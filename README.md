@@ -1,8 +1,8 @@
 **GLIST ENGINE**
 
-Glist Engine is a cross platform and easy to use  game engine written in C++.
+Glist Engine is a cross platform OpenGL game engine written in C++.
 
-The engine supports Open GL 3.3. It can be used to develop Windows, Linux and Macintosh games. Mobile platforms coming soon.
+The engine supports OpenGL 3.3. It can be used to develop Windows, Linux and Macintosh games. Mobile platforms coming soon.
 
 Glist Engine consists of 3 repositories:
 - Glist App
