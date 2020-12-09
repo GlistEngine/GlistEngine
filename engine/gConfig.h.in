@@ -1,0 +1,42 @@
+#ifndef GCONFIG_H
+#define GCONFIG_H
+
+// define your engine path
+#define ENGINE_DIR @ENGINE_DIR@
+#define APP_DIR @APP_DIR@
+
+
+#include <string>
+
+// alternatively you could add your global method getEngineDir here
+static std::string gGetEngineDir()
+{
+    return "@ENGINE_DIR@/";
+}
+
+static std::string gGetAppDir()
+{
+    return "@APP_DIR@/";
+}
+
+//static std::string gGetAssetsDir()
+//{
+//    return "./assets/";
+//}
+
+//static std::string gGetImagesDir()
+//{
+//    return "./assets/images/";
+//}
+
+//static std::string gGetFontsDir()
+//{
+//    return "./assets/fonts/";
+//}
+
+//static std::string gGetModelsDir()
+//{
+//    return "./assets/models/";
+//}
+
+#endif // GCONFIG_H
