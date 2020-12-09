@@ -89,7 +89,7 @@ We encourage the game developers to contribute to the engine by sending commits,
 
 **Licence**
 
-This project is under heavy development and has a closed commercial licence. You can not share the codes with third people and companies.
+This project is under heavy development and has a Apache Licence 2.0.
 
 
 **Version**
