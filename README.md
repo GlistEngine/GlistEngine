@@ -1,4 +1,4 @@
-**GLIST ENGINE**
+# GLIST ENGINE
 
 Glist Engine is a cross platform OpenGL game engine written in C++.
 
