@@ -32,11 +32,11 @@ Glist Engine has one-click installers for Windows, Linux and Mac. You can downlo
 - C:\dev\glist\myglistapps
 - C:\dev\glist\zbin
 
-3- Open cmd.exe and go to the zbin folder by the command
+3- Open command line(cmd.exe) and go to the zbin folder by the command
 
 > cd C:\dev\glist\zbin
 
-4- First of all, you need to clone the zbin repo. Clone the zbin repo with this command:
+4- First of all, you need to clone the zbin repo. Clone the zbin repo by writing this command on command line:
 
 >  git clone https://github.com/yourusername/glistzbin-win64.git
 
