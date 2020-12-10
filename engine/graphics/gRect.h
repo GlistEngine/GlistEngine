@@ -19,12 +19,12 @@ public:
 	void set(int left, int top, int right, int bottom);
 	void set(const gRect& r);
 
-	static bool intersects(int r1left, int r1top, int r1right, int r1bottom, int r2left, int r2top, int r2right, int r2bottom);
+	static bool intersects(int left1, int top1, int right1, int bottom1, int left2, int top2, int right2, int bottom2);
 	static bool intersects(const gRect& r1, const gRect& r2);
 	bool intersects(int left, int top, int right, int bottom);
 	bool intersects(const gRect& r);
 
-	static bool contains(int r1left, int r1top, int r1right, int r1bottom, int r2left, int r2top, int r2right, int r2bottom);
+	static bool contains(int left1, int top1, int right1, int bottom1, int left2, int top2, int right2, int bottom2);
 	static bool contains(const gRect& r1, const gRect& r2);
 	bool contains(int left, int top, int right, int bottom);
 	bool contains(const gRect& r);
