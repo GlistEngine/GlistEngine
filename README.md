@@ -9,7 +9,7 @@ Glist Engine consists of 3 repositories:
 - Glist Engine (this repo) and
 - Glist Zbin
 
-Glist Engine repo contains the core engine, plugins, samples to use in the development. Glist Zbin contains libs, includes and an preconfigured ide. Glist App is the repo to clone for each game.
+Glist Engine repo contains the core engine, plugins, samples to use in the development. Glist Zbin contains libs, includes and an preconfigured ide. Glist App is the repo to clone when starting each new game project.
 
 
 ## Installation
@@ -63,7 +63,7 @@ Glist Engine has one-click installers for Windows, Linux and Mac. You can downlo
 10- After the build process, you can start coding your game on GameCanvas.
 
 
-## Troubleshoot
+## Troubleshooting
 
 1- If you see "Unresolved Inclusion" errors on the editor, that means the ide lost the pre-determined include path entries.
 
