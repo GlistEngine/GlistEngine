@@ -58,9 +58,11 @@ Glist Engine has one-click installers for Windows, Linux and Mac. You can downlo
 
 8- On file explorer, go to C:\dev\glist\zbin\glistzbin-win64 directory. You will see a file named "GlistEngine_Win64". Double click this file to start the ide.
 
-9- You will see GlistApp and GlistEngine on the left column. And GameCanvas src/h files will be opened in the code editor. Click somewhere on GameCanvas.cpp. Then click the hammer button located on the toolbar. The GlistApp and the engine will be built for the first time.
+9- You will see GlistApp and GlistEngine on the left column. And GameCanvas src/h files will be opened in the code editor. These are the source code of GlistApp.
 
-10- After the build process, you can start coding your game on GameCanvas.
+10- On the toolbar of the IDE, there is a dropdown button just next to Run button. Dropdown this list. Click "GlistApp Release" on the list. The GlistApp and the engine will be built and run for the first time.
+
+11- After the build process, you can start coding your game on GameCanvas.
 
 
 ## Troubleshooting
