@@ -62,7 +62,7 @@ Glist Engine has one-click installers for Windows, Linux and Mac. You can downlo
 
 10- On the toolbar of the IDE, there is a dropdown button just next to Run button. Dropdown this list. Click "GlistApp Release" on the list. The GlistApp and the engine will be built and run for the first time.
 
-11- After the build process, you can start coding your game on GameCanvas.
+11- After closing the running window, you can start coding your gorgeous game on GameCanvas.
 
 
 ## Troubleshooting
