@@ -48,7 +48,7 @@ Glist Engine has one-click installers for Windows, Linux and Mac. You can downlo
 
 > git clone https://github.com/yourusername/glistengine.git
 
-6- Go to myglistappsfolder
+6- Go to myglistapps folder
 
 > cd C:\dev\glist\myglistapps
 
@@ -80,7 +80,16 @@ Then the "Unresolved Inclusion" errors should be gone.
 
 ## Contributing
 
-We encourage the game developers to contribute to the engine by sending commits, bug reports and issues. One can contribute into the code by working on the cloned git versions of the repos. If you want to work with git repos, you can do the following configuration:
+We are a warm community. We encourage the game developers to contribute into the engine by sending commits, opening bug reports and issues.
+
+If you want to send PR, please open the staging view via 
+
+> Window->Show View->Other..->Git->Git Staging.
+
+On the Staged Changes list, remove unnecessasy files by selecting them and clicking the - (Remove selected files from the index) button on up-right corner of the list. Add your commit message and send the commit to your fork repo. Then login Github and send PR to our repos.
+
+*If you installed GlistEngine using the installer*
+One can contribute into the code when working on the cloned versions of the repos. If you installed GlistEngine by the installer (student installation above) and want to contribute the repo, you can do the following configuration:
 
 1- Right click on the GlistApp and GlistEngine on the left column and select Delete from the drop down menu. (Unselect delete project content on disk)
 
