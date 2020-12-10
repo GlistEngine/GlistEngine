@@ -79,6 +79,7 @@ add_library(GlistEngine SHARED
 			${ENGINE_DIR}/graphics/primitives/gPlane.cpp
 			${ENGINE_DIR}/graphics/primitives/gBox.cpp
 			${ENGINE_DIR}/graphics/gVbo.cpp
+			${ENGINE_DIR}/graphics/gRect.cpp
 			${ENGINE_DIR}/core/gAppObject.cpp
 			${ENGINE_DIR}/base/gBasePlugin.cpp
 			${ENGINE_DIR}/media/gBaseSound.cpp
@@ -112,6 +113,7 @@ add_library(GlistEngine SHARED
 			${ENGINE_DIR}/graphics/primitives/gPlane.cpp
 			${ENGINE_DIR}/graphics/primitives/gBox.cpp
 			${ENGINE_DIR}/graphics/gVbo.cpp
+			${ENGINE_DIR}/graphics/gRect.cpp
 			${ENGINE_DIR}/core/gAppObject.cpp
 			${ENGINE_DIR}/base/gBasePlugin.cpp
 			${ENGINE_DIR}/media/gBaseSound.cpp
