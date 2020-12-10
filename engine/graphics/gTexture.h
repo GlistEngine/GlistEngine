@@ -10,7 +10,7 @@
 
 #include <string>
 #include "gRenderObject.h"
-
+#include "gRect.h"
 
 class gTexture : public gRenderObject {
 public:
@@ -47,6 +47,7 @@ public:
     void drawSub(int x, int y, int w, int h, int sx, int sy, int sw, int sh);
     void drawSub(int x, int y, int w, int h, int sx, int sy, int sw, int sh, float rotate);
     void drawSub(glm::vec2 pos, glm::vec2 size, glm::vec2 subpos, glm::vec2 subsize, float rotate = 0.0f);
+    void drawSub(const gRect& src, const gRect& dst, float rotate = 0.f);
 
 protected:
     std::string fullpath, directory;
