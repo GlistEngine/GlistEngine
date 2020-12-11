@@ -70,7 +70,7 @@ protected:
 private:
     std::string texturetype[4];
 
-    unsigned int quadVAO;
+    unsigned int quadVAO, quadVBO;
     glm::mat4 imagematrix;
     void setupRenderData(int sx, int sy, int sw, int sh);
     void beginDraw();

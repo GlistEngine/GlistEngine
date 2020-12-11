@@ -23,10 +23,7 @@
  * To set edges of the rectangle use one of the set function.
  */
 class gRect {
-	private:
-	int l, r, t, b;
-	int width, height;
-	public:
+public:
 	/**
 	 * Creates empty rectangle
 	 */
@@ -169,6 +166,9 @@ class gRect {
 	 * @return Height of the rectangle.
 	 */
 	int getHeight() const;
+private:
+	int l, r, t, b;
+	int width, height;
 };
 
 #endif /* GRAPHICS_GRECT_H_ */
