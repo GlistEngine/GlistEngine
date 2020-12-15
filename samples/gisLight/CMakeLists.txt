@@ -23,9 +23,6 @@ set(APP_DIR ${CMAKE_SOURCE_DIR})
 set(MAIN_DIR ${APP_DIR}/../..)
 set(TOP_DIR ${MAIN_DIR}/..)
 set(ENGINE_DIR ${MAIN_DIR}/engine)
-set(PLUGINS_DIR ${MAIN_DIR}/plugins)
-set(LIBS_DIR ${MAIN_DIR}/libs)
-set(MINGW64_DIR ${TOP_DIR}/zbin/glistzbin-win64/mingw64)
 
 
 include(${ENGINE_DIR}/CMakeLists.txt)

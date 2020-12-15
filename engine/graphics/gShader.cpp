@@ -81,7 +81,7 @@ void gShader::loadProgram(const std::string vertexShaderStr, const std::string f
     glCompileShader(fragment);
     checkCompileErrors(fragment, "FRAGMENT");
     // if geometry shader is given, compile geometry shader
-#ifdef WIN32
+#if defined(WIN32) || defined(LINUX)
     unsigned int geometry;
     if(geometryShaderStr != "") {
         const char * gShaderCode = geometryShaderStr.c_str();
@@ -96,7 +96,7 @@ void gShader::loadProgram(const std::string vertexShaderStr, const std::string f
     id = glCreateProgram();
     glAttachShader(id, vertex);
     glAttachShader(id, fragment);
-#ifdef WIN32
+#if defined(WIN32) || defined(LINUX)
     if(geometryShaderStr != "") glAttachShader(id, geometry);
 #endif
     glLinkProgram(id);
@@ -104,7 +104,7 @@ void gShader::loadProgram(const std::string vertexShaderStr, const std::string f
     // delete the shaders as they're linked into our program now and no longer necessery
     glDeleteShader(vertex);
     glDeleteShader(fragment);
-#ifdef WIN32
+#if defined(WIN32) || defined(LINUX)
     if(geometryShaderStr != "") glDeleteShader(geometry);
 #endif
 }

@@ -15,7 +15,6 @@ endif()
 set(MAIN_DIR ${APP_DIR}/../..)
 set(TOP_DIR ${MAIN_DIR}/..)
 set(ENGINE_DIR ${MAIN_DIR}/engine)
-set(MINGW64_DIR ${TOP_DIR}/zbin/glistzbin-win64/mingw64)
 
 include(${ENGINE_DIR}/CMakeLists.txt)
 

@@ -18,6 +18,11 @@
 #include "utf8.h"
 
 
+#ifndef LINUX
+	#define LINUX __linux__
+#endif
+
+
 #ifndef PI
 	#define PI       3.14159265358979323846
 #endif

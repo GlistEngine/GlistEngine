@@ -12,7 +12,7 @@
 #include "gBaseCanvas.h"
 #include "gCanvasManager.h"
 #include "gBasePlugin.h"
-#ifdef WIN32
+#if defined(WIN32) || defined(LINUX)
 #include <GLFW/glfw3.h>
 #endif
 
@@ -138,7 +138,7 @@ int gAppManager::getFramerate() {
 }
 
 void gAppManager::onKeyEvent(int key, int action) {
-#ifdef WIN32
+#if defined(WIN32) || defined(LINUX)
 	switch(action) {
 	case GLFW_RELEASE:
 		canvasmanager->getCurrentCanvas()->keyReleased(key);
@@ -158,7 +158,7 @@ void gAppManager::onMouseMoveEvent(double xpos, double ypos) {
 
 void gAppManager::onMouseButtonEvent(int button, int action, double xpos, double ypos) {
 	if (!canvasmanager->getCurrentCanvas()) return;
-#ifdef WIN32
+#if defined(WIN32) || defined(LINUX)
 	switch(action) {
 	case GLFW_PRESS:
 		buttonpressed[button] = true;

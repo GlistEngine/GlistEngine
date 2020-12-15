@@ -8,7 +8,7 @@
 #include "gBaseWindow.h"
 #include <iostream>
 #include "gAppManager.h"
-#ifdef WIN32
+#if defined(WIN32) || defined(LINUX)
 #include "backward.hpp"
 #endif
 #include <sstream>
@@ -141,7 +141,7 @@ void gBaseWindow::sighandler(int signum) {
 	  backtrace_symbols_fd(array, size, STDERR_FILENO);
 	  exit(1);
 */
-#ifdef WIN32
+#if defined(WIN32) || defined(LINUX)
 //		std::cout << "***** ANOTHER METHOD *****" << std::endl;
 	  backward::StackTrace st;
 

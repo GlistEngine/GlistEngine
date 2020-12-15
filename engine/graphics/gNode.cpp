@@ -174,13 +174,13 @@ glm::vec3 gNode::getScale() {
 }
 
 void gNode::pushMatrix() {
-#ifdef WIN32
+#if defined(WIN32) || defined(LINUX)
 	glPushMatrix();
 #endif
 }
 
 void gNode::popMatrix() {
-#ifdef WIN32
+#if defined(WIN32) || defined(LINUX)
 	glPushMatrix();
 #endif
 }

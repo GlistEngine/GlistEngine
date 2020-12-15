@@ -12,6 +12,7 @@
 #include <stdio.h>
 #include <ctype.h>
 #include <iterator>
+#include <unistd.h>
 
 
 int gDefaultWidth() {

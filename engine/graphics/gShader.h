@@ -8,12 +8,14 @@
 #ifndef ENGINE_GRAPHICS_GSHADER_H_
 #define ENGINE_GRAPHICS_GSHADER_H_
 
+#include "gObject.h"
 #include <string>
-#ifdef WIN32
+#if defined(WIN32) || defined(LINUX)
 #include <GL/glew.h>
 #include <GL/gl.h>
 #include <GL/glu.h>
 #endif
+#define GLM_ENABLE_EXPERIMENTAL
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/quaternion.hpp>
@@ -22,7 +24,7 @@
 #endif
 
 
-class gShader {
+class gShader : public gObject {
 public:
 	gShader();
 	gShader(const char* vertexPath, const char* fragmentPath, const char* geometryPath = nullptr);

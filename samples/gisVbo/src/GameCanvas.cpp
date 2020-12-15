@@ -40,8 +40,7 @@ void GameCanvas::setup() {
 	vbo2.setVertexData(&verts2[0], 3, 3);
 
 	light = gLight(gLight::LIGHTTYPE_AMBIENT);
-	light.setAmbientColor(100, 100, 255, 255);
-	plane.scale(100);
+	light.setAmbientColor(255, 255, 255, 255);
 }
 
 void GameCanvas::update() {
@@ -50,11 +49,12 @@ void GameCanvas::update() {
 
 void GameCanvas::draw() {
 	logi("gisVbo draw");
+	light.enable();
 	setColor(255, 50, 0);
 	vbo1.draw();
 	setColor(0, 255, 50);
 	vbo2.draw();
-	plane.draw();
+	light.disable();
 }
 
 void GameCanvas::keyPressed(int key) {
