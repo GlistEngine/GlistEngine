@@ -40,7 +40,6 @@ private:
 	float vertices[9];
 	unsigned int indices[3];
 	gVertex verts2[3];
-	gPlane plane;
 	gLight light;
 };
 

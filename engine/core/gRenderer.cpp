@@ -277,14 +277,14 @@ void gRenderer::disableAlphaBlending() {
 }
 
 void gRenderer::enableAlphaTest() {
-#ifdef WIN32
+#if defined(WIN32) || defined(LINUX)
 	glEnable(GL_ALPHA_TEST);
     glAlphaFunc(GL_GREATER, 0.1);
 #endif
 }
 
 void gRenderer::disableAlphaTest() {
-#ifdef WIN32
+#if defined(WIN32) || defined(LINUX)
     glDisable(GL_ALPHA_TEST);
 #endif
 }

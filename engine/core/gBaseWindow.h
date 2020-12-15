@@ -11,11 +11,12 @@
 #include <iostream>
 #include <unistd.h>
 #include <signal.h>
+#include "gObject.h"
 
 class gAppManager;
 
 
-class gBaseWindow {
+class gBaseWindow : public gObject {
 public:
 	static const int WINDOWMODE_NONE = -1, WINDOWMODE_GAME = 0, WINDOWMODE_FULLSCREEN = 1, WINDOWMODE_APP = 2;
 

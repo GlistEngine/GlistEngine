@@ -14,7 +14,7 @@
 #ifdef ANDROID
 #include "freetype2/freetype/freetype.h"
 #endif
-#ifdef WIN32
+#if defined(WIN32) || defined(LINUX)
 #include FT_FREETYPE_H
 #endif
 

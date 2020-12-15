@@ -7,7 +7,7 @@
 
 #include "gTexture.h"
 #include <iostream>
-#ifdef WIN32
+#if defined(WIN32) || defined(LINUX)
 #include <GL/glew.h>
 #include <GL/gl.h>
 #include <GL/glu.h>
@@ -155,6 +155,7 @@ void gTexture::draw(int x, int y) {
 }
 
 void gTexture::draw(int x, int y, int w, int h) {
+	if (bsubpartdrawn) setupRenderData();
 	beginDraw();
 	imagematrix = glm::translate(imagematrix, glm::vec3(x, y, 0.0f));  // first translate (transformations are: scale happens first, then rotation, and then final translation happens; reversed order)
 	imagematrix = glm::scale(imagematrix, glm::vec3(w,h, 1.0f));
@@ -166,6 +167,7 @@ void gTexture::draw(int x, int y, int w, int h, float rotate) {
 }
 
 void gTexture::draw(glm::vec2 position, glm::vec2 size, float rotate) {
+	if (bsubpartdrawn) setupRenderData();
 	beginDraw();
 	imagematrix = glm::translate(imagematrix, glm::vec3(position, 0.0f));  // first translate (transformations are: scale happens first, then rotation, and then final translation happens; reversed order)
 
@@ -183,8 +185,8 @@ void gTexture::drawSub(int x, int y, int sx, int sy, int sw, int sh) {
 
 void gTexture::drawSub(int x, int y, int w, int h, int sx, int sy, int sw, int sh) {
 	setupRenderData(sx, sy, sw, sh);
-	bsubpartdrawn = true;
 	draw(x, y, w, h);
+	bsubpartdrawn = true;
 }
 
 void gTexture::drawSub(int x, int y, int w, int h, int sx, int sy, int sw, int sh, float rotate) {
@@ -197,8 +199,8 @@ void gTexture::drawSub(const gRect& src, const gRect& dst, float rotate) {
 
 void gTexture::drawSub(glm::vec2 pos, glm::vec2 size, glm::vec2 subpos, glm::vec2 subsize, float rotate) {
 	setupRenderData(subpos.x, subpos.y, subsize.x, subsize.y);
-	bsubpartdrawn = true;
 	draw(pos, size, 0);
+	bsubpartdrawn = true;
 }
 
 void gTexture::beginDraw() {
@@ -226,7 +228,6 @@ void gTexture::endDraw() {
 
     if (format == GL_RGBA) glDisable(GL_BLEND);
     unbind();
-    if(bsubpartdrawn) {	setupRenderData(); }
 }
 
 void gTexture::setupRenderData() {
@@ -235,8 +236,7 @@ void gTexture::setupRenderData() {
 }
 
 void gTexture::setupRenderData(int sx, int sy, int sw, int sh) {
-	glDeleteBuffers(1, &quadVBO);
-	glDeleteVertexArrays(1, &quadVAO);
+    unsigned int VBO;
     float vertices[] = {
         // pos      // tex
         0.0f, 1.0f, (float)sx / width, (float)(sy + sh) / height,
@@ -249,9 +249,9 @@ void gTexture::setupRenderData(int sx, int sy, int sw, int sh) {
     };
 
     glGenVertexArrays(1, &quadVAO);
-    glGenBuffers(1, &quadVBO);
+    glGenBuffers(1, &VBO);
 
-    glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
     glBindVertexArray(quadVAO);

@@ -32,13 +32,13 @@ void gRenderObject::setScreenSize(int screenWidth, int screenHeight) {
 }
 
 void gRenderObject::pushMatrix() {
-#ifdef WIN32
+#if defined(WIN32) || defined(LINUX)
 	glPushMatrix();
 #endif
 }
 
 void gRenderObject::popMatrix() {
-#ifdef WIN32
+#if defined(WIN32) || defined(LINUX)
 	glPopMatrix();
 #endif
 }

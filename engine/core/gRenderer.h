@@ -10,7 +10,8 @@
 #ifndef CORE_GRENDERER_H_
 #define CORE_GRENDERER_H_
 
-#ifdef WIN32
+#include "gObject.h"
+#if defined(WIN32) || defined(LINUX)
 //#include <GL/glext.h>
 #include <GL/glew.h>
 #include <GL/gl.h>
@@ -27,7 +28,6 @@
 #include <glm/gtx/quaternion.hpp>
 
 #include <vector>
-#include "gObject.h"
 #include "gShader.h"
 #include "gColor.h"
 class gLight;
