@@ -27,17 +27,20 @@ Glist Engine has one-click installers for Windows, Linux and Mac. You can downlo
 
 1- Fork one of the GlistZbin-Win64 or GlistZbin-Linux repo intos your account, according to your computer's operating system
 
+
 2- Fork the GlistEngine and GlistApp repos into your account.
+
 
 3- Open file explorer and create necessary folders:
 
-ON Windows:
+On Windows:
 - C:\dev\glist\myglistapps
 - C:\dev\glist\zbin
 
 On Linux:
 - ~/dev/glist/myglistapps
 - ~/dev/glist/zbin
+
 
 4- Open command line(cmd.exe or bash) and go to the zbin folder by the command
 
@@ -47,6 +50,7 @@ On Windows:
 On Linux:
 > cd ~/dev/glist/zbin
 
+
 5- First of all, you need to clone the zbin repo. Clone the zbin repo by writing one of these commands on command line:
 
 On Windows:
@@ -54,6 +58,7 @@ On Windows:
 
 On Linux:
 >  git clone https://github.com/yourusername/glistzbin-linux.git
+
 
 6- Go one folder up
 
@@ -63,9 +68,11 @@ On Windows:
 On Linux:
 > cd ~/dev/glist
 
+
 7- Clone the GlistEngine repo
 
 > git clone https://github.com/yourusername/glistengine.git
+
 
 8- Go to myglistapps folder
 
@@ -75,9 +82,11 @@ On Windows:
 On Linux:
 > cd ~/dev/glist/myglistapps
 
+
 9- Clone the GlistApp repo
 
 > git clone git clone https://github.com/yourusername/glistapp.git
+
 
 10- On file explorer, go to;
 
@@ -89,9 +98,12 @@ On Linux:
 
 directory. You will see a file named "GlistEngine". Double click this file to start the ide.
 
+
 11- You will see GlistApp and GlistEngine on the left column. And GameCanvas src/h files will be opened in the code editor. These are the source code of GlistApp.
 
+
 12- On the toolbar of the IDE, there is a dropdown button just next to Run button. Dropdown this list. Click "GlistApp Release" on the list. The GlistApp and the engine will be built and run for the first time.
+
 
 13- After closing the running window, you can start coding your gorgeous game on GameCanvas.
 
