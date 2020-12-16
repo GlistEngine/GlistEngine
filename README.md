@@ -2,7 +2,7 @@
 
 Glist Engine is a cross platform OpenGL game engine written in C++.
 
-The engine supports OpenGL 3.3. It can be used to develop Windows, Linux and Macintosh games. Mobile platforms coming soon.
+The engine supports OpenGL 3.3. It can be used to develop Windows and Linux games. Macintosh and mobile platforms coming soon.
 
 Glist Engine consists of 3 repositories:
 - Glist App
@@ -25,57 +25,87 @@ Glist Engine has one-click installers for Windows, Linux and Mac. You can downlo
 
 ### II. Installation For Developers
 
-1- Fork the GlistEngine, GlistApp and GlistZbin-Win64 repos into your account.
+1- Fork one of the GlistZbin-Win64 or GlistZbin-Linux repo intos your account, according to your computer's operating system
 
-2- Open file explorer and create necessary folders:
+2- Fork the GlistEngine and GlistApp repos into your account.
 
+3- Open file explorer and create necessary folders:
+
+ON Windows:
 - C:\dev\glist\myglistapps
 - C:\dev\glist\zbin
 
-3- Open command line(cmd.exe) and go to the zbin folder by the command
+On Linux:
+- ~/dev/glist/myglistapps
+- ~/dev/glist/zbin
 
+4- Open command line(cmd.exe or bash) and go to the zbin folder by the command
+
+On Windows:
 > cd C:\dev\glist\zbin
 
-4- First of all, you need to clone the zbin repo. Clone the zbin repo by writing this command on command line:
+On Linux:
+> cd ~/dev/glist/zbin
 
+5- First of all, you need to clone the zbin repo. Clone the zbin repo by writing one of these commands on command line:
+
+On Windows:
 >  git clone https://github.com/yourusername/glistzbin-win64.git
 
-5- Go one folder up to C:\dev\glist
+On Linux:
+>  git clone https://github.com/yourusername/glistzbin-linux.git
 
+6- Go one folder up
+
+On Windows:
 > cd C:\dev\glist
 
-5- Clone the GlistEngine repo
+On Linux:
+> cd ~/dev/glist
+
+7- Clone the GlistEngine repo
 
 > git clone https://github.com/yourusername/glistengine.git
 
-6- Go to myglistapps folder
+8- Go to myglistapps folder
 
+On Windows:
 > cd C:\dev\glist\myglistapps
 
-7- Clone the GlistApp repo
+On Linux:
+> cd ~/dev/glist/myglistapps
+
+9- Clone the GlistApp repo
 
 > git clone git clone https://github.com/yourusername/glistapp.git
 
-8- On file explorer, go to C:\dev\glist\zbin\glistzbin-win64 directory. You will see a file named "GlistEngine_Win64". Double click this file to start the ide.
+10- On file explorer, go to;
 
-9- You will see GlistApp and GlistEngine on the left column. And GameCanvas src/h files will be opened in the code editor. These are the source code of GlistApp.
+On Windows:
+> cd C:\dev\glist\zbin\glistzbin-win64
 
-10- On the toolbar of the IDE, there is a dropdown button just next to Run button. Dropdown this list. Click "GlistApp Release" on the list. The GlistApp and the engine will be built and run for the first time.
+On Linux:
+> cd ~/dev/glist/zbin/glistzbin-linux
 
-11- After closing the running window, you can start coding your gorgeous game on GameCanvas.
+directory. You will see a file named "GlistEngine". Double click this file to start the ide.
+
+11- You will see GlistApp and GlistEngine on the left column. And GameCanvas src/h files will be opened in the code editor. These are the source code of GlistApp.
+
+12- On the toolbar of the IDE, there is a dropdown button just next to Run button. Dropdown this list. Click "GlistApp Release" on the list. The GlistApp and the engine will be built and run for the first time.
+
+13- After closing the running window, you can start coding your gorgeous game on GameCanvas.
 
 
 ## Troubleshooting
 
-1- If you see "Unresolved Inclusion" errors on the editor, that means the ide lost the pre-determined include path entries.
+1- Unresolved Inclusions
 
-2- If so, click GlistApp on the left column, then open Project->Properties->C/C++ General->Paths and symbols->Includes. Select Debug from the Configuration drop down and click Languages->GNU C++. Copy the paths here. Select Release from the Configuration dropdown and click Languages->GNU C++. Click Add. and paste the paths here. After copying all paths to Release, click Apply and close button.
+If you see "Unresolved Inclusion" errors on the editor, that means the ide lost the pre-determined include path entries.
 
-3- Click GlistEngine on the left column and do the same copy-paste jobs here too. (This repo has more lines)
-
-4- Select GlistApp again and click hammer button to rebuild the project.
-
-5- Click Project->C/C++ Index->Rebuild to invode indexer.
+- If so, click GlistApp on the left column, then open Project->Properties->C/C++ General->Paths and symbols->Includes. Select Debug from the Configuration drop down and click Languages->GNU C++. Copy the paths here. Select Release from the Configuration dropdown and click Languages->GNU C++. Click Add. and paste the paths here. After copying all paths to Release, click Apply and close button.
+- Click GlistEngine on the left column and do the same copy-paste jobs here too. (This repo has more lines)
+- Select GlistApp again and click hammer button to rebuild the project.
+- Click Project->C/C++ Index->Rebuild to invode indexer.
 
 Then the "Unresolved Inclusion" errors should be gone.
 
