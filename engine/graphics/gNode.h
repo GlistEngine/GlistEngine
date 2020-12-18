@@ -33,13 +33,6 @@ public:
 	void setScale(float s);
 
 	/*
-	 * Movement forward-backward along -z axis
-	 *
-	 * @param distance movement amount in gl units
-	 */
-	void dolly(float distance);
-
-	/*
 	 * Movement right-left along x axis
 	 *
 	 * @param distance movement amount in gl units
@@ -52,6 +45,13 @@ public:
 	 * @param distance movement amount in gl units
 	 */
 	void boom(float distance);
+
+	/*
+	 * Movement forward-backward along z axis
+	 *
+	 * @param distance movement amount in gl units
+	 */
+	void dolly(float distance);
 
 	/*
 	 * Rotation around local x axis

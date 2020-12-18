@@ -80,7 +80,7 @@ void gCamera::setPosition(float px, float py, float pz) {
 
 void gCamera::dolly(float distance) {
 	gNode::dolly(distance);
-	lookposition -= normalize(glm::vec3(localtransformationmatrix[2])) * distance;
+	lookposition += normalize(glm::vec3(localtransformationmatrix[2])) * distance;
 	processLookMatrix();
 }
 
