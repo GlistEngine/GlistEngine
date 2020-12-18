@@ -66,7 +66,7 @@ void gNode::setPosition(const glm::vec3 pv) {
 }
 
 void gNode::dolly(float distance) {
-	position -= normalize(glm::vec3(localtransformationmatrix[2])) * distance;
+	position += normalize(glm::vec3(localtransformationmatrix[2])) * distance;
 	processTransformationMatrix();
 }
 
