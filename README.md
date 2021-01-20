@@ -20,7 +20,7 @@ More information about GlistEngine can be found at [https://glistengine.gamelab.
 
 Glist Engine has one-click installers for Windows, Linux and Mac. You can download the installers from the below links:
 
-- Windows Installer (coming soon)
+- Windows Installer - [https://glistengine.gamelab.istanbul/documentation/tutorials/glistengine-setup-tutorial.html](https://glistengine.gamelab.istanbul/documentation/tutorials/glistengine-setup-tutorial.html)
 - Linux installer (coming soon)
 - Mac installer (coming soon)
 
