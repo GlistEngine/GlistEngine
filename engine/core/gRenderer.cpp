@@ -193,7 +193,7 @@ gColor* gRenderer::getLightingColor() {
 	return lightingcolor;
 }
 
-void gRenderer::setLightingPosition(glm::vec3 lightingPosition) {
+void gRenderer::setLightingPosition(const glm::vec3& lightingPosition) {
 	lightingposition = lightingPosition;
 }
 

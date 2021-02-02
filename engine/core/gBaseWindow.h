@@ -33,8 +33,8 @@ public:
 	void setSize(int width, int height);
 	int getWidth();
 	int getHeight();
-	void setTitle(std::string windowTitle);
-	std::string getTitle();
+	void setTitle(const std::string& windowTitle);
+	const std::string& getTitle();
 
 	void onKeyEvent(int key, int action);
 	void onMouseMoveEvent(double xpos, double ypos);

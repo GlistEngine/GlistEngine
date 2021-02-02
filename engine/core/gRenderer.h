@@ -62,7 +62,7 @@ public:
 	void setLightingColor(int r, int g, int b, int a = 255);
 	void setLightingColor(gColor* color);
 	gColor* getLightingColor();
-	void setLightingPosition(glm::vec3 lightingPosition);
+	void setLightingPosition(const glm::vec3& lightingPosition);
 	glm::vec3 getLightingPosition();
 	void setGlobalAmbientColor(int r, int g, int b, int a = 255);
 	void setGlobalAmbientColor(gColor color);

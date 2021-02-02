@@ -64,7 +64,7 @@ public:
 	void setFramerate(int targetFramerate);
 	int getFramerate();
 
-	std::string getAppName();
+	const std::string& getAppName();
 
 	void onKeyEvent(int key, int action);
 	void onMouseMoveEvent(double xpos, double ypos);

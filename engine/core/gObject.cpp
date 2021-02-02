@@ -36,26 +36,22 @@ gObject::gObject() {
 gObject::~gObject() {
 }
 
-std::string gObject::gGetAppDir() {
-	return exepath;
-}
+const std::string& gObject::gGetAssetsDir() {
 
-std::string gObject::gGetAssetsDir() {
-	return exepath + "assets/";
 }
-std::string gObject::gGetImagesDir() {
+const std::string& gObject::gGetImagesDir() {
 	return exepath + "assets/images/";
 }
 
-std::string gObject::gGetFontsDir() {
+const std::string& gObject::gGetFontsDir() {
 	return exepath + "assets/fonts/";
 }
 
-std::string gObject::gGetModelsDir() {
+const std::string& gObject::gGetModelsDir() {
 	return exepath + "assets/models/";
 }
 
-std::string gObject::gGetSoundsDir() {
+const std::string& gObject::gGetSoundsDir() {
 	return exepath + "assets/sounds/";
 }
 
@@ -64,47 +60,47 @@ void gObject::setLogLevel(int logLevel) {
 }
 
 
-void gObject::log(int logLevel, std::string tag, std::string message) {
+void gObject::log(int logLevel, const std::string& tag, const std::string& message) {
 	std::cout << "[" << loglevelname[logLevel] << "] " << tag << ": " << message << std::endl;
 }
 
 
-void gObject::logi(std::string tag, std::string message) {
+void gObject::logi(const std::string& tag, const std::string& message) {
 	if (loglevel < LOGLEVEL_INFO) return;
 	log(LOGLEVEL_INFO, tag, message);
 }
 
-void gObject::logi(std::string message) {
+void gObject::logi(const std::string& message) {
 	if (loglevel < LOGLEVEL_INFO) return;
 	log(LOGLEVEL_INFO, abi::__cxa_demangle(typeid(*this).name(), 0, 0, 0), message);
 }
 
-void gObject::logd(std::string tag, std::string message) {
+void gObject::logd(const std::string& tag, const std::string& message) {
 	if (loglevel < LOGLEVEL_DEBUG) return;
 	log(LOGLEVEL_DEBUG, tag, message);
 }
 
-void gObject::logd(std::string message) {
+void gObject::logd(const std::string& message) {
 	if (loglevel < LOGLEVEL_DEBUG) return;
 	log(LOGLEVEL_DEBUG, abi::__cxa_demangle(typeid(*this).name(), 0, 0, 0), message);
 }
 
-void gObject::logw(std::string tag, std::string message) {
+void gObject::logw(const std::string& tag, const std::string& message) {
 	if (loglevel < LOGLEVEL_WARNING) return;
 	log(LOGLEVEL_WARNING, tag, message);
 }
 
-void gObject::logw(std::string message) {
+void gObject::logw(const std::string& message) {
 	if (loglevel < LOGLEVEL_WARNING) return;
 	log(LOGLEVEL_WARNING, abi::__cxa_demangle(typeid(*this).name(), 0, 0, 0), message);
 }
 
-void gObject::loge(std::string tag, std::string message) {
+void gObject::loge(const std::string& tag, const std::string& message) {
 	if (loglevel < LOGLEVEL_ERROR) return;
 	std::cerr << "[" << loglevelname[LOGLEVEL_ERROR] << "] " << tag << ": " << message << std::endl;
 }
 
-void gObject::loge(std::string message) {
+void gObject::loge(const std::string& message) {
 	if (loglevel < LOGLEVEL_ERROR) return;
 	loge(abi::__cxa_demangle(typeid(*this).name(), 0, 0, 0), message);
 }

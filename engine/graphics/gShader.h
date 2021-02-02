@@ -10,6 +10,7 @@
 
 #include "gObject.h"
 #include <string>
+#include <unordered_map>
 #if defined(WIN32) || defined(LINUX)
 #include <GL/glew.h>
 #include <GL/gl.h>
@@ -52,6 +53,10 @@ public:
 
 private:
 	void checkCompileErrors(GLuint shader, std::string type);
+
+	int GetUniformLocation(const std::string& name);
+private:
+	std::unordered_map<std::string, int> m_UniformLocationMap;
 };
 
 #endif /* ENGINE_GRAPHICS_GSHADER_H_ */

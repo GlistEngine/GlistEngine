@@ -27,22 +27,22 @@ public:
 	gObject();
 	virtual ~gObject();
 
-	std::string gGetAppDir();
-	std::string gGetAssetsDir();
-	std::string gGetImagesDir();
-	std::string gGetFontsDir();
-	std::string gGetModelsDir();
-	std::string gGetSoundsDir();
+	const std::string& gGetAppDir();
+	const std::string& gGetAssetsDir();
+	const std::string& gGetImagesDir();
+	const std::string& gGetFontsDir();
+	const std::string& gGetModelsDir();
+	const std::string& gGetSoundsDir();
 
-	void logi(std::string message);
-	void logd(std::string message);
-	void logw(std::string message);
-	void loge(std::string message);
+	void logi(const std::string& message);
+	void logd(const std::string& message);
+	void logw(const std::string& message);
+	void loge(const std::string& message);
 
-	void logi(std::string tag, std::string message);
-	void logd(std::string tag, std::string message);
-	void logw(std::string tag, std::string message);
-	void loge(std::string tag, std::string message);
+	void logi(const std::string& tag, const std::string& message);
+	void logd(const std::string& tag, const std::string& message);
+	void logw(const std::string& tag, const std::string& message);
+	void loge(const std::string& tag, const std::string& message);
 
 	void setLogLevel(int logLevel);
 
@@ -50,7 +50,7 @@ public:
 private:
 	int loglevel;
 	std::string loglevelname[5];
-	void log(int logLevel, std::string tag, std::string message);
+	void log(int logLevel, const std::string& tag, const std::string& message);
 	std::string exepath;
 };
 

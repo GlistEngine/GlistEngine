@@ -17,11 +17,10 @@
 #endif
 
 
-void gStartEngine(gBaseApp *baseApp, std::string appName, int windowMode, int width, int height) {
+void gStartEngine(gBaseApp *baseApp, const std::string& appName, int windowMode, int width, int height) {
 	gAppManager appmanager;
 	gGLFWWindow gbwindow;
 	gbwindow.setAppManager(&appmanager);
-	if (appName == "") appName = "GlistApp";
 	gbwindow.setTitle(appName);
 	appmanager.setWindow(&gbwindow);
 	baseApp->setAppManager(&appmanager);
@@ -129,7 +128,7 @@ void gAppManager::setFramerate(int targetFramerate) {
 	minWorkTime = std::chrono::duration<double, std::milli>(millisecondsperframe);
 }
 
-std::string gAppManager::getAppName() {
+const std::string& gAppManager::getAppName() {
 	return appname;
 }
 
