@@ -201,7 +201,7 @@ int gShader::GetUniformLocation(const std::string& name)
 	int location = glGetUniformLocation(id, name.c_str());
 	if(location == -1)
 	{
-		std::cout << "Shader : " << id << " " << name "does not exist.\n";
+		std::cout << "Shader : " << id << " " << name << "does not exist.\n";
 		return location;
 	}
 

@@ -15,7 +15,6 @@ gGLFWWindow::gGLFWWindow() {
 }
 
 gGLFWWindow::~gGLFWWindow() {
-	glfwDelete();
 }
 
 
