@@ -1,8 +1,8 @@
 cmake_minimum_required (VERSION 3.10.2)
 
 # Configure compiler and linker as you need
-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS} -std=c++14 -DNDEBUG -DENABLE_BOOST_WORKAROUND=ON -Wuninitialized -Wmultichar -ffunction-sections -fdata-sections -fexceptions -frtti -fpermissive -fPIC -O2")
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} -g -std=c++14 -g -DDEBUG -DENABLE_BOOST_WORKAROUND=ON -Wuninitialized -Wmultichar -ffunction-sections -fdata-sections -fexceptions -frtti -fpermissive -fPIC -O0")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS} -std=c++14 -DNDEBUG -DENABLE_BOOST_WORKAROUND=ON -fuse-ld=gold -Wuninitialized -Wmultichar -ffunction-sections -fdata-sections -fexceptions -frtti -fpermissive -fPIC -O2")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} -g -std=c++14 -DDEBUG -DENABLE_BOOST_WORKAROUND=ON -fuse-ld=gold -Wuninitialized -Wmultichar -ffunction-sections -fdata-sections -fexceptions -frtti -fpermissive -fPIC -O0")
 set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -v -Wl,--no-as-needed -Wl,--gc-sections -Wl,--unresolved-symbols=report-all")
 
 
@@ -144,10 +144,12 @@ if(WIN32)
 	)
 elseif(LINUX)
 	list(APPEND INC_DIRS
-		/usr/include/freetype2
+		${MINGW64_DIR}/include
+		${MINGW64_DIR}/include/freetype2
+#		/usr/include/freetype2
 		/usr/include
 		/usr/local/lib
-		${MINGW64_DIR}/lib
+#		${MINGW64_DIR}/lib
 	)
 elseif(ANDROID)
 	list(APPEND INC_DIRS
@@ -169,15 +171,19 @@ if(WIN32)
 			${PLUGIN_LINKDIRS}
 	)
 elseif(LINUX)
-	find_library(Lib_Freetype2 freetype HINTS /usr/lib/x86_64-linux-gnu)
+#	find_library(Lib_Freetype2 freetype HINTS /usr/lib/x86_64-linux-gnu)
 	
-	execute_process(COMMAND 
-	    pkg-config --cflags freetype2
-	    OUTPUT_VARIABLE
-	    CL_TMP_VAR
-	    OUTPUT_STRIP_TRAILING_WHITESPACE)
-	string(STRIP ${CL_TMP_VAR} CL_VAR_1)
-	add_definitions(${CL_VAR_1})
+#	execute_process(COMMAND 
+#	    pkg-config --cflags freetype2
+#	    OUTPUT_VARIABLE
+#	    CL_TMP_VAR
+#	    OUTPUT_STRIP_TRAILING_WHITESPACE)
+#	string(STRIP ${CL_TMP_VAR} CL_VAR_1)
+#	add_definitions(${CL_VAR_1})
+	
+	add_library(glfw SHARED IMPORTED)
+	set_target_properties(glfw PROPERTIES IMPORTED_LOCATION
+			${MINGW64_DIR}/lib/libglfw.so)
 
 	add_library(fmod SHARED IMPORTED)
 	set_target_properties(fmod PROPERTIES IMPORTED_LOCATION
@@ -186,6 +192,18 @@ elseif(LINUX)
 	add_library(fmodL SHARED IMPORTED)
 	set_target_properties(fmodL PROPERTIES IMPORTED_LOCATION
 			${MINGW64_DIR}/lib/libfmodL.so)
+
+	add_library(assimp SHARED IMPORTED)
+	set_target_properties(assimp PROPERTIES IMPORTED_LOCATION
+			${MINGW64_DIR}/lib/libassimp.so)
+	
+	add_library(libpng SHARED IMPORTED)
+	set_target_properties(libpng PROPERTIES IMPORTED_LOCATION
+			${MINGW64_DIR}/lib/libpng.so)
+	
+	add_library(freetype SHARED IMPORTED)
+	set_target_properties(freetype PROPERTIES IMPORTED_LOCATION
+			${MINGW64_DIR}/lib/libfreetype.so)
 
 elseif(ANDROID)
 	find_library( # Sets the name of the path variable.
@@ -239,7 +257,8 @@ if(WIN32)
 	)
 elseif(LINUX)
 	list(APPEND LINK_LIBS
-		${Lib_Freetype2}
+#		${Lib_Freetype2}
+		libpng
 		glfw
 		GL
 		GLEW
