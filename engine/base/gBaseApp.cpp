@@ -10,6 +10,7 @@
 
 gBaseApp::gBaseApp() {
 	appmanager = nullptr;
+	gSeedRandom();
 }
 
 gBaseApp::~gBaseApp() {
