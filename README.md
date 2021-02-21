@@ -124,7 +124,7 @@ On Linux:
 
 9- Clone the GlistApp repo
 
-> git clone git clone https://github.com/yourgithubusername/glistapp.git
+> git clone https://github.com/yourgithubusername/glistapp.git
 
 
 10- Run the GlistEngine
