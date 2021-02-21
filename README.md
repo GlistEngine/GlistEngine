@@ -35,23 +35,23 @@ Glist Engine has one-click installers for Windows, Linux and Mac. You can downlo
 
 2- You need to install some programs into your computer in order to clone and run GlistEngine.
 
-- WINDOWS users:
-We provide all libraries except CMake. You should first download and install CMake from https://git-scm.com/download/win
+On Windows:
+- We provide all libraries except CMake. You should first download and install CMake from https://git-scm.com/download/win
 
-- MACOS Users:
-a. First of all, you should install Xcode because OpenGL library comes with Xcode. Download Xcode via 
+On macOS:
+- First of all, you should install Xcode because OpenGL library comes with Xcode. Download Xcode via 
  App Store
 
-b. Open Terminal and install homebrew
+- Open Terminal and install homebrew
 > ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 
-c. Install libraries via home-brew and make necessary configurations
+- Install libraries via home-brew and make necessary configurations
 > brew install gcc@7 cmake glew glfw glm freetype assimp
 > export PATH=$PATH:~/usr/local/bin/cmake
 > sudo spctl --master-disable
 
-- LINUX Users:
-Install necessary libraries
+On Linux:
+- Install necessary libraries
 > sudo apt-get install git cmake g++-7 glew-dev
 
 3- Open file explorer and create necessary folders:
@@ -127,18 +127,19 @@ On Linux:
 > git clone git clone https://github.com/yourgithubusername/glistapp.git
 
 
-10- On file explorer, go to;
+10- Run the GlistEngine
+
+Windows and Linux, on file explorer, go to;
 
 On Windows:
-> cd C:\dev\glist\zbin\glistzbin-win64
+- Open file explorer, go to C:\dev\glist\zbin\glistzbin-win64 and double click GlistEngine
 
 On macOS:
-> cd ~/dev/glist/zbin/glistzbin-macos
+- Open Terminal and enter this command
+> open ~/dev/glist/zbin/glistzbin-macos/eclipse/eclipsecpp-2020-09/Eclipse.app
 
 On Linux:
-> cd ~/dev/glist/zbin/glistzbin-linux
-
-directory. You will see a file named "GlistEngine". Double click this file to start the ide.
+- Open file explorer, go to ~/dev/glist/zbin/glistzbin-linux and double click GlistEngine
 
 
 11- You will see GlistApp and GlistEngine on the left column. And GameCanvas src/h files will be opened in the code editor. These are the source code of GlistApp.
