@@ -17,9 +17,37 @@
 #include <iomanip>
 #include "utf8.h"
 
-
+/*
 #ifndef LINUX
 	#define LINUX __linux__
+#endif
+*/
+#ifdef _WIN64
+   //define something for Windows (64-bit)
+	#define WIN64 _WIN32
+#elif _WIN32
+   //define something for Windows (32-bit)
+	#define WIN32 _WIN32
+#elif __APPLE__
+    #include "TargetConditionals.h"
+    #if TARGET_IPHONE_SIMULATOR
+        // define something for simulator
+    #elif TARGET_OS_IPHONE
+        // define something for iphone
+    #else
+        #define TARGET_OS_OSX 1
+		#define APPLE __APPLE__
+        // define something for OSX
+    #endif
+#elif __ANDROID__
+    // Android
+#elif __linux
+    // Linux
+	#define LINUX __linux__
+#elif __unix // all unices not caught above
+    // Unix
+#elif __posix
+    // POSIX
 #endif
 
 

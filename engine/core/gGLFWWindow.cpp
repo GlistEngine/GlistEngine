@@ -9,7 +9,7 @@
 
 
 gGLFWWindow::gGLFWWindow() {
-#if defined(WIN32) || defined(LINUX)
+#if defined(WIN32) || defined(LINUX) || defined(APPLE)
 	window = nullptr;
 #endif
 }
@@ -20,7 +20,7 @@ gGLFWWindow::~gGLFWWindow() {
 
 void gGLFWWindow::initialize(int width, int height, int windowMode) {
 	gBaseWindow::initialize(width, height, windowMode);
-#if defined(WIN32) || defined(LINUX)
+#if defined(WIN32) || defined(LINUX) || defined(APPLE)
 	// Create glfw
 	glfwInit();
 
@@ -75,7 +75,7 @@ void gGLFWWindow::initialize(int width, int height, int windowMode) {
 	glewExperimental = GL_TRUE;
 	glewInit();
 
-#if defined(WIN32) || defined(LINUX)
+#if defined(WIN32) || defined(LINUX) || defined(APPLE)
 //	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
 //	    std::cout << "Failed to initialize GLAD" << std::endl;
 //	    return -1;
@@ -100,14 +100,14 @@ void gGLFWWindow::initialize(int width, int height, int windowMode) {
 
 
 bool gGLFWWindow::getShouldClose() {
-#if defined(WIN32) || defined(LINUX)
+#if defined(WIN32) || defined(LINUX) || defined(APPLE)
 	return glfwWindowShouldClose(window);
 #endif
 	return 0;
 }
 
 void gGLFWWindow::update() {
-#if defined(WIN32) || defined(LINUX)
+#if defined(WIN32) || defined(LINUX) || defined(APPLE)
 	// End window drawing
     glfwSwapBuffers(window);
     glfwPollEvents();
@@ -116,13 +116,13 @@ void gGLFWWindow::update() {
 }
 
 void gGLFWWindow::close() {
-#if defined(WIN32) || defined(LINUX)
+#if defined(WIN32) || defined(LINUX) || defined(APPLE)
 	// Deallocate glfw resources
 	glfwTerminate();
 #endif
 }
 
-#if defined(WIN32) || defined(LINUX)
+#if defined(WIN32) || defined(LINUX) || defined(APPLE)
 void gGLFWWindow::framebuffer_size_callback(GLFWwindow* window, int width, int height) {
     glViewport(0, 0, width, height);
     (static_cast<gGLFWWindow *>(glfwGetWindowUserPointer(window)))->setSize(width, height);

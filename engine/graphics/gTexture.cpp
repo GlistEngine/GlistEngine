@@ -11,6 +11,13 @@
 #include <GL/glew.h>
 #include <GL/gl.h>
 #include <GL/glu.h>
+#else if defined(APPLE)
+#include <OpenGL/gl.h>
+#include <GL/glew.h>
+#include <OpenGL/glu.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/quaternion.hpp>
 #endif
 #include "gPlane.h"
 #define STB_IMAGE_IMPLEMENTATION

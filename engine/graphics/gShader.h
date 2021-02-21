@@ -15,6 +15,11 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 #endif
+#if defined(APPLE)
+#include <GL/glew.h>
+#include <OpenGL/gl.h>
+#include <OpenGL/glu.h>
+#endif
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>

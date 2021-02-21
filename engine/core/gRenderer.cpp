@@ -290,305 +290,297 @@ void gRenderer::disableAlphaTest() {
 }
 
 const std::string gRenderer::getShaderSrcColorVertex() {
-	const char* shadersource = R"glsl(
-	#version 330 core
-	layout (location = 0) in vec3 aPos; // the position variable has attribute position 0
-	layout (location = 1) in vec3 aNormal;
-	layout (location = 2) in vec2 aTexCoords;
-	layout (location = 3) in vec3 aTangent;
-	layout (location = 4) in vec3 aBitangent;
-	layout (location = 5) in int aUseNormalMap;
-
-	uniform mat4 model;
-	uniform mat4 view;
-	uniform mat4 projection;
-	uniform vec3 lightPos;
-	uniform vec3 viewPos;
-
-	out vec3 Normal;
-	out vec3 FragPos;
-	out vec2 TexCoords;
-	flat out int mUseNormalMap;
-	out vec3 TangentLightPos;
-	out vec3 TangentViewPos;
-	out vec3 TangentFragPos;
-
-	void main() {
-	    FragPos = vec3(model * vec4(aPos, 1.0));
-	    Normal = mat3(transpose(inverse(model))) * aNormal;
-	    TexCoords = aTexCoords;
-	    mUseNormalMap = aUseNormalMap;
-	    
-	    if (aUseNormalMap > 0) {
-		    mat3 normalMatrix = transpose(inverse(mat3(model)));
-		    vec3 T = normalize(normalMatrix * aTangent);
-		    vec3 N = normalize(normalMatrix * aNormal);
-		    T = normalize(T - dot(T, N) * N);
-		    vec3 B = cross(N, T);
-		    
-		    mat3 TBN = transpose(mat3(T, B, N));    
-		    TangentLightPos = TBN * lightPos;
-		    TangentViewPos  = TBN * viewPos;
-		    TangentFragPos  = TBN * FragPos;
-	    }
-	    
-	    gl_Position = projection * view * vec4(FragPos, 1.0);
-	}
-	)glsl";
+	const char* shadersource =
+"	#version 330 core\n"
+"	layout (location = 0) in vec3 aPos; // the position variable has attribute position 0\n"
+"	layout (location = 1) in vec3 aNormal;\n"
+"	layout (location = 2) in vec2 aTexCoords;\n"
+"	layout (location = 3) in vec3 aTangent;\n"
+"	layout (location = 4) in vec3 aBitangent;\n"
+"	layout (location = 5) in int aUseNormalMap;\n"
+"\n"
+"	uniform mat4 model;\n"
+"	uniform mat4 view;\n"
+"	uniform mat4 projection;\n"
+"	uniform vec3 lightPos;\n"
+"	uniform vec3 viewPos;\n"
+"\n"
+"	out vec3 Normal;\n"
+"	out vec3 FragPos;\n"
+"	out vec2 TexCoords;\n"
+"	flat out int mUseNormalMap;\n"
+"	out vec3 TangentLightPos;\n"
+"	out vec3 TangentViewPos;\n"
+"	out vec3 TangentFragPos;\n"
+"\n"
+"	void main() {\n"
+"	    FragPos = vec3(model * vec4(aPos, 1.0));\n"
+"	    Normal = mat3(transpose(inverse(model))) * aNormal;\n"
+"	    TexCoords = aTexCoords;\n"
+"	    mUseNormalMap = aUseNormalMap;\n"
+"	    \n"
+"	    if (aUseNormalMap > 0) {\n"
+"		    mat3 normalMatrix = transpose(inverse(mat3(model)));\n"
+"		    vec3 T = normalize(normalMatrix * aTangent);\n"
+"		    vec3 N = normalize(normalMatrix * aNormal);\n"
+"		    T = normalize(T - dot(T, N) * N);\n"
+"		    vec3 B = cross(N, T);\n"
+"		    \n"
+"		    mat3 TBN = transpose(mat3(T, B, N));    \n"
+"		    TangentLightPos = TBN * lightPos;\n"
+"		    TangentViewPos  = TBN * viewPos;\n"
+"		    TangentFragPos  = TBN * FragPos;\n"
+"	    }\n"
+"	    \n"
+"	    gl_Position = projection * view * vec4(FragPos, 1.0);\n"
+"	}\n";
 
 	return std::string(shadersource);
 }
 
 const std::string gRenderer::getShaderSrcColorFragment() {
-	const char* shadersource = R"glsl(
-	#version 330 core
-
-	struct Material {
-	    vec4 ambient;
-	    vec4 diffuse;
-	    vec4 specular;
-	    float shininess;
-	    sampler2D diffusemap;
-	    sampler2D specularmap;
-	    sampler2D normalMap;
-		int useDiffuseMap;
-		int useSpecularMap;
-	};
-
-	struct Light {
-		int type; //0-ambient, 1-directional, 2-point, 3-spot
-	    vec3 position;
-	    vec3 direction;
-	    float cutOff;
-	    float outerCutOff;
-
-	    vec4 ambient;
-	    vec4 diffuse;
-	    vec4 specular;
-		
-	    float constant;
-	    float linear;
-	    float quadratic;
-	};
-
-	uniform Material material;
-	uniform Light light;
-
-	uniform vec4 renderColor;
-	uniform vec3 viewPos; 
-
-	in vec3 Normal;
-	in vec3 FragPos;
-	in vec2 TexCoords;
-	flat in int mUseNormalMap;
-	in vec3 TangentLightPos;
-	in vec3 TangentViewPos;
-	in vec3 TangentFragPos;
-
-	out vec4 FragColor;
-
-	void main() {
-	    vec4 ambient;
-		vec4 diffuse;
-	    vec4 specular;
-
-	    // ambient
-	    if (material.useDiffuseMap > 0) {
-	        ambient = light.ambient * texture(material.diffusemap, TexCoords).rgba;
-	    } else {
-	        ambient = light.ambient * material.ambient;
-	    }
-
-		if (light.type > 0) {
-			vec3 norm;
-			if (mUseNormalMap > 0) {
-			    norm = normalize(texture(material.normalMap, TexCoords).rgb * 2.0 - 1.0);  // this normal is in tangent space
-			} else {
-				norm = normalize(Normal);
-			}
-
-		    // diffuse 
-			float diff;
-			float distance;
-			vec3 lightDir;
-			if (light.type > 1) {
-				if (mUseNormalMap > 0) {
-				    lightDir = normalize(TangentLightPos - TangentFragPos);
-				    distance = length(TangentLightPos - TangentFragPos);
-				} else {
-					lightDir = normalize(light.position - FragPos);
-					distance = length(light.position - FragPos);
-				}
-			} else {
-	//			lightDir = normalize(light.position);
-				lightDir = normalize(-light.direction);
-			}
-			if (mUseNormalMap > 0) {
-			    diff = max(dot(lightDir, norm), 0.0);
-			} else {
-				diff = max(dot(norm, lightDir), 0.0);
-			}
-		    if (material.useDiffuseMap > 0) {
-			    diffuse = light.diffuse * diff * texture(material.diffusemap, TexCoords).rgba;
-		    } else {
-			    diffuse = light.diffuse * (diff * material.diffuse);
-		    }
-		    
-		    // specular
-		    vec3 viewDir;
-		    vec3 reflectDir;
-		    float spec;
-		    if (mUseNormalMap > 0) {
-		    	viewDir = normalize(TangentViewPos - TangentFragPos);
-		    	reflectDir = reflect(-lightDir, norm);
-		    	vec3 halfwayDir = normalize(lightDir + viewDir);
-		    	spec = pow(max(dot(norm, halfwayDir), 0.0), material.shininess);
-		    } else {
-		    	viewDir = normalize(viewPos - FragPos);
-		    	reflectDir = reflect(-lightDir, norm);
-		    	spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
-		    }
-		    if (material.useSpecularMap > 0) {
-			    specular = light.specular * spec * texture(material.specularmap, TexCoords).rgba;
-		    } else {
-			    specular = light.specular * (spec * material.specular);
-		    }
-		    
-		    if (light.type > 1) {
-		    	if (light.type == 3) {
-		   		    // spotlight (with soft edges)
-				    float theta = dot(lightDir, normalize(-light.direction)); 
-				    float epsilon = (light.cutOff - light.outerCutOff);
-				    float intensity = clamp((theta - light.outerCutOff) / epsilon, 0.0, 1.0);
-				    diffuse *= intensity;
-				    specular *= intensity;
-		    	}
-		
-			    // attenuation
-			    float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));
-			    ambient *= attenuation;
-			    diffuse *= attenuation;
-			    specular *= attenuation;
-		    }
-	    }
-	        
-	    FragColor = (ambient + diffuse + specular) * renderColor;
-	}
-	)glsl";
+	const char* shadersource =
+"	#version 330 core\n"
+"\n"
+"	struct Material {\n"
+"	    vec4 ambient;\n"
+"	    vec4 diffuse;\n"
+"	    vec4 specular;\n"
+"	    float shininess;\n"
+"	    sampler2D diffusemap;\n"
+"	    sampler2D specularmap;\n"
+"	    sampler2D normalMap;\n"
+"		int useDiffuseMap;\n"
+"		int useSpecularMap;\n"
+"	};\n"
+"\n"
+"	struct Light {\n"
+"		int type; //0-ambient, 1-directional, 2-point, 3-spot\n"
+"	    vec3 position;\n"
+"	    vec3 direction;\n"
+"	    float cutOff;\n"
+"	    float outerCutOff;\n"
+"\n"
+"	    vec4 ambient;\n"
+"	    vec4 diffuse;\n"
+"	    vec4 specular;\n"
+"		\n"
+"	    float constant;\n"
+"	    float linear;\n"
+"	    float quadratic;\n"
+"	};\n"
+"\n"
+"	uniform Material material;\n"
+"	uniform Light light;\n"
+"\n"
+"	uniform vec4 renderColor;\n"
+"	uniform vec3 viewPos; \n"
+"\n"
+"	in vec3 Normal;\n"
+"	in vec3 FragPos;\n"
+"	in vec2 TexCoords;\n"
+"	flat in int mUseNormalMap;\n"
+"	in vec3 TangentLightPos;\n"
+"	in vec3 TangentViewPos;\n"
+"	in vec3 TangentFragPos;\n"
+"\n"
+"	out vec4 FragColor;\n"
+"\n"
+"	void main() {\n"
+"	    vec4 ambient;\n"
+"		vec4 diffuse;\n"
+"	    vec4 specular;\n"
+"\n"
+"	    // ambient\n"
+"	    if (material.useDiffuseMap > 0) {\n"
+"	        ambient = light.ambient * texture(material.diffusemap, TexCoords).rgba;\n"
+"	    } else {\n"
+"	        ambient = light.ambient * material.ambient;\n"
+"	    }\n"
+"\n"
+"		if (light.type > 0) {\n"
+"			vec3 norm;\n"
+"			if (mUseNormalMap > 0) {\n"
+"			    norm = normalize(texture(material.normalMap, TexCoords).rgb * 2.0 - 1.0);  // this normal is in tangent space\n"
+"			} else {\n"
+"				norm = normalize(Normal);\n"
+"			}\n"
+"\n"
+"		    // diffuse \n"
+"			float diff;\n"
+"			float distance;\n"
+"			vec3 lightDir;\n"
+"			if (light.type > 1) {\n"
+"				if (mUseNormalMap > 0) {\n"
+"				    lightDir = normalize(TangentLightPos - TangentFragPos);\n"
+"				    distance = length(TangentLightPos - TangentFragPos);\n"
+"				} else {\n"
+"					lightDir = normalize(light.position - FragPos);\n"
+"					distance = length(light.position - FragPos);\n"
+"				}\n"
+"			} else {\n"
+"	//			lightDir = normalize(light.position);\n"
+"				lightDir = normalize(-light.direction);\n"
+"			}\n"
+"			if (mUseNormalMap > 0) {\n"
+"			    diff = max(dot(lightDir, norm), 0.0);\n"
+"			} else {\n"
+"				diff = max(dot(norm, lightDir), 0.0);\n"
+"			}\n"
+"		    if (material.useDiffuseMap > 0) {\n"
+"			    diffuse = light.diffuse * diff * texture(material.diffusemap, TexCoords).rgba;\n"
+"		    } else {\n"
+"			    diffuse = light.diffuse * (diff * material.diffuse);\n"
+"		    }\n"
+"		    \n"
+"		    // specular\n"
+"		    vec3 viewDir;\n"
+"		    vec3 reflectDir;\n"
+"		    float spec;\n"
+"		    if (mUseNormalMap > 0) {\n"
+"		    	viewDir = normalize(TangentViewPos - TangentFragPos);\n"
+"		    	reflectDir = reflect(-lightDir, norm);\n"
+"		    	vec3 halfwayDir = normalize(lightDir + viewDir);\n"
+"		    	spec = pow(max(dot(norm, halfwayDir), 0.0), material.shininess);\n"
+"		    } else {\n"
+"		    	viewDir = normalize(viewPos - FragPos);\n"
+"		    	reflectDir = reflect(-lightDir, norm);\n"
+"		    	spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);\n"
+"		    }\n"
+"		    if (material.useSpecularMap > 0) {\n"
+"			    specular = light.specular * spec * texture(material.specularmap, TexCoords).rgba;\n"
+"		    } else {\n"
+"			    specular = light.specular * (spec * material.specular);\n"
+"		    }\n"
+"		    \n"
+"		    if (light.type > 1) {\n"
+"		    	if (light.type == 3) {\n"
+"		   		    // spotlight (with soft edges)\n"
+"				    float theta = dot(lightDir, normalize(-light.direction)); \n"
+"				    float epsilon = (light.cutOff - light.outerCutOff);\n"
+"				    float intensity = clamp((theta - light.outerCutOff) / epsilon, 0.0, 1.0);\n"
+"				    diffuse *= intensity;\n"
+"				    specular *= intensity;\n"
+"		    	}\n"
+"		\n"
+"			    // attenuation\n"
+"			    float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));\n"
+"			    ambient *= attenuation;\n"
+"			    diffuse *= attenuation;\n"
+"			    specular *= attenuation;\n"
+"		    }\n"
+"	    }\n"
+"	        \n"
+"	    FragColor = (ambient + diffuse + specular) * renderColor;\n"
+"	}\n";
 
 	return std::string(shadersource);
 }
 
 const std::string gRenderer::getShaderSrcTextureVertex() {
-	const char* shadersource = R"glsl(
-#version 330 core
-layout (location = 0) in vec3 aPos;
-layout (location = 1) in vec3 aNormal;
-layout (location = 2) in vec2 aTexCoords;
-
-out vec2 TexCoords;
-
-uniform mat4 model;
-uniform mat4 view;
-uniform mat4 projection;
-
-void main()
-{
-    TexCoords = aTexCoords;    
-    gl_Position = projection * view * model * vec4(aPos, 1.0);
-}
-	)glsl";
+	const char* shadersource =
+"#version 330 core\n"
+"layout (location = 0) in vec3 aPos;\n"
+"layout (location = 1) in vec3 aNormal;\n"
+"layout (location = 2) in vec2 aTexCoords;\n"
+"\n"
+"out vec2 TexCoords;\n"
+"\n"
+"uniform mat4 model;\n"
+"uniform mat4 view;\n"
+"uniform mat4 projection;\n"
+"\n"
+"void main()\n"
+"{\n"
+"    TexCoords = aTexCoords;    \n"
+"    gl_Position = projection * view * model * vec4(aPos, 1.0);\n"
+"}\n";
 
 	return std::string(shadersource);
 }
 
 const std::string gRenderer::getShaderSrcTextureFragment() {
-	const char* shadersource = R"glsl(
-#version 330 core
-out vec4 FragColor;
-  
-in vec2 TexCoords;
-
-uniform sampler2D texture_diffuse1;
-
-void main()
-{    
-    FragColor = texture(texture_diffuse1, TexCoords);
-}
-	)glsl";
+	const char* shadersource =
+"#version 330 core\n"
+"out vec4 FragColor;\n"
+"  \n"
+"in vec2 TexCoords;\n"
+"\n"
+"uniform sampler2D texture_diffuse1;\n"
+"\n"
+"void main()\n"
+"{    \n"
+"    FragColor = texture(texture_diffuse1, TexCoords);\n"
+"}\n";
 
 	return std::string(shadersource);
 }
 
 const std::string gRenderer::getShaderSrcImageVertex() {
-	const char* shadersource = R"glsl(
-#version 330 core
-layout (location = 0) in vec4 vertex; // <vec2 position, vec2 texCoords>
-
-out vec2 TexCoords;
-
-uniform mat4 model;
-uniform mat4 projection;
-
-void main()
-{
-    TexCoords = vertex.zw;
-    gl_Position = projection * model * vec4(vertex.xy, 0.0, 1.0);
-}
-	)glsl";
+	const char* shadersource =
+"#version 330 core\n"
+"layout (location = 0) in vec4 vertex; // <vec2 position, vec2 texCoords>\n"
+"	\n"
+"out vec2 TexCoords;\n"
+"\n"
+"uniform mat4 model;\n"
+"uniform mat4 projection;\n"
+"\n"
+"void main()\n"
+"{\n"
+"    TexCoords = vertex.zw;\n"
+"    gl_Position = projection * model * vec4(vertex.xy, 0.0, 1.0);\n"
+"}\n";
 
 	return std::string(shadersource);
 }
 
 const std::string gRenderer::getShaderSrcImageFragment() {
-	const char* shadersource = R"glsl(
-#version 330 core
-in vec2 TexCoords;
-out vec4 color;
-
-uniform sampler2D image;
-uniform vec3 spriteColor;
-
-void main()
-{    
-    color = vec4(spriteColor, 1.0) * texture(image, TexCoords);
-} 
-	)glsl";
+	const char* shadersource =
+"#version 330 core\n"
+"in vec2 TexCoords;\n"
+"out vec4 color;\n"
+"\n"
+"uniform sampler2D image;\n"
+"uniform vec3 spriteColor;\n"
+"\n"
+"void main()\n"
+"{    \n"
+"    color = vec4(spriteColor, 1.0) * texture(image, TexCoords);\n"
+"} \n";
 
 	return std::string(shadersource);
 }
 
 const std::string gRenderer::getShaderSrcFontVertex() {
-	const char* shadersource = R"glsl(
-#version 330 core
-layout (location = 0) in vec4 vertex; // <vec2 pos, vec2 tex>
-out vec2 TexCoords;
-
-uniform mat4 projection;
-
-void main() {
-    gl_Position = projection * vec4(vertex.xy, 0.0, 1.0);
-    TexCoords = vertex.zw;
-}
-	)glsl";
+	const char* shadersource =
+"#version 330 core\n"
+"layout (location = 0) in vec4 vertex; // <vec2 pos, vec2 tex>\n"
+"out vec2 TexCoords;\n"
+"\n"
+"uniform mat4 projection;\n"
+"\n"
+"void main() {\n"
+"    gl_Position = projection * vec4(vertex.xy, 0.0, 1.0);\n"
+"    TexCoords = vertex.zw;\n"
+"}\n";
 
 	return std::string(shadersource);
 }
 
 const std::string gRenderer::getShaderSrcFontFragment() {
-	const char* shadersource = R"glsl(
-#version 330 core
-in vec2 TexCoords;
-out vec4 color;
-
-uniform sampler2D text;
-uniform vec3 textColor;
-
-void main() {    
-    vec4 sampled = vec4(1.0, 1.0, 1.0, texture(text, TexCoords).r);
-    color = vec4(textColor, 1.0) * sampled;
-}
-	)glsl";
+	const char* shadersource =
+"#version 330 core\n"
+"in vec2 TexCoords;\n"
+"out vec4 color;\n"
+"\n"
+"uniform sampler2D text;\n"
+"uniform vec3 textColor;\n"
+"\n"
+"void main() {    \n"
+"    vec4 sampled = vec4(1.0, 1.0, 1.0, texture(text, TexCoords).r);\n"
+"    color = vec4(textColor, 1.0) * sampled;\n"
+"}\n";
 
 	return std::string(shadersource);
 }
