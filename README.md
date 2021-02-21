@@ -29,9 +29,9 @@ Glist Engine has one-click installers for Windows, Linux and Mac. You can downlo
 
 1- Fork our 3 repos into your Github account:
 
-- One of the GlistZbin-Win64, GlistZbin-Linux or GlistZbin-Macos repos, according to your OS
-- GlistEngine repo
-- GlistApp repo
+- One of the GlistEngine/GlistZbin-Win64, GlistEngine/GlistZbin-Linux or GlistEngine/GlistZbin-Macos repos, according to your OS
+- GlistEngine/GlistEngine repo
+- GlistEngine/GlistApp repo
 
 2- You need to install some programs into your computer in order to clone and run GlistEngine.
 
