@@ -124,12 +124,12 @@ On Linux:
 
 9- Clone the GlistApp repo
 
-> git clone git clone https://github.com/yourgithubusername/glistapp.git
+> git clone https://github.com/yourgithubusername/glistapp.git
 
 
 10- Run the GlistEngine
 
-Windows and Linux, on file explorer, go to;
+Start the engine.
 
 On Windows:
 - Open file explorer, go to C:\dev\glist\zbin\glistzbin-win64 and double click GlistEngine
