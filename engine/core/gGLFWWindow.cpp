@@ -6,6 +6,10 @@
  */
 
 #include "gGLFWWindow.h"
+#ifndef STB_IMAGE_IMPLEMENTATION
+#define STB_IMAGE_IMPLEMENTATION
+#endif
+#include "stb/stb_image.h"
 
 
 gGLFWWindow::gGLFWWindow() {
@@ -71,6 +75,13 @@ void gGLFWWindow::initialize(int width, int height, int windowMode) {
 	    	glfwSetWindowMonitor(window, monitor, 0, 0, width, height, currentrefreshrate);
 	    }
 	}
+
+	GLFWimage images[1];
+	std::string iconpath = gGetImagesDir() + "gameicon/icon.png";
+	images[0].pixels = stbi_load(iconpath.c_str(), &images[0].width, &images[0].height, 0, 4); //rgba channels
+	glfwSetWindowIcon(window, 1, images);
+	stbi_image_free(images[0].pixels);
+
 	glfwMakeContextCurrent(window);
 	glewExperimental = GL_TRUE;
 	glewInit();

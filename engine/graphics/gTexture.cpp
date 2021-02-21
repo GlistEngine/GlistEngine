@@ -11,7 +11,8 @@
 #include <GL/glew.h>
 #include <GL/gl.h>
 #include <GL/glu.h>
-#else if defined(APPLE)
+#endif
+#if defined(APPLE)
 #include <OpenGL/gl.h>
 #include <GL/glew.h>
 #include <OpenGL/glu.h>
@@ -20,7 +21,9 @@
 #include <glm/gtx/quaternion.hpp>
 #endif
 #include "gPlane.h"
-#define STB_IMAGE_IMPLEMENTATION
+//#ifndef STB_IMAGE_IMPLEMENTATION
+//#define STB_IMAGE_IMPLEMENTATION
+//#endif
 #include "stb/stb_image.h"
 
 const int gTexture::TEXTURETYPE_DIFFUSE = 0;
