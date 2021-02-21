@@ -47,7 +47,9 @@ On macOS:
 
 - Install libraries via home-brew and make necessary configurations
 > brew install gcc@7 cmake glew glfw glm freetype assimp
+
 > export PATH=$PATH:~/usr/local/bin/cmake
+
 > sudo spctl --master-disable
 
 On Linux:
