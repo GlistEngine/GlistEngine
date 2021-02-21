@@ -2,7 +2,7 @@
 
 Glist Engine is a cross platform OpenGL game engine written in C++.
 
-The engine supports OpenGL 3.3. It can be used to develop Windows and Linux games. Macintosh and mobile platforms coming soon.
+The engine supports OpenGL 3.3. It can be used to develop Windows, macOS and Linux games. Mobile platforms coming soon.
 
 Glist Engine consists of 3 repositories:
 - Glist App
@@ -27,17 +27,44 @@ Glist Engine has one-click installers for Windows, Linux and Mac. You can downlo
 
 ### II. Installation For Developers
 
-1- Fork one of the GlistZbin-Win64 or GlistZbin-Linux repo intos your account, according to your computer's operating system
+1- Fork our 3 repos into your Github account:
 
+- One of the GlistEngine/GlistZbin-Win64, GlistEngine/GlistZbin-Linux or GlistEngine/GlistZbin-Macos repos, according to your OS
+- GlistEngine/GlistEngine repo
+- GlistEngine/GlistApp repo
 
-2- Fork the GlistEngine and GlistApp repos into your account.
+2- You need to install some programs into your computer in order to clone and run GlistEngine.
 
+On Windows:
+- We provide all libraries except GIT. You should first download and install GIT from https://git-scm.com/download/win
+
+On macOS:
+- First of all, you should install Xcode because OpenGL library comes with Xcode. Download Xcode via 
+ App Store
+
+- Open Terminal and install homebrew
+> ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+
+- Install libraries via home-brew and make necessary configurations
+> brew install gcc@7 cmake glew glfw glm freetype assimp
+
+> export PATH=$PATH:~/usr/local/bin/cmake
+
+> sudo spctl --master-disable
+
+On Linux:
+- Install necessary libraries
+> sudo apt-get install git cmake g++-7 glew-dev
 
 3- Open file explorer and create necessary folders:
 
 On Windows:
 - C:\dev\glist\myglistapps
 - C:\dev\glist\zbin
+
+On macOS:
+- ~/dev/glist/myglistapps
+- ~/dev/glist/zbin
 
 On Linux:
 - ~/dev/glist/myglistapps
@@ -49,6 +76,9 @@ On Linux:
 On Windows:
 > cd C:\dev\glist\zbin
 
+On macOS:
+> cd ~/dev/glist/zbin
+
 On Linux:
 > cd ~/dev/glist/zbin
 
@@ -56,10 +86,13 @@ On Linux:
 5- First of all, you need to clone the zbin repo. Clone the zbin repo by writing one of these commands on command line:
 
 On Windows:
->  git clone https://github.com/yourusername/glistzbin-win64.git
+>  git clone https://github.com/yourgithubusername/glistzbin-win64.git
+
+On MacOS:
+>  git clone https://github.com/yourgithubusername/glistzbin-macos.git
 
 On Linux:
->  git clone https://github.com/yourusername/glistzbin-linux.git
+>  git clone https://github.com/yourgithubusername/glistzbin-linux.git
 
 
 6- Go one folder up
@@ -67,13 +100,16 @@ On Linux:
 On Windows:
 > cd C:\dev\glist
 
+On macOS:
+> cd ~/dev/glist
+
 On Linux:
 > cd ~/dev/glist
 
 
 7- Clone the GlistEngine repo
 
-> git clone https://github.com/yourusername/glistengine.git
+> git clone https://github.com/yourgithubusername/glistengine.git
 
 
 8- Go to myglistapps folder
@@ -81,24 +117,31 @@ On Linux:
 On Windows:
 > cd C:\dev\glist\myglistapps
 
+On macOS:
+> cd ~/dev/glist/myglistapps
+
 On Linux:
 > cd ~/dev/glist/myglistapps
 
 
 9- Clone the GlistApp repo
 
-> git clone git clone https://github.com/yourusername/glistapp.git
+> git clone https://github.com/yourgithubusername/glistapp.git
 
 
-10- On file explorer, go to;
+10- Run the GlistEngine
+
+Start the engine.
 
 On Windows:
-> cd C:\dev\glist\zbin\glistzbin-win64
+- Open file explorer, go to C:\dev\glist\zbin\glistzbin-win64 and double click GlistEngine
+
+On macOS:
+- Open Terminal and enter this command
+> open ~/dev/glist/zbin/glistzbin-macos/eclipse/eclipsecpp-2020-09/Eclipse.app
 
 On Linux:
-> cd ~/dev/glist/zbin/glistzbin-linux
-
-directory. You will see a file named "GlistEngine". Double click this file to start the ide.
+- Open file explorer, go to ~/dev/glist/zbin/glistzbin-linux and double click GlistEngine
 
 
 11- You will see GlistApp and GlistEngine on the left column. And GameCanvas src/h files will be opened in the code editor. These are the source code of GlistApp.
@@ -107,7 +150,7 @@ directory. You will see a file named "GlistEngine". Double click this file to st
 12- On the toolbar of the IDE, there is a dropdown button just next to Run button. Dropdown this list. Click "GlistApp Release" on the list. The GlistApp and the engine will be built and run for the first time.
 
 
-13- After closing the running window, you can start coding your gorgeous game on GameCanvas.
+13- After closing the running window, you can start coding your new gorgeous game on GameCanvas.
 
 
 ## Troubleshooting
@@ -116,10 +159,10 @@ directory. You will see a file named "GlistEngine". Double click this file to st
 
 If you see "Unresolved Inclusion" errors on the editor, that means the ide lost the pre-determined include path entries.
 
-- If so, click GlistApp on the left column, then open Project->Properties->C/C++ General->Paths and symbols->Includes. Select Debug from the Configuration drop down and click Languages->GNU C++. Copy the paths here. Select Release from the Configuration dropdown and click Languages->GNU C++. Click Add. and paste the paths here. After copying all paths to Release, click Apply and close button.
-- Click GlistEngine on the left column and do the same copy-paste jobs here too. (This repo has more lines)
-- Select GlistApp again and click hammer button to rebuild the project.
-- Click Project->C/C++ Index->Rebuild to invode indexer.
+- Open Project->Properties->C/C++ General->Preprocessor Include Paths->Providers. Go to the bottom of the list. Select CMAKE_EXPORT_COMPILE_COMMANDS Compiler and Parser selections. Click Apply and close button.
+- Click Project->Clean Project to clean previous build
+- Click hammer button to rebuild the project.
+- Click Project->C/C++ Index->Rebuild to invoke indexer.
 
 Then the "Unresolved Inclusion" errors should be gone.
 

@@ -10,7 +10,7 @@
 
 #include "gBaseWindow.h"
 // #include <glad/glad.h> //case_win
-#if defined(WIN32) || defined(LINUX)
+#if defined(WIN32) || defined(LINUX) || defined(APPLE)
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #endif
@@ -28,7 +28,7 @@ public:
 	void close();
 
 private:
-#if defined(WIN32) || defined(LINUX)
+#if defined(WIN32) || defined(LINUX) || defined(APPLE)
 	GLFWwindow* window;
 	static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 	static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);

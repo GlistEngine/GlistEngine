@@ -6,10 +6,14 @@
  */
 
 #include "gGLFWWindow.h"
+#ifndef STB_IMAGE_IMPLEMENTATION
+#define STB_IMAGE_IMPLEMENTATION
+#endif
+#include "stb/stb_image.h"
 
 
 gGLFWWindow::gGLFWWindow() {
-#if defined(WIN32) || defined(LINUX)
+#if defined(WIN32) || defined(LINUX) || defined(APPLE)
 	window = nullptr;
 #endif
 }
@@ -20,7 +24,7 @@ gGLFWWindow::~gGLFWWindow() {
 
 void gGLFWWindow::initialize(int width, int height, int windowMode) {
 	gBaseWindow::initialize(width, height, windowMode);
-#if defined(WIN32) || defined(LINUX)
+#if defined(WIN32) || defined(LINUX) || defined(APPLE)
 	// Create glfw
 	glfwInit();
 
@@ -71,11 +75,18 @@ void gGLFWWindow::initialize(int width, int height, int windowMode) {
 	    	glfwSetWindowMonitor(window, monitor, 0, 0, width, height, currentrefreshrate);
 	    }
 	}
+
+	GLFWimage images[1];
+	std::string iconpath = gGetImagesDir() + "gameicon/icon.png";
+	images[0].pixels = stbi_load(iconpath.c_str(), &images[0].width, &images[0].height, 0, 4); //rgba channels
+	glfwSetWindowIcon(window, 1, images);
+	stbi_image_free(images[0].pixels);
+
 	glfwMakeContextCurrent(window);
 	glewExperimental = GL_TRUE;
 	glewInit();
 
-#if defined(WIN32) || defined(LINUX)
+#if defined(WIN32) || defined(LINUX) || defined(APPLE)
 //	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
 //	    std::cout << "Failed to initialize GLAD" << std::endl;
 //	    return -1;
@@ -100,14 +111,14 @@ void gGLFWWindow::initialize(int width, int height, int windowMode) {
 
 
 bool gGLFWWindow::getShouldClose() {
-#if defined(WIN32) || defined(LINUX)
+#if defined(WIN32) || defined(LINUX) || defined(APPLE)
 	return glfwWindowShouldClose(window);
 #endif
 	return 0;
 }
 
 void gGLFWWindow::update() {
-#if defined(WIN32) || defined(LINUX)
+#if defined(WIN32) || defined(LINUX) || defined(APPLE)
 	// End window drawing
     glfwSwapBuffers(window);
     glfwPollEvents();
@@ -116,13 +127,13 @@ void gGLFWWindow::update() {
 }
 
 void gGLFWWindow::close() {
-#if defined(WIN32) || defined(LINUX)
+#if defined(WIN32) || defined(LINUX) || defined(APPLE)
 	// Deallocate glfw resources
 	glfwTerminate();
 #endif
 }
 
-#if defined(WIN32) || defined(LINUX)
+#if defined(WIN32) || defined(LINUX) || defined(APPLE)
 void gGLFWWindow::framebuffer_size_callback(GLFWwindow* window, int width, int height) {
     glViewport(0, 0, width, height);
     (static_cast<gGLFWWindow *>(glfwGetWindowUserPointer(window)))->setSize(width, height);
