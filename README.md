@@ -36,7 +36,7 @@ Glist Engine has one-click installers for Windows, Linux and Mac. You can downlo
 2- You need to install some programs into your computer in order to clone and run GlistEngine.
 
 On Windows:
-- We provide all libraries except CMake. You should first download and install CMake from https://git-scm.com/download/win
+- We provide all libraries except GIT. You should first download and install GIT from https://git-scm.com/download/win
 
 On macOS:
 - First of all, you should install Xcode because OpenGL library comes with Xcode. Download Xcode via 
