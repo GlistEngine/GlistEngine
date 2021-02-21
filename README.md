@@ -129,7 +129,7 @@ On Linux:
 
 10- Run the GlistEngine
 
-Windows and Linux, on file explorer, go to;
+Start the engine.
 
 On Windows:
 - Open file explorer, go to C:\dev\glist\zbin\glistzbin-win64 and double click GlistEngine
