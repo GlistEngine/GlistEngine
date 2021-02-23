@@ -30,8 +30,18 @@
 #include <vector>
 #include "gShader.h"
 #include "gColor.h"
+#include "gConstants.h"
 class gLight;
 //#include "gLight.h"
+
+
+void gEnableCulling();
+void gDisableCulling();
+bool gIsCullingEnabled();
+void gCullFace(int cullingFace);
+int gGetCullFace();
+void gSetCullingDirection(int cullingDirection);
+int gGetCullingDirection();
 
 
 class gRenderer: public gObject {
