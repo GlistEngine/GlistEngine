@@ -45,6 +45,32 @@ gTexture::gTexture() {
 	height = 0;
 	bsubpartdrawn = false;
 	ismutable = false;
+	isfbo = false;
+	setupRenderData();
+}
+
+gTexture::gTexture(int w, int h, int format, bool isFbo) {
+	id = GL_NONE;
+	this->format = format;
+	texturetype[0] = "texture_diffuse";
+	texturetype[1] = "texture_specular";
+	texturetype[2] = "texture_normal";
+	texturetype[3] = "texture_height";
+	type = TEXTURETYPE_DIFFUSE;
+	path = "";
+	width = w;
+	height = h;
+	bsubpartdrawn = false;
+	ismutable = false;
+	isfbo = isFbo;
+    glGenTextures(1, &id);
+    bind();
+    glTexImage2D(GL_TEXTURE_2D, 0, format, getWidth(), getHeight(), 0, format, GL_UNSIGNED_BYTE, 0);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	setupRenderData();
 }
 
@@ -167,7 +193,7 @@ void gTexture::draw(int x, int y) {
 void gTexture::draw(int x, int y, int w, int h) {
 	beginDraw();
 	imagematrix = glm::translate(imagematrix, glm::vec3(x, y, 0.0f));  // first translate (transformations are: scale happens first, then rotation, and then final translation happens; reversed order)
-	imagematrix = glm::scale(imagematrix, glm::vec3(w,h, 1.0f));
+	imagematrix = glm::scale(imagematrix, glm::vec3(w, h, 1.0f));
 	endDraw();
 }
 
@@ -257,12 +283,23 @@ void gTexture::setupRenderData(int sx, int sy, int sw, int sh) {
         1.0f, 1.0f, (float)(sx + sw) / width, (float)(sy + sh) / height,
         1.0f, 0.0f, (float)(sx + sw) / width, (float)sy / height
     };
+    float vertices2[] = {
+        // pos      // tex
+        0.0f, 1.0f, (float)sx / width, (float)(sy) / height,
+        1.0f, 0.0f, (float)(sx + sw) / width, (float)(sy + sh) / height,
+        0.0f, 0.0f, (float)sx / width, (float)(sy + sh) / height,
+
+        0.0f, 1.0f, (float)sx / width, (float)(sy) / height,
+        1.0f, 1.0f, (float)(sx + sw) / width, (float)(sy) / height,
+        1.0f, 0.0f, (float)(sx + sw) / width, (float)(sy + sh) / height
+    };
 
     glGenVertexArrays(1, &quadVAO);
     glGenBuffers(1, &quadVBO);
 
     glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    if (isfbo) glBufferData(GL_ARRAY_BUFFER, sizeof(vertices2), vertices2, GL_STATIC_DRAW);
+    else glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
     glBindVertexArray(quadVAO);
     glEnableVertexAttribArray(0);
