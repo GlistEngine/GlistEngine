@@ -15,6 +15,38 @@ const int gRenderer::DEPTHTESTTYPE_ALWAYS = 1;
 int gRenderer::width;
 int gRenderer::height;
 
+void gEnableCulling() {
+	glEnable(GL_CULL_FACE);
+}
+
+void gDisableCulling() {
+	glDisable(GL_CULL_FACE);
+}
+
+bool gIsCullingEnabled() {
+	return glIsEnabled(GL_CULL_FACE);
+}
+
+void gCullFace(int cullingFace) {
+	glCullFace(cullingFace);
+}
+
+int gGetCullFace() {
+	GLint i;
+	glGetIntegerv(GL_CULL_FACE_MODE, &i);
+	return i;
+}
+
+void gSetCullingDirection(int cullingDirection) {
+	glFrontFace(cullingDirection);
+}
+
+int gGetCullingDirection() {
+	GLint i;
+	glGetIntegerv(GL_FRONT_FACE, &i);
+	return i;
+}
+
 
 gRenderer::gRenderer() {
 	width = gDefaultWidth();

@@ -17,6 +17,7 @@ public:
 	static const int TEXTURETYPE_DIFFUSE, TEXTURETYPE_SPECULAR, TEXTURETYPE_NORMAL, TEXTURETYPE_HEIGHT;
 
 	gTexture();
+	gTexture(int w, int h, int format = GL_RGBA, bool isFbo = true);
 	virtual ~gTexture();
 
 	virtual unsigned int load(std::string filePath);
@@ -76,6 +77,7 @@ private:
     void beginDraw();
     void endDraw();
     bool bsubpartdrawn;
+    bool isfbo;
 };
 
 #endif /* ENGINE_GRAPHICS_GTEXTURE_H_ */
