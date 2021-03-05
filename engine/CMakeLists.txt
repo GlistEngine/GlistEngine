@@ -172,7 +172,8 @@ elseif(APPLE)
   		/usr/local/Cellar/glew/2.2.0_1/include
   		/usr/local/Cellar/glm/0.9.9.8/include
   		/usr/local/Cellar/assimp/5.0.1/include
-  		/usr/local/Cellar/glfw/3.3.2/include
+  		/usr/local/include
+#  		/usr/local/Cellar/glfw/3.3.2/include
 #  		/usr/local/include
   	)
 elseif(ANDROID)
