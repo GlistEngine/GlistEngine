@@ -85,10 +85,10 @@ private:
 	int pressed;
 	int myPow (int x, int p);
 	int mpi, mpj;
-	std::chrono::high_resolution_clock::time_point starttime, endtime, endtime2;
+	std::chrono::high_resolution_clock::time_point starttime;
 	std::chrono::duration<double, std::milli> timediff, timediff2;
-	float millisecondsperframe;
-	std::chrono::duration<double, std::milli> minWorkTime;
+	float millisecondsperframe, delaycoef;
+	std::chrono::duration<double, std::milli> minWorkTime, delay;
 	int framerate;
 	int upi;
 };
