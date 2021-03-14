@@ -45,11 +45,10 @@ gAppManager::gAppManager() {
 	millisecondsperframe = 1000 / framerate;
 	minWorkTime = std::chrono::duration<double, std::milli>(millisecondsperframe);
 	starttime = std::chrono::high_resolution_clock::now();
-	endtime = std::chrono::high_resolution_clock::now();
-	endtime2 = std::chrono::high_resolution_clock::now();
-	timediff = endtime - starttime;
-	timediff2 = endtime2 - starttime;
-//	starttime = endtime = endtime2 = timediff = 0;
+	timediff = std::chrono::high_resolution_clock::now() - starttime;
+	timediff2 = std::chrono::high_resolution_clock::now() - starttime;
+	delaycoef = 0.34f;
+	delay = std::chrono::duration<double, std::milli>(delaycoef * 60 / framerate);
 	mpi = 0;
 	mpj = 0;
 	upi = 0;
@@ -73,9 +72,9 @@ void gAppManager::runApp(std::string appName, gBaseApp *baseApp, int width, int 
 
 	// Run app
 	app->setup();
-	if (canvasmanager->getTempCanvas() != nullptr) {
+//	if (canvasmanager->getTempCanvas() != nullptr) {
 //		canvasmanager->getTempCanvas()->setup(); // Commented out because was invoking first canvas's setup 2 times in the app launch
-	}
+//	}
 
 	starttime = std::chrono::high_resolution_clock::now();
 
@@ -93,13 +92,11 @@ void gAppManager::runApp(std::string appName, gBaseApp *baseApp, int width, int 
 		window->update();
 
 		// Framerate adjustment
-		endtime = std::chrono::high_resolution_clock::now();
-		timediff = endtime - starttime;
+		timediff = std::chrono::high_resolution_clock::now() - starttime;
 		if (timediff < minWorkTime) {
-			std::this_thread::sleep_for(minWorkTime - timediff);
+			std::this_thread::sleep_for(minWorkTime - timediff + delay);
 		}
-		endtime2 = std::chrono::high_resolution_clock::now();
-		timediff2 = endtime2 - starttime;
+		timediff2 = std::chrono::high_resolution_clock::now() - starttime;
 		starttime = std::chrono::high_resolution_clock::now();
 	}
 
@@ -127,6 +124,7 @@ void gAppManager::setFramerate(int targetFramerate) {
 	framerate = targetFramerate;
 	millisecondsperframe = 1000 / framerate;
 	minWorkTime = std::chrono::duration<double, std::milli>(millisecondsperframe);
+	delay = std::chrono::duration<double, std::milli>(delaycoef * 60 / framerate);
 }
 
 std::string gAppManager::getAppName() {
