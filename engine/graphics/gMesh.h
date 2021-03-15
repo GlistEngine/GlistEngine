@@ -20,6 +20,7 @@
 #include "gTexture.h"
 #include "gMaterial.h"
 #include "gVbo.h"
+#include "gBoundingBox.h"
 
 class gMesh : public gNode {
 public:
@@ -36,6 +37,8 @@ public:
 	std::vector<unsigned int> getIndices();
 	int getVerticesNum();
 	int getIndicesNum();
+	gBoundingBox getBoundingBox();
+	gBoundingBox getInitialBoundingBox();
 	gVbo* getVbo();
 
 	void setMaterial(gMaterial* material);
@@ -64,6 +67,9 @@ private:
     gLight* scenelight;
     gShader* colorshader;
     gShader* textureshader;
+
+    gBoundingBox initialboundingbox;
+    float bbminx, bbminy, bbminz, bbmaxx, bbmaxy, bbmaxz;
 };
 
 #endif /* ENGINE_GRAPHICS_GMESH_H_ */

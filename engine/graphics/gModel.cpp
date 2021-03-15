@@ -20,6 +20,8 @@ gModel::gModel() {
 	animationframeno = 0;
 	isvertexanimated = false;
 	isvertexanimationstoredonvram = false;
+	bbminx = 0.0f, bbminy = 0.0f, bbminz = 0.0f;
+	bbmaxx = 0.0f, bbmaxy = 0.0f, bbmaxz = 0.0f;
 }
 
 // TODO Clean ptrs if any
@@ -53,6 +55,7 @@ void gModel::loadModelFile(std::string fullPath) {
     processNode(scene->mRootNode, scene);
     if (isanimated) setAnimationFramerate(animationframerate);
     animate(0);
+    initialboundingbox = getBoundingBox();
 }
 
 void gModel::move(float dx, float dy, float dz) {
@@ -648,6 +651,32 @@ bool gModel::isVertexAnimated() {
 
 bool gModel::isVertexAnimationStoredOnVram() {
 	return isvertexanimationstoredonvram;
+}
+
+gBoundingBox gModel::getBoundingBox() {
+	bbminx = 0.0f, bbminy = 0.0f, bbminz = 0.0f;
+	bbmaxx = 0.0f, bbmaxy = 0.0f, bbmaxz = 0.0f;
+
+	for (int i = 0; i< meshes.size(); i++) {
+		std::vector<gVertex> vertices = meshes[i].getVertices();
+		for (int j = 0; j < vertices.size(); j++) {
+			gVertex v = vertices[j];
+			glm::vec3 vpos = glm::vec3(localtransformationmatrix * glm::vec4(v.position, 1.0));
+
+			bbminx = std::min(bbminx, vpos.x);
+			bbminy = std::min(bbminy, vpos.y);
+			bbminz = std::min(bbminz, vpos.z);
+			bbmaxx = std::max(bbmaxx, vpos.x);
+			bbmaxy = std::max(bbmaxy, vpos.y);
+			bbmaxz = std::max(bbmaxz, vpos.z);
+		}
+	}
+
+	return gBoundingBox(bbminx, bbminy, bbminz, bbmaxx, bbmaxy, bbmaxz);
+}
+
+gBoundingBox gModel::getInitialBoundingBox() {
+	return initialboundingbox;
 }
 
 

@@ -16,6 +16,8 @@
 
 #ifndef GRAPHICS_GRECT_H_
 #define GRAPHICS_GRECT_H_
+
+
 /**
  * gRect holds six integer for a rectangle. The rectangle is represented by the coordinates of its four edges(left, top, right, bottom).
  * These fields can be accessed via their respective functions(e.g. to acces left edge of the rectangle use left()).
