@@ -55,7 +55,6 @@ void gModel::loadModelFile(std::string fullPath) {
     processNode(scene->mRootNode, scene);
     if (isanimated) setAnimationFramerate(animationframerate);
     animate(0);
-    initialboundingbox = getBoundingBox();
 }
 
 void gModel::move(float dx, float dy, float dz) {
@@ -673,10 +672,6 @@ gBoundingBox gModel::getBoundingBox() {
 	}
 
 	return gBoundingBox(bbminx, bbminy, bbminz, bbmaxx, bbmaxy, bbmaxz);
-}
-
-gBoundingBox gModel::getInitialBoundingBox() {
-	return initialboundingbox;
 }
 
 

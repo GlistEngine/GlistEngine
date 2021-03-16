@@ -5,35 +5,29 @@
  *      Author: noyan
  */
 
-#include <gBoundingBox.h>
+#include "gBoundingBox.h"
+#include "gRay.h"
 
-gBoundingBox::gBoundingBox() : minx(0), miny(0), minz(0), maxx(0), maxy(0), maxz(0), width(0), height(0), depth(0) {}
 
-gBoundingBox::gBoundingBox(float minX, float minY, float minZ, float maxX, float maxY, float maxZ) : minx(minX), miny(minY), minz(minZ), maxx(maxX), maxy(maxY), maxz(maxZ), width(maxX - minX), height(maxY - minY), depth(maxZ - minZ) {}
+gBoundingBox::gBoundingBox() : minf(glm::vec3(0.0f)), maxf(glm::vec3(0.0f)), width(0), height(0), depth(0) {}
 
-gBoundingBox::gBoundingBox(const gBoundingBox& b) : minx(b.minX()), miny(b.minY()), minz(b.minZ()), maxx(b.maxX()), maxy(b.maxY()), maxz(b.maxZ()), width(b.maxX() - b.minX()), height(b.maxY() - b.minY()), depth(b.maxZ() - b.minZ()) {}
+gBoundingBox::gBoundingBox(float minX, float minY, float minZ, float maxX, float maxY, float maxZ) : minf(glm::vec3(minX, minY, minZ)), maxf(glm::vec3(maxX, maxY, maxZ)), width(maxX - minX), height(maxY - minY), depth(maxZ - minZ) {}
+
+gBoundingBox::gBoundingBox(const gBoundingBox& b) : minf(glm::vec3(b.minX(), b.minY(), b.minZ())), maxf(glm::vec3(b.maxX(), b.maxY(), b.maxZ())), width(b.getWidth()), height(b.getHeight()), depth(b.getDepth()) {}
 
 gBoundingBox::~gBoundingBox() {}
 
 void gBoundingBox::set(float minX, float minY, float minZ, float maxX, float maxY, float maxZ) {
-	minx = minX;
-	miny = minY;
-	minz = minZ;
-	maxx = maxX;
-	maxy = maxY;
-	maxz = maxZ;
+	minf = glm::vec3(minX, minY, minZ);
+	maxf = glm::vec3(maxX, maxY, maxZ);
 	width = maxX - minX;
 	height = maxY - minY;
 	depth = maxZ - minZ;
 }
 
 void gBoundingBox::set(const gBoundingBox& b) {
-	minx = b.minX();
-	miny = b.minY();
-	minz = b.minZ();
-	maxx = b.maxX();
-	maxy = b.maxY();
-	maxz = b.maxZ();
+	minf = glm::vec3(b.minX(), b.minY(), b.minZ());
+	maxf = glm::vec3(b.maxX(), b.maxY(), b.maxZ());
 	width = b.getWidth();
 	height = b.getHeight();
 	depth = b.getDepth();
@@ -48,11 +42,11 @@ bool gBoundingBox::intersects(const gBoundingBox& b1, const gBoundingBox& b2) {
 }
 
 bool gBoundingBox::intersects(float minX, float minY, float minZ, float maxX, float maxY, float maxZ) {
-	return intersects(minx, miny, minz, maxx, maxy, maxz, minX, minY, minZ, maxX, maxY, maxZ);
+	return intersects(minf[0], minf[1], minf[2], maxf[0], maxf[1], maxf[2], minX, minY, minZ, maxX, maxY, maxZ);
 }
 
 bool gBoundingBox::intersects(const gBoundingBox& b) {
-	return intersects(minx, miny, minz, maxx, maxy, maxz, b.minX(), b.minY(), b.minZ(), b.maxX(), b.maxY(), b.maxZ());
+	return intersects(minf[0], minf[1], minf[2], maxf[0], maxf[1], maxf[2], b.minX(), b.minY(), b.minZ(), b.maxX(), b.maxY(), b.maxZ());
 }
 
 bool gBoundingBox::contains(float minX1, float minY1, float minZ1, float maxX1, float maxY1, float maxZ1, float minX2, float minY2, float minZ2, float maxX2, float maxY2, float maxZ2) {
@@ -64,15 +58,15 @@ bool gBoundingBox::contains(const gBoundingBox& b1, const gBoundingBox& b2) {
 }
 
 bool gBoundingBox::contains(float minX, float minY, float minZ, float maxX, float maxY, float maxZ) {
-	return contains(minx, miny, minz, maxx, maxy, maxz, minX, minY, minZ, maxX, maxY, maxZ);
+	return contains(minf[0], minf[1], minf[2], maxf[0], maxf[1], maxf[2], minX, minY, minZ, maxX, maxY, maxZ);
 }
 
 bool gBoundingBox::contains(const gBoundingBox& b) {
-	return contains(minx, miny, minz, maxx, maxy, maxz, b.minX(), b.minY(), b.minZ(), b.maxX(), b.maxY(), b.maxZ());
+	return contains(minf[0], minf[1], minf[2], maxf[0], maxf[1], maxf[2], b.minX(), b.minY(), b.minZ(), b.maxX(), b.maxY(), b.maxZ());
 }
 
 bool gBoundingBox::contains(float x, float y, float z) {
-	return contains(minx, miny, minz, maxx, maxy, maxz, x, y, z, x, y, z);
+	return contains(minf[0], minf[1], minf[2], maxf[0], maxf[1], maxf[2], x, y, z, x, y, z);
 }
 
 gBoundingBox gBoundingBox::merge(const gBoundingBox& other) {
@@ -80,37 +74,72 @@ gBoundingBox gBoundingBox::merge(const gBoundingBox& other) {
 	else if (other.getWidth() == 0.0f && other.getHeight() == 0.0f && other.getDepth() == 0.0f) return *this;
 
 	return gBoundingBox(
-			std::min(minx, other.minX()),
-			std::min(miny, other.minY()),
-			std::min(minz, other.minZ()),
-			std::max(maxx, other.maxX()),
-			std::max(maxy, other.maxY()),
-			std::max(maxz, other.maxZ())
+			std::min(minf[0], other.minX()),
+			std::min(minf[1], other.minY()),
+			std::min(minf[2], other.minZ()),
+			std::max(maxf[0], other.maxX()),
+			std::max(maxf[1], other.maxY()),
+			std::max(maxf[2], other.maxZ())
 	);
 }
 
+bool gBoundingBox::intersects(gRay& ray) {
+	rs = ray.getOrigin();
+	rd = ray.getDirection();
+	dmin = std::numeric_limits<float>::min();
+	dmax = std::numeric_limits<float>::max();
+
+	for (int i = 0; i < componentnum; i++) {
+		inverted = 1.0f / rd[i];
+		direction1 = (minf[i] - rs[i]) * inverted;
+		direction2 = (maxf[i] - rs[i]) * inverted;
+
+		if (inverted < 0.0f) {
+			tempdirection = direction2;
+			direction2 = direction1;
+			direction1 = tempdirection;
+		}
+
+		dmin = direction1 > dmin ? direction1 : dmin;
+		dmax = direction2 < dmax ? direction2 : dmax;
+
+		if (dmax <= dmin)
+			return false;
+	}
+
+	return true;
+}
+
+glm::vec3 gBoundingBox::getMin() {
+	return minf;
+}
+
+glm::vec3 gBoundingBox::getMax() {
+	return maxf;
+}
+
 float gBoundingBox::minX() const {
-	return minx;
+	return minf[0];
 }
 
 float gBoundingBox::minY() const {
-	return miny;
+	return minf[1];
 }
 
 float gBoundingBox::minZ() const {
-	return minz;
+	return minf[2];
 }
 
 float gBoundingBox::maxX() const {
-	return maxx;
+	return maxf[0];
 }
 
 float gBoundingBox::maxY() const {
-	return maxy;
+	return maxf[1];
 }
 
 float gBoundingBox::maxZ() const {
-	return maxz;
+	return maxf[2];
 }
 
 float gBoundingBox::getWidth() const {

@@ -38,7 +38,6 @@ public:
 	int getVerticesNum();
 	int getIndicesNum();
 	gBoundingBox getBoundingBox();
-	gBoundingBox getInitialBoundingBox();
 	gVbo* getVbo();
 
 	void setMaterial(gMaterial* material);
@@ -68,7 +67,6 @@ private:
     gShader* colorshader;
     gShader* textureshader;
 
-    gBoundingBox initialboundingbox;
     float bbminx, bbminy, bbminz, bbmaxx, bbmaxy, bbmaxz;
 };
 
