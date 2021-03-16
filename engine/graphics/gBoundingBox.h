@@ -18,6 +18,7 @@
 #define GRAPHICS_GBOUNDINGBOX_H_
 
 #include <algorithm>
+#include "gRay.h"
 
 
 /**
@@ -51,6 +52,10 @@ public:
 
 	gBoundingBox merge(const gBoundingBox& other);
 
+	bool intersects(gRay& ray);
+
+	glm::vec3 getMin();
+	glm::vec3 getMax();
 	float minX() const;
 	float minY() const;
 	float minZ() const;
@@ -62,8 +67,13 @@ public:
 	float getDepth() const;
 
 private:
-	float minx, miny, minz, maxx, maxy, maxz;
+	static const int componentnum = 3;
+	glm::vec3 minf, maxf;
 	float width, height, depth;
+
+	float inverted, direction1, direction2, tempdirection;
+	glm::vec3 rs, rd;
+	float dmin, dmax;
 };
 
 #endif /* GRAPHICS_GBOUNDINGBOX_H_ */

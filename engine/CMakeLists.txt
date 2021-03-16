@@ -108,6 +108,7 @@ set(SRC_FILES
 	${ENGINE_DIR}/graphics/primitives/gBox.cpp
 	${ENGINE_DIR}/graphics/gVbo.cpp
 	${ENGINE_DIR}/graphics/gFbo.cpp
+	${ENGINE_DIR}/graphics/gRay.cpp
 	${ENGINE_DIR}/graphics/gBoundingBox.cpp
 	${ENGINE_DIR}/graphics/gRect.cpp
 	${ENGINE_DIR}/core/gAppObject.cpp
