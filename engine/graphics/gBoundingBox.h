@@ -17,6 +17,8 @@
 #ifndef GRAPHICS_GBOUNDINGBOX_H_
 #define GRAPHICS_GBOUNDINGBOX_H_
 
+#include <algorithm>
+
 
 /**
  * gBoundingBox represents an axis aligned box (AABB) defined by 6 parameters for the minimum and maximum
@@ -46,6 +48,8 @@ public:
 	bool contains(float minX, float minY, float minZ, float maxX, float maxY, float maxZ);
 	bool contains(const gBoundingBox& b);
 	bool contains(float x, float y, float z);
+
+	gBoundingBox merge(gBoundingBox& other);
 
 	float minX() const;
 	float minY() const;
