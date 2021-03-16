@@ -75,6 +75,20 @@ bool gBoundingBox::contains(float x, float y, float z) {
 	return contains(minx, miny, minz, maxx, maxy, maxz, x, y, z, x, y, z);
 }
 
+gBoundingBox gBoundingBox::merge(gBoundingBox& other) {
+	if (width == 0.0f && height == 0.0f && depth == 0.0f) return other;
+	else if (other.getWidth() == 0.0f && other.getHeight() == 0.0f && other.getDepth() == 0.0f) return *this;
+
+	return gBoundingBox(
+			std::min(minx, other.minX()),
+			std::min(miny, other.minY()),
+			std::min(minz, other.minZ()),
+			std::max(maxx, other.maxX()),
+			std::max(maxy, other.maxY()),
+			std::max(maxz, other.maxZ())
+	);
+}
+
 float gBoundingBox::minX() const {
 	return minx;
 }
