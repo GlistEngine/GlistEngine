@@ -53,6 +53,7 @@ public:
 	gBoundingBox merge(const gBoundingBox& other);
 
 	bool intersects(gRay& ray);
+	float distance(gRay& ray);
 
 	glm::vec3 getMin();
 	glm::vec3 getMax();
@@ -72,7 +73,9 @@ private:
 	float width, height, depth;
 
 	float inverted, direction1, direction2, tempdirection;
-	glm::vec3 rs, rd;
+	float dimlo, dimhi, dimtemp;
+	int di;
+	glm::vec3 ro, rd;
 	float dmin, dmax;
 };
 
