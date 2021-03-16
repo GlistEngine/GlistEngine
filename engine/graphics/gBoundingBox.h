@@ -49,7 +49,7 @@ public:
 	bool contains(const gBoundingBox& b);
 	bool contains(float x, float y, float z);
 
-	gBoundingBox merge(gBoundingBox& other);
+	gBoundingBox merge(const gBoundingBox& other);
 
 	float minX() const;
 	float minY() const;
