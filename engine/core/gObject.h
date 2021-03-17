@@ -1,8 +1,17 @@
 /*
- * gObject.h
+ * Copyright (C) 2016 Nitra Games Ltd.
  *
- *  Created on: May 16, 2020
- *      Author: noyan
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 #ifndef ENGINE_BASE_GOBJECT_H_
@@ -27,12 +36,13 @@ public:
 	gObject();
 	virtual ~gObject();
 
-	std::string gGetAppDir();
-	std::string gGetAssetsDir();
-	std::string gGetImagesDir();
-	std::string gGetFontsDir();
-	std::string gGetModelsDir();
-	std::string gGetSoundsDir();
+	static std::string gGetAppDir();
+	static std::string gGetAssetsDir();
+	static std::string gGetFilesDir();
+	static std::string gGetImagesDir();
+	static std::string gGetFontsDir();
+	static std::string gGetModelsDir();
+	static std::string gGetSoundsDir();
 
 	void logi(std::string message);
 	void logd(std::string message);
@@ -51,7 +61,7 @@ private:
 	int loglevel;
 	std::string loglevelname[5];
 	void log(int logLevel, std::string tag, std::string message);
-	std::string exepath;
+	static std::string exepath;
 };
 
 #endif /* ENGINE_BASE_GOBJECT_H_ */
