@@ -90,6 +90,7 @@ set(SRC_FILES
 	${PLUGIN_SRCS}
 	${ENGINE_DIR}/types/gColor.cpp
 	${ENGINE_DIR}/utils/gUtils.cpp
+	${ENGINE_DIR}/utils/gFile.cpp
 	${ENGINE_DIR}/graphics/gShader.cpp
 	${ENGINE_DIR}/core/gObject.cpp
 	${ENGINE_DIR}/core/gRenderer.cpp
@@ -140,6 +141,7 @@ set(INC_DIRS
 	${LIBS_DIR}/stb/include
 	${LIBS_DIR}/fmod/include
 	${LIBS_DIR}/utf8/include
+	${LIBS_DIR}/ghc/include
     ${ENGINE_DIR}/utils
     ${ENGINE_DIR}/types
     ${ENGINE_DIR}/media

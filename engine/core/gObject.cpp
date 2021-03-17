@@ -14,6 +14,8 @@ const int gObject::LOGLEVEL_DEBUG = 2;
 const int gObject::LOGLEVEL_WARNING = 3;
 const int gObject::LOGLEVEL_ERROR = 4;
 
+std::string gObject::exepath;
+
 
 gObject::gObject() {
 	loglevelname[0] = "Silent";
@@ -43,6 +45,11 @@ std::string gObject::gGetAppDir() {
 std::string gObject::gGetAssetsDir() {
 	return exepath + "assets/";
 }
+
+std::string gObject::gGetFilesDir() {
+	return exepath + "assets/files/";
+}
+
 std::string gObject::gGetImagesDir() {
 	return exepath + "assets/images/";
 }
