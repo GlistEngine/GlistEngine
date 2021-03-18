@@ -20,7 +20,7 @@
 //#include <fstream>
 #include <ios>
 #include <iostream>
-#include <ghc/filesystem.hpp>
+#include "ghc/filesystem.hpp"
 namespace fs {
 using namespace ghc::filesystem;
 using ifstream = ghc::filesystem::ifstream;
@@ -46,7 +46,7 @@ public:
 	bool loadFile(const std::string& filePath, int fileMode = FILEMODE_READONLY, bool isBinary = true);
 	void close();
 
-	ghc::filesystem::path getPath();
+	fs::path getPath();
 	int getMode();
 	bool isBinary();
 

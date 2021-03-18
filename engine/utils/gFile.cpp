@@ -13,7 +13,7 @@ gFile::gFile() : mode(FILEMODE_READONLY), binary(true), size(0) {}
 gFile::~gFile() {}
 
 bool gFile::load(const std::string& fullPath, int fileMode, bool isBinary) {
-	path = ghc::filesystem::path(fullPath);
+	path = fs::path(fullPath);
 	mode = fileMode;
 	binary = isBinary;
 	size = 0;
@@ -21,14 +21,14 @@ bool gFile::load(const std::string& fullPath, int fileMode, bool isBinary) {
 }
 
 bool gFile::loadFile(const std::string& filePath, int fileMode, bool isBinary) {
-	path = ghc::filesystem::path(gGetFilesDir() + filePath);
+	path = fs::path(gGetFilesDir() + filePath);
 	mode = fileMode;
 	binary = isBinary;
 	size = 0;
 	return open();
 }
 
-ghc::filesystem::path gFile::getPath() {
+fs::path gFile::getPath() {
 	return path;
 }
 
@@ -100,7 +100,7 @@ bool gFile::openStream(int fileMode, bool isBinary) {
 	}
 
 	if(!stream) {
-		std::cerr << "Error opening file " + std::string(path) << std::endl;
+		std::cerr << "Error opening file " + path.u8string() << std::endl;
 		return -1 ;
 	}
 
@@ -130,19 +130,19 @@ std::string gFile::getDirectory() {
 }
 
 bool gFile::exists() {
-	return doesFileExist(path);
+	return doesFileExist(path.u8string());
 }
 
 bool gFile::isFile() {
-	return isFile(path);
+	return isFile(path.u8string());
 }
 
 bool gFile::isLink() {
-	return isLink(path);
+	return isLink(path.u8string());
 }
 
 bool gFile::isDirectory() {
-	return isDirectory(path);
+	return isDirectory(path.u8string());
 }
 
 bool gFile::isDevice() {
