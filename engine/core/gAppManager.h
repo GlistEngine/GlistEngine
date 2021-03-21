@@ -63,6 +63,7 @@ public:
 
 	void setFramerate(int targetFramerate);
 	int getFramerate();
+	double getElapsedTime();
 
 	std::string getAppName();
 

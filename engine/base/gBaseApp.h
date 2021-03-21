@@ -25,6 +25,7 @@ public:
 
 	void setFramerate(int targetFramerate);
 	int getFramerate();
+	double getElapsedTime();
 
 protected:
 	gAppManager *appmanager;
