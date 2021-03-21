@@ -42,6 +42,7 @@ public:
 	static std::string gGetImagesDir();
 	static std::string gGetFontsDir();
 	static std::string gGetModelsDir();
+	static std::string gGetTexturesDir();
 	static std::string gGetSoundsDir();
 
 	void logi(std::string message);

@@ -20,7 +20,8 @@ public:
 	gTexture(int w, int h, int format = GL_RGBA, bool isFbo = true);
 	virtual ~gTexture();
 
-	virtual unsigned int load(std::string filePath);
+	virtual unsigned int load(std::string fullPath);
+	unsigned int loadTexture(std::string texturePath);
 
     void bind();
     void unbind();
