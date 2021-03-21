@@ -94,7 +94,7 @@ void gAppManager::runApp(std::string appName, gBaseApp *baseApp, int width, int 
 		// Framerate adjustment
 		timediff = std::chrono::high_resolution_clock::now() - starttime;
 		if (timediff < minWorkTime) {
-			std::this_thread::sleep_for(minWorkTime - timediff + delay);
+			std::this_thread::sleep_for(minWorkTime - timediff);
 		}
 		timediff2 = std::chrono::high_resolution_clock::now() - starttime;
 		starttime = std::chrono::high_resolution_clock::now();
@@ -133,6 +133,10 @@ std::string gAppManager::getAppName() {
 
 int gAppManager::getFramerate() {
     return (int)(1000 / timediff2.count());
+}
+
+double gAppManager::getElapsedTime() {
+	return timediff2.count();
 }
 
 void gAppManager::onKeyEvent(int key, int action) {
