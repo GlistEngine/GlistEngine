@@ -62,6 +62,10 @@ std::string gObject::gGetModelsDir() {
 	return exepath + "assets/models/";
 }
 
+std::string gObject::gGetTexturesDir() {
+	return exepath + "assets/textures/";
+}
+
 std::string gObject::gGetSoundsDir() {
 	return exepath + "assets/sounds/";
 }

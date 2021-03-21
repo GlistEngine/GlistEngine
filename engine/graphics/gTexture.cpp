@@ -78,8 +78,8 @@ gTexture::~gTexture() {
 	if (ismutable) delete data;
 }
 
-unsigned int gTexture::load(std::string filePath) {
-	fullpath = filePath;
+unsigned int gTexture::load(std::string fullPath) {
+	fullpath = fullPath;
 	directory = getDirName(fullpath);
 	path = getFileName(fullpath);
 
@@ -90,6 +90,10 @@ unsigned int gTexture::load(std::string filePath) {
 
 	setupRenderData();
     return id;
+}
+
+unsigned int gTexture::loadTexture(std::string texturePath) {
+	return load(gGetTexturesDir() + texturePath);
 }
 
 void gTexture::setData(unsigned char* textureData, bool isMutable) {
