@@ -75,6 +75,11 @@ gRenderer::gRenderer() {
 	fontshader = new gShader();
 	fontshader->loadProgram(getShaderSrcFontVertex(), getShaderSrcFontFragment());
 
+	skyboxshader = new gShader();
+	skyboxshader->loadProgram(getShaderSrcSkyboxVertex(), getShaderSrcSkyboxFragment());
+	skyboxshader->setMat4("projection", projectionmatrix);
+	skyboxshader->setMat4("view", viewmatrix);
+
 	rendercolor = new gColor();
 	rendercolor->set(255, 255, 255, 255);
 
@@ -110,6 +115,10 @@ gShader* gRenderer::getFontShader() {
 
 gShader* gRenderer::getImageShader() {
 	return imageshader;
+}
+
+gShader* gRenderer::getSkyboxShader() {
+	return skyboxshader;
 }
 
 void gRenderer::setProjectionMatrix(glm::mat4 projectionMatrix) {
@@ -616,3 +625,41 @@ const std::string gRenderer::getShaderSrcFontFragment() {
 
 	return std::string(shadersource);
 }
+
+const std::string gRenderer::getShaderSrcSkyboxVertex() {
+	const char* shadersource =
+"#version 330 core\n"
+"layout (location = 0) in vec3 aPos;\n"
+"\n"
+"out vec3 TexCoords;\n"
+"\n"
+"uniform mat4 model;\n"
+"uniform mat4 projection;\n"
+"uniform mat4 view;\n"
+"\n"
+"void main()\n"
+"{\n"
+"    TexCoords = aPos;\n"
+"    vec4 pos = projection * view * model * vec4(aPos, 1.0);\n"
+"    gl_Position = pos.xyww;\n"
+"}";
+
+	return std::string(shadersource);
+}
+
+const std::string gRenderer::getShaderSrcSkyboxFragment() {
+	const char* shadersource =
+"#version 330 core\n"
+"out vec4 FragColor;\n"
+"\n"
+"in vec3 TexCoords;\n"
+"\n"
+"uniform samplerCube skymap;\n"
+"\n"
+"void main() {\n"
+"    FragColor = texture(skymap, TexCoords);\n"
+"}";
+
+	return std::string(shadersource);
+}
+
