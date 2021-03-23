@@ -16,14 +16,18 @@ gShader::gShader() {
 	id = 0;
 }
 
-gShader::gShader(const char* vertexPath, const char* fragmentPath, const char* geometryPath) {
+gShader::gShader(const std::string& vertexPath, const std::string& fragmentPath, const std::string& geometryPath) {
 	load(vertexPath, fragmentPath);
 }
 
 gShader::~gShader() {
 }
 
-void gShader::load(const char* vertexPath, const char* fragmentPath, const char* geometryPath) {
+void gShader::loadShader(const std::string& vertexFileName, const std::string& fragmentFileName, const std::string& geometryFileName) {
+	load(gGetShadersDir() + vertexFileName, gGetShadersDir() + fragmentFileName, gGetShadersDir() + geometryFileName);
+}
+
+void gShader::load(const std::string& vertexFullPath, const std::string& fragmentFullPath, const std::string& geometryFullPath) {
     // 1. retrieve the vertex/fragment source code from filePath
     std::string vertexCode;
     std::string fragmentCode;
@@ -37,8 +41,8 @@ void gShader::load(const char* vertexPath, const char* fragmentPath, const char*
     gShaderFile.exceptions (std::ifstream::failbit | std::ifstream::badbit);
     try  {
         // open files
-        vShaderFile.open(vertexPath);
-        fShaderFile.open(fragmentPath);
+        vShaderFile.open(vertexFullPath);
+        fShaderFile.open(fragmentFullPath);
         std::stringstream vShaderStream, fShaderStream;
         // read file's buffer contents into streams
         vShaderStream << vShaderFile.rdbuf();
@@ -51,9 +55,8 @@ void gShader::load(const char* vertexPath, const char* fragmentPath, const char*
         fragmentCode = fShaderStream.str();
         // if geometry shader path is present, also load a geometry shader
         geometryCode = "";
-        if(geometryPath != nullptr)
-        {
-            gShaderFile.open(geometryPath);
+        if(geometryFullPath != "") {
+            gShaderFile.open(geometryFullPath);
             std::stringstream gShaderStream;
             gShaderStream << gShaderFile.rdbuf();
             gShaderFile.close();
@@ -65,7 +68,7 @@ void gShader::load(const char* vertexPath, const char* fragmentPath, const char*
     loadProgram(vertexCode, fragmentCode, geometryCode);
 }
 
-void gShader::loadProgram(const std::string vertexShaderStr, const std::string fragmentShaderStr, const std::string geometryShaderStr) {
+void gShader::loadProgram(const std::string& vertexShaderStr, const std::string& fragmentShaderStr, const std::string& geometryShaderStr) {
     const char* vShaderCode = vertexShaderStr.c_str();
     const char * fShaderCode = fragmentShaderStr.c_str();
     // 2. compile shaders
