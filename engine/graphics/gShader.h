@@ -32,11 +32,13 @@
 class gShader : public gObject {
 public:
 	gShader();
-	gShader(const char* vertexPath, const char* fragmentPath, const char* geometryPath = nullptr);
+	gShader(const std::string& vertexPath, const std::string& fragmentPath, const std::string& geometryPath = nullptr);
 	virtual ~gShader();
 
-	void load(const char* vertexPath, const char* fragmentPath, const char* geometryPath = nullptr);
-	void loadProgram(const std::string vertexShaderStr, const std::string fragmentShaderStr, const std::string geometryShaderStr = "");
+	void load(const std::string& vertexFullPath, const std::string& fragmentFullPath, const std::string& geometryFullPath = "");
+	void loadShader(const std::string& vertexFileName, const std::string& fragmentFileName, const std::string& geometryFileName = "");
+
+	void loadProgram(const std::string& vertexShaderStr, const std::string& fragmentShaderStr, const std::string& geometryShaderStr = "");
 
     GLuint id;
 
