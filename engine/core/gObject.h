@@ -43,6 +43,7 @@ public:
 	static std::string gGetFontsDir();
 	static std::string gGetModelsDir();
 	static std::string gGetTexturesDir();
+	static std::string gGetShadersDir();
 	static std::string gGetSoundsDir();
 
 	void logi(std::string message);
@@ -57,6 +58,8 @@ public:
 
 	void setLogLevel(int logLevel);
 
+protected:
+	static int renderpassnum, renderpassno;
 
 private:
 	int loglevel;

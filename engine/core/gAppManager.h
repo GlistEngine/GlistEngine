@@ -91,7 +91,7 @@ private:
 	float millisecondsperframe, delaycoef;
 	std::chrono::duration<double, std::milli> minWorkTime, delay;
 	int framerate;
-	int upi;
+	int upi, upj;
 };
 
 #endif /* ENGINE_CORE_GAPPMANAGER_H_ */

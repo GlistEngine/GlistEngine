@@ -16,6 +16,9 @@ const int gObject::LOGLEVEL_ERROR = 4;
 
 std::string gObject::exepath;
 
+int gObject::renderpassnum = 1;
+int gObject::renderpassno = 0;
+
 
 gObject::gObject() {
 	loglevelname[0] = "Silent";
@@ -64,6 +67,10 @@ std::string gObject::gGetModelsDir() {
 
 std::string gObject::gGetTexturesDir() {
 	return exepath + "assets/textures/";
+}
+
+std::string gObject::gGetShadersDir() {
+	return exepath + "assets/shaders/";
 }
 
 std::string gObject::gGetSoundsDir() {

@@ -52,6 +52,7 @@ gAppManager::gAppManager() {
 	mpi = 0;
 	mpj = 0;
 	upi = 0;
+	upj = 0;
 }
 
 gAppManager::~gAppManager() {
@@ -86,8 +87,11 @@ void gAppManager::runApp(std::string appName, gBaseApp *baseApp, int width, int 
 		canvas = canvasmanager->getCurrentCanvas();
 		if (canvas != nullptr) {
 			canvas->update();
-			canvas->clearBackground();
-			canvas->draw();
+			for (upj = 0; upj < renderpassnum; upj++) {
+				renderpassno = upj;
+				canvas->clearBackground();
+				canvas->draw();
+			}
 		}
 		window->update();
 
