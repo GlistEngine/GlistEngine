@@ -28,10 +28,10 @@ void gFbo::allocate(int width, int height, bool isDepthMap) {
 
     if (!isDepthMap) {
         // create a color attachment texture
-        colortexture = gTexture(width, height);
-        textureid = colortexture.getId();
-        colortexture.bind();
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colortexture.getId(), 0);
+        texture = gTexture(width, height, GL_RGBA, true);
+        textureid = texture.getId();
+        texture.bind();
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture.getId(), 0);
 
         // create a renderbuffer object for depth and stencil attachment (we won't be sampling these)
         unsigned int rbo;
@@ -40,18 +40,10 @@ void gFbo::allocate(int width, int height, bool isDepthMap) {
         glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height); // use a single renderbuffer object for both a depth AND stencil buffer.
         glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo); // now actually attach it
     } else {
-        glGenTextures(1, &textureid);
-        glBindTexture(GL_TEXTURE_2D, textureid);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-        float borderColor[] = { 1.0, 1.0, 1.0, 1.0 };
-        glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
-        // attach depth texture as FBO's depth buffer
-        glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, textureid, 0);
+        texture = gTexture(width, height, GL_DEPTH_COMPONENT, true);
+        textureid = texture.getId();
+        texture.bind();
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, texture.getId(), 0);
         glDrawBuffer(GL_NONE);
         glReadBuffer(GL_NONE);
     }
@@ -87,46 +79,50 @@ void gFbo::unbind() {
 
 void gFbo::draw(int x, int y) {
 	if(isdepthmap) return;
-	colortexture.draw(x, y);
+	texture.draw(x, y);
 }
 
 void gFbo::draw(int x, int y, int w, int h) {
 	if(isdepthmap) return;
-	colortexture.draw(x, y, w, h);
+	texture.draw(x, y, w, h);
 }
 
 void gFbo::draw(int x, int y, int w, int h, float rotate){
 	if(isdepthmap) return;
-	colortexture.draw(x, y, w, h, rotate);
+	texture.draw(x, y, w, h, rotate);
 }
 
 void gFbo::draw(glm::vec2 position, glm::vec2 size, float rotate) {
 	if(isdepthmap) return;
-	colortexture.draw(position, size, rotate);
+	texture.draw(position, size, rotate);
 }
 
 void gFbo::drawSub(int x, int y, int sx, int sy, int sw, int sh) {
 	if(isdepthmap) return;
-	colortexture.drawSub(x, y, sx, sy, sw, sh);
+	texture.drawSub(x, y, sx, sy, sw, sh);
 }
 
 void gFbo::drawSub(int x, int y, int w, int h, int sx, int sy, int sw, int sh) {
 	if(isdepthmap) return;
-	colortexture.drawSub(x, y, w, h, sx, sy, sw, sh);
+	texture.drawSub(x, y, w, h, sx, sy, sw, sh);
 }
 
 void gFbo::drawSub(int x, int y, int w, int h, int sx, int sy, int sw, int sh, float rotate) {
 	if(isdepthmap) return;
-	colortexture.drawSub(x, y, w, h, sx, sy, sw, sh, rotate);
+	texture.drawSub(x, y, w, h, sx, sy, sw, sh, rotate);
 }
 
 void gFbo::drawSub(glm::vec2 pos, glm::vec2 size, glm::vec2 subpos, glm::vec2 subsize, float rotate) {
 	if(isdepthmap) return;
-	colortexture.drawSub(pos, size, subpos, subsize, rotate);
+	texture.drawSub(pos, size, subpos, subsize, rotate);
 }
 
 void gFbo::drawSub(const gRect& src, const gRect& dst, float rotate) {
 	if(isdepthmap) return;
-	colortexture.drawSub(src, dst, rotate);
+	texture.drawSub(src, dst, rotate);
+}
+
+gTexture& gFbo::getTexture() {
+	return texture;
 }
 

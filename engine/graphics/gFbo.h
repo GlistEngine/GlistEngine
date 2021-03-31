@@ -22,6 +22,7 @@ public:
 	int getWidth();
 	int getHeight();
 	unsigned int getTextureId();
+    gTexture& getTexture();
 
 	void bind();
 	void unbind();
@@ -39,7 +40,7 @@ public:
 
 private:
     unsigned int framebuffer;
-    gTexture colortexture;
+    gTexture texture;
     int width, height;
     bool isdepthmap;
     unsigned int textureid;

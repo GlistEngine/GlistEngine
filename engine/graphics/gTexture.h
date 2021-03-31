@@ -17,7 +17,7 @@ public:
 	static const int TEXTURETYPE_DIFFUSE, TEXTURETYPE_SPECULAR, TEXTURETYPE_NORMAL, TEXTURETYPE_HEIGHT;
 
 	gTexture();
-	gTexture(int w, int h, int format = GL_RGBA, bool isFbo = true);
+	gTexture(int w, int h, int format = GL_RGBA, bool isFbo = false);
 	virtual ~gTexture();
 
 	virtual unsigned int load(std::string fullPath);
