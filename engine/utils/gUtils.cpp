@@ -14,6 +14,9 @@
 #include <iterator>
 #include <unistd.h>
 
+bool gLog::isloggingenabled = true;
+std::string gLog::loglevelname[] = {"INFO", "DEBUG", "WARNING", "ERROR"};
+
 
 int gDefaultWidth() {
 	return 960;
@@ -221,6 +224,69 @@ int gToInt(const std::string& intString) {
 	return x;
 }
 
+gLog::gLog() {
+	loglevel = LOGLEVEL_INFO;
+	logtag = "";
+}
+
+gLog::gLog(const std::string& tag) {
+	loglevel = LOGLEVEL_INFO;
+	logtag = tag;
+}
+
+gLog::~gLog() {
+	if(!isloggingenabled) return;
+
+	if(loglevel == LOGLEVEL_ERROR) {
+		std::cerr << "[" << loglevelname[loglevel] << "] " << logtag << ": " << logmessage.str() << std::endl;
+	} else {
+		std::cout << "[" << loglevelname[loglevel] << "] " << logtag << ": " << logmessage.str() << std::endl;
+	}
+}
+
+void gLog::setLoggingEnabled(bool isLoggingEnabled) {
+	isloggingenabled = isLoggingEnabled;
+}
+
+bool gLog::isLoggingEnabled() {
+	return isloggingenabled;
+}
+
+std::string gLog::getLogLevelName(int logLevel) {
+	return loglevelname[logLevel];
+}
+
+gLogi::gLogi(const std::string& tag) {
+	loglevel = LOGLEVEL_INFO;
+	logtag = tag;
+}
+
+gLogd::gLogd(const std::string& tag) {
+	loglevel = LOGLEVEL_DEBUG;
+	logtag = tag;
+}
+
+gLogw::gLogw(const std::string& tag) {
+	loglevel = LOGLEVEL_WARNING;
+	logtag = tag;
+}
+
+gLoge::gLoge(const std::string& tag) {
+	loglevel = LOGLEVEL_ERROR;
+	logtag = tag;
+}
+
+void gEnableLogging() {
+	gLog::setLoggingEnabled(true);
+}
+
+void gDisableLogging() {
+	gLog::setLoggingEnabled(false);
+}
+
+bool gIsLoggingEnabled() {
+	return gLog::isLoggingEnabled();
+}
 
 gUtils::gUtils() {
 

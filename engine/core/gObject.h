@@ -56,15 +56,10 @@ public:
 	void logw(std::string tag, std::string message);
 	void loge(std::string tag, std::string message);
 
-	void setLogLevel(int logLevel);
-
 protected:
 	static int renderpassnum, renderpassno;
 
 private:
-	int loglevel;
-	std::string loglevelname[5];
-	void log(int logLevel, std::string tag, std::string message);
 	static std::string exepath;
 };
 

@@ -125,6 +125,66 @@ private:
 	std::string src_valid;
 };
 
+class gLog {
+public:
+	enum {
+		LOGLEVEL_INFO,
+		LOGLEVEL_DEBUG,
+		LOGLEVEL_WARNING,
+		LOGLEVEL_ERROR
+	};
+
+	gLog();
+	gLog(const std::string& tag);
+	~gLog();
+
+	gLog& operator<<(std::ostream& (*func)(std::ostream&)){
+		func(logmessage);
+		return *this;
+	}
+
+	template <typename T>
+	gLog& operator<<(const T& value) {
+		logmessage << value;
+		return *this;
+	}
+
+	static void setLoggingEnabled(bool isLoggingEnabled);
+	static bool isLoggingEnabled();
+
+	static std::string getLogLevelName(int logLevel);
+
+protected:
+	static bool isloggingenabled;
+	int loglevel;
+	std::stringstream logmessage;
+	std::string logtag;
+	static std::string loglevelname[];
+};
+
+class gLogi : public gLog {
+public:
+	gLogi(const std::string& tag = "");
+};
+
+class gLogd : public gLog {
+public:
+	gLogd(const std::string& tag = "");
+};
+
+class gLogw : public gLog {
+public:
+	gLogw(const std::string& tag = "");
+};
+
+class gLoge : public gLog {
+public:
+	gLoge(const std::string& tag = "");
+};
+
+void gEnableLogging();
+void gDisableLogging();
+bool gIsLoggingEnabled();
 
 class gUtils {
 public:
