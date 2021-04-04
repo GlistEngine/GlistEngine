@@ -75,6 +75,7 @@ void gGLFWWindow::initialize(int width, int height, int windowMode) {
 	    	glfwSetWindowMonitor(window, monitor, 0, 0, width, height, currentrefreshrate);
 	    }
 	}
+	glfwGetWindowSize(window, &width, &height);
 
 #ifndef LINUX
 	GLFWimage images[1];
