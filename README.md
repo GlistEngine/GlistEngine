@@ -54,8 +54,14 @@ On macOS:
 > sudo spctl --master-disable
 
 On Linux:
-- Install necessary libraries
+- Install necessary libraries Debian Based Linux
 > sudo apt-get install git cmake g++-7 glew-dev
+
+- Install necessary libraries rpm based system Linux
+> sudo dnf install glm-devel
+> sudo dnf install glfw glfw-decel
+> sudo dnf install  glew-devel 
+> sudo dnf install freetype-devel freetype
 
 3- Open file explorer and create necessary folders:
 
