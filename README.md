@@ -62,6 +62,7 @@ On Linux:
 > sudo dnf install glfw glfw-decel
 > sudo dnf install  glew-devel 
 > sudo dnf install freetype-devel freetype
+> sudo dnf install assimp assimp-devel
 
 3- Open file explorer and create necessary folders:
 
