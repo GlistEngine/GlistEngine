@@ -164,7 +164,8 @@ elseif(LINUX)
 	list(APPEND INC_DIRS
 		${MINGW64_DIR}/include
 		${MINGW64_DIR}/include/freetype2
-#		/usr/include/freetype2
+		
+		/usr/include/freetype2
 		/usr/include
 		/usr/local/lib
 #		${MINGW64_DIR}/lib
