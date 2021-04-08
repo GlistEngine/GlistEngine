@@ -100,6 +100,7 @@ set(SRC_FILES
 	${ENGINE_DIR}/graphics/gSkybox.cpp
 	${ENGINE_DIR}/graphics/gNode.cpp
 	${ENGINE_DIR}/graphics/gLight.cpp
+	${ENGINE_DIR}/graphics/gShadowMap.cpp
 	${ENGINE_DIR}/graphics/gCamera.cpp
 	${ENGINE_DIR}/graphics/gFont.cpp
 	${ENGINE_DIR}/graphics/gMaterial.cpp

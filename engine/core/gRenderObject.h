@@ -24,8 +24,14 @@ public:
 	void pushMatrix();
 	void popMatrix();
 
+	static void enableShadowMapping();
+	static void disableShadowMapping();
+	static bool isShadowMappingEnabled();
+
+
 protected:
 	static gRenderer* renderer;
+	static bool isshadowmappingenabled;
 
 private:
 	static bool isrendermaterialsloaded;

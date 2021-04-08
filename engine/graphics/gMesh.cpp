@@ -103,12 +103,18 @@ void gMesh::draw() {
 }
 
 void gMesh::drawStart() {
+	if (isshadowmappingenabled && renderpassno == 0) {
+		renderer->getShadowmapShader()->use();
+		renderer->getShadowmapShader()->setMat4("model", localtransformationmatrix);
+		return;
+	}
+
     if (textures.size() == 0) {
     	colorshader = renderer->getColorShader();
 		colorshader->use();
 
 	    // Set scene properties
-	    colorshader->setVec3("viewPos", 0.0f, 0.0f, 0.0f);
+//	    colorshader->setVec3("viewPos", 0.0f, 0.0f, 0.0f); //bunu shadowmap testi için kapattim
 	    colorshader->setVec4("renderColor", renderer->getColor()->r, renderer->getColor()->g, renderer->getColor()->b, renderer->getColor()->a);
 
 	    // Set material colors
