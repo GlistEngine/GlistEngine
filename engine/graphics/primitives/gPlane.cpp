@@ -16,10 +16,17 @@ gPlane::gPlane() {
 			};
 
 		const float tcoords[] = {
-				1.0f, 1.0f, // top right
-				1.0f, 0.0f, // bottom right
-				0.0f, 0.0f, // bottom left
-				0.0f, 1.0f  // top left
+				1.0f, 0.0f, // top right
+				1.0f, 1.0f, // bottom right
+				0.0f, 1.0f, // bottom left
+				0.0f, 0.0f  // top left
+		};
+
+		float normaldata[] = {
+		    -1.0f,  1.0f,  1.0f, // Front
+		     1.0f,  1.0f,  1.0f,
+		    -1.0f, -1.0f,  1.0f,
+		     1.0f, -1.0f,  1.0f
 		};
 
 		std::vector<gVertex> verticessb;
@@ -32,6 +39,9 @@ gPlane::gPlane() {
 			vertex.position.z = vpos[(i * 3) + 2];
 			vertex.texcoords.x = tcoords[(i * 2)];
 			vertex.texcoords.y = tcoords[(i * 2) + 1];
+			vertex.normal.x = normaldata[(i * 3)];
+			vertex.normal.y = normaldata[(i * 3) + 1];
+			vertex.normal.z = normaldata[(i * 3) + 2];
 			verticessb.push_back(vertex);
 		}
 
