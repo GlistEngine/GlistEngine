@@ -40,6 +40,7 @@ public:
 
 	int getMeshNum();
 	gSkinnedMesh getMesh(int meshNo);
+	std::string getMeshName(int meshNo);
 	gBoundingBox getBoundingBox();
 
 	void move(float dx, float dy, float dz);
