@@ -164,6 +164,10 @@ gSkinnedMesh gModel::getMesh(int meshNo) {
 	return meshes[meshNo];
 }
 
+std::string gModel::getMeshName(int meshNo) {
+	return scene->mMeshes[meshNo]->mName.C_Str();
+}
+
 void gModel::processNode(aiNode *node, const aiScene *scene) {
 	// process each mesh located at the current node
 	for(unsigned int i = 0; i < node->mNumMeshes; i++) {
