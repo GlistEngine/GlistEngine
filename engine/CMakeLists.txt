@@ -109,6 +109,7 @@ set(SRC_FILES
 	${ENGINE_DIR}/graphics/gModel.cpp
 	${ENGINE_DIR}/graphics/primitives/gPlane.cpp
 	${ENGINE_DIR}/graphics/primitives/gBox.cpp
+	${ENGINE_DIR}/graphics/primitives/gSphere.cpp
 	${ENGINE_DIR}/graphics/gVbo.cpp
 	${ENGINE_DIR}/graphics/gFbo.cpp
 	${ENGINE_DIR}/graphics/gRay.cpp
