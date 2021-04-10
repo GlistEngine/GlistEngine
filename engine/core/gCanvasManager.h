@@ -10,7 +10,7 @@
 
 #include "gBaseCanvas.h"
 
-class gCanvasManager {
+class gCanvasManager : public gObject {
 
 public:
 	gCanvasManager();

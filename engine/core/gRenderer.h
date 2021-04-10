@@ -100,6 +100,8 @@ public:
 	gShader* getTextureShader();
 	gShader* getFontShader();
 	gShader* getImageShader();
+	gShader* getSkyboxShader();
+	gShader* getShadowmapShader();
 
 	void setProjectionMatrix(glm::mat4 projectionMatrix);
 	void setProjectionMatrix2d(glm::mat4 projectionMatrix2d);
@@ -130,6 +132,8 @@ private:
 	gShader *textureshader;
 	gShader *fontshader;
 	gShader *imageshader;
+	gShader *skyboxshader;
+	gShader *shadowmapshader;
 
 	glm::mat4 projectionmatrix;
 	glm::mat4 projectionmatrixold;
@@ -145,6 +149,10 @@ private:
 	const std::string getShaderSrcImageFragment();
 	const std::string getShaderSrcFontVertex();
 	const std::string getShaderSrcFontFragment();
+	const std::string getShaderSrcSkyboxVertex();
+	const std::string getShaderSrcSkyboxFragment();
+	const std::string getShaderSrcShadowmapVertex();
+	const std::string getShaderSrcShadowmapFragment();
 
 };
 

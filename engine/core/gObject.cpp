@@ -14,14 +14,13 @@ const int gObject::LOGLEVEL_DEBUG = 2;
 const int gObject::LOGLEVEL_WARNING = 3;
 const int gObject::LOGLEVEL_ERROR = 4;
 
+std::string gObject::exepath;
+
+int gObject::renderpassnum = 1;
+int gObject::renderpassno = 0;
+
 
 gObject::gObject() {
-	loglevelname[0] = "Silent";
-	loglevelname[1] = "Info";
-	loglevelname[2] = "Debug";
-	loglevelname[3] = "Warning";
-	loglevelname[4] = "Error";
-	loglevel = LOGLEVEL_INFO;
 	char temp[256];
 	exepath = getcwd(temp, sizeof(temp));
 	exepath += "/";
@@ -43,6 +42,11 @@ std::string gObject::gGetAppDir() {
 std::string gObject::gGetAssetsDir() {
 	return exepath + "assets/";
 }
+
+std::string gObject::gGetFilesDir() {
+	return exepath + "assets/files/";
+}
+
 std::string gObject::gGetImagesDir() {
 	return exepath + "assets/images/";
 }
@@ -55,57 +59,56 @@ std::string gObject::gGetModelsDir() {
 	return exepath + "assets/models/";
 }
 
+std::string gObject::gGetTexturesDir() {
+	return exepath + "assets/textures/";
+}
+
+std::string gObject::gGetShadersDir() {
+	return exepath + "assets/shaders/";
+}
+
 std::string gObject::gGetSoundsDir() {
 	return exepath + "assets/sounds/";
 }
 
-void gObject::setLogLevel(int logLevel) {
-	loglevel = logLevel;
-}
-
-
-void gObject::log(int logLevel, std::string tag, std::string message) {
-	std::cout << "[" << loglevelname[logLevel] << "] " << tag << ": " << message << std::endl;
-}
-
 
 void gObject::logi(std::string tag, std::string message) {
-	if (loglevel < LOGLEVEL_INFO) return;
-	log(LOGLEVEL_INFO, tag, message);
+	if(!gIsLoggingEnabled()) return;
+	gLogi(tag) << message;
 }
 
 void gObject::logi(std::string message) {
-	if (loglevel < LOGLEVEL_INFO) return;
-	log(LOGLEVEL_INFO, abi::__cxa_demangle(typeid(*this).name(), 0, 0, 0), message);
+	if(!gIsLoggingEnabled()) return;
+	gLogi(abi::__cxa_demangle(typeid(*this).name(), 0, 0, 0)) << message;
 }
 
 void gObject::logd(std::string tag, std::string message) {
-	if (loglevel < LOGLEVEL_DEBUG) return;
-	log(LOGLEVEL_DEBUG, tag, message);
+	if(!gIsLoggingEnabled()) return;
+	gLogd(tag) << message;
 }
 
 void gObject::logd(std::string message) {
-	if (loglevel < LOGLEVEL_DEBUG) return;
-	log(LOGLEVEL_DEBUG, abi::__cxa_demangle(typeid(*this).name(), 0, 0, 0), message);
+	if(!gIsLoggingEnabled()) return;
+	gLogd(abi::__cxa_demangle(typeid(*this).name(), 0, 0, 0)) << message;
 }
 
 void gObject::logw(std::string tag, std::string message) {
-	if (loglevel < LOGLEVEL_WARNING) return;
-	log(LOGLEVEL_WARNING, tag, message);
+	if(!gIsLoggingEnabled()) return;
+	gLogw(tag) << message;
 }
 
 void gObject::logw(std::string message) {
-	if (loglevel < LOGLEVEL_WARNING) return;
-	log(LOGLEVEL_WARNING, abi::__cxa_demangle(typeid(*this).name(), 0, 0, 0), message);
+	if(!gIsLoggingEnabled()) return;
+	gLogw(abi::__cxa_demangle(typeid(*this).name(), 0, 0, 0)) << message;
 }
 
 void gObject::loge(std::string tag, std::string message) {
-	if (loglevel < LOGLEVEL_ERROR) return;
-	std::cerr << "[" << loglevelname[LOGLEVEL_ERROR] << "] " << tag << ": " << message << std::endl;
+	if(!gIsLoggingEnabled()) return;
+	gLoge(tag) << message;
 }
 
 void gObject::loge(std::string message) {
-	if (loglevel < LOGLEVEL_ERROR) return;
-	loge(abi::__cxa_demangle(typeid(*this).name(), 0, 0, 0), message);
+	if(!gIsLoggingEnabled()) return;
+	gLoge(abi::__cxa_demangle(typeid(*this).name(), 0, 0, 0)) << message;
 }
 

@@ -25,6 +25,8 @@ gMesh::gMesh() {
     scenelight = nullptr;
     colorshader = nullptr;
     textureshader = nullptr;
+	bbminx = 0.0f, bbminy = 0.0f, bbminz = 0.0f;
+	bbmaxx = 0.0f, bbmaxy = 0.0f, bbmaxz = 0.0f;
 }
 
 gMesh::gMesh(std::vector<gVertex> vertices, std::vector<unsigned int> indices, std::vector<gTexture> textures) {
@@ -101,12 +103,18 @@ void gMesh::draw() {
 }
 
 void gMesh::drawStart() {
+	if (isshadowmappingenabled && renderpassno == 0) {
+		renderer->getShadowmapShader()->use();
+		renderer->getShadowmapShader()->setMat4("model", localtransformationmatrix);
+		return;
+	}
+
     if (textures.size() == 0) {
     	colorshader = renderer->getColorShader();
 		colorshader->use();
 
 	    // Set scene properties
-	    colorshader->setVec3("viewPos", 0.0f, 0.0f, 0.0f);
+//	    colorshader->setVec3("viewPos", 0.0f, 0.0f, 0.0f); //bunu shadowmap testi için kapattim
 	    colorshader->setVec4("renderColor", renderer->getColor()->r, renderer->getColor()->g, renderer->getColor()->b, renderer->getColor()->a);
 
 	    // Set material colors
@@ -226,5 +234,24 @@ int gMesh::getIndicesNum() {
 
 gVbo* gMesh::getVbo() {
 	return &vbo;
+}
+
+gBoundingBox gMesh::getBoundingBox() {
+	bbminx = 0.0f, bbminy = 0.0f, bbminz = 0.0f;
+	bbmaxx = 0.0f, bbmaxy = 0.0f, bbmaxz = 0.0f;
+
+	for (int i = 0; i< vertices.size(); i++) {
+		gVertex v = vertices[i];
+		glm::vec3 vpos = glm::vec3(localtransformationmatrix * glm::vec4(v.position, 1.0));
+
+		bbminx = std::min(bbminx, vpos.x);
+		bbminy = std::min(bbminy, vpos.y);
+		bbminz = std::min(bbminz, vpos.z);
+		bbmaxx = std::max(bbmaxx, vpos.x);
+		bbmaxy = std::max(bbmaxy, vpos.y);
+		bbmaxz = std::max(bbmaxz, vpos.z);
+	}
+
+	return gBoundingBox(bbminx, bbminy, bbminz, bbmaxx, bbmaxy, bbmaxz);
 }
 

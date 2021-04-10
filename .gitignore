@@ -1,5 +1,6 @@
+**/*.DS_Store
+**/language.settings.xml
 **/build/
 **/.settings/
 *.project
 *.cproject
-*.DS_Store

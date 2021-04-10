@@ -39,8 +39,9 @@ On Windows:
 - We provide all libraries except GIT. You should first download and install GIT from https://git-scm.com/download/win
 
 On macOS:
-- First of all, you should install Xcode because OpenGL library comes with Xcode. Download Xcode via 
- App Store
+- Please note that the installation is tested on a clean BigSur. If you have an older OS version, consider upgrading your Mac
+
+- First of all, you should install Xcode because OpenGL library comes with Xcode. Download Xcode via App Store
 
 - Open Terminal and install homebrew
 > ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
@@ -53,8 +54,15 @@ On macOS:
 > sudo spctl --master-disable
 
 On Linux:
-- Install necessary libraries
+- Install necessary libraries Debian Based Linux
 > sudo apt-get install git cmake g++-7 glew-dev
+
+- Install necessary libraries rpm based system Linux
+> sudo dnf install glm-devel
+> sudo dnf install glfw glfw-decel
+> sudo dnf install  glew-devel 
+> sudo dnf install freetype-devel freetype
+> sudo dnf install assimp assimp-devel
 
 3- Open file explorer and create necessary folders:
 

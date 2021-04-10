@@ -24,7 +24,9 @@ void gCanvasManager::update() {
 		case DISPLAY_CHANGE_CURRENT:
 			if (currentCanvas != nullptr) {
 				currentCanvas->hideNotify();
+#ifndef WIN32
 				delete currentCanvas;
+#endif
 			}
 			if (tempCanvas != nullptr) {
 				currentCanvas = tempCanvas;

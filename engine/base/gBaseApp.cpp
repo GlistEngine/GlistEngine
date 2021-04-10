@@ -39,3 +39,7 @@ void gBaseApp::setFramerate(int targetFramerate) {
 int gBaseApp::getFramerate() {
 	return appmanager->getFramerate();
 }
+
+double gBaseApp::getElapsedTime() {
+	return appmanager->getElapsedTime();
+}

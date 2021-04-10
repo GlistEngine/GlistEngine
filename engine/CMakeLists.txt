@@ -90,14 +90,17 @@ set(SRC_FILES
 	${PLUGIN_SRCS}
 	${ENGINE_DIR}/types/gColor.cpp
 	${ENGINE_DIR}/utils/gUtils.cpp
+	${ENGINE_DIR}/utils/gFile.cpp
 	${ENGINE_DIR}/graphics/gShader.cpp
 	${ENGINE_DIR}/core/gObject.cpp
 	${ENGINE_DIR}/core/gRenderer.cpp
 	${ENGINE_DIR}/core/gRenderObject.cpp
 	${ENGINE_DIR}/graphics/gTexture.cpp
 	${ENGINE_DIR}/graphics/gImage.cpp
+	${ENGINE_DIR}/graphics/gSkybox.cpp
 	${ENGINE_DIR}/graphics/gNode.cpp
 	${ENGINE_DIR}/graphics/gLight.cpp
+	${ENGINE_DIR}/graphics/gShadowMap.cpp
 	${ENGINE_DIR}/graphics/gCamera.cpp
 	${ENGINE_DIR}/graphics/gFont.cpp
 	${ENGINE_DIR}/graphics/gMaterial.cpp
@@ -106,8 +109,11 @@ set(SRC_FILES
 	${ENGINE_DIR}/graphics/gModel.cpp
 	${ENGINE_DIR}/graphics/primitives/gPlane.cpp
 	${ENGINE_DIR}/graphics/primitives/gBox.cpp
+	${ENGINE_DIR}/graphics/primitives/gSphere.cpp
 	${ENGINE_DIR}/graphics/gVbo.cpp
 	${ENGINE_DIR}/graphics/gFbo.cpp
+	${ENGINE_DIR}/graphics/gRay.cpp
+	${ENGINE_DIR}/graphics/gBoundingBox.cpp
 	${ENGINE_DIR}/graphics/gRect.cpp
 	${ENGINE_DIR}/core/gAppObject.cpp
 	${ENGINE_DIR}/base/gBasePlugin.cpp
@@ -138,6 +144,7 @@ set(INC_DIRS
 	${LIBS_DIR}/stb/include
 	${LIBS_DIR}/fmod/include
 	${LIBS_DIR}/utf8/include
+	${LIBS_DIR}/ghc/include
     ${ENGINE_DIR}/utils
     ${ENGINE_DIR}/types
     ${ENGINE_DIR}/media
@@ -159,7 +166,8 @@ elseif(LINUX)
 	list(APPEND INC_DIRS
 		${MINGW64_DIR}/include
 		${MINGW64_DIR}/include/freetype2
-#		/usr/include/freetype2
+		
+		/usr/include/freetype2
 		/usr/include
 		/usr/local/lib
 #		${MINGW64_DIR}/lib
@@ -172,7 +180,8 @@ elseif(APPLE)
   		/usr/local/Cellar/glew/2.2.0_1/include
   		/usr/local/Cellar/glm/0.9.9.8/include
   		/usr/local/Cellar/assimp/5.0.1/include
-  		/usr/local/Cellar/glfw/3.3.2/include
+  		/usr/local/include
+#  		/usr/local/Cellar/glfw/3.3.2/include
 #  		/usr/local/include
   	)
 elseif(ANDROID)

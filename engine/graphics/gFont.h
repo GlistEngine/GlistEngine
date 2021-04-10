@@ -27,7 +27,7 @@ public:
 
 	void load(std::string fullPath, int size);
 	void loadFont(std::string fontPath, int size);
-	void drawText(std::string text, float x, float y, float scale);
+	void drawText(std::string text, float x, float y, float scale = 1.0f);
 
 private:
 

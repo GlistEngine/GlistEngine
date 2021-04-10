@@ -17,8 +17,12 @@ public:
 	gFbo();
 	virtual ~gFbo();
 
-	void allocate(int width, int height);
+	void allocate(int width, int height, bool isDepthMap = false);
     unsigned int getId();
+	int getWidth();
+	int getHeight();
+	unsigned int getTextureId();
+    gTexture& getTexture();
 
 	void bind();
 	void unbind();
@@ -36,8 +40,10 @@ public:
 
 private:
     unsigned int framebuffer;
-    unsigned int textureColorbuffer;
-    gTexture colortexture;
+    gTexture texture;
+    int width, height;
+    bool isdepthmap;
+    unsigned int textureid;
 
 };
 

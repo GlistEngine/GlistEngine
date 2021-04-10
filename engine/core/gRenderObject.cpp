@@ -12,6 +12,7 @@
 gRenderer* gRenderObject::renderer;
 
 bool gRenderObject::isrendermaterialsloaded = false;
+bool gRenderObject::isshadowmappingenabled = false;
 
 
 gRenderObject::gRenderObject() {
@@ -42,5 +43,18 @@ void gRenderObject::popMatrix() {
 	glPopMatrix();
 #endif
 }
+
+void gRenderObject::enableShadowMapping() {
+	isshadowmappingenabled = true;
+}
+
+void gRenderObject::disableShadowMapping() {
+	isshadowmappingenabled = false;
+}
+
+bool gRenderObject::isShadowMappingEnabled() {
+	return isshadowmappingenabled;
+}
+
 
 

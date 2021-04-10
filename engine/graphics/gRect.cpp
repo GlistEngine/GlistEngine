@@ -18,8 +18,7 @@ gRect::gRect(const gRect& r) : l(r.left()), t(r.top()), r(r.right()), b(r.bottom
 
 gRect::~gRect() {}
 
-void gRect::set(int left, int top, int right, int bottom)
-{
+void gRect::set(int left, int top, int right, int bottom) {
 	l = left;
 	t = top;
 	r = right;
@@ -28,8 +27,7 @@ void gRect::set(int left, int top, int right, int bottom)
 	height = bottom - top;
 }
 
-void gRect::set(const gRect& r)
-{
+void gRect::set(const gRect& r) {
 	l = r.left();
 	t = r.top();
 	this->r = r.right();
@@ -38,13 +36,13 @@ void gRect::set(const gRect& r)
 	height = r.getHeight();
 }
 
-bool gRect::intersects(int left1, int top1, int right1, int bottom1, int left2, int top2, int right2, int bottom2) { return left1 < right2 && right1 > left2 && top1 < bottom2 && bottom1 > top2; }
+bool gRect::intersects(int left1, int top1, int right1, int bottom1, int left2, int top2, int right2, int bottom2) { return left1 <= right2 && right1 >= left2 && top1 <= bottom2 && bottom1 >= top2; }
 
 bool gRect::intersects(const gRect& r1, const gRect& r2) { return intersects(r1.left(), r1.top(), r1.right(), r1.bottom(), r2.left(), r2.top(), r2.right(), r2.bottom()); }
 
 bool gRect::intersects(int left, int top, int right, int bottom) { return intersects(l, t, r, b, left, top, right, bottom); }
 
-bool gRect::intersects(const gRect& r) { return intersects(r.left(), r.top(), r.right(), r.bottom()); }
+bool gRect::intersects(const gRect& r) { return intersects(l, t, this->r, b, r.left(), r.top(), r.right(), r.bottom()); }
 
 bool gRect::contains(int left1, int top1, int right1, int bottom1, int left2, int top2, int right2, int bottom2) { return left1 <= left2 && right1 >= right2 && top1 <= top2 && bottom1 >= bottom2; }
 
@@ -52,18 +50,18 @@ bool gRect::contains(const gRect& r1, const gRect& r2) { return contains(r1.left
 
 bool gRect::contains(int left, int top, int right, int bottom) { return contains(l, t, r, b, left, top, right, bottom); }
 
-bool gRect::contains(const gRect& r) { return contains(r.left(), r.top(), r.right(), r.bottom()); }
+bool gRect::contains(const gRect& r) { return contains(l, t, this->r, b, r.left(), r.top(), r.right(), r.bottom()); }
 
-bool gRect::contains(int x, int y) { return contains(x, y, x, y); }
+bool gRect::contains(int x, int y) { return contains(l, t, r, b, x, y, x, y); }
 
-int gRect::left() 	const { return l; }
+int gRect::left() const { return l; }
 
-int gRect::top()	const { return t; }
+int gRect::top() const { return t; }
 
-int gRect::right()	const { return r; }
+int gRect::right() const { return r; }
 
-int gRect::bottom()	const { return b; }
+int gRect::bottom() const { return b; }
 
-int gRect::getWidth()  const { return width; }
+int gRect::getWidth() const { return width; }
 
 int gRect::getHeight() const { return height; }
