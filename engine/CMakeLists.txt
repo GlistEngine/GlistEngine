@@ -161,11 +161,13 @@ if(WIN32)
 		${MINGW64_DIR}/include
 		${MINGW64_DIR}/lib/gcc/x86_64-w64-mingw32/8.1.0/include/c++
 		${MINGW64_DIR}/include/freetype2
+		${MINGW64_DIR}/include/ffmpeg
 	)
 elseif(LINUX)
 	list(APPEND INC_DIRS
 		${MINGW64_DIR}/include
 		${MINGW64_DIR}/include/freetype2
+		# TODO: FFMPEG
 		
 		/usr/include/freetype2
 		/usr/include
@@ -183,6 +185,7 @@ elseif(APPLE)
   		/usr/local/include
 #  		/usr/local/Cellar/glfw/3.3.2/include
 #  		/usr/local/include
+		# TODO: FFMPEG
   	)
 elseif(ANDROID)
 	list(APPEND INC_DIRS
@@ -204,6 +207,7 @@ if(WIN32)
 			${PLUGIN_LINKDIRS}
 	)
 elseif(LINUX)
+	# TODO: FFMPEG
 #	find_library(Lib_Freetype2 freetype HINTS /usr/lib/x86_64-linux-gnu)
 	
 #	execute_process(COMMAND 
@@ -349,6 +353,13 @@ if(WIN32)
 		dbghelp
 		msvcr100
 		psapi
+		swscale-5
+		swresample-3
+		avutil-56
+		avformat-58
+		avfilter-7
+		avdevice-58
+		avcodec-58
 	)
 elseif(LINUX)
 	list(APPEND LINK_LIBS
@@ -360,6 +371,7 @@ elseif(LINUX)
 		glfw
 		GL
 		GLEW
+	# TODO: FFMPEG
 	)
 elseif(APPLE)
 	list(APPEND LINK_LIBS
@@ -370,6 +382,7 @@ elseif(APPLE)
 		${Lib_glfw}
 		${Lib_GL}
 		${Lib_GLEW}
+	# TODO: FFMPEG
 	)
 elseif(ANDROID)
 	list(APPEND LINK_LIBS
