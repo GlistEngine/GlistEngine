@@ -355,7 +355,6 @@ if(WIN32)
 		psapi
 		swscale-5
 		swresample-3
-		postproc-55
 		avutil-56
 		avformat-58
 		avfilter-7
