@@ -244,7 +244,7 @@ void gTexture::drawSub(glm::vec2 pos, glm::vec2 size, glm::vec2 subpos, glm::vec
 void gTexture::beginDraw() {
 	renderer->getImageShader()->use();
 	imagematrix = glm::mat4(1.0f);
-	renderer->setProjectionMatrix2d(glm::ortho(0.0f, (float)renderer->getScreenWidth(), (float)renderer->getScreenHeight(), 0.0f, -1.0f, 1.0f));
+	renderer->setProjectionMatrix2d(glm::ortho(0.0f, (float)renderer->getWidth(), (float)renderer->getHeight(), 0.0f, -1.0f, 1.0f));
 }
 
 void gTexture::endDraw() {

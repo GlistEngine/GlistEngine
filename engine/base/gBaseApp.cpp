@@ -32,6 +32,14 @@ gAppManager* gBaseApp::getAppManager() {
 	return appmanager;
 }
 
+void gBaseApp::setCurrentCanvas(gBaseCanvas* currentCanvas) {
+	appmanager->setCurrentCanvas(currentCanvas);
+}
+
+gBaseCanvas* gBaseApp::getCurrentCanvas() {
+	return appmanager->getCurrentCanvas();
+}
+
 void gBaseApp::setFramerate(int targetFramerate) {
 	appmanager->setFramerate(targetFramerate);
 }

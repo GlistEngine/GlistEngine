@@ -20,6 +20,8 @@ public:
 	virtual ~gRenderObject();
 
 	static void setScreenSize(int screenWidth, int screenHeight);
+	static void setUnitScreenSize(int unitWidth, int unitHeight);
+	static void setScreenScaling(int screenScaling);
 
 	void pushMatrix();
 	void popMatrix();

@@ -46,17 +46,31 @@ int gGetCullingDirection();
 
 class gRenderer: public gObject {
 public:
+	static const int SCREENSCALING_NONE, SCREENSCALING_MIPMAP, SCREENSCALING_AUTO;
 	static const int DEPTHTESTTYPE_LESS, DEPTHTESTTYPE_ALWAYS;
 
 	gRenderer();
 	virtual ~gRenderer();
 
 	static void setScreenSize(int screenWidth, int screenHeight);
+	static void setUnitScreenSize(int unitWidth, int unitHeight);
+	static void setScreenScaling(int screenScaling);
 
 	int getWidth();
 	int getHeight();
 	int getScreenWidth();
 	int getScreenHeight();
+	int getUnitWidth();
+	int getUnitHeight();
+	int getScreenScaling();
+
+	static void setCurrentResolution(int resolution);
+	static void setCurrentResolution(int screenWidth, int screenHeight);
+	static void setUnitResolution(int resolution);
+	static void setUnitResolution(int screenWidth, int screenHeight);
+	static int getResolution(int screenWidth, int screenHeight);
+	int getCurrentResolution();
+	int getUnitResolution();
 
 	void setColor(int r, int g, int b, int a = 255);
 	void setColor(gColor color);
@@ -115,6 +129,9 @@ public:
 
 private:
 	static int width, height;
+	static int unitwidth, unitheight;
+	static int screenscaling;
+	static int currentresolution, unitresolution;
 	gColor *rendercolor;
 
 	gColor *lightingcolor;

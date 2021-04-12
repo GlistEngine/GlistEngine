@@ -14,7 +14,14 @@ const int gObject::LOGLEVEL_DEBUG = 2;
 const int gObject::LOGLEVEL_WARNING = 3;
 const int gObject::LOGLEVEL_ERROR = 4;
 
+int gObject::releasescaling;
+int gObject::releaseresolution;
+
+
 std::string gObject::exepath;
+static const std::string resolutiondirs[] = {
+		"1-8k/", "2-4k/", "3-qhd/", "4-fullhd/", "5-hd/", "6-qfhd/", "7-wvga/", "8-hvga/"
+};
 
 int gObject::renderpassnum = 1;
 int gObject::renderpassno = 0;
@@ -48,6 +55,7 @@ std::string gObject::gGetFilesDir() {
 }
 
 std::string gObject::gGetImagesDir() {
+	if (releasescaling == 1) return exepath + "assets/mipmaps/" + resolutiondirs[releaseresolution];
 	return exepath + "assets/images/";
 }
 
@@ -69,6 +77,11 @@ std::string gObject::gGetShadersDir() {
 
 std::string gObject::gGetSoundsDir() {
 	return exepath + "assets/sounds/";
+}
+
+void gObject::setCurrentResolution(int scalingNo, int currentResolutionNo) {
+	releasescaling = scalingNo;
+	releaseresolution = currentResolutionNo;
 }
 
 

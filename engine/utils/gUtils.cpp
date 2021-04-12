@@ -26,6 +26,10 @@ int gDefaultHeight() {
 	return 540;
 }
 
+int gDefaultScreenScaling() {
+	return 2;
+}
+
 float gRadToDeg(float radians) {
 	return radians * 180 / PI;
 }
