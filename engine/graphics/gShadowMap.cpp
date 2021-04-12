@@ -81,6 +81,7 @@ void gShadowMap::activate() {
 
 void gShadowMap::deactivate() {
 	renderpassnum = 1;
+	updateshadows = false;
 	disable();
 	isactivated = false;
 }
