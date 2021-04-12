@@ -19,6 +19,8 @@
 
 #include "gRenderObject.h"
 #include "gFbo.h"
+#include "gLight.h"
+#include "gCamera.h"
 
 
 class gShadowMap : public gRenderObject {
@@ -26,10 +28,17 @@ public:
 	gShadowMap();
 	virtual ~gShadowMap();
 
-	void allocate(int width, int height);
+	void allocate(gLight* light, gCamera* camera, int width = 4096, int height = 4096);
 	bool isAllocated();
 	int getWidth();
 	int getHeight();
+
+	void update();
+
+	void setLight(gLight* light);
+	void setCamera(gCamera* camera);
+	gLight* getLight();
+	gCamera* getCamera();
 
 	void activate();
 	void deactivate();
@@ -39,28 +48,26 @@ public:
 	void disable();
 	bool isEnabled();
 
-	void setLightPosition(glm::vec3 lightPosition);
 	void setLightProjection(glm::mat4 lightProjection);
+	void setLightProjection(float leftx, float rightx, float fronty, float backy, float nearz, float farz);
 	void setLightView(glm::mat4 lightView);
-	glm::vec3 getLightPosition();
 	glm::mat4 getLightProjection();
 	glm::mat4 getLightView();
 	glm::mat4 getLightMatrix();
-
-	void setViewPosition(glm::vec3 viewPosition);
-	glm::vec3 getViewPosition();
 
 	gFbo& getDepthFbo();
 
 
 private:
 	bool isallocated, isactivated, isenabled;
+	gLight* light;
+	gCamera* camera;
 	glm::mat4 lightprojection, lightview, lightmatrix;
 	glm::vec3 lightposition;
-	glm::vec3 viewposition;
 	gFbo depthfbo;
 	int width, height;
 	int shadowmaptextureslot;
+	bool updateshadows;
 };
 
 #endif /* GRAPHICS_GSHADOWMAP_H_ */
