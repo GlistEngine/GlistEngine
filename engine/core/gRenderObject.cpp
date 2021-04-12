@@ -32,6 +32,14 @@ void gRenderObject::setScreenSize(int screenWidth, int screenHeight) {
 	renderer->setScreenSize(screenWidth, screenHeight);
 }
 
+void gRenderObject::setUnitScreenSize(int unitWidth, int unitHeight) {
+	renderer->setUnitScreenSize(unitWidth, unitHeight);
+}
+
+void gRenderObject::setScreenScaling(int screenScaling) {
+	renderer->setScreenScaling(screenScaling);
+}
+
 void gRenderObject::pushMatrix() {
 #if defined(WIN32) || defined(LINUX)
 	glPushMatrix();

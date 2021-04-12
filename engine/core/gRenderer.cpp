@@ -9,11 +9,21 @@
 
 #include "gLight.h"
 
+const int gRenderer::SCREENSCALING_NONE = 0;
+const int gRenderer::SCREENSCALING_MIPMAP = 1;
+const int gRenderer::SCREENSCALING_AUTO = 2;
+
 const int gRenderer::DEPTHTESTTYPE_LESS = 0;
 const int gRenderer::DEPTHTESTTYPE_ALWAYS = 1;
 
 int gRenderer::width;
 int gRenderer::height;
+int gRenderer::unitwidth;
+int gRenderer::unitheight;
+int gRenderer::screenscaling;
+int gRenderer::currentresolution;
+int gRenderer::unitresolution;
+
 
 void gEnableCulling() {
 	glEnable(GL_CULL_FACE);
@@ -56,7 +66,7 @@ gRenderer::gRenderer() {
 	projectionmatrix = glm::mat4(1.0f);
 	projectionmatrix = glm::perspective(glm::radians(60.0f), (float)width / height, 0.0f, 1000.0f);
 	projectionmatrixold = projectionmatrix;
-	projectionmatrix2d = glm::ortho(0.0f, (float)width, (float)height, 0.0f, -1.0f, 1.0f);
+	projectionmatrix2d = glm::ortho(0.0f, (float)unitwidth, (float)unitheight, 0.0f, -1.0f, 1.0f);
 	viewmatrix = glm::mat4(1.0f);
 	viewmatrixold = viewmatrix;
 
@@ -165,13 +175,27 @@ void gRenderer::restoreMatrices() {
 void gRenderer::setScreenSize(int screenWidth, int screenHeight) {
 	width = screenWidth;
 	height = screenHeight;
+	setCurrentResolution(getResolution(screenWidth, screenHeight));
+}
+
+void gRenderer::setUnitScreenSize(int unitWidth, int unitHeight) {
+	unitwidth = unitWidth;
+	unitheight = unitHeight;
+	setUnitResolution(getResolution(unitWidth, unitHeight));
+}
+
+void gRenderer::setScreenScaling(int screenScaling) {
+	screenscaling = screenScaling;
+	gObject::setCurrentResolution(screenscaling, currentresolution);
 }
 
 int gRenderer::getWidth() {
+	if (screenscaling >= SCREENSCALING_AUTO) return unitwidth;
 	return width;
 }
 
 int gRenderer::getHeight() {
+	if (screenscaling >= SCREENSCALING_AUTO) return unitheight;
 	return height;
 }
 
@@ -182,6 +206,67 @@ int gRenderer::getScreenWidth() {
 int gRenderer::getScreenHeight() {
 	return height;
 }
+
+int gRenderer::getUnitWidth() {
+	return unitwidth;
+}
+
+int gRenderer::getUnitHeight() {
+	return unitheight;
+}
+
+int gRenderer::getScreenScaling() {
+	return screenscaling;
+}
+
+void gRenderer::setCurrentResolution(int resolution) {
+	currentresolution = resolution;
+}
+
+void gRenderer::setCurrentResolution(int screenWidth, int screenHeight) {
+	setCurrentResolution(getResolution(screenWidth, screenHeight));
+	gObject::setCurrentResolution(screenscaling, currentresolution);
+}
+
+void gRenderer::setUnitResolution(int resolution) {
+	unitresolution = resolution;
+}
+
+void gRenderer::setUnitResolution(int screenWidth, int screenHeight) {
+	setUnitResolution(getResolution(screenWidth, screenHeight));
+}
+
+int gRenderer::getResolution(int screenWidth, int screenHeight) {
+	int resolutions[8][2] = {
+			{7680, 4320}, //8k
+			{3840, 2160}, //4k
+			{2560, 1440}, //qhd
+			{1920, 1080}, //fullhd
+			{1280, 720},  //hd
+			{960, 540},   //qfhd
+			{800, 480},   //wvga
+			{480, 320}    //hvga
+	};
+
+	int res = 0;
+	for(int i = 0; i < 8; i++) {
+		if (screenWidth >= resolutions[i][0] * 0.9f && screenHeight >= resolutions[i][1] * 0.9f) {
+			res =i;
+			break;
+		}
+	}
+
+	return res;
+}
+
+int gRenderer::getCurrentResolution() {
+	return currentresolution;
+}
+
+int gRenderer::getUnitResolution() {
+	return unitresolution;
+}
+
 
 
 void gRenderer::setColor(int r, int g, int b, int a) {

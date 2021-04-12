@@ -23,7 +23,7 @@
 
 
 // TODO Change hardcoded engine path
-// Only use this variable for development purposes. Never export within release build.
+// Only use this function for development purposes. Never use that within release build.
 static std::string gGetEngineDir() {
 	return "C:/dev/glist/glistengine/engine/";
 }
@@ -56,8 +56,12 @@ public:
 	void logw(std::string tag, std::string message);
 	void loge(std::string tag, std::string message);
 
+	// For internal access. Do not invoke this function directly
+	static void setCurrentResolution(int scalingNo, int currentResolutionNo);
+
 protected:
 	static int renderpassnum, renderpassno;
+	static int releasescaling, releaseresolution;
 
 private:
 	static std::string exepath;

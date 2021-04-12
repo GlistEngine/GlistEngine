@@ -49,16 +49,19 @@ class gBaseCanvas;
 class gCanvasManager;
 
 
-void gStartEngine(gBaseApp *baseApp, std::string appName = "GlistApp", int windowMode = 1, int width = gDefaultWidth(), int height = gDefaultHeight());
+void gStartEngine(gBaseApp* baseApp, std::string appName = "GlistApp", int windowMode = 2, int width = gDefaultWidth(), int height = gDefaultHeight());
+void gStartEngine(gBaseApp* baseApp, std::string appName, int windowMode, int width, int height, int screenScaling, int unitWidth, int unitHeight);
+
 
 class gAppManager : gObject {
 public:
 	gAppManager();
 	virtual ~gAppManager();
 
-	void runApp(std::string appName, gBaseApp *baseApp, int width, int height, int windowMode);
+	void runApp(std::string appName, gBaseApp *baseApp, int width, int height, int windowMode, int unitWidth, int unitHeight, int screenScaling);
 	void setWindow(gBaseWindow * baseWindow);
 	void setCurrentCanvas(gBaseCanvas *baseCanvas);
+	gBaseCanvas* getCurrentCanvas();
 	void setScreenSize(int width, int height);
 
 	void setFramerate(int targetFramerate);
@@ -72,15 +75,15 @@ public:
 	void onMouseButtonEvent(int button, int action, double xpos, double ypos);
 	void onMouseEnterEvent(int entered);
 
-	gCanvasManager *getCanvasManager();
+	gCanvasManager* getCanvasManager();
 
 private:
 	std::string appname;
-	gBaseWindow *window;
-	gBaseApp *app;
-	gBaseCanvas *canvas;
-	gCanvasManager *canvasmanager;
-	gBaseCanvas *tempbasecanvas;
+	gBaseWindow* window;
+	gBaseApp* app;
+	gBaseCanvas* canvas;
+	gCanvasManager* canvasmanager;
+	gBaseCanvas* tempbasecanvas;
 	bool ismouseentered;
 	bool buttonpressed[3];
 	int pressed;

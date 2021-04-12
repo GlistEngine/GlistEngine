@@ -17,7 +17,7 @@
 #endif
 
 
-void gStartEngine(gBaseApp *baseApp, std::string appName, int windowMode, int width, int height) {
+void gStartEngine(gBaseApp* baseApp, std::string appName, int windowMode, int width, int height) {
 	gAppManager appmanager;
 	gGLFWWindow gbwindow;
 	gbwindow.setAppManager(&appmanager);
@@ -25,7 +25,18 @@ void gStartEngine(gBaseApp *baseApp, std::string appName, int windowMode, int wi
 	gbwindow.setTitle(appName);
 	appmanager.setWindow(&gbwindow);
 	baseApp->setAppManager(&appmanager);
-	appmanager.runApp(appName, baseApp, width, height, windowMode);
+	appmanager.runApp(appName, baseApp, width, height, windowMode, width, height, gRenderer::SCREENSCALING_AUTO);
+}
+
+void gStartEngine(gBaseApp* baseApp, std::string appName, int windowMode, int width, int height, int screenScaling, int unitWidth, int unitHeight) {
+	gAppManager appmanager;
+	gGLFWWindow gbwindow;
+	gbwindow.setAppManager(&appmanager);
+	if (appName == "") appName = "GlistApp";
+	gbwindow.setTitle(appName);
+	appmanager.setWindow(&gbwindow);
+	baseApp->setAppManager(&appmanager);
+	appmanager.runApp(appName, baseApp, width, height, windowMode, unitWidth, unitHeight, screenScaling);
 }
 
 
@@ -58,7 +69,7 @@ gAppManager::gAppManager() {
 gAppManager::~gAppManager() {
 }
 
-void gAppManager::runApp(std::string appName, gBaseApp *baseApp, int width, int height, int windowMode) {
+void gAppManager::runApp(std::string appName, gBaseApp *baseApp, int width, int height, int windowMode, int unitWidth, int unitHeight, int screenScaling) {
 	appname = appName;
 	app = baseApp;
 
@@ -68,6 +79,8 @@ void gAppManager::runApp(std::string appName, gBaseApp *baseApp, int width, int 
 	tempbasecanvas = new gBaseCanvas(app);
 //	tempbasecanvas->loadRenderMaterials();
 	tempbasecanvas->setScreenSize(width, height);
+	tempbasecanvas->setUnitScreenSize(unitWidth, unitHeight);
+	tempbasecanvas->setScreenScaling(screenScaling);
 
 	canvasmanager = new gCanvasManager();
 
@@ -118,6 +131,10 @@ gCanvasManager *gAppManager::getCanvasManager() {
 void gAppManager::setCurrentCanvas(gBaseCanvas *baseCanvas) {
 	canvas = baseCanvas;
 	canvasmanager->setCurrentCanvas(canvas);
+}
+
+gBaseCanvas* gAppManager::getCurrentCanvas() {
+	return canvas;
 }
 
 void gAppManager::setScreenSize(int width, int height) {
