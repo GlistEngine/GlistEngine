@@ -19,7 +19,7 @@ gShadowMap::gShadowMap() {
 	width = 0;
 	height = 0;
 	shadowmaptextureslot = 9;
-	updateshadows = true;
+	updateshadows = false;
 }
 
 gShadowMap::~gShadowMap() {}
@@ -76,6 +76,7 @@ gCamera* gShadowMap::getCamera() {
 void gShadowMap::activate() {
 	isactivated = true;
 	renderpassnum = 2;
+	updateshadows = true;
 }
 
 void gShadowMap::deactivate() {
