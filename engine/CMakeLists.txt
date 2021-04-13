@@ -353,13 +353,13 @@ if(WIN32)
 		dbghelp
 		msvcr100
 		psapi
-		swscale-5
-		swresample-3
-		avutil-56
-		avformat-58
-		avfilter-7
-		avdevice-58
-		avcodec-58
+#		swscale-5
+#		swresample-3
+#		avutil-56
+#		avformat-58
+#		avfilter-7
+#		avdevice-58
+#		avcodec-58
 	)
 elseif(LINUX)
 	list(APPEND LINK_LIBS
