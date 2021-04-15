@@ -267,6 +267,15 @@ int gRenderer::getUnitResolution() {
 	return unitresolution;
 }
 
+int gRenderer::scaleX(int x) {
+	return (x * unitwidth) / width;
+}
+
+int gRenderer::scaleY(int y) {
+	return (y * unitheight) / height;
+}
+
+
 
 
 void gRenderer::setColor(int r, int g, int b, int a) {

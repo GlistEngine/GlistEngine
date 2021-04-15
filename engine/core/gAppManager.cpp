@@ -175,6 +175,10 @@ void gAppManager::onKeyEvent(int key, int action) {
 
 void gAppManager::onMouseMoveEvent(double xpos, double ypos) {
 	if (!canvasmanager->getCurrentCanvas()) return;
+	if (gRenderer::getScreenScaling() > gRenderer::SCREENSCALING_NONE) {
+		xpos = gRenderer::scaleX(xpos);
+		ypos = gRenderer::scaleY(ypos);
+	}
 	if (pressed) canvasmanager->getCurrentCanvas()->mouseDragged(xpos, ypos, pressed);
 	else canvasmanager->getCurrentCanvas()->mouseMoved(xpos, ypos);
 }
@@ -186,11 +190,19 @@ void gAppManager::onMouseButtonEvent(int button, int action, double xpos, double
 	case GLFW_PRESS:
 		buttonpressed[button] = true;
 		pressed |= myPow(2, button + 1);
+		if (gRenderer::getScreenScaling() > gRenderer::SCREENSCALING_NONE) {
+			xpos = gRenderer::scaleX(xpos);
+			ypos = gRenderer::scaleY(ypos);
+		}
 		canvasmanager->getCurrentCanvas()->mousePressed(xpos, ypos, button);
 		break;
 	case GLFW_RELEASE:
 		buttonpressed[button] = false;
 		pressed &= ~myPow(2, button + 1);
+		if (gRenderer::getScreenScaling() > gRenderer::SCREENSCALING_NONE) {
+			xpos = gRenderer::scaleX(xpos);
+			ypos = gRenderer::scaleY(ypos);
+		}
 		canvasmanager->getCurrentCanvas()->mouseReleased(xpos, ypos, button);
 		break;
 	}
