@@ -62,7 +62,7 @@ public:
 	int getScreenHeight();
 	int getUnitWidth();
 	int getUnitHeight();
-	int getScreenScaling();
+	static int getScreenScaling();
 
 	static void setCurrentResolution(int resolution);
 	static void setCurrentResolution(int screenWidth, int screenHeight);
@@ -71,6 +71,8 @@ public:
 	static int getResolution(int screenWidth, int screenHeight);
 	int getCurrentResolution();
 	int getUnitResolution();
+	static int scaleX(int x);
+	static int scaleY(int y);
 
 	void setColor(int r, int g, int b, int a = 255);
 	void setColor(gColor color);
