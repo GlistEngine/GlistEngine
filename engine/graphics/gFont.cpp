@@ -20,11 +20,15 @@ gFont::gFont() {
 }
 
 gFont::~gFont() {
+    // destroy FreeType once we're finished
+    FT_Done_Face(face);
+    FT_Done_FreeType(ft);
 }
 
 void gFont::loadFont(std::string fontPath, int size) {
 	load(gGetFontsDir() + fontPath, size);
 }
+
 
 void gFont::load(std::string fullPath, int size) {
 	fontsize = size;
@@ -45,11 +49,9 @@ void gFont::load(std::string fullPath, int size) {
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
     // load first 128 characters of ASCII set
-    for (unsigned char c = 0; c < 128; c++)
-    {
+    for (ci = 0; ci < 128; ci++) {
         // Load character glyph
-        if (FT_Load_Char(face, c, FT_LOAD_RENDER))
-        {
+        if (FT_Load_Char(face, ci, FT_LOAD_RENDER)) {
             std::cout << "ERROR::FREETYTPE: Failed to load Glyph" << std::endl;
             continue;
         }
@@ -81,12 +83,12 @@ void gFont::load(std::string fullPath, int size) {
             glm::ivec2(face->glyph->bitmap_left, face->glyph->bitmap_top),
             static_cast<unsigned int>(face->glyph->advance.x)
         };
-        Characters.insert(std::pair<char, Character>(c, character));
+        Characters.insert(std::pair<char, Character>(ci, character));
     }
     glBindTexture(GL_TEXTURE_2D, 0);
     // destroy FreeType once we're finished
-    FT_Done_Face(face);
-    FT_Done_FreeType(ft);
+//    FT_Done_Face(face);
+//    FT_Done_FreeType(ft);
 
     // configure VAO/VBO for texture quads
     // -----------------------------------
@@ -102,7 +104,7 @@ void gFont::load(std::string fullPath, int size) {
 }
 
 
-void gFont::drawText(std::string text, float x, float y, float scale) {
+void gFont::drawText(std::string text, float x, float y) {
     // OpenGL state
     // ------------
     glEnable(GL_CULL_FACE);
@@ -120,25 +122,24 @@ void gFont::drawText(std::string text, float x, float y, float scale) {
     glBindVertexArray(vao);
 
     // iterate through all characters
-    std::string::const_iterator c;
     for (c = text.begin(); c != text.end(); c++) {
-        Character ch = Characters[*c];
+        ch = Characters[*c];
 
-        float xpos = x + ch.Bearing.x * scale;
-        float ypos = renderer->getHeight() - y - (ch.Size.y - ch.Bearing.y) * scale;
+        xpos = x + ch.Bearing.x;
+        ypos = renderer->getHeight() - y - (ch.Size.y - ch.Bearing.y);
 
-        float w = ch.Size.x * scale;
-        float h = ch.Size.y * scale;
+        csx = ch.Size.x;
+        csy = ch.Size.y;
 //        logi("gFont", "ch:" + str(ch.Advance) + ", c:" + str(*c) + ", w:" + str(w) + ", h:" + str(h) + ", xpos:" + str(xpos) + ", ypos:" + str(ypos) + ", texid:" + str(ch.TextureID));
         // update VBO for each character
         float vertices[6][4] = {
-            { xpos,     ypos + h,   0.0f, 0.0f },
+            { xpos,     ypos + csy,   0.0f, 0.0f },
             { xpos,     ypos,       0.0f, 1.0f },
-            { xpos + w, ypos,       1.0f, 1.0f },
+            { xpos + csx, ypos,       1.0f, 1.0f },
 
-            { xpos,     ypos + h,   0.0f, 0.0f },
-            { xpos + w, ypos,       1.0f, 1.0f },
-            { xpos + w, ypos + h,   1.0f, 0.0f }
+            { xpos,     ypos + csy,   0.0f, 0.0f },
+            { xpos + csx, ypos,       1.0f, 1.0f },
+            { xpos + csx, ypos + csy,   1.0f, 0.0f }
         };
         // render glyph texture over quad
         glBindTexture(GL_TEXTURE_2D, ch.TextureID);
@@ -150,7 +151,7 @@ void gFont::drawText(std::string text, float x, float y, float scale) {
         // render quad
         glDrawArrays(GL_TRIANGLES, 0, 6);
         // now advance cursors for next glyph (note that advance is number of 1/64 pixels)
-        x += (ch.Advance >> 6) * scale; // bitshift by 6 to get value in pixels (2^6 = 64 (divide amount of 1/64th pixels by 64 to get amount of pixels))
+        x += (ch.Advance >> 6); // bitshift by 6 to get value in pixels (2^6 = 64 (divide amount of 1/64th pixels by 64 to get amount of pixels))
     }
     glBindVertexArray(0);
     glBindTexture(GL_TEXTURE_2D, 0);
@@ -158,6 +159,24 @@ void gFont::drawText(std::string text, float x, float y, float scale) {
     glDisable(GL_BLEND);
     glDisable(GL_CULL_FACE);
 
+}
+
+
+float gFont::getStringWidth(std::string text) {
+    ssw = 0.0f;
+    for (cs1 = text.begin(); cs1 != text.end(); cs1++) {
+    	ssw += (Characters[*cs1].Advance >> 6);
+    }
+	return ssw;
+}
+
+float gFont::getStringHeight(std::string text) {
+	ssh = 0.0f;
+    for (cs2 = text.begin(); cs2 != text.end(); cs2++) {
+    	cthy = Characters[*cs2].Size.y;
+    	if (cthy > ssh) ssh = cthy;
+    }
+	return ssh;
 }
 
 
