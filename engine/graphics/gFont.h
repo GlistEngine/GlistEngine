@@ -27,7 +27,10 @@ public:
 
 	void load(std::string fullPath, int size);
 	void loadFont(std::string fontPath, int size);
-	void drawText(std::string text, float x, float y, float scale = 1.0f);
+	void drawText(std::string text, float x, float y);
+
+	float getStringWidth(std::string text);
+	float getStringHeight(std::string text);
 
 private:
 
@@ -45,6 +48,14 @@ private:
     unsigned int vao, vbo;
 
     int fontsize;
+
+    unsigned char ci;
+    std::string::const_iterator c, cs1, cs2;
+    Character ch;
+    float xpos, ypos;
+    float csx, csy;
+    float cthy;
+    float ssw, ssh;
 };
 
 #endif /* ENGINE_GRAPHICS_GFONT_H_ */
