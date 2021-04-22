@@ -30,11 +30,31 @@ const int gTexture::TEXTURETYPE_DIFFUSE = 0;
 const int gTexture::TEXTURETYPE_SPECULAR = 1;
 const int gTexture::TEXTURETYPE_NORMAL = 2;
 const int gTexture::TEXTURETYPE_HEIGHT = 3;
+const int gTexture::TEXTURETYPE_PBR_ALBEDO = 4;
+const int gTexture::TEXTURETYPE_PBR_ROUGHNESS = 5;
+const int gTexture::TEXTURETYPE_PBR_METALNESS = 6;
+const int gTexture::TEXTURETYPE_PBR_NORMAL = 7;
+const int gTexture::TEXTURETYPE_PBR_AO = 8;
 
+const int gTexture::TEXTUREWRAP_REPEAT = 0;
+const int gTexture::TEXTUREWRAP_CLAMP = 1;
+const int gTexture::TEXTUREWRAP_CLAMPTOEDGE = 2;
+
+const int gTexture::TEXTUREMINMAGFILTER_LINEAR = 0;
+const int gTexture::TEXTUREMINMAGFILTER_MIPMAPLINEAR = 1;
+const int gTexture::TEXTUREMINMAGFILTER_NEAREST = 2;
+
+static const int texturewrap[3] = {GL_REPEAT, GL_CLAMP, GL_CLAMP_TO_EDGE};
+static const int texturefilter[3] = {GL_LINEAR, GL_CLAMP, GL_CLAMP_TO_EDGE};
 
 gTexture::gTexture() {
 	id = GL_NONE;
+	internalformat = GL_RGBA;
 	format = GL_RGBA;
+	wraps = TEXTUREWRAP_REPEAT;
+	wrapt = TEXTUREWRAP_REPEAT;
+	filtermin = TEXTUREMINMAGFILTER_LINEAR;
+	filtermag = TEXTUREMINMAGFILTER_LINEAR;
 	texturetype[0] = "texture_diffuse";
 	texturetype[1] = "texture_specular";
 	texturetype[2] = "texture_normal";
@@ -46,12 +66,18 @@ gTexture::gTexture() {
 	bsubpartdrawn = false;
 	ismutable = false;
 	isfbo = false;
+	ishdr = false;
 	setupRenderData();
 }
 
 gTexture::gTexture(int w, int h, int format, bool isFbo) {
 	id = GL_NONE;
+	internalformat = format;
 	this->format = format;
+	wraps = TEXTUREWRAP_REPEAT;
+	wrapt = TEXTUREWRAP_REPEAT;
+	filtermin = TEXTUREMINMAGFILTER_LINEAR;
+	filtermag = TEXTUREMINMAGFILTER_LINEAR;
 	texturetype[0] = "texture_diffuse";
 	texturetype[1] = "texture_specular";
 	texturetype[2] = "texture_normal";
@@ -65,7 +91,7 @@ gTexture::gTexture(int w, int h, int format, bool isFbo) {
 	isfbo = isFbo;
     glGenTextures(1, &id);
     bind();
-    glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, 0);
+    glTexImage2D(GL_TEXTURE_2D, 0, internalformat, width, height, 0, format, GL_UNSIGNED_BYTE, 0);
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP); // TODO: BEFORE SHADOWMAP GL_REPEAT
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP); // TODO: BEFORE SHADOWMAP GL_REPEAT
@@ -78,56 +104,104 @@ gTexture::~gTexture() {
 	if (ismutable) delete data;
 }
 
-unsigned int gTexture::load(std::string fullPath) {
+unsigned int gTexture::load(std::string fullPath, bool isHDR) {
 	fullpath = fullPath;
 	directory = getDirName(fullpath);
 	path = getFileName(fullpath);
+	ishdr = isHDR;
 
     glGenTextures(1, &id);
 
-    data = stbi_load(fullpath.c_str(), &width, &height, &componentnum, 0);
-    setData(data, false);
+    if (ishdr) {
+    	stbi_set_flip_vertically_on_load(true);
+    	datahdr = stbi_loadf(fullpath.c_str(), &width, &height, &componentnum, 0);
+    	setDataHDR(datahdr, false);
+    } else {
+        data = stbi_load(fullpath.c_str(), &width, &height, &componentnum, 0);
+        setData(data, false);
+    }
 
 	setupRenderData();
     return id;
 }
 
-unsigned int gTexture::loadTexture(std::string texturePath) {
-	return load(gGetTexturesDir() + texturePath);
+unsigned int gTexture::loadTexture(std::string texturePath, bool isHDR) {
+	return load(gGetTexturesDir() + texturePath, isHDR);
+}
+
+unsigned int gTexture::loadData(unsigned char* textureData, int width, int height, int componentNum) {
+	this->width = width;
+	this->height = height;
+	this->componentnum = componentNum;
+
+    glGenTextures(1, &id);
+
+    data = textureData;
+    setData(data, true);
+
+	setupRenderData();
+    return id;
 }
 
 void gTexture::setData(unsigned char* textureData, bool isMutable) {
 	ismutable = isMutable;
 	data = textureData;
-    if (data) {
-        if (componentnum == 1)
-            format = GL_RED;
-        else if (componentnum == 3)
-            format = GL_RGB;
-        else if (componentnum == 4)
-            format = GL_RGBA;
+    if (componentnum == 1) format = GL_RED;
+    else if (componentnum == 2) format = GL_RG;
+    else if (componentnum == 3) format = GL_RGB;
+    else if (componentnum == 4) format = GL_RGBA;
 
+    if (data) {
         bind();
         glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
         glGenerateMipmap(GL_TEXTURE_2D);
 
-        glTexImage2D(GL_TEXTURE_2D, 0, 0, getWidth(), getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+        glTexImage2D(GL_TEXTURE_2D, 0, format, getWidth(), getHeight(), 0, format, GL_UNSIGNED_BYTE, data);
 
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
+        if (format == GL_RG) {
+            GLint swizzleMask[] = {GL_RED, GL_RED, GL_RED, GL_GREEN};
+            glTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_RGBA, swizzleMask);
+        }
+
         if (!ismutable) stbi_image_free(data);
         unbind();
     } else {
-        std::cout << "Texture failed to load at path: " << fullpath << std::endl;
+    	gLoge("gTexture") << "Texture failed to load at path: " << fullpath;
         stbi_image_free(data);
     }
 }
 
+void gTexture::setDataHDR(float* textureData, bool isMutable) {
+	ismutable = isMutable;
+	datahdr = textureData;
+	if (datahdr) {
+		bind();
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, width, height, 0, GL_RGB, GL_FLOAT, datahdr); // note how we specify the texture's data value to be float
+
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+		if (!ismutable) stbi_image_free(datahdr);
+		unbind();
+	} else {
+		gLoge("gTexture") << "Failed to load HDR image at path: " << fullpath;
+		stbi_image_free(datahdr);
+	}
+}
+
 unsigned char* gTexture::getData() {
 	return data;
+}
+
+float* gTexture::getDataHDR() {
+	return datahdr;
 }
 
 bool gTexture::isMutable() {
@@ -138,12 +212,25 @@ void gTexture::bind() {
 	glBindTexture(GL_TEXTURE_2D, id);
 }
 
+void gTexture::bind(int textureSlotNo) {
+	glActiveTexture(GL_TEXTURE0 + textureSlotNo);
+	glBindTexture(GL_TEXTURE_2D, id);
+}
+
 void gTexture::unbind() {
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 unsigned int gTexture::getId() {
 	return id;
+}
+
+bool gTexture::isHDR() {
+	return ishdr;
+}
+
+unsigned int gTexture::getInternalFormat() {
+	return internalformat;
 }
 
 unsigned int gTexture::getFormat() {
@@ -157,6 +244,41 @@ void gTexture::setType(int textureType) {
 int gTexture::getType() {
 	return type;
 }
+
+void gTexture::setWrapping(int wrapS, int wrapT) {
+	wraps = wrapS;
+	wrapt = wrapT;
+	bind();
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, texturewrap[wraps]);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, texturewrap[wrapt]);
+	unbind();
+}
+
+void gTexture::setFiltering(int minFilter, int magFilter) {
+	filtermin = minFilter;
+	filtermag = magFilter;
+	bind();
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, texturefilter[filtermin]);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	unbind();
+}
+
+int gTexture::getWrapS() {
+	return wraps;
+}
+
+int gTexture::getWrapT() {
+	return wrapt;
+}
+
+int gTexture::getFilterMin() {
+	return filtermin;
+}
+
+int gTexture::getFilterMag() {
+	return filtermag;
+}
+
 
 std::string gTexture::getTypeName() {
 	return texturetype[type];
@@ -255,7 +377,7 @@ void gTexture::endDraw() {
 
 	glActiveTexture(GL_TEXTURE0);
     bind();
-    if (format == GL_RGBA) {
+    if (format == GL_RGBA || format == GL_RG) {
         glEnable(GL_BLEND);
         glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     }
@@ -264,7 +386,7 @@ void gTexture::endDraw() {
     glDrawArrays(GL_TRIANGLES, 0, 6);
     glBindVertexArray(0);
 
-    if (format == GL_RGBA) glDisable(GL_BLEND);
+    if (format == GL_RGBA || format == GL_RG) glDisable(GL_BLEND);
     unbind();
     if(bsubpartdrawn) {	setupRenderData(); }
 }
