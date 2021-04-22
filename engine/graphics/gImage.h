@@ -16,11 +16,14 @@ public:
 	gImage();
 	virtual ~gImage();
 
-	unsigned int load(std::string fullPath);
-	unsigned int loadImage(std::string imagePath);
+	unsigned int load(std::string fullPath, bool isHDR = false);
+	unsigned int loadImage(std::string imagePath, bool isHDR = false);
 
     void setImageData(unsigned char* imageData);
     unsigned char* getImageData();
+
+    void setImageDataHDR(float* imageData);
+    float* getImageDataHDR();
 
     void clearData();
 };

@@ -5,6 +5,8 @@
  *      Author: noyan
  */
 
+#pragma once
+
 #ifndef ENGINE_GRAPHICS_GTEXTURE_H_
 #define ENGINE_GRAPHICS_GTEXTURE_H_
 
@@ -15,21 +17,35 @@
 class gTexture : public gRenderObject {
 public:
 	static const int TEXTURETYPE_DIFFUSE, TEXTURETYPE_SPECULAR, TEXTURETYPE_NORMAL, TEXTURETYPE_HEIGHT;
+	static const int TEXTURETYPE_PBR_ALBEDO, TEXTURETYPE_PBR_ROUGHNESS, TEXTURETYPE_PBR_METALNESS, TEXTURETYPE_PBR_NORMAL, TEXTURETYPE_PBR_AO;
+	static const int TEXTUREWRAP_REPEAT, TEXTUREWRAP_CLAMP, TEXTUREWRAP_CLAMPTOEDGE;
+	static const int TEXTUREMINMAGFILTER_LINEAR, TEXTUREMINMAGFILTER_MIPMAPLINEAR, TEXTUREMINMAGFILTER_NEAREST;
 
 	gTexture();
 	gTexture(int w, int h, int format = GL_RGBA, bool isFbo = false);
 	virtual ~gTexture();
 
-	virtual unsigned int load(std::string fullPath);
-	unsigned int loadTexture(std::string texturePath);
+	virtual unsigned int load(std::string fullPath, bool isHDR = false);
+	unsigned int loadTexture(std::string texturePath, bool isHDR = false);
+
+	unsigned int loadData(unsigned char* textureData, int width, int height, int componentNum);
 
     void bind();
+    void bind(int textureSlotNo);
     void unbind();
 
     unsigned int getId();
+    bool isHDR();
+    unsigned int getInternalFormat();
     unsigned int getFormat();
     void setType(int textureType);
     int getType();
+    void setWrapping(int wrapS, int wrapT);
+    void setFiltering(int minFilter, int magFilter);
+    int getWrapS();
+    int getWrapT();
+    int getFilterMin();
+    int getFilterMag();
     std::string getTypeName();
     std::string getTypeName(int textureType);
     std::string getFilename();
@@ -53,12 +69,13 @@ public:
 
 protected:
     std::string fullpath, directory;
-    unsigned int id, format;
+    unsigned int id, internalformat, format;
     int type;
     std::string path;
     int width, height, componentnum;
     unsigned char* data;
     bool ismutable;
+    int wraps, wrapt, filtermin, filtermag;
 
     void setData(unsigned char* textureData, bool isMutable = false);
     unsigned char* getData();
@@ -68,6 +85,11 @@ protected:
 
 	std::string getDirName(const std::string& fname);
 	std::string getFileName(const std::string& fname);
+
+    bool ishdr;
+    float* datahdr;
+    void setDataHDR(float* textureData, bool isMutable = false);
+    float* getDataHDR();
 
 private:
     std::string texturetype[4];
