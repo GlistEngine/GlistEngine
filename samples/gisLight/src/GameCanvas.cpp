@@ -94,7 +94,7 @@ void GameCanvas::draw() {
 	camera.end();
 	disableDepthTest();
 
-	font.drawText("FPS: " + gToStr(root->getFramerate()), 10, 22, 1.0f);
+	font.drawText("FPS: " + gToStr(root->getFramerate()), 10, 22);
 }
 
 void GameCanvas::keyPressed(int key) {
