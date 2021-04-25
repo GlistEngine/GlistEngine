@@ -17,6 +17,7 @@
 gMesh::gMesh() {
 	sli = 0;
 	ti = 0;
+	drawmode = DRAWMODE_TRIANGLES;
     diffuseNr  = 1;
     specularNr = 1;
     normalNr   = 1;
@@ -32,6 +33,7 @@ gMesh::gMesh() {
 gMesh::gMesh(std::vector<gVertex> vertices, std::vector<unsigned int> indices, std::vector<gTexture> textures) {
 	sli = 0;
 	ti = 0;
+	drawmode = DRAWMODE_TRIANGLES;
     diffuseNr  = 1;
     specularNr = 1;
     normalNr   = 1;
@@ -61,7 +63,7 @@ std::vector<unsigned int> gMesh::getIndices() {
 	return indices;
 }
 
-void gMesh::setTextures(std::vector<gTexture> textures) {
+void gMesh::setTextures(std::vector<gTexture>& textures) {
 //	this->textures = textures;
     for(ti = 0; ti < textures.size(); ti++) {
         textype = textures[ti].getType();
@@ -72,6 +74,17 @@ void gMesh::setTextures(std::vector<gTexture> textures) {
         } else if(textype == gTexture::TEXTURETYPE_NORMAL) {
         	material.setNormalMap(&textures[ti]);
         } else if(textype == gTexture::TEXTURETYPE_HEIGHT) {
+        	material.setHeightMap(&textures[ti]);
+        } else if (textype == gTexture::TEXTURETYPE_PBR_ALBEDO) {
+        	material.setAlbedoMap(&textures[ti]);
+        } else if (textype == gTexture::TEXTURETYPE_PBR_ROUGHNESS) {
+        	material.setRoughnessMap(&textures[ti]);
+        } else if (textype == gTexture::TEXTURETYPE_PBR_METALNESS) {
+        	material.setMetalnessMap(&textures[ti]);
+        } else if (textype == gTexture::TEXTURETYPE_PBR_NORMAL) {
+        	material.setPbrNormalMap(&textures[ti]);
+        } else if (textype == gTexture::TEXTURETYPE_PBR_AO) {
+        	material.setAOMap(&textures[ti]);
         }
     }
 
@@ -83,6 +96,15 @@ void gMesh::addTexture(gTexture tex) {
 
 gTexture* gMesh::getTexture(int textureNo) {
 	return &textures[textureNo];
+}
+
+
+void gMesh::setDrawMode(int drawMode) {
+	drawmode = drawMode;
+}
+
+int gMesh::getDrawMode() {
+	return drawmode;
 }
 
 void gMesh::setMaterial(gMaterial* material) {
@@ -109,7 +131,7 @@ void gMesh::drawStart() {
 		return;
 	}
 
-    if (textures.size() == 0) {
+    if (textures.size() == 0 && !material.isPBR()) {
     	colorshader = renderer->getColorShader();
 		colorshader->use();
 
@@ -172,6 +194,31 @@ void gMesh::drawStart() {
 	    colorshader->setMat4("projection", renderer->getProjectionMatrix());
 		colorshader->setMat4("view", renderer->getViewMatrix());
 		colorshader->setMat4("model", localtransformationmatrix);
+    } else if (textures.size() == 0 && material.isPBR()) {
+    	pbrshader = renderer->getPbrShader();
+    	pbrshader->use();
+    	pbrshader->setMat4("projection", renderer->getProjectionMatrix());
+	    pbrshader->setMat4("view", renderer->getViewMatrix());
+    	pbrshader->setMat4("model", localtransformationmatrix);
+    	pbrshader->setInt("albedoMap", 3);
+    	pbrshader->setInt("normalMap", 4);
+    	pbrshader->setInt("metallicMap", 5);
+    	pbrshader->setInt("roughnessMap", 6);
+    	pbrshader->setInt("aoMap", 7);
+    	material.bindAlbedoMap();
+    	material.bindPbrNormalMap();
+    	material.bindMetalnessMap();
+    	material.bindRoughnessMap();
+    	material.bindAOMap();
+	    if (renderer->isLightingEnabled()) {
+    		pbrshader->setInt("lightNum", renderer->getSceneLightNum());
+	    	for (sli = 0; sli < renderer->getSceneLightNum(); sli++) {
+	    		pbrshader->setVec3("lightPositions[" + gToStr(sli) + "]", renderer->getSceneLight(sli)->getPosition());
+	    		pbrshader->setVec3("lightColors[" + gToStr(sli) + "]", glm::vec3(renderer->getSceneLight(sli)->getDiffuseColor()->r, renderer->getSceneLight(sli)->getDiffuseColor()->g, renderer->getSceneLight(sli)->getDiffuseColor()->b));
+	    	}
+	    }
+
+
 	} else {
 		textureshader = renderer->getTextureShader();
         textureshader->use();
@@ -212,9 +259,9 @@ void gMesh::drawVbo() {
     // draw mesh
     vbo.bind();
     if (vbo.isIndexDataAllocated()) {
-        glDrawElements(GL_TRIANGLES, vbo.getIndicesNum(), GL_UNSIGNED_INT, 0);
+        glDrawElements(drawmode, vbo.getIndicesNum(), GL_UNSIGNED_INT, 0);
     } else {
-    	glDrawArrays(GL_TRIANGLES, 0, vbo.getVerticesNum());
+    	glDrawArrays(drawmode, 0, vbo.getVerticesNum());
     }
     vbo.unbind();
 }
