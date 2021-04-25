@@ -181,7 +181,7 @@ void gTexture::setDataHDR(float* textureData, bool isMutable) {
 	datahdr = textureData;
 	if (datahdr) {
 		bind();
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, width, height, 0, GL_RGB, GL_FLOAT, datahdr); // note how we specify the texture's data value to be float
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB32F, width, height, 0, GL_RGB, GL_FLOAT, datahdr); // note how we specify the texture's data value to be float
 
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
