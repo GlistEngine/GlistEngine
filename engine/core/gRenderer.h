@@ -118,13 +118,20 @@ public:
 	gShader* getImageShader();
 	gShader* getSkyboxShader();
 	gShader* getShadowmapShader();
+	gShader* getPbrShader();
+	gShader* getEquirectangularShader();
+	gShader* getIrradianceShader();
+	gShader* getPrefilterShader();
+	gShader* getBrdfShader();
 
 	void setProjectionMatrix(glm::mat4 projectionMatrix);
 	void setProjectionMatrix2d(glm::mat4 projectionMatrix2d);
 	void setViewMatrix(glm::mat4 viewMatrix);
+	void setCameraPosition(glm::vec3 cameraPosition);
 	glm::mat4 getProjectionMatrix();
 	glm::mat4 getProjectionMatrix2d();
 	glm::mat4 getViewMatrix();
+	glm::vec3 getCameraPosition();
 	void backupMatrices();
 	void restoreMatrices();
 
@@ -134,12 +141,12 @@ private:
 	static int unitwidth, unitheight;
 	static int screenscaling;
 	static int currentresolution, unitresolution;
-	gColor *rendercolor;
+	gColor* rendercolor;
 
-	gColor *lightingcolor;
+	gColor* lightingcolor;
 	bool islightingenabled;
 	glm::vec3 lightingposition;
-	gColor *globalambientcolor;
+	gColor* globalambientcolor;
 	int li;
 	std::vector<gLight*> scenelights;
 
@@ -147,18 +154,24 @@ private:
 	int depthtesttype;
 	unsigned int depthtesttypeid[2];
 
-	gShader *colorshader;
-	gShader *textureshader;
-	gShader *fontshader;
-	gShader *imageshader;
-	gShader *skyboxshader;
-	gShader *shadowmapshader;
+	gShader* colorshader;
+	gShader* textureshader;
+	gShader* fontshader;
+	gShader* imageshader;
+	gShader* skyboxshader;
+	gShader* shadowmapshader;
+	gShader* pbrshader;
+	gShader* equirectangularshader;
+	gShader* irradianceshader;
+	gShader* prefiltershader;
+	gShader* brdfshader;
 
 	glm::mat4 projectionmatrix;
 	glm::mat4 projectionmatrixold;
 	glm::mat4 projectionmatrix2d;
 	glm::mat4 viewmatrix;
 	glm::mat4 viewmatrixold;
+	glm::vec3 cameraposition;
 
 	const std::string getShaderSrcColorVertex();
 	const std::string getShaderSrcColorFragment();
@@ -172,6 +185,14 @@ private:
 	const std::string getShaderSrcSkyboxFragment();
 	const std::string getShaderSrcShadowmapVertex();
 	const std::string getShaderSrcShadowmapFragment();
+	const std::string getShaderSrcPbrVertex();
+	const std::string getShaderSrcPbrFragment();
+	const std::string getShaderSrcCubemapVertex();
+	const std::string getShaderSrcEquirectangularFragment();
+	const std::string getShaderSrcIrradianceFragment();
+	const std::string getShaderSrcPrefilterFragment();
+	const std::string getShaderSrcBrdfVertex();
+	const std::string getShaderSrcBrdfFragment();
 
 };
 
