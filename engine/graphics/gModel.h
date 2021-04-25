@@ -38,6 +38,8 @@ public:
 	void load(std::string fullPath);
 	void draw();
 
+	std::string getFilename();
+	std::string getFullpath();
 	int getMeshNum();
 	gSkinnedMesh getMesh(int meshNo);
 	std::string getMeshName(int meshNo);
@@ -89,11 +91,13 @@ private:
 	void processNode(aiNode *node, const aiScene *scene);
 	gSkinnedMesh processMesh(aiMesh *mesh, const aiScene *scene);
 	std::vector<gTexture> loadMaterialTextures(aiMaterial *mat, aiTextureType type, int textureType);
+	gTexture loadMaterialTexture(aiMaterial *mat, aiTextureType type, int textureType);
 	void updateBones(gSkinnedMesh* gmesh, aiMesh* aimesh);
 	void updateVbo(gSkinnedMesh* gmesh);
 	void updateAnimationNodes();
 	void generateAnimationKeys();
 
+	std::string filename;
 	int animationnum;
 	bool isanimated;
 	float animationposition, animationpositionold;
