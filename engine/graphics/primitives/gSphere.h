@@ -21,7 +21,7 @@
 
 class gSphere: public gMesh {
 public:
-	gSphere(int sectorCount = 18, int stackCount = 36);
+	gSphere(int xSegmentNum = 64, int ySegmentNum = 64);
 	virtual ~gSphere();
 };
 
