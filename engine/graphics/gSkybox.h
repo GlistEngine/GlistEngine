@@ -41,11 +41,18 @@ public:
 	 */
 	unsigned int load(std::vector<std::string> fullPaths);
 
+	unsigned int loadEquirectangular(std::string fullPath);
+	unsigned int loadTextureEquirectangular(std::string texturePath);
+
 	/**
 	 * Draws the skybox back the scene. Drawing the skybox after drawing all scene objects and disabling lights would give the most
 	 * native visual result.
 	 */
 	void draw();
+
+	void generatePbrMaps();
+	void bindPbrMaps();
+
 
 private:
 	unsigned int id;
@@ -59,6 +66,26 @@ private:
 
 	gVbo vbo;
 	int skymapint, skymapslot;
+
+	//Equirectangular variables and objects
+	gShader* pbrShader;
+	gShader* equirectangularToCubemapShader;
+	gShader* irradianceShader;
+	gShader* prefilterShader;
+	gShader* brdfShader;
+
+	unsigned int captureFBO;
+	unsigned int captureRBO;
+	unsigned int irradianceMap;
+	unsigned int prefilterMap;
+	unsigned int brdfLUTTexture;
+	unsigned int quadVAO;
+	unsigned int quadVBO;
+
+	void renderCube();
+	void renderQuad();
+
+	bool ishdr, ispbr;
 };
 
 #endif /* GRAPHICS_GSKYBOX_H_ */
