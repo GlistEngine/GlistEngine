@@ -41,6 +41,7 @@ void gCamera::begin() {
 	renderer->backupMatrices();
 	renderer->setProjectionMatrix(glm::perspective(glm::radians(fov), (float)renderer->getWidth() / (float)renderer->getHeight(), nearclip, farclip));
 	renderer->setViewMatrix(glm::inverse(locallookmatrix));
+	renderer->setCameraPosition(position);
 //	viewmatrix = GetViewMatrix();
 }
 
