@@ -39,7 +39,7 @@ void gModel::loadModel(std::string modelPath) {
 void gModel::loadModelFile(std::string fullPath) {
     // read file via ASSIMP
     Assimp::Importer importer;
-    importer.ReadFile(fullPath, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
+    importer.ReadFile(fullPath, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace | aiProcessPreset_TargetRealtime_Fast);
     scene = importer.GetOrphanedScene();
     // check for errors
     if(!scene || (scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE) || !scene->mRootNode) { // if is Not Zero
@@ -48,6 +48,7 @@ void gModel::loadModelFile(std::string fullPath) {
     }
     // retrieve the directory path of the filepath
     directory = fullPath.substr(0, fullPath.find_last_of('/'));
+    filename = fullPath.substr(fullPath.find_last_of('/') + 1, fullPath.length());
     animationnum = scene->mNumAnimations;
     isanimated = animationnum > 0;
 
@@ -156,6 +157,14 @@ void gModel::draw() {
 	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i].draw();
 }
 
+std::string gModel::getFilename() {
+	return filename;
+}
+
+std::string gModel::getFullpath() {
+	return directory + "/" + filename;
+}
+
 int gModel::getMeshNum() {
 	return meshes.size();
 }
@@ -251,22 +260,47 @@ gSkinnedMesh gModel::processMesh(aiMesh *mesh, const aiScene *scene) {
     // specular: texture_specularN
     // normal: texture_normalN
 
-    // 1. diffuse maps
-    std::vector<gTexture> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE, gTexture::TEXTURETYPE_DIFFUSE);
-    textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
-    // 2. specular maps
-    std::vector<gTexture> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, gTexture::TEXTURETYPE_SPECULAR);
-    textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
-    // 3. normal maps
-    std::vector<gTexture> normalMaps = loadMaterialTextures(material, aiTextureType_HEIGHT, gTexture::TEXTURETYPE_NORMAL);
-    textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
-    // 4. height maps
-    std::vector<gTexture> heightMaps = loadMaterialTextures(material, aiTextureType_AMBIENT, gTexture::TEXTURETYPE_HEIGHT);
-    textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
-
     // return a mesh object created from the extracted mesh data
     gSkinnedMesh gmesh;
     gmesh.setVertices(vertices,  indices);
+
+    // 1. diffuse maps
+    std::vector<gTexture> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE, gTexture::TEXTURETYPE_DIFFUSE);
+    for (int i = 0; i < diffuseMaps.size(); i++) diffuseMaps[i].setType(gTexture::TEXTURETYPE_DIFFUSE);
+    textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
+    // 2. specular maps
+    std::vector<gTexture> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, gTexture::TEXTURETYPE_SPECULAR);
+    for (int i = 0; i < specularMaps.size(); i++) specularMaps[i].setType(gTexture::TEXTURETYPE_SPECULAR);
+    textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
+    // 3. normal maps
+    std::vector<gTexture> normalMaps = loadMaterialTextures(material, aiTextureType_NORMALS, gTexture::TEXTURETYPE_NORMAL);
+    for (int i = 0; i < normalMaps.size(); i++) normalMaps[i].setType(gTexture::TEXTURETYPE_NORMAL);
+    textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
+    // 4. height maps
+    std::vector<gTexture> heightMaps = loadMaterialTextures(material, aiTextureType_HEIGHT, gTexture::TEXTURETYPE_HEIGHT);
+    for (int i = 0; i < heightMaps.size(); i++) heightMaps[i].setType(gTexture::TEXTURETYPE_HEIGHT);
+    textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
+    // 5. pbr albedo maps
+    std::vector<gTexture> albedoMaps = loadMaterialTextures(material, aiTextureType_BASE_COLOR, gTexture::TEXTURETYPE_PBR_ALBEDO);
+    for (int i = 0; i < albedoMaps.size(); i++) albedoMaps[i].setType(gTexture::TEXTURETYPE_PBR_ALBEDO);
+    textures.insert(textures.end(), albedoMaps.begin(), albedoMaps.end());
+    // 6. pbr roughness maps
+    std::vector<gTexture> roughnessMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE_ROUGHNESS, gTexture::TEXTURETYPE_PBR_ROUGHNESS);
+    for (int i = 0; i < roughnessMaps.size(); i++) roughnessMaps[i].setType(gTexture::TEXTURETYPE_PBR_ROUGHNESS);
+    textures.insert(textures.end(), roughnessMaps.begin(), roughnessMaps.end());
+    // 7. pbr metalness maps
+    std::vector<gTexture> metalnessMaps = loadMaterialTextures(material, aiTextureType_METALNESS, gTexture::TEXTURETYPE_PBR_METALNESS);
+    for (int i = 0; i < metalnessMaps.size(); i++) metalnessMaps[i].setType(gTexture::TEXTURETYPE_PBR_METALNESS);
+    textures.insert(textures.end(), metalnessMaps.begin(), metalnessMaps.end());
+    // 8. pbr normal maps
+    std::vector<gTexture> pbrnormalMaps = loadMaterialTextures(material, aiTextureType_NORMAL_CAMERA, gTexture::TEXTURETYPE_PBR_NORMAL);
+    for (int i = 0; i < pbrnormalMaps.size(); i++) pbrnormalMaps[i].setType(gTexture::TEXTURETYPE_PBR_NORMAL);
+    textures.insert(textures.end(), pbrnormalMaps.begin(), pbrnormalMaps.end());
+    // 5. pbr ao maps
+    std::vector<gTexture> aoMaps = loadMaterialTextures(material, aiTextureType_AMBIENT_OCCLUSION, gTexture::TEXTURETYPE_PBR_AO);
+    for (int i = 0; i < aoMaps.size(); i++) aoMaps[i].setType(gTexture::TEXTURETYPE_PBR_AO);
+    textures.insert(textures.end(), aoMaps.begin(), aoMaps.end());
+
     gmesh.setTextures(textures);
 
     return gmesh;
@@ -297,6 +331,19 @@ std::vector<gTexture> gModel::loadMaterialTextures(aiMaterial *mat, aiTextureTyp
         }
     }
     return textures;
+}
+
+gTexture gModel::loadMaterialTexture(aiMaterial *mat, aiTextureType type, int textureType) {
+	gTexture texture;
+    for(unsigned int i = 0; i < mat->GetTextureCount(type); i++) {
+        aiString str;
+        mat->GetTexture(type, i, &str);
+
+		std::string tpath = this->directory + "/" + str.C_Str();
+		texture.load(tpath);
+		texture.setType(textureType);
+    }
+    return texture;
 }
 
 bool gModel::isAnimated() {
