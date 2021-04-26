@@ -37,6 +37,7 @@ public:
 	virtual void setVolume(float volume);
 	virtual float getVolume();
 
+
 protected:
 	bool isplaying, isloaded;
 	unsigned int position;

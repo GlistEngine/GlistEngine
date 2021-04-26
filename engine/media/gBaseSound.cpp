@@ -26,6 +26,7 @@ int gBaseSound::load(std::string fullPath) {
 	return 0;
 }
 
+
 int gBaseSound::loadSound(std::string soundPath) {
 	filepath = soundPath;
 	return 0;

@@ -34,6 +34,7 @@ int gFmodSound::load(std::string fullPath) {
 //        Common_Fatal("FMOD lib version %08x doesn't match header version %08x", version, FMOD_VERSION);
     }
 
+
     result = FMOD_System_Init(system, 32, FMOD_INIT_NORMAL, extradriverdata);
 //    ERRCHECK(result);
 

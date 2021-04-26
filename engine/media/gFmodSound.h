@@ -45,4 +45,5 @@ private:
     void *extradriverdata = 0;
 };
 
+
 #endif /* MEDIA_GFMODSOUND_H_ */
