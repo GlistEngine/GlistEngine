@@ -18,6 +18,7 @@ public:
 	virtual ~gBaseSound();
 
 	virtual int load(std::string fullPath);
+	virtual int loadSound(std::string soundPath);
 	virtual void play();
 	virtual bool isLoaded();
 	virtual bool isPlaying();
