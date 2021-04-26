@@ -183,7 +183,7 @@ void gModel::processNode(aiNode *node, const aiScene *scene) {
 		// the node object only contains indices to index the actual objects in the scene.
 		// the scene contains all the data, node is just to keep stuff organized (like relations between nodes).
 		aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-		logi("Loading mesh:" + std::string(mesh->mName.C_Str()));
+		gLogi("gModel") << "Loading mesh:" << mesh->mName.C_Str();
 		gSkinnedMesh modelmesh = processMesh(mesh, scene);
 //		if (isanimated) updateBones(&modelmesh, mesh, scene);
 //		modelmesh.setParent(this);
@@ -280,7 +280,6 @@ gSkinnedMesh gModel::processMesh(aiMesh *mesh, const aiScene *scene) {
     std::vector<gTexture> heightMaps = loadMaterialTextures(material, aiTextureType_HEIGHT, gTexture::TEXTURETYPE_HEIGHT);
     for (int i = 0; i < heightMaps.size(); i++) heightMaps[i].setType(gTexture::TEXTURETYPE_HEIGHT);
     textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
-#ifdef LINUX
     // 5. pbr albedo maps
     std::vector<gTexture> albedoMaps = loadMaterialTextures(material, aiTextureType_BASE_COLOR, gTexture::TEXTURETYPE_PBR_ALBEDO);
     for (int i = 0; i < albedoMaps.size(); i++) albedoMaps[i].setType(gTexture::TEXTURETYPE_PBR_ALBEDO);
@@ -301,7 +300,6 @@ gSkinnedMesh gModel::processMesh(aiMesh *mesh, const aiScene *scene) {
     std::vector<gTexture> aoMaps = loadMaterialTextures(material, aiTextureType_AMBIENT_OCCLUSION, gTexture::TEXTURETYPE_PBR_AO);
     for (int i = 0; i < aoMaps.size(); i++) aoMaps[i].setType(gTexture::TEXTURETYPE_PBR_AO);
     textures.insert(textures.end(), aoMaps.begin(), aoMaps.end());
-#endif
 
     gmesh.setTextures(textures);
 
