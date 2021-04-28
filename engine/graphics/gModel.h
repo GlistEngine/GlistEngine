@@ -42,6 +42,7 @@ public:
 	std::string getFullpath();
 	int getMeshNum();
 	gSkinnedMesh getMesh(int meshNo);
+	gSkinnedMesh* getMeshPtr(int meshNo);
 	std::string getMeshName(int meshNo);
 	gBoundingBox getBoundingBox();
 
