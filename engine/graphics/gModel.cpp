@@ -173,6 +173,10 @@ gSkinnedMesh gModel::getMesh(int meshNo) {
 	return meshes[meshNo];
 }
 
+gSkinnedMesh* gModel::getMeshPtr(int meshNo) {
+	return &meshes[meshNo];
+}
+
 std::string gModel::getMeshName(int meshNo) {
 	return scene->mMeshes[meshNo]->mName.C_Str();
 }
