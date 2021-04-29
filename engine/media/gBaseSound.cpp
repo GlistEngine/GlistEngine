@@ -88,3 +88,7 @@ float gBaseSound::getVolume() {
 	return volume;
 }
 
+std::string gBaseSound::getPath() {
+	return filepath;
+}
+

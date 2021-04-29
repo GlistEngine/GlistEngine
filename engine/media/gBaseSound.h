@@ -10,6 +10,7 @@
 
 #include <string>
 
+
 class gBaseSound {
 public:
 	static const int LOOPTYPE_DEFAULT = 0, LOOPTYPE_NONE = 1, LOOPTYPE_NORMAL = 2;
@@ -36,6 +37,8 @@ public:
 
 	virtual void setVolume(float volume);
 	virtual float getVolume();
+
+	std::string getPath();
 
 
 protected:
