@@ -53,7 +53,7 @@ int gFmodSound::load(std::string fullPath) {
 }
 
 int gFmodSound::loadSound(std::string soundPath) {
-	return load(gObject::gGetSoundsDir() + soundPath);
+	return load(gGetSoundsDir() + soundPath);
 }
 
 void gFmodSound::play() {

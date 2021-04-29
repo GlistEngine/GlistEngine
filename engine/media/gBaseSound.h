@@ -9,9 +9,10 @@
 #define MEDIA_GBASESOUND_H_
 
 #include <string>
+#include "gObject.h"
 
 
-class gBaseSound {
+class gBaseSound : public gObject {
 public:
 	static const int LOOPTYPE_DEFAULT = 0, LOOPTYPE_NONE = 1, LOOPTYPE_NORMAL = 2;
 

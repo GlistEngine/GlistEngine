@@ -11,7 +11,7 @@
 #include "gBaseSound.h"
 #include "fmod.h"
 #include "fmod_common.h"
-#include "gObject.h"
+
 
 class gFmodSound: public gBaseSound {
 public:
