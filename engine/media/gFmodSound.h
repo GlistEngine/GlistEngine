@@ -24,6 +24,7 @@ public:
 	void setPaused(bool isPaused);
 	void stop();
 	void close();
+	bool isPlaying();
 
 	void setLoopType(int loopType);
 
@@ -43,6 +44,7 @@ private:
     FMOD_RESULT result;
     unsigned int version;
     void *extradriverdata = 0;
+    int ip;
 };
 
 

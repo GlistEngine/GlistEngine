@@ -80,6 +80,12 @@ void gFmodSound::close() {
 	isloaded = false;
 }
 
+bool gFmodSound::isPlaying() {
+	FMOD_Channel_IsPlaying(channel, &ip);
+	isplaying = ip;
+	return isplaying;
+}
+
 int gFmodSound::getDuration() {
 	return duration;
 }
