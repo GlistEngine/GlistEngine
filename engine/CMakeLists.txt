@@ -107,6 +107,7 @@ set(SRC_FILES
 	${ENGINE_DIR}/graphics/gMesh.cpp
 	${ENGINE_DIR}/graphics/gSkinnedMesh.cpp
 	${ENGINE_DIR}/graphics/gModel.cpp
+	${ENGINE_DIR}/graphics/primitives/gLine.cpp
 	${ENGINE_DIR}/graphics/primitives/gPlane.cpp
 	${ENGINE_DIR}/graphics/primitives/gBox.cpp
 	${ENGINE_DIR}/graphics/primitives/gSphere.cpp

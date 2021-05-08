@@ -58,6 +58,7 @@ protected:
     void drawEnd();
 	gVbo vbo;
 	std::vector<gVertex> vertices;
+    bool isprojection2d;
 
 private:
 	std::vector<unsigned int> indices;
