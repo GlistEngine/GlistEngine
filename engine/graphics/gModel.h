@@ -60,6 +60,7 @@ public:
 	void roll(float radians);
 
 	void setPosition(float px, float py, float pz);
+	void setPosition(const glm::vec3& p);
 	void setOrientation(const glm::quat& o);
 	void setOrientation(const glm::vec3& angles);
 	void setScale(const glm::vec3& s);
