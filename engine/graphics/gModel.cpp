@@ -93,6 +93,11 @@ void gModel::setPosition(float px, float py, float pz) {
 	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i].setPosition(px, py, pz);
 }
 
+void gModel::setPosition(const glm::vec3& p) {
+	gNode::setPosition(p);
+	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i].setPosition(p);
+}
+
 void gModel::setOrientation(const glm::quat& o) {
 	gNode::setOrientation(o);
 	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i].setOrientation(o);
