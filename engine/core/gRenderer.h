@@ -43,6 +43,9 @@ int gGetCullFace();
 void gSetCullingDirection(int cullingDirection);
 int gGetCullingDirection();
 
+void gDrawLine(float x1, float y1, float x2, float y2);
+void gDrawLine(float x1, float y1, float z1, float x2, float y2, float z2);
+
 
 class gRenderer: public gObject {
 public:

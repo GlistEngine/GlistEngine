@@ -18,6 +18,7 @@ gMesh::gMesh() {
 	sli = 0;
 	ti = 0;
 	drawmode = DRAWMODE_TRIANGLES;
+	isprojection2d = false;
     diffuseNr  = 1;
     specularNr = 1;
     normalNr   = 1;
@@ -26,6 +27,7 @@ gMesh::gMesh() {
     scenelight = nullptr;
     colorshader = nullptr;
     textureshader = nullptr;
+    pbrshader = nullptr;
 	bbminx = 0.0f, bbminy = 0.0f, bbminz = 0.0f;
 	bbmaxx = 0.0f, bbmaxy = 0.0f, bbmaxz = 0.0f;
 }
@@ -34,6 +36,7 @@ gMesh::gMesh(std::vector<gVertex> vertices, std::vector<unsigned int> indices, s
 	sli = 0;
 	ti = 0;
 	drawmode = DRAWMODE_TRIANGLES;
+	isprojection2d = false;
     diffuseNr  = 1;
     specularNr = 1;
     normalNr   = 1;
@@ -191,7 +194,8 @@ void gMesh::drawStart() {
 	    }
 
 	    // Set matrices
-	    colorshader->setMat4("projection", renderer->getProjectionMatrix());
+	    if(isprojection2d)colorshader->setMat4("projection", renderer->getProjectionMatrix2d());
+	    else colorshader->setMat4("projection", renderer->getProjectionMatrix());
 		colorshader->setMat4("view", renderer->getViewMatrix());
 		colorshader->setMat4("model", localtransformationmatrix);
     } else if (textures.size() == 0 && material.isPBR()) {
@@ -249,7 +253,8 @@ void gMesh::drawStart() {
 	        textures[ti].bind();
 	    }
 
-	    textureshader->setMat4("projection", renderer->getProjectionMatrix());
+	    if (isprojection2d) textureshader->setMat4("projection", renderer->getProjectionMatrix2d());
+	    else textureshader->setMat4("projection", renderer->getProjectionMatrix());
 	    textureshader->setMat4("view", renderer->getViewMatrix());
 	    textureshader->setMat4("model", localtransformationmatrix);
 	}

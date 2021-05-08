@@ -8,6 +8,7 @@
 #include "gRenderer.h"
 
 #include "gLight.h"
+#include "gLine.h"
 
 const int gRenderer::SCREENSCALING_NONE = 0;
 const int gRenderer::SCREENSCALING_MIPMAP = 1;
@@ -55,6 +56,16 @@ int gGetCullingDirection() {
 	GLint i;
 	glGetIntegerv(GL_FRONT_FACE, &i);
 	return i;
+}
+
+void gDrawLine(float x1, float y1, float x2, float y2) {
+	gLine linemesh;
+	linemesh.draw(x1, y1, x2, y2);
+}
+
+void gDrawLine(float x1, float y1, float z1, float x2, float y2, float z2) {
+	gLine linemesh;
+	linemesh.draw(x1, y1, z1, x2, y2, z2);
 }
 
 
@@ -1492,5 +1503,4 @@ const std::string gRenderer::getShaderSrcBrdfFragment() {
 
 	return std::string(shadersource);
 }
-
 
