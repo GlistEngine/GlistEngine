@@ -127,7 +127,7 @@ unsigned int gSkybox::loadEquirectangular(std::string fullPath) {
 
 	// pbr: load the HDR environment map
 	gTexture hdr;
-	hdr.load(fullPath, true);
+	hdr.load(fullPath);
 	hdr.bind(0);
 
 	glViewport(0, 0, 512, 512); // don't forget to configure the viewport to the capture dimensions.

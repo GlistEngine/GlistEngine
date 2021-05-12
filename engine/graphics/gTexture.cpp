@@ -89,6 +89,7 @@ gTexture::gTexture(int w, int h, int format, bool isFbo) {
 	bsubpartdrawn = false;
 	ismutable = false;
 	isfbo = isFbo;
+	ishdr = false;
     glGenTextures(1, &id);
     bind();
     glTexImage2D(GL_TEXTURE_2D, 0, internalformat, width, height, 0, format, GL_UNSIGNED_BYTE, 0);
@@ -104,11 +105,12 @@ gTexture::~gTexture() {
 	if (ismutable) delete data;
 }
 
-unsigned int gTexture::load(std::string fullPath, bool isHDR) {
+unsigned int gTexture::load(std::string fullPath) {
 	fullpath = fullPath;
 	directory = getDirName(fullpath);
 	path = getFileName(fullpath);
-	ishdr = isHDR;
+	ishdr = false;
+	if (gToLower(fullpath.substr(fullpath.length() - 3, 3)) == "hdr") ishdr = true;
 
     glGenTextures(1, &id);
 
@@ -125,8 +127,8 @@ unsigned int gTexture::load(std::string fullPath, bool isHDR) {
     return id;
 }
 
-unsigned int gTexture::loadTexture(std::string texturePath, bool isHDR) {
-	return load(gGetTexturesDir() + texturePath, isHDR);
+unsigned int gTexture::loadTexture(std::string texturePath) {
+	return load(gGetTexturesDir() + texturePath);
 }
 
 unsigned int gTexture::loadData(unsigned char* textureData, int width, int height, int componentNum) {
@@ -145,6 +147,7 @@ unsigned int gTexture::loadData(unsigned char* textureData, int width, int heigh
 
 void gTexture::setData(unsigned char* textureData, bool isMutable) {
 	ismutable = isMutable;
+	ishdr = false;
 	data = textureData;
     if (componentnum == 1) format = GL_RED;
     else if (componentnum == 2) format = GL_RG;
@@ -178,6 +181,7 @@ void gTexture::setData(unsigned char* textureData, bool isMutable) {
 
 void gTexture::setDataHDR(float* textureData, bool isMutable) {
 	ismutable = isMutable;
+	ishdr = true;
 	datahdr = textureData;
 	if (datahdr) {
 		bind();
@@ -424,7 +428,7 @@ void gTexture::setupRenderData(int sx, int sy, int sw, int sh) {
     glGenBuffers(1, &quadVBO);
 
     glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
-    if (isfbo) glBufferData(GL_ARRAY_BUFFER, sizeof(vertices2), vertices2, GL_STATIC_DRAW);
+    if (isfbo || ishdr) glBufferData(GL_ARRAY_BUFFER, sizeof(vertices2), vertices2, GL_STATIC_DRAW);
     else glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
     glBindVertexArray(quadVAO);

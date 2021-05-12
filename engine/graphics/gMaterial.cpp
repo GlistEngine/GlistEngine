@@ -84,8 +84,8 @@ float gMaterial::getShininess() {
 	return shininess;
 }
 
-void gMaterial::loadDiffuseMap(std::string texturePath, bool isHDR) {
-	diffusemap.loadTexture(texturePath, isHDR);
+void gMaterial::loadDiffuseMap(std::string texturePath) {
+	diffusemap.loadTexture(texturePath);
 	if(diffusemap.getWidth() > 0) diffusemapenabled = true;
 }
 
@@ -114,8 +114,8 @@ bool gMaterial::isDiffuseMapEnabled() {
 	return diffusemapenabled;
 }
 
-void gMaterial::loadSpecularMap(std::string texturePath, bool isHDR) {
-	specularmap.loadTexture(texturePath, isHDR);
+void gMaterial::loadSpecularMap(std::string texturePath) {
+	specularmap.loadTexture(texturePath);
 	if(specularmap.getWidth() > 0) specularmapenabled = true;
 }
 
@@ -144,8 +144,8 @@ bool gMaterial::isSpecularMapEnabled() {
 	return specularmapenabled;
 }
 
-void gMaterial::loadNormalMap(std::string texturePath, bool isHDR) {
-	normalmap.loadTexture(texturePath, isHDR);
+void gMaterial::loadNormalMap(std::string texturePath) {
+	normalmap.loadTexture(texturePath);
 	if(normalmap.getWidth() > 0) normalmapenabled = true;
 }
 
@@ -174,8 +174,8 @@ bool gMaterial::isNormalMapEnabled() {
 	return normalmapenabled;
 }
 
-void gMaterial::loadHeightMap(std::string texturePath, bool isHDR) {
-	heightmap.loadTexture(texturePath, isHDR);
+void gMaterial::loadHeightMap(std::string texturePath) {
+	heightmap.loadTexture(texturePath);
 	if(heightmap.getWidth() > 0) heightmapenabled = true;
 }
 
@@ -204,8 +204,8 @@ bool gMaterial::isHeightMapEnabled() {
 	return heightmapenabled;
 }
 
-void gMaterial::loadAlbedoMap(std::string texturePath, bool isHDR) {
-	albedomap.loadTexture(texturePath, isHDR);
+void gMaterial::loadAlbedoMap(std::string texturePath) {
+	albedomap.loadTexture(texturePath);
 	if(albedomap.getWidth() > 0) {
 		albedomapenabled = true;
 		ispbr = true;
@@ -232,8 +232,8 @@ void gMaterial::unbindAlbedoMap() {
 	albedomap.unbind();
 }
 
-void gMaterial::loadRoughnessMap(std::string texturePath, bool isHDR) {
-	roughnessmap.loadTexture(texturePath, isHDR);
+void gMaterial::loadRoughnessMap(std::string texturePath) {
+	roughnessmap.loadTexture(texturePath);
 	if(roughnessmap.getWidth() > 0) {
 		roughnessmapenabled = true;
 		ispbr = true;
@@ -268,8 +268,8 @@ bool gMaterial::isRoughnessMapEnabled() {
 	return roughnessmapenabled;
 }
 
-void gMaterial::loadMetalnessMap(std::string texturePath, bool isHDR) {
-	metalnessmap.loadTexture(texturePath, isHDR);
+void gMaterial::loadMetalnessMap(std::string texturePath) {
+	metalnessmap.loadTexture(texturePath);
 	if(metalnessmap.getWidth() > 0) {
 		metalnessmapenabled = true;
 		ispbr = true;
@@ -304,8 +304,8 @@ bool gMaterial::isMetalnessMapEnabled() {
 	return metalnessmapenabled;
 }
 
-void gMaterial::loadPbrNormalMap(std::string texturePath, bool isHDR) {
-	pbrnormalmap.loadTexture(texturePath, isHDR);
+void gMaterial::loadPbrNormalMap(std::string texturePath) {
+	pbrnormalmap.loadTexture(texturePath);
 	if(pbrnormalmap.getWidth() > 0) pbrnormalmapenabled = true;
 }
 
@@ -334,8 +334,8 @@ bool gMaterial::isPbrNormalMapEnabled() {
 	return pbrnormalmapenabled;
 }
 
-void gMaterial::loadAOMap(std::string texturePath, bool isHDR) {
-	aomap.loadTexture(texturePath, isHDR);
+void gMaterial::loadAOMap(std::string texturePath) {
+	aomap.loadTexture(texturePath);
 	if(aomap.getWidth() > 0) aomapenabled = true;
 }
 
