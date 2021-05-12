@@ -25,8 +25,8 @@ public:
 	gTexture(int w, int h, int format = GL_RGBA, bool isFbo = false);
 	virtual ~gTexture();
 
-	virtual unsigned int load(std::string fullPath, bool isHDR = false);
-	unsigned int loadTexture(std::string texturePath, bool isHDR = false);
+	virtual unsigned int load(std::string fullPath);
+	unsigned int loadTexture(std::string texturePath);
 
 	unsigned int loadData(unsigned char* textureData, int width, int height, int componentNum);
 

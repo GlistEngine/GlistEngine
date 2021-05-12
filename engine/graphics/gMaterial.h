@@ -39,7 +39,7 @@ public:
 	void setShininess(float shininess);
 	float getShininess();
 
-	void loadDiffuseMap(std::string texturePath, bool isHDR = false);
+	void loadDiffuseMap(std::string texturePath);
 	void setDiffuseMap(gTexture* diffuseMap);
 	gTexture* getDiffuseMap();
 	void bindDiffuseMap();
@@ -47,7 +47,7 @@ public:
 	void setDiffuseMapEnabled(bool enableDiffuseMap);
 	bool isDiffuseMapEnabled();
 
-	void loadSpecularMap(std::string texturePath, bool isHDR = false);
+	void loadSpecularMap(std::string texturePath);
 	void setSpecularMap(gTexture* specularMap);
 	gTexture* getSpecularMap();
 	void bindSpecularMap();
@@ -55,7 +55,7 @@ public:
 	void setSpecularMapEnabled(bool enableSpecularMap);
 	bool isSpecularMapEnabled();
 
-	void loadNormalMap(std::string texturePath, bool isHDR = false);
+	void loadNormalMap(std::string texturePath);
 	void setNormalMap(gTexture* normalMap);
 	gTexture* getNormalMap();
 	void bindNormalMap();
@@ -63,7 +63,7 @@ public:
 	void setNormalMapEnabled(bool enableNormalMap);
 	bool isNormalMapEnabled();
 
-	void loadHeightMap(std::string texturePath, bool isHDR = false);
+	void loadHeightMap(std::string texturePath);
 	void setHeightMap(gTexture* heightMap);
 	gTexture* getHeightMap();
 	void bindHeightMap();
@@ -71,7 +71,7 @@ public:
 	void setHeightMapEnabled(bool enableHeightMap);
 	bool isHeightMapEnabled();
 
-	void loadAlbedoMap(std::string texturePath, bool isHDR = false);
+	void loadAlbedoMap(std::string texturePath);
 	void setAlbedoMap(gTexture* albedoMap);
 	gTexture* getAlbedoMap();
 	void bindAlbedoMap(int slotNo = 3);
@@ -79,7 +79,7 @@ public:
 	void setAlbedoMapEnabled(bool enableNormalMap);
 	bool isAlbedoMapEnabled();
 
-	void loadRoughnessMap(std::string texturePath, bool isHDR = false);
+	void loadRoughnessMap(std::string texturePath);
 	void setRoughnessMap(gTexture* roughnessMap);
 	gTexture* getRoughnessMap();
 	void bindRoughnessMap(int slotNo = 6);
@@ -87,7 +87,7 @@ public:
 	void setRoughnessMapEnabled(bool enableRoughnessMap);
 	bool isRoughnessMapEnabled();
 
-	void loadMetalnessMap(std::string texturePath, bool isHDR = false);
+	void loadMetalnessMap(std::string texturePath);
 	void setMetalnessMap(gTexture* metalnessMap);
 	gTexture* getMetalnessMap();
 	void bindMetalnessMap(int slotNo = 5);
@@ -95,7 +95,7 @@ public:
 	void setMetalnessMapEnabled(bool enableMetalnessMap);
 	bool isMetalnessMapEnabled();
 
-	void loadPbrNormalMap(std::string texturePath, bool isHDR = false);
+	void loadPbrNormalMap(std::string texturePath);
 	void setPbrNormalMap(gTexture* pbrNormalMap);
 	gTexture* getPbrNormalMap();
 	void bindPbrNormalMap(int slotNo = 4);
@@ -103,7 +103,7 @@ public:
 	void setPbrNormalMapEnabled(bool enablePbrNormalMap);
 	bool isPbrNormalMapEnabled();
 
-	void loadAOMap(std::string texturePath, bool isHDR = false);
+	void loadAOMap(std::string texturePath);
 	void setAOMap(gTexture* aoMap);
 	gTexture* getAOMap();
 	void bindAOMap(int slotNo = 7);

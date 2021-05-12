@@ -19,11 +19,12 @@ gImage::gImage() {
 gImage::~gImage() {
 }
 
-unsigned int gImage::load(std::string fullPath, bool isHDR) {
+unsigned int gImage::load(std::string fullPath) {
 	fullpath = fullPath;
 	directory = getDirName(fullpath);
 	path = getFileName(fullpath);
-	ishdr = isHDR;
+	ishdr = false;
+	if (gToLower(fullpath.substr(fullpath.length() - 3, 3)) == "hdr") ishdr = true;
 
     glGenTextures(1, &id);
 
@@ -40,8 +41,8 @@ unsigned int gImage::load(std::string fullPath, bool isHDR) {
     return id;
 }
 
-unsigned int gImage::loadImage(std::string imagePath, bool isHDR) {
-	return load(gGetImagesDir() + imagePath, isHDR);
+unsigned int gImage::loadImage(std::string imagePath) {
+	return load(gGetImagesDir() + imagePath);
 }
 
 
