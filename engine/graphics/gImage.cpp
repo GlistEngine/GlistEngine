@@ -13,7 +13,7 @@
 
 
 gImage::gImage() {
-
+	ishdr = false;
 }
 
 gImage::~gImage() {
@@ -45,6 +45,37 @@ unsigned int gImage::loadImage(std::string imagePath) {
 	return load(gGetImagesDir() + imagePath);
 }
 
+void gImage::loadData(std::string fullPath) {
+	fullpath = fullPath;
+	directory = getDirName(fullpath);
+	path = getFileName(fullpath);
+	ishdr = false;
+	if (gToLower(fullpath.substr(fullpath.length() - 3, 3)) == "hdr") ishdr = true;
+
+    if (ishdr) {
+    	stbi_set_flip_vertically_on_load(true);
+    	datahdr = stbi_loadf(fullpath.c_str(), &width, &height, &componentnum, 0);
+    } else {
+        data = stbi_load(fullpath.c_str(), &width, &height, &componentnum, 0);
+    }
+}
+
+void gImage::loadImageData(std::string imagePath) {
+	loadData(gGetImagesDir() + imagePath);
+}
+
+unsigned int gImage::useData() {
+    glGenTextures(1, &id);
+
+    if (ishdr) {
+    	setDataHDR(datahdr, true);
+    } else {
+        setData(data, true);
+    }
+
+	setupRenderData();
+    return id;
+}
 
 void gImage::setImageData(unsigned char* imageData) {
 	setData(imageData, true);

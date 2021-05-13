@@ -19,6 +19,10 @@ public:
 	unsigned int load(std::string fullPath);
 	unsigned int loadImage(std::string imagePath);
 
+	void loadData(std::string fullPath);
+	void loadImageData(std::string imagePath);
+	unsigned int useData();
+
     void setImageData(unsigned char* imageData);
     unsigned char* getImageData();
 
