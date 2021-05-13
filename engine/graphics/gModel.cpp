@@ -38,7 +38,23 @@ void gModel::loadModel(std::string modelPath) {
 
 void gModel::loadModelFile(std::string fullPath) {
     // read file via ASSIMP
+#ifdef LINUX
+	std::shared_ptr<aiPropertyStore> store;
+    store.reset(aiCreatePropertyStore(), aiReleasePropertyStore);
+    // only ever give us triangles.
+    aiSetImportPropertyInteger(store.get(), AI_CONFIG_PP_SBP_REMOVE, aiPrimitiveType_LINE | aiPrimitiveType_POINT );
+    aiSetImportPropertyInteger(store.get(), AI_CONFIG_PP_PTV_NORMALIZE, true);
+
+    scene = aiImportFileExWithProperties(fullPath.c_str(), aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace | aiProcessPreset_TargetRealtime_Fast, NULL, store.get());
+    // check for errors
+    if(!scene || (scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE) || !scene->mRootNode) { // if is Not Zero
+    	std::cout << "ERROR::ASSIMP:: " << aiGetErrorString() << std::endl;
+        return;
+    }
+#else
     Assimp::Importer importer;
+    importer.SetPropertyInteger(AI_CONFIG_PP_SBP_REMOVE, aiPrimitiveType_LINE | aiPrimitiveType_POINT);
+    importer.SetPropertyBool(AI_CONFIG_PP_PTV_NORMALIZE, true);
     importer.ReadFile(fullPath, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace | aiProcessPreset_TargetRealtime_Fast);
     scene = importer.GetOrphanedScene();
     // check for errors
@@ -46,6 +62,8 @@ void gModel::loadModelFile(std::string fullPath) {
         std::cout << "ERROR::ASSIMP:: " << importer.GetErrorString() << std::endl;
         return;
     }
+#endif
+
     // retrieve the directory path of the filepath
     directory = fullPath.substr(0, fullPath.find_last_of('/'));
     filename = fullPath.substr(fullPath.find_last_of('/') + 1, fullPath.length());
@@ -159,7 +177,10 @@ void gModel::setTransformationMatrix(glm::mat4 transformationMatrix) {
 }
 
 void gModel::draw() {
-	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i].draw();
+	for(unsigned int i = 0; i < meshes.size(); i++) {
+//		gLogi("gModel") << "draw mesh no:" << i << ", name:" << scene->mMeshes[i]->mName.C_Str();
+		meshes[i].draw();
+	}
 }
 
 std::string gModel::getFilename() {
