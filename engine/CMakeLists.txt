@@ -95,6 +95,7 @@ endforeach()
 ########## CPP SOURCE FILES ##########
 set(SRC_FILES
 	${PLUGIN_SRCS}
+	${LIBS_DIR}/sqlite/src/sqlite3.c
 	${ENGINE_DIR}/types/gColor.cpp
 	${ENGINE_DIR}/utils/gThread.cpp
 	${ENGINE_DIR}/utils/gUtils.cpp
@@ -115,6 +116,7 @@ set(SRC_FILES
 	${ENGINE_DIR}/graphics/gMesh.cpp
 	${ENGINE_DIR}/graphics/gSkinnedMesh.cpp
 	${ENGINE_DIR}/graphics/gModel.cpp
+	${ENGINE_DIR}/utils/gDatabase.cpp
 	${ENGINE_DIR}/utils/gAssetLoader.cpp
 	${ENGINE_DIR}/graphics/primitives/gLine.cpp
 	${ENGINE_DIR}/graphics/primitives/gPlane.cpp
@@ -155,6 +157,7 @@ set(INC_DIRS
 	${LIBS_DIR}/fmod/include
 	${LIBS_DIR}/utf8/include
 	${LIBS_DIR}/ghc/include
+	${LIBS_DIR}/sqlite/include
     ${ENGINE_DIR}/utils
     ${ENGINE_DIR}/types
     ${ENGINE_DIR}/media
@@ -381,6 +384,7 @@ elseif(LINUX)
 		glfw
 		GL
 		GLEW
+		dl
 	# TODO: FFMPEG
 	)
 elseif(APPLE)

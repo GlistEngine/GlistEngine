@@ -45,6 +45,7 @@ public:
 	static std::string gGetTexturesDir();
 	static std::string gGetShadersDir();
 	static std::string gGetSoundsDir();
+	static std::string gGetDatabasesDir();
 
 	void logi(std::string message);
 	void logd(std::string message);
