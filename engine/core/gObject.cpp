@@ -79,6 +79,10 @@ std::string gObject::gGetSoundsDir() {
 	return exepath + "assets/sounds/";
 }
 
+std::string gObject::gGetDatabasesDir() {
+	return exepath + "assets/databases/";
+}
+
 void gObject::setCurrentResolution(int scalingNo, int currentResolutionNo) {
 	releasescaling = scalingNo;
 	releaseresolution = currentResolutionNo;
