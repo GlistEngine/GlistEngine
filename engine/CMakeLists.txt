@@ -95,7 +95,7 @@ endforeach()
 ########## CPP SOURCE FILES ##########
 set(SRC_FILES
 	${PLUGIN_SRCS}
-	${LIBS_DIR}/sqlite/src/sqlite3.c
+	${MINGW64_DIR}/lib/sqlite3.c
 	${ENGINE_DIR}/types/gColor.cpp
 	${ENGINE_DIR}/utils/gThread.cpp
 	${ENGINE_DIR}/utils/gUtils.cpp
@@ -157,7 +157,6 @@ set(INC_DIRS
 	${LIBS_DIR}/fmod/include
 	${LIBS_DIR}/utf8/include
 	${LIBS_DIR}/ghc/include
-	${LIBS_DIR}/sqlite/include
     ${ENGINE_DIR}/utils
     ${ENGINE_DIR}/types
     ${ENGINE_DIR}/media
@@ -175,11 +174,13 @@ if(WIN32)
 		${MINGW64_DIR}/lib/gcc/x86_64-w64-mingw32/8.1.0/include/c++
 		${MINGW64_DIR}/include/freetype2
 		${MINGW64_DIR}/include/ffmpeg
+		${MINGW64_DIR}/include/sqlite
 	)
 elseif(LINUX)
 	list(APPEND INC_DIRS
 		${MINGW64_DIR}/include
 		${MINGW64_DIR}/include/freetype2
+		${MINGW64_DIR}/include/sqlite
 		# TODO: FFMPEG
 		
 		/usr/include/freetype2
@@ -196,6 +197,7 @@ elseif(APPLE)
   		/usr/local/Cellar/glm/0.9.9.8/include
   		/usr/local/Cellar/assimp/5.0.1/include
   		/usr/local/include
+		${MINGW64_DIR}/include/sqlite
 #  		/usr/local/Cellar/glfw/3.3.2/include
 #  		/usr/local/include
 		# TODO: FFMPEG
