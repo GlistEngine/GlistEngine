@@ -49,6 +49,8 @@ void gAssetLoader::threadFunction() {
 }
 
 void gAssetLoader::update() {
+	if(!isupdateneeded) return;
+
 	assetToLoad assettoupdate;
 	if (receiveToUpdate(assettoupdate)) {
         switch(assettoupdate.type) {
