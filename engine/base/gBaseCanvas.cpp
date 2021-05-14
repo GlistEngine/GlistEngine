@@ -80,14 +80,6 @@ int gBaseCanvas::getHeight() {
 	return renderer->getHeight();
 }
 
-int gBaseCanvas::getScreenWidth() {
-	return renderer->getScreenWidth();
-}
-
-int gBaseCanvas::getScreenHeight() {
-	return renderer->getScreenHeight();
-}
-
 
 void gBaseCanvas::clearBackground() {
 	// Clear the background

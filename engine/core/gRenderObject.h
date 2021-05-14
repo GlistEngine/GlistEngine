@@ -22,6 +22,8 @@ public:
 	static void setScreenSize(int screenWidth, int screenHeight);
 	static void setUnitScreenSize(int unitWidth, int unitHeight);
 	static void setScreenScaling(int screenScaling);
+	int getScreenWidth();
+	int getScreenHeight();
 
 	void pushMatrix();
 	void popMatrix();
