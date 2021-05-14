@@ -15,16 +15,24 @@
 
 class gBasePlugin : public gRenderObject {
 public:
-	gBasePlugin(gBaseApp *root);
+	gBasePlugin();
 	virtual ~gBasePlugin();
 
 	virtual void setup();
 	virtual void update();
 
+	virtual void keyPressed(int key);
+	virtual void keyReleased(int key);
+	virtual void mouseMoved(int x, int y );
+	virtual void mouseDragged(int x, int y, int button);
+	virtual void mousePressed(int x, int y, int button);
+	virtual void mouseReleased(int x, int y, int button);
+	virtual void mouseEntered();
+	virtual void mouseExited();
+
 	static std::deque<gBasePlugin*> usedplugins;
 
 private:
-	gBaseApp *root;
 };
 
 #endif /* ENGINE_BASE_GBASEPLUGIN_H_ */

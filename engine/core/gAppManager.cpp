@@ -161,12 +161,14 @@ double gAppManager::getElapsedTime() {
 }
 
 void gAppManager::onKeyEvent(int key, int action) {
-#if defined(WIN32) || defined(LINUX)
+#if defined(WIN32) || defined(LINUX) || defined(APPLE)
 	switch(action) {
 	case GLFW_RELEASE:
+		for (upi = 0; upi < gBasePlugin::usedplugins.size(); upi++) gBasePlugin::usedplugins[upi]->keyReleased(key);
 		canvasmanager->getCurrentCanvas()->keyReleased(key);
 		break;
 	case GLFW_PRESS:
+		for (upi = 0; upi < gBasePlugin::usedplugins.size(); upi++) gBasePlugin::usedplugins[upi]->keyPressed(key);
 		canvasmanager->getCurrentCanvas()->keyPressed(key);
 		break;
 	}
@@ -179,13 +181,18 @@ void gAppManager::onMouseMoveEvent(double xpos, double ypos) {
 		xpos = gRenderer::scaleX(xpos);
 		ypos = gRenderer::scaleY(ypos);
 	}
-	if (pressed) canvasmanager->getCurrentCanvas()->mouseDragged(xpos, ypos, pressed);
-	else canvasmanager->getCurrentCanvas()->mouseMoved(xpos, ypos);
+	if (pressed) {
+		for (upi = 0; upi < gBasePlugin::usedplugins.size(); upi++) gBasePlugin::usedplugins[upi]->mouseDragged(xpos, ypos, pressed);
+		canvasmanager->getCurrentCanvas()->mouseDragged(xpos, ypos, pressed);
+	} else {
+		for (upi = 0; upi < gBasePlugin::usedplugins.size(); upi++) gBasePlugin::usedplugins[upi]->mouseMoved(xpos, ypos);
+		canvasmanager->getCurrentCanvas()->mouseMoved(xpos, ypos);
+	}
 }
 
 void gAppManager::onMouseButtonEvent(int button, int action, double xpos, double ypos) {
 	if (!canvasmanager->getCurrentCanvas()) return;
-#if defined(WIN32) || defined(LINUX)
+#if defined(WIN32) || defined(LINUX) || defined(APPLE)
 	switch(action) {
 	case GLFW_PRESS:
 		buttonpressed[button] = true;
@@ -194,6 +201,7 @@ void gAppManager::onMouseButtonEvent(int button, int action, double xpos, double
 			xpos = gRenderer::scaleX(xpos);
 			ypos = gRenderer::scaleY(ypos);
 		}
+		for (upi = 0; upi < gBasePlugin::usedplugins.size(); upi++) gBasePlugin::usedplugins[upi]->mousePressed(xpos, ypos, button);
 		canvasmanager->getCurrentCanvas()->mousePressed(xpos, ypos, button);
 		break;
 	case GLFW_RELEASE:
@@ -203,6 +211,7 @@ void gAppManager::onMouseButtonEvent(int button, int action, double xpos, double
 			xpos = gRenderer::scaleX(xpos);
 			ypos = gRenderer::scaleY(ypos);
 		}
+		for (upi = 0; upi < gBasePlugin::usedplugins.size(); upi++) gBasePlugin::usedplugins[upi]->mouseReleased(xpos, ypos, button);
 		canvasmanager->getCurrentCanvas()->mouseReleased(xpos, ypos, button);
 		break;
 	}
@@ -219,9 +228,11 @@ void gAppManager::onMouseEnterEvent(int entered) {
 	if (!canvasmanager->getCurrentCanvas()) return;
 	if (entered) {
 		ismouseentered = true;
+		for (upi = 0; upi < gBasePlugin::usedplugins.size(); upi++) gBasePlugin::usedplugins[upi]->mouseEntered();
 		canvasmanager->getCurrentCanvas()->mouseEntered();
 	} else {
 		ismouseentered = false;
+		for (upi = 0; upi < gBasePlugin::usedplugins.size(); upi++) gBasePlugin::usedplugins[upi]->mouseExited();
 		canvasmanager->getCurrentCanvas()->mouseExited();
 	}
 }

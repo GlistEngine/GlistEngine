@@ -42,8 +42,6 @@ protected:
 
 	int getWidth();
 	int getHeight();
-	int getScreenWidth();
-	int getScreenHeight();
 
 	void setColor(int r, int g, int b, int a = 255);
 	void setColor(gColor color);
