@@ -331,6 +331,11 @@ void gTexture::draw(int x, int y, int w, int h, float rotate) {
 	draw(glm::vec2(x, y), glm::vec2(w, h), rotate);
 }
 
+void gTexture::draw(int x, int y, int w, int h, int pivotx, int pivoty, float rotate) {
+	draw(glm::vec2(x, y), glm::vec2(w, h), glm::vec2(pivotx, pivoty), rotate);
+}
+
+
 void gTexture::draw(glm::vec2 position, glm::vec2 size, float rotate) {
 	beginDraw();
 	imagematrix = glm::translate(imagematrix, glm::vec3(position, 0.0f));  // first translate (transformations are: scale happens first, then rotation, and then final translation happens; reversed order)
@@ -338,6 +343,18 @@ void gTexture::draw(glm::vec2 position, glm::vec2 size, float rotate) {
 	imagematrix = glm::translate(imagematrix, glm::vec3(0.5f * size.x, 0.5f * size.y, 0.0f));
 	imagematrix = glm::rotate(imagematrix, glm::radians(rotate), glm::vec3(0.0f, 0.0f, 1.0f));
 	imagematrix = glm::translate(imagematrix, glm::vec3(-0.5f * size.x, -0.5f * size.y, 0.0f));
+
+	imagematrix = glm::scale(imagematrix, glm::vec3(size.x, size.y, 1.0f));
+	endDraw();
+}
+
+void gTexture::draw(glm::vec2 position, glm::vec2 size, glm::vec2 pivotPointCoords, float rotate) {
+	beginDraw();
+	imagematrix = glm::translate(imagematrix, glm::vec3(position, 0.0f));  // first translate (transformations are: scale happens first, then rotation, and then final translation happens; reversed order)
+
+	imagematrix = glm::translate(imagematrix, glm::vec3(pivotPointCoords.x, pivotPointCoords.y, 0.0f));
+	imagematrix = glm::rotate(imagematrix, glm::radians(rotate), glm::vec3(0.0f, 0.0f, 1.0f));
+	imagematrix = glm::translate(imagematrix, glm::vec3(-pivotPointCoords.x, -pivotPointCoords.y, 0.0f));
 
 	imagematrix = glm::scale(imagematrix, glm::vec3(size.x, size.y, 1.0f));
 	endDraw();
@@ -357,14 +374,32 @@ void gTexture::drawSub(int x, int y, int w, int h, int sx, int sy, int sw, int s
 	drawSub(glm::vec2(x, y), glm::vec2(w, h), glm::vec2(sx, sy), glm::vec2(sw, sh), rotate);
 }
 
+void gTexture::drawSub(int x, int y, int w, int h, int sx, int sy, int sw, int sh, int pivotx, int pivoty, float rotate) {
+	drawSub(glm::vec2(x, y), glm::vec2(w, h), glm::vec2(sx, sy), glm::vec2(sw, sh), glm::vec2(pivotx, pivoty), rotate);
+}
+
 void gTexture::drawSub(const gRect& src, const gRect& dst, float rotate) {
 	drawSub(dst.left(), dst.top(), dst.getWidth(), dst.getHeight(), src.left(), src.top(), src.getWidth(), src.getHeight(), rotate);
+}
+
+void gTexture::drawSub(const gRect& src, const gRect& dst, int pivotx, int pivoty, float rotate) {
+	drawSub(dst.left(), dst.top(), dst.getWidth(), dst.getHeight(), src.left(), src.top(), src.getWidth(), src.getHeight(), pivotx, pivoty, rotate);
+}
+
+void gTexture::drawSub(const gRect& src, const gRect& dst, glm::vec2 pivotPointCoords, float rotate) {
+	drawSub(dst.left(), dst.top(), dst.getWidth(), dst.getHeight(), src.left(), src.top(), src.getWidth(), src.getHeight(), pivotPointCoords.x, pivotPointCoords.y, rotate);
 }
 
 void gTexture::drawSub(glm::vec2 pos, glm::vec2 size, glm::vec2 subpos, glm::vec2 subsize, float rotate) {
 	setupRenderData(subpos.x, subpos.y, subsize.x, subsize.y);
 	bsubpartdrawn = true;
 	draw(pos, size, rotate);
+}
+
+void gTexture::drawSub(glm::vec2 pos, glm::vec2 size, glm::vec2 subpos, glm::vec2 subsize, glm::vec2 pivotPointCoords, float rotate) {
+	setupRenderData(subpos.x, subpos.y, subsize.x, subsize.y);
+	bsubpartdrawn = true;
+	draw(pos, size, pivotPointCoords, rotate);
 }
 
 void gTexture::beginDraw() {
