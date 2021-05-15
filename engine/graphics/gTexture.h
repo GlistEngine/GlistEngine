@@ -59,13 +59,19 @@ public:
     void draw(int x, int y);
     void draw(int x, int y, int w, int h);
     void draw(int x, int y, int w, int h, float rotate);
+    void draw(int x, int y, int w, int h, int pivotx, int pivoty, float rotate);
     void draw(glm::vec2 position, glm::vec2 size, float rotate = 0.0f);
+    void draw(glm::vec2 position, glm::vec2 size, glm::vec2 pivotPointCoords, float rotate = 0.0f);
 
     void drawSub(int x, int y, int sx, int sy, int sw, int sh);
     void drawSub(int x, int y, int w, int h, int sx, int sy, int sw, int sh);
     void drawSub(int x, int y, int w, int h, int sx, int sy, int sw, int sh, float rotate);
+    void drawSub(int x, int y, int w, int h, int sx, int sy, int sw, int sh, int pivotx, int pivoty, float rotate);
     void drawSub(glm::vec2 pos, glm::vec2 size, glm::vec2 subpos, glm::vec2 subsize, float rotate = 0.0f);
+    void drawSub(glm::vec2 pos, glm::vec2 size, glm::vec2 subpos, glm::vec2 subsize, glm::vec2 pivotPointCoords, float rotate = 0.0f);
     void drawSub(const gRect& src, const gRect& dst, float rotate = 0.f);
+    void drawSub(const gRect& src, const gRect& dst, int pivotx, int pivoty, float rotate = 0.f);
+    void drawSub(const gRect& src, const gRect& dst, glm::vec2 pivotPointCoords, float rotate = 0.f);
 
 protected:
     std::string fullpath, directory;
