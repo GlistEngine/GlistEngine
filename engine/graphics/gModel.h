@@ -22,12 +22,13 @@
 #include <map>
 #include "gSkinnedMesh.h"
 #include <vector>
+#include <deque>
 
 
 class gModel : public gNode {
 public:
     // model data
-    std::vector<gTexture> textures_loaded;	// stores all the textures loaded so far, optimization to make sure textures aren't loaded more than once.
+    std::deque<gTexture> textures_loaded;	// stores all the textures loaded so far, optimization to make sure textures aren't loaded more than once.
     std::vector<gSkinnedMesh>    meshes;
     std::string directory;
 
@@ -93,8 +94,7 @@ private:
 	void loadModelFile(std::string fullPath);
 	void processNode(aiNode *node, const aiScene *scene);
 	gSkinnedMesh processMesh(aiMesh *mesh, const aiScene *scene);
-	std::vector<gTexture> loadMaterialTextures(aiMaterial *mat, aiTextureType type, int textureType);
-	gTexture loadMaterialTexture(aiMaterial *mat, aiTextureType type, int textureType);
+	void loadMaterialTextures(gSkinnedMesh* mesh, aiMaterial *mat, aiTextureType type, int textureType);
 	void updateBones(gSkinnedMesh* gmesh, aiMesh* aimesh);
 	void updateVbo(gSkinnedMesh* gmesh);
 	void updateAnimationNodes();

@@ -15,6 +15,7 @@
 
 
 gMesh::gMesh() {
+	name = "";
 	sli = 0;
 	ti = 0;
 	drawmode = DRAWMODE_TRIANGLES;
@@ -33,6 +34,7 @@ gMesh::gMesh() {
 }
 
 gMesh::gMesh(std::vector<gVertex> vertices, std::vector<unsigned int> indices, std::vector<gTexture> textures) {
+	name = "";
 	sli = 0;
 	ti = 0;
 	drawmode = DRAWMODE_TRIANGLES;
@@ -50,6 +52,13 @@ gMesh::gMesh(std::vector<gVertex> vertices, std::vector<unsigned int> indices, s
 gMesh::~gMesh() {
 }
 
+void gMesh::setName(std::string name) {
+	this->name = name;
+}
+
+std::string gMesh::getName() {
+	return name;
+}
 
 void gMesh::setVertices(std::vector<gVertex> vertices, std::vector<unsigned int> indices) {
 	this->vertices = vertices;
@@ -90,7 +99,29 @@ void gMesh::setTextures(std::vector<gTexture>& textures) {
         	material.setAOMap(&textures[ti]);
         }
     }
+}
 
+void gMesh::setTexture(gTexture* texture) {
+    textype = texture->getType();
+    if(textype == gTexture::TEXTURETYPE_DIFFUSE) {
+    	material.setDiffuseMap(texture);
+    } else if(textype == gTexture::TEXTURETYPE_SPECULAR) {
+    	material.setSpecularMap(texture);
+    } else if(textype == gTexture::TEXTURETYPE_NORMAL) {
+    	material.setNormalMap(texture);
+    } else if(textype == gTexture::TEXTURETYPE_HEIGHT) {
+    	material.setHeightMap(texture);
+    } else if (textype == gTexture::TEXTURETYPE_PBR_ALBEDO) {
+    	material.setAlbedoMap(texture);
+    } else if (textype == gTexture::TEXTURETYPE_PBR_ROUGHNESS) {
+    	material.setRoughnessMap(texture);
+    } else if (textype == gTexture::TEXTURETYPE_PBR_METALNESS) {
+    	material.setMetalnessMap(texture);
+    } else if (textype == gTexture::TEXTURETYPE_PBR_NORMAL) {
+    	material.setPbrNormalMap(texture);
+    } else if (textype == gTexture::TEXTURETYPE_PBR_AO) {
+    	material.setAOMap(texture);
+    }
 }
 
 void gMesh::addTexture(gTexture tex) {
@@ -150,6 +181,8 @@ void gMesh::drawStart() {
 
 	    // Bind diffuse textures
 	    colorshader->setInt("material.useDiffuseMap", material.isDiffuseMapEnabled());
+//		if(material.isDiffuseMapEnabled()) gLogi("gModel") << "mesh name:" << name;
+//		if(material.isDiffuseMapEnabled()) gLogi("gModel") << "diffuse texture name:" << material.getDiffuseMap()->getFilename();
 	    if (material.isDiffuseMapEnabled()) {
 		    colorshader->setInt("material.diffusemap", 0); // Diffuse texture unit
 		    glActiveTexture(GL_TEXTURE0);

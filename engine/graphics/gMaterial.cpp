@@ -19,9 +19,27 @@ gMaterial::gMaterial() {
     pbrnormalmapenabled = false;
     aomapenabled = false;
     ispbr = false;
+    diffusemapown = false;
+    normalmapown = false;
+    specularmapown = false;
+    heightmapown = false;
+    albedomapown = false;
+    roughnessmapown = false;
+    metalnessmapown = false;
+    pbrnormalmapown = false;
+    aomapown = false;
 }
 
 gMaterial::~gMaterial() {
+	if(diffusemapenabled && diffusemapown) delete diffusemap;
+	if(normalmapenabled && normalmapown) delete normalmap;
+	if(specularmapenabled && specularmapown) delete specularmap;
+	if(heightmapenabled && heightmapown) delete heightmap;
+	if(albedomapenabled && albedomapown) delete albedomap;
+	if(roughnessmapenabled && roughnessmapown) delete roughnessmap;
+	if(metalnessmapenabled && metalnessmapown) delete metalnessmap;
+	if(pbrnormalmapenabled && pbrnormalmapown) delete pbrnormalmap;
+	if(aomapenabled && aomapown) delete aomap;
 }
 
 bool gMaterial::isPBR() {
@@ -85,25 +103,30 @@ float gMaterial::getShininess() {
 }
 
 void gMaterial::loadDiffuseMap(std::string texturePath) {
-	diffusemap.loadTexture(texturePath);
-	if(diffusemap.getWidth() > 0) diffusemapenabled = true;
+	if(diffusemapenabled && diffusemapown) delete diffusemap;
+	diffusemap = new gTexture();
+	diffusemap->loadTexture(texturePath);
+	if(diffusemap->getWidth() > 0) diffusemapenabled = true;
+	diffusemapown = true;
 }
 
 void gMaterial::setDiffuseMap(gTexture* diffuseMap) {
-	diffusemap = *diffuseMap;
-	if(diffusemap.getWidth() > 0) diffusemapenabled = true;
+	if(diffusemapenabled && diffusemapown) delete diffusemap;
+	diffusemap = diffuseMap;
+	if(diffusemap->getWidth() > 0) diffusemapenabled = true;
+	diffusemapown = false;
 }
 
 gTexture* gMaterial::getDiffuseMap() {
-	return &diffusemap;
+	return diffusemap;
 }
 
 void gMaterial::bindDiffuseMap() {
-	diffusemap.bind();
+	diffusemap->bind();
 }
 
 void gMaterial::unbindDiffuseMap() {
-	diffusemap.unbind();
+	diffusemap->unbind();
 }
 
 void gMaterial::setDiffuseMapEnabled(bool enableDiffuseMap) {
@@ -115,25 +138,30 @@ bool gMaterial::isDiffuseMapEnabled() {
 }
 
 void gMaterial::loadSpecularMap(std::string texturePath) {
-	specularmap.loadTexture(texturePath);
-	if(specularmap.getWidth() > 0) specularmapenabled = true;
+	if(specularmapenabled && specularmapown) delete specularmap;
+	specularmap = new gTexture();
+	specularmap->loadTexture(texturePath);
+	if(specularmap->getWidth() > 0) specularmapenabled = true;
+	specularmapown = true;
 }
 
 void gMaterial::setSpecularMap(gTexture* specularMap) {
-	specularmap = *specularMap;
-	if(specularmap.getWidth() > 0) specularmapenabled = true;
+	if(specularmapenabled && specularmapown) delete specularmap;
+	specularmap = specularMap;
+	if(specularmap->getWidth() > 0) specularmapenabled = true;
+	specularmapown = false;
 }
 
 gTexture* gMaterial::getSpecularMap() {
-	return &specularmap;
+	return specularmap;
 }
 
 void gMaterial::bindSpecularMap() {
-	specularmap.bind();
+	specularmap->bind();
 }
 
 void gMaterial::unbindSpecularMap() {
-	specularmap.unbind();
+	specularmap->unbind();
 }
 
 void gMaterial::setSpecularMapEnabled(bool enableSpecularMap) {
@@ -145,25 +173,30 @@ bool gMaterial::isSpecularMapEnabled() {
 }
 
 void gMaterial::loadNormalMap(std::string texturePath) {
-	normalmap.loadTexture(texturePath);
-	if(normalmap.getWidth() > 0) normalmapenabled = true;
+	if(normalmapenabled && normalmapown) delete normalmap;
+	normalmap = new gTexture();
+	normalmap->loadTexture(texturePath);
+	if(normalmap->getWidth() > 0) normalmapenabled = true;
+	normalmapown = true;
 }
 
 void gMaterial::setNormalMap(gTexture* normalMap) {
-	normalmap = *normalMap;
-	if(normalmap.getWidth() > 0) normalmapenabled = true;
+	if(normalmapenabled && normalmapown) delete normalmap;
+	normalmap = normalMap;
+	if(normalmap->getWidth() > 0) normalmapenabled = true;
+	normalmapown = false;
 }
 
 gTexture* gMaterial::getNormalMap() {
-	return &normalmap;
+	return normalmap;
 }
 
 void gMaterial::bindNormalMap() {
-	normalmap.bind();
+	normalmap->bind();
 }
 
 void gMaterial::unbindNormalMap() {
-	normalmap.unbind();
+	normalmap->unbind();
 }
 
 void gMaterial::setNormalMapEnabled(bool enableNormalMap) {
@@ -175,25 +208,30 @@ bool gMaterial::isNormalMapEnabled() {
 }
 
 void gMaterial::loadHeightMap(std::string texturePath) {
-	heightmap.loadTexture(texturePath);
-	if(heightmap.getWidth() > 0) heightmapenabled = true;
+	if(heightmapenabled && heightmapown) delete heightmap;
+	heightmap = new gTexture();
+	heightmap->loadTexture(texturePath);
+	if(heightmap->getWidth() > 0) heightmapenabled = true;
+	heightmapown = true;
 }
 
 void gMaterial::setHeightMap(gTexture* heightMap) {
-	heightmap = *heightMap;
-	if(heightmap.getWidth() > 0) heightmapenabled = true;
+	if(heightmapenabled && heightmapown) delete heightmap;
+	heightmap = heightMap;
+	if(heightmap->getWidth() > 0) heightmapenabled = true;
+	heightmapown = false;
 }
 
 gTexture* gMaterial::getHeightMap() {
-	return &heightmap;
+	return heightmap;
 }
 
 void gMaterial::bindHeightMap() {
-	heightmap.bind();
+	heightmap->bind();
 }
 
 void gMaterial::unbindHeightMap() {
-	heightmap.unbind();
+	heightmap->unbind();
 }
 
 void gMaterial::setHeightMapEnabled(bool enableHeightMap) {
@@ -205,59 +243,69 @@ bool gMaterial::isHeightMapEnabled() {
 }
 
 void gMaterial::loadAlbedoMap(std::string texturePath) {
-	albedomap.loadTexture(texturePath);
-	if(albedomap.getWidth() > 0) {
+	if(albedomapenabled && albedomapown) delete albedomap;
+	albedomap = new gTexture();
+	albedomap->loadTexture(texturePath);
+	if(albedomap->getWidth() > 0) {
 		albedomapenabled = true;
 		ispbr = true;
 	}
+	albedomapown = true;
 }
 
 void gMaterial::setAlbedoMap(gTexture* albedoMap) {
-	albedomap = *albedoMap;
-	if(albedomap.getWidth() > 0) {
+	if(albedomapenabled && albedomapown) delete albedomap;
+	albedomap = albedoMap;
+	if(albedomap->getWidth() > 0) {
 		albedomapenabled = true;
 		ispbr = true;
 	}
+	albedomapown = false;
 }
 
 gTexture* gMaterial::getAlbedoMap() {
-	return &albedomap;
+	return albedomap;
 }
 
 void gMaterial::bindAlbedoMap(int slotNo) {
-	if(albedomapenabled) albedomap.bind(slotNo);
+	if(albedomapenabled) albedomap->bind(slotNo);
 }
 
 void gMaterial::unbindAlbedoMap() {
-	albedomap.unbind();
+	albedomap->unbind();
 }
 
 void gMaterial::loadRoughnessMap(std::string texturePath) {
-	roughnessmap.loadTexture(texturePath);
-	if(roughnessmap.getWidth() > 0) {
+	if(roughnessmapenabled && roughnessmapown) delete roughnessmap;
+	roughnessmap = new gTexture();
+	roughnessmap->loadTexture(texturePath);
+	if(roughnessmap->getWidth() > 0) {
 		roughnessmapenabled = true;
 		ispbr = true;
 	}
+	roughnessmapown = true;
 }
 
 void gMaterial::setRoughnessMap(gTexture* roughnessMap) {
-	roughnessmap = *roughnessMap;
-	if(roughnessmap.getWidth() > 0) {
+	if(roughnessmapenabled && roughnessmapown) delete roughnessmap;
+	roughnessmap = roughnessMap;
+	if(roughnessmap->getWidth() > 0) {
 		roughnessmapenabled = true;
 		ispbr = true;
 	}
+	roughnessmapown = false;
 }
 
 gTexture* gMaterial::getRoughnessMap() {
-	return &roughnessmap;
+	return roughnessmap;
 }
 
 void gMaterial::bindRoughnessMap(int slotNo) {
-	roughnessmap.bind(slotNo);
+	roughnessmap->bind(slotNo);
 }
 
 void gMaterial::unbindRoughnessMap() {
-	roughnessmap.unbind();
+	roughnessmap->unbind();
 }
 
 void gMaterial::setRoughnessMapEnabled(bool enableRoughnessMap) {
@@ -269,31 +317,36 @@ bool gMaterial::isRoughnessMapEnabled() {
 }
 
 void gMaterial::loadMetalnessMap(std::string texturePath) {
-	metalnessmap.loadTexture(texturePath);
-	if(metalnessmap.getWidth() > 0) {
+	if(metalnessmapenabled && metalnessmapown) delete metalnessmap;
+	metalnessmap = new gTexture();
+	metalnessmap->loadTexture(texturePath);
+	if(metalnessmap->getWidth() > 0) {
 		metalnessmapenabled = true;
 		ispbr = true;
 	}
+	metalnessmapown = true;
 }
 
 void gMaterial::setMetalnessMap(gTexture* metalnessMap) {
-	metalnessmap = *metalnessMap;
-	if(metalnessmap.getWidth() > 0) {
+	if(metalnessmapenabled && metalnessmapown) delete metalnessmap;
+	metalnessmap = metalnessMap;
+	if(metalnessmap->getWidth() > 0) {
 		metalnessmapenabled = true;
 		ispbr = true;
 	}
+	metalnessmapown = false;
 }
 
 gTexture* gMaterial::getMetalnessMap() {
-	return &metalnessmap;
+	return metalnessmap;
 }
 
 void gMaterial::bindMetalnessMap(int slotNo) {
-	metalnessmap.bind(slotNo);
+	metalnessmap->bind(slotNo);
 }
 
 void gMaterial::unbindMetalnessMap() {
-	metalnessmap.unbind();
+	metalnessmap->unbind();
 }
 
 void gMaterial::setMetalnessMapEnabled(bool enableMetalnessMap) {
@@ -305,25 +358,30 @@ bool gMaterial::isMetalnessMapEnabled() {
 }
 
 void gMaterial::loadPbrNormalMap(std::string texturePath) {
-	pbrnormalmap.loadTexture(texturePath);
-	if(pbrnormalmap.getWidth() > 0) pbrnormalmapenabled = true;
+	if(pbrnormalmapenabled && pbrnormalmapown) delete pbrnormalmap;
+	pbrnormalmap = new gTexture();
+	pbrnormalmap->loadTexture(texturePath);
+	if(pbrnormalmap->getWidth() > 0) pbrnormalmapenabled = true;
+	pbrnormalmapown = true;
 }
 
 void gMaterial::setPbrNormalMap(gTexture* pbrNormalMap) {
-	pbrnormalmap = *pbrNormalMap;
-	if(pbrnormalmap.getWidth() > 0) pbrnormalmapenabled = true;
+	if(pbrnormalmapenabled && pbrnormalmapown) delete pbrnormalmap;
+	pbrnormalmap = pbrNormalMap;
+	if(pbrnormalmap->getWidth() > 0) pbrnormalmapenabled = true;
+	pbrnormalmapown = false;
 }
 
 gTexture* gMaterial::getPbrNormalMap() {
-	return &pbrnormalmap;
+	return pbrnormalmap;
 }
 
 void gMaterial::bindPbrNormalMap(int slotNo) {
-	pbrnormalmap.bind(slotNo);
+	pbrnormalmap->bind(slotNo);
 }
 
 void gMaterial::unbindPbrNormalMap() {
-	pbrnormalmap.unbind();
+	pbrnormalmap->unbind();
 }
 
 void gMaterial::setPbrNormalMapEnabled(bool enablePbrNormalMap) {
@@ -335,25 +393,30 @@ bool gMaterial::isPbrNormalMapEnabled() {
 }
 
 void gMaterial::loadAOMap(std::string texturePath) {
-	aomap.loadTexture(texturePath);
-	if(aomap.getWidth() > 0) aomapenabled = true;
+	if(aomapenabled && aomapown) delete aomap;
+	aomap = new gTexture();
+	aomap->loadTexture(texturePath);
+	if(aomap->getWidth() > 0) aomapenabled = true;
+	aomapown = true;
 }
 
 void gMaterial::setAOMap(gTexture* aoMap) {
-	aomap = *aoMap;
-	if(aomap.getWidth() > 0) aomapenabled = true;
+	if(aomapenabled && aomapown) delete aomap;
+	aomap = aoMap;
+	if(aomap->getWidth() > 0) aomapenabled = true;
+	aomapown = false;
 }
 
 gTexture* gMaterial::getAOMap() {
-	return &aomap;
+	return aomap;
 }
 
 void gMaterial::bindAOMap(int slotNo) {
-	aomap.bind(slotNo);
+	aomap->bind(slotNo);
 }
 
 void gMaterial::unbindAOMap() {
-	aomap.unbind();
+	aomap->unbind();
 }
 
 void gMaterial::setAOMapEnabled(bool enableAOMap) {
