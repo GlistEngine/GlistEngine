@@ -116,11 +116,13 @@ private:
     gColor diffuse;
     gColor specular;
     float shininess;
-    gTexture diffusemap, specularmap, normalmap, heightmap;
+    gTexture* diffusemap, *normalmap, *specularmap, *heightmap;
     bool diffusemapenabled, specularmapenabled, normalmapenabled, heightmapenabled;
+    bool diffusemapown, normalmapown, specularmapown, heightmapown;
     bool ispbr;
-    gTexture albedomap, roughnessmap, metalnessmap, pbrnormalmap, aomap;
+    gTexture* albedomap, *roughnessmap, *metalnessmap, *pbrnormalmap, *aomap;
     bool albedomapenabled, roughnessmapenabled, metalnessmapenabled, pbrnormalmapenabled, aomapenabled;
+    bool albedomapown, roughnessmapown, metalnessmapown, pbrnormalmapown, aomapown;
 };
 
 #endif /* GRAPHICS_GMATERIAL_H_ */

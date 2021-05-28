@@ -34,6 +34,7 @@ public:
 
 	void setVertices(std::vector<gVertex> vertices, std::vector<unsigned int> indices = std::vector<unsigned int>());
 	void setTextures(std::vector<gTexture>& textures);
+	void setTexture(gTexture* texture);
 	void addTexture(gTexture tex);
 	gTexture* getTexture(int textureNo);
 
@@ -43,6 +44,9 @@ public:
 	int getIndicesNum();
 	gBoundingBox getBoundingBox();
 	gVbo* getVbo();
+
+	void setName(std::string name);
+	std::string getName();
 
 	void setDrawMode(int drawMode);
 	int getDrawMode();
@@ -61,6 +65,7 @@ protected:
     bool isprojection2d;
 
 private:
+    std::string name;
 	std::vector<unsigned int> indices;
 	std::vector<gTexture> textures;
 	int drawmode;

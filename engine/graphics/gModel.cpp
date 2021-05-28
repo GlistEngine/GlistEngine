@@ -24,7 +24,7 @@ gModel::gModel() {
 	bbmaxx = 0.0f, bbmaxy = 0.0f, bbmaxz = 0.0f;
 }
 
-// TODO Clean ptrs if any
+
 gModel::~gModel() {
 }
 
@@ -231,7 +231,6 @@ gSkinnedMesh gModel::processMesh(aiMesh *mesh, const aiScene *scene) {
     // data to fill
     std::vector<gVertex> vertices;
     std::vector<unsigned int> indices;
-    std::vector<gTexture> textures;
 
     // walk through each of the mesh's vertices
     for(unsigned int i = 0; i < mesh->mNumVertices; i++) {
@@ -292,61 +291,33 @@ gSkinnedMesh gModel::processMesh(aiMesh *mesh, const aiScene *scene) {
 
     // return a mesh object created from the extracted mesh data
     gSkinnedMesh gmesh;
+    gmesh.setName(mesh->mName.C_Str());
     gmesh.setVertices(vertices,  indices);
 
-    // 1. diffuse maps
-    std::vector<gTexture> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE, gTexture::TEXTURETYPE_DIFFUSE);
-    for (int i = 0; i < diffuseMaps.size(); i++) diffuseMaps[i].setType(gTexture::TEXTURETYPE_DIFFUSE);
-    textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
-    // 2. specular maps
-    std::vector<gTexture> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, gTexture::TEXTURETYPE_SPECULAR);
-    for (int i = 0; i < specularMaps.size(); i++) specularMaps[i].setType(gTexture::TEXTURETYPE_SPECULAR);
-    textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
-    // 3. normal maps
-    std::vector<gTexture> normalMaps = loadMaterialTextures(material, aiTextureType_NORMALS, gTexture::TEXTURETYPE_NORMAL);
-    for (int i = 0; i < normalMaps.size(); i++) normalMaps[i].setType(gTexture::TEXTURETYPE_NORMAL);
-    textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
-    // 4. height maps
-    std::vector<gTexture> heightMaps = loadMaterialTextures(material, aiTextureType_HEIGHT, gTexture::TEXTURETYPE_HEIGHT);
-    for (int i = 0; i < heightMaps.size(); i++) heightMaps[i].setType(gTexture::TEXTURETYPE_HEIGHT);
-    textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
-    // 5. pbr albedo maps
-    std::vector<gTexture> albedoMaps = loadMaterialTextures(material, aiTextureType_BASE_COLOR, gTexture::TEXTURETYPE_PBR_ALBEDO);
-    for (int i = 0; i < albedoMaps.size(); i++) albedoMaps[i].setType(gTexture::TEXTURETYPE_PBR_ALBEDO);
-    textures.insert(textures.end(), albedoMaps.begin(), albedoMaps.end());
-    // 6. pbr roughness maps
-    std::vector<gTexture> roughnessMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE_ROUGHNESS, gTexture::TEXTURETYPE_PBR_ROUGHNESS);
-    for (int i = 0; i < roughnessMaps.size(); i++) roughnessMaps[i].setType(gTexture::TEXTURETYPE_PBR_ROUGHNESS);
-    textures.insert(textures.end(), roughnessMaps.begin(), roughnessMaps.end());
-    // 7. pbr metalness maps
-    std::vector<gTexture> metalnessMaps = loadMaterialTextures(material, aiTextureType_METALNESS, gTexture::TEXTURETYPE_PBR_METALNESS);
-    for (int i = 0; i < metalnessMaps.size(); i++) metalnessMaps[i].setType(gTexture::TEXTURETYPE_PBR_METALNESS);
-    textures.insert(textures.end(), metalnessMaps.begin(), metalnessMaps.end());
-    // 8. pbr normal maps
-    std::vector<gTexture> pbrnormalMaps = loadMaterialTextures(material, aiTextureType_NORMAL_CAMERA, gTexture::TEXTURETYPE_PBR_NORMAL);
-    for (int i = 0; i < pbrnormalMaps.size(); i++) pbrnormalMaps[i].setType(gTexture::TEXTURETYPE_PBR_NORMAL);
-    textures.insert(textures.end(), pbrnormalMaps.begin(), pbrnormalMaps.end());
-    // 5. pbr ao maps
-    std::vector<gTexture> aoMaps = loadMaterialTextures(material, aiTextureType_AMBIENT_OCCLUSION, gTexture::TEXTURETYPE_PBR_AO);
-    for (int i = 0; i < aoMaps.size(); i++) aoMaps[i].setType(gTexture::TEXTURETYPE_PBR_AO);
-    textures.insert(textures.end(), aoMaps.begin(), aoMaps.end());
-
-    gmesh.setTextures(textures);
+    loadMaterialTextures(&gmesh, material, aiTextureType_DIFFUSE, gTexture::TEXTURETYPE_DIFFUSE);
+    loadMaterialTextures(&gmesh, material, aiTextureType_SPECULAR, gTexture::TEXTURETYPE_SPECULAR);
+    loadMaterialTextures(&gmesh, material, aiTextureType_NORMALS, gTexture::TEXTURETYPE_NORMAL);
+    loadMaterialTextures(&gmesh, material, aiTextureType_HEIGHT, gTexture::TEXTURETYPE_HEIGHT);
+    loadMaterialTextures(&gmesh, material, aiTextureType_BASE_COLOR, gTexture::TEXTURETYPE_PBR_ALBEDO);
+    loadMaterialTextures(&gmesh, material, aiTextureType_DIFFUSE_ROUGHNESS, gTexture::TEXTURETYPE_PBR_ROUGHNESS);
+    loadMaterialTextures(&gmesh, material, aiTextureType_METALNESS, gTexture::TEXTURETYPE_PBR_METALNESS);
+    loadMaterialTextures(&gmesh, material, aiTextureType_NORMAL_CAMERA, gTexture::TEXTURETYPE_PBR_NORMAL);
+    loadMaterialTextures(&gmesh, material, aiTextureType_AMBIENT_OCCLUSION, gTexture::TEXTURETYPE_PBR_AO);
 
     return gmesh;
 }
 
-std::vector<gTexture> gModel::loadMaterialTextures(aiMaterial *mat, aiTextureType type, int textureType) {
-	std::vector<gTexture> textures;
+void gModel::loadMaterialTextures(gSkinnedMesh* mesh, aiMaterial *mat, aiTextureType type, int textureType) {
     for(unsigned int i = 0; i < mat->GetTextureCount(type); i++) {
+    	int texno = -1;
         aiString str;
         mat->GetTexture(type, i, &str);
         // check if texture was loaded before and if so, continue to next iteration: skip loading a new texture
         bool skip = false;
         for(unsigned int j = 0; j < textures_loaded.size(); j++) {
             if(std::strcmp(textures_loaded[j].getFilename().data(), str.C_Str()) == 0) {
-                textures.push_back(textures_loaded[j]);
                 skip = true; // a texture with the same filepath has already been loaded, continue to next one. (optimization)
+                texno = j;
                 break;
             }
         }
@@ -356,24 +327,12 @@ std::vector<gTexture> gModel::loadMaterialTextures(aiMaterial *mat, aiTextureTyp
             std::string tpath = this->directory + "/" + str.C_Str();
             texture.load(tpath);
             texture.setType(textureType);
-            textures.push_back(texture);
             textures_loaded.push_back(texture);  // store it as texture loaded for entire model, to ensure we won't unnecesery load duplicate textures.
+            texno = textures_loaded.size() - 1;
         }
-    }
-    return textures;
-}
 
-gTexture gModel::loadMaterialTexture(aiMaterial *mat, aiTextureType type, int textureType) {
-	gTexture texture;
-    for(unsigned int i = 0; i < mat->GetTextureCount(type); i++) {
-        aiString str;
-        mat->GetTexture(type, i, &str);
-
-		std::string tpath = this->directory + "/" + str.C_Str();
-		texture.load(tpath);
-		texture.setType(textureType);
+        mesh->setTexture(&textures_loaded[texno]);
     }
-    return texture;
 }
 
 bool gModel::isAnimated() {
