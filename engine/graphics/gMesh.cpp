@@ -322,19 +322,21 @@ gVbo* gMesh::getVbo() {
 }
 
 gBoundingBox gMesh::getBoundingBox() {
-	bbminx = 0.0f, bbminy = 0.0f, bbminz = 0.0f;
-	bbmaxx = 0.0f, bbmaxy = 0.0f, bbmaxz = 0.0f;
+	for (bbi = 0; bbi< vertices.size(); bbi++) {
+		bbvpos = glm::vec3(localtransformationmatrix * glm::vec4(vertices[bbi].position, 1.0));
 
-	for (int i = 0; i< vertices.size(); i++) {
-		gVertex v = vertices[i];
-		glm::vec3 vpos = glm::vec3(localtransformationmatrix * glm::vec4(v.position, 1.0));
+		if (bbi == 0) {
+			bbminx = bbvpos.x, bbminy = bbvpos.y, bbminz = bbvpos.z;
+			bbmaxx = bbvpos.x, bbmaxy = bbvpos.y, bbmaxz = bbvpos.z;
+			continue;
+		}
 
-		bbminx = std::min(bbminx, vpos.x);
-		bbminy = std::min(bbminy, vpos.y);
-		bbminz = std::min(bbminz, vpos.z);
-		bbmaxx = std::max(bbmaxx, vpos.x);
-		bbmaxy = std::max(bbmaxy, vpos.y);
-		bbmaxz = std::max(bbmaxz, vpos.z);
+		bbminx = std::min(bbminx, bbvpos.x);
+		bbminy = std::min(bbminy, bbvpos.y);
+		bbminz = std::min(bbminz, bbvpos.z);
+		bbmaxx = std::max(bbmaxx, bbvpos.x);
+		bbmaxy = std::max(bbmaxy, bbvpos.y);
+		bbmaxz = std::max(bbmaxz, bbvpos.z);
 	}
 
 	return gBoundingBox(bbminx, bbminy, bbminz, bbmaxx, bbmaxy, bbmaxz);

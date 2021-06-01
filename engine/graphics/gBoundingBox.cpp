@@ -84,7 +84,8 @@ gBoundingBox gBoundingBox::merge(const gBoundingBox& other) {
 }
 
 bool gBoundingBox::intersects(gRay& ray) {
-	return distance(ray) == std::numeric_limits<float>::min() ? false : true;
+	raydist = distance(ray);
+	return raydist == std::numeric_limits<float>::min() ? false : true && raydist <= glm::length(ray.getDirection());
 }
 
 float gBoundingBox::distance(gRay& ray) {

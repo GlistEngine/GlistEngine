@@ -83,6 +83,8 @@ private:
     gShader *pbrshader;
 
     float bbminx, bbminy, bbminz, bbmaxx, bbmaxy, bbmaxz;
+    glm::vec3 bbvpos;
+    int bbi;
 };
 
 #endif /* ENGINE_GRAPHICS_GMESH_H_ */

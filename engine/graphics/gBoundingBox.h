@@ -77,6 +77,7 @@ private:
 	int di;
 	glm::vec3 ro, rd;
 	float dmin, dmax;
+	float raydist;
 };
 
 #endif /* GRAPHICS_GBOUNDINGBOX_H_ */
