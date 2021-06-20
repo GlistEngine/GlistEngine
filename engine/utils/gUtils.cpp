@@ -218,7 +218,15 @@ utf8::iterator<std::string::const_reverse_iterator> gUTF8Iterator::rend() const 
 }
 
 std::locale gGetLocale(const std::string & locale) {
-	return std::locale(locale.c_str());
+	std::locale loc;
+
+#ifdef APPLE
+	loc = std::locale(std::locale(), new std::ctype<char>);
+#else
+	loc = std::locale(locale.c_str());
+#endif
+
+	return loc;
 }
 
 int gToInt(const std::string& intString) {
