@@ -54,6 +54,8 @@ public:
 
 	bool intersects(gRay& ray);
 	float distance(gRay& ray);
+	bool intersects(gRay* ray);
+	float distance(gRay* ray);
 
 	glm::vec3 getMin();
 	glm::vec3 getMax();
