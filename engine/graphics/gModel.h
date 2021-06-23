@@ -114,6 +114,10 @@ private:
 	bool isvertexanimationstoredonvram;
 
     float bbminx, bbminy, bbminz, bbmaxx, bbmaxy, bbmaxz;
+    int bbi, bbj;
+    std::vector<gVertex> bbvertices;
+    glm::vec3 bbvpos;
+    gVertex bbv;
 };
 
 #endif /* ENGINE_GRAPHICS_GMODEL_H_ */

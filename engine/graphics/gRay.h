@@ -22,6 +22,9 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/quaternion.hpp>
 
+class gMesh;
+class gBoundingBox;
+
 
 class gRay {
 public:
@@ -34,8 +37,19 @@ public:
 	glm::vec3 getOrigin();
 	glm::vec3 getDirection();
 
+	bool intersects(gBoundingBox& boundingBox);
+	float distance(gBoundingBox& boundingBox);
+
+	void link(gMesh* mesh, float rayScale = 1.0f, bool isNormalized = false, float dx = 0.0f, float dy = 0.0f, float dz = 0.0f);
+	void unlink();
+
 private:
 	glm::vec3 origin, direction;
+	bool islinked;
+	gMesh* linkedmesh;
+	float scale;
+	bool isnormalized;
+	glm::vec3 pdiff;
 };
 
 #endif /* GRAPHICS_GRAY_H_ */
