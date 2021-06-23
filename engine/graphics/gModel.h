@@ -43,6 +43,7 @@ public:
 	std::string getFilename();
 	std::string getFullpath();
 	int getMeshNum();
+	int getMeshNo(std::string meshName);
 	gSkinnedMesh getMesh(int meshNo);
 	gSkinnedMesh* getMeshPtr(int meshNo);
 	std::string getMeshName(int meshNo);

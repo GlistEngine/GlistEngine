@@ -195,6 +195,13 @@ int gModel::getMeshNum() {
 	return meshes.size();
 }
 
+int gModel::getMeshNo(std::string meshName) {
+	for(unsigned int i = 0; i < meshes.size(); i++) {
+		if (meshName == scene->mMeshes[i]->mName.C_Str()) return i;
+	}
+	return -1;
+}
+
 gSkinnedMesh gModel::getMesh(int meshNo) {
 	return meshes[meshNo];
 }
