@@ -81,6 +81,21 @@ public:
 	glm::quat getOrientation();
 	glm::vec3 getScale();
 
+	/**
+	 * Returns truck direction as a scalar vec3.
+	 */
+	glm::vec3 getScalarDirectionX();
+
+	/**
+	 * Returns boom direction as a scalar vec3.
+	 */
+	glm::vec3 getScalarDirectionY();
+
+	/**
+	 * Returns dolly direction as a scalar vec3.
+	 */
+	glm::vec3 getScalarDirectionZ();
+
 	void setTransformationMatrix(glm::mat4 transformationMatrix);
 	glm::mat4 getTransformationMatrix();
 

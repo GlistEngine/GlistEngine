@@ -173,6 +173,19 @@ glm::vec3 gNode::getScale() {
 	return scalevec;
 }
 
+glm::vec3 gNode::getScalarDirectionX() {
+	return glm::vec3(localtransformationmatrix[0]);
+}
+
+glm::vec3 gNode::getScalarDirectionY() {
+	return glm::vec3(localtransformationmatrix[1]);
+}
+
+glm::vec3 gNode::getScalarDirectionZ() {
+	return glm::vec3(localtransformationmatrix[2]);
+}
+
+
 void gNode::pushMatrix() {
 #if defined(WIN32) || defined(LINUX)
 	glPushMatrix();

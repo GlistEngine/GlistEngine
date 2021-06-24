@@ -43,6 +43,7 @@ public:
 	std::string getFilename();
 	std::string getFullpath();
 	int getMeshNum();
+	int getMeshNo(std::string meshName);
 	gSkinnedMesh getMesh(int meshNo);
 	gSkinnedMesh* getMeshPtr(int meshNo);
 	std::string getMeshName(int meshNo);
@@ -114,6 +115,10 @@ private:
 	bool isvertexanimationstoredonvram;
 
     float bbminx, bbminy, bbminz, bbmaxx, bbmaxy, bbmaxz;
+    int bbi, bbj;
+    std::vector<gVertex> bbvertices;
+    glm::vec3 bbvpos;
+    gVertex bbv;
 };
 
 #endif /* ENGINE_GRAPHICS_GMODEL_H_ */
