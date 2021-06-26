@@ -13,19 +13,33 @@
 #include <deque>
 
 /**
- * This class should be extended whenever you are developing
- * a new plugin for your project.
+ * This class should be extended whenever you are developing a new plugin for
+ * your project.
+ *
+ * Developers should add their plugins inside ../dev/glist/glistplugins folder.
+ * If the folder does not exist, it should be added. The file structure inside
+ * of the glistplugins should be like 'glistplugins/gipPlugin'. Every plugin
+ * folder should have atleast a src folder with .cpp and .h files of that plugin
+ * inside it.
+ *
+ * Plugins should be classes that help the project by reducing the amount of
+ * code that's being repeated. For example, buttons are a way to run certain
+ * functions at the click of a mouse on a certain area. In that case a plugin,
+ * such as gipButton, can be used to reduce the amount of code that's being
+ * written inside the mouse state functions for the current canvas.
+ *
+ * When naming the plugins, developers are encouraged to add the 'gip' prefix to
+ * whichever plugin that's being created. Ex: gipButton, gipMenu, gipTitle.
+ * It's important to keep this naming convention, as that makes reading the file
+ * structure easier for the whole team if a developer has one. If not, it should
+ * still be used for when publishing the code online.
+ *
+ * gBasePlugin is a class that gets updated by the engine and therefore gets updated
+ * at the same time as other classes that has update function.
  *
  * The functions in this class should never be called manually,
  * as that's handled by the engine, and doing so might raise
  * errors that are unknown.
- *
- * Example:
- * void setup() {
- *     update();
- * }
- *
- * This usage is prone to errors, and should be avoided.
  */
 class gBasePlugin : public gRenderObject {
 public:
@@ -36,8 +50,12 @@ public:
 	 * Starting point for each plugin that extends this class.
 	 *
 	 * This function gets called once when this class is instantiated, and
-	 * is called after the constructor. Almost every initialization that a
-	 * plugin has to do, should be made in this function.
+	 * is called after the constructor.
+	 *
+	 * Almost every initialization that a plugin has to do, should be made
+	 * in this function. Certain class functions such as gImage's loadImage,
+	 * should also be called in this function as it initializes the pixel data
+	 * for the image.
 	 *
 	 * setup should not be used for re-initalization of variables. Meaning,
 	 * this function should not be called anywhere in the code, as it might
@@ -56,6 +74,9 @@ public:
 	 * here to allow maintaining the code clean and find errors quicker. Meaning,
 	 * this function should only hold (other than some exceptions) function calls.
 	 *
+	 * If the plugin should be drawn, it should be in a seperate draw function,
+	 * then be called in the draw function that belongs to the current canvas.
+	 *
 	 * Exceptions of not using only functions in update should be conditions, that
 	 * allows/disallows functions to be called.
 	 */
@@ -64,10 +85,11 @@ public:
 	/**
 	 * Gets called each time a key is pressed on the keyboard.
 	 *
-	 * Events that are related to a key being pressed, should be handled in this
-	 * function. As this function is called synchronous to the other keyPressed()
-	 * functions, events should be handled consciously with that knowledge as mapping
-	 * the same keys to different functionalities will cause problems.
+	 * If the developer wants the plugin to do something when a key is being pressed,
+	 * the functionality should be defined in this function.
+	 *
+	 * This function should only contain a code that updates a keystate, with some
+	 * exceptions. Not doing so might lead to a spaghetti code.
 	 *
 	 * @param key The keycode of the key that has been pressed.
 	 */
@@ -76,10 +98,11 @@ public:
 	/**
 	 * Gets called each time a key is released on the keyboard.
 	 *
-	 * Events that are related to a key being released, should be handled in this
-	 * function. As this function is called synchronous to the other keyReleased()
-	 * functions, events should be handled consciously with that knowledge as mapping
-	 * the same keys to different functionalities will cause problems.
+	 * If the developer wants the plugin to do something when a key is being released,
+	 * the functionality should be defined in this function.
+	 *
+	 * This function should only contain a code that updates a keystate, with some
+	 * exceptions. Not doing so might lead to a spaghetti code.
 	 *
 	 * @param key The keycode of the key that has been released.
 	 */
@@ -87,10 +110,6 @@ public:
 
 	/**
 	 * Gets called every time the mouse moves on the current canvas.
-	 *
-	 * This function DOES NOT get triggered when the mouse is moved on the current
-	 * plugin, but instead, it gets triggered when the mouse is moved on the current
-	 * canvas.
 	 *
 	 * @param x Mouse's current x coordinate on the canvas space
 	 * @param y Mouse's current y coordinate on the canvas space
@@ -116,8 +135,9 @@ public:
 	 *
 	 * As this function immediately gets triggered when a mouse button is clicked on
 	 * the current canvas, if not intended, most click events should be handled inside
-	 * the mouseReleased function. If an immediate response is needed for an action,
-	 * use this function instead.
+	 * the mouseReleased function.
+	 *
+	 * If an immediate response is needed for an action, use this function instead.
 	 *
 	 * @param x Mouse's x coordinate when the button was pressed.
 	 * @param y Mouse's y coordinate when the button was pressed.
@@ -156,7 +176,7 @@ public:
 
 	/**
 	 * All the plugins that extends this class should add themselves into this
-	 * deque container.
+	 * deque container in their constructor, as this is not a plugin-specific variable.
 	 */
 	static std::deque<gBasePlugin*> usedplugins;
 
