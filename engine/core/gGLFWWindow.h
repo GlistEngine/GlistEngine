@@ -31,6 +31,7 @@ private:
 #if defined(WIN32) || defined(LINUX) || defined(APPLE)
 	GLFWwindow* window;
 	static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+	static void character_callback(GLFWwindow* window, unsigned int keycode);
 	static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 	static void mouse_pos_callback(GLFWwindow* window, double xpos, double ypos);
 	static void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);

@@ -100,9 +100,9 @@ void gGLFWWindow::initialize(int width, int height, int windowMode) {
 	// Window specs to OpenGL
 	glViewport(0, 0, width, height);
 
-
 	// Notify OpenGL if the window size changed
 	glfwSetFramebufferSizeCallback(window, gGLFWWindow::framebuffer_size_callback);
+	glfwSetCharCallback(window, gGLFWWindow::character_callback);
 	glfwSetKeyCallback(window, gGLFWWindow::key_callback);
 	glfwSetCursorPosCallback(window, gGLFWWindow::mouse_pos_callback);
 	glfwSetMouseButtonCallback(window, gGLFWWindow::mouse_button_callback);
@@ -140,6 +140,9 @@ void gGLFWWindow::framebuffer_size_callback(GLFWwindow* window, int width, int h
     (static_cast<gGLFWWindow *>(glfwGetWindowUserPointer(window)))->setSize(width, height);
 }
 
+void gGLFWWindow::character_callback(GLFWwindow* window, unsigned int keycode) {
+	 (static_cast<gGLFWWindow *>(glfwGetWindowUserPointer(window)))->onCharEvent((char)keycode);
+}
 
 void gGLFWWindow::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
 	if (action != GLFW_RELEASE && action != GLFW_PRESS) return;
