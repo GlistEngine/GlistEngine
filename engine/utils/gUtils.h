@@ -15,6 +15,7 @@
 #include <ostream>
 #include <iostream>
 #include <iomanip>
+#include <stringapiset.h>
 #include "utf8.h"
 
 /*
@@ -108,6 +109,7 @@ std::string gToStr(const T& value, int width, char fill) {
 }
 
 int gToInt(const std::string& intString);
+std::string gWStrToStr(const std::wstring& s);
 
 template <typename T>
 int gSign(T val) {
