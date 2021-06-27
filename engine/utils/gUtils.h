@@ -17,6 +17,8 @@
 #include <iomanip>
 #include <stringapiset.h>
 #include "utf8.h"
+#include <stdlib.h>
+#include <wchar.h>
 
 /*
 #ifndef LINUX

@@ -236,15 +236,11 @@ int gToInt(const std::string& intString) {
 	return x;
 }
 
-std::string gWStrToStr(const std::wstring& s) {
-	int len;
-	int slength = (int) s.length() + 1;
-	len = WideCharToMultiByte(CP_ACP, 0, s.c_str(), slength, 0, 0, 0, 0);
-	char *buf = new char[len];
-	WideCharToMultiByte(CP_ACP, 0, s.c_str(), slength, buf, len, 0, 0);
-	std::string r(buf);
-	delete[] buf;
-	return r;
+std::string gWStrToStr(const std::wstring& WS) {
+	const unsigned wlen = WS.length();
+	char buf[wlen * sizeof(std::wstring::value_type) + 1];
+	const ssize_t res = std::wcstombs(buf, WS.c_str(), sizeof(buf));
+	return res != static_cast<std::size_t>(-1) ? buf : "?";
 }
 
 gLog::gLog() {
