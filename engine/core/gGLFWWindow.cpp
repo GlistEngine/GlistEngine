@@ -100,9 +100,10 @@ void gGLFWWindow::initialize(int width, int height, int windowMode) {
 	// Window specs to OpenGL
 	glViewport(0, 0, width, height);
 
+
 	// Notify OpenGL if the window size changed
 	glfwSetFramebufferSizeCallback(window, gGLFWWindow::framebuffer_size_callback);
-	glfwSetCharCallback(window, gGLFWWindow::character_callback);
+	glfwSetCharCallback(window, gGLFWWindow::character_callback)
 	glfwSetKeyCallback(window, gGLFWWindow::key_callback);
 	glfwSetCursorPosCallback(window, gGLFWWindow::mouse_pos_callback);
 	glfwSetMouseButtonCallback(window, gGLFWWindow::mouse_button_callback);
