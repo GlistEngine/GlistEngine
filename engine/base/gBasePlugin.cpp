@@ -25,7 +25,7 @@ void gBasePlugin::update() {
 
 }
 
-void gBasePlugin::charPressed(char key) {
+void gBasePlugin::charPressed(wchar_t key) {
 
 }
 

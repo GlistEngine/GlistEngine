@@ -160,7 +160,7 @@ double gAppManager::getElapsedTime() {
 	return timediff2.count();
 }
 
-void gAppManager::onCharEvet(char key) {
+void gAppManager::onCharEvet(wchar_t key) {
 #if defined(WIN32) || defined(LINUX) || defined(APPLE)
 	for (upi = 0; upi < gBasePlugin::usedplugins.size(); upi++) gBasePlugin::usedplugins[upi]->charPressed(key);
 	canvasmanager->getCurrentCanvas()->charPressed(key);

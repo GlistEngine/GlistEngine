@@ -141,7 +141,7 @@ void gGLFWWindow::framebuffer_size_callback(GLFWwindow* window, int width, int h
 }
 
 void gGLFWWindow::character_callback(GLFWwindow* window, unsigned int keycode) {
-	 (static_cast<gGLFWWindow *>(glfwGetWindowUserPointer(window)))->onCharEvent((char)keycode);
+	 (static_cast<gGLFWWindow *>(glfwGetWindowUserPointer(window)))->onCharEvent((wchar_t)keycode);
 }
 
 void gGLFWWindow::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {

@@ -70,7 +70,7 @@ public:
 
 	std::string getAppName();
 
-	void onCharEvet(char key);
+	void onCharEvet(wchar_t key);
 	void onKeyEvent(int key, int action);
 	void onMouseMoveEvent(double xpos, double ypos);
 	void onMouseButtonEvent(int button, int action, double xpos, double ypos);

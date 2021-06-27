@@ -91,7 +91,7 @@ public:
 	 *
 	 * @param key Unicode representation of the pressed key on the keyboard.
 	 */
-	virtual void charPressed(char key);
+	virtual void charPressed(wchar_t key);
 
 	/**
 	 * Gets called each time a key is pressed on the keyboard.

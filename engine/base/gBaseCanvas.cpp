@@ -31,7 +31,7 @@ void gBaseCanvas::draw() {
 
 }
 
-void gBaseCanvas::charPressed(char key) {
+void gBaseCanvas::charPressed(wchar_t key) {
 
 }
 
