@@ -149,6 +149,19 @@ void gStringReplace(std::string& input, const std::string& searchStr, const std:
 	}
 }
 
+std::vector<std::string> gSplitString(const std::string& textToSplit, const std::string& delimiter) {
+	std::vector<std::string> tokens;
+	size_t prev = 0, pos = 0;
+	do {
+		pos = textToSplit.find(delimiter, prev);
+		if (pos == std::string::npos) pos = textToSplit.length();
+		std::string token = textToSplit.substr(prev, pos - prev);
+		if (!token.empty()) tokens.push_back(token);
+		prev = pos + delimiter.length();
+	} while (pos < textToSplit.length() && prev < textToSplit.length());
+	return tokens;
+}
+
 std::string gToLower(const std::string& src, const std::string & locale) {
 	std::string dst;
 	std::locale loc = gGetLocale(locale);
