@@ -70,6 +70,7 @@ public:
 
 	std::string getAppName();
 
+	void onCharEvent(unsigned int key);
 	void onKeyEvent(int key, int action);
 	void onMouseMoveEvent(double xpos, double ypos);
 	void onMouseButtonEvent(int button, int action, double xpos, double ypos);

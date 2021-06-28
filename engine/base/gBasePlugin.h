@@ -83,6 +83,17 @@ public:
 	virtual void update();
 
 	/**
+	 * This function gets the unicode representation of the pressed key as it's
+	 * parameter.
+	 *
+	 * Can be either used for printing or drawing the key that's been pressed, or
+	 * for the input controls.
+	 *
+	 * @param key Unicode representation of the pressed key on the keyboard.
+	 */
+	virtual void charPressed(unsigned int unicode);
+
+	/**
 	 * Gets called each time a key is pressed on the keyboard.
 	 *
 	 * If the developer wants the plugin to do something when a key is being pressed,

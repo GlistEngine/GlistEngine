@@ -109,6 +109,10 @@ std::string gBaseWindow::getTitle() {
 	return title;
 }
 
+void gBaseWindow::onCharEvent(unsigned int key) {
+	appmanager->onCharEvent(key);
+}
+
 void gBaseWindow::onKeyEvent(int key, int action) {
 	appmanager->onKeyEvent(key, action);
 }
