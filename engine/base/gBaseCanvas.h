@@ -23,7 +23,7 @@ public:
 	virtual void update();
 	virtual void draw();
 
-	virtual void charPressed(wchar_t key);
+	virtual void charPressed(unsigned int key);
 	virtual void keyPressed(int key);
 	virtual void keyReleased(int key);
 	virtual void mouseMoved(int x, int y );

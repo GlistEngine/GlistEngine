@@ -109,7 +109,7 @@ std::string gBaseWindow::getTitle() {
 	return title;
 }
 
-void gBaseWindow::onCharEvent(wchar_t key) {
+void gBaseWindow::onCharEvent(unsigned int key) {
 	appmanager->onCharEvet(key);
 }
 
