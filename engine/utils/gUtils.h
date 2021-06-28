@@ -18,6 +18,7 @@
 #include "utf8.h"
 #include <stdlib.h>
 #include <wchar.h>
+#include <vector>
 
 /*
 #ifndef LINUX
@@ -93,7 +94,7 @@ void gStringReplace(std::string& input, const std::string& searchStr, const std:
 std::locale gGetLocale(const std::string & locale);
 std::string gToLower(const std::string& src, const std::string & locale = "");
 std::string gToUpper(const std::string& src, const std::string & locale = "");
-
+std::vector<std::string> gSplitString(const std::string& textToSplit, const std::string& delimiter);
 
 template <class T>
 std::string gToStr(const T& numValue) {
