@@ -30,6 +30,7 @@ public:
 	virtual void mouseDragged(int x, int y, int button);
 	virtual void mousePressed(int x, int y, int button);
 	virtual void mouseReleased(int x, int y, int button);
+	virtual void mouseScrolled(int x, int y);
 	virtual void mouseEntered();
 	virtual void mouseExited();
 

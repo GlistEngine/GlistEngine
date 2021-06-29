@@ -244,4 +244,8 @@ void gAppManager::onMouseEnterEvent(int entered) {
 	}
 }
 
-
+void gAppManager::onMouseScrollEvent(double xoffset, double yoffset) {
+	if (!canvasmanager->getCurrentCanvas()) return;
+	for (upi = 0; upi < gBasePlugin::usedplugins.size(); upi++) gBasePlugin::usedplugins[upi]->mouseScrolled(xoffset, yoffset);
+	canvasmanager->getCurrentCanvas()->mouseScrolled(xoffset, yoffset);
+}

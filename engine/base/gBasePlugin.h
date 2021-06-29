@@ -169,6 +169,23 @@ public:
 	virtual void mouseReleased(int x, int y, int button);
 
 	/**
+	 * Gets called whenever the mouse wheel has been scrolled.
+	 *
+	 * If the mouse that's being used by the user is a normal mouse, it'll always
+	 * return the y axis movements as a parameter.
+	 *
+	 * The minimum value both axises can receive is 0, which represents the mouse
+	 * scroll not being moved on that axis. The value's magnitude is determined by
+	 * how fast the scroll has been moved on that axis.
+	 *
+	 * @param x If greater than 0, mouse is scrolled to the right, if less then 0,
+	 * it's been scrolled to the left.
+	 * @param y If greater than 0, mouse is scrolled up, if less then 0, it's been
+	 * scrolled down.
+	 */
+	virtual void mouseScrolled(int x, int y);
+
+	/**
 	 * Gets called when the mouse enters the current canvas.
 	 *
 	 * This function gets called only once when the cursor enters the current canvas

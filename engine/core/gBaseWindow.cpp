@@ -129,6 +129,10 @@ void gBaseWindow::onMouseEnterEvent(int entered) {
 	appmanager->onMouseEnterEvent(entered);
 }
 
+void gBaseWindow::onMouseScrollEvent(double xoffset, double yoffset) {
+	appmanager->onMouseScrollEvent(xoffset, yoffset);
+}
+
 void gBaseWindow::sighandler(int signum) {
 	std::cerr << "Process " << getpid() << " got signal " << signum << " " << signalname[signum] << std::endl;
 //	signal(signum, SIG_DFL);

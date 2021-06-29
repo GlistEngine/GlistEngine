@@ -41,6 +41,7 @@ public:
 	void onMouseMoveEvent(double xpos, double ypos);
 	void onMouseButtonEvent(int button, int action, double xpos, double ypos);
 	void onMouseEnterEvent(int entered);
+	void onMouseScrollEvent(double xoffset, double yoffset);
 
 protected:
 	gAppManager *appmanager;
