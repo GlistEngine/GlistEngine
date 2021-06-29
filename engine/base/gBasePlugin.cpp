@@ -53,6 +53,10 @@ void gBasePlugin::mouseReleased(int x, int y, int button) {
 
 }
 
+void gBasePlugin::mouseScrolled(int x, int y) {
+
+}
+
 void gBasePlugin::mouseEntered() {
 
 }

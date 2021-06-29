@@ -59,6 +59,10 @@ void gBaseCanvas::mouseReleased(int x, int y, int button) {
 
 }
 
+void gBaseCanvas::mouseScrolled(int x, int y) {
+
+}
+
 void gBaseCanvas::mouseEntered() {
 
 }
