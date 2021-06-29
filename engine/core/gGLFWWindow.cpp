@@ -108,7 +108,7 @@ void gGLFWWindow::initialize(int width, int height, int windowMode) {
 	glfwSetCursorPosCallback(window, gGLFWWindow::mouse_pos_callback);
 	glfwSetMouseButtonCallback(window, gGLFWWindow::mouse_button_callback);
 	glfwSetCursorEnterCallback(window, gGLFWWindow::mouse_enter_callback);
-	glfwSetScrollCallback(window, gGLFWWindow::scroll_callback);
+	glfwSetScrollCallback(window, gGLFWWindow::mouse_scroll_callback);
 #endif
 }
 
@@ -165,7 +165,7 @@ void gGLFWWindow::mouse_enter_callback(GLFWwindow* window, int entered) {
 	(static_cast<gGLFWWindow *>(glfwGetWindowUserPointer(window)))->onMouseEnterEvent(entered);
 }
 
-void gGLFWWindow::scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
+void gGLFWWindow::mouse_scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
 	(static_cast<gGLFWWindow *>(glfwGetWindowUserPointer(window)))->onMouseScrollEvent(xoffset, yoffset);
 }
 #endif
