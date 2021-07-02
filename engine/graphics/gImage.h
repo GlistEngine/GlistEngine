@@ -74,7 +74,25 @@ public:
 	 */
 	unsigned int loadImage(std::string imagePath);
 
+	/**
+	* Loads an image’s data from the given full path to the RAM.
+	*
+	* Supported image formats can be found in the class description.
+	*
+	* The image can be located in anywhere(hard disk or other storage devices)
+	* as long as it has the full path.Supported image formats can be found in the class                                 *        description.
+	*
+	* Loading assets in separate threads improves overall efficiency. In order to load
+	* an image’s data separately, this function can be used. It doesn’t create a texture
+	* of the loaded data’s image in VRAM, instead it loads the Data of a given image
+	* and saves it into the RAM.
+	*
+	* @param fullPath  The full path to the image file. It should contain the
+	* full path of the folder where the image is located.
+	*
+	*/
 	void loadData(std::string fullPath);
+
 	void loadImageData(std::string imagePath);
 	unsigned int useData();
 
