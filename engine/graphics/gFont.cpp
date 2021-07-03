@@ -34,9 +34,13 @@ gFont::~gFont() {
  *
  *
  *	@param fullPath The full path to the font file. It should contain the
- *  full path of the folder where the font is located. The size is the size of the font
- *	the isAntialised is used in digital imaging to reduce visual imperfections and users don't need to give value.
- *	the dpi is a measure of resolution used for printed text or images and users don't need to give value
+ *  full path of the folder where the font is located.
+ *
+ *  @param The size is the size of the font
+ *
+ *	@param the isAntialised is used in digital imaging to reduce visual imperfections and users don't need to give value.
+ *
+ *	@param the dpi is a measure of resolution used for printed text or images and users don't need to give value
  *
  *
  *	@return the function will load the font style and
@@ -89,9 +93,13 @@ bool gFont::load(std::string fullPath, int size, bool isAntialiased, int dpi) {
  *	in glistapp/assets/fonts
  *
  *	@param fontPath The font path to the font file. It should contain the
- *  font path of the folder where the font is located. The size is the size of the font
- *	the isAntialised is used in digital imaging to reduce visual imperfections and users don't need to give value.
- *	the dpi is a measure of resolution used for printed text or images and users don't need to give value
+ *  font path of the folder where the font is located.
+ *
+ *  @param The size is the size of the font. Users are recommended to use 6 and its multiples.
+ *
+ *  @param the isAntialised is used in digital imaging to reduce visual imperfections and users don't need to give value.
+ *
+ *	@param the dpi is a measure of resolution used for printed text or images and users don't need to give value
  *
  *
  *	@return the function will load the font style and
@@ -116,8 +124,10 @@ bool gFont::loadFont(std::string fontPath, int size, bool isAntialiased, int dpi
  *	Values must be in screen coordinates
  *
  *	@param The first parameter should be the text to be printed.
- *	must be the x-axis value that the second text wants to be printed
- *	the last parameter should be the value of the y-axis of the place to be printed
+ *
+ *	@param x axis value of the region you want to draw
+ *
+ *	@param y-axis value of the region you want to draw
  *
  *	@return Users will see the text users want to print on the screen
  */
@@ -220,7 +230,8 @@ float gFont::getStringHeight(std::string text) {
  *
  * No parameters are required when using this function
  * Users should pay attention to data type
- * If the data type isn't string. Users will get error.
+ *
+ * @return If the user makes an assignment, he returns fullpath name
  */
 std::string gFont::getPath() {
 	return fullpath;
@@ -231,7 +242,7 @@ std::string gFont::getPath() {
  *
  * No parameters are required when using this function
  *
- * @returns This function returns fullpath location
+ * @returns This function returns the font size that users have assigned to their font.
  */
 int gFont::getSize() {
 	return fontsize;
@@ -247,7 +258,6 @@ bool gFont::isLoaded() {
 	return isloaded;
 }
 /**
- *
  * the isAntialised is used in digital imaging to reduce visual imperfections.
  * This function lets users know if isAntialised is done or not.
  *
@@ -296,6 +306,8 @@ void gFont::resizeVectors(int num) {
 	loadChar(getCharID('a'));
 }
 /**
+ * This function allows chars to be recognized
+ *
  * This function allows users to find the ID of the character as an integer
  * with this function, users could access the integer value of char characters.
  *
@@ -322,13 +334,13 @@ int gFont::getCharID(const int& c) {
 	}
 	return tempcharno;
 }
+
 /**
- *	Loads a char from the font
+ *	This function provides the mathematical properties of the entered char.
  *
- *	Users could use this function for loading char.
- *
- *	Users do not need to enter the isAntialiased and the dpi values because
- *	those values are given automatically.
+ *	Users could use this function for loading char's values.
+ *	through this function char measures are found and char is defined
+ *	The found values allow users to use chars in fonts
  *
  *	@param users could choose which char is wanted to use. charID has to be integer so users have to know char's number
  *
@@ -429,14 +441,41 @@ void gFont::loadChar(const int& charID) {
 }
 
 /**
- * This function completes the inserting process of the data
+ * This function is used to assign properties to be used to recognize chars.
+ *
+ * the function finds the values of the char
+ *
+ * the function completes the inserting process of the data
  * by making comparisons with the entered data.
  *
  * Users must enter values in the correct place for the Function
  * to compare data correctly
  *
- * @param as parameters char data's value, width, height, x axis, y axis, component number
- * and the values of the data to compare values are entered into the function.
+ * @param as parameters char data's value
+ *
+ * @param srcWidth of selected char
+ *
+ * @param srcHeight of selected char
+ *
+ * @param component number of selected char
+ *
+ * @param x axis of selected char
+ *
+ * @param y axis of selected char
+ *
+ * @param dstData of selected char
+ *
+ * @param dstWidth of selected char
+ *
+ * @param dstHeight of selected char
+ *
+ * @param dstComponent of selected char
+ *
+ * @param dstFirstX of selected char
+ *
+ * @param dstFirstY of selected char
+ *
+ *  the values of the data to compare values are entered into the function.
  *
  * @return The function is loaded datas and if users want to check this function, they can return true or
  * false by assigning an assignment to the function
@@ -459,6 +498,7 @@ bool gFont::insertData(unsigned char* srcData, int srcWidth, int srcHeight, int 
 }
 /**
  * This function allows users to convert std::string to LPWSTR
+ * LPWSTR is pointer to constant Unicode (wide) string.
  *
  * @param Users could write which std::string they want to convert.
  *
