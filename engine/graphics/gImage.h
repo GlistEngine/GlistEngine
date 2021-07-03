@@ -91,7 +91,8 @@ public:
 	* Supported image formats can be found in the class description.
 	*
 	* The image can be located in anywhere(hard disk or other storage devices)
-	* as long as it has the full path.Supported image formats can be found in the class                                 *        description.
+	* as long as it has the full path.Supported image formats can be found in the class
+	* description.
 	*
 	* Loading assets in separate threads improves overall efficiency. In order to load
 	* an image’s data separately, this function can be used. It doesn’t create a texture
