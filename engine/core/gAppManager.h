@@ -49,34 +49,340 @@ class gBaseCanvas;
 class gCanvasManager;
 
 
+/**
+ * Sets the app settings for the engine according to given name, mode of window,
+ * application window's widh and height. Then calls the runApp method to give
+ * output to the screen. GlistEngine has scaling methods. User and developer can
+ * have different resolutions, but the engine can adapt to users resolution by
+ * scaling. In this function, screen scaling is done automatically
+ * by the Engine. If developers want to set the scaling, they are encouraged to
+ * use overrided gStartEngine function instead.
+ *
+ * @param baseApp Current app object.
+ *
+ * @param appName Name of the application.
+ *
+ * @param windowMode Type of the application window. Developers are encouraged
+ * to use this parameter to be able to see both codes and game window while
+ * developing apps, then later on switching for a suiting mode.
+ *
+ * @param width application window's width to be shown on the user's computer. User
+ * should choose this parameter suitable according to their screen resolution
+ * to prevent distorted images.
+ *
+ * @param height application window's width to be shown on the user's computer.
+ * User should choose this parameter suitable according to their screen resolution
+ * to prevent distorted images.
+ */
 void gStartEngine(gBaseApp* baseApp, std::string appName = "GlistApp", int windowMode = 2, int width = gDefaultWidth(), int height = gDefaultHeight());
+
+/**
+ * Sets the app settings for engine according to given name, mode of window,
+ * application window's widh and height. Beside that, this is an overrided
+ * method of gStartEngine, user should give scaling and unit parameters
+ * addition to the baseApp object, app name, windowmode, width and height.
+ *
+ * Users are encouraged to use this function if they want to scale the
+ * output.
+ *
+ * @param baseApp Current app object.
+ *
+ * @param appName Name of the application.
+ *
+ * @param windowMode Type of the application window. Developers are encouraged
+ * to use this parameter to be able to see both codes and game window while
+ * developing apps, then later on switching for a suiting mode.
+ *
+ * @param width application window's width to be shown on the user's computer. User
+ * should choose this parameter suitable according to their screen resolution
+ * to prevent distorted images.
+ *
+ * @param height application window's width to be shown on the user's computer.
+ * User should choose this parameter suitable according to their screen resolution
+ * to prevent distorted images.
+ *
+ * @param screenScaling how much everything should be enlarged when measured in
+ * pixels.
+ *
+ * @param unitWidth width of the developer's application window. The resolution can
+ * differ from developer to user. GlistEngine has scaling methods. User and
+ * developer can have different resolutions, but the engine can adapt to users
+ * resolution by scaling. Thus, unitWidth is developer's unit width.
+ *
+ * @param unitHeight height of the developer's application window. The resolution
+ * can differ from developer to user. GlistEngine has scaling methods. User and
+ * developer can have different resolutions, but the engine can adapt to users
+ * resolution by scaling. Thus, unitHeight is developer's unit height.
+ */
 void gStartEngine(gBaseApp* baseApp, std::string appName, int windowMode, int width, int height, int screenScaling, int unitWidth, int unitHeight);
 
-
+/**
+ * This class controls basically everything which is shown to user from beginning
+ * to end. Process starts with gStartEngine function. gStartEngine gets the input
+ * values and sends it to the runApp function. runApp then executes application
+ * window with desired settings such as app name, width, height and if not sent,
+ * a default gBaseApp object.
+ *
+ * gAppManager is synchronous. Thus, keeps getting updated every frame by engine
+ * and keeps track of changes and inputs. Keeping track of current canvas,
+ * getting user inputs, tracking elapsed time are some features of gAppManager.
+ *
+ * All the inputs of user is received instantly by methods of this class. This
+ * updating process continues until the app is closed.
+ *
+ * gAppManager also handles synchronous draw function. If the canvas is not empty,
+ * drawing process continues until the app is closed.
+ *
+ * Developers should be careful when working with this class. Any wrong input can
+ * cause a huge difference in the app. Double checking the gStartEngine function
+ * before doing anything else is recommended.
+ *
+ * Methods of this class should not be called directly from anywhere else, this may
+ * cause unexpected errors, excluding gStartEngine, which is a free function
+ */
 class gAppManager : gObject {
 public:
+	/**
+	 * Constructor of gAppManager class. Constructor is automatically called when
+	 * object(instance of class) is created. A constructor will have exact same name as
+	 * the class and it does not have any return type at all, not even void.
+	 * Constructors can be very useful for setting initial values for certain member
+	 * variables. In gAppManager constructor, inital values are set.
+	 */
 	gAppManager();
+
+	/**
+	 * Virtual destructor of gAppManager class. Destructor is called when the lifetime
+	 * of an object ends. The purpose of the destructor is to free the resources that
+	 * the object may have acquired during its lifetime. This destructor is virtual
+	 * because Deleting an object through pointer to base invokes undefined behavior.
+	 */
 	virtual ~gAppManager();
 
+    /**
+	 * Gathers all the settings from gStartEngine functions and creates a new window
+	 * with given app name, width, height and window mode. Constructs a temp canvas
+	 * with baseApp object. Then starts giving output to the user's screen. The
+	 * starting time is being held for computing elapsed time and frame calculations.
+	 *
+	 * Setup method is executed just before the first output. Generally, setup method
+	 * is useful for initializing a variable. When declaring a variable, variable must
+	 * be initialized before doing anything else. Then for each frame main loop is
+	 * executed.
+	 * Main loop includes update and draw functions which is the most important part of
+	 * the code. These functions are synchronous, update function is generally used for
+	 * variable updates, and draw function for drawing textures.
+	 *
+	 * Developers should avoid any mathematical operations or declaring variables in
+	 * the draw function. Since this function is executed each frame, this can cause
+	 * performance loss. App continues to run unless user closes the app. Therefore
+	 * any memory leaks should be avoided.
+	 *
+	 * @param appName Name of the application.
+	 *
+	 * @param baseApp Current app object.
+	 *
+	 * @param width application window's width to be shown on the user's computer. User
+	 * should choose this parameter suitable according to their screen resolution
+	 * to prevent distorted images.
+	 *
+	 * @param height application window's width to be shown on the user's computer.
+	 * User should choose this parameter suitable according to their screen resolution
+	 * to prevent distorted images.
+	 *
+	 * @param windowMode Type of the application window. Developers are encouraged
+	 * to use this parameter to be able to see both codes and game window while
+	 * developing apps, then later on switching for a suiting mode.
+	 *
+	 * @param unitWidth width of the developer's application window. The resolution can
+     * differ from developer to user. GlistEngine has scaling methods. User and
+     * developer can have different resolutions, but the engine can adapt to users
+     * resolution by scaling. Thus, unitWidth is developer's unit width.
+	 *
+	 * @param unitHeight height of the developer's application window. The resolution
+     * can differ from developer to user. GlistEngine has scaling methods. User and
+     * developer can have different resolutions, but the engine can adapt to users
+     * resolution by scaling. Thus, unitHeight is developer's unit height.
+	 *
+	 * @param screenScaling how much everything should be enlarged when measured in
+	 * pixels.
+	 */
 	void runApp(std::string appName, gBaseApp *baseApp, int width, int height, int windowMode, int unitWidth, int unitHeight, int screenScaling);
+
+	/**
+	 * Completely replace the current gBaseWindow with the specified gBaseWindow.
+	 *
+	 * @param baseWindow new gBaseWindow to replace.
+	 */
 	void setWindow(gBaseWindow * baseWindow);
+
+	/**
+	 * Completely replace the current gBaseCanvas with the specified gBaseCanvas.
+	 *
+	 * @param baseCanvas new gBaseCanvas to replace.
+	 */
 	void setCurrentCanvas(gBaseCanvas *baseCanvas);
+
+	/**
+	 * Returns the current Canvas.
+	 *
+	 * @return current Canvas.
+	 */
 	gBaseCanvas* getCurrentCanvas();
+
+	/**
+	 * Sets screen size by given width and height. GlistEngine scales the process.
+	 *
+	 * @param width new width value of screen.
+	 *
+	 * @param height new height value of screen.
+	 */
 	void setScreenSize(int width, int height);
 
+	/**
+	 * Sets current framerate into the given targetFramerate value.
+	 *
+	 * @param targetFramerate desired new frame rate value.
+	 */
 	void setFramerate(int targetFramerate);
+
+	/**
+	 * Returns current Framerate value.
+	 *
+	 * @return Framerate value.
+	 */
 	int getFramerate();
+
+	/**
+	 * Returns elapsed time between frames.
+	 *
+	 * @return elapsed time between each frame.
+	 */
 	double getElapsedTime();
 
+	/**
+	 * Returns current app name.
+	 *
+	 * @return app's name.
+	 */
 	std::string getAppName();
 
+	/*
+	 * Gets called each time a key is pressed on the keyboard.
+	 *
+	 * Receives which key is pressed and converts the key value to unicode
+	 * represantation.
+	 *
+	 * Graphics Library Framework(GLFW) handles communication with keyboard and OS
+	 * input.
+	 * @param key the pressed key value.
+
+	 */
 	void onCharEvent(unsigned int key);
+
+	/**
+	 * Receives either the keyboard key is pressed, or released. Saves the input of the
+	 * user. Then later sends this value to keyReleased or keyPressed methods.
+	 *
+	 * Later on developers can manipulate these methods and process the input of user.
+	 *
+	 * Graphics Library Framework(GLFW) handles communication with keyboard and OS
+	 * input.
+	 *
+	 * Note that this method is implemented to return an integer of the pressed key,
+	 * developers are encouraged to use onCharEvent method if they want a unicode value
+	 * return type.
+	 *
+	 * @param key the value of user's interacted key.
+	 *
+	 * @param action info of user's action. either the keyboard key is pressed or
+	 * released.
+	 */
 	void onKeyEvent(int key, int action);
+
+	/**
+	 * Receives x and y coordinate of the application window's clicked positon by user.
+	 * Then sends x and y coordinates to mouseMoved method. And in addition sends
+	 * clicked button value to mouseDragged.
+	 *
+	 * Later on developers can manipulate these methods and process the input of user.
+	 *
+	 * Due to the shortcomings of only getting x and y coordinates of mouse,
+	 * developers are encouraged to use onMouseButtonEvent for getting button info
+	 * addition to the coordinates.
+	 *
+	 * Users should remember that x and y values are returned in window coordinates.
+	 *
+	 * Graphics Library Framework(GLFW) handles communication with mouse and OS input.
+	 *
+	 * @param xpos x coordinate of the application window's clicked position.
+	 *
+	 * @param ypos y coordinate of the application window's clicked position.
+	 */
 	void onMouseMoveEvent(double xpos, double ypos);
+
+	/**
+	 * Receives x and y coordinate of the application window's clicked position by user.
+	 * Either the mouse button is pressed, or released. Saves the input of the user. Then
+	 * later sends this value to mouseReleased or mousePressed methods.
+	 *
+	 * Later on developers can manipulate these methods and process the input of user.
+	 *
+	 * Users should remember that x and y values are returned in window coordinates.
+	 *
+	 * Graphics Library Framework(GLFW) handles communication with mouse and OS input.
+	 *
+	 * @param button which button is being interacted.
+	 *
+	 * @param action info of user's action. either mouse button is pressed or released.
+	 *
+	 * @param  xpos x coordinate of the application window's clicked position.
+	 *
+	 * @param ypos y coordinate of the application window's clicked position.
+	 */
 	void onMouseButtonEvent(int button, int action, double xpos, double ypos);
+
+	/**
+	 * Gets the info of user's cursor. Checks if user is currently on the application
+	 * window or not.
+	 *
+	 * Then sends this info to mouseEntered and mouseExited methods.
+	 * Developers can manipulate these methods and process current state. This can be
+	 * helpful to understand if user is currently on the application tab or borders,
+	 * continuing the game when user is on the tab, and pausing when is not.
+	 *
+	 * Graphics Library Framework(GLFW) handles communication with mouse and OS input.
+	 *
+	 * @param info of user's cursor is either in the boundaries of application window
+	 * or outside the boundaries.
+	 */
 	void onMouseEnterEvent(int entered);
+
+	/**
+	 * Gets the info of user's cursor. Checks if user is currently on the application
+	 * window or not. Then receives offset values x and y, x for horizontal axis and y
+	 * for vertical axis. Then sends this values to mouseScrolled method. Developers
+	 * can manipulate this method and process current state.
+	 *
+	 * If x value is greater than 0, mouse is being scrolled to the right. If
+	 * x value is less than 0, mouse is being scrolled to the left.
+	 *
+	 * If y value is greater than 0, mouse is being scrolled up. If y value is less
+	 * than 0, mouse is being scrolled down.
+	 *
+	 * This can be helpful for aim precision, view changing, and smooth controls.
+	 *
+	 * @param xoffset offset value of x(horizontal) axis.
+	 *
+	 * @param yoffset offset value of y(vertical) axis.
+	 */
 	void onMouseScrollEvent(double xoffset, double yoffset);
 
+	/**
+	 * Returns the current gCanvasManager object pointer.
+	 *
+	 * @return gCanvasManager object pointer.
+	 */
 	gCanvasManager* getCanvasManager();
 
 private:
