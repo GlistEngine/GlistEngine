@@ -77,7 +77,6 @@ void gAppManager::runApp(std::string appName, gBaseApp *baseApp, int width, int 
 	window->initialize(width, height, windowMode);
 
 	tempbasecanvas = new gBaseCanvas(app);
-//	tempbasecanvas->loadRenderMaterials();
 	tempbasecanvas->setScreenSize(width, height);
 	tempbasecanvas->setUnitScreenSize(unitWidth, unitHeight);
 	tempbasecanvas->setScreenScaling(screenScaling);
