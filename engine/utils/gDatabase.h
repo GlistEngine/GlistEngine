@@ -27,8 +27,8 @@ public:
 	gDatabase();
 	virtual ~gDatabase();
 
-	bool open(std::string fullPath);
-	bool openDatabase(std::string databasePath);
+	bool load(std::string fullPath);
+	bool loadDatabase(std::string databasePath);
 	void close();
 
 	std::string getPath();

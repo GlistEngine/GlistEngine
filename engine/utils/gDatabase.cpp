@@ -19,7 +19,7 @@ gDatabase::gDatabase() {
 gDatabase::~gDatabase() {
 }
 
-bool gDatabase::open(std::string fullPath) {
+bool gDatabase::load(std::string fullPath) {
 	fullpath = fullPath;
 	int rc = sqlite3_open(fullpath.c_str(), &db);
 	if(rc) {
@@ -29,8 +29,8 @@ bool gDatabase::open(std::string fullPath) {
 	return true;
 }
 
-bool gDatabase::openDatabase(std::string databasePath) {
-	return open(gGetDatabasesDir() + databasePath);
+bool gDatabase::loadDatabase(std::string databasePath) {
+	return load(gGetDatabasesDir() + databasePath);
 }
 
 void gDatabase::close() {
