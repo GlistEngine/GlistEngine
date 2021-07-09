@@ -36,25 +36,140 @@ public:
 	gObject();
 	virtual ~gObject();
 
+	/**
+	 * Gives the path to the project folder.
+	 *
+	 *@return The location of the project folder.
+     */
 	static std::string gGetAppDir();
+
+	/**
+	 * Gives the path to the assets folder.
+	 *
+	 *@return The location of the project’s assets folder.
+	 */
 	static std::string gGetAssetsDir();
+
+	/**
+	 * Gives the path to the files folder.
+	 *
+	 *@return The location of the files folder in the project.
+	 */
 	static std::string gGetFilesDir();
+
+	/**
+	 * Gives the path to the image folder.
+	 *
+	 *@return The location of the images folder in the project.
+	 */
 	static std::string gGetImagesDir();
+
+	/**
+	 * Gives the path to the fonts folder.
+	 *
+	 *@return The location of the fonts folder in the project.
+	 */
 	static std::string gGetFontsDir();
+
+	/**
+	 * Gives the path to the models folder.
+	 *
+	 *@return The location of the models folder in the project.
+	 */
 	static std::string gGetModelsDir();
+
+	/**
+	 * Gives the path to the textures folder.
+	 *
+	 *@return The location of the textures folder in the project.
+	 */
 	static std::string gGetTexturesDir();
+
+	/**
+	 * Gives the path to the shaders folder.
+	 *
+	 *@return The location of the shaders folder in the project.
+	 */
 	static std::string gGetShadersDir();
+
+	/**
+	 * Gives the path to the sounds folder.
+	 *
+	 *@return The location of the sounds folder in the project.
+	 */
 	static std::string gGetSoundsDir();
+
+	/**
+	 * Gives the path to the databases folder.
+	 *
+	 *@return The location of the databases folder in the project.
+	 */
 	static std::string gGetDatabasesDir();
 
+	/**
+	 * Prints the given message to the console. It has [INFO] at the beginning.
+	 * It also prints which class it is used in.
+	 *
+	 * @param message  The desired output. It should be a string.
+	 */
 	void logi(std::string message);
+
+	/**
+	 * Prints the given message to the console. It has [DEBUG] at the beginning.
+	 * It also prints which class it is used in.
+	 *
+	 * @param message  The desired output. It should be a string.
+	 */
 	void logd(std::string message);
+
+	/**
+	 * Prints the given message to the console. It has [WARNING] at the beginning.
+	 * It also prints which class it is used in.
+	 *
+	 * @param message  The desired output. It should be a string.
+	 */
 	void logw(std::string message);
+
+	/**
+	 * Prints the given message to the console. It has [ERROR] at the beginning.
+	 * It also prints which class it is used in.
+	 *  It gives yellow output.
+	 *
+	 * @param message  The desired output. It should be a string.
+	 */
 	void loge(std::string message);
 
+	/**
+	 * Prints the given message to the console. It has [INFO] at the beginning.
+	 *
+	 * @param tag  Reminder tag suitable for the place used. It should be a string.
+	 * @param message  The desired output. It should be a string.
+	 */
 	void logi(std::string tag, std::string message);
+
+	/**
+	 * Prints the given message to the console. It has [DEBUG] at the beginning.
+	 *
+	 * @param tag  Reminder tag suitable for the place used. It should be a string.
+	 * @param message  The desired output. It should be a string.
+	 */
 	void logd(std::string tag, std::string message);
+
+	/**
+	 * Prints the given message to the console. It has [WARNING] at the beginning.
+	 *
+	 * @param tag  Reminder tag suitable for the place used. It should be a string.
+	 * @param message  The desired output. It should be a string.
+	 */
 	void logw(std::string tag, std::string message);
+
+	/**
+	 * Prints the given message to the console. It has [ERROR] at the beginning.
+	 *  It gives yellow output.
+	 *
+	 * @param tag  Reminder tag suitable for the place used. It should be a string.
+	 * @param message  The desired output. It should be a string.
+	 */
 	void loge(std::string tag, std::string message);
 
 	// For internal access. Do not invoke this function directly
