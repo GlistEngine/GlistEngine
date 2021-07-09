@@ -16,6 +16,9 @@ gImage::gImage() {
 	ishdr = false;
 }
 
+gImage::gImage(int w, int h, int format) : gTexture(w, h, format, false) {
+}
+
 gImage::~gImage() {
 }
 

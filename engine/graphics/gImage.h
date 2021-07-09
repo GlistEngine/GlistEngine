@@ -23,17 +23,18 @@
 	* It allows the developer to load images in one or multiple threads.
 	*
 	* Overview of the functions: load and loadImage functions to load images effectively.
-	* LoadData and loadImageData functions to load image’s Data in a separate
+	* LoadData and loadImageData functions to load imageï¿½s Data in a separate
 	* thread. useData function to create the texture in VRAM by using the loaded data.
-	* setImageData function to alter an image’s data in integer format. setImageDataHDR
-	* function to alter an image’s data in float format. getImageData function to  access
-	* an image’s original or edited data in integer format. getImageDataHDR function to
-	* access an image’s original or edited data in float format. clearData function to clear
+	* setImageData function to alter an imageï¿½s data in integer format. setImageDataHDR
+	* function to alter an imageï¿½s data in float format. getImageData function to  access
+	* an imageï¿½s original or edited data in integer format. getImageDataHDR function to
+	* access an imageï¿½s original or edited data in float format. clearData function to clear
 	* a given Data.
 	*/
 class gImage : public gTexture {
 public:
 	gImage();
+	gImage(int w, int h, int format = GL_RGBA);
 	virtual ~gImage();
 
 	/**
@@ -86,7 +87,7 @@ public:
 	unsigned int loadImage(std::string imagePath);
 
 	/**
-	* Loads an image’s data from the given full path to the RAM.
+	* Loads an imageï¿½s data from the given full path to the RAM.
 	*
 	* Supported image formats can be found in the class description.
 	*
@@ -95,8 +96,8 @@ public:
 	* description.
 	*
 	* Loading assets in separate threads improves overall efficiency. In order to load
-	* an image’s data separately, this function can be used. It doesn’t create a texture
-	* of the loaded data’s image in VRAM, instead it loads the Data of a given image
+	* an imageï¿½s data separately, this function can be used. It doesnï¿½t create a texture
+	* of the loaded dataï¿½s image in VRAM, instead it loads the Data of a given image
 	* and saves it into the RAM.
 	*
 	* @param fullPath  The full path to the image file. It should contain the
@@ -106,19 +107,19 @@ public:
 	void loadData(std::string fullPath);
 
 	/**
-	* Loads an image’s data from the project’s images folder to the RAM.
+	* Loads an imageï¿½s data from the projectï¿½s images folder to the RAM.
 	*
 	* Supported image formats can be found in the class description.
 	*
-	* It doesn’t require a full path of an image because the function loads an image
+	* It doesnï¿½t require a full path of an image because the function loads an image
 	* from the project's own images folders. In fact, providing this function with a
-	* path that looks like “image.jpg” is sufficient.
+	* path that looks like ï¿½image.jpgï¿½ is sufficient.
 	*
 	* Project's default images folder is ProjectLocation/assets/images directory.
 	*
 	* Loading assets in separate threads improves overall efficiency. In order to load
-	* an image’s data separately, this function can be used. It doesn’t create a texture
-	* of the loaded data’s image in VRAM, instead it loads the Data of a given image
+	* an imageï¿½s data separately, this function can be used. It doesnï¿½t create a texture
+	* of the loaded dataï¿½s image in VRAM, instead it loads the Data of a given image
 	* and saves it into the RAM.
 	*
 	* Developers are encouraged to use this function for Data loading so that an
@@ -136,29 +137,29 @@ public:
 	unsigned int useData();
 
 	/**
-	* Alters an image’s data in integer format.
+	* Alters an imageï¿½s data in integer format.
 	*
 	* Data of a given image can be altered by the usage of this function.
-	* It’s in integer format.
+	* Itï¿½s in integer format.
 	*/
     void setImageData(unsigned char* imageData);
 
     /**
-    * Accesses an image’s original or edited data in integer format.
+    * Accesses an imageï¿½s original or edited data in integer format.
     * The data should be loaded in order to be accessed by this function.
     */
     unsigned char* getImageData();
 
     /**
-    * Alters an image’s data in float format.
+    * Alters an imageï¿½s data in float format.
     *
     * Data of a given image can be altered by the usage of this function.
-    * It’s in float format.
+    * Itï¿½s in float format.
     */
     void setImageDataHDR(float* imageData);
 
     /**
-    * Accesses an image’s original or edited data in float format.
+    * Accesses an imageï¿½s original or edited data in float format.
     * The data should be loaded in order to be accessed by this function.
     */
     float* getImageDataHDR();
