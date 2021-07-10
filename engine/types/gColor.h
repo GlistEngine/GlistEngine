@@ -11,6 +11,12 @@
 
 class gColor {
 public:
+	static const gColor	RED, GREEN, BLUE,
+						CYAN, MAGENTA, YELLOW,
+						BLACK, WHITE, GRAY,
+						DARK_GRAY, LIGHT_GRAY,
+						ORANGE, PINK, VIOLET;
+
 	gColor();
 	gColor(float r, float g, float b, float a = 1.0f);
 	gColor(gColor* color);
