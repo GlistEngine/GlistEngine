@@ -7,20 +7,20 @@
 
 #include "gColor.h"
 
-const gColor gColor::RED 	 	(1.0f,	0,		0,		1.0f);
-const gColor gColor::GREEN 		(0,		1.0f, 	0,		1.0f);
-const gColor gColor::BLUE 	 	(0, 	0,		1.0f, 	1.0f);
-const gColor gColor::CYAN 	 	(0, 	1.0f, 	1.0f, 	1.0f);
-const gColor gColor::MAGENTA  	(1.0f, 	0, 		1.0f, 	1.0f);
-const gColor gColor::YELLOW  	(1.0f, 	1.0f, 	0, 		1.0f);
-const gColor gColor::BLACK 	 	(0,		0,		0,		1.0f);
+const gColor gColor::RED 	 	(1.0f,	0.0f,	0.0f,	1.0f);
+const gColor gColor::GREEN 		(0.0f,	1.0f, 	0.0f,	1.0f);
+const gColor gColor::BLUE 	 	(0.0f, 	0.0f,	1.0f, 	1.0f);
+const gColor gColor::CYAN 	 	(0.0f, 	1.0f, 	1.0f, 	1.0f);
+const gColor gColor::MAGENTA  	(1.0f, 	0.0f, 	1.0f, 	1.0f);
+const gColor gColor::YELLOW 	(1.0f, 	1.0f, 	0.0f,	1.0f);
+const gColor gColor::BLACK 	 	(0.0f,	0.0f,	0.0f,	1.0f);
 const gColor gColor::WHITE 	 	(1.0f, 	1.0f, 	1.0f, 	1.0f);
 const gColor gColor::GRAY 	 	(0.5f, 	0.5f, 	0.5f, 	1.0f);
-const gColor gColor::DARK_GRAY  (0.25f, 0.25f, 	0.25f, 	1.0f);
-const gColor gColor::LIGHT_GRAY (0.75f, 0.75f, 	0.75f, 	1.0f);
-const gColor gColor::ORANGE  	(1.0f, 	0.25f, 	0, 		1.0f);
+const gColor gColor::DARK_GRAY	(0.25f, 0.25f, 	0.25f, 	1.0f);
+const gColor gColor::LIGHT_GRAY	(0.75f, 0.75f, 	0.75f, 	1.0f);
+const gColor gColor::ORANGE		(1.0f, 	0.25f, 	0.0f, 	1.0f);
 const gColor gColor::PINK 		(1.0f, 	0.69f, 	0.773f,	1.0f);
-const gColor gColor::VIOLET		(0.5f,	0, 		1.0f, 	1.0f);
+const gColor gColor::VIOLET		(0.5f,	0.0f, 	1.0f, 	1.0f);
 
 gColor::gColor() {
 	this->r = 1.0f;
