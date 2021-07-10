@@ -83,6 +83,10 @@ std::string gObject::gGetDatabasesDir() {
 	return exepath + "assets/databases/";
 }
 
+std::string gObject::gGetVideosDir() {
+	return exepath + "assets/videos/";
+}
+
 void gObject::setCurrentResolution(int scalingNo, int currentResolutionNo) {
 	releasescaling = scalingNo;
 	releaseresolution = currentResolutionNo;
@@ -128,4 +132,3 @@ void gObject::loge(std::string message) {
 	if(!gIsLoggingEnabled()) return;
 	gLoge(abi::__cxa_demangle(typeid(*this).name(), 0, 0, 0)) << message;
 }
-
