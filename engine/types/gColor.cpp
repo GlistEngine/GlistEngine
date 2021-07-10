@@ -12,7 +12,7 @@ const gColor gColor::GREEN 		(0.0f,	1.0f, 	0.0f,	1.0f);
 const gColor gColor::BLUE 	 	(0.0f, 	0.0f,	1.0f, 	1.0f);
 const gColor gColor::CYAN 	 	(0.0f, 	1.0f, 	1.0f, 	1.0f);
 const gColor gColor::MAGENTA  	(1.0f, 	0.0f, 	1.0f, 	1.0f);
-const gColor gColor::YELLOW 	(1.0f, 	1.0f, 	0.0f,	1.0f);
+const gColor gColor::YELLOW		(1.0f, 	1.0f, 	0.0f,	1.0f);
 const gColor gColor::BLACK 	 	(0.0f,	0.0f,	0.0f,	1.0f);
 const gColor gColor::WHITE 	 	(1.0f, 	1.0f, 	1.0f, 	1.0f);
 const gColor gColor::GRAY 	 	(0.5f, 	0.5f, 	0.5f, 	1.0f);
