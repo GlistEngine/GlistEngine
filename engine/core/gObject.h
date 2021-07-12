@@ -40,7 +40,7 @@ public:
 	 * Gives the path to the project folder.
 	 *
 	 *@return The location of the project folder.
-     */
+         */
 	static std::string gGetAppDir();
 
 	/**
