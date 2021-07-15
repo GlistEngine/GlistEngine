@@ -100,6 +100,7 @@ set(SRC_FILES
 	${ENGINE_DIR}/utils/gThread.cpp
 	${ENGINE_DIR}/utils/gUtils.cpp
 	${ENGINE_DIR}/utils/gFile.cpp
+	${ENGINE_DIR}/utils/gHttpFile.cpp
 	${ENGINE_DIR}/graphics/gShader.cpp
 	${ENGINE_DIR}/core/gObject.cpp
 	${ENGINE_DIR}/core/gRenderer.cpp
@@ -175,6 +176,7 @@ if(WIN32)
 		${MINGW64_DIR}/include/freetype2
 		${MINGW64_DIR}/include/ffmpeg
 		${MINGW64_DIR}/include/sqlite
+		${MINGW64_DIR}/include/curl
 	)
 elseif(LINUX)
 	list(APPEND INC_DIRS
@@ -368,6 +370,7 @@ if(WIN32)
 		dbghelp
 		msvcr100
 		psapi
+		curl
 #		swscale-5
 #		swresample-3
 #		avutil-56
