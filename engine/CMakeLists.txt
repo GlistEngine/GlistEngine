@@ -364,13 +364,13 @@ if(WIN32)
 		fmod
 		assimp
 		freetype
+		curl
 		glfw3
 		opengl32
 		glew32
 		dbghelp
 		msvcr100
 		psapi
-		curl
 #		swscale-5
 #		swresample-3
 #		avutil-56
@@ -386,6 +386,7 @@ elseif(LINUX)
 		assimp
 		freetype
 		libpng
+		curl
 		glfw
 		GL
 		GLEW
