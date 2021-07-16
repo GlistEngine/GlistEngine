@@ -31,8 +31,8 @@ std::string gHttpFile::getHtml() {
 	return html;
 }
 
-void gHttpFile::save(std::string filePath) {
-	file.load(filePath, 1, false);
+void gHttpFile::save(std::string filePath, bool isBinary) {
+	file.load(filePath, 1, isBinary);
 	file.write(html);
 	file.close();
 }
