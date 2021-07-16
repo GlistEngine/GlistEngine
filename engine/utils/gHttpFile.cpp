@@ -13,40 +13,44 @@ gHttpFile::gHttpFile() {
 gHttpFile::~gHttpFile() {
 }
 
-size_t gHttpFile::writeCallBack(char *contents, size_t size, size_t nmemb, void *userp)
-{
+size_t gHttpFile::writeCallBack(char *contents, size_t size, size_t nmemb, void *userp) {
     ((std::string*)userp)->append((char*)contents, size * nmemb);
     return size * nmemb;
 }
 
 void gHttpFile::load(std::string url) {
 	this->url = url;
+	loadHtml();
 }
 
 std::string gHttpFile::getUrl() {
 	return url;
 }
 
-void gHttpFile::save(std::string filePath) {
-	std::string writebuffer;
-	file.load(filePath, 1);
-	writebuffer = gHttpFile::getHtml();
-	file.write(writebuffer);
+std::string gHttpFile::getHtml() {
+	return html;
 }
 
-std::string gHttpFile::getHtml() {
-  CURL *curl;
-  CURLcode res;
+void gHttpFile::save(std::string filePath) {
+	file.load(filePath, 1, false);
+	file.write(html);
+	file.close();
+}
 
-  curl_global_init(CURL_GLOBAL_DEFAULT);
+void gHttpFile::loadHtml() {
+	html = "";
+	CURL *curl;
+	CURLcode res;
 
-  curl = curl_easy_init();
-  if(curl) {
-    curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
-    curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, false);
-    curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
-    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, &gHttpFile::writeCallBack);
-    curl_easy_setopt(curl, CURLOPT_WRITEDATA, &curlbuffer);
+	curl_global_init(CURL_GLOBAL_DEFAULT);
+
+	curl = curl_easy_init();
+	if(curl) {
+		curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+		curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, false);
+		curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
+		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, &gHttpFile::writeCallBack);
+		curl_easy_setopt(curl, CURLOPT_WRITEDATA, &html);
 
 #ifdef SKIP_PEER_VERIFICATION
     /*
@@ -72,17 +76,15 @@ std::string gHttpFile::getHtml() {
     curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L);
 #endif
 
-    /* Perform the request, res will get the return code */
-    res = curl_easy_perform(curl);
-    /* Check for errors */
-    if(res != CURLE_OK)
-      fprintf(stderr, "curl_easy_perform() failed: %s\n",
-              curl_easy_strerror(res));
+    	/* Perform the request, res will get the return code */
+    	res = curl_easy_perform(curl);
+    	/* Check for errors */
+    	if(res != CURLE_OK)
+    	fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
 
-    /* always cleanup */
-    curl_easy_cleanup(curl);
-  }
+    	/* always cleanup */
+    	curl_easy_cleanup(curl);
+	}
 
-  curl_global_cleanup();
-  return curlbuffer;
+	curl_global_cleanup();
 }

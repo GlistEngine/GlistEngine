@@ -32,7 +32,8 @@ private:
 	std::string filepath;
 	std::string url;
 	gFile file;
-	std::string curlbuffer;
+	std::string html;
+	void loadHtml();
 };
 
 #endif /* UTILS_GHTTPFILE_H_ */
