@@ -43,7 +43,7 @@ std::string gHttpFile::getHtml() {
   curl = curl_easy_init();
   if(curl) {
     curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
-    curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, FALSE);
+    curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, false);
     curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, &gHttpFile::writeCallBack);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, &curlbuffer);
