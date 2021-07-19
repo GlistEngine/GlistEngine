@@ -132,6 +132,7 @@ set(SRC_FILES
 	${ENGINE_DIR}/base/gBasePlugin.cpp
 	${ENGINE_DIR}/media/gBaseSound.cpp
 	${ENGINE_DIR}/media/gFmodSound.cpp
+	${ENGINE_DIR}/media/gVideo.cpp
 	${ENGINE_DIR}/base/gBaseApp.cpp
 	${ENGINE_DIR}/base/gBaseCanvas.cpp
 	${ENGINE_DIR}/core/gBaseWindow.cpp
@@ -177,6 +178,9 @@ if(WIN32)
 		${MINGW64_DIR}/include/ffmpeg
 		${MINGW64_DIR}/include/sqlite
 		${MINGW64_DIR}/include/curl
+		${MINGW64_DIR}/include/gstreamer
+		${MINGW64_DIR}/include/gstreamer/gstreamer-1.0
+		${MINGW64_DIR}/include/gstreamer/glib-2.0
 	)
 elseif(LINUX)
 	list(APPEND INC_DIRS
@@ -371,13 +375,10 @@ if(WIN32)
 		dbghelp
 		msvcr100
 		psapi
-#		swscale-5
-#		swresample-3
-#		avutil-56
-#		avformat-58
-#		avfilter-7
-#		avdevice-58
-#		avcodec-58
+		gstreamer-1.0
+		glib-2.0
+		gobject-2.0
+		gstvideo-1.0
 	)
 elseif(LINUX)
 	list(APPEND LINK_LIBS

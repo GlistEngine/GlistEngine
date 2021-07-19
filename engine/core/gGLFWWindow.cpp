@@ -10,6 +10,7 @@
 #define STB_IMAGE_IMPLEMENTATION
 #endif
 #include "stb/stb_image.h"
+#include "gVideo.h"
 
 
 gGLFWWindow::gGLFWWindow() {
@@ -96,6 +97,7 @@ void gGLFWWindow::initialize(int width, int height, int windowMode) {
 
 	glfwSetWindowUserPointer(window, this);
 
+	gVideo::setWindow(&window);
 
 	// Window specs to OpenGL
 	glViewport(0, 0, width, height);
