@@ -49,6 +49,9 @@ void gHttpFile::loadHtml() {
 		curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
 		curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, false);
 		curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
+    //  enable this command for seing verbose information. Useful for debugging and tracking the request.
+	//	curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
+		curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 0L);
 		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, &gHttpFile::writeCallBack);
 		curl_easy_setopt(curl, CURLOPT_WRITEDATA, &html);
 
