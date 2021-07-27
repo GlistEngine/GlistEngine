@@ -178,9 +178,8 @@ if(WIN32)
 		${MINGW64_DIR}/include/ffmpeg
 		${MINGW64_DIR}/include/sqlite
 		${MINGW64_DIR}/include/curl
-		${MINGW64_DIR}/include/gstreamer
-		${MINGW64_DIR}/include/gstreamer/gstreamer-1.0
-		${MINGW64_DIR}/include/gstreamer/glib-2.0
+		${MINGW64_DIR}/include/gstreamer-1.0
+		${MINGW64_DIR}/include/glib-2.0
 	)
 elseif(LINUX)
 	list(APPEND INC_DIRS

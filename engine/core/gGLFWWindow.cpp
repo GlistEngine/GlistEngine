@@ -12,7 +12,6 @@
 #include "stb/stb_image.h"
 #include "gVideo.h"
 
-
 gGLFWWindow::gGLFWWindow() {
 #if defined(WIN32) || defined(LINUX) || defined(APPLE)
 	window = nullptr;

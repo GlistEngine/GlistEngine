@@ -11,9 +11,13 @@
 #include "gObject.h"
 #include "gst/gst.h"
 
-#ifdef WIN32
+#if defined(WIN32)
 #include <windef.h>
 #define GLFW_EXPOSE_NATIVE_WIN32
+#elif defined(LINUX)
+#define GLFW_EXPOSE_NATIVE_X11
+#elif defined(APPLE)
+#define GLFW_EXPOSE_NATIVE_COCOA
 #endif
 
 #include "GLFW/glfw3.h"

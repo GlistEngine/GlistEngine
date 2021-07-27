@@ -17,6 +17,7 @@ gVideo::gVideo() {
 		gst_init(NULL, NULL);
 		gVideo::isgstinitialized = true;
 	}
+	data.terminate = false;
 }
 
 gVideo::~gVideo() {
@@ -32,6 +33,7 @@ void gVideo::loadVideo(std::string videoPath) {
 
 void gVideo::update() {
 	if(data.terminate) {
+		gst_element_set_state(data.pipeline, GST_STATE_NULL);
 		close();
 	}
 }
@@ -50,8 +52,8 @@ void gVideo::play() {
 	data.vconvert = gst_element_factory_make("videoconvert", "vsource");
 	data.vsink = gst_element_factory_make("d3dvideosink", "vsink");
 
-	if (!data.pipeline || !data.source || !data.convert || !data.resample
-			|| !data.sink || !data.vconvert || !data.vsink) {
+	if (!data.pipeline || !data.source || !data.convert || !data.resample ||
+		!data.sink || !data.vconvert || !data.vsink) {
 		g_printerr("Not all elements could be created.\n");
 		return;
 	}
@@ -70,7 +72,6 @@ void gVideo::play() {
 		gst_object_unref(data.pipeline);
 		return;
 	}
-
 	/* Set the URI to play */
 	g_object_set(data.source,
 			"uri", ("file:///" + gGetVideosDir() + "sintel_trailer-480p.mp4").c_str(),
@@ -79,14 +80,12 @@ void gVideo::play() {
 	/* Connect to the pad-added signal */
 	g_signal_connect(data.source,
 			"pad-added", G_CALLBACK (pad_added_handler), &data);
-
 	/* Listen to the bus */
 	data.bus = gst_pipeline_get_bus(GST_PIPELINE(data.pipeline));
 
 	gst_bus_add_watch(data.bus, (GstBusFunc)message_handler, &data);
 
 	gst_bus_set_sync_handler(data.bus, (GstBusSyncHandler) bus_sync_handler, &data, NULL);
-
 
 	// TODO: Implement state changing into another function
 	ret = gst_element_set_state(data.pipeline, GST_STATE_READY);
@@ -95,7 +94,6 @@ void gVideo::play() {
 		gst_object_unref(data.pipeline);
 		return;
 	}
-
 	ret = gst_element_set_state(data.pipeline, GST_STATE_PLAYING);
 	if (ret == GST_STATE_CHANGE_FAILURE) {
 		g_printerr("Unable to set the pipeline to the playing state.\n");
@@ -180,8 +178,15 @@ GstBusSyncReply gVideo::bus_sync_handler(GstBus *src, GstMessage *message,
 		return GST_BUS_PASS;
 	}
 
-	guintptr winhandle = (guintptr) glfwGetWin32Window(
-			(GLFWwindow*) gVideo::window);
+	guintptr winhandle;
+
+#if defined(WIN32)
+	winhandle = (guintptr) glfwGetWin32Window((GLFWwindow*) gVideo::window);
+#elif defined(LINUX)
+	winhandle = (guintptr) glfwGetX11Window((GLFWwindow*) gVideo::window);
+#elif defined(APPLE)
+	winhandle = (guintptr) glfwGetCocoaWindow((GLFWwindow*) gVideo::window)
+#endif
 
 	if (winhandle != 0) {
 
