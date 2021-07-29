@@ -86,6 +86,7 @@ set(PLUGIN_SRCS)
 set(PLUGIN_INCLUDES)
 set(PLUGIN_LINKDIRS)
 set(PLUGIN_LINKLIBS)
+set(PLUGIN_LIBDIRS)
 
 foreach(pluginname ${PLUGINS})
 	include(${PLUGINS_DIR}/${pluginname}/CMakeLists.txt)
@@ -153,7 +154,6 @@ add_library(GlistEngine SHARED
 
 ########## INCLUDE DIRECTORIES ##########
 set(INC_DIRS
-	${PLUGIN_INCLUDES}
 	${LIBS_DIR}/stb/include
 	${LIBS_DIR}/fmod/include
 	${LIBS_DIR}/utf8/include
@@ -165,6 +165,7 @@ set(INC_DIRS
     ${ENGINE_DIR}/graphics/primitives
     ${ENGINE_DIR}/base
     ${ENGINE_DIR}/core
+	${PLUGIN_INCLUDES}
 #	${CMAKE_BINARY_DIR}/generated
 )
 
@@ -213,6 +214,11 @@ endif(WIN32)
 
 
 include_directories(${INC_DIRS})
+
+#message(WARNING "PLUGIN_LIBDIRS: ${PLUGIN_LIBDIRS}")
+FOREACH(PLIBDIR ${PLUGIN_LIBDIRS})
+	set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -L${PLIBDIR}")
+ENDFOREACH()
 
 
 ########## FIND LIBRARIES ##########
