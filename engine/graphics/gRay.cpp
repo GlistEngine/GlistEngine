@@ -41,8 +41,8 @@ glm::vec3 gRay::getOrigin() {
 
 glm::vec3 gRay::getDirection() {
 	if(islinked) {
-		if(isnormalized) return normalize(linkedmesh->getScalarDirectionZ()) * scale;
-		return linkedmesh->getScalarDirectionZ() * scale;
+		if(isnormalized) return normalize(direction) * scale;
+		return direction * scale;
 	}
 	return direction;
 }
