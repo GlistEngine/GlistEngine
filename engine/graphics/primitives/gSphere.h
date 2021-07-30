@@ -17,7 +17,7 @@
 #ifndef GRAPHICS_PRIMITIVES_GSPHERE_H_
 #define GRAPHICS_PRIMITIVES_GSPHERE_H_
 
-#include <gMesh.h>
+#include "gMesh.h"
 
 class gSphere: public gMesh {
 public:
