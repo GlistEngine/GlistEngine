@@ -9,7 +9,6 @@
 
 #include "gLight.h"
 #include "gLine.h"
-#include "Math.h"
 #include "gCircle.h"
 
 
