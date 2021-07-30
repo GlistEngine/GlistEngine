@@ -119,6 +119,7 @@ set(SRC_FILES
 	${ENGINE_DIR}/graphics/gSkinnedMesh.cpp
 	${ENGINE_DIR}/graphics/gModel.cpp
 	${ENGINE_DIR}/utils/gDatabase.cpp
+	${ENGINE_DIR}/utils/gLocalization.cpp
 	${ENGINE_DIR}/utils/gAssetLoader.cpp
 	${ENGINE_DIR}/graphics/primitives/gLine.cpp
 	${ENGINE_DIR}/graphics/primitives/gCircle.cpp
