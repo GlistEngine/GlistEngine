@@ -783,11 +783,11 @@ const std::string gRenderer::getShaderSrcImageFragment() {
 "out vec4 color;\n"
 "\n"
 "uniform sampler2D image;\n"
-"uniform vec3 spriteColor;\n"
+"uniform vec4 spriteColor;\n"
 "\n"
 "void main()\n"
 "{    \n"
-"    color = vec4(spriteColor, 1.0) * texture(image, TexCoords);\n"
+"    color = spriteColor * texture(image, TexCoords);\n"
 "} \n";
 
 	return std::string(shadersource);
