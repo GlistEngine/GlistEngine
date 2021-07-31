@@ -13,6 +13,13 @@ gHttpFile::gHttpFile() {
 gHttpFile::~gHttpFile() {
 }
 
+int gHttpFile::progressCallback(ProgressData *p, double totaltodownload, double downloaded, double totaltoupload, double uploaded)
+{
+    p->progresslength = downloaded;
+    p->filelength = totaltodownload;
+    return 0;
+}
+
 size_t gHttpFile::writeCallBack(char *contents, size_t size, size_t nmemb, void *userp) {
     ((std::string*)userp)->append((char*)contents, size * nmemb);
     return size * nmemb;
@@ -51,9 +58,11 @@ void gHttpFile::loadHtml() {
 		curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
     //  enable this command for seing verbose information. Useful for debugging and tracking the request.
 	//	curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
-		curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 0L);
 		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, &gHttpFile::writeCallBack);
 		curl_easy_setopt(curl, CURLOPT_WRITEDATA, &html);
+		curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 0L);
+		curl_easy_setopt(curl, CURLOPT_PROGRESSFUNCTION, &gHttpFile::progressCallback);
+		curl_easy_setopt(curl, CURLOPT_PROGRESSDATA, &prog);
 
 #ifdef SKIP_PEER_VERIFICATION
     /*
@@ -90,4 +99,11 @@ void gHttpFile::loadHtml() {
 	}
 
 	curl_global_cleanup();
+}
+
+double gHttpFile::getProgressLength() {
+	return prog.progresslength;
+}
+double gHttpFile::getFileLength() {
+	return prog.filelength;
 }
