@@ -19,7 +19,8 @@ public:
 	void move(float dx, float dy, float dz);
 	void move(const glm::vec3 dv);
 	void rotate(const glm::quat& q);
-	void rotate(float angle, float ax, float ay, float az);
+	void rotateDeg(float angle, float ax, float ay, float az);
+	void rotate(float radians, float ax, float ay, float az);
 	void rotateAround(float radians, const glm::vec3& axis, const glm::vec3& point);
 	void scale(float sx, float sy, float sz);
 	void scale(float s);
@@ -60,6 +61,10 @@ public:
 	 */
 	void tilt(float radians);
 
+	/**
+	 *
+	 */
+	void tiltDeg(float angle);
 	/*
 	 * Rotation around local y axis
 	 *
@@ -67,12 +72,21 @@ public:
 	 */
 	void pan(float radians);
 
+	/**
+	 *
+	 */
+	void panDeg(float angle);
 	/*
 	 * Rotation around local z axis
 	 *
 	 * @param radians rotation amount in gl units
 	 */
 	void roll(float radians);
+
+	/**
+	 *
+	 */
+	void rollDeg(float angle);
 
 	float getPosX();
 	float getPosY();
