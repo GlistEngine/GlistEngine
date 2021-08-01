@@ -68,6 +68,14 @@ void gDrawLine(float x1, float y1, float z1, float x2, float y2, float z2) {
 	linemesh.draw(x1, y1, z1, x2, y2, z2);
 }
 
+void gDrawArrow(float x1, float y1, float x2, float y2, float tipLength, float tipDegree) {
+	gLine linemesh;
+	float arrowangle = std::atan2(y2 - y1, x2 - x1);
+	linemesh.draw(x2, y2, x1, y1);
+	linemesh.draw(x1, y1, x1 + std::cos(arrowangle - gDegToRad(tipDegree)) * tipLength, y1 + std::sin(arrowangle - gDegToRad(tipDegree)) * tipLength);
+	linemesh.draw(x1, y1, x1 + (std::cos(arrowangle + gDegToRad(tipDegree)) * tipLength) , y1 + std::sin(arrowangle + gDegToRad(tipDegree)) * tipLength);
+}
+
 
 gRenderer::gRenderer() {
 	width = gDefaultWidth();
