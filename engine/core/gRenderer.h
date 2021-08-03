@@ -48,6 +48,8 @@ void gDrawLine(float x1, float y1, float z1, float x2, float y2, float z2);
 
 void gDrawCircle(float xCenter, float yCenter, float radius, bool isFilled = false, float numberOfSides = 64.0f);
 
+void gDrawRectangle(float x, float y, float w, float h, bool isFilled);
+
 class gRenderer: public gObject {
 public:
 	static const int SCREENSCALING_NONE, SCREENSCALING_MIPMAP, SCREENSCALING_AUTO;

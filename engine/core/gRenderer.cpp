@@ -10,6 +10,7 @@
 #include "gLight.h"
 #include "gLine.h"
 #include "gCircle.h"
+#include "gRec.h"
 
 
 const int gRenderer::SCREENSCALING_NONE = 0;
@@ -73,6 +74,11 @@ void gDrawLine(float x1, float y1, float z1, float x2, float y2, float z2) {
  void gDrawCircle(float xCenter, float yCenter, float radius, bool isFilled, float numberOfSides) {
 	gCircle circlemesh;
 	circlemesh.draw(xCenter, yCenter, radius, isFilled, numberOfSides);
+}
+
+void gDrawRectangle(float x, float y, float w, float h, bool isFilled) {
+	gRec recmesh;
+ 	recmesh.draw(x, y, w, h, isFilled);
 }
 
 
