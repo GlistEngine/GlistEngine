@@ -10,6 +10,7 @@
 #include "gLight.h"
 #include "gLine.h"
 #include "gCircle.h"
+#include "gRectangle.h"
 
 
 const int gRenderer::SCREENSCALING_NONE = 0;
@@ -83,6 +84,11 @@ void gDrawArrow(float x1, float y1, float length, float angle, float tipLength, 
 	linemesh.draw(x2, y2, x1, y1);
 	linemesh.draw(x1, y1, x1 + std::cos(gDegToRad(angle) - gDegToRad(tipAngle)) * tipLength, y1 + std::sin(gDegToRad(angle) - gDegToRad(tipAngle)) * tipLength);
 	linemesh.draw(x1, y1, x1 + (std::cos(gDegToRad(angle) + gDegToRad(tipAngle)) * tipLength) , y1 + std::sin(gDegToRad(angle) + gDegToRad(tipAngle)) * tipLength);
+}
+
+void gDrawRectangle(float x, float y, float w, float h, bool isFilled) {
+	gRectangle rectanglemesh;
+ 	rectanglemesh.draw(x, y, w, h, isFilled);
 }
 
 gRenderer::gRenderer() {
