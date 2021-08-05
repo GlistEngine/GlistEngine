@@ -55,38 +55,46 @@ public:
 	void dolly(float distance);
 
 	/*
-	 * Rotation around local x axis
+	 * Rotation around local x axis in radians
 	 *
-	 * @param radians rotation amount in gl units
+	 * @param angle in radians
 	 */
 	void tilt(float radians);
 
-	/**
-	 *
-	 */
-	void tiltDeg(float angle);
 	/*
-	 * Rotation around local y axis
+	 * Rotation around local x axis in degrees
 	 *
-	 * @param radians rotation amount in gl units
+	 * @param angle in degrees
+	 */
+	void tiltDeg(float degrees);
+
+	/*
+	 * Rotation around local y axis in radians
+	 *
+	 * @param angle in radians
 	 */
 	void pan(float radians);
 
-	/**
-	 *
-	 */
-	void panDeg(float angle);
 	/*
-	 * Rotation around local z axis
+	 * Rotation around local y axis in degrees
 	 *
-	 * @param radians rotation amount in gl units
+	 * @param angle in degrees
+	 */
+	void panDeg(float degrees);
+
+	/*
+	 * Rotation around local z axis in radians
+	 *
+	 * @param angle in radians
 	 */
 	void roll(float radians);
 
-	/**
+	/*
+	 * Rotation around local z axis in degrees
 	 *
+	 * @param angle in degrees
 	 */
-	void rollDeg(float angle);
+	void rollDeg(float degrees);
 
 	float getPosX();
 	float getPosY();
