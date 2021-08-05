@@ -101,8 +101,13 @@ void gNode::rotate(const glm::quat& o) {
 	processTransformationMatrix();
 }
 
-void gNode::rotate(float angle, float ax, float ay, float az) {
+void gNode::rotateDeg(float angle, float ax, float ay, float az) {
 	orientation = (const glm::quat&)orientation * glm::angleAxis(angle * (3.141592f / 180.0f), glm::vec3(ax, ay, az));
+	processTransformationMatrix();
+}
+
+void gNode::rotate(float radians, float ax, float ay, float az) {
+	orientation = (const glm::quat&)orientation * glm::angleAxis(radians, glm::vec3(ax, ay, az));
 	processTransformationMatrix();
 }
 
@@ -130,13 +135,29 @@ void gNode::tilt(float radians) {
 	processTransformationMatrix();
 }
 
+void gNode::tiltDeg(float angle) {
+	orientation = (const glm::quat&)orientation * glm::angleAxis(angle * (3.141592f / 180.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+	processTransformationMatrix();
+
+}
+
 void gNode::pan(float radians) {
 	orientation = (const glm::quat&)orientation * glm::angleAxis(radians, glm::vec3(0.0f, 1.0f, 0.0f));
 	processTransformationMatrix();
 }
 
+void gNode::panDeg(float angle) {
+	orientation = (const glm::quat&)orientation * glm::angleAxis(angle * (3.141592f / 180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	processTransformationMatrix();
+}
+
 void gNode::roll(float radians) {
 	orientation = (const glm::quat&)orientation * glm::angleAxis(radians, glm::vec3(0.0f, 0.0f, 1.0f));
+	processTransformationMatrix();
+}
+
+void gNode::rollDeg(float angle) {
+	orientation = (const glm::quat&)orientation * glm::angleAxis(angle * (3.141592f / 180.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 	processTransformationMatrix();
 }
 
