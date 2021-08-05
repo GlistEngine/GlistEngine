@@ -86,14 +86,14 @@ void gModel::move(const glm::vec3 dv) {
 	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i].move(dv);
 }
 
-void gModel::rotateDeg(float angle, float ax, float ay, float az) {
-	gNode::rotate(angle, ax, ay, az);
-	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i].rotateDeg(angle, ax, ay, az);
-}
-
 void gModel::rotate(float radians, float ax, float ay, float az) {
 	gNode::rotate(radians, ax, ay, az);
 	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i].rotate(radians, ax, ay, az);
+}
+
+void gModel::rotateDeg(float degrees, float ax, float ay, float az) {
+	gNode::rotate(degrees, ax, ay, az);
+	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i].rotateDeg(degrees, ax, ay, az);
 }
 
 void gModel::rotate(const glm::quat& q) {
@@ -166,9 +166,9 @@ void gModel::tilt(float radians) {
 	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i].tilt(radians);
 }
 
-void gModel::tiltDeg(float angle) {
-	gNode::tiltDeg(angle);
-	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i].tiltDeg(angle);
+void gModel::tiltDeg(float degrees) {
+	gNode::tiltDeg(degrees);
+	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i].tiltDeg(degrees);
 }
 
 void gModel::pan(float radians) {
@@ -176,9 +176,9 @@ void gModel::pan(float radians) {
 	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i].pan(radians);
 }
 
-void gModel::panDeg(float angle) {
-	gNode::panDeg(angle);
-	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i].panDeg(angle);
+void gModel::panDeg(float degrees) {
+	gNode::panDeg(degrees);
+	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i].panDeg(degrees);
 }
 
 void gModel::roll(float radians) {
@@ -186,9 +186,9 @@ void gModel::roll(float radians) {
 	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i].roll(radians);
 }
 
-void gModel::rollDeg(float angle) {
-	gNode::rollDeg(angle);
-	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i].rollDeg(angle);
+void gModel::rollDeg(float degrees) {
+	gNode::rollDeg(degrees);
+	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i].rollDeg(degrees);
 }
 
 void gModel::setTransformationMatrix(glm::mat4 transformationMatrix) {
