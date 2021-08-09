@@ -21,12 +21,18 @@ public:
 
 	gHttpFile();
 	virtual ~gHttpFile();
-
+	struct ProgressData {
+	  double progresslength;
+	  double filelength;
+	} prog;
+	static int progressCallback(ProgressData *p, double totaltodownload, double downloaded, double totaltoupload, double uploaded);
 	static size_t writeCallBack(char *contents, size_t size, size_t nmemb, void *userp);
 	void load(std::string url);
 	std::string getUrl();
 	void save(std::string filepath, bool isBinary = false);
 	std::string getHtml();
+	double getProgressLength();
+	double getFileLength();
 
 private:
 	std::string filepath;

@@ -153,7 +153,6 @@ int gFont::getDpi() {
 	return dpi;
 }
 
-
 void gFont::resizeVectors(int num) {
 	if (num <= 0) return;
 
@@ -193,7 +192,8 @@ int gFont::getCharID(const int& c) {
 	return tempcharno;
 }
 
-void gFont::loadChar(const int &charID) {
+
+void gFont::loadChar(const int& charID) {
 	  lci = charID;
 
 	  lcerr = FT_Load_Glyph(fontface, FT_Get_Char_Index(fontface, loadedcharacters[lci]), FT_LOAD_DEFAULT);
@@ -304,7 +304,6 @@ bool gFont::insertData(unsigned char* srcData, int srcWidth, int srcHeight, int 
 
 	return true;
 }
-
 
 std::wstring gFont::s2ws(const std::string& s) {
     std::string curLocale = setlocale(LC_ALL, "");
