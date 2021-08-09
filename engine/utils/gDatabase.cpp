@@ -55,7 +55,7 @@ void gDatabase::execute(std::string statement, std::string id) {
 	int rc = sqlite3_exec(db, statement.c_str(), gDatabase::callback, (void*)id.c_str(), &zErrMsg);
 
 	if(rc != SQLITE_OK){
-	  fprintf(stderr, "SQL error: %s\n", zErrMsg);
+		gLoge("gDatabase") << "SQL error:" << zErrMsg;
 	  sqlite3_free(zErrMsg);
 	}
 }

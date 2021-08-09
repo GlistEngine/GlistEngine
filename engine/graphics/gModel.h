@@ -51,7 +51,8 @@ public:
 
 	void move(float dx, float dy, float dz);
 	void move(const glm::vec3 dv);
-	void rotate(float angle, float ax, float ay, float az);
+	void rotate(float radians, float ax, float ay, float az); //first change
+	void rotateDeg(float degrees, float ax, float ay, float az);
 	void rotate(const glm::quat& q);
 	void scale(float sx, float sy, float sz);
 	void scale(float s);
@@ -59,8 +60,11 @@ public:
 	void truck(float distance);
 	void boom(float distance);
 	void tilt(float radians);
+	void tiltDeg(float degrees);
 	void pan(float radians);
+	void panDeg(float degrees);
 	void roll(float radians);
+	void rollDeg(float degrees);
 
 	void setPosition(float px, float py, float pz);
 	void setPosition(const glm::vec3& p);

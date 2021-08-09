@@ -411,7 +411,7 @@ void gTexture::beginDraw() {
 void gTexture::endDraw() {
 	renderer->getImageShader()->setMat4("projection", renderer->getProjectionMatrix2d());
 	renderer->getImageShader()->setMat4("model", imagematrix);
-	renderer->getImageShader()->setVec3("spriteColor", glm::vec3(renderer->getColor()->r, renderer->getColor()->g, renderer->getColor()->b));
+	renderer->getImageShader()->setVec4("spriteColor", glm::vec4(renderer->getColor()->r, renderer->getColor()->g, renderer->getColor()->b, renderer->getColor()->a));
 	renderer->getImageShader()->setInt("image", 0);
 
 	glActiveTexture(GL_TEXTURE0);

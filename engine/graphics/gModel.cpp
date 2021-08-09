@@ -86,9 +86,14 @@ void gModel::move(const glm::vec3 dv) {
 	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i].move(dv);
 }
 
-void gModel::rotate(float angle, float ax, float ay, float az) {
-	gNode::rotate(angle, ax, ay, az);
-	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i].rotate(angle, ax, ay, az);
+void gModel::rotate(float radians, float ax, float ay, float az) {
+	gNode::rotate(radians, ax, ay, az);
+	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i].rotate(radians, ax, ay, az);
+}
+
+void gModel::rotateDeg(float degrees, float ax, float ay, float az) {
+	gNode::rotate(degrees, ax, ay, az);
+	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i].rotateDeg(degrees, ax, ay, az);
 }
 
 void gModel::rotate(const glm::quat& q) {
@@ -161,14 +166,29 @@ void gModel::tilt(float radians) {
 	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i].tilt(radians);
 }
 
+void gModel::tiltDeg(float degrees) {
+	gNode::tiltDeg(degrees);
+	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i].tiltDeg(degrees);
+}
+
 void gModel::pan(float radians) {
 	gNode::pan(radians);
 	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i].pan(radians);
 }
 
+void gModel::panDeg(float degrees) {
+	gNode::panDeg(degrees);
+	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i].panDeg(degrees);
+}
+
 void gModel::roll(float radians) {
 	gNode::roll(radians);
 	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i].roll(radians);
+}
+
+void gModel::rollDeg(float degrees) {
+	gNode::rollDeg(degrees);
+	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i].rollDeg(degrees);
 }
 
 void gModel::setTransformationMatrix(glm::mat4 transformationMatrix) {
@@ -305,7 +325,7 @@ gSkinnedMesh gModel::processMesh(aiMesh *mesh, const aiScene *scene) {
     loadMaterialTextures(&gmesh, material, aiTextureType_SPECULAR, gTexture::TEXTURETYPE_SPECULAR);
     loadMaterialTextures(&gmesh, material, aiTextureType_NORMALS, gTexture::TEXTURETYPE_NORMAL);
     loadMaterialTextures(&gmesh, material, aiTextureType_HEIGHT, gTexture::TEXTURETYPE_HEIGHT);
-    loadMaterialTextures(&gmesh, material, aiTextureType_BASE_COLOR, gTexture::TEXTURETYPE_PBR_ALBEDO);
+    loadMaterialTextures(&gmesh, material, aiTextureType_BASE_COLOR, gTexture::TEXTURETYPE_PBR_ALBEDO); // @suppress("Invalid arguments")
     loadMaterialTextures(&gmesh, material, aiTextureType_DIFFUSE_ROUGHNESS, gTexture::TEXTURETYPE_PBR_ROUGHNESS);
     loadMaterialTextures(&gmesh, material, aiTextureType_METALNESS, gTexture::TEXTURETYPE_PBR_METALNESS);
     loadMaterialTextures(&gmesh, material, aiTextureType_NORMAL_CAMERA, gTexture::TEXTURETYPE_PBR_NORMAL);

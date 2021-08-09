@@ -86,6 +86,7 @@ set(PLUGIN_SRCS)
 set(PLUGIN_INCLUDES)
 set(PLUGIN_LINKDIRS)
 set(PLUGIN_LINKLIBS)
+set(PLUGIN_LIBDIRS)
 
 foreach(pluginname ${PLUGINS})
 	include(${PLUGINS_DIR}/${pluginname}/CMakeLists.txt)
@@ -100,6 +101,7 @@ set(SRC_FILES
 	${ENGINE_DIR}/utils/gThread.cpp
 	${ENGINE_DIR}/utils/gUtils.cpp
 	${ENGINE_DIR}/utils/gFile.cpp
+	${ENGINE_DIR}/utils/gHttpFile.cpp
 	${ENGINE_DIR}/graphics/gShader.cpp
 	${ENGINE_DIR}/core/gObject.cpp
 	${ENGINE_DIR}/core/gRenderer.cpp
@@ -119,6 +121,8 @@ set(SRC_FILES
 	${ENGINE_DIR}/utils/gDatabase.cpp
 	${ENGINE_DIR}/utils/gAssetLoader.cpp
 	${ENGINE_DIR}/graphics/primitives/gLine.cpp
+	${ENGINE_DIR}/graphics/primitives/gCircle.cpp
+	${ENGINE_DIR}/graphics/primitives/gRectangle.cpp
 	${ENGINE_DIR}/graphics/primitives/gPlane.cpp
 	${ENGINE_DIR}/graphics/primitives/gBox.cpp
 	${ENGINE_DIR}/graphics/primitives/gSphere.cpp
@@ -152,7 +156,6 @@ add_library(GlistEngine SHARED
 
 ########## INCLUDE DIRECTORIES ##########
 set(INC_DIRS
-	${PLUGIN_INCLUDES}
 	${LIBS_DIR}/stb/include
 	${LIBS_DIR}/fmod/include
 	${LIBS_DIR}/utf8/include
@@ -164,6 +167,7 @@ set(INC_DIRS
     ${ENGINE_DIR}/graphics/primitives
     ${ENGINE_DIR}/base
     ${ENGINE_DIR}/core
+	${PLUGIN_INCLUDES}
 #	${CMAKE_BINARY_DIR}/generated
 )
 
@@ -175,6 +179,7 @@ if(WIN32)
 		${MINGW64_DIR}/include/freetype2
 		${MINGW64_DIR}/include/ffmpeg
 		${MINGW64_DIR}/include/sqlite
+		${MINGW64_DIR}/include/curl
 	)
 elseif(LINUX)
 	list(APPEND INC_DIRS
@@ -211,6 +216,11 @@ endif(WIN32)
 
 
 include_directories(${INC_DIRS})
+
+#message(WARNING "PLUGIN_LIBDIRS: ${PLUGIN_LIBDIRS}")
+FOREACH(PLIBDIR ${PLUGIN_LIBDIRS})
+	set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -L${PLIBDIR}")
+ENDFOREACH()
 
 
 ########## FIND LIBRARIES ##########
@@ -362,6 +372,7 @@ if(WIN32)
 		fmod
 		assimp
 		freetype
+		curl
 		glfw3
 		opengl32
 		glew32
@@ -383,6 +394,7 @@ elseif(LINUX)
 		assimp
 		freetype
 		libpng
+		curl
 		glfw
 		GL
 		GLEW

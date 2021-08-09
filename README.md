@@ -47,7 +47,7 @@ On macOS:
 > ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 
 - Install libraries via home-brew and make necessary configurations
-> brew install gcc@7 cmake glew glfw glm freetype assimp
+> brew install gcc@7 cmake glew glfw glm freetype assimp curl
 
 > export PATH=$PATH:~/usr/local/bin/cmake
 
@@ -55,7 +55,7 @@ On macOS:
 
 On Linux:
 - Install necessary libraries Debian Based Linux
-> sudo apt-get install git cmake g++-7 glew-dev
+> sudo apt-get install git cmake g++-7 glew-dev curl
 
 - Install necessary libraries rpm based system Linux
 > sudo dnf install glm-devel
@@ -63,6 +63,7 @@ On Linux:
 > sudo dnf install  glew-devel 
 > sudo dnf install freetype-devel freetype
 > sudo dnf install assimp assimp-devel
+> sudo dnf install curl curl-devel
 
 3- Open file explorer and create necessary folders:
 
