@@ -44,20 +44,24 @@ public:
 	bool isEnabled();
 
 	/**
-	 * which type of light want to use set the light type id
+	 * Changing type of light using id
 	 *
-	 * ambient light id number 0, directional light id number 1,
-	 * point light id number 2, spot light id number 3
+	 * ambient light id number 0
+	 * directional light id number 1
+	 * point light id number 2
+	 * spot light id number 3
 	 *
 	 * @param lightType setting light type id number
 	 */
 	void setType(int lightType);
 
 	/**
- 	 * which type of light do you use getting the light type id
+ 	 * Gives using which type of light id
  	 *
-	 * ambient light id number 0, directional light id number 1,
-	 * point light id number 2, spot light id number 3
+	 * ambient light id number 0
+	 * directional light id number 1
+	 * point light id number 2
+	 * spot light id number 3
 	 *
 	 * @return light type id number
 	 */
@@ -66,21 +70,22 @@ public:
 	/**
 	 * Rotates light objects around the given vector
 	 *
-	 * The vector should be a unit vector eg.((1, 1, 1) or (1, 1, 0)...). Because the function
-	 * multiplies the x, y, z values by the angle. For instance if we write "rotate(30, 0, 0, 3)",
-	 * the object returns 90 degrees around the z axis. All these x, y, z axis are relative to the
+	 * The vector should be a unit vector eg.((1, 1, 1) or (1, 1, 0)...).
+	 * Because the function multiplies the x, y, z values by the angle.
+	 * For instance if we write "rotate(30, 0, 0, 3)", the object returns 90
+	 * degrees around the z axis. All these x, y, z axis are relative to the
 	 * object's pivot point.
 	 *
 	 * @param angle value of the angle for the rotate
 	 *
-	 * @param ax is the x value of the vector whose origin is the object's pivot point and
-	 * rotate the object around.
+	 * @param ax is the x value of the vector whose origin is the object's
+	 * pivot point and rotate the object around.
 	 *
-	 * @param ay is the y value of the vector whose origin is the object's pivot point and
-     * rotate the object around.
+	 * @param ay is the y value of the vector whose origin is the object's
+	 * pivot point and rotate the object around.
      *
-	 * @param az is the z value of the vector whose origin is the object's pivot point and
-     * rotate the object around.
+	 * @param az is the z value of the vector whose origin is the object's
+	 * pivot point and rotate the object around.
 	 */
 	void rotate(float angle, float ax, float ay, float az);
 
@@ -96,7 +101,7 @@ public:
 	glm::vec3 getDirection();
 
 	/**
-	 * Ambient color changing with RGBA. Setting color rgba value
+	 * Ambient color changing with RGBA.
 	 *
 	 * @param r ambient color in red value. The range of the value [0,255]
 	 * @param g ambient color in green value. The range of the value [0,255]
@@ -106,7 +111,7 @@ public:
 	void setAmbientColor(int r, int g, int b, int a = 255);
 
 	/**
-	 * First, create gColor object. Then, set color value and use parameter.
+	 * First, create gColor object. First, set color value and use parameter.
 	 *
 	 * @param color gColor object to use changing color
 	 */
@@ -114,7 +119,8 @@ public:
 
 	/**
 	 * This function can be use two type. Using directly giving memory address.
-	 * Other way, Typing like function.r, function.g, function.b, function.a giving value of color.
+	 * Other way, Typing like function.r, function.g, function.b, function.a
+	 * giving value of color.
 	 *
 	 * @return color object memory address or RGBA value
 	 */
@@ -141,7 +147,7 @@ public:
 	float getAmbientColorAlpha();
 
 	/**
-	 * Diffuse color changing with RGBA. Setting color rgba value
+	 * Diffuse color changing with RGBA.
 	 *
 	 * @param r diffuse color in red value. The range of the value [0,255]
 	 * @param g diffuse color in green value. The range of the value [0,255]
@@ -158,8 +164,11 @@ public:
 	void setDiffuseColor(gColor* color);
 
 	/**
+	 * Gives diffuse color RGBA value
+	 *
 	 * This function can be use two type. Using directly giving memory address.
-	 * Other way, Typing like function.r, function.g, function.b, function.a giving value of color.
+	 * Other way, Typing like function.r, function.g, function.b, function.a
+	 * giving value of color.
 	 *
 	 * @return color object memory address or RGBA value
 	 */
@@ -186,7 +195,7 @@ public:
 	float getDiffuseColorAlpha();
 
 	/**
-	 * Specular color changing with RGBA. Setting color rgba value
+	 * Specular color changing with RGBA.
 	 *
 	 * @param r specular color in red value. The range of the value [0,255]
 	 * @param g specular color in green value. The range of the value [0,255]
@@ -203,8 +212,11 @@ public:
 	void setSpecularColor(gColor* color);
 
 	/**
+	 * Gives specular color RGBA value
+	 *
 	 * This function can be use two type. Using directly giving memory address.
-	 * Other way, Typing like function.r, function.g, function.b, function.a giving value of color.
+	 * Other way, Typing like function.r, function.g, function.b, function.a
+	 * giving value of color.
 	 *
 	 * @return color object memory address or RGBA value
 	 */
