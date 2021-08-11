@@ -56,6 +56,9 @@ public:
 
 	void draw();
 
+    gBoundingBox getInitialBoundingBox();
+    bool intersectsTriangles(gRay* ray);
+
 protected:
     void drawStart();
     void drawVbo();
@@ -85,6 +88,8 @@ private:
     float bbminx, bbminy, bbminz, bbmaxx, bbmaxy, bbmaxz;
     glm::vec3 bbvpos;
     int bbi;
+
+    gBoundingBox initialboundingbox;
 };
 
 #endif /* ENGINE_GRAPHICS_GMESH_H_ */
