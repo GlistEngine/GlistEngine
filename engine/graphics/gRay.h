@@ -36,6 +36,7 @@ public:
 	void setDirection(const glm::vec3& directionVector);
 	glm::vec3 getOrigin();
 	glm::vec3 getDirection();
+	float getLength();
 
 	bool intersects(gBoundingBox& boundingBox);
 	float distance(gBoundingBox& boundingBox);
@@ -50,6 +51,7 @@ private:
 	float scale;
 	bool isnormalized;
 	glm::vec3 pdiff;
+	float length;
 };
 
 #endif /* GRAPHICS_GRAY_H_ */

@@ -49,6 +49,8 @@ void gDrawLine(float x1, float y1, float z1, float x2, float y2, float z2);
 void gDrawCircle(float xCenter, float yCenter, float radius, bool isFilled = false, float numberOfSides = 64.0f);
 void gDrawArrow(float x1, float y1, float length, float angle, float tipLength, float tipAngle);
 void gDrawRectangle(float x, float y, float w, float h, bool isFilled);
+void gDrawBox(float x, float y, float z, float w = 1.0f, float h = 1.0f, float d = 1.0f, bool isFilled = false);
+void gDrawBox(glm::mat4 transformationMatrix, bool isFilled = false);
 
 class gRenderer: public gObject {
 public:

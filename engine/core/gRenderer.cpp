@@ -11,6 +11,7 @@
 #include "gLine.h"
 #include "gCircle.h"
 #include "gRectangle.h"
+#include "gBox.h"
 
 
 const int gRenderer::SCREENSCALING_NONE = 0;
@@ -89,6 +90,21 @@ void gDrawArrow(float x1, float y1, float length, float angle, float tipLength, 
 void gDrawRectangle(float x, float y, float w, float h, bool isFilled) {
 	gRectangle rectanglemesh;
  	rectanglemesh.draw(x, y, w, h, isFilled);
+}
+
+void gDrawBox(float x, float y, float z, float w, float h, float d, bool isFilled) {
+	gBox boxmesh;
+	if(!isFilled) boxmesh.setDrawMode(gMesh::DRAWMODE_LINELOOP);
+	boxmesh.setPosition(x, y, z);
+	boxmesh.scale(w, h, d);
+	boxmesh.draw();
+}
+
+void gDrawBox(glm::mat4 transformationMatrix, bool isFilled) {
+	gBox boxmesh;
+	if(!isFilled) boxmesh.setDrawMode(gMesh::DRAWMODE_LINELOOP);
+	boxmesh.setTransformationMatrix(transformationMatrix);
+	boxmesh.draw();
 }
 
 gRenderer::gRenderer() {
