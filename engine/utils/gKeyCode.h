@@ -46,6 +46,7 @@ enum class gKeyCode {
 	X = 88,
 	Y = 89,
 	Z = 90,
+	ESC = 256,
 	TAB = 258,
 	CAPS = 280,
 	NUMPAD_0 = 320,
