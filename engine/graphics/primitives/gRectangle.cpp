@@ -33,6 +33,7 @@ void gRectangle::setPoints(float x, float y, float w, float h, bool isFilled) {
 }
 
 void gRectangle::draw() {
+	isprojection2d = true;
 	gMesh::draw();
 }
 
@@ -47,18 +48,22 @@ void gRectangle::setRectanglePoints(float x, float y, float w, float h, bool isF
 
 	vertex1.position.x = x;
 	vertex1.position.y = y;
+	vertex1.position.z = 0.0f;
 	verticessb.push_back(vertex1);
 
 	vertex2.position.x = x + w;
 	vertex2.position.y = y;
+	vertex2.position.z = 0.0f;
 	verticessb.push_back(vertex2);
 
 	vertex3.position.x = x + w;
 	vertex3.position.y = y + h;
+	vertex3.position.z = 0.0f;
 	verticessb.push_back(vertex3);
 
 	vertex4.position.x = x;
 	vertex4.position.y = y + h;
+	vertex4.position.z = 0.0f;
 	verticessb.push_back(vertex4);
 
 	indicessb.push_back(0);
@@ -69,7 +74,7 @@ void gRectangle::setRectanglePoints(float x, float y, float w, float h, bool isF
 
 
 	setVertices(verticessb, indicessb);
-    if(isFilled == false) setDrawMode(gMesh::DRAWMODE_LINESTRIP);
+    if(!isFilled) setDrawMode(gMesh::DRAWMODE_LINESTRIP);
     else setDrawMode(gMesh::DRAWMODE_TRIANGLESTRIP);
 
 }
