@@ -15,6 +15,7 @@ gRay::gRay() : origin(glm::vec3(0.0f)), direction(glm::vec3(0.0f)) {
 	scale = 1.0f;
 	isnormalized = false;
 	pdiff = glm::vec3(0.0f);
+	length = 0.0f;
 }
 
 gRay::gRay(const glm::vec3& originPoint, const glm::vec3& directionVector) : origin(originPoint), direction(directionVector) {
@@ -22,6 +23,7 @@ gRay::gRay(const glm::vec3& originPoint, const glm::vec3& directionVector) : ori
 	scale = 1.0f;
 	isnormalized = false;
 	pdiff = glm::vec3(0.0f);
+	length = glm::length(directionVector);
 }
 
 gRay::~gRay() {}
@@ -32,6 +34,7 @@ void gRay::setOrigin(const glm::vec3& originPoint) {
 
 void gRay::setDirection(const glm::vec3& directionVector) {
 	direction = directionVector;
+	length = glm::length(directionVector);
 }
 
 glm::vec3 gRay::getOrigin() {
@@ -45,6 +48,10 @@ glm::vec3 gRay::getDirection() {
 		return direction * scale;
 	}
 	return direction;
+}
+
+float gRay::getLength() {
+	return length;
 }
 
 bool gRay::intersects(gBoundingBox& boundingBox) {
@@ -67,4 +74,3 @@ void gRay::link(gMesh* mesh, float rayScale, bool isNormalized, float dx, float 
 void gRay::unlink() {
 	islinked = false;
 }
-
