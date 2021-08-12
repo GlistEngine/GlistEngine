@@ -67,7 +67,7 @@ void gMesh::setVertices(std::vector<gVertex> vertices, std::vector<unsigned int>
 	vbo.setVertexData(&vertices[0], sizeof(gVertex), vertices.size());
 	if (indices.size() != 0) vbo.setIndexData(&indices[0], indices.size());
     initialboundingbox = getBoundingBox();
-	initialboundingbox.setTransformationMatrix(localtransformationmatrix);
+//	initialboundingbox.setTransformationMatrix(localtransformationmatrix);
 }
 
 std::vector<gVertex> gMesh::getVertices() {
@@ -343,7 +343,7 @@ gBoundingBox gMesh::getBoundingBox() {
 		bbmaxz = std::max(bbmaxz, bbvpos.z);
 	}
 
-	return gBoundingBox(bbminx, bbminy, bbminz, bbmaxx, bbmaxy, bbmaxz, localtransformationmatrix);
+	return gBoundingBox(bbminx, bbminy, bbminz, bbmaxx, bbmaxy, bbmaxz);
 }
 
 
