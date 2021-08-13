@@ -12,7 +12,6 @@
 #include <vector>
 #include "gMesh.h"
 #include "gLight.h"
-#include <glm/gtx/intersect.hpp>
 
 
 gMesh::gMesh() {
@@ -66,8 +65,6 @@ void gMesh::setVertices(std::vector<gVertex> vertices, std::vector<unsigned int>
 	this->indices = indices;
 	vbo.setVertexData(&vertices[0], sizeof(gVertex), vertices.size());
 	if (indices.size() != 0) vbo.setIndexData(&indices[0], indices.size());
-    initialboundingbox = getBoundingBox();
-//	initialboundingbox.setTransformationMatrix(localtransformationmatrix);
 }
 
 std::vector<gVertex> gMesh::getVertices() {
@@ -293,7 +290,15 @@ void gMesh::drawStart() {
 	    else textureshader->setMat4("projection", renderer->getProjectionMatrix());
 	    textureshader->setMat4("view", renderer->getViewMatrix());
 	    textureshader->setMat4("model", localtransformationmatrix);
+
 	}
+
+    if(renderer->isFogEnabled()){
+    	    colorshader->setInt("aUseFog", 1);
+    	    colorshader->setVec3("fogColor", renderer->fogcolor->r, renderer->fogcolor->g, renderer->fogcolor->b);
+    	    colorshader->setFloat("density", renderer->density);
+    	    colorshader->setFloat("gradient", renderer->gradient);
+    	}
 }
 
 void gMesh::drawVbo() {
@@ -326,7 +331,6 @@ gVbo* gMesh::getVbo() {
 
 gBoundingBox gMesh::getBoundingBox() {
 	for (bbi = 0; bbi< vertices.size(); bbi++) {
-//		bbvpos = vertices[bbi].position;
 		bbvpos = glm::vec3(localtransformationmatrix * glm::vec4(vertices[bbi].position, 1.0));
 
 		if (bbi == 0) {
@@ -346,27 +350,3 @@ gBoundingBox gMesh::getBoundingBox() {
 	return gBoundingBox(bbminx, bbminy, bbminz, bbmaxx, bbmaxy, bbmaxz);
 }
 
-
-gBoundingBox gMesh::getInitialBoundingBox() {
-	return initialboundingbox;
-}
-
-bool gMesh::intersectsTriangles(gRay* ray) {
-	glm::vec2 baryposition(0);
-	float mindistance = std::numeric_limits<float>::max();
-	float distance = 0.0f;
-	bool intersecting = false;
-	for (int i = 0; i < indices.size(); i += 3) {
-		//iterate through all faces of the mesh since each face has 3 vertices
-		glm::vec3 a = vertices[indices[i]].position;
-		glm::vec3 b = vertices[indices[i + 1]].position;
-		glm::vec3 c = vertices[indices[i + 2]].position;
-		if(glm::intersectRayTriangle(ray->getOrigin(), ray->getDirection(), a, b, c, baryposition, distance)) {
-			if(distance > 0) {
-				intersecting = true;
-				if(distance < mindistance) mindistance = distance;
-			}
-		}
-	}
-	return intersecting && mindistance > 0.0f && mindistance < ray->getLength();
-}

@@ -10,8 +10,6 @@
 #include "gLight.h"
 #include "gLine.h"
 #include "gCircle.h"
-#include "gRectangle.h"
-#include "gBox.h"
 
 
 const int gRenderer::SCREENSCALING_NONE = 0;
@@ -77,35 +75,6 @@ void gDrawLine(float x1, float y1, float z1, float x2, float y2, float z2) {
 	circlemesh.draw(xCenter, yCenter, radius, isFilled, numberOfSides);
 }
 
-void gDrawArrow(float x1, float y1, float length, float angle, float tipLength, float tipAngle) {
-	gLine linemesh;
-	float x2, y2;
-	x2 = x1 + std::cos(gDegToRad(angle)) * length;
-	y2 = y1 + std::sin(gDegToRad(angle)) * length;;
-	linemesh.draw(x2, y2, x1, y1);
-	linemesh.draw(x1, y1, x1 + std::cos(gDegToRad(angle) - gDegToRad(tipAngle)) * tipLength, y1 + std::sin(gDegToRad(angle) - gDegToRad(tipAngle)) * tipLength);
-	linemesh.draw(x1, y1, x1 + (std::cos(gDegToRad(angle) + gDegToRad(tipAngle)) * tipLength) , y1 + std::sin(gDegToRad(angle) + gDegToRad(tipAngle)) * tipLength);
-}
-
-void gDrawRectangle(float x, float y, float w, float h, bool isFilled) {
-	gRectangle rectanglemesh;
- 	rectanglemesh.draw(x, y, w, h, isFilled);
-}
-
-void gDrawBox(float x, float y, float z, float w, float h, float d, bool isFilled) {
-	gBox boxmesh;
-	if(!isFilled) boxmesh.setDrawMode(gMesh::DRAWMODE_LINELOOP);
-	boxmesh.setPosition(x, y, z);
-	boxmesh.scale(w, h, d);
-	boxmesh.draw();
-}
-
-void gDrawBox(glm::mat4 transformationMatrix, bool isFilled) {
-	gBox boxmesh;
-	if(!isFilled) boxmesh.setDrawMode(gMesh::DRAWMODE_LINELOOP);
-	boxmesh.setTransformationMatrix(transformationMatrix);
-	boxmesh.draw();
-}
 
 gRenderer::gRenderer() {
 	width = gDefaultWidth();
@@ -131,6 +100,7 @@ gRenderer::gRenderer() {
 	imageshader = new gShader();
 	imageshader->loadProgram(getShaderSrcImageVertex(), getShaderSrcImageFragment());
 	imageshader->setMat4("projection", projectionmatrix2d);
+
 
 	fontshader = new gShader();
 	fontshader->loadProgram(getShaderSrcFontVertex(), getShaderSrcFontFragment());
@@ -169,6 +139,12 @@ gRenderer::gRenderer() {
 	islightingenabled = false;
 	lightingposition = glm::vec3(0.0f);
 	li = 0;
+
+	isfogenabled = false;
+	fogcolor = new gColor();
+	density = 0.3f;
+	gradient = 1.5f;
+
 
 	isdepthtestenabled = false;
 	depthtesttype = 0;
@@ -398,6 +374,14 @@ void gRenderer::clearColor(gColor color) {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
+void gRenderer::enableFog() {
+	isfogenabled = true;
+}
+
+void gRenderer::disableFog() {
+    isfogenabled = false;
+}
+
 void gRenderer::enableLighting() {
 	lightingcolor->set(0.0f, 0.0f, 0.0f, 1.0f);
 	islightingenabled = true;
@@ -412,9 +396,20 @@ void gRenderer::disableLighting() {
 	islightingenabled = false;
 }
 
+
+
 bool gRenderer::isLightingEnabled() {
 	return islightingenabled;
 }
+
+bool gRenderer::isFogEnabled() {
+	return isfogenabled;
+}
+
+void gRenderer::setFogColor(float r, float g, float b) {
+	fogcolor->set(r, g, b);
+}
+
 
 void gRenderer::setLightingColor(int r, int g, int b, int a) {
 	lightingcolor->set(r, g, b, a);
@@ -534,6 +529,7 @@ const std::string gRenderer::getShaderSrcColorVertex() {
 "	layout (location = 4) in vec3 aBitangent;\n"
 "	layout (location = 5) in int aUseNormalMap;\n"
 "   uniform int aUseShadowMap;\n"
+"   uniform int aUseFog;\n"
 "\n"
 "	uniform mat4 model;\n"
 "	uniform mat4 view;\n"
@@ -541,9 +537,13 @@ const std::string gRenderer::getShaderSrcColorVertex() {
 "	uniform vec3 lightPos;\n"
 "	uniform vec3 viewPos;\n"
 "	uniform mat4 lightMatrix;\n"
+"   out float visibility;\n"
+"   uniform float density = 0.2f;\n"
+"   uniform float gradient = 1.5f;\n"
 "\n"
 "	flat out int mUseNormalMap;\n"
 "	flat out int mUseShadowMap;\n"
+"	flat out int mUseFog;\n"
 "\n"
 "	out vec3 Normal;\n"
 "	out vec3 FragPos;\n"
@@ -555,6 +555,7 @@ const std::string gRenderer::getShaderSrcColorVertex() {
 "\n"
 "	void main() {\n"
 "    	mUseShadowMap = aUseShadowMap;\n"
+"    	mUseFog = aUseFog;\n"
 "	    FragPos = vec3(model * vec4(aPos, 1.0));\n"
 "	    Normal = mat3(transpose(inverse(model))) * aNormal;\n"
 "	    TexCoords = aTexCoords;\n"
@@ -575,6 +576,12 @@ const std::string gRenderer::getShaderSrcColorVertex() {
 "	    }\n"
 "\n"
 "	    gl_Position = projection * view * model * vec4(aPos, 1.0);\n"
+"	    if (aUseFog > 0) {\n"
+"          float distance = length(gl_Position.xyz);\n"
+"          visibility = exp(-pow((distance * density), gradient));\n"
+"          visibility = clamp(visibility, 0.0, 1.0);\n"
+"       }\n"
+"\n"
 "	}\n";
 
 	return std::string(shadersource);
@@ -616,7 +623,8 @@ const std::string gRenderer::getShaderSrcColorFragment() {
 "	uniform Light light;\n"
 "\n"
 "	uniform vec4 renderColor;\n"
-"	uniform vec3 viewPos; \n"
+"	uniform vec3 viewPos;\n"
+"	uniform vec3 fogColor;\n"
 "\n"
 "	in vec3 Normal;\n"
 "	in vec3 FragPos;\n"
@@ -626,8 +634,10 @@ const std::string gRenderer::getShaderSrcColorFragment() {
 "	in vec3 TangentLightPos;\n"
 "	in vec3 TangentViewPos;\n"
 "	in vec3 TangentFragPos;\n"
+"	in float visibility;\n"
 "\n"
 "	flat in int mUseShadowMap;\n"
+"	flat in int mUseFog;\n"
 "	uniform sampler2D shadowMap;\n"
 "   uniform vec3 shadowLightPos;\n"
 "\n"
@@ -744,7 +754,11 @@ const std::string gRenderer::getShaderSrcColorFragment() {
 "			specular *= shadowing;\n"
 "	    }"
 "\n"
-"	    FragColor = (ambient + diffuse + specular) * renderColor;\n"
+"			FragColor = (ambient + diffuse + specular) * renderColor;\n"
+"\n"
+"	    if (mUseFog > 0) {\n"
+"			FragColor = mix(vec4(fogColor, 1.0), FragColor, visibility);\n"
+"	    }"
 "	}\n";
 
 	return std::string(shadersource);
@@ -823,6 +837,7 @@ const std::string gRenderer::getShaderSrcImageFragment() {
 
 	return std::string(shadersource);
 }
+
 
 const std::string gRenderer::getShaderSrcFontVertex() {
 	const char* shadersource =

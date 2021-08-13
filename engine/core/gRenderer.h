@@ -47,10 +47,6 @@ void gDrawLine(float x1, float y1, float x2, float y2);
 void gDrawLine(float x1, float y1, float z1, float x2, float y2, float z2);
 
 void gDrawCircle(float xCenter, float yCenter, float radius, bool isFilled = false, float numberOfSides = 64.0f);
-void gDrawArrow(float x1, float y1, float length, float angle, float tipLength, float tipAngle);
-void gDrawRectangle(float x, float y, float w, float h, bool isFilled = false);
-void gDrawBox(float x, float y, float z, float w = 1.0f, float h = 1.0f, float d = 1.0f, bool isFilled = false);
-void gDrawBox(glm::mat4 transformationMatrix, bool isFilled = false);
 
 class gRenderer: public gObject {
 public:
@@ -102,6 +98,13 @@ public:
 	void setGlobalAmbientColor(gColor color);
 	gColor* getGlobalAmbientColor();
 
+	bool isFogEnabled();
+	void enableFog();
+	void disableFog();
+	void setFogColor(float r, float g, float b);
+	void setFogDensity(float d);
+	void setFogGradient(float g);
+
 	void addSceneLight(gLight* light);
 	gLight* getSceneLight(int lightNo);
 	int getSceneLightNum();
@@ -131,6 +134,7 @@ public:
 	gShader* getIrradianceShader();
 	gShader* getPrefilterShader();
 	gShader* getBrdfShader();
+	gShader* getFogShader();
 
 	void setProjectionMatrix(glm::mat4 projectionMatrix);
 	void setProjectionMatrix2d(glm::mat4 projectionMatrix2d);
@@ -143,6 +147,10 @@ public:
 	void backupMatrices();
 	void restoreMatrices();
 
+	gColor* fogcolor;
+	float density;
+	float gradient;
+
 
 private:
 	static int width, height;
@@ -153,6 +161,7 @@ private:
 
 	gColor* lightingcolor;
 	bool islightingenabled;
+	bool isfogenabled;
 	glm::vec3 lightingposition;
 	gColor* globalambientcolor;
 	int li;
@@ -201,6 +210,7 @@ private:
 	const std::string getShaderSrcPrefilterFragment();
 	const std::string getShaderSrcBrdfVertex();
 	const std::string getShaderSrcBrdfFragment();
+
 
 };
 
