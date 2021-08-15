@@ -294,6 +294,13 @@ void gMesh::drawStart() {
 	    textureshader->setMat4("view", renderer->getViewMatrix());
 	    textureshader->setMat4("model", localtransformationmatrix);
 	}
+
+    if(renderer->isFogEnabled()){
+        	    colorshader->setInt("aUseFog", 1);
+        	    colorshader->setVec3("fogColor", renderer->fogcolor->r, renderer->fogcolor->g, renderer->fogcolor->b);
+        	    colorshader->setFloat("density", renderer->density);
+        	    colorshader->setFloat("gradient", renderer->gradient);
+        	}
 }
 
 void gMesh::drawVbo() {
