@@ -170,6 +170,11 @@ gRenderer::gRenderer() {
 	lightingposition = glm::vec3(0.0f);
 	li = 0;
 
+	isfogenabled = false;
+	fogcolor = new gColor();
+	density = 0.3f;
+	gradient = 1.5f;
+
 	isdepthtestenabled = false;
 	depthtesttype = 0;
 	depthtesttypeid[0] = GL_LESS;
@@ -398,6 +403,22 @@ void gRenderer::clearColor(gColor color) {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
+void gRenderer::enableFog() {
+	isfogenabled = true;
+}
+
+void gRenderer::disableFog() {
+    isfogenabled = false;
+}
+
+bool gRenderer::isFogEnabled() {
+	return isfogenabled;
+}
+
+void gRenderer::setFogColor(float r, float g, float b) {
+	fogcolor->set(r, g, b);
+}
+
 void gRenderer::enableLighting() {
 	lightingcolor->set(0.0f, 0.0f, 0.0f, 1.0f);
 	islightingenabled = true;
@@ -534,6 +555,7 @@ const std::string gRenderer::getShaderSrcColorVertex() {
 "	layout (location = 4) in vec3 aBitangent;\n"
 "	layout (location = 5) in int aUseNormalMap;\n"
 "   uniform int aUseShadowMap;\n"
+"   uniform int aUseFog;\n"
 "\n"
 "	uniform mat4 model;\n"
 "	uniform mat4 view;\n"
@@ -541,9 +563,13 @@ const std::string gRenderer::getShaderSrcColorVertex() {
 "	uniform vec3 lightPos;\n"
 "	uniform vec3 viewPos;\n"
 "	uniform mat4 lightMatrix;\n"
+"   out float visibility;\n"
+"   uniform float density = 0.2f;\n"
+"   uniform float gradient = 1.5f;\n"
 "\n"
 "	flat out int mUseNormalMap;\n"
 "	flat out int mUseShadowMap;\n"
+"	flat out int mUseFog;\n"
 "\n"
 "	out vec3 Normal;\n"
 "	out vec3 FragPos;\n"
@@ -555,6 +581,7 @@ const std::string gRenderer::getShaderSrcColorVertex() {
 "\n"
 "	void main() {\n"
 "    	mUseShadowMap = aUseShadowMap;\n"
+"    	mUseFog = aUseFog;\n"
 "	    FragPos = vec3(model * vec4(aPos, 1.0));\n"
 "	    Normal = mat3(transpose(inverse(model))) * aNormal;\n"
 "	    TexCoords = aTexCoords;\n"
@@ -575,6 +602,12 @@ const std::string gRenderer::getShaderSrcColorVertex() {
 "	    }\n"
 "\n"
 "	    gl_Position = projection * view * model * vec4(aPos, 1.0);\n"
+"	    if (aUseFog > 0) {\n"
+"          float distance = length(gl_Position.xyz);\n"
+"          visibility = exp(-pow((distance * density), gradient));\n"
+"          visibility = clamp(visibility, 0.0, 1.0);\n"
+"       }\n"
+"\n"
 "	}\n";
 
 	return std::string(shadersource);
@@ -616,7 +649,8 @@ const std::string gRenderer::getShaderSrcColorFragment() {
 "	uniform Light light;\n"
 "\n"
 "	uniform vec4 renderColor;\n"
-"	uniform vec3 viewPos; \n"
+"	uniform vec3 viewPos;\n"
+"	uniform vec3 fogColor;\n"
 "\n"
 "	in vec3 Normal;\n"
 "	in vec3 FragPos;\n"
@@ -626,8 +660,10 @@ const std::string gRenderer::getShaderSrcColorFragment() {
 "	in vec3 TangentLightPos;\n"
 "	in vec3 TangentViewPos;\n"
 "	in vec3 TangentFragPos;\n"
+"	in float visibility;\n"
 "\n"
 "	flat in int mUseShadowMap;\n"
+"	flat in int mUseFog;\n"
 "	uniform sampler2D shadowMap;\n"
 "   uniform vec3 shadowLightPos;\n"
 "\n"
@@ -744,7 +780,11 @@ const std::string gRenderer::getShaderSrcColorFragment() {
 "			specular *= shadowing;\n"
 "	    }"
 "\n"
-"	    FragColor = (ambient + diffuse + specular) * renderColor;\n"
+"			FragColor = (ambient + diffuse + specular) * renderColor;\n"
+"\n"
+"	    if (mUseFog > 0) {\n"
+"			FragColor = mix(vec4(fogColor, 1.0), FragColor, visibility);\n"
+"	    }"
 "	}\n";
 
 	return std::string(shadersource);

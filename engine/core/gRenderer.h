@@ -102,6 +102,13 @@ public:
 	void setGlobalAmbientColor(gColor color);
 	gColor* getGlobalAmbientColor();
 
+	bool isFogEnabled();
+	void enableFog();
+	void disableFog();
+	void setFogColor(float r, float g, float b);
+	void setFogDensity(float d);
+	void setFogGradient(float g);
+
 	void addSceneLight(gLight* light);
 	gLight* getSceneLight(int lightNo);
 	int getSceneLightNum();
@@ -143,6 +150,9 @@ public:
 	void backupMatrices();
 	void restoreMatrices();
 
+	gColor* fogcolor;
+	float density;
+	float gradient;
 
 private:
 	static int width, height;
@@ -153,6 +163,7 @@ private:
 
 	gColor* lightingcolor;
 	bool islightingenabled;
+	bool isfogenabled;
 	glm::vec3 lightingposition;
 	gColor* globalambientcolor;
 	int li;
