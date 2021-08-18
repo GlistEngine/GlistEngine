@@ -8,7 +8,7 @@
 #include "gFog.h"
 
 gFog::gFog() {
-
+	
 }
 
 gFog::~gFog() {
@@ -27,11 +27,11 @@ void gFog::setColor(float r, float g, float b) {
 }
 
 void gFog::setDensity(float d) {
-	renderer->density = d;
+	renderer->fogdensity = d;
 }
 
 void gFog::setGradient(float g) {
-	renderer->gradient = g;
+	renderer->foggradient = g;
 }
 
 gColor gFog::getColor() {
@@ -39,11 +39,11 @@ gColor gFog::getColor() {
 }
 
 float gFog::getDensity() {
-    return renderer->density;
+    return renderer->fogdensity;
 }
 
 float gFog::getGradient() {
-    return renderer->gradient;
+    return renderer->foggradient;
 }
 
 

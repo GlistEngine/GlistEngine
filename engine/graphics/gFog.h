@@ -12,20 +12,47 @@
 #include <gRenderObject.h>
 #include <gColor.h>
 
-
+// This is a class that allows creating fog
 
 class gFog : public gRenderObject{
 public:
 	gFog();
 	virtual ~gFog();
 
+	/* Activates the fog.This function creates a fog by giving objects a visibility index and
+	 * multiplying this visibility index by the fog color thanks to these two formula
+	 * visibility = exp(-pow((distance * fogdensity), foggradient))
+	 * objectColor = mix(vec4(fogColor, 1.0), FragColor, visibility)
+	 */
 	void enable();
+
+	// Deactivates the fog.
 	void disable();
+
+	/* Sets fogColor.
+	 * @param r = red value of fogColor.
+	 * @param g = green value of fogColor.
+	 * @param b = blue value of fogColor.
+	*/
 	void setColor(float r, float g, float b);
+
+	/* Sets density of fog
+	 * @param d = density value.
+	 */
 	void setDensity(float d);
+
+	/* Sets the gradient curve that distributes the fog in the field.
+	 * @param g = Gradient value.
+	 */
 	void setGradient(float g);
+
+	//Returns fogColor.
 	gColor getColor();
+
+	//Returns density value.
 	float getDensity();
+
+	//Returns fog value.
 	float getGradient();
 
 private:

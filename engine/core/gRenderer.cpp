@@ -172,8 +172,9 @@ gRenderer::gRenderer() {
 
 	isfogenabled = false;
 	fogcolor = new gColor();
-	density = 0.3f;
-	gradient = 1.5f;
+	fogcolor->set(0.3f, 0.3f, 0.3f);
+	fogdensity = 0.3;
+	foggradient = 1.5f;
 
 	isdepthtestenabled = false;
 	depthtesttype = 0;
@@ -564,8 +565,8 @@ const std::string gRenderer::getShaderSrcColorVertex() {
 "	uniform vec3 viewPos;\n"
 "	uniform mat4 lightMatrix;\n"
 "   out float visibility;\n"
-"   uniform float density = 0.2f;\n"
-"   uniform float gradient = 1.5f;\n"
+"   uniform float fogdensity = 0.2f;\n"
+"   uniform float foggradient = 1.5f;\n"
 "\n"
 "	flat out int mUseNormalMap;\n"
 "	flat out int mUseShadowMap;\n"
@@ -604,7 +605,7 @@ const std::string gRenderer::getShaderSrcColorVertex() {
 "	    gl_Position = projection * view * model * vec4(aPos, 1.0);\n"
 "	    if (aUseFog > 0) {\n"
 "          float distance = length(gl_Position.xyz);\n"
-"          visibility = exp(-pow((distance * density), gradient));\n"
+"          visibility = exp(-pow((distance * fogdensity), foggradient));\n"
 "          visibility = clamp(visibility, 0.0, 1.0);\n"
 "       }\n"
 "\n"
