@@ -151,8 +151,10 @@ public:
 	void restoreMatrices();
 
 	gColor* fogcolor;
-	float density;
-	float gradient;
+	float fogdensity;
+	float foggradient;
+
+
 
 private:
 	static int width, height;
@@ -168,6 +170,7 @@ private:
 	gColor* globalambientcolor;
 	int li;
 	std::vector<gLight*> scenelights;
+
 
 	bool isdepthtestenabled;
 	int depthtesttype;

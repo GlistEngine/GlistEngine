@@ -229,6 +229,12 @@ void gMesh::drawStart() {
     	    colorshader->setVec4("light.ambient", renderer->getLightingColor()->r, renderer->getLightingColor()->g, renderer->getLightingColor()->b, renderer->getLightingColor()->a);
 	    }
 
+	    if(renderer->isFogEnabled()){
+	            	    colorshader->setInt("aUseFog", 1);
+	            	    colorshader->setVec3("fogColor", renderer->fogcolor->r, renderer->fogcolor->g, renderer->fogcolor->b);
+	            	    colorshader->setFloat("fogdensity", renderer->fogdensity);
+	            	    colorshader->setFloat("foggradient", renderer->foggradient);
+	            	}
 	    // Set matrices
 	    if(isprojection2d)colorshader->setMat4("projection", renderer->getProjectionMatrix2d());
 	    else colorshader->setMat4("projection", renderer->getProjectionMatrix());
@@ -294,13 +300,6 @@ void gMesh::drawStart() {
 	    textureshader->setMat4("view", renderer->getViewMatrix());
 	    textureshader->setMat4("model", localtransformationmatrix);
 	}
-
-    if(renderer->isFogEnabled()){
-        	    colorshader->setInt("aUseFog", 1);
-        	    colorshader->setVec3("fogColor", renderer->fogcolor->r, renderer->fogcolor->g, renderer->fogcolor->b);
-        	    colorshader->setFloat("density", renderer->density);
-        	    colorshader->setFloat("gradient", renderer->gradient);
-        	}
 }
 
 void gMesh::drawVbo() {
