@@ -119,6 +119,8 @@ int gSign(T val) {
     return (T(0) < val) - (val < T(0));
 }
 
+std::string gCodepointToStr(unsigned int codepoint);
+
 class gUTF8Iterator{
 public:
 	gUTF8Iterator(const std::string & str);

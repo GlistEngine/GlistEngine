@@ -173,7 +173,7 @@ gRenderer::gRenderer() {
 	isfogenabled = false;
 	fogcolor = new gColor();
 	fogcolor->set(0.3f, 0.3f, 0.3f);
-	fogdensity = 0.3;
+	fogdensity = 0.15;
 	foggradient = 1.5f;
 
 	isdepthtestenabled = false;
@@ -381,6 +381,10 @@ void gRenderer::setColor(int r, int g, int b, int a) {
 	rendercolor->set((float)r / 255, (float)g / 255, (float)b / 255, (float)a / 255);
 }
 
+void gRenderer::setColor(float r, float g, float b, float a) {
+	rendercolor->set(r, g, b, a);
+}
+
 void gRenderer::setColor(gColor color) {
 	rendercolor->set(color.r, color.g, color.b, color.a);
 }
@@ -565,8 +569,8 @@ const std::string gRenderer::getShaderSrcColorVertex() {
 "	uniform vec3 viewPos;\n"
 "	uniform mat4 lightMatrix;\n"
 "   out float visibility;\n"
-"   uniform float fogdensity = 0.2f;\n"
-"   uniform float foggradient = 1.5f;\n"
+"   uniform float fogdensity;\n"
+"   uniform float foggradient;\n"
 "\n"
 "	flat out int mUseNormalMap;\n"
 "	flat out int mUseShadowMap;\n"
