@@ -381,6 +381,10 @@ void gRenderer::setColor(int r, int g, int b, int a) {
 	rendercolor->set((float)r / 255, (float)g / 255, (float)b / 255, (float)a / 255);
 }
 
+void gRenderer::setColor(float r, float g, float b, float a) {
+	rendercolor->set(r, g, b, a);
+}
+
 void gRenderer::setColor(gColor color) {
 	rendercolor->set(color.r, color.g, color.b, color.a);
 }
