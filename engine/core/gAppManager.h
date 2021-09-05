@@ -43,9 +43,11 @@
 #include "gObject.h"
 #include <iostream>
 #include <chrono>
+#include "gGUIManager.h"
 class gBaseWindow;
 class gBaseApp;
 class gBaseCanvas;
+class gGUIFrame;
 class gCanvasManager;
 
 
@@ -216,6 +218,8 @@ public:
 	 */
 	void setWindow(gBaseWindow * baseWindow);
 
+	void setCursor(int cursorId);
+
 	/**
 	 * Completely replace the current gBaseCanvas with the specified gBaseCanvas.
 	 *
@@ -229,6 +233,20 @@ public:
 	 * @return current Canvas.
 	 */
 	gBaseCanvas* getCurrentCanvas();
+
+	/**
+	 * Completely replace the current gGUIFrame with the specified gGUIFrame.
+	 *
+	 * @param guiFrame new gGUIFrame to replace.
+	 */
+	void setCurrentGUIFrame(gGUIFrame *guiFrame);
+
+	/**
+	 * Returns the current gGUIFrame.
+	 *
+	 * @return current gGUIFrame.
+	 */
+	gGUIFrame* getCurrentGUIFrame();
 
 	/**
 	 * Sets screen size by given width and height. GlistEngine scales the process.
@@ -385,12 +403,20 @@ public:
 	 */
 	gCanvasManager* getCanvasManager();
 
+	/**
+	 * Returns the current gGUIManager object pointer.
+	 *
+	 * @return gGUIManager object pointer.
+	 */
+	gGUIManager* getGUIManager();
+
 private:
 	std::string appname;
 	gBaseWindow* window;
 	gBaseApp* app;
 	gBaseCanvas* canvas;
 	gCanvasManager* canvasmanager;
+	gGUIManager* guimanager;
 	gBaseCanvas* tempbasecanvas;
 	bool ismouseentered;
 	bool buttonpressed[3];
