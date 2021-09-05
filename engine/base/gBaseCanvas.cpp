@@ -31,15 +31,15 @@ void gBaseCanvas::draw() {
 
 }
 
-void gBaseCanvas::charPressed(unsigned int key) {
-
-}
-
 void gBaseCanvas::keyPressed(int key) {
 
 }
 
 void gBaseCanvas::keyReleased(int key) {
+
+}
+
+void gBaseCanvas::charPressed(unsigned int codepoint) {
 
 }
 
@@ -68,6 +68,10 @@ void gBaseCanvas::mouseEntered() {
 }
 
 void gBaseCanvas::mouseExited() {
+
+}
+
+void gBaseCanvas::onGuiEvent(int guiObjectId, int eventType, std::string value1, std::string value2) {
 
 }
 

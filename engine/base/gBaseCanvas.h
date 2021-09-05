@@ -23,9 +23,9 @@ public:
 	virtual void update();
 	virtual void draw();
 
-	virtual void charPressed(unsigned int key);
 	virtual void keyPressed(int key);
 	virtual void keyReleased(int key);
+	virtual void charPressed(unsigned int codepoint);
 	virtual void mouseMoved(int x, int y );
 	virtual void mouseDragged(int x, int y, int button);
 	virtual void mousePressed(int x, int y, int button);
@@ -33,6 +33,7 @@ public:
 	virtual void mouseScrolled(int x, int y);
 	virtual void mouseEntered();
 	virtual void mouseExited();
+	virtual void onGuiEvent(int guiObjectId, int eventType, std::string value1 = "", std::string value2 = "");
 
 	virtual void showNotify();
 	virtual void hideNotify();
