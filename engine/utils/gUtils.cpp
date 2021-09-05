@@ -186,6 +186,14 @@ std::string gToUpper(const std::string& src, const std::string & locale) {
 	return dst;
 }
 
+std::string gCodepointToStr(unsigned int codepoint) {
+	std::vector<unsigned char> result;
+	utf8::unchecked::utf32to8(&codepoint, &codepoint + 1, std::back_inserter(result));
+	std::stringstream strs;
+	for (int i = 0; i < result.size(); i++) strs << result[i];
+	return strs.str();
+}
+
 
 gUTF8Iterator::gUTF8Iterator(const std::string & str){
 	try{
