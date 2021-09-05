@@ -55,8 +55,8 @@ void gGUIForm::keyReleased(int key) {
 	guisizer->keyReleased(key);
 }
 
-void gGUIForm::charPressed(unsigned int key) {
-	guisizer->charPressed(key);
+void gGUIForm::charPressed(unsigned int codepoint) {
+	guisizer->charPressed(codepoint);
 }
 
 void gGUIForm::mouseMoved(int x, int y) {

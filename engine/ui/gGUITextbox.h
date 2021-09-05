@@ -25,7 +25,7 @@ public:
 	void draw();
 
 	void keyPressed(int key);
-	void charPressed(unsigned int key);
+	void charPressed(unsigned int codepoint);
 	void mousePressed(int x, int y, int button);
 	void mouseReleased(int x, int y, int button);
 

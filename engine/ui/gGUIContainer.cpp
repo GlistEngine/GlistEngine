@@ -63,8 +63,8 @@ void gGUIContainer::keyReleased(int key) {
 	guisizer->keyReleased(key);
 }
 
-void gGUIContainer::charPressed(unsigned int key) {
-	guisizer->charPressed(key);
+void gGUIContainer::charPressed(unsigned int codepoint) {
+	guisizer->charPressed(codepoint);
 }
 
 void gGUIContainer::mouseMoved(int x, int y) {
