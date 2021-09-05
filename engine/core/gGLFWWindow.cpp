@@ -15,6 +15,7 @@
 gGLFWWindow::gGLFWWindow() {
 #if defined(WIN32) || defined(LINUX) || defined(APPLE)
 	window = nullptr;
+	cursor = new GLFWcursor*[6];
 #endif
 }
 
@@ -83,6 +84,14 @@ void gGLFWWindow::initialize(int width, int height, int windowMode) {
 	glfwSetWindowIcon(window, 1, images);
 	stbi_image_free(images[0].pixels);
 
+	cursor[0] = glfwCreateStandardCursor(0x00036001);
+	cursor[1] = glfwCreateStandardCursor(0x00036002);
+	cursor[2] = glfwCreateStandardCursor(0x00036003);
+	cursor[3] = glfwCreateStandardCursor(0x00036004);
+	cursor[4] = glfwCreateStandardCursor(0x00036005);
+	cursor[5] = glfwCreateStandardCursor(0x00036006);
+	glfwSetCursor(window, cursor[0]);
+
 	glfwMakeContextCurrent(window);
 	glewExperimental = GL_TRUE;
 	glewInit();
@@ -133,6 +142,12 @@ void gGLFWWindow::close() {
 #if defined(WIN32) || defined(LINUX) || defined(APPLE)
 	// Deallocate glfw resources
 	glfwTerminate();
+#endif
+}
+
+void gGLFWWindow::setCursor(int cursorNo) {
+#if defined(WIN32) || defined(LINUX) || defined(APPLE)
+	glfwSetCursor(window, cursor[cursorNo]);
 #endif
 }
 

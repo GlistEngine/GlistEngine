@@ -53,9 +53,12 @@ public:
 	 */
 	void close();
 
+	void setCursor(int cursorNo);
+
 private:
 #if defined(WIN32) || defined(LINUX) || defined(APPLE)
 	GLFWwindow* window;
+	GLFWcursor** cursor;
 
 	/**
 	 * Invoking by GLFW if the window size changed.

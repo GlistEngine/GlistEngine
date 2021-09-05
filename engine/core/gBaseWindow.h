@@ -25,6 +25,8 @@ class gAppManager;
 class gBaseWindow : public gObject {
 public:
 	static const int WINDOWMODE_NONE = -1, WINDOWMODE_GAME = 0, WINDOWMODE_FULLSCREEN = 1, WINDOWMODE_APP = 2;
+	static const int CURSOR_ARROW = 0, CURSOR_IBEAM = 1, CURSOR_CROSSHAIR = 2, CURSOR_HAND = 3, CURSOR_HRESIZE = 4, CURSOR_VRESIZE = 5;
+
 
 	gBaseWindow();
 	virtual ~gBaseWindow();
@@ -55,6 +57,8 @@ public:
 	 * Destroys all remaining windows and cursors, restores any modified gamma ramps and frees any other allocated resources.
 	 */
 	virtual void close();
+
+	virtual void setCursor(int cursorNo);
 
 	/**
 	 * Sets game window size.
