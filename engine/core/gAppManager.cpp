@@ -46,6 +46,7 @@ gAppManager::gAppManager() {
 	app = nullptr;
 	canvas = nullptr;
 	canvasmanager = nullptr;
+	guimanager = nullptr;
 	tempbasecanvas = nullptr;
 	ismouseentered = false;
 	buttonpressed[0] = false;
@@ -82,6 +83,7 @@ void gAppManager::runApp(std::string appName, gBaseApp *baseApp, int width, int 
 	tempbasecanvas->setScreenScaling(screenScaling);
 
 	canvasmanager = new gCanvasManager();
+	guimanager = new gGUIManager(app);
 
 	// Run app
 	app->setup();
@@ -94,6 +96,7 @@ void gAppManager::runApp(std::string appName, gBaseApp *baseApp, int width, int 
 	// Main loop
 	while(!window->getShouldClose()) {
 		canvasmanager->update();
+		if(guimanager->isframeset) guimanager->update();
 		app->update();
 		for (upi = 0; upi < gBasePlugin::usedplugins.size(); upi++) gBasePlugin::usedplugins[upi]->update();
 		canvas = canvasmanager->getCurrentCanvas();
@@ -105,6 +108,7 @@ void gAppManager::runApp(std::string appName, gBaseApp *baseApp, int width, int 
 				canvas->draw();
 			}
 		}
+		if(guimanager->isframeset) guimanager->draw();
 		window->update();
 
 		// Framerate adjustment
@@ -123,7 +127,11 @@ void gAppManager::setWindow(gBaseWindow *baseWindow) {
 	window = baseWindow;
 }
 
-gCanvasManager *gAppManager::getCanvasManager() {
+void gAppManager::setCursor(int cursorId) {
+	window->setCursor(cursorId);
+}
+
+gCanvasManager* gAppManager::getCanvasManager() {
 	return canvasmanager;
 }
 
@@ -151,6 +159,20 @@ std::string gAppManager::getAppName() {
 	return appname;
 }
 
+
+gGUIManager* gAppManager::getGUIManager() {
+	return guimanager;
+}
+
+void gAppManager::setCurrentGUIFrame(gGUIFrame *guiFrame) {
+	guimanager->setCurrentFrame(guiFrame);
+}
+
+gGUIFrame* gAppManager::getCurrentGUIFrame() {
+	return guimanager->getCurrentFrame();
+}
+
+
 int gAppManager::getFramerate() {
     return (int)(1000 / timediff2.count());
 }
@@ -161,6 +183,7 @@ double gAppManager::getElapsedTime() {
 
 void gAppManager::onCharEvent(unsigned int key) {
 #if defined(WIN32) || defined(LINUX) || defined(APPLE)
+	if(guimanager->isframeset) guimanager->charPressed(key);
 	for (upi = 0; upi < gBasePlugin::usedplugins.size(); upi++) gBasePlugin::usedplugins[upi]->charPressed(key);
 	canvasmanager->getCurrentCanvas()->charPressed(key);
 #endif
@@ -170,10 +193,12 @@ void gAppManager::onKeyEvent(int key, int action) {
 #if defined(WIN32) || defined(LINUX) || defined(APPLE)
 	switch(action) {
 	case GLFW_RELEASE:
+		if(guimanager->isframeset) guimanager->keyReleased(key);
 		for (upi = 0; upi < gBasePlugin::usedplugins.size(); upi++) gBasePlugin::usedplugins[upi]->keyReleased(key);
 		canvasmanager->getCurrentCanvas()->keyReleased(key);
 		break;
 	case GLFW_PRESS:
+		if(guimanager->isframeset) guimanager->keyPressed(key);
 		for (upi = 0; upi < gBasePlugin::usedplugins.size(); upi++) gBasePlugin::usedplugins[upi]->keyPressed(key);
 		canvasmanager->getCurrentCanvas()->keyPressed(key);
 		break;
@@ -188,9 +213,11 @@ void gAppManager::onMouseMoveEvent(double xpos, double ypos) {
 		ypos = gRenderer::scaleY(ypos);
 	}
 	if (pressed) {
+		if(guimanager->isframeset) guimanager->mouseDragged(xpos, ypos, pressed);
 		for (upi = 0; upi < gBasePlugin::usedplugins.size(); upi++) gBasePlugin::usedplugins[upi]->mouseDragged(xpos, ypos, pressed);
 		canvasmanager->getCurrentCanvas()->mouseDragged(xpos, ypos, pressed);
 	} else {
+		if(guimanager->isframeset) guimanager->mouseMoved(xpos, ypos);
 		for (upi = 0; upi < gBasePlugin::usedplugins.size(); upi++) gBasePlugin::usedplugins[upi]->mouseMoved(xpos, ypos);
 		canvasmanager->getCurrentCanvas()->mouseMoved(xpos, ypos);
 	}
@@ -207,6 +234,7 @@ void gAppManager::onMouseButtonEvent(int button, int action, double xpos, double
 			xpos = gRenderer::scaleX(xpos);
 			ypos = gRenderer::scaleY(ypos);
 		}
+		if(guimanager->isframeset) guimanager->mousePressed(xpos, ypos, button);
 		for (upi = 0; upi < gBasePlugin::usedplugins.size(); upi++) gBasePlugin::usedplugins[upi]->mousePressed(xpos, ypos, button);
 		canvasmanager->getCurrentCanvas()->mousePressed(xpos, ypos, button);
 		break;
@@ -217,6 +245,7 @@ void gAppManager::onMouseButtonEvent(int button, int action, double xpos, double
 			xpos = gRenderer::scaleX(xpos);
 			ypos = gRenderer::scaleY(ypos);
 		}
+		if(guimanager->isframeset) guimanager->mouseReleased(xpos, ypos, button);
 		for (upi = 0; upi < gBasePlugin::usedplugins.size(); upi++) gBasePlugin::usedplugins[upi]->mouseReleased(xpos, ypos, button);
 		canvasmanager->getCurrentCanvas()->mouseReleased(xpos, ypos, button);
 		break;
