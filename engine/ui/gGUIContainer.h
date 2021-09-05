@@ -25,7 +25,7 @@ public:
 	virtual int getCursor(int x, int y);
 	virtual void keyPressed(int key);
 	virtual void keyReleased(int key);
-	virtual void charPressed(unsigned int key);
+	virtual void charPressed(unsigned int codepoint);
 	virtual void mouseMoved(int x, int y);
 	virtual void mousePressed(int x, int y, int button);
 	virtual void mouseDragged(int x, int y, int button);

@@ -76,10 +76,10 @@ void gGUITextbox::keyPressed(int key) {
 	}
 }
 
-void gGUITextbox::charPressed(unsigned int key) {
+void gGUITextbox::charPressed(unsigned int codepoint) {
 	if(editmode) {
-//		gLogi("Textbox") << "charPressed:" << key;
-		text += gCodepointToStr(key);
+//		gLogi("Textbox") << "charPressed:" << codepoint;
+		text += gCodepointToStr(codepoint);
 		cursorposx = left + 4 + font->getStringWidth(text);
 		cursorposchar++;
 	}

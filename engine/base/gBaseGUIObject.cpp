@@ -126,7 +126,7 @@ void gBaseGUIObject::keyReleased(int key) {
 
 }
 
-void gBaseGUIObject::charPressed(unsigned int key) {
+void gBaseGUIObject::charPressed(unsigned int codepoint) {
 
 }
 

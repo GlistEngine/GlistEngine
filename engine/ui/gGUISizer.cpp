@@ -288,10 +288,10 @@ void gGUISizer::keyReleased(int key) {
 	}
 }
 
-void gGUISizer::charPressed(unsigned int key) {
+void gGUISizer::charPressed(unsigned int codepoint) {
 	for(int i = 0; i < linenum; i++) {
 		for(int j = 0; j < columnnum; j++) {
-			if(iscontrolset[i][j] && guicontrol[i][j]->isfocused) guicontrol[i][j]->charPressed(key);
+			if(iscontrolset[i][j] && guicontrol[i][j]->isfocused) guicontrol[i][j]->charPressed(codepoint);
 		}
 	}
 }
