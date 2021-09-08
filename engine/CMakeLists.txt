@@ -103,6 +103,7 @@ set(SRC_FILES
 	${ENGINE_DIR}/utils/gFile.cpp
 	${ENGINE_DIR}/utils/gHttpFile.cpp
 	${ENGINE_DIR}/graphics/gShader.cpp
+	${ENGINE_DIR}/graphics/gFog.cpp
 	${ENGINE_DIR}/core/gObject.cpp
 	${ENGINE_DIR}/core/gRenderer.cpp
 	${ENGINE_DIR}/core/gRenderObject.cpp
@@ -132,6 +133,17 @@ set(SRC_FILES
 	${ENGINE_DIR}/graphics/gRay.cpp
 	${ENGINE_DIR}/graphics/gBoundingBox.cpp
 	${ENGINE_DIR}/graphics/gRect.cpp
+	${ENGINE_DIR}/ui/gGUITextbox.cpp
+	${ENGINE_DIR}/ui/gGUIText.cpp
+	${ENGINE_DIR}/ui/gGUIButton.cpp
+	${ENGINE_DIR}/ui/gGUISizer.cpp
+	${ENGINE_DIR}/ui/gGUIPanel.cpp
+	${ENGINE_DIR}/ui/gGUIFrame.cpp
+	${ENGINE_DIR}/ui/gGUIControl.cpp
+	${ENGINE_DIR}/ui/gGUIContainer.cpp
+	${ENGINE_DIR}/ui/gGUIForm.cpp
+	${ENGINE_DIR}/base/gBaseGUIObject.cpp
+	${ENGINE_DIR}/core/gGUIManager.cpp
 	${ENGINE_DIR}/core/gAppObject.cpp
 	${ENGINE_DIR}/base/gBasePlugin.cpp
 	${ENGINE_DIR}/media/gBaseSound.cpp
@@ -161,6 +173,7 @@ set(INC_DIRS
 	${LIBS_DIR}/fmod/include
 	${LIBS_DIR}/utf8/include
 	${LIBS_DIR}/ghc/include
+    ${ENGINE_DIR}/ui
     ${ENGINE_DIR}/utils
     ${ENGINE_DIR}/types
     ${ENGINE_DIR}/media

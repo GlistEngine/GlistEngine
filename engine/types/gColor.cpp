@@ -54,10 +54,10 @@ void gColor::set(float r, float g, float b, float a) {
 }
 
 void gColor::set(int r, int g, int b, int a) {
-	this->r = (float)r / 255;
-	this->g = (float)g / 255;
-	this->b = (float)b / 255;
-	this->a = (float)a / 255;
+	this->r = (float)r / 255.0f;
+	this->g = (float)g / 255.0f;
+	this->b = (float)b / 255.0f;
+	this->a = (float)a / 255.0f;
 }
 
 void gColor::set(gColor* color) {

@@ -19,6 +19,7 @@
 #include <stdlib.h>
 #include <wchar.h>
 #include <vector>
+#include "gKeyCode.h"
 
 /*
 #ifndef LINUX
@@ -117,6 +118,8 @@ template <typename T>
 int gSign(T val) {
     return (T(0) < val) - (val < T(0));
 }
+
+std::string gCodepointToStr(unsigned int codepoint);
 
 class gUTF8Iterator{
 public:
