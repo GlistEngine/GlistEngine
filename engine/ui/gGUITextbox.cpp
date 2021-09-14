@@ -53,8 +53,8 @@ void gGUITextbox::draw() {
 }
 
 void gGUITextbox::keyPressed(int key) {
+//	gLogi("Textbox") << "keyPressed:" << key;
 	if(editmode) {
-//		gLogi("Textbox") << "keyPressed:" << key;
 		if(key == 259 && cursorposchar > 0) { // BACKDELETE
 			int cw = font->getStringWidth(text.substr(cursorposchar - 1, 1));
 			text = text.substr(0, cursorposchar - 1) + text.substr(cursorposchar, text.length() - cursorposchar);
@@ -77,60 +77,14 @@ void gGUITextbox::keyPressed(int key) {
 }
 
 void gGUITextbox::charPressed(unsigned int codepoint) {
+//	gLogi("Textbox") << "charPressed:" << codepoint;
+//	gLogi("Textbox") << "cp:" << gCodepointToStr(codepoint);
 	if(editmode) {
-//		gLogi("Textbox") << "charPressed:" << codepoint;
 		text += gCodepointToStr(codepoint);
 		cursorposx = left + 4 + font->getStringWidth(text);
 		cursorposchar++;
 	}
 }
-
-char gGUITextbox::toChars(unsigned int codePoint) {
-	if (isBmpCodePoint(codePoint)) {
-		gLogi("Textbox") << "BmpCodePoint";
-		return (char)codePoint;
-	} else {
-		gLogi("Textbox") << "toSurrogates";
-		return toSurrogates(codePoint);
-	}
-}
-
-bool gGUITextbox::isBmpCodePoint(unsigned int codePoint) {
-	return codePoint >> 8 == 0;
-}
-
-char gGUITextbox::toSurrogates(unsigned int codePoint) {
-	// We write elements "backwards" to guarantee all-or-nothing
-	char* c = new char[2];
-	c[1] = lowSurrogate(codePoint);
-	c[0] = highSurrogate(codePoint);
-//	std::string str = (std::string)c;
-//	std::string str;
-//	str.append("" + c[0]);
-//	str.append("" + c[1]);
-//	using convert_typeX = std::codecvt_utf8<wchar_t>;
-//	std::wstring_convert<convert_typeX, wchar_t> converterX;
-//	return converterX.to_bytes(str);
-	char c1 = *c;
-	const char* c2 = (const char*)c;
-//	delete c;
-	gLogi("Textbox") << "cs:" << (std::string)c2 << ", c[1]:" << c[1];
-	return c1;
-}
-
-const int gGUITextbox::MIN_HIGH_SURROGATE = 0x0000D800;
-const int gGUITextbox::MIN_SUPPLEMENTARY_CODE_POINT = 0x010000;
-const int gGUITextbox::MIN_LOW_SURROGATE  = 0x0000DC00;
-
-char gGUITextbox::highSurrogate(unsigned int codePoint) {
-	return (char) ((codePoint >> 10) + (MIN_HIGH_SURROGATE - (MIN_SUPPLEMENTARY_CODE_POINT >> 10)));
-}
-
-char gGUITextbox::lowSurrogate(unsigned int codePoint) {
-	return (char) ((codePoint & 0x3ff) + MIN_LOW_SURROGATE);
-}
-
-
 
 void gGUITextbox::mousePressed(int x, int y, int button) {
 	if(x >= left && x < right && y >= top && y < top + boxh) {

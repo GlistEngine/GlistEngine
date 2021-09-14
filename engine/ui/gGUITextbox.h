@@ -35,15 +35,6 @@ private:
 	std::string text;
 	int cursorshowcounter, cursorshowcounterlimit, cursorshowlimit;
 	bool editmode;
-
-	char toChars(unsigned int codePoint);
-	bool isBmpCodePoint(unsigned int codePoint);
-	char toSurrogates(unsigned int codePoint);
-	static const int MIN_HIGH_SURROGATE;
-	static const int MIN_SUPPLEMENTARY_CODE_POINT;
-	static const int MIN_LOW_SURROGATE;
-	char highSurrogate(unsigned int codePoint);
-	char lowSurrogate(unsigned int codePoint);
 };
 
 #endif /* UI_GGUITEXTBOX_H_ */
