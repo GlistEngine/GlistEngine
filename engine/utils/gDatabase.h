@@ -40,15 +40,29 @@ public:
 	bool hasSelectData();
 	int getSelectDataNum();
 
+	void getTableInfo(char*** sqlResult, int* rowNum, int* colNum);
+
 	void setDelimiter(std::string delimiter);
 	std::string getDelimiter();
 
+	std::vector<std::string> getTableNames();
+	std::vector<std::string> getColumnNames(std::string tableName);
+	std::string getColumnType(std::string tableName, std::string columnName);
 private:
 	sqlite3* db;
 	std::string fullpath;
 	static int num;
 	static std::queue<std::string> selectdata;
 	static std::string delimiter;
+	//parameters of
+	std::string zsql;
+	int rows;
+	int cols;
+	char **result;
+	int kt;
+	int pipecounter = 0;
+	std::string** resultstring;
+	std::vector<std::string> columnList;
 };
 
 #endif /* UTILS_GDATABASE_H_ */
