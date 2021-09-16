@@ -40,13 +40,54 @@ public:
 	bool hasSelectData();
 	int getSelectDataNum();
 
+	/*
+	 * Recieves all table infos from a database
+	 *
+	 * By sending variable pointers this method will give you all table infos from a database.
+	 *
+	 * @return since you sending pointer as input, it will modify and alter variables with results so you can directly use same variable.
+	 */
 	void getTableInfo(char*** sqlResult, int* rowNum, int* colNum);
 
 	void setDelimiter(std::string delimiter);
 	std::string getDelimiter();
 
+	/*
+	 * Receives table names from database
+	 *
+	 * This metod give you table lists in a database.
+	 *
+	 * Using sql query for execute() metod and getting table list as result
+	 *
+	 * @param data which table to get info so metod will get full column list
+	 * @param datastorage selecting column to recieve which type of this column name
+	 * @param temporarystring storing table names which metod finds
+	 * @param data returning tablenames info as vector
+	 *
+	 * @return resultstring return back column type of columnName
+	 */
 	std::vector<std::string> getTableNames();
+
+	/* Gives all column names from table info
+	 *
+	 * Receives column names from @tableName after database loaded.
+	 *
+	 * After load database and give table name as input metod store all column names of that table
+	 *
+	 * @return sending back colunm name list as string vector
+	 */
 	std::vector<std::string> getColumnNames(std::string tableName);
+
+	/*
+	 * Receives columnType from given colunmName and tableName
+	 *
+	 * This metod give you column type from senden table name and column name.
+	 *
+	 * @param tableName which table to get info so metod will get full column list
+	 * @param columnName selecting column to recieve which type of this column name
+	 *
+	 * @return resultstring return back column type of columnName
+	 */
 	std::string getColumnType(std::string tableName, std::string columnName);
 private:
 	sqlite3* db;

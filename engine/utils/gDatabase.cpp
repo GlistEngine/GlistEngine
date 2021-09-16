@@ -72,7 +72,7 @@ std::string gDatabase::getSelectData() {
 	if (selectdata.empty()) return "";
 
 	std::string res = selectdata.front();
-	selectdata.pop();//silen
+	selectdata.pop();
 	return res;
 }
 
@@ -83,25 +83,11 @@ void gDatabase::getTableInfo(char*** sqlResult, int* rowNum, int* colNum) {
 	gLogi("gDatabase") << "getTableInfo 2";
 }
 
-/*
- * Receive table names from database
- *
- * This metod give you table list in database.
- *
- * Using sql query for execute() metod and getting table list as result
- *
- * @param data which table to get info so metod will get full column list
- * @param datayedek selecting column to recieve which type of this column name
- * @param temporarystring storing table names which metod finds
- * @param data returning tablenames info as vector
- *
- * @return resultstring return back column type of columnName
- */
 
 std::vector<std::string> gDatabase::getTableNames() {
 	std::vector<std::string> data;
 	std::string temporarystring = "";
-	std::vector<std::string> datayedek;
+	std::vector<std::string> datastorage;
 	zsql = "SELECT * FROM sqlite_master WHERE type = 'table'";
 	execute(zsql);
 
@@ -111,26 +97,17 @@ std::vector<std::string> gDatabase::getTableNames() {
 		temporarystring = selectdata.front();
 		selectdata.pop();
 		//char read
-		datayedek = gSplitString(temporarystring, "|");
-		data.push_back(datayedek[2]);
+		datastorage = gSplitString(temporarystring, "|");
+		data.push_back(datastorage[2]);
 		for(int i = 0; i < data.size(); i++)
 		gLogi("Sonuc: ") << data[i];
 	}
-	//std::string *tablename;
+
 	return data;
 
 }
 
-/*
- * Receive columnType from given colunmName and tableName
- *
- * This metod give you column type from senden table name and column name.
- *
- * @param tableName which table to get info so metod will get full column list
- * @param columnName selecting column to recieve which type of this column name
- *
- * @return resultstring return back column type of columnName
- */
+
 std::string gDatabase::getColumnType(std::string tableName, std::string columnName) {
 	zsql = "SELECT sql FROM sqlite_master WHERE tbl_name = \'" + tableName + "\' AND type = \'table\'";
 	execute(zsql);
@@ -177,16 +154,10 @@ std::string gDatabase::getColumnType(std::string tableName, std::string columnNa
 				endpoint = 0;
 			}
 		}
+		return "NULL";
 }
 
-/* Give all column names from table info
- *
- * Receive column names from @tableName after database loaded.
- *
- * After load database and give table name as input metod store all column names of that table
- *
- * @return sending back colunm name list as string vector
- */
+
 std::vector<std::string> gDatabase::getColumnNames(std::string tableName) {
 	zsql = "SELECT sql FROM sqlite_master WHERE tbl_name = \'" + tableName + "\' AND type = \'table\'";
 	execute(zsql);

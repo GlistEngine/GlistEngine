@@ -21,6 +21,7 @@ gLocalization::~gLocalization() {
 	localizedb.close();
 }
 
+
 void gLocalization::loadDatabase(std::string database) {
 	//Database will open for reading
 	currentlanguage = 1;
@@ -85,25 +86,19 @@ void gLocalization::columnLister(std::string tableinfo) {
 	}
 }
 
-/*
- * setting current language
- * @wordfortranslate "string" you send for translate
- */
+
 void gLocalization::setCurrentLanguage(int languageId) {
 	currentlanguage = languageId;
 }
 
-/*
- * It will give you current word equally to your "word" which you give
- *
- */
+
 std::string gLocalization::getCurrentLanguage() {
 	return columnList[currentlanguage];
 }
 
-//kullanýlmýyor
+
 int gLocalization::getLangId() {
-	return 0;
+	return currentlanguage;
 }
 
 
@@ -113,14 +108,10 @@ std::string gLocalization::getColumnData(std::string columnname) {//sorunu var
 	while(localizedb.getSelectData() != "") {
 		resultstring = localizedb.getSelectData();
 	}
-	//return columnList[sayi];
 	return resultstring;
 }
 
-/*
- * Metod for translating words to current language it will return string
- * @ word Sending string for translate
- */
+
 std::string gLocalization::localizeWord(std:: string word) {
 	gLogi("GameCanvas") << "Response:" << localizedb.getSelectData();
 
