@@ -23,6 +23,11 @@ class gSphere: public gMesh {
 public:
 	gSphere(int xSegmentNum = 64, int ySegmentNum = 64);
 	virtual ~gSphere();
+
+	void draw();
+	void drawSphere(int xSegmentNum = 64, int ySegmentNum = 64);
+
+	void setSpherePoints(int xSegmentNum = 64, int ySegmentNum = 64);
 };
 
 #endif /* GRAPHICS_PRIMITIVES_GSPHERE_H_ */

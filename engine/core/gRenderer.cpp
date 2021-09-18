@@ -12,6 +12,7 @@
 #include "gCircle.h"
 #include "gRectangle.h"
 #include "gBox.h"
+#include "gSphere.h"
 
 
 const int gRenderer::SCREENSCALING_NONE = 0;
@@ -105,6 +106,12 @@ void gDrawBox(glm::mat4 transformationMatrix, bool isFilled) {
 	if(!isFilled) boxmesh.setDrawMode(gMesh::DRAWMODE_LINELOOP);
 	boxmesh.setTransformationMatrix(transformationMatrix);
 	boxmesh.draw();
+}
+
+void gDrawSphere(int xSegmentNum, int ySegmentNum,float xPos ,float yPos, float zPos) {
+	gSphere spheremesh;
+	spheremesh.setPosition(xPos , yPos, zPos);
+	spheremesh.drawSphere(xSegmentNum, ySegmentNum);
 }
 
 gRenderer::gRenderer() {

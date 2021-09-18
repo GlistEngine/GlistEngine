@@ -51,6 +51,7 @@ void gDrawArrow(float x1, float y1, float length, float angle, float tipLength, 
 void gDrawRectangle(float x, float y, float w, float h, bool isFilled = false);
 void gDrawBox(float x, float y, float z, float w = 1.0f, float h = 1.0f, float d = 1.0f, bool isFilled = false);
 void gDrawBox(glm::mat4 transformationMatrix, bool isFilled = false);
+void gDrawSphere(int xSegmentNum, int ySegmentNum, float xPos ,float yPos, float zPos);
 
 class gRenderer: public gObject {
 public:
