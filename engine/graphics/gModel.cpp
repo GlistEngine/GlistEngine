@@ -72,6 +72,7 @@ void gModel::loadModelFile(std::string fullPath) {
 
     // process ASSIMP's root node recursively
     processNode(scene->mRootNode, scene);
+    initialboundingbox = getBoundingBox();
     if (isanimated) setAnimationFramerate(animationframerate);
     animate(0);
 }
@@ -240,8 +241,8 @@ void gModel::processNode(aiNode *node, const aiScene *scene) {
 		// the node object only contains indices to index the actual objects in the scene.
 		// the scene contains all the data, node is just to keep stuff organized (like relations between nodes).
 		aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-		gLogi("gModel") << "Loading mesh:" << mesh->mName.C_Str();
-		gSkinnedMesh modelmesh = processMesh(mesh, scene);
+		gLogi("gModel") << "Loading mesh:" << mesh->mName.C_Str() << ", tm:" << node->mTransformation[0];
+		gSkinnedMesh modelmesh = processMesh(mesh, scene, node->mTransformation);
 //		if (isanimated) updateBones(&modelmesh, mesh, scene);
 //		modelmesh.setParent(this);
 		meshes.push_back(modelmesh);
@@ -254,10 +255,11 @@ void gModel::processNode(aiNode *node, const aiScene *scene) {
 
 }
 
-gSkinnedMesh gModel::processMesh(aiMesh *mesh, const aiScene *scene) {
+gSkinnedMesh gModel::processMesh(aiMesh *mesh, const aiScene *scene, aiMatrix4x4 matrix) {
     // data to fill
     std::vector<gVertex> vertices;
     std::vector<unsigned int> indices;
+    glm::mat4 mat = convertMatrix(matrix);
 
     // walk through each of the mesh's vertices
     for(unsigned int i = 0; i < mesh->mNumVertices; i++) {
@@ -320,6 +322,7 @@ gSkinnedMesh gModel::processMesh(aiMesh *mesh, const aiScene *scene) {
     gSkinnedMesh gmesh;
     gmesh.setName(mesh->mName.C_Str());
     gmesh.setVertices(vertices,  indices);
+//    gmesh.setTransformationMatrix(convertMatrix(matrix));
 
     loadMaterialTextures(&gmesh, material, aiTextureType_DIFFUSE, gTexture::TEXTURETYPE_DIFFUSE);
     loadMaterialTextures(&gmesh, material, aiTextureType_SPECULAR, gTexture::TEXTURETYPE_SPECULAR);
@@ -741,7 +744,19 @@ gBoundingBox gModel::getBoundingBox() {
 		}
 	}
 
-	return gBoundingBox(bbminx, bbminy, bbminz, bbmaxx, bbmaxy, bbmaxz);
+	return gBoundingBox(bbminx, bbminy, bbminz, bbmaxx, bbmaxy, bbmaxz, localtransformationmatrix);
 }
 
+glm::mat4 gModel::convertMatrix(const aiMatrix4x4 &aiMat) {
+	return {
+	aiMat.a1, aiMat.b1, aiMat.c1, aiMat.d1,
+	aiMat.a2, aiMat.b2, aiMat.c2, aiMat.d2,
+	aiMat.a3, aiMat.b3, aiMat.c3, aiMat.d3,
+	aiMat.a4, aiMat.b4, aiMat.c4, aiMat.d4
+	};
+}
 
+gBoundingBox gModel::getInitialBoundingBox() {
+	initialboundingbox.setTransformationMatrix(localtransformationmatrix);
+	return initialboundingbox;
+}

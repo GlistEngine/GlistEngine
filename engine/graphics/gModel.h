@@ -93,12 +93,13 @@ public:
 	bool isVertexAnimationStoredOnVram();
 	void makeVertexAnimated(bool storeOnVram = true);
 
+    gBoundingBox getInitialBoundingBox();
 
 private:
 	const aiScene* scene;
 	void loadModelFile(std::string fullPath);
 	void processNode(aiNode *node, const aiScene *scene);
-	gSkinnedMesh processMesh(aiMesh *mesh, const aiScene *scene);
+	gSkinnedMesh processMesh(aiMesh *mesh, const aiScene *scene, aiMatrix4x4 matrix);
 	void loadMaterialTextures(gSkinnedMesh* mesh, aiMaterial *mat, aiTextureType type, int textureType);
 	void updateBones(gSkinnedMesh* gmesh, aiMesh* aimesh);
 	void updateVbo(gSkinnedMesh* gmesh);
@@ -123,6 +124,9 @@ private:
     std::vector<gVertex> bbvertices;
     glm::vec3 bbvpos;
     gVertex bbv;
+
+    glm::mat4 convertMatrix(const aiMatrix4x4 &aiMat);
+    gBoundingBox initialboundingbox;
 };
 
 #endif /* ENGINE_GRAPHICS_GMODEL_H_ */
