@@ -74,3 +74,12 @@ void gRay::link(gMesh* mesh, float rayScale, bool isNormalized, float dx, float 
 void gRay::unlink() {
 	islinked = false;
 }
+
+void gRay::draw() {
+	originpoint = getOrigin();
+	directionpoint = originpoint + getDirection();
+	gColor oldrendercolor = *renderer->getColor();
+	renderer->setColor(0, 255, 0);
+	gDrawLine(originpoint.x, originpoint.y, originpoint.z, directionpoint.x, directionpoint.y, directionpoint.z);
+	renderer->setColor(oldrendercolor);
+}

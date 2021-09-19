@@ -17,6 +17,8 @@
 #ifndef GRAPHICS_GRAY_H_
 #define GRAPHICS_GRAY_H_
 
+#include "gRenderObject.h"
+
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -26,7 +28,7 @@ class gMesh;
 class gBoundingBox;
 
 
-class gRay {
+class gRay : public gRenderObject {
 public:
 	gRay();
 	gRay(const glm::vec3& originPoint, const glm::vec3& directionVector);
@@ -44,6 +46,8 @@ public:
 	void link(gMesh* mesh, float rayScale = 1.0f, bool isNormalized = false, float dx = 0.0f, float dy = 0.0f, float dz = 0.0f);
 	void unlink();
 
+	void draw();
+
 private:
 	glm::vec3 origin, direction;
 	bool islinked;
@@ -52,6 +56,7 @@ private:
 	bool isnormalized;
 	glm::vec3 pdiff;
 	float length;
+	glm::vec3 originpoint, directionpoint;
 };
 
 #endif /* GRAPHICS_GRAY_H_ */
