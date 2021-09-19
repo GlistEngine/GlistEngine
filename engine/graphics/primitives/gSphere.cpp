@@ -7,7 +7,7 @@
 
 #include <gSphere.h>
 
-gSphere::gSphere(int xSegmentNum, int ySegmentNum) {
+gSphere::gSphere(int xSegmentNum, int ySegmentNum, bool isFilled) {
 	if (xSegmentNum < 3) xSegmentNum = 3;
 	if (ySegmentNum < 3) ySegmentNum = 2;
 
@@ -73,7 +73,8 @@ gSphere::gSphere(int xSegmentNum, int ySegmentNum) {
 	}
 
 	setVertices(verticesb, indicesb);
-	setDrawMode(gMesh::DRAWMODE_TRIANGLESTRIP);
+	if(!isFilled) setDrawMode(gMesh::DRAWMODE_LINESTRIP);
+	else setDrawMode(gMesh::DRAWMODE_TRIANGLESTRIP);
 
 }
 
@@ -83,12 +84,12 @@ gSphere::~gSphere() {
 void gSphere::draw() {
 	gMesh::draw();
 }
-void gSphere::drawSphere(int xSegmentNum, int ySegmentNum) {
-	setSpherePoints(xSegmentNum, ySegmentNum);
+void gSphere::drawSphere(int xSegmentNum, int ySegmentNum, bool isFilled) {
+	setSpherePoints(xSegmentNum, ySegmentNum, isFilled);
 	gMesh::draw();
 }
 
-void gSphere::setSpherePoints(int xSegmentNum, int ySegmentNum) {
+void gSphere::setSpherePoints(int xSegmentNum, int ySegmentNum, bool isFilled) {
 
 	if (xSegmentNum < 3) xSegmentNum = 3;
 	if (ySegmentNum < 3) ySegmentNum = 2;
@@ -155,7 +156,8 @@ void gSphere::setSpherePoints(int xSegmentNum, int ySegmentNum) {
 	}
 
 	setVertices(verticesb, indicesb);
-	setDrawMode(gMesh::DRAWMODE_TRIANGLESTRIP);
+	if(!isFilled) setDrawMode(gMesh::DRAWMODE_LINESTRIP);
+	else setDrawMode(gMesh::DRAWMODE_TRIANGLESTRIP);
 }
 
 

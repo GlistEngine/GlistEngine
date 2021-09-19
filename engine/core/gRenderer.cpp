@@ -108,10 +108,11 @@ void gDrawBox(glm::mat4 transformationMatrix, bool isFilled) {
 	boxmesh.draw();
 }
 
-void gDrawSphere(int xSegmentNum, int ySegmentNum,float xPos ,float yPos, float zPos) {
+void gDrawSphere(float xPos, float yPos, float zPos, int xSegmentNum, int ySegmentNum, float scale, bool isFilled) {
 	gSphere spheremesh;
 	spheremesh.setPosition(xPos , yPos, zPos);
-	spheremesh.drawSphere(xSegmentNum, ySegmentNum);
+	spheremesh.scale(scale);
+	spheremesh.drawSphere(xSegmentNum, ySegmentNum, isFilled);
 }
 
 gRenderer::gRenderer() {

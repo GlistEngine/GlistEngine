@@ -21,13 +21,13 @@
 
 class gSphere: public gMesh {
 public:
-	gSphere(int xSegmentNum = 64, int ySegmentNum = 64);
+	gSphere(int xSegmentNum = 64, int ySegmentNum = 64, bool isFilled = true);
 	virtual ~gSphere();
 
 	void draw();
-	void drawSphere(int xSegmentNum = 64, int ySegmentNum = 64);
+	void drawSphere(int xSegmentNum = 64, int ySegmentNum = 64, bool isFilled = true);
 
-	void setSpherePoints(int xSegmentNum = 64, int ySegmentNum = 64);
+	void setSpherePoints(int xSegmentNum = 64, int ySegmentNum = 64, bool isFilled = true);
 };
 
 #endif /* GRAPHICS_PRIMITIVES_GSPHERE_H_ */
