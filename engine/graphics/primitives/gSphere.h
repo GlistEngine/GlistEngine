@@ -21,7 +21,7 @@
 
 class gSphere: public gMesh {
 public:
-	gSphere(int xSegmentNum = 64, int ySegmentNum = 64);
+	gSphere(int xSegmentNum = 64, int ySegmentNum = 64, bool isFilled = true);
 	virtual ~gSphere();
 };
 
