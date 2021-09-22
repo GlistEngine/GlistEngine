@@ -121,6 +121,10 @@ int gSign(T val) {
 
 std::string gCodepointToStr(unsigned int codepoint);
 
+std::string gEncodeBase64(unsigned const char* input, int len);
+std::string gDecodeBase64(const std::string& encoded_string);
+bool gIsBase64(char c);
+
 class gUTF8Iterator{
 public:
 	gUTF8Iterator(const std::string & str);
