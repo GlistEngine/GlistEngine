@@ -18,7 +18,12 @@
 #define GRAPHICS_GBOUNDINGBOX_H_
 
 #include <algorithm>
+#include "gRenderObject.h"
 #include "gRay.h"
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/quaternion.hpp>
 
 
 /**
@@ -27,10 +32,11 @@
  * automatically after setting min and max values. One can use gBoundingBox in calculating broad distance
  * intersection(rejection test) of the objects.
  */
-class gBoundingBox {
+class gBoundingBox : public gRenderObject {
 public:
 	gBoundingBox();
 	gBoundingBox(float minX, float minY, float minZ, float maxX, float maxY, float maxZ);
+	gBoundingBox(float minX, float minY, float minZ, float maxX, float maxY, float maxZ, glm::mat4 transformationMatrix);
 	gBoundingBox(const gBoundingBox& b);
 	virtual ~gBoundingBox();
 
@@ -68,11 +74,22 @@ public:
 	float getWidth()  const;
 	float getHeight() const;
 	float getDepth() const;
+	glm::vec3 getOrigin() const;
+
+	void setTransformationMatrix(glm::mat4 matrix);
+	bool intersectsOBB(gRay* ray);
+	float distanceOBB(gRay* ray);
+
+	void draw();
+	void drawOBB();
 
 private:
 	static const int componentnum = 3;
 	glm::vec3 minf, maxf;
 	float width, height, depth;
+	float widthhalf, heighthalf, depthhalf;
+	glm::vec3 origin;
+	glm::mat4 transformationmatrix;
 
 	float inverted, direction1, direction2, tempdirection;
 	float dimlo, dimhi, dimtemp;
