@@ -13,19 +13,11 @@
 
 class gSpriteAnimator : public gObject{
 public:
-	static const int CONDITION_LESS, CONDITION_GREATER, CONDITION_EQUAL, CONDITION_FALSE, CONDITION_TRUE;
-
 	gSpriteAnimator();
 	virtual ~gSpriteAnimator();
 
 	void addAnimation(int animationId, gSpriteAnimation* animation);
 	void changeAnimation(int animationId);
-
-	void addAnimationTriggerInt(int animationId, int condition, int* var1, int* var2);
-	void addAnimationTriggerFloat(int animationId, int condition, long long* var1, long long* var2);
-	void addAnimationTriggerFloat(int animationId, int condition, float* var1, float* var2);
-	void addAnimationTriggerDouble(int animationId, int condition, double* var1, double* var2);
-	void addAnimationTriggerBool(int animationId, int condition, bool* var);
 
 	void update();
 	void draw(int x, int y);
@@ -33,6 +25,7 @@ public:
 
 private:
 	int currentanimation;
+	std::vector<int> animationids;
 	std::map<int, gSpriteAnimation*> animations;
 };
 

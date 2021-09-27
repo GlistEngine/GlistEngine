@@ -7,12 +7,6 @@
 
 #include "gSpriteAnimator.h"
 
-const int gSpriteAnimator::CONDITION_LESS = 0;
-const int gSpriteAnimator::CONDITION_GREATER = 1;
-const int gSpriteAnimator::CONDITION_EQUAL = 2;
-const int gSpriteAnimator::CONDITION_FALSE = 3;
-const int gSpriteAnimator::CONDITION_TRUE = 4;
-
 gSpriteAnimator::gSpriteAnimator() {
 	currentanimation = 0;
 }
@@ -22,6 +16,7 @@ gSpriteAnimator::~gSpriteAnimator() {
 }
 
 void gSpriteAnimator::addAnimation(int animationId, gSpriteAnimation* animation) {
+	animationids.push_back(animationId);
 	animations.insert({animationId, animation});
 }
 
@@ -30,6 +25,12 @@ void gSpriteAnimator::changeAnimation(int animationId) {
 }
 
 void gSpriteAnimator::update() {
+	for(int i = 0; i < animationids.size(); i++) {
+		if(animations[animationids[i]]->isConditionTriggered()) {
+			animations[currentanimation]->reset();
+			currentanimation = animationids[i];
+		}
+	}
 	animations[currentanimation]->update();
 }
 
