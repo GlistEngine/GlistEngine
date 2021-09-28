@@ -89,6 +89,12 @@ private:
 	std::vector<gImage*> frames;
 };
 
+#define TRIGGER_CONDITION_LESS gSpriteAnimation::CONDITION_LESS
+#define TRIGGER_CONDITION_GREATER gSpriteAnimation::CONDITION_GREATER
+#define TRIGGER_CONDITION_EQUAL gSpriteAnimation::CONDITION_EQUAL
+#define TRIGGER_CONDITION_FALSE gSpriteAnimation::CONDITION_FALSE
+#define TRIGGER_CONDITION_TRUE gSpriteAnimation::CONDITION_TRUE
+
 class gAnimationTriggerBase {
 public:
 	virtual ~gAnimationTriggerBase();
