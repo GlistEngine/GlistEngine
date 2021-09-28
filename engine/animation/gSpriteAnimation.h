@@ -50,6 +50,24 @@ gSpriteAnimation* createSpriteAnimation(gImage* frameList, int listSize);
  */
 gSpriteAnimation* createSpriteAnimation(gImage* frameList, int listSize, gAnimationTriggerBase* animationTrigger);
 
+/**
+ * This class can be used to ease the use and declarations of animations. Usually,
+ * to create an animation, developers have to manually declare an array of gImage's
+ * and load images into those. Then somewhere in the code, a logic has to be created
+ * to animate those gImage's.
+ *
+ * Using this class alone is not recommended, but still can be used if you want to
+ * manually arrange multiple animation's condition triggers. Instead, this class
+ * should be used with a gSpriteAnimator, and should be added as a animation inside
+ * that class.
+ *
+ * To create a gSpriteAnimation, the overloaded createSpriteAnimation functions can
+ * be used for creating a gSpriteAnimation with different type of settings and
+ * initializations.
+ *
+ * For now, the class only supports only one condition trigger, but multiple triggers
+ * are coming soon.
+ */
 class gSpriteAnimation : public gObject {
 public:
 	static const int CONDITION_LESS, CONDITION_GREATER, CONDITION_EQUAL, CONDITION_FALSE, CONDITION_TRUE;

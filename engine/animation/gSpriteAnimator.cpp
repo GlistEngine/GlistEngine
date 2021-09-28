@@ -9,15 +9,21 @@
 
 gSpriteAnimator::gSpriteAnimator() {
 	currentanimation = 0;
+	autoassignedids = 0;
 }
 
 gSpriteAnimator::~gSpriteAnimator() {
 	// TODO Auto-generated destructor stub
 }
 
-void gSpriteAnimator::addAnimation(int animationId, gSpriteAnimation* animation) {
-	animationids.push_back(animationId);
-	animations.insert({animationId, animation});
+int gSpriteAnimator::addAnimation(gSpriteAnimation* animation, int animationId) {
+	int animid;
+	if(animationId == -1) animid = autoassignedids++;
+	else animid = animationId;
+	animationids.push_back(animid);
+	animations.insert({animid, animation});
+
+	return animid;
 }
 
 void gSpriteAnimator::changeAnimation(int animationId) {
