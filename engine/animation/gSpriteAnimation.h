@@ -12,68 +12,43 @@
 
 class gSpriteAnimation;
 class gAnimationTriggerBase;
-class gAnimationTriggerInt;
-class gAnimationTriggerLong;
-class gAnimationTriggerFloat;
-class gAnimationTriggerDouble;
-class gAnimationTriggerBool;
 
-/*
- * After calling this function, users should use "delete" to manually delete
- * the dynamically created gSpriteAnimation to avoid memory leaks or excessive
- * amounts of memory usage.
+/**
+ * This function can be used to create an empty gSpriteAnimation pointer.
  *
- * This function should be used when there is already an allocated gImage array.
- *
- * @param frameList The pointer to the first member of the gImage array/pointer;
- * @param listSize The size of the image array;
+ * @return Dynamically created gSpriteAnimation's pointer.
  */
 gSpriteAnimation* createSpriteAnimation();
+
+/**
+ * This function can be used to create a gSpriteAnimation with a pre-allocated
+ * gImage list. So that way you have more control over the images, and don't have
+ * to manually add frames into the animation via addFrame function.
+ *
+ * @param frameList Either the pointer to the first item of the list, or the list.
+ * @param listSize The number of how many gImage's inside the list.
+ *
+ * @return Dynamically created gSpriteAnimation's pointer.
+ */
 gSpriteAnimation* createSpriteAnimation(gImage* frameList, int listSize);
+
+/**
+ * This function can be used to create a gSpriteAnimation with a pre-allocated
+ * gImage list and a gAnimationTrigger. So that way you have more control over
+ * the images, and don't have to manually add frames into the animation via
+ * addFrame function.
+ *
+ * To create the gAnimationTrigger, simply use createTrigger function with the
+ * required parameters.
+ *
+ * @see createTrigger()
+ *
+ * @param frameList Either the pointer to the first item of the list, or the list.
+ * @param listSize The number of how many gImage's inside the list.
+ *
+ * @return Dynamically created gSpriteAnimation's pointer.
+ */
 gSpriteAnimation* createSpriteAnimation(gImage* frameList, int listSize, gAnimationTriggerBase* animationTrigger);
-
-gAnimationTriggerBase* createIntTrigger(int condition, int* var1, int* var2);
-gAnimationTriggerBase* createLongTrigger(int condition, long long* var1, long long* var2);
-gAnimationTriggerBase* createFloatTrigger(int condition, float* var1, float* var2);
-gAnimationTriggerBase* createDoubleTrigger(int condition, double* var1, double* var2);
-gAnimationTriggerBase* createBoolTrigger(int condition, bool* var1);
-
-class gAnimationTriggerBase {
-public:
-	virtual ~gAnimationTriggerBase();
-
-	void addTrigger(int condition, void* var1, void* var2 = nullptr);
-	virtual bool isConditionTriggered() = 0;
-protected:
-	int condition;
-	void *var1;
-	void *var2;
-};
-
-class gAnimationTriggerInt : public gAnimationTriggerBase {
-public:
-	bool isConditionTriggered();
-};
-
-class gAnimationTriggerLong : public gAnimationTriggerBase {
-public:
-	bool isConditionTriggered();
-};
-
-class gAnimationTriggerFloat : public gAnimationTriggerBase {
-public:
-	bool isConditionTriggered();
-};
-
-class gAnimationTriggerDouble : public gAnimationTriggerBase {
-public:
-	bool isConditionTriggered();
-};
-
-class gAnimationTriggerBool : public gAnimationTriggerBase {
-public:
-	bool isConditionTriggered();
-};
 
 class gSpriteAnimation : public gObject {
 public:
@@ -113,5 +88,62 @@ private:
 
 	std::vector<gImage*> frames;
 };
+
+class gAnimationTriggerBase {
+public:
+	virtual ~gAnimationTriggerBase();
+
+	void addTrigger(int condition, void* var1, void* var2 = nullptr);
+	virtual bool isConditionTriggered() = 0;
+protected:
+	int condition;
+	void *var1;
+	void *var2;
+};
+
+template<typename T>
+class gAnimationTrigger : public gAnimationTriggerBase {
+public:
+	bool isConditionTriggered() {
+		int value1 = *((int*)var1);
+		int value2;
+		if(var2 != nullptr) value2 = *((int*)var2);
+
+		if(condition == gSpriteAnimation::CONDITION_LESS) {
+			return value1 < value2;
+		}
+		else if (condition == gSpriteAnimation::CONDITION_GREATER) {
+			return value1 > value2;
+		}
+		else if (condition == gSpriteAnimation::CONDITION_EQUAL) {
+			return value1 == value2;
+		}
+		else if (condition == gSpriteAnimation::CONDITION_FALSE) {
+			return !value1;
+		}
+		else if (condition == gSpriteAnimation::CONDITION_TRUE) {
+			return value1;
+		}
+		return false;
+	}
+};
+
+/**
+ * This function creates a condition trigger that can be used with a gSpriteAnimation.
+ *
+ * @param condition A condition enumeration that is declared in gSpriteAnimation.
+ * @param var1 Pointer to the first variable
+ * @param var2 Pointer to the second variable (Optional)
+ *
+ * @return Pointer to the dynamically created gAnimationTrigger.
+ */
+template<typename T>
+gAnimationTriggerBase* createTrigger(int condition, T* var1, T* var2 = nullptr) {
+	gAnimationTriggerBase* trigger = new gAnimationTrigger<T>();
+
+	trigger->addTrigger(condition, var1, var2);
+
+	return trigger;
+}
 
 #endif /* ANIMATION_GANIMATION_H_ */

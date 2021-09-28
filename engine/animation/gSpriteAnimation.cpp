@@ -35,46 +35,6 @@ gSpriteAnimation* createSpriteAnimation(gImage* frameList, int listSize, gAnimat
 	return animation;
 }
 
-gAnimationTriggerBase* createIntTrigger(int condition, int* var1, int* var2) {
-	gAnimationTriggerBase* trigger = new gAnimationTriggerInt();
-
-	trigger->addTrigger(condition, var1, var2);
-
-	return trigger;
-}
-
-gAnimationTriggerBase* createLongTrigger(int condition, long long* var1, long long* var2) {
-	gAnimationTriggerBase* trigger = new gAnimationTriggerLong();
-
-	trigger->addTrigger(condition, var1, var2);
-
-	return trigger;
-}
-
-gAnimationTriggerBase* createFloatTrigger(int condition, float* var1, float* var2) {
-	gAnimationTriggerBase* trigger = new gAnimationTriggerFloat();
-
-	trigger->addTrigger(condition, var1, var2);
-
-	return trigger;
-}
-
-gAnimationTriggerBase* createDoubleTrigger(int condition, double* var1, double* var2) {
-	gAnimationTriggerBase* trigger = new gAnimationTriggerDouble();
-
-	trigger->addTrigger(condition, var1, var2);
-
-	return trigger;
-}
-
-gAnimationTriggerBase* createBoolTrigger(int condition, bool* var1) {
-	gAnimationTriggerBase* trigger = new gAnimationTriggerBool();
-
-	trigger->addTrigger(condition, var1);
-
-	return trigger;
-}
-
 gSpriteAnimation::gSpriteAnimation() {
 	fps = 0;
 	framecount = 0;
@@ -91,6 +51,7 @@ gSpriteAnimation::~gSpriteAnimation() {
 		delete frames[i];
 	}
 	frames.clear();
+	delete trigger;
 }
 
 void gSpriteAnimation::addFrame(gImage* frame) {
@@ -168,70 +129,4 @@ void gAnimationTriggerBase::addTrigger(int condition, void* var1, void* var2) {
 	this->var1 = var1;
 	this->var2 = var2;
 	this->condition = condition;
-}
-
-bool gAnimationTriggerInt::isConditionTriggered() {
-	int value1 = *((int*)var1);
-	int value2 = *((int*)var2);
-
-	if(condition == gSpriteAnimation::CONDITION_LESS) {
-		return value1 < value2;
-	}
-	else if (condition == gSpriteAnimation::CONDITION_GREATER) {
-		return value1 > value2;
-	}
-	else if (condition == gSpriteAnimation::CONDITION_EQUAL) {
-		return value1 == value2;
-	}
-	return false;
-}
-
-bool gAnimationTriggerLong::isConditionTriggered() {
-	long value1 = *((long*)var1);
-	long value2 = *((long*)var2);
-	if(condition == gSpriteAnimation::CONDITION_LESS) {
-		return value1 < value2;
-	}
-	else if (condition == gSpriteAnimation::CONDITION_GREATER) {
-		return value1 > value2;
-	}
-	else if (condition == gSpriteAnimation::CONDITION_EQUAL) {
-		return value1 == value2;
-	}
-	return false;
-}
-
-bool gAnimationTriggerFloat::isConditionTriggered() {
-	float value1 = *((float*)var1);
-	float value2 = *((float*)var2);
-	if(condition == gSpriteAnimation::CONDITION_LESS) {
-		return value1 < value2;
-	}
-	else if (condition == gSpriteAnimation::CONDITION_GREATER) {
-		return value1 > value2;
-	}
-	else if (condition == gSpriteAnimation::CONDITION_EQUAL) {
-		return value1 == value2;
-	}
-	return false;
-}
-
-bool gAnimationTriggerDouble::isConditionTriggered() {
-	double value1 = *((double*)var1);
-	double value2 = *((double*)var2);
-	if(condition == gSpriteAnimation::CONDITION_LESS) {
-		return value1 < value2;
-	}
-	else if (condition == gSpriteAnimation::CONDITION_GREATER) {
-		return value1 > value2;
-	}
-	else if (condition == gSpriteAnimation::CONDITION_EQUAL) {
-		return value1 == value2;
-	}
-	return false;
-}
-
-bool gAnimationTriggerBool::isConditionTriggered() {
-	bool value1 = *((bool*)var1);
-	return condition == gSpriteAnimation::CONDITION_TRUE ? value1 : !value1;
 }
