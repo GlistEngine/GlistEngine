@@ -22,9 +22,9 @@
  * be passed, but for the ease of use, simply call createSpriteAnimation with the
  * needed parameters.
  *
- * Then for the animationId, developers can pass in their own
- * declared animationId's, if more control and the use of changeAnimation is
- * wanted.
+ * Then for the animationId, developers can pass in their own declared
+ * animationId's, if more control and the use of changeAnimation is wanted.
+ * Creating the same id with one of the autoassigned id's should be avoided.
  *
  * If nothing is passed, the animationId's will be auto assigned in an
  * ordered fashion and the id that's been assigned to that animation is returned.
@@ -40,7 +40,8 @@ public:
 	gSpriteAnimator();
 	virtual ~gSpriteAnimator();
 
-	int addAnimation(gSpriteAnimation* animation, int animationId = -1);
+	int addAnimation(gSpriteAnimation* animation);
+	int addAnimation(gSpriteAnimation* animation, int animationId);
 	void changeAnimation(int animationId);
 
 	void update();

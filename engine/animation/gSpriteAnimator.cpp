@@ -16,14 +16,18 @@ gSpriteAnimator::~gSpriteAnimator() {
 	// TODO Auto-generated destructor stub
 }
 
-int gSpriteAnimator::addAnimation(gSpriteAnimation* animation, int animationId) {
-	int animid;
-	if(animationId == -1) animid = autoassignedids++;
-	else animid = animationId;
-	animationids.push_back(animid);
-	animations.insert({animid, animation});
+int gSpriteAnimator::addAnimation(gSpriteAnimation* animation) {
+	animationids.push_back(autoassignedids++);
+	animations.insert({autoassignedids, animation});
 
-	return animid;
+	return autoassignedids;
+}
+
+int gSpriteAnimator::addAnimation(gSpriteAnimation* animation, int animationId) {
+	animationids.push_back(animationId);
+	animations.insert({animationId, animation});
+
+	return animationId;
 }
 
 void gSpriteAnimator::changeAnimation(int animationId) {
