@@ -85,14 +85,22 @@ public:
 	void addConditionTrigger(gAnimationTriggerBase* trigger);
 	bool isConditionTriggered();
 
+	void setFlipV(bool shouldFlip);
+	void setFlipH(bool shouldFlip);
+	bool isFlippedV();
+	bool isFlippedH();
+
 	void reset();
 
 	void update();
 	void draw(int x, int y);
+	void draw(int x, int y, float rotation);
 	void draw(int x, int y, int w, int h);
+	void draw(int x, int y, int w, int h, float rotation);
 
 private:
 	bool shouldStop();
+	void draw(float rotation = 0.0f);
 
 	int fps;
 	int framecount;
@@ -103,6 +111,12 @@ private:
 
 	gAnimationTriggerBase* trigger;
 	bool hastriggered;
+
+	gRect srcrect, dstrect;
+	int srcwidth, srcheight;
+	bool issrcset;
+	bool isflippedv;
+	bool isflippedh;
 
 	std::vector<gImage*> frames;
 };

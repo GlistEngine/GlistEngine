@@ -34,6 +34,10 @@ void gSpriteAnimator::changeAnimation(int animationId) {
 	currentanimation = animationId;
 }
 
+gSpriteAnimation* gSpriteAnimator::getAnimation(int animationId) {
+	return animations[animationId];
+}
+
 void gSpriteAnimator::update() {
 	for(int i = 0; i < animationids.size(); i++) {
 		if(animations[animationids[i]]->isConditionTriggered()) {
@@ -48,6 +52,14 @@ void gSpriteAnimator::draw(int x, int y) {
 	animations[currentanimation]->draw(x, y);
 }
 
+void gSpriteAnimator::draw(int x, int y, float rotation) {
+	animations[currentanimation]->draw(x, y, rotation);
+}
+
 void gSpriteAnimator::draw(int x, int y, int w, int h) {
 	animations[currentanimation]->draw(x, y, w, h);
+}
+
+void gSpriteAnimator::draw(int x, int y, int w, int h, float rotation) {
+	animations[currentanimation]->draw(x, y, w, h, rotation);
 }

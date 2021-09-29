@@ -42,11 +42,15 @@ public:
 
 	int addAnimation(gSpriteAnimation* animation);
 	int addAnimation(gSpriteAnimation* animation, int animationId);
+
 	void changeAnimation(int animationId);
+	gSpriteAnimation* getAnimation(int animationId);
 
 	void update();
 	void draw(int x, int y);
+	void draw(int x, int y, float rotation);
 	void draw(int x, int y, int w, int h);
+	void draw(int x, int y, int w, int h, float rotation);
 
 private:
 	int currentanimation;

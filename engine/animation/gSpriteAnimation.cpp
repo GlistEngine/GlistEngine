@@ -42,8 +42,12 @@ gSpriteAnimation::gSpriteAnimation() {
 	currentframe = 0;
 	islooped = true;
 	hastriggered = false;
-
+	issrcset = false;
 	trigger = nullptr;
+	isflippedh = false;
+	isflippedv = false;
+	srcwidth = 0;
+	srcheight = 0;
 }
 
 gSpriteAnimation::~gSpriteAnimation() {
@@ -55,6 +59,13 @@ gSpriteAnimation::~gSpriteAnimation() {
 }
 
 void gSpriteAnimation::addFrame(gImage* frame) {
+	if(!issrcset) {
+		issrcset = true;
+		srcwidth = frame->getWidth();
+		srcheight = frame->getHeight();
+		srcrect.set(0, 0, srcwidth, srcheight);
+	}
+
 	frames.push_back(frame);
 	framecount++;
 }
@@ -95,6 +106,22 @@ bool gSpriteAnimation::isConditionTriggered() {
 	return hastriggered;
 }
 
+void gSpriteAnimation::setFlipV(bool shouldFlip) {
+	srcrect.set(0, 0, srcwidth, (shouldFlip ? -1 : 1) * srcheight);
+}
+
+void gSpriteAnimation::setFlipH(bool shouldFlip) {
+	srcrect.set(0, 0, (shouldFlip ? -1 : 1) * srcwidth, srcheight);
+}
+
+bool gSpriteAnimation::isFlippedV() {
+	return isflippedv;
+}
+
+bool gSpriteAnimation::isFlippedH() {
+	return isflippedh;
+}
+
 void gSpriteAnimation::update() {
 
 	if(shouldStop()) return;
@@ -109,15 +136,27 @@ void gSpriteAnimation::update() {
 }
 
 void gSpriteAnimation::draw(int x, int y) {
-	frames[currentframe]->draw(x, y);
+	draw(x, y, srcwidth, srcheight);
+}
+
+void gSpriteAnimation::draw(int x, int y, float rotation) {
+	draw(x, y, srcwidth, srcheight, rotation);
 }
 
 void gSpriteAnimation::draw(int x, int y, int w, int h) {
-	frames[currentframe]->draw(x, y, w, h);
+	draw(x, y, w, h, 0.0f);
+}
+
+void gSpriteAnimation::draw(int x, int y, int w, int h, float rotation) {
+	dstrect.set(x, y, x + w, y + h);
+	draw(rotation);
+}
+
+void gSpriteAnimation::draw(float rotation) {
+	frames[currentframe]->drawSub(srcrect, dstrect, rotation);
 }
 
 bool gSpriteAnimation::shouldStop() {
-
 	return !islooped ? currentframe >= framecount - 1: false;
 }
 
