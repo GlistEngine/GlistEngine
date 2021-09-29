@@ -15,6 +15,7 @@ gFont::gFont() {
 	isantialiased = false;
 	fontsize = 0;
 	dpi = 0;
+	iskerning = false;
 }
 
 gFont::~gFont() {
@@ -47,6 +48,8 @@ bool gFont::load(std::string fullPath, int size, bool isAntialiased, int dpi) {
 	border = 3;
 	characternumlimit = 10000;
 
+	iskerning = FT_HAS_KERNING(fontface);
+
 	resizeVectors(characternumlimit);
 
 	isloaded = true;
@@ -67,6 +70,8 @@ void gFont::drawText(std::string text, float x, float y) {
 
 	  while (index1 < len1) {
 	      c1 = text1[index1];
+	      if(index1 > 0) cold1 = text1[index1 - 1];
+	      else cold1 = -1;
 	      if (c1 == '\n') {
 	          posy1 += lineheight;
 	          posx1 = x ; //reset X Pos back to zero
@@ -76,6 +81,7 @@ void gFont::drawText(std::string text, float x, float y) {
 	      } else {
 	          cid1 = getCharID(c1);
 	          if (cpset[cid1].character == unloadedchar) loadChar(cid1);
+	          posx1 += getKerning(cid1, cold1);
 	          textures[cid1].draw(posx1, posy1 + cpset[cid1].dytop);
 	          posx1 += cpset[cid1].advance * letterspacing;
 	      }
@@ -92,12 +98,15 @@ float gFont::getStringWidth(std::string text) {
 
 	  while (index2 < len2) {
 	      cid2 = text2[index2];
+	      if(index2 > 0) cold2 = text2[index2 - 1];
+	      else cold2 = -1;
 	      if (cid2 == ' ') {
 	          cy2 = getCharID('a');
 	          posx2 += cpset[cy2].width * letterspacing * spacesize;
 	      } else {
 	          cy2 = getCharID(cid2);
 	          if (cpset[cy2].character == unloadedchar) loadChar(cy2);
+	          posx2 += getKerning(cid2, cold2);
 	          posx2 += cpset[cy2].advance * letterspacing;
 	      }
 	    index2++;
@@ -196,7 +205,7 @@ int gFont::getCharID(const int& c) {
 void gFont::loadChar(const int& charID) {
 	  lci = charID;
 
-	  lcerr = FT_Load_Glyph(fontface, FT_Get_Char_Index(fontface, loadedcharacters[lci]), FT_LOAD_DEFAULT);
+	  lcerr = FT_Load_Glyph(fontface, FT_Get_Char_Index(fontface, loadedcharacters[lci]), isantialiased ?  FT_LOAD_FORCE_AUTOHINT : FT_LOAD_DEFAULT);
 	  if(lcerr) gLoge("gFont") << "Error FT_Load_Glyph";
 
 	  if (isantialiased == true) FT_Render_Glyph(fontface->glyph, FT_RENDER_MODE_NORMAL);
@@ -303,6 +312,16 @@ bool gFont::insertData(unsigned char* srcData, int srcWidth, int srcHeight, int 
 	}
 
 	return true;
+}
+
+int gFont::getKerning(int c, int previousC) {
+    if(iskerning){
+        FT_Vector kerning;
+        FT_Get_Kerning(fontface, FT_Get_Char_Index(fontface, previousC), FT_Get_Char_Index(fontface, c), FT_KERNING_DEFAULT, &kerning);
+        return kerning.x >> 6;
+    }else{
+        return 0;
+    }
 }
 
 std::wstring gFont::s2ws(const std::string& s) {

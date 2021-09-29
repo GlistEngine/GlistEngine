@@ -155,6 +155,7 @@ private:
 	  int fontsize;
 	  int characternumlimit;
 	  int border;
+	  bool iskerning;
 
 	  FT_Library ftlib;
 	  FT_Face fontface;
@@ -181,13 +182,14 @@ private:
 	  static const int unloadedchar = 0;
 
 
+	  int getKerning(int c, int prevC);
 	  void resizeVectors(int num);
 	  bool insertData(unsigned char* srcData, int srcWidth, int srcHeight, int componentNum, unsigned char* dstData, int dstWidth, int dstHeight, int dstComponentNum, size_t dstFirstX, size_t dstFirstY) const;
 	  std::wstring s2ws(const std::string& s);
 
 	  GLint index1, posx1, posy1, index2, posx2, index3, posy3;
 	  std::wstring text1, text2, text3;
-	  int len1, c1, cid1, len2, cid2, cy2, len3, cid3, cy3, y3;
+	  int len1, c1, cid1, cold1, len2, cid2, cold2, cy2, len3, cid3, cy3, y3;
 	  int tempint, tempcharno;
 	  int lci, lci2, lci3, lci4, lcj, lck;
 	  int lcdataw, lcdatah, lcdatanum;
