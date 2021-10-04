@@ -93,6 +93,13 @@ void gDrawRectangle(float x, float y, float w, float h, bool isFilled) {
  	rectanglemesh.draw(x, y, w, h, isFilled);
 }
 
+void gDrawRectangle(float x, float y, float w, float h, bool isFilled, float thickness) {
+	for(int i = 0; i < thickness; i++) {
+		gRectangle rectanglemesh;
+	 	rectanglemesh.draw(x - i, y - i, w + i*2, h + i*2, isFilled);
+	}
+}
+
 void gDrawBox(float x, float y, float z, float w, float h, float d, bool isFilled) {
 	gBox boxmesh;
 	if(!isFilled) boxmesh.setDrawMode(gMesh::DRAWMODE_LINELOOP);
