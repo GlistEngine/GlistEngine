@@ -76,6 +76,119 @@ std::string gDatabase::getSelectData() {
 	return res;
 }
 
+void gDatabase::getTableInfo(char*** sqlResult, int* rowNum, int* colNum) {
+	char* zErr = 0;
+	zsql = "SELECT * FROM sqlite_master WHERE type = 'table'";
+	execute(zsql);
+	gLogi("gDatabase") << "getTableInfo 2";
+}
+
+
+std::vector<std::string> gDatabase::getTableNames() {
+	std::vector<std::string> data;
+	std::string temporarystring = "";
+	std::vector<std::string> datastorage;
+	zsql = "SELECT * FROM sqlite_master WHERE type = 'table'";
+	execute(zsql);
+
+
+	while(!selectdata.empty()) {
+		temporarystring = "";
+		temporarystring = selectdata.front();
+		selectdata.pop();
+		//char read
+		datastorage = gSplitString(temporarystring, "|");
+		data.push_back(datastorage[2]);
+		for(int i = 0; i < data.size(); i++)
+		gLogi("Sonuc: ") << data[i];
+	}
+
+	return data;
+
+}
+
+
+std::string gDatabase::getColumnType(std::string tableName, std::string columnName) {
+	zsql = "SELECT sql FROM sqlite_master WHERE tbl_name = \'" + tableName + "\' AND type = \'table\'";
+	execute(zsql);
+	std::string backupstring = selectdata.front();
+	selectdata.pop();
+	std::string resultstring;
+	int columnsearchpoint = 0;
+	int startpoint = 0;
+	int endpoint = 0;
+	int searchpoint = 0;
+		for(int i = 0; i < backupstring.length(); i++) {
+			if(backupstring[i] == '"' && searchpoint == 0) {
+				startpoint = i+1;
+				searchpoint = 1;
+				continue;
+			}
+			if(backupstring[i] == '"' && searchpoint == 1) {
+				endpoint = i;
+				searchpoint = 2;
+			}
+			if(searchpoint == 2) {
+				if(backupstring.substr(startpoint, endpoint - startpoint) != tableName)resultstring = backupstring.substr(startpoint, endpoint - startpoint);
+				//taking columntype
+				if(resultstring == columnName) {
+					for(int j = endpoint; j < backupstring.length(); j++) {
+						if(backupstring[j] == '\t' && columnsearchpoint == 0) {
+							startpoint = j+1;
+							columnsearchpoint = 1;
+							continue;
+						}
+						if(backupstring[j] == ',' && columnsearchpoint == 1) {
+							endpoint = j;
+							columnsearchpoint = 2;
+						}
+						if(columnsearchpoint == 2) {
+							resultstring = backupstring.substr(startpoint, endpoint - startpoint);
+
+							return resultstring;
+						}
+					}
+				}
+				searchpoint = 0;
+				startpoint = 0;
+				endpoint = 0;
+			}
+		}
+		return "NULL";
+}
+
+
+std::vector<std::string> gDatabase::getColumnNames(std::string tableName) {
+	zsql = "SELECT sql FROM sqlite_master WHERE tbl_name = \'" + tableName + "\' AND type = \'table\'";
+	execute(zsql);
+	std::string backupstring = selectdata.front();
+	selectdata.pop();
+	gLogi("columnlist: ") << backupstring;
+	int startpoint = 0;
+	int endpoint = 0;
+	int searchpoint = 0;
+	for(int i = 0; i < backupstring.length(); i++) {
+		if(backupstring[i] == '"' && searchpoint == 0) {
+			startpoint = i+1;
+			searchpoint = 1;
+			continue;
+		}
+		if(backupstring[i] == '"' && searchpoint == 1) {
+			endpoint = i;
+			searchpoint = 2;
+		}
+		if(searchpoint == 2) {
+			if(backupstring.substr(startpoint, endpoint - startpoint) != tableName)columnList.push_back(backupstring.substr(startpoint, endpoint - startpoint));
+			searchpoint = 0;
+			startpoint = 0;
+			endpoint = 0;
+		}
+	}
+
+	return columnList;
+}
+
+
 int gDatabase::callback(void* statementId, int argc, char **argv, char **azColName) {
 	std::string res = gToStr((char*)statementId);
 	for(int i = 0; i < argc; i++) res += delimiter + std::string(argv[i]);
