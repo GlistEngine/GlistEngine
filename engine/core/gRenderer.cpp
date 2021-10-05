@@ -110,12 +110,6 @@ void gDrawRectangle(float x, float y, float w, float h, bool isFilled, float thi
 			int outside = 0;
 			outside = (thickness * borderposition);
 			inside = thickness - outside;
-			gLogi("RENDER") << "inside: " << inside;
-			gLogi("RENDER") << "outside: " << outside;
-			gLogi("RENDER") << "x: " << x;
-			gLogi("RENDER") << "y: " << y;
-			gLogi("RENDER") << "w: " << w;
-			gLogi("RENDER") << "h: " << h;
 			//outside border
 			for(int i = 0; i < outside; i++) {
 				gRectangle rectanglemesh;
