@@ -93,11 +93,40 @@ void gDrawRectangle(float x, float y, float w, float h, bool isFilled) {
  	rectanglemesh.draw(x, y, w, h, isFilled);
 }
 
-void gDrawRectangle(float x, float y, float w, float h, bool isFilled, float thickness) {
-	for(int i = 0; i < thickness; i++) {
-		gRectangle rectanglemesh;
-	 	rectanglemesh.draw(x - i, y - i, w + i*2, h + i*2, isFilled);
-	}
+void gDrawRectangle(float x, float y, float w, float h, bool isFilled, float thickness, float borderposition) {
+	  	if(borderposition == 0.0f) {
+			for(int i = 0; i < thickness; i++) {
+				gRectangle rectanglemesh;
+			 	rectanglemesh.draw(x + i, y + i, w - i*2, h - i*2, isFilled);
+			}
+		} else if (borderposition == 1.0f) {
+			for(int i = 0; i < thickness; i++) {
+				gRectangle rectanglemesh;
+			 	rectanglemesh.draw(x - i, y - i, w + i*2, h + i*2, isFilled);
+			}
+		}else if (borderposition > 0.0f && borderposition < 1.0f) {
+			//calculating how many pixel is sided to each
+			int inside = 0;
+			int outside = 0;
+			outside = (thickness * borderposition);
+			inside = thickness - outside;
+			gLogi("RENDER") << "inside: " << inside;
+			gLogi("RENDER") << "outside: " << outside;
+			gLogi("RENDER") << "x: " << x;
+			gLogi("RENDER") << "y: " << y;
+			gLogi("RENDER") << "w: " << w;
+			gLogi("RENDER") << "h: " << h;
+			//outside border
+			for(int i = 0; i < outside; i++) {
+				gRectangle rectanglemesh;
+			 	rectanglemesh.draw(x - i, y - i, w + i*2, h + i*2, isFilled);
+			}
+			//inside border
+			for(int i = 0; i < inside; i++) {
+				gRectangle rectanglemesh;
+			 	rectanglemesh.draw(x + i, y + i, w - i*2, h - i*2, isFilled);
+			}
+		}
 }
 
 void gDrawBox(float x, float y, float z, float w, float h, float d, bool isFilled) {
