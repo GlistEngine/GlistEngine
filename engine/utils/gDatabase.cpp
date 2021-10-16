@@ -99,12 +99,9 @@ std::vector<std::string> gDatabase::getTableNames() {
 		//char read
 		datastorage = gSplitString(temporarystring, "|");
 		data.push_back(datastorage[2]);
-		for(int i = 0; i < data.size(); i++)
-		gLogi("Sonuc: ") << data[i];
-	}
-
 	return data;
 
+	}
 }
 
 
