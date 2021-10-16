@@ -5,7 +5,7 @@
  *      Author: Admin
  */
 #include <locale>
-#include <gDatabase.h>
+#include "gDatabase.h"
 
 #ifndef UTILS_GLOCALIZATION_H_
 #define UTILS_GLOCALIZATION_H_
@@ -14,19 +14,22 @@ class gLocalization {
 public:
 	gLocalization();
 	virtual ~gLocalization();
+
+
+	/*
+	 * Load database for localization translate
+	 *
+	 * @database Sends database name as string for load and make ready to use for language translates
+	 * @tableName Sends table name as string for set and make ready to use for other functions and language translates
+	 */
+	void loadDatabase(std::string database, std::string tableName = "WORDS");
+
 	/*
 	 * Metod for translating words to current language it will return string
 	 * @ word Sending string for translate
 	 */
 	std::string localizeWord(std::string word);
 
-	/*
-	 * Load database for localization translate
-	 *
-	 * @database Sends database name as string for load and make ready to use for language translates
-	 *
-	 */
-	void loadDatabase(std::string database);
 
 	/*
 	 * Allows setting current languages
@@ -38,6 +41,7 @@ public:
 	void setCurrentLanguage(int languageId);
 	std::string getTableInfo();
 	std::string getColumnData(std::string columnname);
+	std::vector<std::string> getColumnList();
 
 	/*
 	 * Gives which language used
@@ -57,17 +61,18 @@ public:
 private:
 	//Add column names of database to columnList vector
 	void columnLister(std::string tableinfo);
-	std::vector<std::string> columnList;
+	std::vector<std::string> columnlist;
 	//Variable which will contain a database
 	gDatabase localizedb;
 	//variables for translatint words
 	int currentlanguage;
 	std::string selectquery;
 	std::string localizedword;
-	std::string backupString;
+	std::string backupstring;
 	bool starttowrite;
 	//string for result data
 	std::string resultstring;
+	std::string tablename;
 
 
 };

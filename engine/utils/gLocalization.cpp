@@ -5,71 +5,60 @@
  *      Author: Admin
  */
 
-#include <gLocalization.h>
-#include <gDatabase.h>
+#include "gLocalization.h"
+#include "gDatabase.h"
 
 
 
 gLocalization::gLocalization() {
-	// TODO Auto-generated constructor stub
-
-
 }
 
 gLocalization::~gLocalization() {
-	// TODO Auto-generated destructor stub
 	localizedb.close();
 }
 
 
-void gLocalization::loadDatabase(std::string database) {
+void gLocalization::loadDatabase(std::string database, std::string tableName) {
 	//Database will open for reading
+	tablename = tableName;
 	currentlanguage = 1;
 	starttowrite = false;
-	localizedb.loadDatabase("gamelocal.db");
-	selectquery = "SELECT sql FROM sqlite_master WHERE tbl_name = 'WORDS' AND type = 'table'";
+	localizedb.loadDatabase(database);
+	selectquery = "SELECT sql FROM sqlite_master WHERE tbl_name = \'" + tablename + "\' AND type = \'table\'";
 	localizedb.execute(selectquery);
-	backupString = localizedb.getSelectData();
-	columnLister(backupString);
-
+	backupstring = localizedb.getSelectData();
+	columnLister(backupstring);
 }
 
-
 std::string gLocalization::getTableInfo(){
-	selectquery = "SELECT sql FROM sqlite_master WHERE tbl_name = 'WORDS' AND type = 'table'";
+	selectquery = "SELECT sql FROM sqlite_master WHERE tbl_name = \'" + tablename + "\' AND type = \'table\'";
 	localizedb.execute(selectquery);
-	backupString = localizedb.getSelectData();
-	return backupString;
+	backupstring = localizedb.getSelectData();
+	return backupstring;
 }
 
 void gLocalization::columnLister(std::string tableinfo) {
 	std::string temporarystring = "";
 
-
-	for (int i = 0; i < backupString.length(); i++){
-
-		if (backupString[i] == '\n'){
+	for (int i = 0; i < backupstring.length(); i++){
+		if (backupstring[i] == '\n'){
 			temporarystring = "";
 			i++;
-			while(backupString[i] != '\n' && i < backupString.length()){
-				if(backupString[i] == '"') {
+			while(backupstring[i] != '\n' && i < backupstring.length()){
+				if(backupstring[i] == '"') {
 					starttowrite = !starttowrite;
 					i++;
 				}
-				if(starttowrite)temporarystring += backupString[i];
+				if(starttowrite)temporarystring += backupstring[i];
 				i++;
 			}
 			i--;
-			columnList.push_back(temporarystring);
-
+			columnlist.push_back(temporarystring);
 		}
 	}
 
-
-	for (std::string x : columnList){
-
+	for (std::string x : columnlist){
 		for (int i = 0; i < x.length(); i++){
-
 			if (x[i] == '\"'){
 				i++;
 				temporarystring = "";
@@ -78,12 +67,14 @@ void gLocalization::columnLister(std::string tableinfo) {
 					temporarystring += x[i];
 					i++;
 				}
-
-				columnList.push_back(temporarystring);
-
+				if(temporarystring != "")columnlist.push_back(temporarystring);
 			}
 		}
 	}
+}
+
+std::vector<std::string> gLocalization::getColumnList() {
+	return columnlist;
 }
 
 
@@ -93,7 +84,7 @@ void gLocalization::setCurrentLanguage(int languageId) {
 
 
 std::string gLocalization::getCurrentLanguage() {
-	return columnList[currentlanguage];
+	return columnlist[currentlanguage];
 }
 
 
@@ -102,8 +93,8 @@ int gLocalization::getLangId() {
 }
 
 
-std::string gLocalization::getColumnData(std::string columnname) {//sorunu var
-	selectquery = "SELECT "+ columnname + " from WORDS";
+std::string gLocalization::getColumnData(std::string columnname) {
+	selectquery = "SELECT "+ columnname + " from " + tablename;
 	localizedb.execute(selectquery);
 	while(localizedb.getSelectData() != "") {
 		resultstring = localizedb.getSelectData();
@@ -113,16 +104,9 @@ std::string gLocalization::getColumnData(std::string columnname) {//sorunu var
 
 
 std::string gLocalization::localizeWord(std:: string word) {
-	gLogi("GameCanvas") << "Response:" << localizedb.getSelectData();
-
-	selectquery = "SELECT "+columnList[currentlanguage]+" from WORDS where Key = '"+word+"'";
-	//selectquery = "SELECT En from WORDS where Key = '"+word+"'";
+	selectquery = "SELECT " + columnlist[currentlanguage] + " from WORDS where Key = \'" + word + "\'";
 	localizedb.execute(selectquery);
-	//localizationdb.close();
 	localizedword = localizedb.getSelectData();
-
-
 	return localizedword;
-
 }
 
