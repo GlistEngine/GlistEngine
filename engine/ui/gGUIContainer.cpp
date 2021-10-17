@@ -44,7 +44,7 @@ gGUISizer* gGUIContainer::getSizer() {
 }
 
 void gGUIContainer::update() {
-	guisizer->update();
+	if(guisizer) guisizer->update();
 }
 
 void gGUIContainer::draw() {

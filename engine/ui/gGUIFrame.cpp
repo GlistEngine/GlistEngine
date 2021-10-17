@@ -7,6 +7,8 @@
 
 #include "gGUIFrame.h"
 #include "gGUISizer.h"
+#include "gGUIMenubar.h"
+#include "gGUIToolbar.h"
 
 
 gGUIFrame::gGUIFrame() {
@@ -23,4 +25,6 @@ void gGUIFrame::update() {
 void gGUIFrame::draw() {
 //	gLogi("gGUIFrame") << "draw";
 	if(guisizer) guisizer->draw();
+	if(toolbarnum > 0) for(int i = 0; i < toolbarnum; i++) toolbars[i]->draw();
+	if(menubar) menubar->draw();
 }

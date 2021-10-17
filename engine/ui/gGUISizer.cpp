@@ -35,7 +35,6 @@ gGUISizer::~gGUISizer() {
 }
 
 void gGUISizer::set(int x, int y, int w, int h) {
-	gLogi("Sizer") << "set";
 	left = x;
 	top = y;
 	right = x + w;
@@ -160,6 +159,7 @@ void gGUISizer::setControl(int lineNo, int columnNo, gGUIControl* guiControl) {
 			(top + (height * linetprs[lineNo + 1])) - (top + (height * linetprs[lineNo])) - (2 * slotpadding)
 	);
 	iscontrolset[lineNo][columnNo] = true;
+//	gLogi("Sizer") << "setControl id:" << id << ", w:" << width << ", h:" << height << ", ln:" << lineNo << ", cn:" << columnNo << ", l:" << guiControl->left << ", t:" << guiControl->top << ", r:" << guiControl->right << ", b:" << guiControl->bottom << ", cw:" << ((left + (width * columntprs[columnNo + 1])) - (left + (width * columntprs[columnNo])) - (2 * slotpadding)) << ", ch:" << ((top + (height * linetprs[lineNo + 1])) - (top + (height * linetprs[lineNo])) - (2 * slotpadding));
 //	guicontrol[lineNo][columnNo]->left = left + (width * columntprs[columnNo]);
 //	guicontrol[lineNo][columnNo]->top = top + (height * linetprs[lineNo]);
 //	guicontrol[lineNo][columnNo]->right = left + (width * columntprs[columnNo + 1]);
@@ -236,6 +236,7 @@ void gGUISizer::update() {
 
 void gGUISizer::draw() {
 //	gLogi("gGUISizer") << "draw";
+//	gLogi("gGUISizer") << "l:" << left << ", t:" << top << ", w:" << width << ", h:" << height << ", ln:" << linenum << ", cn:" << columnnum;
 	for(int i = 0; i < linenum; i++) {
 		for(int j = 0; j < columnnum; j++) {
 			if(fillbackground) {
@@ -301,6 +302,7 @@ void gGUISizer::mouseMoved(int x, int y) {
 		for(int j = 0; j < columnnum; j++) {
 			if(iscontrolset[i][j]) {
 				bool iscursoronold = guicontrol[i][j]->iscursoron;
+//				gLogi("Sizer") << "mouseMoved 1, i:" << i << ", j:" << j << ", x:" << x << ", y:" << y << ", l:" << guicontrol[i][j]->left << ", t:" << guicontrol[i][j]->top << ", r:" << guicontrol[i][j]->right << ", b:" << guicontrol[i][j]->bottom;
 				if(x >= guicontrol[i][j]->left && x < guicontrol[i][j]->right && y >= guicontrol[i][j]->top && y < guicontrol[i][j]->bottom) {
 					guicontrol[i][j]->iscursoron = true;
 					if(!iscursoronold) guicontrol[i][j]->mouseEntered();
@@ -317,6 +319,7 @@ void gGUISizer::mouseMoved(int x, int y) {
 }
 
 void gGUISizer::mousePressed(int x, int y, int button) {
+//	gLogi("Sizer") << "mousePressed 1, t:" << title;
 	if(iscursoron && resizable) {
 		for(int i = 1; i < columnnum; i++) {
 			if(x >= left + (width * columntprs[i]) - 1 && x <= left + (width * columntprs[i]) + 1) {
@@ -341,10 +344,11 @@ void gGUISizer::mousePressed(int x, int y, int button) {
 			if(iscontrolset[i][j]) {
 				bool focusold = guicontrol[i][j]->isfocused;
 				guicontrol[i][j]->isfocused = false;
+//				gLogi("Sizer") << "mousePressed 21, i:" << i << ", j:" << j << ", x:" << x << ", y:" << y << ", l:" << guicontrol[i][j]->left << ", t:" << guicontrol[i][j]->top << ", r:" << guicontrol[i][j]->right << ", b:" << guicontrol[i][j]->bottom;
 				if(guicontrol[i][j]->iscursoron) {
 					guicontrol[i][j]->isfocused = true;
-					if(!focusold) root->getCurrentCanvas()->onGuiEvent(id, GUIEVENT_FOCUSED);
 					guicontrol[i][j]->mousePressed(x, y, button);
+					if(!focusold) root->getCurrentCanvas()->onGuiEvent(id, GUIEVENT_FOCUSED);
 				}
 				if(focusold && !guicontrol[i][j]->isfocused) root->getCurrentCanvas()->onGuiEvent(id, GUIEVENT_UNFOCUSED);
 			}
@@ -493,6 +497,7 @@ void gGUISizer::mouseReleased(int x, int y, int button) {
 
 	for(int i = 0; i < linenum; i++) {
 		for(int j = 0; j < columnnum; j++) {
+//			if(iscontrolset[i][j]) gLogi("Sizer") << "sid:" << id << ", cid:" << guicontrol[i][j]->getId() << ", iscursoron:" << guicontrol[i][j]->iscursoron;
 			if(iscontrolset[i][j] && guicontrol[i][j]->iscursoron) guicontrol[i][j]->mouseReleased(x, y, button);
 		}
 	}

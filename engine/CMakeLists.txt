@@ -134,13 +134,18 @@ set(SRC_FILES
 	${ENGINE_DIR}/graphics/gRect.cpp
 	${ENGINE_DIR}/ui/gGUITextbox.cpp
 	${ENGINE_DIR}/ui/gGUIText.cpp
+	${ENGINE_DIR}/ui/gGUIDivider.cpp
+	${ENGINE_DIR}/ui/gGUIToolbarButton.cpp
 	${ENGINE_DIR}/ui/gGUIButton.cpp
 	${ENGINE_DIR}/ui/gGUISizer.cpp
+	${ENGINE_DIR}/ui/gGUIToolbar.cpp
+	${ENGINE_DIR}/ui/gGUIMenubar.cpp
 	${ENGINE_DIR}/ui/gGUIPanel.cpp
 	${ENGINE_DIR}/ui/gGUIFrame.cpp
 	${ENGINE_DIR}/ui/gGUIControl.cpp
 	${ENGINE_DIR}/ui/gGUIContainer.cpp
 	${ENGINE_DIR}/ui/gGUIForm.cpp
+	${ENGINE_DIR}/ui/gGUIResources.cpp
 	${ENGINE_DIR}/base/gBaseGUIObject.cpp
 	${ENGINE_DIR}/core/gGUIManager.cpp
 	${ENGINE_DIR}/core/gAppObject.cpp

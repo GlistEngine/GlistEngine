@@ -46,6 +46,9 @@ public:
 	static void setBackgroundColor(gColor* backgroundColor);
 	static gColor* getBackgroundColor();
 
+	static void setMiddlegroundColor(gColor* middlegroundColor);
+	static gColor* getMiddlegroundColor();
+
 	static void setForegroundColor(gColor* foregroundColor);
 	static gColor* getForegroundColor();
 
@@ -54,6 +57,24 @@ public:
 
 	static void setFontColor(gColor* fontColor);
 	static gColor* getFontColor();
+
+	static void setButtonColor(gColor* color);
+	static gColor* getButtonColor();
+
+	static void setPressedButtonColor(gColor* color);
+	static gColor* getPressedButtonColor();
+
+	static void setDisabledButtonColor(gColor* color);
+	static gColor* getDisabledButtonColor();
+
+	static void setButtonFontColor(gColor* color);
+	static gColor* getButtonFontColor();
+
+	static void setPressedButtonFontColor(gColor* color);
+	static gColor* getPressedButtonFontColor();
+
+	static void setDisabledButtonFontColor(gColor* color);
+	static gColor* getDisabledButtonFontColor();
 
 	virtual int getCursor(int x, int y);
 	virtual void keyPressed(int key);
@@ -75,9 +96,16 @@ public:
 
 protected:
 	static gColor* backgroundcolor;
+	static gColor* middlegroundcolor;
 	static gColor* foregroundcolor;
 	static gFont* font;
 	static gColor* fontcolor;
+	static gColor* buttoncolor;
+	static gColor* pressedbuttoncolor;
+	static gColor* disabledbuttoncolor;
+	static gColor* buttonfontcolor;
+	static gColor* pressedbuttonfontcolor;
+	static gColor* disabledbuttonfontcolor;
 
 	std::string title;
 
