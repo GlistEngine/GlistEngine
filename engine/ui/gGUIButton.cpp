@@ -12,9 +12,22 @@
 
 gGUIButton::gGUIButton() {
 	ispressed = false;
-	buttonw = 80;
-	buttonh = 24;
+	buttonw = 96;
+	buttonh = 32;
+	istoggle = false;
 	title = "Button";
+	istextvisible = true;
+	ispressednow = false;
+	isdisabled = false;
+	bcolor = *buttoncolor;
+//	gLogi("Button") << "fgr:" << foregroundcolor->r << ", fgg:" << foregroundcolor->g << ", fgb:" << foregroundcolor->b;
+//	gLogi("Button") << "br:" << buttoncolor->r << ", bg:" << buttoncolor->g << ", bb:" << buttoncolor->b;
+//	gLogi("Button") << "r:" << bcolor.r << ", g:" << bcolor.g << ", b:" << bcolor.b;
+	pressedbcolor = *pressedbuttoncolor;
+	disabledbcolor = *disabledbuttoncolor;
+	fcolor = *buttonfontcolor;
+	pressedfcolor = *pressedbuttonfontcolor;
+	disabledfcolor = *disabledbuttonfontcolor;
 	resetTitlePosition();
 }
 
@@ -26,6 +39,41 @@ void gGUIButton::setTitle(std::string title) {
 	resetTitlePosition();
 }
 
+void gGUIButton::setSize(int width, int height) {
+	buttonw = width;
+	buttonh = height;
+	resetTitlePosition();
+}
+
+void gGUIButton::setTextVisibility(bool isVisible) {
+	istextvisible = isVisible;
+}
+
+void gGUIButton::setToggle(bool isToggle) {
+	istoggle = isToggle;
+}
+
+void gGUIButton::setDisabled(bool isDisabled) {
+	isdisabled = isDisabled;
+}
+
+bool gGUIButton::isDisabled() {
+	return isdisabled;
+}
+
+
+bool gGUIButton::isToggle() {
+	return istoggle;
+}
+
+bool gGUIButton::isTextVisible() {
+	return istextvisible;
+}
+
+bool gGUIButton::isPressed() {
+	return ispressed;
+}
+
 void gGUIButton::update() {
 //	gLogi("gGUIButton") << "update";
 }
@@ -33,28 +81,105 @@ void gGUIButton::update() {
 void gGUIButton::draw() {
 //	gLogi("gGUIButton") << "draw, w:" << width;
 	gColor oldcolor = *renderer->getColor();
-	renderer->setColor(gColor(0.1f, 0.45f, 0.87f));
+	if(isdisabled) renderer->setColor(disabledbcolor);
+	else {
+		if(ispressed) renderer->setColor(pressedbcolor);
+		else renderer->setColor(bcolor);
+	}
+//	renderer->setColor(gColor(0.1f, 0.45f, 0.87f));
 	gDrawRectangle(left, top + ispressed, buttonw, buttonh, true);
 
-	renderer->setColor(*fontcolor);
-	font->drawText(title, left + tx - 1, top + buttonh - ty + ispressed - 2);
+	if(istextvisible) {
+		if(isdisabled) renderer->setColor(disabledfcolor);
+		else {
+			if(ispressed) renderer->setColor(pressedfcolor);
+			else renderer->setColor(fcolor);
+		}
+		font->drawText(title, left + tx - 1, top + buttonh - ty + ispressed - 2);
+	}
 	renderer->setColor(oldcolor);
 }
 
 void gGUIButton::mousePressed(int x, int y, int button) {
 //	gLogi("Button") << "pressed, id:" << id;
-	if(x >= left && x < left + buttonw && y >= top && y < top + buttonh) ispressed = true;
+	if(isdisabled) return;
+	if(x >= left && x < left + buttonw && y >= top && y < top + buttonh) {
+		if(!istoggle) ispressed = true;
+		else {
+			if(!ispressed) {
+				ispressed = true;
+				ispressednow = true;
+			}
+		}
+	}
 	root->getCurrentCanvas()->onGuiEvent(id, GUIEVENT_BUTTONPRESSED);
 }
 
 void gGUIButton::mouseReleased(int x, int y, int button) {
 //	gLogi("Button") << "released, id:" << id;
-	ispressed = false;
+	if(isdisabled) return;
+	if(x >= left && x < left + buttonw && y >= top && y < top + buttonh) {
+		if(!istoggle) ispressed = false;
+		else {
+			if(!ispressednow) ispressed = false;
+		}
+	} else {
+		if(!istoggle) ispressed = false;
+	}
+	ispressednow = false;
 	root->getCurrentCanvas()->onGuiEvent(id, GUIEVENT_BUTTONRELEASED);
 }
 
 void gGUIButton::resetTitlePosition() {
 	tx = (buttonw - font->getStringWidth(title)) / 2;
 	ty = (buttonh - font->getStringHeight("a")) / 2;
+}
+
+void gGUIButton::setButtonColor(gColor color) {
+	bcolor = color;
+}
+
+void gGUIButton::setPressedButtonColor(gColor color) {
+	pressedbcolor = color;
+}
+
+void gGUIButton::setDisabledButtonColor(gColor color) {
+	disabledbcolor = color;
+}
+
+void gGUIButton::setButtonFontColor(gColor color) {
+	fcolor = color;
+}
+
+void gGUIButton::setPressedButtonFontColor(gColor color) {
+	pressedfcolor = color;
+}
+
+void gGUIButton::setDisabledButtonFontColor(gColor color) {
+	disabledfcolor = color;
+}
+
+gColor* gGUIButton::getButtonColor() {
+	return &bcolor;
+}
+
+gColor* gGUIButton::getPressedButtonColor() {
+	return &pressedbcolor;
+}
+
+gColor* gGUIButton::getDisabledButtonColor() {
+	return &disabledbcolor;
+}
+
+gColor* gGUIButton::getButtonFontColor() {
+	return &fcolor;
+}
+
+gColor* gGUIButton::getPressedButtonFontColor() {
+	return &pressedfcolor;
+}
+
+gColor* gGUIButton::getDisabledButtonFontColor() {
+	return &disabledfcolor;
 }
 

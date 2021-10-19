@@ -10,12 +10,17 @@
 
 #include "gBaseGUIObject.h"
 class gGUISizer;
+class gGUIMenubar;
+class gGUIToolbar;
 
 
 class gGUIForm: public gBaseGUIObject {
 public:
 	gGUIForm();
 	virtual ~gGUIForm();
+
+	void setMenuBar(gGUIMenubar* menuBar);
+	void addToolBar(gGUIToolbar* toolBar);
 
 	void setSizer(gGUISizer* guiSizer);
 	gGUISizer* getSizer();
@@ -34,8 +39,14 @@ public:
 	void mouseReleased(int x, int y, int button);
 
 protected:
+	static const int maxtoolbarnum = 9;
 	gGUISizer* guisizer;
 	bool isshown;
+	gGUIMenubar* menubar;
+	gGUIToolbar *toolbars[maxtoolbarnum];
+	int toolbarnum;
+	int menuh;
+	int toolbarh;
 };
 
 #endif /* UI_GGUIFORM_H_ */

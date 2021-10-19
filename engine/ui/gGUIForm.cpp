@@ -7,12 +7,45 @@
 
 #include "gGUIForm.h"
 #include "gGUISizer.h"
+#include "gGUIMenubar.h"
+#include "gGUIToolbar.h"
 
 
 gGUIForm::gGUIForm() {
+	menuh = 0;
+	toolbarh = 0;
+	toolbarnum = 0;
 }
 
 gGUIForm::~gGUIForm() {
+}
+
+void gGUIForm::setMenuBar(gGUIMenubar* menuBar) {
+	menubar = menuBar;
+	menuh = 30;
+	menubar->set(root, this, 0, 0,
+				left,
+				top,
+				width,
+				menuh
+		);
+}
+
+void gGUIForm::addToolBar(gGUIToolbar* toolBar) {
+	if(toolbarnum >= maxtoolbarnum) return;
+
+	toolbarh = 32;
+
+	toolbars[toolbarnum] = toolBar;
+	toolbars[toolbarnum]->set(left,
+				top + menuh,
+				width,
+				toolbarh
+		);
+	toolbars[toolbarnum]->setParent(this);
+	toolbars[toolbarnum]->setParentSlotNo(0, 0);
+	toolbars[toolbarnum]->setRootApp(root);
+	toolbarnum++;
 }
 
 void gGUIForm::setSizer(gGUISizer* guiSizer) {
@@ -21,9 +54,9 @@ void gGUIForm::setSizer(gGUISizer* guiSizer) {
 	guisizer->setParentSlotNo(0, 0);
 	guisizer->setRootApp(root);
 	guisizer->enableBackgroundFill(true);
-	guisizer->iscursoron = true;
+	guisizer->iscursoron = false;
 	guisizer->left = left;
-	guisizer->top = top;
+	guisizer->top = top + menuh + toolbarh;
 	guisizer->right = right;
 	guisizer->bottom = bottom;
 	guisizer->width = width;
@@ -60,10 +93,14 @@ void gGUIForm::charPressed(unsigned int codepoint) {
 }
 
 void gGUIForm::mouseMoved(int x, int y) {
+	menubar->mouseMoved(x, y);
+	for(int i = 0; i < toolbarnum; i++) toolbars[i]->mouseMoved(x, y);
 	guisizer->mouseMoved(x, y);
 }
 
 void gGUIForm::mousePressed(int x, int y, int button) {
+	menubar->mousePressed(x, y, button);
+	for(int i = 0; i < toolbarnum; i++) toolbars[i]->mousePressed(x, y, button);
 	guisizer->mousePressed(x, y, button);
 }
 
@@ -72,6 +109,7 @@ void gGUIForm::mouseDragged(int x, int y, int button) {
 }
 
 void gGUIForm::mouseReleased(int x, int y, int button) {
+	for(int i = 0; i < toolbarnum; i++) toolbars[i]->mouseReleased(x, y, button);
 	guisizer->mouseReleased(x, y, button);
 }
 

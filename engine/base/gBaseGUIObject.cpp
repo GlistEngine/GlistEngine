@@ -11,9 +11,16 @@
 
 int gBaseGUIObject::lastid = -1;
 gColor* gBaseGUIObject::backgroundcolor;
+gColor* gBaseGUIObject::middlegroundcolor;
 gColor* gBaseGUIObject::foregroundcolor;
 gFont* gBaseGUIObject::font;
 gColor* gBaseGUIObject::fontcolor;
+gColor* gBaseGUIObject::buttoncolor;
+gColor* gBaseGUIObject::pressedbuttoncolor;
+gColor* gBaseGUIObject::disabledbuttoncolor;
+gColor* gBaseGUIObject::buttonfontcolor;
+gColor* gBaseGUIObject::pressedbuttonfontcolor;
+gColor* gBaseGUIObject::disabledbuttonfontcolor;
 
 
 gBaseGUIObject::gBaseGUIObject() {
@@ -86,6 +93,10 @@ void gBaseGUIObject::setBackgroundColor(gColor* backgroundColor) {
 	backgroundcolor = backgroundColor;
 }
 
+void gBaseGUIObject::setMiddlegroundColor(gColor* middlegroundColor) {
+	middlegroundcolor = middlegroundColor;
+}
+
 gColor* gBaseGUIObject::getBackgroundColor() {
 	return backgroundcolor;
 }
@@ -112,6 +123,54 @@ void gBaseGUIObject::setFontColor(gColor* fontColor) {
 
 gColor* gBaseGUIObject::getFontColor() {
 	return fontcolor;
+}
+
+void gBaseGUIObject::setButtonColor(gColor* color) {
+	buttoncolor = color;
+}
+
+gColor* gBaseGUIObject::getButtonColor() {
+	return buttoncolor;
+}
+
+void gBaseGUIObject::setPressedButtonColor(gColor* color) {
+	pressedbuttoncolor = color;
+}
+
+gColor* gBaseGUIObject::getPressedButtonColor() {
+	return pressedbuttoncolor;
+}
+
+void gBaseGUIObject::setDisabledButtonColor(gColor* color) {
+	disabledbuttoncolor = color;
+}
+
+gColor* gBaseGUIObject::getDisabledButtonColor() {
+	return disabledbuttoncolor;
+}
+
+void gBaseGUIObject::setButtonFontColor(gColor* color) {
+	buttonfontcolor = color;
+}
+
+gColor* gBaseGUIObject::getButtonFontColor() {
+	return buttonfontcolor;
+}
+
+void gBaseGUIObject::setPressedButtonFontColor(gColor* color) {
+	pressedbuttonfontcolor = color;
+}
+
+gColor* gBaseGUIObject::getPressedButtonFontColor() {
+	return pressedbuttonfontcolor;
+}
+
+void gBaseGUIObject::setDisabledButtonFontColor(gColor* color) {
+	disabledbuttonfontcolor = color;
+}
+
+gColor* gBaseGUIObject::getDisabledButtonFontColor() {
+	return disabledbuttonfontcolor;
 }
 
 int gBaseGUIObject::getCursor(int x, int y) {
