@@ -31,7 +31,7 @@ public:
 
 	/**
 	 * Adding the light to the scene.
-	 * This function should be using after camera.begin() funciton.
+	 * This function should be using after camera.begin() function.
 	 */
 	void enable();
 
@@ -49,24 +49,14 @@ public:
 	/**
 	 * Changing type of light using id
 	 *
-	 * ambient light id number 0
-	 * directional light id number 1
-	 * point light id number 2
-	 * spot light id number 3
-	 *
-	 * @param lightType changing light type with id number
+	 * @param lightType light id no
 	 */
 	void setType(int lightType);
 
 	/**
- 	 * Gives using which type of light id
+ 	 * Gives using type of light id
  	 *
-	 * ambient light id number 0
-	 * directional light id number 1
-	 * point light id number 2
-	 * spot light id number 3
-	 *
-	 * @return light type id number
+	 * @return light type id no
 	 */
 	int getType();
 
@@ -96,9 +86,7 @@ public:
 	 * Gives light direction x, y, z coordinate.
 	 * For example, can be using function.x, function.y, function.z.
 	 * This typing showing light x, y, z direction. If this function
-	 * using more than 1, copy constructor called. Copy constructor that
-	 * copies the existing object into the new object one
-	 * byte at a time.
+	 * using more than 1, copy constructor called.
 	 *
 	 * @return Light direction with three dimensional floating point vector
 	 */
@@ -116,7 +104,7 @@ public:
 	void setAmbientColor(int r, int g, int b, int a = 255);
 
 	/**
-	 * Ambient color changing with color object.
+	 * Ambient color changing with gColor object.
 	 *
 	 * @param color gColor object to use changing color
 	 */
@@ -126,7 +114,7 @@ public:
 	 * Gives ambient color RGBA component.
 	 * This function can be use two type. Using directly giving memory address.
 	 * Other way, Typing like function.r, function.g, function.b, function.a
-	 * giving value of color.
+	 * giving value of color component.
 	 *
 	 * @return color object memory address or RGBA value
 	 */
@@ -172,7 +160,7 @@ public:
 	void setDiffuseColor(int r, int g, int b, int a = 255);
 
 	/**
-	 * Diffuse color changing with color object.
+	 * Diffuse color changing with gColor object.
 	 *
 	 * @param color gColor object to use changing color
 	 */
@@ -183,7 +171,7 @@ public:
 	 *
 	 * This function can be use two type. Using directly giving memory address.
 	 * Other way, Typing like function.r, function.g, function.b, function.a
-	 * giving value of color.
+	 * giving value of color component.
 	 *
 	 * @return color object memory address or RGBA value
 	 */
@@ -229,7 +217,7 @@ public:
 	void setSpecularColor(int r, int g, int b, int a = 255);
 
 	/**
-	 * Specular color changing with color object.
+	 * Specular color changing with gColor object.
 	 *
 	 * @param color gColor object to use changing color
 	 */
@@ -240,7 +228,7 @@ public:
 	 *
 	 * This function can be use two type. Using directly giving memory address.
 	 * Other way, Typing like function.r, function.g, function.b, function.a
-	 * giving value of color.
+	 * giving value of color component.
 	 *
 	 * @return color object memory address or RGBA value
 	 */
@@ -308,8 +296,6 @@ public:
 	 * For example, can be using function.x, function.y, function.z.
 	 * This typing showing light constant, linear, quadratic values.
 	 * If this function using more than 1, copy constructor called.
-	 * Copy constructor that copies the existing object into the new
-	 * object one byte at a time.
 	 *
 	 * @return attenuation with three dimensional floating point vector
 	 */
@@ -346,8 +332,7 @@ public:
 	/**
 	 * For example, can be using function.x and function.y. This typing showing
 	 * light spot cutoff angle. If this function using more than 1,
-	 * copy constructor called. Copy constructor that copies the existing object
-	 * into the new object one byte at a time.
+	 * copy constructor called.
 	 *
 	 * @return spot cut off angles
 	 */
