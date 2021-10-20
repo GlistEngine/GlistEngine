@@ -41,6 +41,8 @@ public:
 	 */
 	unsigned int load(std::vector<std::string> fullPaths);
 
+	void loadDataSkybox(std::string *data, int width, int height);
+
 	unsigned int loadEquirectangular(std::string fullPath);
 	unsigned int loadTextureEquirectangular(std::string texturePath);
 
