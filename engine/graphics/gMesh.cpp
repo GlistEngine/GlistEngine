@@ -226,8 +226,8 @@ void gMesh::drawStart() {
 			}
 		}
 		else {
-			colorshader->setInt("light[0].type", gLight::LIGHTTYPE_AMBIENT);
-			colorshader->setVec4("light[0].ambient", renderer->getLightingColor()->r, renderer->getLightingColor()->g, renderer->getLightingColor()->b, renderer->getLightingColor()->a);
+			colorshader->setInt("lights[0].type", gLight::LIGHTTYPE_AMBIENT);
+			colorshader->setVec4("lights[0].ambient", renderer->getLightingColor()->r, renderer->getLightingColor()->g, renderer->getLightingColor()->b, renderer->getLightingColor()->a);
 		}
 
 	    if(renderer->isFogEnabled()){
