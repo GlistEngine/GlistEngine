@@ -77,11 +77,6 @@ void gAppManager::runApp(std::string appName, gBaseApp *baseApp, int width, int 
 	// Create window
 	window->initialize(width, height, windowMode);
 
-	tempbasecanvas = new gBaseCanvas(app);
-	tempbasecanvas->setScreenSize(width, height);
-	tempbasecanvas->setUnitScreenSize(unitWidth, unitHeight);
-	tempbasecanvas->setScreenScaling(screenScaling);
-
 	canvasmanager = new gCanvasManager();
 	guimanager = new gGUIManager(app);
 
@@ -90,6 +85,12 @@ void gAppManager::runApp(std::string appName, gBaseApp *baseApp, int width, int 
 //	if (canvasmanager->getTempCanvas() != nullptr) {
 //		canvasmanager->getTempCanvas()->setup(); // Commented out because was invoking first canvas's setup 2 times in the app launch
 //	}
+
+	gBaseCanvas *tempcanvas = canvasmanager->getTempCanvas();
+	tempcanvas->setScreenSize(width, height);
+	tempcanvas->setUnitScreenSize(unitWidth, unitHeight);
+	tempcanvas->setScreenScaling(screenScaling);
+
 
 	starttime = std::chrono::high_resolution_clock::now();
 
@@ -136,8 +137,7 @@ gCanvasManager* gAppManager::getCanvasManager() {
 }
 
 void gAppManager::setCurrentCanvas(gBaseCanvas *baseCanvas) {
-	canvas = baseCanvas;
-	canvasmanager->setCurrentCanvas(canvas);
+	canvasmanager->setCurrentCanvas(baseCanvas);
 }
 
 gBaseCanvas* gAppManager::getCurrentCanvas() {
