@@ -417,7 +417,6 @@ private:
 	gBaseCanvas* canvas;
 	gCanvasManager* canvasmanager;
 	gGUIManager* guimanager;
-	gBaseCanvas* tempbasecanvas;
 	bool ismouseentered;
 	bool buttonpressed[3];
 	int pressed;

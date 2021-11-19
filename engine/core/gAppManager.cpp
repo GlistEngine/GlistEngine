@@ -47,7 +47,6 @@ gAppManager::gAppManager() {
 	canvas = nullptr;
 	canvasmanager = nullptr;
 	guimanager = nullptr;
-	tempbasecanvas = nullptr;
 	ismouseentered = false;
 	buttonpressed[0] = false;
 	buttonpressed[1] = false;
@@ -145,7 +144,7 @@ gBaseCanvas* gAppManager::getCurrentCanvas() {
 }
 
 void gAppManager::setScreenSize(int width, int height) {
-	tempbasecanvas->setScreenSize(width, height);
+	canvas->setScreenSize(width, height);
 }
 
 void gAppManager::setFramerate(int targetFramerate) {
