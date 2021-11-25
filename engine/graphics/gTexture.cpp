@@ -102,7 +102,7 @@ gTexture::gTexture(int w, int h, int format, bool isFbo) {
 }
 
 gTexture::~gTexture() {
-	if (ismutable) delete data;
+	if (ismutable) stbi_image_free(data);
 }
 
 unsigned int gTexture::load(std::string fullPath) {
