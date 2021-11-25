@@ -52,7 +52,6 @@
 /* functional */
 #define G_KEY_ESC 256
 #define G_KEY_ENTER 257
-#define G_KEY_ENTER 257
 #define G_KEY_TAB 258
 #define G_KEY_BACKSPACE 259
 #define G_KEY_INSERT 260
