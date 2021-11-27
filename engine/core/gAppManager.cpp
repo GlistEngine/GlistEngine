@@ -16,6 +16,7 @@
 #include <GLFW/glfw3.h>
 #endif
 
+using namespace std::chrono_literals;
 
 void gStartEngine(gBaseApp* baseApp, std::string appName, int windowMode, int width, int height) {
 	gAppManager appmanager;
@@ -52,14 +53,8 @@ gAppManager::gAppManager() {
 	buttonpressed[1] = false;
 	buttonpressed[2] = false;
 	pressed = 0;
-	framerate = 60;
-	millisecondsperframe = 1000 / framerate;
-	minWorkTime = std::chrono::duration<double, std::milli>(millisecondsperframe);
-	starttime = std::chrono::high_resolution_clock::now();
-	timediff = std::chrono::high_resolution_clock::now() - starttime;
-	timediff2 = std::chrono::high_resolution_clock::now() - starttime;
-	delaycoef = 0.34f;
-	delay = std::chrono::duration<double, std::milli>(delaycoef * 60 / framerate);
+	desiredframerate = 60;
+	desiredframetime = std::chrono::nanoseconds(16ms);
 	mpi = 0;
 	mpj = 0;
 	upi = 0;
@@ -90,18 +85,52 @@ void gAppManager::runApp(std::string appName, gBaseApp *baseApp, int width, int 
 	tempcanvas->setUnitScreenSize(unitWidth, unitHeight);
 	tempcanvas->setScreenScaling(screenScaling);
 
-
-	starttime = std::chrono::high_resolution_clock::now();
-
+	std::chrono::nanoseconds lag(0ns);
+	using Clock = std::chrono::steady_clock;
+	auto timestart = Clock::now();
+	auto currenttime = Clock::now();
 	// Main loop
 	while(!window->getShouldClose()) {
-		canvasmanager->update();
-		if(guimanager->isframeset) guimanager->update();
-		app->update();
-		for (upi = 0; upi < gBasePlugin::usedplugins.size(); upi++) gBasePlugin::usedplugins[upi]->update();
-		canvas = canvasmanager->getCurrentCanvas();
-		if (canvas != nullptr) {
-			canvas->update();
+		// calculate the elapsed time
+		currenttime = Clock::now();
+		auto frametime = currenttime - timestart;
+		timestart = currenttime;
+
+		// calculate lag (accumulates with time)
+		lag += std::chrono::duration_cast<std::chrono::nanoseconds>(frametime);
+
+		/*
+		 * If the last frame took longer than expected, for example;
+		 *
+		 * We want our frame to take exactly 1 second but the last frame took
+		 * 2 seconds, that means we missed a frame in there. To accommodate that,
+		 * in the while loop, if the lag time is more than the desired frame time,
+		 * we first substract the desired time from the lag, and then update once.
+		 * Now our lag became 1 second. Again we continue inside the while loop,
+		 * substract desired frame time from lag, then update. Now, we have updated
+		 * twice. One for the missed last frame, and one for our current frame.
+		 *
+		 * If the last frame took less than expected;
+		 *
+		 * For example if our computer ran fast and completed the frame in 0.5 seconds,
+		 * while our desired frame time was 1 second, we don't update in that frame
+		 * and just make the program render the stuff from the last frame. With that
+		 * we make sure that we run an exact amount of frames per second with a
+		 * fixed frame rate.
+		 *
+		 * We basically render as much as possible and limit the number of updates.
+		 */
+		while(lag >= desiredframetime) {
+			lag -= desiredframetime;
+			canvasmanager->update();
+			if(guimanager->isframeset) guimanager->update();
+			app->update();
+			for (upi = 0; upi < gBasePlugin::usedplugins.size(); upi++) gBasePlugin::usedplugins[upi]->update();
+
+			canvas = canvasmanager->getCurrentCanvas();
+			if(canvas != nullptr) canvas->update();
+		}
+		if(canvas != nullptr) {
 			for (upj = 0; upj < renderpassnum; upj++) {
 				renderpassno = upj;
 				canvas->clearBackground();
@@ -110,14 +139,6 @@ void gAppManager::runApp(std::string appName, gBaseApp *baseApp, int width, int 
 		}
 		if(guimanager->isframeset) guimanager->draw();
 		window->update();
-
-		// Framerate adjustment
-		timediff = std::chrono::high_resolution_clock::now() - starttime;
-		if (timediff < minWorkTime) {
-			std::this_thread::sleep_for(minWorkTime - timediff);
-		}
-		timediff2 = std::chrono::high_resolution_clock::now() - starttime;
-		starttime = std::chrono::high_resolution_clock::now();
 	}
 
 	window->close();
@@ -148,10 +169,8 @@ void gAppManager::setScreenSize(int width, int height) {
 }
 
 void gAppManager::setFramerate(int targetFramerate) {
-	framerate = targetFramerate;
-	millisecondsperframe = 1000 / framerate;
-	minWorkTime = std::chrono::duration<double, std::milli>(millisecondsperframe);
-	delay = std::chrono::duration<double, std::milli>(delaycoef * 60 / framerate);
+	desiredframerate = targetFramerate;
+	desiredframetime = std::chrono::nanoseconds(int(1000000000 / desiredframerate));
 }
 
 std::string gAppManager::getAppName() {
@@ -173,11 +192,11 @@ gGUIFrame* gAppManager::getCurrentGUIFrame() {
 
 
 int gAppManager::getFramerate() {
-    return (int)(1000 / timediff2.count());
+    return int(1000000000 / desiredframetime.count());
 }
 
 double gAppManager::getElapsedTime() {
-	return timediff2.count();
+	return desiredframetime.count();
 }
 
 void gAppManager::onCharEvent(unsigned int key) {
