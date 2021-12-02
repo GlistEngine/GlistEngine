@@ -158,6 +158,13 @@ set(SRC_FILES
 	${ENGINE_DIR}/core/gBaseWindow.cpp
 	${ENGINE_DIR}/core/gCanvasManager.cpp
 	${ENGINE_DIR}/core/gAppManager.cpp
+	${ENGINE_DIR}/core/gPostProcessManager.cpp
+	${ENGINE_DIR}/base/gBasePostProcess.cpp
+	${ENGINE_DIR}/graphics/posteffects/gInversion.cpp
+	${ENGINE_DIR}/graphics/posteffects/gGrayscale.cpp
+	${ENGINE_DIR}/graphics/posteffects/gBlur.cpp
+	${ENGINE_DIR}/graphics/posteffects/gSharpen.cpp
+	${ENGINE_DIR}/graphics/posteffects/gEdgeDetection.cpp	
 )
 
 if(NOT ANDROID)
@@ -184,6 +191,7 @@ set(INC_DIRS
     ${ENGINE_DIR}/media
     ${ENGINE_DIR}/graphics
     ${ENGINE_DIR}/graphics/primitives
+    ${ENGINE_DIR}/graphics/posteffects
     ${ENGINE_DIR}/base
     ${ENGINE_DIR}/core
 	${PLUGIN_INCLUDES}

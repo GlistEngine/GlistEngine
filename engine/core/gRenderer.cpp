@@ -196,6 +196,18 @@ gRenderer::gRenderer() {
 	brdfshader = new gShader();
 	brdfshader->loadProgram(getShaderSrcBrdfVertex(), getShaderSrcBrdfFragment());
 
+	fboshader = new gShader();
+	fboshader->loadProgram(getShaderSrcFboVertex(), getShaderSrcFboFragment());
+
+	inversionppshader = new gShader();
+	inversionppshader->loadProgram(getShaderSrcFboVertex(), getShaderSrcInversionFragment());
+
+	grayscaleshader = new gShader();
+	grayscaleshader->loadProgram(getShaderSrcFboVertex(), getShaderSrcGrayscaleFragment());
+
+	kerneleffectshader = new gShader();
+	kerneleffectshader->loadProgram(getShaderSrcFboVertex(), getShaderSrcKernelEffectFragment());
+
 	rendercolor = new gColor();
 	rendercolor->set(255, 255, 255, 255);
 
@@ -265,6 +277,22 @@ gShader* gRenderer::getPrefilterShader() {
 
 gShader* gRenderer::getBrdfShader() {
 	return brdfshader;
+}
+
+gShader* gRenderer::getFboShader() {
+	return fboshader;
+}
+
+gShader* gRenderer::getInversionShader() {
+	return inversionppshader;
+}
+
+gShader* gRenderer::getGrayscaleShader() {
+	return grayscaleshader;
+}
+
+gShader* gRenderer::getKernelEffectShader() {
+	return kerneleffectshader;
 }
 
 void gRenderer::setProjectionMatrix(glm::mat4 projectionMatrix) {
@@ -1689,3 +1717,111 @@ const std::string gRenderer::getShaderSrcBrdfFragment() {
 	return std::string(shadersource);
 }
 
+const std::string gRenderer::getShaderSrcFboVertex() {
+	const char* shadersource =
+			"#version 330 core\n"
+			"layout (location = 0) in vec2 aPos;"
+			"layout (location = 1) in vec2 aTexCoords;"
+			""
+			"out vec2 TexCoords;"
+			""
+			"void main()"
+			"{"
+			"    gl_Position = vec4(aPos.x, aPos.y, 0.0, 1.0);"
+			"    TexCoords = aTexCoords;"
+			"}\n";
+
+	return std::string(shadersource);
+}
+
+const std::string gRenderer::getShaderSrcFboFragment() {
+	const char* shadersource =
+			"#version 330 core\n"
+			"out vec4 FragColor;"
+			""
+			"in vec2 TexCoords;"
+			""
+			"uniform sampler2D screenTexture;"
+			""
+			"void main()"
+			"{ "
+			"    FragColor = vec4(texture(screenTexture, TexCoords).rgb, 1.0);"
+			"}\n";
+	return std::string(shadersource);
+}
+
+const std::string gRenderer::getShaderSrcInversionFragment() {
+	const char* shadersource =
+			"#version 330 core\n"
+			"out vec4 FragColor;"
+			""
+			"in vec2 TexCoords;"
+			""
+			"uniform sampler2D screenTexture;"
+			""
+			"void main()"
+			"{ "
+			"    FragColor = vec4(vec3(1.0 - texture(screenTexture, TexCoords)), 1.0);"
+			"}\n";
+	return std::string(shadersource);
+}
+
+const std::string gRenderer::getShaderSrcGrayscaleFragment() {
+	const char* shadersource =
+			"#version 330 core\n"
+			"out vec4 FragColor;"
+			""
+			"in vec2 TexCoords;"
+			""
+			"uniform sampler2D screenTexture;"
+			""
+			"void main()"
+			"{ "
+			"	vec4 texcolor = texture(screenTexture, TexCoords);"
+			"	float average = 0.2126 * texcolor.r + 0.7152 * texcolor.g + 0.0722 * texcolor.b;"
+			"	FragColor = vec4(average, average, average, 1.0);"
+			"}";
+	return std::string(shadersource);
+}
+
+const std::string gRenderer::getShaderSrcKernelEffectFragment() {
+	const char* shadersource =
+			"#version 330 core\n"
+			"out vec4 FragColor;"
+			""
+			"in vec2 TexCoords;"
+			""
+			"uniform sampler2D screenTexture;"
+			""
+			"uniform float offset;"
+			"uniform float kernel[9];"
+			""
+			"void main()"
+			"{"
+			"    vec2 offsets[9] = vec2[]("
+			"        vec2(-offset,  offset),"
+			"        vec2( 0.0f,    offset),"
+			"        vec2( offset,  offset),"
+			"        vec2(-offset,  0.0f),  "
+			"        vec2( 0.0f,    0.0f),  "
+			"        vec2( offset,  0.0f),  "
+			"        vec2(-offset, -offset),"
+			"        vec2( 0.0f,   -offset), "
+			"        vec2( offset, -offset)  "
+			"    );"
+			""
+			"    vec3 sampleTex[9];"
+			"    for(int i = 0; i < 9; i++)"
+			"    {"
+			"        sampleTex[i] = vec3(texture(screenTexture, TexCoords.st + offsets[i]));"
+			"    }"
+			"    vec3 col = vec3(0.0);"
+			"    for(int i = 0; i < 9; i++)"
+			"	 {"
+			"		col += sampleTex[i] * kernel[i];"
+			"	 }"
+			""
+			"    FragColor = vec4(col, 1.0);"
+			"}";
+	return std::string(shadersource);
+}
