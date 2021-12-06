@@ -220,6 +220,7 @@ elseif(APPLE)
   		/usr/local/Cellar/glew/2.2.0_1/include
   		/usr/local/Cellar/glm/0.9.9.8/include
   		/usr/local/Cellar/assimp/5.0.1/include
+  		/usr/local/Cellar/curl/7.80.0_1/include
   		/usr/local/include
 		${MINGW64_DIR}/include/sqlite
 #  		/usr/local/Cellar/glfw/3.3.2/include
@@ -348,6 +349,16 @@ elseif(APPLE)
 	    OUTPUT_STRIP_TRAILING_WHITESPACE)
 	string(STRIP "${CL_TMP_VAR}" CL_VAR_7)
 	add_definitions(${CL_VAR_7})
+	
+	find_library(Lib_curl curl HINTS /usr/local/Cellar/curl/7.80.0_1/lib)
+	execute_process(COMMAND 
+	    pkg-config --cflags curl
+	    OUTPUT_VARIABLE
+	    CL_TMP_VAR
+	    OUTPUT_STRIP_TRAILING_WHITESPACE)
+	string(STRIP "${CL_TMP_VAR}" CL_VAR_8)
+	add_definitions(${CL_VAR_8})
+	
 elseif(ANDROID)
 	find_library( # Sets the name of the path variable.
 	              log-lib
@@ -426,6 +437,7 @@ elseif(APPLE)
 		${Lib_fmod}
 		${Lib_assimp}
 		${Lib_freetype}
+		${Lib_curl}
 		${Lib_glfw}
 		${Lib_GL}
 		${Lib_GLEW}
