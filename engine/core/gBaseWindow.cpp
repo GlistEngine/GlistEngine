@@ -91,6 +91,10 @@ void gBaseWindow::setCursor(int cursorNo) {
 
 }
 
+void gBaseWindow::setCursorMode(int cursorMode) {
+
+}
+
 void gBaseWindow::setSize(int width, int height) {
 	this->width = width;
 	this->height = height;

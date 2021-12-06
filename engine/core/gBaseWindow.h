@@ -59,6 +59,7 @@ public:
 	virtual void close();
 
 	virtual void setCursor(int cursorNo);
+	virtual void setCursorMode(int cursorMode);
 
 	/**
 	 * Sets game window size.
