@@ -219,6 +219,7 @@ public:
 	void setWindow(gBaseWindow * baseWindow);
 
 	void setCursor(int cursorId);
+	void setCursorMode(int cursorMode);
 
 	/**
 	 * Completely replace the current gBaseCanvas with the specified gBaseCanvas.

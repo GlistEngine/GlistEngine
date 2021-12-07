@@ -24,6 +24,8 @@
 
 class gGLFWWindow : public gBaseWindow {
 public:
+	static const int CURSORMODE_NORMAL, CURSORMODE_HIDDEN, CURSORMODE_DISABLED;
+
 	gGLFWWindow();
 	~gGLFWWindow();
 
@@ -54,6 +56,7 @@ public:
 	void close();
 
 	void setCursor(int cursorNo);
+	void setCursorMode(int cursorMode);
 
 private:
 #if defined(WIN32) || defined(LINUX) || defined(APPLE)

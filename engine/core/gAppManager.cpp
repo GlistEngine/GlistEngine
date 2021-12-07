@@ -131,6 +131,10 @@ void gAppManager::setCursor(int cursorId) {
 	window->setCursor(cursorId);
 }
 
+void gAppManager::setCursorMode(int cursorMode) {
+	window->setCursorMode(cursorMode);
+}
+
 gCanvasManager* gAppManager::getCanvasManager() {
 	return canvasmanager;
 }

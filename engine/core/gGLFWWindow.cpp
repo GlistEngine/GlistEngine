@@ -11,6 +11,10 @@
 #endif
 #include "stb/stb_image.h"
 
+const int gGLFWWindow::CURSORMODE_NORMAL = GLFW_CURSOR_NORMAL;
+const int gGLFWWindow::CURSORMODE_HIDDEN = GLFW_CURSOR_HIDDEN;
+const int gGLFWWindow::CURSORMODE_DISABLED = GLFW_CURSOR_DISABLED;
+
 
 gGLFWWindow::gGLFWWindow() {
 #if defined(WIN32) || defined(LINUX) || defined(APPLE)
@@ -148,6 +152,12 @@ void gGLFWWindow::close() {
 void gGLFWWindow::setCursor(int cursorNo) {
 #if defined(WIN32) || defined(LINUX) || defined(APPLE)
 	glfwSetCursor(window, cursor[cursorNo]);
+#endif
+}
+
+void gGLFWWindow::setCursorMode(int cursorMode) {
+#if defined(WIN32) || defined(LINUX) || defined(APPLE)
+	glfwSetInputMode(window, GLFW_CURSOR, cursorMode);
 #endif
 }
 
