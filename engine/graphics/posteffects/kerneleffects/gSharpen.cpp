@@ -9,9 +9,9 @@
 
 gSharpen::gSharpen() {
 	float kernel[9] = {
-			-1.0f, -1.0f, -1.0f,
-			-1.0f,  9.0f, -1.0f,
-			-1.0f, -1.0f, -1.0f
+			 0.0f, -1.0f,  0.0f,
+			-1.0f,  5.0f, -1.0f,
+			 0.0f, -1.0f,  0.0f
 	};
 	float offset = 1.0f / 300.0f;
 
