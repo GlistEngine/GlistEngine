@@ -5,17 +5,9 @@
  *      Author: kayra
  */
 
-#include <posteffects/gEdgeDetection.h>
+#include <gEdgeDetection.h>
 
 gEdgeDetection::gEdgeDetection() {
-	shader = renderer->getKernelEffectShader();
-}
-
-gEdgeDetection::~gEdgeDetection() {
-	// TODO Auto-generated destructor stub
-}
-
-void gEdgeDetection::use() {
 	float kernel[9] = {
 			-1.0f, -1.0f, -1.0f,
 			-1.0f,  8.0f, -1.0f,
@@ -26,4 +18,20 @@ void gEdgeDetection::use() {
 	shader->use();
 	shader->setFloat("offset", offset);
 	for(int i = 0; i < 9; i++) shader->setFloat("kernel[" + gToStr(i) + "]", kernel[i]);
+}
+
+gEdgeDetection::~gEdgeDetection() {
+	// TODO Auto-generated destructor stub
+}
+
+void gEdgeDetection::use() {
+	shader->use();
+}
+
+const std::string gEdgeDetection::getVertSrc() {
+	return "";
+}
+
+const std::string gEdgeDetection::getFragSrc() {
+	return "";
 }

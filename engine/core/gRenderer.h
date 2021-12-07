@@ -142,9 +142,6 @@ public:
 	gShader* getPrefilterShader();
 	gShader* getBrdfShader();
 	gShader* getFboShader();
-	gShader* getInversionShader();
-	gShader* getGrayscaleShader();
-	gShader* getKernelEffectShader();
 
 	void setProjectionMatrix(glm::mat4 projectionMatrix);
 	void setProjectionMatrix2d(glm::mat4 projectionMatrix2d);
@@ -160,8 +157,6 @@ public:
 	gColor* fogcolor;
 	float fogdensity;
 	float foggradient;
-
-
 
 private:
 	static int width, height;
@@ -195,9 +190,6 @@ private:
 	gShader* prefiltershader;
 	gShader* brdfshader;
 	gShader* fboshader;
-	gShader* inversionppshader;
-	gShader* grayscaleshader;
-	gShader* kerneleffectshader;
 
 	glm::mat4 projectionmatrix;
 	glm::mat4 projectionmatrixold;
@@ -228,9 +220,6 @@ private:
 	const std::string getShaderSrcBrdfFragment();
 	const std::string getShaderSrcFboVertex();
 	const std::string getShaderSrcFboFragment();
-	const std::string getShaderSrcInversionFragment();
-	const std::string getShaderSrcGrayscaleFragment();
-	const std::string getShaderSrcKernelEffectFragment();
 };
 
 #endif /* CORE_GRENDERER_H_ */

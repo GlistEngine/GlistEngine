@@ -8,16 +8,17 @@
 #ifndef GRAPHICS_POSTEFFECTS_GBLUR_H_
 #define GRAPHICS_POSTEFFECTS_GBLUR_H_
 
-#include <gBasePostProcess.h>
+#include <gKernelEffect.h>
 
-class gBlur: public gBasePostProcess {
+class gBlur: public gKernelEffect {
 public:
 	gBlur();
 	virtual ~gBlur();
-	void use();
 
-private:
-	float kernel[9];
+	void use();
+protected:
+	const std::string getVertSrc();
+	const std::string getFragSrc();
 };
 
 #endif /* GRAPHICS_POSTEFFECTS_GBLUR_H_ */

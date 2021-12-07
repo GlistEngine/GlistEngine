@@ -17,8 +17,11 @@ public:
 	virtual ~gBasePostProcess();
 
 	virtual void use() = 0;
+	gShader* getShader();
 
 protected:
+	virtual const std::string getVertSrc() = 0;
+	virtual const std::string getFragSrc() = 0;
 	gShader* shader;
 };
 

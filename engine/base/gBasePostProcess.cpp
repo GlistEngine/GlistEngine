@@ -13,3 +13,6 @@ gBasePostProcess::gBasePostProcess() {
 gBasePostProcess::~gBasePostProcess() {
 }
 
+gShader* gBasePostProcess::getShader() {
+	return shader;
+}

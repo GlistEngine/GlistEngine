@@ -14,7 +14,12 @@ class gGrayscale: public gBasePostProcess {
 public:
 	gGrayscale();
 	virtual ~gGrayscale();
+
 	void use();
+
+protected:
+	const std::string getVertSrc();
+	const std::string getFragSrc();
 };
 
 #endif /* GRAPHICS_POSTEFFECTS_GGRAYSCALE_H_ */

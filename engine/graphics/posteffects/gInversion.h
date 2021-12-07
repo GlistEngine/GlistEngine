@@ -16,6 +16,9 @@ public:
 	virtual ~gInversion();
 
 	void use();
+protected:
+	const std::string getVertSrc();
+	const std::string getFragSrc();
 };
 
 #endif /* GRAPHICS_POSTEFFECTS_GINVERSION_H_ */

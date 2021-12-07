@@ -5,17 +5,9 @@
  *      Author: kayra
  */
 
-#include <posteffects/gBlur.h>
+#include <gBlur.h>
 
 gBlur::gBlur() {
-	shader = renderer->getKernelEffectShader();
-}
-
-gBlur::~gBlur() {
-	// TODO Auto-generated destructor stub
-}
-
-void gBlur::use() {
 	float kernel[9] = {
 			.0625f, .125f, .0625f,
 			.125f,  .25f,  .125f,
@@ -25,4 +17,20 @@ void gBlur::use() {
 	shader->use();
 	shader->setFloat("offset", offset);
 	for(int i = 0; i < 9; i++) shader->setFloat("kernel[" + gToStr(i) + "]", kernel[i]);
+}
+
+gBlur::~gBlur() {
+	// TODO Auto-generated destructor stub
+}
+
+void gBlur::use() {
+	shader->use();
+}
+
+const std::string gBlur::getVertSrc() {
+	return "";
+}
+
+const std::string gBlur::getFragSrc() {
+	return "";
 }

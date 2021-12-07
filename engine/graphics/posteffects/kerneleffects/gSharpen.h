@@ -8,13 +8,17 @@
 #ifndef GRAPHICS_POSTEFFECTS_GSHARPEN_H_
 #define GRAPHICS_POSTEFFECTS_GSHARPEN_H_
 
-#include <gBasePostProcess.h>
+#include <gKernelEffect.h>
 
-class gSharpen : public gBasePostProcess {
+class gSharpen : public gKernelEffect {
 public:
 	gSharpen();
 	virtual ~gSharpen();
+
 	void use();
+protected:
+	const std::string getVertSrc();
+	const std::string getFragSrc();
 };
 
 #endif /* GRAPHICS_POSTEFFECTS_GSHARPEN_H_ */

@@ -162,9 +162,10 @@ set(SRC_FILES
 	${ENGINE_DIR}/base/gBasePostProcess.cpp
 	${ENGINE_DIR}/graphics/posteffects/gInversion.cpp
 	${ENGINE_DIR}/graphics/posteffects/gGrayscale.cpp
-	${ENGINE_DIR}/graphics/posteffects/gBlur.cpp
-	${ENGINE_DIR}/graphics/posteffects/gSharpen.cpp
-	${ENGINE_DIR}/graphics/posteffects/gEdgeDetection.cpp	
+	${ENGINE_DIR}/graphics/posteffects/gKernelEffect.cpp
+	${ENGINE_DIR}/graphics/posteffects/kerneleffects/gBlur.cpp
+	${ENGINE_DIR}/graphics/posteffects/kerneleffects/gSharpen.cpp
+	${ENGINE_DIR}/graphics/posteffects/kerneleffects/gEdgeDetection.cpp	
 )
 
 if(NOT ANDROID)
@@ -192,6 +193,7 @@ set(INC_DIRS
     ${ENGINE_DIR}/graphics
     ${ENGINE_DIR}/graphics/primitives
     ${ENGINE_DIR}/graphics/posteffects
+    ${ENGINE_DIR}/graphics/posteffects/kerneleffects
     ${ENGINE_DIR}/base
     ${ENGINE_DIR}/core
 	${PLUGIN_INCLUDES}

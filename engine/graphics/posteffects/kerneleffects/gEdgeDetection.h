@@ -8,13 +8,17 @@
 #ifndef GRAPHICS_POSTEFFECTS_GEDGEDETECTION_H_
 #define GRAPHICS_POSTEFFECTS_GEDGEDETECTION_H_
 
-#include <gBasePostProcess.h>
+#include <gKernelEffect.h>
 
-class gEdgeDetection: public gBasePostProcess {
+class gEdgeDetection: public gKernelEffect {
 public:
 	gEdgeDetection();
 	virtual ~gEdgeDetection();
+
 	void use();
+protected:
+	const std::string getVertSrc();
+	const std::string getFragSrc();
 };
 
 #endif /* GRAPHICS_POSTEFFECTS_GEDGEDETECTION_H_ */
