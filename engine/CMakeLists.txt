@@ -1,9 +1,5 @@
 cmake_minimum_required (VERSION 3.10.2)
 
-if(APPLE)
-    set(CMAKE_CXX_COMPILER "/usr/local/Cellar/gcc@7/7.5.0_3/bin/g++-7")
-endif()
-
 
 # Configure compiler and linker as you need
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS} -std=c++14 -DNDEBUG -DENABLE_BOOST_WORKAROUND=ON -fuse-ld=gold -Wuninitialized -Wmultichar -ffunction-sections -fdata-sections -fexceptions -frtti -fpermissive -fPIC -O2")
@@ -72,6 +68,12 @@ if(NOT DEFINED MINGW64_DIR)
 endif()
 if(NOT DEFINED ANDROID_DIR)
 	set(ANDROID_DIR ${ZBIN_DIR}/android)
+endif()
+
+if(APPLE)
+    set(CMAKE_CXX_COMPILER "/usr/local/bin/g++-11")
+#    set(CMAKE_CXX_COMPILER "/usr/bin/g++")
+#    set(CMAKE_CXX_COMPILER "${MINGW64_DIR}/Cellar/gcc@7/7.5.0_3/bin/g++-7")
 endif()
 
 
@@ -215,16 +217,15 @@ elseif(LINUX)
 elseif(APPLE)
   	list(APPEND INC_DIRS
   		/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers
-  		/usr/local/Cellar/freetype/2.10.4/include
-  		/usr/local/Cellar/freetype/2.10.4/include/freetype2
-  		/usr/local/Cellar/glew/2.2.0_1/include
-  		/usr/local/Cellar/glm/0.9.9.8/include
-  		/usr/local/Cellar/assimp/5.0.1/include
-  		/usr/local/Cellar/curl/7.80.0_1/include
+#  		/usr/local/Cellar/freetype/2.10.4/include
+#  		/usr/local/Cellar/freetype/2.10.4/include/freetype2
+#  		/usr/local/Cellar/glew/2.2.0_1/include
+#  		/usr/local/Cellar/glm/0.9.9.8/include
+#  		/usr/local/Cellar/assimp/5.0.1/include
+#  		/usr/local/Cellar/curl/7.80.0_1/include
   		/usr/local/include
+  		/usr/local/include/freetype2
 		${MINGW64_DIR}/include/sqlite
-#  		/usr/local/Cellar/glfw/3.3.2/include
-#  		/usr/local/include
 		# TODO: FFMPEG
   	)
 elseif(ANDROID)
@@ -287,7 +288,8 @@ elseif(LINUX)
 	set_target_properties(freetype PROPERTIES IMPORTED_LOCATION
 			${MINGW64_DIR}/lib/libfreetype.so)
 elseif(APPLE)
-	find_library(Lib_freetype freetype HINTS /usr/local/Cellar/freetype/2.10.4/lib)
+	find_library(Lib_freetype freetype HINTS /usr/local/lib)
+#	find_library(Lib_freetype freetype HINTS /usr/local/Cellar/freetype/2.10.4/lib)
 	execute_process(COMMAND 
 	    pkg-config --cflags freetype
 	    OUTPUT_VARIABLE
@@ -296,7 +298,8 @@ elseif(APPLE)
 	string(STRIP "${CL_TMP_VAR}" CL_VAR_1)
 	add_definitions(${CL_VAR_1})
 
-	find_library(Lib_assimp assimp HINTS /usr/local/Cellar/assimp/5.0.1/lib)
+	find_library(Lib_assimp assimp HINTS /usr/local/lib)
+#	find_library(Lib_assimp assimp HINTS /usr/local/Cellar/assimp/5.0.1/lib)
 	execute_process(COMMAND 
 	    pkg-config --cflags assimp
 	    OUTPUT_VARIABLE
@@ -305,7 +308,7 @@ elseif(APPLE)
 	string(STRIP "${CL_TMP_VAR}" CL_VAR_2)
 	add_definitions(${CL_VAR_2})
 
-	find_library(Lib_fmodL fmodL HINTS ~/dev/glist/zbin/glistzbin-macos/mingw64/lib)
+	find_library(Lib_fmodL fmodL HINTS ${MINGW64_DIR}/lib)
 	execute_process(COMMAND 
 	    pkg-config --cflags fmod
 	    OUTPUT_VARIABLE
@@ -314,7 +317,7 @@ elseif(APPLE)
 	string(STRIP "${CL_TMP_VAR}" CL_VAR_3)
 	add_definitions(${CL_VAR_3})
 
-	find_library(Lib_fmod fmod HINTS ~/dev/glist/zbin/glistzbin-macos/mingw64/lib)
+	find_library(Lib_fmod fmod HINTS ${MINGW64_DIR}/lib)
 	execute_process(COMMAND 
 	    pkg-config --cflags fmod
 	    OUTPUT_VARIABLE
@@ -323,7 +326,8 @@ elseif(APPLE)
 	string(STRIP "${CL_TMP_VAR}" CL_VAR_4)
 	add_definitions(${CL_VAR_4})
 
-	find_library(Lib_glfw glfw HINTS /usr/local/Cellar/glfw/3.3.2/lib)
+	find_library(Lib_glfw glfw HINTS /usr/local/lib)
+#	find_library(Lib_glfw glfw HINTS /usr/local/Cellar/glfw/3.3.3/lib)
 	execute_process(COMMAND 
 	    pkg-config --cflags glfw
 	    OUTPUT_VARIABLE
@@ -341,7 +345,8 @@ elseif(APPLE)
 	string(STRIP "${CL_TMP_VAR}" CL_VAR_6)
 	add_definitions(${CL_VAR_6})
 
-	find_library(Lib_GLEW GLEW HINTS /usr/local/Cellar/glew/2.2.0_1/lib)
+	find_library(Lib_GLEW GLEW HINTS /usr/local/lib)
+#	find_library(Lib_GLEW GLEW HINTS /usr/local/Cellar/glew/2.2.0_1/lib)
 	execute_process(COMMAND 
 	    pkg-config --cflags GLEW
 	    OUTPUT_VARIABLE
@@ -350,7 +355,8 @@ elseif(APPLE)
 	string(STRIP "${CL_TMP_VAR}" CL_VAR_7)
 	add_definitions(${CL_VAR_7})
 	
-	find_library(Lib_curl curl HINTS /usr/local/Cellar/curl/7.80.0_1/lib)
+	find_library(Lib_curl curl HINTS /usr/local/lib)
+#	find_library(Lib_curl curl HINTS /usr/local/Cellar/curl/7.80.0_1/lib)
 	execute_process(COMMAND 
 	    pkg-config --cflags curl
 	    OUTPUT_VARIABLE
