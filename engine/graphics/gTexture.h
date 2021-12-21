@@ -28,7 +28,7 @@ public:
 	virtual unsigned int load(std::string fullPath);
 	unsigned int loadTexture(std::string texturePath);
 
-	unsigned int loadData(unsigned char* textureData, int width, int height, int componentNum);
+	unsigned int loadData(unsigned char* textureData, int width, int height, int componentNum, bool isFont = false);
 
     void bind();
     void bind(int textureSlotNo);
@@ -82,6 +82,7 @@ protected:
     unsigned char* data;
     bool ismutable;
     int wraps, wrapt, filtermin, filtermag;
+    bool isfont;
 
     void setData(unsigned char* textureData, bool isMutable = false);
     unsigned char* getData();
