@@ -67,6 +67,7 @@ gTexture::gTexture() {
 	ismutable = false;
 	isfbo = false;
 	ishdr = false;
+	isfont = false;
 	setupRenderData();
 }
 
@@ -90,6 +91,7 @@ gTexture::gTexture(int w, int h, int format, bool isFbo) {
 	ismutable = false;
 	isfbo = isFbo;
 	ishdr = false;
+	isfont = false;
     glGenTextures(1, &id);
     bind();
     glTexImage2D(GL_TEXTURE_2D, 0, internalformat, width, height, 0, format, GL_UNSIGNED_BYTE, 0);
@@ -102,7 +104,7 @@ gTexture::gTexture(int w, int h, int format, bool isFbo) {
 }
 
 gTexture::~gTexture() {
-	if (ismutable) stbi_image_free(data);
+	if (ismutable && !isfont) stbi_image_free(data);
 }
 
 unsigned int gTexture::load(std::string fullPath) {
@@ -131,10 +133,11 @@ unsigned int gTexture::loadTexture(std::string texturePath) {
 	return load(gGetTexturesDir() + texturePath);
 }
 
-unsigned int gTexture::loadData(unsigned char* textureData, int width, int height, int componentNum) {
+unsigned int gTexture::loadData(unsigned char* textureData, int width, int height, int componentNum, bool isFont) {
 	this->width = width;
 	this->height = height;
 	this->componentnum = componentNum;
+	isfont = isFont;
 
     glGenTextures(1, &id);
 
