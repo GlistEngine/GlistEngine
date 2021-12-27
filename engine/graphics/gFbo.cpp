@@ -7,15 +7,46 @@
 
 #include <gFbo.h>
 
+bool gFbo::isvaoset = false;
+unsigned int gFbo::quadVAO = 0;
+unsigned int gFbo::quadVBO = 0;
+
 gFbo::gFbo() {
 	width = 0;
 	height = 0;
 	framebuffer = 0;
 	isdepthmap = false;
 	textureid = 0;
+
+	if(!isvaoset) {
+	    float quadVertices[] = { // vertex attributes for a quad that fills the entire screen in Normalized Device Coordinates.
+	        // positions   // texCoords
+	        -1.0f,  1.0f,  0.0f, 1.0f,
+	        -1.0f, -1.0f,  0.0f, 0.0f,
+	         1.0f, -1.0f,  1.0f, 0.0f,
+
+	        -1.0f,  1.0f,  0.0f, 1.0f,
+	         1.0f, -1.0f,  1.0f, 0.0f,
+	         1.0f,  1.0f,  1.0f, 1.0f
+	    };
+
+	    glGenVertexArrays(1, &gFbo::quadVAO);
+	    glGenBuffers(1, &gFbo::quadVBO);
+	    glBindVertexArray(gFbo::quadVAO);
+	    glBindBuffer(GL_ARRAY_BUFFER, gFbo::quadVBO);
+	    glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
+	    glEnableVertexAttribArray(0);
+	    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
+	    glEnableVertexAttribArray(1);
+	    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
+	    gFbo::isvaoset = true;
+	}
 }
 
 gFbo::~gFbo() {
+	glDeleteFramebuffers(1, &framebuffer);
+	glDeleteVertexArrays(1, &gFbo::quadVAO);
+	glDeleteBuffers(1, &gFbo::quadVBO);
 }
 
 void gFbo::allocate(int width, int height, bool isDepthMap) {
@@ -28,7 +59,7 @@ void gFbo::allocate(int width, int height, bool isDepthMap) {
 
     if (!isDepthMap) {
         // create a color attachment texture
-        texture = gTexture(width, height, GL_RGBA, true);
+        texture = gTexture(width, height, GL_RGB, true);
         textureid = texture.getId();
         texture.bind();
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture.getId(), 0);
@@ -126,3 +157,6 @@ gTexture& gFbo::getTexture() {
 	return texture;
 }
 
+unsigned int gFbo::getQuadVao() {
+	return gFbo::quadVAO;
+}
