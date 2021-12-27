@@ -1,5 +1,9 @@
 cmake_minimum_required (VERSION 3.10.2)
 
+if(UNIX)
+	EXECUTE_PROCESS( COMMAND uname -m COMMAND tr -d '\n' OUTPUT_VARIABLE DEVICEARCHITECTURE )
+	message( STATUS "Architecture: ${DEVICEARCHITECTURE}" )
+endif()
 
 # Configure compiler and linker as you need
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS} -std=c++14 -DNDEBUG -DENABLE_BOOST_WORKAROUND=ON -fuse-ld=gold -Wuninitialized -Wmultichar -ffunction-sections -fdata-sections -fexceptions -frtti -fpermissive -fPIC -O2")
