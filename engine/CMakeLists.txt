@@ -1,8 +1,8 @@
 cmake_minimum_required (VERSION 3.10.2)
 
 if(UNIX)
-	EXECUTE_PROCESS( COMMAND uname -m COMMAND tr -d '\n' OUTPUT_VARIABLE ARCHITECTURE )
-	message( STATUS "Architecture: ${ARCHITECTURE}" )
+	EXECUTE_PROCESS( COMMAND uname -m COMMAND tr -d '\n' OUTPUT_VARIABLE DEVICEARCHITECTURE )
+	message( STATUS "Architecture: ${DEVICEARCHITECTURE}" )
 endif()
 
 # Configure compiler and linker as you need
