@@ -196,6 +196,9 @@ gRenderer::gRenderer() {
 	brdfshader = new gShader();
 	brdfshader->loadProgram(getShaderSrcBrdfVertex(), getShaderSrcBrdfFragment());
 
+	fboshader = new gShader();
+	fboshader->loadProgram(getShaderSrcFboVertex(), getShaderSrcFboFragment());
+
 	rendercolor = new gColor();
 	rendercolor->set(255, 255, 255, 255);
 
@@ -265,6 +268,10 @@ gShader* gRenderer::getPrefilterShader() {
 
 gShader* gRenderer::getBrdfShader() {
 	return brdfshader;
+}
+
+gShader* gRenderer::getFboShader() {
+	return fboshader;
 }
 
 void gRenderer::setProjectionMatrix(glm::mat4 projectionMatrix) {
@@ -1689,3 +1696,35 @@ const std::string gRenderer::getShaderSrcBrdfFragment() {
 	return std::string(shadersource);
 }
 
+const std::string gRenderer::getShaderSrcFboVertex() {
+	const char* shadersource =
+			"#version 330 core\n"
+			"layout (location = 0) in vec2 aPos;"
+			"layout (location = 1) in vec2 aTexCoords;"
+			""
+			"out vec2 TexCoords;"
+			""
+			"void main()"
+			"{"
+			"    gl_Position = vec4(aPos.x, aPos.y, 0.0, 1.0);"
+			"    TexCoords = aTexCoords;"
+			"}\n";
+
+	return std::string(shadersource);
+}
+
+const std::string gRenderer::getShaderSrcFboFragment() {
+	const char* shadersource =
+			"#version 330 core\n"
+			"out vec4 FragColor;"
+			""
+			"in vec2 TexCoords;"
+			""
+			"uniform sampler2D screenTexture;"
+			""
+			"void main()"
+			"{ "
+			"    FragColor = vec4(texture(screenTexture, TexCoords).rgb, 1.0);"
+			"}\n";
+	return std::string(shadersource);
+}

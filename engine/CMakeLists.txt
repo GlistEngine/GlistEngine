@@ -1,5 +1,9 @@
 cmake_minimum_required (VERSION 3.10.2)
 
+if(UNIX)
+	EXECUTE_PROCESS( COMMAND uname -m COMMAND tr -d '\n' OUTPUT_VARIABLE DEVICEARCHITECTURE )
+	message( STATUS "Architecture: ${DEVICEARCHITECTURE}" )
+endif()
 
 # Configure compiler and linker as you need
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS} -std=c++14 -DNDEBUG -DENABLE_BOOST_WORKAROUND=ON -fuse-ld=gold -Wuninitialized -Wmultichar -ffunction-sections -fdata-sections -fexceptions -frtti -fpermissive -fPIC -O2")
@@ -160,6 +164,14 @@ set(SRC_FILES
 	${ENGINE_DIR}/core/gBaseWindow.cpp
 	${ENGINE_DIR}/core/gCanvasManager.cpp
 	${ENGINE_DIR}/core/gAppManager.cpp
+	${ENGINE_DIR}/core/gPostProcessManager.cpp
+	${ENGINE_DIR}/base/gBasePostProcess.cpp
+	${ENGINE_DIR}/graphics/posteffects/gInversion.cpp
+	${ENGINE_DIR}/graphics/posteffects/gGrayscale.cpp
+	${ENGINE_DIR}/graphics/posteffects/gKernelEffect.cpp
+	${ENGINE_DIR}/graphics/posteffects/kerneleffects/gBlur.cpp
+	${ENGINE_DIR}/graphics/posteffects/kerneleffects/gSharpen.cpp
+	${ENGINE_DIR}/graphics/posteffects/kerneleffects/gEdgeDetection.cpp	
 )
 
 if(NOT ANDROID)
@@ -186,6 +198,8 @@ set(INC_DIRS
     ${ENGINE_DIR}/media
     ${ENGINE_DIR}/graphics
     ${ENGINE_DIR}/graphics/primitives
+    ${ENGINE_DIR}/graphics/posteffects
+    ${ENGINE_DIR}/graphics/posteffects/kerneleffects
     ${ENGINE_DIR}/base
     ${ENGINE_DIR}/core
 	${PLUGIN_INCLUDES}
