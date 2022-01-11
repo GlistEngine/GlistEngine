@@ -87,6 +87,14 @@ void gBaseWindow::close() {
 
 }
 
+bool gBaseWindow::isVyncEnabled() {
+	return false;
+}
+
+void gBaseWindow::enableVsync(bool vsync) {
+
+}
+
 void gBaseWindow::setCursor(int cursorNo) {
 
 }
