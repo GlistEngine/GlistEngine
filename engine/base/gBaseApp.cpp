@@ -51,3 +51,7 @@ int gBaseApp::getFramerate() {
 double gBaseApp::getElapsedTime() {
 	return appmanager->getElapsedTime();
 }
+
+void gBaseApp::enableFpsDisplay(bool shouldDisplay) {
+	appmanager->shouldDisplayFramerate(shouldDisplay);
+}

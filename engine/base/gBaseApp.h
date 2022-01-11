@@ -30,6 +30,8 @@ public:
 	int getFramerate();
 	double getElapsedTime();
 
+	void enableFpsDisplay(bool shouldDisplay);
+
 protected:
 	gAppManager *appmanager;
 };

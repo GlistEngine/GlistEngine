@@ -55,6 +55,9 @@ public:
 	 */
 	void close();
 
+	bool isVyncEnabled();
+	void enableVsync(bool vsync);
+
 	void setCursor(int cursorNo);
 	void setCursorMode(int cursorMode);
 
@@ -62,6 +65,7 @@ private:
 #if defined(WIN32) || defined(LINUX) || defined(APPLE)
 	GLFWwindow* window;
 	GLFWcursor** cursor;
+	bool vsync;
 
 	/**
 	 * Invoking by GLFW if the window size changed.

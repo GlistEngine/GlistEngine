@@ -44,6 +44,7 @@
 #include <iostream>
 #include <chrono>
 #include "gGUIManager.h"
+#include "gFont.h"
 class gBaseWindow;
 class gBaseApp;
 class gBaseCanvas;
@@ -75,8 +76,11 @@ class gCanvasManager;
  * @param height application window's width to be shown on the user's computer.
  * User should choose this parameter suitable according to their screen resolution
  * to prevent distorted images.
+ *
+ * @param vsync When true, application framerate will be bound to current
+ * monitor's refresh rate. Defaults value is false
  */
-void gStartEngine(gBaseApp* baseApp, std::string appName = "GlistApp", int windowMode = 2, int width = gDefaultWidth(), int height = gDefaultHeight());
+void gStartEngine(gBaseApp* baseApp, std::string appName = "GlistApp", int windowMode = 2, int width = gDefaultWidth(), int height = gDefaultHeight(), bool vsync = true);
 
 /**
  * Sets the app settings for engine according to given name, mode of window,
@@ -115,8 +119,11 @@ void gStartEngine(gBaseApp* baseApp, std::string appName = "GlistApp", int windo
  * can differ from developer to user. GlistEngine has scaling methods. User and
  * developer can have different resolutions, but the engine can adapt to users
  * resolution by scaling. Thus, unitHeight is developer's unit height.
+ *
+ * @param vsync When true, application framerate will be bound to current
+ * monitor's refresh rate.
  */
-void gStartEngine(gBaseApp* baseApp, std::string appName, int windowMode, int width, int height, int screenScaling, int unitWidth, int unitHeight);
+void gStartEngine(gBaseApp* baseApp, std::string appName, int windowMode, int width, int height, int screenScaling, int unitWidth, int unitHeight, bool vsync = false);
 
 /**
  * This class controls basically everything which is shown to user from beginning
@@ -144,6 +151,7 @@ void gStartEngine(gBaseApp* baseApp, std::string appName, int windowMode, int wi
  */
 class gAppManager : gObject {
 public:
+
 	/**
 	 * Constructor of gAppManager class. Constructor is automatically called when
 	 * object(instance of class) is created. A constructor will have exact same name as
@@ -411,7 +419,16 @@ public:
 	 */
 	gGUIManager* getGUIManager();
 
+	void shouldDisplayFramerate(bool displayFramerate);
+
 private:
+	using AppClock = std::chrono::steady_clock;
+	using AppClockDuration = AppClock::duration;
+	using AppClockTimePoint = AppClock::time_point;
+
+	void internalUpdate();
+	void preciseSleep(double seconds);
+
 	std::string appname;
 	gBaseWindow* window;
 	gBaseApp* app;
@@ -423,12 +440,18 @@ private:
 	int pressed;
 	int myPow (int x, int p);
 	int mpi, mpj;
-	std::chrono::high_resolution_clock::time_point starttime;
-	std::chrono::duration<double, std::milli> timediff, timediff2;
-	float millisecondsperframe, delaycoef;
-	std::chrono::duration<double, std::milli> minWorkTime, delay;
+	AppClockTimePoint starttime, endtime;
+	AppClockDuration deltatime;
+	AppClockDuration timestepnano;
+	AppClockDuration lag;
+	long long elapsedtime;
+	int updates, draws;
 	int framerate;
 	int upi, upj;
+
+//	gFont logger;
+	bool isloggingon;
+//	float loggery;
 };
 
 #endif /* ENGINE_CORE_GAPPMANAGER_H_ */
