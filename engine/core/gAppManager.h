@@ -449,7 +449,7 @@ private:
 	int framerate;
 	int upi, upj;
 
-	gFont logger;
+//	gFont logger;
 	bool isloggingon;
 //	float loggery;
 };
