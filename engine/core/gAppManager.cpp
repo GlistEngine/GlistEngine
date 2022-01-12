@@ -235,7 +235,7 @@ int gAppManager::getFramerate() {
 }
 
 double gAppManager::getElapsedTime() {
-	return deltatime.count();
+	return deltatime.count() / 1'000'000'000.0f;
 }
 
 void gAppManager::onCharEvent(unsigned int key) {
