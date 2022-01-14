@@ -53,13 +53,14 @@ gAppManager::gAppManager() {
 	buttonpressed[2] = false;
 	pressed = 0;
 	framerate = 60;
-	millisecondsperframe = 1000 / framerate;
-	minWorkTime = std::chrono::duration<double, std::milli>(millisecondsperframe);
-	starttime = std::chrono::high_resolution_clock::now();
-	timediff = std::chrono::high_resolution_clock::now() - starttime;
-	timediff2 = std::chrono::high_resolution_clock::now() - starttime;
-	delaycoef = 0.34f;
-	delay = std::chrono::duration<double, std::milli>(delaycoef * 60 / framerate);
+	timestepnano = AppClockDuration(1'000'000'000 / framerate);
+	starttime = AppClock::now();
+	endtime = starttime;
+	deltatime = AppClockDuration(0);
+	lag = AppClockDuration(0);
+	elapsedtime = 0;
+	updates = 0;
+	draws = 0;
 	mpi = 0;
 	mpj = 0;
 	upi = 0;
@@ -90,37 +91,88 @@ void gAppManager::runApp(std::string appName, gBaseApp *baseApp, int width, int 
 	tempcanvas->setUnitScreenSize(unitWidth, unitHeight);
 	tempcanvas->setScreenScaling(screenScaling);
 
-
-	starttime = std::chrono::high_resolution_clock::now();
-
 	// Main loop
 	while(!window->getShouldClose()) {
-		canvasmanager->update();
-		if(guimanager->isframeset) guimanager->update();
-		app->update();
-		for (upi = 0; upi < gBasePlugin::usedplugins.size(); upi++) gBasePlugin::usedplugins[upi]->update();
-		canvas = canvasmanager->getCurrentCanvas();
-		if (canvas != nullptr) {
-			canvas->update();
-			for (upj = 0; upj < renderpassnum; upj++) {
-				renderpassno = upj;
-				canvas->clearBackground();
-				canvas->draw();
-			}
-		}
-		if(guimanager->isframeset) guimanager->draw();
-		window->update();
+		// Delta time calculations
+		endtime = AppClock::now();
+		deltatime = endtime - starttime;
+		elapsedtime += deltatime.count();
+		starttime = endtime;
 
-		// Framerate adjustment
-		timediff = std::chrono::high_resolution_clock::now() - starttime;
-		if (timediff < minWorkTime) {
-			std::this_thread::sleep_for(minWorkTime - timediff);
+		if(window->isVyncEnabled()) {
+			// No framerate adjustment for vsync
+			internalUpdate();
+		} else {
+			/* Less precision, but lower CPU usage for non vsync */
+			internalUpdate();
+			double sleeptime = (timestepnano - (AppClock::now() - starttime)).count() / 1e9;
+			if (sleeptime > 0.0f) {
+				preciseSleep(sleeptime);
+			}
+			/* Much more precise method, but eats up CPU */
+//			lag += deltatime;
+//			while(lag >= timestepnano) {
+//				lag -= timestepnano;
+//				internalUpdate();
+//			}
 		}
-		timediff2 = std::chrono::high_resolution_clock::now() - starttime;
-		starttime = std::chrono::high_resolution_clock::now();
 	}
 
 	window->close();
+}
+
+void gAppManager::internalUpdate() {
+	canvasmanager->update();
+	if(guimanager->isframeset) guimanager->update();
+	app->update();
+	for (upi = 0; upi < gBasePlugin::usedplugins.size(); upi++) gBasePlugin::usedplugins[upi]->update();
+	canvas = canvasmanager->getCurrentCanvas();
+	if (canvas != nullptr) {
+		canvas->update();
+		updates++;
+		for (upj = 0; upj < renderpassnum; upj++) {
+			renderpassno = upj;
+			canvas->clearBackground();
+			canvas->draw();
+			draws++;
+		}
+	}
+	if(guimanager->isframeset) guimanager->draw();
+	window->update();
+
+	if (elapsedtime >= 1'000'000'000){
+		elapsedtime = 0;
+		updates = 0;
+		draws = 0;
+	}
+}
+
+void gAppManager::preciseSleep(double seconds) {
+
+    static double estimate = 5e-3;
+    static double mean = 5e-3;
+    static double m2 = 0;
+    static int64_t count = 1;
+
+    while (seconds > estimate) {
+        auto start = AppClock::now();
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
+        auto end = AppClock::now();
+
+        double observed = (end - start).count() / 1e9;
+        seconds -= observed;
+
+        ++count;
+        double delta = observed - mean;
+        mean += delta / count;
+        m2   += delta * (observed - mean);
+        double stddev = sqrt(m2 / (count - 1));
+        estimate = mean + stddev;
+    }
+
+    // spin lock
+    auto start = AppClock::now();
+    while ((AppClock::now() - start).count() / 1e9 < seconds);
 }
 
 void gAppManager::setWindow(gBaseWindow *baseWindow) {
@@ -153,9 +205,7 @@ void gAppManager::setScreenSize(int width, int height) {
 
 void gAppManager::setFramerate(int targetFramerate) {
 	framerate = targetFramerate;
-	millisecondsperframe = 1000 / framerate;
-	minWorkTime = std::chrono::duration<double, std::milli>(millisecondsperframe);
-	delay = std::chrono::duration<double, std::milli>(delaycoef * 60 / framerate);
+	timestepnano = AppClockDuration(1'000'000'000 / framerate);
 }
 
 std::string gAppManager::getAppName() {
@@ -175,13 +225,20 @@ gGUIFrame* gAppManager::getCurrentGUIFrame() {
 	return guimanager->getCurrentFrame();
 }
 
+void gAppManager::enableVsync() {
+	window->enableVsync(true);
+}
+
+void gAppManager::disableVsync() {
+	window->enableVsync(false);
+}
 
 int gAppManager::getFramerate() {
-    return (int)(1000 / timediff2.count());
+    return (long long)(1'000'000'000 / deltatime.count());
 }
 
 double gAppManager::getElapsedTime() {
-	return timediff2.count();
+	return deltatime.count() / 1'000'000'000.0f;
 }
 
 void gAppManager::onCharEvent(unsigned int key) {

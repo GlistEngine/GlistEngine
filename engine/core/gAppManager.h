@@ -44,6 +44,7 @@
 #include <iostream>
 #include <chrono>
 #include "gGUIManager.h"
+#include "gFont.h"
 class gBaseWindow;
 class gBaseApp;
 class gBaseCanvas;
@@ -115,6 +116,9 @@ void gStartEngine(gBaseApp* baseApp, std::string appName = "GlistApp", int windo
  * can differ from developer to user. GlistEngine has scaling methods. User and
  * developer can have different resolutions, but the engine can adapt to users
  * resolution by scaling. Thus, unitHeight is developer's unit height.
+ *
+ * @param vsync When true, application framerate will be bound to current
+ * monitor's refresh rate.
  */
 void gStartEngine(gBaseApp* baseApp, std::string appName, int windowMode, int width, int height, int screenScaling, int unitWidth, int unitHeight);
 
@@ -144,6 +148,7 @@ void gStartEngine(gBaseApp* baseApp, std::string appName, int windowMode, int wi
  */
 class gAppManager : gObject {
 public:
+
 	/**
 	 * Constructor of gAppManager class. Constructor is automatically called when
 	 * object(instance of class) is created. A constructor will have exact same name as
@@ -411,7 +416,17 @@ public:
 	 */
 	gGUIManager* getGUIManager();
 
+	void enableVsync();
+	void disableVsync();
+
 private:
+	using AppClock = std::chrono::steady_clock;
+	using AppClockDuration = AppClock::duration;
+	using AppClockTimePoint = AppClock::time_point;
+
+	void internalUpdate();
+	void preciseSleep(double seconds);
+
 	std::string appname;
 	gBaseWindow* window;
 	gBaseApp* app;
@@ -423,10 +438,12 @@ private:
 	int pressed;
 	int myPow (int x, int p);
 	int mpi, mpj;
-	std::chrono::high_resolution_clock::time_point starttime;
-	std::chrono::duration<double, std::milli> timediff, timediff2;
-	float millisecondsperframe, delaycoef;
-	std::chrono::duration<double, std::milli> minWorkTime, delay;
+	AppClockTimePoint starttime, endtime;
+	AppClockDuration deltatime;
+	AppClockDuration timestepnano;
+	AppClockDuration lag;
+	long long elapsedtime;
+	int updates, draws;
 	int framerate;
 	int upi, upj;
 };
