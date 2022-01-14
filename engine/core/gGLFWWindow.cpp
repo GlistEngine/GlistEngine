@@ -154,9 +154,10 @@ bool gGLFWWindow::isVyncEnabled() {
 	return vsync;
 }
 
-void gGLFWWindow::enableVsync(bool vsync = false) {
+void gGLFWWindow::enableVsync(bool vsync) {
 #if defined(WIN32) || defined(LINUX) || defined(APPLE)
 	this->vsync = vsync;
+	glfwSwapInterval(vsync);
 #endif
 }
 
