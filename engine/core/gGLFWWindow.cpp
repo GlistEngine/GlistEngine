@@ -20,6 +20,7 @@ gGLFWWindow::gGLFWWindow() {
 #if defined(WIN32) || defined(LINUX) || defined(APPLE)
 	window = nullptr;
 	cursor = new GLFWcursor*[6];
+	vsync = true;
 #endif
 }
 
@@ -69,7 +70,6 @@ void gGLFWWindow::initialize(int width, int height, int windowMode) {
     window = glfwCreateWindow(width, height, title.c_str(),
 			(windowMode==gBaseWindow::WINDOWMODE_GAME?glfwGetPrimaryMonitor():NULL), NULL);
 
-
 	if (window == NULL) {
 	    std::cout << "Failed to create GLFW window" << std::endl;
 	    glfwTerminate();
@@ -97,6 +97,7 @@ void gGLFWWindow::initialize(int width, int height, int windowMode) {
 	glfwSetCursor(window, cursor[0]);
 
 	glfwMakeContextCurrent(window);
+    glfwSwapInterval(vsync ? 1 : 0);
 	glewExperimental = GL_TRUE;
 	glewInit();
 
@@ -146,6 +147,17 @@ void gGLFWWindow::close() {
 #if defined(WIN32) || defined(LINUX) || defined(APPLE)
 	// Deallocate glfw resources
 	glfwTerminate();
+#endif
+}
+
+bool gGLFWWindow::isVyncEnabled() {
+	return vsync;
+}
+
+void gGLFWWindow::enableVsync(bool vsync) {
+#if defined(WIN32) || defined(LINUX) || defined(APPLE)
+	this->vsync = vsync;
+	glfwSwapInterval(vsync);
 #endif
 }
 

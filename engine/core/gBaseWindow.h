@@ -58,6 +58,9 @@ public:
 	 */
 	virtual void close();
 
+	virtual bool isVyncEnabled();
+	virtual void enableVsync(bool vsync);
+
 	virtual void setCursor(int cursorNo);
 	virtual void setCursorMode(int cursorMode);
 
