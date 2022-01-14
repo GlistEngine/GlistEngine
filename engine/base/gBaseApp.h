@@ -30,7 +30,8 @@ public:
 	int getFramerate();
 	double getElapsedTime();
 
-	void enableFpsDisplay(bool shouldDisplay);
+	void enableVsync();
+	void disableVsync();
 
 protected:
 	gAppManager *appmanager;

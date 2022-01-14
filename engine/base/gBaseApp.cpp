@@ -52,6 +52,10 @@ double gBaseApp::getElapsedTime() {
 	return appmanager->getElapsedTime();
 }
 
-void gBaseApp::enableFpsDisplay(bool shouldDisplay) {
-	appmanager->shouldDisplayFramerate(shouldDisplay);
+void gBaseApp::enableVsync() {
+	appmanager->enableVsync();
+}
+
+void gBaseApp::disableVsync() {
+	appmanager->disableVsync();
 }

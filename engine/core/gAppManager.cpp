@@ -17,25 +17,23 @@
 #endif
 
 
-void gStartEngine(gBaseApp* baseApp, std::string appName, int windowMode, int width, int height, bool vsync) {
+void gStartEngine(gBaseApp* baseApp, std::string appName, int windowMode, int width, int height) {
 	gAppManager appmanager;
 	gGLFWWindow gbwindow;
 	gbwindow.setAppManager(&appmanager);
 	if (appName == "") appName = "GlistApp";
 	gbwindow.setTitle(appName);
-	gbwindow.enableVsync(vsync);
 	appmanager.setWindow(&gbwindow);
 	baseApp->setAppManager(&appmanager);
 	appmanager.runApp(appName, baseApp, width, height, windowMode, width, height, gRenderer::SCREENSCALING_AUTO);
 }
 
-void gStartEngine(gBaseApp* baseApp, std::string appName, int windowMode, int width, int height, int screenScaling, int unitWidth, int unitHeight, bool vsync) {
+void gStartEngine(gBaseApp* baseApp, std::string appName, int windowMode, int width, int height, int screenScaling, int unitWidth, int unitHeight) {
 	gAppManager appmanager;
 	gGLFWWindow gbwindow;
 	gbwindow.setAppManager(&appmanager);
 	if (appName == "") appName = "GlistApp";
 	gbwindow.setTitle(appName);
-	gbwindow.enableVsync(vsync);
 	appmanager.setWindow(&gbwindow);
 	baseApp->setAppManager(&appmanager);
 	appmanager.runApp(appName, baseApp, width, height, windowMode, unitWidth, unitHeight, screenScaling);
@@ -67,7 +65,6 @@ gAppManager::gAppManager() {
 	mpj = 0;
 	upi = 0;
 	upj = 0;
-	isloggingon = false;
 }
 
 gAppManager::~gAppManager() {
@@ -144,7 +141,6 @@ void gAppManager::internalUpdate() {
 	window->update();
 
 	if (elapsedtime >= 1'000'000'000){
-//		if(isloggingon) logger.drawText("FPS: " + gToStr(draws / renderpassnum), 0, loggery);
 		elapsedtime = 0;
 		updates = 0;
 		draws = 0;
@@ -229,6 +225,13 @@ gGUIFrame* gAppManager::getCurrentGUIFrame() {
 	return guimanager->getCurrentFrame();
 }
 
+void gAppManager::enableVsync() {
+	window->enableVsync(true);
+}
+
+void gAppManager::disableVsync() {
+	window->enableVsync(false);
+}
 
 int gAppManager::getFramerate() {
     return (long long)(1'000'000'000 / deltatime.count());
@@ -333,8 +336,4 @@ void gAppManager::onMouseScrollEvent(double xoffset, double yoffset) {
 	if (!canvasmanager->getCurrentCanvas()) return;
 	for (upi = 0; upi < gBasePlugin::usedplugins.size(); upi++) gBasePlugin::usedplugins[upi]->mouseScrolled(xoffset, yoffset);
 	canvasmanager->getCurrentCanvas()->mouseScrolled(xoffset, yoffset);
-}
-
-void gAppManager::shouldDisplayFramerate(bool displayFramerate) {
-	isloggingon = displayFramerate;
 }

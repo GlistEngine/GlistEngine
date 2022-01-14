@@ -76,11 +76,8 @@ class gCanvasManager;
  * @param height application window's width to be shown on the user's computer.
  * User should choose this parameter suitable according to their screen resolution
  * to prevent distorted images.
- *
- * @param vsync When true, application framerate will be bound to current
- * monitor's refresh rate. Defaults value is false
  */
-void gStartEngine(gBaseApp* baseApp, std::string appName = "GlistApp", int windowMode = 2, int width = gDefaultWidth(), int height = gDefaultHeight(), bool vsync = true);
+void gStartEngine(gBaseApp* baseApp, std::string appName = "GlistApp", int windowMode = 2, int width = gDefaultWidth(), int height = gDefaultHeight());
 
 /**
  * Sets the app settings for engine according to given name, mode of window,
@@ -123,7 +120,7 @@ void gStartEngine(gBaseApp* baseApp, std::string appName = "GlistApp", int windo
  * @param vsync When true, application framerate will be bound to current
  * monitor's refresh rate.
  */
-void gStartEngine(gBaseApp* baseApp, std::string appName, int windowMode, int width, int height, int screenScaling, int unitWidth, int unitHeight, bool vsync = false);
+void gStartEngine(gBaseApp* baseApp, std::string appName, int windowMode, int width, int height, int screenScaling, int unitWidth, int unitHeight);
 
 /**
  * This class controls basically everything which is shown to user from beginning
@@ -419,7 +416,8 @@ public:
 	 */
 	gGUIManager* getGUIManager();
 
-	void shouldDisplayFramerate(bool displayFramerate);
+	void enableVsync();
+	void disableVsync();
 
 private:
 	using AppClock = std::chrono::steady_clock;
@@ -448,10 +446,6 @@ private:
 	int updates, draws;
 	int framerate;
 	int upi, upj;
-
-//	gFont logger;
-	bool isloggingon;
-//	float loggery;
 };
 
 #endif /* ENGINE_CORE_GAPPMANAGER_H_ */
