@@ -99,9 +99,8 @@ std::vector<std::string> gDatabase::getTableNames() {
 		//char read
 		datastorage = gSplitString(temporarystring, "|");
 		data.push_back(datastorage[2]);
-	return data;
-
 	}
+	return data;
 }
 
 
