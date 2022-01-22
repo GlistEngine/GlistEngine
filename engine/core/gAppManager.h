@@ -442,10 +442,14 @@ private:
 	AppClockDuration deltatime;
 	AppClockDuration timestepnano;
 	AppClockDuration lag;
+	double sleeptime;
 	long long elapsedtime;
 	int updates, draws;
 	int framerate;
 	int upi, upj;
+	double t_estimate, t_mean, t_m2;
+	int64_t t_count;
+	double t_observed, t_delta, t_stddev;
 };
 
 #endif /* ENGINE_CORE_GAPPMANAGER_H_ */
