@@ -20,7 +20,6 @@ gGLFWWindow::gGLFWWindow() {
 #if defined(WIN32) || defined(LINUX) || defined(APPLE)
 	window = nullptr;
 	cursor = new GLFWcursor*[6];
-	vsync = true;
 #endif
 }
 
@@ -150,13 +149,9 @@ void gGLFWWindow::close() {
 #endif
 }
 
-bool gGLFWWindow::isVyncEnabled() {
-	return vsync;
-}
-
 void gGLFWWindow::enableVsync(bool vsync) {
+	gBaseWindow::enableVsync(vsync);
 #if defined(WIN32) || defined(LINUX) || defined(APPLE)
-	this->vsync = vsync;
 	glfwSwapInterval(vsync);
 #endif
 }

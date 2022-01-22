@@ -53,6 +53,7 @@ gBaseWindow::gBaseWindow() {
 	signalname[30] = "SIGUSR1";
 	signalname[31] = "SIGUSR2";
 
+	vsync = false;
 	width = 0;
 	height = 0;
 	windowmode = WINDOWMODE_NONE;
@@ -87,12 +88,12 @@ void gBaseWindow::close() {
 
 }
 
-bool gBaseWindow::isVyncEnabled() {
-	return false;
+bool gBaseWindow::isVsyncEnabled() {
+	return vsync;
 }
 
 void gBaseWindow::enableVsync(bool vsync) {
-
+	this->vsync = vsync;
 }
 
 void gBaseWindow::setCursor(int cursorNo) {
