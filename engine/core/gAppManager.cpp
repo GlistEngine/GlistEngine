@@ -25,7 +25,17 @@ void gStartEngine(gBaseApp* baseApp, std::string appName, int windowMode, int wi
 	gbwindow.setTitle(appName);
 	appmanager.setWindow(&gbwindow);
 	baseApp->setAppManager(&appmanager);
-	appmanager.runApp(appName, baseApp, width, height, windowMode, width, height, gRenderer::SCREENSCALING_AUTO);
+	int screenwidth = width, screenheight = height;
+#if defined(WIN32) || defined(LINUX) || defined(APPLE)
+	if (windowMode == gBaseWindow::WINDOWMODE_GAME || windowMode == gBaseWindow::WINDOWMODE_FULLSCREEN) {
+		glfwInit();
+		const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+		screenwidth = mode->width;
+		screenheight = mode->height;
+		glfwTerminate();
+	}
+#endif
+	appmanager.runApp(appName, baseApp, screenwidth, screenheight, windowMode, width, height, gRenderer::SCREENSCALING_AUTO);
 }
 
 void gStartEngine(gBaseApp* baseApp, std::string appName, int windowMode, int width, int height, int screenScaling, int unitWidth, int unitHeight) {
