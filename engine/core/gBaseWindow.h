@@ -58,7 +58,7 @@ public:
 	 */
 	virtual void close();
 
-	virtual bool isVyncEnabled();
+	bool isVsyncEnabled();
 	virtual void enableVsync(bool vsync);
 
 	virtual void setCursor(int cursorNo);
@@ -204,6 +204,8 @@ public:
 	 * @param yoffset offset value of y(vertical) axis.
 	 */
 	void onMouseScrollEvent(double xoffset, double yoffset);
+
+	bool vsync;
 
 protected:
 	gAppManager *appmanager;

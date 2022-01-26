@@ -25,7 +25,17 @@ void gStartEngine(gBaseApp* baseApp, std::string appName, int windowMode, int wi
 	gbwindow.setTitle(appName);
 	appmanager.setWindow(&gbwindow);
 	baseApp->setAppManager(&appmanager);
-	appmanager.runApp(appName, baseApp, width, height, windowMode, width, height, gRenderer::SCREENSCALING_AUTO);
+	int screenwidth = width, screenheight = height;
+#if defined(WIN32) || defined(LINUX) || defined(APPLE)
+	if (windowMode == gBaseWindow::WINDOWMODE_GAME || windowMode == gBaseWindow::WINDOWMODE_FULLSCREEN) {
+		glfwInit();
+		const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+		screenwidth = mode->width;
+		screenheight = mode->height;
+		glfwTerminate();
+	}
+#endif
+	appmanager.runApp(appName, baseApp, screenwidth, screenheight, windowMode, width, height, gRenderer::SCREENSCALING_AUTO);
 }
 
 void gStartEngine(gBaseApp* baseApp, std::string appName, int windowMode, int width, int height, int screenScaling, int unitWidth, int unitHeight) {
@@ -53,7 +63,7 @@ gAppManager::gAppManager() {
 	buttonpressed[2] = false;
 	pressed = 0;
 	framerate = 60;
-	timestepnano = AppClockDuration(1'000'000'000 / framerate);
+	timestepnano = AppClockDuration(1'000'000'000 / (framerate + 1));
 	starttime = AppClock::now();
 	endtime = starttime;
 	deltatime = AppClockDuration(0);
@@ -99,13 +109,11 @@ void gAppManager::runApp(std::string appName, gBaseApp *baseApp, int width, int 
 		elapsedtime += deltatime.count();
 		starttime = endtime;
 
-		if(window->isVyncEnabled()) {
-			// No framerate adjustment for vsync
-			internalUpdate();
-		} else {
+		internalUpdate();
+
+		if(!window->vsync) {
 			/* Less precision, but lower CPU usage for non vsync */
-			internalUpdate();
-			double sleeptime = (timestepnano - (AppClock::now() - starttime)).count() / 1e9;
+			sleeptime = (timestepnano - (AppClock::now() - starttime)).count() / 1e9;
 			if (sleeptime > 0.0f) {
 				preciseSleep(sleeptime);
 			}
@@ -148,26 +156,25 @@ void gAppManager::internalUpdate() {
 }
 
 void gAppManager::preciseSleep(double seconds) {
+	t_estimate = 5e-3;
+    t_mean = 5e-3;
+    t_m2 = 0;
+    t_count = 1;
 
-    static double estimate = 5e-3;
-    static double mean = 5e-3;
-    static double m2 = 0;
-    static int64_t count = 1;
-
-    while (seconds > estimate) {
-        auto start = AppClock::now();
+    while (seconds > t_estimate) {
+        auto t_start = AppClock::now();
         std::this_thread::sleep_for(std::chrono::milliseconds(1));
         auto end = AppClock::now();
 
-        double observed = (end - start).count() / 1e9;
-        seconds -= observed;
+        t_observed = (end - t_start).count() / 1e9;
+        seconds -= t_observed;
 
-        ++count;
-        double delta = observed - mean;
-        mean += delta / count;
-        m2   += delta * (observed - mean);
-        double stddev = sqrt(m2 / (count - 1));
-        estimate = mean + stddev;
+        ++t_count;
+        t_delta = t_observed - t_mean;
+        t_mean += t_delta / t_count;
+        t_m2   += t_delta * (t_observed - t_mean);
+        t_stddev = sqrt(t_m2 / (t_count - 1));
+        t_estimate = t_mean + t_stddev;
     }
 
     // spin lock
@@ -205,7 +212,7 @@ void gAppManager::setScreenSize(int width, int height) {
 
 void gAppManager::setFramerate(int targetFramerate) {
 	framerate = targetFramerate;
-	timestepnano = AppClockDuration(1'000'000'000 / framerate);
+	timestepnano = AppClockDuration(1'000'000'000 / (framerate + 1));
 }
 
 std::string gAppManager::getAppName() {
