@@ -148,6 +148,8 @@ void gDrawSphere(float xPos, float yPos, float zPos, int xSegmentNum, int ySegme
 gRenderer::gRenderer() {
 	width = gDefaultWidth();
 	height = gDefaultHeight();
+	unitwidth = gDefaultUnitWidth();
+	unitheight = gDefaultUnitHeight();
 
 	// TODO Check matrix maths
 	projectionmatrix = glm::mat4(1.0f);
