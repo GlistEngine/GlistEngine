@@ -180,7 +180,9 @@ set(INC_DIRS
     ${ENGINE_DIR}/media
     ${ENGINE_DIR}/graphics
     ${ENGINE_DIR}/graphics/primitives
-     ${ENGINE_DIR}/animation
+    ${ENGINE_DIR}/graphics/posteffects
+    ${ENGINE_DIR}/graphics/posteffects/kerneleffects
+    ${ENGINE_DIR}/animation
     ${ENGINE_DIR}/base
     ${ENGINE_DIR}/core
 	${PLUGIN_INCLUDES}

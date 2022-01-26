@@ -105,9 +105,9 @@ template<typename T>
 class gAnimationTrigger : public gAnimationTriggerBase {
 public:
 	bool isConditionTriggered() {
-		int value1 = *((int*)var1);
-		int value2;
-		if(var2 != nullptr) value2 = *((int*)var2);
+		T value1 = static_cast<T>(*var1);
+		T value2;
+		if(var2 != nullptr) value2 = static_cast<T>(*var2);
 
 		if(condition == gSpriteAnimation::CONDITION_LESS) {
 			return value1 < value2;
