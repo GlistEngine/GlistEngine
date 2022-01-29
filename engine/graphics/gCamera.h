@@ -69,7 +69,7 @@ private:
     void processLookMatrix();
 
 
-    gSkybox* gizmos;
+    gSkybox gizmos;
 
 	void rotateGizmos(const glm::quat& o);
 	void rotateGizmos(float radians, float ax, float ay, float az);
