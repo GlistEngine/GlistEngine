@@ -78,6 +78,20 @@ void gGUIManager::mouseScrolled(int x, int y) {
 	currentframe->mouseScrolled(x, y);
 }
 
+void gGUIManager::mouseEntered() {
+	currentframe->mouseEntered();
+}
+
+void gGUIManager::mouseExited() {
+	currentframe->mouseExited();
+}
+
+void gGUIManager::windowResized(int w, int h) {
+	currentframe->width = w;
+	currentframe->height = h;
+	currentframe->windowResized(w, h);
+}
+
 void gGUIManager::update() {
 	currentframe->update();
 }

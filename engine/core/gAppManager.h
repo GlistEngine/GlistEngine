@@ -150,6 +150,11 @@ class gAppManager : gObject {
 public:
 
 	/**
+	 * GUIAPP and FULLSCREENGUIAPP is in progress. Do not use them for instance.
+	 */
+	static const int WINDOWMODE_NONE = -1, WINDOWMODE_GAME = 0, WINDOWMODE_FULLSCREEN = 1, WINDOWMODE_APP = 2, WINDOWMODE_FULLSCREENGUIAPP = 3, WINDOWMODE_GUIAPP = 4;
+
+	/**
 	 * Constructor of gAppManager class. Constructor is automatically called when
 	 * object(instance of class) is created. A constructor will have exact same name as
 	 * the class and it does not have any return type at all, not even void.
@@ -450,6 +455,7 @@ private:
 	double t_estimate, t_mean, t_m2;
 	int64_t t_count;
 	double t_observed, t_delta, t_stddev;
+	bool canvasset;
 };
 
 #endif /* ENGINE_CORE_GAPPMANAGER_H_ */

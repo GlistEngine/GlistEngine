@@ -31,6 +31,15 @@ void gGUIForm::setMenuBar(gGUIMenubar* menuBar) {
 		);
 }
 
+void gGUIForm::resizeMenuBar() {
+	menubar->set(root, this, 0, 0,
+				left,
+				top,
+				width,
+				menuh
+		);
+}
+
 void gGUIForm::addToolBar(gGUIToolbar* toolBar) {
 	if(toolbarnum >= maxtoolbarnum) return;
 
@@ -46,6 +55,16 @@ void gGUIForm::addToolBar(gGUIToolbar* toolBar) {
 	toolbars[toolbarnum]->setParentSlotNo(0, 0);
 	toolbars[toolbarnum]->setRootApp(root);
 	toolbarnum++;
+}
+
+void gGUIForm::resizeToolbars() {
+	for(int i = 0; i < toolbarnum; i++) {
+		toolbars[i]->set(left,
+				top + menuh,
+					width,
+					toolbarh
+			);
+	}
 }
 
 void gGUIForm::setSizer(gGUISizer* guiSizer) {
@@ -111,6 +130,27 @@ void gGUIForm::mouseDragged(int x, int y, int button) {
 void gGUIForm::mouseReleased(int x, int y, int button) {
 	for(int i = 0; i < toolbarnum; i++) toolbars[i]->mouseReleased(x, y, button);
 	guisizer->mouseReleased(x, y, button);
+}
+
+void gGUIForm::mouseScrolled(int x, int y) {
+	guisizer->mouseScrolled(x, y);
+}
+
+void gGUIForm::mouseEntered() {
+	guisizer->mouseEntered();
+}
+
+void gGUIForm::mouseExited() {
+	guisizer->mouseExited();
+}
+
+void gGUIForm::windowResized(int w, int h) {
+	resizeMenuBar();
+	menubar->windowResized(w, h);
+	resizeToolbars();
+	for(int i = 0; i < toolbarnum; i++) toolbars[i]->windowResized(w, h);
+	guisizer->set(guisizer->left, guisizer->top, w, h);
+	guisizer->windowResized(w, h);
 }
 
 

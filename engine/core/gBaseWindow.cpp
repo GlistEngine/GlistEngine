@@ -56,7 +56,7 @@ gBaseWindow::gBaseWindow() {
 	vsync = false;
 	width = 0;
 	height = 0;
-	windowmode = WINDOWMODE_NONE;
+	windowmode = gAppManager::WINDOWMODE_NONE;
 	title = "GlistApp";
 
 	signal(SIGSEGV, sighandler);

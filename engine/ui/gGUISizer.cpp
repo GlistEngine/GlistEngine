@@ -29,6 +29,7 @@ gGUISizer::gGUISizer() {
 	resizeline = 0;
 	fillbackground = false;
 	slotpadding = 2;
+	rescaling = true;
 }
 
 gGUISizer::~gGUISizer() {
@@ -45,15 +46,25 @@ void gGUISizer::set(int x, int y, int w, int h) {
 	for (int i = 0; i < linenum; i++) {
 		for (int j = 0; j < columnnum; j++) {
 			if(iscontrolset[i][j]) {
+				int cr = guicontrol[i][j]->left;
+				int cb = guicontrol[i][j]->top;
+				int cw = guicontrol[i][j]->width;
+				int ch = guicontrol[i][j]->height;
+				if(rescaling) {
+					cr = left + (width * columntprs[j]);
+					cb = top + (height * linetprs[i]);
+					cw = width * (columntprs[j + 1] - columntprs[j]);
+					ch = height * (linetprs[i + 1] - linetprs[i]);
+				}
 				guicontrol[i][j]->set(
 					root,
 					this,
 					i,
 					j,
-					left + (width * columntprs[j]),
-					top + (height * linetprs[i]),
-					width * (columntprs[j + 1] - columntprs[j]),
-					height * (linetprs[i + 1] - linetprs[i])
+					cr,
+					cb,
+					cw,
+					ch
 				);
 			}
 		}
@@ -218,6 +229,10 @@ void gGUISizer::enableBorders(bool isEnabled) {
 
 void gGUISizer::enableResizing(bool isEnabled) {
 	resizable = isEnabled;
+}
+
+void gGUISizer::enableRescaling(bool isEnabled) {
+	rescaling = isEnabled;
 }
 
 void gGUISizer::enableBackgroundFill(bool isEnabled) {
@@ -525,6 +540,16 @@ void gGUISizer::mouseExited() {
 					guicontrol[i][j]->iscursoron = false;
 					guicontrol[i][j]->mouseExited();
 				}
+			}
+		}
+	}
+}
+
+void gGUISizer::windowResized(int w, int h) {
+	for(int i = 0; i < linenum; i++) {
+		for(int j = 0; j < columnnum; j++) {
+			for(int j = 0; j < columnnum; j++) {
+				if(iscontrolset[i][j] && guicontrol[i][j]->iscursoron) guicontrol[i][j]->windowResized(w, h);
 			}
 		}
 	}

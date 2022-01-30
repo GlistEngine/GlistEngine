@@ -217,6 +217,10 @@ void gBaseGUIObject::mouseExited() {
 
 }
 
+void gBaseGUIObject::windowResized(int w, int h) {
+
+}
+
 void gBaseGUIObject::setRootApp(gBaseApp* root) {
 	this->root = root;
 }
