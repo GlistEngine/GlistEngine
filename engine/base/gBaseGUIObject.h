@@ -87,6 +87,7 @@ public:
 	virtual void mouseScrolled(int x, int y);
 	virtual void mouseEntered();
 	virtual void mouseExited();
+	virtual void windowResized(int w, int h);
 
 	void setRootApp(gBaseApp* root);
 
@@ -113,6 +114,8 @@ protected:
 	gBaseGUIObject* parent;
 	bool isenabled;
 	int parentslotlineno, parentslotcolumnno;
+
+	int windowmode;
 
 private:
 	static int lastid;

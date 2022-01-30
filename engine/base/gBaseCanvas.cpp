@@ -71,6 +71,10 @@ void gBaseCanvas::mouseExited() {
 
 }
 
+void gBaseCanvas::windowResized(int w, int h) {
+
+}
+
 void gBaseCanvas::onGuiEvent(int guiObjectId, int eventType, std::string value1, std::string value2) {
 
 }
