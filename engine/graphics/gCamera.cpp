@@ -220,7 +220,6 @@ void gCamera::setScale(float s) {
 }
 
 void gCamera::lookAt(const glm::vec3& point) {
-	//glm::vec3 targetvector = glm::normalize(point - lookposition);
 	lookorientation = glm::conjugate(glm::quat_cast(glm::lookAt(lookposition, point, glm::vec3(0.0f, 1.0f, 0.0f))));
 	processLookMatrix();
 }
