@@ -31,6 +31,7 @@ public:
 	void rotate(const glm::quat& q);
 	void rotate(float radians, float ax, float ay, float az);
 	void rotateDeg(float angle, float ax, float ay, float az);
+	void rotateAround(float radians, const glm::vec3& axis, const glm::vec3& point);
 	void scale(float sx, float sy, float sz);
 	void scale(float s);
 
@@ -52,6 +53,7 @@ public:
 	void panDeg(float degrees);
 	void rollDeg(float degrees);
 
+	void lookAt(const glm::vec3& point);
 	void rotateLook(float angle, float ax, float ay, float az);
 	void resetLook();
 	glm::mat4 getLookMatrix();
