@@ -36,6 +36,7 @@ public:
 
 	void enableBorders(bool isEnabled);
 	void enableResizing(bool isEnabled);
+	void enableRescaling(bool isEnabled);
 	void enableBackgroundFill(bool isEnabled);
 
 	int getCursor(int x, int y);
@@ -49,6 +50,7 @@ public:
 	void mouseScrolled(int x, int y);
 	void mouseEntered();
 	void mouseExited();
+	void windowResized(int w, int h);
 
 private:
 	int sizertype;
@@ -65,6 +67,7 @@ private:
 	int resizex, resizey;
 	bool fillbackground;
 	int slotpadding;
+	bool rescaling;
 
 	int detectSizerType();
 };

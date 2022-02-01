@@ -33,6 +33,19 @@ gGUIToolbarButton::gGUIToolbarButton() {
 gGUIToolbarButton::~gGUIToolbarButton() {
 }
 
+void gGUIToolbarButton::set(gBaseApp* root, gBaseGUIObject* parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h) {
+	this->root = root;
+	parent = parentGUIObject;
+	parentslotlineno = parentSlotLineNo;
+	parentslotcolumnno = parentSlotColumnNo;
+	left = x;
+	top = y;
+	right = x + h;
+	bottom = y + h;
+	width = h;
+	height = h;
+}
+
 void gGUIToolbarButton::setImage(int iconId) {
 	iconid = iconId;
 }

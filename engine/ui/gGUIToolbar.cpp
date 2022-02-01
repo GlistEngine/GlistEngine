@@ -9,6 +9,7 @@
 
 
 gGUIToolbar::gGUIToolbar() {
+	sizerrescaling = false;
 }
 
 gGUIToolbar::~gGUIToolbar() {

@@ -27,7 +27,7 @@ void gStartEngine(gBaseApp* baseApp, std::string appName, int windowMode, int wi
 	baseApp->setAppManager(&appmanager);
 	int screenwidth = width, screenheight = height;
 #if defined(WIN32) || defined(LINUX) || defined(APPLE)
-	if (windowMode == gBaseWindow::WINDOWMODE_GAME || windowMode == gBaseWindow::WINDOWMODE_FULLSCREEN) {
+	if (windowMode == gAppManager::WINDOWMODE_GAME || windowMode == gAppManager::WINDOWMODE_FULLSCREEN || windowMode == gAppManager::WINDOWMODE_FULLSCREENGUIAPP) {
 		glfwInit();
 		const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 		screenwidth = mode->width;
@@ -35,7 +35,9 @@ void gStartEngine(gBaseApp* baseApp, std::string appName, int windowMode, int wi
 		glfwTerminate();
 	}
 #endif
-	appmanager.runApp(appName, baseApp, screenwidth, screenheight, windowMode, width, height, gRenderer::SCREENSCALING_AUTO);
+	int screenscaling = gRenderer::SCREENSCALING_AUTO;
+	if(windowMode == gAppManager::WINDOWMODE_FULLSCREENGUIAPP || windowMode == gAppManager::WINDOWMODE_GUIAPP) screenscaling = gRenderer::SCREENSCALING_NONE;
+	appmanager.runApp(appName, baseApp, screenwidth, screenheight, windowMode, width, height, screenscaling);
 }
 
 void gStartEngine(gBaseApp* baseApp, std::string appName, int windowMode, int width, int height, int screenScaling, int unitWidth, int unitHeight) {
@@ -75,6 +77,7 @@ gAppManager::gAppManager() {
 	mpj = 0;
 	upi = 0;
 	upj = 0;
+	canvasset = false;
 }
 
 gAppManager::~gAppManager() {
@@ -200,6 +203,7 @@ gCanvasManager* gAppManager::getCanvasManager() {
 
 void gAppManager::setCurrentCanvas(gBaseCanvas *baseCanvas) {
 	canvasmanager->setCurrentCanvas(baseCanvas);
+	canvasset = true;
 }
 
 gBaseCanvas* gAppManager::getCurrentCanvas() {
@@ -208,6 +212,8 @@ gBaseCanvas* gAppManager::getCurrentCanvas() {
 
 void gAppManager::setScreenSize(int width, int height) {
 	canvas->setScreenSize(width, height);
+	if(canvasset) canvasmanager->getCurrentCanvas()->windowResized(width, height);
+	if(canvasset && guimanager->isframeset) guimanager->windowResized(width, height);
 }
 
 void gAppManager::setFramerate(int targetFramerate) {
