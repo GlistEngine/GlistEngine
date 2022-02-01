@@ -124,6 +124,12 @@ void gCamera::rotateDeg(float angle, float ax, float ay, float az) {
 	if (gizmos) rotateDegGizmos(angle, ax, ay, az);
 }
 
+void gCamera::rotateAround(float radians, const glm::vec3& axis, const glm::vec3& point) {
+	gNode::rotateAround(radians, axis, point);
+	lookposition = glm::angleAxis(radians, axis) * (lookposition - point) + point;
+	processLookMatrix();
+}
+
 void gCamera::setOrientation(const glm::quat& o) {
 	gNode::setOrientation(o);
 	lookorientation = o;
@@ -210,6 +216,12 @@ void gCamera::setScale(float sx, float sy, float sz) {
 void gCamera::setScale(float s) {
 	gNode::setScale(s);
 	lookscalevec = glm::vec3(s, s, s);
+	processLookMatrix();
+}
+
+void gCamera::lookAt(const glm::vec3& point) {
+	//glm::vec3 targetvector = glm::normalize(point - lookposition);
+	lookorientation = glm::conjugate(glm::quat_cast(glm::lookAt(lookposition, point, glm::vec3(0.0f, 1.0f, 0.0f))));
 	processLookMatrix();
 }
 
