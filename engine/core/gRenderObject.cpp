@@ -72,5 +72,7 @@ bool gRenderObject::isShadowMappingEnabled() {
 	return isshadowmappingenabled;
 }
 
-
+gRenderer* gRenderObject::getRenderer() {
+	return renderer;
+}
 

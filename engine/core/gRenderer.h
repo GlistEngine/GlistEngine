@@ -49,7 +49,7 @@ void gDrawLine(float x1, float y1, float z1, float x2, float y2, float z2);
 void gDrawCircle(float xCenter, float yCenter, float radius, bool isFilled = false, float numberOfSides = 64.0f);
 void gDrawArrow(float x1, float y1, float length, float angle, float tipLength, float tipAngle);
 void gDrawRectangle(float x, float y, float w, float h, bool isFilled = false);
-void gDrawRectangle(float x, float y, float w, float h, bool isFilled, float thickness);
+void gDrawRectangle(float x, float y, float w, float h, bool isFilled, float thickness, float borderposition = 0.0f);
 void gDrawBox(float x, float y, float z, float w = 1.0f, float h = 1.0f, float d = 1.0f, bool isFilled = true);
 void gDrawBox(glm::mat4 transformationMatrix, bool isFilled = true);
 void gDrawSphere(float xPos, float yPos, float zPos, int xSegmentNum = 64, int ySegmentNum = 64, float scale = 1.0f, bool isFilled = true);
@@ -141,6 +141,7 @@ public:
 	gShader* getIrradianceShader();
 	gShader* getPrefilterShader();
 	gShader* getBrdfShader();
+	gShader* getFboShader();
 
 	void setProjectionMatrix(glm::mat4 projectionMatrix);
 	void setProjectionMatrix2d(glm::mat4 projectionMatrix2d);
@@ -156,8 +157,6 @@ public:
 	gColor* fogcolor;
 	float fogdensity;
 	float foggradient;
-
-
 
 private:
 	static int width, height;
@@ -190,6 +189,7 @@ private:
 	gShader* irradianceshader;
 	gShader* prefiltershader;
 	gShader* brdfshader;
+	gShader* fboshader;
 
 	glm::mat4 projectionmatrix;
 	glm::mat4 projectionmatrixold;
@@ -218,7 +218,8 @@ private:
 	const std::string getShaderSrcPrefilterFragment();
 	const std::string getShaderSrcBrdfVertex();
 	const std::string getShaderSrcBrdfFragment();
-
+	const std::string getShaderSrcFboVertex();
+	const std::string getShaderSrcFboFragment();
 };
 
 #endif /* CORE_GRENDERER_H_ */

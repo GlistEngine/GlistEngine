@@ -24,7 +24,7 @@ class gAppManager;
 
 class gBaseWindow : public gObject {
 public:
-	static const int WINDOWMODE_NONE = -1, WINDOWMODE_GAME = 0, WINDOWMODE_FULLSCREEN = 1, WINDOWMODE_APP = 2;
+	static const int WINDOWMODE_NONE = -1, WINDOWMODE_GAME = 0, WINDOWMODE_FULLSCREEN = 1, WINDOWMODE_APP = 2, WINDOWMODE_FULLSCREENGUIAPP = 3, WINDOWMODE_GUIAPP = 4;
 	static const int CURSOR_ARROW = 0, CURSOR_IBEAM = 1, CURSOR_CROSSHAIR = 2, CURSOR_HAND = 3, CURSOR_HRESIZE = 4, CURSOR_VRESIZE = 5;
 
 
@@ -58,7 +58,11 @@ public:
 	 */
 	virtual void close();
 
+	bool isVsyncEnabled();
+	virtual void enableVsync(bool vsync);
+
 	virtual void setCursor(int cursorNo);
+	virtual void setCursorMode(int cursorMode);
 
 	/**
 	 * Sets game window size.
@@ -200,6 +204,8 @@ public:
 	 * @param yoffset offset value of y(vertical) axis.
 	 */
 	void onMouseScrollEvent(double xoffset, double yoffset);
+
+	bool vsync;
 
 protected:
 	gAppManager *appmanager;

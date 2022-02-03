@@ -93,11 +93,34 @@ void gDrawRectangle(float x, float y, float w, float h, bool isFilled) {
  	rectanglemesh.draw(x, y, w, h, isFilled);
 }
 
-void gDrawRectangle(float x, float y, float w, float h, bool isFilled, float thickness) {
-	for(int i = 0; i < thickness; i++) {
-		gRectangle rectanglemesh;
-	 	rectanglemesh.draw(x - i, y - i, w + i*2, h + i*2, isFilled);
-	}
+void gDrawRectangle(float x, float y, float w, float h, bool isFilled, float thickness, float borderposition) {
+	  	if(borderposition == 0.0f) {
+			for(int i = 0; i < thickness; i++) {
+				gRectangle rectanglemesh;
+			 	rectanglemesh.draw(x + i, y + i, w - i*2, h - i*2, isFilled);
+			}
+		} else if (borderposition == 1.0f) {
+			for(int i = 0; i < thickness; i++) {
+				gRectangle rectanglemesh;
+			 	rectanglemesh.draw(x - i, y - i, w + i*2, h + i*2, isFilled);
+			}
+		}else if (borderposition > 0.0f && borderposition < 1.0f) {
+			//calculating how many pixel is sided to each
+			int inside = 0;
+			int outside = 0;
+			outside = (thickness * borderposition);
+			inside = thickness - outside;
+			//outside border
+			for(int i = 0; i < outside; i++) {
+				gRectangle rectanglemesh;
+			 	rectanglemesh.draw(x - i, y - i, w + i*2, h + i*2, isFilled);
+			}
+			//inside border
+			for(int i = 0; i < inside; i++) {
+				gRectangle rectanglemesh;
+			 	rectanglemesh.draw(x + i, y + i, w - i*2, h - i*2, isFilled);
+			}
+		}
 }
 
 void gDrawBox(float x, float y, float z, float w, float h, float d, bool isFilled) {
@@ -125,6 +148,8 @@ void gDrawSphere(float xPos, float yPos, float zPos, int xSegmentNum, int ySegme
 gRenderer::gRenderer() {
 	width = gDefaultWidth();
 	height = gDefaultHeight();
+	unitwidth = gDefaultUnitWidth();
+	unitheight = gDefaultUnitHeight();
 
 	// TODO Check matrix maths
 	projectionmatrix = glm::mat4(1.0f);
@@ -172,6 +197,9 @@ gRenderer::gRenderer() {
 
 	brdfshader = new gShader();
 	brdfshader->loadProgram(getShaderSrcBrdfVertex(), getShaderSrcBrdfFragment());
+
+	fboshader = new gShader();
+	fboshader->loadProgram(getShaderSrcFboVertex(), getShaderSrcFboFragment());
 
 	rendercolor = new gColor();
 	rendercolor->set(255, 255, 255, 255);
@@ -242,6 +270,10 @@ gShader* gRenderer::getPrefilterShader() {
 
 gShader* gRenderer::getBrdfShader() {
 	return brdfshader;
+}
+
+gShader* gRenderer::getFboShader() {
+	return fboshader;
 }
 
 void gRenderer::setProjectionMatrix(glm::mat4 projectionMatrix) {
@@ -666,7 +698,8 @@ const std::string gRenderer::getShaderSrcColorFragment() {
 "	};\n"
 "\n"
 "	uniform Material material;\n"
-"	uniform Light light;\n"
+"	#define MAX_LIGHTS 8\n"
+"	uniform Light lights[MAX_LIGHTS];\n"
 "\n"
 "	uniform vec4 renderColor;\n"
 "	uniform vec3 viewPos;\n"
@@ -710,97 +743,160 @@ const std::string gRenderer::getShaderSrcColorFragment() {
 "       return shadow;\n"
 "   }\n"
 "\n"
-"	void main() {\n"
-"	    vec4 ambient;\n"
-"		vec4 diffuse;\n"
-"	    vec4 specular;\n"
+"	vec4 calcAmbLight(Light light, vec4 materialAmbient) {\n"
+"		vec4 ambient = light.ambient * materialAmbient;\n"
+"		return ambient;\n"
+"	}\n"
 "\n"
-"	    // ambient\n"
-"	    if (material.useDiffuseMap > 0) {\n"
-"	        ambient = light.ambient * texture(material.diffusemap, TexCoords).rgba;\n"
-"	    } else {\n"
-"	        ambient = light.ambient * material.ambient;\n"
-"	    }\n"
-"\n"
-"		if (light.type > 0) {\n"
-"			vec3 norm;\n"
-"			if (mUseNormalMap > 0) {\n"
-"			    norm = normalize(texture(material.normalMap, TexCoords).rgb * 2.0 - 1.0);  // this normal is in tangent space\n"
-"			} else {\n"
-"				norm = normalize(Normal);\n"
-"			}\n"
-"\n"
-"		    // diffuse \n"
-"			float diff;\n"
-"			float distance;\n"
-"			vec3 lightDir;\n"
-"			if (light.type > 1) {\n"
-"				if (mUseNormalMap > 0) {\n"
-"				    lightDir = normalize(TangentLightPos - TangentFragPos);\n"
-"				    distance = length(TangentLightPos - TangentFragPos);\n"
-"				} else {\n"
-"					lightDir = normalize(light.position - FragPos);\n"
-"					distance = length(light.position - FragPos);\n"
-"				}\n"
-"			} else {\n"
-"				lightDir = normalize(-light.direction);\n"
-"			}\n"
-"			if (mUseNormalMap > 0) {\n"
-"			    diff = max(dot(lightDir, norm), 0.0);\n"
-"			} else {\n"
-"				diff = max(dot(norm, lightDir), 0.0);\n"
-"			}\n"
-"		    if (material.useDiffuseMap > 0) {\n"
-"			    diffuse = light.diffuse * diff * texture(material.diffusemap, TexCoords).rgba;\n"
-"		    } else {\n"
-"			    diffuse = light.diffuse * (diff * material.diffuse);\n"
-"		    }\n"
-"\n"
-"		    // specular\n"
-"		    vec3 viewDir;\n"
-"		    vec3 reflectDir;\n"
-"		    float spec;\n"
-"		    if (mUseNormalMap > 0) {\n"
-"		    	viewDir = normalize(TangentViewPos - TangentFragPos);\n"
-"		    	reflectDir = reflect(-lightDir, norm);\n"
-"		    	vec3 halfwayDir = normalize(lightDir + viewDir);\n"
-"		    	spec = pow(max(dot(norm, halfwayDir), 0.0), material.shininess);\n"
-"		    } else {\n"
-"		    	viewDir = normalize(viewPos - FragPos);\n"
-"		    	reflectDir = reflect(-lightDir, norm);\n"
-"		    	spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);\n"
-"		    }\n"
-"		    if (material.useSpecularMap > 0) {\n"
-"			    specular = light.specular * spec * texture(material.specularmap, TexCoords).rgba;\n"
-"		    } else {\n"
-"			    specular = light.specular * (spec * material.specular);\n"
-"		    }\n"
-"\n"
-"		    if (light.type > 1) {\n"
-"		    	if (light.type == 3) {\n"
-"		   		    // spotlight (with soft edges)\n"
-"				    float theta = dot(lightDir, normalize(-light.direction)); \n"
-"				    float epsilon = (light.cutOff - light.outerCutOff);\n"
-"				    float intensity = clamp((theta - light.outerCutOff) / epsilon, 0.0, 1.0);\n"
-"				    diffuse *= intensity;\n"
-"				    specular *= intensity;\n"
-"		    	}\n"
-"\n"
-"			    // attenuation\n"
-"			    float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));\n"
-"			    ambient *= attenuation;\n"
-"			    diffuse *= attenuation;\n"
-"			    specular *= attenuation;\n"
-"		    }\n"
-"	    }\n"
-"\n"
+"	vec4 calcDirLight(Light light, vec3 normal, vec3 viewDir, float shadowing, vec4 materialAmbient, vec4 materialDiffuse, vec4 materialSpecular) {\n"
+"		vec3 lightDir = normalize(-light.direction);\n"
+"		float diff;\n"
+"		float spec;\n"
+"		if (mUseNormalMap > 0) {\n"
+"		    diff = max(dot(lightDir, normal), 0.0);\n"
+"			vec3 halfwayDir = normalize(lightDir + viewDir);\n"
+"			spec = pow(max(dot(normal, halfwayDir), 0.0), material.shininess);\n"
+"		} else {\n"
+"			diff = max(dot(normal, lightDir), 0.0);\n"
+"			vec3 reflectDir = reflect(-lightDir, normal);\n"
+"			spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);\n"
+"		}\n"
+"		vec4 ambient = light.ambient * materialAmbient;\n"
+"		vec4 diffuse = light.diffuse * diff * materialDiffuse;\n"
+"		vec4 specular = light.specular * spec * materialSpecular;\n"
 "	    if (mUseShadowMap > 0) {\n"
-"			float shadowing = 1.0 - calculateShadow(FragPosLightSpace);\n"
 "			diffuse *= shadowing;\n"
 "			specular *= shadowing;\n"
 "	    }"
+"		return (ambient + diffuse + specular);"
+"	}\n"
 "\n"
-"			FragColor = (ambient + diffuse + specular) * renderColor;\n"
+"	vec4 calcPointLight(Light light, vec3 normal, vec3 viewDir, float shadowing, vec4 materialAmbient, vec4 materialDiffuse, vec4 materialSpecular){\n"
+"		vec3 lightDir;\n"
+"		float distance;\n"
+"		if (mUseNormalMap > 0) {\n"
+"		    lightDir = normalize(TangentLightPos - TangentFragPos);\n"
+"		    distance = length(TangentLightPos - TangentFragPos);\n"
+"		} else {\n"
+"			lightDir = normalize(light.position - FragPos);\n"
+"			distance = length(light.position - FragPos);\n"
+"		}\n"
+"		float diff;\n"
+"		float spec;\n"
+"		if (mUseNormalMap > 0) {\n"
+"		    diff = max(dot(lightDir, normal), 0.0);\n"
+"			vec3 halfwayDir = normalize(lightDir + viewDir);\n"
+"			spec = pow(max(dot(normal, halfwayDir), 0.0), material.shininess);\n"
+"		} else {\n"
+"			diff = max(dot(normal, lightDir), 0.0);\n"
+"			vec3 reflectDir = reflect(-lightDir, normal);\n"
+"			spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);\n"
+"		}\n"
+"		vec4 ambient = light.ambient * materialAmbient;\n"
+"		vec4 diffuse = light.diffuse * diff * materialDiffuse;\n"
+"		vec4 specular = light.specular * spec * materialSpecular;\n"
+"		float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));\n"
+"		ambient  *= attenuation;\n"
+"    	diffuse  *= attenuation;\n"
+"    	specular *= attenuation;\n"
+"	    if (mUseShadowMap > 0) {\n"
+"			diffuse  *= shadowing;\n"
+"			specular *= shadowing;\n"
+"	    }"
+"		return (ambient + diffuse + specular);\n"
+"	}\n"
+"\n"
+"	vec4 calcSpotLight(Light light, vec3 normal, vec3 viewDir, float shadowing, vec4 materialAmbient, vec4 materialDiffuse, vec4 materialSpecular){\n"
+"		vec3 lightDir;\n"
+"		float distance;\n"
+"		if (mUseNormalMap > 0) {\n"
+"		    lightDir = normalize(TangentLightPos - TangentFragPos);\n"
+"		    distance = length(TangentLightPos - TangentFragPos);\n"
+"		} else {\n"
+"			lightDir = normalize(light.position - FragPos);\n"
+"			distance = length(light.position - FragPos);\n"
+"		}\n"
+"		float diff;\n"
+"		float spec;\n"
+"		if (mUseNormalMap > 0) {\n"
+"		    diff = max(dot(lightDir, normal), 0.0);\n"
+"			vec3 halfwayDir = normalize(lightDir + viewDir);\n"
+"			spec = pow(max(dot(normal, halfwayDir), 0.0), material.shininess);\n"
+"		} else {\n"
+"			diff = max(dot(normal, lightDir), 0.0);\n"
+"			vec3 reflectDir = reflect(-lightDir, normal);\n"
+"			spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);\n"
+"		}\n"
+"		vec4 ambient  = light.ambient  * materialAmbient;\n"
+"		vec4 diffuse  = light.diffuse  * diff * materialDiffuse;\n"
+"		vec4 specular = light.specular * spec * materialSpecular;\n"
+"\n"
+"		float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));\n"
+"\n"
+"		float theta = dot(lightDir, normalize(-light.direction)); \n"
+"		float epsilon = (light.cutOff - light.outerCutOff);\n"
+"		float intensity = clamp((theta - light.outerCutOff) / epsilon, 0.0, 1.0);\n"
+"		ambient  *= attenuation;\n"
+"    	diffuse  *= attenuation * intensity;\n"
+"    	specular *= attenuation * intensity;\n"
+"	    if (mUseShadowMap > 0) {\n"
+"			diffuse *= shadowing;\n"
+"			specular *= shadowing;\n"
+"	    }"
+"		return (ambient + diffuse + specular);\n"
+"	}\n"
+"\n"
+"	void main() {\n"
+"		vec4 result;\n"
+"		vec3 norm;\n"
+"		if (mUseNormalMap > 0) {\n"
+"		    norm = normalize(texture(material.normalMap, TexCoords).rgb * 2.0 - 1.0);  // this normal is in tangent space\n"
+"		} else {\n"
+"			norm = normalize(Normal);\n"
+"		}\n"
+"		vec3 viewDir;\n"
+"		if (mUseNormalMap > 0) {\n"
+"			viewDir = normalize(TangentViewPos - TangentFragPos);\n"
+"		}\n"
+"		else {\n"
+"			viewDir = normalize(viewPos - FragPos);\n"
+"		}\n"
+"		vec4 materialAmbient;\n"
+"		vec4 materialDiffuse;\n"
+"	    if (material.useDiffuseMap > 0) {\n"
+"	        materialAmbient = texture(material.diffusemap, TexCoords).rgba;\n"
+"			materialDiffuse = texture(material.diffusemap, TexCoords).rgba;\n"
+"	    } else {\n"
+"	        materialAmbient = material.ambient;\n"
+"			materialDiffuse = material.diffuse;\n"
+"	    }\n"
+"		vec4 materialSpecular;\n"
+"		if (material.useSpecularMap > 0) {\n"
+"			materialSpecular = texture(material.specularmap, TexCoords).rgba;\n"
+"		}\n"
+"		else {\n"
+"			materialSpecular = material.specular;\n"
+"		}\n"
+"		float shadowing;"
+"	    if (mUseShadowMap > 0) {\n"
+"			shadowing = 1.0 - calculateShadow(FragPosLightSpace);\n"
+"	    }"
+"		for (int i = 0; i < MAX_LIGHTS; i++) {\n"
+"			if (lights[i].type == 0) {\n"
+"				result += calcAmbLight(lights[i], materialAmbient);\n"
+"			}\n"
+"			else if (lights[i].type == 1) {\n"
+"				result += calcDirLight(lights[i], norm, viewDir, shadowing, materialAmbient, materialDiffuse, materialSpecular);\n"
+"			}\n"
+"			else if (lights[i].type == 2) {\n"
+"				result += calcPointLight(lights[i], norm, viewDir, shadowing, materialAmbient, materialDiffuse, materialSpecular);\n"
+"			}\n"
+"			else if (lights[i].type == 3) {\n"
+"				result += calcSpotLight(lights[i], norm, viewDir, shadowing, materialAmbient, materialDiffuse, materialSpecular);\n"
+"			}\n"
+"		}\n"
+"\n"
+"		FragColor = result * renderColor;\n"
 "\n"
 "	    if (mUseFog > 0) {\n"
 "			FragColor = mix(vec4(fogColor, 1.0), FragColor, visibility);\n"
@@ -1602,3 +1698,35 @@ const std::string gRenderer::getShaderSrcBrdfFragment() {
 	return std::string(shadersource);
 }
 
+const std::string gRenderer::getShaderSrcFboVertex() {
+	const char* shadersource =
+			"#version 330 core\n"
+			"layout (location = 0) in vec2 aPos;"
+			"layout (location = 1) in vec2 aTexCoords;"
+			""
+			"out vec2 TexCoords;"
+			""
+			"void main()"
+			"{"
+			"    gl_Position = vec4(aPos.x, aPos.y, 0.0, 1.0);"
+			"    TexCoords = aTexCoords;"
+			"}\n";
+
+	return std::string(shadersource);
+}
+
+const std::string gRenderer::getShaderSrcFboFragment() {
+	const char* shadersource =
+			"#version 330 core\n"
+			"out vec4 FragColor;"
+			""
+			"in vec2 TexCoords;"
+			""
+			"uniform sampler2D screenTexture;"
+			""
+			"void main()"
+			"{ "
+			"    FragColor = vec4(texture(screenTexture, TexCoords).rgb, 1.0);"
+			"}\n";
+	return std::string(shadersource);
+}

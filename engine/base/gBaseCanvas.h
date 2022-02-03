@@ -33,6 +33,7 @@ public:
 	virtual void mouseScrolled(int x, int y);
 	virtual void mouseEntered();
 	virtual void mouseExited();
+	virtual void windowResized(int w, int h);
 	virtual void onGuiEvent(int guiObjectId, int eventType, std::string value1 = "", std::string value2 = "");
 
 	virtual void showNotify();

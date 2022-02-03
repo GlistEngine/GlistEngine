@@ -293,7 +293,7 @@ void gFont::loadChar(const int& charID) {
 		  textures[lci].setFiltering(gTexture::TEXTUREMINMAGFILTER_NEAREST, gTexture::TEXTUREMINMAGFILTER_NEAREST);
 	  }
 
-	  textures[lci].loadData(lcpixels, lcpixelsw, lcpixelsh, 2);
+	  textures[lci].loadData(lcpixels, lcpixelsw, lcpixelsh, 2, true);
 }
 
 

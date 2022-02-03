@@ -38,6 +38,7 @@ public:
     void drawSub(glm::vec2 pos, glm::vec2 size, glm::vec2 subpos, glm::vec2 subsize, float rotate = 0.0f);
     void drawSub(const gRect& src, const gRect& dst, float rotate = 0.f);
 
+	static unsigned int getQuadVao();
 private:
     unsigned int framebuffer;
     gTexture texture;
@@ -45,6 +46,8 @@ private:
     bool isdepthmap;
     unsigned int textureid;
 
+    static bool isvaoset;
+	static unsigned int quadVAO, quadVBO;
 };
 
 #endif /* GRAPHICS_GFBO_H_ */

@@ -16,10 +16,10 @@ public:
 	gGUIPanel();
 	virtual ~gGUIPanel();
 
-	void update();
 	void draw();
 
 private:
+	int toplineh;
 };
 
 #endif /* UI_GGUIPANEL_H_ */

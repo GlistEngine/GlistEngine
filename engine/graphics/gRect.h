@@ -46,6 +46,27 @@ public:
 	virtual ~gRect();
 
 	/**
+	 * Returns x(horizontal) center coordinate of rectangle but as integer value.
+	 * @return x center of rectangle.
+	 */
+	int centerX();
+	/**
+	 * Returns y(vertical) center coordinate of rectangle but as integer value.
+	 * @return y center of rectangle.
+	 */
+	int centerY();
+	/**
+	 * Returns x(horizontal) exact center coordinate of rectangle as float value.
+	 * @return x exact center of rectangle.
+	 */
+	float exactCenterX();
+	/**
+	 * Returns y(vertical) exact center coordinate of rectangle as float value.
+	 * @return y exact center of rectangle.
+	 */
+	float exactCenterY();
+
+	/**
 	 * Sets edges of the rectangle.
 	 * @param left 	 Left edge to be set
 	 * @param top 	 Top edge to be set

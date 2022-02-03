@@ -6,10 +6,15 @@
  */
 
 #include "gGLFWWindow.h"
+#include "gAppManager.h"
 #ifndef STB_IMAGE_IMPLEMENTATION
 #define STB_IMAGE_IMPLEMENTATION
 #endif
 #include "stb/stb_image.h"
+
+const int gGLFWWindow::CURSORMODE_NORMAL = GLFW_CURSOR_NORMAL;
+const int gGLFWWindow::CURSORMODE_HIDDEN = GLFW_CURSOR_HIDDEN;
+const int gGLFWWindow::CURSORMODE_DISABLED = GLFW_CURSOR_DISABLED;
 
 
 gGLFWWindow::gGLFWWindow() {
@@ -53,25 +58,24 @@ void gGLFWWindow::initialize(int width, int height, int windowMode) {
 
 	// Create window
 	int currentrefreshrate = 60;
-    if (windowMode == gBaseWindow::WINDOWMODE_GAME) {
+    if (windowMode == gAppManager::WINDOWMODE_GAME) {
     	const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
     	width = mode->width;
     	height = mode->height;
     	currentrefreshrate = mode->refreshRate;
-    } else if (windowMode == gBaseWindow::WINDOWMODE_FULLSCREEN) {
+    } else if (windowMode == gAppManager::WINDOWMODE_FULLSCREEN || windowMode == gAppManager::WINDOWMODE_FULLSCREENGUIAPP) {
     	glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
     }
 
     window = glfwCreateWindow(width, height, title.c_str(),
-			(windowMode==gBaseWindow::WINDOWMODE_GAME?glfwGetPrimaryMonitor():NULL), NULL);
-
+			(windowMode==gAppManager::WINDOWMODE_GAME?glfwGetPrimaryMonitor():NULL), NULL);
 
 	if (window == NULL) {
 	    std::cout << "Failed to create GLFW window" << std::endl;
 	    glfwTerminate();
 	    return;
 	} else {
-	    if (windowMode == gBaseWindow::WINDOWMODE_GAME) {
+	    if (windowMode == gAppManager::WINDOWMODE_GAME) {
 	    	GLFWmonitor* monitor = glfwGetWindowMonitor(window);
 	    	glfwSetWindowMonitor(window, monitor, 0, 0, width, height, currentrefreshrate);
 	    }
@@ -93,6 +97,7 @@ void gGLFWWindow::initialize(int width, int height, int windowMode) {
 	glfwSetCursor(window, cursor[0]);
 
 	glfwMakeContextCurrent(window);
+    glfwSwapInterval(vsync ? 1 : 0);
 	glewExperimental = GL_TRUE;
 	glewInit();
 
@@ -145,9 +150,22 @@ void gGLFWWindow::close() {
 #endif
 }
 
+void gGLFWWindow::enableVsync(bool vsync) {
+	gBaseWindow::enableVsync(vsync);
+#if defined(WIN32) || defined(LINUX) || defined(APPLE)
+	glfwSwapInterval(vsync);
+#endif
+}
+
 void gGLFWWindow::setCursor(int cursorNo) {
 #if defined(WIN32) || defined(LINUX) || defined(APPLE)
 	glfwSetCursor(window, cursor[cursorNo]);
+#endif
+}
+
+void gGLFWWindow::setCursorMode(int cursorMode) {
+#if defined(WIN32) || defined(LINUX) || defined(APPLE)
+	glfwSetInputMode(window, GLFW_CURSOR, cursorMode);
 #endif
 }
 

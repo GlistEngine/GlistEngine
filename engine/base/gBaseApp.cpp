@@ -51,3 +51,11 @@ int gBaseApp::getFramerate() {
 double gBaseApp::getElapsedTime() {
 	return appmanager->getElapsedTime();
 }
+
+void gBaseApp::enableVsync() {
+	appmanager->enableVsync();
+}
+
+void gBaseApp::disableVsync() {
+	appmanager->disableVsync();
+}

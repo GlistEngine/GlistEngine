@@ -10,7 +10,7 @@
 
 //#include <GL/glew.h>
 #include "gNode.h"
-
+#include "gSkybox.h"
 
 class gCamera : public gNode {
 public:
@@ -29,11 +29,14 @@ public:
 	void move(float dx, float dy, float dz);
 	void move(const glm::vec3 dv);
 	void rotate(const glm::quat& q);
-	void rotate(float angle, float ax, float ay, float az);
+	void rotate(float radians, float ax, float ay, float az);
+	void rotateDeg(float angle, float ax, float ay, float az);
+	void rotateAround(float radians, const glm::vec3& axis, const glm::vec3& point);
 	void scale(float sx, float sy, float sz);
 	void scale(float s);
 
 	void setPosition(float px, float py, float pz);
+	void setPosition(const glm::vec3 pv);
 	void setOrientation(const glm::quat& o);
 	void setOrientation(const glm::vec3& angles);
 	void setScale(const glm::vec3& s);
@@ -46,12 +49,17 @@ public:
 	void tilt(float radians);
 	void pan(float radians);
 	void roll(float radians);
+	void tiltDeg(float degrees);
+	void panDeg(float degrees);
+	void rollDeg(float degrees);
 
+	void lookAt(const glm::vec3& point);
 	void rotateLook(float angle, float ax, float ay, float az);
 	void resetLook();
 	glm::mat4 getLookMatrix();
 	glm::quat getLookOrientation();
 
+	void drawGizmos();
 
 private:
     float fov, nearclip, farclip;
@@ -61,6 +69,22 @@ private:
 	glm::vec3 lookscalevec;
     glm::mat4 locallookmatrix;
     void processLookMatrix();
-};
 
+
+    gSkybox* gizmos;
+
+	void rotateGizmos(const glm::quat& o);
+	void rotateGizmos(float radians, float ax, float ay, float az);
+	void rotateDegGizmos(float angle, float ax, float ay, float az);
+	void setOrientationGizmos(const glm::quat& o);
+
+	void tiltGizmos(float radians);
+	void panGizmos(float radians);
+	void rollGizmos(float radians);
+
+	void tiltDegGizmos(float degrees);
+	void panDegGizmos(float degrees);
+	void rollDegGizmos(float degrees);
+
+};
 #endif /* ENGINE_GRAPHICS_GCAMERA_H_ */

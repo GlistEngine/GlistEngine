@@ -30,6 +30,9 @@ public:
 	int getFramerate();
 	double getElapsedTime();
 
+	void enableVsync();
+	void disableVsync();
+
 protected:
 	gAppManager *appmanager;
 };

@@ -26,6 +26,14 @@ int gDefaultHeight() {
 	return 540;
 }
 
+int gDefaultUnitWidth() {
+	return 960;
+}
+
+int gDefaultUnitHeight() {
+	return 540;
+}
+
 int gDefaultScreenScaling() {
 	return 2;
 }
