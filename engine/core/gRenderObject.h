@@ -32,7 +32,7 @@ public:
 	static void disableShadowMapping();
 	static bool isShadowMappingEnabled();
 
-
+	static gRenderer* getRenderer();
 protected:
 	static gRenderer* renderer;
 	static bool isshadowmappingenabled;

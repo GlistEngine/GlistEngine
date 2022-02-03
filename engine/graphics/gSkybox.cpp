@@ -82,6 +82,70 @@ unsigned int gSkybox::load(std::vector<std::string> fullPaths) {
     return id;
 }
 
+void gSkybox::loadSkybox(gImage* images) {
+	skymapslot = GL_TEXTURE0;
+	skymapint = 0;
+
+	glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
+
+	glActiveTexture(skymapslot);
+	glGenTextures(1, &id);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, id);
+
+	for (unsigned int i = 0; i < 6; i++) {
+		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB,
+				images[i].getWidth(), images[i].getHeight(), 0, GL_RGB,
+				GL_UNSIGNED_BYTE, images[i].getImageData());
+    }
+
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+
+	renderer->getSkyboxShader()->use();
+	renderer->getSkyboxShader()->setInt("skymap", skymapint);
+
+	if(ispbr) generatePbrMaps();
+
+	glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+	glActiveTexture(GL_TEXTURE0);
+
+}
+
+void gSkybox::loadDataSkybox(std::string *data, int width, int height) {
+	skymapslot = GL_TEXTURE0;
+	skymapint = 0;
+
+	glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
+
+	glActiveTexture(skymapslot);
+	glGenTextures(1, &id);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, id);
+
+	for (unsigned int i = 0; i < 6; i++) {
+		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB,
+				width, height, 0, GL_RGB, GL_UNSIGNED_BYTE,
+				(unsigned char*)gDecodeBase64(data[i]).c_str());
+    }
+
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+
+	renderer->getSkyboxShader()->use();
+	renderer->getSkyboxShader()->setInt("skymap", skymapint);
+
+	if(ispbr) generatePbrMaps();
+
+	glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+	glActiveTexture(GL_TEXTURE0);
+
+}
+
 unsigned int gSkybox::loadTextureEquirectangular(std::string texturePath) {
 	texturePath = gGetTexturesDir() + texturePath;
 	return loadEquirectangular(texturePath);

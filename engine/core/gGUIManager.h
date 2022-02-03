@@ -51,6 +51,9 @@ public:
 	void mouseDragged(int x, int y, int button);
 	void mouseReleased(int x, int y, int button);
 	void mouseScrolled(int x, int y);
+	void mouseEntered();
+	void mouseExited();
+	void windowResized(int w, int h);
 
 	void update();
 	void draw();
@@ -64,8 +67,15 @@ private:
 
 	static const int themenum = 4;
 	gColor themebackgroundcolor[themenum];
+	gColor thememiddlegroundcolor[themenum];
 	gColor themeforegroundcolor[themenum];
 	gColor themefontcolor[themenum];
+	gColor themebuttoncolor[themenum];
+	gColor themepressedbuttoncolor[themenum];
+	gColor themedisabledbuttoncolor[themenum];
+	gColor themebuttonfontcolor[themenum];
+	gColor themepressedbuttonfontcolor[themenum];
+	gColor themedisabledbuttonfontcolor[themenum];
 	gFont themefont;
 	void loadThemes();
 	void resetTheme(int guiTheme);

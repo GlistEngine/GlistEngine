@@ -84,6 +84,10 @@ void gImage::setImageData(unsigned char* imageData) {
 	setData(imageData, true);
 }
 
+void gImage::setImageData(unsigned char* imageData, int width, int height, int componentNum) {
+	gTexture::loadData(imageData, width, height, componentNum);
+}
+
 unsigned char* gImage::getImageData() {
 	return getData();
 }

@@ -20,6 +20,7 @@
 #include <string>
 #include "gNode.h"
 #include "gVbo.h"
+#include "gImage.h"
 
 /**
  * gSkybox creates a 6-sided textured sky box around the scene.
@@ -40,6 +41,10 @@ public:
 	 * the textures should be in this order: right, left, top, bottom, front, back.
 	 */
 	unsigned int load(std::vector<std::string> fullPaths);
+
+	void loadSkybox(gImage* images);
+
+	void loadDataSkybox(std::string *data, int width, int height);
 
 	unsigned int loadEquirectangular(std::string fullPath);
 	unsigned int loadTextureEquirectangular(std::string texturePath);

@@ -144,6 +144,8 @@ public:
 	*/
     void setImageData(unsigned char* imageData);
 
+    void setImageData(unsigned char* imageData, int width, int height, int componentNum);
+
     /**
     * Accesses an image's original or edited data in integer format.
     * The data should be loaded in order to be accessed by this function.

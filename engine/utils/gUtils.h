@@ -71,6 +71,8 @@
 
 int gDefaultWidth();
 int gDefaultHeight();
+int gDefaultUnitWidth();
+int gDefaultUnitHeight();
 int gDefaultScreenScaling();
 
 float gRadToDeg(float radians);
