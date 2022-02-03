@@ -139,6 +139,8 @@ set(SRC_FILES
 	${ENGINE_DIR}/graphics/gRay.cpp
 	${ENGINE_DIR}/graphics/gBoundingBox.cpp
 	${ENGINE_DIR}/graphics/gRect.cpp
+	${ENGINE_DIR}/animation/gSpriteAnimation.cpp
+	${ENGINE_DIR}/animation/gSpriteAnimator.cpp
 	${ENGINE_DIR}/ui/gGUITextbox.cpp
 	${ENGINE_DIR}/ui/gGUIText.cpp
 	${ENGINE_DIR}/ui/gGUIDivider.cpp
@@ -201,6 +203,7 @@ set(INC_DIRS
     ${ENGINE_DIR}/graphics/primitives
     ${ENGINE_DIR}/graphics/posteffects
     ${ENGINE_DIR}/graphics/posteffects/kerneleffects
+    ${ENGINE_DIR}/animation
     ${ENGINE_DIR}/base
     ${ENGINE_DIR}/core
 	${PLUGIN_INCLUDES}
