@@ -1,0 +1,21 @@
+/*
+ * gGUIEvents.h
+ *
+ *  Created on: Feb 4, 2022
+ *      Author: noyan
+ */
+
+#ifndef UI_GGUIEVENTS_H_
+#define UI_GGUIEVENTS_H_
+
+#define G_GUIEVENT_NONE 0
+#define G_GUIEVENT_BUTTONPRESSED 1
+#define G_GUIEVENT_BUTTONRELEASED 2
+#define G_GUIEVENT_TEXTBOXENTRY 3
+#define G_GUIEVENT_CHECKBOXTICKED 4
+#define G_GUIEVENT_CHECKBOXUNTICKED 5
+
+
+
+
+#endif /* UI_GGUIEVENTS_H_ */

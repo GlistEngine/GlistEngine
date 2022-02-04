@@ -20,6 +20,7 @@
 #include <wchar.h>
 #include <vector>
 #include "gKeyCode.h"
+#include "gGUIEvents.h"
 
 /*
 #ifndef LINUX

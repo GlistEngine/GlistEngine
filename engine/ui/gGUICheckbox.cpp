@@ -97,7 +97,7 @@ void gGUICheckbox::mousePressed(int x, int y, int button) {
 	if(x >= left && x < left + buttonw && y >= top && y < top + buttonh) {
 		ischecked = !ischecked;
 	}
-	root->getCurrentCanvas()->onGuiEvent(id, GUIEVENT_BUTTONPRESSED);
+	root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_CHECKBOXTICKED);
 }
 
 void gGUICheckbox::mouseReleased(int x, int y, int button) {
@@ -105,6 +105,6 @@ void gGUICheckbox::mouseReleased(int x, int y, int button) {
 	if(x >= left && x < left + buttonw && y >= top && y < top + buttonh) {
 
 	}
-	root->getCurrentCanvas()->onGuiEvent(id, GUIEVENT_BUTTONRELEASED);
+	root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_CHECKBOXUNTICKED);
 }
 
