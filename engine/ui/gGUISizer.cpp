@@ -256,9 +256,9 @@ void gGUISizer::draw() {
 		for(int j = 0; j < columnnum; j++) {
 			if(fillbackground) {
 				gColor oldcolor = *renderer->getColor();
-				renderer->setColor(*backgroundcolor);
+				renderer->setColor(backgroundcolor);
 				gDrawRectangle(left + (width * columntprs[j]), top + (height * linetprs[i]), width * columnprs[j], height * lineprs[i], true);
-				renderer->setColor(oldcolor);
+				renderer->setColor(&oldcolor);
 			}
 
 			if(iscontrolset[i][j]) guicontrol[i][j]->draw();
@@ -284,7 +284,7 @@ void gGUISizer::draw() {
 				gDrawLine(left, t, right, t);
 			}
 		}
-		renderer->setColor(oldcolor);
+		renderer->setColor(&oldcolor);
 	}
 }
 

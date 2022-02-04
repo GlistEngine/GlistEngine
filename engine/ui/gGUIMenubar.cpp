@@ -129,19 +129,19 @@ void gGUIMenuItem::draw() {
 	if(selected || (parentitemid > 0 && hovered)) {
 
 		if(parentitemid == 0) {
-			renderer->setColor(*middlegroundcolor);
+			renderer->setColor(middlegroundcolor);
 			gDrawRectangle(left, top, width, height, true);
 		}
 
 		if(!childs.empty()) {
-			renderer->setColor(*foregroundcolor);
+			renderer->setColor(foregroundcolor);
 			gDrawRectangle(menuboxx, menuboxy, menuboxw, menuboxh + childs.size() * menuboxlineh, true);
-			renderer->setColor(*backgroundcolor);
+			renderer->setColor(backgroundcolor);
 			gDrawRectangle(menuboxx, menuboxy, menuboxw, menuboxh + childs.size() * menuboxlineh, false);
 
 			for(int i = 0; i < childs.size(); i++) {
 				if(childs[i].hovered) {
-					renderer->setColor(*middlegroundcolor);
+					renderer->setColor(middlegroundcolor);
 					gDrawRectangle(childs[i].left, childs[i].top, childs[i].width, childs[i].height, true);
 				}
 				childs[i].draw();
@@ -149,7 +149,7 @@ void gGUIMenuItem::draw() {
 		}
 	}
 
-	renderer->setColor(*fontcolor);
+	renderer->setColor(fontcolor);
 	font->drawText(title, left + 4, top + (font->getSize() * 4 / 4) + menuboxtextextrah);
 
 	if(itemid == 0) {
@@ -195,14 +195,14 @@ void gGUIMenubar::draw() {
 //	gLogi("Menubar") << "draw";
 
 	gColor oldcolor = *renderer->getColor();
-	renderer->setColor(*foregroundcolor);
+	renderer->setColor(foregroundcolor);
 	gDrawRectangle(left, top, width, height, true);
 	renderer->setColor(foregroundcolor->r - 0.05f, foregroundcolor->g - 0.05f, foregroundcolor->b - 0.05f);
 	gDrawLine(left, top + 29, right, top + 29);
 
 	gGUIMenuItem::draw();
 
-	renderer->setColor(oldcolor);
+	renderer->setColor(&oldcolor);
 }
 
 /*

@@ -19,12 +19,12 @@ gGUIPanel::~gGUIPanel() {
 void gGUIPanel::draw() {
 //	gLogi("gGUIPanel") << "draw";
 	gColor oldcolor = *renderer->getColor();
-	renderer->setColor(*foregroundcolor);
+	renderer->setColor(foregroundcolor);
 	gDrawRectangle(left, top, width, height, true);
 	renderer->setColor(middlegroundcolor->r, middlegroundcolor->g, middlegroundcolor->b);
 	gDrawLine(left, top + toplineh, right, top + toplineh);
-	renderer->setColor(*fontcolor);
+	renderer->setColor(fontcolor);
 	font->drawText(title, left + 2, top + 12);
-	renderer->setColor(oldcolor);
+	renderer->setColor(&oldcolor);
 	if(guisizer) guisizer->draw();
 }
