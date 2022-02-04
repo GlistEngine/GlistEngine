@@ -71,7 +71,7 @@ void gGUITextbox::keyPressed(int key) {
 		} else if (key == 261 && cursorposchar < text.length()) { // DELETE
 			text = text.substr(0, cursorposchar) + text.substr(cursorposchar + 1, text.length() - cursorposchar + 1);
 		} else if (key == 257 || key == 335) { // ENTER
-			root->getCurrentCanvas()->onGuiEvent(id, GUIEVENT_TEXTBOX_ENTRY, text);
+			root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_TEXTBOXENTRY, text);
 		}
 	}
 }

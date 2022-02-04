@@ -14,8 +14,6 @@
 class gGUIButton: public gGUIControl {
 public:
 
-	static const int GUIEVENT_BUTTONPRESSED = 0, GUIEVENT_BUTTONRELEASED = 1;
-
 	gGUIButton();
 	virtual ~gGUIButton();
 

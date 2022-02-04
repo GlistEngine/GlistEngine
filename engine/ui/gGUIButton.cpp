@@ -112,7 +112,7 @@ void gGUIButton::mousePressed(int x, int y, int button) {
 			}
 		}
 	}
-	root->getCurrentCanvas()->onGuiEvent(id, GUIEVENT_BUTTONPRESSED);
+	root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_BUTTONPRESSED);
 }
 
 void gGUIButton::mouseReleased(int x, int y, int button) {
@@ -127,7 +127,7 @@ void gGUIButton::mouseReleased(int x, int y, int button) {
 		if(!istoggle) ispressed = false;
 	}
 	ispressednow = false;
-	root->getCurrentCanvas()->onGuiEvent(id, GUIEVENT_BUTTONRELEASED);
+	root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_BUTTONRELEASED);
 }
 
 void gGUIButton::resetTitlePosition() {
