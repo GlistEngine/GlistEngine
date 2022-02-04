@@ -19,12 +19,12 @@ void gGUIToolbar::draw() {
 //	gLogi("gGUIToolbar") << "draw";
 //	gLogi("gGUIToolbar") << "l:" << left << ", t:" << top << ", w:" << width << ", h:" << height;
 	gColor oldcolor = *renderer->getColor();
-	renderer->setColor(*foregroundcolor);
+	renderer->setColor(foregroundcolor);
 	gDrawRectangle(left, top, width, height, true);
-	renderer->setColor(*backgroundcolor);
+	renderer->setColor(backgroundcolor);
 	gDrawLine(left, bottom, right, bottom);
 //	gDrawRectangle(left, top, width, height, false);
-	renderer->setColor(oldcolor);
+	renderer->setColor(&oldcolor);
 	if(guisizer) guisizer->draw();
 }
 
