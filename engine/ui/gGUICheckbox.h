@@ -22,9 +22,9 @@ public:
 	bool isChecked();
 	bool isTextVisible();
 
-	void setButtonColor(gColor color);
+	void setBgColor(gColor color);
 	void setTickColor(gColor color);
-	gColor* getButtonColor();
+	gColor* getBgColor();
 	gColor* getTickColor();
 
 	void update();

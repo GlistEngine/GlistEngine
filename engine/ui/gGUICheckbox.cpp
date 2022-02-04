@@ -12,11 +12,11 @@ gGUICheckbox::gGUICheckbox() {
 //	gLogi("id") << id;
 	ischecked = true;
 	istextvisible = true;
-	buttonw = 32;
-	buttonh = 32;
-	bcolor = gColor(0.1f, 0.45f, 0.87f);
-	tickcolor = gColor::WHITE;
-	titlecolor = gColor::WHITE;
+	buttonw = 12;
+	buttonh = 12;
+	bcolor = *backgroundcolor;
+	tickcolor = *fontcolor;
+	titlecolor = *fontcolor;
 	title = "Checkbox";
 	titlew = font->getStringWidth(title);
 	titleh = font->getStringHeight(title);
@@ -50,7 +50,7 @@ bool gGUICheckbox::isTextVisible() {
 	return istextvisible;
 }
 
-void gGUICheckbox::setButtonColor(gColor color) {
+void gGUICheckbox::setBgColor(gColor color) {
 	bcolor = color;
 }
 
@@ -58,7 +58,7 @@ void gGUICheckbox::setTickColor(gColor color) {
 	tickcolor = color;
 }
 
-gColor* gGUICheckbox::getButtonColor() {
+gColor* gGUICheckbox::getBgColor() {
 	return &bcolor;
 }
 
@@ -72,20 +72,22 @@ void gGUICheckbox::update() {
 
 void gGUICheckbox::draw() {
 //	gLogi("gGUICheckbox") << "draw";
-	renderer->setColor(bcolor);
+	renderer->setColor(&bcolor);
 	gDrawRectangle(left, top, buttonw, buttonh, true);
+	renderer->setColor(middlegroundcolor);
+	gDrawRectangle(left, top, buttonw, buttonh, false);
 	renderer->setColor(255, 255, 255);
 
 	if (ischecked) {
-		renderer->setColor(tickcolor);
-		gDrawLine(left, top + buttonh / 2, left + buttonw / 2, top + buttonh);
-		gDrawLine(left + buttonw / 2, top + buttonh, left + buttonw, top);
+		renderer->setColor(fontcolor);
+		gDrawLine(left + 2, top + buttonh / 2, left + buttonw / 2, top + buttonh - 2);
+		gDrawLine(left + buttonw / 2, top + buttonh - 2, left + buttonw - 2, top + 2);
 		renderer->setColor(255, 255, 255);
 	}
 
 	if (istextvisible) {
-		renderer->setColor(titlecolor);
-		font->drawText(title, left + buttonw, top + titleh);
+		renderer->setColor(fontcolor);
+		font->drawText(title, left + buttonw, top - 2 + (buttonh + titleh) / 2);
 		renderer->setColor(255, 255, 255);
 	}
 }
