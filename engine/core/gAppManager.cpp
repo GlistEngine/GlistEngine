@@ -27,7 +27,7 @@ void gStartEngine(gBaseApp* baseApp, std::string appName, int windowMode, int wi
 	baseApp->setAppManager(&appmanager);
 	int screenwidth = width, screenheight = height;
 #if defined(WIN32) || defined(LINUX) || defined(APPLE)
-	if (windowMode == gAppManager::WINDOWMODE_GAME || windowMode == gAppManager::WINDOWMODE_FULLSCREEN || windowMode == gAppManager::WINDOWMODE_FULLSCREENGUIAPP) {
+	if (windowMode == G_WINDOWMODE_GAME || windowMode == G_WINDOWMODE_FULLSCREEN || windowMode == G_WINDOWMODE_FULLSCREENGUIAPP) {
 		glfwInit();
 		const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 		screenwidth = mode->width;
@@ -36,7 +36,7 @@ void gStartEngine(gBaseApp* baseApp, std::string appName, int windowMode, int wi
 	}
 #endif
 	int screenscaling = gRenderer::SCREENSCALING_AUTO;
-	if(windowMode == gAppManager::WINDOWMODE_FULLSCREENGUIAPP || windowMode == gAppManager::WINDOWMODE_GUIAPP) screenscaling = gRenderer::SCREENSCALING_NONE;
+	if(windowMode == G_WINDOWMODE_FULLSCREENGUIAPP || windowMode == G_WINDOWMODE_GUIAPP) screenscaling = gRenderer::SCREENSCALING_NONE;
 	appmanager.runApp(appName, baseApp, screenwidth, screenheight, windowMode, width, height, screenscaling);
 }
 

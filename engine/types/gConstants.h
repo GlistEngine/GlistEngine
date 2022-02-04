@@ -10,16 +10,12 @@
 #ifndef TYPES_GCONSTANTS_H_
 #define TYPES_GCONSTANTS_H_
 
-
-static const int GTRUE = GL_TRUE;
-static const int GFALSE = GL_FALSE;
-
-static const int GFACE_FRONT = GL_FRONT;
-static const int GFACE_BACK = GL_BACK;
-static const int GFACE_FRONTBACK = GL_FRONT_AND_BACK;
-
-static const int GCULLDIRECTION_CCW = GL_CCW;
-static const int GCULLDIRECTION_CW = GL_CW;
+#define G_WINDOWMODE_NONE -1
+#define G_WINDOWMODE_GAME 0
+#define G_WINDOWMODE_FULLSCREEN 1
+#define G_WINDOWMODE_APP 2
+#define G_WINDOWMODE_FULLSCREENGUIAPP 3
+#define G_WINDOWMODE_GUIAPP 4
 
 
 #endif /* TYPES_GCONSTANTS_H_ */
