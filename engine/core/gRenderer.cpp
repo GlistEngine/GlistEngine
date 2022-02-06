@@ -436,6 +436,10 @@ void gRenderer::setColor(gColor color) {
 	rendercolor->set(color.r, color.g, color.b, color.a);
 }
 
+void gRenderer::setColor(gColor* color) {
+	rendercolor->set(color->r, color->g, color->b, color->a);
+}
+
 gColor* gRenderer::getColor() {
 	return rendercolor;
 }

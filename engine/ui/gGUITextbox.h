@@ -14,8 +14,6 @@
 class gGUITextbox: public gGUIControl {
 public:
 
-	static const int GUIEVENT_TEXTBOX_ENTRY = 0;
-
 	gGUITextbox();
 	virtual ~gGUITextbox();
 

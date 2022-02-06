@@ -54,10 +54,10 @@ void gGUIToolbarButton::draw() {
 //	gLogi("gGUIToolbarButton") << "draw";
 //	gLogi("gGUIToolbarButton") << "l:" << left << ", t:" << top << ", w:" << width << ", h:" << height << ", bw:" << buttonw << ", bh:" << buttonh;
 	gColor oldcolor = *renderer->getColor();
-	if(isdisabled) renderer->setColor(disabledbcolor);
+	if(isdisabled) renderer->setColor(&disabledbcolor);
 	else {
-		if(ispressed) renderer->setColor(pressedbcolor);
-		else renderer->setColor(bcolor);
+		if(ispressed) renderer->setColor(&pressedbcolor);
+		else renderer->setColor(&bcolor);
 	}
 //	renderer->setColor(gColor(0.1f, 0.45f, 0.87f));
 	gDrawRectangle(left, top + ispressed, buttonw, buttonh, true);
@@ -67,14 +67,14 @@ void gGUIToolbarButton::draw() {
 //	if(iconid != gGUIResources::ICON_NONE) res.getIconImage(iconid)->draw(left, top, buttonw, buttonh);
 
 	if(istextvisible) {
-		if(isdisabled) renderer->setColor(disabledfcolor);
+		if(isdisabled) renderer->setColor(&disabledfcolor);
 		else {
-			if(ispressed) renderer->setColor(pressedfcolor);
-			else renderer->setColor(fcolor);
+			if(ispressed) renderer->setColor(&pressedfcolor);
+			else renderer->setColor(&fcolor);
 		}
 		font->drawText(title, left + tx - 1, top + buttonh - ty + ispressed - 2);
 	}
-	renderer->setColor(oldcolor);
+	renderer->setColor(&oldcolor);
 }
 /*
 void gGUIToolbarButton::mousePressed(int x, int y, int button) {

@@ -35,9 +35,9 @@ void gGUIText::setTextAlignment(int textAligment) {
 
 void gGUIText::draw() {
 	gColor oldcolor = *renderer->getColor();
-	renderer->setColor(*fontcolor);
+	renderer->setColor(fontcolor);
 	for (int i = 0; i < linenum; i++) font->drawText(line[i], left + linefirstx[i], top + fontsize + (i * lineh));
-	renderer->setColor(oldcolor);
+	renderer->setColor(&oldcolor);
 }
 
 void gGUIText::resetText() {

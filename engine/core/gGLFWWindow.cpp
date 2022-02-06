@@ -58,24 +58,24 @@ void gGLFWWindow::initialize(int width, int height, int windowMode) {
 
 	// Create window
 	int currentrefreshrate = 60;
-    if (windowMode == gAppManager::WINDOWMODE_GAME) {
+    if (windowMode == G_WINDOWMODE_GAME) {
     	const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
     	width = mode->width;
     	height = mode->height;
     	currentrefreshrate = mode->refreshRate;
-    } else if (windowMode == gAppManager::WINDOWMODE_FULLSCREEN || windowMode == gAppManager::WINDOWMODE_FULLSCREENGUIAPP) {
+    } else if (windowMode == G_WINDOWMODE_FULLSCREEN || windowMode == G_WINDOWMODE_FULLSCREENGUIAPP) {
     	glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
     }
 
     window = glfwCreateWindow(width, height, title.c_str(),
-			(windowMode==gAppManager::WINDOWMODE_GAME?glfwGetPrimaryMonitor():NULL), NULL);
+			(windowMode == G_WINDOWMODE_GAME?glfwGetPrimaryMonitor():NULL), NULL);
 
 	if (window == NULL) {
 	    std::cout << "Failed to create GLFW window" << std::endl;
 	    glfwTerminate();
 	    return;
 	} else {
-	    if (windowMode == gAppManager::WINDOWMODE_GAME) {
+	    if (windowMode == G_WINDOWMODE_GAME) {
 	    	GLFWmonitor* monitor = glfwGetWindowMonitor(window);
 	    	glfwSetWindowMonitor(window, monitor, 0, 0, width, height, currentrefreshrate);
 	    }

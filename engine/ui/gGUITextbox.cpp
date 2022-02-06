@@ -44,12 +44,12 @@ void gGUITextbox::update() {
 
 void gGUITextbox::draw() {
 	gColor oldcolor = *renderer->getColor();
-	renderer->setColor(*backgroundcolor);
+	renderer->setColor(backgroundcolor);
 	gDrawRectangle(left, top, width, boxh, true);
-	renderer->setColor(*fontcolor);
+	renderer->setColor(fontcolor);
 	font->drawText(text, left + 2, top + 13);
 	if(editmode && cursorshowcounter <= cursorshowlimit) gDrawLine(left + 2 + cursorposx, top + 4, left + 2 + cursorposx, top + boxh - 4);
-	renderer->setColor(oldcolor);
+	renderer->setColor(&oldcolor);
 }
 
 void gGUITextbox::keyPressed(int key) {
@@ -71,7 +71,7 @@ void gGUITextbox::keyPressed(int key) {
 		} else if (key == 261 && cursorposchar < text.length()) { // DELETE
 			text = text.substr(0, cursorposchar) + text.substr(cursorposchar + 1, text.length() - cursorposchar + 1);
 		} else if (key == 257 || key == 335) { // ENTER
-			root->getCurrentCanvas()->onGuiEvent(id, GUIEVENT_TEXTBOX_ENTRY, text);
+			root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_TEXTBOXENTRY, text);
 		}
 	}
 }

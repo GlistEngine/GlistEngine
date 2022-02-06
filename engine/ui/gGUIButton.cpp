@@ -81,23 +81,23 @@ void gGUIButton::update() {
 void gGUIButton::draw() {
 //	gLogi("gGUIButton") << "draw, w:" << width;
 	gColor oldcolor = *renderer->getColor();
-	if(isdisabled) renderer->setColor(disabledbcolor);
+	if(isdisabled) renderer->setColor(&disabledbcolor);
 	else {
-		if(ispressed) renderer->setColor(pressedbcolor);
-		else renderer->setColor(bcolor);
+		if(ispressed) renderer->setColor(&pressedbcolor);
+		else renderer->setColor(&bcolor);
 	}
 //	renderer->setColor(gColor(0.1f, 0.45f, 0.87f));
 	gDrawRectangle(left, top + ispressed, buttonw, buttonh, true);
 
 	if(istextvisible) {
-		if(isdisabled) renderer->setColor(disabledfcolor);
+		if(isdisabled) renderer->setColor(&disabledfcolor);
 		else {
-			if(ispressed) renderer->setColor(pressedfcolor);
-			else renderer->setColor(fcolor);
+			if(ispressed) renderer->setColor(&pressedfcolor);
+			else renderer->setColor(&fcolor);
 		}
 		font->drawText(title, left + tx - 1, top + buttonh - ty + ispressed - 2);
 	}
-	renderer->setColor(oldcolor);
+	renderer->setColor(&oldcolor);
 }
 
 void gGUIButton::mousePressed(int x, int y, int button) {
@@ -112,7 +112,7 @@ void gGUIButton::mousePressed(int x, int y, int button) {
 			}
 		}
 	}
-	root->getCurrentCanvas()->onGuiEvent(id, GUIEVENT_BUTTONPRESSED);
+	root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_BUTTONPRESSED);
 }
 
 void gGUIButton::mouseReleased(int x, int y, int button) {
@@ -127,7 +127,7 @@ void gGUIButton::mouseReleased(int x, int y, int button) {
 		if(!istoggle) ispressed = false;
 	}
 	ispressednow = false;
-	root->getCurrentCanvas()->onGuiEvent(id, GUIEVENT_BUTTONRELEASED);
+	root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_BUTTONRELEASED);
 }
 
 void gGUIButton::resetTitlePosition() {

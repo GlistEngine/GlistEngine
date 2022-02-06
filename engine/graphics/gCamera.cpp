@@ -35,6 +35,7 @@ gCamera::gCamera(float camPosX, float camPosY, float camPosZ) {
 }
 
 gCamera::~gCamera() {
+	if (gizmos) delete gizmos;
 }
 
 void gCamera::begin() {

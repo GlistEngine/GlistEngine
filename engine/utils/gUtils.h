@@ -19,7 +19,9 @@
 #include <stdlib.h>
 #include <wchar.h>
 #include <vector>
+#include "gConstants.h"
 #include "gKeyCode.h"
+#include "gGUIEvents.h"
 
 /*
 #ifndef LINUX
