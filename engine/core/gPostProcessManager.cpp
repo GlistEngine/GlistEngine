@@ -21,14 +21,6 @@ gPostProcessManager::~gPostProcessManager() {
 	delete[] fbos;
 }
 
-gPostProcessManager* gPostProcessManager::getInstance() {
-	if(instance != nullptr) {
-		return instance;
-	}
-	instance = new gPostProcessManager();
-	return instance;
-}
-
 void gPostProcessManager::setDimensions(int width, int height) {
 	this->width = width;
 	this->height = height;
