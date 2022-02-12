@@ -7,7 +7,6 @@
 
 #include <gPostProcessManager.h>
 
-gPostProcessManager* gPostProcessManager::instance;
 const int gPostProcessManager::fbocount = 2;
 
 gPostProcessManager::gPostProcessManager() {
@@ -19,14 +18,6 @@ gPostProcessManager::gPostProcessManager() {
 
 gPostProcessManager::~gPostProcessManager() {
 	delete[] fbos;
-}
-
-gPostProcessManager* gPostProcessManager::getInstance() {
-	if(instance != nullptr) {
-		return instance;
-	}
-	instance = new gPostProcessManager();
-	return instance;
 }
 
 void gPostProcessManager::setDimensions(int width, int height) {
@@ -41,7 +32,7 @@ void gPostProcessManager::addEffect(gBasePostProcess *effect) {
 }
 
 void gPostProcessManager::enable() {
-	fbos[0].bind();
+	fbos[0].bind(); // this is where we will draw our affected objects.
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
