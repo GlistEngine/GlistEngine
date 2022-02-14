@@ -128,6 +128,7 @@ set(SRC_FILES
 	${ENGINE_DIR}/utils/gLocalization.cpp
 	${ENGINE_DIR}/utils/gDatabase.cpp
 	${ENGINE_DIR}/utils/gAssetLoader.cpp
+	${ENGINE_DIR}/utils/gAES.cpp
 	${ENGINE_DIR}/graphics/primitives/gLine.cpp
 	${ENGINE_DIR}/graphics/primitives/gCircle.cpp
 	${ENGINE_DIR}/graphics/primitives/gRectangle.cpp
@@ -433,6 +434,7 @@ if(WIN32)
 		dbghelp
 		msvcr100
 		psapi
+		libcrypto
 #		swscale-5
 #		swresample-3
 #		avutil-56
