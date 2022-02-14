@@ -142,6 +142,7 @@ set(SRC_FILES
 	${ENGINE_DIR}/graphics/gRect.cpp
 	${ENGINE_DIR}/animation/gSpriteAnimation.cpp
 	${ENGINE_DIR}/animation/gSpriteAnimator.cpp
+	${ENGINE_DIR}/ui/gGUICheckbox.cpp
 	${ENGINE_DIR}/ui/gGUITextbox.cpp
 	${ENGINE_DIR}/ui/gGUIText.cpp
 	${ENGINE_DIR}/ui/gGUIDivider.cpp
@@ -156,7 +157,6 @@ set(SRC_FILES
 	${ENGINE_DIR}/ui/gGUIContainer.cpp
 	${ENGINE_DIR}/ui/gGUIForm.cpp
 	${ENGINE_DIR}/ui/gGUIResources.cpp
-	${ENGINE_DIR}/ui/gGUICheckbox.cpp
 	${ENGINE_DIR}/base/gBaseGUIObject.cpp
 	${ENGINE_DIR}/core/gGUIManager.cpp
 	${ENGINE_DIR}/core/gAppObject.cpp
@@ -428,13 +428,13 @@ if(WIN32)
 		assimp
 		freetype
 		curl
+		libcrypto
 		glfw3
 		opengl32
 		glew32
 		dbghelp
 		msvcr100
 		psapi
-		libcrypto
 #		swscale-5
 #		swresample-3
 #		avutil-56
@@ -451,6 +451,7 @@ elseif(LINUX)
 		freetype
 		libpng
 		curl
+		crypto
 		glfw
 		GL
 		GLEW

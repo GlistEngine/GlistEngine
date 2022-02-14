@@ -55,22 +55,22 @@ void gGUITextbox::draw() {
 void gGUITextbox::keyPressed(int key) {
 //	gLogi("Textbox") << "keyPressed:" << key;
 	if(editmode) {
-		if(key == 259 && cursorposchar > 0) { // BACKDELETE
+		if(key == G_KEY_BACKSPACE && cursorposchar > 0) { // BACKDELETE
 			int cw = font->getStringWidth(text.substr(cursorposchar - 1, 1));
 			text = text.substr(0, cursorposchar - 1) + text.substr(cursorposchar, text.length() - cursorposchar);
 			cursorposx -= cw;
 			cursorposchar--;
-		} else if (key == 263 && cursorposchar > 0) { // LEFT ARROW
+		} else if (key == G_KEY_LEFT && cursorposchar > 0) { // LEFT ARROW
 			int cw = font->getStringWidth(text.substr(cursorposchar - 1, 1));
 			cursorposx -= cw;
 			cursorposchar--;
-		} else if (key == 262 && cursorposchar < text.length()) { // RIGHT ARROW
+		} else if (key == G_KEY_RIGHT && cursorposchar < text.length()) { // RIGHT ARROW
 			int cw = font->getStringWidth(text.substr(cursorposchar, 1));
 			cursorposx += cw;
 			cursorposchar++;
-		} else if (key == 261 && cursorposchar < text.length()) { // DELETE
+		} else if (key == G_KEY_DELETE && cursorposchar < text.length()) { // DELETE
 			text = text.substr(0, cursorposchar) + text.substr(cursorposchar + 1, text.length() - cursorposchar + 1);
-		} else if (key == 257 || key == 335) { // ENTER
+		} else if (key == G_KEY_ENTER || key == G_KEY_NP_ENTER) { // ENTER
 			root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_TEXTBOXENTRY, text);
 		}
 	}

@@ -5,7 +5,7 @@
  *      Author: Acer
  */
 
-#include <gFbo.h>
+#include "gFbo.h"
 
 bool gFbo::isvaoset = false;
 unsigned int gFbo::quadVAO = 0;
@@ -59,7 +59,7 @@ void gFbo::allocate(int width, int height, bool isDepthMap) {
 
     if (!isDepthMap) {
         // create a color attachment texture
-        texture = gTexture(width, height, GL_RGB, true);
+        texture = gTexture(width, height, GL_RGBA, true);
         textureid = texture.getId();
         texture.bind();
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture.getId(), 0);

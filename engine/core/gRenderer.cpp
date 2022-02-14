@@ -223,6 +223,9 @@ gRenderer::gRenderer() {
 	depthtesttype = 0;
 	depthtesttypeid[0] = GL_LESS;
 	depthtesttypeid[1] = GL_ALWAYS;
+
+	isalphablendingenabled = false;
+	isalphatestenabled = false;
 }
 
 gRenderer::~gRenderer() {
@@ -582,23 +585,35 @@ int gRenderer::getDepthTestType() {
 void gRenderer::enableAlphaBlending() {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    isalphablendingenabled = true;
 }
 
 void gRenderer::disableAlphaBlending() {
     glDisable(GL_BLEND);
+    isalphablendingenabled = false;
+}
+
+bool gRenderer::isAlphaBlendingEnabled() {
+	return isalphablendingenabled;
 }
 
 void gRenderer::enableAlphaTest() {
 #if defined(WIN32) || defined(LINUX)
 	glEnable(GL_ALPHA_TEST);
     glAlphaFunc(GL_GREATER, 0.1);
+    isalphatestenabled = true;
 #endif
 }
 
 void gRenderer::disableAlphaTest() {
 #if defined(WIN32) || defined(LINUX)
     glDisable(GL_ALPHA_TEST);
+    isalphatestenabled = false;
 #endif
+}
+
+bool gRenderer::isAlphaTestEnabled() {
+	return isalphatestenabled;
 }
 
 const std::string gRenderer::getShaderSrcColorVertex() {
