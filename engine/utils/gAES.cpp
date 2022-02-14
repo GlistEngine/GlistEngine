@@ -25,8 +25,7 @@ void gAES::initialize(unsigned char* initKey, unsigned char* initVector) {
 }
 
 std::string gAES::encrypt(std::string plainText) {
-	unsigned char empty[] = { 0 };
-	unsigned char *ciphertext = empty;
+	unsigned char ciphertext[plainText.length() * 3];
 	int ciphertext_len;
 	int len;
 	EVP_CIPHER_CTX *ctx;
@@ -60,8 +59,7 @@ std::string gAES::encrypt(std::string plainText) {
 }
 
 std::string gAES::decrypt(std::string cipherText) {
-	unsigned char empty[] = { 0 };
-	unsigned char* plaintext = empty;
+	unsigned char plaintext[cipherText.length() * 3];
 	int len;
 	int plaintext_len;
 	EVP_CIPHER_CTX *ctx;
