@@ -47,7 +47,7 @@ On macOS:
 > ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 
 - Install libraries via home-brew and make necessary configurations
-> brew install gcc@11 cmake glew glfw glm freetype assimp curl
+> brew install gcc@11 cmake glew glfw glm freetype assimp curl openssl
 
 > export PATH=$PATH:~/usr/local/bin/cmake
 
