@@ -55,7 +55,7 @@ On macOS:
 
 On Linux:
 - Install necessary libraries Debian Based Linux
-> sudo apt-get install git cmake g++-7 glew-dev curl
+> sudo apt-get install git cmake g++-7 glew-dev curl libssl-dev
 
 - Install necessary libraries rpm based system Linux
 > sudo dnf install glm-devel
@@ -64,6 +64,7 @@ On Linux:
 > sudo dnf install freetype-devel freetype
 > sudo dnf install assimp assimp-devel
 > sudo dnf install curl curl-devel
+> sudo dnf install libssl libssl-devel
 
 3- Open file explorer and create necessary folders:
 
