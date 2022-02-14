@@ -419,16 +419,16 @@ void gTexture::endDraw() {
 
 	glActiveTexture(GL_TEXTURE0);
     bind();
-    if (format == GL_RGBA || format == GL_RG) {
-        glEnable(GL_BLEND);
-        glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    if ((format == GL_RGBA || format == GL_RG) && !renderer->isAlphaBlendingEnabled()) {
+		glEnable(GL_BLEND);
+		glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     }
 
     glBindVertexArray(quadVAO);
     glDrawArrays(GL_TRIANGLES, 0, 6);
     glBindVertexArray(0);
 
-    if (format == GL_RGBA || format == GL_RG) glDisable(GL_BLEND);
+    if ((format == GL_RGBA || format == GL_RG) && !renderer->isAlphaBlendingEnabled()) glDisable(GL_BLEND);
     unbind();
     if(bsubpartdrawn) {	setupRenderData(); }
 }

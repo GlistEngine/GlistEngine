@@ -128,8 +128,10 @@ public:
 
 	void enableAlphaBlending();
 	void disableAlphaBlending();
+	bool isAlphaBlendingEnabled();
 	void enableAlphaTest();
 	void disableAlphaTest();
+	bool isAlphaTestEnabled();
 
 	gShader* getColorShader();
 	gShader* getTextureShader();
@@ -178,6 +180,7 @@ private:
 	bool isdepthtestenabled;
 	int depthtesttype;
 	unsigned int depthtesttypeid[2];
+	bool isalphablendingenabled, isalphatestenabled;
 
 	gShader* colorshader;
 	gShader* textureshader;
