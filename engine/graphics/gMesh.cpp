@@ -359,10 +359,14 @@ gBoundingBox gMesh::getInitialBoundingBox() {
 }
 
 bool gMesh::intersectsTriangles(gRay* ray) {
+	float distance = distanceTriangles(ray);
+	return distance > 0.0f && distance < ray->getLength();
+}
+
+float gMesh::distanceTriangles(gRay* ray) {
 	glm::vec2 baryposition(0);
 	float mindistance = std::numeric_limits<float>::max();
 	float distance = 0.0f;
-	bool intersecting = false;
 	for (int i = 0; i < indices.size(); i += 3) {
 		//iterate through all faces of the mesh since each face has 3 vertices
 		glm::vec3 a = vertices[indices[i]].position;
@@ -370,10 +374,9 @@ bool gMesh::intersectsTriangles(gRay* ray) {
 		glm::vec3 c = vertices[indices[i + 2]].position;
 		if(glm::intersectRayTriangle(ray->getOrigin(), ray->getDirection(), a, b, c, baryposition, distance)) {
 			if(distance > 0) {
-				intersecting = true;
 				if(distance < mindistance) mindistance = distance;
 			}
 		}
 	}
-	return intersecting && mindistance > 0.0f && mindistance < ray->getLength();
+	return mindistance;
 }

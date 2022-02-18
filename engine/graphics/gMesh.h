@@ -58,6 +58,7 @@ public:
 
     gBoundingBox getInitialBoundingBox();
     bool intersectsTriangles(gRay* ray);
+    float distanceTriangles(gRay* ray);
 
 protected:
     void drawStart();
