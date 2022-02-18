@@ -57,6 +57,8 @@ private:
 	glm::vec3 pdiff;
 	float length;
 	glm::vec3 originpoint, directionpoint;
+	glm::vec3 linkedmeshpos;
+	glm::mat4 linkedmeshorientation;
 };
 
 #endif /* GRAPHICS_GRAY_H_ */

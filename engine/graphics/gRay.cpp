@@ -38,7 +38,14 @@ void gRay::setDirection(const glm::vec3& directionVector) {
 }
 
 glm::vec3 gRay::getOrigin() {
-	if(islinked) return linkedmesh->getPosition() + pdiff;
+	if(islinked) {
+		linkedmeshpos = linkedmesh->getPosition();
+		linkedmeshorientation = linkedmesh->getTransformationMatrix();
+		linkedmeshpos += normalize(glm::vec3(linkedmeshorientation[0])) * pdiff[0];
+		linkedmeshpos += normalize(glm::vec3(linkedmeshorientation[1])) * pdiff[1];
+		linkedmeshpos += normalize(glm::vec3(linkedmeshorientation[2])) * pdiff[2];
+		return linkedmeshpos;
+	}
 	return origin;
 }
 
