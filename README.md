@@ -55,12 +55,12 @@ On macOS:
 
 On Linux:
 - Install necessary libraries Debian Based Linux
-> sudo apt-get install git cmake g++-7 glew-dev curl libssl-dev
+> sudo apt-get install git cmake g++-7 libglew-dev curl libssl-dev
 
 - Install necessary libraries rpm based system Linux
 > sudo dnf install glm-devel
 > sudo dnf install glfw glfw-decel
-> sudo dnf install  glew-devel 
+> sudo dnf install libglew-devel 
 > sudo dnf install freetype-devel freetype
 > sudo dnf install assimp assimp-devel
 > sudo dnf install curl curl-devel
