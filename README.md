@@ -54,7 +54,7 @@ On macOS:
 > sudo spctl --master-disable
 
 On Linux:
-- Install necessary libraries Debian Based Linux
+- Install necessary libraries on Ubuntu and other Debian based Linux
 > sudo apt-get install git cmake g++-7 libglew-dev curl libssl-dev
 
 - Install necessary libraries rpm based system Linux
