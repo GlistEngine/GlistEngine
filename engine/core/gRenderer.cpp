@@ -617,1135 +617,1162 @@ bool gRenderer::isAlphaTestEnabled() {
 }
 
 const std::string gRenderer::getShaderSrcColorVertex() {
-	const char* shadersource =
-"	#version 330 core\n"
-"	layout (location = 0) in vec3 aPos; // the position variable has attribute position 0\n"
-"	layout (location = 1) in vec3 aNormal;\n"
-"	layout (location = 2) in vec2 aTexCoords;\n"
-"	layout (location = 3) in vec3 aTangent;\n"
-"	layout (location = 4) in vec3 aBitangent;\n"
-"	layout (location = 5) in int aUseNormalMap;\n"
-"   uniform int aUseShadowMap;\n"
-"   uniform int aUseFog;\n"
-"\n"
-"	uniform mat4 model;\n"
-"	uniform mat4 view;\n"
-"	uniform mat4 projection;\n"
-"	uniform vec3 lightPos;\n"
-"	uniform vec3 viewPos;\n"
-"	uniform mat4 lightMatrix;\n"
-"   out float visibility;\n"
-"   uniform float fogdensity;\n"
-"   uniform float foggradient;\n"
-"\n"
-"	flat out int mUseNormalMap;\n"
-"	flat out int mUseShadowMap;\n"
-"	flat out int mUseFog;\n"
-"\n"
-"	out vec3 Normal;\n"
-"	out vec3 FragPos;\n"
-"	out vec2 TexCoords;\n"
-"   out vec4 FragPosLightSpace;\n"
-"	out vec3 TangentLightPos;\n"
-"	out vec3 TangentViewPos;\n"
-"	out vec3 TangentFragPos;\n"
-"\n"
-"	void main() {\n"
-"    	mUseShadowMap = aUseShadowMap;\n"
-"    	mUseFog = aUseFog;\n"
-"	    FragPos = vec3(model * vec4(aPos, 1.0));\n"
-"	    Normal = mat3(transpose(inverse(model))) * aNormal;\n"
-"	    TexCoords = aTexCoords;\n"
-"		FragPosLightSpace = lightMatrix * vec4(FragPos, 1.0);\n"
-"	    mUseNormalMap = aUseNormalMap;\n"
-"\n"
-"	    if (aUseNormalMap > 0) {\n"
-"		    mat3 normalMatrix = transpose(inverse(mat3(model)));\n"
-"		    vec3 T = normalize(normalMatrix * aTangent);\n"
-"		    vec3 N = normalize(normalMatrix * aNormal);\n"
-"		    T = normalize(T - dot(T, N) * N);\n"
-"		    vec3 B = cross(N, T);\n"
-"		    \n"
-"		    mat3 TBN = transpose(mat3(T, B, N));    \n"
-"		    TangentLightPos = TBN * lightPos;\n"
-"		    TangentViewPos  = TBN * viewPos;\n"
-"		    TangentFragPos  = TBN * FragPos;\n"
-"	    }\n"
-"\n"
-"	    gl_Position = projection * view * model * vec4(aPos, 1.0);\n"
-"	    if (aUseFog > 0) {\n"
-"          float distance = length(gl_Position.xyz);\n"
-"          visibility = exp(-pow((distance * fogdensity), foggradient));\n"
-"          visibility = clamp(visibility, 0.0, 1.0);\n"
-"       }\n"
-"\n"
-"	}\n";
+	const char* shadersource = R"(
+	#version 330 core
+	layout (location = 0) in vec3 aPos; // the position variable has attribute position 0
+	layout (location = 1) in vec3 aNormal;
+	layout (location = 2) in vec2 aTexCoords;
+	layout (location = 3) in vec3 aTangent;
+	layout (location = 4) in vec3 aBitangent;
+	layout (location = 5) in int aUseNormalMap;
+    uniform int aUseShadowMap;
+    uniform int aUseFog;
 
+	uniform mat4 model;
+	uniform mat4 view;
+	uniform mat4 projection;
+	uniform vec3 lightPos;
+	uniform vec3 viewPos;
+	uniform mat4 lightMatrix;
+    out float visibility;
+    uniform float fogdensity;
+    uniform float foggradient;
+
+	flat out int mUseNormalMap;
+	flat out int mUseShadowMap;
+	flat out int mUseFog;
+
+	out vec3 Normal;
+	out vec3 FragPos;
+	out vec2 TexCoords;
+    out vec4 FragPosLightSpace;
+	out vec3 TangentLightPos;
+	out vec3 TangentViewPos;
+	out vec3 TangentFragPos;
+
+	void main() {
+    	mUseShadowMap = aUseShadowMap;
+    	mUseFog = aUseFog;
+	    FragPos = vec3(model * vec4(aPos, 1.0));
+	    Normal = mat3(transpose(inverse(model))) * aNormal;
+	    TexCoords = aTexCoords;
+		FragPosLightSpace = lightMatrix * vec4(FragPos, 1.0);
+	    mUseNormalMap = aUseNormalMap;
+
+	    if (aUseNormalMap > 0) {
+		    mat3 normalMatrix = transpose(inverse(mat3(model)));
+		    vec3 T = normalize(normalMatrix * aTangent);
+		    vec3 N = normalize(normalMatrix * aNormal);
+		    T = normalize(T - dot(T, N) * N);
+		    vec3 B = cross(N, T);
+
+		    mat3 TBN = transpose(mat3(T, B, N));
+		    TangentLightPos = TBN * lightPos;
+		    TangentViewPos  = TBN * viewPos;
+		    TangentFragPos  = TBN * FragPos;
+	    }
+
+	    gl_Position = projection * view * model * vec4(aPos, 1.0);
+	    if (aUseFog > 0) {
+          float distance = length(gl_Position.xyz);
+          visibility = exp(-pow((distance * fogdensity), foggradient));
+          visibility = clamp(visibility, 0.0, 1.0);
+       }
+
+	}
+)";
 	return std::string(shadersource);
 }
 
 const std::string gRenderer::getShaderSrcColorFragment() {
-	const char* shadersource =
-"	#version 330 core\n"
-"\n"
-"	struct Material {\n"
-"	    vec4 ambient;\n"
-"	    vec4 diffuse;\n"
-"	    vec4 specular;\n"
-"	    float shininess;\n"
-"	    sampler2D diffusemap;\n"
-"	    sampler2D specularmap;\n"
-"	    sampler2D normalMap;\n"
-"		int useDiffuseMap;\n"
-"		int useSpecularMap;\n"
-"	};\n"
-"\n"
-"	struct Light {\n"
-"		int type; //0-ambient, 1-directional, 2-point, 3-spot\n"
-"	    vec3 position;\n"
-"	    vec3 direction;\n"
-"	    float cutOff;\n"
-"	    float outerCutOff;\n"
-"\n"
-"	    vec4 ambient;\n"
-"	    vec4 diffuse;\n"
-"	    vec4 specular;\n"
-"		\n"
-"	    float constant;\n"
-"	    float linear;\n"
-"	    float quadratic;\n"
-"	};\n"
-"\n"
-"	uniform Material material;\n"
-"	#define MAX_LIGHTS 8\n"
-"	uniform Light lights[MAX_LIGHTS];\n"
-"\n"
-"	uniform vec4 renderColor;\n"
-"	uniform vec3 viewPos;\n"
-"	uniform vec3 fogColor;\n"
-"\n"
-"	in vec3 Normal;\n"
-"	in vec3 FragPos;\n"
-"	in vec2 TexCoords;\n"
-"   in vec4 FragPosLightSpace;\n"
-"	flat in int mUseNormalMap;\n"
-"	in vec3 TangentLightPos;\n"
-"	in vec3 TangentViewPos;\n"
-"	in vec3 TangentFragPos;\n"
-"	in float visibility;\n"
-"\n"
-"	flat in int mUseShadowMap;\n"
-"	flat in int mUseFog;\n"
-"	uniform sampler2D shadowMap;\n"
-"   uniform vec3 shadowLightPos;\n"
-"\n"
-"	out vec4 FragColor;\n"
-"\n"
-"   float calculateShadow(vec4 fragPosLightSpace) {\n"
-"       vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;\n"
-"       projCoords = projCoords * 0.5 + 0.5;\n"
-"       float closestDepth = texture(shadowMap, projCoords.xy).r; \n"
-"       float currentDepth = projCoords.z;\n"
-"       vec3 normal = normalize(Normal);\n"
-"       vec3 lightDir = normalize(shadowLightPos - FragPos);\n"
-"       float bias = max(0.05 * (1.0 - dot(normal, lightDir)), 0.005);\n"
-"       float shadow = 0.0;\n"
-"       vec2 texelSize = 1.0 / textureSize(shadowMap, 0);\n"
-"       for(int x = -1; x <= 1; ++x) {\n"
-"           for(int y = -1; y <= 1; ++y) {\n"
-"               float pcfDepth = texture(shadowMap, projCoords.xy + vec2(x, y) * texelSize).r;\n"
-"               shadow += currentDepth - bias > pcfDepth  ? 1.0 : 0.0;\n"
-"           }\n"
-"       }\n"
-"       shadow /= 9.0;\n"
-"       if(projCoords.z > 1.0) shadow = 0.0;\n"
-"       return shadow;\n"
-"   }\n"
-"\n"
-"	vec4 calcAmbLight(Light light, vec4 materialAmbient) {\n"
-"		vec4 ambient = light.ambient * materialAmbient;\n"
-"		return ambient;\n"
-"	}\n"
-"\n"
-"	vec4 calcDirLight(Light light, vec3 normal, vec3 viewDir, float shadowing, vec4 materialAmbient, vec4 materialDiffuse, vec4 materialSpecular) {\n"
-"		vec3 lightDir = normalize(-light.direction);\n"
-"		float diff;\n"
-"		float spec;\n"
-"		if (mUseNormalMap > 0) {\n"
-"		    diff = max(dot(lightDir, normal), 0.0);\n"
-"			vec3 halfwayDir = normalize(lightDir + viewDir);\n"
-"			spec = pow(max(dot(normal, halfwayDir), 0.0), material.shininess);\n"
-"		} else {\n"
-"			diff = max(dot(normal, lightDir), 0.0);\n"
-"			vec3 reflectDir = reflect(-lightDir, normal);\n"
-"			spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);\n"
-"		}\n"
-"		vec4 ambient = light.ambient * materialAmbient;\n"
-"		vec4 diffuse = light.diffuse * diff * materialDiffuse;\n"
-"		vec4 specular = light.specular * spec * materialSpecular;\n"
-"	    if (mUseShadowMap > 0) {\n"
-"			diffuse *= shadowing;\n"
-"			specular *= shadowing;\n"
-"	    }"
-"		return (ambient + diffuse + specular);"
-"	}\n"
-"\n"
-"	vec4 calcPointLight(Light light, vec3 normal, vec3 viewDir, float shadowing, vec4 materialAmbient, vec4 materialDiffuse, vec4 materialSpecular){\n"
-"		vec3 lightDir;\n"
-"		float distance;\n"
-"		if (mUseNormalMap > 0) {\n"
-"		    lightDir = normalize(TangentLightPos - TangentFragPos);\n"
-"		    distance = length(TangentLightPos - TangentFragPos);\n"
-"		} else {\n"
-"			lightDir = normalize(light.position - FragPos);\n"
-"			distance = length(light.position - FragPos);\n"
-"		}\n"
-"		float diff;\n"
-"		float spec;\n"
-"		if (mUseNormalMap > 0) {\n"
-"		    diff = max(dot(lightDir, normal), 0.0);\n"
-"			vec3 halfwayDir = normalize(lightDir + viewDir);\n"
-"			spec = pow(max(dot(normal, halfwayDir), 0.0), material.shininess);\n"
-"		} else {\n"
-"			diff = max(dot(normal, lightDir), 0.0);\n"
-"			vec3 reflectDir = reflect(-lightDir, normal);\n"
-"			spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);\n"
-"		}\n"
-"		vec4 ambient = light.ambient * materialAmbient;\n"
-"		vec4 diffuse = light.diffuse * diff * materialDiffuse;\n"
-"		vec4 specular = light.specular * spec * materialSpecular;\n"
-"		float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));\n"
-"		ambient  *= attenuation;\n"
-"    	diffuse  *= attenuation;\n"
-"    	specular *= attenuation;\n"
-"	    if (mUseShadowMap > 0) {\n"
-"			diffuse  *= shadowing;\n"
-"			specular *= shadowing;\n"
-"	    }"
-"		return (ambient + diffuse + specular);\n"
-"	}\n"
-"\n"
-"	vec4 calcSpotLight(Light light, vec3 normal, vec3 viewDir, float shadowing, vec4 materialAmbient, vec4 materialDiffuse, vec4 materialSpecular){\n"
-"		vec3 lightDir;\n"
-"		float distance;\n"
-"		if (mUseNormalMap > 0) {\n"
-"		    lightDir = normalize(TangentLightPos - TangentFragPos);\n"
-"		    distance = length(TangentLightPos - TangentFragPos);\n"
-"		} else {\n"
-"			lightDir = normalize(light.position - FragPos);\n"
-"			distance = length(light.position - FragPos);\n"
-"		}\n"
-"		float diff;\n"
-"		float spec;\n"
-"		if (mUseNormalMap > 0) {\n"
-"		    diff = max(dot(lightDir, normal), 0.0);\n"
-"			vec3 halfwayDir = normalize(lightDir + viewDir);\n"
-"			spec = pow(max(dot(normal, halfwayDir), 0.0), material.shininess);\n"
-"		} else {\n"
-"			diff = max(dot(normal, lightDir), 0.0);\n"
-"			vec3 reflectDir = reflect(-lightDir, normal);\n"
-"			spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);\n"
-"		}\n"
-"		vec4 ambient  = light.ambient  * materialAmbient;\n"
-"		vec4 diffuse  = light.diffuse  * diff * materialDiffuse;\n"
-"		vec4 specular = light.specular * spec * materialSpecular;\n"
-"\n"
-"		float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));\n"
-"\n"
-"		float theta = dot(lightDir, normalize(-light.direction)); \n"
-"		float epsilon = (light.cutOff - light.outerCutOff);\n"
-"		float intensity = clamp((theta - light.outerCutOff) / epsilon, 0.0, 1.0);\n"
-"		ambient  *= attenuation;\n"
-"    	diffuse  *= attenuation * intensity;\n"
-"    	specular *= attenuation * intensity;\n"
-"	    if (mUseShadowMap > 0) {\n"
-"			diffuse *= shadowing;\n"
-"			specular *= shadowing;\n"
-"	    }"
-"		return (ambient + diffuse + specular);\n"
-"	}\n"
-"\n"
-"	void main() {\n"
-"		vec4 result;\n"
-"		vec3 norm;\n"
-"		if (mUseNormalMap > 0) {\n"
-"		    norm = normalize(texture(material.normalMap, TexCoords).rgb * 2.0 - 1.0);  // this normal is in tangent space\n"
-"		} else {\n"
-"			norm = normalize(Normal);\n"
-"		}\n"
-"		vec3 viewDir;\n"
-"		if (mUseNormalMap > 0) {\n"
-"			viewDir = normalize(TangentViewPos - TangentFragPos);\n"
-"		}\n"
-"		else {\n"
-"			viewDir = normalize(viewPos - FragPos);\n"
-"		}\n"
-"		vec4 materialAmbient;\n"
-"		vec4 materialDiffuse;\n"
-"	    if (material.useDiffuseMap > 0) {\n"
-"	        materialAmbient = texture(material.diffusemap, TexCoords).rgba;\n"
-"			materialDiffuse = texture(material.diffusemap, TexCoords).rgba;\n"
-"	    } else {\n"
-"	        materialAmbient = material.ambient;\n"
-"			materialDiffuse = material.diffuse;\n"
-"	    }\n"
-"		vec4 materialSpecular;\n"
-"		if (material.useSpecularMap > 0) {\n"
-"			materialSpecular = texture(material.specularmap, TexCoords).rgba;\n"
-"		}\n"
-"		else {\n"
-"			materialSpecular = material.specular;\n"
-"		}\n"
-"		float shadowing;"
-"	    if (mUseShadowMap > 0) {\n"
-"			shadowing = 1.0 - calculateShadow(FragPosLightSpace);\n"
-"	    }"
-"		for (int i = 0; i < MAX_LIGHTS; i++) {\n"
-"			if (lights[i].type == 0) {\n"
-"				result += calcAmbLight(lights[i], materialAmbient);\n"
-"			}\n"
-"			else if (lights[i].type == 1) {\n"
-"				result += calcDirLight(lights[i], norm, viewDir, shadowing, materialAmbient, materialDiffuse, materialSpecular);\n"
-"			}\n"
-"			else if (lights[i].type == 2) {\n"
-"				result += calcPointLight(lights[i], norm, viewDir, shadowing, materialAmbient, materialDiffuse, materialSpecular);\n"
-"			}\n"
-"			else if (lights[i].type == 3) {\n"
-"				result += calcSpotLight(lights[i], norm, viewDir, shadowing, materialAmbient, materialDiffuse, materialSpecular);\n"
-"			}\n"
-"		}\n"
-"\n"
-"		FragColor = result * renderColor;\n"
-"\n"
-"	    if (mUseFog > 0) {\n"
-"			FragColor = mix(vec4(fogColor, 1.0), FragColor, visibility);\n"
-"	    }"
-"	}\n";
+	const char* shadersource = R"(
+	#version 330 core
 
+	struct Material {
+	    vec4 ambient;
+	    vec4 diffuse;
+	    vec4 specular;
+	    float shininess;
+	    sampler2D diffusemap;
+	    sampler2D specularmap;
+	    sampler2D normalMap;
+		int useDiffuseMap;
+		int useSpecularMap;
+	};
+
+	struct Light {
+		int type; //0-ambient, 1-directional, 2-point, 3-spot
+	    vec3 position;
+	    vec3 direction;
+	    float cutOff;
+	    float outerCutOff;
+
+	    vec4 ambient;
+	    vec4 diffuse;
+	    vec4 specular;
+
+	    float constant;
+	    float linear;
+	    float quadratic;
+	};
+
+	uniform Material material;
+	#define MAX_LIGHTS 8
+	uniform Light lights[MAX_LIGHTS];
+
+	uniform vec4 renderColor;
+	uniform vec3 viewPos;
+	uniform vec3 fogColor;
+
+	in vec3 Normal;
+	in vec3 FragPos;
+	in vec2 TexCoords;
+	in vec4 FragPosLightSpace;
+	flat in int mUseNormalMap;
+	in vec3 TangentLightPos;
+	in vec3 TangentViewPos;
+	in vec3 TangentFragPos;
+	in float visibility;
+
+	flat in int mUseShadowMap;
+	flat in int mUseFog;
+	uniform sampler2D shadowMap;
+	uniform vec3 shadowLightPos;
+
+	out vec4 FragColor;
+
+   float calculateShadow(vec4 fragPosLightSpace) {
+       vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
+       projCoords = projCoords * 0.5 + 0.5;
+       float closestDepth = texture(shadowMap, projCoords.xy).r;
+       float currentDepth = projCoords.z;
+       vec3 normal = normalize(Normal);
+       vec3 lightDir = normalize(shadowLightPos - FragPos);
+       float bias = max(0.05 * (1.0 - dot(normal, lightDir)), 0.005);
+       float shadow = 0.0;
+       vec2 texelSize = 1.0 / textureSize(shadowMap, 0);
+       for(int x = -1; x <= 1; ++x) {
+           for(int y = -1; y <= 1; ++y) {
+               float pcfDepth = texture(shadowMap, projCoords.xy + vec2(x, y) * texelSize).r;
+               shadow += currentDepth - bias > pcfDepth  ? 1.0 : 0.0;
+           }
+       }
+       shadow /= 9.0;
+       if(projCoords.z > 1.0) shadow = 0.0;
+       return shadow;
+   }
+
+	vec4 calcAmbLight(Light light, vec4 materialAmbient) {
+		vec4 ambient = light.ambient * materialAmbient;
+		return ambient;
+	}
+
+	vec4 calcDirLight(Light light, vec3 normal, vec3 viewDir, float shadowing, vec4 materialAmbient, vec4 materialDiffuse, vec4 materialSpecular) {
+		vec3 lightDir = normalize(-light.direction);
+		float diff;
+		float spec;
+		if (mUseNormalMap > 0) {
+		    diff = max(dot(lightDir, normal), 0.0);
+			vec3 halfwayDir = normalize(lightDir + viewDir);
+			spec = pow(max(dot(normal, halfwayDir), 0.0), material.shininess);
+		} else {
+			diff = max(dot(normal, lightDir), 0.0);
+			vec3 reflectDir = reflect(-lightDir, normal);
+			spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
+		}
+		vec4 ambient = light.ambient * materialAmbient;
+		vec4 diffuse = light.diffuse * diff * materialDiffuse;
+		vec4 specular = light.specular * spec * materialSpecular;
+	    if (mUseShadowMap > 0) {
+			diffuse *= shadowing;
+			specular *= shadowing;
+	    }
+		return (ambient + diffuse + specular);
+	}
+
+	vec4 calcPointLight(Light light, vec3 normal, vec3 viewDir, float shadowing, vec4 materialAmbient, vec4 materialDiffuse, vec4 materialSpecular){
+		vec3 lightDir;
+		float distance;
+		if (mUseNormalMap > 0) {
+		    lightDir = normalize(TangentLightPos - TangentFragPos);
+		    distance = length(TangentLightPos - TangentFragPos);
+		} else {
+			lightDir = normalize(light.position - FragPos);
+			distance = length(light.position - FragPos);
+		}
+		float diff;
+		float spec;
+		if (mUseNormalMap > 0) {
+		    diff = max(dot(lightDir, normal), 0.0);
+			vec3 halfwayDir = normalize(lightDir + viewDir);
+			spec = pow(max(dot(normal, halfwayDir), 0.0), material.shininess);
+		} else {
+			diff = max(dot(normal, lightDir), 0.0);
+			vec3 reflectDir = reflect(-lightDir, normal);
+			spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
+		}
+		vec4 ambient = light.ambient * materialAmbient;
+		vec4 diffuse = light.diffuse * diff * materialDiffuse;
+		vec4 specular = light.specular * spec * materialSpecular;
+		float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));
+		ambient  *= attenuation;
+    	diffuse  *= attenuation;
+    	specular *= attenuation;
+	    if (mUseShadowMap > 0) {
+			diffuse  *= shadowing;
+			specular *= shadowing;
+	    }
+		return (ambient + diffuse + specular);
+	}
+
+	vec4 calcSpotLight(Light light, vec3 normal, vec3 viewDir, float shadowing, vec4 materialAmbient, vec4 materialDiffuse, vec4 materialSpecular){
+		vec3 lightDir;
+		float distance;
+		if (mUseNormalMap > 0) {
+		    lightDir = normalize(TangentLightPos - TangentFragPos);
+		    distance = length(TangentLightPos - TangentFragPos);
+		} else {
+			lightDir = normalize(light.position - FragPos);
+			distance = length(light.position - FragPos);
+		}
+		float diff;
+		float spec;
+		if (mUseNormalMap > 0) {
+		    diff = max(dot(lightDir, normal), 0.0);
+			vec3 halfwayDir = normalize(lightDir + viewDir);
+			spec = pow(max(dot(normal, halfwayDir), 0.0), material.shininess);
+		} else {
+			diff = max(dot(normal, lightDir), 0.0);
+			vec3 reflectDir = reflect(-lightDir, normal);
+			spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
+		}
+		vec4 ambient  = light.ambient  * materialAmbient;
+		vec4 diffuse  = light.diffuse  * diff * materialDiffuse;
+		vec4 specular = light.specular * spec * materialSpecular;
+
+		float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));
+
+		float theta = dot(lightDir, normalize(-light.direction));
+		float epsilon = (light.cutOff - light.outerCutOff);
+		float intensity = clamp((theta - light.outerCutOff) / epsilon, 0.0, 1.0);
+		ambient  *= attenuation;
+    	diffuse  *= attenuation * intensity;
+    	specular *= attenuation * intensity;
+	    if (mUseShadowMap > 0) {
+			diffuse *= shadowing;
+			specular *= shadowing;
+	    }
+		return (ambient + diffuse + specular);
+	}
+
+	void main() {
+		vec4 result;
+		vec3 norm;
+		if (mUseNormalMap > 0) {
+		    norm = normalize(texture(material.normalMap, TexCoords).rgb * 2.0 - 1.0);  // this normal is in tangent space
+		} else {
+			norm = normalize(Normal);
+		}
+		vec3 viewDir;
+		if (mUseNormalMap > 0) {
+			viewDir = normalize(TangentViewPos - TangentFragPos);
+		}
+		else {
+			viewDir = normalize(viewPos - FragPos);
+		}
+		vec4 materialAmbient;
+		vec4 materialDiffuse;
+	    if (material.useDiffuseMap > 0) {
+	        materialAmbient = texture(material.diffusemap, TexCoords).rgba;
+			materialDiffuse = texture(material.diffusemap, TexCoords).rgba;
+	    } else {
+	        materialAmbient = material.ambient;
+			materialDiffuse = material.diffuse;
+	    }
+		vec4 materialSpecular;
+		if (material.useSpecularMap > 0) {
+			materialSpecular = texture(material.specularmap, TexCoords).rgba;
+		}
+		else {
+			materialSpecular = material.specular;
+		}
+		float shadowing;
+	    if (mUseShadowMap > 0) {
+			shadowing = 1.0 - calculateShadow(FragPosLightSpace);
+	    }
+		for (int i = 0; i < MAX_LIGHTS; i++) {
+			if (lights[i].type == 0) {
+				result += calcAmbLight(lights[i], materialAmbient);
+			}
+			else if (lights[i].type == 1) {
+				result += calcDirLight(lights[i], norm, viewDir, shadowing, materialAmbient, materialDiffuse, materialSpecular);
+			}
+			else if (lights[i].type == 2) {
+				result += calcPointLight(lights[i], norm, viewDir, shadowing, materialAmbient, materialDiffuse, materialSpecular);
+			}
+			else if (lights[i].type == 3) {
+				result += calcSpotLight(lights[i], norm, viewDir, shadowing, materialAmbient, materialDiffuse, materialSpecular);
+			}
+		}
+
+		FragColor = result * renderColor;
+
+	    if (mUseFog > 0) {
+			FragColor = mix(vec4(fogColor, 1.0), FragColor, visibility);
+	    }
+	}
+)";
 	return std::string(shadersource);
 }
 
 const std::string gRenderer::getShaderSrcTextureVertex() {
-	const char* shadersource =
-"#version 330 core\n"
-"layout (location = 0) in vec3 aPos;\n"
-"layout (location = 1) in vec3 aNormal;\n"
-"layout (location = 2) in vec2 aTexCoords;\n"
-"\n"
-"out vec2 TexCoords;\n"
-"\n"
-"uniform mat4 model;\n"
-"uniform mat4 view;\n"
-"uniform mat4 projection;\n"
-"\n"
-"void main() {\n"
-"    TexCoords = aTexCoords;    \n"
-"    gl_Position = projection * view * model * vec4(aPos, 1.0);\n"
-"}\n";
+	const char* shadersource = R"(
+	#version 330 core
+	layout (location = 0) in vec3 aPos;
+	layout (location = 1) in vec3 aNormal;
+	layout (location = 2) in vec2 aTexCoords;
+	
+	out vec2 TexCoords;
+	
+	uniform mat4 model;
+	uniform mat4 view;
+	uniform mat4 projection;
+	
+	void main() {
+		TexCoords = aTexCoords;
+		gl_Position = projection * view * model * vec4(aPos, 1.0);
+	}
+)";
 
 	return std::string(shadersource);
 }
 
 const std::string gRenderer::getShaderSrcTextureFragment() {
-	const char* shadersource =
-"#version 330 core\n"
-"out vec4 FragColor;\n"
-"  \n"
-"in vec2 TexCoords;\n"
-"\n"
-"uniform sampler2D texture_diffuse1;\n"
-"\n"
-"void main()\n"
-"{    \n"
-"    FragColor = texture(texture_diffuse1, TexCoords);\n"
-"}\n";
+	const char* shadersource = R"(
+	#version 330 core
+	out vec4 FragColor;
+	
+	in vec2 TexCoords;
+	
+	uniform sampler2D texture_diffuse1;
+	
+	void main()
+	{
+		FragColor = texture(texture_diffuse1, TexCoords);
+	}
+)";
 
 	return std::string(shadersource);
 }
 
 const std::string gRenderer::getShaderSrcImageVertex() {
-	const char* shadersource =
-"#version 330 core\n"
-"layout (location = 0) in vec4 vertex; // <vec2 position, vec2 texCoords>\n"
-"	\n"
-"out vec2 TexCoords;\n"
-"\n"
-"uniform mat4 model;\n"
-"uniform mat4 projection;\n"
-"\n"
-"void main()\n"
-"{\n"
-"    TexCoords = vertex.zw;\n"
-"    gl_Position = projection * model * vec4(vertex.xy, 0.0, 1.0);\n"
-"}\n";
+	const char* shadersource = R"(
+	#version 330 core
+	layout (location = 0) in vec4 vertex; // <vec2 position, vec2 texCoords>
+	
+	out vec2 TexCoords;
+	
+	uniform mat4 model;
+	uniform mat4 projection;
+	
+	void main()
+	{
+		TexCoords = vertex.zw;
+		gl_Position = projection * model * vec4(vertex.xy, 0.0, 1.0);
+	}
+)";
 
 	return std::string(shadersource);
 }
 
 const std::string gRenderer::getShaderSrcImageFragment() {
-	const char* shadersource =
-"#version 330 core\n"
-"in vec2 TexCoords;\n"
-"out vec4 color;\n"
-"\n"
-"uniform sampler2D image;\n"
-"uniform vec4 spriteColor;\n"
-"\n"
-"void main()\n"
-"{    \n"
-"    color = spriteColor * texture(image, TexCoords);\n"
-"} \n";
+	const char* shadersource = R"(
+	#version 330 core
+	in vec2 TexCoords;
+	out vec4 color;
+	
+	uniform sampler2D image;
+	uniform vec4 spriteColor;
+	
+	void main()
+	{
+		color = spriteColor * texture(image, TexCoords);
+	}
+)";
+
 
 	return std::string(shadersource);
 }
 
 const std::string gRenderer::getShaderSrcFontVertex() {
-	const char* shadersource =
-"#version 330 core\n"
-"layout (location = 0) in vec4 vertex; // <vec2 pos, vec2 tex>\n"
-"out vec2 TexCoords;\n"
-"\n"
-"uniform mat4 projection;\n"
-"\n"
-"void main() {\n"
-"    gl_Position = projection * vec4(vertex.xy, 0.0, 1.0);\n"
-"    TexCoords = vertex.zw;\n"
-"}\n";
+	const char* shadersource = R"(
+	#version 330 core
+	layout (location = 0) in vec4 vertex; // <vec2 pos, vec2 tex>
+	out vec2 TexCoords;
+	
+	uniform mat4 projection;
+	
+	void main() {
+		gl_Position = projection * vec4(vertex.xy, 0.0, 1.0);
+		TexCoords = vertex.zw;
+	}
+)";
 
 	return std::string(shadersource);
 }
 
 const std::string gRenderer::getShaderSrcFontFragment() {
-	const char* shadersource =
-"#version 330 core\n"
-"in vec2 TexCoords;\n"
-"out vec4 color;\n"
-"\n"
-"uniform sampler2D text;\n"
-"uniform vec3 textColor;\n"
-"\n"
-"void main() {    \n"
-"    vec4 sampled = vec4(1.0, 1.0, 1.0, texture(text, TexCoords).r);\n"
-"    color = vec4(textColor, 1.0) * sampled;\n"
-"}\n";
+	const char* shadersource = R"(
+	#version 330 core
+	in vec2 TexCoords;
+	out vec4 color;
+	
+	uniform sampler2D text;
+	uniform vec3 textColor;
+	
+	void main() {
+		vec4 sampled = vec4(1.0, 1.0, 1.0, texture(text, TexCoords).r);
+		color = vec4(textColor, 1.0) * sampled;
+	}
+)";
 
 	return std::string(shadersource);
 }
 
 const std::string gRenderer::getShaderSrcSkyboxVertex() {
-	const char* shadersource =
-"#version 330 core\n"
-"layout (location = 0) in vec3 aPos;\n"
-"uniform int aIsHDR;\n"
-"\n"
-"out vec3 TexCoords;\n"
-"flat out int mIsHDR;\n"
-"\n"
-"uniform mat4 model;\n"
-"uniform mat4 projection;\n"
-"uniform mat4 view;\n"
-"\n"
-"void main()\n"
-"{\n"
-"    mIsHDR = aIsHDR;\n"
-"    TexCoords = aPos;\n"
-"    vec4 pos = projection * view * model * vec4(aPos, 1.0);\n"
-"    gl_Position = pos.xyww;\n"
-"}";
+	const char* shadersource = R"(
+	#version 330 core
+	layout (location = 0) in vec3 aPos;
+	uniform int aIsHDR;
+	
+	out vec3 TexCoords;
+	flat out int mIsHDR;
+	
+	uniform mat4 model;
+	uniform mat4 projection;
+	uniform mat4 view;
+	
+	void main()
+	{
+		mIsHDR = aIsHDR;
+		TexCoords = aPos;
+		vec4 pos = projection * view * model * vec4(aPos, 1.0);
+		gl_Position = pos.xyww;
+	}
+)";
 
 	return std::string(shadersource);
 }
 
 const std::string gRenderer::getShaderSrcSkyboxFragment() {
-	const char* shadersource =
-"#version 330 core\n"
-"out vec4 FragColor;\n"
-"\n"
-"in vec3 TexCoords;\n"
-"flat in int mIsHDR;\n"
-"vec4 fc;\n"
-"\n"
-"uniform samplerCube skymap;\n"
-"\n"
-"void main() {\n"
-"    if (mIsHDR == 0) {\n"
-"        fc = vec4(1.0, 0.0, 0.0, 1.0);\n"
-"        fc = texture(skymap, TexCoords);\n"
-"    } else if (mIsHDR == 1) {\n"
-"        vec3 envColor = textureLod(skymap, TexCoords, 0.0).rgb;\n" //environmentMap->skymap
-"        envColor = envColor / (envColor + vec3(1.0));\n"
-"        envColor = pow(envColor, vec3(1.0 / 2.2));\n"
-"        fc = vec4(envColor, 1.0);\n"
-//"        fc = vec4(0.0, 1.0, 0.0, 1.0);\n"
-"    } else {\n"
-"        fc = vec4(1.0, 0.0, 0.0, 1.0);\n"
-"    }\n"
-"    FragColor = fc;\n"
-"}\n";
+	const char* shadersource = R"(
+	#version 330 core
+	out vec4 FragColor;
+	
+	in vec3 TexCoords;
+	flat in int mIsHDR;
+	vec4 fc;
+	
+	uniform samplerCube skymap;
+	
+	void main() {
+		if (mIsHDR == 0) {
+			fc = vec4(1.0, 0.0, 0.0, 1.0);
+			fc = texture(skymap, TexCoords);
+		} else if (mIsHDR == 1) {
+			vec3 envColor = textureLod(skymap, TexCoords, 0.0).rgb; //environmentMap->skymap
+			envColor = envColor / (envColor + vec3(1.0));
+			envColor = pow(envColor, vec3(1.0 / 2.2));
+			fc = vec4(envColor, 1.0);
+	//        fc = vec4(0.0, 1.0, 0.0, 1.0);
+		} else {
+			fc = vec4(1.0, 0.0, 0.0, 1.0);
+		}
+		FragColor = fc;
+	}
+)";
 
 	return std::string(shadersource);
 }
 
 const std::string gRenderer::getShaderSrcShadowmapVertex() {
-	const char* shadersource =
-"#version 330 core\n"
-"layout (location = 0) in vec3 aPos;\n"
-"\n"
-"uniform mat4 lightMatrix;\n"
-"uniform mat4 model;\n"
-"\n"
-"void main()\n"
-"{\n"
-"    gl_Position = lightMatrix * model * vec4(aPos, 1.0);\n"
-"}";
+	const char* shadersource = R"(
+	#version 330 core
+	layout (location = 0) in vec3 aPos;
+	
+	uniform mat4 lightMatrix;
+	uniform mat4 model;
+	
+	void main()
+	{
+		gl_Position = lightMatrix * model * vec4(aPos, 1.0);
+	}
+)";
 
 	return std::string(shadersource);
 }
 
 const std::string gRenderer::getShaderSrcShadowmapFragment() {
-	const char* shadersource =
-"#version 330 core\n"
-"\n"
-"void main() {\n"
-"    // gl_FragDepth = gl_FragCoord.z;\n"
-"}";
+	const char* shadersource = R"(
+	#version 330 core
+	
+	void main() {
+		// gl_FragDepth = gl_FragCoord.z;
+	}
+)";
 
 	return std::string(shadersource);
 }
 
 const std::string gRenderer::getShaderSrcPbrVertex() {
-	const char* shadersource =
-"#version 330 core\n"
-"layout (location = 0) in vec3 aPos;\n"
-"layout (location = 1) in vec3 aNormal;\n"
-"layout (location = 2) in vec2 aTexCoords;\n"
-"\n"
-"out vec2 TexCoords;\n"
-"out vec3 WorldPos;\n"
-"out vec3 Normal;\n"
-"\n"
-"uniform mat4 projection;\n"
-"uniform mat4 view;\n"
-"uniform mat4 model;\n"
-"\n"
-"void main()\n"
-"{\n"
-"    TexCoords = aTexCoords;\n"
-"    WorldPos = vec3(model * vec4(aPos, 1.0));\n"
-"    Normal = mat3(model) * aNormal;\n"
-"\n"
-"    gl_Position =  projection * view * vec4(WorldPos, 1.0);\n"
-"}\n";
+	const char* shadersource = R"(
+	#version 330 core
+	layout (location = 0) in vec3 aPos;
+	layout (location = 1) in vec3 aNormal;
+	layout (location = 2) in vec2 aTexCoords;
+	
+	out vec2 TexCoords;
+	out vec3 WorldPos;
+	out vec3 Normal;
+	
+	uniform mat4 projection;
+	uniform mat4 view;
+	uniform mat4 model;
+	
+	void main()
+	{
+		TexCoords = aTexCoords;
+		WorldPos = vec3(model * vec4(aPos, 1.0));
+		Normal = mat3(model) * aNormal;
+	
+		gl_Position =  projection * view * vec4(WorldPos, 1.0);
+	}
+)";
 
 	return std::string(shadersource);
 }
 
 const std::string gRenderer::getShaderSrcPbrFragment() {
-	const char* shadersource =
-"#version 330 core\n"
-"out vec4 FragColor;\n"
-"in vec2 TexCoords;\n"
-"in vec3 WorldPos;\n"
-"in vec3 Normal;\n"
-"\n"
-"// material parameters\n"
-"uniform sampler2D albedoMap;\n"
-"uniform sampler2D normalMap;\n"
-"uniform sampler2D metallicMap;\n"
-"uniform sampler2D roughnessMap;\n"
-"uniform sampler2D aoMap;\n"
-"\n"
-"// IBL\n"
-"uniform samplerCube irradianceMap;\n"
-"uniform samplerCube prefilterMap;\n"
-"uniform sampler2D brdfLUT;\n"
-"\n"
-"// lights\n"
-"uniform int lightNum;\n"
-"uniform vec3 lightPositions[8];\n"
-"uniform vec3 lightColors[8];\n"
-"\n"
-"uniform vec3 camPos;\n"
-"\n"
-"const float PI = 3.14159265359;\n"
-"// ----------------------------------------------------------------------------\n"
-"// Easy trick to get tangent-normals to world-space to keep PBR code simplified.\n"
-"// Don't worry if you don't get what's going on; you generally want to do normal \n"
-"// mapping the usual way for performance anways; I do plan make a note of this \n"
-"// technique somewhere later in the normal mapping tutorial.\n"
-"vec3 getNormalFromMap()\n"
-"{\n"
-"    vec3 tangentNormal = texture(normalMap, TexCoords).xyz * 2.0 - 1.0;\n"
-"\n"
-"    vec3 Q1  = dFdx(WorldPos);\n"
-"    vec3 Q2  = dFdy(WorldPos);\n"
-"    vec2 st1 = dFdx(TexCoords);\n"
-"    vec2 st2 = dFdy(TexCoords);\n"
-"\n"
-"    vec3 N   = normalize(Normal);\n"
-"    vec3 T  = normalize(Q1*st2.t - Q2*st1.t);\n"
-"    vec3 B  = -normalize(cross(N, T));\n"
-"    mat3 TBN = mat3(T, B, N);\n"
-"\n"
-"    return normalize(TBN * tangentNormal);\n"
-"}\n"
-"// ----------------------------------------------------------------------------\n"
-"float DistributionGGX(vec3 N, vec3 H, float roughness)\n"
-"{\n"
-"    float a = roughness*roughness;\n"
-"    float a2 = a*a;\n"
-"    float NdotH = max(dot(N, H), 0.0);\n"
-"    float NdotH2 = NdotH*NdotH;\n"
-"\n"
-"    float nom   = a2;\n"
-"    float denom = (NdotH2 * (a2 - 1.0) + 1.0);\n"
-"    denom = PI * denom * denom;\n"
-"\n"
-"    return nom / denom;\n"
-"}\n"
-"// ----------------------------------------------------------------------------\n"
-"float GeometrySchlickGGX(float NdotV, float roughness)\n"
-"{\n"
-"    float r = (roughness + 1.0);\n"
-"    float k = (r*r) / 8.0;\n"
-"\n"
-"    float nom   = NdotV;\n"
-"    float denom = NdotV * (1.0 - k) + k;\n"
-"\n"
-"    return nom / denom;\n"
-"}\n"
-"// ----------------------------------------------------------------------------\n"
-"float GeometrySmith(vec3 N, vec3 V, vec3 L, float roughness)\n"
-"{\n"
-"    float NdotV = max(dot(N, V), 0.0);\n"
-"    float NdotL = max(dot(N, L), 0.0);\n"
-"    float ggx2 = GeometrySchlickGGX(NdotV, roughness);\n"
-"    float ggx1 = GeometrySchlickGGX(NdotL, roughness);\n"
-"\n"
-"    return ggx1 * ggx2;\n"
-"}\n"
-"// ----------------------------------------------------------------------------\n"
-"vec3 fresnelSchlick(float cosTheta, vec3 F0)\n"
-"{\n"
-"    return F0 + (1.0 - F0) * pow(max(1.0 - cosTheta, 0.0), 5.0);\n"
-"}\n"
-"// ----------------------------------------------------------------------------\n"
-"vec3 fresnelSchlickRoughness(float cosTheta, vec3 F0, float roughness)\n"
-"{\n"
-"    return F0 + (max(vec3(1.0 - roughness), F0) - F0) * pow(max(1.0 - cosTheta, 0.0), 5.0);\n"
-"}  \n"
-"// ----------------------------------------------------------------------------\n"
-"void main()\n"
-"{		\n"
-"    // material properties\n"
-"    vec3 albedo = pow(texture(albedoMap, TexCoords).rgb, vec3(2.2));\n"
-"    float metallic = texture(metallicMap, TexCoords).r;\n"
-"    float roughness = texture(roughnessMap, TexCoords).r;\n"
-"    float ao = texture(aoMap, TexCoords).r;\n"
-"\n"
-"    // input lighting data\n"
-"    vec3 N = getNormalFromMap();\n"
-"    vec3 V = normalize(camPos - WorldPos);\n"
-"    vec3 R = reflect(-V, N);\n"
-"\n"
-"    // calculate reflectance at normal incidence; if dia-electric (like plastic) use F0 \n"
-"    // of 0.04 and if it's a metal, use the albedo color as F0 (metallic workflow)\n"
-"    vec3 F0 = vec3(0.04); \n"
-"    F0 = mix(F0, albedo, metallic);\n"
-"\n"
-"    // reflectance equation\n"
-"    vec3 Lo = vec3(0.0);\n"
-"    for(int i = 0; i < lightNum; ++i) {\n"
-"        // calculate per-light radiance\n"
-"        vec3 L = normalize(lightPositions[i] - WorldPos);\n"
-"        vec3 H = normalize(V + L);\n"
-"        float distance = length(lightPositions[i] - WorldPos);\n"
-"        float attenuation = 1.0 / (distance * distance);\n"
-"        vec3 radiance = lightColors[i] * attenuation;\n"
-"\n"
-"        // Cook-Torrance BRDF\n"
-"        float NDF = DistributionGGX(N, H, roughness);\n"
-"        float G   = GeometrySmith(N, V, L, roughness);\n"
-"        vec3 F    = fresnelSchlick(max(dot(H, V), 0.0), F0);\n"
-"\n"
-"        vec3 nominator    = NDF * G * F;\n"
-"        float denominator = 4 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0) + 0.001; // 0.001 to prevent divide by zero.\n"
-"        vec3 specular = nominator / denominator;\n"
-"\n"
-"         // kS is equal to Fresnel\n"
-"        vec3 kS = F;\n"
-"        // for energy conservation, the diffuse and specular light can't\n"
-"        // be above 1.0 (unless the surface emits light); to preserve this\n"
-"        // relationship the diffuse component (kD) should equal 1.0 - kS.\n"
-"        vec3 kD = vec3(1.0) - kS;\n"
-"        // multiply kD by the inverse metalness such that only non-metals\n"
-"        // have diffuse lighting, or a linear blend if partly metal (pure metals\n"
-"        // have no diffuse light).\n"
-"        kD *= 1.0 - metallic;\n"
-"\n"
-"        // scale light by NdotL\n"
-"        float NdotL = max(dot(N, L), 0.0);\n"
-"\n"
-"        // add to outgoing radiance Lo\n"
-"        Lo += (kD * albedo / PI + specular) * radiance * NdotL; // note that we already multiplied the BRDF by the Fresnel (kS) so we won't multiply by kS again\n"
-"    }\n"
-"\n"
-"    // ambient lighting (we now use IBL as the ambient term)\n"
-"    vec3 F = fresnelSchlickRoughness(max(dot(N, V), 0.0), F0, roughness);\n"
-"    \n"
-"    vec3 kS = F;\n"
-"    vec3 kD = 1.0 - kS;\n"
-"    kD *= 1.0 - metallic;\n"
-"\n"
-"    vec3 irradiance = texture(irradianceMap, N).rgb;\n"
-"    vec3 diffuse      = irradiance * albedo;\n"
-"\n"
-"    // sample both the pre-filter map and the BRDF lut and combine them together as per the Split-Sum approximation to get the IBL specular part.\n"
-"    const float MAX_REFLECTION_LOD = 4.0;\n"
-"    vec3 prefilteredColor = textureLod(prefilterMap, R,  roughness * MAX_REFLECTION_LOD).rgb;\n"
-"    vec2 brdf  = texture(brdfLUT, vec2(max(dot(N, V), 0.0), roughness)).rg;\n"
-"    vec3 specular = prefilteredColor * (F * brdf.x + brdf.y);\n"
-"\n"
-"    vec3 ambient = (kD * diffuse + specular) * ao;\n"
-"\n"
-"    vec3 color = ambient + Lo;\n"
-"\n"
-"    // HDR tonemapping\n"
-"    color = color / (color + vec3(1.0));\n"
-"    // gamma correct\n"
-"    color = pow(color, vec3(1.0/2.2));\n"
-"\n"
-"    FragColor = vec4(color , 1.0);\n"
-"}\n";
+	const char* shadersource = R"(
+	#version 330 core
+	out vec4 FragColor;
+	in vec2 TexCoords;
+	in vec3 WorldPos;
+	in vec3 Normal;
+	
+	// material parameters
+	uniform sampler2D albedoMap;
+	uniform sampler2D normalMap;
+	uniform sampler2D metallicMap;
+	uniform sampler2D roughnessMap;
+	uniform sampler2D aoMap;
+	
+	// IBL
+	uniform samplerCube irradianceMap;
+	uniform samplerCube prefilterMap;
+	uniform sampler2D brdfLUT;
+	
+	// lights
+	uniform int lightNum;
+	uniform vec3 lightPositions[8];
+	uniform vec3 lightColors[8];
+	
+	uniform vec3 camPos;
+	
+	const float PI = 3.14159265359;
+	// ----------------------------------------------------------------------------
+	// Easy trick to get tangent-normals to world-space to keep PBR code simplified.
+	// Don't worry if you don't get what's going on; you generally want to do normal
+	// mapping the usual way for performance anways; I do plan make a note of this
+	// technique somewhere later in the normal mapping tutorial.
+	vec3 getNormalFromMap()
+	{
+		vec3 tangentNormal = texture(normalMap, TexCoords).xyz * 2.0 - 1.0;
+	
+		vec3 Q1  = dFdx(WorldPos);
+		vec3 Q2  = dFdy(WorldPos);
+		vec2 st1 = dFdx(TexCoords);
+		vec2 st2 = dFdy(TexCoords);
+	
+		vec3 N   = normalize(Normal);
+		vec3 T  = normalize(Q1*st2.t - Q2*st1.t);
+		vec3 B  = -normalize(cross(N, T));
+		mat3 TBN = mat3(T, B, N);
+	
+		return normalize(TBN * tangentNormal);
+	}
+	// ----------------------------------------------------------------------------
+	float DistributionGGX(vec3 N, vec3 H, float roughness)
+	{
+		float a = roughness*roughness;
+		float a2 = a*a;
+		float NdotH = max(dot(N, H), 0.0);
+		float NdotH2 = NdotH*NdotH;
+	
+		float nom   = a2;
+		float denom = (NdotH2 * (a2 - 1.0) + 1.0);
+		denom = PI * denom * denom;
+	
+		return nom / denom;
+	}
+	// ----------------------------------------------------------------------------
+	float GeometrySchlickGGX(float NdotV, float roughness)
+	{
+		float r = (roughness + 1.0);
+		float k = (r*r) / 8.0;
+	
+		float nom   = NdotV;
+		float denom = NdotV * (1.0 - k) + k;
+	
+		return nom / denom;
+	}
+	// ----------------------------------------------------------------------------
+	float GeometrySmith(vec3 N, vec3 V, vec3 L, float roughness)
+	{
+		float NdotV = max(dot(N, V), 0.0);
+		float NdotL = max(dot(N, L), 0.0);
+		float ggx2 = GeometrySchlickGGX(NdotV, roughness);
+		float ggx1 = GeometrySchlickGGX(NdotL, roughness);
+	
+		return ggx1 * ggx2;
+	}
+	// ----------------------------------------------------------------------------
+	vec3 fresnelSchlick(float cosTheta, vec3 F0)
+	{
+		return F0 + (1.0 - F0) * pow(max(1.0 - cosTheta, 0.0), 5.0);
+	}
+	// ----------------------------------------------------------------------------
+	vec3 fresnelSchlickRoughness(float cosTheta, vec3 F0, float roughness)
+	{
+		return F0 + (max(vec3(1.0 - roughness), F0) - F0) * pow(max(1.0 - cosTheta, 0.0), 5.0);
+	}
+	// ----------------------------------------------------------------------------
+	void main()
+	{
+		// material properties
+		vec3 albedo = pow(texture(albedoMap, TexCoords).rgb, vec3(2.2));
+		float metallic = texture(metallicMap, TexCoords).r;
+		float roughness = texture(roughnessMap, TexCoords).r;
+		float ao = texture(aoMap, TexCoords).r;
+	
+		// input lighting data
+		vec3 N = getNormalFromMap();
+		vec3 V = normalize(camPos - WorldPos);
+		vec3 R = reflect(-V, N);
+	
+		// calculate reflectance at normal incidence; if dia-electric (like plastic) use F0
+		// of 0.04 and if it's a metal, use the albedo color as F0 (metallic workflow)
+		vec3 F0 = vec3(0.04);
+		F0 = mix(F0, albedo, metallic);
+	
+		// reflectance equation
+		vec3 Lo = vec3(0.0);
+		for(int i = 0; i < lightNum; ++i) {
+			// calculate per-light radiance
+			vec3 L = normalize(lightPositions[i] - WorldPos);
+			vec3 H = normalize(V + L);
+			float distance = length(lightPositions[i] - WorldPos);
+			float attenuation = 1.0 / (distance * distance);
+			vec3 radiance = lightColors[i] * attenuation;
+	
+			// Cook-Torrance BRDF
+			float NDF = DistributionGGX(N, H, roughness);
+			float G   = GeometrySmith(N, V, L, roughness);
+			vec3 F    = fresnelSchlick(max(dot(H, V), 0.0), F0);
+	
+			vec3 nominator    = NDF * G * F;
+			float denominator = 4 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0) + 0.001; // 0.001 to prevent divide by zero.
+			vec3 specular = nominator / denominator;
+	
+			 // kS is equal to Fresnel
+			vec3 kS = F;
+			// for energy conservation, the diffuse and specular light can't
+			// be above 1.0 (unless the surface emits light); to preserve this
+			// relationship the diffuse component (kD) should equal 1.0 - kS.
+			vec3 kD = vec3(1.0) - kS;
+			// multiply kD by the inverse metalness such that only non-metals
+			// have diffuse lighting, or a linear blend if partly metal (pure metals
+			// have no diffuse light).
+			kD *= 1.0 - metallic;
+	
+			// scale light by NdotL
+			float NdotL = max(dot(N, L), 0.0);
+	
+			// add to outgoing radiance Lo
+			Lo += (kD * albedo / PI + specular) * radiance * NdotL; // note that we already multiplied the BRDF by the Fresnel (kS) so we won't multiply by kS again
+		}
+	
+		// ambient lighting (we now use IBL as the ambient term)
+		vec3 F = fresnelSchlickRoughness(max(dot(N, V), 0.0), F0, roughness);
+	
+		vec3 kS = F;
+		vec3 kD = 1.0 - kS;
+		kD *= 1.0 - metallic;
+	
+		vec3 irradiance = texture(irradianceMap, N).rgb;
+		vec3 diffuse      = irradiance * albedo;
+	
+		// sample both the pre-filter map and the BRDF lut and combine them together as per the Split-Sum approximation to get the IBL specular part.
+		const float MAX_REFLECTION_LOD = 4.0;
+		vec3 prefilteredColor = textureLod(prefilterMap, R,  roughness * MAX_REFLECTION_LOD).rgb;
+		vec2 brdf  = texture(brdfLUT, vec2(max(dot(N, V), 0.0), roughness)).rg;
+		vec3 specular = prefilteredColor * (F * brdf.x + brdf.y);
+	
+		vec3 ambient = (kD * diffuse + specular) * ao;
+	
+		vec3 color = ambient + Lo;
+	
+		// HDR tonemapping
+		color = color / (color + vec3(1.0));
+		// gamma correct
+		color = pow(color, vec3(1.0/2.2));
+	
+		FragColor = vec4(color , 1.0);
+	}
+)";
+
 
 	return std::string(shadersource);
 }
 
 const std::string gRenderer::getShaderSrcCubemapVertex() {
-	const char* shadersource =
-"#version 330 core\n"
-"layout (location = 0) in vec3 aPos;\n"
-"\n"
-"out vec3 WorldPos;\n"
-"\n"
-"uniform mat4 projection;\n"
-"uniform mat4 view;\n"
-"\n"
-"void main()\n"
-"{\n"
-"    WorldPos = aPos;\n"
-"    gl_Position =  projection * view * vec4(WorldPos, 1.0);\n"
-"}\n";
-
-	return std::string(shadersource);
-}
-
+	const char* shadersource = R"(
+	#version 330 core
+	layout (location = 0) in vec3 aPos;
+	
+	out vec3 WorldPos;
+	
+	uniform mat4 projection;
+	uniform mat4 view;
+	
+	void main()
+	{
+		WorldPos = aPos;
+		gl_Position =  projection * view * vec4(WorldPos, 1.0);
+	}
+)";
+		return std::string(shadersource);
+	}
+	
 const std::string gRenderer::getShaderSrcEquirectangularFragment() {
-	const char* shadersource =
-"#version 330 core\n"
-"out vec4 FragColor;\n"
-"in vec3 WorldPos;\n"
-"\n"
-"uniform sampler2D equirectangularMap;\n"
-"\n"
-"const vec2 invAtan = vec2(0.1591, 0.3183);\n"
-"\n"
-"vec2 SampleSphericalMap(vec3 v) {\n"
-"    vec2 uv = vec2(atan(v.z, v.x), asin(v.y));\n"
-"    uv *= invAtan;\n"
-"    uv += 0.5;\n"
-"    return uv;\n"
-"}\n"
-"\n"
-"void main() {\n"
-"    vec2 uv = SampleSphericalMap(normalize(WorldPos));\n"
-"    vec3 color = texture(equirectangularMap, uv).rgb;\n"
-" \n"
-"    FragColor = vec4(color, 1.0);\n"
-"}\n";
+		const char* shadersource = R"(
+	#version 330 core
+	out vec4 FragColor;
+	in vec3 WorldPos;
+	
+	uniform sampler2D equirectangularMap;
+	
+	const vec2 invAtan = vec2(0.1591, 0.3183);
+	
+	vec2 SampleSphericalMap(vec3 v) {
+		vec2 uv = vec2(atan(v.z, v.x), asin(v.y));
+		uv *= invAtan;
+		uv += 0.5;
+		return uv;
+	}
+	
+	void main() {
+		vec2 uv = SampleSphericalMap(normalize(WorldPos));
+		vec3 color = texture(equirectangularMap, uv).rgb;
+	
+		FragColor = vec4(color, 1.0);
+	}
+)";
+
 
 	return std::string(shadersource);
 }
 
 const std::string gRenderer::getShaderSrcIrradianceFragment() {
-	const char* shadersource =
-"#version 330 core\n"
-"\n"
-"in vec3 WorldPos;\n"
-"out vec4 FragColor;\n"
-"uniform samplerCube environmentMap;\n"
-"\n"
-"const float PI = 3.14159265359;\n"
-"\n"
-"// Mirror binary digits about the decimal point\n"
-"float radicalInverse_VdC(int bits)\n"
-"{\n"
-"    bits = (bits << 16) | (bits >> 16);\n"
-"    bits = ((bits & 0x55555555) << 1) | ((bits & 0xAAAAAAAA) >> 1);\n"
-"    bits = ((bits & 0x33333333) << 2) | ((bits & 0xCCCCCCCC) >> 2);\n"
-"    bits = ((bits & 0x0F0F0F0F) << 4) | ((bits & 0xF0F0F0F0) >> 4);\n"
-"    bits = ((bits & 0x00FF00FF) << 8) | ((bits & 0xFF00FF00) >> 8);\n"
-"    return float(bits) * 2.3283064365386963e-10; // / 0x100000000\n"
-"}\n"
-"\n"
-"// Randomish sequence that has pretty evenly spaced points\n"
-"// http://holger.dammertz.org/stuff/notes_HammersleyOnHemisphere.html\n"
-"vec2 hammersley(int i, int N)\n"
-"{\n"
-"    return vec2(float(i)/float(N), radicalInverse_VdC(i));\n"
-"}\n"
-"\n"
-"vec3 importanceSampleGGX(vec2 Xi, vec3 N, float roughness)\n"
-"{\n"
-"    float a = roughness * roughness;\n"
-"\n"
-"    float phi = 2.0 * PI * Xi.x;\n"
-"    float cosTheta = sqrt((1.0 - Xi.y) / (1.0 + (a*a - 1.0) * Xi.y));\n"
-"    float sinTheta = sqrt(1.0 - cosTheta * cosTheta);\n"
-"\n"
-"    // from spherical coordinates to cartesian coordinates\n"
-"    vec3 H;\n"
-"    H.x = cos(phi) * sinTheta;\n"
-"    H.y = sin(phi) * sinTheta;\n"
-"    H.z = cosTheta;\n"
-"\n"
-"    // from tangent-space vector to world-space sample vector\n"
-"    vec3 up = abs(N.z) < 0.999 ? vec3 (0.0, 0.0, 1.0) : vec3(1.0, 0.0, 0.0);\n"
-"    vec3 tangent = normalize(cross(up, N));\n"
-"    vec3 bitangent = cross(N, tangent);\n"
-"\n"
-"    vec3 sampleVec = tangent * H.x + bitangent * H.y + N * H.z;\n"
-"    return normalize(sampleVec);\n"
-"}\n"
-"\n"
-"void main()\n"
-"{\n"
-"    // Not the normal of the cube, but the normal that we're calculating the irradiance for\n"
-"    vec3 normal = normalize(WorldPos);\n"
-"    vec3 N = normal;\n"
-"\n"
-"    vec3 irradiance = vec3(0.0);\n"
-"\n"
-"    vec3 up = vec3(0.0, 1.0, 0.0);\n"
-"    vec3 right = cross(up, normal);\n"
-"    up = cross(normal, right);\n"
-"\n"
-"    // ------------------------------------------------------------------------------\n"
-"\n"
-"    const int SAMPLE_COUNT = 16384;\n"
-"    float totalWeight = 0.0;\n"
-"    for (int i = 0; i < SAMPLE_COUNT; ++i) {\n"
-"        vec2 Xi = hammersley(i, SAMPLE_COUNT);\n"
-"        vec3 H = importanceSampleGGX(Xi, N, 1.0);\n"
-"\n"
-"        // NdotH is equal to cos(theta)\n"
-"        float NdotH = max(dot(N, H), 0.0);\n"
-"        // With roughness == 1 in the distribution function we get 1/pi\n"
-"        float D = 1.0 / PI;\n"
-"        float pdf = (D * NdotH / (4.0)) + 0.0001; \n"
-"\n"
-"        float resolution = 1024.0; // resolution of source cubemap (per face)\n"
-"        // with a higher resolution, we should sample coarser mipmap levels\n"
-"        float saTexel = 4.0 * PI / (6.0 * resolution * resolution);\n"
-"        // as we take more samples, we can sample from a finer mipmap.\n"
-"        // And places where H is more likely to be sampled (higher pdf) we\n"
-"        // can use a finer mipmap, otherwise use courser mipmap.\n"
-"        // The tutorial treats this portion as optional to reduce noise but I think it's\n"
-"        // actually necessary for importance sampling to get the correct result\n"
-"        float saSample = 1.0 / (float(SAMPLE_COUNT) * pdf + 0.0001);\n"
-"\n"
-"        float mipLevel = 0.5 * log2(saSample / saTexel); \n"
-"\n"
-"        irradiance += textureLod(environmentMap, H, mipLevel).rgb * NdotH;\n"
-"        // irradiance += texture(environmentMap, H).rgb * NdotH;\n"
-"        totalWeight += NdotH;\n"
-"    }\n"
-"    irradiance = (PI * irradiance) / totalWeight;\n"
-"\n"
-"    // irradiance = texture(environmentMap, normal).rgb;\n"
-"    FragColor = vec4(irradiance, 1.0);\n"
-"}\n";
+	const char* shadersource = R"(
+	#version 330 core
+	
+	in vec3 WorldPos;
+	out vec4 FragColor;
+	uniform samplerCube environmentMap;
+	
+	const float PI = 3.14159265359;
+	
+	// Mirror binary digits about the decimal point
+	float radicalInverse_VdC(int bits)
+	{
+		bits = (bits << 16) | (bits >> 16);
+		bits = ((bits & 0x55555555) << 1) | ((bits & 0xAAAAAAAA) >> 1);
+		bits = ((bits & 0x33333333) << 2) | ((bits & 0xCCCCCCCC) >> 2);
+		bits = ((bits & 0x0F0F0F0F) << 4) | ((bits & 0xF0F0F0F0) >> 4);
+		bits = ((bits & 0x00FF00FF) << 8) | ((bits & 0xFF00FF00) >> 8);
+		return float(bits) * 2.3283064365386963e-10; // / 0x100000000
+	}
+	
+	// Randomish sequence that has pretty evenly spaced points
+	// http://holger.dammertz.org/stuff/notes_HammersleyOnHemisphere.html
+	vec2 hammersley(int i, int N)
+	{
+		return vec2(float(i)/float(N), radicalInverse_VdC(i));
+	}
+	
+	vec3 importanceSampleGGX(vec2 Xi, vec3 N, float roughness)
+	{
+		float a = roughness * roughness;
+	
+		float phi = 2.0 * PI * Xi.x;
+		float cosTheta = sqrt((1.0 - Xi.y) / (1.0 + (a*a - 1.0) * Xi.y));
+		float sinTheta = sqrt(1.0 - cosTheta * cosTheta);
+	
+		// from spherical coordinates to cartesian coordinates
+		vec3 H;
+		H.x = cos(phi) * sinTheta;
+		H.y = sin(phi) * sinTheta;
+		H.z = cosTheta;
+	
+		// from tangent-space vector to world-space sample vector
+		vec3 up = abs(N.z) < 0.999 ? vec3 (0.0, 0.0, 1.0) : vec3(1.0, 0.0, 0.0);
+		vec3 tangent = normalize(cross(up, N));
+		vec3 bitangent = cross(N, tangent);
+	
+		vec3 sampleVec = tangent * H.x + bitangent * H.y + N * H.z;
+		return normalize(sampleVec);
+	}
+	
+	void main()
+	{
+		// Not the normal of the cube, but the normal that we're calculating the irradiance for
+		vec3 normal = normalize(WorldPos);
+		vec3 N = normal;
+	
+		vec3 irradiance = vec3(0.0);
+	
+		vec3 up = vec3(0.0, 1.0, 0.0);
+		vec3 right = cross(up, normal);
+		up = cross(normal, right);
+	
+		// ------------------------------------------------------------------------------
+	
+		const int SAMPLE_COUNT = 16384;
+		float totalWeight = 0.0;
+		for (int i = 0; i < SAMPLE_COUNT; ++i) {
+			vec2 Xi = hammersley(i, SAMPLE_COUNT);
+			vec3 H = importanceSampleGGX(Xi, N, 1.0);
+	
+			// NdotH is equal to cos(theta)
+			float NdotH = max(dot(N, H), 0.0);
+			// With roughness == 1 in the distribution function we get 1/pi
+			float D = 1.0 / PI;
+			float pdf = (D * NdotH / (4.0)) + 0.0001;
+	
+			float resolution = 1024.0; // resolution of source cubemap (per face)
+			// with a higher resolution, we should sample coarser mipmap levels
+			float saTexel = 4.0 * PI / (6.0 * resolution * resolution);
+			// as we take more samples, we can sample from a finer mipmap.
+			// And places where H is more likely to be sampled (higher pdf) we
+			// can use a finer mipmap, otherwise use courser mipmap.
+			// The tutorial treats this portion as optional to reduce noise but I think it's
+			// actually necessary for importance sampling to get the correct result
+			float saSample = 1.0 / (float(SAMPLE_COUNT) * pdf + 0.0001);
+	
+			float mipLevel = 0.5 * log2(saSample / saTexel);
+	
+			irradiance += textureLod(environmentMap, H, mipLevel).rgb * NdotH;
+			// irradiance += texture(environmentMap, H).rgb * NdotH;
+			totalWeight += NdotH;
+		}
+		irradiance = (PI * irradiance) / totalWeight;
+	
+		// irradiance = texture(environmentMap, normal).rgb;
+		FragColor = vec4(irradiance, 1.0);
+	}
+)";
+
 
 	return std::string(shadersource);
 }
 
 const std::string gRenderer::getShaderSrcPrefilterFragment() {
-	const char* shadersource =
-"#version 330 core\n"
-"out vec4 FragColor;\n"
-"in vec3 WorldPos;\n"
-"\n"
-"uniform samplerCube environmentMap;\n"
-"uniform float roughness;\n"
-"\n"
-"const float PI = 3.14159265359;\n"
-"// ----------------------------------------------------------------------------\n"
-"float DistributionGGX(vec3 N, vec3 H, float roughness)\n"
-"{\n"
-"    float a = roughness*roughness;\n"
-"    float a2 = a*a;\n"
-"    float NdotH = max(dot(N, H), 0.0);\n"
-"    float NdotH2 = NdotH*NdotH;\n"
-"\n"
-"    float nom   = a2;\n"
-"    float denom = (NdotH2 * (a2 - 1.0) + 1.0);\n"
-"    denom = PI * denom * denom;\n"
-"\n"
-"    return nom / denom;\n"
-"}\n"
-"// ----------------------------------------------------------------------------\n"
-"// http://holger.dammertz.org/stuff/notes_HammersleyOnHemisphere.html\n"
-"// efficient VanDerCorpus calculation.\n"
-"float RadicalInverse_VdC(uint bits)\n"
-"{\n"
-"     bits = (bits << 16u) | (bits >> 16u);\n"
-"     bits = ((bits & 0x55555555u) << 1u) | ((bits & 0xAAAAAAAAu) >> 1u);\n"
-"     bits = ((bits & 0x33333333u) << 2u) | ((bits & 0xCCCCCCCCu) >> 2u);\n"
-"     bits = ((bits & 0x0F0F0F0Fu) << 4u) | ((bits & 0xF0F0F0F0u) >> 4u);\n"
-"     bits = ((bits & 0x00FF00FFu) << 8u) | ((bits & 0xFF00FF00u) >> 8u);\n"
-"     return float(bits) * 2.3283064365386963e-10; // / 0x100000000\n"
-"}\n"
-"// ----------------------------------------------------------------------------\n"
-"vec2 Hammersley(uint i, uint N)\n"
-"{\n"
-"	return vec2(float(i)/float(N), RadicalInverse_VdC(i));\n"
-"}\n"
-"// ----------------------------------------------------------------------------\n"
-"vec3 ImportanceSampleGGX(vec2 Xi, vec3 N, float roughness)\n"
-"{\n"
-"	float a = roughness*roughness;\n"
-"\n"
-"	float phi = 2.0 * PI * Xi.x;\n"
-"	float cosTheta = sqrt((1.0 - Xi.y) / (1.0 + (a*a - 1.0) * Xi.y));\n"
-"	float sinTheta = sqrt(1.0 - cosTheta*cosTheta);\n"
-"\n"
-"	// from spherical coordinates to cartesian coordinates - halfway vector\n"
-"	vec3 H;\n"
-"	H.x = cos(phi) * sinTheta;\n"
-"	H.y = sin(phi) * sinTheta;\n"
-"	H.z = cosTheta;\n"
-"\n"
-"	// from tangent-space H vector to world-space sample vector\n"
-"	vec3 up          = abs(N.z) < 0.999 ? vec3(0.0, 0.0, 1.0) : vec3(1.0, 0.0, 0.0);\n"
-"	vec3 tangent   = normalize(cross(up, N));\n"
-"	vec3 bitangent = cross(N, tangent);\n"
-"\n"
-"	vec3 sampleVec = tangent * H.x + bitangent * H.y + N * H.z;\n"
-"	return normalize(sampleVec);\n"
-"}\n"
-"// ----------------------------------------------------------------------------\n"
-"void main()\n"
-"{\n"
-"    vec3 N = normalize(WorldPos);\n"
-"\n"
-"    // make the simplyfying assumption that V equals R equals the normal\n"
-"    vec3 R = N;\n"
-"    vec3 V = R;\n"
-"\n"
-"    const uint SAMPLE_COUNT = 1024u;\n"
-"    vec3 prefilteredColor = vec3(0.0);\n"
-"    float totalWeight = 0.0;\n"
-"\n"
-"    for(uint i = 0u; i < SAMPLE_COUNT; ++i)\n"
-"    {\n"
-"        // generates a sample vector that's biased towards the preferred alignment direction (importance sampling).\n"
-"        vec2 Xi = Hammersley(i, SAMPLE_COUNT);\n"
-"        vec3 H = ImportanceSampleGGX(Xi, N, roughness);\n"
-"        vec3 L  = normalize(2.0 * dot(V, H) * H - V);\n"
-"\n"
-"        float NdotL = max(dot(N, L), 0.0);\n"
-"        if(NdotL > 0.0)\n"
-"        {\n"
-"            // sample from the environment's mip level based on roughness/pdf\n"
-"            float D   = DistributionGGX(N, H, roughness);\n"
-"            float NdotH = max(dot(N, H), 0.0);\n"
-"            float HdotV = max(dot(H, V), 0.0);\n"
-"            float pdf = D * NdotH / (4.0 * HdotV) + 0.0001;\n"
-"\n"
-"            float resolution = 512.0; // resolution of source cubemap (per face)\n"
-"            float saTexel  = 4.0 * PI / (6.0 * resolution * resolution);\n"
-"            float saSample = 1.0 / (float(SAMPLE_COUNT) * pdf + 0.0001);\n"
-"\n"
-"            float mipLevel = roughness == 0.0 ? 0.0 : 0.5 * log2(saSample / saTexel);\n"
-"\n"
-"            prefilteredColor += textureLod(environmentMap, L, mipLevel).rgb * NdotL;\n"
-"            totalWeight      += NdotL;\n"
-"        }\n"
-"    }\n"
-"\n"
-"    prefilteredColor = prefilteredColor / totalWeight;\n"
-"\n"
-"    FragColor = vec4(prefilteredColor, 1.0);\n"
-"}\n";
+	const char* shadersource = R"(
+	#version 330 core
+	out vec4 FragColor;
+	in vec3 WorldPos;
+	
+	uniform samplerCube environmentMap;
+	uniform float roughness;
+	
+	const float PI = 3.14159265359;
+	// ----------------------------------------------------------------------------
+	float DistributionGGX(vec3 N, vec3 H, float roughness)
+	{
+		float a = roughness*roughness;
+		float a2 = a*a;
+		float NdotH = max(dot(N, H), 0.0);
+		float NdotH2 = NdotH*NdotH;
+	
+		float nom   = a2;
+		float denom = (NdotH2 * (a2 - 1.0) + 1.0);
+		denom = PI * denom * denom;
+	
+		return nom / denom;
+	}
+	// ----------------------------------------------------------------------------
+	// http://holger.dammertz.org/stuff/notes_HammersleyOnHemisphere.html
+	// efficient VanDerCorpus calculation.
+	float RadicalInverse_VdC(uint bits)
+	{
+		 bits = (bits << 16u) | (bits >> 16u);
+		 bits = ((bits & 0x55555555u) << 1u) | ((bits & 0xAAAAAAAAu) >> 1u);
+		 bits = ((bits & 0x33333333u) << 2u) | ((bits & 0xCCCCCCCCu) >> 2u);
+		 bits = ((bits & 0x0F0F0F0Fu) << 4u) | ((bits & 0xF0F0F0F0u) >> 4u);
+		 bits = ((bits & 0x00FF00FFu) << 8u) | ((bits & 0xFF00FF00u) >> 8u);
+		 return float(bits) * 2.3283064365386963e-10; // / 0x100000000
+	}
+	// ----------------------------------------------------------------------------
+	vec2 Hammersley(uint i, uint N)
+	{
+		return vec2(float(i)/float(N), RadicalInverse_VdC(i));
+	}
+	// ----------------------------------------------------------------------------
+	vec3 ImportanceSampleGGX(vec2 Xi, vec3 N, float roughness)
+	{
+		float a = roughness*roughness;
+	
+		float phi = 2.0 * PI * Xi.x;
+		float cosTheta = sqrt((1.0 - Xi.y) / (1.0 + (a*a - 1.0) * Xi.y));
+		float sinTheta = sqrt(1.0 - cosTheta*cosTheta);
+	
+		// from spherical coordinates to cartesian coordinates - halfway vector
+		vec3 H;
+		H.x = cos(phi) * sinTheta;
+		H.y = sin(phi) * sinTheta;
+		H.z = cosTheta;
+	
+		// from tangent-space H vector to world-space sample vector
+		vec3 up          = abs(N.z) < 0.999 ? vec3(0.0, 0.0, 1.0) : vec3(1.0, 0.0, 0.0);
+		vec3 tangent   = normalize(cross(up, N));
+		vec3 bitangent = cross(N, tangent);
+	
+		vec3 sampleVec = tangent * H.x + bitangent * H.y + N * H.z;
+		return normalize(sampleVec);
+	}
+	// ----------------------------------------------------------------------------
+	void main()
+	{
+		vec3 N = normalize(WorldPos);
+	
+		// make the simplyfying assumption that V equals R equals the normal
+		vec3 R = N;
+		vec3 V = R;
+	
+		const uint SAMPLE_COUNT = 1024u;
+		vec3 prefilteredColor = vec3(0.0);
+		float totalWeight = 0.0;
+	
+		for(uint i = 0u; i < SAMPLE_COUNT; ++i)
+		{
+			// generates a sample vector that's biased towards the preferred alignment direction (importance sampling).
+			vec2 Xi = Hammersley(i, SAMPLE_COUNT);
+			vec3 H = ImportanceSampleGGX(Xi, N, roughness);
+			vec3 L  = normalize(2.0 * dot(V, H) * H - V);
+	
+			float NdotL = max(dot(N, L), 0.0);
+			if(NdotL > 0.0)
+			{
+				// sample from the environment's mip level based on roughness/pdf
+				float D   = DistributionGGX(N, H, roughness);
+				float NdotH = max(dot(N, H), 0.0);
+				float HdotV = max(dot(H, V), 0.0);
+				float pdf = D * NdotH / (4.0 * HdotV) + 0.0001;
+	
+				float resolution = 512.0; // resolution of source cubemap (per face)
+				float saTexel  = 4.0 * PI / (6.0 * resolution * resolution);
+				float saSample = 1.0 / (float(SAMPLE_COUNT) * pdf + 0.0001);
+	
+				float mipLevel = roughness == 0.0 ? 0.0 : 0.5 * log2(saSample / saTexel);
+	
+				prefilteredColor += textureLod(environmentMap, L, mipLevel).rgb * NdotL;
+				totalWeight      += NdotL;
+			}
+		}
+	
+		prefilteredColor = prefilteredColor / totalWeight;
+	
+		FragColor = vec4(prefilteredColor, 1.0);
+	}
+)";
 
 	return std::string(shadersource);
 }
 
 const std::string gRenderer::getShaderSrcBrdfVertex() {
-	const char* shadersource =
-"#version 330 core\n"
-"layout (location = 0) in vec3 aPos;\n"
-"layout (location = 1) in vec2 aTexCoords;\n"
-"\n"
-"out vec2 TexCoords;\n"
-"\n"
-"void main()\n"
-"{\n"
-"    TexCoords = aTexCoords;\n"
-"	gl_Position = vec4(aPos, 1.0);\n"
-"}\n";
+	const char* shadersource = R"(
 
-	return std::string(shadersource);
+	#version 330 core
+	layout (location = 0) in vec3 aPos;
+	layout (location = 1) in vec2 aTexCoords;
+	
+	out vec2 TexCoords;
+	
+	void main()
+	{
+		TexCoords = aTexCoords;
+		gl_Position = vec4(aPos, 1.0);
+	}
+)";
+	
+		return std::string(shadersource);
 }
-
+	
 const std::string gRenderer::getShaderSrcBrdfFragment() {
-	const char* shadersource =
-"#version 330 core\n"
-"out vec2 FragColor;\n"
-"in vec2 TexCoords;\n"
-"\n"
-"const float PI = 3.14159265359;\n"
-"// ----------------------------------------------------------------------------\n"
-"// http://holger.dammertz.org/stuff/notes_HammersleyOnHemisphere.html\n"
-"// efficient VanDerCorpus calculation.\n"
-"float RadicalInverse_VdC(uint bits)\n"
-"{\n"
-"     bits = (bits << 16u) | (bits >> 16u);\n"
-"     bits = ((bits & 0x55555555u) << 1u) | ((bits & 0xAAAAAAAAu) >> 1u);\n"
-"     bits = ((bits & 0x33333333u) << 2u) | ((bits & 0xCCCCCCCCu) >> 2u);\n"
-"     bits = ((bits & 0x0F0F0F0Fu) << 4u) | ((bits & 0xF0F0F0F0u) >> 4u);\n"
-"     bits = ((bits & 0x00FF00FFu) << 8u) | ((bits & 0xFF00FF00u) >> 8u);\n"
-"     return float(bits) * 2.3283064365386963e-10; // / 0x100000000\n"
-"}\n"
-"// ----------------------------------------------------------------------------\n"
-"vec2 Hammersley(uint i, uint N)\n"
-"{\n"
-"	return vec2(float(i)/float(N), RadicalInverse_VdC(i));\n"
-"}\n"
-"// ----------------------------------------------------------------------------\n"
-"vec3 ImportanceSampleGGX(vec2 Xi, vec3 N, float roughness)\n"
-"{\n"
-"	float a = roughness*roughness;\n"
-"	\n"
-"	float phi = 2.0 * PI * Xi.x;\n"
-"	float cosTheta = sqrt((1.0 - Xi.y) / (1.0 + (a*a - 1.0) * Xi.y));\n"
-"	float sinTheta = sqrt(1.0 - cosTheta*cosTheta);\n"
-"	\n"
-"	// from spherical coordinates to cartesian coordinates - halfway vector\n"
-"	vec3 H;\n"
-"	H.x = cos(phi) * sinTheta;\n"
-"	H.y = sin(phi) * sinTheta;\n"
-"	H.z = cosTheta;\n"
-"\n"
-"	// from tangent-space H vector to world-space sample vector\n"
-"	vec3 up          = abs(N.z) < 0.999 ? vec3(0.0, 0.0, 1.0) : vec3(1.0, 0.0, 0.0);\n"
-"	vec3 tangent   = normalize(cross(up, N));\n"
-"	vec3 bitangent = cross(N, tangent);\n"
-"\n"
-"	vec3 sampleVec = tangent * H.x + bitangent * H.y + N * H.z;\n"
-"	return normalize(sampleVec);\n"
-"}\n"
-"// ----------------------------------------------------------------------------\n"
-"float GeometrySchlickGGX(float NdotV, float roughness)\n"
-"{\n"
-"    // note that we use a different k for IBL\n"
-"    float a = roughness;\n"
-"    float k = (a * a) / 2.0;\n"
-"\n"
-"    float nom   = NdotV;\n"
-"    float denom = NdotV * (1.0 - k) + k;\n"
-"\n"
-"    return nom / denom;\n"
-"}\n"
-"// ----------------------------------------------------------------------------\n"
-"float GeometrySmith(vec3 N, vec3 V, vec3 L, float roughness)\n"
-"{\n"
-"    float NdotV = max(dot(N, V), 0.0);\n"
-"    float NdotL = max(dot(N, L), 0.0);\n"
-"    float ggx2 = GeometrySchlickGGX(NdotV, roughness);\n"
-"    float ggx1 = GeometrySchlickGGX(NdotL, roughness);\n"
-"\n"
-"    return ggx1 * ggx2;\n"
-"}\n"
-"// ----------------------------------------------------------------------------\n"
-"vec2 IntegrateBRDF(float NdotV, float roughness)\n"
-"{\n"
-"    vec3 V;\n"
-"    V.x = sqrt(1.0 - NdotV*NdotV);\n"
-"    V.y = 0.0;\n"
-"    V.z = NdotV;\n"
-"\n"
-"    float A = 0.0;\n"
-"    float B = 0.0;\n"
-"\n"
-"    vec3 N = vec3(0.0, 0.0, 1.0);\n"
-"\n"
-"    const uint SAMPLE_COUNT = 1024u;\n"
-"    for(uint i = 0u; i < SAMPLE_COUNT; ++i)\n"
-"    {\n"
-"        // generates a sample vector that's biased towards the\n"
-"        // preferred alignment direction (importance sampling).\n"
-"        vec2 Xi = Hammersley(i, SAMPLE_COUNT);\n"
-"        vec3 H = ImportanceSampleGGX(Xi, N, roughness);\n"
-"        vec3 L = normalize(2.0 * dot(V, H) * H - V);\n"
-"\n"
-"        float NdotL = max(L.z, 0.0);\n"
-"        float NdotH = max(H.z, 0.0);\n"
-"        float VdotH = max(dot(V, H), 0.0);\n"
-"\n"
-"        if(NdotL > 0.0)\n"
-"        {\n"
-"            float G = GeometrySmith(N, V, L, roughness);\n"
-"            float G_Vis = (G * VdotH) / (NdotH * NdotV);\n"
-"            float Fc = pow(1.0 - VdotH, 5.0);\n"
-"\n"
-"            A += (1.0 - Fc) * G_Vis;\n"
-"            B += Fc * G_Vis;\n"
-"        }\n"
-"    }\n"
-"    A /= float(SAMPLE_COUNT);\n"
-"    B /= float(SAMPLE_COUNT);\n"
-"    return vec2(A, B);\n"
-"}\n"
-"// ----------------------------------------------------------------------------\n"
-"void main()\n"
-"{\n"
-"    vec2 integratedBRDF = IntegrateBRDF(TexCoords.x, TexCoords.y);\n"
-"    FragColor = integratedBRDF;\n"
-"}\n";
+	const char* shadersource = R"(
+	#version 330 core
+	out vec2 FragColor;
+	in vec2 TexCoords;
+	
+	const float PI = 3.14159265359;
+	// ----------------------------------------------------------------------------
+	// http://holger.dammertz.org/stuff/notes_HammersleyOnHemisphere.html
+	// efficient VanDerCorpus calculation.
+	float RadicalInverse_VdC(uint bits)
+	{
+		 bits = (bits << 16u) | (bits >> 16u);
+		 bits = ((bits & 0x55555555u) << 1u) | ((bits & 0xAAAAAAAAu) >> 1u);
+		 bits = ((bits & 0x33333333u) << 2u) | ((bits & 0xCCCCCCCCu) >> 2u);
+		 bits = ((bits & 0x0F0F0F0Fu) << 4u) | ((bits & 0xF0F0F0F0u) >> 4u);
+		 bits = ((bits & 0x00FF00FFu) << 8u) | ((bits & 0xFF00FF00u) >> 8u);
+		 return float(bits) * 2.3283064365386963e-10; // / 0x100000000
+	}
+	// ----------------------------------------------------------------------------
+	vec2 Hammersley(uint i, uint N)
+	{
+		return vec2(float(i)/float(N), RadicalInverse_VdC(i));
+	}
+	// ----------------------------------------------------------------------------
+	vec3 ImportanceSampleGGX(vec2 Xi, vec3 N, float roughness)
+	{
+		float a = roughness*roughness;
+	
+		float phi = 2.0 * PI * Xi.x;
+		float cosTheta = sqrt((1.0 - Xi.y) / (1.0 + (a*a - 1.0) * Xi.y));
+		float sinTheta = sqrt(1.0 - cosTheta*cosTheta);
+	
+		// from spherical coordinates to cartesian coordinates - halfway vector
+		vec3 H;
+		H.x = cos(phi) * sinTheta;
+		H.y = sin(phi) * sinTheta;
+		H.z = cosTheta;
+	
+		// from tangent-space H vector to world-space sample vector
+		vec3 up          = abs(N.z) < 0.999 ? vec3(0.0, 0.0, 1.0) : vec3(1.0, 0.0, 0.0);
+		vec3 tangent   = normalize(cross(up, N));
+		vec3 bitangent = cross(N, tangent);
+	
+		vec3 sampleVec = tangent * H.x + bitangent * H.y + N * H.z;
+		return normalize(sampleVec);
+	}
+	// ----------------------------------------------------------------------------
+	float GeometrySchlickGGX(float NdotV, float roughness)
+	{
+		// note that we use a different k for IBL
+		float a = roughness;
+		float k = (a * a) / 2.0;
+	
+		float nom   = NdotV;
+		float denom = NdotV * (1.0 - k) + k;
+	
+		return nom / denom;
+	}
+	// ----------------------------------------------------------------------------
+	float GeometrySmith(vec3 N, vec3 V, vec3 L, float roughness)
+	{
+		float NdotV = max(dot(N, V), 0.0);
+		float NdotL = max(dot(N, L), 0.0);
+		float ggx2 = GeometrySchlickGGX(NdotV, roughness);
+		float ggx1 = GeometrySchlickGGX(NdotL, roughness);
+	
+		return ggx1 * ggx2;
+	}
+	// ----------------------------------------------------------------------------
+	vec2 IntegrateBRDF(float NdotV, float roughness)
+	{
+		vec3 V;
+		V.x = sqrt(1.0 - NdotV*NdotV);
+		V.y = 0.0;
+		V.z = NdotV;
+	
+		float A = 0.0;
+		float B = 0.0;
+	
+		vec3 N = vec3(0.0, 0.0, 1.0);
+	
+		const uint SAMPLE_COUNT = 1024u;
+		for(uint i = 0u; i < SAMPLE_COUNT; ++i)
+		{
+			// generates a sample vector that's biased towards the
+			// preferred alignment direction (importance sampling).
+			vec2 Xi = Hammersley(i, SAMPLE_COUNT);
+			vec3 H = ImportanceSampleGGX(Xi, N, roughness);
+			vec3 L = normalize(2.0 * dot(V, H) * H - V);
+	
+			float NdotL = max(L.z, 0.0);
+			float NdotH = max(H.z, 0.0);
+			float VdotH = max(dot(V, H), 0.0);
+	
+			if(NdotL > 0.0)
+			{
+				float G = GeometrySmith(N, V, L, roughness);
+				float G_Vis = (G * VdotH) / (NdotH * NdotV);
+				float Fc = pow(1.0 - VdotH, 5.0);
+	
+				A += (1.0 - Fc) * G_Vis;
+				B += Fc * G_Vis;
+			}
+		}
+		A /= float(SAMPLE_COUNT);
+		B /= float(SAMPLE_COUNT);
+		return vec2(A, B);
+	}
+	// ----------------------------------------------------------------------------
+	void main()
+	{
+		vec2 integratedBRDF = IntegrateBRDF(TexCoords.x, TexCoords.y);
+		FragColor = integratedBRDF;
+	}
+)";
 
 	return std::string(shadersource);
 }
 
 const std::string gRenderer::getShaderSrcFboVertex() {
-	const char* shadersource =
-			"#version 330 core\n"
-			"layout (location = 0) in vec2 aPos;"
-			"layout (location = 1) in vec2 aTexCoords;"
-			""
-			"out vec2 TexCoords;"
-			""
-			"void main()"
-			"{"
-			"    gl_Position = vec4(aPos.x, aPos.y, 0.0, 1.0);"
-			"    TexCoords = aTexCoords;"
-			"}\n";
+	const char* shadersource = R"(
+	#version 330 core
+	layout (location = 0) in vec2 aPos;
+	layout (location = 1) in vec2 aTexCoords;
+
+	out vec2 TexCoords;
+
+	void main()
+	{
+		gl_Position = vec4(aPos.x, aPos.y, 0.0, 1.0);
+		TexCoords = aTexCoords;
+	}
+)";
+
 
 	return std::string(shadersource);
 }
 
 const std::string gRenderer::getShaderSrcFboFragment() {
-	const char* shadersource =
-			"#version 330 core\n"
-			"out vec4 FragColor;"
-			""
-			"in vec2 TexCoords;"
-			""
-			"uniform sampler2D screenTexture;"
-			""
-			"void main()"
-			"{ "
-			"    FragColor = vec4(texture(screenTexture, TexCoords).rgb, 1.0);"
-			"}\n";
+	const char* shadersource = R"(
+#version 330 core
+out vec4 FragColor;
+
+in vec2 TexCoords;
+
+uniform sampler2D screenTexture;
+
+void main()
+{ 
+    FragColor = vec4(texture(screenTexture, TexCoords).rgb, 1.0);
+}
+
+)";
+
 	return std::string(shadersource);
 }
