@@ -625,8 +625,8 @@ const std::string gRenderer::getShaderSrcColorVertex() {
 	layout (location = 3) in vec3 aTangent;
 	layout (location = 4) in vec3 aBitangent;
 	layout (location = 5) in int aUseNormalMap;
-    uniform int aUseShadowMap;
-    uniform int aUseFog;
+	uniform int aUseShadowMap;
+	uniform int aUseFog;
 
 	uniform mat4 model;
 	uniform mat4 view;
@@ -634,9 +634,9 @@ const std::string gRenderer::getShaderSrcColorVertex() {
 	uniform vec3 lightPos;
 	uniform vec3 viewPos;
 	uniform mat4 lightMatrix;
-    out float visibility;
-    uniform float fogdensity;
-    uniform float foggradient;
+	out float visibility;
+	uniform float fogdensity;
+	uniform float foggradient;
 
 	flat out int mUseNormalMap;
 	flat out int mUseShadowMap;
@@ -645,19 +645,19 @@ const std::string gRenderer::getShaderSrcColorVertex() {
 	out vec3 Normal;
 	out vec3 FragPos;
 	out vec2 TexCoords;
-    out vec4 FragPosLightSpace;
+	out vec4 FragPosLightSpace;
 	out vec3 TangentLightPos;
 	out vec3 TangentViewPos;
 	out vec3 TangentFragPos;
 
 	void main() {
-    	mUseShadowMap = aUseShadowMap;
-    	mUseFog = aUseFog;
-	    FragPos = vec3(model * vec4(aPos, 1.0));
-	    Normal = mat3(transpose(inverse(model))) * aNormal;
-	    TexCoords = aTexCoords;
+		mUseShadowMap = aUseShadowMap;
+		mUseFog = aUseFog;
+		FragPos = vec3(model * vec4(aPos, 1.0));
+		Normal = mat3(transpose(inverse(model))) * aNormal;
+		TexCoords = aTexCoords;
 		FragPosLightSpace = lightMatrix * vec4(FragPos, 1.0);
-	    mUseNormalMap = aUseNormalMap;
+		mUseNormalMap = aUseNormalMap;
 
 	    if (aUseNormalMap > 0) {
 		    mat3 normalMatrix = transpose(inverse(mat3(model)));
@@ -673,12 +673,12 @@ const std::string gRenderer::getShaderSrcColorVertex() {
 	    }
 
 	    gl_Position = projection * view * model * vec4(aPos, 1.0);
-	    if (aUseFog > 0) {
-          float distance = length(gl_Position.xyz);
-          visibility = exp(-pow((distance * fogdensity), foggradient));
-          visibility = clamp(visibility, 0.0, 1.0);
-       }
 
+		if (aUseFog > 0) {
+			float distance = length(gl_Position.xyz);
+			visibility = exp(-pow((distance * fogdensity), foggradient));
+			visibility = clamp(visibility, 0.0, 1.0);
+		}
 	}
 )";
 	return std::string(shadersource);
@@ -741,26 +741,27 @@ const std::string gRenderer::getShaderSrcColorFragment() {
 
 	out vec4 FragColor;
 
-   float calculateShadow(vec4 fragPosLightSpace) {
-       vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
-       projCoords = projCoords * 0.5 + 0.5;
-       float closestDepth = texture(shadowMap, projCoords.xy).r;
-       float currentDepth = projCoords.z;
-       vec3 normal = normalize(Normal);
-       vec3 lightDir = normalize(shadowLightPos - FragPos);
-       float bias = max(0.05 * (1.0 - dot(normal, lightDir)), 0.005);
-       float shadow = 0.0;
-       vec2 texelSize = 1.0 / textureSize(shadowMap, 0);
-       for(int x = -1; x <= 1; ++x) {
-           for(int y = -1; y <= 1; ++y) {
-               float pcfDepth = texture(shadowMap, projCoords.xy + vec2(x, y) * texelSize).r;
-               shadow += currentDepth - bias > pcfDepth  ? 1.0 : 0.0;
-           }
-       }
-       shadow /= 9.0;
-       if(projCoords.z > 1.0) shadow = 0.0;
-       return shadow;
-   }
+	float calculateShadow(vec4 fragPosLightSpace) {
+		vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
+		projCoords = projCoords * 0.5 + 0.5;
+		float closestDepth = texture(shadowMap, projCoords.xy).r;
+		float currentDepth = projCoords.z;
+		vec3 normal = normalize(Normal);
+		vec3 lightDir = normalize(shadowLightPos - FragPos);
+		float bias = max(0.05 * (1.0 - dot(normal, lightDir)), 0.005);
+		float shadow = 0.0;
+		vec2 texelSize = 1.0 / textureSize(shadowMap, 0);
+		for(int x = -1; x <= 1; ++x) {
+			for(int y = -1; y <= 1; ++y) {
+				float pcfDepth = texture(shadowMap, projCoords.xy + vec2(x, y) * texelSize).r;
+				shadow += currentDepth - bias > pcfDepth  ? 1.0 : 0.0;
+			}
+		}
+		shadow /= 9.0;
+		if(projCoords.z > 1.0) shadow = 0.0;
+
+		return shadow;
+	}
 
 	vec4 calcAmbLight(Light light, vec4 materialAmbient) {
 		vec4 ambient = light.ambient * materialAmbient;
@@ -772,7 +773,7 @@ const std::string gRenderer::getShaderSrcColorFragment() {
 		float diff;
 		float spec;
 		if (mUseNormalMap > 0) {
-		    diff = max(dot(lightDir, normal), 0.0);
+			diff = max(dot(lightDir, normal), 0.0);
 			vec3 halfwayDir = normalize(lightDir + viewDir);
 			spec = pow(max(dot(normal, halfwayDir), 0.0), material.shininess);
 		} else {
@@ -783,10 +784,10 @@ const std::string gRenderer::getShaderSrcColorFragment() {
 		vec4 ambient = light.ambient * materialAmbient;
 		vec4 diffuse = light.diffuse * diff * materialDiffuse;
 		vec4 specular = light.specular * spec * materialSpecular;
-	    if (mUseShadowMap > 0) {
+		if (mUseShadowMap > 0) {
 			diffuse *= shadowing;
 			specular *= shadowing;
-	    }
+		}
 		return (ambient + diffuse + specular);
 	}
 
@@ -794,8 +795,8 @@ const std::string gRenderer::getShaderSrcColorFragment() {
 		vec3 lightDir;
 		float distance;
 		if (mUseNormalMap > 0) {
-		    lightDir = normalize(TangentLightPos - TangentFragPos);
-		    distance = length(TangentLightPos - TangentFragPos);
+			lightDir = normalize(TangentLightPos - TangentFragPos);
+			distance = length(TangentLightPos - TangentFragPos);
 		} else {
 			lightDir = normalize(light.position - FragPos);
 			distance = length(light.position - FragPos);
@@ -803,7 +804,7 @@ const std::string gRenderer::getShaderSrcColorFragment() {
 		float diff;
 		float spec;
 		if (mUseNormalMap > 0) {
-		    diff = max(dot(lightDir, normal), 0.0);
+			diff = max(dot(lightDir, normal), 0.0);
 			vec3 halfwayDir = normalize(lightDir + viewDir);
 			spec = pow(max(dot(normal, halfwayDir), 0.0), material.shininess);
 		} else {
@@ -816,12 +817,12 @@ const std::string gRenderer::getShaderSrcColorFragment() {
 		vec4 specular = light.specular * spec * materialSpecular;
 		float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));
 		ambient  *= attenuation;
-    	diffuse  *= attenuation;
-    	specular *= attenuation;
-	    if (mUseShadowMap > 0) {
+		diffuse  *= attenuation;
+		specular *= attenuation;
+		if (mUseShadowMap > 0) {
 			diffuse  *= shadowing;
 			specular *= shadowing;
-	    }
+		}
 		return (ambient + diffuse + specular);
 	}
 
@@ -829,8 +830,8 @@ const std::string gRenderer::getShaderSrcColorFragment() {
 		vec3 lightDir;
 		float distance;
 		if (mUseNormalMap > 0) {
-		    lightDir = normalize(TangentLightPos - TangentFragPos);
-		    distance = length(TangentLightPos - TangentFragPos);
+			lightDir = normalize(TangentLightPos - TangentFragPos);
+			distance = length(TangentLightPos - TangentFragPos);
 		} else {
 			lightDir = normalize(light.position - FragPos);
 			distance = length(light.position - FragPos);
@@ -838,7 +839,7 @@ const std::string gRenderer::getShaderSrcColorFragment() {
 		float diff;
 		float spec;
 		if (mUseNormalMap > 0) {
-		    diff = max(dot(lightDir, normal), 0.0);
+			diff = max(dot(lightDir, normal), 0.0);
 			vec3 halfwayDir = normalize(lightDir + viewDir);
 			spec = pow(max(dot(normal, halfwayDir), 0.0), material.shininess);
 		} else {
@@ -856,12 +857,12 @@ const std::string gRenderer::getShaderSrcColorFragment() {
 		float epsilon = (light.cutOff - light.outerCutOff);
 		float intensity = clamp((theta - light.outerCutOff) / epsilon, 0.0, 1.0);
 		ambient  *= attenuation;
-    	diffuse  *= attenuation * intensity;
-    	specular *= attenuation * intensity;
-	    if (mUseShadowMap > 0) {
+		diffuse  *= attenuation * intensity;
+		specular *= attenuation * intensity;
+		if (mUseShadowMap > 0) {
 			diffuse *= shadowing;
 			specular *= shadowing;
-	    }
+		}
 		return (ambient + diffuse + specular);
 	}
 
@@ -882,13 +883,13 @@ const std::string gRenderer::getShaderSrcColorFragment() {
 		}
 		vec4 materialAmbient;
 		vec4 materialDiffuse;
-	    if (material.useDiffuseMap > 0) {
-	        materialAmbient = texture(material.diffusemap, TexCoords).rgba;
+		if (material.useDiffuseMap > 0) {
+			materialAmbient = texture(material.diffusemap, TexCoords).rgba;
 			materialDiffuse = texture(material.diffusemap, TexCoords).rgba;
-	    } else {
-	        materialAmbient = material.ambient;
+		} else {
+			materialAmbient = material.ambient;
 			materialDiffuse = material.diffuse;
-	    }
+		}
 		vec4 materialSpecular;
 		if (material.useSpecularMap > 0) {
 			materialSpecular = texture(material.specularmap, TexCoords).rgba;
@@ -897,9 +898,9 @@ const std::string gRenderer::getShaderSrcColorFragment() {
 			materialSpecular = material.specular;
 		}
 		float shadowing;
-	    if (mUseShadowMap > 0) {
+		if (mUseShadowMap > 0) {
 			shadowing = 1.0 - calculateShadow(FragPosLightSpace);
-	    }
+		}
 		for (int i = 0; i < MAX_LIGHTS; i++) {
 			if (lights[i].type == 0) {
 				result += calcAmbLight(lights[i], materialAmbient);
@@ -917,9 +918,9 @@ const std::string gRenderer::getShaderSrcColorFragment() {
 
 		FragColor = result * renderColor;
 
-	    if (mUseFog > 0) {
+		if (mUseFog > 0) {
 			FragColor = mix(vec4(fogColor, 1.0), FragColor, visibility);
-	    }
+		}
 	}
 )";
 	return std::string(shadersource);
@@ -1084,7 +1085,7 @@ const std::string gRenderer::getShaderSrcSkyboxFragment() {
 			envColor = envColor / (envColor + vec3(1.0));
 			envColor = pow(envColor, vec3(1.0 / 2.2));
 			fc = vec4(envColor, 1.0);
-	//        fc = vec4(0.0, 1.0, 0.0, 1.0);
+//			fc = vec4(0.0, 1.0, 0.0, 1.0);
 		} else {
 			fc = vec4(1.0, 0.0, 0.0, 1.0);
 		}
@@ -1760,18 +1761,17 @@ const std::string gRenderer::getShaderSrcFboVertex() {
 
 const std::string gRenderer::getShaderSrcFboFragment() {
 	const char* shadersource = R"(
-#version 330 core
-out vec4 FragColor;
-
-in vec2 TexCoords;
-
-uniform sampler2D screenTexture;
-
-void main()
-{ 
-    FragColor = vec4(texture(screenTexture, TexCoords).rgb, 1.0);
-}
-
+	#version 330 core
+	out vec4 FragColor;
+	
+	in vec2 TexCoords;
+	
+	uniform sampler2D screenTexture;
+	
+	void main()
+	{ 
+		FragColor = vec4(texture(screenTexture, TexCoords).rgb, 1.0);
+	}
 )";
 
 	return std::string(shadersource);
