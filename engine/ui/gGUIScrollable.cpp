@@ -9,10 +9,10 @@
 
 
 gGUIScrollable::gGUIScrollable() {
-	vsbw = 16;
+	vsbw = 8;
 	vsbh = height;
 	hsbw = width;
-	hsbh = 16;
+	hsbh = 8;
 	vsbx = right - vsbw;
 	vsby = top;
 	hsbx = left;
@@ -20,6 +20,7 @@ gGUIScrollable::gGUIScrollable() {
 	boxw = width;
 	boxh = height;
 	totalh = boxh;
+	scrolldiff = 8;
 	vsbenabled = false;
 	hsbenabled = false;
 	sbenabled = false;
@@ -27,12 +28,14 @@ gGUIScrollable::gGUIScrollable() {
 	hsbactive = true;
 	iscursoronvsb = false;
 	iscursoronhsb = false;
-	sbbgcolor.set(128, 128, 128, 128);
-	sbfgcolor.set(64, 64, 64, 128);
-	sbdragcolor.set(0, 0, 255, 128);
-	vsbalpha = 0.0f;
-	hsbalpha = 0.0f;
-	sbalphaboxlimit = 0.2f;
+	sbbgcolor = middlegroundcolor;
+	sbfgcolor = backgroundcolor;
+//	sbfgcolor = gColor(0.1f, 0.45f, 0.87f);
+	sbdragcolor.set(0, 0, 255, 255);
+	vsbalpha = 1.0f;
+	hsbalpha = 1.0f;
+	sbalphaboxlimit = 1.0f;
+//	sbalphaboxlimit = 0.2f;
 	sbalphasblimit = 1.0f;
 	alphablending = false;
 	vrw = vsbw;
@@ -45,6 +48,7 @@ gGUIScrollable::gGUIScrollable() {
 	hry = hsby;
 	firstx = 0;
 	firsty = 0;
+	vsbmy = -1;
 	boxfbo = new gFbo();
 }
 
@@ -79,31 +83,35 @@ void gGUIScrollable::setDimensions(int width, int height) {
 	hry = hsby;
 
 	boxfbo->allocate(boxw, boxh);
-	testfbo.allocate(100, 200);
 }
 
 void gGUIScrollable::draw() {
 	boxfbo->bind();
+	renderer->clearColor(0, 0, 0, 0);
 	drawContent();
 	drawScrollbars();
 	boxfbo->unbind();
+	renderer->setColor(255, 255, 255);
 	boxfbo->draw(left, top);
 }
 
 void gGUIScrollable::drawContent() {
-
+//	gLogi("Listbox") << "l:" << left << ", t:" << top << ", w:" << boxw << ", h:" << boxh;
+	renderer->setColor(255, 255, 255);
+	gDrawRectangle(left, top, boxw, boxh, true);
 }
 
 void gGUIScrollable::drawScrollbars() {
-	if(sbenabled && iscursoron) {
+	if(sbenabled) {
 		gColor* oldcolor = renderer->getColor();
 		alphablending = renderer->isAlphaBlendingEnabled();
 		if(!alphablending) {
-			renderer->enableAlphaBlending();
-			renderer->enableAlphaTest();
+//			renderer->enableAlphaBlending();
+//			renderer->enableAlphaTest();
 		}
 
 		if(vsbenabled) {
+/*
 			vsbalpha += 0.01f;
 			if(!iscursoronvsb) {
 				if(vsbalpha > sbalphaboxlimit) vsbalpha = sbalphaboxlimit;
@@ -111,16 +119,18 @@ void gGUIScrollable::drawScrollbars() {
 				vsbalpha += 0.04f;
 				if(vsbalpha > sbalphasblimit) vsbalpha = sbalphasblimit;
 			}
-			sbbgcolor.a = vsbalpha;
+*/
+//			sbbgcolor.a = vsbalpha;
 			renderer->setColor(&sbbgcolor);
 			gDrawRectangle(left + boxw - vsbw, top, vsbw, vsbh, true);
 
-			sbfgcolor.a = vsbalpha;
+//			sbfgcolor.a = vsbalpha;
 			renderer->setColor(&sbfgcolor);
 			gDrawRectangle(vrx, vry, vrw, vrh, true);
 		}
 
 		if(hsbenabled) {
+/*
 			hsbalpha += 0.01f;
 			if(!iscursoronhsb) {
 				if(hsbalpha > sbalphaboxlimit) hsbalpha = sbalphaboxlimit;
@@ -128,6 +138,7 @@ void gGUIScrollable::drawScrollbars() {
 				hsbalpha += 0.04f;
 				if(hsbalpha > sbalphasblimit) hsbalpha = sbalphasblimit;
 			}
+*/
 			sbbgcolor.a = hsbalpha;
 			renderer->setColor(&sbbgcolor);
 			gDrawRectangle(left, top + boxh - hsbh, hsbw, hsbh, true);
@@ -138,13 +149,13 @@ void gGUIScrollable::drawScrollbars() {
 		}
 
 		if(!alphablending) {
-			renderer->disableAlphaTest();
-			renderer->disableAlphaBlending();
+//			renderer->disableAlphaTest();
+//			renderer->disableAlphaBlending();
 		}
 		renderer->setColor(oldcolor);
 	} else {
-		vsbalpha = 0.0f;
-		hsbalpha = 0.0f;
+//		vsbalpha = 0.0f;
+//		hsbalpha = 0.0f;
 	}
 }
 
@@ -156,19 +167,38 @@ void gGUIScrollable::mouseMoved(int x, int y) {
 }
 
 void gGUIScrollable::mousePressed(int x, int y, int button) {
-
+	if(vsbenabled && x >= vrx && x < vrx + vrw && y >= vry && y < vry + vrh) {
+		vsbmy = y;
+	}
 }
 
 void gGUIScrollable::mouseDragged(int x, int y, int button) {
+	if(vsbmy > -1) {
+		vry += y - vsbmy;
+		if(vry < top) vry = top;
+		if(vry > top + boxh - vrh) vry = top + boxh - vrh;
 
+		firsty += y - vsbmy;
+		if(firsty < 0) firsty = 0;
+		if(firsty > totalh - boxh) firsty = totalh - boxh;
+
+		vsbmy = y;
+	}
 }
 
 void gGUIScrollable::mouseReleased(int x, int y, int button) {
-
+	vsbmy = -1;
 }
 
 void gGUIScrollable::mouseScrolled(int x, int y) {
+	firsty -= y * scrolldiff;
+	if(firsty < 0) firsty = 0;
+	if(firsty > totalh - boxh) firsty = totalh - boxh;
+	if(vsbenabled) vry = top + firsty * boxh / totalh;
 
+	firstx -= x * scrolldiff;
+	if(firstx < 0) firstx = 0;
+//	gLogi("Scrollable") << "t:" << top << ", y:" << vry << ", h:" << vrh;
 }
 
 
