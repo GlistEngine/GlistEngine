@@ -89,3 +89,7 @@ void gGUIContainer::mouseScrolled(int x, int y) {
 	guisizer->mouseScrolled(x, y);
 }
 
+void gGUIContainer::windowResized(int w, int h) {
+	guisizer->windowResized(w, h);
+}
+
