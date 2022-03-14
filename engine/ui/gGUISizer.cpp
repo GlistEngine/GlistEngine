@@ -549,7 +549,7 @@ void gGUISizer::windowResized(int w, int h) {
 	for(int i = 0; i < linenum; i++) {
 		for(int j = 0; j < columnnum; j++) {
 			for(int j = 0; j < columnnum; j++) {
-				if(iscontrolset[i][j] && guicontrol[i][j]->iscursoron) guicontrol[i][j]->windowResized(w, h);
+				if(iscontrolset[i][j]) guicontrol[i][j]->windowResized(w, h);
 			}
 		}
 	}
