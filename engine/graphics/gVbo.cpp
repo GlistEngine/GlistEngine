@@ -87,19 +87,19 @@ void gVbo::setIndexData(unsigned int* indices, int total) {
     glBindVertexArray(0);
 }
 
-gVertex* gVbo::getVertices() {
+const gVertex* gVbo::getVertices() const {
 	return verticesptr;
 }
 
-unsigned int* gVbo::getIndices() {
+const unsigned int* gVbo::getIndices() const {
 	return indexarrayptr;
 }
 
-void gVbo::bind() {
+void gVbo::bind() const {
 	glBindVertexArray(vao);
 }
 
-void gVbo::unbind() {
+void gVbo::unbind() const {
 	glBindVertexArray(0);
 }
 
@@ -166,11 +166,11 @@ void gVbo::disable() {
 	isenabled = false;
 }
 
-bool gVbo::isVertexDataAllocated() {
+bool gVbo::isVertexDataAllocated() const {
 	return isvertexdataallocated;
 }
 
-bool gVbo::isIndexDataAllocated() {
+bool gVbo::isIndexDataAllocated() const {
 	return isindexdataallocated;
 }
 
@@ -251,14 +251,14 @@ void gVbo::setIndexData(const int* indices, int total, int usage) {
 
 }
 
-int gVbo::getVAOid() {
+int gVbo::getVAOid() const {
 	return vao;
 }
 
-int gVbo::getVerticesNum() {
+int gVbo::getVerticesNum() const {
 	return totalvertexnum;
 }
 
-int gVbo::getIndicesNum() {
+int gVbo::getIndicesNum() const {
 	return totalindexnum;
 }

@@ -36,19 +36,19 @@ void gRect::set(const gRect& r) {
 	height = r.getHeight();
 }
 
-int gRect::centerX() {
+int gRect::centerX() const {
 	return l + (width / 2);
 }
 
-int gRect::centerY() {
+int gRect::centerY() const {
 	return t + (height / 2);
 }
 
-float gRect::exactCenterX() {
+float gRect::exactCenterX() const {
 	return l + (width / 2);
 }
 
-float gRect::exactCenterY() {
+float gRect::exactCenterY() const {
 	return t + (height / 2);
 }
 
@@ -56,19 +56,19 @@ bool gRect::intersects(int left1, int top1, int right1, int bottom1, int left2, 
 
 bool gRect::intersects(const gRect& r1, const gRect& r2) { return intersects(r1.left(), r1.top(), r1.right(), r1.bottom(), r2.left(), r2.top(), r2.right(), r2.bottom()); }
 
-bool gRect::intersects(int left, int top, int right, int bottom) { return intersects(l, t, r, b, left, top, right, bottom); }
+bool gRect::intersects(int left, int top, int right, int bottom) const { return intersects(l, t, r, b, left, top, right, bottom); }
 
-bool gRect::intersects(const gRect& r) { return intersects(l, t, this->r, b, r.left(), r.top(), r.right(), r.bottom()); }
+bool gRect::intersects(const gRect& r) const { return intersects(l, t, this->r, b, r.left(), r.top(), r.right(), r.bottom()); }
 
 bool gRect::contains(int left1, int top1, int right1, int bottom1, int left2, int top2, int right2, int bottom2) { return left1 <= left2 && right1 >= right2 && top1 <= top2 && bottom1 >= bottom2; }
 
 bool gRect::contains(const gRect& r1, const gRect& r2) { return contains(r1.left(), r1.top(), r1.right(), r1.bottom(), r2.left(), r2.top(), r2.right(), r2.bottom()); }
 
-bool gRect::contains(int left, int top, int right, int bottom) { return contains(l, t, r, b, left, top, right, bottom); }
+bool gRect::contains(int left, int top, int right, int bottom) const { return contains(l, t, r, b, left, top, right, bottom); }
 
-bool gRect::contains(const gRect& r) { return contains(l, t, this->r, b, r.left(), r.top(), r.right(), r.bottom()); }
+bool gRect::contains(const gRect& r) const { return contains(l, t, this->r, b, r.left(), r.top(), r.right(), r.bottom()); }
 
-bool gRect::contains(int x, int y) { return contains(l, t, r, b, x, y, x, y); }
+bool gRect::contains(int x, int y) const { return contains(l, t, r, b, x, y, x, y); }
 
 int gRect::left() const { return l; }
 

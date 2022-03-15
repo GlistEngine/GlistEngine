@@ -38,7 +38,7 @@ void gLight::disable() {
 	isenabled = false;
 }
 
-bool gLight::isEnabled() {
+bool gLight::isEnabled() const {
 	return isenabled;
 }
 
@@ -46,7 +46,7 @@ void gLight::setType(int lightType) {
 	type = lightType;
 }
 
-int gLight::getType() {
+int gLight::getType() const{
 	return type;
 }
 
@@ -55,7 +55,7 @@ void gLight::rotate(float angle, float ax, float ay, float az) {
 	directioneuler = glm::vec3(0, 0, -1) * orientation;
 }
 
-glm::vec3 gLight::getDirection() {
+const glm::vec3& gLight::getDirection() const{
 //	glm::vec3 euler = glm::vec3(0, 0, -1) * orientation;
 //	logi("Euler x:" + str(euler.x), ", y: " + str(euler.y) + ", z:" + str(euler.z));
 	return directioneuler;
@@ -69,39 +69,39 @@ void gLight::setAmbientColor(gColor* color) {
 	ambientcolor.set(color->r, color->g, color->b, color->a);
 }
 
-gColor* gLight::getAmbientColor() {
-	return &ambientcolor;
+const gColor& gLight::getAmbientColor() const {
+	return ambientcolor;
 }
 
-float gLight::getAmbientColorRed() {
+float gLight::getAmbientColorRed() const {
 	return ambientcolor.r;
 }
 
-float gLight::getAmbientColorGreen() {
+float gLight::getAmbientColorGreen() const {
 	return ambientcolor.g;
 }
 
-float gLight::getAmbientColorBlue() {
+float gLight::getAmbientColorBlue() const {
 	return ambientcolor.b;
 }
 
-float gLight::getAmbientColorAlpha() {
+float gLight::getAmbientColorAlpha() const {
 	return ambientcolor.a;
 }
 
-float gLight::getDiffuseColorRed() {
+float gLight::getDiffuseColorRed() const {
 	return diffusecolor.r;
 }
 
-float gLight::getDiffuseColorGreen() {
+float gLight::getDiffuseColorGreen() const {
 	return diffusecolor.g;
 }
 
-float gLight::getDiffuseColorBlue() {
+float gLight::getDiffuseColorBlue() const {
 	return diffusecolor.b;
 }
 
-float gLight::getDiffuseColorAlpha() {
+float gLight::getDiffuseColorAlpha() const {
 	return diffusecolor.a;
 }
 
@@ -114,8 +114,8 @@ void gLight::setDiffuseColor(gColor* color) {
 	diffusecolor.set(color->r, color->g, color->b, color->a);
 }
 
-gColor* gLight::getDiffuseColor() {
-	return &diffusecolor;
+const gColor& gLight::getDiffuseColor() const {
+	return diffusecolor;
 }
 
 void gLight::setSpecularColor(int r, int g, int b, int a) {
@@ -126,23 +126,23 @@ void gLight::setSpecularColor(gColor* color) {
 	specularcolor.set(color->r, color->g, color->b, color->a);
 }
 
-gColor* gLight::getSpecularColor() {
-	return &specularcolor;
+const gColor& gLight::getSpecularColor() const {
+	return specularcolor;
 }
 
-float gLight::getSpecularColorRed() {
+float gLight::getSpecularColorRed() const {
 	return specularcolor.r;
 }
 
-float gLight::getSpecularColorGreen() {
+float gLight::getSpecularColorGreen() const {
 	return specularcolor.g;
 }
 
-float gLight::getSpecularColorBlue() {
+float gLight::getSpecularColorBlue() const {
 	return specularcolor.b;
 }
 
-float gLight::getSpecularColorAlpha() {
+float gLight::getSpecularColorAlpha() const {
 	return specularcolor.a;
 }
 
@@ -156,19 +156,19 @@ void gLight::setAttenuation(glm::vec3 attenuation) {
 	this->attenuation = attenuation;
 }
 
-glm::vec3 gLight::getAttenuation() {
+const glm::vec3& gLight::getAttenuation() const {
 	return attenuation;
 }
 
-float gLight::getAttenuationConstant() {
+float gLight::getAttenuationConstant() const {
 	return attenuation.x;
 }
 
-float gLight::getAttenuationLinear() {
+float gLight::getAttenuationLinear() const {
 	return attenuation.y;
 }
 
-float gLight::getAttenuationQuadratic() {
+float gLight::getAttenuationQuadratic() const {
 	return attenuation.z;
 }
 
@@ -176,7 +176,7 @@ void gLight::setSpotCutOff(glm::vec2 spotCutOff) {
 	spotcutoff = spotCutOff;
 }
 
-glm::vec2 gLight::getSpotCutOff() {
+const glm::vec2& gLight::getSpotCutOff() const {
 	return spotcutoff;
 }
 
@@ -184,11 +184,11 @@ void gLight::setSpotCutOffAngle(float cutOffAngle) {
 	spotcutoff.x = cutOffAngle;
 }
 
-float gLight::getSpotCutOffAngle() {
+float gLight::getSpotCutOffAngle() const {
 	return spotcutoff.x;
 }
 
-float gLight::getSpotOuterCutOffAngle() {
+float gLight::getSpotOuterCutOffAngle() const {
 	return spotcutoff.x + spotcutoff.y;
 }
 
@@ -196,7 +196,7 @@ void gLight::setSpotCutOffSpread(float cutOffSpreadAngle) {
 	spotcutoff.y = cutOffSpreadAngle;
 }
 
-float gLight::getSpotCutOffSpread() {
+float gLight::getSpotCutOffSpread() const {
 	return spotcutoff.y;
 }
 

@@ -17,7 +17,7 @@ gFmodSound::gFmodSound() {
 gFmodSound::~gFmodSound() {
 }
 
-int gFmodSound::load(std::string fullPath) {
+int gFmodSound::load(const std::string& fullPath) {
 //    Common_Init(&extradriverdata);
 
     /*
@@ -52,7 +52,7 @@ int gFmodSound::load(std::string fullPath) {
     return 1;
 }
 
-int gFmodSound::loadSound(std::string soundPath) {
+int gFmodSound::loadSound(const std::string& soundPath) {
 	return load(gGetSoundsDir() + soundPath);
 }
 
@@ -86,7 +86,7 @@ bool gFmodSound::isPlaying() {
 	return isplaying;
 }
 
-int gFmodSound::getDuration() {
+int gFmodSound::getDuration() const {
 	return duration;
 }
 

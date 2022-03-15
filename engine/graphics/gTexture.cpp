@@ -107,7 +107,7 @@ gTexture::~gTexture() {
 	if (ismutable && !isfont) stbi_image_free(data);
 }
 
-unsigned int gTexture::load(std::string fullPath) {
+unsigned int gTexture::load(const std::string& fullPath) {
 	fullpath = fullPath;
 	directory = getDirName(fullpath);
 	path = getFileName(fullpath);
@@ -129,7 +129,7 @@ unsigned int gTexture::load(std::string fullPath) {
     return id;
 }
 
-unsigned int gTexture::loadTexture(std::string texturePath) {
+unsigned int gTexture::loadTexture(const std::string& texturePath) {
 	return load(gGetTexturesDir() + texturePath);
 }
 
@@ -215,32 +215,32 @@ bool gTexture::isMutable() {
 	return ismutable;
 }
 
-void gTexture::bind() {
+void gTexture::bind() const {
 	glBindTexture(GL_TEXTURE_2D, id);
 }
 
-void gTexture::bind(int textureSlotNo) {
+void gTexture::bind(int textureSlotNo) const {
 	glActiveTexture(GL_TEXTURE0 + textureSlotNo);
 	glBindTexture(GL_TEXTURE_2D, id);
 }
 
-void gTexture::unbind() {
+void gTexture::unbind() const {
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-unsigned int gTexture::getId() {
+unsigned int gTexture::getId() const {
 	return id;
 }
 
-bool gTexture::isHDR() {
+bool gTexture::isHDR() const {
 	return ishdr;
 }
 
-unsigned int gTexture::getInternalFormat() {
+unsigned int gTexture::getInternalFormat() const {
 	return internalformat;
 }
 
-unsigned int gTexture::getFormat() {
+unsigned int gTexture::getFormat() const {
 	return format;
 }
 
@@ -248,7 +248,7 @@ void gTexture::setType(int textureType) {
 	type = textureType;
 }
 
-int gTexture::getType() {
+int gTexture::getType() const {
 	return type;
 }
 
@@ -270,52 +270,52 @@ void gTexture::setFiltering(int minFilter, int magFilter) {
 	unbind();
 }
 
-int gTexture::getWrapS() {
+int gTexture::getWrapS() const {
 	return wraps;
 }
 
-int gTexture::getWrapT() {
+int gTexture::getWrapT() const {
 	return wrapt;
 }
 
-int gTexture::getFilterMin() {
+int gTexture::getFilterMin() const {
 	return filtermin;
 }
 
-int gTexture::getFilterMag() {
+int gTexture::getFilterMag() const {
 	return filtermag;
 }
 
 
-std::string gTexture::getTypeName() {
+const std::string& gTexture::getTypeName() const {
 	return texturetype[type];
 }
 
-std::string gTexture::getTypeName(int textureType) {
+const std::string& gTexture::getTypeName(int textureType) const {
 	return texturetype[textureType];
 }
 
-std::string gTexture::getFilename() {
+const std::string& gTexture::getFilename() const {
 	return path;
 }
 
-std::string gTexture::getDir() {
+const std::string& gTexture::getDir() const {
 	return directory;
 }
 
-std::string gTexture::getFullPath() {
+const std::string& gTexture::getFullPath() const {
 	return fullpath;
 }
 
-int gTexture::getWidth() {
+int gTexture::getWidth() const {
 	return width;
 }
 
-int gTexture::getHeight() {
+int gTexture::getHeight() const {
 	return height;
 }
 
-int gTexture::getComponentNum() {
+int gTexture::getComponentNum() const {
 	return componentnum;
 }
 

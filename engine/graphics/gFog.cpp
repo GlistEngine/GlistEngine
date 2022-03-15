@@ -11,9 +11,6 @@ gFog::gFog() {
 	
 }
 
-gFog::~gFog() {
-}
-
 void gFog::enable() {
    renderer->enableFog();
 }
@@ -34,15 +31,15 @@ void gFog::setGradient(float g) {
 	renderer->foggradient = g;
 }
 
-gColor gFog::getColor() {
-    return renderer->fogcolor;
+gColor gFog::getColor() const {
+    return *renderer->fogcolor;
 }
 
-float gFog::getDensity() {
+float gFog::getDensity() const {
     return renderer->fogdensity;
 }
 
-float gFog::getGradient() {
+float gFog::getGradient() const {
     return renderer->foggradient;
 }
 

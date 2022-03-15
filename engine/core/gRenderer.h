@@ -150,10 +150,10 @@ public:
 	void setProjectionMatrix2d(glm::mat4 projectionMatrix2d);
 	void setViewMatrix(glm::mat4 viewMatrix);
 	void setCameraPosition(glm::vec3 cameraPosition);
-	glm::mat4 getProjectionMatrix();
-	glm::mat4 getProjectionMatrix2d();
-	glm::mat4 getViewMatrix();
-	glm::vec3 getCameraPosition();
+	const glm::mat4& getProjectionMatrix() const;
+	const glm::mat4& getProjectionMatrix2d() const;
+	const glm::mat4& getViewMatrix() const;
+	const glm::vec3& getCameraPosition() const;
 	void backupMatrices();
 	void restoreMatrices();
 

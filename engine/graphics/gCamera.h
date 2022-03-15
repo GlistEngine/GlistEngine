@@ -56,8 +56,8 @@ public:
 	void lookAt(const glm::vec3& point);
 	void rotateLook(float angle, float ax, float ay, float az);
 	void resetLook();
-	glm::mat4 getLookMatrix();
-	glm::quat getLookOrientation();
+	const glm::mat4& getLookMatrix() const;
+	const glm::quat& getLookOrientation() const;
 
 	void drawGizmos();
 

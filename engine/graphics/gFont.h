@@ -56,7 +56,7 @@ public:
 	 *
 	 * @return boolean indicating if font is loaded
 	 */
-	bool load(std::string fullPath, int size, bool isAntialiased = true, int dpi = 96);
+	bool load(const std::string& fullPath, int size, bool isAntialiased = true, int dpi = 96);
 
 	/**
 	 * Loads a font from the given fontPath
@@ -76,7 +76,7 @@ public:
 	 *
 	 * @return boolean indicating if font is loaded
 	 */
-	bool loadFont(std::string fontPath, int size, bool isAntialiased = true, int dpi = 96);
+	bool loadFont(const std::string& fontPath, int size, bool isAntialiased = true, int dpi = 96);
 
 	/**
 	 * Draws the text to the given screen coordinates
@@ -85,7 +85,7 @@ public:
 	 * @param float x - x coordinate of the region you want to draw
 ,	 * @param float y - y coordinate of the region you want to draw
 	 */
-	void drawText(std::string text, float x, float y);
+	void drawText(const std::string& text, float x, float y);
 
 	/**
 	 * Calculates text's width
@@ -96,7 +96,7 @@ public:
 	 *
 	 * @return The width of the given text
 	 */
-	float getStringWidth(std::string text);
+	float getStringWidth(const std::string& text);
 
 
 	/**
@@ -108,14 +108,14 @@ public:
 	 *
 	 * @return The height of the given text
 	 */
-	float getStringHeight(std::string text);
+	float getStringHeight(const std::string& text);
 
 	/**
 	 * Returns the path of the loaded font.
 	 *
 	 * @return The path of the font
 	 */
-	std::string getPath();
+	const std::string& getPath() const;
 
 	/**
 	 * Returns the font's size

@@ -34,7 +34,6 @@ public:
 	static const int LOGLEVEL_SILENT, LOGLEVEL_DEBUG, LOGLEVEL_INFO, LOGLEVEL_WARNING, LOGLEVEL_ERROR;
 
 	gObject();
-	virtual ~gObject();
 
 	/**
 	 * Gives the path to the project folder.

@@ -17,7 +17,6 @@
 class gFog : public gRenderObject{
 public:
 	gFog();
-	virtual ~gFog();
 
 	/* Activates the fog.This function creates a fog by giving objects a visibility index and
 	 * multiplying this visibility index by the fog color thanks to these two formula
@@ -47,13 +46,13 @@ public:
 	void setGradient(float g);
 
 	//Returns fogColor.
-	gColor getColor();
+	const gColor& getColor() const;
 
 	//Returns density value.
-	float getDensity();
+	float getDensity() const;
 
 	//Returns fog value.
-	float getGradient();
+	float getGradient() const;
 
 private:
 

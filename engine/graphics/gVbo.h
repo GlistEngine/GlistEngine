@@ -33,17 +33,17 @@ public:
 	void setVertexData(gVertex* vertices, int coordNum, int total);
 	void setIndexData(unsigned int* indices, int total);
 
-	void bind();
-	void unbind();
+	void bind() const;
+	void unbind() const;
 
 	void draw();
 	void draw(int drawMode);
 
 	void enable();
 	void disable();
-	bool isEnabled();
-	bool isVertexDataAllocated();
-	bool isIndexDataAllocated();
+	bool isEnabled() const;
+	bool isVertexDataAllocated() const;
+	bool isIndexDataAllocated() const;
 
 //	void setMesh(const gMesh* mesh, int usage);
 	void setVertexData(const glm::vec3* vertices, int total, int usage = GL_STATIC_DRAW);
@@ -57,11 +57,11 @@ public:
 	void setNormalData(const float* normal0x, int total, int usage, int stride = 0);
 	void setIndexData(const int* indices, int total, int usage);
 
-	int getVAOid();
-	gVertex* getVertices();
-	unsigned int* getIndices();
-	int getVerticesNum();
-	int getIndicesNum();
+	int getVAOid() const;
+	const gVertex* getVertices() const;
+	const unsigned int* getIndices() const;
+	int getVerticesNum() const;
+	int getIndicesNum() const;
 
 
 private:
