@@ -27,13 +27,13 @@ gVbo::gVbo() {
 }
 
 gVbo::~gVbo() {
+    glDeleteVertexArrays(1, &vao);
+    glDeleteBuffers(1, &vbo);
 }
 
 void gVbo::setVertexData(gVertex* vertices, int coordNum, int total) {
     glBindVertexArray(vao);
 	if (!isvertexdataallocated) glGenBuffers(1, &vbo);
-	int vno = 0;
-//	logi("vx:" + str(vertices[vno].position.x) + ", vy:" + str(vertices[vno].position.y) + ", vz:" + str(vertices[vno].position.z));
 	verticesptr = &vertices[0];
 	vertexarrayptr = &vertices[0].position.x;
 	vertexdatacoordnum = coordNum;

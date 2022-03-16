@@ -64,8 +64,8 @@ const std::string& gMesh::getName() const {
 void gMesh::setVertices(std::vector<gVertex> vertices, std::vector<unsigned int> indices) {
 	this->vertices = vertices;
 	this->indices = indices;
-	vbo.setVertexData(&vertices[0], sizeof(gVertex), vertices.size());
-	if (indices.size() != 0) vbo.setIndexData(&indices[0], indices.size());
+	vbo.setVertexData(vertices.data(), sizeof(gVertex), vertices.size());
+	if (indices.size() != 0) vbo.setIndexData(indices.data(), indices.size());
     initialboundingbox = getBoundingBox();
 //	initialboundingbox.setTransformationMatrix(localtransformationmatrix);
 }

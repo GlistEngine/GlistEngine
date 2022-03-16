@@ -153,7 +153,7 @@ set(SRC_FILES
 	${ENGINE_DIR}/ui/gGUIToolbar.cpp
 	${ENGINE_DIR}/ui/gGUIMenubar.cpp
 	${ENGINE_DIR}/ui/gGUIPanel.cpp
-	${ENGINE_DIR}/ui/gGUIScrollable
+	${ENGINE_DIR}/ui/gGUIScrollable.cpp
 	${ENGINE_DIR}/ui/gGUIFrame.cpp
 	${ENGINE_DIR}/ui/gGUIControl.cpp
 	${ENGINE_DIR}/ui/gGUIContainer.cpp
