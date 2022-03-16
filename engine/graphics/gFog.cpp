@@ -1,7 +1,7 @@
 /*
  * gFog.cpp
  *
- *  Created on: 15 Aðu 2021
+ *  Created on: 15 Aï¿½u 2021
  *      Author: furka
  */
 
@@ -31,7 +31,7 @@ void gFog::setGradient(float g) {
 	renderer->foggradient = g;
 }
 
-gColor gFog::getColor() const {
+const gColor& gFog::getColor() const {
     return *renderer->fogcolor;
 }
 

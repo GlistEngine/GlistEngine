@@ -49,7 +49,7 @@ const glm::vec3& gRay::getOrigin() {
 	return origin;
 }
 
-const glm::vec3& gRay::getDirection(){
+const glm::vec3 gRay::getDirection(){
 	if(islinked) {
 		if(isnormalized) return normalize(direction) * scale;
 		return direction * scale;
