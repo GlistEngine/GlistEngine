@@ -521,9 +521,7 @@ void gGUISizer::mouseReleased(int x, int y, int button) {
 void gGUISizer::mouseScrolled(int x, int y) {
 	for(int i = 0; i < linenum; i++) {
 		for(int j = 0; j < columnnum; j++) {
-			for(int j = 0; j < columnnum; j++) {
-				if(iscontrolset[i][j] && guicontrol[i][j]->iscursoron) guicontrol[i][j]->mouseScrolled(x, y);
-			}
+			if(iscontrolset[i][j] && guicontrol[i][j]->iscursoron) guicontrol[i][j]->mouseScrolled(x, y);
 		}
 	}
 }
@@ -535,11 +533,9 @@ void gGUISizer::mouseEntered() {
 void gGUISizer::mouseExited() {
 	for(int i = 0; i < linenum; i++) {
 		for(int j = 0; j < columnnum; j++) {
-			for(int j = 0; j < columnnum; j++) {
-				if(iscontrolset[i][j] && guicontrol[i][j]->iscursoron) {
-					guicontrol[i][j]->iscursoron = false;
-					guicontrol[i][j]->mouseExited();
-				}
+			if(iscontrolset[i][j] && guicontrol[i][j]->iscursoron) {
+				guicontrol[i][j]->iscursoron = false;
+				guicontrol[i][j]->mouseExited();
 			}
 		}
 	}
@@ -548,9 +544,7 @@ void gGUISizer::mouseExited() {
 void gGUISizer::windowResized(int w, int h) {
 	for(int i = 0; i < linenum; i++) {
 		for(int j = 0; j < columnnum; j++) {
-			for(int j = 0; j < columnnum; j++) {
-				if(iscontrolset[i][j] && guicontrol[i][j]->iscursoron) guicontrol[i][j]->windowResized(w, h);
-			}
+			if(iscontrolset[i][j]) guicontrol[i][j]->windowResized(w, h);
 		}
 	}
 }

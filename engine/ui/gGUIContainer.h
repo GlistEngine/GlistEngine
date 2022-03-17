@@ -31,6 +31,7 @@ public:
 	virtual void mouseDragged(int x, int y, int button);
 	virtual void mouseReleased(int x, int y, int button);
 	virtual void mouseScrolled(int x, int y);
+	virtual void windowResized(int w, int h);
 
 	void update();
 	void draw();
