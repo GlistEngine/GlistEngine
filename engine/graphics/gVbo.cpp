@@ -27,8 +27,8 @@ gVbo::gVbo() {
 }
 
 gVbo::~gVbo() {
-    glDeleteVertexArrays(1, &vao);
-    glDeleteBuffers(1, &vbo);
+    //glDeleteVertexArrays(1, &vao);
+    //glDeleteBuffers(1, &vbo);
 }
 
 void gVbo::setVertexData(gVertex* vertices, int coordNum, int total) {
