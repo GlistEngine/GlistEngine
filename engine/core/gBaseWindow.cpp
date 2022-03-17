@@ -118,11 +118,15 @@ int gBaseWindow::getHeight() {
 	return height;
 }
 
-void gBaseWindow::setTitle(std::string windowTitle) {
+void gBaseWindow::setTitle(const std::string& windowTitle) {
 	title = windowTitle;
 }
 
-std::string gBaseWindow::getTitle() {
+void gBaseWindow::setTitle(std::string&& windowTitle) {
+	title = std::move(windowTitle);
+}
+
+const std::string& gBaseWindow::getTitle() const {
 	return title;
 }
 

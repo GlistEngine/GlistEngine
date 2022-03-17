@@ -39,9 +39,6 @@ gObject::gObject() {
 //	std::replace(0, 1, "", "");
 }
 
-gObject::~gObject() {
-}
-
 std::string gObject::gGetAppDir() {
 	return exepath;
 }

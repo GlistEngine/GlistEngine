@@ -295,19 +295,19 @@ void gRenderer::setCameraPosition(glm::vec3 cameraPosition) {
 	cameraposition = cameraPosition;
 }
 
-glm::mat4 gRenderer::getProjectionMatrix() {
+const glm::mat4& gRenderer::getProjectionMatrix() const {
 	return projectionmatrix;
 }
 
-glm::mat4 gRenderer::getProjectionMatrix2d() {
+const glm::mat4& gRenderer::getProjectionMatrix2d() const {
 	return projectionmatrix2d;
 }
 
-glm::mat4 gRenderer::getViewMatrix() {
+const glm::mat4& gRenderer::getViewMatrix() const {
 	return viewmatrix;
 }
 
-glm::vec3 gRenderer::getCameraPosition() {
+const glm::vec3& gRenderer::getCameraPosition() const {
 	return cameraposition;
 }
 

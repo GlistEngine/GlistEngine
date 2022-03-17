@@ -36,27 +36,27 @@ public:
 	void setTextures(std::vector<gTexture>& textures);
 	void setTexture(gTexture* texture);
 	void addTexture(gTexture tex);
-	gTexture* getTexture(int textureNo);
+	const gTexture& getTexture(int textureNo) const;
 
-	std::vector<gVertex> getVertices();
-	std::vector<unsigned int> getIndices();
-	int getVerticesNum();
-	int getIndicesNum();
+	const std::vector<gVertex>& getVertices() const;
+	const std::vector<unsigned int>& getIndices() const;
+	int getVerticesNum() const;
+	int getIndicesNum() const;
 	gBoundingBox getBoundingBox();
-	gVbo* getVbo();
+	const gVbo& getVbo() const;
 
 	void setName(std::string name);
-	std::string getName();
+	const std::string& getName() const;
 
 	void setDrawMode(int drawMode);
-	int getDrawMode();
+	int getDrawMode() const;
 
 	void setMaterial(gMaterial* material);
-	gMaterial* getMaterial();
+	gMaterial& getMaterial();
 
 	void draw();
 
-    gBoundingBox getInitialBoundingBox();
+    const gBoundingBox& getInitialBoundingBox() const;
     bool intersectsTriangles(gRay* ray);
     float distanceTriangles(gRay* ray);
 

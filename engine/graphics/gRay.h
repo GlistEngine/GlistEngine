@@ -36,9 +36,9 @@ public:
 
 	void setOrigin(const glm::vec3& originPoint);
 	void setDirection(const glm::vec3& directionVector);
-	glm::vec3 getOrigin();
-	glm::vec3 getDirection();
-	float getLength();
+	const glm::vec3& getOrigin();
+	const glm::vec3 getDirection();
+	float getLength() const;
 
 	bool intersects(gBoundingBox& boundingBox);
 	float distance(gBoundingBox& boundingBox);

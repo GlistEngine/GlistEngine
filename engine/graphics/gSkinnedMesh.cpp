@@ -70,11 +70,11 @@ void gSkinnedMesh::setVertexNorm(int vertexNo, glm::vec3 newWeight) {
 	animatedNorm[vertexNo] = newWeight;
 }
 
-glm::vec3 gSkinnedMesh::getVertexPos(int vertexNo) {
+const glm::vec3& gSkinnedMesh::getVertexPos(int vertexNo) const {
 	return animatedPos[vertexNo];
 }
 
-glm::vec3 gSkinnedMesh::getVertexNorm(int vertexNo) {
+const glm::vec3& gSkinnedMesh::getVertexNorm(int vertexNo) const {
 	return animatedNorm[vertexNo];
 }
 
@@ -104,11 +104,11 @@ void gSkinnedMesh::setVertexNormData(int animationNo, int frameNo, int vertexNo,
 	animatedNormData[animationNo][frameNo][vertexNo] = newWeight;
 }
 
-glm::vec3 gSkinnedMesh::getVertexPosData(int animationNo, int frameNo, int vertexNo) {
+const glm::vec3& gSkinnedMesh::getVertexPosData(int animationNo, int frameNo, int vertexNo) const {
 	return animatedPosData[animationNo][frameNo][vertexNo];
 }
 
-glm::vec3 gSkinnedMesh::getVertexNormData(int animationNo, int frameNo, int vertexNo) {
+const glm::vec3& gSkinnedMesh::getVertexNormData(int animationNo, int frameNo, int vertexNo) const {
 	return animatedNormData[animationNo][frameNo][vertexNo];
 }
 
@@ -132,7 +132,7 @@ void gSkinnedMesh::setFrameNo(int frameNo) {
 	frameno = frameNo;
 }
 
-int gSkinnedMesh::getFrameNo() {
+int gSkinnedMesh::getFrameNo() const {
 	return frameno;
 }
 

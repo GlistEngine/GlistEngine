@@ -9,7 +9,7 @@
 
 int gNode::lastid = -1;
 
-int gNode::getId() {
+int gNode::getId() const {
 	return id;
 }
 
@@ -34,14 +34,14 @@ void gNode::setParent(gNode* parent) {
 	this->parent = parent;
 }
 
-gNode* gNode::getParent() {
+gNode* gNode::getParent() const {
 	return parent;
 }
 
 void gNode::removeParent() {
 	if (this->parent) {
 		this->parent = nullptr;
-		delete this->parent;
+//		delete this->parent;
 	}
 }
 
@@ -50,7 +50,7 @@ void gNode::move(float dx, float dy, float dz) {
 	processTransformationMatrix();
 }
 
-void gNode::move(const glm::vec3 dv) {
+void gNode::move(const glm::vec3& dv) {
 	position += dv;
 	processTransformationMatrix();
 }
@@ -60,7 +60,7 @@ void gNode::setPosition(float px, float py, float pz) {
 	processTransformationMatrix();
 }
 
-void gNode::setPosition(const glm::vec3 pv) {
+void gNode::setPosition(const glm::vec3& pv) {
 	position = pv;
 	processTransformationMatrix();
 }
@@ -80,19 +80,19 @@ void gNode::boom(float distance) {
 	processTransformationMatrix();
 }
 
-float gNode::getPosX() {
+float gNode::getPosX() const {
 	return position.x;
 }
 
-float gNode::getPosY() {
+float gNode::getPosY() const {
 	return position.y;
 }
 
-float gNode::getPosZ() {
+float gNode::getPosZ() const {
 	return position.z;
 }
 
-glm::vec3 gNode::getPosition() {
+const glm::vec3& gNode::getPosition() const {
 	return position;
 }
 
@@ -126,7 +126,7 @@ void gNode::setOrientation(const glm::vec3& angles) {
 	processTransformationMatrix();
 }
 
-glm::quat gNode::getOrientation() {
+const glm::quat& gNode::getOrientation() const {
 	return orientation;
 }
 
@@ -190,30 +190,30 @@ void gNode::setScale(float s) {
 	processTransformationMatrix();
 }
 
-glm::vec3 gNode::getScale() {
+const glm::vec3& gNode::getScale() const{
 	return scalevec;
 }
 
-glm::vec3 gNode::getScalarDirectionX() {
+glm::vec3 gNode::getScalarDirectionX() const {
 	return glm::vec3(localtransformationmatrix[0]);
 }
 
-glm::vec3 gNode::getScalarDirectionY() {
+glm::vec3 gNode::getScalarDirectionY() const {
 	return glm::vec3(localtransformationmatrix[1]);
 }
 
-glm::vec3 gNode::getScalarDirectionZ() {
+glm::vec3 gNode::getScalarDirectionZ() const {
 	return glm::vec3(localtransformationmatrix[2]);
 }
 
 
-void gNode::pushMatrix() {
+void gNode::pushMatrix() const {
 #if defined(WIN32) || defined(LINUX)
 	glPushMatrix();
 #endif
 }
 
-void gNode::popMatrix() {
+void gNode::popMatrix() const {
 #if defined(WIN32) || defined(LINUX)
 	glPushMatrix();
 #endif
@@ -229,14 +229,14 @@ void gNode::setEnabled(bool isEnabled) {
 	isenabled = isEnabled;
 }
 
-bool gNode::isEnabled() {
+bool gNode::isEnabled() const {
 	return isenabled;
 }
 
-void gNode::setTransformationMatrix(glm::mat4 transformationMatrix) {
+void gNode::setTransformationMatrix(const glm::mat4& transformationMatrix) {
 	localtransformationmatrix = transformationMatrix;
 }
 
-glm::mat4 gNode::getTransformationMatrix() {
+const glm::mat4& gNode::getTransformationMatrix() const {
 	return localtransformationmatrix;
 }

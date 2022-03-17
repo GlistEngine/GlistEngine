@@ -21,7 +21,7 @@ gFont::gFont() {
 gFont::~gFont() {
 }
 
-bool gFont::load(std::string fullPath, int size, bool isAntialiased, int dpi) {
+bool gFont::load(const std::string& fullPath, int size, bool isAntialiased, int dpi) {
 	fullpath = fullPath;
 	isantialiased = isAntialiased;
 	fontsize = size;
@@ -56,11 +56,11 @@ bool gFont::load(std::string fullPath, int size, bool isAntialiased, int dpi) {
 	return true;
 }
 
-bool gFont::loadFont(std::string fontPath, int size, bool isAntialiased, int dpi) {
+bool gFont::loadFont(const std::string& fontPath, int size, bool isAntialiased, int dpi) {
 	return load(gGetFontsDir() + fontPath, size, isAntialiased, dpi);
 }
 
-void gFont::drawText(std::string text, float x, float y) {
+void gFont::drawText(const std::string& text, float x, float y) {
 	  index1 = 0;
 	  posx1 = x;
 	  posy1 = y;
@@ -89,7 +89,7 @@ void gFont::drawText(std::string text, float x, float y) {
 	  }
 }
 
-float gFont::getStringWidth(std::string text) {
+float gFont::getStringWidth(const std::string& text) {
 	  index2 = 0;
 	  posx2 = 0;
 
@@ -115,7 +115,7 @@ float gFont::getStringWidth(std::string text) {
 	  return posx2;
 }
 
-float gFont::getStringHeight(std::string text) {
+float gFont::getStringHeight(const std::string& text) {
 	  index3 = 0;
 	  posy3 = 0;
 
@@ -142,7 +142,7 @@ float gFont::getStringHeight(std::string text) {
 	  return posy3;
 }
 
-std::string gFont::getPath() {
+const std::string& gFont::getPath() const {
 	return fullpath;
 }
 

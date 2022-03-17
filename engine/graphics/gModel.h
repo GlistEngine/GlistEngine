@@ -36,21 +36,21 @@ public:
 	gModel();
 	virtual ~gModel();
 
-	void loadModel(std::string modelPath);
-	void load(std::string fullPath);
+	void loadModel(const std::string& modelPath);
+	void load(const std::string& fullPath);
 	void draw();
 
-	std::string getFilename();
-	std::string getFullpath();
-	int getMeshNum();
-	int getMeshNo(std::string meshName);
-	gSkinnedMesh getMesh(int meshNo);
+	const std::string& getFilename() const;
+	const std::string getFullpath() const;
+	int getMeshNum() const;
+	int getMeshNo(const std::string& meshName) const;
+	gSkinnedMesh& getMesh(int meshNo);
 	gSkinnedMesh* getMeshPtr(int meshNo);
-	std::string getMeshName(int meshNo);
+	const std::string getMeshName(int meshNo) const;
 	gBoundingBox getBoundingBox();
 
 	void move(float dx, float dy, float dz);
-	void move(const glm::vec3 dv);
+	void move(const glm::vec3& dv);
 	void rotate(float radians, float ax, float ay, float az); //first change
 	void rotateDeg(float degrees, float ax, float ay, float az);
 	void rotate(const glm::quat& q);
@@ -74,30 +74,30 @@ public:
 	void setScale(float sx, float sy, float sz);
 	void setScale(float s);
 
-	void setTransformationMatrix(glm::mat4 transformationMatrix);
+	void setTransformationMatrix(const glm::mat4& transformationMatrix);
 
-	bool isAnimated();
-	int getAnimationNum();
-	float getAnimationDuration(int animationNo = 0);
+	bool isAnimated() const;
+	int getAnimationNum() const;
+	float getAnimationDuration(int animationNo = 0) const;
 	void animate(float animationPosition);
-	float getAnimationPosition();
+	float getAnimationPosition() const;
 	void setAnimationFrameNo(int frameNo);
 	void nextAnimationFrame();
-	int getAnimationFrameNo();
+	int getAnimationFrameNo() const;
 	void setAnimationFrameNum(int animationKeyNum);
-	int getAnimationFrameNum();
+	int getAnimationFrameNum() const;
 	void setAnimationFramerate(float animationFramerate);
-	float getAnimationFramerate();
+	float getAnimationFramerate() const;
 
-	bool isVertexAnimated();
-	bool isVertexAnimationStoredOnVram();
+	bool isVertexAnimated() const;
+	bool isVertexAnimationStoredOnVram() const;
 	void makeVertexAnimated(bool storeOnVram = true);
 
-    gBoundingBox getInitialBoundingBox();
+    gBoundingBox& getInitialBoundingBox();
 
 private:
 	const aiScene* scene;
-	void loadModelFile(std::string fullPath);
+	void loadModelFile(const std::string& fullPath);
 	void processNode(aiNode *node, const aiScene *scene);
 	gSkinnedMesh processMesh(aiMesh *mesh, const aiScene *scene, aiMatrix4x4 matrix);
 	void loadMaterialTextures(gSkinnedMesh* mesh, aiMaterial *mat, aiTextureType type, int textureType);

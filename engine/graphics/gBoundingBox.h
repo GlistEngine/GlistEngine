@@ -63,8 +63,8 @@ public:
 	bool intersects(gRay* ray);
 	float distance(gRay* ray);
 
-	glm::vec3 getMin();
-	glm::vec3 getMax();
+	const glm::vec3& getMin() const;
+	const glm::vec3& getMax() const;
 	float minX() const;
 	float minY() const;
 	float minZ() const;
@@ -74,9 +74,9 @@ public:
 	float getWidth()  const;
 	float getHeight() const;
 	float getDepth() const;
-	glm::vec3 getOrigin() const;
+	const glm::vec3& getOrigin() const;
 
-	void setTransformationMatrix(glm::mat4 matrix);
+	void setTransformationMatrix(const glm::mat4& matrix);
 	bool intersectsOBB(gRay* ray);
 	float distanceOBB(gRay* ray);
 

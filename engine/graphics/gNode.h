@@ -17,7 +17,7 @@ public:
 	virtual ~gNode();
 
 	void move(float dx, float dy, float dz);
-	void move(const glm::vec3 dv);
+	void move(const glm::vec3& dv);
 	void rotate(const glm::quat& q);
 	void rotateDeg(float angle, float ax, float ay, float az);
 	void rotate(float radians, float ax, float ay, float az);
@@ -26,7 +26,7 @@ public:
 	void scale(float s);
 
 	void setPosition(float px, float py, float pz);
-	void setPosition(const glm::vec3 pv);
+	void setPosition(const glm::vec3& pv);
 	void setOrientation(const glm::quat& o);
 	void setOrientation(const glm::vec3& angles);
 	void setScale(const glm::vec3& s);
@@ -96,42 +96,42 @@ public:
 	 */
 	void rollDeg(float degrees);
 
-	float getPosX();
-	float getPosY();
-	float getPosZ();
-	glm::vec3 getPosition();
-	glm::quat getOrientation();
-	glm::vec3 getScale();
+	float getPosX() const;
+	float getPosY() const;
+	float getPosZ() const;
+	const glm::vec3& getPosition() const;
+	const glm::quat& getOrientation() const;
+	const glm::vec3& getScale() const;
 
 	/**
 	 * Returns truck direction as a scalar vec3.
 	 */
-	glm::vec3 getScalarDirectionX();
+	glm::vec3 getScalarDirectionX() const;
 
 	/**
 	 * Returns boom direction as a scalar vec3.
 	 */
-	glm::vec3 getScalarDirectionY();
+	glm::vec3 getScalarDirectionY() const;
 
 	/**
 	 * Returns dolly direction as a scalar vec3.
 	 */
-	glm::vec3 getScalarDirectionZ();
+	glm::vec3 getScalarDirectionZ() const;
 
-	void setTransformationMatrix(glm::mat4 transformationMatrix);
-	glm::mat4 getTransformationMatrix();
+	void setTransformationMatrix(const glm::mat4& transformationMatrix);
+	const glm::mat4& getTransformationMatrix() const;
 
-	int getId();
+	int getId() const;
 
 	void setParent(gNode* parent);
-	gNode* getParent();
+	gNode* getParent() const;
 	void removeParent();
 
 	void setEnabled(bool isEnabled);
-	bool isEnabled();
+	bool isEnabled() const;
 
-	void pushMatrix();
-	void popMatrix();
+	void pushMatrix() const;
+	void popMatrix() const;
 
 protected:
 	gNode* parent;

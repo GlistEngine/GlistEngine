@@ -33,7 +33,6 @@ class gShader : public gObject {
 public:
 	gShader();
 	gShader(const std::string& vertexPath, const std::string& fragmentPath, const std::string& geometryPath = nullptr);
-	virtual ~gShader();
 
 	void load(const std::string& vertexFullPath, const std::string& fragmentFullPath, const std::string& geometryFullPath = "");
 	void loadShader(const std::string& vertexFileName, const std::string& fragmentFileName, const std::string& geometryFileName = "");
@@ -42,7 +41,7 @@ public:
 
     GLuint id;
 
-    void use();
+    void use() const;
     void setBool(const std::string &name, bool value) const;
     void setInt(const std::string &name, int value) const;
     void setFloat(const std::string &name, float value) const;

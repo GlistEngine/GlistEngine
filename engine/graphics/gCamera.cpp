@@ -235,11 +235,11 @@ void gCamera::resetLook() {
 	processLookMatrix();
 }
 
-glm::mat4 gCamera::getLookMatrix() {
+const glm::mat4& gCamera::getLookMatrix() const {
 	return locallookmatrix;
 }
 
-glm::quat gCamera::getLookOrientation() {
+const glm::quat& gCamera::getLookOrientation() const {
 	return lookorientation;
 }
 

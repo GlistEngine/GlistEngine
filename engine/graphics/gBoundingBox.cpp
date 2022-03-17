@@ -158,11 +158,11 @@ float gBoundingBox::distance(gRay* ray) {
 	return dmin > dmax ? std::numeric_limits<float>::min() : dmin;
 }
 
-glm::vec3 gBoundingBox::getMin() {
+const glm::vec3& gBoundingBox::getMin() const {
 	return minf;
 }
 
-glm::vec3 gBoundingBox::getMax() {
+const glm::vec3& gBoundingBox::getMax() const {
 	return maxf;
 }
 
@@ -202,11 +202,11 @@ float gBoundingBox::getDepth() const {
 	return depth;
 }
 
-glm::vec3 gBoundingBox::getOrigin() const {
+const glm::vec3& gBoundingBox::getOrigin() const {
 	return origin;
 }
 
-void gBoundingBox::setTransformationMatrix(glm::mat4 matrix) {
+void gBoundingBox::setTransformationMatrix(const glm::mat4& matrix) {
 	transformationmatrix = matrix;
 }
 

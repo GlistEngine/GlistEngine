@@ -20,9 +20,6 @@ gShader::gShader(const std::string& vertexPath, const std::string& fragmentPath,
 	load(vertexPath, fragmentPath);
 }
 
-gShader::~gShader() {
-}
-
 void gShader::loadShader(const std::string& vertexFileName, const std::string& fragmentFileName, const std::string& geometryFileName) {
 	load(gGetShadersDir() + vertexFileName, gGetShadersDir() + fragmentFileName, gGetShadersDir() + geometryFileName);
 }
@@ -134,7 +131,7 @@ void gShader::checkCompileErrors(GLuint shader, std::string type) {
 
 // activate the shader
 // ------------------------------------------------------------------------
-void gShader::use() {
+void gShader::use() const {
     glUseProgram(id);
 }
 
