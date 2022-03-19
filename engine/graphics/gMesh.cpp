@@ -53,6 +53,10 @@ gMesh::gMesh(std::vector<gVertex> vertices, std::vector<unsigned int> indices, s
 gMesh::~gMesh() {
 }
 
+void gMesh::clear() {
+	vbo.clear();
+}
+
 void gMesh::setName(std::string name) {
 	this->name = name;
 }

@@ -44,7 +44,7 @@ void gRectangle::draw(float x, float y, float w, float h, bool isFilled) {
 }
 
 void gRectangle::setRectanglePoints(float x, float y, float w, float h, bool isFilled) {
-//	verticessb.clear();
+	if(!verticessb.empty()) verticessb.clear();
 
 	vertex1.position.x = x;
 	vertex1.position.y = y;
