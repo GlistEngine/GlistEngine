@@ -44,6 +44,7 @@ public:
 	int getIndicesNum() const;
 	gBoundingBox getBoundingBox();
 	const gVbo& getVbo() const;
+	void clear();
 
 	void setName(std::string name);
 	const std::string& getName() const;
