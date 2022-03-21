@@ -33,7 +33,8 @@ private:
 	int minlinenum, minboxh;
 	int maxlinenum;
 	std::vector<std::string> data;
-	int firstlineno, flno;
+	std::vector<float> datady;
+	int firstlineno, flno, fldy;
 	int selectedno;
 	bool mousepressedonlist;
 };

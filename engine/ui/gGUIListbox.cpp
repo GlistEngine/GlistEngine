@@ -6,6 +6,8 @@
  */
 
 #include "gGUIListbox.h"
+#include "gBaseApp.h"
+#include "gBaseCanvas.h"
 
 
 gGUIListbox::gGUIListbox() {
@@ -15,7 +17,7 @@ gGUIListbox::gGUIListbox() {
 	totalh = linenum * lineh;
 	minboxh = minlinenum * lineh;
 	listboxh = minboxh;
-	maxlinenum = listboxh / lineh - 1;
+	maxlinenum = listboxh / lineh + 1;
 	firstlineno = 0;
 	flno = firstlineno;
 	selectedno = 0;
@@ -35,15 +37,16 @@ void gGUIListbox::drawContent() {
 	gColor* oldcolor = renderer->getColor();
 	gGUIScrollable::drawContent();
 	flno = firsty / lineh;
+	fldy = firsty % lineh;
 
 	if(selectedno >= flno && selectedno < flno + linenum) {
 		renderer->setColor(middlegroundcolor);
-		gDrawRectangle(left, top + lineh * 0.88f + (selectedno - flno) * lineh, boxw, lineh, true);
+		gDrawRectangle(0, -fldy + (selectedno - flno) * lineh, boxw, lineh, true);
 	}
 
 	renderer->setColor(fontcolor);
 	for(int i = 0; i < linenum; i++) {
-		font->drawText(data[flno + i], left + 2, top + 1.5f * lineh + i * lineh);
+		font->drawText(data[flno + i], 2, -fldy + lineh + (i * lineh) - datady[flno + i]);
 	}
 
 	renderer->setColor(oldcolor);
@@ -51,6 +54,7 @@ void gGUIListbox::drawContent() {
 
 void gGUIListbox::addData(std::string lineData) {
 	data.push_back(lineData);
+	datady.push_back((lineh - font->getStringHeight("ae")) / 2 + 1);
 	linenum = data.size();
 	if(linenum > maxlinenum) linenum = maxlinenum;
 	totalh = data.size() * lineh;
@@ -58,13 +62,14 @@ void gGUIListbox::addData(std::string lineData) {
 
 void gGUIListbox::mousePressed(int x, int y, int button) {
 	gGUIScrollable::mousePressed(x, y, button);
-	if(x >= left && x < vsbx && y >= top && y < hsby) mousepressedonlist = true;
+	if(x >= left && x < left + vsbx && y >= top && y < top + hsby) mousepressedonlist = true;
 }
 
 void gGUIListbox::mouseReleased(int x, int y, int button) {
 	gGUIScrollable::mouseReleased(x, y, button);
-	if(mousepressedonlist && x >= left && x < vsbx && y >= top && y < hsby) {
+	if(mousepressedonlist && x >= left && x < left + vsbx && y >= top && y < top + hsby) {
 		selectedno = (y - top + firsty) / lineh;
+		root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_LISTBOXSELECTED, gToStr(selectedno));
 	}
 	mousepressedonlist = false;
 }

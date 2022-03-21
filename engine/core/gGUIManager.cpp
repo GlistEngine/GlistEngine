@@ -105,6 +105,7 @@ void gGUIManager::resetTheme(int guiTheme) {
 	gBaseGUIObject::setBackgroundColor(&themebackgroundcolor[guitheme]);
 	gBaseGUIObject::setMiddlegroundColor(&thememiddlegroundcolor[guitheme]);
 	gBaseGUIObject::setForegroundColor(&themeforegroundcolor[guitheme]);
+	gBaseGUIObject::setTextBackgroundColor(&themetextbackgroundcolor[guitheme]);
 	gBaseGUIObject::setFont(&themefont);
 	gBaseGUIObject::setFontColor(&themefontcolor[guitheme]);
 	gBaseGUIObject::setButtonColor(&themebuttoncolor[guitheme]);
@@ -130,6 +131,11 @@ void gGUIManager::loadThemes() {
 	themeforegroundcolor[GUITHEME_DARK] = gColor(59.0f / 255.0f, 59.0f / 255.0f, 59.0f / 255.0f);
 	themeforegroundcolor[GUITHEME_LIGHTBLUE] = gColor(195.0f / 255.0f, 224.0f / 255.0f, 235.0f / 255.0f);
 	themeforegroundcolor[GUITHEME_DARKBLUE] = gColor(28.0f / 255.0f, 40.0f / 255.0f, 53.0f / 255.0f);
+
+	themetextbackgroundcolor[GUITHEME_LIGHT] = gColor(255.0f / 255.0f, 255.0f / 255.0f, 255.0f / 255.0f);
+	themetextbackgroundcolor[GUITHEME_DARK] = gColor(39.0f / 255.0f, 39.0f / 255.0f, 39.0f / 255.0f);
+	themetextbackgroundcolor[GUITHEME_LIGHTBLUE] = gColor(255.0f / 255.0f, 255.0f / 255.0f, 255.0f / 255.0f);
+	themetextbackgroundcolor[GUITHEME_DARKBLUE] = gColor(0.0f / 255.0f, 0.0f / 255.0f, 0.0f / 255.0f);
 
 	themefont.loadFont("FreeSans.ttf", 11);
 

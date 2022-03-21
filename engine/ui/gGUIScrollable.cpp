@@ -30,7 +30,6 @@ gGUIScrollable::gGUIScrollable() {
 	iscursoronhsb = false;
 	sbbgcolor = middlegroundcolor;
 	sbfgcolor = backgroundcolor;
-//	sbfgcolor = gColor(0.1f, 0.45f, 0.87f);
 	sbdragcolor.set(0, 0, 255, 255);
 	vsbalpha = 1.0f;
 	hsbalpha = 1.0f;
@@ -66,12 +65,12 @@ void gGUIScrollable::enableScrollbars(bool isVerticalEnabled, bool isHorizontalE
 void gGUIScrollable::setDimensions(int width, int height) {
 	boxw = width;
 	boxh = height;
-	vsbh = height;
-	hsbw = width;
-	vsbx = left + boxw - vsbw;
-	vsby = top;
-	hsbx = left;
-	hsby = top + boxh - hsbh;
+	vsbh = height - hsbh;
+	hsbw = width - vsbw;
+	vsbx = boxw - vsbw;
+	vsby = 0;
+	hsbx = 0;
+	hsby = boxh - hsbh;
 
 	vrw = vsbw;
 	vrh = vsbh * boxh / totalh;
@@ -82,7 +81,7 @@ void gGUIScrollable::setDimensions(int width, int height) {
 	hrx = hsbx;
 	hry = hsby;
 
-	boxfbo->allocate(boxw, boxh);
+	boxfbo->allocate(renderer->getWidth(), renderer->getHeight());
 }
 
 void gGUIScrollable::draw() {
@@ -92,13 +91,13 @@ void gGUIScrollable::draw() {
 	drawScrollbars();
 	boxfbo->unbind();
 	renderer->setColor(255, 255, 255);
-	boxfbo->draw(left, top);
+	boxfbo->drawSub(left, top, boxw, boxh, 0, renderer->getHeight() - boxh, boxw, boxh);
 }
 
 void gGUIScrollable::drawContent() {
 //	gLogi("Listbox") << "l:" << left << ", t:" << top << ", w:" << boxw << ", h:" << boxh;
-	renderer->setColor(255, 255, 255);
-	gDrawRectangle(left, top, boxw, boxh, true);
+	renderer->setColor(textbackgroundcolor);
+	gDrawRectangle(0, 0, boxw, boxh, true);
 }
 
 void gGUIScrollable::drawScrollbars() {
@@ -122,7 +121,7 @@ void gGUIScrollable::drawScrollbars() {
 */
 //			sbbgcolor.a = vsbalpha;
 			renderer->setColor(&sbbgcolor);
-			gDrawRectangle(left + boxw - vsbw, top, vsbw, vsbh, true);
+			gDrawRectangle(boxw - vsbw, 0, vsbw, vsbh, true);
 
 //			sbfgcolor.a = vsbalpha;
 			renderer->setColor(&sbfgcolor);
@@ -141,7 +140,7 @@ void gGUIScrollable::drawScrollbars() {
 */
 			sbbgcolor.a = hsbalpha;
 			renderer->setColor(&sbbgcolor);
-			gDrawRectangle(left, top + boxh - hsbh, hsbw, hsbh, true);
+			gDrawRectangle(0, boxh - hsbh, hsbw, hsbh, true);
 
 			sbfgcolor.a = hsbalpha;
 			renderer->setColor(&sbfgcolor);
@@ -157,17 +156,20 @@ void gGUIScrollable::drawScrollbars() {
 //		vsbalpha = 0.0f;
 //		hsbalpha = 0.0f;
 	}
+
+	renderer->setColor(foregroundcolor);
+	gDrawRectangle(vsbx, hsby, vsbw, hsbh, true);
 }
 
 void gGUIScrollable::mouseMoved(int x, int y) {
 	iscursoronvsb = false;
 	iscursoronhsb = false;
-	if(x >= vsbx && x < vsbx + vsbw && y >= vsby && y < vsby + vsbh) iscursoronvsb = true;
-	if(x >= hsbx && x < hsbx + hsbw && y >= hsby && y < hsby + hsbh) iscursoronhsb = true;
+	if(x >= left + vsbx && x < left + vsbx + vsbw && y >= top + vsby && y < top + vsby + vsbh) iscursoronvsb = true;
+	if(x >= left + hsbx && x < left + hsbx + hsbw && y >= top + hsby && y < top + hsby + hsbh) iscursoronhsb = true;
 }
 
 void gGUIScrollable::mousePressed(int x, int y, int button) {
-	if(vsbenabled && x >= vrx && x < vrx + vrw && y >= vry && y < vry + vrh) {
+	if(vsbenabled && x >= left + vrx && x < left + vrx + vrw && y >= top + vry && y < top + vry + vrh) {
 		vsbmy = y;
 	}
 }
@@ -175,8 +177,8 @@ void gGUIScrollable::mousePressed(int x, int y, int button) {
 void gGUIScrollable::mouseDragged(int x, int y, int button) {
 	if(vsbmy > -1) {
 		vry += y - vsbmy;
-		if(vry < top) vry = top;
-		if(vry > top + boxh - vrh) vry = top + boxh - vrh;
+		if(vry < 0) vry = 0;
+		if(vry > boxh - vrh) vry = boxh - vrh;
 
 		firsty += y - vsbmy;
 		if(firsty < 0) firsty = 0;
@@ -194,11 +196,22 @@ void gGUIScrollable::mouseScrolled(int x, int y) {
 	firsty -= y * scrolldiff;
 	if(firsty < 0) firsty = 0;
 	if(firsty > totalh - boxh) firsty = totalh - boxh;
-	if(vsbenabled) vry = top + firsty * boxh / totalh;
+	if(vsbenabled) vry = firsty * (boxh - hsbh) / totalh;
 
 	firstx -= x * scrolldiff;
 	if(firstx < 0) firstx = 0;
 //	gLogi("Scrollable") << "t:" << top << ", y:" << vry << ", h:" << vrh;
+}
+
+void gGUIScrollable::windowResized(int w, int h) {
+	delete boxfbo;
+	boxfbo = new gFbo();
+	setDimensions(boxw, boxh);
+	gGUIControl::windowResized(w, h);
+}
+
+gFbo* gGUIScrollable::getFbo() {
+	return boxfbo;
 }
 
 
