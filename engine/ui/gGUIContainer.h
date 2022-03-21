@@ -17,7 +17,7 @@ public:
 	gGUIContainer();
 	virtual ~gGUIContainer();
 
-	void set(int x, int y, int w, int h);
+	virtual void set(int x, int y, int w, int h);
 
 	void setSizer(gGUISizer* guiSizer);
 	gGUISizer* getSizer();

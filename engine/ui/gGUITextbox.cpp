@@ -44,7 +44,7 @@ void gGUITextbox::update() {
 
 void gGUITextbox::draw() {
 	gColor oldcolor = *renderer->getColor();
-	renderer->setColor(backgroundcolor);
+	renderer->setColor(textbackgroundcolor);
 	gDrawRectangle(left, top, width, boxh, true);
 	renderer->setColor(fontcolor);
 	font->drawText(text, left + 2, top + 13);
