@@ -52,6 +52,9 @@ public:
 	static void setForegroundColor(gColor* foregroundColor);
 	static gColor* getForegroundColor();
 
+	static void setTextBackgroundColor(gColor* textBackgroundColor);
+	static gColor* getTextBackgroundColor();
+
 	static void setFont(gFont* font);
 	static gFont* getFont();
 
@@ -99,6 +102,7 @@ protected:
 	static gColor* backgroundcolor;
 	static gColor* middlegroundcolor;
 	static gColor* foregroundcolor;
+	static gColor* textbackgroundcolor;
 	static gFont* font;
 	static gColor* fontcolor;
 	static gColor* buttoncolor;

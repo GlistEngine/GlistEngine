@@ -17,7 +17,6 @@
 class gRenderObject : public gObject {
 public:
 	gRenderObject();
-	virtual ~gRenderObject();
 
 	static void setScreenSize(int screenWidth, int screenHeight);
 	static void setUnitScreenSize(int unitWidth, int unitHeight);

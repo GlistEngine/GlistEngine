@@ -69,6 +69,7 @@ private:
 	gColor themebackgroundcolor[themenum];
 	gColor thememiddlegroundcolor[themenum];
 	gColor themeforegroundcolor[themenum];
+	gColor themetextbackgroundcolor[themenum];
 	gColor themefontcolor[themenum];
 	gColor themebuttoncolor[themenum];
 	gColor themepressedbuttoncolor[themenum];

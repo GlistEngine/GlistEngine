@@ -1,7 +1,7 @@
 /*
  * gFog.cpp
  *
- *  Created on: 15 Aðu 2021
+ *  Created on: 15 Aï¿½u 2021
  *      Author: furka
  */
 
@@ -9,9 +9,6 @@
 
 gFog::gFog() {
 	
-}
-
-gFog::~gFog() {
 }
 
 void gFog::enable() {
@@ -34,15 +31,15 @@ void gFog::setGradient(float g) {
 	renderer->foggradient = g;
 }
 
-gColor gFog::getColor() {
-    return renderer->fogcolor;
+const gColor& gFog::getColor() const {
+    return *renderer->fogcolor;
 }
 
-float gFog::getDensity() {
+float gFog::getDensity() const {
     return renderer->fogdensity;
 }
 
-float gFog::getGradient() {
+float gFog::getGradient() const {
     return renderer->foggradient;
 }
 

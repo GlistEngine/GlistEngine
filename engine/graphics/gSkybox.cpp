@@ -37,14 +37,15 @@ gSkybox::gSkybox() {
 
 gSkybox::~gSkybox() {}
 
-unsigned int gSkybox::loadTextures(std::vector<std::string> texturePaths) {
+unsigned int gSkybox::loadTextures(const std::vector<std::string>& texturePaths) {
+	std::vector<std::string> temp;
 	for (int i = 0; i < texturePaths.size(); i++) {
-		texturePaths[i] = gGetTexturesDir() + texturePaths[i];
+		temp.push_back(std::move<std::string>(gGetTexturesDir() + texturePaths[i]));
 	}
-	return load(texturePaths);
+	return load(temp);
 }
 
-unsigned int gSkybox::load(std::vector<std::string> fullPaths) {
+unsigned int gSkybox::load(const std::vector<std::string>& fullPaths) {
 	skymapslot = GL_TEXTURE0;
 	skymapint = 0;
 
@@ -146,12 +147,11 @@ void gSkybox::loadDataSkybox(std::string *data, int width, int height) {
 
 }
 
-unsigned int gSkybox::loadTextureEquirectangular(std::string texturePath) {
-	texturePath = gGetTexturesDir() + texturePath;
-	return loadEquirectangular(texturePath);
+unsigned int gSkybox::loadTextureEquirectangular(const std::string& texturePath) {
+	return loadEquirectangular(gGetTexturesDir() + texturePath);
 }
 
-unsigned int gSkybox::loadEquirectangular(std::string fullPath) {
+unsigned int gSkybox::loadEquirectangular(const std::string& fullPath) {
 	ishdr = true;
 	skymapslot = GL_TEXTURE0;
 	skymapint = 0;
@@ -210,7 +210,7 @@ unsigned int gSkybox::loadEquirectangular(std::string fullPath) {
 	glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
 
 	if(ispbr) generatePbrMaps();
-
+	glViewport(0, 0, getScreenWidth(), getScreenHeight());
 	return id;
 }
 

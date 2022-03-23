@@ -19,8 +19,8 @@ public:
 	gBaseSound();
 	virtual ~gBaseSound();
 
-	virtual int load(std::string fullPath);
-	virtual int loadSound(std::string soundPath);
+	virtual int load(const std::string& fullPath);
+	virtual int loadSound(const std::string& soundPath);
 	virtual void play();
 	virtual bool isLoaded();
 	virtual bool isPlaying();
@@ -39,7 +39,7 @@ public:
 	virtual void setVolume(float volume);
 	virtual float getVolume();
 
-	std::string getPath();
+	const std::string& getPath();
 
 
 protected:

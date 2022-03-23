@@ -17,11 +17,10 @@
 #endif
 
 
-void gStartEngine(gBaseApp* baseApp, std::string appName, int windowMode, int width, int height) {
+void gStartEngine(gBaseApp* baseApp, const std::string& appName, int windowMode, int width, int height) {
 	gAppManager appmanager;
 	gGLFWWindow gbwindow;
 	gbwindow.setAppManager(&appmanager);
-	if (appName == "") appName = "GlistApp";
 	gbwindow.setTitle(appName);
 	appmanager.setWindow(&gbwindow);
 	baseApp->setAppManager(&appmanager);
@@ -80,10 +79,7 @@ gAppManager::gAppManager() {
 	canvasset = false;
 }
 
-gAppManager::~gAppManager() {
-}
-
-void gAppManager::runApp(std::string appName, gBaseApp *baseApp, int width, int height, int windowMode, int unitWidth, int unitHeight, int screenScaling) {
+void gAppManager::runApp(const std::string& appName, gBaseApp *baseApp, int width, int height, int windowMode, int unitWidth, int unitHeight, int screenScaling) {
 	appname = appName;
 	app = baseApp;
 
@@ -347,6 +343,7 @@ void gAppManager::onMouseEnterEvent(int entered) {
 
 void gAppManager::onMouseScrollEvent(double xoffset, double yoffset) {
 	if (!canvasmanager->getCurrentCanvas()) return;
+	if(guimanager->isframeset) guimanager->mouseScrolled(xoffset, yoffset);
 	for (upi = 0; upi < gBasePlugin::usedplugins.size(); upi++) gBasePlugin::usedplugins[upi]->mouseScrolled(xoffset, yoffset);
 	canvasmanager->getCurrentCanvas()->mouseScrolled(xoffset, yoffset);
 }

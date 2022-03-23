@@ -21,13 +21,13 @@ gBaseSound::gBaseSound() {
 gBaseSound::~gBaseSound() {
 }
 
-int gBaseSound::load(std::string fullPath) {
+int gBaseSound::load(const std::string& fullPath) {
 	filepath = fullPath;
 	return 0;
 }
 
 
-int gBaseSound::loadSound(std::string soundPath) {
+int gBaseSound::loadSound(const std::string& soundPath) {
 	filepath = soundPath;
 	return 0;
 }
@@ -88,7 +88,7 @@ float gBaseSound::getVolume() {
 	return volume;
 }
 
-std::string gBaseSound::getPath() {
+const std::string& gBaseSound::getPath() {
 	return filepath;
 }
 

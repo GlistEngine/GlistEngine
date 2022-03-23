@@ -22,7 +22,7 @@ public:
 	int getWidth();
 	int getHeight();
 	unsigned int getTextureId();
-    gTexture& getTexture();
+    const gTexture& getTexture() const;
 
 	void bind();
 	void unbind();

@@ -28,6 +28,9 @@ public:
 	virtual void mouseDragged(int x, int y, int button);
 	virtual void mouseReleased(int x, int y, int button);
 	virtual void mouseScrolled(int x, int y);
+	virtual void windowResized(int w, int h);
+
+	gFbo* getFbo();
 
 
 protected:
@@ -35,13 +38,12 @@ protected:
 	int boxw, boxh;
 	int totalh;
 	int firstx, firsty;
+	int vsbx, vsby, vsbw, vsbh;
+	int hsbx, hsby, hsbw, hsbh;
 
 private:
 	gFbo* boxfbo;
-	gFbo testfbo;
 
-	int vsbx, vsby, vsbw, vsbh;
-	int hsbx, hsby, hsbw, hsbh;
 	bool vsbenabled, hsbenabled, sbenabled;
 	bool vsbactive, hsbactive;
 	bool iscursoronvsb, iscursoronhsb;
@@ -51,6 +53,8 @@ private:
 	bool alphablending;
 	int vrx, vry, vrw, vrh;
 	int hrx, hry, hrw, hrh;
+	int scrolldiff;
+	int vsbmy;
 };
 
 #endif /* UI_GGUISCROLLABLE_H_ */

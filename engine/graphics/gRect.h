@@ -49,22 +49,22 @@ public:
 	 * Returns x(horizontal) center coordinate of rectangle but as integer value.
 	 * @return x center of rectangle.
 	 */
-	int centerX();
+	int centerX() const;
 	/**
 	 * Returns y(vertical) center coordinate of rectangle but as integer value.
 	 * @return y center of rectangle.
 	 */
-	int centerY();
+	int centerY() const;
 	/**
 	 * Returns x(horizontal) exact center coordinate of rectangle as float value.
 	 * @return x exact center of rectangle.
 	 */
-	float exactCenterX();
+	float exactCenterX() const;
 	/**
 	 * Returns y(vertical) exact center coordinate of rectangle as float value.
 	 * @return y exact center of rectangle.
 	 */
-	float exactCenterY();
+	float exactCenterY() const;
 
 	/**
 	 * Sets edges of the rectangle.
@@ -108,13 +108,13 @@ public:
 	 * @param bottom Bottom edge of the given rectangle
 	 * @return true if there is intersection false if not.
 	 */
-	bool intersects(int left, int top, int right, int bottom);
+	bool intersects(int left, int top, int right, int bottom)  const;
 	/**
 	 * Checks whether of intersection with given rectangle.
 	 * @param r Rectangle to be check.
 	 * @return true if there is intersection false if not.
 	 */
-	bool intersects(const gRect& r);
+	bool intersects(const gRect& r)  const;
 
 	/**
 	 * Checks if second rectangles edges are inside or equal of the first rectangle.
@@ -144,20 +144,20 @@ public:
 	 * @param bottom Bottom edge of the given rectangle
 	 * @return true if given rectangle is inside of current rectangle false if not.
 	 */
-	bool contains(int left, int top, int right, int bottom);
+	bool contains(int left, int top, int right, int bottom) const;
 	/**
 	 * Checks if given rectangles edges are inside or equal of the current rectangle.
 	 * @param r Rectangle to be check.
 	 * @return true if given rectangle is inside of current rectangle false if not.
 	 */
-	bool contains(const gRect& r);
+	bool contains(const gRect& r) const;
 	/**
 	 * Checks if given point are inside of the current rectangle.
 	 * @param x X Position of the given point
 	 * @param y Y Position of the given point
 	 * @return true if given point is inside of current rectangle false if not.
 	 */
-	bool contains(int x, int y);
+	bool contains(int x, int y) const;
 
 	/**
 	 * Returns left edge of the rectangle.

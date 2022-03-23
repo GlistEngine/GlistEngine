@@ -25,36 +25,36 @@ public:
 	gTexture(int w, int h, int format = GL_RGBA, bool isFbo = false);
 	virtual ~gTexture();
 
-	virtual unsigned int load(std::string fullPath);
-	unsigned int loadTexture(std::string texturePath);
+	virtual unsigned int load(const std::string& fullPath);
+	unsigned int loadTexture(const std::string& texturePath);
 
 	unsigned int loadData(unsigned char* textureData, int width, int height, int componentNum, bool isFont = false);
 
-    void bind();
-    void bind(int textureSlotNo);
-    void unbind();
+    void bind() const;
+    void bind(int textureSlotNo) const;
+    void unbind() const;
 
-    unsigned int getId();
-    bool isHDR();
-    unsigned int getInternalFormat();
-    unsigned int getFormat();
+    unsigned int getId() const;
+    bool isHDR() const;
+    unsigned int getInternalFormat() const;
+    unsigned int getFormat() const;
     void setType(int textureType);
-    int getType();
+    int getType() const;
     void setWrapping(int wrapS, int wrapT);
     void setFiltering(int minFilter, int magFilter);
-    int getWrapS();
-    int getWrapT();
-    int getFilterMin();
-    int getFilterMag();
-    std::string getTypeName();
-    std::string getTypeName(int textureType);
-    std::string getFilename();
-    std::string getDir();
-    std::string getFullPath();
+    int getWrapS() const;
+    int getWrapT() const;
+    int getFilterMin() const;
+    int getFilterMag() const;
+    const std::string& getTypeName() const;
+    const std::string& getTypeName(int textureType) const;
+    const std::string& getFilename() const;
+    const std::string& getDir() const;
+    const std::string& getFullPath() const;
 
-    int getWidth();
-    int getHeight();
-    int getComponentNum();
+    int getWidth() const;
+    int getHeight() const;
+    int getComponentNum() const;
 
     void draw(int x, int y);
     void draw(int x, int y, int w, int h);

@@ -53,28 +53,32 @@ gMesh::gMesh(std::vector<gVertex> vertices, std::vector<unsigned int> indices, s
 gMesh::~gMesh() {
 }
 
+void gMesh::clear() {
+	vbo.clear();
+}
+
 void gMesh::setName(std::string name) {
 	this->name = name;
 }
 
-std::string gMesh::getName() {
+const std::string& gMesh::getName() const {
 	return name;
 }
 
 void gMesh::setVertices(std::vector<gVertex> vertices, std::vector<unsigned int> indices) {
 	this->vertices = vertices;
 	this->indices = indices;
-	vbo.setVertexData(&vertices[0], sizeof(gVertex), vertices.size());
-	if (indices.size() != 0) vbo.setIndexData(&indices[0], indices.size());
+	vbo.setVertexData(vertices.data(), sizeof(gVertex), vertices.size());
+	if (indices.size() != 0) vbo.setIndexData(indices.data(), indices.size());
     initialboundingbox = getBoundingBox();
 //	initialboundingbox.setTransformationMatrix(localtransformationmatrix);
 }
 
-std::vector<gVertex> gMesh::getVertices() {
+const std::vector<gVertex>& gMesh::getVertices() const {
 	return vertices;
 }
 
-std::vector<unsigned int> gMesh::getIndices() {
+const std::vector<unsigned int>& gMesh::getIndices() const{
 	return indices;
 }
 
@@ -131,8 +135,8 @@ void gMesh::addTexture(gTexture tex) {
 	textures.push_back(tex);
 }
 
-gTexture* gMesh::getTexture(int textureNo) {
-	return &textures[textureNo];
+const gTexture& gMesh::getTexture(int textureNo) const {
+	return textures[textureNo];
 }
 
 
@@ -140,7 +144,7 @@ void gMesh::setDrawMode(int drawMode) {
 	drawmode = drawMode;
 }
 
-int gMesh::getDrawMode() {
+int gMesh::getDrawMode() const {
 	return drawmode;
 }
 
@@ -148,8 +152,8 @@ void gMesh::setMaterial(gMaterial* material) {
 	this->material = *material;
 }
 
-gMaterial* gMesh::getMaterial() {
-	return &material;
+gMaterial& gMesh::getMaterial() {
+	return material;
 }
 
 
@@ -177,9 +181,9 @@ void gMesh::drawStart() {
 	    colorshader->setVec4("renderColor", renderer->getColor()->r, renderer->getColor()->g, renderer->getColor()->b, renderer->getColor()->a);
 
 	    // Set material colors
-	    colorshader->setVec4("material.ambient", material.getAmbientColor()->r, material.getAmbientColor()->g, material.getAmbientColor()->b, material.getAmbientColor()->a);
-	    colorshader->setVec4("material.diffuse", material.getDiffuseColor()->r, material.getDiffuseColor()->g, material.getDiffuseColor()->b, material.getDiffuseColor()->a);
-	    colorshader->setVec4("material.specular", material.getSpecularColor()->r, material.getSpecularColor()->g, material.getSpecularColor()->b, material.getSpecularColor()->a);
+	    colorshader->setVec4("material.ambient", material.getAmbientColor().r, material.getAmbientColor().g, material.getAmbientColor().b, material.getAmbientColor().a);
+	    colorshader->setVec4("material.diffuse", material.getDiffuseColor().r, material.getDiffuseColor().g, material.getDiffuseColor().b, material.getDiffuseColor().a);
+	    colorshader->setVec4("material.specular", material.getSpecularColor().r, material.getSpecularColor().g, material.getSpecularColor().b, material.getSpecularColor().a);
 	    colorshader->setFloat("material.shininess", material.getShininess());
 
 	    // Bind diffuse textures
@@ -261,7 +265,7 @@ void gMesh::drawStart() {
     		pbrshader->setInt("lightNum", renderer->getSceneLightNum());
 	    	for (sli = 0; sli < renderer->getSceneLightNum(); sli++) {
 	    		pbrshader->setVec3("lightPositions[" + gToStr(sli) + "]", renderer->getSceneLight(sli)->getPosition());
-	    		pbrshader->setVec3("lightColors[" + gToStr(sli) + "]", glm::vec3(renderer->getSceneLight(sli)->getDiffuseColor()->r, renderer->getSceneLight(sli)->getDiffuseColor()->g, renderer->getSceneLight(sli)->getDiffuseColor()->b));
+	    		pbrshader->setVec3("lightColors[" + gToStr(sli) + "]", glm::vec3(renderer->getSceneLight(sli)->getDiffuseColor().r, renderer->getSceneLight(sli)->getDiffuseColor().g, renderer->getSceneLight(sli)->getDiffuseColor().b));
 	    	}
 	    }
 
@@ -319,16 +323,16 @@ void gMesh::drawEnd() {
     glActiveTexture(GL_TEXTURE0);
 }
 
-int gMesh::getVerticesNum() {
+int gMesh::getVerticesNum() const {
 	return vbo.getVerticesNum();
 }
 
-int gMesh::getIndicesNum() {
+int gMesh::getIndicesNum() const {
 	return vbo.getIndicesNum();
 }
 
-gVbo* gMesh::getVbo() {
-	return &vbo;
+const gVbo& gMesh::getVbo() const {
+	return vbo;
 }
 
 gBoundingBox gMesh::getBoundingBox() {
@@ -354,7 +358,7 @@ gBoundingBox gMesh::getBoundingBox() {
 }
 
 
-gBoundingBox gMesh::getInitialBoundingBox() {
+const gBoundingBox& gMesh::getInitialBoundingBox() const {
 	return initialboundingbox;
 }
 

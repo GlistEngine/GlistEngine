@@ -36,15 +36,15 @@ void gShadowMap::allocate(gLight* light, gCamera* camera, int width, int height)
 	setLightProjection(glm::ortho(-40.0f, 40.0f, -40.0f, 40.0f, 2.0f, 114.0f));
 }
 
-bool gShadowMap::isAllocated() {
+bool gShadowMap::isAllocated() const {
 	return isallocated;
 }
 
-int gShadowMap::getWidth() {
+int gShadowMap::getWidth() const {
 	return width;
 }
 
-int gShadowMap::getHeight() {
+int gShadowMap::getHeight() const {
 	return height;
 }
 
@@ -65,11 +65,11 @@ void gShadowMap::setCamera(gCamera* camera) {
 	this->camera = camera;
 }
 
-gLight* gShadowMap::getLight() {
+gLight* gShadowMap::getLight() const {
 	return light;
 }
 
-gCamera* gShadowMap::getCamera() {
+gCamera* gShadowMap::getCamera() const {
 	return camera;
 }
 
@@ -86,7 +86,7 @@ void gShadowMap::deactivate() {
 	isactivated = false;
 }
 
-bool gShadowMap::isActivated() {
+bool gShadowMap::isActivated() const {
 	return isactivated;
 }
 
@@ -129,7 +129,7 @@ void gShadowMap::disable() {
 	depthfbo.unbind();
 }
 
-bool gShadowMap::isEnabled() {
+bool gShadowMap::isEnabled() const {
 	return isenabled;
 }
 
@@ -143,7 +143,7 @@ void gShadowMap::setLightProjection(float leftx, float rightx, float fronty, flo
 	lightmatrix = lightprojection * lightview;
 }
 
-glm::mat4 gShadowMap::getLightProjection() {
+glm::mat4 gShadowMap::getLightProjection() const {
 	return lightprojection;
 }
 
@@ -152,15 +152,15 @@ void gShadowMap::setLightView(glm::mat4 lightView) {
 	lightmatrix = lightprojection * lightview;
 }
 
-glm::mat4 gShadowMap::getLightView() {
+glm::mat4 gShadowMap::getLightView() const {
 	return lightview;
 }
 
-glm::mat4 gShadowMap::getLightMatrix() {
+glm::mat4 gShadowMap::getLightMatrix() const {
 	return lightmatrix;
 }
 
-gFbo& gShadowMap::getDepthFbo() {
+const gFbo& gShadowMap::getDepthFbo() const {
 	return depthfbo;
 }
 

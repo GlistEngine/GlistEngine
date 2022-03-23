@@ -28,15 +28,15 @@ gModel::gModel() {
 gModel::~gModel() {
 }
 
-void gModel::load(std::string fullPath) {
+void gModel::load(const std::string& fullPath) {
 	loadModelFile(fullPath);
 }
 
-void gModel::loadModel(std::string modelPath) {
+void gModel::loadModel(const std::string& modelPath) {
 	loadModelFile(gGetModelsDir() + modelPath);
 }
 
-void gModel::loadModelFile(std::string fullPath) {
+void gModel::loadModelFile(const std::string& fullPath) {
     // read file via ASSIMP
 #ifdef LINUX
 	std::shared_ptr<aiPropertyStore> store;
@@ -82,7 +82,7 @@ void gModel::move(float dx, float dy, float dz) {
 	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i].move(dx, dy, dz);
 }
 
-void gModel::move(const glm::vec3 dv) {
+void gModel::move(const glm::vec3& dv) {
 	gNode::move(dv);
 	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i].move(dv);
 }
@@ -192,7 +192,7 @@ void gModel::rollDeg(float degrees) {
 	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i].rollDeg(degrees);
 }
 
-void gModel::setTransformationMatrix(glm::mat4 transformationMatrix) {
+void gModel::setTransformationMatrix(const glm::mat4& transformationMatrix) {
 	gNode::setTransformationMatrix(transformationMatrix);
 	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i].setTransformationMatrix(transformationMatrix);
 }
@@ -204,26 +204,26 @@ void gModel::draw() {
 	}
 }
 
-std::string gModel::getFilename() {
+const std::string& gModel::getFilename() const {
 	return filename;
 }
 
-std::string gModel::getFullpath() {
+const std::string gModel::getFullpath() const {
 	return directory + "/" + filename;
 }
 
-int gModel::getMeshNum() {
+int gModel::getMeshNum() const {
 	return meshes.size();
 }
 
-int gModel::getMeshNo(std::string meshName) {
+int gModel::getMeshNo(const std::string& meshName) const {
 	for(unsigned int i = 0; i < meshes.size(); i++) {
 		if (meshName == scene->mMeshes[i]->mName.C_Str()) return i;
 	}
 	return -1;
 }
 
-gSkinnedMesh gModel::getMesh(int meshNo) {
+gSkinnedMesh& gModel::getMesh(int meshNo) {
 	return meshes[meshNo];
 }
 
@@ -231,7 +231,7 @@ gSkinnedMesh* gModel::getMeshPtr(int meshNo) {
 	return &meshes[meshNo];
 }
 
-std::string gModel::getMeshName(int meshNo) {
+const std::string gModel::getMeshName(int meshNo) const {
 	return scene->mMeshes[meshNo]->mName.C_Str();
 }
 
@@ -365,11 +365,11 @@ void gModel::loadMaterialTextures(gSkinnedMesh* mesh, aiMaterial *mat, aiTexture
     }
 }
 
-bool gModel::isAnimated() {
+bool gModel::isAnimated() const {
 	return isanimated;
 }
 
-int gModel::getAnimationNum() {
+int gModel::getAnimationNum() const {
 	return animationnum;
 }
 
@@ -538,7 +538,7 @@ void gModel::updateBones(gSkinnedMesh* gmesh, aiMesh* aimesh) {
 void gModel::updateVbo(gSkinnedMesh* gmesh) {
 	std::vector<gVertex> vertexarray = gmesh->getVertices();
 	std::vector<unsigned int> indexarray = gmesh->getIndices();
-	for (int i=0; i<gmesh->getVbo()->getVerticesNum(); i++) {
+	for (int i=0; i<gmesh->getVbo().getVerticesNum(); i++) {
 		vertexarray[i].position = gmesh->getVertexPos(i);
 		vertexarray[i].normal = gmesh->getVertexNorm(i);
 	}
@@ -548,11 +548,11 @@ void gModel::updateVbo(gSkinnedMesh* gmesh) {
 /**
  * Returns duration in seconds.
  */
-float gModel::getAnimationDuration(int animationNo) {
+float gModel::getAnimationDuration(int animationNo) const {
 	return scene->mAnimations[animationNo]->mDuration;
 }
 
-float gModel::getAnimationPosition() {
+float gModel::getAnimationPosition() const {
 	return animationposition;
 }
 
@@ -561,7 +561,7 @@ void gModel::setAnimationFramerate(float animationFramerate) {
 	setAnimationFrameNum(getAnimationDuration() * animationframerate);
 }
 
-float gModel::getAnimationFramerate() {
+float gModel::getAnimationFramerate() const {
 	return animationframerate;
 }
 
@@ -572,7 +572,7 @@ void gModel::setAnimationFrameNum(int animationKeyNum) {
 	animationframeno = 0;
 }
 
-int gModel::getAnimationFrameNum() {
+int gModel::getAnimationFrameNum() const {
 	return animationframenum;
 }
 
@@ -588,7 +588,7 @@ void gModel::nextAnimationFrame() {
 	setAnimationFrameNo(animationframeno);
 }
 
-int gModel::getAnimationFrameNo() {
+int gModel::getAnimationFrameNo() const {
 	return animationframeno;
 }
 
@@ -693,7 +693,7 @@ void gModel::prepareVertexAnimationData() {
                 if (isvertexanimationstoredonvram) {
                 	std::vector<gVertex> vertexarray = meshes[i].getVertices();
                 	std::vector<unsigned int> indexarray = meshes[i].getIndices();
-                	for (int l=0; l<meshes[i].getVbo()->getVerticesNum(); l++) {
+                	for (int l=0; l<meshes[i].getVbo().getVerticesNum(); l++) {
                 		vertexarray[l].position = meshes[i].getVertexPosData(j, k, l);
                 		vertexarray[l].normal = meshes[i].getVertexNormData(j, k, l);
                 	}
@@ -714,11 +714,11 @@ void gModel::prepareVertexAnimationData() {
     }
 }
 
-bool gModel::isVertexAnimated() {
+bool gModel::isVertexAnimated() const {
 	return isvertexanimated;
 }
 
-bool gModel::isVertexAnimationStoredOnVram() {
+bool gModel::isVertexAnimationStoredOnVram() const {
 	return isvertexanimationstoredonvram;
 }
 
@@ -756,7 +756,7 @@ glm::mat4 gModel::convertMatrix(const aiMatrix4x4 &aiMat) {
 	};
 }
 
-gBoundingBox gModel::getInitialBoundingBox() {
+gBoundingBox& gModel::getInitialBoundingBox() {
 	initialboundingbox.setTransformationMatrix(localtransformationmatrix);
 	return initialboundingbox;
 }

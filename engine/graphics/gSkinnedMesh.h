@@ -21,22 +21,22 @@ public:
 	void resetAnimation();
 	void setVertexPos(int vertexNo, glm::vec3 newWeight);
 	void setVertexNorm(int vertexNo, glm::vec3 newWeight);
-	glm::vec3 getVertexPos(int vertexNo);
-	glm::vec3 getVertexNorm(int vertexNo);
+	const glm::vec3& getVertexPos(int vertexNo) const;
+	const glm::vec3& getVertexNorm(int vertexNo) const;
 	void clearAnimation();
 
 	void resizeVertexAnimationData(int animationNum, int frameNum, int verticesNum, bool isOnVram);
 	void resetVertexAnimationData(int animationNo, int frameNo);
 	void setVertexPosData(int animationNo, int frameNo, int vertexNo, glm::vec3 newWeight);
 	void setVertexNormData(int animationNo, int frameNo, int vertexNo, glm::vec3 newWeight);
-	glm::vec3 getVertexPosData(int animationNo, int frameNo, int vertexNo);
-	glm::vec3 getVertexNormData(int animationNo, int frameNo, int vertexNo);
+	const glm::vec3& getVertexPosData(int animationNo, int frameNo, int vertexNo) const;
+	const glm::vec3& getVertexNormData(int animationNo, int frameNo, int vertexNo) const;
 	void setVerticesData(int animationNo, int frameNo, std::vector<gVertex> vertices, std::vector<unsigned int> indices);
 
 	void setVertexAnimated(bool isVertexAnimated);
 	void setVertexAnimationStoredOnVram(bool isVertexAnimationStoredOnVram);
 	void setFrameNo(int frameNo);
-	int getFrameNo();
+	int getFrameNo() const;
 
 private:
 	std::vector<glm::vec3> animatedPos;

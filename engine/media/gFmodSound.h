@@ -30,7 +30,7 @@ public:
 	 *
 	 * @return returns generated id of the sound file.
 	 */
-	int loadSound(std::string soundPath);
+	int loadSound(const std::string& soundPath);
 
 	/**
 	 * Sets the sound data by loading the sound file from the provided path.
@@ -39,7 +39,7 @@ public:
 	 *
 	 * @return returns generated id of the sound file.
 	 */
-	int load(std::string fullPath);
+	int load(const std::string& fullPath);
 
 	/**
 	 * Plays the sound file.
@@ -80,7 +80,7 @@ public:
 	 *
 	 * @return The duration.
 	 */
-	int getDuration();
+	int getDuration() const;
 
 	/**
 	 * The position in time for the playing sound file.

@@ -44,7 +44,7 @@ public:
 	/**
 	 * @return true if light is enable, false if not
 	 */
-	bool isEnabled();
+	bool isEnabled() const;
 
 	/**
 	 * Changing type of light using id
@@ -58,7 +58,7 @@ public:
  	 *
 	 * @return light type id no
 	 */
-	int getType();
+	int getType() const;
 
 	/**
 	 * Rotates light objects around the given vector
@@ -90,7 +90,7 @@ public:
 	 *
 	 * @return Light direction with three dimensional floating point vector
 	 */
-	glm::vec3 getDirection();
+	const glm::vec3& getDirection() const;
 
 	/**
 	 * Ambient color changing with RGBA.
@@ -118,35 +118,35 @@ public:
 	 *
 	 * @return color object memory address or RGBA value
 	 */
-	gColor* getAmbientColor();
+	const gColor& getAmbientColor() const;
 
 	/**
 	 * Gives red component value range is [0,1].
 	 *
 	 * @return ambient color red component.
 	 */
-	float getAmbientColorRed();
+	float getAmbientColorRed() const;
 
 	/**
 	 * Gives green component value range is [0,1].
 	 *
 	 * @return ambient color green component.
 	 */
-	float getAmbientColorGreen();
+	float getAmbientColorGreen() const;
 
 	/**
 	 * Gives blue component value range is [0,1].
 	 *
 	 * @return ambient color blue component.
 	 */
-	float getAmbientColorBlue();
+	float getAmbientColorBlue() const;
 
 	/**
 	 * Gives alpha component value range is [0,1].
 	 *
 	 * @return ambient color alpha component.
 	 */
-	float getAmbientColorAlpha();
+	float getAmbientColorAlpha() const;
 
 	/**
 	 * Diffuse color changing with RGBA.
@@ -175,35 +175,35 @@ public:
 	 *
 	 * @return color object memory address or RGBA value
 	 */
-	gColor* getDiffuseColor();
+	const gColor& getDiffuseColor() const;
 
 	/**
 	 * Gives red component value range is [0,1].
 	 *
 	 * @return diffuse color red component.
 	 */
-	float getDiffuseColorRed();
+	float getDiffuseColorRed() const;
 
 	/**
 	 * Gives green component value range is [0,1].
 	 *
 	 * @return diffuse color green component.
 	 */
-	float getDiffuseColorGreen();
+	float getDiffuseColorGreen() const;
 
 	/**
 	 * Gives blue component value the range is
 	 *
 	 * @return diffuse color blue component.
 	 */
-	float getDiffuseColorBlue();
+	float getDiffuseColorBlue() const;
 
 	/**
 	 * Gives alpha component value range is [0,1].
 	 *
 	 * @return diffuse color alpha component.
 	 */
-	float getDiffuseColorAlpha();
+	float getDiffuseColorAlpha() const;
 
 	/**
 	 * Specular color changing with RGBA.
@@ -232,35 +232,35 @@ public:
 	 *
 	 * @return color object memory address or RGBA value
 	 */
-	gColor* getSpecularColor();
+	const gColor& getSpecularColor() const;
 
 	/**
 	 * Gives red component value range is [0,1].
 	 *
 	 * @return specular color red component.
 	 */
-	float getSpecularColorRed();
+	float getSpecularColorRed() const;
 
 	/**
 	 * Gives green component value range is [0,1].
 	 *
 	 * @return specular color green component.
 	 */
-	float getSpecularColorGreen();
+	float getSpecularColorGreen() const;
 
 	/**
 	 * Gives blue component value range is [0,1].
 	 *
 	 * @return specular color blue component.
 	 */
-	float getSpecularColorBlue();
+	float getSpecularColorBlue() const;
 
 	/**
 	 * Gives alpha component value range is [0,1].
 	 *
 	 * @return specular color alpha component.
 	 */
-	float getSpecularColorAlpha();
+	float getSpecularColorAlpha() const;
 
 	/**
 	 * When blending between these three types of attenuation, set the
@@ -299,22 +299,22 @@ public:
 	 *
 	 * @return attenuation with three dimensional floating point vector
 	 */
-	glm::vec3 getAttenuation();
+	const glm::vec3& getAttenuation() const;
 
 	/**
 	 * @return light attenuation constant value
 	 */
-	float getAttenuationConstant();
+	float getAttenuationConstant() const;
 
 	/**
 	 * @return light attenuation linear value
 	 */
-	float getAttenuationLinear();
+	float getAttenuationLinear() const;
 
 	/**
 	 * @return light attenuation quadratic value
 	 */
-	float getAttenuationQuadratic();
+	float getAttenuationQuadratic() const;
 
 	/**
 	 * Value that specifies the maximum spread angle of a light source.
@@ -336,7 +336,7 @@ public:
 	 *
 	 * @return spot cut off angles
 	 */
-	glm::vec2 getSpotCutOff();
+	const glm::vec2& getSpotCutOff() const;
 
 	/**
 	 * @param cutOffAngle changing minimum angle
@@ -346,12 +346,12 @@ public:
 	/**
 	 * @return spot angle between minimum angle
 	 */
-	float getSpotCutOffAngle();
+	float getSpotCutOffAngle() const;
 
 	/**
 	 * @return spot angle between minimum angle and maximum angle
 	 */
-	float getSpotOuterCutOffAngle();
+	float getSpotOuterCutOffAngle() const;
 
 	/**
 	 * @param cutOffSpreadAngle changing maximum angle
@@ -361,7 +361,7 @@ public:
 	/**
 	 * @return spot angle between maximum angle
 	 */
-	float getSpotCutOffSpread();
+	float getSpotCutOffSpread() const;
 
 private:
 	int type;

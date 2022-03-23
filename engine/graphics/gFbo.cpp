@@ -102,10 +102,12 @@ unsigned int gFbo::getTextureId() {
 
 void gFbo::bind() {
 	glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+	glViewport(0, 0, width, height);
 }
 
 void gFbo::unbind() {
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glViewport(0, 0, renderer->getWidth(), renderer->getHeight());
 }
 
 void gFbo::draw(int x, int y) {
@@ -153,7 +155,7 @@ void gFbo::drawSub(const gRect& src, const gRect& dst, float rotate) {
 	texture.drawSub(src, dst, rotate);
 }
 
-gTexture& gFbo::getTexture() {
+const gTexture& gFbo::getTexture() const {
 	return texture;
 }
 

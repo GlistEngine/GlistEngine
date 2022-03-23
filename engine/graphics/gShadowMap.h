@@ -29,33 +29,33 @@ public:
 	virtual ~gShadowMap();
 
 	void allocate(gLight* light, gCamera* camera, int width = 4096, int height = 4096);
-	bool isAllocated();
-	int getWidth();
-	int getHeight();
+	bool isAllocated() const;
+	int getWidth() const;
+	int getHeight() const;
 
 	void update();
 
 	void setLight(gLight* light);
 	void setCamera(gCamera* camera);
-	gLight* getLight();
-	gCamera* getCamera();
+	gLight* getLight() const;
+	gCamera* getCamera() const;
 
 	void activate();
 	void deactivate();
-	bool isActivated();
+	bool isActivated() const;
 
 	void enable();
 	void disable();
-	bool isEnabled();
+	bool isEnabled() const;
 
 	void setLightProjection(glm::mat4 lightProjection);
 	void setLightProjection(float leftx, float rightx, float fronty, float backy, float nearz, float farz);
 	void setLightView(glm::mat4 lightView);
-	glm::mat4 getLightProjection();
-	glm::mat4 getLightView();
-	glm::mat4 getLightMatrix();
+	glm::mat4 getLightProjection() const;
+	glm::mat4 getLightView() const;
+	glm::mat4 getLightMatrix() const;
 
-	gFbo& getDepthFbo();
+	const gFbo& getDepthFbo() const;
 
 
 private:

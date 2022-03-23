@@ -49,7 +49,8 @@ void gLine::draw(float x1, float y1, float z1, float x2, float y2, float z2) {
 
 
 void gLine::setLinePoints(float x1, float y1, float z1, float x2, float y2, float z2) {
-	verticessb.clear();
+	if(verticessb.size() > 0)
+        verticessb.clear();
 
 	vertex1.position.x = x1;
 	vertex1.position.y = y1;
@@ -64,8 +65,3 @@ void gLine::setLinePoints(float x1, float y1, float z1, float x2, float y2, floa
 	setVertices(verticessb);
 	setDrawMode(gMesh::DRAWMODE_LINES);
 }
-
-
-gLine::~gLine() {
-}
-

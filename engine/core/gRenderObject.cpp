@@ -19,9 +19,6 @@ gRenderObject::gRenderObject() {
 	if(!isrendermaterialsloaded) loadRenderMaterials();
 }
 
-gRenderObject::~gRenderObject() {
-}
-
 void gRenderObject::loadRenderMaterials() {
 	renderer = new gRenderer();
 
