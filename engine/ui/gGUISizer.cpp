@@ -363,9 +363,9 @@ void gGUISizer::mousePressed(int x, int y, int button) {
 				if(guicontrol[i][j]->iscursoron) {
 					guicontrol[i][j]->isfocused = true;
 					guicontrol[i][j]->mousePressed(x, y, button);
-					if(!focusold) root->getCurrentCanvas()->onGuiEvent(id, GUIEVENT_FOCUSED);
+//					if(!focusold) root->getCurrentCanvas()->onGuiEvent(id, GUIEVENT_FOCUSED);
 				}
-				if(focusold && !guicontrol[i][j]->isfocused) root->getCurrentCanvas()->onGuiEvent(id, GUIEVENT_UNFOCUSED);
+//				if(focusold && !guicontrol[i][j]->isfocused) root->getCurrentCanvas()->onGuiEvent(id, GUIEVENT_UNFOCUSED);
 			}
 		}
 	}

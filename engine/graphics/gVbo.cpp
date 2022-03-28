@@ -27,8 +27,6 @@ gVbo::gVbo() {
 }
 
 gVbo::~gVbo() {
-    //glDeleteVertexArrays(1, &vao);
-    //glDeleteBuffers(1, &vbo);
 }
 
 void gVbo::setVertexData(gVertex* vertices, int coordNum, int total) {
@@ -85,6 +83,11 @@ void gVbo::setIndexData(unsigned int* indices, int total) {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, totalindexnum * sizeof(unsigned int), indexarrayptr, GL_STATIC_DRAW);
     glBindVertexArray(0);
+}
+
+void gVbo::clear() {
+    glDeleteVertexArrays(1, &vao);
+    glDeleteBuffers(1, &vbo);
 }
 
 gVertex* gVbo::getVertices() const {

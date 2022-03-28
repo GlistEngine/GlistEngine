@@ -13,6 +13,7 @@ int gBaseGUIObject::lastid = -1;
 gColor* gBaseGUIObject::backgroundcolor;
 gColor* gBaseGUIObject::middlegroundcolor;
 gColor* gBaseGUIObject::foregroundcolor;
+gColor* gBaseGUIObject::textbackgroundcolor;
 gFont* gBaseGUIObject::font;
 gColor* gBaseGUIObject::fontcolor;
 gColor* gBaseGUIObject::buttoncolor;
@@ -93,12 +94,16 @@ void gBaseGUIObject::setBackgroundColor(gColor* backgroundColor) {
 	backgroundcolor = backgroundColor;
 }
 
+gColor* gBaseGUIObject::getBackgroundColor() {
+	return backgroundcolor;
+}
+
 void gBaseGUIObject::setMiddlegroundColor(gColor* middlegroundColor) {
 	middlegroundcolor = middlegroundColor;
 }
 
-gColor* gBaseGUIObject::getBackgroundColor() {
-	return backgroundcolor;
+gColor* gBaseGUIObject::getMiddlegroundColor() {
+	return middlegroundcolor;
 }
 
 void gBaseGUIObject::setForegroundColor(gColor* foregroundColor) {
@@ -107,6 +112,14 @@ void gBaseGUIObject::setForegroundColor(gColor* foregroundColor) {
 
 gColor* gBaseGUIObject::getForegroundColor() {
 	return foregroundcolor;
+}
+
+void gBaseGUIObject::setTextBackgroundColor(gColor* textBackgroundColor) {
+	textbackgroundcolor = textBackgroundColor;
+}
+
+gColor* gBaseGUIObject::getTextBackgroundColor() {
+	return textbackgroundcolor;
 }
 
 void gBaseGUIObject::setFont(gFont* font) {

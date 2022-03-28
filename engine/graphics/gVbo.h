@@ -32,6 +32,7 @@ public:
 
 	void setVertexData(gVertex* vertices, int coordNum, int total);
 	void setIndexData(unsigned int* indices, int total);
+	void clear();
 
 	void bind() const;
 	void unbind() const;

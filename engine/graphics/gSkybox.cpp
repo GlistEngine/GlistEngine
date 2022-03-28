@@ -209,7 +209,7 @@ unsigned int gSkybox::loadEquirectangular(const std::string& fullPath) {
 	glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
 
 	if(ispbr) generatePbrMaps();
-
+	glViewport(0, 0, getScreenWidth(), getScreenHeight());
 	return id;
 }
 

@@ -12,6 +12,7 @@
 
 // Constructor with vectors
 gCamera::gCamera(glm::vec3 camPosition) {
+	gizmos = nullptr;
 	fov = 60.0f;
 	nearclip = 0.01f;
 	farclip = 1000.0f;
@@ -24,6 +25,7 @@ gCamera::gCamera(glm::vec3 camPosition) {
 
 // Constructor with scalar values
 gCamera::gCamera(float camPosX, float camPosY, float camPosZ) {
+	gizmos = nullptr;
 	fov = 60.0f;
 	nearclip = 0.01f;
 	farclip = 1000.0f;

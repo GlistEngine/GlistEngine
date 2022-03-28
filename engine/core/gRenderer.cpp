@@ -66,16 +66,19 @@ int gGetCullingDirection() {
 void gDrawLine(float x1, float y1, float x2, float y2) {
 	gLine linemesh;
 	linemesh.draw(x1, y1, x2, y2);
+	linemesh.clear();
 }
 
 void gDrawLine(float x1, float y1, float z1, float x2, float y2, float z2) {
 	gLine linemesh;
 	linemesh.draw(x1, y1, z1, x2, y2, z2);
+	linemesh.clear();
 }
 
  void gDrawCircle(float xCenter, float yCenter, float radius, bool isFilled, float numberOfSides) {
 	gCircle circlemesh;
 	circlemesh.draw(xCenter, yCenter, radius, isFilled, numberOfSides);
+	circlemesh.clear();
 }
 
 void gDrawArrow(float x1, float y1, float length, float angle, float tipLength, float tipAngle) {
@@ -86,11 +89,13 @@ void gDrawArrow(float x1, float y1, float length, float angle, float tipLength, 
 	linemesh.draw(x2, y2, x1, y1);
 	linemesh.draw(x1, y1, x1 + std::cos(gDegToRad(angle) - gDegToRad(tipAngle)) * tipLength, y1 + std::sin(gDegToRad(angle) - gDegToRad(tipAngle)) * tipLength);
 	linemesh.draw(x1, y1, x1 + (std::cos(gDegToRad(angle) + gDegToRad(tipAngle)) * tipLength) , y1 + std::sin(gDegToRad(angle) + gDegToRad(tipAngle)) * tipLength);
+	linemesh.clear();
 }
 
 void gDrawRectangle(float x, float y, float w, float h, bool isFilled) {
 	gRectangle rectanglemesh;
  	rectanglemesh.draw(x, y, w, h, isFilled);
+ 	rectanglemesh.clear();
 }
 
 void gDrawRectangle(float x, float y, float w, float h, bool isFilled, float thickness, float borderposition) {
@@ -98,11 +103,13 @@ void gDrawRectangle(float x, float y, float w, float h, bool isFilled, float thi
 			for(int i = 0; i < thickness; i++) {
 				gRectangle rectanglemesh;
 			 	rectanglemesh.draw(x + i, y + i, w - i*2, h - i*2, isFilled);
+				rectanglemesh.clear();
 			}
 		} else if (borderposition == 1.0f) {
 			for(int i = 0; i < thickness; i++) {
 				gRectangle rectanglemesh;
 			 	rectanglemesh.draw(x - i, y - i, w + i*2, h + i*2, isFilled);
+				rectanglemesh.clear();
 			}
 		}else if (borderposition > 0.0f && borderposition < 1.0f) {
 			//calculating how many pixel is sided to each
@@ -114,11 +121,13 @@ void gDrawRectangle(float x, float y, float w, float h, bool isFilled, float thi
 			for(int i = 0; i < outside; i++) {
 				gRectangle rectanglemesh;
 			 	rectanglemesh.draw(x - i, y - i, w + i*2, h + i*2, isFilled);
+				rectanglemesh.clear();
 			}
 			//inside border
 			for(int i = 0; i < inside; i++) {
 				gRectangle rectanglemesh;
 			 	rectanglemesh.draw(x + i, y + i, w - i*2, h - i*2, isFilled);
+				rectanglemesh.clear();
 			}
 		}
 }
