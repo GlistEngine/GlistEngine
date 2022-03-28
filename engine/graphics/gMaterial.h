@@ -24,24 +24,24 @@ public:
 	void setAmbientColor(int r, int g, int b, int a = 255);
 	void setAmbientColor(float r, float g, float b, float a = 1.0f);
 	void setAmbientColor(gColor* color);
-	const gColor& getAmbientColor() const;
+	gColor* getAmbientColor();
 
 	void setDiffuseColor(int r, int g, int b, int a = 255);
 	void setDiffuseColor(float r, float g, float b, float a = 1.0f);
 	void setDiffuseColor(gColor* color);
-	const gColor& getDiffuseColor() const;
+	gColor* getDiffuseColor();
 
 	void setSpecularColor(int r, int g, int b, int a = 255);
 	void setSpecularColor(float r, float g, float b, float a = 1.0f);
 	void setSpecularColor(gColor* color);
-	const gColor& getSpecularColor() const;
+	gColor* getSpecularColor();
 
 	void setShininess(float shininess);
 	float getShininess() const;
 
 	void loadDiffuseMap(const std::string& texturePath);
 	void setDiffuseMap(gTexture* diffuseMap);
-	const gTexture* getDiffuseMap() const;
+	gTexture* getDiffuseMap();
 	void bindDiffuseMap() const;
 	void unbindDiffuseMap() const;
 	void setDiffuseMapEnabled(bool enableDiffuseMap);
@@ -49,7 +49,7 @@ public:
 
 	void loadSpecularMap(const std::string& texturePath);
 	void setSpecularMap(gTexture* specularMap);
-	const gTexture* getSpecularMap() const;
+	gTexture* getSpecularMap();
 	void bindSpecularMap() const;
 	void unbindSpecularMap() const;
 	void setSpecularMapEnabled(bool enableSpecularMap);
@@ -57,7 +57,7 @@ public:
 
 	void loadNormalMap(const std::string& texturePath);
 	void setNormalMap(gTexture* normalMap);
-	const gTexture* getNormalMap() const;
+	gTexture* getNormalMap();
 	void bindNormalMap() const;
 	void unbindNormalMap() const;
 	void setNormalMapEnabled(bool enableNormalMap);
@@ -65,7 +65,7 @@ public:
 
 	void loadHeightMap(const std::string& texturePath);
 	void setHeightMap(gTexture* heightMap);
-	const gTexture* getHeightMap() const;
+	gTexture* getHeightMap();
 	void bindHeightMap() const;
 	void unbindHeightMap() const;
 	void setHeightMapEnabled(bool enableHeightMap);
@@ -73,7 +73,7 @@ public:
 
 	void loadAlbedoMap(const std::string& texturePath);
 	void setAlbedoMap(gTexture* albedoMap);
-	const gTexture* getAlbedoMap() const;
+	gTexture* getAlbedoMap();
 	void bindAlbedoMap(int slotNo = 3) const;
 	void unbindAlbedoMap() const;
 	void setAlbedoMapEnabled(bool enableNormalMap);
@@ -81,7 +81,7 @@ public:
 
 	void loadRoughnessMap(const std::string& texturePath);
 	void setRoughnessMap(gTexture* roughnessMap);
-	const gTexture* getRoughnessMap() const;
+	gTexture* getRoughnessMap();
 	void bindRoughnessMap(int slotNo = 6) const;
 	void unbindRoughnessMap() const;
 	void setRoughnessMapEnabled(bool enableRoughnessMap);
@@ -89,7 +89,7 @@ public:
 
 	void loadMetalnessMap(const std::string& texturePath);
 	void setMetalnessMap(gTexture* metalnessMap);
-	const gTexture* getMetalnessMap() const;
+	gTexture* getMetalnessMap();
 	void bindMetalnessMap(int slotNo = 5);
 	void unbindMetalnessMap() const;
 	void setMetalnessMapEnabled(bool enableMetalnessMap);
@@ -97,7 +97,7 @@ public:
 
 	void loadPbrNormalMap(const std::string& texturePath);
 	void setPbrNormalMap(gTexture* pbrNormalMap);
-	const gTexture* getPbrNormalMap() const;
+	gTexture* getPbrNormalMap();
 	void bindPbrNormalMap(int slotNo = 4) const;
 	void unbindPbrNormalMap() const;
 	void setPbrNormalMapEnabled(bool enablePbrNormalMap);
@@ -105,7 +105,7 @@ public:
 
 	void loadAOMap(const std::string& texturePath);
 	void setAOMap(gTexture* aoMap);
-	const gTexture* getAOMap() const;
+	gTexture* getAOMap();
 	void bindAOMap(int slotNo = 7) const;
 	void unbindAOMap() const;
 	void setAOMapEnabled(bool enableAOMap);

@@ -153,7 +153,7 @@ void gFbo::drawSub(const gRect& src, const gRect& dst, float rotate) {
 	texture.drawSub(src, dst, rotate);
 }
 
-const gTexture& gFbo::getTexture() const {
+gTexture& gFbo::getTexture() {
 	return texture;
 }
 

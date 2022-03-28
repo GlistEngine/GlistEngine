@@ -58,8 +58,8 @@ public:
 	void setIndexData(const int* indices, int total, int usage);
 
 	int getVAOid() const;
-	const gVertex* getVertices() const;
-	const unsigned int* getIndices() const;
+	gVertex* getVertices() const;
+	unsigned int* getIndices() const;
 	int getVerticesNum() const;
 	int getIndicesNum() const;
 

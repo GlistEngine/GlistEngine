@@ -87,11 +87,11 @@ void gVbo::setIndexData(unsigned int* indices, int total) {
     glBindVertexArray(0);
 }
 
-const gVertex* gVbo::getVertices() const {
+gVertex* gVbo::getVertices() const {
 	return verticesptr;
 }
 
-const unsigned int* gVbo::getIndices() const {
+unsigned int* gVbo::getIndices() const {
 	return indexarrayptr;
 }
 
