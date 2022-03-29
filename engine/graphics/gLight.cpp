@@ -55,7 +55,7 @@ void gLight::rotate(float angle, float ax, float ay, float az) {
 	directioneuler = glm::vec3(0, 0, -1) * orientation;
 }
 
-const glm::vec3& gLight::getDirection() const{
+const glm::vec3& gLight::getDirection() const {
 //	glm::vec3 euler = glm::vec3(0, 0, -1) * orientation;
 //	logi("Euler x:" + str(euler.x), ", y: " + str(euler.y) + ", z:" + str(euler.z));
 	return directioneuler;
@@ -69,8 +69,8 @@ void gLight::setAmbientColor(gColor* color) {
 	ambientcolor.set(color->r, color->g, color->b, color->a);
 }
 
-const gColor& gLight::getAmbientColor() const {
-	return ambientcolor;
+gColor* gLight::getAmbientColor() {
+	return &ambientcolor;
 }
 
 float gLight::getAmbientColorRed() const {
@@ -114,8 +114,8 @@ void gLight::setDiffuseColor(gColor* color) {
 	diffusecolor.set(color->r, color->g, color->b, color->a);
 }
 
-const gColor& gLight::getDiffuseColor() const {
-	return diffusecolor;
+gColor* gLight::getDiffuseColor() {
+	return &diffusecolor;
 }
 
 void gLight::setSpecularColor(int r, int g, int b, int a) {
@@ -126,8 +126,8 @@ void gLight::setSpecularColor(gColor* color) {
 	specularcolor.set(color->r, color->g, color->b, color->a);
 }
 
-const gColor& gLight::getSpecularColor() const {
-	return specularcolor;
+gColor* gLight::getSpecularColor() {
+	return &specularcolor;
 }
 
 float gLight::getSpecularColorRed() const {

@@ -74,11 +74,11 @@ void gMesh::setVertices(std::vector<gVertex> vertices, std::vector<unsigned int>
 //	initialboundingbox.setTransformationMatrix(localtransformationmatrix);
 }
 
-const std::vector<gVertex>& gMesh::getVertices() const {
+std::vector<gVertex>& gMesh::getVertices() {
 	return vertices;
 }
 
-const std::vector<unsigned int>& gMesh::getIndices() const{
+std::vector<unsigned int>& gMesh::getIndices() {
 	return indices;
 }
 
@@ -135,8 +135,8 @@ void gMesh::addTexture(gTexture tex) {
 	textures.push_back(tex);
 }
 
-const gTexture& gMesh::getTexture(int textureNo) const {
-	return textures[textureNo];
+gTexture* gMesh::getTexture(int textureNo) {
+	return &textures[textureNo];
 }
 
 
@@ -152,8 +152,8 @@ void gMesh::setMaterial(gMaterial* material) {
 	this->material = *material;
 }
 
-gMaterial& gMesh::getMaterial() {
-	return material;
+gMaterial* gMesh::getMaterial() {
+	return &material;
 }
 
 
@@ -181,9 +181,9 @@ void gMesh::drawStart() {
 	    colorshader->setVec4("renderColor", renderer->getColor()->r, renderer->getColor()->g, renderer->getColor()->b, renderer->getColor()->a);
 
 	    // Set material colors
-	    colorshader->setVec4("material.ambient", material.getAmbientColor().r, material.getAmbientColor().g, material.getAmbientColor().b, material.getAmbientColor().a);
-	    colorshader->setVec4("material.diffuse", material.getDiffuseColor().r, material.getDiffuseColor().g, material.getDiffuseColor().b, material.getDiffuseColor().a);
-	    colorshader->setVec4("material.specular", material.getSpecularColor().r, material.getSpecularColor().g, material.getSpecularColor().b, material.getSpecularColor().a);
+	    colorshader->setVec4("material.ambient", material.getAmbientColor()->r, material.getAmbientColor()->g, material.getAmbientColor()->b, material.getAmbientColor()->a);
+	    colorshader->setVec4("material.diffuse", material.getDiffuseColor()->r, material.getDiffuseColor()->g, material.getDiffuseColor()->b, material.getDiffuseColor()->a);
+	    colorshader->setVec4("material.specular", material.getSpecularColor()->r, material.getSpecularColor()->g, material.getSpecularColor()->b, material.getSpecularColor()->a);
 	    colorshader->setFloat("material.shininess", material.getShininess());
 
 	    // Bind diffuse textures
@@ -265,7 +265,7 @@ void gMesh::drawStart() {
     		pbrshader->setInt("lightNum", renderer->getSceneLightNum());
 	    	for (sli = 0; sli < renderer->getSceneLightNum(); sli++) {
 	    		pbrshader->setVec3("lightPositions[" + gToStr(sli) + "]", renderer->getSceneLight(sli)->getPosition());
-	    		pbrshader->setVec3("lightColors[" + gToStr(sli) + "]", glm::vec3(renderer->getSceneLight(sli)->getDiffuseColor().r, renderer->getSceneLight(sli)->getDiffuseColor().g, renderer->getSceneLight(sli)->getDiffuseColor().b));
+	    		pbrshader->setVec3("lightColors[" + gToStr(sli) + "]", glm::vec3(renderer->getSceneLight(sli)->getDiffuseColor()->r, renderer->getSceneLight(sli)->getDiffuseColor()->g, renderer->getSceneLight(sli)->getDiffuseColor()->b));
 	    	}
 	    }
 
@@ -331,8 +331,8 @@ int gMesh::getIndicesNum() const {
 	return vbo.getIndicesNum();
 }
 
-const gVbo& gMesh::getVbo() const {
-	return vbo;
+gVbo* gMesh::getVbo() {
+	return &vbo;
 }
 
 gBoundingBox gMesh::getBoundingBox() {

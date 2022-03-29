@@ -90,11 +90,11 @@ void gVbo::clear() {
     glDeleteBuffers(1, &vbo);
 }
 
-const gVertex* gVbo::getVertices() const {
+gVertex* gVbo::getVertices() const {
 	return verticesptr;
 }
 
-const unsigned int* gVbo::getIndices() const {
+unsigned int* gVbo::getIndices() const {
 	return indexarrayptr;
 }
 

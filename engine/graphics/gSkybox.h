@@ -34,13 +34,13 @@ public:
 	 * Loads skybox textures from the assets/textures folder. 6 textures needed for the 6 sided skybox. Due to OpenGL instructions,
 	 * the textures should be in this order: right, left, top, bottom, front, back.
 	 */
-	unsigned int loadTextures(const std::vector<std::string>& texturePaths);
+	unsigned int loadTextures(std::vector<std::string>& texturePaths);
 
 	/**
 	 * Loads skybox textures from the given full paths. 6 textures needed for the 6 sided skybox. Due to OpenGL instructions,
 	 * the textures should be in this order: right, left, top, bottom, front, back.
 	 */
-	unsigned int load(const std::vector<std::string>& fullPaths);
+	unsigned int load(std::vector<std::string>& fullPaths);
 
 	void loadSkybox(gImage* images);
 

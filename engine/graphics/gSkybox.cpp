@@ -37,15 +37,14 @@ gSkybox::gSkybox() {
 
 gSkybox::~gSkybox() {}
 
-unsigned int gSkybox::loadTextures(const std::vector<std::string>& texturePaths) {
-	std::vector<std::string> temp;
+unsigned int gSkybox::loadTextures(std::vector<std::string>& texturePaths) {
 	for (int i = 0; i < texturePaths.size(); i++) {
-		temp.push_back(std::move<std::string>(gGetTexturesDir() + texturePaths[i]));
+		texturePaths[i] = gGetTexturesDir() + texturePaths[i];
 	}
-	return load(temp);
+	return load(texturePaths);
 }
 
-unsigned int gSkybox::load(const std::vector<std::string>& fullPaths) {
+unsigned int gSkybox::load(std::vector<std::string>& fullPaths) {
 	skymapslot = GL_TEXTURE0;
 	skymapint = 0;
 

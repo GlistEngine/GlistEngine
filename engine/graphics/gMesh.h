@@ -36,10 +36,10 @@ public:
 	void setTextures(std::vector<gTexture>& textures);
 	void setTexture(gTexture* texture);
 	void addTexture(gTexture tex);
-	const gTexture& getTexture(int textureNo) const;
+	gTexture* getTexture(int textureNo);
 
-	const std::vector<gVertex>& getVertices() const;
-	const std::vector<unsigned int>& getIndices() const;
+	std::vector<gVertex>& getVertices();
+	std::vector<unsigned int>& getIndices();
 	int getVerticesNum() const;
 	int getIndicesNum() const;
 	gBoundingBox getBoundingBox();
@@ -53,7 +53,7 @@ public:
 	int getDrawMode() const;
 
 	void setMaterial(gMaterial* material);
-	gMaterial& getMaterial();
+	gMaterial* getMaterial();
 
 	void draw();
 
