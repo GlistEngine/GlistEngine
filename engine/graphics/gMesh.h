@@ -43,7 +43,7 @@ public:
 	int getVerticesNum() const;
 	int getIndicesNum() const;
 	gBoundingBox getBoundingBox();
-	const gVbo& getVbo() const;
+	gVbo* getVbo();
 	void clear();
 
 	void setName(std::string name);
