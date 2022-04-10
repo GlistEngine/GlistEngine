@@ -150,8 +150,10 @@ set(SRC_FILES
 	${ENGINE_DIR}/ui/gGUIToolbarButton.cpp
 	${ENGINE_DIR}/ui/gGUIButton.cpp
 	${ENGINE_DIR}/ui/gGUISizer.cpp
+	${ENGINE_DIR}/ui/gGUINavigation.cpp
 	${ENGINE_DIR}/ui/gGUIToolbar.cpp
 	${ENGINE_DIR}/ui/gGUIMenubar.cpp
+	${ENGINE_DIR}/ui/gGUIPane.cpp
 	${ENGINE_DIR}/ui/gGUIPanel.cpp
 	${ENGINE_DIR}/ui/gGUIScrollable.cpp
 	${ENGINE_DIR}/ui/gGUIFrame.cpp
