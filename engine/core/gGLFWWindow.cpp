@@ -169,6 +169,18 @@ void gGLFWWindow::setCursorMode(int cursorMode) {
 #endif
 }
 
+void gGLFWWindow::setClipboardString(std::string text) {
+#if defined(WIN32) || defined(LINUX) || defined(APPLE)
+	glfwSetClipboardString(window, text.c_str());
+#endif
+}
+
+std::string gGLFWWindow::getClipboardString() {
+#if defined(WIN32) || defined(LINUX) || defined(APPLE)
+	return glfwGetClipboardString(window);
+#endif
+}
+
 #if defined(WIN32) || defined(LINUX) || defined(APPLE)
 void gGLFWWindow::framebuffer_size_callback(GLFWwindow* window, int width, int height) {
     glViewport(0, 0, width, height);

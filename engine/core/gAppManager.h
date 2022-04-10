@@ -220,6 +220,13 @@ public:
 	 */
 	void setWindow(gBaseWindow * baseWindow);
 
+	/**
+	 * Returns the window mode of the application.
+	 *
+	 * @return window mode.
+	 */
+	int getWindowMode();
+
 	void setCursor(int cursorId);
 	void setCursorMode(int cursorMode);
 
@@ -416,6 +423,9 @@ public:
 	void enableVsync();
 	void disableVsync();
 
+	void setClipboardString(std::string text);
+	std::string getClipboardString();
+
 private:
 	using AppClock = std::chrono::steady_clock;
 	using AppClockDuration = AppClock::duration;
@@ -427,6 +437,7 @@ private:
 	std::string appname;
 	gBaseWindow* window;
 	gBaseApp* app;
+	int windowmode;
 	gBaseCanvas* canvas;
 	gCanvasManager* canvasmanager;
 	gGUIManager* guimanager;

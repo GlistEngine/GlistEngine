@@ -60,6 +60,10 @@ public:
 	void setCursor(int cursorNo);
 	void setCursorMode(int cursorMode);
 
+	void setClipboardString(std::string text);
+	std::string getClipboardString();
+
+
 private:
 #if defined(WIN32) || defined(LINUX) || defined(APPLE)
 	GLFWwindow* window;
