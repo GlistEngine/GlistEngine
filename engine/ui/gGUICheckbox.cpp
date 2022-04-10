@@ -71,15 +71,19 @@ void gGUICheckbox::update() {
 }
 
 void gGUICheckbox::draw() {
-//	gLogi("gGUICheckbox") << "draw";
-	renderer->setColor(&bcolor);
-	gDrawRectangle(left, top, buttonw, buttonh, true);
+	if(!ischecked) {
+		renderer->setColor(&bcolor);
+		gDrawRectangle(left, top, buttonw, buttonh, true);
+	}
 	renderer->setColor(middlegroundcolor);
 	gDrawRectangle(left, top, buttonw, buttonh, false);
 	renderer->setColor(255, 255, 255);
 
 	if (ischecked) {
-		renderer->setColor(fontcolor);
+		renderer->setColor(26, 115, 222);
+		gDrawRectangle(left, top, buttonw, buttonh, true);
+//		renderer->setColor(fontcolor);
+		renderer->setColor(255, 255, 255);
 		gDrawLine(left + 2, top + buttonh / 2, left + buttonw / 2, top + buttonh - 2);
 		gDrawLine(left + buttonw / 2, top + buttonh - 2, left + buttonw - 2, top + 2);
 		renderer->setColor(255, 255, 255);
@@ -94,17 +98,17 @@ void gGUICheckbox::draw() {
 
 void gGUICheckbox::mousePressed(int x, int y, int button) {
 //	gLogi("gGUICheckbox") << "pressed, id:" << id;
-	if(x >= left && x < left + buttonw && y >= top && y < top + buttonh) {
-		ischecked = !ischecked;
+	if(x >= left && x < left + buttonw + titlew && y >= top && y < top + buttonh) {
+
 	}
-	root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_CHECKBOXTICKED);
 }
 
 void gGUICheckbox::mouseReleased(int x, int y, int button) {
 //	gLogi("gGUICheckbox") << "released, id:" << id;
-	if(x >= left && x < left + buttonw && y >= top && y < top + buttonh) {
-
+	if(x >= left && x < left + buttonw + titlew && y >= top && y < top + buttonh) {
+		ischecked = !ischecked;
+		if(ischecked) root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_CHECKBOXTICKED);
+		else root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_CHECKBOXUNTICKED);
 	}
-	root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_CHECKBOXUNTICKED);
 }
 
