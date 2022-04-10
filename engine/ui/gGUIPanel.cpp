@@ -11,6 +11,7 @@
 gGUIPanel::gGUIPanel() {
 	topbarh = 30;
 	toplineh = topbarh * 7 / 10;
+	setSizer(&panelsizer);
 }
 
 gGUIPanel::~gGUIPanel() {

@@ -30,6 +30,18 @@ gGUISizer::gGUISizer() {
 	fillbackground = false;
 	slotpadding = 2;
 	rescaling = true;
+
+	guicontrol = new gGUIControl**[linenum];
+	for(int i = 0; i < linenum; i++) guicontrol[i] = new gGUIControl*[columnnum];
+
+	iscontrolset = new bool*[linenum];
+	for(int i = 0; i < linenum; i++) iscontrolset[i] = new bool[columnnum];
+	for(int i = 0; i < linenum; i++) {
+		for(int j = 0; j < columnnum; j++) {
+			iscontrolset[i][j] = false;
+		}
+	}
+
 }
 
 gGUISizer::~gGUISizer() {
@@ -46,14 +58,14 @@ void gGUISizer::set(int x, int y, int w, int h) {
 	for (int i = 0; i < linenum; i++) {
 		for (int j = 0; j < columnnum; j++) {
 			if(iscontrolset[i][j]) {
-				int cr = guicontrol[i][j]->left;
+				int cr = guicontrol[i][j]->left + slotpadding;
 				int cb = guicontrol[i][j]->top;
-				int cw = guicontrol[i][j]->width;
+				int cw = guicontrol[i][j]->width - (slotpadding * 2);
 				int ch = guicontrol[i][j]->height;
 				if(rescaling) {
-					cr = left + (width * columntprs[j]);
+					cr = left + (width * columntprs[j]) + slotpadding;
 					cb = top + (height * linetprs[i]);
-					cw = width * (columntprs[j + 1] - columntprs[j]);
+					cw = width * (columntprs[j + 1] - columntprs[j]) - (slotpadding * 2);
 					ch = height * (linetprs[i + 1] - linetprs[i]);
 				}
 				guicontrol[i][j]->set(
@@ -76,13 +88,23 @@ int gGUISizer::getSizerType() {
 }
 
 void gGUISizer::setSize(int lineNum, int columnNum) {
+
+	for(int i = 0; i < linenum; i++) {
+		delete[] guicontrol[i];
+		delete[] iscontrolset[i];
+	}
+	delete[] guicontrol;
+	delete[] iscontrolset;
+
 	linenum = lineNum;
 	columnnum = columnNum;
 	sizertype = detectSizerType();
+
 	guicontrol = new gGUIControl**[linenum];
-	for(int i = 0; i < linenum; i++) guicontrol[i] = new gGUIControl*[columnNum];
+	for(int i = 0; i < linenum; i++) guicontrol[i] = new gGUIControl*[columnnum];
+
 	iscontrolset = new bool*[linenum];
-	for(int i = 0; i < linenum; i++) iscontrolset[i] = new bool[columnNum];
+	for(int i = 0; i < linenum; i++) iscontrolset[i] = new bool[columnnum];
 	for(int i = 0; i < linenum; i++) {
 		for(int j = 0; j < columnnum; j++) {
 			iscontrolset[i][j] = false;
@@ -91,11 +113,11 @@ void gGUISizer::setSize(int lineNum, int columnNum) {
 
 	delete lineprs;
 	lineprs = new float[linenum];
-	for(int i = 0; i < linenum; i++) lineprs[i] = 1.0f / linenum;
+	for(int i = 0; i < linenum; i++) lineprs[i] = 1.0f / (float)linenum;
 
 	delete columnprs;
 	columnprs = new float[columnnum];
-	for(int i = 0; i < columnnum; i++) columnprs[i] = 1.0f / columnnum;
+	for(int i = 0; i < columnnum; i++) columnprs[i] = 1.0f / (float)columnnum;
 
 	delete linetprs;
 	linetprs = new float[linenum + 1];
@@ -165,9 +187,10 @@ void gGUISizer::setControl(int lineNo, int columnNo, gGUIControl* guiControl) {
 //	guicontrol[lineNo][columnNo]->setRootApp(root);
 	guicontrol[lineNo][columnNo]->set(root, this, lineNo, columnNo,
 			left + (width * columntprs[columnNo]) + slotpadding,
-			top + (height * linetprs[lineNo]) + slotpadding,
+			top + (height * linetprs[lineNo]),
 			(left + (width * columntprs[columnNo + 1])) - (left + (width * columntprs[columnNo])) - (2 * slotpadding),
-			(top + (height * linetprs[lineNo + 1])) - (top + (height * linetprs[lineNo])) - (2 * slotpadding)
+			(top + (height * linetprs[lineNo + 1])) - (top + (height * linetprs[lineNo]))
+//			(top + (height * linetprs[lineNo + 1])) - (top + (height * linetprs[lineNo])) - (2 * slotpadding)
 	);
 	iscontrolset[lineNo][columnNo] = true;
 //	gLogi("Sizer") << "setControl id:" << id << ", w:" << width << ", h:" << height << ", ln:" << lineNo << ", cn:" << columnNo << ", l:" << guiControl->left << ", t:" << guiControl->top << ", r:" << guiControl->right << ", b:" << guiControl->bottom << ", cw:" << ((left + (width * columntprs[columnNo + 1])) - (left + (width * columntprs[columnNo])) - (2 * slotpadding)) << ", ch:" << ((top + (height * linetprs[lineNo + 1])) - (top + (height * linetprs[lineNo])) - (2 * slotpadding));
@@ -261,7 +284,7 @@ void gGUISizer::draw() {
 				renderer->setColor(&oldcolor);
 			}
 
-			if(iscontrolset[i][j]) guicontrol[i][j]->draw();
+			if(iscontrolset[i][j] && guicontrol[i][j]->isEnabled()) guicontrol[i][j]->draw();
 		}
 	}
 	if(bordersenabled) {
@@ -291,7 +314,7 @@ void gGUISizer::draw() {
 void gGUISizer::keyPressed(int key) {
 	for(int i = 0; i < linenum; i++) {
 		for(int j = 0; j < columnnum; j++) {
-			if(iscontrolset[i][j] && guicontrol[i][j]->isfocused) guicontrol[i][j]->keyPressed(key);
+			if(iscontrolset[i][j] && guicontrol[i][j]->isEnabled() && guicontrol[i][j]->isfocused) guicontrol[i][j]->keyPressed(key);
 		}
 	}
 }
@@ -299,7 +322,7 @@ void gGUISizer::keyPressed(int key) {
 void gGUISizer::keyReleased(int key) {
 	for(int i = 0; i < linenum; i++) {
 		for(int j = 0; j < columnnum; j++) {
-			if(iscontrolset[i][j] && guicontrol[i][j]->isfocused) guicontrol[i][j]->keyReleased(key);
+			if(iscontrolset[i][j] && guicontrol[i][j]->isEnabled() && guicontrol[i][j]->isfocused) guicontrol[i][j]->keyReleased(key);
 		}
 	}
 }
@@ -307,7 +330,7 @@ void gGUISizer::keyReleased(int key) {
 void gGUISizer::charPressed(unsigned int codepoint) {
 	for(int i = 0; i < linenum; i++) {
 		for(int j = 0; j < columnnum; j++) {
-			if(iscontrolset[i][j] && guicontrol[i][j]->isfocused) guicontrol[i][j]->charPressed(codepoint);
+			if(iscontrolset[i][j] && guicontrol[i][j]->isEnabled() && guicontrol[i][j]->isfocused) guicontrol[i][j]->charPressed(codepoint);
 		}
 	}
 }
@@ -315,7 +338,7 @@ void gGUISizer::charPressed(unsigned int codepoint) {
 void gGUISizer::mouseMoved(int x, int y) {
 	for(int i = 0; i < linenum; i++) {
 		for(int j = 0; j < columnnum; j++) {
-			if(iscontrolset[i][j]) {
+			if(iscontrolset[i][j] && guicontrol[i][j]->isEnabled()) {
 				bool iscursoronold = guicontrol[i][j]->iscursoron;
 //				gLogi("Sizer") << "mouseMoved 1, i:" << i << ", j:" << j << ", x:" << x << ", y:" << y << ", l:" << guicontrol[i][j]->left << ", t:" << guicontrol[i][j]->top << ", r:" << guicontrol[i][j]->right << ", b:" << guicontrol[i][j]->bottom;
 				if(x >= guicontrol[i][j]->left && x < guicontrol[i][j]->right && y >= guicontrol[i][j]->top && y < guicontrol[i][j]->bottom) {
@@ -356,7 +379,7 @@ void gGUISizer::mousePressed(int x, int y, int button) {
 
 	for(int i = 0; i < linenum; i++) {
 		for(int j = 0; j < columnnum; j++) {
-			if(iscontrolset[i][j]) {
+			if(iscontrolset[i][j] && guicontrol[i][j]->isEnabled()) {
 				bool focusold = guicontrol[i][j]->isfocused;
 				guicontrol[i][j]->isfocused = false;
 //				gLogi("Sizer") << "mousePressed 21, i:" << i << ", j:" << j << ", x:" << x << ", y:" << y << ", l:" << guicontrol[i][j]->left << ", t:" << guicontrol[i][j]->top << ", r:" << guicontrol[i][j]->right << ", b:" << guicontrol[i][j]->bottom;
@@ -438,7 +461,7 @@ void gGUISizer::mouseDragged(int x, int y, int button) {
 
 	for(int i = 0; i < linenum; i++) {
 		for(int j = 0; j < columnnum; j++) {
-			if(iscontrolset[i][j] && guicontrol[i][j]->iscursoron) guicontrol[i][j]->mouseDragged(x, y, button);
+			if(iscontrolset[i][j] && guicontrol[i][j]->isEnabled() && guicontrol[i][j]->iscursoron) guicontrol[i][j]->mouseDragged(x, y, button);
 		}
 	}
 }
@@ -512,8 +535,8 @@ void gGUISizer::mouseReleased(int x, int y, int button) {
 
 	for(int i = 0; i < linenum; i++) {
 		for(int j = 0; j < columnnum; j++) {
-//			if(iscontrolset[i][j]) gLogi("Sizer") << "sid:" << id << ", cid:" << guicontrol[i][j]->getId() << ", iscursoron:" << guicontrol[i][j]->iscursoron;
-			if(iscontrolset[i][j] && guicontrol[i][j]->iscursoron) guicontrol[i][j]->mouseReleased(x, y, button);
+			if(iscontrolset[i][j] && guicontrol[i][j]->isEnabled()) guicontrol[i][j]->mouseReleased(x, y, button);
+//			if(iscontrolset[i][j] && guicontrol[i][j]->isEnabled() && guicontrol[i][j]->iscursoron) guicontrol[i][j]->mouseReleased(x, y, button);
 		}
 	}
 }
@@ -521,7 +544,7 @@ void gGUISizer::mouseReleased(int x, int y, int button) {
 void gGUISizer::mouseScrolled(int x, int y) {
 	for(int i = 0; i < linenum; i++) {
 		for(int j = 0; j < columnnum; j++) {
-			if(iscontrolset[i][j] && guicontrol[i][j]->iscursoron) guicontrol[i][j]->mouseScrolled(x, y);
+			if(iscontrolset[i][j] && guicontrol[i][j]->isEnabled() && guicontrol[i][j]->iscursoron) guicontrol[i][j]->mouseScrolled(x, y);
 		}
 	}
 }
@@ -533,7 +556,7 @@ void gGUISizer::mouseEntered() {
 void gGUISizer::mouseExited() {
 	for(int i = 0; i < linenum; i++) {
 		for(int j = 0; j < columnnum; j++) {
-			if(iscontrolset[i][j] && guicontrol[i][j]->iscursoron) {
+			if(iscontrolset[i][j] && guicontrol[i][j]->isEnabled() && guicontrol[i][j]->iscursoron) {
 				guicontrol[i][j]->iscursoron = false;
 				guicontrol[i][j]->mouseExited();
 			}
