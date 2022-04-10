@@ -14,8 +14,10 @@ gColor* gBaseGUIObject::backgroundcolor;
 gColor* gBaseGUIObject::middlegroundcolor;
 gColor* gBaseGUIObject::foregroundcolor;
 gColor* gBaseGUIObject::textbackgroundcolor;
+gColor* gBaseGUIObject::navigationbackgroundcolor;
 gFont* gBaseGUIObject::font;
 gColor* gBaseGUIObject::fontcolor;
+gColor* gBaseGUIObject::navigationfontcolor;
 gColor* gBaseGUIObject::buttoncolor;
 gColor* gBaseGUIObject::pressedbuttoncolor;
 gColor* gBaseGUIObject::disabledbuttoncolor;
@@ -122,6 +124,14 @@ gColor* gBaseGUIObject::getTextBackgroundColor() {
 	return textbackgroundcolor;
 }
 
+void gBaseGUIObject::setNavigationBackgroundColor(gColor* navigationBackgroundColor) {
+	navigationbackgroundcolor = navigationBackgroundColor;
+}
+
+gColor* gBaseGUIObject::getNavigationBackgroundColor() {
+	return navigationbackgroundcolor;
+}
+
 void gBaseGUIObject::setFont(gFont* font) {
 	gBaseGUIObject::font = font;
 }
@@ -136,6 +146,14 @@ void gBaseGUIObject::setFontColor(gColor* fontColor) {
 
 gColor* gBaseGUIObject::getFontColor() {
 	return fontcolor;
+}
+
+void gBaseGUIObject::setNavigationFontColor(gColor* navigationFontColor) {
+	navigationfontcolor = navigationFontColor;
+}
+
+gColor* gBaseGUIObject::getNavigationFontColor() {
+	return navigationfontcolor;
 }
 
 void gBaseGUIObject::setButtonColor(gColor* color) {

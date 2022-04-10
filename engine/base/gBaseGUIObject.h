@@ -55,11 +55,17 @@ public:
 	static void setTextBackgroundColor(gColor* textBackgroundColor);
 	static gColor* getTextBackgroundColor();
 
+	static void setNavigationBackgroundColor(gColor* navigationBackgroundColor);
+	static gColor* getNavigationBackgroundColor();
+
 	static void setFont(gFont* font);
 	static gFont* getFont();
 
 	static void setFontColor(gColor* fontColor);
 	static gColor* getFontColor();
+
+	static void setNavigationFontColor(gColor* navigationFontColor);
+	static gColor* getNavigationFontColor();
 
 	static void setButtonColor(gColor* color);
 	static gColor* getButtonColor();
@@ -103,8 +109,10 @@ protected:
 	static gColor* middlegroundcolor;
 	static gColor* foregroundcolor;
 	static gColor* textbackgroundcolor;
+	static gColor* navigationbackgroundcolor;
 	static gFont* font;
 	static gColor* fontcolor;
+	static gColor* navigationfontcolor;
 	static gColor* buttoncolor;
 	static gColor* pressedbuttoncolor;
 	static gColor* disabledbuttoncolor;

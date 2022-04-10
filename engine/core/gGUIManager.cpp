@@ -13,8 +13,13 @@
 gGUIManager::gGUIManager(gBaseApp* root) {
 	this->root = root;
 	isframeset = false;
+	emptysizer.enableBackgroundFill(true);
 	loadThemes();
 	resetTheme(GUITHEME_LIGHT);
+	if(root->getAppManager()->getWindowMode() == G_WINDOWMODE_GUIAPP) {
+		setCurrentFrame(&emptyframe);
+		emptyframe.setSizer(&emptysizer);
+	}
 }
 
 gGUIManager::~gGUIManager() {
@@ -106,8 +111,10 @@ void gGUIManager::resetTheme(int guiTheme) {
 	gBaseGUIObject::setMiddlegroundColor(&thememiddlegroundcolor[guitheme]);
 	gBaseGUIObject::setForegroundColor(&themeforegroundcolor[guitheme]);
 	gBaseGUIObject::setTextBackgroundColor(&themetextbackgroundcolor[guitheme]);
+	gBaseGUIObject::setNavigationBackgroundColor(&themenavigationbackgroundcolor[guitheme]);
 	gBaseGUIObject::setFont(&themefont);
 	gBaseGUIObject::setFontColor(&themefontcolor[guitheme]);
+	gBaseGUIObject::setNavigationFontColor(&themenavigationfontcolor[guitheme]);
 	gBaseGUIObject::setButtonColor(&themebuttoncolor[guitheme]);
 	gBaseGUIObject::setPressedButtonColor(&themepressedbuttoncolor[guitheme]);
 	gBaseGUIObject::setDisabledButtonColor(&themedisabledbuttoncolor[guitheme]);
@@ -137,12 +144,22 @@ void gGUIManager::loadThemes() {
 	themetextbackgroundcolor[GUITHEME_LIGHTBLUE] = gColor(255.0f / 255.0f, 255.0f / 255.0f, 255.0f / 255.0f);
 	themetextbackgroundcolor[GUITHEME_DARKBLUE] = gColor(0.0f / 255.0f, 0.0f / 255.0f, 0.0f / 255.0f);
 
+	themenavigationbackgroundcolor[GUITHEME_LIGHT] = gColor(0.0f / 255.0f, 40.0f / 255.0f, 80.0f / 255.0f);
+	themenavigationbackgroundcolor[GUITHEME_DARK] = gColor(195.0f / 255.0f, 224.0f / 255.0f, 235.0f / 255.0f);
+	themenavigationbackgroundcolor[GUITHEME_LIGHTBLUE] = gColor(195.0f / 255.0f, 224.0f / 255.0f, 235.0f / 255.0f);
+	themenavigationbackgroundcolor[GUITHEME_DARKBLUE] = gColor(195.0f / 255.0f, 224.0f / 255.0f, 235.0f / 255.0f);
+
 	themefont.loadFont("FreeSans.ttf", 11);
 
 	themefontcolor[GUITHEME_LIGHT] = gColor(5.0f / 255.0f, 5.0f / 255.0f, 5.0f / 255.0f);
 	themefontcolor[GUITHEME_DARK] = gColor(220.0f / 255.0f, 220.0f / 255.0f, 220.0f / 255.0f);
 	themefontcolor[GUITHEME_LIGHTBLUE] = gColor(5.0f / 255.0f, 5.0f / 255.0f, 5.0f / 255.0f);
 	themefontcolor[GUITHEME_DARKBLUE] = gColor(28.0f / 255.0f, 40.0f / 255.0f, 53.0f / 255.0f);
+
+	themenavigationfontcolor[GUITHEME_LIGHT] = gColor(255.0f / 255.0f, 255.0f / 255.0f, 255.0f / 255.0f);
+	themenavigationfontcolor[GUITHEME_DARK] = gColor(255.0f / 255.0f, 255.0f / 255.0f, 255.0f / 255.0f);
+	themenavigationfontcolor[GUITHEME_LIGHTBLUE] = gColor(255.0f / 255.0f, 255.0f / 255.0f, 255.0f / 255.0f);
+	themenavigationfontcolor[GUITHEME_DARKBLUE] = gColor(255.0f / 255.0f, 255.0f / 255.0f, 255.0f / 255.0f);
 
 	themebuttoncolor[GUITHEME_LIGHT] = gColor(209.0f / 255.0f, 209.0f / 255.0f, 209.0f / 255.0f);
 	themebuttoncolor[GUITHEME_DARK] = gColor(109.0f / 255.0f, 109.0f / 255.0f, 109.0f / 255.0f);

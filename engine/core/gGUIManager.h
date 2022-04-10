@@ -18,6 +18,7 @@
 #define CORE_GGUIMANAGER_H_
 
 #include "gGUIFrame.h"
+#include "gGUISizer.h"
 class gBaseApp;
 
 /**
@@ -63,6 +64,8 @@ public:
 private:
 	gBaseApp* root;
 	gGUIFrame* currentframe;
+	gGUIFrame emptyframe;
+	gGUISizer emptysizer;
 	int guitheme;
 
 	static const int themenum = 4;
@@ -70,7 +73,9 @@ private:
 	gColor thememiddlegroundcolor[themenum];
 	gColor themeforegroundcolor[themenum];
 	gColor themetextbackgroundcolor[themenum];
+	gColor themenavigationbackgroundcolor[themenum];
 	gColor themefontcolor[themenum];
+	gColor themenavigationfontcolor[themenum];
 	gColor themebuttoncolor[themenum];
 	gColor themepressedbuttoncolor[themenum];
 	gColor themedisabledbuttoncolor[themenum];
