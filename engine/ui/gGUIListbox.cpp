@@ -35,7 +35,11 @@ void gGUIListbox::set(gBaseApp* root, gBaseGUIObject* parentGUIObject, int paren
 
 void gGUIListbox::drawContent() {
 	gColor* oldcolor = renderer->getColor();
-	gGUIScrollable::drawContent();
+//	gGUIScrollable::drawContent();
+
+	renderer->setColor(textbackgroundcolor);
+	gDrawRectangle(0, 0, boxw, boxh, true);
+
 	flno = firsty / lineh;
 	fldy = firsty % lineh;
 
@@ -68,7 +72,8 @@ void gGUIListbox::mousePressed(int x, int y, int button) {
 void gGUIListbox::mouseReleased(int x, int y, int button) {
 	gGUIScrollable::mouseReleased(x, y, button);
 	if(mousepressedonlist && x >= left && x < left + vsbx && y >= top && y < top + hsby) {
-		selectedno = (y - top + firsty) / lineh;
+		int newselectedno = (y - top + firsty) / lineh;
+		if(newselectedno < data.size()) selectedno = newselectedno;
 		root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_LISTBOXSELECTED, gToStr(selectedno));
 	}
 	mousepressedonlist = false;

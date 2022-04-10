@@ -96,8 +96,8 @@ void gGUIScrollable::draw() {
 
 void gGUIScrollable::drawContent() {
 //	gLogi("Listbox") << "l:" << left << ", t:" << top << ", w:" << boxw << ", h:" << boxh;
-	renderer->setColor(textbackgroundcolor);
-	gDrawRectangle(0, 0, boxw, boxh, true);
+//	renderer->setColor(textbackgroundcolor);
+//	gDrawRectangle(0, 0, boxw, boxh, true);
 }
 
 void gGUIScrollable::drawScrollbars() {
@@ -179,10 +179,12 @@ void gGUIScrollable::mouseDragged(int x, int y, int button) {
 		vry += y - vsbmy;
 		if(vry < 0) vry = 0;
 		if(vry > boxh - vrh) vry = boxh - vrh;
+		if(totalh < boxh) vry = vsby;
 
 		firsty += y - vsbmy;
 		if(firsty < 0) firsty = 0;
 		if(firsty > totalh - boxh) firsty = totalh - boxh;
+		if(totalh < boxh) firsty = 0;
 
 		vsbmy = y;
 	}
@@ -194,8 +196,10 @@ void gGUIScrollable::mouseReleased(int x, int y, int button) {
 
 void gGUIScrollable::mouseScrolled(int x, int y) {
 	firsty -= y * scrolldiff;
+	gLogi("Scrollable") << "th:" << totalh << ", bh:" << boxh << ", fy:" << firsty;
 	if(firsty < 0) firsty = 0;
 	if(firsty > totalh - boxh) firsty = totalh - boxh;
+	if(totalh < boxh) firsty = 0;
 	if(vsbenabled) vry = firsty * (boxh - hsbh) / totalh;
 
 	firstx -= x * scrolldiff;
