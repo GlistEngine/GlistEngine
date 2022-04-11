@@ -51,13 +51,37 @@ gGUITextbox::gGUITextbox() {
 	firstclicktime = previousclicktime - 2 * clicktimediff;
 	isdoubleclicked = false;
 	istripleclicked = false;
+	iseditable = true;
 }
 
 gGUITextbox::~gGUITextbox() {
 }
 
+void gGUITextbox::setText(const std::string& text) {
+	this->text = text;
+	letterlength.clear();
+	std::vector<short> lettersize = readString(text);
+	for(int i = 0; i < lettersize.size(); i++) letterlength.push_back(lettersize[i]);
+	std::vector<int> newpos = calculateClickPosition(right - 1, top + 1);
+	cursorposchar = newpos[0];
+	cursorposx = newpos[1];
+	cursorposutf = newpos[2];
+}
+
+std::string gGUITextbox::getText() {
+	return text;
+}
+
+void gGUITextbox::setEditable(bool isEditable) {
+	iseditable = isEditable;
+}
+
+bool gGUITextbox::isEditable() {
+	return iseditable;
+}
+
 int gGUITextbox::getCursor(int x, int y) {
-	if(x >= left && x < right && y >= top && y < top + boxh) return CURSOR_IBEAM;
+	if(iseditable && x >= left && x < right && y >= top && y < top + boxh) return CURSOR_IBEAM;
 	return CURSOR_ARROW;
 }
 
@@ -193,17 +217,17 @@ void gGUITextbox::keyReleased(int key) {
 }
 
 void gGUITextbox::handleKeys() {
-	if((selectionmode && (selectionposchar1 != selectionposchar2)) || ctrlapressed || ctrlvpressed || isdoubleclicked || istripleclicked) {
-		if(ctrlcpressed || ctrlvpressed || ctrlxpressed || ctrlapressed || ctrlvpressed || isdoubleclicked || istripleclicked) {
+	if((selectionmode && (selectionposchar1 != selectionposchar2)) || isdoubleclicked || istripleclicked || ctrlapressed || ctrlvpressed) {
+		if((isdoubleclicked || istripleclicked || ctrlcpressed || ctrlvpressed || ctrlxpressed || ctrlapressed || ctrlvpressed)) {
 			pressKey();
-			ctrlcpressed = false;
-			ctrlvpressed = false;
-			ctrlxpressed = false;
-			ctrlapressed = false;
-			isdoubleclicked = false;
-			istripleclicked = false;
-			return;
 		}
+		ctrlcpressed = false;
+		ctrlvpressed = false;
+		ctrlxpressed = false;
+		ctrlapressed = false;
+		isdoubleclicked = false;
+		istripleclicked = false;
+		return;
 	}
 
 	if(keypresstime >= 0) {
@@ -532,6 +556,8 @@ void gGUITextbox::charPressed(unsigned int codepoint) {
 }
 
 void gGUITextbox::mousePressed(int x, int y, int button) {
+	if(!iseditable) return;
+
 	if(x >= left && x < right && y >= top && y < top + boxh && button == 0) {
 		firstclicktime = previousclicktime;
 		previousclicktime = clicktime;
@@ -567,6 +593,8 @@ void gGUITextbox::mousePressed(int x, int y, int button) {
 }
 
 void gGUITextbox::mouseReleased(int x, int y, int button) {
+	if(!iseditable) return;
+
 	if(x >= left && x < right && y >= top && y < top + boxh && button == 0) {
 		return;
 	}
