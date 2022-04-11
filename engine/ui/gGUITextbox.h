@@ -17,6 +17,12 @@ public:
 	gGUITextbox();
 	virtual ~gGUITextbox();
 
+	void setText(const std::string& text);
+	std::string getText();
+
+	void setEditable(bool isEditable);
+	bool isEditable();
+
 	int getCursor(int x, int y);
 
 	void update();
@@ -57,6 +63,7 @@ private:
 	bool isdragging;
 	long clicktime, previousclicktime, firstclicktime, clicktimediff;
 	bool isdoubleclicked, istripleclicked;
+	bool iseditable;
 };
 
 #endif /* UI_GGUITEXTBOX_H_ */
