@@ -13,12 +13,12 @@
 gGUIManager::gGUIManager(gBaseApp* root) {
 	this->root = root;
 	isframeset = false;
-	emptysizer.enableBackgroundFill(true);
 	loadThemes();
 	resetTheme(GUITHEME_LIGHT);
 	if(root->getAppManager()->getWindowMode() == G_WINDOWMODE_GUIAPP) {
 		setCurrentFrame(&emptyframe);
 		emptyframe.setSizer(&emptysizer);
+		emptysizer.enableBackgroundFill(true);
 	}
 }
 

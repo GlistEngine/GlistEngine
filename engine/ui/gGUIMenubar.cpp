@@ -58,21 +58,21 @@ int gGUIMenuItem::addChild(std::string text) {
 
 	int tw = font->getStringWidth(text) + 6 + font->getSize();
 	if(itemid == 0) {
-		childs[childno].set(root, this, 0, 0, totaltextw, 0, tw, height);
+		childs[childno].set(root, topparent, this, 0, 0, totaltextw, 0, tw, height);
 		childs[childno].menuboxx = childs[childno].left;
 		childs[childno].menuboxy = childs[childno].bottom;
 		childs[childno].menuboxw = menuboxdefaultw;
 		childs[childno].menuboxh = menuboxdefaulth;
 		childs[childno].texty = childs[childno].menuboxy + childs[childno].menuboxh - ((childs[childno].menuboxh - texth) / 2);
 	} else if(parentitemid == 0) {
-		childs[childno].set(root, this, 0, 0, menuboxx, (menuboxlineh * 5 / 3) + childno * menuboxlineh, menuboxw - 1, menuboxlineh);
+		childs[childno].set(root, topparent, this, 0, 0, menuboxx, (menuboxlineh * 5 / 3) + childno * menuboxlineh, menuboxw - 1, menuboxlineh);
 		childs[childno].menuboxw = menuboxdefaultw;
 		childs[childno].menuboxh = menuboxdefaulth;
 		childs[childno].menuboxx = childs[childno].left + childs[childno].menuboxw - 8;
 		childs[childno].menuboxy = childs[childno].top;
 		childs[childno].texty = childs[childno].menuboxy + childs[childno].menuboxh - ((childs[childno].menuboxh - texth) / 2);
 	} else {
-		childs[childno].set(root, this, 0, 0, menuboxx, menuboxy + (childno * menuboxlineh), menuboxw - 1, menuboxlineh);
+		childs[childno].set(root, topparent, this, 0, 0, menuboxx, menuboxy + (childno * menuboxlineh), menuboxw - 1, menuboxlineh);
 		childs[childno].menuboxw = menuboxdefaultw;
 		childs[childno].menuboxh = menuboxdefaulth;
 		childs[childno].menuboxx = childs[childno].left + childs[childno].menuboxw - 8;
@@ -93,8 +93,8 @@ int gGUIMenuItem::addChild(gGUIMenuItem childItem) {
 	childs[childno].setParentItemId(itemid);
 
 	int tw = font->getStringWidth(childItem.getTitle()) + 6 + font->getSize();
-	if(itemid == 0) childs[childno].set(root, this, 0, 0, totaltextw, 0, tw, height);
-	else childs[childno].set(root, this, 0, 0, menuboxx, (menuboxlineh * 5 / 3) + childno * menuboxlineh, menuboxw - 1, menuboxlineh);
+	if(itemid == 0) childs[childno].set(root, topparent, this, 0, 0, totaltextw, 0, tw, height);
+	else childs[childno].set(root, topparent, this, 0, 0, menuboxx, (menuboxlineh * 5 / 3) + childno * menuboxlineh, menuboxw - 1, menuboxlineh);
 	totaltextw += tw;
 
 	childs[childno].menuboxx = left + childs[childno].left;

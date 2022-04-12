@@ -28,6 +28,8 @@ public:
 	gGUISizer* getSizer();
 
 	virtual int getCursor(int x, int y);
+	int getFocusId();
+	int getPreviousFocusId();
 
 	void show();
 	void hide();

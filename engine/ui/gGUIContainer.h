@@ -17,7 +17,7 @@ public:
 	gGUIContainer();
 	virtual ~gGUIContainer();
 
-	virtual void set(gBaseApp* root, gBaseGUIObject* parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h);
+	virtual void set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIObject* parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h);
 	virtual void set(int x, int y, int w, int h);
 
 	void setSizer(gGUISizer* guiSizer);

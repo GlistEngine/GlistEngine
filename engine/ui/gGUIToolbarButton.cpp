@@ -33,8 +33,9 @@ gGUIToolbarButton::gGUIToolbarButton() {
 gGUIToolbarButton::~gGUIToolbarButton() {
 }
 
-void gGUIToolbarButton::set(gBaseApp* root, gBaseGUIObject* parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h) {
+void gGUIToolbarButton::set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIObject* parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h) {
 	this->root = root;
+	topparent = topParentGUIObject;
 	parent = parentGUIObject;
 	parentslotlineno = parentSlotLineNo;
 	parentslotcolumnno = parentSlotColumnNo;

@@ -111,7 +111,8 @@ void gGUITextbox::draw() {
 			selectionboxx1 = selectionposx2;
 			selectionboxw = selectionposx1 - selectionposx2;
 		}
-		renderer->setColor(255, 128, 0);
+		if(isfocused) renderer->setColor(255, 128, 0);
+		else renderer->setColor(middlegroundcolor);
 		gDrawRectangle(left + selectionboxx1 + 5, top + 2, selectionboxw, boxh - 4, true);
 	}
 
