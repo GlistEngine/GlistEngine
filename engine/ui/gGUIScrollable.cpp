@@ -48,6 +48,9 @@ gGUIScrollable::gGUIScrollable() {
 	firstx = 0;
 	firsty = 0;
 	vsbmy = -1;
+	titlex = left;
+	titley = top + font->getStringHeight("AE");
+	titledy = font->getSize() * 1.8f;
 	boxfbo = new gFbo();
 }
 
@@ -81,17 +84,24 @@ void gGUIScrollable::setDimensions(int width, int height) {
 	hrx = hsbx;
 	hry = hsby;
 
+	titlex = left + font->getStringWidth("i");
+	titley = top + font->getStringHeight("AE");
+
 	boxfbo->allocate(renderer->getWidth(), renderer->getHeight());
 }
 
 void gGUIScrollable::draw() {
+	renderer->setColor(0, 0, 0);
+	font->drawText(title + ":", titlex, titley);
 	boxfbo->bind();
 	renderer->clearColor(0, 0, 0, 0);
 	drawContent();
 	drawScrollbars();
 	boxfbo->unbind();
 	renderer->setColor(255, 255, 255);
-	boxfbo->drawSub(left, top, boxw, boxh, 0, renderer->getHeight() - boxh, boxw, boxh);
+	boxfbo->drawSub(left, top + titledy, boxw, boxh, 0, renderer->getHeight() - boxh, boxw, boxh);
+	renderer->setColor(foregroundcolor);
+	gDrawRectangle(left, top + titledy, boxw, boxh, false);
 }
 
 void gGUIScrollable::drawContent() {
@@ -164,12 +174,12 @@ void gGUIScrollable::drawScrollbars() {
 void gGUIScrollable::mouseMoved(int x, int y) {
 	iscursoronvsb = false;
 	iscursoronhsb = false;
-	if(x >= left + vsbx && x < left + vsbx + vsbw && y >= top + vsby && y < top + vsby + vsbh) iscursoronvsb = true;
-	if(x >= left + hsbx && x < left + hsbx + hsbw && y >= top + hsby && y < top + hsby + hsbh) iscursoronhsb = true;
+	if(x >= left + vsbx && x < left + vsbx + vsbw && y >= top + titledy + vsby && y < top + titledy + vsby + vsbh) iscursoronvsb = true;
+	if(x >= left + hsbx && x < left + hsbx + hsbw && y >= top + titledy + hsby && y < top + titledy + hsby + hsbh) iscursoronhsb = true;
 }
 
 void gGUIScrollable::mousePressed(int x, int y, int button) {
-	if(vsbenabled && x >= left + vrx && x < left + vrx + vrw && y >= top + vry && y < top + vry + vrh) {
+	if(vsbenabled && x >= left + vrx && x < left + vrx + vrw && y >= top + titledy + vry && y < top + titledy + vry + vrh) {
 		vsbmy = y;
 	}
 }
@@ -196,7 +206,6 @@ void gGUIScrollable::mouseReleased(int x, int y, int button) {
 
 void gGUIScrollable::mouseScrolled(int x, int y) {
 	firsty -= y * scrolldiff;
-	gLogi("Scrollable") << "th:" << totalh << ", bh:" << boxh << ", fy:" << firsty;
 	if(firsty < 0) firsty = 0;
 	if(firsty > totalh - boxh) firsty = totalh - boxh;
 	if(totalh < boxh) firsty = 0;

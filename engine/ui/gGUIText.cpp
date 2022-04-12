@@ -18,8 +18,8 @@ gGUIText::gGUIText() {
 gGUIText::~gGUIText() {
 }
 
-void gGUIText::set(gBaseApp* root, gBaseGUIObject* parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h) {
-	gGUIControl::set(root, parentGUIObject, parentSlotLineNo, parentSlotColumnNo, x, y, w, h);
+void gGUIText::set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIObject* parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h) {
+	gGUIControl::set(root, topParentGUIObject, parentGUIObject, parentSlotLineNo, parentSlotColumnNo, x, y, w, h);
 	resetText();
 }
 

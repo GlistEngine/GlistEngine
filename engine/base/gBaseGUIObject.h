@@ -29,6 +29,9 @@ public:
 	void setEnabled(bool isEnabled);
 	bool isEnabled();
 
+	virtual void setTopParent(gBaseGUIObject* parentGUIObject);
+	gBaseGUIObject* getTopParent();
+
 	virtual void setParent(gBaseGUIObject* parentGUIObject);
 	gBaseGUIObject* getParent();
 
@@ -103,6 +106,8 @@ public:
 	int id, type;
 	int left, top, right, bottom, width, height;
 	bool isfocused, iscursoron;
+	bool issizer, iscontainer;
+	static int focusid, previousfocusid;
 
 protected:
 	static gColor* backgroundcolor;
@@ -123,11 +128,10 @@ protected:
 	std::string title;
 
 	gBaseApp* root;
+	gBaseGUIObject* topparent;
 	gBaseGUIObject* parent;
 	bool isenabled;
 	int parentslotlineno, parentslotcolumnno;
-
-	int windowmode;
 
 private:
 	static int lastid;

@@ -12,6 +12,7 @@
 
 
 gGUISizer::gGUISizer() {
+	issizer = true;
 	sizertype = SIZERTYPE_HORIZONTAL;
 	bordersenabled = false;
 	linenum = 1;
@@ -70,6 +71,7 @@ void gGUISizer::set(int x, int y, int w, int h) {
 				}
 				guicontrol[i][j]->set(
 					root,
+					topparent,
 					this,
 					i,
 					j,
@@ -185,7 +187,7 @@ void gGUISizer::setControl(int lineNo, int columnNo, gGUIControl* guiControl) {
 //	guicontrol[lineNo][columnNo]->setParent(this);
 //	guicontrol[lineNo][columnNo]->setParentSlotNo(lineNo, columnNo);
 //	guicontrol[lineNo][columnNo]->setRootApp(root);
-	guicontrol[lineNo][columnNo]->set(root, this, lineNo, columnNo,
+	guicontrol[lineNo][columnNo]->set(root, topparent, this, lineNo, columnNo,
 			left + (width * columntprs[columnNo]) + slotpadding,
 			top + (height * linetprs[lineNo]),
 			(left + (width * columntprs[columnNo + 1])) - (left + (width * columntprs[columnNo])) - (2 * slotpadding),
@@ -347,7 +349,7 @@ void gGUISizer::mouseMoved(int x, int y) {
 				} else {
 					if (guicontrol[i][j]->iscursoron) {
 						guicontrol[i][j]->iscursoron = false;
-						if(!iscursoronold) guicontrol[i][j]->mouseExited();
+						if(iscursoronold) guicontrol[i][j]->mouseExited();
 					}
 				}
 				if(guicontrol[i][j]->iscursoron) guicontrol[i][j]->mouseMoved(x, y);
@@ -380,11 +382,15 @@ void gGUISizer::mousePressed(int x, int y, int button) {
 	for(int i = 0; i < linenum; i++) {
 		for(int j = 0; j < columnnum; j++) {
 			if(iscontrolset[i][j] && guicontrol[i][j]->isEnabled()) {
-				bool focusold = guicontrol[i][j]->isfocused;
+//				bool focusold = guicontrol[i][j]->isfocused;
 				guicontrol[i][j]->isfocused = false;
 //				gLogi("Sizer") << "mousePressed 21, i:" << i << ", j:" << j << ", x:" << x << ", y:" << y << ", l:" << guicontrol[i][j]->left << ", t:" << guicontrol[i][j]->top << ", r:" << guicontrol[i][j]->right << ", b:" << guicontrol[i][j]->bottom;
 				if(guicontrol[i][j]->iscursoron) {
 					guicontrol[i][j]->isfocused = true;
+					if(!guicontrol[i][j]->iscontainer && !guicontrol[i][j]->issizer) {
+						previousfocusid = focusid;
+						focusid = guicontrol[i][j]->getId();
+					}
 					guicontrol[i][j]->mousePressed(x, y, button);
 //					if(!focusold) root->getCurrentCanvas()->onGuiEvent(id, GUIEVENT_FOCUSED);
 				}
@@ -411,6 +417,7 @@ void gGUISizer::mouseDragged(int x, int y, int button) {
 				if(iscontrolset[j][i]) {
 					guicontrol[j][i]->set(
 						root,
+						topparent,
 						this,
 						i,
 						j,
@@ -443,6 +450,7 @@ void gGUISizer::mouseDragged(int x, int y, int button) {
 				if(iscontrolset[i][j]) {
 					guicontrol[i][j]->set(
 						root,
+						topparent,
 						this,
 						i,
 						j,
@@ -483,6 +491,7 @@ void gGUISizer::mouseReleased(int x, int y, int button) {
 				if(iscontrolset[j][i]) {
 					guicontrol[j][i]->set(
 						root,
+						topparent,
 						this,
 						i,
 						j,
@@ -516,6 +525,7 @@ void gGUISizer::mouseReleased(int x, int y, int button) {
 				if(iscontrolset[i][j]) {
 					guicontrol[i][j]->set(
 						root,
+						topparent,
 						this,
 						i,
 						j,

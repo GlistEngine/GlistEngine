@@ -12,9 +12,13 @@
 
 
 gGUIForm::gGUIForm() {
+	topparent = this;
+	parent = this;
 	menuh = 0;
 	toolbarh = 0;
 	toolbarnum = 0;
+	focusid = 0;
+	previousfocusid = 0;
 }
 
 gGUIForm::~gGUIForm() {
@@ -23,7 +27,7 @@ gGUIForm::~gGUIForm() {
 void gGUIForm::setMenuBar(gGUIMenubar* menuBar) {
 	menubar = menuBar;
 	menuh = 30;
-	menubar->set(root, this, 0, 0,
+	menubar->set(root, this, this, 0, 0,
 				left,
 				top,
 				width,
@@ -32,7 +36,7 @@ void gGUIForm::setMenuBar(gGUIMenubar* menuBar) {
 }
 
 void gGUIForm::resizeMenuBar() {
-	menubar->set(root, this, 0, 0,
+	menubar->set(root, this, this, 0, 0,
 				left,
 				top,
 				width,
@@ -51,6 +55,7 @@ void gGUIForm::addToolBar(gGUIToolbar* toolBar) {
 				width,
 				toolbarh
 		);
+	toolbars[toolbarnum]->setTopParent(this);
 	toolbars[toolbarnum]->setParent(this);
 	toolbars[toolbarnum]->setParentSlotNo(0, 0);
 	toolbars[toolbarnum]->setRootApp(root);
@@ -69,6 +74,7 @@ void gGUIForm::resizeToolbars() {
 
 void gGUIForm::setSizer(gGUISizer* guiSizer) {
 	guisizer = guiSizer;
+	guisizer->setTopParent(this);
 	guisizer->setParent(this);
 	guisizer->setParentSlotNo(0, 0);
 	guisizer->setRootApp(root);
@@ -91,6 +97,15 @@ int gGUIForm::getCursor(int x, int y) {
 	if(guisizer) return guisizer->getCursor(x, y);
 	return CURSOR_ARROW;
 }
+
+int gGUIForm::getFocusId() {
+	return focusid;
+}
+
+int gGUIForm::getPreviousFocusId() {
+	return previousfocusid;
+}
+
 
 void gGUIForm::show() {
 	isshown = true;

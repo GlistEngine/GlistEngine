@@ -17,9 +17,9 @@ gGUINavigation::gGUINavigation() {
 gGUINavigation::~gGUINavigation() {
 }
 
-void gGUINavigation::set(gBaseApp* root, gBaseGUIObject* parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h) {
+void gGUINavigation::set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIObject* parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h) {
 	totalh = h;
-	gGUIScrollable::set(root, parentGUIObject, parentSlotLineNo, parentSlotColumnNo, x, y, w, h);
+	gGUIScrollable::set(root, topParentGUIObject, parentGUIObject, parentSlotLineNo, parentSlotColumnNo, x, y, w, h);
 	gGUIScrollable::setDimensions(w, h);
 }
 
