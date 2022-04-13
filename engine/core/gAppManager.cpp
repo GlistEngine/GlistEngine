@@ -55,6 +55,7 @@ gAppManager::gAppManager() {
 	appname = "";
 	window = nullptr;
 	app = nullptr;
+	windowmode = G_WINDOWMODE_GAME;
 	canvas = nullptr;
 	canvasmanager = nullptr;
 	guimanager = nullptr;
@@ -82,6 +83,7 @@ gAppManager::gAppManager() {
 void gAppManager::runApp(const std::string& appName, gBaseApp *baseApp, int width, int height, int windowMode, int unitWidth, int unitHeight, int screenScaling) {
 	appname = appName;
 	app = baseApp;
+	windowmode = windowMode;
 
 	// Create window
 	window->initialize(width, height, windowMode);
@@ -185,6 +187,10 @@ void gAppManager::setWindow(gBaseWindow *baseWindow) {
 	window = baseWindow;
 }
 
+int gAppManager::getWindowMode() {
+	return windowmode;
+}
+
 void gAppManager::setCursor(int cursorId) {
 	window->setCursor(cursorId);
 }
@@ -248,6 +254,14 @@ int gAppManager::getFramerate() {
 
 double gAppManager::getElapsedTime() {
 	return deltatime.count() / 1'000'000'000.0f;
+}
+
+void gAppManager::setClipboardString(std::string text) {
+	window->setClipboardString(text);
+}
+
+std::string gAppManager::getClipboardString() {
+	return window->getClipboardString();
 }
 
 void gAppManager::onCharEvent(unsigned int key) {

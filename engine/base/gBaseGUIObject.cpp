@@ -14,17 +14,24 @@ gColor* gBaseGUIObject::backgroundcolor;
 gColor* gBaseGUIObject::middlegroundcolor;
 gColor* gBaseGUIObject::foregroundcolor;
 gColor* gBaseGUIObject::textbackgroundcolor;
+gColor* gBaseGUIObject::navigationbackgroundcolor;
 gFont* gBaseGUIObject::font;
 gColor* gBaseGUIObject::fontcolor;
+gColor* gBaseGUIObject::navigationfontcolor;
 gColor* gBaseGUIObject::buttoncolor;
 gColor* gBaseGUIObject::pressedbuttoncolor;
 gColor* gBaseGUIObject::disabledbuttoncolor;
 gColor* gBaseGUIObject::buttonfontcolor;
 gColor* gBaseGUIObject::pressedbuttonfontcolor;
 gColor* gBaseGUIObject::disabledbuttonfontcolor;
+int gBaseGUIObject::focusid;
+int gBaseGUIObject::previousfocusid;
 
 
 gBaseGUIObject::gBaseGUIObject() {
+	root = nullptr;
+	topparent = nullptr;
+	parent = nullptr;
 	type = 0;
 	lastid++;
 	id = lastid;
@@ -39,6 +46,8 @@ gBaseGUIObject::gBaseGUIObject() {
 	height = 0;
 	isfocused = false;
 	iscursoron = false;
+	issizer = false;
+	iscontainer = false;
 }
 
 gBaseGUIObject::~gBaseGUIObject() {
@@ -58,6 +67,14 @@ void gBaseGUIObject::setEnabled(bool isEnabled) {
 
 bool gBaseGUIObject::isEnabled() {
 	return isenabled;
+}
+
+void gBaseGUIObject::setTopParent(gBaseGUIObject* parentGUIObject) {
+	topparent = parentGUIObject;
+}
+
+gBaseGUIObject* gBaseGUIObject::getTopParent() {
+	return topparent;
 }
 
 void gBaseGUIObject::setParent(gBaseGUIObject* parentGUIObject) {
@@ -122,6 +139,14 @@ gColor* gBaseGUIObject::getTextBackgroundColor() {
 	return textbackgroundcolor;
 }
 
+void gBaseGUIObject::setNavigationBackgroundColor(gColor* navigationBackgroundColor) {
+	navigationbackgroundcolor = navigationBackgroundColor;
+}
+
+gColor* gBaseGUIObject::getNavigationBackgroundColor() {
+	return navigationbackgroundcolor;
+}
+
 void gBaseGUIObject::setFont(gFont* font) {
 	gBaseGUIObject::font = font;
 }
@@ -136,6 +161,14 @@ void gBaseGUIObject::setFontColor(gColor* fontColor) {
 
 gColor* gBaseGUIObject::getFontColor() {
 	return fontcolor;
+}
+
+void gBaseGUIObject::setNavigationFontColor(gColor* navigationFontColor) {
+	navigationfontcolor = navigationFontColor;
+}
+
+gColor* gBaseGUIObject::getNavigationFontColor() {
+	return navigationfontcolor;
 }
 
 void gBaseGUIObject::setButtonColor(gColor* color) {

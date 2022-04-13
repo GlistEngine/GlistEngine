@@ -118,7 +118,7 @@ public:
 	 *
 	 * @return color object memory address or RGBA value
 	 */
-	const gColor& getAmbientColor() const;
+	gColor* getAmbientColor();
 
 	/**
 	 * Gives red component value range is [0,1].
@@ -175,7 +175,7 @@ public:
 	 *
 	 * @return color object memory address or RGBA value
 	 */
-	const gColor& getDiffuseColor() const;
+	gColor* getDiffuseColor();
 
 	/**
 	 * Gives red component value range is [0,1].
@@ -232,7 +232,7 @@ public:
 	 *
 	 * @return color object memory address or RGBA value
 	 */
-	const gColor& getSpecularColor() const;
+	gColor* getSpecularColor();
 
 	/**
 	 * Gives red component value range is [0,1].

@@ -160,7 +160,7 @@ glm::mat4 gShadowMap::getLightMatrix() const {
 	return lightmatrix;
 }
 
-const gFbo& gShadowMap::getDepthFbo() const {
+gFbo& gShadowMap::getDepthFbo() {
 	return depthfbo;
 }
 

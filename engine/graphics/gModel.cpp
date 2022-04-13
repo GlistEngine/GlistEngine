@@ -538,7 +538,7 @@ void gModel::updateBones(gSkinnedMesh* gmesh, aiMesh* aimesh) {
 void gModel::updateVbo(gSkinnedMesh* gmesh) {
 	std::vector<gVertex> vertexarray = gmesh->getVertices();
 	std::vector<unsigned int> indexarray = gmesh->getIndices();
-	for (int i=0; i<gmesh->getVbo().getVerticesNum(); i++) {
+	for (int i=0; i<gmesh->getVbo()->getVerticesNum(); i++) {
 		vertexarray[i].position = gmesh->getVertexPos(i);
 		vertexarray[i].normal = gmesh->getVertexNorm(i);
 	}
@@ -693,7 +693,7 @@ void gModel::prepareVertexAnimationData() {
                 if (isvertexanimationstoredonvram) {
                 	std::vector<gVertex> vertexarray = meshes[i].getVertices();
                 	std::vector<unsigned int> indexarray = meshes[i].getIndices();
-                	for (int l=0; l<meshes[i].getVbo().getVerticesNum(); l++) {
+                	for (int l=0; l<meshes[i].getVbo()->getVerticesNum(); l++) {
                 		vertexarray[l].position = meshes[i].getVertexPosData(j, k, l);
                 		vertexarray[l].normal = meshes[i].getVertexNormData(j, k, l);
                 	}

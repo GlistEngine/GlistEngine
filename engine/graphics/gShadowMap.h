@@ -55,7 +55,7 @@ public:
 	glm::mat4 getLightView() const;
 	glm::mat4 getLightMatrix() const;
 
-	const gFbo& getDepthFbo() const;
+	gFbo& getDepthFbo();
 
 
 private:

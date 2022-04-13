@@ -12,9 +12,13 @@
 
 
 gGUIForm::gGUIForm() {
+	topparent = this;
+	parent = this;
 	menuh = 0;
 	toolbarh = 0;
 	toolbarnum = 0;
+	focusid = 0;
+	previousfocusid = 0;
 }
 
 gGUIForm::~gGUIForm() {
@@ -23,7 +27,7 @@ gGUIForm::~gGUIForm() {
 void gGUIForm::setMenuBar(gGUIMenubar* menuBar) {
 	menubar = menuBar;
 	menuh = 30;
-	menubar->set(root, this, 0, 0,
+	menubar->set(root, this, this, 0, 0,
 				left,
 				top,
 				width,
@@ -32,7 +36,7 @@ void gGUIForm::setMenuBar(gGUIMenubar* menuBar) {
 }
 
 void gGUIForm::resizeMenuBar() {
-	menubar->set(root, this, 0, 0,
+	menubar->set(root, this, this, 0, 0,
 				left,
 				top,
 				width,
@@ -51,6 +55,7 @@ void gGUIForm::addToolBar(gGUIToolbar* toolBar) {
 				width,
 				toolbarh
 		);
+	toolbars[toolbarnum]->setTopParent(this);
 	toolbars[toolbarnum]->setParent(this);
 	toolbars[toolbarnum]->setParentSlotNo(0, 0);
 	toolbars[toolbarnum]->setRootApp(root);
@@ -69,6 +74,7 @@ void gGUIForm::resizeToolbars() {
 
 void gGUIForm::setSizer(gGUISizer* guiSizer) {
 	guisizer = guiSizer;
+	guisizer->setTopParent(this);
 	guisizer->setParent(this);
 	guisizer->setParentSlotNo(0, 0);
 	guisizer->setRootApp(root);
@@ -88,8 +94,18 @@ gGUISizer* gGUIForm::getSizer() {
 }
 
 int gGUIForm::getCursor(int x, int y) {
-	return guisizer->getCursor(x, y);
+	if(guisizer) return guisizer->getCursor(x, y);
+	return CURSOR_ARROW;
 }
+
+int gGUIForm::getFocusId() {
+	return focusid;
+}
+
+int gGUIForm::getPreviousFocusId() {
+	return previousfocusid;
+}
+
 
 void gGUIForm::show() {
 	isshown = true;
@@ -100,57 +116,63 @@ void gGUIForm::hide() {
 }
 
 void gGUIForm::keyPressed(int key) {
-	guisizer->keyPressed(key);
+	if(guisizer) guisizer->keyPressed(key);
 }
 
 void gGUIForm::keyReleased(int key) {
-	guisizer->keyReleased(key);
+	if(guisizer) guisizer->keyReleased(key);
 }
 
 void gGUIForm::charPressed(unsigned int codepoint) {
-	guisizer->charPressed(codepoint);
+	if(guisizer) guisizer->charPressed(codepoint);
 }
 
 void gGUIForm::mouseMoved(int x, int y) {
-	menubar->mouseMoved(x, y);
+	if(menubar) menubar->mouseMoved(x, y);
 	for(int i = 0; i < toolbarnum; i++) toolbars[i]->mouseMoved(x, y);
-	guisizer->mouseMoved(x, y);
+	if(guisizer) guisizer->mouseMoved(x, y);
 }
 
 void gGUIForm::mousePressed(int x, int y, int button) {
-	menubar->mousePressed(x, y, button);
+	if(menubar) menubar->mousePressed(x, y, button);
 	for(int i = 0; i < toolbarnum; i++) toolbars[i]->mousePressed(x, y, button);
-	guisizer->mousePressed(x, y, button);
+	if(guisizer) guisizer->mousePressed(x, y, button);
 }
 
 void gGUIForm::mouseDragged(int x, int y, int button) {
-	guisizer->mouseDragged(x, y, button);
+	if(guisizer) guisizer->mouseDragged(x, y, button);
 }
 
 void gGUIForm::mouseReleased(int x, int y, int button) {
 	for(int i = 0; i < toolbarnum; i++) toolbars[i]->mouseReleased(x, y, button);
-	guisizer->mouseReleased(x, y, button);
+	if(guisizer) guisizer->mouseReleased(x, y, button);
 }
 
 void gGUIForm::mouseScrolled(int x, int y) {
-	guisizer->mouseScrolled(x, y);
+	if(guisizer) guisizer->mouseScrolled(x, y);
 }
 
 void gGUIForm::mouseEntered() {
-	guisizer->mouseEntered();
+	if(guisizer) guisizer->mouseEntered();
 }
 
 void gGUIForm::mouseExited() {
-	guisizer->mouseExited();
+	if(guisizer) guisizer->mouseExited();
 }
 
 void gGUIForm::windowResized(int w, int h) {
-	resizeMenuBar();
-	menubar->windowResized(w, h);
-	resizeToolbars();
-	for(int i = 0; i < toolbarnum; i++) toolbars[i]->windowResized(w, h);
-	guisizer->set(guisizer->left, guisizer->top, w, h);
-	guisizer->windowResized(w, h);
+	if(menubar) {
+		resizeMenuBar();
+		menubar->windowResized(w, h);
+	}
+	if(toolbarnum > 0) {
+		resizeToolbars();
+		for(int i = 0; i < toolbarnum; i++) toolbars[i]->windowResized(w, h);
+	}
+	if(guisizer) {
+		guisizer->set(guisizer->left, guisizer->top, w, h);
+		guisizer->windowResized(w, h);
+	}
 }
 
 

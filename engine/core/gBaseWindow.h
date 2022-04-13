@@ -64,6 +64,9 @@ public:
 	virtual void setCursor(int cursorNo);
 	virtual void setCursorMode(int cursorMode);
 
+	virtual void setClipboardString(std::string text);
+	virtual std::string getClipboardString();
+
 	/**
 	 * Sets game window size.
 	 *

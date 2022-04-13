@@ -58,8 +58,8 @@ void gMaterial::setAmbientColor(gColor* color) {
 	ambient.set(color);
 }
 
-const gColor& gMaterial::getAmbientColor() const {
-	return ambient;
+gColor* gMaterial::getAmbientColor() {
+	return &ambient;
 }
 
 void gMaterial::setDiffuseColor(int r, int g, int b, int a) {
@@ -74,8 +74,8 @@ void gMaterial::setDiffuseColor(gColor* color) {
 	diffuse.set(color);
 }
 
-const gColor& gMaterial::getDiffuseColor() const {
-	return diffuse;
+gColor* gMaterial::getDiffuseColor() {
+	return &diffuse;
 }
 
 void gMaterial::setSpecularColor(int r, int g, int b, int a) {
@@ -90,8 +90,8 @@ void gMaterial::setSpecularColor(gColor* color) {
 	specular.set(color);
 }
 
-const gColor& gMaterial::getSpecularColor() const {
-	return specular;
+gColor* gMaterial::getSpecularColor() {
+	return &specular;
 }
 
 void gMaterial::setShininess(float shininess) {
@@ -117,7 +117,7 @@ void gMaterial::setDiffuseMap(gTexture* diffuseMap) {
 	diffusemapown = false;
 }
 
-const gTexture* gMaterial::getDiffuseMap() const {
+gTexture* gMaterial::getDiffuseMap() {
 	return diffusemap;
 }
 
@@ -152,7 +152,7 @@ void gMaterial::setSpecularMap(gTexture* specularMap) {
 	specularmapown = false;
 }
 
-const gTexture* gMaterial::getSpecularMap() const {
+gTexture* gMaterial::getSpecularMap() {
 	return specularmap;
 }
 
@@ -187,7 +187,7 @@ void gMaterial::setNormalMap(gTexture* normalMap) {
 	normalmapown = false;
 }
 
-const gTexture* gMaterial::getNormalMap() const {
+gTexture* gMaterial::getNormalMap() {
 	return normalmap;
 }
 
@@ -222,7 +222,7 @@ void gMaterial::setHeightMap(gTexture* heightMap) {
 	heightmapown = false;
 }
 
-const gTexture* gMaterial::getHeightMap() const {
+gTexture* gMaterial::getHeightMap() {
 	return heightmap;
 }
 
@@ -263,7 +263,7 @@ void gMaterial::setAlbedoMap(gTexture* albedoMap) {
 	albedomapown = false;
 }
 
-const gTexture* gMaterial::getAlbedoMap() const {
+gTexture* gMaterial::getAlbedoMap() {
 	return albedomap;
 }
 
@@ -296,7 +296,7 @@ void gMaterial::setRoughnessMap(gTexture* roughnessMap) {
 	roughnessmapown = false;
 }
 
-const gTexture* gMaterial::getRoughnessMap() const {
+gTexture* gMaterial::getRoughnessMap() {
 	return roughnessmap;
 }
 
@@ -337,7 +337,7 @@ void gMaterial::setMetalnessMap(gTexture* metalnessMap) {
 	metalnessmapown = false;
 }
 
-const gTexture* gMaterial::getMetalnessMap() const {
+gTexture* gMaterial::getMetalnessMap() {
 	return metalnessmap;
 }
 
@@ -372,7 +372,7 @@ void gMaterial::setPbrNormalMap(gTexture* pbrNormalMap) {
 	pbrnormalmapown = false;
 }
 
-const gTexture* gMaterial::getPbrNormalMap() const {
+gTexture* gMaterial::getPbrNormalMap() {
 	return pbrnormalmap;
 }
 
@@ -407,7 +407,7 @@ void gMaterial::setAOMap(gTexture* aoMap) {
 	aomapown = false;
 }
 
-const gTexture* gMaterial::getAOMap() const {
+gTexture* gMaterial::getAOMap()  {
 	return aomap;
 }
 

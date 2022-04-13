@@ -12,6 +12,8 @@
 
 
 gGUIFrame::gGUIFrame() {
+	guisizer = nullptr;
+	menubar = nullptr;
 }
 
 gGUIFrame::~gGUIFrame() {

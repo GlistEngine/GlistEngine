@@ -29,6 +29,9 @@ public:
 	void setEnabled(bool isEnabled);
 	bool isEnabled();
 
+	virtual void setTopParent(gBaseGUIObject* parentGUIObject);
+	gBaseGUIObject* getTopParent();
+
 	virtual void setParent(gBaseGUIObject* parentGUIObject);
 	gBaseGUIObject* getParent();
 
@@ -55,11 +58,17 @@ public:
 	static void setTextBackgroundColor(gColor* textBackgroundColor);
 	static gColor* getTextBackgroundColor();
 
+	static void setNavigationBackgroundColor(gColor* navigationBackgroundColor);
+	static gColor* getNavigationBackgroundColor();
+
 	static void setFont(gFont* font);
 	static gFont* getFont();
 
 	static void setFontColor(gColor* fontColor);
 	static gColor* getFontColor();
+
+	static void setNavigationFontColor(gColor* navigationFontColor);
+	static gColor* getNavigationFontColor();
 
 	static void setButtonColor(gColor* color);
 	static gColor* getButtonColor();
@@ -97,14 +106,18 @@ public:
 	int id, type;
 	int left, top, right, bottom, width, height;
 	bool isfocused, iscursoron;
+	bool issizer, iscontainer;
+	static int focusid, previousfocusid;
 
 protected:
 	static gColor* backgroundcolor;
 	static gColor* middlegroundcolor;
 	static gColor* foregroundcolor;
 	static gColor* textbackgroundcolor;
+	static gColor* navigationbackgroundcolor;
 	static gFont* font;
 	static gColor* fontcolor;
+	static gColor* navigationfontcolor;
 	static gColor* buttoncolor;
 	static gColor* pressedbuttoncolor;
 	static gColor* disabledbuttoncolor;
@@ -115,11 +128,10 @@ protected:
 	std::string title;
 
 	gBaseApp* root;
+	gBaseGUIObject* topparent;
 	gBaseGUIObject* parent;
 	bool isenabled;
 	int parentslotlineno, parentslotcolumnno;
-
-	int windowmode;
 
 private:
 	static int lastid;

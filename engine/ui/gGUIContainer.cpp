@@ -9,11 +9,18 @@
 
 
 gGUIContainer::gGUIContainer() {
+	iscontainer = true;
 	topbarh = 0;
 	sizerrescaling = true;
 }
 
 gGUIContainer::~gGUIContainer() {
+}
+
+void gGUIContainer::set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIObject* parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h) {
+	totalh = h;
+	gGUIScrollable::set(root, topParentGUIObject, parentGUIObject, parentSlotLineNo, parentSlotColumnNo, x, y, w, h);
+	gGUIScrollable::setDimensions(w, h);
 }
 
 void gGUIContainer::set(int x, int y, int w, int h) {
@@ -28,6 +35,7 @@ void gGUIContainer::set(int x, int y, int w, int h) {
 
 void gGUIContainer::setSizer(gGUISizer* guiSizer) {
 	guisizer = guiSizer;
+	guisizer->setTopParent(topparent);
 	guisizer->setParent(this);
 	guisizer->setParentSlotNo(0, 0);
 	guisizer->setRootApp(root);

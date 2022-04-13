@@ -20,6 +20,7 @@ public:
 
 private:
 	int toplineh;
+	gGUISizer panelsizer;
 };
 
 #endif /* UI_GGUIPANEL_H_ */
