@@ -18,6 +18,7 @@ public:
 	gGUISizer();
 	virtual ~gGUISizer();
 
+	void set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIObject* parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h);
 	void set(int x, int y, int w, int h);
 	int getSizerType();
 

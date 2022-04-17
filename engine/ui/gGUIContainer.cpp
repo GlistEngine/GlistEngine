@@ -21,6 +21,7 @@ void gGUIContainer::set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBas
 	totalh = h;
 	gGUIScrollable::set(root, topParentGUIObject, parentGUIObject, parentSlotLineNo, parentSlotColumnNo, x, y, w, h);
 	gGUIScrollable::setDimensions(w, h);
+	guisizer->set(root, topParentGUIObject, parentGUIObject, parentSlotLineNo, parentSlotColumnNo, x, y + topbarh, w, h - topbarh);
 }
 
 void gGUIContainer::set(int x, int y, int w, int h) {
