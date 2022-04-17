@@ -22,6 +22,7 @@
 #include "gConstants.h"
 #include "gKeyCode.h"
 #include "gGUIEvents.h"
+#include "tinyfiledialogs.h"
 
 /*
 #ifndef LINUX
@@ -201,6 +202,73 @@ public:
 void gEnableLogging();
 void gDisableLogging();
 bool gIsLoggingEnabled();
+
+/**
+ * Shows operating system's open file dialog
+ *
+ * EXAMPLE USAGE
+ * GameCanvas.h:
+ * bool showopenfiledialog;
+ * static const int patternnum = 2;
+ * std::string filterpatterns[patternnum];
+ * std::string openfilename;
+ * std::string filepath;
+ *
+ * GameCanvas.cpp:
+ * void GameCanvas::setup() {
+ *     showopenfiledialog = false;
+ *     filterpatterns[0] = "*.csv";
+ *     filterpatterns[1] = "*.txt";
+ *     openfilename = "";
+ *     filepath = "";
+ * }
+ *
+ * void GameCanvas::update() {
+ *     if(showopenfiledialog) {
+ *         openfilename = gShowOpenFileDialog("Open File", gGetFilesDir(), patternnum, filterpatterns, "Data files", false);
+ *         if(openfilename != "") filepath = openfilename;
+ *         openfilename = "";
+ *         showopenfiledialog = false;
+ *     }
+ *     gLogi("GameCanvas") << "filepath:" << filepath;
+ * }
+ *
+ * void GameCanvas::mouseReleased(int x, int y, int button) {
+ *     showopenfiledialog = true;
+ * }
+ *
+ *
+ * @param dialogTitle Dialog's title
+ * @param defaultPathAndFile Default path to show
+ * @param filterNum Filter pattern number
+ * @param filterPatterns A string array of the file patterns to browse
+ * @param filterDescription Description of the filter such as 'Image files'
+ * @param isMultipleSelectionAllowed Is multiple selection allowed. Default value is false.
+ * @return Choosen file's full path
+ */
+std::string gShowOpenFileDialog(
+	std::string dialogTitle,
+	std::string defaultPathAndFile,
+    int filterNum,
+	std::string* filterPatterns,
+	std::string filterDescription,
+    bool isMultipleSelectionAllowed = false);
+
+/**
+ * Shows operating system's message dialog box
+ *
+ * @param aTitle Dialog's title
+ * @param aMessage Dialog's message text. May contain \n and \t
+ * @param aDialogType Dialog's type. Possible values are "ok", "okcancel", "yesno", "yesnocancel"
+ * @param aIconType Dialog's type. Possible values are "info", "warning", "error", "question"
+ * @return clicked button
+ */
+int gShowMessageBox(
+	std::string aTitle , /* NULL or "" */
+	std::string aMessage , /* NULL or ""  may contain \n and \t */
+	std::string aDialogType , /* "ok" "okcancel" "yesno" "yesnocancel" */
+	std::string aIconType , /* "info" "warning" "error" "question" */
+	int aDefaultButton ) /* 0 for cancel/no , 1 for ok/yes , 2 for no in yesnocancel */;
 
 class gUtils {
 public:
