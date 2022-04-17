@@ -130,7 +130,12 @@ void gGUIForm::charPressed(unsigned int codepoint) {
 void gGUIForm::mouseMoved(int x, int y) {
 	if(menubar) menubar->mouseMoved(x, y);
 	for(int i = 0; i < toolbarnum; i++) toolbars[i]->mouseMoved(x, y);
-	if(guisizer) guisizer->mouseMoved(x, y);
+	if(guisizer) {
+		if(x >= guisizer->left && x < guisizer->right && y >= guisizer->top && y < guisizer->bottom) {
+			guisizer->iscursoron = true;
+			guisizer->mouseMoved(x, y);
+		}
+	}
 }
 
 void gGUIForm::mousePressed(int x, int y, int button) {
@@ -170,7 +175,7 @@ void gGUIForm::windowResized(int w, int h) {
 		for(int i = 0; i < toolbarnum; i++) toolbars[i]->windowResized(w, h);
 	}
 	if(guisizer) {
-		guisizer->set(guisizer->left, guisizer->top, w, h);
+		guisizer->set(root, this, this, 0, 0, left, top + (menubar?menubar->height:0) + (toolbarnum?toolbarnum*toolbars[0]->height:0), w, h);
 		guisizer->windowResized(w, h);
 	}
 }

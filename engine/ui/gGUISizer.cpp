@@ -48,6 +48,46 @@ gGUISizer::gGUISizer() {
 gGUISizer::~gGUISizer() {
 }
 
+void gGUISizer::set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIObject* parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h) {
+	gGUIControl::set(root, topParentGUIObject, parentGUIObject, parentSlotLineNo, parentSlotColumnNo, x, y, w, h);
+	left = x;
+	top = y;
+	right = x + w;
+	bottom = y + h;
+	width = w;
+	height = h;
+//	gLogi("Sizer") << "id:" << id  << ", l:" << left << ", t:" << top << ", w:" << w << ", h:" << h;
+
+	for (int i = 0; i < linenum; i++) {
+		for (int j = 0; j < columnnum; j++) {
+			if(iscontrolset[i][j]) {
+				int cr = left + (width * columntprs[j]) + slotpadding;
+				int cb = guicontrol[i][j]->top;
+				int cw = guicontrol[i][j]->width - (slotpadding * 2);
+				int ch = guicontrol[i][j]->height;
+				if(rescaling) {
+					cr = left + (width * columntprs[j]) + slotpadding;
+					cb = top + (height * linetprs[i]);
+					cw = width * (columntprs[j + 1] - columntprs[j]) - (slotpadding * 2);
+					ch = height * (linetprs[i + 1] - linetprs[i]);
+//					if(id == 13 && i == 0 && j == 0) gLogi("Sizer") << "rescaling, t:" << top << ", h:" << height << ", lt:" << linetprs[i];
+				}
+				guicontrol[i][j]->set(
+					root,
+					topparent,
+					this,
+					i,
+					j,
+					cr,
+					cb,
+					cw,
+					ch
+				);
+			}
+		}
+	}
+}
+
 void gGUISizer::set(int x, int y, int w, int h) {
 	left = x;
 	top = y;
@@ -55,6 +95,7 @@ void gGUISizer::set(int x, int y, int w, int h) {
 	bottom = y + h;
 	width = w;
 	height = h;
+//	gLogi("Sizer") << "id:" << id  << ", l:" << left << ", t:" << top << ", w:" << w << ", h:" << h;
 
 	for (int i = 0; i < linenum; i++) {
 		for (int j = 0; j < columnnum; j++) {
