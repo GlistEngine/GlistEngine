@@ -431,6 +431,40 @@ bool gIsLoggingEnabled() {
 	return gLog::isLoggingEnabled();
 }
 
+std::string gShowOpenFileDialog(
+		std::string dialogTitle,
+		std::string defaultPathAndFile,
+	    int filterNum,
+		std::string* filterPatterns,
+		std::string filterDescription,
+	    bool isMultipleSelectionAllowed) {
+	std::string resstr = "";
+	const char* carray[filterNum];
+	for(int i = 0; i < filterNum; i++) carray[i] = filterPatterns[i].c_str();
+	char* res = tinyfd_openFileDialog(
+			dialogTitle.c_str(),
+			defaultPathAndFile.c_str(),
+			filterNum,
+			carray,
+			filterDescription.c_str(),
+			isMultipleSelectionAllowed);
+	if(res) resstr = std::string(res);
+	return resstr;
+}
+
+int gShowMessageBox(
+		std::string aTitle , /* NULL or "" */
+		std::string aMessage , /* NULL or ""  may contain \n and \t */
+		std::string aDialogType , /* "ok" "okcancel" "yesno" "yesnocancel" */
+		std::string aIconType , /* "info" "warning" "error" "question" */
+		int aDefaultButton ) {
+	return tinyfd_messageBox(
+			aTitle.c_str(),
+			aMessage.c_str(),
+			aDialogType.c_str(),
+			aIconType.c_str(),
+			aDefaultButton);
+}
 gUtils::gUtils() {
 
 }

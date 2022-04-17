@@ -161,6 +161,8 @@ set(SRC_FILES
 	${ENGINE_DIR}/ui/gGUIContainer.cpp
 	${ENGINE_DIR}/ui/gGUIForm.cpp
 	${ENGINE_DIR}/ui/gGUIResources.cpp
+	${ENGINE_DIR}/ui/base/tinyfd_moredialogs.c
+	${ENGINE_DIR}/ui/base/tinyfiledialogs.c
 	${ENGINE_DIR}/base/gBaseGUIObject.cpp
 	${ENGINE_DIR}/core/gGUIManager.cpp
 	${ENGINE_DIR}/core/gAppObject.cpp
@@ -209,6 +211,7 @@ set(INC_DIRS
     ${ENGINE_DIR}/graphics/posteffects
     ${ENGINE_DIR}/graphics/posteffects/kerneleffects
     ${ENGINE_DIR}/animation
+    ${ENGINE_DIR}/ui/base
     ${ENGINE_DIR}/base
     ${ENGINE_DIR}/core
 	${PLUGIN_INCLUDES}
