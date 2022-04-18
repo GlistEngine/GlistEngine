@@ -17,6 +17,8 @@ public:
 	gGUITextbox();
 	virtual ~gGUITextbox();
 
+	virtual void set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIObject* parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h);
+
 	void setText(const std::string& text);
 	std::string getText();
 
@@ -53,6 +55,8 @@ private:
 	std::vector<int> calculateLetterPosition(int letterNo);
 	void startSelection();
 	std::vector<short> readString(const std::string& str);
+	bool isLetter(char c);
+	bool isNumber(char c);
 	bool selectionmode;
 	int selectionposchar1, selectionposchar2;
 	int selectionposx1, selectionposx2;

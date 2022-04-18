@@ -57,6 +57,10 @@ gGUITextbox::gGUITextbox() {
 gGUITextbox::~gGUITextbox() {
 }
 
+void gGUITextbox::set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIObject* parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h) {
+	gGUIControl::set(root, topParentGUIObject, parentGUIObject, parentSlotLineNo, parentSlotColumnNo, x, y, w, h);
+}
+
 void gGUITextbox::setText(const std::string& text) {
 	this->text = text;
 	letterlength.clear();
@@ -218,6 +222,16 @@ void gGUITextbox::keyReleased(int key) {
 }
 
 void gGUITextbox::handleKeys() {
+	if(keypresstime >= 0) {
+		keypresstime++;
+		if(keypresstime >= keypresstimelimit2) keypresstime = keypresstimelimit1;
+
+		if(keypresstime == 1 || keypresstime == keypresstimelimit1) {
+			pressKey();
+		}
+		return;
+	}
+
 	if((selectionmode && (selectionposchar1 != selectionposchar2)) || isdoubleclicked || istripleclicked || ctrlapressed || ctrlvpressed) {
 		if((isdoubleclicked || istripleclicked || ctrlcpressed || ctrlvpressed || ctrlxpressed || ctrlapressed || ctrlvpressed)) {
 			pressKey();
@@ -229,15 +243,6 @@ void gGUITextbox::handleKeys() {
 		isdoubleclicked = false;
 		istripleclicked = false;
 		return;
-	}
-
-	if(keypresstime >= 0) {
-		keypresstime++;
-		if(keypresstime >= keypresstimelimit2) keypresstime = keypresstimelimit1;
-
-		if(keypresstime == 1 || keypresstime == keypresstimelimit1) {
-			pressKey();
-		}
 	}
 }
 
@@ -448,8 +453,8 @@ void gGUITextbox::pressKey() {
 	} else if(isdoubleclicked) {
 		bool leftchar = false;
 		bool rightchar = false;
-		if(cursorposchar > 0 && text[cursorposutf - 1] != ' ') leftchar = true;
-		if(cursorposchar < text.length() && text[cursorposutf] != ' ') rightchar = true;
+		if(cursorposchar > 0 && (isLetter(text[cursorposutf - 1]) || isNumber(text[cursorposutf - 1]))) leftchar = true;
+		if(cursorposchar < text.length() && (isLetter(text[cursorposutf]) || isNumber(text[cursorposutf]))) rightchar = true;
 		if(!leftchar && !rightchar) return;
 		selectionmode = true;
 		selectionposchar1 = cursorposchar;
@@ -471,13 +476,13 @@ void gGUITextbox::pressKey() {
 				pdc = posdata2[0];
 				pdx = posdata2[1];
 				pdu = posdata2[2];
-			} while(pdc > 0 && text[pdu - 1] != ' ');
+			} while(pdc > 0 && (isLetter(text[pdu - 1]) || isNumber(text[pdu - 1])));
 			selectionposchar1 = pdc;
 			selectionposx1 = pdx;
 			selectionposutf1 = pdu;
 		}
 		if(rightchar) {
-			std::vector<int> posdata = calculateClickPosition(left + calculateLetterPosition(cursorposchar)[0], top + 1);
+			std::vector<int> posdata = calculateClickPosition(left + calculateLetterPosition(cursorposchar)[0] + 4, top + 1);
 			int pdc = posdata[0];
 			int pdx = posdata[1];
 			int pdu = posdata[2];
@@ -488,7 +493,7 @@ void gGUITextbox::pressKey() {
 				pdc = posdata2[0];
 				pdx = posdata2[1];
 				pdu = posdata2[2];
-			} while(pdc < letterlength.size() && text[pdu] != ' ');
+			} while(pdc < letterlength.size() && (isLetter(text[pdu]) || isNumber(text[pdu])));
 			selectionposchar2 = pdc;
 			selectionposx2 = pdx;
 			selectionposutf2 = pdu;
@@ -641,6 +646,7 @@ std::vector<int> gGUITextbox::calculateClickPosition(int x, int y) {
 				break;
 			}
 		}
+
 		result[0] = poschar;
 		result[1] = posx;
 		result[2] = posutf;
@@ -653,9 +659,9 @@ std::vector<int> gGUITextbox::calculateLetterPosition(int letterNo) {
 
 	int posutf = 0;
 	int posx1 = 0;
-	int posx2 = 0;
+	int posx2 = font->getStringWidth(text.substr(0, posutf));
 	for(int i = 0; i < letterNo; i++) {
-		if(i > 0) posx1 = posx2;
+		posx1 = posx2;
 		posutf += letterlength[i];
 		posx2 = font->getStringWidth(text.substr(0, posutf));
 	}
@@ -687,11 +693,21 @@ std::vector<short> gGUITextbox::readString(const std::string& str) {
         	int lsize = 1;
         	if(i < str.length() - 1 && (str[i + 1] & 0xC0) == 0x80) lsize = 2;
         	lettersizes.push_back(lsize);
-//        	gLogi("Textbox") << "ls " << i << ":" << lsize;
             codepoints++;
         } else {
         }
     }
     return lettersizes;
 }
+
+bool gGUITextbox::isLetter(char c) {
+	if((c >= 65 && c <= 90) || (c >= 97 && c <= 122)) return true;
+	return false;
+}
+
+bool gGUITextbox::isNumber(char c) {
+	if(c >= 48 && c <= 57) return true;
+	return false;
+}
+
 
