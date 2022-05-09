@@ -7,28 +7,8 @@
 
 #include "gSpriteAnimation.h"
 
-const int gSpriteAnimation::CONDITION_LESS = 0;
-const int gSpriteAnimation::CONDITION_GREATER = 1;
-const int gSpriteAnimation::CONDITION_EQUAL = 2;
-const int gSpriteAnimation::CONDITION_FALSE = 3;
-const int gSpriteAnimation::CONDITION_TRUE = 4;
-
-gSpriteAnimation* createSpriteAnimation() {
-	return new gSpriteAnimation();
-}
-
-gSpriteAnimation* createSpriteAnimation(gImage* frameList, int listSize) {
-	gSpriteAnimation* animation = createSpriteAnimation();
-
-	for(int i = 0; i < listSize; i++) {
-		animation->addFrame(&frameList[i]);
-	}
-
-	return animation;
-}
-
-gSpriteAnimation* createSpriteAnimation(gImage* frameList, int listSize, gAnimationTriggerBase* animationTrigger) {
-	gSpriteAnimation* animation = createSpriteAnimation(frameList, listSize);
+gSpriteAnimation* createSpriteAnim(std::shared_ptr<gAnimationTrigger> animationTrigger) {
+	gSpriteAnimation* animation = new gSpriteAnimation{};
 
 	animation->addConditionTrigger(animationTrigger);
 
@@ -47,22 +27,13 @@ gSpriteAnimation::gSpriteAnimation() {
 }
 
 gSpriteAnimation::~gSpriteAnimation() {
-	for(int i = 0; i < frames.size(); i++) {
-		delete frames[i];
-	}
-	frames.clear();
-	delete trigger;
-}
-
-void gSpriteAnimation::addFrame(gImage* frame) {
-	frames.push_back(frame);
-	framecount++;
 }
 
 void gSpriteAnimation::loadFrame(const std::string &framePath) {
-	gImage* img = new gImage();
+	auto img = std::make_unique<gImage>();
 	img->loadImage(framePath);
-	addFrame(img);
+	frames.push_back(std::move(img));
+	framecount++;
 }
 
 void gSpriteAnimation::setLoop(bool isLooped) {
@@ -83,7 +54,7 @@ void gSpriteAnimation::reset() {
 	hastriggered = false;
 }
 
-void gSpriteAnimation::addConditionTrigger(gAnimationTriggerBase* trigger) {
+void gSpriteAnimation::addConditionTrigger(std::shared_ptr<gAnimationTrigger> trigger) {
 	this->trigger = trigger;
 }
 
@@ -106,6 +77,7 @@ void gSpriteAnimation::update() {
 		return;
 	}
 	framecounter++;
+	logi("update");
 }
 
 void gSpriteAnimation::draw(int x, int y) {
@@ -117,16 +89,5 @@ void gSpriteAnimation::draw(int x, int y, int w, int h) {
 }
 
 bool gSpriteAnimation::shouldStop() {
-
 	return !islooped ? currentframe >= framecount - 1: false;
-}
-
-// --- TRIGGER FUNCTION DEFINITIONS --  \\
-
-gAnimationTriggerBase::~gAnimationTriggerBase() {}
-
-void gAnimationTriggerBase::addTrigger(int condition, void* var1, void* var2) {
-	this->var1 = var1;
-	this->var2 = var2;
-	this->condition = condition;
 }
