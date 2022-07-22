@@ -72,12 +72,12 @@ float gGUIProgressBar::getValue() {
 	return value;
 }
 
-void gGUIProgressBar::setThicknessofBorder(float thickness) {
+void gGUIProgressBar::setBorderThickness(float thickness) {
 	if(thickness < 25.0f) {
 		this->thickness = thickness;
 	}
 }
 
-float gGUIProgressBar::getThicknessofBorder() {
+float gGUIProgressBar::getBorderThickness() {
 	return thickness;
 }

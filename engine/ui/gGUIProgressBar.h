@@ -128,12 +128,12 @@ public:
 	 * than 25.0f than the value is silently ignored. Any value smaller and equal
 	 * than 0.0f makes the borders disabled.
 	 */
-	void setThicknessofBorder(float thickness);
+	void setBorderThickness(float thickness);
 
 	/**
 	 * Returns the thickness of progress bar's borders.
 	 */
-	float getThicknessofBorder();
+	float getBorderThickness();
 
 private:
 	int progressbarw, progressbarh;
