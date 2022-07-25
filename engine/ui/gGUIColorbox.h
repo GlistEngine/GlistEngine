@@ -30,72 +30,74 @@
  * Author: Medine, 2022-on                                             *
  ****************************************************************************/
 /*
- * gGUIPicturebox.h
+/*
+ * gGUIColorbox.h
  *
- *  Created on: 20 Tem 2022
+ *  Created on: 25 Tem 2022
  *      Author: Medine
  */
 
-#ifndef UI_GGUIBITMAP_H_
-#define UI_GGUIBITMAP_H_
+#ifndef UI_GGUICOLORBOXH
+#define UI_GGUICOLORBOXH
 
 #include "gGUIControl.h"
-#include "gImage.h"
 
-class gGUIBitmap: public gGUIControl {
+/**
+ * Developers can choose whichever color they want with using setColorboxColor
+ * and loadColorboxColor commands. This class can get the box's widht, height
+ * and color values.
+ */
+class gGUIColorbox: public gGUIControl {
 public:
-	gGUIBitmap();
-	virtual ~gGUIBitmap();
-	void draw();
+    gGUIColorbox();
+    virtual ~gGUIColorbox();
+    void draw();
 
 /**
- * Loads the specific picture file
- * @param imagePath specifies the pictures file location
- * @param isPropotional if the value of parameter is given true the picture
- *  will stretch in picturebox.
+ * Sets the boxsize dimensions
+ *
+ * @param colorboxwidth sets the colorbox's width value.
+ * @param colowboxheight sets the colorbox's height value.
  */
-	void loadImage(const std::string& imagePath, bool isProportional = true);
+    void setColorboxsize(int colorboxwidth, int colorboxheight);
 
 /**
- * Sets the specific picture file
- * @param setImage adds the preloaded image using the variable name
- * @param isPropotional if the value of parameter is given true the picture
- *  will stretch in picturebox.
+ * Sets the colorbox's color first time with using the float values.
+ *
+ * @param r sets the r(red color) value using float parameter
+ * @param g sets the g(green color) value using float parameter
+ * @param b sets the b(blue) value using float parameter
  */
-	void setImage(gImage setImage, bool isProportional = false);
+    void setColorboxColor(float r, float g, float b);
 
 /**
- * Sets the loaded picture's size
- * @param x changes the position of the image on the x-axis up to the added
- * pixel value.
- * @param y changes the position of the image on the y-axis up to the added
- * pixel value.
- * @param scalex changes the size of the image on the x- axis by proportioning
- *  it to the given float value.
- * @param scaley changes the size of the image on the y- axis by proportioning
- * it to the given float value.
+ * sets the colorbox's color
+ *
+ * @param setcolor sets the preused color with using setcolor command.
  */
-	void setImageSize(int x, int y, float scalex, float scaley);
+    void setColorboxColor(gColor newColor);
 
 /**
- * Specifies the path of the image
+ * Gets the box's width value.
  */
-	std::string getImagePath();
+    int getWidth();
 
 /**
- * @param getImageWidth specifies the width of the image
- * @param getImageHeight specifies the height of the image
+ * Gets the box's height value.
  */
-	int getImageWidth();
-	int getImageHeight();
+    int getHeight();
+
+/**
+ * Gets the box's color value in gColor format.
+ */
+    gColor getcolor();
 
 private:
-	float imagew, imageh, proportion;
-	int setsizex, setsizey;
-	float setsizew, setsizeh;
-	bool stretch;
-	std::string imagepath;
-	gImage image;
+    int colorboxw, colorboxh;
+    bool setsize;
+    gColor color;
+
+
 };
 
-#endif /* UI_GGUIBITMAP_H_ */
+#endif /* UI_GGUICOLORBOXH */

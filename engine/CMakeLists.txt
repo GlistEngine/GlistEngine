@@ -153,6 +153,8 @@ set(SRC_FILES
 	${ENGINE_DIR}/ui/gGUIRadioButton.cpp
 	${ENGINE_DIR}/ui/gGUIBitmap.cpp
 	${ENGINE_DIR}/ui/gGUISlider.cpp
+	${ENGINE_DIR}/ui/gGUIImageButton.cpp
+	${ENGINE_DIR}/ui/gGUIColorbox.cpp
 	${ENGINE_DIR}/ui/gGUIButton.cpp
 	${ENGINE_DIR}/ui/gGUISizer.cpp
 	${ENGINE_DIR}/ui/gGUINavigation.cpp
