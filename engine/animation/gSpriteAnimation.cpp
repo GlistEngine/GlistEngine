@@ -77,7 +77,6 @@ void gSpriteAnimation::update() {
 		return;
 	}
 	framecounter++;
-	logi("update");
 }
 
 void gSpriteAnimation::draw(int x, int y) {
