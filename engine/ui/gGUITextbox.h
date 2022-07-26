@@ -25,7 +25,7 @@ public:
 	void setEditable(bool isEditable);
 	bool isEditable();
 
-	void setLineCount(int rowcount);
+	void setLineCount(int linecount);
 	int getLineCount();
 
 	int getCursor(int x, int y);
@@ -64,7 +64,7 @@ private:
 	int calculateLastUtf();
 	int calculateFirstUtf();
 	int calculateCharNoFromUtf(int letterUtfNo);
-	int calculateSelectionStart();
+	int findFirstSpace(int lineend);
 	void startSelection();
 	std::vector<short> readString(const std::string& str);
 	bool isLetter(char c);
@@ -81,6 +81,9 @@ private:
 	bool isdoubleclicked, istripleclicked;
 	bool iseditable;
 	bool isselectedall;
+	int linecount;
+	int lineheight;
+	bool ismultiline;
 };
 
 #endif /* UI_GGUITEXTBOX_H_ */
