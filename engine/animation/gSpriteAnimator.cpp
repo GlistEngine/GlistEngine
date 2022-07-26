@@ -16,19 +16,23 @@ gSpriteAnimator::~gSpriteAnimator() {
 }
 
 void gSpriteAnimator::addAnimation(int animationId, gSpriteAnimation* animation) {
-	animationids.push_back(animationId);
-	animations.insert({animationId, animation});
+	animations.insert(std::make_pair(animationId, std::move(std::unique_ptr<gSpriteAnimation>{animation})));
 }
 
 void gSpriteAnimator::changeAnimation(int animationId) {
 	currentanimation = animationId;
 }
 
+void gSpriteAnimator::setFps(int animationId, int fps) {
+	animations[animationId]->setFps(fps);
+}
+
 void gSpriteAnimator::update() {
-	for(int i = 0; i < animationids.size(); i++) {
-		if(animations[animationids[i]]->isConditionTriggered()) {
+	for(const auto& kv : animations) {
+
+		if(kv.second->isConditionTriggered()) {
 			animations[currentanimation]->reset();
-			currentanimation = animationids[i];
+			currentanimation = kv.first;
 		}
 	}
 	animations[currentanimation]->update();
