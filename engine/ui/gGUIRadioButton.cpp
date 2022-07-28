@@ -37,6 +37,7 @@ gGUIRadioButton::gGUIRadioButton() {
 		textmargin = 0;
 	}
 	lineheightlimit = linemidpoint * 2 + verticaldistance;
+	inity = 15;
 }
 
 gGUIRadioButton::~gGUIRadioButton() {
@@ -174,30 +175,29 @@ void gGUIRadioButton::draw() {
 	float index = 0.0f;
 
 	renderer->setColor(fontcolor);
-	font->drawText(title, left, top);
+	font->drawText(title, left, top + inity);
+
+	float circlex, circley;
 
 	for(int i = 0; i < buttoncount; i++) {
 
 		renderer->setColor(fontcolor);
+		circlex = left + buttonradius + 1 + (i % columncount) * maxradiowidth;
+		circley = top + titleh + buttonradius + i / columncount * lineheightlimit + inity;
 
 		if(selectedbutton != i) {
-			gDrawCircle(left + buttonradius + 1 + (i % columncount) * maxradiowidth,
-					top + titleh + buttonradius + i / columncount * lineheightlimit, buttonradius, true);
+			gDrawCircle(circlex, circley, buttonradius, true);
 
 			renderer->setColor(foregroundcolor);
-			gDrawCircle(left + buttonradius + 1 + (i % columncount) * maxradiowidth,
-					top + titleh + buttonradius + i / columncount * lineheightlimit, buttonradius * 0.7f, true);
+			gDrawCircle(circlex, circley, buttonradius * 0.7f, true);
 		} else {
-			gDrawCircle(left + buttonradius + 1 + (i % columncount) * maxradiowidth,
-					top + titleh + buttonradius + i / columncount * lineheightlimit, buttonradius, true);
+			gDrawCircle(circlex, circley, buttonradius, true);
 
 			renderer->setColor(foregroundcolor);
-			gDrawCircle(left + buttonradius + 1 + (i % columncount) * maxradiowidth,
-					top + titleh + buttonradius + i / columncount * lineheightlimit, buttonradius * 0.75f, true);
+			gDrawCircle(circlex, circley, buttonradius * 0.75f, true);
 
 			renderer->setColor(selectedcolor);
-			gDrawCircle(left + buttonradius + 1 + (i % columncount) * maxradiowidth,
-					top + titleh + buttonradius + i / columncount * lineheightlimit, buttonradius * 0.5f, true);
+			gDrawCircle(circlex, circley, buttonradius * 0.5f, true);
 		}
 
 		index++;
@@ -210,7 +210,7 @@ void gGUIRadioButton::draw() {
 			renderer->setColor(fontcolor);
 //			font->drawText(title, left + buttonradius * 2 + 2, top - 2 + (buttonradius * 2 + titleh) / 2 - textmargin + i * lineheightlimit);
 			font->drawText(titles[i], left + buttonradius * 2 + 2 + (i % columncount) * maxradiowidth,
-					top - 2 + titleh + buttonradius + titleh / 2 + i / columncount * lineheightlimit);
+					top - 2 + titleh + buttonradius + titleh / 2 + i / columncount * lineheightlimit + inity);
 
 			index++;
 		}
@@ -231,7 +231,7 @@ void gGUIRadioButton::mouseReleased(int x, int y, int button) {
 
 	for(int i = 0; i < buttoncount; i++){
 		if(x >= left + (i % columncount)  * sidebysidemargin && x < left + sidebysidemargin + (i % columncount)  * maxradiowidth &&
-				y >= top + titleh + i / columncount * lineheightlimit && y < top + titleh + i / columncount * lineheightlimit + buttonradius * 2) {
+				y >= top + titleh + i / columncount * lineheightlimit + inity && y < top + titleh + i / columncount * lineheightlimit + buttonradius * 2 + inity) {
 			selectedbutton = i;
 			// TODO Create a new GUI event for radio buttons
 			root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_CHECKBOXTICKED);

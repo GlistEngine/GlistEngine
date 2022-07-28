@@ -25,6 +25,9 @@ public:
 	void setEditable(bool isEditable);
 	bool isEditable();
 
+	void setLineCount(int linecount);
+	int getLineCount();
+
 	int getCursor(int x, int y);
 
 	void update();
@@ -46,13 +49,22 @@ private:
 	int cursorshowcounter, cursorshowcounterlimit, cursorshowlimit;
 	bool editmode;
 	std::vector<short> letterlength;
+	std::vector<int> letterpos;
 	int keystate;
 	int keypresstime, keypresstimelimit1, keypresstimelimit2;
+	int initx;
+	int firstchar, firstutf, firstposx;
+	int lastutf, lutf, futf;
 	void handleKeys();
 	void pressKey();
 	std::vector<int> clickTextbox(int x, int y);
 	std::vector<int> calculateClickPosition(int x, int y);
-	std::vector<int> calculateLetterPosition(int letterNo);
+	std::vector<int> calculateLetterPosition(int letterCharNo);
+	std::vector<int> calculateAllLetterPositions();
+	int calculateLastUtf();
+	int calculateFirstUtf();
+	int calculateCharNoFromUtf(int letterUtfNo);
+	int findFirstSpace(int lineend);
 	void startSelection();
 	std::vector<short> readString(const std::string& str);
 	bool isLetter(char c);
@@ -68,6 +80,10 @@ private:
 	long clicktime, previousclicktime, firstclicktime, clicktimediff;
 	bool isdoubleclicked, istripleclicked;
 	bool iseditable;
+	bool isselectedall;
+	int linecount;
+	int lineheight;
+	bool ismultiline;
 };
 
 #endif /* UI_GGUITEXTBOX_H_ */
