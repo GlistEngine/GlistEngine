@@ -131,6 +131,7 @@ set(SRC_FILES
 	${ENGINE_DIR}/utils/gAES.cpp
 	${ENGINE_DIR}/graphics/primitives/gLine.cpp
 	${ENGINE_DIR}/graphics/primitives/gCircle.cpp
+	${ENGINE_DIR}/graphics/primitives/gCircleSlice.cpp
 	${ENGINE_DIR}/graphics/primitives/gRectangle.cpp
 	${ENGINE_DIR}/graphics/primitives/gPlane.cpp
 	${ENGINE_DIR}/graphics/primitives/gBox.cpp
@@ -143,6 +144,7 @@ set(SRC_FILES
 	${ENGINE_DIR}/graphics/gRect.cpp
 	${ENGINE_DIR}/animation/gSpriteAnimation.cpp
 	${ENGINE_DIR}/animation/gSpriteAnimator.cpp
+	${ENGINE_DIR}/ui/gGUICakeGraph.cpp
 	${ENGINE_DIR}/ui/gGUISwitchButton.cpp
 	${ENGINE_DIR}/ui/gGUIListbox.cpp
 	${ENGINE_DIR}/ui/gGUICheckbox.cpp

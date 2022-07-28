@@ -10,6 +10,7 @@
 #include "gLight.h"
 #include "gLine.h"
 #include "gCircle.h"
+#include "gCircleSlice.h"
 #include "gRectangle.h"
 #include "gBox.h"
 #include "gSphere.h"
@@ -86,6 +87,12 @@ void gDrawCircle(float xCenter, float yCenter, float radius, bool isFilled, floa
 	gCircle circlemesh;
 	circlemesh.draw(xCenter, yCenter, radius, isFilled, numberOfSides);
 	circlemesh.clear();
+}
+
+void gDrawCircleSlice(float xCenter, float yCenter, float radius, bool isFilled, float numberOfSides, int degree) {
+	gCircleSlice circleslicemesh;
+	circleslicemesh.draw(xCenter, yCenter, radius, isFilled, numberOfSides, degree);
+	circleslicemesh.clear();
 }
 
 void gDrawArrow(float x1, float y1, float length, float angle, float tipLength, float tipAngle) {
