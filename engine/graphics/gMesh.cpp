@@ -316,7 +316,7 @@ void gMesh::drawVbo() {
     	glDrawArrays(drawmode, 0, vbo.getVerticesNum());
     }
     vbo.unbind();
-    vbo.clear();
+//    vbo.clear();
 }
 
 void gMesh::drawEnd() {
