@@ -67,21 +67,25 @@ int gGetCullingDirection() {
 void gDrawLine(float x1, float y1, float x2, float y2) {
 	gLine linemesh;
 	linemesh.draw(x1, y1, x2, y2);
+	linemesh.clear();
 }
 
 void gDrawLine(float x1, float y1, float z1, float x2, float y2, float z2) {
 	gLine linemesh;
 	linemesh.draw(x1, y1, z1, x2, y2, z2);
+	linemesh.clear();
 }
 
 void gDrawTriangle(float px, float py, float qx, float qy, float rx, float ry, bool is_filled) {
-	gTriangle triangle_mesh;
-	triangle_mesh.draw(px, py, qx, qy, rx, ry, is_filled);
+	gTriangle trianglemesh;
+	trianglemesh.draw(px, py, qx, qy, rx, ry, is_filled);
+	trianglemesh.clear();
 }
 
 void gDrawCircle(float xCenter, float yCenter, float radius, bool isFilled, float numberOfSides) {
 	gCircle circlemesh;
 	circlemesh.draw(xCenter, yCenter, radius, isFilled, numberOfSides);
+	circlemesh.clear();
 }
 
 void gDrawArrow(float x1, float y1, float length, float angle, float tipLength, float tipAngle) {
@@ -92,11 +96,13 @@ void gDrawArrow(float x1, float y1, float length, float angle, float tipLength, 
 	linemesh.draw(x2, y2, x1, y1);
 	linemesh.draw(x1, y1, x1 + std::cos(gDegToRad(angle) - gDegToRad(tipAngle)) * tipLength, y1 + std::sin(gDegToRad(angle) - gDegToRad(tipAngle)) * tipLength);
 	linemesh.draw(x1, y1, x1 + (std::cos(gDegToRad(angle) + gDegToRad(tipAngle)) * tipLength) , y1 + std::sin(gDegToRad(angle) + gDegToRad(tipAngle)) * tipLength);
+	linemesh.clear();
 }
 
 void gDrawRectangle(float x, float y, float w, float h, bool isFilled) {
 	gRectangle rectanglemesh;
  	rectanglemesh.draw(x, y, w, h, isFilled);
+ 	rectanglemesh.clear();
 }
 
 void gDrawRectangle(float x, float y, float w, float h, bool isFilled, float thickness, float borderposition) {
@@ -104,11 +110,13 @@ void gDrawRectangle(float x, float y, float w, float h, bool isFilled, float thi
 			for(int i = 0; i < thickness; i++) {
 				gRectangle rectanglemesh;
 			 	rectanglemesh.draw(x + i, y + i, w - i*2, h - i*2, isFilled);
+			 	rectanglemesh.clear();
 			}
 		} else if (borderposition == 1.0f) {
 			for(int i = 0; i < thickness; i++) {
 				gRectangle rectanglemesh;
 			 	rectanglemesh.draw(x - i, y - i, w + i*2, h + i*2, isFilled);
+			 	rectanglemesh.clear();
 			}
 		}else if (borderposition > 0.0f && borderposition < 1.0f) {
 			//calculating how many pixel is sided to each
@@ -120,11 +128,13 @@ void gDrawRectangle(float x, float y, float w, float h, bool isFilled, float thi
 			for(int i = 0; i < outside; i++) {
 				gRectangle rectanglemesh;
 			 	rectanglemesh.draw(x - i, y - i, w + i*2, h + i*2, isFilled);
+			 	rectanglemesh.clear();
 			}
 			//inside border
 			for(int i = 0; i < inside; i++) {
 				gRectangle rectanglemesh;
 			 	rectanglemesh.draw(x + i, y + i, w - i*2, h - i*2, isFilled);
+			 	rectanglemesh.clear();
 			}
 		}
 }
@@ -135,6 +145,7 @@ void gDrawBox(float x, float y, float z, float w, float h, float d, bool isFille
 	boxmesh.setPosition(x, y, z);
 	boxmesh.scale(w, h, d);
 	boxmesh.draw();
+	boxmesh.clear();
 }
 
 void gDrawBox(glm::mat4 transformationMatrix, bool isFilled) {
@@ -142,6 +153,7 @@ void gDrawBox(glm::mat4 transformationMatrix, bool isFilled) {
 	if(!isFilled) boxmesh.setDrawMode(gMesh::DRAWMODE_LINELOOP);
 	boxmesh.setTransformationMatrix(transformationMatrix);
 	boxmesh.draw();
+	boxmesh.clear();
 }
 
 void gDrawSphere(float xPos, float yPos, float zPos, int xSegmentNum, int ySegmentNum, float scale, bool isFilled) {
@@ -149,6 +161,7 @@ void gDrawSphere(float xPos, float yPos, float zPos, int xSegmentNum, int ySegme
 	spheremesh.setPosition(xPos , yPos, zPos);
 	spheremesh.scale(scale);
 	spheremesh.draw();
+	spheremesh.clear();
 }
 
 gRenderer::gRenderer() {
