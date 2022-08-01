@@ -135,6 +135,7 @@ set(SRC_FILES
 	${ENGINE_DIR}/graphics/primitives/gPlane.cpp
 	${ENGINE_DIR}/graphics/primitives/gBox.cpp
 	${ENGINE_DIR}/graphics/primitives/gSphere.cpp
+	${ENGINE_DIR}/graphics/primitives/gTriangle.cpp
 	${ENGINE_DIR}/graphics/gVbo.cpp
 	${ENGINE_DIR}/graphics/gFbo.cpp
 	${ENGINE_DIR}/graphics/gRay.cpp
@@ -142,7 +143,7 @@ set(SRC_FILES
 	${ENGINE_DIR}/graphics/gRect.cpp
 	${ENGINE_DIR}/animation/gSpriteAnimation.cpp
 	${ENGINE_DIR}/animation/gSpriteAnimator.cpp
-	${ENGINE_DIR}/ui/gGUIToggleButton.cpp
+	${ENGINE_DIR}/ui/gGUISwitchButton.cpp
 	${ENGINE_DIR}/ui/gGUIListbox.cpp
 	${ENGINE_DIR}/ui/gGUICheckbox.cpp
 	${ENGINE_DIR}/ui/gGUITextbox.cpp
@@ -153,6 +154,8 @@ set(SRC_FILES
 	${ENGINE_DIR}/ui/gGUIRadioButton.cpp
 	${ENGINE_DIR}/ui/gGUIBitmap.cpp
 	${ENGINE_DIR}/ui/gGUISlider.cpp
+	${ENGINE_DIR}/ui/gGUIImageButton.cpp
+	${ENGINE_DIR}/ui/gGUIColorbox.cpp
 	${ENGINE_DIR}/ui/gGUIButton.cpp
 	${ENGINE_DIR}/ui/gGUISizer.cpp
 	${ENGINE_DIR}/ui/gGUINavigation.cpp

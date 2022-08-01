@@ -113,20 +113,37 @@ public:
 	 *
 	 * @param color The given color consist of (r, g, b) float values
 	 */
-	void setProgressBarColor(gColor color);
+	void setProgressBarColor(float r, float g, float b);
 
 	/**
 	 * Returns the color of the progress bar.
 	 */
 	gColor* getProgressBarColor();
 
+	/**
+	 * Sets the thickness of progress bar's borders. Borders can be between 0.0f
+	 * and 25.0f.
+	 *
+	 * @param thickness Should be given float type. If the given value is bigger
+	 * than 25.0f than the value is silently ignored. Any value smaller and equal
+	 * than 0.0f makes the borders disabled.
+	 */
+	void setBorderThickness(float thickness);
+
+	/**
+	 * Returns the thickness of progress bar's borders.
+	 */
+	float getBorderThickness();
+
 private:
 	int progressbarw, progressbarh;
 	float progressbarinh;
 	float valuemax, valuemin;
 	float value;
+	float thickness;
 
 	gColor pcolor;
+	gColor scolor;
 };
 
 #endif /* UI_GGUIPROGRESSBAR_H_ */
