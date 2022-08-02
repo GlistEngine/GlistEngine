@@ -27,13 +27,13 @@
  ****************************************************************************/
 
 /****************************************************************************
- * Author: Noyan Culum, 2014-on                                             *
+ * Author: Yaren Cetinkaya, Murat Ergin, 02.08.2022                                            *
  ****************************************************************************/
 /*
  * gGUISlider.h
  *
- *  Created on: 27 Tem 2022
- *      Author: yaren
+ *  Created on: 02 August 2022
+ *      Author: Yaren Cetinkaya, Murat Ergin
  */
 #ifndef UI_GGUISLIDER_H_
 #define UI_GGUISLIDER_H_
@@ -42,24 +42,9 @@
 
 class gGUISlider: public gGUIControl {
 public:
-
-	/**
-	 * Constructor of gGUISlider class. Constructor is automatically called when
-	 * object(instance of class) is created. A constructor will have exact same name as
-	 * the class and it does not have any return type at all, not even void.
-	 * Constructors can be very useful for setting initial values for certain member
-	 * variables. In gGUISlider constructor, inital values are set.
-	 */
 	gGUISlider();
 	virtual ~gGUISlider();
 
-
-	void update();
-	void draw();
-	void drawSliderBar();
-	void drawSlider();
-	void drawTick();
-	void drawText();
 	void mousePressed(int x, int y, int button);
 	void mouseReleased(int x, int y, int button);
 	void mouseDragged(int x, int y, int button);
@@ -216,6 +201,13 @@ public:
 	virtual void set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIObject* parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h);
 
 private:
+	void update();
+	void draw();
+	void drawSliderBar();
+	void drawSlider();
+	void drawTick();
+	void drawText();
+
 	float sliderbarh, sliderbarw;
 	float sliderh, sliderw;
 	float sliderx, slidery;

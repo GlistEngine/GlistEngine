@@ -1,8 +1,8 @@
 /*
  * gGUISlider.cpp
  *
- *  Created on: 27 Tem 2022
- *      Author: murat
+ *  Created on: 02 August 2022
+ *      Author: Yaren Cetinkaya, Murat Ergin
  */
 #include "gGUISlider.h"
 #include "gBaseApp.h"
@@ -30,7 +30,6 @@ gGUISlider::gGUISlider() {
 	currentvaluey = 0;
 
 	ticknumbers.clear();
-//	currentvaluetext.clear();
 
 	ticknum = 5;
 	spacelength = sliderbarw / ticknum;
@@ -92,14 +91,6 @@ void gGUISlider::setMaxValue(float maxValue) {
 float gGUISlider::getCurrentValue() {
 	return currentvalue;
 }
-
-//void gGUISlider::setSliderbarWidth(int width) {
-//	sliderbarw = width;
-//}
-
-//void gGUISlider::setSliderWidth(int width) {
-//	sliderw = width;
-//}
 
 float gGUISlider::getSliderbarWidth() {
 	return sliderbarw;
@@ -174,6 +165,7 @@ void gGUISlider::set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGU
 	gGUIControl::set(root, topParentGUIObject, parentGUIObject, parentSlotLineNo, parentSlotColumnNo, x, y, w, h);
 	sliderx = left + (sliderbarw / 2);
 	slidery = top;
+
 	sliderbarx = left + (sliderw / 2);
 	sliderbary = top + (sliderh / 2) - (sliderbarh / 2);
 
@@ -249,32 +241,16 @@ void gGUISlider::drawText() {
 }
 
 void gGUISlider::drawSlider() {
-	if(std::fmod(sliderx,spacelength) == 0) {
-		gDrawRectangle(sliderx, slidery, sliderw, sliderh, true);
-		slidercenterx = sliderx + (sliderw / 2);
-		currentvaluex = slidercenterx - (sliderw / 2);
-//		currentvaluetext = gToStr(minvalue + (slidercenterx - sliderbarx) / sliderbarw * ticknum * ((maxvalue - minvalue) / ticknum) );
-		currentvalue = floor((minvalue + (slidercenterx - sliderbarx) / sliderbarw * ticknum * ((maxvalue - minvalue) / ticknum)  + 1.25f) * 100.0f) / 100.0f;
-		currentvaluetext = gToStr(getCurrentValue());
-	}else if(std::fmod(sliderx,spacelength) >= spacelength / 2) {
-		sliderx = sliderx + spacelength - std::fmod(sliderx,spacelength);
-		gDrawRectangle(sliderx, slidery, sliderw, sliderh, true);
-		slidercenterx = sliderx + (sliderw / 2);
-		currentvaluex = slidercenterx - (sliderw / 2);
-//		currentvaluetext = gToStr(minvalue + (slidercenterx - sliderbarx) / sliderbarw * ticknum * ((maxvalue - minvalue) / ticknum));
-//		currentvalue = minvalue + (slidercenterx - sliderbarx) / sliderbarw * ticknum * ((maxvalue - minvalue) / ticknum) + 1.25f;
-		currentvalue = floor((minvalue + (slidercenterx - sliderbarx) / sliderbarw * ticknum * ((maxvalue - minvalue) / ticknum)  + 1.25f) * 100.0f) / 100.0f;
-		currentvaluetext = gToStr(getCurrentValue());
-	}else if(std::fmod(sliderx,spacelength) < spacelength / 2) {
-		sliderx = sliderx - std::fmod(sliderx,spacelength);
-		gDrawRectangle(sliderx, slidery, sliderw, sliderh, true);
-		slidercenterx = sliderx + (sliderw / 2);
-		currentvaluex = slidercenterx - (sliderw / 2);
-//		currentvaluetext = gToStr(minvalue + (slidercenterx - sliderbarx) / sliderbarw * ticknum * ((maxvalue - minvalue) / ticknum));
-//		currentvalue = minvalue + (slidercenterx - sliderbarx) / sliderbarw * ticknum * ((maxvalue - minvalue) / ticknum) + 1.25f;
-		currentvalue = floor((minvalue + (slidercenterx - sliderbarx) / sliderbarw * ticknum * ((maxvalue - minvalue) / ticknum)  + 1.25f) * 100.0f) / 100.0f;
-		currentvaluetext = gToStr(getCurrentValue());
-	}
+	float modvalue = std::fmod(sliderx, spacelength);
+	if(modvalue >= spacelength / 2) sliderx = sliderx + spacelength - modvalue;
+	else if(modvalue < spacelength / 2) sliderx = sliderx - modvalue;
+
+	slidercenterx = sliderx + (sliderw / 2);
+	currentvaluex = slidercenterx - (sliderw / 2);
+	currentvalue = floor((minvalue + (slidercenterx - sliderbarx) / sliderbarw * ticknum * ((maxvalue - minvalue) / ticknum)) * 100.0f) / 100.0f;
+	currentvaluetext = gToStr(getCurrentValue());
+
+	gDrawRectangle(sliderx, slidery, sliderw, sliderh, true);
 }
 
 void gGUISlider::mousePressed(int x, int y, int button) {
@@ -298,13 +274,9 @@ void gGUISlider::mouseDragged(int x, int y, int button) {
     mousex = x;
 
     if(ispressedslider) {
-        if(x <= sliderbarx) {
-            sliderx = sliderbarx - (sliderw / 2);
-        } else if(x >= sliderbarx + sliderbarw) {
-            sliderx = sliderbarx + sliderbarw - (sliderw / 2);
-        } else {
-            sliderx = x;
-        }
+        if(x <= sliderbarx) sliderx = sliderbarx - (sliderw / 2);
+        else if(x >= sliderbarx + sliderbarw) sliderx = sliderbarx + sliderbarw - (sliderw / 2);
+        else sliderx = x;
     }
 }
 
