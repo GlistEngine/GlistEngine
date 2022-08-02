@@ -247,7 +247,7 @@ void gGUISlider::drawSlider() {
 
 	slidercenterx = sliderx + (sliderw / 2);
 	currentvaluex = slidercenterx - (sliderw / 2);
-	currentvalue = floor((minvalue + (slidercenterx - sliderbarx) / sliderbarw * ticknum * ((maxvalue - minvalue) / ticknum)) * 100.0f) / 100.0f;
+	currentvalue = floor((minvalue + (slidercenterx - sliderbarx) / sliderbarw * ticknum * ((maxvalue - minvalue) / ticknum)  + 1.25f) * 100.0f) / 100.0f;
 	currentvaluetext = gToStr(getCurrentValue());
 
 	gDrawRectangle(sliderx, slidery, sliderw, sliderh, true);
