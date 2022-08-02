@@ -1,7 +1,7 @@
 /*
  * gGUISlider.cpp
  *
- *  Created on: 02 August 2022
+ *  Created on: 2022 Aug 02
  *      Author: Yaren Cetinkaya, Murat Ergin
  */
 #include "gGUISlider.h"
