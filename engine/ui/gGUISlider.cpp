@@ -1,115 +1,310 @@
 /*
  * gGUISlider.cpp
  *
- *  Created on: 19 Tem 2022
+ *  Created on: 27 Tem 2022
  *      Author: murat
  */
-
 #include "gGUISlider.h"
 #include "gBaseApp.h"
 #include "gBaseCanvas.h"
+#include <iostream>
+#include <cmath>
+#include <iomanip>
+
 
 gGUISlider::gGUISlider() {
 	sliderbarh = 3;
-	sliderbarw = 150;
+	sliderbarw = 160;
 	sliderh = 30;
 	sliderw = 10;
-	isdisabled = false;
-	sliderx = left + (sliderbarw / 2) - (sliderw / 2);
-	ispressedslider = false;
-	ticknum = 10;
+	sliderx = 0;
+	slidery = 0;
+	slidercenterx = 0;
+	sliderbarx = 0;
+	sliderbary = 0;
+	textx = 0;
+	texty = 0;
+	tickx = 0;
+	ticky = 0;
+	currentvaluex = 0;
+	currentvaluey = 0;
+
+	ticknumbers.clear();
+//	currentvaluetext.clear();
+
+	ticknum = 5;
+	spacelength = sliderbarw / ticknum;
+	minvalue = 0;
+	maxvalue = 100;
+	currentvalue = (minvalue + maxvalue) / 2;
 	direction = -1;
 	counter = 0;
 	counterlimit = 6;
-	unitlength = sliderbarw / ticknum;
+	counterpressed = 0;
+	counterpressedlimit = 6;
+	mousex = 0;
+
+	isdisabled = false;
+	ispressedslider = false;
+	istickvisible = false;
+	ispressed = false;
+	istextvisible = false;
+
+	sliderbarcolor = *pressedbuttonfontcolor;
+	disabledcolor = *disabledbuttoncolor;
+	slidercolor = *buttoncolor;
+	pressedslidercolor = *pressedbuttoncolor;
+	tickcolor = sliderbarcolor;
 }
 
 gGUISlider::~gGUISlider() {
+}
 
+void gGUISlider::setTextVisibility(bool isVisible) {
+	istextvisible = isVisible;
+}
+
+void gGUISlider::setTickVisibility(bool isVisible) {
+	istickvisible = isVisible;
+}
+
+void gGUISlider::setTicknum(float tickNum) {
+	ticknum = tickNum;
+	spacelength = sliderbarw / ticknum;
+}
+
+float gGUISlider::getMinValue() {
+	return minvalue;
+}
+
+void gGUISlider::setMinValue(float minValue) {
+	minvalue = minValue;
+}
+
+float gGUISlider::getMaxValue() {
+	return maxvalue;
+}
+
+void gGUISlider::setMaxValue(float maxValue) {
+	minvalue = maxValue;
+}
+
+float gGUISlider::getCurrentValue() {
+	return currentvalue;
+}
+
+//void gGUISlider::setSliderbarWidth(int width) {
+//	sliderbarw = width;
+//}
+
+//void gGUISlider::setSliderWidth(int width) {
+//	sliderw = width;
+//}
+
+float gGUISlider::getSliderbarWidth() {
+	return sliderbarw;
+}
+
+float gGUISlider::getSliderbarHeight() {
+	return sliderbarh;
+}
+
+void gGUISlider::setDisabled(bool isDisabled) {
+	isdisabled = isDisabled;
+}
+
+void gGUISlider::setSliderColor(gColor color) {
+	slidercolor = color;
+}
+
+gColor* gGUISlider::getSliderColor() {
+	return &slidercolor;
+}
+
+void gGUISlider::setPressedSliderColor(gColor color) {
+	pressedslidercolor = color;
+}
+
+gColor* gGUISlider::getPressedSliderColor() {
+	return &pressedslidercolor;
+}
+
+void gGUISlider::setDisabledColor(gColor color) {
+	disabledcolor = color;
+}
+
+gColor* gGUISlider::getDisabledColor() {
+	return &disabledcolor;
+}
+
+void gGUISlider::setSliderbarColor(gColor color) {
+	sliderbarcolor = color;
+}
+
+gColor* gGUISlider::getSliderbarColor() {
+	return &sliderbarcolor;
+}
+
+void gGUISlider::setTickColor(gColor color) {
+	tickcolor = color;
+}
+
+gColor* gGUISlider::getTickColor() {
+	return &tickcolor;
+}
+
+bool gGUISlider::isTickVisible() {
+	return istickvisible;
+}
+
+bool gGUISlider::isDisabled() {
+	return isdisabled;
+}
+
+bool gGUISlider::isPressed() {
+	return ispressed;
+}
+
+bool gGUISlider::isSliderPressed() {
+	return ispressedslider;
+}
+
+
+void gGUISlider::set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIObject* parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h) {
+	gGUIControl::set(root, topParentGUIObject, parentGUIObject, parentSlotLineNo, parentSlotColumnNo, x, y, w, h);
+	sliderx = left + (sliderbarw / 2);
+	slidery = top;
+	sliderbarx = left + (sliderw / 2);
+	sliderbary = top + (sliderh / 2) - (sliderbarh / 2);
+
+	tickx = left + (sliderw / 2) - 1;
+	ticky = top + sliderh;
+	textx = tickx;
+	texty = ticky + 12 + font->getSize();
+
+	currentvaluey = top - (sliderh / 2) + font->getSize() - 4;
+}
+
+void gGUISlider::update() {
+    if(ispressed) {
+        if(mousex <= sliderbarx) {
+        	sliderx = sliderbarx - (sliderw / 2);
+        }else if(mousex >= sliderbarx + sliderbarw) {
+        	sliderx = sliderbarx + sliderbarw - (sliderw / 2);
+        }else {
+            counterpressed++;
+            if(counterpressed >= counterpressedlimit && abs(sliderx - (mousex + sliderw / 2)) > spacelength / 2) {
+                direction = -1;
+                if(mousex > sliderx) direction = 1;
+                sliderx = (sliderx + spacelength * direction);
+                counterpressed = 0;
+			}
+        }
+    }
 }
 
 void gGUISlider::draw() {
 	gColor oldcolor = renderer->getColor();
-	renderer->setColor(pressedbuttonfontcolor);
-	gDrawRectangle(left + sliderw / 2, top + sliderh / 2, sliderbarw, sliderbarh, true);
-	renderer->setColor(255, 0, 0, 1);
-	drawtick();
-	renderer->setColor(buttoncolor);
+	if(isdisabled) renderer->setColor(&disabledcolor);
+	else renderer->setColor(pressedbuttonfontcolor);
+	drawSliderBar();
+	if(istickvisible) drawTick();
+	if(istextvisible) drawText();
+
+	if(isdisabled) renderer->setColor(&disabledcolor);
+	else {
+		if(ispressedslider) renderer->setColor(&pressedslidercolor);
+		else renderer->setColor(&slidercolor);
+	}
 	drawSlider();
 	renderer->setColor(oldcolor);
-
 }
 
-void gGUISlider::drawtick() {
+void gGUISlider::drawSliderBar() {
+	gDrawRectangle(sliderbarx, sliderbary, sliderbarw, sliderbarh, true);
+}
+
+void gGUISlider::drawTick() {
 	for(int i = 0; i <= ticknum; i++) {
-		gDrawLine(left + sliderw / 2 + unitlength * i, top + sliderh + 12, left + sliderw / 2 + unitlength * i, top + sliderh + 2);
+		if(i == 0 || i == ticknum) {
+			//Beginning and ending long ticks
+			gDrawLine(tickx + spacelength * i, ticky + 12, tickx + spacelength * i, ticky - (sliderh / 2));
+		}else {
+			//In-between ticks
+			gDrawLine(tickx + spacelength * i, ticky + 12, tickx + spacelength * i, ticky + 4);
+		}
 	}
+}
+
+void gGUISlider::drawText() {
+    for(int i = 0; i <= ticknum; i++) {
+    	//Tick number texts
+    	float temp_ticknumbers = floor((i * (maxvalue - minvalue) / ticknum) * 100.0) / 100.0;
+    	ticknumbers = gToStr(temp_ticknumbers);
+        font->drawText(ticknumbers, textx - 8 + (spacelength * i), texty);
+    }
+    //Current value text
+    float tempvalue = floor((currentvalue * 100.0)) / 100.0;
+    font->drawText(gToStr(tempvalue), currentvaluex, currentvaluey);
 }
 
 void gGUISlider::drawSlider() {
-	if(std::fmod(sliderx,unitlength) == 0) {
-		gDrawRectangle(sliderx, top + sliderbarh / 2, sliderw, sliderh, true);
-	}else if(std::fmod(sliderx,unitlength) >= unitlength / 2) {
-		gDrawRectangle(sliderx + unitlength - std::fmod(sliderx,unitlength), top + sliderbarh / 2, sliderw, sliderh, true);
-	}else if(std::fmod(sliderx,unitlength) < unitlength / 2) {
-		gDrawRectangle(sliderx - std::fmod(sliderx,unitlength), top + sliderbarh / 2, sliderw, sliderh, true);
+	if(std::fmod(sliderx,spacelength) == 0) {
+		gDrawRectangle(sliderx, slidery, sliderw, sliderh, true);
+		slidercenterx = sliderx + (sliderw / 2);
+		currentvaluex = slidercenterx - (sliderw / 2);
+//		currentvaluetext = gToStr(minvalue + (slidercenterx - sliderbarx) / sliderbarw * ticknum * ((maxvalue - minvalue) / ticknum) );
+		currentvalue = floor((minvalue + (slidercenterx - sliderbarx) / sliderbarw * ticknum * ((maxvalue - minvalue) / ticknum)  + 1.25f) * 100.0f) / 100.0f;
+		currentvaluetext = gToStr(getCurrentValue());
+	}else if(std::fmod(sliderx,spacelength) >= spacelength / 2) {
+		sliderx = sliderx + spacelength - std::fmod(sliderx,spacelength);
+		gDrawRectangle(sliderx, slidery, sliderw, sliderh, true);
+		slidercenterx = sliderx + (sliderw / 2);
+		currentvaluex = slidercenterx - (sliderw / 2);
+//		currentvaluetext = gToStr(minvalue + (slidercenterx - sliderbarx) / sliderbarw * ticknum * ((maxvalue - minvalue) / ticknum));
+//		currentvalue = minvalue + (slidercenterx - sliderbarx) / sliderbarw * ticknum * ((maxvalue - minvalue) / ticknum) + 1.25f;
+		currentvalue = floor((minvalue + (slidercenterx - sliderbarx) / sliderbarw * ticknum * ((maxvalue - minvalue) / ticknum)  + 1.25f) * 100.0f) / 100.0f;
+		currentvaluetext = gToStr(getCurrentValue());
+	}else if(std::fmod(sliderx,spacelength) < spacelength / 2) {
+		sliderx = sliderx - std::fmod(sliderx,spacelength);
+		gDrawRectangle(sliderx, slidery, sliderw, sliderh, true);
+		slidercenterx = sliderx + (sliderw / 2);
+		currentvaluex = slidercenterx - (sliderw / 2);
+//		currentvaluetext = gToStr(minvalue + (slidercenterx - sliderbarx) / sliderbarw * ticknum * ((maxvalue - minvalue) / ticknum));
+//		currentvalue = minvalue + (slidercenterx - sliderbarx) / sliderbarw * ticknum * ((maxvalue - minvalue) / ticknum) + 1.25f;
+		currentvalue = floor((minvalue + (slidercenterx - sliderbarx) / sliderbarw * ticknum * ((maxvalue - minvalue) / ticknum)  + 1.25f) * 100.0f) / 100.0f;
+		currentvaluetext = gToStr(getCurrentValue());
 	}
-
 }
 
 void gGUISlider::mousePressed(int x, int y, int button) {
-	if(isdisabled) return;
-
-	if((x >= sliderx && x < (sliderx + sliderw * 2)) && y >= top - (sliderh / 2) && y < top + sliderbarh + (sliderh / 2)) {
-		ispressedslider = true;
-	}else if(x >= left && x < left + sliderbarw && y >= top && y < top + sliderh && !(x >= sliderx && x < (sliderx + sliderw * 2))) {
-		if(x > sliderx) direction = 1;
-		sliderx = (sliderx + unitlength * direction);
-		direction = -1;
-	}
-
-
-
-	/*
-	if((!(x >= sliderx && x < (sliderx + sliderw)) && x >= left && x < left + sliderbarw) && y >= top && y < top + sliderh) {
-		gLogi("gGUISlider") << "ifin içine girdim za";
-			if(x > sliderx) direction = 1;
-			sliderx = (sliderx + unitlength * direction);
-			direction = -1;
-		}
-	*/
-
-
-
+    if(isdisabled) return;
+    mousex = x;
+    if(x > sliderx && x < sliderx + sliderw && y > sliderbary - (sliderh / 2) && y < sliderbary + sliderbarh + (sliderh / 2)) {
+        ispressedslider = true;
+    }else if(x > sliderbarx && x < sliderbarx + sliderbarw && y > sliderbary - (sliderh / 2) && y < sliderbary + sliderbarh + (sliderh / 2) && !(x >= sliderx && x < (sliderx + sliderw))) {
+        ispressed = true;
+    }
 }
 
 void gGUISlider::mouseReleased(int x, int y, int button) {
-	if(isdisabled) return;
-	ispressedslider = false;
-
-
-
+    if(isdisabled) return;
+    ispressedslider = false;
+    ispressed = false;
 }
 
 void gGUISlider::mouseDragged(int x, int y, int button) {
-	if(isdisabled) return;
+    if(isdisabled) return;
+    mousex = x;
 
-	if(ispressedslider) {
-		if(x <= left) {
-			sliderx = left;
-		} else if(x > left + sliderbarw) {
-			sliderx = left + sliderbarw;
-		} else {
-			sliderx = x - (sliderw / 2);
-		}
-	}else if(!ispressedslider && x >= left && x < left + sliderbarw && y >= top && y < top + sliderh && !(x >= sliderx && x < (sliderx + sliderw * 2))) {
-		counter++;
-		if(counter >= counterlimit) {
-			if(x > sliderx) direction = 1;
-			sliderx = (sliderx + unitlength * direction);
-			direction = -1;
-			counter = 0;
-		}
-	}
+    if(ispressedslider) {
+        if(x <= sliderbarx) {
+            sliderx = sliderbarx - (sliderw / 2);
+        } else if(x >= sliderbarx + sliderbarw) {
+            sliderx = sliderbarx + sliderbarw - (sliderw / 2);
+        } else {
+            sliderx = x;
+        }
+    }
 }
 
