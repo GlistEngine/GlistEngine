@@ -55,6 +55,7 @@ void gVbo::setVertexData(gVertex* vertices, int coordNum, int total) {
     glEnableVertexAttribArray(4);
     glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(gVertex), (void*)offsetof(gVertex, bitangent));
     glBindVertexArray(0);
+    glDeleteBuffers(1, &vbo);
 }
 
 void gVbo::setVertexData(const float* vert0x, int coordNum, int total, int usage, int stride) {
@@ -70,6 +71,7 @@ void gVbo::setVertexData(const float* vert0x, int coordNum, int total, int usage
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, vertexdatacoordnum, GL_FLOAT, GL_FALSE, vertexdatacoordnum * sizeof(float), (void*)0);
 	glBindVertexArray(0);
+	glDeleteBuffers(1, &vbo);
 	isvertexdataallocated = true;
 }
 
@@ -83,6 +85,7 @@ void gVbo::setIndexData(unsigned int* indices, int total) {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, totalindexnum * sizeof(unsigned int), indexarrayptr, GL_STATIC_DRAW);
     glBindVertexArray(0);
+    glDeleteBuffers(1, &vbo);
 }
 
 void gVbo::clear() {

@@ -27,13 +27,13 @@
  ****************************************************************************/
 
 /****************************************************************************
- * Author: Medine, 2022-on                                             *
+ * Author: Noyan Culum, 2022-07-18                                             *
  ****************************************************************************/
 /*
  * gGUISwitchButton.h
  *
  *  Created on: 18 Tem 2022
- *      Author: utkus
+ *      Author: noyan
  */
 
 #ifndef UI_GGUISWITCHBUTTON_H_
@@ -43,8 +43,8 @@
 
 /**
  * Sends the information about buttons open or closed status to the gGUIEvent.
- * If the button is closed, it sends 7 values, and if it is open,
- * it sends 8 values.
+ * If the button is off, it sends the value G_GUIEVENT_SWITCHBUTTON_ON (7),
+ * and if it is on, it sends the value G_GUIEVENT_SWITCHBUTTON_OFF (8).
  */
 class gGUISwitchButton: public gGUIControl {
 public:
@@ -53,6 +53,12 @@ public:
 
 	void draw();
 	void mousePressed(int x, int y, int button);
+
+	/**
+	 * Returns the button status.
+	 *
+	 * @return TRUE if the button is on, FALSE if the button is off
+	 */
 	bool isOn();
 
 private:

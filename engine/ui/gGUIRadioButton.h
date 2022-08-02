@@ -230,6 +230,7 @@ private:
 	int horizontaldistance;
 	int verticaldistance;
 	int columncount;
+	int inity;
 
 	std::string *titles;
 
