@@ -2,7 +2,7 @@
  * gGUIColorbox.cpp
  *
  *  Created on: 25 Tem 2022
- *      Author: Medine
+ *      Author: Medine, Yasin
  */
 
 #include "gGUIColorbox.h"
