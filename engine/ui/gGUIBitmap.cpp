@@ -2,7 +2,7 @@
  * gGUIPicturebox.cpp
  *
  *  Created on: 20 Tem 2022
- *      Author: TheGo
+ *      Author: Yasin, Medine
  */
 
 #include "gGUIBitmap.h"
