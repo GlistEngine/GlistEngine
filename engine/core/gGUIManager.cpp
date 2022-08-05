@@ -13,6 +13,7 @@
 gGUIManager::gGUIManager(gBaseApp* root) {
 	this->root = root;
 	isframeset = false;
+	isdialogueactive = false;
 	loadThemes();
 	resetTheme(GUITHEME_LIGHT);
 	if(root->getAppManager()->getWindowMode() == G_WINDOWMODE_GUIAPP) {
@@ -46,8 +47,25 @@ void gGUIManager::setCurrentFrame(gGUIFrame* currentFrame) {
 	isframeset = true;
 }
 
+void gGUIManager::setActiveDialogue(gGUIDialogue* activeDialogue) {
+	activedialogue = activeDialogue;
+	activedialogue->setParentSlotNo(0, 0);
+	activedialogue->width = root->getAppManager()->getCurrentCanvas()->getScreenWidth() / 3;
+	activedialogue->height = root->getAppManager()->getCurrentCanvas()->getScreenHeight() / 3;
+	activedialogue->left = (root->getAppManager()->getCurrentCanvas()->getScreenWidth() - activedialogue->width) / 2;
+	activedialogue->top = (root->getAppManager()->getCurrentCanvas()->getScreenHeight() - activedialogue->height) / 2;
+	activedialogue->right = activedialogue->left + activedialogue->width;
+	activedialogue->bottom = activedialogue->top + activedialogue->height;
+	activedialogue->setRootApp(root);
+	isdialogueactive = true;
+}
+
 gGUIFrame* gGUIManager::getCurrentFrame() {
 	return currentframe;
+}
+
+gGUIDialogue* gGUIManager::getActiveDialogue() {
+	return activedialogue;
 }
 
 void gGUIManager::keyPressed(int key) {
@@ -99,10 +117,12 @@ void gGUIManager::windowResized(int w, int h) {
 
 void gGUIManager::update() {
 	currentframe->update();
+	if (isdialogueactive) activedialogue->update(); // PROBLEMATIC
 }
 
 void gGUIManager::draw() {
 	currentframe->draw();
+	if (isdialogueactive) activedialogue->draw();
 }
 
 void gGUIManager::resetTheme(int guiTheme) {
@@ -192,4 +212,3 @@ void gGUIManager::loadThemes() {
 	themedisabledbuttonfontcolor[GUITHEME_DARKBLUE] = gColor(28.0f / 255.0f, 40.0f / 255.0f, 53.0f / 255.0f);
 
 }
-

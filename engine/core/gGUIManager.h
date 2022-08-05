@@ -19,6 +19,7 @@
 
 #include "gGUIFrame.h"
 #include "gGUISizer.h"
+#include "gGUIDialogue.h"
 class gBaseApp;
 
 /**
@@ -42,7 +43,9 @@ public:
 	int getTheme();
 
 	void setCurrentFrame(gGUIFrame* currentFrame);
+	void setActiveDialogue(gGUIDialogue* activeDialogue);
 	gGUIFrame* getCurrentFrame();
+	gGUIDialogue* getActiveDialogue();
 
 	void keyPressed(int key);
 	void keyReleased(int key);
@@ -60,10 +63,12 @@ public:
 	void draw();
 
 	bool isframeset;
+	bool isdialogueactive;
 
 private:
 	gBaseApp* root;
 	gGUIFrame* currentframe;
+	gGUIDialogue* activedialogue;
 	gGUIFrame emptyframe;
 	gGUISizer emptysizer;
 	int guitheme;

@@ -10,15 +10,35 @@
 
 #include "gGUIForm.h"
 
+
 class gGUIDialogue: public gGUIForm {
 public:
+
+	enum {
+		DIALOGUETYPE_OK, DIALOGUETYPE_OKCANCEL, DIALOGUETYPE_YESNO, DIALOGUETYPE_YESNOCANCEL
+	};
+
+	enum {
+		ICONTYPE_INFO, ICONTYPE_WARNING, ICONTYPE_ERROR, ICONTYPE_QUESTION
+	};
+
+	static const int dialoguetypenum = 4;
+	static const int icontypenum = 4;
+
 	gGUIDialogue();
 	virtual ~gGUIDialogue();
 
 	void update();
 	void draw();
 
-	void showDialogue();
+	void setMessage(std::string message);
+	std::string getMessage();
+
+	void showDialogue(std::string title, std::string message);
+private:
+	std::string message;
+	std::string dialoguetypename[dialoguetypenum];
+	std::string icontypename[icontypenum];
 };
 
 #endif /* UI_GGUIDIALOGUE_H_ */
