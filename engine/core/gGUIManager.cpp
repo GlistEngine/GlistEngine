@@ -117,7 +117,7 @@ void gGUIManager::windowResized(int w, int h) {
 
 void gGUIManager::update() {
 	currentframe->update();
-	if (isdialogueactive) activedialogue->update(); // PROBLEMATIC
+	if (isdialogueactive) activedialogue->update();
 }
 
 void gGUIManager::draw() {
