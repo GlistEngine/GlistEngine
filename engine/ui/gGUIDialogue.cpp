@@ -7,12 +7,10 @@
 
 #include "gGUIDialogue.h"
 #include "gGUISizer.h"
-#include "gGUIMenubar.h"
-#include "gGUIToolbar.h"
+
 
 gGUIDialogue::gGUIDialogue() {
 	guisizer = nullptr;
-	menubar = nullptr;
 
 	dialoguetypename[DIALOGUETYPE_OK] = "ok";
 	dialoguetypename[DIALOGUETYPE_OKCANCEL] = "okcancel";
@@ -32,11 +30,12 @@ void gGUIDialogue::update() {
 }
 
 void gGUIDialogue::draw() {
-	gLogi("Dialogue") << "draw";
-
 	if(guisizer) guisizer->draw();
-	if(toolbarnum > 0) for(int i = 0; i < toolbarnum; i++) toolbars[i]->draw();
-	if(menubar) menubar->draw();
+
+	gColor oldcolor = *renderer->getColor();
+	renderer->setColor(fontcolor);
+	font->drawText(title, left + 2, top + 12);
+	renderer->setColor(&oldcolor);
 }
 
 void gGUIDialogue::setMessage(std::string message) {
@@ -48,5 +47,19 @@ std::string gGUIDialogue::getMessage() {
 }
 
 void gGUIDialogue::showDialogue(std::string title, std::string message) {
-	gLogi("Dialogue") << "showDialogue";
+
+	this->title = title;
+
+	// PANEL
+	guisizer->setControl(1, 0, &dialoguepanel);
+	dialoguepanelsizer.setSize(1, 1);
+	dialoguepanel.setSizer(&dialoguepanelsizer);
+
+	// EXIT BUTTON
+	guisizer->setControl(0, 0, &exitbutton);
+	exitbutton.setButtonColor({255, 0, 0});
+	exitbutton.setPressedButtonColor({128, 0, 0});
+	exitbutton.setTitle("X");
+	exitbutton.setSize(width / 8, height / 8);
+	exitbutton.left += width - width / 8;
 }

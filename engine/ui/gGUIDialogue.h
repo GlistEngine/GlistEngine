@@ -9,6 +9,9 @@
 #define UI_GGUIDIALOGUE_H_
 
 #include "gGUIForm.h"
+#include "gGUIButton.h"
+#include "gGUIText.h"
+#include "gGUIPanel.h"
 
 
 class gGUIDialogue: public gGUIForm {
@@ -39,6 +42,16 @@ private:
 	std::string message;
 	std::string dialoguetypename[dialoguetypenum];
 	std::string icontypename[icontypenum];
+
+	gGUIButton exitbutton;
+	gGUIButton rightbutton;
+	gGUIButton midbutton;
+	gGUIButton leftbutton;
+
+	gGUIText dialoguetitletext;
+
+	gGUIPanel dialoguepanel;
+	gGUISizer dialoguepanelsizer;
 };
 
 #endif /* UI_GGUIDIALOGUE_H_ */
