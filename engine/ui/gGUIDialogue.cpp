@@ -50,11 +50,6 @@ void gGUIDialogue::showDialogue(std::string title, std::string message) {
 
 	this->title = title;
 
-	// PANEL
-	guisizer->setControl(1, 0, &dialoguepanel);
-	dialoguepanelsizer.setSize(1, 1);
-	dialoguepanel.setSizer(&dialoguepanelsizer);
-
 	// EXIT BUTTON
 	guisizer->setControl(0, 0, &exitbutton);
 	exitbutton.setButtonColor({255, 0, 0});

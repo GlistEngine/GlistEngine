@@ -10,8 +10,6 @@
 
 #include "gGUIForm.h"
 #include "gGUIButton.h"
-#include "gGUIText.h"
-#include "gGUIPanel.h"
 
 
 class gGUIDialogue: public gGUIForm {
@@ -47,11 +45,6 @@ private:
 	gGUIButton rightbutton;
 	gGUIButton midbutton;
 	gGUIButton leftbutton;
-
-	gGUIText dialoguetitletext;
-
-	gGUIPanel dialoguepanel;
-	gGUISizer dialoguepanelsizer;
 };
 
 #endif /* UI_GGUIDIALOGUE_H_ */

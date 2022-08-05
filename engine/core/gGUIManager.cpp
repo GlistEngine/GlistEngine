@@ -70,43 +70,57 @@ gGUIDialogue* gGUIManager::getActiveDialogue() {
 
 void gGUIManager::keyPressed(int key) {
 	currentframe->keyPressed(key);
+	if (isdialogueactive) activedialogue->keyPressed(key);
 }
 
 void gGUIManager::keyReleased(int key) {
 	currentframe->keyReleased(key);
+	if (isdialogueactive) activedialogue->keyReleased(key);
 }
 
 void gGUIManager::charPressed(unsigned int key) {
 	currentframe->charPressed(key);
+	if (isdialogueactive) activedialogue->charPressed(key);
 }
 
 void gGUIManager::mouseMoved(int x, int y) {
 	root->getAppManager()->setCursor(currentframe->getCursor(x, y));
 	currentframe->mouseMoved(x, y);
+
+	if (isdialogueactive) {
+		root->getAppManager()->setCursor(activedialogue->getCursor(x, y));
+		activedialogue->mouseMoved(x, y);
+	}
 }
 
 void gGUIManager::mousePressed(int x, int y, int button) {
 	currentframe->mousePressed(x, y, button);
+	if (isdialogueactive) activedialogue->mousePressed(x, y, button);
 }
 
 void gGUIManager::mouseDragged(int x, int y, int button) {
 	currentframe->mouseDragged(x, y, button);
+	if (isdialogueactive) activedialogue->mouseDragged(x, y, button);
 }
 
 void gGUIManager::mouseReleased(int x, int y, int button) {
 	currentframe->mouseReleased(x, y, button);
+	if (isdialogueactive) activedialogue->mouseReleased(x, y, button);
 }
 
 void gGUIManager::mouseScrolled(int x, int y) {
 	currentframe->mouseScrolled(x, y);
+	if (isdialogueactive) activedialogue->mouseScrolled(x, y);
 }
 
 void gGUIManager::mouseEntered() {
 	currentframe->mouseEntered();
+	if (isdialogueactive) activedialogue->mouseEntered();
 }
 
 void gGUIManager::mouseExited() {
 	currentframe->mouseExited();
+	if (isdialogueactive) activedialogue->mouseEntered();
 }
 
 void gGUIManager::windowResized(int w, int h) {
