@@ -2,7 +2,7 @@
  * gGUIImageButton.cpp
  *
  *  Created on: 21 Tem 2022
- *      Author: Medine
+ *      Author: Medine, Yasin
  */
 
 #include "gGUIImageButton.h"
