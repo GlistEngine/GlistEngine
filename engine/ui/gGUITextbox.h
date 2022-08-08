@@ -27,7 +27,7 @@
  ****************************************************************************/
 
 /****************************************************************************
- * Author: Noyan Culum, 2021-09-02                                     		*
+ * Author: Noyan Culum, 2021-09-02, Utku Sarýalan, 2022-on                 	*
  ****************************************************************************//*
  * gTextbox.h
  *
@@ -49,15 +49,58 @@ public:
 
 	virtual void set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIObject* parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h);
 
+	/**
+	 * Changes the text displayed in the textbox.
+	 *
+	 * @param text Text you want to put in the textbox.
+	 */
 	void setText(const std::string& text);
+
+	/**
+	 * Returns the text that is currently inside the textbox.
+	 *
+	 * @return Text inside the textbox.
+	 */
 	std::string getText();
 
+	/**
+	 * Enables/disables the textbox for editing.
+	 *
+	 * @param isEditable Bool value to enable/disable the textbox for editing.
+	 * If it is 'true', textbox becomes editable. If it is 'false', textbox
+	 * becomes static.
+	 */
 	void setEditable(bool isEditable);
+
+	/**
+	 * Returns the bool value that indicates if textbox is editable or not.
+	 *
+	 * @return Bool value that indicates if textbox is editable or not.
+	 */
 	bool isEditable();
 
+	/**
+	 * Sets the line count of the textbox.
+	 *
+	 * NOTE: Currently if line count is set to a higher value than 1, editing
+	 * is not functioning properly. So, if you want to use multilines in your
+	 * textbox, use the setText() function.
+	 *
+	 * @param linecount Line count of the textbox. By default it is set to 1.
+	 * It must be an integer value bigger than 1.
+	 */
 	void setLineCount(int linecount);
+
+	/**
+	 * Returns the line count of the textbox.
+	 *
+	 * @return Line count of the textbox.
+	 */
 	int getLineCount();
 
+	/**
+	 * Returns the current position of the cursor.
+	 */
 	int getCursor(int x, int y);
 
 	void update();
