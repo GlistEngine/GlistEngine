@@ -47,7 +47,7 @@ void gDrawLine(float x1, float y1, float x2, float y2);
 void gDrawLine(float x1, float y1, float z1, float x2, float y2, float z2);
 void gDrawTriangle(float px, float py, float qx, float qy, float rx, float ry, bool is_filled = true);
 void gDrawCircle(float xCenter, float yCenter, float radius, bool isFilled = false, float numberOfSides = 64.0f);
-void gDrawCircleSlice(float xCenter, float yCenter, float radius, bool isFilled = false, float numberOfSides = 64.0f, int degree = 360);
+void gDrawArc(float xCenter, float yCenter, float radius, bool isFilled = true, int numberOfSides = 60, float degree = 360, float rotate = 360);
 void gDrawArrow(float x1, float y1, float length, float angle, float tipLength, float tipAngle);
 void gDrawRectangle(float x, float y, float w, float h, bool isFilled = false);
 void gDrawRectangle(float x, float y, float w, float h, bool isFilled, float thickness, float borderposition = 0.0f);

@@ -7,10 +7,10 @@
 
 #include "gRenderer.h"
 
+#include "gArc.h"
 #include "gLight.h"
 #include "gLine.h"
 #include "gCircle.h"
-#include "gCircleSlice.h"
 #include "gRectangle.h"
 #include "gBox.h"
 #include "gSphere.h"
@@ -89,10 +89,10 @@ void gDrawCircle(float xCenter, float yCenter, float radius, bool isFilled, floa
 	circlemesh.clear();
 }
 
-void gDrawCircleSlice(float xCenter, float yCenter, float radius, bool isFilled, float numberOfSides, int degree) {
-	gCircleSlice circleslicemesh;
-	circleslicemesh.draw(xCenter, yCenter, radius, isFilled, numberOfSides, degree);
-	circleslicemesh.clear();
+void gDrawArc(float xCenter, float yCenter, float radius, bool isFilled, int numberOfSides, float degree, float rotate) {
+	gArc arcmesh;
+	arcmesh.draw(xCenter, yCenter, radius, isFilled, numberOfSides, degree, rotate);
+	arcmesh.clear();
 }
 
 void gDrawArrow(float x1, float y1, float length, float angle, float tipLength, float tipAngle) {
