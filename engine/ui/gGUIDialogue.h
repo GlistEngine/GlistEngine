@@ -1,7 +1,7 @@
 /*
  * gGUIDialogue.h
  *
- *  Created on: 27 Tem 2022
+ *  Created on: 27 Jul 2022
  *      Author: Umut Can
  */
 
@@ -10,20 +10,22 @@
 
 #include "gGUIForm.h"
 #include "gGUIButton.h"
+#include "gGUIPanel.h"
+#include "gGUIText.h"
 
 
 class gGUIDialogue: public gGUIForm {
 public:
 
 	enum {
-		DIALOGUETYPE_OK, DIALOGUETYPE_OKCANCEL, DIALOGUETYPE_YESNO, DIALOGUETYPE_YESNOCANCEL
+		DIALOGUETYPE_NONE, DIALOGUETYPE_OK, DIALOGUETYPE_OKCANCEL, DIALOGUETYPE_YESNO, DIALOGUETYPE_YESNOCANCEL
 	};
 
 	enum {
 		ICONTYPE_INFO, ICONTYPE_WARNING, ICONTYPE_ERROR, ICONTYPE_QUESTION
 	};
 
-	static const int dialoguetypenum = 4;
+	static const int dialoguetypenum = 5;
 	static const int icontypenum = 4;
 
 	gGUIDialogue();
@@ -35,16 +37,27 @@ public:
 	void setMessage(std::string message);
 	std::string getMessage();
 
-	void showDialogue(std::string title, std::string message);
+	void setExitEvent(bool exitEvent);
+	bool getExitEvent();
+
+	void showDialogue(std::string title, std::string message, int dialogueType);
 private:
 	std::string message;
 	std::string dialoguetypename[dialoguetypenum];
 	std::string icontypename[icontypenum];
 
 	gGUIButton exitbutton;
-	gGUIButton rightbutton;
-	gGUIButton midbutton;
-	gGUIButton leftbutton;
+	gGUIButton okbutton;
+	gGUIButton yesbutton;
+	gGUIButton nobutton;
+	gGUIButton cancelbutton;
+
+	bool exitevent;
+
+	gGUIText messagetext;
+
+	gGUIPanel buttonspanel;
+	gGUISizer buttonspanelsizer;
 };
 
 #endif /* UI_GGUIDIALOGUE_H_ */

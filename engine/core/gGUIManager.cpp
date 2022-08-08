@@ -68,6 +68,10 @@ gGUIDialogue* gGUIManager::getActiveDialogue() {
 	return activedialogue;
 }
 
+void gGUIManager::setIsDialogueActive(bool isactive) {
+	isdialogueactive = isactive;
+}
+
 void gGUIManager::keyPressed(int key) {
 	currentframe->keyPressed(key);
 	if (isdialogueactive) activedialogue->keyPressed(key);
@@ -131,7 +135,13 @@ void gGUIManager::windowResized(int w, int h) {
 
 void gGUIManager::update() {
 	currentframe->update();
-	if (isdialogueactive) activedialogue->update();
+	if (isdialogueactive) {
+		activedialogue->update();
+		if (activedialogue->getExitEvent()) {
+			isdialogueactive = false;
+			activedialogue->setExitEvent(false);
+		}
+	}
 }
 
 void gGUIManager::draw() {

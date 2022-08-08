@@ -47,6 +47,8 @@ public:
 	gGUIFrame* getCurrentFrame();
 	gGUIDialogue* getActiveDialogue();
 
+	void setIsDialogueActive(bool isactive);
+
 	void keyPressed(int key);
 	void keyReleased(int key);
 	void charPressed(unsigned int key);
