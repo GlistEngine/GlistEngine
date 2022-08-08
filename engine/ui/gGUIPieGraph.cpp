@@ -1,7 +1,7 @@
 /*
  * gGUIPieGraph.cpp
  *
- *  Created on: 27 Tem 2022
+ *  Created on: 27 Jul 2022
  *      Author: burakmeydan
  */
 
@@ -19,9 +19,7 @@ gGUIPieGraph::~gGUIPieGraph() {
 }
 
 void gGUIPieGraph::draw() {
-	renderer->setColor(otherscolor);
-	gDrawArc((width/2) + left, (height/2) + top, radius - radiusreduction, isFilled, 10, 1, 0);
-	float degree = 0;
+	float degree = 0.0f;
 	float rotationdegree = rotationforothers;
 	int i = 0;
 	for(; i < variablevalues.size() - othersindex.size() - othersindex.empty(); i++){
@@ -36,16 +34,16 @@ void gGUIPieGraph::draw() {
 	if(!othersindex.empty()) {
 		renderer->setColor(otherscolor);
 		if(cursordegree > rotationdegree && cursordegree < 360) arrangeOnCursor(-1);
-		gDrawArc((width/2) + left, (height/2) + top, radius - radiusreduction, isFilled, sideofothers, 360 - degree, rotationdegree);
+		gDrawArc((width/2) + left, (height/2) + top, radius - radiusreduction, isFilled, sideofothers, 360.0f - degree, rotationdegree);
 		renderer->setColor(outlinecolor);
-		gDrawArc((width/2) + left, (height/2) + top, radius, !isFilled, sideofothers, 360 - degree, rotationdegree);
+		gDrawArc((width/2) + left, (height/2) + top, radius, !isFilled, sideofothers, 360.0f - degree, rotationdegree);
 	}
 	else {
 		renderer->setColor(variablecolors.at(i));
 		if(cursordegree > rotationdegree && cursordegree < 360) arrangeOnCursor(i);
-		gDrawArc((width/2) + left, (height/2) + top, radius - radiusreduction, isFilled, valuessides.at(i), 360 - degree, rotationdegree);
+		gDrawArc((width/2) + left, (height/2) + top, radius - radiusreduction, isFilled, valuessides.at(i), 360.0f - degree, rotationdegree);
 		renderer->setColor(outlinecolor);
-		gDrawArc((width/2) + left, (height/2) + top, radius, !isFilled, valuessides.at(i), 360 - degree, rotationdegree);
+		gDrawArc((width/2) + left, (height/2) + top, radius, !isFilled, valuessides.at(i), 360.0f - degree, rotationdegree);
 	}
 	showInfoOnCursor();
 }
@@ -53,7 +51,7 @@ void gGUIPieGraph::draw() {
 void gGUIPieGraph::mouseMoved(int x, int y) {
 	cursorx = x;
 	cursory = y;
-	if(pow((x - (width/2) - left), 2) + pow((y - (height/2) - top), 2) < pow(radius, 2)) {
+	if(pow((x - (width/2) - left), 2.0f) + pow((y - (height/2) - top), 2.0f) < pow(radius, 2.0f)) {
 		float cosedge = x - (width/2) - left;
 		float sinedge = y - (height/2) - top;
 		float r = sqrt(pow(sinedge, 2.0) + pow(cosedge, 2.0));
@@ -70,7 +68,6 @@ void gGUIPieGraph::mouseMoved(int x, int y) {
 void gGUIPieGraph::setRadius(float radius) {
 	this->radius = radius;
 }
-
 
 void gGUIPieGraph::addVariable(std::string variableLabel, float variableValue) {
 	variablelabels.push_back(variableLabel);
@@ -138,7 +135,7 @@ void gGUIPieGraph::arrangePieGraph() {
 		degree = 360 * variablevalues.at(i) / totalvalue;
 		percentage = degree / 360 * 100;
 		side = percentage < 1 ? 1 : ceil((degree / 360) * numberofsidesratio);
-		if(percentage < 0.5) {
+		if(percentage < 0.5f) {
 			othersindex.push_back(i);
 			orherspercentage += percentage;
 		}
@@ -147,19 +144,22 @@ void gGUIPieGraph::arrangePieGraph() {
 		valuessides.push_back(side);
 		std::string value;
 		std::string percentage;
-		if(variablevalues.at(i) - int(variablevalues.at(i)) > 0)
+		if(variablevalues.at(i) - int(variablevalues.at(i)) > 0) {
 			value = std::to_string(variablevalues.at(i));
-		else
+			valuefortext.push_back(value.substr(0, value.find(".")+3));
+		}
+		else {
 			value = std::to_string((int)variablevalues.at(i));
+			valuefortext.push_back(value);
+		}
 		percentage = std::to_string(valuespercentage.at(i));
 		percentagefortext.push_back(percentage.substr(0, percentage.find(".")+3));
-		valuefortext.push_back(value.substr(0, value.find(".")+3));
 		//gLogi("gGUIPieGraph.h") << "Label -> " << variablelabels.at(i) << ", Value -> " << variablevalues.at(i) << ", Degree -> " << degree << ", Percantage -> " << percentage << ", Side -> " << side;
 		//gLogi("gGUIPieGraph.h") << "Color rgb -> " << variablecolors.at(i).r << ", " << variablecolors.at(i).g << ", " << variablecolors.at(i).b << ", " << variablecolors.at(i).a;
 	}
-	if(orherspercentage < 0.5) {
-		valuesdegree.at(0) -= 0.5;
-		rotationforothers = -0.5;
+	if(orherspercentage < 0.5f) {
+		valuesdegree.at(0) -= 0.5f;
+		rotationforothers = -0.5f;
 	}
 }
 

@@ -1,7 +1,7 @@
 /*
  * gGUIPieGraph.h
  *
- *  Created on: 27 Tem 2022
+ *  Created on: 27 Jul 2022
  *      Author: burakmeydan
  */
 
@@ -16,7 +16,7 @@ public:
 	virtual ~gGUIPieGraph();
 
 	void draw();
-	void setRadius(float radius = 80);
+	void setRadius(float radius = 80.0f);
 	void addVariable(std::string variableLabel, float variableValue);
 	void addVariable(std::string variableLabel, float variableValue, gColor variableColor);
 	void arrangePieGraph();
@@ -44,7 +44,7 @@ private:
 	std::vector<std::string> valuefortext;
 	std::vector<std::string> percentagefortext;
 
-	float radius, cursordegree, radiusreduction = 0.45f, oncursorcolorreduction = - 0.1f, rotationforothers = 0;
+	float radius, cursordegree, radiusreduction = 0.45f, oncursorcolorreduction = - 0.1f, rotationforothers = 0.0f;
 	bool isFilled = true, isshown = true;
 	int numberofsidesratio = 60, sideofothers = 2, cursorx, cursory, infotextshift = 10, showinfoindex, fontsize = 9;
 	gColor color;

@@ -1,7 +1,7 @@
 /*
  * gArc.h
  *
- *  Created on: 27 Tem 2022
+ *  Created on: 27 Jul 2022
  *      Author: burakmeydan
  */
 
@@ -15,10 +15,10 @@ public:
 	gArc();
 	virtual ~gArc();
 
-	void draw(float xCenter, float yCenter, float radius, bool isFilled, int numberOfSides = 60, float degree = 360, float rotate = 360);
+	void draw(float xCenter, float yCenter, float radius, bool isFilled, int numberOfSides = 60, float degree = 360.0f, float rotate = 360.0f);
 
 private:
-	void setArcPoints(float xCenter, float yCenter, float radius, bool isFilled, int numberOfSides = 60, float degree = 360, float rotate = 360);
+	void setArcPoints(float xCenter, float yCenter, float radius, bool isFilled, int numberOfSides = 60, float degree = 360.0f, float rotate = 360.0f);
 	std::vector<gVertex> vertices;
 	std::vector<unsigned int> indices;
 };

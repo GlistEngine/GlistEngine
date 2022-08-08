@@ -1,7 +1,7 @@
 /*
  * gArc.cpp
  *
- *  Created on: 27 Tem 2022
+ *  Created on: 27 Jul 2022
  *      Author: burakmeydan
  */
 
@@ -28,7 +28,7 @@ void gArc::setArcPoints(float xCenter, float yCenter, float radius, bool isFille
 	}
 	if(degree >= 0) degree = std::fmod(degree, 360);
 	else degree = std::fmod((std::fmod(degree, 360) + 360), 360);
-	if(degree == 0) degree = 360.0;
+	if(degree == 0) degree = 360;
 	float angleradian = (float)degree / (float)numberOfSides * (PI / 180);
 	float rotateradian = rotate * (PI / 180);
 	float nextAngle;
