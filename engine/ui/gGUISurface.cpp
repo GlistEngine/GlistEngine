@@ -1,38 +1,29 @@
 /*
  * gGUISurface.cpp
  *
- *  Created on: 27 Tem 2022
- *      Author: ezgil
+ *  Created on: 27 Jul 2022
+ *      Author: Ezgi Lena Sonmez
  */
 
 #include "gGUISurface.h"
 
 #include "gBaseCanvas.h"
 #include "gBaseApp.h"
-#include "gRectangle.h"
-#include "math.h"
 
 gGUISurface::gGUISurface() {
-//	isFilled = false;
-//	thickness = 0;
-//	borderposition = 0.0f;
-//	r = 0.0f;
-//	g = 0.0f;
-//	b = 0.0f;
-//	a = 0.0f;
 	resetColorAndBorder();
 }
 gGUISurface::~gGUISurface() {
 
 }
 void gGUISurface::resetColorAndBorder() {
-	/*bu fonksiyon sayesinde user chooseColor() fonksiyonunu cagirmadigi surece
-	 *shapein kendisine sabit bir color atanacak yani her bir drawRectangle/drawLine/drawCircledan
-	 *sonra simdilik tekrar tekrar chooseColori cagirmasi gerek
+	/*With this function, unless the user calls the chooseColor() function,
+	 * a fixed color will be assigned to the shape itself, so now it should
+	 * call the chooseColor repeatedly after each drawRectangle/drawLine/drawCircle
 	 *
-	 *alternatif olarak su düsünülebilir eger her seferinde sifirlanma istenmezse:
-	 *resetColorAndBorderi eliyle cagirir user
-	 *cagirmazsa bir sonraki sekle de bir onceki sekilde girilen color devam eder
+	 * as an alternative, if you don't want to reset it every time:
+	 * If the user calls resetColorAndBorder with his hand,
+	 * the color entered in the previous way continues with the next shape.
 	 *
 	 **/
 	isFilled = false;
@@ -137,10 +128,10 @@ void gGUISurface::drawRectangle(float x, float y, float w, float h, bool isFille
 	else {
 		newShape.push_back(0); //shapes[i][0] 6 to understand that this rectangle has thickness and borderposition
 	}
-	newShape.push_back(r); //shapes[i][r] 7 (thickness a girmiyorsa) or 9
-	newShape.push_back(g); //shapes[i][g] 8 (thickness a girmiyorsa) or 10
-	newShape.push_back(b); //shapes[i][b] 9 (thickness a girmiyorsa) or 11
-	newShape.push_back(a); //shapes[i][a] 10 (thickness a girmiyorsa) or 12
+	newShape.push_back(r); //shapes[i][r] 7 (if thickness is 0) or 9
+	newShape.push_back(g); //shapes[i][g] 8 (if thickness is 0) or 10
+	newShape.push_back(b); //shapes[i][b] 9 (if thickness is 0) or 11
+	newShape.push_back(a); //shapes[i][a] 10 (if thickness is 0) or 12
 	shapes.push_back(newShape);
 	resetColorAndBorder();
 }

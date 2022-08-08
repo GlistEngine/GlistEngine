@@ -1,8 +1,8 @@
 /*
  * gGUISurface.h
  *
- *  Created on: 27 Tem 2022
- *      Author: ezgil
+ *  Created on: 27 Jul 2022
+ *      Author: Ezgi Lena Sonmez
  */
 
 #ifndef UI_GGUISURFACE_H_
@@ -10,9 +10,6 @@
 
 #include "gGUIControl.h"
 #include "gRenderer.h"
-#include "gRectangle.h"
-#include "gLine.h"
-#include "gCircle.h"
 
 class gGUISurface: public gGUIControl {
 public:
@@ -39,8 +36,6 @@ private:
 	void drawShapes();
 
 	std::vector<std::vector<float>> shapes;
-
-
 	//color
 	float r, g, b, a;
 	//frame of rectangle
