@@ -65,7 +65,7 @@ void gGUIManager::setActiveDialogue(gGUIDialogue* activeDialogue) {
 	dialoguedefaultsizer.setLineProportions(dlineproportions);
 	activedialogue->setSizer(&dialoguedefaultsizer);
 
-	isdialogueactive = true;
+	isdialogueactive = false;
 }
 
 gGUIFrame* gGUIManager::getCurrentFrame() {
