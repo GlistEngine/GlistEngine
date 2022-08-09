@@ -20,7 +20,9 @@ gGUIResources::~gGUIResources() {
 
 void gGUIResources::initialize() {
 	for(int i = 0; i < iconnum; i++) icon[i] = gImage(iconw, iconh, iconformat);
-	// Base64 encoder is also avaible in gUtils library of GlistEngine
+	/* Base64 encoder is also avaible in gUtils library of GlistEngine.
+	The place where we transform the pictures in Base64 format into real pictures with the decode process
+	and add them to the icon array we created in gGUIResources.h file. */
 	icon[ICON_FILE].setImageData((unsigned char*)gDecodeBase64(getBase64IconFile16()).c_str());
 	icon[ICON_FOLDER].setImageData((unsigned char*)gDecodeBase64(getBase64IconFolder16()).c_str());
 	icon[ICON_FOLDEROPENED].setImageData((unsigned char*)gDecodeBase64(getBase64IconFolderOpened16()).c_str());
@@ -69,11 +71,12 @@ int gGUIResources::getIconNum() {
 	return iconnum;
 }
 
+// In any class, a function that allows us to access the images in the array we created.
 gImage* gGUIResources::getIconImage(int iconId) {
 	return &icon[iconId];
 }
 
-//Icons
+// Bodies of getter functions where we keep images in base64 format
 
 std::string gGUIResources::getBase64IconFile16() {
 	return "////ALa2tv+2trb/tra2/7a2tv+2trb/tra2/7a2tv+2trb/tra2/7a2tu+2trYwAAAAAAAAAAD///8A////AP///wC2trb//////////////////////////////////////7a2tv/d3d3/tra277a2tjAAAAAA////AP///wD///8Atra2//////////////////////////////////////+2trb//f39/93d3f+2trbvtra2MP///wD///8A////ALa2tv//////////////////////////////////////paWl///////9/f3/3d3d/7a2tu////8A////AP///wC2trb//////////////////////////////////////4iIiP+Hh4f/h4eH/4eHh/+dnZ3/////AP///wD///8Atra2////////////////////////////////////////////////////////////ioqK/////wD///8A////ALa2tv///////////////////////////////////////////////////////////4eHh/////8A////AP///wC2trb///////////////////////////////////////////////////////////+Hh4f/////AP///wD///8Atra2////////////////////////////////////////////////////////////h4eH/////wD///8A////ALa2tv///////v7+//7+/v/+/v7//v7+//7+/v/+/v7//v7+//7+/v/+/v7//////4eHh/////8A////AP///wC2trb///////39/f/9/f3//f39//39/f/9/f3//f39//39/f/9/f3//v7+//////+Hh4f/////AP///wD///8Atra2///////8/Pz//Pz8//z8/P/8/Pz//Pz8//z8/P/8/Pz//Pz8//39/f//////h4eH/////wD///8A////ALa2tv//////+vr6//r6+v/6+vr/+vr6//r6+v/6+vr/+vr6//r6+v/7+/v//////4eHh/////8A////AP///wC2trb///////n5+f/5+fn/+fn5//n5+f/5+fn/+fn5//n5+f/5+fn/+vr6//////+Hh4f/////AP///wD///8Atra2////////////////////////////////////////////////////////////h4eH/////wD///8A////AK2trf+Pj4//h4eH/4eHh/+Hh4f/h4eH/4eHh/+Hh4f/h4eH/4eHh/+Hh4f/h4eH/4eHh/////8A////AA==";
