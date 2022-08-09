@@ -12,7 +12,7 @@
 
 gGUIListbox::gGUIListbox() {
 	lineh = 2 * font->getSize() + 2;
-	minlinenum = 5;
+	minlinenum = 4;
 	linenum = 0;
 	totalh = linenum * lineh;
 	minboxh = minlinenum * lineh;
@@ -24,6 +24,7 @@ gGUIListbox::gGUIListbox() {
 	mousepressedonlist = false;
 	datady = (lineh - font->getStringHeight("ae")) / 2 + 1;
 	fldy = 0;
+	//scrolldiff = 8;
 }
 
 gGUIListbox::~gGUIListbox() {
@@ -38,14 +39,16 @@ void gGUIListbox::set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseG
 
 void gGUIListbox::drawContent() {
 	gColor* oldcolor = renderer->getColor();
-//	gGUIScrollable::drawContent();
 
 	renderer->setColor(textbackgroundcolor);
 	gDrawRectangle(0, 0, boxw, boxh, true);
 
 	flno = firsty / lineh;
 	fldy = firsty % lineh;
-
+	//gLogi("fldy") << fldy << (" firsty ") << firsty;
+//	gLogi("Lineh") << lineh;
+//	gLogi("Linenumber") << linenum;
+//	gLogi("Totalh") << totalh;
 	if(selectedno >= flno && selectedno < flno + linenum) {
 		if(isfocused) renderer->setColor(255, 128, 0);
 		else renderer->setColor(middlegroundcolor);
@@ -112,12 +115,14 @@ void gGUIListbox::mousePressed(int x, int y, int button) {
 
 void gGUIListbox::mouseReleased(int x, int y, int button) {
 	gGUIScrollable::mouseReleased(x, y, button);
-	if(mousepressedonlist && x >= left && x < left + vsbx && y >= top + titledy && y < top + titledy + hsby) {
+	if(mousepressedonlist) mousepressedonlist = false;
+	if(x >= left && x < left + vsbx && y >= top + titledy && y < top + titledy + hsby) {
 		int newselectedno = (y - top - titledy + firsty) / lineh;
-		if(newselectedno < data.size()) selectedno = newselectedno;
+		if(newselectedno < data.size() + 1) selectedno = newselectedno;
+		isfocused = true;
 		root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_LISTBOXSELECTED, gToStr(selectedno));
+
 	}
-	mousepressedonlist = false;
 }
 
 void gGUIListbox::setSelected(int lineNo) {
@@ -141,4 +146,3 @@ std::string gGUIListbox::getData(int lineNo) {
 int gGUIListbox::getDataNum() {
 	return data.size();
 }
-
