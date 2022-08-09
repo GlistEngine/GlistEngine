@@ -46,13 +46,24 @@ void gGUIDialogue::update() {
 }
 
 void gGUIDialogue::draw() {
-	if(guisizer) guisizer->draw();
-	if (imageloaded) dialogueicon.draw(left + width / 16, top + height / 6, width / 4, width / 4);
+	if(guisizer) {
+		guisizer->draw();
 
-	gColor oldcolor = *renderer->getColor();
-	renderer->setColor(fontcolor);
-	font->drawText(title, left + 2, top + 12);
-	renderer->setColor(&oldcolor);
+		// DIALOGUE TITLE
+		gColor oldcolor = *renderer->getColor();
+		renderer->setColor(fontcolor);
+		font->drawText(title, left + 2, top + 12);
+
+		// DIALOGUE BORDERS
+		gDrawLine(left, top, right, top);
+		gDrawLine(left, top + height / 8, right, top + height / 8);
+		gDrawLine(left, bottom, right, bottom);
+		gDrawLine(left, top, left, bottom);
+		gDrawLine(right, top, right, bottom);
+		renderer->setColor(&oldcolor);
+	}
+
+	if (imageloaded) dialogueicon.draw(left + width / 16, top + height / 6, width / 4, width / 4);
 }
 
 void gGUIDialogue::setMessage(std::string message) {
