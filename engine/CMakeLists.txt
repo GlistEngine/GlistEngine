@@ -144,6 +144,7 @@ set(SRC_FILES
 	${ENGINE_DIR}/graphics/gRect.cpp
 	${ENGINE_DIR}/animation/gSpriteAnimation.cpp
 	${ENGINE_DIR}/animation/gSpriteAnimator.cpp
+	${ENGINE_DIR}/ui/gGUIDialogue.cpp
 	${ENGINE_DIR}/ui/gGUITimebox.cpp
 	${ENGINE_DIR}/ui/gGUIPieGraph.cpp
 	${ENGINE_DIR}/ui/gGUINumberBox.cpp

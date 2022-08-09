@@ -13,6 +13,7 @@
 gGUIManager::gGUIManager(gBaseApp* root) {
 	this->root = root;
 	isframeset = false;
+	isdialogueactive = false;
 	loadThemes();
 	resetTheme(GUITHEME_LIGHT);
 	if(root->getAppManager()->getWindowMode() == G_WINDOWMODE_GUIAPP) {
@@ -46,49 +47,92 @@ void gGUIManager::setCurrentFrame(gGUIFrame* currentFrame) {
 	isframeset = true;
 }
 
+void gGUIManager::setActiveDialogue(gGUIDialogue* activeDialogue) {
+	activedialogue = activeDialogue;
+	activedialogue->setParentSlotNo(0, 0);
+	activedialogue->width = root->getAppManager()->getCurrentCanvas()->getScreenWidth() / 3;
+	activedialogue->height = root->getAppManager()->getCurrentCanvas()->getScreenHeight() / 3;
+	activedialogue->left = (root->getAppManager()->getCurrentCanvas()->getScreenWidth() - activedialogue->width) / 2;
+	activedialogue->top = (root->getAppManager()->getCurrentCanvas()->getScreenHeight() - activedialogue->height) / 2;
+	activedialogue->right = activedialogue->left + activedialogue->width;
+	activedialogue->bottom = activedialogue->top + activedialogue->height;
+	activedialogue->setRootApp(root);
+
+	dialoguedefaultsizer.setTitle("dialoguesizer");
+	dialoguedefaultsizer.setSize(3, 1);
+	float dlineproportions[3] = {0.1f, 0.6f, 0.3f};
+	dialoguedefaultsizer.enableBackgroundFill(true);
+	dialoguedefaultsizer.setLineProportions(dlineproportions);
+	activedialogue->setSizer(&dialoguedefaultsizer);
+
+	isdialogueactive = true;
+}
+
 gGUIFrame* gGUIManager::getCurrentFrame() {
 	return currentframe;
 }
 
+gGUIDialogue* gGUIManager::getActiveDialogue() {
+	return activedialogue;
+}
+
+void gGUIManager::setIsDialogueActive(bool isactive) {
+	isdialogueactive = isactive;
+}
+
 void gGUIManager::keyPressed(int key) {
 	currentframe->keyPressed(key);
+	if (isdialogueactive) activedialogue->keyPressed(key);
 }
 
 void gGUIManager::keyReleased(int key) {
 	currentframe->keyReleased(key);
+	if (isdialogueactive) activedialogue->keyReleased(key);
 }
 
 void gGUIManager::charPressed(unsigned int key) {
 	currentframe->charPressed(key);
+	if (isdialogueactive) activedialogue->charPressed(key);
 }
 
 void gGUIManager::mouseMoved(int x, int y) {
 	root->getAppManager()->setCursor(currentframe->getCursor(x, y));
 	currentframe->mouseMoved(x, y);
+
+	if (isdialogueactive) {
+		root->getAppManager()->setCursor(activedialogue->getCursor(x, y));
+		activedialogue->mouseMoved(x, y);
+	}
 }
 
 void gGUIManager::mousePressed(int x, int y, int button) {
 	currentframe->mousePressed(x, y, button);
+	if (isdialogueactive) activedialogue->mousePressed(x, y, button);
 }
 
 void gGUIManager::mouseDragged(int x, int y, int button) {
 	currentframe->mouseDragged(x, y, button);
+	if (isdialogueactive) activedialogue->mouseDragged(x, y, button);
 }
 
 void gGUIManager::mouseReleased(int x, int y, int button) {
 	currentframe->mouseReleased(x, y, button);
+	if (isdialogueactive) activedialogue->mouseReleased(x, y, button);
 }
 
 void gGUIManager::mouseScrolled(int x, int y) {
 	currentframe->mouseScrolled(x, y);
+	if (isdialogueactive) activedialogue->mouseScrolled(x, y);
 }
 
 void gGUIManager::mouseEntered() {
 	currentframe->mouseEntered();
+	if (isdialogueactive) activedialogue->mouseEntered();
 }
 
 void gGUIManager::mouseExited() {
 	currentframe->mouseExited();
+	if (isdialogueactive) activedialogue->mouseEntered();
 }
 
 void gGUIManager::windowResized(int w, int h) {
@@ -99,10 +143,18 @@ void gGUIManager::windowResized(int w, int h) {
 
 void gGUIManager::update() {
 	currentframe->update();
+	if (isdialogueactive) {
+		activedialogue->update();
+		if (activedialogue->getExitEvent()) {
+			isdialogueactive = false;
+			activedialogue->setExitEvent(false);
+		}
+	}
 }
 
 void gGUIManager::draw() {
 	currentframe->draw();
+	if (isdialogueactive) activedialogue->draw();
 }
 
 void gGUIManager::resetTheme(int guiTheme) {
@@ -192,4 +244,3 @@ void gGUIManager::loadThemes() {
 	themedisabledbuttonfontcolor[GUITHEME_DARKBLUE] = gColor(28.0f / 255.0f, 40.0f / 255.0f, 53.0f / 255.0f);
 
 }
-
