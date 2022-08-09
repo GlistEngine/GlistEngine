@@ -144,6 +144,7 @@ set(SRC_FILES
 	${ENGINE_DIR}/animation/gSpriteAnimator.cpp
 	${ENGINE_DIR}/ui/gGUIToggleButton.cpp
 	${ENGINE_DIR}/ui/gGUIListbox.cpp
+	${ENGINE_DIR}/ui/gGUITreeList.cpp
 	${ENGINE_DIR}/ui/gGUICheckbox.cpp
 	${ENGINE_DIR}/ui/gGUITextbox.cpp
 	${ENGINE_DIR}/ui/gGUIText.cpp
