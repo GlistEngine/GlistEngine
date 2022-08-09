@@ -151,7 +151,7 @@ set(SRC_FILES
 	${ENGINE_DIR}/ui/gGUISwitchButton.cpp
 	${ENGINE_DIR}/ui/gGUISurface.cpp
 	${ENGINE_DIR}/ui/gGUIListbox.cpp
-	${ENGINE_DIR}/ui/gGUITreeList.cpp
+	${ENGINE_DIR}/ui/gGUITreelist.cpp
 	${ENGINE_DIR}/ui/gGUICheckbox.cpp
 	${ENGINE_DIR}/ui/gGUITextbox.cpp
 	${ENGINE_DIR}/ui/gGUIText.cpp
