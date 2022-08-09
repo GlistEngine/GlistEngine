@@ -12,6 +12,7 @@
 #include "gGUIButton.h"
 #include "gGUIPanel.h"
 #include "gGUIText.h"
+#include "gImage.h"
 
 
 class gGUIDialogue: public gGUIForm {
@@ -40,7 +41,7 @@ public:
 	void setExitEvent(bool exitEvent);
 	bool getExitEvent();
 
-	void showDialogue(std::string title, std::string message, int dialogueType);
+	void showDialogue(std::string title, std::string message, int dialogueType, int iconType);
 private:
 	std::string message;
 	std::string dialoguetypename[dialoguetypenum];
@@ -58,6 +59,10 @@ private:
 
 	gGUIPanel buttonspanel;
 	gGUISizer buttonspanelsizer;
+
+	gImage dialogueicon;
+
+	bool imageloaded;
 };
 
 #endif /* UI_GGUIDIALOGUE_H_ */

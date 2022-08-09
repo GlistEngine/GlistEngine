@@ -32,6 +32,8 @@ gGUIDialogue::gGUIDialogue() {
 	cancelbutton.setTitle("CANCEL");
 
 	exitevent = false;
+
+	imageloaded = false;
 }
 
 gGUIDialogue::~gGUIDialogue() {
@@ -45,6 +47,7 @@ void gGUIDialogue::update() {
 
 void gGUIDialogue::draw() {
 	if(guisizer) guisizer->draw();
+	if (imageloaded) dialogueicon.draw(left + width / 16, top + height / 6, width / 4, width / 4);
 
 	gColor oldcolor = *renderer->getColor();
 	renderer->setColor(fontcolor);
@@ -68,7 +71,7 @@ bool gGUIDialogue::getExitEvent() {
 	return exitevent;
 }
 
-void gGUIDialogue::showDialogue(std::string title, std::string message, int dialogueType) {
+void gGUIDialogue::showDialogue(std::string title, std::string message, int dialogueType, int iconType) {
 
 	this->title = title;
 	this->message = message;
@@ -78,16 +81,24 @@ void gGUIDialogue::showDialogue(std::string title, std::string message, int dial
 	exitbutton.setSize(width / 8, height / 8);
 	exitbutton.left += width - width / 8;
 
+	// DIALOGUE ICON
+	dialogueicon.loadImage("dialogueicons/" + icontypename[iconType] + "tpicon.png");
+	imageloaded = true;
+
+	// MESSAGE TEXT
+	guisizer->setControl(1, 0, &messagetext);
+	messagetext.width = width * 0.6f;
+	messagetext.height = height * 0.6f;
+	messagetext.left += width * 0.34f;
+	messagetext.top += height * 0.1f;
+	messagetext.setText(message);
+
 	// BUTTONS PANEL
 	guisizer->setControl(2, 0, &buttonspanel);
 	buttonspanelsizer.setSize(1, 3);
 	buttonspanelsizer.enableBorders(false);
 	buttonspanelsizer.enableBackgroundFill(false);
 	buttonspanel.setSizer(&buttonspanelsizer);
-
-	// MESSAGE TEXT
-	guisizer->setControl(1, 0, &messagetext);
-	messagetext.setText(message);
 
 	// OK BUTTON
 	if (dialoguetypename[dialogueType] == "ok" || dialoguetypename[dialogueType] == "okcancel") {

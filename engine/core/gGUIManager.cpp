@@ -57,6 +57,14 @@ void gGUIManager::setActiveDialogue(gGUIDialogue* activeDialogue) {
 	activedialogue->right = activedialogue->left + activedialogue->width;
 	activedialogue->bottom = activedialogue->top + activedialogue->height;
 	activedialogue->setRootApp(root);
+
+	dialoguedefaultsizer.setTitle("dialoguesizer");
+	dialoguedefaultsizer.setSize(3, 1);
+	float dlineproportions[3] = {0.1f, 0.6f, 0.3f};
+	dialoguedefaultsizer.enableBackgroundFill(true);
+	dialoguedefaultsizer.setLineProportions(dlineproportions);
+	activedialogue->setSizer(&dialoguedefaultsizer);
+
 	isdialogueactive = true;
 }
 
