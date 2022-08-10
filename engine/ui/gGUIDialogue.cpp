@@ -51,8 +51,10 @@ void gGUIDialogue::draw() {
 
 		// DIALOGUE TITLE
 		gColor oldcolor = *renderer->getColor();
+		renderer->setColor(middlegroundcolor);
+		gDrawRectangle(left, top, width - width / 8, height / 8, width - width / 8, height / 8);
 		renderer->setColor(fontcolor);
-		font->drawText(title, left + 2, top + 12);
+		font->drawText(title, left + width / 32, top + height / 14);
 
 		// DIALOGUE BORDERS
 		gDrawLine(left, top, right, top);
