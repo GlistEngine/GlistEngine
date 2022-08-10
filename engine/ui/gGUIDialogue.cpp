@@ -64,7 +64,7 @@ void gGUIDialogue::draw() {
 		renderer->setColor(&oldcolor);
 	}
 
-	if (imageloaded) dialogueicon.draw(left + width / 16, top + height / 6, width / 4, width / 4);
+	if (imageloaded) dialogueicon.draw(left + width / 12, top + height / 4, height / 3, height / 3);
 }
 
 void gGUIDialogue::setMessage(std::string message) {
@@ -98,11 +98,19 @@ void gGUIDialogue::showDialogue(std::string title, std::string message, int dial
 	imageloaded = true;
 
 	// MESSAGE TEXT
+	// One line for each 24 characters of message, don't touch to width, only height
+	int linecount = (message.length() / 24) + 1;
+	gLogi("Line") << message.length();
+	gLogi("Line") << linecount;
+
 	guisizer->setControl(1, 0, &messagetext);
-	messagetext.width = width * 0.6f;
-	messagetext.height = height * 0.6f;
-	messagetext.left += width * 0.34f;
-	messagetext.top += height * 0.1f;
+	messagetext.width = width * 27 / 48;
+	// messagetext.height = height * 2 / 3; // FOR 4 LINES (MAX 96 CHARACTERS)
+	messagetext.height = height * 2 / (12 / linecount);
+	messagetext.left += width * 3 / 8;
+	// messagetext.top += height * 2 / 15;	// FOR 4 LINES (MAX 96 CHARACTERS)
+	gLogi("Top") << messagetext.top;
+	messagetext.top += (height - messagetext.height) / 3;
 	messagetext.setText(message);
 
 	// BUTTONS PANEL
