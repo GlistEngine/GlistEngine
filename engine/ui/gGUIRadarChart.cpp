@@ -13,11 +13,11 @@ gGUIRadarChart::gGUIRadarChart() :
 gGUIRadarChart::~gGUIRadarChart() {}
 
 void gGUIRadarChart::draw() {
-	gColor *old_color = this->renderer->getColor();
-	this->renderer->setColor(0.0f, 0.0f, 0.0f);
+    gColor *old_color = this->renderer->getColor();
+    this->renderer->setColor(0.0f, 0.0f, 0.0f);
     this->drawBase();
     this->drawChart();
-	this->renderer->setColor(old_color);
+    this->renderer->setColor(old_color);
 }
 
 void gGUIRadarChart::update() {
@@ -33,7 +33,7 @@ void gGUIRadarChart::setColor(std::size_t i, const gColor &color) {
 }
 
 void gGUIRadarChart::setNumDataset(std::size_t new_size) {
-	this->datasets.resize(new_size);
+    this->datasets.resize(new_size);
 }
 
 void gGUIRadarChart::setNumVar(std::size_t new_size) {
@@ -46,7 +46,7 @@ void gGUIRadarChart::setNumVar(std::size_t new_size) {
 }
 
 void gGUIRadarChart::calcVertices() {
-	int length = std::min((this->right - this->left), (this->bottom - this->top));
+    int length = std::min((this->right - this->left), (this->bottom - this->top));
 
     switch (this->vertices.size()) {
         case 3: {
@@ -94,8 +94,8 @@ void gGUIRadarChart::drawBase() {
 
 void gGUIRadarChart::drawChart() {
     for (const gDataset &dataset : this->datasets) {
-    	gColor *old_color = this->renderer->getColor();
-    	this->renderer->setColor(dataset.color);
+        gColor *old_color = this->renderer->getColor();
+        this->renderer->setColor(dataset.color);
 
         std::vector<float> vertices(this->vertices.size() * 2);
         float circumradius = std::sqrt(
@@ -128,22 +128,22 @@ void gGUIRadarChart::drawChart() {
 }
 
 void gGUIRadarChart::calcTriangle(int a) {
-	int h = static_cast<int>((std::sqrt(3) / 2.0f) * static_cast<float>(a));
+    int h = static_cast<int>((std::sqrt(3) / 2.0f) * static_cast<float>(a));
     int pad = ((this->bottom - this->top) - h) / 2;
 
-	int middle_x = (this->left + this->right) / 2;
-	int middle_y = (this->top + pad + (h / 3 * 2));
+    int middle_x = (this->left + this->right) / 2;
+    int middle_y = (this->top + pad + (h / 3 * 2));
 
-	this->center.position.x = static_cast<float>(middle_x);
-	this->center.position.y = static_cast<float>(middle_y);
+    this->center.position.x = static_cast<float>(middle_x);
+    this->center.position.y = static_cast<float>(middle_y);
 
-	this->vertices[0].position.x = middle_x;
-	this->vertices[0].position.y = middle_y - (h / 3 * 2);
+    this->vertices[0].position.x = middle_x;
+    this->vertices[0].position.y = middle_y - (h / 3 * 2);
 
-	this->vertices[1].position.x = middle_x - (a / 2);
-	this->vertices[1].position.y = middle_y + (h / 3);
+    this->vertices[1].position.x = middle_x - (a / 2);
+    this->vertices[1].position.y = middle_y + (h / 3);
 
-	this->vertices[2].position.x = middle_x + (a / 2);
+    this->vertices[2].position.x = middle_x + (a / 2);
     this->vertices[2].position.y = middle_y + (h / 3);
 
 
@@ -156,8 +156,8 @@ void gGUIRadarChart::calcSquare(int a) {
     int pad_x = ((this->right - this->left) - h) / 2;
     int pad_y = ((this->bottom - this->top) - h) / 2;
 
-	int middle_x = this->left + std::max(min_pad, pad_x) + h / 2;
-	int middle_y = this->top + std::max(min_pad, pad_y) + h / 2;
+    int middle_x = this->left + std::max(min_pad, pad_x) + h / 2;
+    int middle_y = this->top + std::max(min_pad, pad_y) + h / 2;
 
     this->center.position.x = middle_x;
     this->center.position.y = middle_y;
@@ -188,8 +188,8 @@ void gGUIRadarChart::calcPentagon(int a) {
     int pad_x = (this->right - this->left - circumdiameter) / 2;
     int pad_y = (this->bottom - this->top - circumdiameter) / 2;
 
-	int middle_x = this->left + std::max(min_pad, pad_x) + circumradius;
-	int middle_y = this->top + std::max(min_pad, pad_y) + circumradius;
+    int middle_x = this->left + std::max(min_pad, pad_x) + circumradius;
+    int middle_y = this->top + std::max(min_pad, pad_y) + circumradius;
 
     float px = static_cast<float>(middle_x);
     float py = static_cast<float>(middle_y - circumradius);
