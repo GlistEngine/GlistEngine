@@ -63,8 +63,6 @@
  * icons which you add by using the function you define to get id from users in
  * your class.
  */
-
-
 class gGUIResources {
 public:
 	static const int ICON_NONE = -1;
