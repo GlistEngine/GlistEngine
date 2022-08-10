@@ -102,6 +102,7 @@ void gGUISurface::drawShapes() {
 		}
 	}
 }
+
 void gGUISurface::drawBackground() {
 	renderer->setColor(gColor(1.0f, 	1.0f, 	1.0f, 	1.0f));//white
 	gDrawRectangle(left, top, right, bottom, true);

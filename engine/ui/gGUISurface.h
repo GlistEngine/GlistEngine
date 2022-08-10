@@ -29,7 +29,6 @@ public:
 //	void drawBox(glm::mat4 transformationMatrix, bool isFilled = true);
 //	void drawSphere(float xPos, float yPos, float zPos, int xSegmentNum = 64, int ySegmentNum = 64, float scale = 1.0f, bool isFilled = true);
 
-
 private:
 	void drawBackground();
 	void resetColorAndBorder();
