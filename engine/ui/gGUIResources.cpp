@@ -4,6 +4,33 @@
  *  Created on: Sep 25, 2021
  *      Author: Noyan,
  *      		Batuhan
+ *   This class keeps all images in base64 format that the programmer can use in their software thanks to their getter functions.
+ * We keep this data as base64 because asset images may be lost or corrupted in the file.This results in loss of image and bad experience for a developer.
+ * All the images have their own getter function and this getter functions return base64 string value of the image.
+ * There are 2 types of getter functions in this class. The first of them is getBase64Icon... function. This function provides us to get base64 string of an image.
+ * Also every image has their own getBase64Icon... function. We use these functions inside the initialize function as parameters of the decode function.
+ * gDecodeBase64 is a function that converts the base64 string sent into the decode function to image data.
+ * Thanks to initialize function, we can add image that we decoded to gImage array that we created.Thus, we will be able to use any image we want in other classes.
+ * ----------------------------------------------------------------------------------------------------------------------------------------------------------------
+ *                                                             HOW TO USE
+ * -  Firstly, you have to create a getter function that containing its own name in gGUIResources.h file. (Ex :std::string getBase64IconFile16(); )
+ *
+ * -  After that, you have to enumeration procces to determine id of image which you want to add. (Ex : ICON_FILE,(in the enum))
+ *
+ * -  You have to define the body of your getter function in gGUIResources.cpp. And this function have to return base64 string of your image.(You can encode your image by using encode function of GlistEngine)
+ *
+ * -  Examples of encoding procces in a canvas :
+ * 	img.loadImage("Copy.png");
+ *	gLogi("base") << "base64img:" << gEncodeBase64(img.getImageData(), img.getWidth() * img.getHeight() * img.getComponentNum());
+ *
+ * -  After you define body, go to initialize function and set your image to array by using id of your image.Don't forget that you have to use decode function inside
+ *  setImageData function. Also, gDecodeBase64 have to  contain getter function of your image. (Examples avaible below)
+ *
+ * -  After we add the image to array, we can use this image in every class we want. To be able to use it, we have to create an object
+ *  from gGUIResources class (Ex: gGUIResources res;) and have to use getIconImage method of this object  ( Ex : res.getIconImage(gGUIResources::The id which you enumeration) ).
+ *  To draw this use draw function (Ex : res.getIconImage(id)->draw(....). If you want the users to choose the images by using your class. You have to define
+ *  imageid variable as a parameter of getIconImage in your class. Define a function that get id information from developer user to your class and defines it into the iconid variable in your class .
+ *  Thus, users can use the icons which you add by using the function you define to get id from users in your class.
  */
 
 #include "gGUIResources.h"
@@ -20,7 +47,9 @@ gGUIResources::~gGUIResources() {
 
 void gGUIResources::initialize() {
 	for(int i = 0; i < iconnum; i++) icon[i] = gImage(iconw, iconh, iconformat);
-	// Base64 encoder is also avaible in gUtils library of GlistEngine
+	/* Base64 encoder is also avaible in gUtils library of GlistEngine.
+	The place where we transform the pictures in Base64 format into real pictures with the decode process
+	and add them to the icon array we created in gGUIResources.h file. */
 	icon[ICON_FILE].setImageData((unsigned char*)gDecodeBase64(getBase64IconFile16()).c_str());
 	icon[ICON_FOLDER].setImageData((unsigned char*)gDecodeBase64(getBase64IconFolder16()).c_str());
 	icon[ICON_FOLDEROPENED].setImageData((unsigned char*)gDecodeBase64(getBase64IconFolderOpened16()).c_str());
@@ -69,11 +98,12 @@ int gGUIResources::getIconNum() {
 	return iconnum;
 }
 
+// In any class, a function that allows us to access the images in the array we created.
 gImage* gGUIResources::getIconImage(int iconId) {
 	return &icon[iconId];
 }
 
-//Icons
+// Bodies of getter functions where we keep images in base64 format
 
 std::string gGUIResources::getBase64IconFile16() {
 	return "////ALa2tv+2trb/tra2/7a2tv+2trb/tra2/7a2tv+2trb/tra2/7a2tu+2trYwAAAAAAAAAAD///8A////AP///wC2trb//////////////////////////////////////7a2tv/d3d3/tra277a2tjAAAAAA////AP///wD///8Atra2//////////////////////////////////////+2trb//f39/93d3f+2trbvtra2MP///wD///8A////ALa2tv//////////////////////////////////////paWl///////9/f3/3d3d/7a2tu////8A////AP///wC2trb//////////////////////////////////////4iIiP+Hh4f/h4eH/4eHh/+dnZ3/////AP///wD///8Atra2////////////////////////////////////////////////////////////ioqK/////wD///8A////ALa2tv///////////////////////////////////////////////////////////4eHh/////8A////AP///wC2trb///////////////////////////////////////////////////////////+Hh4f/////AP///wD///8Atra2////////////////////////////////////////////////////////////h4eH/////wD///8A////ALa2tv///////v7+//7+/v/+/v7//v7+//7+/v/+/v7//v7+//7+/v/+/v7//////4eHh/////8A////AP///wC2trb///////39/f/9/f3//f39//39/f/9/f3//f39//39/f/9/f3//v7+//////+Hh4f/////AP///wD///8Atra2///////8/Pz//Pz8//z8/P/8/Pz//Pz8//z8/P/8/Pz//Pz8//39/f//////h4eH/////wD///8A////ALa2tv//////+vr6//r6+v/6+vr/+vr6//r6+v/6+vr/+vr6//r6+v/7+/v//////4eHh/////8A////AP///wC2trb///////n5+f/5+fn/+fn5//n5+f/5+fn/+fn5//n5+f/5+fn/+vr6//////+Hh4f/////AP///wD///8Atra2////////////////////////////////////////////////////////////h4eH/////wD///8A////AK2trf+Pj4//h4eH/4eHh/+Hh4f/h4eH/4eHh/+Hh4f/h4eH/4eHh/+Hh4f/h4eH/4eHh/////8A////AA==";

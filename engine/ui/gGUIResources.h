@@ -15,7 +15,7 @@
 class gGUIResources {
 public:
 	static const int ICON_NONE = -1;
-
+	// In order to use the pictures in the classes we have created, we perform the enumuration process and determine their ids.
 	enum {
 		ICON_FILE,
 		ICON_FOLDER,
@@ -65,9 +65,9 @@ private:
 	static const int iconnum = 30;
 
 	int iconw, iconh, iconformat;
-
+	// The array we keep pictures
 	gImage icon[iconnum];
-
+	// Getter functions where we keep images in base64 format
 	std::string getBase64IconFile16();
 	std::string getBase64IconFolder16();
 	std::string getBase64IconFolderOpened16();
