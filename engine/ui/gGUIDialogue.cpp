@@ -58,7 +58,6 @@ void gGUIDialogue::draw() {
 
 		// DIALOGUE BORDERS
 		gDrawLine(left, top, right, top);
-		gDrawLine(left, top + height / 8, right, top + height / 8);
 		gDrawLine(left, bottom, right, bottom);
 		gDrawLine(left, top, left, bottom);
 		gDrawLine(right, top, right, bottom);
