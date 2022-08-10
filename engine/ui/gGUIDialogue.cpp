@@ -98,19 +98,13 @@ void gGUIDialogue::showDialogue(std::string title, std::string message, int dial
 	imageloaded = true;
 
 	// MESSAGE TEXT
-	// One line for each 24 characters of message, don't touch to width, only height
-	int linecount = (message.length() / 24) + 1;
-	gLogi("Line") << message.length();
-	gLogi("Line") << linecount;
+	int linecount = (this->message.length() / 24) + 1; // One line for each 23 characters of message
 
 	guisizer->setControl(1, 0, &messagetext);
 	messagetext.width = width * 27 / 48;
-	// messagetext.height = height * 2 / 3; // FOR 4 LINES (MAX 96 CHARACTERS)
-	messagetext.height = height * 2 / (12 / linecount);
+	messagetext.height = height * 5 / (48 / linecount);
 	messagetext.left += width * 3 / 8;
-	// messagetext.top += height * 2 / 15;	// FOR 4 LINES (MAX 96 CHARACTERS)
-	gLogi("Top") << messagetext.top;
-	messagetext.top += (height - messagetext.height) / 3;
+	messagetext.top += ((height * 5 / 8) - messagetext.height) / 2 + messagetext.height / 12;
 	messagetext.setText(message);
 
 	// BUTTONS PANEL
