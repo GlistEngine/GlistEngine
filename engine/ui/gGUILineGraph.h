@@ -45,7 +45,6 @@ public:
 
 	virtual void update();
 
-
 	void draw();
 	void graph();
 	void addValue(float x, float y);

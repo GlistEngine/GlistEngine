@@ -107,7 +107,6 @@ void gGUILineGraph::addValue(float x, float y) {  // points get their x and y lo
 	this->x[pointnum] = x;
 	this->y[pointnum] = y;
 	pointnum++;
-
 }
 
 void gGUILineGraph::addpoint() {				//adds points on graph
