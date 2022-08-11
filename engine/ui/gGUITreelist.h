@@ -75,19 +75,13 @@ public:
 			isparent = false;
 		}
 
-		/*
-		 * Used for add a sub element into the parent element's sub vector.
-		 * Developer should initialize the title first. Element's orderno and the
-		 * nodenum will be updates in the function.
-		 *
-		 * @param element is the struct object which includes element's attributes.
-		 */
-		void addElement(Element* element) {
+
+/*		void addElement(Element* element) {
 			sub.push_back(element);
 			element->parent = this;
 			element->orderno = orderno + 1;
 			element->nodenum = this->nodenum + 1;
-		}
+		}*/
 
 		/*
 		 * Used for print all the objects to the console in the struct.
@@ -112,8 +106,8 @@ public:
 		 * Operates when
 		 * an element added to the list,
 		 * an element removed from the list,
-		 * making a update to the element's title,
-		 * the user clicked to parent title and opened the sub titles.
+		 * making an update to the element's title,
+		 * the user clicked to parent's title and opened the sub titles.
 		 */
 		void addSelfToList() {
 			std::string linetext = "";
@@ -208,12 +202,26 @@ public:
 	void addElement(Element* element);
 
 	/*
+	 * Used for add a sub element into the parent element's sub vector.
+	 * Developer should initialize the title first. Element's orderno and the
+	 * nodenum will be updates in the function.
+	 *
+	 * @param element is the struct object which includes element's attributes.
+	 *
+	 * @param parent is the struct object which element will be added to its
+	 * sub vector.
+	 */
+	void addElement(Element* element, Element* parent);
+
+	/*
 	 * Renamed title of the given element with the given text.
 	 *
 	 * @param element is the struct object that renamed on the list.
 	 * @param newtitle is the string value which updated to the element's title.
 	 */
 	void insertData(Element* element, std::string newtitle);
+
+	void refreshList();
 
 	void drawContent();
 
@@ -258,6 +266,14 @@ public:
 	 * @param element is the struct object which if it is isparent or not.
 	 */
 	bool isParent(Element* element);
+
+	/*
+ 	 * Sets the color of the row which developer click and select, with the
+ 	 * given color. Colors consist of RGB values float between 0.0f-1.0f.
+ 	 *
+ 	 * @param color The given color consist of (r, g, b) float values.
+	 */
+	void setChosenColor(float r, float g, float b);
 private:
 	int listboxh;
 	int lineh, linenum;
@@ -267,10 +283,10 @@ private:
 	float datady;
 	int firstlineno;
 	int selectedno;
-
 	float arrowsize;
 	bool mousepressedonlist;
 	Element topelement;
+	gColor chosencolor;
 };
 
 #endif /* UI_GGUITREELIST_H_ */

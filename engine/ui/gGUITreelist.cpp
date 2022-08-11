@@ -1,4 +1,3 @@
-
 /*
  * gGUITreelist.h
  *
@@ -21,7 +20,7 @@ gGUITreelist::gGUITreelist() {
 	topelement.title = "Top";
 	topelement.isexpanded = true;
 	lineh = 2 * font->getSize() + 2;
-	minlinenum = 5  ;
+	minlinenum = 5;
 	linenum = 0;
 	totalh = linenum * lineh;
 	minboxh = minlinenum * lineh;
@@ -34,29 +33,35 @@ gGUITreelist::gGUITreelist() {
 	datady = (lineh - font->getStringHeight("ae")) / 2 + 1;
 	fldy = 0;
 	arrowsize = font->getStringWidth(">");
+	chosencolor = gColor(1.0f, 0.5f, 0.0f);
 }
 
 gGUITreelist::~gGUITreelist() {
 }
 
 void gGUITreelist::set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIObject* parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h) {
-	//gLogi("h") << h;
+//	gLogi("h") << h;
+//	gLogi("TOTALH") << totalh;
 	totalh = h;
-	gGUIScrollable::set(root, topParentGUIObject, parentGUIObject, parentSlotLineNo, parentSlotColumnNo, x, y, w, h);
+	gGUIControl::set(root, topParentGUIObject, parentGUIObject, parentSlotLineNo, parentSlotColumnNo, x, y, w, h);
 	gGUIScrollable::setDimensions(width, listboxh);
 
 }
 
+void  gGUITreelist::addElement(Element* element, Element* parent) {
+		parent->sub.push_back(element);
+		element->parent = parent;
+		element->orderno = parent->orderno + 1;
+		element->nodenum = parent->nodenum + 1;
+
+		refreshList();
+}
+
 void gGUITreelist::addElement(Element* element) {
-
-	topelement.addElement(element);
-	topelement.clearAllSubTitlesList();
-	topelement.addSelfToList();
-
-	linenum = element->nodenum;
-	if(linenum > maxlinenum) linenum = maxlinenum;
-	totalh = topelement.nodenum * lineh;;
-	if(totalh < height) totalh = height;
+	topelement.sub.push_back(element);
+	element->orderno = topelement.orderno + 1;
+	element->nodenum = topelement.nodenum + 1;
+	refreshList();
 
 }
 
@@ -66,14 +71,14 @@ void gGUITreelist::drawContent() {
 	renderer->setColor(textbackgroundcolor);
 	gDrawRectangle(0, 0, boxw, boxh , true);
 
-	flno = firsty / lineh;
-	fldy = firsty % lineh;
+//	flno = firsty / lineh;
+//	fldy = firsty % lineh;
 //	gLogi("Lineh") << lineh;
 //	gLogi("Linenumber") << linenum;
 //	gLogi("Totalh") << totalh;
 //	gLogi("Nodenumber") << topelement.nodenum;
 	if(selectedno >= flno && selectedno <= flno + linenum) {
-		if(isfocused) renderer->setColor(255, 128, 0);
+		if(isfocused) renderer->setColor(chosencolor);
 		else renderer->setColor(middlegroundcolor);
 		gDrawRectangle(0, -fldy + (selectedno - flno) * lineh, boxw, lineh, true);
 	}
@@ -94,13 +99,17 @@ void gGUITreelist::insertData(Element* element, std::string lineData) {
 
 void gGUITreelist::removeElement(Element* element) {
 	topelement.removeElement(element);
-	topelement.clearAllSubTitlesList();
-	topelement.addSelfToList();
+	refreshList();
+}
 
-	linenum = topelement.nodenum;
-	if(linenum > maxlinenum) linenum = maxlinenum;
-	totalh = topelement.nodenum * lineh;
-	if(totalh < height) totalh = height;
+void gGUITreelist::refreshList() {
+    topelement.clearAllSubTitlesList();
+    topelement.addSelfToList();
+
+    linenum = topelement.nodenum;
+    if(linenum > maxlinenum) linenum = maxlinenum;
+    totalh = topelement.nodenum * lineh;;
+    if(totalh < height) totalh = height;
 
 }
 
@@ -167,3 +176,6 @@ bool gGUITreelist::isParent(Element* element) {
 	return element->isparent;
 }
 
+void gGUITreelist::setChosenColor(float r, float g, float b) {
+	chosencolor = gColor(r, g, b);
+}
