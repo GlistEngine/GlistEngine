@@ -12,10 +12,10 @@
 
 class gGUIRadarChart: public gGUIControl {
 public:
-	gGUIRadarChart();
-	virtual ~gGUIRadarChart();
+    gGUIRadarChart();
+    virtual ~gGUIRadarChart();
 
-	void draw() override;
+    void draw() override;
     void update() override;
 
     void setVar(std::size_t i, std::size_t j, float var);
@@ -35,14 +35,10 @@ private:
 
     void calcVertices();
 
-	void calcTriangle(int length);
-    void calcSquare(int length);
-    void calcPentagon(int length);
-
-	std::vector<gDataset> datasets;
+    std::vector<gDataset> datasets;
     std::vector<gVertex> vertices;
     gVertex center;
-	float max;
+    float max;
 };
 
 #endif /* UI_GGUIRADARCHART_H_ */

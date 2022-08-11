@@ -14,7 +14,6 @@ gGUIRadarChart::~gGUIRadarChart() {}
 
 void gGUIRadarChart::draw() {
     gColor *old_color = this->renderer->getColor();
-    this->renderer->setColor(0.0f, 0.0f, 0.0f);
     this->drawBase();
     this->drawChart();
     this->renderer->setColor(old_color);
@@ -46,18 +45,25 @@ void gGUIRadarChart::setNumVar(std::size_t new_size) {
 }
 
 void gGUIRadarChart::calcVertices() {
-    int length = std::min((this->right - this->left), (this->bottom - this->top));
+    int width = this->right - this->left;
+    int height = this->bottom - this->top;
+    int min_length = std::min(width, height);
+    int min_pad = 3;
 
-    switch (this->vertices.size()) {
-        case 3: {
-            this->calcTriangle(length);
-        } break;
-        case 4: {
-            this->calcSquare(length);
-        } break;
-        case 5: {
-            this->calcPentagon(length);
-        } break;
+    constexpr float pi = 3.14159265358979323846264338327950288f;
+    std::size_t n = this->vertices.size();
+
+    float circumradius = static_cast<float>((min_length - 2 * min_pad) / 2);
+    float exterior_angle = 2.0f * pi / static_cast<float>(n);
+
+    this->center.position.x = static_cast<float>(this->left + width / 2);
+    this->center.position.y = static_cast<float>(this->top + height / 2);
+
+    for (std::size_t i = 0; i < n; i++) {
+        this->vertices[i].position.x = this->center.position.x
+            - circumradius * std::sin(static_cast<float>(i) * exterior_angle);
+        this->vertices[i].position.y = this->center.position.y
+            - circumradius * std::cos(static_cast<float>(i) * exterior_angle);
     }
 }
 
@@ -125,102 +131,4 @@ void gGUIRadarChart::drawChart() {
         }
         this->renderer->setColor(old_color);
     }
-}
-
-void gGUIRadarChart::calcTriangle(int a) {
-    int h = static_cast<int>((std::sqrt(3) / 2.0f) * static_cast<float>(a));
-    int pad = ((this->bottom - this->top) - h) / 2;
-
-    int middle_x = (this->left + this->right) / 2;
-    int middle_y = (this->top + pad + (h / 3 * 2));
-
-    this->center.position.x = static_cast<float>(middle_x);
-    this->center.position.y = static_cast<float>(middle_y);
-
-    this->vertices[0].position.x = middle_x;
-    this->vertices[0].position.y = middle_y - (h / 3 * 2);
-
-    this->vertices[1].position.x = middle_x - (a / 2);
-    this->vertices[1].position.y = middle_y + (h / 3);
-
-    this->vertices[2].position.x = middle_x + (a / 2);
-    this->vertices[2].position.y = middle_y + (h / 3);
-
-
-}
-
-void gGUIRadarChart::calcSquare(int a) {
-    int min_pad = 3;
-    int h = a - 2 * min_pad;
-
-    int pad_x = ((this->right - this->left) - h) / 2;
-    int pad_y = ((this->bottom - this->top) - h) / 2;
-
-    int middle_x = this->left + std::max(min_pad, pad_x) + h / 2;
-    int middle_y = this->top + std::max(min_pad, pad_y) + h / 2;
-
-    this->center.position.x = middle_x;
-    this->center.position.y = middle_y;
-
-    this->vertices[0].position.x = middle_x;
-    this->vertices[0].position.y = middle_y - h / 2;
-
-    this->vertices[1].position.x = middle_x - h / 2;
-    this->vertices[1].position.y = middle_y;
-
-    this->vertices[2].position.x = middle_x;
-    this->vertices[2].position.y = middle_y + h / 2;
-
-    this->vertices[3].position.x = middle_x + h / 2;
-    this->vertices[3].position.y = middle_y;
-}
-
-void gGUIRadarChart::calcPentagon(int a) {
-    int min_pad = 3;
-
-    int circumdiameter = a - 2 * min_pad;
-    int circumradius = circumdiameter / 2;
-
-    int t = static_cast<int>(
-        static_cast<float>(circumradius) / std::sqrt((5.0f + std::sqrt(5.0f)) / 10.0f)
-    );
-
-    int pad_x = (this->right - this->left - circumdiameter) / 2;
-    int pad_y = (this->bottom - this->top - circumdiameter) / 2;
-
-    int middle_x = this->left + std::max(min_pad, pad_x) + circumradius;
-    int middle_y = this->top + std::max(min_pad, pad_y) + circumradius;
-
-    float px = static_cast<float>(middle_x);
-    float py = static_cast<float>(middle_y - circumradius);
-
-    float qx = px - static_cast<float>(t) * std::sin(gDegToRad(54.0f));
-    float qy = py + static_cast<float>(t) * std::cos(gDegToRad(54.0f));
-
-    float rx = qx + static_cast<float>(t) * std::sin(gDegToRad(18.0f));
-    float ry = qy + static_cast<float>(t) * std::cos(gDegToRad(18.0f));
-
-    float sx = rx + static_cast<float>(t);
-    float sy = ry;
-
-    float ux = px + static_cast<float>(t) * std::sin(gDegToRad(54.0f));
-    float uy = py + static_cast<float>(t) * std::cos(gDegToRad(54.0f));
-
-    this->center.position.x = middle_x;
-    this->center.position.y = middle_y;
-
-    this->vertices[0].position.x = px;
-    this->vertices[0].position.y = py;
-
-    this->vertices[1].position.x = qx;
-    this->vertices[1].position.y = qy;
-
-    this->vertices[2].position.x = rx;
-    this->vertices[2].position.y = ry;
-    
-    this->vertices[3].position.x = sx;
-    this->vertices[3].position.y = sy;
-
-    this->vertices[4].position.x = ux;
-    this->vertices[4].position.y = uy;
 }
