@@ -34,6 +34,7 @@ gGUIDialogue::gGUIDialogue() {
 	exitevent = false;
 
 	imageloaded = false;
+
 }
 
 gGUIDialogue::~gGUIDialogue() {
@@ -42,7 +43,17 @@ gGUIDialogue::~gGUIDialogue() {
 void gGUIDialogue::update() {
 	if(guisizer) guisizer->update();
 
-	if (exitbutton.isPressed() || okbutton.isPressed() || yesbutton.isPressed() || nobutton.isPressed() || cancelbutton.isPressed()) exitevent = true;
+	if (exitbutton.isPressed() || okbutton.isPressed() || yesbutton.isPressed() || nobutton.isPressed() || cancelbutton.isPressed()) {
+		exitevent = true;
+		guisizer->left = initleft;
+		guisizer->top = inittop;
+		guisizer->right = guisizer->left + initleft;
+		guisizer->bottom = guisizer->top + inittop;
+		left = initleft;
+		top = inittop;
+		right = initleft + width;
+		bottom = inittop + height;
+	}
 }
 
 void gGUIDialogue::draw() {
@@ -87,6 +98,8 @@ void gGUIDialogue::showDialogue(std::string title, std::string message, int dial
 
 	this->title = title;
 	this->message = message;
+	this->dialoguetype = dialogueType;
+	this->icontype = iconType;
 
 	// EXIT BUTTON
 	guisizer->setControl(0, 0, &exitbutton);
@@ -149,3 +162,17 @@ void gGUIDialogue::showDialogue(std::string title, std::string message, int dial
 	}
 
 }
+
+/* void gGUIDialogue::mouseDragged(int x, int y, int button) {
+	if (x > left - width && x < left + width - width / 8 && y >= top - height && y < top + height / 8) {
+		guisizer->left = x;
+		guisizer->top = y;
+		guisizer->right = x + guisizer->width;
+		guisizer->bottom = y + guisizer->height;
+		left = x;
+		top = y;
+		right = x + width;
+		bottom = y + height;
+		showDialogue(title, message, dialoguetype, icontype);	// CAUSES EXCESSIVE MEMORY CONSUMPTION
+	}
+} */

@@ -53,7 +53,9 @@ void gGUIManager::setActiveDialogue(gGUIDialogue* activeDialogue) {
 	activedialogue->width = root->getAppManager()->getCurrentCanvas()->getScreenWidth() / 3;
 	activedialogue->height = root->getAppManager()->getCurrentCanvas()->getScreenHeight() / 3;
 	activedialogue->left = (root->getAppManager()->getCurrentCanvas()->getScreenWidth() - activedialogue->width) / 2;
+	activedialogue->initleft = activedialogue->left;
 	activedialogue->top = (root->getAppManager()->getCurrentCanvas()->getScreenHeight() - activedialogue->height) / 2;
+	activedialogue->inittop = activedialogue->top;
 	activedialogue->right = activedialogue->left + activedialogue->width;
 	activedialogue->bottom = activedialogue->top + activedialogue->height;
 	activedialogue->setRootApp(root);
@@ -104,12 +106,12 @@ void gGUIManager::mouseMoved(int x, int y) {
 }
 
 void gGUIManager::mousePressed(int x, int y, int button) {
-	currentframe->mousePressed(x, y, button);
+	if (!isdialogueactive) currentframe->mousePressed(x, y, button);
 	if (isdialogueactive) activedialogue->mousePressed(x, y, button);
 }
 
 void gGUIManager::mouseDragged(int x, int y, int button) {
-	currentframe->mouseDragged(x, y, button);
+	if (!isdialogueactive)currentframe->mouseDragged(x, y, button);
 	if (isdialogueactive) activedialogue->mouseDragged(x, y, button);
 }
 

@@ -29,6 +29,9 @@ public:
 	static const int dialoguetypenum = 5;
 	static const int icontypenum = 4;
 
+	int initleft;
+	int inittop;
+
 	gGUIDialogue();
 	virtual ~gGUIDialogue();
 
@@ -42,8 +45,11 @@ public:
 	bool getExitEvent();
 
 	void showDialogue(std::string title, std::string message, int dialogueType, int iconType);
+	// void mouseDragged(int x, int y, int button);
 private:
 	std::string message;
+	int dialoguetype;
+	int icontype;
 	std::string dialoguetypename[dialoguetypenum];
 	std::string icontypename[icontypenum];
 
