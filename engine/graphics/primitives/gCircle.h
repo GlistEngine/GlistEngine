@@ -50,6 +50,8 @@ public:
 	*/
 	void draw();
 
+	void setPoints(float xCenter, float yCenter, float radius, bool isFilled,  float numberOfSides = 64.0f);
+
 	/*
 	 * Determines whether the projection is two-dimensional.
 	 * The coordinates of the circle vertices created are taken.

@@ -129,6 +129,7 @@ set(SRC_FILES
 	${ENGINE_DIR}/utils/gDatabase.cpp
 	${ENGINE_DIR}/utils/gAssetLoader.cpp
 	${ENGINE_DIR}/utils/gAES.cpp
+	${ENGINE_DIR}/graphics/primitives/gArc.cpp
 	${ENGINE_DIR}/graphics/primitives/gLine.cpp
 	${ENGINE_DIR}/graphics/primitives/gCircle.cpp
 	${ENGINE_DIR}/graphics/primitives/gRectangle.cpp
@@ -143,8 +144,16 @@ set(SRC_FILES
 	${ENGINE_DIR}/graphics/gRect.cpp
 	${ENGINE_DIR}/animation/gSpriteAnimation.cpp
 	${ENGINE_DIR}/animation/gSpriteAnimator.cpp
+	${ENGINE_DIR}/ui/gGUIContextMenu.cpp
+	${ENGINE_DIR}/ui/gGUIRadarChart.cpp
+	${ENGINE_DIR}/ui/gGUIDialogue.cpp
+	${ENGINE_DIR}/ui/gGUITimebox.cpp
+	${ENGINE_DIR}/ui/gGUIPieGraph.cpp
+	${ENGINE_DIR}/ui/gGUINumberBox.cpp
 	${ENGINE_DIR}/ui/gGUISwitchButton.cpp
+	${ENGINE_DIR}/ui/gGUISurface.cpp
 	${ENGINE_DIR}/ui/gGUIListbox.cpp
+	${ENGINE_DIR}/ui/gGUITreelist.cpp
 	${ENGINE_DIR}/ui/gGUICheckbox.cpp
 	${ENGINE_DIR}/ui/gGUITextbox.cpp
 	${ENGINE_DIR}/ui/gGUIText.cpp
