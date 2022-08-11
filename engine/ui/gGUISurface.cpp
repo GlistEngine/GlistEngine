@@ -1,8 +1,8 @@
 /*
  * gGUISurface.cpp
  *
- *  Created on: 27 Tem 2022
- *      Author: ezgil
+ *  Created on: 27 Jul 2022
+ *      Author: Ezgi Lena Sonmez
  */
 
 #include "gGUISurface.h"
@@ -13,6 +13,7 @@
 
 gGUISurface::gGUISurface() {
 	resetColorAndBorder();
+	imageNum = 0;
 }
 gGUISurface::~gGUISurface() {
 
@@ -99,6 +100,13 @@ void gGUISurface::drawShapes() {
 				renderer->setColor(gColor(shapes[i][8], shapes[i][9], shapes[i][10], shapes[i][11]));
 				gDrawTriangle(shapes[i][1] + left, shapes[i][2] + top, shapes[i][3] + left, shapes[i][4] + top,shapes[i][5] + left, shapes[i][6] + top, true);
 			}
+		}
+		//image = 5
+		else if((int) shapes[i][0] == 5) {//for drawing 3D LINE first index decides to the shape type
+			images[shapes[i][5]].loadImage(paths[shapes[i][5]]);
+			renderer->setColor(gColor(1.0f,	1.0f, 1.0f, 1.0f));
+			images[shapes[i][5]].draw(shapes[i][1] + left, shapes[i][2] + top, shapes[i][3], shapes[i][4]);
+			//images[1].draw(shapes[i+1][1] + left, shapes[i+1][2] + top, shapes[i+1][3], shapes[i+1][4]);
 		}
 	}
 }
@@ -244,6 +252,22 @@ void gGUISurface::drawTriangle(float px, float py, float qx, float qy, float rx,
 	resetColorAndBorder();
 }
 
+void gGUISurface::drawImage(float x, float y, float w, float h, gImage image, std::string pathOfImage) {
+	std::vector<float> newShape;
+	newShape.push_back(5); //for drawing IMAGE //shapes[i][0]
+	newShape.push_back(x); //shapes[i][x] 1
+	newShape.push_back(y); //shapes[i][y] 2
+	newShape.push_back(w); //shapes[i][w] 3
+	newShape.push_back(h); //shapes[i][h] 4
+	newShape.push_back(imageNum);
+	imageNum++;
+
+	paths.push_back(pathOfImage);
+	images.push_back(image); //
+
+	shapes.push_back(newShape);
+	resetColorAndBorder();
+}
 //void gGUISurface::drawBox(float x, float y, float z, float w, float h, float d, bool isFilled) {
 //	this->x = x;
 //	this->y = y;
