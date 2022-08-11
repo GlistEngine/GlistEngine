@@ -252,7 +252,7 @@ void gGUISurface::drawTriangle(float px, float py, float qx, float qy, float rx,
 	resetColorAndBorder();
 }
 
-void gGUISurface::drawImage(float x, float y, float w, float h, gImage image, std::string pathOfImage) {
+void gGUISurface::drawImage(float x, float y, float w, float h, gImage* image, std::string pathOfImage) {
 	std::vector<float> newShape;
 	newShape.push_back(5); //for drawing IMAGE //shapes[i][0]
 	newShape.push_back(x); //shapes[i][x] 1
@@ -263,7 +263,7 @@ void gGUISurface::drawImage(float x, float y, float w, float h, gImage image, st
 	imageNum++;
 
 	paths.push_back(pathOfImage);
-	images.push_back(image); //
+	images.push_back(*image); //
 
 	shapes.push_back(newShape);
 	resetColorAndBorder();
