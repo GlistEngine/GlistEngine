@@ -75,14 +75,6 @@ public:
 			isparent = false;
 		}
 
-
-/*		void addElement(Element* element) {
-			sub.push_back(element);
-			element->parent = this;
-			element->orderno = orderno + 1;
-			element->nodenum = this->nodenum + 1;
-		}*/
-
 		/*
 		 * Used for print all the objects to the console in the struct.
 		 */
@@ -121,6 +113,7 @@ public:
 
 			allsubtitles.push_back(linetext);
 			if(isexpanded) for(int i = 0; i < sub.size(); i++) sub[i]->addSelfToList();
+			if(title == "Top") allsubtitles.erase(allsubtitles.begin() + 0);
 		}
 
 		/*
@@ -220,7 +213,9 @@ public:
 	 * @param newtitle is the string value which updated to the element's title.
 	 */
 	void insertData(Element* element, std::string newtitle);
-
+	/*
+	 * Uses for update the draw list and some values about the draw box.
+	 */
 	void refreshList();
 
 	void drawContent();
@@ -274,6 +269,14 @@ public:
  	 * @param color The given color consist of (r, g, b) float values.
 	 */
 	void setChosenColor(float r, float g, float b);
+
+	/*
+	 * Sets the number of the lines that visible on the tree list.
+	 *
+	 * @param linenumber is an integer value which define the number of minimum
+	 * lines. Developer should give a number bigger than 0.
+	 */
+	void setVisibleLineNumber(int linenumber);
 private:
 	int listboxh;
 	int lineh, linenum;
