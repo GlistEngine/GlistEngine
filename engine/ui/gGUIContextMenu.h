@@ -58,6 +58,7 @@ public:
 	virtual void drawMenuItem();
 	void mouseMoved(int x, int y);
 	void mousePressed(int x, int y, int button);
+	void mouseReleased(int x, int y, int button);
 
 	/**
 	 * Returns itemid.
@@ -67,7 +68,7 @@ public:
 	int getItemId();
 
 	/**
-	 * Sets parentitemid to ,temId.
+	 * Sets parentitemid to itemId.
 	 *
 	 * @param itemId is parenitemid to be set.
 	 */
@@ -104,12 +105,37 @@ public:
 	 */
 	void setContextMenuLeftMargin(int leftMargin);
 
+	/*
+	 * Returns the total number of context menu items.
+	 *
+	 * @return items.size().
+	 */
+	int getContextMenuSize();
+
 	/**
 	 * Returns the visibility of context menu
 	 *
 	 * @return a bool value contextmenushown.
 	 */
 	bool getContextMenuShown();
+
+	/*
+	 * Returns a bool value. If you click on an item
+	 * it will return true, otherwise false.
+	 *
+	 * @return the value of ispressed
+	 */
+	bool getIsPressed();
+
+	/*
+	 * Returns the title of a context menu item.
+	 *
+	 * @param itemNo is the number of context menu item whose
+	 * title will be returned
+	 *
+	 * @return the string item[itemNo].title.
+	 */
+	std::string getItemTitle(int itemNo);
 
 	/**
 	 * Adds an item to the gGUIContextMenuItem vector
@@ -146,6 +172,7 @@ private:
 	bool contextmenushown;
 	bool hovered;
 	bool seperatoradded;
+	bool ispressed;
 	gImage* menuicon;
 	int menuiconx, menuicony, menuiconw, menuiconh;
 };
