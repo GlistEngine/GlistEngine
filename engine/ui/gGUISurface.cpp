@@ -143,6 +143,7 @@ void gGUISurface::addRectangle(float x, float y, float w, float h, bool isFilled
 	resetColorAndBorder();
 }
 
+
 void gGUISurface::addCircle(float xCenter, float yCenter, float radius, bool isFilled, float numberOfSides, gColor color) {
 	std::vector<float> newShape;
 	newShape.push_back(1); //for drawing CIRCLE //shapes[i][0]
