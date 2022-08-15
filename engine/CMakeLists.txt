@@ -99,6 +99,7 @@ foreach(pluginname ${PLUGINS})
 endforeach()
 
 
+
 ########## CPP SOURCE FILES ##########
 set(SRC_FILES
 	${PLUGIN_SRCS}
@@ -129,12 +130,14 @@ set(SRC_FILES
 	${ENGINE_DIR}/utils/gDatabase.cpp
 	${ENGINE_DIR}/utils/gAssetLoader.cpp
 	${ENGINE_DIR}/utils/gAES.cpp
+	${ENGINE_DIR}/graphics/primitives/gArc.cpp
 	${ENGINE_DIR}/graphics/primitives/gLine.cpp
 	${ENGINE_DIR}/graphics/primitives/gCircle.cpp
 	${ENGINE_DIR}/graphics/primitives/gRectangle.cpp
 	${ENGINE_DIR}/graphics/primitives/gPlane.cpp
 	${ENGINE_DIR}/graphics/primitives/gBox.cpp
 	${ENGINE_DIR}/graphics/primitives/gSphere.cpp
+	${ENGINE_DIR}/graphics/primitives/gTriangle.cpp
 	${ENGINE_DIR}/graphics/gVbo.cpp
 	${ENGINE_DIR}/graphics/gFbo.cpp
 	${ENGINE_DIR}/graphics/gRay.cpp
@@ -142,9 +145,17 @@ set(SRC_FILES
 	${ENGINE_DIR}/graphics/gRect.cpp
 	${ENGINE_DIR}/animation/gSpriteAnimation.cpp
 	${ENGINE_DIR}/animation/gSpriteAnimator.cpp
-	${ENGINE_DIR}/ui/gGUIToggleButton.cpp
+	${ENGINE_DIR}/ui/gGUILineGraph.cpp
+	${ENGINE_DIR}/ui/gGUIContextMenu.cpp
+	${ENGINE_DIR}/ui/gGUIRadarChart.cpp
+	${ENGINE_DIR}/ui/gGUIDialogue.cpp
+	${ENGINE_DIR}/ui/gGUITimebox.cpp
+	${ENGINE_DIR}/ui/gGUIPieGraph.cpp
+	${ENGINE_DIR}/ui/gGUINumberBox.cpp
+	${ENGINE_DIR}/ui/gGUISwitchButton.cpp
+	${ENGINE_DIR}/ui/gGUISurface.cpp
 	${ENGINE_DIR}/ui/gGUIListbox.cpp
-	${ENGINE_DIR}/ui/gGUITreeList.cpp
+	${ENGINE_DIR}/ui/gGUITreelist.cpp
 	${ENGINE_DIR}/ui/gGUICheckbox.cpp
 	${ENGINE_DIR}/ui/gGUITextbox.cpp
 	${ENGINE_DIR}/ui/gGUIText.cpp
@@ -154,6 +165,8 @@ set(SRC_FILES
 	${ENGINE_DIR}/ui/gGUIRadioButton.cpp
 	${ENGINE_DIR}/ui/gGUIBitmap.cpp
 	${ENGINE_DIR}/ui/gGUISlider.cpp
+	${ENGINE_DIR}/ui/gGUIImageButton.cpp
+	${ENGINE_DIR}/ui/gGUIColorbox.cpp
 	${ENGINE_DIR}/ui/gGUIButton.cpp
 	${ENGINE_DIR}/ui/gGUISizer.cpp
 	${ENGINE_DIR}/ui/gGUINavigation.cpp

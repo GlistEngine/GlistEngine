@@ -27,75 +27,44 @@
  ****************************************************************************/
 
 /****************************************************************************
- * Author: Medine, Yasin 2022-on                                             *
+ * Author: Noyan Culum, 2022-07-18                                             *
  ****************************************************************************/
 /*
- * gGUIPicturebox.h
+ * gGUISwitchButton.h
  *
- *  Created on: 20 Tem 2022
- *      Author: Medine, Yasin
+ *  Created on: 18 Tem 2022
+ *      Author: noyan
  */
 
-#ifndef UI_GGUIBITMAP_H_
-#define UI_GGUIBITMAP_H_
+#ifndef UI_GGUISWITCHBUTTON_H_
+#define UI_GGUISWITCHBUTTON_H_
 
 #include "gGUIControl.h"
-#include "gImage.h"
 
-class gGUIBitmap: public gGUIControl {
+/**
+ * Sends the information about buttons open or closed status to the gGUIEvent.
+ * If the button is off, it sends the value G_GUIEVENT_SWITCHBUTTON_ON (7),
+ * and if it is on, it sends the value G_GUIEVENT_SWITCHBUTTON_OFF (8).
+ */
+class gGUISwitchButton: public gGUIControl {
 public:
-	gGUIBitmap();
-	virtual ~gGUIBitmap();
+	gGUISwitchButton();
+	virtual ~gGUISwitchButton();
+
 	void draw();
+	void mousePressed(int x, int y, int button);
 
-/**
- * Loads the specific picture file
- * @param imagePath specifies the pictures file location
- * @param isPropotional if the value of parameter is given true the picture
- *  will stretch in picturebox.
- */
-	void loadImage(const std::string& imagePath, bool isProportional = true);
-
-/**
- * Sets the specific picture file
- * @param setImage adds the preloaded image using the variable name
- * @param isPropotional if the value of parameter is given true the picture
- *  will stretch in picturebox.
- */
-	void setImage(gImage setImage, bool isProportional = false);
-
-/**
- * Sets the loaded picture's size
- * @param x changes the position of the image on the x-axis up to the added
- * pixel value.
- * @param y changes the position of the image on the y-axis up to the added
- * pixel value.
- * @param scalex changes the size of the image on the x- axis by proportioning
- *  it to the given float value.
- * @param scaley changes the size of the image on the y- axis by proportioning
- * it to the given float value.
- */
-	void setImageSize(int x, int y, float scalex, float scaley);
-
-/**
- * Specifies the path of the image
- */
-	std::string getImagePath();
-
-/**
- * @param getImageWidth specifies the width of the image
- * @param getImageHeight specifies the height of the image
- */
-	int getImageWidth();
-	int getImageHeight();
+	/**
+	 * Returns the button status.
+	 *
+	 * @return TRUE if the button is on, FALSE if the button is off
+	 */
+	bool isOn();
 
 private:
-	float imagew, imageh, proportion;
-	int setsizex, setsizey;
-	float setsizew, setsizeh;
-	bool stretch;
-	std::string imagepath;
-	gImage image;
+	int togglew, toggleh;
+	bool ison;
+	bool isdisabled;
 };
 
-#endif /* UI_GGUIBITMAP_H_ */
+#endif /* UI_GGUISWITCHBUTTON_H_ */

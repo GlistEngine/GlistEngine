@@ -9,11 +9,13 @@
 #include "gGUISizer.h"
 #include "gGUIMenubar.h"
 #include "gGUIToolbar.h"
+#include "gGUIContextMenu.h"
 
 
 gGUIFrame::gGUIFrame() {
 	guisizer = nullptr;
 	menubar = nullptr;
+	contextmenu = nullptr;
 }
 
 gGUIFrame::~gGUIFrame() {
@@ -29,4 +31,5 @@ void gGUIFrame::draw() {
 	if(guisizer) guisizer->draw();
 	if(toolbarnum > 0) for(int i = 0; i < toolbarnum; i++) toolbars[i]->draw();
 	if(menubar) menubar->draw();
+	if(contextmenu) contextmenu->draw();
 }

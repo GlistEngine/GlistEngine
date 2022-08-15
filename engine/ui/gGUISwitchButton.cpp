@@ -1,26 +1,26 @@
 /*
- * gGUIToggleButton.cpp
+ * gGUISwitchButton.cpp
  *
  *  Created on: 18 Tem 2022
  *      Author: utkus
  */
 
-#include "gGUIToggleButton.h"
+#include "gGUISwitchButton.h"
 #include "gBaseApp.h"
 #include "gBaseCanvas.h"
 
-gGUIToggleButton::gGUIToggleButton() {
+gGUISwitchButton::gGUISwitchButton() {
 	togglew = 64;
 	toggleh = 24;
 	ison = false;
 	isdisabled = false;
 }
 
-gGUIToggleButton::~gGUIToggleButton() {
+gGUISwitchButton::~gGUISwitchButton() {
 
 }
 
-void gGUIToggleButton::draw() {
+void gGUISwitchButton::draw() {
 	gColor oldcolor = renderer->getColor();
 	renderer->setColor(middlegroundcolor);
 	gDrawRectangle(left, top, togglew, toggleh);
@@ -29,15 +29,16 @@ void gGUIToggleButton::draw() {
 	renderer->setColor(oldcolor);
 }
 
-void gGUIToggleButton::mousePressed(int x, int y, int button) {
+void gGUISwitchButton::mousePressed(int x, int y, int button) {
 //	gLogi("Button") << "pressed, id:" << id;
 	if(isdisabled) return;
 	if(x >= left && x < left + togglew && y >= top && y < top + toggleh) {
 		ison = !ison;
-		root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_TOGGLE_OFF - ison);
+		root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_SWITCHBUTTON_OFF - ison);
 	}
 }
 
-bool gGUIToggleButton::isOn() {
+/*bool gGUISwitchButton::isOn() {
 	return ison;
 }
+*/

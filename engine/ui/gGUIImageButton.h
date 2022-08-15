@@ -30,72 +30,102 @@
  * Author: Medine, Yasin 2022-on                                             *
  ****************************************************************************/
 /*
- * gGUIPicturebox.h
+/*
+ * gGUIImageButton.h
  *
- *  Created on: 20 Tem 2022
+ *  Created on: 21 Tem 2022
  *      Author: Medine, Yasin
  */
 
-#ifndef UI_GGUIBITMAP_H_
-#define UI_GGUIBITMAP_H_
+#ifndef UI_GGUIIMAGEBUTTONH
+#define UI_GGUIIMAGEBUTTONH
 
-#include "gGUIControl.h"
+#include "gGUIButton.h"
 #include "gImage.h"
 
-class gGUIBitmap: public gGUIControl {
+/**
+ * Uploaded image acts as a button. The Image adding both as an image and file
+ * path. Stretches the image at the button size or placed the image by keeping
+ * its proportions. Gets the image with its file location, width and height
+ * of the button.
+ */
+class gGUIImageButton: public gGUIButton {
 public:
-	gGUIBitmap();
-	virtual ~gGUIBitmap();
-	void draw();
+    gGUIImageButton();
+    virtual ~gGUIImageButton();
+
+    void draw();
 
 /**
- * Loads the specific picture file
- * @param imagePath specifies the pictures file location
- * @param isPropotional if the value of parameter is given true the picture
- *  will stretch in picturebox.
+ * Loads the image to the button when mouse released
+ *
+ * @param imagePath Adds the image with its file location.
  */
-	void loadImage(const std::string& imagePath, bool isProportional = true);
+    void loadButtonImages(const std::string& imagePath);
 
 /**
- * Sets the specific picture file
- * @param setImage adds the preloaded image using the variable name
- * @param isPropotional if the value of parameter is given true the picture
- *  will stretch in picturebox.
+ * Loads the image to the button when mouse pressed
+ *
+ * @param imagePath Adds the image with its file location. If the image isn't
+ * uploaded to the previous section, there will be blank area at button when
+ * mouse pressed
+ *
  */
-	void setImage(gImage setImage, bool isProportional = false);
+    void loadPressedButtonImages(const std::string& imagePath);
 
 /**
- * Sets the loaded picture's size
- * @param x changes the position of the image on the x-axis up to the added
- * pixel value.
- * @param y changes the position of the image on the y-axis up to the added
- * pixel value.
- * @param scalex changes the size of the image on the x- axis by proportioning
- *  it to the given float value.
- * @param scaley changes the size of the image on the y- axis by proportioning
- * it to the given float value.
+ * Sets the image
+ * @param setImage adds the preloaded image with using gImage gGUI
+ *  without file location.
  */
-	void setImageSize(int x, int y, float scalex, float scaley);
+    void setButtonImage(gImage setImage);
 
 /**
- * Specifies the path of the image
+ * Sets the image to the button when mouse pressed
+ * @param setImage adds the preloaded image with using gImage gGUI
+ *  without file location. If the image isn't uploaded to the
+ *  previous section, there will be blank area at button when mouse pressed
  */
-	std::string getImagePath();
+    void setPressedButtonImage(gImage setImage);
 
 /**
- * @param getImageWidth specifies the width of the image
- * @param getImageHeight specifies the height of the image
+ * Strethes the image in button.
+ * @param stretch stretches the image if the value is true. If the value is
+ * false the image will placed keeping the proportion.
  */
-	int getImageWidth();
-	int getImageHeight();
+    void stretche(bool stretch);
+
+/**
+ *  @param getButtonImagePath Gets the image with its file location. If set
+ *  command used instead of load command code line returns null result .
+ */
+    std::string getButtonImagePath();
+
+/**
+ *  @param getPressedButtonImagePath Gets the button pressed image with its
+ *  file location. If set command used instead of load command code line
+ *  returns null result.
+ */
+    std::string getPressedButtonImagePath();
+
+/**
+ * Gets the width of the button.
+ */
+    int getButtonWidth();
+
+/**
+ * Gets the height of the button.
+ */
+    int getButtonHeight();
+
 
 private:
-	float imagew, imageh, proportion;
-	int setsizex, setsizey;
-	float setsizew, setsizeh;
-	bool stretch;
-	std::string imagepath;
-	gImage image;
+        float imagew, imageh, proportion;
+        bool stretch;
+        std::string buttonimagepath;
+        std::string pressedbuttonimagepath;
+        gImage buttonimage;
+        gImage pressedbuttonimage;
 };
 
-#endif /* UI_GGUIBITMAP_H_ */
+#endif / UI_GGUIIMAGEBUTTONH */
