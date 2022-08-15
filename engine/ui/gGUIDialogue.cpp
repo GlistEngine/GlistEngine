@@ -42,6 +42,9 @@ gGUIDialogue::gGUIDialogue() {
 	stdsizer.setSize(3, 3);
 	float stdlineproportions[3] = {0.125f, 0.625f, 0.250f};
 	stdsizer.setLineProportions(stdlineproportions);
+
+	initleft = left;
+	inittop = top;
 }
 
 gGUIDialogue::~gGUIDialogue() {
@@ -53,14 +56,14 @@ void gGUIDialogue::update() {
 	if (exitbutton.isPressed() || okbutton.isPressed() || yesbutton.isPressed() || nobutton.isPressed() || cancelbutton.isPressed()) {
 		exitevent = true;
 		dialogueshown = false;
-		/* guisizer->left = initleft;
+		guisizer->left = initleft;
 		guisizer->top = inittop;
 		guisizer->right = guisizer->left + initleft;
 		guisizer->bottom = guisizer->top + inittop;
 		left = initleft;
 		top = inittop;
 		right = initleft + width;
-		bottom = inittop + height; */
+		bottom = inittop + height;
 	}
 }
 
@@ -139,6 +142,14 @@ void gGUIDialogue::setExitEvent(bool exitEvent) {
 
 bool gGUIDialogue::getExitEvent() {
 	return exitevent;
+}
+
+void gGUIDialogue::setInitLeft(int initLeft) {
+	this->initleft = initLeft;
+}
+
+void gGUIDialogue::setInitTop(int initTop) {
+	this->inittop = initTop;
 }
 
 void gGUIDialogue::showDialogue(std::string title, std::string message, int dialogueType, int iconType) {

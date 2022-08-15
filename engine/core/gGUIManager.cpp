@@ -53,9 +53,9 @@ void gGUIManager::setActiveDialogue(gGUIDialogue* activeDialogue) {
 	activedialogue->width = root->getAppManager()->getCurrentCanvas()->getScreenWidth() / 3;
 	activedialogue->height = root->getAppManager()->getCurrentCanvas()->getScreenWidth() / 4;
 	activedialogue->left = (root->getAppManager()->getCurrentCanvas()->getScreenWidth() - activedialogue->width) / 2;
-	activedialogue->initleft = activedialogue->left;
+	activedialogue->setInitLeft(activedialogue->left);
 	activedialogue->top = (root->getAppManager()->getCurrentCanvas()->getScreenHeight() - activedialogue->height) / 2;
-	activedialogue->inittop = activedialogue->top;
+	activedialogue->setInitTop(activedialogue->top);
 	activedialogue->right = activedialogue->left + activedialogue->width;
 	activedialogue->bottom = activedialogue->top + activedialogue->height;
 	activedialogue->setRootApp(root);

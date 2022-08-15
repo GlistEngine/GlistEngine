@@ -29,9 +29,6 @@ public:
 	static const int dialoguetypenum = 5;
 	static const int icontypenum = 4;
 
-	int initleft;
-	int inittop;
-
 	gGUIDialogue();
 	virtual ~gGUIDialogue();
 
@@ -43,6 +40,9 @@ public:
 
 	void setExitEvent(bool exitEvent);
 	bool getExitEvent();
+
+	void setInitLeft(int initLeft);
+	void setInitTop(int initTop);
 
 	void showDialogue(std::string title, std::string message, int dialogueType, int iconType);
 	void mouseDragged(int x, int y, int button);
@@ -76,6 +76,9 @@ private:
 	int defmidbuttonleftoffset;
 	int defrightbuttonleftoffset;
 	int defbuttontopoffset;
+
+	int initleft;
+	int inittop;
 };
 
 #endif /* UI_GGUIDIALOGUE_H_ */
