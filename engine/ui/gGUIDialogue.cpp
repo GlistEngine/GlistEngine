@@ -42,7 +42,6 @@ gGUIDialogue::gGUIDialogue() {
 	stdsizer.setSize(3, 3);
 	float stdlineproportions[3] = {0.125f, 0.625f, 0.250f};
 	stdsizer.setLineProportions(stdlineproportions);
-
 }
 
 gGUIDialogue::~gGUIDialogue() {
@@ -84,6 +83,42 @@ void gGUIDialogue::draw() {
 		gDrawLine(right, top, right, bottom);
 		gDrawLine(left + width / 24, top + height / 8, right - width / 24, top + height / 8);
 		gDrawLine(left + width / 24, top + height * 3 / 4, right - width / 24, top + height * 3 / 4);
+
+		int defbuttontopoffset = top + (6 * (height / 8)) + (((height / 4) -  (height / 7)) / 2) + (height / 7);
+
+		// BUTTON UNDERLINES
+		if (dialoguetypename[dialoguetype] == "okcancel" || dialoguetypename[dialoguetype] == "yesno" || dialoguetypename[dialoguetype] == "yesnocancel") {
+			if (dialoguetypename[dialoguetype] == "okcancel") renderer->setColor({0.0f, 0.0f, 0.8f});
+			else if (dialoguetypename[dialoguetype] == "yesno" || dialoguetypename[dialoguetype] == "yesnocancel") renderer->setColor({0.5f, 0.8f, 0.5f});
+			gDrawLine(
+					left + (((width / 3) - (width / 4)) / 2) + width / 48,
+					defbuttontopoffset,
+					left + (((width / 3) - (width / 4)) / 2) + (width / 4) - width / 48,
+					defbuttontopoffset
+					);
+			renderer->setColor({0.5f, 0.5f, 0.5f});
+		}
+		if (dialoguetypename[dialoguetype] == "ok" || dialoguetypename[dialoguetype] == "yesnocancel") {
+			if (dialoguetypename[dialoguetype] == "ok") renderer->setColor({0.0f, 0.0f, 0.8f});
+			else if (dialoguetypename[dialoguetype] == "yesnocancel") renderer->setColor({0.8f, 0.0f, 0.0f});
+			gDrawLine(
+					left + (width / 3) + (((width / 3) - (width / 4)) / 2) + width / 48,
+					defbuttontopoffset,
+					left + (width / 3) + (((width / 3) - (width / 4)) / 2) + (width / 4) - width / 48,
+					defbuttontopoffset
+					);
+			renderer->setColor({0.5f, 0.5f, 0.5f});
+		}
+		if (dialoguetypename[dialoguetype] == "okcancel" || dialoguetypename[dialoguetype] == "yesno" || dialoguetypename[dialoguetype] == "yesnocancel") {
+			if (dialoguetypename[dialoguetype] == "yesno") renderer->setColor({0.8f, 0.0f, 0.0f});
+			gDrawLine(
+					left + (2 * (width / 3)) + (((width / 3) - (width / 4)) / 2) + width / 48,
+					defbuttontopoffset,
+					left + (2 * (width / 3)) + (((width / 3) - (width / 4)) / 2) + (width / 4) - width / 48,
+					defbuttontopoffset
+					);
+			renderer->setColor({0.5f, 0.5f, 0.5f});
+		}
 		renderer->setColor(&oldcolor);
 	}
 

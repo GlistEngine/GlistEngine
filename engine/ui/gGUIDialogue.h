@@ -71,6 +71,11 @@ private:
 	gGUISizer stdsizer;
 
 	gGUISizer buttonssizer;
+
+	int defleftbuttonleftoffset;
+	int defmidbuttonleftoffset;
+	int defrightbuttonleftoffset;
+	int defbuttontopoffset;
 };
 
 #endif /* UI_GGUIDIALOGUE_H_ */
