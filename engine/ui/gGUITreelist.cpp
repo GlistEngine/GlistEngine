@@ -149,7 +149,7 @@ void gGUITreelist::mouseReleased(int x, int y, int button) {
 			element->isexpanded = !element->isexpanded;
 			refreshList();
 		}
-		root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_TREELISTSELECTED, gToStr(selectedno));
+		//root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_TREELISTSELECTED, gToStr(selectedno));
 	}
 }
 
