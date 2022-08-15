@@ -27,7 +27,7 @@
  ****************************************************************************/
 
 /****************************************************************************
- * Author: Noyan Culum, 2021-09-02, Utku Sarýalan, 2022-on                 	*
+ * Author: Noyan Culum, 2021-09-02, Utku Sarialan, 2022-on                 	*
  ****************************************************************************//*
  * gTextbox.h
  *
@@ -103,6 +103,45 @@ public:
 	 */
 	int getCursor(int x, int y);
 
+	/**
+	 * Changes the textbox's measurements. Makes sure that textbox's size is
+	 * within the panel's limits.
+	 *
+	 * @param width Width of the textbox.
+	 *
+	 * @param height Height of the textbox.
+	 */
+	void setSize(int width, int height);
+
+	/**
+	 * Shifts the left and right coordinates of the textbox by given value. Makes
+	 * sure that both left and right coordinates are within the limits of the
+	 * panel.
+	 *
+	 * @param left Desired shift value for the left coordinate of the textbox. It
+	 * can be a negative integer value.
+	 *
+	 */
+	void addLeftMargin(int left);
+
+	/**
+	 * Shifts the top and bottom coordinates of the textbox by given value. Makes
+	 * sure that both top and bottom coordinates are within the limits of the
+	 * panel.
+	 *
+	 * @param top Desired shift value for the top coordinate of the textbox. It
+	 * can be a negative integer value.
+	 *
+	 */
+	void addTopMargin(int top);
+
+	/**
+	 * Changes the top margin between lines.
+	 *
+	 * @param linetopmargin Desired margin value between lines.
+	 */
+	void setLineTopMargin(int linetopmargin);
+
 	void update();
 	void draw();
 
@@ -117,7 +156,7 @@ private:
 	static const int KEY_NONE = 0, KEY_BACKSPACE = 1, KEY_LEFT = 2, KEY_RIGHT = 4, KEY_DELETE = 8, KEY_ENTER = 16;
 
 	int boxw, boxh;
-	int cursorposx, cursorposchar, cursorposutf;
+	int cursorposx, cursorposy, cursorposchar, cursorposutf;
 	std::string text;
 	int cursorshowcounter, cursorshowcounterlimit, cursorshowlimit;
 	bool editmode;
@@ -132,8 +171,10 @@ private:
 	void pressKey();
 	std::vector<int> clickTextbox(int x, int y);
 	std::vector<int> calculateClickPosition(int x, int y);
+	std::vector<int> calculateClickPositionMultiline(int x, int y);
 	std::vector<int> calculateLetterPosition(int letterCharNo);
 	std::vector<int> calculateAllLetterPositions();
+	void calculateLines();
 	int calculateLastUtf();
 	int calculateFirstUtf();
 	int calculateCharNoFromUtf(int letterUtfNo);
@@ -157,6 +198,11 @@ private:
 	int linecount;
 	int lineheight;
 	bool ismultiline;
+	int currentline;
+	int linetopmargin;
+	std::vector<std::string> lines;
+	std::vector<int> lineendchar;
+	int leftlimit, rightlimit, toplimit, bottomlimit;
 };
 
 #endif /* UI_GGUITEXTBOX_H_ */

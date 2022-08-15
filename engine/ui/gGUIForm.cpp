@@ -165,6 +165,7 @@ void gGUIForm::mouseDragged(int x, int y, int button) {
 void gGUIForm::mouseReleased(int x, int y, int button) {
 	for(int i = 0; i < toolbarnum; i++) toolbars[i]->mouseReleased(x, y, button);
 	if(guisizer) guisizer->mouseReleased(x, y, button);
+	if(contextmenu) contextmenu->mouseReleased(x, y, button);
 }
 
 void gGUIForm::mouseScrolled(int x, int y) {
