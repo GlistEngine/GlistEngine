@@ -57,7 +57,7 @@ void  gGUITreelist::addElement(Element* element, Element* parent) {
 void gGUITreelist::addElement(Element* element) {
 	topelement.sub.push_back(element);
 	element->parent = &topelement;
-	element->orderno = topelement.orderno + 1;
+	element->orderno = topelement.orderno;
 	element->nodenum = topelement.nodenum + 1;
 
 	refreshList();
@@ -82,7 +82,8 @@ void gGUITreelist::drawContent() {
 	renderer->setColor(fontcolor);
 
 	for(int i = 0; i < linenum; i++) {
-		if(flno + i <= topelement.allsubtitles.size()) font->drawText(topelement.allsubtitles[flno + i], 2, - fldy + (i * lineh) + lineh - datady);
+		//if(flno + i <= topelement.allsubtitles.size())
+		font->drawText(topelement.allsubtitles[flno + i], 2, - fldy + (i * lineh) + lineh - datady);
 	}
 
 	renderer->setColor(oldcolor);
@@ -148,7 +149,7 @@ void gGUITreelist::mouseReleased(int x, int y, int button) {
 			element->isexpanded = !element->isexpanded;
 			refreshList();
 		}
-		root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_LISTBOXSELECTED, gToStr(selectedno));
+		//root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_TREELISTSELECTED, gToStr(selectedno));
 	}
 }
 
