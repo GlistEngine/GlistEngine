@@ -51,7 +51,7 @@ void gGUIManager::setActiveDialogue(gGUIDialogue* activeDialogue) {
 	activedialogue = activeDialogue;
 	activedialogue->setParentSlotNo(0, 0);
 	activedialogue->width = root->getAppManager()->getCurrentCanvas()->getScreenWidth() / 3;
-	activedialogue->height = root->getAppManager()->getCurrentCanvas()->getScreenHeight() / 3;
+	activedialogue->height = root->getAppManager()->getCurrentCanvas()->getScreenWidth() / 4;
 	activedialogue->left = (root->getAppManager()->getCurrentCanvas()->getScreenWidth() - activedialogue->width) / 2;
 	activedialogue->initleft = activedialogue->left;
 	activedialogue->top = (root->getAppManager()->getCurrentCanvas()->getScreenHeight() - activedialogue->height) / 2;
@@ -63,6 +63,8 @@ void gGUIManager::setActiveDialogue(gGUIDialogue* activeDialogue) {
 	dialoguedefaultsizer.setSize(3, 1);
 	float dlineproportions[3] = {0.125f, 0.625f, 0.250f};
 	dialoguedefaultsizer.setLineProportions(dlineproportions);
+	dialoguedefaultsizer.enableBorders(false);
+
 	activedialogue->setSizer(&dialoguedefaultsizer);
 
 	isdialogueactive = false;

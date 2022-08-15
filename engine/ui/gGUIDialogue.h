@@ -63,12 +63,14 @@ private:
 
 	gGUIText messagetext;
 
-	gGUIPanel buttonspanel;
-	gGUISizer buttonspanelsizer;
-
 	gImage dialogueicon;
 
 	bool imageloaded;
+	bool dialogueshown;
+
+	gGUISizer stdsizer;
+
+	gGUISizer buttonssizer;
 };
 
 #endif /* UI_GGUIDIALOGUE_H_ */

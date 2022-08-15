@@ -94,6 +94,7 @@ private:
 	void resetTheme(int guiTheme);
 
 	gGUISizer dialoguedefaultsizer;
+	gGUISizer dialoguedefaultsizercopy;
 };
 
 #endif /* CORE_GGUIMANAGER_H_ */
