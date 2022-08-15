@@ -129,7 +129,8 @@ void gGUIDialogue::showDialogue(std::string title, std::string message, int dial
 	messagetext.setText(message);
 	messagetext.setTextAlignment(gGUIText::TEXTALIGNMENT_CENTER);
 	messagetext.width = width / 6;
-	messagetext.height = height * 5 / (48 / linecount);
+	messagetext.height = height * 5 / (48 / 2);
+	// 	messagetext.height = height * 5 / (48 / linecount);
 	// messagetext.left += (width - messagetext.width) / 2;
 	messagetext.top += height / 3;
 
@@ -154,48 +155,85 @@ void gGUIDialogue::showDialogue(std::string title, std::string message, int dial
 	nobutton.setSize(buttonwidth, buttonheight);
 
 	// OK BUTTON
-	if (dialoguetypename[dialogueType] == "ok" || dialoguetypename[dialogueType] == "okcancel") {
-		if (dialoguetypename[dialogueType] == "ok") buttonssizer.setControl(0, 1, &okbutton);
-		else buttonssizer.setControl(0, 2, &okbutton);
+	if (dialoguetypename[dialoguetype] == "ok" || dialoguetypename[dialoguetype] == "okcancel") {
+		if (dialoguetypename[dialoguetype] == "ok") buttonssizer.setControl(0, 1, &okbutton);
+		else buttonssizer.setControl(0, 0, &okbutton);
 		okbutton.left += leftoffset;
 		okbutton.top += topoffset;
 		gDrawLine(okbutton.left, okbutton.bottom, okbutton.right, okbutton.bottom);
 	}
 
 	// CANCEL BUTTON
-	if (dialoguetypename[dialogueType] == "okcancel" || dialoguetypename[dialogueType] == "yesnocancel") {
+	if (dialoguetypename[dialoguetype] == "okcancel" || dialoguetypename[dialoguetype] == "yesnocancel") {
 		buttonssizer.setControl(0, 2, &cancelbutton);
 		cancelbutton.left += leftoffset;
 		cancelbutton.top += topoffset;
 	}
 
 	// YES BUTTON
-	if (dialoguetypename[dialogueType] == "yesno" || dialoguetypename[dialogueType] == "yesnocancel") {
+	if (dialoguetypename[dialoguetype] == "yesno" || dialoguetypename[dialoguetype] == "yesnocancel") {
 		buttonssizer.setControl(0, 0, &yesbutton);
 		yesbutton.left += leftoffset;
 		yesbutton.top += topoffset;
 	}
 
 	// NO BUTTON
-	if (dialoguetypename[dialogueType] == "yesno" || dialoguetypename[dialogueType] == "yesnocancel") {
-		if (dialoguetypename[dialogueType] == "yesno")buttonssizer.setControl(0, 2, &nobutton);
-		else if (dialoguetypename[dialogueType] == "yesnocancel") buttonssizer.setControl(0, 1, &nobutton);
+	if (dialoguetypename[dialoguetype] == "yesno" || dialoguetypename[dialoguetype] == "yesnocancel") {
+		if (dialoguetypename[dialoguetype] == "yesno")buttonssizer.setControl(0, 2, &nobutton);
+		else if (dialoguetypename[dialoguetype] == "yesnocancel") buttonssizer.setControl(0, 1, &nobutton);
 		nobutton.left += leftoffset;
 		nobutton.top += topoffset;
 	}
 
 }
 
-/* void gGUIDialogue::mouseDragged(int x, int y, int button) {
+void gGUIDialogue::mouseDragged(int x, int y, int button) {
 	if (x > left - width && x < left + width - width / 8 && y >= top - height && y < top + height / 8) {
-		guisizer->left = x;
-		guisizer->top = y;
-		guisizer->right = x + guisizer->width;
-		guisizer->bottom = y + guisizer->height;
 		left = x;
 		top = y;
 		right = x + width;
 		bottom = y + height;
-		showDialogue(title, message, dialoguetype, icontype);	// CAUSES EXCESSIVE MEMORY CONSUMPTION
+
+		guisizer->left = x;
+		guisizer->top = y;
+		guisizer->right = x + guisizer->width;
+		guisizer->bottom = y + guisizer->height;
+
+		exitbutton.left = x + (width - (width / 8) - (width / 24));
+		exitbutton.top = y;
+		exitbutton.right = exitbutton.left + exitbutton.width;
+		exitbutton.bottom = exitbutton.top + exitbutton.height;
+
+		messagetext.left = x;
+		messagetext.top = y + (height / 8) + (height / 3);
+		messagetext.right = messagetext.left + messagetext.width;
+		messagetext.bottom = messagetext.top + messagetext.height;
+
+		buttonssizer.left = x;
+		buttonssizer.top = y + (6 * (height / 8));
+		buttonssizer.right = buttonssizer.left + buttonssizer.width;
+		buttonssizer.bottom = buttonssizer.top + buttonssizer.height;
+
+		if (dialoguetypename[dialoguetype] == "ok") okbutton.left = x + (width / 3) + (((width / 3) - (width / 4)) / 2);
+		else okbutton.left = x + (((width / 3) - (width / 4)) / 2);
+		okbutton.top = y + (6 * (height / 8)) + (((height / 4) -  (height / 7)) / 2);
+		okbutton.right = okbutton.left + okbutton.width;
+		okbutton.bottom = okbutton.top + okbutton.height;
+
+		cancelbutton.left = x + (2 * (width / 3)) + (((width / 3) - (width / 4)) / 2);
+		cancelbutton.top = y + (6 * (height / 8)) + (((height / 4) -  (height / 7)) / 2);
+		cancelbutton.right = cancelbutton.left + cancelbutton.width;
+		cancelbutton.bottom = cancelbutton.top + cancelbutton.height;
+
+		yesbutton.left = x + (((width / 3) - (width / 4)) / 2);
+		yesbutton.top = y + (6 * (height / 8)) + (((height / 4) -  (height / 7)) / 2);
+		yesbutton.right = yesbutton.left + yesbutton.width;
+		yesbutton.bottom = yesbutton.top + yesbutton.height;
+
+		if (dialoguetypename[dialoguetype] == "yesno") nobutton.left = x + (2 * (width / 3)) + (((width / 3) - (width / 4)) / 2);
+		else nobutton.left = x + (width / 3) + (((width / 3) - (width / 4)) / 2);
+		nobutton.top = y + (6 * (height / 8)) + (((height / 4) -  (height / 7)) / 2);
+		nobutton.right = nobutton.left + nobutton.width;
+		nobutton.bottom = nobutton.right + nobutton.height;
 	}
-} */
+}

@@ -45,7 +45,7 @@ public:
 	bool getExitEvent();
 
 	void showDialogue(std::string title, std::string message, int dialogueType, int iconType);
-	// void mouseDragged(int x, int y, int button);
+	void mouseDragged(int x, int y, int button);
 private:
 	std::string message;
 	int dialoguetype;
