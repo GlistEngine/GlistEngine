@@ -31,10 +31,6 @@ void gGUISurface::resetColorAndBorder() {
 	isFilled = false;
 	thickness = 0.0f;
 	borderposition = 0.0f;
-	r = 0.0f;
-	g = 0.0f;
-	b = 0.0f;
-	a = 0.0f;
 }
 
 void gGUISurface::draw() {
@@ -103,9 +99,9 @@ void gGUISurface::drawShapes() {
 		}
 		//image = 5
 		else if((int) shapes[i][0] == 5) {//for drawing 3D LINE first index decides to the shape type
-			images[shapes[i][5]].loadImage(paths[shapes[i][5]]);
+			//images[shapes[i][5]]->loadImage(paths[shapes[i][5]]);
 			renderer->setColor(gColor(1.0f,	1.0f, 1.0f, 1.0f));
-			images[shapes[i][5]].draw(shapes[i][1] + left, shapes[i][2] + top, shapes[i][3], shapes[i][4]);
+			images[shapes[i][5]]->draw(shapes[i][1] + left, shapes[i][2] + top, shapes[i][3], shapes[i][4]);
 			//images[1].draw(shapes[i+1][1] + left, shapes[i+1][2] + top, shapes[i+1][3], shapes[i+1][4]);
 		}
 	}
@@ -115,17 +111,12 @@ void gGUISurface::drawBackground() {
 	renderer->setColor(gColor(1.0f, 	1.0f, 	1.0f, 	1.0f));//white
 	gDrawRectangle(left, top, right, bottom, true);
 }
-void gGUISurface::setColor(float r, float g, float b, float a) {
-	this->r = r;
-	this->g = g;
-	this->b = b;
-	this->a = a;
-}
+
 void gGUISurface::setBorder(float thickness, float borderposition) {
 	this->thickness = thickness;
 	this->borderposition = borderposition;
 }
-void gGUISurface::drawRectangle(float x, float y, float w, float h, bool isFilled) {
+void gGUISurface::addRectangle(float x, float y, float w, float h, bool isFilled, gColor color) {
 	std::vector<float> newShape;
 	newShape.push_back(0); //for drawing rectangle //shapes[i][0]
 	newShape.push_back(x); //shapes[i][x] 1
@@ -144,15 +135,16 @@ void gGUISurface::drawRectangle(float x, float y, float w, float h, bool isFille
 	else {
 		newShape.push_back(0); //shapes[i][0] 6 to understand that this rectangle has thickness and borderposition
 	}
-	newShape.push_back(r); //shapes[i][r] 7 (thickness a girmiyorsa) or 9
-	newShape.push_back(g); //shapes[i][g] 8 (thickness a girmiyorsa) or 10
-	newShape.push_back(b); //shapes[i][b] 9 (thickness a girmiyorsa) or 11
-	newShape.push_back(a); //shapes[i][a] 10 (thickness a girmiyorsa) or 12
+	newShape.push_back(color.r); //shapes[i][r] 7 (if it does not have a thickness) or 9
+	newShape.push_back(color.g); //shapes[i][g] 8 (if it does not have a thickness) or 10
+	newShape.push_back(color.b); //shapes[i][b] 9 (if it does not have a thickness) or 11
+	newShape.push_back(color.a); //shapes[i][a] 10 (if it does not have a thickness) or 12
 	shapes.push_back(newShape);
 	resetColorAndBorder();
 }
 
-void gGUISurface::drawCircle(float xCenter, float yCenter, float radius, bool isFilled, float numberOfSides) {
+
+void gGUISurface::addCircle(float xCenter, float yCenter, float radius, bool isFilled, float numberOfSides, gColor color) {
 	std::vector<float> newShape;
 	newShape.push_back(1); //for drawing CIRCLE //shapes[i][0]
 	newShape.push_back(xCenter); //shapes[i][xCenter] 1
@@ -164,16 +156,16 @@ void gGUISurface::drawCircle(float xCenter, float yCenter, float radius, bool is
 	else
 		newShape.push_back(0); //to get whether the circle is filled //shapes[i][4] 0/1 = false/true
 	newShape.push_back(numberOfSides); //shapes[i][numberOfSides] 5
-	newShape.push_back(r); //shapes[i][r] 6
-	newShape.push_back(g); //shapes[i][g] 7
-	newShape.push_back(b); //shapes[i][b] 8
-	newShape.push_back(a); //shapes[i][a] 9
+	newShape.push_back(color.r); //shapes[i][r] 6
+	newShape.push_back(color.g); //shapes[i][g] 7
+	newShape.push_back(color.b); //shapes[i][b] 8
+	newShape.push_back(color.a); //shapes[i][a] 9
 
 	shapes.push_back(newShape);
 	resetColorAndBorder();
 }
 
-void gGUISurface::drawLine(float x1, float y1, float x2, float y2) {
+void gGUISurface::addLine(float x1, float y1, float x2, float y2, gColor color) {
 	std::vector<float> newShape;
 	newShape.push_back(2); //for drawing 2D LINE //shapes[i][0]
 	newShape.push_back(x1); //shapes[i][x1] 1
@@ -181,10 +173,70 @@ void gGUISurface::drawLine(float x1, float y1, float x2, float y2) {
 	newShape.push_back(x2); //shapes[i][x2] 3
 	newShape.push_back(y2); //shapes[i][y2] 4
 
-	newShape.push_back(r); //shapes[i][r] 5
-	newShape.push_back(g); //shapes[i][g] 6
-	newShape.push_back(b); //shapes[i][b] 7
-	newShape.push_back(a); //shapes[i][a] 8
+	newShape.push_back(color.r); //shapes[i][r] 5
+	newShape.push_back(color.g); //shapes[i][g] 6
+	newShape.push_back(color.b); //shapes[i][b] 7
+	newShape.push_back(color.a); //shapes[i][a] 8
+
+	shapes.push_back(newShape);
+	resetColorAndBorder();
+}
+
+void gGUISurface::addArrow(float x1, float y1, float length, float angle, float tipLength, float tipAngle, gColor color) {
+	std::vector<float> newShape;
+	newShape.push_back(3); //for drawing ARROW //shapes[i][0]
+	newShape.push_back(x1); //shapes[i][x1] 1
+	newShape.push_back(y1); //shapes[i][y1] 2
+	newShape.push_back(length); //shapes[i][length] 3
+	newShape.push_back(angle); //shapes[i][angle] 4
+	newShape.push_back(tipLength); //shapes[i][tipLength] 5
+	newShape.push_back(tipAngle); //shapes[i][tipAngle] 6
+
+	newShape.push_back(color.r); //shapes[i][r] 7
+	newShape.push_back(color.g); //shapes[i][g] 8
+	newShape.push_back(color.b); //shapes[i][b] 9
+	newShape.push_back(color.a); //shapes[i][a] 10
+
+	shapes.push_back(newShape);
+	resetColorAndBorder();
+}
+
+void gGUISurface::addTriangle(float px, float py, float qx, float qy, float rx, float ry, bool isFilled, gColor color) {
+	std::vector<float> newShape;
+	newShape.push_back(4); //for drawing TRIANGLE //shapes[i][0]
+	newShape.push_back(px); //shapes[i][px] 1
+	newShape.push_back(py); //shapes[i][py] 2
+	newShape.push_back(qx); //shapes[i][qx] 3
+	newShape.push_back(qy); //shapes[i][qy] 4
+	newShape.push_back(rx); //shapes[i][rx] 5
+	newShape.push_back(ry); //shapes[i][ry] 6
+
+	if(isFilled)
+		newShape.push_back(1); //to get whether the circle is filled //shapes[i][7] 0/1 = false/true
+	else
+		newShape.push_back(0); //to get whether the circle is filled //shapes[i][7] 0/1 = false/true
+
+	newShape.push_back(color.r); //shapes[i][r] 8
+	newShape.push_back(color.g); //shapes[i][g] 9
+	newShape.push_back(color.b); //shapes[i][b] 10
+	newShape.push_back(color.a); //shapes[i][a] 11
+
+	shapes.push_back(newShape);
+	resetColorAndBorder();
+}
+
+void gGUISurface::addImage(float x, float y, float w, float h, gImage* image) {
+	std::vector<float> newShape;
+	newShape.push_back(5); //for drawing IMAGE //shapes[i][0]
+	newShape.push_back(x); //shapes[i][x] 1
+	newShape.push_back(y); //shapes[i][y] 2
+	newShape.push_back(w); //shapes[i][w] 3
+	newShape.push_back(h); //shapes[i][h] 4
+	newShape.push_back(imageNum);
+	imageNum++;
+
+	//paths.push_back(pathOfImage);
+	images.push_back(image); //
 
 	shapes.push_back(newShape);
 	resetColorAndBorder();
@@ -192,7 +244,7 @@ void gGUISurface::drawLine(float x1, float y1, float x2, float y2) {
 
 //void gGUISurface::drawLine(float x1, float y1, float z1, float x2, float y2, float z2) {
 //	std::vector<float> newShape;
-//	newShape.push_back(3); //for drawing 3D LINE //shapes[i][0]
+//	newShape.push_back(6); //for drawing 3D LINE //shapes[i][0]
 //	newShape.push_back(x1); //shapes[i][x1] 1
 //	newShape.push_back(y1); //shapes[i][y1] 2
 //	newShape.push_back(z1); //shapes[i][z1] 3
@@ -209,65 +261,6 @@ void gGUISurface::drawLine(float x1, float y1, float x2, float y2) {
 //	resetColorAndBorder();
 //}
 
-void gGUISurface::drawArrow(float x1, float y1, float length, float angle, float tipLength, float tipAngle) {
-	std::vector<float> newShape;
-	newShape.push_back(3); //for drawing ARROW //shapes[i][0]
-	newShape.push_back(x1); //shapes[i][x1] 1
-	newShape.push_back(y1); //shapes[i][y1] 2
-	newShape.push_back(length); //shapes[i][length] 3
-	newShape.push_back(angle); //shapes[i][angle] 4
-	newShape.push_back(tipLength); //shapes[i][tipLength] 5
-	newShape.push_back(tipAngle); //shapes[i][tipAngle] 6
-
-	newShape.push_back(r); //shapes[i][r] 7
-	newShape.push_back(g); //shapes[i][g] 8
-	newShape.push_back(b); //shapes[i][b] 9
-	newShape.push_back(a); //shapes[i][a] 10
-
-	shapes.push_back(newShape);
-	resetColorAndBorder();
-}
-
-void gGUISurface::drawTriangle(float px, float py, float qx, float qy, float rx, float ry, bool isFilled) {
-	std::vector<float> newShape;
-	newShape.push_back(4); //for drawing TRIANGLE //shapes[i][0]
-	newShape.push_back(px); //shapes[i][px] 1
-	newShape.push_back(py); //shapes[i][py] 2
-	newShape.push_back(qx); //shapes[i][qx] 3
-	newShape.push_back(qy); //shapes[i][qy] 4
-	newShape.push_back(rx); //shapes[i][rx] 5
-	newShape.push_back(ry); //shapes[i][ry] 6
-
-	if(isFilled)
-		newShape.push_back(1); //to get whether the circle is filled //shapes[i][7] 0/1 = false/true
-	else
-		newShape.push_back(0); //to get whether the circle is filled //shapes[i][7] 0/1 = false/true
-
-	newShape.push_back(r); //shapes[i][r] 8
-	newShape.push_back(g); //shapes[i][g] 9
-	newShape.push_back(b); //shapes[i][b] 10
-	newShape.push_back(a); //shapes[i][a] 11
-
-	shapes.push_back(newShape);
-	resetColorAndBorder();
-}
-
-void gGUISurface::drawImage(float x, float y, float w, float h, gImage image, std::string pathOfImage) {
-	std::vector<float> newShape;
-	newShape.push_back(5); //for drawing IMAGE //shapes[i][0]
-	newShape.push_back(x); //shapes[i][x] 1
-	newShape.push_back(y); //shapes[i][y] 2
-	newShape.push_back(w); //shapes[i][w] 3
-	newShape.push_back(h); //shapes[i][h] 4
-	newShape.push_back(imageNum);
-	imageNum++;
-
-	paths.push_back(pathOfImage);
-	images.push_back(image); //
-
-	shapes.push_back(newShape);
-	resetColorAndBorder();
-}
 //void gGUISurface::drawBox(float x, float y, float z, float w, float h, float d, bool isFilled) {
 //	this->x = x;
 //	this->y = y;
