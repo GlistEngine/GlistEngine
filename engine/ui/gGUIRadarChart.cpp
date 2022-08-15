@@ -8,7 +8,11 @@
 #include "gGUIRadarChart.h"
 
 gGUIRadarChart::gGUIRadarChart() :
-    datasets{{{0.0f, 0.0f, 0.0f}, gColor::RED}}, vertices(3), max{1.0f} {}
+    datasets{{{0.0f, 0.0f, 0.0f}, gColor::RED}},
+    vertices(3),
+    labels(3),
+    max{1.0f}
+{}
 
 gGUIRadarChart::~gGUIRadarChart() {}
 
@@ -31,6 +35,10 @@ void gGUIRadarChart::setColor(std::size_t i, const gColor &color) {
     this->datasets[i].color = color;
 }
 
+void gGUIRadarChart::setLabel(std::size_t i, const std::string &label) {
+    this->labels[i] = label;
+}
+
 void gGUIRadarChart::setNumDataset(std::size_t new_size) {
     this->datasets.resize(new_size);
 }
@@ -41,6 +49,7 @@ void gGUIRadarChart::setNumVar(std::size_t new_size) {
             dataset.variables.resize(new_size);
         }
         this->vertices.resize(new_size);
+        this->labels.resize(new_size);
     }
 }
 
@@ -48,7 +57,7 @@ void gGUIRadarChart::calcVertices() {
     int width = this->right - this->left;
     int height = this->bottom - this->top;
     int min_length = std::min(width, height);
-    int min_pad = 3;
+    int min_pad = 10;
 
     constexpr float pi = 3.14159265358979323846264338327950288f;
     std::size_t n = this->vertices.size();
@@ -69,9 +78,9 @@ void gGUIRadarChart::calcVertices() {
 
 void gGUIRadarChart::drawBase() {
     gColor *old_color = this->renderer->getColor();
-    this->renderer->setColor(this->middlegroundcolor);
 
     for (std::size_t i = 0; i < this->vertices.size(); i++) {
+        this->renderer->setColor(this->middlegroundcolor);
         gDrawLine(
             this->center.position.x,
             this->center.position.y,
@@ -92,6 +101,31 @@ void gGUIRadarChart::drawBase() {
                 this->vertices[i].position.y,
                 this->vertices[0].position.x,
                 this->vertices[0].position.y
+            );
+        }
+
+        this->renderer->setColor(this->fontcolor);
+        if (this->center.position.x - this->vertices[i].position.x < 0.0f) {
+            this->font->drawText(
+                this->labels[i],
+                this->vertices[i].position.x,
+                this->vertices[i].position.y
+            );
+        } else if (this->center.position.x - this->vertices[i].position.x > 0.0f) {
+            float text_width = this->font->getStringWidth(this->labels[i]);
+
+            this->font->drawText(
+                this->labels[i],
+                this->vertices[i].position.x - text_width,
+                this->vertices[i].position.y
+            );
+        } else {
+            float text_width = this->font->getStringWidth(this->labels[i]);
+
+            this->font->drawText(
+                this->labels[i],
+                this->vertices[i].position.x - text_width / 2.0f,
+                this->vertices[i].position.y
             );
         }
     }

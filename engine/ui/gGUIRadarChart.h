@@ -20,6 +20,7 @@ public:
 
     void setVar(std::size_t i, std::size_t j, float var);
     void setColor(std::size_t i, const gColor &color);
+    void setLabel(std::size_t i, const std::string &label);
 
     void setNumDataset(std::size_t new_size);
     void setNumVar(std::size_t new_size);
@@ -37,6 +38,7 @@ private:
 
     std::vector<gDataset> datasets;
     std::vector<gVertex> vertices;
+    std::vector<std::string> labels;
     gVertex center;
     float max;
 };
