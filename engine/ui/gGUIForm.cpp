@@ -9,6 +9,7 @@
 #include "gGUISizer.h"
 #include "gGUIMenubar.h"
 #include "gGUIToolbar.h"
+#include "gGUIContextMenu.h"
 
 
 gGUIForm::gGUIForm() {
@@ -19,6 +20,10 @@ gGUIForm::gGUIForm() {
 	toolbarnum = 0;
 	focusid = 0;
 	previousfocusid = 0;
+	contextmenuw = 0;
+	contextmenuh = 0;
+	contextmenux = 0;
+	contextmenuy = 0;
 }
 
 gGUIForm::~gGUIForm() {
@@ -70,6 +75,13 @@ void gGUIForm::resizeToolbars() {
 					toolbarh
 			);
 	}
+}
+
+void gGUIForm::showContextMenu(gGUIContextMenu* contextMenu) {
+	contextmenu = contextMenu;
+	contextmenuw = 50;
+	contextmenuh = 50;
+	contextmenu->set(root, this, this, 0, 0, contextmenux, contextmenuy, contextmenuw, contextmenuh);
 }
 
 void gGUIForm::setSizer(gGUISizer* guiSizer) {
@@ -136,12 +148,14 @@ void gGUIForm::mouseMoved(int x, int y) {
 			guisizer->mouseMoved(x, y);
 		}
 	}
+	if(contextmenu) contextmenu->mouseMoved(x, y);
 }
 
 void gGUIForm::mousePressed(int x, int y, int button) {
 	if(menubar) menubar->mousePressed(x, y, button);
 	for(int i = 0; i < toolbarnum; i++) toolbars[i]->mousePressed(x, y, button);
 	if(guisizer) guisizer->mousePressed(x, y, button);
+	if(contextmenu) contextmenu->mousePressed(x, y, button);
 }
 
 void gGUIForm::mouseDragged(int x, int y, int button) {
@@ -151,6 +165,7 @@ void gGUIForm::mouseDragged(int x, int y, int button) {
 void gGUIForm::mouseReleased(int x, int y, int button) {
 	for(int i = 0; i < toolbarnum; i++) toolbars[i]->mouseReleased(x, y, button);
 	if(guisizer) guisizer->mouseReleased(x, y, button);
+	if(contextmenu) contextmenu->mouseReleased(x, y, button);
 }
 
 void gGUIForm::mouseScrolled(int x, int y) {
