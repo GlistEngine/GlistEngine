@@ -33,6 +33,7 @@ public:
 
 	void mouseMoved(int x, int y);
 	void mousePressed(int x, int y, int button);
+	void update();
 
 	int menuboxx, menuboxy, menuboxw, menuboxh;
 	int texty;
@@ -42,6 +43,8 @@ protected:
 
 private:
 	static int lastitemid;
+	static int lastparentitemid;
+	static std::vector<int> parentitems;
 	int itemid, parentitemid;
 	std::string text;
 	std::vector<gGUIMenuItem> childs;
@@ -50,8 +53,10 @@ private:
 	int menuboxlineh, menuboxtextextrah;
 	int menuboxdefaultw;
 	bool menuboxshown;
+	bool isparent;
 	int menuboxdefaulth;
 	int texth;
+	int counter;
 };
 
 
