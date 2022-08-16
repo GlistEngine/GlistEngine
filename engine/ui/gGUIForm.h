@@ -12,6 +12,7 @@
 class gGUISizer;
 class gGUIMenubar;
 class gGUIToolbar;
+class gGUIStatusBar;
 
 
 class gGUIForm: public gBaseGUIObject {
@@ -23,6 +24,8 @@ public:
 	void resizeMenuBar();
 	void addToolBar(gGUIToolbar* toolBar);
 	void resizeToolbars();
+	void setStatusBar(gGUIStatusBar* statusBar);
+	void resizeStatusBar();
 
 	void setSizer(gGUISizer* guiSizer);
 	gGUISizer* getSizer();
@@ -51,10 +54,14 @@ protected:
 	gGUISizer* guisizer;
 	bool isshown;
 	gGUIMenubar* menubar;
+	gGUIStatusBar* statusbar;
 	gGUIToolbar *toolbars[maxtoolbarnum];
 	int toolbarnum;
 	int menuh;
 	int toolbarh;
+	int statusw, statush;
+	int sizerh;
+
 };
 
 #endif /* UI_GGUIFORM_H_ */

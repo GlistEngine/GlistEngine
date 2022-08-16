@@ -9,24 +9,27 @@
 #include "gGUISizer.h"
 #include "gGUIMenubar.h"
 #include "gGUIToolbar.h"
+#include "gGUIStatusBar.h"
 
 
 gGUIFrame::gGUIFrame() {
 	guisizer = nullptr;
 	menubar = nullptr;
+	statusbar = nullptr;
 }
 
 gGUIFrame::~gGUIFrame() {
 }
 
 void gGUIFrame::update() {
-//	gLogi("gGUIFrame") << "update";
+	//gLogi("gGUIFrame") << "update";
 	if(guisizer) guisizer->update();
 }
 
 void gGUIFrame::draw() {
-//	gLogi("gGUIFrame") << "draw";
+	//gLogi("gGUIFrame") << "draw";
 	if(guisizer) guisizer->draw();
 	if(toolbarnum > 0) for(int i = 0; i < toolbarnum; i++) toolbars[i]->draw();
 	if(menubar) menubar->draw();
+	if(statusbar) statusbar->draw();
 }

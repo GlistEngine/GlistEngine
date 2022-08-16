@@ -142,8 +142,9 @@ set(SRC_FILES
 	${ENGINE_DIR}/graphics/gRect.cpp
 	${ENGINE_DIR}/animation/gSpriteAnimation.cpp
 	${ENGINE_DIR}/animation/gSpriteAnimator.cpp
-	${ENGINE_DIR}/ui/gGUISwitchButton.cpp
+	${ENGINE_DIR}/ui/gGUIToggleButton.cpp
 	${ENGINE_DIR}/ui/gGUIListbox.cpp
+	${ENGINE_DIR}/ui/gGUISwitchButton.cpp
 	${ENGINE_DIR}/ui/gGUICheckbox.cpp
 	${ENGINE_DIR}/ui/gGUITextbox.cpp
 	${ENGINE_DIR}/ui/gGUIText.cpp
@@ -159,6 +160,7 @@ set(SRC_FILES
 	${ENGINE_DIR}/ui/gGUISizer.cpp
 	${ENGINE_DIR}/ui/gGUINavigation.cpp
 	${ENGINE_DIR}/ui/gGUIToolbar.cpp
+	${ENGINE_DIR}/ui/gGUIStatusBar.cpp
 	${ENGINE_DIR}/ui/gGUIMenubar.cpp
 	${ENGINE_DIR}/ui/gGUIPane.cpp
 	${ENGINE_DIR}/ui/gGUIPanel.cpp
