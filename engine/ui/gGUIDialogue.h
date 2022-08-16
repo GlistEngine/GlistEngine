@@ -13,6 +13,7 @@
 #include "gGUIPanel.h"
 #include "gGUIText.h"
 #include "gImage.h"
+#include "gGUIResources.h"
 
 
 class gGUIDialogue: public gGUIForm {
@@ -55,6 +56,7 @@ private:
 	std::string icontypename[icontypenum];
 
 	gImage dialogueicon;
+	gImage* newdialogueicon;
 	gGUIText messagetext;
 	gGUISizer buttonssizer;
 
@@ -73,6 +75,8 @@ private:
 
 	int initleft;
 	int inittop;
+
+	gGUIResources resources;
 };
 
 #endif /* UI_GGUIDIALOGUE_H_ */

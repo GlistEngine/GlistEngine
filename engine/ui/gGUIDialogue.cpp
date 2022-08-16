@@ -50,6 +50,8 @@ gGUIDialogue::gGUIDialogue() {
 
 	initleft = left;
 	inittop = top;
+
+	resources.initialize();
 }
 
 gGUIDialogue::~gGUIDialogue() {
@@ -128,22 +130,16 @@ void gGUIDialogue::update() {
 
 void gGUIDialogue::draw() {
 	if(guisizer) {
-		guisizer->draw();
 
 		gColor oldcolor = *renderer->getColor();
+		renderer->setColor(foregroundcolor);
+		gDrawRectangle(left, top, width, height, true);
 
 		// DIALOGUE TITLE
 		renderer->setColor(fontcolor);
 		font->drawText(title, left + width / 12, top + height / 14);
 
-		// COLORS FOR DRAWING
-		gColor strokecolor = gColor(0.5f, 0.5f, 0.5f);
-		gColor okcolor = gColor(0.0f, 0.0f, 0.8f);
-		gColor yescolor = gColor(0.5f, 0.8f, 0.5f);
-		gColor nocolor = gColor(0.8f, 0.0f, 0.0f);
-
 		// DIALOGUE BORDERS
-		renderer->setColor(strokecolor);
 		gDrawLine(left, top, right, top);
 		gDrawLine(left, bottom, right, bottom);
 		gDrawLine(left, top, left, bottom);
@@ -151,51 +147,12 @@ void gGUIDialogue::draw() {
 		gDrawLine(left + width / 24, top + height / 8, right - width / 24, top + height / 8);
 		gDrawLine(left + width / 24, top + height * 3 / 4, right - width / 24, top + height * 3 / 4);
 
-		int defbuttontopoffset = top + (6 * (height / 8)) + (((height / 4) -  (height / 7)) / 2) + (height / 7);
-
-		// BUTTON UNDERLINES
-
-		// LEFT BUTTON
-		if (dialoguetypename[dialoguetype] == "okcancel" || dialoguetypename[dialoguetype] == "yesno" || dialoguetypename[dialoguetype] == "yesnocancel") {
-			if (dialoguetypename[dialoguetype] == "okcancel") renderer->setColor(okcolor);
-			else if (dialoguetypename[dialoguetype] == "yesno" || dialoguetypename[dialoguetype] == "yesnocancel") renderer->setColor(yescolor);
-			gDrawLine(
-					left + (((width / 3) - (width / 4)) / 2) + width / 48,
-					defbuttontopoffset,
-					left + (((width / 3) - (width / 4)) / 2) + (width / 4) - width / 48,
-					defbuttontopoffset
-					);
-			renderer->setColor(strokecolor);
-		}
-
-		// MID BUTTON
-		if (dialoguetypename[dialoguetype] == "ok" || dialoguetypename[dialoguetype] == "yesnocancel") {
-			if (dialoguetypename[dialoguetype] == "ok") renderer->setColor(okcolor);
-			else if (dialoguetypename[dialoguetype] == "yesnocancel") renderer->setColor(nocolor);
-			gDrawLine(
-					left + (width / 3) + (((width / 3) - (width / 4)) / 2) + width / 48,
-					defbuttontopoffset,
-					left + (width / 3) + (((width / 3) - (width / 4)) / 2) + (width / 4) - width / 48,
-					defbuttontopoffset
-					);
-			renderer->setColor(strokecolor);
-		}
-
-		// RIGHT BUTTON
-		if (dialoguetypename[dialoguetype] == "okcancel" || dialoguetypename[dialoguetype] == "yesno" || dialoguetypename[dialoguetype] == "yesnocancel") {
-			if (dialoguetypename[dialoguetype] == "yesno") renderer->setColor(nocolor);
-			gDrawLine(
-					left + (2 * (width / 3)) + (((width / 3) - (width / 4)) / 2) + width / 48,
-					defbuttontopoffset,
-					left + (2 * (width / 3)) + (((width / 3) - (width / 4)) / 2) + (width / 4) - width / 48,
-					defbuttontopoffset
-					);
-			renderer->setColor(strokecolor);
-		}
-
 		renderer->setColor(&oldcolor);
 
 		dialogueicon.draw(left + (width - height / 4) / 2, top + height / 6, height / 4, height / 4);
+		// newdialogueicon->draw(left + (width - height / 4) / 2, top + height / 6, height / 4, height / 4);
+
+		guisizer->draw();
 	}
 }
 
@@ -230,6 +187,7 @@ void gGUIDialogue::showDialogue(std::string title, std::string message, int dial
 	this->dialoguetype = dialogueType;
 	this->icontype = iconType;
 
+	guisizer->enableBackgroundFill(false);
 	// EXIT BUTTON
 	guisizer->setControl(0, 0, &exitbutton);
 	exitbutton.setSize(width / 8, height / 8);
@@ -237,6 +195,7 @@ void gGUIDialogue::showDialogue(std::string title, std::string message, int dial
 
 	// DIALOGUE ICON
 	dialogueicon.loadImage("dialogueicons/" + icontypename[iconType] + "tpicon.png");
+	// newdialogueicon = resources.getIconImage(gGUIResources::ICON_INFO);
 
 	// MESSAGE TEXT
 	int linecount = (this->message.length() / 24) + 1; // One line for each 23 characters of message
