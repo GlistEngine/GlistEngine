@@ -60,13 +60,15 @@ private:
 	gGUIButton cancelbutton;
 
 	bool exitevent;
+	bool exitbuttonexittrigger;
+	bool okbuttonexittrigger;
+	bool yesbuttonexittrigger;
+	bool nobuttonexittrigger;
+	bool cancelbuttonexittrigger;
 
 	gGUIText messagetext;
 
 	gImage dialogueicon;
-
-	bool imageloaded;
-	bool dialogueshown;
 
 	gGUISizer stdsizer;
 
