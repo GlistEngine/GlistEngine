@@ -70,14 +70,7 @@ private:
 
 	gImage dialogueicon;
 
-	gGUISizer stdsizer;
-
 	gGUISizer buttonssizer;
-
-	int defleftbuttonleftoffset;
-	int defmidbuttonleftoffset;
-	int defrightbuttonleftoffset;
-	int defbuttontopoffset;
 
 	int initleft;
 	int inittop;

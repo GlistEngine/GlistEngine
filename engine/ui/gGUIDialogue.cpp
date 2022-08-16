@@ -12,6 +12,11 @@
 gGUIDialogue::gGUIDialogue() {
 	guisizer = nullptr;
 
+	title = "DIALOGUE BOX";
+	message = "This is a dialogue box.";
+	dialoguetype = DIALOGUETYPE_NONE;
+	icontype = ICONTYPE_INFO;
+
 	dialoguetypename[DIALOGUETYPE_NONE] = "none";
 	dialoguetypename[DIALOGUETYPE_OK] = "ok";
 	dialoguetypename[DIALOGUETYPE_OKCANCEL] = "okcancel";
@@ -40,10 +45,6 @@ gGUIDialogue::gGUIDialogue() {
 	yesbuttonexittrigger = false;
 	nobuttonexittrigger = false;
 	cancelbuttonexittrigger = false;
-
-	stdsizer.setSize(3, 3);
-	float stdlineproportions[3] = {0.125f, 0.625f, 0.250f};
-	stdsizer.setLineProportions(stdlineproportions);
 
 	initleft = left;
 	inittop = top;
