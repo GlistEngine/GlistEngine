@@ -54,6 +54,8 @@
  * want. To be able to use it, we have to create an object from gGUIResources
  * class (Ex: gGUIResources res;) and have to use getIconImage method of this
  * object  ( Ex : res.getIconImage(gGUIResources::The id which you enumeration)).
+ * Don't forget to add res.initialize(); function to the constructor of your class.
+ * This function makes the initialize function of gGUIResources class work.
  *
  * To draw this use draw function (Ex : res.getIconImage(id)->draw(....). If you
  * want the users to choose the images by using your class. You have to define
@@ -99,6 +101,10 @@ public:
 		ICON_INFO,
 		ICON_HELP,
 		ICON_COPY,
+		ICON_WARNING,
+		ICON_ERROR,
+		ICON_CALENDAR,
+		ICON_CLOCK
 	};
 
 	gGUIResources();
@@ -114,7 +120,7 @@ public:
 	gImage* getIconImage(int iconId);
 
 private:
-	static const int iconnum = 30;
+	static const int iconnum = 34;
 
 	int iconw, iconh, iconformat;
 	// The array we keep pictures
@@ -150,6 +156,10 @@ private:
 	std::string getBase64IconInfo16();
 	std::string getBase64IconHelp16();
 	std::string getBase64IconCopy16();
+	std::string getBase64IconWarning16();
+	std::string getBase64IconError16();
+	std::string getBase64IconCalendar16();
+	std::string getBase64IconClock16();
 
 	std::string getBase64IconFile40();
 	std::string getBase64IconFolder40();
