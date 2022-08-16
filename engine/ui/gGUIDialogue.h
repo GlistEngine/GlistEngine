@@ -50,8 +50,13 @@ private:
 	std::string message;
 	int dialoguetype;
 	int icontype;
+
 	std::string dialoguetypename[dialoguetypenum];
 	std::string icontypename[icontypenum];
+
+	gImage dialogueicon;
+	gGUIText messagetext;
+	gGUISizer buttonssizer;
 
 	gGUIButton exitbutton;
 	gGUIButton okbutton;
@@ -65,12 +70,6 @@ private:
 	bool yesbuttonexittrigger;
 	bool nobuttonexittrigger;
 	bool cancelbuttonexittrigger;
-
-	gGUIText messagetext;
-
-	gImage dialogueicon;
-
-	gGUISizer buttonssizer;
 
 	int initleft;
 	int inittop;

@@ -33,6 +33,8 @@ gGUIDialogue::gGUIDialogue() {
 	nobutton.setButtonColor(backgroundcolor);
 	cancelbutton.setButtonColor(backgroundcolor);
 
+	exitbutton.setButtonFontColor({0.5f, 0.0f, 0.0f});
+
 	exitbutton.setTitle("X");
 	okbutton.setTitle("OK");
 	yesbutton.setTitle("YES");
