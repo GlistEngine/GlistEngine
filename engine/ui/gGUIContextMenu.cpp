@@ -6,6 +6,8 @@
  */
 
 #include "gGUIContextMenu.h"
+#include "gBaseApp.h"
+#include "gBaseCanvas.h"
 
 
 int gGUIContextMenuItem::lastitemid;
@@ -27,6 +29,7 @@ gGUIContextMenuItem::gGUIContextMenuItem(std::string text, gImage* menuIcon) {
 	contextmenushown = false;
 	hovered = false;
 	seperatoradded = false;
+	ispressed = false;
 	nullicon = nullptr;
 	menuicon = menuIcon;
 	menuiconx = 0;
@@ -63,8 +66,20 @@ bool gGUIContextMenuItem::getContextMenuShown() {
 	return contextmenushown;
 }
 
+bool gGUIContextMenuItem::getIsPressed() {
+	return ispressed;
+}
+
+std::string gGUIContextMenuItem::getItemTitle(int itemNo) {
+	return items[itemNo].title;
+}
+
 void gGUIContextMenuItem::setContextMenuLeftMargin(int leftMargin) {
 	contextmenuleftmargin = leftMargin;
+}
+
+int gGUIContextMenuItem::getContextMenuSize() {
+	return items.size();
 }
 
 int gGUIContextMenuItem::addItem(std::string text,  gImage* menuIcon) {
@@ -73,7 +88,7 @@ int gGUIContextMenuItem::addItem(std::string text,  gImage* menuIcon) {
 	items.push_back(gGUIContextMenuItem(text, menuicon));
 	items[itemno].setParentItemId(itemid);
 	contextmenuh = items.size() * contextmenulineh;
-	gLogi("MenuItem") << "text:" << text << ", parentitemid:" << items[itemno].getParentItemId();
+//	gLogi("MenuItem") << "text:" << text << ", parentitemid:" << items[itemno].getParentItemId();
 	return items[itemno].getItemId();
 }
 
@@ -166,7 +181,32 @@ void gGUIContextMenuItem::mousePressed(int x, int y, int button) {
 	} else if((x != contextmenux || y != contextmenuy) && button == 1) {
 		contextmenux = x;
 		contextmenuy = y;
-	} else if(button == 0) contextmenushown = false;
+	} else if(button == 0) {
+		for(int i = 0; i < items.size(); i++) {
+			if(x >= items[i].left && x < items[i].right && y >= items[i].top && y < items[i].bottom) {
+				items[i].ispressed = true;
+				root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_BUTTONPRESSED);
+			} else {
+				items[i].left = 0;
+				items[i].right = 0;
+				items[i].bottom = 0;
+				items[i].top = 0;
+				contextmenushown = false;
+			}
+		}
+	}
+}
+
+void gGUIContextMenuItem::mouseReleased(int x, int y, int button) {
+//	gLogi("Button") << "released, id:" << id;
+	for(int i = 0; i < items.size(); i++) {
+		if(x >= items[i].left && x < items[i].right && y >= items[i].top && y < items[i].bottom) {
+			items[i].ispressed = false;
+			root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_BUTTONRELEASED);
+		} else {
+			items[i].ispressed = false;
+		}
+	}
 }
 
 gGUIContextMenu::gGUIContextMenu() : gGUIContextMenuItem("", nullicon) {
@@ -179,7 +219,7 @@ gGUIContextMenu::~gGUIContextMenu() {
 void gGUIContextMenu::draw() {
 	gGUIContextMenuItem::drawMenuItem();
 //	context menu borders
-	if(getContextMenuShown() == true) {
+	if(getContextMenuShown()) {
 		renderer->setColor(backgroundcolor);
 		gDrawRectangle(contextmenux, contextmenuy, contextmenudefaultw + 1, contextmenuh + 1, false);
 	}
