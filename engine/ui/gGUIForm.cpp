@@ -10,6 +10,7 @@
 #include "gGUIMenubar.h"
 #include "gGUIToolbar.h"
 #include "gGUIContextMenu.h"
+#include "gGUIStatusBar.h"
 
 
 gGUIForm::gGUIForm() {
@@ -18,6 +19,8 @@ gGUIForm::gGUIForm() {
 	menuh = 0;
 	toolbarh = 0;
 	toolbarnum = 0;
+	statush = 0;
+	sizerh = 0;
 	focusid = 0;
 	previousfocusid = 0;
 	contextmenuw = 0;
@@ -101,6 +104,26 @@ void gGUIForm::setSizer(gGUISizer* guiSizer) {
 	guisizer->setSlotPadding(0);
 }
 
+void gGUIForm::setStatusBar(gGUIStatusBar* statusBar) {
+	statusbar = statusBar;
+	statush = 30;
+	statusbar->set(root, this, this, 0, 0,
+					left,
+					statush,
+					width,
+					statush
+			);
+}
+
+void gGUIForm::resizeStatusBar() {
+	statusbar->set(root, this, this, 0, 0,
+					left,
+					statush,
+					width,
+					statush
+		);
+}
+
 gGUISizer* gGUIForm::getSizer() {
 	return guisizer;
 }
@@ -140,6 +163,7 @@ void gGUIForm::charPressed(unsigned int codepoint) {
 }
 
 void gGUIForm::mouseMoved(int x, int y) {
+	if(statusbar) statusbar->mouseMoved(x, y);
 	if(menubar) menubar->mouseMoved(x, y);
 	for(int i = 0; i < toolbarnum; i++) toolbars[i]->mouseMoved(x, y);
 	if(guisizer) {
@@ -152,6 +176,7 @@ void gGUIForm::mouseMoved(int x, int y) {
 }
 
 void gGUIForm::mousePressed(int x, int y, int button) {
+	if(statusbar) statusbar->mousePressed(x, y, button);
 	if(menubar) menubar->mousePressed(x, y, button);
 	for(int i = 0; i < toolbarnum; i++) toolbars[i]->mousePressed(x, y, button);
 	if(guisizer) guisizer->mousePressed(x, y, button);
@@ -181,6 +206,10 @@ void gGUIForm::mouseExited() {
 }
 
 void gGUIForm::windowResized(int w, int h) {
+	if(statusbar) {
+		resizeStatusBar();
+		statusbar->windowResized(w, h);
+	}
 	if(menubar) {
 		resizeMenuBar();
 		menubar->windowResized(w, h);
