@@ -66,7 +66,7 @@ public:
 	/**
 	 * Enables/disables the textbox for editing.
 	 *
-	 * @param isEditable Bool value to enable/disable the textbox for editing.
+	 * @param isEditable Boolean value to enable/disable the textbox for editing.
 	 * If it is 'true', textbox becomes editable. If it is 'false', textbox
 	 * becomes static.
 	 */
@@ -114,13 +114,29 @@ public:
 	void setSize(int width, int height);
 
 	/**
+	 * Enables/disables the numeric value only mode of the textbox.
+	 *
+	 * @param command Boolean value to enable/disable entering numeric values
+	 * only. If it is 'true', you can only input numeric values into the textbox,
+	 * if it is 'false', it works normally.
+	 */
+	void setNumeric(bool command);
+
+	/**
+	 * Check if the textbox only allows numeric value entry.
+	 *
+	 * @return Bool value that indicates if textbox allows only numbers to be
+	 * input into the textbox.
+	 */
+	bool isNumeric();
+
+	/**
 	 * Shifts the left and right coordinates of the textbox by given value. Makes
 	 * sure that both left and right coordinates are within the limits of the
 	 * panel.
 	 *
 	 * @param left Desired shift value for the left coordinate of the textbox. It
 	 * can be a negative integer value.
-	 *
 	 */
 	void addLeftMargin(int left);
 
@@ -131,7 +147,6 @@ public:
 	 *
 	 * @param top Desired shift value for the top coordinate of the textbox. It
 	 * can be a negative integer value.
-	 *
 	 */
 	void addTopMargin(int top);
 
@@ -153,7 +168,7 @@ public:
 	void mouseDragged(int x, int y, int button);
 
 private:
-	static const int KEY_NONE = 0, KEY_BACKSPACE = 1, KEY_LEFT = 2, KEY_RIGHT = 4, KEY_DELETE = 8, KEY_ENTER = 16;
+	static const int KEY_NONE = 0, KEY_BACKSPACE = 1, KEY_LEFT = 2, KEY_RIGHT = 4, KEY_DELETE = 8, KEY_ENTER = 16, KEY_UP = 32, KEY_DOWN = 64;
 
 	int boxw, boxh;
 	int cursorposx, cursorposy, cursorposchar, cursorposutf;
@@ -183,6 +198,7 @@ private:
 	std::vector<short> readString(const std::string& str);
 	bool isLetter(char c);
 	bool isNumber(char c);
+	void findCursorPosition();
 	bool selectionmode;
 	int selectionposchar1, selectionposchar2;
 	int selectionposx1, selectionposx2;
@@ -203,6 +219,7 @@ private:
 	std::vector<std::string> lines;
 	std::vector<int> lineendchar;
 	int leftlimit, rightlimit, toplimit, bottomlimit;
+	bool isnumeric;
 };
 
 #endif /* UI_GGUITEXTBOX_H_ */
