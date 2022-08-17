@@ -26,7 +26,7 @@ public:
 	void resizeToolbars();
 	void setStatusBar(gGUIStatusBar* statusBar);
 	void resizeStatusBar();
-	void showContextMenu(gGUIContextMenu* contextMenu);
+	void addContextMenu(gGUIContextMenu* contextMenu);
 
 	void setSizer(gGUISizer* guiSizer);
 	gGUISizer* getSizer();
