@@ -80,7 +80,7 @@ void gGUIForm::resizeToolbars() {
 	}
 }
 
-void gGUIForm::showContextMenu(gGUIContextMenu* contextMenu) {
+void gGUIForm::addContextMenu(gGUIContextMenu* contextMenu) {
 	contextmenu = contextMenu;
 	contextmenuw = 50;
 	contextmenuh = 50;
