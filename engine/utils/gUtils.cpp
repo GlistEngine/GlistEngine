@@ -332,6 +332,7 @@ utf8::iterator<std::string::const_reverse_iterator> gUTF8Iterator::rbegin() cons
 	}
 }
 
+
 utf8::iterator<std::string::const_reverse_iterator> gUTF8Iterator::rend() const {
 	try {
 		return utf8::iterator<std::string::const_reverse_iterator>(src_valid.rbegin(), src_valid.rbegin(), src_valid.rend());

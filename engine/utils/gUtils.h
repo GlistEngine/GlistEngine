@@ -256,6 +256,7 @@ std::string gShowOpenFileDialog(
 	std::string filterDescription,
     bool isMultipleSelectionAllowed = false);
 
+
 /**
  * Shows operating system's message dialog box
  *
