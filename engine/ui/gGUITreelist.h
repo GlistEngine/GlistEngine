@@ -36,6 +36,8 @@
 #include "gGUIScrollable.h"
 #include <deque>
 #include <iostream>
+#include "gGUIResources.h"
+#include "gImage.h"
 
 /*
  * This class creats a tree list. Tree list is kinf of a list that includes sub
@@ -64,22 +66,30 @@ public:
 		static int nodenum;
 		bool isexpanded;
 		bool isparent;
+		bool isicon;
 		int orderno;
+		gImage* icon;
 		static std::vector<std::string> allsubtitles;
+		static std::vector<int> allorderno;
+		static std::deque<gImage*> icons;
+		gGUIResources res;
 
 		Element() {
 			nodenum = 0;
+			isicon = false;
 			isexpanded = false;
 			orderno = 0;
 			parent = nullptr;
 			isparent = false;
+			res.initialize();
+			icon = nullptr;
 		}
 
 		/*
 		 * Used for print all the objects to the console in the struct.
 		 */
 		void logTitle() {
-			if(parent!= nullptr) gLogi("Element") << title << (" Nodenumber") << nodenum;
+			if(parent!= nullptr) gLogi("Element") << title << (" iconid") << this->res.getIconNum();
 			for(int i = 0; i < sub.size(); i++) {
 				sub[i]->logTitle();
 			}
@@ -91,6 +101,8 @@ public:
 		 */
 		void clearAllSubTitlesList() {
 			allsubtitles.clear();
+			allorderno.clear();
+			icons.clear();
 		}
 
 		/*
@@ -103,17 +115,29 @@ public:
 		 */
 		void addSelfToList() {
 			std::string linetext = "";
-			for(int i = 0; i < orderno; i++) linetext = "    " + linetext;
-			if(sub.size() > 0) {
-				linetext = linetext + "> ";
-				isparent = true;
+			if(isicon == false) {
+				for(int i = 0; i < orderno; i++) linetext = "    " + linetext;
+				if(sub.size() > 0) {
+					linetext = linetext + "> ";
+					isparent = true;
+				}
+				else linetext = linetext + "- ";
 			}
-			else linetext = linetext + "- ";
-			linetext += title;
+			else{
+				for(int i = 0; i < orderno + 1; i++) linetext = "  " + linetext;
+				allorderno.push_back(orderno + 1);
+				icons.push_back(this->icon);
+				if(sub.size() > 0) isparent = true;
+			}
 
+			linetext += title;
 			allsubtitles.push_back(linetext);
 			if(isexpanded) for(int i = 0; i < sub.size(); i++) sub[i]->addSelfToList();
-			if(title == "Top") allsubtitles.erase(allsubtitles.begin() + 0);
+			if(title == "Top") {
+				allsubtitles.erase(allsubtitles.begin() + 0);
+				if(allorderno.size() > 0) allorderno.erase(allorderno.begin() + 0);
+				if(icons.size() > 0) icons.erase(icons.begin() + 0);
+			}
 		}
 
 		/*
@@ -170,6 +194,17 @@ public:
 			element->parent->sub.erase(element->parent->sub.begin() + index);
 		}
 
+		void setIconType(bool isicon) {
+			this->isicon = isicon;
+			for(int i = 0; i < sub.size(); i++) sub[i]->setIconType(isicon);
+		}
+
+		void setIcon() {
+			if(sub.size() > 0) this->icon = res.getIconImage(gGUIResources::ICON_FOLDER);
+			else this->icon = res.getIconImage(gGUIResources::ICON_FILE);
+			for(int i = 0; i < sub.size(); i++) sub[i]->setIcon();
+		}
+
 	};
 
 
@@ -213,6 +248,7 @@ public:
 	 * @param newtitle is the string value which updated to the element's title.
 	 */
 	void insertData(Element* element, std::string newtitle);
+
 	/*
 	 * Uses for update the draw list and some values about the draw box.
 	 */
@@ -222,6 +258,63 @@ public:
 
 	void mousePressed(int x, int y, int button);
 	void mouseReleased(int x, int y, int button);
+
+	/*
+ 	 * Sets the color of the row which developer click and select, with the
+ 	 * given color. Colors consist of RGB values float between 0.0f-1.0f.
+ 	 *
+ 	 * @param color The given color consist of (r, g, b) float values.
+	 */
+	void setChosenColor(float r, float g, float b);
+
+	/*
+	 * Sets the number of the lines that visible on the tree list.
+	 *
+	 * @param linenumber is an integer value which define the number of minimum
+	 * lines. Developer should give a number bigger than 0.
+	 */
+	void setVisibleLineNumber(int linenumber);
+
+	/*
+	 * Sets the icon type at the top of the titles. If developer wants to use new
+	 * icons, should sets the isicon attribute. If the attribute is not setted,
+	 * default icons will be '>' and '-'.
+	 *
+	 * @param isicon is the boolean value that sets the icon types. For using new
+	 * icons, it should be 'true'.
+	 */
+	void setIconType(bool isicon);
+
+	/*
+	 * Sets the given icon to the given object of struct. Developer can give any
+	 * image from outside. The image must be loaded before using as a parameter
+	 * for the function. Image's width and height will be arrange automatically.
+	 *
+	 * @param icon is the image that developer wants to use.
+	 *
+	 *  @param element is the struct object which the icon will be changed.
+	 */
+	void setIcon(gImage* icon, Element* element);
+
+
+	/*
+	 * Sets the given icon to the given object of the struct. Uses the icons in
+	 * the gGUIResources class. This icons are storing in the base64.
+	 *
+	 * @param iconid is the icon number of the images in the gGUIResources class.
+	 * This numbers are defined with enumeration method.
+	 *
+	 * @param element is the struct object which the icon will be changed.
+	 */
+	void setIcon(int iconid, Element* element);
+
+	/*
+ 	 * Sets the color of the icons with the given color. Colors consist of RGB
+ 	 * values float between 0.0f-1.0f.
+ 	 *
+ 	 * @param color The given color consist of (r, g, b) float values.
+	 */
+	void setIconsColor(float r, float g, float b);
 
 	/*
 	 * Returns given struct object's title.
@@ -263,20 +356,32 @@ public:
 	bool isParent(Element* element);
 
 	/*
- 	 * Sets the color of the row which developer click and select, with the
- 	 * given color. Colors consist of RGB values float between 0.0f-1.0f.
- 	 *
- 	 * @param color The given color consist of (r, g, b) float values.
+	 * Returns the isicon value of the struct object.
 	 */
-	void setChosenColor(float r, float g, float b);
+	bool getIconType();
 
 	/*
-	 * Sets the number of the lines that visible on the tree list.
+	 * Returns the pointer of the image that uses for icons to the given struct
+	 * object.
 	 *
-	 * @param linenumber is an integer value which define the number of minimum
-	 * lines. Developer should give a number bigger than 0.
+	 *  @param element is the struct object which returned icon image.
 	 */
-	void setVisibleLineNumber(int linenumber);
+	gImage* getIcon(Element* element);
+
+	/*
+	 * Returns the color that when an element is chosen.
+	 */
+	gColor getChosenColor();
+
+	/*
+	 * Returns the icons color.
+	 */
+	gColor getIconsColor();
+
+	/*
+	 * Returns the number of the lines which is visible in the box.
+	 */
+	int getVisibleLineNumber();
 private:
 	int listboxh;
 	int lineh, linenum;
@@ -286,10 +391,12 @@ private:
 	float datady;
 	int firstlineno;
 	int selectedno;
-	float arrowsize;
+	float arrowsize, spacesize;
 	bool mousepressedonlist;
 	Element topelement;
-	gColor chosencolor;
+	gColor chosencolor, iconcolor;
+	gGUIResources res;
+	int iconx, iconw, iconh;
 };
 
 #endif /* UI_GGUITREELIST_H_ */
