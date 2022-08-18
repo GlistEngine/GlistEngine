@@ -40,7 +40,7 @@
 #include "gImage.h"
 
 /*
- * This class creats a tree list. Tree list is kinf of a list that includes sub
+ * This class creats a tree list. Tree list is kind of a list that includes sub
  * titles. All sub titles can have their own sub titles. There is not any edge
  * for the numbers of sub titles. Uses a struct and its vector attribute which
  * includes struct type of elements for storing the sub elements.
@@ -55,6 +55,11 @@
  * shown. If the sub titles are shown on the list, draw list will be updating
  * and sub titles will be disabled.
  *
+ * Also there is an icon mode for the tree list. If developer uses the setIconType()
+ * function and actived the icons, '>' and '-' symbols will be 'Folder' and 'File'
+ * icons. This icons can change for all elements with using gGUIResources class
+ * or getting an image from outside.
+ *
  * Developers can get the struct's attributes with getter functions.
  */
 class gGUITreelist: public gGUIScrollable {
@@ -67,6 +72,7 @@ public:
 		bool isexpanded;
 		bool isparent;
 		bool isicon;
+		bool isiconchanged;
 		int orderno;
 		gImage* icon;
 		static std::vector<std::string> allsubtitles;
@@ -83,6 +89,7 @@ public:
 			isparent = false;
 			res.initialize();
 			icon = nullptr;
+			isiconchanged = false;
 		}
 
 		/*
@@ -194,11 +201,22 @@ public:
 			element->parent->sub.erase(element->parent->sub.begin() + index);
 		}
 
+		/*
+		 * Sets the isicon attributes of all elements.
+		 */
 		void setIconType(bool isicon) {
 			this->isicon = isicon;
 			for(int i = 0; i < sub.size(); i++) sub[i]->setIconType(isicon);
 		}
 
+		/*
+		 * Sets the icon attributes of all elements. This function uses when
+		 * isicon value of the elements is true.
+		 * Sets the icons according to their isparent attributes. If the element
+		 * has got a sub vector, it's icon will be the 'Folder icon'. If it has
+		 * not got a sub vector, it's icon will be the 'File icon'.
+		 *
+		 */
 		void setIcon() {
 			if(sub.size() > 0) this->icon = res.getIconImage(gGUIResources::ICON_FOLDER);
 			else this->icon = res.getIconImage(gGUIResources::ICON_FILE);
@@ -268,7 +286,8 @@ public:
 	void setChosenColor(float r, float g, float b);
 
 	/*
-	 * Sets the number of the lines that visible on the tree list.
+	 * Sets the number of the lines that visible on the tree list. This function
+	 * should be use before Treelist added to the panel with setControl function.
 	 *
 	 * @param linenumber is an integer value which define the number of minimum
 	 * lines. Developer should give a number bigger than 0.
@@ -315,6 +334,7 @@ public:
  	 * @param color The given color consist of (r, g, b) float values.
 	 */
 	void setIconsColor(float r, float g, float b);
+
 
 	/*
 	 * Returns given struct object's title.
