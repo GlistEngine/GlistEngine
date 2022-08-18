@@ -55,7 +55,13 @@ void gVbo::setVertexData(gVertex* vertices, int coordNum, int total) {
     glEnableVertexAttribArray(4);
     glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(gVertex), (void*)offsetof(gVertex, bitangent));
     glBindVertexArray(0);
-    glDeleteBuffers(1, &vbo);
+
+    /* Because of a bug with AMD drivers, glDeleteBuffers function must be called
+     * only while exiting the application.
+     */
+    const unsigned char* vendorname = glGetString(GL_VENDOR);
+    std::string glven(reinterpret_cast<const char*>(vendorname));
+    if(glven != "ATI Technologies Inc.") glDeleteBuffers(1, &vbo);
 }
 
 void gVbo::setVertexData(const float* vert0x, int coordNum, int total, int usage, int stride) {
