@@ -34,6 +34,7 @@ private:
 	bool ispressed;
 	bool isdisabled;
 
+
 	gImage colorpicker;
 	unsigned char *data;
 };

@@ -16,6 +16,7 @@ gGUIColorPicker::gGUIColorPicker() {
 	colorpickerh = colorpicker.getHeight();
 	columnnum = 1;
 	data = colorpicker.getImageData();
+
 }
 
 gGUIColorPicker::~gGUIColorPicker() {
