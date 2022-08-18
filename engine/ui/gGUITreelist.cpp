@@ -180,6 +180,10 @@ void gGUITreelist::mouseReleased(int x, int y, int button) {
 				if(x < left + iconx || x > left + iconx + iconw) isfocused = true;
 				else if(x > left + iconx && x < left + iconx + iconw) {
 					element->isexpanded = !element->isexpanded;
+					if(element->isiconchanged == false) {
+						if(element->isexpanded) setIcon(gGUIResources::ICON_FOLDEROPENED, element);
+						else setIcon(gGUIResources::ICON_FOLDER, element);
+					}
 					refreshList();
 				}
 			}
@@ -212,13 +216,18 @@ void gGUITreelist::setIconType(bool isicon) {
 }
 
 void gGUITreelist::setIcon(gImage* icon, Element* element) {
-
-	if(element != nullptr) element->icon = icon;
+	if(element != nullptr) {
+		element->icon = icon;
+		element->isiconchanged = true;
+	}
 	refreshList();
 }
 
 void gGUITreelist::setIcon(int iconid, Element* element) {
-	element->icon = res.getIconImage(iconid);
+	if(element != nullptr) {
+		element->icon = res.getIconImage(iconid);
+		element->isiconchanged = true;
+	}
 	refreshList();
 }
 
