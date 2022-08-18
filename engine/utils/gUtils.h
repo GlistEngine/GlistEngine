@@ -5,7 +5,6 @@
  *      Author: Acer
  */
 
-
 #pragma once
 
 #ifndef UTILS_GUTILS_H_
