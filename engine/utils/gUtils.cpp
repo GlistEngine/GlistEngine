@@ -360,6 +360,20 @@ int gToInt(const std::string& intString) {
 	return x;
 }
 
+float gToFloat(const std::string& floatString) {
+	float f;
+	std::istringstream ff(floatString);
+	ff >> f;
+	return f;
+}
+
+double gToDouble(const std::string& doubleString) {
+	double d;
+	std::istringstream dd(doubleString);
+	dd >> d;
+	return d;
+}
+
 std::string gWStrToStr(const std::wstring& WS) {
 	const unsigned wlen = WS.length();
 	char buf[wlen * sizeof(std::wstring::value_type) + 1];
