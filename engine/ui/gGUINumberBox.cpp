@@ -57,7 +57,6 @@ gGUINumberBox::gGUINumberBox() {
 	boxsizer.setLineProportions(lineprops);
 	textbox.setEditable(true);
 	textbox.setNumeric(true);
-//	textbox.setSize(75, 23);
 	boxsizer.setControl(2, 1, &textbox);
 	setSizer(&boxsizer);
 }
