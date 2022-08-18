@@ -28,10 +28,8 @@ gVbo::gVbo() {
 	isAMD = false;
     const unsigned char* vendorname = glGetString(GL_VENDOR);
     std::string glven(reinterpret_cast<const char*>(vendorname));
-    if (glven.find("ATI") != std::string::npos) {
-        std::cout << "found!" << '\n';
-        isAMD = true;
-    }
+
+    if (glven.find("ATI") != std::string::npos) isAMD = true;
 }
 
 gVbo::~gVbo() {
