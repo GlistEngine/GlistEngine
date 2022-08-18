@@ -58,5 +58,6 @@ private:
 
 	gGUITextbox textbox;
 	gGUISizer boxsizer;
+
 };
 #endif /* UI_GGUINUMBERBOX_H_ */
