@@ -24,6 +24,14 @@ gVbo::gVbo() {
 	sli = 0;
 	scenelight = nullptr;
 	colorshader = nullptr;
+
+	isAMD = false;
+    const unsigned char* vendorname = glGetString(GL_VENDOR);
+    std::string glven(reinterpret_cast<const char*>(vendorname));
+    if (glven.find("ATI") != std::string::npos) {
+        std::cout << "found!" << '\n';
+        isAMD = true;
+    }
 }
 
 gVbo::~gVbo() {
@@ -59,9 +67,7 @@ void gVbo::setVertexData(gVertex* vertices, int coordNum, int total) {
     /* Because of a bug with AMD drivers, glDeleteBuffers function must be called
      * only while exiting the application.
      */
-    const unsigned char* vendorname = glGetString(GL_VENDOR);
-    std::string glven(reinterpret_cast<const char*>(vendorname));
-    if(glven != "ATI Technologies Inc.") glDeleteBuffers(1, &vbo);
+    if(!isAMD) glDeleteBuffers(1, &vbo);
 }
 
 void gVbo::setVertexData(const float* vert0x, int coordNum, int total, int usage, int stride) {
