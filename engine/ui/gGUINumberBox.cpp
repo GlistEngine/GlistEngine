@@ -53,7 +53,6 @@ gGUINumberBox::gGUINumberBox() {
 	float lineprops[] = {0.03f, 0.06f, 0.2f, 0.2f};
 	float columnprops[] = {0.014f, 0.14f};
 	boxsizer.enableBorders(false);
-
 	boxsizer.setColumnProportions(columnprops);
 	boxsizer.setLineProportions(lineprops);
 	textbox.setEditable(true);
@@ -72,14 +71,6 @@ void gGUINumberBox::setText(const std::string& text) {
 bool gGUINumberBox::setType(bool texttype) {
 	typo = texttype;
 	return typo;
-//	if(texttype) {
-//		setText(defintvalue);
-//		gLogi("INT SELECTED");
-//	}
-//	if(!texttype) {
-//		setText(deffloatvalue);
-//		gLogi("FLOAT SELECTED");
-//	}
 }
 
 void gGUINumberBox::keyPressed(int key) {
@@ -109,7 +100,6 @@ void gGUINumberBox::mousePressed(int x, int y, int button) {
 		root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_BUTTONPRESSED);
 //		gLogi("Increase Button: ") << "Pressed";
 
-		//handle text for increasing
 		if(typo){
 			castcurrtexttoint = gToInt(textbox.getText());
 			castcurrtexttoint = castcurrtexttoint + 1;
@@ -134,7 +124,6 @@ void gGUINumberBox::mousePressed(int x, int y, int button) {
 		root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_BUTTONPRESSED);
 //		gLogi("Decrease Button: ") << "Pressed";
 
-		//handle text for decreasing
 		if(typo){
 			castcurrtexttoint = gToInt(textbox.getText());
 			castcurrtexttoint = castcurrtexttoint - 1;
@@ -160,7 +149,7 @@ void gGUINumberBox::mouseReleased(int x, int y, int button) {
 			if(!b1ispressednow) b1ispressed = false;
 			}
 			root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_BUTTONRELEASED);
-//			gLogi("Button1: ") << "Released";
+//			gLogi("Increase Button: ") << "Released";
 		} else {
 			if(!b1istoggle) b1ispressed = false;
 	}
@@ -172,7 +161,7 @@ void gGUINumberBox::mouseReleased(int x, int y, int button) {
 			if(!b2ispressednow) b2ispressed = false;
 			}
 			root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_BUTTONRELEASED);
-//			gLogi("Button2: ") << "Released";
+//			gLogi("Decrease Button: ") << "Released";;
 		} else {
 			if(!b2istoggle) b2ispressed = false;
 	}
@@ -195,11 +184,9 @@ void gGUINumberBox::draw() {
 	gColor buttonColor = gColor(0.1f, 0.45f, 0.87f, 1.0f);
 	gColor pressedButtonColor = gColor(0.08f, 0.36f, 0.71f, 1.0f);
 
-	// frame
 	renderer->setColor(frameColor);
 	gDrawRectangle(left, top, boxwidth, boxheight, true);
 
-	// increment box
 	if(b1ispressed) renderer->setColor(pressedButtonColor);
 	if(!b1ispressed) renderer->setColor(buttonColor);
 	gDrawRectangle(incboxposx, incboxposy + 1  * b1ispressed, smalboxwidth, smalboxheight, true);
@@ -208,7 +195,6 @@ void gGUINumberBox::draw() {
 	if(!b1ispressed) renderer->setColor(white);
 	gDrawTriangle(inctriucorpx, inctriucorpy, inctrilcorpx, inctrilcorpy, inctrircorpx, inctrircorpy, true);
 
-	// decrement box
 	if(b2ispressed) renderer->setColor(pressedButtonColor);
 	if(!b2ispressed) renderer->setColor(buttonColor);
 	gDrawRectangle(decboxposx, decboxposy+1 + 1 * b2ispressed, smalboxwidth, smalboxheight, true);
@@ -220,7 +206,6 @@ void gGUINumberBox::draw() {
 	renderer->setColor(black);
 	font->drawText(headertext, left + 10, top + 13);
 
-	// default renderer color
 	renderer->setColor(defColor);
 	if(guisizer) guisizer->draw();
 }

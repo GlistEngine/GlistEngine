@@ -23,7 +23,6 @@ public:
 	 *
 	 * @param texttype for switching between integer and float values
 	 */
-
 	bool setType(bool texttype);
 	void keyPressed(int key);
 	void keyReleased(int key);
