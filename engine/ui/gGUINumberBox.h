@@ -24,6 +24,7 @@ public:
 	 * @param texttype for switching between integer and float values
 	 */
 	bool setType(bool texttype);
+	void setSize(int width, int height);
 	void keyPressed(int key);
 	void keyReleased(int key);
 	void charPressed(unsigned int codepoint);
@@ -57,6 +58,7 @@ private:
 
 	gGUITextbox textbox;
 	gGUISizer boxsizer;
-};
 
+};
 #endif /* UI_GGUINUMBERBOX_H_ */
+

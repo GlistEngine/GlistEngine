@@ -56,16 +56,20 @@ gGUINumberBox::gGUINumberBox() {
 	boxsizer.setColumnProportions(columnprops);
 	boxsizer.setLineProportions(lineprops);
 	textbox.setEditable(true);
+	textbox.setNumeric(true);
 	boxsizer.setControl(2, 1, &textbox);
 	setSizer(&boxsizer);
 }
 
 gGUINumberBox::~gGUINumberBox() {
-
 }
 
 void gGUINumberBox::setText(const std::string& text) {
 	textbox.setText(text);
+}
+
+void gGUINumberBox::setSize(int width, int height) {
+	textbox.setSize(75, 23);
 }
 
 bool gGUINumberBox::setType(bool texttype) {
@@ -189,7 +193,7 @@ void gGUINumberBox::draw() {
 
 	if(b1ispressed) renderer->setColor(pressedButtonColor);
 	if(!b1ispressed) renderer->setColor(buttonColor);
-	gDrawRectangle(incboxposx, incboxposy + 1  * b1ispressed, smalboxwidth, smalboxheight, true);
+	gDrawRectangle(incboxposx, incboxposy + 1 * b1ispressed, smalboxwidth, smalboxheight, true);
 
 	if(b1ispressed) renderer->setColor(middlegroundcolor);
 	if(!b1ispressed) renderer->setColor(white);
