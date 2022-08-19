@@ -62,7 +62,6 @@ gGUINumberBox::gGUINumberBox() {
 }
 
 gGUINumberBox::~gGUINumberBox() {
-
 }
 
 void gGUINumberBox::setText(const std::string& text) {
