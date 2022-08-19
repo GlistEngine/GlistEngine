@@ -110,7 +110,7 @@ void gGUIRadarChart::drawBase() {
     std::size_t n = this->vertices.size();
 
     for (std::size_t i = 0; i < n; i++) {
-        this->renderer->setColor(this->middlegroundcolor);
+        this->renderer->setColor(this->buttoncolor);
         gDrawLine(
             this->center.position.x,
             this->center.position.y,
