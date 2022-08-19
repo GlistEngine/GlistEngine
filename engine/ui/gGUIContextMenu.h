@@ -55,7 +55,9 @@ public:
 	gGUIContextMenuItem(std::string text, gImage* menuIcon, bool seperatorAdded);
 	~gGUIContextMenuItem();
 
+	void update();
 	virtual void drawMenuItem();
+
 	void mouseMoved(int x, int y);
 	void mousePressed(int x, int y, int button);
 	void mouseReleased(int x, int y, int button);
@@ -171,10 +173,12 @@ private:
 	bool hovered;
 	bool seperatoradded;
 	bool ispressed;
+	bool isparent;
+	bool selected;
 	gImage* menuicon;
 	int menuiconx, menuicony, menuiconw, menuiconh;
-
 	int itemno;
+	int counter;
 };
 
 class gGUIContextMenu : public gGUIContextMenuItem {
