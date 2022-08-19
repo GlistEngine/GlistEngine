@@ -145,6 +145,7 @@ set(SRC_FILES
 	${ENGINE_DIR}/graphics/gRect.cpp
 	${ENGINE_DIR}/animation/gSpriteAnimation.cpp
 	${ENGINE_DIR}/animation/gSpriteAnimator.cpp
+	${ENGINE_DIR}/ui/gGUIStatusBar.cpp
 	${ENGINE_DIR}/ui/gGUILineGraph.cpp
 	${ENGINE_DIR}/ui/gGUIContextMenu.cpp
 	${ENGINE_DIR}/ui/gGUIRadarChart.cpp
@@ -157,6 +158,7 @@ set(SRC_FILES
 	${ENGINE_DIR}/ui/gGUIListbox.cpp
 	${ENGINE_DIR}/ui/gGUITreelist.cpp
 	${ENGINE_DIR}/ui/gGUICheckbox.cpp
+	${ENGINE_DIR}/ui/gGUIColumnChart.cpp
 	${ENGINE_DIR}/ui/gGUITextbox.cpp
 	${ENGINE_DIR}/ui/gGUIText.cpp
 	${ENGINE_DIR}/ui/gGUIDivider.cpp

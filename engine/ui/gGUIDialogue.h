@@ -13,6 +13,7 @@
 #include "gGUIPanel.h"
 #include "gGUIText.h"
 #include "gImage.h"
+#include "gGUIResources.h"
 
 
 class gGUIDialogue: public gGUIForm {
@@ -41,11 +42,23 @@ public:
 	void setExitEvent(bool exitEvent);
 	bool getExitEvent();
 
+	void setInitLeft(int initLeft);
+	void setInitTop(int initTop);
+
 	void showDialogue(std::string title, std::string message, int dialogueType, int iconType);
+	void mouseDragged(int x, int y, int button);
 private:
 	std::string message;
+	int dialoguetype;
+	int icontype;
+
 	std::string dialoguetypename[dialoguetypenum];
 	std::string icontypename[icontypenum];
+
+	gImage dialogueicon;
+	gImage* newdialogueicon;
+	gGUIText messagetext;
+	gGUISizer buttonssizer;
 
 	gGUIButton exitbutton;
 	gGUIButton okbutton;
@@ -54,15 +67,16 @@ private:
 	gGUIButton cancelbutton;
 
 	bool exitevent;
+	bool exitbuttonexittrigger;
+	bool okbuttonexittrigger;
+	bool yesbuttonexittrigger;
+	bool nobuttonexittrigger;
+	bool cancelbuttonexittrigger;
 
-	gGUIText messagetext;
+	int initleft;
+	int inittop;
 
-	gGUIPanel buttonspanel;
-	gGUISizer buttonspanelsizer;
-
-	gImage dialogueicon;
-
-	bool imageloaded;
+	gGUIResources resources;
 };
 
 #endif /* UI_GGUIDIALOGUE_H_ */

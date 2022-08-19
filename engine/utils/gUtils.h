@@ -117,6 +117,8 @@ std::string gToStr(const T& value, int width, char fill) {
 }
 
 int gToInt(const std::string& intString);
+float gToFloat(const std::string& floatString);
+double gToDouble(const std::string& doubleString);
 std::string gWStrToStr(const std::wstring& s);
 
 template <typename T>

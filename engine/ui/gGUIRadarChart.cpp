@@ -8,8 +8,10 @@
 #include "gGUIRadarChart.h"
 
 gGUIRadarChart::gGUIRadarChart() :
-    datasets{{{0.0f, 0.0f, 0.0f}, gColor::RED}},
+    datasets{{std::vector<float>(3), gColor::RED}},
     vertices(3),
+    grids{std::vector<gVertex>(3), std::vector<gVertex>(3), std::vector<gVertex>(3)},
+    is_grid_enabled{true},
     labels(3),
     max{1.0f}
 {}
@@ -39,14 +41,31 @@ void gGUIRadarChart::setLabel(std::size_t i, const std::string &label) {
     this->labels[i] = label;
 }
 
+void gGUIRadarChart::setGrid(bool enable) {
+    this->is_grid_enabled = enable;
+}
+
+void gGUIRadarChart::setGridSize(std::size_t new_size) {
+    this->grids.resize(new_size);
+    for (std::vector<gVertex> &grid : this->grids) {
+        grid.resize(this->vertices.size());
+    }
+}
+
 void gGUIRadarChart::setNumDataset(std::size_t new_size) {
     this->datasets.resize(new_size);
+    for (gDataset &dataset : this->datasets) {
+        dataset.variables.resize(this->vertices.size());
+    }
 }
 
 void gGUIRadarChart::setNumVar(std::size_t new_size) {
     if (new_size >= 3) {
         for (gDataset &dataset : this->datasets) {
             dataset.variables.resize(new_size);
+        }
+        for (std::vector<gVertex> &grid : this->grids) {
+            grid.resize(new_size);
         }
         this->vertices.resize(new_size);
         this->labels.resize(new_size);
@@ -59,11 +78,11 @@ void gGUIRadarChart::calcVertices() {
     int min_length = std::min(width, height);
     int min_pad = 10;
 
-    constexpr float pi = 3.14159265358979323846264338327950288f;
     std::size_t n = this->vertices.size();
 
     float circumradius = static_cast<float>((min_length - 2 * min_pad) / 2);
-    float exterior_angle = 2.0f * pi / static_cast<float>(n);
+    float exterior_angle = 2.0f * PI / static_cast<float>(n);
+    float ratio = 1.0f / static_cast<float>(this->grids.size() + 1);
 
     this->center.position.x = static_cast<float>(this->left + width / 2);
     this->center.position.y = static_cast<float>(this->top + height / 2);
@@ -73,13 +92,24 @@ void gGUIRadarChart::calcVertices() {
             - circumradius * std::sin(static_cast<float>(i) * exterior_angle);
         this->vertices[i].position.y = this->center.position.y
             - circumradius * std::cos(static_cast<float>(i) * exterior_angle);
+
+        for (std::size_t j = 0; j < this->grids.size(); j++) {
+            this->grids[j][i].position.x = this->center.position.x
+                - ratio * static_cast<float>(j + 1)
+                * circumradius * std::sin(static_cast<float>(i) * exterior_angle);
+           
+            this->grids[j][i].position.y = this->center.position.y
+                - ratio * static_cast<float>(j + 1)
+                * circumradius * std::cos(static_cast<float>(i) * exterior_angle);
+        }
     }
 }
 
 void gGUIRadarChart::drawBase() {
     gColor *old_color = this->renderer->getColor();
+    std::size_t n = this->vertices.size();
 
-    for (std::size_t i = 0; i < this->vertices.size(); i++) {
+    for (std::size_t i = 0; i < n; i++) {
         this->renderer->setColor(this->middlegroundcolor);
         gDrawLine(
             this->center.position.x,
@@ -88,7 +118,7 @@ void gGUIRadarChart::drawBase() {
             this->vertices[i].position.y
         );
 
-        if (i != this->vertices.size() - 1) {
+        if (i != n - 1) {
             gDrawLine(
                 this->vertices[i].position.x,
                 this->vertices[i].position.y,
@@ -104,14 +134,28 @@ void gGUIRadarChart::drawBase() {
             );
         }
 
+        if (this->is_grid_enabled) {
+            for (const std::vector<gVertex> &grid : this->grids) {
+                if (i != grid.size() - 1) {
+                    gDrawLine(
+                        grid[i].position.x,
+                        grid[i].position.y,
+                        grid[i + 1].position.x,
+                        grid[i + 1].position.y
+                    );
+                } else {
+                    gDrawLine(
+                        grid[i].position.x,
+                        grid[i].position.y,
+                        grid[0].position.x,
+                        grid[0].position.y
+                    );
+                }
+            }
+        }
+
         this->renderer->setColor(this->fontcolor);
-        if (this->center.position.x - this->vertices[i].position.x < 0.0f) {
-            this->font->drawText(
-                this->labels[i],
-                this->vertices[i].position.x,
-                this->vertices[i].position.y
-            );
-        } else if (this->center.position.x - this->vertices[i].position.x > 0.0f) {
+        if ((i > 0 && i < n / 2) || (n % 2 != 0 && i == n / 2)) {
             float text_width = this->font->getStringWidth(this->labels[i]);
 
             this->font->drawText(
@@ -119,12 +163,18 @@ void gGUIRadarChart::drawBase() {
                 this->vertices[i].position.x - text_width,
                 this->vertices[i].position.y
             );
-        } else {
+        } else if (i == 0 || (n % 2 == 0 && i == n / 2)) {
             float text_width = this->font->getStringWidth(this->labels[i]);
 
             this->font->drawText(
                 this->labels[i],
                 this->vertices[i].position.x - text_width / 2.0f,
+                this->vertices[i].position.y
+            );
+        } else {
+            this->font->drawText(
+                this->labels[i],
+                this->vertices[i].position.x,
                 this->vertices[i].position.y
             );
         }

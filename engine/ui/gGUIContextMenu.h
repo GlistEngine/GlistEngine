@@ -52,7 +52,7 @@
 class gGUIContextMenuItem: public gGUIControl {
 public:
 
-	gGUIContextMenuItem(std::string text, gImage* menuIcon);
+	gGUIContextMenuItem(std::string text, gImage* menuIcon, bool seperatorAdded);
 	~gGUIContextMenuItem();
 
 	virtual void drawMenuItem();
@@ -127,6 +127,9 @@ public:
 	 */
 	bool getIsPressed();
 
+//	bool isDisabled();
+//	void setDisabled();
+
 	/*
 	 * Returns the title of a context menu item.
 	 *
@@ -145,23 +148,18 @@ public:
 	 * @param gImage* menuIcon is the icon of menu item,
 	 * if nullptr is sent an item without any icons will
 	 * be added to the vector.
-	 */
-	int addItem(std::string text, gImage* menuIcon);
-
-	/*
-	 * Adds a seperator under selected menu item
 	 *
-	 * @param itemNo is the number of menu item where
-	 * the seperator is going to be added.
+	 * @param bool seperatorAdded determines whether a seperator
+	 * will added under a menu item or not.
 	 */
-	void addSeperator(int itemNo);
+	void addItem(std::string text, gImage* menuIcon, bool seperatorAdded);
 
 	int contextmenux, contextmenuy, contextmenudefaultw, contextmenuh;
 
-	gImage* nullicon;
-
 private:
 	static int lastitemid;
+	static int lastparentitemid;
+	static std::vector<int> parentitems;
 	int itemid, parentitemid;
 	std::string text;
 	std::vector<gGUIContextMenuItem> items;
@@ -175,6 +173,8 @@ private:
 	bool ispressed;
 	gImage* menuicon;
 	int menuiconx, menuicony, menuiconw, menuiconh;
+
+	int itemno;
 };
 
 class gGUIContextMenu : public gGUIContextMenuItem {
@@ -186,7 +186,7 @@ public:
 	void draw();
 
 private:
-	std::vector<gGUIContextMenuItem> childs;
+	std::vector<gGUIContextMenuItem> items;
 };
 
 #endif /* UI_GGUICONTEXTMENU_H_ */
