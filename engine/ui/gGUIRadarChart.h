@@ -74,6 +74,20 @@ public:
      */
     void setNumVar(std::size_t new_size);
 
+    /*
+     * Sets minimum value of datasets. Defaults to 0.
+     *
+     * @param min A minimum value.
+     */
+    void setMin(float min);
+
+    /*
+     * Sets maximum value of datasets. Defaults to 1.
+     *
+     * @param max A maximum value.
+     */
+    void setMax(float max);
+
 private:
     struct gDataset {
         std::vector<float> variables;
@@ -91,6 +105,7 @@ private:
     bool is_grid_enabled;
     std::vector<std::string> labels;
     gVertex center;
+    float min;
     float max;
 };
 
