@@ -30,7 +30,7 @@ void gGUIRadarChart::update() {
     this->calcVertices();
 }
 
-void gGUIRadarChart::setVal(std::size_t i, std::size_t j, float val) {
+void gGUIRadarChart::setValue(std::size_t i, std::size_t j, float val) {
     this->datasets[i].variables[j] = val;
 }
 

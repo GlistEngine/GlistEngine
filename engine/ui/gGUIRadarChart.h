@@ -22,13 +22,13 @@ public:
     void update() override;
 
     /*
-     * Sets specified quantitative variable with specified dataset.
+     * Sets specified quantitative variable of the specified dataset.
      *
      * @param i   Dataset index.
      * @param j   Axis index.
      * @param val Quantitative data.
      */
-    void setVal(std::size_t i, std::size_t j, float val);
+    void setValue(std::size_t i, std::size_t j, float val);
 
     /*
      * Sets color of given dataset.
