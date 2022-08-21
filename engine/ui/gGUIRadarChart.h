@@ -26,9 +26,9 @@ public:
      *
      * @param i   Dataset index.
      * @param j   Axis index.
-     * @param var Quantitative data, must be between 0 and 1.
+     * @param val Quantitative data.
      */
-    void setVar(std::size_t i, std::size_t j, float var);
+    void setVal(std::size_t i, std::size_t j, float val);
 
     /*
      * Sets color of given dataset.

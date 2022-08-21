@@ -29,8 +29,8 @@ void gGUIRadarChart::update() {
     this->calcVertices();
 }
 
-void gGUIRadarChart::setVar(std::size_t i, std::size_t j, float var) {
-    this->datasets[i].variables[j] = var;
+void gGUIRadarChart::setVal(std::size_t i, std::size_t j, float val) {
+    this->datasets[i].variables[j] = val;
 }
 
 void gGUIRadarChart::setColor(std::size_t i, const gColor &color) {
