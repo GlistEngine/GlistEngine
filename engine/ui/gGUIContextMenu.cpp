@@ -216,6 +216,7 @@ void gGUIContextMenuItem::drawMenuItem() {
 		for(i = 0; i < items.size(); i++) {
 			if(items[i].parentitemid >= 0) {
 				renderer->setColor(fontcolor);
+//				> symbol for parent items
 				if(items[i].isparent) font->drawText(">", items[i].right - 20, items[i].top + items[i].height - datady - 2);
 				font->drawText(items[i].title, items[i].left + contextmenuleftmargin, items[i].top + items[i].height - datady);
 			}

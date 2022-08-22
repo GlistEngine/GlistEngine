@@ -95,7 +95,6 @@ public:
 	void mouseMoved(int x, int y);
 	void mousePressed(int x, int y, int button);
 	void mouseReleased(int x, int y, int button);
-//	int getIconId(int iconId);
 
 	/**
 	 * Returns item id.
