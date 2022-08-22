@@ -101,9 +101,6 @@ void gGUIContextMenuItem::addItem(std::string text,  gImage* menuIcon, bool sepe
 }
 
 void gGUIContextMenuItem::drawMenuItem() {
-//	condition for > symbol
-	i = 0;
-	for(i = 0; i < parentitems.size(); i++) if(itemid == parentitems[i]) isparent = true;
 	if(contextmenushown) {
 //		context menu on the right
 		if((contextmenux + contextmenudefaultw) >= getScreenWidth()) {
@@ -156,7 +153,7 @@ void gGUIContextMenuItem::drawMenuItem() {
 				items[i].menuicony = items[i].top + items[i].menuiconh / 4;
 			}
 		}
-//		set poisiton for the sub-menu items
+//		set position for the sub-menu items
 		i = 0;
 		for(i = 0; i < items.size(); i++) {
 			if(items[i].parentitemid > 0) {
@@ -211,6 +208,9 @@ void gGUIContextMenuItem::drawMenuItem() {
 				items[i].menuicon->draw(items[i].menuiconx, items[i].menuicony, items[i].menuiconw, items[i].menuiconh);
 			}
 		}
+//		condition for > symbol
+		i = 0;
+		for(i = 0; i < parentitems.size(); i++) if(itemid == parentitems[i]) isparent = true;
 //		menu item titles
 		i = 0;
 		for(i = 0; i < items.size(); i++) {
