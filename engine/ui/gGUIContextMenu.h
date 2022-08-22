@@ -84,7 +84,6 @@
  * - Lastly, run your program. When you right click on the screen you will
  * see the context menu, then you can close it with a left click.
  */
-
 class gGUIContextMenuItem: public gGUIControl {
 public:
 

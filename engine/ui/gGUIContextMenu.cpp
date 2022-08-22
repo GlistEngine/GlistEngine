@@ -44,7 +44,6 @@ gGUIContextMenuItem::gGUIContextMenuItem(std::string text, gImage* menuIcon, boo
 }
 
 gGUIContextMenuItem::~gGUIContextMenuItem() {
-
 }
 
 int gGUIContextMenuItem::getItemId() {
