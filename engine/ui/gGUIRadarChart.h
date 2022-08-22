@@ -22,13 +22,13 @@ public:
     void update() override;
 
     /*
-     * Sets specified quantitative variable with specified dataset.
+     * Sets specified quantitative variable of the specified dataset.
      *
-     * @param i   Dataset index.
-     * @param j   Axis index.
-     * @param var Quantitative data, must be between 0 and 1.
+     * @param i     Dataset index.
+     * @param j     Axis index.
+     * @param value Quantitative data.
      */
-    void setVar(std::size_t i, std::size_t j, float var);
+    void setValue(std::size_t i, std::size_t j, float value);
 
     /*
      * Sets color of given dataset.
@@ -72,11 +72,25 @@ public:
      *
      * @param new_size Number of variables.
      */
-    void setNumVar(std::size_t new_size);
+    void setNumAxes(std::size_t new_size);
+
+    /*
+     * Sets minimum value of datasets. Defaults to 0.
+     *
+     * @param min A minimum value.
+     */
+    void setMin(float min);
+
+    /*
+     * Sets maximum value of datasets. Defaults to 1.
+     *
+     * @param max A maximum value.
+     */
+    void setMax(float max);
 
 private:
     struct gDataset {
-        std::vector<float> variables;
+        std::vector<float> values;
         gColor color;
     };
 
@@ -91,6 +105,7 @@ private:
     bool is_grid_enabled;
     std::vector<std::string> labels;
     gVertex center;
+    float min;
     float max;
 };
 

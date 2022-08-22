@@ -13,6 +13,7 @@ gGUIRadarChart::gGUIRadarChart() :
     grids{std::vector<gVertex>(3), std::vector<gVertex>(3), std::vector<gVertex>(3)},
     is_grid_enabled{true},
     labels(3),
+    min{0.0f},
     max{1.0f}
 {}
 
@@ -29,8 +30,8 @@ void gGUIRadarChart::update() {
     this->calcVertices();
 }
 
-void gGUIRadarChart::setVar(std::size_t i, std::size_t j, float var) {
-    this->datasets[i].variables[j] = var;
+void gGUIRadarChart::setValue(std::size_t i, std::size_t j, float value) {
+    this->datasets[i].values[j] = value;
 }
 
 void gGUIRadarChart::setColor(std::size_t i, const gColor &color) {
@@ -55,14 +56,14 @@ void gGUIRadarChart::setGridSize(std::size_t new_size) {
 void gGUIRadarChart::setNumDataset(std::size_t new_size) {
     this->datasets.resize(new_size);
     for (gDataset &dataset : this->datasets) {
-        dataset.variables.resize(this->vertices.size());
+        dataset.values.resize(this->vertices.size());
     }
 }
 
-void gGUIRadarChart::setNumVar(std::size_t new_size) {
+void gGUIRadarChart::setNumAxes(std::size_t new_size) {
     if (new_size >= 3) {
         for (gDataset &dataset : this->datasets) {
-            dataset.variables.resize(new_size);
+            dataset.values.resize(new_size);
         }
         for (std::vector<gVertex> &grid : this->grids) {
             grid.resize(new_size);
@@ -70,6 +71,14 @@ void gGUIRadarChart::setNumVar(std::size_t new_size) {
         this->vertices.resize(new_size);
         this->labels.resize(new_size);
     }
+}
+
+void gGUIRadarChart::setMin(float min) {
+    this->min = min;
+}
+
+void gGUIRadarChart::setMax(float max) {
+    this->max = max;
 }
 
 void gGUIRadarChart::calcVertices() {
@@ -194,7 +203,9 @@ void gGUIRadarChart::drawChart() {
         );
 
         for (std::size_t i = 0; i < vertices.size(); i += 2) {
-            float distance = dataset.variables[i / 2] * (circumradius / this->max);
+            float normalized =
+                (dataset.values[i / 2] - this->min) / (this->max - this->min);
+            float distance = normalized * circumradius;
 
             float rad = std::atan2(
                 this->center.position.y - this->vertices[i / 2].position.y,
