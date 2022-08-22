@@ -64,6 +64,17 @@
  * menu.getItem(0)->getItem(0)->addItem("item name", nullptr, false);)
  * Parameter explanations can be found below.
  *
+ * - To add an icon to menu you can load your own images or use the icons
+ * provided by GlistEngine.
+ * - To use your own image create a gImage object
+ * (Ex: gImage icon;) and load it with loadImage method. Then, you can
+ * send this object to add item. (Ex: menu.addItem("item name", &icon, false);)
+ * - To use icons provided by GlistEngine create a gGUIResources object.
+ * (Ex: gGUIResources resource;) Initialize it by initialize method.
+ * (Ex: resource.initialize();) then you can send it to addItem by getIconImage
+ * method. (Ex: menu.addItem("item name", icon.getIconImage(gGUIResources::ICON_FILE), false);)
+ * - There are many different icons in GlistEngine you can see them all in gGUIResources.h
+ *
  * - In order to add functionality to menu options you can use isPressed
  * method in GameCanvas' mousePressed method.
  * (Ex: if(menu.getItem(0)->isPressed()) {
@@ -79,7 +90,6 @@ public:
 	gGUIContextMenuItem(std::string text, gImage* menuIcon, bool seperatorAdded);
 	~gGUIContextMenuItem();
 
-	void update();
 	virtual void drawMenuItem();
 
 	void mouseMoved(int x, int y);
@@ -196,11 +206,11 @@ private:
 	bool seperatoradded;
 	bool ispressed;
 	bool isparent;
-	bool selected;
 	gImage* menuicon;
 	int menuiconx, menuicony, menuiconw, menuiconh;
 	int itemno;
 	int counter;
+	int i;
 };
 
 class gGUIContextMenu : public gGUIContextMenuItem {
