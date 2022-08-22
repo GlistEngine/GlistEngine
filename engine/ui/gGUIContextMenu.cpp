@@ -216,7 +216,7 @@ void gGUIContextMenuItem::drawMenuItem() {
 		for(i = 0; i < items.size(); i++) {
 			if(items[i].parentitemid >= 0) {
 				renderer->setColor(fontcolor);
-//				> symbol for parent items
+//				">" symbol for parent items
 				if(items[i].isparent) font->drawText(">", items[i].right - 20, items[i].top + items[i].height - datady - 2);
 				font->drawText(items[i].title, items[i].left + contextmenuleftmargin, items[i].top + items[i].height - datady);
 			}
@@ -227,23 +227,19 @@ void gGUIContextMenuItem::drawMenuItem() {
 }
 
 void gGUIContextMenuItem::mouseMoved(int x, int y) {
-//	if(contextmenushown) {
-		for(int i = 0; i < items.size(); i++) {
-			if(items[i].contextmenushown && items[i].parentitemid >= 0 && x >= items[i].left && x < items[i].right && y >= items[i].top && y < items[i].bottom) {
-//				gLogi("Item") << i << ", left:" << items[i].left << ", top:" << items[i].top << ", right:" << items[i].right << ", bottom:" << items[i].bottom;
-				hovered = true;
-				items[i].hovered = true;
-//				items[i].update();
-			} else if(items[i].parentitemid != 0 && x >= items[i].left && x < items[i].right && y >= items[i].top && y < items[i].bottom) {
-				hovered = true;
-				items[i].hovered = true;
-			} else {
-				items[i].hovered = false;
-//				items[i].counter = 0;
-			}
-			items[i].mouseMoved(x, y);
+	for(int i = 0; i < items.size(); i++) {
+		if(items[i].contextmenushown && items[i].parentitemid >= 0 && x >= items[i].left && x < items[i].right && y >= items[i].top && y < items[i].bottom) {
+//			gLogi("Item") << i << ", left:" << items[i].left << ", top:" << items[i].top << ", right:" << items[i].right << ", bottom:" << items[i].bottom;
+			hovered = true;
+			items[i].hovered = true;
+		} else if(items[i].parentitemid != 0 && x >= items[i].left && x < items[i].right && y >= items[i].top && y < items[i].bottom) {
+			hovered = true;
+			items[i].hovered = true;
+		} else {
+			items[i].hovered = false;
 		}
-//	}
+		items[i].mouseMoved(x, y);
+	}
 }
 
 void gGUIContextMenuItem::mousePressed(int x, int y, int button) {
