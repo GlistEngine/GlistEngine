@@ -44,7 +44,7 @@ private:
 	std::vector<std::string> valuefortext;
 	std::vector<std::string> percentagefortext;
 
-	float radius, cursordegree, radiusreduction = 0.45f, oncursorcolorreduction = - 0.1f, rotationforothers = 0.0f;
+	float radius, cursordegree = -1, radiusreduction = 0.45f, oncursorcolorreduction = - 0.1f, rotationforothers = 0.0f;
 	bool isFilled = true, isshown = true;
 	int numberofsidesratio = 60, sideofothers = 2, cursorx, cursory, infotextshift = 10, showinfoindex, fontsize = 9;
 	gColor color;
