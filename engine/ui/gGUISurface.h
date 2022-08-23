@@ -8,17 +8,18 @@
 #ifndef UI_GGUISURFACE_H_
 #define UI_GGUISURFACE_H_
 
-#include "gGUIControl.h"
+#include "gGUIScrollable.h"
 #include "gRenderer.h"
 #include "gImage.h"
 #include <deque>
 
 
-class gGUISurface: public gGUIControl {
+class gGUISurface: public gGUIScrollable {
 public:
 	gGUISurface();
 	virtual ~gGUISurface();
-	void draw();
+	void set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIObject* parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h);
+	void drawContent();
 
 	void setBorder(float thickness, float borderposition);
 	void addRectangle(float x, float y, float w, float h, bool isFilled, gColor color = gColor(0.0f, 0.0f, 0.0f));
@@ -40,16 +41,20 @@ private:
 	void resetColorAndBorder();
 	void drawShapes();
 
+	void mousePressed(int x, int y, int button);
+	void mouseReleased(int x, int y, int button);
+
 	std::vector<std::vector<float>> shapes;
 	std::deque<gImage*> images;
 
 	int imageNum;
+	int maxHeight;
 	//color
 	float r, g, b, a;
 	//frame of rectangle
 	float thickness, borderposition;
 	//boolean isFilled: initialize this as false
-	bool isFilled;
+	bool isFilled, mousepressedonlist;
 
 };
 

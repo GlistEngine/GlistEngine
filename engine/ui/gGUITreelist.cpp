@@ -179,8 +179,9 @@ void gGUITreelist::mouseReleased(int x, int y, int button) {
 				iconx = element->orderno * spacesize + (iconw * 2 / 3);
 				if(x < left + iconx || x > left + iconx + iconw) isfocused = true;
 				else if(x > left + iconx && x < left + iconx + iconw) {
-					element->isexpanded = !element->isexpanded;
+					element->isexpanded = !(element->isexpanded);
 					if(element->isiconchanged == false) {
+						gLogi("HEREX");
 						if(element->isexpanded) setIcon(gGUIResources::ICON_FOLDEROPENED, element);
 						else setIcon(gGUIResources::ICON_FOLDER, element);
 					}
@@ -191,6 +192,7 @@ void gGUITreelist::mouseReleased(int x, int y, int button) {
 		}
 
 		root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_TREELISTSELECTED, gToStr(selectedno));
+		actionmanager.onGUIEvent(id, G_GUIEVENT_TREELISTSELECTED);
 	}
 }
 
@@ -226,7 +228,7 @@ void gGUITreelist::setIcon(gImage* icon, Element* element) {
 void gGUITreelist::setIcon(int iconid, Element* element) {
 	if(element != nullptr) {
 		element->icon = res.getIconImage(iconid);
-		element->isiconchanged = true;
+		if(iconid != gGUIResources::ICON_FOLDER && iconid != gGUIResources::ICON_FOLDEROPENED) element->isiconchanged = true;
 	}
 	refreshList();
 }

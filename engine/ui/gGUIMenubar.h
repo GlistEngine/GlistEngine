@@ -9,6 +9,8 @@
 #define UI_GGUIMENUBAR_H_
 
 #include "gGUIControl.h"
+#include "gImage.h"
+#include "gGUIResources.h"
 
 
 class gGUIMenuItem : public gGUIControl {
@@ -22,7 +24,7 @@ public:
 	void setParentItemId(int itemId);
 	int getParentItemId();
 
-	int addChild(std::string text);
+	int addChild(std::string text, bool addSeperator = false);
 	int addChild(gGUIMenuItem childItem);
 	void removeChild(int childNo);
 	int getChildNum();
@@ -30,6 +32,8 @@ public:
 	gGUIMenuItem* findChild(int itemId);
 
 	virtual void draw();
+	void setMenuicon(int menuItemid, std::string icon);
+	void setMenuicon(int menuItemId, int icon);
 
 	void mouseMoved(int x, int y);
 	void mousePressed(int x, int y, int button);
@@ -57,6 +61,11 @@ private:
 	int menuboxdefaulth;
 	int texth;
 	int counter;
+	gImage* menuicon;
+	bool isicon;
+	int iconh, iconw;
+	gGUIResources res;
+	bool seperator;
 };
 
 

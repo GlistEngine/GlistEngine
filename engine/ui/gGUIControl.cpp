@@ -8,6 +8,7 @@
 #include "gGUIControl.h"
 
 
+
 gGUIControl::gGUIControl() {
 }
 
@@ -39,4 +40,3 @@ void gGUIControl::update() {
 void gGUIControl::draw() {
 //	gLogi("gGUIControl") << "draw";
 }
-

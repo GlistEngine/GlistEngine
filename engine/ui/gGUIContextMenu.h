@@ -46,8 +46,43 @@
  * Beggining of gGUIContextMenuItem class which
  * creates a menu item according to given parameters.
  * Without any parameters the class will give an error.
- * You can add menu items and seperators, change the left
- * margin and the menu width.
+ * You can add menu items, seperators, change both menu width
+ * and left margin width. You can directly change menu width
+ * (Ex: menu.contextmenudefaultw = 100;) but
+ * you have to use setter function to change left margin width.
+ * (Ex: menu.setContextMenuLeftMargin(20);)
+ *
+ * HOW TO USE
+ * - First, create an object from gGUIContextMenu class
+ * (Ex: gGUIContextMenu menu;) and use addContextMenu method
+ * to add your menu into the frame. (Ex: frame.addContextMenu(&menu);)
+ *
+ * - Second, add menu items with addItem method.
+ * (Ex: menu.addItem("item name", nullptr, false);)
+ * You can also add sub-menu items with this function.
+ * (Ex: menu.getItem(0)->addItem("item name", &menuicon, false); or
+ * menu.getItem(0)->getItem(0)->addItem("item name", nullptr, false);)
+ * Parameter explanations can be found below.
+ *
+ * - To add an icon to menu you can load your own images or use the icons
+ * provided by GlistEngine.
+ * - To use your own image create a gImage object
+ * (Ex: gImage icon;) and load it with loadImage method. Then, you can
+ * send this object to add item. (Ex: menu.addItem("item name", &icon, false);)
+ * - To use icons provided by GlistEngine create a gGUIResources object.
+ * (Ex: gGUIResources resource;) Initialize it by initialize method.
+ * (Ex: resource.initialize();) then you can send it to addItem by getIconImage
+ * method. (Ex: menu.addItem("item name", icon.getIconImage(gGUIResources::ICON_FILE), false);)
+ * - There are many different icons in GlistEngine you can see them all in gGUIResources.h
+ *
+ * - In order to add functionality to menu options you can use isPressed
+ * method in GameCanvas' mousePressed method.
+ * (Ex: if(menu.getItem(0)->isPressed()) {
+ * 			// your code
+ * 		})
+ *
+ * - Lastly, run your program. When you right click on the screen you will
+ * see the context menu, then you can close it with a left click.
  */
 class gGUIContextMenuItem: public gGUIControl {
 public:
@@ -55,7 +90,6 @@ public:
 	gGUIContextMenuItem(std::string text, gImage* menuIcon, bool seperatorAdded);
 	~gGUIContextMenuItem();
 
-	void update();
 	virtual void drawMenuItem();
 
 	void mouseMoved(int x, int y);
@@ -63,40 +97,39 @@ public:
 	void mouseReleased(int x, int y, int button);
 
 	/**
-	 * Returns itemid.
+	 * Returns item id.
 	 *
-	 * @return itemid.
+	 * @return the value of a menu items id.
 	 */
 	int getItemId();
 
 	/**
-	 * Sets parentitemid to itemId.
+	 * Sets parent item id of an item.
 	 *
-	 * @param itemId is parenitemid to be set.
+	 * @param itemId is the menu item's parent id to be set.
 	 */
 	void setParentItemId(int itemId);
 
 	/**
-	 * Returns parentitemid.
+	 * Returns parent item's id.
 	 *
-	 * @return parentitemid.
+	 * @return the value of parent item's id.
 	 */
 	int getParentItemId();
 
 	/**
 	 * Returns selected menu item.
 	 *
-	 * @return menuitems[itemNo].
+	 * @param itemNo is the number of the gGUIMenuItem object to return
 	 *
-	 * @param itemNo is the item's number that
-	 * is going to be returned
+	 * @return selected item as an gGUIMenuItem object.
 	 */
 	gGUIContextMenuItem* getItem(int itemNo);
 
 	/**
 	 * Returns the width of context menu item's left margin.
 	 *
-	 * @return contextmenuleftmargin.
+	 * @return the current width of left margin.
 	 */
 	int getContextMenuLeftMargin();
 
@@ -110,27 +143,24 @@ public:
 	/*
 	 * Returns the total number of context menu items.
 	 *
-	 * @return items.size().
+	 * @return the current size of items vector.
 	 */
 	int getContextMenuSize();
 
 	/**
 	 * Returns the visibility of context menu
 	 *
-	 * @return a bool value contextmenushown.
+	 * @return the visibility information for menu.
 	 */
 	bool getContextMenuShown();
 
 	/*
-	 * Returns a bool value. If you click on an item
-	 * it will return true, otherwise false.
+	 * Returns the information for whether an item is
+	 * selected or not.
 	 *
-	 * @return the value of ispressed
+	 * @return whether a menu item was clicked or not.
 	 */
-	bool getIsPressed();
-
-//	bool isDisabled();
-//	void setDisabled();
+	bool isPressed();
 
 	/*
 	 * Returns the title of a context menu item.
@@ -138,7 +168,7 @@ public:
 	 * @param itemNo is the number of context menu item whose
 	 * title will be returned
 	 *
-	 * @return the string item[itemNo].title.
+	 * @return a menu items title as a string.
 	 */
 	std::string getItemTitle(int itemNo);
 
@@ -151,10 +181,11 @@ public:
 	 * if nullptr is sent an item without any icons will
 	 * be added to the vector.
 	 *
-	 * @param bool seperatorAdded determines whether a seperator
-	 * will added under a menu item or not.
+	 * @param bool seperatorAdded determines if there will
+	 * be a seperator under a menu item or not.
 	 */
 	void addItem(std::string text, gImage* menuIcon, bool seperatorAdded);
+
 
 	int contextmenux, contextmenuy, contextmenudefaultw, contextmenuh;
 
@@ -174,11 +205,11 @@ private:
 	bool seperatoradded;
 	bool ispressed;
 	bool isparent;
-	bool selected;
 	gImage* menuicon;
 	int menuiconx, menuicony, menuiconw, menuiconh;
 	int itemno;
 	int counter;
+	int i;
 };
 
 class gGUIContextMenu : public gGUIContextMenuItem {
