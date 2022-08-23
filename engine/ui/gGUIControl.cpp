@@ -7,7 +7,6 @@
 
 #include "gGUIControl.h"
 
-gGUIActionManager gGUIControl::actionmanager;
 
 
 gGUIControl::gGUIControl() {
@@ -40,8 +39,4 @@ void gGUIControl::update() {
 
 void gGUIControl::draw() {
 //	gLogi("gGUIControl") << "draw";
-}
-
-void gGUIControl::onGUIEvent(int guiObjectId, int eventType, std::string value1, std::string value2) {
-
 }
