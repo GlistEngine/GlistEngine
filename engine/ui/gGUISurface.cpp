@@ -14,6 +14,8 @@
 gGUISurface::gGUISurface() {
 	resetColorAndBorder();
 	imageNum = 0;
+	totalh = 0;
+	maxHeight = bottom;
 }
 gGUISurface::~gGUISurface() {
 
@@ -32,36 +34,49 @@ void gGUISurface::resetColorAndBorder() {
 	thickness = 0.0f;
 	borderposition = 0.0f;
 }
+//
+void gGUISurface::set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIObject* parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h) {
+	totalh = h;
+	gGUIScrollable::set(root, topParentGUIObject, parentGUIObject, parentSlotLineNo, parentSlotColumnNo, x, y, w, h);
+	gGUIScrollable::setDimensions(width, height);
+	gGUIScrollable::enableScrollbars(true, false);
+}
 
-void gGUISurface::draw() {
+void gGUISurface::drawContent() {
+	renderer->setColor(gColor(0.0f, 0.0f, 0.0f, 0.0f));
+	title = "Surface";
+	font->drawText(title + ":", titlex, titley);
+
 	drawBackground();
 	drawShapes();
 }
 
 void gGUISurface::drawShapes() {
 	for(int i = 0; i < shapes.size(); i++) {
+
 		//rectangle = 0
 		if((int) shapes[i][0] == 0) {//for drawing RECTANGLE first index decides to the shape type
+
 			if((int) shapes[i][5] == 0) {//isFilled = false
 				if((int) shapes[i][6] == 0) {//no thickness
 					renderer->setColor(gColor(shapes[i][7], shapes[i][8], shapes[i][9], shapes[i][10]));
-					gDrawRectangle(shapes[i][1] + left, shapes[i][2] + top, shapes[i][3], shapes[i][4], false);
+					gDrawRectangle(shapes[i][1], shapes[i][2] - firsty, shapes[i][3], shapes[i][4], false);
 				}
 				else
 				{
 					renderer->setColor(gColor(shapes[i][9], shapes[i][10], shapes[i][11], shapes[i][12]));
-					gDrawRectangle(shapes[i][1] + left, shapes[i][2] + top, shapes[i][3], shapes[i][4], false, shapes[i][7], shapes[i][8]);
+					gDrawRectangle(shapes[i][1], shapes[i][2] - firsty, shapes[i][3], shapes[i][4], false, shapes[i][7], shapes[i][8]);
 				}
 			}
 			else { //isFilled = true
 				if((int) shapes[i][6] == 0) {//no thickness
 					renderer->setColor(gColor(shapes[i][7], shapes[i][8], shapes[i][9], shapes[i][10]));
-					gDrawRectangle(shapes[i][1] + left, shapes[i][2] + top, shapes[i][3], shapes[i][4], true);
+					gDrawRectangle(shapes[i][1], shapes[i][2] - firsty, shapes[i][3], shapes[i][4], true);
 				}
 				else
 				{
 					renderer->setColor(gColor(shapes[i][9], shapes[i][10], shapes[i][11], shapes[i][12]));
-					gDrawRectangle(shapes[i][1] + left, shapes[i][2] + top, shapes[i][3], shapes[i][4], true, shapes[i][7], shapes[i][8]);
+					gDrawRectangle(shapes[i][1], shapes[i][2] - firsty, shapes[i][3], shapes[i][4], true, shapes[i][7], shapes[i][8]);
 				}
 			}
 		}
@@ -69,39 +84,39 @@ void gGUISurface::drawShapes() {
 		else if((int) shapes[i][0] == 1) {//for drawing CIRCLE first index decides to the shape type
 			if((int) shapes[i][4] == 0) {//isFilled = false
 				renderer->setColor(gColor(shapes[i][6], shapes[i][7], shapes[i][8], shapes[i][9]));
-				gDrawCircle(shapes[i][1] + left, shapes[i][2] + top, shapes[i][3], false, shapes[i][5]);
+				gDrawCircle(shapes[i][1], shapes[i][2]  - firsty, shapes[i][3], false, shapes[i][5]);
 			}
 			else { //isFilled = true
 				renderer->setColor(gColor(shapes[i][6], shapes[i][7], shapes[i][8], shapes[i][9]));
-				gDrawCircle(shapes[i][1] + left, shapes[i][2] + top, shapes[i][3], true, shapes[i][5]);
+				gDrawCircle(shapes[i][1], shapes[i][2] - firsty, shapes[i][3], true, shapes[i][5]);
 			}
 		}
 		//2d line = 2
 		else if((int) shapes[i][0] == 2) {//for drawing 2D LINE first index decides to the shape type
 			renderer->setColor(gColor(shapes[i][5], shapes[i][6], shapes[i][7], shapes[i][8]));
-			gDrawLine(shapes[i][1] + left, shapes[i][2] + top, shapes[i][3] + left, shapes[i][4] + top);
+			gDrawLine(shapes[i][1], shapes[i][2] - firsty, shapes[i][3], shapes[i][4] - firsty);
 		}
 		//arrow = 3
 		else if((int) shapes[i][0] == 3) {//for drawing 3D LINE first index decides to the shape type
 			renderer->setColor(gColor(shapes[i][7], shapes[i][8], shapes[i][9], shapes[i][10]));
-			gDrawArrow(shapes[i][1] + left, shapes[i][2] + top, shapes[i][3], shapes[i][4], shapes[i][5], shapes[i][6]);
+			gDrawArrow(shapes[i][1], shapes[i][2] - firsty, shapes[i][3], shapes[i][4], shapes[i][5], shapes[i][6]);
 		}
 		//triangle = 4
 		else if((int) shapes[i][0] == 4) {//for drawing 3D LINE first index decides to the shape type
 			if((int) shapes[i][7] == 0) {//isFilled = false
 				renderer->setColor(gColor(shapes[i][8], shapes[i][9], shapes[i][10], shapes[i][11]));
-				gDrawTriangle(shapes[i][1] + left, shapes[i][2] + top, shapes[i][3] + left, shapes[i][4] + top,shapes[i][5] + left, shapes[i][6] + top, false);
+				gDrawTriangle(shapes[i][1], shapes[i][2] - firsty, shapes[i][3], shapes[i][4] - firsty, shapes[i][5], shapes[i][6] - firsty, false);
 			}
 			else { //isFilled = true
 				renderer->setColor(gColor(shapes[i][8], shapes[i][9], shapes[i][10], shapes[i][11]));
-				gDrawTriangle(shapes[i][1] + left, shapes[i][2] + top, shapes[i][3] + left, shapes[i][4] + top,shapes[i][5] + left, shapes[i][6] + top, true);
+				gDrawTriangle(shapes[i][1], shapes[i][2] - firsty, shapes[i][3], shapes[i][4] - firsty,shapes[i][5], shapes[i][6] - firsty, true);
 			}
 		}
 		//image = 5
 		else if((int) shapes[i][0] == 5) {//for drawing 3D LINE first index decides to the shape type
 			//images[shapes[i][5]]->loadImage(paths[shapes[i][5]]);
 			renderer->setColor(gColor(1.0f,	1.0f, 1.0f, 1.0f));
-			images[shapes[i][5]]->draw(shapes[i][1] + left, shapes[i][2] + top, shapes[i][3], shapes[i][4]);
+			images[shapes[i][5]]->draw(shapes[i][1], shapes[i][2] - firsty, shapes[i][3], shapes[i][4]);
 			//images[1].draw(shapes[i+1][1] + left, shapes[i+1][2] + top, shapes[i+1][3], shapes[i+1][4]);
 		}
 	}
@@ -109,7 +124,8 @@ void gGUISurface::drawShapes() {
 
 void gGUISurface::drawBackground() {
 	renderer->setColor(gColor(1.0f, 	1.0f, 	1.0f, 	1.0f));//white
-	gDrawRectangle(left, top, right, bottom, true);
+	gDrawRectangle(0, 0, right, maxHeight, true);
+	totalh= maxHeight;
 }
 
 void gGUISurface::setBorder(float thickness, float borderposition) {
@@ -117,6 +133,9 @@ void gGUISurface::setBorder(float thickness, float borderposition) {
 	this->borderposition = borderposition;
 }
 void gGUISurface::addRectangle(float x, float y, float w, float h, bool isFilled, gColor color) {
+	if(y >= maxHeight)
+		maxHeight = y + h + 30;
+
 	std::vector<float> newShape;
 	newShape.push_back(0); //for drawing rectangle //shapes[i][0]
 	newShape.push_back(x); //shapes[i][x] 1
@@ -145,6 +164,8 @@ void gGUISurface::addRectangle(float x, float y, float w, float h, bool isFilled
 
 
 void gGUISurface::addCircle(float xCenter, float yCenter, float radius, bool isFilled, float numberOfSides, gColor color) {
+	if(yCenter >= maxHeight)
+		maxHeight = yCenter + radius + 30;
 	std::vector<float> newShape;
 	newShape.push_back(1); //for drawing CIRCLE //shapes[i][0]
 	newShape.push_back(xCenter); //shapes[i][xCenter] 1
@@ -166,6 +187,13 @@ void gGUISurface::addCircle(float xCenter, float yCenter, float radius, bool isF
 }
 
 void gGUISurface::addLine(float x1, float y1, float x2, float y2, gColor color) {
+	if(y1 >= maxHeight || y2 >= maxHeight) {
+		if(y1 >= y2)
+			maxHeight = y1 + 30;
+		else
+			maxHeight = y2 + 30;
+	}
+
 	std::vector<float> newShape;
 	newShape.push_back(2); //for drawing 2D LINE //shapes[i][0]
 	newShape.push_back(x1); //shapes[i][x1] 1
@@ -183,6 +211,9 @@ void gGUISurface::addLine(float x1, float y1, float x2, float y2, gColor color) 
 }
 
 void gGUISurface::addArrow(float x1, float y1, float length, float angle, float tipLength, float tipAngle, gColor color) {
+	if(y1 >= maxHeight)
+		maxHeight = y1 + length + tipLength;
+
 	std::vector<float> newShape;
 	newShape.push_back(3); //for drawing ARROW //shapes[i][0]
 	newShape.push_back(x1); //shapes[i][x1] 1
@@ -202,6 +233,15 @@ void gGUISurface::addArrow(float x1, float y1, float length, float angle, float 
 }
 
 void gGUISurface::addTriangle(float px, float py, float qx, float qy, float rx, float ry, bool isFilled, gColor color) {
+	if(py >= maxHeight || qy >= maxHeight || ry >= maxHeight) {
+		if(py >= qy && py >= ry)
+			maxHeight = py + 30;
+		else if(qy >= py && qy >= ry)
+			maxHeight = qy + 30;
+		else
+			maxHeight = ry + 30;
+	}
+
 	std::vector<float> newShape;
 	newShape.push_back(4); //for drawing TRIANGLE //shapes[i][0]
 	newShape.push_back(px); //shapes[i][px] 1
@@ -226,6 +266,9 @@ void gGUISurface::addTriangle(float px, float py, float qx, float qy, float rx, 
 }
 
 void gGUISurface::addImage(float x, float y, float w, float h, gImage* image) {
+	if(y >= maxHeight)
+		maxHeight = y + h + 30;
+
 	std::vector<float> newShape;
 	newShape.push_back(5); //for drawing IMAGE //shapes[i][0]
 	newShape.push_back(x); //shapes[i][x] 1
@@ -240,6 +283,21 @@ void gGUISurface::addImage(float x, float y, float w, float h, gImage* image) {
 
 	shapes.push_back(newShape);
 	resetColorAndBorder();
+}
+
+void gGUISurface::mousePressed(int x, int y, int button) {
+	gGUIScrollable::mousePressed(x, y, button);
+	if(x >= (boxw - vsbw) && x < vsbw && y >= 0 && y < vsbh) {
+		mousepressedonlist = true;
+	}
+}
+
+void gGUISurface::mouseReleased(int x, int y, int button) {
+	gGUIScrollable::mouseReleased(x, y, button);
+	if(mousepressedonlist) {
+		mousepressedonlist = false;
+		firsty = y;
+	}
 }
 
 //void gGUISurface::drawLine(float x1, float y1, float z1, float x2, float y2, float z2) {
