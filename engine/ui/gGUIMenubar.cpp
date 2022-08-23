@@ -38,6 +38,9 @@ gGUIMenuItem::gGUIMenuItem(std::string text) {
 	isparent = false;
 	counter = 0;
 	isicon = false;
+	seperator = false;
+	iconh = 16;
+	iconw = 16;
 }
 
 gGUIMenuItem::~gGUIMenuItem() {
@@ -58,10 +61,11 @@ int gGUIMenuItem::getParentItemId() {
 	return parentitemid;
 }
 
-int gGUIMenuItem::addChild(std::string text) {
+int gGUIMenuItem::addChild(std::string text, bool addSeperator) {
 	int childno = childs.size();
 	childs.push_back(gGUIMenuItem(text));
 	childs[childno].setParentItemId(itemid);
+	childs[childno].seperator = addSeperator;
 	if(itemid != lastparentitemid) parentitems.push_back(itemid);
 	lastparentitemid = itemid;
 	childs[childno].menuicon = new gImage();
@@ -183,20 +187,26 @@ void gGUIMenuItem::draw() {
 			for(int i = 0; i < childs.size(); i++) {
 				if(childs[i].hovered) {
 					renderer->setColor(middlegroundcolor);
-					gDrawRectangle(childs[i].left, childs[i].top - texth / 2 - 1 , childs[i].width, childs[i].height, true);
+					gDrawRectangle(childs[i].left, childs[i].top - texth / 2, childs[i].width, childs[i].height - 1, true);
 				}
 				childs[i].draw();
 			}
 		}
 	}
+
 	renderer->setColor(textbackgroundcolor);
 	if(isicon){
-		if(menuicon) menuicon->draw(left, top, 16, 16);
+		menuicon->draw(left, top - texth / 3, iconh, iconw);
 	}
 
 	renderer->setColor(fontcolor);
-	if(parentitemid != 0) font->drawText(title, left + 16, top + (font->getSize() - texth / 3) + menuboxtextextrah);
+	if(parentitemid != 0)font->drawText(title, left + iconh, top + (font->getSize() - texth / 3) + menuboxtextextrah);
 	else font->drawText(title, left + 7, top + (font->getSize() - texth / 3) + menuboxtextextrah);
+
+	if(seperator){
+		renderer->setColor(backgroundcolor);
+		gDrawLine(left + 10,bottom - texth / 2,right - 10,bottom - texth / 2);
+	}
 
 	if(isparent && parentitemid != 0) font->drawText(">", left + menuboxw - 20, top + (font->getSize() - texth / 3) + menuboxtextextrah);
 
