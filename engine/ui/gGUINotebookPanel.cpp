@@ -18,6 +18,7 @@ gGUINotebookPanel::~gGUINotebookPanel() {
 }
 
 void gGUINotebookPanel::draw() {
+	fbo.bind();
 	//gLogi("gGUINotebookPanel") << "draw";
 	isslidingright = false;
 	isslidingleft = false;
@@ -33,8 +34,9 @@ void gGUINotebookPanel::draw() {
 	gDrawRectangle(left, top + tablinetop, width, tabsizersh, true);
 	renderer->setColor(foregroundcolor);
 	gDrawRectangle(left, top + topbarh - 1, width, height - topbarh - 1, true);
-	fbo.drawSub(left, tablinetop, left, top, width, height - tablinetop);
-	fbo.bind();
+	renderer->setColor(tablinecolor);
+	gDrawLine(left, top + tablinetop, right, top + tablinetop);
+	gDrawLine(left, top + topbarh - 1, right, top + topbarh - 1);
 	if(guisizer) {
 		int x;
 		int tabsize;
@@ -42,11 +44,6 @@ void gGUINotebookPanel::draw() {
 			drawfromlefttoright = true;
 			indexleft = 0;
 		}
-		renderer->setColor(middlegroundcolor);
-		gDrawRectangle(left, top + tablinetop, width, tabsizersh, true);
-		renderer->setColor(tablinecolor);
-		gDrawLine(left, top + tablinetop, right, top + tablinetop);
-		gDrawLine(left, top + topbarh - 1, right, top + topbarh - 1);
 		if(drawfromlefttoright == true) {
 			x = left;
 			if(indexleft != 0) {
@@ -87,7 +84,9 @@ void gGUINotebookPanel::draw() {
 				x = x - tabsize;
 			}
 		}
+		renderer->setColor(color);
 		fbo.unbind();
+		fbo.drawSub(left, top, left, top, width, height);
 		guisizer->draw();
 	}
 }

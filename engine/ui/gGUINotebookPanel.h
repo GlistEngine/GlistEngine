@@ -33,12 +33,10 @@ private:
 	int indexleft = 0, indexright;
 
 	gGUISizer notebookpanelsizer;
-
 	gColor color;
 	gColor tablinecolor = color.LIGHT_GRAY;
 	gColor slidebuttoncolor = color.GRAY;
 	gFont fontfortabs;
-
 	gFbo fbo;
 };
 
