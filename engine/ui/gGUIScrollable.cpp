@@ -76,7 +76,7 @@ void gGUIScrollable::setDimensions(int width, int height) {
 	hsby = boxh - hsbh;
 
 	vrw = vsbw;
-	vrh = vsbh * boxh / totalh;
+	vrh=(boxh / vsbh) * totalh;
 	vrx = vsbx;
 	vry = vsby;
 	hrw = hsbw;
