@@ -14,13 +14,12 @@ gGUIActionManager::gGUIActionManager() {
 gGUIActionManager::~gGUIActionManager() {
 }
 
-void gGUIActionManager::addAction(gGUIControl* srcControl, int srcEvent, gGUIControl* dstControl, int dstEvent, std::string value) {
+void gGUIActionManager::addAction(gBaseGUIObject* srcControl, int srcEvent, gBaseGUIObject* dstControl, int dstEvent) {
 	Action a;
 	a.sourceControl = srcControl;
 	a.sourceEvent = srcEvent;
 	a.targetControl = dstControl;
 	a.targetEvent = dstEvent;
-	a.value = value;
 	actions.push_back(a);
 }
 
