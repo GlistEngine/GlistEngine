@@ -9,7 +9,6 @@
 #define CORE_GGUIACTIONMANAGER_H_
 
 #include <gObject.h>
-//class gGUIControl;
 class gBaseGUIObject;
 #include <deque>
 
