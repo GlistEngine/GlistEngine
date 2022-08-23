@@ -522,7 +522,7 @@ void gGUITextbox::pressKey() {
 				selectionposutf2 = cursorposutf;
 			}
 		}
-		gLogi("Textbox") << "pk 1, cx:" << cursorposx << ", fu:" << firstutf << ", lu:" << lastutf << ", cp:" << cursorposchar;
+//		gLogi("Textbox") << "pk 1, cx:" << cursorposx << ", fu:" << firstutf << ", lu:" << lastutf << ", cp:" << cursorposchar;
 
 	} else if((keystate & KEY_RIGHT) && cursorposchar < text.size()) { // RIGHT ARROW
 		if(!shiftpressed) selectionmode = false;
@@ -586,7 +586,7 @@ void gGUITextbox::pressKey() {
 			}
 		}
 
-		gLogi("Textbox") << "pk 1, cx:" << cursorposx << ", fu:" << firstutf << ", lu:" << lastutf << ", cp:" << cursorposchar << " " << cursorposutf;
+//		gLogi("Textbox") << "pk 1, cx:" << cursorposx << ", fu:" << firstutf << ", lu:" << lastutf << ", cp:" << cursorposchar << " " << cursorposutf;
 
 	} else if(ismultiline && (keystate & KEY_UP) && currentline > 1) {
 //		gLogi("Pressed up");
@@ -959,7 +959,7 @@ void gGUITextbox::charPressed(unsigned int codepoint) {
 			}
 		}
 
-		gLogi("Textbox") << "cp cx:" << cursorposx;
+//		gLogi("Textbox") << "cp cx:" << cursorposx;
 	}
 }
 
