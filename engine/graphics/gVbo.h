@@ -84,6 +84,8 @@ private:
 
     gLight* scenelight;
     gShader* colorshader;
+
+    bool isAMD;
 };
 
 #endif /* GRAPHICS_GVBO_H_ */

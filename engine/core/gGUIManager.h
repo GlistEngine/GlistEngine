@@ -19,6 +19,7 @@
 
 #include "gGUIFrame.h"
 #include "gGUISizer.h"
+#include "gGUIDialogue.h"
 class gBaseApp;
 
 /**
@@ -42,7 +43,11 @@ public:
 	int getTheme();
 
 	void setCurrentFrame(gGUIFrame* currentFrame);
+	void setActiveDialogue(gGUIDialogue* activeDialogue);
 	gGUIFrame* getCurrentFrame();
+	gGUIDialogue* getActiveDialogue();
+
+	void setIsDialogueActive(bool isactive);
 
 	void keyPressed(int key);
 	void keyReleased(int key);
@@ -60,10 +65,12 @@ public:
 	void draw();
 
 	bool isframeset;
+	bool isdialogueactive;
 
 private:
 	gBaseApp* root;
 	gGUIFrame* currentframe;
+	gGUIDialogue* activedialogue;
 	gGUIFrame emptyframe;
 	gGUISizer emptysizer;
 	int guitheme;
@@ -85,6 +92,8 @@ private:
 	gFont themefont;
 	void loadThemes();
 	void resetTheme(int guiTheme);
+
+	gGUISizer dialoguedefaultsizer;
 };
 
 #endif /* CORE_GGUIMANAGER_H_ */

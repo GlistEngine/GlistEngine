@@ -7,6 +7,7 @@
 
 #include "gRenderer.h"
 
+#include "gArc.h"
 #include "gLight.h"
 #include "gLine.h"
 #include "gCircle.h"
@@ -86,6 +87,12 @@ void gDrawCircle(float xCenter, float yCenter, float radius, bool isFilled, floa
 	gCircle circlemesh;
 	circlemesh.draw(xCenter, yCenter, radius, isFilled, numberOfSides);
 	circlemesh.clear();
+}
+
+void gDrawArc(float xCenter, float yCenter, float radius, bool isFilled, int numberOfSides, float degree, float rotate) {
+	gArc arcmesh;
+	arcmesh.draw(xCenter, yCenter, radius, isFilled, numberOfSides, degree, rotate);
+	arcmesh.clear();
 }
 
 void gDrawArrow(float x1, float y1, float length, float angle, float tipLength, float tipAngle) {
