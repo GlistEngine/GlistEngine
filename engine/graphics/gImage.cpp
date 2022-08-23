@@ -9,7 +9,11 @@
 //#ifndef STB_IMAGE_IMPLEMENTATION
 //#define STB_IMAGE_IMPLEMENTATION
 //#endif
+#ifndef STB_IMAGE_WRITE_IMPLEMENTATION
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#endif
 #include "stb/stb_image.h"
+#include "stb/stb_image_write.h"
 
 
 gImage::gImage() {
@@ -104,4 +108,12 @@ void gImage::clearData() {
 	if (ishdr) stbi_image_free(datahdr);
 	else stbi_image_free(data);
 }
+
+void gImage::saveImage(std::string fileName) {
+    std::string path = gGetImagesDir() + fileName;
+    stbi_write_png(path.c_str(), width, height, componentnum, data, width * componentnum * sizeof(unsigned char));
+}
+
+
+
 

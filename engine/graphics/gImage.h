@@ -19,6 +19,7 @@
 
 #include "gTexture.h"
 
+
 	/** gImage holds several functions primarily to locate and load images.
 	* It allows the developer to load images in one or multiple threads.
 	*
@@ -170,6 +171,16 @@ public:
     * Clears the data of a given structure.
     */
     void clearData();
+
+    /**
+     * Used for the image's extension and changing image's name.
+     *
+     * @param fileName is a string value  for the function .
+     * This file will be exist in the GlistApp's assets clasor
+     * after saving process.
+     */
+    void saveImage(std::string fileName);
+
 };
 
 #endif /* ENGINE_GRAPHICS_GIMAGE_H_ */
