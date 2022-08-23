@@ -1,7 +1,7 @@
 /*
  * gGUIDropdownList.cpp
  *
- *  Created on: 19 Aðu 2022
+ *  Created on: 19 Aï¿½u 2022
  *      Author: sevval
  */
 
@@ -20,7 +20,7 @@ gGUIDropdownList::gGUIDropdownList() {
 	listsizer.setControl(0, 1, &button);
 	listsizer.setControl(0, 0, &textbox);
 
-	actionmanager.addAction(&button, G_GUIEVENT_BUTTONPRESSED, &textbox, G_GUIEVENT_TEXTBOXENTRY, "TEST");
+	actionmanager.addAction(&button, G_GUIEVENT_BUTTONPRESSED, &textbox, G_GUIEVENT_TEXTBOXENTRY);
 }
 
 gGUIDropdownList::~gGUIDropdownList() {
