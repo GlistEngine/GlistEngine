@@ -93,7 +93,8 @@ private:
 	void loadThemes();
 	void resetTheme(int guiTheme);
 
-	gGUISizer dialoguedefaultsizer;
+	gGUIDialogue emptydialogue;
+	gGUISizer emptydialoguesizer;
 };
 
 #endif /* CORE_GGUIMANAGER_H_ */
