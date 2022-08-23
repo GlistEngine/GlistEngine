@@ -24,7 +24,7 @@ public:
 	void setParentItemId(int itemId);
 	int getParentItemId();
 
-	int addChild(std::string text);
+	int addChild(std::string text, bool addSeperator = false);
 	int addChild(gGUIMenuItem childItem);
 	void removeChild(int childNo);
 	int getChildNum();
@@ -63,7 +63,9 @@ private:
 	int counter;
 	gImage* menuicon;
 	bool isicon;
+	int iconh, iconw;
 	gGUIResources res;
+	bool seperator;
 };
 
 
