@@ -9,12 +9,9 @@
 #include "gGUIControl.h"
 
 gGUIActionManager::gGUIActionManager() {
-	// TODO Auto-generated constructor stub
-
 }
 
 gGUIActionManager::~gGUIActionManager() {
-	// TODO Auto-generated destructor stub
 }
 
 void gGUIActionManager::addAction(gGUIControl* srcControl, int srcEvent, gGUIControl* dstControl, int dstEvent, std::string value) {
