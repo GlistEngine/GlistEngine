@@ -18,6 +18,7 @@
 #define UI_GGUICONTROL_H_
 
 #include "gBaseGUIObject.h"
+#include "gGUIActionManager.h"
 
 /**
  * Base class for gui controls.
@@ -28,6 +29,8 @@
  */
 class gGUIControl: public gBaseGUIObject {
 public:
+	static gGUIActionManager actionmanager;
+
 	gGUIControl();
 	virtual ~gGUIControl();
 
@@ -37,6 +40,8 @@ public:
 
 	virtual void update();
 	virtual void draw();
+
+	virtual void onGUIEvent(int guiObjectId, int eventType, std::string value1 = "", std::string value2 = "");
 };
 
 #endif /* UI_GGUICONTROL_H_ */
