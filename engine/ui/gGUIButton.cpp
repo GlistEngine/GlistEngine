@@ -112,6 +112,7 @@ void gGUIButton::mousePressed(int x, int y, int button) {
 			}
 		}
 		root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_BUTTONPRESSED);
+		actionmanager.onGUIEvent(id, G_GUIEVENT_BUTTONPRESSED);
 	}
 }
 

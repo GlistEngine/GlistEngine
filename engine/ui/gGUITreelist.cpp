@@ -192,6 +192,7 @@ void gGUITreelist::mouseReleased(int x, int y, int button) {
 		}
 
 		root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_TREELISTSELECTED, gToStr(selectedno));
+		actionmanager.onGUIEvent(id, G_GUIEVENT_TREELISTSELECTED);
 	}
 }
 
