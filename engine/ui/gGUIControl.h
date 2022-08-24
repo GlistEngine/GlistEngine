@@ -18,7 +18,6 @@
 #define UI_GGUICONTROL_H_
 
 #include "gBaseGUIObject.h"
-//#include "gGUIActionManager.h"
 
 /**
  * Base class for gui controls.
