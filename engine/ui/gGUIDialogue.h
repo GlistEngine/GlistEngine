@@ -11,6 +11,7 @@
 #include "gGUIForm.h"
 #include "gGUIContainer.h"
 #include "gGUIImageButton.h"
+#include "gGUIBitmap.h"
 
 
 class gGUIDialogue: public gGUIForm {
@@ -47,8 +48,14 @@ public:
 
 	void setTitleBar(gGUIContainer* titleBar);
 	void setButtonsBar(gGUIContainer* buttonsBar);
+	void resetTitleBar();
+	void resetButtonsBar();
 
 	void setExitButton(gGUIImageButton* exitButton);
+
+	void mouseMoved(int x, int y);
+	void mousePressed(int x, int y, int button);
+	void mouseReleased(int x, int y, int button);
 private:
 	std::string message;
 	int dialoguetype;
@@ -70,7 +77,14 @@ private:
 	gGUIContainer* titlebar;
 	gGUIContainer* buttonsbar;
 
-	gGUIImageButton* newexitbutton;
+	// gGUIContainer deftitlebar;
+
+	gGUISizer deftitlebarsizer;
+	gGUIBitmap deftitlebarbitmap;
+	// gGUIImageButton deftitlebarexitbutton;	// PROBLEMATIC
+	// gGUIText deftitlebartext;
+
+	gGUIImageButton* exitbutton;
 };
 
 #endif /* UI_GGUIDIALOGUE_H_ */

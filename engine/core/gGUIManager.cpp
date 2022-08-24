@@ -53,8 +53,8 @@ void gGUIManager::setCurrentFrame(gGUIFrame* currentFrame) {
 void gGUIManager::setActiveDialogue(gGUIDialogue* activeDialogue) {
 	activedialogue = activeDialogue;
 	activedialogue->setParentSlotNo(0, 0);
-	activedialogue->width = root->getAppManager()->getCurrentCanvas()->getScreenWidth() / 1.2 * 0.84;
-	activedialogue->height = root->getAppManager()->getCurrentCanvas()->getScreenHeight() / 1.2 * 0.84;
+	activedialogue->width = root->getAppManager()->getCurrentCanvas()->getScreenWidth() / 1 * 0.84;
+	activedialogue->height = root->getAppManager()->getCurrentCanvas()->getScreenHeight() / 1 * 0.84;
 	activedialogue->left = (root->getAppManager()->getCurrentCanvas()->getScreenWidth() - activedialogue->width) / 2;
 	activedialogue->top = (root->getAppManager()->getCurrentCanvas()->getScreenHeight() - activedialogue->height) / 2;
 	activedialogue->right = activedialogue->left + activedialogue->width;
