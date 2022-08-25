@@ -26,7 +26,7 @@ gColor* gBaseGUIObject::pressedbuttonfontcolor;
 gColor* gBaseGUIObject::disabledbuttonfontcolor;
 int gBaseGUIObject::focusid;
 int gBaseGUIObject::previousfocusid;
-
+gGUIActionManager gBaseGUIObject::actionmanager;
 
 gBaseGUIObject::gBaseGUIObject() {
 	root = nullptr;
@@ -269,5 +269,9 @@ void gBaseGUIObject::windowResized(int w, int h) {
 
 void gBaseGUIObject::setRootApp(gBaseApp* root) {
 	this->root = root;
+}
+
+void gBaseGUIObject::onGUIEvent(int guiObjectId, int eventType, std::string value1, std::string value2) {
+
 }
 

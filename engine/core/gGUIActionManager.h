@@ -9,25 +9,28 @@
 #define CORE_GGUIACTIONMANAGER_H_
 
 #include <gObject.h>
-class gGUIControl;
+class gBaseGUIObject;
 #include <deque>
 
 /*
  * This class send information to the target classes when an event happend in the
  * source class. It builded with a struct structure.
  *
- * gGUIControl has a variable that type is gGUIActionManager. When developers
- * derive a class from gGUIControl, they must use this variable to call the function.
+ * gBaseGUIObject has a static variable that type is gGUIActionManager. When
+ * developers derive a class from gBaseGUIObject, they must use this variable
+ * to call this class'es functions.
+ *
+ * All the child classes makes their own operations in onGUIEvent() function which
+ * overrided from gBaseGUIObject class.
  *
  */
 class gGUIActionManager: public gObject {
 public:
 	struct Action{
-		gGUIControl* sourceControl;
+		gBaseGUIObject* sourceControl;
 		int sourceEvent;
-		gGUIControl* targetControl;
+		gBaseGUIObject* targetControl;
 		int targetEvent;
-		std::string value;
 	};
 
 	gGUIActionManager();
@@ -35,7 +38,8 @@ public:
 
 	/*
 	 * Adds events to a vector. This function creates a new struct object with
-	 * given parameters. Then adds the struct object to the vector.
+	 * given parameters. Then adds the struct object to the vector. When an event
+	 * happened, this should be added to this vector.
 	 *
 	 * @param srcControl is the source resource class. An event must be happened
 	 * in this class and it should effect other classes.
@@ -55,7 +59,7 @@ public:
 	 * as empty string.
 	 *
 	 */
-	void addAction(gGUIControl* srcControl, int srcEvent, gGUIControl* dstControl, int dstEvent, std::string value = "");
+	void addAction(gBaseGUIObject* srcControl, int srcEvent, gBaseGUIObject* dstControl, int dstEvent);
 
 	/*
 	 * Uses for send information from one class to another class. This function

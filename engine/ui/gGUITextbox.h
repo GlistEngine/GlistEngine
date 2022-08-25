@@ -116,11 +116,11 @@ public:
 	/**
 	 * Enables/disables the numeric value only mode of the textbox.
 	 *
-	 * @param command Boolean value to enable/disable entering numeric values
+	 * @param isNumeric Boolean value to enable/disable entering numeric values
 	 * only. If it is 'true', you can only input numeric values into the textbox,
 	 * if it is 'false', it works normally.
 	 */
-	void setNumeric(bool command);
+	void setNumeric(bool isNumeric);
 
 	/**
 	 * Check if the textbox only allows numeric value entry.
@@ -156,6 +156,16 @@ public:
 	 * @param linetopmargin Desired margin value between lines.
 	 */
 	void setLineTopMargin(int linetopmargin);
+
+	/**
+	 * Converts textbox into a password box or converts password box back into a
+	 * textbox.
+	 *
+	 * @param isPassword Boolean value to select between password box and textbox.
+	 * If it is true, password box is active. If it is false, textbox is active.
+	 */
+	void setPassword(bool isPassword);
+	bool isPassword();
 
 	void update();
 	void draw();
@@ -199,6 +209,8 @@ private:
 	bool isLetter(char c);
 	bool isNumber(char c);
 	void findCursorPosition();
+	void findCursorPositionPassword();
+	void cleanText();
 	bool selectionmode;
 	int selectionposchar1, selectionposchar2;
 	int selectionposx1, selectionposx2;
@@ -220,6 +232,8 @@ private:
 	std::vector<int> lineendchar;
 	int leftlimit, rightlimit, toplimit, bottomlimit;
 	bool isnumeric;
+	bool ispassword;
+	int dotradius;
 };
 
 #endif /* UI_GGUITEXTBOX_H_ */
