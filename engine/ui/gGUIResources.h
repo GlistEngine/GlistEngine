@@ -104,7 +104,9 @@ public:
 		ICON_WARNING,
 		ICON_ERROR,
 		ICON_CALENDAR,
-		ICON_CLOCK
+		ICON_CLOCK,
+		ICON_DOWN,
+		ICON_UP
 	};
 
 	gGUIResources();
@@ -120,7 +122,7 @@ public:
 	gImage* getIconImage(int iconId);
 
 private:
-	static const int iconnum = 34;
+	static const int iconnum = 36;
 
 	int iconw, iconh, iconformat;
 	// The array we keep pictures
@@ -160,6 +162,8 @@ private:
 	std::string getBase64IconError16();
 	std::string getBase64IconCalendar16();
 	std::string getBase64IconClock16();
+	std::string getBase64IconDown16();
+	std::string getBase64IconUp16();
 
 	std::string getBase64IconFile40();
 	std::string getBase64IconFolder40();
