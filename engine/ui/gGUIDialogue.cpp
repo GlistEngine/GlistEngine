@@ -30,16 +30,15 @@ gGUIDialogue::gGUIDialogue() {
 	icontypename[ICONTYPE_ERROR] = "error";
 	icontypename[ICONTYPE_QUESTION] = "question";
 
+	minimizebutton = nullptr;
+	maximizebutton = nullptr;
+	exitbutton = nullptr;
 
+	minimizeevent = false;
+	maximizeevent = false;
 	exitevent = false;
-	exitbuttonexittrigger = false;
-	okbuttonexittrigger = false;
-	yesbuttonexittrigger = false;
-	nobuttonexittrigger = false;
-	cancelbuttonexittrigger = false;
 
-	initleft = left;
-	inittop = top;
+	exitbuttonexittrigger = false;
 }
 
 gGUIDialogue::~gGUIDialogue() {
@@ -52,7 +51,6 @@ void gGUIDialogue::update() {
 		if (exitbuttonexittrigger && !exitbutton->isPressed())  exitevent = true; exitbuttonexittrigger = false;
 		if (exitbutton->isPressed()) exitbuttonexittrigger = true;
 	}
-
 }
 
 void gGUIDialogue::draw() {
@@ -84,12 +82,20 @@ void gGUIDialogue::draw() {
 	if (buttonsbar) buttonsbar->draw();
 }
 
-void gGUIDialogue::setMessage(std::string message) {
-	this->message = message;
+void gGUIDialogue::setMinimizeEvent(bool minimizeEvent) {
+	this->minimizeevent = minimizeEvent;
 }
 
-std::string gGUIDialogue::getMessage() {
-	return message;
+bool gGUIDialogue::getMinimizeEvent() {
+	return minimizeevent;
+}
+
+void gGUIDialogue::setMaximizeEvent(bool maximizeEvent) {
+	this->maximizeevent = maximizeEvent;
+}
+
+bool gGUIDialogue::getMaximizeEvent() {
+	return maximizeevent;
 }
 
 void gGUIDialogue::setExitEvent(bool exitEvent) {
@@ -98,14 +104,6 @@ void gGUIDialogue::setExitEvent(bool exitEvent) {
 
 bool gGUIDialogue::getExitEvent() {
 	return exitevent;
-}
-
-void gGUIDialogue::setInitLeft(int initLeft) {
-	this->initleft = initLeft;
-}
-
-void gGUIDialogue::setInitTop(int initTop) {
-	this->inittop = initTop;
 }
 
 void gGUIDialogue::showDialogue(std::string title, std::string message, int dialogueType, int iconType) {
@@ -120,10 +118,7 @@ void gGUIDialogue::showDialogue(std::string title, std::string message, int dial
 }
 
 void gGUIDialogue::mouseDragged(int x, int y, int button) {
-	if (x > left - width && x < left + width - width / 8 && y >= top - height && y < top + height / 8) {
-		int buttontopoffset = (6 * (height / 8)) + (((height / 4) -  (height / 7)) / 2);
-		int buttonleftoffset = (((width / 3) - (width / 4)) / 2);
-
+	if (x > left - width && x < left + width && y >= top - height && y < top + height / 8) {
 		left = x;
 		top = y;
 		right = x + width;
@@ -148,30 +143,26 @@ void gGUIDialogue::mouseDragged(int x, int y, int button) {
 
 void gGUIDialogue::setTitleBar(gGUIContainer* titleBar) {
 	this->titlebar = titleBar;
-	titlebar->height = height * 0.06;
-	titlebar->set(root, this, this, 0, 0,
-				left,
-				top - titlebar->height,
-				width,
-				titlebar->height
-		);
+	titlebar->set(root, this, this, 0, 0, left, top - titlebar->height, width, titlebar->height);
 }
 
 void gGUIDialogue::setButtonsBar(gGUIContainer* buttonsBar) {
 	this->buttonsbar = buttonsBar;
-	buttonsbar->height = height * 0.1;
-	buttonsbar->set(root, this, this, 0, 0,
-				left,
-				top + height,
-				width,
-				buttonsbar->height
-		);
+	buttonsbar->set(root, this, this, 0, 0, left, top + height, width, buttonsbar->height);
 }
 
 void gGUIDialogue::resetTitleBar() {
 }
 
 void gGUIDialogue::resetButtonsBar() {
+}
+
+void gGUIDialogue::setMinimizeButton(gGUIImageButton* minimizeButton) {
+	this->minimizebutton = minimizeButton;
+}
+
+void gGUIDialogue::setMaximizeButton(gGUIImageButton* maximizeButton) {
+	this->maximizebutton = maximizeButton;
 }
 
 void gGUIDialogue::setExitButton(gGUIImageButton* exitButton) {

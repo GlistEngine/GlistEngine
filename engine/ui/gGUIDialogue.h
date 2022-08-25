@@ -34,14 +34,12 @@ public:
 	void update();
 	void draw();
 
-	void setMessage(std::string message);
-	std::string getMessage();
-
+	void setMinimizeEvent(bool minimizeEvent);
+	bool getMinimizeEvent();
+	void setMaximizeEvent(bool maximizeEvent);
+	bool getMaximizeEvent();
 	void setExitEvent(bool exitEvent);
 	bool getExitEvent();
-
-	void setInitLeft(int initLeft);
-	void setInitTop(int initTop);
 
 	void showDialogue(std::string title, std::string message, int dialogueType, int iconType);
 	void mouseDragged(int x, int y, int button);
@@ -51,6 +49,8 @@ public:
 	void resetTitleBar();
 	void resetButtonsBar();
 
+	void setMinimizeButton(gGUIImageButton* minimizeButton);
+	void setMaximizeButton(gGUIImageButton* maximizeButton);
 	void setExitButton(gGUIImageButton* exitButton);
 
 	void mouseMoved(int x, int y);
@@ -64,26 +64,24 @@ private:
 	std::string dialoguetypename[dialoguetypenum];
 	std::string icontypename[icontypenum];
 
+	bool minimizeevent;
+	bool maximizeevent;
 	bool exitevent;
-	bool exitbuttonexittrigger;
-	bool okbuttonexittrigger;
-	bool yesbuttonexittrigger;
-	bool nobuttonexittrigger;
-	bool cancelbuttonexittrigger;
 
-	int initleft;
-	int inittop;
+	bool exitbuttonexittrigger;
 
 	gGUIContainer* titlebar;
 	gGUIContainer* buttonsbar;
 
 	// gGUIContainer deftitlebar;
 
-	gGUISizer deftitlebarsizer;
-	gGUIBitmap deftitlebarbitmap;
-	// gGUIImageButton deftitlebarexitbutton;	// PROBLEMATIC
+	// gGUISizer deftitlebarsizer;
+	// gGUIBitmap deftitlebarbitmap;
+	// gGUIImageButton deftitlebarexitbutton;
 	// gGUIText deftitlebartext;
 
+	gGUIImageButton* minimizebutton;
+	gGUIImageButton* maximizebutton;
 	gGUIImageButton* exitbutton;
 };
 
