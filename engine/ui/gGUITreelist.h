@@ -65,23 +65,20 @@
 class gGUITreelist: public gGUIScrollable {
 public:
 	struct Element {
+		gGUITreelist* parentlist;
 		std::string title;
 		std::deque<Element*> sub;
 		Element* parent;
-		static int nodenum;
 		bool isexpanded;
 		bool isparent;
 		bool isicon;
 		bool isiconchanged;
 		int orderno;
 		gImage* icon;
-		static std::vector<std::string> allsubtitles;
-		static std::vector<int> allorderno;
-		static std::deque<gImage*> icons;
 		gGUIResources res;
 
 		Element() {
-			nodenum = 0;
+			parentlist = nullptr;
 			isicon = false;
 			isexpanded = false;
 			orderno = 0;
@@ -107,9 +104,9 @@ public:
 		 * list.
 		 */
 		void clearAllSubTitlesList() {
-			allsubtitles.clear();
-			allorderno.clear();
-			icons.clear();
+			parentlist->allsubtitles.clear();
+			parentlist->allorderno.clear();
+			parentlist->icons.clear();
 		}
 
 		/*
@@ -132,18 +129,18 @@ public:
 			}
 			else{
 				for(int i = 0; i < orderno + 1; i++) linetext = "  " + linetext;
-				allorderno.push_back(orderno + 1);
-				icons.push_back(this->icon);
+				parentlist->allorderno.push_back(orderno + 1);
+				parentlist->icons.push_back(this->icon);
 				if(sub.size() > 0) isparent = true;
 			}
 
 			linetext += title;
-			allsubtitles.push_back(linetext);
+			parentlist->allsubtitles.push_back(linetext);
 			if(isexpanded) for(int i = 0; i < sub.size(); i++) sub[i]->addSelfToList();
 			if(title == "Top") {
-				allsubtitles.erase(allsubtitles.begin() + 0);
-				if(allorderno.size() > 0) allorderno.erase(allorderno.begin() + 0);
-				if(icons.size() > 0) icons.erase(icons.begin() + 0);
+				parentlist->allsubtitles.erase(parentlist->allsubtitles.begin() + 0);
+				if(parentlist->allorderno.size() > 0) parentlist->allorderno.erase(parentlist->allorderno.begin() + 0);
+				if(parentlist->icons.size() > 0) parentlist->icons.erase(parentlist->icons.begin() + 0);
 			}
 		}
 
@@ -175,7 +172,7 @@ public:
 		 */
 		void removeSubElement(Element* element) {
 		    if(element->sub.size() != 0) {
-		    	nodenum -= element->sub.size();
+		    	parentlist->nodenum -= element->sub.size();
 		    	for(int i = 0; i < element->sub.size(); i++) removeSubElement(element->sub[i]);
 		    }
 		    element->sub.clear();
@@ -190,7 +187,7 @@ public:
 		 */
 		void removeElement(Element* element) {
 			removeSubElement(element);
-			nodenum -= 1;
+			parentlist->nodenum -= 1;
 			int index = 0;
 			for(auto i: element->parent->sub) {
 				if(i!= element) {
@@ -222,12 +219,12 @@ public:
 			else this->icon = res.getIconImage(gGUIResources::ICON_FILE);
 			for(int i = 0; i < sub.size(); i++) sub[i]->setIcon();
 		}
-
 	};
 
 
 	gGUITreelist();
 	virtual ~gGUITreelist();
+
 
 	void set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIObject* parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h);
 
@@ -349,7 +346,7 @@ public:
 	 *
 	 *  @param element is the struct object which has the node number value.
 	 */
-	int getNodenum(Element* element);
+	int getNodenum();
 
 	/*
 	 * Returns given struct object's orderno. Orderno is used for calculating the
@@ -402,6 +399,19 @@ public:
 	 * Returns the number of the lines which is visible in the box.
 	 */
 	int getVisibleLineNumber();
+
+	/*
+	 * Returns root element of the struct object.
+	 */
+	Element* getRootElement();
+
+	int getSelectedLineNumber();
+
+	int nodenum;
+	std::vector<std::string> allsubtitles;
+	std::vector<int> allorderno;
+	std::deque<gImage*> icons;
+
 private:
 	int listboxh;
 	int lineh, linenum;

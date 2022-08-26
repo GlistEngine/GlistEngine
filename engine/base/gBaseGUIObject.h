@@ -101,7 +101,7 @@ public:
 	virtual void mouseEntered();
 	virtual void mouseExited();
 	virtual void windowResized(int w, int h);
-	virtual void onGUIEvent(int guiObjectId, int eventType, std::string value1 = "", std::string value2 = "");
+	virtual void onGUIEvent(int guiObjectId, int eventType, int sourceEventType, std::string value1 = "", std::string value2 = "");
 
 	void setRootApp(gBaseApp* root);
 
