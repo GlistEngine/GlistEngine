@@ -11,6 +11,7 @@
 #include "gGUIToolbar.h"
 #include "gGUIContextMenu.h"
 #include "gGUIStatusBar.h"
+#include "gGUITreelist.h"
 
 
 gGUIForm::gGUIForm() {
@@ -27,6 +28,8 @@ gGUIForm::gGUIForm() {
 	contextmenuh = 0;
 	contextmenux = 0;
 	contextmenuy = 0;
+	treelisth = 0;
+	treelistw = 0;
 }
 
 gGUIForm::~gGUIForm() {
@@ -85,6 +88,13 @@ void gGUIForm::addContextMenu(gGUIContextMenu* contextMenu) {
 	contextmenuw = 50;
 	contextmenuh = 50;
 	contextmenu->set(root, this, this, 0, 0, contextmenux, contextmenuy, contextmenuw, contextmenuh);
+}
+
+void gGUIForm::addTreelist(gGUITreelist* treeList, int treeListx, int treeListy, int treeListw) {
+	treelist = treeList;
+	treelistw = 10;
+	treelisth = 188;
+	treelist->set(root, this, this, 0, 0, treeListx, treeListy, treeListw, treelisth);
 }
 
 void gGUIForm::setSizer(gGUISizer* guiSizer) {

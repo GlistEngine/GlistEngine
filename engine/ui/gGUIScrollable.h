@@ -124,6 +124,7 @@ public:
 
 	gFbo* getFbo();
 
+	int getTitleTop();
 
 protected:
 

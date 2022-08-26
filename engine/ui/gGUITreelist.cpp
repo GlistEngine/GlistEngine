@@ -13,12 +13,8 @@
 #include <string.h>
 
 
-std::vector<std::string> gGUITreelist::Element::allsubtitles;
-std::deque<gImage*> gGUITreelist::Element::icons;
-std::vector<int> gGUITreelist::Element::allorderno;
-int::gGUITreelist::Element::nodenum;
-
 gGUITreelist::gGUITreelist() {
+	topelement.parentlist = this;
 	topelement.title = "Top";
 	topelement.isexpanded = true;
 	lineh = 2 * font->getSize() + 2;
@@ -42,6 +38,7 @@ gGUITreelist::gGUITreelist() {
 	iconw = lineh / 2;
 	iconh = iconw;
 	iconx = 0;
+	nodenum = 0;
 }
 
 gGUITreelist::~gGUITreelist() {
@@ -54,10 +51,11 @@ void gGUITreelist::set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBase
 }
 
 void  gGUITreelist::addElement(Element* element, Element* parent) {
+	element->parentlist = this;
 	parent->sub.push_back(element);
 	element->parent = parent;
 	element->orderno = parent->orderno + 1;
-	element->nodenum = parent->nodenum + 1;
+	nodenum = nodenum + 1;
 
 	refreshList();
 	topelement.setIcon();
@@ -65,10 +63,11 @@ void  gGUITreelist::addElement(Element* element, Element* parent) {
 }
 
 void gGUITreelist::addElement(Element* element) {
+	element->parentlist = this;
 	topelement.sub.push_back(element);
 	element->parent = &topelement;
 	element->orderno = topelement.orderno;
-	element->nodenum = topelement.nodenum + 1;
+	nodenum = nodenum + 1;
 
 	refreshList();
 	topelement.setIcon();
@@ -77,6 +76,7 @@ void gGUITreelist::addElement(Element* element) {
 
 void gGUITreelist::drawContent() {
 	//topelement.logTitle();
+
 	gColor* oldcolor = renderer->getColor();
 	renderer->setColor(textbackgroundcolor);
 	gDrawRectangle(0, 0, boxw, boxh , true);
@@ -89,14 +89,14 @@ void gGUITreelist::drawContent() {
 		else renderer->setColor(middlegroundcolor);
 		gDrawRectangle(0, -fldy + (selectedno - flno) * lineh, boxw, lineh, true);
 	}
-	for(int i = 0; i < linenum; i++) {
-		if(flno + i < topelement.allsubtitles.size()) {
+	for(int i = 0; i < linenum + 1; i++) {
+		if(flno + i < allsubtitles.size()) {
 			if(topelement.isicon) {
 				renderer->setColor(iconcolor);
-				topelement.icons[i + flno]->draw(topelement.allorderno[i + flno] * spacesize - (iconw * 2 / 3), - fldy + (i * lineh) - datady / 2 + lineh / 2, iconw, iconh);
+				icons[i + flno]->draw(allorderno[i + flno] * spacesize - (iconw * 2 / 3), - fldy + (i * lineh) - datady / 2 + lineh / 2, iconw, iconh);
 			}
 			renderer->setColor(fontcolor);
-		    font->drawText(topelement.allsubtitles[flno + i], 2, - fldy + (i * lineh) + lineh - datady);
+			font->drawText(allsubtitles[flno + i], 2, - fldy + (i * lineh) + lineh - datady);
 		}
 	}
 
@@ -119,9 +119,9 @@ void gGUITreelist::refreshList() {
     topelement.clearAllSubTitlesList();
     topelement.addSelfToList();
 
-    linenum = topelement.nodenum;
+    linenum = nodenum;
     if(linenum > maxlinenum) linenum = maxlinenum;
-    totalh = topelement.allsubtitles.size() * lineh;
+    totalh = allsubtitles.size() * lineh;
     if(totalh < height) totalh = height;
 }
 
@@ -143,8 +143,8 @@ void gGUITreelist::mouseReleased(int x, int y, int button) {
 	if(mousepressedonlist) mousepressedonlist = false;
 	if(x >= left && x < left + vsbx && y >= top + titledy && y < top + titledy + hsby) {
 		int newselectedno = (y - top - titledy + firsty) / lineh;
-		if(newselectedno <= topelement.allsubtitles.size() - 1) selectedno = newselectedno;
-		tmptitle = topelement.allsubtitles[selectedno];
+		if(newselectedno <= allsubtitles.size() - 1) selectedno = newselectedno;
+		tmptitle = allsubtitles[selectedno];
 
 		if(topelement.isicon == false) { // Process which using default symbols '>' and '-'
 			int i = 0;
@@ -181,7 +181,6 @@ void gGUITreelist::mouseReleased(int x, int y, int button) {
 				else if(x > left + iconx && x < left + iconx + iconw) {
 					element->isexpanded = !(element->isexpanded);
 					if(element->isiconchanged == false) {
-						gLogi("HEREX");
 						if(element->isexpanded) setIcon(gGUIResources::ICON_FOLDEROPENED, element);
 						else setIcon(gGUIResources::ICON_FOLDER, element);
 					}
@@ -241,8 +240,8 @@ std::string gGUITreelist::getTitle(Element* element) {
 	return element->title;
 }
 
-int gGUITreelist::getNodenum(Element* element) {
-	return element->nodenum;
+int gGUITreelist::getNodenum() {
+	return nodenum;
 }
 
 int gGUITreelist::getOrderno(Element* element) {
@@ -275,4 +274,12 @@ gColor gGUITreelist::getIconsColor() {
 
 int gGUITreelist::getVisibleLineNumber() {
 	return minlinenum;
+}
+
+gGUITreelist::Element* gGUITreelist::getRootElement() {
+	return (&topelement);
+}
+
+int gGUITreelist::getSelectedLineNumber() {
+	return selectedno;
 }
