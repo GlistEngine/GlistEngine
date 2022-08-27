@@ -6,10 +6,9 @@
  */
 
 #include "gGUIMenubar.h"
-//#include "gBaseApp.h"
 #include "gBaseCanvas.h"
 
-
+bool gGUIMenuItem::isresinitialized = false;
 int gGUIMenuItem::lastitemid;
 int gGUIMenuItem::lastparentitemid;
 int gGUIMenuItem::totaltextw;
@@ -41,6 +40,7 @@ gGUIMenuItem::gGUIMenuItem(std::string text) {
 	seperator = false;
 	iconh = 16;
 	iconw = 16;
+
 }
 
 gGUIMenuItem::~gGUIMenuItem() {
@@ -161,6 +161,7 @@ void gGUIMenuItem::setMenuicon(int MenuItemid, std::string icon){
 }
 
 void gGUIMenuItem::setMenuicon(int MenuItemid, int icon){
+	res.initialize();
 	for(int i = 0; i < childs.size(); i++){
 		if(childs[i].itemid == MenuItemid) {
 			childs[i].menuicon = res.getIconImage(icon);
@@ -194,8 +195,8 @@ void gGUIMenuItem::draw() {
 		}
 	}
 
-	renderer->setColor(textbackgroundcolor);
 	if(isicon){
+		renderer->setColor(gColor(1.0f, 1.0f, 1.0f));
 		menuicon->draw(left, top - texth / 3, iconh, iconw);
 	}
 
@@ -234,7 +235,6 @@ void gGUIMenuItem::mouseMoved(int x, int y) {
 }
 
 void gGUIMenuItem::mousePressed(int x, int y, int button) {
-	static bool selectedchild;
 	for(int i = 0; i < childs.size(); i++) {
 			childs[i].selected = false;
 			childs[i].menuboxshown = false;
@@ -242,13 +242,13 @@ void gGUIMenuItem::mousePressed(int x, int y, int button) {
 			childs[i].selected = true;
 			childs[i].menuboxshown = true;
 			childs[i].hovered = false;
-			gLogi("MenuItem") << "selected:" << childs[i].getItemId();
-			root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_MENUBARSELECTED, gToStr(itemid));
+			root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_MENUBARSELECTED, gToStr(childs[i].itemid));
 		}
 		childs[i].mousePressed(x, y, button);
 	}
-
 }
+
+
 
 gGUIMenubar::gGUIMenubar() : gGUIMenuItem("") {
 	totaltextw = 0;
