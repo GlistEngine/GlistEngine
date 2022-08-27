@@ -20,18 +20,17 @@
 #include "gTexture.h"
 
 
-	/** gImage holds several functions primarily to locate and load images.
-	* It allows the developer to load images in one or multiple threads.
-	*
-	* Overview of the functions: load and loadImage functions to load images effectively.
-	* LoadData and loadImageData functions to load image's Data in a separate
-	* thread. useData function to create the texture in VRAM by using the loaded data.
-	* setImageData function to alter an image's data in integer format. setImageDataHDR
-	* function to alter an image's data in float format. getImageData function to  access
-	* an image's original or edited data in integer format. getImageDataHDR function to
-	* access an image's original or edited data in float format. clearData function to clear
-	* a given Data.
-	*/
+/** gImage holds several functions primarily to locate and load images.
+*
+* Overview of the functions: load and loadImage functions to load images effectively.
+* LoadData and loadImageData functions to load image's Data in a separate
+* thread. useData function to create the texture in VRAM by using the loaded data.
+* setImageData function to alter an image's data in integer format. setImageDataHDR
+* function to alter an image's data in float format. getImageData function to  access
+* an image's original or edited data in integer format. getImageDataHDR function to
+* access an image's original or edited data in float format. clearData function to clear
+* a given Data.
+*/
 class gImage : public gTexture {
 public:
 	gImage();
