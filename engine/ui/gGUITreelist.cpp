@@ -157,10 +157,16 @@ void gGUITreelist::mouseReleased(int x, int y, int button) {
 				i++;
 			}
 
-			if(x < left + arrowposx  - arrowsize || x > left + arrowposx) isfocused = true;
+			if(x < left + arrowposx  - arrowsize || x > left + arrowposx) {
+				isfocused = true;
+				root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_TREELISTSELECTED, gToStr(selectedno));
+				actionmanager.onGUIEvent(id, G_GUIEVENT_TREELISTSELECTED);
+			}
 			else if(x > left + arrowposx  - arrowsize && x < left + arrowposx) {
 				element = topelement.findElement(parsedtitle);
 				element->isexpanded = !element->isexpanded;
+				root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_TREELISTEXPANDED, gToStr(selectedno));
+				actionmanager.onGUIEvent(id, G_GUIEVENT_TREELISTEXPANDED);
 				refreshList();
 			}
 		}
@@ -177,9 +183,15 @@ void gGUITreelist::mouseReleased(int x, int y, int button) {
 			element = topelement.findElement(parsedtitle);
 			if(element->isparent) {
 				iconx = element->orderno * spacesize + (iconw * 2 / 3);
-				if(x < left + iconx || x > left + iconx + iconw) isfocused = true;
+				if(x < left + iconx || x > left + iconx + iconw) {
+					isfocused = true;
+					root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_TREELISTSELECTED, gToStr(selectedno));
+					actionmanager.onGUIEvent(id, G_GUIEVENT_TREELISTSELECTED);
+				}
 				else if(x > left + iconx && x < left + iconx + iconw) {
 					element->isexpanded = !(element->isexpanded);
+					root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_TREELISTEXPANDED, gToStr(selectedno));
+					actionmanager.onGUIEvent(id, G_GUIEVENT_TREELISTEXPANDED);
 					if(element->isiconchanged == false) {
 						if(element->isexpanded) setIcon(gGUIResources::ICON_FOLDEROPENED, element);
 						else setIcon(gGUIResources::ICON_FOLDER, element);
@@ -187,11 +199,15 @@ void gGUITreelist::mouseReleased(int x, int y, int button) {
 					refreshList();
 				}
 			}
-			else isfocused = true;
+			else {
+				isfocused = true;
+				root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_TREELISTSELECTED, gToStr(selectedno));
+				actionmanager.onGUIEvent(id, G_GUIEVENT_TREELISTSELECTED);
+			}
 		}
 
-		root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_TREELISTSELECTED, gToStr(selectedno));
-		actionmanager.onGUIEvent(id, G_GUIEVENT_TREELISTSELECTED);
+		root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_MOUSEPRESSEDONTREELIST, gToStr(selectedno));
+		actionmanager.onGUIEvent(id, G_GUIEVENT_MOUSEPRESSEDONTREELIST);
 	}
 }
 
