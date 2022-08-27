@@ -38,7 +38,7 @@ public:
 	void mouseMoved(int x, int y);
 	void mousePressed(int x, int y, int button);
 	void update();
-
+	void resInitialize();
 	int menuboxx, menuboxy, menuboxw, menuboxh;
 	int texty;
 
@@ -66,6 +66,7 @@ private:
 	int iconh, iconw;
 	gGUIResources res;
 	bool seperator;
+	static bool isresinitialized;
 };
 
 
