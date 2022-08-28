@@ -84,8 +84,6 @@ void gGUINotebookPanel::draw() {
 				x = x - tabsize;
 			}
 		}
-		//renderer->setColor(color.YELLOW);
-		//gDrawCross(left + width / 2 - 150, tablinetop + height / 2 - 150, 120.0f, 160.0f, 40.0f, true);////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		renderer->setColor(color);
 		fbo.unbind();
 		fbo.drawSub(left, top, left, top, width, height);
