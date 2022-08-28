@@ -29,6 +29,7 @@ public:
 	void addList(gGUIFrame *frame);
 	void mousePressed(int x, int y, int button);
 	void mouseReleased(int x, int y, int button);
+	void mouseScrolled(int x, int y);
 	void setfirstTitle();
 	void setSelectedTitle();
 	void addElement(gGUITreelist::Element* element);
@@ -43,7 +44,7 @@ private:
 	int textboxw, buttonw;
 	int textboxh;
 	int listx, listy, listw;
-	bool listopened, pressedonlist;
+	bool listopened, selectedline, listexpanded, pressedonlist, buttonpressed;
 
 };
 
