@@ -162,10 +162,12 @@ void gGUIForm::hide() {
 
 void gGUIForm::keyPressed(int key) {
 	if(guisizer) guisizer->keyPressed(key);
+	if(statusbar) statusbar->keyPressed(key);
 }
 
 void gGUIForm::keyReleased(int key) {
 	if(guisizer) guisizer->keyReleased(key);
+	if(statusbar) statusbar->keyPressed(key);
 }
 
 void gGUIForm::charPressed(unsigned int codepoint) {
