@@ -42,6 +42,7 @@
 
 #include "gGUIButton.h"
 #include "gImage.h"
+#include "gGUIResources.h"
 
 /**
  * Uploaded image acts as a button. The Image adding both as an image and file
@@ -118,6 +119,16 @@ public:
  */
     int getButtonHeight();
 
+/**
+ * Sets the button image using icons from the resources.
+ */
+    void setButtonImageFromIcon(int iconId);
+
+/**
+ * Sets the pressed button image using icons from the resources.
+ */
+    void setPressedButtonImageFromIcon(int pressedIconId);
+
 
 private:
         float imagew, imageh, proportion;
@@ -126,7 +137,10 @@ private:
         std::string pressedbuttonimagepath;
         gImage buttonimage;
         gImage pressedbuttonimage;
+
+        gGUIResources res;
+        int iconid;
+        int pressediconid;
 };
 
 #endif /* UI_GGUIIMAGEBUTTONH */
-
