@@ -148,6 +148,7 @@ set(SRC_FILES
 	${ENGINE_DIR}/animation/gSpriteAnimation.cpp
 	${ENGINE_DIR}/animation/gSpriteAnimator.cpp
 	${ENGINE_DIR}/ui/gGUINotebookPanel.cpp
+	${ENGINE_DIR}/ui/gGUICandleStickChart.cpp
 	${ENGINE_DIR}/ui/gGUIStatusBar.cpp
 	${ENGINE_DIR}/ui/gGUILineGraph.cpp
 	${ENGINE_DIR}/ui/gGUIContextMenu.cpp

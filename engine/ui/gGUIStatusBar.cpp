@@ -20,9 +20,12 @@ gGUIStatusBar::gGUIStatusBar() {
 	//top = getScreenHeight() - statusbarh;
 	setSizer(&statussizer);
 	//text font
+	textx[0] = 15;
+	textx[1] = statusbarx + statusbarw / 2;
+	textx[2] = textx[1] + statusbarw / 6;
+	textx[3] = textx[2] + statusbarw / 6;
 	for (int order = 0; order < textobjectsize; ++order) {
-		text[order] = "";
-		if(order != 0)textx[order] = statusbarx + (statusbarw / textobjectsize) * order;else textx[order] = statusbarx + 15;
+		text[order] = "Example";
 		texty[order] = statusbary + statusbarh / 2;
 		textsliderx[order] = textx[order] - 10;
 		textslidery[order] = statusbary;
@@ -44,9 +47,17 @@ void gGUIStatusBar::draw() {
 		renderer->setColor(&oldcolor);
 }
 
+void gGUIStatusBar::keyPressed(int key) {
+	//gLogi("gGUIStatusBar") << key;
+}
+
+void gGUIStatusBar::keyReleased(int key) {
+
+}
+
 void gGUIStatusBar::windowResized(int w, int h) {
- gLogi("width: ") << w;
- gLogi("height ") << h;
+ //gLogi("width: ") << w;
+ //gLogi("height ") << h;
  updateStatusBarCoordinate(w, h);
  updateTextCoordinate(w, h);
 }
@@ -61,7 +72,10 @@ void gGUIStatusBar::updateStatusBarCoordinate(int w, int h) {
 
 void gGUIStatusBar::updateTextCoordinate(int w, int h) {
  	for (int order = 0; order < textobjectsize; ++order) {
- 		textx[order] = statusbarx + (statusbarw / textobjectsize) * order;
+ 		textx[0] = 15;
+ 		textx[1] = statusbarx + statusbarw / 2;
+ 		textx[2] = textx[1] + statusbarw / 6;
+ 		textx[3] = textx[2] + statusbarw / 6;
  		texty[order] = statusbary + statusbarh / 2;
  		textsliderx[order] = textx[order];
  		textslidery[order] = statusbary;
@@ -69,7 +83,6 @@ void gGUIStatusBar::updateTextCoordinate(int w, int h) {
 }
 
 void gGUIStatusBar::statusbarDraw() {
-
 	gDrawRectangle(statusbarx, statusbary, statusbarw, statusbarh, true);
 	renderer->setColor(middlegroundcolor->r, middlegroundcolor->g, middlegroundcolor->b);
 	//ust cizgi
@@ -82,25 +95,21 @@ void gGUIStatusBar::statusbarAllTextDraw() {
 	//statusbarsliders
 	renderer->setColor(middlegroundcolor->r, middlegroundcolor->g, middlegroundcolor->b);
 	for (int id = 0; id < textobjectsize; ++id) {
-		//sol ufak çizgi
-		//gDrawLine(textsliderx[id] - 1, textslidery[id] + textsliderh[id] / 3, textsliderx[id] - 1, textslidery[id] + textsliderh[id] * 3 / 4);
+		if(text[id].empty())continue;
 		//çizgi
 		gDrawLine(textsliderx[id], textslidery[id] + textsliderh[id]* 0.05f, textsliderx[id], textslidery[id] + textsliderh[id]*0.95f);
-		//sað ufak çizgi
-		//gDrawLine(textsliderx[id] + 1, textslidery[id] + textsliderh[id] / 3, textsliderx[id] + 1, textslidery[id] + textsliderh[id] * 3 / 4);
-	}
-	//statusbartexts
-	renderer->setColor(middlegroundcolor->r, middlegroundcolor->g, middlegroundcolor->b);
-	for (int id = 0; id < textobjectsize; ++id) {
+		//statusbartexts
+		renderer->setColor(fontcolor);
 		font->drawText(text[id], textx[id], texty[id]);
+		renderer->setColor(middlegroundcolor->r, middlegroundcolor->g, middlegroundcolor->b);
 	}
 }
 
 void gGUIStatusBar::mousePressed(int x, int y, int button) {
-	gLogi("x: ") << x;
-	gLogi("y: ") << y;
-	gLogi("textx: ") << textx[0];
-	gLogi("texty: ") << texty[0];
+	//gLogi("x: ") << x;
+	//gLogi("y: ") << y;
+	//gLogi("textx: ") << textx[0];
+	//gLogi("texty: ") << texty[0];
 	for (int id = 0; id < textobjectsize; ++id) {
 		if(x > textsliderx[id] - 5 && x < textsliderx[id] + textsliderw[id] + 5 && y > statusbary && y < statusbary + statusbarh) {
 			selectedtext = id;
@@ -111,8 +120,8 @@ void gGUIStatusBar::mousePressed(int x, int y, int button) {
 }
 
 void gGUIStatusBar::mouseDragged(int x, int y, int button) {
-	gLogi("dragx: ") << x;
-	gLogi("dragy: ") << y;
+	//gLogi("dragx: ") << x;
+	//gLogi("dragy: ") << y;
 	if(selectedtext != -1) {
 		textsliderx[selectedtext] = x;
 		textx[selectedtext] = x + 10;
@@ -120,8 +129,8 @@ void gGUIStatusBar::mouseDragged(int x, int y, int button) {
 }
 
 void gGUIStatusBar::mouseReleased(int x, int y, int button) {
-	gLogi("releasex: ") << x;
-	gLogi("releasey") << y;
+	//gLogi("releasex: ") << x;
+	//gLogi("releasey") << y;
 	if(selectedtext != -1) {
 		textsliderx[selectedtext] = x;
 		textx[selectedtext] = x + 10;

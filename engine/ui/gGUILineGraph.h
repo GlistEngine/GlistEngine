@@ -17,7 +17,7 @@
 #include "gGUIControl.h"
 #include "gLine.h"
 #include "gRectangle.h"
-
+#include "gCircle.h"
 
 class gGUILineGraph: public gGUIControl  {
 
@@ -35,6 +35,7 @@ public:
 	void setDisabledLinePartColor(gColor color);
 	void setGraphColor(gColor color);
 	void setLineDrawerColor(gColor color);
+	void setmultiLineColor(gColor color);
 
 
 	gColor* getLineDrawerColor();
@@ -42,14 +43,18 @@ public:
 	gColor* getGraphColor();
 	gColor* getDisabledLinePartColor();
 	gColor* getDisabledLinePartFontColor();
+	gColor* getmultiLineColor();
 
 	virtual void update();
 
 	void draw();
 	void graph();
 	void addValue(float x, float y);
+	void addMultiValue(float title, float mx, float my);
 	void addpoint();
+	void addMultiPoint();
 	void linedrawer();
+	void multiline();
 
 
 	void drawXAxis();
@@ -65,7 +70,7 @@ protected:
 	bool istoggle;
 	bool ispressednow;
 	bool isdisabled;
-	gColor lpcolor, pressedlpcolor, disabledlpcolor, lgcolor, ldcolor; //LP=linepart, LG=linegraph, LD=linedrawer
+	gColor lpcolor, pressedlpcolor, disabledlpcolor, lgcolor, ldcolor, mlcolor; //LP=linepart, LG=linegraph, LD=linedrawer, ML=multiline
 	gColor lpfcolor, pressedlpfcolor, disabledlpfcolor; //font
 
 	void resetTitlePosition();
@@ -77,9 +82,13 @@ private:
 	gRectangle points[300];
 	float x[300];
 	float y[300];
+	float mx[300];
+	float my[300];
 	int pointnum;
+	int multinum;
 	gLine lines[300];
-	gLine line3;
+	int maxy;
+	int maxx;
 
 	std::vector<std::vector<int>> linesX;
 	std::vector<std::vector<int>> linesY;

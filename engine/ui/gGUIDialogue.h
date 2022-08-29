@@ -11,66 +11,64 @@
 #include "gGUIForm.h"
 #include "gGUIContainer.h"
 #include "gGUIImageButton.h"
-
+#include "gGUIBitmap.h"
+#include "gGUIText.h"
 
 class gGUIDialogue: public gGUIForm {
 public:
-
-	enum {
-		DIALOGUETYPE_NONE, DIALOGUETYPE_OK, DIALOGUETYPE_OKCANCEL, DIALOGUETYPE_YESNO, DIALOGUETYPE_YESNOCANCEL
-	};
-
-	enum {
-		ICONTYPE_INFO, ICONTYPE_WARNING, ICONTYPE_ERROR, ICONTYPE_QUESTION
-	};
-
-	static const int dialoguetypenum = 5;
-	static const int icontypenum = 4;
-
 	gGUIDialogue();
 	virtual ~gGUIDialogue();
 
 	void update();
 	void draw();
 
-	void setMessage(std::string message);
-	std::string getMessage();
+	void setTitleBar(gGUIContainer* titleBar);
+	void setButtonsBar(gGUIContainer* buttonsBar);
+	void resetTitleBar();
+	void resetButtonsBar();
 
+	void setMinimizeButton(gGUIImageButton* minimizeButton);
+	void setMaximizeButton(gGUIImageButton* maximizeButton);
+	void setExitButton(gGUIImageButton* exitButton);
+
+	void setMinimizeEvent(bool minimizeEvent);
+	bool getMinimizeEvent();
+	void setMaximizeEvent(bool maximizeEvent);
+	bool getMaximizeEvent();
 	void setExitEvent(bool exitEvent);
 	bool getExitEvent();
 
-	void setInitLeft(int initLeft);
-	void setInitTop(int initTop);
-
-	void showDialogue(std::string title, std::string message, int dialogueType, int iconType);
+	void mouseMoved(int x, int y);
+	void mousePressed(int x, int y, int button);
 	void mouseDragged(int x, int y, int button);
-
-	void setTitleBar(gGUIContainer* titleBar);
-	void setButtonsBar(gGUIContainer* buttonsBar);
-
-	void setExitButton(gGUIImageButton* exitButton);
+	void mouseReleased(int x, int y, int button);
 private:
-	std::string message;
-	int dialoguetype;
-	int icontype;
-
-	std::string dialoguetypename[dialoguetypenum];
-	std::string icontypename[icontypenum];
-
-	bool exitevent;
-	bool exitbuttonexittrigger;
-	bool okbuttonexittrigger;
-	bool yesbuttonexittrigger;
-	bool nobuttonexittrigger;
-	bool cancelbuttonexittrigger;
-
-	int initleft;
-	int inittop;
-
 	gGUIContainer* titlebar;
 	gGUIContainer* buttonsbar;
 
-	gGUIImageButton* newexitbutton;
+	gGUIImageButton* minimizebutton;
+	gGUIImageButton* maximizebutton;
+	gGUIImageButton* exitbutton;
+
+	gGUIContainer deftitlebar;
+	gGUISizer deftitlebarsizer;
+	gGUIBitmap deftitlebarbitmap;
+	gGUIText deftitlebartext;
+	gGUIImageButton deftitlebarminimizebutton;
+	gGUIImageButton deftitlebarmaximizebutton;
+	gGUIImageButton deftitlebarexitbutton;
+
+	gGUIContainer defbuttonsbar;
+	gGUISizer defbuttonsbarsizer;
+	gGUIButton defbuttonsbarokbutton;
+
+	bool minimizeevent;
+	bool maximizeevent;
+	bool exitevent;
+
+	bool minimizebuttonminimizetrigger;
+	bool maximizebuttonmaximizetrigger;
+	bool exitbuttonexittrigger;
 };
 
 #endif /* UI_GGUIDIALOGUE_H_ */
