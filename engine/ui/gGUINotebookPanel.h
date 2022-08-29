@@ -22,23 +22,27 @@ public:
 private:
 	void loadFont();
 	void mousePressed(int x, int y, int button);
+	void mouseMoved(int x, int y);
 	void slideButtonPressed(int x, int y);
 	void drawTabs(int x, int tabSize, int index, bool drawFromLeftToRight);
 	void drawSlideButtons(bool isRightButton);
+	void closeTab(int index);
+	gColor colorReductionOnCursor(gColor color);
 	int getWidthOfTabLabels();
 
-	bool istitlevisible = false, drawfromlefttoright = true, isslidingleft = false, isslidingright = false;
+	bool istitlevisible = false, drawfromlefttoright = true, isslidingleft = false, isslidingright = false, colorreductionl = false, colorreductionr = false;
 	int tablinetop = 0, titleh = 20, tabsizersh = 22, tablabelssizew, tabfontsize = 11;
-	int spaceforleft = 23, spaceforright = 28;
-	int indexleft = 0, indexright;
+	int spaceforleft = 20, spaceforright = 30, slidebuttonw = 11;
+	int indexleft = 0, indexright, indexcursoroncross;
+	float oncursorcolorreduction = - 0.1f;
 
 	gGUISizer notebookpanelsizer;
-
 	gColor color;
 	gColor tablinecolor = color.LIGHT_GRAY;
 	gColor slidebuttoncolor = color.GRAY;
+	gColor crossoutlinecolor = color.DARK_GRAY;
+	gColor cursoroncrosscolor = color.RED;
 	gFont fontfortabs;
-
 	gFbo fbo;
 };
 
