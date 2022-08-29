@@ -12,60 +12,50 @@
 gGUIDialogue::gGUIDialogue() {
 	guisizer = nullptr;
 
-	title = "DIALOGUE BOX";
-	message = "This is a dialogue box.";
-	dialoguetype = DIALOGUETYPE_NONE;
-	icontype = ICONTYPE_INFO;
+	titlebar = nullptr;
+	buttonsbar = nullptr;
 
-	dialoguetypename[DIALOGUETYPE_NONE] = "none";
-	dialoguetypename[DIALOGUETYPE_OK] = "ok";
-	dialoguetypename[DIALOGUETYPE_OKCANCEL] = "okcancel";
-	dialoguetypename[DIALOGUETYPE_YESNO] = "yesno";
-	dialoguetypename[DIALOGUETYPE_YESNOCANCEL] = "yesnocancel";
-	icontypename[ICONTYPE_INFO] = "info";
-	icontypename[ICONTYPE_WARNING] = "warning";
-	icontypename[ICONTYPE_ERROR] = "error";
-	icontypename[ICONTYPE_QUESTION] = "question";
+	minimizebutton = nullptr;
+	maximizebutton = nullptr;
+	exitbutton = nullptr;
 
-
+	minimizeevent = false;
+	maximizeevent = false;
 	exitevent = false;
+
+	minimizebuttonminimizetrigger = false;
+	maximizebuttonmaximizetrigger = false;
 	exitbuttonexittrigger = false;
-	okbuttonexittrigger = false;
-	yesbuttonexittrigger = false;
-	nobuttonexittrigger = false;
-	cancelbuttonexittrigger = false;
-
-	initleft = left;
-	inittop = top;
-
 }
 
 gGUIDialogue::~gGUIDialogue() {
 }
 
 void gGUIDialogue::update() {
-	if(guisizer) guisizer->update();
+	if (guisizer) guisizer->update();
 
-	if (exitbuttonexittrigger && !newexitbutton->isPressed())  exitevent = true; exitbuttonexittrigger = false;
-	if (newexitbutton->isPressed()) exitbuttonexittrigger = true;
+	if (exitbutton) {
+		if (exitbuttonexittrigger && !exitbutton->isPressed())  exitevent = true; exitbuttonexittrigger = false;
+		if (exitbutton->isPressed()) exitbuttonexittrigger = true;
+	}
 
-
+	if (minimizebutton) {
+		if (minimizebuttonminimizetrigger && !minimizebutton->isPressed())  minimizeevent = true; minimizebuttonminimizetrigger = false;
+		if (minimizebutton->isPressed()) minimizebuttonminimizetrigger = true;
+	}
 }
 
 void gGUIDialogue::draw() {
-	if(guisizer) {
+	if (guisizer) {
 
 		gColor oldcolor = *renderer->getColor();
 		renderer->setColor(textbackgroundcolor);
 		gDrawRectangle(left, top - titlebar->height, width, titlebar->height, true);
-		renderer->setColor(middlegroundcolor);
+		renderer->setColor(foregroundcolor);
 		gDrawRectangle(left, top, width, height + buttonsbar->height, true);
 
-		// DIALOGUE TITLE
-		renderer->setColor(fontcolor);
-		// font->drawText(title, left + width / 12, top + height / 14);
-
 		// DIALOGUE BORDERS
+		renderer->setColor(fontcolor);
 		gDrawLine(left, top - titlebar->height, right, top - titlebar->height);
 		gDrawLine(left, bottom + buttonsbar->height, right, bottom + buttonsbar->height);
 		gDrawLine(left, top - titlebar->height, left, bottom + buttonsbar->height);
@@ -82,12 +72,99 @@ void gGUIDialogue::draw() {
 	if (buttonsbar) buttonsbar->draw();
 }
 
-void gGUIDialogue::setMessage(std::string message) {
-	this->message = message;
+void gGUIDialogue::setTitleBar(gGUIContainer* titleBar) {
+	this->titlebar = titleBar;
+	titlebar->set(root, this, this, 0, 0, left, top - titlebar->height, width, titlebar->height);
 }
 
-std::string gGUIDialogue::getMessage() {
-	return message;
+void gGUIDialogue::setButtonsBar(gGUIContainer* buttonsBar) {
+	this->buttonsbar = buttonsBar;
+	buttonsbar->set(root, this, this, 0, 0, left, top + height, width, buttonsbar->height);
+}
+
+void gGUIDialogue::resetTitleBar() {
+	deftitlebar.width = width;
+	deftitlebar.height = height * 0.06f;
+
+	deftitlebar.setSizer(&deftitlebarsizer);
+	deftitlebarsizer.setSize(1, 5);
+	deftitlebarsizer.enableBorders(false);
+	float tbcolproportions[5] = {0.04f, 0.81f, 0.05f, 0.05f, 0.05f};
+	deftitlebarsizer.setColumnProportions(tbcolproportions);
+
+	setTitleBar(&deftitlebar);
+
+	deftitlebarsizer.setControl(0, 0, &deftitlebarbitmap);
+	deftitlebarbitmap.loadImage("gameicon/icon.png", false);
+	deftitlebarbitmap.height = deftitlebar.height * 0.7f;
+	deftitlebarbitmap.width = deftitlebarbitmap.height;
+	deftitlebarbitmap.top += (deftitlebar.height - deftitlebarbitmap.height) / 2;
+	deftitlebarbitmap.left += (deftitlebar.width * 0.04 - deftitlebarbitmap.width) / 2;
+
+	deftitlebarsizer.setControl(0, 1, &deftitlebartext);
+	deftitlebartext.setText("Properties for GlistEngine");
+	deftitlebartext.height = deftitlebar.height * 0.6f;
+	deftitlebartext.top += (deftitlebar.height - deftitlebartext.height) / 2;
+
+	deftitlebarsizer.setControl(0, 2, &deftitlebarminimizebutton);
+	deftitlebarminimizebutton.setSize(deftitlebar.height, deftitlebar.height);
+	// deftitlebarminimizebutton.loadButtonImages("dicons/tminb32.png");
+	setMinimizeButton(&deftitlebarminimizebutton);
+
+	deftitlebarsizer.setControl(0, 3, &deftitlebarmaximizebutton);
+	deftitlebarmaximizebutton.setSize(deftitlebar.height, deftitlebar.height);
+	// deftitlebarmaximizebutton.loadButtonImages("dicons/tmaxb32.png");
+	setMaximizeButton(&deftitlebarmaximizebutton);
+
+	deftitlebarsizer.setControl(0, 4, &deftitlebarexitbutton);
+	deftitlebarexitbutton.setSize(deftitlebar.height, deftitlebar.height);
+	// deftitlebarexitbutton.loadButtonImages("dicons/tcb32.png");
+	setExitButton(&deftitlebarexitbutton);
+}
+
+void gGUIDialogue::resetButtonsBar() {
+	defbuttonsbar.width = width;
+	defbuttonsbar.height = height * 0.1f;
+
+	defbuttonsbar.setSizer(&defbuttonsbarsizer);
+	defbuttonsbarsizer.setSize(1, 5);
+	defbuttonsbarsizer.enableBorders(true);
+
+	setButtonsBar(&defbuttonsbar);
+
+	defbuttonsbarsizer.setControl(0, 4, &defbuttonsbarokbutton);
+	defbuttonsbarokbutton.setTitle("OK");
+	defbuttonsbarokbutton.setSize(defbuttonsbar.width * 0.14f, defbuttonsbar.height * 0.6f);
+	defbuttonsbarokbutton.left += (defbuttonsbar.width * 0.2f - defbuttonsbar.width * 0.14f) / 2;
+	defbuttonsbarokbutton.top += (defbuttonsbar.height - defbuttonsbar.height * 0.6f) / 2;
+}
+
+void gGUIDialogue::setMinimizeButton(gGUIImageButton* minimizeButton) {
+	this->minimizebutton = minimizeButton;
+}
+
+void gGUIDialogue::setMaximizeButton(gGUIImageButton* maximizeButton) {
+	this->maximizebutton = maximizeButton;
+}
+
+void gGUIDialogue::setExitButton(gGUIImageButton* exitButton) {
+	this->exitbutton = exitButton;
+}
+
+void gGUIDialogue::setMinimizeEvent(bool minimizeEvent) {
+	this->minimizeevent = minimizeEvent;
+}
+
+bool gGUIDialogue::getMinimizeEvent() {
+	return minimizeevent;
+}
+
+void gGUIDialogue::setMaximizeEvent(bool maximizeEvent) {
+	this->maximizeevent = maximizeEvent;
+}
+
+bool gGUIDialogue::getMaximizeEvent() {
+	return maximizeevent;
 }
 
 void gGUIDialogue::setExitEvent(bool exitEvent) {
@@ -98,103 +175,25 @@ bool gGUIDialogue::getExitEvent() {
 	return exitevent;
 }
 
-void gGUIDialogue::setInitLeft(int initLeft) {
-	this->initleft = initLeft;
+void gGUIDialogue::mouseMoved(int x, int y) {
+	if(titlebar) titlebar->mouseMoved(x, y);
+	if(guisizer) {
+		if(x >= guisizer->left && x < guisizer->right && y >= guisizer->top && y < guisizer->bottom) {
+			guisizer->iscursoron = true;
+			guisizer->mouseMoved(x, y);
+		}
+	}
+	if(buttonsbar) buttonsbar->mouseMoved(x, y);
 }
 
-void gGUIDialogue::setInitTop(int initTop) {
-	this->inittop = initTop;
-}
-
-void gGUIDialogue::showDialogue(std::string title, std::string message, int dialogueType, int iconType) {
-
-	this->title = title;
-	this->message = message;
-	this->dialoguetype = dialogueType;
-	this->icontype = iconType;
-
-	guisizer->enableBackgroundFill(false);
-	/*
-	// EXIT BUTTON
-	guisizer->setControl(0, 0, &exitbutton);
-	exitbutton.setSize(width / 8, height / 8);
-	exitbutton.left += width - (width / 8) - (width / 24);
-
-	// DIALOGUE ICON
-	dialogueicon.loadImage("dialogueicons/" + icontypename[iconType] + "tpicon.png");
-	// newdialogueicon = resources.getIconImage(gGUIResources::ICON_INFO);
-
-	// MESSAGE TEXT
-	int linecount = (this->message.length() / 24) + 1; // One line for each 23 characters of message
-
-	guisizer->setControl(1, 0, &messagetext);
-	messagetext.setText(message);
-	messagetext.setTextAlignment(gGUIText::TEXTALIGNMENT_CENTER);
-	messagetext.width = width / 6;
-	messagetext.height = height * 5 / (48 / 2);
-	// 	messagetext.height = height * 5 / (48 / linecount);
-	// messagetext.left += (width - messagetext.width) / 2;
-	messagetext.top += height / 3;
-
-	/* guisizer->setControl(1, 0, &messagetext);
-	messagetext.setText(message);
-	messagetext.width = width * 27 / 48;
-	messagetext.height = height * 5 / (48 / linecount);
-	messagetext.left += width * 3 / 8;
-	messagetext.top += ((height * 5 / 8) - messagetext.height) / 2 + messagetext.height / 12;
-
-	guisizer->setControl(2, 0, &buttonssizer);
-	buttonssizer.setSize(1, 3);
-
-	int buttonwidth = width / 4;
-	int buttonheight = height / 7;
-	int leftoffset = ((width / 3) - buttonwidth) / 2;
-	int topoffset = ((height / 4) -  buttonheight) / 2;
-
-	okbutton.setSize(buttonwidth, buttonheight);
-	cancelbutton.setSize(buttonwidth, buttonheight);
-	yesbutton.setSize(buttonwidth, buttonheight);
-	nobutton.setSize(buttonwidth, buttonheight);
-
-	// OK BUTTON
-	if (dialoguetypename[dialoguetype] == "ok" || dialoguetypename[dialoguetype] == "okcancel") {
-		if (dialoguetypename[dialoguetype] == "ok") buttonssizer.setControl(0, 1, &okbutton);
-		else buttonssizer.setControl(0, 0, &okbutton);
-		okbutton.left += leftoffset;
-		okbutton.top += topoffset;
-	}
-
-	// CANCEL BUTTON
-	if (dialoguetypename[dialoguetype] == "okcancel" || dialoguetypename[dialoguetype] == "yesnocancel") {
-		buttonssizer.setControl(0, 2, &cancelbutton);
-		cancelbutton.left += leftoffset;
-		cancelbutton.top += topoffset;
-	}
-
-	// YES BUTTON
-	if (dialoguetypename[dialoguetype] == "yesno" || dialoguetypename[dialoguetype] == "yesnocancel") {
-		buttonssizer.setControl(0, 0, &yesbutton);
-		yesbutton.left += leftoffset;
-		yesbutton.top += topoffset;
-	}
-
-	// NO BUTTON
-	if (dialoguetypename[dialoguetype] == "yesno" || dialoguetypename[dialoguetype] == "yesnocancel") {
-		if (dialoguetypename[dialoguetype] == "yesno")buttonssizer.setControl(0, 2, &nobutton);
-		else if (dialoguetypename[dialoguetype] == "yesnocancel") buttonssizer.setControl(0, 1, &nobutton);
-		nobutton.left += leftoffset;
-		nobutton.top += topoffset;
-	}
-
-	*/
-
+void gGUIDialogue::mousePressed(int x, int y, int button) {
+	if (titlebar) titlebar->mousePressed(x, y, button);
+	if (guisizer) guisizer->mousePressed(x, y, button);
+	if (buttonsbar) buttonsbar->mousePressed(x, y, button);
 }
 
 void gGUIDialogue::mouseDragged(int x, int y, int button) {
-	if (x > left - width && x < left + width - width / 8 && y >= top - height && y < top + height / 8) {
-		int buttontopoffset = (6 * (height / 8)) + (((height / 4) -  (height / 7)) / 2);
-		int buttonleftoffset = (((width / 3) - (width / 4)) / 2);
-
+	/* if (x > left - width && x < left + width && y >= top - height && y < top + height / 8) {
 		left = x;
 		top = y;
 		right = x + width;
@@ -214,31 +213,11 @@ void gGUIDialogue::mouseDragged(int x, int y, int button) {
 		buttonsbar->top = y;
 		buttonsbar->right = x + buttonsbar->width;
 		buttonsbar->bottom = y + buttonsbar->height;
-	}
+	} */
 }
 
-void gGUIDialogue::setTitleBar(gGUIContainer* titleBar) {
-	this->titlebar = titleBar;
-	titlebar->height = height * 0.06;
-	titlebar->set(root, this, this, 0, 0,
-				left,
-				top - titlebar->height,
-				width,
-				titlebar->height
-		);
-}
-
-void gGUIDialogue::setButtonsBar(gGUIContainer* buttonsBar) {
-	this->buttonsbar = buttonsBar;
-	buttonsbar->height = height * 0.1;
-	buttonsbar->set(root, this, this, 0, 0,
-				left,
-				top + height,
-				width,
-				buttonsbar->height
-		);
-}
-
-void gGUIDialogue::setExitButton(gGUIImageButton* exitButton) {
-	this->newexitbutton = exitButton;
+void gGUIDialogue::mouseReleased(int x, int y, int button) {
+	if (titlebar) titlebar->mouseReleased(x, y, button);
+	if (guisizer) guisizer->mouseReleased(x, y, button);
+	if (buttonsbar) buttonsbar->mouseReleased(x, y, button);
 }
