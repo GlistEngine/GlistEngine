@@ -22,15 +22,6 @@ public:
 	void update();
 	void draw();
 
-	void setMinimizeEvent(bool minimizeEvent);
-	bool getMinimizeEvent();
-	void setMaximizeEvent(bool maximizeEvent);
-	bool getMaximizeEvent();
-	void setExitEvent(bool exitEvent);
-	bool getExitEvent();
-
-	void mouseDragged(int x, int y, int button);
-
 	void setTitleBar(gGUIContainer* titleBar);
 	void setButtonsBar(gGUIContainer* buttonsBar);
 	void resetTitleBar();
@@ -40,17 +31,18 @@ public:
 	void setMaximizeButton(gGUIImageButton* maximizeButton);
 	void setExitButton(gGUIImageButton* exitButton);
 
+	void setMinimizeEvent(bool minimizeEvent);
+	bool getMinimizeEvent();
+	void setMaximizeEvent(bool maximizeEvent);
+	bool getMaximizeEvent();
+	void setExitEvent(bool exitEvent);
+	bool getExitEvent();
+
 	void mouseMoved(int x, int y);
 	void mousePressed(int x, int y, int button);
+	void mouseDragged(int x, int y, int button);
 	void mouseReleased(int x, int y, int button);
 private:
-	bool minimizeevent;
-	bool maximizeevent;
-	bool exitevent;
-
-	bool exitbuttonexittrigger;
-	bool minimizebuttonminimizetrigger;
-
 	gGUIContainer* titlebar;
 	gGUIContainer* buttonsbar;
 
@@ -58,7 +50,6 @@ private:
 	gGUIImageButton* maximizebutton;
 	gGUIImageButton* exitbutton;
 
-	// DEFAULT TITLEBAR ELEMENTS
 	gGUIContainer deftitlebar;
 	gGUISizer deftitlebarsizer;
 	gGUIBitmap deftitlebarbitmap;
@@ -67,10 +58,17 @@ private:
 	gGUIImageButton deftitlebarmaximizebutton;
 	gGUIImageButton deftitlebarexitbutton;
 
-	// DEFAULT BUTTONSBAR ELEMENTS
 	gGUIContainer defbuttonsbar;
 	gGUISizer defbuttonsbarsizer;
 	gGUIButton defbuttonsbarokbutton;
+
+	bool minimizeevent;
+	bool maximizeevent;
+	bool exitevent;
+
+	bool minimizebuttonminimizetrigger;
+	bool maximizebuttonmaximizetrigger;
+	bool exitbuttonexittrigger;
 };
 
 #endif /* UI_GGUIDIALOGUE_H_ */
