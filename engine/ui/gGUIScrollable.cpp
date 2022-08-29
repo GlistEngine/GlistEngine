@@ -76,7 +76,7 @@ void gGUIScrollable::setDimensions(int width, int height) {
 	hsby = boxh - hsbh;
 
 	vrw = vsbw;
-	vrh=(boxh / vsbh) * totalh;
+	vrh = vsbh * boxh / totalh;
 	vrx = vsbx;
 	vry = vsby;
 	hrw = hsbw;
@@ -88,6 +88,7 @@ void gGUIScrollable::setDimensions(int width, int height) {
 	titley = top + font->getStringHeight("AE");
 
 	boxfbo->allocate(renderer->getWidth(), renderer->getHeight());
+
 }
 
 void gGUIScrollable::draw() {
@@ -213,7 +214,7 @@ void gGUIScrollable::mouseScrolled(int x, int y) {
 
 	firstx -= x * scrolldiff;
 	if(firstx < 0) firstx = 0;
-//	gLogi("Scrollable") << "t:" << top << ", y:" << vry << ", h:" << vrh;
+	//gLogi("Scrollable") << "t:" << top << ", y:" << vry << ", h:" << vrh;
 }
 
 void gGUIScrollable::windowResized(int w, int h) {

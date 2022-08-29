@@ -224,6 +224,7 @@ void gGUIForm::mouseExited() {
 }
 
 void gGUIForm::windowResized(int w, int h) {
+	if(w == 0 || h == 0) return;
 	if(statusbar) {
 		resizeStatusBar();
 		statusbar->windowResized(w, h);
