@@ -50,13 +50,22 @@ void gGUIManager::setCurrentFrame(gGUIFrame* currentFrame) {
 void gGUIManager::setActiveDialogue(gGUIDialogue* activeDialogue) {
 	activedialogue = activeDialogue;
 	activedialogue->setParentSlotNo(0, 0);
-	activedialogue->width = root->getAppManager()->getCurrentCanvas()->getScreenWidth() / 1 * 0.84;
-	activedialogue->height = root->getAppManager()->getCurrentCanvas()->getScreenHeight() / 1 * 0.84;
+	activedialogue->width = root->getAppManager()->getCurrentCanvas()->getScreenWidth() / 1 * 0.84f;
+	activedialogue->height = root->getAppManager()->getCurrentCanvas()->getScreenHeight() / 1 * 0.84f;
 	activedialogue->left = (root->getAppManager()->getCurrentCanvas()->getScreenWidth() - activedialogue->width) / 2;
 	activedialogue->top = (root->getAppManager()->getCurrentCanvas()->getScreenHeight() - activedialogue->height) / 2;
 	activedialogue->right = activedialogue->left + activedialogue->width;
 	activedialogue->bottom = activedialogue->top + activedialogue->height;
 	activedialogue->setRootApp(root);
+
+	defdialoguesizer.setSize(1, 1);
+	defdialoguesizer.enableBorders(true);
+	activedialogue->setSizer(&defdialoguesizer);
+
+	activedialogue->getSizer()->enableBackgroundFill(false);
+	activedialogue->resetTitleBar();
+	activedialogue->resetButtonsBar();
+
 	isdialogueactive = false;
 }
 

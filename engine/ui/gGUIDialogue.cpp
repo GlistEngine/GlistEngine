@@ -97,15 +97,6 @@ bool gGUIDialogue::getExitEvent() {
 	return exitevent;
 }
 
-void gGUIDialogue::showDialogue() {
-
-	guisizer->enableBackgroundFill(false);
-
-	resetButtonsBar();
-	resetTitleBar();
-
-}
-
 void gGUIDialogue::mouseDragged(int x, int y, int button) {
 	/* if (x > left - width && x < left + width && y >= top - height && y < top + height / 8) {
 		left = x;

@@ -29,7 +29,6 @@ public:
 	void setExitEvent(bool exitEvent);
 	bool getExitEvent();
 
-	void showDialogue();
 	void mouseDragged(int x, int y, int button);
 
 	void setTitleBar(gGUIContainer* titleBar);
