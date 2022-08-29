@@ -25,12 +25,16 @@ gGUIDropdownList::gGUIDropdownList() {
 	listy = textbox.top + textbox.height;
 	listw = textbox.width + button.width + 1;
 	listopened = false;
+	selectedline = false;
+	listexpanded = false;
 	pressedonlist = false;
-
+	buttonpressed = false;
 
 
 	actionmanager.addAction(&button, G_GUIEVENT_BUTTONPRESSED, this, G_GUIEVENT_TREELISTOPENEDONDROPDOWNLIST);
-	 actionmanager.addAction(&list, G_GUIEVENT_TREELISTSELECTED, this, G_GUIEVENT_TREELISTOPENEDONDROPDOWNLIST);
+	actionmanager.addAction(&list, G_GUIEVENT_TREELISTSELECTED, this, G_GUIEVENT_TREELISTOPENEDONDROPDOWNLIST);
+	actionmanager.addAction(&list, G_GUIEVENT_TREELISTEXPANDED, this, G_GUIEVENT_TREELISTOPENEDONDROPDOWNLIST);
+	actionmanager.addAction(&list, G_GUIEVENT_MOUSEPRESSEDONTREELIST, this, G_GUIEVENT_TREELISTOPENEDONDROPDOWNLIST);
 }
 
 gGUIDropdownList::~gGUIDropdownList() {
@@ -59,20 +63,26 @@ void gGUIDropdownList::set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, g
 
 void gGUIDropdownList::onGUIEvent(int guiObjectId, int eventType, int sourceEventType, std::string value1, std::string value2) {
 	if(sourceEventType == G_GUIEVENT_BUTTONPRESSED) {
+		buttonpressed = true;
 		listopened = !listopened;
 		root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_TREELISTOPENEDONDROPDOWNLIST);
 		actionmanager.onGUIEvent(id, G_GUIEVENT_TREELISTOPENEDONDROPDOWNLIST);
 	}
-	if(sourceEventType == G_GUIEVENT_TREELISTSELECTED) pressedonlist = true;
+	if(sourceEventType == G_GUIEVENT_TREELISTSELECTED) {
+		selectedline = true;
+		if(listopened) listopened = false;
+	}
+	if(sourceEventType == G_GUIEVENT_TREELISTEXPANDED) {
 
+		listexpanded = true;
+	}
+	if(sourceEventType == G_GUIEVENT_MOUSEPRESSEDONTREELIST) pressedonlist = true;
 }
 
 void gGUIDropdownList::draw() {
 	gGUIContainer::draw();
 	if(listopened) {
 		list.draw();
-
-
 	}
 //	gColor* oldcolor = renderer->getColor();
 //	renderer->setColor(oldcolor);
@@ -100,9 +110,15 @@ void gGUIDropdownList::mousePressed(int x, int y, int button) {
 }
 
 void gGUIDropdownList::mouseReleased(int x, int y, int button) {
+	bool o = listopened;
 	gGUIContainer::mouseReleased(x, y, button);
 	list.mouseReleased(x, y, button);
 	setSelectedTitle();
+	if(o && !pressedonlist) listopened = false;
+}
+
+void gGUIDropdownList::mouseScrolled(int x, int y) {
+	list.mouseScrolled(x, y);
 }
 
 void gGUIDropdownList::setfirstTitle() {
@@ -115,7 +131,7 @@ void gGUIDropdownList::setfirstTitle() {
 void gGUIDropdownList::setSelectedTitle() {
 	std::string title = "";
 	bool arrow = false;
-	if(pressedonlist) {
+	if(selectedline) {
 		title = rootelement->parentlist->allsubtitles[list.getSelectedLineNumber()];
 		if(rootelement->isicon) {
 			int i = 0;
