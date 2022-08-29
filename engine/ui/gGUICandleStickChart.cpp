@@ -144,9 +144,7 @@ void gGUICandleStickChart::addpoint() {				//adds points on graph
 			gDrawLine(xAxis[i]+15, y[i], xAxis[i]+15, y[i]-close[i]);
 		}
 	}
-
 }
-
 
 void gGUICandleStickChart::setGraphColor(gColor color) {			//.setGraphColor(gColor(1.0f, 1.0f, 0.0f, 1.0f));
 	cscolor = color;
@@ -170,4 +168,3 @@ void gGUICandleStickChart::setSize(int width, int height) {
 gColor* gGUICandleStickChart::getGraphColor() {
 	return &cscolor;
 }
-

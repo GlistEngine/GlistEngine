@@ -45,13 +45,11 @@ public:
 	void setXAxisValues(int min, int max, int range);
 	void setYAxisValues(int min, int max, int range);
 
-
 protected:
 	int candlew, candleh;
 	gColor cscolor;
 
 	void resetTitlePosition();
-
 
 private:
 	float x[300];
