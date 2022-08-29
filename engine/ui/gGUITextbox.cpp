@@ -1289,3 +1289,6 @@ void gGUITextbox::cleanText() {
 	if(ismultiline) currentline = 1;
 }
 
+int gGUITextbox::getTextboxh() {
+	return boxh;
+}

@@ -19,6 +19,7 @@ gGUINotebookPanel::~gGUINotebookPanel() {
 
 void gGUINotebookPanel::draw() {
 	//gLogi("gGUINotebookPanel") << "draw";
+	fbo.bind();
 	isslidingright = false;
 	isslidingleft = false;
 	if(istitlevisible) {
@@ -33,8 +34,9 @@ void gGUINotebookPanel::draw() {
 	gDrawRectangle(left, top + tablinetop, width, tabsizersh, true);
 	renderer->setColor(foregroundcolor);
 	gDrawRectangle(left, top + topbarh - 1, width, height - topbarh - 1, true);
-	fbo.drawSub(left, tablinetop, left, top, width, height - tablinetop);
-	fbo.bind();
+	renderer->setColor(tablinecolor);
+	gDrawLine(left, top + tablinetop, right, top + tablinetop);
+	gDrawLine(left, top + topbarh - 1, right, top + topbarh - 1);
 	if(guisizer) {
 		int x;
 		int tabsize;
@@ -42,16 +44,11 @@ void gGUINotebookPanel::draw() {
 			drawfromlefttoright = true;
 			indexleft = 0;
 		}
-		renderer->setColor(middlegroundcolor);
-		gDrawRectangle(left, top + tablinetop, width, tabsizersh, true);
-		renderer->setColor(tablinecolor);
-		gDrawLine(left, top + tablinetop, right, top + tablinetop);
-		gDrawLine(left, top + topbarh - 1, right, top + topbarh - 1);
 		if(drawfromlefttoright == true) {
 			x = left;
 			if(indexleft != 0) {
 				drawSlideButtons(false);
-				x += 11;
+				x += slidebuttonw;
 				isslidingleft = true;
 			}
 			for(int i = indexleft; i < guisizers.size(); i++) {
@@ -71,7 +68,7 @@ void gGUINotebookPanel::draw() {
 			x = left + width;
 			if(indexright != guisizers.size() - 1) {
 				drawSlideButtons(true);
-				x -= 11;
+				x -= slidebuttonw;
 				isslidingright = true;
 			}
 			for(int i = indexright; i >= 0; i--) {
@@ -87,7 +84,9 @@ void gGUINotebookPanel::draw() {
 				x = x - tabsize;
 			}
 		}
+		renderer->setColor(color);
 		fbo.unbind();
+		fbo.drawSub(left, top, left, top, width, height);
 		guisizer->draw();
 	}
 }
@@ -121,13 +120,18 @@ void gGUINotebookPanel::mousePressed(int x, int y, int button) {
 	guisizer->mousePressed(x, y, button);
 	int xleft;
 	int tabsize;
-	if(((isslidingleft && x < left + 10) || (isslidingright && x > left + width - 10)) && y <= top + topbarh && y >= top + tablinetop) {
+	if(((isslidingleft && x < left + slidebuttonw - 1) || (isslidingright && x > left + width - slidebuttonw + 1)) && y <= top + topbarh && y >= top + tablinetop) {
 		slideButtonPressed(x, y);
 	}
 	else if(drawfromlefttoright) {
 		xleft = left + 1;
 		for(int i = indexleft; i < guisizers.size(); i++) {
 			tabsize = fontfortabs.getStringWidth(quisizerlabels.at(i)) + spaceforleft + spaceforright;
+			if (x >= xleft - spaceforright + 7 + isslidingleft * (slidebuttonw - 1) + tabsize && x <= xleft - spaceforright + 7 + isslidingleft * (slidebuttonw - 1) + tabsize + 10 && y >= tablinetop + 6 && y <= tablinetop + 17) {
+				//gLogi("gGUINotebookPanel") << "Close button pressed for-> " << quisizerlabels.at(i);
+				closeTab(i);
+				break;
+			}
 			if(x <= xleft + tabsize && x >= xleft && y <= top + topbarh && y >= top + tablinetop) {
 				setSizerFromDeque(i);
 				break;
@@ -138,6 +142,11 @@ void gGUINotebookPanel::mousePressed(int x, int y, int button) {
 	else {
 		xleft = left + width - 1;
 		for(int i = indexright; i >= 0; i--) {
+			if (x >= xleft - spaceforright + 9 - isslidingright * (slidebuttonw - 1) && x <= xleft - spaceforright + 9 - isslidingright * (slidebuttonw - 1) + 10 && y >= tablinetop + 6 && y <= tablinetop + 17) {
+				//gLogi("gGUINotebookPanel") << "Close button pressed for-> " << quisizerlabels.at(i);
+				closeTab(i);
+				break;
+			}
 			tabsize = fontfortabs.getStringWidth(quisizerlabels.at(i)) + spaceforleft + spaceforright;
 			if(x >= xleft - tabsize && x <= xleft && y <= top + topbarh && y >= top + tablinetop) {
 				setSizerFromDeque(i);
@@ -148,8 +157,46 @@ void gGUINotebookPanel::mousePressed(int x, int y, int button) {
 	}
 }
 
+void gGUINotebookPanel::mouseMoved(int x, int y) {
+	//gLogi("gGUINotebookPanel") << "x -> " << x << ",  y -> " << y;
+	indexcursoroncross = -1;
+	colorreductionr = false;
+	colorreductionl = false;
+	guisizer->mouseMoved(x, y);
+	int xleft = 0;
+	int tabsize = 0;
+	if ((isslidingleft && x <= left + slidebuttonw - 1) && y <= top + topbarh && y >= top + tablinetop) {
+		colorreductionl = true;
+	}
+	else if ((isslidingright && x >= left + width - slidebuttonw + 1) && y <= top + topbarh && y >= top + tablinetop) {
+		colorreductionr = true;
+	}
+	else if(drawfromlefttoright) {
+		xleft = left - spaceforright + 8 + isslidingleft * (slidebuttonw - 1);
+		for(int i = indexleft; i < guisizers.size(); i++) {
+			tabsize = fontfortabs.getStringWidth(quisizerlabels.at(i)) + spaceforleft + spaceforright;
+			if(x >= xleft + tabsize && x <= xleft + tabsize + 10 && y >= tablinetop + 6 && y <= tablinetop + 17) {
+				indexcursoroncross = i;
+				break;
+			}
+			xleft = xleft + tabsize;
+		}
+	}
+	else {
+		xleft = left + width - spaceforright + 8 - isslidingright * (slidebuttonw - 1);
+		for(int i = indexright; i >= 0; i--) {
+			if(x >= xleft && x <= xleft + 10 && y >= tablinetop + 6 && y <= tablinetop + 17) {
+				indexcursoroncross = i;
+				break;
+			}
+			tabsize = fontfortabs.getStringWidth(quisizerlabels.at(i)) + spaceforleft + spaceforright;
+			xleft = xleft - tabsize;
+		}
+	}
+}
+
 void gGUINotebookPanel::slideButtonPressed(int x, int y) {
-	if(x > left + width - 10) {
+	if(x > left + width - slidebuttonw + 1) {
 		drawfromlefttoright = false;
 		indexright++;
 		//gLogi("gGUINotebookPanel") << "Right slide button pressed, indexright-> " << indexright;
@@ -167,28 +214,84 @@ void gGUINotebookPanel::drawTabs(int x, int tabSize, int index, bool drawFromLef
 		renderer->setColor(foregroundcolor);
 		gDrawRectangle(x - !drawFromLeftToRight * (tabSize), top + tablinetop + 1, tabSize, tabsizersh, true);
 	}
-	renderer->setColor(tablinecolor);
-	if(drawFromLeftToRight == false)
+	if(drawFromLeftToRight == false) {
 		sign = -1;
+		if(indexcursoroncross == index) {
+			renderer->setColor(cursoroncrosscolor);
+			gDrawCross(x - spaceforright + 11, tablinetop + 7, 10, 10, 2, true);
+		}
+		renderer->setColor(crossoutlinecolor);
+		gDrawCross(x - spaceforright + 11, tablinetop + 7, 10, 10, 2, false);
+	}
+	else {
+		if(indexcursoroncross == index) {
+			renderer->setColor(cursoroncrosscolor);
+			gDrawCross(x + tabSize - spaceforright + 11, tablinetop + 7, 10, 10, 2, true);
+		}
+		renderer->setColor(crossoutlinecolor);
+		gDrawCross(x + tabSize - spaceforright + 11, tablinetop + 7, 10, 10, 2, false);
+	}
+	renderer->setColor(tablinecolor);
 	gDrawLine(x, top + tablinetop + 1, x, top + topbarh);
 	gDrawLine(x + sign * tabSize, top + tablinetop + 1, x + sign * tabSize, top + topbarh);
 	renderer->setColor(fontcolor);
-	fontfortabs.drawText(quisizerlabels.at(index), x - (!drawFromLeftToRight * tabSize) + spaceforleft, top + topbarh - tabsizersh / 2.45f - 1);
+	fontfortabs.drawText(quisizerlabels.at(index), x - (!drawFromLeftToRight * tabSize) + spaceforleft, top + topbarh - tabsizersh / 2.45f);
 }
 
 void gGUINotebookPanel::drawSlideButtons(bool isRightButton) {
+	int signsize = fontfortabs.getStringWidth(">");
 	if(isRightButton) {
-		renderer->setColor(slidebuttoncolor);
-		gDrawRectangle(left + width - 11, top + tablinetop + 1, 11, tabsizersh - 1, true);
+		if(colorreductionr)
+			renderer->setColor(colorReductionOnCursor(slidebuttoncolor));
+		else
+			renderer->setColor(slidebuttoncolor);
+		gDrawRectangle(left + width - slidebuttonw, top + tablinetop + 1, slidebuttonw, tabsizersh - 1, true);
 		renderer->setColor(fontcolor);
-		fontfortabs.drawText(">", left + width - 12, top + topbarh - tabsizersh / 2);
+		fontfortabs.drawText(">", left + width - (slidebuttonw / 2) - (signsize / 2) - 2, top + topbarh - tabsizersh / 2);
 	}
 	else {
-		renderer->setColor(slidebuttoncolor);
-		gDrawRectangle(left - 1, top + tablinetop + 1, 11, tabsizersh - 1, true);
+		if(colorreductionl)
+			renderer->setColor(colorReductionOnCursor(slidebuttoncolor));
+		else
+			renderer->setColor(slidebuttoncolor);
+		gDrawRectangle(left - 1, top + tablinetop + 1, slidebuttonw, tabsizersh - 1, true);
 		renderer->setColor(fontcolor);
-		fontfortabs.drawText("<", left - 1, top + topbarh - tabsizersh / 2);
+		fontfortabs.drawText("<", left + (slidebuttonw / 2) - (signsize / 2) - 2, top + topbarh - tabsizersh / 2);
 	}
+}
+
+void gGUINotebookPanel::closeTab(int index) {
+	if(drawfromlefttoright) {
+		if(index < activesizerindex) {
+			activesizerindex--;
+		}
+		else if (index == activesizerindex) {
+			setSizer(&notebookpanelsizer);
+			activesizerindex = -1;
+		}
+		if(indexleft != 0)
+			indexleft--;
+	}
+	else {
+		if(index < activesizerindex) {
+			activesizerindex--;
+		}
+		else if (index == activesizerindex) {
+			setSizer(&notebookpanelsizer);
+			activesizerindex = -1;
+		}
+		if(indexright != 0)
+			indexright--;
+	}
+	guisizers.erase(guisizers.begin() + index);
+	quisizerlabels.erase(quisizerlabels.begin() + index);
+	tablabelssizew = getWidthOfTabLabels();
+	indexcursoroncross = -1;
+}
+
+gColor gGUINotebookPanel::colorReductionOnCursor(gColor color) {
+		color.set(color.r + oncursorcolorreduction, color.g + oncursorcolorreduction, color.b + oncursorcolorreduction);
+		return color;
 }
 
 int gGUINotebookPanel::getWidthOfTabLabels() {
