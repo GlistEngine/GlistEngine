@@ -15,6 +15,10 @@ gGUIImageButton::gGUIImageButton() {
 	stretch = true;
 	buttonimagepath = "";
 	pressedbuttonimagepath = "";
+
+	res.initialize();
+	iconid = gGUIResources::ICON_NONE;
+	pressediconid = gGUIResources::ICON_NONE;
 }
 
 gGUIImageButton::~gGUIImageButton() {
@@ -42,10 +46,12 @@ void gGUIImageButton::draw() {
             imageh = buttonh;
         }
     if(isPressed()) {
-        buttonimage.draw(left, top + ispressed, buttonw, buttonh);
+    	if (iconid != gGUIResources::ICON_NONE) res.getIconImage(iconid)->draw(left, top + ispressed, buttonw, buttonh);
+    	else buttonimage.draw(left, top + ispressed, buttonw, buttonh);
     }
     else {
-        pressedbuttonimage.draw(left, top + ispressed, buttonw, buttonh);
+    	if (pressediconid != gGUIResources::ICON_NONE) res.getIconImage(pressediconid)->draw(left, top + ispressed, buttonw, buttonh);
+    	else pressedbuttonimage.draw(left, top + ispressed, buttonw, buttonh);
     }
     setSize(imagew, imageh);
 }
@@ -85,4 +91,11 @@ void gGUIImageButton::stretche(bool stretchMod) {
    }
    std::string gGUIImageButton::getPressedButtonImagePath() {
     return pressedbuttonimagepath;
+   }
+
+   void gGUIImageButton::setButtonImageFromIcon(int iconId){
+   	iconid = iconId;
+   }
+   void gGUIImageButton::setPressedButtonImageFromIcon(int pressedIconId){
+   	pressediconid = pressedIconId;
    }
