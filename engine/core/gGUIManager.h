@@ -92,9 +92,6 @@ private:
 	gFont themefont;
 	void loadThemes();
 	void resetTheme(int guiTheme);
-
-	gGUIDialogue emptydialogue;
-	gGUISizer emptydialoguesizer;
 };
 
 #endif /* CORE_GGUIMANAGER_H_ */

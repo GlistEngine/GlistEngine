@@ -15,21 +15,6 @@ gGUIDialogue::gGUIDialogue() {
 	titlebar = nullptr;
 	buttonsbar = nullptr;
 
-	title = "DIALOGUE BOX";
-	message = "This is a dialogue box.";
-	dialoguetype = DIALOGUETYPE_NONE;
-	icontype = ICONTYPE_INFO;
-
-	dialoguetypename[DIALOGUETYPE_NONE] = "none";
-	dialoguetypename[DIALOGUETYPE_OK] = "ok";
-	dialoguetypename[DIALOGUETYPE_OKCANCEL] = "okcancel";
-	dialoguetypename[DIALOGUETYPE_YESNO] = "yesno";
-	dialoguetypename[DIALOGUETYPE_YESNOCANCEL] = "yesnocancel";
-	icontypename[ICONTYPE_INFO] = "info";
-	icontypename[ICONTYPE_WARNING] = "warning";
-	icontypename[ICONTYPE_ERROR] = "error";
-	icontypename[ICONTYPE_QUESTION] = "question";
-
 	minimizebutton = nullptr;
 	maximizebutton = nullptr;
 	exitbutton = nullptr;
@@ -38,6 +23,7 @@ gGUIDialogue::gGUIDialogue() {
 	maximizeevent = false;
 	exitevent = false;
 
+	minimizebuttonminimizetrigger = false;
 	exitbuttonexittrigger = false;
 }
 
@@ -50,6 +36,11 @@ void gGUIDialogue::update() {
 	if (exitbutton) {
 		if (exitbuttonexittrigger && !exitbutton->isPressed())  exitevent = true; exitbuttonexittrigger = false;
 		if (exitbutton->isPressed()) exitbuttonexittrigger = true;
+	}
+
+	if (minimizebutton) {
+		if (minimizebuttonminimizetrigger && !minimizebutton->isPressed())  minimizeevent = true; minimizebuttonminimizetrigger = false;
+		if (minimizebutton->isPressed()) minimizebuttonminimizetrigger = true;
 	}
 }
 
@@ -106,19 +97,17 @@ bool gGUIDialogue::getExitEvent() {
 	return exitevent;
 }
 
-void gGUIDialogue::showDialogue(std::string title, std::string message, int dialogueType, int iconType) {
-
-	this->title = title;
-	this->message = message;
-	this->dialoguetype = dialogueType;
-	this->icontype = iconType;
+void gGUIDialogue::showDialogue() {
 
 	guisizer->enableBackgroundFill(false);
+
+	resetButtonsBar();
+	resetTitleBar();
 
 }
 
 void gGUIDialogue::mouseDragged(int x, int y, int button) {
-	if (x > left - width && x < left + width && y >= top - height && y < top + height / 8) {
+	/* if (x > left - width && x < left + width && y >= top - height && y < top + height / 8) {
 		left = x;
 		top = y;
 		right = x + width;
@@ -138,7 +127,7 @@ void gGUIDialogue::mouseDragged(int x, int y, int button) {
 		buttonsbar->top = y;
 		buttonsbar->right = x + buttonsbar->width;
 		buttonsbar->bottom = y + buttonsbar->height;
-	}
+	} */
 }
 
 void gGUIDialogue::setTitleBar(gGUIContainer* titleBar) {
@@ -152,9 +141,60 @@ void gGUIDialogue::setButtonsBar(gGUIContainer* buttonsBar) {
 }
 
 void gGUIDialogue::resetTitleBar() {
+	deftitlebar.width = width;
+	deftitlebar.height = height * 0.06f;
+
+	deftitlebar.setSizer(&deftitlebarsizer);
+	deftitlebarsizer.setSize(1, 5);
+	deftitlebarsizer.enableBorders(false);
+	float tbcolproportions[5] = {0.04f, 0.81f, 0.05f, 0.05f, 0.05f};
+	deftitlebarsizer.setColumnProportions(tbcolproportions);
+
+	deftitlebarsizer.setControl(0, 0, &deftitlebarbitmap);
+	deftitlebarbitmap.loadImage("gameicon/icon.png", false);
+	deftitlebarbitmap.height = deftitlebar.height * 0.7f;
+	deftitlebarbitmap.width = deftitlebarbitmap.height;
+	deftitlebarbitmap.top += (deftitlebar.height - deftitlebarbitmap.height) / 2;
+	deftitlebarbitmap.left += (deftitlebar.width * 0.04 - deftitlebarbitmap.width) / 2;
+
+	deftitlebarsizer.setControl(0, 1, &deftitlebartext);
+	deftitlebartext.setText("Properties for GlistEngine");
+	deftitlebartext.height = deftitlebar.height * 0.6f;
+	deftitlebartext.top += (deftitlebar.height - deftitlebartext.height) / 2;
+
+	deftitlebarsizer.setControl(0, 2, &deftitlebarminimizebutton);
+	deftitlebarminimizebutton.setSize(deftitlebar.height, deftitlebar.height);
+	// deftitlebarminimizebutton.loadButtonImages("dicons/tminb32.png");
+	setMinimizeButton(&deftitlebarminimizebutton);
+
+	deftitlebarsizer.setControl(0, 3, &deftitlebarmaximizebutton);
+	deftitlebarmaximizebutton.setSize(deftitlebar.height, deftitlebar.height);
+	// deftitlebarmaximizebutton.loadButtonImages("dicons/tmaxb32.png");
+	setMaximizeButton(&deftitlebarmaximizebutton);
+
+	deftitlebarsizer.setControl(0, 4, &deftitlebarexitbutton);
+	deftitlebarexitbutton.setSize(deftitlebar.height, deftitlebar.height);
+	// deftitlebarexitbutton.loadButtonImages("dicons/tcb32.png");
+	setExitButton(&deftitlebarexitbutton);
+
+	setTitleBar(&deftitlebar);
 }
 
 void gGUIDialogue::resetButtonsBar() {
+	defbuttonsbar.width = width;
+	defbuttonsbar.height = height * 0.1f;
+
+	defbuttonsbar.setSizer(&defbuttonsbarsizer);
+	defbuttonsbarsizer.setSize(1, 5);
+	defbuttonsbarsizer.enableBorders(false);
+
+	defbuttonsbarsizer.setControl(0, 4, &defbuttonsbarokbutton);
+	defbuttonsbarokbutton.setTitle("OK");
+	defbuttonsbarokbutton.setSize(defbuttonsbar.width * 0.14f, defbuttonsbar.height * 0.6f);
+	defbuttonsbarokbutton.left += (defbuttonsbar.width * 0.2f - defbuttonsbar.width * 0.14f) / 2;
+	defbuttonsbarokbutton.top += (defbuttonsbar.height - defbuttonsbar.height * 0.6f) / 2;
+
+	setButtonsBar(&defbuttonsbar);
 }
 
 void gGUIDialogue::setMinimizeButton(gGUIImageButton* minimizeButton) {

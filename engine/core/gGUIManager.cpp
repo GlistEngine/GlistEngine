@@ -20,9 +20,6 @@ gGUIManager::gGUIManager(gBaseApp* root) {
 		setCurrentFrame(&emptyframe);
 		emptyframe.setSizer(&emptysizer);
 		emptysizer.enableBackgroundFill(true);
-		setActiveDialogue(&emptydialogue);
-		emptydialogue.setSizer(&emptydialoguesizer);
-		emptydialoguesizer.enableBackgroundFill(false);
 	}
 }
 
@@ -143,6 +140,10 @@ void gGUIManager::update() {
 		if (activedialogue->getExitEvent()) {
 			isdialogueactive = false;
 			activedialogue->setExitEvent(false);
+		}
+		if (activedialogue->getMinimizeEvent()) {
+			isdialogueactive = false;
+			activedialogue->setMinimizeEvent(false);
 		}
 	}
 }

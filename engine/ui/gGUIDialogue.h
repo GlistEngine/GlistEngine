@@ -12,22 +12,10 @@
 #include "gGUIContainer.h"
 #include "gGUIImageButton.h"
 #include "gGUIBitmap.h"
-
+#include "gGUIText.h"
 
 class gGUIDialogue: public gGUIForm {
 public:
-
-	enum {
-		DIALOGUETYPE_NONE, DIALOGUETYPE_OK, DIALOGUETYPE_OKCANCEL, DIALOGUETYPE_YESNO, DIALOGUETYPE_YESNOCANCEL
-	};
-
-	enum {
-		ICONTYPE_INFO, ICONTYPE_WARNING, ICONTYPE_ERROR, ICONTYPE_QUESTION
-	};
-
-	static const int dialoguetypenum = 5;
-	static const int icontypenum = 4;
-
 	gGUIDialogue();
 	virtual ~gGUIDialogue();
 
@@ -41,7 +29,7 @@ public:
 	void setExitEvent(bool exitEvent);
 	bool getExitEvent();
 
-	void showDialogue(std::string title, std::string message, int dialogueType, int iconType);
+	void showDialogue();
 	void mouseDragged(int x, int y, int button);
 
 	void setTitleBar(gGUIContainer* titleBar);
@@ -57,32 +45,33 @@ public:
 	void mousePressed(int x, int y, int button);
 	void mouseReleased(int x, int y, int button);
 private:
-	std::string message;
-	int dialoguetype;
-	int icontype;
-
-	std::string dialoguetypename[dialoguetypenum];
-	std::string icontypename[icontypenum];
-
 	bool minimizeevent;
 	bool maximizeevent;
 	bool exitevent;
 
 	bool exitbuttonexittrigger;
+	bool minimizebuttonminimizetrigger;
 
 	gGUIContainer* titlebar;
 	gGUIContainer* buttonsbar;
 
-	// gGUIContainer deftitlebar;
-
-	// gGUISizer deftitlebarsizer;
-	// gGUIBitmap deftitlebarbitmap;
-	// gGUIImageButton deftitlebarexitbutton;
-	// gGUIText deftitlebartext;
-
 	gGUIImageButton* minimizebutton;
 	gGUIImageButton* maximizebutton;
 	gGUIImageButton* exitbutton;
+
+	// DEFAULT TITLEBAR ELEMENTS
+	gGUIContainer deftitlebar;
+	gGUISizer deftitlebarsizer;
+	gGUIBitmap deftitlebarbitmap;
+	gGUIText deftitlebartext;
+	gGUIImageButton deftitlebarminimizebutton;
+	gGUIImageButton deftitlebarmaximizebutton;
+	gGUIImageButton deftitlebarexitbutton;
+
+	// DEFAULT BUTTONSBAR ELEMENTS
+	gGUIContainer defbuttonsbar;
+	gGUISizer defbuttonsbarsizer;
+	gGUIButton defbuttonsbarokbutton;
 };
 
 #endif /* UI_GGUIDIALOGUE_H_ */
