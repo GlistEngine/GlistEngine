@@ -128,4 +128,5 @@ private:
         gImage pressedbuttonimage;
 };
 
-#endif / UI_GGUIIMAGEBUTTONH */
+#endif /* UI_GGUIIMAGEBUTTONH */
+
