@@ -271,7 +271,7 @@ void gBaseGUIObject::setRootApp(gBaseApp* root) {
 	this->root = root;
 }
 
-void gBaseGUIObject::onGUIEvent(int guiObjectId, int eventType, std::string value1, std::string value2) {
+void gBaseGUIObject::onGUIEvent(int guiObjectId, int eventType, int sourceEventType, std::string value1, std::string value2) {
 
 }
 
