@@ -131,6 +131,7 @@ set(SRC_FILES
 	${ENGINE_DIR}/utils/gDatabase.cpp
 	${ENGINE_DIR}/utils/gAssetLoader.cpp
 	${ENGINE_DIR}/utils/gAES.cpp
+	${ENGINE_DIR}/graphics/primitives/gCross.cpp
 	${ENGINE_DIR}/graphics/primitives/gArc.cpp
 	${ENGINE_DIR}/graphics/primitives/gLine.cpp
 	${ENGINE_DIR}/graphics/primitives/gCircle.cpp
@@ -146,6 +147,7 @@ set(SRC_FILES
 	${ENGINE_DIR}/graphics/gRect.cpp
 	${ENGINE_DIR}/animation/gSpriteAnimation.cpp
 	${ENGINE_DIR}/animation/gSpriteAnimator.cpp
+	${ENGINE_DIR}/ui/gGUINotebookPanel.cpp
 	${ENGINE_DIR}/ui/gGUIStatusBar.cpp
 	${ENGINE_DIR}/ui/gGUILineGraph.cpp
 	${ENGINE_DIR}/ui/gGUIContextMenu.cpp

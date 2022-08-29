@@ -9,6 +9,7 @@
 #define UI_GGUISTATUSBAR_H_
 
 #include "gGUIContainer.h"
+#include "gFont.h"
 
 
 class gGUIStatusBar: public gGUIContainer {
@@ -17,13 +18,25 @@ public:
 	virtual ~gGUIStatusBar();
 
 	void draw();
-
 	void windowResized(int w, int h);
+	void mousePressed(int x, int y, int button);
+	void mouseDragged(int x, int y, int button);
+	void mouseReleased(int x, int y, int button);
 
 private:
-	int statush, statusw;
+	//statusbar
+	int statusbarh, statusbarw, statusbarx, statusbary;
 	gGUISizer statussizer;
-
+	void statusbarDraw();
+	//text
+	static const int textobjectsize = 4;
+	int selectedtext;
+	std::string text[textobjectsize];
+	int textx[textobjectsize], texty[textobjectsize];
+	int textsliderx[textobjectsize], textslidery[textobjectsize], textsliderw[textobjectsize], textsliderh[textobjectsize];
+	void statusbarAllTextDraw();
+	void updateStatusBarCoordinate(int w, int h);
+	void updateTextCoordinate(int w, int h);
 };
 
 #endif /* UI_GGUISTATUSBAR_H_ */

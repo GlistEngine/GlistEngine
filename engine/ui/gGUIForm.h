@@ -14,6 +14,7 @@ class gGUIMenubar;
 class gGUIToolbar;
 class gGUIContextMenu;
 class gGUIStatusBar;
+class gGUITreelist;
 
 class gGUIForm: public gBaseGUIObject {
 public:
@@ -27,6 +28,7 @@ public:
 	void setStatusBar(gGUIStatusBar* statusBar);
 	void resizeStatusBar();
 	void addContextMenu(gGUIContextMenu* contextMenu);
+	void addTreelist(gGUITreelist* treeList, int treeListx, int treeListy, int treeListw);
 
 	void setSizer(gGUISizer* guiSizer);
 	gGUISizer* getSizer();
@@ -65,6 +67,8 @@ protected:
 	gGUIContextMenu* contextmenu;
 	int contextmenuw, contextmenuh;
 	int contextmenux, contextmenuy;
+	gGUITreelist* treelist;
+	int treelistw, treelisth;
 };
 
 #endif /* UI_GGUIFORM_H_ */

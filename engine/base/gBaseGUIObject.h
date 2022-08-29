@@ -11,10 +11,11 @@
 #include "gRenderObject.h"
 #include "gFont.h"
 class gBaseApp;
-
+#include "gGUIActionManager.h"
 
 class gBaseGUIObject : public gRenderObject {
 public:
+	static gGUIActionManager actionmanager;
 
 	static const int GUIEVENT_FOCUSED = -1, GUIEVENT_UNFOCUSED = -2;
 
@@ -100,6 +101,7 @@ public:
 	virtual void mouseEntered();
 	virtual void mouseExited();
 	virtual void windowResized(int w, int h);
+	virtual void onGUIEvent(int guiObjectId, int eventType, int sourceEventType, std::string value1 = "", std::string value2 = "");
 
 	void setRootApp(gBaseApp* root);
 

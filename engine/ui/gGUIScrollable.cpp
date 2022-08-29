@@ -228,4 +228,8 @@ gFbo* gGUIScrollable::getFbo() {
 	return boxfbo;
 }
 
+int gGUIScrollable::getTitleTop() {
+	return titledy;
+}
+
 

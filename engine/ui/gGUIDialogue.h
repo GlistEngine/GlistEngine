@@ -9,11 +9,8 @@
 #define UI_GGUIDIALOGUE_H_
 
 #include "gGUIForm.h"
-#include "gGUIButton.h"
-#include "gGUIPanel.h"
-#include "gGUIText.h"
-#include "gImage.h"
-#include "gGUIResources.h"
+#include "gGUIContainer.h"
+#include "gGUIImageButton.h"
 
 
 class gGUIDialogue: public gGUIForm {
@@ -47,6 +44,11 @@ public:
 
 	void showDialogue(std::string title, std::string message, int dialogueType, int iconType);
 	void mouseDragged(int x, int y, int button);
+
+	void setTitleBar(gGUIContainer* titleBar);
+	void setButtonsBar(gGUIContainer* buttonsBar);
+
+	void setExitButton(gGUIImageButton* exitButton);
 private:
 	std::string message;
 	int dialoguetype;
@@ -54,17 +56,6 @@ private:
 
 	std::string dialoguetypename[dialoguetypenum];
 	std::string icontypename[icontypenum];
-
-	gImage dialogueicon;
-	gImage* newdialogueicon;
-	gGUIText messagetext;
-	gGUISizer buttonssizer;
-
-	gGUIButton exitbutton;
-	gGUIButton okbutton;
-	gGUIButton yesbutton;
-	gGUIButton nobutton;
-	gGUIButton cancelbutton;
 
 	bool exitevent;
 	bool exitbuttonexittrigger;
@@ -76,7 +67,10 @@ private:
 	int initleft;
 	int inittop;
 
-	gGUIResources resources;
+	gGUIContainer* titlebar;
+	gGUIContainer* buttonsbar;
+
+	gGUIImageButton* newexitbutton;
 };
 
 #endif /* UI_GGUIDIALOGUE_H_ */

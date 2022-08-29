@@ -20,6 +20,9 @@ gGUIManager::gGUIManager(gBaseApp* root) {
 		setCurrentFrame(&emptyframe);
 		emptyframe.setSizer(&emptysizer);
 		emptysizer.enableBackgroundFill(true);
+		setActiveDialogue(&emptydialogue);
+		emptydialogue.setSizer(&emptydialoguesizer);
+		emptydialoguesizer.enableBackgroundFill(false);
 	}
 }
 
@@ -50,23 +53,13 @@ void gGUIManager::setCurrentFrame(gGUIFrame* currentFrame) {
 void gGUIManager::setActiveDialogue(gGUIDialogue* activeDialogue) {
 	activedialogue = activeDialogue;
 	activedialogue->setParentSlotNo(0, 0);
-	activedialogue->width = root->getAppManager()->getCurrentCanvas()->getScreenWidth() / 3;
-	activedialogue->height = root->getAppManager()->getCurrentCanvas()->getScreenWidth() / 4;
+	activedialogue->width = root->getAppManager()->getCurrentCanvas()->getScreenWidth() / 1.2 * 0.84;
+	activedialogue->height = root->getAppManager()->getCurrentCanvas()->getScreenHeight() / 1.2 * 0.84;
 	activedialogue->left = (root->getAppManager()->getCurrentCanvas()->getScreenWidth() - activedialogue->width) / 2;
-	activedialogue->setInitLeft(activedialogue->left);
 	activedialogue->top = (root->getAppManager()->getCurrentCanvas()->getScreenHeight() - activedialogue->height) / 2;
-	activedialogue->setInitTop(activedialogue->top);
 	activedialogue->right = activedialogue->left + activedialogue->width;
 	activedialogue->bottom = activedialogue->top + activedialogue->height;
 	activedialogue->setRootApp(root);
-
-	dialoguedefaultsizer.setSize(3, 1);
-	float dlineproportions[3] = {0.125f, 0.625f, 0.250f};
-	dialoguedefaultsizer.setLineProportions(dlineproportions);
-	dialoguedefaultsizer.enableBorders(false);
-
-	activedialogue->setSizer(&dialoguedefaultsizer);
-
 	isdialogueactive = false;
 }
 
