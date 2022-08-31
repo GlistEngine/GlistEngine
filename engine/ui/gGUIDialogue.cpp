@@ -108,17 +108,23 @@ void gGUIDialogue::resetTitleBar() {
 
 	deftitlebarsizer.setControl(0, 2, &deftitlebarminimizebutton);
 	deftitlebarminimizebutton.setSize(deftitlebar.height, deftitlebar.height);
-	// deftitlebarminimizebutton.loadButtonImages("dicons/tminb32.png");
+	// deftitlebarminimizebutton.loadButtonImages("dicons/nzwmin16.png");
+	deftitlebarminimizebutton.setButtonImageFromIcon(gGUIResources::ICON_MINIMIZEBLACK);
+	deftitlebarminimizebutton.setPressedButtonImageFromIcon(gGUIResources::ICON_MINIMIZEBLACK);
 	setMinimizeButton(&deftitlebarminimizebutton);
 
 	deftitlebarsizer.setControl(0, 3, &deftitlebarmaximizebutton);
 	deftitlebarmaximizebutton.setSize(deftitlebar.height, deftitlebar.height);
-	// deftitlebarmaximizebutton.loadButtonImages("dicons/tmaxb32.png");
+	// deftitlebarmaximizebutton.loadButtonImages("dicons/nzwr16.png");
+	deftitlebarmaximizebutton.setButtonImageFromIcon(gGUIResources::ICON_MAXIMIZEBLACK);
+	deftitlebarmaximizebutton.setPressedButtonImageFromIcon(gGUIResources::ICON_MAXIMIZEBLACK);
 	setMaximizeButton(&deftitlebarmaximizebutton);
 
 	deftitlebarsizer.setControl(0, 4, &deftitlebarexitbutton);
 	deftitlebarexitbutton.setSize(deftitlebar.height, deftitlebar.height);
-	// deftitlebarexitbutton.loadButtonImages("dicons/tcb32.png");
+	// deftitlebarexitbutton.loadButtonImages("dicons/nzwe16.png");
+	deftitlebarexitbutton.setButtonImageFromIcon(gGUIResources::ICON_EXITBLACK);
+	deftitlebarexitbutton.setPressedButtonImageFromIcon(gGUIResources::ICON_EXITBLACK);
 	setExitButton(&deftitlebarexitbutton);
 }
 
