@@ -246,6 +246,7 @@ void gGUISizer::setControl(int lineNo, int columnNo, gGUIControl* guiControl) {
 }
 
 gGUIControl* gGUISizer::getControl(int lineNo, int columnNo) {
+	if (!iscontrolset[lineNo][columnNo]) return nullptr;
 	return guicontrol[lineNo][columnNo];
 }
 
