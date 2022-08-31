@@ -50,22 +50,6 @@ void gGUIContainer::setSizer(gGUISizer* guiSizer) {
 	if(!sizerrescaling) guisizer->enableRescaling(false);
 }
 
-void gGUIContainer::setSizerFromDeque(int guiSizersIndex) {
-	activesizerindex = guiSizersIndex;
-	guisizer = guisizers.at(guiSizersIndex);
-	guisizer->setTopParent(topparent);
-	guisizer->setParent(this);
-	guisizer->setParentSlotNo(0, 0);
-	guisizer->setRootApp(root);
-	guisizer->set(left, topbarh, width, height - topbarh);
-	if(!sizerrescaling) guisizer->enableRescaling(false);
-}
-
-void gGUIContainer::addSizerToDeque(gGUISizer* guiSizer, std::string sizerLabel) {
-	guisizers.push_back(guiSizer);
-	quisizerlabels.push_back(sizerLabel);
-}
-
 gGUISizer* gGUIContainer::getSizer() {
 	return guisizer;
 }

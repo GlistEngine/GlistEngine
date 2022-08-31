@@ -10,7 +10,6 @@
 
 #include "gGUIScrollable.h"
 #include "gGUISizer.h"
-#include <deque>
 
 
 class gGUIContainer: public gGUIScrollable {
@@ -22,8 +21,6 @@ public:
 	virtual void set(int x, int y, int w, int h);
 
 	void setSizer(gGUISizer* guiSizer);
-	void setSizerFromDeque(int guiSizersIndex);
-	void addSizerToDeque(gGUISizer* guiSizer, std::string sizerLabel = "");
 	gGUISizer* getSizer();
 
 	virtual int getCursor(int x, int y);
@@ -42,9 +39,7 @@ public:
 
 protected:
 	gGUISizer* guisizer;
-	std::deque<gGUISizer*> guisizers;
-	std::vector<std::string> quisizerlabels;
-	int topbarh, activesizerindex = -1;
+	int topbarh;
 	bool sizerrescaling;
 };
 

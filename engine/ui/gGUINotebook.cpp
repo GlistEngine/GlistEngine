@@ -1,24 +1,24 @@
 /*
- * gGUINotebookPanel.cpp
+ * gGUINotebook.cpp
  *
  *  Created on: 10 Aug 2022
  *      Author: burakmeydan
  */
 
-#include "gGUINotebookPanel.h"
+#include <gGUINotebook.h>
 
-gGUINotebookPanel::gGUINotebookPanel() {
+gGUINotebook::gGUINotebook() {
 	loadFont();
 	topbarh = tabsizersh + 1;
-	setSizer(&notebookpanelsizer);
+	setSizer(&notebooksizer);
 }
 
-gGUINotebookPanel::~gGUINotebookPanel() {
+gGUINotebook::~gGUINotebook() {
 
 }
 
-void gGUINotebookPanel::draw() {
-	//gLogi("gGUINotebookPanel") << "draw";
+void gGUINotebook::draw() {
+	//gLogi("gGUINotebook") << "draw";
 	fbo.bind();
 	isslidingright = false;
 	isslidingleft = false;
@@ -55,7 +55,7 @@ void gGUINotebookPanel::draw() {
 				tabsize = fontfortabs.getStringWidth(quisizerlabels.at(i)) + spaceforleft + spaceforright;
 				drawTabs(x, tabsize, i, drawfromlefttoright);
 				if(x + tabsize > left + width) {
-					//gLogi("gGUINotebookPanel") << "Overflowing panel -> " << quisizerlabels.at(i);
+					//gLogi("gGUINotebook") << "Overflowing panel -> " << quisizerlabels.at(i);
 					isslidingright = true;
 					drawSlideButtons(true);
 					indexright = i - 1;
@@ -75,7 +75,7 @@ void gGUINotebookPanel::draw() {
 				tabsize = fontfortabs.getStringWidth(quisizerlabels.at(i)) + spaceforleft + spaceforright;;
 				drawTabs(x, tabsize, i, drawfromlefttoright);
 				if(x - tabsize < left) {
-					//gLogi("gGUINotebookPanel") << "Overflowing panel from left-> " << quisizerlabels.at(i);
+					//gLogi("gGUINotebook") << "Overflowing panel from left-> " << quisizerlabels.at(i);
 					isslidingleft = true;
 					drawSlideButtons(false);
 					indexleft = i + 1;
@@ -91,7 +91,7 @@ void gGUINotebookPanel::draw() {
 	}
 }
 
-void gGUINotebookPanel::set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIObject* parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h) {
+void gGUINotebook::set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIObject* parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h) {
 	totalh = h;
 	gGUIScrollable::set(root, topParentGUIObject, parentGUIObject, parentSlotLineNo, parentSlotColumnNo, x, y, w, h);
 	gGUIScrollable::setDimensions(w, h);
@@ -103,20 +103,15 @@ void gGUINotebookPanel::set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, 
 	else {
 		tablabelssizew = width;
 	}
-	//gLogi("gGUINotebookPanel") << tablabelssizew;
+	//gLogi("gGUINotebook") << tablabelssizew;
 }
 
-void gGUINotebookPanel::loadFont() {
+void gGUINotebook::loadFont() {
 	fontfortabs.load(font->getPath(), tabfontsize, font->isAntialised(), font->getDpi());
 }
 
-void gGUINotebookPanel::setTitleVisibility(bool isVisible) {
-	istitlevisible = isVisible;
-	topbarh = tabsizersh + 1;
-}
-
-void gGUINotebookPanel::mousePressed(int x, int y, int button) {
-	//gLogi("gGUINotebookPanel") << "x -> " << x << ",  y -> " << y << ", button -> " << button;
+void gGUINotebook::mousePressed(int x, int y, int button) {
+	//gLogi("gGUINotebook") << "x -> " << x << ",  y -> " << y << ", button -> " << button;
 	guisizer->mousePressed(x, y, button);
 	int xleft;
 	int tabsize;
@@ -127,8 +122,9 @@ void gGUINotebookPanel::mousePressed(int x, int y, int button) {
 		xleft = left + 1;
 		for(int i = indexleft; i < guisizers.size(); i++) {
 			tabsize = fontfortabs.getStringWidth(quisizerlabels.at(i)) + spaceforleft + spaceforright;
-			if (x >= xleft - spaceforright + 7 + isslidingleft * (slidebuttonw - 1) + tabsize && x <= xleft - spaceforright + 7 + isslidingleft * (slidebuttonw - 1) + tabsize + 10 && y >= tablinetop + 6 && y <= tablinetop + 17) {
-				//gLogi("gGUINotebookPanel") << "Close button pressed for-> " << quisizerlabels.at(i);
+			if (x >= xleft - spaceforright + 7 + isslidingleft * (slidebuttonw - 1) + tabsize && x <= xleft - spaceforright + 7 + isslidingleft * (slidebuttonw - 1) + tabsize + 10
+					&& y >= tablinetop + 6 && y <= tablinetop + 17 && isclosabletab) {
+				//gLogi("gGUINotebook") << "Close button pressed for-> " << quisizerlabels.at(i);
 				closeTab(i);
 				break;
 			}
@@ -142,8 +138,9 @@ void gGUINotebookPanel::mousePressed(int x, int y, int button) {
 	else {
 		xleft = left + width - 1;
 		for(int i = indexright; i >= 0; i--) {
-			if (x >= xleft - spaceforright + 9 - isslidingright * (slidebuttonw - 1) && x <= xleft - spaceforright + 9 - isslidingright * (slidebuttonw - 1) + 10 && y >= tablinetop + 6 && y <= tablinetop + 17) {
-				//gLogi("gGUINotebookPanel") << "Close button pressed for-> " << quisizerlabels.at(i);
+			if (x >= xleft - spaceforright + 9 - isslidingright * (slidebuttonw - 1) && x <= xleft - spaceforright + 9 - isslidingright * (slidebuttonw - 1) + 10
+					&& y >= tablinetop + 6 && y <= tablinetop + 17 && isclosabletab) {
+				//gLogi("gGUINotebook") << "Close button pressed for-> " << quisizerlabels.at(i);
 				closeTab(i);
 				break;
 			}
@@ -157,8 +154,8 @@ void gGUINotebookPanel::mousePressed(int x, int y, int button) {
 	}
 }
 
-void gGUINotebookPanel::mouseMoved(int x, int y) {
-	//gLogi("gGUINotebookPanel") << "x -> " << x << ",  y -> " << y;
+void gGUINotebook::mouseMoved(int x, int y) {
+	//gLogi("gGUINotebook") << "x -> " << x << ",  y -> " << y;
 	indexcursoroncross = -1;
 	colorreductionr = false;
 	colorreductionl = false;
@@ -195,20 +192,20 @@ void gGUINotebookPanel::mouseMoved(int x, int y) {
 	}
 }
 
-void gGUINotebookPanel::slideButtonPressed(int x, int y) {
+void gGUINotebook::slideButtonPressed(int x, int y) {
 	if(x > left + width - slidebuttonw + 1) {
 		drawfromlefttoright = false;
 		indexright++;
-		//gLogi("gGUINotebookPanel") << "Right slide button pressed, indexright-> " << indexright;
+		//gLogi("gGUINotebook") << "Right slide button pressed, indexright-> " << indexright;
 	}
 	else {
 		drawfromlefttoright = true;
 		indexleft--;
-		//gLogi("gGUINotebookPanel") << "Left slide button pressed, indexleft-> " << indexleft;
+		//gLogi("gGUINotebook") << "Left slide button pressed, indexleft-> " << indexleft;
 	}
 }
 
-void gGUINotebookPanel::drawTabs(int x, int tabSize, int index, bool drawFromLeftToRight) {
+void gGUINotebook::drawTabs(int x, int tabSize, int index, bool drawFromLeftToRight) {
 	int sign = 1;
 	if(activesizerindex == index) {
 		renderer->setColor(foregroundcolor);
@@ -216,20 +213,24 @@ void gGUINotebookPanel::drawTabs(int x, int tabSize, int index, bool drawFromLef
 	}
 	if(drawFromLeftToRight == false) {
 		sign = -1;
-		if(indexcursoroncross == index) {
+		if(indexcursoroncross == index && isclosabletab) {
 			renderer->setColor(cursoroncrosscolor);
 			gDrawCross(x - spaceforright + 11, tablinetop + 7, 10, 10, 2, true);
 		}
-		renderer->setColor(crossoutlinecolor);
-		gDrawCross(x - spaceforright + 11, tablinetop + 7, 10, 10, 2, false);
+		if(isclosabletab) {
+			renderer->setColor(crossoutlinecolor);
+			gDrawCross(x - spaceforright + 11, tablinetop + 7, 10, 10, 2, false);
+		}
 	}
 	else {
-		if(indexcursoroncross == index) {
+		if(indexcursoroncross == index && isclosabletab) {
 			renderer->setColor(cursoroncrosscolor);
 			gDrawCross(x + tabSize - spaceforright + 11, tablinetop + 7, 10, 10, 2, true);
 		}
-		renderer->setColor(crossoutlinecolor);
-		gDrawCross(x + tabSize - spaceforright + 11, tablinetop + 7, 10, 10, 2, false);
+		if(isclosabletab) {
+			renderer->setColor(crossoutlinecolor);
+			gDrawCross(x + tabSize - spaceforright + 11, tablinetop + 7, 10, 10, 2, false);
+		}
 	}
 	renderer->setColor(tablinecolor);
 	gDrawLine(x, top + tablinetop + 1, x, top + topbarh);
@@ -238,7 +239,7 @@ void gGUINotebookPanel::drawTabs(int x, int tabSize, int index, bool drawFromLef
 	fontfortabs.drawText(quisizerlabels.at(index), x - (!drawFromLeftToRight * tabSize) + spaceforleft, top + topbarh - tabsizersh / 2.45f);
 }
 
-void gGUINotebookPanel::drawSlideButtons(bool isRightButton) {
+void gGUINotebook::drawSlideButtons(bool isRightButton) {
 	int signsize = fontfortabs.getStringWidth(">");
 	if(isRightButton) {
 		if(colorreductionr)
@@ -260,13 +261,13 @@ void gGUINotebookPanel::drawSlideButtons(bool isRightButton) {
 	}
 }
 
-void gGUINotebookPanel::closeTab(int index) {
+void gGUINotebook::closeTab(int index) {
 	if(drawfromlefttoright) {
 		if(index < activesizerindex) {
 			activesizerindex--;
 		}
 		else if (index == activesizerindex) {
-			setSizer(&notebookpanelsizer);
+			setSizer(&notebooksizer);
 			activesizerindex = -1;
 		}
 		if(indexleft != 0)
@@ -277,7 +278,7 @@ void gGUINotebookPanel::closeTab(int index) {
 			activesizerindex--;
 		}
 		else if (index == activesizerindex) {
-			setSizer(&notebookpanelsizer);
+			setSizer(&notebooksizer);
 			activesizerindex = -1;
 		}
 		if(indexright != 0)
@@ -289,15 +290,40 @@ void gGUINotebookPanel::closeTab(int index) {
 	indexcursoroncross = -1;
 }
 
-gColor gGUINotebookPanel::colorReductionOnCursor(gColor color) {
+gColor gGUINotebook::colorReductionOnCursor(gColor color) {
 		color.set(color.r + oncursorcolorreduction, color.g + oncursorcolorreduction, color.b + oncursorcolorreduction);
 		return color;
 }
 
-int gGUINotebookPanel::getWidthOfTabLabels() {
+int gGUINotebook::getWidthOfTabLabels() {
 	int tabsize = 0;
 	for(int i = 0; i < guisizers.size(); i++) {
 		tabsize += fontfortabs.getStringWidth(quisizerlabels.at(i)) + spaceforleft + spaceforright;
 	}
 	return tabsize;
+}
+
+void gGUINotebook::setTitleVisibility(bool isVisible) {
+	istitlevisible = isVisible;
+	topbarh = tabsizersh + 1;
+}
+
+void gGUINotebook::setClosableTab(bool isClosableTab) {
+	isclosabletab = isClosableTab;
+}
+
+void gGUINotebook::setSizerFromDeque(int guiSizersIndex) {
+	activesizerindex = guiSizersIndex;
+	guisizer = guisizers.at(guiSizersIndex);
+	guisizer->setTopParent(topparent);
+	guisizer->setParent(this);
+	guisizer->setParentSlotNo(0, 0);
+	guisizer->setRootApp(root);
+	guisizer->set(left, topbarh, width, height - topbarh);
+	if(!sizerrescaling) guisizer->enableRescaling(false);
+}
+
+void gGUINotebook::addSizerToDeque(gGUISizer* guiSizer, std::string sizerLabel) {
+	guisizers.push_back(guiSizer);
+	quisizerlabels.push_back(sizerLabel);
 }
