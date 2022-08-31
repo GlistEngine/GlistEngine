@@ -134,7 +134,7 @@ void gGUIDialogue::resetButtonsBar() {
 
 	defbuttonsbar.setSizer(&defbuttonsbarsizer);
 	defbuttonsbarsizer.setSize(1, 5);
-	defbuttonsbarsizer.enableBorders(true);
+	defbuttonsbarsizer.enableBorders(false);
 
 	setButtonsBar(&defbuttonsbar);
 
