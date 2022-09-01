@@ -26,6 +26,10 @@ gGUIDialogue::gGUIDialogue() {
 	minimizebuttonminimizetrigger = false;
 	maximizebuttonmaximizetrigger = false;
 	exitbuttonexittrigger = false;
+
+	isdragged = false;
+	dragposx = 0;
+	dragposy = 0;
 }
 
 gGUIDialogue::~gGUIDialogue() {
@@ -196,34 +200,83 @@ void gGUIDialogue::mousePressed(int x, int y, int button) {
 	if (titlebar) titlebar->mousePressed(x, y, button);
 	if (guisizer) guisizer->mousePressed(x, y, button);
 	if (buttonsbar) buttonsbar->mousePressed(x, y, button);
+	if (x > titlebar->left - titlebar->width && x < titlebar->left + titlebar->width && y >= titlebar->top - titlebar->height && y < titlebar->top + titlebar->height) {
+		isdragged = true;
+		dragposx = x;
+		dragposy = y;
+	}
 }
 
 void gGUIDialogue::mouseDragged(int x, int y, int button) {
-	/* if (x > left - width && x < left + width && y >= top - height && y < top + height / 8) {
-		left = x;
-		top = y;
-		right = x + width;
-		bottom = y + height;
+	if (x >= titlebar->left - titlebar->width && x < titlebar->left + titlebar->width && y >= titlebar->top - titlebar->height - guisizer->height && y < titlebar->top + titlebar->height + guisizer->height && isdragged) {
+		int dx = x - dragposx;
+		int dy = y - dragposy;
 
-		guisizer->left = x;
-		guisizer->top = y;
-		guisizer->right = x + guisizer->width;
-		guisizer->bottom = y + guisizer->height;
+		left += dx;
+		top += dy;
+		right = left + width;
+		bottom = top + height;
 
-		titlebar->left = x;
-		titlebar->top = y;
-		titlebar->right = x + titlebar->width;
-		titlebar->bottom = y + titlebar->height;
+		titlebar->left += dx;
+		titlebar->top += dy;
+		titlebar->right = titlebar->left + titlebar->width;
+		titlebar->bottom = titlebar->top + titlebar->height;
 
-		buttonsbar->left = x;
-		buttonsbar->top = y;
-		buttonsbar->right = x + buttonsbar->width;
-		buttonsbar->bottom = y + buttonsbar->height;
-	} */
+		guisizer->left += dx;
+		guisizer->top += dy;
+		guisizer->right = guisizer->left + guisizer->width;
+		guisizer->bottom = guisizer->top + guisizer->height;
+
+		buttonsbar->left += dx;
+		buttonsbar->top += dy;
+		buttonsbar->right = buttonsbar->left + buttonsbar->width;
+		buttonsbar->bottom = buttonsbar->top + buttonsbar->height;
+
+		for (int i = 0; i < titlebar->getSizer()->getLineNum(); i++) {
+			for (int j = 0; j < titlebar->getSizer()->getColumnNum(); j++) {
+				gGUIControl* guicontrol = titlebar->getSizer()->getControl(i, j);
+				if (guicontrol != nullptr) {
+					guicontrol->left += dx;
+					guicontrol->top += dy;
+					guicontrol->right = guicontrol->left + guicontrol->width;
+					guicontrol->bottom = guicontrol->top + guicontrol->height;
+				}
+			}
+		}
+
+		for (int i = 0; i < guisizer->getLineNum(); i++) {
+			for (int j = 0; j < guisizer->getColumnNum(); j++) {
+				gGUIControl* guicontrol = guisizer->getControl(i, j);
+				if (guicontrol != nullptr) {
+					guicontrol->left += dx;
+					guicontrol->top += dy;
+					guicontrol->right = guicontrol->left + guicontrol->width;
+					guicontrol->bottom = guicontrol->top + guicontrol->height;
+				}
+			}
+		}
+
+		for (int i = 0; i < buttonsbar->getSizer()->getLineNum(); i++) {
+			for (int j = 0; j < buttonsbar->getSizer()->getColumnNum(); j++) {
+				gGUIControl* guicontrol = buttonsbar->getSizer()->getControl(i, j);
+				if (guicontrol != nullptr) {
+					guicontrol->left += dx;
+					guicontrol->top += dy;
+					guicontrol->right = guicontrol->left + guicontrol->width;
+					guicontrol->bottom = guicontrol->top + guicontrol->height;
+				}
+			}
+		}
+
+		dragposx += dx;
+		dragposy += dy;
+	}
+
 }
 
 void gGUIDialogue::mouseReleased(int x, int y, int button) {
 	if (titlebar) titlebar->mouseReleased(x, y, button);
 	if (guisizer) guisizer->mouseReleased(x, y, button);
 	if (buttonsbar) buttonsbar->mouseReleased(x, y, button);
+	if (isdragged) isdragged = false;
 }
