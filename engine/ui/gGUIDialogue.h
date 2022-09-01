@@ -69,6 +69,10 @@ private:
 	bool minimizebuttonminimizetrigger;
 	bool maximizebuttonmaximizetrigger;
 	bool exitbuttonexittrigger;
+
+	bool isdragged;
+	int dragposx;
+	int dragposy;
 };
 
 #endif /* UI_GGUIDIALOGUE_H_ */
