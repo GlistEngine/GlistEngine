@@ -131,7 +131,7 @@ public:
 	gImage* getIconImage(int iconId);
 
 private:
-	static const int iconnum = 44;
+	static const int iconnum = 45;
 
 	int iconw, iconh, iconformat;
 	// The array we keep pictures
