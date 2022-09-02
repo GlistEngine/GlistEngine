@@ -105,6 +105,16 @@ public:
 		ICON_ERROR,
 		ICON_CALENDAR,
 		ICON_CLOCK,
+		ICON_DOWN,
+		ICON_UP,
+		ICON_MINIMIZEBLACK,
+		ICON_MAXIMIZEBLACK,
+		ICON_RESTOREBLACK,
+		ICON_EXITBLACK,
+		ICON_MINIMIZEWHITE,
+		ICON_MAXIMIZEWHITE,
+		ICON_RESTOREWHITE,
+		ICON_EXITWHITE,
 		COLORPICKER
 	};
 
@@ -121,7 +131,7 @@ public:
 	gImage* getIconImage(int iconId);
 
 private:
-	static const int iconnum = 34;
+	static const int iconnum = 44;
 
 	int iconw, iconh, iconformat;
 	// The array we keep pictures
@@ -161,12 +171,23 @@ private:
 	std::string getBase64IconError16();
 	std::string getBase64IconCalendar16();
 	std::string getBase64IconClock16();
+	std::string getBase64IconDown16();
+	std::string getBase64IconUp16();
+
+	std::string getBase64IconMinimizeBlack16();
+	std::string getBase64IconMaximizeBlack16();
+	std::string getBase64IconRestoreBlack16();
+	std::string getBase64IconExitBlack16();
+	std::string getBase64IconMinimizeWhite16();
+	std::string getBase64IconMaximizeWhite16();
+	std::string getBase64IconRestoreWhite16();
+	std::string getBase64IconExitWhite16();
+	std::string getBase64ColorPicker();
 
 	std::string getBase64IconFile40();
 	std::string getBase64IconFolder40();
 	std::string getBase64IconFolderOpened40();
 	std::string getBase64IconSave40();
-	std::string getBase64ColorPicker();
 };
 
 #endif /* UI_GGUIRESOURCES_H_ */
