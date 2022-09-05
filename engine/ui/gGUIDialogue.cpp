@@ -53,19 +53,19 @@ void gGUIDialogue::draw() {
 	if (guisizer) {
 
 		gColor oldcolor = *renderer->getColor();
+
+		// TITLE BAR BACKGROUND
 		renderer->setColor(textbackgroundcolor);
 		gDrawRectangle(left, top - titlebar->height, width, titlebar->height, true);
+		// BUTTONS BAR BACKGROUND
 		renderer->setColor(foregroundcolor);
 		gDrawRectangle(left, top, width, height + buttonsbar->height, true);
-
 		// DIALOGUE BORDERS
 		renderer->setColor(fontcolor);
 		gDrawLine(left, top - titlebar->height, right, top - titlebar->height);
 		gDrawLine(left, bottom + buttonsbar->height, right, bottom + buttonsbar->height);
 		gDrawLine(left, top - titlebar->height, left, bottom + buttonsbar->height);
 		gDrawLine(right, top - titlebar->height, right, bottom + buttonsbar->height);
-		// gDrawLine(left + width / 24, top + height / 8, right - width / 24, top + height / 8);
-		// gDrawLine(left + width / 24, top + height * 3 / 4, right - width / 24, top + height * 3 / 4);
 
 		renderer->setColor(&oldcolor);
 
@@ -78,12 +78,12 @@ void gGUIDialogue::draw() {
 
 void gGUIDialogue::setTitleBar(gGUIContainer* titleBar) {
 	this->titlebar = titleBar;
-	titlebar->set(root, this, this, 0, 0, left, top - titlebar->height, width, titlebar->height);
+	titlebar->set(root, this, this, 0, 0, left, top - titlebar->height, titlebar->width, titlebar->height);
 }
 
 void gGUIDialogue::setButtonsBar(gGUIContainer* buttonsBar) {
 	this->buttonsbar = buttonsBar;
-	buttonsbar->set(root, this, this, 0, 0, left, top + height, width, buttonsbar->height);
+	buttonsbar->set(root, this, this, 0, 0, left, top + height, buttonsbar->width, buttonsbar->height);
 }
 
 void gGUIDialogue::resetTitleBar() {
@@ -103,7 +103,7 @@ void gGUIDialogue::resetTitleBar() {
 	deftitlebarbitmap.height = deftitlebar.height * 0.7f;
 	deftitlebarbitmap.width = deftitlebarbitmap.height;
 	deftitlebarbitmap.top += (deftitlebar.height - deftitlebarbitmap.height) / 2;
-	deftitlebarbitmap.left += (deftitlebar.width * 0.04 - deftitlebarbitmap.width) / 2;
+	deftitlebarbitmap.left += (deftitlebar.width * 0.04f - deftitlebarbitmap.width) / 2;
 
 	deftitlebarsizer.setControl(0, 1, &deftitlebartext);
 	deftitlebartext.setText("Properties for GlistEngine");
@@ -112,21 +112,18 @@ void gGUIDialogue::resetTitleBar() {
 
 	deftitlebarsizer.setControl(0, 2, &deftitlebarminimizebutton);
 	deftitlebarminimizebutton.setSize(deftitlebar.height, deftitlebar.height);
-	// deftitlebarminimizebutton.loadButtonImages("dicons/nzwmin16.png");
 	deftitlebarminimizebutton.setButtonImageFromIcon(gGUIResources::ICON_MINIMIZEBLACK);
 	deftitlebarminimizebutton.setPressedButtonImageFromIcon(gGUIResources::ICON_MINIMIZEBLACK);
 	setMinimizeButton(&deftitlebarminimizebutton);
 
 	deftitlebarsizer.setControl(0, 3, &deftitlebarmaximizebutton);
 	deftitlebarmaximizebutton.setSize(deftitlebar.height, deftitlebar.height);
-	// deftitlebarmaximizebutton.loadButtonImages("dicons/nzwr16.png");
 	deftitlebarmaximizebutton.setButtonImageFromIcon(gGUIResources::ICON_MAXIMIZEBLACK);
 	deftitlebarmaximizebutton.setPressedButtonImageFromIcon(gGUIResources::ICON_MAXIMIZEBLACK);
 	setMaximizeButton(&deftitlebarmaximizebutton);
 
 	deftitlebarsizer.setControl(0, 4, &deftitlebarexitbutton);
 	deftitlebarexitbutton.setSize(deftitlebar.height, deftitlebar.height);
-	// deftitlebarexitbutton.loadButtonImages("dicons/nzwe16.png");
 	deftitlebarexitbutton.setButtonImageFromIcon(gGUIResources::ICON_EXITBLACK);
 	deftitlebarexitbutton.setPressedButtonImageFromIcon(gGUIResources::ICON_EXITBLACK);
 	setExitButton(&deftitlebarexitbutton);
@@ -201,9 +198,15 @@ void gGUIDialogue::mousePressed(int x, int y, int button) {
 	if (guisizer) guisizer->mousePressed(x, y, button);
 	if (buttonsbar) buttonsbar->mousePressed(x, y, button);
 	if (x > titlebar->left - titlebar->width && x < titlebar->left + titlebar->width && y >= titlebar->top - titlebar->height && y < titlebar->top + titlebar->height) {
-		isdragged = true;
-		dragposx = x;
-		dragposy = y;
+		if ((minimizebutton || maximizebutton || exitbutton) && (minimizebutton->isPressed() || maximizebutton->isPressed() || exitbutton->isPressed())) {
+			isdragged = false;
+		}
+		else {
+			isdragged = true;
+			dragposx = x;
+			dragposy = y;
+		}
+
 	}
 }
 
