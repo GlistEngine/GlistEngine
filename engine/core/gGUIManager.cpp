@@ -59,7 +59,7 @@ void gGUIManager::setActiveDialogue(gGUIDialogue* activeDialogue) {
 	activedialogue->setRootApp(root);
 
 	defdialoguesizer.setSize(1, 1);
-	defdialoguesizer.enableBorders(true);
+	defdialoguesizer.enableBorders(false);
 	activedialogue->setSizer(&defdialoguesizer);
 
 	activedialogue->getSizer()->enableBackgroundFill(false);
