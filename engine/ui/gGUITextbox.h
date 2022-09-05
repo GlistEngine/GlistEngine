@@ -165,7 +165,21 @@ public:
 	 * If it is true, password box is active. If it is false, textbox is active.
 	 */
 	void setPassword(bool isPassword);
+
+	/**
+	 * Check if the textbox is a password box.
+	 *
+	 * @return Bool value that indicates if textbox is a password box
+	 */
 	bool isPassword();
+
+	/**
+	 * Enables/disable drawing a background for textbox.
+	 *
+	 * @param isEnabled Boolean value to enable/disable drawing a background.
+	 */
+	void enableBackground(bool isEnabled);
+	bool isBackgroundEnabled();
 
 	void update();
 	void draw();
@@ -236,6 +250,7 @@ private:
 	bool isnumeric;
 	bool ispassword;
 	int dotradius;
+	bool isbackgroundenabled;
 };
 
 #endif /* UI_GGUITEXTBOX_H_ */
