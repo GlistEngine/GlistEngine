@@ -1,7 +1,7 @@
 /*
  * gGUIActionManager.h
  *
- *  Created on: 22 Aðu 2022
+ *  Created on: 22 Aï¿½u 2022
  *      Author: sevval
  */
 
@@ -60,6 +60,11 @@ public:
 	 *
 	 */
 	void addAction(gBaseGUIObject* srcControl, int srcEvent, gBaseGUIObject* dstControl, int dstEvent);
+
+	/**
+	 * Removes an already added action from the list
+	 */
+	void removeAction(gBaseGUIObject* srcControl, int srcEvent, gBaseGUIObject* dstControl, int dstEvent);
 
 	/*
 	 * Uses for send information from one class to another class. This function
