@@ -13,15 +13,15 @@ gGUIPanel::gGUIPanel() {
 	toplineh = topbarh * 7 / 10;
 	setSizer(&panelsizer);
 	title = "Panel";
-	istitle = true;
+	istitleshown = true;
 }
 
 gGUIPanel::~gGUIPanel() {
 }
 
-void gGUIPanel::showTitle(bool istitle) {
-	this->istitle = istitle;
-	if(istitle) {
+void gGUIPanel::showTitle(bool isShown) {
+	istitleshown = isShown;
+	if(istitleshown) {
 		topbarh = 30;
 		toplineh = topbarh * 7 / 10;
 		guisizer->set(root, topparent, parent, parentslotlineno, parentslotcolumnno, left, top + toplineh, width, height - toplineh);
@@ -38,7 +38,7 @@ void gGUIPanel::draw() {
 	gColor oldcolor = *renderer->getColor();
 	renderer->setColor(foregroundcolor);
 	gDrawRectangle(left, top, width, height, true);
-	if(istitle) {
+	if(istitleshown) {
 		renderer->setColor(middlegroundcolor->r, middlegroundcolor->g, middlegroundcolor->b);
 		gDrawLine(left, top + toplineh, right, top + toplineh);
 		renderer->setColor(fontcolor);
