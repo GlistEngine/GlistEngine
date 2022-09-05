@@ -16,11 +16,14 @@ public:
 	gGUIPanel();
 	virtual ~gGUIPanel();
 
+	void showTitle(bool istitle);
+
 	void draw();
 
 private:
 	int toplineh;
 	gGUISizer panelsizer;
+	bool istitle;
 };
 
 #endif /* UI_GGUIPANEL_H_ */
