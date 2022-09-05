@@ -23,7 +23,9 @@ public:
 	void draw();
 
 	void setTitleBar(gGUIContainer* titleBar);
+	gGUIContainer* getTitleBar();
 	void setButtonsBar(gGUIContainer* buttonsBar);
+	gGUIContainer* getButtonsBar();
 	void resetTitleBar();
 	void resetButtonsBar();
 
@@ -35,8 +37,12 @@ public:
 	bool getMinimizeEvent();
 	void setMaximizeEvent(bool maximizeEvent);
 	bool getMaximizeEvent();
+	void setRestoreEvent(bool restoreEvent);
+	bool getRestoreEvent();
 	void setExitEvent(bool exitEvent);
 	bool getExitEvent();
+
+	void setIsMaximized(bool isMaximized);
 
 	void mouseMoved(int x, int y);
 	void mousePressed(int x, int y, int button);
@@ -62,14 +68,20 @@ private:
 	gGUISizer defbuttonsbarsizer;
 	gGUIButton defbuttonsbarokbutton;
 
+	static const int titlebarheight = 27;
+	static const int buttonsbarheight = 45;
+
 	bool minimizeevent;
 	bool maximizeevent;
+	bool restoreevent;
 	bool exitevent;
 
 	bool minimizebuttonminimizetrigger;
 	bool maximizebuttonmaximizetrigger;
+	bool maximizebuttonrestoretrigger;
 	bool exitbuttonexittrigger;
 
+	bool ismaximized;
 	bool isdragged;
 	int dragposx;
 	int dragposy;

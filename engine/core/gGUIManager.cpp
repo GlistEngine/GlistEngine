@@ -154,6 +154,34 @@ void gGUIManager::update() {
 			isdialogueactive = false;
 			activedialogue->setMinimizeEvent(false);
 		}
+		if (activedialogue->getMaximizeEvent()) {
+			int titlebarheight = activedialogue->getTitleBar()->height;
+			int buttonsbarheight = activedialogue->getButtonsBar()->height;
+			activedialogue->width = root->getAppManager()->getCurrentCanvas()->getScreenWidth();
+			activedialogue->height = root->getAppManager()->getCurrentCanvas()->getScreenHeight() - titlebarheight - buttonsbarheight;
+			activedialogue->left = 0;
+			activedialogue->top = activedialogue->getTitleBar()->height;
+			activedialogue->right = activedialogue->left + activedialogue->width;
+			activedialogue->bottom = activedialogue->top + activedialogue->height;
+			activedialogue->setIsMaximized(true);
+			activedialogue->resetTitleBar();
+			activedialogue->resetButtonsBar();
+			activedialogue->setMaximizeEvent(false);
+		}
+		if (activedialogue->getRestoreEvent()) {
+			int titlebarheight = activedialogue->getTitleBar()->height;
+			int buttonsbarheight = activedialogue->getButtonsBar()->height;
+			activedialogue->width = root->getAppManager()->getCurrentCanvas()->getScreenWidth() / 1 * 0.84f;
+			activedialogue->height = root->getAppManager()->getCurrentCanvas()->getScreenHeight() / 1 * 0.84f;
+			activedialogue->left = (root->getAppManager()->getCurrentCanvas()->getScreenWidth() - activedialogue->width) / 2;
+			activedialogue->top = (root->getAppManager()->getCurrentCanvas()->getScreenHeight() - activedialogue->height) / 2;
+			activedialogue->right = activedialogue->left + activedialogue->width;
+			activedialogue->bottom = activedialogue->top + activedialogue->height;
+			activedialogue->setIsMaximized(false);
+			activedialogue->resetTitleBar();
+			activedialogue->resetButtonsBar();
+			activedialogue->setRestoreEvent(false);
+		}
 	}
 }
 
