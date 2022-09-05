@@ -75,6 +75,7 @@ gGUITextbox::gGUITextbox() {
 	isnumeric = false;
 	ispassword = false;
 	dotradius = 0;
+	isbackgroundenabled = true;
 }
 
 gGUITextbox::~gGUITextbox() {
@@ -219,10 +220,22 @@ void gGUITextbox::update() {
 	}
 }
 
+void gGUITextbox::enableBackground(bool isEnabled) {
+	isbackgroundenabled = isEnabled;
+}
+
+bool gGUITextbox::isBackgroundEnabled() {
+	return isbackgroundenabled;
+}
+
 void gGUITextbox::draw() {
 	gColor oldcolor = *renderer->getColor();
+	if(isbackgroundenabled) {
+		renderer->setColor(foregroundcolor);
+		gDrawRectangle(left, top, width, boxh * 3 / 2 + (lineheight + linetopmargin) * (linecount - 1), false);
+	}
 	renderer->setColor(textbackgroundcolor);
-	gDrawRectangle(left, top, width, boxh + (lineheight + linetopmargin) * (linecount - 1), true);
+	gDrawRectangle(left, top + boxh / 4, width,  boxh + (lineheight + linetopmargin) * (linecount - 1), true);
 
 	if(selectionmode) {
 		if(selectionposx2 >= selectionposx1) {
@@ -234,7 +247,7 @@ void gGUITextbox::draw() {
 		}
 		if(isfocused) renderer->setColor(255, 128, 0);
 		else renderer->setColor(middlegroundcolor);
-		gDrawRectangle(left + selectionboxx1 + 5, top + linetopmargin, selectionboxw, lineheight * 5 / 3, true);
+		gDrawRectangle(left + selectionboxx1 + 5, top + boxh / 4 + linetopmargin, selectionboxw, lineheight * 5 / 3, true);
 	}
 
 	renderer->setColor(fontcolor);
@@ -246,17 +259,17 @@ void gGUITextbox::draw() {
 		if(dotlimit > text.size()) dotlimit = text.size();
 		for(int i = 0; i < dotlimit; i++) gDrawCircle(left + dotinit + i * dotlen, doty, dotradius, true);
 	} else if(linecount == 1) {
-		font->drawText(text.substr(firstutf, lastutf), left + initx - 2, top + lineheight + linetopmargin);
+		font->drawText(text.substr(firstutf, lastutf), left + initx - 2, top + boxh / 4 + lineheight + linetopmargin);
 	} else {
 		if(text.size() == 0) currentline = 1;
 		for(int i = 0; i < linecount; i++) {
 			if(lines[i] == "") continue;
-			font->drawText(lines[i], left + initx - 2, top + (i + 1) * (lineheight + linetopmargin));
+			font->drawText(lines[i], left + initx - 2, top + boxh / 4 + (i + 1) * (lineheight + linetopmargin));
 		}
 	}
 
 	if(editmode && (cursorshowcounter <= cursorshowlimit || keystate)) {
-		int linebottom = top + currentline * (lineheight + linetopmargin);
+		int linebottom = top + boxh / 4 + currentline * (lineheight + linetopmargin);
 		gDrawLine(left + initx + 1 + cursorposx, linebottom - lineheight,
 				left + initx + 1 + cursorposx, linebottom + lineheight * 2 / 3);
 
@@ -958,6 +971,8 @@ void gGUITextbox::charPressed(unsigned int codepoint) {
 				cursorposx = font->getStringWidth(text.substr(firstutf, cursorposutf - firstutf));
 			}
 		}
+
+		if(ismultiline) setText(text);
 
 //		gLogi("Textbox") << "cp cx:" << cursorposx;
 	}
