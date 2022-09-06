@@ -64,12 +64,16 @@ private:
 	gGUIImageButton deftitlebarmaximizebutton;
 	gGUIImageButton deftitlebarexitbutton;
 
+	static const int deftitlebarheight = 27;
+	static const int deftitlebarbitmapwidth = 38;
+	static const int deftitlebarbuttonwidth = 48;
+	static const int defbuttonsbarheight = 45;
+	static const int defbuttonsbarbuttonwidth = 100;
+	static const int defbuttonsbarbuttonheight = 27;
+
 	gGUIContainer defbuttonsbar;
 	gGUISizer defbuttonsbarsizer;
 	gGUIButton defbuttonsbarokbutton;
-
-	static const int titlebarheight = 27;
-	static const int buttonsbarheight = 45;
 
 	bool minimizeevent;
 	bool maximizeevent;
