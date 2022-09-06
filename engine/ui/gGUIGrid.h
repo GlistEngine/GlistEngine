@@ -17,7 +17,6 @@
 class gGUIGrid: public gGUIScrollable {
 public:
 	struct Cell {
-		// cellde yazýyý sola yapýþtýrma saða yapýþtýrma ve rengini deðiþtirme olacak !!
 	    int cellx;
 	    int celly;
 	    float cellh;
@@ -26,13 +25,15 @@ public:
 	    int cellcolumnno;
 	    bool iscellselected;
 	    std::string cellcontent;
-	    std::string printedcontent;
+	    std::string showncontent;
 	    Cell(){
 	    	cellx = -1;
 	    	celly = -1;
-	    	cellw = 80.0f;
 	    	cellh = 30.0f;
+	    	cellw = 80.0f;
 	    	iscellselected = false;
+	    	cellcontent = "";
+	    	showncontent = "";
 	    }
 	};
 	gGUIGrid();
@@ -52,8 +53,8 @@ public:
 	void drawSelectedBox();
 	void drawTitleRowBackground();
 	void drawTitleColumnBackground();
-	void drawRowContents(); // draws titles and lines for rows
-	void drawColumnContents(); // draws titles and lines for columns
+	void drawRowContents();
+	void drawColumnContents();
 	void drawTitleLines();
 	void drawCellContents();
 
@@ -61,7 +62,8 @@ public:
 	void createCells();
 	void showCells();
 	void showCell(int rowNo, int columnNo);
-
+	bool isRightCellFull(int cellIndex);
+	void createTextBox(int x, int y);
 
 private:
 
@@ -71,11 +73,11 @@ private:
 	int rownum, columnnum;
 	float gridx, gridy, gridw, gridh;
 	float gridboxw, gridboxh;
-	float firstcellx, firstcelly;
 	int selectedbox[2];
 	bool isselected;
 	int rowtitle;
 	int columntitle;
+	gGUITextbox textbox;
 
 
 };
