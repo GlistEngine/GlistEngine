@@ -115,6 +115,7 @@ void gGUIDialogue::resetTitleBar() {
 	deftitlebar.setSizer(&deftitlebarsizer);
 	deftitlebarsizer.setSize(1, 5);
 	deftitlebarsizer.enableBorders(false);
+
 	float tbbitp = (float)deftitlebarbitmapwidth / (float)deftitlebar.width;
 	float tbbutp = (float)deftitlebarbuttonwidth / (float)deftitlebar.width;
 	float tbtxtp = 1 - (tbbitp + 3 * tbbutp);
@@ -165,18 +166,20 @@ void gGUIDialogue::resetButtonsBar() {
 	defbuttonsbar.height = defbuttonsbarheight;
 
 	defbuttonsbar.setSizer(&defbuttonsbarsizer);
-	defbuttonsbarsizer.setSize(1, 5);
+	defbuttonsbarsizer.setSize(1, 2);
 	defbuttonsbarsizer.enableBorders(false);
+
+	float bbbutp = (((float)defbuttonsbarbuttonwidth + 30) / (float)defbuttonsbar.width);
+	float bbempp = 1 - bbbutp;
+	float bbcolproportions[2] = {bbempp, bbbutp};
+	defbuttonsbarsizer.setColumnProportions(bbcolproportions);
 
 	setButtonsBar(&defbuttonsbar);
 
-	defbuttonsbarsizer.setControl(0, 4, &defbuttonsbarokbutton);
+	defbuttonsbarsizer.setControl(0, 1, &defbuttonsbarokbutton);
 	defbuttonsbarokbutton.setTitle("OK");
-	/* defbuttonsbarokbutton.setSize(defbuttonsbar.width * 0.14f, defbuttonsbar.height * 0.6f);
-	defbuttonsbarokbutton.left += (defbuttonsbar.width * 0.2f - defbuttonsbar.width * 0.14f) / 2;
-	defbuttonsbarokbutton.top += (defbuttonsbar.height - defbuttonsbar.height * 0.6f) / 2; */
 	defbuttonsbarokbutton.setSize(defbuttonsbarbuttonwidth, defbuttonsbarbuttonheight);
-	defbuttonsbarokbutton.left += (defbuttonsbar.width * 0.2f - defbuttonsbarbuttonwidth) / 2;
+	defbuttonsbarokbutton.left += (defbuttonsbar.width * bbbutp - defbuttonsbarbuttonwidth) / 2;
 	defbuttonsbarokbutton.top += (defbuttonsbar.height - defbuttonsbarbuttonheight) / 2;
 }
 
