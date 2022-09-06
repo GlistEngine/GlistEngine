@@ -76,6 +76,7 @@ gGUITextbox::gGUITextbox() {
 	ispassword = false;
 	dotradius = 0;
 	isbackgroundenabled = true;
+	totalh = boxh;
 }
 
 gGUITextbox::~gGUITextbox() {
@@ -115,13 +116,14 @@ bool gGUITextbox::isEditable() {
 }
 
 int gGUITextbox::getCursor(int x, int y) {
-	if(iseditable && x >= left && x < right && y >= top && y < top + boxh) return CURSOR_IBEAM;
+	if(iseditable && x >= left && x < right && y >= top + boxh / 4 && y < top + totalh + boxh / 4) return CURSOR_IBEAM;
 	return CURSOR_ARROW;
 }
 
 void gGUITextbox::setLineCount(int linecount) {
 	this->linecount = linecount;
 	if(linecount > 1) {
+		totalh = boxh + (lineheight + linetopmargin) * (linecount - 1);
 		ismultiline = true;
 		lines.clear();
 		calculateLines();
@@ -232,10 +234,10 @@ void gGUITextbox::draw() {
 	gColor oldcolor = *renderer->getColor();
 	if(isbackgroundenabled) {
 		renderer->setColor(foregroundcolor);
-		gDrawRectangle(left, top, width, boxh * 3 / 2 + (lineheight + linetopmargin) * (linecount - 1), false);
+		gDrawRectangle(left, top, width, boxh / 2 + totalh, false);
 	}
 	renderer->setColor(textbackgroundcolor);
-	gDrawRectangle(left, top + boxh / 4, width,  boxh + (lineheight + linetopmargin) * (linecount - 1), true);
+	gDrawRectangle(left, top + boxh / 4, width,  totalh, true);
 
 	if(selectionmode) {
 		if(selectionposx2 >= selectionposx1) {
@@ -1020,7 +1022,7 @@ int gGUITextbox::findFirstSpace(int lineend) {
 void gGUITextbox::mousePressed(int x, int y, int button) {
 	if(!iseditable) return;
 
-	if(x >= left && x < right && y >= top && y < top + boxh + (lineheight + linetopmargin) * (linecount - 1) && button == 0) {
+	if(x >= left && x < right && y >= top + boxh / 4 && y < top + totalh + boxh / 4 && button == 0) {
 		firstclicktime = previousclicktime;
 		previousclicktime = clicktime;
 		clicktime = gGetSystemTimeMillis();
@@ -1063,7 +1065,7 @@ void gGUITextbox::mousePressed(int x, int y, int button) {
 void gGUITextbox::mouseReleased(int x, int y, int button) {
 	if(!iseditable) return;
 
-	if(x >= left && x < right && y >= top && y < top + boxh && button == 0) {
+	if(x >= left && x < right && y >= top + boxh / 4 && y < top + totalh + boxh / 4 && button == 0) {
 		return;
 	}
 	if(!isdragging) editmode = false;
@@ -1129,9 +1131,17 @@ std::vector<int> gGUITextbox::calculateClickPosition(int x, int y) {
 std::vector<int> gGUITextbox::calculateClickPositionMultiline(int x, int y) {
 	std::vector<int> result;
 	for(int i = 0; i < 3; i++) result.push_back(0);
+	int selectedline = 1;
 	for(int i = 0; i < linecount; i++) {
-		if(y > top + i * (lineheight + linetopmargin) && y < top + (i + 1) * (lineheight + linetopmargin)) currentline = i + 1;
+		if(y > top + boxh / 4 + i * (lineheight + linetopmargin) && y < top + boxh / 4 + (i + 1) * (lineheight + linetopmargin)) selectedline = i + 1;
 	}
+	if(lines[selectedline] == "") {
+		result[0] = cursorposchar;
+		result[1] = cursorposx;
+		result[2] = cursorposutf;
+		return result;
+	}
+	currentline = selectedline;
 	if(letterlength.size() != 0) {
 		int clickxdiff = x - left;
 		int poschar = firstchar;
