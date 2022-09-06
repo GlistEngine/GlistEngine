@@ -39,7 +39,6 @@ gGUIPane::~gGUIPane() {
 void gGUIPane::set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIObject* parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h) {
 	totalh = h;
 	gGUIContainer::set(root, topParentGUIObject, parentGUIObject, parentSlotLineNo, parentSlotColumnNo, x, y, w, h);
-	gLogi("Pane") << "top:" << top << ", height:" << height << ", nbh:" << nextbutton.height;
 	buttonsizer.set(root, topparent, this, 0, 0, left, top + height - 50, width, 50);
 }
 
@@ -59,11 +58,13 @@ void gGUIPane::setNextPane(gGUIPane* nextPane) {
 
 void gGUIPane::enablePreviousButton(bool isEnabled) {
 	previousbuttonenabled = isEnabled;
+	if(!previousbuttonenabled) previousbutton.setDisabled(true);
 	if(previouspane && previousbuttonenabled) previousbutton.setDisabled(false);
 }
 
 void gGUIPane::enableNextButton(bool isEnabled) {
 	nextbuttonenabled = isEnabled;
+	if(!nextbuttonenabled) nextbutton.setDisabled(true);
 	if(nextpane && nextbuttonenabled) nextbutton.setDisabled(false);
 }
 
