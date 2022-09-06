@@ -110,12 +110,15 @@ gGUIContainer* gGUIDialogue::getButtonsBar() {
 
 void gGUIDialogue::resetTitleBar() {
 	deftitlebar.width = width;
-	deftitlebar.height = titlebarheight;
+	deftitlebar.height = deftitlebarheight;
 
 	deftitlebar.setSizer(&deftitlebarsizer);
 	deftitlebarsizer.setSize(1, 5);
 	deftitlebarsizer.enableBorders(false);
-	float tbcolproportions[5] = {0.04f, 0.81f, 0.05f, 0.05f, 0.05f};
+	float tbbitp = (float)deftitlebarbitmapwidth / (float)deftitlebar.width;
+	float tbbutp = (float)deftitlebarbuttonwidth / (float)deftitlebar.width;
+	float tbtxtp = 1 - (tbbitp + 3 * tbbutp);
+	float tbcolproportions[5] = {tbbitp, tbtxtp, tbbutp, tbbutp, tbbutp};
 	deftitlebarsizer.setColumnProportions(tbcolproportions);
 
 	setTitleBar(&deftitlebar);
@@ -125,7 +128,7 @@ void gGUIDialogue::resetTitleBar() {
 	deftitlebarbitmap.height = deftitlebar.height * 0.7f;
 	deftitlebarbitmap.width = deftitlebarbitmap.height;
 	deftitlebarbitmap.top += (deftitlebar.height - deftitlebarbitmap.height) / 2;
-	deftitlebarbitmap.left += (deftitlebar.width * 0.04f - deftitlebarbitmap.width) / 2;
+	deftitlebarbitmap.left += (deftitlebar.width * tbbitp - deftitlebarbitmap.width) / 2;
 
 	deftitlebarsizer.setControl(0, 1, &deftitlebartext);
 	deftitlebartext.setText("Properties for GlistEngine");
@@ -159,7 +162,7 @@ void gGUIDialogue::resetTitleBar() {
 
 void gGUIDialogue::resetButtonsBar() {
 	defbuttonsbar.width = width;
-	defbuttonsbar.height = buttonsbarheight;
+	defbuttonsbar.height = defbuttonsbarheight;
 
 	defbuttonsbar.setSizer(&defbuttonsbarsizer);
 	defbuttonsbarsizer.setSize(1, 5);
@@ -169,9 +172,12 @@ void gGUIDialogue::resetButtonsBar() {
 
 	defbuttonsbarsizer.setControl(0, 4, &defbuttonsbarokbutton);
 	defbuttonsbarokbutton.setTitle("OK");
-	defbuttonsbarokbutton.setSize(defbuttonsbar.width * 0.14f, defbuttonsbar.height * 0.6f);
+	/* defbuttonsbarokbutton.setSize(defbuttonsbar.width * 0.14f, defbuttonsbar.height * 0.6f);
 	defbuttonsbarokbutton.left += (defbuttonsbar.width * 0.2f - defbuttonsbar.width * 0.14f) / 2;
-	defbuttonsbarokbutton.top += (defbuttonsbar.height - defbuttonsbar.height * 0.6f) / 2;
+	defbuttonsbarokbutton.top += (defbuttonsbar.height - defbuttonsbar.height * 0.6f) / 2; */
+	defbuttonsbarokbutton.setSize(defbuttonsbarbuttonwidth, defbuttonsbarbuttonheight);
+	defbuttonsbarokbutton.left += (defbuttonsbar.width * 0.2f - defbuttonsbarbuttonwidth) / 2;
+	defbuttonsbarokbutton.top += (defbuttonsbar.height - defbuttonsbarbuttonheight) / 2;
 }
 
 void gGUIDialogue::setMinimizeButton(gGUIImageButton* minimizeButton) {
