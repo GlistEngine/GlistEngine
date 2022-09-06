@@ -251,6 +251,7 @@ private:
 	bool ispassword;
 	int dotradius;
 	bool isbackgroundenabled;
+	int totalh;
 };
 
 #endif /* UI_GGUITEXTBOX_H_ */
