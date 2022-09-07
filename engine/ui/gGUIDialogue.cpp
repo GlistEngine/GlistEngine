@@ -116,7 +116,7 @@ void gGUIDialogue::resetTitleBar() {
 	deftitlebarsizer.setSize(1, 5);
 	deftitlebarsizer.enableBorders(false);
 
-	float tbbitp = (float)deftitlebarbitmapwidth / (float)deftitlebar.width;
+	float tbbitp = ((float)deftitlebarbitmapwidth + 10) / (float)deftitlebar.width;
 	float tbbutp = (float)deftitlebarbuttonwidth / (float)deftitlebar.width;
 	float tbtxtp = 1 - (tbbitp + 3 * tbbutp);
 	float tbcolproportions[5] = {tbbitp, tbtxtp, tbbutp, tbbutp, tbbutp};
@@ -126,8 +126,8 @@ void gGUIDialogue::resetTitleBar() {
 
 	deftitlebarsizer.setControl(0, 0, &deftitlebarbitmap);
 	deftitlebarbitmap.loadImage("gameicon/icon.png", false);
-	deftitlebarbitmap.height = deftitlebar.height * 0.7f;
-	deftitlebarbitmap.width = deftitlebarbitmap.height;
+	deftitlebarbitmap.height = deftitlebarbitmapwidth;
+	deftitlebarbitmap.width = deftitlebarbitmapwidth;
 	deftitlebarbitmap.top += (deftitlebar.height - deftitlebarbitmap.height) / 2;
 	deftitlebarbitmap.left += (deftitlebar.width * tbbitp - deftitlebarbitmap.width) / 2;
 
@@ -169,7 +169,7 @@ void gGUIDialogue::resetButtonsBar() {
 	defbuttonsbarsizer.setSize(1, 2);
 	defbuttonsbarsizer.enableBorders(false);
 
-	float bbbutp = (((float)defbuttonsbarbuttonwidth + 30) / (float)defbuttonsbar.width);
+	float bbbutp = ((float)defbuttonsbarbuttonwidth + 30) / (float)defbuttonsbar.width;
 	float bbempp = 1 - bbbutp;
 	float bbcolproportions[2] = {bbempp, bbbutp};
 	defbuttonsbarsizer.setColumnProportions(bbcolproportions);

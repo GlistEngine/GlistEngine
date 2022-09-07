@@ -65,7 +65,7 @@ private:
 	gGUIImageButton deftitlebarexitbutton;
 
 	static const int deftitlebarheight = 27;
-	static const int deftitlebarbitmapwidth = 38;
+	static const int deftitlebarbitmapwidth = 24;
 	static const int deftitlebarbuttonwidth = 48;
 	static const int defbuttonsbarheight = 45;
 	static const int defbuttonsbarbuttonwidth = 100;
