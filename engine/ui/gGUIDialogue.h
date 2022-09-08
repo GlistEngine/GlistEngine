@@ -42,8 +42,12 @@ public:
 	void setExitEvent(bool exitEvent);
 	bool getExitEvent();
 
+	void enableDrag(bool isDragEnabled);
+	void enableResize(bool isResizeEnabled);
+
 	void setIsMaximized(bool isMaximized);
 
+	int getCursor(int x, int y);
 	void mouseMoved(int x, int y);
 	void mousePressed(int x, int y, int button);
 	void mouseDragged(int x, int y, int button);
@@ -56,6 +60,13 @@ private:
 	gGUIImageButton* maximizebutton;
 	gGUIImageButton* exitbutton;
 
+	static const int deftitlebarheight = 27;
+	static const int deftitlebarbitmapwidth = 24;
+	static const int deftitlebarbuttonwidth = 48;
+	static const int defbuttonsbarheight = 45;
+	static const int defbuttonsbarbuttonwidth = 100;
+	static const int defbuttonsbarbuttonheight = 27;
+
 	gGUIContainer deftitlebar;
 	gGUISizer deftitlebarsizer;
 	gGUIBitmap deftitlebarbitmap;
@@ -63,13 +74,6 @@ private:
 	gGUIImageButton deftitlebarminimizebutton;
 	gGUIImageButton deftitlebarmaximizebutton;
 	gGUIImageButton deftitlebarexitbutton;
-
-	static const int deftitlebarheight = 27;
-	static const int deftitlebarbitmapwidth = 24;
-	static const int deftitlebarbuttonwidth = 48;
-	static const int defbuttonsbarheight = 45;
-	static const int defbuttonsbarbuttonwidth = 100;
-	static const int defbuttonsbarbuttonheight = 27;
 
 	gGUIContainer defbuttonsbar;
 	gGUISizer defbuttonsbarsizer;
@@ -85,10 +89,19 @@ private:
 	bool maximizebuttonrestoretrigger;
 	bool exitbuttonexittrigger;
 
+	bool isdragenabled;
+	bool isresizeenabled;
+
 	bool ismaximized;
 	bool isdragged;
+	bool isleftresized;
+	bool isrightresized;
+	bool istopresized;
+	bool isbottomresized;
 	int dragposx;
 	int dragposy;
+	int sizeposx;
+	int sizeposy;
 };
 
 #endif /* UI_GGUIDIALOGUE_H_ */
