@@ -247,8 +247,10 @@ void gGUIDialogue::setIsMaximized(bool isMaximized) {
 }
 
 int gGUIDialogue::getCursor(int x, int y) {
-	if ((x > left - 5 && x < left + 5) || (x > right - 5 && x < right + 5)) return CURSOR_HRESIZE;
-	if ((y > titlebar->top - 5 && y < titlebar->top + 5) || (y > buttonsbar->bottom - 5 && y < buttonsbar->bottom + 5)) return CURSOR_VRESIZE;
+	if (!ismaximized) {
+		if ((x > left - 5 && x < left + 5) || (x > right - 5 && x < right + 5)) return CURSOR_HRESIZE;
+		if ((y > titlebar->top - 5 && y < titlebar->top + 5) || (y > buttonsbar->bottom - 5 && y < buttonsbar->bottom + 5)) return CURSOR_VRESIZE;
+	}
 	return CURSOR_ARROW;
 }
 
@@ -279,10 +281,12 @@ void gGUIDialogue::mousePressed(int x, int y, int button) {
 		}
 	}
 
-	if (x > left - 5 && x < left + 5) isleftresized = true; sizeposx = x;
-	if (x > right - 5 && x < right + 5) isrightresized = true; sizeposx = x;
-	if (y > titlebar->top - 5 && y < titlebar->top + 5) istopresized = true; sizeposy = y;
-	if (y > buttonsbar->bottom - 5 && y < buttonsbar->bottom + 5) isbottomresized = true; sizeposy = y;
+	if (!ismaximized) {
+		if (x > left - 5 && x < left + 5) isleftresized = true; sizeposx = x;
+		if (x > right - 5 && x < right + 5) isrightresized = true; sizeposx = x;
+		if (y > titlebar->top - 5 && y < titlebar->top + 5) istopresized = true; sizeposy = y;
+		if (y > buttonsbar->bottom - 5 && y < buttonsbar->bottom + 5) isbottomresized = true; sizeposy = y;
+	}
 }
 
 void gGUIDialogue::mouseDragged(int x, int y, int button) {
