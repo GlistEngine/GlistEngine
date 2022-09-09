@@ -268,7 +268,7 @@ void gGUIDialogue::mousePressed(int x, int y, int button) {
 	if (guisizer) guisizer->mousePressed(x, y, button);
 	if (buttonsbar) buttonsbar->mousePressed(x, y, button);
 
-	if (!ismaximized && x > titlebar->left && x < titlebar->left + titlebar->width && y > titlebar->top + 5 && y < titlebar->top + titlebar->height) {
+	if (!ismaximized && x > titlebar->left + 5 && x < titlebar->left + titlebar->width - 5 && y > titlebar->top + 5 && y < titlebar->top + titlebar->height) {
 		if ((minimizebutton || maximizebutton || exitbutton) && (minimizebutton->isPressed() || maximizebutton->isPressed() || exitbutton->isPressed())) {
 			isdragged = false;
 		}
