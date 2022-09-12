@@ -40,6 +40,7 @@ gGUIMenuItem::gGUIMenuItem(std::string text) {
 	seperator = false;
 	iconh = 16;
 	iconw = 16;
+	isparentpressed = false;
 
 }
 
@@ -95,6 +96,7 @@ int gGUIMenuItem::addChild(std::string text, bool addSeperator) {
 	}
 	totaltextw += tw;
 	menuboxh = 0;
+//	if(font->getStringWidth(text) > menuboxw) menuboxw = font->getStringWidth(text);
 	return childs[childno].getItemId();
 }
 
@@ -181,14 +183,14 @@ void gGUIMenuItem::draw() {
 
 		if(!childs.empty()) {
 			renderer->setColor(foregroundcolor);
-			gDrawRectangle(menuboxx, menuboxy, menuboxw, menuboxh + childs.size() * menuboxlineh + texth, true);
+			gDrawRectangle(menuboxx, menuboxy, menuboxw + texth, menuboxh + childs.size() * menuboxlineh + texth, true);
 			renderer->setColor(backgroundcolor);
-			gDrawRectangle(menuboxx, menuboxy, menuboxw, menuboxh + childs.size() * menuboxlineh + texth, false);
+			gDrawRectangle(menuboxx, menuboxy, menuboxw + texth, menuboxh + childs.size() * menuboxlineh + texth, false);
 
 			for(int i = 0; i < childs.size(); i++) {
 				if(childs[i].hovered) {
 					renderer->setColor(middlegroundcolor);
-					gDrawRectangle(childs[i].left, childs[i].top - texth / 2, childs[i].width, childs[i].height - 1, true);
+					gDrawRectangle(childs[i].left, childs[i].top - texth / 2, childs[i].width + texth, childs[i].height - 1, true);
 				}
 				childs[i].draw();
 			}
@@ -202,14 +204,14 @@ void gGUIMenuItem::draw() {
 
 	renderer->setColor(fontcolor);
 	if(parentitemid != 0)font->drawText(title, left + iconh, top + (font->getSize() - texth / 3) + menuboxtextextrah);
-	else font->drawText(title, left + 7, top + (font->getSize() - texth / 3) + menuboxtextextrah);
+	else font->drawText(title, left + 8, top + (font->getSize() - texth / 3) + menuboxtextextrah);
 
 	if(seperator){
 		renderer->setColor(backgroundcolor);
-		gDrawLine(left + 10,bottom - texth / 2,right - 10,bottom - texth / 2);
+		gDrawLine(left + iconh, bottom - texth / 2, right + 10, bottom - texth / 2);
 	}
 
-	if(isparent && parentitemid != 0) font->drawText(">", left + menuboxw - 20, top + (font->getSize() - texth / 3) + menuboxtextextrah);
+	if(isparent && parentitemid != 0) font->drawText(">", left + menuboxw, top + (font->getSize() - texth / 3) + menuboxtextextrah);
 
 	if(itemid == 0) {
 		for(int i = 0; i < childs.size(); i++) {
@@ -222,9 +224,13 @@ void gGUIMenuItem::mouseMoved(int x, int y) {
 	if(itemid == 0 || menuboxshown) {
 		for(int i = 0; i < childs.size(); i++) {
 			childs[i].hovered = false;
+//			if(parentitemid == 0 && x >= childs[i].left && x < childs[i].right && y >= childs[i].top && y < childs[i].bottom){
+//				childs[i].selected = false;
+//				childs[i].menuboxshown = false;
+//				childs[i].update();
+//			}
 			if(x >= childs[i].left && x < childs[i].right && y >= childs[i].top && y < childs[i].bottom) {
 				childs[i].hovered = true;
-				childs[i].update();
 			}
 			else{
 				childs[i].counter = 0;
@@ -235,15 +241,26 @@ void gGUIMenuItem::mouseMoved(int x, int y) {
 }
 
 void gGUIMenuItem::mousePressed(int x, int y, int button) {
+	for(int i = 0; i < parentitems.size(); i++){
+		isparentpressed = false;
+		menuboxshown = false;
+	}
+
 	for(int i = 0; i < childs.size(); i++) {
 			childs[i].selected = false;
 			childs[i].menuboxshown = false;
+		if(parentitemid == 0 && x >= childs[i].left && x < childs[i].right && y >= childs[i].top && y < childs[i].bottom){
+			childs[i].hovered = true;
+			childs[i].selected = true;
+			childs[i].menuboxshown = true;
+		}
 		if(childs[i].hovered && x >= childs[i].left && x < childs[i].right && y >= childs[i].top && y < childs[i].bottom) {
 			childs[i].selected = true;
 			childs[i].menuboxshown = true;
 			childs[i].hovered = false;
 			root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_MENUBARSELECTED, gToStr(childs[i].itemid));
 		}
+
 		childs[i].mousePressed(x, y, button);
 	}
 }
