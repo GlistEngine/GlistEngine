@@ -354,73 +354,37 @@ void gGUIDialogue::mouseDragged(int x, int y, int button) {
 		dragposy += dy;
 	}
 
-	/* if (isleftresized || isrightresized || istopresized || isbottomresized) {
-		int dx, dy;
-		if (isleftresized || isrightresized) dx = x - sizeposx;
-		if (istopresized || isbottomresized) dy = y - sizeposy;
-
-		if (isleftresized) width -= dx; left = x; right = left + width;
-		if (isrightresized) width += dx; right = x; left = right - width;
-		if (istopresized) height -= dy; top = y + titlebar->height; bottom = top + height;
-		if (isbottomresized) height += dy; bottom = y - buttonsbar->height; top = bottom - height;
-
-		guisizer->width = width;
-		guisizer->height = height;
-		guisizer->left = left;
-		guisizer->right = right;
-		guisizer->top = top;
-		guisizer->bottom = bottom;
-
-		if (isleftresized) titlebar->width -= dx; titlebar->left = x; titlebar->right = left + width;
-		if (isrightresized) titlebar->width += dx; titlebar->right = x; titlebar->left = titlebar->right - titlebar->width;
-		if (istopresized) titlebar->top = y; titlebar->bottom = titlebar->top + titlebar->height;
-		if (isbottomresized) titlebar->bottom = y - buttonsbar->height - height; titlebar->top = titlebar->bottom - titlebar->height;
-
-		if (isleftresized) buttonsbar->width -= dx; buttonsbar->left = x; buttonsbar->right = buttonsbar->left + buttonsbar->width;
-		if (isrightresized) buttonsbar->width += dx; buttonsbar->right = x; buttonsbar->left = buttonsbar->right - buttonsbar->width;
-		if (istopresized) buttonsbar->top = y + titlebar->height + height; buttonsbar->bottom = buttonsbar->top + buttonsbar->height;
-		if (isbottomresized) buttonsbar->bottom = y; buttonsbar->top = buttonsbar->bottom - buttonsbar->height;
-
-		if (isleftresized || isrightresized) sizeposx += dx;
-		if (istopresized || isbottomresized) sizeposy += dy;
-	} */
+	int sx = x - sizeposx;
+	int sy = y - sizeposy;
 
 	if (isleftresized) {
-		int sx = x - sizeposx;
-		width -= sx; left = x; right = left + width;
-		titlebar->width -= sx; titlebar->left = x; titlebar->right = titlebar->left + titlebar->width;
-		guisizer->width = width; guisizer->height = height; guisizer->left = left; guisizer->right = right; guisizer->top = top; guisizer->bottom = bottom;
-		buttonsbar->width -= sx; buttonsbar->left = x; buttonsbar->right = buttonsbar->left + buttonsbar->width;
-		sizeposx += sx;
+		width -= sx; left += sx; right = left + width;
+		titlebar->width -= sx; titlebar->left += sx; titlebar->right = titlebar->left + titlebar->width;
+		buttonsbar->width -= sx; buttonsbar->left += sx; buttonsbar->right = buttonsbar->left + buttonsbar->width;
 	}
 
 	if (isrightresized) {
-		int sx = x - sizeposx;
-		width += sx; right = x; left = right - width;
-		titlebar->width += sx; titlebar->right = x; titlebar->left = titlebar->right - titlebar->width;
-		guisizer->width = width; guisizer->height = height; guisizer->left = left; guisizer->right = right; guisizer->top = top; guisizer->bottom = bottom;
-		buttonsbar->width += sx; buttonsbar->right = x; buttonsbar->left = buttonsbar->right - buttonsbar->width;
-		sizeposx += sx;
+		width += sx; right += sx; left = right - width;
+		titlebar->width += sx; titlebar->right += sx; titlebar->left = titlebar->right - titlebar->width;
+		buttonsbar->width += sx; buttonsbar->right += sx; buttonsbar->left = buttonsbar->right - buttonsbar->width;
 	}
 
 	if (istopresized) {
-		int sy = y - sizeposy;
-		height -= sy; top = y + titlebar->height; bottom = top + height;
-		titlebar->top = y; titlebar->bottom = titlebar->top + titlebar->height;
-		guisizer->width = width; guisizer->height = height; guisizer->left = left; guisizer->right = right; guisizer->top = top; guisizer->bottom = bottom;
-		buttonsbar->top = y + titlebar->height + height; buttonsbar->bottom = buttonsbar->top + buttonsbar->height;
-		sizeposy += sy;
+		height -= sy; top += sy; bottom = top + height;
+		titlebar->top += sy; titlebar->bottom = titlebar->top + titlebar->height;
+		buttonsbar->top += sy; buttonsbar->bottom = buttonsbar->top + buttonsbar->height;
 	}
 
 	if (isbottomresized) {
-		int sy = y - sizeposy;
-		height += sy; bottom = y - buttonsbar->height; top = bottom - height;
-		titlebar->bottom = y - buttonsbar->height - height; titlebar->top = titlebar->bottom - titlebar->height;
-		guisizer->width = width; guisizer->height = height; guisizer->left = left; guisizer->right = right; guisizer->top = top; guisizer->bottom = bottom;
-		buttonsbar->bottom = y; buttonsbar->top = buttonsbar->bottom - buttonsbar->height;
-		sizeposy += sy;
+		height += sy; bottom += sy; top = bottom - height;
+		titlebar->bottom += sy; titlebar->top = titlebar->bottom - titlebar->height;
+		buttonsbar->bottom += sy; buttonsbar->top = buttonsbar->bottom - buttonsbar->height;
 	}
 
+	guisizer->width = width; guisizer->height = height; guisizer->left = left; guisizer->right = right; guisizer->top = top; guisizer->bottom = bottom;
+
+	sizeposx += sx;
+	sizeposy += sy;
 }
 
 void gGUIDialogue::mouseReleased(int x, int y, int button) {
