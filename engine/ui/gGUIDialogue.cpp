@@ -290,19 +290,14 @@ void gGUIDialogue::mousePressed(int x, int y, int button) {
 }
 
 void gGUIDialogue::mouseDragged(int x, int y, int button) {
-	if (isdragged && x >= titlebar->left - titlebar->width && x < titlebar->left + titlebar->width && y >= titlebar->top - titlebar->height - guisizer->height && y < titlebar->top + titlebar->height + guisizer->height) {
-		int dx = x - dragposx;
-		int dy = y - dragposy;
+	int dx = x - dragposx; int dy = y - dragposy;
+	int sx = x - sizeposx; int sy = y - sizeposy;
 
+	if (isdragged && x >= titlebar->left - titlebar->width && x < titlebar->left + titlebar->width && y >= titlebar->top - titlebar->height - guisizer->height && y < titlebar->top + titlebar->height + guisizer->height) {
 		left += dx;
 		top += dy;
 		right = left + width;
 		bottom = top + height;
-
-		guisizer->left = left;
-		guisizer->top = top;
-		guisizer->right = right;
-		guisizer->bottom = bottom;
 
 		titlebar->left += dx;
 		titlebar->top += dy;
@@ -349,13 +344,7 @@ void gGUIDialogue::mouseDragged(int x, int y, int button) {
 				}
 			}
 		}
-
-		dragposx += dx;
-		dragposy += dy;
 	}
-
-	int sx = x - sizeposx;
-	int sy = y - sizeposy;
 
 	if (isleftresized) {
 		width -= sx; left += sx; right = left + width;
@@ -383,8 +372,8 @@ void gGUIDialogue::mouseDragged(int x, int y, int button) {
 
 	guisizer->width = width; guisizer->height = height; guisizer->left = left; guisizer->right = right; guisizer->top = top; guisizer->bottom = bottom;
 
-	sizeposx += sx;
-	sizeposy += sy;
+	dragposx += dx; dragposy += dy;
+	sizeposx += sx; sizeposy += sy;
 }
 
 void gGUIDialogue::mouseReleased(int x, int y, int button) {
