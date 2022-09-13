@@ -31,6 +31,7 @@ public:
 	void addTreelist(gGUITreelist* treeList, int treeListx, int treeListy, int treeListw);
 
 	void setSizer(gGUISizer* guiSizer);
+	void updateSizer();
 	gGUISizer* getSizer();
 
 	virtual int getCursor(int x, int y);

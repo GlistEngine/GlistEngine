@@ -44,6 +44,7 @@ void gGUIForm::setMenuBar(gGUIMenubar* menuBar) {
 				width,
 				menuh
 		);
+	updateSizer();
 }
 
 void gGUIForm::resizeMenuBar() {
@@ -71,6 +72,7 @@ void gGUIForm::addToolBar(gGUIToolbar* toolBar) {
 	toolbars[toolbarnum]->setParentSlotNo(0, 0);
 	toolbars[toolbarnum]->setRootApp(root);
 	toolbarnum++;
+	updateSizer();
 }
 
 void gGUIForm::resizeToolbars() {
@@ -114,6 +116,15 @@ void gGUIForm::setSizer(gGUISizer* guiSizer) {
 	guisizer->setSlotPadding(0);
 }
 
+void gGUIForm::updateSizer() {
+	guisizer->left = left;
+	guisizer->top = top + menuh + toolbarh;
+	guisizer->right = right;
+	guisizer->bottom = bottom;
+	guisizer->width = width;
+	guisizer->height = height;
+}
+
 void gGUIForm::setStatusBar(gGUIStatusBar* statusBar) {
 	statusbar = statusBar;
 	statush = 30;
@@ -123,6 +134,7 @@ void gGUIForm::setStatusBar(gGUIStatusBar* statusBar) {
 					width,
 					statush
 			);
+	updateSizer();
 }
 
 void gGUIForm::resizeStatusBar() {
