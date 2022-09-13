@@ -53,8 +53,8 @@ public:
 	void addMultiValue(float title, float mx, float my);
 	void addpoint();
 	void addMultiPoint();
-	void linedrawer();
-	void multiline();
+	void drawLine();
+	void drawMultiline();
 
 
 	void drawXAxis();
@@ -86,6 +86,7 @@ private:
 	float my[300];
 	int pointnum;
 	int multinum;
+	int rangepointx, rangepointy;
 	gLine lines[300];
 	int maxy;
 	int maxx;
