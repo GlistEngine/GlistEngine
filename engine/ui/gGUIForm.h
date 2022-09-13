@@ -70,6 +70,7 @@ protected:
 	int contextmenux, contextmenuy;
 	gGUITreelist* treelist;
 	int treelistw, treelisth;
+	bool issizerset;
 };
 
 #endif /* UI_GGUIFORM_H_ */
