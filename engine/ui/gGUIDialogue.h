@@ -22,6 +22,8 @@ public:
 	void update();
 	void draw();
 
+	void initDefTitleBar();
+	void initDefButtonsBar();
 	void setTitleBar(gGUIContainer* titleBar);
 	gGUIContainer* getTitleBar();
 	void setButtonsBar(gGUIContainer* buttonsBar);
@@ -94,14 +96,8 @@ private:
 
 	bool ismaximized;
 	bool isdragged;
-	bool isleftresized;
-	bool isrightresized;
-	bool istopresized;
-	bool isbottomresized;
-	int dragposx;
-	int dragposy;
-	int sizeposx;
-	int sizeposy;
+	bool isleftresized, isrightresized, istopresized, isbottomresized;
+	int dragposx, dragposy, sizeposx, sizeposy;
 };
 
 #endif /* UI_GGUIDIALOGUE_H_ */
