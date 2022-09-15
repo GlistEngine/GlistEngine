@@ -60,7 +60,7 @@ void gGUIForm::resizeMenuBar() {
 }
 
 void gGUIForm::addToolBar(gGUIToolbar* toolBar) {
-	if(toolBar->getToolbarType() == gGUIToolbar::HORIZONTAL_TOOLBAR) {
+	if(toolBar->getToolbarType() == gGUIToolbar::TOOLBAR_HORIZONTAL) {
 		if(toolbarnum >= maxtoolbarnum) return;
 
 		toolbarh = 32;
