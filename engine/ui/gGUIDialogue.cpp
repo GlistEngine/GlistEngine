@@ -34,12 +34,11 @@ gGUIDialogue::gGUIDialogue() {
 
 	ismaximized = false;
 	isdragged = false;
-	isleftresized = false;
-	isrightresized = false;
-	istopresized = false;
-	isbottomresized = false;
-	dragposx = 0; dragposy = 0;
-	sizeposx = 0; sizeposy = 0;
+	isleftresized = false; isrightresized = false; istopresized = false; isbottomresized = false;
+	dragposx = 0; dragposy = 0; sizeposx = 0; sizeposy = 0;
+
+	initDefTitleBar();
+	initDefButtonsBar();
 }
 
 gGUIDialogue::~gGUIDialogue() {
@@ -71,34 +70,66 @@ void gGUIDialogue::update() {
 }
 
 void gGUIDialogue::draw() {
-	if (guisizer) {
+	gColor oldcolor = *renderer->getColor();
 
-		gColor oldcolor = *renderer->getColor();
-
+	if (!(isleftresized || isrightresized || istopresized || isbottomresized)) {
 		// TITLE BAR BACKGROUND
 		renderer->setColor(textbackgroundcolor);
 		gDrawRectangle(left, top - titlebar->height, width, titlebar->height, true);
 		// BUTTONS BAR BACKGROUND
 		renderer->setColor(foregroundcolor);
 		gDrawRectangle(left, top, width, height + buttonsbar->height, true);
-		// DIALOGUE BORDERS
-		renderer->setColor(fontcolor);
-		gDrawLine(left, top - titlebar->height, right, top - titlebar->height);
-		gDrawLine(left, bottom + buttonsbar->height, right, bottom + buttonsbar->height);
-		gDrawLine(left, top - titlebar->height, left, bottom + buttonsbar->height);
-		gDrawLine(right, top - titlebar->height, right, bottom + buttonsbar->height);
 
-		renderer->setColor(&oldcolor);
-
-		guisizer->draw();
+		if (guisizer) guisizer->draw();
+		if (titlebar) titlebar->draw();
+		if (buttonsbar) buttonsbar->draw();
 	}
 
-	if (titlebar) titlebar->draw();
-	if (buttonsbar) buttonsbar->draw();
+	// DIALOGUE BORDERS
+	renderer->setColor(fontcolor);
+	gDrawLine(left, top - titlebar->height, right, top - titlebar->height);
+	gDrawLine(left, bottom + buttonsbar->height, right, bottom + buttonsbar->height);
+	gDrawLine(left, top - titlebar->height, left, bottom + buttonsbar->height);
+	gDrawLine(right, top - titlebar->height, right, bottom + buttonsbar->height);
+
+	renderer->setColor(&oldcolor);
+}
+
+void gGUIDialogue::initDefTitleBar() {
+	deftitlebar.setSizer(&deftitlebarsizer);
+	deftitlebarsizer.setSize(1, 5);
+
+	deftitlebarbitmap.loadImage("gameicon/icon.png", false);
+	deftitlebarbitmap.width = deftitlebarbitmapwidth;
+	deftitlebarbitmap.height = deftitlebarbitmapwidth;
+
+	deftitlebartext.setText("Properties for GlistEngine");
+
+	deftitlebarminimizebutton.setButtonImageFromIcon(gGUIResources::ICON_MINIMIZEBLACK);
+	deftitlebarminimizebutton.setPressedButtonImageFromIcon(gGUIResources::ICON_MINIMIZEBLACK);
+
+	deftitlebarmaximizebutton.setButtonImageFromIcon(gGUIResources::ICON_RESTOREBLACK);
+	deftitlebarmaximizebutton.setPressedButtonImageFromIcon(gGUIResources::ICON_RESTOREBLACK);
+
+	deftitlebarexitbutton.setButtonImageFromIcon(gGUIResources::ICON_EXITBLACK);
+	deftitlebarexitbutton.setPressedButtonImageFromIcon(gGUIResources::ICON_EXITBLACK);
+
+	setMinimizeButton(&deftitlebarminimizebutton);
+	setMaximizeButton(&deftitlebarmaximizebutton);
+	setExitButton(&deftitlebarexitbutton);
+}
+
+void gGUIDialogue::initDefButtonsBar() {
+	defbuttonsbar.setSizer(&defbuttonsbarsizer);
+	defbuttonsbarsizer.setSize(1, 2);
+
+	defbuttonsbarokbutton.setTitle("OK");
 }
 
 void gGUIDialogue::setTitleBar(gGUIContainer* titleBar) {
 	this->titlebar = titleBar;
+	titlebar->width = width;
+	if (titlebar->height == 0) titlebar->height = deftitlebarheight;
 	titlebar->set(root, this, this, 0, 0, left, top - titlebar->height, titlebar->width, titlebar->height);
 }
 
@@ -108,6 +139,8 @@ gGUIContainer* gGUIDialogue::getTitleBar() {
 
 void gGUIDialogue::setButtonsBar(gGUIContainer* buttonsBar) {
 	this->buttonsbar = buttonsBar;
+	buttonsbar->width = width;
+	if (buttonsbar->height == 0) buttonsbar->height = defbuttonsbarheight;
 	buttonsbar->set(root, this, this, 0, 0, left, top + height, buttonsbar->width, buttonsbar->height);
 }
 
@@ -116,12 +149,7 @@ gGUIContainer* gGUIDialogue::getButtonsBar() {
 }
 
 void gGUIDialogue::resetTitleBar() {
-	deftitlebar.width = width;
-	deftitlebar.height = deftitlebarheight;
-
-	deftitlebar.setSizer(&deftitlebarsizer);
-	deftitlebarsizer.setSize(1, 5);
-	deftitlebarsizer.enableBorders(false);
+	setTitleBar(&deftitlebar);
 
 	float tbbitp = ((float)deftitlebarbitmapwidth + 10) / (float)deftitlebar.width;
 	float tbbutp = (float)deftitlebarbuttonwidth / (float)deftitlebar.width;
@@ -129,28 +157,17 @@ void gGUIDialogue::resetTitleBar() {
 	float tbcolproportions[5] = {tbbitp, tbtxtp, tbbutp, tbbutp, tbbutp};
 	deftitlebarsizer.setColumnProportions(tbcolproportions);
 
-	setTitleBar(&deftitlebar);
-
 	deftitlebarsizer.setControl(0, 0, &deftitlebarbitmap);
-	deftitlebarbitmap.loadImage("gameicon/icon.png", false);
-	deftitlebarbitmap.height = deftitlebarbitmapwidth;
-	deftitlebarbitmap.width = deftitlebarbitmapwidth;
 	deftitlebarbitmap.top += (deftitlebar.height - deftitlebarbitmap.height) / 2;
 	deftitlebarbitmap.left += (deftitlebar.width * tbbitp - deftitlebarbitmap.width) / 2;
 
 	deftitlebarsizer.setControl(0, 1, &deftitlebartext);
-	deftitlebartext.setText("Properties for GlistEngine");
-	deftitlebartext.height = deftitlebar.height * 0.6f;
+	deftitlebartext.height = deftitlebarbitmapwidth / 1.5f;
 	deftitlebartext.top += (deftitlebar.height - deftitlebartext.height) / 2;
 
 	deftitlebarsizer.setControl(0, 2, &deftitlebarminimizebutton);
 	deftitlebarminimizebutton.setSize(deftitlebar.height, deftitlebar.height);
-	deftitlebarminimizebutton.setButtonImageFromIcon(gGUIResources::ICON_MINIMIZEBLACK);
-	deftitlebarminimizebutton.setPressedButtonImageFromIcon(gGUIResources::ICON_MINIMIZEBLACK);
-	setMinimizeButton(&deftitlebarminimizebutton);
 
-	deftitlebarsizer.setControl(0, 3, &deftitlebarmaximizebutton);
-	deftitlebarmaximizebutton.setSize(deftitlebar.height, deftitlebar.height);
 	if (ismaximized) {
 		deftitlebarmaximizebutton.setButtonImageFromIcon(gGUIResources::ICON_RESTOREBLACK);
 		deftitlebarmaximizebutton.setPressedButtonImageFromIcon(gGUIResources::ICON_RESTOREBLACK);
@@ -159,32 +176,23 @@ void gGUIDialogue::resetTitleBar() {
 		deftitlebarmaximizebutton.setButtonImageFromIcon(gGUIResources::ICON_MAXIMIZEBLACK);
 		deftitlebarmaximizebutton.setPressedButtonImageFromIcon(gGUIResources::ICON_MAXIMIZEBLACK);
 	}
-	setMaximizeButton(&deftitlebarmaximizebutton);
+
+	deftitlebarsizer.setControl(0, 3, &deftitlebarmaximizebutton);
+	deftitlebarmaximizebutton.setSize(deftitlebar.height, deftitlebar.height);
 
 	deftitlebarsizer.setControl(0, 4, &deftitlebarexitbutton);
 	deftitlebarexitbutton.setSize(deftitlebar.height, deftitlebar.height);
-	deftitlebarexitbutton.setButtonImageFromIcon(gGUIResources::ICON_EXITBLACK);
-	deftitlebarexitbutton.setPressedButtonImageFromIcon(gGUIResources::ICON_EXITBLACK);
-	setExitButton(&deftitlebarexitbutton);
 }
 
 void gGUIDialogue::resetButtonsBar() {
-	defbuttonsbar.width = width;
-	defbuttonsbar.height = defbuttonsbarheight;
-
-	defbuttonsbar.setSizer(&defbuttonsbarsizer);
-	defbuttonsbarsizer.setSize(1, 2);
-	defbuttonsbarsizer.enableBorders(false);
+	setButtonsBar(&defbuttonsbar);
 
 	float bbbutp = ((float)defbuttonsbarbuttonwidth + 30) / (float)defbuttonsbar.width;
 	float bbempp = 1 - bbbutp;
 	float bbcolproportions[2] = {bbempp, bbbutp};
 	defbuttonsbarsizer.setColumnProportions(bbcolproportions);
 
-	setButtonsBar(&defbuttonsbar);
-
 	defbuttonsbarsizer.setControl(0, 1, &defbuttonsbarokbutton);
-	defbuttonsbarokbutton.setTitle("OK");
 	defbuttonsbarokbutton.setSize(defbuttonsbarbuttonwidth, defbuttonsbarbuttonheight);
 	defbuttonsbarokbutton.left += (defbuttonsbar.width * bbbutp - defbuttonsbarbuttonwidth) / 2;
 	defbuttonsbarokbutton.top += (defbuttonsbar.height - defbuttonsbarbuttonheight) / 2;
@@ -290,8 +298,7 @@ void gGUIDialogue::mousePressed(int x, int y, int button) {
 }
 
 void gGUIDialogue::mouseDragged(int x, int y, int button) {
-	int dx = x - dragposx; int dy = y - dragposy;
-	int sx = x - sizeposx; int sy = y - sizeposy;
+	int dx = x - dragposx; int dy = y - dragposy; int sx = x - sizeposx; int sy = y - sizeposy;
 
 	if (isdragged && x >= titlebar->left - titlebar->width && x < titlebar->left + titlebar->width && y >= titlebar->top - titlebar->height - guisizer->height && y < titlebar->top + titlebar->height + guisizer->height) {
 		left += dx;
@@ -372,8 +379,7 @@ void gGUIDialogue::mouseDragged(int x, int y, int button) {
 
 	guisizer->width = width; guisizer->height = height; guisizer->left = left; guisizer->right = right; guisizer->top = top; guisizer->bottom = bottom;
 
-	dragposx += dx; dragposy += dy;
-	sizeposx += sx; sizeposy += sy;
+	dragposx += dx; dragposy += dy; sizeposx += sx; sizeposy += sy;
 }
 
 void gGUIDialogue::mouseReleased(int x, int y, int button) {
@@ -381,8 +387,7 @@ void gGUIDialogue::mouseReleased(int x, int y, int button) {
 	if (guisizer) guisizer->mouseReleased(x, y, button);
 	if (buttonsbar) buttonsbar->mouseReleased(x, y, button);
 	if (isdragged) isdragged = false;
-	if (isleftresized) isleftresized = false; resetTitleBar(); resetButtonsBar();
-	if (isrightresized) isrightresized = false; resetTitleBar(); resetButtonsBar();
-	if (istopresized) istopresized = false; resetTitleBar(); resetButtonsBar();
-	if (isbottomresized) isbottomresized = false; resetTitleBar(); resetButtonsBar();
+	if (isleftresized || isrightresized || istopresized || isbottomresized) {
+		isleftresized = false; isrightresized = false; istopresized = false; isbottomresized = false; resetTitleBar(); resetButtonsBar();
+	}
 }
