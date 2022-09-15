@@ -18,8 +18,8 @@ public:
 	virtual ~gGUIToolbar();
 
 	enum {
-		HORIZONTAL_TOOLBAR,
-		VERTICAL_TOOLBAR
+		TOOLBAR_HORIZONTAL,
+		TOOLBAR_VERTICAL
 	};
 
 	void setToolbarType(int toolbarType);
