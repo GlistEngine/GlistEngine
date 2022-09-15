@@ -48,6 +48,7 @@ public:
 	void enableResize(bool isResizeEnabled);
 
 	void setIsMaximized(bool isMaximized);
+	void transformDialogue(int left, int top, int width, int height);
 
 	int getCursor(int x, int y);
 	void mouseMoved(int x, int y);
