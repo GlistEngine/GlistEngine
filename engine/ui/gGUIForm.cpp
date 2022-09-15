@@ -111,7 +111,7 @@ void gGUIForm::resizeToolbars() {
 void gGUIForm::resizeVerticalToolbars() {
 	for(int i = 0; i < verticaltoolbarnum; i++) {
 		verticaltoolbars[i]->set(left,
-				top + menuh + toolbarh,
+				top + menuh + toolbarh * toolbarnum,
 				verticaltoolbarw,
 				height
 			);
