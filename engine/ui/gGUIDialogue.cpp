@@ -284,8 +284,7 @@ void gGUIDialogue::mousePressed(int x, int y, int button) {
 		}
 		else {
 			isdragged = true;
-			dragposx = x;
-			dragposy = y;
+			dragposx = x; dragposy = y;
 		}
 	}
 
@@ -298,7 +297,11 @@ void gGUIDialogue::mousePressed(int x, int y, int button) {
 }
 
 void gGUIDialogue::mouseDragged(int x, int y, int button) {
-	int dx = x - dragposx; int dy = y - dragposy; int sx = x - sizeposx; int sy = y - sizeposy;
+	int dx = x - dragposx; int dy = y - dragposy;
+	int sx = x - sizeposx; int sy = y - sizeposy;
+
+	if ((isrightresized && sx < 0 && width < 400) || (isleftresized && sx > 0 && width < 400)) sx = 0;
+	if ((isbottomresized && sy < 0 && height < 100) || (istopresized && sy > 0 && height < 100)) sy = 0;
 
 	if (isdragged && x >= titlebar->left - titlebar->width && x < titlebar->left + titlebar->width && y >= titlebar->top - titlebar->height - guisizer->height && y < titlebar->top + titlebar->height + guisizer->height) {
 		left += dx;
