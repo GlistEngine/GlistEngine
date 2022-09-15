@@ -32,6 +32,7 @@ void gGUIFrame::draw() {
 //	gLogi("gGUIFrame") << "draw";
 	if(guisizer) guisizer->draw();
 	if(toolbarnum > 0) for(int i = 0; i < toolbarnum; i++) toolbars[i]->draw();
+	if(verticaltoolbarnum > 0) for(int i = 0; i < verticaltoolbarnum; i++) verticaltoolbars[i]->draw();
 	if(menubar) menubar->draw();
 	if(statusbar) statusbar->draw();
 	if(contextmenu) contextmenu->draw();
