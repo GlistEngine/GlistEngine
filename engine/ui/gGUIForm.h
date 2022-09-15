@@ -25,10 +25,16 @@ public:
 	void resizeMenuBar();
 	void addToolBar(gGUIToolbar* toolBar);
 	void resizeToolbars();
+	void resizeVerticalToolbars();
 	void setStatusBar(gGUIStatusBar* statusBar);
 	void resizeStatusBar();
 	void addContextMenu(gGUIContextMenu* contextMenu);
 	void addTreelist(gGUITreelist* treeList, int treeListx, int treeListy, int treeListw);
+
+	void setToolbarHeight(int toolbarHeight);
+	int getToolbarHeight();
+	void setVerticalToolbarWidth(int verticalToolbarWidth);
+	int getVerticalToolbarWidth();
 
 	void setSizer(gGUISizer* guiSizer);
 	void updateSizer();
@@ -59,10 +65,11 @@ protected:
 	bool isshown;
 	gGUIMenubar* menubar;
 	gGUIToolbar *toolbars[maxtoolbarnum];
+	gGUIToolbar *verticaltoolbars[maxtoolbarnum];
 	gGUIStatusBar* statusbar;
-	int toolbarnum;
+	int toolbarnum, verticaltoolbarnum;
 	int menuh;
-	int toolbarh;
+	int toolbarh, verticaltoolbarw;
 	int statusw, statush;
 	int sizerh;
 	gGUIContextMenu* contextmenu;
