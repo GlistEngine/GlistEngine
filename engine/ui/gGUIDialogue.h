@@ -16,6 +16,8 @@
 
 class gGUIDialogue: public gGUIForm {
 public:
+	static const int EVENT_NONE = 0, EVENT_MINIMIZE = 1, EVENT_MAXIMIZE = 2, EVENT_RESTORE = 3, EVENT_EXIT = 4;
+
 	gGUIDialogue();
 	virtual ~gGUIDialogue();
 
@@ -35,14 +37,8 @@ public:
 	void setMaximizeButton(gGUIImageButton* maximizeButton);
 	void setExitButton(gGUIImageButton* exitButton);
 
-	void setMinimizeEvent(bool minimizeEvent);
-	bool getMinimizeEvent();
-	void setMaximizeEvent(bool maximizeEvent);
-	bool getMaximizeEvent();
-	void setRestoreEvent(bool restoreEvent);
-	bool getRestoreEvent();
-	void setExitEvent(bool exitEvent);
-	bool getExitEvent();
+	void setButtonEvent(int buttonEvent);
+	int getButtonEvent();
 
 	void enableDrag(bool isDragEnabled);
 	void enableResize(bool isResizeEnabled);
@@ -86,6 +82,8 @@ private:
 	bool maximizeevent;
 	bool restoreevent;
 	bool exitevent;
+
+	int buttonevent;
 
 	bool minimizetrigger;
 	bool maximizetrigger;

@@ -19,10 +19,7 @@ gGUIDialogue::gGUIDialogue() {
 	maximizebutton = nullptr;
 	exitbutton = nullptr;
 
-	minimizeevent = false;
-	maximizeevent = false;
-	restoreevent = false;
-	exitevent = false;
+	buttonevent = EVENT_NONE;
 
 	minimizetrigger = false;
 	maximizetrigger = false;
@@ -189,36 +186,12 @@ void gGUIDialogue::setExitButton(gGUIImageButton* exitButton) {
 	this->exitbutton = exitButton;
 }
 
-void gGUIDialogue::setMinimizeEvent(bool minimizeEvent) {
-	this->minimizeevent = minimizeEvent;
+void gGUIDialogue::setButtonEvent(int buttonEvent) {
+	this->buttonevent = buttonEvent;
 }
 
-bool gGUIDialogue::getMinimizeEvent() {
-	return minimizeevent;
-}
-
-void gGUIDialogue::setMaximizeEvent(bool maximizeEvent) {
-	this->maximizeevent = maximizeEvent;
-}
-
-bool gGUIDialogue::getMaximizeEvent() {
-	return maximizeevent;
-}
-
-void gGUIDialogue::setRestoreEvent(bool restoreEvent) {
-	this->restoreevent = restoreEvent;
-}
-
-bool gGUIDialogue::getRestoreEvent() {
-	return restoreevent;
-}
-
-void gGUIDialogue::setExitEvent(bool exitEvent) {
-	this->exitevent = exitEvent;
-}
-
-bool gGUIDialogue::getExitEvent() {
-	return exitevent;
+int gGUIDialogue::getButtonEvent() {
+	return buttonevent;
 }
 
 void gGUIDialogue::enableDrag(bool isDragEnabled) {
@@ -361,8 +334,13 @@ void gGUIDialogue::mouseReleased(int x, int y, int button) {
 	if (isleftresized || isrightresized || istopresized || isbottomresized) {
 		isleftresized = false; isrightresized = false; istopresized = false; isbottomresized = false; resetTitleBar(); resetButtonsBar();
 	}
-	if (minimizetrigger) {minimizeevent = true; minimizetrigger = false;}
+	/* if (minimizetrigger) {minimizeevent = true; minimizetrigger = false;}
 	if (maximizetrigger) {maximizeevent = true; maximizetrigger = false;}
 	if (restoretrigger) {restoreevent = true; restoretrigger = false;}
-	if (exittrigger) {exitevent = true; exittrigger = false;}
+	if (exittrigger) {exitevent = true; exittrigger = false;} */
+
+	if (minimizetrigger) {buttonevent = EVENT_MINIMIZE; minimizetrigger = false;}
+	if (maximizetrigger) {buttonevent = EVENT_MAXIMIZE; maximizetrigger = false;}
+	if (restoretrigger) {buttonevent = EVENT_RESTORE; restoretrigger = false;}
+	if (exittrigger) {buttonevent = EVENT_EXIT; exittrigger = false;}
 }
