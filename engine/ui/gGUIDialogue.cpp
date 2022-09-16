@@ -27,8 +27,9 @@ gGUIDialogue::gGUIDialogue() {
 
 	ismaximized = false;
 	isdragged = false;
-	isleftresized = false; isrightresized = false; istopresized = false; isbottomresized = false;
 	dragposx = 0; dragposy = 0; sizeposx = 0; sizeposy = 0;
+
+	resizeposition = RESIZE_NONE;
 
 	initDefTitleBar();
 	initDefButtonsBar();
@@ -44,7 +45,7 @@ void gGUIDialogue::update() {
 void gGUIDialogue::draw() {
 	gColor oldcolor = *renderer->getColor();
 
-	if (!(isleftresized || isrightresized || istopresized || isbottomresized)) {
+	if (resizeposition == RESIZE_NONE) {
 		// TITLE BAR BACKGROUND
 		renderer->setColor(textbackgroundcolor);
 		gDrawRectangle(left, top - titlebar->height, width, titlebar->height, true);
@@ -258,10 +259,10 @@ void gGUIDialogue::mousePressed(int x, int y, int button) {
 	}
 
 	if (!ismaximized && isresizeenabled) {
-		if ((x > left - 5 && x < left + 5) && (y > titlebar->top && y < buttonsbar->bottom)) isleftresized = true; sizeposx = x;
-		if ((x > right - 5 && x < right + 5) && (y > titlebar->top && y < buttonsbar->bottom)) isrightresized = true; sizeposx = x;
-		if ((y > titlebar->top - 5 && y < titlebar->top + 5) && (x > left && x < right)) istopresized = true; sizeposy = y;
-		if ((y > buttonsbar->bottom - 5 && y < buttonsbar->bottom + 5) && (x > left && x < right)) isbottomresized = true; sizeposy = y;
+		if ((x > left - 5 && x < left + 5) && (y > titlebar->top && y < buttonsbar->bottom)) {resizeposition = RESIZE_LEFT; sizeposx = x;}
+		if ((x > right - 5 && x < right + 5) && (y > titlebar->top && y < buttonsbar->bottom)) {resizeposition = RESIZE_RIGHT; sizeposx = x;}
+		if ((y > titlebar->top - 5 && y < titlebar->top + 5) && (x > left && x < right)) {resizeposition = RESIZE_TOP; sizeposy = y;}
+		if ((y > buttonsbar->bottom - 5 && y < buttonsbar->bottom + 5) && (x > left && x < right)) {resizeposition = RESIZE_BOTTOM; sizeposy = y;}
 	}
 }
 
@@ -269,8 +270,8 @@ void gGUIDialogue::mouseDragged(int x, int y, int button) {
 	int dx = x - dragposx; int dy = y - dragposy; int sx = x - sizeposx; int sy = y - sizeposy;
 	int tleft = left; int twidth = width; int theight = height; int ttop = top;
 
-	if ((isrightresized && sx < 0 && width < 400) || (isleftresized && sx > 0 && width < 400)) sx = 0;
-	if ((isbottomresized && sy < 0 && height < 100) || (istopresized && sy > 0 && height < 100)) sy = 0;
+	if ((resizeposition == RESIZE_RIGHT && sx < 0 && width < 400) || (resizeposition == RESIZE_LEFT && sx > 0 && width < 400)) sx = 0;
+	if ((resizeposition == RESIZE_BOTTOM && sy < 0 && height < 100) || (resizeposition == RESIZE_TOP && sy > 0 && height < 100)) sy = 0;
 
 	if (isdragged && x >= titlebar->left - titlebar->width && x < titlebar->left + titlebar->width && y >= titlebar->top - titlebar->height - guisizer->height && y < titlebar->top + titlebar->height + guisizer->height) {
 		tleft += dx; ttop += dy;
@@ -312,10 +313,10 @@ void gGUIDialogue::mouseDragged(int x, int y, int button) {
 		}
 	}
 
-	if (isleftresized) {twidth -= sx; tleft += sx;}
-	if (isrightresized) {twidth += sx;}
-	if (istopresized) {theight -= sy; ttop += sy;}
-	if (isbottomresized) {theight += sy;}
+	if (resizeposition == RESIZE_LEFT) {twidth -= sx; tleft += sx;}
+	if (resizeposition == RESIZE_RIGHT) {twidth += sx;}
+	if (resizeposition == RESIZE_TOP) {theight -= sy; ttop += sy;}
+	if (resizeposition == RESIZE_BOTTOM) {theight += sy;}
 
 	transformDialogue(tleft, ttop, twidth, theight);
 
@@ -327,9 +328,8 @@ void gGUIDialogue::mouseReleased(int x, int y, int button) {
 	if (guisizer) guisizer->mouseReleased(x, y, button);
 	if (buttonsbar) buttonsbar->mouseReleased(x, y, button);
 	if (isdragged) isdragged = false;
-	if (isleftresized || isrightresized || istopresized || isbottomresized) {
-		isleftresized = false; isrightresized = false; istopresized = false; isbottomresized = false; resetTitleBar(); resetButtonsBar();
-	}
+
+	if (resizeposition != RESIZE_NONE) {resizeposition = RESIZE_NONE; resetTitleBar(); resetButtonsBar();}
 
 	if (buttontrigger == TRIGGER_MINIMIZE) {buttonevent = EVENT_MINIMIZE; buttontrigger = TRIGGER_NONE;}
 	if (buttontrigger == TRIGGER_MAXIMIZE) {buttonevent = EVENT_MAXIMIZE; buttontrigger = TRIGGER_NONE;}

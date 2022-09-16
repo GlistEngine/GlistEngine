@@ -18,6 +18,7 @@ class gGUIDialogue: public gGUIForm {
 public:
 	static const int EVENT_NONE = 0, EVENT_MINIMIZE = 1, EVENT_MAXIMIZE = 2, EVENT_RESTORE = 3, EVENT_EXIT = 4;
 	static const int TRIGGER_NONE = 0, TRIGGER_MINIMIZE = 1, TRIGGER_MAXIMIZE = 2, TRIGGER_RESTORE = 3, TRIGGER_EXIT = 4;
+	static const int RESIZE_NONE = 0, RESIZE_LEFT = 1, RESIZE_RIGHT = 2, RESIZE_TOP = 3, RESIZE_BOTTOM = 4;
 
 	gGUIDialogue();
 	virtual ~gGUIDialogue();
@@ -87,8 +88,9 @@ private:
 
 	bool ismaximized;
 	bool isdragged;
-	bool isleftresized, isrightresized, istopresized, isbottomresized;
 	int dragposx, dragposy, sizeposx, sizeposy;
+
+	int resizeposition;
 };
 
 #endif /* UI_GGUIDIALOGUE_H_ */
