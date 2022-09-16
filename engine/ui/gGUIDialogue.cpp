@@ -314,7 +314,7 @@ void gGUIDialogue::mousePressed(int x, int y, int button) {
 
 void gGUIDialogue::mouseDragged(int x, int y, int button) {
 	int dx = x - dragposx; int dy = y - dragposy; int sx = x - sizeposx; int sy = y - sizeposy;
-	int tleft = left; int tright = right; int twidth = width; int theight = height; int ttop = top; int tbottom = bottom;
+	int tleft = left; int twidth = width; int theight = height; int ttop = top;
 
 	if ((isrightresized && sx < 0 && width < 400) || (isleftresized && sx > 0 && width < 400)) sx = 0;
 	if ((isbottomresized && sy < 0 && height < 100) || (istopresized && sy > 0 && height < 100)) sy = 0;
