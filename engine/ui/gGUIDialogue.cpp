@@ -269,7 +269,7 @@ void gGUIDialogue::transformDialogue(int left, int top, int width, int height) {
 }
 
 int gGUIDialogue::getCursor(int x, int y) {
-	if (!ismaximized) {
+	if (!ismaximized && isresizeenabled) {
 		if ((x > left - 5 && x < left + 5) && (y > titlebar->top && y < buttonsbar->bottom)) return CURSOR_HRESIZE;
 		if ((x > right - 5 && x < right + 5) && (y > titlebar->top && y < buttonsbar->bottom)) return CURSOR_HRESIZE;
 		if ((y > titlebar->top - 5 && y < titlebar->top + 5) && (x > left && x < right)) return CURSOR_VRESIZE;
@@ -294,7 +294,7 @@ void gGUIDialogue::mousePressed(int x, int y, int button) {
 	if (guisizer) guisizer->mousePressed(x, y, button);
 	if (buttonsbar) buttonsbar->mousePressed(x, y, button);
 
-	if (!ismaximized && x > titlebar->left + 5 && x < titlebar->left + titlebar->width - 5 && y > titlebar->top + 5 && y < titlebar->top + titlebar->height) {
+	if (!ismaximized && isdragenabled && x > titlebar->left + 5 && x < titlebar->left + titlebar->width - 5 && y > titlebar->top + 5 && y < titlebar->top + titlebar->height) {
 		if ((minimizebutton || maximizebutton || exitbutton) && (minimizebutton->isPressed() || maximizebutton->isPressed() || exitbutton->isPressed())) {
 			isdragged = false;
 		}
@@ -304,7 +304,7 @@ void gGUIDialogue::mousePressed(int x, int y, int button) {
 		}
 	}
 
-	if (!ismaximized) {
+	if (!ismaximized && isresizeenabled) {
 		if ((x > left - 5 && x < left + 5) && (y > titlebar->top && y < buttonsbar->bottom)) isleftresized = true; sizeposx = x;
 		if ((x > right - 5 && x < right + 5) && (y > titlebar->top && y < buttonsbar->bottom)) isrightresized = true; sizeposx = x;
 		if ((y > titlebar->top - 5 && y < titlebar->top + 5) && (x > left && x < right)) istopresized = true; sizeposy = y;
