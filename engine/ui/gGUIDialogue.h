@@ -87,10 +87,10 @@ private:
 	bool restoreevent;
 	bool exitevent;
 
-	bool minimizebuttonminimizetrigger;
-	bool maximizebuttonmaximizetrigger;
-	bool maximizebuttonrestoretrigger;
-	bool exitbuttonexittrigger;
+	bool minimizetrigger;
+	bool maximizetrigger;
+	bool restoretrigger;
+	bool exittrigger;
 
 	bool isdragenabled;
 	bool isresizeenabled;

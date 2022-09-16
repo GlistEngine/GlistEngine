@@ -24,10 +24,10 @@ gGUIDialogue::gGUIDialogue() {
 	restoreevent = false;
 	exitevent = false;
 
-	minimizebuttonminimizetrigger = false;
-	maximizebuttonmaximizetrigger = false;
-	maximizebuttonrestoretrigger = false;
-	exitbuttonexittrigger = false;
+	minimizetrigger = false;
+	maximizetrigger = false;
+	restoretrigger = false;
+	exittrigger = false;
 
 	isdragenabled = true;
 	isresizeenabled = true;
@@ -46,27 +46,6 @@ gGUIDialogue::~gGUIDialogue() {
 
 void gGUIDialogue::update() {
 	if (guisizer) guisizer->update();
-
-	if (exitbutton) {
-		if (exitbuttonexittrigger && !exitbutton->isPressed())  exitevent = true; exitbuttonexittrigger = false;
-		if (exitbutton->isPressed()) exitbuttonexittrigger = true;
-	}
-
-	if (minimizebutton) {
-		if (minimizebuttonminimizetrigger && !minimizebutton->isPressed())  minimizeevent = true; minimizebuttonminimizetrigger = false;
-		if (minimizebutton->isPressed()) minimizebuttonminimizetrigger = true;
-	}
-
-	if (maximizebutton) {
-		if (ismaximized) {
-			if (maximizebuttonrestoretrigger && !maximizebutton->isPressed())  restoreevent = true; maximizebuttonrestoretrigger = false;
-			if (maximizebutton->isPressed()) maximizebuttonrestoretrigger = true;
-		}
-		else {
-			if (maximizebuttonmaximizetrigger && !maximizebutton->isPressed())  maximizeevent = true; maximizebuttonmaximizetrigger = false;
-			if (maximizebutton->isPressed()) maximizebuttonmaximizetrigger = true;
-		}
-	}
 }
 
 void gGUIDialogue::draw() {
@@ -294,6 +273,11 @@ void gGUIDialogue::mousePressed(int x, int y, int button) {
 	if (guisizer) guisizer->mousePressed(x, y, button);
 	if (buttonsbar) buttonsbar->mousePressed(x, y, button);
 
+	if (minimizebutton->isPressed()) minimizetrigger = true;
+	if (!ismaximized && maximizebutton->isPressed()) maximizetrigger = true;
+	if (ismaximized && maximizebutton->isPressed()) restoretrigger = true;
+	if (exitbutton->isPressed()) exittrigger = true;
+
 	if (!ismaximized && isdragenabled && x > titlebar->left + 5 && x < titlebar->left + titlebar->width - 5 && y > titlebar->top + 5 && y < titlebar->top + titlebar->height) {
 		if ((minimizebutton || maximizebutton || exitbutton) && (minimizebutton->isPressed() || maximizebutton->isPressed() || exitbutton->isPressed())) {
 			isdragged = false;
@@ -377,4 +361,8 @@ void gGUIDialogue::mouseReleased(int x, int y, int button) {
 	if (isleftresized || isrightresized || istopresized || isbottomresized) {
 		isleftresized = false; isrightresized = false; istopresized = false; isbottomresized = false; resetTitleBar(); resetButtonsBar();
 	}
+	if (minimizetrigger) {minimizeevent = true; minimizetrigger = false;}
+	if (maximizetrigger) {maximizeevent = true; maximizetrigger = false;}
+	if (restoretrigger) {restoreevent = true; restoretrigger = false;}
+	if (exittrigger) {exitevent = true; exittrigger = false;}
 }
