@@ -17,6 +17,7 @@
 class gGUIDialogue: public gGUIForm {
 public:
 	static const int EVENT_NONE = 0, EVENT_MINIMIZE = 1, EVENT_MAXIMIZE = 2, EVENT_RESTORE = 3, EVENT_EXIT = 4;
+	static const int TRIGGER_NONE = 0, TRIGGER_MINIMIZE = 1, TRIGGER_MAXIMIZE = 2, TRIGGER_RESTORE = 3, TRIGGER_EXIT = 4;
 
 	gGUIDialogue();
 	virtual ~gGUIDialogue();
@@ -78,17 +79,8 @@ private:
 	gGUISizer defbuttonsbarsizer;
 	gGUIButton defbuttonsbarokbutton;
 
-	bool minimizeevent;
-	bool maximizeevent;
-	bool restoreevent;
-	bool exitevent;
-
+	int buttontrigger;
 	int buttonevent;
-
-	bool minimizetrigger;
-	bool maximizetrigger;
-	bool restoretrigger;
-	bool exittrigger;
 
 	bool isdragenabled;
 	bool isresizeenabled;
