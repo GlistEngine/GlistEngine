@@ -104,6 +104,8 @@ endforeach()
 set(SRC_FILES
 	${PLUGIN_SRCS}
 	${MINGW64_DIR}/lib/sqlite3.c
+	${ENGINE_DIR}/graphics/particles/gFireParticles.cpp
+	${ENGINE_DIR}/base/gBaseParticles.cpp
 	${ENGINE_DIR}/types/gColor.cpp
 	${ENGINE_DIR}/utils/gThread.cpp
 	${ENGINE_DIR}/utils/gUtils.cpp
