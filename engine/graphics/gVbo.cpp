@@ -95,7 +95,7 @@ void gVbo::setIndexData(unsigned int* indices, int total) {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, totalindexnum * sizeof(unsigned int), indexarrayptr, GL_STATIC_DRAW);
     glBindVertexArray(0);
-    glDeleteBuffers(1, &vbo);
+    if(!isAMD) glDeleteBuffers(1, &ebo);
 }
 
 void gVbo::clear() {
