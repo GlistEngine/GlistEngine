@@ -19,7 +19,7 @@ gGUIDialogue::gGUIDialogue() {
 	maximizebutton = nullptr;
 	exitbutton = nullptr;
 
-	buttontrigger = TRIGGER_NONE;
+	buttontrigger = EVENT_NONE;
 	buttonevent = EVENT_NONE;
 
 	isdragenabled = true;
@@ -243,10 +243,10 @@ void gGUIDialogue::mousePressed(int x, int y, int button) {
 	if (guisizer) guisizer->mousePressed(x, y, button);
 	if (buttonsbar) buttonsbar->mousePressed(x, y, button);
 
-	if (minimizebutton->isPressed()) buttontrigger = TRIGGER_MINIMIZE;
-	if (!ismaximized && maximizebutton->isPressed()) buttontrigger = TRIGGER_MAXIMIZE;
-	if (ismaximized && maximizebutton->isPressed()) buttontrigger = TRIGGER_RESTORE;
-	if (exitbutton->isPressed()) buttontrigger = TRIGGER_EXIT;
+	if (minimizebutton->isPressed()) buttontrigger = EVENT_MINIMIZE;
+	if (!ismaximized && maximizebutton->isPressed()) buttontrigger = EVENT_MAXIMIZE;
+	if (ismaximized && maximizebutton->isPressed()) buttontrigger = EVENT_RESTORE;
+	if (exitbutton->isPressed()) buttontrigger = EVENT_EXIT;
 
 	if (!ismaximized && isdragenabled && x > titlebar->left + 5 && x < titlebar->left + titlebar->width - 5 && y > titlebar->top + 5 && y < titlebar->top + titlebar->height) {
 		if ((minimizebutton || maximizebutton || exitbutton) && (minimizebutton->isPressed() || maximizebutton->isPressed() || exitbutton->isPressed())) {
@@ -331,8 +331,8 @@ void gGUIDialogue::mouseReleased(int x, int y, int button) {
 
 	if (resizeposition != RESIZE_NONE) {resizeposition = RESIZE_NONE; resetTitleBar(); resetButtonsBar();}
 
-	if (buttontrigger == TRIGGER_MINIMIZE) {buttonevent = EVENT_MINIMIZE; buttontrigger = TRIGGER_NONE;}
-	if (buttontrigger == TRIGGER_MAXIMIZE) {buttonevent = EVENT_MAXIMIZE; buttontrigger = TRIGGER_NONE;}
-	if (buttontrigger == TRIGGER_RESTORE) {buttonevent = EVENT_RESTORE; buttontrigger = TRIGGER_NONE;}
-	if (buttontrigger == TRIGGER_EXIT) {buttonevent = EVENT_EXIT; buttontrigger = TRIGGER_NONE;}
+	if (buttontrigger == EVENT_MINIMIZE) {buttonevent = EVENT_MINIMIZE; buttontrigger = EVENT_NONE;}
+	if (buttontrigger == EVENT_MAXIMIZE) {buttonevent = EVENT_MAXIMIZE; buttontrigger = EVENT_NONE;}
+	if (buttontrigger == EVENT_RESTORE) {buttonevent = EVENT_RESTORE; buttontrigger = EVENT_NONE;}
+	if (buttontrigger == EVENT_EXIT) {buttonevent = EVENT_EXIT; buttontrigger = EVENT_NONE;}
 }
