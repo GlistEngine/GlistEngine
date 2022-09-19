@@ -10,6 +10,8 @@
 
 
 gGUIDialogue::gGUIDialogue() {
+	isdialogueactive = false;
+
 	guisizer = nullptr;
 
 	titlebar = nullptr;
@@ -63,6 +65,14 @@ void gGUIDialogue::draw() {
 	gDrawLine(right, top - titlebar->height, right, bottom + buttonsbar->height);
 
 	renderer->setColor(&oldcolor);
+}
+
+void gGUIDialogue::setIsDialogueActive(bool isDialogueActive) {
+	this->isdialogueactive = isDialogueActive;
+}
+
+bool gGUIDialogue::getIsDialogueActive() {
+	return isdialogueactive;
 }
 
 void gGUIDialogue::initDefTitleBar() {
