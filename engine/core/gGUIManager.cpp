@@ -108,9 +108,8 @@ void gGUIManager::mouseMoved(int x, int y) {
 void gGUIManager::mousePressed(int x, int y, int button) {
 	for (int i = 0; i < dialogues.size(); i++) {
 		if (!dialogues[i]->getIsDialogueActive()) currentframe->mousePressed(x, y, button);
-		if (dialogues[i]->getIsDialogueActive()) selecteddialogue = dialogues[i];
+		if (dialogues[i]->getIsDialogueActive()) dialogues[i]->mousePressed(x, y, button);
 	}
-	if (selecteddialogue) selecteddialogue->mousePressed(x, y, button);
 }
 
 void gGUIManager::mouseDragged(int x, int y, int button) {
