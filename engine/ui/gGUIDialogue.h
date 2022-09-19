@@ -60,12 +60,8 @@ private:
 	gGUIImageButton* maximizebutton;
 	gGUIImageButton* exitbutton;
 
-	static const int deftitlebarheight = 27;
-	static const int deftitlebarbitmapwidth = 24;
-	static const int deftitlebarbuttonwidth = 48;
-	static const int defbuttonsbarheight = 45;
-	static const int defbuttonsbarbuttonwidth = 100;
-	static const int defbuttonsbarbuttonheight = 27;
+	static const int deftitlebarh = 27, deftitlebarbitmapw = 24, deftitlebarbuttonw = 48;
+	static const int defbuttonsbarh = 45, defbuttonsbarbuttonw = 100, defbuttonsbarbuttonh = 27;
 
 	gGUIContainer deftitlebar;
 	gGUISizer deftitlebarsizer;
@@ -79,14 +75,11 @@ private:
 	gGUISizer defbuttonsbarsizer;
 	gGUIButton defbuttonsbarokbutton;
 
-	int buttontrigger;
-	int buttonevent;
+	int buttontrigger, buttonevent;
 
-	bool isdragenabled;
-	bool isresizeenabled;
+	bool isdragenabled, isresizeenabled;
+	bool ismaximized, isdragged;
 
-	bool ismaximized;
-	bool isdragged;
 	int dragposx, dragposy, sizeposx, sizeposy;
 
 	int resizeposition;

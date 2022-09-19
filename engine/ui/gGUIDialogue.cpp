@@ -19,14 +19,11 @@ gGUIDialogue::gGUIDialogue() {
 	maximizebutton = nullptr;
 	exitbutton = nullptr;
 
-	buttontrigger = EVENT_NONE;
-	buttonevent = EVENT_NONE;
+	buttontrigger = EVENT_NONE; buttonevent = EVENT_NONE;
 
-	isdragenabled = true;
-	isresizeenabled = true;
+	isdragenabled = true; isresizeenabled = true;
+	ismaximized = false; isdragged = false;
 
-	ismaximized = false;
-	isdragged = false;
 	dragposx = 0; dragposy = 0; sizeposx = 0; sizeposy = 0;
 
 	resizeposition = RESIZE_NONE;
@@ -73,8 +70,8 @@ void gGUIDialogue::initDefTitleBar() {
 	deftitlebarsizer.setSize(1, 5);
 
 	deftitlebarbitmap.loadImage("gameicon/icon.png", false);
-	deftitlebarbitmap.width = deftitlebarbitmapwidth;
-	deftitlebarbitmap.height = deftitlebarbitmapwidth;
+	deftitlebarbitmap.width = deftitlebarbitmapw;
+	deftitlebarbitmap.height = deftitlebarbitmapw;
 
 	deftitlebartext.setText("Properties for GlistEngine");
 
@@ -102,7 +99,7 @@ void gGUIDialogue::initDefButtonsBar() {
 void gGUIDialogue::setTitleBar(gGUIContainer* titleBar) {
 	this->titlebar = titleBar;
 	titlebar->width = width;
-	if (titlebar->height == 0) titlebar->height = deftitlebarheight;
+	if (titlebar->height == 0) titlebar->height = deftitlebarh;
 	titlebar->set(root, this, this, 0, 0, left, top - titlebar->height, titlebar->width, titlebar->height);
 }
 
@@ -113,7 +110,7 @@ gGUIContainer* gGUIDialogue::getTitleBar() {
 void gGUIDialogue::setButtonsBar(gGUIContainer* buttonsBar) {
 	this->buttonsbar = buttonsBar;
 	buttonsbar->width = width;
-	if (buttonsbar->height == 0) buttonsbar->height = defbuttonsbarheight;
+	if (buttonsbar->height == 0) buttonsbar->height = defbuttonsbarh;
 	buttonsbar->set(root, this, this, 0, 0, left, top + height, buttonsbar->width, buttonsbar->height);
 }
 
@@ -124,8 +121,8 @@ gGUIContainer* gGUIDialogue::getButtonsBar() {
 void gGUIDialogue::resetTitleBar() {
 	setTitleBar(&deftitlebar);
 
-	float tbbitp = ((float)deftitlebarbitmapwidth + 10) / (float)deftitlebar.width;
-	float tbbutp = (float)deftitlebarbuttonwidth / (float)deftitlebar.width;
+	float tbbitp = ((float)deftitlebarbitmapw + 10) / (float)deftitlebar.width;
+	float tbbutp = (float)deftitlebarbuttonw / (float)deftitlebar.width;
 	float tbtxtp = 1 - (tbbitp + 3 * tbbutp);
 	float tbcolproportions[5] = {tbbitp, tbtxtp, tbbutp, tbbutp, tbbutp};
 	deftitlebarsizer.setColumnProportions(tbcolproportions);
@@ -135,7 +132,7 @@ void gGUIDialogue::resetTitleBar() {
 	deftitlebarbitmap.left += (deftitlebar.width * tbbitp - deftitlebarbitmap.width) / 2;
 
 	deftitlebarsizer.setControl(0, 1, &deftitlebartext);
-	deftitlebartext.height = deftitlebarbitmapwidth / 1.5f;
+	deftitlebartext.height = deftitlebarbitmapw / 1.5f;
 	deftitlebartext.top += (deftitlebar.height - deftitlebartext.height) / 2;
 
 	deftitlebarsizer.setControl(0, 2, &deftitlebarminimizebutton);
@@ -160,15 +157,15 @@ void gGUIDialogue::resetTitleBar() {
 void gGUIDialogue::resetButtonsBar() {
 	setButtonsBar(&defbuttonsbar);
 
-	float bbbutp = ((float)defbuttonsbarbuttonwidth + 30) / (float)defbuttonsbar.width;
+	float bbbutp = ((float)defbuttonsbarbuttonw + 30) / (float)defbuttonsbar.width;
 	float bbempp = 1 - bbbutp;
 	float bbcolproportions[2] = {bbempp, bbbutp};
 	defbuttonsbarsizer.setColumnProportions(bbcolproportions);
 
 	defbuttonsbarsizer.setControl(0, 1, &defbuttonsbarokbutton);
-	defbuttonsbarokbutton.setSize(defbuttonsbarbuttonwidth, defbuttonsbarbuttonheight);
-	defbuttonsbarokbutton.left += (defbuttonsbar.width * bbbutp - defbuttonsbarbuttonwidth) / 2;
-	defbuttonsbarokbutton.top += (defbuttonsbar.height - defbuttonsbarbuttonheight) / 2;
+	defbuttonsbarokbutton.setSize(defbuttonsbarbuttonw, defbuttonsbarbuttonh);
+	defbuttonsbarokbutton.left += (defbuttonsbar.width * bbbutp - defbuttonsbarbuttonw) / 2;
+	defbuttonsbarokbutton.top += (defbuttonsbar.height - defbuttonsbarbuttonh) / 2;
 }
 
 void gGUIDialogue::setMinimizeButton(gGUIImageButton* minimizeButton) {
@@ -210,10 +207,10 @@ void gGUIDialogue::transformDialogue(int left, int top, int width, int height) {
 	guisizer->left = this->left; guisizer->top = this->top; guisizer->width = this->width; guisizer->height = this->height;
 	guisizer->right = guisizer->left + guisizer->width; guisizer->bottom = guisizer->top + guisizer->height;
 
-	titlebar->left = left; titlebar->top = top - deftitlebarheight; titlebar->width = width; titlebar->height = deftitlebarheight;
+	titlebar->left = left; titlebar->top = top - deftitlebarh; titlebar->width = width; titlebar->height = deftitlebarh;
 	titlebar->right = titlebar->left + titlebar->width; titlebar->bottom = titlebar->top + titlebar->bottom;
 
-	buttonsbar->left = left; buttonsbar->top = top + height; buttonsbar->width = width; buttonsbar->height = defbuttonsbarheight;
+	buttonsbar->left = left; buttonsbar->top = top + height; buttonsbar->width = width; buttonsbar->height = defbuttonsbarh;
 	buttonsbar->right = buttonsbar->left + buttonsbar->width; buttonsbar->bottom = buttonsbar->top + buttonsbar->height;
 }
 
