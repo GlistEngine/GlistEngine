@@ -89,6 +89,7 @@ private:
 	void resetTheme(int guiTheme);
 
 	gGUISizer defdialoguesizer;
+
 	std::vector<gGUIDialogue*> dialogues;
 	gGUIDialogue* selecteddialogue;
 

@@ -13,6 +13,7 @@
 gGUIManager::gGUIManager(gBaseApp* root) {
 	this->root = root;
 	isframeset = false;
+	selecteddialogue = nullptr;
 	loadThemes();
 	resetTheme(GUITHEME_LIGHT);
 	if(root->getAppManager()->getWindowMode() == G_WINDOWMODE_GUIAPP) {
@@ -64,7 +65,6 @@ void gGUIManager::setupDialogue(gGUIDialogue* dialogue) {
 	dialogue->resetTitleBar();
 	dialogue->resetButtonsBar();
 
-	dialogue->setIsDialogueActive(false);
 	dialogues.push_back(dialogue);
 }
 
@@ -106,18 +106,13 @@ void gGUIManager::mouseMoved(int x, int y) {
 }
 
 void gGUIManager::mousePressed(int x, int y, int button) {
-	for (int i = 0; i < dialogues.size(); i++) {
-		if (!dialogues[i]->getIsDialogueActive()) currentframe->mousePressed(x, y, button);
-		if (dialogues[i]->getIsDialogueActive()) dialogues[i]->mousePressed(x, y, button);
-	}
+	if (selecteddialogue == nullptr) currentframe->mousePressed(x, y, button);
+	else selecteddialogue->mousePressed(x, y, button);
 }
 
 void gGUIManager::mouseDragged(int x, int y, int button) {
-	for (int i = 0; i < dialogues.size(); i++) {
-		if (!dialogues[i]->getIsDialogueActive()) currentframe->mouseDragged(x, y, button);
-		if (dialogues[i]->getIsDialogueActive()) selecteddialogue = dialogues[i];
-	}
-	if (selecteddialogue) selecteddialogue->mouseDragged(x, y, button);
+	if (selecteddialogue == nullptr) currentframe->mouseDragged(x, y, button);
+	else selecteddialogue->mouseDragged(x, y, button);
 }
 
 void gGUIManager::mouseReleased(int x, int y, int button) {
@@ -156,45 +151,49 @@ void gGUIManager::windowResized(int w, int h) {
 
 void gGUIManager::update() {
 	currentframe->update();
-	for (int i = 0; i < dialogues.size(); i++) {
-		if (dialogues[i]->getIsDialogueActive()) {
-			dialogues[i]->update();
-			if (dialogues[i]->getButtonEvent() == gGUIDialogue::EVENT_EXIT) {
-				dialogues[i]->setIsDialogueActive(false);
-				dialogues[i]->setButtonEvent(gGUIDialogue::EVENT_NONE);
-			}
-			if (dialogues[i]->getButtonEvent() == gGUIDialogue::EVENT_MINIMIZE) {
-				dialogues[i]->setIsDialogueActive(false);
-				dialogues[i]->setButtonEvent(gGUIDialogue::EVENT_NONE);
-			}
-			if (dialogues[i]->getButtonEvent() == gGUIDialogue::EVENT_MAXIMIZE) {
-				int titlebarheight = dialogues[i]->getTitleBar()->height;
-				int buttonsbarheight = dialogues[i]->getButtonsBar()->height;
-				int twidth = root->getAppManager()->getCurrentCanvas()->getScreenWidth();
-				int theight = root->getAppManager()->getCurrentCanvas()->getScreenHeight() - titlebarheight - buttonsbarheight;
-				int tleft = 0;
-				int ttop = titlebarheight;
-				dialogues[i]->transformDialogue(tleft, ttop, twidth, theight);
 
-				dialogues[i]->setIsMaximized(true);
+	for (int i = dialogues.size() - 1; i >= 0; i--) {
+		if (dialogues[i]->getIsDialogueActive()) {selecteddialogue = dialogues[i]; break;}
+		selecteddialogue = nullptr;
+	}
 
-				dialogues[i]->resetTitleBar();
-				dialogues[i]->resetButtonsBar();
-				dialogues[i]->setButtonEvent(gGUIDialogue::EVENT_NONE);
-			}
-			if (dialogues[i]->getButtonEvent() == gGUIDialogue::EVENT_RESTORE) {
-				int twidth = root->getAppManager()->getCurrentCanvas()->getScreenWidth() / 1 * 0.84f;
-				int theight = root->getAppManager()->getCurrentCanvas()->getScreenHeight() / 1 * 0.84f;
-				int tleft = (root->getAppManager()->getCurrentCanvas()->getScreenWidth() - twidth) / 2;
-				int ttop = (root->getAppManager()->getCurrentCanvas()->getScreenHeight() - theight) / 2;
-				dialogues[i]->transformDialogue(tleft, ttop, twidth, theight);
+	if (selecteddialogue != nullptr) {
+		selecteddialogue->update();
+		if (selecteddialogue->getButtonEvent() == gGUIDialogue::EVENT_EXIT) {
+			selecteddialogue->setIsDialogueActive(false);
+			selecteddialogue->setButtonEvent(gGUIDialogue::EVENT_NONE);
+		}
+		if (selecteddialogue->getButtonEvent() == gGUIDialogue::EVENT_MINIMIZE) {
+			selecteddialogue->setIsDialogueActive(false);
+			selecteddialogue->setButtonEvent(gGUIDialogue::EVENT_NONE);
+		}
+		if (selecteddialogue->getButtonEvent() == gGUIDialogue::EVENT_MAXIMIZE) {
+			int titlebarheight = selecteddialogue->getTitleBar()->height;
+			int buttonsbarheight = selecteddialogue->getButtonsBar()->height;
+			int twidth = root->getAppManager()->getCurrentCanvas()->getScreenWidth();
+			int theight = root->getAppManager()->getCurrentCanvas()->getScreenHeight() - titlebarheight - buttonsbarheight;
+			int tleft = 0;
+			int ttop = titlebarheight;
+			selecteddialogue->transformDialogue(tleft, ttop, twidth, theight);
 
-				dialogues[i]->setIsMaximized(false);
+			selecteddialogue->setIsMaximized(true);
 
-				dialogues[i]->resetTitleBar();
-				dialogues[i]->resetButtonsBar();
-				dialogues[i]->setButtonEvent(gGUIDialogue::EVENT_NONE);
-			}
+			selecteddialogue->resetTitleBar();
+			selecteddialogue->resetButtonsBar();
+			selecteddialogue->setButtonEvent(gGUIDialogue::EVENT_NONE);
+		}
+		if (selecteddialogue->getButtonEvent() == gGUIDialogue::EVENT_RESTORE) {
+			int twidth = root->getAppManager()->getCurrentCanvas()->getScreenWidth() / 1 * 0.84f;
+			int theight = root->getAppManager()->getCurrentCanvas()->getScreenHeight() / 1 * 0.84f;
+			int tleft = (root->getAppManager()->getCurrentCanvas()->getScreenWidth() - twidth) / 2;
+			int ttop = (root->getAppManager()->getCurrentCanvas()->getScreenHeight() - theight) / 2;
+			selecteddialogue->transformDialogue(tleft, ttop, twidth, theight);
+
+			selecteddialogue->setIsMaximized(false);
+
+			selecteddialogue->resetTitleBar();
+			selecteddialogue->resetButtonsBar();
+			selecteddialogue->setButtonEvent(gGUIDialogue::EVENT_NONE);
 		}
 	}
 }
