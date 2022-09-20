@@ -5,6 +5,22 @@
  *      Author: Umut Can
  */
 
+/* INSTRUCTIONS ON HOW TO USE
+ *
+ * - After declaring a gGUIDialogue object, pass the same object as an argument to gGUIManager's "setupDialogue(gGUIDialogue* dialogue)" function.
+ * This function will initialize the object's dimensions and sizer before pushing it to an array of gGUIDialogue objects. By default, title bar and
+ * buttons bar of the same object will also be initialized within the same function. It should be noted that the gGUIDialogue objects pushed later
+ * will be drawn on top of the ones pushed earlier (if the objects have the "isdialogueactive" boolean variable set as TRUE).
+ *
+ * EX. "root->getAppManager()->getGUIManager()->setupDialogue(&dialogue);"
+ *
+ * - In order to draw the gGUIDialogue object's elements on the canvas (or remove the elements from the canvas), we need to call gGUIDialogue's
+ * "setIsDialogueActive(bool isDialogueActive)" function.
+ *
+ * EX. "dialogue.setIsDialogueActive(true);"
+ *
+ */
+
 #ifndef UI_GGUIDIALOGUE_H_
 #define UI_GGUIDIALOGUE_H_
 
