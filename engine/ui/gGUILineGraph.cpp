@@ -167,7 +167,6 @@ void gGUILineGraph::addPointToLine(int lineindex, float x, float y) {
 		if(newmax % (labelcounty - 1) == 0) setMaxY(newmax);
 		else setMaxY(newmax + labelcounty - 1 - (newmax % (labelcounty - 1)));
 	}
-	gLogi("max") << maxx << " " << maxy;
 	int pointcount = graphlines[lineindex].size();
 	if(pointcount == 0) {
 		graphlines[lineindex].push_back({x, y, axisx1 + axisxw * x / (maxx - minx), axisy2 - axisyh * y / (maxy - miny)});
@@ -214,7 +213,7 @@ void gGUILineGraph::drawLabels() {
 
 	// Draw the labels for x-axis
 	float xpoint = 0;
-	int labelcountx = labelsx.size();
+	int labelcountx = labelsx.size() - 1;
 	for(int i = 0; i < labelcountx; i++) {
 		xpoint = i * labelwidthx;
 		renderer->setColor(backgroundcolor);
@@ -222,7 +221,9 @@ void gGUILineGraph::drawLabels() {
 		else gDrawLine(axisx1 + xpoint, axisy2 + 10, axisx1 + xpoint, axisy2 - axisyh);
 
 		renderer->setColor(fontcolor);
-		if(i > 0) font->drawText(std::to_string(labelsx[i]), axisx1 + xpoint - 6, axisy2 + 25);
+		if(i > 0) {
+			font->drawText(std::to_string(labelsx[i]), axisx1 + xpoint - 6, axisy2 + 25);
+		}
 	}
 //	font->drawText(axisxtitle, axisx1 + axisxw / 2, axisy2 + 40);
 	// Draw the labels for y-axis

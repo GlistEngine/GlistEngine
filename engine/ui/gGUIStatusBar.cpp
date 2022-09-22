@@ -25,7 +25,7 @@ gGUIStatusBar::gGUIStatusBar() {
 	textx[2] = textx[1] + statusbarw / 6;
 	textx[3] = textx[2] + statusbarw / 6;
 	for (int order = 0; order < textobjectsize; ++order) {
-		text[order] = "Example";
+		text[order] = "";
 		texty[order] = statusbary + statusbarh / 2;
 		textsliderx[order] = textx[order] - 10;
 		textslidery[order] = statusbary;
@@ -35,6 +35,10 @@ gGUIStatusBar::gGUIStatusBar() {
 }
 gGUIStatusBar::~gGUIStatusBar() {
 
+}
+
+void gGUIStatusBar::setText(int index, std::string text) {
+	this->text[index] = text;
 }
 
 void gGUIStatusBar::draw() {
