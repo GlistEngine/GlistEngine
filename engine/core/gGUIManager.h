@@ -43,11 +43,8 @@ public:
 	int getTheme();
 
 	void setCurrentFrame(gGUIFrame* currentFrame);
-	void setActiveDialogue(gGUIDialogue* activeDialogue);
+	void setupDialogue(gGUIDialogue* dialogue);
 	gGUIFrame* getCurrentFrame();
-	gGUIDialogue* getActiveDialogue();
-
-	void setIsDialogueActive(bool isactive);
 
 	void keyPressed(int key);
 	void keyReleased(int key);
@@ -65,12 +62,10 @@ public:
 	void draw();
 
 	bool isframeset;
-	bool isdialogueactive;
 
 private:
 	gBaseApp* root;
 	gGUIFrame* currentframe;
-	gGUIDialogue* activedialogue;
 	gGUIFrame emptyframe;
 	gGUISizer emptysizer;
 	int guitheme;
@@ -94,6 +89,10 @@ private:
 	void resetTheme(int guiTheme);
 
 	gGUISizer defdialoguesizer;
+
+	std::vector<gGUIDialogue*> dialogues;
+	gGUIDialogue* selecteddialogue;
+
 };
 
 #endif /* CORE_GGUIMANAGER_H_ */
