@@ -45,7 +45,7 @@ void gGUIGrid::set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIO
 	textbox.set(root, this, this, 0, 0, gridx + (gridboxw / 2) + 1, gridy + gridboxh - 5, gridboxw - 6, gridboxh);
 	textbox.setSize(gridboxw - 6, gridboxh - 2);
 	textbox.enableBackground(false);
-	gLogi("Textbox") << textbox.left << " " << textbox.top << " " << textbox.right << " " << textbox.bottom;
+//	gLogi("Grid") << "Textbox:" << textbox.left << " " << textbox.top << " " << textbox.right << " " << textbox.bottom;
 }
 
 void gGUIGrid::setGrid(int rowNum, int columnNum) {
@@ -94,12 +94,12 @@ void gGUIGrid::showCells() {
 	int cellindexcounter = 0;
 	for(int i = 0; i < rownum; i++) {
 		for(int j = 0; j < columnnum; j++) {
-			gLogi("Cell") << "cellx: "<< allcells.at(cellindexcounter).cellx
-				<< " celly: " << allcells.at(cellindexcounter).celly
-				<< " cellrowno: " << allcells.at(cellindexcounter).cellrowno
-				<< " cellcolumnno: " << allcells.at(cellindexcounter).cellcolumnno
-				<< " cellcontent: " << allcells.at(cellindexcounter).cellcontent
-				<< " celltype:" << allcells.at(cellindexcounter).celltype;
+//			gLogi("Grid") << "cellx: "<< allcells.at(cellindexcounter).cellx
+//				<< " celly: " << allcells.at(cellindexcounter).celly
+//				<< " cellrowno: " << allcells.at(cellindexcounter).cellrowno
+//				<< " cellcolumnno: " << allcells.at(cellindexcounter).cellcolumnno
+//				<< " cellcontent: " << allcells.at(cellindexcounter).cellcontent
+//				<< " celltype:" << allcells.at(cellindexcounter).celltype;
 			cellindexcounter++;
 		}
 	}
@@ -107,13 +107,13 @@ void gGUIGrid::showCells() {
 
 void gGUIGrid::showCell(int rowNo , int columnNo) {
 	int cellindex = columnNo + (rowNo  * columnnum);
-	gLogi("cellindex") << cellindex;
-	gLogi("Cell") << "cellx: "<< allcells.at(cellindex).cellx
-		<< " celly: " << allcells.at(cellindex).celly
-		<< " cellrowno: " << allcells.at(cellindex).cellrowno
-		<< " cellcolumnno: " << allcells.at(cellindex).cellcolumnno
-		<< " cellcontent: " << allcells.at(cellindex).cellcontent
-		<< " celltype: " << allcells.at(cellindex).celltype;
+//	gLogi("Grid") << "cellindex:" << cellindex;
+//	gLogi("Grid") << "cellx: "<< allcells.at(cellindex).cellx
+//		<< " celly: " << allcells.at(cellindex).celly
+//		<< " cellrowno: " << allcells.at(cellindex).cellrowno
+//		<< " cellcolumnno: " << allcells.at(cellindex).cellcolumnno
+//		<< " cellcontent: " << allcells.at(cellindex).cellcontent
+//		<< " celltype: " << allcells.at(cellindex).celltype;
 }
 
 void gGUIGrid::checkCellType(int cellIndex) {
@@ -131,7 +131,7 @@ void gGUIGrid::fillCell(int rowNo, int columnNo, std::string tempstr) { //when r
 	allcells.at(cellindex).cellcontent = tempstr;
 	allcells.at(cellindex).showncontent = tempstr;
 	bool isempty = (tempstr == "");
-//	gLogi("GameCanvas") << isempty;
+//	gLogi("Grid") << "isempty:" << isempty;
 
 	checkCellType(cellindex);
 	// Check left cell & update that cell's shown content if necessary
@@ -214,7 +214,7 @@ void gGUIGrid::fillCell(int rowNo, int columnNo, std::string tempstr) { //when r
 		}
 
 		if(allcells.at(cellindex).showncontent == "") {
-			gLogi("fill");
+//			gLogi("Grid");
 		}
 	}
 }
@@ -312,7 +312,7 @@ void gGUIGrid::mousePressed(int x, int y, int button) {
 		clicktime = gGetSystemTimeMillis();
 		if(clicktime - previousclicktime <= clicktimediff) {
 			isdoubleclicked = true;
-			gLogi("GameCanvas") << "doubleclicked.";
+//			gLogi("Grid") << "doubleclicked.";
 		} else isdoubleclicked = false;
 		if(isdoubleclicked) {
 			textbox.cleanText();
@@ -335,7 +335,7 @@ void gGUIGrid::mouseReleased(int x, int y, int button) {
 }
 
 void gGUIGrid::mouseDragged(int x, int y, int button) {
-	gLogi("GameCanvas") << x << " " << y;
+//	gLogi("Grid") << x << " " << y;
 	if(istextboxactive) textbox.mouseDragged((x - left), (y - top - firsty), button);
 }
 
