@@ -6,8 +6,8 @@
  */
 
 #include "gGUIGrid.h"
-const int gGUIGrid::SELECTEDBOX_X = 0;
-const int gGUIGrid::SELECTEDBOX_Y = 1;
+//const int gGUIGrid::SELECTEDBOX_X = 0;
+//const int gGUIGrid::SELECTEDBOX_Y = 1;
 
 gGUIGrid::gGUIGrid() {
 //	gridsizer.setSize(10,10);
@@ -20,12 +20,16 @@ gGUIGrid::gGUIGrid() {
 	columnnum = 10;
 	gridw = gridboxw * columnnum;
 	gridh = gridboxh * rownum;
-	selectedbox[0] = 0;
-	selectedbox[1] = 0;
+	selectedbox = 0;
 	isselected = false;
 	totalh = rownum * gridboxh;
 	rowtitle = 1;
 	columntitle = 65; // 'A' char in ASCII
+	clicktimediff = 250;
+	clicktime = gGetSystemTimeMillis();
+	previousclicktime = clicktime - 2 * clicktimediff;
+	firstclicktime = previousclicktime - 2 * clicktimediff;
+	isdoubleclicked = false;
 
 //	setSizer(&gridsizer);
 //	gridsizer.setControl(1, 0, &slider);
@@ -41,18 +45,18 @@ void gGUIGrid::set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIO
 	totalh = h;
 	totalh = rownum * gridboxh;
 	gGUIScrollable::set(root, topParentGUIObject, parentGUIObject, parentSlotLineNo, parentSlotColumnNo, x, y, w, h);
-	gGUIScrollable::setDimensions(w, h);
-	textbox.set(root, topParentGUIObject, parentGUIObject, parentSlotLineNo, parentSlotColumnNo, gridx + (gridboxw / 2), gridy + gridboxh, gridboxw, gridboxh);
+	setDimensions(w, h);
+	textbox.set(root, this, this, 0, 0, gridx + (gridboxw / 2) + 1, gridy + gridboxh - 5, gridboxw - 6, gridboxh);
+	textbox.setSize(gridboxw - 6, gridboxh - 2);
 	textbox.enableBackground(false);
-
-//	gridx = left;
-//	gridy = top;
-//	setGrid(linenum, columnnum);
+	gLogi("Textbox") << textbox.left << " " << textbox.top << " " << textbox.right << " " << textbox.bottom;
 }
 
 void gGUIGrid::setGrid(int rowNum, int columnNum) {
 	rownum = rowNum;
 	columnnum = columnNum;
+	gridw = gridboxw * columnnum;
+	gridh = gridboxh * rownum;
 	createCells();
 }
 
@@ -64,6 +68,11 @@ void gGUIGrid::setcolumnNum(int columnNum) {
 	columnnum = columnNum;
 }
 
+void gGUIGrid::update() {
+	textbox.update();
+//	gLogi("Textbox") << textbox.left << " " << textbox.top << " " << textbox.right << " " << textbox.bottom;
+}
+
 void gGUIGrid::createCells() {
 	Cell tempcell;
 	for(int i = 0; i < rownum; i++) {
@@ -73,25 +82,17 @@ void gGUIGrid::createCells() {
 			tempcell.cellrowno = i;
 			tempcell.cellcolumnno = j;
 			tempcell.cellcontent = "";
-//			gLogi("x") << tempcell.cellx;
-//			gLogi("y") << tempcell.celly;
-//			gLogi("cellrowno") << tempcell.cellrowno;
-//			gLogi("cellcolumnno") << tempcell.cellcolumnno;
-//			gLogi("content") << tempcell.cellcontent << "\n";
-
 			allcells.push_back(tempcell);
-
 		}
 	}
-//	showCells();
-//	showCell(24, 8);
 }
 
-void gGUIGrid::createTextBox(int x, int y) {
-//	textbox.set(root, topparent, parent, parentslotlineno, parentslotcolumnno, x, y, gridboxw, gridboxh);
-//	gLogi("gamecanvas") << "textbox is on";
-	textbox.addLeftMargin(x - left);
-	textbox.addTopMargin(y - top);
+void gGUIGrid::createTextBox() {
+	textbox.set(root, this, this, 0, 0, allcells.at(selectedbox).cellx + 1, allcells.at(selectedbox).celly - 2, gridboxw - 10, gridboxh - 2);
+	if(allcells.at(selectedbox).cellcontent != "") {
+		textbox.setText(allcells.at(selectedbox).cellcontent);
+		allcells.at(selectedbox).showncontent = "";
+	} //else textbox.cleanText();
 }
 
 void gGUIGrid::showCells() {
@@ -103,39 +104,129 @@ void gGUIGrid::showCells() {
 				<< " cellrowno: " << allcells.at(cellindexcounter).cellrowno
 				<< " cellcolumnno: " << allcells.at(cellindexcounter).cellcolumnno
 				<< " cellcontent: " << allcells.at(cellindexcounter).cellcontent
-				<< "cellindexcounter: " << cellindexcounter  << "\n";
+				<< " celltype:" << allcells.at(cellindexcounter).celltype;
 			cellindexcounter++;
 		}
 	}
 }
 
-void gGUIGrid::showCell(int rowNo , int columnNo) { // 2,4
+void gGUIGrid::showCell(int rowNo , int columnNo) {
 	int cellindex = columnNo + (rowNo  * columnnum);
 	gLogi("cellindex") << cellindex;
 	gLogi("Cell") << "cellx: "<< allcells.at(cellindex).cellx
 		<< " celly: " << allcells.at(cellindex).celly
 		<< " cellrowno: " << allcells.at(cellindex).cellrowno
 		<< " cellcolumnno: " << allcells.at(cellindex).cellcolumnno
-		<< " cellcontent: " << allcells.at(cellindex).cellcontent;
+		<< " cellcontent: " << allcells.at(cellindex).cellcontent
+		<< " celltype: " << allcells.at(cellindex).celltype;
 }
 
-void gGUIGrid::fillCell(int rowNo, int columnNo, std::string tempstr) {
+void gGUIGrid::checkCellType(int cellIndex) {
+	for(int i = 0; i < allcells.at(cellIndex).cellcontent.length(); i++) {
+		if(!isdigit(allcells.at(cellIndex).cellcontent.at(i))) {
+			allcells.at(cellIndex).celltype = "string";
+			break;
+		}
+		else allcells.at(cellIndex).celltype = "digit";
+	}
+}
+void gGUIGrid::fillCell(int rowNo, int columnNo, std::string tempstr) { //when rowNo = 1, columnNO = 4; tempstr = "happyyyy";
+	if(rowNo > rownum - 1 || columnNo > columnnum - 1) return;
 	int cellindex = columnNo + (rowNo * columnnum);
 	allcells.at(cellindex).cellcontent = tempstr;
-	allcells.at(cellindex).showncontent = allcells.at(cellindex).cellcontent;
-}
+	allcells.at(cellindex).showncontent = tempstr;
+	bool isempty = (tempstr == "");
+	gLogi("GameCanvas") << isempty;
 
-bool gGUIGrid::isRightCellFull(int cellIndex) {
-	if(cellIndex % columnnum != columnnum - 1) {
-		if(!allcells.at(cellIndex).cellcontent.empty() && !allcells.at(cellIndex + 1).cellcontent.empty()) {
-			return true;
+	checkCellType(cellindex);
+	// Check left cell & update that cell's shown content if necessary
+	int leftcolumnlimit = rowNo * columnnum;
+	int leftcolumnindex = cellindex - 1;
+
+	 // Check if input is empty and update left cells according to that
+	if(isempty) {
+		leftcolumnindex = cellindex;
+		cellindex++;
+	}
+
+	while(leftcolumnindex >= leftcolumnlimit) {
+		if(allcells.at(leftcolumnindex).cellcontent.empty()) {
+			leftcolumnindex--;
+			continue;
+		}
+		else {
+			if(font->getStringWidth(allcells.at(leftcolumnindex).cellcontent) > (cellindex - leftcolumnindex) * gridboxw) {
+				std::string tempstr;
+				int index = 0;
+				while (font->getStringWidth(tempstr) < (cellindex - leftcolumnindex - 1) * gridboxw + gridboxw * (0.9f)) {
+					tempstr += allcells.at(leftcolumnindex).cellcontent[index];
+					index++;
+				}
+				tempstr.pop_back();
+				allcells.at(leftcolumnindex).showncontent = tempstr;
+				break;
+			} break;
 		}
 	}
-	else if(cellIndex % columnnum == columnnum - 1) {
-		return true;
-	}
 
-	return false;
+	// Check right cell for shown content
+	if(font->getStringWidth(tempstr) >= gridboxw){
+		int rightcolumnlimit = (int)(font->getStringWidth(tempstr) / gridboxw) + cellindex;
+		if(rightcolumnlimit >= (rowNo + 1) * columnnum) rightcolumnlimit = (rowNo + 1) * columnnum - 1;
+		if(cellindex == rightcolumnlimit) {
+			std::string tempstr;
+			int index = 0;
+			while (font->getStringWidth(tempstr) < gridboxw * (0.9f)) {
+				tempstr += allcells.at(cellindex).cellcontent[index];
+				index++;
+			}
+			tempstr.pop_back();
+			allcells.at(cellindex).showncontent = tempstr;
+			return;
+		}
+		int rightcolumnindex = cellindex + 1;
+
+		while(rightcolumnindex <= rightcolumnlimit) {
+			if(allcells.at(rightcolumnindex).cellcontent.empty()) {
+				if(rightcolumnindex == rightcolumnlimit) {
+					std::string tempstr;
+					int index = 0;
+					while (font->getStringWidth(tempstr) < (rightcolumnindex - cellindex) * gridboxw + gridboxw * (0.9f)) {
+						tempstr += allcells.at(cellindex).cellcontent[index];
+						index++;
+					}
+					tempstr.pop_back();
+					allcells.at(cellindex).showncontent = tempstr;
+					break;
+				}
+				rightcolumnindex++;
+				continue;
+			}
+			else {
+				std::string tempstr;
+				int index = 0;
+				while (font->getStringWidth(tempstr) < (rightcolumnindex - cellindex - 1) * gridboxw + gridboxw * (0.9f)) {
+					tempstr += allcells.at(cellindex).cellcontent[index];
+					index++;
+				}
+				tempstr.pop_back();
+				allcells.at(cellindex).showncontent = tempstr;
+				break;
+			} break;
+
+		}
+
+		if(allcells.at(cellindex).showncontent == "") {
+			gLogi("fill");
+		}
+	}
+}
+
+void gGUIGrid::changeCell() {
+	std::string tmpstr = textbox.getText();
+	fillCell((allcells.at(selectedbox).celly - gridboxh) / gridboxh, (allcells.at(selectedbox).cellx - (gridboxw / 2)) / gridboxw, tmpstr);
+	textbox.cleanText();
+	istextboxactive = false;
 }
 
 void gGUIGrid::drawContent() {
@@ -143,67 +234,65 @@ void gGUIGrid::drawContent() {
 	drawCellBackground();
 	if(isselected) drawSelectedBox();
 	drawCellContents();
+	if(istextboxactive)textbox.draw();
 	drawTitleRowBackground();
 	drawRowContents();
 	drawTitleColumnBackground();
 	drawColumnContents();
 	drawTitleLines();
-//	textbox.draw();
-//	gLogi("Textbox") << textbox.width;
 	renderer->setColor(oldcolor);
 }
 
 void gGUIGrid::drawCellBackground() {
 	renderer->setColor(*textbackgroundcolor);
-//	renderer->setColor(*buttoncolor);
-	gDrawRectangle(gridx + (gridboxw / 2), gridy + gridboxh, gridw - gridboxw, gridh - gridboxh, true);
+	gDrawRectangle(gridx + (gridboxw / 2), gridy + gridboxh, gridw, gridh, true);
 }
 
 void gGUIGrid::drawSelectedBox() {
 	renderer->setColor(0.0f, 1.0f, 0.0f, 1.0f);
-	gDrawRectangle(selectedbox[SELECTEDBOX_X] + 1, (selectedbox[SELECTEDBOX_Y] + 1) - firsty, gridboxw - 2, gridboxh - 2, false);
+	gDrawRectangle(allcells.at(selectedbox).cellx + 1, (allcells.at(selectedbox).celly + 1) - firsty, gridboxw - 2, gridboxh - 2, false);
+	gDrawRectangle(allcells.at(selectedbox).cellx + (gridboxw - 2) - 6, allcells.at(selectedbox).celly + (gridboxh - 2) - 4 - firsty, 6, 6, true); // FLAG
 }
 
 void gGUIGrid::drawTitleRowBackground() {
 	renderer->setColor(*buttoncolor);
-	gDrawRectangle(gridx, gridy - firsty, gridboxw / 2, gridh, true);
+	gDrawRectangle(gridx, gridy - firsty, gridboxw / 2, gridh + gridboxh, true);
 }
 
 void gGUIGrid::drawTitleColumnBackground() {
 	renderer->setColor(*buttoncolor);
-	gDrawRectangle(gridx, gridy, gridw, gridboxh , true);
+	gDrawRectangle(gridx, gridy, gridw + (gridboxw / 2), gridboxh , true);
 }
 
 void gGUIGrid::drawRowContents() {
 	int temprow = rowtitle;
 	renderer->setColor(*pressedbuttoncolor);
-	for(int i = 2; i <= rownum; i++) {
+	for(int i = 1; i <= rownum; i++) {
 		std::string rowtitlestring = std::to_string(temprow);
 		renderer->setColor(*fontcolor);
-		font->drawText(rowtitlestring, gridx + (gridboxw / 4) - (font->getStringWidth(rowtitlestring) / 2), - firsty + gridy + (i * gridboxh) - (gridboxh / 2) + (font->getStringHeight(rowtitlestring) / 2));
+		font->drawText(rowtitlestring, gridx + (gridboxw / 4) - (font->getStringWidth(rowtitlestring) / 2), gridy + (gridboxh / 2) + (i * gridboxh)  + (font->getStringHeight(rowtitlestring) / 2) - firsty);
 		temprow++;
 		renderer->setColor(*pressedbuttoncolor);
-		gDrawLine(gridx, gridy + (i * gridboxh) - firsty, gridx + gridw, gridy + (i * gridboxh) - firsty);
+		gDrawLine(gridx, gridy + ((i + 1) * gridboxh) - firsty, gridx + gridw + (gridboxw / 2), gridy + ((i + 1) * gridboxh) - firsty);
 	}
 }
 
 void gGUIGrid::drawColumnContents() {
 	int tempcol = columntitle;
-	for(int i = 2; i <= columnnum; i++) {
+	for(int i = 1; i <= columnnum; i++) {
 	    std::string columntitlestring(1, (char) tempcol);
 	    renderer->setColor(*fontcolor);
-		font->drawText(columntitlestring, gridx + ((i-1) * gridboxw) - (font->getStringWidth(columntitlestring) / 2), gridy + (gridboxh / 2) + (font->getStringHeight(columntitlestring) / 2));
+		font->drawText(columntitlestring, gridx + (i * gridboxw) - (font->getStringWidth(columntitlestring) / 2), gridy + (gridboxh / 2) + (font->getStringHeight(columntitlestring) / 2));
 		tempcol++;
 		renderer->setColor(*pressedbuttoncolor);
-		gDrawLine(gridx - (gridboxw / 2) + (i * gridboxw), gridy - firsty, gridx - (gridboxw / 2) + (i * gridboxw), gridy + gridh - firsty);
+		gDrawLine(gridx - (gridboxw / 2) + ((i + 1) * gridboxw), gridy - firsty, gridx - (gridboxw / 2) + ((i + 1) * gridboxw), gridy + gridboxh +gridh - firsty);
 	}
 }
 
 void gGUIGrid::drawTitleLines() {
-	//black row and column grid
 	renderer->setColor(*backgroundcolor);
-	gDrawLine(gridx + (gridboxw / 2) + 1, gridy, gridx + (gridboxw / 2) + 1, gridy + gridh); //vertical
-	gDrawLine(gridx, gridy + (gridboxh), gridx + gridw, gridy + (gridboxh)); //horizontal
+	gDrawLine(gridx + (gridboxw / 2) + 1, gridy, gridx + (gridboxw / 2) + 1, gridy + gridboxh + gridh);
+	gDrawLine(gridx, gridy + (gridboxh), gridx + gridboxw / 2 + gridw, gridy + (gridboxh));
 }
 
 void gGUIGrid::drawCellContents() {
@@ -211,55 +300,84 @@ void gGUIGrid::drawCellContents() {
 	int cellindexcounter = 0;
 	for(int i = 0; i < rownum; i++) {
 		for(int j = 0; j < columnnum; j++) {
-			if(!allcells.at(cellindexcounter).cellcontent.empty()) {
-				if(isRightCellFull(cellindexcounter)) {
-					std::string tempstr;
-					int index = 0;
-					if(font->getStringWidth(allcells.at(cellindexcounter).cellcontent) > gridboxw * (0.9f)){
-						while (font->getStringWidth(tempstr) < gridboxw * (0.9f)) {
-							tempstr += allcells.at(cellindexcounter).cellcontent[index];
-							index++;
-						}
-						tempstr.pop_back();
-						allcells.at(cellindexcounter).showncontent = tempstr;
-					}
-//					gLogi("GameCanvas") << "str: " << allcells.at(cellindexcounter).showncontent;
-				}
-				else {
-					allcells.at(cellindexcounter).showncontent = allcells.at(cellindexcounter).cellcontent;
-				}
-//				gLogi("GameCanvas") << "girdi: " << cellindexcounter;
-//				gLogi("Filled cell") << " cellrowno: " << allcells.at(cellindexcounter).cellrowno << " cellcolumnno: " << allcells.at(cellindexcounter).cellcolumnno;
-				font->drawText(allcells.at(cellindexcounter).showncontent, allcells.at(cellindexcounter).cellx, allcells.at(cellindexcounter).celly + (gridboxh / 2) + (font->getStringHeight(allcells.at(cellindexcounter).showncontent) / 2) - firsty);
-
-			}
-			if(cellindexcounter < (rownum * columnnum)) cellindexcounter++;
+			font->drawText(allcells.at(cellindexcounter).showncontent, allcells.at(cellindexcounter).cellx, allcells.at(cellindexcounter).celly + (gridboxh / 2) + (font->getStringHeight(allcells.at(cellindexcounter).showncontent) / 2) - firsty);
+			cellindexcounter++;
 		}
 	}
 }
 
 void gGUIGrid::mousePressed(int x, int y, int button) {
 	gGUIScrollable::mousePressed(x, y, button);
-	textbox.mousePressed(x, y, button);
-	if(x - left >= gridx + (gridboxw / 2) && x - left <= gridx + gridw - (gridboxw / 2) && y - top >= gridy + gridboxh && y - top <= gridy + gridh) {
-		int cellindexcounter = 0;
+	int pressedx = x - left;
+	int pressedy = y - top - firsty - titledy;
+	if(pressedx >= gridx + (gridboxw / 2) && pressedx <= gridx + (gridboxw / 2) + gridw && pressedy >= gridy + gridboxh && pressedy <= gridy + gridboxh + gridh) {
+		previousclicktime = clicktime;
+		clicktime = gGetSystemTimeMillis();
+		if(clicktime - previousclicktime <= clicktimediff) {
+			isdoubleclicked = true;
+			gLogi("GameCanvas") << "doubleclicked.";
+		} else isdoubleclicked = false;
+		if(isdoubleclicked) {
+			textbox.cleanText();
+			createTextBox();
+			textbox.mousePressed(pressedx, pressedy, button);
+			istextboxactive = true;
+		} else istextboxactive = false;
 		isselected = true;
-		selectedbox[SELECTEDBOX_X] = ((int)((x - left - (gridboxw / 2)) / gridboxw)) * gridboxw + (gridboxw / 2);
-		selectedbox[SELECTEDBOX_Y] = ((int)((y + firsty - top - gridboxh - 20) / gridboxh)) * gridboxh + gridboxh;
-//		gLogi("GameCanvas") << "selectedbox_x: " << selectedbox[SELECTEDBOX_X] << " selectedbox_y: " << selectedbox[SELECTEDBOX_Y];
-		for(int i = 0; i < rownum; i++) {
-			for(int j = 0; j < columnnum; j++) {
-				if(allcells.at(cellindexcounter).cellx == selectedbox[SELECTEDBOX_X] && allcells.at(cellindexcounter).celly == selectedbox[SELECTEDBOX_Y]) {
-					showCell(i, j);
-				}
-				cellindexcounter++;
-			}
+		int newcellindex = ((int)((x - left - (gridboxw / 2)) / gridboxw)) + ((int)((y + firsty - top - gridboxh - 20) / gridboxh))  * columnnum ; // * gridboxw + (gridboxw / 2);
+		if(newcellindex != selectedbox) {
+			if(istextboxactive) changeCell();
+			selectedbox = newcellindex;
 		}
-		createTextBox(x, y);
+	}
+
+}
+
+void gGUIGrid::mouseReleased(int x, int y, int button) {
+	if(istextboxactive) textbox.mouseReleased((x - left), (y - top - firsty - titledy), button);
+}
+
+void gGUIGrid::mouseDragged(int x, int y, int button) {
+	gLogi("GameCanvas") << x << " " << y;
+	if(istextboxactive) textbox.mouseDragged((x - left), (y - top - firsty), button);
+}
+
+void gGUIGrid::keyPressed(int key){
+	if(istextboxactive) textbox.keyPressed(key);
+}
+
+void gGUIGrid::keyReleased(int key) {
+	if(istextboxactive) textbox.keyReleased(key);
+	if(key == G_KEY_ENTER && istextboxactive) {
+		changeCell();
+		istextboxactive = false;
+		textbox.setEditable(false);
+	}
+	else if ((key == G_KEY_ENTER || key == G_KEY_DOWN) && !istextboxactive) {
+		if(selectedbox + columnnum < rownum * columnnum) selectedbox += columnnum;
+	}
+	else if(key == G_KEY_UP && !istextboxactive) {
+		if(selectedbox - columnnum > 0) selectedbox -= columnnum;
+	}
+	else if(key == G_KEY_RIGHT && !istextboxactive) {
+		if(selectedbox % columnnum != (columnnum - 1)) selectedbox++;
+	}
+	else if(key == G_KEY_LEFT && !istextboxactive) {
+		if(selectedbox % columnnum != 0) selectedbox--;
+	}
+	else if(key == G_KEY_F2) {
+		textbox.cleanText();
+		createTextBox();
+		istextboxactive = true;
+		istextboxactive = true;
+		textbox.setEditable(true);
 	}
 }
 
+void gGUIGrid::charPressed(unsigned int codepoint) {
+	if(istextboxactive) textbox.charPressed(codepoint);
+}
 
-
-
-
+void gGUIGrid::mouseScrolled(int x, int y) {
+	gGUIScrollable::mouseScrolled(x, y);
+}

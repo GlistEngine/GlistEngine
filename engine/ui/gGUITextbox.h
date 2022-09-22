@@ -192,6 +192,7 @@ public:
 	void mouseDragged(int x, int y, int button);
 
 	int getTextboxh();
+	void cleanText();
 
 private:
 	static const int KEY_NONE = 0, KEY_BACKSPACE = 1, KEY_LEFT = 2, KEY_RIGHT = 4, KEY_DELETE = 8, KEY_ENTER = 16, KEY_UP = 32, KEY_DOWN = 64;
@@ -226,7 +227,6 @@ private:
 	bool isNumber(char c);
 	void findCursorPosition();
 	void findCursorPositionPassword();
-	void cleanText();
 	bool selectionmode;
 	int selectionposchar1, selectionposchar2;
 	int selectionposx1, selectionposx2;

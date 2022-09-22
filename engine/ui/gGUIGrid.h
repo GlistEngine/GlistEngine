@@ -8,9 +8,11 @@
 #ifndef UI_GGUIGRID_H_
 #define UI_GGUIGRID_H_
 
+
 #include "gGUIScrollable.h"
 #include "gGUITextbox.h"
 #include <deque>
+#include <string.h>
 
 //#include "gGUISizer.h"
 
@@ -26,6 +28,7 @@ public:
 	    bool iscellselected;
 	    std::string cellcontent;
 	    std::string showncontent;
+	    std::string celltype;
 	    Cell(){
 	    	cellx = -1;
 	    	celly = -1;
@@ -38,8 +41,6 @@ public:
 	};
 	gGUIGrid();
 	virtual ~gGUIGrid();
-
-	void mousePressed(int x, int y, int button);
 
 	void set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIObject* parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h);
 	void setGrid(int rowNum, int columnNum);
@@ -62,23 +63,34 @@ public:
 	void createCells();
 	void showCells();
 	void showCell(int rowNo, int columnNo);
-	bool isRightCellFull(int cellIndex);
-	void createTextBox(int x, int y);
+	void createTextBox();
+	void changeCell();
+	void checkCellType(int cellIndex);
+
+	void update();
+
+	void keyPressed(int key);
+	void keyReleased(int key);
+	void charPressed(unsigned int codepoint);
+	void mousePressed(int x, int y, int button);
+	void mouseReleased(int x, int y, int button);
+	void mouseDragged(int x, int y, int button);
+	void mouseScrolled(int x, int y);
 
 private:
-
-	static const int SELECTEDBOX_X, SELECTEDBOX_Y;
 
 	std::deque<Cell> allcells;
 	int rownum, columnnum;
 	float gridx, gridy, gridw, gridh;
 	float gridboxw, gridboxh;
-	int selectedbox[2];
+	int selectedbox;
 	bool isselected;
 	int rowtitle;
 	int columntitle;
 	gGUITextbox textbox;
-
+	bool istextboxactive;
+	long clicktime, previousclicktime, firstclicktime, clicktimediff;
+	bool isdoubleclicked;
 
 };
 
