@@ -160,6 +160,7 @@ set(SRC_FILES
 	${ENGINE_DIR}/ui/gGUIDialogue.cpp
 	${ENGINE_DIR}/ui/gGUITimebox.cpp
 	${ENGINE_DIR}/ui/gGUIPieGraph.cpp
+	${ENGINE_DIR}/ui/gGUIGraph.cpp
 	${ENGINE_DIR}/ui/gGUINumberBox.cpp
 	${ENGINE_DIR}/ui/gGUISwitchButton.cpp
 	${ENGINE_DIR}/ui/gGUISurface.cpp
