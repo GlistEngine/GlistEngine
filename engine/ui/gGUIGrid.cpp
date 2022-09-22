@@ -30,11 +30,7 @@ gGUIGrid::gGUIGrid() {
 	previousclicktime = clicktime - 2 * clicktimediff;
 	firstclicktime = previousclicktime - 2 * clicktimediff;
 	isdoubleclicked = false;
-
-//	setSizer(&gridsizer);
-//	gridsizer.setControl(1, 0, &slider);
 	enableScrollbars(true, false);
-
 }
 
 gGUIGrid::~gGUIGrid() {
@@ -70,7 +66,6 @@ void gGUIGrid::setcolumnNum(int columnNum) {
 
 void gGUIGrid::update() {
 	textbox.update();
-//	gLogi("Textbox") << textbox.left << " " << textbox.top << " " << textbox.right << " " << textbox.bottom;
 }
 
 void gGUIGrid::createCells() {
@@ -92,7 +87,7 @@ void gGUIGrid::createTextBox() {
 	if(allcells.at(selectedbox).cellcontent != "") {
 		textbox.setText(allcells.at(selectedbox).cellcontent);
 		allcells.at(selectedbox).showncontent = "";
-	} //else textbox.cleanText();
+	}
 }
 
 void gGUIGrid::showCells() {
@@ -136,7 +131,7 @@ void gGUIGrid::fillCell(int rowNo, int columnNo, std::string tempstr) { //when r
 	allcells.at(cellindex).cellcontent = tempstr;
 	allcells.at(cellindex).showncontent = tempstr;
 	bool isempty = (tempstr == "");
-	gLogi("GameCanvas") << isempty;
+//	gLogi("GameCanvas") << isempty;
 
 	checkCellType(cellindex);
 	// Check left cell & update that cell's shown content if necessary
@@ -192,6 +187,7 @@ void gGUIGrid::fillCell(int rowNo, int columnNo, std::string tempstr) { //when r
 					std::string tempstr;
 					int index = 0;
 					while (font->getStringWidth(tempstr) < (rightcolumnindex - cellindex) * gridboxw + gridboxw * (0.9f)) {
+						if(index > allcells.at(cellindex).cellcontent.length()) break;
 						tempstr += allcells.at(cellindex).cellcontent[index];
 						index++;
 					}
@@ -206,6 +202,7 @@ void gGUIGrid::fillCell(int rowNo, int columnNo, std::string tempstr) { //when r
 				std::string tempstr;
 				int index = 0;
 				while (font->getStringWidth(tempstr) < (rightcolumnindex - cellindex - 1) * gridboxw + gridboxw * (0.9f)) {
+					if(index > allcells.at(cellindex).cellcontent.length()) break;
 					tempstr += allcells.at(cellindex).cellcontent[index];
 					index++;
 				}
