@@ -28,8 +28,8 @@ public:
 	    bool iscellselected;
 	    std::string cellcontent;
 	    std::string showncontent;
-	    std::string celltype; // this can be string, digit or date as format of "day/month/year"
-	    Cell(){ // @suppress("Class members should be properly initialized")
+	    std::string celltype;
+	    Cell(){
 	    	cellx = -1;
 	    	celly = -1;
 	    	cellh = 30.0f;
@@ -78,8 +78,6 @@ public:
 	void mouseScrolled(int x, int y);
 
 private:
-
-//	static const int SELECTEDBOX_X, SELECTEDBOX_Y;
 
 	std::deque<Cell> allcells;
 	int rownum, columnnum;
