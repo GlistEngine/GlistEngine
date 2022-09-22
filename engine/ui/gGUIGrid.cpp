@@ -45,7 +45,7 @@ void gGUIGrid::set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIO
 	textbox.set(root, this, this, 0, 0, gridx + (gridboxw / 2) + 1, gridy + gridboxh - 5, gridboxw - 6, gridboxh);
 	textbox.setSize(gridboxw - 6, gridboxh - 2);
 	textbox.enableBackground(false);
-	gLogi("Textbox") << textbox.left << " " << textbox.top << " " << textbox.right << " " << textbox.bottom;
+//	gLogi("Textbox") << textbox.left << " " << textbox.top << " " << textbox.right << " " << textbox.bottom;
 }
 
 void gGUIGrid::setGrid(int rowNum, int columnNum) {
