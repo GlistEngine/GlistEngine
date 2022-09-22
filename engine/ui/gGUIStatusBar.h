@@ -17,6 +17,8 @@ public:
 	gGUIStatusBar();
 	virtual ~gGUIStatusBar();
 
+	void setText(int index, std::string text);
+
 	void draw();
 	void windowResized(int w, int h);
 	void mousePressed(int x, int y, int button);
