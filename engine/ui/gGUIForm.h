@@ -21,6 +21,13 @@ public:
 	gGUIForm();
 	virtual ~gGUIForm();
 
+	enum {
+		RESIZE_MENUBAR,
+		RESIZE_STATUSBAR,
+		RESIZE_TOOLBAR_HORIZONTAL,
+		RESIZE_TOOLBAR_VERTICAL
+	};
+
 	void setMenuBar(gGUIMenubar* menuBar);
 	void resizeMenuBar();
 	void addToolBar(gGUIToolbar* toolBar);
@@ -30,6 +37,7 @@ public:
 	void resizeStatusBar();
 	void addContextMenu(gGUIContextMenu* contextMenu);
 	void addTreelist(gGUITreelist* treeList, int treeListx, int treeListy, int treeListw);
+	void resizeAll(int resizeCode);
 
 	void setToolbarHeight(int toolbarHeight);
 	int getToolbarHeight();
@@ -77,7 +85,6 @@ protected:
 	int contextmenux, contextmenuy;
 	gGUITreelist* treelist;
 	int treelistw, treelisth;
-	bool issizerset;
 };
 
 #endif /* UI_GGUIFORM_H_ */
