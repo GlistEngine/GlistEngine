@@ -35,8 +35,13 @@ public:
 	void setLabelCountX(int labelCount);
 	void setLabelCountY(int labelCount);
 
+	void enablePoints(bool arePointsEnabled);
+	void setLineColor(int lineIndex, gColor lineColor);
+	gColor getLineColor(int lineIndex);
+
 	void addLine();
-	void addPointToLine(int lineindex, float x, float y);
+	void addData(int lineIndex, std::vector<std::array<float, 2>> dataToAdd);
+	void addPointToLine(int lineIndex, float x, float y);
 
 
 private:
@@ -45,6 +50,8 @@ private:
 
 	std::vector<std::vector<std::array<float, 4>>> graphlines;
 	gColor linecolors[5];
+
+	bool arepointsenabled;
 };
 
 

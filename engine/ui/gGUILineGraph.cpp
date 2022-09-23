@@ -11,6 +11,7 @@
 
 gGUILineGraph::gGUILineGraph() {
 	title = "Graph";
+	arepointsenabled = true;
 
 	linecolors[0] = {0.96f, 0.46f, 0.55f};
 	linecolors[1] = {0.62f, 0.80f, 0.41f};
@@ -60,13 +61,30 @@ void gGUILineGraph::setLabelCountY(int labelCount) {
 	updatePoints();
 }
 
+void gGUILineGraph::enablePoints(bool arePointsEnabled) {
+	arepointsenabled = arePointsEnabled;
+}
+
+void gGUILineGraph::setLineColor(int lineIndex, gColor lineColor) {
+	linecolors[lineIndex] = lineColor;
+}
+
+gColor gGUILineGraph::getLineColor(int lineIndex) {
+	return linecolors[lineIndex];
+}
+
 void gGUILineGraph::addLine() {
 	std::vector<std::array<float, 4>> newline;
 	graphlines.push_back(newline);
 }
 
-void gGUILineGraph::addPointToLine(int lineindex, float x, float y) {
-	if(graphlines.size() - 1 < lineindex) return;
+void gGUILineGraph::addData(int lineIndex, std::vector<std::array<float, 2>> dataToAdd) {
+	int datasize = dataToAdd.size();
+	for(int i = 0; i < datasize; i++) addPointToLine(lineIndex, dataToAdd[i][0], dataToAdd[i][1]);
+}
+
+void gGUILineGraph::addPointToLine(int lineIndex, float x, float y) {
+	if(graphlines.size() - 1 < lineIndex) return;
 	if(x > maxx) {
 		int newmax = int(x) + 1;
 		if(newmax % (labelcountx - 1) == 0) setMaxX(newmax);
@@ -77,18 +95,18 @@ void gGUILineGraph::addPointToLine(int lineindex, float x, float y) {
 		if(newmax % (labelcounty - 1) == 0) setMaxY(newmax);
 		else setMaxY(newmax + labelcounty - 1 - (newmax % (labelcounty - 1)));
 	}
-	int pointcount = graphlines[lineindex].size();
+	int pointcount = graphlines[lineIndex].size();
 	if(pointcount == 0) {
-		graphlines[lineindex].push_back({x, y, axisx1 + axisxw * x / (maxx - minx), axisy2 - axisyh * y / (maxy - miny)});
+		graphlines[lineIndex].push_back({x, y, axisx1 + axisxw * x / (maxx - minx), axisy2 - axisyh * y / (maxy - miny)});
 		return;
 	}
 	int index = 0;
 	while(index < pointcount) {
-		if(graphlines[lineindex][index++][0] < x) continue;
+		if(graphlines[lineIndex][index++][0] < x) continue;
 		index--;
 		break;
 	}
-	graphlines[lineindex].insert(graphlines[lineindex].begin() + index, {x, y, axisx1 + axisxw * x / (maxx - minx), axisy2 - axisyh * y / (maxy - miny)});
+	graphlines[lineIndex].insert(graphlines[lineIndex].begin() + index, {x, y, axisx1 + axisxw * x / (maxx - minx), axisy2 - axisyh * y / (maxy - miny)});
 }
 
 void gGUILineGraph::drawGraph() {
@@ -101,7 +119,7 @@ void gGUILineGraph::drawGraph() {
 		renderer->setColor(linecolors[i]);
 		int pointcount = graphlines[i].size();
 		for(int j = 0; j < graphlines[i].size(); j++) {
-			gDrawCircle(graphlines[i][j][2], graphlines[i][j][3], 5, true);
+			if(arepointsenabled) gDrawCircle(graphlines[i][j][2], graphlines[i][j][3], 5, true);
 			if(j != pointcount - 1) gDrawLine(graphlines[i][j][2], graphlines[i][j][3], graphlines[i][j+1][2], graphlines[i][j+1][3]);
 		}
 	}
