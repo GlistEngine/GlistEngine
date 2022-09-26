@@ -16,61 +16,41 @@
 #include "gGUIControl.h"
 #include "gLine.h"
 #include "gRectangle.h"
+#include "gGUIGraph.h"
 
 
-
-class gGUICandleStickChart: public gGUIControl  {
+class gGUICandleStickChart: public gGUIGraph {
 
 public:
 	gGUICandleStickChart();
 	virtual ~gGUICandleStickChart();
 
-	void setSize(int width, int height);
+	void set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIObject* parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h);
 
-	void setGraphColor(gColor color);
+	void setMaxX(int maxX);
+	void setMinX(int minX);
+	void setMaxY(int maxY);
+	void setMinY(int minY);
 
+	void setLabelCountX(int labelCount);
+	void setLabelCountY(int labelCount);
 
-	gColor* getGraphColor();
+	void setHighColor(gColor highColor);
+	gColor getHighColor();
+	void setLowColor(gColor lowColor);
+	gColor getLowColor();
 
-	virtual void update();
-
-	void draw();
-	void graph();
-	void addValue(float y, float ch, float open, float close);
-	void addpoint();
-
-
-	void drawXAxis();
-	void drawYAxis();
-	void setXAxisValues(int min, int max, int range);
-	void setYAxisValues(int min, int max, int range);
-
-protected:
-	int candlew, candleh;
-	gColor cscolor;
-
-	void resetTitlePosition();
+	void addPointToLine(float x, float high, float low, float open, float close);
 
 private:
-	float x[300];
-	float y[300];
-	gLine lines[300];
-	int pointnum;
-	bool shown;
-	gRectangle candle[300];
-	float ch[300];
-	float open[300];
-	float close[300];
-	float a[300];
-	int locationnum;
-	int xAxis[300];
-	int xx;
-	int maxx;
-	int maxy;
+	void drawGraph();
+	void updatePoints();
 
-	std::vector<std::vector<int>> linesX;
-	std::vector<std::vector<int>> linesY;
+	std::vector<std::array<float, 10>> graphline;
+	gColor highcolor;
+	gColor lowcolor;
 
+	int candlew;
 };
 
 
