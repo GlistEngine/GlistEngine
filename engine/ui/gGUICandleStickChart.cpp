@@ -8,163 +8,133 @@
 #include "gGUICandleStickChart.h"
 
 gGUICandleStickChart::gGUICandleStickChart() {
-
-
-	title = "Button";
-	cscolor = *buttoncolor;
-	pointnum=0;
-	candlew=10;
-	locationnum=0;
-	xx=110;
-
-
-	resetTitlePosition();
+	title = "Candlestick Chart";
+	lowcolor = {0.96f, 0.46f, 0.55f};
+	highcolor = {0.62f, 0.80f, 0.41f};
+	candlew = 10;
 }
 
 gGUICandleStickChart::~gGUICandleStickChart() {
 
 }
 
-void gGUICandleStickChart::draw() {
-
-	graph();
-	addpoint();
-	drawXAxis();
-	drawYAxis();
+void gGUICandleStickChart::set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIObject* parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h) {
+	gGUIGraph::set(root, topParentGUIObject, parentGUIObject, parentSlotLineNo, parentSlotColumnNo, x, y, w, h);
+	updatePoints();
 }
 
-void gGUICandleStickChart::drawXAxis() {				//Drawed in here for X Axis
-	for(int i = 0; i < linesX.size(); i++) {
-		renderer->setColor(gColor(0.0f, 0.0f, 0.0f, 1.0f));
-		gDrawLine(linesX[i][0], linesX[i][1], linesX[i][2], linesX[i][3] );
+void gGUICandleStickChart::setMaxX(int maxX){
+	gGUIGraph::setMaxX(maxX);
+	updatePoints();
+}
+
+
+void gGUICandleStickChart::setMinX(int minX) {
+	gGUIGraph::setMinX(minX);
+	updatePoints();
+}
+
+void gGUICandleStickChart::setMaxY(int maxY) {
+	gGUIGraph::setMaxY(maxY);
+	updatePoints();
+}
+
+
+void gGUICandleStickChart::setMinY(int minY) {
+	gGUIGraph::setMinY(minY);
+	updatePoints();
+}
+
+void gGUICandleStickChart::setLabelCountX(int labelCount){
+	gGUIGraph::setLabelCountX(labelCount);
+	updatePoints();
+}
+
+void gGUICandleStickChart::setLabelCountY(int labelCount) {
+	gGUIGraph::setLabelCountY(labelCount);
+	updatePoints();
+}
+
+void gGUICandleStickChart::setHighColor(gColor highColor) {
+	highcolor = highColor;
+}
+
+gColor gGUICandleStickChart::getHighColor(){
+	return highcolor;
+}
+
+void gGUICandleStickChart::setLowColor(gColor lowColor) {
+	lowcolor = lowColor;
+}
+
+gColor gGUICandleStickChart::getLowColor() {
+	return lowcolor;
+}
+
+void gGUICandleStickChart::addPointToLine(float x, float high, float low, float open, float close) {
+	if(x > maxx) {
+		int newmax = int(x) + 1;
+		if(newmax % (labelcountx - 1) == 0) setMaxX(newmax);
+		else setMaxX(newmax + labelcountx - 1 - (newmax % (labelcountx - 1)));
 	}
-}
-
-void gGUICandleStickChart::setXAxisValues(int min, int max, int range) {				//Add variables on the X-Axis
-									//lineGraph.setXAxisValues(min, max, range);
-	maxx=max;						//get maxx value
-	int a;							//Necessary calculations for locations
-	a = max - min;
-	a = (a / range);
-
-	for(int i = 0; i <= range; i++) {						//LineX always push back in order to draw another range point
-		std::vector<int> lineX;
-		lineX.push_back(100 + min);
-		lineX.push_back(495);
-		lineX.push_back(100 + min);
-		lineX.push_back(505);
-
-		linesX.push_back(lineX);
-		min = min + a;
+	if(high > maxy) {
+		int newmax = int(high) + 1;
+		if(newmax % (labelcounty - 1) == 0) setMaxY(newmax);
+		else setMaxY(newmax + labelcounty - 1 - (newmax % (labelcounty - 1)));
 	}
-}
+	int pointcount = graphline.size();
+	float pointx = axisx1 + axisxw * (x - minx) / (maxx - minx);
+	float lengthy = maxy - miny;
+	float highy = axisy2 - (axisyh * (high - miny) / lengthy);
+	float lowy = axisy2 - axisyh * (low - miny) / lengthy;
+	float openy = axisy2 - axisyh * (open - miny) / lengthy;
+	float closey = axisy2 - axisyh * (close - miny) / lengthy;
 
-void gGUICandleStickChart::drawYAxis() {					//Drawed in here for Y Axis
-	for(int i = 0; i < linesY.size(); i++) {
-		renderer->setColor(gColor(0.0f, 0.0f, 0.0f, 1.0f));
-		gDrawLine(linesY[i][0], linesY[i][1], linesY[i][2], linesY[i][3] );
+	if(pointcount == 0) {
+		graphline.push_back({x, high, low, open, close, pointx, highy, lowy, openy, closey});
+		return;
 	}
-}
-
-void gGUICandleStickChart::setYAxisValues(int min, int max, int range) {				//Add variables on the Y-Axis
-								//	lineGraph.setYAxisValues(min, max, range);
-	maxy=max;					//get maxy value
-	int a;						//Necessary calculations for locations
-	a = max - min;
-	a = (a / range);
-
-	for(int i = 0; i <= range; i++) {				//LineX always push back in order to draw another range point
-		std::vector<int> lineY;
-		//lineX.draw(400 + min, 295, 400, 305);
-		lineY.push_back(95); //lines[i][0]
-		lineY.push_back(500 - min); //lines[i][1]
-		lineY.push_back(105); //lines[i][2]
-		lineY.push_back(500 - min); //lines[i][2]
-
-		linesY.push_back(lineY);
-		min = min + a;
+	int index = 0;
+	while(index < pointcount) {
+		if(graphline[index++][0] < x) continue;
+		index--;
+		break;
 	}
+	graphline.insert(graphline.begin() + index, {x, high, low, open, close, pointx, highy, lowy, openy, closey});
+//	gLogi("update") << graphline[0][5] << " " << graphline[0][6] << " " << graphline[0][7] << " " << graphline[0][8] << " " << graphline[0][9];
+
 }
 
-void gGUICandleStickChart::graph() {					// Graph with 2 straight lines
-														// get maxx and maxy values for draw with accurate
+void gGUICandleStickChart::drawGraph() {
+	if(graphline.empty()) return;
 
 	gColor oldcolor = *renderer->getColor();
-	renderer->setColor(&cscolor);
-	this->maxy = maxy;
-		this->maxx = maxx;
-		if(maxx>0) {
-			gDrawLine(100, 500, maxx+100, 500);
-		}
-		if(maxy>0) {
-			gDrawLine(100, 500, 100, 500-maxy);
-		}
-		else
-			gDrawLine(100, 500, 500, 500);
-			gDrawLine(100, 500, 100, 100);
-}
-
-void gGUICandleStickChart::addValue(float y, float ch, float open, float close) {
-	xAxis[pointnum]=xx;						//get x axis
-	this->y[pointnum] = 500-y;
-	this->ch[pointnum] = -ch;				// used minus value for y axis.(y axi start from top ends on bot but graph needs the opposite
-	this->open[pointnum] = -open;
-	this->close[pointnum] = close;
-	pointnum++;
-	xx=xx+10;							//body has 10pixel width. every candlestick has to 10pixel away from each other
-}
-
-
-void gGUICandleStickChart::addpoint() {				//adds points on graph
-													//for everypointnum draw a candlestick
-	for(int i = 0; i < pointnum; i++) {
-
-		if(ch[i]<0 && i==0) {															//body is larger means draw green body. first value
-			renderer->setColor(gColor(0.0f,	1.0f, 0.0f, 1.0f));							//color
-			gDrawRectangle(xAxis[i], y[i], candlew, ch[i], true);						//rectangle. body of candlestick
-			gDrawLine(xAxis[i]+5, y[i]+ch[i], xAxis[i]+5, y[i]+ch[i]+open[i]);			//open line
-			gDrawLine(xAxis[i]+5, y[i], xAxis[i]+5, y[i]+close[i]);						// close line
-		}
-		if(ch[i]>0 && i==0) {															// body is larger means draw red body. first value
-			renderer->setColor(gColor(1.0f,	0.0f, 0.0f, 1.0f));							// color
-			gDrawRectangle(xAxis[i]+5, y[i], candlew, ch[i], true);						//rectangle body
-			gDrawLine(xAxis[i]+5, y[i]+ch[i], xAxis[i]+5, y[i]+ch[i]-open[i]);			//open line
-			gDrawLine(xAxis[i]+5, y[i], xAxis[i]+5, y[i]-close[i]);						//close line
-		}
-		if(ch[i]<0 && i!=0) {															//body is larger. other values.
-			renderer->setColor(gColor(0.0f,	1.0f, 0.0f, 1.0f));
-			gDrawRectangle(xAxis[i]+10, y[i], candlew, ch[i], true);
-			gDrawLine(xAxis[i]+15, y[i]+ch[i], xAxis[i]+15, y[i]+ch[i]+open[i]);
-			gDrawLine(xAxis[i]+15, y[i], xAxis[i]+15, y[i]+close[i]);
-		}
-		if(ch[i]>0 && i!=0) {															//body is smaller. other values.
-			renderer->setColor(gColor(1.0f,	0.0f, 0.0f, 1.0f));
-			gDrawRectangle(xAxis[i]+10, y[i], candlew, ch[i], true);
-			gDrawLine(xAxis[i]+15, y[i]+ch[i], xAxis[i]+15, y[i]+ch[i]-open[i]);
-			gDrawLine(xAxis[i]+15, y[i], xAxis[i]+15, y[i]-close[i]);
-		}
+	int pointcount = graphline.size();
+	for(int i = 0; i < pointcount; i++) {
+		if(graphline[i][3] - graphline[i][4] < 0) renderer->setColor(lowcolor);
+		else renderer->setColor(highcolor);
+		gDrawLine(graphline[i][5], graphline[i][6], graphline[i][5], graphline[i][7]);
+		gDrawRectangle(graphline[i][5] - candlew, graphline[i][8], candlew * 2, graphline[i][9] - graphline[i][8], true);
+//		gLogi("Data#") << i << " x: " << graphline[i][0] << " high: " << graphline[i][1] << " low: " << graphline[i][2] << " open: " << graphline[i][3] << " close: " << graphline[i][4];
 	}
+
+	renderer->setColor(oldcolor);
 }
 
-void gGUICandleStickChart::setGraphColor(gColor color) {			//.setGraphColor(gColor(1.0f, 1.0f, 0.0f, 1.0f));
-	cscolor = color;
-}
+void gGUICandleStickChart::updatePoints() {
+	if(graphline.empty()) return;
+//	gLogi("update") << axisx1 << " " << axisxw << " " << axisy1 << " " << axisyh;
 
-void gGUICandleStickChart::resetTitlePosition() {
+	int pointcount = graphline.size();
+	float lengthy = maxy - miny;
+	for(int i = 0; i < pointcount; i++) {
+		graphline[i][5] = axisx1 + axisxw * (graphline[i][0] - minx) / (maxx - minx);
+//		gLogi("values") << " " << graphline[i][0] << " " << axisx1 << " " << axisxw << " " << maxx << " " << minx;
+		graphline[i][6] = axisy2 - axisyh * (graphline[i][1] - miny) / lengthy;
+		graphline[i][7] = axisy2 - axisyh * (graphline[i][2] - miny) / lengthy;
+		graphline[i][8] = axisy2 - axisyh * (graphline[i][3] - miny) / lengthy;
+		graphline[i][9] = axisy2 - axisyh * (graphline[i][4] - miny) / lengthy;
+	}
+//	gLogi("update") << graphline[0][5] << " " << graphline[0][6] << " " << graphline[0][7] << " " << graphline[0][8] << " " << graphline[0][9];
 
-}
-
-void gGUICandleStickChart::update() {
-
-}
-
-void gGUICandleStickChart::setSize(int width, int height) {
-	candlew = width;
-	candleh = height;
-	resetTitlePosition();
-}
-
-
-gColor* gGUICandleStickChart::getGraphColor() {
-	return &cscolor;
 }

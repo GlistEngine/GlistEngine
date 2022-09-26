@@ -11,6 +11,7 @@
 
 gGUILineGraph::gGUILineGraph() {
 	title = "Graph";
+	arepointsenabled = true;
 
 	linecolors[0] = {0.96f, 0.46f, 0.55f};
 	linecolors[1] = {0.62f, 0.80f, 0.41f};
@@ -60,35 +61,54 @@ void gGUILineGraph::setLabelCountY(int labelCount) {
 	updatePoints();
 }
 
+void gGUILineGraph::enablePoints(bool arePointsEnabled) {
+	arepointsenabled = arePointsEnabled;
+}
+
+void gGUILineGraph::setLineColor(int lineIndex, gColor lineColor) {
+	linecolors[lineIndex] = lineColor;
+}
+
+gColor gGUILineGraph::getLineColor(int lineIndex) {
+	return linecolors[lineIndex];
+}
+
 void gGUILineGraph::addLine() {
 	std::vector<std::array<float, 4>> newline;
 	graphlines.push_back(newline);
 }
 
-void gGUILineGraph::addPointToLine(int lineindex, float x, float y) {
-	if(graphlines.size() - 1 < lineindex) return;
-	if(x > maxx) {
+void gGUILineGraph::addData(int lineIndex, std::vector<std::array<float, 2>> dataToAdd) {
+	int datasize = dataToAdd.size();
+	for(int i = 0; i < datasize; i++) addPointToLine(lineIndex, dataToAdd[i][0], dataToAdd[i][1]);
+}
+
+void gGUILineGraph::addPointToLine(int lineIndex, float x, float y) {
+	if(graphlines.size() - 1 < lineIndex) return;
+	if(x < minx) setMinX(x);
+	else if(x > maxx) {
 		int newmax = int(x) + 1;
 		if(newmax % (labelcountx - 1) == 0) setMaxX(newmax);
 		else setMaxX(newmax + labelcountx - 1 - (newmax % (labelcountx - 1)));
 	}
-	if(y > maxy) {
+	if(y < miny) setMinY(y);
+	else if(y > maxy) {
 		int newmax = int(y) + 1;
 		if(newmax % (labelcounty - 1) == 0) setMaxY(newmax);
 		else setMaxY(newmax + labelcounty - 1 - (newmax % (labelcounty - 1)));
 	}
-	int pointcount = graphlines[lineindex].size();
+	int pointcount = graphlines[lineIndex].size();
 	if(pointcount == 0) {
-		graphlines[lineindex].push_back({x, y, axisx1 + axisxw * x / (maxx - minx), axisy2 - axisyh * y / (maxy - miny)});
+		graphlines[lineIndex].push_back({x, y, axisx1 + axisxw * (x - minx) / (maxx - minx), axisy2 - axisyh * (y - miny) / (maxy - miny)});
 		return;
 	}
 	int index = 0;
 	while(index < pointcount) {
-		if(graphlines[lineindex][index++][0] < x) continue;
+		if(graphlines[lineIndex][index++][0] < x) continue;
 		index--;
 		break;
 	}
-	graphlines[lineindex].insert(graphlines[lineindex].begin() + index, {x, y, axisx1 + axisxw * x / (maxx - minx), axisy2 - axisyh * y / (maxy - miny)});
+	graphlines[lineIndex].insert(graphlines[lineIndex].begin() + index, {x, y, axisx1 + axisxw * (x - minx) / (maxx - minx), axisy2 - axisyh * (y - miny) / (maxy - miny)});
 }
 
 void gGUILineGraph::drawGraph() {
@@ -97,11 +117,11 @@ void gGUILineGraph::drawGraph() {
 	gColor oldcolor = *renderer->getColor();
 
 	int linecount = graphlines.size();
-	for(int i = 0; i < graphlines.size(); i++) {
+	for(int i = 0; i < linecount; i++) {
 		renderer->setColor(linecolors[i]);
 		int pointcount = graphlines[i].size();
-		for(int j = 0; j < graphlines[i].size(); j++) {
-			gDrawCircle(graphlines[i][j][2], graphlines[i][j][3], 5, true);
+		for(int j = 0; j < pointcount; j++) {
+			if(arepointsenabled) gDrawCircle(graphlines[i][j][2], graphlines[i][j][3], 5, true);
 			if(j != pointcount - 1) gDrawLine(graphlines[i][j][2], graphlines[i][j][3], graphlines[i][j+1][2], graphlines[i][j+1][3]);
 		}
 	}
@@ -113,11 +133,13 @@ void gGUILineGraph::updatePoints() {
 	if(graphlines.empty()) return;
 
 	int linecount = graphlines.size();
-	for(int i = 0; i < graphlines.size(); i++) {
+	for(int i = 0; i < linecount; i++) {
 		int pointcount = graphlines[i].size();
-		for(int j = 0; j < graphlines[i].size(); j++) {
-			graphlines[i][j][2] = axisx1 + axisxw * graphlines[i][j][0] / (maxx - minx);
-			graphlines[i][j][3] = axisy2 - axisyh * graphlines[i][j][1] / (maxy - miny);
+		for(int j = 0; j < pointcount; j++) {
+			graphlines[i][j][2] = axisx1 + axisxw * (graphlines[i][j][0] - minx) / (maxx - minx);
+			graphlines[i][j][3] = axisy2 - axisyh * (graphlines[i][j][1] - miny) / (maxy - miny);
+//			gLogi("values") << " " << graphlines[i][j][0] << " " << axisx1 << " " << axisxw << " " << maxx << " " << minx;
+//			gLogi("line") << graphlines[i][j][0] << " " << graphlines[i][j][2];
 		}
 	}
 }
