@@ -14,9 +14,9 @@ gGUIGraph::gGUIGraph() {
 	axisy2 = 0;
 	axisxw = 0;
 	axisyh = 0;
-	maxx = 0;
-	maxy = 0;
-	minx = 0;
+	maxx = -2147483647;
+	maxy = -2147483647;
+	minx = 2147483647;
 	miny = 0;
 
 	labelwidthx = 0.0f;
@@ -192,13 +192,13 @@ void gGUIGraph::drawGraph() {
 void gGUIGraph::updateLabelsX() {
 	int step = int(maxx - minx) / (labelcountx - 1);
 	for(int i = 0; i < labelcountx; i++) {
-		labelsx[i] = i * step;
+		labelsx[i] = minx + i * step;
 	}
 }
 
 void gGUIGraph::updateLabelsY() {
 	int step = int(maxy - miny) / (labelcounty - 1);
 	for(int i = 0; i < labelcounty; i++) {
-		labelsy[i] = i * step;
+		labelsy[i] = miny + i * step;
 	}
 }
