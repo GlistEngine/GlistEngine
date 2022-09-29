@@ -72,16 +72,9 @@ gColor gGUICandleStickChart::getLowColor() {
 }
 
 void gGUICandleStickChart::addPointToLine(float x, float high, float low, float open, float close) {
-	if(x > maxx) {
-		int newmax = int(x) + 1;
-		if(newmax % (labelcountx - 1) == 0) setMaxX(newmax);
-		else setMaxX(newmax + labelcountx - 1 - (newmax % (labelcountx - 1)));
-	}
-	if(high > maxy) {
-		int newmax = int(high) + 1;
-		if(newmax % (labelcounty - 1) == 0) setMaxY(newmax);
-		else setMaxY(newmax + labelcounty - 1 - (newmax % (labelcounty - 1)));
-	}
+	if(x > largestvaluex) setMaxX(x);
+	if(high > largestvaluey) setMaxY(high);
+
 	int pointcount = graphline.size();
 	float pointx = axisx1 + axisxw * (x - minx) / (maxx - minx);
 	float lengthy = maxy - miny;
@@ -101,7 +94,6 @@ void gGUICandleStickChart::addPointToLine(float x, float high, float low, float 
 		break;
 	}
 	graphline.insert(graphline.begin() + index, {x, high, low, open, close, pointx, highy, lowy, openy, closey});
-//	gLogi("update") << graphline[0][5] << " " << graphline[0][6] << " " << graphline[0][7] << " " << graphline[0][8] << " " << graphline[0][9];
 
 }
 
@@ -115,7 +107,6 @@ void gGUICandleStickChart::drawGraph() {
 		else renderer->setColor(highcolor);
 		gDrawLine(graphline[i][5], graphline[i][6], graphline[i][5], graphline[i][7]);
 		gDrawRectangle(graphline[i][5] - candlew, graphline[i][8], candlew * 2, graphline[i][9] - graphline[i][8], true);
-//		gLogi("Data#") << i << " x: " << graphline[i][0] << " high: " << graphline[i][1] << " low: " << graphline[i][2] << " open: " << graphline[i][3] << " close: " << graphline[i][4];
 	}
 
 	renderer->setColor(oldcolor);
@@ -123,18 +114,15 @@ void gGUICandleStickChart::drawGraph() {
 
 void gGUICandleStickChart::updatePoints() {
 	if(graphline.empty()) return;
-//	gLogi("update") << axisx1 << " " << axisxw << " " << axisy1 << " " << axisyh;
 
 	int pointcount = graphline.size();
 	float lengthy = maxy - miny;
 	for(int i = 0; i < pointcount; i++) {
 		graphline[i][5] = axisx1 + axisxw * (graphline[i][0] - minx) / (maxx - minx);
-//		gLogi("values") << " " << graphline[i][0] << " " << axisx1 << " " << axisxw << " " << maxx << " " << minx;
 		graphline[i][6] = axisy2 - axisyh * (graphline[i][1] - miny) / lengthy;
 		graphline[i][7] = axisy2 - axisyh * (graphline[i][2] - miny) / lengthy;
 		graphline[i][8] = axisy2 - axisyh * (graphline[i][3] - miny) / lengthy;
 		graphline[i][9] = axisy2 - axisyh * (graphline[i][4] - miny) / lengthy;
 	}
-//	gLogi("update") << graphline[0][5] << " " << graphline[0][6] << " " << graphline[0][7] << " " << graphline[0][8] << " " << graphline[0][9];
 
 }
