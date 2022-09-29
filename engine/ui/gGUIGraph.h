@@ -43,13 +43,17 @@ public:
 	virtual void setLabelCountY(int labelCount);
 	int getLabelCountY();
 
+	int calculateStepSize(int step);
+
 	void draw();
 
 protected:
-	float axisx1, axisy1, axisx2, axisy2;
+	float axisx1, axisy1, axisx2, axisy2, axisxstart, axisystart;
 	float axisxw, axisyh;
 	float maxy, miny, maxx, minx;
+	float largestvaluex, largestvaluey, smallestvaluex, smallestvaluey;
 	bool gridlinesxenabled, gridlinesyenabled;
+	bool floatlabelsenabled;
 	int labelcountx, labelcounty;
 
 
@@ -59,10 +63,14 @@ private:
 	virtual void drawGraph();
 	void updateLabelsX();
 	void updateLabelsY();
+	int countDigits(int number);
 	float labelwidthx, labelwidthy;
 	std::string axisytitle, axisxtitle;
 	std::vector<int> labelsx;
 	std::vector<int> labelsy;
+	std::vector<float> floatlabelsx;
+	std::vector<float> floatlabelsy;
+	std::vector<int> labelsteps;
 };
 
 #endif /* UI_GGUIGRAPH_H_ */

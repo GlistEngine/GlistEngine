@@ -72,16 +72,9 @@ gColor gGUICandleStickChart::getLowColor() {
 }
 
 void gGUICandleStickChart::addPointToLine(float x, float high, float low, float open, float close) {
-	if(x > maxx) {
-		int newmax = int(x) + 1;
-		if(newmax % (labelcountx - 1) == 0) setMaxX(newmax);
-		else setMaxX(newmax + labelcountx - 1 - (newmax % (labelcountx - 1)));
-	}
-	if(high > maxy) {
-		int newmax = int(high) + 1;
-		if(newmax % (labelcounty - 1) == 0) setMaxY(newmax);
-		else setMaxY(newmax + labelcounty - 1 - (newmax % (labelcounty - 1)));
-	}
+	if(x > largestvaluex) setMaxX(x);
+	if(high > largestvaluey) setMaxY(high);
+
 	int pointcount = graphline.size();
 	float pointx = axisx1 + axisxw * (x - minx) / (maxx - minx);
 	float lengthy = maxy - miny;
