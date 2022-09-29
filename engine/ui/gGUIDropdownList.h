@@ -1,7 +1,7 @@
 /*
  * gGUIDropdownList.h
  *
- *  Created on: 19 Aðu 2022
+ *  Created on: 19 Aï¿½u 2022
  *      Author: sevval
  */
 
@@ -45,6 +45,7 @@ private:
 	int textboxh;
 	int listx, listy, listw;
 	bool listopened, selectedline, listexpanded, pressedonlist, buttonpressed;
+	bool lopened;
 
 };
 

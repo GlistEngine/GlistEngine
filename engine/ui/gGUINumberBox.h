@@ -16,6 +16,9 @@ public:
 	gGUINumberBox();
 	virtual ~gGUINumberBox();
 
+	virtual void set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIObject* parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h);
+	virtual void set(int x, int y, int w, int h);
+
 	void setText(const std::string& text);
 
 	/*
@@ -23,8 +26,10 @@ public:
 	 *
 	 * @param texttype for switching between integer and float values
 	 */
-	bool setType(bool texttype);
+	bool setType(bool isInteger = true);
 	void setSize(int width, int height);
+	void showTitle(bool isShown);
+
 	void keyPressed(int key);
 	void keyReleased(int key);
 	void charPressed(unsigned int codepoint);
@@ -38,10 +43,8 @@ private:
 	int boxwidth, boxheight, numboxwidth, numboxheight, smalboxwidth, smalboxheight;
 
 	bool b1ispressed, b2ispressed;
-	bool b1istoggle, b2istoggle;
-	bool b1ispressednow, b2ispressednow;
 	bool b1isdisabled, b2isdisabled;
-	bool typo;
+	bool isinteger;
 
 	int lineno, columno;
 	int castcurrtexttoint;
@@ -53,11 +56,13 @@ private:
 	float castcurrtexttofloat;
 
 	std::string defintvalue, deffloatvalue;
-	std::string headertext;
 	std::string currenttext;
 
 	gGUITextbox textbox;
 	gGUISizer boxsizer;
+	bool istitleshown;
+	int boxtoph;
+	int smalltriangleheight;
 
 };
 #endif /* UI_GGUINUMBERBOX_H_ */
