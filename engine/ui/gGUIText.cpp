@@ -13,6 +13,7 @@ gGUIText::gGUIText() {
 	text = "";
 	fontsize = font->getSize();
 	lineh = 14 * fontsize / 10;
+	width = 0;
 }
 
 gGUIText::~gGUIText() {
@@ -41,6 +42,7 @@ void gGUIText::draw() {
 }
 
 void gGUIText::resetText() {
+	if(width <= 0) return;
 	linenum = 0;
 	for (int i = 0; i < maxlinenum; i++) {
 		line[i] = "";
