@@ -10,22 +10,19 @@
 
 gGUINumberBox::gGUINumberBox() {
 	b1ispressed = false;
-	b1istoggle = false;
-	b1ispressednow = false;
 	b1isdisabled = false;
 	b2ispressed = false;
-	b2istoggle = false;
-	b2ispressednow = false;
 	b2isdisabled = false;
-	typo = true;
-	lineno = 5;
+	isinteger = true;
+	lineno = 4;
 	columno = 3;
 	boxwidth = 117;
 	boxheight = 64;
 	numboxwidth = 80;
 	numboxheight = 23;
-	smalboxwidth = 11;
-	smalboxheight = 11;
+	smalboxwidth = 16;
+	smalboxheight = 16;
+	smalltriangleheight = 6;
 	castcurrtexttoint = 0;
 	castcurrtexttofloat = 0.0f;
 	incboxposx = 90;
@@ -44,24 +41,66 @@ gGUINumberBox::gGUINumberBox() {
 	dectrilcorpy = decboxposy + 4;
 	dectrircorpx = decboxposx + 11;
 	dectrircorpy = decboxposy + 4;
-	headertext = "Number Box";
+	title = "Number Box";
 	currenttext = "";
 	defintvalue = "0";
 	deffloatvalue = "0.0";
+	istitleshown = false;
+	boxtoph = istitleshown * font->getSize();
 
 	boxsizer.setSize(lineno, columno);
-	float lineprops[] = {0.03f, 0.06f, 0.2f, 0.2f};
-	float columnprops[] = {0.014f, 0.14f};
+	float lineprops[] = {0.43f, 0.06f, 0.2f, 0.01f};
+	float columnprops[] = {0.20f, 0.80f};
 	boxsizer.enableBorders(false);
 	boxsizer.setColumnProportions(columnprops);
 	boxsizer.setLineProportions(lineprops);
 	textbox.setEditable(true);
 	textbox.setNumeric(true);
-	boxsizer.setControl(2, 1, &textbox);
+	boxsizer.setControl(0, 0, &textbox);
 	setSizer(&boxsizer);
 }
 
 gGUINumberBox::~gGUINumberBox() {
+}
+
+void gGUINumberBox::set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIObject* parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h) {
+	gGUIContainer::set(root, topParentGUIObject, parentGUIObject, parentSlotLineNo, parentSlotColumnNo, x, y, w, h);
+	incboxposx = textbox.left + textbox.width + 5;
+	incboxposy = textbox.top;
+	decboxposx = incboxposx;
+	decboxposy = incboxposy + smalboxheight + 2;
+	inctrilcorpx = incboxposx + 3;
+	inctrilcorpy = incboxposy + smalboxheight - 1 - (smalboxheight - smalltriangleheight) / 2;
+	inctrircorpx = incboxposx + smalboxwidth - 2;
+	inctrircorpy = inctrilcorpy;
+	inctriucorpx = (inctrilcorpx + inctrircorpx) / 2;
+	inctriucorpy = inctrilcorpy - smalltriangleheight;
+	dectrilcorpx = decboxposx + 3;
+	dectrilcorpy = decboxposy + 1 + (smalboxheight - smalltriangleheight) / 2;
+	dectrircorpx = decboxposx + smalboxwidth - 2;
+	dectrircorpy = dectrilcorpy;
+	dectriucorpx = (dectrilcorpx + dectrircorpx) / 2;
+	dectriucorpy = dectrilcorpy + smalltriangleheight;
+}
+
+void gGUINumberBox::set(int x, int y, int w, int h) {
+	gGUIContainer::set(x, y, w, h);
+	incboxposx = textbox.left + textbox.width + 5;
+	incboxposy = textbox.top;
+	decboxposx = incboxposx;
+	decboxposy = incboxposy + smalboxheight + 2;
+	inctrilcorpx = incboxposx + 3;
+	inctrilcorpy = incboxposy + smalboxheight - 1 - (smalboxheight - smalltriangleheight) / 2;
+	inctrircorpx = incboxposx + smalboxwidth - 2;
+	inctrircorpy = inctrilcorpy;
+	inctriucorpx = (inctrilcorpx + inctrircorpx) / 2;
+	inctriucorpy = inctrilcorpy - smalltriangleheight;
+	dectrilcorpx = decboxposx + 3;
+	dectrilcorpy = decboxposy + 1 + (smalboxheight - smalltriangleheight) / 2;
+	dectrircorpx = decboxposx + smalboxwidth - 2;
+	dectrircorpy = dectrilcorpy;
+	dectriucorpx = (dectrilcorpx + dectrircorpx) / 2;
+	dectriucorpy = dectrilcorpy + smalltriangleheight;
 }
 
 void gGUINumberBox::setText(const std::string& text) {
@@ -69,12 +108,17 @@ void gGUINumberBox::setText(const std::string& text) {
 }
 
 void gGUINumberBox::setSize(int width, int height) {
-	textbox.setSize(75, 23);
+	textbox.setSize(width, height);
 }
 
-bool gGUINumberBox::setType(bool texttype) {
-	typo = texttype;
-	return typo;
+void gGUINumberBox::showTitle(bool isShown) {
+	istitleshown = isShown;
+	boxtoph = istitleshown * font->getSize();
+}
+
+bool gGUINumberBox::setType(bool isInteger) {
+	isinteger = isInteger;
+	return isinteger;
 }
 
 void gGUINumberBox::keyPressed(int key) {
@@ -94,52 +138,14 @@ void gGUINumberBox::mousePressed(int x, int y, int button) {
 	textbox.mousePressed(x, y, button);
 	if(b1isdisabled) return;
 	if(x >= incboxposx && x < incboxposx + smalboxwidth && y >= incboxposy && y < incboxposy + smalboxheight) {
-		if(!b1istoggle) b1ispressed = true;
-		else {
-			if(!b1ispressed) {
-				b1ispressed = true;
-				b1ispressednow = true;
-			}
-		}
+		b1ispressed = true;
 		root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_BUTTONPRESSED);
 //		gLogi("Increase Button: ") << "Pressed";
-
-		if(typo){
-			castcurrtexttoint = gToInt(textbox.getText());
-			castcurrtexttoint = castcurrtexttoint + 1;
-			gLogi("current value: ") << castcurrtexttoint;
-			setText(gToStr(castcurrtexttoint));
-		}
-		if(!typo) {
-			castcurrtexttofloat = gToFloat(textbox.getText());
-			castcurrtexttofloat = castcurrtexttofloat + 0.1;
-			gLogi("current value: ") << castcurrtexttofloat;
-			setText(gToStr(castcurrtexttofloat));
-		}
 	}
 	if(x >= decboxposx && x < decboxposx + smalboxwidth && y >= decboxposy && y < decboxposy + smalboxheight) {
-		if(!b2istoggle) b2ispressed = true;
-			else {
-				if(!b2ispressed) {
-					b2ispressed = true;
-					b2ispressednow = true;
-				}
-			}
+		b2ispressed = true;
 		root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_BUTTONPRESSED);
 //		gLogi("Decrease Button: ") << "Pressed";
-
-		if(typo){
-			castcurrtexttoint = gToInt(textbox.getText());
-			castcurrtexttoint = castcurrtexttoint - 1;
-			gLogi("current value: ") << castcurrtexttoint;
-			setText(gToStr(castcurrtexttoint));
-		}
-		if(!typo) {
-			castcurrtexttofloat = gToFloat(textbox.getText());
-			castcurrtexttofloat = castcurrtexttofloat - 0.1;
-			gLogi("current value: ") << castcurrtexttofloat;
-			setText(gToStr(castcurrtexttofloat));
-		}
 	}
 }
 
@@ -147,29 +153,49 @@ void gGUINumberBox::mouseReleased(int x, int y, int button) {
 	gGUIContainer::mouseReleased(x, y, button);
 	textbox.mouseReleased(x, y, button);
 	if(b1isdisabled) return;
-	if(x >= left + 150 && x < left + 150 + smalboxwidth && y >= top + 30 && y < top + 30 + smalboxheight) {
-		if(!b1istoggle) b1ispressed = false;
-		else {
-			if(!b1ispressednow) b1ispressed = false;
-			}
-			root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_BUTTONRELEASED);
+	if(x >= incboxposx && x < incboxposx + smalboxwidth && y >= incboxposy && y < incboxposy + smalboxheight) {
+		gLogi("NumberBox") << "inc but pressed";
+		b1ispressed = false;
+		root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_BUTTONRELEASED);
 //			gLogi("Increase Button: ") << "Released";
-		} else {
-			if(!b1istoggle) b1ispressed = false;
-	}
-	b1ispressednow = false;
 
-	if(x >= left + 150 && x < left + 150 + smalboxwidth && y >= top + 62 && y < top + 62 + smalboxheight) {
-		if(!b2istoggle) b2ispressed = false;
-		else {
-			if(!b2ispressednow) b2ispressed = false;
-			}
-			root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_BUTTONRELEASED);
-//			gLogi("Decrease Button: ") << "Released";;
+		if(isinteger){
+			gLogi("NumberBox") << "inc integer";
+			castcurrtexttoint = gToInt(textbox.getText());
+			castcurrtexttoint = castcurrtexttoint + 1;
+			gLogi("current value: ") << castcurrtexttoint;
+			setText(gToStr(castcurrtexttoint));
 		} else {
-			if(!b2istoggle) b2ispressed = false;
+			castcurrtexttofloat = gToFloat(textbox.getText());
+			castcurrtexttofloat = castcurrtexttofloat + 0.1;
+			gLogi("current value: ") << castcurrtexttofloat;
+			setText(gToStr(castcurrtexttofloat));
+		}
+	} else {
+		b1ispressed = false;
 	}
-	b2ispressednow = false;
+
+	if(x >= decboxposx && x < decboxposx + smalboxwidth && y >= decboxposy && y < decboxposy + smalboxheight) {
+		gLogi("NumberBox") << "dec but pressed";
+		b2ispressed = false;
+		root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_BUTTONRELEASED);
+//			gLogi("Decrease Button: ") << "Released";;
+
+		if(isinteger){
+			gLogi("NumberBox") << "dec integer";
+			castcurrtexttoint = gToInt(textbox.getText());
+			castcurrtexttoint = castcurrtexttoint - 1;
+			gLogi("current value: ") << castcurrtexttoint;
+			setText(gToStr(castcurrtexttoint));
+		} else {
+			castcurrtexttofloat = gToFloat(textbox.getText());
+			castcurrtexttofloat = castcurrtexttofloat - 0.1;
+			gLogi("current value: ") << castcurrtexttofloat;
+			setText(gToStr(castcurrtexttofloat));
+		}
+	} else {
+		b2ispressed = false;
+	}
 }
 
 void gGUINumberBox::mouseDragged(int x, int y, int button) {
@@ -188,27 +214,29 @@ void gGUINumberBox::draw() {
 	gColor buttonColor = gColor(0.1f, 0.45f, 0.87f, 1.0f);
 	gColor pressedButtonColor = gColor(0.08f, 0.36f, 0.71f, 1.0f);
 
-	renderer->setColor(frameColor);
-	gDrawRectangle(left, top, boxwidth, boxheight, true);
+//	renderer->setColor(frameColor);
+//	gDrawRectangle(left, top, boxwidth, boxheight, true);
 
 	if(b1ispressed) renderer->setColor(pressedButtonColor);
-	if(!b1ispressed) renderer->setColor(buttonColor);
-	gDrawRectangle(incboxposx, incboxposy + 1 * b1ispressed, smalboxwidth, smalboxheight, true);
+	else renderer->setColor(buttonColor);
+	gDrawRectangle(incboxposx, incboxposy + b1ispressed, smalboxwidth, smalboxheight, true);
 
 	if(b1ispressed) renderer->setColor(middlegroundcolor);
-	if(!b1ispressed) renderer->setColor(white);
+	else renderer->setColor(white);
 	gDrawTriangle(inctriucorpx, inctriucorpy, inctrilcorpx, inctrilcorpy, inctrircorpx, inctrircorpy, true);
 
 	if(b2ispressed) renderer->setColor(pressedButtonColor);
-	if(!b2ispressed) renderer->setColor(buttonColor);
-	gDrawRectangle(decboxposx, decboxposy+1 + 1 * b2ispressed, smalboxwidth, smalboxheight, true);
+	else renderer->setColor(buttonColor);
+	gDrawRectangle(decboxposx, decboxposy + b2ispressed, smalboxwidth, smalboxheight, true);
 
 	if(b2ispressed) renderer->setColor(middlegroundcolor);
-	if(!b2ispressed) renderer->setColor(white);
+	else renderer->setColor(white);
 	gDrawTriangle(dectriucorpx, dectriucorpy, dectrilcorpx, dectrilcorpy, dectrircorpx, dectrircorpy, true);
 
-	renderer->setColor(black);
-	font->drawText(headertext, left + 10, top + 13);
+	if(istitleshown) {
+		renderer->setColor(fontcolor);
+		font->drawText(title, left, top + font->getSize());
+	}
 
 	renderer->setColor(defColor);
 	if(guisizer) guisizer->draw();
