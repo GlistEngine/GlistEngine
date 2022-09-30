@@ -94,7 +94,14 @@ void gGUICandleStickChart::addPointToLine(float x, float high, float low, float 
 		break;
 	}
 	graphline.insert(graphline.begin() + index, {x, high, low, open, close, pointx, highy, lowy, openy, closey});
+}
 
+void gGUICandleStickChart::setCandleWidth(float candleWidth) {
+	candlew = candleWidth;
+}
+
+float gGUICandleStickChart::getCandleWidth() {
+	return candlew;
 }
 
 void gGUICandleStickChart::drawGraph() {
@@ -103,6 +110,7 @@ void gGUICandleStickChart::drawGraph() {
 	gColor oldcolor = *renderer->getColor();
 	int pointcount = graphline.size();
 	for(int i = 0; i < pointcount; i++) {
+		if(rangeenabled) if(graphline[i][0] < rangestart || graphline[i][0] > rangeend) continue;
 		if(graphline[i][3] - graphline[i][4] < 0) renderer->setColor(lowcolor);
 		else renderer->setColor(highcolor);
 		gDrawLine(graphline[i][5], graphline[i][6], graphline[i][5], graphline[i][7]);
