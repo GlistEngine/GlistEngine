@@ -120,6 +120,7 @@ void gGUILineGraph::drawGraph() {
 				continue;
 			}
 			if(arepointsenabled) gDrawCircle(graphlines[i][j][2], graphlines[i][j][3], 5, true);
+
 			if(!skipped) gDrawLine(graphlines[i][j-1][2], graphlines[i][j-1][3], graphlines[i][j][2], graphlines[i][j][3]);
 			skipped = false;
 		}
