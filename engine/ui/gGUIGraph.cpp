@@ -25,6 +25,10 @@ gGUIGraph::gGUIGraph() {
 	smallestvaluex = 0;
 	smallestvaluey = 0;
 
+	rangeenabled = false;
+	rangestart = 0;
+	rangeend = 0;
+
 	labelwidthx = 0.0f;
 	labelwidthy = 0.0f;
 	gridlinesxenabled = false;
@@ -150,8 +154,21 @@ int gGUIGraph::getLabelCountY() {
 	return labelcounty;
 }
 
-int gGUIGraph::calculateStepSize(int step) {
-	return step;
+void gGUIGraph::enableRange(bool isRangeEnabled) {
+	rangeenabled = isRangeEnabled;
+}
+
+void gGUIGraph::setRange(float rangeStart, float rangeEnd) {
+	rangestart = rangeStart;
+	rangeend = rangeEnd;
+}
+
+int gGUIGraph::getRangeStart() {
+	return rangestart;
+}
+
+int gGUIGraph::getRangeEnd() {
+	return rangeend;
 }
 
 void gGUIGraph::draw() {
@@ -235,7 +252,7 @@ void gGUIGraph::updateLabelsX() {
 		labelcountx = (maxx - minx) / step + 1;
 //		gLogi("labelx") << labelcountx << " " << maxx << " " << minx << " " << step;
 		labelsx.clear();
-		for(int i = 0; i < labelcountx; i++) {
+		for(int i = 0; i < labelcountx + 1; i++) {
 			labelsx.push_back(minx + i * step);
 		}
 	}

@@ -113,9 +113,16 @@ void gGUILineGraph::drawGraph() {
 	for(int i = 0; i < linecount; i++) {
 		renderer->setColor(linecolors[i]);
 		int pointcount = graphlines[i].size();
+		bool skipped = true;
 		for(int j = 0; j < pointcount; j++) {
+			if(rangeenabled) if(graphlines[i][j][0] < rangestart || graphlines[i][j][0] > rangeend) {
+				skipped = true;
+				continue;
+			}
 			if(arepointsenabled) gDrawCircle(graphlines[i][j][2], graphlines[i][j][3], 5, true);
-			if(j != pointcount - 1) gDrawLine(graphlines[i][j][2], graphlines[i][j][3], graphlines[i][j+1][2], graphlines[i][j+1][3]);
+
+			if(!skipped) gDrawLine(graphlines[i][j-1][2], graphlines[i][j-1][3], graphlines[i][j][2], graphlines[i][j][3]);
+			skipped = false;
 		}
 	}
 
@@ -131,8 +138,6 @@ void gGUILineGraph::updatePoints() {
 		for(int j = 0; j < pointcount; j++) {
 			graphlines[i][j][2] = axisx1 + axisxw * (graphlines[i][j][0] - minx) / (maxx - minx);
 			graphlines[i][j][3] = axisy2 - axisyh * (graphlines[i][j][1] - miny) / (maxy - miny);
-//			gLogi("values") << " " << graphlines[i][j][0] << " " << axisx1 << " " << axisxw << " " << maxx << " " << minx;
-//			gLogi("line") << graphlines[i][j][0] << " " << graphlines[i][j][2];
 		}
 	}
 }
