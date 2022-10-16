@@ -87,6 +87,7 @@ public:
 			res.initialize();
 			icon = nullptr;
 			isiconchanged = false;
+			title = "";
 		}
 
 		/*

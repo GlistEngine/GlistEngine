@@ -11,6 +11,7 @@
 #include "gGUIToolbar.h"
 #include "gGUIStatusBar.h"
 #include "gGUIContextMenu.h"
+#include "gGUITreelist.h"
 
 
 gGUIFrame::gGUIFrame() {
@@ -36,4 +37,5 @@ void gGUIFrame::draw() {
 	if(menubar) menubar->draw();
 	if(statusbar) statusbar->draw();
 	if(contextmenu) contextmenu->draw();
+	if(treelist) treelist->draw();
 }

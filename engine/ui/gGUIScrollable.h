@@ -158,6 +158,7 @@ private:
 	int vrx, vry, vrw, vrh;
 	int hrx, hry, hrw, hrh;
 	int vsbmy;
+	bool isalpha;
 };
 
 #endif /* UI_GGUISCROLLABLE_H_ */
