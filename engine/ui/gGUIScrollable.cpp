@@ -92,6 +92,11 @@ void gGUIScrollable::setDimensions(int width, int height) {
 }
 
 void gGUIScrollable::draw() {
+	isalpha = renderer->isAlphaBlendingEnabled();
+	if(isalpha) {
+		renderer->disableAlphaTest();
+		renderer->disableAlphaBlending();
+	}
 	renderer->setColor(0, 0, 0);
 	font->drawText(title + ":", titlex, titley);
 	boxfbo->bind();
@@ -103,6 +108,10 @@ void gGUIScrollable::draw() {
 	boxfbo->drawSub(left, top + titledy, boxw, boxh, 0, renderer->getHeight() - boxh, boxw, boxh);
 	renderer->setColor(foregroundcolor);
 	gDrawRectangle(left, top + titledy, boxw, boxh, false);
+	if(isalpha) {
+		renderer->enableAlphaBlending();
+		renderer->enableAlphaTest();
+	}
 }
 
 void gGUIScrollable::drawContent() {
