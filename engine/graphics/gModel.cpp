@@ -345,7 +345,10 @@ void gModel::loadMaterialTextures(gSkinnedMesh* mesh, aiMaterial *mat, aiTexture
         // check if texture was loaded before and if so, continue to next iteration: skip loading a new texture
         bool skip = false;
         for(unsigned int j = 0; j < textures_loaded.size(); j++) {
-            if(std::strcmp(textures_loaded[j].getFilename().data(), str.C_Str()) == 0) {
+        	std::string aip = str.C_Str();
+        	int aipspos = aip.find_last_of('/');
+        	aip = aip.substr(aipspos + 1, aip.length() - aipspos - 1);
+            if(aip == textures_loaded[j].getFilename()) {
                 skip = true; // a texture with the same filepath has already been loaded, continue to next one. (optimization)
                 texno = j;
                 break;
