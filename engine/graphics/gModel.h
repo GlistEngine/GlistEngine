@@ -127,6 +127,9 @@ private:
 
     glm::mat4 convertMatrix(const aiMatrix4x4 &aiMat);
     gBoundingBox initialboundingbox;
+
+    bool oldalpha;
+    unsigned int dri;
 };
 
 #endif /* ENGINE_GRAPHICS_GMODEL_H_ */

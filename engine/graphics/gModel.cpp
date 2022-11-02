@@ -198,9 +198,18 @@ void gModel::setTransformationMatrix(const glm::mat4& transformationMatrix) {
 }
 
 void gModel::draw() {
-	for(unsigned int i = 0; i < meshes.size(); i++) {
-//		gLogi("gModel") << "draw mesh no:" << i << ", name:" << scene->mMeshes[i]->mName.C_Str();
-		meshes[i].draw();
+	oldalpha = renderer->isAlphaBlendingEnabled();
+	renderer->disableAlphaBlending();
+	for(dri = 0; dri < meshes.size(); dri++) {
+		if((meshes[dri].getMaterial()->getDiffuseMap() == nullptr && meshes[dri].getMaterial()->getDiffuseColor()->a == 1.0f)
+			|| (meshes[dri].getMaterial()->getDiffuseMap() != nullptr && meshes[dri].getMaterial()->getDiffuseMap()->getComponentNum() < 4)) meshes[dri].draw();
+	}
+	if(oldalpha) {
+		renderer->enableAlphaBlending();
+		for(dri = 0; dri < meshes.size(); dri++) {
+			if((meshes[dri].getMaterial()->getDiffuseMap() == nullptr && meshes[dri].getMaterial()->getDiffuseColor()->a < 1.0f)
+				|| (meshes[dri].getMaterial()->getDiffuseMap() != nullptr && meshes[dri].getMaterial()->getDiffuseMap()->getComponentNum() == 4)) meshes[dri].draw();
+		}
 	}
 }
 
