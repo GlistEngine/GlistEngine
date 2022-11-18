@@ -66,14 +66,16 @@ int gGetCullingDirection() {
 	return i;
 }
 
+//show Grid
 void gRenderer::enabledGrid() {
 	isgridenabled = true;
 }
-
+//close Grid
 void gRenderer::disableGrid() {
 	isgridenabled = false;
 }
 
+//return if Grid Draw or not
 bool gRenderer::isGridEnabled() {
 	return isgridenabled;
 }
@@ -82,17 +84,18 @@ void gRenderer::drawGrid() {
 	if(!isgridenabled) return;
 	//grid
 	for (float row = 0; row < linecount; row += linesnap) {
-		//satýr
+		//row
 		if(row == linecount / 2)rendercolor->set(200, 0, 0, 175);else rendercolor->set(30, 150, 30, 100);
 		gDrawLine(-linecount / 2, 0.0f, -(linecount / 2) + row, linecount / 2, 0, -(linecount / 2) + row);
-		//sutun
+		//column
 		gDrawLine(-(linecount / 2) + row, 0.0f, -linecount / 2, -(linecount / 2) + row, 0, linecount / 2);
 		rendercolor->set(255, 255, 255, 255);
 	}
+	//line color
 	rendercolor->set(30, 150, 30, 100);
-	//son satýr köþesi
+	//last row line
 	gDrawLine(-linecount / 2, 0.0f, -(linecount / 2) + linecount, linecount / 2, 0, -(linecount / 2) + linecount);
-	//son sütun köþesi
+	//last column line
 	gDrawLine(-(linecount / 2) + linecount, 0.0f, -linecount / 2, -(linecount / 2) + linecount, 0, linecount / 2);
 	rendercolor->set(255, 255, 255, 255);
 }
