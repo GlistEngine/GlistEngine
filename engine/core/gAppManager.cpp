@@ -139,12 +139,13 @@ void gAppManager::internalUpdate() {
 	if (canvas != nullptr) {
 		canvas->update();
 		updates++;
+		canvas->clearBackground();
 		for (upj = 0; upj < renderpassnum; upj++) {
 			renderpassno = upj;
-			canvas->clearBackground();
 			canvas->draw();
 			draws++;
 		}
+
 	}
 	if(guimanager->isframeset) guimanager->draw();
 	window->update();
