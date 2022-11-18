@@ -66,6 +66,35 @@ int gGetCullingDirection() {
 	return i;
 }
 
+//show Grid
+void gRenderer::enabledGrid() {
+	isgridenabled = true;
+}
+//close Grid
+void gRenderer::disableGrid() {
+	isgridenabled = false;
+}
+
+//return if Grid Draw or not
+bool gRenderer::isGridEnabled() {
+	return isgridenabled;
+}
+
+void gRenderer::drawGrid() {
+	if(!isgridenabled) return;
+	//grid
+	for (float row = 0; row <= linecount; row += linesnap) {
+		//row
+		//line color
+		if(row == linecount / 2)rendercolor->set(200, 0, 0, 175);else rendercolor->set(30, 150, 30, 100);
+		gDrawLine(-linecount / 2, 0.0f, -(linecount / 2) + row, linecount / 2, 0, -(linecount / 2) + row);
+		//column
+		gDrawLine(-(linecount / 2) + row, 0.0f, -linecount / 2, -(linecount / 2) + row, 0, linecount / 2);
+		//line color reset
+		rendercolor->set(255, 255, 255, 255);
+	}
+}
+
 void gDrawLine(float x1, float y1, float x2, float y2) {
 	gLine linemesh;
 	linemesh.draw(x1, y1, x2, y2);
@@ -261,6 +290,10 @@ gRenderer::gRenderer() {
 
 	isalphablendingenabled = false;
 	isalphatestenabled = false;
+	//grid
+	linesnap = 1.0f;
+	linecount = 50;
+	isgridenabled = false;
 }
 
 gRenderer::~gRenderer() {

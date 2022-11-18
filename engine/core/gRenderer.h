@@ -56,6 +56,7 @@ void gDrawBox(float x, float y, float z, float w = 1.0f, float h = 1.0f, float d
 void gDrawBox(glm::mat4 transformationMatrix, bool isFilled = true);
 void gDrawSphere(float xPos, float yPos, float zPos, int xSegmentNum = 64, int ySegmentNum = 64, float scale = 1.0f, bool isFilled = true);
 
+
 class gRenderer: public gObject {
 public:
 	static const int SCREENSCALING_NONE, SCREENSCALING_MIPMAP, SCREENSCALING_AUTO;
@@ -75,6 +76,14 @@ public:
 	int getUnitWidth();
 	int getUnitHeight();
 	static int getScreenScaling();
+
+	//grid
+	void drawGrid();
+	void enabledGrid();
+	void disableGrid();
+	bool isGridEnabled();
+
+
 
 	static void setCurrentResolution(int resolution);
 	static void setCurrentResolution(int screenWidth, int screenHeight);
@@ -168,6 +177,9 @@ private:
 	static int unitwidth, unitheight;
 	static int screenscaling;
 	static int currentresolution, unitresolution;
+	int linecount;
+	float linesnap;
+	bool isgridenabled;
 	gColor* rendercolor;
 
 	gColor* lightingcolor;

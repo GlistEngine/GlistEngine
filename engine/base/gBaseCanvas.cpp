@@ -232,5 +232,17 @@ void gBaseCanvas::disableAlphaTest() {
 	renderer->disableAlphaTest();
 }
 
+void gBaseCanvas::enableGrid() {
+	renderer->enabledGrid();
+}
+
+void gBaseCanvas::disableGrid() {
+	renderer->disableGrid();
+}
+
+bool gBaseCanvas::isGridEnabled() {
+	return renderer->isGridEnabled();
+}
+
 
 
