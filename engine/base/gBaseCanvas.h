@@ -87,7 +87,7 @@ protected:
 
 	void enableGrid();
 	void disableGrid();
-	bool isGridEnable();
+	bool isGridEnabled();
 };
 
 #endif /* ENGINE_BASE_GBASECANVAS_H_ */

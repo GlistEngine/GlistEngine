@@ -240,7 +240,7 @@ void gBaseCanvas::disableGrid() {
 	renderer->disableGrid();
 }
 
-bool gBaseCanvas::isGridEnable() {
+bool gBaseCanvas::isGridEnabled() {
 	return renderer->isGridEnabled();
 }
 
