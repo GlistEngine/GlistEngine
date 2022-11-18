@@ -84,6 +84,10 @@ protected:
 	void disableAlphaBlending();
 	void enableAlphaTest();
 	void disableAlphaTest();
+
+	void enableGrid();
+	void disableGrid();
+	bool isGridEnable();
 };
 
 #endif /* ENGINE_BASE_GBASECANVAS_H_ */
