@@ -19,6 +19,7 @@ gGUIFrame::gGUIFrame() {
 	menubar = nullptr;
 	statusbar = nullptr;
 	contextmenu = nullptr;
+	treelist = nullptr;
 }
 
 gGUIFrame::~gGUIFrame() {
