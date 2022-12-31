@@ -65,6 +65,7 @@ public:
 	bool isLink();
 	bool isDirectory();
 	bool isDevice();
+	bool isOpen();
 
 	static bool doesFileExist(const std::string& fullPath);
 	static bool doesFileExistInAssets(const std::string& filePath);

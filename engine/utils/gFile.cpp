@@ -149,6 +149,10 @@ bool gFile::isDevice() {
 	return isDevice(path);
 }
 
+bool gFile::isOpen() {
+	return stream.is_open();
+}
+
 void gFile::readFile() {
 	stream.seekg(0, std::ios::beg);
 	stream.ignore( std::numeric_limits<std::streamsize>::max() );
