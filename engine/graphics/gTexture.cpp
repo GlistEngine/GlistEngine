@@ -266,7 +266,7 @@ void gTexture::setFiltering(int minFilter, int magFilter) {
 	filtermag = magFilter;
 	bind();
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, texturefilter[filtermin]);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, texturefilter[filtermag]);
 	unbind();
 }
 
