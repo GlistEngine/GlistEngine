@@ -934,7 +934,7 @@ const std::string gRenderer::getShaderSrcColorFragment() {
 "	}\n"
 "\n"
 "	void main() {\n"
-"		vec4 result;\n"
+"		vec4 result = vec4(0.0);\n"
 "		vec3 norm;\n"
 "		if (mUseNormalMap > 0) {\n"
 "		    norm = normalize(texture(material.normalMap, TexCoords).rgb * 2.0 - 1.0);  // this normal is in tangent space\n"
