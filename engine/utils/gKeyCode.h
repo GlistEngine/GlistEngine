@@ -50,6 +50,7 @@
 #define G_KEY_Z 90
 
 /* functional */
+#define G_KEY_SPACE 32
 #define G_KEY_ESC 256
 #define G_KEY_ENTER 257
 #define G_KEY_TAB 258
