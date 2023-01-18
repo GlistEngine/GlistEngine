@@ -20,9 +20,12 @@ public:
 	void init(int particleNum);
 	void resetParticle(int particleNo);
 
+	void setPosition(float x, float y, float z);
+
 private:
 	std::string getFlameImageData();
 	gImage tex;
+	glm::vec3 pos;
 };
 
 #endif /* GRAPHICS_PARTICLES_GFIREPARTICLES_H_ */

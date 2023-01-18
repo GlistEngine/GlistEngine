@@ -13,11 +13,17 @@ gFireParticles::gFireParticles() {
 gFireParticles::~gFireParticles() {
 }
 
+void gFireParticles::setPosition(float x, float y, float z) {
+	pos.x = x;
+	pos.y = y;
+	pos.z = z;
+}
+
 void gFireParticles::init(int particleNum) {
 	tex = gImage(128, 128, GL_RGBA);
 	tex.setImageData((unsigned char*)gDecodeBase64(getFlameImageData()).c_str());
 	setTexture(&tex);
-	setInitialColor(1.0f, 0.9f, 0.0f, 1.0f);
+	setInitialColor(1.0f, 0.9f, 0.5f, 1.0f);
 	gBaseParticles::init(particleNum);
 }
 
@@ -26,8 +32,8 @@ void gFireParticles::resetParticle(int particleNo) {
 
 	float fRand = (float)(gRandom(500));
 	fRand = fRand / 50000;
-	setFadeColor(particleNo, 0.0f, -0.008f, 0.0f, -fRand - 0.01f);
-	setFadeLife(particleNo, -fRand-.001f);
+	setFadeColor(particleNo, 0.0f, -0.008f,  -0.008f, -fRand - 0.01f);
+	setFadeLife(particleNo, -fRand - 0.01f);
 
 
 	float fX;
@@ -35,8 +41,8 @@ void gFireParticles::resetParticle(int particleNo) {
 
 	fRand= (float)(gRandom(500));
 	fRand = fRand / 500;
+	fX = fRand - 0.5f;
 
-	fX = fRand-.5f;
 	fRand= (float)(gRandom(500));
 	fRand = fRand / 500;
 	fY = fRand;
@@ -44,12 +50,13 @@ void gFireParticles::resetParticle(int particleNo) {
 	fX = fX / 1000;
 	fY = fY / 50;
 
-	setDirection(particleNo, 0, fY, 0);
-	setGravity(particleNo, 0, 0, 0);
+	setDirection(particleNo, fX, fY, 0);
+	setGravity(particleNo, 0, -0.005f, 0);
+
 	fRand= (float)(gRandom(400));
-	fRand = fRand / 500;
-	setLR(particleNo, fRand - 0.4f, -1, 0);
-	setUL(particleNo, fRand - 0.4f + 0.3f, -0.7f, -4.0f);
+	fRand = fRand / 1600;
+	setLR(particleNo, fRand - 0.5f, -1, 0);
+	setUL(particleNo, pos.x - 0.2f + fRand, pos.y, pos.z + (particleNo - particlenum) * 0.0001f);
 	setAge(particleNo, 0);
 	setFrame(particleNo, 0);
 
