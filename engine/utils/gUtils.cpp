@@ -455,7 +455,7 @@ std::string gShowOpenFileDialog(
 	std::string resstr = "";
 	const char* carray[filterNum];
 	for(int i = 0; i < filterNum; i++) carray[i] = filterPatterns[i].c_str();
-	char* res = tinyfd_openFileDialog(
+	const char* res = tinyfd_openFileDialog(
 			dialogTitle.c_str(),
 			defaultPathAndFile.c_str(),
 			filterNum,
