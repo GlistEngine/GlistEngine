@@ -70,8 +70,28 @@ int gGetCullingDirection() {
 void gRenderer::enabledGrid() {
 	isgridenabled = true;
 }
+//set Grid axis
+void gRenderer::setGridShowedAxis(bool xy, bool yz, bool xz) {
+	isgridxzenabled = xz;
+	isgridxyenabled = xy;
+	isgridyzenabled = yz;
+}
+// set Grid XY axis enable or not with xy boolean
+void gRenderer::setGridEnabledXY(bool xy) {
+	isgridxyenabled = xy;
+}
+
+// set Grid XZ axis enable or not with xy boolean
+void gRenderer::setGridEnabledXZ(bool xz) {
+	isgridxzenabled = xz;
+}
+
+// set Grid YZ axis enable or not with yz boolean
+void gRenderer::setGridEnabledYZ(bool yz) {
+	isgridyzenabled = yz;
+}
 //close Grid
-void gRenderer::disableGrid() {
+void gRenderer::disabledGrid() {
 	isgridenabled = false;
 }
 
@@ -80,8 +100,29 @@ bool gRenderer::isGridEnabled() {
 	return isgridenabled;
 }
 
+//return if GridXY axis
+bool gRenderer::isGridXYEnabled() {
+	return isgridxyenabled;
+}
+
+//return if GridXZ axis
+bool gRenderer::isGridXZEnabled() {
+	return isgridxzenabled;
+}
+
+//return if GridYZ axis
+bool gRenderer::isGridYZEnabled() {
+	return isgridyzenabled;
+}
+//drawing grid screen
 void gRenderer::drawGrid() {
 	if(!isgridenabled) return;
+	if(isgridxzenabled)drawGridXZ();
+	if(isgridxyenabled)drawGridXY();
+	if(isgridyzenabled)drawGridYZ();
+}
+//drawing Grid XZ axis
+void gRenderer::drawGridXZ() {
 	//grid
 	for (float row = 0; row <= linecount; row += linesnap) {
 		//row
@@ -90,6 +131,36 @@ void gRenderer::drawGrid() {
 		gDrawLine(-linecount / 2, 0.0f, -(linecount / 2) + row, linecount / 2, 0, -(linecount / 2) + row);
 		//column
 		gDrawLine(-(linecount / 2) + row, 0.0f, -linecount / 2, -(linecount / 2) + row, 0, linecount / 2);
+		//line color reset
+		rendercolor->set(255, 255, 255, 255);
+	}
+}
+//drawing Grid YZ axis
+void gRenderer::drawGridYZ() {
+	if(!isgridenabled) return;
+	//grid
+	for (float row = 0; row <= linecount; row += linesnap) {
+		//row
+		//line color
+		if(row == linecount / 2)rendercolor->set(100, 100, 200, 175);else rendercolor->set(150, 150, 30, 100);
+		gDrawLine(0.0f, -(linecount / 2) + row, -linecount / 2, 0.0f, -(linecount / 2) + row, linecount / 2);
+		//column
+		gDrawLine(0.0f, -linecount / 2, -(linecount / 2) + row, 0.0f, linecount / 2, -(linecount / 2) + row);
+		//line color reset
+		rendercolor->set(255, 255, 255, 255);
+	}
+}
+//drawing Grid XY axis
+void gRenderer::drawGridXY() {
+	if(!isgridenabled) return;
+	//grid
+	for (float row = 0; row <= linecount; row += linesnap) {
+		//row
+		//line color
+		if(row == linecount / 2)rendercolor->set(0, 200, 0, 175);else rendercolor->set(150, 30, 30, 100);
+		gDrawLine(-linecount / 2, -(linecount / 2) + row, 0.0f, linecount / 2, -(linecount / 2) + row, 0.0f);
+		//column
+		gDrawLine(-(linecount / 2) + row, -linecount / 2, 0.0f, -(linecount / 2) + row, linecount / 2, 0.0f);
 		//line color reset
 		rendercolor->set(255, 255, 255, 255);
 	}
@@ -294,6 +365,9 @@ gRenderer::gRenderer() {
 	linesnap = 1.0f;
 	linecount = 50;
 	isgridenabled = false;
+	isgridxzenabled = true;
+	isgridxyenabled = true;
+	isgridyzenabled = true;
 }
 
 gRenderer::~gRenderer() {

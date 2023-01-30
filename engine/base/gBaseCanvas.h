@@ -85,9 +85,11 @@ protected:
 	void enableAlphaTest();
 	void disableAlphaTest();
 
-	void enableGrid();
-	void disableGrid();
-	bool isGridEnabled();
+	void enabledGrid();
+	void disabledGrid();
+	void setGridShowedAxis(bool xy, bool yz, bool xz);
+	void setGridEnabledXY(bool xy), setGridEnabledYZ(bool yz), setGridEnabledXZ(bool xz);
+	bool isGridEnabled(), isGridXYEnabled(), isGridYZEnabled(), isGridXZEnabled();
 };
 
 #endif /* ENGINE_BASE_GBASECANVAS_H_ */

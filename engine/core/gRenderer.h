@@ -79,9 +79,14 @@ public:
 
 	//grid
 	void drawGrid();
+	void drawGridYZ();
+	void drawGridXY();
+	void drawGridXZ();
 	void enabledGrid();
-	void disableGrid();
-	bool isGridEnabled();
+	void disabledGrid();
+	void setGridShowedAxis(bool xy, bool yz, bool xz);
+	void setGridEnabledXY(bool xy), setGridEnabledYZ(bool yz), setGridEnabledXZ(bool xz);
+	bool isGridEnabled(), isGridXYEnabled(), isGridYZEnabled(), isGridXZEnabled();
 
 
 
@@ -179,7 +184,7 @@ private:
 	static int currentresolution, unitresolution;
 	int linecount;
 	float linesnap;
-	bool isgridenabled;
+	bool isgridenabled, isgridxzenabled, isgridxyenabled, isgridyzenabled;
 	gColor* rendercolor;
 
 	gColor* lightingcolor;
