@@ -11,6 +11,7 @@
 #include "gBaseApp.h"
 #include "gBaseCanvas.h"
 #include "gCanvasManager.h"
+#include "gBaseComponent.h"
 #include "gBasePlugin.h"
 #if defined(WIN32) || defined(LINUX)
 #include <GLFW/glfw3.h>
@@ -56,6 +57,7 @@ gAppManager::gAppManager() {
 	window = nullptr;
 	app = nullptr;
 	windowmode = G_WINDOWMODE_GAME;
+	usewindow = true;
 	canvas = nullptr;
 	canvasmanager = nullptr;
 	guimanager = nullptr;
@@ -84,12 +86,13 @@ void gAppManager::runApp(const std::string& appName, gBaseApp *baseApp, int widt
 	appname = appName;
 	app = baseApp;
 	windowmode = windowMode;
+	if(windowmode == G_WINDOWMODE_NONE) usewindow = false;
 
 	// Create window
-	window->initialize(width, height, windowMode);
+	if(usewindow) window->initialize(width, height, windowMode);
 
 	canvasmanager = new gCanvasManager();
-	guimanager = new gGUIManager(app);
+	if(usewindow) guimanager = new gGUIManager(app);
 
 	// Run app
 	app->setup();
@@ -103,37 +106,45 @@ void gAppManager::runApp(const std::string& appName, gBaseApp *baseApp, int widt
 	tempcanvas->setScreenScaling(screenScaling);
 
 	// Main loop
-	while(!window->getShouldClose()) {
-		// Delta time calculations
-		endtime = AppClock::now();
-		deltatime = endtime - starttime;
-		elapsedtime += deltatime.count();
-		starttime = endtime;
+	if(usewindow) {
+		while(!window->getShouldClose()) {
+			// Delta time calculations
+			endtime = AppClock::now();
+			deltatime = endtime - starttime;
+			elapsedtime += deltatime.count();
+			starttime = endtime;
 
-		internalUpdate();
+			internalUpdate();
 
-		if(!window->vsync) {
-			/* Less precision, but lower CPU usage for non vsync */
-			sleeptime = (timestepnano - (AppClock::now() - starttime)).count() / 1e9;
-			if (sleeptime > 0.0f) {
-				preciseSleep(sleeptime);
+			if(!window->vsync) {
+				/* Less precision, but lower CPU usage for non vsync */
+				sleeptime = (timestepnano - (AppClock::now() - starttime)).count() / 1e9;
+				if (sleeptime > 0.0f) {
+					preciseSleep(sleeptime);
+				}
+				/* Much more precise method, but eats up CPU */
+	//			lag += deltatime;
+	//			while(lag >= timestepnano) {
+	//				lag -= timestepnano;
+	//				internalUpdate();
+	//			}
 			}
-			/* Much more precise method, but eats up CPU */
-//			lag += deltatime;
-//			while(lag >= timestepnano) {
-//				lag -= timestepnano;
-//				internalUpdate();
-//			}
+		}
+	} else {
+		while(true) {
+			app->update();
+			for (uci = 0; uci < gBaseComponent::usedcomponents.size(); uci++) gBaseComponent::usedcomponents[uci]->update();
 		}
 	}
 
-	window->close();
+	if(usewindow) window->close();
 }
 
 void gAppManager::internalUpdate() {
 	canvasmanager->update();
 	if(guimanager->isframeset) guimanager->update();
 	app->update();
+	for (uci = 0; uci < gBaseComponent::usedcomponents.size(); uci++) gBaseComponent::usedcomponents[uci]->update();
 	for (upi = 0; upi < gBasePlugin::usedplugins.size(); upi++) gBasePlugin::usedplugins[upi]->update();
 	canvas = canvasmanager->getCurrentCanvas();
 	if (canvas != nullptr) {
@@ -145,8 +156,8 @@ void gAppManager::internalUpdate() {
 			canvas->draw();
 			draws++;
 		}
-
 	}
+
 	if(guimanager->isframeset) guimanager->draw();
 	window->update();
 

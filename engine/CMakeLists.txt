@@ -196,6 +196,7 @@ set(SRC_FILES
 	${ENGINE_DIR}/base/gBaseGUIObject.cpp
 	${ENGINE_DIR}/core/gGUIManager.cpp
 	${ENGINE_DIR}/core/gAppObject.cpp
+	${ENGINE_DIR}/base/gBaseComponent.cpp
 	${ENGINE_DIR}/base/gBasePlugin.cpp
 	${ENGINE_DIR}/media/gBaseSound.cpp
 	${ENGINE_DIR}/media/gFmodSound.cpp
