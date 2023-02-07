@@ -232,32 +232,32 @@ void gBaseCanvas::disableAlphaTest() {
 	renderer->disableAlphaTest();
 }
 
-void gBaseCanvas::enabledGrid() {
-	renderer->enabledGrid();
+void gBaseCanvas::enableGrid() {
+	renderer->enableGrid();
 }
 
-void gBaseCanvas::disabledGrid() {
-	renderer->disabledGrid();
+void gBaseCanvas::disableGrid() {
+	renderer->disableGrid();
 }
 
 //set which Grid axis to show or close with xy,yz,xz boolean
-void gBaseCanvas::setGridShowedAxis(bool xy, bool yz, bool xz) {
-	renderer->setGridShowedAxis(xy, yz, xz);
+void gBaseCanvas::setGridEnableAxis(bool xy, bool yz, bool xz) {
+	renderer->setGridEnableAxis(xy, yz, xz);
 }
 
 // set Grid XY axis enable or not with xy boolean
-void gBaseCanvas::setGridEnabledXY(bool xy) {
-	renderer->setGridEnabledXY(xy);
+void gBaseCanvas::setGridEnableXY(bool xy) {
+	renderer->setGridEnableXY(xy);
 }
 
 // set Grid XZ axis enable or not with xy boolean
-void gBaseCanvas::setGridEnabledXZ(bool xz) {
-	renderer->setGridEnabledXZ(xz);
+void gBaseCanvas::setGridEnableXZ(bool xz) {
+	renderer->setGridEnableXZ(xz);
 }
 
 // set Grid YZ axis enable or not with yz boolean
-void gBaseCanvas::setGridEnabledYZ(bool yz) {
-	renderer->setGridEnabledYZ(yz);
+void gBaseCanvas::setGridEnableYZ(bool yz) {
+	renderer->setGridEnableYZ(yz);
 }
 
 bool gBaseCanvas::isGridEnabled() {

@@ -85,10 +85,10 @@ protected:
 	void enableAlphaTest();
 	void disableAlphaTest();
 
-	void enabledGrid();
-	void disabledGrid();
-	void setGridShowedAxis(bool xy, bool yz, bool xz);
-	void setGridEnabledXY(bool xy), setGridEnabledYZ(bool yz), setGridEnabledXZ(bool xz);
+	void enableGrid();
+	void disableGrid();
+	void setGridEnableAxis(bool xy, bool yz, bool xz);
+	void setGridEnableXY(bool xy), setGridEnableYZ(bool yz), setGridEnableXZ(bool xz);
 	bool isGridEnabled(), isGridXYEnabled(), isGridYZEnabled(), isGridXZEnabled();
 };
 
