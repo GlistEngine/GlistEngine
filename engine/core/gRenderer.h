@@ -86,6 +86,10 @@ public:
 	void disableGrid();
 	void setGridEnableAxis(bool xy, bool yz, bool xz);
 	void setGridEnableXY(bool xy), setGridEnableYZ(bool yz), setGridEnableXZ(bool xz);
+	void setGridMaxLength(float length);
+	float getGridMaxLength();
+	void setGridLineInterval(float intervalvalue);
+	float getGridLineInterval();
 	bool isGridEnabled(), isGridXYEnabled(), isGridYZEnabled(), isGridXZEnabled();
 
 

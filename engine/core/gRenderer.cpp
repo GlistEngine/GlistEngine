@@ -66,31 +66,78 @@ int gGetCullingDirection() {
 	return i;
 }
 
-//show Grid
+/*
+ * enable to show grid
+ */
 void gRenderer::enableGrid() {
 	isgridenable = true;
 }
-//set Grid axis
+/*
+ * set which Grid axis will be showned by set xy, xz, yz
+ * xy => xy axis
+ * xz => xz axis
+ * yz => yz axis
+ */
 void gRenderer::setGridEnableAxis(bool xy, bool yz, bool xz) {
 	isgridxzenable = xz;
 	isgridxyenable = xy;
 	isgridyzenable = yz;
 }
-// set Grid XY axis enable or not with xy boolean
+
+/*
+ * set Grid XY axis enable or not with xy boolean
+ */
 void gRenderer::setGridEnableXY(bool xy) {
 	isgridxyenable = xy;
 }
 
-// set Grid XZ axis enable or not with xy boolean
+/*
+ * set Grid XZ axis enable or not with xy boolean
+ */
 void gRenderer::setGridEnableXZ(bool xz) {
 	isgridxzenable = xz;
 }
 
-// set Grid YZ axis enable or not with yz boolean
+/*
+ * set Grid YZ axis enable or not with yz boolean
+ */
 void gRenderer::setGridEnableYZ(bool yz) {
 	isgridyzenable = yz;
 }
-//close Grid
+
+/*
+ * set max coordinate to reach for grid. Example: 50 mean (-25 to 25) as coordinate axis
+ * @param gridmaxvalue => set max distance for grid.
+ */
+void gRenderer::setGridMaxLength(float length) {
+	gridmaxvalue = length;
+}
+
+/*
+ * return max length of grid as float
+ */
+float gRenderer::getGridMaxLength() {
+	return gridmaxvalue;
+}
+
+/*
+ * set distance between grid lines.
+ * @param gridmaxvalue => set max distance for grid.
+ */
+void gRenderer::setGridLineInterval(float intervalvalue) {
+	gridlineinterval = intervalvalue;
+}
+
+/*
+ * return distance between grid lines as float
+ */
+float gRenderer::getGridLineInterval() {
+	return gridlineinterval;
+}
+
+/*
+ * disable grid
+ */
 void gRenderer::disableGrid() {
 	isgridenable = false;
 }
@@ -114,14 +161,24 @@ bool gRenderer::isGridXZEnabled() {
 bool gRenderer::isGridYZEnabled() {
 	return isgridyzenable;
 }
-//drawing grid screen
+/*
+ * draw grid lines if each axis valuables are enable(true)
+ * @param isgridenable for showing grid lines
+ * @param isgridxzenable, isgridxyenable, isgridyzenable for which axis of grid lines will be draw
+ */
 void gRenderer::drawGrid() {
 	if(!isgridenable) return;
 	if(isgridxzenable)drawGridXZ();
 	if(isgridxyenable)drawGridXY();
 	if(isgridyzenable)drawGridYZ();
 }
-//drawing Grid XZ axis
+
+/*
+ * drawing Grid XZ axis
+ * @row - which coordinate for line to draw
+ * @gridmaxvalue => how many lines will draw (can count as max grid lenght)
+ * @gridlineinterval => distance between lines
+ */
 void gRenderer::drawGridXZ() {
 	//grid
 	for (float row = 0; row <= gridmaxvalue; row += gridlineinterval) {
@@ -135,7 +192,13 @@ void gRenderer::drawGridXZ() {
 		rendercolor->set(255, 255, 255, 255);
 	}
 }
-//drawing Grid YZ axis
+
+/*
+ * drawing Grid YZ axis
+ * @row - which coordinate for line to draw
+ * @gridmaxvalue => how many lines will draw (can count as max grid lenght)
+ * @gridlineinterval => distance between lines
+ */
 void gRenderer::drawGridYZ() {
 	if(!isgridenable) return;
 	//grid
@@ -150,7 +213,12 @@ void gRenderer::drawGridYZ() {
 		rendercolor->set(255, 255, 255, 255);
 	}
 }
-//drawing Grid XY axis
+/*
+ * drawing Grid XY axis
+ * @row - which coordinate for line to draw
+ * @gridmaxvalue => how many lines will draw (can count as max grid lenght)
+ * @gridlineinterval => distance between lines
+ */
 void gRenderer::drawGridXY() {
 	if(!isgridenable) return;
 	//grid

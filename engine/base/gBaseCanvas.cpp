@@ -260,6 +260,36 @@ void gBaseCanvas::setGridEnableYZ(bool yz) {
 	renderer->setGridEnableYZ(yz);
 }
 
+/*
+ * set max coordinate to reach for grid. Example: 50 mean (-25 to 25) as coordinate axis
+ * @param gridmaxvalue => set max distance for grid.
+ */
+void gBaseCanvas::setGridMaxLength(float length) {
+	renderer->setGridMaxLength(length);
+}
+
+/*
+ * return max length of grid as float
+ */
+float gBaseCanvas::getGridMaxLength() {
+	return renderer->getGridMaxLength();
+}
+
+/*
+ * set distance between grid lines.
+ * @param gridmaxvalue => set max distance for grid.
+ */
+void gBaseCanvas::setGridLineInterval(float intervalvalue) {
+	renderer->setGridLineInterval(intervalvalue);
+}
+
+/*
+ * return distance between grid lines as float
+ */
+float gBaseCanvas::getGridLineInterval() {
+	return renderer->getGridLineInterval();
+}
+
 bool gBaseCanvas::isGridEnabled() {
 	return renderer->isGridEnabled();
 }
