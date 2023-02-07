@@ -50,6 +50,8 @@
 #include "gLine.h"
 #include "gRectangle.h"
 #include "gCircle.h"
+#include <array>
+
 
 class gGUILineGraph: public gGUIGraph  {
 
