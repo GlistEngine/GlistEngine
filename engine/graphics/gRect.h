@@ -189,6 +189,22 @@ public:
 	 * @return Height of the rectangle.
 	 */
 	int getHeight() const;
+	/**
+	 * Move the rectangle on X Axis with amound of speedX
+	 */
+	void moveX(int speedX);
+	/**
+	 * Move the rectangle on Y Axis with amound of speedY
+	 */
+	void moveY(int speedY);
+	/**
+	 * Move the rectangle on X Axis with amound of speedX
+	 */
+	void moveX(float speedX);
+	/**
+	 * Move the rectangle on Y Axis with amound of speedY
+	 */
+	void moveY(float speedY);
 private:
 	int l, r, t, b;
 	int width, height;
