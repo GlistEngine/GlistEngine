@@ -288,18 +288,18 @@ void gBaseCanvas::setGridColorofAxisXZ(gColor* color) {
 /*
  * set color for margin of XZ axis of grid r:red, g:green, b:blue, a:transparency(0 => full transparancy)
  */
-void gBaseCanvas::setGridColorofAxisMarginXZ(int r, int g, int b, int a) {
+void gBaseCanvas::setGridColorofAxisWireFrameXZ(int r, int g, int b, int a) {
 	if(r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255 || a < 0 || a > 255)return;
-	renderer->setGridColorofAxisMarginXZ(r, g, b, a);
+	renderer->setGridColorofAxisWireFrameXZ(r, g, b, a);
 }
 
 /*
  * set color for margin of XZ axis of grid with gColor a:transparency(0 => full transparancy)
  * @param color => send direct color with gColor function
  */
-void gBaseCanvas::setGridColorofAxisMarginXZ(gColor* color) {
+void gBaseCanvas::setGridColorofAxisWireFrameXZ(gColor* color) {
 	if(color->r < 0 || color->r > 255 || color->g < 0 || color->g > 255 || color->b < 0 || color->b > 255 || color->a < 0 || color->a > 255)return;
-	renderer->setGridColorofAxisMarginXZ(color);
+	renderer->setGridColorofAxisWireFrameXZ(color);
 	//rendercolor->set(color);
 }
 
@@ -326,18 +326,18 @@ void gBaseCanvas::setGridColorofAxisXY(gColor* color) {
 /*
  * set color for margin of XY axis of grid r:red, g:green, b:blue, a:transparency(0 => full transparancy)
  */
-void gBaseCanvas::setGridColorofAxisMarginXY(int r, int g, int b, int a) {
+void gBaseCanvas::setGridColorofAxisWireFrameXY(int r, int g, int b, int a) {
 	if(r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255 || a < 0 || a > 255)return;
-	renderer->setGridColorofAxisMarginXY(r, g, b, a);
+	renderer->setGridColorofAxisWireFrameXY(r, g, b, a);
 }
 
 /*
  * set color for margin of XY axis of grid with gColor a:transparency(0 => full transparancy)
  * @param color => send direct color with gColor function
  */
-void gBaseCanvas::setGridColorofAxisMarginXY(gColor* color) {
+void gBaseCanvas::setGridColorofAxisWireFrameXY(gColor* color) {
 	if(color->r < 0 || color->r > 255 || color->g < 0 || color->g > 255 || color->b < 0 || color->b > 255 || color->a < 0 || color->a > 255)return;
-	renderer->setGridColorofAxisMarginXY(color);
+	renderer->setGridColorofAxisWireFrameXY(color);
 	//rendercolor->set(color);
 }
 
@@ -363,18 +363,18 @@ void gBaseCanvas::setGridColorofAxisYZ(gColor* color) {
 /*
  * set color for margin of YZ axis of grid r:red, g:green, b:blue, a:transparency(0 => full transparancy)
  */
-void gBaseCanvas::setGridColorofAxisMarginYZ(int r, int g, int b, int a) {
+void gBaseCanvas::setGridColorofAxisWireFrameYZ(int r, int g, int b, int a) {
 	if(r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255 || a < 0 || a > 255)return;
-	renderer->setGridColorofAxisMarginYZ(r, g, b, a);
+	renderer->setGridColorofAxisWireFrameYZ(r, g, b, a);
 }
 
 /*
  * set color for margin of YZ axis of grid with gColor a:transparency(0 => full transparancy)
  * @param color => send direct color with gColor function
  */
-void gBaseCanvas::setGridColorofAxisMarginYZ(gColor* color) {
+void gBaseCanvas::setGridColorofAxisWireFrameYZ(gColor* color) {
 	if(color->r < 0 || color->r > 255 || color->g < 0 || color->g > 255 || color->b < 0 || color->b > 255 || color->a < 0 || color->a > 255)return;
-	renderer->setGridColorofAxisMarginYZ(color);
+	renderer->setGridColorofAxisWireFrameYZ(color);
 	//rendercolor->set(color);
 }
 

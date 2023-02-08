@@ -168,9 +168,11 @@ bool gRenderer::isGridYZEnabled() {
  */
 void gRenderer::drawGrid() {
 	if(!isgridenable) return;
+	enableDepthTest();
 	if(isgridxzenable)drawGridXZ();
 	if(isgridxyenable)drawGridXY();
 	if(isgridyzenable)drawGridYZ();
+	disableDepthTest();
 }
 
 /*
@@ -225,7 +227,8 @@ void gRenderer::drawGridXY() {
 	for (float row = 0; row <= gridmaxvalue; row += gridlineinterval) {
 		//row
 		//line color
-		if(row == gridmaxvalue / 2)rendercolor->set(gridxycolor.r, gridxycolor.g, gridxycolor.b, gridxycolor.a);else rendercolor->set(gridxymargincolor.r, gridxymargincolor.g, gridxymargincolor.b, gridxymargincolor.a);
+		if(row == gridmaxvalue / 2)rendercolor->set(gridxycolor.r, gridxycolor.g, gridxycolor.b, gridxycolor.a);
+		else rendercolor->set(gridxymargincolor.r, gridxymargincolor.g, gridxymargincolor.b, gridxymargincolor.a);
 		gDrawLine(-gridmaxvalue / 2, -(gridmaxvalue / 2) + row, 0.0f, gridmaxvalue / 2, -(gridmaxvalue / 2) + row, 0.0f);
 		//column
 		gDrawLine(-(gridmaxvalue / 2) + row, -gridmaxvalue / 2, 0.0f, -(gridmaxvalue / 2) + row, gridmaxvalue / 2, 0.0f);
@@ -263,7 +266,7 @@ void gRenderer::setGridColorofAxisXZ(gColor* color) {
 /*
  * set color for margin of XZ axis of grid r:red, g:green, b:blue, a:transparency(0 => full transparancy)
  */
-void gRenderer::setGridColorofAxisMarginXZ(int r, int g, int b, int a) {
+void gRenderer::setGridColorofAxisWireFrameXZ(int r, int g, int b, int a) {
 	if(r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255 || a < 0 || a > 255)return;
 	gridxzmargincolor.r = r;
 	gridxzmargincolor.g = g;
@@ -275,7 +278,7 @@ void gRenderer::setGridColorofAxisMarginXZ(int r, int g, int b, int a) {
  * set color for margin of XZ axis of grid with gColor a:transparency(0 => full transparancy)
  * @param color => send direct color with gColor function
  */
-void gRenderer::setGridColorofAxisMarginXZ(gColor* color) {
+void gRenderer::setGridColorofAxisWireFrameXZ(gColor* color) {
 	if(color->r < 0 || color->r > 255 || color->g < 0 || color->g > 255 || color->b < 0 || color->b > 255 || color->a < 0 || color->a > 255)return;
 	gridxzmargincolor.r = color->r;
 	gridxzmargincolor.g = color->g;
@@ -313,7 +316,7 @@ void gRenderer::setGridColorofAxisXY(gColor* color) {
 /*
  * set color for margin of XY axis of grid r:red, g:green, b:blue, a:transparency(0 => full transparancy)
  */
-void gRenderer::setGridColorofAxisMarginXY(int r, int g, int b, int a) {
+void gRenderer::setGridColorofAxisWireFrameXY(int r, int g, int b, int a) {
 	if(r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255 || a < 0 || a > 255)return;
 	gridxymargincolor.r = r;
 	gridxymargincolor.g = g;
@@ -325,7 +328,7 @@ void gRenderer::setGridColorofAxisMarginXY(int r, int g, int b, int a) {
  * set color for margin of XY axis of grid with gColor a:transparency(0 => full transparancy)
  * @param color => send direct color with gColor function
  */
-void gRenderer::setGridColorofAxisMarginXY(gColor* color) {
+void gRenderer::setGridColorofAxisWireFrameXY(gColor* color) {
 	if(color->r < 0 || color->r > 255 || color->g < 0 || color->g > 255 || color->b < 0 || color->b > 255 || color->a < 0 || color->a > 255)return;
 	gridxymargincolor.r = color->r;
 	gridxymargincolor.g = color->g;
@@ -362,7 +365,7 @@ void gRenderer::setGridColorofAxisYZ(gColor* color) {
 /*
  * set color for margin of YZ axis of grid r:red, g:green, b:blue, a:transparency(0 => full transparancy)
  */
-void gRenderer::setGridColorofAxisMarginYZ(int r, int g, int b, int a) {
+void gRenderer::setGridColorofAxisWireFrameYZ(int r, int g, int b, int a) {
 	if(r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255 || a < 0 || a > 255)return;
 	gridyzmargincolor.r = r;
 	gridyzmargincolor.g = g;
@@ -374,7 +377,7 @@ void gRenderer::setGridColorofAxisMarginYZ(int r, int g, int b, int a) {
  * set color for margin of YZ axis of grid with gColor a:transparency(0 => full transparancy)
  * @param color => send direct color with gColor function
  */
-void gRenderer::setGridColorofAxisMarginYZ(gColor* color) {
+void gRenderer::setGridColorofAxisWireFrameYZ(gColor* color) {
 	if(color->r < 0 || color->r > 255 || color->g < 0 || color->g > 255 || color->b < 0 || color->b > 255 || color->a < 0 || color->a > 255)return;
 	gridyzmargincolor.r = color->r;
 	gridyzmargincolor.g = color->g;
@@ -583,7 +586,7 @@ gRenderer::gRenderer() {
 	gridmaxvalue = 50;
 	isgridenable = false;
 	isgridxzenable = true;
-	isgridxyenable = false;
+	isgridxyenable = true;
 	isgridyzenable = false;
 	//bayrak2
 	//xz init

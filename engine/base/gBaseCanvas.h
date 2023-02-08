@@ -99,12 +99,12 @@ protected:
 	void setGridColorofAxisXZ(gColor* color);
 	void setGridColorofAxisYZ(gColor* color);
 	void setGridColorofAxisXY(gColor* color);
-	void setGridColorofAxisMarginXZ(int r, int g, int b, int a);
-	void setGridColorofAxisMarginYZ(int r, int g, int b, int a);
-	void setGridColorofAxisMarginXY(int r, int g, int b, int a);
-	void setGridColorofAxisMarginXZ(gColor* color);
-	void setGridColorofAxisMarginYZ(gColor* color);
-	void setGridColorofAxisMarginXY(gColor* color);
+	void setGridColorofAxisWireFrameXZ(int r, int g, int b, int a);
+	void setGridColorofAxisWireFrameYZ(int r, int g, int b, int a);
+	void setGridColorofAxisWireFrameXY(int r, int g, int b, int a);
+	void setGridColorofAxisWireFrameXZ(gColor* color);
+	void setGridColorofAxisWireFrameYZ(gColor* color);
+	void setGridColorofAxisWireFrameXY(gColor* color);
 	bool isGridEnabled(), isGridXYEnabled(), isGridYZEnabled(), isGridXZEnabled();
 };
 
