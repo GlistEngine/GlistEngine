@@ -90,6 +90,18 @@ public:
 	float getGridMaxLength();
 	void setGridLineInterval(float intervalvalue);
 	float getGridLineInterval();
+	void setGridColorofAxisXZ(int r, int g, int b, int a);
+	void setGridColorofAxisYZ(int r, int g, int b, int a);
+	void setGridColorofAxisXY(int r, int g, int b, int a);
+	void setGridColorofAxisXZ(gColor* color);
+	void setGridColorofAxisYZ(gColor* color);
+	void setGridColorofAxisXY(gColor* color);
+	void setGridColorofAxisMarginXZ(int r, int g, int b, int a);
+	void setGridColorofAxisMarginYZ(int r, int g, int b, int a);
+	void setGridColorofAxisMarginXY(int r, int g, int b, int a);
+	void setGridColorofAxisMarginXZ(gColor* color);
+	void setGridColorofAxisMarginYZ(gColor* color);
+	void setGridColorofAxisMarginXY(gColor* color);
 	bool isGridEnabled(), isGridXYEnabled(), isGridYZEnabled(), isGridXZEnabled();
 
 
@@ -186,9 +198,12 @@ private:
 	static int unitwidth, unitheight;
 	static int screenscaling;
 	static int currentresolution, unitresolution;
+	//grid
 	int gridmaxvalue;
 	float gridlineinterval;
 	bool isgridenable, isgridxzenable, isgridxyenable, isgridyzenable;
+	gColor gridxzcolor, gridxzmargincolor, gridxycolor,gridxymargincolor, gridyzcolor, gridyzmargincolor;//default
+	//grid - END
 	gColor* rendercolor;
 
 	gColor* lightingcolor;

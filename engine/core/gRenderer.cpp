@@ -184,7 +184,7 @@ void gRenderer::drawGridXZ() {
 	for (float row = 0; row <= gridmaxvalue; row += gridlineinterval) {
 		//row
 		//line color
-		if(row == gridmaxvalue / 2)rendercolor->set(200, 0, 0, 175);else rendercolor->set(30, 150, 30, 100);
+		if(row == gridmaxvalue / 2)rendercolor->set(gridxzcolor.r, gridxzcolor.g, gridxzcolor.b, gridxzcolor.a);else rendercolor->set(gridxzmargincolor.r, gridxzmargincolor.g, gridxzmargincolor.b, gridxzmargincolor.a);
 		gDrawLine(-gridmaxvalue / 2, 0.0f, -(gridmaxvalue / 2) + row, gridmaxvalue / 2, 0, -(gridmaxvalue / 2) + row);
 		//column
 		gDrawLine(-(gridmaxvalue / 2) + row, 0.0f, -gridmaxvalue / 2, -(gridmaxvalue / 2) + row, 0, gridmaxvalue / 2);
@@ -205,7 +205,7 @@ void gRenderer::drawGridYZ() {
 	for (float row = 0; row <= gridmaxvalue; row += gridlineinterval) {
 		//row
 		//line color
-		if(row == gridmaxvalue / 2)rendercolor->set(100, 100, 200, 175);else rendercolor->set(150, 150, 30, 100);
+		if(row == gridmaxvalue / 2)rendercolor->set(gridyzcolor.r, gridyzcolor.g, gridyzcolor.b, gridyzcolor.a);else rendercolor->set(gridyzmargincolor.r, gridyzmargincolor.g, gridyzmargincolor.b, gridyzmargincolor.a);
 		gDrawLine(0.0f, -(gridmaxvalue / 2) + row, -gridmaxvalue / 2, 0.0f, -(gridmaxvalue / 2) + row, gridmaxvalue / 2);
 		//column
 		gDrawLine(0.0f, -gridmaxvalue / 2, -(gridmaxvalue / 2) + row, 0.0f, gridmaxvalue / 2, -(gridmaxvalue / 2) + row);
@@ -225,13 +225,162 @@ void gRenderer::drawGridXY() {
 	for (float row = 0; row <= gridmaxvalue; row += gridlineinterval) {
 		//row
 		//line color
-		if(row == gridmaxvalue / 2)rendercolor->set(0, 200, 0, 175);else rendercolor->set(150, 30, 30, 100);
+		if(row == gridmaxvalue / 2)rendercolor->set(gridxycolor.r, gridxycolor.g, gridxycolor.b, gridxycolor.a);else rendercolor->set(gridxymargincolor.r, gridxymargincolor.g, gridxymargincolor.b, gridxymargincolor.a);
 		gDrawLine(-gridmaxvalue / 2, -(gridmaxvalue / 2) + row, 0.0f, gridmaxvalue / 2, -(gridmaxvalue / 2) + row, 0.0f);
 		//column
 		gDrawLine(-(gridmaxvalue / 2) + row, -gridmaxvalue / 2, 0.0f, -(gridmaxvalue / 2) + row, gridmaxvalue / 2, 0.0f);
 		//line color reset
 		rendercolor->set(255, 255, 255, 255);
 	}
+}
+
+
+/*
+ * set color for XZ axis of grid r:red, g:green, b:blue, a:transparency(0 => full transparancy)
+ */
+void gRenderer::setGridColorofAxisXZ(int r, int g, int b, int a) {
+	if(r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255 || a < 0 || a > 255)return;
+	gridxzcolor.r = r;
+	gridxzcolor.g = g;
+	gridxzcolor.b = b;
+	gridxzcolor.a = a;
+}
+
+/*
+ * set color for XZ axis of grid with gColor a:transparency(0 => full transparancy)
+ * @param color => send direct color with gColor function
+ */
+void gRenderer::setGridColorofAxisXZ(gColor* color) {
+	if(color->r < 0 || color->r > 255 || color->g < 0 || color->g > 255 || color->b < 0 || color->b > 255 || color->a < 0 || color->a > 255)return;
+	gridxzcolor.r = color->r;
+	gridxzcolor.g = color->g;
+	gridxzcolor.b = color->b;
+	gridxzcolor.a = color->a;
+	//color->r = 100;
+	//rendercolor->set(color);
+}
+
+/*
+ * set color for margin of XZ axis of grid r:red, g:green, b:blue, a:transparency(0 => full transparancy)
+ */
+void gRenderer::setGridColorofAxisMarginXZ(int r, int g, int b, int a) {
+	if(r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255 || a < 0 || a > 255)return;
+	gridxzmargincolor.r = r;
+	gridxzmargincolor.g = g;
+	gridxzmargincolor.b = b;
+	gridxzmargincolor.a = a;
+}
+
+/*
+ * set color for margin of XZ axis of grid with gColor a:transparency(0 => full transparancy)
+ * @param color => send direct color with gColor function
+ */
+void gRenderer::setGridColorofAxisMarginXZ(gColor* color) {
+	if(color->r < 0 || color->r > 255 || color->g < 0 || color->g > 255 || color->b < 0 || color->b > 255 || color->a < 0 || color->a > 255)return;
+	gridxzmargincolor.r = color->r;
+	gridxzmargincolor.g = color->g;
+	gridxzmargincolor.b = color->b;
+	gridxzmargincolor.a = color->a;
+	//rendercolor->set(color);
+}
+
+
+/*
+ * set color for XY axis of grid r:red, g:green, b:blue, a:transparency(0 => full transparancy)
+ */
+void gRenderer::setGridColorofAxisXY(int r, int g, int b, int a) {
+	if(r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255 || a < 0 || a > 255)return;
+	gridxycolor.r = r;
+	gridxycolor.g = g;
+	gridxycolor.b = b;
+	gridxycolor.a = a;
+}
+
+/*
+ * set color for XY axis of grid with gColor a:transparency(0 => full transparancy)
+ * @param color => send direct color with gColor function
+ */
+void gRenderer::setGridColorofAxisXY(gColor* color) {
+	if(color->r < 0 || color->r > 255 || color->g < 0 || color->g > 255 || color->b < 0 || color->b > 255 || color->a < 0 || color->a > 255)return;
+	gridxycolor.r = color->r;
+	gridxycolor.g = color->g;
+	gridxycolor.b = color->b;
+	gridxycolor.a = color->a;
+	//color->r = 100;
+	//rendercolor->set(color);
+}
+
+/*
+ * set color for margin of XY axis of grid r:red, g:green, b:blue, a:transparency(0 => full transparancy)
+ */
+void gRenderer::setGridColorofAxisMarginXY(int r, int g, int b, int a) {
+	if(r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255 || a < 0 || a > 255)return;
+	gridxymargincolor.r = r;
+	gridxymargincolor.g = g;
+	gridxymargincolor.b = b;
+	gridxymargincolor.a = a;
+}
+
+/*
+ * set color for margin of XY axis of grid with gColor a:transparency(0 => full transparancy)
+ * @param color => send direct color with gColor function
+ */
+void gRenderer::setGridColorofAxisMarginXY(gColor* color) {
+	if(color->r < 0 || color->r > 255 || color->g < 0 || color->g > 255 || color->b < 0 || color->b > 255 || color->a < 0 || color->a > 255)return;
+	gridxymargincolor.r = color->r;
+	gridxymargincolor.g = color->g;
+	gridxymargincolor.b = color->b;
+	gridxymargincolor.a = color->a;
+	//rendercolor->set(color);
+}
+
+/*
+ * set color for YZ axis of grid r:red, g:green, b:blue, a:transparency(0 => full transparancy)
+ */
+void gRenderer::setGridColorofAxisYZ(int r, int g, int b, int a) {
+	if(r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255 || a < 0 || a > 255)return;
+	gridyzcolor.r = r;
+	gridyzcolor.g = g;
+	gridyzcolor.b = b;
+	gridyzcolor.a = a;
+}
+
+/*
+ * set color for YZ axis of grid with gColor a:transparency(0 => full transparancy)
+ * @param color => send direct color with gColor function
+ */
+void gRenderer::setGridColorofAxisYZ(gColor* color) {
+	if(color->r < 0 || color->r > 255 || color->g < 0 || color->g > 255 || color->b < 0 || color->b > 255 || color->a < 0 || color->a > 255)return;
+	gridyzcolor.r = color->r;
+	gridyzcolor.g = color->g;
+	gridyzcolor.b = color->b;
+	gridyzcolor.a = color->a;
+	//color->r = 100;
+	//rendercolor->set(color);
+}
+
+/*
+ * set color for margin of YZ axis of grid r:red, g:green, b:blue, a:transparency(0 => full transparancy)
+ */
+void gRenderer::setGridColorofAxisMarginYZ(int r, int g, int b, int a) {
+	if(r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255 || a < 0 || a > 255)return;
+	gridyzmargincolor.r = r;
+	gridyzmargincolor.g = g;
+	gridyzmargincolor.b = b;
+	gridyzmargincolor.a = a;
+}
+
+/*
+ * set color for margin of YZ axis of grid with gColor a:transparency(0 => full transparancy)
+ * @param color => send direct color with gColor function
+ */
+void gRenderer::setGridColorofAxisMarginYZ(gColor* color) {
+	if(color->r < 0 || color->r > 255 || color->g < 0 || color->g > 255 || color->b < 0 || color->b > 255 || color->a < 0 || color->a > 255)return;
+	gridyzmargincolor.r = color->r;
+	gridyzmargincolor.g = color->g;
+	gridyzmargincolor.b = color->b;
+	gridyzmargincolor.a = color->a;
+	//rendercolor->set(color);
 }
 
 void gDrawLine(float x1, float y1, float x2, float y2) {
@@ -436,6 +585,16 @@ gRenderer::gRenderer() {
 	isgridxzenable = true;
 	isgridxyenable = false;
 	isgridyzenable = false;
+	//bayrak2
+	//xz init
+	gridxzcolor.set(200, 0, 0, 175);
+	gridxzmargincolor.set(30, 150, 30, 100); //0, 200, 0, 175
+	//xy init
+	gridxycolor.set(0, 200, 0, 175);
+	gridxymargincolor.set(150, 30, 30, 100);//150, 30, 30, 100
+	//yz init 100, 100, 200, 175
+	gridyzcolor.set(100, 100, 200, 175);
+	gridyzmargincolor.set(150, 30, 30, 100);//100, 100, 200, 175
 }
 
 gRenderer::~gRenderer() {
