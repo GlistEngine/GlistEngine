@@ -23,7 +23,7 @@ int gFmodSound::load(const std::string& fullPath) {
     /*
         Create a System object and initialize
     */
-    result = FMOD_System_Create(&system);
+    result = FMOD_System_Create(&system, FMOD_VERSION);
 //    ERRCHECK(result);
 
     result = FMOD_System_GetVersion(system, &version);
