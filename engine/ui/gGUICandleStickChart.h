@@ -33,7 +33,7 @@
 /*
  * gGUICandleStickChart.h
  *
- *  Created on: 15 Aðu 2022
+ *  Created on: 15 Agu 2022
  *      Author: Berke Adil
  */
 
@@ -49,6 +49,7 @@
 #include "gLine.h"
 #include "gRectangle.h"
 #include "gGUIGraph.h"
+#include <array>
 
 
 class gGUICandleStickChart: public gGUIGraph {

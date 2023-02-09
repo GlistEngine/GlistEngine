@@ -52,6 +52,26 @@ float gRect::exactCenterY() const {
 	return t + (height / 2);
 }
 
+void gRect::moveX(float speedX) {
+	l += speedX;
+	r += speedX;
+}
+
+void gRect::moveY(float speedY) {
+	t += speedY;
+	b += speedY;
+}
+
+void gRect::moveX(int speedX) {
+	l += speedX;
+	r += speedX;
+}
+
+void gRect::moveY(int speedY) {
+	t += speedY;
+	b += speedY;
+}
+
 bool gRect::intersects(int left1, int top1, int right1, int bottom1, int left2, int top2, int right2, int bottom2) { return left1 <= right2 && right1 >= left2 && top1 <= bottom2 && bottom1 >= top2; }
 
 bool gRect::intersects(const gRect& r1, const gRect& r2) { return intersects(r1.left(), r1.top(), r1.right(), r1.bottom(), r2.left(), r2.top(), r2.right(), r2.bottom()); }

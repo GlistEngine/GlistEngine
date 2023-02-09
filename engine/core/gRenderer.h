@@ -79,9 +79,30 @@ public:
 
 	//grid
 	void drawGrid();
-	void enabledGrid();
+	void drawGridYZ();
+	void drawGridXY();
+	void drawGridXZ();
+	void enableGrid();
 	void disableGrid();
-	bool isGridEnabled();
+	void setGridEnableAxis(bool xy, bool yz, bool xz);
+	void setGridEnableXY(bool xy), setGridEnableYZ(bool yz), setGridEnableXZ(bool xz);
+	void setGridMaxLength(float length);
+	float getGridMaxLength();
+	void setGridLineInterval(float intervalvalue);
+	float getGridLineInterval();
+	void setGridColorofAxisXZ(int r, int g, int b, int a);
+	void setGridColorofAxisYZ(int r, int g, int b, int a);
+	void setGridColorofAxisXY(int r, int g, int b, int a);
+	void setGridColorofAxisXZ(gColor* color);
+	void setGridColorofAxisYZ(gColor* color);
+	void setGridColorofAxisXY(gColor* color);
+	void setGridColorofAxisWireFrameXZ(int r, int g, int b, int a);
+	void setGridColorofAxisWireFrameYZ(int r, int g, int b, int a);
+	void setGridColorofAxisWireFrameXY(int r, int g, int b, int a);
+	void setGridColorofAxisWireFrameXZ(gColor* color);
+	void setGridColorofAxisWireFrameYZ(gColor* color);
+	void setGridColorofAxisWireFrameXY(gColor* color);
+	bool isGridEnabled(), isGridXYEnabled(), isGridYZEnabled(), isGridXZEnabled();
 
 
 
@@ -177,9 +198,12 @@ private:
 	static int unitwidth, unitheight;
 	static int screenscaling;
 	static int currentresolution, unitresolution;
-	int linecount;
-	float linesnap;
-	bool isgridenabled;
+	//grid
+	int gridmaxvalue;
+	float gridlineinterval;
+	bool isgridenable, isgridxzenable, isgridxyenable, isgridyzenable;
+	gColor gridxzcolor, gridxzmargincolor, gridxycolor,gridxymargincolor, gridyzcolor, gridyzmargincolor;//default
+	//grid - END
 	gColor* rendercolor;
 
 	gColor* lightingcolor;
