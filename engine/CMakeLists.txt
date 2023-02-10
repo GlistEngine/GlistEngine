@@ -6,8 +6,8 @@ if(UNIX)
 endif()
 
 # Configure compiler and linker as you need
-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS} -std=c++14 -DNDEBUG -DENABLE_BOOST_WORKAROUND=ON -fuse-ld=gold -Wuninitialized -Wmultichar -ffunction-sections -fdata-sections -fexceptions -frtti -fpermissive -fPIC -O2")
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} -g -std=c++14 -DDEBUG -DENABLE_BOOST_WORKAROUND=ON -fuse-ld=gold -Wuninitialized -Wmultichar -ffunction-sections -fdata-sections -fexceptions -frtti -fpermissive -fPIC -O0")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS} -std=c++14 -stdlib=libc++ -DNDEBUG -DENABLE_BOOST_WORKAROUND=ON -fuse-ld=gold -Wuninitialized -Wmultichar -ffunction-sections -fdata-sections -fexceptions -frtti -fpermissive -fPIC -O2")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} -g -std=c++14 -stdlib=libc++ -DDEBUG -DENABLE_BOOST_WORKAROUND=ON -fuse-ld=gold -Wuninitialized -Wmultichar -ffunction-sections -fdata-sections -fexceptions -frtti -fpermissive -fPIC -O0")
 if(NOT APPLE)
     set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -v -pthread -Wl,--no-as-needed -Wl,--gc-sections -Wl,--unresolved-symbols=report-all")
 endif()
@@ -80,6 +80,7 @@ if(APPLE)
 #    set(CMAKE_CXX_COMPILER "${MINGW64_DIR}/Cellar/gcc@7/7.5.0_3/bin/g++-7")
 endif()
 
+#set(CMAKE_CXX_COMPILER "${MINGW64_DIR}/bin/clang++.exe")
 
 #configure_file( ${ENGINE_DIR}/gConfig.h.in ${CMAKE_BINARY_DIR}/generated/gConfig.h )
 
@@ -253,11 +254,13 @@ set(INC_DIRS
 if(WIN32)
 	list(APPEND INC_DIRS
 		${MINGW64_DIR}/include
-		${MINGW64_DIR}/lib/gcc/x86_64-w64-mingw32/8.1.0/include/c++
+		${MINGW64_DIR}/lib/gcc/x86_64-w64-mingw32/12.2.0/include/c++
 		${MINGW64_DIR}/include/freetype2
 		${MINGW64_DIR}/include/ffmpeg
 		${MINGW64_DIR}/include/sqlite
 		${MINGW64_DIR}/include/curl
+		${MINGW64_DIR}/include/fmod
+		${MINGW64_DIR}/include/utf8
 	)
 elseif(LINUX)
 	list(APPEND INC_DIRS
@@ -305,7 +308,7 @@ ENDFOREACH()
 if(WIN32)
 	link_directories(
 			${MINGW64_DIR}/bin
-			${MINGW64_DIR}/x86_64-w64-mingw32/lib
+	#		${MINGW64_DIR}/x86_64-w64-mingw32/lib
 	#		${LIBS_DIR}/fmod/lib
 			${PLUGIN_LINKDIRS}
 	)
