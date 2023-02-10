@@ -4,3 +4,4 @@
 **/.settings/
 *.project
 *.cproject
+**/_build/
