@@ -86,6 +86,9 @@ public:
 	 */
 	unsigned int loadImage(const std::string& imagePath);
 
+	unsigned int loadImageFromURL(const std::string& imageUrl);
+	unsigned int loadImageFromURL(const std::string& imageUrl, bool cutUrlParameters);
+
 	/**
 	* Loads an image's data from the given full path to the RAM.
 	*
@@ -180,6 +183,12 @@ public:
      */
     void saveImage(std::string fileName);
 
+    std::string getImageUrl();
+
+private:
+    bool loadedfromurl;
+    std::string imageurl;
+    static int downloadno;
 };
 
 #endif /* ENGINE_GRAPHICS_GIMAGE_H_ */
