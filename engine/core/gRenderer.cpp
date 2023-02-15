@@ -182,6 +182,9 @@ void gRenderer::drawGrid() {
  * @gridlineinterval => distance between lines
  */
 void gRenderer::drawGridXZ() {
+	//color saved temp
+	gColor oldcolor;
+	oldcolor.set(rendercolor->r, rendercolor->g, rendercolor->b, rendercolor->a);
 	//grid
 	for (float row = 0; row <= gridmaxvalue; row += gridlineinterval) {
 		//row
@@ -190,9 +193,9 @@ void gRenderer::drawGridXZ() {
 		gDrawLine(-gridmaxvalue / 2, 0.0f, -(gridmaxvalue / 2) + row, gridmaxvalue / 2, 0, -(gridmaxvalue / 2) + row);
 		//column
 		gDrawLine(-(gridmaxvalue / 2) + row, 0.0f, -gridmaxvalue / 2, -(gridmaxvalue / 2) + row, 0, gridmaxvalue / 2);
-		//line color reset
-		rendercolor->set(255, 255, 255, 255);
 	}
+	//line color reset
+	rendercolor->set(oldcolor.r, oldcolor.g, oldcolor.b, oldcolor.a);
 }
 
 /*
@@ -202,6 +205,9 @@ void gRenderer::drawGridXZ() {
  * @gridlineinterval => distance between lines
  */
 void gRenderer::drawGridYZ() {
+	//color saved temp
+	gColor oldcolor;
+	oldcolor.set(rendercolor->r, rendercolor->g, rendercolor->b, rendercolor->a);
 	if(!isgridenable) return;
 	//grid
 	for (float row = 0; row <= gridmaxvalue; row += gridlineinterval) {
@@ -211,10 +217,10 @@ void gRenderer::drawGridYZ() {
 		gDrawLine(0.0f, -(gridmaxvalue / 2) + row, -gridmaxvalue / 2, 0.0f, -(gridmaxvalue / 2) + row, gridmaxvalue / 2);
 		//column
 		gDrawLine(0.0f, -gridmaxvalue / 2, -(gridmaxvalue / 2) + row, 0.0f, gridmaxvalue / 2, -(gridmaxvalue / 2) + row);
-		//line color reset
-		rendercolor->set(255, 255, 255, 255);
 	}
-}
+	//line color reset
+	rendercolor->set(oldcolor.r, oldcolor.g, oldcolor.b, oldcolor.a);
+}s
 /*
  * drawing Grid XY axis
  * @row - which coordinate for line to draw
@@ -222,6 +228,9 @@ void gRenderer::drawGridYZ() {
  * @gridlineinterval => distance between lines
  */
 void gRenderer::drawGridXY() {
+	//color saved temp
+	gColor oldcolor;
+	oldcolor.set(rendercolor->r, rendercolor->g, rendercolor->b, rendercolor->a);
 	if(!isgridenable) return;
 	//grid
 	for (float row = 0; row <= gridmaxvalue; row += gridlineinterval) {
@@ -232,9 +241,9 @@ void gRenderer::drawGridXY() {
 		gDrawLine(-gridmaxvalue / 2, -(gridmaxvalue / 2) + row, 0.0f, gridmaxvalue / 2, -(gridmaxvalue / 2) + row, 0.0f);
 		//column
 		gDrawLine(-(gridmaxvalue / 2) + row, -gridmaxvalue / 2, 0.0f, -(gridmaxvalue / 2) + row, gridmaxvalue / 2, 0.0f);
-		//line color reset
-		rendercolor->set(255, 255, 255, 255);
 	}
+	//line color reset
+	rendercolor->set(oldcolor.r, oldcolor.g, oldcolor.b, oldcolor.a);
 }
 
 
