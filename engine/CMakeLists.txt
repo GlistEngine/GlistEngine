@@ -139,6 +139,7 @@ set(SRC_FILES
 	${ENGINE_DIR}/graphics/primitives/gLine.cpp
 	${ENGINE_DIR}/graphics/primitives/gCircle.cpp
 	${ENGINE_DIR}/graphics/primitives/gRectangle.cpp
+	${ENGINE_DIR}/graphics/primitives/gRoundedRectangle.cpp
 	${ENGINE_DIR}/graphics/primitives/gPlane.cpp
 	${ENGINE_DIR}/graphics/primitives/gBox.cpp
 	${ENGINE_DIR}/graphics/primitives/gSphere.cpp
