@@ -1,7 +1,7 @@
 /*
  * gRoundedRectangle.cpp
  *
- *  Created on: 15 Þub 2023
+ *  Created on: 15 Feb 2023
  *      Author: Umutjohn
  */
 //Added necessary class label to engine's CMakeLists.txt at line 141
@@ -25,12 +25,9 @@ void gRoundedRectangle::draw() {
 
 void gRoundedRectangle::setRoundedRectanglePoints(int x, int y, int w, int h, int radius, bool isFilled) {
 	isprojection2d = true;
-	if (radius < 0)
-	    radius = 0;
-	if (radius > w / 2)
-	    radius = h / 2;
-	if (radius > h / 2)
-		radius = h / 2;
+	if (radius < 0) radius = 0;
+	if (radius > w / 2) radius = w / 2;
+	if (radius > h / 2) radius = h / 2;
 	std::vector<gVertex> vertices;
 	float numberOfVertices = std::max(std::max(100, w), h);
 	float angle = PI * 2 / numberOfVertices;
