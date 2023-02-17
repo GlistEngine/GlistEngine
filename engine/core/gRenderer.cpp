@@ -186,41 +186,44 @@ void gRenderer::drawGridXZ() {
 	gColor oldcolor;
 	oldcolor.set(rendercolor->r, rendercolor->g, rendercolor->b, rendercolor->a);
 	//grid
-	for (float row = 0; row <= gridmaxvalue; row += gridlineinterval) {
-		//row
+	for (float row = cameraposition.z + gridmaxvalue / 2; row > cameraposition.z - gridmaxvalue / 2; row -= gridlineinterval) {
+		//row(z)
 		//line color
-		if(row == gridmaxvalue / 2)rendercolor->set(gridxzcolor.r, gridxzcolor.g, gridxzcolor.b, gridxzcolor.a);else rendercolor->set(gridxzmargincolor.r, gridxzmargincolor.g, gridxzmargincolor.b, gridxzmargincolor.a);
-		gDrawLine(-gridmaxvalue / 2, 0.0f, -(gridmaxvalue / 2) + row, gridmaxvalue / 2, 0, -(gridmaxvalue / 2) + row);
-		//column
-		gDrawLine(-(gridmaxvalue / 2) + row, 0.0f, -gridmaxvalue / 2, -(gridmaxvalue / 2) + row, 0, gridmaxvalue / 2);
+		if(((int)row % 10) == 0)rendercolor->set(gridxzcolor.r, gridxzcolor.g, gridxzcolor.b, gridxzcolor.a);else rendercolor->set(gridxzmargincolor.r, gridxzmargincolor.g, gridxzmargincolor.b, gridxzmargincolor.a);
+		gDrawLine(cameraposition.x - gridmaxvalue / 2, 0.0f, row, cameraposition.x + gridmaxvalue / 2, 0.0f, row);
+	}
+	//grid
+	for (float column = cameraposition.x - gridmaxvalue / 2; column <= cameraposition.x + gridmaxvalue / 2; column += gridlineinterval) {
+		//row(z)
+		//line color
+		if(((int)column % 10) == 0)rendercolor->set(gridxzcolor.r, gridxzcolor.g, gridxzcolor.b, gridxzcolor.a);else rendercolor->set(gridxzmargincolor.r, gridxzmargincolor.g, gridxzmargincolor.b, gridxzmargincolor.a);
+		gDrawLine(column, 0.0f, cameraposition.z - gridmaxvalue / 2, column, 0.0f, cameraposition.z + gridmaxvalue / 2);
 	}
 	//line color reset
 	rendercolor->set(oldcolor.r, oldcolor.g, oldcolor.b, oldcolor.a);
 }
 
-/*
- * drawing Grid YZ axis
- * @row - which coordinate for line to draw
- * @gridmaxvalue => how many lines will draw (can count as max grid lenght)
- * @gridlineinterval => distance between lines
- */
 void gRenderer::drawGridYZ() {
 	//color saved temp
 	gColor oldcolor;
 	oldcolor.set(rendercolor->r, rendercolor->g, rendercolor->b, rendercolor->a);
-	if(!isgridenable) return;
 	//grid
-	for (float row = 0; row <= gridmaxvalue; row += gridlineinterval) {
-		//row
+	for (float row = cameraposition.z + gridmaxvalue / 2; row > cameraposition.z - gridmaxvalue / 2; row -= gridlineinterval) {
+		//row(z)
 		//line color
-		if(row == gridmaxvalue / 2)rendercolor->set(gridyzcolor.r, gridyzcolor.g, gridyzcolor.b, gridyzcolor.a);else rendercolor->set(gridyzmargincolor.r, gridyzmargincolor.g, gridyzmargincolor.b, gridyzmargincolor.a);
-		gDrawLine(0.0f, -(gridmaxvalue / 2) + row, -gridmaxvalue / 2, 0.0f, -(gridmaxvalue / 2) + row, gridmaxvalue / 2);
-		//column
-		gDrawLine(0.0f, -gridmaxvalue / 2, -(gridmaxvalue / 2) + row, 0.0f, gridmaxvalue / 2, -(gridmaxvalue / 2) + row);
+		if(((int)row % 10) == 0)rendercolor->set(gridyzcolor.r, gridyzcolor.g, gridyzcolor.b, gridyzcolor.a);else rendercolor->set(gridyzmargincolor.r, gridyzmargincolor.g, gridyzmargincolor.b, gridyzmargincolor.a);
+		gDrawLine(0.0f, cameraposition.y - gridmaxvalue / 2, row, 0.0f, cameraposition.y + gridmaxvalue / 2, row);
+	}
+	//grid
+	for (float column = cameraposition.y - gridmaxvalue / 2; column <= cameraposition.y + gridmaxvalue / 2; column += gridlineinterval) {
+		//row(z)
+		//line color
+		if(((int)column % 10) == 0)rendercolor->set(gridyzcolor.r, gridyzcolor.g, gridyzcolor.b, gridyzcolor.a);else rendercolor->set(gridyzmargincolor.r, gridyzmargincolor.g, gridyzmargincolor.b, gridyzmargincolor.a);
+		gDrawLine(0.0f, column, cameraposition.z - gridmaxvalue / 2, 0.0f, column, cameraposition.z + gridmaxvalue / 2);
 	}
 	//line color reset
 	rendercolor->set(oldcolor.r, oldcolor.g, oldcolor.b, oldcolor.a);
-}s
+}
 /*
  * drawing Grid XY axis
  * @row - which coordinate for line to draw
@@ -233,14 +236,18 @@ void gRenderer::drawGridXY() {
 	oldcolor.set(rendercolor->r, rendercolor->g, rendercolor->b, rendercolor->a);
 	if(!isgridenable) return;
 	//grid
-	for (float row = 0; row <= gridmaxvalue; row += gridlineinterval) {
-		//row
+	for (float row = cameraposition.x - gridmaxvalue / 2; row <= cameraposition.x + gridmaxvalue / 2; row += gridlineinterval) {
+		//row(z)
 		//line color
-		if(row == gridmaxvalue / 2)rendercolor->set(gridxycolor.r, gridxycolor.g, gridxycolor.b, gridxycolor.a);
-		else rendercolor->set(gridxymargincolor.r, gridxymargincolor.g, gridxymargincolor.b, gridxymargincolor.a);
-		gDrawLine(-gridmaxvalue / 2, -(gridmaxvalue / 2) + row, 0.0f, gridmaxvalue / 2, -(gridmaxvalue / 2) + row, 0.0f);
-		//column
-		gDrawLine(-(gridmaxvalue / 2) + row, -gridmaxvalue / 2, 0.0f, -(gridmaxvalue / 2) + row, gridmaxvalue / 2, 0.0f);
+		if(((int)row % 10) == 0)rendercolor->set(gridxycolor.r, gridxycolor.g, gridxycolor.b, gridxycolor.a);else rendercolor->set(gridxymargincolor.r, gridxymargincolor.g, gridxymargincolor.b, gridxymargincolor.a);
+		gDrawLine(row, cameraposition.y - gridmaxvalue / 2, 0.0f, row, cameraposition.y + gridmaxvalue / 2, 0.0f);
+	}
+	//grid
+	for (float column = cameraposition.y - gridmaxvalue / 2; column <= cameraposition.y + gridmaxvalue / 2; column += gridlineinterval) {
+		//row(z)
+		//line color
+		if(((int)column % 10) == 0)rendercolor->set(gridxycolor.r, gridxycolor.g, gridxycolor.b, gridxycolor.a);else rendercolor->set(gridxymargincolor.r, gridxymargincolor.g, gridxymargincolor.b, gridxymargincolor.a);
+		gDrawLine(cameraposition.x - gridmaxvalue / 2, column, 0.0f, cameraposition.x + gridmaxvalue / 2, column, 0.0f);
 	}
 	//line color reset
 	rendercolor->set(oldcolor.r, oldcolor.g, oldcolor.b, oldcolor.a);
