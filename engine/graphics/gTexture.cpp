@@ -92,6 +92,7 @@ gTexture::gTexture(int w, int h, int format, bool isFbo) {
 	isfbo = isFbo;
 	ishdr = false;
 	isfont = false;
+	ismaskloaded = false;
     glGenTextures(1, &id);
     bind();
     glTexImage2D(GL_TEXTURE_2D, 0, internalformat, width, height, 0, format, GL_UNSIGNED_BYTE, 0);
@@ -131,6 +132,18 @@ unsigned int gTexture::load(const std::string& fullPath) {
 
 unsigned int gTexture::loadTexture(const std::string& texturePath) {
 	return load(gGetTexturesDir() + texturePath);
+}
+
+unsigned int gTexture::loadMask(const std::string& fullPath) {
+	masktexture = new gTexture();
+	ismaskloaded = true;
+	return masktexture->load(fullPath);
+}
+
+unsigned int gTexture::loadMaskTexture(const std::string& maskTexturePath) {
+	masktexture = new gTexture();
+	ismaskloaded = true;
+	return masktexture->load(gGetTexturesDir() + maskTexturePath);
 }
 
 unsigned int gTexture::loadData(unsigned char* textureData, int width, int height, int componentNum, bool isFont) {
@@ -416,10 +429,16 @@ void gTexture::endDraw() {
 	renderer->getImageShader()->setMat4("model", imagematrix);
 	renderer->getImageShader()->setVec4("spriteColor", glm::vec4(renderer->getColor()->r, renderer->getColor()->g, renderer->getColor()->b, renderer->getColor()->a));
 	renderer->getImageShader()->setInt("image", 0);
+	renderer->getImageShader()->setInt("maskimage", 1);
+	renderer->getImageShader()->setBool("isAlphaMasking", ismaskloaded);
 
 	glActiveTexture(GL_TEXTURE0);
     bind();
-    if ((format == GL_RGBA || format == GL_RG) && !renderer->isAlphaBlendingEnabled()) {
+    if(ismaskloaded) {
+        glActiveTexture(GL_TEXTURE0 + 1);
+        masktexture->bind(1);
+    }
+    if ((format == GL_RGBA || format == GL_RG || ismaskloaded) && !renderer->isAlphaBlendingEnabled()) {
 		glEnable(GL_BLEND);
 		glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     }
@@ -428,7 +447,7 @@ void gTexture::endDraw() {
     glDrawArrays(GL_TRIANGLES, 0, 6);
     glBindVertexArray(0);
 
-    if ((format == GL_RGBA || format == GL_RG) && !renderer->isAlphaBlendingEnabled()) glDisable(GL_BLEND);
+    if (((format == GL_RGBA || format == GL_RG || format == GL_RGB) && !renderer->isAlphaBlendingEnabled()) || ismaskloaded) glDisable(GL_BLEND);
     unbind();
     if(bsubpartdrawn) {	setupRenderData(); }
 }
