@@ -184,6 +184,7 @@ public:
     void saveImage(std::string fileName);
 
     std::string getImageUrl();
+    static std::string generateDownloadedImagePath(std::string imageType = "png");
 
 private:
     bool loadedfromurl;
