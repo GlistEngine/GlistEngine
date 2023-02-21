@@ -70,19 +70,6 @@ bool gFile::openStream(int fileMode, bool isBinary) {
 
 	switch(mode) {
 	case FILEMODE_READONLY:
-		break;
-	case FILEMODE_WRITEONLY:
-	case FILEMODE_READWRITE:
-	case FILEMODE_APPEND:
-//		if(!ofDirectory(ofFilePath::getEnclosingDirectory(path())).exists()){
-//			ofFilePath::createEnclosingDirectory(path());
-//		}
-		break;
-	}
-
-
-	switch(mode) {
-	case FILEMODE_READONLY:
 		stream.open(path, std::ios::in | binarymode);
 		readFile();
 		break;

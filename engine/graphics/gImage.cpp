@@ -58,7 +58,7 @@ unsigned int gImage::loadImage(const std::string& imagePath) {
 }
 
 unsigned int gImage::loadImageFromURL(const std::string& imageUrl) {
-	return loadImageFromURL(imageUrl, false);
+	return loadImageFromURL(imageUrl, true);
 }
 
 unsigned int gImage::loadImageFromURL(const std::string& imageUrl, bool cutUrlParameters) {
@@ -73,14 +73,13 @@ unsigned int gImage::loadImageFromURL(const std::string& imageUrl, bool cutUrlPa
 	int lastdot = imagename.find_last_of('.');
 	std::string imagetype = gToLower(imagename.substr(lastdot + 1, imagename.size() - lastdot - 1));
 
-	imagename = "downloadedimage_" + gToStr(downloadno) + "." + imagetype;
-	downloadno++;
+	std::string imagepath = generateDownloadedImagePath(imagetype);
 	gHttpFile urlfile;
 	urlfile.load(imageurl);
-	urlfile.save(gGetImagesDir() + imagename, true);
+	urlfile.save(imagepath, true);
 	loadedfromurl = true;
 
-	return load(gGetImagesDir() + imagename);
+	return load(imagepath);
 }
 
 void gImage::loadData(const std::string& fullPath) {
@@ -164,5 +163,13 @@ std::string gImage::getImageUrl() {
 	return imageurl;
 }
 
+std::string gImage::generateDownloadedImagePath(std::string imageType) {
+	std::string imagepath = "";
+	do {
+		imagepath = gGetImagesDir() + "downloadedimage_" + gToStr(downloadno) + "." + imageType;
+		downloadno++;
+	} while(gFile::doesFileExist(imagepath));
+	return imagepath;
+}
 
 
