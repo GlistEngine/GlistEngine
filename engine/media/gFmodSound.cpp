@@ -58,6 +58,7 @@ int gFmodSound::loadSound(const std::string& soundPath) {
 
 void gFmodSound::play() {
     result = FMOD_System_PlaySound(system, sound1, 0, false, &channel);
+	FMOD_Channel_SetVolume(channel, getVolume());
     isplaying = true;
 //    ERRCHECK(result);
 }
@@ -107,7 +108,9 @@ void gFmodSound::setLoopType(int loopType) {
 
 void gFmodSound::setVolume(float volume) {
 	gBaseSound::setVolume(volume);
-	FMOD_Channel_SetVolume(channel, volume);
+	if(isPlaying()) {
+		FMOD_Channel_SetVolume(channel, volume);
+	}
 }
 
 

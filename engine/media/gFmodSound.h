@@ -49,17 +49,17 @@ public:
 	/**
 	 * Pauses the sound file that is currently playing also resumes it.
 	 *
-	 * @param isPaused checks and returns bool variable whether the video is stopped or not.
+	 * @param isPaused checks and returns bool variable whether the sound is stopped or not.
 	 */
 	void setPaused(bool isPaused);
 
 	/**
-	 * Stops the currently playing video file.
+	 * Stops the currently playing sound file.
 	 */
 	void stop();
 
 	/**
-	 * Closes the currently playing video file.
+	 * Closes the currently playing sound file.
 	 */
 	void close();
 
