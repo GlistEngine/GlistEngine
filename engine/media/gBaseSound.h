@@ -47,11 +47,11 @@ protected:
 	unsigned int position;
 	unsigned int duration;
 	bool ispaused;
+	float volume;
 
 private:
 	std::string filepath;
 	int looptype;
-	float volume;
 };
 
 #endif /* MEDIA_GBASESOUND_H_ */
