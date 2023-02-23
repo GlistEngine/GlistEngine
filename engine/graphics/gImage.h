@@ -185,6 +185,7 @@ public:
 
     std::string getImageUrl();
     static std::string generateDownloadedImagePath(std::string imageType = "png");
+    unsigned int loadMaskImage(const std::string& maskImagePath);
 
 private:
     bool loadedfromurl;
