@@ -11,7 +11,7 @@ Glist Engine consists of 3 repositories:
 
 Glist Engine repo contains the core engine, plugins, samples to use in the development. Glist Zbin contains libs, includes and a preconfigured ide. Glist App is the repo to clone when starting each new game project.
 
-More information about GlistEngine can be found at [https://glistengine.gamelab.istanbul/](https://glistengine.gamelab.istanbul/)
+More information about GlistEngine can be found at [https://www.glistengine.com](https://www.glistengine.com)
 
 
 ## Installation
@@ -20,7 +20,7 @@ More information about GlistEngine can be found at [https://glistengine.gamelab.
 
 Glist Engine has one-click installers for Windows, Linux and Mac. You can download the installers from the below links:
 
-- Windows Installer - [https://glistengine.gamelab.istanbul/documentation/tutorials/glistengine-setup-tutorial.html](https://glistengine.gamelab.istanbul/documentation/tutorials/glistengine-setup-tutorial.html)
+- Windows Installer - [https://www.glistengine.com/download](https://www.glistengine.com/download)
 - Linux installer (coming soon)
 - Mac installer (coming soon)
 
