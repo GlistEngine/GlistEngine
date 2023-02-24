@@ -154,8 +154,7 @@ unsigned int gTexture::loadData(unsigned char* textureData, int width, int heigh
 
     glGenTextures(1, &id);
 
-    data = textureData;
-    setData(data, true);
+    setData(textureData, true);
 
 	setupRenderData();
     return id;

@@ -104,6 +104,8 @@ public:
     void drawSub(const gRect& src, const gRect& dst, int pivotx, int pivoty, float rotate = 0.f);
     void drawSub(const gRect& src, const gRect& dst, glm::vec2 pivotPointCoords, float rotate = 0.f);
 
+    void setData(unsigned char* textureData, bool isMutable = false);
+
 protected:
     std::string fullpath, directory;
     unsigned int id, internalformat, format;
@@ -115,7 +117,6 @@ protected:
     int wraps, wrapt, filtermin, filtermag;
     bool isfont;
 
-    void setData(unsigned char* textureData, bool isMutable = false);
     unsigned char* getData();
     bool isMutable();
 
