@@ -87,6 +87,7 @@ void gAppManager::runApp(const std::string& appName, gBaseApp *baseApp, int widt
 	app = baseApp;
 	windowmode = windowMode;
 	if(windowmode == G_WINDOWMODE_NONE) usewindow = false;
+	if(!usewindow) framerate = INT_MAX;
 
 	// Create window
 	if(usewindow) window->initialize(width, height, windowMode);
@@ -106,34 +107,31 @@ void gAppManager::runApp(const std::string& appName, gBaseApp *baseApp, int widt
 	tempcanvas->setScreenScaling(screenScaling);
 
 	// Main loop
-	if(usewindow) {
-		while(!window->getShouldClose()) {
-			// Delta time calculations
-			endtime = AppClock::now();
-			deltatime = endtime - starttime;
-			elapsedtime += deltatime.count();
-			starttime = endtime;
+	while(!usewindow || !window->getShouldClose()) {
+		// Delta time calculations
+		endtime = AppClock::now();
+		deltatime = endtime - starttime;
+		elapsedtime += deltatime.count();
+		starttime = endtime;
 
-			internalUpdate();
-
-			if(!window->vsync) {
-				/* Less precision, but lower CPU usage for non vsync */
-				sleeptime = (timestepnano - (AppClock::now() - starttime)).count() / 1e9;
-				if (sleeptime > 0.0f) {
-					preciseSleep(sleeptime);
-				}
-				/* Much more precise method, but eats up CPU */
-	//			lag += deltatime;
-	//			while(lag >= timestepnano) {
-	//				lag -= timestepnano;
-	//				internalUpdate();
-	//			}
-			}
-		}
-	} else {
-		while(true) {
+		if(usewindow) internalUpdate();
+		else {
 			app->update();
 			for (uci = 0; uci < gBaseComponent::usedcomponents.size(); uci++) gBaseComponent::usedcomponents[uci]->update();
+		}
+
+		if(!usewindow || !window->vsync) {
+			/* Less precision, but lower CPU usage for non vsync */
+			sleeptime = (timestepnano - (AppClock::now() - starttime)).count() / 1e9;
+			if (sleeptime > 0.0f) {
+				preciseSleep(sleeptime);
+			}
+			/* Much more precise method, but eats up CPU */
+//			lag += deltatime;
+//			while(lag >= timestepnano) {
+//				lag -= timestepnano;
+//				internalUpdate();
+//			}
 		}
 	}
 
