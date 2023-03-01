@@ -1,7 +1,7 @@
 /*
  * gGUIColorPicker.cpp
  *
- *  Created on: 8 Aðu 2022
+ *  Created on: 8 Aï¿½u 2022
  *      Author: Hp
  */
 
@@ -18,7 +18,6 @@ gGUIColorPicker::gGUIColorPicker() {
 	ih = 270;
 	ix = left;
 	iy = top;
-	res.initialize();
 }
 
 gGUIColorPicker::~gGUIColorPicker() {

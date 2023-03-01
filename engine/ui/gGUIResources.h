@@ -8,8 +8,8 @@
 #ifndef UI_GGUIRESOURCES_H_
 #define UI_GGUIRESOURCES_H_
 
-#include "gBaseGUIObject.h"
-#include "gImage.h"
+#include "gObject.h"
+class gTexture;
 
 /**
  * gGUIResources keeps all images in base64 format that the programmer can use
@@ -65,9 +65,9 @@
  * icons which you add by using the function you define to get id from users in
  * your class.
  */
-class gGUIResources {
+class gGUIResources : public gObject {
 public:
-	static const int ICON_NONE = -1;
+	static const int ICON_NONE;
 	// In order to use the pictures in the classes we have created, we perform
 	// the enumuration process and determine their ids.
 	enum {
@@ -122,20 +122,22 @@ public:
 	virtual ~gGUIResources();
 
 	void initialize();
+	bool isInitialized();
 
 	int getIconWidth();
 	int getIconHeight();
 	int getIconFormat();
 
 	int getIconNum();
-	gImage* getIconImage(int iconId);
+	gTexture* getIconImage(int iconId);
 
 private:
-	static const int iconnum = 45;
+	static const int iconnum;
 
+	bool isinitialized;
 	int iconw, iconh, iconformat;
 	// The array we keep pictures
-	gImage icon[iconnum];
+	gTexture* icon;
 	// Getter functions where we keep images in base64 format
 	std::string getBase64IconFile16();
 	std::string getBase64IconFolder16();

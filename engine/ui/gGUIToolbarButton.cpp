@@ -6,6 +6,7 @@
  */
 
 #include "gGUIToolbarButton.h"
+#include "gImage.h"
 
 //gGUIResources gGUIToolbarButton::res;
 
@@ -27,7 +28,6 @@ gGUIToolbarButton::gGUIToolbarButton() {
 	ih = buttonh * 2 / 4;
 	ix = (buttonw - iw) / 2;
 	iy = (buttonh - ih) / 2;
-	res.initialize();
 }
 
 gGUIToolbarButton::~gGUIToolbarButton() {

@@ -34,7 +34,6 @@ gGUITreelist::gGUITreelist() {
 	spacesize = font->getStringWidth("  ");
 	chosencolor = gColor(1.0f, 0.5f, 0.0f);
 	iconcolor = textbackgroundcolor;
-	res.initialize();
 	iconw = lineh / 2;
 	iconh = iconw;
 	iconx = 0;
@@ -276,7 +275,7 @@ bool gGUITreelist::getIconType() {
 	return topelement.isicon;
 }
 
-gImage* gGUITreelist::getIcon(Element* element) {
+gTexture* gGUITreelist::getIcon(Element* element) {
 	return element->icon;
 }
 

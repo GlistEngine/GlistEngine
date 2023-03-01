@@ -154,7 +154,7 @@ void gGUIMenuItem::update() {
 void gGUIMenuItem::setMenuicon(int MenuItemid, std::string icon){
 	for(int i = 0; i < childs.size(); i++){
 		if(childs[i].itemid == MenuItemid) {
-			childs[i].menuicon->loadImage(icon);
+			childs[i].menuicon->load(icon);
 			childs[i].isicon = true;
 			//gLogi("Menubar") << "icon" << i << " itemid" << MenuItemid;
 		}
@@ -163,7 +163,6 @@ void gGUIMenuItem::setMenuicon(int MenuItemid, std::string icon){
 }
 
 void gGUIMenuItem::setMenuicon(int MenuItemid, int icon){
-	res.initialize();
 	for(int i = 0; i < childs.size(); i++){
 		if(childs[i].itemid == MenuItemid) {
 			childs[i].menuicon = res.getIconImage(icon);

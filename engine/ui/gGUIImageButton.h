@@ -42,7 +42,7 @@
 
 #include "gGUIButton.h"
 #include "gImage.h"
-#include "gGUIResources.h"
+
 
 /**
  * Uploaded image acts as a button. The Image adding both as an image and file
@@ -94,7 +94,7 @@ public:
  * @param stretch stretches the image if the value is true. If the value is
  * false the image will placed keeping the proportion.
  */
-    void stretche(bool stretch);
+    void setImageStretched(bool stretch);
 
 /**
  *  @param getButtonImagePath Gets the image with its file location. If set
@@ -138,7 +138,6 @@ private:
         gImage buttonimage;
         gImage pressedbuttonimage;
 
-        gGUIResources res;
         int iconid;
         int pressediconid;
 };

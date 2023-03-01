@@ -27,7 +27,6 @@ gGUIListbox::gGUIListbox() {
 	chosencolor = gColor(1.0f, 0.5f, 0.0f);
 	iconcolor = textbackgroundcolor;
 	isicon = false;
-	res.initialize();
 	iconw = lineh / 2;
 }
 
@@ -219,7 +218,7 @@ bool gGUIListbox::getIconType() {
 	return isicon;
 }
 
-gImage* gGUIListbox::getIcon(std::string title) {
+gTexture* gGUIListbox::getIcon(std::string title) {
 	int index = 0;
 	for(auto i : data) {
 		if(title != i) index++;

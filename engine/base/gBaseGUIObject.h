@@ -12,6 +12,7 @@
 #include "gFont.h"
 class gBaseApp;
 #include "gGUIActionManager.h"
+#include "gGUIResources.h"
 
 class gBaseGUIObject : public gRenderObject {
 public:
@@ -112,6 +113,7 @@ public:
 	static int focusid, previousfocusid;
 
 protected:
+	static gGUIResources res;
 	static gColor* backgroundcolor;
 	static gColor* middlegroundcolor;
 	static gColor* foregroundcolor;

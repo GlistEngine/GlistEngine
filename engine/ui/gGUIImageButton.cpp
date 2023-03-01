@@ -16,7 +16,6 @@ gGUIImageButton::gGUIImageButton() {
 	buttonimagepath = "";
 	pressedbuttonimagepath = "";
 
-	res.initialize();
 	iconid = gGUIResources::ICON_NONE;
 	pressediconid = gGUIResources::ICON_NONE;
 }
@@ -27,7 +26,6 @@ gGUIImageButton::~gGUIImageButton() {
 
 void gGUIImageButton::draw() {
     if(!stretch) {
-
     	 	imagew = pressedbuttonimage.getWidth();
             imageh = pressedbuttonimage.getHeight();
             if(imageh > buttonh) {
@@ -57,7 +55,7 @@ void gGUIImageButton::draw() {
 }
 
 
-void gGUIImageButton::stretche(bool stretchMod) {
+void gGUIImageButton::setImageStretched(bool stretchMod) {
     stretch = stretchMod;
 }
 

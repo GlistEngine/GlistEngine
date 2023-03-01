@@ -40,7 +40,7 @@
 
 #include "gGUIControl.h"
 #include "gImage.h"
-#include "gGUIResources.h"
+
 
 /**
  * The menubar is a thin, horizontal bar containing the labels of the menus in
@@ -160,10 +160,9 @@ private:
 	int menuboxdefaulth;
 	int texth;
 	int counter;
-	gImage* menuicon;
+	gTexture* menuicon;
 	bool isicon;
 	int iconh, iconw;
-	gGUIResources res;
 	bool seperator;
 	static bool isresinitialized;
 	bool isparentpressed;

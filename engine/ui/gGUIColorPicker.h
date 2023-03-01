@@ -1,7 +1,7 @@
 /*
  * gGUIColorPicker.h
  *
- *  Created on: 8 Aðu 2022
+ *  Created on: 8 Aï¿½u 2022
  *      Author: Hp
  */
 
@@ -11,7 +11,7 @@
 #include "gGUIImageButton.h"
 #include "gImage.h"
 #include "gBaseCanvas.h"
-#include "gGUIResources.h"
+
 
 class gGUIColorPicker: public gGUIControl {
 public:
@@ -38,7 +38,6 @@ private:
 	bool isdisabled;
 
 	gImage colorpicker;
-	gGUIResources res;
 	unsigned char *data;
 };
 
