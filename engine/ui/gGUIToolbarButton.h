@@ -9,7 +9,6 @@
 #define UI_GGUITOOLBARBUTTON_H_
 
 #include "gGUIButton.h"
-#include "gGUIResources.h"
 
 
 class gGUIToolbarButton: public gGUIButton {
@@ -27,7 +26,6 @@ public:
 //	void mouseReleased(int x, int y, int button);
 
 private:
-	gGUIResources res;
 	int iconid;
 	int iw, ih, ix, iy;
 };

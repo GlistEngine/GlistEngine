@@ -8,7 +8,7 @@
 #include "gBaseGUIObject.h"
 #include "gBaseApp.h"
 
-
+gGUIResources gBaseGUIObject::res;
 int gBaseGUIObject::lastid = -1;
 gColor* gBaseGUIObject::backgroundcolor;
 gColor* gBaseGUIObject::middlegroundcolor;
@@ -27,6 +27,7 @@ gColor* gBaseGUIObject::disabledbuttonfontcolor;
 int gBaseGUIObject::focusid;
 int gBaseGUIObject::previousfocusid;
 gGUIActionManager gBaseGUIObject::actionmanager;
+
 
 gBaseGUIObject::gBaseGUIObject() {
 	root = nullptr;
@@ -48,6 +49,7 @@ gBaseGUIObject::gBaseGUIObject() {
 	iscursoron = false;
 	issizer = false;
 	iscontainer = false;
+	res.initialize();
 }
 
 gBaseGUIObject::~gBaseGUIObject() {

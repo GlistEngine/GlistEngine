@@ -8,67 +8,82 @@
 
 
 #include "gGUIResources.h"
+#include "gTexture.h"
+
+const int gGUIResources::ICON_NONE = -1;
+const int gGUIResources::iconnum = 45;
 
 
 gGUIResources::gGUIResources() {
 	iconw = 16;
 	iconh = 16;
 	iconformat = GL_RGBA;
+	isinitialized = false;
 }
 
 gGUIResources::~gGUIResources() {
+//	delete[] icon;
 }
 
 void gGUIResources::initialize() {
-	for(int i = 0; i < iconnum; i++) icon[i] = gImage(iconw, iconh, iconformat);
+	if(isinitialized) return;
+
+	icon = new gTexture[iconnum];
+	for(int i = 0; i < iconnum; i++) icon[i] = gTexture(iconw, iconh, iconformat);
 	/* Base64 encoder is also avaible in gUtils library of GlistEngine.
 	The place where we transform the pictures in Base64 format into real pictures with the decode process
 	and add them to the icon array we created in gGUIResources.h file. */
-	icon[ICON_FILE].setImageData((unsigned char*)gDecodeBase64(getBase64IconFile16()).c_str());
-	icon[ICON_FOLDER].setImageData((unsigned char*)gDecodeBase64(getBase64IconFolder16()).c_str());
-	icon[ICON_FOLDEROPENED].setImageData((unsigned char*)gDecodeBase64(getBase64IconFolderOpened16()).c_str());
-	icon[ICON_SAVE].setImageData((unsigned char*)gDecodeBase64(getBase64IconSave16()).c_str());
-	icon[ICON_PLUS].setImageData((unsigned char*)gDecodeBase64(getBase64IconPlus16()).c_str());
-	icon[ICON_BRUSH].setImageData((unsigned char*)gDecodeBase64(getBase64IconBrush16()).c_str());
-	icon[ICON_DELETE].setImageData((unsigned char*)gDecodeBase64(getBase64IconDelete16()).c_str());
-	icon[ICON_DOWNLOAD].setImageData((unsigned char*)gDecodeBase64(getBase64IconDownload16()).c_str());
-	icon[ICON_UPLOAD].setImageData((unsigned char*)gDecodeBase64(getBase64IconUpload16()).c_str());
-	icon[ICON_FONT].setImageData((unsigned char*)gDecodeBase64(getBase64IconFont16()).c_str());
-	icon[ICON_HOME].setImageData((unsigned char*)gDecodeBase64(getBase64IconHome16()).c_str());
-	icon[ICON_PENLOGO].setImageData((unsigned char*)gDecodeBase64(getBase64IconPen16()).c_str());
-	icon[ICON_PICTURE].setImageData((unsigned char*)gDecodeBase64(getBase64IconPicture16()).c_str());
-	icon[ICON_PRINTER].setImageData((unsigned char*)gDecodeBase64(getBase64IconPrinter16()).c_str());
-	icon[ICON_REPAIR].setImageData((unsigned char*)gDecodeBase64(getBase64IconRepair16()).c_str());
-	icon[ICON_RETURN].setImageData((unsigned char*)gDecodeBase64(getBase64IconReturn16()).c_str());
-	icon[ICON_FORWARD].setImageData((unsigned char*)gDecodeBase64(getBase64IconForward16()).c_str());
-	icon[ICON_SETTINGS].setImageData((unsigned char*)gDecodeBase64(getBase64IconSettings16()).c_str());
-	icon[ICON_SPLIT].setImageData((unsigned char*)gDecodeBase64(getBase64IconSplit16()).c_str());
-	icon[ICON_TEXT].setImageData((unsigned char*)gDecodeBase64(getBase64IconText16()).c_str());
-	icon[ICON_ZOOMIN].setImageData((unsigned char*)gDecodeBase64(getBase64IconZoomin16()).c_str());
-	icon[ICON_ZOOMOUT].setImageData((unsigned char*)gDecodeBase64(getBase64IconZoomout16()).c_str());
-	icon[ICON_SEARCH].setImageData((unsigned char*)gDecodeBase64(getBase64IconSearch16()).c_str());
-	icon[ICON_PLAY].setImageData((unsigned char*)gDecodeBase64(getBase64IconPlay16()).c_str());
-	icon[ICON_PAUSE].setImageData((unsigned char*)gDecodeBase64(getBase64IconPause16()).c_str());
-	icon[ICON_STOP].setImageData((unsigned char*)gDecodeBase64(getBase64IconStop16()).c_str());
-	icon[ICON_FAV].setImageData((unsigned char*)gDecodeBase64(getBase64IconFav16()).c_str());
-	icon[ICON_INFO].setImageData((unsigned char*)gDecodeBase64(getBase64IconInfo16()).c_str());
-	icon[ICON_HELP].setImageData((unsigned char*)gDecodeBase64(getBase64IconHelp16()).c_str());
-	icon[ICON_COPY].setImageData((unsigned char*)gDecodeBase64(getBase64IconCopy16()).c_str());
-	icon[ICON_WARNING].setImageData((unsigned char*)gDecodeBase64(getBase64IconWarning16()).c_str());
-	icon[ICON_ERROR].setImageData((unsigned char*)gDecodeBase64(getBase64IconError16()).c_str());
-	icon[ICON_CALENDAR].setImageData((unsigned char*)gDecodeBase64(getBase64IconCalendar16()).c_str());
-	icon[ICON_CLOCK].setImageData((unsigned char*)gDecodeBase64(getBase64IconClock16()).c_str());
-	icon[ICON_DOWN].setImageData((unsigned char*)gDecodeBase64(getBase64IconDown16()).c_str());
-	icon[ICON_UP].setImageData((unsigned char*)gDecodeBase64(getBase64IconUp16()).c_str());
-	icon[ICON_MINIMIZEBLACK].setImageData((unsigned char*)gDecodeBase64(getBase64IconMinimizeBlack16()).c_str());
-	icon[ICON_MAXIMIZEBLACK].setImageData((unsigned char*)gDecodeBase64(getBase64IconMaximizeBlack16()).c_str());
-	icon[ICON_RESTOREBLACK].setImageData((unsigned char*)gDecodeBase64(getBase64IconRestoreBlack16()).c_str());
-	icon[ICON_EXITBLACK].setImageData((unsigned char*)gDecodeBase64(getBase64IconExitBlack16()).c_str());
-	icon[ICON_MINIMIZEWHITE].setImageData((unsigned char*)gDecodeBase64(getBase64IconMinimizeWhite16()).c_str());
-	icon[ICON_MAXIMIZEWHITE].setImageData((unsigned char*)gDecodeBase64(getBase64IconMaximizeWhite16()).c_str());
-	icon[ICON_RESTOREWHITE].setImageData((unsigned char*)gDecodeBase64(getBase64IconRestoreWhite16()).c_str());
-	icon[ICON_EXITWHITE].setImageData((unsigned char*)gDecodeBase64(getBase64IconExitWhite16()).c_str());
-	icon[COLORPICKER].setImageData((unsigned char*)gDecodeBase64(getBase64ColorPicker()).c_str());
+	icon[ICON_FILE].setData((unsigned char*)gDecodeBase64(getBase64IconFile16()).c_str(), true);
+	icon[ICON_FOLDER].setData((unsigned char*)gDecodeBase64(getBase64IconFolder16()).c_str(), true);
+	icon[ICON_FOLDEROPENED].setData((unsigned char*)gDecodeBase64(getBase64IconFolderOpened16()).c_str(), true);
+	icon[ICON_SAVE].setData((unsigned char*)gDecodeBase64(getBase64IconSave16()).c_str(), true);
+	icon[ICON_PLUS].setData((unsigned char*)gDecodeBase64(getBase64IconPlus16()).c_str(), true);
+	icon[ICON_BRUSH].setData((unsigned char*)gDecodeBase64(getBase64IconBrush16()).c_str(), true);
+	icon[ICON_DELETE].setData((unsigned char*)gDecodeBase64(getBase64IconDelete16()).c_str(), true);
+	icon[ICON_DOWNLOAD].setData((unsigned char*)gDecodeBase64(getBase64IconDownload16()).c_str(), true);
+	icon[ICON_UPLOAD].setData((unsigned char*)gDecodeBase64(getBase64IconUpload16()).c_str(), true);
+	icon[ICON_FONT].setData((unsigned char*)gDecodeBase64(getBase64IconFont16()).c_str(), true);
+	icon[ICON_HOME].setData((unsigned char*)gDecodeBase64(getBase64IconHome16()).c_str(), true);
+	icon[ICON_PENLOGO].setData((unsigned char*)gDecodeBase64(getBase64IconPen16()).c_str(), true);
+	icon[ICON_PICTURE].setData((unsigned char*)gDecodeBase64(getBase64IconPicture16()).c_str(), true);
+	icon[ICON_PRINTER].setData((unsigned char*)gDecodeBase64(getBase64IconPrinter16()).c_str(), true);
+	icon[ICON_REPAIR].setData((unsigned char*)gDecodeBase64(getBase64IconRepair16()).c_str(), true);
+	icon[ICON_RETURN].setData((unsigned char*)gDecodeBase64(getBase64IconReturn16()).c_str(), true);
+	icon[ICON_FORWARD].setData((unsigned char*)gDecodeBase64(getBase64IconForward16()).c_str(), true);
+	icon[ICON_SETTINGS].setData((unsigned char*)gDecodeBase64(getBase64IconSettings16()).c_str(), true);
+	icon[ICON_SPLIT].setData((unsigned char*)gDecodeBase64(getBase64IconSplit16()).c_str(), true);
+	icon[ICON_TEXT].setData((unsigned char*)gDecodeBase64(getBase64IconText16()).c_str(), true);
+	icon[ICON_ZOOMIN].setData((unsigned char*)gDecodeBase64(getBase64IconZoomin16()).c_str(), true);
+	icon[ICON_ZOOMOUT].setData((unsigned char*)gDecodeBase64(getBase64IconZoomout16()).c_str(), true);
+	icon[ICON_SEARCH].setData((unsigned char*)gDecodeBase64(getBase64IconSearch16()).c_str(), true);
+	icon[ICON_PLAY].setData((unsigned char*)gDecodeBase64(getBase64IconPlay16()).c_str(), true);
+	icon[ICON_PAUSE].setData((unsigned char*)gDecodeBase64(getBase64IconPause16()).c_str(), true);
+	icon[ICON_STOP].setData((unsigned char*)gDecodeBase64(getBase64IconStop16()).c_str(), true);
+	icon[ICON_FAV].setData((unsigned char*)gDecodeBase64(getBase64IconFav16()).c_str(), true);
+	icon[ICON_INFO].setData((unsigned char*)gDecodeBase64(getBase64IconInfo16()).c_str(), true);
+	icon[ICON_HELP].setData((unsigned char*)gDecodeBase64(getBase64IconHelp16()).c_str(), true);
+	icon[ICON_COPY].setData((unsigned char*)gDecodeBase64(getBase64IconCopy16()).c_str(), true);
+	icon[ICON_WARNING].setData((unsigned char*)gDecodeBase64(getBase64IconWarning16()).c_str(), true);
+	icon[ICON_ERROR].setData((unsigned char*)gDecodeBase64(getBase64IconError16()).c_str(), true);
+	icon[ICON_CALENDAR].setData((unsigned char*)gDecodeBase64(getBase64IconCalendar16()).c_str(), true);
+	icon[ICON_CLOCK].setData((unsigned char*)gDecodeBase64(getBase64IconClock16()).c_str(), true);
+	icon[ICON_DOWN].setData((unsigned char*)gDecodeBase64(getBase64IconDown16()).c_str(), true);
+	icon[ICON_UP].setData((unsigned char*)gDecodeBase64(getBase64IconUp16()).c_str(), true);
+	icon[ICON_MINIMIZEBLACK].setData((unsigned char*)gDecodeBase64(getBase64IconMinimizeBlack16()).c_str(), true);
+	icon[ICON_MAXIMIZEBLACK].setData((unsigned char*)gDecodeBase64(getBase64IconMaximizeBlack16()).c_str(), true);
+	icon[ICON_RESTOREBLACK].setData((unsigned char*)gDecodeBase64(getBase64IconRestoreBlack16()).c_str(), true);
+	icon[ICON_EXITBLACK].setData((unsigned char*)gDecodeBase64(getBase64IconExitBlack16()).c_str(), true);
+	icon[ICON_MINIMIZEWHITE].setData((unsigned char*)gDecodeBase64(getBase64IconMinimizeWhite16()).c_str(), true);
+	icon[ICON_MAXIMIZEWHITE].setData((unsigned char*)gDecodeBase64(getBase64IconMaximizeWhite16()).c_str(), true);
+	icon[ICON_RESTOREWHITE].setData((unsigned char*)gDecodeBase64(getBase64IconRestoreWhite16()).c_str(), true);
+	icon[ICON_EXITWHITE].setData((unsigned char*)gDecodeBase64(getBase64IconExitWhite16()).c_str(), true);
+	icon[COLORPICKER].setData((unsigned char*)gDecodeBase64(getBase64ColorPicker()).c_str(), true);
+
+	isinitialized = true;
+}
+
+bool gGUIResources::isInitialized() {
+	return isinitialized;
 }
 
 int gGUIResources::getIconWidth() {
@@ -88,7 +103,7 @@ int gGUIResources::getIconNum() {
 }
 
 // In any class, a function that allows us to access the images in the array we created.
-gImage* gGUIResources::getIconImage(int iconId) {
+gTexture* gGUIResources::getIconImage(int iconId) {
 	return &icon[iconId];
 }
 

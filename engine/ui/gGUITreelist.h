@@ -36,7 +36,6 @@
 #include "gGUIScrollable.h"
 #include <deque>
 #include <iostream>
-#include "gGUIResources.h"
 #include "gImage.h"
 
 /*
@@ -74,8 +73,7 @@ public:
 		bool isicon;
 		bool isiconchanged;
 		int orderno;
-		gImage* icon;
-		gGUIResources res;
+		gTexture* icon;
 
 		Element() {
 			parentlist = nullptr;
@@ -84,7 +82,6 @@ public:
 			orderno = 0;
 			parent = nullptr;
 			isparent = false;
-			res.initialize();
 			icon = nullptr;
 			isiconchanged = false;
 			title = "";
@@ -94,7 +91,7 @@ public:
 		 * Used for print all the objects to the console in the struct.
 		 */
 		void logTitle() {
-			if(parent!= nullptr) gLogi("Element") << title << (" iconid") << this->res.getIconNum();
+			if(parent!= nullptr) gLogi("Element") << title << (" iconid") << res.getIconNum();
 			for(int i = 0; i < sub.size(); i++) {
 				sub[i]->logTitle();
 			}
@@ -384,7 +381,7 @@ public:
 	 *
 	 *  @param element is the struct object which returned icon image.
 	 */
-	gImage* getIcon(Element* element);
+	gTexture* getIcon(Element* element);
 
 	/*
 	 * Returns the color that when an element is chosen.
@@ -411,7 +408,7 @@ public:
 	int nodenum;
 	std::vector<std::string> allsubtitles;
 	std::vector<int> allorderno;
-	std::deque<gImage*> icons;
+	std::deque<gTexture*> icons;
 
 private:
 	int listboxh;
@@ -426,7 +423,6 @@ private:
 	bool mousepressedonlist;
 	Element topelement;
 	gColor chosencolor, iconcolor;
-	gGUIResources res;
 	int iconx, iconw, iconh;
 };
 

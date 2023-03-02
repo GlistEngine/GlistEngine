@@ -43,7 +43,7 @@
 #include "gGUIScrollable.h"
 #include <deque>
 #include "gImage.h"
-#include "gGUIResources.h"
+
 
 /*
  * This class creates list boxes. List boxes can use when developer wants to listed
@@ -215,7 +215,7 @@ public:
 	 *  @param title is the string data value which returned icon image on the
 	 *  list.
 	 */
-	gImage* getIcon(std::string title);
+	gTexture* getIcon(std::string title);
 
 	/*
 	 * Returns the color that when an data is chosen.
@@ -238,13 +238,12 @@ private:
 	int minlinenum, minboxh;
 	int maxlinenum;
 	std::vector<std::string> data;
-	std::deque<gImage*> icons;
+	std::deque<gTexture*> icons;
 	float datady;
 	int firstlineno, flno, fldy;
 	int selectedno;
 	bool mousepressedonlist;
 	bool isicon;
-	gGUIResources res;
 	gColor chosencolor, iconcolor;
 	int iconw;
 };
