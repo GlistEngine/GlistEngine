@@ -90,7 +90,12 @@ void gAppManager::runApp(const std::string& appName, gBaseApp *baseApp, int widt
 	if(!usewindow) framerate = INT_MAX;
 
 	// Create window
-	if(usewindow) window->initialize(width, height, windowMode);
+	if(usewindow) {
+		window->initialize(width, height, windowMode);
+		// Update the width and height incase it was changed by the operating system or the window implementation
+		width = window->getWidth();
+		height = window->getHeight();
+	}
 
 	canvasmanager = new gCanvasManager();
 	if(usewindow) guimanager = new gGUIManager(app);
