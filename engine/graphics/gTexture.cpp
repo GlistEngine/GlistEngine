@@ -68,6 +68,7 @@ gTexture::gTexture() {
 	isfbo = false;
 	ishdr = false;
 	isfont = false;
+	ismaskloaded = false;
 	setupRenderData();
 }
 
