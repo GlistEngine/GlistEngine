@@ -87,24 +87,29 @@ void gModel::move(const glm::vec3& dv) {
 	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i].move(dv);
 }
 
+void gModel::rotate(const glm::quat& q) {
+	gNode::rotate(q);
+	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i].rotate(q);
+}
+
 void gModel::rotate(float radians, float ax, float ay, float az) {
 	gNode::rotate(radians, ax, ay, az);
 	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i].rotate(radians, ax, ay, az);
 }
 
 void gModel::rotateDeg(float degrees, float ax, float ay, float az) {
-	gNode::rotate(degrees, ax, ay, az);
+	gNode::rotateDeg(degrees, ax, ay, az);
 	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i].rotateDeg(degrees, ax, ay, az);
-}
-
-void gModel::rotate(const glm::quat& q) {
-	gNode::rotate(q);
-	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i].rotate(q);
 }
 
 void gModel::rotateAround(float radians, const glm::vec3& axis, const glm::vec3& point) {
 	gNode::rotateAround(radians, axis, point);
 	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i].rotateAround(radians, axis, point);
+}
+
+void gModel::rotateAroundDeg(float degrees, const glm::vec3& axis, const glm::vec3& point) {
+	gNode::rotateAroundDeg(degrees, axis, point);
+	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i].rotateAroundDeg(degrees, axis, point);
 }
 
 void gModel::scale(float sx, float sy, float sz) {

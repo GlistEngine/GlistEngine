@@ -106,13 +106,18 @@ void gNode::rotate(float radians, float ax, float ay, float az) {
 	processTransformationMatrix();
 }
 
-void gNode::rotateDeg(float angle, float ax, float ay, float az) {
-	orientation = (const glm::quat&)orientation * glm::angleAxis((angle * 3.141592f) / 180.0f, glm::vec3(ax, ay, az));
+void gNode::rotateDeg(float degrees, float ax, float ay, float az) {
+	orientation = (const glm::quat&)orientation * glm::angleAxis((degrees * 3.141592f) / 180.0f, glm::vec3(ax, ay, az));
 	processTransformationMatrix();
 }
 
 void gNode::rotateAround(float radians, const glm::vec3& axis, const glm::vec3& point) {
 	position = glm::angleAxis(radians, axis) * (position - point) + point;
+	processTransformationMatrix();
+}
+
+void gNode::rotateAroundDeg(float degrees, const glm::vec3& axis, const glm::vec3& point) {
+	position = glm::angleAxis((degrees * 3.141592f) / 180.0f, axis) * (position - point) + point;
 	processTransformationMatrix();
 }
 

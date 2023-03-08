@@ -51,10 +51,11 @@ public:
 
 	void move(float dx, float dy, float dz);
 	void move(const glm::vec3& dv);
+	void rotate(const glm::quat& q);
 	void rotate(float radians, float ax, float ay, float az); //first change
 	void rotateDeg(float degrees, float ax, float ay, float az);
-	void rotate(const glm::quat& q);
 	void rotateAround(float radians, const glm::vec3& axis, const glm::vec3& point);
+	void rotateAroundDeg(float degrees, const glm::vec3& axis, const glm::vec3& point);
 	void scale(float sx, float sy, float sz);
 	void scale(float s);
 	void dolly(float distance);
