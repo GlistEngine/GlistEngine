@@ -102,6 +102,11 @@ void gModel::rotate(const glm::quat& q) {
 	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i].rotate(q);
 }
 
+void gModel::rotateAround(float radians, const glm::vec3& axis, const glm::vec3& point) {
+	gNode::rotateAround(radians, axis, point);
+	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i].rotateAround(radians, axis, point);
+}
+
 void gModel::scale(float sx, float sy, float sz) {
 	gNode::scale(sx, sy, sz);
 	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i].scale(sx, sy, sz);
