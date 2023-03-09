@@ -8,6 +8,7 @@
 #include "gBaseGUIObject.h"
 #include "gBaseApp.h"
 
+gGUIResources gBaseGUIObject::res;
 int gBaseGUIObject::lastid = -1;
 gColor* gBaseGUIObject::backgroundcolor;
 gColor* gBaseGUIObject::middlegroundcolor;
