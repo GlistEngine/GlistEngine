@@ -7,11 +7,8 @@
 
 #include "gGUIControl.h"
 
-gGUIResources gGUIControl::res;
-
 
 gGUIControl::gGUIControl() {
-	res.initialize();
 }
 
 gGUIControl::~gGUIControl() {
