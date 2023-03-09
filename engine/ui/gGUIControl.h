@@ -18,6 +18,7 @@
 #define UI_GGUICONTROL_H_
 
 #include "gBaseGUIObject.h"
+#include "gGUIResources.h"
 
 /**
  * Base class for gui controls.
@@ -38,6 +39,9 @@ public:
 
 	virtual void update();
 	virtual void draw();
+
+protected:
+	static gGUIResources res;
 };
 
 #endif /* UI_GGUICONTROL_H_ */
