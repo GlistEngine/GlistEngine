@@ -87,7 +87,14 @@ void gAppManager::runApp(const std::string& appName, gBaseApp *baseApp, int widt
 	app = baseApp;
 	windowmode = windowMode;
 	if(windowmode == G_WINDOWMODE_NONE) usewindow = false;
-	if(!usewindow) framerate = INT_MAX;
+	if(!usewindow) {
+		framerate = INT_MAX;
+		timestepnano = AppClockDuration(1'000'000'000 / (framerate + 1));
+		starttime = AppClock::now();
+		endtime = starttime;
+		deltatime = AppClockDuration(0);
+		lag = AppClockDuration(0);
+	}
 
 	// Create window
 	if(usewindow) window->initialize(width, height, windowMode);
