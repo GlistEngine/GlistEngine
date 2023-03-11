@@ -127,7 +127,7 @@ void gNode::setOrientation(const glm::quat& o) {
 }
 
 void gNode::setOrientation(const glm::vec3& angles) {
-	orientation = (const glm::quat&)orientation * glm::angleAxis(angles.x, glm::vec3(1, 0, 0)) * glm::angleAxis(angles.z, glm::vec3(0, 0, 1)) * glm::angleAxis(angles.y, glm::vec3(0, 1, 0));
+	orientation = glm::quatLookAt(glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, 1.0f, 0.0f)) * glm::angleAxis(angles.x, glm::vec3(1.0f, 0.0f, 0.0f)) * glm::angleAxis(angles.z, glm::vec3(0.0f, 0.0f, 1.0f)) * glm::angleAxis(angles.y, glm::vec3(0.0f, 1.0f, 0.0f));
 	processTransformationMatrix();
 }
 
