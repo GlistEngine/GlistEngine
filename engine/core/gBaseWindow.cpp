@@ -163,7 +163,7 @@ void gBaseWindow::onMouseScrollEvent(double xoffset, double yoffset) {
 }
 
 void gBaseWindow::sighandler(int signum) {
-	std::cerr << "Process " << getpid() << " got signal " << signum << " " << signalname[signum] << std::endl;
+//	std::cerr << "Process " << getpid() << " got signal " << signum << " " << signalname[signum] << std::endl;
 //	signal(signum, SIG_DFL);
 //	kill(getpid(), signum);
 /*

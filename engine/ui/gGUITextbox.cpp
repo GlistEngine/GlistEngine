@@ -13,7 +13,7 @@
 
 
 gGUITextbox::gGUITextbox() {
-	std::setlocale(LC_ALL, "en_US.UTF-8");
+	setlocale(LC_ALL, "en_US.UTF-8");
 	boxw = width;
 	boxh = 24;
 	cursorposx = 0;

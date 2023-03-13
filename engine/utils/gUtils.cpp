@@ -47,10 +47,10 @@ float gDegToRad(float degrees) {
 }
 
 void gSeedRandom() {
-	struct timeval tv;
-	gettimeofday(&tv, 0);
-	long int n = (tv.tv_sec ^ tv.tv_usec) ^ getpid();
-	std::srand(n);
+//	struct timeval tv;
+//	gettimeofday(&tv, 0);
+//	long int n = (tv.tv_sec ^ tv.tv_usec) ^ getpid();
+//	std::srand(n);
 }
 
 float gRandom(float max) {
