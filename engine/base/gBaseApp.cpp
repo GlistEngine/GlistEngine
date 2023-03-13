@@ -11,6 +11,15 @@
 gBaseApp::gBaseApp() {
 	appmanager = nullptr;
 	gSeedRandom();
+	argc = 0;
+	argv = nullptr;
+}
+
+gBaseApp::gBaseApp(int argc, char **argv) {
+	appmanager = nullptr;
+	gSeedRandom();
+	this->argc = argc;
+	this->argv = argv;
 }
 
 gBaseApp::~gBaseApp() {

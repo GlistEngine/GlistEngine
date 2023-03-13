@@ -15,6 +15,7 @@
 class gBaseApp : public gAppObject {
 public:
 	gBaseApp();
+	gBaseApp(int argc, char **argv);
 	virtual ~gBaseApp();
 
 	virtual void setup();
@@ -35,6 +36,8 @@ public:
 
 protected:
 	gAppManager *appmanager;
+	int argc;
+	char **argv;
 };
 
 #endif /* ENGINE_BASE_GBASEAPP_H_ */
