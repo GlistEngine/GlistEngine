@@ -20,7 +20,7 @@ gGUIRadioButton::gGUIRadioButton() {
 	title = "Radio Buttons";
 	selectedbutton = 0;
 	titles = new std::string;
-	*titles = {"Radio button"};
+	*titles = "Radio button";
 	titlew = font->getStringWidth(title);
 	titleh = font->getStringHeight(title);
 	horizontaldistance = 8;
