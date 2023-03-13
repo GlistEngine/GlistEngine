@@ -16,6 +16,7 @@
 #include "gBox.h"
 #include "gSphere.h"
 #include "gTriangle.h"
+#include "gRoundedRectangle.h"
 
 
 const int gRenderer::SCREENSCALING_NONE = 0;
@@ -489,6 +490,12 @@ void gDrawRectangle(float x, float y, float w, float h, bool isFilled, float thi
 			 	rectanglemesh.clear();
 			}
 		}
+}
+
+void gDrawRoundedRectangle(float x, float y, float w, float h, int radius, bool isFilled) {
+	gRoundedRectangle roundedrectanglemesh;
+	roundedrectanglemesh.draw(x, y, w, h, radius, isFilled);
+	roundedrectanglemesh.clear();
 }
 
 void gDrawBox(float x, float y, float z, float w, float h, float d, bool isFilled) {

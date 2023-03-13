@@ -16,6 +16,7 @@ public:
 	virtual ~gRoundedRectangle();
 
 	void draw();
+	void draw(int x, int y, int w, int h, int radius, bool isFilled);
 	void setRoundedRectanglePoints(int x, int y, int w, int h, int radius, bool isFilled);
 private:
 	//This is the default value of vertices of the created shape
