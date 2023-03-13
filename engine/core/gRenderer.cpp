@@ -498,6 +498,40 @@ void gDrawRoundedRectangle(float x, float y, float w, float h, int radius, bool 
 	roundedrectanglemesh.clear();
 }
 
+void gDrawRoundedRectangle(float x, float y, float w, float h, int radius, bool isFilled, float thickness, float borderposition) {
+	  	if(borderposition == 0.0f) {
+			for(int i = 0; i < thickness; i++) {
+				gRoundedRectangle rectanglemesh;
+			 	rectanglemesh.draw(x + i, y + i, w - i*2, h - i*2, radius, isFilled);
+			 	rectanglemesh.clear();
+			}
+		} else if (borderposition == 1.0f) {
+			for(int i = 0; i < thickness; i++) {
+				gRoundedRectangle rectanglemesh;
+			 	rectanglemesh.draw(x + i, y + i, w - i*2, h - i*2, radius, isFilled);
+			 	rectanglemesh.clear();
+			}
+		}else if (borderposition > 0.0f && borderposition < 1.0f) {
+			//calculating how many pixel is sided to each
+			int inside = 0;
+			int outside = 0;
+			outside = (thickness * borderposition);
+			inside = thickness - outside;
+			//outside border
+			for(int i = 0; i < outside; i++) {
+				gRoundedRectangle rectanglemesh;
+			 	rectanglemesh.draw(x + i, y + i, w - i*2, h - i*2, radius, isFilled);
+			 	rectanglemesh.clear();
+			}
+			//inside border
+			for(int i = 0; i < inside; i++) {
+				gRoundedRectangle rectanglemesh;
+			 	rectanglemesh.draw(x + i, y + i, w - i*2, h - i*2, radius, isFilled);
+			 	rectanglemesh.clear();
+			}
+		}
+}
+
 void gDrawBox(float x, float y, float z, float w, float h, float d, bool isFilled) {
 	gBox boxmesh;
 	if(!isFilled) boxmesh.setDrawMode(gMesh::DRAWMODE_LINELOOP);
