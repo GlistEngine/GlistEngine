@@ -8,6 +8,7 @@
 
 #include "gRoundedRectangle.h"
 gRoundedRectangle::gRoundedRectangle() {
+
 }
 
 gRoundedRectangle::gRoundedRectangle(int x, int y, int w, int h, int radius, bool isFilled) {
@@ -18,8 +19,15 @@ gRoundedRectangle::gRoundedRectangle(int x, int y, int w, int h, int radius, boo
 gRoundedRectangle::~gRoundedRectangle() {
 
 }
+
 void gRoundedRectangle::draw() {
 	isprojection2d = true;
+	gMesh::draw();
+}
+
+void gRoundedRectangle::draw(int x, int y, int w, int h, int radius, bool isFilled) {
+	isprojection2d = true;
+	setRoundedRectanglePoints(x, y, w, h, radius, isFilled);
 	gMesh::draw();
 }
 

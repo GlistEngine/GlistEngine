@@ -52,6 +52,8 @@ void gDrawArc(float xCenter, float yCenter, float radius, bool isFilled = true, 
 void gDrawArrow(float x1, float y1, float length, float angle, float tipLength, float tipAngle);
 void gDrawRectangle(float x, float y, float w, float h, bool isFilled = false);
 void gDrawRectangle(float x, float y, float w, float h, bool isFilled, float thickness, float borderposition = 0.0f);
+void gDrawRoundedRectangle(float x, float y, float w, float h, int radius, bool isFilled);
+void gDrawRoundedRectangle(float x, float y, float w, float h, int radius, bool isFilled, float thickness, float borderposition = 0.0f);
 void gDrawBox(float x, float y, float z, float w = 1.0f, float h = 1.0f, float d = 1.0f, bool isFilled = true);
 void gDrawBox(glm::mat4 transformationMatrix, bool isFilled = true);
 void gDrawSphere(float xPos, float yPos, float zPos, int xSegmentNum = 64, int ySegmentNum = 64, float scale = 1.0f, bool isFilled = true);
