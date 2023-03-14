@@ -1,8 +1,10 @@
 cmake_minimum_required (VERSION 3.10.2)
 
 if(WIN32)
+if(COMPILER_CLANG)
 	set(CMAKE_C_COMPILER "${CMAKE_SOURCE_DIR}/../../zbin/glistzbin-win64/clang64/bin/clang.exe")
 	set(CMAKE_CXX_COMPILER "${CMAKE_SOURCE_DIR}/../../zbin/glistzbin-win64/clang64/bin/clang++.exe")
+endif(COMPILER_CLANG)
 endif(WIN32)
 
 if(UNIX)
@@ -73,7 +75,12 @@ if(NOT DEFINED SYSZBIN_DIR)
 	set(SYSZBIN_DIR ${ZBIN_DIR}/glistzbin-${SYS_NAME})
 endif()
 if(NOT DEFINED MINGW64_DIR)
+if(COMPILER_CLANG)
 	set(MINGW64_DIR ${SYSZBIN_DIR}/clang64)
+endif(COMPILER_CLANG)
+if(NOT COMPILER_CLANG)
+	set(MINGW64_DIR ${SYSZBIN_DIR}/mingw64)
+endif(COMPILER_CLANG)
 endif()
 if(NOT DEFINED ANDROID_DIR)
 	set(ANDROID_DIR ${ZBIN_DIR}/android)
@@ -258,8 +265,6 @@ set(INC_DIRS
 if(WIN32)
 	list(APPEND INC_DIRS
 		${MINGW64_DIR}/include
-		${MINGW64_DIR}/include/c++/v1
-#		${MINGW64_DIR}/lib/gcc/x86_64-w64-mingw32/12.2.0/include/c++
 		${MINGW64_DIR}/include/freetype2
 #		${MINGW64_DIR}/include/ffmpeg
 		${MINGW64_DIR}/include/sqlite
@@ -267,6 +272,13 @@ if(WIN32)
 		${MINGW64_DIR}/include/fmod
 		${MINGW64_DIR}/include/utf8
 	)
+if(COMPILER_CLANG)
+	list(APPEND INC_DIRS ${MINGW64_DIR}/include/c++/v1)
+endif(COMPILER_CLANG)
+if(NOT COMPILER_CLANG)
+	list(APPEND INC_DIRS ${MINGW64_DIR}/lib/gcc/x86_64-w64-mingw32/12.2.0/include/c++)
+endif(NOT COMPILER_CLANG)
+
 elseif(LINUX)
 	list(APPEND INC_DIRS
 		${MINGW64_DIR}/include
