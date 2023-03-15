@@ -22,7 +22,9 @@ void gStartEngine(gBaseApp* baseApp, const std::string& appName, int windowMode,
 	gAppManager appmanager;
 	gGLFWWindow gbwindow;
 	gbwindow.setAppManager(&appmanager);
-	gbwindow.setTitle(appName);
+	std::string appname = appName;
+	if (appname == "") appname = "GlistApp";
+	gbwindow.setTitle(appname);
 	appmanager.setWindow(&gbwindow);
 	baseApp->setAppManager(&appmanager);
 	int screenwidth = width, screenheight = height;
@@ -40,15 +42,26 @@ void gStartEngine(gBaseApp* baseApp, const std::string& appName, int windowMode,
 	appmanager.runApp(appName, baseApp, screenwidth, screenheight, windowMode, width, height, screenscaling);
 }
 
-void gStartEngine(gBaseApp* baseApp, std::string appName, int windowMode, int width, int height, int screenScaling, int unitWidth, int unitHeight) {
+void gStartEngine(gBaseApp* baseApp, const std::string& appName, int windowMode, int unitWidth, int unitHeight, int screenScaling, int width, int height) {
 	gAppManager appmanager;
 	gGLFWWindow gbwindow;
 	gbwindow.setAppManager(&appmanager);
-	if (appName == "") appName = "GlistApp";
-	gbwindow.setTitle(appName);
+	std::string appname = appName;
+	if (appname == "") appname = "GlistApp";
+	gbwindow.setTitle(appname);
 	appmanager.setWindow(&gbwindow);
 	baseApp->setAppManager(&appmanager);
-	appmanager.runApp(appName, baseApp, width, height, windowMode, unitWidth, unitHeight, screenScaling);
+	int screenwidth = width, screenheight = height;
+#if defined(WIN32) || defined(LINUX) || defined(APPLE)
+	if (windowMode == G_WINDOWMODE_GAME || windowMode == G_WINDOWMODE_FULLSCREEN || windowMode == G_WINDOWMODE_FULLSCREENGUIAPP) {
+		glfwInit();
+		const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+		screenwidth = mode->width;
+		screenheight = mode->height;
+		glfwTerminate();
+	}
+#endif
+	appmanager.runApp(appName, baseApp, screenwidth, screenheight, windowMode, unitWidth, unitHeight, screenScaling);
 }
 
 
