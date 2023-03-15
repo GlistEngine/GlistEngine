@@ -50,6 +50,20 @@ public:
 	static std::string gGetAssetsDir();
 
 	/**
+	 * Sets the given folder as new assets dir. The new folder can be
+	 * anywhere in the device. This function gives the ability of using
+	 * the same assets folder to multiple GlistApps.
+	 *
+	 * All sub asset folders, ie.files, images, sounds, databases.., are
+	 * defined relative to main assets folder. That means, all sub asset
+	 * folders will change automatically, in conjunction with main assets
+	 * folder path.
+	 *
+	 * @param assetsDir New assets folder
+	 */
+	static void gSetAssetsDir(std::string assetsDir);
+
+	/**
 	 * Gives the path to the files folder.
 	 *
 	 *@return The location of the files folder in the project.
@@ -181,6 +195,7 @@ protected:
 
 private:
 	static std::string exepath;
+	static std::string assetsdir;
 };
 
 #endif /* ENGINE_BASE_GOBJECT_H_ */
