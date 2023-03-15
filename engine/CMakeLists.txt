@@ -1,10 +1,12 @@
 cmake_minimum_required (VERSION 3.10.2)
 
+if(WIN32)
+# Clang compiler definition for Windows. Do not touch below value. If you need to
+# use clang compiler, change the definition in the GlistApp's CmakeLists, not here.
 if(NOT DEFINED COMPILER_CLANG)
     set(COMPILER_CLANG false)
 endif()
 
-if(WIN32)
 if(COMPILER_CLANG)
 	set(CMAKE_C_COMPILER "${CMAKE_SOURCE_DIR}/../../zbin/glistzbin-win64/clang64/bin/clang.exe")
 	set(CMAKE_CXX_COMPILER "${CMAKE_SOURCE_DIR}/../../zbin/glistzbin-win64/clang64/bin/clang++.exe")
