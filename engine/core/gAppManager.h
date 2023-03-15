@@ -120,7 +120,7 @@ void gStartEngine(gBaseApp* baseApp, const std::string& appName = "GlistApp", in
  * @param vsync When true, application framerate will be bound to current
  * monitor's refresh rate.
  */
-void gStartEngine(gBaseApp* baseApp, std::string appName, int windowMode, int width, int height, int screenScaling, int unitWidth, int unitHeight);
+void gStartEngine(gBaseApp* baseApp, const std::string& appName, int windowMode, int unitWidth, int unitHeight, int screenScaling, int width = gDefaultWidth(), int height = gDefaultHeight());
 
 /**
  * This class controls basically everything which is shown to user from beginning
