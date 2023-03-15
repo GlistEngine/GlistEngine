@@ -17,8 +17,10 @@ const int gObject::LOGLEVEL_ERROR = 4;
 int gObject::releasescaling;
 int gObject::releaseresolution;
 
-
 std::string gObject::exepath;
+std::string gObject::assetsdir;
+
+
 static const std::string resolutiondirs[] = {
 		"1-8k/", "2-4k/", "3-qhd/", "4-fullhd/", "5-hd/", "6-qfhd/", "7-wvga/", "8-hvga/"
 };
@@ -36,6 +38,9 @@ gObject::gObject() {
 	    	exepath[i] = '/';
 	    }
 	}
+	if(assetsdir == "") {
+		assetsdir = exepath + "assets/";
+	}
 //	std::replace(0, 1, "", "");
 }
 
@@ -44,44 +49,48 @@ std::string gObject::gGetAppDir() {
 }
 
 std::string gObject::gGetAssetsDir() {
-	return exepath + "assets/";
+	return assetsdir;
+}
+
+void gObject::gSetAssetsDir(std::string assetsDir) {
+	gObject::assetsdir = assetsDir;
 }
 
 std::string gObject::gGetFilesDir() {
-	return exepath + "assets/files/";
+	return assetsdir + "files/";
 }
 
 std::string gObject::gGetImagesDir() {
-	if (releasescaling == 1) return exepath + "assets/mipmaps/" + resolutiondirs[releaseresolution];
-	return exepath + "assets/images/";
+	if (releasescaling == 1) return assetsdir + "mipmaps/" + resolutiondirs[releaseresolution];
+	return assetsdir + "images/";
 }
 
 std::string gObject::gGetFontsDir() {
-	return exepath + "assets/fonts/";
+	return assetsdir + "fonts/";
 }
 
 std::string gObject::gGetModelsDir() {
-	return exepath + "assets/models/";
+	return assetsdir + "models/";
 }
 
 std::string gObject::gGetTexturesDir() {
-	return exepath + "assets/textures/";
+	return assetsdir + "textures/";
 }
 
 std::string gObject::gGetShadersDir() {
-	return exepath + "assets/shaders/";
+	return assetsdir + "shaders/";
 }
 
 std::string gObject::gGetSoundsDir() {
-	return exepath + "assets/sounds/";
+	return assetsdir + "sounds/";
 }
 
 std::string gObject::gGetDatabasesDir() {
-	return exepath + "assets/databases/";
+	return assetsdir + "databases/";
 }
 
 std::string gObject::gGetVideosDir() {
-	return exepath + "assets/videos/";
+	return assetsdir + "videos/";
 }
 
 void gObject::setCurrentResolution(int scalingNo, int currentResolutionNo) {
