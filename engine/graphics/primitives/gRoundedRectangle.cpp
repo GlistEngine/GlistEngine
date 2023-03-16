@@ -2,9 +2,8 @@
  * gRoundedRectangle.cpp
  *
  *  Created on: 15 Feb 2023
- *      Author: Umutjohn
+ *      Author: Umutcan Turkmen
  */
-//Added necessary class label to engine's CMakeLists.txt at line 141
 
 #include "gRoundedRectangle.h"
 gRoundedRectangle::gRoundedRectangle() {

@@ -2,17 +2,17 @@
  * gCone.cpp
  *
  *  Created on: 15 Mar 2023
- *      Author: Umutcan Türkmen
+ *      Author: Umutcan Turkmen
  */
 
 #include "gCone.h"
 
-gCone::gCone(int r, int h, int segments, glm::vec2 shiftdistance, bool isFilled) {
+gCone::gCone(int r, int h, glm::vec2 shiftdistance, int segmentnum, bool isFilled) {
 	std::vector<unsigned int> indicesb;
 	std::vector<gVertex> verticesb;
 
-	float angle = PI * 2 / segments;
-	for(int i = 0; i < segments; i++) {
+	float angle = PI * 2 / segmentnum;
+	for(int i = 0; i < segmentnum; i++) {
 		//BOTTOM
 		gVertex v;
 		v.position.x = r * cos(angle * i);
@@ -28,9 +28,9 @@ gCone::gCone(int r, int h, int segments, glm::vec2 shiftdistance, bool isFilled)
 	v.position.z = shiftdistance.y;
 	verticesb.push_back(v);
 
-	for(int i = 0; i < segments; i++) {
+	for(int i = 0; i < segmentnum; i++) {
 		indicesb.push_back(i);
-		indicesb.push_back(segments);
+		indicesb.push_back(segmentnum);
 		indicesb.push_back(i + 1);
 		indicesb.push_back(i);
 	}

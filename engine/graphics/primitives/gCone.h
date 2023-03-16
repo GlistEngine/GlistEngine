@@ -2,7 +2,7 @@
  * gCone.h
  *
  *  Created on: 15 Mar 2023
- *      Author: Umutcan Türkmen
+ *      Author: Umutcan Turkmen
  */
 
 #ifndef GRAPHICS_PRIMITIVES_GCONE_H_
@@ -12,7 +12,7 @@
 
 class gCone: public gMesh {
 public:
-	gCone(int r, int h, int segments, glm::vec2 shiftdistance, bool isFilled);
+	gCone(int r, int h, glm::vec2 shiftdistance, int segmentnum = 64, bool isFilled = true);
 	virtual ~gCone();
 };
 
