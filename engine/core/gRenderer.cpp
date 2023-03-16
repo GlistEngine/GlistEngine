@@ -17,6 +17,8 @@
 #include "gSphere.h"
 #include "gTriangle.h"
 #include "gRoundedRectangle.h"
+#include "gCylinder.h"
+#include "gCone.h"
 
 
 const int gRenderer::SCREENSCALING_NONE = 0;
@@ -549,12 +551,78 @@ void gDrawBox(glm::mat4 transformationMatrix, bool isFilled) {
 	boxmesh.clear();
 }
 
-void gDrawSphere(float xPos, float yPos, float zPos, int xSegmentNum, int ySegmentNum, float scale, bool isFilled) {
+void gDrawSphere(float xPos, float yPos, float zPos, glm::vec3 scale, int xSegmentNum, int ySegmentNum, bool isFilled) {
 	gSphere spheremesh(xSegmentNum, ySegmentNum, isFilled);
-	spheremesh.setPosition(xPos , yPos, zPos);
-	spheremesh.scale(scale);
+	spheremesh.setPosition(xPos, yPos, zPos);
+	spheremesh.scale(scale.x, scale.y, scale.z);
 	spheremesh.draw();
 	spheremesh.clear();
+}
+
+void gDrawCylinder(float x, float y, float z, glm::vec3 scale, int r, int h, bool isFilled) {
+	gCylinder cylindermesh(r, r, h, glm::vec2(0,0), isFilled);
+	cylindermesh.setPosition(x, y, z);
+	cylindermesh.scale(scale.x, scale.y, scale.z);
+	cylindermesh.draw();
+	cylindermesh.clear();
+}
+
+void gDrawCylinderOblique(float x, float y, float z, glm::vec3 scale, glm::vec2 shiftdistance, int r, int h, bool isFilled) {
+	gCylinder cylindermesh(r, r, h, shiftdistance, isFilled);
+	cylindermesh.setPosition(x, y, z);
+	cylindermesh.scale(scale.x, scale.y, scale.z);
+	cylindermesh.draw();
+	cylindermesh.clear();
+}
+
+void gDrawCylinderTrapezodial(float x, float y, float z, glm::vec3 scale, int r1, int r2, int h, bool isFilled) {
+	gCylinder cylindermesh(r1, r2, h, glm::vec2(0,0), isFilled);
+	cylindermesh.setPosition(x, y, z);
+	cylindermesh.scale(scale.x, scale.y, scale.z);
+	cylindermesh.draw();
+	cylindermesh.clear();
+}
+
+void gDrawCylinderObliqueTrapezodial(float x, float y, float z, glm::vec3 scale, glm::vec2 shiftdistance, int r1, int r2, int h, bool isFilled) {
+	gCylinder cylindermesh(r1, r2, h, shiftdistance, isFilled);
+	cylindermesh.setPosition(x, y, z);
+	cylindermesh.scale(scale.x, scale.y, scale.z);
+	cylindermesh.draw();
+	cylindermesh.clear();
+}
+
+void gDrawCone(float x, float y, float z, glm::vec3 scale, int r, int h, bool isFilled) {
+	int segments = 64;
+	gCone conemesh(r, h, segments, glm::vec2(0, 0), isFilled);
+	conemesh.setPosition(x, y, z);
+	conemesh.scale(scale.x, scale.y, scale.z);
+	conemesh.draw();
+	conemesh.clear();
+}
+
+void gDrawConeOblique(float x, float y, float z, glm::vec3 scale, glm::vec2 shiftdistance, int r, int h, bool isFilled) {
+	int segments = 64;
+	gCone conemesh(r, h, segments, shiftdistance, isFilled);
+	conemesh.setPosition(x, y, z);
+	conemesh.scale(scale.x, scale.y, scale.z);
+	conemesh.draw();
+	conemesh.clear();
+}
+
+void gDrawPyramid(float x, float y, float z, glm::vec3 scale, int r, int h, int numberofsides, bool isFilled) {
+	gCone conemesh(r, h, numberofsides, glm::vec2(0, 0), isFilled);
+	conemesh.setPosition(x, y, z);
+	conemesh.scale(scale.x, scale.y, scale.z);
+	conemesh.draw();
+	conemesh.clear();
+}
+
+void gDrawPyramidOblique(float x, float y, float z, glm::vec3 scale, glm::vec2 shiftdistance, int r, int h, int numberofsides, bool isFilled) {
+	gCone conemesh(r, h, numberofsides, shiftdistance, isFilled);
+	conemesh.setPosition(x, y, z);
+	conemesh.scale(scale.x, scale.y, scale.z);
+	conemesh.draw();
+	conemesh.clear();
 }
 
 gRenderer::gRenderer() {
