@@ -17,7 +17,7 @@ gGUIProgressBar::gGUIProgressBar() {
 	value = 25.0f;
 	progressbarcolor = gColor(0.1f, 0.45f, 0.87f);
 	backgroundcolor = middlegroundcolor;
-	thickness = 10.0f;
+	thickness = 1.0f;
 }
 
 gGUIProgressBar::~gGUIProgressBar() {
@@ -70,11 +70,24 @@ float gGUIProgressBar::getValue() {
 }
 
 void gGUIProgressBar::setBorderThickness(float thickness) {
-	if(thickness < width / 2) {
+	if(thickness < progressbarh / 2 && thickness < progressbarw / 2) {
 		this->thickness = thickness;
 	}
 }
 
 float gGUIProgressBar::getBorderThickness() {
 	return thickness;
+}
+
+void gGUIProgressBar::setProgressBarSize(int w, int h) {
+	progressbarw = w;
+	progressbarh = h;
+}
+
+int gGUIProgressBar::getProgressBarWidth() {
+	return progressbarw;
+}
+
+int gGUIProgressBar::getProgressBarHeight() {
+	return progressbarh;
 }

@@ -144,6 +144,23 @@ public:
 	 */
 	float getBorderThickness();
 
+	/**
+	 * Sets the size of the progressbar's outer frame
+	 * @param w Width of the outer frame
+	 * @param h Height of the outer frame
+	 */
+	void setProgressBarSize(int w, int h);
+
+	/**
+	 * Gets width of the progressbar's outer frame
+	 */
+	int getProgressBarWidth();
+
+	/**
+	 * Gets height of the progressbar's outer frame
+	 */
+	int getProgressBarHeight();
+
 private:
 	int progressbarw, progressbarh;
 	float valuemax, valuemin;
