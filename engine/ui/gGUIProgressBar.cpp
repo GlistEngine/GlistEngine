@@ -3,39 +3,33 @@
  *
  *  Created on: 19 Tem 2022
  *      Author: sevval
+ *      Revised: 16 March 2022 Umutcan Turkmen
  */
 
 #include "gGUIProgressBar.h"
 
 
 gGUIProgressBar::gGUIProgressBar() {
-	progressbarw = 180;
+	progressbarw = 100;
 	progressbarh = 25;
-	progressbarinh = progressbarh - 5;
 	valuemax = 100.0f;
 	valuemin = 0.0f;
 	value = 25.0f;
-	pcolor = gColor(0.1f, 0.45f, 0.87f);
-	scolor = gColor(0.1f * 0.82f, 0.45f * 0.82f, 0.87f * 0.82f);
-	thickness = 1.0f;
+	progressbarcolor = gColor(0.1f, 0.45f, 0.87f);
+	backgroundcolor = middlegroundcolor;
+	thickness = 10.0f;
 }
 
 gGUIProgressBar::~gGUIProgressBar() {
 }
 
 void gGUIProgressBar::draw() {
-//	gColor oldcolor = renderer->getColor();
-//	renderer->setColor(middlegroundcolor);// window
-//	gDrawRectangle(left, top, progressbarw, progressbarh, false, thickness);
-//	gDrawRectangle(left - thickness, top - thickness, progressbarw, progressbarh, false, thickness);
-//
-//	renderer->setColor(scolor); // progressbar shadow
-//	gDrawRectangle(left + (thickness / 2) + 2.26f, top + (thickness / 2) + 0.66f , ((value * 180) / (valuemax - valuemin)) - (thickness / 2) - 7.22f, progressbarinh - thickness , true, 1.26f);
-//	renderer->setColor(pcolor); // progress bar
-//	gDrawRectangle(left + (thickness / 2) + 2, top + ((thickness / 2) + 0.4f ), ((value * 180) / (valuemax - valuemin)) - (thickness / 2) - 8, progressbarinh - thickness - 1.78f, true);
-//
-//
-//	renderer->setColor(oldcolor);
+	gColor oldcolor = renderer->getColor();
+	renderer->setColor(backgroundcolor);// color of the background of progressbar
+	gDrawRectangle(left, top, progressbarw, progressbarh, true);
+	renderer->setColor(progressbarcolor); // progressbar color
+	gDrawRectangle(left + thickness / 2, top + thickness / 2, (progressbarw - thickness) * value / valuemax, progressbarh - thickness, true);
+	renderer->setColor(oldcolor);
 }
 
 
@@ -48,8 +42,11 @@ void gGUIProgressBar::setMinValue(float value) {
 }
 
 void gGUIProgressBar::setProgressBarColor(float r, float g, float b) {
-	pcolor = gColor(r,g,b);
-	scolor = gColor(r * 0.82f, g * 0.82f, b * 0.82f);
+	progressbarcolor = gColor(r,g,b);
+}
+
+void gGUIProgressBar::setBackgroundColor(float r, float g, float b) {
+	backgroundcolor = gColor(r,g,b);
 }
 
 void gGUIProgressBar::setValue(float value) {
@@ -57,7 +54,7 @@ void gGUIProgressBar::setValue(float value) {
 }
 
 gColor* gGUIProgressBar::getProgressBarColor() {
-	return &pcolor;
+	return &progressbarcolor;
 }
 
 float gGUIProgressBar::getMaxValue() {
@@ -73,7 +70,7 @@ float gGUIProgressBar::getValue() {
 }
 
 void gGUIProgressBar::setBorderThickness(float thickness) {
-	if(thickness < 25.0f) {
+	if(thickness < width / 2) {
 		this->thickness = thickness;
 	}
 }
