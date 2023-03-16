@@ -24,18 +24,18 @@ gGUIProgressBar::~gGUIProgressBar() {
 }
 
 void gGUIProgressBar::draw() {
-	gColor oldcolor = renderer->getColor();
-	renderer->setColor(middlegroundcolor);// window
-	gDrawRectangle(left, top, progressbarw, progressbarh, false, thickness);
-
-
-	renderer->setColor(scolor); // progressbar shadow
-	gDrawRectangle(left + (thickness / 2) + 2.26f, top + (thickness / 2) + 0.66f , ((value * 180) / (valuemax - valuemin)) - (thickness / 2) - 7.22f, progressbarinh - thickness , true, 1.26f);
-	renderer->setColor(pcolor); // progress bar
-	gDrawRectangle(left + (thickness / 2) + 2, top + ((thickness / 2) + 0.4f ), ((value * 180) / (valuemax - valuemin)) - (thickness / 2) - 8, progressbarinh - thickness - 1.78f, true);
-
-
-	renderer->setColor(oldcolor);
+//	gColor oldcolor = renderer->getColor();
+//	renderer->setColor(middlegroundcolor);// window
+//	gDrawRectangle(left, top, progressbarw, progressbarh, false, thickness);
+//	gDrawRectangle(left - thickness, top - thickness, progressbarw, progressbarh, false, thickness);
+//
+//	renderer->setColor(scolor); // progressbar shadow
+//	gDrawRectangle(left + (thickness / 2) + 2.26f, top + (thickness / 2) + 0.66f , ((value * 180) / (valuemax - valuemin)) - (thickness / 2) - 7.22f, progressbarinh - thickness , true, 1.26f);
+//	renderer->setColor(pcolor); // progress bar
+//	gDrawRectangle(left + (thickness / 2) + 2, top + ((thickness / 2) + 0.4f ), ((value * 180) / (valuemax - valuemin)) - (thickness / 2) - 8, progressbarinh - thickness - 1.78f, true);
+//
+//
+//	renderer->setColor(oldcolor);
 }
 
 
