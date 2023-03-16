@@ -56,7 +56,15 @@ void gDrawRoundedRectangle(float x, float y, float w, float h, int radius, bool 
 void gDrawRoundedRectangle(float x, float y, float w, float h, int radius, bool isFilled, float thickness, float borderposition = 0.0f);
 void gDrawBox(float x, float y, float z, float w = 1.0f, float h = 1.0f, float d = 1.0f, bool isFilled = true);
 void gDrawBox(glm::mat4 transformationMatrix, bool isFilled = true);
-void gDrawSphere(float xPos, float yPos, float zPos, int xSegmentNum = 64, int ySegmentNum = 64, float scale = 1.0f, bool isFilled = true);
+void gDrawSphere(float xPos, float yPos, float zPos, glm::vec3 scale, int xSegmentNum = 64, int ySegmentNum = 64, bool isFilled = true);
+void gDrawCylinder(float x, float y, float z, glm::vec3 scale, int r, int h, bool isFilled);
+void gDrawCylinderOblique(float x, float y, float z, glm::vec3 scale, glm::vec2 shiftdistance, int r, int h, bool isFilled);
+void gDrawCylinderTrapezodial(float x, float y, float z, glm::vec3 scale, int r1, int r2, int h, bool isFilled);
+void gDrawCylinderObliqueTrapezodial(float x, float y, float z, glm::vec3 scale, glm::vec2 shiftdistance, int r1, int r2, int h, bool isFilled);
+void gDrawCone(float x, float y, float z, glm::vec3 scale, int r, int h, bool isFilled);
+void gDrawConeOblique(float x, float y, float z, glm::vec3 scale, glm::vec2 shiftdistance, int r, int h, bool isFilled);
+void gDrawPyramid(float x, float y, float z, glm::vec3 scale, int r, int h, int numberofsides, bool isFilled);
+void gDrawPyramidOblique(float x, float y, float z, glm::vec3 scale, glm::vec2 shiftdistance, int r, int h, int numberofsides, bool isFilled);
 
 
 class gRenderer: public gObject {
