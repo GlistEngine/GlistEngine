@@ -2,18 +2,15 @@
  * gCylinder.cpp
  *
  *  Created on: 13 Mar 2023
- *      Author: Umutcan Türkmen
+ *      Author: Umutcan Turkmen
  */
 
 #include "gCylinder.h"
 
-gCylinder::gCylinder(int r1, int r2, int h, glm::vec2 shiftdistance, bool isFilled) {
+gCylinder::gCylinder(int r1, int r2, int h, glm::vec2 shiftdistance, int segmentnum, bool isFilled) {
 
 	std::vector<unsigned int> indicesb;
 	std::vector<gVertex> verticesb;
-
-	//How many vertices the cylinder will have on top and bottom surfaces.
-	int segmentnum = 64;
 
 	float angle = PI * 2 / segmentnum;
 	for(int i = 0; i < segmentnum; i++) {

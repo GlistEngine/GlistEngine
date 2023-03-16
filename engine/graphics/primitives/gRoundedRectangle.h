@@ -2,7 +2,7 @@
  * gRoundedRectangle.h
  *
  *  Created on: 15 Feb 2023
- *      Author: Umutjohn
+ *      Author: Umutcan Turkmen
  */
 
 #ifndef GRAPHICS_PRIMITIVES_GROUNDEDRECTANGLE_H_

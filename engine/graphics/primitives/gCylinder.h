@@ -2,7 +2,7 @@
  * gCylinder.h
  *
  *  Created on: 13 Mar 2023
- *      Author: Umutcan Türkmen
+ *      Author: Umutcan Turkmen
  */
 
 #ifndef GRAPHICS_PRIMITIVES_GCYLINDER_H_
@@ -12,7 +12,7 @@
 
 class gCylinder: public gMesh {
 public:
-	gCylinder(int r1, int r2, int h, glm::vec2 shiftdistance, bool isFilled);
+	gCylinder(int r1, int r2, int h, glm::vec2 shiftdistance, int segmentnum = 64, bool isFilled = true);
 	virtual ~gCylinder();
 };
 
