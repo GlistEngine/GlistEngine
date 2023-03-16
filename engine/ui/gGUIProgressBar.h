@@ -35,6 +35,7 @@
  *
  *  Created on: July 20, 2022
  *      Author: sevval, aynur
+ *      Revised: 16 March 2022 Umutcan Turkmen
  */
 
 #ifndef UI_GGUIPROGRESSBAR_H_
@@ -116,6 +117,14 @@ public:
 	void setProgressBarColor(float r, float g, float b);
 
 	/**
+	 * Sets the color of the background of the progressbar with the given color. Colors consist
+	 * of RGB values float between 0.0f-1.0f.
+	 *
+	 * @param color The given color consist of (r, g, b) float values
+	 */
+	void setBackgroundColor(float r, float g, float b);
+
+	/**
 	 * Returns the color of the progress bar.
 	 */
 	gColor* getProgressBarColor();
@@ -137,13 +146,12 @@ public:
 
 private:
 	int progressbarw, progressbarh;
-	float progressbarinh;
 	float valuemax, valuemin;
 	float value;
 	float thickness;
 
-	gColor pcolor;
-	gColor scolor;
+	gColor progressbarcolor;
+	gColor backgroundcolor;
 };
 
 #endif /* UI_GGUIPROGRESSBAR_H_ */
