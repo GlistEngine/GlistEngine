@@ -12,7 +12,7 @@
 
 class gCylinder: public gMesh {
 public:
-	gCylinder(int r1, int r2, int h, glm::vec2 shiftdistance, int segmentnum = 64, bool isFilled = true);
+	gCylinder(int r1, int r2, int h, glm::vec2 shiftdistance, int segmentnum = 32, bool isFilled = true);
 	virtual ~gCylinder();
 };
 
