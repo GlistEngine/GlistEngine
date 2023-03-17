@@ -60,8 +60,11 @@ void gGUIGraph::set(gBaseApp *root, gBaseGUIObject *topParentGUIObject, gBaseGUI
 	gGUIControl::set(root, topParentGUIObject, parentGUIObject, parentSlotLineNo, parentSlotColumnNo, x, y, w, h);
 	axisxw = width * 3 / 4;
 	axisyh = height * 3 / 4;
+//	gLogi("HEIGHT") << height;
+//	gLogi("WIDTH") << width;
+//	gLogi("/////////////////////") << top;
 	axisx1 = left + 60;
-	axisy1 = top + 40;
+	axisy1 = top + 0.14f * height;
 	axisx2 = axisx1 + axisxw;
 	axisy2 = axisy1 + axisyh;
 	axisxstart = axisy2;
@@ -204,12 +207,12 @@ void gGUIGraph::drawLabels() {
 	for(int i = 0; i < labelcountx; i++) {
 		xpoint = i * labelwidthx;
 		renderer->setColor(backgroundcolor);
-		if(!gridlinesxenabled) gDrawLine(axisx1 + xpoint, axisy2 + 10, axisx1 + xpoint, axisy2);
-		else gDrawLine(axisx1 + xpoint, axisy2 + 10, axisx1 + xpoint, axisy2 - axisyh);
+		if(!gridlinesxenabled) gDrawLine(axisx1 + xpoint, axisy2 + 0.04f * height, axisx1 + xpoint, axisy2);
+		else gDrawLine(axisx1 + xpoint, axisy2 + 0.04f * height, axisx1 + xpoint, axisy2 - axisyh);
 
 		renderer->setColor(fontcolor);
-		if(floatlabelsenabled) font->drawText(std::to_string(floatlabelsx[i]), axisx1 + xpoint - 6, axisxstart + 20);
-		else font->drawText(std::to_string(labelsx[i]), axisx1 + xpoint - 6, axisxstart + 20);
+		if(floatlabelsenabled) font->drawText(std::to_string(floatlabelsx[i]), axisx1 + xpoint - 0.01f * width, axisxstart + 0.07f * height);
+		else font->drawText(std::to_string(labelsx[i]), axisx1 + xpoint - 0.01f * width, axisxstart + 0.07f * height);
 	}
 //	font->drawText(axisxtitle, axisx1 + axisxw / 2, axisy2 + 40);
 	// Draw the labels for y-axis
@@ -218,12 +221,12 @@ void gGUIGraph::drawLabels() {
 	for(int i = 0; i < labelcounty; i++) {
 		ypoint = i * labelwidthy;
 		renderer->setColor(backgroundcolor);
-		if(!gridlinesyenabled) gDrawLine(axisx1 - 10, axisy2 - ypoint, axisx1, axisy2 - ypoint);
-		else gDrawLine(axisx1 - 10, axisy2 - ypoint, axisx1 + axisxw, axisy2 - ypoint);
+		if(!gridlinesyenabled) gDrawLine(axisx1 - 0.02f * width, axisy2 - ypoint, axisx1, axisy2 - ypoint);
+		else gDrawLine(axisx1 - 0.02f * width, axisy2 - ypoint, axisx1 + axisxw, axisy2 - ypoint);
 
 		renderer->setColor(fontcolor);
-		if(floatlabelsenabled) font->drawText(std::to_string(floatlabelsy[i]), axisystart - 30, axisy2 - ypoint + 3);
-		else font->drawText(std::to_string(labelsy[i]), axisystart - 30, axisy2 - ypoint + 3);
+		if(floatlabelsenabled) font->drawText(std::to_string(floatlabelsy[i]), axisystart - 0.054f * width, axisy2 - ypoint + 0.012f * height);
+		else font->drawText(std::to_string(labelsy[i]), axisystart - 0.054f * width, axisy2 - ypoint + 0.012f * height);
 	}
 }
 
