@@ -1,7 +1,7 @@
 /*
  * gFog.h
  *
- *  Created on: 15 Aðu 2021
+ *  Created on: Aug 15, 2021
  *      Author: furka
  */
 
@@ -12,50 +12,113 @@
 #include <gRenderObject.h>
 #include <gColor.h>
 
-// This is a class that allows creating fog
-
-class gFog : public gRenderObject{
+/**
+ * Represents a fog object that can be enabled and configured.
+ * Inherits from gRenderObject.
+*/
+class gFog : public gRenderObject {
 public:
+	static int fognum;
+
 	gFog();
 
-	/* Activates the fog.This function creates a fog by giving objects a visibility index and
-	 * multiplying this visibility index by the fog color thanks to these two formula
-	 * visibility = exp(-pow((distance * fogdensity), foggradient))
-	 * objectColor = mix(vec4(fogColor, 1.0), FragColor, visibility)
+	/**
+	 * Sets the current fog as active. You can have multiple fog instances with different properties.
 	 */
 	void enable();
 
-	// Deactivates the fog.
+	/**
+	 * Deactivates the fog
+	 */
 	void disable();
 
-	/* Sets fogColor.
+	/**
+	 * Sets the color of the fog.
+	 *
 	 * @param r = red value of fogColor.
 	 * @param g = green value of fogColor.
 	 * @param b = blue value of fogColor.
-	*/
+	 */
 	void setColor(float r, float g, float b);
 
-	/* Sets density of fog
-	 * @param d = density value.
+	/**
+	 * Sets mode of the fog
+	 * @param value New fog mode. Possible values are:
+	 * - gRenderer::FOGMODE_LINEAR -> Linear Fog (only linear start/end affects visuals)
+	 * - gRenderer::FOGMODE_EXP -> Exponential Fog (only density and gradient affects visuals)
 	 */
-	void setDensity(float d);
+	void setMode(int value);
 
-	/* Sets the gradient curve that distributes the fog in the field.
-	 * @param g = Gradient value.
+	/**
+ 	 * Sets density of the fog, increasing this will make it appear closer to the camera.
+ 	 * @param value Density value.
 	 */
-	void setGradient(float g);
+	void setDensity(float value);
 
-	//Returns fogColor.
+	/**
+	 * Sets the rate at which the fog density increases. A higher value will cause the fog to become denser more quickly.
+	 *
+	 * @param rate The rate of fog density increase. Default is 2.0
+	 */
+	void setGradient(float value);
+
+	/**
+	 * Sets the start value of the linear fog.
+	 * @param value Start value of the linear mode.
+	 */
+	void setLinearStart(float value);
+
+	/**
+	 * Sets the end value of the linear fog.
+	 * @param value End value of the linear mode.
+	 */
+	void setLinearEnd(float value);
+
+	/**
+	 * Gets the fog color.
+	 * @return The fog color.
+	 */
 	const gColor& getColor() const;
 
-	//Returns density value.
+	/**
+	 * Gets the fog mode.
+	 * @return The fog mode. Possible values are:
+	 * - gRenderer::FOGMODE_LINEAR -> Linear Fog (only linear start/end affects visuals)
+	 * - gRenderer::FOGMODE_EXP -> Exponential Fog (only density and gradient affects visuals)
+	 */
+	int getMode() const;
+
+	/**
+	 * Gets the fog density.
+	 * @return The fog density.
+	 */
 	float getDensity() const;
 
-	//Returns fog value.
+	/**
+	 * Gets the fog gradient.
+	 * @return The fog gradient.
+	 */
 	float getGradient() const;
 
-private:
+	/**
+	 * Gets the start value of the linear mode.
+	 * @return The start value of the linear mode. Default is 0.0.
+	 */
+	float getLinearStart() const;
 
+	/**
+	 * Gets the end value of the linear mode.
+	 * @return The end value of the linear mode. Default is 1.0.
+	 */
+	float getLinearEnd() const;
+
+private:
+	int fogno;
+	gColor color;
+	float density;
+	float gradient;
+	int mode;
+	float linearstart, linearend;
 };
 
 

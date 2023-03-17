@@ -228,18 +228,22 @@ void gMesh::drawStart() {
 				colorshader->setFloat("lights[" + gToStr(sli) + "].linear", scenelight->getAttenuationLinear());
 				colorshader->setFloat("lights[" + gToStr(sli) + "].quadratic", scenelight->getAttenuationQuadratic());
 			}
-		}
-		else {
+		} else {
 			colorshader->setInt("lights[0].type", gLight::LIGHTTYPE_AMBIENT);
 			colorshader->setVec4("lights[0].ambient", renderer->getLightingColor()->r, renderer->getLightingColor()->g, renderer->getLightingColor()->b, renderer->getLightingColor()->a);
 		}
 
-	    if(renderer->isFogEnabled()){
-	            	    colorshader->setInt("aUseFog", 1);
-	            	    colorshader->setVec3("fogColor", renderer->fogcolor->r, renderer->fogcolor->g, renderer->fogcolor->b);
-	            	    colorshader->setFloat("fogdensity", renderer->fogdensity);
-	            	    colorshader->setFloat("foggradient", renderer->foggradient);
-	            	}
+		if(renderer->isFogEnabled()) {
+			colorshader->setBool("fog.enabled", true);
+			colorshader->setVec3("fog.color", renderer->getFogColor().r, renderer->getFogColor().g, renderer->getFogColor().b);
+			colorshader->setInt("fog.mode", renderer->getFogMode());
+			colorshader->setFloat("fog.density", renderer->getFogDensity());
+			colorshader->setFloat("fog.gradient", renderer->getFogGradient());
+			colorshader->setFloat("fog.linearStart", renderer->getFogLinearStart());
+			colorshader->setFloat("fog.linearEnd", renderer->getFogLinearEnd());
+		} else {
+			colorshader->setBool("fog.enabled", false);
+		}
 	    // Set matrices
 	    if(isprojection2d)colorshader->setMat4("projection", renderer->getProjectionMatrix2d());
 	    else colorshader->setMat4("projection", renderer->getProjectionMatrix());
