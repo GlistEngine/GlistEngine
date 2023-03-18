@@ -69,6 +69,7 @@ class gRenderer: public gObject {
 public:
 	static const int SCREENSCALING_NONE, SCREENSCALING_MIPMAP, SCREENSCALING_AUTO;
 	static const int DEPTHTESTTYPE_LESS, DEPTHTESTTYPE_ALWAYS;
+	static const int FOGMODE_LINEAR, FOGMODE_EXP;
 
 	gRenderer();
 	virtual ~gRenderer();
@@ -146,12 +147,25 @@ public:
 	void setGlobalAmbientColor(gColor color);
 	gColor* getGlobalAmbientColor();
 
-	bool isFogEnabled();
 	void enableFog();
 	void disableFog();
+	void setFogNo(int no);
 	void setFogColor(float r, float g, float b);
-	void setFogDensity(float d);
-	void setFogGradient(float g);
+	void setFogColor(const gColor& color);
+	void setFogMode(int fogMode);
+	void setFogDensity(float value);
+	void setFogGradient(float value);
+	void setFogLinearStart(float value);
+	void setFogLinearEnd(float value);
+
+	bool isFogEnabled();
+	int getFogNo() const;
+	const gColor& getFogColor() const;
+	int getFogMode() const;
+	float getFogDensity() const;
+	float getFogGradient() const;
+	float getFogLinearStart() const;
+	float getFogLinearEnd() const;
 
 	void addSceneLight(gLight* light);
 	gLight* getSceneLight(int lightNo);
@@ -197,10 +211,6 @@ public:
 	void backupMatrices();
 	void restoreMatrices();
 
-	gColor* fogcolor;
-	float fogdensity;
-	float foggradient;
-
 private:
 	static int width, height;
 	static int unitwidth, unitheight;
@@ -216,7 +226,16 @@ private:
 
 	gColor* lightingcolor;
 	bool islightingenabled;
+
 	bool isfogenabled;
+	int fogno;
+	gColor fogcolor;
+	float fogdensity;
+	float foggradient;
+	int fogmode;
+	float foglinearstart;
+	float foglinearend;
+
 	glm::vec3 lightingposition;
 	gColor* globalambientcolor;
 	int li;

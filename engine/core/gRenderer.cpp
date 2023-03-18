@@ -28,6 +28,9 @@ const int gRenderer::SCREENSCALING_AUTO = 2;
 const int gRenderer::DEPTHTESTTYPE_LESS = 0;
 const int gRenderer::DEPTHTESTTYPE_ALWAYS = 1;
 
+const int gRenderer::FOGMODE_LINEAR = 0;
+const int gRenderer::FOGMODE_EXP = 1;
+
 int gRenderer::width;
 int gRenderer::height;
 int gRenderer::unitwidth;
@@ -623,11 +626,13 @@ gRenderer::gRenderer() {
 	lightingposition = glm::vec3(0.0f);
 	li = 0;
 
-	isfogenabled = false;
-	fogcolor = new gColor();
-	fogcolor->set(0.3f, 0.3f, 0.3f);
-	fogdensity = 0.15;
-	foggradient = 1.5f;
+	fogno = -1;
+	fogcolor.set(0.3f, 0.3f, 0.3f);
+	fogmode = gRenderer::FOGMODE_EXP;
+	fogdensity = 0.3f;
+	foggradient = 2.0f;
+	foglinearstart = 0.0f;
+	foglinearend = 1.0f;
 
 	isdepthtestenabled = false;
 	depthtesttype = 0;
@@ -894,15 +899,72 @@ void gRenderer::enableFog() {
 }
 
 void gRenderer::disableFog() {
-    isfogenabled = false;
+	isfogenabled = false;
+	fogno = -1;
+}
+
+void gRenderer::setFogNo(int no) {
+	fogno = no;
+}
+
+void gRenderer::setFogColor(float r, float g, float b) {
+	fogcolor.set(r, g, b);
+}
+
+void gRenderer::setFogColor(const gColor& color) {
+	fogcolor.set(color.r, color.g, color.b);
+}
+
+void gRenderer::setFogMode(int mode) {
+	fogmode = mode;
+}
+
+void gRenderer::setFogDensity(float value) {
+	fogdensity = value;
+}
+
+void gRenderer::setFogGradient(float value) {
+	foggradient = value;
+}
+
+void gRenderer::setFogLinearStart(float value) {
+	foglinearstart = value;
+}
+
+void gRenderer::setFogLinearEnd(float value) {
+	foglinearend = value;
 }
 
 bool gRenderer::isFogEnabled() {
 	return isfogenabled;
 }
 
-void gRenderer::setFogColor(float r, float g, float b) {
-	fogcolor->set(r, g, b);
+int gRenderer::getFogNo() const {
+	return fogno;
+}
+
+const gColor& gRenderer::getFogColor() const {
+	return fogcolor;
+}
+
+int gRenderer::getFogMode() const {
+	return fogmode;
+}
+
+float gRenderer::getFogDensity() const {
+	return fogdensity;
+}
+
+float gRenderer::getFogGradient() const {
+	return foggradient;
+}
+
+float gRenderer::getFogLinearStart() const {
+	return foglinearstart;
+}
+
+float gRenderer::getFogLinearEnd() const {
+	return foglinearend;
 }
 
 void gRenderer::enableLighting() {
@@ -1053,7 +1115,6 @@ const std::string gRenderer::getShaderSrcColorVertex() {
 "	layout (location = 4) in vec3 aBitangent;\n"
 "	layout (location = 5) in int aUseNormalMap;\n"
 "   uniform int aUseShadowMap;\n"
-"   uniform int aUseFog;\n"
 "\n"
 "	uniform mat4 model;\n"
 "	uniform mat4 view;\n"
@@ -1061,13 +1122,9 @@ const std::string gRenderer::getShaderSrcColorVertex() {
 "	uniform vec3 lightPos;\n"
 "	uniform vec3 viewPos;\n"
 "	uniform mat4 lightMatrix;\n"
-"   out float visibility;\n"
-"   uniform float fogdensity;\n"
-"   uniform float foggradient;\n"
 "\n"
 "	flat out int mUseNormalMap;\n"
 "	flat out int mUseShadowMap;\n"
-"	flat out int mUseFog;\n"
 "\n"
 "	out vec3 Normal;\n"
 "	out vec3 FragPos;\n"
@@ -1076,10 +1133,10 @@ const std::string gRenderer::getShaderSrcColorVertex() {
 "	out vec3 TangentLightPos;\n"
 "	out vec3 TangentViewPos;\n"
 "	out vec3 TangentFragPos;\n"
+"	out vec4 EyePosition;\n"
 "\n"
 "	void main() {\n"
 "    	mUseShadowMap = aUseShadowMap;\n"
-"    	mUseFog = aUseFog;\n"
 "	    FragPos = vec3(model * vec4(aPos, 1.0));\n"
 "	    Normal = mat3(transpose(inverse(model))) * aNormal;\n"
 "	    TexCoords = aTexCoords;\n"
@@ -1099,13 +1156,11 @@ const std::string gRenderer::getShaderSrcColorVertex() {
 "		    TangentFragPos  = TBN * FragPos;\n"
 "	    }\n"
 "\n"
-"	    gl_Position = projection * view * model * vec4(aPos, 1.0);\n"
-"	    if (aUseFog > 0) {\n"
-"          float distance = length(gl_Position.xyz);\n"
-"          visibility = exp(-pow((distance * fogdensity), foggradient));\n"
-"          visibility = clamp(visibility, 0.0, 1.0);\n"
-"       }\n"
-"\n"
+"    	mat4 modelViewMatrix = view * model;\n"
+"    	mat4 projectedMatrix = projection * modelViewMatrix;\n"
+"    	vec4 aPosVec4 = vec4(aPos, 1.0);\n"
+"    	gl_Position = projectedMatrix * aPosVec4;\n"
+"    	EyePosition = modelViewMatrix * aPosVec4;\n"
 "	}\n";
 
 	return std::string(shadersource);
@@ -1143,13 +1198,24 @@ const std::string gRenderer::getShaderSrcColorFragment() {
 "	    float quadratic;\n"
 "	};\n"
 "\n"
+"struct Fog {\n"
+"    vec3 color;\n"
+"    float linearStart;\n"
+"    float linearEnd;\n"
+"    float density;\n"
+"    float gradient;\n"
+"\n"
+"    int mode;\n"
+"    bool enabled;\n"
+"};\n"
+"\n"
 "	uniform Material material;\n"
 "	#define MAX_LIGHTS 8\n"
 "	uniform Light lights[MAX_LIGHTS];\n"
 "\n"
 "	uniform vec4 renderColor;\n"
 "	uniform vec3 viewPos;\n"
-"	uniform vec3 fogColor;\n"
+"	uniform Fog fog;\n"
 "\n"
 "	in vec3 Normal;\n"
 "	in vec3 FragPos;\n"
@@ -1159,10 +1225,9 @@ const std::string gRenderer::getShaderSrcColorFragment() {
 "	in vec3 TangentLightPos;\n"
 "	in vec3 TangentViewPos;\n"
 "	in vec3 TangentFragPos;\n"
-"	in float visibility;\n"
+"	in vec4 EyePosition;\n"
 "\n"
 "	flat in int mUseShadowMap;\n"
-"	flat in int mUseFog;\n"
 "	uniform sampler2D shadowMap;\n"
 "   uniform vec3 shadowLightPos;\n"
 "\n"
@@ -1292,6 +1357,19 @@ const std::string gRenderer::getShaderSrcColorFragment() {
 "		return (ambient + diffuse + specular);\n"
 "	}\n"
 "\n"
+"	float getFogVisibility(Fog fog, float distance) {\n"
+"   	 float visibility = 0.0;\n"
+"   	 if(fog.mode == 0) { // linear\n"
+"      	 	float fogLength = fog.linearEnd - fog.linearStart;\n"
+"        	visibility = (fog.linearEnd - distance) / fogLength;\n"
+"    	} else if(fog.mode == 1) { // exp\n"
+"       	 visibility = exp(-pow((distance * fog.density), fog.gradient));\n"
+"    	}\n"
+"\n"
+"    	visibility = clamp(visibility, 0.0, 1.0);\n"
+"    	return visibility;\n"
+"	}\n"
+"\n"
 "	void main() {\n"
 "		vec4 result = vec4(0.0);\n"
 "		vec3 norm;\n"
@@ -1303,8 +1381,7 @@ const std::string gRenderer::getShaderSrcColorFragment() {
 "		vec3 viewDir;\n"
 "		if (mUseNormalMap > 0) {\n"
 "			viewDir = normalize(TangentViewPos - TangentFragPos);\n"
-"		}\n"
-"		else {\n"
+"		} else {\n"
 "			viewDir = normalize(viewPos - FragPos);\n"
 "		}\n"
 "		vec4 materialAmbient;\n"
@@ -1347,9 +1424,10 @@ const std::string gRenderer::getShaderSrcColorFragment() {
 "\n"
 "		FragColor = result * renderColor;\n"
 "\n"
-"	    if (mUseFog > 0) {\n"
-"			FragColor = mix(vec4(fogColor, 1.0), FragColor, visibility);\n"
-"	    }"
+"    	if(fog.enabled) {\n"
+"        	float distance = abs(EyePosition.z / EyePosition.w);\n"
+"       	FragColor = mix(vec4(fog.color, 1.0), FragColor, getFogVisibility(fog, distance));\n"
+"    	}\n"
 "	}\n";
 
 	return std::string(shadersource);
@@ -2191,3 +2269,5 @@ const std::string gRenderer::getShaderSrcFboFragment() {
 			"}\n";
 	return std::string(shadersource);
 }
+
+
