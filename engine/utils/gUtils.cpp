@@ -13,25 +13,46 @@
 #include <ctype.h>
 #include <iterator>
 #include <unistd.h>
+#if defined(WIN32) || defined(LINUX) || defined(APPLE)
+#include <GLFW/glfw3.h>
+#endif
 
 bool gLog::isloggingenabled = true;
 std::string gLog::loglevelname[] = {"INFO", "DEBUG", "WARNING", "ERROR"};
 
 
 int gDefaultWidth() {
-	return 960;
+	return 1280;
 }
 
 int gDefaultHeight() {
-	return 540;
+	return 720;
 }
 
 int gDefaultUnitWidth() {
-	return 960;
+	return 1280;
 }
 
 int gDefaultUnitHeight() {
-	return 540;
+	return 720;
+}
+
+int gDefaultMonitorWidth() {
+	int w = gDefaultWidth();
+	glfwInit();
+	const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+	w = mode->width;
+	glfwTerminate();
+	return w;
+}
+
+int gDefaultMonitorHeight() {
+	int h = gDefaultHeight();
+	glfwInit();
+	const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+	h = mode->height;
+	glfwTerminate();
+	return h;
 }
 
 int gDefaultScreenScaling() {
