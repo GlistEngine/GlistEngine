@@ -27,7 +27,7 @@
 #include <glm/gtc/matrix_transform.hpp> // glm::translate, glm::rotate, glm::scale, glm::perspective
 #include <glm/gtx/quaternion.hpp>
 
-#include <vector>
+#include <deque>
 #include "gShader.h"
 #include "gColor.h"
 #include "gConstants.h"
@@ -239,7 +239,7 @@ private:
 	glm::vec3 lightingposition;
 	gColor* globalambientcolor;
 	int li;
-	std::vector<gLight*> scenelights;
+	std::deque<gLight*> scenelights;
 
 
 	bool isdepthtestenabled;

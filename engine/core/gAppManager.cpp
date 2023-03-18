@@ -13,7 +13,7 @@
 #include "gCanvasManager.h"
 #include "gBaseComponent.h"
 #include "gBasePlugin.h"
-#if defined(WIN32) || defined(LINUX)
+#if defined(WIN32) || defined(LINUX) || defined(APPLE)
 #include <GLFW/glfw3.h>
 #endif
 
@@ -37,8 +37,8 @@ void gStartEngine(gBaseApp* baseApp, const std::string& appName, int windowMode,
 		glfwTerminate();
 	}
 #endif
-	int screenscaling = gRenderer::SCREENSCALING_AUTO;
-	if(windowMode == G_WINDOWMODE_FULLSCREENGUIAPP || windowMode == G_WINDOWMODE_GUIAPP) screenscaling = gRenderer::SCREENSCALING_NONE;
+	int screenscaling = G_SCREENSCALING_AUTO;
+	if(windowMode == G_WINDOWMODE_FULLSCREENGUIAPP || windowMode == G_WINDOWMODE_GUIAPP) screenscaling = G_SCREENSCALING_NONE;
 	appmanager.runApp(appName, baseApp, screenwidth, screenheight, windowMode, width, height, screenscaling);
 }
 
@@ -321,7 +321,7 @@ void gAppManager::onKeyEvent(int key, int action) {
 
 void gAppManager::onMouseMoveEvent(double xpos, double ypos) {
 	if (!canvasmanager->getCurrentCanvas()) return;
-	if (gRenderer::getScreenScaling() > gRenderer::SCREENSCALING_NONE) {
+	if (gRenderer::getScreenScaling() > G_SCREENSCALING_NONE) {
 		xpos = gRenderer::scaleX(xpos);
 		ypos = gRenderer::scaleY(ypos);
 	}
@@ -343,7 +343,7 @@ void gAppManager::onMouseButtonEvent(int button, int action, double xpos, double
 	case GLFW_PRESS:
 		buttonpressed[button] = true;
 		pressed |= myPow(2, button + 1);
-		if (gRenderer::getScreenScaling() > gRenderer::SCREENSCALING_NONE) {
+		if (gRenderer::getScreenScaling() > G_SCREENSCALING_NONE) {
 			xpos = gRenderer::scaleX(xpos);
 			ypos = gRenderer::scaleY(ypos);
 		}
@@ -354,7 +354,7 @@ void gAppManager::onMouseButtonEvent(int button, int action, double xpos, double
 	case GLFW_RELEASE:
 		buttonpressed[button] = false;
 		pressed &= ~myPow(2, button + 1);
-		if (gRenderer::getScreenScaling() > gRenderer::SCREENSCALING_NONE) {
+		if (gRenderer::getScreenScaling() > G_SCREENSCALING_NONE) {
 			xpos = gRenderer::scaleX(xpos);
 			ypos = gRenderer::scaleY(ypos);
 		}
