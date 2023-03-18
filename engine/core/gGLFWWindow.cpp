@@ -58,29 +58,32 @@ void gGLFWWindow::initialize(int width, int height, int windowMode) {
 
 	// Create window
 	int currentrefreshrate = 60;
-    if (windowMode == G_WINDOWMODE_GAME) {
+    if(windowMode == G_WINDOWMODE_GAME) {
     	const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
     	width = mode->width;
     	height = mode->height;
     	currentrefreshrate = mode->refreshRate;
-    } else if (windowMode == G_WINDOWMODE_FULLSCREEN || windowMode == G_WINDOWMODE_FULLSCREENGUIAPP) {
+    } else if(windowMode == G_WINDOWMODE_FULLSCREEN || windowMode == G_WINDOWMODE_FULLSCREENGUIAPP) {
     	glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
     }
 
     window = glfwCreateWindow(width, height, title.c_str(),
 			(windowMode == G_WINDOWMODE_GAME?glfwGetPrimaryMonitor():NULL), NULL);
 
-	if (window == NULL) {
+	if(window == NULL) {
 	    std::cout << "Failed to create GLFW window" << std::endl;
 	    glfwTerminate();
 	    return;
-	} else {
-	    if (windowMode == G_WINDOWMODE_GAME) {
-	    	GLFWmonitor* monitor = glfwGetWindowMonitor(window);
-	    	glfwSetWindowMonitor(window, monitor, 0, 0, width, height, currentrefreshrate);
-	    }
 	}
-	glfwGetWindowSize(window, &width, &height);
+	if(windowMode == G_WINDOWMODE_GAME) {
+	   	GLFWmonitor* monitor = glfwGetWindowMonitor(window);
+	   	glfwSetWindowMonitor(window, monitor, 0, 0, width, height, currentrefreshrate);
+	   	glViewport(0, 0, width, height);
+	}
+
+	glfwGetFramebufferSize(window, &width, &height);
+	this->width = width;
+	this->height = height;
 
 	GLFWimage images[1];
 	std::string iconpath = gGetImagesDir() + "gameicon/icon.png";
