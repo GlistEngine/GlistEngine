@@ -21,6 +21,9 @@ gGLFWWindow::gGLFWWindow() {
 #if defined(WIN32) || defined(LINUX) || defined(APPLE)
 	window = nullptr;
 	cursor = new GLFWcursor*[6];
+	scalex = 1.0f;
+	scaley = 1.0f;
+
 #endif
 }
 
@@ -84,6 +87,14 @@ void gGLFWWindow::initialize(int width, int height, int windowMode) {
 	glfwGetFramebufferSize(window, &width, &height);
 	this->width = width;
 	this->height = height;
+
+	// Fix mouse movement for HiDPI (scaled) displays.
+	int windowWidth;
+	int windowHeight;
+	glfwGetWindowSize(window, &windowWidth, &windowHeight);
+	// Currently, this is not updated from anywhere, we might need to update this value inside framebuffer_size_callback in some rare edge case.
+	this->scalex = (float) width / (float) windowWidth;
+	this->scaley = (float) height / (float) windowHeight;
 
 	GLFWimage images[1];
 	std::string iconpath = gGetImagesDir() + "gameicon/icon.png";
@@ -200,7 +211,8 @@ void gGLFWWindow::key_callback(GLFWwindow* window, int key, int scancode, int ac
 }
 
 void gGLFWWindow::mouse_pos_callback(GLFWwindow* window, double xpos, double ypos) {
-	(static_cast<gGLFWWindow *>(glfwGetWindowUserPointer(window)))->onMouseMoveEvent(xpos, ypos);
+	auto handle = static_cast<gGLFWWindow *>(glfwGetWindowUserPointer(window));
+	handle->onMouseMoveEvent(xpos * handle->scalex, ypos * handle->scaley);
 }
 
 void gGLFWWindow::mouse_button_callback(GLFWwindow* window, int button, int action, int mods) {
