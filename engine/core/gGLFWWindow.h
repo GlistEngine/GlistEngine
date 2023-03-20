@@ -68,6 +68,7 @@ private:
 #if defined(WIN32) || defined(LINUX) || defined(APPLE)
 	GLFWwindow* window;
 	GLFWcursor** cursor;
+	float scalex, scaley;
 
 	/**
 	 * Invoking by GLFW if the window size changed.
