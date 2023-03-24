@@ -19,6 +19,9 @@
 
 
 void gStartEngine(gBaseApp* baseApp, const std::string& appName, int windowMode, int width, int height) {
+	int wmode = windowMode;
+	if(wmode == G_WINDOWMODE_NONE) wmode = G_WINDOWMODE_APP;
+
 	gAppManager appmanager;
 	gGLFWWindow gbwindow;
 	gbwindow.setAppManager(&appmanager);
@@ -29,7 +32,7 @@ void gStartEngine(gBaseApp* baseApp, const std::string& appName, int windowMode,
 	baseApp->setAppManager(&appmanager);
 	int screenwidth = width, screenheight = height;
 #if defined(WIN32) || defined(LINUX) || defined(APPLE)
-	if (windowMode == G_WINDOWMODE_GAME || windowMode == G_WINDOWMODE_FULLSCREEN || windowMode == G_WINDOWMODE_FULLSCREENGUIAPP) {
+	if (wmode == G_WINDOWMODE_GAME || wmode == G_WINDOWMODE_FULLSCREEN || wmode == G_WINDOWMODE_FULLSCREENGUIAPP) {
 		glfwInit();
 		const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 		screenwidth = mode->width;
@@ -38,11 +41,14 @@ void gStartEngine(gBaseApp* baseApp, const std::string& appName, int windowMode,
 	}
 #endif
 	int screenscaling = G_SCREENSCALING_AUTO;
-	if(windowMode == G_WINDOWMODE_FULLSCREENGUIAPP || windowMode == G_WINDOWMODE_GUIAPP) screenscaling = G_SCREENSCALING_NONE;
-	appmanager.runApp(appName, baseApp, screenwidth, screenheight, windowMode, width, height, screenscaling);
+	if(wmode == G_WINDOWMODE_FULLSCREENGUIAPP || wmode == G_WINDOWMODE_GUIAPP) screenscaling = G_SCREENSCALING_NONE;
+	appmanager.runApp(appName, baseApp, screenwidth, screenheight, wmode, width, height, screenscaling, G_LOOPMODE_NORMAL);
 }
 
 void gStartEngine(gBaseApp* baseApp, const std::string& appName, int windowMode, int unitWidth, int unitHeight, int screenScaling, int width, int height) {
+	int wmode = windowMode;
+	if(wmode == G_WINDOWMODE_NONE) wmode = G_WINDOWMODE_APP;
+
 	gAppManager appmanager;
 	gGLFWWindow gbwindow;
 	gbwindow.setAppManager(&appmanager);
@@ -53,7 +59,7 @@ void gStartEngine(gBaseApp* baseApp, const std::string& appName, int windowMode,
 	baseApp->setAppManager(&appmanager);
 	int screenwidth = width, screenheight = height;
 #if defined(WIN32) || defined(LINUX) || defined(APPLE)
-	if (windowMode == G_WINDOWMODE_GAME || windowMode == G_WINDOWMODE_FULLSCREEN || windowMode == G_WINDOWMODE_FULLSCREENGUIAPP) {
+	if (wmode == G_WINDOWMODE_GAME || wmode == G_WINDOWMODE_FULLSCREEN || wmode == G_WINDOWMODE_FULLSCREENGUIAPP) {
 		glfwInit();
 		const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 		screenwidth = mode->width;
@@ -61,7 +67,15 @@ void gStartEngine(gBaseApp* baseApp, const std::string& appName, int windowMode,
 		glfwTerminate();
 	}
 #endif
-	appmanager.runApp(appName, baseApp, screenwidth, screenheight, windowMode, unitWidth, unitHeight, screenScaling);
+	appmanager.runApp(appName, baseApp, screenwidth, screenheight, wmode, unitWidth, unitHeight, screenScaling, G_LOOPMODE_NORMAL);
+}
+
+void gStartEngine(gBaseApp* baseApp, const std::string& appName, int loopMode) {
+	gAppManager appmanager;
+	std::string appname = appName;
+	if (appname == "") appname = "GlistApp";
+	baseApp->setAppManager(&appmanager);
+	appmanager.runApp(appName, baseApp, 0, 0, G_WINDOWMODE_NONE, 0, 0, 0, loopMode);
 }
 
 
@@ -71,6 +85,8 @@ gAppManager::gAppManager() {
 	app = nullptr;
 	windowmode = G_WINDOWMODE_GAME;
 	usewindow = true;
+	loopmode = G_LOOPMODE_NORMAL;
+	loopalways = true;
 	canvas = nullptr;
 	canvasmanager = nullptr;
 	guimanager = nullptr;
@@ -95,7 +111,8 @@ gAppManager::gAppManager() {
 	canvasset = false;
 }
 
-void gAppManager::runApp(const std::string& appName, gBaseApp *baseApp, int width, int height, int windowMode, int unitWidth, int unitHeight, int screenScaling) {
+void gAppManager::runApp(const std::string& appName, gBaseApp *baseApp, int width, int height, int windowMode, int unitWidth, int unitHeight, int screenScaling, int loopMode) {
+	// Create app
 	appname = appName;
 	app = baseApp;
 	windowmode = windowMode;
@@ -109,27 +126,35 @@ void gAppManager::runApp(const std::string& appName, gBaseApp *baseApp, int widt
 		lag = AppClockDuration(0);
 	}
 
+	// Create loop mode
+	loopmode = loopMode;
+	if(loopmode == G_LOOPMODE_NONE) loopalways = false;
+
 	// Create window
 	if(usewindow) {
 		window->initialize(width, height, windowMode);
-		// Update the width and height incase it was changed by the operating system or the window implementation
+
+		// Update the width and height in case it was changed by the operating system or the window implementation
 		width = window->getWidth();
 		height = window->getHeight();
-	}
 
-	canvasmanager = new gCanvasManager();
-	if(usewindow) guimanager = new gGUIManager(app);
+		canvasmanager = new gCanvasManager();
+		guimanager = new gGUIManager(app);
+	}
 
 	// Run app
 	app->setup();
-//	if (canvasmanager->getTempCanvas() != nullptr) {
-//		canvasmanager->getTempCanvas()->setup(); // Commented out because was invoking first canvas's setup 2 times in the app launch
-//	}
 
-	gBaseCanvas *tempcanvas = canvasmanager->getTempCanvas();
-	tempcanvas->setScreenSize(width, height);
-	tempcanvas->setUnitScreenSize(unitWidth, unitHeight);
-	tempcanvas->setScreenScaling(screenScaling);
+	// Exit if console app does not loop
+	if(!loopalways) return;
+
+	// Add a temporary empty canvas to prevent errors
+	if(usewindow) {
+		gBaseCanvas *tempcanvas = canvasmanager->getTempCanvas();
+		tempcanvas->setScreenSize(width, height);
+		tempcanvas->setUnitScreenSize(unitWidth, unitHeight);
+		tempcanvas->setScreenScaling(screenScaling);
+	}
 
 	// Main loop
 	while(!usewindow || !window->getShouldClose()) {
@@ -139,11 +164,7 @@ void gAppManager::runApp(const std::string& appName, gBaseApp *baseApp, int widt
 		elapsedtime += deltatime.count();
 		starttime = endtime;
 
-		if(usewindow) internalUpdate();
-		else {
-			app->update();
-			for (uci = 0; uci < gBaseComponent::usedcomponents.size(); uci++) gBaseComponent::usedcomponents[uci]->update();
-		}
+		internalUpdate();
 
 		if(!usewindow || !window->vsync) {
 			/* Less precision, but lower CPU usage for non vsync */
@@ -164,6 +185,12 @@ void gAppManager::runApp(const std::string& appName, gBaseApp *baseApp, int widt
 }
 
 void gAppManager::internalUpdate() {
+	if(!usewindow) {
+		app->update();
+		for (uci = 0; uci < gBaseComponent::usedcomponents.size(); uci++) gBaseComponent::usedcomponents[uci]->update();
+		return;
+	}
+
 	canvasmanager->update();
 	if(guimanager->isframeset) guimanager->update();
 	app->update();
@@ -297,6 +324,10 @@ void gAppManager::setClipboardString(std::string text) {
 
 std::string gAppManager::getClipboardString() {
 	return window->getClipboardString();
+}
+
+int gAppManager::getLoopMode() {
+	return loopmode;
 }
 
 void gAppManager::onCharEvent(unsigned int key) {

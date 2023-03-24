@@ -65,19 +65,24 @@ class gCanvasManager;
  *
  * @param appName Name of the application.
  *
- * @param windowMode Type of the application window. Developers are encouraged
- * to use this parameter to be able to see both codes and game window while
- * developing apps, then later on switching for a suiting mode.
+ * @param windowMode Type of the application window. This parameter can be one of
+ * G_WINDOWMODE_GAME, G_WINDOWMODE_APP, G_WINDOWMODE_FULLSCREEN, G_WINDOWMODE_GUIAPP
+ * and G_WINDOWMODE_FULLSCREENGUIAPP. This value can not be G_WINDOWMODE_NONE as
+ * the app needs a window to work. The developer who needs a windowless console app
+ * should use other gStartEngine function. This function defaults to G_WINDOWMODE_APP
+ * in case of no window.
  *
  * @param width application window's width to be shown on the user's computer. User
  * should choose this parameter suitable according to their screen resolution
- * to prevent distorted images.
+ * to prevent distorted images. Please note that some operating systems may scale
+ * the framebuffer and create a bigger window than the developer's value.
  *
  * @param height application window's width to be shown on the user's computer.
  * User should choose this parameter suitable according to their screen resolution
- * to prevent distorted images.
+ * to prevent distorted images. Please note that some operating systems may scale
+ * the framebuffer and create a bigger window than the developer's value.
  */
-void gStartEngine(gBaseApp* baseApp, const std::string& appName = "GlistApp", int windowMode = 2, int width = gDefaultWidth(), int height = gDefaultHeight());
+void gStartEngine(gBaseApp* baseApp, const std::string& appName, int windowMode, int width, int height);
 
 /**
  * Sets the app settings for engine according to given name, mode of window,
@@ -92,20 +97,12 @@ void gStartEngine(gBaseApp* baseApp, const std::string& appName = "GlistApp", in
  *
  * @param appName Name of the application.
  *
- * @param windowMode Type of the application window. Developers are encouraged
- * to use this parameter to be able to see both codes and game window while
- * developing apps, then later on switching for a suiting mode.
- *
- * @param width application window's width to be shown on the user's computer. User
- * should choose this parameter suitable according to their screen resolution
- * to prevent distorted images.
- *
- * @param height application window's width to be shown on the user's computer.
- * User should choose this parameter suitable according to their screen resolution
- * to prevent distorted images.
- *
- * @param screenScaling how much everything should be enlarged when measured in
- * pixels.
+ * @param windowMode Type of the application window. This parameter can be one of
+ * G_WINDOWMODE_GAME, G_WINDOWMODE_APP, G_WINDOWMODE_FULLSCREEN, G_WINDOWMODE_GUIAPP
+ * and G_WINDOWMODE_FULLSCREENGUIAPP. This value can not be G_WINDOWMODE_NONE as
+ * the app needs a window to work. The developer who needs a windowless console app
+ * should use other gStartEngine function. This function defaults to G_WINDOWMODE_APP
+ * in case of no window.
  *
  * @param unitWidth width of the developer's application window. The resolution can
  * differ from developer to user. GlistEngine has scaling methods. User and
@@ -117,10 +114,34 @@ void gStartEngine(gBaseApp* baseApp, const std::string& appName = "GlistApp", in
  * developer can have different resolutions, but the engine can adapt to users
  * resolution by scaling. Thus, unitHeight is developer's unit height.
  *
- * @param vsync When true, application framerate will be bound to current
- * monitor's refresh rate.
+ * @param screenScaling how much everything should be enlarged when measured in
+ * pixels.
+ *
+ * @param width application window's width to be shown on the user's computer. User
+ * should choose this parameter suitable according to their screen resolution
+ * to prevent distorted images. Please note that some operating systems may scale
+ * the framebuffer and create a bigger window than the developer's value.
+ *
+ * @param height application window's width to be shown on the user's computer.
+ * User should choose this parameter suitable according to their screen resolution
+ * to prevent distorted images. Please note that some operating systems may scale
+ * the framebuffer and create a bigger window than the developer's value.
  */
-void gStartEngine(gBaseApp* baseApp, const std::string& appName, int windowMode, int unitWidth, int unitHeight, int screenScaling, int width = gDefaultWidth(), int height = gDefaultHeight());
+void gStartEngine(gBaseApp* baseApp, const std::string& appName, int windowMode, int unitWidth, int unitHeight, int screenScaling, int width, int height);
+
+/**
+ * Creates a windowless console/service app.
+ *
+ * Developers should not forget to remove all calls to Canvas classes, plugins and
+ * other rendering elements from the code and from the CMakeLists.
+ *
+ * The app's loop mode can be one of G_LOOPMODE_NORMAL and G_LOOPMODE_NONE.
+ *
+ * If the loopmode is G_LOOPMODE_NONE and if the developer needs a component to update,
+ * he should invode the component's update() function manually.
+ */
+void gStartEngine(gBaseApp* baseApp, const std::string& appName, int loopMode);
+
 
 /**
  * This class controls basically everything which is shown to user from beginning
@@ -211,7 +232,7 @@ public:
 	 * @param screenScaling how much everything should be enlarged when measured in
 	 * pixels.
 	 */
-	void runApp(const std::string& appName, gBaseApp *baseApp, int width, int height, int windowMode, int unitWidth, int unitHeight, int screenScaling);
+	void runApp(const std::string& appName, gBaseApp *baseApp, int width, int height, int windowMode, int unitWidth, int unitHeight, int screenScaling, int loopMode);
 
 	/**
 	 * Completely replace the current gBaseWindow with the specified gBaseWindow.
@@ -426,6 +447,14 @@ public:
 	void setClipboardString(std::string text);
 	std::string getClipboardString();
 
+	/**
+	 * Returns the loop mode of the engine. The returning value can be
+	 * one of G_LOOPMODE_NORMAL(0) or G_LOOPMODE_NONE(1)
+	 *
+	 * @return Loop mode
+	 */
+	int getLoopMode();
+
 private:
 	using AppClock = std::chrono::steady_clock;
 	using AppClockDuration = AppClock::duration;
@@ -439,6 +468,8 @@ private:
 	gBaseApp* app;
 	int windowmode;
 	bool usewindow;
+	int loopmode;
+	bool loopalways;
 	gBaseCanvas* canvas;
 	gCanvasManager* canvasmanager;
 	gGUIManager* guimanager;
