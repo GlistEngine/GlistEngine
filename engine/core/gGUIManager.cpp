@@ -16,7 +16,7 @@ gGUIManager::gGUIManager(gBaseApp* root) {
 	selecteddialogue = nullptr;
 	loadThemes();
 	resetTheme(GUITHEME_LIGHT);
-	if(root->getAppManager()->getWindowMode() == G_WINDOWMODE_GUIAPP) {
+	if(root->getAppManager()->getWindowMode() == G_WINDOWMODE_GUIAPP || root->getAppManager()->getWindowMode() == G_WINDOWMODE_FULLSCREENGUIAPP) {
 		setCurrentFrame(&emptyframe);
 		emptyframe.setSizer(&emptysizer);
 		emptysizer.enableBackgroundFill(true);
