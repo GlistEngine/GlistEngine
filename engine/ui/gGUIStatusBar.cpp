@@ -13,24 +13,24 @@ gGUIStatusBar::gGUIStatusBar() {
 
 	sizerrescaling = true;
 	selectedtext = -1;
-	statusbarw = getScreenWidth();
-	statusbarh = 30;
-	statusbarx = 0;
-	statusbary = getScreenHeight() - statusbarh;
+	width = getScreenWidth();
+	height = 30;
+	top = 0;
+	left = getScreenHeight() - height;
 	//top = getScreenHeight() - statusbarh;
 	setSizer(&statussizer);
 	//text font
 	textx[0] = 15;
-	textx[1] = statusbarx + statusbarw / 2;
-	textx[2] = textx[1] + statusbarw / 6;
-	textx[3] = textx[2] + statusbarw / 6;
+	textx[1] = left + width / 2;
+	textx[2] = textx[1] + width / 6;
+	textx[3] = textx[2] + width / 6;
 	for (int order = 0; order < textobjectsize; ++order) {
 		text[order] = "";
-		texty[order] = statusbary + statusbarh / 2;
+		texty[order] = left + height / 2;
 		textsliderx[order] = textx[order] - 10;
-		textslidery[order] = statusbary;
+		textslidery[order] = left;
 		textsliderw[order] = 5;
-		textsliderh[order] = statusbarh;
+		textsliderh[order] = height;
 	}
 }
 gGUIStatusBar::~gGUIStatusBar() {
@@ -62,37 +62,37 @@ void gGUIStatusBar::keyReleased(int key) {
 void gGUIStatusBar::windowResized(int w, int h) {
  //gLogi("width: ") << w;
  //gLogi("height ") << h;
- updateStatusBarCoordinate(w, h);
+// updateStatusBarCoordinate(w, h);
  updateTextCoordinate(w, h);
 }
 
 void gGUIStatusBar::updateStatusBarCoordinate(int w, int h) {
 	 //update necessary coordinate update x and h not needed
-	 statusbary = h - statusbarh;
-	 statusbarw = getScreenWidth();
-	 statusbarx = 0;
-	 statusbary = getScreenHeight() - statusbarh;
+//	 statusbary = h - height;
+//	 statusbarw = getScreenWidth();
+//	 statusbarx = 0;
+//	 statusbary = getScreenHeight() - statusbarh;
 }
 
 void gGUIStatusBar::updateTextCoordinate(int w, int h) {
  	for (int order = 0; order < textobjectsize; ++order) {
  		textx[0] = 15;
- 		textx[1] = statusbarx + statusbarw / 2;
- 		textx[2] = textx[1] + statusbarw / 6;
- 		textx[3] = textx[2] + statusbarw / 6;
- 		texty[order] = statusbary + statusbarh / 2;
+ 		textx[1] = left + width / 2;
+ 		textx[2] = textx[1] + width / 6;
+ 		textx[3] = textx[2] + width / 6;
+ 		texty[order] = top + height / 2;
  		textsliderx[order] = textx[order];
- 		textslidery[order] = statusbary;
+ 		textslidery[order] = top;
  	}
 }
 
 void gGUIStatusBar::statusbarDraw() {
-	gDrawRectangle(statusbarx, statusbary, statusbarw, statusbarh, true);
+	gDrawRectangle(left, top, width, height, true);
 	renderer->setColor(middlegroundcolor->r, middlegroundcolor->g, middlegroundcolor->b);
 	//ust cizgi
-	gDrawLine(statusbarx, statusbary, statusbarx + statusbarw, statusbary);
+	gDrawLine(left, top, left + width, top);
 	//alt cizgi
-	gDrawLine(statusbarx, statusbary + statusbarh, statusbarx + statusbarw, statusbary+ statusbarh);
+	gDrawLine(left, top + height, left + width, top + height);
 }
 
 void gGUIStatusBar::statusbarAllTextDraw() {
@@ -100,7 +100,7 @@ void gGUIStatusBar::statusbarAllTextDraw() {
 	renderer->setColor(middlegroundcolor->r, middlegroundcolor->g, middlegroundcolor->b);
 	for (int id = 0; id < textobjectsize; ++id) {
 		if(text[id].empty())continue;
-		//çizgi
+		//ï¿½izgi
 		gDrawLine(textsliderx[id], textslidery[id] + textsliderh[id]* 0.05f, textsliderx[id], textslidery[id] + textsliderh[id]*0.95f);
 		//statusbartexts
 		renderer->setColor(fontcolor);
@@ -115,7 +115,7 @@ void gGUIStatusBar::mousePressed(int x, int y, int button) {
 	//gLogi("textx: ") << textx[0];
 	//gLogi("texty: ") << texty[0];
 	for (int id = 0; id < textobjectsize; ++id) {
-		if(x > textsliderx[id] - 5 && x < textsliderx[id] + textsliderw[id] + 5 && y > statusbary && y < statusbary + statusbarh) {
+		if(x > textsliderx[id] - 5 && x < textsliderx[id] + textsliderw[id] + 5 && y > top && y < top + height) {
 			selectedtext = id;
 			textsliderx[selectedtext] = x;
 			textx[selectedtext] = x + 10;
