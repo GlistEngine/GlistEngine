@@ -29,7 +29,6 @@ public:
 
 private:
 	//statusbar
-	int statusbarh, statusbarw, statusbarx, statusbary;
 	gGUISizer statussizer;
 	void statusbarDraw();
 	//text
