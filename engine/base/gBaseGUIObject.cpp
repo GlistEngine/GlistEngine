@@ -49,6 +49,7 @@ gBaseGUIObject::gBaseGUIObject() {
 	iscursoron = false;
 	issizer = false;
 	iscontainer = false;
+	isresizable = true;
 }
 
 gBaseGUIObject::~gBaseGUIObject() {
