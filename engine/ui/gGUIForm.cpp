@@ -56,7 +56,7 @@ void gGUIForm::resizeMenuBar() {
 				width,
 				menuh
 		);
-	resizeAll(RESIZE_MENUBAR);
+//	resizeAll(RESIZE_MENUBAR);
 }
 
 void gGUIForm::addToolBar(gGUIToolbar* toolBar) {
@@ -106,7 +106,7 @@ void gGUIForm::resizeToolbars() {
 				toolbarh
 			);
 	}
-	resizeAll(RESIZE_TOOLBAR_HORIZONTAL);
+//	resizeAll(RESIZE_TOOLBAR_HORIZONTAL);
 }
 
 void gGUIForm::resizeVerticalToolbars() {
@@ -117,7 +117,7 @@ void gGUIForm::resizeVerticalToolbars() {
 				height
 			);
 	}
-	resizeAll(RESIZE_TOOLBAR_VERTICAL);
+//	resizeAll(RESIZE_TOOLBAR_VERTICAL);
 }
 
 
@@ -140,7 +140,7 @@ void gGUIForm::resizeStatusBar() {
 					width,
 					statush
 		);
-	resizeAll(RESIZE_STATUSBAR);
+//	resizeAll(RESIZE_STATUSBAR);
 }
 
 void gGUIForm::addContextMenu(gGUIContextMenu* contextMenu) {
@@ -327,7 +327,12 @@ void gGUIForm::windowResized(int w, int h) {
 		statusbar->windowResized(w, h);
 	}
 	if(guisizer) {
-		updateSizer();
+//		updateSizer();
+		guisizer->set(left + (verticaltoolbarnum ? verticaltoolbarnum * verticaltoolbars[0]->width : 0),
+				top + (menubar ? menubar->height : 0) + (toolbarnum ? toolbarnum * toolbars[0]->height : 0),
+				width - (verticaltoolbarnum ? verticaltoolbarnum * verticaltoolbars[0]->width : 0),
+				height - (statusbar ? statusbar->height : 0) - (menubar ? menubar->height : 0) - (toolbarnum ? toolbarnum * toolbars[0]->height : 0));
+
 		guisizer->windowResized(w, h);
 	}
 }

@@ -101,7 +101,7 @@ void gGUISizer::set(int x, int y, int w, int h) {
 
 	for (int i = 0; i < linenum; i++) {
 		for (int j = 0; j < columnnum; j++) {
-			if(iscontrolset[i][j]) {
+			if(iscontrolset[i][j] && guicontrol[i][j]->isresizable) {
 				int cr = guicontrol[i][j]->left + slotpadding;
 				int cb = (top - oldtop) + guicontrol[i][j]->top;
 				int cw = guicontrol[i][j]->width - (slotpadding * 2);
