@@ -112,6 +112,7 @@ public:
 	bool isfocused, iscursoron;
 	bool issizer, iscontainer;
 	static int focusid, previousfocusid;
+	bool isresizable;
 
 protected:
 	static gGUIResources res;
