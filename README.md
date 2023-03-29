@@ -44,7 +44,7 @@ On macOS:
 - First of all, you should install Xcode because OpenGL library comes with Xcode. Download Xcode via App Store
 
 - Open Terminal and install homebrew
-> ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+> /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
 - Install libraries via home-brew and make necessary configurations
 > brew install gcc@11 cmake glew glfw glm freetype assimp curl openssl
