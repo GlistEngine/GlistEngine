@@ -1,26 +1,9 @@
 cmake_minimum_required (VERSION 3.10.2)
 
-if(WIN32)
-# Clang compiler definition for Windows. Do not touch below value. If you need to
-# use clang compiler, change the definition in the GlistApp's CmakeLists, not here.
-if(NOT DEFINED COMPILER_CLANG)
-    set(COMPILER_CLANG false)
-endif()
-
-if(COMPILER_CLANG)
-	set(CMAKE_C_COMPILER "${CMAKE_SOURCE_DIR}/../../zbin/glistzbin-win64/clang64/bin/clang.exe")
-	set(CMAKE_CXX_COMPILER "${CMAKE_SOURCE_DIR}/../../zbin/glistzbin-win64/clang64/bin/clang++.exe")
-endif(COMPILER_CLANG)
-endif(WIN32)
-
-if(UNIX)
-	EXECUTE_PROCESS( COMMAND uname -m COMMAND tr -d '\n' OUTPUT_VARIABLE DEVICEARCHITECTURE )
-	message( STATUS "Architecture: ${DEVICEARCHITECTURE}" )
-endif()
 
 # Configure compiler and linker as you need
-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS} -std=c++14 -stdlib=c++ -DEIGEN_NO_CUDA -DNDEBUG -DENABLE_BOOST_WORKAROUND=ON -fuse-ld=gold -Wuninitialized -Wmultichar -ffunction-sections -fdata-sections -fexceptions -frtti -fpermissive -fPIC -O2")
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} -g -std=c++14 -stdlib=c++ -DDEBUG -DENABLE_BOOST_WORKAROUND=ON -fuse-ld=gold -Wuninitialized -Wmultichar -ffunction-sections -fdata-sections -fexceptions -frtti -fpermissive -fPIC -O0")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS} -std=c++17 -stdlib=c++ -DEIGEN_NO_CUDA -DNDEBUG -DENABLE_BOOST_WORKAROUND=ON -fuse-ld=gold -Wuninitialized -Wmultichar -ffunction-sections -fdata-sections -fexceptions -frtti -fpermissive -fPIC -O2")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} -g -std=c++17 -stdlib=c++ -DDEBUG -DENABLE_BOOST_WORKAROUND=ON -fuse-ld=gold -Wuninitialized -Wmultichar -ffunction-sections -fdata-sections -fexceptions -frtti -fpermissive -fPIC -O0")
 if(NOT APPLE)
     set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -v -pthread -Wl,--gc-sections")
 endif()
@@ -29,6 +12,11 @@ endif()
 ##################################################
 # DO NOT CHANGE BELOW
 ##################################################
+
+if(UNIX)
+	EXECUTE_PROCESS( COMMAND uname -m COMMAND tr -d '\n' OUTPUT_VARIABLE DEVICEARCHITECTURE )
+	message( STATUS "Architecture: ${DEVICEARCHITECTURE}" )
+endif()
 
 ########## BUILD VARIABLES ##########
 if(UNIX AND NOT APPLE)
@@ -81,12 +69,12 @@ if(NOT DEFINED SYSZBIN_DIR)
 	set(SYSZBIN_DIR ${ZBIN_DIR}/glistzbin-${SYS_NAME})
 endif()
 if(NOT DEFINED MINGW64_DIR)
-if(COMPILER_CLANG)
+if(WIN32)
 	set(MINGW64_DIR ${SYSZBIN_DIR}/clang64)
-endif(COMPILER_CLANG)
-if(NOT COMPILER_CLANG)
+endif(WIN32)
+if(NOT WIN32)
 	set(MINGW64_DIR ${SYSZBIN_DIR}/mingw64)
-endif(COMPILER_CLANG)
+endif(NOT WIN32)
 endif()
 if(NOT DEFINED ANDROID_DIR)
 	set(ANDROID_DIR ${ZBIN_DIR}/android)
@@ -271,21 +259,14 @@ set(INC_DIRS
 
 if(WIN32)
 	list(APPEND INC_DIRS
+		${MINGW64_DIR}/include/c++/v1
 		${MINGW64_DIR}/include
 		${MINGW64_DIR}/include/freetype2
-#		${MINGW64_DIR}/include/ffmpeg
 		${MINGW64_DIR}/include/sqlite
 		${MINGW64_DIR}/include/curl
 		${MINGW64_DIR}/include/fmod
 		${MINGW64_DIR}/include/utf8
 	)
-if(COMPILER_CLANG)
-	list(APPEND INC_DIRS ${MINGW64_DIR}/include/c++/v1)
-endif(COMPILER_CLANG)
-if(NOT COMPILER_CLANG)
-	list(APPEND INC_DIRS ${MINGW64_DIR}/lib/gcc/x86_64-w64-mingw32/12.2.0/include/c++)
-endif(NOT COMPILER_CLANG)
-
 elseif(LINUX)
 	list(APPEND INC_DIRS
 		${MINGW64_DIR}/include
@@ -296,7 +277,6 @@ elseif(LINUX)
 		/usr/include/freetype2
 		/usr/include
 		/usr/local/lib
-#		${MINGW64_DIR}/lib
 	)
 elseif(APPLE)
   	list(APPEND INC_DIRS
@@ -333,9 +313,6 @@ if(WIN32)
 	link_directories(
 			${MINGW64_DIR}/bin
 			${MINGW64_DIR}/lib
-    #		${MINGW64_DIR}/x86_64-w64-mingw32/bin
-    #		${MINGW64_DIR}/x86_64-w64-mingw32/lib
-	#		${LIBS_DIR}/fmod/lib
 			${PLUGIN_LINKDIRS}
 	)
 elseif(LINUX)
