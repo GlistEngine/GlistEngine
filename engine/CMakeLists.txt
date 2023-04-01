@@ -13,11 +13,6 @@ endif()
 # DO NOT CHANGE BELOW
 ##################################################
 
-if(UNIX)
-	EXECUTE_PROCESS( COMMAND uname -m COMMAND tr -d '\n' OUTPUT_VARIABLE DEVICEARCHITECTURE )
-	message( STATUS "Architecture: ${DEVICEARCHITECTURE}" )
-endif()
-
 ########## BUILD VARIABLES ##########
 if(UNIX AND NOT APPLE)
 	set(LINUX TRUE)
@@ -30,11 +25,6 @@ if(WIN32)
 	set(SYS_NAME "win64")
 endif(WIN32)
 
-if(APPLE)
-	set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS} -march=x86-64")
-	set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} -march=x86-64")
-	set(SYS_NAME "macos")
-endif(APPLE)
 
 set(CMAKE_THREAD_LIBS_INIT "-lpthread")
 set(CMAKE_HAVE_THREADS_LIBRARY 1)
@@ -42,10 +32,6 @@ set(CMAKE_USE_WIN32_THREADS_INIT 0)
 set(CMAKE_USE_PTHREADS_INIT 1)
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 
-
-if(NOT DEFINED CMAKE_SUPPRESS_DEVELOPER_WARNINGS)
-    set(CMAKE_SUPPRESS_DEVELOPER_WARNINGS 1 CACHE INTERNAL "No dev warnings")
-endif()
 
 if(NOT DEFINED ENGINE_DIR)
     set(ENGINE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
@@ -78,12 +64,6 @@ endif(NOT WIN32)
 endif()
 if(NOT DEFINED ANDROID_DIR)
 	set(ANDROID_DIR ${ZBIN_DIR}/android)
-endif()
-
-if(APPLE)
-    set(CMAKE_CXX_COMPILER "/usr/local/bin/g++-11")
-#    set(CMAKE_CXX_COMPILER "/usr/bin/g++")
-#    set(CMAKE_CXX_COMPILER "${MINGW64_DIR}/Cellar/gcc@7/7.5.0_3/bin/g++-7")
 endif()
 
 #configure_file( ${ENGINE_DIR}/gConfig.h.in ${CMAKE_BINARY_DIR}/generated/gConfig.h )
@@ -281,17 +261,17 @@ elseif(LINUX)
 elseif(APPLE)
   	list(APPEND INC_DIRS
   		/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers
-#  		/usr/local/Cellar/freetype/2.10.4/include
-#  		/usr/local/Cellar/freetype/2.10.4/include/freetype2
-#  		/usr/local/Cellar/glew/2.2.0_1/include
-#  		/usr/local/Cellar/glm/0.9.9.8/include
-#  		/usr/local/Cellar/assimp/5.0.1/include
-#  		/usr/local/Cellar/curl/7.80.0_1/include
-  		/usr/local/include
-  		/usr/local/include/freetype2
+  		${SYS_INC_PATH}
+  		${SYS_INC_PATH}/freetype2
 		${MINGW64_DIR}/include/sqlite
+		${BREW_PATH}/openssl@${OPENSSL_VER_SHORT}/${OPENSSL_VER_FULL}/include
 		# TODO: FFMPEG
   	)
+  	if(${DEVICEARCHITECTURE} STREQUAL "arm64")
+	  	list(APPEND INC_DIRS
+	  		${BREW_PATH}/llvm/${LLVM_VER}/include/c++/v1
+	  	)
+  	endif()
 elseif(ANDROID)
 	list(APPEND INC_DIRS
 		${ANDROID_DIR}/include
@@ -352,7 +332,6 @@ elseif(LINUX)
 			${MINGW64_DIR}/lib/libfreetype.so)
 elseif(APPLE)
 	find_library(Lib_freetype freetype HINTS /usr/local/lib)
-#	find_library(Lib_freetype freetype HINTS /usr/local/Cellar/freetype/2.10.4/lib)
 	execute_process(COMMAND 
 	    pkg-config --cflags freetype
 	    OUTPUT_VARIABLE
@@ -362,7 +341,6 @@ elseif(APPLE)
 	add_definitions(${CL_VAR_1})
 
 	find_library(Lib_assimp assimp HINTS /usr/local/lib)
-#	find_library(Lib_assimp assimp HINTS /usr/local/Cellar/assimp/5.0.1/lib)
 	execute_process(COMMAND 
 	    pkg-config --cflags assimp
 	    OUTPUT_VARIABLE
@@ -390,7 +368,6 @@ elseif(APPLE)
 	add_definitions(${CL_VAR_4})
 
 	find_library(Lib_glfw glfw HINTS /usr/local/lib)
-#	find_library(Lib_glfw glfw HINTS /usr/local/Cellar/glfw/3.3.3/lib)
 	execute_process(COMMAND 
 	    pkg-config --cflags glfw
 	    OUTPUT_VARIABLE
@@ -409,7 +386,6 @@ elseif(APPLE)
 	add_definitions(${CL_VAR_6})
 
 	find_library(Lib_GLEW GLEW HINTS /usr/local/lib)
-#	find_library(Lib_GLEW GLEW HINTS /usr/local/Cellar/glew/2.2.0_1/lib)
 	execute_process(COMMAND 
 	    pkg-config --cflags GLEW
 	    OUTPUT_VARIABLE
@@ -419,7 +395,6 @@ elseif(APPLE)
 	add_definitions(${CL_VAR_7})
 	
 	find_library(Lib_curl curl HINTS /usr/local/lib)
-#	find_library(Lib_curl curl HINTS /usr/local/Cellar/curl/7.80.0_1/lib)
 	execute_process(COMMAND 
 	    pkg-config --cflags curl
 	    OUTPUT_VARIABLE
@@ -427,6 +402,24 @@ elseif(APPLE)
 	    OUTPUT_STRIP_TRAILING_WHITESPACE)
 	string(STRIP "${CL_TMP_VAR}" CL_VAR_8)
 	add_definitions(${CL_VAR_8})
+	
+	find_library(Lib_crypto crypto HINTS ${BREW_PATH}/openssl@${OPENSSL_VER_SHORT}/${OPENSSL_VER_FULL}/lib)
+	execute_process(COMMAND 
+	    pkg-config --cflags crypto
+	    OUTPUT_VARIABLE
+	    CL_TMP_VAR
+	    OUTPUT_STRIP_TRAILING_WHITESPACE)
+	string(STRIP "${CL_TMP_VAR}" CL_VAR_9)
+	add_definitions(${CL_VAR_9})
+	
+#	find_library(Lib_cpp c++ HINTS ${BREW_PATH}/llvm/${LLVM_VER}/lib/c++)
+#	execute_process(COMMAND 
+#	    pkg-config --cflags c++
+#	    OUTPUT_VARIABLE
+#	    CL_TMP_VAR
+#	    OUTPUT_STRIP_TRAILING_WHITESPACE)
+#	string(STRIP "${CL_TMP_VAR}" CL_VAR_10)
+#	add_definitions(${CL_VAR_10})
 	
 elseif(ANDROID)
 	find_library( # Sets the name of the path variable.
@@ -512,6 +505,8 @@ elseif(APPLE)
 		${Lib_glfw}
 		${Lib_GL}
 		${Lib_GLEW}
+		${Lib_crypto}
+#		${Lib_cpp}
 	# TODO: FFMPEG
 	)
 elseif(ANDROID)
