@@ -39,7 +39,7 @@ On Windows:
 - We provide all libraries except GIT. You should first download and install GIT from https://git-scm.com/download/win
 
 On macOS:
-- Please note that the installation is tested on a clean BigSur. If you have an older OS version, consider upgrading your Mac
+- Please note that the installation is tested on a clean Monterey. If you have an older OS version, consider upgrading your Mac
 
 - First of all, you should install Xcode because OpenGL library comes with Xcode. Download Xcode via App Store
 
