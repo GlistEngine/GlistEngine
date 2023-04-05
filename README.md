@@ -29,7 +29,7 @@ Glist Engine has one-click installers for Windows, Linux and Mac. You can downlo
 
 1- Fork our 3 repos into your Github account:
 
-- One of the GlistEngine/GlistZbin-Win64, GlistEngine/GlistZbin-Linux or GlistEngine/GlistZbin-Macos repos, according to your OS
+- One of the; GlistEngine/glistzbin-win64, GlistEngine/glistzbin-linux, GlistEngine/glistzbin-macos or GlistEngine/glistzbin-macos-x86_64 repos, according to your OS
 - GlistEngine/GlistEngine repo
 - GlistEngine/GlistApp repo
 
@@ -47,7 +47,7 @@ On macOS:
 > /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
 - Install libraries via home-brew and make necessary configurations
-> brew install gcc@11 cmake glew glfw glm freetype assimp curl openssl
+> brew install llvm gcc@11 cmake glew glfw glm freetype assimp curl openssl
 
 > export PATH=$PATH:~/usr/local/bin/cmake
 
@@ -146,9 +146,13 @@ Start the engine.
 On Windows:
 - Open file explorer, go to C:\dev\glist\zbin\glistzbin-win64 and double click GlistEngine
 
-On macOS:
+On macOS M1:
 - Open Terminal and enter this command
 > open ~/dev/glist/zbin/glistzbin-macos/eclipse/eclipsecpp-2020-09/Eclipse.app
+
+On macOS X86_64:
+- Open Terminal and enter this command
+> open ~/dev/glist/zbin/glistzbin-macos-x86_64/eclipse/eclipsecpp-2020-09/Eclipse.app
 
 On Linux:
 - Open file explorer, go to ~/dev/glist/zbin/glistzbin-linux and double click GlistEngine
