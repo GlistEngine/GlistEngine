@@ -16,9 +16,21 @@ gFont::gFont() {
 	fontsize = 0;
 	dpi = 0;
 	iskerning = false;
+	fontface = nullptr;
+	ftlib = nullptr;
 }
 
 gFont::~gFont() {
+	if(fontface != nullptr) {
+		textures.clear();
+		cpset.clear();
+		loadedcharacters.clear();
+		bitmappixels = nullptr;
+		lcsrc = nullptr;
+		lcbptr = nullptr;
+		FT_Done_Face(fontface);
+		FT_Done_FreeType(ftlib);
+	}
 }
 
 bool gFont::load(const std::string& fullPath, int size, bool isAntialiased, int dpi) {
