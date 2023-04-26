@@ -16,6 +16,8 @@ const int gGLFWWindow::CURSORMODE_NORMAL = GLFW_CURSOR_NORMAL;
 const int gGLFWWindow::CURSORMODE_HIDDEN = GLFW_CURSOR_HIDDEN;
 const int gGLFWWindow::CURSORMODE_DISABLED = GLFW_CURSOR_DISABLED;
 
+GLFWwindow* gGLFWWindow::currentwindow = nullptr;
+
 
 gGLFWWindow::gGLFWWindow() {
 #if defined(WIN32) || defined(LINUX) || defined(APPLE)
@@ -78,6 +80,8 @@ void gGLFWWindow::initialize(int width, int height, int windowMode) {
 	    glfwTerminate();
 	    return;
 	}
+    currentwindow = window;
+
 	if(windowMode == G_WINDOWMODE_GAME) {
 	   	GLFWmonitor* monitor = glfwGetWindowMonitor(window);
 	   	glfwSetWindowMonitor(window, monitor, 0, 0, width, height, currentrefreshrate);
@@ -137,6 +141,8 @@ void gGLFWWindow::initialize(int width, int height, int windowMode) {
 	glfwSetMouseButtonCallback(window, gGLFWWindow::mouse_button_callback);
 	glfwSetCursorEnterCallback(window, gGLFWWindow::mouse_enter_callback);
 	glfwSetScrollCallback(window, gGLFWWindow::mouse_scroll_callback);
+	glfwSetWindowFocusCallback(window, gGLFWWindow::window_focus_callback);
+	glfwSetJoystickCallback(gGLFWWindow::joystick_callback);
 #endif
 }
 
@@ -208,6 +214,14 @@ void gGLFWWindow::character_callback(GLFWwindow* window, unsigned int keycode) {
 void gGLFWWindow::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
 	if (action != GLFW_RELEASE && action != GLFW_PRESS) return;
     (static_cast<gGLFWWindow *>(glfwGetWindowUserPointer(window)))->onKeyEvent(key, action);
+}
+
+void gGLFWWindow::window_focus_callback(GLFWwindow* window, int focused) {
+	(static_cast<gGLFWWindow *>(glfwGetWindowUserPointer(window)))->onWindowFocus(focused);
+}
+
+void gGLFWWindow::joystick_callback(int jid, int event) {
+	(static_cast<gGLFWWindow *>(glfwGetWindowUserPointer(currentwindow)))->onJoystickConnected(jid, glfwJoystickIsGamepad(jid), event == GLFW_CONNECTED);
 }
 
 void gGLFWWindow::mouse_pos_callback(GLFWwindow* window, double xpos, double ypos) {

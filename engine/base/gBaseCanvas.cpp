@@ -75,6 +75,18 @@ void gBaseCanvas::windowResized(int w, int h) {
 
 }
 
+void gBaseCanvas::joystickConnected(int jId, bool isGamepad, bool isConnected) {
+
+}
+
+void gBaseCanvas::gamepadButtonPressed(int jId, int key) {
+
+}
+
+void gBaseCanvas::gamepadButtonReleased(int jId, int key) {
+
+}
+
 void gBaseCanvas::onGuiEvent(int guiObjectId, int eventType, std::string value1, std::string value2) {
 
 }
@@ -414,6 +426,14 @@ bool gBaseCanvas::isGridXZEnabled() {
 
 bool gBaseCanvas::isGridYZEnabled() {
 	return renderer->isGridYZEnabled();
+}
+
+bool gBaseCanvas::isJoystickConnected(int jId) {
+	return root->getAppManager()->isJoystickConnected(jId);
+}
+
+bool gBaseCanvas::isGamepadButtonPressed(int gamepadId, int buttonId) {
+	return root->getAppManager()->isGamepadButtonPressed(gamepadId, buttonId);
 }
 
 

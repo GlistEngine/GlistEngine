@@ -104,11 +104,22 @@ gAppManager::gAppManager() {
 	elapsedtime = 0;
 	updates = 0;
 	draws = 0;
+	uci = 0;
+	ucj = 0;
 	mpi = 0;
 	mpj = 0;
 	upi = 0;
 	upj = 0;
 	canvasset = false;
+	iswindowfocused = false;
+	isgamepadenabled = false;
+	gpbuttonstate = false;
+	for(int i = 0; i < maxgamepadnum; i++) {
+		for(int j = 0; j < gamepadbuttonnum; j++) gamepadbuttonstate[i][j] = false;
+		gamepadon[i] = false;
+	}
+	joystickhatcount = 0;
+	joystickaxecount = 0;
 }
 
 void gAppManager::runApp(const std::string& appName, gBaseApp *baseApp, int width, int height, int windowMode, int unitWidth, int unitHeight, int screenScaling, int loopMode) {
@@ -140,6 +151,10 @@ void gAppManager::runApp(const std::string& appName, gBaseApp *baseApp, int widt
 
 		canvasmanager = new gCanvasManager();
 		guimanager = new gGUIManager(app);
+	}
+	for(int i = 0; i < maxgamepadnum; i++) {
+		gamepadon[i] = glfwJoystickPresent(i);
+		if(gamepadon[i]) isgamepadenabled = true;
 	}
 
 	// Run app
@@ -192,6 +207,23 @@ void gAppManager::internalUpdate() {
 	}
 
 	canvasmanager->update();
+	if(isgamepadenabled && iswindowfocused) {
+		GLFWgamepadstate gpstate;
+		for(uci = 0; uci < maxgamepadnum; uci++) {
+			if(!gamepadon[uci]) continue;
+
+			glfwGetGamepadState(uci, &gpstate);
+			for(ucj = 0; ucj < gamepadbuttonnum; ucj++) {
+				gpbuttonstate = false;
+				if(gpstate.buttons[ucj]) gpbuttonstate = true;
+				if(gpbuttonstate != gamepadbuttonstate[uci][ucj]) {
+					if(gpbuttonstate) canvasmanager->getCurrentCanvas()->gamepadButtonPressed(uci, ucj);
+					else canvasmanager->getCurrentCanvas()->gamepadButtonReleased(uci, ucj);
+				}
+				gamepadbuttonstate[uci][ucj] = gpbuttonstate;
+			}
+		}
+	}
 	if(guimanager->isframeset) guimanager->update();
 	app->update();
 	for (uci = 0; uci < gBaseComponent::usedcomponents.size(); uci++) gBaseComponent::usedcomponents[uci]->update();
@@ -426,4 +458,55 @@ void gAppManager::onMouseScrollEvent(double xoffset, double yoffset) {
 	if(guimanager->isframeset) guimanager->mouseScrolled(xoffset, yoffset);
 	for (upi = 0; upi < gBasePlugin::usedplugins.size(); upi++) gBasePlugin::usedplugins[upi]->mouseScrolled(xoffset, yoffset);
 	canvasmanager->getCurrentCanvas()->mouseScrolled(xoffset, yoffset);
+}
+
+void gAppManager::onWindowFocus(bool isFocused) {
+	iswindowfocused = isFocused;
+}
+
+bool gAppManager::isWindowFocused() {
+	return iswindowfocused;
+}
+
+bool gAppManager::isJoystickConnected(int jId) {
+	return gamepadon[jId];
+}
+
+int gAppManager::getJoystickAxesCount(int jId) {
+	return joystickaxecount;
+}
+
+const float* gAppManager::getJoystickAxes(int jId) {
+	if(!isgamepadenabled) return nullptr;
+	if(!gamepadon[jId]) return nullptr;
+
+	return glfwGetJoystickAxes(jId, &joystickaxecount);
+}
+
+bool gAppManager::isGamepadButtonPressed(int gamepadId, int buttonId) {
+	GLFWgamepadstate gpstate;
+	glfwGetGamepadState(gamepadId, &gpstate);
+	if(gpstate.buttons[buttonId]) return true;
+	return false;
+}
+
+void gAppManager::onJoystickConnected(int jid, bool isGamepad, bool isConnected) {
+	if (!canvasmanager->getCurrentCanvas()) return;
+	if(jid >= maxgamepadnum) return;
+
+	if(isGamepad) {
+		gamepadon[jid] = true;
+		isgamepadenabled = true;
+	} else {
+		gamepadon[jid] = false;
+		bool gamepadenabledtemp = false;
+		for(int i = 0; i < maxgamepadnum; i++) {
+			if(gamepadon[jid]) {
+				gamepadenabledtemp = true;
+				break;
+			}
+		}
+		isgamepadenabled = gamepadenabledtemp;
+	}
+	canvasmanager->getCurrentCanvas()->joystickConnected(jid, isGamepad, isConnected);
 }

@@ -209,6 +209,9 @@ public:
 	 */
 	void onMouseScrollEvent(double xoffset, double yoffset);
 
+	void onWindowFocus(bool isFocused);
+	void onJoystickConnected(int jid, bool isGamepad, bool isConnected);
+
 	bool vsync;
 
 protected:
@@ -216,6 +219,7 @@ protected:
 	int width, height;
 	int windowmode;
 	std::string title;
+	bool isfocused;
 
 	static void sighandler(int signum);
 	static std::string signalname[32];

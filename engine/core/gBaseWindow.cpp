@@ -58,6 +58,7 @@ gBaseWindow::gBaseWindow() {
 	height = 0;
 	windowmode = G_WINDOWMODE_NONE;
 	title = "GlistApp";
+	isfocused = false;
 
 	signal(SIGSEGV, sighandler);
 }
@@ -160,6 +161,15 @@ void gBaseWindow::onMouseEnterEvent(int entered) {
 
 void gBaseWindow::onMouseScrollEvent(double xoffset, double yoffset) {
 	appmanager->onMouseScrollEvent(xoffset, yoffset);
+}
+
+void gBaseWindow::onWindowFocus(bool isFocused) {
+	isfocused = isFocused;
+	appmanager->onWindowFocus(isFocused);
+}
+
+void gBaseWindow::onJoystickConnected(int jid, bool isGamepad, bool isConnected) {
+	appmanager->onJoystickConnected(jid, isGamepad, isConnected);
 }
 
 void gBaseWindow::sighandler(int signum) {
