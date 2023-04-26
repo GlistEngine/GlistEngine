@@ -34,6 +34,9 @@ public:
 	virtual void mouseEntered();
 	virtual void mouseExited();
 	virtual void windowResized(int w, int h);
+	virtual void joystickConnected(int jId, bool isGamepad, bool isConnected);
+	virtual void gamepadButtonPressed(int jId, int key);
+	virtual void gamepadButtonReleased(int jId, int key);
 	virtual void onGuiEvent(int guiObjectId, int eventType, std::string value1 = "", std::string value2 = "");
 
 	virtual void showNotify();
@@ -106,6 +109,9 @@ protected:
 	void setGridColorofAxisWireFrameYZ(gColor* color);
 	void setGridColorofAxisWireFrameXY(gColor* color);
 	bool isGridEnabled(), isGridXYEnabled(), isGridYZEnabled(), isGridXZEnabled();
+
+	bool isJoystickConnected(int jId);
+	bool isGamepadButtonPressed(int gamepadId, int buttonId);
 };
 
 #endif /* ENGINE_BASE_GBASECANVAS_H_ */

@@ -67,6 +67,7 @@ public:
 private:
 #if defined(WIN32) || defined(LINUX) || defined(APPLE)
 	GLFWwindow* window;
+	static GLFWwindow* currentwindow;
 	GLFWcursor** cursor;
 	float scalex, scaley;
 
@@ -76,6 +77,8 @@ private:
 	static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 	static void character_callback(GLFWwindow* window, unsigned int keycode);
 	static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
+	static void window_focus_callback(GLFWwindow* window, int focused);
+	static void joystick_callback(int jid, int event);
 
 	/**
 	 * Invoking by GLFW if mouse position changed.

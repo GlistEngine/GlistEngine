@@ -427,6 +427,9 @@ public:
 	 */
 	void onMouseScrollEvent(double xoffset, double yoffset);
 
+	void onWindowFocus(bool isFocused);
+	void onJoystickConnected(int jid, bool isGamepad, bool isConnected);
+
 	/**
 	 * Returns the current gCanvasManager object pointer.
 	 *
@@ -455,7 +458,16 @@ public:
 	 */
 	int getLoopMode();
 
+	bool isWindowFocused();
+	bool isJoystickConnected(int jId);
+	int getJoystickAxesCount(int jId);
+	const float* getJoystickAxes(int jId);
+	bool isGamepadButtonPressed(int gamepadId, int buttonId);
+
 private:
+	static const int maxgamepadnum = 4;
+	static const int gamepadbuttonnum = 15;
+
 	using AppClock = std::chrono::steady_clock;
 	using AppClockDuration = AppClock::duration;
 	using AppClockTimePoint = AppClock::time_point;
@@ -486,11 +498,18 @@ private:
 	long long elapsedtime;
 	int updates, draws;
 	int framerate;
-	int uci, upi, upj;
+	int uci, ucj, upi, upj;
 	double t_estimate, t_mean, t_m2;
 	int64_t t_count;
 	double t_observed, t_delta, t_stddev;
 	bool canvasset;
+	bool iswindowfocused;
+	bool isgamepadenabled;
+	bool gamepadon[maxgamepadnum];
+	bool gamepadbuttonstate[maxgamepadnum][gamepadbuttonnum];
+	bool gpbuttonstate;
+	int joystickhatcount;
+	int joystickaxecount;
 };
 
 #endif /* ENGINE_CORE_GAPPMANAGER_H_ */
