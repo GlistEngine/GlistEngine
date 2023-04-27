@@ -61,112 +61,115 @@ Glist Engine has one-click installers for Windows, Linux and Mac. You can downlo
 
 #### 3- Open file explorer and create necessary folders:
 
-On Windows:
+<ins>On Windows:</ins>
 - C:\dev\glist\myglistapps
 - C:\dev\glist\zbin
 
-On macOS:
+<ins>On macOS:</ins>
 - ~/dev/glist/myglistapps
 - ~/dev/glist/zbin
 
-On Linux:
+<ins>On Linux:</ins>
 - ~/dev/glist/myglistapps
 - ~/dev/glist/zbin
 
 
-4- Open command line(cmd.exe or bash) and go to the zbin folder by the command
+#### 4- Open command line(cmd.exe or bash) and go to the zbin folder by the command
 
-On Windows:
+<ins>On Windows:</ins>
 > cd C:\dev\glist\zbin
 
-On macOS:
+<ins>On macOS:</ins>
 > cd ~/dev/glist/zbin
 
-On Linux:
+<ins>On Linux:</ins>
 > cd ~/dev/glist/zbin
 
 
-5- First of all, you need to download the zbin repo. Download the zbin repo by visiting one of these pages and extract the zip:
+#### 5- First of all, you need to download the zbin repo. Download the zbin repo by visiting one of these pages and extract the zip:
 
-On Windows:
+<ins>On Windows:</ins>
 >  https://github.com/GlistEngine/glistzbin-win64/releases/latest
 
-On MacOS Arm64 (M1, M2):
+<ins>On MacOS Arm64 (M1, M2):</ins>
 >  https://github.com/GlistEngine/glistzbin-macos/releases/latest
 
-On MacOS X86_64:
+<ins>On MacOS X86_64:</ins>
 >  https://github.com/GlistEngine/glistzbin-macos-x86_64/releases/latest
 
-On Linux:
+<ins>On Linux:</ins>
 >  https://github.com/GlistEngine/glistzbin-linux/releases/latest
 
 
-6- Go one folder up
+#### 6- Go one folder up
 
-On Windows:
+<ins>On Windows:</ins>
 > cd C:\dev\glist
 
-On macOS:
+<ins>On macOS:</ins>
 > cd ~/dev/glist
 
-On Linux:
+<ins>On Linux:</ins>
 > cd ~/dev/glist
 
 
-7- Clone the GlistEngine repo
+#### 7- Clone the GlistEngine repo
 
 > git clone https://github.com/yourgithubusername/glistengine.git
 
 
-8- Go to myglistapps folder
+#### 8- Go to myglistapps folder
 
-On Windows:
+<ins>On Windows:</ins>
 > cd C:\dev\glist\myglistapps
 
-On macOS:
+<ins>On macOS:</ins>
 > cd ~/dev/glist/myglistapps
 
-On Linux:
+<ins>On Linux:</ins>
 > cd ~/dev/glist/myglistapps
 
 
-9- Clone the GlistApp repo
+#### 9- Clone the GlistApp repo
 
 > git clone https://github.com/yourgithubusername/glistapp.git
 
 
-10- Run the GlistEngine
+#### 10- Run the GlistEngine
 
 Start the engine.
 
-On Windows:
+<ins>On Windows:</ins>
 - Open file explorer, go to C:\dev\glist\zbin\glistzbin-win64 and double click GlistEngine
 
-On macOS M1:
+<ins>On macOS M1:</ins>
 - Never start the engine with clicking Eclipse icon on Launchpad! Instead, you should open the Terminal and enter this command:
 > open ~/dev/glist/zbin/glistzbin-macos/eclipse/eclipsecpp-2020-09/Eclipse.app 
 - (If you get an error message "app is damaged and can’t be opened. You should move it to the Trash.", enter this command on Terminal:
 > xattr -cr ~/dev/glist/zbin/glistzbin-macos/eclipse/eclipsecpp-2020-09/Eclipse.app
 - and restart your computer.
 
-On macOS X86_64:
+<ins>On macOS X86_64:</ins>
 - Never start the engine with clicking Eclipse icon on Launchpad! Instead, you should open the Terminal and enter this command:
 > open ~/dev/glist/zbin/glistzbin-macos-x86_64/eclipse/eclipsecpp-2020-09/Eclipse.app 
 - (If you get an error message "app is damaged and can’t be opened. You should move it to the Trash.", enter this command on Terminal:
 > xattr -cr ~/dev/glist/zbin/glistzbin-macos-x86_64/eclipse/eclipsecpp-2020-09/Eclipse.app
 - and restart your computer.
 
-On Linux:
+<ins>On Linux:</ins>
 - Open file explorer, go to ~/dev/glist/zbin/glistzbin-linux and double click GlistEngine
 
 
-11- You will see GlistApp and GlistEngine on the left column. And GameCanvas src/h files will be opened in the code editor. These are the source code of GlistApp.
+#### 11- First screen
+You will see GlistApp and GlistEngine on the left column. And GameCanvas src/h files will be opened in the code editor. These are the source code of GlistApp.
 
 
-12- On the toolbar of the IDE, there is a dropdown button just next to Run button. Dropdown this list. Click "GlistApp Release" on the list. The GlistApp and the engine will be built and run for the first time.
+#### 12- Launch the GlistApp
+On the toolbar of the IDE, there is a dropdown button just next to Run button. Dropdown this list. Click "GlistApp Release" on the list. The GlistApp and the engine will be built and run for the first time.
 
 
-13- After closing the running window, you can start coding your new gorgeous game on GameCanvas.
+#### 13- Start coding
+After closing the running window, you can start coding your new gorgeous game on GameCanvas.
 
 
 ## Troubleshooting
