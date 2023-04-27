@@ -27,17 +27,17 @@ Glist Engine has one-click installers for Windows, Linux and Mac. You can downlo
 
 ### II. Installation For Developers
 
-1- Fork our 2 repos into your Github account:
+#### 1- Fork our 2 repos into your Github account:
 
 - GlistEngine/GlistEngine repo
 - GlistEngine/GlistApp repo
 
-2- You need to install some programs into your computer in order to clone and run GlistEngine.
+#### 2- You need to install some programs into your computer in order to clone and run GlistEngine.
 
-On Windows:
+<ins>On Windows:</ins>
 - We provide all libraries except GIT. You should first download and install GIT from https://git-scm.com/download/win
 
-On macOS:
+<ins>On macOS:</ins>
 - Please note that the installation is tested on a clean Monterey. If you have an older OS version, consider upgrading your Mac
 
 - First of all, you should install Xcode because OpenGL library comes with Xcode. Download Xcode via App Store
@@ -52,14 +52,14 @@ On macOS:
 
 > sudo spctl --master-disable
 
-On Linux:
+<ins>On Linux:</ins>
 - Install necessary libraries on Ubuntu and other Debian based Linux
 > sudo apt-get install git cmake clang-14 libstdc++-12-dev libglew-dev curl libssl-dev
 
 - Install necessary libraries rpm based system Linux
 > sudo dnf install glm-devel glfw glfw-decel libglew-devel freetype-devel freetype assimp assimp-devel curl curl-devel libssl libssl-devel
 
-3- Open file explorer and create necessary folders:
+#### 3- Open file explorer and create necessary folders:
 
 On Windows:
 - C:\dev\glist\myglistapps
