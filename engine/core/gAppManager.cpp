@@ -116,7 +116,7 @@ gAppManager::gAppManager() {
 	gpbuttonstate = false;
 	for(int i = 0; i < maxgamepadnum; i++) {
 		for(int j = 0; j < gamepadbuttonnum; j++) gamepadbuttonstate[i][j] = false;
-		gamepadon[i] = false;
+		gamepadconnected[i] = false;
 	}
 	joystickhatcount = 0;
 	joystickaxecount = 0;
@@ -153,8 +153,8 @@ void gAppManager::runApp(const std::string& appName, gBaseApp *baseApp, int widt
 		guimanager = new gGUIManager(app);
 	}
 	for(int i = 0; i < maxgamepadnum; i++) {
-		gamepadon[i] = glfwJoystickPresent(i);
-		if(gamepadon[i]) isgamepadenabled = true;
+		gamepadconnected[i] = glfwJoystickPresent(i);
+		if(gamepadconnected[i]) isgamepadenabled = true;
 	}
 
 	// Run app
@@ -210,7 +210,7 @@ void gAppManager::internalUpdate() {
 	if(isgamepadenabled && iswindowfocused) {
 		GLFWgamepadstate gpstate;
 		for(uci = 0; uci < maxgamepadnum; uci++) {
-			if(!gamepadon[uci]) continue;
+			if(!gamepadconnected[uci]) continue;
 
 			glfwGetGamepadState(uci, &gpstate);
 			for(ucj = 0; ucj < gamepadbuttonnum; ucj++) {
@@ -469,7 +469,7 @@ bool gAppManager::isWindowFocused() {
 }
 
 bool gAppManager::isJoystickConnected(int jId) {
-	return gamepadon[jId];
+	return gamepadconnected[jId];
 }
 
 int gAppManager::getJoystickAxesCount(int jId) {
@@ -478,9 +478,13 @@ int gAppManager::getJoystickAxesCount(int jId) {
 
 const float* gAppManager::getJoystickAxes(int jId) {
 	if(!isgamepadenabled) return nullptr;
-	if(!gamepadon[jId]) return nullptr;
+	if(!gamepadconnected[jId]) return nullptr;
 
 	return glfwGetJoystickAxes(jId, &joystickaxecount);
+}
+
+bool gAppManager::isGamepadEnabled() {
+	return isgamepadenabled;
 }
 
 bool gAppManager::isGamepadButtonPressed(int gamepadId, int buttonId) {
@@ -490,18 +494,26 @@ bool gAppManager::isGamepadButtonPressed(int gamepadId, int buttonId) {
 	return false;
 }
 
+int gAppManager::getMaxGamepadNum() {
+	return maxgamepadnum;
+}
+
+int gAppManager::getGamepadButtonNum() {
+	return gamepadbuttonnum;
+}
+
 void gAppManager::onJoystickConnected(int jid, bool isGamepad, bool isConnected) {
 	if (!canvasmanager->getCurrentCanvas()) return;
 	if(jid >= maxgamepadnum) return;
 
 	if(isGamepad) {
-		gamepadon[jid] = true;
+		gamepadconnected[jid] = true;
 		isgamepadenabled = true;
 	} else {
-		gamepadon[jid] = false;
+		gamepadconnected[jid] = false;
 		bool gamepadenabledtemp = false;
 		for(int i = 0; i < maxgamepadnum; i++) {
-			if(gamepadon[jid]) {
+			if(gamepadconnected[jid]) {
 				gamepadenabledtemp = true;
 				break;
 			}

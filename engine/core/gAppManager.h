@@ -462,7 +462,10 @@ public:
 	bool isJoystickConnected(int jId);
 	int getJoystickAxesCount(int jId);
 	const float* getJoystickAxes(int jId);
+	bool isGamepadEnabled();
 	bool isGamepadButtonPressed(int gamepadId, int buttonId);
+	int getMaxGamepadNum();
+	int getGamepadButtonNum();
 
 private:
 	static const int maxgamepadnum = 4;
@@ -505,7 +508,7 @@ private:
 	bool canvasset;
 	bool iswindowfocused;
 	bool isgamepadenabled;
-	bool gamepadon[maxgamepadnum];
+	bool gamepadconnected[maxgamepadnum];
 	bool gamepadbuttonstate[maxgamepadnum][gamepadbuttonnum];
 	bool gpbuttonstate;
 	int joystickhatcount;
