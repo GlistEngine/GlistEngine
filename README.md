@@ -27,9 +27,8 @@ Glist Engine has one-click installers for Windows, Linux and Mac. You can downlo
 
 ### II. Installation For Developers
 
-1- Fork our 3 repos into your Github account:
+1- Fork our 2 repos into your Github account:
 
-- One of the; GlistEngine/glistzbin-win64, GlistEngine/glistzbin-linux, GlistEngine/glistzbin-macos or GlistEngine/glistzbin-macos-x86_64 repos, according to your OS
 - GlistEngine/GlistEngine repo
 - GlistEngine/GlistApp repo
 
@@ -58,13 +57,7 @@ On Linux:
 > sudo apt-get install git cmake clang-14 libstdc++-12-dev libglew-dev curl libssl-dev
 
 - Install necessary libraries rpm based system Linux
-> sudo dnf install glm-devel
-> sudo dnf install glfw glfw-decel
-> sudo dnf install libglew-devel 
-> sudo dnf install freetype-devel freetype
-> sudo dnf install assimp assimp-devel
-> sudo dnf install curl curl-devel
-> sudo dnf install libssl libssl-devel
+> sudo dnf install glm-devel glfw glfw-decel libglew-devel freetype-devel freetype assimp assimp-devel curl curl-devel libssl libssl-devel
 
 3- Open file explorer and create necessary folders:
 
@@ -93,16 +86,19 @@ On Linux:
 > cd ~/dev/glist/zbin
 
 
-5- First of all, you need to clone the zbin repo. Clone the zbin repo by writing one of these commands on command line:
+5- First of all, you need to download the zbin repo. Download the zbin repo by visiting one of these pages and extract the zip:
 
 On Windows:
->  git clone https://github.com/yourgithubusername/glistzbin-win64.git
+>  https://github.com/GlistEngine/glistzbin-win64/releases/latest
 
-On MacOS:
->  git clone https://github.com/yourgithubusername/glistzbin-macos.git
+On MacOS Arm64 (M1, M2):
+>  https://github.com/GlistEngine/glistzbin-macos/releases/latest
+
+On MacOS X86_64:
+>  https://github.com/GlistEngine/glistzbin-macos-x86_64/releases/latest
 
 On Linux:
->  git clone https://github.com/yourgithubusername/glistzbin-linux.git
+>  https://github.com/GlistEngine/glistzbin-linux/releases/latest
 
 
 6- Go one folder up
@@ -147,12 +143,22 @@ On Windows:
 - Open file explorer, go to C:\dev\glist\zbin\glistzbin-win64 and double click GlistEngine
 
 On macOS M1:
-- Open Terminal and enter this command
+- Never start the engine with clicking Eclipse icon on Launchpad! Instead, you should start the engine like that:
+> Open Terminal and enter this command
 > open ~/dev/glist/zbin/glistzbin-macos/eclipse/eclipsecpp-2020-09/Eclipse.app
+> 
+> (If you get an error message "app is damaged and can’t be opened. You should move it to the Trash.", enter this command on Terminal:
+> xattr -cr ~/dev/glist/zbin/glistzbin-macos/eclipse/eclipsecpp-2020-09/Eclipse.app
+> and restart your computer.
 
 On macOS X86_64:
-- Open Terminal and enter this command
+- Never start the engine with clicking Eclipse icon on Launchpad! Instead, you should start the engine like that:
+> Open Terminal and enter this command
 > open ~/dev/glist/zbin/glistzbin-macos-x86_64/eclipse/eclipsecpp-2020-09/Eclipse.app
+> 
+> (If you get an error message "app is damaged and can’t be opened. You should move it to the Trash.", enter this command on Terminal:
+> xattr -cr ~/dev/glist/zbin/glistzbin-macos-x86_64/eclipse/eclipsecpp-2020-09/Eclipse.app
+> and restart your computer.
 
 On Linux:
 - Open file explorer, go to ~/dev/glist/zbin/glistzbin-linux and double click GlistEngine
