@@ -143,22 +143,18 @@ On Windows:
 - Open file explorer, go to C:\dev\glist\zbin\glistzbin-win64 and double click GlistEngine
 
 On macOS M1:
-- Never start the engine with clicking Eclipse icon on Launchpad! Instead, you should start the engine like that:
-> Open Terminal and enter this command
-> open ~/dev/glist/zbin/glistzbin-macos/eclipse/eclipsecpp-2020-09/Eclipse.app
-> 
-> (If you get an error message "app is damaged and can’t be opened. You should move it to the Trash.", enter this command on Terminal:
+- Never start the engine with clicking Eclipse icon on Launchpad! Instead, you should open the Terminal and enter this command:
+> open ~/dev/glist/zbin/glistzbin-macos/eclipse/eclipsecpp-2020-09/Eclipse.app 
+- (If you get an error message "app is damaged and can’t be opened. You should move it to the Trash.", enter this command on Terminal:
 > xattr -cr ~/dev/glist/zbin/glistzbin-macos/eclipse/eclipsecpp-2020-09/Eclipse.app
-> and restart your computer.
+- and restart your computer.
 
 On macOS X86_64:
-- Never start the engine with clicking Eclipse icon on Launchpad! Instead, you should start the engine like that:
-> Open Terminal and enter this command
-> open ~/dev/glist/zbin/glistzbin-macos-x86_64/eclipse/eclipsecpp-2020-09/Eclipse.app
-> 
-> (If you get an error message "app is damaged and can’t be opened. You should move it to the Trash.", enter this command on Terminal:
+- Never start the engine with clicking Eclipse icon on Launchpad! Instead, you should open the Terminal and enter this command:
+> open ~/dev/glist/zbin/glistzbin-macos-x86_64/eclipse/eclipsecpp-2020-09/Eclipse.app 
+- (If you get an error message "app is damaged and can’t be opened. You should move it to the Trash.", enter this command on Terminal:
 > xattr -cr ~/dev/glist/zbin/glistzbin-macos-x86_64/eclipse/eclipsecpp-2020-09/Eclipse.app
-> and restart your computer.
+- and restart your computer.
 
 On Linux:
 - Open file explorer, go to ~/dev/glist/zbin/glistzbin-linux and double click GlistEngine
