@@ -36,13 +36,14 @@ class gGUIManager {
 public:
 	static const int GUITHEME_LIGHT = 0, GUITHEME_DARK = 1, GUITHEME_LIGHTBLUE = 2, GUITHEME_DARKBLUE = 3;
 
-	gGUIManager(gBaseApp* root);
+	gGUIManager(gBaseApp* root, int width, int height);
 	virtual ~gGUIManager();
 
 	void setTheme(int guiTheme);
 	int getTheme();
 
 	void setCurrentFrame(gGUIFrame* currentFrame);
+	void setCurrentFrame(gGUIFrame* currentFrame, int width, int height);
 	void setupDialogue(gGUIDialogue* dialogue);
 	gGUIFrame* getCurrentFrame();
 
