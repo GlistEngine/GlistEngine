@@ -450,6 +450,36 @@ std::string gShowOpenFileDialog(
 	return resstr;
 }
 
+std::string gShowSaveFileDialog(
+	std::string dialogTitle,
+	std::string defaultPathAndFile,
+    int filterNum,
+	std::string* filterPatterns,
+	std::string filterDescription) {
+	std::string resstr = "";
+	const char* carray[filterNum];
+	for(int i = 0; i < filterNum; i++) carray[i] = filterPatterns[i].c_str();
+	const char* res = tinyfd_saveFileDialog(
+			dialogTitle.c_str(),
+			defaultPathAndFile.c_str(),
+			filterNum,
+			carray,
+			filterDescription.c_str());
+	if(res) resstr = std::string(res);
+	return resstr;
+}
+
+std::string gShowSelectFolderDialog(
+	std::string dialogTitle,
+	std::string defaultPath) {
+	std::string resstr = "";
+	const char* res = tinyfd_selectFolderDialog(
+			dialogTitle.c_str(),
+			defaultPath.c_str());
+	if(res) resstr = std::string(res);
+	return resstr;
+}
+
 int gShowMessageBox(
 		std::string aTitle , /* NULL or "" */
 		std::string aMessage , /* NULL or ""  may contain \n and \t */
@@ -463,6 +493,33 @@ int gShowMessageBox(
 			aIconType.c_str(),
 			aDefaultButton);
 }
+
+std::string gShowInputBox(
+		std::string aTitle , /* NULL or "" */
+		std::string aMessage , /* NULL or ""  may contain \n and \t */
+		std::string aDefaultInput) /* "" , if NULL it's a passwordBox */ {
+	std::string resstr = "";
+	const char* res = tinyfd_inputBox(
+			aTitle.c_str(),
+			aMessage.c_str(),
+			aDefaultInput.c_str());
+	if(res) resstr = std::string(res);
+	return resstr;
+}
+
+gColor gShowColorChooser(
+	std::string aTitle , /* "" */
+	std::string aDefaultHexRGB , /* NULL or "#FF0000" */
+	unsigned char const aDefaultRGB[3]) /* { 0 , 255 , 255 } */ {
+	gColor selectedcolor(0, 0, 0, 255);
+	unsigned char result[3];
+	char const * res = tinyfd_colorChooser(aTitle.c_str(), aDefaultHexRGB.c_str(), aDefaultRGB, result);
+	if(res) {
+		selectedcolor.set(result[0] / 255, result[1] / 255, result[2] / 255);
+	}
+	return selectedcolor;
+}
+
 gUtils::gUtils() {
 
 }
