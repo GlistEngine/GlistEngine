@@ -23,6 +23,7 @@
 #include "gKeyCode.h"
 #include "gGUIEvents.h"
 #include "tinyfiledialogs.h"
+#include "gColor.h"
 
 /*
 #ifndef LINUX
@@ -300,6 +301,19 @@ std::string gShowOpenFileDialog(
 	std::string filterDescription,
     bool isMultipleSelectionAllowed = false);
 
+std::string gShowSaveFileDialog(
+	std::string dialogTitle,
+	std::string defaultPathAndFile,
+    int filterNum,
+	std::string* filterPatterns,
+	std::string filterDescription);
+
+std::string gShowSelectFolderDialog(
+	std::string dialogTitle,
+	std::string defaultPath);
+
+
+
 /**
  * Shows operating system's message dialog box
  *
@@ -314,7 +328,18 @@ int gShowMessageBox(
 	std::string aMessage , /* NULL or ""  may contain \n and \t */
 	std::string aDialogType , /* "ok" "okcancel" "yesno" "yesnocancel" */
 	std::string aIconType , /* "info" "warning" "error" "question" */
-	int aDefaultButton ) /* 0 for cancel/no , 1 for ok/yes , 2 for no in yesnocancel */;
+	int aDefaultButton) /* 0 for cancel/no , 1 for ok/yes , 2 for no in yesnocancel */;
+
+std::string gShowInputBox(
+		std::string aTitle , /* NULL or "" */
+		std::string aMessage , /* NULL or ""  may contain \n and \t */
+		std::string aDefaultInput) /* "" , if NULL it's a passwordBox */;
+
+gColor gShowColorChooser(
+	std::string aTitle , /* "" */
+	std::string aDefaultHexRGB , /* NULL or "#FF0000" */
+	unsigned char const aDefaultRGB[3]) /* { 0 , 255 , 255 } */;
+
 
 class gUtils {
 public:
