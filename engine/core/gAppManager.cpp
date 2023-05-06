@@ -150,7 +150,7 @@ void gAppManager::runApp(const std::string& appName, gBaseApp *baseApp, int widt
 		height = window->getHeight();
 
 		canvasmanager = new gCanvasManager();
-		guimanager = new gGUIManager(app);
+		guimanager = new gGUIManager(app, width, height);
 	}
 	for(int i = 0; i < maxgamepadnum; i++) {
 		gamepadconnected[i] = glfwJoystickPresent(i);

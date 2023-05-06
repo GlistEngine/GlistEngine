@@ -10,14 +10,14 @@
 #include "gBaseCanvas.h"
 
 
-gGUIManager::gGUIManager(gBaseApp* root) {
+gGUIManager::gGUIManager(gBaseApp* root, int width, int height) {
 	this->root = root;
 	isframeset = false;
 	selecteddialogue = nullptr;
 	loadThemes();
 	resetTheme(GUITHEME_LIGHT);
 	if(root->getAppManager()->getWindowMode() == G_WINDOWMODE_GUIAPP || root->getAppManager()->getWindowMode() == G_WINDOWMODE_FULLSCREENGUIAPP) {
-		setCurrentFrame(&emptyframe);
+		setCurrentFrame(&emptyframe, width, height);
 		emptyframe.setSizer(&emptysizer);
 		emptysizer.enableBackgroundFill(true);
 	}
@@ -35,12 +35,18 @@ int gGUIManager::getTheme() {
 }
 
 void gGUIManager::setCurrentFrame(gGUIFrame* currentFrame) {
+	setCurrentFrame(currentFrame,
+			root->getAppManager()->getCurrentCanvas()->getScreenWidth(),
+			root->getAppManager()->getCurrentCanvas()->getScreenHeight());
+}
+
+void gGUIManager::setCurrentFrame(gGUIFrame* currentFrame, int width, int height) {
 	currentframe = currentFrame;
 	currentframe->setParentSlotNo(0, 0);
 	currentframe->left = 0;
 	currentframe->top = 0;
-	currentframe->right = root->getAppManager()->getCurrentCanvas()->getScreenWidth();
-	currentframe->bottom = root->getAppManager()->getCurrentCanvas()->getScreenHeight();
+	currentframe->right = width;
+	currentframe->bottom = height;
 	currentframe->width = currentframe->right - currentframe->left;
 	currentframe->height = currentframe->bottom - currentframe->top;
 	currentframe->setRootApp(root);
