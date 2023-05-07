@@ -36,32 +36,36 @@ public:
 	 * @param height Sets what the height of the window should be.
 	 * @param windowMode Determines which mode the window is in. Example: Window Mode,Game Mode, Fullscreen Mode.
 	 */
-	void initialize(int width, int height, int windowMode) override;
+	void initialize(int width, int height, int windowMode, bool isResizable) override;
 
 	/**
 	 * Returns if the window should be closed or not.
 	 *
 	 * @return bool varaible and says that windows should be closed or not.
 	 */
-	bool getShouldClose();
+	bool getShouldClose() override;
 
 	/**
 	 * Performs the said operations at the specified frame rate.
 	 */
-	void update();
+	void update() override;
 
 	/**
 	 * Destroys all remaining windows and cursors, restores any modified gamma ramps and frees any other allocated resources.
 	 */
-	void close();
+	void close() override;
 
-	void enableVsync(bool vsync);
+	void enableVsync(bool vsync) override;
 
-	void setCursor(int cursorNo);
-	void setCursorMode(int cursorMode);
+	void setCursor(int cursorNo) override;
+	void setCursorMode(int cursorMode) override;
 
-	void setClipboardString(std::string text);
-	std::string getClipboardString();
+	void setClipboardString(std::string text) override;
+	std::string getClipboardString() override;
+
+	void setWindowSize(int width, int height) override;
+	void setWindowResizable(bool isResizable) override;
+	void setWindowSizeLimits(int minWidth, int minHeight, int maxWidth, int maxHeight) override;
 
 
 private:
