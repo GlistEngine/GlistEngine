@@ -523,3 +523,15 @@ void gAppManager::onJoystickConnected(int jid, bool isGamepad, bool isConnected)
 	}
 	canvasmanager->getCurrentCanvas()->joystickConnected(jid, isGamepad, isConnected);
 }
+
+void gAppManager::setWindowSize(int width, int height) {
+	window->setWindowSize(width, height);
+}
+
+void gAppManager::setWindowResizable(bool isResizable) {
+	window->setWindowResizable(isResizable);
+}
+
+void gAppManager::setWindowSizeLimits(int minWidth, int minHeight, int maxWidth, int maxHeight) {
+	window->setWindowSizeLimits(minWidth, minHeight, maxWidth, maxHeight);
+}
