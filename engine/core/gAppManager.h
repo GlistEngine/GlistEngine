@@ -467,6 +467,10 @@ public:
 	int getMaxGamepadNum();
 	int getGamepadButtonNum();
 
+	void setWindowSize(int width, int height);
+	void setWindowResizable(bool isResizable);
+	void setWindowSizeLimits(int minWidth, int minHeight, int maxWidth, int maxHeight);
+
 private:
 	static const int maxgamepadnum = 4;
 	static const int gamepadbuttonnum = 15;
