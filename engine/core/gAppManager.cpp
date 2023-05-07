@@ -18,7 +18,7 @@
 #endif
 
 
-void gStartEngine(gBaseApp* baseApp, const std::string& appName, int windowMode, int width, int height) {
+void gStartEngine(gBaseApp* baseApp, const std::string& appName, int windowMode, int width, int height, bool isResizable) {
 	int wmode = windowMode;
 	if(wmode == G_WINDOWMODE_NONE) wmode = G_WINDOWMODE_APP;
 
@@ -42,10 +42,10 @@ void gStartEngine(gBaseApp* baseApp, const std::string& appName, int windowMode,
 #endif
 	int screenscaling = G_SCREENSCALING_AUTO;
 	if(wmode == G_WINDOWMODE_FULLSCREENGUIAPP || wmode == G_WINDOWMODE_GUIAPP) screenscaling = G_SCREENSCALING_NONE;
-	appmanager.runApp(appName, baseApp, screenwidth, screenheight, wmode, width, height, screenscaling, G_LOOPMODE_NORMAL);
+	appmanager.runApp(appName, baseApp, screenwidth, screenheight, wmode, width, height, screenscaling, isResizable, G_LOOPMODE_NORMAL);
 }
 
-void gStartEngine(gBaseApp* baseApp, const std::string& appName, int windowMode, int unitWidth, int unitHeight, int screenScaling, int width, int height) {
+void gStartEngine(gBaseApp* baseApp, const std::string& appName, int windowMode, int unitWidth, int unitHeight, int screenScaling, int width, int height, bool isResizable) {
 	int wmode = windowMode;
 	if(wmode == G_WINDOWMODE_NONE) wmode = G_WINDOWMODE_APP;
 
@@ -67,7 +67,7 @@ void gStartEngine(gBaseApp* baseApp, const std::string& appName, int windowMode,
 		glfwTerminate();
 	}
 #endif
-	appmanager.runApp(appName, baseApp, screenwidth, screenheight, wmode, unitWidth, unitHeight, screenScaling, G_LOOPMODE_NORMAL);
+	appmanager.runApp(appName, baseApp, screenwidth, screenheight, wmode, unitWidth, unitHeight, screenScaling, isResizable, G_LOOPMODE_NORMAL);
 }
 
 void gStartEngine(gBaseApp* baseApp, const std::string& appName, int loopMode) {
@@ -75,7 +75,7 @@ void gStartEngine(gBaseApp* baseApp, const std::string& appName, int loopMode) {
 	std::string appname = appName;
 	if (appname == "") appname = "GlistApp";
 	baseApp->setAppManager(&appmanager);
-	appmanager.runApp(appName, baseApp, 0, 0, G_WINDOWMODE_NONE, 0, 0, 0, loopMode);
+	appmanager.runApp(appName, baseApp, 0, 0, G_WINDOWMODE_NONE, 0, 0, 0, false, loopMode);
 }
 
 
@@ -122,7 +122,7 @@ gAppManager::gAppManager() {
 	joystickaxecount = 0;
 }
 
-void gAppManager::runApp(const std::string& appName, gBaseApp *baseApp, int width, int height, int windowMode, int unitWidth, int unitHeight, int screenScaling, int loopMode) {
+void gAppManager::runApp(const std::string& appName, gBaseApp *baseApp, int width, int height, int windowMode, int unitWidth, int unitHeight, int screenScaling, bool isResizable, int loopMode) {
 	// Create app
 	appname = appName;
 	app = baseApp;
@@ -143,7 +143,7 @@ void gAppManager::runApp(const std::string& appName, gBaseApp *baseApp, int widt
 
 	// Create window
 	if(usewindow) {
-		window->initialize(width, height, windowMode);
+		window->initialize(width, height, windowMode, isResizable);
 
 		// Update the width and height in case it was changed by the operating system or the window implementation
 		width = window->getWidth();
@@ -151,10 +151,11 @@ void gAppManager::runApp(const std::string& appName, gBaseApp *baseApp, int widt
 
 		canvasmanager = new gCanvasManager();
 		guimanager = new gGUIManager(app, width, height);
-	}
-	for(int i = 0; i < maxgamepadnum; i++) {
-		gamepadconnected[i] = glfwJoystickPresent(i);
-		if(gamepadconnected[i]) isgamepadenabled = true;
+
+		for(int i = 0; i < maxgamepadnum; i++) {
+			gamepadconnected[i] = glfwJoystickPresent(i);
+			if(gamepadconnected[i]) isgamepadenabled = true;
+		}
 	}
 
 	// Run app

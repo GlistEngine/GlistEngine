@@ -72,7 +72,7 @@ void gBaseWindow::setAppManager(gAppManager *appManager) {
 }
 
 
-void gBaseWindow::initialize(int width, int height, int windowMode) {
+void gBaseWindow::initialize(int width, int height, int windowMode, bool isResizable) {
 	setSize(width, height);
 	windowmode = windowMode;
 }
@@ -117,6 +117,10 @@ void gBaseWindow::setSize(int width, int height) {
 	this->width = width;
 	this->height = height;
 	appmanager->setScreenSize(width, height);
+}
+
+void gBaseWindow::setWindowSize(int width, int height) {
+
 }
 
 int gBaseWindow::getWidth() {
@@ -170,6 +174,14 @@ void gBaseWindow::onWindowFocus(bool isFocused) {
 
 void gBaseWindow::onJoystickConnected(int jid, bool isGamepad, bool isConnected) {
 	appmanager->onJoystickConnected(jid, isGamepad, isConnected);
+}
+
+void gBaseWindow::setWindowResizable(bool isResizable) {
+
+}
+
+void gBaseWindow::setWindowSizeLimits(int minWidth, int minHeight, int maxWidth, int maxHeight) {
+
 }
 
 void gBaseWindow::sighandler(int signum) {

@@ -82,7 +82,7 @@ class gCanvasManager;
  * to prevent distorted images. Please note that some operating systems may scale
  * the framebuffer and create a bigger window than the developer's value.
  */
-void gStartEngine(gBaseApp* baseApp, const std::string& appName, int windowMode, int width, int height);
+void gStartEngine(gBaseApp* baseApp, const std::string& appName, int windowMode, int width, int height, bool isResizable = true);
 
 /**
  * Sets the app settings for engine according to given name, mode of window,
@@ -127,7 +127,7 @@ void gStartEngine(gBaseApp* baseApp, const std::string& appName, int windowMode,
  * to prevent distorted images. Please note that some operating systems may scale
  * the framebuffer and create a bigger window than the developer's value.
  */
-void gStartEngine(gBaseApp* baseApp, const std::string& appName, int windowMode, int unitWidth, int unitHeight, int screenScaling, int width, int height);
+void gStartEngine(gBaseApp* baseApp, const std::string& appName, int windowMode, int unitWidth, int unitHeight, int screenScaling, int width, int height, bool isResizable = true);
 
 /**
  * Creates a windowless console/service app.
@@ -232,7 +232,7 @@ public:
 	 * @param screenScaling how much everything should be enlarged when measured in
 	 * pixels.
 	 */
-	void runApp(const std::string& appName, gBaseApp *baseApp, int width, int height, int windowMode, int unitWidth, int unitHeight, int screenScaling, int loopMode);
+	void runApp(const std::string& appName, gBaseApp *baseApp, int width, int height, int windowMode, int unitWidth, int unitHeight, int screenScaling, bool isResizable, int loopMode);
 
 	/**
 	 * Completely replace the current gBaseWindow with the specified gBaseWindow.

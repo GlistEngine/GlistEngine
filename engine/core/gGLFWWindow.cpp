@@ -33,8 +33,8 @@ gGLFWWindow::~gGLFWWindow() {
 }
 
 
-void gGLFWWindow::initialize(int width, int height, int windowMode) {
-	gBaseWindow::initialize(width, height, windowMode);
+void gGLFWWindow::initialize(int width, int height, int windowMode, bool isResizable) {
+	gBaseWindow::initialize(width, height, windowMode, isResizable);
 #if defined(WIN32) || defined(LINUX) || defined(APPLE)
 	// Create glfw
 	glfwInit();
@@ -70,6 +70,9 @@ void gGLFWWindow::initialize(int width, int height, int windowMode) {
     	currentrefreshrate = mode->refreshRate;
     } else if(windowMode == G_WINDOWMODE_FULLSCREEN || windowMode == G_WINDOWMODE_FULLSCREENGUIAPP) {
     	glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
+    	glfwWindowHint(GLFW_RESIZABLE, isResizable);
+    } else {
+    	glfwWindowHint(GLFW_RESIZABLE, isResizable);
     }
 
     window = glfwCreateWindow(width, height, title.c_str(),
@@ -198,6 +201,35 @@ void gGLFWWindow::setClipboardString(std::string text) {
 std::string gGLFWWindow::getClipboardString() {
 #if defined(WIN32) || defined(LINUX) || defined(APPLE)
 	return glfwGetClipboardString(window);
+#endif
+}
+
+void gGLFWWindow::setWindowSize(int width, int height) {
+#if defined(WIN32) || defined(LINUX) || defined(APPLE)
+	if(window != nullptr) {
+		glfwSetWindowSize(window, width, height);
+		framebuffer_size_callback(window, width, height);
+	}
+#endif
+}
+
+void gGLFWWindow::setWindowResizable(bool isResizable) {
+#if defined(WIN32) || defined(LINUX) || defined(APPLE)
+	if(window != nullptr) {
+		glfwSetWindowAttrib(window, GLFW_RESIZABLE, isResizable);
+	}
+#endif
+}
+
+void gGLFWWindow::setWindowSizeLimits(int minWidth, int minHeight, int maxWidth, int maxHeight) {
+#if defined(WIN32) || defined(LINUX) || defined(APPLE)
+	if(window != nullptr) {
+		if(minWidth == 0) minWidth = GLFW_DONT_CARE;
+		if(minHeight == 0) minHeight = GLFW_DONT_CARE;
+		if(maxWidth == 0) maxWidth = GLFW_DONT_CARE;
+		if(maxHeight == 0) maxHeight = GLFW_DONT_CARE;
+		glfwSetWindowSizeLimits(window, minWidth, minHeight, maxWidth, maxHeight);
+	}
 #endif
 }
 

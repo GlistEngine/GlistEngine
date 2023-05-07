@@ -45,7 +45,7 @@ public:
 	 * @param height Size of game screen height.
 	 * @param windowMode Determines which mode the window is in. Example: Window Mode,Game Mode, Fullscreen Mode.
 	 */
-	virtual void initialize(int width, int height, int windowMode);
+	virtual void initialize(int width, int height, int windowMode, bool isResizable);
 	virtual bool getShouldClose();
 
 	/**
@@ -74,6 +74,7 @@ public:
 	 * @param height Size of game screen height.
 	 */
 	void setSize(int width, int height);
+	virtual void setWindowSize(int width, int height);
 
 	/**
 	 * Get game window width size.
@@ -211,6 +212,9 @@ public:
 
 	void onWindowFocus(bool isFocused);
 	void onJoystickConnected(int jid, bool isGamepad, bool isConnected);
+
+	virtual void setWindowResizable(bool isResizable);
+	virtual void setWindowSizeLimits(int minWidth, int minHeight, int maxWidth, int maxHeight);
 
 	bool vsync;
 
