@@ -127,7 +127,7 @@ unsigned int gTexture::load(const std::string& fullPath) {
         setData(data, false);
     }
 
-	setupRenderData();
+//	setupRenderData();
     return id;
 }
 
@@ -157,7 +157,7 @@ unsigned int gTexture::loadData(unsigned char* textureData, int width, int heigh
 
     setData(textureData, true);
 
-	setupRenderData();
+//	setupRenderData();
     return id;
 }
 
@@ -193,6 +193,8 @@ void gTexture::setData(unsigned char* textureData, bool isMutable) {
     	gLoge("gTexture") << "Texture failed to load at path: " << fullpath;
         stbi_image_free(data);
     }
+
+	setupRenderData();
 }
 
 void gTexture::setDataHDR(float* textureData, bool isMutable) {
@@ -214,6 +216,8 @@ void gTexture::setDataHDR(float* textureData, bool isMutable) {
 		gLoge("gTexture") << "Failed to load HDR image at path: " << fullpath;
 		stbi_image_free(datahdr);
 	}
+
+	setupRenderData();
 }
 
 unsigned char* gTexture::getData() {

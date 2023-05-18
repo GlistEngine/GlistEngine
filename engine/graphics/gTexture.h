@@ -106,6 +106,8 @@ public:
 
     void setData(unsigned char* textureData, bool isMutable = false);
 
+    void setupRenderData();
+
 protected:
     std::string fullpath, directory;
     unsigned int id, internalformat, format;
@@ -119,8 +121,6 @@ protected:
 
     unsigned char* getData();
     bool isMutable();
-
-    void setupRenderData();
 
 	std::string getDirName(const std::string& fname);
 	std::string getFileName(const std::string& fname);
