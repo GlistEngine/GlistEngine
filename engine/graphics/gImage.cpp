@@ -49,7 +49,7 @@ unsigned int gImage::load(const std::string& fullPath) {
         setData(data, true);
     }
 
-	setupRenderData();
+//	setupRenderData();
     return id;
 }
 
@@ -110,7 +110,7 @@ unsigned int gImage::useData() {
         setData(data, true);
     }
 
-	setupRenderData();
+//	setupRenderData();
     return id;
 }
 
