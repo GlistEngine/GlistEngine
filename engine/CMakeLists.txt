@@ -470,7 +470,7 @@ if(WIN32)
 		opengl32
 		glew32
 		dbghelp
-		msvcr110
+		msvcr100
 		psapi
 #		swscale-5
 #		swresample-3
