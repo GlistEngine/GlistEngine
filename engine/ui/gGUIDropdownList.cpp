@@ -76,7 +76,7 @@ void gGUIDropdownList::onGUIEvent(int guiObjectId, int eventType, int sourceEven
 	}
 	if(sourceEventType == G_GUIEVENT_TREELISTSELECTED) {
 		selectedline = true;
-		if(listopened) listopened = false;
+		listopened = true;
 	}
 	if(sourceEventType == G_GUIEVENT_TREELISTEXPANDED) {
 
@@ -125,6 +125,7 @@ void gGUIDropdownList::mouseReleased(int x, int y, int button) {
 		listopened = false;
 		frame->addTreelist(nullptr, listx, listy, listw);
 	}
+	pressedonlist = false;
 }
 
 void gGUIDropdownList::mouseScrolled(int x, int y) {
