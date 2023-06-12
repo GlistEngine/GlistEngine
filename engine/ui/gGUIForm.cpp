@@ -153,7 +153,7 @@ void gGUIForm::addContextMenu(gGUIContextMenu* contextMenu) {
 void gGUIForm::addTreelist(gGUITreelist* treeList, int treeListx, int treeListy, int treeListw) {
 	treelist = treeList;
 	if(treelist) {
-		treelistw = 10;
+		treelistw = treeListw;
 		treelisth = 188;
 		treelist->set(root, this, this, 0, 0, treeListx, treeListy, treeListw, treelisth);
 	}
