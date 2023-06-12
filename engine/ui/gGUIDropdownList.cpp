@@ -30,6 +30,10 @@ gGUIDropdownList::gGUIDropdownList() {
 	pressedonlist = false;
 	buttonpressed = false;
 	frame = nullptr;
+	lopened = false;
+	textboxh = 0;
+	textboxw = 0;
+	rootelement = nullptr;
 
 
 	actionmanager.addAction(&button, G_GUIEVENT_BUTTONRELEASED, this, G_GUIEVENT_TREELISTOPENEDONDROPDOWNLIST);
