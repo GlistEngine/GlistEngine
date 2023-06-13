@@ -257,14 +257,15 @@ void gGLFWWindow::joystick_callback(int jid, int event) {
 }
 
 void gGLFWWindow::mouse_pos_callback(GLFWwindow* window, double xpos, double ypos) {
-	auto handle = static_cast<gGLFWWindow *>(glfwGetWindowUserPointer(window));
+	auto handle = static_cast<gGLFWWindow*>(glfwGetWindowUserPointer(window));
 	handle->onMouseMoveEvent(xpos * handle->scalex, ypos * handle->scaley);
 }
 
 void gGLFWWindow::mouse_button_callback(GLFWwindow* window, int button, int action, int mods) {
 	double xpos, ypos;
-   glfwGetCursorPos(window, &xpos, &ypos);
-   (static_cast<gGLFWWindow *>(glfwGetWindowUserPointer(window)))->onMouseButtonEvent(button, action, xpos, ypos);
+	glfwGetCursorPos(window, &xpos, &ypos);
+	auto handle = static_cast<gGLFWWindow*>(glfwGetWindowUserPointer(window));
+	handle->onMouseButtonEvent(button, action, xpos * handle->scalex, ypos * handle->scaley);
 }
 
 void gGLFWWindow::mouse_enter_callback(GLFWwindow* window, int entered) {

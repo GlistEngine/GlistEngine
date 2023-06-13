@@ -221,6 +221,7 @@ public:
 protected:
 	gAppManager *appmanager;
 	int width, height;
+	int scalex, scaley;
 	int windowmode;
 	std::string title;
 	bool isfocused;
