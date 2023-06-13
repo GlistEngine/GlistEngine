@@ -11,7 +11,7 @@
 //	- line and column numbers
 //	- source code snippet (assuming the file is accessible)
 
-// Install one of the following library then uncomment one of the macro (or
+// Install one of the following libraries then uncomment one of the macro (or
 // better, add the detection of the lib and the macro definition in your build
 // system)
 
@@ -23,6 +23,15 @@
 // - g++/clang++ -lbfd ...
 // #define BACKWARD_HAS_BFD 1
 
+// - apt-get install libdwarf-dev ...
+// - g++/clang++ -ldwarf ...
+// #define BACKWARD_HAS_DWARF 1
+
+// Regardless of the library you choose to read the debug information,
+// for potentially more detailed stack traces you can use libunwind
+// - apt-get install libunwind-dev
+// - g++/clang++ -lunwind
+// #define BACKWARD_HAS_LIBUNWIND 1
 
 #include "backward.hpp"
 
