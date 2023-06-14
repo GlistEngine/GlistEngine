@@ -2,12 +2,13 @@ cmake_minimum_required (VERSION 3.10.2)
 
 
 # Configure compiler and linker as you need
-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS} -std=c++17 -stdlib=c++ -DEIGEN_NO_CUDA -DNDEBUG -DENABLE_BOOST_WORKAROUND=ON -fuse-ld=gold -Wuninitialized -Wmultichar -ffunction-sections -fdata-sections -fexceptions -frtti -fpermissive -fPIC -O2")
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} -g -std=c++17 -stdlib=c++ -DDEBUG -DENABLE_BOOST_WORKAROUND=ON -fuse-ld=gold -Wuninitialized -Wmultichar -ffunction-sections -fdata-sections -fexceptions -frtti -fpermissive -fPIC -O0")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++ -Wuninitialized -Wmultichar -ffunction-sections -fdata-sections -fexceptions -frtti -fpermissive -fPIC")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS} -DEIGEN_NO_CUDA -DNDEBUG -O2")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} -g -DDEBUG -O0")
 if(NOT APPLE)
-    set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -v -pthread -Wl,--gc-sections")
+	set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -v -pthread -Wl,--gc-sections")
 endif()
-
+set(CMAKE_CXX_STANDARD 14)
 
 ##################################################
 # DO NOT CHANGE BELOW
@@ -31,6 +32,7 @@ set(CMAKE_HAVE_THREADS_LIBRARY 1)
 set(CMAKE_USE_WIN32_THREADS_INIT 0)
 set(CMAKE_USE_PTHREADS_INIT 1)
 set(THREADS_PREFER_PTHREAD_FLAG ON)
+set(ENABLE_BOOST_WORKAROUND ON)
 
 
 if(NOT DEFINED ENGINE_DIR)
@@ -411,9 +413,9 @@ elseif(APPLE)
 	    OUTPUT_STRIP_TRAILING_WHITESPACE)
 	string(STRIP "${CL_TMP_VAR}" CL_VAR_9)
 	add_definitions(${CL_VAR_9})
-	
+
 #	find_library(Lib_cpp c++ HINTS ${BREW_PATH}/llvm/${LLVM_VER}/lib/c++)
-#	execute_process(COMMAND 
+#	execute_process(COMMAND
 #	    pkg-config --cflags c++
 #	    OUTPUT_VARIABLE
 #	    CL_TMP_VAR
