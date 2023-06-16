@@ -113,10 +113,6 @@ void gGUIDropdownList::addElement(gGUITreelist::Element* element, gGUITreelist::
 void gGUIDropdownList::mousePressed(int x, int y, int button) {
 	gGUIContainer::mousePressed(x, y, button);
 	list.mousePressed(x, y, button);
-	if(lopened && !pressedonlist) {
-		listopened = false;
-		frame->addTreelist(nullptr, listx, listy, listw);
-	}
 }
 
 void gGUIDropdownList::mouseReleased(int x, int y, int button) {
