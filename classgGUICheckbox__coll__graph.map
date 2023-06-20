@@ -1,0 +1,17 @@
+<map id="gGUICheckbox" name="gGUICheckbox">
+<area shape="rect" id="node1" title=" " alt="" coords="702,1064,821,1091"/>
+<area shape="rect" id="node2" href="$classgGUIButton.html" title=" " alt="" coords="655,988,753,1015"/>
+<area shape="rect" id="node3" href="$classgGUIControl.html" title=" " alt="" coords="403,911,504,937"/>
+<area shape="rect" id="node4" href="$classgBaseGUIObject.html" title=" " alt="" coords="259,745,387,772"/>
+<area shape="rect" id="node5" href="$classgRenderObject.html" title=" " alt="" coords="11,183,130,209"/>
+<area shape="rect" id="node14" href="$classgNode.html" title=" " alt="" coords="39,284,103,311"/>
+<area shape="rect" id="node6" href="$classgObject.html" title=" " alt="" coords="232,5,304,32"/>
+<area shape="rect" id="node7" href="$classgRenderer.html" title=" " alt="" coords="26,81,115,108"/>
+<area shape="rect" id="node9" href="$classgAppObject.html" title=" " alt="" coords="139,81,237,108"/>
+<area shape="rect" id="node10" href="$classgAppManager.html" title=" " alt="" coords="261,81,373,108"/>
+<area shape="rect" id="node11" href="$classgGUIActionManager.html" title=" " alt="" coords="325,132,477,159"/>
+<area shape="rect" id="node12" href="$classgGUIResources.html" title=" " alt="" coords="419,233,541,260"/>
+<area shape="rect" id="node8" href="$classgBaseApp.html" title=" " alt="" coords="189,183,275,209"/>
+<area shape="rect" id="node13" href="$classgFont.html" title=" " alt="" coords="96,441,155,467"/>
+<area shape="rect" id="node15" href="$classgColor.html" title=" " alt="" coords="672,441,736,467"/>
+</map>

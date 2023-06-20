@@ -1,0 +1,8 @@
+<map id="gGUIForm" name="gGUIForm">
+<area shape="rect" id="node1" title=" " alt="" coords="82,229,169,256"/>
+<area shape="rect" id="node5" href="$classgGUIDialogue.html" title=" " alt="" coords="5,304,117,331"/>
+<area shape="rect" id="node6" href="$classgGUIFrame.html" title=" " alt="" coords="142,304,237,331"/>
+<area shape="rect" id="node2" href="$classgBaseGUIObject.html" title=" " alt="" coords="61,155,189,181"/>
+<area shape="rect" id="node3" href="$classgRenderObject.html" title=" " alt="" coords="66,80,185,107"/>
+<area shape="rect" id="node4" href="$classgObject.html" title=" " alt="" coords="89,5,161,32"/>
+</map>

@@ -1,0 +1,10 @@
+<map id="gGUIButton" name="gGUIButton">
+<area shape="rect" id="node1" title=" " alt="" coords="169,304,267,331"/>
+<area shape="rect" id="node6" href="$classgGUICheckbox.html" title=" " alt="" coords="5,379,124,405"/>
+<area shape="rect" id="node7" href="$classgGUIImageButton.html" title=" " alt="" coords="149,379,287,405"/>
+<area shape="rect" id="node8" href="$classgGUIToolbarButton.html" title=" " alt="" coords="311,379,455,405"/>
+<area shape="rect" id="node2" href="$classgGUIControl.html" title=" " alt="" coords="167,229,269,256"/>
+<area shape="rect" id="node3" href="$classgBaseGUIObject.html" title=" " alt="" coords="154,155,282,181"/>
+<area shape="rect" id="node4" href="$classgRenderObject.html" title=" " alt="" coords="159,80,277,107"/>
+<area shape="rect" id="node5" href="$classgObject.html" title=" " alt="" coords="182,5,254,32"/>
+</map>

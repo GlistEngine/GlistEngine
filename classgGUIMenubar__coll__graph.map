@@ -1,0 +1,17 @@
+<map id="gGUIMenubar" name="gGUIMenubar">
+<area shape="rect" id="node1" title=" " alt="" coords="255,975,366,1001"/>
+<area shape="rect" id="node2" href="$classgGUIMenuItem.html" title=" " alt="" coords="251,899,371,925"/>
+<area shape="rect" id="node3" href="$classgGUIControl.html" title=" " alt="" coords="260,823,361,849"/>
+<area shape="rect" id="node4" href="$classgBaseGUIObject.html" title=" " alt="" coords="247,745,375,772"/>
+<area shape="rect" id="node5" href="$classgRenderObject.html" title=" " alt="" coords="11,183,130,209"/>
+<area shape="rect" id="node14" href="$classgNode.html" title=" " alt="" coords="108,284,172,311"/>
+<area shape="rect" id="node6" href="$classgObject.html" title=" " alt="" coords="232,5,304,32"/>
+<area shape="rect" id="node7" href="$classgRenderer.html" title=" " alt="" coords="26,81,115,108"/>
+<area shape="rect" id="node9" href="$classgAppObject.html" title=" " alt="" coords="139,81,237,108"/>
+<area shape="rect" id="node10" href="$classgAppManager.html" title=" " alt="" coords="261,81,373,108"/>
+<area shape="rect" id="node11" href="$classgGUIActionManager.html" title=" " alt="" coords="325,132,477,159"/>
+<area shape="rect" id="node12" href="$classgGUIResources.html" title=" " alt="" coords="429,233,550,260"/>
+<area shape="rect" id="node8" href="$classgBaseApp.html" title=" " alt="" coords="189,183,275,209"/>
+<area shape="rect" id="node13" href="$classgFont.html" title=" " alt="" coords="148,441,207,467"/>
+<area shape="rect" id="node15" href="$classgColor.html" title=" " alt="" coords="519,441,583,467"/>
+</map>
