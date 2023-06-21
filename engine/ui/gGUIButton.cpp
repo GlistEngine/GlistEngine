@@ -184,3 +184,10 @@ gColor* gGUIButton::getDisabledButtonFontColor() {
 	return &disabledfcolor;
 }
 
+int gGUIButton::getButtonWidth() {
+	return buttonw;
+}
+
+int gGUIButton::getButtonHeight() {
+	return buttonh;
+}
