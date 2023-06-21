@@ -41,6 +41,9 @@ public:
 	gColor* getPressedButtonFontColor();
 	gColor* getDisabledButtonFontColor();
 
+	int getButtonWidth();
+	int getButtonHeight();
+
 	virtual void update();
 	virtual void draw();
 
