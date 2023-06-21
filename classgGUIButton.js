@@ -5,6 +5,8 @@ var classgGUIButton =
     [ "draw", "classgGUIButton.html#a5b22d95d81faa128345bf23ebb225a35", null ],
     [ "getButtonColor", "classgGUIButton.html#a2533158db0d516c6a1ede31504488c64", null ],
     [ "getButtonFontColor", "classgGUIButton.html#aa495561d52862479cd17edfcc06ba624", null ],
+    [ "getButtonHeight", "classgGUIButton.html#a055521460bd1fd7bc94c81b76bce3601", null ],
+    [ "getButtonWidth", "classgGUIButton.html#a7131231122c36e7b0bd47d4f36ef520e", null ],
     [ "getDisabledButtonColor", "classgGUIButton.html#aab839072fa7acc69477a03de19879900", null ],
     [ "getDisabledButtonFontColor", "classgGUIButton.html#a57c5e70ba47d0326732fb3e7b21b557b", null ],
     [ "getPressedButtonColor", "classgGUIButton.html#a7f02ca26d23f9888c37687e9d7db97cd", null ],
