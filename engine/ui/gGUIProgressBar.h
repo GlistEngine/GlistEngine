@@ -57,7 +57,7 @@
 class gGUIProgressBar: public gGUIControl {
 public:
 	enum TYPE{
-		TYPE_LINE = 0,  TYPE_CIRCULAR = 1, TYPE_SPIN = 2
+		TYPE_LINE, TYPE_CIRCULAR, TYPE_SPIN
 	};
 
 	gGUIProgressBar();
@@ -187,7 +187,6 @@ private:
 	gColor progressbarcolor;
 	gColor backgroundcolor;
 	gColor linetextcolor, spintextcolor;
-	gFont progresstextfont;
 };
 
 #endif /* UI_GGUIPROGRESSBAR_H_ */
