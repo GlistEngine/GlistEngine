@@ -105,9 +105,9 @@ void gGUIScrollable::draw() {
 	drawScrollbars();
 	boxfbo->unbind();
 	renderer->setColor(255, 255, 255);
-	boxfbo->drawSub(left, top + (titledy * istitleon), boxw, boxh, 0, renderer->getHeight() - boxh, boxw, boxh);
+	boxfbo->drawSub(left, top + titledy, boxw, boxh, 0, renderer->getHeight() - boxh, boxw, boxh);
 	renderer->setColor(foregroundcolor);
-	gDrawRectangle(left, top + (titledy * istitleon), boxw, boxh, false);
+	gDrawRectangle(left, top + titledy, boxw, boxh, false);
 	if(isalpha) {
 		renderer->enableAlphaBlending();
 		renderer->enableAlphaTest();

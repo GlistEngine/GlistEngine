@@ -142,7 +142,6 @@ protected:
 	int firstx, firsty;
 	int vsbx, vsby, vsbw, vsbh;
 	int hsbx, hsby, hsbw, hsbh;
-	int titlex, titley, titledy;
 	int scrolldiff;
 
 private:
