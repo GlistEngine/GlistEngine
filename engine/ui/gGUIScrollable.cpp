@@ -98,7 +98,7 @@ void gGUIScrollable::draw() {
 		renderer->disableAlphaBlending();
 	}
 	renderer->setColor(0, 0, 0);
-	font->drawText(title + ":", titlex, titley);
+	if(istitleon) font->drawText(title + ":", titlex, titley);
 	boxfbo->bind();
 	renderer->clearColor(0, 0, 0, 0);
 	drawContent();

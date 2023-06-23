@@ -50,6 +50,7 @@ gBaseGUIObject::gBaseGUIObject() {
 	issizer = false;
 	iscontainer = false;
 	isresizable = true;
+	istitleon = true;
 }
 
 gBaseGUIObject::~gBaseGUIObject() {
@@ -71,6 +72,13 @@ bool gBaseGUIObject::isEnabled() {
 	return isenabled;
 }
 
+void gBaseGUIObject::setTitleOn(bool isTitleOn) {
+	istitleon = isTitleOn;
+}
+
+bool gBaseGUIObject::isTitleOn() {
+	return istitleon;
+}
 void gBaseGUIObject::setTopParent(gBaseGUIObject* parentGUIObject) {
 	topparent = parentGUIObject;
 }

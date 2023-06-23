@@ -32,6 +32,9 @@ public:
 	void setEnabled(bool isEnabled);
 	bool isEnabled();
 
+	void setTitleOn(bool isTitleOn);
+	bool isTitleOn();
+
 	virtual void setTopParent(gBaseGUIObject* parentGUIObject);
 	gBaseGUIObject* getTopParent();
 
@@ -137,6 +140,7 @@ protected:
 	gBaseGUIObject* topparent;
 	gBaseGUIObject* parent;
 	bool isenabled;
+	bool istitleon;
 	int parentslotlineno, parentslotcolumnno;
 
 private:
