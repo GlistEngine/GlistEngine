@@ -8,7 +8,7 @@
 #include "gCone.h"
 
 gCone::gCone(int r, int h, glm::vec2 shiftdistance, int segmentnum, bool isFilled) {
-	std::vector<unsigned int> indicesb;
+	std::vector<Index> indicesb;
 	std::vector<gVertex> verticesb;
 
 	float angle = PI * 2 / segmentnum;

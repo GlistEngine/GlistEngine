@@ -16,6 +16,9 @@
 #if defined(WIN32) || defined(LINUX) || defined(APPLE)
 #include <GLFW/glfw3.h>
 #endif
+#if defined(ANDROID)
+#include <android/log.h>
+#endif
 
 bool gLog::isloggingenabled = true;
 std::string gLog::loglevelname[] = {"INFO", "DEBUG", "WARNING", "ERROR"};
@@ -35,24 +38,6 @@ int gDefaultUnitWidth() {
 
 int gDefaultUnitHeight() {
 	return 720;
-}
-
-int gDefaultMonitorWidth() {
-	int w = gDefaultWidth();
-	glfwInit();
-	const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-	w = mode->width;
-	glfwTerminate();
-	return w;
-}
-
-int gDefaultMonitorHeight() {
-	int h = gDefaultHeight();
-	glfwInit();
-	const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-	h = mode->height;
-	glfwTerminate();
-	return h;
 }
 
 int gDefaultScreenScaling() {
@@ -413,11 +398,19 @@ gLog::gLog(const std::string& tag) {
 gLog::~gLog() {
 	if(!isloggingenabled) return;
 
+#if ANDROID
+	if(loglevel == LOGLEVEL_ERROR) {
+		__android_log_print(ANDROID_LOG_ERROR, logtag.c_str(), "%s", logmessage.str().c_str());
+	} else {
+		__android_log_print(ANDROID_LOG_INFO, logtag.c_str(), "%s", logmessage.str().c_str());
+	}
+#else
 	if(loglevel == LOGLEVEL_ERROR) {
 		std::cerr << "[" << loglevelname[loglevel] << "] " << logtag << ": " << logmessage.str() << std::endl;
 	} else {
 		std::cout << "[" << loglevelname[loglevel] << "] " << logtag << ": " << logmessage.str() << std::endl;
 	}
+#endif
 }
 
 void gLog::setLoggingEnabled(bool isLoggingEnabled) {

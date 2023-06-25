@@ -10,10 +10,8 @@
 
 #include "gBaseWindow.h"
 // #include <glad/glad.h> //case_win
-#if defined(WIN32) || defined(LINUX) || defined(APPLE)
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-#endif
 #include "gCamera.h"
 
 /**
@@ -69,7 +67,6 @@ public:
 
 
 private:
-#if defined(WIN32) || defined(LINUX) || defined(APPLE)
 	GLFWwindow* window;
 	static GLFWwindow* currentwindow;
 	GLFWcursor** cursor;
@@ -103,7 +100,6 @@ private:
 	 * Invoking by GLFW if scroll changed.
 	 */
 	static void mouse_scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
-#endif
 };
 
 #endif /* ENGINE_CORE_GGLFWWINDOW_H_ */

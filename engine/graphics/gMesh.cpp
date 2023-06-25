@@ -34,7 +34,7 @@ gMesh::gMesh() {
 	bbmaxx = 0.0f, bbmaxy = 0.0f, bbmaxz = 0.0f;
 }
 
-gMesh::gMesh(std::vector<gVertex> vertices, std::vector<unsigned int> indices, std::vector<gTexture> textures) {
+gMesh::gMesh(std::vector<gVertex> vertices, std::vector<Index> indices, std::vector<gTexture> textures) {
 	name = "";
 	sli = 0;
 	ti = 0;
@@ -65,7 +65,7 @@ const std::string& gMesh::getName() const {
 	return name;
 }
 
-void gMesh::setVertices(std::vector<gVertex> vertices, std::vector<unsigned int> indices) {
+void gMesh::setVertices(std::vector<gVertex> vertices, std::vector<Index> indices) {
 	this->vertices = vertices;
 	this->indices = indices;
 	vbo.setVertexData(vertices.data(), sizeof(gVertex), vertices.size());
@@ -78,7 +78,7 @@ std::vector<gVertex>& gMesh::getVertices() {
 	return vertices;
 }
 
-std::vector<unsigned int>& gMesh::getIndices() {
+std::vector<Index>& gMesh::getIndices() {
 	return indices;
 }
 
@@ -294,7 +294,7 @@ void gMesh::drawStart() {
 	            texnumber = gToStr(specularNr++); // transfer unsigned int to stream
 	        else if(textype == gTexture::TEXTURETYPE_NORMAL)
 	            texnumber = gToStr(normalNr++); // transfer unsigned int to stream
-	         else if(textype == gTexture::TEXTURETYPE_HEIGHT)
+	        else if(textype == gTexture::TEXTURETYPE_HEIGHT)
 	            texnumber = gToStr(heightNr++); // transfer unsigned int to stream
 
 	        // Set the sampler to the correct texture unit
@@ -315,7 +315,7 @@ void gMesh::drawVbo() {
     // draw mesh
     vbo.bind();
     if (vbo.isIndexDataAllocated()) {
-        glDrawElements(drawmode, vbo.getIndicesNum(), GL_UNSIGNED_INT, 0);
+        glDrawElements(drawmode, vbo.getIndicesNum(), G_INDEX_SIZE, nullptr);
     } else {
     	glDrawArrays(drawmode, 0, vbo.getVerticesNum());
     }

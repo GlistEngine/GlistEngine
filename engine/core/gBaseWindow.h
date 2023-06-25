@@ -12,6 +12,7 @@
 #include <unistd.h>
 #include <signal.h>
 #include "gObject.h"
+#include "gEvent.h"
 
 class gAppManager;
 
@@ -24,19 +25,13 @@ class gAppManager;
 
 class gBaseWindow : public gObject {
 public:
+
 	static const int WINDOWMODE_NONE = -1, WINDOWMODE_GAME = 0, WINDOWMODE_FULLSCREEN = 1, WINDOWMODE_APP = 2, WINDOWMODE_FULLSCREENGUIAPP = 3, WINDOWMODE_GUIAPP = 4;
 	static const int CURSOR_ARROW = 0, CURSOR_IBEAM = 1, CURSOR_CROSSHAIR = 2, CURSOR_HAND = 3, CURSOR_HRESIZE = 4, CURSOR_VRESIZE = 5;
 
 
 	gBaseWindow();
 	virtual ~gBaseWindow();
-
-	/**
-	 * Takes the address of the gAppManager in RAM and assigns it to the appmanager in the class.
-	 *
-	 * @param *appManager Get from RAM address.
-	 */
-	void setAppManager(gAppManager *appManager);
 
 	/**
 	 * Sets game window's width, height sizes and window mode.
@@ -105,127 +100,22 @@ public:
 	 */
 	const std::string& getTitle() const;
 
-	/*
-	 * Gets called each time a key is pressed on the keyboard.
-	 *
-	 * Receives which key is pressed and converts the key value to unicode
-	 * represantation.
-	 *
-	 * Graphics Library Framework(GLFW) handles communication with keyboard and OS
-	 * input.
-	 *
-	 * @param key the pressed key value.
-	 */
-	void onCharEvent(unsigned int key);
-
-	/**
-	 * Receives either the keyboard key is pressed, or released. Saves the input of the
-	 * user. Then later sends this value to keyReleased or keyPressed methods.
-	 *
-	 * Later on developers can manipulate these methods and process the input of user.
-	 *
-	 * Graphics Library Framework(GLFW) handles communication with keyboard and OS
-	 * input.
-	 *
-	 * Note that this method is implemented to return an integer of the pressed key,
-	 * developers are encouraged to use onCharEvent method if they want a unicode value
-	 * return type.
-	 *
-	 * @param key the value of user's interacted key.
-	 * @param action info of user's action. either the keyboard key is pressed or
-	 * released.
-	 */
-	void onKeyEvent(int key, int action);
-
-	/**
-	 * Receives x and y coordinate of the application window's clicked positon by user.
-	 * Then sends x and y coordinates to mouseMoved method. And in addition sends
-	 * clicked button value to mouseDragged.
-	 *
-	 * Later on developers can manipulate these methods and process the input of user.
-	 *
-	 * Due to the shortcomings of only getting x and y coordinates of mouse,
-	 * developers are encouraged to use onMouseButtonEvent for getting button info
-	 * addition to the coordinates.
-	 *
-	 * Users should remember that x and y values are returned in window coordinates.
-	 *
-	 * Graphics Library Framework(GLFW) handles communication with mouse and OS input.
-	 *
-	 * @param xpos x coordinate of the application window's clicked position.
-	 * @param ypos y coordinate of the application window's clicked position.
-	 */
-	void onMouseMoveEvent(double xpos, double ypos);
-
-	/**
-	 * Receives x and y coordinate of the application window's clicked position by user.
-	 * Either the mouse button is pressed, or released. Saves the input of the user. Then
-	 * later sends this value to mouseReleased or mousePressed methods.
-	 *
-	 * Later on developers can manipulate these methods and process the input of user.
-	 *
-	 * Users should remember that x and y values are returned in window coordinates.
-	 *
-	 * Graphics Library Framework(GLFW) handles communication with mouse and OS input.
-	 *
-	 * @param button which button is being interacted.
-	 * @param action info of user's action. either mouse button is pressed or released.
-	 * @param  xpos x coordinate of the application window's clicked position.
-	 * @param ypos y coordinate of the application window's clicked position.
-	 */
-	void onMouseButtonEvent(int button, int action, double xpos, double ypos);
-
-	/**
-	 * Gets the info of user's cursor. Checks if user is currently on the application
-	 * window or not.
-	 *
-	 * Then sends this info to mouseEntered and mouseExited methods.
-	 * Developers can manipulate these methods and process current state. This can be
-	 * helpful to understand if user is currently on the application tab or borders,
-	 * continuing the game when user is on the tab, and pausing when is not.
-	 *
-	 * Graphics Library Framework(GLFW) handles communication with mouse and OS input.
-	 *
-	 * @param info of user's cursor is either in the boundaries of application window
-	 * or outside the boundaries.
-	 */
-	void onMouseEnterEvent(int entered);
-
-	/**
-	 * Gets the info of user's cursor. Checks if user is currently on the application
-	 * window or not. Then receives offset values x and y, x for horizontal axis and y
-	 * for vertical axis. Then sends this values to mouseScrolled method. Developers
-	 * can manipulate this method and process current state.
-	 *
-	 * If x value is greater than 0, mouse is being scrolled to the right. If
-	 * x value is less than 0, mouse is being scrolled to the left.
-	 *
-	 * If y value is greater than 0, mouse is being scrolled up. If y value is less
-	 * than 0, mouse is being scrolled down.
-	 *
-	 * This can be helpful for aim precision, view changing, and smooth controls.
-	 *
-	 * @param xoffset offset value of x(horizontal) axis.
-	 * @param yoffset offset value of y(vertical) axis.
-	 */
-	void onMouseScrollEvent(double xoffset, double yoffset);
-
-	void onWindowFocus(bool isFocused);
-	void onJoystickConnected(int jid, bool isGamepad, bool isConnected);
-
 	virtual void setWindowResizable(bool isResizable);
 	virtual void setWindowSizeLimits(int minWidth, int minHeight, int maxWidth, int maxHeight);
 
 	bool vsync;
 
+	void setEventHandler(EventHandlerFn handler);
+
 protected:
-	gAppManager *appmanager;
+	void callEvent(gEvent& event);
+
 	int width, height;
 	int scalex, scaley;
 	int windowmode;
 	std::string title;
 	bool isfocused;
-
+	EventHandlerFn eventhandler;
 	static void sighandler(int signum);
 	static std::string signalname[32];
 };

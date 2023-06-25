@@ -30,7 +30,7 @@ gPlane::gPlane() {
 		};
 
 		std::vector<gVertex> verticessb;
-		std::vector<unsigned int> indicessb;
+		std::vector<Index> indicessb;
 
 		for (int i=0; i<4; i++) {
 			gVertex vertex;

@@ -28,19 +28,29 @@ static const std::string resolutiondirs[] = {
 int gObject::renderpassnum = 1;
 int gObject::renderpassno = 0;
 
+inline bool endsWith(std::string const & value, std::string const & ending)
+{
+	if (ending.size() > value.size()) return false;
+	return std::equal(ending.rbegin(), ending.rend(), value.rbegin());
+}
 
 gObject::gObject() {
 	char temp[256];
 	exepath = getcwd(temp, sizeof(temp));
-	exepath += "/";
+	if(!endsWith(exepath, "/")) {
+		exepath += "/";
+	}
+
 	for (int i = 0; i < exepath.size(); i++) {
 	    if (exepath[i] == '\\') {
 	    	exepath[i] = '/';
 	    }
 	}
+#ifndef ANDROID
 	if(assetsdir == "") {
 		assetsdir = exepath + "assets/";
 	}
+#endif
 //	std::replace(0, 1, "", "");
 }
 

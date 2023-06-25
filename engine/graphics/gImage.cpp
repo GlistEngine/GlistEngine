@@ -6,15 +6,14 @@
  */
 
 #include "gImage.h"
-//#ifndef STB_IMAGE_IMPLEMENTATION
-//#define STB_IMAGE_IMPLEMENTATION
-//#endif
 #ifndef STB_IMAGE_WRITE_IMPLEMENTATION
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #endif
-#include "stb/stb_image.h"
 #include "stb/stb_image_write.h"
 #include "gHttpFile.h"
+#ifdef ANDROID
+#include "gAndroidUtil.h"
+#endif
 
 int gImage::downloadno = 1;
 
@@ -45,7 +44,15 @@ unsigned int gImage::load(const std::string& fullPath) {
     	datahdr = stbi_loadf(fullpath.c_str(), &width, &height, &componentnum, 0);
     	setDataHDR(datahdr, true);
     } else {
-        data = stbi_load(fullpath.c_str(), &width, &height, &componentnum, 0);
+#ifdef ANDROID
+		AAsset* asset = gAndroidUtil::loadAsset(fullpath, 0);
+		auto* buf = (unsigned char*) AAsset_getBuffer(asset);
+		int length = AAsset_getLength(asset);
+		data = stbi_load_from_memory(buf, length, &width, &height, &componentnum, 0);
+		gAndroidUtil::closeAsset(asset);
+#else
+		data = stbi_load(fullpath.c_str(), &width, &height, &componentnum, 0);
+#endif
         setData(data, true);
     }
 
@@ -62,6 +69,9 @@ unsigned int gImage::loadImageFromURL(const std::string& imageUrl) {
 }
 
 unsigned int gImage::loadImageFromURL(const std::string& imageUrl, bool cutUrlParameters) {
+#if(ANDROID)
+	return 0; // todo
+#else
 	imageurl = imageUrl;
 	std::string imageurledited = imageurl;
 	if(cutUrlParameters) {
@@ -80,6 +90,7 @@ unsigned int gImage::loadImageFromURL(const std::string& imageUrl, bool cutUrlPa
 	loadedfromurl = true;
 
 	return load(imagepath);
+#endif
 }
 
 void gImage::loadData(const std::string& fullPath) {
@@ -164,12 +175,16 @@ std::string gImage::getImageUrl() {
 }
 
 std::string gImage::generateDownloadedImagePath(std::string imageType) {
+#if(ANDROID)
+	return ""; // todo
+#else
 	std::string imagepath = "";
 	do {
 		imagepath = gGetImagesDir() + "downloadedimage_" + gToStr(downloadno) + "." + imageType;
 		downloadno++;
 	} while(gFile::doesFileExist(imagepath));
 	return imagepath;
+#endif
 }
 
 unsigned int gImage::loadMaskImage(const std::string& maskImagePath) {

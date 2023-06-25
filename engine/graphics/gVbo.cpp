@@ -74,18 +74,17 @@ void gVbo::setVertexData(const float* vert0x, int coordNum, int total, int usage
 	vertexarrayptr = vert0x;
 	vertexdatacoordnum = coordNum;
 	totalvertexnum = total;
+	isvertexdataallocated = true;
 
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	GLsizeiptr size = (stride == 0) ? vertexdatacoordnum * sizeof(float) : stride;
 	glBufferData(GL_ARRAY_BUFFER, totalvertexnum * size, vertexarrayptr, usage);
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, vertexdatacoordnum, GL_FLOAT, GL_FALSE, vertexdatacoordnum * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, vertexdatacoordnum, GL_FLOAT, GL_FALSE, vertexdatacoordnum * sizeof(float),nullptr);
 	glBindVertexArray(0);
-	glDeleteBuffers(1, &vbo);
-	isvertexdataallocated = true;
 }
 
-void gVbo::setIndexData(unsigned int* indices, int total) {
+void gVbo::setIndexData(Index* indices, int total) {
     glBindVertexArray(vao);
 	if (!isindexdataallocated) glGenBuffers(1, &ebo);
 	indexarrayptr = indices;
@@ -93,21 +92,21 @@ void gVbo::setIndexData(unsigned int* indices, int total) {
 	isindexdataallocated = true;
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, totalindexnum * sizeof(unsigned int), indexarrayptr, GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, totalindexnum * sizeof(Index), indexarrayptr, GL_STATIC_DRAW);
     glBindVertexArray(0);
-    if(!isAMD) glDeleteBuffers(1, &ebo);
 }
 
 void gVbo::clear() {
     glDeleteVertexArrays(1, &vao);
-    glDeleteBuffers(1, &vbo);
+    if(isvertexdataallocated) glDeleteBuffers(1, &vbo);
+	if(isindexdataallocated)  glDeleteBuffers(1, &ebo);
 }
 
 gVertex* gVbo::getVertices() const {
 	return verticesptr;
 }
 
-unsigned int* gVbo::getIndices() const {
+Index* gVbo::getIndices() const {
 	return indexarrayptr;
 }
 

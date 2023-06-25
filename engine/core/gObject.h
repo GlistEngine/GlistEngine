@@ -19,6 +19,7 @@
 
 #include "gUtils.h"
 #include <cxxabi.h>
+#include "stb/stb_image.h"
 //#include "gConfig.h"
 
 

@@ -75,7 +75,11 @@ void gFbo::allocate(int width, int height, bool isDepthMap) {
         textureid = texture.getId();
         texture.bind();
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, texture.getId(), 0);
-        glDrawBuffer(GL_NONE);
+#if(ANDROID)
+		glDrawBuffers(0, GL_NONE);
+#else
+		glDrawBuffer(GL_NONE);
+#endif
         glReadBuffer(GL_NONE);
     }
 

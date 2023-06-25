@@ -7,21 +7,16 @@
 
 #include "gSkybox.h"
 #include "gTexture.h"
-//#ifndef STB_IMAGE_IMPLEMENTATION
-//#define STB_IMAGE_IMPLEMENTATION
-//#endif
-#include "stb/stb_image.h"
 
-	glm::mat4 captureProjection = glm::perspective(glm::radians(90.0f), 1.0f, 0.1f, 10.0f);
-	glm::mat4 captureViews[] = {
-		glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3( 1.0f,  0.0f,  0.0f), glm::vec3(0.0f, -1.0f,  0.0f)),
-		glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(-1.0f,  0.0f,  0.0f), glm::vec3(0.0f, -1.0f,  0.0f)),
-		glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3( 0.0f,  1.0f,  0.0f), glm::vec3(0.0f,  0.0f,  1.0f)),
-		glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3( 0.0f, -1.0f,  0.0f), glm::vec3(0.0f,  0.0f, -1.0f)),
-		glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3( 0.0f,  0.0f,  1.0f), glm::vec3(0.0f, -1.0f,  0.0f)),
-		glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3( 0.0f,  0.0f, -1.0f), glm::vec3(0.0f, -1.0f,  0.0f))
-	};
-
+glm::mat4 captureProjection = glm::perspective(glm::radians(90.0f), 1.0f, 0.1f, 10.0f);
+glm::mat4 captureViews[] = {
+	glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3( 1.0f,  0.0f,  0.0f), glm::vec3(0.0f, -1.0f,  0.0f)),
+	glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(-1.0f,  0.0f,  0.0f), glm::vec3(0.0f, -1.0f,  0.0f)),
+	glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3( 0.0f,  1.0f,  0.0f), glm::vec3(0.0f,  0.0f,  1.0f)),
+	glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3( 0.0f, -1.0f,  0.0f), glm::vec3(0.0f,  0.0f, -1.0f)),
+	glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3( 0.0f,  0.0f,  1.0f), glm::vec3(0.0f, -1.0f,  0.0f)),
+	glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3( 0.0f,  0.0f, -1.0f), glm::vec3(0.0f, -1.0f,  0.0f))
+};
 
 gSkybox::gSkybox() {
 	id = GL_NONE;
@@ -48,7 +43,11 @@ unsigned int gSkybox::load(std::vector<std::string>& fullPaths) {
 	skymapslot = GL_TEXTURE0;
 	skymapint = 0;
 
+#if(ANDROID)
+	glEnable(GL_TEXTURE_CUBE_MAP); // OpenGL ES does not support GL_TEXTURE_CUBE_MAP_SEAMLESS
+#else
 	glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
+#endif
 
 	glActiveTexture(skymapslot);
 	glGenTextures(1, &id);
@@ -86,7 +85,11 @@ void gSkybox::loadSkybox(gImage* images) {
 	skymapslot = GL_TEXTURE0;
 	skymapint = 0;
 
+#if(ANDROID)
+	glEnable(GL_TEXTURE_CUBE_MAP); // OpenGL ES does not support GL_TEXTURE_CUBE_MAP_SEAMLESS
+#else
 	glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
+#endif
 
 	glActiveTexture(skymapslot);
 	glGenTextures(1, &id);
@@ -118,7 +121,11 @@ void gSkybox::loadDataSkybox(std::string *data, int width, int height) {
 	skymapslot = GL_TEXTURE0;
 	skymapint = 0;
 
+#if(ANDROID)
+	glEnable(GL_TEXTURE_CUBE_MAP); // OpenGL ES does not support GL_TEXTURE_CUBE_MAP_SEAMLESS
+#else
 	glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
+#endif
 
 	glActiveTexture(skymapslot);
 	glGenTextures(1, &id);
@@ -158,7 +165,11 @@ unsigned int gSkybox::loadEquirectangular(const std::string& fullPath) {
 //	glGenTextures(1, &id);
 //	glBindTexture(GL_TEXTURE_CUBE_MAP, id);
 
+#if(ANDROID)
+	glEnable(GL_TEXTURE_CUBE_MAP); // OpenGL ES does not support GL_TEXTURE_CUBE_MAP_SEAMLESS
+#else
 	glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
+#endif
 
 	equirectangularToCubemapShader = renderer->getEquirectangularShader();
 
@@ -442,7 +453,7 @@ void gSkybox::setupRenderData() {
 	};
 
 
-	unsigned int indexdata[] = {
+	Index indexdata[] = {
 	   // back
 		 0,  2, 3,
 		 0,  1, 3,
@@ -480,7 +491,7 @@ void gSkybox::setupRenderData() {
 	}
 
 	int ni = sizeof(indexdata) / sizeof(indexdata[0]);
-	std::vector<unsigned int> indicesb;
+	std::vector<Index> indicesb;
 	for (int i=0; i<ni; i++) {
 		indicesb.push_back(indexdata[i]);
 	}

@@ -112,7 +112,7 @@ const glm::vec3& gSkinnedMesh::getVertexNormData(int animationNo, int frameNo, i
 	return animatedNormData[animationNo][frameNo][vertexNo];
 }
 
-void gSkinnedMesh::setVerticesData(int animationNo, int frameNo, std::vector<gVertex> vertices, std::vector<unsigned int> indices) {
+void gSkinnedMesh::setVerticesData(int animationNo, int frameNo, std::vector<gVertex> vertices, std::vector<Index> indices) {
 //	this->vertices = vertices;
 //	this->indices = indices;
 	vboframe[animationNo][frameNo].setVertexData(&vertices[0], sizeof(gVertex), vertices.size());

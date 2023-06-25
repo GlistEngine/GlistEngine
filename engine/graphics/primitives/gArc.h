@@ -20,7 +20,7 @@ public:
 private:
 	void setArcPoints(float xCenter, float yCenter, float radius, bool isFilled, int numberOfSides = 60, float degree = 360.0f, float rotate = 360.0f);
 	std::vector<gVertex> vertices;
-	std::vector<unsigned int> indices;
+	std::vector<Index> indices;
 };
 
 #endif /* GRAPHICS_PRIMITIVES_gArc_H_ */

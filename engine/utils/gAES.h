@@ -8,6 +8,9 @@
 #ifndef UTILS_GAES_H_
 #define UTILS_GAES_H_
 
+#if(ANDROID)
+// todo
+#else
 #include <openssl/conf.h>
 #include <openssl/evp.h>
 #include <openssl/err.h>
@@ -15,8 +18,8 @@
 #include "gObject.h"
 
 
-class gAES: public gObject {
-public:
+class gAES : public gObject {
+  public:
 	gAES();
 	virtual ~gAES();
 
@@ -27,13 +30,11 @@ public:
 
 	std::string encodeMD5(std::string plainText); //MD5
 
-private:
+  private:
 	unsigned char *initkey, *initvector;
 	void handleErrors(void);
 	void clean();
 };
-
-
-
+#endif
 
 #endif /* UTILS_GAES_H_ */

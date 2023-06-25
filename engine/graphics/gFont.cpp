@@ -7,6 +7,9 @@
 
 #include "gFont.h"
 #include <iostream>
+#ifdef ANDROID
+#include "gAndroidUtil.h"
+#endif
 
 
 gFont::gFont() {
@@ -30,6 +33,9 @@ gFont::~gFont() {
 		lcbptr = nullptr;
 		FT_Done_Face(fontface);
 		FT_Done_FreeType(ftlib);
+#ifdef ANDROID
+        if (androidasset) gAndroidUtil::closeAsset(androidasset);
+#endif
 	}
 }
 
@@ -45,13 +51,21 @@ bool gFont::load(const std::string& fullPath, int size, bool isAntialiased, int 
 		gLoge("gFont") << "Error loading freetype";
 		return false;
 	}
+#ifdef ANDROID
+	androidasset = gAndroidUtil::loadAsset(fullpath, 0);
+	auto* buf = (unsigned char*) AAsset_getBuffer(androidasset);
+	int length = AAsset_getLength(androidasset);
+	err = FT_New_Memory_Face(ftlib, buf, length, 0, &fontface);
+#else
 	err = FT_New_Face(ftlib, fullPath.c_str(), 0, &fontface);
+#endif
 	if (err) {
 		std::string errorstr = "freetype error";
 		if (err == 1) errorstr = "wrong file name";
 		gLoge("gFont") << "Freetype error: " << errorstr.c_str();
 		return false;
 	}
+
 
 	FT_Set_Char_Size(fontface, fontsize << 6, fontsize << 6, dpi, dpi);
 	lineheight = fontsize * 1.43f;
@@ -327,10 +341,23 @@ bool gFont::insertData(unsigned char* srcData, int srcWidth, int srcHeight, int 
 }
 
 int gFont::getKerning(int c, int previousC) {
-    if(iskerning){
+    if(fontface && iskerning) {
+        // Convert the characters to indices
+        FT_UInt index1 = FT_Get_Char_Index(fontface, previousC);
+        FT_UInt index2 = FT_Get_Char_Index(fontface, c);
+
+        // Get the kerning vector
         FT_Vector kerning;
-        FT_Get_Kerning(fontface, FT_Get_Char_Index(fontface, previousC), FT_Get_Char_Index(fontface, c), FT_KERNING_DEFAULT, &kerning);
+        FT_Get_Kerning(fontface, index1, index2, FT_KERNING_DEFAULT, &kerning);
+
+        // X advance is already in pixels for bitmap fonts
+        if (!FT_IS_SCALABLE(fontface))
+            return kerning.x;
+
         return kerning.x >> 6;
+//        FT_Vector kerning;
+//        FT_Get_Kerning(fontface, FT_Get_Char_Index(fontface, previousC), FT_Get_Char_Index(fontface, c), FT_KERNING_DEFAULT, &kerning);
+//        return kerning.x >> 6;
     }else{
         return 0;
     }

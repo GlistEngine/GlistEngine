@@ -7,10 +7,6 @@
 
 #include "gGLFWWindow.h"
 #include "gAppManager.h"
-#ifndef STB_IMAGE_IMPLEMENTATION
-#define STB_IMAGE_IMPLEMENTATION
-#endif
-#include "stb/stb_image.h"
 
 const int gGLFWWindow::CURSORMODE_NORMAL = GLFW_CURSOR_NORMAL;
 const int gGLFWWindow::CURSORMODE_HIDDEN = GLFW_CURSOR_HIDDEN;
@@ -20,13 +16,10 @@ GLFWwindow* gGLFWWindow::currentwindow = nullptr;
 
 
 gGLFWWindow::gGLFWWindow() {
-#if defined(WIN32) || defined(LINUX) || defined(APPLE)
 	window = nullptr;
 	cursor = new GLFWcursor*[6];
 	scalex = 1.0f;
 	scaley = 1.0f;
-
-#endif
 }
 
 gGLFWWindow::~gGLFWWindow() {
@@ -35,7 +28,6 @@ gGLFWWindow::~gGLFWWindow() {
 
 void gGLFWWindow::initialize(int width, int height, int windowMode, bool isResizable) {
 	gBaseWindow::initialize(width, height, windowMode, isResizable);
-#if defined(WIN32) || defined(LINUX) || defined(APPLE)
 	// Create glfw
 	glfwInit();
 
@@ -122,12 +114,10 @@ void gGLFWWindow::initialize(int width, int height, int windowMode, bool isResiz
 	glewExperimental = GL_TRUE;
 	glewInit();
 
-#if defined(WIN32) || defined(LINUX) || defined(APPLE)
 //	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
 //	    std::cout << "Failed to initialize GLAD" << std::endl;
 //	    return -1;
 //	}
-#endif
 
 	glfwSetWindowUserPointer(window, this);
 
@@ -146,83 +136,60 @@ void gGLFWWindow::initialize(int width, int height, int windowMode, bool isResiz
 	glfwSetScrollCallback(window, gGLFWWindow::mouse_scroll_callback);
 	glfwSetWindowFocusCallback(window, gGLFWWindow::window_focus_callback);
 	glfwSetJoystickCallback(gGLFWWindow::joystick_callback);
-#endif
 }
 
 
 bool gGLFWWindow::getShouldClose() {
-#if defined(WIN32) || defined(LINUX) || defined(APPLE)
 	return glfwWindowShouldClose(window);
-#endif
-	return 0;
 }
 
 void gGLFWWindow::update() {
-#if defined(WIN32) || defined(LINUX) || defined(APPLE)
 	// End window drawing
-    glfwSwapBuffers(window);
-    glfwPollEvents();
-#endif
+	glfwSwapBuffers(window);
+	glfwPollEvents();
 //    std::cout << "width:" << width << ", height:" << height << std::endl;
 }
 
 void gGLFWWindow::close() {
-#if defined(WIN32) || defined(LINUX) || defined(APPLE)
 	// Deallocate glfw resources
 	glfwTerminate();
-#endif
 }
 
 void gGLFWWindow::enableVsync(bool vsync) {
 	gBaseWindow::enableVsync(vsync);
-#if defined(WIN32) || defined(LINUX) || defined(APPLE)
 	glfwSwapInterval(vsync);
-#endif
 }
 
 void gGLFWWindow::setCursor(int cursorNo) {
-#if defined(WIN32) || defined(LINUX) || defined(APPLE)
 	glfwSetCursor(window, cursor[cursorNo]);
-#endif
 }
 
 void gGLFWWindow::setCursorMode(int cursorMode) {
-#if defined(WIN32) || defined(LINUX) || defined(APPLE)
 	glfwSetInputMode(window, GLFW_CURSOR, cursorMode);
-#endif
 }
 
 void gGLFWWindow::setClipboardString(std::string text) {
-#if defined(WIN32) || defined(LINUX) || defined(APPLE)
 	glfwSetClipboardString(window, text.c_str());
-#endif
 }
 
 std::string gGLFWWindow::getClipboardString() {
-#if defined(WIN32) || defined(LINUX) || defined(APPLE)
 	return glfwGetClipboardString(window);
-#endif
 }
 
 void gGLFWWindow::setWindowSize(int width, int height) {
-#if defined(WIN32) || defined(LINUX) || defined(APPLE)
 	if(window != nullptr) {
 		glfwSetWindowSize(window, width, height);
 		framebuffer_size_callback(window, width, height);
 	}
-#endif
 }
 
 void gGLFWWindow::setWindowResizable(bool isResizable) {
-#if defined(WIN32) || defined(LINUX) || defined(APPLE)
 	if(window != nullptr) {
 		glfwSetWindowAttrib(window, GLFW_RESIZABLE, isResizable);
 	}
-#endif
 }
 
 void gGLFWWindow::setWindowSizeLimits(int minWidth, int minHeight, int maxWidth, int maxHeight) {
-#if defined(WIN32) || defined(LINUX) || defined(APPLE)
 	if(window != nullptr) {
 		if(minWidth == 0) minWidth = GLFW_DONT_CARE;
 		if(minHeight == 0) minHeight = GLFW_DONT_CARE;
@@ -230,50 +197,91 @@ void gGLFWWindow::setWindowSizeLimits(int minWidth, int minHeight, int maxWidth,
 		if(maxHeight == 0) maxHeight = GLFW_DONT_CARE;
 		glfwSetWindowSizeLimits(window, minWidth, minHeight, maxWidth, maxHeight);
 	}
-#endif
 }
 
-#if defined(WIN32) || defined(LINUX) || defined(APPLE)
+// todo use eventbus
 void gGLFWWindow::framebuffer_size_callback(GLFWwindow* window, int width, int height) {
     glViewport(0, 0, width, height);
-    (static_cast<gGLFWWindow *>(glfwGetWindowUserPointer(window)))->setSize(width, height);
+	auto handle = static_cast<gGLFWWindow*>(glfwGetWindowUserPointer(window));
+    handle->setSize(width, height);
 }
 
 void gGLFWWindow::character_callback(GLFWwindow* window, unsigned int keycode) {
-	 (static_cast<gGLFWWindow *>(glfwGetWindowUserPointer(window)))->onCharEvent(keycode);
+	auto handle = static_cast<gGLFWWindow*>(glfwGetWindowUserPointer(window));
+	gCharTypedEvent event{keycode};
+	handle->callEvent(event);
 }
 
 void gGLFWWindow::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
 	if (action != GLFW_RELEASE && action != GLFW_PRESS) return;
-    (static_cast<gGLFWWindow *>(glfwGetWindowUserPointer(window)))->onKeyEvent(key, action);
+	auto handle = static_cast<gGLFWWindow*>(glfwGetWindowUserPointer(window));
+	switch(action) {
+	case GLFW_RELEASE:{
+		gKeyReleasedEvent event{key};
+		handle->callEvent(event);
+		break;
+	}
+	case GLFW_PRESS:{
+		gKeyPressedEvent event{key};
+		handle->callEvent(event);
+		break;
+	}
+	}
 }
 
 void gGLFWWindow::window_focus_callback(GLFWwindow* window, int focused) {
-	(static_cast<gGLFWWindow *>(glfwGetWindowUserPointer(window)))->onWindowFocus(focused);
+	auto handle = static_cast<gGLFWWindow*>(glfwGetWindowUserPointer(window));
+	if(focused) {
+		gWindowFocusEvent event{};
+		handle->callEvent(event);
+	} else {
+		gWindowLoseFocusEvent event{};
+		handle->callEvent(event);
+	}
 }
 
 void gGLFWWindow::joystick_callback(int jid, int event) {
-	(static_cast<gGLFWWindow *>(glfwGetWindowUserPointer(currentwindow)))->onJoystickConnected(jid, glfwJoystickIsGamepad(jid), event == GLFW_CONNECTED);
+	// todo
 }
 
 void gGLFWWindow::mouse_pos_callback(GLFWwindow* window, double xpos, double ypos) {
 	auto handle = static_cast<gGLFWWindow*>(glfwGetWindowUserPointer(window));
-	handle->onMouseMoveEvent(xpos * handle->scalex, ypos * handle->scaley);
+	gMouseMovedEvent event{static_cast<int>(xpos * handle->scalex), static_cast<int>(ypos * handle->scalex)};
+	handle->callEvent(event);
 }
 
 void gGLFWWindow::mouse_button_callback(GLFWwindow* window, int button, int action, int mods) {
 	double xpos, ypos;
 	glfwGetCursorPos(window, &xpos, &ypos);
 	auto handle = static_cast<gGLFWWindow*>(glfwGetWindowUserPointer(window));
-	handle->onMouseButtonEvent(button, action, xpos * handle->scalex, ypos * handle->scaley);
+	switch(action) {
+	case GLFW_RELEASE:{
+		gMouseButtonReleasedEvent event{button, static_cast<int>(xpos * handle->scalex), static_cast<int>(ypos * handle->scalex)};
+		handle->callEvent(event);
+		break;
+	}
+	case GLFW_PRESS:{
+		gMouseButtonPressedEvent event{button, static_cast<int>(xpos * handle->scalex), static_cast<int>(ypos * handle->scalex)};
+		handle->callEvent(event);
+		break;
+	}
+	}
 }
 
 void gGLFWWindow::mouse_enter_callback(GLFWwindow* window, int entered) {
-	(static_cast<gGLFWWindow *>(glfwGetWindowUserPointer(window)))->onMouseEnterEvent(entered);
+	auto handle = static_cast<gGLFWWindow*>(glfwGetWindowUserPointer(window));
+	if(entered) {
+		gWindowMouseEnterEvent event{};
+		handle->callEvent(event);
+	} else {
+		gWindowMouseExitEvent event{};
+		handle->callEvent(event);
+	}
 }
 
 void gGLFWWindow::mouse_scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
-	(static_cast<gGLFWWindow *>(glfwGetWindowUserPointer(window)))->onMouseScrollEvent(xoffset, yoffset);
+	auto handle = static_cast<gGLFWWindow*>(glfwGetWindowUserPointer(window));
+	gMouseScrolledEvent event{static_cast<int>(xoffset), static_cast<int>(yoffset)};
+	handle->callEvent(event);
 }
-#endif
 

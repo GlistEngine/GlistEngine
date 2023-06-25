@@ -40,12 +40,15 @@
 #ifndef ENGINE_CORE_GAPPMANAGER_H_
 #define ENGINE_CORE_GAPPMANAGER_H_
 
-#include "gObject.h"
-#include <iostream>
-#include <chrono>
-#include "gGUIManager.h"
+#include "gBaseWindow.h"
+#include "gEvent.h"
+#include "gWindowEvents.h"
 #include "gFont.h"
-class gBaseWindow;
+#include "gGUIManager.h"
+#include "gObject.h"
+#include <chrono>
+#include <iostream>
+
 class gBaseApp;
 class gBaseCanvas;
 class gGUIFrame;
@@ -316,120 +319,6 @@ public:
 	 */
 	std::string getAppName();
 
-	/*
-	 * Gets called each time a key is pressed on the keyboard.
-	 *
-	 * Receives which key is pressed and converts the key value to unicode
-	 * represantation.
-	 *
-	 * Graphics Library Framework(GLFW) handles communication with keyboard and OS
-	 * input.
-	 * @param key the pressed key value.
-
-	 */
-	void onCharEvent(unsigned int key);
-
-	/**
-	 * Receives either the keyboard key is pressed, or released. Saves the input of the
-	 * user. Then later sends this value to keyReleased or keyPressed methods.
-	 *
-	 * Later on developers can manipulate these methods and process the input of user.
-	 *
-	 * Graphics Library Framework(GLFW) handles communication with keyboard and OS
-	 * input.
-	 *
-	 * Note that this method is implemented to return an integer of the pressed key,
-	 * developers are encouraged to use onCharEvent method if they want a unicode value
-	 * return type.
-	 *
-	 * @param key the value of user's interacted key.
-	 *
-	 * @param action info of user's action. either the keyboard key is pressed or
-	 * released.
-	 */
-	void onKeyEvent(int key, int action);
-
-	/**
-	 * Receives x and y coordinate of the application window's clicked positon by user.
-	 * Then sends x and y coordinates to mouseMoved method. And in addition sends
-	 * clicked button value to mouseDragged.
-	 *
-	 * Later on developers can manipulate these methods and process the input of user.
-	 *
-	 * Due to the shortcomings of only getting x and y coordinates of mouse,
-	 * developers are encouraged to use onMouseButtonEvent for getting button info
-	 * addition to the coordinates.
-	 *
-	 * Users should remember that x and y values are returned in window coordinates.
-	 *
-	 * Graphics Library Framework(GLFW) handles communication with mouse and OS input.
-	 *
-	 * @param xpos x coordinate of the application window's clicked position.
-	 *
-	 * @param ypos y coordinate of the application window's clicked position.
-	 */
-	void onMouseMoveEvent(double xpos, double ypos);
-
-	/**
-	 * Receives x and y coordinate of the application window's clicked position by user.
-	 * Either the mouse button is pressed, or released. Saves the input of the user. Then
-	 * later sends this value to mouseReleased or mousePressed methods.
-	 *
-	 * Later on developers can manipulate these methods and process the input of user.
-	 *
-	 * Users should remember that x and y values are returned in window coordinates.
-	 *
-	 * Graphics Library Framework(GLFW) handles communication with mouse and OS input.
-	 *
-	 * @param button which button is being interacted.
-	 *
-	 * @param action info of user's action. either mouse button is pressed or released.
-	 *
-	 * @param  xpos x coordinate of the application window's clicked position.
-	 *
-	 * @param ypos y coordinate of the application window's clicked position.
-	 */
-	void onMouseButtonEvent(int button, int action, double xpos, double ypos);
-
-	/**
-	 * Gets the info of user's cursor. Checks if user is currently on the application
-	 * window or not.
-	 *
-	 * Then sends this info to mouseEntered and mouseExited methods.
-	 * Developers can manipulate these methods and process current state. This can be
-	 * helpful to understand if user is currently on the application tab or borders,
-	 * continuing the game when user is on the tab, and pausing when is not.
-	 *
-	 * Graphics Library Framework(GLFW) handles communication with mouse and OS input.
-	 *
-	 * @param info of user's cursor is either in the boundaries of application window
-	 * or outside the boundaries.
-	 */
-	void onMouseEnterEvent(int entered);
-
-	/**
-	 * Gets the info of user's cursor. Checks if user is currently on the application
-	 * window or not. Then receives offset values x and y, x for horizontal axis and y
-	 * for vertical axis. Then sends this values to mouseScrolled method. Developers
-	 * can manipulate this method and process current state.
-	 *
-	 * If x value is greater than 0, mouse is being scrolled to the right. If
-	 * x value is less than 0, mouse is being scrolled to the left.
-	 *
-	 * If y value is greater than 0, mouse is being scrolled up. If y value is less
-	 * than 0, mouse is being scrolled down.
-	 *
-	 * This can be helpful for aim precision, view changing, and smooth controls.
-	 *
-	 * @param xoffset offset value of x(horizontal) axis.
-	 *
-	 * @param yoffset offset value of y(vertical) axis.
-	 */
-	void onMouseScrollEvent(double xoffset, double yoffset);
-
-	void onWindowFocus(bool isFocused);
-	void onJoystickConnected(int jid, bool isGamepad, bool isConnected);
-
 	/**
 	 * Returns the current gCanvasManager object pointer.
 	 *
@@ -459,6 +348,10 @@ public:
 	int getLoopMode();
 
 	bool isWindowFocused();
+
+	EventHandlerFn getEventHandler();
+
+#ifndef ANDROID
 	bool isJoystickConnected(int jId);
 	int getJoystickAxesCount(int jId);
 	const float* getJoystickAxes(int jId);
@@ -466,6 +359,7 @@ public:
 	bool isGamepadButtonPressed(int gamepadId, int buttonId);
 	int getMaxGamepadNum();
 	int getGamepadButtonNum();
+#endif
 
 	void setWindowSize(int width, int height);
 	void setWindowResizable(bool isResizable);
@@ -481,7 +375,27 @@ private:
 
 	void internalUpdate();
 	void preciseSleep(double seconds);
+	void onEvent(gEvent& event);
 
+	bool onWindowResizedEvent(gWindowResizeEvent&);
+	bool onCharTypedEvent(gCharTypedEvent&);
+	bool onKeyPressedEvent(gKeyPressedEvent&);
+	bool onKeyReleasedEvent(gKeyReleasedEvent&);
+	bool onMouseMovedEvent(gMouseMovedEvent&);
+	bool onMouseButtonPressedEvent(gMouseButtonPressedEvent&);
+	bool onMouseButtonReleasedEvent(gMouseButtonReleasedEvent&);
+	bool onWindowMouseEnterEvent(gWindowMouseEnterEvent&);
+	bool onWindowMouseExitEvent(gWindowMouseExitEvent&);
+	bool onMouseScrolledEvent(gMouseScrolledEvent&);
+	bool onWindowFocusEvent(gWindowFocusEvent&);
+	bool onWindowLoseFocusEvent(gWindowLoseFocusEvent&);
+
+	#ifndef ANDROID
+	// todo
+	//void onJoystickConnected(int jid, bool isGamepad, bool isConnected);
+	#endif
+
+	EventHandlerFn eventhandler;
 	std::string appname;
 	gBaseWindow* window;
 	gBaseApp* app;

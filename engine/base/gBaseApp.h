@@ -15,11 +15,18 @@
 class gBaseApp : public gAppObject {
 public:
 	gBaseApp();
+#ifndef ANDROID
 	gBaseApp(int argc, char **argv);
+#endif
 	virtual ~gBaseApp();
 
 	virtual void setup();
 	virtual void update();
+
+#ifdef ANDROID
+	virtual void pause();
+	virtual void resume();
+#endif
 
 	void setAppManager(gAppManager* appManager);
 	gAppManager* getAppManager();

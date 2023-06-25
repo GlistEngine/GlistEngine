@@ -34,9 +34,11 @@ public:
 	virtual void mouseEntered();
 	virtual void mouseExited();
 	virtual void windowResized(int w, int h);
+#ifndef ANDROID
 	virtual void joystickConnected(int jId, bool isGamepad, bool isConnected);
 	virtual void gamepadButtonPressed(int jId, int key);
 	virtual void gamepadButtonReleased(int jId, int key);
+#endif
 	virtual void onGuiEvent(int guiObjectId, int eventType, std::string value1 = "", std::string value2 = "");
 
 	virtual void showNotify();

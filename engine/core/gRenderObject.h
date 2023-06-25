@@ -13,6 +13,13 @@
 #include "gRenderer.h"
 //#include "gColor.h"
 
+#ifdef ANDROID
+using Index = unsigned short;
+#define G_INDEX_SIZE GL_UNSIGNED_SHORT
+#else
+using Index = unsigned int;
+#define G_INDEX_SIZE GL_UNSIGNED_INT
+#endif
 
 class gRenderObject : public gObject {
 public:

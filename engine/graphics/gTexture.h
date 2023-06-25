@@ -142,6 +142,7 @@ private:
     void endDraw();
     bool bsubpartdrawn;
     bool isfbo;
+	bool isloaded;
 };
 
 #endif /* ENGINE_GRAPHICS_GTEXTURE_H_ */

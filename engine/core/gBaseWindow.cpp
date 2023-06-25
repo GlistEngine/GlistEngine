@@ -6,11 +6,12 @@
  */
 
 #include "gBaseWindow.h"
-#include <iostream>
 #include "gAppManager.h"
-#if defined(WIN32) || defined(LINUX)
+#if defined(WIN32) || defined(LINUX) || defined(APPLE)
 #include "backward.hpp"
 #endif
+#include "gWindowEvents.h"
+
 #include <sstream>
 #include <ostream>
 #include <iostream>
@@ -19,7 +20,6 @@ std::string gBaseWindow::signalname[32];
 
 
 gBaseWindow::gBaseWindow() {
-	appmanager = NULL;
 	signalname[0] = "SIGHUP";
 	signalname[1] = "SIGINT";
 	signalname[2] = "SIGQUIT";
@@ -66,12 +66,6 @@ gBaseWindow::gBaseWindow() {
 gBaseWindow::~gBaseWindow() {
 }
 
-
-void gBaseWindow::setAppManager(gAppManager *appManager) {
-	appmanager = appManager;
-}
-
-
 void gBaseWindow::initialize(int width, int height, int windowMode, bool isResizable) {
 	setSize(width, height);
 	windowmode = windowMode;
@@ -116,7 +110,8 @@ std::string gBaseWindow::getClipboardString() {
 void gBaseWindow::setSize(int width, int height) {
 	this->width = width;
 	this->height = height;
-	appmanager->setScreenSize(width, height);
+	gWindowResizeEvent event{width, height};
+	callEvent(event);
 }
 
 void gBaseWindow::setWindowSize(int width, int height) {
@@ -143,45 +138,20 @@ const std::string& gBaseWindow::getTitle() const {
 	return title;
 }
 
-void gBaseWindow::onCharEvent(unsigned int key) {
-	appmanager->onCharEvent(key);
-}
-
-void gBaseWindow::onKeyEvent(int key, int action) {
-	appmanager->onKeyEvent(key, action);
-}
-
-void gBaseWindow::onMouseMoveEvent(double xpos, double ypos) {
-	appmanager->onMouseMoveEvent(xpos, ypos);
-}
-
-void gBaseWindow::onMouseButtonEvent(int button, int action, double xpos, double ypos) {
-	appmanager->onMouseButtonEvent(button, action, xpos, ypos);
-}
-
-void gBaseWindow::onMouseEnterEvent(int entered) {
-	appmanager->onMouseEnterEvent(entered);
-}
-
-void gBaseWindow::onMouseScrollEvent(double xoffset, double yoffset) {
-	appmanager->onMouseScrollEvent(xoffset, yoffset);
-}
-
-void gBaseWindow::onWindowFocus(bool isFocused) {
-	isfocused = isFocused;
-	appmanager->onWindowFocus(isFocused);
-}
-
-void gBaseWindow::onJoystickConnected(int jid, bool isGamepad, bool isConnected) {
-	appmanager->onJoystickConnected(jid, isGamepad, isConnected);
-}
-
 void gBaseWindow::setWindowResizable(bool isResizable) {
 
 }
 
 void gBaseWindow::setWindowSizeLimits(int minWidth, int minHeight, int maxWidth, int maxHeight) {
 
+}
+
+void gBaseWindow::setEventHandler(EventHandlerFn handler) {
+	eventhandler = handler;
+}
+
+void gBaseWindow::callEvent(gEvent& event) {
+	if(eventhandler) eventhandler(event);
 }
 
 void gBaseWindow::sighandler(int signum) {

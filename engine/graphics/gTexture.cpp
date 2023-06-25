@@ -21,9 +21,9 @@
 #include <glm/gtx/quaternion.hpp>
 #endif
 #include "gPlane.h"
-//#ifndef STB_IMAGE_IMPLEMENTATION
-//#define STB_IMAGE_IMPLEMENTATION
-//#endif
+#ifndef STB_IMAGE_IMPLEMENTATION
+#define STB_IMAGE_IMPLEMENTATION
+#endif
 #include "stb/stb_image.h"
 
 const int gTexture::TEXTURETYPE_DIFFUSE = 0;
@@ -44,8 +44,14 @@ const int gTexture::TEXTUREMINMAGFILTER_LINEAR = 0;
 const int gTexture::TEXTUREMINMAGFILTER_MIPMAPLINEAR = 1;
 const int gTexture::TEXTUREMINMAGFILTER_NEAREST = 2;
 
+#if(ANDROID)
+// todo alternatives?
+static const int texturewrap[3] = {GL_REPEAT, GL_NEAREST, GL_NEAREST};
+static const int texturefilter[3] = {GL_LINEAR, GL_NEAREST, GL_NEAREST};
+#else
 static const int texturewrap[3] = {GL_REPEAT, GL_CLAMP, GL_CLAMP_TO_EDGE};
 static const int texturefilter[3] = {GL_LINEAR, GL_CLAMP, GL_CLAMP_TO_EDGE};
+#endif
 
 gTexture::gTexture() {
 	id = GL_NONE;
@@ -69,6 +75,7 @@ gTexture::gTexture() {
 	ishdr = false;
 	isfont = false;
 	ismaskloaded = false;
+	isloaded = false;
 	setupRenderData();
 }
 
@@ -94,12 +101,18 @@ gTexture::gTexture(int w, int h, int format, bool isFbo) {
 	ishdr = false;
 	isfont = false;
 	ismaskloaded = false;
-    glGenTextures(1, &id);
+	isloaded = false;
+	glGenTextures(1, &id);
     bind();
     glTexImage2D(GL_TEXTURE_2D, 0, internalformat, width, height, 0, format, GL_UNSIGNED_BYTE, 0);
 
+#ifdef ANDROID
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE); // TODO: BEFORE SHADOWMAP GL_REPEAT
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE); // TODO: BEFORE SHADOWMAP GL_REPEAT
+#else
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP); // TODO: BEFORE SHADOWMAP GL_REPEAT
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP); // TODO: BEFORE SHADOWMAP GL_REPEAT
+#endif
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	setupRenderData();
@@ -184,7 +197,14 @@ void gTexture::setData(unsigned char* textureData, bool isMutable) {
 
         if (format == GL_RG) {
             GLint swizzleMask[] = {GL_RED, GL_RED, GL_RED, GL_GREEN};
+#if(ANDROID)
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_R, swizzleMask[0]);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_G, swizzleMask[1]);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_B, swizzleMask[2]);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_A, swizzleMask[3]);
+#else
             glTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_RGBA, swizzleMask);
+#endif
         }
 
         if (!ismutable) stbi_image_free(data);
@@ -462,8 +482,10 @@ void gTexture::setupRenderData() {
 }
 
 void gTexture::setupRenderData(int sx, int sy, int sw, int sh) {
-	glDeleteBuffers(1, &quadVBO);
-	glDeleteVertexArrays(1, &quadVAO);
+	if(isloaded) {
+		glDeleteBuffers(1, &quadVBO);
+		glDeleteVertexArrays(1, &quadVAO);
+	}
     float vertices[] = {
         // pos      // tex
         0.0f, 1.0f, (float)sx / width, (float)(sy + sh) / height,
@@ -497,6 +519,7 @@ void gTexture::setupRenderData(int sx, int sy, int sw, int sh) {
     glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
+	isloaded = true;
 }
 
 std::string gTexture::getDirName(const std::string& fname) {
