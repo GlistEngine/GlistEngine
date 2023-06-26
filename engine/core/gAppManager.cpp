@@ -88,6 +88,11 @@ void gStartEngine(gBaseApp* baseApp, const std::string& appName, int loopMode) {
    appmanager.runApp(appName, baseApp, 0, 0, G_WINDOWMODE_NONE, 0, 0, 0, false, loopMode);
 }
 
+int pow(int x, int p) {
+   int i = 1;
+   for (int j = 1; j <= p; j++) i *= x;
+   return i;
+}
 
 gAppManager::gAppManager() {
    appname = "";
@@ -97,13 +102,12 @@ gAppManager::gAppManager() {
    usewindow = true;
    loopmode = G_LOOPMODE_NORMAL;
    loopalways = true;
-   canvas = nullptr;
    canvasmanager = nullptr;
    guimanager = nullptr;
    ismouseentered = false;
-   buttonpressed[0] = false;
-   buttonpressed[1] = false;
-   buttonpressed[2] = false;
+   for(int i = 0; i < maxmousebuttonnum; i++) {
+	   mousebuttonpressed[i] = false;
+   }
    pressed = 0;
    framerate = 60;
    timestepnano = AppClockDuration(1'000'000'000 / (framerate + 1));
@@ -116,17 +120,15 @@ gAppManager::gAppManager() {
    draws = 0;
    uci = 0;
    ucj = 0;
-   mpi = 0;
-   mpj = 0;
    upi = 0;
    upj = 0;
    canvasset = false;
    iswindowfocused = false;
-   isgamepadenabled = false;
+   isjoystickenabled = false;
    gpbuttonstate = false;
-   for(int i = 0; i < maxgamepadnum; i++) {
-	   for(int j = 0; j < gamepadbuttonnum; j++) gamepadbuttonstate[i][j] = false;
-	   gamepadconnected[i] = false;
+   for(int i = 0; i < maxjoysticknum; i++) {
+	   for(int j = 0; j < maxjoystickbuttonnum; j++) joystickbuttonstate[i][j] = false;
+	   joystickconnected[i] = false;
    }
    joystickhatcount = 0;
    joystickaxecount = 0;
@@ -163,14 +165,12 @@ void gAppManager::runApp(const std::string& appName, gBaseApp *baseApp, int widt
 	   canvasmanager = new gCanvasManager();
        guimanager = new gGUIManager(app, width, height);
 
-#if(ANDROID)
-	   // todo gamepad support for android
-#else
-	   for(int i = 0; i < maxgamepadnum; i++) {
-		   gamepadconnected[i] = glfwJoystickPresent(i);
-		   if(gamepadconnected[i]) isgamepadenabled = true;
+	   for(int i = 0; i < maxjoysticknum; i++) {
+		   joystickconnected[i] = window->isJoystickPresent(i);
+		   if(joystickconnected[i]) {
+			   isjoystickenabled = true;
+		   }
 	   }
-#endif
    }
 
    // Run app
@@ -194,7 +194,9 @@ void gAppManager::runApp(const std::string& appName, gBaseApp *baseApp, int widt
 	   elapsedtime += deltatime.count();
 	   starttime = endtime;
 
-	   internalUpdate();
+       if(window->isRendering()) {
+           internalUpdate();
+       }
 
 	   if(!usewindow || !window->vsync) {
 		   /* Less precision, but lower CPU usage for non vsync */
@@ -225,30 +227,30 @@ void gAppManager::internalUpdate() {
 #if(ANDROID)
    // todo gamepad support for android
 #else
-   if(isgamepadenabled && iswindowfocused) {
+   if(isjoystickenabled && iswindowfocused) {
 	   GLFWgamepadstate gpstate;
-	   for(uci = 0; uci < maxgamepadnum; uci++) {
-		   if(!gamepadconnected[uci]) continue;
+	   for(uci = 0; uci < maxjoysticknum; uci++) {
+		   if(!joystickconnected[uci]) continue;
 
 		   glfwGetGamepadState(uci, &gpstate);
-		   for(ucj = 0; ucj < gamepadbuttonnum; ucj++) {
+		   for(ucj = 0; ucj < maxjoystickbuttonnum; ucj++) {
 			   gpbuttonstate = false;
 			   if(gpstate.buttons[ucj]) gpbuttonstate = true;
-			   if(gpbuttonstate != gamepadbuttonstate[uci][ucj]) {
+			   if(gpbuttonstate != joystickbuttonstate[uci][ucj]) {
 				   if(gpbuttonstate) canvasmanager->getCurrentCanvas()->gamepadButtonPressed(uci, ucj);
 				   else canvasmanager->getCurrentCanvas()->gamepadButtonReleased(uci, ucj);
 			   }
-			   gamepadbuttonstate[uci][ucj] = gpbuttonstate;
+			   joystickbuttonstate[uci][ucj] = gpbuttonstate;
 		   }
 	   }
    }
 #endif
 
-   if(guimanager->isframeset) guimanager->update();
+   guimanager->update();
    app->update();
    for (uci = 0; uci < gBaseComponent::usedcomponents.size(); uci++) gBaseComponent::usedcomponents[uci]->update();
    for (upi = 0; upi < gBasePlugin::usedplugins.size(); upi++) gBasePlugin::usedplugins[upi]->update();
-   canvas = canvasmanager->getCurrentCanvas();
+   gBaseCanvas* canvas = canvasmanager->getCurrentCanvas();
    if (canvas != nullptr) {
 	   canvas->update();
 	   updates++;
@@ -260,7 +262,7 @@ void gAppManager::internalUpdate() {
 	   }
    }
 
-   if(guimanager->isframeset) guimanager->draw();
+   guimanager->draw();
    window->update();
 
    if (elapsedtime >= 1'000'000'000){
@@ -298,8 +300,9 @@ void gAppManager::preciseSleep(double seconds) {
 }
 
 void gAppManager::onEvent(gEvent& event) {
+   if(event.ishandled) return;
+
    gEventDispatcher dispatcher(event);
-   // todo use eventbus to pass events to plugins, canvas and gui manager instead of dispatching one by one
    dispatcher.dispatch<gWindowResizeEvent>(G_BIND_FUNCTION(onWindowResizedEvent));
    dispatcher.dispatch<gCharTypedEvent>(G_BIND_FUNCTION(onCharTypedEvent));
    dispatcher.dispatch<gKeyPressedEvent>(G_BIND_FUNCTION(onKeyPressedEvent));
@@ -312,12 +315,11 @@ void gAppManager::onEvent(gEvent& event) {
    dispatcher.dispatch<gMouseScrolledEvent>(G_BIND_FUNCTION(onMouseScrolledEvent));
    dispatcher.dispatch<gWindowFocusEvent>(G_BIND_FUNCTION(onWindowFocusEvent));
    dispatcher.dispatch<gWindowLoseFocusEvent>(G_BIND_FUNCTION(onWindowLoseFocusEvent));
-}
+   dispatcher.dispatch<gJoystickConnectEvent>(G_BIND_FUNCTION(onJoystickConnectEvent));
+   dispatcher.dispatch<gJoystickDisconnectEvent>(G_BIND_FUNCTION(onJoystickDisconnectEvent));
 
-int gAppManager::myPow(int x, int p) {
-   mpi = 1;
-   for (mpj = 1; mpj <= p; mpj++)  mpi *= x;
-   return mpi;
+   if(canvasmanager && canvasmanager->getCurrentCanvas()) canvasmanager->getCurrentCanvas()->onEvent(event);
+   // todo pass event to app and plugins
 }
 
 bool gAppManager::onWindowResizedEvent(gWindowResizeEvent& event) {
@@ -328,7 +330,7 @@ bool gAppManager::onWindowResizedEvent(gWindowResizeEvent& event) {
 
 bool gAppManager::onCharTypedEvent(gCharTypedEvent& event) {
    if(guimanager->isframeset) guimanager->charPressed(event.getCharacter());
-   for (upi = 0; upi < gBasePlugin::usedplugins.size(); upi++) gBasePlugin::usedplugins[upi]->charPressed(event.getCharacter());
+   for (gBasePlugin*& plugin : gBasePlugin::usedplugins) plugin->charPressed(event.getCharacter());
    canvasmanager->getCurrentCanvas()->charPressed(event.getCharacter());
    return false;
 }
@@ -336,7 +338,7 @@ bool gAppManager::onCharTypedEvent(gCharTypedEvent& event) {
 bool gAppManager::onKeyPressedEvent(gKeyPressedEvent& event) {
    if (!canvasmanager->getCurrentCanvas()) return true;
    if(guimanager->isframeset) guimanager->keyPressed(event.getKeyCode());
-   for (upi = 0; upi < gBasePlugin::usedplugins.size(); upi++) gBasePlugin::usedplugins[upi]->keyPressed(event.getKeyCode());
+   for (gBasePlugin*& plugin : gBasePlugin::usedplugins) plugin->keyPressed(event.getKeyCode());
    canvasmanager->getCurrentCanvas()->keyPressed(event.getKeyCode());
    return false;
 }
@@ -344,7 +346,7 @@ bool gAppManager::onKeyPressedEvent(gKeyPressedEvent& event) {
 bool gAppManager::onKeyReleasedEvent(gKeyReleasedEvent& event) {
    if (!canvasmanager->getCurrentCanvas()) return true;
    if(guimanager->isframeset) guimanager->keyReleased(event.getKeyCode());
-   for (upi = 0; upi < gBasePlugin::usedplugins.size(); upi++) gBasePlugin::usedplugins[upi]->keyReleased(event.getKeyCode());
+   for (gBasePlugin*& plugin : gBasePlugin::usedplugins) plugin->keyReleased(event.getKeyCode());
    canvasmanager->getCurrentCanvas()->keyReleased(event.getKeyCode());
    return false;
 }
@@ -359,11 +361,11 @@ bool gAppManager::onMouseMovedEvent(gMouseMovedEvent& event) {
    }
    if (pressed) {
 	   if(guimanager->isframeset) guimanager->mouseDragged(xpos, ypos, pressed);
-	   for (upi = 0; upi < gBasePlugin::usedplugins.size(); upi++) gBasePlugin::usedplugins[upi]->mouseDragged(xpos, ypos, pressed);
+	   for(gBasePlugin*& plugin : gBasePlugin::usedplugins) plugin->mouseDragged(xpos, ypos, pressed);
 	   canvasmanager->getCurrentCanvas()->mouseDragged(xpos, ypos, pressed);
    } else {
 	   if(guimanager->isframeset) guimanager->mouseMoved(xpos, ypos);
-	   for (upi = 0; upi < gBasePlugin::usedplugins.size(); upi++) gBasePlugin::usedplugins[upi]->mouseMoved(xpos, ypos);
+	   for(gBasePlugin*& plugin : gBasePlugin::usedplugins) plugin->mouseMoved(xpos, ypos);
 	   canvasmanager->getCurrentCanvas()->mouseMoved(xpos, ypos);
    }
    return false;
@@ -371,8 +373,8 @@ bool gAppManager::onMouseMovedEvent(gMouseMovedEvent& event) {
 
 bool gAppManager::onMouseButtonPressedEvent(gMouseButtonPressedEvent& event) {
    if (!canvasmanager->getCurrentCanvas()) return true;
-   buttonpressed[event.getMouseButton()] = true;
-   pressed |= myPow(2, event.getMouseButton() + 1);
+   mousebuttonpressed[event.getMouseButton()] = true;
+   pressed |= pow(2, event.getMouseButton() + 1);
    int xpos = event.getX();
    int ypos = event.getY();
    if (gRenderer::getScreenScaling() > G_SCREENSCALING_NONE) {
@@ -380,39 +382,39 @@ bool gAppManager::onMouseButtonPressedEvent(gMouseButtonPressedEvent& event) {
 	   ypos = gRenderer::scaleY(event.getY());
    }
    if(guimanager->isframeset) guimanager->mousePressed(xpos, ypos, event.getMouseButton());
-   for (upi = 0; upi < gBasePlugin::usedplugins.size(); upi++) gBasePlugin::usedplugins[upi]->mousePressed(xpos, ypos, event.getMouseButton());
+   for(gBasePlugin*& plugin : gBasePlugin::usedplugins) plugin->mousePressed(xpos, ypos, event.getMouseButton());
    canvasmanager->getCurrentCanvas()->mousePressed(xpos, ypos, event.getMouseButton());
    return false;
 }
 
 bool gAppManager::onMouseButtonReleasedEvent(gMouseButtonReleasedEvent& event) {
    if (!canvasmanager->getCurrentCanvas()) return true;
-   buttonpressed[event.getMouseButton()] = false;
-   pressed &= ~myPow(2, event.getMouseButton() + 1);
+   mousebuttonpressed[event.getMouseButton()] = false;
+   pressed &= ~pow(2, event.getMouseButton() + 1);
    int xpos = event.getX();
    int ypos = event.getY();
-   if (gRenderer::getScreenScaling() > G_SCREENSCALING_NONE) {
+   if(gRenderer::getScreenScaling() > G_SCREENSCALING_NONE) {
 	   xpos = gRenderer::scaleX(event.getX());
 	   ypos = gRenderer::scaleY(event.getY());
    }
    if(guimanager->isframeset) guimanager->mouseReleased(xpos, ypos, event.getMouseButton());
-   for (upi = 0; upi < gBasePlugin::usedplugins.size(); upi++) gBasePlugin::usedplugins[upi]->mouseReleased(xpos, ypos, event.getMouseButton());
+   for(gBasePlugin*& plugin : gBasePlugin::usedplugins) plugin->mouseReleased(xpos, ypos, event.getMouseButton());
    canvasmanager->getCurrentCanvas()->mouseReleased(xpos, ypos, event.getMouseButton());
    return false;
 }
 
 bool gAppManager::onWindowMouseEnterEvent(gWindowMouseEnterEvent& event) {
-   if (!canvasmanager->getCurrentCanvas()) return true;
+   if(!canvasmanager->getCurrentCanvas()) return true;
    ismouseentered = true;
-   for (upi = 0; upi < gBasePlugin::usedplugins.size(); upi++) gBasePlugin::usedplugins[upi]->mouseEntered();
+   for(gBasePlugin*& plugin : gBasePlugin::usedplugins) plugin->mouseEntered();
    canvasmanager->getCurrentCanvas()->mouseEntered();
    return false;
 }
 
 bool gAppManager::onWindowMouseExitEvent(gWindowMouseExitEvent& event) {
-   if (!canvasmanager->getCurrentCanvas()) return true;
+   if(!canvasmanager->getCurrentCanvas()) return true;
    ismouseentered = false;
-   for (upi = 0; upi < gBasePlugin::usedplugins.size(); upi++) gBasePlugin::usedplugins[upi]->mouseExited();
+   for(gBasePlugin*& plugin : gBasePlugin::usedplugins) plugin->mouseExited();
    canvasmanager->getCurrentCanvas()->mouseExited();
    return false;
 }
@@ -420,8 +422,38 @@ bool gAppManager::onWindowMouseExitEvent(gWindowMouseExitEvent& event) {
 bool gAppManager::onMouseScrolledEvent(gMouseScrolledEvent& event) {
    if (!canvasmanager->getCurrentCanvas()) return true;
    if(guimanager->isframeset) guimanager->mouseScrolled(event.getOffsetX(), event.getOffsetY());
-   for (upi = 0; upi < gBasePlugin::usedplugins.size(); upi++) gBasePlugin::usedplugins[upi]->mouseScrolled(event.getOffsetX(), event.getOffsetY());
+   for (gBasePlugin*& plugin : gBasePlugin::usedplugins) plugin->mouseScrolled(event.getOffsetX(), event.getOffsetY());
    canvasmanager->getCurrentCanvas()->mouseScrolled(event.getOffsetX(), event.getOffsetY());
+   return false;
+}
+
+bool gAppManager::onJoystickConnectEvent(gJoystickConnectEvent& event) {
+   if(event.getJoystickId() >= maxjoysticknum) return true;
+
+   if(event.isGamepad()) {
+	   joystickconnected[event.getJoystickId()] = true;
+	   isjoystickenabled = true;
+   }
+   if (!canvasmanager->getCurrentCanvas()) return true;
+   canvasmanager->getCurrentCanvas()->joystickConnected(event.getJoystickId(), event.isGamepad(), true);
+   return false;
+}
+
+bool gAppManager::onJoystickDisconnectEvent(gJoystickDisconnectEvent& event) {
+   if(event.getJoystickId() >= maxjoysticknum) return true;
+
+   bool wasgamepad = joystickconnected[event.getJoystickId()];
+   joystickconnected[event.getJoystickId()] = false;
+   isjoystickenabled = false;
+   // If at least one joystick is connected
+   for(int i = 0; i < maxjoysticknum; i++) {
+	   if(joystickconnected[event.getJoystickId()]) {
+		   isjoystickenabled = true;
+		   break;
+	   }
+   }
+   if (!canvasmanager->getCurrentCanvas()) return true;
+   canvasmanager->getCurrentCanvas()->joystickConnected(event.getJoystickId(), wasgamepad, false);
    return false;
 }
 
@@ -461,11 +493,11 @@ void gAppManager::setCurrentCanvas(gBaseCanvas *baseCanvas) {
 }
 
 gBaseCanvas* gAppManager::getCurrentCanvas() {
-   return canvas;
+   return canvasmanager->getCurrentCanvas();
 }
 
 void gAppManager::setScreenSize(int width, int height) {
-   canvas->setScreenSize(width, height);
+   canvasmanager->getCurrentCanvas()->setScreenSize(width, height);
    if(canvasset) canvasmanager->getCurrentCanvas()->windowResized(width, height);
    if(canvasset && guimanager->isframeset) guimanager->windowResized(width, height);
 }
@@ -525,74 +557,40 @@ bool gAppManager::isWindowFocused() {
 }
 
 EventHandlerFn gAppManager::getEventHandler() {
-   return eventhandler;
+	return eventhandler;
 }
-
-#ifndef ANDROID
-bool gAppManager::isJoystickConnected(int jId) {
-   return gamepadconnected[jId];
-}
-
-int gAppManager::getJoystickAxesCount(int jId) {
-   return joystickaxecount;
-}
-
-const float* gAppManager::getJoystickAxes(int jId) {
-   if(!isgamepadenabled) return nullptr;
-   if(!gamepadconnected[jId]) return nullptr;
-
-   return glfwGetJoystickAxes(jId, &joystickaxecount);
-}
-
-bool gAppManager::isGamepadEnabled() {
-   return isgamepadenabled;
-}
-
-bool gAppManager::isGamepadButtonPressed(int gamepadId, int buttonId) {
-   GLFWgamepadstate gpstate;
-   glfwGetGamepadState(gamepadId, &gpstate);
-   if(gpstate.buttons[buttonId]) return true;
-   return false;
-}
-
-int gAppManager::getMaxGamepadNum() {
-   return maxgamepadnum;
-}
-
-int gAppManager::getGamepadButtonNum() {
-   return gamepadbuttonnum;
-}
-/*
-void gAppManager::onJoystickConnected(int jid, bool isGamepad, bool isConnected) {
-   if (!canvasmanager->getCurrentCanvas()) return;
-   if(jid >= maxgamepadnum) return;
-
-   if(isGamepad) {
-	   gamepadconnected[jid] = true;
-	   isgamepadenabled = true;
-   } else {
-	   gamepadconnected[jid] = false;
-	   bool gamepadenabledtemp = false;
-	   for(int i = 0; i < maxgamepadnum; i++) {
-		   if(gamepadconnected[jid]) {
-			   gamepadenabledtemp = true;
-			   break;
-		   }
-	   }
-	   isgamepadenabled = gamepadenabledtemp;
-   }
-   canvasmanager->getCurrentCanvas()->joystickConnected(jid, isGamepad, isConnected);
-}*/
-#endif
 
 void gAppManager::setWindowSize(int width, int height) {
-   window->setWindowSize(width, height);
+	window->setWindowSize(width, height);
 }
 
 void gAppManager::setWindowResizable(bool isResizable) {
-   window->setWindowResizable(isResizable);
+	window->setWindowResizable(isResizable);
 }
 
 void gAppManager::setWindowSizeLimits(int minWidth, int minHeight, int maxWidth, int maxHeight) {
-   window->setWindowSizeLimits(minWidth, minHeight, maxWidth, maxHeight);
+	window->setWindowSizeLimits(minWidth, minHeight, maxWidth, maxHeight);
+}
+
+bool gAppManager::isJoystickConnected(int joystickId) {
+	if(joystickId >= maxjoysticknum) return false;
+	return joystickconnected[joystickId];
+}
+
+int gAppManager::getJoystickAxesCount(int joystickId) {
+	return joystickaxecount;
+}
+
+const float* gAppManager::getJoystickAxes(int joystickId) {
+	if(joystickId >= maxjoysticknum || !isjoystickenabled || !joystickconnected[joystickId]) {
+		return nullptr;
+	}
+	return window->getJoystickAxes(joystickId, &joystickaxecount);
+}
+
+bool gAppManager::isJoystickButtonPressed(int joystickId, int buttonId) {
+	if(joystickId >= maxjoysticknum || !isjoystickenabled || !joystickconnected[joystickId]) {
+		return false;
+	}
+	return window->isJoystickButtonPressed(joystickId, buttonId);
 }

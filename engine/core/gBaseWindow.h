@@ -103,9 +103,16 @@ public:
 	virtual void setWindowResizable(bool isResizable);
 	virtual void setWindowSizeLimits(int minWidth, int minHeight, int maxWidth, int maxHeight);
 
-	bool vsync;
-
 	void setEventHandler(EventHandlerFn handler);
+
+	virtual bool isJoystickPresent(int joystickId);
+    virtual bool isJoystickButtonPressed(int joystickId, int buttonId);
+	virtual const float* getJoystickAxes(int joystickId, int* axisCountPtr);
+
+	virtual bool isRendering();
+
+public:
+	bool vsync;
 
 protected:
 	void callEvent(gEvent& event);

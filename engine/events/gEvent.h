@@ -8,6 +8,8 @@
 #ifndef GEVENT_H_
 #define GEVENT_H_
 
+#include <functional>
+
 enum EventType {
 	CharTyped,
 	KeyPressed,
@@ -21,6 +23,8 @@ enum EventType {
 	WindowLoseFocus,
 	WindowMouseEnter,
 	WindowMouseExit,
+	JoystickConnect,
+	JoystickDisconnect,
 #ifdef ANDROID
 	AppPause,
 	AppRestart,
@@ -35,9 +39,15 @@ enum EventCategory {
 	Input = BIT(1),
 	Keyboard = BIT(2),
 	Mouse = BIT(3),
-	MouseButton = BIT(4)
+	MouseButton = BIT(4),
+	Joystick = BIT(5),
 };
 #undef BIT
+
+/*
+ * Events are more future proof, in case anything new is added to an event
+ * developers doesn't have to update their function parameters.
+ */
 
 class gEvent {
   public:
@@ -54,8 +64,26 @@ class gEvent {
 	}
 };
 
-using EventHandlerFn = std::function<void(gEvent&)>;
+typedef std::function<void(gEvent&)> EventHandlerFn;
 
+/**
+ * Example usage:
+ *
+ * \code{.cpp}
+ * void gCanvas::onEvent(gEvent& event) {
+ *    gEventDispatcher dispatcher(event);
+ *    dispatcher.dispatch<gSomethingEvent>(G_BIND_FUNCTION(onSomethingEvent)); // to bind functions inside the current class
+ *    dispatcher.dispatch<gSomethingEvent>(G_BIND_GLOBAL_FUNCTION(onSomethingEvent)); // to bind global functions without a class
+ * }
+ *
+ * bool gCanvas::onSomethingEvent(gSomethingEvent& event) {
+ *    gLogi("gCanvas") << "My something event is called!";
+ *    // Return true if event is handled, meaning that no other event function will be called.
+ *    return false;
+ * }
+ * \endcode
+ *
+ */
 class gEventDispatcher {
   public:
 	gEventDispatcher(gEvent& event)

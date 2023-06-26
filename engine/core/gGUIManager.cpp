@@ -156,6 +156,8 @@ void gGUIManager::windowResized(int w, int h) {
 }
 
 void gGUIManager::update() {
+	if(!isframeset) return;
+
 	currentframe->update();
 
 	for (int i = dialogues.size() - 1; i >= 0; i--) {
@@ -205,6 +207,8 @@ void gGUIManager::update() {
 }
 
 void gGUIManager::draw() {
+	if(!isframeset) return;
+
 	currentframe->draw();
 	for (int i = 0; i < dialogues.size(); i++) {
 		if (dialogues[i]->getIsDialogueActive()) dialogues[i]->draw();

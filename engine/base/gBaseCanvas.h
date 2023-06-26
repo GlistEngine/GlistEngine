@@ -34,12 +34,12 @@ public:
 	virtual void mouseEntered();
 	virtual void mouseExited();
 	virtual void windowResized(int w, int h);
-#ifndef ANDROID
-	virtual void joystickConnected(int jId, bool isGamepad, bool isConnected);
-	virtual void gamepadButtonPressed(int jId, int key);
-	virtual void gamepadButtonReleased(int jId, int key);
-#endif
+	virtual void joystickConnected(int joystickId, bool isGamepad, bool isConnected);
+	virtual void gamepadButtonPressed(int joystickId, int key);
+	virtual void gamepadButtonReleased(int joystickId, int key);
 	virtual void onGuiEvent(int guiObjectId, int eventType, std::string value1 = "", std::string value2 = "");
+
+	virtual void onEvent(gEvent& event);
 
 	virtual void showNotify();
 	virtual void hideNotify();
@@ -112,8 +112,8 @@ protected:
 	void setGridColorofAxisWireFrameXY(gColor* color);
 	bool isGridEnabled(), isGridXYEnabled(), isGridYZEnabled(), isGridXZEnabled();
 
-	bool isJoystickConnected(int jId);
-	bool isGamepadButtonPressed(int gamepadId, int buttonId);
+	bool isJoystickConnected(int joystickId);
+	bool isJoystickButtonPressed(int joystickId, int buttonId);
 };
 
 #endif /* ENGINE_BASE_GBASECANVAS_H_ */

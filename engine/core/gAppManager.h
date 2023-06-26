@@ -145,7 +145,6 @@ void gStartEngine(gBaseApp* baseApp, const std::string& appName, int windowMode,
  */
 void gStartEngine(gBaseApp* baseApp, const std::string& appName, int loopMode);
 
-
 /**
  * This class controls basically everything which is shown to user from beginning
  * to end. Process starts with gStartEngine function. gStartEngine gets the input
@@ -351,23 +350,22 @@ public:
 
 	EventHandlerFn getEventHandler();
 
-#ifndef ANDROID
-	bool isJoystickConnected(int jId);
-	int getJoystickAxesCount(int jId);
-	const float* getJoystickAxes(int jId);
-	bool isGamepadEnabled();
-	bool isGamepadButtonPressed(int gamepadId, int buttonId);
-	int getMaxGamepadNum();
-	int getGamepadButtonNum();
-#endif
+	bool isJoystickConnected(int joystickId);
+	int getJoystickAxesCount(int joystickId);
+	const float* getJoystickAxes(int joystickId);
+	bool isGamepadEnabled() { return isjoystickenabled; }
+	bool isJoystickButtonPressed(int joystickId, int buttonId);
+	int getMaxJoystickNum() { return maxjoysticknum; }
+	int getMaxJoystickButtonNum() { return maxjoystickbuttonnum; }
 
 	void setWindowSize(int width, int height);
 	void setWindowResizable(bool isResizable);
 	void setWindowSizeLimits(int minWidth, int minHeight, int maxWidth, int maxHeight);
 
 private:
-	static const int maxgamepadnum = 4;
-	static const int gamepadbuttonnum = 15;
+	static const int maxjoysticknum = 4;
+	static const int maxjoystickbuttonnum = 15;
+	static const int maxmousebuttonnum = 3;
 
 	using AppClock = std::chrono::steady_clock;
 	using AppClockDuration = AppClock::duration;
@@ -389,11 +387,9 @@ private:
 	bool onMouseScrolledEvent(gMouseScrolledEvent&);
 	bool onWindowFocusEvent(gWindowFocusEvent&);
 	bool onWindowLoseFocusEvent(gWindowLoseFocusEvent&);
+	bool onJoystickConnectEvent(gJoystickConnectEvent&);
+	bool onJoystickDisconnectEvent(gJoystickDisconnectEvent&);
 
-	#ifndef ANDROID
-	// todo
-	//void onJoystickConnected(int jid, bool isGamepad, bool isConnected);
-	#endif
 
 	EventHandlerFn eventhandler;
 	std::string appname;
@@ -403,20 +399,17 @@ private:
 	bool usewindow;
 	int loopmode;
 	bool loopalways;
-	gBaseCanvas* canvas;
 	gCanvasManager* canvasmanager;
 	gGUIManager* guimanager;
 	bool ismouseentered;
-	bool buttonpressed[3];
+	bool mousebuttonpressed[maxmousebuttonnum];
 	int pressed;
-	int myPow (int x, int p);
-	int mpi, mpj;
 	AppClockTimePoint starttime, endtime;
 	AppClockDuration deltatime;
 	AppClockDuration timestepnano;
 	AppClockDuration lag;
 	double sleeptime;
-	long long elapsedtime;
+	uint64_t elapsedtime;
 	int updates, draws;
 	int framerate;
 	int uci, ucj, upi, upj;
@@ -425,9 +418,9 @@ private:
 	double t_observed, t_delta, t_stddev;
 	bool canvasset;
 	bool iswindowfocused;
-	bool isgamepadenabled;
-	bool gamepadconnected[maxgamepadnum];
-	bool gamepadbuttonstate[maxgamepadnum][gamepadbuttonnum];
+	bool isjoystickenabled;
+	bool joystickconnected[maxjoysticknum];
+	bool joystickbuttonstate[maxjoysticknum][maxjoystickbuttonnum];
 	bool gpbuttonstate;
 	int joystickhatcount;
 	int joystickaxecount;

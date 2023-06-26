@@ -138,7 +138,6 @@ void gGLFWWindow::initialize(int width, int height, int windowMode, bool isResiz
 	glfwSetJoystickCallback(gGLFWWindow::joystick_callback);
 }
 
-
 bool gGLFWWindow::getShouldClose() {
 	return glfwWindowShouldClose(window);
 }
@@ -199,7 +198,20 @@ void gGLFWWindow::setWindowSizeLimits(int minWidth, int minHeight, int maxWidth,
 	}
 }
 
-// todo use eventbus
+bool gGLFWWindow::isJoystickPresent(int joystickId) {
+	return glfwJoystickPresent(joystickId);
+}
+
+bool gGLFWWindow::isJoystickButtonPressed(int joystickId, int buttonId) {
+	GLFWgamepadstate gpstate;
+	glfwGetGamepadState(joystickId, &gpstate);
+	return gpstate.buttons[buttonId];
+}
+
+const float* gGLFWWindow::getJoystickAxes(int joystickId, int* axisCountPtr) {
+	return glfwGetJoystickAxes(joystickId, axisCountPtr);
+}
+
 void gGLFWWindow::framebuffer_size_callback(GLFWwindow* window, int width, int height) {
     glViewport(0, 0, width, height);
 	auto handle = static_cast<gGLFWWindow*>(glfwGetWindowUserPointer(window));
@@ -240,13 +252,25 @@ void gGLFWWindow::window_focus_callback(GLFWwindow* window, int focused) {
 	}
 }
 
-void gGLFWWindow::joystick_callback(int jid, int event) {
-	// todo
+void gGLFWWindow::joystick_callback(int jid, int action) {
+	auto handle = static_cast<gGLFWWindow*>(glfwGetWindowUserPointer(currentwindow));
+	switch(action) {
+	case GLFW_CONNECTED: {
+		gJoystickConnectEvent event{jid, glfwJoystickIsGamepad(jid) == GLFW_TRUE};
+		handle->callEvent(event);
+		break;
+	}
+	case GLFW_DISCONNECTED: {
+		gJoystickDisconnectEvent event{jid};
+		handle->callEvent(event);
+		break;
+	}
+	}
 }
 
 void gGLFWWindow::mouse_pos_callback(GLFWwindow* window, double xpos, double ypos) {
 	auto handle = static_cast<gGLFWWindow*>(glfwGetWindowUserPointer(window));
-	gMouseMovedEvent event{static_cast<int>(xpos * handle->scalex), static_cast<int>(ypos * handle->scalex)};
+	gMouseMovedEvent event{static_cast<int>(xpos * handle->scalex), static_cast<int>(ypos * handle->scaley)};
 	handle->callEvent(event);
 }
 
@@ -256,12 +280,12 @@ void gGLFWWindow::mouse_button_callback(GLFWwindow* window, int button, int acti
 	auto handle = static_cast<gGLFWWindow*>(glfwGetWindowUserPointer(window));
 	switch(action) {
 	case GLFW_RELEASE:{
-		gMouseButtonReleasedEvent event{button, static_cast<int>(xpos * handle->scalex), static_cast<int>(ypos * handle->scalex)};
+		gMouseButtonReleasedEvent event{button, static_cast<int>(xpos * handle->scalex), static_cast<int>(ypos * handle->scaley)};
 		handle->callEvent(event);
 		break;
 	}
 	case GLFW_PRESS:{
-		gMouseButtonPressedEvent event{button, static_cast<int>(xpos * handle->scalex), static_cast<int>(ypos * handle->scalex)};
+		gMouseButtonPressedEvent event{button, static_cast<int>(xpos * handle->scalex), static_cast<int>(ypos * handle->scaley)};
 		handle->callEvent(event);
 		break;
 	}

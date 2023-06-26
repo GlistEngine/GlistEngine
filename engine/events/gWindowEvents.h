@@ -125,8 +125,8 @@ class gWindowResizeEvent : public gEvent {
 	gWindowResizeEvent(int width, int height)
 		: width(width), height(height) {}
 
-	const int getWidth() { return width; }
-	const int getHeight() { return height; }
+	int getWidth() const { return width; }
+	int getHeight() const { return height; }
 
 	G_EVENT_CLASS_TYPE(WindowResize)
 	G_EVENT_CLASS_CATEGORY(EventCategory::App)
@@ -164,6 +164,36 @@ class gWindowMouseExitEvent : public gEvent {
 
 	G_EVENT_CLASS_TYPE(WindowMouseExit)
 	G_EVENT_CLASS_CATEGORY(EventCategory::App)
+};
+
+class gJoystickConnectEvent : public gEvent {
+  public:
+	gJoystickConnectEvent(int joystickId, bool isgamepad)
+		: joystickid(joystickId), isgamepad(isgamepad) {}
+
+	int getJoystickId() const { return joystickid; }
+	bool isGamepad() const { return isgamepad; }
+
+	G_EVENT_CLASS_TYPE(JoystickConnect)
+	G_EVENT_CLASS_CATEGORY(EventCategory::Input | EventCategory::Joystick)
+  private:
+	int joystickid;
+	bool isgamepad;
+};
+
+
+class gJoystickDisconnectEvent : public gEvent {
+  public:
+	gJoystickDisconnectEvent(int joystickId)
+		: joystickid(joystickId) {}
+
+	int getJoystickId() const { return joystickid; }
+
+	G_EVENT_CLASS_TYPE(JoystickDisconnect)
+	G_EVENT_CLASS_CATEGORY(EventCategory::Input | EventCategory::Joystick)
+  private:
+	int joystickid;
+	bool isgamepad;
 };
 
 #endif /* GWINDOWEVENTS_H_ */

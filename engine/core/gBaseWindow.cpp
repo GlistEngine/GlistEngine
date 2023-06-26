@@ -150,6 +150,10 @@ void gBaseWindow::setEventHandler(EventHandlerFn handler) {
 	eventhandler = handler;
 }
 
+bool gBaseWindow::isJoystickPresent(int joystickId) {
+	return false;
+}
+
 void gBaseWindow::callEvent(gEvent& event) {
 	if(eventhandler) eventhandler(event);
 }
@@ -186,6 +190,18 @@ void gBaseWindow::sighandler(int signum) {
 	  p.print(st, stderr);
 	  exit(1);
 #endif
+}
+
+bool gBaseWindow::isJoystickButtonPressed(int joystickId, int buttonId) {
+    return false;
+}
+
+const float* gBaseWindow::getJoystickAxes(int joystickId, int* axisCountPtr) {
+	return nullptr;
+}
+
+bool gBaseWindow::isRendering() {
+	return true;
 }
 
 /*

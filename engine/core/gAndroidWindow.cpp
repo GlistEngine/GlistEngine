@@ -8,19 +8,24 @@
 #include "gAndroidWindow.h"
 #include "gAppManager.h"
 
+#ifdef ANDROID
 
+
+ANativeWindow* gAndroidWindow::nativewindow;
+gAndroidWindow* window;
 
 gAndroidWindow::gAndroidWindow() {
+    window = this;
+    shouldclose = false;
 }
 
 gAndroidWindow::~gAndroidWindow() {
 }
 
-
 void gAndroidWindow::initialize(int uwidth, int uheight, int windowMode, bool isResizable) {
 	gBaseWindow::initialize(uwidth, uheight, windowMode, isResizable);
 
-	while(!window){ }
+	while(!nativewindow){ }
 
 	const EGLint attribs[] = {
 			EGL_RENDERABLE_TYPE, EGL_OPENGL_ES3_BIT, // request OpenGL ES 3.0
@@ -49,57 +54,50 @@ void gAndroidWindow::initialize(int uwidth, int uheight, int windowMode, bool is
 
 	if (!eglChooseConfig(display, attribs, &config, 1, &numConfigs)) {
 		gLogi("gAndroidWindow") << "eglChooseConfig() returned error " << eglGetError();
-		//destroy();
-        exit(-1);
+		close();
 		return;
 	}
 
 	if (!eglGetConfigAttrib(display, config, EGL_NATIVE_VISUAL_ID, &format)) {
 		gLogi("gAndroidWindow") << "eglGetConfigAttrib() returned error " << eglGetError();
-		//destroy();
-        exit(-1);
+		close();
 		return;
 	}
 
-	//ANativeWindow_setBuffersGeometry(this->window, 0, 0, format);
-
-	if (!(surface = eglCreateWindowSurface(display, config, window, 0))) {
+	if (!(surface = eglCreateWindowSurface(display, config, nativewindow, 0))) {
 		gLogi("gAndroidWindow") << "eglCreateWindowSurface() returned error " << eglGetError();
-		//destroy();
-//        exit(-1);
+		close();
 		return;
 	}
     const EGLint attribList[] = {EGL_CONTEXT_CLIENT_VERSION, 3, EGL_NONE};
 
 	if (!(context = eglCreateContext(display, config, EGL_NO_CONTEXT, attribList))) {
 		gLogi("gAndroidWindow") << "eglCreateContext() returned error " << eglGetError();
-		//destroy();
-		exit(-1);
+		close();
 		return;
 	}
 
 	if (!eglMakeCurrent(display, surface, surface, context)) {
 		gLogi("gAndroidWindow") << "eglMakeCurrent() returned error " << eglGetError();
-		//destroy();
-		exit(-1);
+		close();
 		return;
 	}
 
 	if (!eglQuerySurface(display, surface, EGL_WIDTH, &width) ||
 		!eglQuerySurface(display, surface, EGL_HEIGHT, &height)) {
 		gLogi("gAndroidWindow") << "eglQuerySurface() returned error " << eglGetError();
-		//destroy();
-		exit(-1);
+		close();
 		return;
 	}
 
-//	glDisable(GL_DITHER);
 	glViewport(0, 0, width, height);
+	this->scalex = (float) width / (float) uwidth;
+	this->scaley = (float) height / (float) uheight;
 }
 
 
 bool gAndroidWindow::getShouldClose() {
-	return false;
+	return shouldclose;
 }
 
 void gAndroidWindow::update() {
@@ -111,6 +109,8 @@ void gAndroidWindow::update() {
 }
 
 void gAndroidWindow::close() {
+	// todo
+	eglTerminate(display);
 }
 
 void gAndroidWindow::enableVsync(bool vsync) {
@@ -139,13 +139,73 @@ void gAndroidWindow::setWindowResizable(bool isResizable) {
 void gAndroidWindow::setWindowSizeLimits(int minWidth, int minHeight, int maxWidth, int maxHeight) {
 }
 
-ANativeWindow* gAndroidWindow::window;
+bool gAndroidWindow::isRendering() {
+    return isrendering;
+}
+
+bool gAndroidWindow::onTouchCallback(int x, int  y) {
+/*	gMouseMovedEvent event1{x, y};
+	callEvent(event1);
+	gMouseButtonPressedEvent event2{1, x, y};
+	callEvent(event2);
+	gMouseButtonReleasedEvent event3{1, x, y};
+	callEvent(event3);*/
+// todo gTouchEvent
+	return false;
+}
+
 extern "C" {
-	JNIEXPORT void JNICALL Java_dev_glist_glistapp_GlistNative_setSurface(JNIEnv *env, jclass clazz, jobject surface) {
-        if (surface != 0) {
-            gAndroidWindow::window = ANativeWindow_fromSurface(env, surface);
-        } else {
-            ANativeWindow_release(gAndroidWindow::window);
-        }
+
+JNIEXPORT void JNICALL Java_dev_glist_glistapp_GlistNative_setSurface(JNIEnv *env, jclass clazz, jobject surface) {
+	if (surface != 0) {
+		gAndroidWindow::nativewindow = ANativeWindow_fromSurface(env, surface);
+	} else {
+		ANativeWindow_release(gAndroidWindow::nativewindow);
 	}
 }
+
+JNIEXPORT jboolean JNICALL Java_dev_glist_glistapp_GlistNative_onTouchEvent(JNIEnv *env, jclass clazz, jobject event, jint x, jint y) {
+    if(window->onTouchCallback(x, y)) { // todo pointers
+        return true; // consumed
+    }
+	return false;
+}
+
+std::unique_ptr<std::thread> thread;
+JNIEXPORT void JNICALL Java_dev_glist_glistapp_GlistNative_onCreate(JNIEnv *env, jclass clazz) {
+    gLogi("GlistNative") << "onCreate";
+    if(thread) {
+        throw std::runtime_error("thread is already created!");
+    }
+    thread = std::make_unique<std::thread>([]() {
+        androidMain();
+    });
+}
+
+JNIEXPORT void JNICALL Java_dev_glist_glistapp_GlistNative_onDestroy(JNIEnv *env, jclass clazz) {
+    gLogi("GlistNative") << "onDestroy";
+    window->shouldclose = true;
+    thread->join();
+}
+
+JNIEXPORT void JNICALL Java_dev_glist_glistapp_GlistNative_onStart(JNIEnv *env, jclass clazz) {
+    gLogi("GlistNative") << "onStart";
+}
+
+JNIEXPORT void JNICALL Java_dev_glist_glistapp_GlistNative_onStop(JNIEnv *env, jclass clazz) {
+    gLogi("GlistNative") << "onStop";
+}
+
+JNIEXPORT void JNICALL Java_dev_glist_glistapp_GlistNative_onPause(JNIEnv *env, jclass clazz) {
+    gLogi("GlistNative") << "onPause";
+    window->isrendering = false;
+}
+
+JNIEXPORT void JNICALL Java_dev_glist_glistapp_GlistNative_onResume(JNIEnv *env, jclass clazz) {
+    gLogi("GlistNative") << "onResume";
+    window->isrendering = true;
+}
+
+}
+
+#endif /* ANDROID */

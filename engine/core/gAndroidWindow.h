@@ -9,27 +9,22 @@
 #define GANDROIDWINDOW_H_
 
 #include "gBaseWindow.h"
-// #include <glad/glad.h> //case_win
 #include "gCamera.h"
-#include "string"
+#include "gAppManager.h"
+#include "gApp.h"
+#include "gAndroidUtil.h"
 
 #include <jni.h>
 #include <string>
 #include <iostream>
 #include <android/log.h>
-#include "gAppManager.h"
-#include "gApp.h"
 #include <sys/ioctl.h>
 #include <linux/fb.h>
 #include <fcntl.h>
 
-#include <cstdint>
-#include <unistd.h>
-#include <pthread.h>
 #include <android/native_window.h> // requires ndk r5 or newer
 #include <android/native_window_jni.h> // requires ndk r5 or newer
 #include <EGL/egl.h> // requires ndk r5 or newer
-#include <GLES/gl.h>
 #include <thread>
 
 class gAndroidWindow : public gBaseWindow {
@@ -77,12 +72,19 @@ public:
 	void setWindowResizable(bool isResizable) override;
 	void setWindowSizeLimits(int minWidth, int minHeight, int maxWidth, int maxHeight) override;
 
-	static ANativeWindow* window;
-private:
+	bool isRendering() override;
 
-	EGLDisplay display;
-	EGLSurface surface;
-	EGLContext context;
+	bool onTouchCallback(int x, int y);
+public:
+	static ANativeWindow* nativewindow;
+	bool shouldclose;
+	bool isrendering;
+
+private:
+	EGLDisplay display{};
+	EGLSurface surface{};
+	EGLContext context{};
+
 };
 
 #endif /* GANDROIDWINDOW_H_ */

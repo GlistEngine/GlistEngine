@@ -217,10 +217,18 @@ else()
 	)
 endif(NOT ANDROID)
 
-add_library(GlistEngine SHARED
-	${SRC_FILES}
-)
-
+if(ANDROID)
+	# We have androidMain function that is
+	# defined inside the GlistEngine but implemented by the
+	# GlistApp. To have this behavior, library should be static.
+	add_library(GlistEngine STATIC
+		${SRC_FILES}
+	)
+else()
+	add_library(GlistEngine SHARED
+			${SRC_FILES}
+	)
+endif()
 
 ########## INCLUDE DIRECTORIES ##########
 set(INC_DIRS
