@@ -156,7 +156,7 @@ bool gAndroidWindow::onTouchCallback(int x, int  y) {
 
 extern "C" {
 
-JNIEXPORT void JNICALL Java_dev_glist_glistapp_GlistNative_setSurface(JNIEnv *env, jclass clazz, jobject surface) {
+JNIEXPORT void JNICALL Java_dev_glist_android_lib_GlistNative_setSurface(JNIEnv *env, jclass clazz, jobject surface) {
 	if (surface != 0) {
 		gAndroidWindow::nativewindow = ANativeWindow_fromSurface(env, surface);
 	} else {
@@ -164,7 +164,7 @@ JNIEXPORT void JNICALL Java_dev_glist_glistapp_GlistNative_setSurface(JNIEnv *en
 	}
 }
 
-JNIEXPORT jboolean JNICALL Java_dev_glist_glistapp_GlistNative_onTouchEvent(JNIEnv *env, jclass clazz, jobject event, jint x, jint y) {
+JNIEXPORT jboolean JNICALL Java_dev_glist_android_lib_GlistNative_onTouchEvent(JNIEnv *env, jclass clazz, jobject event, jint x, jint y) {
     if(window->onTouchCallback(x, y)) { // todo pointers
         return true; // consumed
     }
@@ -172,7 +172,7 @@ JNIEXPORT jboolean JNICALL Java_dev_glist_glistapp_GlistNative_onTouchEvent(JNIE
 }
 
 std::unique_ptr<std::thread> thread;
-JNIEXPORT void JNICALL Java_dev_glist_glistapp_GlistNative_onCreate(JNIEnv *env, jclass clazz) {
+JNIEXPORT void JNICALL Java_dev_glist_android_lib_GlistNative_onCreate(JNIEnv *env, jclass clazz) {
     gLogi("GlistNative") << "onCreate";
     if(thread) {
         throw std::runtime_error("thread is already created!");
@@ -182,26 +182,26 @@ JNIEXPORT void JNICALL Java_dev_glist_glistapp_GlistNative_onCreate(JNIEnv *env,
     });
 }
 
-JNIEXPORT void JNICALL Java_dev_glist_glistapp_GlistNative_onDestroy(JNIEnv *env, jclass clazz) {
+JNIEXPORT void JNICALL Java_dev_glist_android_lib_GlistNative_onDestroy(JNIEnv *env, jclass clazz) {
     gLogi("GlistNative") << "onDestroy";
     window->shouldclose = true;
     thread->join();
 }
 
-JNIEXPORT void JNICALL Java_dev_glist_glistapp_GlistNative_onStart(JNIEnv *env, jclass clazz) {
+JNIEXPORT void JNICALL Java_dev_glist_android_lib_GlistNative_onStart(JNIEnv *env, jclass clazz) {
     gLogi("GlistNative") << "onStart";
 }
 
-JNIEXPORT void JNICALL Java_dev_glist_glistapp_GlistNative_onStop(JNIEnv *env, jclass clazz) {
+JNIEXPORT void JNICALL Java_dev_glist_android_lib_GlistNative_onStop(JNIEnv *env, jclass clazz) {
     gLogi("GlistNative") << "onStop";
 }
 
-JNIEXPORT void JNICALL Java_dev_glist_glistapp_GlistNative_onPause(JNIEnv *env, jclass clazz) {
+JNIEXPORT void JNICALL Java_dev_glist_android_lib_GlistNative_onPause(JNIEnv *env, jclass clazz) {
     gLogi("GlistNative") << "onPause";
     window->isrendering = false;
 }
 
-JNIEXPORT void JNICALL Java_dev_glist_glistapp_GlistNative_onResume(JNIEnv *env, jclass clazz) {
+JNIEXPORT void JNICALL Java_dev_glist_android_lib_GlistNative_onResume(JNIEnv *env, jclass clazz) {
     gLogi("GlistNative") << "onResume";
     window->isrendering = true;
 }
