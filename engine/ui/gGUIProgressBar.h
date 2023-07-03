@@ -56,6 +56,10 @@
  */
 class gGUIProgressBar: public gGUIControl {
 public:
+	enum TYPE{
+		TYPE_LINE = 0,  TYPE_CIRCULAR = 1, TYPE_SPIN = 2
+	};
+
 	gGUIProgressBar();
 	virtual ~gGUIProgressBar();
 	void draw();
@@ -161,14 +165,29 @@ public:
 	 */
 	int getProgressBarHeight();
 
+	void setType(TYPE type);
+	TYPE getType();
+	void setLineTextColor(float r, float g, float b);
+	void setSpinTextColor(float r, float g, float b);
+	void setSpinThickness(float thickness);
+	float getSpinThickness();
+	void displayProgressText(bool display);
+
+
 private:
 	int progressbarw, progressbarh;
+	int radius;
 	float valuemax, valuemin;
 	float value;
-	float thickness;
+	float thickness, spinthickness;
+	TYPE type;
+	bool textdisplayed;
+	float texth;
 
 	gColor progressbarcolor;
 	gColor backgroundcolor;
+	gColor linetextcolor, spintextcolor;
+	gFont progresstextfont;
 };
 
 #endif /* UI_GGUIPROGRESSBAR_H_ */
