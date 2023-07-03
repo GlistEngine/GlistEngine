@@ -77,6 +77,8 @@ gGUITextbox::gGUITextbox() {
 	dotradius = 0;
 	isbackgroundenabled = true;
 	totalh = boxh;
+	firstx = 0;
+	firsty = 0;
 }
 
 gGUITextbox::~gGUITextbox() {
@@ -234,10 +236,10 @@ void gGUITextbox::draw() {
 	gColor oldcolor = *renderer->getColor();
 	if(isbackgroundenabled) {
 		renderer->setColor(foregroundcolor);
-		gDrawRectangle(left, top, width, boxh / 2 + totalh, false);
+		gDrawRectangle(left - firstx, top - firsty, width, boxh / 2 + totalh, false);
 	}
 	renderer->setColor(textbackgroundcolor);
-	gDrawRectangle(left, top + boxh / 4, width,  totalh, true);
+	gDrawRectangle(left - firstx, top + boxh / 4 - firsty, width,  totalh, true);
 
 	if(selectionmode) {
 		if(selectionposx2 >= selectionposx1) {
@@ -261,19 +263,19 @@ void gGUITextbox::draw() {
 		if(dotlimit > text.size()) dotlimit = text.size();
 		for(int i = 0; i < dotlimit; i++) gDrawCircle(left + dotinit + i * dotlen, doty, dotradius, true);
 	} else if(linecount == 1) {
-		font->drawText(text.substr(firstutf, lastutf), left + initx - 2, top + boxh / 4 + lineheight + linetopmargin);
+		font->drawText(text.substr(firstutf, lastutf), left + initx - 2 - firstx, top + boxh / 4 + lineheight + linetopmargin - firsty);
 	} else {
 		if(text.size() == 0) currentline = 1;
 		for(int i = 0; i < linecount; i++) {
 			if(lines[i] == "") continue;
-			font->drawText(lines[i], left + initx - 2, top + boxh / 4 + (i + 1) * (lineheight + linetopmargin));
+			font->drawText(lines[i], left + initx - 2 - firstx, top + boxh / 4 + (i + 1) * (lineheight + linetopmargin) - firsty);
 		}
 	}
 
 	if(editmode && (cursorshowcounter <= cursorshowlimit || keystate)) {
-		int linebottom = top + boxh / 4 + currentline * (lineheight + linetopmargin);
-		gDrawLine(left + initx + 1 + cursorposx, linebottom - lineheight,
-				left + initx + 1 + cursorposx, linebottom + lineheight * 2 / 3);
+		int linebottom = top + boxh / 4 + currentline * (lineheight + linetopmargin) - firsty;
+		gDrawLine(left + initx + 1 + cursorposx - firstx, linebottom - lineheight,
+				left + initx + 1 + cursorposx - firstx, linebottom + lineheight * 2 / 3);
 
 	}
 	renderer->setColor(&oldcolor);
@@ -1316,4 +1318,12 @@ void gGUITextbox::cleanText() {
 
 int gGUITextbox::getTextboxh() {
 	return boxh;
+}
+
+void gGUITextbox::setFirstX(int firstx) {
+	this->firstx = firstx;
+}
+
+void gGUITextbox::setFirstY(int firsty) {
+	this->firsty = firsty;
 }

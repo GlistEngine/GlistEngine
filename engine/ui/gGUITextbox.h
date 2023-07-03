@@ -39,6 +39,7 @@
 #define UI_GGUITEXTBOX_H_
 
 #include "gGUIControl.h"
+#include "gGUIScrollable.h"
 
 
 class gGUITextbox: public gGUIControl {
@@ -194,6 +195,9 @@ public:
 	int getTextboxh();
 	void cleanText();
 
+	void setFirstX(int firstx);
+	void setFirstY(int firsty);
+
 private:
 	static const int KEY_NONE = 0, KEY_BACKSPACE = 1, KEY_LEFT = 2, KEY_RIGHT = 4, KEY_DELETE = 8, KEY_ENTER = 16, KEY_UP = 32, KEY_DOWN = 64;
 
@@ -252,6 +256,7 @@ private:
 	int dotradius;
 	bool isbackgroundenabled;
 	int totalh;
+	int firstx, firsty;
 };
 
 #endif /* UI_GGUITEXTBOX_H_ */

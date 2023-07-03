@@ -160,11 +160,11 @@ void gGUIScrollable::drawScrollbars() {
 */
 			sbbgcolor.a = hsbalpha;
 			renderer->setColor(&sbbgcolor);
-			gDrawRectangle(0, boxh - hsbh, hsbw, hsbh, true);
+			gDrawRectangle(0, boxh - hsbh - (titletopmargin * istitleon), hsbw, hsbh, true);
 
 			sbfgcolor.a = hsbalpha;
 			renderer->setColor(&sbfgcolor);
-			gDrawRectangle(hrx, hry, hrw, hrh, true);
+			gDrawRectangle(hrx, hry - (titletopmargin * istitleon), vsbh, hrh, true);
 		}
 
 		if(!alphablending) {
@@ -223,6 +223,8 @@ void gGUIScrollable::mouseScrolled(int x, int y) {
 
 	firstx -= x * scrolldiff;
 	if(firstx < 0) firstx = 0;
+	if(firstx > boxw - vsbh) firstx = boxw - vsbh;
+	if(hsbenabled) hrx = firstx;
 	//gLogi("Scrollable") << "t:" << top << ", y:" << vry << ", h:" << vrh;
 }
 
@@ -240,5 +242,3 @@ gFbo* gGUIScrollable::getFbo() {
 int gGUIScrollable::getTitleTop() {
 	return titledy;
 }
-
-

@@ -126,6 +126,8 @@ public:
 
 	int getTitleTop();
 
+	const int titletopmargin = 20;
+
 protected:
 
 	/*
