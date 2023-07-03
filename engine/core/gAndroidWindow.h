@@ -25,6 +25,9 @@
 #include <android/native_window.h> // requires ndk r5 or newer
 #include <android/native_window_jni.h> // requires ndk r5 or newer
 #include <EGL/egl.h> // requires ndk r5 or newer
+#include <EGL/eglext.h> // requires ndk r5 or newer
+#include <GLES3/gl3.h>
+#include <GLES2/gl2ext.h>
 #include <thread>
 
 class gAndroidWindow : public gBaseWindow {
@@ -74,7 +77,7 @@ public:
 
 	bool isRendering() override;
 
-	bool onTouchCallback(int x, int y);
+	bool onTouchCallback(int pointerCount, int* fingerIds, int* x, int* y);
 public:
 	static ANativeWindow* nativewindow;
 	bool shouldclose;

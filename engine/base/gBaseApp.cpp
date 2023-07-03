@@ -36,7 +36,6 @@ void gBaseApp::update() {
 }
 
 #ifdef ANDROID
-
 void gBaseApp::pause() {
 
 }

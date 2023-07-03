@@ -11,11 +11,11 @@
 #include "gEvent.h"
 
 class gKeyEvent : public gEvent {
-  public:
+public:
 	int getKeyCode() const { return keycode; }
 
-	G_EVENT_CLASS_CATEGORY(EventCategory::Keyboard | EventCategory::Input)
-  protected:
+	G_EVENT_CLASS_CATEGORY(EventCategoryKeyboard | EventCategoryInput)
+protected:
 	gKeyEvent(const int keycode)
 		: keycode(keycode) {}
 
@@ -23,42 +23,42 @@ class gKeyEvent : public gEvent {
 };
 
 class gCharTypedEvent : public gEvent {
-  public:
+public:
 	gCharTypedEvent(const unsigned int keycode)
 		: keycode(keycode) {}
 
 	unsigned int getCharacter() const { return keycode; }
 
-	G_EVENT_CLASS_TYPE(CharTyped)
-	G_EVENT_CLASS_CATEGORY(EventCategory::Keyboard | EventCategory::Input)
-  private:
+	G_EVENT_CLASS_TYPE(EventTypeCharTyped)
+	G_EVENT_CLASS_CATEGORY(EventCategoryKeyboard | EventCategoryInput)
+private:
 	unsigned int keycode;
 };
 
 class gKeyPressedEvent : public gKeyEvent {
-  public:
+public:
 	gKeyPressedEvent(const int keycode, bool isrepeat = false)
 		: gKeyEvent(keycode),
 		  isrepeat(isrepeat) {}
 
 	bool isRepeat() const { return isrepeat; }
 
-	G_EVENT_CLASS_TYPE(KeyPressed)
-  private:
+	G_EVENT_CLASS_TYPE(EventTypeKeyPressed)
+private:
 	bool isrepeat;
 };
 
 class gKeyReleasedEvent : public gKeyEvent {
-  public:
+public:
 	gKeyReleasedEvent(const int keycode)
 		: gKeyEvent(keycode) {}
 
-	G_EVENT_CLASS_TYPE(KeyReleased)
+	G_EVENT_CLASS_TYPE(EventTypeKeyReleased)
 };
 
 
 class gMouseMovedEvent : public gEvent {
-  public:
+public:
 	gMouseMovedEvent(const int x, const int y)
 		: mousex(x),
 		  mousey(y) {}
@@ -66,14 +66,14 @@ class gMouseMovedEvent : public gEvent {
 	int getX() const { return mousex; }
 	int getY() const { return mousey; }
 
-	G_EVENT_CLASS_TYPE(MouseMoved)
-	G_EVENT_CLASS_CATEGORY(EventCategory::Mouse | EventCategory::Input)
-  private:
+	G_EVENT_CLASS_TYPE(EventTypeMouseMoved)
+	G_EVENT_CLASS_CATEGORY(EventCategoryMouse | EventCategoryInput)
+private:
 	int mousex, mousey;
 };
 
 class gMouseScrolledEvent : public gEvent {
-  public:
+public:
 	gMouseScrolledEvent(const int offsetx, const int offsety)
 		: offsetx(offsetx),
 		  offsety(offsety) {}
@@ -82,118 +82,141 @@ class gMouseScrolledEvent : public gEvent {
 	int getOffsetY() const { return offsety; }
 
 
-	G_EVENT_CLASS_TYPE(MouseScrolled)
-	G_EVENT_CLASS_CATEGORY(EventCategory::Mouse | EventCategory::Input)
-  private:
+	G_EVENT_CLASS_TYPE(EventTypeMouseScrolled)
+	G_EVENT_CLASS_CATEGORY(EventCategoryMouse | EventCategoryInput)
+private:
 	int offsetx, offsety;
 };
 
 class gMouseButtonEvent : public gEvent {
-  public:
+public:
 	int getMouseButton() const { return button; }
 	int getX() const { return x; }
 	int getY() const { return y; }
 
-	G_EVENT_CLASS_CATEGORY(EventCategory::Mouse | EventCategory::Input | EventCategory::MouseButton)
-  protected:
+	G_EVENT_CLASS_CATEGORY(EventCategoryMouse | EventCategoryInput | EventCategoryMouseButton)
+protected:
 	gMouseButtonEvent(const int button, const int x, const int y)
 		: button(button), x(x), y(y) {}
 
 	int button;
-	int x;
-	int y;
+	int x, y;
 };
 
 class gMouseButtonPressedEvent : public gMouseButtonEvent {
-  public:
+public:
 	gMouseButtonPressedEvent(const int button, const int x, const int y)
 		: gMouseButtonEvent(button, x, y) {}
 
-	G_EVENT_CLASS_TYPE(MouseButtonPressed)
+	G_EVENT_CLASS_TYPE(EventTypeMouseButtonPressed)
 };
 
 class gMouseButtonReleasedEvent : public gMouseButtonEvent {
-  public:
+public:
 	gMouseButtonReleasedEvent(const int button, const int x, const int y)
 		: gMouseButtonEvent(button, x, y) {}
 
-	G_EVENT_CLASS_TYPE(MouseButtonReleased)
+	G_EVENT_CLASS_TYPE(EventTypeMouseButtonReleased)
 };
 
 class gWindowResizeEvent : public gEvent {
-  public:
+public:
 	gWindowResizeEvent(int width, int height)
 		: width(width), height(height) {}
 
 	int getWidth() const { return width; }
 	int getHeight() const { return height; }
 
-	G_EVENT_CLASS_TYPE(WindowResize)
-	G_EVENT_CLASS_CATEGORY(EventCategory::App)
-  private:
+	G_EVENT_CLASS_TYPE(EventTypeWindowResize)
+	G_EVENT_CLASS_CATEGORY(EventCategoryApp)
+private:
 	int width, height;
 };
 
 class gWindowFocusEvent : public gEvent {
-  public:
+public:
 	gWindowFocusEvent() {}
 
-	G_EVENT_CLASS_TYPE(WindowFocus)
-	G_EVENT_CLASS_CATEGORY(EventCategory::App)
+	G_EVENT_CLASS_TYPE(EventTypeWindowFocus)
+	G_EVENT_CLASS_CATEGORY(EventCategoryApp)
 };
 
 class gWindowLoseFocusEvent : public gEvent {
-  public:
+public:
 	gWindowLoseFocusEvent() {}
 
-	G_EVENT_CLASS_TYPE(WindowLoseFocus)
-	G_EVENT_CLASS_CATEGORY(EventCategory::App)
+	G_EVENT_CLASS_TYPE(EventTypeWindowLoseFocus)
+	G_EVENT_CLASS_CATEGORY(EventCategoryApp)
 };
 
 class gWindowMouseEnterEvent : public gEvent {
-  public:
+public:
 	gWindowMouseEnterEvent() {}
 
-	G_EVENT_CLASS_TYPE(WindowMouseEnter)
-	G_EVENT_CLASS_CATEGORY(EventCategory::App)
+	G_EVENT_CLASS_TYPE(EventTypeWindowMouseEnter)
+	G_EVENT_CLASS_CATEGORY(EventCategoryApp)
 };
 
 class gWindowMouseExitEvent : public gEvent {
-  public:
+public:
 	gWindowMouseExitEvent() {}
 
-	G_EVENT_CLASS_TYPE(WindowMouseExit)
-	G_EVENT_CLASS_CATEGORY(EventCategory::App)
+	G_EVENT_CLASS_TYPE(EventTypeWindowMouseExit)
+	G_EVENT_CLASS_CATEGORY(EventCategoryApp)
 };
 
 class gJoystickConnectEvent : public gEvent {
-  public:
+public:
 	gJoystickConnectEvent(int joystickId, bool isgamepad)
 		: joystickid(joystickId), isgamepad(isgamepad) {}
 
 	int getJoystickId() const { return joystickid; }
 	bool isGamepad() const { return isgamepad; }
 
-	G_EVENT_CLASS_TYPE(JoystickConnect)
-	G_EVENT_CLASS_CATEGORY(EventCategory::Input | EventCategory::Joystick)
-  private:
+	G_EVENT_CLASS_TYPE(EventTypeJoystickConnect)
+	G_EVENT_CLASS_CATEGORY(EventCategoryInput | EventCategoryJoystick)
+private:
 	int joystickid;
 	bool isgamepad;
 };
 
 
 class gJoystickDisconnectEvent : public gEvent {
-  public:
+public:
 	gJoystickDisconnectEvent(int joystickId)
 		: joystickid(joystickId) {}
 
 	int getJoystickId() const { return joystickid; }
 
-	G_EVENT_CLASS_TYPE(JoystickDisconnect)
-	G_EVENT_CLASS_CATEGORY(EventCategory::Input | EventCategory::Joystick)
-  private:
+	G_EVENT_CLASS_TYPE(EventTypeJoystickDisconnect)
+	G_EVENT_CLASS_CATEGORY(EventCategoryInput | EventCategoryJoystick)
+private:
 	int joystickid;
-	bool isgamepad;
 };
+
+
+#ifdef ANDROID
+struct TouchInput {
+	int fingerid;
+	int pointerindex;
+	int x, y;
+};
+
+class gTouchEvent : public gEvent {
+public:
+	gTouchEvent(int inputCount, TouchInput* inputs) : inputs(inputs), inputcount(inputCount) {}
+
+	int getInputCount() const { return inputcount; }
+	TouchInput* getInputs() const { return inputs; };
+
+	G_EVENT_CLASS_TYPE(EventTypeTouch)
+	G_EVENT_CLASS_CATEGORY(EventCategoryInput | EventCategoryTouchscreen)
+private:
+	int inputcount;
+	TouchInput* inputs;
+
+};
+
+#endif
 
 #endif /* GWINDOWEVENTS_H_ */

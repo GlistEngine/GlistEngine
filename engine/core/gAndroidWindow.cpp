@@ -10,6 +10,9 @@
 
 #ifdef ANDROID
 
+static void onErrorCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar *message, const void *userParam) {
+	gLogi("gAndroidWindow") << "OpenGL ERROR: " << message;
+}
 
 ANativeWindow* gAndroidWindow::nativewindow;
 gAndroidWindow* window;
@@ -69,7 +72,10 @@ void gAndroidWindow::initialize(int uwidth, int uheight, int windowMode, bool is
 		close();
 		return;
 	}
-    const EGLint attribList[] = {EGL_CONTEXT_CLIENT_VERSION, 3, EGL_NONE};
+    const EGLint attribList[] = {
+			EGL_CONTEXT_CLIENT_VERSION, 3,
+			EGL_NONE
+	};
 
 	if (!(context = eglCreateContext(display, config, EGL_NO_CONTEXT, attribList))) {
 		gLogi("gAndroidWindow") << "eglCreateContext() returned error " << eglGetError();
@@ -143,14 +149,13 @@ bool gAndroidWindow::isRendering() {
     return isrendering;
 }
 
-bool gAndroidWindow::onTouchCallback(int x, int  y) {
-/*	gMouseMovedEvent event1{x, y};
-	callEvent(event1);
-	gMouseButtonPressedEvent event2{1, x, y};
-	callEvent(event2);
-	gMouseButtonReleasedEvent event3{1, x, y};
-	callEvent(event3);*/
-// todo gTouchEvent
+bool gAndroidWindow::onTouchCallback(int pointerCount, int* fingerIds, int* x, int* y) {
+	TouchInput inputs[pointerCount];
+	for (int i = 0; i < pointerCount; ++i) {
+		inputs[i] = {fingerIds[i], i, x[i], y[i]};
+	}
+	gTouchEvent event{pointerCount, inputs};
+	callEvent(event);
 	return false;
 }
 
@@ -164,11 +169,12 @@ JNIEXPORT void JNICALL Java_dev_glist_android_lib_GlistNative_setSurface(JNIEnv 
 	}
 }
 
-JNIEXPORT jboolean JNICALL Java_dev_glist_android_lib_GlistNative_onTouchEvent(JNIEnv *env, jclass clazz, jobject event, jint x, jint y) {
-    if(window->onTouchCallback(x, y)) { // todo pointers
-        return true; // consumed
-    }
-	return false;
+JNIEXPORT jboolean JNICALL Java_dev_glist_android_lib_GlistNative_onTouchEvent(JNIEnv *env, jclass clazz, jint pointerCount, jintArray fingerIds, jintArray x, jintArray y) {
+    int* _fingerids = env->GetIntArrayElements(fingerIds, new jboolean(false));
+    int* _x = env->GetIntArrayElements(x, new jboolean(false));
+    int* _y = env->GetIntArrayElements(y, new jboolean(false));
+
+	return window->onTouchCallback(pointerCount, _fingerids, _x, _y); // true if consumed
 }
 
 std::unique_ptr<std::thread> thread;
@@ -198,12 +204,18 @@ JNIEXPORT void JNICALL Java_dev_glist_android_lib_GlistNative_onStop(JNIEnv *env
 
 JNIEXPORT void JNICALL Java_dev_glist_android_lib_GlistNative_onPause(JNIEnv *env, jclass clazz) {
     gLogi("GlistNative") << "onPause";
-    window->isrendering = false;
+    if (window) {
+		// todo pause event
+        window->isrendering = false;
+    }
 }
 
 JNIEXPORT void JNICALL Java_dev_glist_android_lib_GlistNative_onResume(JNIEnv *env, jclass clazz) {
     gLogi("GlistNative") << "onResume";
-    window->isrendering = true;
+    if (window) {
+		// todo resume event
+        window->isrendering = true;
+    }
 }
 
 }
