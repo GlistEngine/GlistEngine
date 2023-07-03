@@ -14,6 +14,7 @@ gGUIText::gGUIText() {
 	fontsize = font->getSize();
 	lineh = 14 * fontsize / 10;
 	width = 0;
+	linenum = 0;
 }
 
 gGUIText::~gGUIText() {
@@ -56,37 +57,44 @@ void gGUIText::resetText() {
 }
 
 void gGUIText::resetAlignment() {
-	for (int i = 0; i < linenum; i++) {
-		linefirstx[i] = textalignment * (width - font->getStringWidth(line[i])) / 2;
-	}
+    for (int i = 0; i < linenum; i++) {
+        int lineTextWidth = font->getStringWidth(line[i]);
+        int lineIndent = 0;
+
+        if (textalignment == TEXTALIGNMENT_CENTER) {
+            lineIndent = (width - lineTextWidth) / 2;  // Calculate the indentation for the line based on the difference between the width of the GUI element and the width of the text line.
+        } else if (textalignment == TEXTALIGNMENT_RIGHT) {
+            lineIndent = std::max(width - lineTextWidth, 0);
+        }
+        linefirstx[i] = lineIndent;
+    }
+    if (textalignment == TEXTALIGNMENT_RIGHT) {
+        int margin = 5;
+        for (int i = 0; i < linenum; i++) {
+            int lineTextWidth = font->getStringWidth(line[i]);
+            linefirstx[i] -= margin; // Decrease the indentation value for the current line by the margin value
+        }
+    }
 }
 
 std::vector<std::string> gGUIText::splitString(const std::string& textToSplit, gFont* font, int lineWidth) {
-	std::vector<std::string> tokens;
-	if(textToSplit == "" || lineWidth == 0) return tokens;
+    std::vector<std::string> tokens;
+    if (textToSplit.empty() || lineWidth == 0) return tokens;
 
-	size_t prev = 0, pos = 0, posprevious = 0;
-	do {
-		bool islinecomplete = false;
-		std::string token = "";
-
-		do {
-			pos = textToSplit.find(" ", posprevious + 1);
-			if (pos == std::string::npos) {
-				pos = textToSplit.length();
-				islinecomplete = true;
-			}
-			int length = font->getStringWidth(textToSplit.substr(prev, pos - prev));
-			if(length > lineWidth) {
-				pos = posprevious;
-				islinecomplete = true;
-			}
-			token = textToSplit.substr(prev, pos - prev);
-			posprevious = pos;
-		} while(!islinecomplete);
-
-		if (!token.empty()) tokens.push_back(token);
-		prev = pos + 1;
-	} while (pos < textToSplit.length() && prev < textToSplit.length());
-	return tokens;
+    std::istringstream iss(textToSplit); // Convert the given text into an std::istringstream object to enable splitting the text into word tokens.
+    std::string word; // Create a string to hold each word read from the text.
+    std::string line; // Create a string to temporarily store the constructed line.
+    while (iss >> word) { // Read a word from the text, and if the word is not empty, enter the loop.
+        if (font->getStringWidth(line + " " + word) <= lineWidth) { // Check if adding the current word to the existing line, with a space in between, exceeds the lineWidth.
+            if (!line.empty()) line += " "; // If the line is not empty, add a space before adding the word.
+            line += word; // Add the word to the line.
+        } else {
+            tokens.push_back(line);
+            line = word;
+        }
+    }
+    if (!line.empty()) {
+        tokens.push_back(line);
+    }
+    return tokens;
 }
