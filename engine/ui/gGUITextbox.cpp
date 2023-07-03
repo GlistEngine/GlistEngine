@@ -45,6 +45,7 @@ gGUITextbox::gGUITextbox() {
 	ctrlvpressed = false;
 	ctrlxpressed = false;
 	ctrlapressed = false;
+	ctrlzpressed = false;
 	isdragging = false;
 	clicktimediff = 250;
 	clicktime = gGetSystemTimeMillis();
@@ -283,6 +284,7 @@ void gGUITextbox::keyPressed(int key) {
 	else if(key == G_KEY_V && ctrlpressed) ctrlvpressed = true;
 	else if(key == G_KEY_X && ctrlpressed) ctrlxpressed = true;
 	else if(key == G_KEY_A && ctrlpressed) ctrlapressed = true;
+	else if(key == G_KEY_Z && ctrlpressed) ctrlzpressed = true;
 
 	int pressedkey = KEY_NONE;
 	switch(key) {
@@ -398,14 +400,15 @@ void gGUITextbox::handleKeys() {
 		return;
 	}
 
-	if((selectionmode && (selectionposchar1 != selectionposchar2)) || isdoubleclicked || istripleclicked || ctrlapressed || ctrlvpressed) {
-		if((isdoubleclicked || istripleclicked || ctrlcpressed || ctrlvpressed || ctrlxpressed || ctrlapressed || ctrlvpressed)) {
+	if((selectionmode && (selectionposchar1 != selectionposchar2)) || isdoubleclicked || istripleclicked || ctrlapressed || ctrlvpressed || ctrlzpressed) {
+		if((isdoubleclicked || istripleclicked || ctrlcpressed || ctrlvpressed || ctrlxpressed || ctrlapressed || ctrlzpressed)) {
 			pressKey();
 		}
 		ctrlcpressed = false;
 		ctrlvpressed = false;
 		ctrlxpressed = false;
 		ctrlapressed = false;
+		ctrlzpressed = false;
 		isdoubleclicked = false;
 		istripleclicked = false;
 		return;
@@ -414,6 +417,7 @@ void gGUITextbox::handleKeys() {
 
 void gGUITextbox::pressKey() {
 	if((keystate & KEY_BACKSPACE) && (cursorposchar > 0 || (selectionmode && (selectionposchar1 > 0 || selectionposchar2 > 0)))) { // BACKSPACE
+		pushToStack();
 		if(selectionmode && selectionposchar1 != selectionposchar2) {
 			int sepc1, sepx1, sepu1, sepc2, sepx2, sepu2;
 			if(selectionposx2 >= selectionposx1) {
@@ -472,7 +476,7 @@ void gGUITextbox::pressKey() {
 						cursorposx += icw;
 					}
 			}
-			cursorposutf--;
+			cursorposutf -= letterlength[cursorposchar - 1];
 			letterlength.erase(letterlength.begin() + cursorposchar - 1);
 			letterpos = calculateAllLetterPositions();
 			cursorposchar--;
@@ -602,28 +606,20 @@ void gGUITextbox::pressKey() {
 				selectionposutf2 = cursorposutf;
 			}
 		}
-
-//		gLogi("Textbox") << "pk 1, cx:" << cursorposx << ", fu:" << firstutf << ", lu:" << lastutf << ", cp:" << cursorposchar << " " << cursorposutf;
-
-	} else if(ismultiline && (keystate & KEY_UP) && currentline > 1) {
-//		gLogi("Pressed up");
+	} else if(ismultiline && (keystate & KEY_UP) && currentline > 1) { // UP ARROW
 		currentline--;
 		std::vector<int> clickpos = calculateClickPositionMultiline(cursorposx, top + currentline * (lineheight + linetopmargin));
 		cursorposchar = clickpos[0];
 		cursorposx = clickpos[1];
 		cursorposutf = clickpos[2];
-//		gLogi("Current line") << currentline;
-
-	} else if(ismultiline && (keystate & KEY_DOWN) && currentline < linecount) {
-//		gLogi("Pressed down");
+	} else if(ismultiline && (keystate & KEY_DOWN) && currentline < linecount) { // DOWN ARROW
 		currentline++;
 		std::vector<int> clickpos = calculateClickPositionMultiline(cursorposx, top + currentline * (lineheight + linetopmargin));
 		cursorposchar = clickpos[0];
 		cursorposx = clickpos[1];
 		cursorposutf = clickpos[2];
-//		gLogi("Current line") << currentline;
-
 	} else if((keystate & KEY_DELETE) && cursorposchar < letterlength.size()) { // DELETE
+		pushToStack();
 		if(selectionmode && selectionposchar1 != selectionposchar2) {
 			if(isselectedall) {
 				cleanText();
@@ -670,7 +666,7 @@ void gGUITextbox::pressKey() {
 	} else if((keystate & KEY_ENTER)) { // ENTER
 		selectionmode = false;
 		root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_TEXTBOXENTRY, text);
-	} else if(ctrlcpressed) {
+	} else if(ctrlcpressed) { //ctrl c
 		if(isselectedall) {
 			root->getAppManager()->setClipboardString(text);
 			return;
@@ -682,7 +678,8 @@ void gGUITextbox::pressKey() {
 			seput2 = selectionposutf1;
 		}
 		root->getAppManager()->setClipboardString(text.substr(seput1, seput2 - seput1));
-	} else if(ctrlxpressed) {
+	} else if(ctrlxpressed) { //ctrl x
+		pushToStack();
 		if(isselectedall) {
 			cleanText();
 			root->getAppManager()->setClipboardString(text);
@@ -730,7 +727,7 @@ void gGUITextbox::pressKey() {
 		selectionmode = false;
 		lastutf = calculateLastUtf();
 		if(ismultiline) setText(text);
-	} else if(ctrlapressed) {
+	} else if(ctrlapressed) { //ctrl a
 		selectionmode = true;
 		isselectedall = true;
 		if(!ispassword) {
@@ -755,7 +752,8 @@ void gGUITextbox::pressKey() {
 		cursorposchar = selectionposchar2;
 		cursorposx = selectionposx2;
 		cursorposutf = selectionposutf2;
-	} else if(ctrlvpressed) {
+	} else if(ctrlvpressed) { //ctrl v
+		pushToStack();
 		if(isnumeric) {
 			std::string testtext = root->getAppManager()->getClipboardString();
 			for(int i = 0; i < testtext.size(); i++) if(testtext[i] < 48 || testtext[i] > 57) return;
@@ -841,6 +839,29 @@ void gGUITextbox::pressKey() {
 		selectionmode = false;
 		isselectedall = false;
 		if(ismultiline) setText(text);
+
+	} else if(ctrlzpressed){ //ctrl z
+		if(undostack.empty()) return; //there is nothing to be undone
+		setText(undostack.top()); //undo changes to text
+		undostack.pop();
+
+		//undo cursor changes
+		cursorposx = cursorposxstack.top();
+		cursorposxstack.pop();
+		cursorposy = cursorposystack.top();
+		cursorposystack.pop();
+		cursorposchar = cursorposcharstack.top();
+		cursorposcharstack.pop();
+		cursorposutf = cursorposutfstack.top();
+		cursorposutfstack.pop();
+
+		//undo first character changes
+		firstchar = firstcharstack.top();
+		firstcharstack.pop();
+		firstutf = firstutfstack.top();
+		firstutfstack.pop();
+		firstposx = firstposxstack.top();
+		firstposxstack.pop();
 	} else if(isdoubleclicked) {
 		bool leftchar = false;
 		bool rightchar = false;
@@ -910,6 +931,7 @@ void gGUITextbox::pressKey() {
 void gGUITextbox::charPressed(unsigned int codepoint) {
 //	gLogi("Textbox") << "charPressed:" << codepoint;
 //	gLogi("Textbox") << "cp:" << gCodepointToStr(codepoint);
+	pushToStack();
 	if(editmode) {
 		if(isnumeric && (codepoint < 48 || codepoint > 57) && codepoint != 44 && codepoint != 46) return;
 		if(selectionmode && selectionposchar1 != selectionposchar2) {
@@ -1256,7 +1278,7 @@ void gGUITextbox::startSelection() {
 		selectionmode = true;
 	}
 }
- 
+
 std::vector<short> gGUITextbox::readString(const std::string& str) {
 	std::vector<short> lettersizes;
     int codepoints = 0;
@@ -1316,4 +1338,15 @@ void gGUITextbox::cleanText() {
 
 int gGUITextbox::getTextboxh() {
 	return boxh;
+}
+
+void gGUITextbox::pushToStack() {
+	undostack.push(text);
+	cursorposxstack.push(cursorposx);
+	cursorposystack.push(cursorposy);
+	cursorposcharstack.push(cursorposchar);
+	cursorposutfstack.push(cursorposutf);
+	firstcharstack.push(firstchar);
+	firstutfstack.push(firstutf);
+	firstposxstack.push(firstposx);
 }
