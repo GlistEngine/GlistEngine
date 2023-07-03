@@ -208,7 +208,7 @@ private:
 	int keypresstime, keypresstimelimit1, keypresstimelimit2;
 	int initx;
 	int firstchar, firstutf, firstposx;
-	int lastutf, lutf, futf;
+	int lastutf;
 	void handleKeys();
 	void pressKey();
 	std::vector<int> clickTextbox(int x, int y);
