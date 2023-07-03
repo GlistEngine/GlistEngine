@@ -39,6 +39,12 @@ int gRenderer::screenscaling;
 int gRenderer::currentresolution;
 int gRenderer::unitresolution;
 
+void gCheckGLErrorAndPrint(const std::string& prefix, const std::string& func, int line) {
+	GLenum error = glGetError();
+	if (error != GL_NO_ERROR) {
+		gLogi("gRenderer") << prefix << "OpenGL ERROR at " << func << ", line " << line << ", error code: " << error;
+	}
+}
 
 void gEnableCulling() {
 	glEnable(GL_CULL_FACE);

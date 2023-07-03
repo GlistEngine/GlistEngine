@@ -34,6 +34,13 @@
 class gLight;
 //#include "gLight.h"
 
+#ifdef DEBUG
+#define G_CHECK_GL(a) gCheckGLErrorAndPrint("Previously Unhandled ", __PRETTY_FUNCTION__, __LINE__); a; gCheckGLErrorAndPrint("", __PRETTY_FUNCTION__, __LINE__)
+#else
+#define G_CHECK_GL(a) a;
+#endif
+
+void gCheckGLErrorAndPrint(const std::string& prefix, const std::string& func, int line);
 
 void gEnableCulling();
 void gDisableCulling();

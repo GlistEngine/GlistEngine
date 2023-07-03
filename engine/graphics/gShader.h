@@ -57,7 +57,7 @@ public:
 
 
 private:
-	void checkCompileErrors(GLuint shader, std::string type);
+	void checkCompileErrors(GLuint shader, const std::string& type);
 };
 
 #endif /* ENGINE_GRAPHICS_GSHADER_H_ */

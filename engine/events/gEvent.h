@@ -11,36 +11,37 @@
 #include <functional>
 
 enum EventType {
-	CharTyped,
-	KeyPressed,
-	KeyReleased,
-	MouseMoved,
-	MouseScrolled,
-	MouseButtonPressed,
-	MouseButtonReleased,
-	WindowResize,
-	WindowFocus,
-	WindowLoseFocus,
-	WindowMouseEnter,
-	WindowMouseExit,
-	JoystickConnect,
-	JoystickDisconnect,
+	EventTypeCharTyped,
+	EventTypeKeyPressed,
+	EventTypeKeyReleased,
+	EventTypeMouseMoved,
+	EventTypeMouseScrolled,
+	EventTypeMouseButtonPressed,
+	EventTypeMouseButtonReleased,
+	EventTypeWindowResize,
+	EventTypeWindowFocus,
+	EventTypeWindowLoseFocus,
+	EventTypeWindowMouseEnter,
+	EventTypeWindowMouseExit,
+	EventTypeJoystickConnect,
+	EventTypeJoystickDisconnect,
 #ifdef ANDROID
-	AppPause,
-	AppRestart,
-	AppStop,
-	Touch
+	EventTypeAppPause,
+	EventTypeAppRestart,
+	EventTypeAppStop,
+	EventTypeTouch
 #endif
 };
 
 #define BIT(x) (1 << x)
 enum EventCategory {
-	App = BIT(0),
-	Input = BIT(1),
-	Keyboard = BIT(2),
-	Mouse = BIT(3),
-	MouseButton = BIT(4),
-	Joystick = BIT(5),
+	EventCategoryApp = BIT(0),
+	EventCategoryInput = BIT(1),
+	EventCategoryKeyboard = BIT(2),
+	EventCategoryMouse = BIT(3),
+	EventCategoryMouseButton = BIT(4),
+	EventCategoryJoystick = BIT(5),
+	EventCategoryTouchscreen = BIT(6),
 };
 #undef BIT
 
@@ -82,7 +83,6 @@ typedef std::function<void(gEvent&)> EventHandlerFn;
  *    return false;
  * }
  * \endcode
- *
  */
 class gEventDispatcher {
   public:
