@@ -90,8 +90,9 @@ void gGUISizer::set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUI
 }
 
 void gGUISizer::set(int x, int y, int w, int h) {
-	left = x;
 	int oldtop = top;
+	int oldleft = left;
+	left = x;
 	top = y;
 	right = x + w;
 	bottom = y + h;
@@ -102,7 +103,7 @@ void gGUISizer::set(int x, int y, int w, int h) {
 	for (int i = 0; i < linenum; i++) {
 		for (int j = 0; j < columnnum; j++) {
 			if(iscontrolset[i][j] && guicontrol[i][j]->isresizable) {
-				int cr = guicontrol[i][j]->left + slotpadding;
+				int cr = (left - oldleft) + guicontrol[i][j]->left;
 				int cb = (top - oldtop) + guicontrol[i][j]->top;
 				int cw = guicontrol[i][j]->width - (slotpadding * 2);
 				int ch = guicontrol[i][j]->height;
