@@ -39,6 +39,7 @@
 #define UI_GGUITEXTBOX_H_
 
 #include "gGUIControl.h"
+#include <stack>
 
 
 class gGUITextbox: public gGUIControl {
@@ -213,7 +214,7 @@ private:
 	int keypresstime, keypresstimelimit1, keypresstimelimit2;
 	int initx;
 	int firstchar, firstutf, firstposx;
-	int lastutf, lutf, futf;
+	int lastutf;
 	void handleKeys();
 	void pressKey();
 	std::vector<int> clickTextbox(int x, int y);
@@ -238,7 +239,7 @@ private:
 	int selectionposutf1, selectionposutf2;
 	int selectionboxx1, selectionboxx2, selectionboxw;
 	bool shiftpressed, ctrlpressed;
-	bool ctrlcpressed, ctrlvpressed, ctrlxpressed, ctrlapressed;
+	bool ctrlcpressed, ctrlvpressed, ctrlxpressed, ctrlapressed, ctrlzpressed;
 	bool isdragging;
 	long clicktime, previousclicktime, firstclicktime, clicktimediff;
 	bool isdoubleclicked, istripleclicked;
@@ -258,6 +259,13 @@ private:
 	int dotradius;
 	bool isbackgroundenabled;
 	int totalh;
+
+	//undo stacks
+	std::stack<std::string> undostack;
+	std::stack<int> cursorposxstack, cursorposystack, cursorposcharstack, cursorposutfstack;
+	std::stack<int> firstutfstack, firstcharstack, firstposxstack;
+
+	void pushToStack();
 };
 
 #endif /* UI_GGUITEXTBOX_H_ */

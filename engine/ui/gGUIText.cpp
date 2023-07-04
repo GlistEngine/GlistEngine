@@ -14,6 +14,7 @@ gGUIText::gGUIText() {
 	fontsize = font->getSize();
 	lineh = 14 * fontsize / 10;
 	width = 0;
+	linenum = 0;
 }
 
 gGUIText::~gGUIText() {
