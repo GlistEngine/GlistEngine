@@ -43,8 +43,8 @@ int gGetCullFace();
 void gSetCullingDirection(int cullingDirection);
 int gGetCullingDirection();
 
-void gDrawLine(float x1, float y1, float x2, float y2);
-void gDrawLine(float x1, float y1, float z1, float x2, float y2, float z2);
+void gDrawLine(float x1, float y1, float x2, float y2, float thickness = 1.0f);
+void gDrawLine(float x1, float y1, float z1, float x2, float y2, float z2, float thickness = 1.0f);
 void gDrawTriangle(float px, float py, float qx, float qy, float rx, float ry, bool is_filled = true);
 void gDrawCircle(float xCenter, float yCenter, float radius, bool isFilled = false, float numberOfSides = 64.0f);
 void gDrawCross(float x, float y, float width, float height, float thickness, bool isFilled);

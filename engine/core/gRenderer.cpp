@@ -408,14 +408,16 @@ void gRenderer::setGridColorofAxisWireFrameYZ(gColor* color) {
 	//rendercolor->set(color);
 }
 
-void gDrawLine(float x1, float y1, float x2, float y2) {
+void gDrawLine(float x1, float y1, float x2, float y2, float thickness) {
 	gLine linemesh;
+	linemesh.setThickness(thickness);
 	linemesh.draw(x1, y1, x2, y2);
 	linemesh.clear();
 }
 
-void gDrawLine(float x1, float y1, float z1, float x2, float y2, float z2) {
+void gDrawLine(float x1, float y1, float z1, float x2, float y2, float z2, float thickness) {
 	gLine linemesh;
+	linemesh.setThickness(thickness);
 	linemesh.draw(x1, y1, z1, x2, y2, z2);
 	linemesh.clear();
 }

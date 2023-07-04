@@ -40,10 +40,15 @@ public:
 	void draw(float x1, float y1, float x2, float y2);
 	void draw(float x1, float y1, float z1, float x2, float y2, float z2);
 
+	void setThickness(float thickness);
+
 private:
 	std::vector<gVertex> verticessb;
+	std::vector<unsigned int> indicessb;
 	void setLinePoints(float x1, float y1, float z1, float x2, float y2, float z2);
 	gVertex vertex1, vertex2;
+	float thickness;
+
 };
 
 #endif /* GRAPHICS_PRIMITIVES_GLINE_H_ */
