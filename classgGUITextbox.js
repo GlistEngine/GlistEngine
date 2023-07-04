@@ -8,6 +8,7 @@ var classgGUITextbox =
     [ "cleanText", "classgGUITextbox.html#aa55684fd12dba93a5a9a91858a5592d5", null ],
     [ "draw", "classgGUITextbox.html#a19dad1764deec36abc1bf31a809c4e86", null ],
     [ "enableBackground", "classgGUITextbox.html#ab30373418b4de7a24cfbc526b93bb4ca", null ],
+    [ "enableVerticalMargin", "classgGUITextbox.html#adc51846dc1873585a4ed75342a99336d", null ],
     [ "getCursor", "classgGUITextbox.html#a2fec8dc4b43664ee6f22ab8d5e7ad4b6", null ],
     [ "getLineCount", "classgGUITextbox.html#a63d11404b44c7133e1df949706841a1f", null ],
     [ "getText", "classgGUITextbox.html#a313df9db46518f9842c88241656404ad", null ],
