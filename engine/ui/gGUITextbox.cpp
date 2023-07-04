@@ -8,6 +8,7 @@
 #include "gGUITextbox.h"
 #include <cwchar>
 #include <codecvt>
+#include <cctype>
 #include "gBaseApp.h"
 #include "gBaseCanvas.h"
 
@@ -521,6 +522,7 @@ void gGUITextbox::pressKey() {
 
 				std::vector<int> clickpos = calculateClickPosition(left + cursorposx, top + 1);
 				if(selectionmode) {
+
 					selectionposchar2 = clickpos[0];
 					selectionposx2 = clickpos[1];
 					selectionposutf2 = clickpos[2];
@@ -839,7 +841,6 @@ void gGUITextbox::pressKey() {
 		selectionmode = false;
 		isselectedall = false;
 		if(ismultiline) setText(text);
-
 	} else if(ctrlzpressed){ //ctrl z
 		if(undostack.empty()) return; //there is nothing to be undone
 		setText(undostack.top()); //undo changes to text
@@ -1296,8 +1297,7 @@ std::vector<short> gGUITextbox::readString(const std::string& str) {
 }
 
 bool gGUITextbox::isLetter(char c) {
-	if((c >= 65 && c <= 90) || (c >= 97 && c <= 122)) return true;
-	return false;
+    return std::isalpha(static_cast<unsigned char>(c));
 }
 
 bool gGUITextbox::isNumber(char c) {
