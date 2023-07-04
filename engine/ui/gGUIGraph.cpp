@@ -206,7 +206,7 @@ void gGUIGraph::drawLabels() {
 	int labelcountx = labelsx.size() - 1;
 	for(int i = 0; i < labelcountx; i++) {
 		xpoint = i * labelwidthx;
-		renderer->setColor(backgroundcolor);
+		renderer->setColor(foregroundcolor);
 		if(!gridlinesxenabled) gDrawLine(axisx1 + xpoint, axisy2 + 0.04f * height, axisx1 + xpoint, axisy2);
 		else gDrawLine(axisx1 + xpoint, axisy2 + 0.04f * height, axisx1 + xpoint, axisy2 - axisyh);
 
@@ -220,7 +220,7 @@ void gGUIGraph::drawLabels() {
 	int labelcounty = labelsy.size();
 	for(int i = 0; i < labelcounty; i++) {
 		ypoint = i * labelwidthy;
-		renderer->setColor(backgroundcolor);
+		renderer->setColor(foregroundcolor);
 		if(!gridlinesyenabled) gDrawLine(axisx1 - 0.02f * width, axisy2 - ypoint, axisx1, axisy2 - ypoint);
 		else gDrawLine(axisx1 - 0.02f * width, axisy2 - ypoint, axisx1 + axisxw, axisy2 - ypoint);
 
