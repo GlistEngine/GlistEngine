@@ -231,6 +231,8 @@ void gGUIGrid::drawContent() {
 	drawCellBackground();
 	if(isselected) drawSelectedBox();
 	drawCellContents();
+	textbox.setFirstX(firstx);
+	textbox.setFirstY(firsty);
 	if(istextboxactive)textbox.draw();
 	drawTitleRowBackground();
 	drawRowContents();
@@ -242,13 +244,13 @@ void gGUIGrid::drawContent() {
 
 void gGUIGrid::drawCellBackground() {
 	renderer->setColor(*textbackgroundcolor);
-	gDrawRectangle(gridx + (gridboxw / 2), gridy + gridboxh, gridw, gridh, true);
+	gDrawRectangle(gridx + (gridboxw / 2) - firstx, gridy + gridboxh - firsty, gridw, gridh, true);
 }
 
 void gGUIGrid::drawSelectedBox() {
 	renderer->setColor(0.0f, 1.0f, 0.0f, 1.0f);
-	gDrawRectangle(allcells.at(selectedbox).cellx + 1, (allcells.at(selectedbox).celly + 1) - firsty, gridboxw - 2, gridboxh - 2, false);
-	gDrawRectangle(allcells.at(selectedbox).cellx + (gridboxw - 2) - 6, allcells.at(selectedbox).celly + (gridboxh - 2) - 4 - firsty, 6, 6, true); // FLAG
+	gDrawRectangle(allcells.at(selectedbox).cellx + 1 - firstx, (allcells.at(selectedbox).celly + 1) - firsty, gridboxw - 2, gridboxh - 2, false);
+	gDrawRectangle(allcells.at(selectedbox).cellx + (gridboxw - 2) - 6 - firstx, allcells.at(selectedbox).celly + (gridboxh - 2) - 4 - firsty, 6, 6, true); // FLAG
 }
 
 void gGUIGrid::drawTitleRowBackground() {
@@ -258,7 +260,7 @@ void gGUIGrid::drawTitleRowBackground() {
 
 void gGUIGrid::drawTitleColumnBackground() {
 	renderer->setColor(*buttoncolor);
-	gDrawRectangle(gridx, gridy, gridw + (gridboxw / 2), gridboxh , true);
+	gDrawRectangle(gridx - firstx, gridy, gridw + (gridboxw / 2), gridboxh , true);
 }
 
 void gGUIGrid::drawRowContents() {
@@ -270,7 +272,7 @@ void gGUIGrid::drawRowContents() {
 		font->drawText(rowtitlestring, gridx + (gridboxw / 4) - (font->getStringWidth(rowtitlestring) / 2), gridy + (gridboxh / 2) + (i * gridboxh)  + (font->getStringHeight(rowtitlestring) / 2) - firsty);
 		temprow++;
 		renderer->setColor(*pressedbuttoncolor);
-		gDrawLine(gridx, gridy + ((i + 1) * gridboxh) - firsty, gridx + gridw + (gridboxw / 2), gridy + ((i + 1) * gridboxh) - firsty);
+		gDrawLine(gridx - firstx, gridy + ((i + 1) * gridboxh) - firsty, gridx + gridw + (gridboxw / 2) - firstx, gridy + ((i + 1) * gridboxh) - firsty);
 	}
 }
 
@@ -279,17 +281,18 @@ void gGUIGrid::drawColumnContents() {
 	for(int i = 1; i <= columnnum; i++) {
 	    std::string columntitlestring(1, (char) tempcol);
 	    renderer->setColor(*fontcolor);
-		font->drawText(columntitlestring, gridx + (i * gridboxw) - (font->getStringWidth(columntitlestring) / 2), gridy + (gridboxh / 2) + (font->getStringHeight(columntitlestring) / 2));
+		font->drawText(columntitlestring, gridx + (i * gridboxw) - (font->getStringWidth(columntitlestring) / 2) - firstx, gridy + (gridboxh / 2) + (font->getStringHeight(columntitlestring) / 2));
 		tempcol++;
 		renderer->setColor(*pressedbuttoncolor);
-		gDrawLine(gridx - (gridboxw / 2) + ((i + 1) * gridboxw), gridy - firsty, gridx - (gridboxw / 2) + ((i + 1) * gridboxw), gridy + gridboxh +gridh - firsty);
+		gDrawLine(gridx - (gridboxw / 2) + ((i + 1) * gridboxw) - firstx, gridy - firsty, gridx - (gridboxw / 2) + ((i + 1) * gridboxw) - firstx, gridy + gridboxh +gridh - firsty);
+		gDrawRectangle(gridx, gridy, allcells.at(0).cellw / 2, allcells.at(0).cellh, true);
 	}
 }
 
 void gGUIGrid::drawTitleLines() {
 	renderer->setColor(*backgroundcolor);
-	gDrawLine(gridx + (gridboxw / 2) + 1, gridy, gridx + (gridboxw / 2) + 1, gridy + gridboxh + gridh);
-	gDrawLine(gridx, gridy + (gridboxh), gridx + gridboxw / 2 + gridw, gridy + (gridboxh));
+	gDrawLine(gridx + (gridboxw / 2) + 1 - firstx, gridy - firsty, gridx + (gridboxw / 2) + 1 - firstx, gridy + gridboxh + gridh - firsty);
+	gDrawLine(gridx - firstx, gridy + (gridboxh) - firsty, gridx + gridboxw / 2 + gridw - firstx, gridy + (gridboxh) - firsty);
 }
 
 void gGUIGrid::drawCellContents() {
@@ -297,7 +300,7 @@ void gGUIGrid::drawCellContents() {
 	int cellindexcounter = 0;
 	for(int i = 0; i < rownum; i++) {
 		for(int j = 0; j < columnnum; j++) {
-			font->drawText(allcells.at(cellindexcounter).showncontent, allcells.at(cellindexcounter).cellx, allcells.at(cellindexcounter).celly + (gridboxh / 2) + (font->getStringHeight(allcells.at(cellindexcounter).showncontent) / 2) - firsty);
+			font->drawText(allcells.at(cellindexcounter).showncontent, allcells.at(cellindexcounter).cellx - firstx, allcells.at(cellindexcounter).celly + (gridboxh / 2) + (font->getStringHeight(allcells.at(cellindexcounter).showncontent) / 2) - firsty);
 			cellindexcounter++;
 		}
 	}
@@ -305,9 +308,9 @@ void gGUIGrid::drawCellContents() {
 
 void gGUIGrid::mousePressed(int x, int y, int button) {
 	gGUIScrollable::mousePressed(x, y, button);
-	int pressedx = x - left;
+	int pressedx = x - left - firstx;
 	int pressedy = y - top - firsty - titledy;
-	if(pressedx >= gridx + (gridboxw / 2) && pressedx <= gridx + (gridboxw / 2) + gridw && pressedy >= gridy + gridboxh && pressedy <= gridy + gridboxh + gridh) {
+	if(pressedx >= gridx + (gridboxw / 2) - firstx && pressedx <= gridx + (gridboxw / 2) + gridw - firstx && pressedy >= gridy + gridboxh - firsty && pressedy <= gridy + gridboxh + gridh - firsty) {
 		previousclicktime = clicktime;
 		clicktime = gGetSystemTimeMillis();
 		if(clicktime - previousclicktime <= clicktimediff) {
@@ -321,7 +324,7 @@ void gGUIGrid::mousePressed(int x, int y, int button) {
 			istextboxactive = true;
 		} else istextboxactive = false;
 		isselected = true;
-		int newcellindex = ((int)((x - left - (gridboxw / 2)) / gridboxw)) + ((int)((y + firsty - top - gridboxh - 20) / gridboxh))  * columnnum ; // * gridboxw + (gridboxw / 2);
+		int newcellindex = ((int)((x + firstx - left - (gridboxw / 2)) / gridboxw)) + ((int)((y + firsty - top - gridboxh - titletopmargin + ((font->getSize() * 1.8f) * !istitleon)) / gridboxh))  * columnnum ; // * gridboxw + (gridboxw / 2);
 		if(newcellindex != selectedbox) {
 			if(istextboxactive) changeCell();
 			selectedbox = newcellindex;
@@ -332,11 +335,13 @@ void gGUIGrid::mousePressed(int x, int y, int button) {
 
 void gGUIGrid::mouseReleased(int x, int y, int button) {
 	if(istextboxactive) textbox.mouseReleased((x - left), (y - top - firsty - titledy), button);
+	gGUIScrollable::mouseReleased(x, y, button);
 }
 
 void gGUIGrid::mouseDragged(int x, int y, int button) {
 //	gLogi("Grid") << x << " " << y;
 	if(istextboxactive) textbox.mouseDragged((x - left), (y - top - firsty), button);
+	gGUIScrollable::mouseDragged(x, y, button);
 }
 
 void gGUIGrid::keyPressed(int key){

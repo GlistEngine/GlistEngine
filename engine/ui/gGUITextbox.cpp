@@ -78,6 +78,8 @@ gGUITextbox::gGUITextbox() {
 	isbackgroundenabled = true;
 	totalh = boxh;
 	hdiff = boxh / 4;
+	firstx = 0;
+	firsty = 0;
 }
 
 
@@ -237,10 +239,10 @@ void gGUITextbox::draw() {
 	gColor oldcolor = *renderer->getColor();
 	if(isbackgroundenabled) {
 		renderer->setColor(foregroundcolor);
-		gDrawRectangle(left, top + hdiff, width, boxh / 2 + totalh, false);
+		gDrawRectangle(left - firstx, top + hdiff - firsty, width, boxh / 2 + totalh, false);
 	}
 	renderer->setColor(textbackgroundcolor);
-	gDrawRectangle(left, top + hdiff, width,  totalh, true);
+	gDrawRectangle(left - firstx, top + hdiff - firsty, width,  totalh, true);
 
 	if(selectionmode) {
 		if(selectionposx2 >= selectionposx1) {
@@ -264,19 +266,19 @@ void gGUITextbox::draw() {
 		if(dotlimit > text.size()) dotlimit = text.size();
 		for(int i = 0; i < dotlimit; i++) gDrawCircle(left + dotinit + i * dotlen, doty, dotradius, true);
 	} else if(linecount == 1) {
-		font->drawText(text.substr(firstutf, lastutf), left + initx - 2, top + hdiff + lineheight + linetopmargin);
+		font->drawText(text.substr(firstutf, lastutf), left + initx - 2 - firstx, top + hdiff + lineheight + linetopmargin - firsty);
 	} else {
 		if(text.size() == 0) currentline = 1;
 		for(int i = 0; i < linecount; i++) {
 			if(lines[i] == "") continue;
-			font->drawText(lines[i], left + initx - 2, top + hdiff + (i + 1) * (lineheight + linetopmargin));
+			font->drawText(lines[i], left + initx - 2 - firstx, top + hdiff + (i + 1) * (lineheight + linetopmargin) - firsty);
 		}
 	}
 
 	if(editmode && (cursorshowcounter <= cursorshowlimit || keystate)) {
-		int linebottom = top + hdiff + currentline * (lineheight + linetopmargin);
-		gDrawLine(left + initx + 1 + cursorposx, linebottom - lineheight,
-				left + initx + 1 + cursorposx, linebottom + lineheight * 2 / 3);
+		int linebottom = top + hdiff + currentline * (lineheight + linetopmargin) - firsty;
+		gDrawLine(left + initx + 1 + cursorposx - firstx, linebottom - lineheight,
+				left + initx + 1 + cursorposx - firstx, linebottom + lineheight * 2 / 3);
 	}
 	renderer->setColor(&oldcolor);
 }
@@ -1049,7 +1051,7 @@ int gGUITextbox::findFirstSpace(int lineend) {
 void gGUITextbox::mousePressed(int x, int y, int button) {
 	if(!iseditable) return;
 
-	if(x >= left && x < right && y >= top + hdiff && y < top + totalh + hdiff && button == 0) {
+	if(x >= left - (firstx * 2) && x < right - (firstx * 2) && y >= top + hdiff - (firsty * 2) && y < top + totalh + hdiff - (firsty * 2) && button == 0) {
 		firstclicktime = previousclicktime;
 		previousclicktime = clicktime;
 		clicktime = gGetSystemTimeMillis();
@@ -1358,4 +1360,13 @@ void gGUITextbox::pushToStack() {
 	firstcharstack.push(firstchar);
 	firstutfstack.push(firstutf);
 	firstposxstack.push(firstposx);
+}
+
+
+void gGUITextbox::setFirstX(int firstx) {
+	this->firstx = firstx;
+}
+
+void gGUITextbox::setFirstY(int firsty) {
+	this->firsty = firsty;
 }
