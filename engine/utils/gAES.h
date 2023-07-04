@@ -8,9 +8,6 @@
 #ifndef UTILS_GAES_H_
 #define UTILS_GAES_H_
 
-#if(ANDROID)
-// todo
-#else
 #include <openssl/conf.h>
 #include <openssl/evp.h>
 #include <openssl/err.h>
@@ -19,22 +16,20 @@
 
 
 class gAES : public gObject {
-  public:
-	gAES();
-	virtual ~gAES();
+public:
+    gAES();
+    virtual ~gAES();
 
-	void initialize(unsigned char* initKey, unsigned char* initVector);
+    void initialize(unsigned char* initKey, unsigned char* initVector);
 
-	std::string encrypt(std::string plainText); //AES-256
-	std::string decrypt(std::string cipherText); //AES-256
+    std::string encrypt(std::string plainText); //AES-256
+    std::string decrypt(std::string cipherText); //AES-256
 
-	std::string encodeMD5(std::string plainText); //MD5
+    std::string encodeMD5(std::string plainText); //MD5
 
-  private:
-	unsigned char *initkey, *initvector;
-	void handleErrors(void);
-	void clean();
+private:
+    unsigned char *initkey, *initvector;
+    void handleErrors(void);
+    void clean();
 };
-#endif
-
 #endif /* UTILS_GAES_H_ */

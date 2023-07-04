@@ -268,6 +268,7 @@ elseif(ANDROID)
 	list(APPEND INC_DIRS
 			${ANDROID_DIR}/include
 			${ANDROID_DIR}/include/freetype2
+			${ANDROID_DIR}/libs/openssl/${ANDROID_ABI}/include
 	)
 elseif(LINUX)
 	list(APPEND INC_DIRS
@@ -345,17 +346,17 @@ elseif(ANDROID)
 	set_target_properties(fmodL PROPERTIES IMPORTED_LOCATION
 			${ANDROID_DIR}/libs/fmod/${ANDROID_ABI}/libfmodL.so)
 
-	#add_library(assimp STATIC IMPORTED)
-	#set_target_properties(assimp PROPERTIES IMPORTED_LOCATION
-	#		${ANDROID_DIR}/libs/assimp/${ANDROID_ABI}/libassimp.a)
-
 	add_library(libpng STATIC IMPORTED)
 	set_target_properties(libpng PROPERTIES IMPORTED_LOCATION
 			${ANDROID_DIR}/libs/libpng/${ANDROID_ABI}/libpng.a)
 
-	add_library(freetype STATIC IMPORTED)
-	set_target_properties(freetype PROPERTIES IMPORTED_LOCATION
-			${ANDROID_DIR}/libs/freetype/${ANDROID_ABI}/libfreetype.a)
+    add_library(openssl SHARED IMPORTED)
+    set_target_properties(openssl PROPERTIES IMPORTED_LOCATION
+            ${ANDROID_DIR}/libs/openssl/${ANDROID_ABI}/lib/libcrypto.so.1.1)
+
+    add_library(freetype STATIC IMPORTED)
+    set_target_properties(freetype PROPERTIES IMPORTED_LOCATION
+            ${ANDROID_DIR}/libs/freetype/${ANDROID_ABI}/libfreetype.a)
 elseif(LINUX)
 	# TODO: FFMPEG
 #	find_library(Lib_Freetype2 freetype HINTS /usr/lib/x86_64-linux-gnu)

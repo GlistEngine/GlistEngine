@@ -7,9 +7,6 @@
 
 #include "gAES.h"
 
-#if(ANDROID)
-// todo
-#else
 gAES::gAES() {
 	unsigned char empty[] = { 0 };
 	initkey = empty;
@@ -105,5 +102,4 @@ void gAES::handleErrors(void) {
 	ERR_print_errors_fp(stderr);
 	abort();
 }
-#endif
 
