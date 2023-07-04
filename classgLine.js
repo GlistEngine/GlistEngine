@@ -7,5 +7,6 @@ var classgLine =
     [ "draw", "classgLine.html#a81b181aad3771052b6ce4bb3bde2b5c8", null ],
     [ "draw", "classgLine.html#a16339f9a679d37480f248e2256fe54e2", null ],
     [ "setPoints", "classgLine.html#a7601826ff65d87110bfc108e8e2c2baf", null ],
-    [ "setPoints", "classgLine.html#ab0430bcf052dd047dc017474690f29ac", null ]
+    [ "setPoints", "classgLine.html#ab0430bcf052dd047dc017474690f29ac", null ],
+    [ "setThickness", "classgLine.html#a8d20da7f87bf9d4edca9253fd69d0950", null ]
 ];
