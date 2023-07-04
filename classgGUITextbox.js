@@ -24,6 +24,8 @@ var classgGUITextbox =
     [ "mouseReleased", "classgGUITextbox.html#a4fbba7cc0c52a98db86eb371fe9e8f44", null ],
     [ "set", "classgGUITextbox.html#a41d3868ecb91fc566f6a9fdd8904239c", null ],
     [ "setEditable", "classgGUITextbox.html#aa689bb1a1633dd1c03bf5a2cb0e8f652", null ],
+    [ "setFirstX", "classgGUITextbox.html#af056405b640b2578281f4baae09484cf", null ],
+    [ "setFirstY", "classgGUITextbox.html#ae165f54e3bc8eaeafa497393bfb4e233", null ],
     [ "setLineCount", "classgGUITextbox.html#a35c6bc9259522115233412f72383d3f5", null ],
     [ "setLineTopMargin", "classgGUITextbox.html#a53f8c7b4ceb7bb28e047f5ca9f55a1b0", null ],
     [ "setNumeric", "classgGUITextbox.html#a97ad956c305f08731c110cf37ccf31b3", null ],
