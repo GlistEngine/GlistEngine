@@ -244,7 +244,7 @@ void gGUIGrid::drawContent() {
 
 void gGUIGrid::drawCellBackground() {
 	renderer->setColor(*textbackgroundcolor);
-	gDrawRectangle(gridx + (gridboxw / 2), gridy + gridboxh, gridw, gridh, true);
+	gDrawRectangle(gridx + (gridboxw / 2) - firstx, gridy + gridboxh - firsty, gridw, gridh, true);
 }
 
 void gGUIGrid::drawSelectedBox() {
@@ -272,7 +272,7 @@ void gGUIGrid::drawRowContents() {
 		font->drawText(rowtitlestring, gridx + (gridboxw / 4) - (font->getStringWidth(rowtitlestring) / 2), gridy + (gridboxh / 2) + (i * gridboxh)  + (font->getStringHeight(rowtitlestring) / 2) - firsty);
 		temprow++;
 		renderer->setColor(*pressedbuttoncolor);
-		gDrawLine(gridx, gridy + ((i + 1) * gridboxh) - firsty, gridx + gridw + (gridboxw / 2), gridy + ((i + 1) * gridboxh) - firsty);
+		gDrawLine(gridx - firstx, gridy + ((i + 1) * gridboxh) - firsty, gridx + gridw + (gridboxw / 2) - firstx, gridy + ((i + 1) * gridboxh) - firsty);
 	}
 }
 
@@ -291,8 +291,8 @@ void gGUIGrid::drawColumnContents() {
 
 void gGUIGrid::drawTitleLines() {
 	renderer->setColor(*backgroundcolor);
-	gDrawLine(gridx + (gridboxw / 2) + 1, gridy, gridx + (gridboxw / 2) + 1, gridy + gridboxh + gridh);
-	gDrawLine(gridx, gridy + (gridboxh), gridx + gridboxw / 2 + gridw, gridy + (gridboxh));
+	gDrawLine(gridx + (gridboxw / 2) + 1 - firstx, gridy - firsty, gridx + (gridboxw / 2) + 1 - firstx, gridy + gridboxh + gridh - firsty);
+	gDrawLine(gridx - firstx, gridy + (gridboxh) - firsty, gridx + gridboxw / 2 + gridw - firstx, gridy + (gridboxh) - firsty);
 }
 
 void gGUIGrid::drawCellContents() {
