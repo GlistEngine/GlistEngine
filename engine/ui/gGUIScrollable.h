@@ -159,6 +159,7 @@ private:
 	int vrx, vry, vrw, vrh;
 	int hrx, hry, hrw, hrh;
 	int vsbmy;
+	int hsbmx;
 	bool isalpha;
 };
 

@@ -335,11 +335,13 @@ void gGUIGrid::mousePressed(int x, int y, int button) {
 
 void gGUIGrid::mouseReleased(int x, int y, int button) {
 	if(istextboxactive) textbox.mouseReleased((x - left), (y - top - firsty - titledy), button);
+	gGUIScrollable::mouseReleased(x, y, button);
 }
 
 void gGUIGrid::mouseDragged(int x, int y, int button) {
 //	gLogi("Grid") << x << " " << y;
 	if(istextboxactive) textbox.mouseDragged((x - left), (y - top - firsty), button);
+	gGUIScrollable::mouseDragged(x, y, button);
 }
 
 void gGUIGrid::keyPressed(int key){

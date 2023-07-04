@@ -48,6 +48,7 @@ gGUIScrollable::gGUIScrollable() {
 	firstx = 0;
 	firsty = 0;
 	vsbmy = -1;
+	hsbmx = -1;
 	titlex = left;
 	titley = top + font->getStringHeight("AE");
 	titledy = font->getSize() * 1.8f;
@@ -185,12 +186,15 @@ void gGUIScrollable::mouseMoved(int x, int y) {
 	iscursoronvsb = false;
 	iscursoronhsb = false;
 	if(x >= left + vsbx && x < left + vsbx + vsbw && y >= top + titledy + vsby && y < top + titledy + vsby + vsbh) iscursoronvsb = true;
-	if(x >= left + hsbx && x < left + hsbx + hsbw && y >= top + titledy + hsby && y < top + titledy + hsby + hsbh) iscursoronhsb = true;
+	if(x >= left + hsbx && x < left + hsbx + hsbw && y >= top + titledy + hsby - (titletopmargin * istitleon) && y < top + titledy + hsby - (titletopmargin * istitleon) + hsbh) iscursoronhsb = true;
 }
 
 void gGUIScrollable::mousePressed(int x, int y, int button) {
 	if(vsbenabled && x >= left + vrx && x < left + vrx + vrw && y >= top + titledy + vry && y < top + titledy + vry + vrh) {
 		vsbmy = y;
+	}
+	if(hsbenabled && x >= left + hrx && x < left + hrx + hrw && y >= top + titledy + hry - (titletopmargin * istitleon) && y < top + titledy + hry - (titletopmargin * istitleon) + hrh) {
+		hsbmx = x;
 	}
 }
 
@@ -208,10 +212,23 @@ void gGUIScrollable::mouseDragged(int x, int y, int button) {
 
 		vsbmy = y;
 	}
+
+	if(hsbmx > -1) {
+		hrx += x - hsbmx;
+		if(hrx < 0) hrx = 0;
+		if(hrx > boxw - vsbh) hrx = boxw - vsbh;
+
+		firstx += x - hsbmx;
+		if(firstx < 0) firstx = 0;
+		if(firstx > boxw - vsbh) firstx = boxw - vsbh;
+
+		hsbmx = x;
+	}
 }
 
 void gGUIScrollable::mouseReleased(int x, int y, int button) {
 	vsbmy = -1;
+	hsbmx = -1;
 }
 
 void gGUIScrollable::mouseScrolled(int x, int y) {
@@ -225,7 +242,6 @@ void gGUIScrollable::mouseScrolled(int x, int y) {
 	if(firstx < 0) firstx = 0;
 	if(firstx > boxw - vsbh) firstx = boxw - vsbh;
 	if(hsbenabled) hrx = firstx;
-	//gLogi("Scrollable") << "t:" << top << ", y:" << vry << ", h:" << vrh;
 }
 
 void gGUIScrollable::windowResized(int w, int h) {
