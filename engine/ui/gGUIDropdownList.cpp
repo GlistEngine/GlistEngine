@@ -20,6 +20,7 @@ gGUIDropdownList::gGUIDropdownList() {
 	button.setSize(buttonw, buttonw);
 	button.setTitle("-");
 	textbox.setEditable(false);
+	textbox.enableVerticalMargin(false);
 	listsizer.setControl(0, 0, &textbox);
 	listsizer.setControl(0, 1, &button);
 	listx = textbox.left;
@@ -62,7 +63,7 @@ void gGUIDropdownList::set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, g
 	textboxw = textbox.width;
 	textboxh = textbox.getTextboxh();
 	buttonw = textboxh;
-	listw = textboxw + buttonw + 7;
+	listw = textboxw + buttonw + 5;
 	listx = textbox.left;
 	listy = textbox.top + textboxh - list.getTitleTop() + 5;
 }

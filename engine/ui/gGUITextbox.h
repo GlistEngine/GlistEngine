@@ -179,6 +179,11 @@ public:
 	 * @param isEnabled Boolean value to enable/disable drawing a background.
 	 */
 	void enableBackground(bool isEnabled);
+	/*
+	 * Enables/disables the vertical margin between textbox and its background
+	 *
+	 */
+	void enableVerticalMargin(bool isAligned);
 	bool isBackgroundEnabled();
 
 	void update();
@@ -244,6 +249,7 @@ private:
 	bool ismultiline;
 	int currentline;
 	int linetopmargin;
+	int hdiff;
 	std::vector<std::string> lines;
 	std::vector<int> lineendchar;
 	int leftlimit, rightlimit, toplimit, bottomlimit;
