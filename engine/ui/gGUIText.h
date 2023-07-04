@@ -14,33 +14,31 @@
 class gGUIText: public gGUIControl {
 public:
 
-	static const int TEXTALIGNMENT_LEFT = 0, TEXTALIGNMENT_CENTER = 1, TEXTALIGNMENT_RIGHT = 2;
+    static const int TEXTALIGNMENT_LEFT = 0, TEXTALIGNMENT_CENTER = 1, TEXTALIGNMENT_RIGHT = 2;
 
-	gGUIText();
-	virtual ~gGUIText();
+    gGUIText();
+    virtual ~gGUIText();
 
-	void set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIObject* parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h);
+    void set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIObject* parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h);
 
-	void setText(std::string text);
+    void setText(std::string text);
 
-	void setTextAlignment(int textAligment);
+    void setTextAlignment(int textAligment);
 
-	void draw();
+    void draw();
 
 private:
-	static const int maxlinenum = 50;
+    std::string text;
+    std::vector<std::string> line;
+    std::vector<int> linefirstx;
+    int linenum;
+    int textalignment;
+    int fontsize, lineh;
 
-	std::string text;
-	std::string line[maxlinenum];
-	int linenum;
-	int textalignment;
-	int linefirstx[maxlinenum];
-	int fontsize, lineh;
+    void resetText();
+    void resetAlignment();
 
-	void resetText();
-	void resetAlignment();
-
-	std::vector<std::string> splitString(const std::string& textToSplit, gFont* font, int lineWidth);
+    std::vector<std::string> splitString(const std::string& textToSplit, gFont* font, int lineWidth);
 };
 
 #endif /* UI_GGUITEXT_H_ */
