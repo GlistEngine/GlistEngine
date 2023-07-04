@@ -266,13 +266,30 @@ elseif(APPLE)
   		${SYS_INC_PATH}
   		${SYS_INC_PATH}/freetype2
 		${MINGW64_DIR}/include/sqlite
-		${BREW_PATH}/openssl@${OPENSSL_VER_SHORT}/${OPENSSL_VER_FULL}/include
 		# TODO: FFMPEG
   	)
+	if(DEFINED ENGINE_USE_SYMLINKS)
+		list(APPEND INC_DIRS
+				${BREW_PATH}/openssl@3.0/include
+		)
+	else()
+		# For backwards compatibility
+		list(APPEND INC_DIRS
+				${BREW_PATH}/openssl@${OPENSSL_VER_SHORT}/${OPENSSL_VER_FULL}/include
+		)
+	endif()
+
   	if(${DEVICEARCHITECTURE} STREQUAL "arm64")
-	  	list(APPEND INC_DIRS
-	  		${BREW_PATH}/llvm/${LLVM_VER}/include/c++/v1
-	  	)
+		if(DEFINED ENGINE_USE_SYMLINKS)
+			list(APPEND INC_DIRS
+					${BREW_PATH}/llvm/include/c++/v1
+			)
+		else()
+			# For backwards compatibility
+			list(APPEND INC_DIRS
+					${BREW_PATH}/llvm/${LLVM_VER}/include/c++/v1
+			)
+		endif()
   	endif()
 elseif(ANDROID)
 	list(APPEND INC_DIRS
@@ -404,9 +421,15 @@ elseif(APPLE)
 	    OUTPUT_STRIP_TRAILING_WHITESPACE)
 	string(STRIP "${CL_TMP_VAR}" CL_VAR_8)
 	add_definitions(${CL_VAR_8})
-	
-	find_library(Lib_crypto crypto HINTS ${BREW_PATH}/openssl@${OPENSSL_VER_SHORT}/${OPENSSL_VER_FULL}/lib)
-	execute_process(COMMAND 
+
+	if(DEFINED ENGINE_USE_SYMLINKS)
+		find_library(Lib_crypto crypto HINTS ${BREW_PATH}/openssl@3.0/lib)
+	else()
+		# For backwards compatibility
+		find_library(Lib_crypto crypto HINTS ${BREW_PATH}/openssl@${OPENSSL_VER_SHORT}/${OPENSSL_VER_FULL}/lib)
+	endif()
+
+	execute_process(COMMAND
 	    pkg-config --cflags crypto
 	    OUTPUT_VARIABLE
 	    CL_TMP_VAR
