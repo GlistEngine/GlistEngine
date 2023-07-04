@@ -14,11 +14,13 @@ gGUIDropdownList::gGUIDropdownList() {
 	listsizer.setSize(1, 2);
 	float columnproportions[2] = {0.8f, 0.2f};
 	listsizer.setColumnProportions(columnproportions);
+	listsizer.enableBorders(true);
 	setSizer(&listsizer);
 	button.setButtonColor(pressedbuttoncolor);
 	button.setSize(buttonw, buttonw);
 	button.setTitle("-");
 	textbox.setEditable(false);
+	textbox.enableVerticalMargin(false);
 	listsizer.setControl(0, 0, &textbox);
 	listsizer.setControl(0, 1, &button);
 	listx = textbox.left;
@@ -63,12 +65,12 @@ void gGUIDropdownList::set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, g
 	buttonw = textboxh;
 	listw = textboxw + buttonw + 5;
 	listx = textbox.left;
-	listy = textbox.top + textboxh - list.getTitleTop();
+	listy = textbox.top + textboxh - list.getTitleTop() + 5;
 }
 
 void gGUIDropdownList::onGUIEvent(int guiObjectId, int eventType, int sourceEventType, std::string value1, std::string value2) {
 	if(sourceEventType == G_GUIEVENT_BUTTONRELEASED) {
-		buttonpressed = true;
+		buttonpressed = listopened;
 		frame->addTreelist(&list, listx, listy, listw);
 		root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_TREELISTOPENEDONDROPDOWNLIST);
 		actionmanager.onGUIEvent(id, G_GUIEVENT_TREELISTOPENEDONDROPDOWNLIST);
@@ -112,20 +114,32 @@ void gGUIDropdownList::addElement(gGUITreelist::Element* element, gGUITreelist::
 
 void gGUIDropdownList::mousePressed(int x, int y, int button) {
 	gGUIContainer::mousePressed(x, y, button);
-	list.mousePressed(x, y, button);
+	if(listopened)
+		list.mousePressed(x, y, button);
 }
 
 void gGUIDropdownList::mouseReleased(int x, int y, int button) {
-	lopened = listopened;
-	gGUIContainer::mouseReleased(x, y, button);
-	list.mouseReleased(x, y, button);
-	setSelectedTitle();
-	if(lopened && !pressedonlist) {
-		listopened = false;
-		frame->addTreelist(nullptr, listx, listy, listw);
-	}
-	pressedonlist = false;
+    lopened = listopened;
+    gGUIContainer::mouseReleased(x, y, button);
+    if(listopened)
+    	list.mouseReleased(x, y, button);
+    setSelectedTitle();
+    //Clicking on the Textbox opens the Treelist.
+    if (x >= textbox.left && x <= textbox.right && y >= textbox.top + 5 && y <= textbox.height + buttonw) {
+        buttonpressed = true;
+        frame->addTreelist(&list, listx, listy, listw);
+        root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_TREELISTOPENEDONDROPDOWNLIST);
+        actionmanager.onGUIEvent(id, G_GUIEVENT_TREELISTOPENEDONDROPDOWNLIST);
+        listopened = true;
+    }
+    //Clicking on the Textbox closes the Treelist.
+    if(lopened && !pressedonlist) {
+        listopened = false;
+        frame->addTreelist(nullptr, listx, listy, listw);
+    }
+    pressedonlist = false;
 }
+
 
 void gGUIDropdownList::mouseScrolled(int x, int y) {
 	list.mouseScrolled(x, y);

@@ -77,7 +77,9 @@ gGUITextbox::gGUITextbox() {
 	dotradius = 0;
 	isbackgroundenabled = true;
 	totalh = boxh;
+	hdiff = boxh / 4;
 }
+
 
 gGUITextbox::~gGUITextbox() {
 }
@@ -117,7 +119,7 @@ bool gGUITextbox::isEditable() {
 }
 
 int gGUITextbox::getCursor(int x, int y) {
-	if(iseditable && x >= left && x < right && y >= top + boxh / 4 && y < top + totalh + boxh / 4) return CURSOR_IBEAM;
+	if(iseditable && x >= left && x < right && y >= top + hdiff && y < top + totalh + hdiff) return CURSOR_IBEAM;
 	return CURSOR_ARROW;
 }
 
@@ -235,10 +237,10 @@ void gGUITextbox::draw() {
 	gColor oldcolor = *renderer->getColor();
 	if(isbackgroundenabled) {
 		renderer->setColor(foregroundcolor);
-		gDrawRectangle(left, top, width, boxh / 2 + totalh, false);
+		gDrawRectangle(left, top + hdiff, width, boxh / 2 + totalh, false);
 	}
 	renderer->setColor(textbackgroundcolor);
-	gDrawRectangle(left, top + boxh / 4, width,  totalh, true);
+	gDrawRectangle(left, top + hdiff, width,  totalh, true);
 
 	if(selectionmode) {
 		if(selectionposx2 >= selectionposx1) {
@@ -250,7 +252,7 @@ void gGUITextbox::draw() {
 		}
 		if(isfocused) renderer->setColor(255, 128, 0);
 		else renderer->setColor(middlegroundcolor);
-		gDrawRectangle(left + selectionboxx1 + 5, top + boxh / 4 + linetopmargin, selectionboxw, lineheight * 5 / 3, true);
+		gDrawRectangle(left + selectionboxx1 + 5, top + hdiff + linetopmargin, selectionboxw, lineheight * 5 / 3, true);
 	}
 
 	renderer->setColor(fontcolor);
@@ -262,17 +264,17 @@ void gGUITextbox::draw() {
 		if(dotlimit > text.size()) dotlimit = text.size();
 		for(int i = 0; i < dotlimit; i++) gDrawCircle(left + dotinit + i * dotlen, doty, dotradius, true);
 	} else if(linecount == 1) {
-		font->drawText(text.substr(firstutf, lastutf), left + initx - 2, top + boxh / 4 + lineheight + linetopmargin);
+		font->drawText(text.substr(firstutf, lastutf), left + initx - 2, top + hdiff + lineheight + linetopmargin);
 	} else {
 		if(text.size() == 0) currentline = 1;
 		for(int i = 0; i < linecount; i++) {
 			if(lines[i] == "") continue;
-			font->drawText(lines[i], left + initx - 2, top + boxh / 4 + (i + 1) * (lineheight + linetopmargin));
+			font->drawText(lines[i], left + initx - 2, top + hdiff + (i + 1) * (lineheight + linetopmargin));
 		}
 	}
 
 	if(editmode && (cursorshowcounter <= cursorshowlimit || keystate)) {
-		int linebottom = top + boxh / 4 + currentline * (lineheight + linetopmargin);
+		int linebottom = top + hdiff + currentline * (lineheight + linetopmargin);
 		gDrawLine(left + initx + 1 + cursorposx, linebottom - lineheight,
 				left + initx + 1 + cursorposx, linebottom + lineheight * 2 / 3);
 	}
@@ -1047,7 +1049,7 @@ int gGUITextbox::findFirstSpace(int lineend) {
 void gGUITextbox::mousePressed(int x, int y, int button) {
 	if(!iseditable) return;
 
-	if(x >= left && x < right && y >= top + boxh / 4 && y < top + totalh + boxh / 4 && button == 0) {
+	if(x >= left && x < right && y >= top + hdiff && y < top + totalh + hdiff && button == 0) {
 		firstclicktime = previousclicktime;
 		previousclicktime = clicktime;
 		clicktime = gGetSystemTimeMillis();
@@ -1090,7 +1092,7 @@ void gGUITextbox::mousePressed(int x, int y, int button) {
 void gGUITextbox::mouseReleased(int x, int y, int button) {
 	if(!iseditable) return;
 
-	if(x >= left && x < right && y >= top + boxh / 4 && y < top + totalh + boxh / 4 && button == 0) {
+	if(x >= left && x < right && y >= top + hdiff && y < top + totalh + hdiff && button == 0) {
 		return;
 	}
 	if(!isdragging) editmode = false;
@@ -1158,7 +1160,7 @@ std::vector<int> gGUITextbox::calculateClickPositionMultiline(int x, int y) {
 	for(int i = 0; i < 3; i++) result.push_back(0);
 	int selectedline = 1;
 	for(int i = 0; i < linecount; i++) {
-		if(y > top + boxh / 4 + i * (lineheight + linetopmargin) && y < top + boxh / 4 + (i + 1) * (lineheight + linetopmargin)) selectedline = i + 1;
+		if(y > top + hdiff + i * (lineheight + linetopmargin) && y < top + hdiff + (i + 1) * (lineheight + linetopmargin)) selectedline = i + 1;
 	}
 	if(lines[selectedline] == "") {
 		result[0] = cursorposchar;
@@ -1338,6 +1340,13 @@ void gGUITextbox::cleanText() {
 
 int gGUITextbox::getTextboxh() {
 	return boxh;
+}
+
+void gGUITextbox::enableVerticalMargin(bool isAlinged) {
+	if(isAlinged)
+		hdiff = boxh / 4;
+	else
+		hdiff = 0;
 }
 
 void gGUITextbox::pushToStack() {
