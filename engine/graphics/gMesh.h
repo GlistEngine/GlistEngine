@@ -28,17 +28,17 @@ public:
 	DRAWMODE_TRIANGLES = GL_TRIANGLES, DRAWMODE_TRIANGLESTRIP = GL_TRIANGLE_STRIP, DRAWMODE_TRIANGLEFAN = GL_TRIANGLE_FAN;
 
 	gMesh();
-	gMesh(std::vector<gVertex> vertices, std::vector<Index> indices, std::vector<gTexture> textures);
+	gMesh(std::vector<gVertex> vertices, std::vector<gIndex> indices, std::vector<gTexture> textures);
 	virtual ~gMesh();
 
-	void setVertices(std::vector<gVertex> vertices, std::vector<Index> indices = std::vector<Index>());
+	void setVertices(std::vector<gVertex> vertices, std::vector<gIndex> indices = std::vector<gIndex>());
 	void setTextures(std::vector<gTexture>& textures);
 	void setTexture(gTexture* texture);
 	void addTexture(gTexture tex);
 	gTexture* getTexture(int textureNo);
 
 	std::vector<gVertex>& getVertices();
-	std::vector<Index>& getIndices();
+	std::vector<gIndex>& getIndices();
 	int getVerticesNum() const;
 	int getIndicesNum() const;
 	gBoundingBox getBoundingBox();
@@ -70,7 +70,7 @@ protected:
 
 private:
     std::string name;
-	std::vector<Index> indices;
+	std::vector<gIndex> indices;
 	std::vector<gTexture> textures;
 	int drawmode;
     gMaterial material;

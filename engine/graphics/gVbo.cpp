@@ -84,7 +84,7 @@ void gVbo::setVertexData(const float* vert0x, int coordNum, int total, int usage
 	glBindVertexArray(0);
 }
 
-void gVbo::setIndexData(Index* indices, int total) {
+void gVbo::setIndexData(gIndex* indices, int total) {
     glBindVertexArray(vao);
 	if (!isindexdataallocated) glGenBuffers(1, &ebo);
 	indexarrayptr = indices;
@@ -92,7 +92,7 @@ void gVbo::setIndexData(Index* indices, int total) {
 	isindexdataallocated = true;
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, totalindexnum * sizeof(Index), indexarrayptr, GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, totalindexnum * sizeof(gIndex), indexarrayptr, GL_STATIC_DRAW);
     glBindVertexArray(0);
 }
 
@@ -106,7 +106,7 @@ gVertex* gVbo::getVertices() const {
 	return verticesptr;
 }
 
-Index* gVbo::getIndices() const {
+gIndex* gVbo::getIndices() const {
 	return indexarrayptr;
 }
 

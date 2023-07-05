@@ -22,7 +22,7 @@ private:
 	void drawFilled(float x, float y, float width, float height, float thickness);
 
 	std::vector<gVertex> vertices;
-	std::vector<Index> indices;
+	std::vector<gIndex> indices;
 };
 
 #endif /* GRAPHICS_PRIMITIVES_GCROSS_H_ */

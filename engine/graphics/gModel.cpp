@@ -267,7 +267,7 @@ void gModel::processNode(aiNode *node, const aiScene *scene) {
 gSkinnedMesh gModel::processMesh(aiMesh *mesh, const aiScene *scene, aiMatrix4x4 matrix) {
     // data to fill
     std::vector<gVertex> vertices;
-    std::vector<Index> indices;
+    std::vector<gIndex> indices;
     glm::mat4 mat = convertMatrix(matrix);
 
     // walk through each of the mesh's vertices
@@ -549,7 +549,7 @@ void gModel::updateBones(gSkinnedMesh* gmesh, aiMesh* aimesh) {
 
 void gModel::updateVbo(gSkinnedMesh* gmesh) {
 	std::vector<gVertex> vertexarray = gmesh->getVertices();
-	std::vector<Index> indexarray = gmesh->getIndices();
+	std::vector<gIndex> indexarray = gmesh->getIndices();
 	for (int i=0; i<gmesh->getVbo()->getVerticesNum(); i++) {
 		vertexarray[i].position = gmesh->getVertexPos(i);
 		vertexarray[i].normal = gmesh->getVertexNorm(i);
@@ -704,7 +704,7 @@ void gModel::prepareVertexAnimationData() {
 
                 if (isvertexanimationstoredonvram) {
                 	std::vector<gVertex> vertexarray = meshes[i].getVertices();
-                	std::vector<Index> indexarray = meshes[i].getIndices();
+                	std::vector<gIndex> indexarray = meshes[i].getIndices();
                 	for (int l=0; l<meshes[i].getVbo()->getVerticesNum(); l++) {
                 		vertexarray[l].position = meshes[i].getVertexPosData(j, k, l);
                 		vertexarray[l].normal = meshes[i].getVertexNormData(j, k, l);

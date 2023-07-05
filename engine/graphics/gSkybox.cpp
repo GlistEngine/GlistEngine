@@ -453,7 +453,7 @@ void gSkybox::setupRenderData() {
 	};
 
 
-	Index indexdata[] = {
+	gIndex indexdata[] = {
 	   // back
 		 0,  2, 3,
 		 0,  1, 3,
@@ -491,7 +491,7 @@ void gSkybox::setupRenderData() {
 	}
 
 	int ni = sizeof(indexdata) / sizeof(indexdata[0]);
-	std::vector<Index> indicesb;
+	std::vector<gIndex> indicesb;
 	for (int i=0; i<ni; i++) {
 		indicesb.push_back(indexdata[i]);
 	}

@@ -14,10 +14,10 @@
 //#include "gColor.h"
 
 #ifdef ANDROID
-using Index = unsigned short;
+using gIndex = unsigned short;
 #define G_INDEX_SIZE GL_UNSIGNED_SHORT
 #else
-using Index = unsigned int;
+using gIndex = unsigned int;
 #define G_INDEX_SIZE GL_UNSIGNED_INT
 #endif
 

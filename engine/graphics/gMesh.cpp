@@ -34,7 +34,7 @@ gMesh::gMesh() {
 	bbmaxx = 0.0f, bbmaxy = 0.0f, bbmaxz = 0.0f;
 }
 
-gMesh::gMesh(std::vector<gVertex> vertices, std::vector<Index> indices, std::vector<gTexture> textures) {
+gMesh::gMesh(std::vector<gVertex> vertices, std::vector<gIndex> indices, std::vector<gTexture> textures) {
 	name = "";
 	sli = 0;
 	ti = 0;
@@ -65,7 +65,7 @@ const std::string& gMesh::getName() const {
 	return name;
 }
 
-void gMesh::setVertices(std::vector<gVertex> vertices, std::vector<Index> indices) {
+void gMesh::setVertices(std::vector<gVertex> vertices, std::vector<gIndex> indices) {
 	this->vertices = vertices;
 	this->indices = indices;
 	vbo.setVertexData(vertices.data(), sizeof(gVertex), vertices.size());
@@ -78,7 +78,7 @@ std::vector<gVertex>& gMesh::getVertices() {
 	return vertices;
 }
 
-std::vector<Index>& gMesh::getIndices() {
+std::vector<gIndex>& gMesh::getIndices() {
 	return indices;
 }
 

@@ -31,7 +31,7 @@ public:
 	void setVertexNormData(int animationNo, int frameNo, int vertexNo, glm::vec3 newWeight);
 	const glm::vec3& getVertexPosData(int animationNo, int frameNo, int vertexNo) const;
 	const glm::vec3& getVertexNormData(int animationNo, int frameNo, int vertexNo) const;
-	void setVerticesData(int animationNo, int frameNo, std::vector<gVertex> vertices, std::vector<Index> indices);
+	void setVerticesData(int animationNo, int frameNo, std::vector<gVertex> vertices, std::vector<gIndex> indices);
 
 	void setVertexAnimated(bool isVertexAnimated);
 	void setVertexAnimationStoredOnVram(bool isVertexAnimationStoredOnVram);

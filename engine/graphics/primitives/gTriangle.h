@@ -21,7 +21,7 @@ private:
 	void setPoints(float px, float py, float qx, float qy, float rx, float ry, bool is_filled);
 
 	std::vector<gVertex> vertices;
-	std::vector<Index> indices;
+	std::vector<gIndex> indices;
 	gVertex vertex1;
 	gVertex vertex2;
 	gVertex vertex3;
