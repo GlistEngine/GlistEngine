@@ -7,9 +7,7 @@
 
 #ifndef UTILS_GHTTPFILE_H_
 #define UTILS_GHTTPFILE_H_
-#if(ANDROID)
 
-#else
 #include <curl/curl.h>
 #include <stdio.h>
 #include <iostream>
@@ -33,6 +31,12 @@ class gHttpFile: public gObject {
 	std::string getUrl();
 	void save(std::string filepath, bool isBinary = false);
 	std::string getHtml();
+    /**
+     * @see https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
+     *
+     * @return HTTP Status code, returns -1 if requests isn't complete yet.
+     */
+    int getStatusCode();
 	double getProgressLength();
 	double getFileLength();
 
@@ -41,8 +45,9 @@ class gHttpFile: public gObject {
 	std::string url;
 	gFile file;
 	std::string html;
+    int statuscode;
+
 	void loadHtml();
 };
-#endif
 
 #endif /* UTILS_GHTTPFILE_H_ */
