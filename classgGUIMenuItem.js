@@ -12,6 +12,7 @@ var classgGUIMenuItem =
     [ "getParentItemId", "classgGUIMenuItem.html#a9c91d26fae23fd4cb5d7def21d157a3b", null ],
     [ "mouseMoved", "classgGUIMenuItem.html#ac4a9abf24e7e59470ce3b8c217e850a0", null ],
     [ "mousePressed", "classgGUIMenuItem.html#a35f590600d3ed263db96d759d5f752eb", null ],
+    [ "mouseReleased", "classgGUIMenuItem.html#a2b01d88f005bb22c9e93c0e0c502a463", null ],
     [ "removeChild", "classgGUIMenuItem.html#a78b4a63d93fa71d6822c746091cc8508", null ],
     [ "resInitialize", "classgGUIMenuItem.html#a583ca4a6f3e895820376d8dc207aa2db", null ],
     [ "setMenuicon", "classgGUIMenuItem.html#afe08e1c724987ca20c6aa02230efd34b", null ],
