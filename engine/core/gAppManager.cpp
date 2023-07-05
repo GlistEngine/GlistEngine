@@ -194,7 +194,7 @@ void gAppManager::runApp(const std::string& appName, gBaseApp *baseApp, int widt
 	   elapsedtime += deltatime.count();
 	   starttime = endtime;
 
-       if(window->isRendering()) {
+       if(!usewindow || window->isRendering()) {
            internalUpdate();
        }
 
