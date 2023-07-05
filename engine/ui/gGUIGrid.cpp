@@ -22,15 +22,19 @@ gGUIGrid::gGUIGrid() {
 	gridh = gridboxh * rownum;
 	selectedbox = 0;
 	isselected = false;
+	totalw = columnnum * gridboxw;
 	totalh = rownum * gridboxh;
 	rowtitle = 1;
 	columntitle = 65; // 'A' char in ASCII
 	clicktimediff = 250;
+	titlediff = 20;
 	clicktime = gGetSystemTimeMillis();
 	previousclicktime = clicktime - 2 * clicktimediff;
 	firstclicktime = previousclicktime - 2 * clicktimediff;
 	isdoubleclicked = false;
 	enableScrollbars(true, false);
+	Cell tempcell;
+	setMargin(tempcell.cellw / 2, tempcell.cellh);
 }
 
 gGUIGrid::~gGUIGrid() {
@@ -38,6 +42,7 @@ gGUIGrid::~gGUIGrid() {
 }
 
 void gGUIGrid::set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIObject* parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h) {
+	totalw = columnnum * gridboxw;
 	totalh = h;
 	totalh = rownum * gridboxh;
 	gGUIScrollable::set(root, topParentGUIObject, parentGUIObject, parentSlotLineNo, parentSlotColumnNo, x, y, w, h);
