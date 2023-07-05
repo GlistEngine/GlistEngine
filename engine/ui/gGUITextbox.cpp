@@ -4,7 +4,7 @@
  *  Created on: Sep 2, 2021
  *      Author: noyan
  */
-
+ 
 #include "gGUITextbox.h"
 #include <cwchar>
 #include <codecvt>
@@ -224,6 +224,25 @@ void gGUITextbox::update() {
 		}
 
 		handleKeys();
+	}
+
+	if(font->getStringWidth(text.substr(firstchar, lastutf)) >= width - 2 * initx) {
+		if(!ismultiline && !ispassword) {
+			do {
+				firstutf += letterlength[firstchar];
+				firstposx = font->getStringWidth(text.substr(0, firstutf));
+				firstchar++;
+				cursorposx = font->getStringWidth(text.substr(firstutf, cursorposutf - firstutf));
+			} while(cursorposx >= width - 2 * initx);
+			lastutf = calculateLastUtf();
+		} else if(ismultiline) {
+			setText(text);
+			findCursorPosition();
+		} else if(ispassword) {
+			cursorposx -= 3 * dotradius;
+		} else {
+			cursorposx = font->getStringWidth(text.substr(firstutf, cursorposutf - firstutf));
+		}
 	}
 }
 
