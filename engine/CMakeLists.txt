@@ -265,11 +265,8 @@ if(WIN32)
 		${MINGW64_DIR}/include/utf8
 	)
 elseif(ANDROID)
-	list(APPEND INC_DIRS
-			${ANDROID_DIR}/include
-			${ANDROID_DIR}/include/freetype2
-			${ANDROID_DIR}/libs/openssl/${ANDROID_ABI}/include
-	)
+    # These are added by gipAndroid plugin
+    # Do not remove the if, otherwise linux libraries will be linked/included.
 elseif(LINUX)
 	list(APPEND INC_DIRS
 		${MINGW64_DIR}/include
@@ -331,32 +328,8 @@ if(WIN32)
 	)
 
 elseif(ANDROID)
-	find_library( # Sets the name of the path variable.
-			log-lib
-
-			# Specifies the name of the NDK library that
-			# you want CMake to locate.
-			log)
-
-	add_library(fmod SHARED IMPORTED)
-	set_target_properties(fmod PROPERTIES IMPORTED_LOCATION
-			${ANDROID_DIR}/libs/fmod/${ANDROID_ABI}/libfmod.so)
-
-	add_library(fmodL SHARED IMPORTED)
-	set_target_properties(fmodL PROPERTIES IMPORTED_LOCATION
-			${ANDROID_DIR}/libs/fmod/${ANDROID_ABI}/libfmodL.so)
-
-	add_library(libpng STATIC IMPORTED)
-	set_target_properties(libpng PROPERTIES IMPORTED_LOCATION
-			${ANDROID_DIR}/libs/libpng/${ANDROID_ABI}/libpng.a)
-
-    add_library(openssl SHARED IMPORTED)
-    set_target_properties(openssl PROPERTIES IMPORTED_LOCATION
-            ${ANDROID_DIR}/libs/openssl/${ANDROID_ABI}/lib/libcrypto.so.1.1)
-
-    add_library(freetype STATIC IMPORTED)
-    set_target_properties(freetype PROPERTIES IMPORTED_LOCATION
-            ${ANDROID_DIR}/libs/freetype/${ANDROID_ABI}/libfreetype.a)
+    # These are added by gipAndroid plugin
+    # Do not remove the if, otherwise linux libraries will be linked/included.
 elseif(LINUX)
 	# TODO: FFMPEG
 #	find_library(Lib_Freetype2 freetype HINTS /usr/lib/x86_64-linux-gnu)
@@ -519,17 +492,8 @@ if(WIN32)
 #		avcodec-58
 	)
 elseif(ANDROID)
-	list(APPEND LINK_LIBS
-			fmodL
-			fmod
-			assimp
-			freetype
-			libpng
-			android
-			log
-			EGL
-			GLESv3
-	)
+    # These are added by gipAndroid plugin
+    # Do not remove the if, otherwise linux libraries will be linked/included.
 elseif(LINUX)
 	list(APPEND LINK_LIBS
 		fmodL
