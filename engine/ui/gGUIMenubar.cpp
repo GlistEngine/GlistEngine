@@ -220,7 +220,7 @@ void gGUIMenuItem::draw() {
 }
 
 void gGUIMenuItem::mouseMoved(int x, int y) {
-	if(itemid == 0 || menuboxshown) {
+	if(menuboxshown && isparentpressed) {
 		for(int i = 0; i < childs.size(); i++) {
 			childs[i].hovered = false;
 //			if(parentitemid == 0 && x >= childs[i].left && x < childs[i].right && y >= childs[i].top && y < childs[i].bottom){
@@ -237,12 +237,25 @@ void gGUIMenuItem::mouseMoved(int x, int y) {
 			childs[i].mouseMoved(x, y);
 		}
 	}
+
+	for(int i = 0; i < childs.size(); i++) {
+		if(childs[i].selected) {
+			childs[i].hovered = false;
+			if(x >= childs[i].left && x < childs[i].right && y >= childs[i].top && y < childs[i].bottom) {
+				childs[i].hovered = true;
+			}
+			else{
+				childs[i].counter = 0;
+			}
+			childs[i].mouseMoved(x, y);
+		}
+	}
 }
 
 void gGUIMenuItem::mousePressed(int x, int y, int button) {
 	for(int i = 0; i < parentitems.size(); i++){
-		isparentpressed = false;
-		menuboxshown = false;
+		isparentpressed = true;
+		menuboxshown = true;
 	}
 
 	for(int i = 0; i < childs.size(); i++) {
@@ -264,7 +277,10 @@ void gGUIMenuItem::mousePressed(int x, int y, int button) {
 	}
 }
 
-
+void gGUIMenuItem::mouseReleased(int x, int y, int button) {
+	isparentpressed = false;
+	menuboxshown = true;
+}
 
 gGUIMenubar::gGUIMenubar() : gGUIMenuItem("") {
 	totaltextw = 0;
