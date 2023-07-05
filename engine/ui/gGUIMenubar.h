@@ -135,6 +135,7 @@ public:
 
 	void mouseMoved(int x, int y);
 	void mousePressed(int x, int y, int button);
+	void mouseReleased(int x, int y, int button);
 	void update();
 
 	void resInitialize();
@@ -166,6 +167,7 @@ private:
 	bool seperator;
 	static bool isresinitialized;
 	bool isparentpressed;
+	bool pressed;
 };
 
 
