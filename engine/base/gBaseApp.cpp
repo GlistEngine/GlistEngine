@@ -8,6 +8,8 @@
 #include "gBaseApp.h"
 
 
+
+
 gBaseApp::gBaseApp() {
 	appmanager = nullptr;
 	gSeedRandom();
