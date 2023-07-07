@@ -262,7 +262,7 @@ private:
 	int dotradius;
 	bool isbackgroundenabled;
 	int totalh;
-	int firstx, firsty;\
+	int firstx, firsty;
 	bool widthchanged;
 
 	//undo stacks
