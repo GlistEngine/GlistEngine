@@ -9,6 +9,7 @@
 #include <cwchar>
 #include <codecvt>
 #include <cctype>
+#include <gEngine.h>
 #include "gBaseApp.h"
 #include "gBaseCanvas.h"
 
@@ -674,7 +675,7 @@ void gGUITextbox::pressKey() {
 		root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_TEXTBOXENTRY, text);
 	} else if(ctrlcpressed) { //ctrl c
 		if(isselectedall) {
-			root->getAppManager()->setClipboardString(text);
+			gEngine::get()->setClipboardString(text);
 			return;
 		}
 		int seput1 = selectionposutf1;
@@ -683,12 +684,12 @@ void gGUITextbox::pressKey() {
 			seput1 = selectionposutf2;
 			seput2 = selectionposutf1;
 		}
-		root->getAppManager()->setClipboardString(text.substr(seput1, seput2 - seput1));
+		gEngine::get()->setClipboardString(text.substr(seput1, seput2 - seput1));
 	} else if(ctrlxpressed) { //ctrl x
 		pushToStack();
 		if(isselectedall) {
 			cleanText();
-			root->getAppManager()->setClipboardString(text);
+			gEngine::get()->setClipboardString(text);
 			if(ismultiline) setText(text);
 			return;
 		}
@@ -698,7 +699,7 @@ void gGUITextbox::pressKey() {
 			seput1 = selectionposutf2;
 			seput2 = selectionposutf1;
 		}
-		root->getAppManager()->setClipboardString(text.substr(seput1, seput2 - seput1));
+		gEngine::get()->setClipboardString(text.substr(seput1, seput2 - seput1));
 		int sepc1, sepx1, sepu1, sepc2, sepx2, sepu2;
 		if(selectionposx2 >= selectionposx1) {
 			sepc1 = selectionposchar1;
@@ -761,12 +762,12 @@ void gGUITextbox::pressKey() {
 	} else if(ctrlvpressed) { //ctrl v
 		pushToStack();
 		if(isnumeric) {
-			std::string testtext = root->getAppManager()->getClipboardString();
+			std::string testtext = gEngine::get()->getClipboardString();
 			for(int i = 0; i < testtext.size(); i++) if(testtext[i] < 48 || testtext[i] > 57) return;
 		}
 		if(selectionmode && selectionposchar1 != selectionposchar2) {
 			if(isselectedall) {
-				std::string newtext = root->getAppManager()->getClipboardString();
+				std::string newtext = gEngine::get()->getClipboardString();
 				setText(newtext);
 				selectionmode = false;
 				isselectedall = false;
@@ -805,7 +806,7 @@ void gGUITextbox::pressKey() {
 			}
 		}
 
-		std::string pastedtext = root->getAppManager()->getClipboardString();
+		std::string pastedtext = gEngine::get()->getClipboardString();
 		if(pastedtext.size() == 0) return;
 		std::vector<short> lettersize = readString(pastedtext);
 		int pastedtextw = font->getStringWidth(pastedtext);

@@ -103,6 +103,7 @@ gTexture::gTexture(int w, int h, int format, bool isFbo) {
 	ismaskloaded = false;
 	isloaded = false;
 	glGenTextures(1, &id);
+	isallocated = true;
     bind();
     G_CHECK_GL(glTexImage2D(GL_TEXTURE_2D, 0, internalformat, width, height, 0, format, GL_UNSIGNED_BYTE, nullptr));
 
@@ -121,7 +122,8 @@ gTexture::gTexture(int w, int h, int format, bool isFbo) {
 }
 
 gTexture::~gTexture() {
-	if (ismutable && !isfont) stbi_image_free(data);
+	if(ismutable && !isfont) stbi_image_free(data);
+	deallocate();
 }
 
 unsigned int gTexture::load(const std::string& fullPath) {
@@ -132,6 +134,7 @@ unsigned int gTexture::load(const std::string& fullPath) {
 	if (gToLower(fullpath.substr(fullpath.length() - 3, 3)) == "hdr") ishdr = true;
 
     glGenTextures(1, &id);
+	isallocated = true;
 
     if (ishdr) {
     	stbi_set_flip_vertically_on_load(true);
@@ -200,7 +203,8 @@ void gTexture::setData(unsigned char* textureData, bool isMutable) {
 
         if (format == GL_RG) {
             GLint swizzleMask[] = {GL_RED, GL_RED, GL_RED, GL_GREEN};
-#if(ANDROID)
+#ifdef ANDROID
+			// Android doesn't have glTexParameteriv, so we manually set each parameter
             G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_R, swizzleMask[0]));
             G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_G, swizzleMask[1]));
             G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_B, swizzleMask[2]));
@@ -326,7 +330,6 @@ int gTexture::getFilterMag() const {
 	return filtermag;
 }
 
-
 const std::string& gTexture::getTypeName() const {
 	return texturetype[type];
 }
@@ -377,7 +380,6 @@ void gTexture::draw(int x, int y, int w, int h, float rotate) {
 void gTexture::draw(int x, int y, int w, int h, int pivotx, int pivoty, float rotate) {
 	draw(glm::vec2(x, y), glm::vec2(w, h), glm::vec2(pivotx, pivoty), rotate);
 }
-
 
 void gTexture::draw(glm::vec2 position, glm::vec2 size, float rotate) {
 	beginDraw();
@@ -479,7 +481,9 @@ void gTexture::endDraw() {
         G_CHECK_GL(glDisable(GL_BLEND));
     }
     unbind();
-    if(bsubpartdrawn) {	setupRenderData(); }
+    if(bsubpartdrawn) {
+		setupRenderData();
+	}
 }
 
 void gTexture::setupRenderData() {
@@ -487,39 +491,62 @@ void gTexture::setupRenderData() {
 	bsubpartdrawn = false;
 }
 
+void gTexture::allocate() {
+	glGenTextures(1, &id);
+	isallocated = true;
+	setupRenderData();
+}
+
+void gTexture::deallocate() {
+	if(isallocated) {
+		G_CHECK_GL(glDeleteTextures(1, &id));
+		isallocated = false;
+	}
+	if(isloaded) {
+		G_CHECK_GL(glDeleteBuffers(1, &quadVBO));
+		G_CHECK_GL(glDeleteVertexArrays(1, &quadVAO));
+		isallocated = false;
+	}
+}
+
+void gTexture::reallocate() {
+	deallocate();
+	reallocate();
+}
+
 void gTexture::setupRenderData(int sx, int sy, int sw, int sh) {
 	if(isloaded) {
         G_CHECK_GL(glDeleteBuffers(1, &quadVBO));
         G_CHECK_GL(glDeleteVertexArrays(1, &quadVAO));
 	}
-    float vertices[] = {
-        // pos      // tex
-        0.0f, 1.0f, (float)sx / width, (float)(sy + sh) / height,
-        1.0f, 0.0f, (float)(sx + sw) / width, (float)sy / height,
-        0.0f, 0.0f, (float)sx / width, (float)sy / height,
 
-        0.0f, 1.0f, (float)sx / width, (float)(sy + sh) / height,
-        1.0f, 1.0f, (float)(sx + sw) / width, (float)(sy + sh) / height,
-        1.0f, 0.0f, (float)(sx + sw) / width, (float)sy / height
-    };
-    float vertices2[] = {
-        // pos      // tex
-        0.0f, 1.0f, (float)sx / width, (float)(sy) / height,
-        1.0f, 0.0f, (float)(sx + sw) / width, (float)(sy + sh) / height,
-        0.0f, 0.0f, (float)sx / width, (float)(sy + sh) / height,
-
-        0.0f, 1.0f, (float)sx / width, (float)(sy) / height,
-        1.0f, 1.0f, (float)(sx + sw) / width, (float)(sy) / height,
-        1.0f, 0.0f, (float)(sx + sw) / width, (float)(sy + sh) / height
-    };
-
-    G_CHECK_GL(glGenVertexArrays(1, &quadVAO));
+	G_CHECK_GL(glGenVertexArrays(1, &quadVAO));
     G_CHECK_GL(glGenBuffers(1, &quadVBO));
 
     G_CHECK_GL(glBindBuffer(GL_ARRAY_BUFFER, quadVBO));
     if (isfbo || ishdr) {
-        G_CHECK_GL(glBufferData(GL_ARRAY_BUFFER, sizeof(vertices2), vertices2, GL_STATIC_DRAW));
+		float vertices[] = {
+				// pos      // tex
+				0.0f, 1.0f, (float)sx / width, (float)(sy) / height,
+				1.0f, 0.0f, (float)(sx + sw) / width, (float)(sy + sh) / height,
+				0.0f, 0.0f, (float)sx / width, (float)(sy + sh) / height,
+
+				0.0f, 1.0f, (float)sx / width, (float)(sy) / height,
+				1.0f, 1.0f, (float)(sx + sw) / width, (float)(sy) / height,
+				1.0f, 0.0f, (float)(sx + sw) / width, (float)(sy + sh) / height
+		};
+        G_CHECK_GL(glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW));
     } else {
+		float vertices[] = {
+				// pos      // tex
+				0.0f, 1.0f, (float)sx / width, (float)(sy + sh) / height,
+				1.0f, 0.0f, (float)(sx + sw) / width, (float)sy / height,
+				0.0f, 0.0f, (float)sx / width, (float)sy / height,
+
+				0.0f, 1.0f, (float)sx / width, (float)(sy + sh) / height,
+				1.0f, 1.0f, (float)(sx + sw) / width, (float)(sy + sh) / height,
+				1.0f, 0.0f, (float)(sx + sw) / width, (float)sy / height
+		};
         G_CHECK_GL(glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW));
     }
 

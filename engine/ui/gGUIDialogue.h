@@ -12,7 +12,7 @@
  * buttons bar of the same object will also be initialized within the same function. It should be noted that the gGUIDialogue objects pushed later
  * will be drawn on top of the ones pushed earlier (if the objects have the "isdialogueactive" boolean variable set as TRUE).
  *
- * EX. "root->getAppManager()->getGUIManager()->setupDialogue(&dialogue);"
+ * EX. "gEngine::get()->getGUIManager()->setupDialogue(&dialogue);"
  *
  * - In order to draw the gGUIDialogue object's elements on the canvas (or remove the elements from the canvas), we need to call gGUIDialogue's
  * "setIsDialogueActive(bool isDialogueActive)" function.

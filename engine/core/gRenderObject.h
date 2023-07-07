@@ -39,14 +39,12 @@ public:
 	static bool isShadowMappingEnabled();
 
 	static gRenderer* getRenderer();
+
+	static void destroyRenderer();
+	static void createRenderer();
 protected:
 	static gRenderer* renderer;
 	static bool isshadowmappingenabled;
-
-private:
-	static bool isrendermaterialsloaded;
-
-	static void loadRenderMaterials();
 };
 
 #endif /* ENGINE_BASE_GRENDEROBJECT_H_ */

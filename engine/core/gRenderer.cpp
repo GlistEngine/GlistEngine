@@ -669,6 +669,21 @@ gRenderer::gRenderer() {
 }
 
 gRenderer::~gRenderer() {
+	delete colorshader;
+	delete textureshader;
+	delete imageshader;
+	delete fontshader;
+	delete skyboxshader;
+	delete shadowmapshader;
+	delete pbrshader;
+	delete equirectangularshader;
+	delete irradianceshader;
+	delete prefiltershader;
+	delete brdfshader;
+	delete fboshader;
+	delete rendercolor;
+	delete globalambientcolor;
+	delete lightingcolor;
 }
 
 gShader* gRenderer::getColorShader() {

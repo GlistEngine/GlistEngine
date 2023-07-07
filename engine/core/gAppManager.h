@@ -422,7 +422,6 @@ private:
 	bool joystickconnected[maxjoysticknum];
 	bool joystickbuttonstate[maxjoysticknum][maxjoystickbuttonnum];
 	bool gpbuttonstate;
-	int joystickhatcount;
 	int joystickaxecount;
 };
 

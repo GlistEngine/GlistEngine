@@ -154,8 +154,8 @@ void gGLFWWindow::close() {
 	glfwTerminate();
 }
 
-void gGLFWWindow::enableVsync(bool vsync) {
-	gBaseWindow::enableVsync(vsync);
+void gGLFWWindow::setVsync(bool vsync) {
+	gBaseWindow::setVsync(vsync);
 	glfwSwapInterval(vsync);
 }
 
@@ -171,7 +171,7 @@ void gGLFWWindow::setClipboardString(std::string text) {
 	glfwSetClipboardString(window, text.c_str());
 }
 
-std::string gGLFWWindow::getClipboardString() {
+std::string gGLFWWindow::getClipboardString() const {
 	return glfwGetClipboardString(window);
 }
 

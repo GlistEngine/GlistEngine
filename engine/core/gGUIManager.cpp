@@ -8,6 +8,7 @@
 #include "gGUIManager.h"
 #include "gBaseApp.h"
 #include "gBaseCanvas.h"
+#include "gEngine.h"
 
 
 gGUIManager::gGUIManager(gBaseApp* root, int width, int height) {
@@ -16,7 +17,7 @@ gGUIManager::gGUIManager(gBaseApp* root, int width, int height) {
 	selecteddialogue = nullptr;
 	loadThemes();
 	resetTheme(GUITHEME_LIGHT);
-	if(root->getAppManager()->getWindowMode() == G_WINDOWMODE_GUIAPP || root->getAppManager()->getWindowMode() == G_WINDOWMODE_FULLSCREENGUIAPP) {
+	if(gEngine::get()->getWindowMode() == G_WINDOWMODE_GUIAPP || gEngine::get()->getWindowMode() == G_WINDOWMODE_FULLSCREENGUIAPP) {
 		setCurrentFrame(&emptyframe, width, height);
 		emptyframe.setSizer(&emptysizer);
 		emptysizer.enableBackgroundFill(true);
@@ -36,8 +37,8 @@ int gGUIManager::getTheme() {
 
 void gGUIManager::setCurrentFrame(gGUIFrame* currentFrame) {
 	setCurrentFrame(currentFrame,
-			root->getAppManager()->getCurrentCanvas()->getScreenWidth(),
-			root->getAppManager()->getCurrentCanvas()->getScreenHeight());
+			gEngine::get()->getCurrentCanvas()->getScreenWidth(),
+			gEngine::get()->getCurrentCanvas()->getScreenHeight());
 }
 
 void gGUIManager::setCurrentFrame(gGUIFrame* currentFrame, int width, int height) {
@@ -55,10 +56,10 @@ void gGUIManager::setCurrentFrame(gGUIFrame* currentFrame, int width, int height
 
 void gGUIManager::setupDialogue(gGUIDialogue* dialogue) {
 	dialogue->setParentSlotNo(0, 0);
-	dialogue->width = root->getAppManager()->getCurrentCanvas()->getScreenWidth() / 1 * 0.84f;
-	dialogue->height = root->getAppManager()->getCurrentCanvas()->getScreenHeight() / 1 * 0.84f;
-	dialogue->left = (root->getAppManager()->getCurrentCanvas()->getScreenWidth() - dialogue->width) / 2;
-	dialogue->top = (root->getAppManager()->getCurrentCanvas()->getScreenHeight() - dialogue->height) / 2;
+	dialogue->width = gEngine::get()->getCurrentCanvas()->getScreenWidth() / 1 * 0.84f;
+	dialogue->height = gEngine::get()->getCurrentCanvas()->getScreenHeight() / 1 * 0.84f;
+	dialogue->left = (gEngine::get()->getCurrentCanvas()->getScreenWidth() - dialogue->width) / 2;
+	dialogue->top = (gEngine::get()->getCurrentCanvas()->getScreenHeight() - dialogue->height) / 2;
 	dialogue->right = dialogue->left + dialogue->width;
 	dialogue->bottom = dialogue->top + dialogue->height;
 	dialogue->setRootApp(root);
@@ -100,12 +101,12 @@ void gGUIManager::charPressed(unsigned int key) {
 }
 
 void gGUIManager::mouseMoved(int x, int y) {
-	root->getAppManager()->setCursor(currentframe->getCursor(x, y));
+	gEngine::get()->setCursor(currentframe->getCursor(x, y));
 	currentframe->mouseMoved(x, y);
 
 	for (int i = 0; i < dialogues.size(); i++) {
 		if (dialogues[i]->getIsDialogueActive()) {
-			root->getAppManager()->setCursor(dialogues[i]->getCursor(x, y));
+			gEngine::get()->setCursor(dialogues[i]->getCursor(x, y));
 			dialogues[i]->mouseMoved(x, y);
 		}
 	}
@@ -178,8 +179,8 @@ void gGUIManager::update() {
 		if (selecteddialogue->getButtonEvent() == gGUIDialogue::EVENT_MAXIMIZE) {
 			int titlebarheight = selecteddialogue->getTitleBar()->height;
 			int buttonsbarheight = selecteddialogue->getButtonsBar()->height;
-			int twidth = root->getAppManager()->getCurrentCanvas()->getScreenWidth();
-			int theight = root->getAppManager()->getCurrentCanvas()->getScreenHeight() - titlebarheight - buttonsbarheight;
+			int twidth = gEngine::get()->getCurrentCanvas()->getScreenWidth();
+			int theight = gEngine::get()->getCurrentCanvas()->getScreenHeight() - titlebarheight - buttonsbarheight;
 			int tleft = 0;
 			int ttop = titlebarheight;
 			selecteddialogue->transformDialogue(tleft, ttop, twidth, theight);
@@ -191,10 +192,10 @@ void gGUIManager::update() {
 			selecteddialogue->setButtonEvent(gGUIDialogue::EVENT_NONE);
 		}
 		if (selecteddialogue->getButtonEvent() == gGUIDialogue::EVENT_RESTORE) {
-			int twidth = root->getAppManager()->getCurrentCanvas()->getScreenWidth() / 1 * 0.84f;
-			int theight = root->getAppManager()->getCurrentCanvas()->getScreenHeight() / 1 * 0.84f;
-			int tleft = (root->getAppManager()->getCurrentCanvas()->getScreenWidth() - twidth) / 2;
-			int ttop = (root->getAppManager()->getCurrentCanvas()->getScreenHeight() - theight) / 2;
+			int twidth = gEngine::get()->getCurrentCanvas()->getScreenWidth() / 1 * 0.84f;
+			int theight = gEngine::get()->getCurrentCanvas()->getScreenHeight() / 1 * 0.84f;
+			int tleft = (gEngine::get()->getCurrentCanvas()->getScreenWidth() - twidth) / 2;
+			int ttop = (gEngine::get()->getCurrentCanvas()->getScreenHeight() - theight) / 2;
 			selecteddialogue->transformDialogue(tleft, ttop, twidth, theight);
 
 			selecteddialogue->setIsMaximized(false);

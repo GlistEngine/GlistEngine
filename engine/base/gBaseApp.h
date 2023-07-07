@@ -28,9 +28,6 @@ public:
 	virtual void resume();
 #endif
 
-	void setAppManager(gAppManager* appManager);
-	gAppManager* getAppManager();
-
 	void setCurrentCanvas(gBaseCanvas* currentCanvas);
 	gBaseCanvas* getCurrentCanvas();
 
@@ -42,7 +39,6 @@ public:
 	void disableVsync();
 
 protected:
-	gAppManager *appmanager;
 	int argc;
 	char **argv;
 };

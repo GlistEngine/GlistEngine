@@ -108,9 +108,14 @@ public:
 
     void setupRenderData();
 
+	void allocate();
+	void deallocate();
+	void reallocate();
+
 protected:
     std::string fullpath, directory;
-    unsigned int id, internalformat, format;
+    GLuint id, internalformat, format;
+	bool isallocated;
     int type;
     std::string path;
     int width, height, componentnum;

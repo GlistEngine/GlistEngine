@@ -9,39 +9,50 @@
 #include <iostream>
 
 
-gRenderer* gRenderObject::renderer;
+gRenderer* gRenderObject::renderer = nullptr;
 
-bool gRenderObject::isrendermaterialsloaded = false;
 bool gRenderObject::isshadowmappingenabled = false;
 
 
 gRenderObject::gRenderObject() {
-	if(!isrendermaterialsloaded) loadRenderMaterials();
-}
-
-void gRenderObject::loadRenderMaterials() {
-	renderer = new gRenderer();
-
-	isrendermaterialsloaded = true;
+	// Renderer should be created by the gEngineManager
+	/*if(!renderer) {
+		createRenderer();
+	}*/
 }
 
 void gRenderObject::setScreenSize(int screenWidth, int screenHeight) {
+#ifdef DEBUG
+	assert(renderer);
+#endif
 	renderer->setScreenSize(screenWidth, screenHeight);
 }
 
 void gRenderObject::setUnitScreenSize(int unitWidth, int unitHeight) {
+#ifdef DEBUG
+	assert(renderer);
+#endif
 	renderer->setUnitScreenSize(unitWidth, unitHeight);
 }
 
 void gRenderObject::setScreenScaling(int screenScaling) {
+#ifdef DEBUG
+	assert(renderer);
+#endif
 	renderer->setScreenScaling(screenScaling);
 }
 
 int gRenderObject::getScreenWidth() {
+#ifdef DEBUG
+	assert(renderer);
+#endif
 	return renderer->getScreenWidth();
 }
 
 int gRenderObject::getScreenHeight() {
+#ifdef DEBUG
+	assert(renderer);
+#endif
 	return renderer->getScreenHeight();
 }
 
@@ -66,6 +77,9 @@ void gRenderObject::disableShadowMapping() {
 }
 
 bool gRenderObject::isShadowMappingEnabled() {
+#ifdef DEBUG
+	assert(renderer);
+#endif
 	return isshadowmappingenabled;
 }
 
@@ -73,3 +87,12 @@ gRenderer* gRenderObject::getRenderer() {
 	return renderer;
 }
 
+void gRenderObject::createRenderer() {
+	destroyRenderer(); // Delete the previous renderer if exists. If renderer is null, this will have no affect.
+	renderer = new gRenderer();
+}
+
+void gRenderObject::destroyRenderer() {
+	delete renderer;
+	renderer = nullptr;
+}

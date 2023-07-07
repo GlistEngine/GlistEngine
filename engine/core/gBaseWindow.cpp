@@ -87,7 +87,7 @@ bool gBaseWindow::isVsyncEnabled() {
 	return vsync;
 }
 
-void gBaseWindow::enableVsync(bool vsync) {
+void gBaseWindow::setVsync(bool vsync) {
 	this->vsync = vsync;
 }
 
@@ -103,7 +103,7 @@ void gBaseWindow::setClipboardString(std::string text) {
 
 }
 
-std::string gBaseWindow::getClipboardString() {
+std::string gBaseWindow::getClipboardString() const {
 	return "";
 }
 

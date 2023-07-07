@@ -216,7 +216,6 @@ private:
 	TouchInput* inputs;
 
 };
-
 #endif
 
 #endif /* GWINDOWEVENTS_H_ */

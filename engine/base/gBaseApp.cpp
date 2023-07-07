@@ -5,11 +5,11 @@
  *      Author: noyan
  */
 
+#include <gEngine.h>
 #include "gBaseApp.h"
 
 
 gBaseApp::gBaseApp() {
-	appmanager = nullptr;
 	gSeedRandom();
 	argc = 0;
 	argv = nullptr;
@@ -45,38 +45,30 @@ void gBaseApp::resume() {
 }
 #endif
 
-void gBaseApp::setAppManager(gAppManager *appManager) {
-	appmanager = appManager;
-}
-
-gAppManager* gBaseApp::getAppManager() {
-	return appmanager;
-}
-
 void gBaseApp::setCurrentCanvas(gBaseCanvas* currentCanvas) {
-	appmanager->setCurrentCanvas(currentCanvas);
+	gEngine::get()->setCurrentCanvas(currentCanvas);
 }
 
 gBaseCanvas* gBaseApp::getCurrentCanvas() {
-	return appmanager->getCurrentCanvas();
+	return gEngine::get()->getCurrentCanvas();
 }
 
 void gBaseApp::setFramerate(int targetFramerate) {
-	appmanager->setFramerate(targetFramerate);
+	gEngine::get()->setTargetFramerate(targetFramerate);
 }
 
 int gBaseApp::getFramerate() {
-	return appmanager->getFramerate();
+	return gEngine::get()->getTargetFramerate();
 }
 
 double gBaseApp::getElapsedTime() {
-	return appmanager->getElapsedTime();
+	return gEngine::get()->getElapsedTime();
 }
 
 void gBaseApp::enableVsync() {
-	appmanager->enableVsync();
+    gEngine::get()->enableVsync();
 }
 
 void gBaseApp::disableVsync() {
-	appmanager->disableVsync();
+    gEngine::get()->disableVsync();
 }

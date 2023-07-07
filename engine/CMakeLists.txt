@@ -193,6 +193,7 @@ set(SRC_FILES
 	${ENGINE_DIR}/core/gBaseWindow.cpp
 	${ENGINE_DIR}/core/gCanvasManager.cpp
 	${ENGINE_DIR}/core/gAppManager.cpp
+	${ENGINE_DIR}/core/gEngine.cpp
 	${ENGINE_DIR}/core/gPostProcessManager.cpp
 	${ENGINE_DIR}/base/gBasePostProcess.cpp
 	${ENGINE_DIR}/graphics/posteffects/gInversion.cpp

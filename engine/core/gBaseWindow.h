@@ -54,13 +54,13 @@ public:
 	virtual void close();
 
 	bool isVsyncEnabled();
-	virtual void enableVsync(bool vsync);
+	virtual void setVsync(bool vsync);
 
 	virtual void setCursor(int cursorNo);
 	virtual void setCursorMode(int cursorMode);
 
 	virtual void setClipboardString(std::string text);
-	virtual std::string getClipboardString();
+	virtual std::string getClipboardString() const;
 
 	/**
 	 * Sets game window size.

@@ -5,6 +5,7 @@
  *      Author: noyan
  */
 
+#include <gEngine.h>
 #include "gBaseCanvas.h"
 
 const int gBaseCanvas::MOUSEBUTTON_LEFT = 2;
@@ -88,12 +89,12 @@ void gBaseCanvas::gamepadButtonReleased(int joystickId, int key) {
 }
 
 bool gBaseCanvas::isJoystickConnected(int joystickId) {
-	return root->getAppManager()->isJoystickConnected(joystickId);
+	return gEngine::get()->isJoystickConnected(joystickId);
 
 }
 
 bool gBaseCanvas::isJoystickButtonPressed(int joystickId, int buttonId) {
-	return root->getAppManager()->isJoystickButtonPressed(joystickId, buttonId);
+	return gEngine::get()->isJoystickButtonPressed(joystickId, buttonId);
 }
 
 void gBaseCanvas::onGuiEvent(int guiObjectId, int eventType, std::string value1, std::string value2) {

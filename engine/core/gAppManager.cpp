@@ -19,7 +19,7 @@
 #include "gAndroidWindow.h"
 #endif
 
-
+/*
 void gStartEngine(gBaseApp* baseApp, const std::string& appName, int windowMode, int width, int height, bool isResizable) {
    int wmode = windowMode;
    if(wmode == G_WINDOWMODE_NONE) wmode = G_WINDOWMODE_APP;
@@ -87,8 +87,9 @@ void gStartEngine(gBaseApp* baseApp, const std::string& appName, int loopMode) {
    baseApp->setAppManager(&appmanager);
    appmanager.runApp(appName, baseApp, 0, 0, G_WINDOWMODE_NONE, 0, 0, 0, false, loopMode);
 }
+*/
 
-int pow(int x, int p) {
+int pow2(int x, int p) {
    int i = 1;
    for (int j = 1; j <= p; j++) i *= x;
    return i;
@@ -130,7 +131,6 @@ gAppManager::gAppManager() {
 	   for(int j = 0; j < maxjoystickbuttonnum; j++) joystickbuttonstate[i][j] = false;
 	   joystickconnected[i] = false;
    }
-   joystickhatcount = 0;
    joystickaxecount = 0;
    eventhandler = G_BIND_FUNCTION(onEvent);
 }
@@ -194,9 +194,7 @@ void gAppManager::runApp(const std::string& appName, gBaseApp *baseApp, int widt
 	   elapsedtime += deltatime.count();
 	   starttime = endtime;
 
-       if(!usewindow || window->isRendering()) {
-           internalUpdate();
-       }
+       internalUpdate();
 
 	   if(!usewindow || !window->vsync) {
 		   /* Less precision, but lower CPU usage for non vsync */
@@ -206,8 +204,8 @@ void gAppManager::runApp(const std::string& appName, gBaseApp *baseApp, int widt
 		   }
 		   /* Much more precise method, but eats up CPU */
 		   //			lag += deltatime;
-		   //			while(lag >= timestepnano) {
-		   //				lag -= timestepnano;
+		   //			while(lag >= targettimestep) {
+		   //				lag -= targettimestep;
 		   //				internalUpdate();
 		   //			}
 	   }
@@ -248,21 +246,25 @@ void gAppManager::internalUpdate() {
 
    guimanager->update();
    app->update();
-   for (uci = 0; uci < gBaseComponent::usedcomponents.size(); uci++) gBaseComponent::usedcomponents[uci]->update();
-   for (upi = 0; upi < gBasePlugin::usedplugins.size(); upi++) gBasePlugin::usedplugins[upi]->update();
+   for(uci = 0; uci < gBaseComponent::usedcomponents.size(); uci++) gBaseComponent::usedcomponents[uci]->update();
+   for(upi = 0; upi < gBasePlugin::usedplugins.size(); upi++) gBasePlugin::usedplugins[upi]->update();
    gBaseCanvas* canvas = canvasmanager->getCurrentCanvas();
-   if (canvas != nullptr) {
+   if(canvas != nullptr) {
 	   canvas->update();
 	   updates++;
-	   canvas->clearBackground();
-	   for (upj = 0; upj < renderpassnum; upj++) {
-		   renderpassno = upj;
-		   canvas->draw();
-		   draws++;
-	   }
+       if(window->isRendering()) {
+           canvas->clearBackground();
+           for (upj = 0; upj < renderpassnum; upj++) {
+               renderpassno = upj;
+               canvas->draw();
+               draws++;
+           }
+       }
    }
 
-   guimanager->draw();
+   if(window->isRendering()) {
+       guimanager->draw();
+   }
    window->update();
 
    if (elapsedtime >= 1'000'000'000){
@@ -374,7 +376,7 @@ bool gAppManager::onMouseMovedEvent(gMouseMovedEvent& event) {
 bool gAppManager::onMouseButtonPressedEvent(gMouseButtonPressedEvent& event) {
    if (!canvasmanager->getCurrentCanvas()) return true;
    mousebuttonpressed[event.getMouseButton()] = true;
-   pressed |= pow(2, event.getMouseButton() + 1);
+   pressed |= pow2(2, event.getMouseButton() + 1);
    int xpos = event.getX();
    int ypos = event.getY();
    if (gRenderer::getScreenScaling() > G_SCREENSCALING_NONE) {
@@ -390,7 +392,7 @@ bool gAppManager::onMouseButtonPressedEvent(gMouseButtonPressedEvent& event) {
 bool gAppManager::onMouseButtonReleasedEvent(gMouseButtonReleasedEvent& event) {
    if (!canvasmanager->getCurrentCanvas()) return true;
    mousebuttonpressed[event.getMouseButton()] = false;
-   pressed &= ~pow(2, event.getMouseButton() + 1);
+   pressed &= ~pow2(2, event.getMouseButton() + 1);
    int xpos = event.getX();
    int ypos = event.getY();
    if(gRenderer::getScreenScaling() > G_SCREENSCALING_NONE) {
@@ -525,11 +527,11 @@ gGUIFrame* gAppManager::getCurrentGUIFrame() {
 }
 
 void gAppManager::enableVsync() {
-   window->enableVsync(true);
+    window->setVsync(true);
 }
 
 void gAppManager::disableVsync() {
-   window->enableVsync(false);
+    window->setVsync(false);
 }
 
 int gAppManager::getFramerate() {
