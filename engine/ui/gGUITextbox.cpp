@@ -80,6 +80,7 @@ gGUITextbox::gGUITextbox() {
 	hdiff = boxh / 4;
 	firstx = 0;
 	firsty = 0;
+	widthchanged = false;
 }
 
 
@@ -225,8 +226,9 @@ void gGUITextbox::update() {
 
 		handleKeys();
 	}
-
-	if(font->getStringWidth(text.substr(firstchar, lastutf)) >= width - 2 * initx) {
+	if(boxw - width != 0) widthchanged = true;
+	boxw = width;
+	if(font->getStringWidth(text.substr(firstchar, lastutf)) >= width - 2 * initx && widthchanged) {
 		if(!ismultiline && !ispassword) {
 			do {
 				firstutf += letterlength[firstchar];
@@ -246,6 +248,7 @@ void gGUITextbox::update() {
 			cursorposx = font->getStringWidth(text.substr(firstutf, cursorposutf - firstutf));
 		}
 	}
+	widthchanged = false;
 }
 
 void gGUITextbox::enableBackground(bool isEnabled) {
@@ -465,7 +468,9 @@ void gGUITextbox::pressKey() {
 				cleanText();
 			} else {
 				std::string newtext = "";
+				std::string deletedtext;
 				if(sepu1 > 0) newtext = text.substr(0, sepu1);
+				deletedtext = text.substr(sepu1, sepu2 - sepu1);
 				if(sepu2 < text.length()) newtext += text.substr(sepu2, text.length() - sepu2 + 1);
 				text = newtext;
 				letterlength.erase(letterlength.begin() + sepc1, letterlength.begin() + sepc2);
@@ -474,10 +479,25 @@ void gGUITextbox::pressKey() {
 					cursorposx = sepx1;
 					cursorposutf = sepu1;
 					cursorposchar = sepc1;
-					if(sepu2 - sepu1 >= lastutf) {
-						firstutf = sepu1;
-						firstchar = sepc1;
-						firstposx = sepx1;
+					if(firstchar > 0) {
+						firstchar -= deletedtext.length();
+						int oldutf = firstutf;
+						for(int i = 0; i < deletedtext.length(); i++) {
+							firstutf -= letterlength[sepc1 + i];
+						}
+						if(firstchar < 0) {
+							firstchar = 0;
+							firstutf = 0;
+						} else {
+							cursorposx += font->getStringWidth(text.substr(firstchar, oldutf - firstutf));
+						}
+						firstposx = font->getStringWidth(text.substr(0, firstutf));
+					} else {
+						if(sepu2 - sepu1 >= lastutf) {
+							firstutf = sepu1;
+							firstchar = sepc1;
+							firstposx = sepx1;
+						}
 					}
 				} else if(ispassword) {
 					cursorposx = sepx1;
@@ -546,9 +566,8 @@ void gGUITextbox::pressKey() {
 				lastutf = calculateLastUtf();
 				firstutf = calculateFirstUtf();
 
-				std::vector<int> clickpos = calculateClickPosition(left + cursorposx, top + 1);
 				if(selectionmode) {
-
+				std::vector<int> clickpos = calculateClickPosition(left + cursorposx, top + 1);
 					selectionposchar2 = clickpos[0];
 					selectionposx2 = clickpos[1];
 					selectionposutf2 = clickpos[2];
@@ -671,6 +690,7 @@ void gGUITextbox::pressKey() {
 			}
 			std::string newtext = "";
 			if(sepu1 > 0) newtext = text.substr(0, sepu1);
+			std::string deletedtext = text.substr(sepu1, sepu2 - sepu1);
 			if(sepu2 < text.length()) newtext += text.substr(sepu2, text.length() - sepu2 + 1);
 			text = newtext;
 			letterlength.erase(letterlength.begin() + sepc1, letterlength.begin() + sepc2);
@@ -678,13 +698,35 @@ void gGUITextbox::pressKey() {
 			cursorposx = sepx1;
 			cursorposutf = sepu1;
 			cursorposchar = sepc1;
-			if(sepu2 - sepu1 >= lastutf) {
-				firstutf = sepu1;
-				firstchar = sepc1;
-				firstposx = sepx1;
+			if(firstchar > 0) {
+				firstchar -= deletedtext.length();
+				int oldutf = firstutf;
+				for(int i = 0; i < deletedtext.length(); i++) {
+					firstutf -= letterlength[sepc1 + i];
+				}
+				if(firstchar < 0) {
+					firstchar = 0;
+					firstutf = 0;
+				} else {
+					cursorposx += font->getStringWidth(text.substr(firstchar, oldutf - firstutf));
+				}
+				firstposx = font->getStringWidth(text.substr(0, firstutf));
+			} else {
+				if(sepu2 - sepu1 >= lastutf) {
+					firstutf = sepu1;
+					firstchar = sepc1;
+					firstposx = sepx1;
+				}
 			}
 		} else {
 			text = text.substr(0, cursorposutf) + text.substr(cursorposutf + letterlength[cursorposchar], text.length() - (cursorposutf + letterlength[cursorposchar]));
+			if(firstutf > 0) {
+				int icw = font->getStringWidth(text.substr(firstchar - 1, letterlength[firstchar - 1]));
+				firstutf -= letterlength[firstchar];
+				firstposx = font->getStringWidth(text.substr(0, firstutf));
+				firstchar--;
+				cursorposx += icw;
+			}
 			letterlength.erase(letterlength.begin() + cursorposchar);
 			letterpos = calculateAllLetterPositions();
 		}

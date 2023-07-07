@@ -263,6 +263,7 @@ private:
 	bool isbackgroundenabled;
 	int totalh;
 	int firstx, firsty;
+	bool widthchanged;
 
 	//undo stacks
 	std::stack<std::string> undostack;
