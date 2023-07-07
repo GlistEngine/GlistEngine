@@ -46,6 +46,7 @@ public:
 	void setGrid(int rowNum, int columnNum);
 	void setRowNum(int rowNum);
 	void setcolumnNum(int columnNum);
+	void setTextAlignment(int textAlignment);
 
 	Cell* getCell(int rowNo, int columnNo);
 
@@ -91,7 +92,7 @@ private:
 	bool istextboxactive;
 	long clicktime, previousclicktime, firstclicktime, clicktimediff;
 	bool isdoubleclicked;
-
+	int newgridboxw;
 };
 
 #endif /* UI_GGUIGRID_H_ */
