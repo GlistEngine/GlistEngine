@@ -915,7 +915,7 @@ void gGUITextbox::pressKey() {
 				pdc = posdata2[0];
 				pdx = posdata2[1];
 				pdu = posdata2[2];
-			} while(pdc > 0 && (isLetter(text[pdu - 1]) || isNumber(text[pdu - 1])));
+			} while(pdc > firstchar && (isLetter(text[pdu - 1]) || isNumber(text[pdu - 1])));
 			selectionposchar1 = pdc;
 			selectionposx1 = pdx;
 			selectionposutf1 = pdu;
@@ -1124,7 +1124,7 @@ void gGUITextbox::mouseReleased(int x, int y, int button) {
 }
 
 void gGUITextbox::mouseDragged(int x, int y, int button) {
-	if(editmode && x >= left && x < right && y >= top && y < top + boxh && button == 2) {
+	if(editmode && x >= left && x < right && y >= top && y < top + totalh && button == 2) {
 		if(!selectionmode) startSelection();
 
 		if(ispassword) {
