@@ -109,13 +109,11 @@ public:
     virtual bool isJoystickButtonPressed(int joystickId, int buttonId);
 	virtual const float* getJoystickAxes(int joystickId, int* axisCountPtr);
 
-	virtual bool isRendering();
-
 public:
 	bool vsync;
+	void callEvent(gEvent& event);
 
 protected:
-	void callEvent(gEvent& event);
 
 	int width, height;
 	int scalex, scaley;

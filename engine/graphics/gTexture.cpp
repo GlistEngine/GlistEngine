@@ -102,6 +102,10 @@ gTexture::~gTexture() {
 			datahdr = nullptr;
 		}
 	}
+    if(ismutable) {
+        delete data;
+        delete datahdr;
+    }
 	if(androidasset) {
 		gAndroidUtil::closeAsset(androidasset);
 	}

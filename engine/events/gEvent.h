@@ -29,8 +29,7 @@ enum EventType {
 	EventTypeReallocateRenderData,
 #ifdef ANDROID
 	EventTypeAppPause,
-	EventTypeAppRestart,
-	EventTypeAppStop,
+	EventTypeAppResume,
 	EventTypeTouch,
 #endif
 };

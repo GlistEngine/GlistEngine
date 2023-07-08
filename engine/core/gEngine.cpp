@@ -65,10 +65,11 @@ gEngine::gEngine(const std::string& appName, gBaseApp *baseApp, int width, int h
     initialized = false;
     initializedbefore = false;
     iscanvasset = false;
+    isrunning = false;
+    isrendering = false;
 
     canvasmanager = new gCanvasManager();
-    //guimanager = new gGUIManager(baseApp, width, height);
-    guimanager = nullptr;
+    guimanager = new gGUIManager(baseApp, width, height);
     // Mouse
     ismouseentered = false;
     mousebuttonstate = 0;
@@ -150,6 +151,7 @@ void gEngine::initialize() {
         eventhandler(event);
     }
     initializedbefore = true;
+    app->start();
 }
 
 void gEngine::loop() {
@@ -162,7 +164,9 @@ void gEngine::loop() {
         assert(gRenderObject::getRenderer());
     }
 #endif
-    while (!window || !window->getShouldClose()) {
+    gLogi("gEngine") << "starting loop";
+    isrunning = true;
+    while (isrunning && (!window || !window->getShouldClose())) {
         // Delta time calculations
         endtime = AppClock::now();
         deltatime = endtime - starttime;
@@ -184,18 +188,19 @@ void gEngine::loop() {
             }
         }
     }
-    // Execute the queue one last time, in case it has anything left to run.
-    executeQueue();
+    gLogi("gEngine") << "stopping loop";
+    gLogi("gEngine") << "window:" << window;
+    gLogi("gEngine") << "window.shouldClose:" << window->getShouldClose();
+    app->stop();
+    gRenderObject::destroyRenderer();
+    if(window) {
+        window->close();
+    }
+    initialized = false;
 }
 
 void gEngine::stop() {
-    submitToMainThread([this]() {
-        gRenderObject::destroyRenderer();
-        if(window) {
-            window->close();
-        }
-        initialized = false;
-    });
+    isrunning = false;
 }
 
 void gEngine::setScreenSize(int width, int height) {
@@ -293,7 +298,7 @@ void gEngine::tick() {
 
     // todo joystick
     canvasmanager->update();
-    if(guimanager) guimanager->update();
+    guimanager->update();
     app->update();
     for(int i = 0; i < gBaseComponent::usedcomponents.size(); i++) {
         gBaseComponent::usedcomponents[i]->update();
@@ -306,7 +311,7 @@ void gEngine::tick() {
     if(canvas) {
         canvas->update();
     }
-    if(window->isRendering()) {
+    if(isrendering) {
         if(canvas) {
             canvas->clearBackground();
             for (int i = 0; i < renderpassnum; i++) {
@@ -315,7 +320,7 @@ void gEngine::tick() {
             }
         }
 
-        if(guimanager) guimanager->draw();
+        guimanager->draw();
         totaldraws++;
     }
     window->update();
@@ -341,7 +346,10 @@ void gEngine::onEvent(gEvent& event) {
     dispatcher.dispatch<gWindowLoseFocusEvent>(G_BIND_FUNCTION(onWindowLoseFocusEvent));
     dispatcher.dispatch<gJoystickConnectEvent>(G_BIND_FUNCTION(onJoystickConnectEvent));
     dispatcher.dispatch<gJoystickDisconnectEvent>(G_BIND_FUNCTION(onJoystickDisconnectEvent));
-
+#ifdef ANDROID
+    dispatcher.dispatch<gAppPauseEvent>(G_BIND_FUNCTION(onAppPauseEvent));
+    dispatcher.dispatch<gAppResumeEvent>(G_BIND_FUNCTION(onAppResumeEvent));
+#endif
     if(canvasmanager && canvasmanager->getCurrentCanvas()) canvasmanager->getCurrentCanvas()->onEvent(event);
     // todo pass event to app and plugins
 }
@@ -451,6 +459,16 @@ bool gEngine::onMouseScrolledEvent(gMouseScrolledEvent& event) {
     return false;
 }
 
+bool gEngine::onWindowFocusEvent(gWindowFocusEvent& event) {
+    iswindowfocused = true;
+    return false;
+}
+
+bool gEngine::onWindowLoseFocusEvent(gWindowLoseFocusEvent& event) {
+    iswindowfocused = false;
+    return false;
+}
+
 bool gEngine::onJoystickConnectEvent(gJoystickConnectEvent& event) {
     if(event.getJoystickId() >= maxjoysticknum) return true;
 
@@ -481,13 +499,19 @@ bool gEngine::onJoystickDisconnectEvent(gJoystickDisconnectEvent& event) {
     return false;
 }
 
-bool gEngine::onWindowFocusEvent(gWindowFocusEvent& event) {
-    iswindowfocused = true;
+bool gEngine::onAppPauseEvent(gAppPauseEvent& ) {
+    submitToMainThread([this]() {
+        isrendering = false;
+        app->pause();
+    });
     return false;
 }
 
-bool gEngine::onWindowLoseFocusEvent(gWindowLoseFocusEvent& event) {
-    iswindowfocused = false;
+bool gEngine::onAppResumeEvent(gAppResumeEvent &) {
+    submitToMainThread([this]() {
+        isrendering = true;
+        app->resume();
+    });
     return false;
 }
 
@@ -598,5 +622,22 @@ JNIEXPORT void JNICALL Java_dev_glist_android_lib_GlistNative_onStop(JNIEnv *env
     }
 }
 
+JNIEXPORT void JNICALL Java_dev_glist_android_lib_GlistNative_onPause(JNIEnv *env, jclass clazz) {
+    gLogi("GlistNative") << "onPause";
+    gEngine* engine = gEngine::get();
+    if(engine) {
+        gAppPauseEvent event{};
+        engine->getEventHandler()(event);
+    }
+}
+
+JNIEXPORT void JNICALL Java_dev_glist_android_lib_GlistNative_onResume(JNIEnv *env, jclass clazz) {
+    gLogi("GlistNative") << "onResume";
+    gEngine* engine = gEngine::get();
+    if(engine) {
+        gAppResumeEvent event{};
+        engine->getEventHandler()(event);
+    }
+}
 }
 #endif

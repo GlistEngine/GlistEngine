@@ -200,10 +200,6 @@ const float* gBaseWindow::getJoystickAxes(int joystickId, int* axisCountPtr) {
 	return nullptr;
 }
 
-bool gBaseWindow::isRendering() {
-	return true;
-}
-
 /*
 void stacker() {
 

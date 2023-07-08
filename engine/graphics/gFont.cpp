@@ -302,7 +302,7 @@ void gFont::loadChar(const int& charID) {
 	  lcpixelsw = lclongest;
 	  lcpixelsh = lcpixelsw;
 
-	  unsigned char lcpixels[lcpixelsw * lcpixelsh * 2];
+	  unsigned char* lcpixels = new unsigned char[lcpixelsw * lcpixelsh * 2];
 	  lcapsize = lcpixelsw * lcpixelsh;
 	  for (lci4 = 0; lci4 < lcapsize; lci4++) {
 		  lcpixels[lci4 * 2] = 255;

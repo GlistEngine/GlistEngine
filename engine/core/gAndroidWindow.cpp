@@ -19,9 +19,7 @@ gAndroidWindow* window = nullptr;
 
 gAndroidWindow::gAndroidWindow() {
     window = this;
-    shouldclose = false;
 	isclosed = true;
-	isrendering = false;
 }
 
 gAndroidWindow::~gAndroidWindow() {
@@ -110,14 +108,10 @@ void gAndroidWindow::initialize(int uwidth, int uheight, int windowMode, bool is
 
 
 bool gAndroidWindow::getShouldClose() {
-	return shouldclose || isclosed;
+	return isclosed;
 }
 
 void gAndroidWindow::update() {
-	if(!isrendering) {
-		return;
-	}
-
 	if(!eglSwapBuffers(display, surface)) {
 		gLogi("gAndroidWindow") << "eglSwapBuffers() returned error " << eglGetError();
 	}
@@ -162,10 +156,6 @@ void gAndroidWindow::setWindowResizable(bool isResizable) {
 void gAndroidWindow::setWindowSizeLimits(int minWidth, int minHeight, int maxWidth, int maxHeight) {
 }
 
-bool gAndroidWindow::isRendering() {
-    return isrendering;
-}
-
 bool gAndroidWindow::onTouchCallback(int pointerCount, int* fingerIds, int* x, int* y) {
 	TouchInput inputs[pointerCount];
 	for (int i = 0; i < pointerCount; ++i) {
@@ -188,22 +178,6 @@ JNIEXPORT void JNICALL Java_dev_glist_android_lib_GlistNative_setSurface(JNIEnv 
 		}
 		ANativeWindow_release(gAndroidWindow::nativewindow);
 	}
-}
-
-JNIEXPORT void JNICALL Java_dev_glist_android_lib_GlistNative_onPause(JNIEnv *env, jclass clazz) {
-    gLogi("GlistNative") << "onPause";
-    if(window) {
-    // todo pause event
-        window->isrendering = false;
-    }
-}
-
-JNIEXPORT void JNICALL Java_dev_glist_android_lib_GlistNative_onResume(JNIEnv *env, jclass clazz) {
-    gLogi("GlistNative") << "onResume";
-    if(window) {
-    // todo resume event
-        window->isrendering = true;
-    }
 }
 }
 

@@ -43,6 +43,14 @@ void gBaseApp::pause() {
 void gBaseApp::resume() {
 
 }
+
+void gBaseApp::start() {
+
+}
+
+void gBaseApp::stop() {
+
+}
 #endif
 
 void gBaseApp::setCurrentCanvas(gBaseCanvas* currentCanvas) {

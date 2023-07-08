@@ -150,6 +150,7 @@ public:
     int getMaxJoystickButtonNum() { return maxjoystickbuttonnum; }
 
     gBaseWindow* getWindow() const { return window; }
+    EventHandlerFn getEventHandler() { return eventhandler; }
 
     /**
      * Submits a function to run on the main loop.
@@ -175,7 +176,8 @@ private:
 
     EventHandlerFn eventhandler;
     gBaseWindow* window;
-
+    bool isrunning;
+    bool isrendering;
     std::string appname;
     gBaseApp* app;
     int width;
@@ -232,6 +234,11 @@ private:
     bool onWindowLoseFocusEvent(gWindowLoseFocusEvent&);
     bool onJoystickConnectEvent(gJoystickConnectEvent&);
     bool onJoystickDisconnectEvent(gJoystickDisconnectEvent&);
+
+#ifdef ANDROID
+    bool onAppPauseEvent(gAppPauseEvent&);
+    bool onAppResumeEvent(gAppResumeEvent&);
+#endif
 
     void updateTime();
     void executeQueue();

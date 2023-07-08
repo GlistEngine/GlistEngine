@@ -226,6 +226,25 @@ private:
 
 };
 
+class gAppPauseEvent : public gEvent {
+public:
+	gAppPauseEvent() {}
+
+	G_EVENT_CLASS_TYPE(EventTypeAppPause)
+	G_EVENT_CLASS_CATEGORY(EventCategoryApp)
+private:
+};
+
+class gAppResumeEvent : public gEvent {
+public:
+	gAppResumeEvent() {}
+
+	G_EVENT_CLASS_TYPE(EventTypeAppResume)
+	G_EVENT_CLASS_CATEGORY(EventCategoryApp)
+private:
+};
+
+
 #endif
 
 #endif /* GWINDOWEVENTS_H_ */

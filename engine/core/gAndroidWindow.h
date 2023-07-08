@@ -75,13 +75,9 @@ public:
 	void setWindowResizable(bool isResizable) override;
 	void setWindowSizeLimits(int minWidth, int minHeight, int maxWidth, int maxHeight) override;
 
-	bool isRendering() override;
-
 	bool onTouchCallback(int pointerCount, int* fingerIds, int* x, int* y);
 public:
 	static ANativeWindow* nativewindow;
-	bool shouldclose;
-	bool isrendering;
 	bool isclosed;
 
 private:

@@ -27,6 +27,8 @@ public:
 #ifdef ANDROID
 	virtual void pause();
 	virtual void resume();
+	virtual void start();
+	virtual void stop();
 #endif
 
 	void setCurrentCanvas(gBaseCanvas* currentCanvas);
