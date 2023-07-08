@@ -53,34 +53,15 @@ static const int texturewrap[3] = {GL_REPEAT, GL_CLAMP, GL_CLAMP_TO_EDGE};
 static const int texturefilter[3] = {GL_LINEAR, GL_CLAMP, GL_CLAMP_TO_EDGE};
 #endif
 
-gTexture::gTexture() {
-	id = GL_NONE;
-	internalformat = GL_RGBA;
-	format = GL_RGBA;
-	wraps = TEXTUREWRAP_REPEAT;
-	wrapt = TEXTUREWRAP_REPEAT;
-	filtermin = TEXTUREMINMAGFILTER_LINEAR;
-	filtermag = TEXTUREMINMAGFILTER_LINEAR;
-	texturetype[0] = "texture_diffuse";
-	texturetype[1] = "texture_specular";
-	texturetype[2] = "texture_normal";
-	texturetype[3] = "texture_height";
-	type = TEXTURETYPE_DIFFUSE;
-	path = "";
-	width = 0;
-	height = 0;
-	bsubpartdrawn = false;
-	ismutable = false;
-	isfbo = false;
-	ishdr = false;
-	isfont = false;
-	ismaskloaded = false;
-	isloaded = false;
-	setupRenderData();
+gTexture::gTexture() : gTexture(0, 0,  GL_RGBA, false) {
 }
 
-gTexture::gTexture(int w, int h, int format, bool isFbo) {
+gTexture::gTexture(int w, int h, int format, bool isFbo) : gAllocatableBase() {
 	id = GL_NONE;
+	componentnum = 0;
+	masktexture = nullptr;
+	quadVAO = GL_NONE;
+	quadVBO = GL_NONE;
 	internalformat = format;
 	this->format = format;
 	wraps = TEXTUREWRAP_REPEAT;
@@ -101,29 +82,30 @@ gTexture::gTexture(int w, int h, int format, bool isFbo) {
 	ishdr = false;
 	isfont = false;
 	ismaskloaded = false;
-	isloaded = false;
-	glGenTextures(1, &id);
-	isallocated = true;
-    bind();
-    G_CHECK_GL(glTexImage2D(GL_TEXTURE_2D, 0, internalformat, width, height, 0, format, GL_UNSIGNED_BYTE, nullptr));
-
-	// TODO: BEFORE SHADOWMAP GL_REPEAT
-#ifdef ANDROID
-    G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE));
-    G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE));
-#else
-    G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP));
-    G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP));
-#endif
-
-    G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
-    G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
-	setupRenderData();
+    isrenderdataset = false;
+    istexturegenerated = false;
+	data = nullptr;
+	datahdr = nullptr;
+	androidasset = nullptr;
+  	setupRenderData();
 }
 
 gTexture::~gTexture() {
-	if(ismutable && !isfont) stbi_image_free(data);
 	deallocate();
+	if(ismutable && !isfont) {
+		if(data) {
+			stbi_image_free(data);
+			data = nullptr;
+		}
+		if(datahdr) {
+			stbi_image_free(datahdr);
+			datahdr = nullptr;
+		}
+	}
+	if(androidasset) {
+		gAndroidUtil::closeAsset(androidasset);
+	}
+	delete masktexture;
 }
 
 unsigned int gTexture::load(const std::string& fullPath) {
@@ -133,19 +115,29 @@ unsigned int gTexture::load(const std::string& fullPath) {
 	ishdr = false;
 	if (gToLower(fullpath.substr(fullpath.length() - 3, 3)) == "hdr") ishdr = true;
 
-    glGenTextures(1, &id);
-	isallocated = true;
-
     if (ishdr) {
     	stbi_set_flip_vertically_on_load(true);
-    	datahdr = stbi_loadf(fullpath.c_str(), &width, &height, &componentnum, 0);
+#ifdef ANDROID
+		androidasset = gAndroidUtil::loadAsset(fullpath, 0);
+		auto* buf = (unsigned char*) AAsset_getBuffer(androidasset);
+		int length = AAsset_getLength(androidasset);
+		float* datahdr = stbi_loadf_from_memory(buf, length, &width, &height, &componentnum, 0);
+		gAndroidUtil::closeAsset(androidasset);
+#else
+		datahdr = stbi_loadf(fullpath.c_str(), &width, &height, &componentnum, 0);
+#endif
     	setDataHDR(datahdr, false);
     } else {
-        data = stbi_load(fullpath.c_str(), &width, &height, &componentnum, 0);
+#ifdef ANDROID
+		androidasset = gAndroidUtil::loadAsset(fullpath, 0);
+		auto* buf = (unsigned char*) AAsset_getBuffer(androidasset);
+		int length = AAsset_getLength(androidasset);
+		unsigned char* data = stbi_load_from_memory(buf, length, &width, &height, &componentnum, 0);
+#else
+		data = stbi_load(fullpath.c_str(), &width, &height, &componentnum, 0);
+#endif
         setData(data, false);
     }
-
-//	setupRenderData();
     return id;
 }
 
@@ -154,15 +146,14 @@ unsigned int gTexture::loadTexture(const std::string& texturePath) {
 }
 
 unsigned int gTexture::loadMask(const std::string& fullPath) {
+	delete masktexture;
 	masktexture = new gTexture();
 	ismaskloaded = true;
 	return masktexture->load(fullPath);
 }
 
 unsigned int gTexture::loadMaskTexture(const std::string& maskTexturePath) {
-	masktexture = new gTexture();
-	ismaskloaded = true;
-	return masktexture->load(gGetTexturesDir() + maskTexturePath);
+	return loadMask(gGetTexturesDir() + maskTexturePath);
 }
 
 unsigned int gTexture::loadData(unsigned char* textureData, int width, int height, int componentNum, bool isFont) {
@@ -170,17 +161,53 @@ unsigned int gTexture::loadData(unsigned char* textureData, int width, int heigh
 	this->height = height;
 	this->componentnum = componentNum;
 	isfont = isFont;
-
-
-    glGenTextures(1, &id);
-
     setData(textureData, true);
-
-//	setupRenderData();
     return id;
 }
 
+void gTexture::loadData(const std::string& fullPath) {
+    fullpath = fullPath;
+    directory = getDirName(fullpath);
+    path = getFileName(fullpath);
+    ishdr = false;
+    ismutable = false;
+    if (gToLower(fullpath.substr(fullpath.length() - 3, 3)) == "hdr") ishdr = true;
+
+    if (ishdr) {
+		if(ismutable && !isfont && datahdr) {
+			stbi_image_free(datahdr);
+			datahdr = nullptr;
+		}
+        stbi_set_flip_vertically_on_load(true);
+#ifdef ANDROID
+        androidasset = gAndroidUtil::loadAsset(fullpath, 0);
+        auto* buf = (unsigned char*) AAsset_getBuffer(androidasset);
+        int length = AAsset_getLength(androidasset);
+        datahdr = stbi_loadf_from_memory(buf, length, &width, &height, &componentnum, 0);
+        gAndroidUtil::closeAsset(androidasset);
+#else
+        datahdr = stbi_loadf(fullpath.c_str(), &width, &height, &componentnum, 0);
+#endif
+    } else {
+		if(ismutable && !isfont && data) {
+			stbi_image_free(data);
+			data = nullptr;
+		}
+#ifdef ANDROID
+        androidasset = gAndroidUtil::loadAsset(fullpath, 0);
+        auto* buf = (unsigned char*) AAsset_getBuffer(androidasset);
+        int length = AAsset_getLength(androidasset);
+        data = stbi_load_from_memory(buf, length, &width, &height, &componentnum, 0);
+#else
+        data = stbi_load(fullpath.c_str(), &width, &height, &componentnum, 0);
+#endif
+    }
+}
+
 void gTexture::setData(unsigned char* textureData, bool isMutable) {
+	if(ismutable && !isfont && data) {
+		stbi_image_free(data);
+	}
 	ismutable = isMutable;
 	ishdr = false;
 	data = textureData;
@@ -188,63 +215,17 @@ void gTexture::setData(unsigned char* textureData, bool isMutable) {
     else if (componentnum == 2) format = GL_RG;
     else if (componentnum == 3) format = GL_RGB;
     else if (componentnum == 4) format = GL_RGBA;
-
-    if (data) {
-        bind();
-        G_CHECK_GL(glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data));
-		G_CHECK_GL(glGenerateMipmap(GL_TEXTURE_2D));
-
-		G_CHECK_GL(glTexImage2D(GL_TEXTURE_2D, 0, format, getWidth(), getHeight(), 0, format, GL_UNSIGNED_BYTE, data));
-
-        G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT));
-        G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT));
-        G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR));
-        G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
-
-        if (format == GL_RG) {
-            GLint swizzleMask[] = {GL_RED, GL_RED, GL_RED, GL_GREEN};
-#ifdef ANDROID
-			// Android doesn't have glTexParameteriv, so we manually set each parameter
-            G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_R, swizzleMask[0]));
-            G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_G, swizzleMask[1]));
-            G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_B, swizzleMask[2]));
-            G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_A, swizzleMask[3]));
-#else
-            G_CHECK_GL(glTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_RGBA, swizzleMask));
-#endif
-        }
-
-        if (!ismutable) stbi_image_free(data);
-        unbind();
-    } else {
-    	gLoge("gTexture") << "Texture failed to load at path: " << fullpath;
-        stbi_image_free(data);
-    }
-
-	setupRenderData();
+    allocate();
 }
 
 void gTexture::setDataHDR(float* textureData, bool isMutable) {
+	if(ismutable && !isfont && datahdr) {
+		stbi_image_free(datahdr);
+	}
 	ismutable = isMutable;
 	ishdr = true;
 	datahdr = textureData;
-	if (datahdr) {
-		bind();
-		G_CHECK_GL(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB32F, width, height, 0, GL_RGB, GL_FLOAT, datahdr)); // note how we specify the texture's data value to be float
-
-		G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE));
-		G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE));
-		G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
-		G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
-
-		if (!ismutable) stbi_image_free(datahdr);
-		unbind();
-	} else {
-		gLoge("gTexture") << "Failed to load HDR image at path: " << fullpath;
-		stbi_image_free(datahdr);
-	}
-
-	setupRenderData();
+    allocate();
 }
 
 unsigned char* gTexture::getData() {
@@ -492,36 +473,89 @@ void gTexture::setupRenderData() {
 }
 
 void gTexture::allocate() {
-	glGenTextures(1, &id);
-	isallocated = true;
-	setupRenderData();
+    if(!istexturegenerated) {
+        glGenTextures(1, &id);
+        istexturegenerated = true;
+    }
+    bind();
+    if (datahdr) {
+        G_CHECK_GL(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB32F, width, height, 0, GL_RGB, GL_FLOAT, datahdr)); // note how we specify the texture's data value to be float
+
+        G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE));
+        G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE));
+        G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
+        G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
+    } else if (data) {
+        G_CHECK_GL(glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data));
+        G_CHECK_GL(glGenerateMipmap(GL_TEXTURE_2D));
+
+        G_CHECK_GL(glTexImage2D(GL_TEXTURE_2D, 0, format, getWidth(), getHeight(), 0, format, GL_UNSIGNED_BYTE, data));
+
+        G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT));
+        G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT));
+        G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR));
+        G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
+
+        if (format == GL_RG) {
+            GLint swizzleMask[] = {GL_RED, GL_RED, GL_RED, GL_GREEN};
+#ifdef ANDROID
+            // Android doesn't have glTexParameteriv, so we manually set each parameter
+            G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_R, swizzleMask[0]));
+            G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_G, swizzleMask[1]));
+            G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_B, swizzleMask[2]));
+            G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_A, swizzleMask[3]));
+#else
+            G_CHECK_GL(glTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_RGBA, swizzleMask));
+#endif
+        }
+    } else {
+		G_CHECK_GL(glTexImage2D(GL_TEXTURE_2D, 0, internalformat, width, height, 0, format, GL_UNSIGNED_BYTE, nullptr));
+
+		// TODO: BEFORE SHADOWMAP GL_REPEAT
+#ifdef ANDROID
+		G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE));
+		G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE));
+#else
+		G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP));
+		G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP));
+#endif
+		G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
+		G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
+	}
+    unbind();
+    setupRenderData();
 }
 
 void gTexture::deallocate() {
-	if(isallocated) {
+    if(isrenderdataset) {
+        G_CHECK_GL(glDeleteVertexArrays(1, &quadVAO));
+        G_CHECK_GL(glDeleteBuffers(1, &quadVBO));
+        isrenderdataset = false;
+    }
+	if(istexturegenerated) {
 		G_CHECK_GL(glDeleteTextures(1, &id));
-		isallocated = false;
-	}
-	if(isloaded) {
-		G_CHECK_GL(glDeleteBuffers(1, &quadVBO));
-		G_CHECK_GL(glDeleteVertexArrays(1, &quadVAO));
-		isallocated = false;
+        istexturegenerated = false;
 	}
 }
 
 void gTexture::reallocate() {
+    if(!istexturegenerated || !isrenderdataset) {
+        return;
+    }
 	deallocate();
-	reallocate();
+	allocate();
 }
 
 void gTexture::setupRenderData(int sx, int sy, int sw, int sh) {
-	if(isloaded) {
+    if(isrenderdataset) {
         G_CHECK_GL(glDeleteBuffers(1, &quadVBO));
         G_CHECK_GL(glDeleteVertexArrays(1, &quadVAO));
-	}
+		isrenderdataset = false;
+    }
 
-	G_CHECK_GL(glGenVertexArrays(1, &quadVAO));
+    G_CHECK_GL(glGenVertexArrays(1, &quadVAO));
     G_CHECK_GL(glGenBuffers(1, &quadVBO));
+    isrenderdataset = true;
 
     G_CHECK_GL(glBindBuffer(GL_ARRAY_BUFFER, quadVBO));
     if (isfbo || ishdr) {
@@ -555,7 +589,6 @@ void gTexture::setupRenderData(int sx, int sy, int sw, int sh) {
     G_CHECK_GL(glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0));
     G_CHECK_GL(glBindBuffer(GL_ARRAY_BUFFER, 0));
     G_CHECK_GL(glBindVertexArray(0));
-	isloaded = true;
 }
 
 std::string gTexture::getDirName(const std::string& fname) {

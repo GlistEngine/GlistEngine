@@ -53,11 +53,15 @@ gBaseCanvas* gBaseApp::getCurrentCanvas() {
 	return gEngine::get()->getCurrentCanvas();
 }
 
-void gBaseApp::setFramerate(int targetFramerate) {
+void gBaseApp::setTargetFramerate(int targetFramerate) {
 	gEngine::get()->setTargetFramerate(targetFramerate);
 }
 
 int gBaseApp::getFramerate() {
+	return gEngine::get()->getFramerate();
+}
+
+int gBaseApp::getTargetFramerate() {
 	return gEngine::get()->getTargetFramerate();
 }
 

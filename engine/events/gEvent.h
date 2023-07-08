@@ -10,6 +10,7 @@
 
 #include <functional>
 
+// todo documentation
 enum EventType {
 	EventTypeCharTyped,
 	EventTypeKeyPressed,
@@ -25,11 +26,12 @@ enum EventType {
 	EventTypeWindowMouseExit,
 	EventTypeJoystickConnect,
 	EventTypeJoystickDisconnect,
+	EventTypeReallocateRenderData,
 #ifdef ANDROID
 	EventTypeAppPause,
 	EventTypeAppRestart,
 	EventTypeAppStop,
-	EventTypeTouch
+	EventTypeTouch,
 #endif
 };
 
@@ -42,6 +44,7 @@ enum EventCategory {
 	EventCategoryMouseButton = BIT(4),
 	EventCategoryJoystick = BIT(5),
 	EventCategoryTouchscreen = BIT(6),
+	EventCategoryRenderer = BIT(7),
 };
 #undef BIT
 

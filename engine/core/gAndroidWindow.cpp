@@ -29,8 +29,7 @@ gAndroidWindow::~gAndroidWindow() {
 }
 
 void gAndroidWindow::initialize(int uwidth, int uheight, int windowMode, bool isResizable) {
-	gBaseWindow::initialize(uwidth, uheight, windowMode, false);
-
+    gLogi("gAndroidWindow") << "initialize";
 	const EGLint attribs[] = {
 			EGL_RENDERABLE_TYPE, EGL_OPENGL_ES3_BIT, // request OpenGL ES 3.0
             EGL_SURFACE_TYPE, EGL_WINDOW_BIT,
@@ -97,9 +96,16 @@ void gAndroidWindow::initialize(int uwidth, int uheight, int windowMode, bool is
 	}
 
 	glViewport(0, 0, width, height);
+	if(uwidth == 0) {
+		uwidth = width;
+	}
+	if(uheight == 0) {
+		uheight = height;
+	}
 	scalex = (float) width / (float) uwidth;
 	scaley = (float) height / (float) uheight;
 	isclosed = false;
+	gBaseWindow::initialize(width, height, windowMode, false);
 }
 
 
@@ -121,6 +127,10 @@ void gAndroidWindow::close() {
     if(!display) {
         return;
     }
+    gLogi("gAndroidWindow") << "close";
+	eglMakeCurrent(display,EGL_NO_SURFACE,EGL_NO_SURFACE, EGL_NO_CONTEXT );
+	eglDestroySurface(display, surface);
+	eglDestroyContext(display,context);
 	eglTerminate(display);
 	display = nullptr;
 	isclosed = true;
@@ -173,6 +183,9 @@ JNIEXPORT void JNICALL Java_dev_glist_android_lib_GlistNative_setSurface(JNIEnv 
 	if (surface != nullptr) {
 		gAndroidWindow::nativewindow = ANativeWindow_fromSurface(env, surface);
 	} else {
+		if(window) {
+			window->close();
+		}
 		ANativeWindow_release(gAndroidWindow::nativewindow);
 	}
 }

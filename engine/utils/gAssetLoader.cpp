@@ -55,7 +55,7 @@ void gAssetLoader::update() {
 	if (receiveToUpdate(assettoupdate)) {
         switch(assettoupdate.type) {
         case TYPE_IMAGE:
-        	assettoupdate.image->useData();
+        	assettoupdate.image->allocate();
         	signal = assettoupdate.assetsignal;
         	break;
         default:

@@ -17,47 +17,23 @@
 
 int gImage::downloadno = 1;
 
-
-gImage::gImage() {
-	ishdr = false;
-	loadedfromurl = false;
-	imageurl = "";
+gImage::gImage() : gImage(0, 0, GL_RGBA) {
 }
 
 gImage::gImage(int w, int h, int format) : gTexture(w, h, format, false) {
+    ishdr = false;
+    loadedfromurl = false;
+    imageurl = "";
 }
 
 gImage::~gImage() {
+#ifdef ANDROID
+	if (androidasset) gAndroidUtil::closeAsset(androidasset);
+#endif
 }
 
 unsigned int gImage::load(const std::string& fullPath) {
-	fullpath = fullPath;
-	directory = getDirName(fullpath);
-	path = getFileName(fullpath);
-	ishdr = false;
-	if (gToLower(fullpath.substr(fullpath.length() - 3, 3)) == "hdr") ishdr = true;
-
-    glGenTextures(1, &id);
-
-    if (ishdr) {
-    	stbi_set_flip_vertically_on_load(true);
-    	datahdr = stbi_loadf(fullpath.c_str(), &width, &height, &componentnum, 0);
-    	setDataHDR(datahdr, true);
-    } else {
-#ifdef ANDROID
-		AAsset* asset = gAndroidUtil::loadAsset(fullpath, 0);
-		auto* buf = (unsigned char*) AAsset_getBuffer(asset);
-		int length = AAsset_getLength(asset);
-		data = stbi_load_from_memory(buf, length, &width, &height, &componentnum, 0);
-		gAndroidUtil::closeAsset(asset);
-#else
-		data = stbi_load(fullpath.c_str(), &width, &height, &componentnum, 0);
-#endif
-        setData(data, true);
-    }
-
-//	setupRenderData();
-    return id;
+    return gTexture::load(fullPath);
 }
 
 unsigned int gImage::loadImage(const std::string& imagePath) {
@@ -93,35 +69,12 @@ unsigned int gImage::loadImageFromURL(const std::string& imageUrl, bool cutUrlPa
 #endif
 }
 
-void gImage::loadData(const std::string& fullPath) {
-	fullpath = fullPath;
-	directory = getDirName(fullpath);
-	path = getFileName(fullpath);
-	ishdr = false;
-	if (gToLower(fullpath.substr(fullpath.length() - 3, 3)) == "hdr") ishdr = true;
-
-    if (ishdr) {
-    	stbi_set_flip_vertically_on_load(true);
-    	datahdr = stbi_loadf(fullpath.c_str(), &width, &height, &componentnum, 0);
-    } else {
-        data = stbi_load(fullpath.c_str(), &width, &height, &componentnum, 0);
-    }
-}
-
 void gImage::loadImageData(const std::string& imagePath) {
 	loadData(gGetImagesDir() + imagePath);
 }
 
 unsigned int gImage::useData() {
-    glGenTextures(1, &id);
-
-    if (ishdr) {
-    	setDataHDR(datahdr, true);
-    } else {
-        setData(data, true);
-    }
-
-//	setupRenderData();
+	gTexture::allocate();
     return id;
 }
 
@@ -188,9 +141,7 @@ std::string gImage::generateDownloadedImagePath(std::string imageType) {
 }
 
 unsigned int gImage::loadMaskImage(const std::string& maskImagePath) {
-	masktexture = new gTexture();
-	ismaskloaded = true;
-	return masktexture->load(gGetImagesDir() + maskImagePath);
+	return loadMask(gGetImagesDir() + maskImagePath);
 }
 
 

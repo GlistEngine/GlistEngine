@@ -10,6 +10,7 @@
 
 #include "gAppObject.h"
 #include "gAppManager.h"
+#include "gBaseCanvas.h"
 
 
 class gBaseApp : public gAppObject {
@@ -31,8 +32,9 @@ public:
 	void setCurrentCanvas(gBaseCanvas* currentCanvas);
 	gBaseCanvas* getCurrentCanvas();
 
-	void setFramerate(int targetFramerate);
+	void setTargetFramerate(int targetFramerate);
 	int getFramerate();
+	int getTargetFramerate();
 	double getElapsedTime();
 
 	void enableVsync();

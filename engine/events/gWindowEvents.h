@@ -194,6 +194,15 @@ private:
 	int joystickid;
 };
 
+class gReallocateRenderDataEvent : public gEvent {
+public:
+    gReallocateRenderDataEvent() {}
+
+    G_EVENT_CLASS_TYPE(EventTypeReallocateRenderData)
+    G_EVENT_CLASS_CATEGORY(EventCategoryRenderer | EventCategoryApp)
+private:
+};
+
 
 #ifdef ANDROID
 struct TouchInput {
@@ -216,6 +225,7 @@ private:
 	TouchInput* inputs;
 
 };
+
 #endif
 
 #endif /* GWINDOWEVENTS_H_ */

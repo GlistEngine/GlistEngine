@@ -11,10 +11,12 @@
 #define ENGINE_GRAPHICS_GTEXTURE_H_
 
 #include <string>
+#include "gAndroidUtil.h"
 #include "gRenderObject.h"
 #include "gRect.h"
+#include "gAllocatableBase.h"
 
-class gTexture : public gRenderObject {
+class gTexture : public gRenderObject, public gAllocatableBase {
 public:
 	static const int TEXTURETYPE_DIFFUSE, TEXTURETYPE_SPECULAR, TEXTURETYPE_NORMAL, TEXTURETYPE_HEIGHT;
 	static const int TEXTURETYPE_PBR_ALBEDO, TEXTURETYPE_PBR_ROUGHNESS, TEXTURETYPE_PBR_METALNESS, TEXTURETYPE_PBR_NORMAL, TEXTURETYPE_PBR_AO;
@@ -60,6 +62,22 @@ public:
 	unsigned int loadMaskTexture(const std::string& maskTexturePath);
 
 	unsigned int loadData(unsigned char* textureData, int width, int height, int componentNum, bool isFont = false);
+
+	/**
+	* Loads texture data to the RAM from the given full path.
+	*
+	* The image can be located in anywhere(hard disk or other storage devices)
+	* as long as it has the full path.
+	*
+	* Loading assets in separate threads improves overall efficiency. In order to load
+	* an image's data separately, this function can be used. This function only loads
+	* the data to the RAM and not the VRAM and doesn't create any GPU resources.
+	* To load GPU resources, allocate() should be called from the main thread.
+	*
+	* @param fullPath The full path to the image file.
+	*
+	*/
+	void loadData(const std::string& fullPath);
 
     void bind() const;
     void bind(int textureSlotNo) const;
@@ -108,14 +126,14 @@ public:
 
     void setupRenderData();
 
-	void allocate();
-	void deallocate();
-	void reallocate();
+	void allocate() override;
+	void deallocate() override;
+	void reallocate() override;
 
 protected:
     std::string fullpath, directory;
     GLuint id, internalformat, format;
-	bool isallocated;
+	bool istexturegenerated;
     int type;
     std::string path;
     int width, height, componentnum;
@@ -136,6 +154,7 @@ protected:
     float* getDataHDR();
     bool ismaskloaded;
     gTexture* masktexture;
+	AAsset* androidasset;
 
 private:
     std::string texturetype[4];
@@ -147,7 +166,7 @@ private:
     void endDraw();
     bool bsubpartdrawn;
     bool isfbo;
-	bool isloaded;
+	bool isrenderdataset;
 };
 
 #endif /* ENGINE_GRAPHICS_GTEXTURE_H_ */

@@ -23,7 +23,7 @@
 /** gImage holds several functions primarily to locate and load images.
 *
 * Overview of the functions: load and loadImage functions to load images effectively.
-* LoadData and loadImageData functions to load image's Data in a separate
+* loadData and loadImageData functions to load image's Data in a separate
 * thread. useData function to create the texture in VRAM by using the loaded data.
 * setImageData function to alter an image's data in integer format. setImageDataHDR
 * function to alter an image's data in float format. getImageData function to  access
@@ -90,26 +90,6 @@ public:
 	unsigned int loadImageFromURL(const std::string& imageUrl, bool cutUrlParameters);
 
 	/**
-	* Loads an image's data from the given full path to the RAM.
-	*
-	* Supported image formats can be found in the class description.
-	*
-	* The image can be located in anywhere(hard disk or other storage devices)
-	* as long as it has the full path.Supported image formats can be found in the class
-	* description.
-	*
-	* Loading assets in separate threads improves overall efficiency. In order to load
-	* an image's data separately, this function can be used. It doesn't create a texture
-	* of the loaded data's image in VRAM, instead it loads the Data of a given image
-	* and saves it into the RAM.
-	*
-	* @param fullPath  The full path to the image file. It should contain the
-	* full path of the folder where the image is located.
-	*
-	*/
-	void loadData(const std::string& fullPath);
-
-	/**
 	* Loads an image's data from the project's images folder to the RAM.
 	*
 	* Supported image formats can be found in the class description.
@@ -128,7 +108,7 @@ public:
 	* Developers are encouraged to use this function for Data loading so that an
 	* efficient work can be carried out.
 	*
-	* @param ImagePath  The full name of the image stored under project's images
+	* @param ImagePath The full name of the image stored under project's images
 	* folder which should contain the image name and its extension. It is case
 	* sensitive.
 	*/
@@ -136,6 +116,9 @@ public:
 
 	/**
 	* Creates a texture in VRAM by the usage of loaded data.
+	*
+	* @deprecated Prefer allocate(), which is implemented inside gImage class.
+	* @return Id of the image, this id might be changed after loading the image.
 	*/
 	unsigned int useData();
 
@@ -170,16 +153,14 @@ public:
     float* getImageDataHDR();
 
     /**
-    * Clears the data of a given structure.
-    */
+     * Clears the data of a given structure.
+     */
     void clearData();
 
     /**
-     * Used for the image's extension and changing image's name.
+     * Saves this image to the images folder with the given name and extension.
      *
-     * @param fileName is a string value  for the function .
-     * This file will be exist in the GlistApp's assets clasor
-     * after saving process.
+     * @param fileName File name for the file, this name should have the file extension. For example: glistapp.png
      */
     void saveImage(std::string fileName);
 

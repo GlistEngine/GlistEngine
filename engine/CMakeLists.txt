@@ -103,6 +103,7 @@ set(SRC_FILES
 	${ENGINE_DIR}/core/gRenderer.cpp
 	${ENGINE_DIR}/core/gRenderObject.cpp
 	${ENGINE_DIR}/core/gGUIActionManager.cpp
+	${ENGINE_DIR}/graphics/gAllocatableBase.cpp
 	${ENGINE_DIR}/graphics/gTexture.cpp
 	${ENGINE_DIR}/graphics/gImage.cpp
 	${ENGINE_DIR}/graphics/gSkybox.cpp
@@ -192,7 +193,6 @@ set(SRC_FILES
 	${ENGINE_DIR}/base/gBaseCanvas.cpp
 	${ENGINE_DIR}/core/gBaseWindow.cpp
 	${ENGINE_DIR}/core/gCanvasManager.cpp
-	${ENGINE_DIR}/core/gAppManager.cpp
 	${ENGINE_DIR}/core/gEngine.cpp
 	${ENGINE_DIR}/core/gPostProcessManager.cpp
 	${ENGINE_DIR}/base/gBasePostProcess.cpp
