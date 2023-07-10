@@ -244,6 +244,18 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>setTitleOn</b> (bool 
 <tr class="memitem:a2b8f451024e253c141e9a22f32c5b292 inherit pub_methods_classgBaseGUIObject"><td class="memItemLeft" align="right" valign="top"><a id="a2b8f451024e253c141e9a22f32c5b292"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>isTitleOn</b> ()</td></tr>
 <tr class="separator:a2b8f451024e253c141e9a22f32c5b292 inherit pub_methods_classgBaseGUIObject"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa33079bee209657b70ea110c103082d1 inherit pub_methods_classgBaseGUIObject"><td class="memItemLeft" align="right" valign="top"><a id="aa33079bee209657b70ea110c103082d1"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setTextAlignment</b> (int textAlignment, float cellW, int initX)</td></tr>
+<tr class="separator:aa33079bee209657b70ea110c103082d1 inherit pub_methods_classgBaseGUIObject"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab20e81ecbd022f3d8233bbbf201f578c inherit pub_methods_classgBaseGUIObject"><td class="memItemLeft" align="right" valign="top"><a id="ab20e81ecbd022f3d8233bbbf201f578c"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>getTextAlignment</b> ()</td></tr>
+<tr class="separator:ab20e81ecbd022f3d8233bbbf201f578c inherit pub_methods_classgBaseGUIObject"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab9f070d730cb40fa5dcb64b5d77fb11f inherit pub_methods_classgBaseGUIObject"><td class="memItemLeft" align="right" valign="top"><a id="ab9f070d730cb40fa5dcb64b5d77fb11f"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>getTextAlignmentAmount</b> ()</td></tr>
+<tr class="separator:ab9f070d730cb40fa5dcb64b5d77fb11f inherit pub_methods_classgBaseGUIObject"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad3fa90297f60dc4d83697693b90174a8 inherit pub_methods_classgBaseGUIObject"><td class="memItemLeft" align="right" valign="top"><a id="ad3fa90297f60dc4d83697693b90174a8"></a>
+float&#160;</td><td class="memItemRight" valign="bottom"><b>getTextMoveAmount</b> ()</td></tr>
+<tr class="separator:ad3fa90297f60dc4d83697693b90174a8 inherit pub_methods_classgBaseGUIObject"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad8a76f59d9975c919cf8d34a2a0eddc6 inherit pub_methods_classgBaseGUIObject"><td class="memItemLeft" align="right" valign="top"><a id="ad8a76f59d9975c919cf8d34a2a0eddc6"></a>
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>setTopParent</b> (<a class="el" href="classgBaseGUIObject.html">gBaseGUIObject</a> *parentGUIObject)</td></tr>
 <tr class="separator:ad8a76f59d9975c919cf8d34a2a0eddc6 inherit pub_methods_classgBaseGUIObject"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -556,6 +568,15 @@ static const int&#160;</td><td class="memItemRight" valign="bottom"><b>CURSOR_HR
 <tr class="memitem:aaaac84f3b52c29f0c83b96b1c495a0db inherit pub_static_attribs_classgBaseGUIObject"><td class="memItemLeft" align="right" valign="top"><a id="aaaac84f3b52c29f0c83b96b1c495a0db"></a>
 static const int&#160;</td><td class="memItemRight" valign="bottom"><b>CURSOR_VRESIZE</b> = 5</td></tr>
 <tr class="separator:aaaac84f3b52c29f0c83b96b1c495a0db inherit pub_static_attribs_classgBaseGUIObject"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a19ddeaf66a06a426dfb4bd67ea5e76a0 inherit pub_static_attribs_classgBaseGUIObject"><td class="memItemLeft" align="right" valign="top"><a id="a19ddeaf66a06a426dfb4bd67ea5e76a0"></a>
+static const int&#160;</td><td class="memItemRight" valign="bottom"><b>TEXT_LEFT_ALIGNMENT</b> = 0</td></tr>
+<tr class="separator:a19ddeaf66a06a426dfb4bd67ea5e76a0 inherit pub_static_attribs_classgBaseGUIObject"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abb95f989573add48e022108068e1fec8 inherit pub_static_attribs_classgBaseGUIObject"><td class="memItemLeft" align="right" valign="top"><a id="abb95f989573add48e022108068e1fec8"></a>
+static const int&#160;</td><td class="memItemRight" valign="bottom"><b>TEXT_MIDDLE_ALIGNMENT</b> = 1</td></tr>
+<tr class="separator:abb95f989573add48e022108068e1fec8 inherit pub_static_attribs_classgBaseGUIObject"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a12a413c67a71bc0d5e76c2dc326b3da6 inherit pub_static_attribs_classgBaseGUIObject"><td class="memItemLeft" align="right" valign="top"><a id="a12a413c67a71bc0d5e76c2dc326b3da6"></a>
+static const int&#160;</td><td class="memItemRight" valign="bottom"><b>TEXT_RIGHT_ALIGNMENT</b> = 2</td></tr>
+<tr class="separator:a12a413c67a71bc0d5e76c2dc326b3da6 inherit pub_static_attribs_classgBaseGUIObject"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af9ea7b8f37f07b50b5c62ac2f65d389c inherit pub_static_attribs_classgBaseGUIObject"><td class="memItemLeft" align="right" valign="top"><a id="af9ea7b8f37f07b50b5c62ac2f65d389c"></a>
 static int&#160;</td><td class="memItemRight" valign="bottom"><b>focusid</b></td></tr>
 <tr class="separator:af9ea7b8f37f07b50b5c62ac2f65d389c inherit pub_static_attribs_classgBaseGUIObject"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -676,6 +697,18 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>parentslotlineno</b></
 <tr class="memitem:adc28d16c1d9223579a0031547fc45fa5 inherit pro_attribs_classgBaseGUIObject"><td class="memItemLeft" align="right" valign="top"><a id="adc28d16c1d9223579a0031547fc45fa5"></a>
 int&#160;</td><td class="memItemRight" valign="bottom"><b>parentslotcolumnno</b></td></tr>
 <tr class="separator:adc28d16c1d9223579a0031547fc45fa5 inherit pro_attribs_classgBaseGUIObject"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a42a9088a968751bd18121c05e2da6009 inherit pro_attribs_classgBaseGUIObject"><td class="memItemLeft" align="right" valign="top"><a id="a42a9088a968751bd18121c05e2da6009"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>textalignment</b></td></tr>
+<tr class="separator:a42a9088a968751bd18121c05e2da6009 inherit pro_attribs_classgBaseGUIObject"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6140ffcda74a270e15228f96829b407b inherit pro_attribs_classgBaseGUIObject"><td class="memItemLeft" align="right" valign="top"><a id="a6140ffcda74a270e15228f96829b407b"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>textalignmentamount</b></td></tr>
+<tr class="separator:a6140ffcda74a270e15228f96829b407b inherit pro_attribs_classgBaseGUIObject"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac553e173b0d2d15d9b0ecb0c2047ba9c inherit pro_attribs_classgBaseGUIObject"><td class="memItemLeft" align="right" valign="top"><a id="ac553e173b0d2d15d9b0ecb0c2047ba9c"></a>
+float&#160;</td><td class="memItemRight" valign="bottom"><b>cursormoveamount</b></td></tr>
+<tr class="separator:ac553e173b0d2d15d9b0ecb0c2047ba9c inherit pro_attribs_classgBaseGUIObject"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af3c6986df6240943c740c5d51764c7d0 inherit pro_attribs_classgBaseGUIObject"><td class="memItemLeft" align="right" valign="top"><a id="af3c6986df6240943c740c5d51764c7d0"></a>
+float&#160;</td><td class="memItemRight" valign="bottom"><b>textmoveamount</b></td></tr>
+<tr class="separator:af3c6986df6240943c740c5d51764c7d0 inherit pro_attribs_classgBaseGUIObject"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_static_attribs_classgBaseGUIObject"><td colspan="2" onclick="javascript:toggleInherit('pro_static_attribs_classgBaseGUIObject')"><img src="closed.png" alt="-"/>&#160;Static Protected Attributes inherited from <a class="el" href="classgBaseGUIObject.html">gBaseGUIObject</a></td></tr>
 <tr class="memitem:a4fa03ae051ce44fabdbd2bb046ad5550 inherit pro_static_attribs_classgBaseGUIObject"><td class="memItemLeft" align="right" valign="top"><a id="a4fa03ae051ce44fabdbd2bb046ad5550"></a>
 static <a class="el" href="classgGUIResources.html">gGUIResources</a>&#160;</td><td class="memItemRight" valign="bottom"><b>res</b></td></tr>

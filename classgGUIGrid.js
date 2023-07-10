@@ -29,6 +29,7 @@ var classgGUIGrid =
     [ "setcolumnNum", "classgGUIGrid.html#a048680cc28d160c2043c5bd061469dd5", null ],
     [ "setGrid", "classgGUIGrid.html#a9d9331748e04ddca0916f8f8897f299c", null ],
     [ "setRowNum", "classgGUIGrid.html#ad039e97cc24d0291389676323e49382e", null ],
+    [ "setTextAlignment", "classgGUIGrid.html#a6c8df2a80df2f771fd8844480d2fe8a7", null ],
     [ "showCell", "classgGUIGrid.html#a86e6cef9d29dfedb79025a933be6b49b", null ],
     [ "showCells", "classgGUIGrid.html#ad822d04d5593ed390bcdd382fd689bde", null ],
     [ "update", "classgGUIGrid.html#a9680a5de13c3ae9e70b01354f5d9e241", null ]
