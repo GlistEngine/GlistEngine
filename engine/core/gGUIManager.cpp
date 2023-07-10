@@ -34,6 +34,21 @@ int gGUIManager::getTheme() {
 	return guitheme;
 }
 
+gFont* gGUIManager::getFont(int fontNum) {
+	switch(fontNum) {
+	case REGULAR_FONT:
+		return &themefont;
+	case BOLD_FONT:
+		return &themeboldfont;
+	case OBLIQUE_FONT:
+		return &themeobliquefont;
+	case BOLD_OBLIQUE_FONT:
+		return &themeboldobliquefont;
+	default:
+		return &themefont;
+	}
+}
+
 void gGUIManager::setCurrentFrame(gGUIFrame* currentFrame) {
 	setCurrentFrame(currentFrame,
 			root->getAppManager()->getCurrentCanvas()->getScreenWidth(),
@@ -256,6 +271,9 @@ void gGUIManager::loadThemes() {
 	themenavigationbackgroundcolor[GUITHEME_DARKBLUE] = gColor(195.0f / 255.0f, 224.0f / 255.0f, 235.0f / 255.0f);
 
 	themefont.loadFont("FreeSans.ttf", 11);
+	themeboldfont.loadFont("FreeSansBold.ttf", 11);
+	themeobliquefont.loadFont("FreeSansOblique.ttf", 11);
+	themeboldobliquefont.loadFont("FreeSansBoldOblique.ttf", 11);
 
 	themefontcolor[GUITHEME_LIGHT] = gColor(5.0f / 255.0f, 5.0f / 255.0f, 5.0f / 255.0f);
 	themefontcolor[GUITHEME_DARK] = gColor(220.0f / 255.0f, 220.0f / 255.0f, 220.0f / 255.0f);
