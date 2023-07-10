@@ -566,18 +566,6 @@ void gAppManager::preciseSleep(double seconds) {
 
 #ifdef ANDROID
 extern "C" {
-JNIEXPORT jboolean JNICALL Java_dev_glist_android_lib_GlistNative_onTouchEvent(JNIEnv *env, jclass clazz, jint pointerCount, jintArray fingerIds, jintArray x, jintArray y) {
-   /* if(!window) {
-        return false;
-    }
-
-    int* _fingerids = env->GetIntArrayElements(fingerIds, new jboolean(false));
-    int* _x = env->GetIntArrayElements(x, new jboolean(false));
-    int* _y = env->GetIntArrayElements(y, new jboolean(false));
-
-    return window->onTouchCallback(pointerCount, _fingerids, _x, _y); // true if consumed*/
-    return false;
-}
 
 JNIEXPORT void JNICALL Java_dev_glist_android_lib_GlistNative_onCreate(JNIEnv *env, jclass clazz) {
     gLogi("GlistNative") << "onCreate";
