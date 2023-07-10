@@ -366,6 +366,10 @@ void gGUIGrid::mousePressed(int x, int y, int button) {
 		int newcellindex = ((int)((x + firstx - left - (gridboxw / 2)) / gridboxw)) + ((int)((y + firsty - top - gridboxh - titletopmargin + ((font->getSize() * 1.8f) * !istitleon)) / gridboxh))  * columnnum ; // * gridboxw + (gridboxw / 2);
 		if(newcellindex != selectedbox) {
 			if(istextboxactive) changeCell();
+			if(newcellindex != selectedbox) {
+				allcells.at(selectedbox).iscellselected = false;
+				allcells.at(newcellindex).iscellselected = true;
+			}
 			selectedbox = newcellindex;
 		}
 	}
