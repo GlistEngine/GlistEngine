@@ -51,6 +51,10 @@ gBaseGUIObject::gBaseGUIObject() {
 	iscontainer = false;
 	isresizable = true;
 	istitleon = true;
+	textalignment = TEXT_LEFT_ALIGNMENT;
+	textalignmentamount = 5;
+	cursormoveamount = textalignmentamount;
+	textmoveamount = textalignmentamount;
 }
 
 gBaseGUIObject::~gBaseGUIObject() {
@@ -88,6 +92,40 @@ void gBaseGUIObject::setTitleOn(bool isTitleOn) {
 bool gBaseGUIObject::isTitleOn() {
 	return istitleon;
 }
+
+void gBaseGUIObject::setTextAlignment(int textAlignment, float cellW, int initX) {
+	textalignment = textAlignment;
+	switch(textalignment) {
+	case TEXT_LEFT_ALIGNMENT:
+		textalignmentamount = initX + 1;
+		cursormoveamount = 1;
+		textmoveamount = 0;
+		break;
+	case TEXT_MIDDLE_ALIGNMENT:
+		textalignmentamount = cellW / 2;
+		cursormoveamount = 0.5f;
+		textmoveamount = 0.5f;
+		break;
+	case TEXT_RIGHT_ALIGNMENT:
+		textalignmentamount = cellW - initX - 1;
+		cursormoveamount = 0;
+		textmoveamount = 1;
+		break;
+	}
+}
+
+int gBaseGUIObject::getTextAlignment() {
+	return textalignment;
+}
+
+int gBaseGUIObject::getTextAlignmentAmount() {
+	return textalignmentamount;
+}
+
+float gBaseGUIObject::getTextMoveAmount() {
+	return textmoveamount;
+}
+
 void gBaseGUIObject::setTopParent(gBaseGUIObject* parentGUIObject) {
 	topparent = parentGUIObject;
 }

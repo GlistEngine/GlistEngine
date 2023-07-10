@@ -23,6 +23,8 @@ public:
 
 	static const int CURSOR_ARROW = 0, CURSOR_IBEAM = 1, CURSOR_CROSSHAIR = 2, CURSOR_HAND = 3, CURSOR_HRESIZE = 4, CURSOR_VRESIZE = 5;
 
+	static const int TEXT_LEFT_ALIGNMENT = 0, TEXT_MIDDLE_ALIGNMENT = 1, TEXT_RIGHT_ALIGNMENT = 2;
+
 	gBaseGUIObject();
 	virtual ~gBaseGUIObject();
 
@@ -34,6 +36,13 @@ public:
 
 	void setTitleOn(bool isTitleOn);
 	bool isTitleOn();
+
+	void setTextAlignment(int textAlignment, float cellW, int initX);
+	int getTextAlignment();
+
+	int getTextAlignmentAmount();
+
+	float getTextMoveAmount();
 
 	virtual void setTopParent(gBaseGUIObject* parentGUIObject);
 	gBaseGUIObject* getTopParent();
@@ -143,6 +152,10 @@ protected:
 	bool isenabled;
 	bool istitleon;
 	int parentslotlineno, parentslotcolumnno;
+	int textalignment;
+	int textalignmentamount;
+	float cursormoveamount;
+	float textmoveamount;
 
 private:
 	static int lastid;

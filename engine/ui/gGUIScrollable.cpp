@@ -17,7 +17,7 @@ gGUIScrollable::gGUIScrollable() {
 	vsby = top;
 	hsbx = left;
 	hsby = bottom - hsbh;
-	boxw = width ;
+	boxw = width;
 	boxh = height;
 	totalw = boxw;
 	totalh = boxh;
