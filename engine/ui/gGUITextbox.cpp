@@ -924,10 +924,26 @@ void gGUITextbox::pressKey() {
 		}
 		letterpos = calculateAllLetterPositions();
 		lastutf = calculateLastUtf();
-		if(cursorposx + pastedtextw <= width) {
-			cursorposchar = firsttextl + pastedtextl;
-			cursorposutf = firsttextsize + pastedtextsize;
-			cursorposx = firsttextw + pastedtextw - firstposx;
+		cursorposchar = firsttextl + pastedtextl;
+		cursorposutf = firsttextsize + pastedtextsize;
+		cursorposx = firsttextw + pastedtextw - firstposx;
+		if(cursorposx >= width - 2 * initx) {
+			if(!ismultiline && !ispassword) {
+				do {
+					firstutf += letterlength[firstchar];
+					firstposx = font->getStringWidth(text.substr(0, firstutf));
+					firstchar++;
+					cursorposx = font->getStringWidth(text.substr(firstutf, cursorposutf - firstutf));
+				} while(cursorposx >= width - 2 * initx);
+				lastutf = calculateLastUtf();
+			} else if(ismultiline) {
+				setText(text);
+				findCursorPosition();
+			} else if(ispassword) {
+				cursorposx -= 3 * dotradius;
+			} else {
+				cursorposx = font->getStringWidth(text.substr(firstutf, cursorposutf - firstutf));
+			}
 		}
 		selectionmode = false;
 		isselectedall = false;
