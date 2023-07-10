@@ -10,10 +10,6 @@
 
 #ifdef ANDROID
 
-static void onErrorCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar *message, const void *userParam) {
-	gLogi("gAndroidWindow") << "OpenGL ERROR: " << message;
-}
-
 ANativeWindow* gAndroidWindow::nativewindow = nullptr;
 gAndroidWindow* window = nullptr;
 
