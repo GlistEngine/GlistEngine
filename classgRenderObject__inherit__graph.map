@@ -1,23 +1,23 @@
 <map id="gRenderObject" name="gRenderObject">
-<area shape="rect" id="node1" title=" " alt="" coords="125,816,244,843"/>
-<area shape="rect" id="node3" href="$classgBaseCanvas.html" title=" " alt="" coords="307,461,417,488"/>
-<area shape="rect" id="node4" href="$classgBaseGUIObject.html" title=" " alt="" coords="298,512,426,539"/>
-<area shape="rect" id="node26" href="$classgBaseParticles.html" title=" " alt="" coords="303,563,421,589"/>
-<area shape="rect" id="node28" href="$classgBasePlugin.html" title=" " alt="" coords="311,613,413,640"/>
-<area shape="rect" id="node29" href="$classgBasePostProcess.html" title=" " alt="" coords="292,664,432,691"/>
-<area shape="rect" id="node33" href="$classgBoundingBox.html" title=" " alt="" coords="304,715,420,741"/>
-<area shape="rect" id="node34" href="$classgFbo.html" title=" " alt="" coords="335,765,389,792"/>
-<area shape="rect" id="node35" href="$classgFog.html" title=" " alt="" coords="335,816,389,843"/>
-<area shape="rect" id="node36" href="$classgMaterial.html" title=" " alt="" coords="320,867,404,893"/>
-<area shape="rect" id="node37" href="$classgNode.html" title=" " alt="" coords="330,917,394,944"/>
-<area shape="rect" id="node44" href="$classgParticle.html" title=" " alt="" coords="323,968,401,995"/>
-<area shape="rect" id="node45" href="$classgRay.html" title=" " alt="" coords="335,1019,389,1045"/>
-<area shape="rect" id="node46" href="$classgShadowMap.html" title=" " alt="" coords="307,1069,417,1096"/>
-<area shape="rect" id="node47" href="$classgTexture.html" title=" " alt="" coords="323,1120,401,1147"/>
-<area shape="rect" id="node49" href="$classgVbo.html" title=" " alt="" coords="335,1171,389,1197"/>
-<area shape="rect" id="node2" href="$classgObject.html" title=" " alt="" coords="5,816,77,843"/>
-<area shape="rect" id="node5" href="$classgGUIControl.html" title=" " alt="" coords="484,461,585,488"/>
-<area shape="rect" id="node25" href="$classgGUIForm.html" title=" " alt="" coords="491,512,578,539"/>
+<area shape="rect" id="node1" title=" " alt="" coords="125,791,244,817"/>
+<area shape="rect" id="node3" href="$classgBaseCanvas.html" title=" " alt="" coords="307,436,417,463"/>
+<area shape="rect" id="node4" href="$classgBaseGUIObject.html" title=" " alt="" coords="298,487,426,513"/>
+<area shape="rect" id="node25" href="$classgBaseParticles.html" title=" " alt="" coords="303,537,421,564"/>
+<area shape="rect" id="node27" href="$classgBasePlugin.html" title=" " alt="" coords="311,588,413,615"/>
+<area shape="rect" id="node28" href="$classgBasePostProcess.html" title=" " alt="" coords="292,639,432,665"/>
+<area shape="rect" id="node33" href="$classgBoundingBox.html" title=" " alt="" coords="304,689,420,716"/>
+<area shape="rect" id="node34" href="$classgFbo.html" title=" " alt="" coords="335,740,389,767"/>
+<area shape="rect" id="node35" href="$classgFog.html" title=" " alt="" coords="335,791,389,817"/>
+<area shape="rect" id="node36" href="$classgMaterial.html" title=" " alt="" coords="320,841,404,868"/>
+<area shape="rect" id="node37" href="$classgNode.html" title=" " alt="" coords="330,892,394,919"/>
+<area shape="rect" id="node44" href="$classgParticle.html" title=" " alt="" coords="323,943,401,969"/>
+<area shape="rect" id="node45" href="$classgRay.html" title=" " alt="" coords="335,993,389,1020"/>
+<area shape="rect" id="node46" href="$classgShadowMap.html" title=" " alt="" coords="307,1044,417,1071"/>
+<area shape="rect" id="node47" href="$classgTexture.html" title=" " alt="" coords="323,1095,401,1121"/>
+<area shape="rect" id="node49" href="$classgVbo.html" title=" " alt="" coords="335,1145,389,1172"/>
+<area shape="rect" id="node2" href="$classgObject.html" title=" " alt="" coords="5,791,77,817"/>
+<area shape="rect" id="node5" href="$classgGUIControl.html" title=" " alt="" coords="484,436,585,463"/>
+<area shape="rect" id="node24" href="$classgGUIForm.html" title=" " alt="" coords="491,487,578,513"/>
 <area shape="rect" id="node6" href="$classgGUIBitmap.html" title=" " alt="" coords="672,5,773,32"/>
 <area shape="rect" id="node7" href="$classgGUIButton.html" title=" " alt="" coords="674,56,771,83"/>
 <area shape="rect" id="node8" href="$classgGUIColorPicker.html" title=" " alt="" coords="659,107,786,133"/>
@@ -36,16 +36,16 @@
 <area shape="rect" id="node21" href="$classgGUISlider.html" title=" " alt="" coords="677,765,768,792"/>
 <area shape="rect" id="node22" href="$classgGUISwitchButton.html" title=" " alt="" coords="653,816,793,843"/>
 <area shape="rect" id="node23" href="$classgGUIText.html" title=" " alt="" coords="682,867,763,893"/>
-<area shape="rect" id="node24" href="$classgGUITextbox.html" title=" " alt="" coords="670,917,775,944"/>
-<area shape="rect" id="node27" href="$classgFireParticles.html" title=" " alt="" coords="480,563,589,589"/>
-<area shape="rect" id="node30" href="$classgGrayscale.html" title=" " alt="" coords="487,613,582,640"/>
-<area shape="rect" id="node31" href="$classgInversion.html" title=" " alt="" coords="489,664,580,691"/>
-<area shape="rect" id="node32" href="$classgKernelEffect.html" title=" " alt="" coords="481,715,589,741"/>
+<area shape="rect" id="node26" href="$classgFireParticles.html" title=" " alt="" coords="480,537,589,564"/>
+<area shape="rect" id="node29" href="$classgGrayscale.html" title=" " alt="" coords="487,588,582,615"/>
+<area shape="rect" id="node30" href="$classgInversion.html" title=" " alt="" coords="489,639,580,665"/>
+<area shape="rect" id="node31" href="$classgKernelEffect.html" title=" " alt="" coords="481,689,589,716"/>
+<area shape="rect" id="node32" href="$classgSepiatone.html" title=" " alt="" coords="487,740,582,767"/>
 <area shape="rect" id="node38" href="$classgCamera.html" title=" " alt="" coords="494,791,575,817"/>
 <area shape="rect" id="node39" href="$classgFont.html" title=" " alt="" coords="505,841,564,868"/>
 <area shape="rect" id="node40" href="$classgLight.html" title=" " alt="" coords="503,892,566,919"/>
 <area shape="rect" id="node41" href="$classgMesh.html" title=" " alt="" coords="502,943,567,969"/>
 <area shape="rect" id="node42" href="$classgModel.html" title=" " alt="" coords="499,993,570,1020"/>
 <area shape="rect" id="node43" href="$classgSkybox.html" title=" " alt="" coords="496,1044,573,1071"/>
-<area shape="rect" id="node48" href="$classgImage.html" title=" " alt="" coords="499,1120,570,1147"/>
+<area shape="rect" id="node48" href="$classgImage.html" title=" " alt="" coords="499,1095,570,1121"/>
 </map>

@@ -27,11 +27,11 @@
 <area shape="rect" id="node23" href="$classgBaseParticles.html" title=" " alt="" coords="350,360,467,387"/>
 <area shape="rect" id="node25" href="$classgBasePlugin.html" title=" " alt="" coords="357,411,460,437"/>
 <area shape="rect" id="node26" href="$classgBasePostProcess.html" title=" " alt="" coords="339,461,479,488"/>
-<area shape="rect" id="node30" href="$classgBoundingBox.html" title=" " alt="" coords="351,512,467,539"/>
-<area shape="rect" id="node31" href="$classgFbo.html" title=" " alt="" coords="381,563,436,589"/>
-<area shape="rect" id="node32" href="$classgFog.html" title=" " alt="" coords="382,613,435,640"/>
-<area shape="rect" id="node33" href="$classgMaterial.html" title=" " alt="" coords="367,664,451,691"/>
-<area shape="rect" id="node34" href="$classgNode.html" title=" " alt="" coords="377,715,441,741"/>
+<area shape="rect" id="node31" href="$classgBoundingBox.html" title=" " alt="" coords="351,512,467,539"/>
+<area shape="rect" id="node32" href="$classgFbo.html" title=" " alt="" coords="381,563,436,589"/>
+<area shape="rect" id="node33" href="$classgFog.html" title=" " alt="" coords="382,613,435,640"/>
+<area shape="rect" id="node34" href="$classgMaterial.html" title=" " alt="" coords="367,664,451,691"/>
+<area shape="rect" id="node35" href="$classgNode.html" title=" " alt="" coords="377,715,441,741"/>
 <area shape="rect" id="node39" href="$classgParticle.html" title=" " alt="" coords="369,765,448,792"/>
 <area shape="rect" id="node40" href="$classgRay.html" title=" " alt="" coords="381,816,436,843"/>
 <area shape="rect" id="node41" href="$classgShadowMap.html" title=" " alt="" coords="354,867,463,893"/>
@@ -43,9 +43,9 @@
 <area shape="rect" id="node27" href="$classgGrayscale.html" title=" " alt="" coords="534,411,629,437"/>
 <area shape="rect" id="node28" href="$classgInversion.html" title=" " alt="" coords="536,461,627,488"/>
 <area shape="rect" id="node29" href="$classgKernelEffect.html" title=" " alt="" coords="527,512,635,539"/>
-<area shape="rect" id="node35" href="$classgCamera.html" title=" " alt="" coords="541,639,622,665"/>
-<area shape="rect" id="node36" href="$classgFont.html" title=" " alt="" coords="552,689,611,716"/>
-<area shape="rect" id="node37" href="$classgLight.html" title=" " alt="" coords="550,740,613,767"/>
-<area shape="rect" id="node38" href="$classgMesh.html" title=" " alt="" coords="549,791,614,817"/>
+<area shape="rect" id="node30" href="$classgSepiatone.html" title=" " alt="" coords="534,563,629,589"/>
+<area shape="rect" id="node36" href="$classgCamera.html" title=" " alt="" coords="541,664,622,691"/>
+<area shape="rect" id="node37" href="$classgFont.html" title=" " alt="" coords="552,715,611,741"/>
+<area shape="rect" id="node38" href="$classgLight.html" title=" " alt="" coords="550,765,613,792"/>
 <area shape="rect" id="node49" href="$classgAssetLoader.html" title=" " alt="" coords="353,1019,464,1045"/>
 </map>
