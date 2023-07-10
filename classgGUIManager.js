@@ -5,6 +5,7 @@ var classgGUIManager =
     [ "charPressed", "classgGUIManager.html#aafee1530e562cae39d380220d7e8d43a", null ],
     [ "draw", "classgGUIManager.html#a3f67103a5848f7c748bf0b6ec69b3226", null ],
     [ "getCurrentFrame", "classgGUIManager.html#af3826b55befe6e80655dfae54b66723a", null ],
+    [ "getFont", "classgGUIManager.html#a2aff9e88f9b018307aa197a1879421f3", null ],
     [ "getTheme", "classgGUIManager.html#a969a47d6a47338fc5a6dd2e48a5eeb1a", null ],
     [ "keyPressed", "classgGUIManager.html#abccf7c58c565d3bbba93ec673102ddc6", null ],
     [ "keyReleased", "classgGUIManager.html#a3e32785261a3723ab570a9366a34804c", null ],
