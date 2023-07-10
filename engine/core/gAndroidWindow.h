@@ -79,6 +79,7 @@ public:
 public:
 	static ANativeWindow* nativewindow;
 	bool isclosed;
+	bool isrendering;
 
 private:
 	EGLDisplay display{};

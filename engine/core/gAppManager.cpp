@@ -144,12 +144,12 @@ void gAppManager::initialize() {
     }
     if(initializedbefore) {
         gAllocatableBase::reallocateAll();
+        if(eventhandler) {
+            gReallocateRenderDataEvent event{};
+            eventhandler(event);
+        }
     }
     initialized = true;
-    if(initializedbefore && eventhandler) {
-        gReallocateRenderDataEvent event{};
-        eventhandler(event);
-    }
     initializedbefore = true;
     app->start();
 }
@@ -290,7 +290,7 @@ void gAppManager::tick() {
         for(int i = 0; i < gBaseComponent::usedcomponents.size(); i++) {
             gBaseComponent::usedcomponents[i]->update();
         }
-        executeQueue();
+		executeQueue();
         return;
     }
 
@@ -323,7 +323,11 @@ void gAppManager::tick() {
         totaldraws++;
     }
     window->update();
-    executeQueue();
+    if(!window->isRendering() && isrendering) {
+        isrendering = false; // If window has lost the context, we should stop rendering.
+		app->pause();
+    }
+	executeQueue();
 }
 
 
@@ -500,6 +504,9 @@ bool gAppManager::onJoystickDisconnectEvent(gJoystickDisconnectEvent& event) {
 
 bool gAppManager::onAppPauseEvent(gAppPauseEvent& ) {
     submitToMainThread([this]() {
+		if(!isrendering) {
+			return;
+		}
         isrendering = false;
         app->pause();
     });
@@ -508,6 +515,9 @@ bool gAppManager::onAppPauseEvent(gAppPauseEvent& ) {
 
 bool gAppManager::onAppResumeEvent(gAppResumeEvent &) {
     submitToMainThread([this]() {
+		if(isrendering) {
+			return;
+		}
         isrendering = true;
         app->resume();
     });

@@ -16,6 +16,7 @@ gAndroidWindow* window = nullptr;
 gAndroidWindow::gAndroidWindow() {
     window = this;
 	isclosed = true;
+	isrendering = false;
 }
 
 gAndroidWindow::~gAndroidWindow() {
@@ -99,6 +100,7 @@ void gAndroidWindow::initialize(int uwidth, int uheight, int windowMode, bool is
 	scalex = (float) width / (float) uwidth;
 	scaley = (float) height / (float) uheight;
 	isclosed = false;
+	isrendering = true;
 	gBaseWindow::initialize(width, height, windowMode, false);
 }
 
@@ -108,8 +110,16 @@ bool gAndroidWindow::getShouldClose() {
 }
 
 void gAndroidWindow::update() {
+    if(!isrendering) {
+        return;
+    }
 	if(!eglSwapBuffers(display, surface)) {
-		gLogi("gAndroidWindow") << "eglSwapBuffers() returned error " << eglGetError();
+        EGLint err = eglGetError();
+        if(err == EGL_BAD_SURFACE) {
+            isrendering = false;
+            return;
+        }
+		gLogi("gAndroidWindow") << "eglSwapBuffers() returned error " << err;
 	}
 }
 
@@ -117,6 +127,7 @@ void gAndroidWindow::close() {
     if(!display) {
         return;
     }
+    isrendering = false;
     gLogi("gAndroidWindow") << "close";
 	eglMakeCurrent(display,EGL_NO_SURFACE,EGL_NO_SURFACE, EGL_NO_CONTEXT );
 	eglDestroySurface(display, surface);

@@ -75,6 +75,10 @@ bool gBaseWindow::getShouldClose() {
 	return false;
 }
 
+bool gBaseWindow::isRendering() const {
+	return true;
+}
+
 void gBaseWindow::update() {
 
 }

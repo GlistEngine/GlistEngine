@@ -43,6 +43,8 @@ public:
 	virtual void initialize(int width, int height, int windowMode, bool isResizable);
 	virtual bool getShouldClose();
 
+	bool isRendering() const;
+
 	/**
 	 * Performs the said operations at the specified frame rate.
 	 */
