@@ -86,7 +86,9 @@ gTexture::gTexture(int w, int h, int format, bool isFbo) : gAllocatableBase() {
     istexturegenerated = false;
 	data = nullptr;
 	datahdr = nullptr;
+#ifdef ANDROID
 	androidasset = nullptr;
+#endif
   	setupRenderData();
 }
 
@@ -106,9 +108,11 @@ gTexture::~gTexture() {
         delete data;
         delete datahdr;
     }
+#ifdef ANDROID
 	if(androidasset) {
 		gAndroidUtil::closeAsset(androidasset);
 	}
+#endif
 	delete masktexture;
 }
 

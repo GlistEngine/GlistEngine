@@ -41,6 +41,7 @@ public:
 	 * @param windowMode Determines which mode the window is in. Example: Window Mode,Game Mode, Fullscreen Mode.
 	 */
 	virtual void initialize(int width, int height, int windowMode, bool isResizable);
+
 	virtual bool getShouldClose();
 
 	bool isRendering() const;
@@ -105,6 +106,26 @@ public:
 	virtual void setWindowResizable(bool isResizable);
 	virtual void setWindowSizeLimits(int minWidth, int minHeight, int maxWidth, int maxHeight);
 
+	/**
+	 * Sets the handler function for events. For example if the window is resized
+	 * gWindowResizeEvent will be send to this function.
+	 *
+	 * Then from there, gEventDispatcher can be used to redirect events to their own handlers.
+	 *
+	 * Example usage:
+	 * \code{.cpp}
+	 * gGLFWWindow window;
+	 * window.setEventHandler(G_BIND_FUNCTION(onEvent));
+	 * ...
+	 *
+	 * void gAppManager::onEvent(gEvent& event) {
+	 * ...
+	 * }
+	 *
+	 * ...
+	 *
+	 * @param handler Handler function
+	 */
 	void setEventHandler(EventHandlerFn handler);
 
 	virtual bool isJoystickPresent(int joystickId);
@@ -113,6 +134,12 @@ public:
 
 public:
 	bool vsync;
+
+	/**
+	 * Sends given event to the the event handler function which is set with setEventHandler function.
+	 *
+	 * @param event Event to send
+	 */
 	void callEvent(gEvent& event);
 
 protected:

@@ -2,12 +2,13 @@
 // Created by Metehan Gezer on 6.07.2023.
 //
 
+#include "gAppManager.h"
 #include "gBaseComponent.h"
 #include "gBasePlugin.h"
-#include "gAppManager.h"
 #include "gBaseApp.h"
 #include "gCanvasManager.h"
-#include "gGUIManager.h"
+#include "gGUIFrame.h"
+
 #include <thread>
 #include <mutex>
 
@@ -26,11 +27,11 @@ void gStartEngine(gBaseApp* baseApp, const std::string& appName, int windowMode,
     if(windowMode == G_WINDOWMODE_NONE) windowMode = G_WINDOWMODE_APP;
     if(windowMode == G_WINDOWMODE_FULLSCREENGUIAPP || windowMode == G_WINDOWMODE_GUIAPP) screenScaling = G_SCREENSCALING_NONE;
 #ifndef ANDROID
-    gEngine engine(appName, baseApp, width, height, windowMode, unitWidth, unitHeight, screenScaling, isResizable, G_LOOPMODE_NORMAL);
-    engine.setup();
-    engine.initialize();
-    engine.loop();
-    engine.stop();
+    gAppManager manager(appName, baseApp, width, height, windowMode, unitWidth, unitHeight, screenScaling, isResizable, G_LOOPMODE_NORMAL);
+	manager.initialize();
+	manager.setup();
+	manager.loop();
+	manager.stop();
 #else
     new gAppManager(appName, baseApp, width, height, windowMode, unitWidth, unitHeight, screenScaling, isResizable, G_LOOPMODE_NORMAL);
 #endif
@@ -38,11 +39,11 @@ void gStartEngine(gBaseApp* baseApp, const std::string& appName, int windowMode,
 
 void gStartEngine(gBaseApp* baseApp, const std::string& appName, int loopMode) {
 #ifndef ANDROID
-    gEngine engine(appName, baseApp, 0, 0, G_WINDOWMODE_NONE, 0, 0, G_SCREENSCALING_NONE, false, loopMode);
-    engine.setup();
-    engine.initialize();
-    engine.loop();
-    engine.stop();
+	gAppManager manager(appName, baseApp, 0, 0, G_WINDOWMODE_NONE, 0, 0, G_SCREENSCALING_NONE, false, loopMode);
+    manager.initialize();
+	manager.setup();
+	manager.loop();
+    manager.stop();
 #else
     new gAppManager(appName, baseApp, 0, 0, G_WINDOWMODE_NONE, 0, 0, G_SCREENSCALING_NONE, false, loopMode);
 #endif
@@ -54,22 +55,26 @@ int pow(int x, int p) {
     return i;
 }
 
-gAppManager* gAppManager::appmanager = nullptr;
+gAppManager* appmanager = nullptr;
 
 gAppManager::gAppManager(const std::string& appName, gBaseApp *baseApp, int width, int height,
                          int windowMode, int unitWidth, int unitHeight, int screenScaling,
                          bool isResizable, int loopMode) : appname(appName), app(baseApp), width(width), height(height),
                                                                  windowmode(windowMode), unitwidth(unitWidth), unitheight(unitHeight), screenscaling(screenScaling),
                                                                  isresizable(isResizable), loopmode(loopMode) {
-    gAppManager::set(this);
+    appmanager = this;
+	canvasmanager = new gCanvasManager();
+	guimanager = nullptr;
     initialized = false;
     initializedbefore = false;
     iscanvasset = false;
     isrunning = false;
-    isrendering = false;
-
-    canvasmanager = new gCanvasManager();
-    guimanager = new gGUIManager(baseApp, width, height);
+    setupcomplete = false;
+#ifdef ANDROID
+	isrendering = false;
+#else
+	isrendering = true;
+#endif
     // Mouse
     ismouseentered = false;
     mousebuttonstate = 0;
@@ -116,7 +121,11 @@ gAppManager::~gAppManager() {
 }
 
 void gAppManager::setup() {
+    if(setupcomplete) {
+        return;
+    }
     app->setup();
+    setupcomplete = true;
 }
 
 void gAppManager::initialize() {
@@ -135,13 +144,17 @@ void gAppManager::initialize() {
     if(unitheight == 0) {
         unitheight = this->height;
     }
-    // Create renderer and reallocate (if available) all gpu resources.
-    gRenderObject::createRenderer();
-    if(canvasmanager->getCurrentCanvas() || canvasmanager->getTempCanvas()) {
-        gBaseCanvas::setScreenSize(width, height);
-        gBaseCanvas::setUnitScreenSize(unitwidth, unitheight);
-        gBaseCanvas::setScreenScaling(screenscaling);
-    }
+	// Create renderer
+	gRenderObject::createRenderer();
+	// Update renderer dimensions
+	gBaseCanvas::setScreenSize(width, height);
+	gBaseCanvas::setUnitScreenSize(unitwidth, unitheight);
+	gBaseCanvas::setScreenScaling(screenscaling);
+	// Create managers if not created
+	if(!guimanager) {
+		guimanager = new gGUIManager(app, width, height);
+	}
+	// Reallocate all gpu resources if initialized before.
     if(initializedbefore) {
         gAllocatableBase::reallocateAll();
         if(eventhandler) {
@@ -164,7 +177,7 @@ void gAppManager::loop() {
         assert(gRenderObject::getRenderer());
     }
 #endif
-    gLogi("gAppManager") << "starting loop";
+    //gLogi("gAppManager") << "starting loop";
     isrunning = true;
     while (isrunning && (!window || !window->getShouldClose())) {
         // Delta time calculations
@@ -188,7 +201,7 @@ void gAppManager::loop() {
             }
         }
     }
-    gLogi("gAppManager") << "stopping loop";
+    //gLogi("gAppManager") << "stopping loop";
     app->stop();
     gRenderObject::destroyRenderer();
     if(window) {
@@ -199,6 +212,38 @@ void gAppManager::loop() {
 
 void gAppManager::stop() {
     isrunning = false;
+}
+
+std::string gAppManager::getAppName() {
+	return appname;
+}
+
+gCanvasManager* gAppManager::getCanvasManager() {
+	return canvasmanager;
+}
+
+gGUIManager* gAppManager::getGUIManager() {
+	return guimanager;
+}
+
+int gAppManager::getLoopMode() {
+	return loopmode;
+}
+
+bool gAppManager::isWindowFocused() {
+	return iswindowfocused;
+}
+
+void gAppManager::setWindowSize(int width, int height) {
+	window->setWindowSize(width, height);
+}
+
+void gAppManager::setWindowResizable(bool isResizable) {
+	window->setWindowResizable(isResizable);
+}
+
+void gAppManager::setWindowSizeLimits(int minWidth, int minHeight, int maxWidth, int maxHeight) {
+	window->setWindowSizeLimits(minWidth, minHeight, maxWidth, maxHeight);
 }
 
 void gAppManager::setScreenSize(int width, int height) {
@@ -296,7 +341,7 @@ void gAppManager::tick() {
 
     // todo joystick
     canvasmanager->update();
-    guimanager->update();
+    if(guimanager) guimanager->update();
     app->update();
     for(int i = 0; i < gBaseComponent::usedcomponents.size(); i++) {
         gBaseComponent::usedcomponents[i]->update();
@@ -319,13 +364,15 @@ void gAppManager::tick() {
             }
         }
 
-        guimanager->draw();
+		if(guimanager) guimanager->draw();
         totaldraws++;
     }
     window->update();
     if(!window->isRendering() && isrendering) {
         isrendering = false; // If window has lost the context, we should stop rendering.
+#ifdef ANDROID
 		app->pause();
+#endif
     }
 	executeQueue();
 }
@@ -502,7 +549,8 @@ bool gAppManager::onJoystickDisconnectEvent(gJoystickDisconnectEvent& event) {
     return false;
 }
 
-bool gAppManager::onAppPauseEvent(gAppPauseEvent& ) {
+#ifdef ANDROID
+bool gAppManager::onAppPauseEvent(gAppPauseEvent& event) {
     submitToMainThread([this]() {
 		if(!isrendering) {
 			return;
@@ -513,7 +561,7 @@ bool gAppManager::onAppPauseEvent(gAppPauseEvent& ) {
     return false;
 }
 
-bool gAppManager::onAppResumeEvent(gAppResumeEvent &) {
+bool gAppManager::onAppResumeEvent(gAppResumeEvent& event) {
     submitToMainThread([this]() {
 		if(isrendering) {
 			return;
@@ -523,6 +571,7 @@ bool gAppManager::onAppResumeEvent(gAppResumeEvent &) {
     });
     return false;
 }
+#endif
 
 void gAppManager::updateTime() {
     targettimestep = AppClockDuration(1'000'000'000 / (targetframerate + 1));
@@ -578,20 +627,17 @@ void gAppManager::preciseSleep(double seconds) {
 extern "C" {
 
 JNIEXPORT void JNICALL Java_dev_glist_android_lib_GlistNative_onCreate(JNIEnv *env, jclass clazz) {
-    gLogi("GlistNative") << "onCreate";
+    //gLogi("GlistNative") << "onCreate";
     androidMain();
-    gAppManager* engine = gAppManager::get();
 #ifdef DEBUG
-    assert(engine); // engine should not be null after androidMain();
+    assert(appmanager); // appmanager should not be null after androidMain();
 #endif
-    engine->setup();
 }
 
 JNIEXPORT void JNICALL Java_dev_glist_android_lib_GlistNative_onDestroy(JNIEnv *env, jclass clazz) {
-    gLogi("GlistNative") << "onDestroy";
-    gAppManager* engine = gAppManager::get();
-    delete engine;
-    gAppManager::set(nullptr);
+    //gLogi("GlistNative") << "onDestroy";
+    delete appmanager;
+    appmanager = nullptr;
 }
 
 std::unique_ptr<std::thread> thread;
@@ -601,17 +647,16 @@ JNIEXPORT void JNICALL Java_dev_glist_android_lib_GlistNative_onStart(JNIEnv *en
         throw std::runtime_error("cannot call onStart without calling onStop first");
     }
     thread = std::make_unique<std::thread>([]() {
-        gAppManager* engine = gAppManager::get();
-        engine->initialize();
-        engine->loop();
+        appmanager->initialize();
+        appmanager->setup();
+        appmanager->loop();
     });
 }
 
 JNIEXPORT void JNICALL Java_dev_glist_android_lib_GlistNative_onStop(JNIEnv *env, jclass clazz) {
-    gLogi("GlistNative") << "onStop";
-    gAppManager* engine = gAppManager::get();
-    if(engine) {
-        engine->stop();
+    //gLogi("GlistNative") << "onStop";
+    if(appmanager) {
+        appmanager->stop();
     }
     if(thread) {
         thread->join(); // wait for shutdown
@@ -620,20 +665,18 @@ JNIEXPORT void JNICALL Java_dev_glist_android_lib_GlistNative_onStop(JNIEnv *env
 }
 
 JNIEXPORT void JNICALL Java_dev_glist_android_lib_GlistNative_onPause(JNIEnv *env, jclass clazz) {
-    gLogi("GlistNative") << "onPause";
-    gAppManager* engine = gAppManager::get();
-    if(engine) {
+    //gLogi("GlistNative") << "onPause";
+    if(appmanager) {
         gAppPauseEvent event{};
-        engine->getEventHandler()(event);
+        appmanager->getEventHandler()(event);
     }
 }
 
 JNIEXPORT void JNICALL Java_dev_glist_android_lib_GlistNative_onResume(JNIEnv *env, jclass clazz) {
-    gLogi("GlistNative") << "onResume";
-    gAppManager* engine = gAppManager::get();
-    if(engine) {
+    //gLogi("GlistNative") << "onResume";
+    if(appmanager) {
         gAppResumeEvent event{};
-        engine->getEventHandler()(event);
+        appmanager->getEventHandler()(event);
     }
 }
 }

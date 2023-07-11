@@ -113,6 +113,10 @@ class gEventDispatcher {
 
 #define G_EVENT_CLASS_CATEGORY(category) \
   virtual int getCategoryFlags() const override { return category; }
+
+
+// This macro can be used instead of std::bind function call.
+// G_BIND_FUNCTION can be used to bind class methods. While G_BIND_GLOBAL_FUNCTION can be used to bind global functions without a class.
 #define G_BIND_FUNCTION(fn) [this](auto&&... args) -> decltype(auto) { return this->fn(std::forward<decltype(args)>(args)...); }
 #define G_BIND_GLOBAL_FUNCTION(fn) [](auto&&... args) -> decltype(auto) { return fn(std::forward<decltype(args)>(args)...); }
 

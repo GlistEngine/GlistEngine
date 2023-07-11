@@ -20,6 +20,7 @@
 #include "gGUIFrame.h"
 #include "gGUISizer.h"
 #include "gGUIDialogue.h"
+
 class gBaseApp;
 
 /**

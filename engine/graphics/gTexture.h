@@ -154,7 +154,9 @@ protected:
     float* getDataHDR();
     bool ismaskloaded;
     gTexture* masktexture;
+#ifdef ANDROID
 	AAsset* androidasset;
+#endif
 
 private:
     std::string texturetype[4];

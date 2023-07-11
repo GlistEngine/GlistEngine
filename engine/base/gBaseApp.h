@@ -27,9 +27,9 @@ public:
 #ifdef ANDROID
 	virtual void pause();
 	virtual void resume();
+#endif
 	virtual void start();
 	virtual void stop();
-#endif
 
 	void setCurrentCanvas(gBaseCanvas* currentCanvas);
 	gBaseCanvas* getCurrentCanvas();
@@ -42,6 +42,7 @@ public:
 	void enableVsync();
 	void disableVsync();
 
+	static gAppManager* getAppManager() { return appmanager; }
 protected:
 	int argc;
 	char **argv;

@@ -48,12 +48,13 @@
 
 #include <chrono>
 #include <iostream>
+#include "gGUIManager.h"
 
 class gCanvasManager;
 class gBaseCanvas;
 class gBaseApp;
-class gGUIManager;
 class gAppManager;
+class gGUIFrame;
 
 /**
  * Sets the app settings for the engine according to given name, mode of window,
@@ -145,17 +146,42 @@ void gStartEngine(gBaseApp* baseApp, const std::string& appName, int windowMode,
  */
 void gStartEngine(gBaseApp* baseApp, const std::string& appName, int loopMode);
 
+extern gAppManager* appmanager;
+
 class gAppManager : public gObject {
 public:
     gAppManager(const std::string& appName, gBaseApp *baseApp, int width, int height, int windowMode, int unitWidth, int unitHeight, int screenScaling, bool isResizable, int loopMode);
     ~gAppManager();
 
-    void setup();
+	// Main application
     void initialize();
+	void setup();
     void loop();
     void stop();
 
-    /**
+
+
+	std::string getAppName();
+
+	gCanvasManager* getCanvasManager();
+
+	gGUIManager* getGUIManager();
+
+	/**
+	 * Returns the loop mode of the engine. The returning value can be
+	 * one of G_LOOPMODE_NORMAL(0) or G_LOOPMODE_NONE(1)
+	 *
+	 * @return Loop mode
+	 */
+	int getLoopMode();
+
+	bool isWindowFocused();
+
+	void setWindowSize(int width, int height);
+	void setWindowResizable(bool isResizable);
+	void setWindowSizeLimits(int minWidth, int minHeight, int maxWidth, int maxHeight);
+
+	/**
      * Sets screen size by given width and height. GlistEngine scales the process.
      *
      * @param width new width value of screen.
@@ -163,18 +189,71 @@ public:
      * @param height new height value of screen.
      */
     void setScreenSize(int width, int height);
+
+	/**
+	 * Completely replace the current gBaseCanvas with the specified gBaseCanvas.
+	 *
+	 * @param baseCanvas new gBaseCanvas to replace.
+	 */
     void setCurrentCanvas(gBaseCanvas* canvas);
-    gBaseCanvas* getCurrentCanvas() const;
+
+	/**
+	 * @return Current canvas.
+	 */
+	gBaseCanvas* getCurrentCanvas() const;
+
+	/**
+	 * @param framerate Target frames per second value
+	 */
     void setTargetFramerate(int framerate);
+
+	/**
+	 * @return Target frames per second value
+	 */
     int getTargetFramerate() const;
+
+	/**
+	 * @return Current frames per second value.
+	 */
     int getFramerate() const;
+
     void enableVsync();
     void disableVsync();
+
+	/**
+	 * Returns elapsed time between frames.
+	 *
+	 * @return elapsed time between each frame.
+	 */
     double getElapsedTime() const;
 
-    void setClipboardString(const std::string& clipboard);
+	/**
+	 * Completely replace the current gGUIFrame with the specified gGUIFrame.
+	 *
+	 * @param guiFrame new gGUIFrame to replace.
+	 */
+	void setCurrentGUIFrame(gGUIFrame *guiFrame);
+
+	/**
+	 * Returns the current gGUIFrame.
+	 *
+	 * @return current gGUIFrame.
+	 */
+	gGUIFrame* getCurrentGUIFrame();
+
+	void setClipboardString(const std::string& clipboard);
     std::string getClipboardString() const;
 
+	/**
+	 * Possible values are
+	 * - WINDOWMODE_GAME,
+	 * - WINDOWMODE_FULLSCREEN,
+	 * - WINDOWMODE_APP,
+	 * - WINDOWMODE_FULLSCREENGUIAPP,
+	 * - WINDOWMODE_GUIAPP
+	 *
+	 * @return Window mode of the application.
+	 */
     int getWindowMode() const;
 
     void setCursor(int cursorId);
@@ -198,9 +277,6 @@ public:
      * @param fn Function to submit
      */
     void submitToMainThread(std::function<void()> fn);
-
-    static gAppManager* get() { return appmanager; }
-    static void set(gAppManager* appmanagerPtr) { gAppManager::appmanager = appmanagerPtr; }
 private:
     static const int maxjoysticknum = 4;
     static const int maxjoystickbuttonnum = 15;
@@ -217,6 +293,7 @@ private:
     gBaseWindow* window;
     bool isrunning;
     bool isrendering;
+	bool setupcomplete;
     std::string appname;
     gBaseApp* app;
     int width;
@@ -252,9 +329,7 @@ private:
 
     std::vector<std::function<void()>> mainthreadqueue;
     std::mutex mainthreadqueuemutex;
-
 private:
-    static gAppManager* appmanager;
 
     void tick();
     void onEvent(gEvent& event);
@@ -273,7 +348,6 @@ private:
     bool onWindowLoseFocusEvent(gWindowLoseFocusEvent&);
     bool onJoystickConnectEvent(gJoystickConnectEvent&);
     bool onJoystickDisconnectEvent(gJoystickDisconnectEvent&);
-
 #ifdef ANDROID
     bool onAppPauseEvent(gAppPauseEvent&);
     bool onAppResumeEvent(gAppResumeEvent&);

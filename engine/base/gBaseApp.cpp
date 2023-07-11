@@ -17,7 +17,6 @@ gBaseApp::gBaseApp() {
 
 #ifndef ANDROID
 gBaseApp::gBaseApp(int argc, char **argv) {
-	appmanager = nullptr;
 	gSeedRandom();
 	this->argc = argc;
 	this->argv = argv;
@@ -43,6 +42,7 @@ void gBaseApp::pause() {
 void gBaseApp::resume() {
 
 }
+#endif
 
 void gBaseApp::start() {
 
@@ -51,36 +51,35 @@ void gBaseApp::start() {
 void gBaseApp::stop() {
 
 }
-#endif
 
 void gBaseApp::setCurrentCanvas(gBaseCanvas* currentCanvas) {
-	gAppManager::get()->setCurrentCanvas(currentCanvas);
+	appmanager->setCurrentCanvas(currentCanvas);
 }
 
 gBaseCanvas* gBaseApp::getCurrentCanvas() {
-	return gAppManager::get()->getCurrentCanvas();
+	return appmanager->getCurrentCanvas();
 }
 
 void gBaseApp::setTargetFramerate(int targetFramerate) {
-	gAppManager::get()->setTargetFramerate(targetFramerate);
+	appmanager->setTargetFramerate(targetFramerate);
 }
 
 int gBaseApp::getFramerate() {
-	return gAppManager::get()->getFramerate();
+	return appmanager->getFramerate();
 }
 
 int gBaseApp::getTargetFramerate() {
-	return gAppManager::get()->getTargetFramerate();
+	return appmanager->getTargetFramerate();
 }
 
 double gBaseApp::getElapsedTime() {
-	return gAppManager::get()->getElapsedTime();
+	return appmanager->getElapsedTime();
 }
 
 void gBaseApp::enableVsync() {
-    gAppManager::get()->enableVsync();
+    appmanager->enableVsync();
 }
 
 void gBaseApp::disableVsync() {
-    gAppManager::get()->disableVsync();
+    appmanager->disableVsync();
 }
