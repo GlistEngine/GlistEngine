@@ -199,6 +199,8 @@ set(SRC_FILES
 	${ENGINE_DIR}/graphics/posteffects/gInversion.cpp
 	${ENGINE_DIR}/graphics/posteffects/gGrayscale.cpp
 	${ENGINE_DIR}/graphics/posteffects/gSepiatone.cpp
+	${ENGINE_DIR}/graphics/posteffects/gGrain.cpp
+	${ENGINE_DIR}/graphics/posteffects/gDynamicGrain.cpp
 	${ENGINE_DIR}/graphics/posteffects/gKernelEffect.cpp
 	${ENGINE_DIR}/graphics/posteffects/kerneleffects/gBlur.cpp
 	${ENGINE_DIR}/graphics/posteffects/kerneleffects/gSharpen.cpp
