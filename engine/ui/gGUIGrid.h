@@ -39,7 +39,7 @@ public:
 	    	iscellselected = false;
 	    	cellcontent = "";
 	    	showncontent = "";
-	    	fontnum = gGUIManager::REGULAR_FONT;
+	    	fontnum = gGUIManager::FONT_REGULAR;
 	    }
 	};
 	gGUIGrid();

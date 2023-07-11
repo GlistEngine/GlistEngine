@@ -99,7 +99,7 @@ void gGUITextbox::set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseG
 	arrowamount = 0;
 	if(!root) return;
 	manager = root->getAppManager()->getGUIManager();
-	textfont = manager->getFont(gGUIManager::REGULAR_FONT);
+	textfont = manager->getFont(gGUIManager::FONT_REGULAR);
 }
 
 void gGUITextbox::setText(const std::string& text) {
@@ -297,7 +297,6 @@ void gGUITextbox::draw() {
 		if(dotlimit > text.size()) dotlimit = text.size();
 		for(int i = 0; i < dotlimit; i++) gDrawCircle(left + dotinit + i * dotlen, doty, dotradius, true);
 	} else if(linecount == 1) {
-		gLogi("TextFont") << textfont;
 		textfont->drawText(text.substr(firstutf, lastutf), left - (cursorposx * textmoveamount - arrowamount) - textfont->getStringWidth(" ") / 2 - firstx + textalignmentamount, top + hdiff + lineheight + linetopmargin - firsty);
 	} else {
 		if(text.size() == 0) currentline = 1;

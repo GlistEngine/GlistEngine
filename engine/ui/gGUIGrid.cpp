@@ -92,7 +92,7 @@ void gGUIGrid::createCells() {
 			tempcell.cellrowno = i;
 			tempcell.cellcolumnno = j;
 			tempcell.cellcontent = "";
-			tempcell.fontnum = gGUIManager::REGULAR_FONT;
+			tempcell.fontnum = gGUIManager::FONT_REGULAR;
 			allcells.push_back(tempcell);
 		}
 	}
