@@ -12,6 +12,9 @@ gAllocatableBase::gAllocatableBase() {
 }
 
 gAllocatableBase::~gAllocatableBase() {
+	if(!hasallocatedonce) {
+		return;
+	}
     auto end = std::remove(allocatedobjects.begin(), allocatedobjects.end(), this);
     allocatedobjects.erase(end, allocatedobjects.end());
     hasallocatedonce = false;
