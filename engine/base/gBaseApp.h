@@ -25,19 +25,53 @@ public:
 	virtual void update();
 
 #ifdef ANDROID
+	// Android specific functions
+
+	/**
+	 * Called when current activity is invisible.
+	 * Application will stop rendering after this but will
+	 * still receive updates.
+	 */
 	virtual void pause();
+	/**
+	 * Called when current activity is visible again.
+	 * Application will continue rendering.
+	 */
 	virtual void resume();
 #endif
+	/**
+	 * Called after window is initialized and all resources
+	 * have been reallocated (if required).
+	 */
 	virtual void start();
+	/**
+	 * Called right before renderer and other gpu resources
+	 * is destroyed.
+	 */
 	virtual void stop();
 
 	void setCurrentCanvas(gBaseCanvas* currentCanvas);
 	gBaseCanvas* getCurrentCanvas();
 
-	void setTargetFramerate(int targetFramerate);
-	int getFramerate();
-	int getTargetFramerate();
-	double getElapsedTime();
+	/**
+	 * @param framerate Target frames per second value
+	 */
+	void setTargetFramerate(int framerate);
+
+	/**
+	 * @return Target frames per second value
+	 */
+	int getTargetFramerate() const;
+
+	/**
+	 * @return Current frames per second value.
+	 */
+	int getFramerate() const;
+
+	/**
+	 * @return Elapsed time between this frame and the previous one, as seconds. Also known as deltaTime.
+	 */
+	double getElapsedTime() const;
 
 	void enableVsync();
 	void disableVsync();

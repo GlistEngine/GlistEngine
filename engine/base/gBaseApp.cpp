@@ -64,22 +64,22 @@ void gBaseApp::setTargetFramerate(int targetFramerate) {
 	appmanager->setTargetFramerate(targetFramerate);
 }
 
-int gBaseApp::getFramerate() {
+int gBaseApp::getFramerate() const {
 	return appmanager->getFramerate();
 }
 
-int gBaseApp::getTargetFramerate() {
+int gBaseApp::getTargetFramerate() const {
 	return appmanager->getTargetFramerate();
 }
 
-double gBaseApp::getElapsedTime() {
+double gBaseApp::getElapsedTime() const {
 	return appmanager->getElapsedTime();
 }
 
 void gBaseApp::enableVsync() {
-    appmanager->enableVsync();
+	appmanager->enableVsync();
 }
 
 void gBaseApp::disableVsync() {
-    appmanager->disableVsync();
+	appmanager->disableVsync();
 }

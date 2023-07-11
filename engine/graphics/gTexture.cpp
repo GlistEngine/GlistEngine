@@ -54,6 +54,7 @@ static const int texturefilter[3] = {GL_LINEAR, GL_CLAMP, GL_CLAMP_TO_EDGE};
 #endif
 
 gTexture::gTexture() : gTexture(0, 0,  GL_RGBA, false) {
+
 }
 
 gTexture::gTexture(int w, int h, int format, bool isFbo) : gAllocatableBase() {
@@ -89,7 +90,9 @@ gTexture::gTexture(int w, int h, int format, bool isFbo) : gAllocatableBase() {
 #ifdef ANDROID
 	androidasset = nullptr;
 #endif
-  	setupRenderData();
+	if(width != 0 && height != 0) {
+		setupRenderData();
+	}
 }
 
 gTexture::~gTexture() {
@@ -481,6 +484,7 @@ void gTexture::setupRenderData() {
 }
 
 void gTexture::allocate() {
+	gAllocatableBase::allocate();
     if(!istexturegenerated) {
         glGenTextures(1, &id);
         istexturegenerated = true;
@@ -535,6 +539,7 @@ void gTexture::allocate() {
 }
 
 void gTexture::deallocate() {
+	gAllocatableBase::deallocate();
     if(isrenderdataset) {
         G_CHECK_GL(glDeleteVertexArrays(1, &quadVAO));
         G_CHECK_GL(glDeleteBuffers(1, &quadVBO));
@@ -547,9 +552,10 @@ void gTexture::deallocate() {
 }
 
 void gTexture::reallocate() {
-    if(!istexturegenerated || !isrenderdataset) {
+	if(!istexturegenerated || !isrenderdataset) {
         return;
     }
+	gAllocatableBase::reallocate();
 	deallocate();
 	allocate();
 }

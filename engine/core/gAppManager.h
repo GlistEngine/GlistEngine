@@ -159,6 +159,13 @@ public:
     void loop();
     void stop();
 
+	/**
+     * Submits a function to run on the main loop.
+     * Queue is executed after every tick.
+     *
+     * @param fn Function to submit
+     */
+	void submitToMainThread(std::function<void()> fn);
 
 
 	std::string getAppName();
@@ -177,25 +184,7 @@ public:
 
 	bool isWindowFocused();
 
-	void setWindowSize(int width, int height);
-	void setWindowResizable(bool isResizable);
-	void setWindowSizeLimits(int minWidth, int minHeight, int maxWidth, int maxHeight);
-
-	/**
-     * Sets screen size by given width and height. GlistEngine scales the process.
-     *
-     * @param width new width value of screen.
-     *
-     * @param height new height value of screen.
-     */
-    void setScreenSize(int width, int height);
-
-	/**
-	 * Completely replace the current gBaseCanvas with the specified gBaseCanvas.
-	 *
-	 * @param baseCanvas new gBaseCanvas to replace.
-	 */
-    void setCurrentCanvas(gBaseCanvas* canvas);
+	EventHandlerFn getEventHandler() { return eventhandler; }
 
 	/**
 	 * @return Current canvas.
@@ -217,27 +206,13 @@ public:
 	 */
     int getFramerate() const;
 
-    void enableVsync();
-    void disableVsync();
-
 	/**
-	 * Returns elapsed time between frames.
-	 *
-	 * @return elapsed time between each frame.
+	 * @return Elapsed time between this frame and the previous one, as seconds. Also known as deltaTime.
 	 */
     double getElapsedTime() const;
 
 	/**
-	 * Completely replace the current gGUIFrame with the specified gGUIFrame.
-	 *
-	 * @param guiFrame new gGUIFrame to replace.
-	 */
-	void setCurrentGUIFrame(gGUIFrame *guiFrame);
-
-	/**
-	 * Returns the current gGUIFrame.
-	 *
-	 * @return current gGUIFrame.
+	 * @return Current gGUIFrame.
 	 */
 	gGUIFrame* getCurrentGUIFrame();
 
@@ -254,7 +229,39 @@ public:
 	 *
 	 * @return Window mode of the application.
 	 */
-    int getWindowMode() const;
+    int getWindowMode() const { return windowmode; }
+
+	gBaseWindow* getWindow() const { return window; }
+
+	void setWindowSize(int width, int height);
+	void setWindowResizable(bool isResizable);
+	void setWindowSizeLimits(int minWidth, int minHeight, int maxWidth, int maxHeight);
+
+	/**
+     * Sets screen size by given width and height. GlistEngine scales the process.
+     *
+     * @param width new width value of screen.
+     *
+     * @param height new height value of screen.
+     */
+	void setScreenSize(int width, int height);
+
+	/**
+	 * Completely replace the current gBaseCanvas with the specified gBaseCanvas.
+	 *
+	 * @param baseCanvas new gBaseCanvas to replace.
+	 */
+	void setCurrentCanvas(gBaseCanvas* canvas);
+
+	void enableVsync();
+	void disableVsync();
+
+	/**
+	 * Completely replace the current gGUIFrame with the specified gGUIFrame.
+	 *
+	 * @param guiFrame new gGUIFrame to replace.
+	 */
+	void setCurrentGUIFrame(gGUIFrame* guiFrame);
 
     void setCursor(int cursorId);
     void setCursorMode(int cursorMode);
@@ -267,16 +274,6 @@ public:
     int getMaxJoystickNum() { return maxjoysticknum; }
     int getMaxJoystickButtonNum() { return maxjoystickbuttonnum; }
 
-    gBaseWindow* getWindow() const { return window; }
-    EventHandlerFn getEventHandler() { return eventhandler; }
-
-    /**
-     * Submits a function to run on the main loop.
-     * Queue is executed after every tick.
-     *
-     * @param fn Function to submit
-     */
-    void submitToMainThread(std::function<void()> fn);
 private:
     static const int maxjoysticknum = 4;
     static const int maxjoystickbuttonnum = 15;

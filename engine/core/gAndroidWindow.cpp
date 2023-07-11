@@ -117,6 +117,7 @@ void gAndroidWindow::update() {
         EGLint err = eglGetError();
         if(err == EGL_BAD_SURFACE) {
             isrendering = false;
+			close();
             return;
         }
 		gLogi("gAndroidWindow") << "eglSwapBuffers() returned error " << err;
@@ -151,7 +152,7 @@ void gAndroidWindow::setClipboardString(std::string text) {
 }
 
 std::string gAndroidWindow::getClipboardString() const {
-	return "ASD";
+	return "todo";
 }
 
 void gAndroidWindow::setWindowSize(int width, int height) {

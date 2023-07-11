@@ -20,7 +20,12 @@ public:
     virtual void deallocate();
     virtual void reallocate();
 
+    static void allocateAll();
+    static void deallocateAll();
     static void reallocateAll();
+
+private:
+    bool hasallocatedonce;
 };
 
 

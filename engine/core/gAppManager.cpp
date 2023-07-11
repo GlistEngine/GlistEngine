@@ -156,7 +156,7 @@ void gAppManager::initialize() {
 	}
 	// Reallocate all gpu resources if initialized before.
     if(initializedbefore) {
-        gAllocatableBase::reallocateAll();
+        gAllocatableBase::allocateAll();
         if(eventhandler) {
             gReallocateRenderDataEvent event{};
             eventhandler(event);
@@ -203,6 +203,7 @@ void gAppManager::loop() {
     }
     //gLogi("gAppManager") << "stopping loop";
     app->stop();
+    gAllocatableBase::deallocateAll();
     gRenderObject::destroyRenderer();
     if(window) {
         window->close();
@@ -281,6 +282,10 @@ void gAppManager::disableVsync() {
     window->setVsync(false);
 }
 
+void gAppManager::setCurrentGUIFrame(gGUIFrame *guiFrame) {
+    guimanager->setCurrentFrame(guiFrame);
+}
+
 double gAppManager::getElapsedTime() const {
     return deltatime.count() / 1'000'000'000.0;
 }
@@ -291,10 +296,6 @@ void gAppManager::setClipboardString(const std::string &clipboard) {
 
 std::string gAppManager::getClipboardString() const {
     return window->getClipboardString();
-}
-
-int gAppManager::getWindowMode() const {
-    return windowmode;
 }
 
 void gAppManager::setCursor(int cursorId) {
