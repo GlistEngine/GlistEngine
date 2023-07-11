@@ -94,6 +94,8 @@ var hierarchy =
         ] ],
         [ "gBasePlugin", "classgBasePlugin.html", null ],
         [ "gBasePostProcess", "classgBasePostProcess.html", [
+          [ "gDynamicGrain", "classgDynamicGrain.html", null ],
+          [ "gGrain", "classgGrain.html", null ],
           [ "gGrayscale", "classgGrayscale.html", null ],
           [ "gInversion", "classgInversion.html", null ],
           [ "gKernelEffect", "classgKernelEffect.html", [
