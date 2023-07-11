@@ -4,6 +4,7 @@ var classgGUIGrid =
     [ "gGUIGrid", "classgGUIGrid.html#ad9148ea44b0e6666d992d13bf8d98119", null ],
     [ "~gGUIGrid", "classgGUIGrid.html#a8b03ae3f4cf0e950add1636278282ad9", null ],
     [ "changeCell", "classgGUIGrid.html#a546c823b09e4088b8c9c3a3d04f4fa14", null ],
+    [ "changeCellFont", "classgGUIGrid.html#a08fd0ca0a4861292b8ceec00c04fc9b5", null ],
     [ "charPressed", "classgGUIGrid.html#ad656bed63618aed5041b9521d7b3b983", null ],
     [ "checkCellType", "classgGUIGrid.html#a56f976d2a6a671b10405256ec84a11ee", null ],
     [ "createCells", "classgGUIGrid.html#afc38eb580dd00ad796ffc409dde54362", null ],

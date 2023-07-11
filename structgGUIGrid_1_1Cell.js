@@ -9,6 +9,7 @@ var structgGUIGrid_1_1Cell =
     [ "cellw", "structgGUIGrid_1_1Cell.html#a18d25ba1bdcb734586614006710f0921", null ],
     [ "cellx", "structgGUIGrid_1_1Cell.html#ad13a17f3a2c38cf0af2fd64aae578832", null ],
     [ "celly", "structgGUIGrid_1_1Cell.html#a7bd3244887013dad72028dec37d1cedd", null ],
+    [ "fontnum", "structgGUIGrid_1_1Cell.html#ae8709edabb9b44032803c7529e91b6c8", null ],
     [ "iscellselected", "structgGUIGrid_1_1Cell.html#a6170b43a3ab5613efeb3a37edf1b01aa", null ],
     [ "showncontent", "structgGUIGrid_1_1Cell.html#abb6437a9c53cf19334448c01d1c34085", null ]
 ];

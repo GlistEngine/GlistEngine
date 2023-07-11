@@ -35,5 +35,6 @@ var classgGUITextbox =
     [ "setPassword", "classgGUITextbox.html#a78c9ee71bf2fc0b6080ca03e060aad19", null ],
     [ "setSize", "classgGUITextbox.html#a1daefb94bc10cf5da30e5e6701cadd23", null ],
     [ "setText", "classgGUITextbox.html#a83aa097d46a86437cfd86b7e0aea2892", null ],
+    [ "setTextFont", "classgGUITextbox.html#ab0581a36f4dab26d7bc11fb02f3dc841", null ],
     [ "update", "classgGUITextbox.html#ac12b4194d9673b4b5811729cb402a379", null ]
 ];
