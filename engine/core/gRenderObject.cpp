@@ -15,10 +15,7 @@ bool gRenderObject::isshadowmappingenabled = false;
 
 
 gRenderObject::gRenderObject() {
-	// Renderer should be created by the gEngineManager
-	/*if(!renderer) {
-		createRenderer();
-	}*/
+	// Renderer should be created by the gAppManager
 }
 
 void gRenderObject::setScreenSize(int screenWidth, int screenHeight) {
