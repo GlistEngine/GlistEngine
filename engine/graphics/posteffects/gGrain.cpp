@@ -1,28 +1,28 @@
 /*
- * gStaticGrain.cpp
+ * gGrain.cpp
  *
  *  Created on: 11 Tem 2023
  *      Author: Batuhan Yigit
  */
 
-#include "gStaticGrain.h"
+#include "gGrain.h"
 
-gStaticGrain::gStaticGrain(float intensity) {
+gGrain::gGrain(float intensity) {
 	shader = new gShader();
 	shader->loadProgram(getVertSrc(), getFragSrc());
 	shader->use();
 	shader->setFloat("intensity", intensity);
 }
 
-gStaticGrain::~gStaticGrain() {
+gGrain::~gGrain() {
 	delete shader;
 }
 
-void gStaticGrain::use() {
+void gGrain::use() {
 	shader->use();
 }
 
-const std::string gStaticGrain::getVertSrc() {
+const std::string gGrain::getVertSrc() {
 	const char* shadersource =
 			"#version 330 core\n"
 			"layout (location = 0) in vec2 aPos;"
@@ -38,7 +38,7 @@ const std::string gStaticGrain::getVertSrc() {
 	return std::string(shadersource);
 }
 
-const std::string gStaticGrain::getFragSrc() {
+const std::string gGrain::getFragSrc() {
 	const char* shadersource =
 			"#version 330 core\n"
 			"out vec4 FragColor;"
