@@ -15,6 +15,7 @@ var classgGUITextbox =
     [ "getLineCount", "classgGUITextbox.html#a63d11404b44c7133e1df949706841a1f", null ],
     [ "getText", "classgGUITextbox.html#a313df9db46518f9842c88241656404ad", null ],
     [ "getTextboxh", "classgGUITextbox.html#ad87e0fecb6fb23a782e27883e3cc1571", null ],
+    [ "getTextMoveAmount", "classgGUITextbox.html#a9e43ada739a2b49be86ad50a1674deef", null ],
     [ "isBackgroundEnabled", "classgGUITextbox.html#a4b4be9e6b21fcb1c2c1263d40f6ac1be", null ],
     [ "isEditable", "classgGUITextbox.html#a508bb63272338ed3a04a1daf02ca3353", null ],
     [ "isNumeric", "classgGUITextbox.html#a21c9fe385926848602d3382c6d58694c", null ],
@@ -35,6 +36,7 @@ var classgGUITextbox =
     [ "setPassword", "classgGUITextbox.html#a78c9ee71bf2fc0b6080ca03e060aad19", null ],
     [ "setSize", "classgGUITextbox.html#a1daefb94bc10cf5da30e5e6701cadd23", null ],
     [ "setText", "classgGUITextbox.html#a83aa097d46a86437cfd86b7e0aea2892", null ],
+    [ "setTextAlignment", "classgGUITextbox.html#ab1231921d8473967a5d8b1e98bc1a9d8", null ],
     [ "setTextFont", "classgGUITextbox.html#ab0581a36f4dab26d7bc11fb02f3dc841", null ],
     [ "update", "classgGUITextbox.html#ac12b4194d9673b4b5811729cb402a379", null ]
 ];

@@ -4,6 +4,7 @@ var classgGUIGrid =
     [ "gGUIGrid", "classgGUIGrid.html#ad9148ea44b0e6666d992d13bf8d98119", null ],
     [ "~gGUIGrid", "classgGUIGrid.html#a8b03ae3f4cf0e950add1636278282ad9", null ],
     [ "changeCell", "classgGUIGrid.html#a546c823b09e4088b8c9c3a3d04f4fa14", null ],
+    [ "changeCellAlignment", "classgGUIGrid.html#a1ba3b9da88a1768bcabb36042af79788", null ],
     [ "changeCellFont", "classgGUIGrid.html#a08fd0ca0a4861292b8ceec00c04fc9b5", null ],
     [ "charPressed", "classgGUIGrid.html#ad656bed63618aed5041b9521d7b3b983", null ],
     [ "checkCellType", "classgGUIGrid.html#a56f976d2a6a671b10405256ec84a11ee", null ],
@@ -30,7 +31,6 @@ var classgGUIGrid =
     [ "setcolumnNum", "classgGUIGrid.html#a048680cc28d160c2043c5bd061469dd5", null ],
     [ "setGrid", "classgGUIGrid.html#a9d9331748e04ddca0916f8f8897f299c", null ],
     [ "setRowNum", "classgGUIGrid.html#ad039e97cc24d0291389676323e49382e", null ],
-    [ "setTextAlignment", "classgGUIGrid.html#a6c8df2a80df2f771fd8844480d2fe8a7", null ],
     [ "showCell", "classgGUIGrid.html#a86e6cef9d29dfedb79025a933be6b49b", null ],
     [ "showCells", "classgGUIGrid.html#ad822d04d5593ed390bcdd382fd689bde", null ],
     [ "update", "classgGUIGrid.html#a9680a5de13c3ae9e70b01354f5d9e241", null ]
