@@ -35,7 +35,8 @@ class gBaseApp;
 class gGUIManager {
 public:
 	static const int GUITHEME_LIGHT = 0, GUITHEME_DARK = 1, GUITHEME_LIGHTBLUE = 2, GUITHEME_DARKBLUE = 3;
-	static const int REGULAR_FONT = 0, BOLD_FONT = 1, OBLIQUE_FONT = 2, BOLD_OBLIQUE_FONT = 3;
+	static const int REGULAR_FONT = 0, BOLD_FONT = 1, ITALIC_FONT = 2, BOLD_ITALIC_FONT = 3;
+	static const int fontnum = 4;
 
 	gGUIManager(gBaseApp* root, int width, int height);
 	virtual ~gGUIManager();
@@ -88,7 +89,7 @@ private:
 	gColor themebuttonfontcolor[themenum];
 	gColor themepressedbuttonfontcolor[themenum];
 	gColor themedisabledbuttonfontcolor[themenum];
-	gFont themefont, themeboldfont, themeobliquefont, themeboldobliquefont;
+	gFont themefonts[fontnum];
 	void loadThemes();
 	void resetTheme(int guiTheme);
 
