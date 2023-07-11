@@ -73,12 +73,6 @@ void gGUIGrid::setcolumnNum(int columnNum) {
 	columnnum = columnNum;
 }
 
-void gGUIGrid::setTextAlignment(int textAlignment) {
-	textalignment = textAlignment;
-	Cell tempcell;
-	textbox.setTextAlignment(textAlignment, tempcell.cellw, textbox.getInitX());
-}
-
 void gGUIGrid::update() {
 	textbox.update();
 }
@@ -93,6 +87,8 @@ void gGUIGrid::createCells() {
 			tempcell.cellcolumnno = j;
 			tempcell.cellcontent = "";
 			tempcell.fontnum = gGUIManager::FONT_REGULAR;
+			tempcell.cellalignment = gBaseGUIObject::ALIGNMENT_LEFT;
+			tempcell.textmoveamount = 0;
 			allcells.push_back(tempcell);
 		}
 	}
@@ -101,26 +97,25 @@ void gGUIGrid::createCells() {
 void gGUIGrid::createTextBox() {
 	//allcells.at(selectedbox).cellx + 1
 	//allcells.at(cellindexcounter).cellx + (allcells.at(cellindexcounter).cellw - font->getStringWidth(allcells.at(cellindexcounter).showncontent)) * textbox.getTextMoveAmount() - textbox.getInitX() * textbox.getTextAlignment() - firstx
-	Cell tempcell;
 	int newwamount = font->getStringWidth(allcells.at(selectedbox).cellcontent) / gridboxw + 1;
 	newgridboxw = gridboxw * newwamount;
-	if(textalignment == gBaseGUIObject::TEXT_LEFT_ALIGNMENT) {
-		while(newgridboxw > gridw - allcells.at(selectedbox).cellx + tempcell.cellw / 2)
+	if(allcells.at(selectedbox).cellalignment == gBaseGUIObject::ALIGNMENT_LEFT) {
+		while(newgridboxw > gridw - allcells.at(selectedbox).cellx + allcells.at(selectedbox).cellw / 2)
 			newgridboxw -= gridboxw;
-			//Should go to a new line and the width of the textbox should be "gridw - allcells.at(selectedbox).cellx + tempcell.cellw / 2"
+			//Should go to a new line and the width of the textbox should be "gridw - allcells.at(selectedbox).cellx + allcells.at(selectedbox).cellw / 2"
 	}
-	else if(textalignment == gBaseGUIObject::TEXT_RIGHT_ALIGNMENT) {
-		while(newgridboxw > allcells.at(selectedbox).cellx - tempcell.cellw / 2 + gridboxw)
+	else if(allcells.at(selectedbox).cellalignment == gBaseGUIObject::ALIGNMENT_RIGHT) {
+		while(newgridboxw > allcells.at(selectedbox).cellx - allcells.at(selectedbox).cellw / 2 + gridboxw)
 			newgridboxw -= gridboxw;
-			//Should go to a new line and the width of the textbox should be "allcells.at(selectedbox).cellx - tempcell.cellw / 2 + gridboxw"
+			//Should go to a new line and the width of the textbox should be "allcells.at(selectedbox).cellx - allcells.at(selectedbox).cellw / 2 + gridboxw"
 	}
 	textbox.set(root, this, this, 0, 0, allcells.at(selectedbox).cellx + 1, allcells.at(selectedbox).celly - 2, newgridboxw - 10, gridboxh - 2);
 	textbox.setTextFont(manager->getFont(allcells.at(selectedbox).fontnum));
-//	textbox.setTextAlignmentAmount(textalignmentamount);
+	textbox.setTextAlignment(allcells.at(selectedbox).cellalignment, allcells.at(selectedbox).cellw, textbox.getInitX());
 	if(allcells.at(selectedbox).cellcontent != "") {
 		textbox.setText(allcells.at(selectedbox).cellcontent);
 		int length = allcells.at(selectedbox).cellcontent.length();
-		if(textbox.getTextAlignment() == gBaseGUIObject::TEXT_LEFT_ALIGNMENT || textbox.getTextAlignment() == gBaseGUIObject::TEXT_RIGHT_ALIGNMENT)
+		if(allcells.at(selectedbox).cellalignment == gBaseGUIObject::ALIGNMENT_LEFT || allcells.at(selectedbox).cellalignment == gBaseGUIObject::ALIGNMENT_RIGHT)
 			textbox.setCursorPosX(font->getStringWidth(allcells.at(selectedbox).cellcontent), length);
 		else {
 			std::string mid;
@@ -173,7 +168,16 @@ void gGUIGrid::checkCellType(int cellIndex) {
 void gGUIGrid::changeCellFont(int fontNum) {
 	if(allcells.at(selectedbox).iscellselected) {
 		allcells.at(selectedbox).fontnum = fontNum;
+		allcells.at(selectedbox).textmoveamount = 0.5f * fontNum;
 		textbox.setTextFont(manager->getFont(fontNum));
+	}
+}
+
+void gGUIGrid::changeCellAlignment(int cellAlignment) {
+	if(allcells.at(selectedbox).iscellselected) {
+		allcells.at(selectedbox).cellalignment = cellAlignment;
+		allcells.at(selectedbox).textmoveamount = 0.5f * cellAlignment;
+		textbox.setTextAlignment(cellAlignment, allcells.at(selectedbox).cellw, textbox.getInitX());
 	}
 }
 
@@ -352,7 +356,7 @@ void gGUIGrid::drawCellContents() {
 	int cellindexcounter = 0;
 	for(int i = 0; i < rownum; i++) {
 		for(int j = 0; j < columnnum; j++) {
-			manager->getFont(allcells.at(cellindexcounter).fontnum)->drawText(allcells.at(cellindexcounter).showncontent, allcells.at(cellindexcounter).cellx + (allcells.at(cellindexcounter).cellw - font->getStringWidth(allcells.at(cellindexcounter).showncontent)) * textbox.getTextMoveAmount() - textbox.getInitX() * textbox.getTextAlignment() - firstx, allcells.at(cellindexcounter).celly + (gridboxh / 2) + (font->getStringHeight(allcells.at(cellindexcounter).showncontent) / 2) - firsty);
+			manager->getFont(allcells.at(cellindexcounter).fontnum)->drawText(allcells.at(cellindexcounter).showncontent, allcells.at(cellindexcounter).cellx + (allcells.at(cellindexcounter).cellw - manager->getFont(allcells.at(cellindexcounter).fontnum)->getStringWidth(allcells.at(cellindexcounter).showncontent)) * allcells.at(cellindexcounter).textmoveamount - textbox.getInitX() * allcells.at(cellindexcounter).cellalignment - firstx, allcells.at(cellindexcounter).celly + (gridboxh / 2) + (manager->getFont(allcells.at(cellindexcounter).fontnum)->getStringHeight(allcells.at(cellindexcounter).showncontent) / 2) - firsty);
 			cellindexcounter++;
 		}
 	}

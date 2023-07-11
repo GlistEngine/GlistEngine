@@ -208,6 +208,9 @@ public:
 
 	void setTextFont(gFont* textFont);
 
+	void setTextAlignment(int textAlignment, float cellW, int initX);
+	float getTextMoveAmount();
+
 	int getCursorPosX();
 	void setCursorPosX(int cursorPosX, int length);
 
@@ -276,6 +279,10 @@ private:
 	int arrowamount;
 	gFont* textfont;
 	gGUIManager* manager;
+	int textalignment;
+	int textalignmentamount;
+	float cursormoveamount;
+	float textmoveamount;
 
 	//undo stacks
 	std::stack<std::string> undostack;
