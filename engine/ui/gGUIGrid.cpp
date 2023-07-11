@@ -8,6 +8,7 @@
 #include "gGUIGrid.h"
 //const int gGUIGrid::SELECTEDBOX_X = 0;
 //const int gGUIGrid::SELECTEDBOX_Y = 1;
+#include "gBaseApp.h"
 
 gGUIGrid::gGUIGrid() {
 //	gridsizer.setSize(10,10);
@@ -51,6 +52,8 @@ void gGUIGrid::set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIO
 	textbox.set(root, this, this, 0, 0, gridx + (gridboxw / 2) + 1, gridy + gridboxh - 5, gridboxw - 6, gridboxh);
 	textbox.setSize(gridboxw - 6, gridboxh - 2);
 	textbox.enableBackground(false);
+	manager = root->getAppManager()->getGUIManager();
+
 //	gLogi("Grid") << "Textbox:" << textbox.left << " " << textbox.top << " " << textbox.right << " " << textbox.bottom;
 }
 
@@ -89,6 +92,7 @@ void gGUIGrid::createCells() {
 			tempcell.cellrowno = i;
 			tempcell.cellcolumnno = j;
 			tempcell.cellcontent = "";
+			tempcell.fontnum = gGUIManager::REGULAR_FONT;
 			allcells.push_back(tempcell);
 		}
 	}
@@ -111,6 +115,7 @@ void gGUIGrid::createTextBox() {
 			//Should go to a new line and the width of the textbox should be "allcells.at(selectedbox).cellx - tempcell.cellw / 2 + gridboxw"
 	}
 	textbox.set(root, this, this, 0, 0, allcells.at(selectedbox).cellx + 1, allcells.at(selectedbox).celly - 2, newgridboxw - 10, gridboxh - 2);
+	textbox.setTextFont(manager->getFont(allcells.at(selectedbox).fontnum));
 //	textbox.setTextAlignmentAmount(textalignmentamount);
 	if(allcells.at(selectedbox).cellcontent != "") {
 		textbox.setText(allcells.at(selectedbox).cellcontent);
@@ -164,6 +169,14 @@ void gGUIGrid::checkCellType(int cellIndex) {
 		else allcells.at(cellIndex).celltype = "digit";
 	}
 }
+
+void gGUIGrid::changeCellFont(int fontNum) {
+	if(allcells.at(selectedbox).iscellselected) {
+		allcells.at(selectedbox).fontnum = fontNum;
+		textbox.setTextFont(manager->getFont(fontNum));
+	}
+}
+
 void gGUIGrid::fillCell(int rowNo, int columnNo, std::string tempstr) { //when rowNo = 1, columnNO = 4; tempstr = "happyyyy";
 	if(rowNo > rownum - 1 || columnNo > columnnum - 1) return;
 	int cellindex = columnNo + (rowNo * columnnum);
@@ -339,7 +352,7 @@ void gGUIGrid::drawCellContents() {
 	int cellindexcounter = 0;
 	for(int i = 0; i < rownum; i++) {
 		for(int j = 0; j < columnnum; j++) {
-			font->drawText(allcells.at(cellindexcounter).showncontent, allcells.at(cellindexcounter).cellx + (allcells.at(cellindexcounter).cellw - font->getStringWidth(allcells.at(cellindexcounter).showncontent)) * textbox.getTextMoveAmount() - textbox.getInitX() * textbox.getTextAlignment() - firstx, allcells.at(cellindexcounter).celly + (gridboxh / 2) + (font->getStringHeight(allcells.at(cellindexcounter).showncontent) / 2) - firsty);
+			manager->getFont(allcells.at(cellindexcounter).fontnum)->drawText(allcells.at(cellindexcounter).showncontent, allcells.at(cellindexcounter).cellx + (allcells.at(cellindexcounter).cellw - font->getStringWidth(allcells.at(cellindexcounter).showncontent)) * textbox.getTextMoveAmount() - textbox.getInitX() * textbox.getTextAlignment() - firstx, allcells.at(cellindexcounter).celly + (gridboxh / 2) + (font->getStringHeight(allcells.at(cellindexcounter).showncontent) / 2) - firsty);
 			cellindexcounter++;
 		}
 	}

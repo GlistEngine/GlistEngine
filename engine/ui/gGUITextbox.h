@@ -40,6 +40,7 @@
 
 #include "gGUIControl.h"
 #include <stack>
+#include "gGUIManager.h"
 
 
 class gGUITextbox: public gGUIControl {
@@ -205,6 +206,8 @@ public:
 
 	int getInitX();
 
+	void setTextFont(gFont* textFont);
+
 	int getCursorPosX();
 	void setCursorPosX(int cursorPosX, int length);
 
@@ -271,6 +274,8 @@ private:
 	bool widthchanged;
 	bool arrowkeypressed;
 	int arrowamount;
+	gFont* textfont;
+	gGUIManager* manager;
 
 	//undo stacks
 	std::stack<std::string> undostack;
