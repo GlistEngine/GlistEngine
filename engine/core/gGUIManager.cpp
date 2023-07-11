@@ -34,6 +34,10 @@ int gGUIManager::getTheme() {
 	return guitheme;
 }
 
+gFont* gGUIManager::getFont(int fontNum) {
+	return &themefonts[fontNum];
+}
+
 void gGUIManager::setCurrentFrame(gGUIFrame* currentFrame) {
 	setCurrentFrame(currentFrame,
 			root->getAppManager()->getCurrentCanvas()->getScreenWidth(),
@@ -218,7 +222,7 @@ void gGUIManager::resetTheme(int guiTheme) {
 	gBaseGUIObject::setForegroundColor(&themeforegroundcolor[guitheme]);
 	gBaseGUIObject::setTextBackgroundColor(&themetextbackgroundcolor[guitheme]);
 	gBaseGUIObject::setNavigationBackgroundColor(&themenavigationbackgroundcolor[guitheme]);
-	gBaseGUIObject::setFont(&themefont);
+	gBaseGUIObject::setFont(&themefonts[FONT_REGULAR]);
 	gBaseGUIObject::setFontColor(&themefontcolor[guitheme]);
 	gBaseGUIObject::setNavigationFontColor(&themenavigationfontcolor[guitheme]);
 	gBaseGUIObject::setButtonColor(&themebuttoncolor[guitheme]);
@@ -255,7 +259,10 @@ void gGUIManager::loadThemes() {
 	themenavigationbackgroundcolor[GUITHEME_LIGHTBLUE] = gColor(195.0f / 255.0f, 224.0f / 255.0f, 235.0f / 255.0f);
 	themenavigationbackgroundcolor[GUITHEME_DARKBLUE] = gColor(195.0f / 255.0f, 224.0f / 255.0f, 235.0f / 255.0f);
 
-	themefont.loadFont("FreeSans.ttf", 11);
+	themefonts[FONT_REGULAR].loadFont("FreeSans.ttf", 11);
+	themefonts[FONT_BOLD].loadFont("FreeSansBold.ttf", 11);
+	themefonts[FONT_ITALIC].loadFont("FreeSansOblique.ttf", 11);
+	themefonts[FONT_BOLDITALIC].loadFont("FreeSansBoldOblique.ttf", 11);
 
 	themefontcolor[GUITHEME_LIGHT] = gColor(5.0f / 255.0f, 5.0f / 255.0f, 5.0f / 255.0f);
 	themefontcolor[GUITHEME_DARK] = gColor(220.0f / 255.0f, 220.0f / 255.0f, 220.0f / 255.0f);

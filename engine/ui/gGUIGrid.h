@@ -13,6 +13,7 @@
 #include "gGUITextbox.h"
 #include <deque>
 #include <string.h>
+#include "gGUIManager.h"
 
 //#include "gGUISizer.h"
 
@@ -29,6 +30,7 @@ public:
 	    std::string cellcontent;
 	    std::string showncontent;
 	    std::string celltype;
+	    int fontnum;
 	    Cell(){
 	    	cellx = -1;
 	    	celly = -1;
@@ -37,6 +39,7 @@ public:
 	    	iscellselected = false;
 	    	cellcontent = "";
 	    	showncontent = "";
+	    	fontnum = gGUIManager::FONT_REGULAR;
 	    }
 	};
 	gGUIGrid();
@@ -67,6 +70,7 @@ public:
 	void createTextBox();
 	void changeCell();
 	void checkCellType(int cellIndex);
+	void changeCellFont(int fontNum);
 
 	void update();
 
@@ -79,7 +83,6 @@ public:
 	void mouseScrolled(int x, int y);
 
 private:
-
 	std::deque<Cell> allcells;
 	int rownum, columnnum;
 	float gridx, gridy, gridw, gridh;
@@ -93,7 +96,7 @@ private:
 	long clicktime, previousclicktime, firstclicktime, clicktimediff;
 	bool isdoubleclicked;
 	int newgridboxw;
-	
+	gGUIManager* manager;
 };
 
 #endif /* UI_GGUIGRID_H_ */
