@@ -15,7 +15,7 @@
 
 gShader::gShader() {
 	id = 0;
-    loaded = false;
+	loaded = false;
 }
 
 gShader::~gShader() {

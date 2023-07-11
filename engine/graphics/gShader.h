@@ -41,7 +41,7 @@ public:
 	void loadProgram(const std::string& vertexShaderStr, const std::string& fragmentShaderStr, const std::string& geometryShaderStr = "");
 
 	bool loaded;
-    GLuint id;
+	GLuint id;
 
     void use() const;
     void setBool(const std::string &name, bool value) const;
