@@ -83,7 +83,11 @@ gGUITextbox::gGUITextbox() {
 	widthchanged = false;
 	arrowkeypressed = false;
 	arrowamount = 0;
-	setTextAlignment(gBaseGUIObject::TEXT_LEFT_ALIGNMENT, boxw, initx);
+	textalignment = ALIGNMENT_LEFT;
+	textalignmentamount = 5;
+	cursormoveamount = 1;
+	textmoveamount = 0;
+	setTextAlignment(textalignment, boxw, initx);
 }
 
 
@@ -563,11 +567,11 @@ void gGUITextbox::pressKey() {
 		else {
 			int cw = textfont->getStringWidth(text.substr(cursorposutf - letterlength[cursorposchar - 1], letterlength[cursorposchar - 1]));
 			cursorposx -= cw;
-			if(textalignment == gBaseGUIObject::TEXT_RIGHT_ALIGNMENT) {
+			if(textalignment == gBaseGUIObject::ALIGNMENT_RIGHT) {
 				arrowamount -= textfont->getStringWidth(text.substr(cursorposutf - letterlength[cursorposchar - 1], letterlength[cursorposchar - 1]));
 				if(arrowamount < -textfont->getStringWidth(text)) arrowamount = -textfont->getStringWidth(text);
 			}
-			else if(textalignment == gBaseGUIObject::TEXT_MIDDLE_ALIGNMENT) {
+			else if(textalignment == gBaseGUIObject::ALIGNMENT_MIDDLE) {
 				arrowamount -= textfont->getStringWidth(text.substr(cursorposutf - letterlength[cursorposchar - 1], letterlength[cursorposchar - 1])) / 2;
 				int middle;
 				if(text.length() % 2 == 0) middle = text.length() / 2;
@@ -618,11 +622,11 @@ void gGUITextbox::pressKey() {
 		if(ispassword) cursorposx += 3 * dotradius;
 		else {
 			cursorposx += cw;
-			if(textalignment == gBaseGUIObject::TEXT_RIGHT_ALIGNMENT) {
+			if(textalignment == gBaseGUIObject::ALIGNMENT_RIGHT) {
 				arrowamount += textfont->getStringWidth(text.substr(cursorposutf, letterlength[cursorposchar]));
 				if(arrowamount > 0) arrowamount = 0;
 			}
-			else if(textalignment == gBaseGUIObject::TEXT_MIDDLE_ALIGNMENT) {
+			else if(textalignment == gBaseGUIObject::ALIGNMENT_MIDDLE) {
 				arrowamount += textfont->getStringWidth(text.substr(cursorposutf, letterlength[cursorposchar])) / 2;
 				if(arrowamount > textfont->getStringWidth(text) / 2) arrowamount = textfont->getStringWidth(text) / 2;
 			}
@@ -1487,6 +1491,31 @@ void gGUITextbox::setTextFont(gFont* textFont) {
 	textfont = textFont;
 }
 
+void gGUITextbox::setTextAlignment(int textAlignment, float cellW, int initX) {
+	textalignment = textAlignment;
+	switch(textalignment) {
+	case ALIGNMENT_LEFT:
+		textalignmentamount = initX + 1;
+		cursormoveamount = 1;
+		textmoveamount = 0;
+		break;
+	case ALIGNMENT_MIDDLE:
+		textalignmentamount = cellW / 2;
+		cursormoveamount = 0.5f;
+		textmoveamount = 0.5f;
+		break;
+	case ALIGNMENT_RIGHT:
+		textalignmentamount = cellW - initX - 1;
+		cursormoveamount = 0;
+		textmoveamount = 1;
+		break;
+	}
+}
+
+float gGUITextbox::getTextMoveAmount() {
+	return textmoveamount;
+}
+
 int gGUITextbox::getCursorPosX() {
 	return cursorposx;
 }
@@ -1495,5 +1524,5 @@ void gGUITextbox::setCursorPosX(int cursorPosX, int length) {
 	cursorposx = cursorPosX;
 	cursorposchar = text.size() - (text.size() - length);
 	cursorposutf = length;
-	if(textalignment == gBaseGUIObject::TEXT_MIDDLE_ALIGNMENT) arrowamount -= cursorposx / 2;
+	if(textalignment == gBaseGUIObject::ALIGNMENT_MIDDLE) arrowamount -= cursorposx / 2;
 }
