@@ -539,7 +539,7 @@ void gGUITextbox::pressKey() {
 			}
 			else {
 				cursorposx -= cw;
-					if(firstutf > 0) {
+					if(firstutf > 0 && !ismultiline) {
 						int icw = textfont->getStringWidth(text.substr(firstchar - 1, letterlength[firstchar - 1]));
 						firstutf -= letterlength[firstchar];
 						firstposx = textfont->getStringWidth(text.substr(0, firstutf));
@@ -570,8 +570,16 @@ void gGUITextbox::pressKey() {
 			}
 		}
 		selectionmode = false;
+		int oldlastutf;
+		if(ismultiline) oldlastutf = lastutf;
 		lastutf = calculateLastUtf();
-		if(ismultiline) setText(text);
+		if(ismultiline) {
+			setText(text);
+			if(oldlastutf - lastutf != 1 && currentline > 1) {
+				currentline--;
+				cursorposx = textfont->getStringWidth(lines[currentline - 1]);
+			}
+		}
 
 	} else if((keystate & KEY_LEFT) && cursorposchar > 0) { // LEFT ARROW
 		if(!shiftpressed) selectionmode = false;
