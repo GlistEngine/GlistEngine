@@ -196,7 +196,7 @@ void gFont::resizeVectors(int num) {
 
 	characternumlimit = num;
 
-	std::vector<CharProperties>().swap(cpset);
+	std::vector<charProperties>().swap(cpset);
 	std::vector<int>().swap(loadedcharacters);
 
 	// initialize character info and textures
