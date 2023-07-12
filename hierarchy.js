@@ -3,7 +3,6 @@ var hierarchy =
     [ "gGUIActionManager::Action", "structgGUIActionManager_1_1Action.html", null ],
     [ "gGUIGrid::Cell", "structgGUIGrid_1_1Cell.html", null ],
     [ "gGUITreelist::Element", "structgGUITreelist_1_1Element.html", null ],
-    [ "gAllocatableBase", "classgAllocatableBase.html", null ],
     [ "gAnimationTrigger", "classgAnimationTrigger.html", null ],
     [ "gColor", "classgColor.html", null ],
     [ "gEvent", "classgEvent.html", [

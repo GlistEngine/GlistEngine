@@ -1,7 +1,6 @@
 var annotated_dup =
 [
     [ "gAES", "classgAES.html", "classgAES" ],
-    [ "gAllocatableBase", "classgAllocatableBase.html", "classgAllocatableBase" ],
     [ "gAndroidWindow", "classgAndroidWindow.html", "classgAndroidWindow" ],
     [ "gAnimationTrigger", "classgAnimationTrigger.html", "classgAnimationTrigger" ],
     [ "gAppManager", "classgAppManager.html", "classgAppManager" ],

@@ -1,7 +1,6 @@
 var files_dup =
 [
     [ "gAES.h", "gAES_8h_source.html", null ],
-    [ "gAllocatableBase.h", "gAllocatableBase_8h_source.html", null ],
     [ "gAndroidUtil.h", "gAndroidUtil_8h_source.html", null ],
     [ "gAndroidWindow.h", "gAndroidWindow_8h_source.html", null ],
     [ "gAppManager.h", "gAppManager_8h_source.html", null ],
