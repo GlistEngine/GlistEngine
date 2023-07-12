@@ -119,7 +119,7 @@ $(document).ready(function(){initNavTree('gVbo_8h_source.html',''); initResizabl
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    <span class="keyword">virtual</span> ~<a class="code" href="classgVbo.html">gVbo</a>();</div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160; </div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <span class="keywordtype">void</span> setVertexData(<a class="code" href="structgVertex.html">gVertex</a>* vertices, <span class="keywordtype">int</span> coordNum, <span class="keywordtype">int</span> total);</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="keywordtype">void</span> setIndexData(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span>* indices, <span class="keywordtype">int</span> total);</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="keywordtype">void</span> setIndexData(gIndex* indices, <span class="keywordtype">int</span> total);</div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <span class="keywordtype">void</span> clear();</div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160; </div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <span class="keywordtype">void</span> bind() <span class="keyword">const</span>;</div>
@@ -148,7 +148,7 @@ $(document).ready(function(){initNavTree('gVbo_8h_source.html',''); initResizabl
 <div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160; </div>
 <div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <span class="keywordtype">int</span> getVAOid() <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    <a class="code" href="structgVertex.html">gVertex</a>* getVertices() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span>* getIndices() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    gIndex* getIndices() <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    <span class="keywordtype">int</span> getVerticesNum() <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <span class="keywordtype">int</span> getIndicesNum() <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160; </div>
@@ -167,7 +167,7 @@ $(document).ready(function(){initNavTree('gVbo_8h_source.html',''); initResizabl
 <div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    <a class="code" href="structgVertex.html">gVertex</a>* verticesptr;</div>
 <div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160; </div>
 <div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    <span class="keywordtype">bool</span> isindexdataallocated;</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span>* indexarrayptr;</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    gIndex* indexarrayptr;</div>
 <div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    <span class="keywordtype">int</span> totalindexnum;</div>
 <div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160; </div>
 <div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    <a class="code" href="classgLight.html">gLight</a>* scenelight;</div>
@@ -179,7 +179,7 @@ $(document).ready(function(){initNavTree('gVbo_8h_source.html',''); initResizabl
 <div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* GRAPHICS_GVBO_H_ */</span><span class="preprocessor"></span></div>
 <div class="ttc" id="aclassgColor_html"><div class="ttname"><a href="classgColor.html">gColor</a></div><div class="ttdef"><b>Definition:</b> gColor.h:12</div></div>
 <div class="ttc" id="aclassgLight_html"><div class="ttname"><a href="classgLight.html">gLight</a></div><div class="ttdef"><b>Definition:</b> gLight.h:22</div></div>
-<div class="ttc" id="aclassgRenderObject_html"><div class="ttname"><a href="classgRenderObject.html">gRenderObject</a></div><div class="ttdef"><b>Definition:</b> gRenderObject.h:17</div></div>
+<div class="ttc" id="aclassgRenderObject_html"><div class="ttname"><a href="classgRenderObject.html">gRenderObject</a></div><div class="ttdef"><b>Definition:</b> gRenderObject.h:24</div></div>
 <div class="ttc" id="aclassgShader_html"><div class="ttname"><a href="classgShader.html">gShader</a></div><div class="ttdef"><b>Definition:</b> gShader.h:32</div></div>
 <div class="ttc" id="aclassgVbo_html"><div class="ttname"><a href="classgVbo.html">gVbo</a></div><div class="ttdef"><b>Definition:</b> gVbo.h:28</div></div>
 <div class="ttc" id="astructgVertex_html"><div class="ttname"><a href="structgVertex.html">gVertex</a></div><div class="ttdef"><b>Definition:</b> gVbo.h:14</div></div>

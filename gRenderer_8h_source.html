@@ -122,269 +122,278 @@ $(document).ready(function(){initNavTree('gRenderer_8h_source.html',''); initRes
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="keyword">class </span><a class="code" href="classgLight.html">gLight</a>;</div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="comment">//#include &quot;gLight.h&quot;</span></div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160; </div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160; </div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="keywordtype">void</span> gEnableCulling();</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="keywordtype">void</span> gDisableCulling();</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="keywordtype">bool</span> gIsCullingEnabled();</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="keywordtype">void</span> gCullFace(<span class="keywordtype">int</span> cullingFace);</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="keywordtype">int</span> gGetCullFace();</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="keywordtype">void</span> gSetCullingDirection(<span class="keywordtype">int</span> cullingDirection);</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="keywordtype">int</span> gGetCullingDirection();</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; </div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="keywordtype">void</span> gDrawLine(<span class="keywordtype">float</span> x1, <span class="keywordtype">float</span> y1, <span class="keywordtype">float</span> x2, <span class="keywordtype">float</span> y2, <span class="keywordtype">float</span> thickness = 1.0f);</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="keywordtype">void</span> gDrawLine(<span class="keywordtype">float</span> x1, <span class="keywordtype">float</span> y1, <span class="keywordtype">float</span> z1, <span class="keywordtype">float</span> x2, <span class="keywordtype">float</span> y2, <span class="keywordtype">float</span> z2, <span class="keywordtype">float</span> thickness = 1.0f);</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="keywordtype">void</span> gDrawTriangle(<span class="keywordtype">float</span> px, <span class="keywordtype">float</span> py, <span class="keywordtype">float</span> qx, <span class="keywordtype">float</span> qy, <span class="keywordtype">float</span> rx, <span class="keywordtype">float</span> ry, <span class="keywordtype">bool</span> is_filled = <span class="keyword">true</span>);</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="keywordtype">void</span> gDrawCircle(<span class="keywordtype">float</span> xCenter, <span class="keywordtype">float</span> yCenter, <span class="keywordtype">float</span> radius, <span class="keywordtype">bool</span> isFilled = <span class="keyword">false</span>, <span class="keywordtype">float</span> numberOfSides = 64.0f);</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="keywordtype">void</span> gDrawCross(<span class="keywordtype">float</span> x, <span class="keywordtype">float</span> y, <span class="keywordtype">float</span> width, <span class="keywordtype">float</span> height, <span class="keywordtype">float</span> thickness, <span class="keywordtype">bool</span> isFilled);</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="keywordtype">void</span> gDrawArc(<span class="keywordtype">float</span> xCenter, <span class="keywordtype">float</span> yCenter, <span class="keywordtype">float</span> radius, <span class="keywordtype">bool</span> isFilled = <span class="keyword">true</span>, <span class="keywordtype">int</span> numberOfSides = 60, <span class="keywordtype">float</span> degree = 360.0f, <span class="keywordtype">float</span> <a class="code" href="classgLight.html#a75b058eae4c870cbf951a39d8c7b0939">rotate</a> = 360.0f);</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="keywordtype">void</span> gDrawArrow(<span class="keywordtype">float</span> x1, <span class="keywordtype">float</span> y1, <span class="keywordtype">float</span> length, <span class="keywordtype">float</span> angle, <span class="keywordtype">float</span> tipLength, <span class="keywordtype">float</span> tipAngle);</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="keywordtype">void</span> gDrawRectangle(<span class="keywordtype">float</span> x, <span class="keywordtype">float</span> y, <span class="keywordtype">float</span> w, <span class="keywordtype">float</span> h, <span class="keywordtype">bool</span> isFilled = <span class="keyword">false</span>);</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="keywordtype">void</span> gDrawRoundedRectangle(<span class="keywordtype">float</span> x, <span class="keywordtype">float</span> y, <span class="keywordtype">float</span> w, <span class="keywordtype">float</span> h, <span class="keywordtype">int</span> radius, <span class="keywordtype">bool</span> isFilled);</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="keywordtype">void</span> gDrawBox(<span class="keywordtype">float</span> x, <span class="keywordtype">float</span> y, <span class="keywordtype">float</span> z, <span class="keywordtype">float</span> w = 1.0f, <span class="keywordtype">float</span> h = 1.0f, <span class="keywordtype">float</span> d = 1.0f, <span class="keywordtype">bool</span> isFilled = <span class="keyword">true</span>);</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="keywordtype">void</span> gDrawBox(glm::mat4 transformationMatrix, <span class="keywordtype">bool</span> isFilled = <span class="keyword">true</span>);</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="keywordtype">void</span> gDrawSphere(<span class="keywordtype">float</span> xPos, <span class="keywordtype">float</span> yPos, <span class="keywordtype">float</span> zPos, glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f), <span class="keywordtype">int</span> xSegmentNum = 64, <span class="keywordtype">int</span> ySegmentNum = 32, <span class="keywordtype">bool</span> isFilled = <span class="keyword">true</span>);</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="keywordtype">void</span> gDrawCylinder(<span class="keywordtype">float</span> x, <span class="keywordtype">float</span> y, <span class="keywordtype">float</span> z, <span class="keywordtype">int</span> r, <span class="keywordtype">int</span> h, glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f), <span class="keywordtype">int</span> segmentnum = 32, <span class="keywordtype">bool</span> isFilled = <span class="keyword">true</span>);</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="keywordtype">void</span> gDrawCylinderOblique(<span class="keywordtype">float</span> x, <span class="keywordtype">float</span> y, <span class="keywordtype">float</span> z, <span class="keywordtype">int</span> r, <span class="keywordtype">int</span> h, glm::vec2 shiftdistance, glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f), <span class="keywordtype">int</span> segmentnum = 32, <span class="keywordtype">bool</span> isFilled = <span class="keyword">true</span>);</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="keywordtype">void</span> gDrawCylinderTrapezodial(<span class="keywordtype">float</span> x, <span class="keywordtype">float</span> y, <span class="keywordtype">float</span> z, <span class="keywordtype">int</span> r1, <span class="keywordtype">int</span> r2, <span class="keywordtype">int</span> h, glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f), <span class="keywordtype">int</span> segmentnum = 32, <span class="keywordtype">bool</span> isFilled = <span class="keyword">true</span>);</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="keywordtype">void</span> gDrawCylinderObliqueTrapezodial(<span class="keywordtype">float</span> x, <span class="keywordtype">float</span> y, <span class="keywordtype">float</span> z, <span class="keywordtype">int</span> r1, <span class="keywordtype">int</span> r2, <span class="keywordtype">int</span> h, glm::vec2 shiftdistance, glm::vec3 scale = glm::vec3(1.0, 1.0, 1.0), <span class="keywordtype">int</span> segmentnum = 32, <span class="keywordtype">bool</span> isFilled = <span class="keyword">true</span>);</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="keywordtype">void</span> gDrawCone(<span class="keywordtype">float</span> x, <span class="keywordtype">float</span> y, <span class="keywordtype">float</span> z, <span class="keywordtype">int</span> r, <span class="keywordtype">int</span> h, glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f), <span class="keywordtype">int</span> segmentnum = 32, <span class="keywordtype">bool</span> isFilled = <span class="keyword">true</span>);</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="keywordtype">void</span> gDrawConeOblique(<span class="keywordtype">float</span> x, <span class="keywordtype">float</span> y, <span class="keywordtype">float</span> z, <span class="keywordtype">int</span> r, <span class="keywordtype">int</span> h, glm::vec2 shiftdistance, glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f), <span class="keywordtype">int</span> segmentnum = 32, <span class="keywordtype">bool</span> isFilled = <span class="keyword">true</span>);</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="keywordtype">void</span> gDrawPyramid(<span class="keywordtype">float</span> x, <span class="keywordtype">float</span> y, <span class="keywordtype">float</span> z, <span class="keywordtype">int</span> r, <span class="keywordtype">int</span> h, glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f), <span class="keywordtype">int</span> numberofsides = 4, <span class="keywordtype">bool</span> isFilled = <span class="keyword">true</span>);</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="keywordtype">void</span> gDrawPyramidOblique(<span class="keywordtype">float</span> x, <span class="keywordtype">float</span> y, <span class="keywordtype">float</span> z, <span class="keywordtype">int</span> r, <span class="keywordtype">int</span> h, glm::vec2 shiftdistance, glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f), <span class="keywordtype">int</span> numberofsides = 4, <span class="keywordtype">bool</span> isFilled = <span class="keyword">true</span>);</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160; </div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160; </div>
-<div class="line"><a name="l00068"></a><span class="lineno"><a class="line" href="classgRenderer.html">   68</a></span>&#160;<span class="keyword">class </span><a class="code" href="classgRenderer.html">gRenderer</a>: <span class="keyword">public</span> <a class="code" href="classgObject.html">gObject</a> {</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">int</span> SCREENSCALING_NONE, SCREENSCALING_MIPMAP, SCREENSCALING_AUTO;</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">int</span> DEPTHTESTTYPE_LESS, DEPTHTESTTYPE_ALWAYS;</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">int</span> FOGMODE_LINEAR, FOGMODE_EXP;</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160; </div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <a class="code" href="classgRenderer.html">gRenderer</a>();</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    <span class="keyword">virtual</span> ~<a class="code" href="classgRenderer.html">gRenderer</a>();</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="preprocessor">#ifdef DEBUG</span></div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="preprocessor">#define G_CHECK_GL(a) gCheckGLErrorAndPrint(&quot;Previously Unhandled &quot;</span>, __PRETTY_FUNCTION__, __LINE__); a; gCheckGLErrorAndPrint(&quot;&quot;, __PRETTY_FUNCTION__, __LINE__)</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="preprocessor">#define G_CHECK_GL2(value, fn) gCheckGLErrorAndPrint(&quot;Previously Unhandled &quot;</span>, __PRETTY_FUNCTION__, __LINE__); value = fn; gCheckGLErrorAndPrint(&quot;&quot;, __PRETTY_FUNCTION__, __LINE__)</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="preprocessor">#else</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="preprocessor">#define G_CHECK_GL(fn) fn</span></div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="preprocessor">#define G_CHECK_GL2(value, fn) value = fn</span></div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160; </div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="keywordtype">void</span> gCheckGLErrorAndPrint(<span class="keyword">const</span> std::string&amp; prefix, <span class="keyword">const</span> std::string&amp; func, <span class="keywordtype">int</span> line);</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160; </div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="keywordtype">void</span> gEnableCulling();</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="keywordtype">void</span> gDisableCulling();</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="keywordtype">bool</span> gIsCullingEnabled();</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="keywordtype">void</span> gCullFace(<span class="keywordtype">int</span> cullingFace);</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="keywordtype">int</span> gGetCullFace();</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="keywordtype">void</span> gSetCullingDirection(<span class="keywordtype">int</span> cullingDirection);</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="keywordtype">int</span> gGetCullingDirection();</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160; </div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="keywordtype">void</span> gDrawLine(<span class="keywordtype">float</span> x1, <span class="keywordtype">float</span> y1, <span class="keywordtype">float</span> x2, <span class="keywordtype">float</span> y2, <span class="keywordtype">float</span> thickness = 1.0f);</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="keywordtype">void</span> gDrawLine(<span class="keywordtype">float</span> x1, <span class="keywordtype">float</span> y1, <span class="keywordtype">float</span> z1, <span class="keywordtype">float</span> x2, <span class="keywordtype">float</span> y2, <span class="keywordtype">float</span> z2, <span class="keywordtype">float</span> thickness = 1.0f);</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="keywordtype">void</span> gDrawTriangle(<span class="keywordtype">float</span> px, <span class="keywordtype">float</span> py, <span class="keywordtype">float</span> qx, <span class="keywordtype">float</span> qy, <span class="keywordtype">float</span> rx, <span class="keywordtype">float</span> ry, <span class="keywordtype">bool</span> is_filled = <span class="keyword">true</span>);</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="keywordtype">void</span> gDrawCircle(<span class="keywordtype">float</span> xCenter, <span class="keywordtype">float</span> yCenter, <span class="keywordtype">float</span> radius, <span class="keywordtype">bool</span> isFilled = <span class="keyword">false</span>, <span class="keywordtype">float</span> numberOfSides = 64.0f);</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="keywordtype">void</span> gDrawCross(<span class="keywordtype">float</span> x, <span class="keywordtype">float</span> y, <span class="keywordtype">float</span> width, <span class="keywordtype">float</span> height, <span class="keywordtype">float</span> thickness, <span class="keywordtype">bool</span> isFilled);</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="keywordtype">void</span> gDrawArc(<span class="keywordtype">float</span> xCenter, <span class="keywordtype">float</span> yCenter, <span class="keywordtype">float</span> radius, <span class="keywordtype">bool</span> isFilled = <span class="keyword">true</span>, <span class="keywordtype">int</span> numberOfSides = 60, <span class="keywordtype">float</span> degree = 360.0f, <span class="keywordtype">float</span> <a class="code" href="classgLight.html#a75b058eae4c870cbf951a39d8c7b0939">rotate</a> = 360.0f);</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="keywordtype">void</span> gDrawArrow(<span class="keywordtype">float</span> x1, <span class="keywordtype">float</span> y1, <span class="keywordtype">float</span> length, <span class="keywordtype">float</span> angle, <span class="keywordtype">float</span> tipLength, <span class="keywordtype">float</span> tipAngle);</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="keywordtype">void</span> gDrawRectangle(<span class="keywordtype">float</span> x, <span class="keywordtype">float</span> y, <span class="keywordtype">float</span> w, <span class="keywordtype">float</span> h, <span class="keywordtype">bool</span> isFilled = <span class="keyword">false</span>);</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="keywordtype">void</span> gDrawRoundedRectangle(<span class="keywordtype">float</span> x, <span class="keywordtype">float</span> y, <span class="keywordtype">float</span> w, <span class="keywordtype">float</span> h, <span class="keywordtype">int</span> radius, <span class="keywordtype">bool</span> isFilled);</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="keywordtype">void</span> gDrawBox(<span class="keywordtype">float</span> x, <span class="keywordtype">float</span> y, <span class="keywordtype">float</span> z, <span class="keywordtype">float</span> w = 1.0f, <span class="keywordtype">float</span> h = 1.0f, <span class="keywordtype">float</span> d = 1.0f, <span class="keywordtype">bool</span> isFilled = <span class="keyword">true</span>);</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="keywordtype">void</span> gDrawBox(glm::mat4 transformationMatrix, <span class="keywordtype">bool</span> isFilled = <span class="keyword">true</span>);</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="keywordtype">void</span> gDrawSphere(<span class="keywordtype">float</span> xPos, <span class="keywordtype">float</span> yPos, <span class="keywordtype">float</span> zPos, glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f), <span class="keywordtype">int</span> xSegmentNum = 64, <span class="keywordtype">int</span> ySegmentNum = 32, <span class="keywordtype">bool</span> isFilled = <span class="keyword">true</span>);</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="keywordtype">void</span> gDrawCylinder(<span class="keywordtype">float</span> x, <span class="keywordtype">float</span> y, <span class="keywordtype">float</span> z, <span class="keywordtype">int</span> r, <span class="keywordtype">int</span> h, glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f), <span class="keywordtype">int</span> segmentnum = 32, <span class="keywordtype">bool</span> isFilled = <span class="keyword">true</span>);</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="keywordtype">void</span> gDrawCylinderOblique(<span class="keywordtype">float</span> x, <span class="keywordtype">float</span> y, <span class="keywordtype">float</span> z, <span class="keywordtype">int</span> r, <span class="keywordtype">int</span> h, glm::vec2 shiftdistance, glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f), <span class="keywordtype">int</span> segmentnum = 32, <span class="keywordtype">bool</span> isFilled = <span class="keyword">true</span>);</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<span class="keywordtype">void</span> gDrawCylinderTrapezodial(<span class="keywordtype">float</span> x, <span class="keywordtype">float</span> y, <span class="keywordtype">float</span> z, <span class="keywordtype">int</span> r1, <span class="keywordtype">int</span> r2, <span class="keywordtype">int</span> h, glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f), <span class="keywordtype">int</span> segmentnum = 32, <span class="keywordtype">bool</span> isFilled = <span class="keyword">true</span>);</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<span class="keywordtype">void</span> gDrawCylinderObliqueTrapezodial(<span class="keywordtype">float</span> x, <span class="keywordtype">float</span> y, <span class="keywordtype">float</span> z, <span class="keywordtype">int</span> r1, <span class="keywordtype">int</span> r2, <span class="keywordtype">int</span> h, glm::vec2 shiftdistance, glm::vec3 scale = glm::vec3(1.0, 1.0, 1.0), <span class="keywordtype">int</span> segmentnum = 32, <span class="keywordtype">bool</span> isFilled = <span class="keyword">true</span>);</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<span class="keywordtype">void</span> gDrawCone(<span class="keywordtype">float</span> x, <span class="keywordtype">float</span> y, <span class="keywordtype">float</span> z, <span class="keywordtype">int</span> r, <span class="keywordtype">int</span> h, glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f), <span class="keywordtype">int</span> segmentnum = 32, <span class="keywordtype">bool</span> isFilled = <span class="keyword">true</span>);</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="keywordtype">void</span> gDrawConeOblique(<span class="keywordtype">float</span> x, <span class="keywordtype">float</span> y, <span class="keywordtype">float</span> z, <span class="keywordtype">int</span> r, <span class="keywordtype">int</span> h, glm::vec2 shiftdistance, glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f), <span class="keywordtype">int</span> segmentnum = 32, <span class="keywordtype">bool</span> isFilled = <span class="keyword">true</span>);</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="keywordtype">void</span> gDrawPyramid(<span class="keywordtype">float</span> x, <span class="keywordtype">float</span> y, <span class="keywordtype">float</span> z, <span class="keywordtype">int</span> r, <span class="keywordtype">int</span> h, glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f), <span class="keywordtype">int</span> numberofsides = 4, <span class="keywordtype">bool</span> isFilled = <span class="keyword">true</span>);</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;<span class="keywordtype">void</span> gDrawPyramidOblique(<span class="keywordtype">float</span> x, <span class="keywordtype">float</span> y, <span class="keywordtype">float</span> z, <span class="keywordtype">int</span> r, <span class="keywordtype">int</span> h, glm::vec2 shiftdistance, glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f), <span class="keywordtype">int</span> numberofsides = 4, <span class="keywordtype">bool</span> isFilled = <span class="keyword">true</span>);</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160; </div>
 <div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160; </div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    <span class="keyword">static</span> <span class="keywordtype">void</span> setScreenSize(<span class="keywordtype">int</span> screenWidth, <span class="keywordtype">int</span> screenHeight);</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    <span class="keyword">static</span> <span class="keywordtype">void</span> setUnitScreenSize(<span class="keywordtype">int</span> unitWidth, <span class="keywordtype">int</span> unitHeight);</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    <span class="keyword">static</span> <span class="keywordtype">void</span> setScreenScaling(<span class="keywordtype">int</span> screenScaling);</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160; </div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    <span class="keywordtype">int</span> getWidth();</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    <span class="keywordtype">int</span> getHeight();</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    <span class="keywordtype">int</span> getScreenWidth();</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <span class="keywordtype">int</span> getScreenHeight();</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    <span class="keywordtype">int</span> getUnitWidth();</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    <span class="keywordtype">int</span> getUnitHeight();</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    <span class="keyword">static</span> <span class="keywordtype">int</span> getScreenScaling();</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160; </div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    <span class="comment">//grid</span></div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    <span class="keywordtype">void</span> drawGrid();</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    <span class="keywordtype">void</span> drawGridYZ();</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    <span class="keywordtype">void</span> drawGridXY();</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    <span class="keywordtype">void</span> drawGridXZ();</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    <span class="keywordtype">void</span> enableGrid();</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    <span class="keywordtype">void</span> disableGrid();</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    <span class="keywordtype">void</span> setGridEnableAxis(<span class="keywordtype">bool</span> xy, <span class="keywordtype">bool</span> yz, <span class="keywordtype">bool</span> xz);</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    <span class="keywordtype">void</span> setGridEnableXY(<span class="keywordtype">bool</span> xy), setGridEnableYZ(<span class="keywordtype">bool</span> yz), setGridEnableXZ(<span class="keywordtype">bool</span> xz);</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    <span class="keywordtype">void</span> setGridMaxLength(<span class="keywordtype">float</span> length);</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    <span class="keywordtype">float</span> getGridMaxLength();</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    <span class="keywordtype">void</span> setGridLineInterval(<span class="keywordtype">float</span> intervalvalue);</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    <span class="keywordtype">float</span> getGridLineInterval();</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    <span class="keywordtype">void</span> setGridColorofAxisXZ(<span class="keywordtype">int</span> r, <span class="keywordtype">int</span> g, <span class="keywordtype">int</span> b, <span class="keywordtype">int</span> a);</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    <span class="keywordtype">void</span> setGridColorofAxisYZ(<span class="keywordtype">int</span> r, <span class="keywordtype">int</span> g, <span class="keywordtype">int</span> b, <span class="keywordtype">int</span> a);</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    <span class="keywordtype">void</span> setGridColorofAxisXY(<span class="keywordtype">int</span> r, <span class="keywordtype">int</span> g, <span class="keywordtype">int</span> b, <span class="keywordtype">int</span> a);</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    <span class="keywordtype">void</span> setGridColorofAxisXZ(<a class="code" href="classgColor.html">gColor</a>* color);</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    <span class="keywordtype">void</span> setGridColorofAxisYZ(<a class="code" href="classgColor.html">gColor</a>* color);</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    <span class="keywordtype">void</span> setGridColorofAxisXY(<a class="code" href="classgColor.html">gColor</a>* color);</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    <span class="keywordtype">void</span> setGridColorofAxisWireFrameXZ(<span class="keywordtype">int</span> r, <span class="keywordtype">int</span> g, <span class="keywordtype">int</span> b, <span class="keywordtype">int</span> a);</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;    <span class="keywordtype">void</span> setGridColorofAxisWireFrameYZ(<span class="keywordtype">int</span> r, <span class="keywordtype">int</span> g, <span class="keywordtype">int</span> b, <span class="keywordtype">int</span> a);</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;    <span class="keywordtype">void</span> setGridColorofAxisWireFrameXY(<span class="keywordtype">int</span> r, <span class="keywordtype">int</span> g, <span class="keywordtype">int</span> b, <span class="keywordtype">int</span> a);</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;    <span class="keywordtype">void</span> setGridColorofAxisWireFrameXZ(<a class="code" href="classgColor.html">gColor</a>* color);</div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;    <span class="keywordtype">void</span> setGridColorofAxisWireFrameYZ(<a class="code" href="classgColor.html">gColor</a>* color);</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;    <span class="keywordtype">void</span> setGridColorofAxisWireFrameXY(<a class="code" href="classgColor.html">gColor</a>* color);</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    <span class="keywordtype">bool</span> isGridEnabled(), isGridXYEnabled(), isGridYZEnabled(), isGridXZEnabled();</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160; </div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160; </div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160; </div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;    <span class="keyword">static</span> <span class="keywordtype">void</span> setCurrentResolution(<span class="keywordtype">int</span> resolution);</div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;    <span class="keyword">static</span> <span class="keywordtype">void</span> setCurrentResolution(<span class="keywordtype">int</span> screenWidth, <span class="keywordtype">int</span> screenHeight);</div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;    <span class="keyword">static</span> <span class="keywordtype">void</span> setUnitResolution(<span class="keywordtype">int</span> resolution);</div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;    <span class="keyword">static</span> <span class="keywordtype">void</span> setUnitResolution(<span class="keywordtype">int</span> screenWidth, <span class="keywordtype">int</span> screenHeight);</div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;    <span class="keyword">static</span> <span class="keywordtype">int</span> getResolution(<span class="keywordtype">int</span> screenWidth, <span class="keywordtype">int</span> screenHeight);</div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;    <span class="keywordtype">int</span> getCurrentResolution();</div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;    <span class="keywordtype">int</span> getUnitResolution();</div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;    <span class="keyword">static</span> <span class="keywordtype">int</span> scaleX(<span class="keywordtype">int</span> x);</div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;    <span class="keyword">static</span> <span class="keywordtype">int</span> scaleY(<span class="keywordtype">int</span> y);</div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160; </div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;    <span class="keywordtype">void</span> setColor(<span class="keywordtype">int</span> r, <span class="keywordtype">int</span> g, <span class="keywordtype">int</span> b, <span class="keywordtype">int</span> a = 255);</div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;    <span class="keywordtype">void</span> setColor(<span class="keywordtype">float</span> r, <span class="keywordtype">float</span> g, <span class="keywordtype">float</span> b, <span class="keywordtype">float</span> a = 1.0f);</div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;    <span class="keywordtype">void</span> setColor(<a class="code" href="classgColor.html">gColor</a> color);</div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;    <span class="keywordtype">void</span> setColor(<a class="code" href="classgColor.html">gColor</a>* color);</div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;    <a class="code" href="classgColor.html">gColor</a>* getColor();</div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160; </div>
-<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;    <span class="keywordtype">void</span> clear();</div>
-<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;    <span class="keywordtype">void</span> clearColor(<span class="keywordtype">int</span> r, <span class="keywordtype">int</span> g, <span class="keywordtype">int</span> b, <span class="keywordtype">int</span> a = 255);</div>
-<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;    <span class="keywordtype">void</span> clearColor(<a class="code" href="classgColor.html">gColor</a> color);</div>
-<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160; </div>
-<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;    <span class="keywordtype">void</span> enableLighting();</div>
-<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;    <span class="keywordtype">void</span> disableLighting();</div>
-<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;    <span class="keywordtype">bool</span> isLightingEnabled();</div>
-<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;    <span class="keywordtype">void</span> setLightingColor(<span class="keywordtype">int</span> r, <span class="keywordtype">int</span> g, <span class="keywordtype">int</span> b, <span class="keywordtype">int</span> a = 255);</div>
-<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;    <span class="keywordtype">void</span> setLightingColor(<a class="code" href="classgColor.html">gColor</a>* color);</div>
-<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;    <a class="code" href="classgColor.html">gColor</a>* getLightingColor();</div>
-<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;    <span class="keywordtype">void</span> setLightingPosition(glm::vec3 lightingPosition);</div>
-<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;    glm::vec3 getLightingPosition();</div>
-<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;    <span class="keywordtype">void</span> setGlobalAmbientColor(<span class="keywordtype">int</span> r, <span class="keywordtype">int</span> g, <span class="keywordtype">int</span> b, <span class="keywordtype">int</span> a = 255);</div>
-<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;    <span class="keywordtype">void</span> setGlobalAmbientColor(<a class="code" href="classgColor.html">gColor</a> color);</div>
-<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;    <a class="code" href="classgColor.html">gColor</a>* getGlobalAmbientColor();</div>
-<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160; </div>
-<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;    <span class="keywordtype">void</span> enableFog();</div>
-<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;    <span class="keywordtype">void</span> disableFog();</div>
-<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;    <span class="keywordtype">void</span> setFogNo(<span class="keywordtype">int</span> no);</div>
-<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;    <span class="keywordtype">void</span> setFogColor(<span class="keywordtype">float</span> r, <span class="keywordtype">float</span> g, <span class="keywordtype">float</span> b);</div>
-<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;    <span class="keywordtype">void</span> setFogColor(<span class="keyword">const</span> <a class="code" href="classgColor.html">gColor</a>&amp; color);</div>
-<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;    <span class="keywordtype">void</span> setFogMode(<span class="keywordtype">int</span> fogMode);</div>
-<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;    <span class="keywordtype">void</span> setFogDensity(<span class="keywordtype">float</span> value);</div>
-<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;    <span class="keywordtype">void</span> setFogGradient(<span class="keywordtype">float</span> value);</div>
-<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;    <span class="keywordtype">void</span> setFogLinearStart(<span class="keywordtype">float</span> value);</div>
-<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;    <span class="keywordtype">void</span> setFogLinearEnd(<span class="keywordtype">float</span> value);</div>
-<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160; </div>
-<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;    <span class="keywordtype">bool</span> isFogEnabled();</div>
-<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;    <span class="keywordtype">int</span> getFogNo() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;    <span class="keyword">const</span> <a class="code" href="classgColor.html">gColor</a>&amp; getFogColor() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;    <span class="keywordtype">int</span> getFogMode() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;    <span class="keywordtype">float</span> getFogDensity() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;    <span class="keywordtype">float</span> getFogGradient() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;    <span class="keywordtype">float</span> getFogLinearStart() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;    <span class="keywordtype">float</span> getFogLinearEnd() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00077"></a><span class="lineno"><a class="line" href="classgRenderer.html">   77</a></span>&#160;<span class="keyword">class </span><a class="code" href="classgRenderer.html">gRenderer</a>: <span class="keyword">public</span> <a class="code" href="classgObject.html">gObject</a> {</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">int</span> SCREENSCALING_NONE, SCREENSCALING_MIPMAP, SCREENSCALING_AUTO;</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">int</span> DEPTHTESTTYPE_LESS, DEPTHTESTTYPE_ALWAYS;</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">int</span> FOGMODE_LINEAR, FOGMODE_EXP;</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160; </div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    <a class="code" href="classgRenderer.html">gRenderer</a>();</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <span class="keyword">virtual</span> ~<a class="code" href="classgRenderer.html">gRenderer</a>();</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160; </div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    <span class="keyword">static</span> <span class="keywordtype">void</span> setScreenSize(<span class="keywordtype">int</span> screenWidth, <span class="keywordtype">int</span> screenHeight);</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    <span class="keyword">static</span> <span class="keywordtype">void</span> setUnitScreenSize(<span class="keywordtype">int</span> unitWidth, <span class="keywordtype">int</span> unitHeight);</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    <span class="keyword">static</span> <span class="keywordtype">void</span> setScreenScaling(<span class="keywordtype">int</span> screenScaling);</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160; </div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    <span class="keywordtype">int</span> getWidth();</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    <span class="keywordtype">int</span> getHeight();</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    <span class="keywordtype">int</span> getScreenWidth();</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    <span class="keywordtype">int</span> getScreenHeight();</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    <span class="keywordtype">int</span> getUnitWidth();</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    <span class="keywordtype">int</span> getUnitHeight();</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    <span class="keyword">static</span> <span class="keywordtype">int</span> getScreenScaling();</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160; </div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    <span class="comment">//grid</span></div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    <span class="keywordtype">void</span> drawGrid();</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    <span class="keywordtype">void</span> drawGridYZ();</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    <span class="keywordtype">void</span> drawGridXY();</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    <span class="keywordtype">void</span> drawGridXZ();</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    <span class="keywordtype">void</span> enableGrid();</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    <span class="keywordtype">void</span> disableGrid();</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    <span class="keywordtype">void</span> setGridEnableAxis(<span class="keywordtype">bool</span> xy, <span class="keywordtype">bool</span> yz, <span class="keywordtype">bool</span> xz);</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    <span class="keywordtype">void</span> setGridEnableXY(<span class="keywordtype">bool</span> xy), setGridEnableYZ(<span class="keywordtype">bool</span> yz), setGridEnableXZ(<span class="keywordtype">bool</span> xz);</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    <span class="keywordtype">void</span> setGridMaxLength(<span class="keywordtype">float</span> length);</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    <span class="keywordtype">float</span> getGridMaxLength();</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;    <span class="keywordtype">void</span> setGridLineInterval(<span class="keywordtype">float</span> intervalvalue);</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;    <span class="keywordtype">float</span> getGridLineInterval();</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;    <span class="keywordtype">void</span> setGridColorofAxisXZ(<span class="keywordtype">int</span> r, <span class="keywordtype">int</span> g, <span class="keywordtype">int</span> b, <span class="keywordtype">int</span> a);</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;    <span class="keywordtype">void</span> setGridColorofAxisYZ(<span class="keywordtype">int</span> r, <span class="keywordtype">int</span> g, <span class="keywordtype">int</span> b, <span class="keywordtype">int</span> a);</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;    <span class="keywordtype">void</span> setGridColorofAxisXY(<span class="keywordtype">int</span> r, <span class="keywordtype">int</span> g, <span class="keywordtype">int</span> b, <span class="keywordtype">int</span> a);</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    <span class="keywordtype">void</span> setGridColorofAxisXZ(<a class="code" href="classgColor.html">gColor</a>* color);</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;    <span class="keywordtype">void</span> setGridColorofAxisYZ(<a class="code" href="classgColor.html">gColor</a>* color);</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;    <span class="keywordtype">void</span> setGridColorofAxisXY(<a class="code" href="classgColor.html">gColor</a>* color);</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;    <span class="keywordtype">void</span> setGridColorofAxisWireFrameXZ(<span class="keywordtype">int</span> r, <span class="keywordtype">int</span> g, <span class="keywordtype">int</span> b, <span class="keywordtype">int</span> a);</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;    <span class="keywordtype">void</span> setGridColorofAxisWireFrameYZ(<span class="keywordtype">int</span> r, <span class="keywordtype">int</span> g, <span class="keywordtype">int</span> b, <span class="keywordtype">int</span> a);</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;    <span class="keywordtype">void</span> setGridColorofAxisWireFrameXY(<span class="keywordtype">int</span> r, <span class="keywordtype">int</span> g, <span class="keywordtype">int</span> b, <span class="keywordtype">int</span> a);</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;    <span class="keywordtype">void</span> setGridColorofAxisWireFrameXZ(<a class="code" href="classgColor.html">gColor</a>* color);</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;    <span class="keywordtype">void</span> setGridColorofAxisWireFrameYZ(<a class="code" href="classgColor.html">gColor</a>* color);</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;    <span class="keywordtype">void</span> setGridColorofAxisWireFrameXY(<a class="code" href="classgColor.html">gColor</a>* color);</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;    <span class="keywordtype">bool</span> isGridEnabled(), isGridXYEnabled(), isGridYZEnabled(), isGridXZEnabled();</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160; </div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160; </div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160; </div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;    <span class="keyword">static</span> <span class="keywordtype">void</span> setCurrentResolution(<span class="keywordtype">int</span> resolution);</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;    <span class="keyword">static</span> <span class="keywordtype">void</span> setCurrentResolution(<span class="keywordtype">int</span> screenWidth, <span class="keywordtype">int</span> screenHeight);</div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;    <span class="keyword">static</span> <span class="keywordtype">void</span> setUnitResolution(<span class="keywordtype">int</span> resolution);</div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;    <span class="keyword">static</span> <span class="keywordtype">void</span> setUnitResolution(<span class="keywordtype">int</span> screenWidth, <span class="keywordtype">int</span> screenHeight);</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;    <span class="keyword">static</span> <span class="keywordtype">int</span> getResolution(<span class="keywordtype">int</span> screenWidth, <span class="keywordtype">int</span> screenHeight);</div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;    <span class="keywordtype">int</span> getCurrentResolution();</div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;    <span class="keywordtype">int</span> getUnitResolution();</div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;    <span class="keyword">static</span> <span class="keywordtype">int</span> scaleX(<span class="keywordtype">int</span> x);</div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;    <span class="keyword">static</span> <span class="keywordtype">int</span> scaleY(<span class="keywordtype">int</span> y);</div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160; </div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;    <span class="keywordtype">void</span> setColor(<span class="keywordtype">int</span> r, <span class="keywordtype">int</span> g, <span class="keywordtype">int</span> b, <span class="keywordtype">int</span> a = 255);</div>
+<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;    <span class="keywordtype">void</span> setColor(<span class="keywordtype">float</span> r, <span class="keywordtype">float</span> g, <span class="keywordtype">float</span> b, <span class="keywordtype">float</span> a = 1.0f);</div>
+<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;    <span class="keywordtype">void</span> setColor(<a class="code" href="classgColor.html">gColor</a> color);</div>
+<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;    <span class="keywordtype">void</span> setColor(<a class="code" href="classgColor.html">gColor</a>* color);</div>
+<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;    <a class="code" href="classgColor.html">gColor</a>* getColor();</div>
+<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160; </div>
+<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;    <span class="keywordtype">void</span> clear();</div>
+<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;    <span class="keywordtype">void</span> clearColor(<span class="keywordtype">int</span> r, <span class="keywordtype">int</span> g, <span class="keywordtype">int</span> b, <span class="keywordtype">int</span> a = 255);</div>
+<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;    <span class="keywordtype">void</span> clearColor(<a class="code" href="classgColor.html">gColor</a> color);</div>
+<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160; </div>
+<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;    <span class="keywordtype">void</span> enableLighting();</div>
+<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;    <span class="keywordtype">void</span> disableLighting();</div>
+<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;    <span class="keywordtype">bool</span> isLightingEnabled();</div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;    <span class="keywordtype">void</span> setLightingColor(<span class="keywordtype">int</span> r, <span class="keywordtype">int</span> g, <span class="keywordtype">int</span> b, <span class="keywordtype">int</span> a = 255);</div>
+<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;    <span class="keywordtype">void</span> setLightingColor(<a class="code" href="classgColor.html">gColor</a>* color);</div>
+<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;    <a class="code" href="classgColor.html">gColor</a>* getLightingColor();</div>
+<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;    <span class="keywordtype">void</span> setLightingPosition(glm::vec3 lightingPosition);</div>
+<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;    glm::vec3 getLightingPosition();</div>
+<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;    <span class="keywordtype">void</span> setGlobalAmbientColor(<span class="keywordtype">int</span> r, <span class="keywordtype">int</span> g, <span class="keywordtype">int</span> b, <span class="keywordtype">int</span> a = 255);</div>
+<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;    <span class="keywordtype">void</span> setGlobalAmbientColor(<a class="code" href="classgColor.html">gColor</a> color);</div>
+<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;    <a class="code" href="classgColor.html">gColor</a>* getGlobalAmbientColor();</div>
+<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160; </div>
+<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;    <span class="keywordtype">void</span> enableFog();</div>
+<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;    <span class="keywordtype">void</span> disableFog();</div>
+<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;    <span class="keywordtype">void</span> setFogNo(<span class="keywordtype">int</span> no);</div>
+<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;    <span class="keywordtype">void</span> setFogColor(<span class="keywordtype">float</span> r, <span class="keywordtype">float</span> g, <span class="keywordtype">float</span> b);</div>
+<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;    <span class="keywordtype">void</span> setFogColor(<span class="keyword">const</span> <a class="code" href="classgColor.html">gColor</a>&amp; color);</div>
+<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;    <span class="keywordtype">void</span> setFogMode(<span class="keywordtype">int</span> fogMode);</div>
+<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;    <span class="keywordtype">void</span> setFogDensity(<span class="keywordtype">float</span> value);</div>
+<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;    <span class="keywordtype">void</span> setFogGradient(<span class="keywordtype">float</span> value);</div>
+<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;    <span class="keywordtype">void</span> setFogLinearStart(<span class="keywordtype">float</span> value);</div>
+<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;    <span class="keywordtype">void</span> setFogLinearEnd(<span class="keywordtype">float</span> value);</div>
 <div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160; </div>
-<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;    <span class="keywordtype">void</span> addSceneLight(<a class="code" href="classgLight.html">gLight</a>* light);</div>
-<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;    <a class="code" href="classgLight.html">gLight</a>* getSceneLight(<span class="keywordtype">int</span> lightNo);</div>
-<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;    <span class="keywordtype">int</span> getSceneLightNum();</div>
-<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;    <span class="keywordtype">void</span> removeSceneLight(<a class="code" href="classgLight.html">gLight</a>* light);</div>
-<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;    <span class="keywordtype">void</span> removeAllSceneLights();</div>
-<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160; </div>
-<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;    <span class="keywordtype">void</span> enableDepthTest();</div>
-<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;    <span class="keywordtype">void</span> enableDepthTest(<span class="keywordtype">int</span> depthTestType);</div>
-<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;    <span class="keywordtype">void</span> setDepthTestFunc(<span class="keywordtype">int</span> depthTestType);</div>
-<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;    <span class="keywordtype">void</span> disableDepthTest();</div>
-<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;    <span class="keywordtype">bool</span> isDepthTestEnabled();</div>
-<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;    <span class="keywordtype">int</span> getDepthTestType();</div>
-<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160; </div>
-<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;    <span class="keywordtype">void</span> enableAlphaBlending();</div>
-<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;    <span class="keywordtype">void</span> disableAlphaBlending();</div>
-<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;    <span class="keywordtype">bool</span> isAlphaBlendingEnabled();</div>
-<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;    <span class="keywordtype">void</span> enableAlphaTest();</div>
-<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;    <span class="keywordtype">void</span> disableAlphaTest();</div>
-<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;    <span class="keywordtype">bool</span> isAlphaTestEnabled();</div>
-<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160; </div>
-<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;    <a class="code" href="classgShader.html">gShader</a>* getColorShader();</div>
-<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;    <a class="code" href="classgShader.html">gShader</a>* getTextureShader();</div>
-<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;    <a class="code" href="classgShader.html">gShader</a>* getFontShader();</div>
-<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;    <a class="code" href="classgShader.html">gShader</a>* getImageShader();</div>
-<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;    <a class="code" href="classgShader.html">gShader</a>* getSkyboxShader();</div>
-<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;    <a class="code" href="classgShader.html">gShader</a>* getShadowmapShader();</div>
-<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;    <a class="code" href="classgShader.html">gShader</a>* getPbrShader();</div>
-<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;    <a class="code" href="classgShader.html">gShader</a>* getEquirectangularShader();</div>
-<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;    <a class="code" href="classgShader.html">gShader</a>* getIrradianceShader();</div>
-<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;    <a class="code" href="classgShader.html">gShader</a>* getPrefilterShader();</div>
-<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;    <a class="code" href="classgShader.html">gShader</a>* getBrdfShader();</div>
-<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;    <a class="code" href="classgShader.html">gShader</a>* getFboShader();</div>
-<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160; </div>
-<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;    <span class="keywordtype">void</span> setProjectionMatrix(glm::mat4 projectionMatrix);</div>
-<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;    <span class="keywordtype">void</span> setProjectionMatrix2d(glm::mat4 projectionMatrix2d);</div>
-<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;    <span class="keywordtype">void</span> setViewMatrix(glm::mat4 viewMatrix);</div>
-<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;    <span class="keywordtype">void</span> setCameraPosition(glm::vec3 cameraPosition);</div>
-<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;    <span class="keyword">const</span> glm::mat4&amp; getProjectionMatrix() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;    <span class="keyword">const</span> glm::mat4&amp; getProjectionMatrix2d() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160;    <span class="keyword">const</span> glm::mat4&amp; getViewMatrix() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;    <span class="keyword">const</span> glm::vec3&amp; getCameraPosition() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;    <span class="keywordtype">void</span> backupMatrices();</div>
-<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;    <span class="keywordtype">void</span> restoreMatrices();</div>
-<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160; </div>
-<div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160;    <span class="keyword">static</span> <span class="keywordtype">int</span> width, height;</div>
-<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;    <span class="keyword">static</span> <span class="keywordtype">int</span> unitwidth, unitheight;</div>
-<div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;    <span class="keyword">static</span> <span class="keywordtype">int</span> screenscaling;</div>
-<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;    <span class="keyword">static</span> <span class="keywordtype">int</span> currentresolution, unitresolution;</div>
-<div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;    <span class="comment">//grid</span></div>
-<div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;    <span class="keywordtype">int</span> gridmaxvalue;</div>
-<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;    <span class="keywordtype">float</span> gridlineinterval;</div>
-<div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;    <span class="keywordtype">bool</span> isgridenable, isgridxzenable, isgridxyenable, isgridyzenable;</div>
-<div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;    <a class="code" href="classgColor.html">gColor</a> gridxzcolor, gridxzmargincolor, gridxycolor,gridxymargincolor, gridyzcolor, gridyzmargincolor;<span class="comment">//default</span></div>
-<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;    <span class="comment">//grid - END</span></div>
-<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;    <a class="code" href="classgColor.html">gColor</a>* rendercolor;</div>
-<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160; </div>
-<div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;    <a class="code" href="classgColor.html">gColor</a>* lightingcolor;</div>
-<div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;    <span class="keywordtype">bool</span> islightingenabled;</div>
-<div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160; </div>
-<div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160;    <span class="keywordtype">bool</span> isfogenabled;</div>
-<div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;    <span class="keywordtype">int</span> fogno;</div>
-<div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;    <a class="code" href="classgColor.html">gColor</a> fogcolor;</div>
-<div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160;    <span class="keywordtype">float</span> fogdensity;</div>
-<div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160;    <span class="keywordtype">float</span> foggradient;</div>
-<div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;    <span class="keywordtype">int</span> fogmode;</div>
-<div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160;    <span class="keywordtype">float</span> foglinearstart;</div>
-<div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160;    <span class="keywordtype">float</span> foglinearend;</div>
+<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;    <span class="keywordtype">bool</span> isFogEnabled();</div>
+<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;    <span class="keywordtype">int</span> getFogNo() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;    <span class="keyword">const</span> <a class="code" href="classgColor.html">gColor</a>&amp; getFogColor() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;    <span class="keywordtype">int</span> getFogMode() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;    <span class="keywordtype">float</span> getFogDensity() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;    <span class="keywordtype">float</span> getFogGradient() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;    <span class="keywordtype">float</span> getFogLinearStart() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;    <span class="keywordtype">float</span> getFogLinearEnd() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160; </div>
+<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;    <span class="keywordtype">void</span> addSceneLight(<a class="code" href="classgLight.html">gLight</a>* light);</div>
+<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;    <a class="code" href="classgLight.html">gLight</a>* getSceneLight(<span class="keywordtype">int</span> lightNo);</div>
+<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;    <span class="keywordtype">int</span> getSceneLightNum();</div>
+<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;    <span class="keywordtype">void</span> removeSceneLight(<a class="code" href="classgLight.html">gLight</a>* light);</div>
+<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;    <span class="keywordtype">void</span> removeAllSceneLights();</div>
+<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160; </div>
+<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;    <span class="keywordtype">void</span> enableDepthTest();</div>
+<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;    <span class="keywordtype">void</span> enableDepthTest(<span class="keywordtype">int</span> depthTestType);</div>
+<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;    <span class="keywordtype">void</span> setDepthTestFunc(<span class="keywordtype">int</span> depthTestType);</div>
+<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;    <span class="keywordtype">void</span> disableDepthTest();</div>
+<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;    <span class="keywordtype">bool</span> isDepthTestEnabled();</div>
+<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;    <span class="keywordtype">int</span> getDepthTestType();</div>
+<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160; </div>
+<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;    <span class="keywordtype">void</span> enableAlphaBlending();</div>
+<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;    <span class="keywordtype">void</span> disableAlphaBlending();</div>
+<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;    <span class="keywordtype">bool</span> isAlphaBlendingEnabled();</div>
+<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;    <span class="keywordtype">void</span> enableAlphaTest();</div>
+<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;    <span class="keywordtype">void</span> disableAlphaTest();</div>
+<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;    <span class="keywordtype">bool</span> isAlphaTestEnabled();</div>
+<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160; </div>
+<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;    <a class="code" href="classgShader.html">gShader</a>* getColorShader();</div>
+<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;    <a class="code" href="classgShader.html">gShader</a>* getTextureShader();</div>
+<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;    <a class="code" href="classgShader.html">gShader</a>* getFontShader();</div>
+<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;    <a class="code" href="classgShader.html">gShader</a>* getImageShader();</div>
+<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;    <a class="code" href="classgShader.html">gShader</a>* getSkyboxShader();</div>
+<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;    <a class="code" href="classgShader.html">gShader</a>* getShadowmapShader();</div>
+<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;    <a class="code" href="classgShader.html">gShader</a>* getPbrShader();</div>
+<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;    <a class="code" href="classgShader.html">gShader</a>* getEquirectangularShader();</div>
+<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;    <a class="code" href="classgShader.html">gShader</a>* getIrradianceShader();</div>
+<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;    <a class="code" href="classgShader.html">gShader</a>* getPrefilterShader();</div>
+<div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160;    <a class="code" href="classgShader.html">gShader</a>* getBrdfShader();</div>
+<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;    <a class="code" href="classgShader.html">gShader</a>* getFboShader();</div>
+<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160; </div>
+<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;    <span class="keywordtype">void</span> setProjectionMatrix(glm::mat4 projectionMatrix);</div>
+<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;    <span class="keywordtype">void</span> setProjectionMatrix2d(glm::mat4 projectionMatrix2d);</div>
+<div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160;    <span class="keywordtype">void</span> setViewMatrix(glm::mat4 viewMatrix);</div>
+<div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160;    <span class="keywordtype">void</span> setCameraPosition(glm::vec3 cameraPosition);</div>
+<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;    <span class="keyword">const</span> glm::mat4&amp; getProjectionMatrix() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;    <span class="keyword">const</span> glm::mat4&amp; getProjectionMatrix2d() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;    <span class="keyword">const</span> glm::mat4&amp; getViewMatrix() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;    <span class="keyword">const</span> glm::vec3&amp; getCameraPosition() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;    <span class="keywordtype">void</span> backupMatrices();</div>
+<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;    <span class="keywordtype">void</span> restoreMatrices();</div>
+<div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160; </div>
+<div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;    <span class="keyword">static</span> <span class="keywordtype">int</span> width, height;</div>
+<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;    <span class="keyword">static</span> <span class="keywordtype">int</span> unitwidth, unitheight;</div>
+<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;    <span class="keyword">static</span> <span class="keywordtype">int</span> screenscaling;</div>
+<div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;    <span class="keyword">static</span> <span class="keywordtype">int</span> currentresolution, unitresolution;</div>
+<div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;    <span class="comment">//grid</span></div>
+<div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160;    <span class="keywordtype">int</span> gridmaxvalue;</div>
+<div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160;    <span class="keywordtype">float</span> gridlineinterval;</div>
+<div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;    <span class="keywordtype">bool</span> isgridenable, isgridxzenable, isgridxyenable, isgridyzenable;</div>
+<div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;    <a class="code" href="classgColor.html">gColor</a> gridxzcolor, gridxzmargincolor, gridxycolor,gridxymargincolor, gridyzcolor, gridyzmargincolor;<span class="comment">//default</span></div>
+<div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160;    <span class="comment">//grid - END</span></div>
+<div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160;    <a class="code" href="classgColor.html">gColor</a>* rendercolor;</div>
+<div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160; </div>
+<div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160;    <a class="code" href="classgColor.html">gColor</a>* lightingcolor;</div>
+<div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160;    <span class="keywordtype">bool</span> islightingenabled;</div>
 <div class="line"><a name="l00238"></a><span class="lineno">  238</span>&#160; </div>
-<div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160;    glm::vec3 lightingposition;</div>
-<div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160;    <a class="code" href="classgColor.html">gColor</a>* globalambientcolor;</div>
-<div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160;    <span class="keywordtype">int</span> li;</div>
-<div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;    std::deque&lt;gLight*&gt; scenelights;</div>
-<div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160; </div>
-<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160; </div>
-<div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160;    <span class="keywordtype">bool</span> isdepthtestenabled;</div>
-<div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;    <span class="keywordtype">int</span> depthtesttype;</div>
-<div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> depthtesttypeid[2];</div>
-<div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;    <span class="keywordtype">bool</span> isalphablendingenabled, isalphatestenabled;</div>
-<div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160; </div>
-<div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160;    <a class="code" href="classgShader.html">gShader</a>* colorshader;</div>
-<div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160;    <a class="code" href="classgShader.html">gShader</a>* textureshader;</div>
-<div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160;    <a class="code" href="classgShader.html">gShader</a>* fontshader;</div>
-<div class="line"><a name="l00253"></a><span class="lineno">  253</span>&#160;    <a class="code" href="classgShader.html">gShader</a>* imageshader;</div>
-<div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160;    <a class="code" href="classgShader.html">gShader</a>* skyboxshader;</div>
-<div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160;    <a class="code" href="classgShader.html">gShader</a>* shadowmapshader;</div>
-<div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;    <a class="code" href="classgShader.html">gShader</a>* pbrshader;</div>
-<div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;    <a class="code" href="classgShader.html">gShader</a>* equirectangularshader;</div>
-<div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;    <a class="code" href="classgShader.html">gShader</a>* irradianceshader;</div>
-<div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;    <a class="code" href="classgShader.html">gShader</a>* prefiltershader;</div>
-<div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160;    <a class="code" href="classgShader.html">gShader</a>* brdfshader;</div>
-<div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;    <a class="code" href="classgShader.html">gShader</a>* fboshader;</div>
-<div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160; </div>
-<div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;    glm::mat4 projectionmatrix;</div>
-<div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;    glm::mat4 projectionmatrixold;</div>
-<div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;    glm::mat4 projectionmatrix2d;</div>
-<div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;    glm::mat4 viewmatrix;</div>
-<div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160;    glm::mat4 viewmatrixold;</div>
-<div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160;    glm::vec3 cameraposition;</div>
-<div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160; </div>
-<div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160;    <span class="keyword">const</span> std::string getShaderSrcColorVertex();</div>
-<div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160;    <span class="keyword">const</span> std::string getShaderSrcColorFragment();</div>
-<div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160;    <span class="keyword">const</span> std::string getShaderSrcTextureVertex();</div>
-<div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;    <span class="keyword">const</span> std::string getShaderSrcTextureFragment();</div>
-<div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160;    <span class="keyword">const</span> std::string getShaderSrcImageVertex();</div>
-<div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;    <span class="keyword">const</span> std::string getShaderSrcImageFragment();</div>
-<div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;    <span class="keyword">const</span> std::string getShaderSrcFontVertex();</div>
-<div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160;    <span class="keyword">const</span> std::string getShaderSrcFontFragment();</div>
-<div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160;    <span class="keyword">const</span> std::string getShaderSrcSkyboxVertex();</div>
-<div class="line"><a name="l00279"></a><span class="lineno">  279</span>&#160;    <span class="keyword">const</span> std::string getShaderSrcSkyboxFragment();</div>
-<div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160;    <span class="keyword">const</span> std::string getShaderSrcShadowmapVertex();</div>
-<div class="line"><a name="l00281"></a><span class="lineno">  281</span>&#160;    <span class="keyword">const</span> std::string getShaderSrcShadowmapFragment();</div>
-<div class="line"><a name="l00282"></a><span class="lineno">  282</span>&#160;    <span class="keyword">const</span> std::string getShaderSrcPbrVertex();</div>
-<div class="line"><a name="l00283"></a><span class="lineno">  283</span>&#160;    <span class="keyword">const</span> std::string getShaderSrcPbrFragment();</div>
-<div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160;    <span class="keyword">const</span> std::string getShaderSrcCubemapVertex();</div>
-<div class="line"><a name="l00285"></a><span class="lineno">  285</span>&#160;    <span class="keyword">const</span> std::string getShaderSrcEquirectangularFragment();</div>
-<div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160;    <span class="keyword">const</span> std::string getShaderSrcIrradianceFragment();</div>
-<div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160;    <span class="keyword">const</span> std::string getShaderSrcPrefilterFragment();</div>
-<div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160;    <span class="keyword">const</span> std::string getShaderSrcBrdfVertex();</div>
-<div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160;    <span class="keyword">const</span> std::string getShaderSrcBrdfFragment();</div>
-<div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160;    <span class="keyword">const</span> std::string getShaderSrcFboVertex();</div>
-<div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160;    <span class="keyword">const</span> std::string getShaderSrcFboFragment();</div>
-<div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160;};</div>
-<div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160; </div>
-<div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* CORE_GRENDERER_H_ */</span><span class="preprocessor"></span></div>
+<div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160;    <span class="keywordtype">bool</span> isfogenabled;</div>
+<div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160;    <span class="keywordtype">int</span> fogno;</div>
+<div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160;    <a class="code" href="classgColor.html">gColor</a> fogcolor;</div>
+<div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;    <span class="keywordtype">float</span> fogdensity;</div>
+<div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160;    <span class="keywordtype">float</span> foggradient;</div>
+<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;    <span class="keywordtype">int</span> fogmode;</div>
+<div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160;    <span class="keywordtype">float</span> foglinearstart;</div>
+<div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;    <span class="keywordtype">float</span> foglinearend;</div>
+<div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160; </div>
+<div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;    glm::vec3 lightingposition;</div>
+<div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160;    <a class="code" href="classgColor.html">gColor</a>* globalambientcolor;</div>
+<div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160;    <span class="keywordtype">int</span> li;</div>
+<div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160;    std::deque&lt;gLight*&gt; scenelights;</div>
+<div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160; </div>
+<div class="line"><a name="l00253"></a><span class="lineno">  253</span>&#160; </div>
+<div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160;    <span class="keywordtype">bool</span> isdepthtestenabled;</div>
+<div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160;    <span class="keywordtype">int</span> depthtesttype;</div>
+<div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> depthtesttypeid[2];</div>
+<div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;    <span class="keywordtype">bool</span> isalphablendingenabled, isalphatestenabled;</div>
+<div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160; </div>
+<div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;    <a class="code" href="classgShader.html">gShader</a>* colorshader;</div>
+<div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160;    <a class="code" href="classgShader.html">gShader</a>* textureshader;</div>
+<div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;    <a class="code" href="classgShader.html">gShader</a>* fontshader;</div>
+<div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;    <a class="code" href="classgShader.html">gShader</a>* imageshader;</div>
+<div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;    <a class="code" href="classgShader.html">gShader</a>* skyboxshader;</div>
+<div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;    <a class="code" href="classgShader.html">gShader</a>* shadowmapshader;</div>
+<div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;    <a class="code" href="classgShader.html">gShader</a>* pbrshader;</div>
+<div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;    <a class="code" href="classgShader.html">gShader</a>* equirectangularshader;</div>
+<div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160;    <a class="code" href="classgShader.html">gShader</a>* irradianceshader;</div>
+<div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160;    <a class="code" href="classgShader.html">gShader</a>* prefiltershader;</div>
+<div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160;    <a class="code" href="classgShader.html">gShader</a>* brdfshader;</div>
+<div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160;    <a class="code" href="classgShader.html">gShader</a>* fboshader;</div>
+<div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160; </div>
+<div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160;    glm::mat4 projectionmatrix;</div>
+<div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;    glm::mat4 projectionmatrixold;</div>
+<div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160;    glm::mat4 projectionmatrix2d;</div>
+<div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;    glm::mat4 viewmatrix;</div>
+<div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;    glm::mat4 viewmatrixold;</div>
+<div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160;    glm::vec3 cameraposition;</div>
+<div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160; </div>
+<div class="line"><a name="l00279"></a><span class="lineno">  279</span>&#160;    <span class="keyword">const</span> std::string getShaderSrcColorVertex();</div>
+<div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160;    <span class="keyword">const</span> std::string getShaderSrcColorFragment();</div>
+<div class="line"><a name="l00281"></a><span class="lineno">  281</span>&#160;    <span class="keyword">const</span> std::string getShaderSrcTextureVertex();</div>
+<div class="line"><a name="l00282"></a><span class="lineno">  282</span>&#160;    <span class="keyword">const</span> std::string getShaderSrcTextureFragment();</div>
+<div class="line"><a name="l00283"></a><span class="lineno">  283</span>&#160;    <span class="keyword">const</span> std::string getShaderSrcImageVertex();</div>
+<div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160;    <span class="keyword">const</span> std::string getShaderSrcImageFragment();</div>
+<div class="line"><a name="l00285"></a><span class="lineno">  285</span>&#160;    <span class="keyword">const</span> std::string getShaderSrcFontVertex();</div>
+<div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160;    <span class="keyword">const</span> std::string getShaderSrcFontFragment();</div>
+<div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160;    <span class="keyword">const</span> std::string getShaderSrcSkyboxVertex();</div>
+<div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160;    <span class="keyword">const</span> std::string getShaderSrcSkyboxFragment();</div>
+<div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160;    <span class="keyword">const</span> std::string getShaderSrcShadowmapVertex();</div>
+<div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160;    <span class="keyword">const</span> std::string getShaderSrcShadowmapFragment();</div>
+<div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160;    <span class="keyword">const</span> std::string getShaderSrcPbrVertex();</div>
+<div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160;    <span class="keyword">const</span> std::string getShaderSrcPbrFragment();</div>
+<div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160;    <span class="keyword">const</span> std::string getShaderSrcCubemapVertex();</div>
+<div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160;    <span class="keyword">const</span> std::string getShaderSrcEquirectangularFragment();</div>
+<div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160;    <span class="keyword">const</span> std::string getShaderSrcIrradianceFragment();</div>
+<div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160;    <span class="keyword">const</span> std::string getShaderSrcPrefilterFragment();</div>
+<div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160;    <span class="keyword">const</span> std::string getShaderSrcBrdfVertex();</div>
+<div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160;    <span class="keyword">const</span> std::string getShaderSrcBrdfFragment();</div>
+<div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160;    <span class="keyword">const</span> std::string getShaderSrcFboVertex();</div>
+<div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160;    <span class="keyword">const</span> std::string getShaderSrcFboFragment();</div>
+<div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160;};</div>
+<div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160; </div>
+<div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* CORE_GRENDERER_H_ */</span><span class="preprocessor"></span></div>
 <div class="ttc" id="aclassgColor_html"><div class="ttname"><a href="classgColor.html">gColor</a></div><div class="ttdef"><b>Definition:</b> gColor.h:12</div></div>
 <div class="ttc" id="aclassgLight_html"><div class="ttname"><a href="classgLight.html">gLight</a></div><div class="ttdef"><b>Definition:</b> gLight.h:22</div></div>
 <div class="ttc" id="aclassgLight_html_a75b058eae4c870cbf951a39d8c7b0939"><div class="ttname"><a href="classgLight.html#a75b058eae4c870cbf951a39d8c7b0939">gLight::rotate</a></div><div class="ttdeci">void rotate(float angle, float ax, float ay, float az)</div></div>
-<div class="ttc" id="aclassgObject_html"><div class="ttname"><a href="classgObject.html">gObject</a></div><div class="ttdef"><b>Definition:</b> gObject.h:32</div></div>
-<div class="ttc" id="aclassgRenderer_html"><div class="ttname"><a href="classgRenderer.html">gRenderer</a></div><div class="ttdef"><b>Definition:</b> gRenderer.h:68</div></div>
+<div class="ttc" id="aclassgObject_html"><div class="ttname"><a href="classgObject.html">gObject</a></div><div class="ttdef"><b>Definition:</b> gObject.h:33</div></div>
+<div class="ttc" id="aclassgRenderer_html"><div class="ttname"><a href="classgRenderer.html">gRenderer</a></div><div class="ttdef"><b>Definition:</b> gRenderer.h:77</div></div>
 <div class="ttc" id="aclassgShader_html"><div class="ttname"><a href="classgShader.html">gShader</a></div><div class="ttdef"><b>Definition:</b> gShader.h:32</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

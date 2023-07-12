@@ -107,10 +107,9 @@ Collaboration diagram for gGLFWWindow:</div>
 <div class="dyncontent">
 <div class="center"><img src="classgGLFWWindow__coll__graph.png" border="0" usemap="#agGLFWWindow_coll__map" alt="Collaboration graph"/></div>
 <map name="agGLFWWindow_coll__map" id="agGLFWWindow_coll__map">
-<area shape="rect" title=" " alt="" coords="5,247,125,273"/>
-<area shape="rect" href="classgBaseWindow.html" title=" " alt="" coords="8,171,123,197"/>
-<area shape="rect" href="classgObject.html" title=" " alt="" coords="24,5,96,32"/>
-<area shape="rect" href="classgAppManager.html" title=" " alt="" coords="81,81,193,108"/>
+<area shape="rect" title=" " alt="" coords="5,155,125,181"/>
+<area shape="rect" href="classgBaseWindow.html" title=" " alt="" coords="8,80,123,107"/>
+<area shape="rect" href="classgObject.html" title=" " alt="" coords="29,5,101,32"/>
 </map>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
@@ -124,9 +123,9 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a2480f711c72c0e4f963e70a704bc971f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acd4fb915673ad68f52190337c25967d8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgGLFWWindow.html#acd4fb915673ad68f52190337c25967d8">close</a> () override</td></tr>
 <tr class="separator:acd4fb915673ad68f52190337c25967d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:affe487a8d5f151dd70514b97e344525c"><td class="memItemLeft" align="right" valign="top"><a id="affe487a8d5f151dd70514b97e344525c"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>enableVsync</b> (bool vsync) override</td></tr>
-<tr class="separator:affe487a8d5f151dd70514b97e344525c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac77ae081eb18e471d7a5533443253fcf"><td class="memItemLeft" align="right" valign="top"><a id="ac77ae081eb18e471d7a5533443253fcf"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setVsync</b> (bool vsync) override</td></tr>
+<tr class="separator:ac77ae081eb18e471d7a5533443253fcf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aad0f9c5efce47b2588c9ea96a4c3c099"><td class="memItemLeft" align="right" valign="top"><a id="aad0f9c5efce47b2588c9ea96a4c3c099"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>setCursor</b> (int cursorNo) override</td></tr>
 <tr class="separator:aad0f9c5efce47b2588c9ea96a4c3c099"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -148,12 +147,31 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>setWindowResizable</b
 <tr class="memitem:a3d44cb80525f64095977fcd9194fb021"><td class="memItemLeft" align="right" valign="top"><a id="a3d44cb80525f64095977fcd9194fb021"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>setWindowSizeLimits</b> (int minWidth, int minHeight, int maxWidth, int maxHeight) override</td></tr>
 <tr class="separator:a3d44cb80525f64095977fcd9194fb021"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad61bc4c718fc6a0cb7e88e1470b15122"><td class="memItemLeft" align="right" valign="top"><a id="ad61bc4c718fc6a0cb7e88e1470b15122"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>isJoystickPresent</b> (int joystickId) override</td></tr>
+<tr class="separator:ad61bc4c718fc6a0cb7e88e1470b15122"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a15dc67d582f90b88049e03f21a3e657a"><td class="memItemLeft" align="right" valign="top"><a id="a15dc67d582f90b88049e03f21a3e657a"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>isGamepadButtonPressed</b> (int joystickId, int buttonId) override</td></tr>
+<tr class="separator:a15dc67d582f90b88049e03f21a3e657a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae3878f9312f88027481d923f990f1dea"><td class="memItemLeft" align="right" valign="top"><a id="ae3878f9312f88027481d923f990f1dea"></a>
+const float *&#160;</td><td class="memItemRight" valign="bottom"><b>getJoystickAxes</b> (int joystickId, int *axisCountPtr) override</td></tr>
+<tr class="separator:ae3878f9312f88027481d923f990f1dea"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classgBaseWindow"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classgBaseWindow')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classgBaseWindow.html">gBaseWindow</a></td></tr>
-<tr class="memitem:abf7a02775e4011366dbaf8f4f6d0269c inherit pub_methods_classgBaseWindow"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBaseWindow.html#abf7a02775e4011366dbaf8f4f6d0269c">setAppManager</a> (<a class="el" href="classgAppManager.html">gAppManager</a> *appManager)</td></tr>
-<tr class="separator:abf7a02775e4011366dbaf8f4f6d0269c inherit pub_methods_classgBaseWindow"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae2126f9457a55ad769121413acc7a7f1 inherit pub_methods_classgBaseWindow"><td class="memItemLeft" align="right" valign="top"><a id="ae2126f9457a55ad769121413acc7a7f1"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>isRendering</b> ()</td></tr>
+<tr class="separator:ae2126f9457a55ad769121413acc7a7f1 inherit pub_methods_classgBaseWindow"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6bb62d9f5c2ecce6532a42dc62e580fa inherit pub_methods_classgBaseWindow"><td class="memItemLeft" align="right" valign="top"><a id="a6bb62d9f5c2ecce6532a42dc62e580fa"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>isVsyncEnabled</b> ()</td></tr>
 <tr class="separator:a6bb62d9f5c2ecce6532a42dc62e580fa inherit pub_methods_classgBaseWindow"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a17c4bec808328c76195f2f61dfc05c06 inherit pub_methods_classgBaseWindow"><td class="memItemLeft" align="right" valign="top"><a id="a17c4bec808328c76195f2f61dfc05c06"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>enableVsync</b> ()</td></tr>
+<tr class="separator:a17c4bec808328c76195f2f61dfc05c06 inherit pub_methods_classgBaseWindow"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a919c57c2696bb89499653c80ceefa90c inherit pub_methods_classgBaseWindow"><td class="memItemLeft" align="right" valign="top"><a id="a919c57c2696bb89499653c80ceefa90c"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>enableVsync</b> (bool vsync)</td></tr>
+<tr class="separator:a919c57c2696bb89499653c80ceefa90c inherit pub_methods_classgBaseWindow"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8a271b838dbb0c8f9c099f9374ffd4aa inherit pub_methods_classgBaseWindow"><td class="memItemLeft" align="right" valign="top"><a id="a8a271b838dbb0c8f9c099f9374ffd4aa"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>disableVsync</b> ()</td></tr>
+<tr class="separator:a8a271b838dbb0c8f9c099f9374ffd4aa inherit pub_methods_classgBaseWindow"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4cf9a0bce0544fac4c51c6aedcc05d4b inherit pub_methods_classgBaseWindow"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBaseWindow.html#a4cf9a0bce0544fac4c51c6aedcc05d4b">setSize</a> (int width, int height)</td></tr>
 <tr class="separator:a4cf9a0bce0544fac4c51c6aedcc05d4b inherit pub_methods_classgBaseWindow"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1a18778e3537b13d1962bb9f39cd8340 inherit pub_methods_classgBaseWindow"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBaseWindow.html#a1a18778e3537b13d1962bb9f39cd8340">getWidth</a> ()</td></tr>
@@ -165,27 +183,8 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>isVsyncEnabled</b> ()
 <tr class="memitem:a31fa7835854c7b0cdbbf265811569810 inherit pub_methods_classgBaseWindow"><td class="memItemLeft" align="right" valign="top"><a id="a31fa7835854c7b0cdbbf265811569810"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>setTitle</b> (std::string &amp;&amp;windowTitle)</td></tr>
 <tr class="separator:a31fa7835854c7b0cdbbf265811569810 inherit pub_methods_classgBaseWindow"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad3f36fd4dc7fa16d4e7cedca127c50ac inherit pub_methods_classgBaseWindow"><td class="memItemLeft" align="right" valign="top">const std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBaseWindow.html#ad3f36fd4dc7fa16d4e7cedca127c50ac">getTitle</a> () const</td></tr>
-<tr class="separator:ad3f36fd4dc7fa16d4e7cedca127c50ac inherit pub_methods_classgBaseWindow"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa71a0584112d2cba9440bf50e57e37e5 inherit pub_methods_classgBaseWindow"><td class="memItemLeft" align="right" valign="top"><a id="aa71a0584112d2cba9440bf50e57e37e5"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>onCharEvent</b> (unsigned int key)</td></tr>
-<tr class="separator:aa71a0584112d2cba9440bf50e57e37e5 inherit pub_methods_classgBaseWindow"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9579f055922c569a017de9292c265a8d inherit pub_methods_classgBaseWindow"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBaseWindow.html#a9579f055922c569a017de9292c265a8d">onKeyEvent</a> (int key, int action)</td></tr>
-<tr class="separator:a9579f055922c569a017de9292c265a8d inherit pub_methods_classgBaseWindow"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a933a2b6833aa75127dabb11c89d189fe inherit pub_methods_classgBaseWindow"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBaseWindow.html#a933a2b6833aa75127dabb11c89d189fe">onMouseMoveEvent</a> (double xpos, double ypos)</td></tr>
-<tr class="separator:a933a2b6833aa75127dabb11c89d189fe inherit pub_methods_classgBaseWindow"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af44954b45d925f739d729012635de066 inherit pub_methods_classgBaseWindow"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBaseWindow.html#af44954b45d925f739d729012635de066">onMouseButtonEvent</a> (int button, int action, double xpos, double ypos)</td></tr>
-<tr class="separator:af44954b45d925f739d729012635de066 inherit pub_methods_classgBaseWindow"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a41a8edeeab051664a146cd44ce37776a inherit pub_methods_classgBaseWindow"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBaseWindow.html#a41a8edeeab051664a146cd44ce37776a">onMouseEnterEvent</a> (int entered)</td></tr>
-<tr class="separator:a41a8edeeab051664a146cd44ce37776a inherit pub_methods_classgBaseWindow"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afa75cd9d2a393032ee11695a6bf38ceb inherit pub_methods_classgBaseWindow"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBaseWindow.html#afa75cd9d2a393032ee11695a6bf38ceb">onMouseScrollEvent</a> (double xoffset, double yoffset)</td></tr>
-<tr class="separator:afa75cd9d2a393032ee11695a6bf38ceb inherit pub_methods_classgBaseWindow"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae59f2d7a449b9f9f7100d506bb3693a8 inherit pub_methods_classgBaseWindow"><td class="memItemLeft" align="right" valign="top"><a id="ae59f2d7a449b9f9f7100d506bb3693a8"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>onWindowFocus</b> (bool isFocused)</td></tr>
-<tr class="separator:ae59f2d7a449b9f9f7100d506bb3693a8 inherit pub_methods_classgBaseWindow"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aeedc68c5e9bb21b1302ef138116329dc inherit pub_methods_classgBaseWindow"><td class="memItemLeft" align="right" valign="top"><a id="aeedc68c5e9bb21b1302ef138116329dc"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>onJoystickConnected</b> (int jid, bool isGamepad, bool isConnected)</td></tr>
-<tr class="separator:aeedc68c5e9bb21b1302ef138116329dc inherit pub_methods_classgBaseWindow"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0196c2e13e4facd95d6d52b76402f099 inherit pub_methods_classgBaseWindow"><td class="memItemLeft" align="right" valign="top">const std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBaseWindow.html#a0196c2e13e4facd95d6d52b76402f099">getTitle</a> ()</td></tr>
+<tr class="separator:a0196c2e13e4facd95d6d52b76402f099 inherit pub_methods_classgBaseWindow"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classgObject"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classgObject')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classgObject.html">gObject</a></td></tr>
 <tr class="memitem:a03b1c7b33a01c762a726c152c11a0fa9 inherit pub_methods_classgObject"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgObject.html#a03b1c7b33a01c762a726c152c11a0fa9">logi</a> (std::string message)</td></tr>
 <tr class="separator:a03b1c7b33a01c762a726c152c11a0fa9 inherit pub_methods_classgObject"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -300,43 +299,6 @@ static std::string&#160;</td><td class="memItemRight" valign="bottom"><b>gGetVid
 <tr class="memitem:aaebd7b33318f1c3936706759972f9ba2 inherit pub_static_methods_classgObject"><td class="memItemLeft" align="right" valign="top"><a id="aaebd7b33318f1c3936706759972f9ba2"></a>
 static void&#160;</td><td class="memItemRight" valign="bottom"><b>setCurrentResolution</b> (int scalingNo, int currentResolutionNo)</td></tr>
 <tr class="separator:aaebd7b33318f1c3936706759972f9ba2 inherit pub_static_methods_classgObject"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="inherit_header pub_attribs_classgBaseWindow"><td colspan="2" onclick="javascript:toggleInherit('pub_attribs_classgBaseWindow')"><img src="closed.png" alt="-"/>&#160;Public Attributes inherited from <a class="el" href="classgBaseWindow.html">gBaseWindow</a></td></tr>
-<tr class="memitem:adb2bd91bfc892926354cf8f53aeb9d1e inherit pub_attribs_classgBaseWindow"><td class="memItemLeft" align="right" valign="top"><a id="adb2bd91bfc892926354cf8f53aeb9d1e"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>vsync</b></td></tr>
-<tr class="separator:adb2bd91bfc892926354cf8f53aeb9d1e inherit pub_attribs_classgBaseWindow"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="inherit_header pro_static_methods_classgBaseWindow"><td colspan="2" onclick="javascript:toggleInherit('pro_static_methods_classgBaseWindow')"><img src="closed.png" alt="-"/>&#160;Static Protected Member Functions inherited from <a class="el" href="classgBaseWindow.html">gBaseWindow</a></td></tr>
-<tr class="memitem:aa42637ec4d64bd9033f37fccae125b7d inherit pro_static_methods_classgBaseWindow"><td class="memItemLeft" align="right" valign="top"><a id="aa42637ec4d64bd9033f37fccae125b7d"></a>
-static void&#160;</td><td class="memItemRight" valign="bottom"><b>sighandler</b> (int signum)</td></tr>
-<tr class="separator:aa42637ec4d64bd9033f37fccae125b7d inherit pro_static_methods_classgBaseWindow"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="inherit_header pro_attribs_classgBaseWindow"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_classgBaseWindow')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="classgBaseWindow.html">gBaseWindow</a></td></tr>
-<tr class="memitem:afa9919ed158f8faceec438a82e938f3a inherit pro_attribs_classgBaseWindow"><td class="memItemLeft" align="right" valign="top"><a id="afa9919ed158f8faceec438a82e938f3a"></a>
-<a class="el" href="classgAppManager.html">gAppManager</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>appmanager</b></td></tr>
-<tr class="separator:afa9919ed158f8faceec438a82e938f3a inherit pro_attribs_classgBaseWindow"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a206ee4f6648b38b4aa9fb67c4c74fc2d inherit pro_attribs_classgBaseWindow"><td class="memItemLeft" align="right" valign="top"><a id="a206ee4f6648b38b4aa9fb67c4c74fc2d"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>width</b></td></tr>
-<tr class="separator:a206ee4f6648b38b4aa9fb67c4c74fc2d inherit pro_attribs_classgBaseWindow"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:add8763f7531abd5b8f71ca44a1a51f02 inherit pro_attribs_classgBaseWindow"><td class="memItemLeft" align="right" valign="top"><a id="add8763f7531abd5b8f71ca44a1a51f02"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>height</b></td></tr>
-<tr class="separator:add8763f7531abd5b8f71ca44a1a51f02 inherit pro_attribs_classgBaseWindow"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a55ab15b44c0ed94a7a84f0c986a04353 inherit pro_attribs_classgBaseWindow"><td class="memItemLeft" align="right" valign="top"><a id="a55ab15b44c0ed94a7a84f0c986a04353"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>scalex</b></td></tr>
-<tr class="separator:a55ab15b44c0ed94a7a84f0c986a04353 inherit pro_attribs_classgBaseWindow"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a50d8f283155bdae569f06440c7b872e7 inherit pro_attribs_classgBaseWindow"><td class="memItemLeft" align="right" valign="top"><a id="a50d8f283155bdae569f06440c7b872e7"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>scaley</b></td></tr>
-<tr class="separator:a50d8f283155bdae569f06440c7b872e7 inherit pro_attribs_classgBaseWindow"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7645ae513ebc74f407356cb644a88554 inherit pro_attribs_classgBaseWindow"><td class="memItemLeft" align="right" valign="top"><a id="a7645ae513ebc74f407356cb644a88554"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>windowmode</b></td></tr>
-<tr class="separator:a7645ae513ebc74f407356cb644a88554 inherit pro_attribs_classgBaseWindow"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0c558e1515e06face110080cacf75a1d inherit pro_attribs_classgBaseWindow"><td class="memItemLeft" align="right" valign="top"><a id="a0c558e1515e06face110080cacf75a1d"></a>
-std::string&#160;</td><td class="memItemRight" valign="bottom"><b>title</b></td></tr>
-<tr class="separator:a0c558e1515e06face110080cacf75a1d inherit pro_attribs_classgBaseWindow"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae2edb73b074c387a23f1f11d4013e5d8 inherit pro_attribs_classgBaseWindow"><td class="memItemLeft" align="right" valign="top"><a id="ae2edb73b074c387a23f1f11d4013e5d8"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>isfocused</b></td></tr>
-<tr class="separator:ae2edb73b074c387a23f1f11d4013e5d8 inherit pro_attribs_classgBaseWindow"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="inherit_header pro_static_attribs_classgBaseWindow"><td colspan="2" onclick="javascript:toggleInherit('pro_static_attribs_classgBaseWindow')"><img src="closed.png" alt="-"/>&#160;Static Protected Attributes inherited from <a class="el" href="classgBaseWindow.html">gBaseWindow</a></td></tr>
-<tr class="memitem:a3d432bc656d06824fb6851e8c5b96569 inherit pro_static_attribs_classgBaseWindow"><td class="memItemLeft" align="right" valign="top"><a id="a3d432bc656d06824fb6851e8c5b96569"></a>
-static std::string&#160;</td><td class="memItemRight" valign="bottom"><b>signalname</b> [32]</td></tr>
-<tr class="separator:a3d432bc656d06824fb6851e8c5b96569 inherit pro_static_attribs_classgBaseWindow"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_static_attribs_classgObject"><td colspan="2" onclick="javascript:toggleInherit('pro_static_attribs_classgObject')"><img src="closed.png" alt="-"/>&#160;Static Protected Attributes inherited from <a class="el" href="classgObject.html">gObject</a></td></tr>
 <tr class="memitem:ad65017496d33d18901dd59bd79a993b6 inherit pro_static_attribs_classgObject"><td class="memItemLeft" align="right" valign="top"><a id="ad65017496d33d18901dd59bd79a993b6"></a>
 static int&#160;</td><td class="memItemRight" valign="bottom"><b>renderpassnum</b></td></tr>

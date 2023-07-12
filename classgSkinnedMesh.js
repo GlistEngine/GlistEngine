@@ -20,5 +20,5 @@ var classgSkinnedMesh =
     [ "setVertexNormData", "classgSkinnedMesh.html#a7eaeab4560445b3d9346a3b1532e2986", null ],
     [ "setVertexPos", "classgSkinnedMesh.html#a9180b25260ade056e1335029714cdd92", null ],
     [ "setVertexPosData", "classgSkinnedMesh.html#aa0441d7feb98a6d44b0cd066413765af", null ],
-    [ "setVerticesData", "classgSkinnedMesh.html#a71a438bdb24d54fe5628715f71b21cba", null ]
+    [ "setVerticesData", "classgSkinnedMesh.html#acc29e47c7d8955e6d293b3295289f270", null ]
 ];

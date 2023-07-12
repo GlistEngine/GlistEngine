@@ -57,5 +57,5 @@ var classgModel =
     [ "truck", "classgModel.html#a47b8a9ab9025c504729339ce5f5f2e45", null ],
     [ "directory", "classgModel.html#a132fda4d09c27d33002f710a277e03dc", null ],
     [ "meshes", "classgModel.html#af8bcf250f9bfca4b0162c84af2dc4240", null ],
-    [ "textures_loaded", "classgModel.html#a47a40dd62bc208d67fd18290a77ba715", null ]
+    [ "textures_loaded", "classgModel.html#a474d45544560276725a46b446b693e2c", null ]
 ];

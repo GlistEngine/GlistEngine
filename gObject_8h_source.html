@@ -107,75 +107,76 @@ $(document).ready(function(){initNavTree('gObject_8h_source.html',''); initResiz
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160; </div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="preprocessor">#include &quot;gUtils.h&quot;</span></div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor">#include &lt;cxxabi.h&gt;</span></div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">//#include &quot;gConfig.h&quot;</span></div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">#include &quot;stb/stb_image.h&quot;</span></div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment">//#include &quot;gConfig.h&quot;</span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160; </div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">// TODO Change hardcoded engine path</span></div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment">// Only use this function for development purposes. Never use that within release build.</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="keyword">static</span> std::string gGetEngineDir() {</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    <span class="keywordflow">return</span> <span class="stringliteral">&quot;C:/dev/glist/glistengine/engine/&quot;</span>;</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;}</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160; </div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160; </div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment">// TODO Change hardcoded engine path</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment">// Only use this function for development purposes. Never use that within release build.</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="keyword">static</span> std::string gGetEngineDir() {</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    <span class="keywordflow">return</span> <span class="stringliteral">&quot;C:/dev/glist/glistengine/engine/&quot;</span>;</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;}</div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160; </div>
-<div class="line"><a name="l00032"></a><span class="lineno"><a class="line" href="classgObject.html">   32</a></span>&#160;<span class="keyword">class </span><a class="code" href="classgObject.html">gObject</a> {</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">int</span> LOGLEVEL_SILENT, LOGLEVEL_DEBUG, LOGLEVEL_INFO, LOGLEVEL_WARNING, LOGLEVEL_ERROR;</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160; </div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <a class="code" href="classgObject.html">gObject</a>();</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160; </div>
-<div class="line"><a name="l00043"></a><span class="lineno"><a class="line" href="classgObject.html#a241585065215d0640b48a1d628713067">   43</a></span>&#160;    <span class="keyword">static</span> std::string <a class="code" href="classgObject.html#a241585065215d0640b48a1d628713067">gGetAppDir</a>();</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160; </div>
-<div class="line"><a name="l00050"></a><span class="lineno"><a class="line" href="classgObject.html#a778b2f748bb255bfd9dbadb96dbf55ce">   50</a></span>&#160;    <span class="keyword">static</span> std::string <a class="code" href="classgObject.html#a778b2f748bb255bfd9dbadb96dbf55ce">gGetAssetsDir</a>();</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160; </div>
-<div class="line"><a name="l00064"></a><span class="lineno"><a class="line" href="classgObject.html#a7e6a0411a53e66a8d24c648092db937d">   64</a></span>&#160;    <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="classgObject.html#a7e6a0411a53e66a8d24c648092db937d">gSetAssetsDir</a>(std::string assetsDir);</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160; </div>
-<div class="line"><a name="l00071"></a><span class="lineno"><a class="line" href="classgObject.html#a17a575252922491f9a79469e8b0b4124">   71</a></span>&#160;    <span class="keyword">static</span> std::string <a class="code" href="classgObject.html#a17a575252922491f9a79469e8b0b4124">gGetFilesDir</a>();</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160; </div>
-<div class="line"><a name="l00078"></a><span class="lineno"><a class="line" href="classgObject.html#ae95622cb52ea7326ee3fa0ebed8c2f61">   78</a></span>&#160;    <span class="keyword">static</span> std::string <a class="code" href="classgObject.html#ae95622cb52ea7326ee3fa0ebed8c2f61">gGetImagesDir</a>();</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160; </div>
-<div class="line"><a name="l00085"></a><span class="lineno"><a class="line" href="classgObject.html#aa31bfcd81a439399819458caf0578dac">   85</a></span>&#160;    <span class="keyword">static</span> std::string <a class="code" href="classgObject.html#aa31bfcd81a439399819458caf0578dac">gGetFontsDir</a>();</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160; </div>
-<div class="line"><a name="l00092"></a><span class="lineno"><a class="line" href="classgObject.html#a28906157e6357409f580b287e95a5a66">   92</a></span>&#160;    <span class="keyword">static</span> std::string <a class="code" href="classgObject.html#a28906157e6357409f580b287e95a5a66">gGetModelsDir</a>();</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160; </div>
-<div class="line"><a name="l00099"></a><span class="lineno"><a class="line" href="classgObject.html#a64b2a66fc47b758af148a0decc7e860f">   99</a></span>&#160;    <span class="keyword">static</span> std::string <a class="code" href="classgObject.html#a64b2a66fc47b758af148a0decc7e860f">gGetTexturesDir</a>();</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160; </div>
-<div class="line"><a name="l00106"></a><span class="lineno"><a class="line" href="classgObject.html#a85d59036379f37f0c87f9b9d3a84e539">  106</a></span>&#160;    <span class="keyword">static</span> std::string <a class="code" href="classgObject.html#a85d59036379f37f0c87f9b9d3a84e539">gGetShadersDir</a>();</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160; </div>
-<div class="line"><a name="l00113"></a><span class="lineno"><a class="line" href="classgObject.html#a76fa8093cbfe2935c1b8e76fe88300af">  113</a></span>&#160;    <span class="keyword">static</span> std::string <a class="code" href="classgObject.html#a76fa8093cbfe2935c1b8e76fe88300af">gGetSoundsDir</a>();</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160; </div>
-<div class="line"><a name="l00120"></a><span class="lineno"><a class="line" href="classgObject.html#a39c7994a4be3615acea4ceaa41bc9dfc">  120</a></span>&#160;    <span class="keyword">static</span> std::string <a class="code" href="classgObject.html#a39c7994a4be3615acea4ceaa41bc9dfc">gGetDatabasesDir</a>();</div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;    <span class="keyword">static</span> std::string gGetVideosDir();</div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160; </div>
-<div class="line"><a name="l00129"></a><span class="lineno"><a class="line" href="classgObject.html#a03b1c7b33a01c762a726c152c11a0fa9">  129</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classgObject.html#a03b1c7b33a01c762a726c152c11a0fa9">logi</a>(std::string message);</div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160; </div>
-<div class="line"><a name="l00137"></a><span class="lineno"><a class="line" href="classgObject.html#a92802af1d2172ba4501c38c40ccbed4a">  137</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classgObject.html#a92802af1d2172ba4501c38c40ccbed4a">logd</a>(std::string message);</div>
-<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160; </div>
-<div class="line"><a name="l00145"></a><span class="lineno"><a class="line" href="classgObject.html#afc48ffd17991aeadc5cf1bb38ef89459">  145</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classgObject.html#afc48ffd17991aeadc5cf1bb38ef89459">logw</a>(std::string message);</div>
-<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160; </div>
-<div class="line"><a name="l00154"></a><span class="lineno"><a class="line" href="classgObject.html#a55667d5e42365ab3e637c5630193e713">  154</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classgObject.html#a55667d5e42365ab3e637c5630193e713">loge</a>(std::string message);</div>
-<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160; </div>
-<div class="line"><a name="l00162"></a><span class="lineno"><a class="line" href="classgObject.html#a51fddd4a893cf798c7dd638aab3e6b94">  162</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classgObject.html#a51fddd4a893cf798c7dd638aab3e6b94">logi</a>(std::string tag, std::string message);</div>
-<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160; </div>
-<div class="line"><a name="l00170"></a><span class="lineno"><a class="line" href="classgObject.html#a21dc431930419f68ffa871bc3c42eb52">  170</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classgObject.html#a21dc431930419f68ffa871bc3c42eb52">logd</a>(std::string tag, std::string message);</div>
-<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160; </div>
-<div class="line"><a name="l00178"></a><span class="lineno"><a class="line" href="classgObject.html#abfb3e727e239860e92e52be62b13f87a">  178</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classgObject.html#abfb3e727e239860e92e52be62b13f87a">logw</a>(std::string tag, std::string message);</div>
-<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160; </div>
-<div class="line"><a name="l00187"></a><span class="lineno"><a class="line" href="classgObject.html#aa1eb5154520926fd6228394b47c3a752">  187</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classgObject.html#aa1eb5154520926fd6228394b47c3a752">loge</a>(std::string tag, std::string message);</div>
-<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160; </div>
-<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;    <span class="comment">// For internal access. Do not invoke this function directly</span></div>
-<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;    <span class="keyword">static</span> <span class="keywordtype">void</span> setCurrentResolution(<span class="keywordtype">int</span> scalingNo, <span class="keywordtype">int</span> currentResolutionNo);</div>
-<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160; </div>
-<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;<span class="keyword">protected</span>:</div>
-<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;    <span class="keyword">static</span> <span class="keywordtype">int</span> renderpassnum, renderpassno;</div>
-<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;    <span class="keyword">static</span> <span class="keywordtype">int</span> releasescaling, releaseresolution;</div>
-<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160; </div>
-<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;    <span class="keyword">static</span> std::string exepath;</div>
-<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;    <span class="keyword">static</span> std::string assetsdir;</div>
-<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;};</div>
-<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160; </div>
-<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* ENGINE_BASE_GOBJECT_H_ */</span><span class="preprocessor"></span></div>
-<div class="ttc" id="aclassgObject_html"><div class="ttname"><a href="classgObject.html">gObject</a></div><div class="ttdef"><b>Definition:</b> gObject.h:32</div></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160; </div>
+<div class="line"><a name="l00033"></a><span class="lineno"><a class="line" href="classgObject.html">   33</a></span>&#160;<span class="keyword">class </span><a class="code" href="classgObject.html">gObject</a> {</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">int</span> LOGLEVEL_SILENT, LOGLEVEL_DEBUG, LOGLEVEL_INFO, LOGLEVEL_WARNING, LOGLEVEL_ERROR;</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160; </div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <a class="code" href="classgObject.html">gObject</a>();</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160; </div>
+<div class="line"><a name="l00044"></a><span class="lineno"><a class="line" href="classgObject.html#a241585065215d0640b48a1d628713067">   44</a></span>&#160;    <span class="keyword">static</span> std::string <a class="code" href="classgObject.html#a241585065215d0640b48a1d628713067">gGetAppDir</a>();</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; </div>
+<div class="line"><a name="l00051"></a><span class="lineno"><a class="line" href="classgObject.html#a778b2f748bb255bfd9dbadb96dbf55ce">   51</a></span>&#160;    <span class="keyword">static</span> std::string <a class="code" href="classgObject.html#a778b2f748bb255bfd9dbadb96dbf55ce">gGetAssetsDir</a>();</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160; </div>
+<div class="line"><a name="l00065"></a><span class="lineno"><a class="line" href="classgObject.html#a7e6a0411a53e66a8d24c648092db937d">   65</a></span>&#160;    <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="classgObject.html#a7e6a0411a53e66a8d24c648092db937d">gSetAssetsDir</a>(std::string assetsDir);</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160; </div>
+<div class="line"><a name="l00072"></a><span class="lineno"><a class="line" href="classgObject.html#a17a575252922491f9a79469e8b0b4124">   72</a></span>&#160;    <span class="keyword">static</span> std::string <a class="code" href="classgObject.html#a17a575252922491f9a79469e8b0b4124">gGetFilesDir</a>();</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160; </div>
+<div class="line"><a name="l00079"></a><span class="lineno"><a class="line" href="classgObject.html#ae95622cb52ea7326ee3fa0ebed8c2f61">   79</a></span>&#160;    <span class="keyword">static</span> std::string <a class="code" href="classgObject.html#ae95622cb52ea7326ee3fa0ebed8c2f61">gGetImagesDir</a>();</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160; </div>
+<div class="line"><a name="l00086"></a><span class="lineno"><a class="line" href="classgObject.html#aa31bfcd81a439399819458caf0578dac">   86</a></span>&#160;    <span class="keyword">static</span> std::string <a class="code" href="classgObject.html#aa31bfcd81a439399819458caf0578dac">gGetFontsDir</a>();</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160; </div>
+<div class="line"><a name="l00093"></a><span class="lineno"><a class="line" href="classgObject.html#a28906157e6357409f580b287e95a5a66">   93</a></span>&#160;    <span class="keyword">static</span> std::string <a class="code" href="classgObject.html#a28906157e6357409f580b287e95a5a66">gGetModelsDir</a>();</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160; </div>
+<div class="line"><a name="l00100"></a><span class="lineno"><a class="line" href="classgObject.html#a64b2a66fc47b758af148a0decc7e860f">  100</a></span>&#160;    <span class="keyword">static</span> std::string <a class="code" href="classgObject.html#a64b2a66fc47b758af148a0decc7e860f">gGetTexturesDir</a>();</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160; </div>
+<div class="line"><a name="l00107"></a><span class="lineno"><a class="line" href="classgObject.html#a85d59036379f37f0c87f9b9d3a84e539">  107</a></span>&#160;    <span class="keyword">static</span> std::string <a class="code" href="classgObject.html#a85d59036379f37f0c87f9b9d3a84e539">gGetShadersDir</a>();</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160; </div>
+<div class="line"><a name="l00114"></a><span class="lineno"><a class="line" href="classgObject.html#a76fa8093cbfe2935c1b8e76fe88300af">  114</a></span>&#160;    <span class="keyword">static</span> std::string <a class="code" href="classgObject.html#a76fa8093cbfe2935c1b8e76fe88300af">gGetSoundsDir</a>();</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160; </div>
+<div class="line"><a name="l00121"></a><span class="lineno"><a class="line" href="classgObject.html#a39c7994a4be3615acea4ceaa41bc9dfc">  121</a></span>&#160;    <span class="keyword">static</span> std::string <a class="code" href="classgObject.html#a39c7994a4be3615acea4ceaa41bc9dfc">gGetDatabasesDir</a>();</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;    <span class="keyword">static</span> std::string gGetVideosDir();</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160; </div>
+<div class="line"><a name="l00130"></a><span class="lineno"><a class="line" href="classgObject.html#a03b1c7b33a01c762a726c152c11a0fa9">  130</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classgObject.html#a03b1c7b33a01c762a726c152c11a0fa9">logi</a>(std::string message);</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160; </div>
+<div class="line"><a name="l00138"></a><span class="lineno"><a class="line" href="classgObject.html#a92802af1d2172ba4501c38c40ccbed4a">  138</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classgObject.html#a92802af1d2172ba4501c38c40ccbed4a">logd</a>(std::string message);</div>
+<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160; </div>
+<div class="line"><a name="l00146"></a><span class="lineno"><a class="line" href="classgObject.html#afc48ffd17991aeadc5cf1bb38ef89459">  146</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classgObject.html#afc48ffd17991aeadc5cf1bb38ef89459">logw</a>(std::string message);</div>
+<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160; </div>
+<div class="line"><a name="l00155"></a><span class="lineno"><a class="line" href="classgObject.html#a55667d5e42365ab3e637c5630193e713">  155</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classgObject.html#a55667d5e42365ab3e637c5630193e713">loge</a>(std::string message);</div>
+<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160; </div>
+<div class="line"><a name="l00163"></a><span class="lineno"><a class="line" href="classgObject.html#a51fddd4a893cf798c7dd638aab3e6b94">  163</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classgObject.html#a51fddd4a893cf798c7dd638aab3e6b94">logi</a>(std::string tag, std::string message);</div>
+<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160; </div>
+<div class="line"><a name="l00171"></a><span class="lineno"><a class="line" href="classgObject.html#a21dc431930419f68ffa871bc3c42eb52">  171</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classgObject.html#a21dc431930419f68ffa871bc3c42eb52">logd</a>(std::string tag, std::string message);</div>
+<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160; </div>
+<div class="line"><a name="l00179"></a><span class="lineno"><a class="line" href="classgObject.html#abfb3e727e239860e92e52be62b13f87a">  179</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classgObject.html#abfb3e727e239860e92e52be62b13f87a">logw</a>(std::string tag, std::string message);</div>
+<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160; </div>
+<div class="line"><a name="l00188"></a><span class="lineno"><a class="line" href="classgObject.html#aa1eb5154520926fd6228394b47c3a752">  188</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classgObject.html#aa1eb5154520926fd6228394b47c3a752">loge</a>(std::string tag, std::string message);</div>
+<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160; </div>
+<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;    <span class="comment">// For internal access. Do not invoke this function directly</span></div>
+<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;    <span class="keyword">static</span> <span class="keywordtype">void</span> setCurrentResolution(<span class="keywordtype">int</span> scalingNo, <span class="keywordtype">int</span> currentResolutionNo);</div>
+<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160; </div>
+<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;<span class="keyword">protected</span>:</div>
+<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;    <span class="keyword">static</span> <span class="keywordtype">int</span> renderpassnum, renderpassno;</div>
+<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;    <span class="keyword">static</span> <span class="keywordtype">int</span> releasescaling, releaseresolution;</div>
+<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160; </div>
+<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;    <span class="keyword">static</span> std::string exepath;</div>
+<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;    <span class="keyword">static</span> std::string assetsdir;</div>
+<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;};</div>
+<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160; </div>
+<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* ENGINE_BASE_GOBJECT_H_ */</span><span class="preprocessor"></span></div>
+<div class="ttc" id="aclassgObject_html"><div class="ttname"><a href="classgObject.html">gObject</a></div><div class="ttdef"><b>Definition:</b> gObject.h:33</div></div>
 <div class="ttc" id="aclassgObject_html_a03b1c7b33a01c762a726c152c11a0fa9"><div class="ttname"><a href="classgObject.html#a03b1c7b33a01c762a726c152c11a0fa9">gObject::logi</a></div><div class="ttdeci">void logi(std::string message)</div></div>
 <div class="ttc" id="aclassgObject_html_a17a575252922491f9a79469e8b0b4124"><div class="ttname"><a href="classgObject.html#a17a575252922491f9a79469e8b0b4124">gObject::gGetFilesDir</a></div><div class="ttdeci">static std::string gGetFilesDir()</div></div>
 <div class="ttc" id="aclassgObject_html_a21dc431930419f68ffa871bc3c42eb52"><div class="ttname"><a href="classgObject.html#a21dc431930419f68ffa871bc3c42eb52">gObject::logd</a></div><div class="ttdeci">void logd(std::string tag, std::string message)</div></div>

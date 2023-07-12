@@ -1,5 +1,6 @@
 <map id="gBaseWindow" name="gBaseWindow">
-<area shape="rect" id="node1" title=" " alt="" coords="8,80,123,107"/>
-<area shape="rect" id="node3" href="$classgGLFWWindow.html" title=" " alt="" coords="5,155,125,181"/>
-<area shape="rect" id="node2" href="$classgObject.html" title=" " alt="" coords="29,5,101,32"/>
+<area shape="rect" id="node1" title=" " alt="" coords="89,80,203,107"/>
+<area shape="rect" id="node3" href="$classgAndroidWindow.html" title=" " alt="" coords="5,155,137,181"/>
+<area shape="rect" id="node4" href="$classgGLFWWindow.html" title=" " alt="" coords="162,155,282,181"/>
+<area shape="rect" id="node2" href="$classgObject.html" title=" " alt="" coords="110,5,182,32"/>
 </map>

@@ -116,9 +116,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ad470954f698de7f745232ec259e23f95"><td class="memItemLeft" align="right" valign="top"><a id="ad470954f698de7f745232ec259e23f95"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>setVertexData</b> (<a class="el" href="structgVertex.html">gVertex</a> *vertices, int coordNum, int total)</td></tr>
 <tr class="separator:ad470954f698de7f745232ec259e23f95"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adca0c956f7186f3e75909b539d2e954a"><td class="memItemLeft" align="right" valign="top"><a id="adca0c956f7186f3e75909b539d2e954a"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>setIndexData</b> (unsigned int *indices, int total)</td></tr>
-<tr class="separator:adca0c956f7186f3e75909b539d2e954a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1b4272bd931f4cc5212f3da61d4d4e3e"><td class="memItemLeft" align="right" valign="top"><a id="a1b4272bd931f4cc5212f3da61d4d4e3e"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setIndexData</b> (gIndex *indices, int total)</td></tr>
+<tr class="separator:a1b4272bd931f4cc5212f3da61d4d4e3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abe47346a4ca7a3e4251fffcc2c0b0a07"><td class="memItemLeft" align="right" valign="top"><a id="abe47346a4ca7a3e4251fffcc2c0b0a07"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>clear</b> ()</td></tr>
 <tr class="separator:abe47346a4ca7a3e4251fffcc2c0b0a07"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -185,9 +185,9 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>getVAOid</b> () const<
 <tr class="memitem:af3a7146a8acede0dc199ecd68fd2e353"><td class="memItemLeft" align="right" valign="top"><a id="af3a7146a8acede0dc199ecd68fd2e353"></a>
 <a class="el" href="structgVertex.html">gVertex</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>getVertices</b> () const</td></tr>
 <tr class="separator:af3a7146a8acede0dc199ecd68fd2e353"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6d29574bd3a594165c37f986338fb7b1"><td class="memItemLeft" align="right" valign="top"><a id="a6d29574bd3a594165c37f986338fb7b1"></a>
-unsigned int *&#160;</td><td class="memItemRight" valign="bottom"><b>getIndices</b> () const</td></tr>
-<tr class="separator:a6d29574bd3a594165c37f986338fb7b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a57f38836bc6a70500b54367ee036caf2"><td class="memItemLeft" align="right" valign="top"><a id="a57f38836bc6a70500b54367ee036caf2"></a>
+gIndex *&#160;</td><td class="memItemRight" valign="bottom"><b>getIndices</b> () const</td></tr>
+<tr class="separator:a57f38836bc6a70500b54367ee036caf2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a54558e4d55a66d2fbe59a9aba2642cb6"><td class="memItemLeft" align="right" valign="top"><a id="a54558e4d55a66d2fbe59a9aba2642cb6"></a>
 int&#160;</td><td class="memItemRight" valign="bottom"><b>getVerticesNum</b> () const</td></tr>
 <tr class="separator:a54558e4d55a66d2fbe59a9aba2642cb6"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -249,6 +249,12 @@ static bool&#160;</td><td class="memItemRight" valign="bottom"><b>isShadowMappin
 <tr class="memitem:a71eb1d3005af34cb48b0d046f1dbfece inherit pub_static_methods_classgRenderObject"><td class="memItemLeft" align="right" valign="top"><a id="a71eb1d3005af34cb48b0d046f1dbfece"></a>
 static <a class="el" href="classgRenderer.html">gRenderer</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>getRenderer</b> ()</td></tr>
 <tr class="separator:a71eb1d3005af34cb48b0d046f1dbfece inherit pub_static_methods_classgRenderObject"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac9f891754643559fc81d22f0b9341452 inherit pub_static_methods_classgRenderObject"><td class="memItemLeft" align="right" valign="top"><a id="ac9f891754643559fc81d22f0b9341452"></a>
+static void&#160;</td><td class="memItemRight" valign="bottom"><b>destroyRenderer</b> ()</td></tr>
+<tr class="separator:ac9f891754643559fc81d22f0b9341452 inherit pub_static_methods_classgRenderObject"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a00da65160d49ebab7b9fd9d5cdb2a823 inherit pub_static_methods_classgRenderObject"><td class="memItemLeft" align="right" valign="top"><a id="a00da65160d49ebab7b9fd9d5cdb2a823"></a>
+static void&#160;</td><td class="memItemRight" valign="bottom"><b>createRenderer</b> ()</td></tr>
+<tr class="separator:a00da65160d49ebab7b9fd9d5cdb2a823 inherit pub_static_methods_classgRenderObject"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_static_methods_classgObject"><td colspan="2" onclick="javascript:toggleInherit('pub_static_methods_classgObject')"><img src="closed.png" alt="-"/>&#160;Static Public Member Functions inherited from <a class="el" href="classgObject.html">gObject</a></td></tr>
 <tr class="memitem:a241585065215d0640b48a1d628713067 inherit pub_static_methods_classgObject"><td class="memItemLeft" align="right" valign="top">static std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgObject.html#a241585065215d0640b48a1d628713067">gGetAppDir</a> ()</td></tr>
 <tr class="separator:a241585065215d0640b48a1d628713067 inherit pub_static_methods_classgObject"><td class="memSeparator" colspan="2">&#160;</td></tr>

@@ -109,10 +109,9 @@ Collaboration diagram for gBaseCanvas:</div>
 <map name="agBaseCanvas_coll__map" id="agBaseCanvas_coll__map">
 <area shape="rect" title=" " alt="" coords="72,260,183,287"/>
 <area shape="rect" href="classgRenderObject.html" title=" " alt="" coords="5,171,124,197"/>
-<area shape="rect" href="classgObject.html" title=" " alt="" coords="71,5,143,32"/>
-<area shape="rect" href="classgRenderer.html" title=" " alt="" coords="25,81,115,108"/>
-<area shape="rect" href="classgAppObject.html" title=" " alt="" coords="139,81,236,108"/>
-<area shape="rect" href="classgAppManager.html" title=" " alt="" coords="261,81,373,108"/>
+<area shape="rect" href="classgObject.html" title=" " alt="" coords="38,5,110,32"/>
+<area shape="rect" href="classgRenderer.html" title=" " alt="" coords="29,81,119,108"/>
+<area shape="rect" href="classgAppObject.html" title=" " alt="" coords="143,81,240,108"/>
 <area shape="rect" href="classgBaseApp.html" title=" " alt="" coords="148,171,235,197"/>
 </map>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
@@ -164,18 +163,21 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>mouseExited</
 <tr class="memitem:a8e799f1555f6fba10472a4d62c71d7e2"><td class="memItemLeft" align="right" valign="top"><a id="a8e799f1555f6fba10472a4d62c71d7e2"></a>
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>windowResized</b> (int w, int h)</td></tr>
 <tr class="separator:a8e799f1555f6fba10472a4d62c71d7e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac6d0d676416d7ca9a756c1f3d207d31e"><td class="memItemLeft" align="right" valign="top"><a id="ac6d0d676416d7ca9a756c1f3d207d31e"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>joystickConnected</b> (int jId, bool isGamepad, bool isConnected)</td></tr>
-<tr class="separator:ac6d0d676416d7ca9a756c1f3d207d31e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a485a2e2bc186e08e73eaa792671750d9"><td class="memItemLeft" align="right" valign="top"><a id="a485a2e2bc186e08e73eaa792671750d9"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>gamepadButtonPressed</b> (int jId, int key)</td></tr>
-<tr class="separator:a485a2e2bc186e08e73eaa792671750d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a49d5f3b60906bbde154f13b4c0c787a9"><td class="memItemLeft" align="right" valign="top"><a id="a49d5f3b60906bbde154f13b4c0c787a9"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>gamepadButtonReleased</b> (int jId, int key)</td></tr>
-<tr class="separator:a49d5f3b60906bbde154f13b4c0c787a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a523f63e59258e4ff02d9000ed2342362"><td class="memItemLeft" align="right" valign="top"><a id="a523f63e59258e4ff02d9000ed2342362"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>joystickConnected</b> (int joystickId, bool isGamepad, bool isConnected)</td></tr>
+<tr class="separator:a523f63e59258e4ff02d9000ed2342362"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2539daeec970c33d0d7f9e35f379f7f3"><td class="memItemLeft" align="right" valign="top"><a id="a2539daeec970c33d0d7f9e35f379f7f3"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>gamepadButtonPressed</b> (int joystickId, int key)</td></tr>
+<tr class="separator:a2539daeec970c33d0d7f9e35f379f7f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2b83f30321c12a749c0f81b8922cfbb5"><td class="memItemLeft" align="right" valign="top"><a id="a2b83f30321c12a749c0f81b8922cfbb5"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>gamepadButtonReleased</b> (int joystickId, int key)</td></tr>
+<tr class="separator:a2b83f30321c12a749c0f81b8922cfbb5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a286c57483068857371425641c263de30"><td class="memItemLeft" align="right" valign="top"><a id="a286c57483068857371425641c263de30"></a>
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>onGuiEvent</b> (int guiObjectId, int eventType, std::string value1=&quot;&quot;, std::string value2=&quot;&quot;)</td></tr>
 <tr class="separator:a286c57483068857371425641c263de30"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a11604b1c043f581e96dfa2a16a022f34"><td class="memItemLeft" align="right" valign="top"><a id="a11604b1c043f581e96dfa2a16a022f34"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>onEvent</b> (<a class="el" href="classgEvent.html">gEvent</a> &amp;event)</td></tr>
+<tr class="separator:a11604b1c043f581e96dfa2a16a022f34"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9e66459d771a1d7071e1da53749967a2"><td class="memItemLeft" align="right" valign="top"><a id="a9e66459d771a1d7071e1da53749967a2"></a>
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>showNotify</b> ()</td></tr>
 <tr class="separator:a9e66459d771a1d7071e1da53749967a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -426,12 +428,12 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>isGridYZEnabled</b> (
 <tr class="memitem:a0e5934ec587406da673966bbdf077df7"><td class="memItemLeft" align="right" valign="top"><a id="a0e5934ec587406da673966bbdf077df7"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>isGridXZEnabled</b> ()</td></tr>
 <tr class="separator:a0e5934ec587406da673966bbdf077df7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1a4915828f66c051622fe91984f23703"><td class="memItemLeft" align="right" valign="top"><a id="a1a4915828f66c051622fe91984f23703"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>isJoystickConnected</b> (int jId)</td></tr>
-<tr class="separator:a1a4915828f66c051622fe91984f23703"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a567407a22f71e860a4ce8f17009829e9"><td class="memItemLeft" align="right" valign="top"><a id="a567407a22f71e860a4ce8f17009829e9"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>isGamepadButtonPressed</b> (int gamepadId, int buttonId)</td></tr>
-<tr class="separator:a567407a22f71e860a4ce8f17009829e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a61830270b03e009eb8d1a1cb89160b34"><td class="memItemLeft" align="right" valign="top"><a id="a61830270b03e009eb8d1a1cb89160b34"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>isJoystickConnected</b> (int joystickId)</td></tr>
+<tr class="separator:a61830270b03e009eb8d1a1cb89160b34"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab96fbbb04a39dd9f5186e6e62c4abd06"><td class="memItemLeft" align="right" valign="top"><a id="ab96fbbb04a39dd9f5186e6e62c4abd06"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>isGamepadButtonPressed</b> (int joystickId, int buttonId)</td></tr>
+<tr class="separator:ab96fbbb04a39dd9f5186e6e62c4abd06"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
@@ -463,6 +465,12 @@ static bool&#160;</td><td class="memItemRight" valign="bottom"><b>isShadowMappin
 <tr class="memitem:a71eb1d3005af34cb48b0d046f1dbfece inherit pub_static_methods_classgRenderObject"><td class="memItemLeft" align="right" valign="top"><a id="a71eb1d3005af34cb48b0d046f1dbfece"></a>
 static <a class="el" href="classgRenderer.html">gRenderer</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>getRenderer</b> ()</td></tr>
 <tr class="separator:a71eb1d3005af34cb48b0d046f1dbfece inherit pub_static_methods_classgRenderObject"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac9f891754643559fc81d22f0b9341452 inherit pub_static_methods_classgRenderObject"><td class="memItemLeft" align="right" valign="top"><a id="ac9f891754643559fc81d22f0b9341452"></a>
+static void&#160;</td><td class="memItemRight" valign="bottom"><b>destroyRenderer</b> ()</td></tr>
+<tr class="separator:ac9f891754643559fc81d22f0b9341452 inherit pub_static_methods_classgRenderObject"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a00da65160d49ebab7b9fd9d5cdb2a823 inherit pub_static_methods_classgRenderObject"><td class="memItemLeft" align="right" valign="top"><a id="a00da65160d49ebab7b9fd9d5cdb2a823"></a>
+static void&#160;</td><td class="memItemRight" valign="bottom"><b>createRenderer</b> ()</td></tr>
+<tr class="separator:a00da65160d49ebab7b9fd9d5cdb2a823 inherit pub_static_methods_classgRenderObject"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_static_methods_classgObject"><td colspan="2" onclick="javascript:toggleInherit('pub_static_methods_classgObject')"><img src="closed.png" alt="-"/>&#160;Static Public Member Functions inherited from <a class="el" href="classgObject.html">gObject</a></td></tr>
 <tr class="memitem:a241585065215d0640b48a1d628713067 inherit pub_static_methods_classgObject"><td class="memItemLeft" align="right" valign="top">static std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgObject.html#a241585065215d0640b48a1d628713067">gGetAppDir</a> ()</td></tr>
 <tr class="separator:a241585065215d0640b48a1d628713067 inherit pub_static_methods_classgObject"><td class="memSeparator" colspan="2">&#160;</td></tr>

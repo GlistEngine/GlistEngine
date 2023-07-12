@@ -84,11 +84,7 @@ $(document).ready(function(){initNavTree('classgBaseWindow.html',''); initResiza
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="#pub-static-attribs">Static Public Attributes</a> &#124;
-<a href="#pro-static-methods">Static Protected Member Functions</a> &#124;
-<a href="#pro-attribs">Protected Attributes</a> &#124;
-<a href="#pro-static-attribs">Static Protected Attributes</a> &#124;
 <a href="classgBaseWindow-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">gBaseWindow Class Reference</div>  </div>
@@ -101,9 +97,10 @@ Inheritance diagram for gBaseWindow:</div>
 <div class="dyncontent">
 <div class="center"><img src="classgBaseWindow__inherit__graph.png" border="0" usemap="#agBaseWindow_inherit__map" alt="Inheritance graph"/></div>
 <map name="agBaseWindow_inherit__map" id="agBaseWindow_inherit__map">
-<area shape="rect" title=" " alt="" coords="8,80,123,107"/>
-<area shape="rect" href="classgGLFWWindow.html" title=" " alt="" coords="5,155,125,181"/>
-<area shape="rect" href="classgObject.html" title=" " alt="" coords="29,5,101,32"/>
+<area shape="rect" title=" " alt="" coords="89,80,203,107"/>
+<area shape="rect" href="classgAndroidWindow.html" title=" " alt="" coords="5,155,137,181"/>
+<area shape="rect" href="classgGLFWWindow.html" title=" " alt="" coords="162,155,282,181"/>
+<area shape="rect" href="classgObject.html" title=" " alt="" coords="110,5,182,32"/>
 </map>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <div class="dynheader">
@@ -111,21 +108,21 @@ Collaboration diagram for gBaseWindow:</div>
 <div class="dyncontent">
 <div class="center"><img src="classgBaseWindow__coll__graph.png" border="0" usemap="#agBaseWindow_coll__map" alt="Collaboration graph"/></div>
 <map name="agBaseWindow_coll__map" id="agBaseWindow_coll__map">
-<area shape="rect" title=" " alt="" coords="5,171,120,197"/>
-<area shape="rect" href="classgObject.html" title=" " alt="" coords="21,5,93,32"/>
-<area shape="rect" href="classgAppManager.html" title=" " alt="" coords="79,81,191,108"/>
+<area shape="rect" title=" " alt="" coords="5,80,120,107"/>
+<area shape="rect" href="classgObject.html" title=" " alt="" coords="27,5,99,32"/>
 </map>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:abf7a02775e4011366dbaf8f4f6d0269c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBaseWindow.html#abf7a02775e4011366dbaf8f4f6d0269c">setAppManager</a> (<a class="el" href="classgAppManager.html">gAppManager</a> *appManager)</td></tr>
-<tr class="separator:abf7a02775e4011366dbaf8f4f6d0269c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad9b39abff15d1ceb60428971f8c78748"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBaseWindow.html#ad9b39abff15d1ceb60428971f8c78748">initialize</a> (int width, int height, int windowMode, bool isResizable)</td></tr>
 <tr class="separator:ad9b39abff15d1ceb60428971f8c78748"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae05b932ac4d6e6c9499911af09fcdfd4"><td class="memItemLeft" align="right" valign="top"><a id="ae05b932ac4d6e6c9499911af09fcdfd4"></a>
 virtual bool&#160;</td><td class="memItemRight" valign="bottom"><b>getShouldClose</b> ()</td></tr>
 <tr class="separator:ae05b932ac4d6e6c9499911af09fcdfd4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae2126f9457a55ad769121413acc7a7f1"><td class="memItemLeft" align="right" valign="top"><a id="ae2126f9457a55ad769121413acc7a7f1"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>isRendering</b> ()</td></tr>
+<tr class="separator:ae2126f9457a55ad769121413acc7a7f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7ce6fc79d7fdadd40181156614b83b7e"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBaseWindow.html#a7ce6fc79d7fdadd40181156614b83b7e">update</a> ()</td></tr>
 <tr class="separator:a7ce6fc79d7fdadd40181156614b83b7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4f01bf13a831462ad7c13cc8e542b45b"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBaseWindow.html#a4f01bf13a831462ad7c13cc8e542b45b">close</a> ()</td></tr>
@@ -133,9 +130,18 @@ virtual bool&#160;</td><td class="memItemRight" valign="bottom"><b>getShouldClos
 <tr class="memitem:a6bb62d9f5c2ecce6532a42dc62e580fa"><td class="memItemLeft" align="right" valign="top"><a id="a6bb62d9f5c2ecce6532a42dc62e580fa"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>isVsyncEnabled</b> ()</td></tr>
 <tr class="separator:a6bb62d9f5c2ecce6532a42dc62e580fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a29c178392965e0c0b3e7877a9ffabf54"><td class="memItemLeft" align="right" valign="top"><a id="a29c178392965e0c0b3e7877a9ffabf54"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>enableVsync</b> (bool vsync)</td></tr>
-<tr class="separator:a29c178392965e0c0b3e7877a9ffabf54"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af4c9f98c827b64968159c2335231c7c2"><td class="memItemLeft" align="right" valign="top"><a id="af4c9f98c827b64968159c2335231c7c2"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>setVsync</b> (bool vsync)</td></tr>
+<tr class="separator:af4c9f98c827b64968159c2335231c7c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a17c4bec808328c76195f2f61dfc05c06"><td class="memItemLeft" align="right" valign="top"><a id="a17c4bec808328c76195f2f61dfc05c06"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>enableVsync</b> ()</td></tr>
+<tr class="separator:a17c4bec808328c76195f2f61dfc05c06"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a919c57c2696bb89499653c80ceefa90c"><td class="memItemLeft" align="right" valign="top"><a id="a919c57c2696bb89499653c80ceefa90c"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>enableVsync</b> (bool vsync)</td></tr>
+<tr class="separator:a919c57c2696bb89499653c80ceefa90c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8a271b838dbb0c8f9c099f9374ffd4aa"><td class="memItemLeft" align="right" valign="top"><a id="a8a271b838dbb0c8f9c099f9374ffd4aa"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>disableVsync</b> ()</td></tr>
+<tr class="separator:a8a271b838dbb0c8f9c099f9374ffd4aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a90c1c59b15e4f55d0cdd484d33f30d2e"><td class="memItemLeft" align="right" valign="top"><a id="a90c1c59b15e4f55d0cdd484d33f30d2e"></a>
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>setCursor</b> (int cursorNo)</td></tr>
 <tr class="separator:a90c1c59b15e4f55d0cdd484d33f30d2e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -162,27 +168,8 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>setWindowSize
 <tr class="memitem:a31fa7835854c7b0cdbbf265811569810"><td class="memItemLeft" align="right" valign="top"><a id="a31fa7835854c7b0cdbbf265811569810"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>setTitle</b> (std::string &amp;&amp;windowTitle)</td></tr>
 <tr class="separator:a31fa7835854c7b0cdbbf265811569810"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad3f36fd4dc7fa16d4e7cedca127c50ac"><td class="memItemLeft" align="right" valign="top">const std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBaseWindow.html#ad3f36fd4dc7fa16d4e7cedca127c50ac">getTitle</a> () const</td></tr>
-<tr class="separator:ad3f36fd4dc7fa16d4e7cedca127c50ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa71a0584112d2cba9440bf50e57e37e5"><td class="memItemLeft" align="right" valign="top"><a id="aa71a0584112d2cba9440bf50e57e37e5"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>onCharEvent</b> (unsigned int key)</td></tr>
-<tr class="separator:aa71a0584112d2cba9440bf50e57e37e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9579f055922c569a017de9292c265a8d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBaseWindow.html#a9579f055922c569a017de9292c265a8d">onKeyEvent</a> (int key, int action)</td></tr>
-<tr class="separator:a9579f055922c569a017de9292c265a8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a933a2b6833aa75127dabb11c89d189fe"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBaseWindow.html#a933a2b6833aa75127dabb11c89d189fe">onMouseMoveEvent</a> (double xpos, double ypos)</td></tr>
-<tr class="separator:a933a2b6833aa75127dabb11c89d189fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af44954b45d925f739d729012635de066"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBaseWindow.html#af44954b45d925f739d729012635de066">onMouseButtonEvent</a> (int button, int action, double xpos, double ypos)</td></tr>
-<tr class="separator:af44954b45d925f739d729012635de066"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a41a8edeeab051664a146cd44ce37776a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBaseWindow.html#a41a8edeeab051664a146cd44ce37776a">onMouseEnterEvent</a> (int entered)</td></tr>
-<tr class="separator:a41a8edeeab051664a146cd44ce37776a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afa75cd9d2a393032ee11695a6bf38ceb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBaseWindow.html#afa75cd9d2a393032ee11695a6bf38ceb">onMouseScrollEvent</a> (double xoffset, double yoffset)</td></tr>
-<tr class="separator:afa75cd9d2a393032ee11695a6bf38ceb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae59f2d7a449b9f9f7100d506bb3693a8"><td class="memItemLeft" align="right" valign="top"><a id="ae59f2d7a449b9f9f7100d506bb3693a8"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>onWindowFocus</b> (bool isFocused)</td></tr>
-<tr class="separator:ae59f2d7a449b9f9f7100d506bb3693a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aeedc68c5e9bb21b1302ef138116329dc"><td class="memItemLeft" align="right" valign="top"><a id="aeedc68c5e9bb21b1302ef138116329dc"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>onJoystickConnected</b> (int jid, bool isGamepad, bool isConnected)</td></tr>
-<tr class="separator:aeedc68c5e9bb21b1302ef138116329dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0196c2e13e4facd95d6d52b76402f099"><td class="memItemLeft" align="right" valign="top">const std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBaseWindow.html#a0196c2e13e4facd95d6d52b76402f099">getTitle</a> ()</td></tr>
+<tr class="separator:a0196c2e13e4facd95d6d52b76402f099"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7a630098e306f9e43593694eb28d3a9e"><td class="memItemLeft" align="right" valign="top"><a id="a7a630098e306f9e43593694eb28d3a9e"></a>
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>setWindowResizable</b> (bool isResizable)</td></tr>
 <tr class="separator:a7a630098e306f9e43593694eb28d3a9e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -206,12 +193,6 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>setWindowSize
 <tr class="separator:abfb3e727e239860e92e52be62b13f87a inherit pub_methods_classgObject"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa1eb5154520926fd6228394b47c3a752 inherit pub_methods_classgObject"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgObject.html#aa1eb5154520926fd6228394b47c3a752">loge</a> (std::string tag, std::string message)</td></tr>
 <tr class="separator:aa1eb5154520926fd6228394b47c3a752 inherit pub_methods_classgObject"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
-Public Attributes</h2></td></tr>
-<tr class="memitem:adb2bd91bfc892926354cf8f53aeb9d1e"><td class="memItemLeft" align="right" valign="top"><a id="adb2bd91bfc892926354cf8f53aeb9d1e"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>vsync</b></td></tr>
-<tr class="separator:adb2bd91bfc892926354cf8f53aeb9d1e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
@@ -268,58 +249,6 @@ static const int&#160;</td><td class="memItemRight" valign="bottom"><b>LOGLEVEL_
 static const int&#160;</td><td class="memItemRight" valign="bottom"><b>LOGLEVEL_ERROR</b></td></tr>
 <tr class="separator:a2e7e512031a455faf43eb905a1e1b67e inherit pub_static_attribs_classgObject"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-static-methods"></a>
-Static Protected Member Functions</h2></td></tr>
-<tr class="memitem:aa42637ec4d64bd9033f37fccae125b7d"><td class="memItemLeft" align="right" valign="top"><a id="aa42637ec4d64bd9033f37fccae125b7d"></a>
-static void&#160;</td><td class="memItemRight" valign="bottom"><b>sighandler</b> (int signum)</td></tr>
-<tr class="separator:aa42637ec4d64bd9033f37fccae125b7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
-Protected Attributes</h2></td></tr>
-<tr class="memitem:afa9919ed158f8faceec438a82e938f3a"><td class="memItemLeft" align="right" valign="top"><a id="afa9919ed158f8faceec438a82e938f3a"></a>
-<a class="el" href="classgAppManager.html">gAppManager</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>appmanager</b></td></tr>
-<tr class="separator:afa9919ed158f8faceec438a82e938f3a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a206ee4f6648b38b4aa9fb67c4c74fc2d"><td class="memItemLeft" align="right" valign="top"><a id="a206ee4f6648b38b4aa9fb67c4c74fc2d"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>width</b></td></tr>
-<tr class="separator:a206ee4f6648b38b4aa9fb67c4c74fc2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:add8763f7531abd5b8f71ca44a1a51f02"><td class="memItemLeft" align="right" valign="top"><a id="add8763f7531abd5b8f71ca44a1a51f02"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>height</b></td></tr>
-<tr class="separator:add8763f7531abd5b8f71ca44a1a51f02"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a55ab15b44c0ed94a7a84f0c986a04353"><td class="memItemLeft" align="right" valign="top"><a id="a55ab15b44c0ed94a7a84f0c986a04353"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>scalex</b></td></tr>
-<tr class="separator:a55ab15b44c0ed94a7a84f0c986a04353"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a50d8f283155bdae569f06440c7b872e7"><td class="memItemLeft" align="right" valign="top"><a id="a50d8f283155bdae569f06440c7b872e7"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>scaley</b></td></tr>
-<tr class="separator:a50d8f283155bdae569f06440c7b872e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7645ae513ebc74f407356cb644a88554"><td class="memItemLeft" align="right" valign="top"><a id="a7645ae513ebc74f407356cb644a88554"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>windowmode</b></td></tr>
-<tr class="separator:a7645ae513ebc74f407356cb644a88554"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0c558e1515e06face110080cacf75a1d"><td class="memItemLeft" align="right" valign="top"><a id="a0c558e1515e06face110080cacf75a1d"></a>
-std::string&#160;</td><td class="memItemRight" valign="bottom"><b>title</b></td></tr>
-<tr class="separator:a0c558e1515e06face110080cacf75a1d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae2edb73b074c387a23f1f11d4013e5d8"><td class="memItemLeft" align="right" valign="top"><a id="ae2edb73b074c387a23f1f11d4013e5d8"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>isfocused</b></td></tr>
-<tr class="separator:ae2edb73b074c387a23f1f11d4013e5d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-static-attribs"></a>
-Static Protected Attributes</h2></td></tr>
-<tr class="memitem:a3d432bc656d06824fb6851e8c5b96569"><td class="memItemLeft" align="right" valign="top"><a id="a3d432bc656d06824fb6851e8c5b96569"></a>
-static std::string&#160;</td><td class="memItemRight" valign="bottom"><b>signalname</b> [32]</td></tr>
-<tr class="separator:a3d432bc656d06824fb6851e8c5b96569"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="inherit_header pro_static_attribs_classgObject"><td colspan="2" onclick="javascript:toggleInherit('pro_static_attribs_classgObject')"><img src="closed.png" alt="-"/>&#160;Static Protected Attributes inherited from <a class="el" href="classgObject.html">gObject</a></td></tr>
-<tr class="memitem:ad65017496d33d18901dd59bd79a993b6 inherit pro_static_attribs_classgObject"><td class="memItemLeft" align="right" valign="top"><a id="ad65017496d33d18901dd59bd79a993b6"></a>
-static int&#160;</td><td class="memItemRight" valign="bottom"><b>renderpassnum</b></td></tr>
-<tr class="separator:ad65017496d33d18901dd59bd79a993b6 inherit pro_static_attribs_classgObject"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa7c8342e855f939d0cbd171901e98393 inherit pro_static_attribs_classgObject"><td class="memItemLeft" align="right" valign="top"><a id="aa7c8342e855f939d0cbd171901e98393"></a>
-static int&#160;</td><td class="memItemRight" valign="bottom"><b>renderpassno</b></td></tr>
-<tr class="separator:aa7c8342e855f939d0cbd171901e98393 inherit pro_static_attribs_classgObject"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7dfc6fad4f74ef8c294aecd3c97c4228 inherit pro_static_attribs_classgObject"><td class="memItemLeft" align="right" valign="top"><a id="a7dfc6fad4f74ef8c294aecd3c97c4228"></a>
-static int&#160;</td><td class="memItemRight" valign="bottom"><b>releasescaling</b></td></tr>
-<tr class="separator:a7dfc6fad4f74ef8c294aecd3c97c4228 inherit pro_static_attribs_classgObject"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9a7e5f300e8e38ad6f0beb85ad840c52 inherit pro_static_attribs_classgObject"><td class="memItemLeft" align="right" valign="top"><a id="a9a7e5f300e8e38ad6f0beb85ad840c52"></a>
-static int&#160;</td><td class="memItemRight" valign="bottom"><b>releaseresolution</b></td></tr>
-<tr class="separator:a9a7e5f300e8e38ad6f0beb85ad840c52 inherit pro_static_attribs_classgObject"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
 <tr class="inherit_header pub_static_methods_classgObject"><td colspan="2" onclick="javascript:toggleInherit('pub_static_methods_classgObject')"><img src="closed.png" alt="-"/>&#160;Static Public Member Functions inherited from <a class="el" href="classgObject.html">gObject</a></td></tr>
@@ -351,6 +280,19 @@ static std::string&#160;</td><td class="memItemRight" valign="bottom"><b>gGetVid
 <tr class="memitem:aaebd7b33318f1c3936706759972f9ba2 inherit pub_static_methods_classgObject"><td class="memItemLeft" align="right" valign="top"><a id="aaebd7b33318f1c3936706759972f9ba2"></a>
 static void&#160;</td><td class="memItemRight" valign="bottom"><b>setCurrentResolution</b> (int scalingNo, int currentResolutionNo)</td></tr>
 <tr class="separator:aaebd7b33318f1c3936706759972f9ba2 inherit pub_static_methods_classgObject"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pro_static_attribs_classgObject"><td colspan="2" onclick="javascript:toggleInherit('pro_static_attribs_classgObject')"><img src="closed.png" alt="-"/>&#160;Static Protected Attributes inherited from <a class="el" href="classgObject.html">gObject</a></td></tr>
+<tr class="memitem:ad65017496d33d18901dd59bd79a993b6 inherit pro_static_attribs_classgObject"><td class="memItemLeft" align="right" valign="top"><a id="ad65017496d33d18901dd59bd79a993b6"></a>
+static int&#160;</td><td class="memItemRight" valign="bottom"><b>renderpassnum</b></td></tr>
+<tr class="separator:ad65017496d33d18901dd59bd79a993b6 inherit pro_static_attribs_classgObject"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa7c8342e855f939d0cbd171901e98393 inherit pro_static_attribs_classgObject"><td class="memItemLeft" align="right" valign="top"><a id="aa7c8342e855f939d0cbd171901e98393"></a>
+static int&#160;</td><td class="memItemRight" valign="bottom"><b>renderpassno</b></td></tr>
+<tr class="separator:aa7c8342e855f939d0cbd171901e98393 inherit pro_static_attribs_classgObject"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7dfc6fad4f74ef8c294aecd3c97c4228 inherit pro_static_attribs_classgObject"><td class="memItemLeft" align="right" valign="top"><a id="a7dfc6fad4f74ef8c294aecd3c97c4228"></a>
+static int&#160;</td><td class="memItemRight" valign="bottom"><b>releasescaling</b></td></tr>
+<tr class="separator:a7dfc6fad4f74ef8c294aecd3c97c4228 inherit pro_static_attribs_classgObject"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9a7e5f300e8e38ad6f0beb85ad840c52 inherit pro_static_attribs_classgObject"><td class="memItemLeft" align="right" valign="top"><a id="a9a7e5f300e8e38ad6f0beb85ad840c52"></a>
+static int&#160;</td><td class="memItemRight" valign="bottom"><b>releaseresolution</b></td></tr>
+<tr class="separator:a9a7e5f300e8e38ad6f0beb85ad840c52 inherit pro_static_attribs_classgObject"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p><a class="el" href="classgBaseWindow.html">gBaseWindow</a>, looks at events for the game window, sets and gets the properties of the game window. It is a base class that's why If who want create window class, have to use this class as parent.</p>
@@ -380,7 +322,7 @@ static void&#160;</td><td class="memItemRight" valign="bottom"><b>setCurrentReso
 </div><div class="memdoc">
 <p>Destroys all remaining windows and cursors, restores any modified gamma ramps and frees any other allocated resources. </p>
 
-<p>Reimplemented in <a class="el" href="classgGLFWWindow.html#acd4fb915673ad68f52190337c25967d8">gGLFWWindow</a>.</p>
+<p>Reimplemented in <a class="el" href="classgGLFWWindow.html#acd4fb915673ad68f52190337c25967d8">gGLFWWindow</a>, and <a class="el" href="classgAndroidWindow.html#a75ccdb140f72366d0037b86ef8f05938">gAndroidWindow</a>.</p>
 
 </div>
 </div>
@@ -403,8 +345,8 @@ static void&#160;</td><td class="memItemRight" valign="bottom"><b>setCurrentReso
 
 </div>
 </div>
-<a id="ad3f36fd4dc7fa16d4e7cedca127c50ac"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad3f36fd4dc7fa16d4e7cedca127c50ac">&#9670;&nbsp;</a></span>getTitle()</h2>
+<a id="a0196c2e13e4facd95d6d52b76402f099"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0196c2e13e4facd95d6d52b76402f099">&#9670;&nbsp;</a></span>getTitle()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -413,7 +355,7 @@ static void&#160;</td><td class="memItemRight" valign="bottom"><b>setCurrentReso
           <td class="memname">const std::string&amp; gBaseWindow::getTitle </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td> const</td>
+          <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -496,230 +438,7 @@ static void&#160;</td><td class="memItemRight" valign="bottom"><b>setCurrentReso
   </dd>
 </dl>
 
-<p>Reimplemented in <a class="el" href="classgGLFWWindow.html#a379c147808dfeeefa7a4f4862803b819">gGLFWWindow</a>.</p>
-
-</div>
-</div>
-<a id="a9579f055922c569a017de9292c265a8d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9579f055922c569a017de9292c265a8d">&#9670;&nbsp;</a></span>onKeyEvent()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void gBaseWindow::onKeyEvent </td>
-          <td>(</td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>key</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>action</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Receives either the keyboard key is pressed, or released. Saves the input of the user. Then later sends this value to keyReleased or keyPressed methods.</p>
-<p>Later on developers can manipulate these methods and process the input of user.</p>
-<p>Graphics Library Framework(GLFW) handles communication with keyboard and OS input.</p>
-<p>Note that this method is implemented to return an integer of the pressed key, developers are encouraged to use onCharEvent method if they want a unicode value return type.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">key</td><td>the value of user's interacted key. </td></tr>
-    <tr><td class="paramname">action</td><td>info of user's action. either the keyboard key is pressed or released. </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a id="af44954b45d925f739d729012635de066"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af44954b45d925f739d729012635de066">&#9670;&nbsp;</a></span>onMouseButtonEvent()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void gBaseWindow::onMouseButtonEvent </td>
-          <td>(</td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>button</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>action</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">double&#160;</td>
-          <td class="paramname"><em>xpos</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">double&#160;</td>
-          <td class="paramname"><em>ypos</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Receives x and y coordinate of the application window's clicked position by user. Either the mouse button is pressed, or released. Saves the input of the user. Then later sends this value to mouseReleased or mousePressed methods.</p>
-<p>Later on developers can manipulate these methods and process the input of user.</p>
-<p>Users should remember that x and y values are returned in window coordinates.</p>
-<p>Graphics Library Framework(GLFW) handles communication with mouse and OS input.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">button</td><td>which button is being interacted. </td></tr>
-    <tr><td class="paramname">action</td><td>info of user's action. either mouse button is pressed or released. </td></tr>
-    <tr><td class="paramname">xpos</td><td>x coordinate of the application window's clicked position. </td></tr>
-    <tr><td class="paramname">ypos</td><td>y coordinate of the application window's clicked position. </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a id="a41a8edeeab051664a146cd44ce37776a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a41a8edeeab051664a146cd44ce37776a">&#9670;&nbsp;</a></span>onMouseEnterEvent()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void gBaseWindow::onMouseEnterEvent </td>
-          <td>(</td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>entered</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Gets the info of user's cursor. Checks if user is currently on the application window or not.</p>
-<p>Then sends this info to mouseEntered and mouseExited methods. Developers can manipulate these methods and process current state. This can be helpful to understand if user is currently on the application tab or borders, continuing the game when user is on the tab, and pausing when is not.</p>
-<p>Graphics Library Framework(GLFW) handles communication with mouse and OS input.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">info</td><td>of user's cursor is either in the boundaries of application window or outside the boundaries. </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a id="a933a2b6833aa75127dabb11c89d189fe"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a933a2b6833aa75127dabb11c89d189fe">&#9670;&nbsp;</a></span>onMouseMoveEvent()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void gBaseWindow::onMouseMoveEvent </td>
-          <td>(</td>
-          <td class="paramtype">double&#160;</td>
-          <td class="paramname"><em>xpos</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">double&#160;</td>
-          <td class="paramname"><em>ypos</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Receives x and y coordinate of the application window's clicked positon by user. Then sends x and y coordinates to mouseMoved method. And in addition sends clicked button value to mouseDragged.</p>
-<p>Later on developers can manipulate these methods and process the input of user.</p>
-<p>Due to the shortcomings of only getting x and y coordinates of mouse, developers are encouraged to use onMouseButtonEvent for getting button info addition to the coordinates.</p>
-<p>Users should remember that x and y values are returned in window coordinates.</p>
-<p>Graphics Library Framework(GLFW) handles communication with mouse and OS input.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">xpos</td><td>x coordinate of the application window's clicked position. </td></tr>
-    <tr><td class="paramname">ypos</td><td>y coordinate of the application window's clicked position. </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a id="afa75cd9d2a393032ee11695a6bf38ceb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afa75cd9d2a393032ee11695a6bf38ceb">&#9670;&nbsp;</a></span>onMouseScrollEvent()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void gBaseWindow::onMouseScrollEvent </td>
-          <td>(</td>
-          <td class="paramtype">double&#160;</td>
-          <td class="paramname"><em>xoffset</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">double&#160;</td>
-          <td class="paramname"><em>yoffset</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Gets the info of user's cursor. Checks if user is currently on the application window or not. Then receives offset values x and y, x for horizontal axis and y for vertical axis. Then sends this values to mouseScrolled method. Developers can manipulate this method and process current state.</p>
-<p>If x value is greater than 0, mouse is being scrolled to the right. If x value is less than 0, mouse is being scrolled to the left.</p>
-<p>If y value is greater than 0, mouse is being scrolled up. If y value is less than 0, mouse is being scrolled down.</p>
-<p>This can be helpful for aim precision, view changing, and smooth controls.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">xoffset</td><td>offset value of x(horizontal) axis. </td></tr>
-    <tr><td class="paramname">yoffset</td><td>offset value of y(vertical) axis. </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a id="abf7a02775e4011366dbaf8f4f6d0269c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abf7a02775e4011366dbaf8f4f6d0269c">&#9670;&nbsp;</a></span>setAppManager()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void gBaseWindow::setAppManager </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="classgAppManager.html">gAppManager</a> *&#160;</td>
-          <td class="paramname"><em>appManager</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Takes the address of the <a class="el" href="classgAppManager.html">gAppManager</a> in RAM and assigns it to the appmanager in the class.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">*appManager</td><td>Get from RAM address. </td></tr>
-  </table>
-  </dd>
-</dl>
+<p>Reimplemented in <a class="el" href="classgGLFWWindow.html#a379c147808dfeeefa7a4f4862803b819">gGLFWWindow</a>, and <a class="el" href="classgAndroidWindow.html#a246e1108eb1ccc39171855deb4b7c5c1">gAndroidWindow</a>.</p>
 
 </div>
 </div>
@@ -808,7 +527,7 @@ static void&#160;</td><td class="memItemRight" valign="bottom"><b>setCurrentReso
 </div><div class="memdoc">
 <p>Performs the said operations at the specified frame rate. </p>
 
-<p>Reimplemented in <a class="el" href="classgGLFWWindow.html#a2480f711c72c0e4f963e70a704bc971f">gGLFWWindow</a>.</p>
+<p>Reimplemented in <a class="el" href="classgGLFWWindow.html#a2480f711c72c0e4f963e70a704bc971f">gGLFWWindow</a>, and <a class="el" href="classgAndroidWindow.html#ae405a311086441a4d85557e9b0889e1c">gAndroidWindow</a>.</p>
 
 </div>
 </div>
