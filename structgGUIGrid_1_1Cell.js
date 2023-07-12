@@ -4,6 +4,7 @@ var structgGUIGrid_1_1Cell =
     [ "cellalignment", "structgGUIGrid_1_1Cell.html#a6cb86904f47ec6d7ca979667167f73c0", null ],
     [ "cellcolumnno", "structgGUIGrid_1_1Cell.html#a4db043fed305b9b99c5b29953fba1aa8", null ],
     [ "cellcontent", "structgGUIGrid_1_1Cell.html#a495f7c4c49788efde21b6148f0413280", null ],
+    [ "cellfontcolor", "structgGUIGrid_1_1Cell.html#ad5802364493e41a13913568baedf35bc", null ],
     [ "cellh", "structgGUIGrid_1_1Cell.html#adbc16a895757c374b3c5c0aae0dd52ac", null ],
     [ "cellrowno", "structgGUIGrid_1_1Cell.html#a3edc08ecd4d0f004cc417dcb28a48ae4", null ],
     [ "celltype", "structgGUIGrid_1_1Cell.html#a7cc4a4e02ee453dec8d85735ae2fb5dd", null ],

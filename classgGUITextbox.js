@@ -37,6 +37,7 @@ var classgGUITextbox =
     [ "setSize", "classgGUITextbox.html#a1daefb94bc10cf5da30e5e6701cadd23", null ],
     [ "setText", "classgGUITextbox.html#a83aa097d46a86437cfd86b7e0aea2892", null ],
     [ "setTextAlignment", "classgGUITextbox.html#ab1231921d8473967a5d8b1e98bc1a9d8", null ],
+    [ "setTextColor", "classgGUITextbox.html#acc76110b3a35af157eaf22975ae717a9", null ],
     [ "setTextFont", "classgGUITextbox.html#ab0581a36f4dab26d7bc11fb02f3dc841", null ],
     [ "update", "classgGUITextbox.html#ac12b4194d9673b4b5811729cb402a379", null ]
 ];
