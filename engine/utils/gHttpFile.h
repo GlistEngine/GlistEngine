@@ -16,8 +16,8 @@
 #include "gFile.h"
 #include "gObject.h"
 
-class gHttpFile: public gObject {
-  public:
+class gHttpFile : public gObject {
+public:
 
 	gHttpFile();
 	virtual ~gHttpFile();
@@ -31,21 +31,21 @@ class gHttpFile: public gObject {
 	std::string getUrl();
 	void save(std::string filepath, bool isBinary = false);
 	std::string getHtml();
-    /**
+	/**
      * @see https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
      *
      * @return HTTP Status code, returns -1 if requests isn't complete yet.
      */
-    int getStatusCode();
+	int getStatusCode();
 	double getProgressLength();
 	double getFileLength();
 
-  private:
+private:
 	std::string filepath;
 	std::string url;
 	gFile file;
 	std::string html;
-    int statuscode;
+	int statuscode;
 
 	void loadHtml();
 };

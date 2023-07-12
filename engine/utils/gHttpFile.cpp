@@ -8,7 +8,7 @@
 #include "gHttpFile.h"
 
 gHttpFile::gHttpFile() {
-    statuscode = -1;
+	statuscode = -1;
 }
 
 gHttpFile::~gHttpFile() {
@@ -51,7 +51,7 @@ void gHttpFile::save(std::string filePath, bool isBinary) {
 
 void gHttpFile::loadHtml() {
 	html = "";
-    statuscode = -1;
+	statuscode = -1;
 	CURL *curl;
 	CURLcode res;
 
@@ -77,7 +77,7 @@ void gHttpFile::loadHtml() {
 		curl_easy_setopt(curl, CURLOPT_PROGRESSDATA, &prog);
 
 #ifdef SKIP_PEER_VERIFICATION
-		/*
+    /*
      * If you want to connect to a site who isn't using a certificate that is
      * signed by one of the certs in the CA bundle you have, you can skip the
      * verification of the server's certificate. This makes the connection
@@ -91,7 +91,7 @@ void gHttpFile::loadHtml() {
 #endif
 
 #ifdef SKIP_HOSTNAME_VERIFICATION
-		/*
+    /*
      * If the site you're connecting to uses a different host name that what
      * they have mentioned in their server certificate's commonName (or
      * subjectAltName) fields, libcurl will refuse to connect. You can skip

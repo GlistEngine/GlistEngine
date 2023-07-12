@@ -315,7 +315,7 @@ void gMesh::drawVbo() {
     // draw mesh
     vbo.bind();
     if (vbo.isIndexDataAllocated()) {
-        G_CHECK_GL(glDrawElements(drawmode, vbo.getIndicesNum(), G_INDEX_SIZE, nullptr));
+		G_CHECK_GL(glDrawElements(drawmode, vbo.getIndicesNum(), G_INDEX_SIZE, nullptr));
     } else {
 		G_CHECK_GL(glDrawArrays(drawmode, 0, vbo.getVerticesNum()));
     }
@@ -324,8 +324,8 @@ void gMesh::drawVbo() {
 }
 
 void gMesh::drawEnd() {
-    // set everything back to defaults.
-    G_CHECK_GL(glActiveTexture(GL_TEXTURE0));
+	// set everything back to defaults.
+	G_CHECK_GL(glActiveTexture(GL_TEXTURE0));
 }
 
 int gMesh::getVerticesNum() const {
