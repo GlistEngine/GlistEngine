@@ -8,6 +8,7 @@
 #include "gBaseApp.h"
 #include "gCanvasManager.h"
 #include "gGUIFrame.h"
+#include "gAllocatableBase.h"
 
 #include <thread>
 #include <mutex>

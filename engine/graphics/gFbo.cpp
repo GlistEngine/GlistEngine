@@ -64,7 +64,6 @@ void gFbo::allocate(int width, int height, bool isDepthMap) {
     if(!isDepthMap) {
         // create a color attachment texture
         texture = new gTexture(width, height, GL_RGBA, true);
-		texture->allocate();
         texture->bind();
         G_CHECK_GL(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture->getId(), 0));
 
@@ -76,8 +75,7 @@ void gFbo::allocate(int width, int height, bool isDepthMap) {
         G_CHECK_GL(glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo)); // now actually attach it
     } else {
 		// create a depth attachment texture
-		texture = new gTexture(width, height, GL_DEPTH_COMPONENT, GL_DEPTH_COMPONENT, true);
-		texture->allocate();
+		texture = new gTexture(width, height, GL_DEPTH_COMPONENT, true);
 		texture->bind();
 		G_CHECK_GL(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, texture->getId(), 0));
 #if(ANDROID)
