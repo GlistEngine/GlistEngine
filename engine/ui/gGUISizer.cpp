@@ -389,11 +389,11 @@ void gGUISizer::mouseMoved(int x, int y) {
 				bool iscursoronold = guicontrol[i][j]->iscursoron;
 //				gLogi("Sizer") << "mouseMoved 1, i:" << i << ", j:" << j << ", x:" << x << ", y:" << y << ", l:" << guicontrol[i][j]->left << ", t:" << guicontrol[i][j]->top << ", r:" << guicontrol[i][j]->right << ", b:" << guicontrol[i][j]->bottom;
 				if(x >= guicontrol[i][j]->left && x < guicontrol[i][j]->right && y >= guicontrol[i][j]->top && y < guicontrol[i][j]->bottom) {
-					guicontrol[i][j]->iscursoron = true;
+					guicontrol[i][j]->setCursorOn(true);
 					if(!iscursoronold) guicontrol[i][j]->mouseEntered();
 				} else {
 					if (guicontrol[i][j]->iscursoron) {
-						guicontrol[i][j]->iscursoron = false;
+						guicontrol[i][j]->setCursorOn(false);
 						if(iscursoronold) guicontrol[i][j]->mouseExited();
 					}
 				}
@@ -612,7 +612,7 @@ void gGUISizer::mouseExited() {
 	for(int i = 0; i < linenum; i++) {
 		for(int j = 0; j < columnnum; j++) {
 			if(iscontrolset[i][j] && guicontrol[i][j]->isEnabled() && guicontrol[i][j]->iscursoron) {
-				guicontrol[i][j]->iscursoron = false;
+				guicontrol[i][j]->setCursorOn(false);
 				guicontrol[i][j]->mouseExited();
 			}
 		}

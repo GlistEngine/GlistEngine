@@ -102,3 +102,8 @@ void gGUIContainer::windowResized(int w, int h) {
 	guisizer->windowResized(w, h);
 }
 
+void gGUIContainer::setCursorOn(bool isOn) {
+	gBaseGUIObject::setCursorOn(isOn);
+	guisizer->setCursorOn(isOn);
+}
+

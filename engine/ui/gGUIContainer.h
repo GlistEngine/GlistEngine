@@ -37,6 +37,8 @@ public:
 	void update();
 	void draw();
 
+	void setCursorOn(bool isOn);
+
 protected:
 	gGUISizer* guisizer;
 	int topbarh;
