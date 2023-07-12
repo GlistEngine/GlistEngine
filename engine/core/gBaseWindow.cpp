@@ -95,6 +95,14 @@ void gBaseWindow::setVsync(bool vsync) {
 	this->vsync = vsync;
 }
 
+void gBaseWindow::enableVsync() {
+	setVsync(true);
+}
+
+void gBaseWindow::disableVsync() {
+	setVsync(false);
+}
+
 void gBaseWindow::setCursor(int cursorNo) {
 
 }
