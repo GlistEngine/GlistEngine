@@ -59,6 +59,7 @@ public:
 	bool isVsyncEnabled();
 	virtual void setVsync(bool vsync);
 	void enableVsync();
+	void enableVsync(bool vsync);
 	void disableVsync();
 
 	virtual void setCursor(int cursorNo);

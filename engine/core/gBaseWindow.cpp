@@ -99,6 +99,10 @@ void gBaseWindow::enableVsync() {
 	setVsync(true);
 }
 
+void gBaseWindow::enableVsync(bool vsync) {
+	setVsync(vsync);
+}
+
 void gBaseWindow::disableVsync() {
 	setVsync(false);
 }
