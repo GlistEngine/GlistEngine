@@ -26,6 +26,9 @@ gModel::gModel() {
 
 
 gModel::~gModel() {
+	for (const auto& item : textures_loaded) {
+		delete item;
+	}
 }
 
 void gModel::load(const std::string& fullPath) {
@@ -357,7 +360,7 @@ void gModel::loadMaterialTextures(gSkinnedMesh* mesh, aiMaterial *mat, aiTexture
         	std::string aip = str.C_Str();
         	int aipspos = aip.find_last_of('/');
         	aip = aip.substr(aipspos + 1, aip.length() - aipspos - 1);
-            if(aip == textures_loaded[j].getFilename()) {
+            if(aip == textures_loaded[j]->getFilename()) {
                 skip = true; // a texture with the same filepath has already been loaded, continue to next one. (optimization)
                 texno = j;
                 break;
@@ -365,15 +368,15 @@ void gModel::loadMaterialTextures(gSkinnedMesh* mesh, aiMaterial *mat, aiTexture
         }
 
         if(!skip) {   // if texture hasn't been loaded already, load it
-            gTexture texture;
+            gTexture* texture = new gTexture();
             std::string tpath = this->directory + "/" + str.C_Str();
-            texture.load(tpath);
-            texture.setType(textureType);
+            texture->load(tpath);
+            texture->setType(textureType);
             textures_loaded.push_back(texture);  // store it as texture loaded for entire model, to ensure we won't unnecesery load duplicate textures.
             texno = textures_loaded.size() - 1;
         }
 
-        mesh->setTexture(&textures_loaded[texno]);
+        mesh->setTexture(textures_loaded[texno]);
     }
 }
 

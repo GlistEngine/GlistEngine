@@ -378,7 +378,7 @@ void gSkybox::bindPbrMaps() {
 
 void gSkybox::draw() {
 	skyboxshader = renderer->getSkyboxShader();
-	glDepthFunc(GL_LEQUAL);  // change depth function so depth test passes when values are equal to depth buffer's content
+	G_CHECK_GL(glDepthFunc(GL_LEQUAL));  // change depth function so depth test passes when values are equal to depth buffer's content
 	skyboxshader->use();
 	skyboxshader->setInt("aIsHDR", ishdr);
 	skyboxshader->setMat4("projection", renderer->getProjectionMatrix());

@@ -175,10 +175,10 @@ private:
 	    int advance;
 	    float texturewidth,textureheight;
 	    float dxleft, dxright, dytop, dybottom;
-	  } charProperties;
+	  } CharProperties;
 
-	  std::vector<charProperties> cpset;
-	  std::vector<gTexture> textures;
+	  std::vector<CharProperties> cpset;
+	  std::vector<gTexture*> textures;
 	  std::vector<int> loadedcharacters;
 	  static const int unloadedchar = 0;
 #ifdef ANDROID

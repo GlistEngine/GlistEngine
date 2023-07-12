@@ -42,7 +42,7 @@ int gRenderer::unitresolution;
 void gCheckGLErrorAndPrint(const std::string& prefix, const std::string& func, int line) {
 	GLenum error = glGetError();
 	if (error != GL_NO_ERROR) {
-		gLogi("gRenderer") << prefix << "OpenGL ERROR at " << func << ", line " << line << ", error code: " << error;
+		gLogi("gRenderer") << prefix << "OpenGL ERROR at " << func << ", line " << line << ", error code: " << gToHex(error, 4);
 	}
 }
 
@@ -903,18 +903,18 @@ gColor* gRenderer::getColor() {
 }
 
 void gRenderer::clear() {
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	G_CHECK_GL(glClearColor(0.0f, 0.0f, 0.0f, 1.0f));
+	G_CHECK_GL(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
 }
 
 void gRenderer::clearColor(int r, int g, int b, int a) {
-	glClearColor((float)r / 255, (float)g / 255, (float)b / 255, (float)a / 255);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	G_CHECK_GL(glClearColor((float)r / 255, (float)g / 255, (float)b / 255, (float)a / 255));
+	G_CHECK_GL(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
 }
 
 void gRenderer::clearColor(gColor color) {
-	glClearColor(color.r, color.g, color.b, color.a);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	G_CHECK_GL(glClearColor(color.r, color.g, color.b, color.a));
+	G_CHECK_GL(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
 }
 
 void gRenderer::enableFog() {
@@ -1070,19 +1070,19 @@ void gRenderer::enableDepthTest() {
 }
 
 void gRenderer::enableDepthTest(int depthTestType) {
-	glEnable(GL_DEPTH_TEST);
-	glDepthFunc(depthtesttypeid[depthTestType]);
+	G_CHECK_GL(glEnable(GL_DEPTH_TEST));
+	G_CHECK_GL(glDepthFunc(depthtesttypeid[depthTestType]));
 	isdepthtestenabled = true;
 	depthtesttype = depthTestType;
 }
 
 void gRenderer::setDepthTestFunc(int depthTestType) {
-	glDepthFunc(depthtesttypeid[depthTestType]);
+	G_CHECK_GL(glDepthFunc(depthtesttypeid[depthTestType]));
 	depthtesttype = depthTestType;
 }
 
 void gRenderer::disableDepthTest() {
-	glDisable(GL_DEPTH_TEST);
+	G_CHECK_GL(glDisable(GL_DEPTH_TEST));
 	isdepthtestenabled = false;
 }
 
@@ -1095,13 +1095,13 @@ int gRenderer::getDepthTestType() {
 }
 
 void gRenderer::enableAlphaBlending() {
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    G_CHECK_GL(glEnable(GL_BLEND));
+    G_CHECK_GL(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
     isalphablendingenabled = true;
 }
 
 void gRenderer::disableAlphaBlending() {
-    glDisable(GL_BLEND);
+	G_CHECK_GL(glDisable(GL_BLEND));
     isalphablendingenabled = false;
 }
 

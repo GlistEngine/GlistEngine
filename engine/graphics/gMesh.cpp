@@ -34,7 +34,7 @@ gMesh::gMesh() {
 	bbmaxx = 0.0f, bbmaxy = 0.0f, bbmaxz = 0.0f;
 }
 
-gMesh::gMesh(std::vector<gVertex> vertices, std::vector<gIndex> indices, std::vector<gTexture> textures) {
+gMesh::gMesh(std::vector<gVertex> vertices, std::vector<gIndex> indices, std::vector<gTexture*> textures) {
 	name = "";
 	sli = 0;
 	ti = 0;
@@ -82,28 +82,28 @@ std::vector<gIndex>& gMesh::getIndices() {
 	return indices;
 }
 
-void gMesh::setTextures(std::vector<gTexture>& textures) {
+void gMesh::setTextures(std::vector<gTexture*> textures) {
 //	this->textures = textures;
     for(ti = 0; ti < textures.size(); ti++) {
-        textype = textures[ti].getType();
+        textype = textures[ti]->getType();
         if(textype == gTexture::TEXTURETYPE_DIFFUSE) {
-        	material.setDiffuseMap(&textures[ti]);
+        	material.setDiffuseMap(textures[ti]);
         } else if(textype == gTexture::TEXTURETYPE_SPECULAR) {
-        	material.setSpecularMap(&textures[ti]);
+        	material.setSpecularMap(textures[ti]);
         } else if(textype == gTexture::TEXTURETYPE_NORMAL) {
-        	material.setNormalMap(&textures[ti]);
+        	material.setNormalMap(textures[ti]);
         } else if(textype == gTexture::TEXTURETYPE_HEIGHT) {
-        	material.setHeightMap(&textures[ti]);
+        	material.setHeightMap(textures[ti]);
         } else if (textype == gTexture::TEXTURETYPE_PBR_ALBEDO) {
-        	material.setAlbedoMap(&textures[ti]);
+        	material.setAlbedoMap(textures[ti]);
         } else if (textype == gTexture::TEXTURETYPE_PBR_ROUGHNESS) {
-        	material.setRoughnessMap(&textures[ti]);
+        	material.setRoughnessMap(textures[ti]);
         } else if (textype == gTexture::TEXTURETYPE_PBR_METALNESS) {
-        	material.setMetalnessMap(&textures[ti]);
+        	material.setMetalnessMap(textures[ti]);
         } else if (textype == gTexture::TEXTURETYPE_PBR_NORMAL) {
-        	material.setPbrNormalMap(&textures[ti]);
+        	material.setPbrNormalMap(textures[ti]);
         } else if (textype == gTexture::TEXTURETYPE_PBR_AO) {
-        	material.setAOMap(&textures[ti]);
+        	material.setAOMap(textures[ti]);
         }
     }
 }
@@ -131,12 +131,12 @@ void gMesh::setTexture(gTexture* texture) {
     }
 }
 
-void gMesh::addTexture(gTexture tex) {
+void gMesh::addTexture(gTexture* tex) {
 	textures.push_back(tex);
 }
 
 gTexture* gMesh::getTexture(int textureNo) {
-	return &textures[textureNo];
+	return textures[textureNo];
 }
 
 
@@ -192,7 +192,7 @@ void gMesh::drawStart() {
 //		if(material.isDiffuseMapEnabled()) gLogi("gModel") << "diffuse texture name:" << material.getDiffuseMap()->getFilename();
 	    if (material.isDiffuseMapEnabled()) {
 		    colorshader->setInt("material.diffusemap", 0); // Diffuse texture unit
-		    glActiveTexture(GL_TEXTURE0);
+			G_CHECK_GL(glActiveTexture(GL_TEXTURE0));
 		    material.bindDiffuseMap();
 	    }
 
@@ -200,7 +200,7 @@ void gMesh::drawStart() {
 	    colorshader->setInt("material.useSpecularMap", material.isDiffuseMapEnabled() && material.isSpecularMapEnabled());
 	    if (material.isDiffuseMapEnabled() && material.isSpecularMapEnabled()) {
 		    colorshader->setInt("material.specularmap", 1); // Specular texture unit
-		    glActiveTexture(GL_TEXTURE1);
+		    G_CHECK_GL(glActiveTexture(GL_TEXTURE1));
 		    material.bindSpecularMap();
 	    }
 
@@ -208,7 +208,7 @@ void gMesh::drawStart() {
 	    colorshader->setInt("aUseNormalMap", material.isDiffuseMapEnabled() && material.isNormalMapEnabled());
 	    if (material.isDiffuseMapEnabled() && material.isNormalMapEnabled()) {
 		    colorshader->setInt("material.normalmap", 2); // Normal texture unit
-		    glActiveTexture(GL_TEXTURE2);
+		    G_CHECK_GL(glActiveTexture(GL_TEXTURE2));
 		    material.bindNormalMap();
 	    }
 
@@ -283,11 +283,11 @@ void gMesh::drawStart() {
 	    normalNr   = 1;
 	    heightNr   = 1;
 	    for(ti = 0; ti < textures.size(); ti++) {
-	        glActiveTexture(GL_TEXTURE0 + ti); // active proper texture unit before binding
+	        G_CHECK_GL(glActiveTexture(GL_TEXTURE0 + ti)); // active proper texture unit before binding
 
 	        // retrieve texture number (the N in diffuse_textureN)
 	        texnumber = "";
-	        textype = textures[ti].getType();
+	        textype = textures[ti]->getType();
 	        if(textype == gTexture::TEXTURETYPE_DIFFUSE)
 	            texnumber = gToStr(diffuseNr++);
 	        else if(textype == gTexture::TEXTURETYPE_SPECULAR)
@@ -301,7 +301,7 @@ void gMesh::drawStart() {
 	        textureshader->setInt(gToStr(textype) + texnumber, ti);
 
 	        // Bind the texture
-	        textures[ti].bind();
+	        textures[ti]->bind();
 	    }
 
 	    if (isprojection2d) textureshader->setMat4("projection", renderer->getProjectionMatrix2d());
@@ -315,9 +315,9 @@ void gMesh::drawVbo() {
     // draw mesh
     vbo.bind();
     if (vbo.isIndexDataAllocated()) {
-        glDrawElements(drawmode, vbo.getIndicesNum(), G_INDEX_SIZE, nullptr);
+        G_CHECK_GL(glDrawElements(drawmode, vbo.getIndicesNum(), G_INDEX_SIZE, nullptr));
     } else {
-    	glDrawArrays(drawmode, 0, vbo.getVerticesNum());
+		G_CHECK_GL(glDrawArrays(drawmode, 0, vbo.getVerticesNum()));
     }
     vbo.unbind();
 //    vbo.clear();
@@ -325,7 +325,7 @@ void gMesh::drawVbo() {
 
 void gMesh::drawEnd() {
     // set everything back to defaults.
-    glActiveTexture(GL_TEXTURE0);
+    G_CHECK_GL(glActiveTexture(GL_TEXTURE0));
 }
 
 int gMesh::getVerticesNum() const {

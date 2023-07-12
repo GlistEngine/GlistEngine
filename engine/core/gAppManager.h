@@ -288,6 +288,7 @@ private:
 
     EventHandlerFn eventhandler;
     gBaseWindow* window;
+	bool usewindow;
     bool isrunning;
     bool isrendering;
 	bool setupcomplete;

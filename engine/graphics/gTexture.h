@@ -24,7 +24,11 @@ public:
 	static const int TEXTUREMINMAGFILTER_LINEAR, TEXTUREMINMAGFILTER_MIPMAPLINEAR, TEXTUREMINMAGFILTER_NEAREST;
 
 	gTexture();
+	gTexture(int w, int h, int format, int internalformat, bool isFbo = false);
 	gTexture(int w, int h, int format = GL_RGBA, bool isFbo = false);
+	// Copy constructer is deleted until this implementation is complete
+	// Copying a texture causes issues!
+	gTexture(const gTexture&) = delete;
 	virtual ~gTexture();
 
 	virtual unsigned int load(const std::string& fullPath);

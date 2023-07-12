@@ -53,17 +53,21 @@ static const int texturewrap[3] = {GL_REPEAT, GL_CLAMP, GL_CLAMP_TO_EDGE};
 static const int texturefilter[3] = {GL_LINEAR, GL_CLAMP, GL_CLAMP_TO_EDGE};
 #endif
 
-gTexture::gTexture() : gTexture(0, 0,  GL_RGBA, false) {
+gTexture::gTexture() : gTexture(0, 0, GL_RGBA, false) {
 
 }
 
-gTexture::gTexture(int w, int h, int format, bool isFbo) : gAllocatableBase() {
+gTexture::gTexture(int w, int h, int format, bool isFbo) : gTexture(w, h, format, format, isFbo) {
+
+}
+
+gTexture::gTexture(int w, int h, int format, int internalformat, bool isFbo) : gAllocatableBase() {
 	id = GL_NONE;
 	componentnum = 0;
 	masktexture = nullptr;
 	quadVAO = GL_NONE;
 	quadVBO = GL_NONE;
-	internalformat = format;
+	this->internalformat = internalformat;
 	this->format = format;
 	wraps = TEXTUREWRAP_REPEAT;
 	wrapt = TEXTUREWRAP_REPEAT;
@@ -91,9 +95,54 @@ gTexture::gTexture(int w, int h, int format, bool isFbo) : gAllocatableBase() {
 	androidasset = nullptr;
 #endif
 	if(width != 0 && height != 0) {
-		setupRenderData();
+		allocate();
 	}
 }
+
+// Copy constructer is deleted until this implementation is complete
+// Copying a texture causes issues!
+/*gTexture::gTexture(const gTexture& other) {
+	// todo copy data
+	fullpath = other.fullpath;
+	directory = other.directory;
+	id = GL_NONE;
+	internalformat = other.internalformat;
+	format = other.format;
+	istexturegenerated = other.istexturegenerated;
+	type = other.type;
+	path = other.path;
+	width = other.width;
+	height = other.height;
+	componentnum = other.componentnum;
+	data = other.data;
+	ismutable = other.ismutable;
+	wraps = other.wraps;
+	wrapt = other.wrapt;
+	filtermin = other.filtermin;
+	filtermag = other.filtermag;
+	isfont = other.isfont;
+	ishdr = other.ishdr;
+	datahdr = other.datahdr;
+	ismaskloaded = other.ismaskloaded;
+	if(other.masktexture) {
+		masktexture = new gTexture(*other.masktexture);
+	} else {
+		masktexture = nullptr;
+	}
+#ifdef ANDROID
+	androidasset = other.androidasset;
+#endif
+	memcpy(texturetype, other.texturetype, sizeof(other.texturetype));
+	quadVAO = GL_NONE;
+	quadVBO = GL_NONE;
+	imagematrix = other.imagematrix;
+	bsubpartdrawn = false;
+	isfbo = other.isfbo;
+	isrenderdataset = other.isrenderdataset;
+	if(width != 0 && height != 0) {
+		allocate();
+	}
+}*/
 
 gTexture::~gTexture() {
 	deallocate();
@@ -486,10 +535,16 @@ void gTexture::setupRenderData() {
 void gTexture::allocate() {
 	gAllocatableBase::allocate();
     if(!istexturegenerated) {
-        glGenTextures(1, &id);
+		G_CHECK_GL(glGenTextures(1, &id));
         istexturegenerated = true;
     }
     bind();
+#ifdef DEBUG
+	// Check max texture size, debug mode only!
+	int maxSize;
+	G_CHECK_GL(glGetIntegerv(GL_MAX_TEXTURE_SIZE, &maxSize));
+	assert(width <= maxSize && height <= maxSize);
+#endif
     if (datahdr) {
         G_CHECK_GL(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB32F, width, height, 0, GL_RGB, GL_FLOAT, datahdr)); // note how we specify the texture's data value to be float
 
@@ -501,7 +556,7 @@ void gTexture::allocate() {
         G_CHECK_GL(glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data));
         G_CHECK_GL(glGenerateMipmap(GL_TEXTURE_2D));
 
-        G_CHECK_GL(glTexImage2D(GL_TEXTURE_2D, 0, format, getWidth(), getHeight(), 0, format, GL_UNSIGNED_BYTE, data));
+        G_CHECK_GL(glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data));
 
         G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT));
         G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT));
@@ -523,7 +578,7 @@ void gTexture::allocate() {
     } else {
 		G_CHECK_GL(glTexImage2D(GL_TEXTURE_2D, 0, internalformat, width, height, 0, format, GL_UNSIGNED_BYTE, nullptr));
 
-		// TODO: BEFORE SHADOWMAP GL_REPEAT
+// TODO: BEFORE SHADOWMAP GL_REPEAT
 #ifdef ANDROID
 		G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE));
 		G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE));
@@ -531,8 +586,6 @@ void gTexture::allocate() {
 		G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP));
 		G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP));
 #endif
-		G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
-		G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
 	}
     unbind();
     setupRenderData();
@@ -561,10 +614,12 @@ void gTexture::reallocate() {
 }
 
 void gTexture::setupRenderData(int sx, int sy, int sw, int sh) {
+#ifdef DEBUG
+	assert(istexturegenerated);
+#endif
     if(isrenderdataset) {
         G_CHECK_GL(glDeleteBuffers(1, &quadVBO));
         G_CHECK_GL(glDeleteVertexArrays(1, &quadVAO));
-		isrenderdataset = false;
     }
 
     G_CHECK_GL(glGenVertexArrays(1, &quadVAO));

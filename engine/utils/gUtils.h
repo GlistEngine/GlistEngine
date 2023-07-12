@@ -111,6 +111,15 @@ std::string gToStr(const T& numValue) {
 }
 
 template <class T>
+std::string gToHex(const T& numValue, int width = sizeof(T)*2) {
+	std::ostringstream stream;
+	stream << "0x"
+		   << std::setfill ('0') << std::setw(width)
+		   << std::hex << numValue;
+	return stream.str();
+}
+
+template <class T>
 std::string gToStr(const T& value, int width, char fill) {
 	std::ostringstream out;
 	out << std::fixed << std::setfill(fill) << std::setw(width) << value;

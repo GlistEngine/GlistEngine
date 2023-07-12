@@ -45,7 +45,7 @@ void gStartEngine(gBaseApp* baseApp, const std::string& appName, int loopMode) {
 	manager.loop();
     manager.stop();
 #else
-    new gAppManager(appName, baseApp, 0, 0, G_WINDOWMODE_NONE, 0, 0, G_SCREENSCALING_NONE, false, loopMode);
+	throw std::runtime_error("windowless android applications are not supported yet!");
 #endif
 }
 
@@ -63,7 +63,11 @@ gAppManager::gAppManager(const std::string& appName, gBaseApp *baseApp, int widt
                                                                  windowmode(windowMode), unitwidth(unitWidth), unitheight(unitHeight), screenscaling(screenScaling),
                                                                  isresizable(isResizable), loopmode(loopMode) {
     appmanager = this;
-	canvasmanager = new gCanvasManager();
+	if(windowMode != G_WINDOWMODE_NONE) {
+		canvasmanager = new gCanvasManager();
+	} else {
+		canvasmanager = nullptr;
+	}
 	guimanager = nullptr;
     initialized = false;
     initializedbefore = false;
@@ -98,19 +102,25 @@ gAppManager::gAppManager(const std::string& appName, gBaseApp *baseApp, int widt
         joystickconnected[i] = false;
     }
     joystickaxecount = 0;
-
     eventhandler = G_BIND_FUNCTION(onEvent);
 
+	if (appname.empty()) {
+		appname = "GlistApp";
+	}
+	if(windowMode != G_WINDOWMODE_NONE) {
+		usewindow = true;
 #ifdef ANDROID
-    window = new gAndroidWindow();
+		window = new gAndroidWindow();
 #else
-    window = new gGLFWWindow();
+		window = new gGLFWWindow();
 #endif
-    window->setEventHandler(eventhandler);
-    if (appname.empty()) {
-        appname = "GlistApp";
-    }
-    window->setTitle(appname);
+		window->setEventHandler(eventhandler);
+		window->setTitle(appname);
+	} else {
+		usewindow = false;
+		window = nullptr;
+		setTargetFramerate(INT_MAX);
+	}
 }
 
 gAppManager::~gAppManager() {
@@ -130,38 +140,41 @@ void gAppManager::setup() {
 
 void gAppManager::initialize() {
     if(initialized || loopmode == G_LOOPMODE_NONE) {
+		app->start();
         return;
     }
-    deltatime = AppClockDuration(0);
+	deltatime = AppClockDuration(0);
 
-    window->initialize(width, height, windowmode, isresizable);
-    // Update size
-    width = window->getWidth();
-    height = window->getHeight();
-    if(unitwidth == 0) {
-        unitwidth = this->width;
-    }
-    if(unitheight == 0) {
-        unitheight = this->height;
-    }
-	// Create renderer
-	gRenderObject::createRenderer();
-	// Update renderer dimensions
-	gBaseCanvas::setScreenSize(width, height);
-	gBaseCanvas::setUnitScreenSize(unitwidth, unitheight);
-	gBaseCanvas::setScreenScaling(screenscaling);
-	// Create managers if not created
-	if(!guimanager) {
-		guimanager = new gGUIManager(app, width, height);
+	if(usewindow) {
+		window->initialize(width, height, windowmode, isresizable);
+		// Update size
+		width = window->getWidth();
+		height = window->getHeight();
+		if(unitwidth == 0) {
+			unitwidth = this->width;
+		}
+		if(unitheight == 0) {
+			unitheight = this->height;
+		}
+		// Create renderer
+		gRenderObject::createRenderer();
+		// Update renderer dimensions
+		gBaseCanvas::setScreenSize(width, height);
+		gBaseCanvas::setUnitScreenSize(unitwidth, unitheight);
+		gBaseCanvas::setScreenScaling(screenscaling);
+		// Create managers if not created
+		if(!guimanager) {
+			guimanager = new gGUIManager(app, width, height);
+		}
+		// Reallocate all gpu resources if initialized before.
+		if(initializedbefore) {
+			gAllocatableBase::allocateAll();
+			if(eventhandler) {
+				gReallocateRenderDataEvent event{};
+				eventhandler(event);
+			}
+		}
 	}
-	// Reallocate all gpu resources if initialized before.
-    if(initializedbefore) {
-        gAllocatableBase::allocateAll();
-        if(eventhandler) {
-            gReallocateRenderDataEvent event{};
-            eventhandler(event);
-        }
-    }
     initialized = true;
     initializedbefore = true;
     app->start();
@@ -173,13 +186,16 @@ void gAppManager::loop() {
     }
 
 #ifdef DEBUG
-    if(window) {
+    if(usewindow) {
+		assert(window);
         assert(gRenderObject::getRenderer());
     }
 #endif
     //gLogi("gAppManager") << "starting loop";
     isrunning = true;
-    while (isrunning && (!window || !window->getShouldClose())) {
+	starttime = AppClock::now();
+
+    while (isrunning && (!usewindow || !window->getShouldClose())) {
         // Delta time calculations
         endtime = AppClock::now();
         deltatime = endtime - starttime;
@@ -194,8 +210,8 @@ void gAppManager::loop() {
             totaldraws = 0;
         }
 
-        if(!window || !window->vsync) {
-            double sleepTime = (targettimestep - (AppClock::now() - starttime)).count() / 1'000'000'000;
+        if(!usewindow || !window->vsync) {
+            double sleepTime = (targettimestep - (AppClock::now() - starttime)).count() / 1'000'000'000.0;
             if(sleepTime > 0) {
                 preciseSleep(sleepTime);
             }
@@ -205,7 +221,7 @@ void gAppManager::loop() {
     app->stop();
     gAllocatableBase::deallocateAll();
     gRenderObject::destroyRenderer();
-    if(window) {
+    if(usewindow) {
         window->close();
     }
     initialized = false;
@@ -264,6 +280,7 @@ gBaseCanvas* gAppManager::getCurrentCanvas() const {
 
 void gAppManager::setTargetFramerate(int framerate) {
     targetframerate = framerate;
+	updateTime();
 }
 
 int gAppManager::getTargetFramerate() const {
@@ -331,7 +348,7 @@ bool gAppManager::isJoystickButtonPressed(int joystickId, int buttonId) {
 
 void gAppManager::tick() {
     totalupdates++;
-    if(!window) {
+    if(!usewindow) {
         app->update();
         for(int i = 0; i < gBaseComponent::usedcomponents.size(); i++) {
             gBaseComponent::usedcomponents[i]->update();
@@ -341,7 +358,7 @@ void gAppManager::tick() {
     }
 
     // todo joystick
-    canvasmanager->update();
+    if(canvasmanager) canvasmanager->update();
     if(guimanager) guimanager->update();
     app->update();
     for(int i = 0; i < gBaseComponent::usedcomponents.size(); i++) {
@@ -368,7 +385,9 @@ void gAppManager::tick() {
 		if(guimanager) guimanager->draw();
         totaldraws++;
     }
-    window->update();
+	if(usewindow) {
+		window->update();
+	}
     if(!window->isRendering() && isrendering) {
         isrendering = false; // If window has lost the context, we should stop rendering.
 #ifdef ANDROID
@@ -575,7 +594,7 @@ bool gAppManager::onAppResumeEvent(gAppResumeEvent& event) {
 #endif
 
 void gAppManager::updateTime() {
-    targettimestep = AppClockDuration(1'000'000'000 / (targetframerate + 1));
+	targettimestep = AppClockDuration(1'000'000'000 / (targetframerate + 1));
 }
 
 void gAppManager::submitToMainThread(std::function<void()> fn) {
@@ -607,7 +626,7 @@ void gAppManager::preciseSleep(double seconds) {
         std::this_thread::sleep_for(std::chrono::milliseconds(1));
         AppClockTimePoint end = AppClock::now();
 
-        observed = (end - start).count() / 1'000'000'000;
+        observed = (end - start).count() / 1'000'000'000.0;
         seconds -= observed;
 
         count++;
@@ -620,7 +639,7 @@ void gAppManager::preciseSleep(double seconds) {
 
     // spin lock
     AppClockTimePoint start = AppClock::now();
-    while ((AppClock::now() - start).count() / 1'000'000'000 < seconds);
+    while ((AppClock::now() - start).count() / 1'000'000'000.0 < seconds);
 }
 
 

@@ -25,6 +25,9 @@ gFont::gFont() {
 
 gFont::~gFont() {
 	if(fontface != nullptr) {
+		for (const auto& item : textures) {
+			delete item;
+		}
 		textures.clear();
 		cpset.clear();
 		loadedcharacters.clear();
@@ -108,7 +111,7 @@ void gFont::drawText(const std::string& text, float x, float y) {
 	          cid1 = getCharID(c1);
 	          if (cpset[cid1].character == unloadedchar) loadChar(cid1);
 	          posx1 += getKerning(cid1, cold1);
-	          textures[cid1].draw(posx1, posy1 + cpset[cid1].dytop);
+	          textures[cid1]->draw(posx1, posy1 + cpset[cid1].dytop);
 	          posx1 += cpset[cid1].advance * letterspacing;
 	      }
 	    index1++;
@@ -193,14 +196,17 @@ void gFont::resizeVectors(int num) {
 
 	characternumlimit = num;
 
-	std::vector<charProperties>().swap(cpset);
-	std::vector<gTexture>().swap(textures);
+	std::vector<CharProperties>().swap(cpset);
 	std::vector<int>().swap(loadedcharacters);
 
 	// initialize character info and textures
 	cpset.resize(characternumlimit);
 	for (int i=0; i<characternumlimit; ++i) cpset[i].character = unloadedchar;
 
+	for (const auto& item : textures) {
+		delete item;
+	}
+	textures.clear();
 	textures.resize(characternumlimit);
 
 	// load 'a' character for display space char
@@ -311,15 +317,15 @@ void gFont::loadChar(const int& charID) {
 
 	  insertData(lcdata, lcdataw, lcdatah, 2, lcpixels, lcpixelsw, lcpixelsh, 2, border, border);
 
-	  textures[lci] = gTexture(lcpixelsw, lcpixelsh, GL_LUMINANCE_ALPHA, false);
+	  textures[lci] = new gTexture(lcpixelsw, lcpixelsh, GL_LUMINANCE_ALPHA, false);
 
 	  if (isantialiased && fontsize > 20) {
-	    textures[lci].setFiltering(gTexture::TEXTUREMINMAGFILTER_LINEAR, gTexture::TEXTUREMINMAGFILTER_LINEAR);
+	    textures[lci]->setFiltering(gTexture::TEXTUREMINMAGFILTER_LINEAR, gTexture::TEXTUREMINMAGFILTER_LINEAR);
 	  } else {
-		  textures[lci].setFiltering(gTexture::TEXTUREMINMAGFILTER_NEAREST, gTexture::TEXTUREMINMAGFILTER_NEAREST);
+		  textures[lci]->setFiltering(gTexture::TEXTUREMINMAGFILTER_NEAREST, gTexture::TEXTUREMINMAGFILTER_NEAREST);
 	  }
 
-	  textures[lci].loadData(lcpixels, lcpixelsw, lcpixelsh, 2, true);
+	  textures[lci]->loadData(lcpixels, lcpixelsw, lcpixelsh, 2, true);
 }
 
 
