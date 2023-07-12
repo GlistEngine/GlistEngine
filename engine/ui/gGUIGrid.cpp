@@ -87,8 +87,9 @@ void gGUIGrid::createCells() {
 			tempcell.cellcolumnno = j;
 			tempcell.cellcontent = "";
 			tempcell.fontnum = gGUIManager::FONT_REGULAR;
-			tempcell.cellalignment = gBaseGUIObject::ALIGNMENT_LEFT;
+			tempcell.cellalignment = gBaseGUIObject::TEXTALIGNMENT_LEFT;
 			tempcell.textmoveamount = 0;
+			tempcell.cellfontcolor = fontcolor;
 			allcells.push_back(tempcell);
 		}
 	}
@@ -99,12 +100,12 @@ void gGUIGrid::createTextBox() {
 	//allcells.at(cellindexcounter).cellx + (allcells.at(cellindexcounter).cellw - font->getStringWidth(allcells.at(cellindexcounter).showncontent)) * textbox.getTextMoveAmount() - textbox.getInitX() * textbox.getTextAlignment() - firstx
 	int newwamount = font->getStringWidth(allcells.at(selectedbox).cellcontent) / gridboxw + 1;
 	newgridboxw = gridboxw * newwamount;
-	if(allcells.at(selectedbox).cellalignment == gBaseGUIObject::ALIGNMENT_LEFT) {
+	if(allcells.at(selectedbox).cellalignment == gBaseGUIObject::TEXTALIGNMENT_LEFT) {
 		while(newgridboxw > gridw - allcells.at(selectedbox).cellx + allcells.at(selectedbox).cellw / 2)
 			newgridboxw -= gridboxw;
 			//Should go to a new line and the width of the textbox should be "gridw - allcells.at(selectedbox).cellx + allcells.at(selectedbox).cellw / 2"
 	}
-	else if(allcells.at(selectedbox).cellalignment == gBaseGUIObject::ALIGNMENT_RIGHT) {
+	else if(allcells.at(selectedbox).cellalignment == gBaseGUIObject::TEXTALIGNMENT_RIGHT) {
 		while(newgridboxw > allcells.at(selectedbox).cellx - allcells.at(selectedbox).cellw / 2 + gridboxw)
 			newgridboxw -= gridboxw;
 			//Should go to a new line and the width of the textbox should be "allcells.at(selectedbox).cellx - allcells.at(selectedbox).cellw / 2 + gridboxw"
@@ -112,10 +113,11 @@ void gGUIGrid::createTextBox() {
 	textbox.set(root, this, this, 0, 0, allcells.at(selectedbox).cellx + 1, allcells.at(selectedbox).celly - 2, newgridboxw - 10, gridboxh - 2);
 	textbox.setTextFont(manager->getFont(allcells.at(selectedbox).fontnum));
 	textbox.setTextAlignment(allcells.at(selectedbox).cellalignment, allcells.at(selectedbox).cellw, textbox.getInitX());
+	textbox.setTextColor(&allcells.at(selectedbox).cellfontcolor);
 	if(allcells.at(selectedbox).cellcontent != "") {
 		textbox.setText(allcells.at(selectedbox).cellcontent);
 		int length = allcells.at(selectedbox).cellcontent.length();
-		if(allcells.at(selectedbox).cellalignment == gBaseGUIObject::ALIGNMENT_LEFT || allcells.at(selectedbox).cellalignment == gBaseGUIObject::ALIGNMENT_RIGHT)
+		if(allcells.at(selectedbox).cellalignment == gBaseGUIObject::TEXTALIGNMENT_LEFT || allcells.at(selectedbox).cellalignment == gBaseGUIObject::TEXTALIGNMENT_RIGHT)
 			textbox.setCursorPosX(font->getStringWidth(allcells.at(selectedbox).cellcontent), length);
 		else {
 			std::string mid;
@@ -180,6 +182,14 @@ void gGUIGrid::changeCellAlignment(int cellAlignment) {
 		textbox.setTextAlignment(cellAlignment, allcells.at(selectedbox).cellw, textbox.getInitX());
 	}
 }
+
+void gGUIGrid::changeCellFontColor(gColor *fontColor) {
+	if(allcells.at(selectedbox).iscellselected) {
+		allcells.at(selectedbox).cellfontcolor = fontColor;
+		textbox.setTextColor(fontColor);
+	}
+}
+
 
 void gGUIGrid::fillCell(int rowNo, int columnNo, std::string tempstr) { //when rowNo = 1, columnNO = 4; tempstr = "happyyyy";
 	if(rowNo > rownum - 1 || columnNo > columnnum - 1) return;
@@ -352,10 +362,10 @@ void gGUIGrid::drawTitleLines() {
 }
 
 void gGUIGrid::drawCellContents() {
-	renderer->setColor(*fontcolor);
 	int cellindexcounter = 0;
 	for(int i = 0; i < rownum; i++) {
 		for(int j = 0; j < columnnum; j++) {
+			renderer->setColor(allcells.at(cellindexcounter).cellfontcolor);
 			manager->getFont(allcells.at(cellindexcounter).fontnum)->drawText(allcells.at(cellindexcounter).showncontent, allcells.at(cellindexcounter).cellx + (allcells.at(cellindexcounter).cellw - manager->getFont(allcells.at(cellindexcounter).fontnum)->getStringWidth(allcells.at(cellindexcounter).showncontent)) * allcells.at(cellindexcounter).textmoveamount - textbox.getInitX() * allcells.at(cellindexcounter).cellalignment - firstx, allcells.at(cellindexcounter).celly + (gridboxh / 2) + (manager->getFont(allcells.at(cellindexcounter).fontnum)->getStringHeight(allcells.at(cellindexcounter).showncontent) / 2) - firsty);
 			cellindexcounter++;
 		}
