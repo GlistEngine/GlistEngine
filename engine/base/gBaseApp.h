@@ -77,6 +77,7 @@ public:
 	void disableVsync();
 
 	static gAppManager* getAppManager() { return appmanager; }
+	static void setAppManager(gAppManager* appManager) { appmanager = appManager; }
 protected:
 	int argc;
 	char **argv;
