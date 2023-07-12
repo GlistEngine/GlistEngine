@@ -21,7 +21,7 @@ void gSkinnedMesh::draw() {
 	if (!isvertexanimationstoredonvram) {
 		if (isvertexanimated && frameno != framenoold) {
 			// TODO Below lines of vertex animation stored on CPU needs to be optimized
-			for(int i=0; i<vbo.getVerticesNum(); i++) {
+			for(int i = 0; i < vbo.getVerticesNum(); i++) {
 				vertices[i].position = animatedPosData[0][frameno][i];
 				vertices[i].normal = animatedNormData[0][frameno][i];
 			}
@@ -112,7 +112,7 @@ const glm::vec3& gSkinnedMesh::getVertexNormData(int animationNo, int frameNo, i
 	return animatedNormData[animationNo][frameNo][vertexNo];
 }
 
-void gSkinnedMesh::setVerticesData(int animationNo, int frameNo, std::vector<gVertex> vertices, std::vector<unsigned int> indices) {
+void gSkinnedMesh::setVerticesData(int animationNo, int frameNo, std::vector<gVertex> vertices, std::vector<gIndex> indices) {
 //	this->vertices = vertices;
 //	this->indices = indices;
 	vboframe[animationNo][frameNo].setVertexData(&vertices[0], sizeof(gVertex), vertices.size());

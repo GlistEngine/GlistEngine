@@ -5,22 +5,23 @@
  *      Author: noyan
  */
 
+#include "gAppManager.h"
 #include "gBaseApp.h"
 
 
 gBaseApp::gBaseApp() {
-	appmanager = nullptr;
 	gSeedRandom();
 	argc = 0;
 	argv = nullptr;
 }
 
+#ifndef ANDROID
 gBaseApp::gBaseApp(int argc, char **argv) {
-	appmanager = nullptr;
 	gSeedRandom();
 	this->argc = argc;
 	this->argv = argv;
 }
+#endif
 
 gBaseApp::~gBaseApp() {
 }
@@ -33,12 +34,22 @@ void gBaseApp::update() {
 
 }
 
-void gBaseApp::setAppManager(gAppManager *appManager) {
-	appmanager = appManager;
+#ifdef ANDROID
+void gBaseApp::pause() {
+
 }
 
-gAppManager* gBaseApp::getAppManager() {
-	return appmanager;
+void gBaseApp::resume() {
+
+}
+#endif
+
+void gBaseApp::start() {
+
+}
+
+void gBaseApp::stop() {
+
 }
 
 void gBaseApp::setCurrentCanvas(gBaseCanvas* currentCanvas) {
@@ -49,12 +60,16 @@ gBaseCanvas* gBaseApp::getCurrentCanvas() {
 	return appmanager->getCurrentCanvas();
 }
 
-void gBaseApp::setFramerate(int targetFramerate) {
-	appmanager->setFramerate(targetFramerate);
+void gBaseApp::setTargetFramerate(int targetFramerate) {
+	appmanager->setTargetFramerate(targetFramerate);
 }
 
 int gBaseApp::getFramerate() {
 	return appmanager->getFramerate();
+}
+
+int gBaseApp::getTargetFramerate() {
+	return appmanager->getTargetFramerate();
 }
 
 double gBaseApp::getElapsedTime() {

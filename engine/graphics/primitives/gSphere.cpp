@@ -21,7 +21,7 @@ gSphere::gSphere(int xSegmentNum, int ySegmentNum, bool isFilled) {
     std::vector<glm::vec3> positions1;
     std::vector<glm::vec2> uv1;
     std::vector<glm::vec3> normals1;
-	std::vector<unsigned int> indicesb;
+	std::vector<gIndex> indicesb;
     for (unsigned int y = 0; y <= ySegmentNum; ++y) {
         for (unsigned int x = 0; x <= xSegmentNum; ++x) {
             float xSegment = (float)x / (float)xSegmentNum;

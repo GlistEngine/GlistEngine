@@ -16,14 +16,14 @@
 #include "gFile.h"
 #include "gObject.h"
 
-class gHttpFile: public gObject {
+class gHttpFile : public gObject {
 public:
 
 	gHttpFile();
 	virtual ~gHttpFile();
 	struct ProgressData {
-	  double progresslength;
-	  double filelength;
+		double progresslength;
+		double filelength;
 	} prog;
 	static int progressCallback(ProgressData *p, double totaltodownload, double downloaded, double totaltoupload, double uploaded);
 	static size_t writeCallBack(char *contents, size_t size, size_t nmemb, void *userp);
@@ -31,6 +31,12 @@ public:
 	std::string getUrl();
 	void save(std::string filepath, bool isBinary = false);
 	std::string getHtml();
+	/**
+     * @see https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
+     *
+     * @return HTTP Status code, returns -1 if requests isn't complete yet.
+     */
+	int getStatusCode();
 	double getProgressLength();
 	double getFileLength();
 
@@ -39,6 +45,8 @@ private:
 	std::string url;
 	gFile file;
 	std::string html;
+	int statuscode;
+
 	void loadHtml();
 };
 

@@ -6,15 +6,14 @@
  */
 
 #include "gImage.h"
-//#ifndef STB_IMAGE_IMPLEMENTATION
-//#define STB_IMAGE_IMPLEMENTATION
-//#endif
 #ifndef STB_IMAGE_WRITE_IMPLEMENTATION
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #endif
-#include "stb/stb_image.h"
 #include "stb/stb_image_write.h"
 #include "gHttpFile.h"
+#ifdef ANDROID
+#include "gAndroidUtil.h"
+#endif
 
 int gImage::downloadno = 1;
 
@@ -38,19 +37,27 @@ unsigned int gImage::load(const std::string& fullPath) {
 	ishdr = false;
 	if (gToLower(fullpath.substr(fullpath.length() - 3, 3)) == "hdr") ishdr = true;
 
-    glGenTextures(1, &id);
+	glGenTextures(1, &id);
 
-    if (ishdr) {
-    	stbi_set_flip_vertically_on_load(true);
-    	datahdr = stbi_loadf(fullpath.c_str(), &width, &height, &componentnum, 0);
-    	setDataHDR(datahdr, true);
-    } else {
-        data = stbi_load(fullpath.c_str(), &width, &height, &componentnum, 0);
-        setData(data, true);
-    }
+	if (ishdr) {
+		stbi_set_flip_vertically_on_load(true);
+		datahdr = stbi_loadf(fullpath.c_str(), &width, &height, &componentnum, 0);
+		setDataHDR(datahdr, true);
+	} else {
+#ifdef ANDROID
+		AAsset* asset = gAndroidUtil::loadAsset(fullpath, 0);
+		auto* buf = (unsigned char*) AAsset_getBuffer(asset);
+		int length = AAsset_getLength(asset);
+		data = stbi_load_from_memory(buf, length, &width, &height, &componentnum, 0);
+		gAndroidUtil::closeAsset(asset);
+#else
+		data = stbi_load(fullpath.c_str(), &width, &height, &componentnum, 0);
+#endif
+		setData(data, true);
+	}
 
-//	setupRenderData();
-    return id;
+	//	setupRenderData();
+	return id;
 }
 
 unsigned int gImage::loadImage(const std::string& imagePath) {
@@ -62,6 +69,9 @@ unsigned int gImage::loadImageFromURL(const std::string& imageUrl) {
 }
 
 unsigned int gImage::loadImageFromURL(const std::string& imageUrl, bool cutUrlParameters) {
+#if(ANDROID)
+	return 0; // todo
+#else
 	imageurl = imageUrl;
 	std::string imageurledited = imageurl;
 	if(cutUrlParameters) {
@@ -80,6 +90,7 @@ unsigned int gImage::loadImageFromURL(const std::string& imageUrl, bool cutUrlPa
 	loadedfromurl = true;
 
 	return load(imagepath);
+#endif
 }
 
 void gImage::loadData(const std::string& fullPath) {
@@ -89,12 +100,12 @@ void gImage::loadData(const std::string& fullPath) {
 	ishdr = false;
 	if (gToLower(fullpath.substr(fullpath.length() - 3, 3)) == "hdr") ishdr = true;
 
-    if (ishdr) {
-    	stbi_set_flip_vertically_on_load(true);
-    	datahdr = stbi_loadf(fullpath.c_str(), &width, &height, &componentnum, 0);
-    } else {
-        data = stbi_load(fullpath.c_str(), &width, &height, &componentnum, 0);
-    }
+	if (ishdr) {
+		stbi_set_flip_vertically_on_load(true);
+		datahdr = stbi_loadf(fullpath.c_str(), &width, &height, &componentnum, 0);
+	} else {
+		data = stbi_load(fullpath.c_str(), &width, &height, &componentnum, 0);
+	}
 }
 
 void gImage::loadImageData(const std::string& imagePath) {
@@ -102,16 +113,16 @@ void gImage::loadImageData(const std::string& imagePath) {
 }
 
 unsigned int gImage::useData() {
-    glGenTextures(1, &id);
+	glGenTextures(1, &id);
 
-    if (ishdr) {
-    	setDataHDR(datahdr, true);
-    } else {
-        setData(data, true);
-    }
+	if (ishdr) {
+		setDataHDR(datahdr, true);
+	} else {
+		setData(data, true);
+	}
 
-//	setupRenderData();
-    return id;
+	//	setupRenderData();
+	return id;
 }
 
 void gImage::setImageData(unsigned char* imageData) {
@@ -140,22 +151,22 @@ void gImage::clearData() {
 }
 
 void gImage::saveImage(std::string fileName) {
-    std::string path = gGetImagesDir() + fileName;
+	std::string path = gGetImagesDir() + fileName;
 	int lastdot = fileName.find_last_of('.');
 	std::string imagetype = gToLower(fileName.substr(lastdot + 1, fileName.size() - lastdot - 1));
 
 	if(imagetype == "png") {
-	    stbi_write_png(path.c_str(), width, height, componentnum, data, width * componentnum * sizeof(unsigned char));
+		stbi_write_png(path.c_str(), width, height, componentnum, data, width * componentnum * sizeof(unsigned char));
 	} else if(imagetype == "jpg" || imagetype == "jpeg") {
-	    stbi_write_jpg(path.c_str(), width, height, componentnum, data, 100);
+		stbi_write_jpg(path.c_str(), width, height, componentnum, data, 100);
 	} else if(imagetype == "bmp") {
-	    stbi_write_bmp(path.c_str(), width, height, componentnum, data);
+		stbi_write_bmp(path.c_str(), width, height, componentnum, data);
 	} else if(imagetype == "tga") {
-	    stbi_write_tga(path.c_str(), width, height, componentnum, data);
+		stbi_write_tga(path.c_str(), width, height, componentnum, data);
 	} else if(imagetype == "hdr") {
-	    stbi_write_hdr(path.c_str(), width, height, componentnum, datahdr);
+		stbi_write_hdr(path.c_str(), width, height, componentnum, datahdr);
 	} else {
-	    stbi_write_png(path.c_str(), width, height, componentnum, data, width * componentnum * sizeof(unsigned char));
+		stbi_write_png(path.c_str(), width, height, componentnum, data, width * componentnum * sizeof(unsigned char));
 	}
 }
 
@@ -164,12 +175,16 @@ std::string gImage::getImageUrl() {
 }
 
 std::string gImage::generateDownloadedImagePath(std::string imageType) {
+#if(ANDROID)
+	return ""; // todo
+#else
 	std::string imagepath = "";
 	do {
 		imagepath = gGetImagesDir() + "downloadedimage_" + gToStr(downloadno) + "." + imageType;
 		downloadno++;
 	} while(gFile::doesFileExist(imagepath));
 	return imagepath;
+#endif
 }
 
 unsigned int gImage::loadMaskImage(const std::string& maskImagePath) {
@@ -177,5 +192,3 @@ unsigned int gImage::loadMaskImage(const std::string& maskImagePath) {
 	ismaskloaded = true;
 	return masktexture->load(gGetImagesDir() + maskImagePath);
 }
-
-

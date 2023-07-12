@@ -90,7 +90,6 @@ endforeach()
 ########## CPP SOURCE FILES ##########
 set(SRC_FILES
 	${PLUGIN_SRCS}
-	${MINGW64_DIR}/lib/sqlite3.c
 	${ENGINE_DIR}/graphics/particles/gFireParticles.cpp
 	${ENGINE_DIR}/base/gBaseParticles.cpp
 	${ENGINE_DIR}/types/gColor.cpp
@@ -104,6 +103,7 @@ set(SRC_FILES
 	${ENGINE_DIR}/core/gRenderer.cpp
 	${ENGINE_DIR}/core/gRenderObject.cpp
 	${ENGINE_DIR}/core/gGUIActionManager.cpp
+	${ENGINE_DIR}/graphics/gAllocatableBase.cpp
 	${ENGINE_DIR}/graphics/gTexture.cpp
 	${ENGINE_DIR}/graphics/gImage.cpp
 	${ENGINE_DIR}/graphics/gSkybox.cpp
@@ -204,20 +204,35 @@ set(SRC_FILES
 	${ENGINE_DIR}/graphics/posteffects/gKernelEffect.cpp
 	${ENGINE_DIR}/graphics/posteffects/kerneleffects/gBlur.cpp
 	${ENGINE_DIR}/graphics/posteffects/kerneleffects/gSharpen.cpp
-	${ENGINE_DIR}/graphics/posteffects/kerneleffects/gEdgeDetection.cpp	
+	${ENGINE_DIR}/graphics/posteffects/kerneleffects/gEdgeDetection.cpp
 )
 
 if(NOT ANDROID)
 	list(APPEND SRC_FILES
+		${MINGW64_DIR}/lib/sqlite3.c
 		${ENGINE_DIR}/core/backward.cpp
 		${ENGINE_DIR}/core/gGLFWWindow.cpp
 	)
+else()
+	list(APPEND SRC_FILES
+			${ANDROID_DIR}/libs/sqlite3.c
+			${ENGINE_DIR}/core/gAndroidWindow.cpp
+			${ENGINE_DIR}/utils/gAndroidUtil.cpp
+	)
 endif(NOT ANDROID)
 
-add_library(GlistEngine SHARED
-	${SRC_FILES}
-)
-
+if(ANDROID)
+	# We have androidMain function that is
+	# defined inside the GlistEngine but implemented by the
+	# GlistApp. To have this behavior, library should be static.
+	add_library(GlistEngine STATIC
+		${SRC_FILES}
+	)
+else()
+	add_library(GlistEngine SHARED
+			${SRC_FILES}
+	)
+endif()
 
 ########## INCLUDE DIRECTORIES ##########
 set(INC_DIRS
@@ -237,6 +252,7 @@ set(INC_DIRS
     ${ENGINE_DIR}/ui/base
     ${ENGINE_DIR}/base
     ${ENGINE_DIR}/core
+    ${ENGINE_DIR}/events
 	${PLUGIN_INCLUDES}
 #	${CMAKE_BINARY_DIR}/generated
 )
@@ -252,6 +268,9 @@ if(WIN32)
 		${MINGW64_DIR}/include/fmod
 		${MINGW64_DIR}/include/utf8
 	)
+elseif(ANDROID)
+    # These are added by gipAndroid plugin
+    # Do not remove the if, otherwise linux libraries will be linked/included.
 elseif(LINUX)
 	list(APPEND INC_DIRS
 		${MINGW64_DIR}/include
@@ -294,11 +313,6 @@ elseif(APPLE)
 			)
 		endif()
   	endif()
-elseif(ANDROID)
-	list(APPEND INC_DIRS
-		${ANDROID_DIR}/include
-		${ANDROID_DIR}/include/freetype2
-	)
 endif(WIN32)
 
 
@@ -309,7 +323,6 @@ FOREACH(PLIBDIR ${PLUGIN_LIBDIRS})
 	set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -L${PLIBDIR}")
 ENDFOREACH()
 
-
 ########## FIND LIBRARIES ##########
 if(WIN32)
 	link_directories(
@@ -317,6 +330,10 @@ if(WIN32)
 			${MINGW64_DIR}/lib
 			${PLUGIN_LINKDIRS}
 	)
+
+elseif(ANDROID)
+    # These are added by gipAndroid plugin
+    # Do not remove the if, otherwise linux libraries will be linked/included.
 elseif(LINUX)
 	# TODO: FFMPEG
 #	find_library(Lib_Freetype2 freetype HINTS /usr/lib/x86_64-linux-gnu)
@@ -448,36 +465,6 @@ elseif(APPLE)
 #	    OUTPUT_STRIP_TRAILING_WHITESPACE)
 #	string(STRIP "${CL_TMP_VAR}" CL_VAR_10)
 #	add_definitions(${CL_VAR_10})
-	
-elseif(ANDROID)
-	find_library( # Sets the name of the path variable.
-	              log-lib
-	
-	              # Specifies the name of the NDK library that
-	              # you want CMake to locate.
-	              log )
-	
-	
-	add_library(fmod SHARED IMPORTED)
-	set_target_properties(fmod PROPERTIES IMPORTED_LOCATION
-			${ANDROID_DIR}/libs/fmod/${ANDROID_ABI}/libfmod.so)
-	
-	add_library(fmodL SHARED IMPORTED)
-	set_target_properties(fmodL PROPERTIES IMPORTED_LOCATION
-			${ANDROID_DIR}/libs/fmod/${ANDROID_ABI}/libfmodL.so)
-	
-	add_library(assimp STATIC IMPORTED)
-	set_target_properties(assimp PROPERTIES IMPORTED_LOCATION
-			${ANDROID_DIR}/libs/assimp/${ANDROID_ABI}/libassimp.a)
-	
-	add_library(libpng STATIC IMPORTED)
-	set_target_properties(libpng PROPERTIES IMPORTED_LOCATION
-			${ANDROID_DIR}/libs/libpng/${ANDROID_ABI}/libpng.a)
-	
-	add_library(freetype STATIC IMPORTED)
-	set_target_properties(freetype PROPERTIES IMPORTED_LOCATION
-			${ANDROID_DIR}/libs/freetype/${ANDROID_ABI}/libfreetype.a)
-	
 endif (WIN32)
 
 
@@ -508,6 +495,9 @@ if(WIN32)
 #		avdevice-58
 #		avcodec-58
 	)
+elseif(ANDROID)
+    # These are added by gipAndroid plugin
+    # Do not remove the if, otherwise linux libraries will be linked/included.
 elseif(LINUX)
 	list(APPEND LINK_LIBS
 		fmodL
@@ -536,17 +526,6 @@ elseif(APPLE)
 		${Lib_crypto}
 #		${Lib_cpp}
 	# TODO: FFMPEG
-	)
-elseif(ANDROID)
-	list(APPEND LINK_LIBS
-		fmodL
-		fmod
-		assimp
-		freetype
-		libpng
-		android
-		log
-		GLESv3
 	)
 endif(WIN32)
 

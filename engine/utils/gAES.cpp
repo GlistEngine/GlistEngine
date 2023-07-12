@@ -85,7 +85,7 @@ std::string gAES::encodeMD5(std::string plainText) {
 	char mdString[33];
 
 	for(int i = 0; i < 16; i++)
-		 sprintf(&mdString[i*2], "%02x", (unsigned int)digest[i]);
+		sprintf(&mdString[i*2], "%02x", (unsigned int)digest[i]);
 
 	std::string hashText(reinterpret_cast<char*>(mdString));
 	return hashText;
@@ -99,7 +99,7 @@ void gAES::clean() {
 }
 
 void gAES::handleErrors(void) {
-  ERR_print_errors_fp(stderr);
-  abort();
+	ERR_print_errors_fp(stderr);
+	abort();
 }
 

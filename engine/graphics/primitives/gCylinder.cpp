@@ -9,7 +9,7 @@
 
 gCylinder::gCylinder(int r1, int r2, int h, glm::vec2 shiftdistance, int segmentnum, bool isFilled) {
 
-	std::vector<unsigned int> indicesb;
+	std::vector<gIndex> indicesb;
 	std::vector<gVertex> verticesb;
 
 	float angle = PI * 2 / segmentnum;

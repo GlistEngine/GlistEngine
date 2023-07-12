@@ -10,10 +10,8 @@
 
 #include "gBaseWindow.h"
 // #include <glad/glad.h> //case_win
-#if defined(WIN32) || defined(LINUX) || defined(APPLE)
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-#endif
 #include "gCamera.h"
 
 /**
@@ -55,7 +53,7 @@ public:
 	 */
 	void close() override;
 
-	void enableVsync(bool vsync) override;
+	void setVsync(bool vsync) override;
 
 	void setCursor(int cursorNo) override;
 	void setCursorMode(int cursorMode) override;
@@ -67,9 +65,11 @@ public:
 	void setWindowResizable(bool isResizable) override;
 	void setWindowSizeLimits(int minWidth, int minHeight, int maxWidth, int maxHeight) override;
 
+	bool isJoystickPresent(int joystickId) override;
+	bool isGamepadButtonPressed(int joystickId, int buttonId) override;
+	const float* getJoystickAxes(int joystickId, int* axisCountPtr) override;
 
-private:
-#if defined(WIN32) || defined(LINUX) || defined(APPLE)
+  private:
 	GLFWwindow* window;
 	static GLFWwindow* currentwindow;
 	GLFWcursor** cursor;
@@ -103,7 +103,6 @@ private:
 	 * Invoking by GLFW if scroll changed.
 	 */
 	static void mouse_scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
-#endif
 };
 
 #endif /* ENGINE_CORE_GGLFWWINDOW_H_ */

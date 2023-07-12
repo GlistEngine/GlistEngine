@@ -7,6 +7,9 @@
 
 #include "gFont.h"
 #include <iostream>
+#ifdef ANDROID
+#include "gAndroidUtil.h"
+#endif
 
 
 gFont::gFont() {
@@ -22,6 +25,9 @@ gFont::gFont() {
 
 gFont::~gFont() {
 	if(fontface != nullptr) {
+		for (const auto& item : textures) {
+			delete item;
+		}
 		textures.clear();
 		cpset.clear();
 		loadedcharacters.clear();
@@ -30,6 +36,9 @@ gFont::~gFont() {
 		lcbptr = nullptr;
 		FT_Done_Face(fontface);
 		FT_Done_FreeType(ftlib);
+#ifdef ANDROID
+        if (androidasset) gAndroidUtil::closeAsset(androidasset);
+#endif
 	}
 }
 
@@ -45,13 +54,21 @@ bool gFont::load(const std::string& fullPath, int size, bool isAntialiased, int 
 		gLoge("gFont") << "Error loading freetype";
 		return false;
 	}
+#ifdef ANDROID
+	androidasset = gAndroidUtil::loadAsset(fullpath, 0);
+	auto* buf = (unsigned char*) AAsset_getBuffer(androidasset);
+	int length = AAsset_getLength(androidasset);
+	err = FT_New_Memory_Face(ftlib, buf, length, 0, &fontface);
+#else
 	err = FT_New_Face(ftlib, fullPath.c_str(), 0, &fontface);
+#endif
 	if (err) {
 		std::string errorstr = "freetype error";
 		if (err == 1) errorstr = "wrong file name";
 		gLoge("gFont") << "Freetype error: " << errorstr.c_str();
 		return false;
 	}
+
 
 	FT_Set_Char_Size(fontface, fontsize << 6, fontsize << 6, dpi, dpi);
 	lineheight = fontsize * 1.43f;
@@ -94,7 +111,7 @@ void gFont::drawText(const std::string& text, float x, float y) {
 	          cid1 = getCharID(c1);
 	          if (cpset[cid1].character == unloadedchar) loadChar(cid1);
 	          posx1 += getKerning(cid1, cold1);
-	          textures[cid1].draw(posx1, posy1 + cpset[cid1].dytop);
+	          textures[cid1]->draw(posx1, posy1 + cpset[cid1].dytop);
 	          posx1 += cpset[cid1].advance * letterspacing;
 	      }
 	    index1++;
@@ -180,13 +197,16 @@ void gFont::resizeVectors(int num) {
 	characternumlimit = num;
 
 	std::vector<charProperties>().swap(cpset);
-	std::vector<gTexture>().swap(textures);
 	std::vector<int>().swap(loadedcharacters);
 
 	// initialize character info and textures
 	cpset.resize(characternumlimit);
 	for (int i=0; i<characternumlimit; ++i) cpset[i].character = unloadedchar;
 
+	for (const auto& item : textures) {
+		delete item;
+	}
+	textures.clear();
 	textures.resize(characternumlimit);
 
 	// load 'a' character for display space char
@@ -288,7 +308,7 @@ void gFont::loadChar(const int& charID) {
 	  lcpixelsw = lclongest;
 	  lcpixelsh = lcpixelsw;
 
-	  unsigned char lcpixels[lcpixelsw * lcpixelsh * 2];
+	  unsigned char* lcpixels = new unsigned char[lcpixelsw * lcpixelsh * 2];
 	  lcapsize = lcpixelsw * lcpixelsh;
 	  for (lci4 = 0; lci4 < lcapsize; lci4++) {
 		  lcpixels[lci4 * 2] = 255;
@@ -297,15 +317,16 @@ void gFont::loadChar(const int& charID) {
 
 	  insertData(lcdata, lcdataw, lcdatah, 2, lcpixels, lcpixelsw, lcpixelsh, 2, border, border);
 
-	  textures[lci] = gTexture(lcpixelsw, lcpixelsh, GL_LUMINANCE_ALPHA, false);
+	  textures[lci] = new gTexture(lcpixelsw, lcpixelsh, GL_LUMINANCE_ALPHA, false);
 
 	  if (isantialiased && fontsize > 20) {
-	    textures[lci].setFiltering(gTexture::TEXTUREMINMAGFILTER_LINEAR, gTexture::TEXTUREMINMAGFILTER_LINEAR);
+	    textures[lci]->setFiltering(gTexture::TEXTUREMINMAGFILTER_LINEAR, gTexture::TEXTUREMINMAGFILTER_LINEAR);
 	  } else {
-		  textures[lci].setFiltering(gTexture::TEXTUREMINMAGFILTER_NEAREST, gTexture::TEXTUREMINMAGFILTER_NEAREST);
+		  textures[lci]->setFiltering(gTexture::TEXTUREMINMAGFILTER_NEAREST, gTexture::TEXTUREMINMAGFILTER_NEAREST);
 	  }
 
-	  textures[lci].loadData(lcpixels, lcpixelsw, lcpixelsh, 2, true);
+	  textures[lci]->loadData(lcpixels, lcpixelsw, lcpixelsh, 2, true);
+	  delete[] lcpixels;
 }
 
 
@@ -327,10 +348,23 @@ bool gFont::insertData(unsigned char* srcData, int srcWidth, int srcHeight, int 
 }
 
 int gFont::getKerning(int c, int previousC) {
-    if(iskerning){
+    if(fontface && iskerning) {
+        // Convert the characters to indices
+        FT_UInt index1 = FT_Get_Char_Index(fontface, previousC);
+        FT_UInt index2 = FT_Get_Char_Index(fontface, c);
+
+        // Get the kerning vector
         FT_Vector kerning;
-        FT_Get_Kerning(fontface, FT_Get_Char_Index(fontface, previousC), FT_Get_Char_Index(fontface, c), FT_KERNING_DEFAULT, &kerning);
+        FT_Get_Kerning(fontface, index1, index2, FT_KERNING_DEFAULT, &kerning);
+
+        // X advance is already in pixels for bitmap fonts
+        if (!FT_IS_SCALABLE(fontface))
+            return kerning.x;
+
         return kerning.x >> 6;
+//        FT_Vector kerning;
+//        FT_Get_Kerning(fontface, FT_Get_Char_Index(fontface, previousC), FT_Get_Char_Index(fontface, c), FT_KERNING_DEFAULT, &kerning);
+//        return kerning.x >> 6;
     }else{
         return 0;
     }

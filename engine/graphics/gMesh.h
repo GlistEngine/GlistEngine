@@ -24,22 +24,21 @@
 
 class gMesh : public gNode {
 public:
-	static const int DRAWMODE_POINTS = 0, DRAWMODE_LINES = 1, DRAWMODE_LINELOOP = 2, DRAWMODE_LINESTRIP = 3,
-	DRAWMODE_TRIANGLES = 4, DRAWMODE_TRIANGLESTRIP = 5, DRAWMODE_TRIANGLEFAN = 6,
-	DRAWMODE_QUADS = 7, DRAWMODE_QUADSTRIP = 8, DRAWMODE_POLYGON = 9;
+	static const int DRAWMODE_POINTS = GL_POINTS, DRAWMODE_LINES = GL_LINES, DRAWMODE_LINELOOP = GL_LINE_LOOP, DRAWMODE_LINESTRIP = GL_LINE_STRIP,
+	DRAWMODE_TRIANGLES = GL_TRIANGLES, DRAWMODE_TRIANGLESTRIP = GL_TRIANGLE_STRIP, DRAWMODE_TRIANGLEFAN = GL_TRIANGLE_FAN;
 
 	gMesh();
-	gMesh(std::vector<gVertex> vertices, std::vector<unsigned int> indices, std::vector<gTexture> textures);
+	gMesh(std::vector<gVertex> vertices, std::vector<gIndex> indices, std::vector<gTexture*> textures);
 	virtual ~gMesh();
 
-	void setVertices(std::vector<gVertex> vertices, std::vector<unsigned int> indices = std::vector<unsigned int>());
-	void setTextures(std::vector<gTexture>& textures);
+	void setVertices(std::vector<gVertex> vertices, std::vector<gIndex> indices = std::vector<gIndex>());
+	void setTextures(std::vector<gTexture*> textures);
 	void setTexture(gTexture* texture);
-	void addTexture(gTexture tex);
+	void addTexture(gTexture* tex);
 	gTexture* getTexture(int textureNo);
 
 	std::vector<gVertex>& getVertices();
-	std::vector<unsigned int>& getIndices();
+	std::vector<gIndex>& getIndices();
 	int getVerticesNum() const;
 	int getIndicesNum() const;
 	gBoundingBox getBoundingBox();
@@ -71,8 +70,8 @@ protected:
 
 private:
     std::string name;
-	std::vector<unsigned int> indices;
-	std::vector<gTexture> textures;
+	std::vector<gIndex> indices;
+	std::vector<gTexture*> textures;
 	int drawmode;
     gMaterial material;
     int sli;

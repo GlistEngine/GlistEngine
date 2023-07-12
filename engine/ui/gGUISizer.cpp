@@ -311,7 +311,7 @@ void gGUISizer::enableBackgroundFill(bool isEnabled) {
 
 void gGUISizer::update() {
 //	gLogi("gGUISizer") << "update, c0pr:" << linetprs[1];
-//	root->getAppManager()->setCursor(3);
+//	appmanager->setCursor(3);
 	for(int i = 0; i < linenum; i++) {
 		for(int j = 0; j < columnnum; j++) {
 			if(iscontrolset[i][j]) guicontrol[i][j]->update();
