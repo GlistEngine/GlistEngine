@@ -2,7 +2,7 @@
  * gSepiatone.cpp
  *
  *  Created on: 10 Tem 2023
- *      Author: BATUHAN
+ *      Author: Batuhan Yigit
  */
 
 #include "gSepiatone.h"

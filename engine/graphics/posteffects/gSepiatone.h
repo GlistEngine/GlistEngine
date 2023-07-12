@@ -2,7 +2,7 @@
  * gSepiatone.h
  *
  *  Created on: 10 Tem 2023
- *      Author: BATUHAN
+ *      Author: Batuhan Yigit
  */
 
 #ifndef GRAPHICS_POSTEFFECTS_GSEPIATONE_H_

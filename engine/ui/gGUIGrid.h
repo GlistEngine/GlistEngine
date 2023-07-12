@@ -31,6 +31,9 @@ public:
 	    std::string showncontent;
 	    std::string celltype;
 	    int fontnum;
+	    int cellalignment;
+	    float textmoveamount;
+	    gColor cellfontcolor;
 	    Cell(){
 	    	cellx = -1;
 	    	celly = -1;
@@ -40,6 +43,9 @@ public:
 	    	cellcontent = "";
 	    	showncontent = "";
 	    	fontnum = gGUIManager::FONT_REGULAR;
+	    	cellalignment = gBaseGUIObject::TEXTALIGNMENT_LEFT;
+	    	textmoveamount = 0;
+	    	cellfontcolor = fontcolor;
 	    }
 	};
 	gGUIGrid();
@@ -49,7 +55,6 @@ public:
 	void setGrid(int rowNum, int columnNum);
 	void setRowNum(int rowNum);
 	void setcolumnNum(int columnNum);
-	void setTextAlignment(int textAlignment);
 
 	Cell* getCell(int rowNo, int columnNo);
 
@@ -71,6 +76,8 @@ public:
 	void changeCell();
 	void checkCellType(int cellIndex);
 	void changeCellFont(int fontNum);
+	void changeCellAlignment(int cellAlignment);
+	void changeCellFontColor(gColor* fontColor);
 
 	void update();
 
