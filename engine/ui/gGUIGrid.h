@@ -61,6 +61,8 @@ public:
 	void drawContent();
 	void drawCellBackground();
 	void drawSelectedBox();
+	void drawSelectedRow();
+	void drawSelectedColumn();
 	void drawTitleRowBackground();
 	void drawTitleColumnBackground();
 	void drawRowContents();
@@ -95,7 +97,7 @@ private:
 	float gridx, gridy, gridw, gridh;
 	float gridboxw, gridboxh;
 	int selectedbox;
-	bool isselected;
+	bool isselected, isrowselected, iscolumnselected;
 	int rowtitle;
 	int columntitle;
 	gGUITextbox textbox;
@@ -104,6 +106,7 @@ private:
 	bool isdoubleclicked;
 	int newgridboxw;
 	gGUIManager* manager;
+	int selectedtitle;
 };
 
 #endif /* UI_GGUIGRID_H_ */

@@ -24,6 +24,8 @@ gGUIGrid::gGUIGrid() {
 	gridh = gridboxh * rownum;
 	selectedbox = 0;
 	isselected = false;
+	isrowselected = false;
+	iscolumnselected = false;
 	totalw = columnnum * gridboxw;
 	totalh = rownum * gridboxh;
 	rowtitle = 1;
@@ -34,6 +36,7 @@ gGUIGrid::gGUIGrid() {
 	previousclicktime = clicktime - 2 * clicktimediff;
 	firstclicktime = previousclicktime - 2 * clicktimediff;
 	isdoubleclicked = false;
+	selectedtitle = 0;
 	enableScrollbars(true, false);
 	Cell tempcell;
 	setMargin(tempcell.cellw / 2, tempcell.cellh);
@@ -296,6 +299,8 @@ void gGUIGrid::drawContent() {
 	gColor oldcolor = renderer->getColor();
 	drawCellBackground();
 	if(isselected) drawSelectedBox();
+	else if(isrowselected) drawSelectedRow();
+	else if(iscolumnselected) drawSelectedColumn();
 	drawCellContents();
 	textbox.setFirstX(firstx);
 	textbox.setFirstY(firsty);
@@ -317,6 +322,18 @@ void gGUIGrid::drawSelectedBox() {
 	renderer->setColor(0.0f, 1.0f, 0.0f, 1.0f);
 	gDrawRectangle(allcells.at(selectedbox).cellx + 1 - firstx, (allcells.at(selectedbox).celly + 1) - firsty, gridboxw - 2, gridboxh - 2, false);
 	gDrawRectangle(allcells.at(selectedbox).cellx + (gridboxw - 2) - 6 - firstx, allcells.at(selectedbox).celly + (gridboxh - 2) - 4 - firsty, 6, 6, true); // FLAG
+}
+
+void gGUIGrid::drawSelectedRow() {
+	renderer->setColor(0.0f, 1.0f, 0.0f, 1.0f);
+	gDrawRectangle(gridx + (gridboxw / 2) + 1 - firstx, gridy + gridboxh * selectedtitle + 1 - firsty, gridw - 2, gridboxh - 2, false);
+	gDrawRectangle(gridx + (gridboxw / 2) + gridw - 2 - 6 - firstx, gridy + gridboxh * selectedtitle + (gridboxh - 2) - 4 - firsty, 6, 6, true); // FLAG
+}
+
+void gGUIGrid::drawSelectedColumn() {
+	renderer->setColor(0.0f, 1.0f, 0.0f, 1.0f);
+	gDrawRectangle(gridx + (gridboxw / 2) + 1 + (gridboxw * (selectedtitle - 1)) - firstx, gridy + gridboxh + 1 - firsty, gridboxw - 2, gridh - 2, false);
+	gDrawRectangle(gridx + (gridboxw / 2) + (gridboxw * (selectedtitle - 1)) + gridboxw - 2 - 6 - firstx, gridy + gridboxh + gridh - 2 - 4 - firsty, 6, 6, true); // FLAG
 }
 
 void gGUIGrid::drawTitleRowBackground() {
@@ -376,7 +393,36 @@ void gGUIGrid::mousePressed(int x, int y, int button) {
 	gGUIScrollable::mousePressed(x, y, button);
 	int pressedx = x - left - firstx;
 	int pressedy = y - top - firsty - titledy;
-	if(pressedx >= gridx + (gridboxw / 2) - firstx && pressedx <= gridx + (gridboxw / 2) + gridw - firstx && pressedy >= gridy + gridboxh - firsty && pressedy <= gridy + gridboxh + gridh - firsty) {
+	if(!(pressedy < gridy + gridboxh - firsty && pressedx < gridx + (gridboxw / 2) - firstx) && pressedx >= gridx - firstx && pressedx <= gridx + (gridboxw / 2) + gridw - firstx && pressedy >= gridy - firsty && pressedy <= gridy + gridboxh + gridh - firsty) {
+		if(pressedx >= gridx + (gridboxw / 2) - firstx && pressedx <= gridx + (gridboxw / 2) + gridw - firstx && pressedy >= gridy + gridboxh - firsty && pressedy <= gridy + gridboxh + gridh - firsty) {
+			isselected = true;
+			isrowselected = false;
+			iscolumnselected = false;
+			int newcellindex = ((int)((x + firstx - left - (gridboxw / 2)) / gridboxw)) + ((int)((y + firsty - top - gridboxh - titletopmargin + ((font->getSize() * 1.8f) * !istitleon)) / gridboxh))  * columnnum ; // * gridboxw + (gridboxw / 2);
+			if(newcellindex != selectedbox) {
+				if(istextboxactive) changeCell();
+				if(newcellindex != selectedbox) {
+					allcells.at(selectedbox).iscellselected = false;
+					allcells.at(newcellindex).iscellselected = true;
+				}
+				selectedbox = newcellindex;
+			}
+		}
+		else if(pressedx >= gridx - firstx && pressedx < gridx + (gridboxw / 2) - firstx && pressedy >= gridy + gridboxh - firsty && pressedy <= gridy + gridboxh + gridh - firsty) {
+			selectedtitle = ceil((pressedy + (firsty * 2)) / gridboxh) - 1;
+			selectedbox = columnnum * (selectedtitle - 1);
+			isselected = false;
+			isrowselected = true;
+			iscolumnselected = false;
+		}
+		else if(pressedx >= gridx + (gridboxw / 2) - firstx && pressedx < gridx + (gridboxw / 2) + gridw - firstx && pressedy >= gridy - firsty && pressedy <= gridy + gridboxh - firsty) {
+			selectedtitle = ceil((pressedx - gridboxw / 2 + (firstx * 2)) / gridboxw);
+			selectedbox = selectedtitle - 1;
+			isselected = false;
+			isrowselected = false;
+			iscolumnselected = true;
+		}
+
 		previousclicktime = clicktime;
 		clicktime = gGetSystemTimeMillis();
 		if(clicktime - previousclicktime <= clicktimediff) {
@@ -389,16 +435,6 @@ void gGUIGrid::mousePressed(int x, int y, int button) {
 			textbox.mousePressed(pressedx, pressedy, button);
 			istextboxactive = true;
 		} else istextboxactive = false;
-		isselected = true;
-		int newcellindex = ((int)((x + firstx - left - (gridboxw / 2)) / gridboxw)) + ((int)((y + firsty - top - gridboxh - titletopmargin + ((font->getSize() * 1.8f) * !istitleon)) / gridboxh))  * columnnum ; // * gridboxw + (gridboxw / 2);
-		if(newcellindex != selectedbox) {
-			if(istextboxactive) changeCell();
-			if(newcellindex != selectedbox) {
-				allcells.at(selectedbox).iscellselected = false;
-				allcells.at(newcellindex).iscellselected = true;
-			}
-			selectedbox = newcellindex;
-		}
 	}
 
 }
