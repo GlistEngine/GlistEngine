@@ -211,6 +211,8 @@ public:
 	void setTextAlignment(int textAlignment, float cellW, int initX);
 	float getTextMoveAmount();
 
+	void setTextColor(gColor* textColor);
+
 	int getCursorPosX();
 	void setCursorPosX(int cursorPosX, int length);
 
@@ -283,6 +285,7 @@ private:
 	int textalignmentamount;
 	float cursormoveamount;
 	float textmoveamount;
+	gColor* textcolor;
 
 	//undo stacks
 	std::stack<std::string> undostack;
