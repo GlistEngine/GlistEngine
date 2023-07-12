@@ -264,6 +264,7 @@ private:
 	int linecount;
 	int lineheight;
 	bool ismultiline;
+	bool linecountexceeded;
 	int currentline;
 	int linetopmargin;
 	int hdiff;
