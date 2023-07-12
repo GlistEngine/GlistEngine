@@ -59,7 +59,7 @@ public:
 	void setCursorMode(int cursorMode) override;
 
 	void setClipboardString(std::string text) override;
-	std::string getClipboardString() const override;
+	std::string getClipboardString() override;
 
 	void setWindowSize(int width, int height) override;
 	void setWindowResizable(bool isResizable) override;

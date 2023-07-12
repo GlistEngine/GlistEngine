@@ -61,17 +61,17 @@ public:
 	/**
 	 * @return Target frames per second value
 	 */
-	int getTargetFramerate() const;
+	int getTargetFramerate();
 
 	/**
 	 * @return Current frames per second value.
 	 */
-	int getFramerate() const;
+	int getFramerate();
 
 	/**
 	 * @return Elapsed time between this frame and the previous one, as seconds. Also known as deltaTime.
 	 */
-	double getElapsedTime() const;
+	double getElapsedTime();
 
 	void enableVsync();
 	void disableVsync();

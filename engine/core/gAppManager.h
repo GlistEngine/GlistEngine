@@ -189,7 +189,7 @@ public:
 	/**
 	 * @return Current canvas.
 	 */
-	gBaseCanvas* getCurrentCanvas() const;
+	gBaseCanvas* getCurrentCanvas();
 
 	/**
 	 * @param framerate Target frames per second value
@@ -199,17 +199,17 @@ public:
 	/**
 	 * @return Target frames per second value
 	 */
-    int getTargetFramerate() const;
+    int getTargetFramerate();
 
 	/**
 	 * @return Current frames per second value.
 	 */
-    int getFramerate() const;
+    int getFramerate();
 
 	/**
 	 * @return Elapsed time between this frame and the previous one, as seconds. Also known as deltaTime.
 	 */
-    double getElapsedTime() const;
+    double getElapsedTime();
 
 	/**
 	 * @return Current gGUIFrame.
@@ -217,7 +217,7 @@ public:
 	gGUIFrame* getCurrentGUIFrame();
 
 	void setClipboardString(const std::string& clipboard);
-    std::string getClipboardString() const;
+    std::string getClipboardString();
 
 	/**
 	 * Possible values are

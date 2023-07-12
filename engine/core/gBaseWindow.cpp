@@ -75,7 +75,7 @@ bool gBaseWindow::getShouldClose() {
 	return false;
 }
 
-bool gBaseWindow::isRendering() const {
+bool gBaseWindow::isRendering() {
 	return true;
 }
 
@@ -119,7 +119,7 @@ void gBaseWindow::setClipboardString(std::string text) {
 
 }
 
-std::string gBaseWindow::getClipboardString() const {
+std::string gBaseWindow::getClipboardString() {
 	return "";
 }
 
@@ -150,7 +150,7 @@ void gBaseWindow::setTitle(std::string&& windowTitle) {
 	title = std::move(windowTitle);
 }
 
-const std::string& gBaseWindow::getTitle() const {
+const std::string& gBaseWindow::getTitle() {
 	return title;
 }
 

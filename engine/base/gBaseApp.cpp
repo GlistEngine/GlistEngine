@@ -64,15 +64,15 @@ void gBaseApp::setTargetFramerate(int targetFramerate) {
 	appmanager->setTargetFramerate(targetFramerate);
 }
 
-int gBaseApp::getFramerate() const {
+int gBaseApp::getFramerate() {
 	return appmanager->getFramerate();
 }
 
-int gBaseApp::getTargetFramerate() const {
+int gBaseApp::getTargetFramerate() {
 	return appmanager->getTargetFramerate();
 }
 
-double gBaseApp::getElapsedTime() const {
+double gBaseApp::getElapsedTime() {
 	return appmanager->getElapsedTime();
 }
 

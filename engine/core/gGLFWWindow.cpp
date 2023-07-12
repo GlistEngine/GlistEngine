@@ -171,7 +171,7 @@ void gGLFWWindow::setClipboardString(std::string text) {
 	glfwSetClipboardString(window, text.c_str());
 }
 
-std::string gGLFWWindow::getClipboardString() const {
+std::string gGLFWWindow::getClipboardString() {
 	return glfwGetClipboardString(window);
 }
 

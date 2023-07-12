@@ -44,7 +44,7 @@ public:
 
 	virtual bool getShouldClose();
 
-	bool isRendering() const;
+	bool isRendering();
 
 	/**
 	 * Performs the said operations at the specified frame rate.
@@ -66,7 +66,7 @@ public:
 	virtual void setCursorMode(int cursorMode);
 
 	virtual void setClipboardString(std::string text);
-	virtual std::string getClipboardString() const;
+	virtual std::string getClipboardString();
 
 	/**
 	 * Sets game window size.
@@ -104,7 +104,7 @@ public:
 	 *
 	 * @return Returns the title at the top of the window.
 	 */
-	const std::string& getTitle() const;
+	const std::string& getTitle();
 
 	virtual void setWindowResizable(bool isResizable);
 	virtual void setWindowSizeLimits(int minWidth, int minHeight, int maxWidth, int maxHeight);

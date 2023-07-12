@@ -275,7 +275,7 @@ void gAppManager::setCurrentCanvas(gBaseCanvas* canvas) {
     iscanvasset = true;
 }
 
-gBaseCanvas* gAppManager::getCurrentCanvas() const {
+gBaseCanvas* gAppManager::getCurrentCanvas() {
     return canvasmanager->getCurrentCanvas();
 }
 
@@ -284,11 +284,11 @@ void gAppManager::setTargetFramerate(int framerate) {
 	updateTime();
 }
 
-int gAppManager::getTargetFramerate() const {
+int gAppManager::getTargetFramerate() {
     return targetframerate;
 }
 
-int gAppManager::getFramerate() const {
+int gAppManager::getFramerate() {
     return (uint32_t)(1'000'000'000 / deltatime.count());
 }
 
@@ -304,7 +304,7 @@ void gAppManager::setCurrentGUIFrame(gGUIFrame *guiFrame) {
     guimanager->setCurrentFrame(guiFrame);
 }
 
-double gAppManager::getElapsedTime() const {
+double gAppManager::getElapsedTime() {
     return deltatime.count() / 1'000'000'000.0;
 }
 
@@ -312,7 +312,7 @@ void gAppManager::setClipboardString(const std::string &clipboard) {
     window->setClipboardString(clipboard);
 }
 
-std::string gAppManager::getClipboardString() const {
+std::string gAppManager::getClipboardString() {
     return window->getClipboardString();
 }
 
