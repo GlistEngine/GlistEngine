@@ -236,6 +236,7 @@ private:
 	std::vector<int> clickTextbox(int x, int y);
 	std::vector<int> calculateClickPosition(int x, int y);
 	std::vector<int> calculateClickPositionMultiline(int x, int y);
+	std::vector<int> calculateCursorPositionMultiline(int x, int y);
 	std::vector<int> calculateLetterPosition(int letterCharNo);
 	std::vector<int> calculateAllLetterPositions();
 	void calculateLines();
@@ -265,7 +266,7 @@ private:
 	int lineheight;
 	bool ismultiline;
 	bool linecountexceeded;
-	int currentline;
+	int currentline, lastline;
 	int linetopmargin;
 	int hdiff;
 	std::vector<std::string> lines;
