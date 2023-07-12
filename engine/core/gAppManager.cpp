@@ -10,7 +10,6 @@
 #include "gGUIFrame.h"
 
 #include <thread>
-#include <mutex>
 
 // Platform specific window implementation
 #if defined(WIN32) || defined(LINUX) || defined(APPLE)
