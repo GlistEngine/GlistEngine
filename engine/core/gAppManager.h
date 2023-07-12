@@ -270,7 +270,7 @@ public:
     int getJoystickAxesCount(int joystickId);
     const float* getJoystickAxes(int joystickId);
     bool isGamepadEnabled() { return isjoystickenabled; }
-    bool isJoystickButtonPressed(int joystickId, int buttonId);
+    bool isGamepadButtonPressed(int joystickId, int buttonId);
     int getMaxJoystickNum() { return maxjoysticknum; }
     int getMaxJoystickButtonNum() { return maxjoystickbuttonnum; }
 

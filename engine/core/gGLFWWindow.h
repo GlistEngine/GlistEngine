@@ -66,7 +66,7 @@ public:
 	void setWindowSizeLimits(int minWidth, int minHeight, int maxWidth, int maxHeight) override;
 
 	bool isJoystickPresent(int joystickId) override;
-	bool isJoystickButtonPressed(int joystickId, int buttonId) override;
+	bool isGamepadButtonPressed(int joystickId, int buttonId) override;
 	const float* getJoystickAxes(int joystickId, int* axisCountPtr) override;
 
   private:

@@ -132,7 +132,7 @@ public:
 	void setEventHandler(EventHandlerFn handler);
 
 	virtual bool isJoystickPresent(int joystickId);
-    virtual bool isJoystickButtonPressed(int joystickId, int buttonId);
+    virtual bool isGamepadButtonPressed(int joystickId, int buttonId);
 	virtual const float* getJoystickAxes(int joystickId, int* axisCountPtr);
 
 public:

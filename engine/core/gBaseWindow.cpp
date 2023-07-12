@@ -208,7 +208,7 @@ void gBaseWindow::sighandler(int signum) {
 #endif
 }
 
-bool gBaseWindow::isJoystickButtonPressed(int joystickId, int buttonId) {
+bool gBaseWindow::isGamepadButtonPressed(int joystickId, int buttonId) {
     return false;
 }
 

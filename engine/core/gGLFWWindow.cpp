@@ -202,7 +202,7 @@ bool gGLFWWindow::isJoystickPresent(int joystickId) {
 	return glfwJoystickPresent(joystickId);
 }
 
-bool gGLFWWindow::isJoystickButtonPressed(int joystickId, int buttonId) {
+bool gGLFWWindow::isGamepadButtonPressed(int joystickId, int buttonId) {
 	GLFWgamepadstate gpstate;
 	glfwGetGamepadState(joystickId, &gpstate);
 	return gpstate.buttons[buttonId];

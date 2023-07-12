@@ -113,7 +113,7 @@ protected:
 	bool isGridEnabled(), isGridXYEnabled(), isGridYZEnabled(), isGridXZEnabled();
 
 	bool isJoystickConnected(int joystickId);
-	bool isJoystickButtonPressed(int joystickId, int buttonId);
+	bool isGamepadButtonPressed(int joystickId, int buttonId);
 };
 
 #endif /* ENGINE_BASE_GBASECANVAS_H_ */

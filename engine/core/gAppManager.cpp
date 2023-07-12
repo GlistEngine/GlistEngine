@@ -340,11 +340,11 @@ const float* gAppManager::getJoystickAxes(int joystickId) {
     return window->getJoystickAxes(joystickId, &joystickaxecount);
 }
 
-bool gAppManager::isJoystickButtonPressed(int joystickId, int buttonId) {
+bool gAppManager::isGamepadButtonPressed(int joystickId, int buttonId) {
     if(joystickId >= maxjoysticknum || !isjoystickenabled || !joystickconnected[joystickId]) {
         return false;
     }
-    return window->isJoystickButtonPressed(joystickId, buttonId);
+    return window->isGamepadButtonPressed(joystickId, buttonId);
 }
 
 void gAppManager::tick() {

@@ -93,8 +93,8 @@ bool gBaseCanvas::isJoystickConnected(int joystickId) {
 
 }
 
-bool gBaseCanvas::isJoystickButtonPressed(int joystickId, int buttonId) {
-	return appmanager->isJoystickButtonPressed(joystickId, buttonId);
+bool gBaseCanvas::isGamepadButtonPressed(int joystickId, int buttonId) {
+	return appmanager->isGamepadButtonPressed(joystickId, buttonId);
 }
 
 void gBaseCanvas::onGuiEvent(int guiObjectId, int eventType, std::string value1, std::string value2) {
