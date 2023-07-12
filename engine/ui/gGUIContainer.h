@@ -39,6 +39,7 @@ public:
 
 	void setCursorOn(bool isOn);
 
+
 protected:
 	gGUISizer* guisizer;
 	int topbarh;

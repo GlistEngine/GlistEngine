@@ -118,6 +118,7 @@ public:
 
 	virtual void setCursorOn(bool isOn);
 
+
 	int id, type;
 	int left, top, right, bottom, width, height;
 	int titlex, titley, titledy;

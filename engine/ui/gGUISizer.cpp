@@ -349,6 +349,7 @@ void gGUISizer::draw() {
 			if(i == 0) continue;
 			for (int k = 0; k < 3; k++) {
 				float lc = foregroundcolor->r - (std::fabs(k - 1) * 0.05f);
+
 				renderer->setColor(gColor(lc, lc, lc));
 				int t = top + (height * linetprs[i]) + k - 1;
 				gDrawLine(left, t, right, t);
