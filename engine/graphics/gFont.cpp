@@ -326,6 +326,7 @@ void gFont::loadChar(const int& charID) {
 	  }
 
 	  textures[lci]->loadData(lcpixels, lcpixelsw, lcpixelsh, 2, true);
+	  delete[] lcpixels;
 }
 
 
