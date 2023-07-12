@@ -1,6 +1,9 @@
-//
-// Created by Metehan Gezer on 6.07.2023.
-//
+/*
+ * gAppManager.cpp
+ *
+ *  Created on: May 6, 2020
+ *      Author: noyan
+ */
 
 #include "gAppManager.h"
 #include "gBaseComponent.h"
