@@ -38,14 +38,14 @@
 <area shape="rect" id="node41" href="$classgShadowMap.html" title=" " alt="" coords="354,917,463,944"/>
 <area shape="rect" id="node42" href="$classgTexture.html" title=" " alt="" coords="369,968,448,995"/>
 <area shape="rect" id="node43" href="$classgVbo.html" title=" " alt="" coords="381,1019,436,1045"/>
-<area shape="rect" id="node22" href="$classgGUIControl.html" title=" " alt="" coords="537,309,639,336"/>
-<area shape="rect" id="node23" href="$classgGUIForm.html" title=" " alt="" coords="545,360,631,387"/>
-<area shape="rect" id="node25" href="$classgFireParticles.html" title=" " alt="" coords="533,411,643,437"/>
-<area shape="rect" id="node28" href="$classgDynamicGrain.html" title=" " alt="" coords="527,461,649,488"/>
-<area shape="rect" id="node29" href="$classgGrain.html" title=" " alt="" coords="555,512,621,539"/>
-<area shape="rect" id="node30" href="$classgGrayscale.html" title=" " alt="" coords="541,563,635,589"/>
-<area shape="rect" id="node31" href="$classgInversion.html" title=" " alt="" coords="543,613,633,640"/>
-<area shape="rect" id="node32" href="$classgKernelEffect.html" title=" " alt="" coords="534,664,642,691"/>
-<area shape="rect" id="node33" href="$classgSepiatone.html" title=" " alt="" coords="541,715,635,741"/>
+<area shape="rect" id="node22" href="$classgGUIControl.html" title=" " alt="" coords="549,309,651,336"/>
+<area shape="rect" id="node23" href="$classgGUIForm.html" title=" " alt="" coords="557,360,643,387"/>
+<area shape="rect" id="node25" href="$classgFireParticles.html" title=" " alt="" coords="545,411,655,437"/>
+<area shape="rect" id="node28" href="$classgColorAdjustments.html" title=" " alt="" coords="527,461,673,488"/>
+<area shape="rect" id="node29" href="$classgDynamicGrain.html" title=" " alt="" coords="539,512,661,539"/>
+<area shape="rect" id="node30" href="$classgGrain.html" title=" " alt="" coords="567,563,633,589"/>
+<area shape="rect" id="node31" href="$classgGrayscale.html" title=" " alt="" coords="553,613,647,640"/>
+<area shape="rect" id="node32" href="$classgInversion.html" title=" " alt="" coords="555,664,645,691"/>
+<area shape="rect" id="node33" href="$classgKernelEffect.html" title=" " alt="" coords="546,715,654,741"/>
 <area shape="rect" id="node49" href="$classgAssetLoader.html" title=" " alt="" coords="353,1069,464,1096"/>
 </map>

@@ -24,6 +24,7 @@ var annotated_dup =
     [ "gCharTypedEvent", "classgCharTypedEvent.html", "classgCharTypedEvent" ],
     [ "gCircle", "classgCircle.html", "classgCircle" ],
     [ "gColor", "classgColor.html", "classgColor" ],
+    [ "gColorAdjustments", "classgColorAdjustments.html", "classgColorAdjustments" ],
     [ "gCone", "classgCone.html", "classgCone" ],
     [ "gCross", "classgCross.html", "classgCross" ],
     [ "gCylinder", "classgCylinder.html", "classgCylinder" ],
