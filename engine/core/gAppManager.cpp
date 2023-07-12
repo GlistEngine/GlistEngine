@@ -350,7 +350,7 @@ void gAppManager::tick() {
         return;
     }
 
-    // todo joystick
+	updateJoystick();
     if(canvasmanager) canvasmanager->update();
     if(guimanager) guimanager->update();
     app->update();
@@ -590,6 +590,31 @@ void gAppManager::updateTime() {
 	targettimestep = AppClockDuration(1'000'000'000 / (targetframerate + 1));
 }
 
+void gAppManager::updateJoystick() {
+#ifndef ANDROID
+	if(isjoystickenabled && iswindowfocused) {
+		GLFWgamepadstate state;
+		for(int i = 0; i < maxjoysticknum; i++) {
+			if(!joystickconnected[i]) {
+				continue;
+			}
+
+			glfwGetGamepadState(i, &state);
+			for(int j = 0; j < maxjoystickbuttonnum; j++) {
+				bool buttonstate = false;
+				if(state.buttons[j]) buttonstate = true;
+				if(buttonstate != joystickbuttonstate[i][j]) {
+					if(buttonstate) canvasmanager->getCurrentCanvas()->gamepadButtonPressed(i, j);
+					else canvasmanager->getCurrentCanvas()->gamepadButtonReleased(i, j);
+				}
+				joystickbuttonstate[i][j] = buttonstate;
+			}
+		}
+	}
+#else
+	// todo gamepad support for android
+#endif
+}
 void gAppManager::submitToMainThread(std::function<void()> fn) {
     // todo use scoped_lock when switched to c++17
     std::unique_lock<std::mutex> lock(mainthreadqueuemutex);

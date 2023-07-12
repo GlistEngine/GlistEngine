@@ -354,6 +354,7 @@ private:
 #endif
 
     void updateTime();
+	void updateJoystick();
     void executeQueue();
 
     static void preciseSleep(double seconds);
