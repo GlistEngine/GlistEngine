@@ -40,6 +40,32 @@ int gDefaultUnitHeight() {
 	return 720;
 }
 
+int gDefaultMonitorWidth() {
+#ifndef ANDROID
+	int w = gDefaultWidth();
+	glfwInit();
+	const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+	w = mode->width;
+	glfwTerminate();
+	return w;
+#else
+	throw std::runtime_exception("not implemented!");
+#endif
+}
+
+int gDefaultMonitorHeight() {
+#ifndef ANDROID
+	int h = gDefaultHeight();
+	glfwInit();
+	const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+	h = mode->height;
+	glfwTerminate();
+	return h;
+#else
+	throw std::runtime_exception("not implemented!");
+#endif
+}
+
 int gDefaultScreenScaling() {
 	return 2;
 }
