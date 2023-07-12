@@ -295,3 +295,9 @@ void gBaseGUIObject::onGUIEvent(int guiObjectId, int eventType, int sourceEventT
 
 }
 
+void gBaseGUIObject::setCursorOn(bool isOn) {
+	iscursoron = isOn;
+
+}
+
+
