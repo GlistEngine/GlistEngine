@@ -8,7 +8,6 @@
 #include "gBaseApp.h"
 #include "gCanvasManager.h"
 #include "gGUIFrame.h"
-#include "gAllocatableBase.h"
 
 #include <thread>
 #include <mutex>
@@ -167,14 +166,6 @@ void gAppManager::initialize() {
 		if(!guimanager) {
 			guimanager = new gGUIManager(app, width, height);
 		}
-		// Reallocate all gpu resources if initialized before.
-		if(initializedbefore) {
-			gAllocatableBase::allocateAll();
-			if(eventhandler) {
-				gReallocateRenderDataEvent event{};
-				eventhandler(event);
-			}
-		}
 	}
     initialized = true;
     initializedbefore = true;
@@ -220,7 +211,6 @@ void gAppManager::loop() {
     }
     //gLogi("gAppManager") << "stopping loop";
     app->stop();
-    gAllocatableBase::deallocateAll();
     gRenderObject::destroyRenderer();
     if(usewindow) {
         window->close();
