@@ -15,6 +15,7 @@ var classgGUIContainer =
     [ "mouseScrolled", "classgGUIContainer.html#aba07d9ea2f5856241a0bea679fe8c3f5", null ],
     [ "set", "classgGUIContainer.html#ae1b92fc2fce622b847a69d9155fa0066", null ],
     [ "set", "classgGUIContainer.html#a187dc9343bb98b78633975a5aad3baf0", null ],
+    [ "setCursorOn", "classgGUIContainer.html#a7438dff25e26ea6df7a5a2616a9ed81e", null ],
     [ "setSizer", "classgGUIContainer.html#a652d1e210e07e0567345d9bf413a6f9a", null ],
     [ "update", "classgGUIContainer.html#a0ccbebe1d1d4eacf91e13162d2b71d17", null ],
     [ "windowResized", "classgGUIContainer.html#ae03271ea11c5b1e791b98ff6c93d45b6", null ],

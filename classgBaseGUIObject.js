@@ -24,6 +24,7 @@ var classgBaseGUIObject =
     [ "mouseReleased", "classgBaseGUIObject.html#a3b0f2d1d774701b3afb3ceddd30d986c", null ],
     [ "mouseScrolled", "classgBaseGUIObject.html#a02b28b9d85da9285a5de42544abe488a", null ],
     [ "onGUIEvent", "classgBaseGUIObject.html#aba419d856535f412a57bbc9ebc804be5", null ],
+    [ "setCursorOn", "classgBaseGUIObject.html#a710482bf10978d06c49478ccede77a2b", null ],
     [ "setEnabled", "classgBaseGUIObject.html#aa3c0e2d1e3df1fd8ced099bc186661ec", null ],
     [ "setParent", "classgBaseGUIObject.html#ae41c831df01fe84383a3c00503706e14", null ],
     [ "setParentSlotNo", "classgBaseGUIObject.html#a7adc62da93d28c49cd925fddebde2531", null ],
