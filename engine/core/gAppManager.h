@@ -48,6 +48,7 @@
 
 #include <chrono>
 #include <iostream>
+#include <mutex>
 #include "gGUIManager.h"
 
 class gCanvasManager;
@@ -327,6 +328,7 @@ private:
 
     std::vector<std::function<void()>> mainthreadqueue;
     std::mutex mainthreadqueuemutex;
+
 private:
 
     void tick();
