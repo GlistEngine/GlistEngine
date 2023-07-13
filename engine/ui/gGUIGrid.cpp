@@ -163,7 +163,7 @@ void gGUIGrid::showCell(int rowNo , int columnNo) {
 
 void gGUIGrid::checkCellType(int cellIndex) {
 	for(int i = 0; i < allcells.at(cellIndex).cellcontent.length(); i++) {
-		if(!isdigit(allcells.at(cellIndex).cellcontent.at(i))) {
+		if(!isdigit(allcells.at(cellIndex).cellcontent.at(i)) && allcells.at(cellIndex).cellcontent.at(i) != '.') {
 			if(allcells.at(cellIndex).celltype == "digit" && !allcells.at(cellIndex).iscellaligned) changeCellAlignment(gBaseGUIObject::TEXTALIGNMENT_LEFT, false);
 			allcells.at(cellIndex).celltype = "string";
 			break;
