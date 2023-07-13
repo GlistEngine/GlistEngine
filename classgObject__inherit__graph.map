@@ -38,14 +38,14 @@
 <area shape="rect" id="node41" href="$classgShadowMap.html" title=" " alt="" coords="354,917,463,944"/>
 <area shape="rect" id="node42" href="$classgTexture.html" title=" " alt="" coords="369,968,448,995"/>
 <area shape="rect" id="node43" href="$classgVbo.html" title=" " alt="" coords="381,1019,436,1045"/>
-<area shape="rect" id="node22" href="$classgGUIControl.html" title=" " alt="" coords="549,309,651,336"/>
-<area shape="rect" id="node23" href="$classgGUIForm.html" title=" " alt="" coords="557,360,643,387"/>
-<area shape="rect" id="node25" href="$classgFireParticles.html" title=" " alt="" coords="545,411,655,437"/>
-<area shape="rect" id="node28" href="$classgColorAdjustments.html" title=" " alt="" coords="527,461,673,488"/>
-<area shape="rect" id="node29" href="$classgDynamicGrain.html" title=" " alt="" coords="539,512,661,539"/>
-<area shape="rect" id="node30" href="$classgGrain.html" title=" " alt="" coords="567,563,633,589"/>
-<area shape="rect" id="node31" href="$classgGrayscale.html" title=" " alt="" coords="553,613,647,640"/>
-<area shape="rect" id="node32" href="$classgInversion.html" title=" " alt="" coords="555,664,645,691"/>
-<area shape="rect" id="node33" href="$classgKernelEffect.html" title=" " alt="" coords="546,715,654,741"/>
+<area shape="rect" id="node22" href="$classgGUIControl.html" title=" " alt="" coords="553,309,654,336"/>
+<area shape="rect" id="node23" href="$classgGUIForm.html" title=" " alt="" coords="560,360,647,387"/>
+<area shape="rect" id="node25" href="$classgFireParticles.html" title=" " alt="" coords="549,411,658,437"/>
+<area shape="rect" id="node28" href="$classgColorAdjustments.html" title=" " alt="" coords="530,461,677,488"/>
+<area shape="rect" id="node29" href="$classgColorChannelMixer.html" title=" " alt="" coords="527,512,680,539"/>
+<area shape="rect" id="node30" href="$classgDynamicGrain.html" title=" " alt="" coords="542,563,665,589"/>
+<area shape="rect" id="node31" href="$classgGrain.html" title=" " alt="" coords="571,613,636,640"/>
+<area shape="rect" id="node32" href="$classgGrayscale.html" title=" " alt="" coords="556,664,651,691"/>
+<area shape="rect" id="node33" href="$classgInversion.html" title=" " alt="" coords="558,715,649,741"/>
 <area shape="rect" id="node49" href="$classgAssetLoader.html" title=" " alt="" coords="353,1069,464,1096"/>
 </map>
