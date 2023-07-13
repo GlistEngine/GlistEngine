@@ -7,6 +7,7 @@
 
 #include "gColorChannelMixer.h"
 
+//Default rgb matrix = {{1.0, 0.0, 0.0}, {0.0, 1.0, 0.0}, {0.0, 0.0, 1.0}}.
 gColorChannelMixer::gColorChannelMixer(float rgbmatrix[3][3]) {
 	shader = new gShader();
 	shader->loadProgram(getVertSrc(), getFragSrc());
