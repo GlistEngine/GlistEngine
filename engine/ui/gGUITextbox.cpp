@@ -302,7 +302,7 @@ void gGUITextbox::draw() {
 		}
 		if(isfocused) renderer->setColor(255, 128, 0);
 		else renderer->setColor(middlegroundcolor);
-		gDrawRectangle(left + selectionboxx1 - firstx + textalignmentamount - (textfont->getStringWidth(text) / 2 * textalignment), top + hdiff + linetopmargin - firsty, selectionboxw, lineheight * 5 / 3, true);
+		gDrawRectangle(left + selectionboxx1 - firstx + textalignmentamount - (textfont->getStringWidth(text) / 2 * textalignment), top + hdiff + linetopmargin - firsty + lineheight * 5 / 3 * (currentline - 1), selectionboxw, lineheight * 5 / 3, true);
 	}
 
 	renderer->setColor(textcolor);
@@ -560,11 +560,8 @@ void gGUITextbox::pressKey() {
 					cursorposx = 0;
 					lastutf = calculateLastUtf();
 				} else if(ismultiline){
-					currentline--;
-					std::vector<int> clickpos = calculateClickPositionMultiline(right - 1, top + currentline * (lineheight + linetopmargin));
-					cursorposchar = clickpos[0];
-					cursorposx = clickpos[1];
-					cursorposutf = clickpos[2];
+					if(currentline > 1) currentline--;
+					cursorposx = textfont->getStringWidth(lines[currentline - 1]);
 				} else if(ispassword) {
 					cursorposx = 0;
 				}
@@ -697,7 +694,7 @@ void gGUITextbox::pressKey() {
 			if(lines[currentline] == "") return;
 			cursorposx = firstposx;
 			currentline++;
-			if(currentline > linecount) currentline = linecount;
+			if(currentline > lastline) currentline = lastline;
 		} else {
 			if(selectionmode) {
 				selectionposchar2 = cursorposchar;
@@ -1173,7 +1170,7 @@ int gGUITextbox::findFirstSpace(int lineend) {
 	for(int i = lineend; i > lineend - lastutf; i--) {
 		if (text[i] == ' ') return i;
 	}
-	return lineend;
+	return lineend - 1;
 }
 
 void gGUITextbox::mousePressed(int x, int y, int button) {
@@ -1292,9 +1289,12 @@ std::vector<int> gGUITextbox::calculateClickPositionMultiline(int x, int y) {
 	for(int i = 0; i < 3; i++) result.push_back(0);
 	int selectedline = 1;
 	for(int i = 0; i < linecount; i++) {
-		if(y > top + hdiff + i * (lineheight + linetopmargin) && y < top + hdiff + (i + 1) * (lineheight + linetopmargin)) selectedline = i + 1;
+		if(y > top + hdiff + (i + 1) * (lineheight + linetopmargin) && y < top + hdiff + (i + 2) * (lineheight + linetopmargin)) {
+			if(currentline > linecount) selectedline = currentline - linecount + i + 1;
+			else selectedline = i + 1;
+		}
 	}
-	if(lines[selectedline] == "") {
+	if(lines[selectedline - 1] == "") {
 		result[0] = cursorposchar;
 		result[1] = cursorposx;
 		result[2] = cursorposutf;
@@ -1476,7 +1476,7 @@ bool gGUITextbox::isNumber(char c) {
 
 void gGUITextbox::findCursorPosition() {
 	int linelastchar = 0;
-	if(currentline == linecount) linelastchar = text.size();
+	if(currentline == lastline) linelastchar = text.size();
 	else for(int i = 0; i < currentline; i++) linelastchar += lines[i].size() + 1;
 	if(cursorposchar >= linelastchar) {
 		currentline++;
