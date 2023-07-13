@@ -183,7 +183,10 @@ void gGUIGrid::changeCellFont(int fontNum) {
 
 void gGUIGrid::changeCellAlignment(int cellAlignment, bool clicked) {
 	if(clicked && !allcells.at(selectedbox).iscellaligned) allcells.at(selectedbox).iscellaligned = true;
-	else if(clicked && allcells.at(selectedbox).cellalignment == cellAlignment) allcells.at(selectedbox).iscellaligned = false;
+	else if(clicked && allcells.at(selectedbox).cellalignment == cellAlignment) {
+		allcells.at(selectedbox).iscellaligned = false;
+		cellAlignment = gBaseGUIObject::TEXTALIGNMENT_LEFT;
+	}
 	if(allcells.at(selectedbox).iscellselected) {
 		allcells.at(selectedbox).cellalignment = cellAlignment;
 		allcells.at(selectedbox).textmoveamount = 0.5f * cellAlignment;
