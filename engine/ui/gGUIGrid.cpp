@@ -93,6 +93,7 @@ void gGUIGrid::createCells() {
 			tempcell.cellalignment = gBaseGUIObject::TEXTALIGNMENT_LEFT;
 			tempcell.textmoveamount = 0;
 			tempcell.cellfontcolor = fontcolor;
+			tempcell.iscellaligned = false;
 			allcells.push_back(tempcell);
 		}
 	}
@@ -162,12 +163,14 @@ void gGUIGrid::showCell(int rowNo , int columnNo) {
 
 void gGUIGrid::checkCellType(int cellIndex) {
 	for(int i = 0; i < allcells.at(cellIndex).cellcontent.length(); i++) {
-		if(!isdigit(allcells.at(cellIndex).cellcontent.at(i))) {
+		if(!isdigit(allcells.at(cellIndex).cellcontent.at(i)) && allcells.at(cellIndex).cellcontent.at(i) != '.') {
+			if(allcells.at(cellIndex).celltype == "digit" && !allcells.at(cellIndex).iscellaligned) changeCellAlignment(gBaseGUIObject::TEXTALIGNMENT_LEFT, false);
 			allcells.at(cellIndex).celltype = "string";
 			break;
 		}
 		else allcells.at(cellIndex).celltype = "digit";
 	}
+	if(allcells.at(cellIndex).celltype == "digit" && !allcells.at(cellIndex).iscellaligned) changeCellAlignment(gBaseGUIObject::TEXTALIGNMENT_RIGHT, false);
 }
 
 void gGUIGrid::changeCellFont(int fontNum) {
@@ -178,12 +181,19 @@ void gGUIGrid::changeCellFont(int fontNum) {
 	}
 }
 
-void gGUIGrid::changeCellAlignment(int cellAlignment) {
-	if(allcells.at(selectedbox).iscellselected) {
-		allcells.at(selectedbox).cellalignment = cellAlignment;
-		allcells.at(selectedbox).textmoveamount = 0.5f * cellAlignment;
-		textbox.setTextAlignment(cellAlignment, allcells.at(selectedbox).cellw, textbox.getInitX());
+void gGUIGrid::changeCellAlignment(int cellAlignment, bool clicked) {
+	if(clicked && !allcells.at(selectedbox).iscellaligned) allcells.at(selectedbox).iscellaligned = true;
+	else if(clicked && allcells.at(selectedbox).iscellaligned && allcells.at(selectedbox).celltype == "digit") {
+		allcells.at(selectedbox).iscellaligned = false;
+		cellAlignment = gBaseGUIObject::TEXTALIGNMENT_RIGHT;
 	}
+	else if(clicked && allcells.at(selectedbox).cellalignment == cellAlignment) {
+		allcells.at(selectedbox).iscellaligned = false;
+		cellAlignment = gBaseGUIObject::TEXTALIGNMENT_LEFT;
+	}
+	allcells.at(selectedbox).cellalignment = cellAlignment;
+	allcells.at(selectedbox).textmoveamount = 0.5f * cellAlignment;
+	textbox.setTextAlignment(cellAlignment, allcells.at(selectedbox).cellw, textbox.getInitX());
 }
 
 void gGUIGrid::changeCellFontColor(gColor *fontColor) {
@@ -452,6 +462,15 @@ void gGUIGrid::mouseDragged(int x, int y, int button) {
 
 void gGUIGrid::keyPressed(int key){
 	if(istextboxactive) textbox.keyPressed(key);
+	else if(isselected || isrowselected || iscolumnselected) {
+		textbox.cleanText();
+		allcells.at(selectedbox).cellcontent = "";
+		allcells.at(selectedbox).showncontent = "";
+		createTextBox();
+		textbox.mousePressed(allcells.at(selectedbox).cellx + textbox.getInitX(), allcells.at(selectedbox).celly + textbox.getInitX(), 0);
+		textbox.keyPressed(key);
+		istextboxactive = true;
+	}
 }
 
 void gGUIGrid::keyReleased(int key) {

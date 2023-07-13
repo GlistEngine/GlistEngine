@@ -200,6 +200,8 @@ set(SRC_FILES
 	${ENGINE_DIR}/graphics/posteffects/gSepiatone.cpp
 	${ENGINE_DIR}/graphics/posteffects/gGrain.cpp
 	${ENGINE_DIR}/graphics/posteffects/gDynamicGrain.cpp
+	${ENGINE_DIR}/graphics/posteffects/gColorAdjustments.cpp
+	${ENGINE_DIR}/graphics/posteffects/gColorChannelMixer.cpp
 	${ENGINE_DIR}/graphics/posteffects/gKernelEffect.cpp
 	${ENGINE_DIR}/graphics/posteffects/kerneleffects/gBlur.cpp
 	${ENGINE_DIR}/graphics/posteffects/kerneleffects/gSharpen.cpp

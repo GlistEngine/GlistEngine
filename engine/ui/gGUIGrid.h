@@ -27,6 +27,7 @@ public:
 	    int cellrowno;
 	    int cellcolumnno;
 	    bool iscellselected;
+	    bool iscellaligned;
 	    std::string cellcontent;
 	    std::string showncontent;
 	    std::string celltype;
@@ -40,6 +41,7 @@ public:
 	    	cellh = 30.0f;
 	    	cellw = 80.0f;
 	    	iscellselected = false;
+	    	iscellaligned = false;
 	    	cellcontent = "";
 	    	showncontent = "";
 	    	fontnum = gGUIManager::FONT_REGULAR;
@@ -78,7 +80,7 @@ public:
 	void changeCell();
 	void checkCellType(int cellIndex);
 	void changeCellFont(int fontNum);
-	void changeCellAlignment(int cellAlignment);
+	void changeCellAlignment(int cellAlignment, bool clicked);
 	void changeCellFontColor(gColor* fontColor);
 
 	void update();
