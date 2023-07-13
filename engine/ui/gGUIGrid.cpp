@@ -162,8 +162,25 @@ void gGUIGrid::showCell(int rowNo , int columnNo) {
 }
 
 void gGUIGrid::checkCellType(int cellIndex) {
-	for(int i = 0; i < allcells.at(cellIndex).cellcontent.length(); i++) {
-		if(!isdigit(allcells.at(cellIndex).cellcontent.at(i)) && allcells.at(cellIndex).cellcontent.at(i) != '.') {
+	bool isnegative = false;
+	bool isfractional = false;
+	bool doubledot = false;
+	if(allcells.at(cellIndex).showncontent.at(0) == '-') isnegative = true;
+	for(int i = 1 + isnegative; i < allcells.at(cellIndex).showncontent.length(); i++) {
+		if(allcells.at(cellIndex).showncontent.at(i) == '.') {
+			for(int j = i + 1; j < allcells.at(cellIndex).showncontent.length(); j++) {
+				if(!isdigit(allcells.at(cellIndex).showncontent.at(j))) {
+					isfractional = false;
+					doubledot = true;
+					break;
+				}
+				else isfractional = true;
+			}
+			if(doubledot) break;
+		}
+	}
+	for(int i = 0 + isnegative; i < allcells.at(cellIndex).showncontent.length(); i++) {
+		if(!isdigit(allcells.at(cellIndex).showncontent.at(i)) && !(isfractional && allcells.at(cellIndex).showncontent.at(i) == '.')) {
 			if(allcells.at(cellIndex).celltype == "digit" && !allcells.at(cellIndex).iscellaligned) changeCellAlignment(gBaseGUIObject::TEXTALIGNMENT_LEFT, false);
 			allcells.at(cellIndex).celltype = "string";
 			break;
@@ -203,12 +220,54 @@ void gGUIGrid::changeCellFontColor(gColor *fontColor) {
 	}
 }
 
+std::string gGUIGrid::fixTextFunction(std::string text) {
+	std::string tempstr = text;
+	std::stack<int> unnecessaryindexes;
+	if(int(tempstr[0]) == 39) allcells.at(selectedbox).showncontent = tempstr.erase(0, 1);
+	else {
+		bool hasdigit = false;
+		for(int i = 0; i < tempstr.size(); i++) {
+			if(isdigit(tempstr[i])) {
+				hasdigit = true;
+				break;
+			}
+		}
+		if(tempstr[0] == '+' && hasdigit) {
+			unnecessaryindexes.push(0);
+			for(int i = 1; i < tempstr.size(); i++) {
+				if(tempstr[i] != '+' && tempstr[i] != '-') break;
+				if(tempstr[i] == '+') unnecessaryindexes.push(i);
+				else if(tempstr[i] != '-') continue;
+			}
+			while(!unnecessaryindexes.empty()) {
+				tempstr.erase(unnecessaryindexes.top(), 1);
+				unnecessaryindexes.pop();
+			}
+		}
+		if(tempstr[0] == '-' && hasdigit) {
+			int minuscount = 1;
+			for(int i = 1; i < tempstr.size(); i++) {
+				if(tempstr[i] == '-') minuscount++;
+				else if(tempstr[i] == '+') unnecessaryindexes.push(i);
+				else break;
+			}
+			while(!unnecessaryindexes.empty()) {
+				tempstr.erase(unnecessaryindexes.top(), 1);
+				unnecessaryindexes.pop();
+			}
+			if(minuscount % 2 == 1) tempstr.erase(0, minuscount - 1);
+			else tempstr.erase(0, minuscount);
+		}
+	}
+
+	return tempstr;
+}
 
 void gGUIGrid::fillCell(int rowNo, int columnNo, std::string tempstr) { //when rowNo = 1, columnNO = 4; tempstr = "happyyyy";
 	if(rowNo > rownum - 1 || columnNo > columnnum - 1) return;
 	int cellindex = columnNo + (rowNo * columnnum);
 	allcells.at(cellindex).cellcontent = tempstr;
-	allcells.at(cellindex).showncontent = tempstr;
+	allcells.at(cellindex).showncontent = fixTextFunction(tempstr);
 	bool isempty = (tempstr == "");
 //	gLogi("Grid") << "isempty:" << isempty;
 
