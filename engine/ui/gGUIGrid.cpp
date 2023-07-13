@@ -183,15 +183,17 @@ void gGUIGrid::changeCellFont(int fontNum) {
 
 void gGUIGrid::changeCellAlignment(int cellAlignment, bool clicked) {
 	if(clicked && !allcells.at(selectedbox).iscellaligned) allcells.at(selectedbox).iscellaligned = true;
+	else if(clicked && allcells.at(selectedbox).iscellaligned && allcells.at(selectedbox).celltype == "digit") {
+		allcells.at(selectedbox).iscellaligned = false;
+		cellAlignment = gBaseGUIObject::TEXTALIGNMENT_RIGHT;
+	}
 	else if(clicked && allcells.at(selectedbox).cellalignment == cellAlignment) {
 		allcells.at(selectedbox).iscellaligned = false;
 		cellAlignment = gBaseGUIObject::TEXTALIGNMENT_LEFT;
 	}
-	if(allcells.at(selectedbox).iscellselected) {
-		allcells.at(selectedbox).cellalignment = cellAlignment;
-		allcells.at(selectedbox).textmoveamount = 0.5f * cellAlignment;
-		textbox.setTextAlignment(cellAlignment, allcells.at(selectedbox).cellw, textbox.getInitX());
-	}
+	allcells.at(selectedbox).cellalignment = cellAlignment;
+	allcells.at(selectedbox).textmoveamount = 0.5f * cellAlignment;
+	textbox.setTextAlignment(cellAlignment, allcells.at(selectedbox).cellw, textbox.getInitX());
 }
 
 void gGUIGrid::changeCellFontColor(gColor *fontColor) {
