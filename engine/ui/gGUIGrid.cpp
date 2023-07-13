@@ -170,7 +170,6 @@ void gGUIGrid::checkCellType(int cellIndex) {
 		}
 		else allcells.at(cellIndex).celltype = "digit";
 	}
-	gLogi("") << allcells.at(cellIndex).iscellaligned;
 	if(allcells.at(cellIndex).celltype == "digit" && !allcells.at(cellIndex).iscellaligned) changeCellAlignment(gBaseGUIObject::TEXTALIGNMENT_RIGHT, false);
 }
 
