@@ -462,6 +462,15 @@ void gGUIGrid::mouseDragged(int x, int y, int button) {
 
 void gGUIGrid::keyPressed(int key){
 	if(istextboxactive) textbox.keyPressed(key);
+	else if(isselected || isrowselected || iscolumnselected) {
+		textbox.cleanText();
+		allcells.at(selectedbox).cellcontent = "";
+		allcells.at(selectedbox).showncontent = "";
+		createTextBox();
+		textbox.mousePressed(allcells.at(selectedbox).cellx + textbox.getInitX(), allcells.at(selectedbox).celly + textbox.getInitX(), 0);
+		textbox.keyPressed(key);
+		istextboxactive = true;
+	}
 }
 
 void gGUIGrid::keyReleased(int key) {
