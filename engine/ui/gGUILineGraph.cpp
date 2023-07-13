@@ -84,6 +84,8 @@ void gGUILineGraph::addData(int lineIndex, std::vector<std::array<float, 2>> dat
 }
 
 void gGUILineGraph::addPointToLine(int lineIndex, float x, float y) {
+	setLabelCountX(getLabelCountX());
+	setLabelCountY(getLabelCountY());
 	if(graphlines.size() - 1 < lineIndex) return;
 	if(x < smallestvaluex) setMinX(x);
 	else if(x > largestvaluex) setMaxX(x);
