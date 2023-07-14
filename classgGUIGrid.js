@@ -31,6 +31,8 @@ var classgGUIGrid =
     [ "mousePressed", "classgGUIGrid.html#ac97512d3a236341a8acb4c7643a958dc", null ],
     [ "mouseReleased", "classgGUIGrid.html#ad0711e9c4334d0203dee56c57057697b", null ],
     [ "mouseScrolled", "classgGUIGrid.html#a9b6be6bbfb5680a84cf7303303c96183", null ],
+    [ "pushToRedoStack", "classgGUIGrid.html#afaa5db525326f47f93f9d502c29cbdee", null ],
+    [ "pushToUndoStack", "classgGUIGrid.html#a31bb6cda15b2cab3b5aa52b8ca1d37c3", null ],
     [ "set", "classgGUIGrid.html#a21486d293fa094e2abb54a283df8afbe", null ],
     [ "setcolumnNum", "classgGUIGrid.html#a048680cc28d160c2043c5bd061469dd5", null ],
     [ "setGrid", "classgGUIGrid.html#a9d9331748e04ddca0916f8f8897f299c", null ],

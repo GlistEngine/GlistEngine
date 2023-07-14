@@ -1,5 +1,7 @@
 var NAVTREEINDEX9 =
 {
+"classgSoftFocus.html#a0529c89af00a855bd2a3d688432c8403":[0,0,133,4],
+"classgSoftFocus.html#a55655b936d0b1998da9cce9d9d43fab4":[0,0,133,1],
 "classgSoftFocus.html#a58844e035b4edc5a3af58634444c7f71":[0,0,133,2],
 "classgSoftFocus.html#a680f9e93fc80da777a606b42288d3d14":[0,0,133,3],
 "classgSoftFocus.html#a8eb3f7a706bc499a7991c4c6b08a4bc4":[0,0,133,0],
@@ -247,7 +249,5 @@ var NAVTREEINDEX9 =
 "gDynamicGrain_8h_source.html":[1,0,30],
 "gEdgeDetection_8h_source.html":[1,0,31],
 "gEvent_8h_source.html":[1,0,32],
-"gFbo_8h_source.html":[1,0,33],
-"gFile_8h_source.html":[1,0,34],
-"gFireParticles_8h_source.html":[1,0,35]
+"gFbo_8h_source.html":[1,0,33]
 };
