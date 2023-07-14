@@ -128,6 +128,12 @@ void gGUISizer::set(int x, int y, int w, int h) {
 		}
 	}
 }
+int gGUISizer::getSlotWidth(int lineNo, int columnNo) { //
+	return width * columnprs[columnNo];
+}
+int gGUISizer::getSlotHeight(int lineNo, int columnNo) { //
+	return height * lineprs[lineNo];
+}
 
 int gGUISizer::getSizerType() {
 	return sizertype;
