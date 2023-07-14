@@ -82,6 +82,7 @@ public:
 	void changeCellFont(int fontNum);
 	void changeCellAlignment(int cellAlignment, bool clicked);
 	void changeCellFontColor(gColor* fontColor);
+	std::string fixTextFunction(std::string text);
 
 	void update();
 
