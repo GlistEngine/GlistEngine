@@ -99,6 +99,7 @@ var files_dup =
     [ "gMatrix4.h", "gMatrix4_8h_source.html", null ],
     [ "gMesh.h", "gMesh_8h_source.html", null ],
     [ "gModel.h", "gModel_8h_source.html", null ],
+    [ "gMorphingMesh.h", "gMorphingMesh_8h_source.html", null ],
     [ "gNode.h", "gNode_8h_source.html", null ],
     [ "gObject.h", "gObject_8h_source.html", null ],
     [ "gPlane.h", "gPlane_8h_source.html", null ],

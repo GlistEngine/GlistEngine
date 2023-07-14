@@ -26,6 +26,7 @@ var classgModel =
     [ "isVertexAnimationStoredOnVram", "classgModel.html#a941f57fd25ddb8196fc36cdd0a256bc2", null ],
     [ "load", "classgModel.html#a5aea42589bda85df0520a9179431b1a5", null ],
     [ "loadModel", "classgModel.html#af6d718a512cc44e0e0d92b387540cb88", null ],
+    [ "loadModelWithOriginalVertices", "classgModel.html#a8c5fac17d63053692a7eff4178823315", null ],
     [ "makeVertexAnimated", "classgModel.html#a0f3c81d381a29b00e71cfd7a6d3c3645", null ],
     [ "move", "classgModel.html#aa14d59d5918732be1ee3453c24b6ecb2", null ],
     [ "move", "classgModel.html#ad716b4f310e800c96c8c4a726aa897a3", null ],

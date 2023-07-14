@@ -147,6 +147,7 @@ var hierarchy =
             [ "gCross", "classgCross.html", null ],
             [ "gCylinder", "classgCylinder.html", null ],
             [ "gLine", "classgLine.html", null ],
+            [ "gMorphingMesh", "classgMorphingMesh.html", null ],
             [ "gPlane", "classgPlane.html", null ],
             [ "gRectangle", "classgRectangle.html", null ],
             [ "gRoundedRectangle", "classgRoundedRectangle.html", null ],

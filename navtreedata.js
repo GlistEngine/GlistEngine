@@ -51,9 +51,9 @@ var NAVTREEINDEX =
 "classgGUIProgressBar.html#a94cc5d13adb6c1bf6e14660f3ec36e97",
 "classgGUIToolbarButton.html#a16f739bd41906919daad2ad12847ce0b",
 "classgMaterial.html#aa5f7b702a4b68eb74c9d8cddf9141088",
-"classgRect.html#a4134238301d4d25ca30bda626f215844",
-"classgSoftFocus.html#a0529c89af00a855bd2a3d688432c8403",
-"gFile_8h_source.html"
+"classgRay.html#a094eca866594799d8b6a4c93d6e87db2",
+"classgSkinnedMesh.html#a9180b25260ade056e1335029714cdd92",
+"gBasePlugin_8h_source.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
