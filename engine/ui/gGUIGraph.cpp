@@ -31,7 +31,7 @@ gGUIGraph::gGUIGraph() {
 
 	labelwidthx = 0.0f;
 	labelwidthy = 0.0f;
-	gridlinesxenabled = false;
+	gridlinesxenabled = true;
 	gridlinesyenabled = true;
 	floatlabelsenabled = false;
 	labelcountx = 5;

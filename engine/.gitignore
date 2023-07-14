@@ -5,3 +5,5 @@
 *.project
 *.cproject
 **/_build/
+**/cmake-build-*/
+.idea

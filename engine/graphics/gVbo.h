@@ -31,7 +31,7 @@ public:
 	virtual ~gVbo();
 
 	void setVertexData(gVertex* vertices, int coordNum, int total);
-	void setIndexData(unsigned int* indices, int total);
+	void setIndexData(gIndex* indices, int total);
 	void clear();
 
 	void bind() const;
@@ -60,7 +60,7 @@ public:
 
 	int getVAOid() const;
 	gVertex* getVertices() const;
-	unsigned int* getIndices() const;
+	gIndex* getIndices() const;
 	int getVerticesNum() const;
 	int getIndicesNum() const;
 
@@ -79,7 +79,7 @@ private:
     gVertex* verticesptr;
 
     bool isindexdataallocated;
-    unsigned int* indexarrayptr;
+    gIndex* indexarrayptr;
     int totalindexnum;
 
     gLight* scenelight;

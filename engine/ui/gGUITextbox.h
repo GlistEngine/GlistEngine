@@ -40,6 +40,7 @@
 
 #include "gGUIControl.h"
 #include <stack>
+#include "gGUIManager.h"
 
 
 class gGUITextbox: public gGUIControl {
@@ -203,6 +204,18 @@ public:
 	void setFirstX(int firstx);
 	void setFirstY(int firsty);
 
+	int getInitX();
+
+	void setTextFont(gFont* textFont);
+
+	void setTextAlignment(int textAlignment, float cellW, int initX);
+	float getTextMoveAmount();
+
+	void setTextColor(gColor* textColor);
+
+	int getCursorPosX();
+	void setCursorPosX(int cursorPosX, int length);
+
 private:
 	static const int KEY_NONE = 0, KEY_BACKSPACE = 1, KEY_LEFT = 2, KEY_RIGHT = 4, KEY_DELETE = 8, KEY_ENTER = 16, KEY_UP = 32, KEY_DOWN = 64;
 
@@ -223,6 +236,7 @@ private:
 	std::vector<int> clickTextbox(int x, int y);
 	std::vector<int> calculateClickPosition(int x, int y);
 	std::vector<int> calculateClickPositionMultiline(int x, int y);
+	std::vector<int> calculateCursorPositionMultiline(int x, int y);
 	std::vector<int> calculateLetterPosition(int letterCharNo);
 	std::vector<int> calculateAllLetterPositions();
 	void calculateLines();
@@ -251,7 +265,8 @@ private:
 	int linecount;
 	int lineheight;
 	bool ismultiline;
-	int currentline;
+	bool linecountexceeded;
+	int currentline, lastline;
 	int linetopmargin;
 	int hdiff;
 	std::vector<std::string> lines;
@@ -264,6 +279,15 @@ private:
 	int totalh;
 	int firstx, firsty;
 	bool widthchanged;
+	bool arrowkeypressed;
+	int arrowamount;
+	gFont* textfont;
+	gGUIManager* manager;
+	int textalignment;
+	int textalignmentamount;
+	float cursormoveamount;
+	float textmoveamount;
+	gColor* textcolor;
 
 	//undo stacks
 	std::stack<std::string> undostack;

@@ -25,7 +25,7 @@ public:
 	std::vector<gVertex> verticessb;
 	void setRectanglePoints(float x, float y, float w, float h, bool isFilled);
 	gVertex vertex1, vertex2, vertex3, vertex4;
-	std::vector<unsigned int> indicessb;
+	std::vector<gIndex> indicessb;
 };
 
 

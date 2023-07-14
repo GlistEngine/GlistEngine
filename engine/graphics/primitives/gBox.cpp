@@ -103,7 +103,7 @@ gBox::gBox() {
 	}
 
 	int ni = sizeof(indexdata) / sizeof(indexdata[0]);
-	std::vector<unsigned int> indicesb;
+	std::vector<gIndex> indicesb;
 	for (int i=0; i<ni; i++) {
 		indicesb.push_back(indexdata[i]);
 	}

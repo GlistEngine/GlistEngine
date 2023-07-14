@@ -26,6 +26,9 @@ gModel::gModel() {
 
 
 gModel::~gModel() {
+	for (const auto& item : textures_loaded) {
+		delete item;
+	}
 }
 
 void gModel::load(const std::string& fullPath) {
@@ -267,7 +270,7 @@ void gModel::processNode(aiNode *node, const aiScene *scene) {
 gSkinnedMesh gModel::processMesh(aiMesh *mesh, const aiScene *scene, aiMatrix4x4 matrix) {
     // data to fill
     std::vector<gVertex> vertices;
-    std::vector<unsigned int> indices;
+    std::vector<gIndex> indices;
     glm::mat4 mat = convertMatrix(matrix);
 
     // walk through each of the mesh's vertices
@@ -330,7 +333,7 @@ gSkinnedMesh gModel::processMesh(aiMesh *mesh, const aiScene *scene, aiMatrix4x4
     // return a mesh object created from the extracted mesh data
     gSkinnedMesh gmesh;
     gmesh.setName(mesh->mName.C_Str());
-    gmesh.setVertices(vertices,  indices);
+    gmesh.setVertices(vertices, indices);
 //    gmesh.setTransformationMatrix(convertMatrix(matrix));
 
     loadMaterialTextures(&gmesh, material, aiTextureType_DIFFUSE, gTexture::TEXTURETYPE_DIFFUSE);
@@ -357,7 +360,7 @@ void gModel::loadMaterialTextures(gSkinnedMesh* mesh, aiMaterial *mat, aiTexture
         	std::string aip = str.C_Str();
         	int aipspos = aip.find_last_of('/');
         	aip = aip.substr(aipspos + 1, aip.length() - aipspos - 1);
-            if(aip == textures_loaded[j].getFilename()) {
+            if(aip == textures_loaded[j]->getFilename()) {
                 skip = true; // a texture with the same filepath has already been loaded, continue to next one. (optimization)
                 texno = j;
                 break;
@@ -365,15 +368,15 @@ void gModel::loadMaterialTextures(gSkinnedMesh* mesh, aiMaterial *mat, aiTexture
         }
 
         if(!skip) {   // if texture hasn't been loaded already, load it
-            gTexture texture;
+            gTexture* texture = new gTexture();
             std::string tpath = this->directory + "/" + str.C_Str();
-            texture.load(tpath);
-            texture.setType(textureType);
+            texture->load(tpath);
+            texture->setType(textureType);
             textures_loaded.push_back(texture);  // store it as texture loaded for entire model, to ensure we won't unnecesery load duplicate textures.
             texno = textures_loaded.size() - 1;
         }
 
-        mesh->setTexture(&textures_loaded[texno]);
+        mesh->setTexture(textures_loaded[texno]);
     }
 }
 
@@ -549,7 +552,7 @@ void gModel::updateBones(gSkinnedMesh* gmesh, aiMesh* aimesh) {
 
 void gModel::updateVbo(gSkinnedMesh* gmesh) {
 	std::vector<gVertex> vertexarray = gmesh->getVertices();
-	std::vector<unsigned int> indexarray = gmesh->getIndices();
+	std::vector<gIndex> indexarray = gmesh->getIndices();
 	for (int i=0; i<gmesh->getVbo()->getVerticesNum(); i++) {
 		vertexarray[i].position = gmesh->getVertexPos(i);
 		vertexarray[i].normal = gmesh->getVertexNorm(i);
@@ -704,7 +707,7 @@ void gModel::prepareVertexAnimationData() {
 
                 if (isvertexanimationstoredonvram) {
                 	std::vector<gVertex> vertexarray = meshes[i].getVertices();
-                	std::vector<unsigned int> indexarray = meshes[i].getIndices();
+                	std::vector<gIndex> indexarray = meshes[i].getIndices();
                 	for (int l=0; l<meshes[i].getVbo()->getVerticesNum(); l++) {
                 		vertexarray[l].position = meshes[i].getVertexPosData(j, k, l);
                 		vertexarray[l].normal = meshes[i].getVertexNormData(j, k, l);

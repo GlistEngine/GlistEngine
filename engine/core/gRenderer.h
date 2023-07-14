@@ -34,6 +34,15 @@
 class gLight;
 //#include "gLight.h"
 
+#ifdef DEBUG
+#define G_CHECK_GL(a) gCheckGLErrorAndPrint("Previously Unhandled ", __PRETTY_FUNCTION__, __LINE__); a; gCheckGLErrorAndPrint("", __PRETTY_FUNCTION__, __LINE__)
+#define G_CHECK_GL2(value, fn) gCheckGLErrorAndPrint("Previously Unhandled ", __PRETTY_FUNCTION__, __LINE__); value = fn; gCheckGLErrorAndPrint("", __PRETTY_FUNCTION__, __LINE__)
+#else
+#define G_CHECK_GL(fn) fn
+#define G_CHECK_GL2(value, fn) value = fn
+#endif
+
+void gCheckGLErrorAndPrint(const std::string& prefix, const std::string& func, int line);
 
 void gEnableCulling();
 void gDisableCulling();
