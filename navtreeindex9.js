@@ -1,5 +1,6 @@
 var NAVTREEINDEX9 =
 {
+"classgSpriteAnimation.html#a1b8cf7371ac691da6112c6635427c15c":[0,0,134,4],
 "classgSpriteAnimation.html#a44d625853890bd4504570ba1fcbc0b27":[0,0,134,3],
 "classgSpriteAnimation.html#a59504f31ccf9d34be42cfa3de20fcf1a":[0,0,134,7],
 "classgSpriteAnimation.html#a881cb855d95e3bae36843f0369bda1ba":[0,0,134,5],
@@ -248,6 +249,5 @@ var NAVTREEINDEX9 =
 "gGUIActionManager_8h_source.html":[1,0,42],
 "gGUIBitmap_8h_source.html":[1,0,43],
 "gGUIButton_8h_source.html":[1,0,44],
-"gGUICandleStickChart_8h_source.html":[1,0,45],
-"gGUICheckbox_8h_source.html":[1,0,46]
+"gGUICandleStickChart_8h_source.html":[1,0,45]
 };
