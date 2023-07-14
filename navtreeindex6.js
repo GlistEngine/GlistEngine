@@ -1,5 +1,7 @@
 var NAVTREEINDEX6 =
 {
+"classgGUIToolbarButton.html#a68f0ae8e92099be256249676d792a0ef":[0,0,87,4],
+"classgGUIToolbarButton.html#ab4dc01885007f1a5039745c98fbd57b7":[0,0,87,1],
 "classgGUIToolbarButton.html#af46669389990a69138f9000a5a80610a":[0,0,87,3],
 "classgGUITreelist.html":[0,0,88],
 "classgGUITreelist.html#a01030404d21b24cb9b4a15586424f75a":[0,0,88,29],
@@ -247,7 +249,5 @@ var NAVTREEINDEX6 =
 "classgMaterial.html#aa1510cfa6c117bb31457ba5584a197bb":[0,0,106,27],
 "classgMaterial.html#aa19c50ce35e8de704a27feeb2dea042a":[0,0,106,23],
 "classgMaterial.html#aa5f7b702a4b68eb74c9d8cddf9141088":[0,0,106,57],
-"classgMaterial.html#aaac5952416870f0949f5c968cb693328":[0,0,106,65],
-"classgMaterial.html#ab4e5f80bbd09fc8f05d59d129007c89c":[0,0,106,29],
-"classgMaterial.html#ab52a08128ff5eb8ebbf8c3df80b0c18f":[0,0,106,69]
+"classgMaterial.html#aaac5952416870f0949f5c968cb693328":[0,0,106,65]
 };

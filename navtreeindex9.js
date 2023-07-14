@@ -1,5 +1,7 @@
 var NAVTREEINDEX9 =
 {
+"classgSpriteAnimation.html":[0,0,134],
+"classgSpriteAnimation.html#a1a0900bed280e4c5bac499ce494ef620":[0,0,134,1],
 "classgSpriteAnimation.html#a1b8cf7371ac691da6112c6635427c15c":[0,0,134,4],
 "classgSpriteAnimation.html#a44d625853890bd4504570ba1fcbc0b27":[0,0,134,3],
 "classgSpriteAnimation.html#a59504f31ccf9d34be42cfa3de20fcf1a":[0,0,134,7],
@@ -173,8 +175,8 @@ var NAVTREEINDEX9 =
 "classgWindowResizeEvent.html#a12037a9797b82a2efcd950a2e740f344":[0,0,147,2],
 "classgWindowResizeEvent.html#a303c8759dad7cdd6f914b71c1821c6d2":[0,0,147,0],
 "files.html":[1,0],
-"functions.html":[0,3,0],
 "functions.html":[0,3,0,0],
+"functions.html":[0,3,0],
 "functions_b.html":[0,3,0,1],
 "functions_c.html":[0,3,0,2],
 "functions_d.html":[0,3,0,3],
@@ -247,7 +249,5 @@ var NAVTREEINDEX9 =
 "gFont_8h_source.html":[1,0,38],
 "gGLFWWindow_8h_source.html":[1,0,39],
 "gGUIActionManager_8h_source.html":[1,0,42],
-"gGUIBitmap_8h_source.html":[1,0,43],
-"gGUIButton_8h_source.html":[1,0,44],
-"gGUICandleStickChart_8h_source.html":[1,0,45]
+"gGUIBitmap_8h_source.html":[1,0,43]
 };
