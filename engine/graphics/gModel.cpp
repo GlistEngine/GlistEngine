@@ -80,11 +80,11 @@ void gModel::loadModelFile(const std::string& fullPath) {
     animate(0);
 }
 
-void gModel::loadMorphingModel(const std::string &modelPath) {
-	loadMorphingModelFile(gGetModelsDir() + modelPath);
+void gModel::loadModelWithOriginalVertices(const std::string& modelPath) {
+	loadModelFileWithOriginalVertices(gGetModelsDir() + modelPath);
 }
 
-void gModel::loadMorphingModelFile(const std::string &fullPath) {
+void gModel::loadModelFileWithOriginalVertices(const std::string &fullPath) {
 #ifdef LINUX
 	std::shared_ptr<aiPropertyStore> store;
     store.reset(aiCreatePropertyStore(), aiReleasePropertyStore);
