@@ -162,6 +162,7 @@ void gGUIGrid::showCell(int rowNo , int columnNo) {
 }
 
 void gGUIGrid::checkCellType(int cellIndex) {
+	if(allcells.at(cellIndex).showncontent == "") return;
 	bool isnegative = false;
 	bool isfractional = false;
 	bool doubledot = false;
@@ -221,16 +222,22 @@ void gGUIGrid::changeCellFontColor(gColor *fontColor) {
 }
 
 std::string gGUIGrid::fixTextFunction(std::string text) {
+	if(text == "") return text;
 	std::string tempstr = text;
 	std::stack<int> unnecessaryindexes;
 	if(int(tempstr[0]) == 39) allcells.at(selectedbox).showncontent = tempstr.erase(0, 1);
 	else {
-		bool hasdigit = false;
+		bool hasdigit = true;
 		for(int i = 0; i < tempstr.size(); i++) {
-			if(isdigit(tempstr[i])) {
-				hasdigit = true;
+			if(!isdigit(tempstr[i]) && tempstr[i] != '+' && tempstr[i] != '-' && tempstr[i] != '*' && tempstr[i] != '/' && tempstr[i] != '%' && tempstr[i] != '^') {
+				if(i == 0 && tempstr[i] == '=') continue;
+				hasdigit = false;
 				break;
 			}
+		}
+		if(tempstr[0] == '=') {
+			allcells.at(selectedbox).showncontent = tempstr.erase(0, 1);
+
 		}
 		if(tempstr[0] == '+' && hasdigit) {
 			unnecessaryindexes.push(0);
@@ -521,7 +528,10 @@ void gGUIGrid::mouseDragged(int x, int y, int button) {
 
 void gGUIGrid::keyPressed(int key){
 	if(istextboxactive) textbox.keyPressed(key);
-	else if(isselected || isrowselected || iscolumnselected) {
+	else if((isselected || isrowselected || iscolumnselected) && (key == G_KEY_LEFT_CONTROL || key == G_KEY_RIGHT_CONTROL)) {
+
+	}
+	else if((isselected || isrowselected || iscolumnselected) && key != G_KEY_ENTER && key != G_KEY_UP && key != G_KEY_DOWN && key != G_KEY_RIGHT && key != G_KEY_LEFT && key != G_KEY_ESC && key != G_KEY_LEFT_SHIFT && key != G_KEY_RIGHT_SHIFT) {
 		textbox.cleanText();
 		allcells.at(selectedbox).cellcontent = "";
 		allcells.at(selectedbox).showncontent = "";
@@ -541,15 +551,31 @@ void gGUIGrid::keyReleased(int key) {
 	}
 	else if ((key == G_KEY_ENTER || key == G_KEY_DOWN) && !istextboxactive) {
 		if(selectedbox + columnnum < rownum * columnnum) selectedbox += columnnum;
+		if(isrowselected) {
+			isrowselected = false;
+			isselected = true;
+		}
 	}
 	else if(key == G_KEY_UP && !istextboxactive) {
-		if(selectedbox - columnnum > 0) selectedbox -= columnnum;
+		if(selectedbox - columnnum >= 0) selectedbox -= columnnum;
+		if(isrowselected) {
+			isrowselected = false;
+			isselected = true;
+		}
 	}
 	else if(key == G_KEY_RIGHT && !istextboxactive) {
 		if(selectedbox % columnnum != (columnnum - 1)) selectedbox++;
+		if(iscolumnselected) {
+			iscolumnselected = false;
+			isselected = true;
+		}
 	}
 	else if(key == G_KEY_LEFT && !istextboxactive) {
 		if(selectedbox % columnnum != 0) selectedbox--;
+		if(iscolumnselected) {
+			iscolumnselected = false;
+			isselected = true;
+		}
 	}
 	else if(key == G_KEY_F2) {
 		textbox.cleanText();
