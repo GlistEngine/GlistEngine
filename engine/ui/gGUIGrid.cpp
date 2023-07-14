@@ -37,6 +37,11 @@ gGUIGrid::gGUIGrid() {
 	firstclicktime = previousclicktime - 2 * clicktimediff;
 	isdoubleclicked = false;
 	selectedtitle = 0;
+	shiftpressed = false;
+	ctrlpressed = false;
+	ctrlvpressed = false;
+	ctrlzpressed = false;
+	ctrlypressed = false;
 	enableScrollbars(true, false);
 	Cell tempcell;
 	setMargin(tempcell.cellw / 2, tempcell.cellh);
@@ -221,6 +226,19 @@ void gGUIGrid::changeCellFontColor(gColor *fontColor) {
 	}
 }
 
+void gGUIGrid::pushToUndoStack() {
+	int index;
+	if(!ctrlypressed) index = selectedbox;
+	else index = redocellnumberstack.top();
+	undostringstack.push(allcells.at(index).cellcontent);
+	undocellnumberstack.push(index);
+}
+
+void gGUIGrid::pushToRedoStack() {
+	redostringstack.push(allcells.at(undocellnumberstack.top()).cellcontent);
+	redocellnumberstack.push(undocellnumberstack.top());
+}
+
 std::string gGUIGrid::fixTextFunction(std::string text) {
 	if(text == "") return text;
 	std::string tempstr = text;
@@ -365,10 +383,27 @@ void gGUIGrid::fillCell(int rowNo, int columnNo, std::string tempstr) { //when r
 }
 
 void gGUIGrid::changeCell() {
-	std::string tmpstr = textbox.getText();
-	fillCell((allcells.at(selectedbox).celly - gridboxh) / gridboxh, (allcells.at(selectedbox).cellx - (gridboxw / 2)) / gridboxw, tmpstr);
-	textbox.cleanText();
-	istextboxactive = false;
+	std::string tmpstr;
+	if(!ctrlvpressed && !ctrlzpressed && !ctrlypressed) {
+		tmpstr = textbox.getText();
+		textbox.cleanText();
+		istextboxactive = false;
+		fillCell((allcells.at(selectedbox).celly - gridboxh) / gridboxh, (allcells.at(selectedbox).cellx - (gridboxw / 2)) / gridboxw, tmpstr);
+	}
+	else if(ctrlvpressed){
+		tmpstr = appmanager->getClipboardString();
+		fillCell((allcells.at(selectedbox).celly - gridboxh) / gridboxh, (allcells.at(selectedbox).cellx - (gridboxw / 2)) / gridboxw, tmpstr);
+		ctrlvpressed = false;
+	}
+	else if(ctrlzpressed) {
+		tmpstr = undostringstack.top();
+		fillCell((allcells.at(undocellnumberstack.top()).celly - gridboxh) / gridboxh, (allcells.at(undocellnumberstack.top()).cellx - (gridboxw / 2)) / gridboxw, tmpstr);
+		ctrlzpressed = false;
+	}
+	else if(ctrlypressed) {
+		tmpstr = redostringstack.top();
+		fillCell((allcells.at(redocellnumberstack.top()).celly - gridboxh) / gridboxh, (allcells.at(redocellnumberstack.top()).cellx - (gridboxw / 2)) / gridboxw, tmpstr);
+	}
 }
 
 void gGUIGrid::drawContent() {
@@ -528,10 +563,40 @@ void gGUIGrid::mouseDragged(int x, int y, int button) {
 
 void gGUIGrid::keyPressed(int key){
 	if(istextboxactive) textbox.keyPressed(key);
-	else if((isselected || isrowselected || iscolumnselected) && (key == G_KEY_LEFT_CONTROL || key == G_KEY_RIGHT_CONTROL)) {
-
+	else if(key == G_KEY_C && ctrlpressed) appmanager->setClipboardString(allcells.at(selectedbox).cellcontent);
+	else if(key == G_KEY_V && ctrlpressed) {
+		ctrlvpressed = true;
+		pushToUndoStack();
+		changeCell();
 	}
+	else if(key == G_KEY_X && ctrlpressed) {
+		appmanager->setClipboardString(allcells.at(selectedbox).cellcontent);
+		pushToUndoStack();
+		textbox.cleanText();
+		allcells.at(selectedbox).cellcontent = "";
+		allcells.at(selectedbox).showncontent = "";
+	}
+	else if(key == G_KEY_Z && ctrlpressed) {
+		if(undocellnumberstack.empty()) return;
+		ctrlzpressed = true;
+		pushToRedoStack();
+		changeCell();
+		undostringstack.pop();
+		undocellnumberstack.pop();
+	}
+	else if(key == G_KEY_Y && ctrlpressed) {
+		if(redocellnumberstack.empty()) return;
+		ctrlypressed = true;
+		pushToUndoStack();
+		changeCell();
+		redostringstack.pop();
+		redocellnumberstack.pop();
+		ctrlypressed = false;
+	}
+	else if((isselected || isrowselected || iscolumnselected) && (key == G_KEY_LEFT_CONTROL || key == G_KEY_RIGHT_CONTROL)) ctrlpressed = true;
+	else if((isselected || isrowselected || iscolumnselected) && (key == G_KEY_LEFT_SHIFT || key == G_KEY_RIGHT_SHIFT)) shiftpressed = true;
 	else if((isselected || isrowselected || iscolumnselected) && key != G_KEY_ENTER && key != G_KEY_UP && key != G_KEY_DOWN && key != G_KEY_RIGHT && key != G_KEY_LEFT && key != G_KEY_ESC && key != G_KEY_LEFT_SHIFT && key != G_KEY_RIGHT_SHIFT) {
+		pushToUndoStack();
 		textbox.cleanText();
 		allcells.at(selectedbox).cellcontent = "";
 		allcells.at(selectedbox).showncontent = "";
@@ -544,7 +609,7 @@ void gGUIGrid::keyPressed(int key){
 
 void gGUIGrid::keyReleased(int key) {
 	if(istextboxactive) textbox.keyReleased(key);
-	if(key == G_KEY_ENTER && istextboxactive) {
+	if((key == G_KEY_ENTER && istextboxactive)) {
 		changeCell();
 		istextboxactive = false;
 		textbox.setEditable(false);
@@ -584,6 +649,8 @@ void gGUIGrid::keyReleased(int key) {
 		istextboxactive = true;
 		textbox.setEditable(true);
 	}
+	else if(key == G_KEY_LEFT_CONTROL || key == G_KEY_RIGHT_CONTROL) ctrlpressed = false;
+	else if(key == G_KEY_LEFT_SHIFT || key == G_KEY_RIGHT_SHIFT) shiftpressed = false;
 }
 
 void gGUIGrid::charPressed(unsigned int codepoint) {
