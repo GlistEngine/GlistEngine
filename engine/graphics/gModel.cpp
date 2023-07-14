@@ -80,6 +80,51 @@ void gModel::loadModelFile(const std::string& fullPath) {
     animate(0);
 }
 
+void gModel::loadMorphingModel(const std::string &modelPath) {
+	loadMorphingModelFile(gGetModelsDir() + modelPath);
+}
+
+void gModel::loadMorphingModelFile(const std::string &fullPath) {
+#ifdef LINUX
+	std::shared_ptr<aiPropertyStore> store;
+    store.reset(aiCreatePropertyStore(), aiReleasePropertyStore);
+    // only ever give us triangles.
+    aiSetImportPropertyInteger(store.get(), AI_CONFIG_PP_SBP_REMOVE, aiPrimitiveType_LINE | aiPrimitiveType_POINT );
+    aiSetImportPropertyInteger(store.get(), AI_CONFIG_PP_PTV_NORMALIZE, true);
+
+    scene = aiImportFileExWithProperties(fullPath.c_str(), aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace | aiProcess_GenNormals | aiProcess_GenUVCoords | aiProcess_SplitLargeMeshes | aiProcess_SortByPType, NULL, store.get());
+    // check for errors
+    if(!scene || (scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE) || !scene->mRootNode) { // if is Not Zero
+    	std::cout << "ERROR::ASSIMP:: " << aiGetErrorString() << std::endl;
+        return;
+    }
+#else
+    Assimp::Importer importer;
+    importer.SetPropertyInteger(AI_CONFIG_PP_SBP_REMOVE, aiPrimitiveType_LINE | aiPrimitiveType_POINT);
+    importer.SetPropertyBool(AI_CONFIG_PP_PTV_NORMALIZE, true);
+    importer.ReadFile(fullPath, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace | aiProcess_GenNormals | aiProcess_GenUVCoords | aiProcess_SplitLargeMeshes | aiProcess_SortByPType);
+    scene = importer.GetOrphanedScene();
+    // check for errors
+    //aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace | aiProcess_GenNormals | aiProcess_GenUVCoords | aiProcess_SplitLargeMeshes | aiProcess_SortByPType
+    if(!scene || (scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE) || !scene->mRootNode) { // if is Not Zero
+        std::cout << "ERROR::ASSIMP:: " << importer.GetErrorString() << std::endl;
+        return;
+    }
+#endif
+
+    // retrieve the directory path of the filepath
+    directory = fullPath.substr(0, fullPath.find_last_of('/'));
+    filename = fullPath.substr(fullPath.find_last_of('/') + 1, fullPath.length());
+    animationnum = scene->mNumAnimations;
+    isanimated = animationnum > 0;
+
+    // process ASSIMP's root node recursively
+    processNode(scene->mRootNode, scene);
+    initialboundingbox = getBoundingBox();
+    if (isanimated) setAnimationFramerate(animationframerate);
+    animate(0);
+}
+
 void gModel::move(float dx, float dy, float dz) {
 	gNode::move(dx, dy, dz);
 	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i].move(dx, dy, dz);
