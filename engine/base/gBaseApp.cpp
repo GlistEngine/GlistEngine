@@ -9,6 +9,7 @@
 #include "gBaseApp.h"
 
 
+
 gBaseApp::gBaseApp() {
 	gSeedRandom();
 	argc = 0;
