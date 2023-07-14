@@ -128,7 +128,8 @@ var hierarchy =
             [ "gEdgeDetection", "classgEdgeDetection.html", null ],
             [ "gSharpen", "classgSharpen.html", null ]
           ] ],
-          [ "gSepiatone", "classgSepiatone.html", null ]
+          [ "gSepiatone", "classgSepiatone.html", null ],
+          [ "gSoftFocus", "classgSoftFocus.html", null ]
         ] ],
         [ "gBoundingBox", "classgBoundingBox.html", null ],
         [ "gFbo", "classgFbo.html", null ],

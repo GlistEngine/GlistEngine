@@ -52,8 +52,8 @@ var NAVTREEINDEX =
 "classgGUIToolbarButton.html#a68f0ae8e92099be256249676d792a0ef",
 "classgMaterial.html#ab4e5f80bbd09fc8f05d59d129007c89c",
 "classgRect.html#a42bf2b485a2abbfc2473ffe29a88d048",
-"classgSpriteAnimation.html",
-"gGUIButton_8h_source.html"
+"classgSoftFocus.html#a58844e035b4edc5a3af58634444c7f71",
+"gFmodSound_8h_source.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

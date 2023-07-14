@@ -115,6 +115,7 @@ var files_dup =
     [ "gSharpen.h", "gSharpen_8h_source.html", null ],
     [ "gSkinnedMesh.h", "gSkinnedMesh_8h_source.html", null ],
     [ "gSkybox.h", "gSkybox_8h_source.html", null ],
+    [ "gSoftFocus.h", "gSoftFocus_8h_source.html", null ],
     [ "gSphere.h", "gSphere_8h_source.html", null ],
     [ "gSpriteAnimation.h", "gSpriteAnimation_8h_source.html", null ],
     [ "gSpriteAnimator.h", "gSpriteAnimator_8h_source.html", null ],

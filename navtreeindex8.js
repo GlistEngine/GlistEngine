@@ -247,7 +247,7 @@ var NAVTREEINDEX8 =
 "classgSkybox.html#ac0bec377edffc9dc15c12055a1c05e9e":[0,0,132,2],
 "classgSkybox.html#ac3bc676204a9080a36f909c437017207":[0,0,132,9],
 "classgSkybox.html#aefca38c3c4002a1ac9ecbf0270837944":[0,0,132,6],
-"classgSphere.html":[0,0,133],
-"classgSphere.html#a94dea51c71a9f41b3884d5e297ec0979":[0,0,133,1],
-"classgSphere.html#aeac8f32eeb095b7656089b5cbe9ff43e":[0,0,133,0]
+"classgSoftFocus.html":[0,0,133],
+"classgSoftFocus.html#a0529c89af00a855bd2a3d688432c8403":[0,0,133,4],
+"classgSoftFocus.html#a55655b936d0b1998da9cce9d9d43fab4":[0,0,133,1]
 };
