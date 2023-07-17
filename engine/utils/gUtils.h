@@ -97,6 +97,11 @@ int gGetWeekday();
 int gGetHours();
 int gGetMinutes();
 int gGetSeconds();
+
+#if  defined(WIN32) || defined(LINUX)
+uint64_t gGetAvailableRamSize();
+#endif
+
 std::string gGetTimestampString();
 std::string gGetTimestampString(const std::string& format);
 void gStringReplace(std::string& input, const std::string& searchStr, const std::string& replaceStr);
