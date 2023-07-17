@@ -98,6 +98,7 @@ int gGetHours();
 int gGetMinutes();
 int gGetSeconds();
 
+
 #if  defined(WIN32) || defined(LINUX)
 uint64_t gGetAvailableRamSize();
 #endif

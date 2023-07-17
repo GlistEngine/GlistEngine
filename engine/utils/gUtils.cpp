@@ -151,7 +151,6 @@ int gGetSeconds() {
 	return std::localtime(&curr)->tm_sec;
 }
 
-
 #ifdef WIN32
 #include <windows.h>
 
