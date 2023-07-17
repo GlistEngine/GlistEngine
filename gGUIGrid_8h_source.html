@@ -202,13 +202,21 @@ $(document).ready(function(){initNavTree('gGUIGrid_8h_source.html',''); initResi
 <div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    <span class="keywordtype">int</span> selectedtitle;</div>
 <div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;    <span class="keywordtype">bool</span> shiftpressed, ctrlpressed;</div>
 <div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;    <span class="keywordtype">bool</span> ctrlvpressed, ctrlzpressed, ctrlypressed;</div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;    std::stack&lt;std::string&gt; undostringstack;</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;    std::stack&lt;int&gt; undocellnumberstack;</div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;    std::stack&lt;std::string&gt; redostringstack;</div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;    std::stack&lt;int&gt; redocellnumberstack;</div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;};</div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160; </div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* UI_GGUIGRID_H_ */</span><span class="preprocessor"></span></div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;    <span class="keywordtype">int</span> copiedfont, copiedalignment;</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;    <a class="code" href="classgColor.html">gColor</a> copiedfontcolor;</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;    std::stack&lt;std::string&gt; undostringstack;</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;    std::stack&lt;int&gt; undofontstack;</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;    std::stack&lt;int&gt; undoalignmentstack;</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;    std::stack&lt;gColor&gt; undofontcolorstack;</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;    std::stack&lt;int&gt; undocellnumberstack;</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;    std::stack&lt;std::string&gt; redostringstack;</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;    std::stack&lt;int&gt; redofontstack;</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;    std::stack&lt;int&gt; redoalignmentstack;</div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;    std::stack&lt;gColor&gt; redofontcolorstack;</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;    std::stack&lt;int&gt; redocellnumberstack;</div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;};</div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160; </div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* UI_GGUIGRID_H_ */</span><span class="preprocessor"></span></div>
 <div class="ttc" id="aclassgBaseApp_html"><div class="ttname"><a href="classgBaseApp.html">gBaseApp</a></div><div class="ttdef"><b>Definition:</b> gBaseApp.h:16</div></div>
 <div class="ttc" id="aclassgBaseGUIObject_html"><div class="ttname"><a href="classgBaseGUIObject.html">gBaseGUIObject</a></div><div class="ttdef"><b>Definition:</b> gBaseGUIObject.h:18</div></div>
 <div class="ttc" id="aclassgColor_html"><div class="ttname"><a href="classgColor.html">gColor</a></div><div class="ttdef"><b>Definition:</b> gColor.h:12</div></div>
