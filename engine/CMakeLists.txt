@@ -206,6 +206,7 @@ set(SRC_FILES
 	${ENGINE_DIR}/graphics/posteffects/gSoftFocus.cpp
 	${ENGINE_DIR}/graphics/posteffects/gVignette.cpp
 	${ENGINE_DIR}/graphics/posteffects/gChromaticAberration.cpp
+	${ENGINE_DIR}/graphics/posteffects/gHighContrast.cpp
 	${ENGINE_DIR}/graphics/posteffects/gKernelEffect.cpp
 	${ENGINE_DIR}/graphics/posteffects/kerneleffects/gBlur.cpp
 	${ENGINE_DIR}/graphics/posteffects/kerneleffects/gSharpen.cpp
