@@ -171,7 +171,6 @@ uint64_t gGetAvailableRamSize() {
 }
 #endif
 
-
 std::string gGetTimestampString() {
 	return gGetTimestampString("%Y-%m-%d-%H-%M-%S-%i");
 }
