@@ -90,6 +90,7 @@ var annotated_dup =
     [ "gGUIToolbar", "classgGUIToolbar.html", "classgGUIToolbar" ],
     [ "gGUIToolbarButton", "classgGUIToolbarButton.html", "classgGUIToolbarButton" ],
     [ "gGUITreelist", "classgGUITreelist.html", "classgGUITreelist" ],
+    [ "gHighContrast", "classgHighContrast.html", "classgHighContrast" ],
     [ "gHttpFile", "classgHttpFile.html", "classgHttpFile" ],
     [ "gImage", "classgImage.html", "classgImage" ],
     [ "gInversion", "classgInversion.html", "classgInversion" ],

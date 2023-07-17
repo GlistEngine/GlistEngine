@@ -1,19 +1,20 @@
 <map id="gBasePostProcess" name="gBasePostProcess">
-<area shape="rect" id="node1" title=" " alt="" coords="292,259,432,285"/>
+<area shape="rect" id="node1" title=" " alt="" coords="292,284,432,311"/>
 <area shape="rect" id="node4" href="$classgChromaticAberration.html" title=" " alt="" coords="480,5,645,32"/>
 <area shape="rect" id="node5" href="$classgColorAdjustments.html" title=" " alt="" coords="489,56,636,83"/>
 <area shape="rect" id="node6" href="$classgColorChannelMixer.html" title=" " alt="" coords="486,107,639,133"/>
 <area shape="rect" id="node7" href="$classgDynamicGrain.html" title=" " alt="" coords="501,157,624,184"/>
 <area shape="rect" id="node8" href="$classgGrain.html" title=" " alt="" coords="530,208,595,235"/>
 <area shape="rect" id="node9" href="$classgGrayscale.html" title=" " alt="" coords="515,259,610,285"/>
-<area shape="rect" id="node10" href="$classgInversion.html" title=" " alt="" coords="517,309,608,336"/>
-<area shape="rect" id="node11" href="$classgKernelEffect.html" title=" " alt="" coords="509,360,617,387"/>
-<area shape="rect" id="node15" href="$classgSepiatone.html" title=" " alt="" coords="515,411,610,437"/>
-<area shape="rect" id="node16" href="$classgSoftFocus.html" title=" " alt="" coords="517,461,609,488"/>
-<area shape="rect" id="node17" href="$classgVignette.html" title=" " alt="" coords="520,512,605,539"/>
-<area shape="rect" id="node2" href="$classgRenderObject.html" title=" " alt="" coords="125,259,244,285"/>
-<area shape="rect" id="node3" href="$classgObject.html" title=" " alt="" coords="5,259,77,285"/>
-<area shape="rect" id="node12" href="$classgBlur.html" title=" " alt="" coords="728,309,784,336"/>
-<area shape="rect" id="node13" href="$classgEdgeDetection.html" title=" " alt="" coords="693,360,819,387"/>
-<area shape="rect" id="node14" href="$classgSharpen.html" title=" " alt="" coords="715,411,797,437"/>
+<area shape="rect" id="node10" href="$classgHighContrast.html" title=" " alt="" coords="505,309,620,336"/>
+<area shape="rect" id="node11" href="$classgInversion.html" title=" " alt="" coords="517,360,608,387"/>
+<area shape="rect" id="node12" href="$classgKernelEffect.html" title=" " alt="" coords="509,411,617,437"/>
+<area shape="rect" id="node16" href="$classgSepiatone.html" title=" " alt="" coords="515,461,610,488"/>
+<area shape="rect" id="node17" href="$classgSoftFocus.html" title=" " alt="" coords="517,512,609,539"/>
+<area shape="rect" id="node18" href="$classgVignette.html" title=" " alt="" coords="520,563,605,589"/>
+<area shape="rect" id="node2" href="$classgRenderObject.html" title=" " alt="" coords="125,284,244,311"/>
+<area shape="rect" id="node3" href="$classgObject.html" title=" " alt="" coords="5,284,77,311"/>
+<area shape="rect" id="node13" href="$classgBlur.html" title=" " alt="" coords="728,360,784,387"/>
+<area shape="rect" id="node14" href="$classgEdgeDetection.html" title=" " alt="" coords="693,411,819,437"/>
+<area shape="rect" id="node15" href="$classgSharpen.html" title=" " alt="" coords="715,461,797,488"/>
 </map>

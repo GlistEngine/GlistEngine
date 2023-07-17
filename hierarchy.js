@@ -123,6 +123,7 @@ var hierarchy =
           [ "gDynamicGrain", "classgDynamicGrain.html", null ],
           [ "gGrain", "classgGrain.html", null ],
           [ "gGrayscale", "classgGrayscale.html", null ],
+          [ "gHighContrast", "classgHighContrast.html", null ],
           [ "gInversion", "classgInversion.html", null ],
           [ "gKernelEffect", "classgKernelEffect.html", [
             [ "gBlur", "classgBlur.html", null ],

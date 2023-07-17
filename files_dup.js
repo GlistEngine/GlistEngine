@@ -88,6 +88,7 @@ var files_dup =
     [ "gGUIToolbar.h", "gGUIToolbar_8h_source.html", null ],
     [ "gGUIToolbarButton.h", "gGUIToolbarButton_8h_source.html", null ],
     [ "gGUITreelist.h", "gGUITreelist_8h_source.html", null ],
+    [ "gHighContrast.h", "gHighContrast_8h_source.html", null ],
     [ "gHttpFile.h", "gHttpFile_8h_source.html", null ],
     [ "gImage.h", "gImage_8h_source.html", null ],
     [ "gInversion.h", "gInversion_8h_source.html", null ],
