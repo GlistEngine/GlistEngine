@@ -21,6 +21,7 @@ var files_dup =
     [ "gBox.h", "gBox_8h_source.html", null ],
     [ "gCamera.h", "gCamera_8h_source.html", null ],
     [ "gCanvasManager.h", "gCanvasManager_8h_source.html", null ],
+    [ "gChromaticAberration.h", "gChromaticAberration_8h_source.html", null ],
     [ "gCircle.h", "gCircle_8h_source.html", null ],
     [ "gColor.h", "gColor_8h_source.html", null ],
     [ "gColorAdjustments.h", "gColorAdjustments_8h_source.html", null ],

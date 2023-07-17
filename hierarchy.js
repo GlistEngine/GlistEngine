@@ -117,6 +117,7 @@ var hierarchy =
         ] ],
         [ "gBasePlugin", "classgBasePlugin.html", null ],
         [ "gBasePostProcess", "classgBasePostProcess.html", [
+          [ "gChromaticAberration", "classgChromaticAberration.html", null ],
           [ "gColorAdjustments", "classgColorAdjustments.html", null ],
           [ "gColorChannelMixer", "classgColorChannelMixer.html", null ],
           [ "gDynamicGrain", "classgDynamicGrain.html", null ],

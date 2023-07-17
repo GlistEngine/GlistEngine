@@ -22,6 +22,7 @@ var annotated_dup =
     [ "gCamera", "classgCamera.html", "classgCamera" ],
     [ "gCanvasManager", "classgCanvasManager.html", "classgCanvasManager" ],
     [ "gCharTypedEvent", "classgCharTypedEvent.html", "classgCharTypedEvent" ],
+    [ "gChromaticAberration", "classgChromaticAberration.html", "classgChromaticAberration" ],
     [ "gCircle", "classgCircle.html", "classgCircle" ],
     [ "gColor", "classgColor.html", "classgColor" ],
     [ "gColorAdjustments", "classgColorAdjustments.html", "classgColorAdjustments" ],
