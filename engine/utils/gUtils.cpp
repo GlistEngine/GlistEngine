@@ -151,6 +151,28 @@ int gGetSeconds() {
 	return std::localtime(&curr)->tm_sec;
 }
 
+
+#ifdef WIN32
+#include <windows.h>
+
+uint64_t gGetAvailableRamSize() {
+    MEMORYSTATUSEX memStatus;
+    memStatus.dwLength = sizeof(MEMORYSTATUSEX);
+    GlobalMemoryStatusEx(&memStatus);
+    return memStatus.ullAvailPhys;
+}
+
+#elif LINUX
+#include <sys/sysinfo.h>
+
+uint64_t gGetAvailableRamSize() {
+    struct sysinfo sysInfo;
+    sysinfo(&sysInfo);
+    return sysInfo.freeram * sysInfo.mem_unit;
+}
+#endif
+
+
 std::string gGetTimestampString() {
 	return gGetTimestampString("%Y-%m-%d-%H-%M-%S-%i");
 }
