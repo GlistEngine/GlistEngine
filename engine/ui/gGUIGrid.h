@@ -82,6 +82,9 @@ public:
 	void changeCellFont(int fontNum);
 	void changeCellAlignment(int cellAlignment, bool clicked);
 	void changeCellFontColor(gColor* fontColor);
+	void pushToUndoStack();
+	void pushToRedoStack();
+	std::string fixTextFunction(std::string text);
 
 	void update();
 
@@ -109,6 +112,12 @@ private:
 	int newgridboxw;
 	gGUIManager* manager;
 	int selectedtitle;
+	bool shiftpressed, ctrlpressed;
+	bool ctrlvpressed, ctrlzpressed, ctrlypressed;
+	std::stack<std::string> undostringstack;
+	std::stack<int> undocellnumberstack;
+	std::stack<std::string> redostringstack;
+	std::stack<int> redocellnumberstack;
 };
 
 #endif /* UI_GGUIGRID_H_ */

@@ -115,6 +115,7 @@ set(SRC_FILES
 	${ENGINE_DIR}/graphics/gMesh.cpp
 	${ENGINE_DIR}/graphics/gSkinnedMesh.cpp
 	${ENGINE_DIR}/graphics/gModel.cpp
+	${ENGINE_DIR}/graphics/gMorphingMesh.cpp
 	${ENGINE_DIR}/utils/gLocalization.cpp
 	${ENGINE_DIR}/utils/gDatabase.cpp
 	${ENGINE_DIR}/utils/gAssetLoader.cpp
@@ -202,6 +203,8 @@ set(SRC_FILES
 	${ENGINE_DIR}/graphics/posteffects/gDynamicGrain.cpp
 	${ENGINE_DIR}/graphics/posteffects/gColorAdjustments.cpp
 	${ENGINE_DIR}/graphics/posteffects/gColorChannelMixer.cpp
+	${ENGINE_DIR}/graphics/posteffects/gSoftFocus.cpp
+	${ENGINE_DIR}/graphics/posteffects/gVignette.cpp
 	${ENGINE_DIR}/graphics/posteffects/gKernelEffect.cpp
 	${ENGINE_DIR}/graphics/posteffects/kerneleffects/gBlur.cpp
 	${ENGINE_DIR}/graphics/posteffects/kerneleffects/gSharpen.cpp
