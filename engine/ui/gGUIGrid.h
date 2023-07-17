@@ -114,9 +114,17 @@ private:
 	int selectedtitle;
 	bool shiftpressed, ctrlpressed;
 	bool ctrlvpressed, ctrlzpressed, ctrlypressed;
+	int copiedfont, copiedalignment;
+	gColor copiedfontcolor;
 	std::stack<std::string> undostringstack;
+	std::stack<int> undofontstack;
+	std::stack<int> undoalignmentstack;
+	std::stack<gColor> undofontcolorstack;
 	std::stack<int> undocellnumberstack;
 	std::stack<std::string> redostringstack;
+	std::stack<int> redofontstack;
+	std::stack<int> redoalignmentstack;
+	std::stack<gColor> redofontcolorstack;
 	std::stack<int> redocellnumberstack;
 };
 

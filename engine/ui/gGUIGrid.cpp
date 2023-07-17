@@ -197,33 +197,51 @@ void gGUIGrid::checkCellType(int cellIndex) {
 }
 
 void gGUIGrid::changeCellFont(int fontNum) {
-	if(allcells.at(selectedbox).iscellselected) {
-		allcells.at(selectedbox).fontnum = fontNum;
-		allcells.at(selectedbox).textmoveamount = 0.5f * fontNum;
-		textbox.setTextFont(manager->getFont(fontNum));
+	int index;
+	if(!ctrlzpressed && !ctrlypressed) {
+		index = selectedbox;
+		if(!ctrlvpressed) pushToUndoStack();
 	}
+	else if(ctrlzpressed) index = undocellnumberstack.top();
+	else if(ctrlypressed) index = redocellnumberstack.top();
+
+	allcells.at(index).fontnum = fontNum;
+	textbox.setTextFont(manager->getFont(fontNum));
 }
 
 void gGUIGrid::changeCellAlignment(int cellAlignment, bool clicked) {
-	if(clicked && !allcells.at(selectedbox).iscellaligned) allcells.at(selectedbox).iscellaligned = true;
-	else if(clicked && allcells.at(selectedbox).iscellaligned && allcells.at(selectedbox).celltype == "digit") {
-		allcells.at(selectedbox).iscellaligned = false;
+	int index;
+	if(clicked && !ctrlzpressed && !ctrlypressed && !ctrlvpressed) {
+		index = selectedbox;
+		pushToUndoStack();
+	}
+	else if(ctrlzpressed) index = undocellnumberstack.top();
+	else if(ctrlypressed) index = redocellnumberstack.top();
+	else if(ctrlvpressed) index = selectedbox;
+	if(clicked && !allcells.at(index).iscellaligned) allcells.at(index).iscellaligned = true;
+	else if(clicked && allcells.at(index).iscellaligned && allcells.at(index).celltype == "digit") {
+		allcells.at(index).iscellaligned = false;
 		cellAlignment = gBaseGUIObject::TEXTALIGNMENT_RIGHT;
 	}
-	else if(clicked && allcells.at(selectedbox).cellalignment == cellAlignment) {
-		allcells.at(selectedbox).iscellaligned = false;
+	else if(clicked && allcells.at(index).cellalignment == cellAlignment) {
+		allcells.at(index).iscellaligned = false;
 		cellAlignment = gBaseGUIObject::TEXTALIGNMENT_LEFT;
 	}
-	allcells.at(selectedbox).cellalignment = cellAlignment;
-	allcells.at(selectedbox).textmoveamount = 0.5f * cellAlignment;
-	textbox.setTextAlignment(cellAlignment, allcells.at(selectedbox).cellw, textbox.getInitX());
+	allcells.at(index).cellalignment = cellAlignment;
+	allcells.at(index).textmoveamount = 0.5f * cellAlignment;
+	textbox.setTextAlignment(cellAlignment, allcells.at(index).cellw, textbox.getInitX());
 }
 
 void gGUIGrid::changeCellFontColor(gColor *fontColor) {
-	if(allcells.at(selectedbox).iscellselected) {
-		allcells.at(selectedbox).cellfontcolor = fontColor;
-		textbox.setTextColor(fontColor);
+	int index;
+	if(!ctrlzpressed && !ctrlypressed) {
+		index = selectedbox;
+		if(!ctrlvpressed) pushToUndoStack();
 	}
+	else if(ctrlzpressed) index = undocellnumberstack.top();
+	else if(ctrlypressed) index = redocellnumberstack.top();
+	allcells.at(index).cellfontcolor = fontColor;
+	textbox.setTextColor(fontColor);
 }
 
 void gGUIGrid::pushToUndoStack() {
@@ -231,11 +249,17 @@ void gGUIGrid::pushToUndoStack() {
 	if(!ctrlypressed) index = selectedbox;
 	else index = redocellnumberstack.top();
 	undostringstack.push(allcells.at(index).cellcontent);
+	undofontstack.push(allcells.at(index).fontnum);
+	undoalignmentstack.push(allcells.at(index).cellalignment);
+	undofontcolorstack.push(allcells.at(index).cellfontcolor);
 	undocellnumberstack.push(index);
 }
 
 void gGUIGrid::pushToRedoStack() {
 	redostringstack.push(allcells.at(undocellnumberstack.top()).cellcontent);
+	redofontstack.push(allcells.at(undocellnumberstack.top()).fontnum);
+	redoalignmentstack.push(allcells.at(undocellnumberstack.top()).cellalignment);
+	redofontcolorstack.push(allcells.at(undocellnumberstack.top()).cellfontcolor);
 	redocellnumberstack.push(undocellnumberstack.top());
 }
 
@@ -392,16 +416,35 @@ void gGUIGrid::changeCell() {
 	}
 	else if(ctrlvpressed){
 		tmpstr = appmanager->getClipboardString();
+		std::string tmpcellstr = allcells.at(selectedbox).cellcontent;
+		int tmpfont = allcells.at(selectedbox).fontnum;
+		int tmpalignment = allcells.at(selectedbox).cellalignment;
+		gColor tmpcolor = allcells.at(selectedbox).cellfontcolor;
+		changeCellFont(copiedfont);
+		changeCellAlignment(copiedalignment, false);
+		changeCellFontColor(&copiedfontcolor);
 		fillCell((allcells.at(selectedbox).celly - gridboxh) / gridboxh, (allcells.at(selectedbox).cellx - (gridboxw / 2)) / gridboxw, tmpstr);
 		ctrlvpressed = false;
+
+		undostringstack.push(tmpcellstr);
+		undofontstack.push(tmpfont);
+		undoalignmentstack.push(tmpalignment);
+		undofontcolorstack.push(tmpcolor);
+		undocellnumberstack.push(selectedbox);
 	}
 	else if(ctrlzpressed) {
 		tmpstr = undostringstack.top();
+		changeCellFont(undofontstack.top());
+		changeCellAlignment(undoalignmentstack.top(), false);
+		changeCellFontColor(&undofontcolorstack.top());
 		fillCell((allcells.at(undocellnumberstack.top()).celly - gridboxh) / gridboxh, (allcells.at(undocellnumberstack.top()).cellx - (gridboxw / 2)) / gridboxw, tmpstr);
 		ctrlzpressed = false;
 	}
 	else if(ctrlypressed) {
 		tmpstr = redostringstack.top();
+		changeCellFont(redofontstack.top());
+		changeCellAlignment(redoalignmentstack.top(), false);
+		changeCellFontColor(&redofontcolorstack.top());
 		fillCell((allcells.at(redocellnumberstack.top()).celly - gridboxh) / gridboxh, (allcells.at(redocellnumberstack.top()).cellx - (gridboxw / 2)) / gridboxw, tmpstr);
 	}
 }
@@ -541,6 +584,7 @@ void gGUIGrid::mousePressed(int x, int y, int button) {
 //			gLogi("Grid") << "doubleclicked.";
 		} else isdoubleclicked = false;
 		if(isdoubleclicked) {
+			pushToUndoStack();
 			textbox.cleanText();
 			createTextBox();
 			textbox.mousePressed(pressedx, pressedy, button);
@@ -563,18 +607,28 @@ void gGUIGrid::mouseDragged(int x, int y, int button) {
 
 void gGUIGrid::keyPressed(int key){
 	if(istextboxactive) textbox.keyPressed(key);
-	else if(key == G_KEY_C && ctrlpressed) appmanager->setClipboardString(allcells.at(selectedbox).cellcontent);
+	else if(key == G_KEY_C && ctrlpressed) {
+		appmanager->setClipboardString(allcells.at(selectedbox).cellcontent);
+		copiedfont = allcells.at(selectedbox).fontnum;
+		copiedalignment = allcells.at(selectedbox).cellalignment;
+		copiedfontcolor = allcells.at(selectedbox).cellfontcolor;
+	}
 	else if(key == G_KEY_V && ctrlpressed) {
 		ctrlvpressed = true;
-		pushToUndoStack();
 		changeCell();
 	}
 	else if(key == G_KEY_X && ctrlpressed) {
 		appmanager->setClipboardString(allcells.at(selectedbox).cellcontent);
+		copiedfont = allcells.at(selectedbox).fontnum;
+		copiedalignment = allcells.at(selectedbox).cellalignment;
+		copiedfontcolor = allcells.at(selectedbox).cellfontcolor;
 		pushToUndoStack();
 		textbox.cleanText();
 		allcells.at(selectedbox).cellcontent = "";
 		allcells.at(selectedbox).showncontent = "";
+		allcells.at(selectedbox).fontnum = gGUIManager::FONT_REGULAR;
+		allcells.at(selectedbox).cellalignment = gBaseGUIObject::TEXTALIGNMENT_LEFT;
+		allcells.at(selectedbox).cellfontcolor = fontcolor;
 	}
 	else if(key == G_KEY_Z && ctrlpressed) {
 		if(undocellnumberstack.empty()) return;
@@ -582,6 +636,9 @@ void gGUIGrid::keyPressed(int key){
 		pushToRedoStack();
 		changeCell();
 		undostringstack.pop();
+		undofontstack.pop();
+		undoalignmentstack.pop();
+		undofontcolorstack.pop();
 		undocellnumberstack.pop();
 	}
 	else if(key == G_KEY_Y && ctrlpressed) {
@@ -590,6 +647,9 @@ void gGUIGrid::keyPressed(int key){
 		pushToUndoStack();
 		changeCell();
 		redostringstack.pop();
+		redofontstack.pop();
+		redoalignmentstack.pop();
+		redofontcolorstack.pop();
 		redocellnumberstack.pop();
 		ctrlypressed = false;
 	}
