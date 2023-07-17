@@ -1,5 +1,5 @@
 <map id="gBasePostProcess" name="gBasePostProcess">
-<area shape="rect" id="node1" title=" " alt="" coords="292,208,432,235"/>
+<area shape="rect" id="node1" title=" " alt="" coords="292,233,432,260"/>
 <area shape="rect" id="node4" href="$classgColorAdjustments.html" title=" " alt="" coords="483,5,630,32"/>
 <area shape="rect" id="node5" href="$classgColorChannelMixer.html" title=" " alt="" coords="480,56,633,83"/>
 <area shape="rect" id="node6" href="$classgDynamicGrain.html" title=" " alt="" coords="495,107,618,133"/>
@@ -9,8 +9,9 @@
 <area shape="rect" id="node10" href="$classgKernelEffect.html" title=" " alt="" coords="503,309,611,336"/>
 <area shape="rect" id="node14" href="$classgSepiatone.html" title=" " alt="" coords="509,360,604,387"/>
 <area shape="rect" id="node15" href="$classgSoftFocus.html" title=" " alt="" coords="511,411,603,437"/>
-<area shape="rect" id="node2" href="$classgRenderObject.html" title=" " alt="" coords="125,208,244,235"/>
-<area shape="rect" id="node3" href="$classgObject.html" title=" " alt="" coords="5,208,77,235"/>
+<area shape="rect" id="node16" href="$classgVignette.html" title=" " alt="" coords="514,461,599,488"/>
+<area shape="rect" id="node2" href="$classgRenderObject.html" title=" " alt="" coords="125,233,244,260"/>
+<area shape="rect" id="node3" href="$classgObject.html" title=" " alt="" coords="5,233,77,260"/>
 <area shape="rect" id="node11" href="$classgBlur.html" title=" " alt="" coords="716,259,772,285"/>
 <area shape="rect" id="node12" href="$classgEdgeDetection.html" title=" " alt="" coords="681,309,807,336"/>
 <area shape="rect" id="node13" href="$classgSharpen.html" title=" " alt="" coords="703,360,785,387"/>

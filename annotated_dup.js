@@ -145,6 +145,7 @@ var annotated_dup =
     [ "gUtils", "classgUtils.html", "classgUtils" ],
     [ "gVbo", "classgVbo.html", "classgVbo" ],
     [ "gVertex", "structgVertex.html", "structgVertex" ],
+    [ "gVignette", "classgVignette.html", "classgVignette" ],
     [ "gWindowFocusEvent", "classgWindowFocusEvent.html", "classgWindowFocusEvent" ],
     [ "gWindowLoseFocusEvent", "classgWindowLoseFocusEvent.html", "classgWindowLoseFocusEvent" ],
     [ "gWindowMouseEnterEvent", "classgWindowMouseEnterEvent.html", "classgWindowMouseEnterEvent" ],

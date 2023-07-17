@@ -129,7 +129,8 @@ var hierarchy =
             [ "gSharpen", "classgSharpen.html", null ]
           ] ],
           [ "gSepiatone", "classgSepiatone.html", null ],
-          [ "gSoftFocus", "classgSoftFocus.html", null ]
+          [ "gSoftFocus", "classgSoftFocus.html", null ],
+          [ "gVignette", "classgVignette.html", null ]
         ] ],
         [ "gBoundingBox", "classgBoundingBox.html", null ],
         [ "gFbo", "classgFbo.html", null ],
