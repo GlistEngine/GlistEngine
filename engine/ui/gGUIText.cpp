@@ -54,24 +54,56 @@ void gGUIText::resetText() {
 
 void gGUIText::resetAlignment() {
     linefirstx.clear();
+    int spacewidth = font->getStringWidth(" ");
     for (int i = 0; i < linenum; i++) {
-        int lineTextWidth = font->getStringWidth(line[i]);
-        int lineIndent = 0;
+        int linetextwidth = font->getStringWidth(line[i]);
+        int lineindent = 0;
 
         if (textalignment == TEXTALIGNMENT_CENTER) {
-            lineIndent = (width - lineTextWidth) / 2;
+            lineindent = (width - linetextwidth) / 2;
         } else if (textalignment == TEXTALIGNMENT_RIGHT) {
-            lineIndent = std::max(width - lineTextWidth, 0);
-        }
-        linefirstx.push_back(lineIndent);
+            lineindent = std::max(width - linetextwidth, 0);
+        } else if (textalignment == TEXTALIGNMENT_JUSTIFY) {
+        	 int numspaces = std::count(line[i].begin(), line[i].end(), ' ');
+				if (numspaces > 0) {
+					int totalspacing = width - linetextwidth;
+				    int extraspacing = (totalspacing % spacewidth) - font->getStringWidth(" ");
+					totalspacing /= spacewidth;
+					int spacing = totalspacing / numspaces * 2;
+					if(spacing == 0) spacing = 1;
+					std::string justifiedline;
+					size_t pos = 0;
+					size_t lastpos = 0;
+					while ((pos = line[i].find(' ', pos)) != std::string::npos) {
+						justifiedline += line[i].substr(lastpos, pos - lastpos);
+						int spacestoadd = spacing;
+						justifiedline.append(spacestoadd, ' ');
+						if(extraspacing > 0){
+							justifiedline.append(extraspacing, ' ');
+							extraspacing--;
+						}
+						lastpos = ++pos;
+					}
+					justifiedline += line[i].substr(lastpos);
+				    line[i] = justifiedline;
+				}
+	    }
+        linefirstx.push_back(lineindent);
     }
     if (textalignment == TEXTALIGNMENT_RIGHT) {
         int margin = 5;
         for (int i = 0; i < linenum; i++) {
-            int lineTextWidth = font->getStringWidth(line[i]);
+            int linetextwidth = font->getStringWidth(line[i]);
             linefirstx[i] -= margin;
         }
     }
+    if (textalignment == TEXTALIGNMENT_JUSTIFY) {
+            int margin = 3;
+            for (int i = 0; i < linenum; i++) {
+                int linetextwidth = font->getStringWidth(line[i]);
+                linefirstx[i] -= margin;
+            }
+        }
 }
 
 std::vector<std::string> gGUIText::splitString(const std::string& textToSplit, gFont* font, int lineWidth) {

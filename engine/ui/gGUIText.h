@@ -14,7 +14,7 @@
 class gGUIText: public gGUIControl {
 public:
 
-    static const int TEXTALIGNMENT_LEFT = 0, TEXTALIGNMENT_CENTER = 1, TEXTALIGNMENT_RIGHT = 2;
+    static const int TEXTALIGNMENT_LEFT = 0, TEXTALIGNMENT_CENTER = 1, TEXTALIGNMENT_RIGHT = 2, TEXTALIGNMENT_JUSTIFY = 3;
 
     gGUIText();
     virtual ~gGUIText();
