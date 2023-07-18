@@ -192,3 +192,34 @@ unsigned int gImage::loadMaskImage(const std::string& maskImagePath) {
 	ismaskloaded = true;
 	return masktexture->load(gGetImagesDir() + maskImagePath);
 }
+
+
+bool gImage::gImage::checkPixelPerfectCollision(gImage *otherImage,
+		float imgposX, float imgposY, float otherimgposX, float otherimgposY,
+		float imgrot, float otherimgrot) {
+unsigned char* data2 = otherImage->data;
+	if (checkCollision(imgposX, imgposY, (imgposX + getWidth()), (imgposY + getHeight()), otherimgposX, otherimgposY, (otherimgposX + otherImage->getWidth()), (otherimgposY + otherImage->getHeight()))) {
+		int overlapleft = std::max(imgposX, otherimgposX);
+		int overlapright = std::min(imgposX + getWidth(), otherimgposX + otherImage->getWidth());
+		int overlaptop = std::max(imgposY, otherimgposY);
+		int overlapbot = std::min(imgposY + getHeight(), otherimgposY + otherImage->getHeight());
+
+		for(int r = overlapleft; r < overlapright; ++r) {
+
+			for (int c = overlaptop; c < overlapbot; ++c) {
+				//findout which row, then add collumn finally multipy with number of channel
+				int pixelIndex1 =  ((c - imgposY) * getWidth() + (r - imgposX)) * componentnum;
+				int pixelIndex2 = ((c - otherimgposY) * otherImage->getWidth() + (r - otherimgposX)) * otherImage->getComponentNum();
+				// get to the A channel and check if it is tranparent, only works for PNGs
+				if(data[pixelIndex1 + 3] != 0 && data2[pixelIndex2 + 3] != 0 )
+				{
+					return true;
+				}
+
+			}
+
+		}
+
+	}
+	return false;
+}
