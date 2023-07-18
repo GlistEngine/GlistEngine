@@ -3,6 +3,7 @@ var classgImage =
     [ "gImage", "classgImage.html#a30338f87dc86158460c014bbc2dc3795", null ],
     [ "gImage", "classgImage.html#a21697d66bb4f45a23073ea66e8e72067", null ],
     [ "~gImage", "classgImage.html#ab22e4953be162e577a172d4834d2efa6", null ],
+    [ "checkPixelPerfectCollision", "classgImage.html#a74b5a03977d819f44e140c0b6501f16e", null ],
     [ "clearData", "classgImage.html#a25cd5df20e2d778e906767859c95f96f", null ],
     [ "getImageData", "classgImage.html#a6d533660d45d58276864100fae9f0293", null ],
     [ "getImageDataHDR", "classgImage.html#adff6cebb068474d7107fa624939ba9e3", null ],

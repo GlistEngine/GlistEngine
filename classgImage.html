@@ -152,6 +152,8 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>setImageData</b> (uns
 <tr class="separator:a25cd5df20e2d778e906767859c95f96f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a815510984b1d92b4d67f43889a29afbd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgImage.html#a815510984b1d92b4d67f43889a29afbd">saveImage</a> (std::string fileName)</td></tr>
 <tr class="separator:a815510984b1d92b4d67f43889a29afbd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a74b5a03977d819f44e140c0b6501f16e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgImage.html#a74b5a03977d819f44e140c0b6501f16e">checkPixelPerfectCollision</a> (<a class="el" href="classgImage.html">gImage</a> *otherImage, float imgposX, float imgposY, float otherimgposX, float otherimgposY)</td></tr>
+<tr class="separator:a74b5a03977d819f44e140c0b6501f16e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1e521117158e56ebdcd9e4a34c9af481"><td class="memItemLeft" align="right" valign="top"><a id="a1e521117158e56ebdcd9e4a34c9af481"></a>
 std::string&#160;</td><td class="memItemRight" valign="bottom"><b>getImageUrl</b> ()</td></tr>
 <tr class="separator:a1e521117158e56ebdcd9e4a34c9af481"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -558,6 +560,59 @@ static int&#160;</td><td class="memItemRight" valign="bottom"><b>releaseresoluti
 <div class="textblock"><p><a class="el" href="classgImage.html">gImage</a> holds several functions primarily to locate and load images.</p>
 <p>Overview of the functions: load and loadImage functions to load images effectively. loadData and loadImageData functions to load image's Data in a separate thread. useData function to create the texture in VRAM by using the loaded data. setImageData function to alter an image's data in integer format. setImageDataHDR function to alter an image's data in float format. getImageData function to access an image's original or edited data in integer format. getImageDataHDR function to access an image's original or edited data in float format. clearData function to clear a given Data. </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
+<a id="a74b5a03977d819f44e140c0b6501f16e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a74b5a03977d819f44e140c0b6501f16e">&#9670;&nbsp;</a></span>checkPixelPerfectCollision()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool gImage::checkPixelPerfectCollision </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classgImage.html">gImage</a> *&#160;</td>
+          <td class="paramname"><em>otherImage</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>imgposX</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>imgposY</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>otherimgposX</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>otherimgposY</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Used to check pixel perfect collision between 2 images.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">OtherImage</td><td>for the target image object which will be checked collisions with the caller object. positions of this images and position of the target image rotations of this images and rotation of the target image </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="a25cd5df20e2d778e906767859c95f96f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a25cd5df20e2d778e906767859c95f96f">&#9670;&nbsp;</a></span>clearData()</h2>
 
