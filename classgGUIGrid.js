@@ -23,7 +23,6 @@ var classgGUIGrid =
     [ "drawTitleLines", "classgGUIGrid.html#af2cb25feb2a0176d38c107406df9136e", null ],
     [ "drawTitleRowBackground", "classgGUIGrid.html#a0ca8251f16c199f7b920af4f0a37fe6e", null ],
     [ "fillCell", "classgGUIGrid.html#a80121cc7ef288cb4c2425623465ed8fb", null ],
-    [ "fixTextFunction", "classgGUIGrid.html#ad1de12150693506a430079ca5a061e7e", null ],
     [ "getCell", "classgGUIGrid.html#a4f8b2f79df84c4183185a5e2e8d86eba", null ],
     [ "keyPressed", "classgGUIGrid.html#ab6d67ff8f1aff5571f58ddf90a938a42", null ],
     [ "keyReleased", "classgGUIGrid.html#ade1bb0ab840c360e38729cd3b4cc6c2d", null ],
