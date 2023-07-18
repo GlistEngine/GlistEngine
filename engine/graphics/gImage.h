@@ -190,7 +190,7 @@ public:
 	 * positions of this images and position of the target image
 	 * rotations of this images and rotation of the target image
 	 */
-	bool checkPixelPerfectCollision(gImage* otherImage, float imgposX, float imgposY, float otherimgposX, float otherimgposY, float imgrot = 0.f, float otherimgrot = 0.f);
+	bool checkPixelPerfectCollision(gImage* otherImage, float imgposX, float imgposY, float otherimgposX, float otherimgposY);
 
 	std::string getImageUrl();
 	static std::string generateDownloadedImagePath(std::string imageType = "png");
