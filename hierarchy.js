@@ -120,6 +120,7 @@ var hierarchy =
           [ "gChromaticAberration", "classgChromaticAberration.html", null ],
           [ "gColorAdjustments", "classgColorAdjustments.html", null ],
           [ "gColorChannelMixer", "classgColorChannelMixer.html", null ],
+          [ "gColorCurves", "classgColorCurves.html", null ],
           [ "gDynamicGrain", "classgDynamicGrain.html", null ],
           [ "gGrain", "classgGrain.html", null ],
           [ "gGrayscale", "classgGrayscale.html", null ],
@@ -131,8 +132,10 @@ var hierarchy =
             [ "gSharpen", "classgSharpen.html", null ]
           ] ],
           [ "gSepiatone", "classgSepiatone.html", null ],
+          [ "gShadowsMidtonesHighlights", "classgShadowsMidtonesHighlights.html", null ],
           [ "gSoftFocus", "classgSoftFocus.html", null ],
-          [ "gVignette", "classgVignette.html", null ]
+          [ "gVignette", "classgVignette.html", null ],
+          [ "gWhiteBalance", "classgWhiteBalance.html", null ]
         ] ],
         [ "gBoundingBox", "classgBoundingBox.html", null ],
         [ "gFbo", "classgFbo.html", null ],

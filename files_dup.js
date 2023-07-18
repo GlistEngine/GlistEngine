@@ -26,6 +26,7 @@ var files_dup =
     [ "gColor.h", "gColor_8h_source.html", null ],
     [ "gColorAdjustments.h", "gColorAdjustments_8h_source.html", null ],
     [ "gColorChannelMixer.h", "gColorChannelMixer_8h_source.html", null ],
+    [ "gColorCurves.h", "gColorCurves_8h_source.html", null ],
     [ "gCone.h", "gCone_8h_source.html", null ],
     [ "gConstants.h", "gConstants_8h_source.html", null ],
     [ "gCross.h", "gCross_8h_source.html", null ],
@@ -115,6 +116,7 @@ var files_dup =
     [ "gSepiatone.h", "gSepiatone_8h_source.html", null ],
     [ "gShader.h", "gShader_8h_source.html", null ],
     [ "gShadowMap.h", "gShadowMap_8h_source.html", null ],
+    [ "gShadowsMidtonesHighlights.h", "gShadowsMidtonesHighlights_8h_source.html", null ],
     [ "gSharpen.h", "gSharpen_8h_source.html", null ],
     [ "gSkinnedMesh.h", "gSkinnedMesh_8h_source.html", null ],
     [ "gSkybox.h", "gSkybox_8h_source.html", null ],
@@ -128,6 +130,7 @@ var files_dup =
     [ "gUtils.h", "gUtils_8h_source.html", null ],
     [ "gVbo.h", "gVbo_8h_source.html", null ],
     [ "gVignette.h", "gVignette_8h_source.html", null ],
+    [ "gWhiteBalance.h", "gWhiteBalance_8h_source.html", null ],
     [ "gWindowEvents.h", "gWindowEvents_8h_source.html", null ],
     [ "tinyfiledialogs.h", "tinyfiledialogs_8h_source.html", null ]
 ];

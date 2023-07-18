@@ -1,20 +1,23 @@
 <map id="gBasePostProcess" name="gBasePostProcess">
-<area shape="rect" id="node1" title=" " alt="" coords="292,284,432,311"/>
-<area shape="rect" id="node4" href="$classgChromaticAberration.html" title=" " alt="" coords="480,5,645,32"/>
-<area shape="rect" id="node5" href="$classgColorAdjustments.html" title=" " alt="" coords="489,56,636,83"/>
-<area shape="rect" id="node6" href="$classgColorChannelMixer.html" title=" " alt="" coords="486,107,639,133"/>
-<area shape="rect" id="node7" href="$classgDynamicGrain.html" title=" " alt="" coords="501,157,624,184"/>
-<area shape="rect" id="node8" href="$classgGrain.html" title=" " alt="" coords="530,208,595,235"/>
-<area shape="rect" id="node9" href="$classgGrayscale.html" title=" " alt="" coords="515,259,610,285"/>
-<area shape="rect" id="node10" href="$classgHighContrast.html" title=" " alt="" coords="505,309,620,336"/>
-<area shape="rect" id="node11" href="$classgInversion.html" title=" " alt="" coords="517,360,608,387"/>
-<area shape="rect" id="node12" href="$classgKernelEffect.html" title=" " alt="" coords="509,411,617,437"/>
-<area shape="rect" id="node16" href="$classgSepiatone.html" title=" " alt="" coords="515,461,610,488"/>
-<area shape="rect" id="node17" href="$classgSoftFocus.html" title=" " alt="" coords="517,512,609,539"/>
-<area shape="rect" id="node18" href="$classgVignette.html" title=" " alt="" coords="520,563,605,589"/>
-<area shape="rect" id="node2" href="$classgRenderObject.html" title=" " alt="" coords="125,284,244,311"/>
-<area shape="rect" id="node3" href="$classgObject.html" title=" " alt="" coords="5,284,77,311"/>
-<area shape="rect" id="node13" href="$classgBlur.html" title=" " alt="" coords="728,360,784,387"/>
-<area shape="rect" id="node14" href="$classgEdgeDetection.html" title=" " alt="" coords="693,411,819,437"/>
-<area shape="rect" id="node15" href="$classgSharpen.html" title=" " alt="" coords="715,461,797,488"/>
+<area shape="rect" id="node1" title=" " alt="" coords="292,360,432,387"/>
+<area shape="rect" id="node4" href="$classgChromaticAberration.html" title=" " alt="" coords="505,5,670,32"/>
+<area shape="rect" id="node5" href="$classgColorAdjustments.html" title=" " alt="" coords="514,56,661,83"/>
+<area shape="rect" id="node6" href="$classgColorChannelMixer.html" title=" " alt="" coords="511,107,664,133"/>
+<area shape="rect" id="node7" href="$classgColorCurves.html" title=" " alt="" coords="533,157,642,184"/>
+<area shape="rect" id="node8" href="$classgDynamicGrain.html" title=" " alt="" coords="526,208,649,235"/>
+<area shape="rect" id="node9" href="$classgGrain.html" title=" " alt="" coords="555,259,620,285"/>
+<area shape="rect" id="node10" href="$classgGrayscale.html" title=" " alt="" coords="540,309,635,336"/>
+<area shape="rect" id="node11" href="$classgHighContrast.html" title=" " alt="" coords="530,360,645,387"/>
+<area shape="rect" id="node12" href="$classgInversion.html" title=" " alt="" coords="542,411,633,437"/>
+<area shape="rect" id="node13" href="$classgKernelEffect.html" title=" " alt="" coords="533,461,641,488"/>
+<area shape="rect" id="node17" href="$classgSepiatone.html" title=" " alt="" coords="540,512,635,539"/>
+<area shape="rect" id="node18" href="$classgShadowsMidtonesHighlights.html" title=" " alt="" coords="480,563,695,589"/>
+<area shape="rect" id="node19" href="$classgSoftFocus.html" title=" " alt="" coords="541,613,633,640"/>
+<area shape="rect" id="node20" href="$classgVignette.html" title=" " alt="" coords="545,664,630,691"/>
+<area shape="rect" id="node21" href="$classgWhiteBalance.html" title=" " alt="" coords="527,715,647,741"/>
+<area shape="rect" id="node2" href="$classgRenderObject.html" title=" " alt="" coords="125,360,244,387"/>
+<area shape="rect" id="node3" href="$classgObject.html" title=" " alt="" coords="5,360,77,387"/>
+<area shape="rect" id="node14" href="$classgBlur.html" title=" " alt="" coords="777,411,833,437"/>
+<area shape="rect" id="node15" href="$classgEdgeDetection.html" title=" " alt="" coords="743,461,868,488"/>
+<area shape="rect" id="node16" href="$classgSharpen.html" title=" " alt="" coords="764,512,847,539"/>
 </map>
