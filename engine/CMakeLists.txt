@@ -207,6 +207,9 @@ set(SRC_FILES
 	${ENGINE_DIR}/graphics/posteffects/gVignette.cpp
 	${ENGINE_DIR}/graphics/posteffects/gChromaticAberration.cpp
 	${ENGINE_DIR}/graphics/posteffects/gHighContrast.cpp
+	${ENGINE_DIR}/graphics/posteffects/gColorCurves.cpp
+	${ENGINE_DIR}/graphics/posteffects/gShadowsMidtonesHighlights.cpp
+	${ENGINE_DIR}/graphics/posteffects/gWhiteBalance.cpp
 	${ENGINE_DIR}/graphics/posteffects/gKernelEffect.cpp
 	${ENGINE_DIR}/graphics/posteffects/kerneleffects/gBlur.cpp
 	${ENGINE_DIR}/graphics/posteffects/kerneleffects/gSharpen.cpp
