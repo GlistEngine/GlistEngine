@@ -1,6 +1,5 @@
 var NAVTREEINDEX8 =
 {
-"classgParticle.html#a94e52de83959e14f87bcc333e72de7dc":[0,0,121,8],
 "classgParticle.html#aca5830cf620ff5ec926331450db2a57b":[0,0,121,15],
 "classgParticle.html#ad9fabdc524540f604401e30f4a1c0c57":[0,0,121,0],
 "classgParticle.html#ada848fd144ccfc2c6087b0e2e9fffe02":[0,0,121,9],
@@ -249,5 +248,6 @@ var NAVTREEINDEX8 =
 "classgShadowMap.html#ada1b4cac29cbb41b495fc1b9e2e2c204":[0,0,133,23],
 "classgShadowMap.html#ae30080c15bc996c9fedf58990f69ff40":[0,0,133,1],
 "classgShadowMap.html#ae8af34c4cec04816fbad8aa3299504b3":[0,0,133,13],
-"classgShadowMap.html#af5a94cc07ece8e6ca39fb65a2e2ad6a7":[0,0,133,14]
+"classgShadowMap.html#af5a94cc07ece8e6ca39fb65a2e2ad6a7":[0,0,133,14],
+"classgShadowsMidtonesHighlights.html":[0,0,134]
 };
