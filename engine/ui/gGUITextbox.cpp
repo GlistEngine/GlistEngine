@@ -330,7 +330,7 @@ void gGUITextbox::draw() {
 
 	if(editmode && (cursorshowcounter <= cursorshowlimit || keystate)) {
 		int linebottom = 0;
-		if(currentline <= rowsnum) linebottom = top + hdiff +  currentline * (lineheight + linetopmargin) - firsty;
+		if(currentline <= rowsnum && lastdrawnline <= rowsnum) linebottom = top + hdiff +  currentline * (lineheight + linetopmargin) - firsty;
 		else linebottom = top + hdiff + (rowsnum - (lastdrawnline - currentline)) * (lineheight + linetopmargin) - firsty;
 		gDrawLine(left + (cursorposx * cursormoveamount + arrowamount) - firstx + textalignmentamount, linebottom - lineheight,
 				left + (cursorposx * cursormoveamount + arrowamount) - firstx + textalignmentamount, linebottom + lineheight * 2 / 3);
@@ -572,7 +572,8 @@ void gGUITextbox::pressKey() {
 						linecount--;
 					}
 					if(currentline > 1) currentline--;
-					cursorposx = textfont->getStringWidth(lines[currentline - 1]);
+					std::vector<int> clickpos = calculateCursorPositionMultiline(right - 1, top + currentline * (lineheight + linetopmargin));
+					cursorposx = clickpos[1];
 				} else if(ispassword) {
 					cursorposx = 0;
 				}
@@ -584,7 +585,7 @@ void gGUITextbox::pressKey() {
 			setText(text);
 			if(lastdrawnline == linecount && linecount < lines.size() && lastdrawnline > 1) lastdrawnline--;
 			linecount = lines.size();
-			if(ismultiline && lines[currentline - 1].size() == 0) {
+			if(ismultiline && lines[currentline - 1].size() == 0 && cursorposx > 0) {
 				if(currentline >= 2) cursorposx = textfont->getStringWidth(lines[currentline - 2]);
 				linecount--;
 				if(lastdrawnline > 1) lastdrawnline--;
@@ -632,10 +633,10 @@ void gGUITextbox::pressKey() {
 			} else if(ispassword) {
 				cursorposx = 0;
 			} else {
-				currentline--;
-				if(currentline < 1) currentline = 1;
-				cursorposx = textfont->getStringWidth(lines[currentline - 1]);
-				if(currentline < lastdrawnline - rowsnum) lastdrawnline--;
+				if(currentline > 1) currentline--;
+				std::vector<int> clickpos = calculateCursorPositionMultiline(right - 1, top + currentline * (lineheight + linetopmargin));
+				cursorposx = clickpos[1];
+				if(currentline <= lastdrawnline - rowsnum) lastdrawnline--;
 			}
 
 		} else {
@@ -696,19 +697,22 @@ void gGUITextbox::pressKey() {
 			} else if(ismultiline) {
 				if(currentline == linecount) return;
 				if(lines[currentline - 1] == "") return;
-				cursorposx = firstposx;
 				currentline++;
+				std::vector<int> clickpos = calculateCursorPositionMultiline(left + 1, top + currentline * (lineheight + linetopmargin));
+				cursorposx = clickpos[1];
 				if(currentline > linecount) currentline = linecount;
 				if(currentline > lastdrawnline && lastdrawnline < linecount) lastdrawnline++;
 			} else if(ispassword) {
 				cursorposx -= 3 * dotradius;
 			}
 		} else if(ismultiline && cursorposchar == lineendchar[currentline - 1] + 1) {
-			if(currentline == rowsnum) return;
-			if(lines[currentline] == "") return;
-			cursorposx = firstposx;
+			if(currentline == linecount) return;
+			if(lines[currentline - 1] == "") return;
 			currentline++;
+			std::vector<int> clickpos = calculateCursorPositionMultiline(left + 1, top + currentline * (lineheight + linetopmargin));
+			cursorposx = clickpos[1];
 			if(currentline > linecount) currentline = linecount;
+			if(currentline > lastdrawnline && lastdrawnline < linecount) lastdrawnline++;
 		} else {
 			if(selectionmode) {
 				selectionposchar2 = cursorposchar;
