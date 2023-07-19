@@ -7,6 +7,7 @@ var classgGUIGrid =
     [ "changeCellAlignment", "classgGUIGrid.html#ae0a9f099fac1c48e22785f60b0156f4c", null ],
     [ "changeCellFont", "classgGUIGrid.html#a08fd0ca0a4861292b8ceec00c04fc9b5", null ],
     [ "changeCellFontColor", "classgGUIGrid.html#afed80d61f3e243f325603973fb64ba5d", null ],
+    [ "changeCellLine", "classgGUIGrid.html#a3ba277e2d69124aac0ca0b009e90dfce", null ],
     [ "charPressed", "classgGUIGrid.html#ad656bed63618aed5041b9521d7b3b983", null ],
     [ "checkCellType", "classgGUIGrid.html#a56f976d2a6a671b10405256ec84a11ee", null ],
     [ "createCells", "classgGUIGrid.html#afc38eb580dd00ad796ffc409dde54362", null ],

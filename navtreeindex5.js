@@ -1,5 +1,6 @@
 var NAVTREEINDEX5 =
 {
+"classgGUIProgressBar.html#a3df3b3f959627ebe32bddbbd4d43fa68":[0,0,76,0],
 "classgGUIProgressBar.html#a3df3b3f959627ebe32bddbbd4d43fa68a2e957293ee8f69845023ea2525ca6091":[0,0,76,0,1],
 "classgGUIProgressBar.html#a3df3b3f959627ebe32bddbbd4d43fa68a57dc4c120a31140cd7495d618ad0f935":[0,0,76,0,0],
 "classgGUIProgressBar.html#a3df3b3f959627ebe32bddbbd4d43fa68ab8003d7d6157a8fd217a6c85e17c04cf":[0,0,76,0,2],
@@ -248,6 +249,5 @@ var NAVTREEINDEX5 =
 "classgGUITimebox.html#a8a0c0fb952326770db08daa5849c0215":[0,0,87,0],
 "classgGUITimebox.html#a91dfbb3e9d734b52ebe7cffa94ce8111":[0,0,87,2],
 "classgGUITimebox.html#a9b1708ec3f0d377027ad2a5a8381d09b":[0,0,87,9],
-"classgGUITimebox.html#a9dd7f30c05677dfba0562701c6fc1615":[0,0,87,7],
-"classgGUITimebox.html#aa6c42f136ad849259806cef973ef2428":[0,0,87,11]
+"classgGUITimebox.html#a9dd7f30c05677dfba0562701c6fc1615":[0,0,87,7]
 };

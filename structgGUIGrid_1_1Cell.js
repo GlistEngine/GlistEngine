@@ -16,6 +16,7 @@ var structgGUIGrid_1_1Cell =
     [ "hasfunction", "structgGUIGrid_1_1Cell.html#ad3e3f7e7bae7595d4bff1d6a6ddc5a62", null ],
     [ "iscellaligned", "structgGUIGrid_1_1Cell.html#aafb69ff4b9eeac0a91b0745b2562997f", null ],
     [ "iscellselected", "structgGUIGrid_1_1Cell.html#a6170b43a3ab5613efeb3a37edf1b01aa", null ],
+    [ "lineno", "structgGUIGrid_1_1Cell.html#a62c65d1287779290a5cabf4eabec45c2", null ],
     [ "showncontent", "structgGUIGrid_1_1Cell.html#abb6437a9c53cf19334448c01d1c34085", null ],
     [ "textmoveamount", "structgGUIGrid_1_1Cell.html#a771d15da4e462d0e28cb16cc3229a986", null ]
 ];
