@@ -594,6 +594,11 @@ gColor gShowColorChooser(
 	return selectedcolor;
 }
 
+bool checkCollision(int xLeft1, int yUp1, int xRight1, int yBottom1,
+		int xLeft2, int yUp2, int xRight2, int yBottom2) {
+	return xLeft1 < xRight2 && xRight1 > xLeft2 && yBottom1 > yUp2 && yUp1 < yBottom2;
+}
+
 gUtils::gUtils() {
 
 }

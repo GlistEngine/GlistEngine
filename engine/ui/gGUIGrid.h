@@ -35,6 +35,9 @@ public:
 	    int cellalignment;
 	    float textmoveamount;
 	    gColor cellfontcolor;
+	    int copiedno;
+	    bool hasfunction;
+	    int lineno;
 	    Cell(){
 	    	cellx = -1;
 	    	celly = -1;
@@ -44,12 +47,24 @@ public:
 	    	iscellaligned = false;
 	    	cellcontent = "";
 	    	showncontent = "";
+	    	celltype = "string";
 	    	fontnum = gGUIManager::FONT_REGULAR;
 	    	cellalignment = gBaseGUIObject::TEXTALIGNMENT_LEFT;
 	    	textmoveamount = 0;
 	    	cellfontcolor = fontcolor;
+	    	copiedno = -1;
+	    	hasfunction = false;
+	    	lineno = TEXTLINE_NONE;
 	    }
 	};
+
+	enum {
+		TEXTLINE_NONE,
+		TEXTLINE_UNDER,
+		TEXTLINE_DOUBLEUNDER,
+		TEXTLINE_STRIKE
+	};
+
 	gGUIGrid();
 	virtual ~gGUIGrid();
 
@@ -82,9 +97,9 @@ public:
 	void changeCellFont(int fontNum);
 	void changeCellAlignment(int cellAlignment, bool clicked);
 	void changeCellFontColor(gColor* fontColor);
+	void changeCellLine(int lineNo, bool clicked);
 	void pushToUndoStack();
 	void pushToRedoStack();
-	std::string fixTextFunction(std::string text);
 
 	void update();
 
@@ -97,6 +112,14 @@ public:
 	void mouseScrolled(int x, int y);
 
 private:
+	std::string fixTextFunction(std::string text);
+	bool isNumeric(std::string text);
+	std::string fixNumeric(std::string text);
+	std::string getTextColumn(std::string text);
+	int getCellIndex(std::string text);
+	Cell getCopiedCell(int cellIndex);
+	int makeSum(int c1, int r1, int c2, int r2);
+
 	std::deque<Cell> allcells;
 	int rownum, columnnum;
 	float gridx, gridy, gridw, gridh;
@@ -113,18 +136,22 @@ private:
 	gGUIManager* manager;
 	int selectedtitle;
 	bool shiftpressed, ctrlpressed;
-	bool ctrlvpressed, ctrlzpressed, ctrlypressed;
-	int copiedfont, copiedalignment;
+	bool ctrlcpressed, ctrlvpressed, ctrlzpressed, ctrlypressed;
+	int copiedfont, copiedalignment, copiedno, copiedlineno;
 	gColor copiedfontcolor;
 	std::stack<std::string> undostringstack;
 	std::stack<int> undofontstack;
 	std::stack<int> undoalignmentstack;
 	std::stack<gColor> undofontcolorstack;
+	std::stack<int> undocopiednostack;
+	std::stack<int> undolinenostack;
 	std::stack<int> undocellnumberstack;
 	std::stack<std::string> redostringstack;
 	std::stack<int> redofontstack;
 	std::stack<int> redoalignmentstack;
 	std::stack<gColor> redofontcolorstack;
+	std::stack<int> redocopiednostack;
+	std::stack<int> redolinenostack;
 	std::stack<int> redocellnumberstack;
 };
 

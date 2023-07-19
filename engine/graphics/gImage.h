@@ -182,6 +182,14 @@ public:
 	 * after saving process.
 	 */
 	void saveImage(std::string fileName);
+	/**
+	 * Used to check pixel perfect collision between 2 images.
+	 *
+	 * @param OtherImage for the target image object which will be checked collisions with the caller object.
+	 * positions of this images and position of the target image
+	 * rotations of this images and rotation of the target image
+	 */
+	bool checkPixelPerfectCollision(gImage* otherImage, float imgposX, float imgposY, float otherimgposX, float otherimgposY);
 
 	std::string getImageUrl();
 	static std::string generateDownloadedImagePath(std::string imageType = "png");
