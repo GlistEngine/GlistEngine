@@ -126,6 +126,7 @@ var files_dup =
     [ "gSpriteAnimator.h", "gSpriteAnimator_8h_source.html", null ],
     [ "gTexture.h", "gTexture_8h_source.html", null ],
     [ "gThread.h", "gThread_8h_source.html", null ],
+    [ "gTiltShift.h", "gTiltShift_8h_source.html", null ],
     [ "gTriangle.h", "gTriangle_8h_source.html", null ],
     [ "gUtils.h", "gUtils_8h_source.html", null ],
     [ "gVbo.h", "gVbo_8h_source.html", null ],

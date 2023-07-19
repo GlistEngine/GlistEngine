@@ -144,6 +144,7 @@ var annotated_dup =
     [ "gSpriteAnimator", "classgSpriteAnimator.html", "classgSpriteAnimator" ],
     [ "gTexture", "classgTexture.html", "classgTexture" ],
     [ "gThread", "classgThread.html", "classgThread" ],
+    [ "gTiltShift", "classgTiltShift.html", "classgTiltShift" ],
     [ "gTriangle", "classgTriangle.html", "classgTriangle" ],
     [ "gUTF8Iterator", "classgUTF8Iterator.html", "classgUTF8Iterator" ],
     [ "gUtils", "classgUtils.html", "classgUtils" ],

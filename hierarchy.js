@@ -134,6 +134,7 @@ var hierarchy =
           [ "gSepiatone", "classgSepiatone.html", null ],
           [ "gShadowsMidtonesHighlights", "classgShadowsMidtonesHighlights.html", null ],
           [ "gSoftFocus", "classgSoftFocus.html", null ],
+          [ "gTiltShift", "classgTiltShift.html", null ],
           [ "gVignette", "classgVignette.html", null ],
           [ "gWhiteBalance", "classgWhiteBalance.html", null ]
         ] ],

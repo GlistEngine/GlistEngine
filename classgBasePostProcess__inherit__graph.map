@@ -1,5 +1,5 @@
 <map id="gBasePostProcess" name="gBasePostProcess">
-<area shape="rect" id="node1" title=" " alt="" coords="292,360,432,387"/>
+<area shape="rect" id="node1" title=" " alt="" coords="292,385,432,412"/>
 <area shape="rect" id="node4" href="$classgChromaticAberration.html" title=" " alt="" coords="505,5,670,32"/>
 <area shape="rect" id="node5" href="$classgColorAdjustments.html" title=" " alt="" coords="514,56,661,83"/>
 <area shape="rect" id="node6" href="$classgColorChannelMixer.html" title=" " alt="" coords="511,107,664,133"/>
@@ -13,10 +13,11 @@
 <area shape="rect" id="node17" href="$classgSepiatone.html" title=" " alt="" coords="540,512,635,539"/>
 <area shape="rect" id="node18" href="$classgShadowsMidtonesHighlights.html" title=" " alt="" coords="480,563,695,589"/>
 <area shape="rect" id="node19" href="$classgSoftFocus.html" title=" " alt="" coords="541,613,633,640"/>
-<area shape="rect" id="node20" href="$classgVignette.html" title=" " alt="" coords="545,664,630,691"/>
-<area shape="rect" id="node21" href="$classgWhiteBalance.html" title=" " alt="" coords="527,715,647,741"/>
-<area shape="rect" id="node2" href="$classgRenderObject.html" title=" " alt="" coords="125,360,244,387"/>
-<area shape="rect" id="node3" href="$classgObject.html" title=" " alt="" coords="5,360,77,387"/>
+<area shape="rect" id="node20" href="$classgTiltShift.html" title=" " alt="" coords="547,664,627,691"/>
+<area shape="rect" id="node21" href="$classgVignette.html" title=" " alt="" coords="545,715,630,741"/>
+<area shape="rect" id="node22" href="$classgWhiteBalance.html" title=" " alt="" coords="527,765,647,792"/>
+<area shape="rect" id="node2" href="$classgRenderObject.html" title=" " alt="" coords="125,385,244,412"/>
+<area shape="rect" id="node3" href="$classgObject.html" title=" " alt="" coords="5,385,77,412"/>
 <area shape="rect" id="node14" href="$classgBlur.html" title=" " alt="" coords="777,411,833,437"/>
 <area shape="rect" id="node15" href="$classgEdgeDetection.html" title=" " alt="" coords="743,461,868,488"/>
 <area shape="rect" id="node16" href="$classgSharpen.html" title=" " alt="" coords="764,512,847,539"/>
