@@ -37,6 +37,7 @@ public:
 	    gColor cellfontcolor;
 	    int copiedno;
 	    bool hasfunction;
+	    int lineno;
 	    Cell(){
 	    	cellx = -1;
 	    	celly = -1;
@@ -53,8 +54,17 @@ public:
 	    	cellfontcolor = fontcolor;
 	    	copiedno = -1;
 	    	hasfunction = false;
+	    	lineno = TEXTLINE_NONE;
 	    }
 	};
+
+	enum {
+		TEXTLINE_NONE,
+		TEXTLINE_UNDER,
+		TEXTLINE_DOUBLEUNDER,
+		TEXTLINE_STRIKE
+	};
+
 	gGUIGrid();
 	virtual ~gGUIGrid();
 
@@ -87,6 +97,7 @@ public:
 	void changeCellFont(int fontNum);
 	void changeCellAlignment(int cellAlignment, bool clicked);
 	void changeCellFontColor(gColor* fontColor);
+	void changeCellLine(int lineNo, bool clicked);
 	void pushToUndoStack();
 	void pushToRedoStack();
 
@@ -126,19 +137,21 @@ private:
 	int selectedtitle;
 	bool shiftpressed, ctrlpressed;
 	bool ctrlcpressed, ctrlvpressed, ctrlzpressed, ctrlypressed;
-	int copiedfont, copiedalignment, copiedno;
+	int copiedfont, copiedalignment, copiedno, copiedlineno;
 	gColor copiedfontcolor;
 	std::stack<std::string> undostringstack;
 	std::stack<int> undofontstack;
 	std::stack<int> undoalignmentstack;
 	std::stack<gColor> undofontcolorstack;
 	std::stack<int> undocopiednostack;
+	std::stack<int> undolinenostack;
 	std::stack<int> undocellnumberstack;
 	std::stack<std::string> redostringstack;
 	std::stack<int> redofontstack;
 	std::stack<int> redoalignmentstack;
 	std::stack<gColor> redofontcolorstack;
 	std::stack<int> redocopiednostack;
+	std::stack<int> redolinenostack;
 	std::stack<int> redocellnumberstack;
 };
 
