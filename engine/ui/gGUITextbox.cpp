@@ -1564,16 +1564,22 @@ void gGUITextbox::findCursorPosition() {
 	if(currentline == linecount) linelastchar = text.size();
 	else for(int i = 0; i < currentline; i++) linelastchar += lines[i].size() + 1;
 	if(cursorposchar >= linelastchar) {
-		if(!(currentline < linecount)) linecount++;
-		if(lastdrawnline < rowsnum || currentline == lastdrawnline) {
-			lastdrawnline++;
+		if(cursorposchar == lineendchar[currentline - 1]) {
+			cursorposx = textfont->getStringWidth(lines[currentline - 1]);
 		}
-		currentline++;
-		if(cursorposchar == lineendchar[currentline - 2]) cursorposx = 0;
 		else  {
+			if(!(currentline < linecount)) {
+				linecount++;
+			}
+			if(lastdrawnline < rowsnum || currentline == lastdrawnline) {
+				lastdrawnline++;
+			}
+			currentline++;
 			cursorposx = textfont->getStringWidth(text.substr(lineendchar[currentline - 2] + 1, cursorposchar - lineendchar[currentline - 2] - 1));
 		}
-	} else if(widthexceeded) linecount++;
+	} else if(widthexceeded) {
+		linecount++;
+	}
 	widthexceeded = false;
 }
 
