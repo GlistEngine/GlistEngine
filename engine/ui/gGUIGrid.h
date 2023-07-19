@@ -11,9 +11,9 @@
 
 #include "gGUIScrollable.h"
 #include "gGUITextbox.h"
+#include "gGUIManager.h"
 #include <deque>
 #include <string.h>
-#include "gGUIManager.h"
 
 //#include "gGUISizer.h"
 
@@ -98,8 +98,7 @@ public:
 	void changeCellAlignment(int cellAlignment, bool clicked);
 	void changeCellFontColor(gColor* fontColor);
 	void changeCellLine(int lineNo, bool clicked);
-	void pushToUndoStack();
-	void pushToRedoStack();
+	void setCopiedCell(Cell* cell);
 
 	void update();
 
@@ -137,22 +136,9 @@ private:
 	int selectedtitle;
 	bool shiftpressed, ctrlpressed;
 	bool ctrlcpressed, ctrlvpressed, ctrlzpressed, ctrlypressed;
-	int copiedfont, copiedalignment, copiedno, copiedlineno;
-	gColor copiedfontcolor;
-	std::stack<std::string> undostringstack;
-	std::stack<int> undofontstack;
-	std::stack<int> undoalignmentstack;
-	std::stack<gColor> undofontcolorstack;
-	std::stack<int> undocopiednostack;
-	std::stack<int> undolinenostack;
-	std::stack<int> undocellnumberstack;
-	std::stack<std::string> redostringstack;
-	std::stack<int> redofontstack;
-	std::stack<int> redoalignmentstack;
-	std::stack<gColor> redofontcolorstack;
-	std::stack<int> redocopiednostack;
-	std::stack<int> redolinenostack;
-	std::stack<int> redocellnumberstack;
+	Cell copiedcell;
+	std::stack<Cell> undocellstack;
+	std::stack<Cell> redocellstack;
 };
 
 #endif /* UI_GGUIGRID_H_ */

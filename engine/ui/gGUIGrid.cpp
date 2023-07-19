@@ -197,72 +197,50 @@ void gGUIGrid::checkCellType(int cellIndex) {
 }
 
 void gGUIGrid::changeCellFont(int fontNum) {
-	int index = selectedbox;
-	if(!ctrlzpressed && !ctrlypressed && !ctrlvpressed) pushToUndoStack();
-	else if(ctrlzpressed) index = undocellnumberstack.top();
-	else if(ctrlypressed) index = redocellnumberstack.top();
-
-	allcells.at(index).fontnum = fontNum;
+	undocellstack.push(allcells.at(selectedbox));
+	undocellstack.top().showncontent = fixTextFunction(undocellstack.top().cellcontent);
+	allcells.at(selectedbox).fontnum = fontNum;
 	textbox.setTextFont(manager->getFont(fontNum));
 }
 
 void gGUIGrid::changeCellAlignment(int cellAlignment, bool clicked) {
-	int index = selectedbox;
-	if(clicked && !ctrlzpressed && !ctrlypressed && !ctrlvpressed) pushToUndoStack();
-	else if(ctrlzpressed) index = undocellnumberstack.top();
-	else if(ctrlypressed) index = redocellnumberstack.top();
-	if(clicked && !allcells.at(index).iscellaligned) allcells.at(index).iscellaligned = true;
-	else if(clicked && allcells.at(index).iscellaligned && allcells.at(index).celltype == "digit") {
-		allcells.at(index).iscellaligned = false;
+	undocellstack.push(allcells.at(selectedbox));
+	undocellstack.top().showncontent = fixTextFunction(undocellstack.top().cellcontent);
+	if(clicked && !allcells.at(selectedbox).iscellaligned) allcells.at(selectedbox).iscellaligned = true;
+	else if(clicked && allcells.at(selectedbox).iscellaligned && allcells.at(selectedbox).celltype == "digit") {
+		allcells.at(selectedbox).iscellaligned = false;
 		cellAlignment = gBaseGUIObject::TEXTALIGNMENT_RIGHT;
 	}
-	else if(clicked && allcells.at(index).cellalignment == cellAlignment) {
-		allcells.at(index).iscellaligned = false;
+	else if(clicked && allcells.at(selectedbox).cellalignment == cellAlignment) {
+		allcells.at(selectedbox).iscellaligned = false;
 		cellAlignment = gBaseGUIObject::TEXTALIGNMENT_LEFT;
 	}
-	allcells.at(index).cellalignment = cellAlignment;
-	allcells.at(index).textmoveamount = 0.5f * cellAlignment;
-	textbox.setTextAlignment(cellAlignment, allcells.at(index).cellw, textbox.getInitX());
+	allcells.at(selectedbox).cellalignment = cellAlignment;
+	allcells.at(selectedbox).textmoveamount = 0.5f * cellAlignment;
+	textbox.setTextAlignment(cellAlignment, allcells.at(selectedbox).cellw, textbox.getInitX());
 }
 
 void gGUIGrid::changeCellFontColor(gColor *fontColor) {
-	int index = selectedbox;
-	if(!ctrlzpressed && !ctrlypressed && !ctrlvpressed) pushToUndoStack();
-	else if(ctrlzpressed) index = undocellnumberstack.top();
-	else if(ctrlypressed) index = redocellnumberstack.top();
-	allcells.at(index).cellfontcolor = fontColor;
+	undocellstack.push(allcells.at(selectedbox));
+	undocellstack.top().showncontent = fixTextFunction(undocellstack.top().cellcontent);
+	allcells.at(selectedbox).cellfontcolor = fontColor;
 	textbox.setTextColor(fontColor);
 }
 
 void gGUIGrid::changeCellLine(int lineNo, bool clicked) {
-	int index = selectedbox;
-	if(clicked && !ctrlzpressed && !ctrlypressed && !ctrlvpressed) pushToUndoStack();
-	else if(ctrlzpressed) index = undocellnumberstack.top();
-	else if(ctrlypressed) index = redocellnumberstack.top();
-	if(clicked && lineNo == allcells.at(index).lineno) lineNo = 0;
-	allcells.at(index).lineno = lineNo;
+	undocellstack.push(allcells.at(selectedbox));
+	undocellstack.top().showncontent = fixTextFunction(undocellstack.top().cellcontent);
+	if(clicked && lineNo == allcells.at(selectedbox).lineno) lineNo = 0;
+	else allcells.at(selectedbox).lineno = lineNo;
 }
 
-void gGUIGrid::pushToUndoStack() {
-	int index = selectedbox;
-	if(ctrlypressed) index = redocellnumberstack.top();
-	undostringstack.push(allcells.at(index).cellcontent);
-	undofontstack.push(allcells.at(index).fontnum);
-	undoalignmentstack.push(allcells.at(index).cellalignment);
-	undofontcolorstack.push(allcells.at(index).cellfontcolor);
-	undocopiednostack.push(allcells.at(index).copiedno);
-	undolinenostack.push(allcells.at(index).lineno);
-	undocellnumberstack.push(index);
-}
-
-void gGUIGrid::pushToRedoStack() {
-	redostringstack.push(allcells.at(undocellnumberstack.top()).cellcontent);
-	redofontstack.push(allcells.at(undocellnumberstack.top()).fontnum);
-	redoalignmentstack.push(allcells.at(undocellnumberstack.top()).cellalignment);
-	redofontcolorstack.push(allcells.at(undocellnumberstack.top()).cellfontcolor);
-	redocopiednostack.push(allcells.at(undocellnumberstack.top()).copiedno);
-	redolinenostack.push(allcells.at(undocellnumberstack.top()).lineno);
-	redocellnumberstack.push(undocellnumberstack.top());
+void gGUIGrid::setCopiedCell(Cell* cell) {
+	if(ctrlcpressed) cell->cellcontent = copiedcell.cellcontent = "=" + std::string(1, char(copiedcell.cellcolumnno + 65)) + std::to_string(copiedcell.cellrowno + 1);
+	else cell->cellcontent = appmanager->getClipboardString();
+	cell->cellx = allcells.at(selectedbox).cellx;
+	cell->celly = allcells.at(selectedbox).celly;
+	cell->cellrowno = allcells.at(selectedbox).cellrowno;
+	cell->cellcolumnno = allcells.at(selectedbox).cellcolumnno;
 }
 
 std::string gGUIGrid::fixTextFunction(std::string text) {
@@ -439,6 +417,10 @@ int gGUIGrid::makeSum(int c1, int r1, int c2, int r2) {
 void gGUIGrid::fillCell(int rowNo, int columnNo, std::string tempstr) { //when rowNo = 1, columnNO = 4; tempstr = "happyyyy";
 	if(rowNo > rownum - 1 || columnNo > columnnum - 1) return;
 	int cellindex = columnNo + (rowNo * columnnum);
+	if(allcells.at(cellindex).cellcontent != tempstr && !ctrlzpressed && !ctrlypressed) {
+		undocellstack.push(allcells.at(cellindex));
+		undocellstack.top().showncontent = fixTextFunction(undocellstack.top().cellcontent);
+	}
 	allcells.at(cellindex).cellcontent = tempstr;
 	allcells.at(cellindex).showncontent = fixTextFunction(tempstr);
 	bool isempty = (tempstr == "");
@@ -531,57 +513,34 @@ void gGUIGrid::fillCell(int rowNo, int columnNo, std::string tempstr) { //when r
 }
 
 void gGUIGrid::changeCell() {
+	int index = selectedbox;
 	std::string tmpstr;
-	if(!ctrlvpressed && !ctrlzpressed && !ctrlypressed) {
-		tmpstr = textbox.getText();
-		textbox.cleanText();
-		istextboxactive = false;
-		fillCell((allcells.at(selectedbox).celly - gridboxh) / gridboxh, (allcells.at(selectedbox).cellx - (gridboxw / 2)) / gridboxw, tmpstr);
-	}
-	else if(ctrlvpressed) {
-		if(ctrlcpressed) tmpstr = "=" + std::string(1, char(allcells.at(copiedno).cellcolumnno + 65)) + std::to_string(allcells.at(copiedno).cellrowno + 1);
-		else tmpstr = appmanager->getClipboardString();
-		std::string tmpcellstr = allcells.at(selectedbox).cellcontent;
-		int tmpfont = allcells.at(selectedbox).fontnum;
-		int tmpalignment = allcells.at(selectedbox).cellalignment;
-		gColor tmpcolor = allcells.at(selectedbox).cellfontcolor;
-		int tmpcopiedno = allcells.at(selectedbox).copiedno;
-		int tmplineno = allcells.at(selectedbox).lineno;
-		changeCellFont(copiedfont);
-		changeCellAlignment(copiedalignment, false);
-		changeCellFontColor(&copiedfontcolor);
-		allcells.at(selectedbox).copiedno = -1;
-		changeCellLine(copiedlineno, false);
-		fillCell((allcells.at(selectedbox).celly - gridboxh) / gridboxh, (allcells.at(selectedbox).cellx - (gridboxw / 2)) / gridboxw, tmpstr);
+	if(ctrlvpressed) {
+		undocellstack.push(allcells.at(index));
+		undocellstack.top().showncontent = fixTextFunction(undocellstack.top().cellcontent);
+		allcells.at(index) = copiedcell;
+		tmpstr = allcells.at(index).cellcontent;
 		ctrlvpressed = false;
-
-		undostringstack.push(tmpcellstr);
-		undofontstack.push(tmpfont);
-		undoalignmentstack.push(tmpalignment);
-		undofontcolorstack.push(tmpcolor);
-		undocopiednostack.push(tmpcopiedno);
-		undolinenostack.push(tmplineno);
-		undocellnumberstack.push(selectedbox);
 	}
 	else if(ctrlzpressed) {
-		tmpstr = undostringstack.top();
-		changeCellFont(undofontstack.top());
-		changeCellAlignment(undoalignmentstack.top(), false);
-		changeCellFontColor(&undofontcolorstack.top());
-		allcells.at(undocellnumberstack.top()).copiedno = undocopiednostack.top();
-		changeCellLine(undolinenostack.top(), false);
-		fillCell((allcells.at(undocellnumberstack.top()).celly - gridboxh) / gridboxh, (allcells.at(undocellnumberstack.top()).cellx - (gridboxw / 2)) / gridboxw, tmpstr);
+		index = undocellstack.top().cellrowno * columnnum + undocellstack.top().cellcolumnno;
+		allcells.at(index) = undocellstack.top();
+		gLogi("ChangeZCellContent") << allcells.at(index).cellcontent << " ChangeZShownContent: " << allcells.at(index).showncontent;
+		tmpstr = allcells.at(index).cellcontent;
 		ctrlzpressed = false;
 	}
 	else if(ctrlypressed) {
-		tmpstr = redostringstack.top();
-		changeCellFont(redofontstack.top());
-		changeCellAlignment(redoalignmentstack.top(), false);
-		changeCellFontColor(&redofontcolorstack.top());
-		allcells.at(redocellnumberstack.top()).copiedno = redocopiednostack.top();
-		changeCellLine(redolinenostack.top(), false);
-		fillCell((allcells.at(redocellnumberstack.top()).celly - gridboxh) / gridboxh, (allcells.at(redocellnumberstack.top()).cellx - (gridboxw / 2)) / gridboxw, tmpstr);
+		index = redocellstack.top().cellrowno * columnnum + redocellstack.top().cellcolumnno;
+		allcells.at(index) = redocellstack.top();
+		tmpstr = allcells.at(index).cellcontent;
+		ctrlypressed = false;
 	}
+	else {
+		tmpstr = textbox.getText();
+		textbox.cleanText();
+		istextboxactive = false;
+	}
+	fillCell(allcells.at(index).cellrowno, allcells.at(index).cellcolumnno, tmpstr);
 }
 
 void gGUIGrid::drawContent() {
@@ -738,7 +697,6 @@ void gGUIGrid::mousePressed(int x, int y, int button) {
 //			gLogi("Grid") << "doubleclicked.";
 		} else isdoubleclicked = false;
 		if(isdoubleclicked) {
-			pushToUndoStack();
 			textbox.cleanText();
 			createTextBox();
 			textbox.mousePressed(pressedx, pressedy, button);
@@ -763,25 +721,17 @@ void gGUIGrid::keyPressed(int key){
 	if(istextboxactive) textbox.keyPressed(key);
 	else if(key == G_KEY_C && ctrlpressed) {
 		ctrlcpressed = true;
-		copiedfont = allcells.at(selectedbox).fontnum;
-		copiedalignment = allcells.at(selectedbox).cellalignment;
-		copiedfontcolor = allcells.at(selectedbox).cellfontcolor;
-		copiedno = allcells.at(selectedbox).cellrowno * columnnum + allcells.at(selectedbox).cellcolumnno;
-		copiedlineno = allcells.at(selectedbox).lineno;
+		copiedcell = allcells.at(selectedbox);
+		appmanager->setClipboardString(allcells.at(selectedbox).cellcontent);
 	}
-	else if(key == G_KEY_V && ctrlpressed) {
+	else if(key == G_KEY_V && ctrlpressed && (&copiedcell != NULL || appmanager->getClipboardString() != "")) {
 		ctrlvpressed = true;
+		setCopiedCell(&copiedcell);
 		changeCell();
 	}
 	else if(key == G_KEY_X && ctrlpressed) {
 		ctrlcpressed = false;
-		appmanager->setClipboardString(allcells.at(selectedbox).cellcontent);
-		copiedfont = allcells.at(selectedbox).fontnum;
-		copiedalignment = allcells.at(selectedbox).cellalignment;
-		copiedfontcolor = allcells.at(selectedbox).cellfontcolor;
-		copiedno = allcells.at(selectedbox).copiedno;
-		copiedlineno = allcells.at(selectedbox).lineno;
-		pushToUndoStack();
+		copiedcell = allcells.at(selectedbox);
 		textbox.cleanText();
 		allcells.at(selectedbox).cellcontent = "";
 		allcells.at(selectedbox).showncontent = "";
@@ -792,36 +742,24 @@ void gGUIGrid::keyPressed(int key){
 		allcells.at(selectedbox).lineno = TEXTLINE_NONE;
 	}
 	else if(key == G_KEY_Z && ctrlpressed) {
-		if(undocellnumberstack.empty()) return;
+		if(undocellstack.empty()) return;
 		ctrlzpressed = true;
-		pushToRedoStack();
+		redocellstack.push(allcells.at(undocellstack.top().cellrowno * columnnum + undocellstack.top().cellcolumnno));
+		redocellstack.top().showncontent = fixTextFunction(redocellstack.top().cellcontent);
 		changeCell();
-		undostringstack.pop();
-		undofontstack.pop();
-		undoalignmentstack.pop();
-		undofontcolorstack.pop();
-		undocopiednostack.pop();
-		undolinenostack.pop();
-		undocellnumberstack.pop();
+		undocellstack.pop();
 	}
 	else if(key == G_KEY_Y && ctrlpressed) {
-		if(redocellnumberstack.empty()) return;
+		if(redocellstack.empty()) return;
 		ctrlypressed = true;
-		pushToUndoStack();
+		undocellstack.push(allcells.at(redocellstack.top().cellrowno * columnnum + redocellstack.top().cellcolumnno));
+		undocellstack.top().showncontent = fixTextFunction(undocellstack.top().cellcontent);
 		changeCell();
-		redostringstack.pop();
-		redofontstack.pop();
-		redoalignmentstack.pop();
-		redofontcolorstack.pop();
-		redocopiednostack.pop();
-		redolinenostack.pop();
-		redocellnumberstack.pop();
-		ctrlypressed = false;
+		redocellstack.pop();
 	}
 	else if((isselected || isrowselected || iscolumnselected) && (key == G_KEY_LEFT_CONTROL || key == G_KEY_RIGHT_CONTROL)) ctrlpressed = true;
 	else if((isselected || isrowselected || iscolumnselected) && (key == G_KEY_LEFT_SHIFT || key == G_KEY_RIGHT_SHIFT)) shiftpressed = true;
 	else if((isselected || isrowselected || iscolumnselected) && key != G_KEY_ENTER && key != G_KEY_UP && key != G_KEY_DOWN && key != G_KEY_RIGHT && key != G_KEY_LEFT && key != G_KEY_ESC && key != G_KEY_LEFT_SHIFT && key != G_KEY_RIGHT_SHIFT && key != G_KEY_F2) {
-		pushToUndoStack();
 		textbox.cleanText();
 		allcells.at(selectedbox).cellcontent = "";
 		allcells.at(selectedbox).showncontent = "";
