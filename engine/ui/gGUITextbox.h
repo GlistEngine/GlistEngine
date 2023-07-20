@@ -296,6 +296,7 @@ private:
 	std::stack<std::string> undostack;
 	std::stack<int> cursorposxstack, cursorposystack, cursorposcharstack, cursorposutfstack;
 	std::stack<int> firstutfstack, firstcharstack, firstposxstack;
+	std::stack<int> currentlinestack, lastdrawnlinestack,linecountstack;
 
 	void pushToStack();
 };
