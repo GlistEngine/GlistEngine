@@ -936,7 +936,105 @@ void gGUITextbox::pressKey() {
 		cursorposx = selectionposx2;
 		cursorposutf = selectionposutf2;
 	} else if(ctrlvpressed) { //ctrl v
-		pressCtrlV();
+		pushToStack();
+		if(isnumeric) {
+			std::string testtext = appmanager->getClipboardString();
+			for(int i = 0; i < testtext.size(); i++) if(testtext[i] < 48 || testtext[i] > 57) return;
+		}
+		if(selectionmode && selectionposchar1 != selectionposchar2) {
+			if(isselectedall) {
+				std::string newtext = appmanager->getClipboardString();
+				setText(newtext);
+				cursorposchar = text.length();
+				cursorposx = font->getStringWidth(text);
+				cursorposutf = lastutf;
+				selectionmode = false;
+				isselectedall = false;
+				return;
+			}
+			int sepc1, sepx1, sepu1, sepc2, sepx2, sepu2;
+			if(selectionposx2 >= selectionposx1) {
+				sepc1 = selectionposchar1;
+				sepx1 = selectionposx1;
+				sepu1 = selectionposutf1;
+				sepc2 = selectionposchar2;
+				sepx2 = selectionposx2;
+				sepu2 = selectionposutf2;
+			} else {
+				sepc1 = selectionposchar2;
+				sepx1 = selectionposx2;
+				sepu1 = selectionposutf2;
+				sepc2 = selectionposchar1;
+				sepx2 = selectionposx1;
+				sepu2 = selectionposutf1;
+			}
+			std::string newtext = "";
+			if(sepu1 > 0) newtext = text.substr(0, sepu1);
+			if(sepu2 < text.length()) newtext += text.substr(sepu2, text.length() - sepu2 + 1);
+			text = newtext;
+			letterlength.erase(letterlength.begin() + sepc1, letterlength.begin() + sepc2);
+			letterpos = calculateAllLetterPositions();
+			cursorposx = sepx1;
+			if(ispassword) findCursorPositionPassword();
+			cursorposutf = sepu1;
+			cursorposchar = sepc1;
+			if(sepu2 - sepu1 >= lastutf) {
+				firstutf = sepu1;
+				firstchar = sepc1;
+				firstposx = sepx1;
+			}
+		}
+
+		std::string pastedtext = appmanager->getClipboardString();
+		if(pastedtext.size() == 0) return;
+		std::vector<short> lettersize = readString(pastedtext);
+		int pastedtextw = textfont->getStringWidth(pastedtext);
+		int pastedtextl = pastedtext.length();
+		int pastedtextsize = pastedtext.size();
+
+		std::string firsttext = "";
+		if(cursorposutf > 0) firsttext = text.substr(0, cursorposutf);
+		int firsttextw = font->getStringWidth(firsttext);
+		int firsttextl = firsttext.length();
+		int firsttextsize = firsttext.size();
+		std::string lasttext = "";
+		if(cursorposutf < text.length()) lasttext = text.substr(cursorposutf, text.length() - cursorposutf + 1);
+		int oldtextlength = text.length();
+		text = firsttext + pastedtext + lasttext;
+
+		if(text.length() == 0) {
+			letterlength = lettersize;
+		} else if(cursorposchar < letterlength.size()) {
+			for(int i = lettersize.size() - 1; i >= 0; i--) letterlength.insert(letterlength.begin() + cursorposchar, lettersize[i]);
+		} else {
+			for(int i = 0; i < lettersize.size(); i++) letterlength.push_back(lettersize[i]);
+		}
+		letterpos = calculateAllLetterPositions();
+		lastutf = calculateLastUtf();
+		cursorposchar = firsttextl + pastedtextl;
+		cursorposutf = firsttextsize + pastedtextsize;
+		cursorposx = firsttextw + pastedtextw - firstposx;
+		if(cursorposx >= width - 2 * initx) {
+			if(!ismultiline && !ispassword) {
+				do {
+					firstutf += letterlength[firstchar];
+					firstposx = font->getStringWidth(text.substr(0, firstutf));
+					firstchar++;
+					cursorposx = font->getStringWidth(text.substr(firstutf, cursorposutf - firstutf));
+				} while(cursorposx >= width - 2 * initx);
+				lastutf = calculateLastUtf();
+			} else if(ismultiline) {
+				setText(text);
+				findCursorPosition();
+			} else if(ispassword) {
+				cursorposx -= 3 * dotradius;
+			} else {
+				cursorposx = font->getStringWidth(text.substr(firstutf, cursorposutf - firstutf));
+			}
+		}
+		selectionmode = false;
+		isselectedall = false;
+		if(ismultiline) setText(text);
 	} else if(ctrlzpressed){ //ctrl z
 		if(undostack.empty()) return; //there is nothing to be undone
 		setText(undostack.top()); //undo changes to text
