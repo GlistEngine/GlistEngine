@@ -534,6 +534,10 @@ void gGUITextbox::pressKey() {
 					}
 				} else if(ispassword) {
 					cursorposx = sepx1;
+				} else if(ismultiline) {
+					cursorposx = sepx1;
+					cursorposutf = sepu1;
+					cursorposchar = sepc1;
 				}
 			}
 		} else {
@@ -567,9 +571,9 @@ void gGUITextbox::pressKey() {
 					cursorposx = 0;
 					lastutf = calculateLastUtf();
 				} else if(ismultiline){
-					if(lastdrawnline > 1 && linecount > 1 && lines[currentline - 1].size() == 0) {
-						lastdrawnline--;
-						linecount--;
+					if(lines[currentline - 1].size() == 0 || currentline == lastdrawnline - rowsnum + 1) {
+						if(lastdrawnline > 1) lastdrawnline--;
+						if(linecount > 1) linecount--;
 					}
 					if(currentline > 1) currentline--;
 					std::vector<int> clickpos = calculateCursorPositionMultiline(right - 1, top + currentline * (lineheight + linetopmargin));
@@ -789,7 +793,7 @@ void gGUITextbox::pressKey() {
 			}
 		} else {
 			text = text.substr(0, cursorposutf) + text.substr(cursorposutf + letterlength[cursorposchar], text.length() - (cursorposutf + letterlength[cursorposchar]));
-			if(firstutf > 0) {
+			if(firstutf > 0 && !ismultiline) {
 				int icw = textfont->getStringWidth(text.substr(firstchar - 1, letterlength[firstchar - 1]));
 				firstutf -= letterlength[firstchar];
 				firstposx = textfont->getStringWidth(text.substr(0, firstutf));
@@ -801,7 +805,21 @@ void gGUITextbox::pressKey() {
 		}
 		selectionmode = false;
 		lastutf = calculateLastUtf();
-		if(ismultiline) setText(text);
+		if(ismultiline) {
+			setText(text);
+			if(lines[currentline - 1].size() == 0) {
+				currentline--;
+				lastdrawnline--;
+				linecount--;
+				std::vector<int> clickpos = calculateCursorPositionMultiline(right - 1, top + currentline * (lineheight + linetopmargin));
+				cursorposchar = clickpos[0];
+				cursorposx = clickpos[1];
+				cursorposutf = clickpos[2];
+			} else if(lines[linecount - 1] == "") {
+				if(linecount > 1) linecount--;
+				if(lastdrawnline > 1) lastdrawnline--;
+			}
+		}
 	} else if((keystate & KEY_ENTER)) { // ENTER
 		selectionmode = false;
 		root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_TEXTBOXENTRY, text);
