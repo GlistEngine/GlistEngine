@@ -883,7 +883,18 @@ void gGUITextbox::pressKey() {
 		}
 		selectionmode = false;
 		lastutf = calculateLastUtf();
-		if(ismultiline) setText(text);
+		if(ismultiline) {
+			setText(text);
+			if(lines[currentline - 1] == "") {
+				if(currentline > 1) currentline--;
+				if(lastdrawnline > 1) lastdrawnline--;
+				if(linecount > 1) linecount--;
+				std::vector<int> clickpos = calculateCursorPositionMultiline(right - 1, top + currentline * (lineheight + linetopmargin));
+				cursorposchar = clickpos[0];
+				cursorposx = clickpos[1];
+				cursorposutf = clickpos[2];
+			}
+		}
 	} else if(ctrlapressed) { //ctrl a
 		selectionmode = true;
 		isselectedall = true;
@@ -1031,6 +1042,16 @@ void gGUITextbox::pressKey() {
 		firstutfstack.pop();
 		firstposx = firstposxstack.top();
 		firstposxstack.pop();
+
+		//undo line changes for multiline
+		if(ismultiline) {
+			currentline = currentlinestack.top();
+			currentlinestack.pop();
+			lastdrawnline = lastdrawnlinestack.top();
+			lastdrawnlinestack.pop();
+			linecount = linecountstack.top();
+			linecountstack.pop();
+		}
 	} else if(isdoubleclicked) {
 		bool leftchar = false;
 		bool rightchar = false;
@@ -1663,6 +1684,11 @@ void gGUITextbox::pushToStack() {
 	firstcharstack.push(firstchar);
 	firstutfstack.push(firstutf);
 	firstposxstack.push(firstposx);
+	if(ismultiline) {
+		currentlinestack.push(currentline);
+		lastdrawnlinestack.push(lastdrawnline);
+		linecountstack.push(linecount);
+	}
 }
 
 
