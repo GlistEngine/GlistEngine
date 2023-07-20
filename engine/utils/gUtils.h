@@ -98,8 +98,16 @@ int gGetHours();
 int gGetMinutes();
 int gGetSeconds();
 
-#if  defined(WIN32) || defined(LINUX)
+#if  defined(WIN32) || defined(LINUX)      //Available Ram Size
 uint64_t gGetAvailableRamSize();
+#endif
+
+#if  defined(WIN32) || defined(LINUX)      //Current Ram Size Used by Glist Engine
+uint64_t gGetRamSizeUsedbyGE();
+#endif
+
+#if  defined(WIN32) || defined(LINUX) || defined(APPLE)    //Total Ram Size
+uint64_t gGetTotalRamSize();
 #endif
 
 std::string gGetTimestampString();
