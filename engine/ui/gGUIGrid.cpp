@@ -67,8 +67,10 @@ void gGUIGrid::set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIO
 }
 
 void gGUIGrid::setGrid(int rowNum, int columnNum) {
-	rownum = rowNum;
-	columnnum = columnNum;
+	if(rowNum > maxrownum) rownum = maxrownum;
+	else rownum = rowNum;
+	if(columnNum > maxcolumnnum) columnnum = maxcolumnnum;
+	else columnnum = columnNum;
 	gridw = gridboxw * columnnum;
 	gridh = gridboxh * rownum;
 	createCells();

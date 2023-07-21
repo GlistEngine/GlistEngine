@@ -72,6 +72,9 @@ public:
 		FUNCTION_FIRSTINDEX
 	};
 
+	static const int maxcolumnnum = 16384;
+	static const int maxrownum = 1048576;
+
 	gGUIGrid();
 	virtual ~gGUIGrid();
 
