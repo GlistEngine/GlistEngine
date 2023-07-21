@@ -73,6 +73,7 @@ var hierarchy =
             [ "gGUIContextMenuItem", "classgGUIContextMenuItem.html", [
               [ "gGUIContextMenu", "classgGUIContextMenu.html", null ]
             ] ],
+            [ "gGUIDate", "classgGUIDate.html", null ],
             [ "gGUIDivider", "classgGUIDivider.html", null ],
             [ "gGUIGraph", "classgGUIGraph.html", [
               [ "gGUICandleStickChart", "classgGUICandleStickChart.html", null ],

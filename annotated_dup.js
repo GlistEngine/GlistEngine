@@ -57,6 +57,7 @@ var annotated_dup =
     [ "gGUIContextMenu", "classgGUIContextMenu.html", "classgGUIContextMenu" ],
     [ "gGUIContextMenuItem", "classgGUIContextMenuItem.html", "classgGUIContextMenuItem" ],
     [ "gGUIControl", "classgGUIControl.html", "classgGUIControl" ],
+    [ "gGUIDate", "classgGUIDate.html", "classgGUIDate" ],
     [ "gGUIDialogue", "classgGUIDialogue.html", "classgGUIDialogue" ],
     [ "gGUIDivider", "classgGUIDivider.html", "classgGUIDivider" ],
     [ "gGUIDropdownList", "classgGUIDropdownList.html", "classgGUIDropdownList" ],

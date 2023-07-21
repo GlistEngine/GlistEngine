@@ -55,6 +55,7 @@ var files_dup =
     [ "gGUIContainer.h", "gGUIContainer_8h_source.html", null ],
     [ "gGUIContextMenu.h", "gGUIContextMenu_8h_source.html", null ],
     [ "gGUIControl.h", "gGUIControl_8h_source.html", null ],
+    [ "gGUIDate.h", "gGUIDate_8h_source.html", null ],
     [ "gGUIDialogue.h", "gGUIDialogue_8h_source.html", null ],
     [ "gGUIDivider.h", "gGUIDivider_8h_source.html", null ],
     [ "gGUIDropdownList.h", "gGUIDropdownList_8h_source.html", null ],
