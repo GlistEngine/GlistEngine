@@ -186,11 +186,11 @@ $(document).ready(function(){initNavTree('gUtils_8h_source.html',''); initResiza
 <div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;<span class="keywordtype">int</span> gGetMinutes();</div>
 <div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;<span class="keywordtype">int</span> gGetSeconds();</div>
 <div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160; </div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;<span class="preprocessor">#if  defined(WIN32) || defined(LINUX)      </span><span class="comment">//Available Ram Size</span></div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;<span class="preprocessor">#if  defined(WIN32) || defined(LINUX) || defined(APPLE)    </span><span class="comment">//Available Ram Size</span></div>
 <div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;uint64_t gGetAvailableRamSize();</div>
 <div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160; </div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;<span class="preprocessor">#if  defined(WIN32) || defined(LINUX)      </span><span class="comment">//Current Ram Size Used by Glist Engine</span></div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;<span class="preprocessor">#if  defined(WIN32) || defined(LINUX) || defined(APPLE)     </span><span class="comment">//Current Ram Size Used by Glist Engine</span></div>
 <div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;uint64_t gGetRamSizeUsedbyGE();</div>
 <div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160; </div>
