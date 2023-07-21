@@ -65,7 +65,10 @@ void gVbo::setVertexData(gVertex* vertices, int coordNum, int total) {
     /* Because of a bug with AMD drivers, glDeleteBuffers function must be called
      * only while exiting the application.
      */
-    if(!isAMD) glDeleteBuffers(1, &vbo);
+    if(!isAMD) {
+		glDeleteBuffers(1, &vbo);
+		isvertexdataallocated = false;
+	  }
 }
 
 void gVbo::setVertexData(const float* vert0x, int coordNum, int total, int usage, int stride) {
@@ -97,9 +100,12 @@ void gVbo::setIndexData(gIndex* indices, int total) {
 }
 
 void gVbo::clear() {
-    glDeleteVertexArrays(1, &vao);
-    if(isvertexdataallocated) glDeleteBuffers(1, &vbo);
-	if(isindexdataallocated)  glDeleteBuffers(1, &ebo);
+	glDeleteVertexArrays(1, &vao);
+	if(isvertexdataallocated) {
+	  glDeleteBuffers(1, &vbo);
+	  isvertexdataallocated = false;
+	}
+	if(isindexdataallocated) glDeleteBuffers(1, &ebo);
 }
 
 gVertex* gVbo::getVertices() const {
