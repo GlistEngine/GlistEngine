@@ -155,7 +155,6 @@ int gGetSeconds() {
 #ifdef WIN32
 #include <windows.h>
 #include <psapi.h>
-
 uint64_t gGetTotalRamSize() {
 	 	MEMORYSTATUSEX memStatus;
 	    memStatus.dwLength = sizeof(MEMORYSTATUSEX);
@@ -166,7 +165,6 @@ uint64_t gGetTotalRamSize() {
 #elif LINUX
 #include "sys/types.h"
 #include "sys/sysinfo.h"
-
 uint64_t gGetTotalRamSize() {
 	struct sysinfo memInfo;
 	sysinfo (&memInfo);
@@ -177,7 +175,6 @@ uint64_t gGetTotalRamSize() {
 
 #elif APPLE
 #include <sys/sysctl.h>
-
 uint64_t gGetTotalRamSize() {
 	int mib [] = { CTL_HW, HW_MEMSIZE };
 	int64_t value = 0;
@@ -190,13 +187,11 @@ uint64_t gGetTotalRamSize() {
 	// Physical memory is now in value
 	return value;
 }
-
 #endif
 
 //Available RAM Size
 #ifdef WIN32
 #include <windows.h>
-
 uint64_t gGetAvailableRamSize() {
     MEMORYSTATUSEX memStatus;
     memStatus.dwLength = sizeof(MEMORYSTATUSEX);
@@ -206,11 +201,40 @@ uint64_t gGetAvailableRamSize() {
 
 #elif LINUX
 #include <sys/sysinfo.h>
-
 uint64_t gGetAvailableRamSize() {
     struct sysinfo sysInfo;
     sysinfo(&sysInfo);
     return sysInfo.freeram * sysInfo.mem_unit;
+}
+
+#elif APPLE
+#include <iostream>
+#include <sys/types.h>
+#include <sys/sysctl.h>
+#include <mach/mach.h>
+uint64_t gGetAvailableRAMSize() {
+    // Query the total physical memory size
+    int mib[2];
+    int64_t physicalMemorySize;
+    size_t len = sizeof(physicalMemorySize);
+    mib[0] = CTL_HW;
+    mib[1] = HW_MEMSIZE;
+    sysctl(mib, 2, &physicalMemorySize, &len, nullptr, 0);
+
+    // Query the amount of free memory
+    mach_port_t host_port = mach_host_self();
+    mach_msg_type_number_t count = HOST_VM_INFO_COUNT;
+    vm_statistics64_data_t vm_stats;
+    if (host_statistics64(host_port, HOST_VM_INFO, reinterpret_cast<host_info64_t>(&vm_stats), &count) != KERN_SUCCESS) {
+        return 0;
+    }
+
+    uint64_t freeMemory = static_cast<uint64_t>(vm_stats.free_count) * static_cast<uint64_t>(vm_page_size);
+
+    // Calculate available RAM size by taking the minimum of physical memory and free memory
+    uint64_t availableRAM = std::min(static_cast<uint64_t>(physicalMemorySize), freeMemory);
+
+    return availableRAM;
 }
 #endif
 
@@ -218,7 +242,6 @@ uint64_t gGetAvailableRamSize() {
 #ifdef WIN32
 #include <windows.h>
 #include <psapi.h>
-
 uint64_t gGetRamSizeUsedbyGE() {
 	PROCESS_MEMORY_COUNTERS_EX pmc;
 	GetProcessMemoryInfo(GetCurrentProcess(), (PROCESS_MEMORY_COUNTERS*)&pmc, sizeof(pmc));
@@ -229,7 +252,7 @@ uint64_t gGetRamSizeUsedbyGE() {
 #include "stdlib.h"
 #include "stdio.h"
 #include "string.h"
-
+uint64_t gGetRamSizeUsedbyGE() {
 int parseLine(char* line){
     // This assumes that a digit will be found and the line ends in " Kb".
     int i = strlen(line);
@@ -253,6 +276,23 @@ int getValue(){ //Note: this value is in KB!
     }
     fclose(file);
     return result;
+  }
+}
+
+#elif APPLE
+#include <iostream>
+#include <sys/types.h>
+#include <sys/sysctl.h>
+#include <mach/mach.h>
+uint64_t gGetRAMSizeUsedbyGE() {
+    task_vm_info_data_t taskInfo;
+    mach_msg_type_number_t taskInfoCount = TASK_VM_INFO_COUNT;
+    if (task_info(mach_task_self(), TASK_VM_INFO, reinterpret_cast<task_info_t>(&taskInfo), &taskInfoCount) != KERN_SUCCESS) {
+        return 0;
+    }
+
+    uint64_t residentMemory = taskInfo.phys_footprint;
+    return residentMemory;
 }
 #endif
 

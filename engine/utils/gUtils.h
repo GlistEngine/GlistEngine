@@ -98,11 +98,11 @@ int gGetHours();
 int gGetMinutes();
 int gGetSeconds();
 
-#if  defined(WIN32) || defined(LINUX)      //Available Ram Size
+#if  defined(WIN32) || defined(LINUX) || defined(APPLE)    //Available Ram Size
 uint64_t gGetAvailableRamSize();
 #endif
 
-#if  defined(WIN32) || defined(LINUX)      //Current Ram Size Used by Glist Engine
+#if  defined(WIN32) || defined(LINUX) || defined(APPLE)     //Current Ram Size Used by Glist Engine
 uint64_t gGetRamSizeUsedbyGE();
 #endif
 
