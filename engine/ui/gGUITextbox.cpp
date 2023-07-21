@@ -94,7 +94,7 @@ gGUITextbox::gGUITextbox() {
 	textmoveamount = 0;
 	setTextAlignment(textalignment, boxw, initx);
 	textcolor = fontcolor;
-
+	
 	widthexceeded = false;
 }
 
@@ -828,7 +828,7 @@ void gGUITextbox::pressKey() {
 			newtext += "\n";
 			if(cursorposchar < letterlength.size()) newtext += text.substr(cursorposutf, text.length() - cursorposutf);
 			text = newtext;
-			if(lastdrawnline == linecount || lastdrawnline < rowsnum) lastdrawnline++;
+			if(lastdrawnline == currentline || lastdrawnline < rowsnum) lastdrawnline++;
 			linecount++;
 			currentline++;
 			setText(text);
@@ -1302,7 +1302,7 @@ int gGUITextbox::calculateCharNoFromUtf(int letterUtfNo) {
 
 int gGUITextbox::findFirstSpace(int lineend) {
 	for(int i = lineend; i > lineend - lastutf; i--) {
-		if (text[i] == ' ') return i;
+		if (text[i] == ' ' || text[i] == '\n') return i;
 	}
 	return lineend - 1;
 }
@@ -1585,9 +1585,9 @@ void gGUITextbox::calculateLines() {
 		}
 		lastutf = calculateLastUtf();
 		linesize = lastutf;
-
+		
 		if(firstchar + linesize < text.size()) {
-			int lineendpoint = findFirstSpace(firstchar + linesize);
+			int lineendpoint = findFirstSpace(firstchar + linesize + 1);
 			linesize = lineendpoint - firstchar;
 		}
 
