@@ -1,5 +1,6 @@
 var NAVTREEINDEX6 =
 {
+"classgGUITimebox.html#aa6c42f136ad849259806cef973ef2428":[0,0,87,11],
 "classgGUITimebox.html#abac06665cf37bb659a3bb61016f23e9c":[0,0,87,3],
 "classgGUITimebox.html#acf62597708650d20210e079623852950":[0,0,87,5],
 "classgGUITimebox.html#ade0bbb82dca8c03f89092f59a72ee01b":[0,0,87,1],
@@ -248,6 +249,5 @@ var NAVTREEINDEX6 =
 "classgMaterial.html#a6b1e3be7e87a34f85852acfa6ec29444":[0,0,109,46],
 "classgMaterial.html#a6f3f1c2d8bd9b76bd5b5ab8bbd948938":[0,0,109,35],
 "classgMaterial.html#a710d8a128b0c48b3d6ac278bed63282b":[0,0,109,20],
-"classgMaterial.html#a7209f502ed48d00d76c86780a3811e71":[0,0,109,33],
-"classgMaterial.html#a726e7c52f3400e288b06d7b3392775f8":[0,0,109,71]
+"classgMaterial.html#a7209f502ed48d00d76c86780a3811e71":[0,0,109,33]
 };

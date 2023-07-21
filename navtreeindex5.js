@@ -194,11 +194,12 @@ var NAVTREEINDEX5 =
 "classgGUISwitchButton.html#ab221284ef55c3ec4bf80dae7dea731de":[0,0,84,2],
 "classgGUISwitchButton.html#aca220b9117d5612a9f99a82449b2c029":[0,0,84,1],
 "classgGUIText.html":[0,0,85],
-"classgGUIText.html#a0bbf772a17e46e48e5619c8e01107c8a":[0,0,85,3],
-"classgGUIText.html#a7a23591745d6cecf0e0fc8db1090bfe7":[0,0,85,5],
+"classgGUIText.html#a0bbf772a17e46e48e5619c8e01107c8a":[0,0,85,4],
+"classgGUIText.html#a5d62be43ece08ff362063b5863caf2ca":[0,0,85,3],
+"classgGUIText.html#a7a23591745d6cecf0e0fc8db1090bfe7":[0,0,85,6],
 "classgGUIText.html#a7c414b9688346ad594b4f2f8c58d5c38":[0,0,85,1],
 "classgGUIText.html#ac6c6e7ad8a5d1eda8ba8a96940cd90ca":[0,0,85,2],
-"classgGUIText.html#ade299582efc36e8c4b58ab7d79b46323":[0,0,85,4],
+"classgGUIText.html#ade299582efc36e8c4b58ab7d79b46323":[0,0,85,5],
 "classgGUIText.html#af9cedf71bbdaa229911950a827a7df08":[0,0,85,0],
 "classgGUITextbox.html":[0,0,86],
 "classgGUITextbox.html#a19dad1764deec36abc1bf31a809c4e86":[0,0,86,6],
@@ -248,6 +249,5 @@ var NAVTREEINDEX5 =
 "classgGUITimebox.html#a8a0c0fb952326770db08daa5849c0215":[0,0,87,0],
 "classgGUITimebox.html#a91dfbb3e9d734b52ebe7cffa94ce8111":[0,0,87,2],
 "classgGUITimebox.html#a9b1708ec3f0d377027ad2a5a8381d09b":[0,0,87,9],
-"classgGUITimebox.html#a9dd7f30c05677dfba0562701c6fc1615":[0,0,87,7],
-"classgGUITimebox.html#aa6c42f136ad849259806cef973ef2428":[0,0,87,11]
+"classgGUITimebox.html#a9dd7f30c05677dfba0562701c6fc1615":[0,0,87,7]
 };
