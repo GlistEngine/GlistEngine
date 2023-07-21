@@ -97,6 +97,19 @@ int gGetWeekday();
 int gGetHours();
 int gGetMinutes();
 int gGetSeconds();
+
+#if  defined(WIN32) || defined(LINUX)      //Available Ram Size
+uint64_t gGetAvailableRamSize();
+#endif
+
+#if  defined(WIN32) || defined(LINUX)      //Current Ram Size Used by Glist Engine
+uint64_t gGetRamSizeUsedbyGE();
+#endif
+
+#if  defined(WIN32) || defined(LINUX) || defined(APPLE)    //Total Ram Size
+uint64_t gGetTotalRamSize();
+#endif
+
 std::string gGetTimestampString();
 std::string gGetTimestampString(const std::string& format);
 void gStringReplace(std::string& input, const std::string& searchStr, const std::string& replaceStr);
@@ -308,6 +321,8 @@ gColor gShowColorChooser(
 	std::string aDefaultHexRGB , /* NULL or "#FF0000" */
 	unsigned char const aDefaultRGB[3]) /* { 0 , 255 , 255 } */;
 
+bool checkCollision(int xLeft1, int yUp1, int xRight1, int yBottom1,
+		int xLeft2, int yUp2, int xRight2, int yBottom2);
 
 class gUtils {
 public:

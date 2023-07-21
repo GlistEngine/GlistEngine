@@ -11,52 +11,72 @@
 
 #include "gGUIScrollable.h"
 #include "gGUITextbox.h"
+#include "gGUIManager.h"
 #include <deque>
 #include <string.h>
-#include "gGUIManager.h"
 
 //#include "gGUISizer.h"
 
 class gGUIGrid: public gGUIScrollable {
 public:
 	struct Cell {
-	    int cellx;
-	    int celly;
-	    float cellh;
-	    float cellw;
-	    int cellrowno;
-	    int cellcolumnno;
 	    bool iscellselected;
 	    bool iscellaligned;
+	    bool hasfunction;
+	    int cellx;
+	    int celly;
+	    int cellrowno;
+	    int cellcolumnno;
+	    int copiedno;
+	    int fontnum;
+	    int cellalignment;
+	    int lineno;
+	    float cellh;
+	    float cellw;
+	    float textmoveamount;
 	    std::string cellcontent;
 	    std::string showncontent;
 	    std::string celltype;
-	    int fontnum;
-	    int cellalignment;
-	    float textmoveamount;
 	    gColor cellfontcolor;
 	    Cell(){
-	    	cellx = -1;
-	    	celly = -1;
-	    	cellh = 30.0f;
-	    	cellw = 80.0f;
 	    	iscellselected = false;
 	    	iscellaligned = false;
-	    	cellcontent = "";
-	    	showncontent = "";
+	    	hasfunction = false;
+	    	cellx = -1;
+	    	celly = -1;
+	    	copiedno = -1;
 	    	fontnum = gGUIManager::FONT_REGULAR;
 	    	cellalignment = gBaseGUIObject::TEXTALIGNMENT_LEFT;
+	    	lineno = TEXTLINE_NONE;
+	    	cellh = 30.0f;
+	    	cellw = 80.0f;
 	    	textmoveamount = 0;
+	    	cellcontent = "";
+	    	showncontent = "";
+	    	celltype = "string";
 	    	cellfontcolor = fontcolor;
 	    }
 	};
+
+	enum {
+		TEXTLINE_NONE,
+		TEXTLINE_UNDER,
+		TEXTLINE_DOUBLEUNDER,
+		TEXTLINE_STRIKE
+	};
+
 	gGUIGrid();
 	virtual ~gGUIGrid();
 
 	void set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIObject* parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h);
 	void setGrid(int rowNum, int columnNum);
 	void setRowNum(int rowNum);
-	void setcolumnNum(int columnNum);
+	void setColumnNum(int columnNum);
+	void setCellFont(int fontNum);
+	void setCellAlignment(int cellAlignment, bool clicked);
+	void setCellFontColor(gColor* fontColor);
+	void setCellLine(int lineNo, bool clicked);
+	void setCopiedCell(Cell* cell);
 
 	Cell* getCell(int rowNo, int columnNo);
 
@@ -79,12 +99,6 @@ public:
 	void createTextBox();
 	void changeCell();
 	void checkCellType(int cellIndex);
-	void changeCellFont(int fontNum);
-	void changeCellAlignment(int cellAlignment, bool clicked);
-	void changeCellFontColor(gColor* fontColor);
-	void pushToUndoStack();
-	void pushToRedoStack();
-	std::string fixTextFunction(std::string text);
 
 	void update();
 
@@ -97,27 +111,35 @@ public:
 	void mouseScrolled(int x, int y);
 
 private:
+	std::string fixTextFunction(std::string text);
+	std::string fixNumeric(std::string text);
+	std::string getTextColumn(std::string text);
+	int getCellIndex(std::string text);
+	Cell getCopiedCell(int cellIndex);
+	int makeSum(int c1, int r1, int c2, int r2);
+	bool isNumeric(std::string text);
+
 	std::deque<Cell> allcells;
-	int rownum, columnnum;
-	float gridx, gridy, gridw, gridh;
-	float gridboxw, gridboxh;
-	int selectedbox;
+	std::stack<Cell> undocellstack;
+	std::stack<Cell> redocellstack;
+	Cell copiedcell;
+	gGUIManager* manager;
+	gGUITextbox textbox;
 	bool isselected, isrowselected, iscolumnselected;
+	bool istextboxactive;
+	bool isdoubleclicked;
+	bool shiftpressed, ctrlpressed;
+	bool ctrlcpressed, ctrlvpressed, ctrlzpressed, ctrlypressed;
+	int selectedbox;
+	int selectedtitle;
+	int rownum, columnnum;
 	int rowtitle;
 	int columntitle;
-	gGUITextbox textbox;
-	bool istextboxactive;
+	float gridboxw, gridboxh;
+	float newgridboxw;
+	float gridx, gridy, gridw, gridh;
 	long clicktime, previousclicktime, firstclicktime, clicktimediff;
-	bool isdoubleclicked;
-	int newgridboxw;
-	gGUIManager* manager;
-	int selectedtitle;
-	bool shiftpressed, ctrlpressed;
-	bool ctrlvpressed, ctrlzpressed, ctrlypressed;
-	std::stack<std::string> undostringstack;
-	std::stack<int> undocellnumberstack;
-	std::stack<std::string> redostringstack;
-	std::stack<int> redocellnumberstack;
+	std::string strflag;
 };
 
 #endif /* UI_GGUIGRID_H_ */

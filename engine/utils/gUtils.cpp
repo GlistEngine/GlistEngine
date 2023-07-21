@@ -151,6 +151,112 @@ int gGetSeconds() {
 	return std::localtime(&curr)->tm_sec;
 }
 
+//total RAM size
+#ifdef WIN32
+#include <windows.h>
+#include <psapi.h>
+
+uint64_t gGetTotalRamSize() {
+	 	MEMORYSTATUSEX memStatus;
+	    memStatus.dwLength = sizeof(MEMORYSTATUSEX);
+	    GlobalMemoryStatusEx(&memStatus);
+	    return memStatus.ullTotalPhys;
+}
+
+#elif LINUX
+#include "sys/types.h"
+#include "sys/sysinfo.h"
+
+uint64_t gGetTotalRamSize() {
+	struct sysinfo memInfo;
+	sysinfo (&memInfo);
+	long long totalPhysMem = memInfo.totalram;
+	//Multiply in next statement to avoid int overflow on right hand side...
+	return totalPhysMem * memInfo.mem_unit;
+}
+
+#elif APPLE
+#include <sys/sysctl.h>
+
+uint64_t gGetTotalRamSize() {
+	int mib [] = { CTL_HW, HW_MEMSIZE };
+	int64_t value = 0;
+	size_t length = sizeof(value);
+
+	if(-1 == sysctl(mib, 2, &value, &length, NULL, 0)) {
+		// An error occurred
+		return 0;
+	}
+	// Physical memory is now in value
+	return value;
+}
+
+#endif
+
+//Available RAM Size
+#ifdef WIN32
+#include <windows.h>
+
+uint64_t gGetAvailableRamSize() {
+    MEMORYSTATUSEX memStatus;
+    memStatus.dwLength = sizeof(MEMORYSTATUSEX);
+    GlobalMemoryStatusEx(&memStatus);
+    return memStatus.ullAvailPhys;
+}
+
+#elif LINUX
+#include <sys/sysinfo.h>
+
+uint64_t gGetAvailableRamSize() {
+    struct sysinfo sysInfo;
+    sysinfo(&sysInfo);
+    return sysInfo.freeram * sysInfo.mem_unit;
+}
+#endif
+
+//RAM size used by GlistEngine currently
+#ifdef WIN32
+#include <windows.h>
+#include <psapi.h>
+
+uint64_t gGetRamSizeUsedbyGE() {
+	PROCESS_MEMORY_COUNTERS_EX pmc;
+	GetProcessMemoryInfo(GetCurrentProcess(), (PROCESS_MEMORY_COUNTERS*)&pmc, sizeof(pmc));
+    return pmc.PrivateUsage;
+}
+
+#elif LINUX
+#include "stdlib.h"
+#include "stdio.h"
+#include "string.h"
+
+int parseLine(char* line){
+    // This assumes that a digit will be found and the line ends in " Kb".
+    int i = strlen(line);
+    const char* p = line;
+    while (*p <'0' || *p > '9') p++;
+    line[i-3] = '\0';
+    i = atoi(p);
+    return i;
+}
+
+int getValue(){ //Note: this value is in KB!
+    FILE* file = fopen("/proc/self/status", "r");
+    int result = -1;
+    char line[128];
+
+    while (fgets(line, 128, file) != NULL){
+        if (strncmp(line, "VmRSS:", 6) == 0){
+            result = parseLine(line);
+            break;
+        }
+    }
+    fclose(file);
+    return result;
+}
+#endif
+
+
 std::string gGetTimestampString() {
 	return gGetTimestampString("%Y-%m-%d-%H-%M-%S-%i");
 }
@@ -572,6 +678,11 @@ gColor gShowColorChooser(
 		selectedcolor.set(result[0] / 255, result[1] / 255, result[2] / 255);
 	}
 	return selectedcolor;
+}
+
+bool checkCollision(int xLeft1, int yUp1, int xRight1, int yBottom1,
+		int xLeft2, int yUp2, int xRight2, int yBottom2) {
+	return xLeft1 < xRight2 && xRight1 > xLeft2 && yBottom1 > yUp2 && yUp1 < yBottom2;
 }
 
 gUtils::gUtils() {

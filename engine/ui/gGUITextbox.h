@@ -237,6 +237,7 @@ private:
 	std::vector<int> calculateClickPosition(int x, int y);
 	std::vector<int> calculateClickPositionMultiline(int x, int y);
 	std::vector<int> calculateCursorPositionMultiline(int x, int y);
+	void calculateLinePositionMultiline(int x, int y);
 	std::vector<int> calculateLetterPosition(int letterCharNo);
 	std::vector<int> calculateAllLetterPositions();
 	void calculateLines();
@@ -262,11 +263,11 @@ private:
 	bool isdoubleclicked, istripleclicked;
 	bool iseditable;
 	bool isselectedall;
-	int linecount;
+	int rowsnum;
 	int lineheight;
 	bool ismultiline;
-	bool linecountexceeded;
-	int currentline, lastline;
+	bool rowsnumexceeded;
+	int currentline, linecount, lastdrawnline;
 	int linetopmargin;
 	int hdiff;
 	std::vector<std::string> lines;
@@ -289,10 +290,13 @@ private:
 	float textmoveamount;
 	gColor* textcolor;
 
+	bool widthexceeded;
+	
 	//undo stacks
 	std::stack<std::string> undostack;
 	std::stack<int> cursorposxstack, cursorposystack, cursorposcharstack, cursorposutfstack;
 	std::stack<int> firstutfstack, firstcharstack, firstposxstack;
+	std::stack<int> currentlinestack, lastdrawnlinestack,linecountstack;
 
 	void pushToStack();
 };
