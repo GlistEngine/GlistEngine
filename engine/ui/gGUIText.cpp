@@ -30,6 +30,10 @@ void gGUIText::setText(std::string text) {
     resetText();
 }
 
+std::string gGUIText::getText() {
+	return text;
+}
+
 void gGUIText::setTextAlignment(int textAligment) {
     textalignment = textAligment;
     resetAlignment();
