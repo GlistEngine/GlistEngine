@@ -253,6 +253,8 @@ uint64_t gGetRamSizeUsedbyGE() {
 #elif LINUX
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
+
 
 int parseLine(char* line){
     // This assumes that a digit will be found and the line ends in " Kb".
