@@ -181,6 +181,7 @@ set(SRC_FILES
 	${ENGINE_DIR}/ui/gGUIContainer.cpp
 	${ENGINE_DIR}/ui/gGUIForm.cpp
 	${ENGINE_DIR}/ui/gGUIResources.cpp
+	${ENGINE_DIR}/ui/gGUIDate.cpp
 	${ENGINE_DIR}/ui/base/tinyfiledialogs.c
 	${ENGINE_DIR}/base/gBaseGUIObject.cpp
 	${ENGINE_DIR}/core/gGUIManager.cpp
