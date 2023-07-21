@@ -10,173 +10,115 @@
 gMorphingMesh::gMorphingMesh() {
 	currenttargetmeshid = -1;
 	currentframeid = -1;
-	currentbasemeshid = -1;
 	speed = 1;
+	basemesh = nullptr;
 }
 
 gMorphingMesh::~gMorphingMesh() {
 }
 
-void gMorphingMesh::loadMorphingModel(std::string path) {
-	loadModelFile(gGetModelsDir() + path);
+void gMorphingMesh::addTargetPositions(std::vector<gVertex> &targetvertices) {
+	targetpositions.push_back(std::vector<glm::vec3>(targetvertices.size()));
+	currenttargetmeshid = targetpositions.size() - 1;
+	for (int i = 0; i < targetpositions[currenttargetmeshid].size(); i++) {
+		targetpositions[currenttargetmeshid][i] = targetvertices[i].position;
+	}
+}
+
+void gMorphingMesh::addTargetNormals(std::vector<gVertex> &targetvertices) {
+	targetnormals.push_back(std::vector<glm::vec3>(targetvertices.size()));
+	currenttargetmeshid = targetnormals.size() - 1;
+	for (int i = 0; i < targetnormals[currenttargetmeshid].size(); i++) {
+		targetnormals[currenttargetmeshid][i] = targetvertices[i].normal;
+	}
+}
+
+int gMorphingMesh::addTargetMesh(gMesh *targetmesh) {
+	addTargetPositions(targetmesh->getVertices());
+	addTargetNormals(targetmesh->getVertices());
+	framecounts.push_back(1);
+	return targetpositions.size() - 1;
+}
+
+void gMorphingMesh::setBaseMesh(gMesh *basemesh) {
+	if (basemesh == nullptr) {
+		gLoge("gMorphingMesh::setBaseMesh::The given basemesh pointer's value is nullptr. Cannot set the base mesh.");
+		return;
+	}
+	this->basemesh = basemesh;
+	this->setDrawMode(basemesh->getDrawMode());
+	this->setMaterial(basemesh->getMaterial());
+	this->setVertices(basemesh->getVertices(), basemesh->getIndices());
 }
 
 void gMorphingMesh::setCurrentTargetMeshId(int currenttargetmeshid) {
 	//Exception check
-	if (currenttargetmeshid < 0 || currenttargetmeshid >= targetpositions[currentbasemeshid].size()) {
-		std::cout << "ERROR::MORPHINGMESH::Cannot assign the given current target mesh id." << std::endl;
+	if (currenttargetmeshid < 0 || currenttargetmeshid >= targetpositions.size()) {
+		gLoge("gMorphingMesh::setCurrentTargetMeshId::Cannot assign the given current target mesh id.");
 		return;
 	}
 	//Actual statement
 	this->currenttargetmeshid = currenttargetmeshid;
 }
 
-void gMorphingMesh::loadModel(gModel *basemodel) {
-	//Copying the necessary mesh attributes to this morphing mesh.
-	this->basemeshes.clear();
-	this->basemeshes.resize(basemodel->getMeshNum());
-	for (int i = 0; i < basemeshes.size(); i++) {
-		basemeshes[i] = basemodel->getMeshPtr(i);
-		targetpositions.push_back(std::vector<std::vector<glm::vec3>>());
-		vboframes.push_back(std::vector<std::vector<gVbo>>());
-		framepositions.push_back(std::vector<std::vector<glm::vec3>>());
-	}
-	currentbasemeshid = this->basemeshes.size() - 1;
-}
-
-void gMorphingMesh::interpolate(int framescount) {
+void gMorphingMesh::interpolate() {
 	//Exception check
-	if (currenttargetmeshid < 0 || framescount < 0) {
-		std::cout << "ERROR::MORPHINGMESH::Cannot interpolate the morphing mesh since either there aren't any model loaded for morphig mesh or the argument is invalid." << std::endl;
+	if (currenttargetmeshid < 0 || basemesh == nullptr) {
+		gLoge("gMorphingMesh::interpolate::Cannot interpolate the morphing mesh since either there aren't any target mesh added for morphig mesh or there aren't any base mesh setted.");
 		return;
 	}
-	//Resetting the previous frame datas.
-	framepositions[currentbasemeshid].clear();
-	framepositions[currentbasemeshid].resize(framescount, std::vector<glm::vec3>(basemeshes[currentbasemeshid]->getVertices().size()));
-	vboframes[currentbasemeshid][currenttargetmeshid].clear();
-	vboframes[currentbasemeshid][currenttargetmeshid].resize(framescount);
-	std::vector<gVertex> vertices;
-	//Creating frames
-	for (int i = 0; i < framescount; i++) {
-		//Setting vertices of the current frame.
-		vertices.clear();
-		for (int j = 0; j < basemeshes[currentbasemeshid]->getVertices().size(); j++) {
-			vertices.push_back(basemeshes[currentbasemeshid]->getVertices()[j]);
-			vertices[j].position = basemeshes[currentbasemeshid]->getVertices()[j].position + ((targetpositions[currentbasemeshid][currenttargetmeshid][j] - basemeshes[currentbasemeshid]->getVertices()[j].position) * ((float)(i + 1) / (float)framescount));
-		}
-		//Assigning the filled vertices to the current frame's vbo.
-		setVerticesData(i, vertices, basemeshes[currentbasemeshid]->getIndices());
+	//Setting vertices of the current frame.
+	std::vector<gVertex> framevertices;
+	for (int i = 0; i < targetpositions[currenttargetmeshid].size(); i++) {
+		framevertices.push_back(basemesh->getVertices()[i]);
+		framevertices[i].position += ((targetpositions[currenttargetmeshid][i] - framevertices[i].position) * ((float)(currentframeid + 1) / (float)framecounts[currenttargetmeshid]));
+		framevertices[i].normal += ((targetnormals[currenttargetmeshid][i] - framevertices[i].normal) * ((float)(currentframeid + 1) / (float)framecounts[currenttargetmeshid]));
 	}
-	currentframeid = framescount - 1;
-}
-
-void gMorphingMesh::loadModelFile(const std::string &fullpath) {
-#ifdef LINUX
-	std::shared_ptr<aiPropertyStore> store;
-    store.reset(aiCreatePropertyStore(), aiReleasePropertyStore);
-    // only ever give us triangles.
-    aiSetImportPropertyInteger(store.get(), AI_CONFIG_PP_SBP_REMOVE, aiPrimitiveType_LINE | aiPrimitiveType_POINT );
-    aiSetImportPropertyInteger(store.get(), AI_CONFIG_PP_PTV_NORMALIZE, true);
-
-    scene = aiImportFileExWithProperties(fullpath.c_str(), aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace | aiProcessPreset_TargetRealtime_Fast, NULL, store.get());
-    // check for errors
-    if(!scene || (scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE) || !scene->mRootNode) { // if is Not Zero
-    	std::cout << "ERROR::ASSIMP:: " << aiGetErrorString() << std::endl;
-        return;
-    }
-#else
-    Assimp::Importer importer;
-    importer.SetPropertyInteger(AI_CONFIG_PP_SBP_REMOVE, aiPrimitiveType_LINE | aiPrimitiveType_POINT);
-    importer.SetPropertyBool(AI_CONFIG_PP_PTV_NORMALIZE, true);
-    importer.ReadFile(fullpath, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace | aiProcess_GenNormals | aiProcess_GenUVCoords | aiProcess_SplitLargeMeshes | aiProcess_SortByPType);
-    scene = importer.GetOrphanedScene();
-    // check for errors
-    if(!scene || (scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE) || !scene->mRootNode) { // if is Not Zero
-        std::cout << "ERROR::ASSIMP:: " << importer.GetErrorString() << std::endl;
-        return;
-    }
-#endif
-
-    // retrieve the directory path of the filepath
-    directory = fullpath.substr(0, fullpath.find_last_of('/'));
-    filename = fullpath.substr(fullpath.find_last_of('/') + 1, fullpath.length());
-
-    // process ASSIMP's root node recursively
-    loadorder = 0;
-    processNode(scene->mRootNode, scene);
-}
-
-void gMorphingMesh::processNode(aiNode *node, const aiScene *scene) {
-	// process each mesh located at the current node
-	for(unsigned int i = 0; i < node->mNumMeshes; i++) {
-		// the node object only contains indices to index the actual objects in the scene.
-		// the scene contains all the data, node is just to keep stuff organized (like relations between nodes).
-		aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-		gLogi("gMorphingMesh") << "Loading mesh:" << mesh->mName.C_Str() << ", tm:" << node->mTransformation[0];
-//		if (isanimated) updateBones(&modelmesh, mesh, scene);
-//		modelmesh.setParent(this);
-		processMesh(mesh, scene, node->mTransformation, loadorder);
-	}
-
-	// after we've processed all of the meshes (if any) we then recursively process each of the children nodes
-	for(unsigned int i = 0; i < node->mNumChildren; i++) {
-		processNode(node->mChildren[i], scene);
-		loadorder++;
-	}
-}
-
-void gMorphingMesh::processMesh(aiMesh *mesh, const aiScene *scene, aiMatrix4x4 matrix, int basemeshid) {
-	targetpositions[basemeshid].push_back(std::vector<glm::vec3>(mesh->mNumVertices));
-	vboframes[basemeshid].push_back(std::vector<gVbo>());
-	currenttargetmeshid = targetpositions[basemeshid].size() - 1;
-	for (int i = 0; i < mesh->mNumVertices; i++) {
-		glm::vec3 vector;
-		//positions
-		vector.x = mesh->mVertices[i].x;
-		vector.y = mesh->mVertices[i].y;
-		vector.z = mesh->mVertices[i].z;
-		targetpositions[basemeshid][currenttargetmeshid][i] = vector;
-	}
-}
-
-void gMorphingMesh::setVerticesData(int frameno, std::vector<gVertex>& vertices, std::vector<unsigned int>& indices) {
-	vboframes[currentbasemeshid][currenttargetmeshid][frameno].setVertexData(vertices.data(), sizeof(gVertex), vertices.size());
-	if (indices.size() != 0) vboframes[currentbasemeshid][currenttargetmeshid][frameno].setIndexData(indices.data(), indices.size());
-}
-
-void gMorphingMesh::draw() {
-	if (!isenabled) return;
-
-	this->setTransformationMatrix(basemeshes[currentbasemeshid]->getTransformationMatrix());
-	this->setVertices(basemeshes[currentbasemeshid]->getVertices(), basemeshes[currentbasemeshid]->getIndices());
-	this->setDrawMode(basemeshes[currentbasemeshid]->getDrawMode());
-	this->setMaterial(basemeshes[currentbasemeshid]->getMaterial());
-
-	drawStart();
-	drawVboFrame();
-	drawEnd();
-}
-
-void gMorphingMesh::drawVboFrame() {
-	if (!isenabled) return;
-
-    vboframes[currentbasemeshid][currenttargetmeshid][currentframeid].bind();
-    if (vboframes[currentbasemeshid][currenttargetmeshid][currentframeid].isIndexDataAllocated()) {
-        glDrawElements(this->getDrawMode(), vboframes[currentbasemeshid][currenttargetmeshid][currentframeid].getIndicesNum(), GL_UNSIGNED_INT, 0);
-    } else {
-    	glDrawArrays(this->getDrawMode(), 0, vboframes[currentbasemeshid][currenttargetmeshid][currentframeid].getVerticesNum());
-    }
-    vboframes[currentbasemeshid][currenttargetmeshid][currentframeid].unbind();
+	this->setVertices(framevertices);
 }
 
 void gMorphingMesh::setCurrentFrameId(int frameid) {
 	//Exception check
-	if (frameid < 0 || frameid >= vboframes[currentbasemeshid][currenttargetmeshid].size()) {
-		std::cout << "ERROR::MORPHINGMESH::Cannot change the current frame with the desired value since it is beyond the bounds([0, framescount])." << std::endl;
+	if (frameid < 0 || frameid >= framecounts[currenttargetmeshid]) {
+		gLoge("gMorphingMesh::Cannot change the current frame with the desired value since it is beyond the bounds([0, framescount]).");
 		return;
 	}
 	//Actual statement
 	this->currentframeid = frameid;
+}
+
+void gMorphingMesh::nextFrameId() {
+	currentframeid = (currentframeid + speed) % getFrameCount();
+}
+
+void gMorphingMesh::setSpeed(int speed) {
+	if (speed < 0) {
+		gLoge("gMorphingMesh::setSpeed::Cannot assign speed since it is a negative value.");
+		return;
+	}
+	this->speed = speed;
+}
+
+void gMorphingMesh::setFrameCount(int targetmeshid, int framecount) {
+	if (targetmeshid < 0 || targetmeshid >= targetpositions.size()) {
+		gLoge("gMorphingMesh::setFrameCount::Cannot assign the frame count because the desired target mesh is out of beyonds.");
+		return;
+	}
+	framecounts[targetmeshid] = framecount;
+}
+
+void gMorphingMesh::setTargetPosition(int targetid, int positionid, glm::vec3 newposition) {
+	if (targetid < 0 || targetid >= targetpositions.size() || positionid < 0 || positionid >= targetpositions[targetid].size()) {
+		gLoge("gMorphingMesh::setTargetPosition::Couldn't set the position to the desired position since either targetid is beyond bounds or positionid is beyond bounds.");
+	}
+	targetpositions[targetid][positionid] = newposition;
+}
+
+void gMorphingMesh::setTargetNormal(int targetid, int normalid, glm::vec3 newnormal) {
+	if (targetid < 0 || targetid >= targetnormals.size() || normalid < 0 || normalid >= targetnormals[targetid].size()) {
+		gLoge("gMorphingMesh::setTargetnormal::Couldn't set the normal to the desired normal since either targetid is beyond bounds or normalid is beyond bounds.");
+	}
+	targetnormals[targetid][normalid] = newnormal;
 }
 
 int gMorphingMesh::getCurrentTargetMeshId() {
@@ -189,41 +131,18 @@ int gMorphingMesh::getCurrentFrameId() {
 
 int gMorphingMesh::getFrameCount(int targetmeshid) {
 	//Exception check
-	if (targetmeshid < 0 || targetmeshid >= vboframes[currentbasemeshid].size()) {
-		gLogi("ERROR::MORPHINGMESH::Cannot return the frame count because your desired target mesh's id isn't found in target meshs' vector.");
+	if (targetmeshid < 0 || targetmeshid >= framecounts.size()) {
+		gLoge("gMorphingMesh::getFrameCount::Cannot return the frame count because your desired target mesh's id isn't found in target meshs' vector.");
+		return -1;
 	}
 	//Actual statement
-	return vboframes[currentbasemeshid][targetmeshid].size();
+	return framecounts[targetmeshid];
 }
 
 int gMorphingMesh::getFrameCount() {
-	return vboframes[currentbasemeshid][currenttargetmeshid].size();
+	return framecounts[currenttargetmeshid];
 }
 
 int gMorphingMesh::getTargetMeshCount() {
-	return targetpositions[currentbasemeshid].size();
-}
-
-void gMorphingMesh::setCurrentBaseMeshId(int basemeshid) {
-	if (basemeshid < 0 || basemeshid >= basemeshes.size()) {
-		std::cout << "ERROR::GMORPHINGMESH::Cannot assign the current base mesh id to the desired value since it is beyond the bounds." << std::endl;
-		return;
-	}
-	currentbasemeshid = basemeshid;
-}
-
-int gMorphingMesh::getBaseMeshCount() {
-	return basemeshes.size();
-}
-
-int gMorphingMesh::getCurrentBaseMeshId() {
-	return currentbasemeshid;
-}
-
-void gMorphingMesh::nextFrameId() {
-	currentframeid = (currentframeid + speed) % getFrameCount();
-}
-
-void gMorphingMesh::setSpeed(int speed) {
-	this->speed = speed;
+	return targetpositions.size();
 }
