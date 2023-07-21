@@ -1631,6 +1631,10 @@ void gGUITextbox::calculateLines() {
 			linesize = text.substr(firstchar, linesize).find('\n');
 		}
 
+		if(widthchanged && firstchar + linesize + 1 >= cursorposutf) {
+			cursorposx = textfont->getStringWidth(text.substr(firstchar, cursorposutf));
+		}
+
 		lines.push_back(text.substr(firstchar, linesize));
 		lineendchar.push_back(firstchar + linesize);
 		firstposx += textfont->getStringWidth(text.substr(firstchar, linesize + 1));
