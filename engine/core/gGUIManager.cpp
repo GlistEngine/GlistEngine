@@ -8,6 +8,7 @@
 #include "gGUIManager.h"
 #include "gBaseApp.h"
 #include "gBaseCanvas.h"
+#include "gAppManager.h"
 
 
 gGUIManager::gGUIManager(gBaseApp* root, int width, int height) {
@@ -16,7 +17,7 @@ gGUIManager::gGUIManager(gBaseApp* root, int width, int height) {
 	selecteddialogue = nullptr;
 	loadThemes();
 	resetTheme(GUITHEME_LIGHT);
-	if(root->getAppManager()->getWindowMode() == G_WINDOWMODE_GUIAPP || root->getAppManager()->getWindowMode() == G_WINDOWMODE_FULLSCREENGUIAPP) {
+	if(appmanager->getWindowMode() == G_WINDOWMODE_GUIAPP || appmanager->getWindowMode() == G_WINDOWMODE_FULLSCREENGUIAPP) {
 		setCurrentFrame(&emptyframe, width, height);
 		emptyframe.setSizer(&emptysizer);
 		emptysizer.enableBackgroundFill(true);
@@ -34,10 +35,14 @@ int gGUIManager::getTheme() {
 	return guitheme;
 }
 
+gFont* gGUIManager::getFont(int fontNum) {
+	return &themefonts[fontNum];
+}
+
 void gGUIManager::setCurrentFrame(gGUIFrame* currentFrame) {
 	setCurrentFrame(currentFrame,
-			root->getAppManager()->getCurrentCanvas()->getScreenWidth(),
-			root->getAppManager()->getCurrentCanvas()->getScreenHeight());
+                    appmanager->getCurrentCanvas()->getScreenWidth(),
+                    appmanager->getCurrentCanvas()->getScreenHeight());
 }
 
 void gGUIManager::setCurrentFrame(gGUIFrame* currentFrame, int width, int height) {
@@ -55,10 +60,10 @@ void gGUIManager::setCurrentFrame(gGUIFrame* currentFrame, int width, int height
 
 void gGUIManager::setupDialogue(gGUIDialogue* dialogue) {
 	dialogue->setParentSlotNo(0, 0);
-	dialogue->width = root->getAppManager()->getCurrentCanvas()->getScreenWidth() / 1 * 0.84f;
-	dialogue->height = root->getAppManager()->getCurrentCanvas()->getScreenHeight() / 1 * 0.84f;
-	dialogue->left = (root->getAppManager()->getCurrentCanvas()->getScreenWidth() - dialogue->width) / 2;
-	dialogue->top = (root->getAppManager()->getCurrentCanvas()->getScreenHeight() - dialogue->height) / 2;
+	dialogue->width = appmanager->getCurrentCanvas()->getScreenWidth() / 1 * 0.84f;
+	dialogue->height = appmanager->getCurrentCanvas()->getScreenHeight() / 1 * 0.84f;
+	dialogue->left = (appmanager->getCurrentCanvas()->getScreenWidth() - dialogue->width) / 2;
+	dialogue->top = (appmanager->getCurrentCanvas()->getScreenHeight() - dialogue->height) / 2;
 	dialogue->right = dialogue->left + dialogue->width;
 	dialogue->bottom = dialogue->top + dialogue->height;
 	dialogue->setRootApp(root);
@@ -100,12 +105,12 @@ void gGUIManager::charPressed(unsigned int key) {
 }
 
 void gGUIManager::mouseMoved(int x, int y) {
-	root->getAppManager()->setCursor(currentframe->getCursor(x, y));
+	appmanager->setCursor(currentframe->getCursor(x, y));
 	currentframe->mouseMoved(x, y);
 
 	for (int i = 0; i < dialogues.size(); i++) {
 		if (dialogues[i]->getIsDialogueActive()) {
-			root->getAppManager()->setCursor(dialogues[i]->getCursor(x, y));
+			appmanager->setCursor(dialogues[i]->getCursor(x, y));
 			dialogues[i]->mouseMoved(x, y);
 		}
 	}
@@ -156,6 +161,8 @@ void gGUIManager::windowResized(int w, int h) {
 }
 
 void gGUIManager::update() {
+	if(!isframeset) return;
+
 	currentframe->update();
 
 	for (int i = dialogues.size() - 1; i >= 0; i--) {
@@ -176,8 +183,8 @@ void gGUIManager::update() {
 		if (selecteddialogue->getButtonEvent() == gGUIDialogue::EVENT_MAXIMIZE) {
 			int titlebarheight = selecteddialogue->getTitleBar()->height;
 			int buttonsbarheight = selecteddialogue->getButtonsBar()->height;
-			int twidth = root->getAppManager()->getCurrentCanvas()->getScreenWidth();
-			int theight = root->getAppManager()->getCurrentCanvas()->getScreenHeight() - titlebarheight - buttonsbarheight;
+			int twidth = appmanager->getCurrentCanvas()->getScreenWidth();
+			int theight = appmanager->getCurrentCanvas()->getScreenHeight() - titlebarheight - buttonsbarheight;
 			int tleft = 0;
 			int ttop = titlebarheight;
 			selecteddialogue->transformDialogue(tleft, ttop, twidth, theight);
@@ -189,10 +196,10 @@ void gGUIManager::update() {
 			selecteddialogue->setButtonEvent(gGUIDialogue::EVENT_NONE);
 		}
 		if (selecteddialogue->getButtonEvent() == gGUIDialogue::EVENT_RESTORE) {
-			int twidth = root->getAppManager()->getCurrentCanvas()->getScreenWidth() / 1 * 0.84f;
-			int theight = root->getAppManager()->getCurrentCanvas()->getScreenHeight() / 1 * 0.84f;
-			int tleft = (root->getAppManager()->getCurrentCanvas()->getScreenWidth() - twidth) / 2;
-			int ttop = (root->getAppManager()->getCurrentCanvas()->getScreenHeight() - theight) / 2;
+			int twidth = appmanager->getCurrentCanvas()->getScreenWidth() / 1 * 0.84f;
+			int theight = appmanager->getCurrentCanvas()->getScreenHeight() / 1 * 0.84f;
+			int tleft = (appmanager->getCurrentCanvas()->getScreenWidth() - twidth) / 2;
+			int ttop = (appmanager->getCurrentCanvas()->getScreenHeight() - theight) / 2;
 			selecteddialogue->transformDialogue(tleft, ttop, twidth, theight);
 
 			selecteddialogue->setIsMaximized(false);
@@ -205,6 +212,8 @@ void gGUIManager::update() {
 }
 
 void gGUIManager::draw() {
+	if(!isframeset) return;
+
 	currentframe->draw();
 	for (int i = 0; i < dialogues.size(); i++) {
 		if (dialogues[i]->getIsDialogueActive()) dialogues[i]->draw();
@@ -218,7 +227,7 @@ void gGUIManager::resetTheme(int guiTheme) {
 	gBaseGUIObject::setForegroundColor(&themeforegroundcolor[guitheme]);
 	gBaseGUIObject::setTextBackgroundColor(&themetextbackgroundcolor[guitheme]);
 	gBaseGUIObject::setNavigationBackgroundColor(&themenavigationbackgroundcolor[guitheme]);
-	gBaseGUIObject::setFont(&themefont);
+	gBaseGUIObject::setFont(&themefonts[FONT_REGULAR]);
 	gBaseGUIObject::setFontColor(&themefontcolor[guitheme]);
 	gBaseGUIObject::setNavigationFontColor(&themenavigationfontcolor[guitheme]);
 	gBaseGUIObject::setButtonColor(&themebuttoncolor[guitheme]);
@@ -255,7 +264,10 @@ void gGUIManager::loadThemes() {
 	themenavigationbackgroundcolor[GUITHEME_LIGHTBLUE] = gColor(195.0f / 255.0f, 224.0f / 255.0f, 235.0f / 255.0f);
 	themenavigationbackgroundcolor[GUITHEME_DARKBLUE] = gColor(195.0f / 255.0f, 224.0f / 255.0f, 235.0f / 255.0f);
 
-	themefont.loadFont("FreeSans.ttf", 11);
+	themefonts[FONT_REGULAR].loadFont("FreeSans.ttf", 11);
+	themefonts[FONT_BOLD].loadFont("FreeSansBold.ttf", 11);
+	themefonts[FONT_ITALIC].loadFont("FreeSansOblique.ttf", 11);
+	themefonts[FONT_BOLDITALIC].loadFont("FreeSansBoldOblique.ttf", 11);
 
 	themefontcolor[GUITHEME_LIGHT] = gColor(5.0f / 255.0f, 5.0f / 255.0f, 5.0f / 255.0f);
 	themefontcolor[GUITHEME_DARK] = gColor(220.0f / 255.0f, 220.0f / 255.0f, 220.0f / 255.0f);

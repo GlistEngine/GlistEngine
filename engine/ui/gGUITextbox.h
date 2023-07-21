@@ -40,6 +40,7 @@
 
 #include "gGUIControl.h"
 #include <stack>
+#include "gGUIManager.h"
 
 
 class gGUITextbox: public gGUIControl {
@@ -203,6 +204,18 @@ public:
 	void setFirstX(int firstx);
 	void setFirstY(int firsty);
 
+	int getInitX();
+
+	void setTextFont(gFont* textFont);
+
+	void setTextAlignment(int textAlignment, float cellW, int initX);
+	float getTextMoveAmount();
+
+	void setTextColor(gColor* textColor);
+
+	int getCursorPosX();
+	void setCursorPosX(int cursorPosX, int length);
+
 private:
 	static const int KEY_NONE = 0, KEY_BACKSPACE = 1, KEY_LEFT = 2, KEY_RIGHT = 4, KEY_DELETE = 8, KEY_ENTER = 16, KEY_UP = 32, KEY_DOWN = 64;
 
@@ -223,6 +236,8 @@ private:
 	std::vector<int> clickTextbox(int x, int y);
 	std::vector<int> calculateClickPosition(int x, int y);
 	std::vector<int> calculateClickPositionMultiline(int x, int y);
+	std::vector<int> calculateCursorPositionMultiline(int x, int y);
+	void calculateLinePositionMultiline(int x, int y);
 	std::vector<int> calculateLetterPosition(int letterCharNo);
 	std::vector<int> calculateAllLetterPositions();
 	void calculateLines();
@@ -241,17 +256,19 @@ private:
 	int selectionposx1, selectionposx2;
 	int selectionposutf1, selectionposutf2;
 	int selectionboxx1, selectionboxx2, selectionboxw;
-	bool shiftpressed, ctrlpressed;
+	bool shiftpressed, ctrlpressed, commandpressed;
 	bool ctrlcpressed, ctrlvpressed, ctrlxpressed, ctrlapressed, ctrlzpressed;
+	bool commandcpressed, commandvpressed, commandxpressed, commandapressed, commandzpressed;
 	bool isdragging;
 	long clicktime, previousclicktime, firstclicktime, clicktimediff;
 	bool isdoubleclicked, istripleclicked;
 	bool iseditable;
 	bool isselectedall;
-	int linecount;
+	int rowsnum;
 	int lineheight;
 	bool ismultiline;
-	int currentline;
+	bool rowsnumexceeded;
+	int currentline, linecount, lastdrawnline;
 	int linetopmargin;
 	int hdiff;
 	std::vector<std::string> lines;
@@ -263,11 +280,24 @@ private:
 	bool isbackgroundenabled;
 	int totalh;
 	int firstx, firsty;
+	bool widthchanged;
+	bool arrowkeypressed;
+	int arrowamount;
+	gFont* textfont;
+	gGUIManager* manager;
+	int textalignment;
+	int textalignmentamount;
+	float cursormoveamount;
+	float textmoveamount;
+	gColor* textcolor;
 
+	bool widthexceeded;
+	
 	//undo stacks
 	std::stack<std::string> undostack;
 	std::stack<int> cursorposxstack, cursorposystack, cursorposcharstack, cursorposutfstack;
 	std::stack<int> firstutfstack, firstcharstack, firstposxstack;
+	std::stack<int> currentlinestack, lastdrawnlinestack,linecountstack;
 
 	void pushToStack();
 };

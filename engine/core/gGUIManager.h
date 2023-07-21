@@ -20,6 +20,7 @@
 #include "gGUIFrame.h"
 #include "gGUISizer.h"
 #include "gGUIDialogue.h"
+
 class gBaseApp;
 
 /**
@@ -35,12 +36,22 @@ class gBaseApp;
 class gGUIManager {
 public:
 	static const int GUITHEME_LIGHT = 0, GUITHEME_DARK = 1, GUITHEME_LIGHTBLUE = 2, GUITHEME_DARKBLUE = 3;
+	static const int fontnum = 4;
+
+	enum {
+		FONT_REGULAR,
+		FONT_BOLD,
+		FONT_ITALIC,
+		FONT_BOLDITALIC
+	};
 
 	gGUIManager(gBaseApp* root, int width, int height);
 	virtual ~gGUIManager();
 
 	void setTheme(int guiTheme);
 	int getTheme();
+
+	gFont* getFont(int fontNum);
 
 	void setCurrentFrame(gGUIFrame* currentFrame);
 	void setCurrentFrame(gGUIFrame* currentFrame, int width, int height);
@@ -85,7 +96,7 @@ private:
 	gColor themebuttonfontcolor[themenum];
 	gColor themepressedbuttonfontcolor[themenum];
 	gColor themedisabledbuttonfontcolor[themenum];
-	gFont themefont;
+	gFont themefonts[fontnum];
 	void loadThemes();
 	void resetTheme(int guiTheme);
 

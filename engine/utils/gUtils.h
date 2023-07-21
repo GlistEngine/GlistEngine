@@ -97,6 +97,19 @@ int gGetWeekday();
 int gGetHours();
 int gGetMinutes();
 int gGetSeconds();
+
+#if  defined(WIN32) || defined(LINUX) || defined(APPLE)    //Available Ram Size
+uint64_t gGetAvailableRamSize();
+#endif
+
+#if  defined(WIN32) || defined(LINUX) || defined(APPLE)     //Current Ram Size Used by Glist Engine
+uint64_t gGetRamSizeUsedbyGE();
+#endif
+
+#if  defined(WIN32) || defined(LINUX) || defined(APPLE)    //Total Ram Size
+uint64_t gGetTotalRamSize();
+#endif
+
 std::string gGetTimestampString();
 std::string gGetTimestampString(const std::string& format);
 void gStringReplace(std::string& input, const std::string& searchStr, const std::string& replaceStr);
@@ -110,6 +123,15 @@ std::string gToStr(const T& numValue) {
 	std::ostringstream out;
 	out << numValue;
 	return out.str();
+}
+
+template <class T>
+std::string gToHex(const T& numValue, int width = sizeof(T)*2) {
+	std::ostringstream stream;
+	stream << "0x"
+		   << std::setfill ('0') << std::setw(width)
+		   << std::hex << numValue;
+	return stream.str();
 }
 
 template <class T>
@@ -299,6 +321,8 @@ gColor gShowColorChooser(
 	std::string aDefaultHexRGB , /* NULL or "#FF0000" */
 	unsigned char const aDefaultRGB[3]) /* { 0 , 255 , 255 } */;
 
+bool checkCollision(int xLeft1, int yUp1, int xRight1, int yBottom1,
+		int xLeft2, int yUp2, int xRight2, int yBottom2);
 
 class gUtils {
 public:

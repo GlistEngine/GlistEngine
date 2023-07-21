@@ -28,7 +28,7 @@
 class gModel : public gNode {
 public:
     // model data
-    std::deque<gTexture> textures_loaded;	// stores all the textures loaded so far, optimization to make sure textures aren't loaded more than once.
+    std::deque<gTexture*> textures_loaded;	// stores all the textures loaded so far, optimization to make sure textures aren't loaded more than once.
     std::vector<gSkinnedMesh>    meshes;
     std::string directory;
 
@@ -37,6 +37,7 @@ public:
 	virtual ~gModel();
 
 	void loadModel(const std::string& modelPath);
+	void loadModelWithOriginalVertices(const std::string& modelPath);
 	void load(const std::string& fullPath);
 	void draw();
 
@@ -100,6 +101,7 @@ public:
 private:
 	const aiScene* scene;
 	void loadModelFile(const std::string& fullPath);
+	void loadModelFileWithOriginalVertices(const std::string& fullPath);
 	void processNode(aiNode *node, const aiScene *scene);
 	gSkinnedMesh processMesh(aiMesh *mesh, const aiScene *scene, aiMatrix4x4 matrix);
 	void loadMaterialTextures(gSkinnedMesh* mesh, aiMaterial *mat, aiTextureType type, int textureType);

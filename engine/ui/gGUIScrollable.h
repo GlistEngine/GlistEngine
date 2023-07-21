@@ -139,12 +139,14 @@ protected:
 	 *	@param h is the new height value.
 	 */
 	void setDimensions(int width, int height);
+	void setMargin(float marginx, float marginy);
 	int boxw, boxh;
-	int totalh;
+	int totalw, totalh;
 	int firstx, firsty;
 	int vsbx, vsby, vsbw, vsbh;
 	int hsbx, hsby, hsbw, hsbh;
 	int scrolldiff;
+	int titlediff;
 
 private:
 	gFbo* boxfbo;
@@ -161,6 +163,7 @@ private:
 	int vsbmy;
 	int hsbmx;
 	bool isalpha;
+	float marginx, marginy;
 };
 
 #endif /* UI_GGUISCROLLABLE_H_ */

@@ -8,6 +8,7 @@
 #include "gGUIToolbarButton.h"
 #include "gImage.h"
 
+
 //gGUIResources gGUIToolbarButton::res;
 
 
@@ -61,8 +62,7 @@ void gGUIToolbarButton::draw() {
 		else renderer->setColor(&bcolor);
 	}
 //	renderer->setColor(gColor(0.1f, 0.45f, 0.87f));
-	gDrawRectangle(left, top + ispressed, buttonw, buttonh, true);
-
+	gDrawRectangle(left, top + ispressed, buttonw, buttonh * 3 / 4, true);
 	renderer->setColor(255, 255, 255);
 	// icon image
 	if(iconid != gGUIResources::ICON_NONE) res.getIconImage(iconid)->draw(left + ix, top + iy, iw, ih);

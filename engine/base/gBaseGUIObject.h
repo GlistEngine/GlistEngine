@@ -23,6 +23,12 @@ public:
 
 	static const int CURSOR_ARROW = 0, CURSOR_IBEAM = 1, CURSOR_CROSSHAIR = 2, CURSOR_HAND = 3, CURSOR_HRESIZE = 4, CURSOR_VRESIZE = 5;
 
+	enum {
+		TEXTALIGNMENT_LEFT,
+		TEXTALIGNMENT_MIDDLE,
+		TEXTALIGNMENT_RIGHT
+	};
+
 	gBaseGUIObject();
 	virtual ~gBaseGUIObject();
 
@@ -109,6 +115,9 @@ public:
 	virtual void onGUIEvent(int guiObjectId, int eventType, int sourceEventType, std::string value1 = "", std::string value2 = "");
 
 	void setRootApp(gBaseApp* root);
+
+	virtual void setCursorOn(bool isOn);
+
 
 	int id, type;
 	int left, top, right, bottom, width, height;

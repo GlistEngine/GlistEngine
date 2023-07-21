@@ -11,6 +11,7 @@
 
 #include "gGUIScrollable.h"
 #include "gGUITextbox.h"
+#include "gGUIManager.h"
 #include <deque>
 #include <string.h>
 
@@ -19,39 +20,78 @@
 class gGUIGrid: public gGUIScrollable {
 public:
 	struct Cell {
+	    bool iscellselected;
+	    bool iscellaligned;
 	    int cellx;
 	    int celly;
-	    float cellh;
-	    float cellw;
 	    int cellrowno;
 	    int cellcolumnno;
-	    bool iscellselected;
+	    int fontnum;
+	    int cellalignment;
+	    int lineno;
+	    float cellh;
+	    float cellw;
+	    float textmoveamount;
 	    std::string cellcontent;
 	    std::string showncontent;
 	    std::string celltype;
+	    gColor cellfontcolor;
 	    Cell(){
+	    	iscellselected = false;
+	    	iscellaligned = false;
 	    	cellx = -1;
 	    	celly = -1;
+	    	fontnum = gGUIManager::FONT_REGULAR;
+	    	cellalignment = gBaseGUIObject::TEXTALIGNMENT_LEFT;
+	    	lineno = TEXTLINE_NONE;
 	    	cellh = 30.0f;
 	    	cellw = 80.0f;
-	    	iscellselected = false;
+	    	textmoveamount = 0;
 	    	cellcontent = "";
 	    	showncontent = "";
+	    	celltype = "string";
+	    	cellfontcolor = fontcolor;
 	    }
 	};
+
+	enum {
+		TEXTLINE_NONE,
+		TEXTLINE_UNDER,
+		TEXTLINE_DOUBLEUNDER,
+		TEXTLINE_STRIKE
+	};
+
+	enum {
+		FUNCTION_COPY,
+		FUNCTION_SUM
+	};
+
+	enum {
+		FUNCTION_TYPE,
+		FUNCTION_SENDER,
+		FUNCTION_FIRSTINDEX
+	};
+
 	gGUIGrid();
 	virtual ~gGUIGrid();
 
 	void set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIObject* parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h);
 	void setGrid(int rowNum, int columnNum);
 	void setRowNum(int rowNum);
-	void setcolumnNum(int columnNum);
+	void setColumnNum(int columnNum);
+	void setCellFont(int fontNum);
+	void setCellAlignment(int cellAlignment, bool clicked);
+	void setCellFontColor(gColor* fontColor);
+	void setCellLine(int lineNo, bool clicked);
+	void setCopiedCell(Cell* cell);
 
 	Cell* getCell(int rowNo, int columnNo);
 
 	void drawContent();
 	void drawCellBackground();
 	void drawSelectedBox();
+	void drawSelectedRow();
+	void drawSelectedColumn();
 	void drawTitleRowBackground();
 	void drawTitleColumnBackground();
 	void drawRowContents();
@@ -78,20 +118,40 @@ public:
 	void mouseScrolled(int x, int y);
 
 private:
+	std::string fixTextFunction(std::string text, int index);
+	std::string fixNumeric(std::string text);
+	std::string getTextColumn(std::string text);
+	int getCellIndex(std::string text);
+	float makeSum(int c1, int r1, int c2, int r2);
+	bool isNumeric(std::string text);
+	void addFunction(int functionType, int functionSender);
+	void removeFunction(int functionNum);
+	void operateFunction(int functionNum);
+	void makeDefaultCell();
 
 	std::deque<Cell> allcells;
-	int rownum, columnnum;
-	float gridx, gridy, gridw, gridh;
-	float gridboxw, gridboxh;
+	std::stack<Cell> undocellstack;
+	std::stack<Cell> redocellstack;
+	std::vector<int> functionindexes;
+	std::vector<std::vector<int>> functions;
+	Cell copiedcell;
+	gGUIManager* manager;
+	gGUITextbox textbox;
+	bool isselected, isrowselected, iscolumnselected;
+	bool istextboxactive;
+	bool isdoubleclicked;
+	bool shiftpressed, ctrlpressed;
+	bool ctrlcpressed, ctrlvpressed, ctrlzpressed, ctrlypressed;
 	int selectedbox;
-	bool isselected;
+	int selectedtitle;
+	int rownum, columnnum;
 	int rowtitle;
 	int columntitle;
-	gGUITextbox textbox;
-	bool istextboxactive;
+	float gridboxw, gridboxh;
+	float newgridboxw;
+	float gridx, gridy, gridw, gridh;
 	long clicktime, previousclicktime, firstclicktime, clicktimediff;
-	bool isdoubleclicked;
-
+	std::string strflag;
 };
 
 #endif /* UI_GGUIGRID_H_ */
