@@ -118,33 +118,30 @@ Collaboration diagram for gMorphingMesh:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a6c5a4f1665e4199746a5ab6d1c74a884"><td class="memItemLeft" align="right" valign="top"><a id="a6c5a4f1665e4199746a5ab6d1c74a884"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>draw</b> ()</td></tr>
-<tr class="separator:a6c5a4f1665e4199746a5ab6d1c74a884"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af9689c8d959fe21193f7893b9177658a"><td class="memItemLeft" align="right" valign="top"><a id="af9689c8d959fe21193f7893b9177658a"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>drawVboFrame</b> ()</td></tr>
-<tr class="separator:af9689c8d959fe21193f7893b9177658a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae7efed649188b58a4452047c0d8371a3"><td class="memItemLeft" align="right" valign="top"><a id="ae7efed649188b58a4452047c0d8371a3"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>loadMorphingModel</b> (std::string path)</td></tr>
-<tr class="separator:ae7efed649188b58a4452047c0d8371a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7e226ffc0f64b24ed5f14332280737b3"><td class="memItemLeft" align="right" valign="top"><a id="a7e226ffc0f64b24ed5f14332280737b3"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>loadModel</b> (<a class="el" href="classgModel.html">gModel</a> *basemodel)</td></tr>
-<tr class="separator:a7e226ffc0f64b24ed5f14332280737b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab391e4127a6d2b36a38592ca9feed35f"><td class="memItemLeft" align="right" valign="top"><a id="ab391e4127a6d2b36a38592ca9feed35f"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>addTargetMesh</b> (<a class="el" href="classgMesh.html">gMesh</a> *targetmesh)</td></tr>
+<tr class="separator:ab391e4127a6d2b36a38592ca9feed35f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3176cf062897a6ef5e81b0947d49e850"><td class="memItemLeft" align="right" valign="top"><a id="a3176cf062897a6ef5e81b0947d49e850"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setBaseMesh</b> (<a class="el" href="classgMesh.html">gMesh</a> *basemesh)</td></tr>
+<tr class="separator:a3176cf062897a6ef5e81b0947d49e850"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac6892d2eafb7355ce3db0a4ee7e9423a"><td class="memItemLeft" align="right" valign="top"><a id="ac6892d2eafb7355ce3db0a4ee7e9423a"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>setCurrentTargetMeshId</b> (int currenttargetmeshid)</td></tr>
 <tr class="separator:ac6892d2eafb7355ce3db0a4ee7e9423a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5ca9bd9aef7cc4917d287b6936567e3e"><td class="memItemLeft" align="right" valign="top"><a id="a5ca9bd9aef7cc4917d287b6936567e3e"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>setCurrentFrameId</b> (int frameid)</td></tr>
 <tr class="separator:a5ca9bd9aef7cc4917d287b6936567e3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae16e4b0c7a93f1d9cecff48be983c14d"><td class="memItemLeft" align="right" valign="top"><a id="ae16e4b0c7a93f1d9cecff48be983c14d"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>setCurrentBaseMeshId</b> (int basemeshid)</td></tr>
-<tr class="separator:ae16e4b0c7a93f1d9cecff48be983c14d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5addc50b4b8f5412ba2b1e80d98a7fbf"><td class="memItemLeft" align="right" valign="top"><a id="a5addc50b4b8f5412ba2b1e80d98a7fbf"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>setVerticesData</b> (int frameno, std::vector&lt; <a class="el" href="structgVertex.html">gVertex</a> &gt; &amp;vertices, std::vector&lt; unsigned int &gt; &amp;indices)</td></tr>
-<tr class="separator:a5addc50b4b8f5412ba2b1e80d98a7fbf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5d28be9996b5855d8b469878498a1c30"><td class="memItemLeft" align="right" valign="top"><a id="a5d28be9996b5855d8b469878498a1c30"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setFrameCount</b> (int targetmeshid, int framecount)</td></tr>
+<tr class="separator:a5d28be9996b5855d8b469878498a1c30"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3bfe239e056ae5ef40c4c63167566289"><td class="memItemLeft" align="right" valign="top"><a id="a3bfe239e056ae5ef40c4c63167566289"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>setSpeed</b> (int speed)</td></tr>
 <tr class="separator:a3bfe239e056ae5ef40c4c63167566289"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac257ddf6ab2c27a950c3e2ec38266acf"><td class="memItemLeft" align="right" valign="top"><a id="ac257ddf6ab2c27a950c3e2ec38266acf"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setTargetPosition</b> (int targetid, int positionid, glm::vec3 newposition)</td></tr>
+<tr class="separator:ac257ddf6ab2c27a950c3e2ec38266acf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad493c6d3c33b9bec6adfb88778e2aac7"><td class="memItemLeft" align="right" valign="top"><a id="ad493c6d3c33b9bec6adfb88778e2aac7"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setTargetNormal</b> (int targetid, int normalid, glm::vec3 newnormal)</td></tr>
+<tr class="separator:ad493c6d3c33b9bec6adfb88778e2aac7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae7517dfdf497a3a01e19bdbf78f2c230"><td class="memItemLeft" align="right" valign="top"><a id="ae7517dfdf497a3a01e19bdbf78f2c230"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>nextFrameId</b> ()</td></tr>
 <tr class="separator:ae7517dfdf497a3a01e19bdbf78f2c230"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -163,15 +160,12 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>getFrameCount</b> ()</
 <tr class="memitem:afe1e4d38ec2224b514b6b0515145eac0"><td class="memItemLeft" align="right" valign="top"><a id="afe1e4d38ec2224b514b6b0515145eac0"></a>
 int&#160;</td><td class="memItemRight" valign="bottom"><b>getTargetMeshCount</b> ()</td></tr>
 <tr class="separator:afe1e4d38ec2224b514b6b0515145eac0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad03d810517cb587ff9fee40bedb61f0c"><td class="memItemLeft" align="right" valign="top"><a id="ad03d810517cb587ff9fee40bedb61f0c"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>getBaseMeshCount</b> ()</td></tr>
-<tr class="separator:ad03d810517cb587ff9fee40bedb61f0c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5a5fbf982829c2c4ebede5aed4650be0"><td class="memItemLeft" align="right" valign="top"><a id="a5a5fbf982829c2c4ebede5aed4650be0"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>getCurrentBaseMeshId</b> ()</td></tr>
-<tr class="separator:a5a5fbf982829c2c4ebede5aed4650be0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3af209cb4213099dcca906356f508ded"><td class="memItemLeft" align="right" valign="top"><a id="a3af209cb4213099dcca906356f508ded"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>interpolate</b> (int framescount)</td></tr>
-<tr class="separator:a3af209cb4213099dcca906356f508ded"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9e37e6960833d5a3ef58f43da5c86aca"><td class="memItemLeft" align="right" valign="top"><a id="a9e37e6960833d5a3ef58f43da5c86aca"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>getSpeed</b> ()</td></tr>
+<tr class="separator:a9e37e6960833d5a3ef58f43da5c86aca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abf5ed4a1c3bfb8401d8f623492bb9493"><td class="memItemLeft" align="right" valign="top"><a id="abf5ed4a1c3bfb8401d8f623492bb9493"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>interpolate</b> ()</td></tr>
+<tr class="separator:abf5ed4a1c3bfb8401d8f623492bb9493"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classgMesh"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classgMesh')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classgMesh.html">gMesh</a></td></tr>
 <tr class="memitem:abba3d9fb88c3539f40225f5760b2ea7c inherit pub_methods_classgMesh"><td class="memItemLeft" align="right" valign="top"><a id="abba3d9fb88c3539f40225f5760b2ea7c"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>gMesh</b> (std::vector&lt; <a class="el" href="structgVertex.html">gVertex</a> &gt; vertices, std::vector&lt; gIndex &gt; indices, std::vector&lt; <a class="el" href="classgTexture.html">gTexture</a> * &gt; textures)</td></tr>
