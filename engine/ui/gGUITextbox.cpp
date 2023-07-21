@@ -1253,10 +1253,10 @@ void gGUITextbox::charPressed(unsigned int codepoint) {
 		std::string oldtext = "";
 		if(cursorposchar > 0) oldtext = text.substr(0, cursorposutf);
 		addedtext = gCodepointToStr(codepoint);
-		if(linecount > currentline) {
+		if(linecount > currentline && ismultiline) {
 			if(textfont->getStringWidth(lines[linecount - 1]) + textfont->getStringWidth(addedtext) >= width - 2 *initx)
 				widthexceeded = true;
-		} else if(textfont->getStringWidth(lines[currentline - 1]) + textfont->getStringWidth(addedtext) >= width - 2 *initx)
+		} else if(textfont->getStringWidth(lines[currentline - 1]) + textfont->getStringWidth(addedtext) >= width - 2 *initx  && ismultiline)
 			widthexceeded = true;
 		newtext = oldtext + addedtext;
 		if(cursorposchar < letterlength.size()) newtext += text.substr(cursorposutf, text.length() - cursorposutf);
@@ -1272,7 +1272,7 @@ void gGUITextbox::charPressed(unsigned int codepoint) {
 		cursorposutf += diffutf;
 		lastutf += diffutf;
 		
-		if(cursorposx >= width - 2 * initx) {
+		if(cursorposx >= width - 2 * initx  && ismultiline) {
 			widthexceeded = false;
 		}
 		if(cursorposx >= width - 2 * initx || widthexceeded) {
@@ -1294,10 +1294,11 @@ void gGUITextbox::charPressed(unsigned int codepoint) {
 			}
 		}
 		
-		if(ismultiline) setText(text);
-
-		if(text.length() - cursorposchar == lines[currentline - 1].size()) {
-			cursorposx = 0;
+		if(ismultiline) {
+			setText(text);
+			if(text.length() - cursorposchar == lines[currentline - 1].size()) {
+				cursorposx = 0;
+			}
 		}
 
 //		gLogi("Textbox") << "cp cx:" << cursorposx;
