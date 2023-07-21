@@ -256,8 +256,9 @@ private:
 	int selectionposx1, selectionposx2;
 	int selectionposutf1, selectionposutf2;
 	int selectionboxx1, selectionboxx2, selectionboxw;
-	bool shiftpressed, ctrlpressed;
+	bool shiftpressed, ctrlpressed, commandpressed;
 	bool ctrlcpressed, ctrlvpressed, ctrlxpressed, ctrlapressed, ctrlzpressed;
+	bool commandcpressed, commandvpressed, commandxpressed, commandapressed, commandzpressed;
 	bool isdragging;
 	long clicktime, previousclicktime, firstclicktime, clicktimediff;
 	bool isdoubleclicked, istripleclicked;
