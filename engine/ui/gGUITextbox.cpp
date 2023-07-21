@@ -44,6 +44,12 @@ gGUITextbox::gGUITextbox() {
 	selectionboxw = 0;
 	shiftpressed = false;
 	ctrlpressed = false;
+	commandpressed = false;
+	commandcpressed = false;
+	commandvpressed = false;
+	commandxpressed = false;
+	commandapressed = false;
+	commandzpressed = false;
 	ctrlcpressed = false;
 	ctrlvpressed = false;
 	ctrlxpressed = false;
@@ -247,7 +253,7 @@ void gGUITextbox::update() {
 	}
 	if(boxw - width != 0) widthchanged = true;
 	boxw = width;
-	if(textfont->getStringWidth(text.substr(firstchar, lastutf)) >= width - 2 * initx && widthchanged) {
+	if(textfont->getStringWidth(text.substr(firstchar, lastutf)) >= width - 2 * initx && widthchanged && !ismultiline) {
 		if(!ismultiline && !ispassword) {
 			do {
 				firstutf += letterlength[firstchar];
@@ -258,13 +264,19 @@ void gGUITextbox::update() {
 			letterpos.clear();
 			letterpos = calculateAllLetterPositions();
 			lastutf = calculateLastUtf();
-		} else if(ismultiline) {
-			setText(text);
-			findCursorPosition();
 		} else if(ispassword) {
 			cursorposx -= 3 * dotradius;
 		} else {
 			cursorposx = textfont->getStringWidth(text.substr(firstutf, cursorposutf - firstutf));
+		}
+	}
+
+	if(ismultiline && widthchanged) {
+		for(int i = 0; i < linecount; i++) {
+			if(textfont->getStringWidth(lines[i]) >= width - 2 * initx) {
+				findCursorPosition();
+				setText(text);
+			}
 		}
 	}
 	widthchanged = false;
@@ -345,6 +357,12 @@ void gGUITextbox::keyPressed(int key) {
 	else if(key == G_KEY_A && ctrlpressed) ctrlapressed = true;
 	else if(key == G_KEY_Z && ctrlpressed) ctrlzpressed = true;
 
+	if(key == G_KEY_C && commandpressed) commandcpressed = true;
+	else if(key == G_KEY_V && commandpressed) commandvpressed = true;
+	else if(key == G_KEY_X && commandpressed) commandxpressed = true;
+	else if(key == G_KEY_A && commandpressed) commandapressed = true;
+	else if(key == G_KEY_Z && commandpressed) commandzpressed = true;
+
 	int pressedkey = KEY_NONE;
 	switch(key) {
 	case G_KEY_BACKSPACE:
@@ -389,6 +407,12 @@ void gGUITextbox::keyPressed(int key) {
 		break;
 	case G_KEY_RIGHT_CONTROL:
 		ctrlpressed = true;
+		break;
+	case G_KEY_LEFT_SUPER:
+		commandpressed = true;
+		break;
+	case G_KEY_RIGHT_SUPER:
+		commandpressed = true;
 		break;
 	default:
 		break;
@@ -444,6 +468,12 @@ void gGUITextbox::keyReleased(int key) {
 	case G_KEY_RIGHT_CONTROL:
 		ctrlpressed = false;
 		break;
+	case G_KEY_LEFT_SUPER:
+		commandpressed = false;
+		break;
+	case G_KEY_RIGHT_SUPER:
+		commandpressed = false;
+		break;
 	default:
 		break;
 	}
@@ -461,8 +491,9 @@ void gGUITextbox::handleKeys() {
 		return;
 	}
 
-	if((selectionmode && (selectionposchar1 != selectionposchar2)) || isdoubleclicked || istripleclicked || ctrlapressed || ctrlvpressed || ctrlzpressed) {
-		if((isdoubleclicked || istripleclicked || ctrlcpressed || ctrlvpressed || ctrlxpressed || ctrlapressed || ctrlzpressed)) {
+	if((selectionmode && (selectionposchar1 != selectionposchar2)) || isdoubleclicked || istripleclicked || ctrlapressed || ctrlvpressed || ctrlzpressed || commandapressed || commandvpressed || commandzpressed) {
+		if((isdoubleclicked || istripleclicked || ctrlcpressed || ctrlvpressed || ctrlxpressed || ctrlapressed || ctrlzpressed
+												|| commandcpressed || commandvpressed || commandxpressed || commandapressed || commandzpressed)) {
 			pressKey();
 		}
 		ctrlcpressed = false;
@@ -470,6 +501,11 @@ void gGUITextbox::handleKeys() {
 		ctrlxpressed = false;
 		ctrlapressed = false;
 		ctrlzpressed = false;
+		commandcpressed = false;
+		commandvpressed = false;
+		commandxpressed = false;
+		commandapressed = false;
+		commandzpressed = false;
 		isdoubleclicked = false;
 		istripleclicked = false;
 		return;
@@ -837,7 +873,7 @@ void gGUITextbox::pressKey() {
 			cursorposutf++;
 			cursorposchar++;
 		}
-	} else if(ctrlcpressed) { //ctrl c
+	} else if(ctrlcpressed || commandcpressed) { //ctrl c
 		if(isselectedall) {
 			appmanager->setClipboardString(text);
 			return;
@@ -849,7 +885,7 @@ void gGUITextbox::pressKey() {
 			seput2 = selectionposutf1;
 		}
 		appmanager->setClipboardString(text.substr(seput1, seput2 - seput1));
-	} else if(ctrlxpressed) { //ctrl x
+	} else if(ctrlxpressed || commandxpressed) { //ctrl x
 		pushToStack();
 		if(isselectedall) {
 			cleanText();
@@ -909,7 +945,7 @@ void gGUITextbox::pressKey() {
 				cursorposutf = clickpos[2];
 			}
 		}
-	} else if(ctrlapressed) { //ctrl a
+	} else if(ctrlapressed || commandapressed) { //ctrl a
 		selectionmode = true;
 		isselectedall = true;
 		if(!ispassword) {
@@ -934,7 +970,7 @@ void gGUITextbox::pressKey() {
 		cursorposchar = selectionposchar2;
 		cursorposx = selectionposx2;
 		cursorposutf = selectionposutf2;
-	} else if(ctrlvpressed) { //ctrl v
+	} else if(ctrlvpressed || commandvpressed) { //ctrl v
 		pushToStack();
 		if(isnumeric) {
 			std::string testtext = appmanager->getClipboardString();
@@ -1034,7 +1070,7 @@ void gGUITextbox::pressKey() {
 		selectionmode = false;
 		isselectedall = false;
 		if(ismultiline) setText(text);
-	} else if(ctrlzpressed){ //ctrl z
+	} else if(ctrlzpressed || commandzpressed){ //ctrl z
 		if(undostack.empty()) return; //there is nothing to be undone
 		setText(undostack.top()); //undo changes to text
 		undostack.pop();
