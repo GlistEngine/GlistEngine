@@ -211,6 +211,7 @@ set(SRC_FILES
 	${ENGINE_DIR}/graphics/posteffects/gShadowsMidtonesHighlights.cpp
 	${ENGINE_DIR}/graphics/posteffects/gWhiteBalance.cpp
 	${ENGINE_DIR}/graphics/posteffects/gTiltShift.cpp
+	${ENGINE_DIR}/graphics/posteffects/gBloom.cpp
 	${ENGINE_DIR}/graphics/posteffects/gKernelEffect.cpp
 	${ENGINE_DIR}/graphics/posteffects/kerneleffects/gBlur.cpp
 	${ENGINE_DIR}/graphics/posteffects/kerneleffects/gSharpen.cpp
