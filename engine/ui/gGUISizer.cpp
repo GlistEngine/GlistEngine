@@ -627,3 +627,10 @@ void gGUISizer::windowResized(int w, int h) {
 	}
 }
 
+int gGUISizer::getSlotX(int lineNo, int columnNo) {
+	return columnNo * columnnum;
+}
+
+int gGUISizer::getSlotY(int lineNo, int columnNo) {
+	return lineNo * linenum;
+}

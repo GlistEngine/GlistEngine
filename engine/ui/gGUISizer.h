@@ -71,6 +71,9 @@ private:
 	bool rescaling;
 
 	int detectSizerType();
+
+	int getSlotX(int lineNo, int columnNo);
+	int getSlotY(int lineNo, int columnNo);
 };
 
 #endif /* UI_GGUISIZER_H_ */
