@@ -1,5 +1,8 @@
 var NAVTREEINDEX10 =
 {
+"classgWhiteBalance.html#a4a4c798c7f480eca23aff77a79721857":[0,0,153,3],
+"classgWhiteBalance.html#a73d1de622aabfcd9ed83c6d1827df919":[0,0,153,2],
+"classgWhiteBalance.html#a8165820b0db38a930dcb26f3eac888d2":[0,0,153,0],
 "classgWhiteBalance.html#a8abf85738632cfc32f404ff394638430":[0,0,153,4],
 "classgWhiteBalance.html#ab6da8400abfcd54fab26288bf5a0113d":[0,0,153,1],
 "classgWindowFocusEvent.html":[0,0,154],
@@ -21,8 +24,8 @@ var NAVTREEINDEX10 =
 "functions_c.html":[0,3,0,2],
 "functions_d.html":[0,3,0,3],
 "functions_e.html":[0,3,0,4],
-"functions_func.html":[0,3,1,0],
 "functions_func.html":[0,3,1],
+"functions_func.html":[0,3,1,0],
 "functions_func_b.html":[0,3,1,1],
 "functions_func_c.html":[0,3,1,2],
 "functions_func_d.html":[0,3,1,3],

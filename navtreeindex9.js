@@ -1,5 +1,8 @@
 var NAVTREEINDEX9 =
 {
+"classgShadowMap.html#a436d18c4843d0ed3311882771c195231":[0,0,135,15],
+"classgShadowMap.html#a533c54b7ec5f15d9997a92e25b9b7da8":[0,0,135,19],
+"classgShadowMap.html#a5429e4743aeadc926907375db151d9e9":[0,0,135,10],
 "classgShadowMap.html#a567396ed5c7e99706f677b8ad299040a":[0,0,135,20],
 "classgShadowMap.html#a5cbafc7fdb2196cec54fa4ec56e11e01":[0,0,135,6],
 "classgShadowMap.html#a636fbd547bf9f211e2d7345c4c50d34a":[0,0,135,2],
@@ -246,8 +249,5 @@ var NAVTREEINDEX9 =
 "classgVignette.html#a9ba91dcc7f11895b01e277ee6fef410b":[0,0,152,0],
 "classgVignette.html#ad529af6577ff78e4fb48d350145a35a9":[0,0,152,4],
 "classgVignette.html#ad6c0700e597163bb3581c8a72b19a549":[0,0,152,3],
-"classgWhiteBalance.html":[0,0,153],
-"classgWhiteBalance.html#a4a4c798c7f480eca23aff77a79721857":[0,0,153,3],
-"classgWhiteBalance.html#a73d1de622aabfcd9ed83c6d1827df919":[0,0,153,2],
-"classgWhiteBalance.html#a8165820b0db38a930dcb26f3eac888d2":[0,0,153,0]
+"classgWhiteBalance.html":[0,0,153]
 };
