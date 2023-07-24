@@ -676,14 +676,22 @@ void gGUIGrid::drawRowContents() {
 }
 
 void gGUIGrid::drawColumnContents() {
-	int tempcol = columntitle;
-	for(int i = 1; i <= columnnum; i++) {
-	    std::string columntitlestring(1, (char) tempcol);
-	    renderer->setColor(*fontcolor);
-		font->drawText(columntitlestring, gridx + (i * gridboxw) - (font->getStringWidth(columntitlestring) / 2) - firstx, gridy + (gridboxh / 2) + (font->getStringHeight(columntitlestring) / 2));
-		tempcol++;
+	std::string columntitlestring = "";
+	for(int i = 0; i < columnnum; i++) {
+		if(i / 26 > 26) {
+			columntitlestring = (char)(columntitle + i / (26 * 26) - 1);
+			columntitlestring += (char)(columntitle + (i / 26 - 1) % 26);
+			columntitlestring += (char)(columntitle + i % 26);
+		}
+		else if(i / 26 > 0) {
+			columntitlestring = (char)(columntitle + i / 26 - 1);
+			columntitlestring += (char)(columntitle + i % 26);
+		}
+		else columntitlestring = (char)(columntitle + i);
+		renderer->setColor(*fontcolor);
+		font->drawText(columntitlestring, gridx + ((i + 1) * gridboxw) - (font->getStringWidth(columntitlestring) / 2) - firstx, gridy + (gridboxh / 2) + (font->getStringHeight(columntitlestring) / 2));
 		renderer->setColor(*pressedbuttoncolor);
-		gDrawLine(gridx - (gridboxw / 2) + ((i + 1) * gridboxw) - firstx, gridy - firsty, gridx - (gridboxw / 2) + ((i + 1) * gridboxw) - firstx, gridy + gridboxh +gridh - firsty);
+		gDrawLine(gridx - (gridboxw / 2) + ((i + 2) * gridboxw) - firstx, gridy - firsty, gridx - (gridboxw / 2) + ((i + 2) * gridboxw) - firstx, gridy + gridboxh + gridh - firsty);
 		gDrawRectangle(gridx, gridy, allcells.at(0).cellw / 2, allcells.at(0).cellh, true);
 	}
 }
