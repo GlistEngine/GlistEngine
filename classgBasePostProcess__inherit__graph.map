@@ -1,24 +1,25 @@
 <map id="gBasePostProcess" name="gBasePostProcess">
-<area shape="rect" id="node1" title=" " alt="" coords="292,385,432,412"/>
-<area shape="rect" id="node4" href="$classgChromaticAberration.html" title=" " alt="" coords="505,5,670,32"/>
-<area shape="rect" id="node5" href="$classgColorAdjustments.html" title=" " alt="" coords="514,56,661,83"/>
-<area shape="rect" id="node6" href="$classgColorChannelMixer.html" title=" " alt="" coords="511,107,664,133"/>
-<area shape="rect" id="node7" href="$classgColorCurves.html" title=" " alt="" coords="533,157,642,184"/>
-<area shape="rect" id="node8" href="$classgDynamicGrain.html" title=" " alt="" coords="526,208,649,235"/>
-<area shape="rect" id="node9" href="$classgGrain.html" title=" " alt="" coords="555,259,620,285"/>
-<area shape="rect" id="node10" href="$classgGrayscale.html" title=" " alt="" coords="540,309,635,336"/>
-<area shape="rect" id="node11" href="$classgHighContrast.html" title=" " alt="" coords="530,360,645,387"/>
-<area shape="rect" id="node12" href="$classgInversion.html" title=" " alt="" coords="542,411,633,437"/>
-<area shape="rect" id="node13" href="$classgKernelEffect.html" title=" " alt="" coords="533,461,641,488"/>
-<area shape="rect" id="node17" href="$classgSepiatone.html" title=" " alt="" coords="540,512,635,539"/>
-<area shape="rect" id="node18" href="$classgShadowsMidtonesHighlights.html" title=" " alt="" coords="480,563,695,589"/>
-<area shape="rect" id="node19" href="$classgSoftFocus.html" title=" " alt="" coords="541,613,633,640"/>
-<area shape="rect" id="node20" href="$classgTiltShift.html" title=" " alt="" coords="547,664,627,691"/>
-<area shape="rect" id="node21" href="$classgVignette.html" title=" " alt="" coords="545,715,630,741"/>
-<area shape="rect" id="node22" href="$classgWhiteBalance.html" title=" " alt="" coords="527,765,647,792"/>
-<area shape="rect" id="node2" href="$classgRenderObject.html" title=" " alt="" coords="125,385,244,412"/>
-<area shape="rect" id="node3" href="$classgObject.html" title=" " alt="" coords="5,385,77,412"/>
-<area shape="rect" id="node14" href="$classgBlur.html" title=" " alt="" coords="777,411,833,437"/>
-<area shape="rect" id="node15" href="$classgEdgeDetection.html" title=" " alt="" coords="743,461,868,488"/>
-<area shape="rect" id="node16" href="$classgSharpen.html" title=" " alt="" coords="764,512,847,539"/>
+<area shape="rect" id="node1" title=" " alt="" coords="292,411,432,437"/>
+<area shape="rect" id="node4" href="$classgBloom.html" title=" " alt="" coords="551,5,623,32"/>
+<area shape="rect" id="node5" href="$classgChromaticAberration.html" title=" " alt="" coords="505,56,670,83"/>
+<area shape="rect" id="node6" href="$classgColorAdjustments.html" title=" " alt="" coords="514,107,661,133"/>
+<area shape="rect" id="node7" href="$classgColorChannelMixer.html" title=" " alt="" coords="511,157,664,184"/>
+<area shape="rect" id="node8" href="$classgColorCurves.html" title=" " alt="" coords="533,208,642,235"/>
+<area shape="rect" id="node9" href="$classgDynamicGrain.html" title=" " alt="" coords="526,259,649,285"/>
+<area shape="rect" id="node10" href="$classgGrain.html" title=" " alt="" coords="555,309,620,336"/>
+<area shape="rect" id="node11" href="$classgGrayscale.html" title=" " alt="" coords="540,360,635,387"/>
+<area shape="rect" id="node12" href="$classgHighContrast.html" title=" " alt="" coords="530,411,645,437"/>
+<area shape="rect" id="node13" href="$classgInversion.html" title=" " alt="" coords="542,461,633,488"/>
+<area shape="rect" id="node14" href="$classgKernelEffect.html" title=" " alt="" coords="533,512,641,539"/>
+<area shape="rect" id="node18" href="$classgSepiatone.html" title=" " alt="" coords="540,563,635,589"/>
+<area shape="rect" id="node19" href="$classgShadowsMidtonesHighlights.html" title=" " alt="" coords="480,613,695,640"/>
+<area shape="rect" id="node20" href="$classgSoftFocus.html" title=" " alt="" coords="541,664,633,691"/>
+<area shape="rect" id="node21" href="$classgTiltShift.html" title=" " alt="" coords="547,715,627,741"/>
+<area shape="rect" id="node22" href="$classgVignette.html" title=" " alt="" coords="545,765,630,792"/>
+<area shape="rect" id="node23" href="$classgWhiteBalance.html" title=" " alt="" coords="527,816,647,843"/>
+<area shape="rect" id="node2" href="$classgRenderObject.html" title=" " alt="" coords="125,411,244,437"/>
+<area shape="rect" id="node3" href="$classgObject.html" title=" " alt="" coords="5,411,77,437"/>
+<area shape="rect" id="node15" href="$classgBlur.html" title=" " alt="" coords="777,461,833,488"/>
+<area shape="rect" id="node16" href="$classgEdgeDetection.html" title=" " alt="" coords="743,512,868,539"/>
+<area shape="rect" id="node17" href="$classgSharpen.html" title=" " alt="" coords="764,563,847,589"/>
 </map>

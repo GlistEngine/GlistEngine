@@ -16,6 +16,7 @@ var files_dup =
     [ "gBasePostProcess.h", "gBasePostProcess_8h_source.html", null ],
     [ "gBaseSound.h", "gBaseSound_8h_source.html", null ],
     [ "gBaseWindow.h", "gBaseWindow_8h_source.html", null ],
+    [ "gBloom.h", "gBloom_8h_source.html", null ],
     [ "gBlur.h", "gBlur_8h_source.html", null ],
     [ "gBoundingBox.h", "gBoundingBox_8h_source.html", null ],
     [ "gBox.h", "gBox_8h_source.html", null ],
