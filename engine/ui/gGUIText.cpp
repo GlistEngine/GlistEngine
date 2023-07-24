@@ -47,12 +47,29 @@ void gGUIText::draw() {
 }
 
 void gGUIText::resetText() {
-    if(width <= 0) return;
-    linenum = 0; // Reset the number of lines to zero.
-	line.clear(); // Clear the content of the line vector.
-	std::vector<std::string> lines = splitString(text, font, width); // Split the text into lines based on the specified width.
-	linenum = lines.size(); // Update the number of lines.
-	line = lines; // Copy the split lines to the line vector.
+    if (width <= 0) return;
+    linenum = 0;
+    line.clear();
+    std::vector<std::string> lines;
+    std::vector<std::string> lineswithrules;
+
+    // Split the text based on "\n" character
+    std::istringstream iss(text);
+    std::string singleline;
+    while (std::getline(iss, singleline, '\n')) {
+        lines.push_back(singleline);
+    }
+
+    // Process each line and apply alignment rules
+    for (const std::string& singleline : lines) {
+        std::vector<std::string> splitlines = splitString(singleline, font, width);
+        for (const std::string& splitline : splitlines) {
+            lineswithrules.push_back(splitline);
+        }
+    }
+    linenum = lineswithrules.size();
+    line.clear();
+    line.insert(line.end(), lineswithrules.begin(), lineswithrules.end());
     resetAlignment();
 }
 
