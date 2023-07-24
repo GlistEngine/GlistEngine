@@ -333,7 +333,10 @@ void gGUITextbox::draw() {
 		if(isfocused) renderer->setColor(255, 128, 0);
 		else renderer->setColor(middlegroundcolor);
 		int line = rowsnum - (lastdrawnline - currentline);
-		gDrawRectangle(left + selectionboxx1 - firstx + textalignmentamount - (textfont->getStringWidth(text) / 2 * textalignment), top + hdiff + linetopmargin - firsty + lineheight * 5 / 3  * ((currentline - 1) * !rowsnumexceeded + (line - 1) * rowsnumexceeded) , selectionboxw, lineheight * 5 / 3, true);
+		bool firstline = false;
+		if(line <= 1 || currentline == 1) firstline = true;
+		gDrawRectangle(left + selectionboxx1 - firstx + textalignmentamount - (textfont->getStringWidth(text) / 2 * textalignment), top + hdiff + linetopmargin * firstline - firsty + lineheight * 3/2  * ((currentline - 1) * !rowsnumexceeded + (line - 1) * rowsnumexceeded) , selectionboxw, lineheight * 5 / 3, true);
+		firstline = false;
 	}
 
 	renderer->setColor(textcolor);
@@ -1477,18 +1480,12 @@ std::vector<int> gGUITextbox::calculateClickPositionMultiline(int x, int y) {
 	for(int i = 0; i < 3; i++) result.push_back(0);
 	int selectedline = 1;
 	for(int i = 0; i < rowsnum; i++) {
-		if(y <= top + hdiff + lineheight + linetopmargin) {
-			if(lastdrawnline > rowsnum) selectedline = lastdrawnline - rowsnum + 1;
-			else selectedline = 1;
-			break;
-		} else if(y > top + hdiff + boxh) {
-			if(lastdrawnline > rowsnum) selectedline = lastdrawnline;
-			else selectedline = rowsnum;
-			break;
-		} else if(y > top + hdiff + i * (lineheight + linetopmargin) && y < top + hdiff + (i + 1) * (lineheight + linetopmargin)) {
+		if(y > top + hdiff + i * (lineheight + linetopmargin) && y < top + hdiff + (i + 1) * (lineheight + linetopmargin)) {
 			if(lastdrawnline > rowsnum) selectedline = lastdrawnline - rowsnum + i + 1;
 			else selectedline = i + 1;
 			break;
+		} else if(y >= top + hdiff + (i + 1) * (lineheight + linetopmargin)) {
+			selectedline = lastdrawnline;
 		}
 	}
 	if(lines[selectedline - 1] == "") {
@@ -1566,18 +1563,12 @@ std::vector<int> gGUITextbox::calculateCursorPositionMultiline(int x, int y) {
 void gGUITextbox::calculateLinePositionMultiline(int x, int y) {
 	int selectedline = 1;
 	for(int i = 0; i < rowsnum; i++) {
-		if(y <= top + hdiff + lineheight + linetopmargin) {
-			if(lastdrawnline > rowsnum) selectedline = lastdrawnline - rowsnum + 1;
-			else selectedline = 1;
-			break;
-		} else if(y > top + hdiff + boxh) {
-			if(lastdrawnline > rowsnum) selectedline = lastdrawnline;
-			else selectedline = rowsnum;
-			break;
-		} else if(y > top + hdiff + i * (lineheight + linetopmargin) && y < top + hdiff + (i + 1) * (lineheight + linetopmargin)) {
+		if(y > top + hdiff + i * (lineheight + linetopmargin) && y < top + hdiff + (i + 1) * (lineheight + linetopmargin)) {
 			if(lastdrawnline > rowsnum) selectedline = lastdrawnline - rowsnum + i + 1;
 			else selectedline = i + 1;
 			break;
+		} else if(y >= top + hdiff + (i + 1) * (lineheight + linetopmargin)) {
+			selectedline = lastdrawnline;
 		}
 	}
 	currentline = selectedline;
