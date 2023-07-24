@@ -17,53 +17,53 @@ gMorphingMesh::gMorphingMesh() {
 gMorphingMesh::~gMorphingMesh() {
 }
 
-void gMorphingMesh::addTargetPositions(std::vector<gVertex> &targetvertices) {
-	targetpositions.push_back(std::vector<glm::vec3>(targetvertices.size()));
+void gMorphingMesh::addTargetPositions(std::vector<gVertex> &targetVertices) {
+	targetpositions.push_back(std::vector<glm::vec3>(targetVertices.size()));
 	currenttargetmeshid = targetpositions.size() - 1;
 	for (int i = 0; i < targetpositions[currenttargetmeshid].size(); i++) {
-		targetpositions[currenttargetmeshid][i] = targetvertices[i].position;
+		targetpositions[currenttargetmeshid][i] = targetVertices[i].position;
 	}
 }
 
-void gMorphingMesh::addTargetNormals(std::vector<gVertex> &targetvertices) {
-	targetnormals.push_back(std::vector<glm::vec3>(targetvertices.size()));
+void gMorphingMesh::addTargetNormals(std::vector<gVertex> &targetVertices) {
+	targetnormals.push_back(std::vector<glm::vec3>(targetVertices.size()));
 	currenttargetmeshid = targetnormals.size() - 1;
 	for (int i = 0; i < targetnormals[currenttargetmeshid].size(); i++) {
-		targetnormals[currenttargetmeshid][i] = targetvertices[i].normal;
+		targetnormals[currenttargetmeshid][i] = targetVertices[i].normal;
 	}
 }
 
-int gMorphingMesh::addTargetMesh(gMesh *targetmesh) {
-	addTargetPositions(targetmesh->getVertices());
-	addTargetNormals(targetmesh->getVertices());
+int gMorphingMesh::addTargetMesh(gMesh *targetMesh) {
+	addTargetPositions(targetMesh->getVertices());
+	addTargetNormals(targetMesh->getVertices());
 	framecounts.push_back(1);
 	return targetpositions.size() - 1;
 }
 
-void gMorphingMesh::setBaseMesh(gMesh *basemesh) {
-	if (basemesh == nullptr) {
+void gMorphingMesh::setBaseMesh(gMesh *baseMesh) {
+	if (baseMesh == nullptr) {
 		gLoge("gMorphingMesh::setBaseMesh::The given basemesh pointer's value is nullptr. Cannot set the base mesh.");
 		return;
 	}
-	this->basemesh = basemesh;
-	this->setDrawMode(basemesh->getDrawMode());
-	this->setMaterial(basemesh->getMaterial());
-	this->setVertices(basemesh->getVertices(), basemesh->getIndices());
+	this->basemesh = baseMesh;
+	this->setDrawMode(baseMesh->getDrawMode());
+	this->setMaterial(baseMesh->getMaterial());
+	this->setVertices(baseMesh->getVertices(), baseMesh->getIndices());
 }
 
-void gMorphingMesh::setCurrentTargetMeshId(int currenttargetmeshid) {
+void gMorphingMesh::setCurrentTargetMeshId(int targetMeshId) {
 	//Exception check
-	if (currenttargetmeshid < 0 || currenttargetmeshid >= targetpositions.size()) {
+	if (targetMeshId < 0 || targetMeshId >= targetpositions.size()) {
 		gLoge("gMorphingMesh::setCurrentTargetMeshId::Cannot assign the given current target mesh id.");
 		return;
 	}
 	//Actual statement
-	this->currenttargetmeshid = currenttargetmeshid;
+	this->currenttargetmeshid = targetMeshId;
 }
 
-void gMorphingMesh::interpolate(bool isnomatter) {
+void gMorphingMesh::interpolate(bool forceInterpolation) {
 	//Exception check
-	if (isnomatter || oldframeid == currentframeid && oldtargetmeshid == currenttargetmeshid) return;
+	if (!forceInterpolation || oldframeid == currentframeid && oldtargetmeshid == currenttargetmeshid) return;
 	if (currenttargetmeshid < 0 || basemesh == nullptr) {
 		gLoge("gMorphingMesh::interpolate::Cannot interpolate the morphing mesh since either there aren't any target mesh added for morphig mesh or there aren't any base mesh setted.");
 		return;
@@ -80,14 +80,14 @@ void gMorphingMesh::interpolate(bool isnomatter) {
 	oldtargetmeshid = currenttargetmeshid;
 }
 
-void gMorphingMesh::setCurrentFrameId(int frameid) {
+void gMorphingMesh::setCurrentFrameId(int frameId) {
 	//Exception check
-	if (frameid < 0 || frameid >= framecounts[currenttargetmeshid]) {
+	if (frameId < 0 || frameId >= framecounts[currenttargetmeshid]) {
 		gLoge("gMorphingMesh::Cannot change the current frame with the desired value since it is beyond the bounds([0, framescount]).");
 		return;
 	}
 	//Actual statement
-	this->currentframeid = frameid;
+	this->currentframeid = frameId;
 }
 
 void gMorphingMesh::nextFrameId() {
@@ -102,26 +102,26 @@ void gMorphingMesh::setSpeed(int speed) {
 	this->speed = speed;
 }
 
-void gMorphingMesh::setFrameCount(int targetmeshid, int framecount) {
-	if (targetmeshid < 0 || targetmeshid >= targetpositions.size()) {
+void gMorphingMesh::setFrameCount(int targetMeshId, int frameCount) {
+	if (targetMeshId < 0 || targetMeshId >= targetpositions.size()) {
 		gLoge("gMorphingMesh::setFrameCount::Cannot assign the frame count because the desired target mesh is out of beyonds.");
 		return;
 	}
-	framecounts[targetmeshid] = framecount;
+	framecounts[targetMeshId] = frameCount;
 }
 
-void gMorphingMesh::setTargetPosition(int targetid, int positionid, glm::vec3 newposition) {
-	if (targetid < 0 || targetid >= targetpositions.size() || positionid < 0 || positionid >= targetpositions[targetid].size()) {
+void gMorphingMesh::setTargetPosition(int targetId, int positionId, glm::vec3 newPosition) {
+	if (targetId < 0 || targetId >= targetpositions.size() || positionId < 0 || positionId >= targetpositions[targetId].size()) {
 		gLoge("gMorphingMesh::setTargetPosition::Couldn't set the position to the desired position since either targetid is beyond bounds or positionid is beyond bounds.");
 	}
-	targetpositions[targetid][positionid] = newposition;
+	targetpositions[targetId][positionId] = newPosition;
 }
 
-void gMorphingMesh::setTargetNormal(int targetid, int normalid, glm::vec3 newnormal) {
-	if (targetid < 0 || targetid >= targetnormals.size() || normalid < 0 || normalid >= targetnormals[targetid].size()) {
+void gMorphingMesh::setTargetNormal(int targetId, int normalId, glm::vec3 newNormal) {
+	if (targetId < 0 || targetId >= targetnormals.size() || normalId < 0 || normalId >= targetnormals[targetId].size()) {
 		gLoge("gMorphingMesh::setTargetnormal::Couldn't set the normal to the desired normal since either targetid is beyond bounds or normalid is beyond bounds.");
 	}
-	targetnormals[targetid][normalid] = newnormal;
+	targetnormals[targetId][normalId] = newNormal;
 }
 
 int gMorphingMesh::getCurrentTargetMeshId() {
@@ -133,14 +133,14 @@ int gMorphingMesh::getCurrentFrameId() {
 	return currentframeid;
 }
 
-int gMorphingMesh::getFrameCount(int targetmeshid) {
+int gMorphingMesh::getFrameCount(int targetMeshId) {
 	//Exception check
-	if (targetmeshid < 0 || targetmeshid >= framecounts.size()) {
+	if (targetMeshId < 0 || targetMeshId >= framecounts.size()) {
 		gLoge("gMorphingMesh::getFrameCount::Cannot return the frame count because your desired target mesh's id isn't found in target meshs' vector.");
 		return -1;
 	}
 	//Actual statement
-	return framecounts[targetmeshid];
+	return framecounts[targetMeshId];
 }
 
 int gMorphingMesh::getFrameCount() {
@@ -151,15 +151,15 @@ int gMorphingMesh::getTargetMeshCount() {
 	return targetpositions.size();
 }
 
-void gMorphingMesh::resetTargetData(int targetid) {
-	targetpositions[targetid].assign(targetpositions[targetid].size(), glm::vec3(0));
-	targetnormals[targetid].assign(targetnormals[targetid].size(), glm::vec3(0));
+void gMorphingMesh::resetTargetData(int targetId) {
+	targetpositions[targetId].assign(targetpositions[targetId].size(), glm::vec3(0));
+	targetnormals[targetId].assign(targetnormals[targetId].size(), glm::vec3(0));
 }
 
-const glm::vec3& gMorphingMesh::getTargetPosition(int targetid, int positionid) {
-	return targetpositions[targetid][positionid];
+const glm::vec3& gMorphingMesh::getTargetPosition(int targetId, int positionId) {
+	return targetpositions[targetId][positionId];
 }
 
-const glm::vec3& gMorphingMesh::getTargetNormal(int targetid, int normalid) {
-	return targetnormals[targetid][normalid];
+const glm::vec3& gMorphingMesh::getTargetNormal(int targetId, int normalId) {
+	return targetnormals[targetId][normalId];
 }
