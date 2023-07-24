@@ -23,6 +23,8 @@ public:
 
     void setText(std::string text);
 
+    std::string getText();
+
     void setTextAlignment(int textAligment);
 
     void draw();

@@ -29,21 +29,17 @@ public:
 	gMorphingMesh();
 	virtual ~gMorphingMesh();
 
-	void draw();
-
-	void drawVboFrame();
-
 	/*
-	 * @brief loads the model's vertex positions and normals from the given path.
-	 * @param path is the location of model file in the model directory.
+	 * @brief adds the given targetmesh's specific attributes to the vectors.
+	 * @param targetmesh is a pointer to the desired target mesh.
 	 */
-	void loadMorphingModel(std::string path);
+	int addTargetMesh(gMesh *targetmesh);
 
 	/*
 	 * @brief sets the base mesh which is going to be used during interpolation.
 	 * @param basemesh is the base mesh's pointer.
 	 */
-	void loadModel(gModel *basemodel);
+	void setBaseMesh(gMesh *basemesh);
 
 	/*
 	 * @brief sets the current target mesh id to the given id if it is valid. Else it doesn't set.
@@ -58,23 +54,33 @@ public:
 	void setCurrentFrameId(int frameid);
 
 	/*
-	 * @brief sets the current base mesh id to the desired basemeshid if possible.
-	 * @param basemeshid is the desired base mesh id.
+	 * @brief sets the desired target mesh's frame count which is the beyond of interpolation.
+	 * @param targetmeshid is the target mesh which will be affected by this function.
+	 * @param framecount is the desired framecount.
 	 */
-	void setCurrentBaseMeshId(int basemeshid);
-
-	/*
-	 * @brief sets the current target mesh's vbo's vertices and indices.
-	 * @param vertices is the vertices.
-	 * @param indices is the indices.
-	 */
-	void setVerticesData(int frameno, std::vector<gVertex>& vertices, std::vector<unsigned int>& indices);
+	void setFrameCount(int targetmeshid, int framecount);
 
 	/*
 	 * @brief sets the frame jump speed.
 	 * @param speed is the desired speed.
 	 */
 	void setSpeed(int speed);
+
+	/*
+	 * @brief sets position at the given indices to the new one.
+	 * @param targetid is the target mesh's index.
+	 * @param vertxid is one of the target mesh's position's index.
+	 * @param newposition is the desired position.
+	 */
+	void setTargetPosition(int targetid, int positionid, glm::vec3 newposition);
+
+	/*
+	 * @brief sets normal at the given indices to the new one.
+	 * @param targetid is the target mesh's index.
+	 * @param vertxid is one of the target mesh's normal's index.
+	 * @param newnormal is the desired normal.
+	 */
+	void setTargetNormal(int targetid, int normalid, glm::vec3 newnormal);
 
 	/*
 	 * @brief jumps frames as many as the given value of the speed variable.
@@ -107,42 +113,38 @@ public:
 	int getTargetMeshCount();
 
 	/*
-	 * @brief returns the base meshes' count.
+	 * @brief returns the current frame jump speed.
 	 */
-	int getBaseMeshCount();
-
-	/*
-	 * returns the current base mesh's id.
-	 */
-	int getCurrentBaseMeshId();
+	int getSpeed();
 
 	/*
 	 * @brief interpolates the vertices in base and target meshes' from base's to target's meshes.
-	 * @param framescount indicates how many frames the function will create.
 	 */
-	void interpolate(int framescount);
+	void interpolate();
 
 private:
-	//The loaded base meshes' positions which are the end point of interpolation.
-	std::vector<std::vector<std::vector<glm::vec3>>> targetpositions, framepositions;
-	//The frames vertex buffers.
-	std::vector<std::vector<std::vector<gVbo>>> vboframes;
-	//The current base mesh(that is going to be used in interpolation)'s index on the vector.
-	int currenttargetmeshid, currentframeid, currentbasemeshid;
-	//The target mesh which is the begin point of interpolation.
-	std::vector<gMesh*> basemeshes;
-	std::string directory, filename;
-	const aiScene *scene;
+	//The loaded target meshes' positions which are the end points of interpolation.
+	std::vector<std::vector<glm::vec3>> targetpositions, targetnormals;
+	//The current target mesh(that is going to be end point of interpolation)'s index on the targetpositions vector.
+	//The current frame id indicates how much should the interpolation progress.
+	//The speed is used in function nextFrame which adjusts the frame automatically as a jump indicator.
+	int currenttargetmeshid, currentframeid, speed;
+	std::vector<int> framecounts;
+	//The base mesh which is the begin point of interpolation.
+	gMesh *basemesh;
+
+	//Private Functions
 	/*
-	 * @variable loadorder is order of load.
-	 * @variable speed is how many frame jumps are in an iteration of nextFrameId function.
+	 * @brief extracts the positions from the given vertices to the targetpositions vector.
+	 * @param targetvertices is the vertex vector of target.
 	 */
-	int loadorder, speed;
+	void addTargetPositions(std::vector<gVertex>& targetvertices);
 
-	void loadModelFile(const std::string& fullpath);
-	void processNode(aiNode *node, const aiScene *scene);
-	void processMesh(aiMesh *mesh, const aiScene *scene, aiMatrix4x4 matrix, int basemeshid);
-
+	/*
+	 * @brief extracts the normals from the given vertices to the targetnormals vector.
+	 * @param targetvertices is the vertex vector of target.
+	 */
+	void addTargetNormals(std::vector<gVertex>& targetvertices);
 };
 
 #endif /* GRAPHICS_GMORPHINGMESH_H_ */

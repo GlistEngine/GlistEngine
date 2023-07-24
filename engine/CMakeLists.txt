@@ -115,6 +115,7 @@ set(SRC_FILES
 	${ENGINE_DIR}/graphics/gMesh.cpp
 	${ENGINE_DIR}/graphics/gSkinnedMesh.cpp
 	${ENGINE_DIR}/graphics/gModel.cpp
+	${ENGINE_DIR}/graphics/gMorphingMesh.cpp
 	${ENGINE_DIR}/utils/gLocalization.cpp
 	${ENGINE_DIR}/utils/gDatabase.cpp
 	${ENGINE_DIR}/utils/gAssetLoader.cpp
@@ -180,6 +181,7 @@ set(SRC_FILES
 	${ENGINE_DIR}/ui/gGUIContainer.cpp
 	${ENGINE_DIR}/ui/gGUIForm.cpp
 	${ENGINE_DIR}/ui/gGUIResources.cpp
+	${ENGINE_DIR}/ui/gGUIDate.cpp
 	${ENGINE_DIR}/ui/base/tinyfiledialogs.c
 	${ENGINE_DIR}/base/gBaseGUIObject.cpp
 	${ENGINE_DIR}/core/gGUIManager.cpp

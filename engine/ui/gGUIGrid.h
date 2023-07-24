@@ -22,12 +22,10 @@ public:
 	struct Cell {
 	    bool iscellselected;
 	    bool iscellaligned;
-	    bool hasfunction;
 	    int cellx;
 	    int celly;
 	    int cellrowno;
 	    int cellcolumnno;
-	    int copiedno;
 	    int fontnum;
 	    int cellalignment;
 	    int lineno;
@@ -41,10 +39,8 @@ public:
 	    Cell(){
 	    	iscellselected = false;
 	    	iscellaligned = false;
-	    	hasfunction = false;
 	    	cellx = -1;
 	    	celly = -1;
-	    	copiedno = -1;
 	    	fontnum = gGUIManager::FONT_REGULAR;
 	    	cellalignment = gBaseGUIObject::TEXTALIGNMENT_LEFT;
 	    	lineno = TEXTLINE_NONE;
@@ -64,6 +60,20 @@ public:
 		TEXTLINE_DOUBLEUNDER,
 		TEXTLINE_STRIKE
 	};
+
+	enum {
+		FUNCTION_COPY,
+		FUNCTION_SUM
+	};
+
+	enum {
+		FUNCTION_TYPE,
+		FUNCTION_SENDER,
+		FUNCTION_FIRSTINDEX
+	};
+
+	static const int maxcolumnnum = 16384;
+	static const int maxrownum = 1048576;
 
 	gGUIGrid();
 	virtual ~gGUIGrid();
@@ -111,17 +121,22 @@ public:
 	void mouseScrolled(int x, int y);
 
 private:
-	std::string fixTextFunction(std::string text);
+	std::string fixTextFunction(std::string text, int index);
 	std::string fixNumeric(std::string text);
 	std::string getTextColumn(std::string text);
 	int getCellIndex(std::string text);
-	Cell getCopiedCell(int cellIndex);
-	int makeSum(int c1, int r1, int c2, int r2);
+	float makeSum(int c1, int r1, int c2, int r2);
 	bool isNumeric(std::string text);
+	void addFunction(int functionType, int functionSender);
+	void removeFunction(int functionNum);
+	void operateFunction(int functionNum);
+	void makeDefaultCell();
 
 	std::deque<Cell> allcells;
 	std::stack<Cell> undocellstack;
 	std::stack<Cell> redocellstack;
+	std::vector<int> functionindexes;
+	std::vector<std::vector<int>> functions;
 	Cell copiedcell;
 	gGUIManager* manager;
 	gGUITextbox textbox;
