@@ -53,7 +53,7 @@ gBloom::gBloom(float intensity, float bloomsize, float rgb[]) {
 	shader->setFloat("screenheight", getScreenHeight());
 	shader->setVec3("rgbmask", rgb[0], rgb[1], rgb[2]);
 	shader->setInt("rectssize", 1);
-	shader->setVec4("rect[0]", 0.0, 0.0, getScreenWidth(), getScreenHeight());
+	shader->setVec4("rects[0]", 0.0, 0.0, getScreenWidth(), getScreenHeight());
 	shader->setBool("isrgbmask", true);
 	isrectsset = false;
 }
@@ -120,7 +120,6 @@ const std::string gBloom::getFragSrc() {
 			""
 			"void main()"
 			"{"
-			"	const float rgbrangeoffset = 0.01;"
 			""
 			"   float offset = bloomsize / 300.0;"
 			"   vec2 offsets[9] = vec2[]("
@@ -144,6 +143,7 @@ const std::string gBloom::getFragSrc() {
 			"   vec4 texcolor = texture(screenTexture, TexCoords);"
 			" 	float brightness = dot(texcolor.rgb, vec3(0.2126, 0.7152, 0.0722));"
 			"   vec4 blurcolor = vec4(0.0, 0.0, 0.0, 1.0);"
+			"   const float rgbrangeoffset = 0.01;"
 			" 	for(int j = 0; j < rectssize; j++){"
 			" 		if(TexCoords.x * screenwidth >= rects[j].x && TexCoords.x * screenwidth <= rects[j].x + rects[j].z &&"
 			"			TexCoords.y * screenheight <= screenheight - rects[j].y && TexCoords.y * screenheight >= screenheight - rects[j].y - rects[j].w){"
