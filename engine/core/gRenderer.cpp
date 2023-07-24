@@ -794,12 +794,14 @@ void gRenderer::setScreenScaling(int screenScaling) {
 }
 
 int gRenderer::getWidth() {
-	if (screenscaling >= G_SCREENSCALING_AUTO) return unitwidth;
+	if (screenscaling >= G_SCREENSCALING_AUTO)
+		return unitwidth;
 	return width;
 }
 
 int gRenderer::getHeight() {
-	if (screenscaling >= G_SCREENSCALING_AUTO) return unitheight;
+	if (screenscaling >= G_SCREENSCALING_AUTO)
+        return unitheight;
 	return height;
 }
 
