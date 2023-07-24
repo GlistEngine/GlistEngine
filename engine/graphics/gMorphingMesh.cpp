@@ -8,8 +8,8 @@
 #include "gMorphingMesh.h"
 
 gMorphingMesh::gMorphingMesh() {
-	currenttargetmeshid = -1;
-	currentframeid = -1;
+	oldtargetmeshid = currenttargetmeshid = -1;
+	oldframeid = currentframeid = -1;
 	speed = 1;
 	basemesh = nullptr;
 }
@@ -61,8 +61,9 @@ void gMorphingMesh::setCurrentTargetMeshId(int currenttargetmeshid) {
 	this->currenttargetmeshid = currenttargetmeshid;
 }
 
-void gMorphingMesh::interpolate() {
+void gMorphingMesh::interpolate(bool isnomatter) {
 	//Exception check
+	if (isnomatter || oldframeid == currentframeid && oldtargetmeshid == currenttargetmeshid) return;
 	if (currenttargetmeshid < 0 || basemesh == nullptr) {
 		gLoge("gMorphingMesh::interpolate::Cannot interpolate the morphing mesh since either there aren't any target mesh added for morphig mesh or there aren't any base mesh setted.");
 		return;
@@ -75,6 +76,8 @@ void gMorphingMesh::interpolate() {
 		framevertices[i].normal += ((targetnormals[currenttargetmeshid][i] - framevertices[i].normal) * ((float)(currentframeid + 1) / (float)framecounts[currenttargetmeshid]));
 	}
 	this->setVertices(framevertices);
+	oldframeid = currentframeid;
+	oldtargetmeshid = currenttargetmeshid;
 }
 
 void gMorphingMesh::setCurrentFrameId(int frameid) {
@@ -126,6 +129,7 @@ int gMorphingMesh::getCurrentTargetMeshId() {
 }
 
 int gMorphingMesh::getCurrentFrameId() {
+	oldframeid = currentframeid;
 	return currentframeid;
 }
 
@@ -145,4 +149,17 @@ int gMorphingMesh::getFrameCount() {
 
 int gMorphingMesh::getTargetMeshCount() {
 	return targetpositions.size();
+}
+
+void gMorphingMesh::resetTargetData(int targetid) {
+	targetpositions[targetid].assign(targetpositions[targetid].size(), glm::vec3(0));
+	targetnormals[targetid].assign(targetnormals[targetid].size(), glm::vec3(0));
+}
+
+const glm::vec3& gMorphingMesh::getTargetPosition(int targetid, int positionid) {
+	return targetpositions[targetid][positionid];
+}
+
+const glm::vec3& gMorphingMesh::getTargetNormal(int targetid, int normalid) {
+	return targetnormals[targetid][normalid];
 }

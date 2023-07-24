@@ -21,7 +21,6 @@
 #include <iostream>
 #include <vector>
 #include "gMesh.h"
-#include "gModel.h"
 
 
 class gMorphingMesh : public gMesh {
@@ -83,6 +82,12 @@ public:
 	void setTargetNormal(int targetid, int normalid, glm::vec3 newnormal);
 
 	/*
+	 * @brief sets all the glm vectors of normals and positions to zero vector.
+	 * @param targetid is the target mesh's index.
+	 */
+	void resetTargetData(int targetid);
+
+	/*
 	 * @brief jumps frames as many as the given value of the speed variable.
 	 */
 	void nextFrameId();
@@ -118,9 +123,26 @@ public:
 	int getSpeed();
 
 	/*
-	 * @brief interpolates the vertices in base and target meshes' from base's to target's meshes.
+	 * @brief returns the desired target position.
+	 * @param targetid is the desired target mesh's id.
+	 * @param positionid is the desired position's id.
+	 * @return returns the constant reference of the desired position as a glm::vec3.
 	 */
-	void interpolate();
+	const glm::vec3& getTargetPosition(int targetid, int positionid);
+
+	/*
+	 * @brief returns the desired target normal.
+	 * @param targetid is the desired target mesh's id.
+	 * @param positionid is the desired normal's id.
+	 * @return returns the constant reference of the desired normal as a glm::vec3.
+	 */
+	const glm::vec3& getTargetNormal(int targetid, int normalid);
+
+	/*
+	 * @brief interpolates the vertices in base and target meshes' from base's to target's meshes.
+	 * @param isnomatter is a indicator of no matter if the current target mesh and current frame are as last interpolate.
+	 */
+	void interpolate(bool isnomatter = false);
 
 private:
 	//The loaded target meshes' positions which are the end points of interpolation.
@@ -128,7 +150,7 @@ private:
 	//The current target mesh(that is going to be end point of interpolation)'s index on the targetpositions vector.
 	//The current frame id indicates how much should the interpolation progress.
 	//The speed is used in function nextFrame which adjusts the frame automatically as a jump indicator.
-	int currenttargetmeshid, currentframeid, speed;
+	int currenttargetmeshid, currentframeid, speed, oldtargetmeshid, oldframeid;
 	std::vector<int> framecounts;
 	//The base mesh which is the begin point of interpolation.
 	gMesh *basemesh;
