@@ -695,8 +695,8 @@ void gGUIGrid::drawColumnContents() {
 			renderer->setColor(*pressedbuttoncolor);
 			gDrawLine(gridx - (gridboxw / 2) + ((i + 2) * gridboxw) - firstx, gridy - firsty, gridx - (gridboxw / 2) + ((i + 2) * gridboxw) - firstx, gridy + gridboxh + gridh - firsty);
 		}
-		gDrawRectangle(gridx, gridy, allcells.at(0).cellw / 2, allcells.at(0).cellh, true);
 	}
+	gDrawRectangle(gridx, gridy, allcells.at(0).cellw / 2, allcells.at(0).cellh, true);
 }
 
 void gGUIGrid::drawTitleLines() {
