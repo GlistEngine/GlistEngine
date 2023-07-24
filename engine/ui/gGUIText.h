@@ -36,6 +36,7 @@ private:
     int linenum;
     int textalignment;
     int fontsize, lineh;
+    float linespacingfactor;
 
     void resetText();
     void resetAlignment();
