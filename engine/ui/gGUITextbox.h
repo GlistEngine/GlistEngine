@@ -280,7 +280,7 @@ private:
 	bool isbackgroundenabled;
 	int totalh;
 	int firstx, firsty;
-	bool widthchanged;
+	bool boxshrinked, boxexpanded;
 	bool arrowkeypressed;
 	int arrowamount;
 	gFont* textfont;

@@ -91,7 +91,8 @@ gGUITextbox::gGUITextbox() {
 	hdiff = boxh / 4;
 	firstx = 0;
 	firsty = 0;
-	widthchanged = false;
+	boxshrinked = false;
+	boxexpanded = false;
 	arrowkeypressed = false;
 	arrowamount = 0;
 	textalignment = TEXTALIGNMENT_LEFT;
@@ -251,9 +252,10 @@ void gGUITextbox::update() {
 
 		handleKeys();
 	}
-	if(boxw - width != 0) widthchanged = true;
+	if(boxw - width > 0) boxshrinked = true;
+	else if(boxw - width < 0) boxexpanded = true;
 	boxw = width;
-	if(textfont->getStringWidth(text.substr(firstchar, lastutf)) >= width - 2 * initx && widthchanged && !ismultiline) {
+	if(textfont->getStringWidth(text.substr(firstchar, lastutf)) >= width - 2 * initx && boxshrinked && !ismultiline) {
 		if(!ismultiline && !ispassword) {
 			do {
 				firstutf += letterlength[firstchar];
@@ -269,17 +271,30 @@ void gGUITextbox::update() {
 		} else {
 			cursorposx = textfont->getStringWidth(text.substr(firstutf, cursorposutf - firstutf));
 		}
+	} else if(boxexpanded && firstchar > 0) {
+		if(!ismultiline && !ispassword) {
+			do {
+				firstutf -= letterlength[firstchar];
+				firstposx = textfont->getStringWidth(text.substr(0, firstutf));
+				firstchar--;
+				cursorposx = textfont->getStringWidth(text.substr(firstutf, cursorposutf - firstutf));
+				lastutf += letterlength[firstchar];
+			} while(firstchar > 0 && textfont->getStringWidth(text.substr(firstchar, lastutf)) < width - 2 * initx);
+			letterpos.clear();
+			letterpos = calculateAllLetterPositions();
+			lastutf = calculateLastUtf();
+		}
 	}
 
-	if(ismultiline && widthchanged) {
+	if(ismultiline && boxshrinked) {
 		for(int i = 0; i < linecount; i++) {
 			if(textfont->getStringWidth(lines[i]) >= width - 2 * initx) {
-				findCursorPosition();
 				setText(text);
 			}
 		}
 	}
-	widthchanged = false;
+	boxshrinked = false;
+	boxexpanded = false;
 
 	while(totalh > height) {
 		rowsnum--;
@@ -1632,7 +1647,7 @@ void gGUITextbox::calculateLines() {
 			linesize = text.substr(firstchar, linesize).find('\n');
 		}
 
-		if(widthchanged && firstchar + linesize + 1 >= cursorposutf) {
+		if(boxshrinked && firstchar + linesize + 1 >= cursorposutf) {
 			cursorposx = textfont->getStringWidth(text.substr(firstchar, cursorposutf));
 		}
 
