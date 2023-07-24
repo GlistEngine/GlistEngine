@@ -49,7 +49,7 @@ int gDefaultMonitorWidth() {
 	glfwTerminate();
 	return w;
 #else
-	throw std::runtime_exception("not implemented!");
+	throw std::runtime_error("not implemented!");
 #endif
 }
 
@@ -62,7 +62,7 @@ int gDefaultMonitorHeight() {
 	glfwTerminate();
 	return h;
 #else
-	throw std::runtime_exception("not implemented!");
+	throw std::runtime_error("not implemented!");
 #endif
 }
 
