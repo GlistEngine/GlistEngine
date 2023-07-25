@@ -7,7 +7,7 @@ var structgGUIGrid_1_1Cell =
     [ "cellfontcolor", "structgGUIGrid_1_1Cell.html#ad5802364493e41a13913568baedf35bc", null ],
     [ "cellh", "structgGUIGrid_1_1Cell.html#adbc16a895757c374b3c5c0aae0dd52ac", null ],
     [ "cellrowno", "structgGUIGrid_1_1Cell.html#a3edc08ecd4d0f004cc417dcb28a48ae4", null ],
-    [ "celltype", "structgGUIGrid_1_1Cell.html#a7cc4a4e02ee453dec8d85735ae2fb5dd", null ],
+    [ "celltype", "structgGUIGrid_1_1Cell.html#a796a3118d5d03a2a9642fd0842600b37", null ],
     [ "cellw", "structgGUIGrid_1_1Cell.html#a18d25ba1bdcb734586614006710f0921", null ],
     [ "cellx", "structgGUIGrid_1_1Cell.html#ad13a17f3a2c38cf0af2fd64aae578832", null ],
     [ "celly", "structgGUIGrid_1_1Cell.html#a7bd3244887013dad72028dec37d1cedd", null ],
@@ -15,6 +15,7 @@ var structgGUIGrid_1_1Cell =
     [ "iscellaligned", "structgGUIGrid_1_1Cell.html#aafb69ff4b9eeac0a91b0745b2562997f", null ],
     [ "iscellselected", "structgGUIGrid_1_1Cell.html#a6170b43a3ab5613efeb3a37edf1b01aa", null ],
     [ "lineno", "structgGUIGrid_1_1Cell.html#a62c65d1287779290a5cabf4eabec45c2", null ],
+    [ "overflowcontent", "structgGUIGrid_1_1Cell.html#a6a6f3a8c1cbd138a9de68cfbae382f18", null ],
     [ "showncontent", "structgGUIGrid_1_1Cell.html#abb6437a9c53cf19334448c01d1c34085", null ],
     [ "textmoveamount", "structgGUIGrid_1_1Cell.html#a771d15da4e462d0e28cb16cc3229a986", null ]
 ];
