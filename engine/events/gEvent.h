@@ -31,6 +31,7 @@ enum EventType {
 	EventTypeAppPause,
 	EventTypeAppResume,
 	EventTypeTouch,
+	EventTypeDeviceOrientationChanged
 #endif
 };
 

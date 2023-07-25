@@ -76,6 +76,8 @@ public:
 	void setWindowSizeLimits(int minWidth, int minHeight, int maxWidth, int maxHeight) override;
 
 	bool onTouchCallback(int pointerCount, int* fingerIds, int* x, int* y);
+
+	void resize();
 public:
 	static ANativeWindow* nativewindow;
 	bool isclosed;
