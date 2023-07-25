@@ -28,6 +28,10 @@ public:
 	gMorphingMesh();
 	virtual ~gMorphingMesh();
 
+	void draw();
+
+	void drawVboFrames();
+
 	/*
 	 * @brief adds the given targetmesh's specific attributes to the vectors.
 	 * @param targetMesh is a pointer to the desired target mesh.
@@ -80,6 +84,18 @@ public:
 	 * @param newNormal is the desired normal.
 	 */
 	void setTargetNormal(int targetId, int normalId, glm::vec3 newNormal);
+
+	/*
+	 * @brief sets the member ismorphinganimated as the desired value.
+	 * @param isMorphingAnimated is the desired value.
+	 */
+	void setMorphingAnimated(bool isMorphingAnimated);
+
+	/*
+	 * @brief sets the member ismorphinganimationstoredonvram as the desired value.
+	 * @param isMorphingAnimationStoredOnVram is the desired value.
+	 */
+	void setMorphingAnimationStoredOnVram(bool isMorphingAnimationStoredOnVram);
 
 	/*
 	 * @brief sets all the glm vectors of normals and positions to zero vector.
@@ -148,10 +164,18 @@ public:
 private:
 	//The loaded target meshes' positions which are the end points of interpolation.
 	std::vector<std::vector<glm::vec3>> targetpositions, targetnormals;
+	//The animated frames' data.
+	std::vector<std::vector<std::vector<glm::vec3>>> framepositions, framenormals;
+	//The frames data on vram.
+	std::vector<std::vector<gVbo>> vboframes;
 	//The current target mesh(that is going to be end point of interpolation)'s index on the targetpositions vector.
 	//The current frame id indicates how much should the interpolation progress.
 	//The speed is used in function nextFrame which adjusts the frame automatically as a jump indicator.
 	int currenttargetmeshid, currentframeid, speed, oldtargetmeshid, oldframeid;
+	//ismorphinganimated is an indicator of the holding state of frames. If it is true then the whole frames' positions and normals will be held in vectors those occupies memory in RAM.
+	//ismorphinganimationstoredonvram is an indicator of the holding state of frames. If it is true all the frames will be held in vbos which are stored in VRAM.
+	//They initialized as false.
+	bool ismorphinganimated, ismorphinganimationstoredonvram;
 	std::vector<int> framecounts;
 	//The base mesh which is the begin point of interpolation.
 	gMesh *basemesh;
