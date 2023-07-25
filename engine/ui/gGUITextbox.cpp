@@ -1156,11 +1156,9 @@ void gGUITextbox::pressKey() {
 			int pdu = posdata[2];
 			do {
 				int tw = textfont->getStringWidth(text.substr(pdu - letterlength[pdc - 1], letterlength[pdc - 1]));
-				pdx -= (tw + 2);
-				std::vector<int> posdata2 = calculateCursorPositionMultiline(left + pdx + initx, top + 1);
-				pdc = posdata2[0];
-				pdx = posdata2[1];
-				pdu = posdata2[2];
+				pdx -= tw;
+				pdu -= letterlength[pdc - 1];
+				pdc--;
 			} while(pdx > 0 && (isLetter(text[pdu - 1]) || isNumber(text[pdu - 1])));
 			selectionposchar1 = pdc;
 			selectionposx1 = pdx;
@@ -1495,6 +1493,7 @@ std::vector<int> gGUITextbox::calculateClickPositionMultiline(int x, int y) {
 		return result;
 	}
 	currentline = selectedline;
+	if(lastdrawnline < selectedline) lastdrawnline = selectedline;
 	if(letterlength.size() != 0) {
 		int clickxdiff = x - left;
 		int poschar = firstchar;
@@ -1528,7 +1527,7 @@ std::vector<int> gGUITextbox::calculateClickPositionMultiline(int x, int y) {
 std::vector<int> gGUITextbox::calculateCursorPositionMultiline(int x, int y) {
 	std::vector<int> result;
 	for(int i = 0; i < 3; i++) result.push_back(0);
-
+	
 	if(letterlength.size() != 0) {
 		int clickxdiff = x - left;
 		int poschar = firstchar;
@@ -1552,7 +1551,7 @@ std::vector<int> gGUITextbox::calculateCursorPositionMultiline(int x, int y) {
 				break;
 			}
 		}
-
+		
 		result[0] = poschar;
 		result[1] = posx;
 		result[2] = posutf;
@@ -1571,6 +1570,7 @@ void gGUITextbox::calculateLinePositionMultiline(int x, int y) {
 			selectedline = lastdrawnline;
 		}
 	}
+	if(selectedline > lastdrawnline && selectedline <= rowsnum) selectedline = lastdrawnline;
 	currentline = selectedline;
 }
 
