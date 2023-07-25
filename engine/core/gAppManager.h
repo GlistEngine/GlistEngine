@@ -275,6 +275,11 @@ public:
     int getMaxJoystickNum() { return maxjoysticknum; }
     int getMaxJoystickButtonNum() { return maxjoystickbuttonnum; }
 
+#ifdef ANDROID
+	DeviceOrientation getDeviceOrientation() { return deviceorientation; }
+	void setDeviceOrientation(DeviceOrientation orientation);
+#endif
+
 private:
     static const int maxjoysticknum = 4;
     static const int maxjoystickbuttonnum = 15;
@@ -326,6 +331,11 @@ private:
     bool joystickbuttonstate[maxjoysticknum][maxjoystickbuttonnum];
     int joystickaxecount;
 
+#ifdef ANDROID
+    DeviceOrientation deviceorientation;
+    DeviceOrientation olddeviceorientation;
+#endif
+
     std::vector<std::function<void()>> mainthreadqueue;
     std::mutex mainthreadqueuemutex;
 
@@ -351,6 +361,7 @@ private:
 #ifdef ANDROID
     bool onAppPauseEvent(gAppPauseEvent&);
     bool onAppResumeEvent(gAppResumeEvent&);
+    bool onDeviceOrientationChangedEvent(gDeviceOrientationChangedEvent&);
 #endif
 
     void updateTime();

@@ -174,12 +174,29 @@ bool gAndroidWindow::onTouchCallback(int pointerCount, int* fingerIds, int* x, i
 	return false;
 }
 
+void gAndroidWindow::resize() {
+    if(!eglQuerySurface(display, surface, EGL_WIDTH, &width) ||
+        !eglQuerySurface(display, surface, EGL_HEIGHT, &height)) {
+        gLogi("gAndroidWindow") << "eglQuerySurface() returned error " << eglGetError();
+        close();
+        return;
+    }
+    glViewport(0, 0, width, height);
+    setSize(width, height);
+}
 
 extern "C" {
 JNIEXPORT void JNICALL Java_dev_glist_android_lib_GlistNative_setSurface(JNIEnv *env, jclass clazz, jobject surface) {
-	gLogi("GlistNative") << "setSurface";
 	if (surface != nullptr) {
 		gAndroidWindow::nativewindow = ANativeWindow_fromSurface(env, surface);
+        if(window) {
+            appmanager->submitToMainThread([]() {
+                if(!window) {
+                    return;
+                }
+                window->resize();
+            });
+        }
 	} else {
 		if(window) {
 			window->close();
@@ -200,6 +217,16 @@ JNIEXPORT jboolean JNICALL Java_dev_glist_android_lib_GlistNative_onTouchEvent(J
 	return window->onTouchCallback(pointerCount, _fingerids, _x, _y); // true if consumed
 	return false;
 }
+
+JNIEXPORT void JNICALL Java_dev_glist_android_lib_GlistNative_onOrientationChanged(JNIEnv *env, jclass clazz, jint orientation) {
+	if(!window) {
+		return;
+	}
+
+    gDeviceOrientationChangedEvent event{(DeviceOrientation) orientation};
+	window->callEvent(event);
+}
+
 }
 
 #endif /* ANDROID */
