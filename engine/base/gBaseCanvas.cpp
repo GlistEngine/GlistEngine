@@ -105,6 +105,12 @@ void gBaseCanvas::onEvent(gEvent& event) {
 
 }
 
+#ifdef ANDROID
+void gBaseCanvas::onDeviceOrientationChange(DeviceOrientation deviceorientation) {
+
+}
+#endif
+
 void gBaseCanvas::showNotify() {
 
 }

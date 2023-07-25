@@ -244,7 +244,26 @@ public:
 private:
 };
 
+enum DeviceOrientation {
+	DEVICEORIENTATION_UNSPECIFIED = -1,
+	DEVICEORIENTATION_LANDSCAPE = 0,
+	DEVICEORIENTATION_PORTRAIT = 1,
+	DEVICEORIENTATION_REVERSE_LANDSCAPE = 8,
+	DEVICEORIENTATION_REVERSE_PORTRAIT = 9
+};
 
-#endif
+class gDeviceOrientationChangedEvent : public gEvent {
+public:
+	gDeviceOrientationChangedEvent(DeviceOrientation orientation) : orientation(orientation) {}
+
+	DeviceOrientation getOrientation() const { return orientation; }
+
+	G_EVENT_CLASS_TYPE(EventTypeDeviceOrientationChanged)
+	G_EVENT_CLASS_CATEGORY(EventCategoryApp)
+private:
+	DeviceOrientation orientation;
+};
+
+#endif /* ANDROID */
 
 #endif /* GWINDOWEVENTS_H_ */

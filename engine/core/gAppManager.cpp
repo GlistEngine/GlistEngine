@@ -96,6 +96,10 @@ gAppManager::gAppManager(const std::string& appName, gBaseApp *baseApp, int widt
     totalupdates = 0;
     totaldraws = 0;
     iswindowfocused = false;
+#ifdef ANDROID
+    deviceorientation = DEVICEORIENTATION_PORTRAIT;
+    olddeviceorientation = DEVICEORIENTATION_PORTRAIT;
+#endif
 
     // Joystick
     isjoystickenabled = false;
@@ -339,6 +343,12 @@ bool gAppManager::isGamepadButtonPressed(int joystickId, int buttonId) {
     return window->isGamepadButtonPressed(joystickId, buttonId);
 }
 
+#ifdef ANDROID
+void gAppManager::setDeviceOrientation(DeviceOrientation orientation) {
+    gAndroidUtil::setDeviceOrientation(orientation);
+}
+#endif
+
 void gAppManager::tick() {
     totalupdates++;
     if(!usewindow) {
@@ -412,14 +422,29 @@ void gAppManager::onEvent(gEvent& event) {
 #ifdef ANDROID
     dispatcher.dispatch<gAppPauseEvent>(G_BIND_FUNCTION(onAppPauseEvent));
     dispatcher.dispatch<gAppResumeEvent>(G_BIND_FUNCTION(onAppResumeEvent));
+    dispatcher.dispatch<gDeviceOrientationChangedEvent>(G_BIND_FUNCTION(onDeviceOrientationChangedEvent));
 #endif
     if(canvasmanager && canvasmanager->getCurrentCanvas()) canvasmanager->getCurrentCanvas()->onEvent(event);
     // todo pass event to app and plugins
 }
 
 bool gAppManager::onWindowResizedEvent(gWindowResizeEvent& event) {
-    if (!canvasmanager || !canvasmanager->getCurrentCanvas() || !initialized) return true;
+    if(!canvasmanager || !canvasmanager->getCurrentCanvas() || !initialized) return true;
     setScreenSize(event.getWidth(), event.getHeight());
+#ifdef ANDROID
+    int orientation = deviceorientation % 2;
+    int oldorientation = olddeviceorientation % 2;
+    if(gRenderer::getScreenScaling() >= G_SCREENSCALING_AUTO && oldorientation != orientation) {
+        int width = gRenderObject::getRenderer()->getUnitWidth();
+        int height = gRenderObject::getRenderer()->getUnitHeight();
+        if(oldorientation == orientation) {
+            gRenderer::setUnitScreenSize(width, height);
+        } else {
+            gRenderer::setUnitScreenSize(height, width);
+        }
+    }
+    olddeviceorientation = deviceorientation;
+#endif
     return false;
 }
 
@@ -584,6 +609,17 @@ bool gAppManager::onAppResumeEvent(gAppResumeEvent& event) {
     });
     return false;
 }
+
+bool gAppManager::onDeviceOrientationChangedEvent(gDeviceOrientationChangedEvent& event) {
+    deviceorientation = event.getOrientation();
+    if(usewindow && canvasmanager && canvasmanager->getCurrentCanvas()) {
+        canvasmanager->getCurrentCanvas()->onDeviceOrientationChange(event.getOrientation());
+    }
+    gWindowResizeEvent resizeevent{width, height};
+    eventhandler(resizeevent);
+    return false;
+}
+
 #endif
 
 void gAppManager::updateTime() {
