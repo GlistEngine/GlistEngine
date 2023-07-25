@@ -251,6 +251,7 @@ private:
 	bool isNumber(char c);
 	void findCursorPosition();
 	void findCursorPositionPassword();
+	void calculateLineCount();
 	bool selectionmode;
 	int selectionposchar1, selectionposchar2;
 	int selectionposx1, selectionposx2;
@@ -292,6 +293,7 @@ private:
 	gColor* textcolor;
 
 	bool widthexceeded;
+	int widthAdjusmentDelay;
 	
 	//undo stacks
 	std::stack<std::string> undostack;

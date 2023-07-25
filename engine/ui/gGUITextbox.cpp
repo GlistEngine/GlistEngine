@@ -103,6 +103,7 @@ gGUITextbox::gGUITextbox() {
 	textcolor = fontcolor;
 	
 	widthexceeded = false;
+	widthAdjusmentDelay = 0;
 }
 
 
@@ -244,6 +245,7 @@ bool gGUITextbox::isPassword() {
 }
 
 void gGUITextbox::update() {
+	if(widthAdjusmentDelay < 5) widthAdjusmentDelay++;
 	if(editmode) {
 		cursorshowcounter++;
 		if(cursorshowcounter >= cursorshowcounterlimit) {
@@ -287,11 +289,22 @@ void gGUITextbox::update() {
 	}
 
 	if(ismultiline && boxshrinked) {
-		for(int i = 0; i < linecount; i++) {
+		for(int i = 0; i < linecount; i++){
 			if(textfont->getStringWidth(lines[i]) >= width - 2 * initx) {
 				setText(text);
+				findCursorPosition();
+				setText(text);
+				break;
 			}
 		}
+	} else if(ismultiline && boxexpanded && widthAdjusmentDelay > 3) {
+		for(int i = 0; i < linecount; i++){
+			if(textfont->getStringWidth(lines[i]) < width - 2 * initx) {
+				setText(text);
+				break;
+			}
+		}
+		calculateLineCount();
 	}
 	boxshrinked = false;
 	boxexpanded = false;
@@ -303,6 +316,18 @@ void gGUITextbox::update() {
 
 	if(lastdrawnline > rowsnum) rowsnumexceeded = true;
 	else rowsnumexceeded = false;
+
+}
+
+void gGUITextbox::calculateLineCount() {
+	for(int i = linecount - 1; i >= 0 ; i--) {
+		if(lines[i] == "") {
+			if(lastdrawnline == linecount) lastdrawnline--;
+			if(currentline == linecount) currentline--;
+			linecount--;
+		}
+		else break;
+	}
 }
 
 void gGUITextbox::enableBackground(bool isEnabled) {
@@ -1638,7 +1663,7 @@ void gGUITextbox::calculateLines() {
 			linesize = text.substr(firstchar, linesize).find('\n');
 		}
 
-		if(boxshrinked && firstchar + linesize + 1 >= cursorposutf) {
+		if((boxshrinked || boxexpanded) && firstchar + linesize + 1 >= cursorposutf) {
 			cursorposx = textfont->getStringWidth(text.substr(firstchar, cursorposutf));
 		}
 
