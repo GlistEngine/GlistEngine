@@ -20,6 +20,11 @@
 class gGUIGrid: public gGUIScrollable {
 public:
 	struct Cell {
+	    enum {
+	    	TYPE_STRING,
+			TYPE_DIGIT
+	    };
+
 	    bool iscellselected;
 	    bool iscellaligned;
 	    int cellx;
@@ -34,7 +39,8 @@ public:
 	    float textmoveamount;
 	    std::string cellcontent;
 	    std::string showncontent;
-	    std::string celltype;
+	    std::string overflowcontent;
+	    int celltype;
 	    gColor cellfontcolor;
 	    Cell(){
 	    	iscellselected = false;
@@ -49,7 +55,8 @@ public:
 	    	textmoveamount = 0;
 	    	cellcontent = "";
 	    	showncontent = "";
-	    	celltype = "string";
+	    	overflowcontent = "";
+	    	celltype = TYPE_STRING;
 	    	cellfontcolor = fontcolor;
 	    }
 	};
@@ -88,7 +95,7 @@ public:
 	void setCellLine(int lineNo, bool clicked);
 	void setCopiedCell(Cell* cell);
 
-	Cell* getCell(int rowNo, int columnNo);
+	int getCell(int rowNo, int columnNo);
 
 	void drawContent();
 	void drawCellBackground();
@@ -102,8 +109,8 @@ public:
 	void drawTitleLines();
 	void drawCellContents();
 
-	void fillCell(int rowNo, int columnNo, std::string tempstr);
-	void createCells();
+	void fillCell(int cellNo, std::string tempstr);
+	void createCell(int rowNo, int columnNo);
 	void showCells();
 	void showCell(int rowNo, int columnNo);
 	void createTextBox();
@@ -123,8 +130,9 @@ public:
 private:
 	std::string fixTextFunction(std::string text, int index);
 	std::string fixNumeric(std::string text);
+	std::string fixOverflowText(Cell& thisCell, Cell& otherCell);
 	std::string getTextColumn(std::string text);
-	int getCellIndex(std::string text);
+	int getNearestFilledCell(int index);
 	float makeSum(int c1, int r1, int c2, int r2);
 	bool isNumeric(std::string text);
 	void addFunction(int functionType, int functionSender);
