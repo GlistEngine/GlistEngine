@@ -432,16 +432,35 @@ bool gAppManager::onWindowResizedEvent(gWindowResizeEvent& event) {
     if(!canvasmanager || !canvasmanager->getCurrentCanvas() || !initialized) return true;
     setScreenSize(event.getWidth(), event.getHeight());
 #ifdef ANDROID
-    int orientation = deviceorientation % 2;
-    int oldorientation = olddeviceorientation % 2;
-    if(gRenderer::getScreenScaling() >= G_SCREENSCALING_AUTO && oldorientation != orientation) {
-        int width = gRenderObject::getRenderer()->getUnitWidth();
-        int height = gRenderObject::getRenderer()->getUnitHeight();
-        if(oldorientation == orientation) {
-            gRenderer::setUnitScreenSize(width, height);
-        } else {
-            gRenderer::setUnitScreenSize(height, width);
-        }
+    if(gRenderer::getScreenScaling() >= G_SCREENSCALING_AUTO && olddeviceorientation != deviceorientation) {
+		DeviceOrientation orientation = deviceorientation;
+		DeviceOrientation oldorientation = olddeviceorientation;
+		// Normalize values
+		if(orientation == DEVICEORIENTATION_REVERSE_PORTRAIT) {
+			orientation = DEVICEORIENTATION_PORTRAIT;
+		} else if(orientation == DEVICEORIENTATION_REVERSE_LANDSCAPE) {
+			orientation = DEVICEORIENTATION_LANDSCAPE;
+		}
+		if(oldorientation == DEVICEORIENTATION_REVERSE_PORTRAIT) {
+			oldorientation = DEVICEORIENTATION_PORTRAIT;
+		} else if(oldorientation == DEVICEORIENTATION_REVERSE_LANDSCAPE) {
+			oldorientation = DEVICEORIENTATION_LANDSCAPE;
+		}
+
+		bool swapdimensions = oldorientation != orientation;
+		if((orientation != DEVICEORIENTATION_PORTRAIT && orientation != DEVICEORIENTATION_LANDSCAPE) ||
+			(oldorientation != DEVICEORIENTATION_PORTRAIT && oldorientation != DEVICEORIENTATION_LANDSCAPE)) {
+			// If this orientation is not known, we should not do anything
+			swapdimensions = false;
+		}
+
+		// Orientation changed, we should swap height and width
+		if(swapdimensions) {
+			int unitwidth = gRenderObject::getRenderer()->getUnitWidth();
+			int unitheight = gRenderObject::getRenderer()->getUnitHeight();
+			// Swap width and height values
+			gRenderer::setUnitScreenSize(unitheight, unitwidth);
+		}
     }
     olddeviceorientation = deviceorientation;
 #endif
