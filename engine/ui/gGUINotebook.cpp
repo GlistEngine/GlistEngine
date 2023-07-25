@@ -6,7 +6,6 @@
  */
 
 #include <gGUINotebook.h>
-
 gGUINotebook::gGUINotebook() {
 	loadFont();
 	topbarh = tabsizersh + 1;
@@ -24,12 +23,13 @@ void gGUINotebook::draw() {
 	isslidingleft = false;
 	if(istitlevisible) {
 		topbarh = titleh + tabsizersh + 1;
-		renderer->setColor(foregroundcolor);
+		renderer->setColor(backgroundcolor);
 		gDrawRectangle(left, top, width, titleh, true);
 		renderer->setColor(fontcolor);
 		font->drawText(title, left + 2, top + 12);
 		tablinetop = titleh;
 	}
+
 	renderer->setColor(middlegroundcolor);
 	gDrawRectangle(left, top + tablinetop, width, tabsizersh, true);
 	renderer->setColor(foregroundcolor);
@@ -84,11 +84,13 @@ void gGUINotebook::draw() {
 				x = x - tabsize;
 			}
 		}
-		renderer->setColor(color);
-		fbo.unbind();
-		fbo.drawSub(left, top, left, top, width, height);
 		guisizer->draw();
 	}
+
+	renderer->setColor(color);
+	fbo.unbind();
+//	fbo.drawSub(left, top, 0, 0, width, height);
+	fbo.draw(0, 0);
 }
 
 void gGUINotebook::set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIObject* parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h) {
@@ -327,3 +329,10 @@ void gGUINotebook::addSizerToDeque(gGUISizer* guiSizer, std::string sizerLabel) 
 	guisizers.push_back(guiSizer);
 	quisizerlabels.push_back(sizerLabel);
 }
+
+void gGUINotebook::setActiveTab(int index) {
+    if (index >= 0 && index < guisizers.size()) {
+        setSizerFromDeque(index);
+    }
+}
+
