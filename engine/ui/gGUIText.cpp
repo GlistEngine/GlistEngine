@@ -12,7 +12,8 @@ gGUIText::gGUIText() {
     textalignment = TEXTALIGNMENT_LEFT;
     text = "";
     fontsize = font->getSize();
-    lineh = 14 * fontsize / 10;
+    linespacingfactor = 0.4f;
+	lineh = fontsize + (fontsize * linespacingfactor);
     width = 0;
     linenum = 0;
 }
@@ -22,6 +23,9 @@ gGUIText::~gGUIText() {
 
 void gGUIText::set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIObject* parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h) {
     gGUIControl::set(root, topParentGUIObject, parentGUIObject, parentSlotLineNo, parentSlotColumnNo, x, y, w, h);
+    fontsize = font->getSize();
+    linespacingfactor = 0.4f;
+	lineh = fontsize + (fontsize * linespacingfactor);
     resetText();
 }
 

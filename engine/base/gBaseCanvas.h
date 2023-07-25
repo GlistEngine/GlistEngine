@@ -41,6 +41,10 @@ public:
 
 	virtual void onEvent(gEvent& event);
 
+#ifdef ANDROID
+  virtual void onDeviceOrientationChange(DeviceOrientation deviceorientation);
+#endif
+
 	virtual void showNotify();
 	virtual void hideNotify();
 

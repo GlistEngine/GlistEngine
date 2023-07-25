@@ -34,7 +34,9 @@
 class gLight;
 //#include "gLight.h"
 
-#ifdef DEBUG
+// You can define ENGINE_OPENGL_CHECKS to enable OpenGL checks
+// without debugging.
+#if defined(DEBUG) || defined(ENGINE_OPENGL_CHECKS)
 #define G_CHECK_GL(a) gCheckGLErrorAndPrint("Previously Unhandled ", __PRETTY_FUNCTION__, __LINE__); a; gCheckGLErrorAndPrint("", __PRETTY_FUNCTION__, __LINE__)
 #define G_CHECK_GL2(value, fn) gCheckGLErrorAndPrint("Previously Unhandled ", __PRETTY_FUNCTION__, __LINE__); value = fn; gCheckGLErrorAndPrint("", __PRETTY_FUNCTION__, __LINE__)
 #else
