@@ -21,7 +21,6 @@
 #include <iostream>
 #include <vector>
 #include "gMesh.h"
-#include "gModel.h"
 
 
 class gMorphingMesh : public gMesh {
@@ -31,34 +30,34 @@ public:
 
 	/*
 	 * @brief adds the given targetmesh's specific attributes to the vectors.
-	 * @param targetmesh is a pointer to the desired target mesh.
+	 * @param targetMesh is a pointer to the desired target mesh.
 	 */
-	int addTargetMesh(gMesh *targetmesh);
+	int addTargetMesh(gMesh *targetMesh);
 
 	/*
 	 * @brief sets the base mesh which is going to be used during interpolation.
-	 * @param basemesh is the base mesh's pointer.
+	 * @param baseMesh is the base mesh's pointer.
 	 */
-	void setBaseMesh(gMesh *basemesh);
+	void setBaseMesh(gMesh *baseMesh);
 
 	/*
 	 * @brief sets the current target mesh id to the given id if it is valid. Else it doesn't set.
-	 * @param currenttargetmeshid is the id of target mesh which is going to be used during interpolation.
+	 * @param targetMeshId is the id of the desired target mesh.
 	 */
-	void setCurrentTargetMeshId(int currenttargetmeshid);
+	void setCurrentTargetMeshId(int targetMeshId);
 
 	/*
-	 * @brief sets the current frame id.
-	 * @param frameid is the desired frame id to change with original.
+	 * @brief sets the current frame id to the desired id.
+	 * @param frameId is the desired frame id.
 	 */
-	void setCurrentFrameId(int frameid);
+	void setCurrentFrameId(int frameId);
 
 	/*
 	 * @brief sets the desired target mesh's frame count which is the beyond of interpolation.
-	 * @param targetmeshid is the target mesh which will be affected by this function.
-	 * @param framecount is the desired framecount.
+	 * @param targetMeshId is the target mesh which will be affected by this function.
+	 * @param frameCount is the desired framecount.
 	 */
-	void setFrameCount(int targetmeshid, int framecount);
+	void setFrameCount(int targetMeshId, int frameCount);
 
 	/*
 	 * @brief sets the frame jump speed.
@@ -68,19 +67,25 @@ public:
 
 	/*
 	 * @brief sets position at the given indices to the new one.
-	 * @param targetid is the target mesh's index.
-	 * @param vertxid is one of the target mesh's position's index.
-	 * @param newposition is the desired position.
+	 * @param targetId is the target mesh's index.
+	 * @param positionId is one of the target mesh's position's index.
+	 * @param newPosition is the desired position.
 	 */
-	void setTargetPosition(int targetid, int positionid, glm::vec3 newposition);
+	void setTargetPosition(int targetId, int positionId, glm::vec3 newPosition);
 
 	/*
 	 * @brief sets normal at the given indices to the new one.
-	 * @param targetid is the target mesh's index.
-	 * @param vertxid is one of the target mesh's normal's index.
-	 * @param newnormal is the desired normal.
+	 * @param targetId is the target mesh's index.
+	 * @param normalId is one of the target mesh's normal's index.
+	 * @param newNormal is the desired normal.
 	 */
-	void setTargetNormal(int targetid, int normalid, glm::vec3 newnormal);
+	void setTargetNormal(int targetId, int normalId, glm::vec3 newNormal);
+
+	/*
+	 * @brief sets all the glm vectors of normals and positions to zero vector.
+	 * @param targetId is the target mesh's index.
+	 */
+	void resetTargetData(int targetId);
 
 	/*
 	 * @brief jumps frames as many as the given value of the speed variable.
@@ -98,9 +103,10 @@ public:
 	int getCurrentFrameId();
 
 	/*
-	 * @brief returns the given target mesh's frame count.
+	 * @brief returns the desired target mesh's frame count.
+	 * @param targetMeshId is the desired target mesh id.
 	 */
-	int getFrameCount(int targetmeshid);
+	int getFrameCount(int targetMeshId);
 
 	/*
 	 * @brief returns the current target mesh's frame count.
@@ -118,9 +124,26 @@ public:
 	int getSpeed();
 
 	/*
-	 * @brief interpolates the vertices in base and target meshes' from base's to target's meshes.
+	 * @brief returns the desired target position.
+	 * @param targetId is the desired target mesh's id.
+	 * @param positionId is the desired position's id.
+	 * @return returns the constant reference of the desired position as a glm::vec3.
 	 */
-	void interpolate();
+	const glm::vec3& getTargetPosition(int targetId, int positionId);
+
+	/*
+	 * @brief returns the desired target normal.
+	 * @param targetId is the desired target mesh's id.
+	 * @param positionId is the desired normal's id.
+	 * @return returns the constant reference of the desired normal as a glm::vec3.
+	 */
+	const glm::vec3& getTargetNormal(int targetId, int normalId);
+
+	/*
+	 * @brief interpolates the vertices in base and target meshes' from base's to target's meshes.
+	 * @param ignoreChecks is an indicator if it checks the current target mesh and current frame are as last interpolate.
+	 */
+	void interpolate(bool forceInterpolation = true);
 
 private:
 	//The loaded target meshes' positions which are the end points of interpolation.
@@ -128,7 +151,7 @@ private:
 	//The current target mesh(that is going to be end point of interpolation)'s index on the targetpositions vector.
 	//The current frame id indicates how much should the interpolation progress.
 	//The speed is used in function nextFrame which adjusts the frame automatically as a jump indicator.
-	int currenttargetmeshid, currentframeid, speed;
+	int currenttargetmeshid, currentframeid, speed, oldtargetmeshid, oldframeid;
 	std::vector<int> framecounts;
 	//The base mesh which is the begin point of interpolation.
 	gMesh *basemesh;
