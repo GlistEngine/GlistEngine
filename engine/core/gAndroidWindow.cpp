@@ -26,13 +26,13 @@ gAndroidWindow::~gAndroidWindow() {
 void gAndroidWindow::initialize(int uwidth, int uheight, int windowMode, bool isResizable) {
     gLogi("gAndroidWindow") << "initialize";
 	const EGLint attribs[] = {
-			EGL_RENDERABLE_TYPE, EGL_OPENGL_ES3_BIT, // request OpenGL ES 3.0
-            EGL_SURFACE_TYPE, EGL_WINDOW_BIT,
-            EGL_BLUE_SIZE, 8,
-            EGL_GREEN_SIZE, 8,
-            EGL_RED_SIZE, 8,
-            EGL_DEPTH_SIZE, 16,
-            EGL_NONE
+		EGL_RENDERABLE_TYPE, EGL_OPENGL_ES3_BIT, // request OpenGL ES 3.0
+		EGL_SURFACE_TYPE, EGL_WINDOW_BIT,
+		EGL_BLUE_SIZE, 8,
+		EGL_GREEN_SIZE, 8,
+		EGL_RED_SIZE, 8,
+		EGL_DEPTH_SIZE, 16,
+		EGL_NONE
 	};
 	EGLConfig config;
 	EGLint numConfigs;
@@ -40,12 +40,12 @@ void gAndroidWindow::initialize(int uwidth, int uheight, int windowMode, bool is
 
 	if ((display = eglGetDisplay(EGL_DEFAULT_DISPLAY)) == EGL_NO_DISPLAY) {
 		gLogi("gAndroidWindow") << "eglGetDisplay() returned error " << eglGetError();
-        exit(-1);
+		exit(-1);
 		return;
 	}
 	if (!eglInitialize(display, 0, 0)) {
 		gLogi("gAndroidWindow") << "eglInitialize() returned error " << eglGetError();
-        exit(-1);
+		exit(-1);
 		return;
 	}
 
@@ -111,22 +111,22 @@ bool gAndroidWindow::getShouldClose() {
 
 void gAndroidWindow::update() {
     if(!isrendering) {
-        return;
+		return;
     }
 	if(!eglSwapBuffers(display, surface)) {
-        EGLint err = eglGetError();
-        if(err == EGL_BAD_SURFACE) {
-            isrendering = false;
+		EGLint err = eglGetError();
+		if(err == EGL_BAD_SURFACE) {
+			isrendering = false;
 			close();
-            return;
-        }
+			return;
+		}
 		gLogi("gAndroidWindow") << "eglSwapBuffers() returned error " << err;
 	}
 }
 
 void gAndroidWindow::close() {
     if(!display) {
-        return;
+		return;
     }
     isrendering = false;
     gLogi("gAndroidWindow") << "close";
@@ -175,28 +175,28 @@ bool gAndroidWindow::onTouchCallback(int pointerCount, int* fingerIds, int* x, i
 }
 
 void gAndroidWindow::resize() {
-    if(!eglQuerySurface(display, surface, EGL_WIDTH, &width) ||
-        !eglQuerySurface(display, surface, EGL_HEIGHT, &height)) {
-        gLogi("gAndroidWindow") << "eglQuerySurface() returned error " << eglGetError();
-        close();
-        return;
-    }
-    glViewport(0, 0, width, height);
-    setSize(width, height);
+	if(!eglQuerySurface(display, surface, EGL_WIDTH, &width) ||
+		!eglQuerySurface(display, surface, EGL_HEIGHT, &height)) {
+		gLogi("gAndroidWindow") << "eglQuerySurface() returned error " << eglGetError();
+		close();
+		return;
+	}
+	glViewport(0, 0, width, height);
+	setSize(width, height);
 }
 
 extern "C" {
 JNIEXPORT void JNICALL Java_dev_glist_android_lib_GlistNative_setSurface(JNIEnv *env, jclass clazz, jobject surface) {
 	if (surface != nullptr) {
 		gAndroidWindow::nativewindow = ANativeWindow_fromSurface(env, surface);
-        if(window) {
-            appmanager->submitToMainThread([]() {
-                if(!window) {
-                    return;
-                }
-                window->resize();
-            });
-        }
+		if(window) {
+			appmanager->submitToMainThread([]() {
+				if(!window) {
+					return;
+				}
+				window->resize();
+			});
+		}
 	} else {
 		if(window) {
 			window->close();
