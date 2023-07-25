@@ -7,6 +7,7 @@ var classgAndroidWindow =
     [ "getShouldClose", "classgAndroidWindow.html#a06e9292e89eae540bef6476a81e069a3", null ],
     [ "initialize", "classgAndroidWindow.html#a246e1108eb1ccc39171855deb4b7c5c1", null ],
     [ "onTouchCallback", "classgAndroidWindow.html#a89476d9c86ab292d7db0a71cdd1b40e9", null ],
+    [ "resize", "classgAndroidWindow.html#af4040938ddcfc65b54e40f5dd793d43c", null ],
     [ "setClipboardString", "classgAndroidWindow.html#a2d89961ab063f083ebb604a181fb1e6f", null ],
     [ "setCursor", "classgAndroidWindow.html#a367d32163b6ecae944aab4c3825b645b", null ],
     [ "setCursorMode", "classgAndroidWindow.html#a310a501365cd146f07a821f6d2987f96", null ],

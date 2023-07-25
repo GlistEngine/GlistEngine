@@ -1,5 +1,6 @@
 var NAVTREEINDEX8 =
 {
+"classgNode.html#aeb966c8d571f6d817c1c9298ddfc997d":[0,0,121,2],
 "classgNode.html#aff1f76374f156e7cb1d0107ca4d949e9":[0,0,121,3],
 "classgObject.html":[0,0,122],
 "classgObject.html#a03b1c7b33a01c762a726c152c11a0fa9":[0,0,122,5],
@@ -248,6 +249,5 @@ var NAVTREEINDEX8 =
 "classgShadowMap.html":[0,0,135],
 "classgShadowMap.html#a1013009e98b0b497d426683d18e2b774":[0,0,135,11],
 "classgShadowMap.html#a13424049b5cd947863b51d50e4466b01":[0,0,135,9],
-"classgShadowMap.html#a1bba969e8e5d9877813a05e16c683682":[0,0,135,3],
-"classgShadowMap.html#a408742936de2655425fab25c7d2a903e":[0,0,135,4]
+"classgShadowMap.html#a1bba969e8e5d9877813a05e16c683682":[0,0,135,3]
 };

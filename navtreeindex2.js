@@ -1,5 +1,6 @@
 var NAVTREEINDEX2 =
 {
+"classgColor.html#aa98cf0a78ff9bb7fe73aa9d330624bbf":[0,0,25,7],
 "classgColor.html#ac6bf016844ba31d70417e9e611005ff1":[0,0,25,6],
 "classgColor.html#ae67c8087dd63578cac179efab1f260d5":[0,0,25,8],
 "classgColor.html#af5f4eb9ab4ef0f713bb30a3565a35b15":[0,0,25,0],
@@ -248,6 +249,5 @@ var NAVTREEINDEX2 =
 "classgGUIButton.html#afbba78f123bea6029f2d302f9782a5cc":[0,0,48,24],
 "classgGUIButton.html#afc99fa00ee92bbcce412a4d853ce9b8d":[0,0,48,20],
 "classgGUICandleStickChart.html":[0,0,49],
-"classgGUICandleStickChart.html#a0b3f2bd19fd8cbc11f1b55f3db79a990":[0,0,49,15],
-"classgGUICandleStickChart.html#a1310bf56b9d80ef3aa490eda67040ce7":[0,0,49,12]
+"classgGUICandleStickChart.html#a0b3f2bd19fd8cbc11f1b55f3db79a990":[0,0,49,15]
 };

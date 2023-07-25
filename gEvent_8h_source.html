@@ -119,81 +119,82 @@ $(document).ready(function(){initNavTree('gEvent_8h_source.html',''); initResiza
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    EventTypeAppPause,</div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    EventTypeAppResume,</div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    EventTypeTouch,</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;};</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160; </div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="preprocessor">#define BIT(x) (1 &lt;&lt; x)</span></div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="keyword">enum</span> EventCategory {</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    EventCategoryApp = BIT(0),</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    EventCategoryInput = BIT(1),</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    EventCategoryKeyboard = BIT(2),</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    EventCategoryMouse = BIT(3),</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    EventCategoryMouseButton = BIT(4),</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    EventCategoryJoystick = BIT(5),</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    EventCategoryTouchscreen = BIT(6),</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    EventCategoryRenderer = BIT(7),</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;};</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="preprocessor">#undef BIT</span></div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160; </div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="comment">/*</span></div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="comment"> * Events are more future proof, in case anything new is added to an event</span></div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="comment"> * developers doesn&#39;t have to update their function parameters.</span></div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="comment"> */</span></div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160; </div>
-<div class="line"><a name="l00055"></a><span class="lineno"><a class="line" href="classgEvent.html">   55</a></span>&#160;<span class="keyword">class </span><a class="code" href="classgEvent.html">gEvent</a> {</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;  <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <span class="keyword">virtual</span> ~<a class="code" href="classgEvent.html">gEvent</a>() = <span class="keywordflow">default</span>;</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160; </div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    <span class="keywordtype">bool</span> ishandled = <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160; </div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <span class="keyword">virtual</span> <span class="keyword">const</span> <span class="keywordtype">char</span>* getEventName() <span class="keyword">const</span> = 0;</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    <span class="keyword">virtual</span> EventType getEventType() <span class="keyword">const</span> = 0;</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">int</span> getCategoryFlags() <span class="keyword">const</span> = 0;</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160; </div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <span class="keywordtype">bool</span> isInCategory(EventCategory category) {</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;        <span class="keywordflow">return</span> getCategoryFlags() &amp; category;</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    }</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;};</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160; </div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<span class="keyword">typedef</span> std::function&lt;void(<a class="code" href="classgEvent.html">gEvent</a>&amp;)&gt; EventHandlerFn;</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160; </div>
-<div class="line"><a name="l00089"></a><span class="lineno"><a class="line" href="classgEventDispatcher.html">   89</a></span>&#160;<span class="keyword">class </span><a class="code" href="classgEventDispatcher.html">gEventDispatcher</a> {</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;  <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    <a class="code" href="classgEventDispatcher.html">gEventDispatcher</a>(<a class="code" href="classgEvent.html">gEvent</a>&amp; event)</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;        : event(event) {</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    }</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160; </div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    <span class="comment">// F will be deduced by the compiler</span></div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span> F&gt;</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    <span class="keywordtype">bool</span> dispatch(<span class="keyword">const</span> F&amp; func) {</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;        <span class="keywordflow">if</span> (event.getEventType() == T::getStaticType()) {</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;            <span class="keyword">event</span>.ishandled |= func(<span class="keyword">static_cast&lt;</span>T&amp;<span class="keyword">&gt;</span>(event));</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;            <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;        }</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    }</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160; </div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;  <span class="keyword">private</span>:</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    <a class="code" href="classgEvent.html">gEvent</a>&amp; event;</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;};</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160; </div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;<span class="preprocessor">#define G_EVENT_CLASS_TYPE(type)                                                \</span></div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;<span class="preprocessor">  static EventType getStaticType() { return EventType::type; }                \</span></div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;<span class="preprocessor">  virtual EventType getEventType() const override { return getStaticType(); } \</span></div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;<span class="preprocessor">  virtual const char* getEventName() const override { return #type; }</span></div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160; </div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;<span class="preprocessor">#define G_EVENT_CLASS_CATEGORY(category) \</span></div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;<span class="preprocessor">  virtual int getCategoryFlags() const override { return category; }</span></div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160; </div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    EventTypeDeviceOrientationChanged</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;};</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160; </div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="preprocessor">#define BIT(x) (1 &lt;&lt; x)</span></div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="keyword">enum</span> EventCategory {</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    EventCategoryApp = BIT(0),</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    EventCategoryInput = BIT(1),</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    EventCategoryKeyboard = BIT(2),</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    EventCategoryMouse = BIT(3),</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    EventCategoryMouseButton = BIT(4),</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    EventCategoryJoystick = BIT(5),</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    EventCategoryTouchscreen = BIT(6),</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    EventCategoryRenderer = BIT(7),</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;};</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="preprocessor">#undef BIT</span></div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160; </div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="comment">/*</span></div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="comment"> * Events are more future proof, in case anything new is added to an event</span></div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="comment"> * developers doesn&#39;t have to update their function parameters.</span></div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="comment"> */</span></div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160; </div>
+<div class="line"><a name="l00056"></a><span class="lineno"><a class="line" href="classgEvent.html">   56</a></span>&#160;<span class="keyword">class </span><a class="code" href="classgEvent.html">gEvent</a> {</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;  <span class="keyword">public</span>:</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    <span class="keyword">virtual</span> ~<a class="code" href="classgEvent.html">gEvent</a>() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160; </div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <span class="keywordtype">bool</span> ishandled = <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160; </div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    <span class="keyword">virtual</span> <span class="keyword">const</span> <span class="keywordtype">char</span>* getEventName() <span class="keyword">const</span> = 0;</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <span class="keyword">virtual</span> EventType getEventType() <span class="keyword">const</span> = 0;</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">int</span> getCategoryFlags() <span class="keyword">const</span> = 0;</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160; </div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    <span class="keywordtype">bool</span> isInCategory(EventCategory category) {</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;        <span class="keywordflow">return</span> getCategoryFlags() &amp; category;</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    }</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;};</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160; </div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<span class="keyword">typedef</span> std::function&lt;void(<a class="code" href="classgEvent.html">gEvent</a>&amp;)&gt; EventHandlerFn;</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160; </div>
+<div class="line"><a name="l00090"></a><span class="lineno"><a class="line" href="classgEventDispatcher.html">   90</a></span>&#160;<span class="keyword">class </span><a class="code" href="classgEventDispatcher.html">gEventDispatcher</a> {</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;  <span class="keyword">public</span>:</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    <a class="code" href="classgEventDispatcher.html">gEventDispatcher</a>(<a class="code" href="classgEvent.html">gEvent</a>&amp; event)</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;        : event(event) {</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    }</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160; </div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    <span class="comment">// F will be deduced by the compiler</span></div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span> F&gt;</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    <span class="keywordtype">bool</span> dispatch(<span class="keyword">const</span> F&amp; func) {</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;        <span class="keywordflow">if</span> (event.getEventType() == T::getStaticType()) {</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;            <span class="keyword">event</span>.ishandled |= func(<span class="keyword">static_cast&lt;</span>T&amp;<span class="keyword">&gt;</span>(event));</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;            <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;        }</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    }</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160; </div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;  <span class="keyword">private</span>:</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    <a class="code" href="classgEvent.html">gEvent</a>&amp; event;</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;};</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160; </div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;<span class="preprocessor">#define G_EVENT_CLASS_TYPE(type)                                                \</span></div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;<span class="preprocessor">  static EventType getStaticType() { return EventType::type; }                \</span></div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;<span class="preprocessor">  virtual EventType getEventType() const override { return getStaticType(); } \</span></div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;<span class="preprocessor">  virtual const char* getEventName() const override { return #type; }</span></div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160; </div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;<span class="preprocessor">#define G_EVENT_CLASS_CATEGORY(category) \</span></div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;<span class="preprocessor">  virtual int getCategoryFlags() const override { return category; }</span></div>
 <div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160; </div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;<span class="comment">// This macro can be used instead of std::bind function call.</span></div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;<span class="comment">// G_BIND_FUNCTION can be used to bind class methods. While G_BIND_GLOBAL_FUNCTION can be used to bind global functions without a class.</span></div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;<span class="preprocessor">#define G_BIND_FUNCTION(fn) [this](auto&amp;&amp;... args) -&gt; decltype(auto) { return this-&gt;fn(std::forward&lt;decltype(args)&gt;(args)...); }</span></div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;<span class="preprocessor">#define G_BIND_GLOBAL_FUNCTION(fn) [](auto&amp;&amp;... args) -&gt; decltype(auto) { return fn(std::forward&lt;decltype(args)&gt;(args)...); }</span></div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160; </div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* GEVENT_H_ */</span><span class="preprocessor"></span></div>
-<div class="ttc" id="aclassgEventDispatcher_html"><div class="ttname"><a href="classgEventDispatcher.html">gEventDispatcher</a></div><div class="ttdef"><b>Definition:</b> gEvent.h:89</div></div>
-<div class="ttc" id="aclassgEvent_html"><div class="ttname"><a href="classgEvent.html">gEvent</a></div><div class="ttdef"><b>Definition:</b> gEvent.h:55</div></div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160; </div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;<span class="comment">// This macro can be used instead of std::bind function call.</span></div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;<span class="comment">// G_BIND_FUNCTION can be used to bind class methods. While G_BIND_GLOBAL_FUNCTION can be used to bind global functions without a class.</span></div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;<span class="preprocessor">#define G_BIND_FUNCTION(fn) [this](auto&amp;&amp;... args) -&gt; decltype(auto) { return this-&gt;fn(std::forward&lt;decltype(args)&gt;(args)...); }</span></div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;<span class="preprocessor">#define G_BIND_GLOBAL_FUNCTION(fn) [](auto&amp;&amp;... args) -&gt; decltype(auto) { return fn(std::forward&lt;decltype(args)&gt;(args)...); }</span></div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160; </div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* GEVENT_H_ */</span><span class="preprocessor"></span></div>
+<div class="ttc" id="aclassgEventDispatcher_html"><div class="ttname"><a href="classgEventDispatcher.html">gEventDispatcher</a></div><div class="ttdef"><b>Definition:</b> gEvent.h:90</div></div>
+<div class="ttc" id="aclassgEvent_html"><div class="ttname"><a href="classgEvent.html">gEvent</a></div><div class="ttdef"><b>Definition:</b> gEvent.h:56</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

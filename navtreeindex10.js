@@ -1,5 +1,6 @@
 var NAVTREEINDEX10 =
 {
+"classgWhiteBalance.html":[0,0,153],
 "classgWhiteBalance.html#a4a4c798c7f480eca23aff77a79721857":[0,0,153,3],
 "classgWhiteBalance.html#a73d1de622aabfcd9ed83c6d1827df919":[0,0,153,2],
 "classgWhiteBalance.html#a8165820b0db38a930dcb26f3eac888d2":[0,0,153,0],
@@ -18,8 +19,8 @@ var NAVTREEINDEX10 =
 "classgWindowResizeEvent.html#a12037a9797b82a2efcd950a2e740f344":[0,0,158,2],
 "classgWindowResizeEvent.html#a303c8759dad7cdd6f914b71c1821c6d2":[0,0,158,0],
 "files.html":[1,0],
-"functions.html":[0,3,0,0],
 "functions.html":[0,3,0],
+"functions.html":[0,3,0,0],
 "functions_b.html":[0,3,0,1],
 "functions_c.html":[0,3,0,2],
 "functions_d.html":[0,3,0,3],
