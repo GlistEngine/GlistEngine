@@ -27,6 +27,8 @@ public:
 
 	    bool iscellselected;
 	    bool iscellaligned;
+	    bool isbold;
+	    bool isitalic;
 	    int cellx;
 	    int celly;
 	    int cellrowno;
@@ -46,9 +48,11 @@ public:
 	    Cell(){
 	    	iscellselected = false;
 	    	iscellaligned = false;
+	    	isbold = false;
+	    	isitalic = false;
 	    	cellx = -1;
 	    	celly = -1;
-	    	fontnum = gGUIManager::FONT_REGULAR;
+	    	fontnum = gGUIManager::FONT_FREESANS;
 	    	fontstate = gGUIManager::FONT_REGULAR;
 	    	cellalignment = gBaseGUIObject::TEXTALIGNMENT_LEFT;
 	    	lineno = TEXTLINE_NONE;
