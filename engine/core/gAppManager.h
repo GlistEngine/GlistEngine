@@ -155,6 +155,8 @@ public:
     ~gAppManager();
 
 	// Main application
+	void runApp();
+
     void initialize();
 	void setup();
     void loop();
