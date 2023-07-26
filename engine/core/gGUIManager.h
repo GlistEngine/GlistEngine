@@ -40,10 +40,10 @@ public:
 	static const int fonttypenum = 4;
 
 	enum {
-		FONT_REGULAR,
-		FONT_BOLD,
-		FONT_ITALIC,
-		FONT_BOLDITALIC
+		FONTTYPE_REGULAR,
+		FONTTYPE_BOLD,
+		FONTTYPE_ITALIC,
+		FONTTYPE_BOLDITALIC
 	};
 
 	enum {
@@ -56,7 +56,7 @@ public:
 	void setTheme(int guiTheme);
 	int getTheme();
 
-	gFont* getFont(int fontNum, int fontType = FONT_REGULAR);
+	gFont* getFont(int fontNum, int fontType = FONTTYPE_REGULAR);
 
 	void setCurrentFrame(gGUIFrame* currentFrame);
 	void setCurrentFrame(gGUIFrame* currentFrame, int width, int height);

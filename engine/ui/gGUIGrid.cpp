@@ -192,9 +192,9 @@ void gGUIGrid::setCellFont(int fontNum) {
 	undocellstack.push(allcells.at(selectedbox));
 	undocellstack.top().showncontent = fixTextFunction(undocellstack.top().cellcontent, selectedbox);
 	allcells.at(selectedbox).fontnum = fontNum;
-	allcells.at(selectedbox).fontstate = gGUIManager::FONT_REGULAR;
-	if(allcells.at(selectedbox).isbold) allcells.at(selectedbox).fontstate += gGUIManager::FONT_BOLD;
-	if(allcells.at(selectedbox).isitalic) allcells.at(selectedbox).fontstate += gGUIManager::FONT_ITALIC;
+	allcells.at(selectedbox).fontstate = gGUIManager::FONTTYPE_REGULAR;
+	if(allcells.at(selectedbox).isbold) allcells.at(selectedbox).fontstate += gGUIManager::FONTTYPE_BOLD;
+	if(allcells.at(selectedbox).isitalic) allcells.at(selectedbox).fontstate += gGUIManager::FONTTYPE_ITALIC;
 	textbox.setTextFont(manager->getFont(allcells.at(selectedbox).fontnum, allcells.at(selectedbox).fontstate));
 }
 
@@ -487,7 +487,7 @@ void gGUIGrid::operateFunction(int functionNum) {
 void gGUIGrid::makeDefaultCell() {
 	allcells.at(selectedbox).iscellselected = false;
 	allcells.at(selectedbox).iscellaligned = false;
-	allcells.at(selectedbox).fontnum = gGUIManager::FONT_REGULAR;
+	allcells.at(selectedbox).fontnum = gGUIManager::FONTTYPE_REGULAR;
 	allcells.at(selectedbox).cellalignment = gBaseGUIObject::TEXTALIGNMENT_LEFT;
 	allcells.at(selectedbox).lineno = TEXTLINE_NONE;
 	allcells.at(selectedbox).cellh = 30.0f;
