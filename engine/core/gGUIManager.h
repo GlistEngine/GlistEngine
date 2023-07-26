@@ -37,7 +37,7 @@ class gGUIManager {
 public:
 	static const int GUITHEME_LIGHT = 0, GUITHEME_DARK = 1, GUITHEME_LIGHTBLUE = 2, GUITHEME_DARKBLUE = 3;
 	static const int fontnum = 1;
-	static const int fontfeatures = 4;
+	static const int fonttypenum = 4;
 
 	enum {
 		FONT_REGULAR,
@@ -101,7 +101,7 @@ private:
 	gColor themebuttonfontcolor[themenum];
 	gColor themepressedbuttonfontcolor[themenum];
 	gColor themedisabledbuttonfontcolor[themenum];
-	gFont themefonts[fontnum][fontfeatures];
+	gFont themefonts[fontnum][fonttypenum];
 	void loadThemes();
 	void resetTheme(int guiTheme);
 
