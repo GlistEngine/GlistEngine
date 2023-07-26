@@ -191,8 +191,23 @@ void gGUIGrid::checkCellType(int cellIndex) {
 void gGUIGrid::setCellFont(int fontNum) {
 	undocellstack.push(allcells.at(selectedbox));
 	undocellstack.top().showncontent = fixTextFunction(undocellstack.top().cellcontent, selectedbox);
-	allcells.at(selectedbox).fontnum = fontNum;
-	textbox.setTextFont(manager->getFont(fontNum));
+	if(allcells.at(selectedbox).fontstate & gGUIManager::FONT_BOLD && !(allcells.at(selectedbox).fontstate & gGUIManager::FONT_ITALIC)) allcells.at(selectedbox).fontnum = gGUIManager::FONT_BOLD;
+	else if(!(allcells.at(selectedbox).fontstate & gGUIManager::FONT_BOLD) && allcells.at(selectedbox).fontstate & gGUIManager::FONT_ITALIC) allcells.at(selectedbox).fontnum = gGUIManager::FONT_ITALIC;
+	else if(allcells.at(selectedbox).fontstate & gGUIManager::FONT_BOLD && allcells.at(selectedbox).fontstate & gGUIManager::FONT_ITALIC) allcells.at(selectedbox).fontnum = gGUIManager::FONT_BOLDITALIC;
+	else allcells.at(selectedbox).fontnum = gGUIManager::FONT_REGULAR;
+	textbox.setTextFont(manager->getFont(allcells.at(selectedbox).fontnum));
+}
+
+void gGUIGrid::setCellFontBold() {
+	if(allcells.at(selectedbox).fontstate & gGUIManager::FONT_BOLD) allcells.at(selectedbox).fontstate &= ~gGUIManager::FONT_BOLD;
+	else allcells.at(selectedbox).fontstate |= gGUIManager::FONT_BOLD;
+	setCellFont(allcells.at(selectedbox).fontnum);
+}
+
+void gGUIGrid::setCellFontItalic() {
+	if(allcells.at(selectedbox).fontstate & gGUIManager::FONT_ITALIC) allcells.at(selectedbox).fontstate &= ~gGUIManager::FONT_ITALIC;
+	else allcells.at(selectedbox).fontstate |= gGUIManager::FONT_ITALIC;
+	setCellFont(allcells.at(selectedbox).fontnum);
 }
 
 void gGUIGrid::setCellAlignment(int cellAlignment, bool clicked) {
@@ -809,6 +824,8 @@ void gGUIGrid::keyPressed(int key){
 		changeCell();
 		redocellstack.pop();
 	}
+	else if(key == G_KEY_B && ctrlpressed) setCellFontBold();
+	else if(key == G_KEY_I && ctrlpressed) setCellFontItalic();
 	else if((isselected || isrowselected || iscolumnselected) && (key == G_KEY_LEFT_CONTROL || key == G_KEY_RIGHT_CONTROL)) ctrlpressed = true;
 	else if((isselected || isrowselected || iscolumnselected) && (key == G_KEY_LEFT_SHIFT || key == G_KEY_RIGHT_SHIFT)) shiftpressed = true;
 	else if((isselected || isrowselected || iscolumnselected) && key != G_KEY_ENTER && key != G_KEY_UP && key != G_KEY_DOWN && key != G_KEY_RIGHT && key != G_KEY_LEFT && key != G_KEY_ESC && key != G_KEY_LEFT_SHIFT && key != G_KEY_RIGHT_SHIFT && key != G_KEY_F2) {

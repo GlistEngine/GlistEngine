@@ -32,15 +32,16 @@ public:
 	    int cellrowno;
 	    int cellcolumnno;
 	    int fontnum;
+	    int fontstate;
 	    int cellalignment;
 	    int lineno;
+	    int celltype;
 	    float cellh;
 	    float cellw;
 	    float textmoveamount;
 	    std::string cellcontent;
 	    std::string showncontent;
 	    std::string overflowcontent;
-	    int celltype;
 	    gColor cellfontcolor;
 	    Cell(){
 	    	iscellselected = false;
@@ -48,15 +49,16 @@ public:
 	    	cellx = -1;
 	    	celly = -1;
 	    	fontnum = gGUIManager::FONT_REGULAR;
+	    	fontstate = gGUIManager::FONT_REGULAR;
 	    	cellalignment = gBaseGUIObject::TEXTALIGNMENT_LEFT;
 	    	lineno = TEXTLINE_NONE;
+	    	celltype = TYPE_STRING;
 	    	cellh = 30.0f;
 	    	cellw = 80.0f;
 	    	textmoveamount = 0;
 	    	cellcontent = "";
 	    	showncontent = "";
 	    	overflowcontent = "";
-	    	celltype = TYPE_STRING;
 	    	cellfontcolor = fontcolor;
 	    }
 	};
@@ -90,6 +92,8 @@ public:
 	void setRowNum(int rowNum);
 	void setColumnNum(int columnNum);
 	void setCellFont(int fontNum);
+	void setCellFontBold();
+	void setCellFontItalic();
 	void setCellAlignment(int cellAlignment, bool clicked);
 	void setCellFontColor(gColor* fontColor);
 	void setCellLine(int lineNo, bool clicked);
