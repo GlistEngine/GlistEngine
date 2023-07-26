@@ -19,7 +19,6 @@
 #include "gGLFWWindow.h"
 #elif defined(ANDROID)
 #include "gAndroidWindow.h"
-#include "gipAndroid.h"
 #endif
 
 void gStartEngine(gBaseApp* baseApp, const std::string& appName, int windowMode, int width, int height, bool isResizable) {
@@ -33,7 +32,6 @@ void gStartEngine(gBaseApp* baseApp, const std::string& appName, int windowMode,
     gAppManager manager(appName, baseApp, width, height, windowMode, unitWidth, unitHeight, screenScaling, isResizable, G_LOOPMODE_NORMAL);
 	manager.runApp();
 #else
-    gipAndroid::onEngineStart();
     new gAppManager(appName, baseApp, width, height, windowMode, unitWidth, unitHeight, screenScaling, isResizable, G_LOOPMODE_NORMAL);
 #endif
 }

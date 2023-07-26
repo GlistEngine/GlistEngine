@@ -64,9 +64,6 @@ if(NOT WIN32)
 	set(MINGW64_DIR ${SYSZBIN_DIR}/mingw64)
 endif(NOT WIN32)
 endif()
-if(NOT DEFINED ANDROID_DIR)
-	set(ANDROID_DIR ${ZBIN_DIR}/android)
-endif()
 
 #configure_file( ${ENGINE_DIR}/gConfig.h.in ${CMAKE_BINARY_DIR}/generated/gConfig.h )
 
@@ -224,11 +221,6 @@ if(NOT ANDROID)
 		${MINGW64_DIR}/lib/sqlite3.c
 		${ENGINE_DIR}/core/backward.cpp
 		${ENGINE_DIR}/core/gGLFWWindow.cpp
-	)
-else()
-	list(APPEND SRC_FILES
-		${ENGINE_DIR}/core/gAndroidWindow.cpp
-		${ENGINE_DIR}/utils/gAndroidUtil.cpp
 	)
 endif(NOT ANDROID)
 
