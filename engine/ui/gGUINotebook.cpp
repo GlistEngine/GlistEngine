@@ -23,7 +23,7 @@ void gGUINotebook::draw() {
 	isslidingleft = false;
 	if(istitlevisible) {
 		topbarh = titleh + tabsizersh + 1;
-		renderer->setColor(backgroundcolor);
+		renderer->setColor(foregroundcolor);
 		gDrawRectangle(left, top, width, titleh, true);
 		renderer->setColor(fontcolor);
 		font->drawText(title, left + 2, top + 12);
