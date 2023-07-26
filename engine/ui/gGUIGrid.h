@@ -53,7 +53,7 @@ public:
 	    	cellx = -1;
 	    	celly = -1;
 	    	fontnum = gGUIManager::FONT_FREESANS;
-	    	fontstate = gGUIManager::FONT_REGULAR;
+	    	fontstate = gGUIManager::FONTTYPE_REGULAR;
 	    	cellalignment = gBaseGUIObject::TEXTALIGNMENT_LEFT;
 	    	lineno = TEXTLINE_NONE;
 	    	celltype = TYPE_STRING;
