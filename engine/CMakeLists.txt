@@ -227,9 +227,8 @@ if(NOT ANDROID)
 	)
 else()
 	list(APPEND SRC_FILES
-			${ANDROID_DIR}/libs/sqlite3.c
-			${ENGINE_DIR}/core/gAndroidWindow.cpp
-			${ENGINE_DIR}/utils/gAndroidUtil.cpp
+		${ENGINE_DIR}/core/gAndroidWindow.cpp
+		${ENGINE_DIR}/utils/gAndroidUtil.cpp
 	)
 endif(NOT ANDROID)
 
@@ -242,7 +241,7 @@ if(ANDROID)
 	)
 else()
 	add_library(GlistEngine SHARED
-			${SRC_FILES}
+		${SRC_FILES}
 	)
 endif()
 

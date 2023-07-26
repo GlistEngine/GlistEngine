@@ -15,7 +15,7 @@
 #include <android/asset_manager_jni.h>
 #include <android/asset_manager.h>
 #include <string>
-#include <gWindowEvents.h>
+#include "gWindowEvents.h"
 
 void androidMain();
 
