@@ -48,13 +48,13 @@ var NAVTREEINDEX =
 "classgColor.html#aa98cf0a78ff9bb7fe73aa9d330624bbf",
 "classgGUICandleStickChart.html#a1310bf56b9d80ef3aa490eda67040ce7",
 "classgGUIGraph.html#a291a35d8eb55d99011e0f3cc1298375c",
-"classgGUIPanel.html#a748e6cfc77a111bc30b2b6f6062776dc",
-"classgGUITextbox.html#aaf63a9747057101d493deaa78ddfe00b",
-"classgMaterial.html#a2661355c616f375b436cdceaa6ad13cf",
-"classgNode.html#ac9a321a61f691091d47fd566f21b2e9b",
-"classgShader.html#acdb7cb556bf02b0811370ab864b16bd9",
-"classgVbo.html#af3a7146a8acede0dc199ecd68fd2e353",
-"structgVertex.html#a8cdcce468b4c82eba1a8e4f82eb4e4a2"
+"classgGUIPanel.html",
+"classgGUITextbox.html#aa689bb1a1633dd1c03bf5a2cb0e8f652",
+"classgMaterial.html#a232742a6b0d11f3e901a174522ab3eed",
+"classgNode.html#abc954186b74b891086a754e59eda9230",
+"classgShader.html#aca29cff5650c2e994cd21d20ffef9654",
+"classgVbo.html#acd7dd67025e2ddd7220fd924ae3f28d4",
+"structgVertex.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
