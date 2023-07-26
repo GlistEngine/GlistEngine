@@ -129,6 +129,7 @@ set(SRC_FILES
 	${ENGINE_DIR}/graphics/primitives/gTriangle.cpp
 	${ENGINE_DIR}/graphics/primitives/gCylinder.cpp
 	${ENGINE_DIR}/graphics/primitives/gCone.cpp
+	${ENGINE_DIR}/graphics/primitives/gTube.cpp
 	${ENGINE_DIR}/graphics/gVbo.cpp
 	${ENGINE_DIR}/graphics/gFbo.cpp
 	${ENGINE_DIR}/graphics/gRay.cpp
