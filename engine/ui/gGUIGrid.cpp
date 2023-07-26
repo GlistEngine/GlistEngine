@@ -618,14 +618,14 @@ void gGUIGrid::drawSelectedBox() {
 
 void gGUIGrid::drawSelectedRow() {
 	renderer->setColor(0.0f, 1.0f, 0.0f, 1.0f);
-	gDrawRectangle(gridx + (gridboxw / 2) + 1 - firstx, gridy + gridboxh * selectedtitle + 1 - firsty, gridw - 2, gridboxh - 2, false);
-	gDrawRectangle(gridx + (gridboxw / 2) + gridw - 2 - 6 - firstx, gridy + gridboxh * selectedtitle + (gridboxh - 2) - 4 - firsty, 6, 6, true); // FLAG
+	gDrawRectangle(gridx + (gridboxw / 2) + 1 - firstx, gridy + gridboxh + gridboxh * allcells.at(selectedtitle).cellrowno + 1 - firsty, gridw - 2, gridboxh - 2, false);
+	gDrawRectangle(gridx + (gridboxw / 2) + gridw - 2 - 6 - firstx, gridy + gridboxh + gridboxh * allcells.at(selectedtitle).cellrowno + (gridboxh - 2) - 4 - firsty, 6, 6, true); // FLAG
 }
 
 void gGUIGrid::drawSelectedColumn() {
 	renderer->setColor(0.0f, 1.0f, 0.0f, 1.0f);
-	gDrawRectangle(gridx + (gridboxw / 2) + 1 + (gridboxw * (selectedtitle - 1)) - firstx, gridy + gridboxh + 1 - firsty, gridboxw - 2, gridh - 2, false);
-	gDrawRectangle(gridx + (gridboxw / 2) + (gridboxw * (selectedtitle - 1)) + gridboxw - 2 - 6 - firstx, gridy + gridboxh + gridh - 2 - 4 - firsty, 6, 6, true); // FLAG
+	gDrawRectangle(gridx + (gridboxw / 2) + 1 + (gridboxw * allcells.at(selectedtitle).cellcolumnno) - firstx, gridy + gridboxh + 1 - firsty, gridboxw - 2, gridh - 2, false);
+	gDrawRectangle(gridx + (gridboxw / 2) + (gridboxw * allcells.at(selectedtitle).cellcolumnno) + gridboxw - 2 - 6 - firstx, gridy + gridboxh + gridh - 2 - 4 - firsty, 6, 6, true); // FLAG
 }
 
 void gGUIGrid::drawTitleRowBackground() {
@@ -738,23 +738,37 @@ void gGUIGrid::mousePressed(int x, int y, int button) {
 				createCell((int)((pressedy - gridboxh + firsty * 2) / gridboxh), (int)((pressedx - (gridboxw / 2) + firstx * 2) / gridboxw));
 				index = allcells.size() - 1;
 			}
-			if(index != selectedbox) {
-				if(istextboxactive) changeCell();
-				if(index != selectedbox) allcells.at(selectedbox).iscellselected = false;
-				allcells.at(index).iscellselected = true;
-			}
+			if(istextboxactive) changeCell();
+			allcells.at(selectedbox).iscellselected = false;
+			allcells.at(index).iscellselected = true;
 			selectedbox = index;
 		}
 		else if(pressedx >= gridx - firstx && pressedx < gridx + (gridboxw / 2) - firstx && pressedy >= gridy + gridboxh - firsty && pressedy <= gridy + gridboxh + gridh - firsty) {
-			selectedtitle = ceil((pressedy + (firsty * 2)) / gridboxh) - 1;
-			selectedbox = columnnum * (selectedtitle - 1);
+			int index = getCell((int)((pressedy - gridboxh + firsty * 2) / gridboxh), 0);
+			if(index == -1) {
+				createCell((int)((pressedy - gridboxh + firsty * 2) / gridboxh), 0);
+				index = allcells.size() - 1;
+			}
+			if(istextboxactive) changeCell();
+			allcells.at(selectedbox).iscellselected = false;
+			allcells.at(index).iscellselected = true;
+			selectedtitle = index;
+			selectedbox = index;
 			isselected = false;
 			isrowselected = true;
 			iscolumnselected = false;
 		}
 		else if(pressedx >= gridx + (gridboxw / 2) - firstx && pressedx < gridx + (gridboxw / 2) + gridw - firstx && pressedy >= gridy - firsty && pressedy <= gridy + gridboxh - firsty) {
-			selectedtitle = ceil((pressedx - gridboxw / 2 + (firstx * 2)) / gridboxw);
-			selectedbox = selectedtitle - 1;
+			int index = getCell(0, (int)((pressedx - (gridboxw / 2) + firstx * 2) / gridboxw));
+			if(index == -1) {
+				createCell(0, (int)((pressedx - (gridboxw / 2) + firstx * 2) / gridboxw));
+				index = allcells.size() - 1;
+			}
+			if(istextboxactive) changeCell();
+			allcells.at(selectedbox).iscellselected = false;
+			allcells.at(index).iscellselected = true;
+			selectedtitle = index;
+			selectedbox = index;
 			isselected = false;
 			isrowselected = false;
 			iscolumnselected = true;
