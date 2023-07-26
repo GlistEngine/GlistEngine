@@ -11,6 +11,17 @@
 
 AAssetManager* gAndroidUtil::assets;
 JavaVM* javavm;
+jobject classloader;
+
+JavaString::JavaString(const std::string &string) {
+	env = gAndroidUtil::getJNIEnv();
+	str = (jstring) env->NewGlobalRef(env->NewStringUTF(string.c_str()));
+}
+
+JavaString::~JavaString() {
+	env = gAndroidUtil::getJNIEnv();
+	env->DeleteGlobalRef(str);
+}
 
 AAsset* gAndroidUtil::loadAsset(const std::string &path, int mode) {
 	return AAssetManager_open(assets, path.c_str(), mode);
@@ -53,12 +64,22 @@ std::string gAndroidUtil::getJavaClassName(jclass classID) {
 }
 
 jclass gAndroidUtil::getJavaClassID(std::string className) {
-	jclass result = getJNIEnv()->FindClass(className.c_str());
-
+	JNIEnv* env = getJNIEnv();
+	jclass result = env->FindClass(className.c_str());
 	if(!result) {
-		gLoge("gAndroidUtil::getJavaClassID") << "couldn't find class '"
-											  << className << "'";
-		return nullptr;
+		env->ExceptionClear();
+		jstring str = env->NewStringUTF(className.c_str());
+		result = (jclass) gAndroidUtil::callJavaObjectMethod(
+				classloader, env->GetObjectClass(classloader), "findClass",
+				"(Ljava/lang/String;)Ljava/lang/Class;",
+				str);
+		env->DeleteLocalRef(str);
+
+		if(!result) {
+			gLoge("gAndroidUtil::getJavaClassID") << "couldn't find class '"
+												  << className << "'";
+			return nullptr;
+		}
 	}
 
 	return result;
@@ -375,8 +396,8 @@ JavaVM* gAndroidUtil::getJavaVM() {
 }
 
 JNIEnv* gAndroidUtil::getJNIEnv() {
-	JNIEnv *env;
-	JavaVM * vm = getJavaVM();
+	JNIEnv* env;
+	JavaVM* vm = getJavaVM();
 	if(!vm) {
 		gLoge("gAndroidUtil") << "couldn't get java virtual machine";
 		return nullptr;
@@ -385,7 +406,9 @@ JNIEnv* gAndroidUtil::getJNIEnv() {
 	int getEnvStat = vm->GetEnv((void**) &env, JNI_VERSION_1_4);
 
 	if (getEnvStat == JNI_EDETACHED) {
-		if (vm->AttachCurrentThread(&env, nullptr) != 0) {
+		JavaVMAttachArgs args{JNI_VERSION_1_4, nullptr, nullptr};
+
+		if (vm->AttachCurrentThread(&env, &args) != JNI_OK) {
 			gLoge("gAndroidUtil") << "couldn't get environment using GetEnv()";
 			return nullptr;
 		}
@@ -398,7 +421,19 @@ JNIEnv* gAndroidUtil::getJNIEnv() {
 }
 
 jclass gAndroidUtil::getJavaGlistAndroid() {
-	return getJNIEnv()->FindClass("dev/glist/android/lib/GlistNative");
+	return getJavaClassID("dev/glist/android/lib/GlistNative");
+}
+
+jobject gAndroidUtil::getJavaAndroidActivity() {
+	jclass nativeclass = getJavaGlistAndroid();
+	return getJavaStaticObjectField(nativeclass, "activity", "Ldev/glist/android/GlistAppActivity;");
+}
+
+void gAndroidUtil::attachMainThread(jobject classLoader) {
+	JNIEnv* env = gAndroidUtil::getJNIEnv(); // Attach the thread to JVM
+	classloader = classLoader;
+	jclass looper = gAndroidUtil::getJavaClassID("android/os/Looper");
+	gAndroidUtil::callJavaStaticVoidMethod(looper, "prepare", "()V");
 }
 
 void gAndroidUtil::setDeviceOrientation(DeviceOrientation orientation) {
@@ -408,12 +443,10 @@ void gAndroidUtil::setDeviceOrientation(DeviceOrientation orientation) {
 	getJNIEnv()->CallStaticVoidMethod(glistandroid,method, orientation);
 }
 
-
-
 extern "C" {
 
 jint JNI_OnLoad(JavaVM* vm, void* reserved) {
-	JNIEnv *env;
+	JNIEnv* env;
 	javavm = vm;
 	gLogd("gAndroidUtil") << "JNI_OnLoad called";
 	if (vm->GetEnv((void**) &env, JNI_VERSION_1_4) != JNI_OK) {
@@ -425,7 +458,6 @@ jint JNI_OnLoad(JavaVM* vm, void* reserved) {
 }
 
 JNIEXPORT void JNICALL Java_dev_glist_android_lib_GlistNative_setAssetManager(JNIEnv* env, jclass clazz, jobject assets) {
-
 	AAssetManager* man = AAssetManager_fromJava(env, assets);
 	gAndroidUtil::assets = man;
 }

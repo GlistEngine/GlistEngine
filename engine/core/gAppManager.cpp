@@ -709,16 +709,21 @@ JNIEXPORT void JNICALL Java_dev_glist_android_lib_GlistNative_onDestroy(JNIEnv *
 }
 
 std::unique_ptr<std::thread> thread;
-JNIEXPORT void JNICALL Java_dev_glist_android_lib_GlistNative_onStart(JNIEnv *env, jclass clazz) {
+JNIEXPORT void JNICALL Java_dev_glist_android_lib_GlistNative_onStart(JNIEnv* env, jclass clazz, jobject classloader) {
     gLogi("GlistNative") << "onStart";
     if(thread) {
         throw std::runtime_error("cannot call onStart without calling onStop first");
     }
-    thread = std::make_unique<std::thread>([]() {
-        appmanager->initialize();
-        appmanager->setup();
-        appmanager->loop();
+
+	jobject globalclassloader = env->NewGlobalRef(classloader);
+	thread = std::make_unique<std::thread>([globalclassloader]() {
+		gAndroidUtil::attachMainThread(globalclassloader);
+		appmanager->initialize();
+		appmanager->setup();
+		appmanager->loop();
+		gAndroidUtil::getJavaVM()->DetachCurrentThread();
     });
+	thread->detach();
 }
 
 JNIEXPORT void JNICALL Java_dev_glist_android_lib_GlistNative_onStop(JNIEnv *env, jclass clazz) {
