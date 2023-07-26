@@ -112,7 +112,7 @@ void gGUIGrid::createTextBox() {
 			//Should go to a new line and the width of the textbox should be "allcells.at(selectedbox).cellx - allcells.at(selectedbox).cellw / 2 + gridboxw"
 	}
 	textbox.set(root, this, this, 0, 0, allcells.at(selectedbox).cellx + 1, allcells.at(selectedbox).celly - 2, newgridboxw - 10, gridboxh - 2);
-	textbox.setTextFont(manager->getFont(allcells.at(selectedbox).fontnum));
+	textbox.setTextFont(manager->getFont(allcells.at(selectedbox).fontnum, allcells.at(selectedbox).fontstate));
 	textbox.setTextAlignment(allcells.at(selectedbox).cellalignment, allcells.at(selectedbox).cellw, textbox.getInitX());
 	textbox.setTextColor(&allcells.at(selectedbox).cellfontcolor);
 	if(allcells.at(selectedbox).cellcontent != "") {
@@ -191,22 +191,22 @@ void gGUIGrid::checkCellType(int cellIndex) {
 void gGUIGrid::setCellFont(int fontNum) {
 	undocellstack.push(allcells.at(selectedbox));
 	undocellstack.top().showncontent = fixTextFunction(undocellstack.top().cellcontent, selectedbox);
-	if(allcells.at(selectedbox).fontstate & gGUIManager::FONT_BOLD && !(allcells.at(selectedbox).fontstate & gGUIManager::FONT_ITALIC)) allcells.at(selectedbox).fontnum = gGUIManager::FONT_BOLD;
-	else if(!(allcells.at(selectedbox).fontstate & gGUIManager::FONT_BOLD) && allcells.at(selectedbox).fontstate & gGUIManager::FONT_ITALIC) allcells.at(selectedbox).fontnum = gGUIManager::FONT_ITALIC;
-	else if(allcells.at(selectedbox).fontstate & gGUIManager::FONT_BOLD && allcells.at(selectedbox).fontstate & gGUIManager::FONT_ITALIC) allcells.at(selectedbox).fontnum = gGUIManager::FONT_BOLDITALIC;
-	else allcells.at(selectedbox).fontnum = gGUIManager::FONT_REGULAR;
-	textbox.setTextFont(manager->getFont(allcells.at(selectedbox).fontnum));
+	allcells.at(selectedbox).fontnum = fontNum;
+	allcells.at(selectedbox).fontstate = gGUIManager::FONT_REGULAR;
+	if(allcells.at(selectedbox).isbold) allcells.at(selectedbox).fontstate += gGUIManager::FONT_BOLD;
+	if(allcells.at(selectedbox).isitalic) allcells.at(selectedbox).fontstate += gGUIManager::FONT_ITALIC;
+	textbox.setTextFont(manager->getFont(allcells.at(selectedbox).fontnum, allcells.at(selectedbox).fontstate));
 }
 
 void gGUIGrid::setCellFontBold() {
-	if(allcells.at(selectedbox).fontstate & gGUIManager::FONT_BOLD) allcells.at(selectedbox).fontstate &= ~gGUIManager::FONT_BOLD;
-	else allcells.at(selectedbox).fontstate |= gGUIManager::FONT_BOLD;
+	if(allcells.at(selectedbox).isbold) allcells.at(selectedbox).isbold = false;
+	else allcells.at(selectedbox).isbold = true;
 	setCellFont(allcells.at(selectedbox).fontnum);
 }
 
 void gGUIGrid::setCellFontItalic() {
-	if(allcells.at(selectedbox).fontstate & gGUIManager::FONT_ITALIC) allcells.at(selectedbox).fontstate &= ~gGUIManager::FONT_ITALIC;
-	else allcells.at(selectedbox).fontstate |= gGUIManager::FONT_ITALIC;
+	if(allcells.at(selectedbox).isitalic) allcells.at(selectedbox).isitalic = false;
+	else allcells.at(selectedbox).isitalic = true;
 	setCellFont(allcells.at(selectedbox).fontnum);
 }
 
@@ -690,18 +690,18 @@ void gGUIGrid::drawCellContents() {
 		float currentstringwidth;
 		float currentstringheight;
 		if(currentcell.overflowcontent.empty()) {
-			currentstringwidth = manager->getFont(currentcell.fontnum)->getStringWidth(currentcell.showncontent);
-			currentstringheight = manager->getFont(currentcell.fontnum)->getStringHeight(currentcell.showncontent);
+			currentstringwidth = manager->getFont(currentcell.fontnum, currentcell.fontstate)->getStringWidth(currentcell.showncontent);
+			currentstringheight = manager->getFont(currentcell.fontnum, currentcell.fontstate)->getStringHeight(currentcell.showncontent);
 		}
 		else {
-			currentstringwidth = manager->getFont(currentcell.fontnum)->getStringWidth(currentcell.overflowcontent);
-			currentstringheight = manager->getFont(currentcell.fontnum)->getStringHeight(currentcell.overflowcontent);
+			currentstringwidth = manager->getFont(currentcell.fontnum, currentcell.fontstate)->getStringWidth(currentcell.overflowcontent);
+			currentstringheight = manager->getFont(currentcell.fontnum, currentcell.fontstate)->getStringHeight(currentcell.overflowcontent);
 		}
 		if(currentcell.cellx + currentstringwidth * currentcell.textmoveamount - textbox.getInitX() * currentcell.cellalignment < gridx + firstx || currentcell.cellx + currentstringwidth * currentcell.textmoveamount - textbox.getInitX() * currentcell.cellalignment > boxw + firstx || currentcell.celly < gridy + firsty || currentcell.celly > boxh + firsty) continue;
 		if(currentcell.cellx + currentstringwidth * currentcell.textmoveamount - textbox.getInitX() * currentcell.cellalignment >= gridx + firstx && currentcell.cellx + currentstringwidth * currentcell.textmoveamount - textbox.getInitX() * currentcell.cellalignment <= boxw + firstx && currentcell.celly >= gridy + firsty && currentcell.celly <= boxh + firsty) {
 			renderer->setColor(currentcell.cellfontcolor);
-			if(currentcell.overflowcontent.empty()) manager->getFont(currentcell.fontnum)->drawText(currentcell.showncontent, currentcell.cellx + (currentcell.cellw - currentstringwidth) * currentcell.textmoveamount - textbox.getInitX() * currentcell.cellalignment - firstx, currentcell.celly + (gridboxh / 2) + (currentstringheight / 2) - firsty);
-			else manager->getFont(currentcell.fontnum)->drawText(currentcell.overflowcontent, currentcell.cellx + (currentcell.cellw - currentstringwidth) * currentcell.textmoveamount - textbox.getInitX() * currentcell.cellalignment - firstx, currentcell.celly + (gridboxh / 2) + (currentstringheight / 2) - firsty);
+			if(currentcell.overflowcontent.empty()) manager->getFont(currentcell.fontnum, currentcell.fontstate)->drawText(currentcell.showncontent, currentcell.cellx + (currentcell.cellw - currentstringwidth) * currentcell.textmoveamount - textbox.getInitX() * currentcell.cellalignment - firstx, currentcell.celly + (gridboxh / 2) + (currentstringheight / 2) - firsty);
+			else manager->getFont(currentcell.fontnum, currentcell.fontstate)->drawText(currentcell.overflowcontent, currentcell.cellx + (currentcell.cellw - currentstringwidth) * currentcell.textmoveamount - textbox.getInitX() * currentcell.cellalignment - firstx, currentcell.celly + (gridboxh / 2) + (currentstringheight / 2) - firsty);
 			switch(currentcell.lineno) {
 			case TEXTLINE_UNDER:
 				gDrawLine(currentcell.cellx + (currentcell.cellw - currentstringwidth) * currentcell.textmoveamount - textbox.getInitX() * currentcell.cellalignment - firstx, currentcell.celly + (gridboxh / 2) + currentstringheight - firsty,
