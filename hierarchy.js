@@ -47,7 +47,6 @@ var hierarchy =
         [ "gFmodSound", "classgFmodSound.html", null ]
       ] ],
       [ "gBaseWindow", "classgBaseWindow.html", [
-        [ "gAndroidWindow", "classgAndroidWindow.html", null ],
         [ "gGLFWWindow", "classgGLFWWindow.html", null ]
       ] ],
       [ "gCanvasManager", "classgCanvasManager.html", null ],
