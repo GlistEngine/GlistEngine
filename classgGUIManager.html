@@ -103,6 +103,9 @@ Public Types</h2></td></tr>
 , <b>FONT_BOLDITALIC</b>
  }</td></tr>
 <tr class="separator:a1580bf4455093e1aa348e583e6172091"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1e7c91c785609c9509d1a5020793055f"><td class="memItemLeft" align="right" valign="top"><a id="a1e7c91c785609c9509d1a5020793055f"></a>enum &#160;</td><td class="memItemRight" valign="bottom">{ <b>FONT_FREESANS</b>
+ }</td></tr>
+<tr class="separator:a1e7c91c785609c9509d1a5020793055f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -115,9 +118,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>setTheme</b> (int gui
 <tr class="memitem:a969a47d6a47338fc5a6dd2e48a5eeb1a"><td class="memItemLeft" align="right" valign="top"><a id="a969a47d6a47338fc5a6dd2e48a5eeb1a"></a>
 int&#160;</td><td class="memItemRight" valign="bottom"><b>getTheme</b> ()</td></tr>
 <tr class="separator:a969a47d6a47338fc5a6dd2e48a5eeb1a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2aff9e88f9b018307aa197a1879421f3"><td class="memItemLeft" align="right" valign="top"><a id="a2aff9e88f9b018307aa197a1879421f3"></a>
-<a class="el" href="classgFont.html">gFont</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>getFont</b> (int fontNum)</td></tr>
-<tr class="separator:a2aff9e88f9b018307aa197a1879421f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a60c5667de95774042b98d3f63995d743"><td class="memItemLeft" align="right" valign="top"><a id="a60c5667de95774042b98d3f63995d743"></a>
+<a class="el" href="classgFont.html">gFont</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>getFont</b> (int fontNum, int fontType=FONT_REGULAR)</td></tr>
+<tr class="separator:a60c5667de95774042b98d3f63995d743"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a070c7ecd89ce9e355f2fe9f268ac8f02"><td class="memItemLeft" align="right" valign="top"><a id="a070c7ecd89ce9e355f2fe9f268ac8f02"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>setCurrentFrame</b> (<a class="el" href="classgGUIFrame.html">gGUIFrame</a> *currentFrame)</td></tr>
 <tr class="separator:a070c7ecd89ce9e355f2fe9f268ac8f02"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -191,8 +194,11 @@ static const int&#160;</td><td class="memItemRight" valign="bottom"><b>GUITHEME_
 static const int&#160;</td><td class="memItemRight" valign="bottom"><b>GUITHEME_DARKBLUE</b> = 3</td></tr>
 <tr class="separator:a80141e811ca078f26dbc037effb63534"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a083ad40f8b73eed2c121f47e5eceef4d"><td class="memItemLeft" align="right" valign="top"><a id="a083ad40f8b73eed2c121f47e5eceef4d"></a>
-static const int&#160;</td><td class="memItemRight" valign="bottom"><b>fontnum</b> = 4</td></tr>
+static const int&#160;</td><td class="memItemRight" valign="bottom"><b>fontnum</b> = 1</td></tr>
 <tr class="separator:a083ad40f8b73eed2c121f47e5eceef4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2fb857c4171fe02594684dacf96a8f32"><td class="memItemLeft" align="right" valign="top"><a id="a2fb857c4171fe02594684dacf96a8f32"></a>
+static const int&#160;</td><td class="memItemRight" valign="bottom"><b>fonttypenum</b> = 4</td></tr>
+<tr class="separator:a2fb857c4171fe02594684dacf96a8f32"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>GUI Manager for GlistEngine</p>

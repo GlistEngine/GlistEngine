@@ -54,7 +54,7 @@ var NAVTREEINDEX =
 "classgNode.html#abc954186b74b891086a754e59eda9230",
 "classgShader.html#aca29cff5650c2e994cd21d20ffef9654",
 "classgVbo.html#acd7dd67025e2ddd7220fd924ae3f28d4",
-"structgVertex.html"
+"structgHttpFile_1_1ProgressData.html#a437d4db25e3c8db350206cb7de706e3f"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
