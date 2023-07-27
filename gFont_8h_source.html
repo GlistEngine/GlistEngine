@@ -181,33 +181,30 @@ $(document).ready(function(){initNavTree('gFont_8h_source.html',''); initResizab
 <div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;      std::vector&lt;gTexture*&gt; textures;</div>
 <div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;      std::vector&lt;int&gt; loadedcharacters;</div>
 <div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;      <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">int</span> unloadedchar = 0;</div>
-<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;<span class="preprocessor">#ifdef ANDROID</span></div>
-<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;      AAsset* androidasset;</div>
-<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160; </div>
-<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160; </div>
-<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;      <span class="keywordtype">int</span> getKerning(<span class="keywordtype">int</span> c, <span class="keywordtype">int</span> prevC);</div>
-<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;      <span class="keywordtype">void</span> resizeVectors(<span class="keywordtype">int</span> num);</div>
-<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;      <span class="keywordtype">bool</span> insertData(<span class="keywordtype">unsigned</span> <span class="keywordtype">char</span>* srcData, <span class="keywordtype">int</span> srcWidth, <span class="keywordtype">int</span> srcHeight, <span class="keywordtype">int</span> componentNum, <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span>* dstData, <span class="keywordtype">int</span> dstWidth, <span class="keywordtype">int</span> dstHeight, <span class="keywordtype">int</span> dstComponentNum, <span class="keywordtype">size_t</span> dstFirstX, <span class="keywordtype">size_t</span> dstFirstY) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;      std::wstring s2ws(<span class="keyword">const</span> std::string&amp; s);</div>
-<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160; </div>
-<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;      GLint index1, posx1, posy1, index2, posx2, index3, posy3;</div>
-<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;      std::wstring text1, text2, text3;</div>
-<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;      <span class="keywordtype">int</span> len1, c1, cid1, cold1, len2, cid2, cold2, cy2, len3, cid3, cy3, y3;</div>
-<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;      <span class="keywordtype">int</span> tempint, tempcharno;</div>
-<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;      <span class="keywordtype">int</span> lci, lci2, lci3, lci4, lcj, lck;</div>
-<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;      <span class="keywordtype">int</span> lcdataw, lcdatah, lcdatanum;</div>
-<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;      <span class="keywordtype">int</span> lclongside, lclongest, lcpixelsw, lcpixelsh, lcapsize;</div>
-<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;      FT_Error lcerr;</div>
-<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;      GLint lcfheight, lcbwidth, lctop, lclextent;</div>
-<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;      GLfloat lcstretch, lccorr;</div>
-<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;      <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span>* bitmappixels;</div>
-<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;      <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span>* lcsrc;</div>
-<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;      <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span>* lcbptr;</div>
-<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;      <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> lcb;</div>
-<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;};</div>
-<div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160; </div>
-<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* ENGINE_GRAPHICS_GFONT_H_ */</span><span class="preprocessor"></span></div>
+<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160; </div>
+<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160; </div>
+<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;      <span class="keywordtype">int</span> getKerning(<span class="keywordtype">int</span> c, <span class="keywordtype">int</span> prevC);</div>
+<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;      <span class="keywordtype">void</span> resizeVectors(<span class="keywordtype">int</span> num);</div>
+<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;      <span class="keywordtype">bool</span> insertData(<span class="keywordtype">unsigned</span> <span class="keywordtype">char</span>* srcData, <span class="keywordtype">int</span> srcWidth, <span class="keywordtype">int</span> srcHeight, <span class="keywordtype">int</span> componentNum, <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span>* dstData, <span class="keywordtype">int</span> dstWidth, <span class="keywordtype">int</span> dstHeight, <span class="keywordtype">int</span> dstComponentNum, <span class="keywordtype">size_t</span> dstFirstX, <span class="keywordtype">size_t</span> dstFirstY) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;      std::wstring s2ws(<span class="keyword">const</span> std::string&amp; s);</div>
+<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160; </div>
+<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;      GLint index1, posx1, posy1, index2, posx2, index3, posy3;</div>
+<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;      std::wstring text1, text2, text3;</div>
+<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;      <span class="keywordtype">int</span> len1, c1, cid1, cold1, len2, cid2, cold2, cy2, len3, cid3, cy3, y3;</div>
+<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;      <span class="keywordtype">int</span> tempint, tempcharno;</div>
+<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;      <span class="keywordtype">int</span> lci, lci2, lci3, lci4, lcj, lck;</div>
+<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;      <span class="keywordtype">int</span> lcdataw, lcdatah, lcdatanum;</div>
+<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;      <span class="keywordtype">int</span> lclongside, lclongest, lcpixelsw, lcpixelsh, lcapsize;</div>
+<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;      FT_Error lcerr;</div>
+<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;      GLint lcfheight, lcbwidth, lctop, lclextent;</div>
+<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;      GLfloat lcstretch, lccorr;</div>
+<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;      <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span>* bitmappixels;</div>
+<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;      <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span>* lcsrc;</div>
+<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;      <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span>* lcbptr;</div>
+<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;      <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> lcb;</div>
+<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;};</div>
+<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160; </div>
+<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* ENGINE_GRAPHICS_GFONT_H_ */</span><span class="preprocessor"></span></div>
 <div class="ttc" id="aclassgFont_html"><div class="ttname"><a href="classgFont.html">gFont</a></div><div class="ttdef"><b>Definition:</b> gFont.h:37</div></div>
 <div class="ttc" id="aclassgFont_html_a3735214e7a048f574a5bf5b5ac7db2d1"><div class="ttname"><a href="classgFont.html#a3735214e7a048f574a5bf5b5ac7db2d1">gFont::loadFont</a></div><div class="ttdeci">bool loadFont(const std::string &amp;fontPath, int size, bool isAntialiased=true, int dpi=96)</div></div>
 <div class="ttc" id="aclassgFont_html_a4662bf7fec0a4a2b4b08bef6d553d5c5"><div class="ttname"><a href="classgFont.html#a4662bf7fec0a4a2b4b08bef6d553d5c5">gFont::getStringWidth</a></div><div class="ttdeci">float getStringWidth(const std::string &amp;text)</div></div>
