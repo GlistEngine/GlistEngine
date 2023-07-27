@@ -99,8 +99,9 @@ gGUITextbox::gGUITextbox() {
 	textalignmentamount = 5;
 	cursormoveamount = 1;
 	textmoveamount = 0;
-	setTextAlignment(textalignment, boxw, initx);
 	textcolor = fontcolor;
+	colorset = false;
+	setTextAlignment(textalignment, boxw, initx);
 	
 	widthexceeded = false;
 	widthAdjusmentDelay = 0;
@@ -363,7 +364,7 @@ void gGUITextbox::draw() {
 		gDrawRectangle(left + selectionboxx1 - firstx + textalignmentamount - (textfont->getStringWidth(text) / 2 * textalignment), top + hdiff + linetopmargin * firstline - firsty + lineheight * 3/2  * ((currentline - 1) * !rowsnumexceeded + (line - 1) * rowsnumexceeded) , selectionboxw, lineheight * 5 / 3, true);
 		firstline = false;
 	}
-
+	if(!colorset) textcolor = fontcolor;
 	renderer->setColor(textcolor);
 	if(ispassword) {
 		int doty = top + lineheight + linetopmargin;
@@ -1064,6 +1065,7 @@ void gGUITextbox::pressKey() {
 		}
 
 		std::string pastedtext = appmanager->getClipboardString();
+		gLogi("pastedtext") << pastedtext;
 		if(pastedtext.size() == 0) return;
 		std::vector<short> lettersize = readString(pastedtext);
 		int pastedtextw = textfont->getStringWidth(pastedtext);
@@ -1836,6 +1838,7 @@ float gGUITextbox::getTextMoveAmount() {
 
 void gGUITextbox::setTextColor(gColor *textColor) {
 	textcolor = textColor;
+	colorset = true;
 }
 
 int gGUITextbox::getCursorPosX() {
