@@ -280,20 +280,21 @@ $(document).ready(function(){initNavTree('gGUITextbox_8h_source.html',''); initR
 <div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160;    <span class="keywordtype">float</span> cursormoveamount;</div>
 <div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160;    <span class="keywordtype">float</span> textmoveamount;</div>
 <div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160;    <a class="code" href="classgColor.html">gColor</a>* textcolor;</div>
-<div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160; </div>
-<div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160;    <span class="keywordtype">bool</span> widthexceeded;</div>
-<div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160;    <span class="keywordtype">int</span> widthAdjusmentDelay;</div>
-<div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160;    </div>
-<div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160;    <span class="comment">//undo stacks</span></div>
-<div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160;    std::stack&lt;std::string&gt; undostack;</div>
-<div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160;    std::stack&lt;int&gt; cursorposxstack, cursorposystack, cursorposcharstack, cursorposutfstack;</div>
-<div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160;    std::stack&lt;int&gt; firstutfstack, firstcharstack, firstposxstack;</div>
-<div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160;    std::stack&lt;int&gt; currentlinestack, lastdrawnlinestack,linecountstack;</div>
-<div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160; </div>
-<div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160;    <span class="keywordtype">void</span> pushToStack();</div>
-<div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160;};</div>
-<div class="line"><a name="l00306"></a><span class="lineno">  306</span>&#160; </div>
-<div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* UI_GGUITEXTBOX_H_ */</span><span class="preprocessor"></span></div>
+<div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160;    <span class="keywordtype">bool</span> colorset;</div>
+<div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160; </div>
+<div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160;    <span class="keywordtype">bool</span> widthexceeded;</div>
+<div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160;    <span class="keywordtype">int</span> widthAdjusmentDelay;</div>
+<div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160;    </div>
+<div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160;    <span class="comment">//undo stacks</span></div>
+<div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160;    std::stack&lt;std::string&gt; undostack;</div>
+<div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160;    std::stack&lt;int&gt; cursorposxstack, cursorposystack, cursorposcharstack, cursorposutfstack;</div>
+<div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160;    std::stack&lt;int&gt; firstutfstack, firstcharstack, firstposxstack;</div>
+<div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160;    std::stack&lt;int&gt; currentlinestack, lastdrawnlinestack,linecountstack;</div>
+<div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160; </div>
+<div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160;    <span class="keywordtype">void</span> pushToStack();</div>
+<div class="line"><a name="l00306"></a><span class="lineno">  306</span>&#160;};</div>
+<div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160; </div>
+<div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* UI_GGUITEXTBOX_H_ */</span><span class="preprocessor"></span></div>
 <div class="ttc" id="aclassgBaseApp_html"><div class="ttname"><a href="classgBaseApp.html">gBaseApp</a></div><div class="ttdef"><b>Definition:</b> gBaseApp.h:16</div></div>
 <div class="ttc" id="aclassgBaseGUIObject_html"><div class="ttname"><a href="classgBaseGUIObject.html">gBaseGUIObject</a></div><div class="ttdef"><b>Definition:</b> gBaseGUIObject.h:18</div></div>
 <div class="ttc" id="aclassgColor_html"><div class="ttname"><a href="classgColor.html">gColor</a></div><div class="ttdef"><b>Definition:</b> gColor.h:12</div></div>
