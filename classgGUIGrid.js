@@ -21,6 +21,7 @@ var classgGUIGrid =
     [ "drawTitleRowBackground", "classgGUIGrid.html#a0ca8251f16c199f7b920af4f0a37fe6e", null ],
     [ "fillCell", "classgGUIGrid.html#a8e550a25875f9626f86444319ad386ed", null ],
     [ "getCell", "classgGUIGrid.html#ab37f1268ae54e2173fe6c9c20a272fed", null ],
+    [ "getCursor", "classgGUIGrid.html#a8d053370b4db7e8727e22589534bc0ab", null ],
     [ "keyPressed", "classgGUIGrid.html#ab6d67ff8f1aff5571f58ddf90a938a42", null ],
     [ "keyReleased", "classgGUIGrid.html#ade1bb0ab840c360e38729cd3b4cc6c2d", null ],
     [ "mouseDragged", "classgGUIGrid.html#a6f030d38f194ab0d73333c77befa95f3", null ],
