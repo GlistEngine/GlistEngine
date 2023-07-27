@@ -29,6 +29,7 @@ gGUIGrid::gGUIGrid() {
 	columnnum = 10;
 	rowtitle = 1;
 	columntitle = 65; // 'A' char in ASCII
+	cursor = gGUIForm::CURSOR_ARROW;
 	gridboxw = 80.0f;
 	gridboxh = 30.0f;
 	newgridboxw = gridboxw;
@@ -73,6 +74,20 @@ void gGUIGrid::setGrid(int rowNum, int columnNum) {
 	else columnnum = columnNum;
 	gridw = gridboxw * columnnum;
 	gridh = gridboxh * rownum;
+	if(columnNum > rowNum) {
+		for(int row = 0; row < rownum; row++) {
+			gridboxesh.push_back(gridboxh);
+			gridboxesw.push_back(gridboxw);
+		}
+		for(int column = rownum; column < columnnum; column++) gridboxesw.push_back(gridboxw);
+	}
+	else {
+		for(int column = 0; column < columnnum; column++) {
+			gridboxesh.push_back(gridboxh);
+			gridboxesw.push_back(gridboxw);
+		}
+		for(int row = columnnum; row < rownum; row++) gridboxesh.push_back(gridboxh);
+	}
 }
 
 void gGUIGrid::setRowNum(int rowNum) {
@@ -728,7 +743,7 @@ void gGUIGrid::mousePressed(int x, int y, int button) {
 	gGUIScrollable::mousePressed(x, y, button);
 	int pressedx = x - left - firstx;
 	int pressedy = y - top - firsty - titledy;
-	if(!(pressedy < gridy + gridboxh - firsty && pressedx < gridx + (gridboxw / 2) - firstx) && pressedx >= gridx - firstx && pressedx <= gridx + (gridboxw / 2) + gridw - firstx && pressedy >= gridy - firsty && pressedy <= gridy + gridboxh + gridh - firsty) {
+	if(cursor != gGUIForm::CURSOR_VRESIZE && cursor != gGUIForm::CURSOR_HRESIZE && !(pressedy < gridy + gridboxh - firsty && pressedx < gridx + (gridboxw / 2) - firstx) && pressedx >= gridx - firstx && pressedx <= gridx + (gridboxw / 2) + gridw - firstx && pressedy >= gridy - firsty && pressedy <= gridy + gridboxh + gridh - firsty) {
 		if(pressedx >= gridx + (gridboxw / 2) - firstx && pressedx <= gridx + (gridboxw / 2) + gridw - firstx && pressedy >= gridy + gridboxh - firsty && pressedy <= gridy + gridboxh + gridh - firsty) {
 			isselected = true;
 			isrowselected = false;
@@ -934,4 +949,29 @@ void gGUIGrid::charPressed(unsigned int codepoint) {
 
 void gGUIGrid::mouseScrolled(int x, int y) {
 	gGUIScrollable::mouseScrolled(x, y);
+}
+
+int gGUIGrid::getCursor(int x, int y) {
+	int currentx = x - left - firstx;
+	int currenty = y - top - titledy;
+	cursor = gGUIForm::CURSOR_ARROW;
+	int row = 0;
+	int column = 0;
+	if(currentx >= gridx - firstx && currentx < gridx + (gridboxw / 2) - firstx && currenty >= gridy + gridboxh + gridboxesh[row] - mousetolerance - firsty && currenty <= gridy + gridboxh + gridh + mousetolerance - firsty) {
+		int currenth = gridy + gridboxh + gridboxesh[row] - mousetolerance - firsty;
+		while(currenth + gridboxesh[row + 1] <= currenty) {
+			currenth += gridboxesh[row + 1];
+			row++;
+		}
+		if(currenth <= currenty && currenth + mousetolerance * 2 >= currenty) cursor = gGUIForm::CURSOR_VRESIZE;
+	}
+	else if(currentx >= gridx + (gridboxw / 2) + gridboxesw[column] - mousetolerance - firstx && currentx < gridx + (gridboxw / 2) + gridw + mousetolerance - firstx && currenty >= gridy - firsty && currenty <= gridy + gridboxh - firsty) {
+		int currentw = gridx + (gridboxw / 2) + gridboxesw[column] - mousetolerance - firstx;
+		while(currentw + gridboxesw[column + 1] <= currentx) {
+			currentw += gridboxesw[column + 1];
+			row++;
+		}
+		if(currentw <= currentx && currentw + mousetolerance * 2 >= currentx) cursor = gGUIForm::CURSOR_HRESIZE;
+	}
+	return cursor;
 }

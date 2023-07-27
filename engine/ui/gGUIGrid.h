@@ -134,8 +134,11 @@ public:
 	void mouseReleased(int x, int y, int button);
 	void mouseDragged(int x, int y, int button);
 	void mouseScrolled(int x, int y);
+	int getCursor(int x, int y);
 
 private:
+	static const int mousetolerance = 5;
+
 	std::string fixTextFunction(std::string text, int index);
 	std::string fixNumeric(std::string text);
 	std::string fixOverflowText(Cell& thisCell, Cell& otherCell);
@@ -153,6 +156,8 @@ private:
 	std::stack<Cell> redocellstack;
 	std::vector<int> functionindexes;
 	std::vector<std::vector<int>> functions;
+	std::deque<float> gridboxesw;
+	std::deque<float> gridboxesh;
 	Cell copiedcell;
 	gGUIManager* manager;
 	gGUITextbox textbox;
@@ -166,6 +171,7 @@ private:
 	int rownum, columnnum;
 	int rowtitle;
 	int columntitle;
+	int cursor;
 	float gridboxw, gridboxh;
 	float newgridboxw;
 	float gridx, gridy, gridw, gridh;
