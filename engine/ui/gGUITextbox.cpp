@@ -99,6 +99,8 @@ gGUITextbox::gGUITextbox() {
 	textalignmentamount = 5;
 	cursormoveamount = 1;
 	textmoveamount = 0;
+	textcolor = fontcolor;
+	colorset = false;
 	setTextAlignment(textalignment, boxw, initx);
 	
 	widthexceeded = false;
@@ -362,8 +364,8 @@ void gGUITextbox::draw() {
 		gDrawRectangle(left + selectionboxx1 - firstx + textalignmentamount - (textfont->getStringWidth(text) / 2 * textalignment), top + hdiff + linetopmargin * firstline - firsty + lineheight * 3/2  * ((currentline - 1) * !rowsnumexceeded + (line - 1) * rowsnumexceeded) , selectionboxw, lineheight * 5 / 3, true);
 		firstline = false;
 	}
-
-	renderer->setColor(fontcolor);
+	if(!colorset) textcolor = fontcolor;
+	renderer->setColor(textcolor);
 	if(ispassword) {
 		int doty = top + lineheight + linetopmargin;
 		int dotlen = 3 * dotradius;
@@ -1836,6 +1838,7 @@ float gGUITextbox::getTextMoveAmount() {
 
 void gGUITextbox::setTextColor(gColor *textColor) {
 	textcolor = textColor;
+	colorset = true;
 }
 
 int gGUITextbox::getCursorPosX() {
