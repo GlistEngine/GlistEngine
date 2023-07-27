@@ -20,36 +20,49 @@
 class gGUIGrid: public gGUIScrollable {
 public:
 	struct Cell {
+	    enum {
+	    	TYPE_STRING,
+			TYPE_DIGIT
+	    };
+
 	    bool iscellselected;
 	    bool iscellaligned;
+	    bool isbold;
+	    bool isitalic;
 	    int cellx;
 	    int celly;
 	    int cellrowno;
 	    int cellcolumnno;
 	    int fontnum;
+	    int fontstate;
 	    int cellalignment;
 	    int lineno;
+	    int celltype;
 	    float cellh;
 	    float cellw;
 	    float textmoveamount;
 	    std::string cellcontent;
 	    std::string showncontent;
-	    std::string celltype;
+	    std::string overflowcontent;
 	    gColor cellfontcolor;
 	    Cell(){
 	    	iscellselected = false;
 	    	iscellaligned = false;
+	    	isbold = false;
+	    	isitalic = false;
 	    	cellx = -1;
 	    	celly = -1;
-	    	fontnum = gGUIManager::FONT_REGULAR;
+	    	fontnum = gGUIManager::FONT_FREESANS;
+	    	fontstate = gGUIManager::FONTTYPE_REGULAR;
 	    	cellalignment = gBaseGUIObject::TEXTALIGNMENT_LEFT;
 	    	lineno = TEXTLINE_NONE;
+	    	celltype = TYPE_STRING;
 	    	cellh = 30.0f;
 	    	cellw = 80.0f;
 	    	textmoveamount = 0;
 	    	cellcontent = "";
 	    	showncontent = "";
-	    	celltype = "string";
+	    	overflowcontent = "";
 	    	cellfontcolor = fontcolor;
 	    }
 	};
@@ -83,12 +96,14 @@ public:
 	void setRowNum(int rowNum);
 	void setColumnNum(int columnNum);
 	void setCellFont(int fontNum);
+	void setCellFontBold();
+	void setCellFontItalic();
 	void setCellAlignment(int cellAlignment, bool clicked);
 	void setCellFontColor(gColor* fontColor);
 	void setCellLine(int lineNo, bool clicked);
 	void setCopiedCell(Cell* cell);
 
-	Cell* getCell(int rowNo, int columnNo);
+	int getCell(int rowNo, int columnNo);
 
 	void drawContent();
 	void drawCellBackground();
@@ -102,8 +117,8 @@ public:
 	void drawTitleLines();
 	void drawCellContents();
 
-	void fillCell(int rowNo, int columnNo, std::string tempstr);
-	void createCells();
+	void fillCell(int cellNo, std::string tempstr);
+	void createCell(int rowNo, int columnNo);
 	void showCells();
 	void showCell(int rowNo, int columnNo);
 	void createTextBox();
@@ -123,8 +138,9 @@ public:
 private:
 	std::string fixTextFunction(std::string text, int index);
 	std::string fixNumeric(std::string text);
+	std::string fixOverflowText(Cell& thisCell, Cell& otherCell);
 	std::string getTextColumn(std::string text);
-	int getCellIndex(std::string text);
+	int getNearestFilledCell(int index);
 	float makeSum(int c1, int r1, int c2, int r2);
 	bool isNumeric(std::string text);
 	void addFunction(int functionType, int functionSender);

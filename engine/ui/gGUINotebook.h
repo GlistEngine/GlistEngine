@@ -10,6 +10,8 @@
 
 #include "gGUIContainer.h"
 #include "gGUIPanel.h"
+#include "gRenderer.h"
+#include "gFont.h"
 #include <deque>
 
 /**
@@ -24,6 +26,9 @@ class gGUINotebook: public gGUIContainer {
 public:
 	gGUINotebook();
 	virtual ~gGUINotebook();
+
+	void setActiveTab(int index);
+
 	void draw();
 
 	/**
@@ -50,14 +55,28 @@ public:
 	 */
 	void addSizerToDeque(gGUISizer* guiSizer, std::string sizerLabel = "");
 
+    /**
+     * Opens a new tab with the specified gGUISizer.
+     *
+     * @param guiSizer gGUISizer to be displayed in the new tab.
+     * @param sizerLabel Label of the new tab.
+     */
+    void openTab(gGUISizer* guiSizer, const std::string& sizerLabel);
+
+    /**
+     * Closes the tab at the specified index.
+     *
+     * @param index Index of the tab to be closed.
+     */
+    void closeTab(int index);
+    void drawTabs(int x, int tabSize, int index, bool drawFromLeftToRight);
 private:
 	void loadFont();
 	void mousePressed(int x, int y, int button);
 	void mouseMoved(int x, int y);
 	void slideButtonPressed(int x, int y);
-	void drawTabs(int x, int tabSize, int index, bool drawFromLeftToRight);
+
 	void drawSlideButtons(bool isRightButton);
-	void closeTab(int index);
 	gColor colorReductionOnCursor(gColor color);
 	int getWidthOfTabLabels();
 	void setSizerFromDeque(int guiSizersIndex);
@@ -67,9 +86,11 @@ private:
 	std::vector<std::string> quisizerlabels;
 	bool istitlevisible = false, drawfromlefttoright = true, isslidingleft = false, isslidingright = false, colorreductionl = false, colorreductionr = false, isclosabletab = true;
 	int tablinetop = 0, titleh = 20, tabsizersh = 22, tablabelssizew, tabfontsize = 11;
-	int spaceforleft = 20, spaceforright = 30, slidebuttonw = 11;
+	int spaceforleft = 4, spaceforright = 4, slidebuttonw = 11;
 	int indexleft = 0, indexright, indexcursoroncross, activesizerindex = -1;
 	float oncursorcolorreduction = - 0.1f;
+	int tabSize = 20;
+
 
 	gGUISizer notebooksizer;
 	gColor color;

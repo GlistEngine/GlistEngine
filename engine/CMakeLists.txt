@@ -64,9 +64,6 @@ if(NOT WIN32)
 	set(MINGW64_DIR ${SYSZBIN_DIR}/mingw64)
 endif(NOT WIN32)
 endif()
-if(NOT DEFINED ANDROID_DIR)
-	set(ANDROID_DIR ${ZBIN_DIR}/android)
-endif()
 
 #configure_file( ${ENGINE_DIR}/gConfig.h.in ${CMAKE_BINARY_DIR}/generated/gConfig.h )
 
@@ -132,6 +129,7 @@ set(SRC_FILES
 	${ENGINE_DIR}/graphics/primitives/gTriangle.cpp
 	${ENGINE_DIR}/graphics/primitives/gCylinder.cpp
 	${ENGINE_DIR}/graphics/primitives/gCone.cpp
+	${ENGINE_DIR}/graphics/primitives/gTube.cpp
 	${ENGINE_DIR}/graphics/gVbo.cpp
 	${ENGINE_DIR}/graphics/gFbo.cpp
 	${ENGINE_DIR}/graphics/gRay.cpp
@@ -225,12 +223,6 @@ if(NOT ANDROID)
 		${ENGINE_DIR}/core/backward.cpp
 		${ENGINE_DIR}/core/gGLFWWindow.cpp
 	)
-else()
-	list(APPEND SRC_FILES
-			${ANDROID_DIR}/libs/sqlite3.c
-			${ENGINE_DIR}/core/gAndroidWindow.cpp
-			${ENGINE_DIR}/utils/gAndroidUtil.cpp
-	)
 endif(NOT ANDROID)
 
 if(ANDROID)
@@ -242,7 +234,7 @@ if(ANDROID)
 	)
 else()
 	add_library(GlistEngine SHARED
-			${SRC_FILES}
+		${SRC_FILES}
 	)
 endif()
 
