@@ -36,9 +36,6 @@ gFont::~gFont() {
 		lcbptr = nullptr;
 		FT_Done_Face(fontface);
 		FT_Done_FreeType(ftlib);
-#ifdef ANDROID
-        if (androidasset) gAndroidUtil::closeAsset(androidasset);
-#endif
 	}
 }
 
@@ -54,14 +51,7 @@ bool gFont::load(const std::string& fullPath, int size, bool isAntialiased, int 
 		gLoge("gFont") << "Error loading freetype";
 		return false;
 	}
-#ifdef ANDROID
-	androidasset = gAndroidUtil::loadAsset(fullpath, 0);
-	auto* buf = (unsigned char*) AAsset_getBuffer(androidasset);
-	int length = AAsset_getLength(androidasset);
-	err = FT_New_Memory_Face(ftlib, buf, length, 0, &fontface);
-#else
 	err = FT_New_Face(ftlib, fullPath.c_str(), 0, &fontface);
-#endif
 	if (err) {
 		std::string errorstr = "freetype error";
 		if (err == 1) errorstr = "wrong file name";

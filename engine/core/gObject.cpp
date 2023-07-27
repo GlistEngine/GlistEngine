@@ -7,6 +7,9 @@
 
 #include "gObject.h"
 #include <unistd.h>
+#ifdef ANDROID
+#include "gAndroidUtil.h"
+#endif
 
 const int gObject::LOGLEVEL_SILENT = 0;
 const int gObject::LOGLEVEL_INFO = 1;
@@ -50,8 +53,13 @@ gObject::gObject() {
 	if(assetsdir == "") {
 		assetsdir = exepath + "assets/";
 	}
+#else
+	if(gAndroidUtil::datadirectory.empty()) {
+		assetsdir = "";
+	} else {
+		assetsdir = gAndroidUtil::datadirectory + "/";
+	}
 #endif
-//	std::replace(0, 1, "", "");
 }
 
 std::string gObject::gGetAppDir() {

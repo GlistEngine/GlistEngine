@@ -44,15 +44,7 @@ unsigned int gImage::load(const std::string& fullPath) {
 		datahdr = stbi_loadf(fullpath.c_str(), &width, &height, &componentnum, 0);
 		setDataHDR(datahdr, true);
 	} else {
-#ifdef ANDROID
-		AAsset* asset = gAndroidUtil::loadAsset(fullpath, 0);
-		auto* buf = (unsigned char*) AAsset_getBuffer(asset);
-		int length = AAsset_getLength(asset);
-		data = stbi_load_from_memory(buf, length, &width, &height, &componentnum, 0);
-		gAndroidUtil::closeAsset(asset);
-#else
 		data = stbi_load(fullpath.c_str(), &width, &height, &componentnum, 0);
-#endif
 		setData(data, true);
 	}
 
