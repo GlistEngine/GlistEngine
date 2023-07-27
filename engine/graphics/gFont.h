@@ -181,9 +181,6 @@ private:
 	  std::vector<gTexture*> textures;
 	  std::vector<int> loadedcharacters;
 	  static const int unloadedchar = 0;
-#ifdef ANDROID
-      AAsset* androidasset;
-#endif
 
 
 	  int getKerning(int c, int prevC);
