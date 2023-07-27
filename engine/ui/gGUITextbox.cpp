@@ -118,7 +118,7 @@ void gGUITextbox::set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseG
 	arrowamount = 0;
 	if(!root) return;
 	manager = root->getAppManager()->getGUIManager();
-	textfont = manager->getFont(gGUIManager::FONT_REGULAR);
+	textfont = manager->getFont(gGUIManager::FONT_FREESANS);
 }
 
 void gGUITextbox::setText(const std::string& text) {

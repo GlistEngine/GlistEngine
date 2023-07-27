@@ -30,10 +30,7 @@ void gStartEngine(gBaseApp* baseApp, const std::string& appName, int windowMode,
     if(windowMode == G_WINDOWMODE_FULLSCREENGUIAPP || windowMode == G_WINDOWMODE_GUIAPP) screenScaling = G_SCREENSCALING_NONE;
 #ifndef ANDROID
     gAppManager manager(appName, baseApp, width, height, windowMode, unitWidth, unitHeight, screenScaling, isResizable, G_LOOPMODE_NORMAL);
-	manager.initialize();
-	manager.setup();
-	manager.loop();
-	manager.stop();
+	manager.runApp();
 #else
     new gAppManager(appName, baseApp, width, height, windowMode, unitWidth, unitHeight, screenScaling, isResizable, G_LOOPMODE_NORMAL);
 #endif
@@ -42,10 +39,7 @@ void gStartEngine(gBaseApp* baseApp, const std::string& appName, int windowMode,
 void gStartEngine(gBaseApp* baseApp, const std::string& appName, int loopMode) {
 #ifndef ANDROID
 	gAppManager manager(appName, baseApp, 0, 0, G_WINDOWMODE_NONE, 0, 0, G_SCREENSCALING_NONE, false, loopMode);
-    manager.initialize();
-	manager.setup();
-	manager.loop();
-    manager.stop();
+	manager.runApp();
 #else
 	throw std::runtime_error("windowless android applications are not supported yet!");
 #endif
@@ -142,6 +136,13 @@ void gAppManager::setup() {
     }
     app->setup();
     setupcomplete = true;
+}
+
+void gAppManager::runApp() {
+	initialize();
+	setup();
+	loop();
+	stop();
 }
 
 void gAppManager::initialize() {
@@ -689,63 +690,3 @@ void gAppManager::preciseSleep(double seconds) {
     AppClockTimePoint start = AppClock::now();
     while ((AppClock::now() - start).count() / 1'000'000'000.0 < seconds);
 }
-
-
-#ifdef ANDROID
-extern "C" {
-
-JNIEXPORT void JNICALL Java_dev_glist_android_lib_GlistNative_onCreate(JNIEnv *env, jclass clazz) {
-    //gLogi("GlistNative") << "onCreate";
-    androidMain();
-#ifdef DEBUG
-    assert(appmanager); // appmanager should not be null after androidMain();
-#endif
-}
-
-JNIEXPORT void JNICALL Java_dev_glist_android_lib_GlistNative_onDestroy(JNIEnv *env, jclass clazz) {
-    //gLogi("GlistNative") << "onDestroy";
-    delete appmanager;
-    appmanager = nullptr;
-}
-
-std::unique_ptr<std::thread> thread;
-JNIEXPORT void JNICALL Java_dev_glist_android_lib_GlistNative_onStart(JNIEnv *env, jclass clazz) {
-    gLogi("GlistNative") << "onStart";
-    if(thread) {
-        throw std::runtime_error("cannot call onStart without calling onStop first");
-    }
-    thread = std::make_unique<std::thread>([]() {
-        appmanager->initialize();
-        appmanager->setup();
-        appmanager->loop();
-    });
-}
-
-JNIEXPORT void JNICALL Java_dev_glist_android_lib_GlistNative_onStop(JNIEnv *env, jclass clazz) {
-    //gLogi("GlistNative") << "onStop";
-    if(appmanager) {
-        appmanager->stop();
-    }
-    if(thread) {
-        thread->join(); // wait for shutdown
-        thread = nullptr;
-    }
-}
-
-JNIEXPORT void JNICALL Java_dev_glist_android_lib_GlistNative_onPause(JNIEnv *env, jclass clazz) {
-    //gLogi("GlistNative") << "onPause";
-    if(appmanager) {
-        gAppPauseEvent event{};
-        appmanager->getEventHandler()(event);
-    }
-}
-
-JNIEXPORT void JNICALL Java_dev_glist_android_lib_GlistNative_onResume(JNIEnv *env, jclass clazz) {
-    //gLogi("GlistNative") << "onResume";
-    if(appmanager) {
-        gAppResumeEvent event{};
-        appmanager->getEventHandler()(event);
-    }
-}
-}
-#endif

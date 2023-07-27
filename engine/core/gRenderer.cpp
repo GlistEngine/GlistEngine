@@ -19,7 +19,7 @@
 #include "gRoundedRectangle.h"
 #include "gCylinder.h"
 #include "gCone.h"
-
+#include "gTube.h"
 
 const int gRenderer::SCREENSCALING_NONE = 0;
 const int gRenderer::SCREENSCALING_MIPMAP = 1;
@@ -564,6 +564,45 @@ void gDrawPyramidOblique(float x, float y, float z, int r, int h, glm::vec2 shif
 	conemesh.scale(scale.x, scale.y, scale.z);
 	conemesh.draw();
 	conemesh.clear();
+}
+
+void gDrawTube(float x, float y, float z, int outerradius, int innerradious, int h, glm::vec3 scale, int segmentnum, bool isFilled) {
+	gTube tubemesh(outerradius,innerradious ,outerradius,innerradious, h, glm::vec2(0.0f, 0.0f), segmentnum, isFilled);
+	tubemesh.setPosition(x, y, z);
+	tubemesh.scale(scale.x, scale.y, scale.z);
+	tubemesh.draw();
+	tubemesh.clear();
+}
+
+void gDrawTubeOblique(float x, float y, float z, int outerradius,
+		int innerradious, int h, glm::vec2 shiftdistance, glm::vec3 scale,
+		int segmentnum, bool isFilled) {
+	gTube tubemesh(outerradius,innerradious ,outerradius,innerradious, h, shiftdistance, segmentnum, isFilled);
+	tubemesh.setPosition(x, y, z);
+	tubemesh.scale(scale.x, scale.y, scale.z);
+	tubemesh.draw();
+	tubemesh.clear();
+}
+
+void gDrawTubeTrapezodial(float x, float y, float z, int topouterradius,
+		int topinnerradious, int buttomouterradious, int buttominnerradious,
+		int h, glm::vec3 scale, int segmentnum, bool isFilled) {
+	gTube tubemesh(topouterradius,topinnerradious , buttomouterradious,buttominnerradious, h, glm::vec2(0.0f, 0.0f), segmentnum, isFilled);
+	tubemesh.setPosition(x, y, z);
+	tubemesh.scale(scale.x, scale.y, scale.z);
+	tubemesh.draw();
+	tubemesh.clear();
+}
+
+void gDrawTubeObliqueTrapezodial(float x, float y, float z, int topouterradius,
+		int topinnerradious, int buttomouterradious, int buttominnerradious,
+		int h, glm::vec2 shiftdistance, glm::vec3 scale, int segmentnum,
+		bool isFilled) {
+	gTube tubemesh(topouterradius,topinnerradious , buttomouterradious,buttominnerradious, h, shiftdistance, segmentnum, isFilled);
+	tubemesh.setPosition(x, y, z);
+	tubemesh.scale(scale.x, scale.y, scale.z);
+	tubemesh.draw();
+	tubemesh.clear();
 }
 
 gRenderer::gRenderer() {
