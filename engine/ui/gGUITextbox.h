@@ -290,7 +290,6 @@ private:
 	int textalignmentamount;
 	float cursormoveamount;
 	float textmoveamount;
-	gColor* textcolor;
 
 	bool widthexceeded;
 	int widthAdjusmentDelay;
