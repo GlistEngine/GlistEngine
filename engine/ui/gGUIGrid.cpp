@@ -631,7 +631,7 @@ void gGUIGrid::drawContent() {
 	drawCellContents();
 	textbox.setFirstX(firstx);
 	textbox.setFirstY(firsty);
-	if(istextboxactive)textbox.draw();
+	if(istextboxactive) textbox.draw();
 	drawTitleRowBackground();
 	drawRowContents();
 	drawTitleColumnBackground();
@@ -766,6 +766,38 @@ void gGUIGrid::mousePressed(int x, int y, int button) {
 	if(cursor == gGUIForm::CURSOR_VRESIZE || cursor == gGUIForm::CURSOR_HRESIZE) {
 		firstcursorposx = x;
 		firstcursorposy = y;
+
+		previousclicktime = clicktime;
+		clicktime = gGetSystemTimeMillis();
+		if(clicktime - previousclicktime <= clicktimediff) {
+			if(cursor == gGUIForm::CURSOR_VRESIZE) {
+				int row = 0;
+				while(calculateCurrentY(row) + gridboxesh[row] < pressedy - mousetolerance - firsty) row++;
+				int index = getCell(row, 0);
+				if(index != -1 && !allcells.at(index).showncontent.empty()) {
+					int diff = gridboxh - allcells.at(index).cellh;
+					currentrow = row;
+					gridboxesh[currentrow] = gridboxh;
+					changeAllAffectedCellsYH(diff);
+				}
+			}
+		}
+		else if(cursor == gGUIForm::CURSOR_HRESIZE) {
+			int column = 0;
+			while(calculateCurrentX(column) + gridboxesw[column] < pressedx - mousetolerance - firstx) column++;
+			int index = getCell(0, column);
+			if(index != -1 && !allcells.at(index).showncontent.empty()) {
+				gFont* tmpfont = manager->getFont(allcells.at(index).fontnum, allcells.at(index).fontstate);
+				for(int i = 0; i < allcells.size(); i++)
+					if(allcells.at(i).cellcolumnno == column && tmpfont->getStringWidth(allcells.at(i).showncontent) > tmpfont->getStringWidth(allcells.at(index).showncontent)) index = i;
+				float neww = tmpfont->getStringWidth(allcells.at(index).showncontent) + textbox.getInitX() + 1;
+				if(neww < font->getSize() * 1.8f) neww = font->getSize() * 1.8f;
+				int diff = neww - allcells.at(index).cellw;
+				currentcolumn = column;
+				gridboxesw[currentcolumn] = neww;
+				changeAllAffectedCellsXW(diff);
+			}
+		}
 	}
 	else if(!(pressedy < gridy + gridboxh + firsty && pressedx < gridx + gridboxw / 2 + firstx) && pressedx >= gridx + firstx && pressedx <= gridx + gridboxw / 2 + gridw + firstx && pressedy >= gridy + firsty && pressedy <= gridy + gridboxh + gridh + firsty) {
 		if(pressedx >= gridx + gridboxw / 2 + firstx && pressedx <= gridx + gridboxw / 2 + gridw + firstx && pressedy >= gridy + gridboxh + firsty && pressedy <= gridy + gridboxh + gridh + firsty) {
