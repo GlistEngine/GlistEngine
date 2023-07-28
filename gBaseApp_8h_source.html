@@ -104,45 +104,37 @@ $(document).ready(function(){initNavTree('gBaseApp_8h_source.html',''); initResi
 <div class="line"><a name="l00016"></a><span class="lineno"><a class="line" href="classgBaseApp.html">   16</a></span>&#160;<span class="keyword">class </span><a class="code" href="classgBaseApp.html">gBaseApp</a> : <span class="keyword">public</span> <a class="code" href="classgAppObject.html">gAppObject</a> {</div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="keyword">public</span>:</div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    <a class="code" href="classgBaseApp.html">gBaseApp</a>();</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="preprocessor">#ifndef ANDROID</span></div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    <a class="code" href="classgBaseApp.html">gBaseApp</a>(<span class="keywordtype">int</span> argc, <span class="keywordtype">char</span> **argv);</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    <span class="keyword">virtual</span> ~<a class="code" href="classgBaseApp.html">gBaseApp</a>();</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> setup();</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> update();</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#ifdef ANDROID</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    <span class="comment">// Android specific functions</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> pause();</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> resume();</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00046"></a><span class="lineno"><a class="line" href="classgBaseApp.html#a22880d1d8315d3af019a5680c8c2fe03">   46</a></span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classgBaseApp.html#a22880d1d8315d3af019a5680c8c2fe03">start</a>();</div>
-<div class="line"><a name="l00051"></a><span class="lineno"><a class="line" href="classgBaseApp.html#ac7d462bbea10e2ea05d2a8cdd36c2bff">   51</a></span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classgBaseApp.html#ac7d462bbea10e2ea05d2a8cdd36c2bff">stop</a>();</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160; </div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <span class="keywordtype">void</span> setCurrentCanvas(<a class="code" href="classgBaseCanvas.html">gBaseCanvas</a>* currentCanvas);</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <a class="code" href="classgBaseCanvas.html">gBaseCanvas</a>* getCurrentCanvas();</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160; </div>
-<div class="line"><a name="l00059"></a><span class="lineno"><a class="line" href="classgBaseApp.html#abe90f86359a41f6808e46b1ff9e61ed2">   59</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classgBaseApp.html#abe90f86359a41f6808e46b1ff9e61ed2">setTargetFramerate</a>(<span class="keywordtype">int</span> framerate);</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160; </div>
-<div class="line"><a name="l00064"></a><span class="lineno"><a class="line" href="classgBaseApp.html#a714e6b5691fd7a9c7a7169a4d193641a">   64</a></span>&#160;    <span class="keywordtype">int</span> <a class="code" href="classgBaseApp.html#a714e6b5691fd7a9c7a7169a4d193641a">getTargetFramerate</a>();</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160; </div>
-<div class="line"><a name="l00069"></a><span class="lineno"><a class="line" href="classgBaseApp.html#a72a246f800a68b1086874f32d920a696">   69</a></span>&#160;    <span class="keywordtype">int</span> <a class="code" href="classgBaseApp.html#a72a246f800a68b1086874f32d920a696">getFramerate</a>();</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160; </div>
-<div class="line"><a name="l00074"></a><span class="lineno"><a class="line" href="classgBaseApp.html#a356c7343afc8143fc204c5de9ce6a744">   74</a></span>&#160;    <span class="keywordtype">double</span> <a class="code" href="classgBaseApp.html#a356c7343afc8143fc204c5de9ce6a744">getElapsedTime</a>();</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160; </div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    <span class="keywordtype">void</span> enableVsync();</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    <span class="keywordtype">void</span> disableVsync();</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160; </div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    <span class="keyword">static</span> <a class="code" href="classgAppManager.html">gAppManager</a>* getAppManager() { <span class="keywordflow">return</span> appmanager; }</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    <span class="keyword">static</span> <span class="keywordtype">void</span> setAppManager(<a class="code" href="classgAppManager.html">gAppManager</a>* appManager) { appmanager = appManager; }</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;<span class="keyword">protected</span>:</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    <span class="keywordtype">int</span> argc;</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    <span class="keywordtype">char</span> **argv;</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;};</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160; </div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* ENGINE_BASE_GBASEAPP_H_ */</span><span class="preprocessor"></span></div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    <a class="code" href="classgBaseApp.html">gBaseApp</a>(<span class="keywordtype">int</span> argc, <span class="keywordtype">char</span> **argv);</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    <span class="keyword">virtual</span> ~<a class="code" href="classgBaseApp.html">gBaseApp</a>();</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160; </div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> setup();</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> update();</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160; </div>
+<div class="line"><a name="l00029"></a><span class="lineno"><a class="line" href="classgBaseApp.html#a22880d1d8315d3af019a5680c8c2fe03">   29</a></span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classgBaseApp.html#a22880d1d8315d3af019a5680c8c2fe03">start</a>();</div>
+<div class="line"><a name="l00034"></a><span class="lineno"><a class="line" href="classgBaseApp.html#ac7d462bbea10e2ea05d2a8cdd36c2bff">   34</a></span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classgBaseApp.html#ac7d462bbea10e2ea05d2a8cdd36c2bff">stop</a>();</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160; </div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <span class="keywordtype">void</span> setCurrentCanvas(<a class="code" href="classgBaseCanvas.html">gBaseCanvas</a>* currentCanvas);</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <a class="code" href="classgBaseCanvas.html">gBaseCanvas</a>* getCurrentCanvas();</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160; </div>
+<div class="line"><a name="l00042"></a><span class="lineno"><a class="line" href="classgBaseApp.html#abe90f86359a41f6808e46b1ff9e61ed2">   42</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classgBaseApp.html#abe90f86359a41f6808e46b1ff9e61ed2">setTargetFramerate</a>(<span class="keywordtype">int</span> framerate);</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160; </div>
+<div class="line"><a name="l00047"></a><span class="lineno"><a class="line" href="classgBaseApp.html#a714e6b5691fd7a9c7a7169a4d193641a">   47</a></span>&#160;    <span class="keywordtype">int</span> <a class="code" href="classgBaseApp.html#a714e6b5691fd7a9c7a7169a4d193641a">getTargetFramerate</a>();</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160; </div>
+<div class="line"><a name="l00052"></a><span class="lineno"><a class="line" href="classgBaseApp.html#a72a246f800a68b1086874f32d920a696">   52</a></span>&#160;    <span class="keywordtype">int</span> <a class="code" href="classgBaseApp.html#a72a246f800a68b1086874f32d920a696">getFramerate</a>();</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160; </div>
+<div class="line"><a name="l00057"></a><span class="lineno"><a class="line" href="classgBaseApp.html#a356c7343afc8143fc204c5de9ce6a744">   57</a></span>&#160;    <span class="keywordtype">double</span> <a class="code" href="classgBaseApp.html#a356c7343afc8143fc204c5de9ce6a744">getElapsedTime</a>();</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160; </div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    <span class="keywordtype">void</span> enableVsync();</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <span class="keywordtype">void</span> disableVsync();</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160; </div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    <span class="keyword">static</span> <a class="code" href="classgAppManager.html">gAppManager</a>* getAppManager() { <span class="keywordflow">return</span> appmanager; }</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <span class="keyword">static</span> <span class="keywordtype">void</span> setAppManager(<a class="code" href="classgAppManager.html">gAppManager</a>* appManager) { appmanager = appManager; }</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="keyword">protected</span>:</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <span class="keywordtype">int</span> argc;</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    <span class="keywordtype">char</span> **argv;</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;};</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160; </div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* ENGINE_BASE_GBASEAPP_H_ */</span><span class="preprocessor"></span></div>
 <div class="ttc" id="aclassgAppManager_html"><div class="ttname"><a href="classgAppManager.html">gAppManager</a></div><div class="ttdef"><b>Definition:</b> gAppManager.h:152</div></div>
 <div class="ttc" id="aclassgAppObject_html"><div class="ttname"><a href="classgAppObject.html">gAppObject</a></div><div class="ttdef"><b>Definition:</b> gAppObject.h:14</div></div>
 <div class="ttc" id="aclassgBaseApp_html"><div class="ttname"><a href="classgBaseApp.html">gBaseApp</a></div><div class="ttdef"><b>Definition:</b> gBaseApp.h:16</div></div>
