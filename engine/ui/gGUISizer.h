@@ -54,6 +54,8 @@ public:
 	void windowResized(int w, int h);
 	int getSlotWidth(int lineNo, int columnNo);
 	int getSlotHeight(int lineNo, int columnNo);
+	int getSlotX(int lineNo, int columnNo);
+	int getSlotY(int lineNo, int columnNo);
 
 private:
 	int sizertype;
@@ -73,9 +75,6 @@ private:
 	bool rescaling;
 
 	int detectSizerType();
-
-	int getSlotX(int lineNo, int columnNo);
-	int getSlotY(int lineNo, int columnNo);
 };
 
 #endif /* UI_GGUISIZER_H_ */
