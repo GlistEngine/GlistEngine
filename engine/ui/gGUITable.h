@@ -27,10 +27,10 @@ private:
 	gFont tablefont;
 	bool isfilepressed;
 	int pressedfileid;
-	static const int DOSYA_X = 0, DOSYA_Y = 1, DOSYA_W = 2, DOSYA_H = 3;
-	std::deque<gImage*> dosyaresimleri;
-	std::deque<std::string> dosyaisimleri;
-	std::deque<int> dosyaparametreleri;
+	static const int FILE_X = 0, FILE_Y = 1, FILE_W = 2, FILE_H = 3;
+	std::deque<gImage*> imagelist;
+	std::deque<std::string> imagetextlist;
+	std::deque<int> imageparameterlist;
 	int x, y, w, h;
 	int selectedx, selectedy, selectedw, selectedh, selectedid;
 	int screenwidth, screenheight;

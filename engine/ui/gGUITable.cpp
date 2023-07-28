@@ -32,22 +32,17 @@ gGUITable::~gGUITable() {
 
 void gGUITable::draw() {
 	//topparent->width;
-	gLogi("GUITABLE: ") << "boyut: " << dosyaresimleri.size();
-
-	for (int index = 0; index < dosyaresimleri.size(); ++index) {
-		gLogi("GUITABLE: ") << "ugradi3: " << index;
-		//resim
-		dosyaresimleri[index]->drawSub( x + 150 * (index % maxcolumncount),
+	for (int index = 0; index < imagelist.size(); ++index) {
+		//draw file
+		imagelist[index]->drawSub( x + 150 * (index % maxcolumncount),
 				y + (index / maxcolumncount) * 200,
 				w,
 				h,
-				0, 0, dosyaresimleri[index]->getWidth(), dosyaresimleri[index]->getHeight());
-		gLogi("GUITABLE: ") << "ugradi4: ";
-		//yazý
-		tablefont.drawText(dosyaisimleri[index],
-				x + w / 2 - (tablefont.getStringWidth(dosyaisimleri[index]) / 2) + (index % maxcolumncount) * 150,
+				0, 0, imagelist[index]->getWidth(), imagelist[index]->getHeight());
+		//draw file name
+		tablefont.drawText(imagetextlist[index],
+				x + w / 2 - (tablefont.getStringWidth(imagetextlist[index]) / 2) + (index % maxcolumncount) * 150,
 				 y + h + 10 + (index / maxcolumncount) * 200);
-		gLogi("GUITABLE: ") << "ugradi5: ";
 	}
 	//if(true) {
 	//	gColor* oldcolor;
@@ -59,9 +54,6 @@ void gGUITable::draw() {
 }
 
 void gGUITable::addItem(gImage* image, std::string title) {
-	gLogi("GUITABLE: ") << "ugradi0";
-	dosyaresimleri.push_back(image);
-	gLogi("GUITABLE: ") << "ugradi1";
-	dosyaisimleri.push_back(title);
-	gLogi("GUITABLE: ") << "ugradi2";
+	imagelist.push_back(image);
+	imagetextlist.push_back(title);
 }
