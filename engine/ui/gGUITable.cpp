@@ -1,8 +1,8 @@
 /*
  * gGUITable.cpp
  *
- *  Created on: 14 Tem 2023
- *      Author: Admin
+ *  Created on: 28 Tem 2023
+ *      Author: Nazým Gültekin
  */
 
 #include "gGUITable.h"
