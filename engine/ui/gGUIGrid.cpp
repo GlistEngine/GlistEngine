@@ -850,30 +850,24 @@ void gGUIGrid::mouseDragged(int x, int y, int button) {
 		int diff = y - firstcursorposy;
 		firstcursorposy = y;
 		if(diff > 0 || gridboxesh[currentrow] > gridboxh) {
-			if(gridboxesh[currentrow] + diff >= gridboxh) {
-				gridboxesh[currentrow] += diff;
-				changeAllAffectedCellsYH(diff);
-			}
+			if(gridboxesh[currentrow] + diff >= gridboxh) gridboxesh[currentrow] += diff;
 			else {
 				diff = gridboxh - gridboxesh[currentrow];
 				gridboxesh[currentrow] += diff;
-				changeAllAffectedCellsYH(diff);
 			}
+			changeAllAffectedCellsYH(diff);
 		}
 	}
 	else if(cursor == gGUIForm::CURSOR_HRESIZE) {
 		int diff = x - firstcursorposx;
 		firstcursorposx = x;
 		if(diff > 0 || gridboxesw[currentcolumn] > gridboxw) {
-			if(gridboxesw[currentcolumn] + diff >= gridboxh) {
-				gridboxesw[currentcolumn] += diff;
-				changeAllAffectedCellsXW(diff);
-			}
+			if(gridboxesw[currentcolumn] + diff >= gridboxh) gridboxesw[currentcolumn] += diff;
 			else {
 				diff = gridboxw - gridboxesw[currentcolumn];
 				gridboxesw[currentcolumn] += diff;
-				changeAllAffectedCellsXW(diff);
 			}
+			changeAllAffectedCellsXW(diff);
 		}
 	}
 }
