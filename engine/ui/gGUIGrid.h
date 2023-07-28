@@ -145,11 +145,15 @@ private:
 	std::string getTextColumn(std::string text);
 	int getNearestFilledCell(int index);
 	float makeSum(int c1, int r1, int c2, int r2);
+	float calculateCurrentX(int columnNum);
+	float calculateCurrentY(int rowNum);
 	bool isNumeric(std::string text);
 	void addFunction(int functionType, int functionSender);
 	void removeFunction(int functionNum);
 	void operateFunction(int functionNum);
 	void makeDefaultCell();
+	void changeAllAffectedCellsXW(float diff);
+	void changeAllAffectedCellsYH(float diff);
 
 	std::deque<Cell> allcells;
 	std::stack<Cell> undocellstack;
@@ -172,8 +176,9 @@ private:
 	int rowtitle;
 	int columntitle;
 	int cursor;
+	int currentrow, currentcolumn;
+	int firstcursorposx, firstcursorposy;
 	float gridboxw, gridboxh;
-	float newgridboxw;
 	float gridx, gridy, gridw, gridh;
 	long clicktime, previousclicktime, firstclicktime, clicktimediff;
 	std::string strflag;
