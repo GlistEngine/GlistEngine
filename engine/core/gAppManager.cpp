@@ -495,7 +495,7 @@ bool gAppManager::onKeyPressedEvent(gKeyPressedEvent& event) {
 }
 
 bool gAppManager::onKeyReleasedEvent(gKeyReleasedEvent& event) {
-    if (!canvasmanager || ! getCurrentCanvas()) return true;
+    if (!canvasmanager || !getCurrentCanvas()) return true;
     if(guimanager->isframeset) guimanager->keyReleased(event.getKeyCode());
     for (gBasePlugin*& plugin : gBasePlugin::usedplugins) plugin->keyReleased(event.getKeyCode());
     canvasmanager->getCurrentCanvas()->keyReleased(event.getKeyCode());
