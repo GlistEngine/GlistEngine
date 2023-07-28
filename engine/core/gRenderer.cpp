@@ -19,7 +19,7 @@
 #include "gRoundedRectangle.h"
 #include "gCylinder.h"
 #include "gCone.h"
-
+#include "gTube.h"
 
 const int gRenderer::SCREENSCALING_NONE = 0;
 const int gRenderer::SCREENSCALING_MIPMAP = 1;
@@ -39,6 +39,12 @@ int gRenderer::screenscaling;
 int gRenderer::currentresolution;
 int gRenderer::unitresolution;
 
+void gCheckGLErrorAndPrint(const std::string& prefix, const std::string& func, int line) {
+	GLenum error = glGetError();
+	if (error != GL_NO_ERROR) {
+		gLogi("gRenderer") << prefix << "OpenGL ERROR at " << func << ", line " << line << ", error code: " << gToHex(error, 4);
+	}
+}
 
 void gEnableCulling() {
 	glEnable(GL_CULL_FACE);
@@ -560,6 +566,45 @@ void gDrawPyramidOblique(float x, float y, float z, int r, int h, glm::vec2 shif
 	conemesh.clear();
 }
 
+void gDrawTube(float x, float y, float z, int outerradius, int innerradious, int h, glm::vec3 scale, int segmentnum, bool isFilled) {
+	gTube tubemesh(outerradius,innerradious ,outerradius,innerradious, h, glm::vec2(0.0f, 0.0f), segmentnum, isFilled);
+	tubemesh.setPosition(x, y, z);
+	tubemesh.scale(scale.x, scale.y, scale.z);
+	tubemesh.draw();
+	tubemesh.clear();
+}
+
+void gDrawTubeOblique(float x, float y, float z, int outerradius,
+		int innerradious, int h, glm::vec2 shiftdistance, glm::vec3 scale,
+		int segmentnum, bool isFilled) {
+	gTube tubemesh(outerradius,innerradious ,outerradius,innerradious, h, shiftdistance, segmentnum, isFilled);
+	tubemesh.setPosition(x, y, z);
+	tubemesh.scale(scale.x, scale.y, scale.z);
+	tubemesh.draw();
+	tubemesh.clear();
+}
+
+void gDrawTubeTrapezodial(float x, float y, float z, int topouterradius,
+		int topinnerradious, int buttomouterradious, int buttominnerradious,
+		int h, glm::vec3 scale, int segmentnum, bool isFilled) {
+	gTube tubemesh(topouterradius,topinnerradious , buttomouterradious,buttominnerradious, h, glm::vec2(0.0f, 0.0f), segmentnum, isFilled);
+	tubemesh.setPosition(x, y, z);
+	tubemesh.scale(scale.x, scale.y, scale.z);
+	tubemesh.draw();
+	tubemesh.clear();
+}
+
+void gDrawTubeObliqueTrapezodial(float x, float y, float z, int topouterradius,
+		int topinnerradious, int buttomouterradious, int buttominnerradious,
+		int h, glm::vec2 shiftdistance, glm::vec3 scale, int segmentnum,
+		bool isFilled) {
+	gTube tubemesh(topouterradius,topinnerradious , buttomouterradious,buttominnerradious, h, shiftdistance, segmentnum, isFilled);
+	tubemesh.setPosition(x, y, z);
+	tubemesh.scale(scale.x, scale.y, scale.z);
+	tubemesh.draw();
+	tubemesh.clear();
+}
+
 gRenderer::gRenderer() {
 	width = gDefaultWidth();
 	height = gDefaultHeight();
@@ -663,6 +708,21 @@ gRenderer::gRenderer() {
 }
 
 gRenderer::~gRenderer() {
+	delete colorshader;
+	delete textureshader;
+	delete imageshader;
+	delete fontshader;
+	delete skyboxshader;
+	delete shadowmapshader;
+	delete pbrshader;
+	delete equirectangularshader;
+	delete irradianceshader;
+	delete prefiltershader;
+	delete brdfshader;
+	delete fboshader;
+	delete rendercolor;
+	delete globalambientcolor;
+	delete lightingcolor;
 }
 
 gShader* gRenderer::getColorShader() {
@@ -882,18 +942,18 @@ gColor* gRenderer::getColor() {
 }
 
 void gRenderer::clear() {
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	G_CHECK_GL(glClearColor(0.0f, 0.0f, 0.0f, 1.0f));
+	G_CHECK_GL(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
 }
 
 void gRenderer::clearColor(int r, int g, int b, int a) {
-	glClearColor((float)r / 255, (float)g / 255, (float)b / 255, (float)a / 255);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	G_CHECK_GL(glClearColor((float)r / 255, (float)g / 255, (float)b / 255, (float)a / 255));
+	G_CHECK_GL(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
 }
 
 void gRenderer::clearColor(gColor color) {
-	glClearColor(color.r, color.g, color.b, color.a);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	G_CHECK_GL(glClearColor(color.r, color.g, color.b, color.a));
+	G_CHECK_GL(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
 }
 
 void gRenderer::enableFog() {
@@ -1049,19 +1109,19 @@ void gRenderer::enableDepthTest() {
 }
 
 void gRenderer::enableDepthTest(int depthTestType) {
-	glEnable(GL_DEPTH_TEST);
-	glDepthFunc(depthtesttypeid[depthTestType]);
+	G_CHECK_GL(glEnable(GL_DEPTH_TEST));
+	G_CHECK_GL(glDepthFunc(depthtesttypeid[depthTestType]));
 	isdepthtestenabled = true;
 	depthtesttype = depthTestType;
 }
 
 void gRenderer::setDepthTestFunc(int depthTestType) {
-	glDepthFunc(depthtesttypeid[depthTestType]);
+	G_CHECK_GL(glDepthFunc(depthtesttypeid[depthTestType]));
 	depthtesttype = depthTestType;
 }
 
 void gRenderer::disableDepthTest() {
-	glDisable(GL_DEPTH_TEST);
+	G_CHECK_GL(glDisable(GL_DEPTH_TEST));
 	isdepthtestenabled = false;
 }
 
@@ -1074,13 +1134,13 @@ int gRenderer::getDepthTestType() {
 }
 
 void gRenderer::enableAlphaBlending() {
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    G_CHECK_GL(glEnable(GL_BLEND));
+    G_CHECK_GL(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
     isalphablendingenabled = true;
 }
 
 void gRenderer::disableAlphaBlending() {
-    glDisable(GL_BLEND);
+	G_CHECK_GL(glDisable(GL_BLEND));
     isalphablendingenabled = false;
 }
 
@@ -1109,7 +1169,12 @@ bool gRenderer::isAlphaTestEnabled() {
 
 const std::string gRenderer::getShaderSrcColorVertex() {
 	const char* shadersource =
+#ifdef ANDROID
+"	#version 300 es\n"
+"	precision highp float;\n"
+#else
 "	#version 330 core\n"
+#endif
 "	layout (location = 0) in vec3 aPos; // the position variable has attribute position 0\n"
 "	layout (location = 1) in vec3 aNormal;\n"
 "	layout (location = 2) in vec2 aTexCoords;\n"
@@ -1170,7 +1235,12 @@ const std::string gRenderer::getShaderSrcColorVertex() {
 
 const std::string gRenderer::getShaderSrcColorFragment() {
 	const char* shadersource =
+#ifdef ANDROID
+"	#version 300 es\n"
+"	precision highp float;\n"
+#else
 "	#version 330 core\n"
+#endif
 "\n"
 "	struct Material {\n"
 "	    vec4 ambient;\n"
@@ -1244,10 +1314,10 @@ const std::string gRenderer::getShaderSrcColorFragment() {
 "       vec3 lightDir = normalize(shadowLightPos - FragPos);\n"
 "       float bias = max(0.05 * (1.0 - dot(normal, lightDir)), 0.005);\n"
 "       float shadow = 0.0;\n"
-"       vec2 texelSize = 1.0 / textureSize(shadowMap, 0);\n"
+"       ivec2 texelSize = ivec2(1, 1) / textureSize(shadowMap, 0);\n"
 "       for(int x = -1; x <= 1; ++x) {\n"
 "           for(int y = -1; y <= 1; ++y) {\n"
-"               float pcfDepth = texture(shadowMap, projCoords.xy + vec2(x, y) * texelSize).r;\n"
+"               float pcfDepth = texture(shadowMap, projCoords.xy + vec2(x, y) * vec2(texelSize.x, texelSize.y)).r;\n"
 "               shadow += currentDepth - bias > pcfDepth  ? 1.0 : 0.0;\n"
 "           }\n"
 "       }\n"
@@ -1275,11 +1345,11 @@ const std::string gRenderer::getShaderSrcColorFragment() {
 "			spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);\n"
 "		}\n"
 "		vec4 ambient = light.ambient * materialAmbient;\n"
-"		vec4 diffuse = light.diffuse * diff * materialDiffuse;\n"
-"		vec4 specular = light.specular * spec * materialSpecular;\n"
+"		vec4 diffuse = light.diffuse * vec4(diff) * materialDiffuse;\n"
+"		vec4 specular = light.specular * vec4(spec) * materialSpecular;\n"
 "	    if (mUseShadowMap > 0) {\n"
-"			diffuse *= shadowing;\n"
-"			specular *= shadowing;\n"
+"			diffuse *= vec4(shadowing);\n"
+"			specular *= vec4(shadowing);\n"
 "	    }"
 "		return (ambient + diffuse + specular);"
 "	}\n"
@@ -1437,7 +1507,12 @@ const std::string gRenderer::getShaderSrcColorFragment() {
 
 const std::string gRenderer::getShaderSrcTextureVertex() {
 	const char* shadersource =
+#ifdef ANDROID
+"#version 300 es\n"
+"precision highp float;\n"
+#else
 "#version 330 core\n"
+#endif
 "layout (location = 0) in vec3 aPos;\n"
 "layout (location = 1) in vec3 aNormal;\n"
 "layout (location = 2) in vec2 aTexCoords;\n"
@@ -1458,7 +1533,12 @@ const std::string gRenderer::getShaderSrcTextureVertex() {
 
 const std::string gRenderer::getShaderSrcTextureFragment() {
 	const char* shadersource =
+#ifdef ANDROID
+"#version 300 es\n"
+"precision highp float;\n"
+#else
 "#version 330 core\n"
+#endif
 "out vec4 FragColor;\n"
 "  \n"
 "in vec2 TexCoords;\n"
@@ -1475,7 +1555,12 @@ const std::string gRenderer::getShaderSrcTextureFragment() {
 
 const std::string gRenderer::getShaderSrcImageVertex() {
 	const char* shadersource =
+#ifdef ANDROID
+"#version 300 es\n"
+"precision highp float;\n"
+#else
 "#version 330 core\n"
+#endif
 "layout (location = 0) in vec4 vertex; // <vec2 position, vec2 texCoords>\n"
 "	\n"
 "out vec2 TexCoords;\n"
@@ -1494,7 +1579,12 @@ const std::string gRenderer::getShaderSrcImageVertex() {
 
 const std::string gRenderer::getShaderSrcImageFragment() {
 	const char* shadersource =
+#ifdef ANDROID
+"#version 300 es\n"
+"precision highp float;\n"
+#else
 "#version 330 core\n"
+#endif
 "in vec2 TexCoords;\n"
 "out vec4 color;\n"
 "\n"
@@ -1523,7 +1613,12 @@ const std::string gRenderer::getShaderSrcImageFragment() {
 
 const std::string gRenderer::getShaderSrcFontVertex() {
 	const char* shadersource =
+#ifdef ANDROID
+"#version 300 es\n"
+"precision highp float;\n"
+#else
 "#version 330 core\n"
+#endif
 "layout (location = 0) in vec4 vertex; // <vec2 pos, vec2 tex>\n"
 "out vec2 TexCoords;\n"
 "\n"
@@ -1539,7 +1634,12 @@ const std::string gRenderer::getShaderSrcFontVertex() {
 
 const std::string gRenderer::getShaderSrcFontFragment() {
 	const char* shadersource =
+#ifdef ANDROID
+"#version 300 es\n"
+"precision highp float;\n"
+#else
 "#version 330 core\n"
+#endif
 "in vec2 TexCoords;\n"
 "out vec4 color;\n"
 "\n"
@@ -1556,7 +1656,12 @@ const std::string gRenderer::getShaderSrcFontFragment() {
 
 const std::string gRenderer::getShaderSrcSkyboxVertex() {
 	const char* shadersource =
+#ifdef ANDROID
+"#version 300 es\n"
+"precision highp float;\n"
+#else
 "#version 330 core\n"
+#endif
 "layout (location = 0) in vec3 aPos;\n"
 "uniform int aIsHDR;\n"
 "\n"
@@ -1580,7 +1685,12 @@ const std::string gRenderer::getShaderSrcSkyboxVertex() {
 
 const std::string gRenderer::getShaderSrcSkyboxFragment() {
 	const char* shadersource =
+#ifdef ANDROID
+"#version 300 es\n"
+"precision highp float;\n"
+#else
 "#version 330 core\n"
+#endif
 "out vec4 FragColor;\n"
 "\n"
 "in vec3 TexCoords;\n"
@@ -1610,7 +1720,12 @@ const std::string gRenderer::getShaderSrcSkyboxFragment() {
 
 const std::string gRenderer::getShaderSrcShadowmapVertex() {
 	const char* shadersource =
+#ifdef ANDROID
+"#version 300 es\n"
+"precision highp float;\n"
+#else
 "#version 330 core\n"
+#endif
 "layout (location = 0) in vec3 aPos;\n"
 "\n"
 "uniform mat4 lightMatrix;\n"
@@ -1626,7 +1741,12 @@ const std::string gRenderer::getShaderSrcShadowmapVertex() {
 
 const std::string gRenderer::getShaderSrcShadowmapFragment() {
 	const char* shadersource =
+#ifdef ANDROID
+"#version 300 es\n"
+"precision highp float;\n"
+#else
 "#version 330 core\n"
+#endif
 "\n"
 "void main() {\n"
 "    // gl_FragDepth = gl_FragCoord.z;\n"
@@ -1637,7 +1757,12 @@ const std::string gRenderer::getShaderSrcShadowmapFragment() {
 
 const std::string gRenderer::getShaderSrcPbrVertex() {
 	const char* shadersource =
+#ifdef ANDROID
+"#version 300 es\n"
+"precision highp float;\n"
+#else
 "#version 330 core\n"
+#endif
 "layout (location = 0) in vec3 aPos;\n"
 "layout (location = 1) in vec3 aNormal;\n"
 "layout (location = 2) in vec2 aTexCoords;\n"
@@ -1664,7 +1789,12 @@ const std::string gRenderer::getShaderSrcPbrVertex() {
 
 const std::string gRenderer::getShaderSrcPbrFragment() {
 	const char* shadersource =
+#ifdef ANDROID
+"#version 300 es\n"
+"precision highp float;\n"
+#else
 "#version 330 core\n"
+#endif
 "out vec4 FragColor;\n"
 "in vec2 TexCoords;\n"
 "in vec3 WorldPos;\n"
@@ -1791,7 +1921,7 @@ const std::string gRenderer::getShaderSrcPbrFragment() {
 "        vec3 F    = fresnelSchlick(max(dot(H, V), 0.0), F0);\n"
 "\n"
 "        vec3 nominator    = NDF * G * F;\n"
-"        float denominator = 4 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0) + 0.001; // 0.001 to prevent divide by zero.\n"
+"        float denominator = 4.0 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0) + 0.001; // 0.001 to prevent divide by zero.\n"
 "        vec3 specular = nominator / denominator;\n"
 "\n"
 "         // kS is equal to Fresnel\n"
@@ -1845,7 +1975,12 @@ const std::string gRenderer::getShaderSrcPbrFragment() {
 
 const std::string gRenderer::getShaderSrcCubemapVertex() {
 	const char* shadersource =
+#ifdef ANDROID
+"#version 300 es\n"
+"precision highp float;\n"
+#else
 "#version 330 core\n"
+#endif
 "layout (location = 0) in vec3 aPos;\n"
 "\n"
 "out vec3 WorldPos;\n"
@@ -1864,7 +1999,12 @@ const std::string gRenderer::getShaderSrcCubemapVertex() {
 
 const std::string gRenderer::getShaderSrcEquirectangularFragment() {
 	const char* shadersource =
+#ifdef ANDROID
+"#version 300 es\n"
+"precision highp float;\n"
+#else
 "#version 330 core\n"
+#endif
 "out vec4 FragColor;\n"
 "in vec3 WorldPos;\n"
 "\n"
@@ -1891,7 +2031,12 @@ const std::string gRenderer::getShaderSrcEquirectangularFragment() {
 
 const std::string gRenderer::getShaderSrcIrradianceFragment() {
 	const char* shadersource =
+#ifdef ANDROID
+"#version 300 es\n"
+"precision highp float;\n"
+#else
 "#version 330 core\n"
+#endif
 "\n"
 "in vec3 WorldPos;\n"
 "out vec4 FragColor;\n"
@@ -1993,7 +2138,12 @@ const std::string gRenderer::getShaderSrcIrradianceFragment() {
 
 const std::string gRenderer::getShaderSrcPrefilterFragment() {
 	const char* shadersource =
+#ifdef ANDROID
+"#version 300 es\n"
+"precision highp float;\n"
+#else
 "#version 330 core\n"
+#endif
 "out vec4 FragColor;\n"
 "in vec3 WorldPos;\n"
 "\n"
@@ -2105,7 +2255,12 @@ const std::string gRenderer::getShaderSrcPrefilterFragment() {
 
 const std::string gRenderer::getShaderSrcBrdfVertex() {
 	const char* shadersource =
+#ifdef ANDROID
+"#version 300 es\n"
+"precision highp float;\n"
+#else
 "#version 330 core\n"
+#endif
 "layout (location = 0) in vec3 aPos;\n"
 "layout (location = 1) in vec2 aTexCoords;\n"
 "\n"
@@ -2122,7 +2277,12 @@ const std::string gRenderer::getShaderSrcBrdfVertex() {
 
 const std::string gRenderer::getShaderSrcBrdfFragment() {
 	const char* shadersource =
+#ifdef ANDROID
+"#version 300 es\n"
+"precision highp float;\n"
+#else
 "#version 330 core\n"
+#endif
 "out vec2 FragColor;\n"
 "in vec2 TexCoords;\n"
 "\n"
@@ -2241,7 +2401,12 @@ const std::string gRenderer::getShaderSrcBrdfFragment() {
 
 const std::string gRenderer::getShaderSrcFboVertex() {
 	const char* shadersource =
+#ifdef ANDROID
+			"#version 300 es\n"
+			"precision highp float;\n"
+#else
 			"#version 330 core\n"
+#endif
 			"layout (location = 0) in vec2 aPos;"
 			"layout (location = 1) in vec2 aTexCoords;"
 			""
@@ -2258,7 +2423,12 @@ const std::string gRenderer::getShaderSrcFboVertex() {
 
 const std::string gRenderer::getShaderSrcFboFragment() {
 	const char* shadersource =
+#ifdef ANDROID
+			"#version 300 es\n"
+			"precision highp float;\n"
+#else
 			"#version 330 core\n"
+#endif
 			"out vec4 FragColor;"
 			""
 			"in vec2 TexCoords;"

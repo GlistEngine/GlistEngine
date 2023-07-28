@@ -41,10 +41,9 @@ public:
 	static unsigned int getQuadVao();
 private:
     unsigned int framebuffer;
-    gTexture texture;
+    gTexture* texture;
     int width, height;
     bool isdepthmap;
-    unsigned int textureid;
 
     static bool isvaoset;
 	static unsigned int quadVAO, quadVBO;

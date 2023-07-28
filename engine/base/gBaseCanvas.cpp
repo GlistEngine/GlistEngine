@@ -5,6 +5,7 @@
  *      Author: noyan
  */
 
+#include "gAppManager.h"
 #include "gBaseCanvas.h"
 
 const int gBaseCanvas::MOUSEBUTTON_LEFT = 2;
@@ -75,22 +76,34 @@ void gBaseCanvas::windowResized(int w, int h) {
 
 }
 
-void gBaseCanvas::joystickConnected(int jId, bool isGamepad, bool isConnected) {
+void gBaseCanvas::joystickConnected(int joystickId, bool isGamepad, bool isConnected) {
 
 }
 
-void gBaseCanvas::gamepadButtonPressed(int jId, int key) {
+void gBaseCanvas::gamepadButtonPressed(int joystickId, int key) {
 
 }
 
-void gBaseCanvas::gamepadButtonReleased(int jId, int key) {
+void gBaseCanvas::gamepadButtonReleased(int joystickId, int key) {
 
+}
+
+bool gBaseCanvas::isJoystickConnected(int joystickId) {
+	return appmanager->isJoystickConnected(joystickId);
+
+}
+
+bool gBaseCanvas::isGamepadButtonPressed(int joystickId, int buttonId) {
+	return appmanager->isGamepadButtonPressed(joystickId, buttonId);
 }
 
 void gBaseCanvas::onGuiEvent(int guiObjectId, int eventType, std::string value1, std::string value2) {
 
 }
 
+void gBaseCanvas::onEvent(gEvent& event) {
+
+}
 
 void gBaseCanvas::showNotify() {
 
@@ -107,7 +120,6 @@ int gBaseCanvas::getWidth() {
 int gBaseCanvas::getHeight() {
 	return renderer->getHeight();
 }
-
 
 void gBaseCanvas::clearBackground() {
 	// Clear the background
@@ -426,14 +438,6 @@ bool gBaseCanvas::isGridXZEnabled() {
 
 bool gBaseCanvas::isGridYZEnabled() {
 	return renderer->isGridYZEnabled();
-}
-
-bool gBaseCanvas::isJoystickConnected(int jId) {
-	return root->getAppManager()->isJoystickConnected(jId);
-}
-
-bool gBaseCanvas::isGamepadButtonPressed(int gamepadId, int buttonId) {
-	return root->getAppManager()->isGamepadButtonPressed(gamepadId, buttonId);
 }
 
 

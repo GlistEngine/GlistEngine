@@ -8,6 +8,7 @@
 #include "gHttpFile.h"
 
 gHttpFile::gHttpFile() {
+	statuscode = -1;
 }
 
 gHttpFile::~gHttpFile() {
@@ -15,14 +16,14 @@ gHttpFile::~gHttpFile() {
 
 int gHttpFile::progressCallback(ProgressData *p, double totaltodownload, double downloaded, double totaltoupload, double uploaded)
 {
-    p->progresslength = downloaded;
-    p->filelength = totaltodownload;
-    return 0;
+	p->progresslength = downloaded;
+	p->filelength = totaltodownload;
+	return 0;
 }
 
 size_t gHttpFile::writeCallBack(char *contents, size_t size, size_t nmemb, void *userp) {
-    ((std::string*)userp)->append((char*)contents, size * nmemb);
-    return size * nmemb;
+	((std::string*)userp)->append((char*)contents, size * nmemb);
+	return size * nmemb;
 }
 
 void gHttpFile::load(std::string url) {
@@ -38,6 +39,10 @@ std::string gHttpFile::getHtml() {
 	return html;
 }
 
+int gHttpFile::getStatusCode() {
+    return statuscode;
+}
+
 void gHttpFile::save(std::string filePath, bool isBinary) {
 	file.load(filePath, 1, isBinary);
 	file.write(html);
@@ -46,6 +51,7 @@ void gHttpFile::save(std::string filePath, bool isBinary) {
 
 void gHttpFile::loadHtml() {
 	html = "";
+	statuscode = -1;
 	CURL *curl;
 	CURLcode res;
 
@@ -53,11 +59,17 @@ void gHttpFile::loadHtml() {
 
 	curl = curl_easy_init();
 	if(curl) {
-		curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+        // gHttpFile only allows http requests!
+        curl_easy_setopt(curl, CURLOPT_REDIR_PROTOCOLS, CURLPROTO_HTTP | CURLPROTO_HTTPS);
+        curl_easy_setopt(curl, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_WHATEVER);
+
+        curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
 		curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, false);
 		curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
-    //  enable this command for seing verbose information. Useful for debugging and tracking the request.
-	//	curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
+#if defined(DEBUG) || defined(CURL_VERBOSE_MODE)
+        //  enable this command for seeing verbose information. Useful for debugging and tracking the request.
+        curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
+#endif
 		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, &gHttpFile::writeCallBack);
 		curl_easy_setopt(curl, CURLOPT_WRITEDATA, &html);
 		curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 0L);
@@ -75,7 +87,7 @@ void gHttpFile::loadHtml() {
      * default bundle, then the CURLOPT_CAPATH option might come handy for
      * you.
      */
-    curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
+		curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
 #endif
 
 #ifdef SKIP_HOSTNAME_VERIFICATION
@@ -85,16 +97,19 @@ void gHttpFile::loadHtml() {
      * subjectAltName) fields, libcurl will refuse to connect. You can skip
      * this check, but this will make the connection less secure.
      */
-    curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L);
+		curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L);
 #endif
 
-    	/* Perform the request, res will get the return code */
-    	res = curl_easy_perform(curl);
-    	/* Check for errors */
-    	if(res != CURLE_OK) gLoge("gHttpFile") << "curl_easy_perform() failed:" << curl_easy_strerror(res);
+		/* Perform the request, res will get the return code */
+		res = curl_easy_perform(curl);
+		/* Check for errors */
+		if(res != CURLE_OK) {
+            gLoge("gHttpFile") << "curl_easy_perform() failed: " << curl_easy_strerror(res) << ", code: " << res;
+        }
+        curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &statuscode);
 
-    	/* always cleanup */
-    	curl_easy_cleanup(curl);
+		/* always cleanup */
+		curl_easy_cleanup(curl);
 	}
 
 	curl_global_cleanup();
@@ -103,6 +118,7 @@ void gHttpFile::loadHtml() {
 double gHttpFile::getProgressLength() {
 	return prog.progresslength;
 }
+
 double gHttpFile::getFileLength() {
 	return prog.filelength;
 }

@@ -128,6 +128,12 @@ void gGUISizer::set(int x, int y, int w, int h) {
 		}
 	}
 }
+int gGUISizer::getSlotWidth(int lineNo, int columnNo) { //
+	return width * columnprs[columnNo];
+}
+int gGUISizer::getSlotHeight(int lineNo, int columnNo) { //
+	return height * lineprs[lineNo];
+}
 
 int gGUISizer::getSizerType() {
 	return sizertype;
@@ -311,7 +317,7 @@ void gGUISizer::enableBackgroundFill(bool isEnabled) {
 
 void gGUISizer::update() {
 //	gLogi("gGUISizer") << "update, c0pr:" << linetprs[1];
-//	root->getAppManager()->setCursor(3);
+//	appmanager->setCursor(3);
 	for(int i = 0; i < linenum; i++) {
 		for(int j = 0; j < columnnum; j++) {
 			if(iscontrolset[i][j]) guicontrol[i][j]->update();
@@ -349,6 +355,7 @@ void gGUISizer::draw() {
 			if(i == 0) continue;
 			for (int k = 0; k < 3; k++) {
 				float lc = foregroundcolor->r - (std::fabs(k - 1) * 0.05f);
+
 				renderer->setColor(gColor(lc, lc, lc));
 				int t = top + (height * linetprs[i]) + k - 1;
 				gDrawLine(left, t, right, t);
@@ -389,11 +396,11 @@ void gGUISizer::mouseMoved(int x, int y) {
 				bool iscursoronold = guicontrol[i][j]->iscursoron;
 //				gLogi("Sizer") << "mouseMoved 1, i:" << i << ", j:" << j << ", x:" << x << ", y:" << y << ", l:" << guicontrol[i][j]->left << ", t:" << guicontrol[i][j]->top << ", r:" << guicontrol[i][j]->right << ", b:" << guicontrol[i][j]->bottom;
 				if(x >= guicontrol[i][j]->left && x < guicontrol[i][j]->right && y >= guicontrol[i][j]->top && y < guicontrol[i][j]->bottom) {
-					guicontrol[i][j]->iscursoron = true;
+					guicontrol[i][j]->setCursorOn(true);
 					if(!iscursoronold) guicontrol[i][j]->mouseEntered();
 				} else {
 					if (guicontrol[i][j]->iscursoron) {
-						guicontrol[i][j]->iscursoron = false;
+						guicontrol[i][j]->setCursorOn(false);
 						if(iscursoronold) guicontrol[i][j]->mouseExited();
 					}
 				}
@@ -612,7 +619,7 @@ void gGUISizer::mouseExited() {
 	for(int i = 0; i < linenum; i++) {
 		for(int j = 0; j < columnnum; j++) {
 			if(iscontrolset[i][j] && guicontrol[i][j]->isEnabled() && guicontrol[i][j]->iscursoron) {
-				guicontrol[i][j]->iscursoron = false;
+				guicontrol[i][j]->setCursorOn(false);
 				guicontrol[i][j]->mouseExited();
 			}
 		}

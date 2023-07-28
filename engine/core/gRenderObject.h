@@ -13,6 +13,13 @@
 #include "gRenderer.h"
 //#include "gColor.h"
 
+#ifdef ANDROID
+using gIndex = unsigned short;
+#define G_INDEX_SIZE GL_UNSIGNED_SHORT
+#else
+using gIndex = unsigned int;
+#define G_INDEX_SIZE GL_UNSIGNED_INT
+#endif
 
 class gRenderObject : public gObject {
 public:
@@ -32,14 +39,12 @@ public:
 	static bool isShadowMappingEnabled();
 
 	static gRenderer* getRenderer();
+
+	static void destroyRenderer();
+	static void createRenderer();
 protected:
 	static gRenderer* renderer;
 	static bool isshadowmappingenabled;
-
-private:
-	static bool isrendermaterialsloaded;
-
-	static void loadRenderMaterials();
 };
 
 #endif /* ENGINE_BASE_GRENDEROBJECT_H_ */

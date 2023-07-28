@@ -44,7 +44,7 @@ public:
 
 private:
 	std::vector<gVertex> verticessb;
-	std::vector<unsigned int> indicessb;
+	std::vector<gIndex> indicessb;
 	void setLinePoints(float x1, float y1, float z1, float x2, float y2, float z2);
 	gVertex vertex1, vertex2;
 	float thickness;

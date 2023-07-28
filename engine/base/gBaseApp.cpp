@@ -5,19 +5,18 @@
  *      Author: noyan
  */
 
+#include "gAppManager.h"
 #include "gBaseApp.h"
 
 
 
 gBaseApp::gBaseApp() {
-	appmanager = nullptr;
 	gSeedRandom();
 	argc = 0;
 	argv = nullptr;
 }
 
 gBaseApp::gBaseApp(int argc, char **argv) {
-	appmanager = nullptr;
 	gSeedRandom();
 	this->argc = argc;
 	this->argv = argv;
@@ -34,12 +33,12 @@ void gBaseApp::update() {
 
 }
 
-void gBaseApp::setAppManager(gAppManager *appManager) {
-	appmanager = appManager;
+void gBaseApp::start() {
+
 }
 
-gAppManager* gBaseApp::getAppManager() {
-	return appmanager;
+void gBaseApp::stop() {
+
 }
 
 void gBaseApp::setCurrentCanvas(gBaseCanvas* currentCanvas) {
@@ -50,12 +49,16 @@ gBaseCanvas* gBaseApp::getCurrentCanvas() {
 	return appmanager->getCurrentCanvas();
 }
 
-void gBaseApp::setFramerate(int targetFramerate) {
-	appmanager->setFramerate(targetFramerate);
+void gBaseApp::setTargetFramerate(int targetFramerate) {
+	appmanager->setTargetFramerate(targetFramerate);
 }
 
 int gBaseApp::getFramerate() {
 	return appmanager->getFramerate();
+}
+
+int gBaseApp::getTargetFramerate() {
+	return appmanager->getTargetFramerate();
 }
 
 double gBaseApp::getElapsedTime() {

@@ -22,6 +22,7 @@
 #include "freetype2/ft2build.h"
 #ifdef ANDROID
 #include "freetype2/freetype/freetype.h"
+#include <android/asset_manager.h>
 #endif
 #if defined(WIN32) || defined(LINUX) || defined(APPLE)
 #include FT_FREETYPE_H
@@ -177,7 +178,7 @@ private:
 	  } charProperties;
 
 	  std::vector<charProperties> cpset;
-	  std::vector<gTexture> textures;
+	  std::vector<gTexture*> textures;
 	  std::vector<int> loadedcharacters;
 	  static const int unloadedchar = 0;
 

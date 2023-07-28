@@ -33,13 +33,15 @@ class gShader : public gObject {
 public:
 	gShader();
 	gShader(const std::string& vertexPath, const std::string& fragmentPath, const std::string& geometryPath = nullptr);
+	~gShader();
 
 	void load(const std::string& vertexFullPath, const std::string& fragmentFullPath, const std::string& geometryFullPath = "");
 	void loadShader(const std::string& vertexFileName, const std::string& fragmentFileName, const std::string& geometryFileName = "");
 
 	void loadProgram(const std::string& vertexShaderStr, const std::string& fragmentShaderStr, const std::string& geometryShaderStr = "");
 
-    GLuint id;
+	bool loaded;
+	GLuint id;
 
     void use() const;
     void setBool(const std::string &name, bool value) const;
@@ -57,7 +59,7 @@ public:
 
 
 private:
-	void checkCompileErrors(GLuint shader, std::string type);
+	void checkCompileErrors(GLuint shader, const std::string& type);
 };
 
 #endif /* ENGINE_GRAPHICS_GSHADER_H_ */

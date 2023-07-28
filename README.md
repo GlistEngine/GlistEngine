@@ -57,7 +57,7 @@ Glist Engine has one-click installers for Windows, Linux and Mac. You can downlo
 > sudo apt-get install git cmake clang-14 libstdc++-12-dev libglew-dev curl libssl-dev
 
 - Install necessary libraries rpm based system Linux
-> sudo dnf install glm-devel glfw glfw-decel libglew-devel freetype-devel freetype assimp assimp-devel curl curl-devel libssl libssl-devel
+> sudo dnf install glm-devel glfw glfw-devel glew-devel freetype-devel freetype assimp assimp-devel curl curl-devel openssl-devel
 
 #### 3- Open file explorer and create necessary folders:
 

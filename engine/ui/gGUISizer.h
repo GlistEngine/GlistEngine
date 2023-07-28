@@ -52,6 +52,8 @@ public:
 	void mouseEntered();
 	void mouseExited();
 	void windowResized(int w, int h);
+	int getSlotWidth(int lineNo, int columnNo);
+	int getSlotHeight(int lineNo, int columnNo);
 
 private:
 	int sizertype;

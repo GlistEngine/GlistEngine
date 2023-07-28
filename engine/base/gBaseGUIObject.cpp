@@ -88,6 +88,7 @@ void gBaseGUIObject::setTitleOn(bool isTitleOn) {
 bool gBaseGUIObject::isTitleOn() {
 	return istitleon;
 }
+
 void gBaseGUIObject::setTopParent(gBaseGUIObject* parentGUIObject) {
 	topparent = parentGUIObject;
 }
@@ -293,4 +294,10 @@ void gBaseGUIObject::setRootApp(gBaseApp* root) {
 void gBaseGUIObject::onGUIEvent(int guiObjectId, int eventType, int sourceEventType, std::string value1, std::string value2) {
 
 }
+
+void gBaseGUIObject::setCursorOn(bool isOn) {
+	iscursoron = isOn;
+
+}
+
 
