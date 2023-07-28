@@ -128,11 +128,35 @@ void gGUISizer::set(int x, int y, int w, int h) {
 		}
 	}
 }
+
 int gGUISizer::getSlotWidth(int lineNo, int columnNo) { //
 	return width * columnprs[columnNo];
 }
+
 int gGUISizer::getSlotHeight(int lineNo, int columnNo) { //
 	return height * lineprs[lineNo];
+}
+
+int gGUISizer::getSlotX(int lineNo, int columnNo) {
+	int totalwidth = left;
+
+	for(int col = 0; col < columnNo; col++) {
+		int colwidth = getSlotWidth(lineNo, col);
+		totalwidth += colwidth;
+	}
+
+	return totalwidth;
+}
+
+int gGUISizer::getSlotY(int lineNo, int columnNo) {
+	int totalheight = top;
+
+	for(int row = 0; row < lineNo; row++) {
+		int rowheight = getSlotHeight(row, columnNo);
+		totalheight += rowheight;
+	}
+
+	return totalheight;
 }
 
 int gGUISizer::getSizerType() {
@@ -633,4 +657,3 @@ void gGUISizer::windowResized(int w, int h) {
 		}
 	}
 }
-
