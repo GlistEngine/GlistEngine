@@ -30,9 +30,12 @@ gGUIGrid::gGUIGrid() {
 	rowtitle = 1;
 	columntitle = 65; // 'A' char in ASCII
 	cursor = gGUIForm::CURSOR_ARROW;
+	currentrow = 0;
+	currentcolumn = 0;
+	firstcursorposx = 0;
+	firstcursorposy = 0;
 	gridboxw = 80.0f;
 	gridboxh = 30.0f;
-	newgridboxw = gridboxw;
 	gridx = 0.0f;
 	gridy = 0.0f;
 	gridw = gridboxw * columnnum;
@@ -104,8 +107,10 @@ void gGUIGrid::update() {
 
 void gGUIGrid::createCell(int rowNo, int columnNo) {
 	Cell tempcell;
-	tempcell.cellx = gridx + (gridboxw / 2) + (columnNo * gridboxw);
-	tempcell.celly = gridy + gridboxh + (rowNo * gridboxh);
+	tempcell.cellx = calculateCurrentX(columnNo) + firstx;
+	tempcell.celly = calculateCurrentY(rowNo) + firsty;
+	tempcell.cellw = gridboxesw[columnNo];
+	tempcell.cellh = gridboxesh[rowNo];
 	tempcell.cellrowno = rowNo;
 	tempcell.cellcolumnno = columnNo;
 	allcells.push_back(tempcell);
@@ -114,19 +119,7 @@ void gGUIGrid::createCell(int rowNo, int columnNo) {
 void gGUIGrid::createTextBox() {
 	//allcells.at(selectedbox).cellx + 1
 	//allcells.at(cellindexcounter).cellx + (allcells.at(cellindexcounter).cellw - font->getStringWidth(allcells.at(cellindexcounter).showncontent)) * textbox.getTextMoveAmount() - textbox.getInitX() * textbox.getTextAlignment() - firstx
-	int newwamount = font->getStringWidth(allcells.at(selectedbox).cellcontent) / gridboxw + 1;
-	newgridboxw = gridboxw * newwamount;
-	if(allcells.at(selectedbox).cellalignment == gBaseGUIObject::TEXTALIGNMENT_LEFT) {
-		while(newgridboxw > gridw - allcells.at(selectedbox).cellx + allcells.at(selectedbox).cellw / 2)
-			newgridboxw -= gridboxw;
-			//Should go to a new line and the width of the textbox should be "gridw - allcells.at(selectedbox).cellx + allcells.at(selectedbox).cellw / 2"
-	}
-	else if(allcells.at(selectedbox).cellalignment == gBaseGUIObject::TEXTALIGNMENT_RIGHT) {
-		while(newgridboxw > allcells.at(selectedbox).cellx - allcells.at(selectedbox).cellw / 2 + gridboxw)
-			newgridboxw -= gridboxw;
-			//Should go to a new line and the width of the textbox should be "allcells.at(selectedbox).cellx - allcells.at(selectedbox).cellw / 2 + gridboxw"
-	}
-	textbox.set(root, this, this, 0, 0, allcells.at(selectedbox).cellx + 1, allcells.at(selectedbox).celly - 2, newgridboxw - 10, gridboxh - 2);
+	textbox.set(root, this, this, 0, 0, allcells.at(selectedbox).cellx + 1, allcells.at(selectedbox).celly - 2, allcells.at(selectedbox).cellw - 10, allcells.at(selectedbox).cellh - 2);
 	textbox.setTextFont(manager->getFont(allcells.at(selectedbox).fontnum, allcells.at(selectedbox).fontstate));
 	textbox.setTextAlignment(allcells.at(selectedbox).cellalignment, allcells.at(selectedbox).cellw, textbox.getInitX());
 	textbox.setTextColor(&allcells.at(selectedbox).cellfontcolor);
@@ -453,6 +446,18 @@ float gGUIGrid::makeSum(int c1, int r1, int c2, int r2) {
 	return result;
 }
 
+float gGUIGrid::calculateCurrentX(int columnNum) {
+	float currentx = gridx + gridboxw / 2 - firstx;
+	for(int column = 0; column < columnNum; column++) currentx += gridboxesw[column];
+	return currentx;
+}
+
+float gGUIGrid::calculateCurrentY(int rowNum) {
+	float currenty = gridy + gridboxh - firsty;
+	for(int row = 0; row < rowNum; row++) currenty += gridboxesh[row];
+	return currenty;
+}
+
 bool gGUIGrid::isNumeric(std::string text) {
 	bool hasdigit = true;
 	for(int i = 0; i < text.size(); i++) {
@@ -519,6 +524,21 @@ void gGUIGrid::makeDefaultCell() {
 			break;
 		}
 	}
+}
+
+void gGUIGrid::changeAllAffectedCellsXW(float diff) {
+	for(int i = 0; i < allcells.size(); i++) {
+		if(allcells.at(i).cellcolumnno > currentcolumn) allcells.at(i).cellx += diff;
+		else if(allcells.at(i).cellcolumnno == currentcolumn) allcells.at(i).cellw = gridboxesw[currentcolumn];
+	}
+	gridw += diff;
+}
+void gGUIGrid::changeAllAffectedCellsYH(float diff) {
+	for(int i = 0; i < allcells.size(); i++) {
+		if(allcells.at(i).cellrowno > currentrow) allcells.at(i).celly += diff;
+		else if(allcells.at(i).cellrowno == currentrow) allcells.at(i).cellh = gridboxesh[currentrow];
+	}
+	gridh += diff;
 }
 
 void gGUIGrid::fillCell(int cellNo, std::string tempstr) { //when rowNo = 1, columnNO = 4; tempstr = "happyyyy";
@@ -627,20 +647,20 @@ void gGUIGrid::drawCellBackground() {
 
 void gGUIGrid::drawSelectedBox() {
 	renderer->setColor(0.0f, 1.0f, 0.0f, 1.0f);
-	gDrawRectangle(allcells.at(selectedbox).cellx + 1 - firstx, (allcells.at(selectedbox).celly + 1) - firsty, gridboxw - 2, gridboxh - 2, false);
-	gDrawRectangle(allcells.at(selectedbox).cellx + (gridboxw - 2) - 6 - firstx, allcells.at(selectedbox).celly + (gridboxh - 2) - 4 - firsty, 6, 6, true); // FLAG
+	gDrawRectangle(allcells.at(selectedbox).cellx + 1 - firstx, allcells.at(selectedbox).celly + 1 - firsty, gridboxesw[allcells.at(selectedbox).cellcolumnno] - 2, gridboxesh[allcells.at(selectedbox).cellrowno] - 2, false);
+	gDrawRectangle(allcells.at(selectedbox).cellx + gridboxesw[allcells.at(selectedbox).cellcolumnno] - 2 - 6 - firstx, allcells.at(selectedbox).celly + gridboxesh[allcells.at(selectedbox).cellrowno] - 2 - 4 - firsty, 6, 6, true); // FLAG
 }
 
 void gGUIGrid::drawSelectedRow() {
 	renderer->setColor(0.0f, 1.0f, 0.0f, 1.0f);
-	gDrawRectangle(gridx + (gridboxw / 2) + 1 - firstx, gridy + gridboxh + gridboxh * allcells.at(selectedtitle).cellrowno + 1 - firsty, gridw - 2, gridboxh - 2, false);
-	gDrawRectangle(gridx + (gridboxw / 2) + gridw - 2 - 6 - firstx, gridy + gridboxh + gridboxh * allcells.at(selectedtitle).cellrowno + (gridboxh - 2) - 4 - firsty, 6, 6, true); // FLAG
+	gDrawRectangle(gridx + gridboxw / 2 + 1 - firstx, calculateCurrentY(allcells.at(selectedtitle).cellrowno) + 1, gridw - 2, gridboxesh[allcells.at(selectedtitle).cellrowno] - 2, false);
+	gDrawRectangle(gridx + gridboxw / 2 + gridw - 2 - 6 - firstx, calculateCurrentY(allcells.at(selectedtitle).cellrowno) + gridboxesh[allcells.at(selectedtitle).cellrowno] - 2 - 4, 6, 6, true); // FLAG
 }
 
 void gGUIGrid::drawSelectedColumn() {
 	renderer->setColor(0.0f, 1.0f, 0.0f, 1.0f);
-	gDrawRectangle(gridx + (gridboxw / 2) + 1 + (gridboxw * allcells.at(selectedtitle).cellcolumnno) - firstx, gridy + gridboxh + 1 - firsty, gridboxw - 2, gridh - 2, false);
-	gDrawRectangle(gridx + (gridboxw / 2) + (gridboxw * allcells.at(selectedtitle).cellcolumnno) + gridboxw - 2 - 6 - firstx, gridy + gridboxh + gridh - 2 - 4 - firsty, 6, 6, true); // FLAG
+	gDrawRectangle(calculateCurrentX(allcells.at(selectedtitle).cellcolumnno) + 1, gridy + gridboxesh[allcells.at(selectedtitle).cellrowno] + 1 - firsty, gridboxesw[allcells.at(selectedtitle).cellcolumnno] - 2, gridh - 2, false);
+	gDrawRectangle(calculateCurrentX(allcells.at(selectedtitle).cellcolumnno) + gridboxesw[allcells.at(selectedtitle).cellcolumnno] - 2 - 6, gridy + gridboxesh[allcells.at(selectedtitle).cellrowno] + gridh - 2 - 4 - firsty, 6, 6, true); // FLAG
 }
 
 void gGUIGrid::drawTitleRowBackground() {
@@ -656,13 +676,13 @@ void gGUIGrid::drawTitleColumnBackground() {
 void gGUIGrid::drawRowContents() {
 	int temprow = rowtitle;
 	for(int i = 1; i <= rownum; i++) {
-		if(gridy + i * gridboxh < gridy + firsty || gridy + i * gridboxh > boxh + firsty) continue;
-		if(gridy + i * gridboxh >= gridy + firsty && gridy + i * gridboxh <= boxh + firsty) {
+		if(calculateCurrentY(i) < gridy || calculateCurrentY(i) > boxh) continue;
+		if(calculateCurrentY(i) >= gridy && calculateCurrentY(i) <= boxh) {
 			std::string rowtitlestring = std::to_string(i);
 			renderer->setColor(*fontcolor);
-			font->drawText(rowtitlestring, gridx + (gridboxw / 4) - (font->getStringWidth(rowtitlestring) / 2), gridy + (gridboxh / 2) + (i * gridboxh)  + (font->getStringHeight(rowtitlestring) / 2) - firsty);
+			font->drawText(rowtitlestring, gridx + gridboxw / 4 - font->getStringWidth(rowtitlestring) / 2, calculateCurrentY(i) - gridboxesh[i - 1] / 2 + font->getStringHeight(rowtitlestring) / 2);
 			renderer->setColor(*pressedbuttoncolor);
-			gDrawLine(gridx - firstx, gridy + ((i + 1) * gridboxh) - firsty, gridx + gridw + (gridboxw / 2) - firstx, gridy + ((i + 1) * gridboxh) - firsty);
+			gDrawLine(gridx - firstx, calculateCurrentY(i), gridx + gridw + gridboxw / 2 - firstx, calculateCurrentY(i));
 		}
 		temprow++;
 	}
@@ -671,8 +691,8 @@ void gGUIGrid::drawRowContents() {
 void gGUIGrid::drawColumnContents() {
 	std::string columntitlestring = "";
 	for(int i = 0; i < columnnum; i++) {
-		if(gridx + (i + 1) * gridboxw < gridx + firstx || gridx + ((i + 1) * gridboxw) > boxw + firstx) continue;
-		if(gridx + (i + 1) * gridboxw >= gridx + firstx && gridx + ((i + 1) * gridboxw) <= boxw + firstx) {
+		if(calculateCurrentX(i + 1) < gridx || calculateCurrentX(i + 1) > boxw) continue;
+		if(calculateCurrentX(i + 1) >= gridx && calculateCurrentX(i + 1) <= boxw) {
 			if(i / 26 > 26) {
 				columntitlestring = (char)(columntitle + i / (26 * 26) - 1);
 				columntitlestring += (char)(columntitle + (i / 26 - 1) % 26);
@@ -684,9 +704,9 @@ void gGUIGrid::drawColumnContents() {
 			}
 			else columntitlestring = (char)(columntitle + i);
 			renderer->setColor(*fontcolor);
-			font->drawText(columntitlestring, gridx + ((i + 1) * gridboxw) - (font->getStringWidth(columntitlestring) / 2) - firstx, gridy + (gridboxh / 2) + (font->getStringHeight(columntitlestring) / 2));
+			font->drawText(columntitlestring, calculateCurrentX(i + 1) - gridboxesw[i] / 2 - (font->getStringWidth(columntitlestring) / 2), gridy + (gridboxh / 2) + (font->getStringHeight(columntitlestring) / 2));
 			renderer->setColor(*pressedbuttoncolor);
-			gDrawLine(gridx - (gridboxw / 2) + ((i + 2) * gridboxw) - firstx, gridy - firsty, gridx - (gridboxw / 2) + ((i + 2) * gridboxw) - firstx, gridy + gridboxh + gridh - firsty);
+			gDrawLine(calculateCurrentX(i + 1), gridy - firsty, calculateCurrentX(i + 1), gridy + gridboxh + gridh - firsty);
 		}
 	}
 	Cell emptycell;
@@ -741,16 +761,24 @@ void gGUIGrid::drawCellContents() {
 
 void gGUIGrid::mousePressed(int x, int y, int button) {
 	gGUIScrollable::mousePressed(x, y, button);
-	int pressedx = x - left - firstx;
-	int pressedy = y - top - firsty - titledy;
-	if(cursor != gGUIForm::CURSOR_VRESIZE && cursor != gGUIForm::CURSOR_HRESIZE && !(pressedy < gridy + gridboxh - firsty && pressedx < gridx + (gridboxw / 2) - firstx) && pressedx >= gridx - firstx && pressedx <= gridx + (gridboxw / 2) + gridw - firstx && pressedy >= gridy - firsty && pressedy <= gridy + gridboxh + gridh - firsty) {
-		if(pressedx >= gridx + (gridboxw / 2) - firstx && pressedx <= gridx + (gridboxw / 2) + gridw - firstx && pressedy >= gridy + gridboxh - firsty && pressedy <= gridy + gridboxh + gridh - firsty) {
+	int pressedx = x - left + firstx;
+	int pressedy = y - top + firsty - titledy;
+	if(cursor == gGUIForm::CURSOR_VRESIZE || cursor == gGUIForm::CURSOR_HRESIZE) {
+		firstcursorposx = x;
+		firstcursorposy = y;
+	}
+	else if(!(pressedy < gridy + gridboxh + firsty && pressedx < gridx + gridboxw / 2 + firstx) && pressedx >= gridx + firstx && pressedx <= gridx + gridboxw / 2 + gridw + firstx && pressedy >= gridy + firsty && pressedy <= gridy + gridboxh + gridh + firsty) {
+		if(pressedx >= gridx + gridboxw / 2 + firstx && pressedx <= gridx + gridboxw / 2 + gridw + firstx && pressedy >= gridy + gridboxh + firsty && pressedy <= gridy + gridboxh + gridh + firsty) {
 			isselected = true;
 			isrowselected = false;
 			iscolumnselected = false;
-			int index = getCell((int)((pressedy - gridboxh + firsty * 2) / gridboxh), (int)((pressedx - (gridboxw / 2) + firstx * 2) / gridboxw));
+			int row = 0;
+			int column = 0;
+			while(calculateCurrentY(row) + gridboxesh[row] < pressedy - firsty) row++;
+			while(calculateCurrentX(column) + gridboxesw[column] < pressedx - firstx) column++;
+			int index = getCell(row, column);
 			if(index == -1) {
-				createCell((int)((pressedy - gridboxh + firsty * 2) / gridboxh), (int)((pressedx - (gridboxw / 2) + firstx * 2) / gridboxw));
+				createCell(row, column);
 				index = allcells.size() - 1;
 			}
 			if(istextboxactive) changeCell();
@@ -758,10 +786,12 @@ void gGUIGrid::mousePressed(int x, int y, int button) {
 			allcells.at(index).iscellselected = true;
 			selectedbox = index;
 		}
-		else if(pressedx >= gridx - firstx && pressedx < gridx + (gridboxw / 2) - firstx && pressedy >= gridy + gridboxh - firsty && pressedy <= gridy + gridboxh + gridh - firsty) {
-			int index = getCell((int)((pressedy - gridboxh + firsty * 2) / gridboxh), 0);
+		else if(pressedx >= gridx + firstx && pressedx < gridx + (gridboxw / 2) + firstx && pressedy >= gridy + gridboxh + firsty && pressedy <= gridy + gridboxh + gridh + firsty) {
+			int row = 0;
+			while(calculateCurrentY(row) + gridboxesh[row] < pressedy - firsty) row++;
+			int index = getCell(row, 0);
 			if(index == -1) {
-				createCell((int)((pressedy - gridboxh + firsty * 2) / gridboxh), 0);
+				createCell(row, 0);
 				index = allcells.size() - 1;
 			}
 			if(istextboxactive) changeCell();
@@ -773,10 +803,12 @@ void gGUIGrid::mousePressed(int x, int y, int button) {
 			isrowselected = true;
 			iscolumnselected = false;
 		}
-		else if(pressedx >= gridx + (gridboxw / 2) - firstx && pressedx < gridx + (gridboxw / 2) + gridw - firstx && pressedy >= gridy - firsty && pressedy <= gridy + gridboxh - firsty) {
-			int index = getCell(0, (int)((pressedx - (gridboxw / 2) + firstx * 2) / gridboxw));
+		else if(pressedx >= gridx + (gridboxw / 2) + firstx && pressedx < gridx + (gridboxw / 2) + gridw + firstx && pressedy >= gridy + firsty && pressedy <= gridy + gridboxh + firsty) {
+			int column = 0;
+			while(calculateCurrentX(column) + gridboxesw[column] < pressedx - firstx) column++;
+			int index = getCell(0, column);
 			if(index == -1) {
-				createCell(0, (int)((pressedx - (gridboxw / 2) + firstx * 2) / gridboxw));
+				createCell(0, column);
 				index = allcells.size() - 1;
 			}
 			if(istextboxactive) changeCell();
@@ -814,6 +846,36 @@ void gGUIGrid::mouseDragged(int x, int y, int button) {
 //	gLogi("Grid") << x << " " << y;
 	if(istextboxactive) textbox.mouseDragged((x - left), (y - top - firsty), button);
 	gGUIScrollable::mouseDragged(x, y, button);
+	if(cursor == gGUIForm::CURSOR_VRESIZE) {
+		int diff = y - firstcursorposy;
+		firstcursorposy = y;
+		if(diff > 0 || gridboxesh[currentrow] > gridboxh) {
+			if(gridboxesh[currentrow] + diff >= gridboxh) {
+				gridboxesh[currentrow] += diff;
+				changeAllAffectedCellsYH(diff);
+			}
+			else {
+				diff = gridboxh - gridboxesh[currentrow];
+				gridboxesh[currentrow] += diff;
+				changeAllAffectedCellsYH(diff);
+			}
+		}
+	}
+	else if(cursor == gGUIForm::CURSOR_HRESIZE) {
+		int diff = x - firstcursorposx;
+		firstcursorposx = x;
+		if(diff > 0 || gridboxesw[currentcolumn] > gridboxw) {
+			if(gridboxesw[currentcolumn] + diff >= gridboxh) {
+				gridboxesw[currentcolumn] += diff;
+				changeAllAffectedCellsXW(diff);
+			}
+			else {
+				diff = gridboxw - gridboxesw[currentcolumn];
+				gridboxesw[currentcolumn] += diff;
+				changeAllAffectedCellsXW(diff);
+			}
+		}
+	}
 }
 
 void gGUIGrid::keyPressed(int key){
@@ -952,24 +1014,24 @@ void gGUIGrid::mouseScrolled(int x, int y) {
 }
 
 int gGUIGrid::getCursor(int x, int y) {
-	int currentx = x - left - firstx;
-	int currenty = y - top - titledy;
+	int currentx = x - left + firstx;
+	int currenty = y - top + firsty - titledy;
 	cursor = gGUIForm::CURSOR_ARROW;
-	int row = 0;
-	int column = 0;
-	if(currentx >= gridx - firstx && currentx < gridx + (gridboxw / 2) - firstx && currenty >= gridy + gridboxh + gridboxesh[row] - mousetolerance - firsty && currenty <= gridy + gridboxh + gridh + mousetolerance - firsty) {
-		int currenth = gridy + gridboxh + gridboxesh[row] - mousetolerance - firsty;
-		while(currenth + gridboxesh[row + 1] <= currenty) {
-			currenth += gridboxesh[row + 1];
-			row++;
+	currentrow = 0;
+	currentcolumn = 0;
+	if(currentx >= gridx + firstx && currentx < gridx + (gridboxw / 2) + firstx && currenty >= gridy + gridboxh + gridboxesh[currentrow] - mousetolerance - firsty && currenty <= gridy + gridboxh + gridh + mousetolerance - firsty) {
+		int currenth = gridy + gridboxh + gridboxesh[currentrow] - mousetolerance;
+		while(currentrow + 1 < rownum && currenth + gridboxesh[currentrow + 1] <= currenty) {
+			currenth += gridboxesh[currentrow + 1];
+			currentrow++;
 		}
 		if(currenth <= currenty && currenth + mousetolerance * 2 >= currenty) cursor = gGUIForm::CURSOR_VRESIZE;
 	}
-	else if(currentx >= gridx + (gridboxw / 2) + gridboxesw[column] - mousetolerance - firstx && currentx < gridx + (gridboxw / 2) + gridw + mousetolerance - firstx && currenty >= gridy - firsty && currenty <= gridy + gridboxh - firsty) {
-		int currentw = gridx + (gridboxw / 2) + gridboxesw[column] - mousetolerance - firstx;
-		while(currentw + gridboxesw[column + 1] <= currentx) {
-			currentw += gridboxesw[column + 1];
-			row++;
+	else if(currentx >= gridx + (gridboxw / 2) + gridboxesw[currentcolumn] - mousetolerance - firstx && currentx < gridx + (gridboxw / 2) + gridw + mousetolerance - firstx && currenty >= gridy + firsty && currenty <= gridy + gridboxh + firsty) {
+		int currentw = gridx + (gridboxw / 2) + gridboxesw[currentcolumn] - mousetolerance;
+		while(currentcolumn + 1 < columnnum && currentw + gridboxesw[currentcolumn + 1] <= currentx) {
+			currentw += gridboxesw[currentcolumn + 1];
+			currentcolumn++;
 		}
 		if(currentw <= currentx && currentw + mousetolerance * 2 >= currentx) cursor = gGUIForm::CURSOR_HRESIZE;
 	}
