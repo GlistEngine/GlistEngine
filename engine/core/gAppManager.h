@@ -364,6 +364,7 @@ private:
     bool onAppPauseEvent(gAppPauseEvent&);
     bool onAppResumeEvent(gAppResumeEvent&);
     bool onDeviceOrientationChangedEvent(gDeviceOrientationChangedEvent&);
+    bool onTouchEvent(gTouchEvent&);
 #endif
 
     void updateTime();
