@@ -19,6 +19,8 @@
 #include "gGLFWWindow.h"
 #elif defined(ANDROID)
 #include "gAndroidWindow.h"
+#include "gAndroidCanvas.h"
+#include "gAndroidApp.h"
 #endif
 
 void gStartEngine(gBaseApp* baseApp, const std::string& appName, int windowMode, int width, int height, bool isResizable) {
@@ -395,7 +397,14 @@ void gAppManager::tick() {
     if(!window->isRendering() && isrendering) {
         isrendering = false; // If window has lost the context, we should stop rendering.
 #ifdef ANDROID
-		app->pause();
+		if (auto* androidapp = dynamic_cast<gAndroidApp*>(app)) {
+			androidapp->pause();
+		}
+		if (canvasmanager && getCurrentCanvas()) {
+			if (auto* androidcanvas = dynamic_cast<gAndroidCanvas*>(getCurrentCanvas())) {
+				androidcanvas->pause();
+			}
+		}
 #endif
     }
 	executeQueue();
@@ -424,13 +433,14 @@ void gAppManager::onEvent(gEvent& event) {
     dispatcher.dispatch<gAppPauseEvent>(G_BIND_FUNCTION(onAppPauseEvent));
     dispatcher.dispatch<gAppResumeEvent>(G_BIND_FUNCTION(onAppResumeEvent));
     dispatcher.dispatch<gDeviceOrientationChangedEvent>(G_BIND_FUNCTION(onDeviceOrientationChangedEvent));
+    dispatcher.dispatch<gTouchEvent>(G_BIND_FUNCTION(onTouchEvent));
 #endif
-    if(canvasmanager && canvasmanager->getCurrentCanvas()) canvasmanager->getCurrentCanvas()->onEvent(event);
+    if(canvasmanager && getCurrentCanvas()) getCurrentCanvas()->onEvent(event);
     // todo pass event to app and plugins
 }
 
 bool gAppManager::onWindowResizedEvent(gWindowResizeEvent& event) {
-    if(!canvasmanager || !canvasmanager->getCurrentCanvas() || !initialized) return true;
+    if(!canvasmanager || !initialized || !getCurrentCanvas()) return true;
     setScreenSize(event.getWidth(), event.getHeight());
 #ifdef ANDROID
     if(gRenderer::getScreenScaling() >= G_SCREENSCALING_AUTO && olddeviceorientation != deviceorientation) {
@@ -469,22 +479,23 @@ bool gAppManager::onWindowResizedEvent(gWindowResizeEvent& event) {
 }
 
 bool gAppManager::onCharTypedEvent(gCharTypedEvent& event) {
+	if (!canvasmanager || !getCurrentCanvas()) return true;
     if(guimanager->isframeset) guimanager->charPressed(event.getCharacter());
     for (gBasePlugin*& plugin : gBasePlugin::usedplugins) plugin->charPressed(event.getCharacter());
-    canvasmanager->getCurrentCanvas()->charPressed(event.getCharacter());
+    getCurrentCanvas()->charPressed(event.getCharacter());
     return false;
 }
 
 bool gAppManager::onKeyPressedEvent(gKeyPressedEvent& event) {
-    if (!canvasmanager->getCurrentCanvas()) return true;
+    if (!canvasmanager || !getCurrentCanvas()) return true;
     if(guimanager->isframeset) guimanager->keyPressed(event.getKeyCode());
     for (gBasePlugin*& plugin : gBasePlugin::usedplugins) plugin->keyPressed(event.getKeyCode());
-    canvasmanager->getCurrentCanvas()->keyPressed(event.getKeyCode());
+    getCurrentCanvas()->keyPressed(event.getKeyCode());
     return false;
 }
 
 bool gAppManager::onKeyReleasedEvent(gKeyReleasedEvent& event) {
-    if (!canvasmanager->getCurrentCanvas()) return true;
+    if (!canvasmanager || ! getCurrentCanvas()) return true;
     if(guimanager->isframeset) guimanager->keyReleased(event.getKeyCode());
     for (gBasePlugin*& plugin : gBasePlugin::usedplugins) plugin->keyReleased(event.getKeyCode());
     canvasmanager->getCurrentCanvas()->keyReleased(event.getKeyCode());
@@ -492,7 +503,7 @@ bool gAppManager::onKeyReleasedEvent(gKeyReleasedEvent& event) {
 }
 
 bool gAppManager::onMouseMovedEvent(gMouseMovedEvent& event) {
-    if (!canvasmanager->getCurrentCanvas()) return true;
+    if (!canvasmanager || !getCurrentCanvas()) return true;
     int xpos = event.getX();
     int ypos = event.getY();
     if (gRenderer::getScreenScaling() > G_SCREENSCALING_NONE) {
@@ -512,7 +523,7 @@ bool gAppManager::onMouseMovedEvent(gMouseMovedEvent& event) {
 }
 
 bool gAppManager::onMouseButtonPressedEvent(gMouseButtonPressedEvent& event) {
-    if (!canvasmanager->getCurrentCanvas()) return true;
+    if (!canvasmanager || !getCurrentCanvas()) return true;
     mousebuttonpressed[event.getMouseButton()] = true;
     mousebuttonstate |= pow(2, event.getMouseButton() + 1);
     int xpos = event.getX();
@@ -528,7 +539,7 @@ bool gAppManager::onMouseButtonPressedEvent(gMouseButtonPressedEvent& event) {
 }
 
 bool gAppManager::onMouseButtonReleasedEvent(gMouseButtonReleasedEvent& event) {
-    if (!canvasmanager->getCurrentCanvas()) return true;
+    if (!canvasmanager || !getCurrentCanvas()) return true;
     mousebuttonpressed[event.getMouseButton()] = false;
     mousebuttonstate &= ~pow(2, event.getMouseButton() + 1);
     int xpos = event.getX();
@@ -544,7 +555,7 @@ bool gAppManager::onMouseButtonReleasedEvent(gMouseButtonReleasedEvent& event) {
 }
 
 bool gAppManager::onWindowMouseEnterEvent(gWindowMouseEnterEvent& event) {
-    if(!canvasmanager->getCurrentCanvas()) return true;
+    if(!canvasmanager || !getCurrentCanvas()) return true;
     ismouseentered = true;
     for(gBasePlugin*& plugin : gBasePlugin::usedplugins) plugin->mouseEntered();
     canvasmanager->getCurrentCanvas()->mouseEntered();
@@ -552,7 +563,7 @@ bool gAppManager::onWindowMouseEnterEvent(gWindowMouseEnterEvent& event) {
 }
 
 bool gAppManager::onWindowMouseExitEvent(gWindowMouseExitEvent& event) {
-    if(!canvasmanager->getCurrentCanvas()) return true;
+    if(!canvasmanager || !getCurrentCanvas()) return true;
     ismouseentered = false;
     for(gBasePlugin*& plugin : gBasePlugin::usedplugins) plugin->mouseExited();
     canvasmanager->getCurrentCanvas()->mouseExited();
@@ -560,7 +571,7 @@ bool gAppManager::onWindowMouseExitEvent(gWindowMouseExitEvent& event) {
 }
 
 bool gAppManager::onMouseScrolledEvent(gMouseScrolledEvent& event) {
-    if (!canvasmanager->getCurrentCanvas()) return true;
+    if (!canvasmanager || !getCurrentCanvas()) return true;
     if(guimanager->isframeset) guimanager->mouseScrolled(event.getOffsetX(), event.getOffsetY());
     for (gBasePlugin*& plugin : gBasePlugin::usedplugins) plugin->mouseScrolled(event.getOffsetX(), event.getOffsetY());
     canvasmanager->getCurrentCanvas()->mouseScrolled(event.getOffsetX(), event.getOffsetY());
@@ -584,7 +595,7 @@ bool gAppManager::onJoystickConnectEvent(gJoystickConnectEvent& event) {
         joystickconnected[event.getJoystickId()] = true;
         isjoystickenabled = true;
     }
-    if (!canvasmanager->getCurrentCanvas()) return true;
+    if (!canvasmanager || !getCurrentCanvas()) return true;
     canvasmanager->getCurrentCanvas()->joystickConnected(event.getJoystickId(), event.isGamepad(), true);
     return false;
 }
@@ -602,7 +613,7 @@ bool gAppManager::onJoystickDisconnectEvent(gJoystickDisconnectEvent& event) {
             break;
         }
     }
-    if (!canvasmanager->getCurrentCanvas()) return true;
+    if (!canvasmanager || !getCurrentCanvas()) return true;
     canvasmanager->getCurrentCanvas()->joystickConnected(event.getJoystickId(), wasgamepad, false);
     return false;
 }
@@ -614,8 +625,15 @@ bool gAppManager::onAppPauseEvent(gAppPauseEvent& event) {
 			return;
 		}
         isrendering = false;
-        app->pause();
-    });
+		if (auto* androidapp = dynamic_cast<gAndroidApp*>(app)) {
+			androidapp->pause();
+		}
+		if(canvasmanager && getCurrentCanvas()) {
+			if (auto* androidcanvas = dynamic_cast<gAndroidCanvas*>(getCurrentCanvas())) {
+				androidcanvas->pause();
+			}
+		}
+	});
     return false;
 }
 
@@ -625,19 +643,49 @@ bool gAppManager::onAppResumeEvent(gAppResumeEvent& event) {
 			return;
 		}
         isrendering = true;
-        app->resume();
-    });
+		if (auto* androidapp = dynamic_cast<gAndroidApp*>(app)) {
+			androidapp->resume();
+		}
+		if(canvasmanager && getCurrentCanvas()) {
+			if (auto* androidcanvas = dynamic_cast<gAndroidCanvas*>(getCurrentCanvas())) {
+				androidcanvas->resume();
+			}
+		}
+	});
     return false;
 }
 
 bool gAppManager::onDeviceOrientationChangedEvent(gDeviceOrientationChangedEvent& event) {
     deviceorientation = event.getOrientation();
-    if(usewindow && canvasmanager && canvasmanager->getCurrentCanvas()) {
-        canvasmanager->getCurrentCanvas()->onDeviceOrientationChange(event.getOrientation());
+    if(canvasmanager && getCurrentCanvas()) {
+		if (auto* androidcanvas = dynamic_cast<gAndroidCanvas*>(getCurrentCanvas())) {
+			androidcanvas->deviceOrientationChanged(event.getOrientation());
+		}
     }
     gWindowResizeEvent resizeevent{width, height};
     eventhandler(resizeevent);
     return false;
+}
+
+bool gAppManager::onTouchEvent(gTouchEvent& event) {
+	if(canvasmanager && getCurrentCanvas()) {
+		if (auto* androidcanvas = dynamic_cast<gAndroidCanvas*>(getCurrentCanvas())) {
+			if (event.getAction() == ACTIONTYPE_POINTER_DOWN || (event.getInputCount() == 1 && event.getAction() == ACTIONTYPE_DOWN)) {
+				int inputindex = event.getActionIndex();
+				TouchInput& input = event.getInputs()[inputindex];
+				androidcanvas->touchPressed(input.x, input.y, input.fingerid);
+			} else if (event.getAction() == ACTIONTYPE_POINTER_UP || (event.getInputCount() == 1 && event.getAction() == ACTIONTYPE_UP)) {
+				int inputindex = event.getActionIndex();
+				TouchInput& input = event.getInputs()[inputindex];
+				androidcanvas->touchReleased(input.x, input.y, input.fingerid);
+			} else if (event.getAction() == ACTIONTYPE_MOVE) {
+				int inputindex = event.getActionIndex();
+				TouchInput& input = event.getInputs()[inputindex];
+				androidcanvas->touchMoved(input.x, input.y, input.fingerid);
+			}
+		}
+	}
+	return false;
 }
 
 #endif

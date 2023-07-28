@@ -16,29 +16,12 @@
 class gBaseApp : public gAppObject {
 public:
 	gBaseApp();
-#ifndef ANDROID
 	gBaseApp(int argc, char **argv);
-#endif
 	virtual ~gBaseApp();
 
 	virtual void setup();
 	virtual void update();
 
-#ifdef ANDROID
-	// Android specific functions
-
-	/**
-	 * Called when current activity is invisible.
-	 * Application will stop rendering after this but will
-	 * still receive updates.
-	 */
-	virtual void pause();
-	/**
-	 * Called when current activity is visible again.
-	 * Application will continue rendering.
-	 */
-	virtual void resume();
-#endif
 	/**
 	 * Called after window is initialized and all resources
 	 * have been reallocated (if required).

@@ -205,7 +205,29 @@ private:
 
 
 #ifdef ANDROID
+enum InputType {
+	INPUTTYPE_UNKNOWN = 0,
+	INPUTTYPE_FINGER = 1,
+	INPUTTYPE_STYLUS = 2,
+	INPUTTYPE_MOUSE = 3
+};
+
+enum ActionType {
+	ACTIONTYPE_DOWN = 0,
+	ACTIONTYPE_UP = 1,
+	ACTIONTYPE_MOVE = 2,
+	ACTIONTYPE_CANCEL = 3,
+	ACTIONTYPE_OUTSIDE = 4,
+	ACTIONTYPE_POINTER_DOWN = 5,
+	ACTIONTYPE_POINTER_UP = 6,
+	ACTIONTYPE_HOVER_MOVE = 7,
+	ACTIONTYPE_SCROLL = 8,
+	ACTIONTYPE_HOVER_ENTER = 9,
+	ACTIONTYPE_HOVER_EXIT = 10
+};
+
 struct TouchInput {
+	InputType type;
 	int fingerid;
 	int pointerindex;
 	int x, y;
@@ -213,17 +235,20 @@ struct TouchInput {
 
 class gTouchEvent : public gEvent {
 public:
-	gTouchEvent(int inputCount, TouchInput* inputs) : inputs(inputs), inputcount(inputCount) {}
+	gTouchEvent(int inputCount, TouchInput* inputs, int actionIndex, ActionType action) : inputs(inputs), inputcount(inputCount), action(action), actionindex(actionIndex) {}
 
 	int getInputCount() const { return inputcount; }
-	TouchInput* getInputs() const { return inputs; };
+	TouchInput* getInputs() const { return inputs; }
+	int getActionIndex() const { return actionindex; }
+	ActionType getAction() const { return action; }
 
 	G_EVENT_CLASS_TYPE(EventTypeTouch)
 	G_EVENT_CLASS_CATEGORY(EventCategoryInput | EventCategoryTouchscreen)
 private:
 	int inputcount;
 	TouchInput* inputs;
-
+	int actionindex;
+	ActionType action;
 };
 
 class gAppPauseEvent : public gEvent {

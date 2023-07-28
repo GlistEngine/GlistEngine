@@ -15,13 +15,11 @@ gBaseApp::gBaseApp() {
 	argv = nullptr;
 }
 
-#ifndef ANDROID
 gBaseApp::gBaseApp(int argc, char **argv) {
 	gSeedRandom();
 	this->argc = argc;
 	this->argv = argv;
 }
-#endif
 
 gBaseApp::~gBaseApp() {
 }
@@ -33,16 +31,6 @@ void gBaseApp::setup() {
 void gBaseApp::update() {
 
 }
-
-#ifdef ANDROID
-void gBaseApp::pause() {
-
-}
-
-void gBaseApp::resume() {
-
-}
-#endif
 
 void gBaseApp::start() {
 
