@@ -86,6 +86,7 @@ var annotated_dup =
     [ "gGUISlider", "classgGUISlider.html", "classgGUISlider" ],
     [ "gGUIStatusBar", "classgGUIStatusBar.html", "classgGUIStatusBar" ],
     [ "gGUISwitchButton", "classgGUISwitchButton.html", "classgGUISwitchButton" ],
+    [ "gGUITable", "classgGUITable.html", "classgGUITable" ],
     [ "gGUIText", "classgGUIText.html", "classgGUIText" ],
     [ "gGUITextbox", "classgGUITextbox.html", "classgGUITextbox" ],
     [ "gGUITimebox", "classgGUITimebox.html", "classgGUITimebox" ],

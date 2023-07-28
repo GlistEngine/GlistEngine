@@ -104,6 +104,7 @@ var hierarchy =
             [ "gGUISizer", "classgGUISizer.html", null ],
             [ "gGUISlider", "classgGUISlider.html", null ],
             [ "gGUISwitchButton", "classgGUISwitchButton.html", null ],
+            [ "gGUITable", "classgGUITable.html", null ],
             [ "gGUIText", "classgGUIText.html", null ],
             [ "gGUITextbox", "classgGUITextbox.html", null ]
           ] ],
