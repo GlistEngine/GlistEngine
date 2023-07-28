@@ -142,28 +142,30 @@ $(document).ready(function(){initNavTree('gGUISizer_8h_source.html',''); initRes
 <div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <span class="keywordtype">void</span> windowResized(<span class="keywordtype">int</span> w, <span class="keywordtype">int</span> h);</div>
 <div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="keywordtype">int</span> getSlotWidth(<span class="keywordtype">int</span> lineNo, <span class="keywordtype">int</span> columnNo);</div>
 <div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <span class="keywordtype">int</span> getSlotHeight(<span class="keywordtype">int</span> lineNo, <span class="keywordtype">int</span> columnNo);</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160; </div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    <span class="keywordtype">int</span> sizertype;</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <span class="keywordtype">int</span> linenum, columnnum;</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <a class="code" href="classgGUIControl.html">gGUIControl</a>*** guicontrol;</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    <span class="keywordtype">bool</span>** iscontrolset;</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <span class="keywordtype">bool</span> bordersenabled;</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    <span class="keywordtype">float</span>* lineprs;</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <span class="keywordtype">float</span>* columnprs;</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    <span class="keywordtype">float</span>* linetprs;</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    <span class="keywordtype">float</span>* columntprs;</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    <span class="keywordtype">bool</span> resizable;</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    <span class="keywordtype">int</span> resizecolumn, resizeline;</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <span class="keywordtype">int</span> resizex, resizey;</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    <span class="keywordtype">bool</span> fillbackground;</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <span class="keywordtype">int</span> slotpadding;</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    <span class="keywordtype">bool</span> rescaling;</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160; </div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    <span class="keywordtype">int</span> detectSizerType();</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;};</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160; </div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* UI_GGUISIZER_H_ */</span><span class="preprocessor"></span></div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <span class="keywordtype">int</span> getSlotX(<span class="keywordtype">int</span> lineNo, <span class="keywordtype">int</span> columnNo);</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    <span class="keywordtype">int</span> getSlotY(<span class="keywordtype">int</span> lineNo, <span class="keywordtype">int</span> columnNo);</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160; </div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <span class="keywordtype">int</span> sizertype;</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    <span class="keywordtype">int</span> linenum, columnnum;</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <a class="code" href="classgGUIControl.html">gGUIControl</a>*** guicontrol;</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    <span class="keywordtype">bool</span>** iscontrolset;</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <span class="keywordtype">bool</span> bordersenabled;</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    <span class="keywordtype">float</span>* lineprs;</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    <span class="keywordtype">float</span>* columnprs;</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    <span class="keywordtype">float</span>* linetprs;</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    <span class="keywordtype">float</span>* columntprs;</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <span class="keywordtype">bool</span> resizable;</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    <span class="keywordtype">int</span> resizecolumn, resizeline;</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <span class="keywordtype">int</span> resizex, resizey;</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    <span class="keywordtype">bool</span> fillbackground;</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <span class="keywordtype">int</span> slotpadding;</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    <span class="keywordtype">bool</span> rescaling;</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160; </div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    <span class="keywordtype">int</span> detectSizerType();</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;};</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160; </div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* UI_GGUISIZER_H_ */</span><span class="preprocessor"></span></div>
 <div class="ttc" id="aclassgBaseApp_html"><div class="ttname"><a href="classgBaseApp.html">gBaseApp</a></div><div class="ttdef"><b>Definition:</b> gBaseApp.h:16</div></div>
 <div class="ttc" id="aclassgBaseGUIObject_html"><div class="ttname"><a href="classgBaseGUIObject.html">gBaseGUIObject</a></div><div class="ttdef"><b>Definition:</b> gBaseGUIObject.h:18</div></div>
 <div class="ttc" id="aclassgGUIControl_html"><div class="ttname"><a href="classgGUIControl.html">gGUIControl</a></div><div class="ttdef"><b>Definition:</b> gGUIControl.h:29</div></div>

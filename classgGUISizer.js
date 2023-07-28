@@ -15,6 +15,8 @@ var classgGUISizer =
     [ "getSizerType", "classgGUISizer.html#a5ddfcb7edd257628249563dc28809e7e", null ],
     [ "getSlotHeight", "classgGUISizer.html#a1baa153b1ddc4b4d3162c9b1e0c79d2a", null ],
     [ "getSlotWidth", "classgGUISizer.html#a36fdb1821cc3af7dcdf519b19abeea95", null ],
+    [ "getSlotX", "classgGUISizer.html#a53d08b39ab6f8284ef16eeec11d5c6ab", null ],
+    [ "getSlotY", "classgGUISizer.html#aea1345e12c12b5b68f57eac7026579a4", null ],
     [ "keyPressed", "classgGUISizer.html#a425abe8e385bedcd6e7ab2605abe6f16", null ],
     [ "keyReleased", "classgGUISizer.html#a4e28560e02f143d5a4a0d70d15c88e42", null ],
     [ "mouseDragged", "classgGUISizer.html#a03864393c91536fe6508c212519c7fe7", null ],
