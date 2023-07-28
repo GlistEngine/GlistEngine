@@ -2,7 +2,7 @@
  * gGUITable.h
  *
  *  Created on: 28 Tem 2023
- *       Author: Nazim Gültekin
+ *       Author: Nazim Gultekin
  */
 
 #ifndef UI_GGUITABLE_H_

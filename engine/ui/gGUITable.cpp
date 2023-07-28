@@ -2,7 +2,7 @@
  * gGUITable.cpp
  *
  *  Created on: 28 Tem 2023
- *      Author: Nazim Gültekin
+ *      Author: Nazim Gultekin
  */
 
 #include "gGUITable.h"
