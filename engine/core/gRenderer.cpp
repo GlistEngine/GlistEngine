@@ -21,6 +21,12 @@
 #include "gCone.h"
 #include "gTube.h"
 
+//screenShot Related includes
+#include "stb/stb_image_write.h"
+#include "gBaseApp.h"
+#include <GLFW/glfw3.h>
+#include "gImage.h"
+
 const int gRenderer::SCREENSCALING_NONE = 0;
 const int gRenderer::SCREENSCALING_MIPMAP = 1;
 const int gRenderer::SCREENSCALING_AUTO = 2;
@@ -2442,4 +2448,38 @@ const std::string gRenderer::getShaderSrcFboFragment() {
 	return std::string(shadersource);
 }
 
+/*
+ * Rotates The Pixel Data upside down. Hence rotates flips the image upside down
+ */
+void flipVertically(unsigned char* pixelData, int width, int height, int numChannels) {
+    int rowSize = width * numChannels;
+    unsigned char* tempRow = new unsigned char[rowSize];
 
+    for (int row = 0; row < height / 2; ++row) {
+        // Calculate the corresponding row from the bottom
+        int bottomRow = height - row - 1;
+
+        // Swap the rows
+        memcpy(tempRow, pixelData + row * rowSize, rowSize);
+        memcpy(pixelData + row * rowSize, pixelData + bottomRow * rowSize, rowSize);
+        memcpy(pixelData + bottomRow * rowSize, tempRow, rowSize);
+    }
+
+    delete[] tempRow;
+}
+
+gImage* gRenderer::takeScreenshot() {
+
+   int height = gBaseApp::getAppManager()->getWindow()->getHeight();
+   int width = gBaseApp::getAppManager()->getWindow()->getWidth();
+   unsigned char* pixelData = new unsigned char[width * height * 4];
+    glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, pixelData);
+    flipVertically(pixelData, width, height, 4);
+    gImage* screenShot = new gImage();
+    screenShot->setImageData(pixelData, width, height, 4);
+    //std::string imagePath = "output.png";   USE IT TO SAVE THE IMAGE
+   // screenShot->saveImage(imagePath);  USE IT TO SAVE THE IMAGE
+    return screenShot;
+    delete[] pixelData;
+
+}

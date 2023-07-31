@@ -32,6 +32,7 @@
 #include "gColor.h"
 #include "gConstants.h"
 class gLight;
+class gImage;
 //#include "gLight.h"
 
 // You can define ENGINE_OPENGL_CHECKS to enable OpenGL checks
@@ -225,6 +226,11 @@ public:
 	const glm::vec3& getCameraPosition() const;
 	void backupMatrices();
 	void restoreMatrices();
+
+	/*
+	 * Takes Screen Shot of the current Rendered Screen and returns it as an gImage class
+	 */
+	gImage* takeScreenshot();
 
 private:
 	static int width, height;
