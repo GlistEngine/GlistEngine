@@ -1,5 +1,6 @@
 var NAVTREEINDEX5 =
 {
+"classgGUIPieGraph.html#aefada7e7ed7a132b865d75ca88f56b8e":[0,0,76,4],
 "classgGUIPieGraph.html#af2bdbdfa6cc8a7c34ee1830e0d36fb4a":[0,0,76,5],
 "classgGUIPieGraph.html#afeec500078ae3aaea9ae1c83a9dce6ee":[0,0,76,1],
 "classgGUIProgressBar.html":[0,0,77],
@@ -248,6 +249,5 @@ var NAVTREEINDEX5 =
 "classgGUITextbox.html#ab0581a36f4dab26d7bc11fb02f3dc841":[0,0,88,38],
 "classgGUITextbox.html#ab1231921d8473967a5d8b1e98bc1a9d8":[0,0,88,36],
 "classgGUITextbox.html#ab30373418b4de7a24cfbc526b93bb4ca":[0,0,88,7],
-"classgGUITextbox.html#abf3e7e720d587112fc9293e3d481edcd":[0,0,88,2],
-"classgGUITextbox.html#ac06c6c9ab5fe216de85f36dd11b68737":[0,0,88,20]
+"classgGUITextbox.html#abf3e7e720d587112fc9293e3d481edcd":[0,0,88,2]
 };

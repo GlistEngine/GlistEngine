@@ -13,6 +13,7 @@ var classgGUIGrid =
     [ "drawColumnContents", "classgGUIGrid.html#a14f2522ede5c18a8121c29fee93232eb", null ],
     [ "drawContent", "classgGUIGrid.html#ac85a49806fc22aa499c2febfb84dd903", null ],
     [ "drawRowContents", "classgGUIGrid.html#a3a142226789d9762c46c7a76caed5392", null ],
+    [ "drawSelectedArea", "classgGUIGrid.html#afb836e7cd78b9d80908f502fa8cb6cd3", null ],
     [ "drawSelectedBox", "classgGUIGrid.html#a729bf425eb784e3706b813ef7a14035f", null ],
     [ "drawSelectedColumn", "classgGUIGrid.html#ab9bd16e2d0901b13883117fe18efa459", null ],
     [ "drawSelectedRow", "classgGUIGrid.html#ace3a5fa34928c8f4bf21a1924fb3eb02", null ],
