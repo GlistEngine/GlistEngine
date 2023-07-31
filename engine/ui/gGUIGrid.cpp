@@ -720,7 +720,7 @@ void gGUIGrid::drawSelectedRow() {
 		int selectedy = calculateCurrentY(int(firstselectedcell / columnnum));
 		int selectedw = calculateCurrentX(lastselectedcell % columnnum) + gridboxw / 2;
 		int selectedh = calculateCurrentY(int(lastselectedcell / columnnum)) - selectedy + gridboxh;
-		gDrawRectangle(gridx + gridboxw / 2 + 1 - firstx, selectedy + 1, selectedw - 2, selectedh - 2, false);
+		gDrawRectangle(gridx + gridboxw / 2 + 1 - firstx, selectedy + 1, selectedw - 2 + firstx, selectedh - 2, false);
 		gDrawRectangle(gridx + gridboxw / 2 + selectedw - 2 - 6, selectedy + selectedh - 2 - 4, 6, 6, true); // FLAG
 	}
 }
@@ -735,8 +735,8 @@ void gGUIGrid::drawSelectedColumn() {
 		int selectedx = calculateCurrentX(firstselectedcell % columnnum);
 		int selectedw = calculateCurrentX(lastselectedcell % columnnum) - selectedx + gridboxw;
 		int selectedh = calculateCurrentY(int(lastselectedcell / columnnum));
-		gDrawRectangle(selectedx + 1, gridy + gridboxh + 1 - firsty, selectedw - 2, selectedh - 2, false);
-		gDrawRectangle(selectedx + selectedw - 2 - 6, gridboxh + selectedh - 2 - 4 - firsty, 6, 6, true); // FLAG
+		gDrawRectangle(selectedx + 1, gridy + gridboxh + 1 - firsty, selectedw - 2, selectedh - 2 + firsty, false);
+		gDrawRectangle(selectedx + selectedw - 2 - 6, gridboxh + selectedh - 2 - 4, 6, 6, true); // FLAG
 	}
 }
 
