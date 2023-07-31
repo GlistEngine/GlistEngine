@@ -674,6 +674,7 @@ void gGUIGrid::changeCell() {
 void gGUIGrid::drawContent() {
 	gColor oldcolor = renderer->getColor();
 	drawCellBackground();
+	if(firstselectedcell != -1) drawSelectedArea();
 	if(isselected) drawSelectedBox();
 	else if(isrowselected) drawSelectedRow();
 	else if(iscolumnselected) drawSelectedColumn();
@@ -702,9 +703,9 @@ void gGUIGrid::drawSelectedBox() {
 	}
 	else {
 		int selectedx = calculateCurrentX(firstselectedcell % columnnum);
-		int selectedw = calculateCurrentX(lastselectedcell % columnnum) - selectedx + gridboxw;
+		int selectedw = calculateCurrentX(lastselectedcell % columnnum) - selectedx + gridboxesw[lastselectedcell % columnnum];
 		int selectedy = calculateCurrentY(int(firstselectedcell / columnnum));
-		int selectedh = calculateCurrentY(int(lastselectedcell / columnnum)) - selectedy + gridboxh;
+		int selectedh = calculateCurrentY(int(lastselectedcell / columnnum)) - selectedy + gridboxesh[int(lastselectedcell / columnnum)];
 		gDrawRectangle(selectedx + 1, selectedy + 1, selectedw - 2, selectedh - 2, false);
 		gDrawRectangle(selectedx + selectedw - 2 - 6, selectedy + selectedh - 2 - 4, 6, 6, true); // FLAG
 	}
@@ -719,7 +720,7 @@ void gGUIGrid::drawSelectedRow() {
 	else {
 		int selectedy = calculateCurrentY(int(firstselectedcell / columnnum));
 		int selectedw = calculateCurrentX(lastselectedcell % columnnum) + gridboxw / 2;
-		int selectedh = calculateCurrentY(int(lastselectedcell / columnnum)) - selectedy + gridboxh;
+		int selectedh = calculateCurrentY(int(lastselectedcell / columnnum)) - selectedy + gridboxesh[int(lastselectedcell / columnnum)];
 		gDrawRectangle(gridx + gridboxw / 2 + 1 - firstx, selectedy + 1, selectedw - 2 + firstx, selectedh - 2, false);
 		gDrawRectangle(gridx + gridboxw / 2 + selectedw - 2 - 6, selectedy + selectedh - 2 - 4, 6, 6, true); // FLAG
 	}
@@ -733,7 +734,7 @@ void gGUIGrid::drawSelectedColumn() {
 	}
 	else {
 		int selectedx = calculateCurrentX(firstselectedcell % columnnum);
-		int selectedw = calculateCurrentX(lastselectedcell % columnnum) - selectedx + gridboxw;
+		int selectedw = calculateCurrentX(lastselectedcell % columnnum) - selectedx + gridboxesw[lastselectedcell % columnnum];
 		int selectedh = calculateCurrentY(int(lastselectedcell / columnnum));
 		gDrawRectangle(selectedx + 1, gridy + gridboxh + 1 - firsty, selectedw - 2, selectedh - 2 + firsty, false);
 		gDrawRectangle(selectedx + selectedw - 2 - 6, gridboxh + selectedh - 2 - 4, 6, 6, true); // FLAG
@@ -834,6 +835,17 @@ void gGUIGrid::drawCellContents() {
 			}
 		}
 	}
+}
+
+void gGUIGrid::drawSelectedArea() {
+	renderer->setColor(*buttoncolor);
+	int sx = calculateCurrentX(firstselectedcell % columnnum);
+	int sy = calculateCurrentY(int(firstselectedcell / columnnum));
+	int sw = calculateCurrentX(lastselectedcell % columnnum) - sx + gridboxesw[lastselectedcell % columnnum];
+	int sh = calculateCurrentY(int(lastselectedcell / columnnum)) - sy + gridboxesh[int(lastselectedcell / columnnum)];
+	gDrawRectangle(sx, sy, sw, sh, true);
+	renderer->setColor(*textbackgroundcolor);
+	gDrawRectangle(allcells.at(selectedbox).cellx, allcells.at(selectedbox).celly, allcells.at(selectedbox).cellw, allcells.at(selectedbox).cellh, true);
 }
 
 void gGUIGrid::mousePressed(int x, int y, int button) {

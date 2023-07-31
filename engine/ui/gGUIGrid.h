@@ -116,6 +116,7 @@ public:
 	void drawColumnContents();
 	void drawTitleLines();
 	void drawCellContents();
+	void drawSelectedArea();
 
 	void fillCell(int cellNo, std::string tempstr);
 	void createCell(int rowNo, int columnNo);
