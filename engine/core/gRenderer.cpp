@@ -2452,32 +2452,32 @@ const std::string gRenderer::getShaderSrcFboFragment() {
  * Rotates The Pixel Data upside down. Hence rotates flips the image upside down
  */
 void flipVertically(unsigned char* pixelData, int width, int height, int numChannels) {
-    int rowSize = width * numChannels;
-    unsigned char* tempRow = new unsigned char[rowSize];
+    int rowsize = width * numChannels;
+    unsigned char* temprow = new unsigned char[rowsize];
 
     for (int row = 0; row < height / 2; ++row) {
         // Calculate the corresponding row from the bottom
-        int bottomRow = height - row - 1;
+        int bottomrow = height - row - 1;
 
         // Swap the rows
-        memcpy(tempRow, pixelData + row * rowSize, rowSize);
-        memcpy(pixelData + row * rowSize, pixelData + bottomRow * rowSize, rowSize);
-        memcpy(pixelData + bottomRow * rowSize, tempRow, rowSize);
+        memcpy(temprow, pixelData + row * rowsize, rowsize);
+        memcpy(pixelData + row * rowsize, pixelData + bottomrow * rowsize, rowsize);
+        memcpy(pixelData + bottomrow * rowsize, temprow, rowsize);
     }
 
-    delete[] tempRow;
+    delete[] temprow;
 }
 
 gImage gRenderer::takeScreenshot() {
 
    int height = gBaseApp::getAppManager()->getWindow()->getHeight();
    int width = gBaseApp::getAppManager()->getWindow()->getWidth();
-   unsigned char* pixelData = new unsigned char[width * height * 4];
+   unsigned char* pixeldata = new unsigned char[width * height * 4];
     glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, pixelData);
     flipVertically(pixelData, width, height, 4);
-    gImage screenShot; //= new gImage();
-    screenShot.setImageData(pixelData, width, height, 4);
+    gImage screenshot;
+    screenshot.setImageData(pixelData, width, height, 4);
     //std::string imagePath = "output.png";   USE IT TO SAVE THE IMAGE
    // screenShot->saveImage(imagePath);  USE IT TO SAVE THE IMAGE
-    return screenShot;
+    return screenshot;
 }
