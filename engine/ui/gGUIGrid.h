@@ -154,6 +154,7 @@ private:
 	void makeDefaultCell();
 	void changeAllAffectedCellsXW(float diff);
 	void changeAllAffectedCellsYH(float diff);
+	void changeSelectedCell(int amount);
 
 	std::deque<Cell> allcells;
 	std::stack<Cell> undocellstack;
@@ -178,6 +179,7 @@ private:
 	int cursor;
 	int currentrow, currentcolumn;
 	int firstcursorposx, firstcursorposy;
+	int firstselectedcell, lastselectedcell;
 	float gridboxw, gridboxh;
 	float gridx, gridy, gridw, gridh;
 	long clicktime, previousclicktime, firstclicktime, clicktimediff;

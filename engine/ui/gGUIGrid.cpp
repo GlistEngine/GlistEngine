@@ -34,6 +34,8 @@ gGUIGrid::gGUIGrid() {
 	currentcolumn = 0;
 	firstcursorposx = 0;
 	firstcursorposy = 0;
+	firstselectedcell = -1;
+	lastselectedcell = -1;
 	gridboxw = 80.0f;
 	gridboxh = 30.0f;
 	gridx = 0.0f;
@@ -541,6 +543,53 @@ void gGUIGrid::changeAllAffectedCellsYH(float diff) {
 	gridh += diff;
 }
 
+void gGUIGrid::changeSelectedCell(int amount) {
+	if(isselected) {
+		if(allcells.at(selectedbox).cellcolumnno == firstselectedcell % columnnum) {
+			if(amount == 1 && lastselectedcell % columnnum + 1 < columnnum) lastselectedcell += amount;
+			else if(amount == -1 && lastselectedcell % columnnum > firstselectedcell % columnnum) lastselectedcell += amount;
+			else if(amount == -1) firstselectedcell += amount;
+			else if(amount == columnnum && int(firstselectedcell / columnnum) == allcells.at(selectedbox).cellrowno && lastselectedcell + columnnum < rownum * columnnum) lastselectedcell += amount;
+			else if(amount == columnnum && firstselectedcell + columnnum <= lastselectedcell && lastselectedcell + columnnum < rownum * columnnum) firstselectedcell += amount;
+			else if(amount == -columnnum && int(lastselectedcell / columnnum) != allcells.at(selectedbox).cellrowno && lastselectedcell / columnnum > firstselectedcell / columnnum) lastselectedcell += amount;
+			else if(amount == -columnnum && firstselectedcell - columnnum >= firstselectedcell % columnnum) firstselectedcell += amount;
+		}
+		else if(allcells.at(selectedbox).cellcolumnno == lastselectedcell % columnnum) {
+			if(amount == 1 && lastselectedcell % columnnum + 1 < columnnum) {
+				if(firstselectedcell % columnnum < lastselectedcell % columnnum) firstselectedcell += amount;
+				else lastselectedcell += amount;
+			}
+			else if(amount == -1 && firstselectedcell % columnnum > 0) firstselectedcell += amount;
+			else if(amount == columnnum && int(firstselectedcell / columnnum) == allcells.at(selectedbox).cellrowno && lastselectedcell + columnnum < rownum * columnnum) lastselectedcell += amount;
+			else if(amount == columnnum && firstselectedcell + columnnum <= lastselectedcell && lastselectedcell + columnnum < rownum * columnnum) firstselectedcell += amount;
+			else if(amount == -columnnum && int(lastselectedcell / columnnum) != allcells.at(selectedbox).cellrowno && lastselectedcell / columnnum > firstselectedcell / columnnum) lastselectedcell += amount;
+			else if(amount == -columnnum && firstselectedcell - columnnum >= firstselectedcell % columnnum) firstselectedcell += amount;
+		}
+	}
+	else if(iscolumnselected) {
+		if(amount == 1 && lastselectedcell % columnnum + 1 < columnnum) {
+			if(allcells.at(selectedbox).cellrowno * columnnum + allcells.at(selectedbox).cellcolumnno == firstselectedcell) lastselectedcell += amount;
+			else firstselectedcell += amount;
+		}
+		else if(amount == 1 && allcells.at(selectedbox).cellrowno * columnnum + allcells.at(selectedbox).cellcolumnno != firstselectedcell) firstselectedcell += amount;
+		else if(amount == -1 && lastselectedcell % columnnum > firstselectedcell && allcells.at(selectedbox).cellrowno * columnnum + allcells.at(selectedbox).cellcolumnno == firstselectedcell) lastselectedcell += amount;
+		else if(amount == -1 && firstselectedcell > 0) firstselectedcell += amount;
+		else if(amount == columnnum && lastselectedcell + columnnum < rownum * columnnum) lastselectedcell += amount;
+		else if(amount == -columnnum && lastselectedcell > lastselectedcell % columnnum + firstselectedcell) lastselectedcell += amount;
+	}
+	else if(isrowselected) {
+		if(amount == 1 && lastselectedcell % columnnum + 1 < columnnum) lastselectedcell += amount;
+		else if(amount == -1 && lastselectedcell % columnnum > 0) lastselectedcell += amount;
+		else if(amount == columnnum && lastselectedcell + columnnum < rownum * columnnum) {
+			if(allcells.at(selectedbox).cellrowno * columnnum + allcells.at(selectedbox).cellcolumnno == firstselectedcell) lastselectedcell += amount;
+			else firstselectedcell += amount;
+		}
+		else if(amount == columnnum && allcells.at(selectedbox).cellrowno * columnnum + allcells.at(selectedbox).cellcolumnno != firstselectedcell) firstselectedcell += amount;
+		else if(amount == -columnnum && lastselectedcell / columnnum > firstselectedcell / columnnum && allcells.at(selectedbox).cellrowno * columnnum + allcells.at(selectedbox).cellcolumnno == firstselectedcell) lastselectedcell += amount;
+		else if(amount == -columnnum && firstselectedcell > 0) firstselectedcell += amount;
+	}
+}
+
 void gGUIGrid::fillCell(int cellNo, std::string tempstr) { //when rowNo = 1, columnNO = 4; tempstr = "happyyyy";
 	if(cellNo > rownum * columnnum - 1) return;
 	int cellindex = cellNo;
@@ -647,20 +696,48 @@ void gGUIGrid::drawCellBackground() {
 
 void gGUIGrid::drawSelectedBox() {
 	renderer->setColor(0.0f, 1.0f, 0.0f, 1.0f);
-	gDrawRectangle(allcells.at(selectedbox).cellx + 1 - firstx, allcells.at(selectedbox).celly + 1 - firsty, gridboxesw[allcells.at(selectedbox).cellcolumnno] - 2, gridboxesh[allcells.at(selectedbox).cellrowno] - 2, false);
-	gDrawRectangle(allcells.at(selectedbox).cellx + gridboxesw[allcells.at(selectedbox).cellcolumnno] - 2 - 6 - firstx, allcells.at(selectedbox).celly + gridboxesh[allcells.at(selectedbox).cellrowno] - 2 - 4 - firsty, 6, 6, true); // FLAG
+	if(firstselectedcell == -1) {
+		gDrawRectangle(allcells.at(selectedbox).cellx + 1 - firstx, allcells.at(selectedbox).celly + 1 - firsty, gridboxesw[allcells.at(selectedbox).cellcolumnno] - 2, gridboxesh[allcells.at(selectedbox).cellrowno] - 2, false);
+		gDrawRectangle(allcells.at(selectedbox).cellx + gridboxesw[allcells.at(selectedbox).cellcolumnno] - 2 - 6 - firstx, allcells.at(selectedbox).celly + gridboxesh[allcells.at(selectedbox).cellrowno] - 2 - 4 - firsty, 6, 6, true); // FLAG
+	}
+	else {
+		int selectedx = calculateCurrentX(firstselectedcell % columnnum);
+		int selectedw = calculateCurrentX(lastselectedcell % columnnum) - selectedx + gridboxw;
+		int selectedy = calculateCurrentY(int(firstselectedcell / columnnum));
+		int selectedh = calculateCurrentY(int(lastselectedcell / columnnum)) - selectedy + gridboxh;
+		gDrawRectangle(selectedx + 1, selectedy + 1, selectedw - 2, selectedh - 2, false);
+		gDrawRectangle(selectedx + selectedw - 2 - 6, selectedy + selectedh - 2 - 4, 6, 6, true); // FLAG
+	}
 }
 
 void gGUIGrid::drawSelectedRow() {
 	renderer->setColor(0.0f, 1.0f, 0.0f, 1.0f);
-	gDrawRectangle(gridx + gridboxw / 2 + 1 - firstx, calculateCurrentY(allcells.at(selectedtitle).cellrowno) + 1, gridw - 2, gridboxesh[allcells.at(selectedtitle).cellrowno] - 2, false);
-	gDrawRectangle(gridx + gridboxw / 2 + gridw - 2 - 6 - firstx, calculateCurrentY(allcells.at(selectedtitle).cellrowno) + gridboxesh[allcells.at(selectedtitle).cellrowno] - 2 - 4, 6, 6, true); // FLAG
+	if(firstselectedcell == -1) {
+		gDrawRectangle(gridx + gridboxw / 2 + 1 - firstx, calculateCurrentY(allcells.at(selectedtitle).cellrowno) + 1, gridw - 2, gridboxesh[allcells.at(selectedtitle).cellrowno] - 2, false);
+		gDrawRectangle(gridx + gridboxw / 2 + gridw - 2 - 6 - firstx, calculateCurrentY(allcells.at(selectedtitle).cellrowno) + gridboxesh[allcells.at(selectedtitle).cellrowno] - 2 - 4, 6, 6, true); // FLAG
+	}
+	else {
+		int selectedy = calculateCurrentY(int(firstselectedcell / columnnum));
+		int selectedw = calculateCurrentX(lastselectedcell % columnnum) + gridboxw / 2;
+		int selectedh = calculateCurrentY(int(lastselectedcell / columnnum)) - selectedy + gridboxh;
+		gDrawRectangle(gridx + gridboxw / 2 + 1 - firstx, selectedy + 1, selectedw - 2, selectedh - 2, false);
+		gDrawRectangle(gridx + gridboxw / 2 + selectedw - 2 - 6, selectedy + selectedh - 2 - 4, 6, 6, true); // FLAG
+	}
 }
 
 void gGUIGrid::drawSelectedColumn() {
 	renderer->setColor(0.0f, 1.0f, 0.0f, 1.0f);
-	gDrawRectangle(calculateCurrentX(allcells.at(selectedtitle).cellcolumnno) + 1, gridy + gridboxesh[allcells.at(selectedtitle).cellrowno] + 1 - firsty, gridboxesw[allcells.at(selectedtitle).cellcolumnno] - 2, gridh - 2, false);
-	gDrawRectangle(calculateCurrentX(allcells.at(selectedtitle).cellcolumnno) + gridboxesw[allcells.at(selectedtitle).cellcolumnno] - 2 - 6, gridy + gridboxesh[allcells.at(selectedtitle).cellrowno] + gridh - 2 - 4 - firsty, 6, 6, true); // FLAG
+	if(firstselectedcell == -1) {
+		gDrawRectangle(calculateCurrentX(allcells.at(selectedtitle).cellcolumnno) + 1, gridy + gridboxesh[allcells.at(selectedtitle).cellrowno] + 1 - firsty, gridboxesw[allcells.at(selectedtitle).cellcolumnno] - 2, gridh - 2, false);
+		gDrawRectangle(calculateCurrentX(allcells.at(selectedtitle).cellcolumnno) + gridboxesw[allcells.at(selectedtitle).cellcolumnno] - 2 - 6, gridy + gridboxesh[allcells.at(selectedtitle).cellrowno] + gridh - 2 - 4 - firsty, 6, 6, true); // FLAG
+	}
+	else {
+		int selectedx = calculateCurrentX(firstselectedcell % columnnum);
+		int selectedw = calculateCurrentX(lastselectedcell % columnnum) - selectedx + gridboxw;
+		int selectedh = calculateCurrentY(int(lastselectedcell / columnnum));
+		gDrawRectangle(selectedx + 1, gridy + gridboxh + 1 - firsty, selectedw - 2, selectedh - 2, false);
+		gDrawRectangle(selectedx + selectedw - 2 - 6, gridboxh + selectedh - 2 - 4 - firsty, 6, 6, true); // FLAG
+	}
 }
 
 void gGUIGrid::drawTitleRowBackground() {
@@ -763,6 +840,8 @@ void gGUIGrid::mousePressed(int x, int y, int button) {
 	gGUIScrollable::mousePressed(x, y, button);
 	int pressedx = x - left + firstx;
 	int pressedy = y - top + firsty - titledy;
+	firstselectedcell = -1;
+	lastselectedcell = -1;
 	if(cursor == gGUIForm::CURSOR_VRESIZE || cursor == gGUIForm::CURSOR_HRESIZE) {
 		firstcursorposx = x;
 		firstcursorposy = y;
@@ -943,8 +1022,28 @@ void gGUIGrid::keyPressed(int key){
 	}
 	else if(key == G_KEY_B && ctrlpressed) setCellFontBold();
 	else if(key == G_KEY_I && ctrlpressed) setCellFontItalic();
+	else if(shiftpressed) {
+		if(key == G_KEY_DOWN) changeSelectedCell(columnnum);
+		else if(key == G_KEY_UP) changeSelectedCell(-columnnum);
+		else if(key == G_KEY_LEFT) changeSelectedCell(-1);
+		else if(key == G_KEY_RIGHT) changeSelectedCell(1);
+	}
 	else if((isselected || isrowselected || iscolumnselected) && (key == G_KEY_LEFT_CONTROL || key == G_KEY_RIGHT_CONTROL)) ctrlpressed = true;
-	else if((isselected || isrowselected || iscolumnselected) && (key == G_KEY_LEFT_SHIFT || key == G_KEY_RIGHT_SHIFT)) shiftpressed = true;
+	else if((isselected || isrowselected || iscolumnselected) && (key == G_KEY_LEFT_SHIFT || key == G_KEY_RIGHT_SHIFT)) {
+		shiftpressed = true;
+		if(isselected && firstselectedcell == -1) {
+			firstselectedcell = allcells.at(selectedbox).cellrowno * columnnum + allcells.at(selectedbox).cellcolumnno;
+			lastselectedcell = firstselectedcell;
+		}
+		else if(isrowselected && firstselectedcell == -1) {
+			firstselectedcell = allcells.at(selectedbox).cellrowno * columnnum + allcells.at(selectedbox).cellcolumnno;
+			lastselectedcell = allcells.at(selectedbox).cellrowno * columnnum + columnnum - 1;
+		}
+		else if(iscolumnselected && firstselectedcell == -1) {
+			firstselectedcell = allcells.at(selectedbox).cellrowno * columnnum + allcells.at(selectedbox).cellcolumnno;
+			lastselectedcell = (rownum - 1) * columnnum + allcells.at(selectedbox).cellcolumnno;
+		}
+	}
 	else if((isselected || isrowselected || iscolumnselected) && key != G_KEY_ENTER && key != G_KEY_UP && key != G_KEY_DOWN && key != G_KEY_RIGHT && key != G_KEY_LEFT && key != G_KEY_ESC && key != G_KEY_LEFT_SHIFT && key != G_KEY_RIGHT_SHIFT && key != G_KEY_F2) {
 		textbox.cleanText();
 		strflag = allcells.at(selectedbox).cellcontent;
@@ -959,65 +1058,96 @@ void gGUIGrid::keyPressed(int key){
 
 void gGUIGrid::keyReleased(int key) {
 	if(istextboxactive) textbox.keyReleased(key);
-	if((key == G_KEY_ENTER && istextboxactive)) {
+	if((key == G_KEY_ENTER && firstselectedcell != -1)) {
 		changeCell();
 		istextboxactive = false;
 		textbox.setEditable(false);
+		bool godown = (allcells.at(selectedbox).cellrowno + 1 <= int(lastselectedcell / columnnum));
+		int newrow;
+		int newcolumn;
+		if(!godown) {
+			newrow = int(firstselectedcell / columnnum);
+			if(allcells.at(selectedbox).cellcolumnno < lastselectedcell % columnnum) newcolumn = allcells.at(selectedbox).cellcolumnno + 1;
+			else newcolumn = firstselectedcell % columnnum;
+		}
+		else {
+			newrow = allcells.at(selectedbox).cellrowno + 1;
+			newcolumn = allcells.at(selectedbox).cellcolumnno;
+		}
+		int index = getCell(newrow, newcolumn);
+		if(index == -1) {
+			createCell(newrow, newcolumn);
+			index = allcells.size() - 1;
+		}
+		selectedbox = index;
 	}
-	else if ((key == G_KEY_ENTER || key == G_KEY_DOWN) && !istextboxactive) {
-		if(allcells.at(selectedbox).cellrowno + 1 < rownum) {
-			int index = getCell(allcells.at(selectedbox).cellrowno + 1, allcells.at(selectedbox).cellcolumnno);
-			if(index == -1) {
-				createCell(allcells.at(selectedbox).cellrowno + 1, allcells.at(selectedbox).cellcolumnno);
-				index = allcells.size() - 1;
-			}
-			selectedbox = index;
+	else if ((key == G_KEY_ENTER || key == G_KEY_DOWN) && !shiftpressed) {
+		changeCell();
+		istextboxactive = false;
+		textbox.setEditable(false);
+		isrowselected = false;
+		isselected = true;
+		bool godown = (allcells.at(selectedbox).cellrowno + 1 < rownum);
+		int newrow;
+		int newcolumn;
+		if(!godown) {
+			newrow = 0;
+			if(allcells.at(selectedbox).cellrowno * columnnum + allcells.at(selectedbox).cellcolumnno + 1 < rownum * columnnum) newcolumn = allcells.at(selectedbox).cellcolumnno + 1;
+			else newcolumn = 0;
 		}
-		if(isrowselected) {
-			isrowselected = false;
-			isselected = true;
+		else {
+			newrow = allcells.at(selectedbox).cellrowno + 1;
+			newcolumn = allcells.at(selectedbox).cellcolumnno;
 		}
+		int index = getCell(newrow, newcolumn);
+		if(index == -1) {
+			createCell(newrow, newcolumn);
+			index = allcells.size() - 1;
+		}
+		selectedbox = index;
+		firstselectedcell = -1;
+		lastselectedcell = -1;
 	}
 	else if(key == G_KEY_UP && !istextboxactive) {
-		if(allcells.at(selectedbox).cellrowno - 1 >= 0) {
+		if(!shiftpressed && allcells.at(selectedbox).cellrowno - 1 >= 0) {
+			isrowselected = false;
+			isselected = true;
 			int index = getCell(allcells.at(selectedbox).cellrowno - 1, allcells.at(selectedbox).cellcolumnno);
 			if(index == -1) {
 				createCell(allcells.at(selectedbox).cellrowno - 1, allcells.at(selectedbox).cellcolumnno);
 				index = allcells.size() - 1;
 			}
 			selectedbox = index;
-		}
-		if(isrowselected) {
-			isrowselected = false;
-			isselected = true;
+			firstselectedcell = -1;
+			lastselectedcell = -1;
 		}
 	}
 	else if(key == G_KEY_RIGHT && !istextboxactive) {
-		if(allcells.at(selectedbox).cellcolumnno + 1 < columnnum) {
+		if(!shiftpressed && allcells.at(selectedbox).cellcolumnno + 1 < columnnum) {
+			iscolumnselected = false;
+			isselected = true;
 			int index = getCell(allcells.at(selectedbox).cellrowno, allcells.at(selectedbox).cellcolumnno + 1);
 			if(index == -1) {
 				createCell(allcells.at(selectedbox).cellrowno, allcells.at(selectedbox).cellcolumnno + 1);
 				index = allcells.size() - 1;
 			}
 			selectedbox = index;
-		}
-		if(iscolumnselected) {
-			iscolumnselected = false;
-			isselected = true;
+			firstselectedcell = -1;
+			lastselectedcell = -1;
 		}
 	}
 	else if(key == G_KEY_LEFT && !istextboxactive) {
-		if(allcells.at(selectedbox).cellcolumnno - 1 >= 0) {
+		if(!shiftpressed && allcells.at(selectedbox).cellcolumnno - 1 >= 0) {
+			iscolumnselected = false;
+			isselected = true;
 			int index = getCell(allcells.at(selectedbox).cellrowno, allcells.at(selectedbox).cellcolumnno - 1);
 			if(index == -1) {
 				createCell(allcells.at(selectedbox).cellrowno, allcells.at(selectedbox).cellcolumnno - 1);
 				index = allcells.size() - 1;
 			}
 			selectedbox = index;
-		}
-		if(iscolumnselected) {
-			iscolumnselected = false;
-			isselected = true;
+			firstselectedcell = -1;
+			lastselectedcell = -1;
 		}
 	}
 	else if(key == G_KEY_F2) {
