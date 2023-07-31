@@ -230,7 +230,7 @@ public:
 	/*
 	 * Takes Screen Shot of the current Rendered Screen and returns it as an gImage class
 	 */
-	gImage* takeScreenshot();
+	gImage takeScreenshot();
 
 private:
 	static int width, height;

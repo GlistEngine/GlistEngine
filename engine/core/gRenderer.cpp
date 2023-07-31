@@ -2468,18 +2468,16 @@ void flipVertically(unsigned char* pixelData, int width, int height, int numChan
     delete[] tempRow;
 }
 
-gImage* gRenderer::takeScreenshot() {
+gImage gRenderer::takeScreenshot() {
 
    int height = gBaseApp::getAppManager()->getWindow()->getHeight();
    int width = gBaseApp::getAppManager()->getWindow()->getWidth();
    unsigned char* pixelData = new unsigned char[width * height * 4];
     glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, pixelData);
     flipVertically(pixelData, width, height, 4);
-    gImage* screenShot = new gImage();
-    screenShot->setImageData(pixelData, width, height, 4);
+    gImage screenShot; //= new gImage();
+    screenShot.setImageData(pixelData, width, height, 4);
     //std::string imagePath = "output.png";   USE IT TO SAVE THE IMAGE
    // screenShot->saveImage(imagePath);  USE IT TO SAVE THE IMAGE
     return screenShot;
-    delete[] pixelData;
-
 }
