@@ -115,5 +115,6 @@ var classgRenderer =
     [ "setLightingPosition", "classgRenderer.html#ab2849a4b9a2e08f94b5302ff1ec02398", null ],
     [ "setProjectionMatrix", "classgRenderer.html#acf3a9d4e3d32be8583c3eeae57e6139f", null ],
     [ "setProjectionMatrix2d", "classgRenderer.html#addf7108c9745cdb092bf888b99418d1f", null ],
-    [ "setViewMatrix", "classgRenderer.html#add20288b75535a460ccaf6615b2dcbd9", null ]
+    [ "setViewMatrix", "classgRenderer.html#add20288b75535a460ccaf6615b2dcbd9", null ],
+    [ "takeScreenshot", "classgRenderer.html#a08f1eb36d7d25fad01f56695a10889ee", null ]
 ];

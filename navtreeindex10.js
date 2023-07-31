@@ -1,5 +1,6 @@
 var NAVTREEINDEX10 =
 {
+"classgVbo.html#af80337e12ce06252012fddd8c3757a8a":[0,0,151,13],
 "classgVignette.html":[0,0,153],
 "classgVignette.html#a219700a47ff1bf5bfdd720aa9df82d64":[0,0,153,1],
 "classgVignette.html#a5ad26d8923d1f9e8ff86ebd7979e28e8":[0,0,153,2],
@@ -248,6 +249,5 @@ var NAVTREEINDEX10 =
 "structgHttpFile_1_1ProgressData.html":[0,0,94,0],
 "structgHttpFile_1_1ProgressData.html#a437d4db25e3c8db350206cb7de706e3f":[0,0,94,0,1],
 "structgHttpFile_1_1ProgressData.html#a7d3ae2b5d14fb694f338f136d344524c":[0,0,94,0,0],
-"structgVertex.html":[0,0,152],
-"structgVertex.html#a1307c4e7fc374612cd8e583ce90e8115":[0,0,152,2]
+"structgVertex.html":[0,0,152]
 };
