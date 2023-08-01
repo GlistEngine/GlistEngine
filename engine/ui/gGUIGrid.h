@@ -158,8 +158,10 @@ private:
 	void changeAllAffectedCellsXW(float diff);
 	void changeAllAffectedCellsYH(float diff);
 	void changeSelectedCell(int amount);
+	void setSelectedCells();
 
 	std::deque<Cell> allcells;
+	std::deque<int> selectedcells;
 	std::stack<Cell> undocellstack;
 	std::stack<Cell> redocellstack;
 	std::vector<int> functionindexes;
