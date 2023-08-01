@@ -199,6 +199,7 @@ void gGUIGrid::checkCellType(int cellIndex) {
 }
 
 void gGUIGrid::setCellFont(int fontNum) {
+	if(allcells.empty()) return;
 	undocellstack.push(allcells.at(selectedbox));
 	undocellstack.top().showncontent = fixTextFunction(undocellstack.top().cellcontent, selectedbox);
 	allcells.at(selectedbox).fontnum = fontNum;
@@ -209,18 +210,21 @@ void gGUIGrid::setCellFont(int fontNum) {
 }
 
 void gGUIGrid::setCellFontBold() {
+	if(allcells.empty()) return;
 	if(allcells.at(selectedbox).isbold) allcells.at(selectedbox).isbold = false;
 	else allcells.at(selectedbox).isbold = true;
 	setCellFont(allcells.at(selectedbox).fontnum);
 }
 
 void gGUIGrid::setCellFontItalic() {
+	if(allcells.empty()) return;
 	if(allcells.at(selectedbox).isitalic) allcells.at(selectedbox).isitalic = false;
 	else allcells.at(selectedbox).isitalic = true;
 	setCellFont(allcells.at(selectedbox).fontnum);
 }
 
 void gGUIGrid::setCellAlignment(int cellAlignment, bool clicked) {
+	if(allcells.empty()) return;
 	if(clicked) {
 		undocellstack.push(allcells.at(selectedbox));
 		undocellstack.top().showncontent = fixTextFunction(undocellstack.top().cellcontent, selectedbox);
@@ -240,6 +244,7 @@ void gGUIGrid::setCellAlignment(int cellAlignment, bool clicked) {
 }
 
 void gGUIGrid::setCellFontColor(gColor *fontColor) {
+	if(allcells.empty()) return;
 	undocellstack.push(allcells.at(selectedbox));
 	undocellstack.top().showncontent = fixTextFunction(undocellstack.top().cellcontent, selectedbox);
 	allcells.at(selectedbox).cellfontcolor = fontColor;
@@ -247,6 +252,7 @@ void gGUIGrid::setCellFontColor(gColor *fontColor) {
 }
 
 void gGUIGrid::setCellLine(int lineNo, bool clicked) {
+	if(allcells.empty()) return;
 	undocellstack.push(allcells.at(selectedbox));
 	undocellstack.top().showncontent = fixTextFunction(undocellstack.top().cellcontent, selectedbox);
 	if(clicked && lineNo == allcells.at(selectedbox).lineno) lineNo = 0;
@@ -696,7 +702,7 @@ void gGUIGrid::drawCellBackground() {
 }
 
 void gGUIGrid::drawSelectedBox() {
-	renderer->setColor(0.0f, 1.0f, 0.0f, 1.0f);
+	renderer->setColor(0.1f, 0.45f, 0.87f, 1.0f);
 	if(firstselectedcell == -1) {
 		gDrawRectangle(allcells.at(selectedbox).cellx + 1 - firstx, allcells.at(selectedbox).celly + 1 - firsty, gridboxesw[allcells.at(selectedbox).cellcolumnno] - 2, gridboxesh[allcells.at(selectedbox).cellrowno] - 2, false);
 		gDrawRectangle(allcells.at(selectedbox).cellx + gridboxesw[allcells.at(selectedbox).cellcolumnno] - 2 - 6 - firstx, allcells.at(selectedbox).celly + gridboxesh[allcells.at(selectedbox).cellrowno] - 2 - 4 - firsty, 6, 6, true); // FLAG
@@ -712,7 +718,7 @@ void gGUIGrid::drawSelectedBox() {
 }
 
 void gGUIGrid::drawSelectedRow() {
-	renderer->setColor(0.0f, 1.0f, 0.0f, 1.0f);
+	renderer->setColor(0.1f, 0.45f, 0.87f, 1.0f);
 	if(firstselectedcell == -1) {
 		gDrawRectangle(gridx + gridboxw / 2 + 1 - firstx, calculateCurrentY(allcells.at(selectedtitle).cellrowno) + 1, gridw - 2, gridboxesh[allcells.at(selectedtitle).cellrowno] - 2, false);
 		gDrawRectangle(gridx + gridboxw / 2 + gridw - 2 - 6 - firstx, calculateCurrentY(allcells.at(selectedtitle).cellrowno) + gridboxesh[allcells.at(selectedtitle).cellrowno] - 2 - 4, 6, 6, true); // FLAG
@@ -727,7 +733,7 @@ void gGUIGrid::drawSelectedRow() {
 }
 
 void gGUIGrid::drawSelectedColumn() {
-	renderer->setColor(0.0f, 1.0f, 0.0f, 1.0f);
+	renderer->setColor(0.1f, 0.45f, 0.87f, 1.0f);
 	if(firstselectedcell == -1) {
 		gDrawRectangle(calculateCurrentX(allcells.at(selectedtitle).cellcolumnno) + 1, gridy + gridboxesh[allcells.at(selectedtitle).cellrowno] + 1 - firsty, gridboxesw[allcells.at(selectedtitle).cellcolumnno] - 2, gridh - 2, false);
 		gDrawRectangle(calculateCurrentX(allcells.at(selectedtitle).cellcolumnno) + gridboxesw[allcells.at(selectedtitle).cellcolumnno] - 2 - 6, gridy + gridboxesh[allcells.at(selectedtitle).cellrowno] + gridh - 2 - 4 - firsty, 6, 6, true); // FLAG
@@ -838,7 +844,7 @@ void gGUIGrid::drawCellContents() {
 }
 
 void gGUIGrid::drawSelectedArea() {
-	renderer->setColor(*buttoncolor);
+	renderer->setColor(0.85f, 0.85f, 0.9f, 1.0f);
 	int sx = calculateCurrentX(firstselectedcell % columnnum);
 	int sy = calculateCurrentY(int(firstselectedcell / columnnum));
 	int sw = calculateCurrentX(lastselectedcell % columnnum) - sx + gridboxesw[lastselectedcell % columnnum];
