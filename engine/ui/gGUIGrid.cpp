@@ -13,6 +13,8 @@
 gGUIGrid::gGUIGrid() {
 //	gridsizer.setSize(10,10);
 //	gridsizer.enableBorders(true);
+	selectedframecolor = gColor(0.1f, 0.45f, 0.87f, 1.0f);
+	selectedareacolor = gColor(0.85f, 0.85f, 0.9f, 1.0f);
 	isselected = false;
 	isrowselected = false;
 	iscolumnselected = false;
@@ -273,10 +275,26 @@ void gGUIGrid::setCopiedCell(Cell* cell) {
 	cell->overflowcontent = "";
 }
 
+void gGUIGrid::setSelectedFrameColor(gColor* selectedFrameColor) {
+	selectedframecolor = *selectedFrameColor;
+}
+
+void gGUIGrid::setSelectedAreaColor(gColor* selectedAreaColor) {
+	selectedareacolor = *selectedAreaColor;
+}
+
 int gGUIGrid::getCell(int rowNo, int columnNo) {
 	for(int i = 0; i < allcells.size(); i++)
 		if(allcells.at(i).cellrowno == rowNo && allcells.at(i).cellcolumnno == columnNo) return i;
 	return -1;
+}
+
+gColor* gGUIGrid::getSelectedFrameColor() {
+	return &selectedframecolor;
+}
+
+gColor* gGUIGrid::getSelectedAreaColor() {
+	return &selectedareacolor;
 }
 
 std::string gGUIGrid::fixTextFunction(std::string text, int index) {
@@ -804,11 +822,11 @@ void gGUIGrid::drawSelectedArea() {
 	int sy = calculateCurrentY(int(firstselectedcell / columnnum));
 	int sw = calculateCurrentX(lastselectedcell % columnnum) - sx + gridboxesw[lastselectedcell % columnnum];
 	int sh = calculateCurrentY(int(lastselectedcell / columnnum)) - sy + gridboxesh[int(lastselectedcell / columnnum)];
-	renderer->setColor(0.85f, 0.85f, 0.9f, 1.0f);
+	renderer->setColor(selectedareacolor);
 	gDrawRectangle(sx, sy, sw, sh, true);
 	renderer->setColor(*textbackgroundcolor);
 	gDrawRectangle(allcells.at(selectedbox).cellx - firstx, allcells.at(selectedbox).celly - firsty, allcells.at(selectedbox).cellw, allcells.at(selectedbox).cellh, true);
-	renderer->setColor(0.1f, 0.45f, 0.87f, 1.0f);
+	renderer->setColor(selectedframecolor);
 	gDrawRectangle(sx + 1, sy + 1, sw - 2, sh - 2, false);
 	gDrawRectangle(sx + sw - 2 - 6, sy + sh - 2 - 4, 6, 6, true); // FLAG
 }
