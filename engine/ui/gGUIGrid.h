@@ -107,9 +107,6 @@ public:
 
 	void drawContent();
 	void drawCellBackground();
-	void drawSelectedBox();
-	void drawSelectedRow();
-	void drawSelectedColumn();
 	void drawTitleRowBackground();
 	void drawTitleColumnBackground();
 	void drawRowContents();
