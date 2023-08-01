@@ -24,7 +24,6 @@
 //screenShot Related includes
 #include "stb/stb_image_write.h"
 #include "gBaseApp.h"
-#include <GLFW/glfw3.h>
 #include "gImage.h"
 
 const int gRenderer::SCREENSCALING_NONE = 0;
