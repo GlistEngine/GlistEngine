@@ -702,8 +702,6 @@ void gGUIGrid::drawCellBackground() {
 }
 
 void gGUIGrid::drawSelectedBox() {
-//	button1.setButtonColor(gColor(0.1f, 0.45f, 0.87f));
-//	button1.setPressedButtonColor(gColor(0.08f, 0.36f, 0.71f));
 	renderer->setColor(0.1f, 0.45f, 0.87f, 1.0f);
 	if(firstselectedcell == -1) {
 		gDrawRectangle(allcells.at(selectedbox).cellx + 1 - firstx, allcells.at(selectedbox).celly + 1 - firsty, gridboxesw[allcells.at(selectedbox).cellcolumnno] - 2, gridboxesh[allcells.at(selectedbox).cellrowno] - 2, false);
