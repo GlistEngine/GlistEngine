@@ -20,6 +20,8 @@ var classgGUIGrid =
     [ "fillCell", "classgGUIGrid.html#a8e550a25875f9626f86444319ad386ed", null ],
     [ "getCell", "classgGUIGrid.html#ab37f1268ae54e2173fe6c9c20a272fed", null ],
     [ "getCursor", "classgGUIGrid.html#a8d053370b4db7e8727e22589534bc0ab", null ],
+    [ "getSelectedAreaColor", "classgGUIGrid.html#ab07076514d9dd5a20e3f7ace0767e372", null ],
+    [ "getSelectedFrameColor", "classgGUIGrid.html#a72f8959d0e3f0f67944e526c35d7eee6", null ],
     [ "keyPressed", "classgGUIGrid.html#ab6d67ff8f1aff5571f58ddf90a938a42", null ],
     [ "keyReleased", "classgGUIGrid.html#ade1bb0ab840c360e38729cd3b4cc6c2d", null ],
     [ "mouseDragged", "classgGUIGrid.html#a6f030d38f194ab0d73333c77befa95f3", null ],
@@ -38,6 +40,8 @@ var classgGUIGrid =
     [ "setCopiedCell", "classgGUIGrid.html#a0e5fd8e029d236f7ba98308efe3e5386", null ],
     [ "setGrid", "classgGUIGrid.html#a9d9331748e04ddca0916f8f8897f299c", null ],
     [ "setRowNum", "classgGUIGrid.html#ad039e97cc24d0291389676323e49382e", null ],
+    [ "setSelectedAreaColor", "classgGUIGrid.html#aa4974f7c7d37dab80a6d9ae36811b4d9", null ],
+    [ "setSelectedFrameColor", "classgGUIGrid.html#a11c15a1d672ad34543021478865e493a", null ],
     [ "showCell", "classgGUIGrid.html#a86e6cef9d29dfedb79025a933be6b49b", null ],
     [ "showCells", "classgGUIGrid.html#ad822d04d5593ed390bcdd382fd689bde", null ],
     [ "update", "classgGUIGrid.html#a9680a5de13c3ae9e70b01354f5d9e241", null ]

@@ -48,13 +48,13 @@ var NAVTREEINDEX =
 "classgColorCurves.html",
 "classgGUICheckbox.html#a011522897edba65ac0d40c56e6f9cd9e",
 "classgGUIGraph.html#a7296ef007d1d699ec587941d638524ad",
-"classgGUIPieGraph.html#afeec500078ae3aaea9ae1c83a9dce6ee",
-"classgGUITextbox.html#acc76110b3a35af157eaf22975ae717a9",
-"classgMaterial.html#a38b3c782a6c370077d8fc58ccf8e257e",
-"classgNode.html#ae9ecfdd35d1e87c96c44337b66547bbb",
-"classgShadowMap.html#a13424049b5cd947863b51d50e4466b01",
-"classgVignette.html#a219700a47ff1bf5bfdd720aa9df82d64",
-"structgVertex.html#a8cdcce468b4c82eba1a8e4f82eb4e4a2"
+"classgGUIPieGraph.html#aaa4ab0abe91706052dd58d8fba9d5303",
+"classgGUITextbox.html#ab30373418b4de7a24cfbc526b93bb4ca",
+"classgMaterial.html#a30e7f2a87b2bc0193799c79ed19903b8",
+"classgNode.html#ae28250b69ddd6462d84cbb2c4300a7d3",
+"classgShader.html#ae0d1457caa2cfb412d43ef055136288f",
+"classgVbo.html#ad470954f698de7f745232ec259e23f95",
+"structgHttpFile_1_1ProgressData.html#a7d3ae2b5d14fb694f338f136d344524c"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
