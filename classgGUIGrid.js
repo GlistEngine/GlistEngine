@@ -26,6 +26,7 @@ var classgGUIGrid =
     [ "mousePressed", "classgGUIGrid.html#ac97512d3a236341a8acb4c7643a958dc", null ],
     [ "mouseReleased", "classgGUIGrid.html#ad0711e9c4334d0203dee56c57057697b", null ],
     [ "mouseScrolled", "classgGUIGrid.html#a9b6be6bbfb5680a84cf7303303c96183", null ],
+    [ "resetSelectedIndexes", "classgGUIGrid.html#af036b7dc3f0e6feddc2174e55d384c40", null ],
     [ "set", "classgGUIGrid.html#a21486d293fa094e2abb54a283df8afbe", null ],
     [ "setCellAlignment", "classgGUIGrid.html#a6e914452952ed4c2caf1ca2b33f5ea95", null ],
     [ "setCellFont", "classgGUIGrid.html#a7c48e7bfd7c3694bd25cccd16acf7489", null ],
