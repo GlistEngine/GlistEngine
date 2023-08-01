@@ -102,8 +102,12 @@ public:
 	void setCellFontColor(gColor* fontColor);
 	void setCellLine(int lineNo, bool clicked);
 	void setCopiedCell(Cell* cell);
+	void setSelectedFrameColor(gColor* selectedFrameColor);
+	void setSelectedAreaColor(gColor* selectedAreaColor);
 
 	int getCell(int rowNo, int columnNo);
+	gColor* getSelectedFrameColor();
+	gColor* getSelectedAreaColor();
 
 	void drawContent();
 	void drawCellBackground();
@@ -165,6 +169,7 @@ private:
 	Cell copiedcell;
 	gGUIManager* manager;
 	gGUITextbox textbox;
+	gColor selectedframecolor, selectedareacolor;
 	bool isselected, isrowselected, iscolumnselected;
 	bool istextboxactive;
 	bool isdoubleclicked;
