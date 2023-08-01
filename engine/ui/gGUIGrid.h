@@ -122,6 +122,7 @@ public:
 	void createTextBox();
 	void changeCell();
 	void checkCellType(int cellIndex);
+	void resetSelectedIndexes();
 
 	void update();
 
