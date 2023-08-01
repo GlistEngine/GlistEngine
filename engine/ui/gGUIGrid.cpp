@@ -198,6 +198,11 @@ void gGUIGrid::checkCellType(int cellIndex) {
 	if(allcells.at(cellIndex).celltype == Cell::TYPE_DIGIT && !allcells.at(cellIndex).iscellaligned) setCellAlignment(gBaseGUIObject::TEXTALIGNMENT_RIGHT, false);
 }
 
+void gGUIGrid::resetSelectedIndexes() {
+	firstselectedcell = allcells.at(selectedbox).cellrowno * columnnum + allcells.at(selectedbox).cellcolumnno;
+	lastselectedcell = firstselectedcell;
+}
+
 void gGUIGrid::setCellFont(int fontNum) {
 	if(allcells.empty()) return;
 	undocellstack.push(allcells.at(selectedbox));
@@ -1093,8 +1098,7 @@ void gGUIGrid::keyReleased(int key) {
 			index = allcells.size() - 1;
 		}
 		selectedbox = index;
-		firstselectedcell = -1;
-		lastselectedcell = -1;
+		resetSelectedIndexes();
 	}
 	else if(key == G_KEY_UP && !istextboxactive) {
 		if(!shiftpressed && allcells.at(selectedbox).cellrowno - 1 >= 0) {
@@ -1106,8 +1110,7 @@ void gGUIGrid::keyReleased(int key) {
 				index = allcells.size() - 1;
 			}
 			selectedbox = index;
-			firstselectedcell = -1;
-			lastselectedcell = -1;
+			resetSelectedIndexes();
 		}
 	}
 	else if(key == G_KEY_RIGHT && !istextboxactive) {
@@ -1120,8 +1123,7 @@ void gGUIGrid::keyReleased(int key) {
 				index = allcells.size() - 1;
 			}
 			selectedbox = index;
-			firstselectedcell = -1;
-			lastselectedcell = -1;
+			resetSelectedIndexes();
 		}
 	}
 	else if(key == G_KEY_LEFT && !istextboxactive) {
@@ -1134,8 +1136,7 @@ void gGUIGrid::keyReleased(int key) {
 				index = allcells.size() - 1;
 			}
 			selectedbox = index;
-			firstselectedcell = -1;
-			lastselectedcell = -1;
+			resetSelectedIndexes();
 		}
 	}
 	else if(key == G_KEY_F2) {
