@@ -20,7 +20,8 @@ gGUIStatusBar::gGUIStatusBar() {
 	//top = getScreenHeight() - statusbarh;
 	setSizer(&statussizer);
 	//text font
-	textx[0] = 15;
+	std::string dynamicText = "";
+	text[0] = dynamicText;
 	textx[1] = left + width / 2;
 	textx[2] = textx[1] + width / 6;
 	textx[3] = textx[2] + width / 6;
