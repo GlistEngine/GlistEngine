@@ -181,6 +181,7 @@ private:
 	int currentrow, currentcolumn;
 	int firstcursorposx, firstcursorposy;
 	int firstselectedcell, lastselectedcell;
+	int lastdraggedcell;
 	float gridboxw, gridboxh;
 	float gridx, gridy, gridw, gridh;
 	long clicktime, previousclicktime, firstclicktime, clicktimediff;
