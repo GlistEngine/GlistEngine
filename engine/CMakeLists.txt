@@ -297,7 +297,7 @@ elseif(APPLE)
   	)
 	if(DEFINED ENGINE_USE_SYMLINKS)
 		list(APPEND INC_DIRS
-				${BREW_PATH}/openssl@3.0/include
+				${BREW_PATH}/openssl@3/include
 		)
 	else()
 		# For backwards compatibility
@@ -448,7 +448,7 @@ elseif(APPLE)
 	add_definitions(${CL_VAR_8})
 
 	if(DEFINED ENGINE_USE_SYMLINKS)
-		find_library(Lib_crypto crypto HINTS ${BREW_PATH}/openssl@3.0/lib)
+		find_library(Lib_crypto crypto HINTS ${BREW_PATH}/openssl@3/lib)
 	else()
 		# For backwards compatibility
 		find_library(Lib_crypto crypto HINTS ${BREW_PATH}/openssl@${OPENSSL_VER_SHORT}/${OPENSSL_VER_FULL}/lib)
