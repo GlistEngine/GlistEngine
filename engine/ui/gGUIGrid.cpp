@@ -734,7 +734,7 @@ void gGUIGrid::pasteCells() {
 	for(int i = 0; i < copiedcellvalues.size(); i++) {
 		int process = PROCESS_TEXT;
 		std::string tmpstr = copiedcellvalues.at(i);
-		gLogi("TmpStr") << tmpstr;
+		gLogi("Index") << index << " TmpStr: " << tmpstr;
 		while(tmpstr != "") {
 			int dat = tmpstr.find(':');
 			if(dat == std::string::npos) dat = tmpstr.size();
@@ -749,7 +749,8 @@ void gGUIGrid::pasteCells() {
 				allcells.at(index).fontstate = std::stoi(tmpstr.substr(0, dat));
 				break;
 			case PROCESS_ALIGNMENT:
-				setCellAlignment(std::stoi(tmpstr.substr(0, dat)), false);
+				allcells.at(index).cellalignment = std::stoi(tmpstr.substr(0, dat));
+				allcells.at(index).textmoveamount = 0.5f * std::stoi(tmpstr.substr(0, dat));
 				break;
 			case PROCESS_LINE:
 				allcells.at(index).lineno = std::stoi(tmpstr.substr(0, dat));
@@ -768,6 +769,8 @@ void gGUIGrid::pasteCells() {
 			tmpstr.erase(0, dat + 1);
 			process++;
 		}
+
+		fillCell(index, allcells.at(index).cellcontent);
 		column++;
 		if(column > maxcolumn) {
 			column = (allcells.at(selectedbox).cellrowno * columnnum + allcells.at(selectedbox).cellcolumnno) % columnnum;
