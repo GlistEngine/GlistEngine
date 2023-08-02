@@ -144,9 +144,9 @@ Start the engine.
 
 <ins>On macOS M1:</ins>
 - Never start the engine with clicking Eclipse icon on Launchpad! Instead, you should open the Terminal and enter this command:
-> open ~/dev/glist/zbin/glistzbin-macos/eclipse/eclipsecpp-2020-09/Eclipse.app 
+> open ~/dev/glist/zbin/glistzbin-macos/eclipse/eclipsecpp-2022-09/Eclipse.app 
 - (If you get an error message "app is damaged and can’t be opened. You should move it to the Trash.", enter this command on Terminal:
-> xattr -cr ~/dev/glist/zbin/glistzbin-macos/eclipse/eclipsecpp-2020-09/Eclipse.app
+> xattr -cr ~/dev/glist/zbin/glistzbin-macos/eclipse/eclipsecpp-2022-09/Eclipse.app
 - and restart your computer.
 
 <ins>On macOS X86_64:</ins>
