@@ -102,14 +102,15 @@ public:
 	void setCellFontColor(gColor* fontColor);
 	void setCellLine(int lineNo, bool clicked);
 	void setCopiedCell(Cell* cell);
+	void setSelectedFrameColor(gColor* selectedFrameColor);
+	void setSelectedAreaColor(gColor* selectedAreaColor);
 
 	int getCell(int rowNo, int columnNo);
+	gColor* getSelectedFrameColor();
+	gColor* getSelectedAreaColor();
 
 	void drawContent();
 	void drawCellBackground();
-	void drawSelectedBox();
-	void drawSelectedRow();
-	void drawSelectedColumn();
 	void drawTitleRowBackground();
 	void drawTitleColumnBackground();
 	void drawRowContents();
@@ -125,6 +126,7 @@ public:
 	void createTextBox();
 	void changeCell();
 	void checkCellType(int cellIndex);
+	void resetSelectedIndexes();
 
 	void update();
 
@@ -156,8 +158,10 @@ private:
 	void changeAllAffectedCellsXW(float diff);
 	void changeAllAffectedCellsYH(float diff);
 	void changeSelectedCell(int amount);
+	void setSelectedCells();
 
 	std::deque<Cell> allcells;
+	std::deque<int> selectedcells;
 	std::stack<Cell> undocellstack;
 	std::stack<Cell> redocellstack;
 	std::vector<int> functionindexes;
@@ -167,6 +171,7 @@ private:
 	Cell copiedcell;
 	gGUIManager* manager;
 	gGUITextbox textbox;
+	gColor selectedframecolor, selectedareacolor;
 	bool isselected, isrowselected, iscolumnselected;
 	bool istextboxactive;
 	bool isdoubleclicked;
@@ -181,6 +186,7 @@ private:
 	int currentrow, currentcolumn;
 	int firstcursorposx, firstcursorposy;
 	int firstselectedcell, lastselectedcell;
+	int lastdraggedcell;
 	float gridboxw, gridboxh;
 	float gridx, gridy, gridw, gridh;
 	long clicktime, previousclicktime, firstclicktime, clicktimediff;
