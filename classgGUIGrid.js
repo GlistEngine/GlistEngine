@@ -37,7 +37,6 @@ var classgGUIGrid =
     [ "setCellFontItalic", "classgGUIGrid.html#a4fa70fe687325a1fc01bd2ffc1fec673", null ],
     [ "setCellLine", "classgGUIGrid.html#a3dbf4a2375d918464127ee16ebf25e4c", null ],
     [ "setColumnNum", "classgGUIGrid.html#a793584ad1e3534ea70b8d941b0e9ed5a", null ],
-    [ "setCopiedCell", "classgGUIGrid.html#a0e5fd8e029d236f7ba98308efe3e5386", null ],
     [ "setGrid", "classgGUIGrid.html#a9d9331748e04ddca0916f8f8897f299c", null ],
     [ "setRowNum", "classgGUIGrid.html#ad039e97cc24d0291389676323e49382e", null ],
     [ "setSelectedAreaColor", "classgGUIGrid.html#aa4974f7c7d37dab80a6d9ae36811b4d9", null ],
