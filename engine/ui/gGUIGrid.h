@@ -85,8 +85,18 @@ public:
 		FUNCTION_FIRSTINDEX
 	};
 
+	enum {
+		PROCESS_TEXT,
+		PROCESS_FONT,
+		PROCESS_FONTSTATE,
+		PROCESS_ALIGNMENT,
+		PROCESS_COLOR,
+		PROCESS_LINE,
+		PROCESS_ALL
+	};
+
 	static const int maxcolumnnum = 16384;
-	static const int maxrownum = 1048576;
+	static const int maxrownum = 131071;
 
 	gGUIGrid();
 	virtual ~gGUIGrid();
@@ -101,7 +111,6 @@ public:
 	void setCellAlignment(int cellAlignment, bool clicked);
 	void setCellFontColor(gColor* fontColor);
 	void setCellLine(int lineNo, bool clicked);
-	void setCopiedCell(Cell* cell);
 	void setSelectedFrameColor(gColor* selectedFrameColor);
 	void setSelectedAreaColor(gColor* selectedAreaColor);
 
@@ -152,6 +161,7 @@ private:
 	float calculateCurrentY(int rowNum);
 	bool isNumeric(std::string text);
 	void addFunction(int functionType, int functionSender);
+	void addUndoStack(int process);
 	void removeFunction(int functionNum);
 	void operateFunction(int functionNum);
 	void makeDefaultCell();
@@ -159,16 +169,19 @@ private:
 	void changeAllAffectedCellsYH(float diff);
 	void changeSelectedCell(int amount);
 	void setSelectedCells();
+	void copyCells();
+	void pasteCells();
 
 	std::deque<Cell> allcells;
 	std::deque<int> selectedcells;
-	std::stack<Cell> undocellstack;
-	std::stack<Cell> redocellstack;
-	std::vector<int> functionindexes;
-	std::vector<std::vector<int>> functions;
 	std::deque<float> gridboxesw;
 	std::deque<float> gridboxesh;
-	Cell copiedcell;
+	std::vector<int> functionindexes;
+	std::vector<std::vector<int>> functions;
+	std::vector<std::string> copiedcellvalues;
+	std::stack<int> undoprocessstack;
+	std::stack<std::string> undovaluestack;
+	std::stack<std::stack<std::string>> undostack;
 	gGUIManager* manager;
 	gGUITextbox textbox;
 	gColor selectedframecolor, selectedareacolor;
