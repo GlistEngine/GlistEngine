@@ -1,0 +1,14 @@
+<map id="gFireworksParticles" name="gFireworksParticles">
+<area shape="rect" id="node1" title=" " alt="" coords="221,753,369,780"/>
+<area shape="rect" id="node2" href="$classgBaseParticles.html" title=" " alt="" coords="255,663,373,689"/>
+<area shape="rect" id="node6" href="$classgParticle.html" title=" " alt="" coords="427,753,505,780"/>
+<area shape="rect" id="node3" href="$classgRenderObject.html" title=" " alt="" coords="197,171,316,197"/>
+<area shape="rect" id="node10" href="$classgNode.html" title=" " alt="" coords="85,247,149,273"/>
+<area shape="rect" id="node11" href="$classgVbo.html" title=" " alt="" coords="5,247,60,273"/>
+<area shape="rect" id="node12" href="$classgTexture.html" title=" " alt="" coords="103,297,181,324"/>
+<area shape="rect" id="node4" href="$classgObject.html" title=" " alt="" coords="215,5,287,32"/>
+<area shape="rect" id="node5" href="$classgRenderer.html" title=" " alt="" coords="273,81,363,108"/>
+<area shape="rect" id="node7" href="$classgColor.html" title=" " alt="" coords="383,505,447,531"/>
+<area shape="rect" id="node8" href="$classgPlane.html" title=" " alt="" coords="118,505,185,531"/>
+<area shape="rect" id="node9" href="$classgMesh.html" title=" " alt="" coords="49,348,115,375"/>
+</map>

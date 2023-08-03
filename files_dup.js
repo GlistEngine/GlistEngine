@@ -37,6 +37,7 @@ var files_dup =
     [ "gFbo.h", "gFbo_8h_source.html", null ],
     [ "gFile.h", "gFile_8h_source.html", null ],
     [ "gFireParticles.h", "gFireParticles_8h_source.html", null ],
+    [ "gFireworksParticles.h", "gFireworksParticles_8h_source.html", null ],
     [ "gFmodSound.h", "gFmodSound_8h_source.html", null ],
     [ "gFog.h", "gFog_8h_source.html", null ],
     [ "gFont.h", "gFont_8h_source.html", null ],

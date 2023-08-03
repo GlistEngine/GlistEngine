@@ -114,7 +114,8 @@ var hierarchy =
           ] ]
         ] ],
         [ "gBaseParticles", "classgBaseParticles.html", [
-          [ "gFireParticles", "classgFireParticles.html", null ]
+          [ "gFireParticles", "classgFireParticles.html", null ],
+          [ "gFireworksParticles", "classgFireworksParticles.html", null ]
         ] ],
         [ "gBasePlugin", "classgBasePlugin.html", null ],
         [ "gBasePostProcess", "classgBasePostProcess.html", [
