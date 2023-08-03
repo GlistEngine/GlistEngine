@@ -261,17 +261,19 @@ void gFont::loadChar(const int& charID) {
 	  cpset[lci].dxright = lclextent + lcbwidth + lcstretch;
 	  cpset[lci].dybottom = lcfheight + lccorr + lcstretch;
 
-	  unsigned char lcdata[lcdatah * lcdataw * 2];
+	  unsigned char lcdata[lcdatah * lcdataw * 4];
 	  lcdatanum = lcdataw * lcdatah;
 	  for (lci2 = 0; lci2 < lcdatanum; lci2++) {
-		  lcdata[lci2 * 2] = 255;
-		  lcdata[lci2 * 2 + 1] = 0;
+		  lcdata[lci2 * 4] = 255;
+		  lcdata[lci2 * 4 + 1] = 255;
+		  lcdata[lci2 * 4 + 2] = 255;
+		  lcdata[lci2 * 4 + 3] = 0;
 	  }
 
-	  if (isantialiased == true) {
+	  if (isantialiased) {
 		  bitmappixels = lcbitmap.buffer;
 		  for (lci3 = 0; lci3 < lcdatanum; lci3++) {
-			  lcdata[lci3 * 2 + 1] = bitmappixels[lci3];
+			  lcdata[lci3 * 4 + 3] = bitmappixels[lci3];
 		  }
 	  } else {
 	    lcsrc = lcbitmap.buffer;
@@ -279,9 +281,9 @@ void gFont::loadChar(const int& charID) {
 	      lcb = 0;
 	      lcbptr = lcsrc;
 	      for(lck = 0; lck < lcbitmap.width; ++lck) {
-	        lcdata[2 * (lck + lcj * lcdataw)] = 255;
+			lcdata[(lck + lcj * lcdataw) * 4] = 255;
 	        if (lck % 8 == 0) lcb = (*(lcbptr++));
-	        lcdata[2 * (lck + lcj * lcdataw) + 1] = lcb & 0x80 ? 255 : 0;
+	        lcdata[(lck + lcj * lcdataw) * 4 + 3] = lcb & 0x80 ? 255 : 0;
 	        lcb <<= 1;
 	      }
 	      lcsrc += lcbitmap.pitch;
@@ -289,7 +291,11 @@ void gFont::loadChar(const int& charID) {
 	  }
 
 	  lclongside = border * 2;
-	  cpset[lci].texturewidth > cpset[lci].textureheight ? lclongside += cpset[lci].texturewidth : lclongside += cpset[lci].textureheight;
+	  if(cpset[lci].texturewidth > cpset[lci].textureheight) {
+		  lclongside += cpset[lci].texturewidth;
+	  } else {
+		  lclongside += cpset[lci].textureheight;
+	  }
 
 	  lclongest = 1;
 	  while (lclongside > lclongest) {
@@ -298,16 +304,18 @@ void gFont::loadChar(const int& charID) {
 	  lcpixelsw = lclongest;
 	  lcpixelsh = lcpixelsw;
 
-	  unsigned char* lcpixels = new unsigned char[lcpixelsw * lcpixelsh * 2];
+	  unsigned char* lcpixels = new unsigned char[lcpixelsw * lcpixelsh * 4];
 	  lcapsize = lcpixelsw * lcpixelsh;
 	  for (lci4 = 0; lci4 < lcapsize; lci4++) {
-		  lcpixels[lci4 * 2] = 255;
-		  lcpixels[lci4 * 2 + 1] = 0;
+		  lcpixels[lci4 * 4] = 255;
+		  lcpixels[lci4 * 4 + 1] = 255;
+		  lcpixels[lci4 * 4 + 2] = 255;
+		  lcpixels[lci4 * 4 + 3] = 0;
 	  }
 
-	  insertData(lcdata, lcdataw, lcdatah, 2, lcpixels, lcpixelsw, lcpixelsh, 2, border, border);
+	  insertData(lcdata, lcdataw, lcdatah, 4, lcpixels, lcpixelsw, lcpixelsh, 4, border, border);
 
-	  textures[lci] = new gTexture(lcpixelsw, lcpixelsh, GL_LUMINANCE_ALPHA, false);
+	  textures[lci] = new gTexture(lcpixelsw, lcpixelsh, GL_RGBA, false);
 
 	  if (isantialiased && fontsize > 20) {
 	    textures[lci]->setFiltering(gTexture::TEXTUREMINMAGFILTER_LINEAR, gTexture::TEXTUREMINMAGFILTER_LINEAR);
@@ -315,7 +323,7 @@ void gFont::loadChar(const int& charID) {
 		  textures[lci]->setFiltering(gTexture::TEXTUREMINMAGFILTER_NEAREST, gTexture::TEXTUREMINMAGFILTER_NEAREST);
 	  }
 
-	  textures[lci]->loadData(lcpixels, lcpixelsw, lcpixelsh, 2, true);
+	  textures[lci]->loadData(lcpixels, lcpixelsw, lcpixelsh, 4, true);
 	  delete[] lcpixels;
 }
 
@@ -328,7 +336,7 @@ bool gFont::insertData(unsigned char* srcData, int srcWidth, int srcHeight, int 
 	size_t lcsrcstride = srcWidth * componentNum;
 	size_t lcdststride = dstWidth * dstComponentNum;
 
-	for(size_t y = 0; y < pdcolumns; y++){
+	for(size_t y = 0; y < pdcolumns; y++) {
 		memcpy(pddstpix, pdsrcpix, pdrows);
 		pddstpix += lcdststride;
 		pdsrcpix += lcsrcstride;
