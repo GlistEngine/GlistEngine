@@ -721,7 +721,7 @@ void gGUIGrid::setSelectedCells() {
 void gGUIGrid::copyCells() {
 	copiedcellvalues.clear();
 	for(int i = 0; i < selectedcells.size(); i++) {
-		std::string tmpstr = allcells.at(selectedcells.at(i)).cellcontent + ":" + std::to_string(allcells.at(selectedcells.at(i)).fontnum) + ":" + std::to_string(allcells.at(selectedcells.at(i)).fontstate) + ":" + std::to_string(allcells.at(selectedcells.at(i)).cellalignment) + ":" + std::to_string(allcells.at(selectedcells.at(i)).cellfontcolor.r) + ":" + std::to_string(allcells.at(selectedcells.at(i)).cellfontcolor.g) + ":" + std::to_string(allcells.at(selectedcells.at(i)).cellfontcolor.b) + ":" + std::to_string(allcells.at(selectedcells.at(i)).lineno) + ":" + std::to_string(allcells.at(selectedcells.at(i)).cellrowno) + ":" + std::to_string(allcells.at(selectedcells.at(i)).cellcolumnno);
+		std::string tmpstr = std::to_string(allcells.at(selectedcells.at(i)).cellcolumnno) + ":" + allcells.at(selectedcells.at(i)).cellcontent + ":" + std::to_string(allcells.at(selectedcells.at(i)).fontnum) + ":" + std::to_string(allcells.at(selectedcells.at(i)).fontstate) + ":" + std::to_string(allcells.at(selectedcells.at(i)).cellalignment) + ":" + std::to_string(allcells.at(selectedcells.at(i)).cellfontcolor.r) + ":" + std::to_string(allcells.at(selectedcells.at(i)).cellfontcolor.g) + ":" + std::to_string(allcells.at(selectedcells.at(i)).cellfontcolor.b) + ":" + std::to_string(allcells.at(selectedcells.at(i)).lineno);
 		copiedcellvalues.push_back(tmpstr);
 	}
 }
@@ -730,13 +730,22 @@ void gGUIGrid::pasteCells() {
 	int index = selectedbox;
 	int row = (allcells.at(selectedbox).cellrowno * columnnum + allcells.at(selectedbox).cellcolumnno) / columnnum;
 	int column = (allcells.at(selectedbox).cellrowno * columnnum + allcells.at(selectedbox).cellcolumnno) % columnnum;
-	int maxcolumn = column + copiedcellvalues.at(copiedcellvalues.size() - 1).back() - copiedcellvalues.at(0).back();
+	int dat = copiedcellvalues.at(copiedcellvalues.size() - 1).find(':');
+	int maxcolumn = column + std::stoi(copiedcellvalues.at(copiedcellvalues.size() - 1).substr(0, dat));
+	dat = copiedcellvalues.at(0).find(':');
+	maxcolumn -= std::stoi(copiedcellvalues.at(0).substr(0, dat));
+	std::vector<std::string> tmpval;
+
 	for(int i = 0; i < copiedcellvalues.size(); i++) {
+		tmpval.push_back(copiedcellvalues.at(i));
+		tmpval.at(i).erase(0, dat + 1);
+		if(copiedcellvalues.size() > i + 1) dat = copiedcellvalues.at(i + 1).find(':');
+	}
+	for(int i = 0; i < tmpval.size(); i++) {
 		int process = PROCESS_TEXT;
-		std::string tmpstr = copiedcellvalues.at(i);
-		gLogi("Index") << index << " TmpStr: " << tmpstr;
+		std::string tmpstr = tmpval.at(i);
 		while(tmpstr != "") {
-			int dat = tmpstr.find(':');
+			dat = tmpstr.find(':');
 			if(dat == std::string::npos) dat = tmpstr.size();
 			switch(process) {
 			case PROCESS_TEXT:
