@@ -162,6 +162,7 @@ private:
 	bool isNumeric(std::string text);
 	void addFunction(int functionType, int functionSender);
 	void addUndoStack(int process);
+	void addRedoStack();
 	void removeFunction(int functionNum);
 	void operateFunction(int functionNum);
 	void makeDefaultCell();
@@ -172,6 +173,7 @@ private:
 	void copyCells();
 	void pasteCells();
 	void makeUndo();
+	void makeRedo();
 
 	std::deque<Cell> allcells;
 	std::deque<int> selectedcells;
@@ -183,7 +185,11 @@ private:
 	std::stack<int> undoprocessstack;
 	std::stack<std::string> undovaluestack;
 	std::stack<std::stack<std::string>> undostack;
-	std::stack<std::deque<int>>undocellstack;
+	std::stack<std::deque<int>> undocellstack;
+	std::stack<int> redoprocessstack;
+	std::stack<std::string> redovaluestack;
+	std::stack<std::stack<std::string>> redostack;
+	std::stack<std::deque<int>> redocellstack;
 	gGUIManager* manager;
 	gGUITextbox textbox;
 	gColor selectedframecolor, selectedareacolor;
