@@ -168,8 +168,8 @@ private:
 	void changeAllAffectedCellsYH(float diff);
 	void changeSelectedCell(int amount);
 	void changeCell(int cellNo);
-	void resetSelectedIndexes();
 	void setSelectedCells();
+	void resetSelectedIndexes();
 
 	void copyCells();
 	void pasteCells();
