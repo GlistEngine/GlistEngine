@@ -8,9 +8,9 @@
 #ifndef GRAPHICS_GSKINNEDMESH_H_
 #define GRAPHICS_GSKINNEDMESH_H_
 
-#include "gMesh.h"
+#include "gMorphingMesh.h"
 
-class gSkinnedMesh: public gMesh {
+class gSkinnedMesh: public gMorphingMesh {
 public:
 	gSkinnedMesh();
 	virtual ~gSkinnedMesh();

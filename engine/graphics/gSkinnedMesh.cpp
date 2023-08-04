@@ -12,13 +12,26 @@ gSkinnedMesh::gSkinnedMesh() {
 	isvertexanimationstoredonvram = false;
 	frameno = 0;
 	framenoold = 0;
+	this->setBaseMesh(static_cast<gMesh*>(this));
 }
 
 gSkinnedMesh::~gSkinnedMesh() {
 }
 
 void gSkinnedMesh::draw() {
-	if (!isvertexanimationstoredonvram) {
+	if (this->getTargetMeshCount() > 0) {
+		if (frameno != framenoold) {
+			for(int i = 0; i < vbo.getVerticesNum(); i++) {
+				vertices[i].position = animatedPosData[0][frameno][i];
+				vertices[i].normal = animatedNormData[0][frameno][i];
+			}
+			setBaseMesh(static_cast<gMesh*>(this));
+			interpolate(false);
+		}
+		else interpolate();
+		gMesh::draw();
+	}
+	else if (!isvertexanimationstoredonvram) {
 		if (isvertexanimated && frameno != framenoold) {
 			// TODO Below lines of vertex animation stored on CPU needs to be optimized
 			for(int i = 0; i < vbo.getVerticesNum(); i++) {
