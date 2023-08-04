@@ -133,7 +133,7 @@ public:
 	void showCells();
 	void showCell(int rowNo, int columnNo);
 	void createTextBox();
-	void changeCell();
+	void changeCell(int cellNo);
 	void checkCellType(int cellIndex);
 	void resetSelectedIndexes();
 
@@ -171,6 +171,7 @@ private:
 	void setSelectedCells();
 	void copyCells();
 	void pasteCells();
+	void makeUndo();
 
 	std::deque<Cell> allcells;
 	std::deque<int> selectedcells;
@@ -182,6 +183,7 @@ private:
 	std::stack<int> undoprocessstack;
 	std::stack<std::string> undovaluestack;
 	std::stack<std::stack<std::string>> undostack;
+	std::stack<std::deque<int>>undocellstack;
 	gGUIManager* manager;
 	gGUITextbox textbox;
 	gColor selectedframecolor, selectedareacolor;
