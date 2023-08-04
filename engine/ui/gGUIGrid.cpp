@@ -209,7 +209,7 @@ void gGUIGrid::resetSelectedIndexes() {
 
 void gGUIGrid::setCellFont(int fontNum) {
 	if(allcells.empty()) return;
-	if(!ctrlzpressed) {
+	if(!ctrlzpressed && !ctrlypressed) {
 		addUndoStack(PROCESS_FONT);
 		for(int i = 0; i < selectedcells.size(); i++) {
 			allcells.at(selectedcells.at(i)).fontnum = fontNum;
@@ -237,7 +237,7 @@ void gGUIGrid::setCellFont(int fontNum) {
 
 void gGUIGrid::setCellFontBold() {
 	if(allcells.empty()) return;
-	if(!ctrlzpressed) {
+	if(!ctrlzpressed && !ctrlypressed) {
 		addUndoStack(PROCESS_FONTSTATE);
 		for(int i = 0; i < selectedcells.size(); i++) {
 			if(allcells.at(selectedcells.at(i)).isbold) {
@@ -277,7 +277,7 @@ void gGUIGrid::setCellFontBold() {
 
 void gGUIGrid::setCellFontItalic() {
 	if(allcells.empty()) return;
-	if(!ctrlzpressed) {
+	if(!ctrlzpressed && !ctrlypressed) {
 		addUndoStack(PROCESS_FONTSTATE);
 		for(int i = 0; i < selectedcells.size(); i++) {
 			if(allcells.at(selectedcells.at(i)).isitalic) {
@@ -333,7 +333,7 @@ void gGUIGrid::setCellAlignment(int cellAlignment, bool clicked) {
 		}
 	}
 	else {
-		if(!ctrlzpressed) {
+		if(!ctrlzpressed && !ctrlypressed) {
 			allcells.at(selectedbox).cellalignment = cellAlignment;
 			allcells.at(selectedbox).textmoveamount = 0.5f * cellAlignment;
 		}
@@ -353,7 +353,7 @@ void gGUIGrid::setCellAlignment(int cellAlignment, bool clicked) {
 
 void gGUIGrid::setCellFontColor(gColor *fontColor) {
 	if(allcells.empty()) return;
-	if(!ctrlzpressed) {
+	if(!ctrlzpressed && !ctrlypressed) {
 		addUndoStack(PROCESS_COLOR);
 		for(int i = 0; i < selectedcells.size(); i++) {
 			allcells.at(selectedcells.at(i)).cellfontcolor = fontColor;
@@ -368,7 +368,7 @@ void gGUIGrid::setCellFontColor(gColor *fontColor) {
 
 void gGUIGrid::setCellLine(int lineNo, bool clicked) {
 	if(allcells.empty()) return;
-	if(!ctrlzpressed) {
+	if(!ctrlzpressed && !ctrlypressed) {
 		addUndoStack(PROCESS_LINE);
 		for(int i = 0; i < selectedcells.size(); i++) {
 			if(clicked && lineNo == allcells.at(selectedcells.at(i)).lineno) allcells.at(selectedcells.at(i)).lineno = TEXTLINE_NONE;
