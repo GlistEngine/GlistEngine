@@ -114,7 +114,6 @@ public:
 	void setSelectedFrameColor(gColor* selectedFrameColor);
 	void setSelectedAreaColor(gColor* selectedAreaColor);
 
-	int getCell(int rowNo, int columnNo);
 	gColor* getSelectedFrameColor();
 	gColor* getSelectedAreaColor();
 
@@ -127,15 +126,6 @@ public:
 	void drawTitleLines();
 	void drawCellContents();
 	void drawSelectedArea();
-
-	void fillCell(int cellNo, std::string tempstr);
-	void createCell(int rowNo, int columnNo);
-	void showCells();
-	void showCell(int rowNo, int columnNo);
-	void createTextBox();
-	void changeCell(int cellNo);
-	void checkCellType(int cellIndex);
-	void resetSelectedIndexes();
 
 	void update();
 
@@ -154,26 +144,44 @@ private:
 	std::string fixTextFunction(std::string text, int index);
 	std::string fixNumeric(std::string text);
 	std::string fixOverflowText(Cell& thisCell, Cell& otherCell);
+
 	std::string getTextColumn(std::string text);
+	int getCellNo(int rowNo, int columnNo);
 	int getNearestFilledCell(int index);
+
+	void fillCell(int cellNo, std::string tempstr);
 	float makeSum(int c1, int r1, int c2, int r2);
 	float calculateCurrentX(int columnNum);
 	float calculateCurrentY(int rowNum);
 	bool isNumeric(std::string text);
+
 	void addFunction(int functionType, int functionSender);
 	void addUndoStack(int process);
 	void addRedoStack();
+
 	void removeFunction(int functionNum);
+
 	void operateFunction(int functionNum);
 	void makeDefaultCell();
+
 	void changeAllAffectedCellsXW(float diff);
 	void changeAllAffectedCellsYH(float diff);
 	void changeSelectedCell(int amount);
+	void changeCell(int cellNo);
+	void resetSelectedIndexes();
 	void setSelectedCells();
+
 	void copyCells();
 	void pasteCells();
 	void makeUndo();
 	void makeRedo();
+
+	void createCell(int rowNo, int columnNo);
+	void createTextBox();
+
+	void checkCellType(int cellIndex);
+	void showCells();
+	void showCell(int rowNo, int columnNo);
 
 	std::deque<Cell> allcells;
 	std::deque<int> selectedcells;
