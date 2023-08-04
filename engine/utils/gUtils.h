@@ -2,7 +2,7 @@
  * gUtils.h
  *
  *  Created on: 5 Ara 2020
- *      Author: Acer
+ *      Author: Noyan
  */
 
 #pragma once
