@@ -29,7 +29,7 @@ class gModel : public gNode {
 public:
     // model data
     std::deque<gTexture*> textures_loaded;	// stores all the textures loaded so far, optimization to make sure textures aren't loaded more than once.
-    std::vector<gSkinnedMesh>    meshes;
+    std::deque<gSkinnedMesh>    meshes;
     std::string directory;
 
     // constructor, expects a filepath to a 3D model.
@@ -38,6 +38,7 @@ public:
 
 	void loadModel(const std::string& modelPath);
 	void loadModelWithOriginalVertices(const std::string& modelPath);
+	void loadMorphingTargetModel(const std::string& modelPath);
 	void load(const std::string& fullPath);
 	void draw();
 
@@ -91,6 +92,15 @@ public:
 	int getAnimationFrameNum() const;
 	void setAnimationFramerate(float animationFramerate);
 	float getAnimationFramerate() const;
+	void setMorphingFrameNo(int morphingAnimationNo);
+	int getMorphingFrameNo() const;
+	void nextMorphingFrame();
+	void setMorphingSpeed(int speed);
+	int getMorphingSpeed() const;
+	void setMorphingFrameNum(int morphingFrameNum);
+	int getMorphingFrameNum() const;
+	void setMorphingTarget(int morphingTargetId);
+	int getMorphingTarget() const;
 
 	bool isVertexAnimated() const;
 	bool isVertexAnimationStoredOnVram() const;
@@ -100,11 +110,17 @@ public:
 
 private:
 	const aiScene* scene;
+	std::vector<const aiScene*> morphingtargetscenes;
 	void loadModelFile(const std::string& fullPath);
 	void loadModelFileWithOriginalVertices(const std::string& fullPath);
+	void loadMorphingTargetModelFile(const std::string& fullPath);
 	void processNode(aiNode *node, const aiScene *scene);
 	gSkinnedMesh processMesh(aiMesh *mesh, const aiScene *scene, aiMatrix4x4 matrix);
 	void loadMaterialTextures(gSkinnedMesh* mesh, aiMaterial *mat, aiTextureType type, int textureType);
+	void processMorphingNode(aiNode *node, const aiScene *scene);
+	gMesh processMorphingMesh(aiMesh *mesh, const aiScene *scene, aiMatrix4x4 matrix);
+	//The below line's third parameter is to perform the animation on the target mesh by taking the aiTargetMesh as a reference. Haven't tested yet.
+	//void updateBones(gSkinnedMesh* gmesh, aiMesh* aimesh, aiMesh* aiTargetMesh);
 	void updateBones(gSkinnedMesh* gmesh, aiMesh* aimesh);
 	void updateVbo(gSkinnedMesh* gmesh);
 	void updateAnimationNodes();
