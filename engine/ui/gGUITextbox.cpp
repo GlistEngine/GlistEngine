@@ -1753,7 +1753,6 @@ void gGUITextbox::findCursorPositionPassword() {
 
 void gGUITextbox::cleanText() {
 	text = "";
-	setText("");
 	cursorposx = 0;
 	cursorposutf = 0;
 	cursorposchar = 0;
