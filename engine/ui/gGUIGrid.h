@@ -113,7 +113,12 @@ public:
 	void setCellLine(int lineNo, bool clicked);
 	void setSelectedFrameColor(gColor* selectedFrameColor);
 	void setSelectedAreaColor(gColor* selectedAreaColor);
+    void setCellContent(Cell* cell, std::string cellContent);
+    void setCellContent(std::string cell, std::string cellContent);
+    void setCellAlignment(Cell* cell, int cellAlignment);
+    void setCellAlignment(std::string cell, int cellAlignment);
 
+	Cell* getCell(std::string cellID);
 	gColor* getSelectedFrameColor();
 	gColor* getSelectedAreaColor();
 
