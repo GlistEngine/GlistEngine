@@ -108,7 +108,7 @@ void gGUINumberBox::setText(const std::string& text) {
 }
 
 std::string gGUINumberBox::getText() {
-	return textbox.getText();
+	 return textbox.getText();
 }
 
 void gGUINumberBox::setSize(int width, int height) {

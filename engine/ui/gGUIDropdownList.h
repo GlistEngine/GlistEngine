@@ -33,9 +33,10 @@ public:
 	void mouseScrolled(int x, int y);
 	void setfirstTitle();
 	void setSelectedTitle();
-	std::string& getSelectedTitle();
 	void addElement(gGUITreelist::Element* element);
 	void addElement(gGUITreelist::Element* element, gGUITreelist::Element* parentelement);
+
+	std::string& getSelectedTitle();
 
 private:
 	gGUISizer listsizer;

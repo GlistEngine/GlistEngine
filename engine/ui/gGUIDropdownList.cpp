@@ -1,7 +1,8 @@
- /* gGUIDropdownList.cpp
- *
- *  Created on: 19 A�u 2022
- *      Author: sevval
+ /*
+  * gGUIDropdownList.cpp
+  *
+  *  Created on: 19 A�u 2022
+  *      Author: sevval
  */
 
 #include "gGUIDropdownList.h"
@@ -148,7 +149,6 @@ void gGUIDropdownList::setfirstTitle() {
 	rootelement = list.getRootElement();
 	if(rootelement->sub.size() > 0) {
 		textbox.setText(rootelement->sub[0]->title);
-		//fatih
 		title = rootelement->sub[0]->title;
 		fTitle = title;
 	}

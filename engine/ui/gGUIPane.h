@@ -32,6 +32,7 @@ public:
 	void setNextPane(gGUIPane* nextPane);
 	void enablePreviousButton(bool isEnabled);
 	void enableNextButton(bool isEnabled);
+
 	gGUIButton getNextButton();
 
 private:
