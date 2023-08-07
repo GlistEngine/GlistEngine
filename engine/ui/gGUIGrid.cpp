@@ -291,6 +291,46 @@ void gGUIGrid::setSelectedAreaColor(gColor* selectedAreaColor) {
 	selectedareacolor = *selectedAreaColor;
 }
 
+void gGUIGrid::setCellContent(gGUIGrid::Cell* cell, std::string cellContent) {
+	cell->cellcontent = cellContent;
+	int cellno = -1;
+	for(int i = 0; i < allcells.size(); i++) {
+		if(allcells.at(i).cellrowno == cell->cellrowno && allcells.at(i).cellcolumnno == cell->cellcolumnno) {
+			cellno = i;
+			break;
+		}
+	}
+	changeCell(cellno);
+}
+
+void gGUIGrid::setCellContent(std::string cell, std::string cellContent) {
+	Cell* c = getCell(cell);
+	setCellContent(c, cellContent);
+}
+
+void gGUIGrid::setCellAlignment(Cell* cell, int cellAlignment) {
+	cell->cellalignment = cellAlignment;
+	cell->textmoveamount = 0.5f * cellAlignment;
+}
+void gGUIGrid::setCellAlignment(std::string cell, int cellAlignment) {
+	Cell* c = getCell(cell);
+	setCellAlignment(c, cellAlignment);
+}
+
+gGUIGrid::Cell* gGUIGrid::getCell(std::string cellID) {
+	std::transform(cellID.begin(), cellID.end(), cellID.begin(), ::toupper);
+	std::string column = getTextColumn(cellID);
+	std::string row = cellID.substr(column.size(), cellID.size() - column.size());
+	int columnindex = int(column[column.size() - 1]) % 65;
+	for(int i = 0; i < column.size() - 1; i++) columnindex += int((column[i] % 65 + 1) * (26 * ((column.size() - 1) - i)));
+	int index = getCellNo(std::stoi(row) - 1, columnindex);
+	if(index == -1) {
+		createCell(std::stoi(row) - 1, columnindex);
+		index = allcells.size() - 1;
+	}
+	return &allcells.at(index);
+}
+
 gColor* gGUIGrid::getSelectedFrameColor() {
 	return &selectedframecolor;
 }
@@ -473,7 +513,7 @@ void gGUIGrid::fillCell(int cellNo, std::string tempstr) { //when rowNo = 1, col
 			else allcells.at(i).overflowcontent = "";
 		}
 	}
-	if(allcells.at(cellindex).cellw < manager->getFont(allcells.at(cellindex).fontnum)->getStringWidth(allcells.at(cellindex).showncontent)) {
+	if(allcells.at(cellindex).cellw < font->getStringWidth(allcells.at(cellindex).showncontent)) {
 		nearestindex = getNearestFilledCell(cellindex);
 		if(nearestindex != -1) allcells.at(cellindex).overflowcontent = fixOverflowText(allcells.at(cellindex), allcells.at(nearestindex));
 		else allcells.at(cellindex).overflowcontent = "";
