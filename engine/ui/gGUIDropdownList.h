@@ -5,6 +5,7 @@
  *      Author: sevval
  */
 
+
 #ifndef UI_GGUIDROPDOWNLIST_H_
 #define UI_GGUIDROPDOWNLIST_H_
 
@@ -32,6 +33,7 @@ public:
 	void mouseScrolled(int x, int y);
 	void setfirstTitle();
 	void setSelectedTitle();
+	std::string& getSelectedTitle();
 	void addElement(gGUITreelist::Element* element);
 	void addElement(gGUITreelist::Element* element, gGUITreelist::Element* parentelement);
 
@@ -47,8 +49,7 @@ private:
 	bool listopened, selectedline, listexpanded, pressedonlist, buttonpressed;
 	bool lopened;
 	gGUIFrame *frame;
+	std::string fTitle;
 };
-
-
 
 #endif /* UI_GGUIDROPDOWNLIST_H_ */

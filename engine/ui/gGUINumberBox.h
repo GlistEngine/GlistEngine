@@ -21,6 +21,7 @@ public:
 
 	void setText(const std::string& text);
 
+	std::string getText();
 	/*
 	 * Sets type of number which will be increased or decreased
 	 *
@@ -29,6 +30,7 @@ public:
 	bool setType(bool isInteger = true);
 	void setSize(int width, int height);
 	void showTitle(bool isShown);
+
 
 	void keyPressed(int key);
 	void keyReleased(int key);

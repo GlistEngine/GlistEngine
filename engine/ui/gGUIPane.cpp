@@ -7,7 +7,6 @@
 
 #include "gGUIPane.h"
 
-
 gGUIPane::gGUIPane() {
 	setSizer(&panesizer);
 	totalh = 0;
@@ -108,4 +107,6 @@ void gGUIPane::onGUIEvent(int guiObjectId, int eventType, int sourceEventType, s
 	}
 }
 
-
+gGUIButton gGUIPane::getNextButton() {
+	return nextbutton;
+}

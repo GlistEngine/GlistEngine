@@ -107,6 +107,10 @@ void gGUINumberBox::setText(const std::string& text) {
 	textbox.setText(text);
 }
 
+std::string gGUINumberBox::getText() {
+	return textbox.getText();
+}
+
 void gGUINumberBox::setSize(int width, int height) {
 	textbox.setSize(width, height);
 }
@@ -237,7 +241,6 @@ void gGUINumberBox::draw() {
 		renderer->setColor(fontcolor);
 		font->drawText(title, left, top + font->getSize());
 	}
-
 	renderer->setColor(defColor);
 	if(guisizer) guisizer->draw();
 }
