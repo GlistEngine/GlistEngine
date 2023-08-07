@@ -1410,29 +1410,32 @@ void gGUIGrid::mousePressed(int x, int y, int button) {
 				int row = 0;
 				while(calculateCurrentY(row) + getRowHeight(row) < pressedy - mousetolerance - firsty) row++;
 				int index = getCellNo(row, 0);
-				if(index != -1 && !allcells.at(index).showncontent.empty()) {
-					int diff = gridboxh - allcells.at(index).cellh;
-					currentrow = row;
-					addOrChangeRowHeight(currentrow, gridboxh);
-					changeAllAffectedCellsYH(diff);
+				if(index == -1) {
+					createCell(row, 0);
+					index = allcells.size() - 1;
 				}
+				int diff = gridboxh - allcells.at(index).cellh;
+				currentrow = row;
+				addOrChangeRowHeight(currentrow, gridboxh);
+				changeAllAffectedCellsYH(diff);
 			}
 		}
 		else if(cursor == gGUIForm::CURSOR_HRESIZE) {
 			int column = 0;
 			while(calculateCurrentX(column) + getColumnWidth(column) < pressedx - mousetolerance - firstx) column++;
 			int index = getCellNo(0, column);
-			if(index != -1 && !allcells.at(index).showncontent.empty()) {
-				gFont* tmpfont = manager->getFont(allcells.at(index).fontnum, allcells.at(index).fontstate);
-				for(int i = 0; i < allcells.size(); i++)
-					if(allcells.at(i).cellcolumnno == column && tmpfont->getStringWidth(allcells.at(i).showncontent) > tmpfont->getStringWidth(allcells.at(index).showncontent)) index = i;
-				float neww = tmpfont->getStringWidth(allcells.at(index).showncontent) + textbox.getInitX() + 1;
-				if(neww < font->getSize() * 1.8f) neww = font->getSize() * 1.8f;
-				int diff = neww - allcells.at(index).cellw;
-				currentcolumn = column;
-				addOrChangeColumnWidth(currentcolumn, neww);
-				changeAllAffectedCellsXW(diff);
+			if(index == -1) {
+				createCell(0, column);
+				index = allcells.size() - 1;
 			}
+			for(int i = 0; i < allcells.size(); i++)
+				if(allcells.at(i).cellcolumnno == column && manager->getFont(allcells.at(i).fontnum, allcells.at(i).fontstate)->getStringWidth(allcells.at(i).showncontent) > manager->getFont(allcells.at(index).fontnum, allcells.at(index).fontstate)->getStringWidth(allcells.at(index).showncontent)) index = i;
+			float neww = manager->getFont(allcells.at(index).fontnum, allcells.at(index).fontstate)->getStringWidth(allcells.at(index).showncontent) + textbox.getInitX() + 1;
+			if(neww < font->getSize() * 1.8f) neww = font->getSize() * 1.8f;
+			int diff = neww - allcells.at(index).cellw;
+			currentcolumn = column;
+			addOrChangeColumnWidth(currentcolumn, neww);
+			changeAllAffectedCellsXW(diff);
 		}
 	}
 	else if(!(pressedy < gridy + gridboxh + firsty && pressedx < gridx + gridboxw / 2 + firstx) && pressedx >= gridx + firstx && pressedx <= gridx + gridboxw / 2 + gridw + firstx && pressedy >= gridy + firsty && pressedy <= gridy + gridboxh + gridh + firsty) {
