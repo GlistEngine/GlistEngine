@@ -153,6 +153,8 @@ private:
 	std::string getTextColumn(std::string text);
 	int getCellNo(int rowNo, int columnNo);
 	int getNearestFilledCell(int index);
+	float getColumnWidth(int columnNo);
+	float getRowHeight(int rowNo);
 
 	void fillCell(int cellNo, std::string tempstr);
 	float makeSum(int c1, int r1, int c2, int r2);
@@ -163,6 +165,8 @@ private:
 	void addFunction(int functionType, int functionSender);
 	void addUndoStack(int process);
 	void addRedoStack();
+	void addOrChangeColumnWidth(int columnNo, float w);
+	void addOrChangeRowHeight(int rowNo, float h);
 
 	void removeFunction(int functionNum);
 
@@ -190,8 +194,8 @@ private:
 
 	std::deque<Cell> allcells;
 	std::deque<int> selectedcells;
-	std::deque<float> gridboxesw;
-	std::deque<float> gridboxesh;
+	std::deque<std::array<float, 2>> gridboxesw;
+	std::deque<std::array<float, 2>> gridboxesh;
 	std::vector<int> functionindexes;
 	std::vector<std::vector<int>> functions;
 	std::vector<std::string> copiedcellvalues;
