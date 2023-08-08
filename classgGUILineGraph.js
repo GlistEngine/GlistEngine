@@ -14,5 +14,6 @@ var classgGUILineGraph =
     [ "setMaxX", "classgGUILineGraph.html#a9c15b8fe0d1e205dd3919ac1c7111f83", null ],
     [ "setMaxY", "classgGUILineGraph.html#ac60941f2909e7644b7015e456c84ed83", null ],
     [ "setMinX", "classgGUILineGraph.html#a77d4c52243dda58b7cb0e818ce953da9", null ],
-    [ "setMinY", "classgGUILineGraph.html#a7556cfa962ba002a59cede6d28d1837e", null ]
+    [ "setMinY", "classgGUILineGraph.html#a7556cfa962ba002a59cede6d28d1837e", null ],
+    [ "setPointValues", "classgGUILineGraph.html#ac806177e2baa15f61358457a1d05eacb", null ]
 ];
