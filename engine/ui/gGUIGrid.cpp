@@ -1262,12 +1262,6 @@ void gGUIGrid::showCell(int rowNo , int columnNo) {
 //		<< " celltype: " << allcells[cellindex].celltype;
 }
 
-bool gGUIGrid::customSort(const Cell& c1, const Cell& c2) {
-	if(c1.cellrowno < c2.cellrowno) return true;
-	else if(c1.cellrowno == c2.cellrowno) return c1.cellcolumnno < c2.cellcolumnno;
-	else return false;
-}
-
 void gGUIGrid::drawContent() {
 	gColor oldcolor = renderer->getColor();
 	drawCellBackground();
