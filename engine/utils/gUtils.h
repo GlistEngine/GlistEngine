@@ -321,7 +321,7 @@ gColor gShowColorChooser(
 	std::string aDefaultHexRGB , /* NULL or "#FF0000" */
 	unsigned char const aDefaultRGB[3]) /* { 0 , 255 , 255 } */;
 
-bool checkCollision(int xLeft1, int yUp1, int xRight1, int yBottom1,
+bool gCheckCollision(int xLeft1, int yUp1, int xRight1, int yBottom1,
 		int xLeft2, int yUp2, int xRight2, int yBottom2);
 
 class gUtils {
