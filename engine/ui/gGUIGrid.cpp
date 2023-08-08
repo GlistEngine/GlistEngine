@@ -632,7 +632,7 @@ void gGUIGrid::addUndoStack(int process) {
 		case PROCESS_TEXT:
 			tmpcell.push_back(selectedbox);
 			undocellstack.push(tmpcell);
-			undovaluestack.push(allcells.at(selectedbox).cellcontent);
+			undovaluestack.push(strflag);
 			break;
 		case PROCESS_FONT:
 			undocellstack.push(selectedcells);
@@ -1587,12 +1587,16 @@ void gGUIGrid::keyPressed(int key){
 		makeDefaultCell();
 	}
 	else if(key == G_KEY_Z && ctrlpressed) {
-		ctrlzpressed = true;
-		if(!undostack.empty()) makeUndo();
+		if(!undostack.empty()) {
+			ctrlzpressed = true;
+			makeUndo();
+		}
 	}
 	else if(key == G_KEY_Y && ctrlpressed) {
-		ctrlypressed = true;
-		if(!redostack.empty()) makeRedo();
+		if(!redostack.empty()) {
+			ctrlypressed = true;
+			makeRedo();
+		}
 	}
 	else if(key == G_KEY_B && ctrlpressed) setCellFontBold();
 	else if(key == G_KEY_I && ctrlpressed) setCellFontItalic();
@@ -1619,7 +1623,6 @@ void gGUIGrid::keyPressed(int key){
 		}
 	}
 	else if((isselected || isrowselected || iscolumnselected) && !ctrlpressed && key != G_KEY_ENTER && key != G_KEY_UP && key != G_KEY_DOWN && key != G_KEY_RIGHT && key != G_KEY_LEFT && key != G_KEY_ESC && key != G_KEY_F2) {
-		if(!isdoubleclicked) addUndoStack(PROCESS_TEXT);
 		textbox.cleanText();
 		strflag = allcells.at(selectedbox).cellcontent;
 		allcells.at(selectedbox).cellcontent = "";
@@ -1628,12 +1631,13 @@ void gGUIGrid::keyPressed(int key){
 		textbox.mousePressed(allcells.at(selectedbox).cellx + textbox.getInitX(), allcells.at(selectedbox).celly + textbox.getInitX(), 0);
 		textbox.keyPressed(key);
 		istextboxactive = true;
+		isdoubleclicked = true;
 	}
 }
 
 void gGUIGrid::keyReleased(int key) {
 	if(istextboxactive) textbox.keyReleased(key);
-	if(key == G_KEY_ENTER && isdoubleclicked) addUndoStack(PROCESS_TEXT);
+	if(key == G_KEY_ENTER && isdoubleclicked && (strflag != allcells.at(selectedbox).cellcontent || (strflag == "" && textbox.getText() != ""))) addUndoStack(PROCESS_TEXT);
 	if((key == G_KEY_ENTER && firstselectedcell != lastselectedcell)) {
 		changeCell(selectedbox);
 		istextboxactive = false;
