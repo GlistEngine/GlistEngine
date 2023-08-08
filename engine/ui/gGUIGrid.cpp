@@ -6,13 +6,10 @@
  */
 
 #include "gGUIGrid.h"
-//const int gGUIGrid::SELECTEDBOX_X = 0;
-//const int gGUIGrid::SELECTEDBOX_Y = 1;
 #include "gBaseApp.h"
+#include <array>
 
 gGUIGrid::gGUIGrid() {
-//	gridsizer.setSize(10,10);
-//	gridsizer.enableBorders(true);
 	selectedframecolor = gColor(0.1f, 0.45f, 0.87f, 1.0f);
 	selectedareacolor = gColor(0.85f, 0.85f, 0.9f, 1.0f);
 	isselected = false;
