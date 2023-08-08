@@ -1764,7 +1764,10 @@ void gGUITextbox::cleanText() {
 	firstutf = 0;
 	firstposx = 0;
 	lastutf = 0;
-	if(ismultiline) currentline = 1;
+	if(ismultiline){
+		currentline = 1;
+		setText("");
+	}
 }
 
 int gGUITextbox::getTextboxh() {
