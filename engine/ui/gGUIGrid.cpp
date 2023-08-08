@@ -1331,8 +1331,7 @@ void gGUIGrid::drawColumnContents() {
 			gDrawLine(calculateCurrentX(i + 1), gridy - firsty, calculateCurrentX(i + 1), gridy + gridboxh + gridh - firsty);
 		}
 	}
-	Cell emptycell;
-	gDrawRectangle(gridx, gridy, emptycell.cellw / 2, emptycell.cellh, true);
+	gDrawRectangle(gridx, gridy, gridboxw / 2, gridboxh, true);
 }
 
 void gGUIGrid::drawTitleLines() {
