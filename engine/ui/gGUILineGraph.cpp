@@ -105,6 +105,25 @@ void gGUILineGraph::addPointToLine(int lineIndex, float x, float y) {
 	graphlines[lineIndex].insert(graphlines[lineIndex].begin() + index, {x, y, axisx1 + axisxw * (x - minx) / (maxx - minx), axisy2 - axisyh * (y - miny) / (maxy - miny)});
 }
 
+void gGUILineGraph::setPointValues(int lineIndex, int pointIndex, float newx, float newy) {
+	if(graphlines.size() - 1 < lineIndex) return;
+		if(newx < smallestvaluex) setMinX(newx);
+		else if(newx > largestvaluex) setMaxX(newx);
+		if(newy < smallestvaluey) setMinY(newy);
+		else if(newy > largestvaluey) setMaxY(newy);
+		setLabelCountX(getLabelCountX());
+		setLabelCountY(getLabelCountY());
+		int pointcount = graphlines[lineIndex].size();
+		int index = 0;
+		while(index < pointcount) {
+			if(graphlines[lineIndex][index++][0] < newx) continue;
+			index--;
+			break;
+		}
+		graphlines[lineIndex][pointIndex - 1] = {newx,newy, axisx1 + axisxw * (newx - minx) / (maxx - minx), axisy2 - axisyh * (newy - miny) / (maxy - miny)};
+}
+
+
 void gGUILineGraph::drawGraph() {
 	if(graphlines.empty()) return;
 
