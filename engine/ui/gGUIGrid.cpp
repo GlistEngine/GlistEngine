@@ -469,13 +469,13 @@ int gGUIGrid::getCellNo(int rowNo, int columnNo) {
 int gGUIGrid::getNearestFilledCell(int index) {
 	int nearestindex = -1;
 	for(int i = 0; i < allcells.size(); i++) {
-		if(i != index && allcells[i].celly == allcells[index].celly && !allcells[i].showncontent.empty()) {
-			if(allcells[index].cellalignment != gBaseGUIObject::TEXTALIGNMENT_RIGHT && allcells[index].cellx + manager->getFont(allcells[index].fontnum)->getStringWidth(allcells[index].showncontent) > allcells[i].cellx && allcells[index].cellx < allcells[i].cellx) {
-				if(nearestindex != -1 && allcells[nearestindex].cellx > allcells[i].cellx) nearestindex = i;
+		if(i != index && allcells[i].cellrowno == allcells[index].cellrowno && !allcells[i].showncontent.empty()) {
+			if(allcells[index].cellalignment != gBaseGUIObject::TEXTALIGNMENT_RIGHT && allcells[index].cellx + font->getStringWidth(allcells[index].showncontent) > allcells[i].cellx && allcells[index].cellcolumnno < allcells[i].cellcolumnno) {
+				if(nearestindex != -1 && allcells[nearestindex].cellcolumnno > allcells[i].cellcolumnno) nearestindex = i;
 				else if(nearestindex == -1) nearestindex = i;
 			}
-			else if(allcells[index].cellalignment == gBaseGUIObject::TEXTALIGNMENT_RIGHT && allcells[index].cellx - (manager->getFont(allcells[index].fontnum)->getStringWidth(allcells[index].showncontent) - allcells[index].cellw) < allcells[i].cellx + allcells[i].cellw && allcells[index].cellx > allcells[i].cellx) {
-				if(nearestindex != -1 && allcells[nearestindex].cellx < allcells[i].cellx) nearestindex = i;
+			else if(allcells[index].cellalignment == gBaseGUIObject::TEXTALIGNMENT_RIGHT && allcells[index].cellx - (font->getStringWidth(allcells[index].showncontent) - allcells[index].cellw) < allcells[i].cellx + allcells[i].cellw && allcells[index].cellcolumnno > allcells[i].cellcolumnno) {
+				if(nearestindex != -1 && allcells[nearestindex].cellcolumnno < allcells[i].cellcolumnno) nearestindex = i;
 				else if(nearestindex == -1) nearestindex = i;
 			}
 		}
@@ -514,7 +514,7 @@ void gGUIGrid::fillCell(int cellNo, std::string tempstr) { //when rowNo = 1, col
 
 	int nearestindex = -1;
 	for(int i = 0; i < allcells.size(); i++) {
-		if(allcells[i].celly == allcells[cellindex].celly) {
+		if(allcells[i].cellrowno == allcells[cellindex].cellrowno) {
 			nearestindex = getNearestFilledCell(i);
 			if(nearestindex != -1) allcells[i].overflowcontent = fixOverflowText(allcells[i], allcells[nearestindex]);
 			else allcells[i].overflowcontent = "";
@@ -1227,13 +1227,13 @@ void gGUIGrid::checkCellType(int cellIndex) {
 	}
 	for(int i = 0 + isnegative; i < allcells[cellIndex].showncontent.length(); i++) {
 		if(!isdigit(allcells[cellIndex].showncontent.at(i)) && !(isfractional && allcells[cellIndex].showncontent.at(i) == '.')) {
-			if(allcells[cellIndex].celltype == Cell::TYPE_DIGIT && !allcells[cellIndex].iscellaligned) setCellAlignment(gBaseGUIObject::TEXTALIGNMENT_LEFT, false);
+			if(allcells[cellIndex].celltype == Cell::TYPE_DIGIT && !allcells[cellIndex].iscellaligned) setCellAlignment(&allcells[cellIndex], gBaseGUIObject::TEXTALIGNMENT_LEFT);
 			allcells[cellIndex].celltype = Cell::TYPE_STRING;
 			break;
 		}
 		else allcells[cellIndex].celltype = Cell::TYPE_DIGIT;
 	}
-	if(allcells[cellIndex].celltype == Cell::TYPE_DIGIT && !allcells[cellIndex].iscellaligned) setCellAlignment(gBaseGUIObject::TEXTALIGNMENT_RIGHT, false);
+	if(allcells[cellIndex].celltype == Cell::TYPE_DIGIT && !allcells[cellIndex].iscellaligned) setCellAlignment(&allcells[cellIndex], gBaseGUIObject::TEXTALIGNMENT_RIGHT);
 }
 
 void gGUIGrid::showCells() {
@@ -1260,6 +1260,12 @@ void gGUIGrid::showCell(int rowNo , int columnNo) {
 //		<< " cellcolumnno: " << allcells[cellindex].cellcolumnno
 //		<< " cellcontent: " << allcells[cellindex].cellcontent
 //		<< " celltype: " << allcells[cellindex].celltype;
+}
+
+bool gGUIGrid::customSort(const Cell& c1, const Cell& c2) {
+	if(c1.cellrowno < c2.cellrowno) return true;
+	else if(c1.cellrowno == c2.cellrowno) return c1.cellcolumnno < c2.cellcolumnno;
+	else return false;
 }
 
 void gGUIGrid::drawContent() {
