@@ -188,7 +188,7 @@ unsigned int gImage::loadMaskImage(const std::string& maskImagePath) {
 bool gImage::gImage::checkPixelPerfectCollision(gImage *otherImage,
 	float imgposX, float imgposY, float otherimgposX, float otherimgposY) {
 	unsigned char* data2 = otherImage->data;
-	if (checkCollision(imgposX, imgposY, (imgposX + getWidth()), (imgposY + getHeight()), otherimgposX, otherimgposY, (otherimgposX + otherImage->getWidth()), (otherimgposY + otherImage->getHeight()))) {
+	if (gCheckCollision(imgposX, imgposY, (imgposX + getWidth()), (imgposY + getHeight()), otherimgposX, otherimgposY, (otherimgposX + otherImage->getWidth()), (otherimgposY + otherImage->getHeight()))) {
 		int overlapleft = std::max(imgposX, otherimgposX);
 		int overlapright = std::min(imgposX + getWidth(), otherimgposX + otherImage->getWidth());
 		int overlaptop = std::max(imgposY, otherimgposY);
