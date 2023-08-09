@@ -29,6 +29,7 @@ public:
 	    bool iscellaligned;
 	    bool isbold;
 	    bool isitalic;
+	    bool iscolorchanged;
 	    int cellx;
 	    int celly;
 	    int cellrowno;
@@ -50,6 +51,7 @@ public:
 	    	iscellaligned = false;
 	    	isbold = false;
 	    	isitalic = false;
+	    	iscolorchanged = false;
 	    	cellx = -1;
 	    	celly = -1;
 	    	fontnum = gGUIManager::FONT_FREESANS;
@@ -109,7 +111,7 @@ public:
 	void setCellFontBold();
 	void setCellFontItalic();
 	void setCellAlignment(int cellAlignment, bool clicked);
-	void setCellFontColor(gColor* fontColor);
+	void setCellFontColor(gColor* fontColor = fontcolor);
 	void setCellLine(int lineNo, bool clicked);
 	void setSelectedFrameColor(gColor* selectedFrameColor);
 	void setSelectedAreaColor(gColor* selectedAreaColor);
@@ -209,7 +211,7 @@ private:
 	std::stack<std::deque<int>> redocellstack;
 	gGUIManager* manager;
 	gGUITextbox textbox;
-	gColor selectedframecolor, selectedareacolor;
+	gColor selectedframecolor, selectedareacolor, selectedareadarkcolor;
 	bool isselected, isrowselected, iscolumnselected;
 	bool istextboxactive;
 	bool isdoubleclicked;
