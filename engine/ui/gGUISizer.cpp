@@ -373,7 +373,6 @@ void gGUISizer::draw() {
 					float lc = foregroundcolor->r - (std::fabs(k - 1) * 0.05f);
 					renderer->setColor(gColor(lc, lc, lc));
 					int l = left + (width * columntprs[j]) + k - 1;
-					gDrawLine(l, top, l, bottom);
 				}
 			}
 			if(i == 0) continue;
