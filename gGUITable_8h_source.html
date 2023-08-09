@@ -100,36 +100,59 @@ $(document).ready(function(){initNavTree('gGUITable_8h_source.html',''); initRes
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor">#include &quot;gGUIControl.h&quot;</span></div>
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="preprocessor">#include &quot;gFont.h&quot;</span></div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="preprocessor">#include &quot;gGUISizer.h&quot;</span></div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160; </div>
-<div class="line"><a name="l00016"></a><span class="lineno"><a class="line" href="classgGUITable.html">   16</a></span>&#160;<span class="keyword">class </span><a class="code" href="classgGUITable.html">gGUITable</a> : <span class="keyword">public</span> <a class="code" href="classgGUIControl.html">gGUIControl</a>{</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    <a class="code" href="classgGUITable.html">gGUITable</a>();</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    <span class="keyword">virtual</span> ~<a class="code" href="classgGUITable.html">gGUITable</a>();</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160; </div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    <span class="keywordtype">void</span> draw();</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    <span class="comment">//void set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIObject* parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h);</span></div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    <span class="keywordtype">void</span> addItem(<a class="code" href="classgImage.html">gImage</a>* image, std::string title = <span class="stringliteral">&quot;New File&quot;</span>);</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    <span class="comment">//gGUISizer tablesizer;</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160; </div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    <a class="code" href="classgFont.html">gFont</a> tablefont;</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    <span class="keywordtype">bool</span> isfilepressed;</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    <span class="keywordtype">int</span> pressedfileid;</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">int</span> FILE_X = 0, FILE_Y = 1, FILE_W = 2, FILE_H = 3;</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    std::deque&lt;gImage*&gt; imagelist;</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    std::deque&lt;std::string&gt; imagetextlist;</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    std::deque&lt;int&gt; imageparameterlist;</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="keywordtype">int</span> x, y, w, h;</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <span class="keywordtype">int</span> selectedx, selectedy, selectedw, selectedh, selectedid;</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <span class="keywordtype">int</span> screenwidth, screenheight;</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <span class="keywordtype">int</span> maxcolumncount;</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160; </div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;};</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160; </div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* UI_GGUITABLE_H_ */</span><span class="preprocessor"></span></div>
-<div class="ttc" id="aclassgFont_html"><div class="ttname"><a href="classgFont.html">gFont</a></div><div class="ttdef"><b>Definition:</b> gFont.h:37</div></div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="preprocessor">#include &quot;gBaseGUIObject.h&quot;</span></div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="preprocessor">#include &quot;gColor.h&quot;</span></div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="preprocessor">#include &quot;gGUIFrame.h&quot;</span></div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="preprocessor">#include &quot;gBaseCanvas.h&quot;</span></div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160; </div>
+<div class="line"><a name="l00020"></a><span class="lineno"><a class="line" href="classgGUITable.html">   20</a></span>&#160;<span class="keyword">class </span><a class="code" href="classgGUITable.html">gGUITable</a> : <span class="keyword">public</span> <a class="code" href="classgGUIControl.html">gGUIControl</a>{</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    <a class="code" href="classgGUITable.html">gGUITable</a>();</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    <span class="keyword">virtual</span> ~<a class="code" href="classgGUITable.html">gGUITable</a>();</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160; </div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    <span class="keywordtype">void</span> setup();</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    <span class="keywordtype">void</span> update();</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    <span class="keywordtype">void</span> draw();</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    <span class="comment">//void set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIObject* parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h);</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    <span class="keywordtype">void</span> addItem(<a class="code" href="classgImage.html">gImage</a>* image, std::string title = <span class="stringliteral">&quot;New File&quot;</span>);</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    <span class="keywordtype">void</span> setFontColor(<a class="code" href="classgColor.html">gColor</a> color);</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    <span class="keywordtype">void</span> setBackgroundTableColor(<a class="code" href="classgColor.html">gColor</a> color);</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    <a class="code" href="classgColor.html">gColor</a>* getBackgroundTableColor();</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <a class="code" href="classgColor.html">gColor</a>* getFontColor();</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="comment">//gGUISizer tablesizer;</span></div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160; </div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <span class="keywordtype">bool</span> isfilepressed;</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <span class="keywordtype">int</span> pressedfileid;</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">int</span> FILE_X = 0, FILE_Y = 1, FILE_W = 2, FILE_H = 3;</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    std::deque&lt;gImage*&gt; imagelist;</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    std::deque&lt;std::string&gt; imagetextlist;</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    std::deque&lt;int&gt; imageparameterlist;</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <span class="keywordtype">int</span> x, y, filew, fileh;</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <span class="keywordtype">int</span> selectedx, selectedy, selectedw, selectedh, selectedid;</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="keywordtype">int</span> screenwidth, screenheight;</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <span class="keywordtype">int</span> maxcolumncount;</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="comment">//  int imagew[20], imageh[20];</span></div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="comment">//  int filex[20], filey[20];</span></div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="comment">//  std::vector&lt;std::array&lt;int, 1&gt;&gt; imagew;</span></div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    std::vector&lt;int&gt; imagew;</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    std::vector&lt;int&gt; imageh;</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    std::vector&lt;int&gt; filex;</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    std::vector&lt;int&gt; filey;</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <span class="keywordtype">int</span> cornerspace;</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="keywordtype">int</span> sonucw, sonuch;</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <a class="code" href="classgColor.html">gColor</a> fcolor, backgroundcolor;</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <span class="keywordtype">int</span> minh, minw;</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    <a class="code" href="classgGUIFrame.html">gGUIFrame</a> frame;</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    <a class="code" href="classgGUISizer.html">gGUISizer</a> framesizer;</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;};</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160; </div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* UI_GGUITABLE_H_ */</span><span class="preprocessor"></span></div>
+<div class="ttc" id="aclassgColor_html"><div class="ttname"><a href="classgColor.html">gColor</a></div><div class="ttdef"><b>Definition:</b> gColor.h:12</div></div>
 <div class="ttc" id="aclassgGUIControl_html"><div class="ttname"><a href="classgGUIControl.html">gGUIControl</a></div><div class="ttdef"><b>Definition:</b> gGUIControl.h:29</div></div>
-<div class="ttc" id="aclassgGUITable_html"><div class="ttname"><a href="classgGUITable.html">gGUITable</a></div><div class="ttdef"><b>Definition:</b> gGUITable.h:16</div></div>
+<div class="ttc" id="aclassgGUIFrame_html"><div class="ttname"><a href="classgGUIFrame.html">gGUIFrame</a></div><div class="ttdef"><b>Definition:</b> gGUIFrame.h:14</div></div>
+<div class="ttc" id="aclassgGUISizer_html"><div class="ttname"><a href="classgGUISizer.html">gGUISizer</a></div><div class="ttdef"><b>Definition:</b> gGUISizer.h:14</div></div>
+<div class="ttc" id="aclassgGUITable_html"><div class="ttname"><a href="classgGUITable.html">gGUITable</a></div><div class="ttdef"><b>Definition:</b> gGUITable.h:20</div></div>
 <div class="ttc" id="aclassgImage_html"><div class="ttname"><a href="classgImage.html">gImage</a></div><div class="ttdef"><b>Definition:</b> gImage.h:34</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
