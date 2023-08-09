@@ -111,33 +111,33 @@ public:
 	/*
 	 * @brief returns the current target mesh's id.
 	 */
-	int getCurrentTargetMeshId();
+	int getCurrentTargetMeshId() const;
 
 	/*
 	 * @brief returns the current frame's id.
 	 */
-	int getCurrentFrameId();
+	int getCurrentFrameId() const;
 
 	/*
 	 * @brief returns the desired target mesh's frame count.
 	 * @param targetMeshId is the desired target mesh id.
 	 */
-	int getFrameCount(int targetMeshId);
+	int getFrameCount(int targetMeshId) const;
 
 	/*
 	 * @brief returns the current target mesh's frame count.
 	 */
-	int getFrameCount();
+	int getFrameCount() const;
 
 	/*
 	 * @brief returns the target mesh's count.
 	 */
-	int getTargetMeshCount();
+	int getTargetMeshCount() const;
 
 	/*
 	 * @brief returns the current frame jump speed.
 	 */
-	int getSpeed();
+	int getSpeed() const;
 
 	/*
 	 * @brief returns the desired target position.
@@ -145,7 +145,7 @@ public:
 	 * @param positionId is the desired position's id.
 	 * @return returns the constant reference of the desired position as a glm::vec3.
 	 */
-	const glm::vec3& getTargetPosition(int targetId, int positionId);
+	const glm::vec3& getTargetPosition(int targetId, int positionId) const;
 
 	/*
 	 * @brief returns the desired target normal.
@@ -153,17 +153,19 @@ public:
 	 * @param positionId is the desired normal's id.
 	 * @return returns the constant reference of the desired normal as a glm::vec3.
 	 */
-	const glm::vec3& getTargetNormal(int targetId, int normalId);
+	const glm::vec3& getTargetNormal(int targetId, int normalId) const;
 
 	/*
 	 * @brief interpolates the vertices in base and target meshes' from base's to target's meshes.
-	 * @param ignoreChecks is an indicator if it checks the current target mesh and current frame are as last interpolate.
+	 * @param forceInterpolation is an indicator if it checks the current target mesh and current frame are as last interpolate.
 	 */
 	void interpolate(bool forceInterpolation = true);
 
 private:
 	//The loaded target meshes' positions which are the end points of interpolation.
 	std::vector<std::vector<glm::vec3>> targetpositions, targetnormals;
+	//The base mesh's vertices' spare.
+	std::vector<gVertex> basevertices;
 	//The animated frames' data.
 	std::vector<std::vector<std::vector<glm::vec3>>> framepositions, framenormals;
 	//The frames data on vram.
