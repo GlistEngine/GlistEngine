@@ -283,44 +283,45 @@ $(document).ready(function(){initNavTree('gAppManager_8h_source.html',''); initR
 <div class="line"><a name="l00336"></a><span class="lineno">  336</span>&#160;<span class="preprocessor">#ifdef ANDROID</span></div>
 <div class="line"><a name="l00337"></a><span class="lineno">  337</span>&#160;    DeviceOrientation deviceorientation;</div>
 <div class="line"><a name="l00338"></a><span class="lineno">  338</span>&#160;    DeviceOrientation olddeviceorientation;</div>
-<div class="line"><a name="l00339"></a><span class="lineno">  339</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00340"></a><span class="lineno">  340</span>&#160; </div>
-<div class="line"><a name="l00341"></a><span class="lineno">  341</span>&#160;    std::vector&lt;std::function&lt;void()&gt;&gt; mainthreadqueue;</div>
-<div class="line"><a name="l00342"></a><span class="lineno">  342</span>&#160;    std::mutex mainthreadqueuemutex;</div>
-<div class="line"><a name="l00343"></a><span class="lineno">  343</span>&#160; </div>
-<div class="line"><a name="l00344"></a><span class="lineno">  344</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00345"></a><span class="lineno">  345</span>&#160; </div>
-<div class="line"><a name="l00346"></a><span class="lineno">  346</span>&#160;    <span class="keywordtype">void</span> tick();</div>
-<div class="line"><a name="l00347"></a><span class="lineno">  347</span>&#160;    <span class="keywordtype">void</span> onEvent(<a class="code" href="classgEvent.html">gEvent</a>&amp; event);</div>
-<div class="line"><a name="l00348"></a><span class="lineno">  348</span>&#160; </div>
-<div class="line"><a name="l00349"></a><span class="lineno">  349</span>&#160;    <span class="keywordtype">bool</span> onWindowResizedEvent(<a class="code" href="classgWindowResizeEvent.html">gWindowResizeEvent</a>&amp;);</div>
-<div class="line"><a name="l00350"></a><span class="lineno">  350</span>&#160;    <span class="keywordtype">bool</span> onCharTypedEvent(<a class="code" href="classgCharTypedEvent.html">gCharTypedEvent</a>&amp;);</div>
-<div class="line"><a name="l00351"></a><span class="lineno">  351</span>&#160;    <span class="keywordtype">bool</span> onKeyPressedEvent(<a class="code" href="classgKeyPressedEvent.html">gKeyPressedEvent</a>&amp;);</div>
-<div class="line"><a name="l00352"></a><span class="lineno">  352</span>&#160;    <span class="keywordtype">bool</span> onKeyReleasedEvent(<a class="code" href="classgKeyReleasedEvent.html">gKeyReleasedEvent</a>&amp;);</div>
-<div class="line"><a name="l00353"></a><span class="lineno">  353</span>&#160;    <span class="keywordtype">bool</span> onMouseMovedEvent(<a class="code" href="classgMouseMovedEvent.html">gMouseMovedEvent</a>&amp;);</div>
-<div class="line"><a name="l00354"></a><span class="lineno">  354</span>&#160;    <span class="keywordtype">bool</span> onMouseButtonPressedEvent(<a class="code" href="classgMouseButtonPressedEvent.html">gMouseButtonPressedEvent</a>&amp;);</div>
-<div class="line"><a name="l00355"></a><span class="lineno">  355</span>&#160;    <span class="keywordtype">bool</span> onMouseButtonReleasedEvent(<a class="code" href="classgMouseButtonReleasedEvent.html">gMouseButtonReleasedEvent</a>&amp;);</div>
-<div class="line"><a name="l00356"></a><span class="lineno">  356</span>&#160;    <span class="keywordtype">bool</span> onWindowMouseEnterEvent(<a class="code" href="classgWindowMouseEnterEvent.html">gWindowMouseEnterEvent</a>&amp;);</div>
-<div class="line"><a name="l00357"></a><span class="lineno">  357</span>&#160;    <span class="keywordtype">bool</span> onWindowMouseExitEvent(<a class="code" href="classgWindowMouseExitEvent.html">gWindowMouseExitEvent</a>&amp;);</div>
-<div class="line"><a name="l00358"></a><span class="lineno">  358</span>&#160;    <span class="keywordtype">bool</span> onMouseScrolledEvent(<a class="code" href="classgMouseScrolledEvent.html">gMouseScrolledEvent</a>&amp;);</div>
-<div class="line"><a name="l00359"></a><span class="lineno">  359</span>&#160;    <span class="keywordtype">bool</span> onWindowFocusEvent(<a class="code" href="classgWindowFocusEvent.html">gWindowFocusEvent</a>&amp;);</div>
-<div class="line"><a name="l00360"></a><span class="lineno">  360</span>&#160;    <span class="keywordtype">bool</span> onWindowLoseFocusEvent(<a class="code" href="classgWindowLoseFocusEvent.html">gWindowLoseFocusEvent</a>&amp;);</div>
-<div class="line"><a name="l00361"></a><span class="lineno">  361</span>&#160;    <span class="keywordtype">bool</span> onJoystickConnectEvent(<a class="code" href="classgJoystickConnectEvent.html">gJoystickConnectEvent</a>&amp;);</div>
-<div class="line"><a name="l00362"></a><span class="lineno">  362</span>&#160;    <span class="keywordtype">bool</span> onJoystickDisconnectEvent(<a class="code" href="classgJoystickDisconnectEvent.html">gJoystickDisconnectEvent</a>&amp;);</div>
-<div class="line"><a name="l00363"></a><span class="lineno">  363</span>&#160;<span class="preprocessor">#ifdef ANDROID</span></div>
-<div class="line"><a name="l00364"></a><span class="lineno">  364</span>&#160;    <span class="keywordtype">bool</span> onAppPauseEvent(gAppPauseEvent&amp;);</div>
-<div class="line"><a name="l00365"></a><span class="lineno">  365</span>&#160;    <span class="keywordtype">bool</span> onAppResumeEvent(gAppResumeEvent&amp;);</div>
-<div class="line"><a name="l00366"></a><span class="lineno">  366</span>&#160;    <span class="keywordtype">bool</span> onDeviceOrientationChangedEvent(gDeviceOrientationChangedEvent&amp;);</div>
-<div class="line"><a name="l00367"></a><span class="lineno">  367</span>&#160;    <span class="keywordtype">bool</span> onTouchEvent(gTouchEvent&amp;);</div>
-<div class="line"><a name="l00368"></a><span class="lineno">  368</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00369"></a><span class="lineno">  369</span>&#160; </div>
-<div class="line"><a name="l00370"></a><span class="lineno">  370</span>&#160;    <span class="keywordtype">void</span> updateTime();</div>
-<div class="line"><a name="l00371"></a><span class="lineno">  371</span>&#160;    <span class="keywordtype">void</span> executeQueue();</div>
-<div class="line"><a name="l00372"></a><span class="lineno">  372</span>&#160; </div>
-<div class="line"><a name="l00373"></a><span class="lineno">  373</span>&#160;    <span class="keyword">static</span> <span class="keywordtype">void</span> preciseSleep(<span class="keywordtype">double</span> seconds);</div>
-<div class="line"><a name="l00374"></a><span class="lineno">  374</span>&#160;};</div>
-<div class="line"><a name="l00375"></a><span class="lineno">  375</span>&#160; </div>
-<div class="line"><a name="l00376"></a><span class="lineno">  376</span>&#160;<span class="preprocessor">#endif </span><span class="comment">//GAPPMANAGER_H</span></div>
+<div class="line"><a name="l00339"></a><span class="lineno">  339</span>&#160;    <span class="keywordtype">bool</span> delayedresize;</div>
+<div class="line"><a name="l00340"></a><span class="lineno">  340</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00341"></a><span class="lineno">  341</span>&#160; </div>
+<div class="line"><a name="l00342"></a><span class="lineno">  342</span>&#160;    std::vector&lt;std::function&lt;void()&gt;&gt; mainthreadqueue;</div>
+<div class="line"><a name="l00343"></a><span class="lineno">  343</span>&#160;    std::mutex mainthreadqueuemutex;</div>
+<div class="line"><a name="l00344"></a><span class="lineno">  344</span>&#160; </div>
+<div class="line"><a name="l00345"></a><span class="lineno">  345</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00346"></a><span class="lineno">  346</span>&#160; </div>
+<div class="line"><a name="l00347"></a><span class="lineno">  347</span>&#160;    <span class="keywordtype">void</span> tick();</div>
+<div class="line"><a name="l00348"></a><span class="lineno">  348</span>&#160;    <span class="keywordtype">void</span> onEvent(<a class="code" href="classgEvent.html">gEvent</a>&amp; event);</div>
+<div class="line"><a name="l00349"></a><span class="lineno">  349</span>&#160; </div>
+<div class="line"><a name="l00350"></a><span class="lineno">  350</span>&#160;    <span class="keywordtype">bool</span> onWindowResizedEvent(<a class="code" href="classgWindowResizeEvent.html">gWindowResizeEvent</a>&amp;);</div>
+<div class="line"><a name="l00351"></a><span class="lineno">  351</span>&#160;    <span class="keywordtype">bool</span> onCharTypedEvent(<a class="code" href="classgCharTypedEvent.html">gCharTypedEvent</a>&amp;);</div>
+<div class="line"><a name="l00352"></a><span class="lineno">  352</span>&#160;    <span class="keywordtype">bool</span> onKeyPressedEvent(<a class="code" href="classgKeyPressedEvent.html">gKeyPressedEvent</a>&amp;);</div>
+<div class="line"><a name="l00353"></a><span class="lineno">  353</span>&#160;    <span class="keywordtype">bool</span> onKeyReleasedEvent(<a class="code" href="classgKeyReleasedEvent.html">gKeyReleasedEvent</a>&amp;);</div>
+<div class="line"><a name="l00354"></a><span class="lineno">  354</span>&#160;    <span class="keywordtype">bool</span> onMouseMovedEvent(<a class="code" href="classgMouseMovedEvent.html">gMouseMovedEvent</a>&amp;);</div>
+<div class="line"><a name="l00355"></a><span class="lineno">  355</span>&#160;    <span class="keywordtype">bool</span> onMouseButtonPressedEvent(<a class="code" href="classgMouseButtonPressedEvent.html">gMouseButtonPressedEvent</a>&amp;);</div>
+<div class="line"><a name="l00356"></a><span class="lineno">  356</span>&#160;    <span class="keywordtype">bool</span> onMouseButtonReleasedEvent(<a class="code" href="classgMouseButtonReleasedEvent.html">gMouseButtonReleasedEvent</a>&amp;);</div>
+<div class="line"><a name="l00357"></a><span class="lineno">  357</span>&#160;    <span class="keywordtype">bool</span> onWindowMouseEnterEvent(<a class="code" href="classgWindowMouseEnterEvent.html">gWindowMouseEnterEvent</a>&amp;);</div>
+<div class="line"><a name="l00358"></a><span class="lineno">  358</span>&#160;    <span class="keywordtype">bool</span> onWindowMouseExitEvent(<a class="code" href="classgWindowMouseExitEvent.html">gWindowMouseExitEvent</a>&amp;);</div>
+<div class="line"><a name="l00359"></a><span class="lineno">  359</span>&#160;    <span class="keywordtype">bool</span> onMouseScrolledEvent(<a class="code" href="classgMouseScrolledEvent.html">gMouseScrolledEvent</a>&amp;);</div>
+<div class="line"><a name="l00360"></a><span class="lineno">  360</span>&#160;    <span class="keywordtype">bool</span> onWindowFocusEvent(<a class="code" href="classgWindowFocusEvent.html">gWindowFocusEvent</a>&amp;);</div>
+<div class="line"><a name="l00361"></a><span class="lineno">  361</span>&#160;    <span class="keywordtype">bool</span> onWindowLoseFocusEvent(<a class="code" href="classgWindowLoseFocusEvent.html">gWindowLoseFocusEvent</a>&amp;);</div>
+<div class="line"><a name="l00362"></a><span class="lineno">  362</span>&#160;    <span class="keywordtype">bool</span> onJoystickConnectEvent(<a class="code" href="classgJoystickConnectEvent.html">gJoystickConnectEvent</a>&amp;);</div>
+<div class="line"><a name="l00363"></a><span class="lineno">  363</span>&#160;    <span class="keywordtype">bool</span> onJoystickDisconnectEvent(<a class="code" href="classgJoystickDisconnectEvent.html">gJoystickDisconnectEvent</a>&amp;);</div>
+<div class="line"><a name="l00364"></a><span class="lineno">  364</span>&#160;<span class="preprocessor">#ifdef ANDROID</span></div>
+<div class="line"><a name="l00365"></a><span class="lineno">  365</span>&#160;    <span class="keywordtype">bool</span> onAppPauseEvent(gAppPauseEvent&amp;);</div>
+<div class="line"><a name="l00366"></a><span class="lineno">  366</span>&#160;    <span class="keywordtype">bool</span> onAppResumeEvent(gAppResumeEvent&amp;);</div>
+<div class="line"><a name="l00367"></a><span class="lineno">  367</span>&#160;    <span class="keywordtype">bool</span> onDeviceOrientationChangedEvent(gDeviceOrientationChangedEvent&amp;);</div>
+<div class="line"><a name="l00368"></a><span class="lineno">  368</span>&#160;    <span class="keywordtype">bool</span> onTouchEvent(gTouchEvent&amp;);</div>
+<div class="line"><a name="l00369"></a><span class="lineno">  369</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00370"></a><span class="lineno">  370</span>&#160; </div>
+<div class="line"><a name="l00371"></a><span class="lineno">  371</span>&#160;    <span class="keywordtype">void</span> updateTime();</div>
+<div class="line"><a name="l00372"></a><span class="lineno">  372</span>&#160;    <span class="keywordtype">void</span> executeQueue();</div>
+<div class="line"><a name="l00373"></a><span class="lineno">  373</span>&#160; </div>
+<div class="line"><a name="l00374"></a><span class="lineno">  374</span>&#160;    <span class="keyword">static</span> <span class="keywordtype">void</span> preciseSleep(<span class="keywordtype">double</span> seconds);</div>
+<div class="line"><a name="l00375"></a><span class="lineno">  375</span>&#160;};</div>
+<div class="line"><a name="l00376"></a><span class="lineno">  376</span>&#160; </div>
+<div class="line"><a name="l00377"></a><span class="lineno">  377</span>&#160;<span class="preprocessor">#endif </span><span class="comment">//GAPPMANAGER_H</span></div>
 <div class="ttc" id="aclassgAppManager_html"><div class="ttname"><a href="classgAppManager.html">gAppManager</a></div><div class="ttdef"><b>Definition:</b> gAppManager.h:152</div></div>
 <div class="ttc" id="aclassgAppManager_html_a62cbdf5e79c8b435779973b6a2bdeefe"><div class="ttname"><a href="classgAppManager.html#a62cbdf5e79c8b435779973b6a2bdeefe">gAppManager::getCurrentGUIFrame</a></div><div class="ttdeci">gGUIFrame * getCurrentGUIFrame()</div></div>
 <div class="ttc" id="aclassgAppManager_html_a78191f2beaa4d835239927f0ea2a8a53"><div class="ttname"><a href="classgAppManager.html#a78191f2beaa4d835239927f0ea2a8a53">gAppManager::getTargetFramerate</a></div><div class="ttdeci">int getTargetFramerate()</div></div>
