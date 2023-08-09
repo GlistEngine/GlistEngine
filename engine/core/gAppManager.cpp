@@ -673,15 +673,42 @@ bool gAppManager::onTouchEvent(gTouchEvent& event) {
 			if (event.getAction() == ACTIONTYPE_POINTER_DOWN || (event.getInputCount() == 1 && event.getAction() == ACTIONTYPE_DOWN)) {
 				int inputindex = event.getActionIndex();
 				TouchInput& input = event.getInputs()[inputindex];
-				androidcanvas->touchPressed(input.x, input.y, input.fingerid);
+				int x = input.x;
+				int y = input.y;
+				if (screenscaling >= G_SCREENSCALING_AUTO) {
+					gRenderer* renderer = gRenderObject::getRenderer();
+					float scaleX = renderer->getUnitWidth() / (float) renderer->getScreenWidth();
+					float scaleY = renderer->getUnitHeight() / (float) renderer->getScreenHeight();
+					x *= scaleX;
+					y *= scaleY;
+				}
+				androidcanvas->touchPressed(x, y, input.fingerid);
 			} else if (event.getAction() == ACTIONTYPE_POINTER_UP || (event.getInputCount() == 1 && event.getAction() == ACTIONTYPE_UP)) {
 				int inputindex = event.getActionIndex();
 				TouchInput& input = event.getInputs()[inputindex];
-				androidcanvas->touchReleased(input.x, input.y, input.fingerid);
+				int x = input.x;
+				int y = input.y;
+				if (screenscaling >= G_SCREENSCALING_AUTO) {
+					gRenderer* renderer = gRenderObject::getRenderer();
+					float scaleX = renderer->getUnitWidth() / (float) renderer->getScreenWidth();
+					float scaleY = renderer->getUnitHeight() / (float) renderer->getScreenHeight();
+					x *= scaleX;
+					y *= scaleY;
+				}
+				androidcanvas->touchReleased(x, y, input.fingerid);
 			} else if (event.getAction() == ACTIONTYPE_MOVE) {
 				int inputindex = event.getActionIndex();
 				TouchInput& input = event.getInputs()[inputindex];
-				androidcanvas->touchMoved(input.x, input.y, input.fingerid);
+				int x = input.x;
+				int y = input.y;
+				if (screenscaling >= G_SCREENSCALING_AUTO) {
+					gRenderer* renderer = gRenderObject::getRenderer();
+					float scaleX = renderer->getUnitWidth() / (float) renderer->getScreenWidth();
+					float scaleY = renderer->getUnitHeight() / (float) renderer->getScreenHeight();
+					x *= scaleX;
+					y *= scaleY;
+				}
+				androidcanvas->touchMoved(x, y, input.fingerid);
 			}
 		}
 	}

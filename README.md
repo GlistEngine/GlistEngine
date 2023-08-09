@@ -2,7 +2,7 @@
 
 Glist Engine is a cross platform OpenGL game engine written in C++.
 
-The engine supports OpenGL 3.3. It can be used to develop Windows, macOS and Linux games. Mobile platforms coming soon.
+The engine supports OpenGL 3.3 and OpenGL ES 3.0. It can be used to develop Windows, macOS, Linux and Android games. iOS platform coming soon.
 
 Glist Engine consists of 3 repositories:
 - Glist App
@@ -144,9 +144,9 @@ Start the engine.
 
 <ins>On macOS M1:</ins>
 - Never start the engine with clicking Eclipse icon on Launchpad! Instead, you should open the Terminal and enter this command:
-> open ~/dev/glist/zbin/glistzbin-macos/eclipse/eclipsecpp-2020-09/Eclipse.app 
+> open ~/dev/glist/zbin/glistzbin-macos/eclipse/eclipsecpp-2022-09/Eclipse.app 
 - (If you get an error message "app is damaged and can’t be opened. You should move it to the Trash.", enter this command on Terminal:
-> xattr -cr ~/dev/glist/zbin/glistzbin-macos/eclipse/eclipsecpp-2020-09/Eclipse.app
+> xattr -cr ~/dev/glist/zbin/glistzbin-macos/eclipse/eclipsecpp-2022-09/Eclipse.app
 - and restart your computer.
 
 <ins>On macOS X86_64:</ins>

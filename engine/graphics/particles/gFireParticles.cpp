@@ -24,6 +24,7 @@ void gFireParticles::init(int particleNum) {
 	tex.setImageData((unsigned char*)gDecodeBase64(getFlameImageData()).c_str());
 	setTexture(&tex);
 	setInitialColor(1.0f, 0.9f, 0.5f, 1.0f);
+	gp.scale(0.1);
 	gBaseParticles::init(particleNum);
 }
 

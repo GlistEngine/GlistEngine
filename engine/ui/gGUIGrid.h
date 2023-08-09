@@ -85,8 +85,18 @@ public:
 		FUNCTION_FIRSTINDEX
 	};
 
+	enum {
+		PROCESS_TEXT,
+		PROCESS_FONT,
+		PROCESS_FONTSTATE,
+		PROCESS_ALIGNMENT,
+		PROCESS_COLOR,
+		PROCESS_LINE,
+		PROCESS_ALL
+	};
+
 	static const int maxcolumnnum = 16384;
-	static const int maxrownum = 1048576;
+	static const int maxrownum = 131071;
 
 	gGUIGrid();
 	virtual ~gGUIGrid();
@@ -101,29 +111,26 @@ public:
 	void setCellAlignment(int cellAlignment, bool clicked);
 	void setCellFontColor(gColor* fontColor);
 	void setCellLine(int lineNo, bool clicked);
-	void setCopiedCell(Cell* cell);
+	void setSelectedFrameColor(gColor* selectedFrameColor);
+	void setSelectedAreaColor(gColor* selectedAreaColor);
+    void setCellContent(Cell* cell, std::string cellContent);
+    void setCellContent(std::string cell, std::string cellContent);
+    void setCellAlignment(Cell* cell, int cellAlignment);
+    void setCellAlignment(std::string cell, int cellAlignment);
 
-	int getCell(int rowNo, int columnNo);
+	Cell* getCell(std::string cellID);
+	gColor* getSelectedFrameColor();
+	gColor* getSelectedAreaColor();
 
 	void drawContent();
 	void drawCellBackground();
-	void drawSelectedBox();
-	void drawSelectedRow();
-	void drawSelectedColumn();
 	void drawTitleRowBackground();
 	void drawTitleColumnBackground();
 	void drawRowContents();
 	void drawColumnContents();
 	void drawTitleLines();
 	void drawCellContents();
-
-	void fillCell(int cellNo, std::string tempstr);
-	void createCell(int rowNo, int columnNo);
-	void showCells();
-	void showCell(int rowNo, int columnNo);
-	void createTextBox();
-	void changeCell();
-	void checkCellType(int cellIndex);
+	void drawSelectedArea();
 
 	void update();
 
@@ -142,29 +149,67 @@ private:
 	std::string fixTextFunction(std::string text, int index);
 	std::string fixNumeric(std::string text);
 	std::string fixOverflowText(Cell& thisCell, Cell& otherCell);
+
 	std::string getTextColumn(std::string text);
+	int getCellNo(int rowNo, int columnNo);
 	int getNearestFilledCell(int index);
+	float getColumnWidth(int columnNo);
+	float getRowHeight(int rowNo);
+
+	void fillCell(int cellNo, std::string tempstr);
 	float makeSum(int c1, int r1, int c2, int r2);
 	float calculateCurrentX(int columnNum);
 	float calculateCurrentY(int rowNum);
 	bool isNumeric(std::string text);
+
 	void addFunction(int functionType, int functionSender);
+	void addUndoStack(int process);
+	void addRedoStack();
+	void addOrChangeColumnWidth(int columnNo, float w);
+	void addOrChangeRowHeight(int rowNo, float h);
+
 	void removeFunction(int functionNum);
+
 	void operateFunction(int functionNum);
 	void makeDefaultCell();
+
 	void changeAllAffectedCellsXW(float diff);
 	void changeAllAffectedCellsYH(float diff);
+	void changeSelectedCell(int amount);
+	void changeCell(int cellNo);
+	void setSelectedCells();
+	void resetSelectedIndexes();
+
+	void copyCells();
+	void pasteCells();
+	void makeUndo();
+	void makeRedo();
+
+	void createCell(int rowNo, int columnNo);
+	void createTextBox();
+
+	void checkCellType(int cellIndex);
+	void showCells();
+	void showCell(int rowNo, int columnNo);
 
 	std::deque<Cell> allcells;
-	std::stack<Cell> undocellstack;
-	std::stack<Cell> redocellstack;
+	std::deque<int> selectedcells;
+	std::deque<std::array<float, 2>> gridboxesw;
+	std::deque<std::array<float, 2>> gridboxesh;
 	std::vector<int> functionindexes;
 	std::vector<std::vector<int>> functions;
-	std::deque<float> gridboxesw;
-	std::deque<float> gridboxesh;
-	Cell copiedcell;
+	std::vector<std::string> copiedcellvalues;
+	std::stack<int> undoprocessstack;
+	std::stack<std::string> undovaluestack;
+	std::stack<std::stack<std::string>> undostack;
+	std::stack<std::deque<int>> undocellstack;
+	std::stack<int> redoprocessstack;
+	std::stack<std::string> redovaluestack;
+	std::stack<std::stack<std::string>> redostack;
+	std::stack<std::deque<int>> redocellstack;
 	gGUIManager* manager;
 	gGUITextbox textbox;
+	gColor selectedframecolor, selectedareacolor;
 	bool isselected, isrowselected, iscolumnselected;
 	bool istextboxactive;
 	bool isdoubleclicked;
@@ -178,6 +223,8 @@ private:
 	int cursor;
 	int currentrow, currentcolumn;
 	int firstcursorposx, firstcursorposy;
+	int firstselectedcell, lastselectedcell;
+	int lastdraggedcell;
 	float gridboxw, gridboxh;
 	float gridx, gridy, gridw, gridh;
 	long clicktime, previousclicktime, firstclicktime, clicktimediff;

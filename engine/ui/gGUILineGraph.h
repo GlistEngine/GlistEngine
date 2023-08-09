@@ -76,6 +76,7 @@ public:
 	void addLine();
 	void addData(int lineIndex, std::vector<std::array<float, 2>> dataToAdd);
 	void addPointToLine(int lineIndex, float x, float y);
+	void setPointValues(int lineIndex, int pointIndex, float newx, float newy);
 
 private:
 	void drawGraph();

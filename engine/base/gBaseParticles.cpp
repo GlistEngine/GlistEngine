@@ -35,8 +35,6 @@ void gBaseParticles::setTexture(gTexture* texture) {
 }
 
 void gBaseParticles::init(int particleNum) {
-	gp.scale(0.1f);
-
 	m_bEngineActive = 1;
 	particle = new gParticle[particleNum];
 	particlenum = particleNum;

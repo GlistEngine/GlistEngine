@@ -96,6 +96,7 @@ endforeach()
 ########## CPP SOURCE FILES ##########
 set(SRC_FILES
 	${PLUGIN_SRCS}
+	${ENGINE_DIR}/graphics/particles/gFireworksParticles.cpp	
 	${ENGINE_DIR}/graphics/particles/gFireParticles.cpp
 	${ENGINE_DIR}/base/gBaseParticles.cpp
 	${ENGINE_DIR}/types/gColor.cpp
@@ -327,7 +328,7 @@ elseif(APPLE)
   	)
 	if(DEFINED ENGINE_USE_SYMLINKS)
 		list(APPEND INC_DIRS
-				${BREW_PATH}/openssl@3.0/include
+				${BREW_PATH}/openssl@3/include
 		)
 	else()
 		# For backwards compatibility
