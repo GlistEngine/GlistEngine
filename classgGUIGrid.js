@@ -31,7 +31,7 @@ var classgGUIGrid =
     [ "setCellContent", "classgGUIGrid.html#a48dcff884a265e82bee6b1f021c197f8", null ],
     [ "setCellFont", "classgGUIGrid.html#a7c48e7bfd7c3694bd25cccd16acf7489", null ],
     [ "setCellFontBold", "classgGUIGrid.html#aa0065e27654ac6d2079fa9426860773e", null ],
-    [ "setCellFontColor", "classgGUIGrid.html#a771e4bf651d9a9589a3376f2b7223f12", null ],
+    [ "setCellFontColor", "classgGUIGrid.html#a3b4f877f7318ec19d45b296646c40bc4", null ],
     [ "setCellFontItalic", "classgGUIGrid.html#a4fa70fe687325a1fc01bd2ffc1fec673", null ],
     [ "setCellLine", "classgGUIGrid.html#a3dbf4a2375d918464127ee16ebf25e4c", null ],
     [ "setColumnNum", "classgGUIGrid.html#a793584ad1e3534ea70b8d941b0e9ed5a", null ],

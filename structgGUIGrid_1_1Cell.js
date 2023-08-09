@@ -16,6 +16,7 @@ var structgGUIGrid_1_1Cell =
     [ "isbold", "structgGUIGrid_1_1Cell.html#abbc34a4138eb2cffdfa1ab7f9f33f4f1", null ],
     [ "iscellaligned", "structgGUIGrid_1_1Cell.html#aafb69ff4b9eeac0a91b0745b2562997f", null ],
     [ "iscellselected", "structgGUIGrid_1_1Cell.html#a6170b43a3ab5613efeb3a37edf1b01aa", null ],
+    [ "iscolorchanged", "structgGUIGrid_1_1Cell.html#a518d8ccdeb424362f8f58d16e9aa6b13", null ],
     [ "isitalic", "structgGUIGrid_1_1Cell.html#a9b3e983bf53e765470bebdb8dd18ba8b", null ],
     [ "lineno", "structgGUIGrid_1_1Cell.html#a62c65d1287779290a5cabf4eabec45c2", null ],
     [ "overflowcontent", "structgGUIGrid_1_1Cell.html#a6a6f3a8c1cbd138a9de68cfbae382f18", null ],
