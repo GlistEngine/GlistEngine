@@ -1,8 +1,8 @@
-/*
- * gGUIDropdownList.cpp
- *
- *  Created on: 19 A�u 2022
- *      Author: sevval
+ /*
+  * gGUIDropdownList.cpp
+  *
+  *  Created on: 19 A�u 2022
+  *      Author: sevval
  */
 
 #include "gGUIDropdownList.h"
@@ -105,7 +105,7 @@ void gGUIDropdownList::setParentFrame(gGUIFrame *frame) {
 
 void gGUIDropdownList::addElement(gGUITreelist::Element* element) {
 	list.addElement(element);
-	setfirstTitle();
+	//setfirstTitle();
 }
 
 void gGUIDropdownList::addElement(gGUITreelist::Element* element, gGUITreelist::Element* parentelement) {
@@ -149,10 +149,13 @@ void gGUIDropdownList::setfirstTitle() {
 	rootelement = list.getRootElement();
 	if(rootelement->sub.size() > 0) {
 		textbox.setText(rootelement->sub[0]->title);
+		title = rootelement->sub[0]->title;
+		fTitle = title;
 	}
 }
 
 void gGUIDropdownList::setSelectedTitle() {
+
 	std::string title = "";
 	bool arrow = false;
 	if(selectedline) {
@@ -178,5 +181,11 @@ void gGUIDropdownList::setSelectedTitle() {
 			}
 		}
 		textbox.setText(title);
+
+		fTitle = title;
 	}
+}
+
+std::string& gGUIDropdownList::getSelectedTitle() {
+	return fTitle;
 }
