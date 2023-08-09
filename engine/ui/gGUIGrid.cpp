@@ -466,13 +466,13 @@ int gGUIGrid::getCellNo(int rowNo, int columnNo) {
 int gGUIGrid::getNearestFilledCell(int index) {
 	int nearestindex = -1;
 	for(int i = 0; i < allcells.size(); i++) {
-		if(i != index && allcells[i].celly == allcells[index].celly && !allcells[i].showncontent.empty()) {
-			if(allcells[index].cellalignment != gBaseGUIObject::TEXTALIGNMENT_RIGHT && allcells[index].cellx + manager->getFont(allcells[index].fontnum)->getStringWidth(allcells[index].showncontent) > allcells[i].cellx && allcells[index].cellx < allcells[i].cellx) {
-				if(nearestindex != -1 && allcells[nearestindex].cellx > allcells[i].cellx) nearestindex = i;
+		if(i != index && allcells[i].cellrowno == allcells[index].cellrowno && !allcells[i].showncontent.empty()) {
+			if(allcells[index].cellalignment != gBaseGUIObject::TEXTALIGNMENT_RIGHT && allcells[index].cellx + font->getStringWidth(allcells[index].showncontent) > allcells[i].cellx && allcells[index].cellcolumnno < allcells[i].cellcolumnno) {
+				if(nearestindex != -1 && allcells[nearestindex].cellcolumnno > allcells[i].cellcolumnno) nearestindex = i;
 				else if(nearestindex == -1) nearestindex = i;
 			}
-			else if(allcells[index].cellalignment == gBaseGUIObject::TEXTALIGNMENT_RIGHT && allcells[index].cellx - (manager->getFont(allcells[index].fontnum)->getStringWidth(allcells[index].showncontent) - allcells[index].cellw) < allcells[i].cellx + allcells[i].cellw && allcells[index].cellx > allcells[i].cellx) {
-				if(nearestindex != -1 && allcells[nearestindex].cellx < allcells[i].cellx) nearestindex = i;
+			else if(allcells[index].cellalignment == gBaseGUIObject::TEXTALIGNMENT_RIGHT && allcells[index].cellx - (font->getStringWidth(allcells[index].showncontent) - allcells[index].cellw) < allcells[i].cellx + allcells[i].cellw && allcells[index].cellcolumnno > allcells[i].cellcolumnno) {
+				if(nearestindex != -1 && allcells[nearestindex].cellcolumnno < allcells[i].cellcolumnno) nearestindex = i;
 				else if(nearestindex == -1) nearestindex = i;
 			}
 		}
@@ -511,7 +511,7 @@ void gGUIGrid::fillCell(int cellNo, std::string tempstr) { //when rowNo = 1, col
 
 	int nearestindex = -1;
 	for(int i = 0; i < allcells.size(); i++) {
-		if(allcells[i].celly == allcells[cellindex].celly) {
+		if(allcells[i].cellrowno == allcells[cellindex].cellrowno) {
 			nearestindex = getNearestFilledCell(i);
 			if(nearestindex != -1) allcells[i].overflowcontent = fixOverflowText(allcells[i], allcells[nearestindex]);
 			else allcells[i].overflowcontent = "";
@@ -765,7 +765,7 @@ void gGUIGrid::addOrChangeRowHeight(int rowNo, float h) {
 		}
 	}
 	if(hindex == -1) gridboxesh.push_back({(float)rowNo, h});
-	else gridboxesw[hindex][1] = h;
+	else gridboxesh[hindex][1] = h;
 }
 
 void gGUIGrid::removeFunction(int functionNum) {
@@ -1208,6 +1208,7 @@ void gGUIGrid::checkCellType(int cellIndex) {
 	bool isnegative = false;
 	bool isfractional = false;
 	bool doubledot = false;
+	bool isdate = true;
 	if(allcells[cellIndex].showncontent.at(0) == '-') isnegative = true;
 	for(int i = 1 + isnegative; i < allcells[cellIndex].showncontent.length(); i++) {
 		if(allcells[cellIndex].showncontent.at(i) == '.') {
@@ -1222,15 +1223,37 @@ void gGUIGrid::checkCellType(int cellIndex) {
 			if(doubledot) break;
 		}
 	}
+	if(allcells[cellIndex].showncontent.length() == 10) {
+	    for(int i = 0; i < 10; i++) {
+	        if(i == 2 || i == 5) {
+	            if(allcells[cellIndex].showncontent[i] != '/' && allcells[cellIndex].showncontent[i] != '.' && allcells[cellIndex].showncontent[i] != '-') {
+	            	isdate = false;
+	            	break;
+	            }
+	        }
+	        else if(!isdigit(allcells[cellIndex].showncontent[i])) {
+	        	isdate = false;
+	        	break;
+	        }
+	    }
+	    if(isdate) {
+		    int day = stoi(allcells[cellIndex].showncontent.substr(0, 2));
+		    int month = stoi(allcells[cellIndex].showncontent.substr(3, 2));
+		    int year = stoi(allcells[cellIndex].showncontent.substr(6, 4));
+
+		    if(day < 1 || day > 31 || month < 1 || month > 12 || year < 0) isdate = false;
+	    }
+	}
+	else isdate = false;
 	for(int i = 0 + isnegative; i < allcells[cellIndex].showncontent.length(); i++) {
-		if(!isdigit(allcells[cellIndex].showncontent.at(i)) && !(isfractional && allcells[cellIndex].showncontent.at(i) == '.')) {
-			if(allcells[cellIndex].celltype == Cell::TYPE_DIGIT && !allcells[cellIndex].iscellaligned) setCellAlignment(gBaseGUIObject::TEXTALIGNMENT_LEFT, false);
+		if(!isdigit(allcells[cellIndex].showncontent.at(i)) && !(isfractional && allcells[cellIndex].showncontent.at(i) == '.') && !isdate) {
+			if(allcells[cellIndex].celltype == Cell::TYPE_DIGIT && !allcells[cellIndex].iscellaligned) setCellAlignment(&allcells[cellIndex], gBaseGUIObject::TEXTALIGNMENT_LEFT);
 			allcells[cellIndex].celltype = Cell::TYPE_STRING;
 			break;
 		}
 		else allcells[cellIndex].celltype = Cell::TYPE_DIGIT;
 	}
-	if(allcells[cellIndex].celltype == Cell::TYPE_DIGIT && !allcells[cellIndex].iscellaligned) setCellAlignment(gBaseGUIObject::TEXTALIGNMENT_RIGHT, false);
+	if(allcells[cellIndex].celltype == Cell::TYPE_DIGIT && !allcells[cellIndex].iscellaligned) setCellAlignment(&allcells[cellIndex], gBaseGUIObject::TEXTALIGNMENT_RIGHT);
 }
 
 void gGUIGrid::showCells() {
@@ -1415,23 +1438,23 @@ void gGUIGrid::mousePressed(int x, int y, int button) {
 				addOrChangeRowHeight(currentrow, gridboxh);
 				changeAllAffectedCellsYH(diff);
 			}
-		}
-		else if(cursor == gGUIForm::CURSOR_HRESIZE) {
-			int column = 0;
-			while(calculateCurrentX(column) + getColumnWidth(column) < pressedx - mousetolerance - firstx) column++;
-			int index = getCellNo(0, column);
-			if(index == -1) {
-				createCell(0, column);
-				index = allcells.size() - 1;
+			else if(cursor == gGUIForm::CURSOR_HRESIZE) {
+				int column = 0;
+				while(calculateCurrentX(column) + getColumnWidth(column) < pressedx - mousetolerance - firstx) column++;
+				int index = getCellNo(0, column);
+				if(index == -1) {
+					createCell(0, column);
+					index = allcells.size() - 1;
+				}
+				for(int i = 0; i < allcells.size(); i++)
+					if(allcells[i].cellcolumnno == column && manager->getFont(allcells[i].fontnum, allcells[i].fontstate)->getStringWidth(allcells[i].showncontent) > manager->getFont(allcells[index].fontnum, allcells[index].fontstate)->getStringWidth(allcells[index].showncontent)) index = i;
+				float neww = manager->getFont(allcells[index].fontnum, allcells[index].fontstate)->getStringWidth(allcells[index].showncontent) + textbox.getInitX() + 1;
+				if(neww < font->getSize() * 1.8f) neww = font->getSize() * 1.8f;
+				int diff = neww - allcells[index].cellw;
+				currentcolumn = column;
+				addOrChangeColumnWidth(currentcolumn, neww);
+				changeAllAffectedCellsXW(diff);
 			}
-			for(int i = 0; i < allcells.size(); i++)
-				if(allcells[i].cellcolumnno == column && manager->getFont(allcells[i].fontnum, allcells[i].fontstate)->getStringWidth(allcells[i].showncontent) > manager->getFont(allcells[index].fontnum, allcells[index].fontstate)->getStringWidth(allcells[index].showncontent)) index = i;
-			float neww = manager->getFont(allcells[index].fontnum, allcells[index].fontstate)->getStringWidth(allcells[index].showncontent) + textbox.getInitX() + 1;
-			if(neww < font->getSize() * 1.8f) neww = font->getSize() * 1.8f;
-			int diff = neww - allcells[index].cellw;
-			currentcolumn = column;
-			addOrChangeColumnWidth(currentcolumn, neww);
-			changeAllAffectedCellsXW(diff);
 		}
 	}
 	else if(!(pressedy < gridy + gridboxh + firsty && pressedx < gridx + gridboxw / 2 + firstx) && pressedx >= gridx + firstx && pressedx <= gridx + gridboxw / 2 + gridw + firstx && pressedy >= gridy + firsty && pressedy <= gridy + gridboxh + gridh + firsty) {
