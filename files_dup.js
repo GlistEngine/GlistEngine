@@ -83,6 +83,7 @@ var files_dup =
     [ "gGUISizer.h", "gGUISizer_8h_source.html", null ],
     [ "gGUISlider.h", "gGUISlider_8h_source.html", null ],
     [ "gGUIStatusBar.h", "gGUIStatusBar_8h_source.html", null ],
+    [ "gGUISurface.h", "gGUISurface_8h_source.html", null ],
     [ "gGUISwitchButton.h", "gGUISwitchButton_8h_source.html", null ],
     [ "gGUITable.h", "gGUITable_8h_source.html", null ],
     [ "gGUIText.h", "gGUIText_8h_source.html", null ],

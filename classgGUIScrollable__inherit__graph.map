@@ -1,14 +1,15 @@
 <map id="gGUIScrollable" name="gGUIScrollable">
-<area shape="rect" id="node1" title=" " alt="" coords="617,284,736,311"/>
+<area shape="rect" id="node1" title=" " alt="" coords="617,309,736,336"/>
 <area shape="rect" id="node6" href="$classgGUIContainer.html" title=" " alt="" coords="788,183,905,209"/>
 <area shape="rect" id="node15" href="$classgGUIGrid.html" title=" " alt="" coords="806,233,887,260"/>
 <area shape="rect" id="node16" href="$classgGUIListbox.html" title=" " alt="" coords="796,284,897,311"/>
 <area shape="rect" id="node17" href="$classgGUINavigation.html" title=" " alt="" coords="784,335,909,361"/>
-<area shape="rect" id="node18" href="$classgGUITreelist.html" title=" " alt="" coords="796,385,897,412"/>
-<area shape="rect" id="node2" href="$classgGUIControl.html" title=" " alt="" coords="468,284,569,311"/>
-<area shape="rect" id="node3" href="$classgBaseGUIObject.html" title=" " alt="" coords="292,284,420,311"/>
-<area shape="rect" id="node4" href="$classgRenderObject.html" title=" " alt="" coords="125,284,244,311"/>
-<area shape="rect" id="node5" href="$classgObject.html" title=" " alt="" coords="5,284,77,311"/>
+<area shape="rect" id="node18" href="$classgGUISurface.html" title=" " alt="" coords="795,385,898,412"/>
+<area shape="rect" id="node19" href="$classgGUITreelist.html" title=" " alt="" coords="796,436,897,463"/>
+<area shape="rect" id="node2" href="$classgGUIControl.html" title=" " alt="" coords="468,309,569,336"/>
+<area shape="rect" id="node3" href="$classgBaseGUIObject.html" title=" " alt="" coords="292,309,420,336"/>
+<area shape="rect" id="node4" href="$classgRenderObject.html" title=" " alt="" coords="125,309,244,336"/>
+<area shape="rect" id="node5" href="$classgObject.html" title=" " alt="" coords="5,309,77,336"/>
 <area shape="rect" id="node7" href="$classgGUIDropdownList.html" title=" " alt="" coords="957,5,1100,32"/>
 <area shape="rect" id="node8" href="$classgGUINotebook.html" title=" " alt="" coords="970,56,1087,83"/>
 <area shape="rect" id="node9" href="$classgGUINumberBox.html" title=" " alt="" coords="963,107,1094,133"/>

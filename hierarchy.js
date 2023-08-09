@@ -99,6 +99,7 @@ var hierarchy =
               [ "gGUIGrid", "classgGUIGrid.html", null ],
               [ "gGUIListbox", "classgGUIListbox.html", null ],
               [ "gGUINavigation", "classgGUINavigation.html", null ],
+              [ "gGUISurface", "classgGUISurface.html", null ],
               [ "gGUITreelist", "classgGUITreelist.html", null ]
             ] ],
             [ "gGUISizer", "classgGUISizer.html", null ],
