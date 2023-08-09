@@ -9,14 +9,11 @@
 
 gGUITable::gGUITable() {
 	// TODO Auto-generated constructor stub
-	tablefont.loadFont("FreeSansBold.ttf", 12);
-	x = 10;
-	y = 10;
-	w = 90;
-	h = 160;
-	screenwidth = 1280;
-	screenheight = 720;
-	maxcolumncount = screenwidth / (w * 2);
+	x = 16;
+	y = 20;
+	filew = 90;
+	fileh = 160;
+	maxcolumncount = screenwidth / (filew * 2);
 	pressedfileid = 0;
 	isfilepressed = false;
 	selectedx = 0;
@@ -24,36 +21,97 @@ gGUITable::gGUITable() {
 	selectedw = 0;
 	selectedh = 0;
 	selectedid = 0;
+	sonucw = 0;
+	sonuch = 0;
+	cornerspace = 10;
+	minh = 4;
+	minw = 1;
 }
 
 gGUITable::~gGUITable() {
 
 }
 
+void gGUITable::update() {
+	screenwidth = getScreenWidth();
+	screenheight = getScreenHeight();
+	maxcolumncount = screenwidth / (filew + cornerspace);
+
+		for (int i = 0; i < imagelist.size(); i++) {
+			imagew.push_back(imagelist[i]->getWidth());
+			imageh.push_back(imagelist[i]->getHeight());
+
+				if(filew < fileh) {
+					if(imagew[i] >= imageh[i]) {
+						//horizontal image
+						sonucw = imagew[i] / filew;
+						imagew[i] /= sonucw + minw;
+						imageh[i] /= sonucw + minw;
+					}
+
+					else if(imageh[i] > imagew[i]) {
+						//vertical image
+						sonuch = imageh[i] / fileh;
+						if(!(imageh[i] <= fileh)){
+							imagew[i] /= sonuch + minh;
+							imageh[i] /= sonuch + minh;
+						}
+					}
+			}
+		}
+
+}
+
 void gGUITable::draw() {
-	//topparent->width;
+	gColor oldcolor = renderer->getColor();
+	gColor white = gColor(1.0f, 1.0f, 1.0f, 1.0f);
+	renderer->setColor(white);
+	gDrawRectangle(0, 0, screenwidth, screenheight, true);
+	renderer->setColor(oldcolor);
+
 	for (int index = 0; index < imagelist.size(); ++index) {
+		filex.push_back(x + 100 * (index % maxcolumncount));
+		filey.push_back(y + 200 * (index / maxcolumncount));
+		filex[index] = x + 100 * (index % maxcolumncount);
+		filey[index] = y + 200 * (index / maxcolumncount);
+
+
 		//draw file
-		imagelist[index]->drawSub( x + 150 * (index % maxcolumncount),
-				y + (index / maxcolumncount) * 200,
-				w,
-				h,
+		imagelist[index]->drawSub(filex[index] + (filew - imagew[index]) / 2,
+				filey[index] + (fileh - (imageh[index] + cornerspace)),
+				imagew[index],
+				imageh[index],
 				0, 0, imagelist[index]->getWidth(), imagelist[index]->getHeight());
 		//draw file name
-		tablefont.drawText(imagetextlist[index],
-				x + w / 2 - (tablefont.getStringWidth(imagetextlist[index]) / 2) + (index % maxcolumncount) * 150,
-				 y + h + 10 + (index / maxcolumncount) * 200);
+		gColor oldcolor = *renderer->getColor();
+		renderer->setColor(&fcolor);
+		setFontColor(&fcolor);
+		font->drawText(imagetextlist[index],
+				x + filew / 2 - (font->getStringWidth(imagetextlist[index]) / 2) + (index % maxcolumncount) * 100,
+				 y + fileh + 10 + (index / maxcolumncount) * 200);
+		renderer->setColor(&oldcolor);
 	}
-	//if(true) {
-	//	gColor* oldcolor;
-	//	oldcolor->set(renderer->getColor());
-	//	renderer->setColor(225, 225, 255, 150);
-	//	gDrawRectangle(x, y, w, h, true);
-	//	renderer->setColor(oldcolor);
-	//}
+
 }
 
 void gGUITable::addItem(gImage* image, std::string title) {
 	imagelist.push_back(image);
 	imagetextlist.push_back(title);
+}
+
+void gGUITable::setFontColor(gColor color) {
+	fcolor = color;
+}
+
+gColor* gGUITable::getFontColor() {
+	return &fcolor;
+}
+
+void gGUITable::setBackgroundTableColor(gColor color) {
+	backgroundcolor = color;
+
+}
+
+gColor* gGUITable::getBackgroundTableColor() {
+	return &backgroundcolor;
 }
