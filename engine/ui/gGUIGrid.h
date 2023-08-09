@@ -179,7 +179,7 @@ private:
 	void changeAllAffectedCellsYH(float diff);
 	void changeSelectedCell(int amount);
 	void changeCell(int cellNo);
-	void setSelectedCells();
+	void setSelectedCells(bool takeAll = false);
 	void resetSelectedIndexes();
 
 	void copyCells();
