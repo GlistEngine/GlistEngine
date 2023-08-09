@@ -139,6 +139,7 @@ set(SRC_FILES
 	${ENGINE_DIR}/animation/gSpriteAnimation.cpp
 	${ENGINE_DIR}/animation/gSpriteAnimator.cpp
 	${ENGINE_DIR}/ui/gGUITable.cpp
+	${ENGINE_DIR}/ui/gGUISurface.cpp
 	${ENGINE_DIR}/ui/gGUIGrid.cpp
 	${ENGINE_DIR}/ui/gGUIColorPicker.cpp
 	${ENGINE_DIR}/ui/gGUINotebook.cpp
