@@ -106,6 +106,7 @@ void gGUIDropdownList::setParentFrame(gGUIFrame *frame) {
 void gGUIDropdownList::addElement(gGUITreelist::Element* element) {
 	list.addElement(element);
 	setfirstTitle();
+
 }
 
 void gGUIDropdownList::addElement(gGUITreelist::Element* element, gGUITreelist::Element* parentelement) {
