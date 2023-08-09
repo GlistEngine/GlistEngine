@@ -690,12 +690,9 @@ bool gAppManager::onTouchEvent(gTouchEvent& event) {
 				TouchInput& input = event.getInputs()[inputindex];
 				int x = input.x;
 				int y = input.y;
-				if (screenscaling >= G_SCREENSCALING_AUTO) {
-					gRenderer* renderer = gRenderObject::getRenderer();
-					float scaleX = renderer->getUnitWidth() / (float) renderer->getScreenWidth();
-					float scaleY = renderer->getUnitHeight() / (float) renderer->getScreenHeight();
-					x *= scaleX;
-					y *= scaleY;
+				if(gRenderer::getScreenScaling() > G_SCREENSCALING_NONE) {
+					x = gRenderer::scaleX(x);
+					y = gRenderer::scaleY(y);
 				}
 				androidcanvas->touchPressed(x, y, input.fingerid);
 			} else if (event.getAction() == ACTIONTYPE_POINTER_UP || (event.getInputCount() == 1 && event.getAction() == ACTIONTYPE_UP)) {
@@ -703,12 +700,9 @@ bool gAppManager::onTouchEvent(gTouchEvent& event) {
 				TouchInput& input = event.getInputs()[inputindex];
 				int x = input.x;
 				int y = input.y;
-				if (screenscaling >= G_SCREENSCALING_AUTO) {
-					gRenderer* renderer = gRenderObject::getRenderer();
-					float scaleX = renderer->getUnitWidth() / (float) renderer->getScreenWidth();
-					float scaleY = renderer->getUnitHeight() / (float) renderer->getScreenHeight();
-					x *= scaleX;
-					y *= scaleY;
+				if(gRenderer::getScreenScaling() > G_SCREENSCALING_NONE) {
+					x = gRenderer::scaleX(x);
+					y = gRenderer::scaleY(y);
 				}
 				androidcanvas->touchReleased(x, y, input.fingerid);
 			} else if (event.getAction() == ACTIONTYPE_MOVE) {
@@ -716,12 +710,9 @@ bool gAppManager::onTouchEvent(gTouchEvent& event) {
 				TouchInput& input = event.getInputs()[inputindex];
 				int x = input.x;
 				int y = input.y;
-				if (screenscaling >= G_SCREENSCALING_AUTO) {
-					gRenderer* renderer = gRenderObject::getRenderer();
-					float scaleX = renderer->getUnitWidth() / (float) renderer->getScreenWidth();
-					float scaleY = renderer->getUnitHeight() / (float) renderer->getScreenHeight();
-					x *= scaleX;
-					y *= scaleY;
+				if(gRenderer::getScreenScaling() > G_SCREENSCALING_NONE) {
+					x = gRenderer::scaleX(x);
+					y = gRenderer::scaleY(y);
 				}
 				androidcanvas->touchMoved(x, y, input.fingerid);
 			}
