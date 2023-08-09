@@ -4,6 +4,7 @@ var classgGUINumberBox =
     [ "~gGUINumberBox", "classgGUINumberBox.html#afd633030a8b4ff0ee61f7dfeb28ca007", null ],
     [ "charPressed", "classgGUINumberBox.html#a2542e02957c55b1f6f52e7cc7c4b1da0", null ],
     [ "draw", "classgGUINumberBox.html#a36bb9d46a06dd09f8ccccfa3f99c66ec", null ],
+    [ "getText", "classgGUINumberBox.html#a05f9ebcb8dad1760d0b3fcfbae840ee5", null ],
     [ "keyPressed", "classgGUINumberBox.html#a488a60ddf326d8bf85cd899b7b46a838", null ],
     [ "keyReleased", "classgGUINumberBox.html#abfc2ff686e03da76c4bd02752106ddb9", null ],
     [ "mouseDragged", "classgGUINumberBox.html#a118f5c9dd08b83c7bd3dc6c54638f1fd", null ],

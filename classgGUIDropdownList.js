@@ -5,6 +5,7 @@ var classgGUIDropdownList =
     [ "addElement", "classgGUIDropdownList.html#aa474389deeb0013fa8574b4a51db9800", null ],
     [ "addElement", "classgGUIDropdownList.html#ac984e25a1447de2f00f1efb8642365c5", null ],
     [ "draw", "classgGUIDropdownList.html#a7c7e528400bff71e5a0b3ef65dd23334", null ],
+    [ "getSelectedTitle", "classgGUIDropdownList.html#a3aeae82a4eb1f00a26c684e1b45a43c2", null ],
     [ "mousePressed", "classgGUIDropdownList.html#ab747a9e9c19c2d6e06df6770f9daa8be", null ],
     [ "mouseReleased", "classgGUIDropdownList.html#ad0e885a30e730037a81e80e89160e67d", null ],
     [ "mouseScrolled", "classgGUIDropdownList.html#afa5bafef9cd007622f45087acffc47f4", null ],

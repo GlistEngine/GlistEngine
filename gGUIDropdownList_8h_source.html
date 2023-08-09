@@ -93,58 +93,60 @@ $(document).ready(function(){initNavTree('gGUIDropdownList_8h_source.html',''); 
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment"> *      Author: sevval</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160; </div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#ifndef UI_GGUIDROPDOWNLIST_H_</span></div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#define UI_GGUIDROPDOWNLIST_H_</span></div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160; </div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#include &quot;gGUIContainer.h&quot;</span></div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor">#include &quot;gGUISizer.h&quot;</span></div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="preprocessor">#include &quot;gGUIButton.h&quot;</span></div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="preprocessor">#include &quot;gGUIImageButton.h&quot;</span></div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="preprocessor">#include &quot;gGUITextbox.h&quot;</span></div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="preprocessor">#include &quot;gGUITreelist.h&quot;</span></div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="preprocessor">#include &quot;gGUIFrame.h&quot;</span></div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="preprocessor">#include &quot;gBaseCanvas.h&quot;</span></div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="preprocessor">#include &quot;gBaseApp.h&quot;</span></div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160; </div>
-<div class="line"><a name="l00021"></a><span class="lineno"><a class="line" href="classgGUIDropdownList.html">   21</a></span>&#160;<span class="keyword">class </span><a class="code" href="classgGUIDropdownList.html">gGUIDropdownList</a>: <span class="keyword">public</span> <a class="code" href="classgGUIContainer.html">gGUIContainer</a> {</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    <a class="code" href="classgGUITreelist.html">gGUITreelist</a> list;</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> onGUIEvent(<span class="keywordtype">int</span> guiObjectId, <span class="keywordtype">int</span> eventType, <span class="keywordtype">int</span> sourceEventType, std::string value1 = <span class="stringliteral">&quot;&quot;</span>, std::string value2 = <span class="stringliteral">&quot;&quot;</span>);</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    <a class="code" href="classgGUIDropdownList.html">gGUIDropdownList</a>();</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    <span class="keyword">virtual</span> ~<a class="code" href="classgGUIDropdownList.html">gGUIDropdownList</a>();</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    <span class="keywordtype">void</span> set(<a class="code" href="classgBaseApp.html">gBaseApp</a>* root, <a class="code" href="classgBaseGUIObject.html">gBaseGUIObject</a>* topParentGUIObject, <a class="code" href="classgBaseGUIObject.html">gBaseGUIObject</a>* parentGUIObject, <span class="keywordtype">int</span> parentSlotLineNo, <span class="keywordtype">int</span> parentSlotColumnNo, <span class="keywordtype">int</span> x, <span class="keywordtype">int</span> y, <span class="keywordtype">int</span> w, <span class="keywordtype">int</span> h);</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    <span class="keywordtype">void</span> draw();</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    <span class="keywordtype">void</span> setParentFrame(<a class="code" href="classgGUIFrame.html">gGUIFrame</a> *frame);</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    <span class="keywordtype">void</span> mousePressed(<span class="keywordtype">int</span> x, <span class="keywordtype">int</span> y, <span class="keywordtype">int</span> button);</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    <span class="keywordtype">void</span> mouseReleased(<span class="keywordtype">int</span> x, <span class="keywordtype">int</span> y, <span class="keywordtype">int</span> button);</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    <span class="keywordtype">void</span> mouseScrolled(<span class="keywordtype">int</span> x, <span class="keywordtype">int</span> y);</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <span class="keywordtype">void</span> setfirstTitle();</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="keywordtype">void</span> setSelectedTitle();</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <span class="keywordtype">void</span> addElement(<a class="code" href="structgGUITreelist_1_1Element.html">gGUITreelist::Element</a>* element);</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <span class="keywordtype">void</span> addElement(<a class="code" href="structgGUITreelist_1_1Element.html">gGUITreelist::Element</a>* element, <a class="code" href="structgGUITreelist_1_1Element.html">gGUITreelist::Element</a>* parentelement);</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160; </div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <a class="code" href="classgGUISizer.html">gGUISizer</a> listsizer;</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <a class="code" href="classgGUIButton.html">gGUIButton</a> button;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <a class="code" href="classgGUIImageButton.html">gGUIImageButton</a> ibutton;</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <a class="code" href="classgGUITextbox.html">gGUITextbox</a> textbox;</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <a class="code" href="structgGUITreelist_1_1Element.html">gGUITreelist::Element</a>* rootelement;</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <span class="keywordtype">int</span> textboxw, buttonw;</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="keywordtype">int</span> textboxh;</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <span class="keywordtype">int</span> listx, listy, listw;</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <span class="keywordtype">bool</span> listopened, selectedline, listexpanded, pressedonlist, buttonpressed;</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <span class="keywordtype">bool</span> lopened;</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <a class="code" href="classgGUIFrame.html">gGUIFrame</a> *frame;</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;};</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160; </div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160; </div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160; </div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* UI_GGUIDROPDOWNLIST_H_ */</span><span class="preprocessor"></span></div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160; </div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#ifndef UI_GGUIDROPDOWNLIST_H_</span></div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#define UI_GGUIDROPDOWNLIST_H_</span></div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160; </div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor">#include &quot;gGUIContainer.h&quot;</span></div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="preprocessor">#include &quot;gGUISizer.h&quot;</span></div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="preprocessor">#include &quot;gGUIButton.h&quot;</span></div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="preprocessor">#include &quot;gGUIImageButton.h&quot;</span></div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="preprocessor">#include &quot;gGUITextbox.h&quot;</span></div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="preprocessor">#include &quot;gGUITreelist.h&quot;</span></div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="preprocessor">#include &quot;gGUIFrame.h&quot;</span></div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="preprocessor">#include &quot;gBaseCanvas.h&quot;</span></div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="preprocessor">#include &quot;gBaseApp.h&quot;</span></div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160; </div>
+<div class="line"><a name="l00022"></a><span class="lineno"><a class="line" href="classgGUIDropdownList.html">   22</a></span>&#160;<span class="keyword">class </span><a class="code" href="classgGUIDropdownList.html">gGUIDropdownList</a>: <span class="keyword">public</span> <a class="code" href="classgGUIContainer.html">gGUIContainer</a> {</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    <a class="code" href="classgGUITreelist.html">gGUITreelist</a> list;</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> onGUIEvent(<span class="keywordtype">int</span> guiObjectId, <span class="keywordtype">int</span> eventType, <span class="keywordtype">int</span> sourceEventType, std::string value1 = <span class="stringliteral">&quot;&quot;</span>, std::string value2 = <span class="stringliteral">&quot;&quot;</span>);</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    <a class="code" href="classgGUIDropdownList.html">gGUIDropdownList</a>();</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    <span class="keyword">virtual</span> ~<a class="code" href="classgGUIDropdownList.html">gGUIDropdownList</a>();</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    <span class="keywordtype">void</span> set(<a class="code" href="classgBaseApp.html">gBaseApp</a>* root, <a class="code" href="classgBaseGUIObject.html">gBaseGUIObject</a>* topParentGUIObject, <a class="code" href="classgBaseGUIObject.html">gBaseGUIObject</a>* parentGUIObject, <span class="keywordtype">int</span> parentSlotLineNo, <span class="keywordtype">int</span> parentSlotColumnNo, <span class="keywordtype">int</span> x, <span class="keywordtype">int</span> y, <span class="keywordtype">int</span> w, <span class="keywordtype">int</span> h);</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    <span class="keywordtype">void</span> draw();</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    <span class="keywordtype">void</span> setParentFrame(<a class="code" href="classgGUIFrame.html">gGUIFrame</a> *frame);</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    <span class="keywordtype">void</span> mousePressed(<span class="keywordtype">int</span> x, <span class="keywordtype">int</span> y, <span class="keywordtype">int</span> button);</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    <span class="keywordtype">void</span> mouseReleased(<span class="keywordtype">int</span> x, <span class="keywordtype">int</span> y, <span class="keywordtype">int</span> button);</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <span class="keywordtype">void</span> mouseScrolled(<span class="keywordtype">int</span> x, <span class="keywordtype">int</span> y);</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="keywordtype">void</span> setfirstTitle();</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <span class="keywordtype">void</span> setSelectedTitle();</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <span class="keywordtype">void</span> addElement(<a class="code" href="structgGUITreelist_1_1Element.html">gGUITreelist::Element</a>* element);</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <span class="keywordtype">void</span> addElement(<a class="code" href="structgGUITreelist_1_1Element.html">gGUITreelist::Element</a>* element, <a class="code" href="structgGUITreelist_1_1Element.html">gGUITreelist::Element</a>* parentelement);</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160; </div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    std::string&amp; getSelectedTitle();</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160; </div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <a class="code" href="classgGUISizer.html">gGUISizer</a> listsizer;</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <a class="code" href="classgGUIButton.html">gGUIButton</a> button;</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <a class="code" href="classgGUIImageButton.html">gGUIImageButton</a> ibutton;</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <a class="code" href="classgGUITextbox.html">gGUITextbox</a> textbox;</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <a class="code" href="structgGUITreelist_1_1Element.html">gGUITreelist::Element</a>* rootelement;</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <span class="keywordtype">int</span> textboxw, buttonw;</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <span class="keywordtype">int</span> textboxh;</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <span class="keywordtype">int</span> listx, listy, listw;</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <span class="keywordtype">bool</span> listopened, selectedline, listexpanded, pressedonlist, buttonpressed;</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <span class="keywordtype">bool</span> lopened;</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <a class="code" href="classgGUIFrame.html">gGUIFrame</a> *frame;</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    std::string fTitle;</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;};</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160; </div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* UI_GGUIDROPDOWNLIST_H_ */</span><span class="preprocessor"></span></div>
 <div class="ttc" id="aclassgBaseApp_html"><div class="ttname"><a href="classgBaseApp.html">gBaseApp</a></div><div class="ttdef"><b>Definition:</b> gBaseApp.h:16</div></div>
 <div class="ttc" id="aclassgBaseGUIObject_html"><div class="ttname"><a href="classgBaseGUIObject.html">gBaseGUIObject</a></div><div class="ttdef"><b>Definition:</b> gBaseGUIObject.h:18</div></div>
 <div class="ttc" id="aclassgGUIButton_html"><div class="ttname"><a href="classgGUIButton.html">gGUIButton</a></div><div class="ttdef"><b>Definition:</b> gGUIButton.h:14</div></div>
 <div class="ttc" id="aclassgGUIContainer_html"><div class="ttname"><a href="classgGUIContainer.html">gGUIContainer</a></div><div class="ttdef"><b>Definition:</b> gGUIContainer.h:15</div></div>
-<div class="ttc" id="aclassgGUIDropdownList_html"><div class="ttname"><a href="classgGUIDropdownList.html">gGUIDropdownList</a></div><div class="ttdef"><b>Definition:</b> gGUIDropdownList.h:21</div></div>
+<div class="ttc" id="aclassgGUIDropdownList_html"><div class="ttname"><a href="classgGUIDropdownList.html">gGUIDropdownList</a></div><div class="ttdef"><b>Definition:</b> gGUIDropdownList.h:22</div></div>
 <div class="ttc" id="aclassgGUIFrame_html"><div class="ttname"><a href="classgGUIFrame.html">gGUIFrame</a></div><div class="ttdef"><b>Definition:</b> gGUIFrame.h:14</div></div>
 <div class="ttc" id="aclassgGUIImageButton_html"><div class="ttname"><a href="classgGUIImageButton.html">gGUIImageButton</a></div><div class="ttdef"><b>Definition:</b> gGUIImageButton.h:53</div></div>
 <div class="ttc" id="aclassgGUISizer_html"><div class="ttname"><a href="classgGUISizer.html">gGUISizer</a></div><div class="ttdef"><b>Definition:</b> gGUISizer.h:14</div></div>
