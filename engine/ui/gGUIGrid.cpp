@@ -963,9 +963,20 @@ void gGUIGrid::setSelectedCells(bool takeAll) {
 		}
 	}
 	else {
-		for(int i = 0; i < allcells.size(); i++) {
-			if(allcells[i].cellrowno >= r1 && allcells[i].cellrowno <= r2 && allcells[i].cellcolumnno >= c1 && allcells[i].cellcolumnno <= c2) {
-				selectedcells.push_back(i);
+		int rowamount = r2 - r1 + 1;
+		int columnamount = c2 - c1 + 1;
+		if(rowamount * columnamount > allcells.size()) {
+			for(int i = 0; i < allcells.size(); i++) {
+				if(allcells[i].cellrowno >= r1 && allcells[i].cellrowno <= r2 && allcells[i].cellcolumnno >= c1 && allcells[i].cellcolumnno <= c2)
+					selectedcells.push_back(i);
+			}
+		}
+		else {
+			for(int column = c1; column <= c2; column++) {
+				for(int row = r1; row <= r2; row++) {
+					int index = getCellNo(row, column);
+					if(index != -1) selectedcells.push_back(index);
+				}
 			}
 		}
 	}
