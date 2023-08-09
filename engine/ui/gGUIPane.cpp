@@ -110,4 +110,3 @@ void gGUIPane::onGUIEvent(int guiObjectId, int eventType, int sourceEventType, s
 gGUIButton gGUIPane::getNextButton() {
 	return nextbutton;
 }
-

@@ -22,6 +22,7 @@ public:
 	void setText(const std::string& text);
 
 	std::string getText();
+
 	/*
 	 * Sets type of number which will be increased or decreased
 	 *

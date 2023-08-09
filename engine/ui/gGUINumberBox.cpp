@@ -243,4 +243,5 @@ void gGUINumberBox::draw() {
 	}
 	renderer->setColor(defColor);
 	if(guisizer) guisizer->draw();
+
 }

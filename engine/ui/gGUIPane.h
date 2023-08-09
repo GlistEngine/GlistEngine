@@ -45,6 +45,7 @@ private:
 	gGUIPane *previouspane, *nextpane;
 	gGUIButton previousbutton, nextbutton;
 	bool previousbuttonenabled, nextbuttonenabled;
+
 };
 
 #endif /* UI_GGUIPANE_H_ */

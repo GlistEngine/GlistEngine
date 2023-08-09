@@ -51,6 +51,7 @@ private:
 	bool lopened;
 	gGUIFrame *frame;
 	std::string fTitle;
+
 };
 
 #endif /* UI_GGUIDROPDOWNLIST_H_ */
