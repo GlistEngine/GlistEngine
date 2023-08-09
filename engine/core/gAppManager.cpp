@@ -95,6 +95,7 @@ gAppManager::gAppManager(const std::string& appName, gBaseApp *baseApp, int widt
 #ifdef ANDROID
     deviceorientation = DEVICEORIENTATION_PORTRAIT;
     olddeviceorientation = DEVICEORIENTATION_PORTRAIT;
+    delayedresize = false;
 #endif
 
     // Joystick
@@ -196,6 +197,14 @@ void gAppManager::loop() {
     isrunning = true;
 	starttime = AppClock::now();
 
+#ifdef ANDROID
+	// This ensures the resize function is called before calling setup for the canvas when
+	// device orientation is changed.
+	while(delayedresize) {
+		executeQueue();
+	}
+#endif
+
     while (isrunning && (!usewindow || !window->getShouldClose())) {
         // Delta time calculations
         endtime = AppClock::now();
@@ -264,8 +273,8 @@ void gAppManager::setWindowSizeLimits(int minWidth, int minHeight, int maxWidth,
 }
 
 void gAppManager::setScreenSize(int width, int height) {
-    canvasmanager->getCurrentCanvas()->setScreenSize(width, height);
-    if(iscanvasset) canvasmanager->getCurrentCanvas()->windowResized(width, height);
+    gRenderObject::setScreenSize(width, height);
+    if(iscanvasset && canvasmanager->getCurrentCanvas()) canvasmanager->getCurrentCanvas()->windowResized(width, height);
     if(iscanvasset && guimanager->isframeset) guimanager->windowResized(width, height);
 }
 
@@ -348,7 +357,12 @@ bool gAppManager::isGamepadButtonPressed(int joystickId, int buttonId) {
 
 #ifdef ANDROID
 void gAppManager::setDeviceOrientation(DeviceOrientation orientation) {
-    gAndroidUtil::setDeviceOrientation(orientation);
+	if(!isrunning) {
+		gAndroidUtil::setDeviceOrientation(orientation);
+		delayedresize = true;
+	} else {
+		gAndroidUtil::setDeviceOrientation(orientation);
+	}
 }
 #endif
 
@@ -440,9 +454,12 @@ void gAppManager::onEvent(gEvent& event) {
 }
 
 bool gAppManager::onWindowResizedEvent(gWindowResizeEvent& event) {
-    if(!canvasmanager || !initialized || !getCurrentCanvas()) return true;
+    if(!canvasmanager || !initialized || (!getCurrentCanvas() && !canvasmanager->getTempCanvas())) {
+        return true;
+    }
     setScreenSize(event.getWidth(), event.getHeight());
 #ifdef ANDROID
+    delayedresize = false;
     if(gRenderer::getScreenScaling() >= G_SCREENSCALING_AUTO && olddeviceorientation != deviceorientation) {
 		DeviceOrientation orientation = deviceorientation;
 		DeviceOrientation oldorientation = olddeviceorientation;
@@ -662,8 +679,6 @@ bool gAppManager::onDeviceOrientationChangedEvent(gDeviceOrientationChangedEvent
 			androidcanvas->deviceOrientationChanged(event.getOrientation());
 		}
     }
-    gWindowResizeEvent resizeevent{width, height};
-    eventhandler(resizeevent);
     return false;
 }
 
