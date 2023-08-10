@@ -382,7 +382,6 @@ void gGUISizer::draw() {
 
 				renderer->setColor(gColor(lc, lc, lc));
 				int t = top + (height * linetprs[i]) + k - 1;
-				gDrawLine(left, t, right, t);
 			}
 		}
 		renderer->setColor(&oldcolor);
