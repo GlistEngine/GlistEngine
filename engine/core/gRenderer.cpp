@@ -1292,6 +1292,10 @@ const std::string gRenderer::getShaderSrcColorFragment() {
 "\n"
 "	uniform vec4 renderColor;\n"
 "	uniform vec3 viewPos;\n"
+"   uniform mat4 projection;\n"
+" 	uniform mat4 view;\n"
+"   uniform bool ssao_enabled;\n"
+"   uniform float ssao_bias;\n"
 "	uniform Fog fog;\n"
 "\n"
 "	in vec3 Normal;\n"
@@ -1447,6 +1451,43 @@ const std::string gRenderer::getShaderSrcColorFragment() {
 "    	return visibility;\n"
 "	}\n"
 "\n"
+"	vec4 getSSAO() {\n"
+"			const int kernelSize = 16;\n"
+"			const float radius = 0.1;\n"
+""
+"			vec4 fragPos = view * vec4(FragPos, 1.0);\n"
+"			vec4 clipPos = projection * fragPos\n;"
+"			float ndcDepth = clipPos.z / clipPos.w;\n"
+"			float depth = ((ndcDepth + 1.0) / 2.0);\n"
+"			vec4 depthMap = vec4(depth, depth, depth, 1.0);\n"
+""
+"			vec3 tangentNormal = normalize(Normal * 2.0 - 1.0);\n"
+"    		vec3 tangentFragPos = FragPos;\n"
+""
+"			vec3 ambient = vec3(0.0);\n"
+""
+"			for (int i = 0; i < kernelSize; ++i){\n"
+"				vec2 co = vec2(float(i), 0.0);\n"
+"				vec2 co2 = vec2(float(i), 1.0);\n"
+"				vec3 randomVec = vec3(fract(sin(dot(co.xy, vec2(12.9898, 78.233))) * 43758.5453), fract(sin(dot(co2.xy, vec2(12.9898, 78.233))) * 43758.5453), 0.0);\n"
+"				vec3 sampleVec = tangentFragPos + randomVec * radius;\n"
+""
+"				vec4 offset = projection * view * vec4(sampleVec, 1.0);\n"
+"        		offset.xy /= offset.w;\n"
+"        		offset.xy = offset.xy * 0.5 + 0.5;\n"
+""
+"				float sampleDepth = depthMap.r;\n"
+"				vec3 samplePos = (view * vec4(sampleVec * sampleDepth, 1.0)).xyz;\n"
+""
+"				float occlusion = clamp(dot(Normal, normalize(samplePos - FragPos)) - ssao_bias, 0.0, 1.0);\n"
+"        		ambient += (1.0 - occlusion);\n"
+"			}"
+"    		ambient /= float(kernelSize);\n"
+"    		ambient = mix(vec3(1.0), ambient, 0.5);\n"
+"			return vec4(ambient, 1.0);\n"
+"	}\n"
+"\n"
+""
 "	void main() {\n"
 "		vec4 result = vec4(0.0);\n"
 "		vec3 norm;\n"
@@ -1505,6 +1546,10 @@ const std::string gRenderer::getShaderSrcColorFragment() {
 "        	float distance = abs(EyePosition.z / EyePosition.w);\n"
 "       	FragColor = mix(vec4(fog.color, 1.0), FragColor, getFogVisibility(fog, distance));\n"
 "    	}\n"
+""
+" 		if(ssao_enabled){\n"
+"    		FragColor *= getSSAO();\n"
+"		}"
 "	}\n";
 
 	return std::string(shadersource);
@@ -2478,4 +2523,24 @@ gImage gRenderer::takeScreenshot() {
 	//std::string imagePath = "output.png";   USE IT TO SAVE THE IMAGE
 	// screenShot->saveImage(imagePath);  USE IT TO SAVE THE IMAGE
 	return screenshot;
+}
+
+bool gRenderer::isSSAOEnabled() {
+	return isssaoenabled;
+}
+
+void gRenderer::enableSSAO() {
+	isssaoenabled = true;
+}
+
+void gRenderer::disableSSAO() {
+	isssaoenabled = false;
+}
+
+void gRenderer::setSSAOBias(float value) {
+	ssaobias = value;
+}
+
+float gRenderer::getSSAOBias() {
+	return ssaobias;
 }
