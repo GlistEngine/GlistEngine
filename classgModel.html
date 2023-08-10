@@ -122,6 +122,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>loadModel</b> (const 
 <tr class="memitem:a8c5fac17d63053692a7eff4178823315"><td class="memItemLeft" align="right" valign="top"><a id="a8c5fac17d63053692a7eff4178823315"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>loadModelWithOriginalVertices</b> (const std::string &amp;modelPath)</td></tr>
 <tr class="separator:a8c5fac17d63053692a7eff4178823315"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac13512d0d9c9af37a97e11e8380487e8"><td class="memItemLeft" align="right" valign="top"><a id="ac13512d0d9c9af37a97e11e8380487e8"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>loadMorphingTargetModel</b> (const std::string &amp;modelPath)</td></tr>
+<tr class="separator:ac13512d0d9c9af37a97e11e8380487e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5aea42589bda85df0520a9179431b1a5"><td class="memItemLeft" align="right" valign="top"><a id="a5aea42589bda85df0520a9179431b1a5"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>load</b> (const std::string &amp;fullPath)</td></tr>
 <tr class="separator:a5aea42589bda85df0520a9179431b1a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -266,6 +269,33 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>setAnimationFramerate
 <tr class="memitem:a7a636e92ccd27653690fe04acc81e1e5"><td class="memItemLeft" align="right" valign="top"><a id="a7a636e92ccd27653690fe04acc81e1e5"></a>
 float&#160;</td><td class="memItemRight" valign="bottom"><b>getAnimationFramerate</b> () const</td></tr>
 <tr class="separator:a7a636e92ccd27653690fe04acc81e1e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a82abf38c7cfb26b51a09fdae425fb048"><td class="memItemLeft" align="right" valign="top"><a id="a82abf38c7cfb26b51a09fdae425fb048"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setMorphingFrameNo</b> (int morphingAnimationNo)</td></tr>
+<tr class="separator:a82abf38c7cfb26b51a09fdae425fb048"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1c7f8b7909e288bb3848a07cde33d8a5"><td class="memItemLeft" align="right" valign="top"><a id="a1c7f8b7909e288bb3848a07cde33d8a5"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>getMorphingFrameNo</b> () const</td></tr>
+<tr class="separator:a1c7f8b7909e288bb3848a07cde33d8a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a605fa9f6e607277e5ddf91877e90de3f"><td class="memItemLeft" align="right" valign="top"><a id="a605fa9f6e607277e5ddf91877e90de3f"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>nextMorphingFrame</b> ()</td></tr>
+<tr class="separator:a605fa9f6e607277e5ddf91877e90de3f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab9aac3bd4d83708a8d52344ad6f3d7a1"><td class="memItemLeft" align="right" valign="top"><a id="ab9aac3bd4d83708a8d52344ad6f3d7a1"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setMorphingSpeed</b> (int speed)</td></tr>
+<tr class="separator:ab9aac3bd4d83708a8d52344ad6f3d7a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa019f3d3a0a15d31dfef54804850f628"><td class="memItemLeft" align="right" valign="top"><a id="aa019f3d3a0a15d31dfef54804850f628"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>getMorphingSpeed</b> () const</td></tr>
+<tr class="separator:aa019f3d3a0a15d31dfef54804850f628"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aed790cb190cc47e35421754564195dad"><td class="memItemLeft" align="right" valign="top"><a id="aed790cb190cc47e35421754564195dad"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setMorphingFrameNum</b> (int morphingFrameNum)</td></tr>
+<tr class="separator:aed790cb190cc47e35421754564195dad"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a19a21589764a485783aa2d569ec6fec0"><td class="memItemLeft" align="right" valign="top"><a id="a19a21589764a485783aa2d569ec6fec0"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>getMorphingFrameNum</b> () const</td></tr>
+<tr class="separator:a19a21589764a485783aa2d569ec6fec0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5274cdf901b2c79fe4ab2b7adba308dc"><td class="memItemLeft" align="right" valign="top"><a id="a5274cdf901b2c79fe4ab2b7adba308dc"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setMorphingTarget</b> (int morphingTargetId)</td></tr>
+<tr class="separator:a5274cdf901b2c79fe4ab2b7adba308dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aef24db89c739f0534e468ef566b52e72"><td class="memItemLeft" align="right" valign="top"><a id="aef24db89c739f0534e468ef566b52e72"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>getMorphingTarget</b> () const</td></tr>
+<tr class="separator:aef24db89c739f0534e468ef566b52e72"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afb38abc0dec4d5f801d668f447a9e86f"><td class="memItemLeft" align="right" valign="top"><a id="afb38abc0dec4d5f801d668f447a9e86f"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>isVertexAnimated</b> () const</td></tr>
 <tr class="separator:afb38abc0dec4d5f801d668f447a9e86f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -444,9 +474,9 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a474d45544560276725a46b446b693e2c"><td class="memItemLeft" align="right" valign="top"><a id="a474d45544560276725a46b446b693e2c"></a>
 std::deque&lt; <a class="el" href="classgTexture.html">gTexture</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>textures_loaded</b></td></tr>
 <tr class="separator:a474d45544560276725a46b446b693e2c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af8bcf250f9bfca4b0162c84af2dc4240"><td class="memItemLeft" align="right" valign="top"><a id="af8bcf250f9bfca4b0162c84af2dc4240"></a>
-std::vector&lt; <a class="el" href="classgSkinnedMesh.html">gSkinnedMesh</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>meshes</b></td></tr>
-<tr class="separator:af8bcf250f9bfca4b0162c84af2dc4240"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af42cbd53f51a091594e5900a9a147bf7"><td class="memItemLeft" align="right" valign="top"><a id="af42cbd53f51a091594e5900a9a147bf7"></a>
+std::deque&lt; <a class="el" href="classgSkinnedMesh.html">gSkinnedMesh</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>meshes</b></td></tr>
+<tr class="separator:af42cbd53f51a091594e5900a9a147bf7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a132fda4d09c27d33002f710a277e03dc"><td class="memItemLeft" align="right" valign="top"><a id="a132fda4d09c27d33002f710a277e03dc"></a>
 std::string&#160;</td><td class="memItemRight" valign="bottom"><b>directory</b></td></tr>
 <tr class="separator:a132fda4d09c27d33002f710a277e03dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
