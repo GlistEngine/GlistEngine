@@ -583,8 +583,6 @@ gRenderer::gRenderer() {
 
 	colorshader = new gShader();
 	colorshader->loadProgram(getShaderSrcColorVertex(), getShaderSrcColorFragment());
-	colorshader->setMat4("projection", projectionmatrix);
-	colorshader->setMat4("view", viewmatrix);
 
 	textureshader = new gShader();
 	textureshader->loadProgram(getShaderSrcTextureVertex(), getShaderSrcTextureFragment());
@@ -2456,6 +2454,8 @@ bool gRenderer::isSSAOEnabled() {
 
 void gRenderer::enableSSAO() {
 	isssaoenabled = true;
+	colorshader->setMat4("projection", projectionmatrix);
+	colorshader->setMat4("view", viewmatrix);
 }
 
 void gRenderer::disableSSAO() {
