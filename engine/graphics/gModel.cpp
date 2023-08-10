@@ -332,7 +332,6 @@ const std::string gModel::getMeshName(int meshNo) const {
 }
 
 void gModel::processNode(aiNode *node, const aiScene *scene) {
-	static int x = 0;
 	// process each mesh located at the current node
 	for(unsigned int i = 0; i < node->mNumMeshes; i++) {
 		// the node object only contains indices to index the actual objects in the scene.
