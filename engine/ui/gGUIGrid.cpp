@@ -846,6 +846,8 @@ void gGUIGrid::changeAllAffectedCellsYH(float diff) {
 }
 
 void gGUIGrid::changeSelectedCell(int amount) {
+	int firstcellbefore = firstselectedcell;
+	int lastcellbefore = lastselectedcell;
 	if(isselected) {
 		if(allcells[selectedbox].cellcolumnno == firstselectedcell % columnnum) {
 			if(amount == 1 && lastselectedcell % columnnum + 1 < columnnum) lastselectedcell += amount;
@@ -890,7 +892,18 @@ void gGUIGrid::changeSelectedCell(int amount) {
 		else if(amount == -columnnum && lastselectedcell / columnnum > firstselectedcell / columnnum && allcells[selectedbox].cellrowno * columnnum + allcells[selectedbox].cellcolumnno == firstselectedcell) lastselectedcell += amount;
 		else if(amount == -columnnum && firstselectedcell > 0) firstselectedcell += amount;
 	}
-
+	if(firstcellbefore != firstselectedcell) {
+		if(calculateCurrentY(firstselectedcell / columnnum) < gridy + gridboxh) firsty += calculateCurrentY(firstselectedcell / columnnum) - gridboxh;
+		else if(calculateCurrentY(firstselectedcell / columnnum) + getRowHeight(firstselectedcell / columnnum) > gridy + boxh - titledy) firsty += calculateCurrentY(firstselectedcell / columnnum) - (gridy + boxh - titledy) + getRowHeight(firstselectedcell / columnnum);
+		else if(calculateCurrentX(firstselectedcell % columnnum) < gridx + gridboxw / 2) firstx += calculateCurrentX(firstselectedcell % columnnum) - gridboxw / 2;
+		else if(calculateCurrentX(firstselectedcell % columnnum) + getColumnWidth(firstselectedcell % columnnum) > gridx + boxw) firstx += calculateCurrentX(firstselectedcell % columnnum) - (gridx + boxw) + getColumnWidth(firstselectedcell % columnnum);
+	}
+	else if(lastcellbefore != lastselectedcell){
+		if(calculateCurrentY(lastselectedcell / columnnum) < gridy + gridboxh) firsty += calculateCurrentY(lastselectedcell / columnnum) - gridboxh;
+		else if(calculateCurrentY(lastselectedcell / columnnum) + getRowHeight(lastselectedcell / columnnum) > gridy + boxh - titledy) firsty += calculateCurrentY(lastselectedcell / columnnum) - (gridy + boxh - titledy) + getRowHeight(lastselectedcell / columnnum);
+		else if(calculateCurrentX(lastselectedcell % columnnum) < gridx + gridboxw / 2) firstx += calculateCurrentX(lastselectedcell % columnnum) - gridboxw / 2;
+		else if(calculateCurrentX(lastselectedcell % columnnum) + getColumnWidth(lastselectedcell % columnnum) > gridx + boxw) firstx += calculateCurrentX(lastselectedcell % columnnum) - (gridx + boxw) + getColumnWidth(lastselectedcell % columnnum);
+	}
 	setSelectedCells();
 }
 
