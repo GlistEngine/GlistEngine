@@ -1,6 +1,8 @@
 /*
  * gSkinnedMesh.h
  *
+ * If a mesh contains any morphing target, then the frame processed during runtime. Which means you cannot use the mesh in VRAM if it has morphing target(s).
+ *
  *  Created on: 27 Kas 2020
  *      Author: Acer
  */
