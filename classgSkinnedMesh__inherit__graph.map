@@ -1,7 +1,8 @@
 <map id="gSkinnedMesh" name="gSkinnedMesh">
-<area shape="rect" id="node1" title=" " alt="" coords="6,304,123,331"/>
-<area shape="rect" id="node2" href="$classgMesh.html" title=" " alt="" coords="32,229,97,256"/>
-<area shape="rect" id="node3" href="$classgNode.html" title=" " alt="" coords="33,155,97,181"/>
-<area shape="rect" id="node4" href="$classgRenderObject.html" title=" " alt="" coords="5,80,124,107"/>
-<area shape="rect" id="node5" href="$classgObject.html" title=" " alt="" coords="29,5,101,32"/>
+<area shape="rect" id="node1" title=" " alt="" coords="10,379,127,405"/>
+<area shape="rect" id="node2" href="$classgMorphingMesh.html" title=" " alt="" coords="5,304,132,331"/>
+<area shape="rect" id="node3" href="$classgMesh.html" title=" " alt="" coords="36,229,101,256"/>
+<area shape="rect" id="node4" href="$classgNode.html" title=" " alt="" coords="37,155,101,181"/>
+<area shape="rect" id="node5" href="$classgRenderObject.html" title=" " alt="" coords="9,80,128,107"/>
+<area shape="rect" id="node6" href="$classgObject.html" title=" " alt="" coords="33,5,105,32"/>
 </map>

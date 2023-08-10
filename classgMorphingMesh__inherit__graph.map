@@ -1,5 +1,6 @@
 <map id="gMorphingMesh" name="gMorphingMesh">
 <area shape="rect" id="node1" title=" " alt="" coords="5,304,132,331"/>
+<area shape="rect" id="node6" href="$classgSkinnedMesh.html" title=" " alt="" coords="10,379,127,405"/>
 <area shape="rect" id="node2" href="$classgMesh.html" title=" " alt="" coords="36,229,101,256"/>
 <area shape="rect" id="node3" href="$classgNode.html" title=" " alt="" coords="37,155,101,181"/>
 <area shape="rect" id="node4" href="$classgRenderObject.html" title=" " alt="" coords="9,80,128,107"/>
