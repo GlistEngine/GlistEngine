@@ -836,6 +836,7 @@ void gGUIGrid::changeAllAffectedCellsXW(float diff) {
 		else if(allcells[i].cellcolumnno == currentcolumn) allcells[i].cellw += diff;
 	}
 	gridw += diff;
+	totalw += diff;
 }
 void gGUIGrid::changeAllAffectedCellsYH(float diff) {
 	for(int i = 0; i < allcells.size(); i++) {
@@ -843,6 +844,7 @@ void gGUIGrid::changeAllAffectedCellsYH(float diff) {
 		else if(allcells[i].cellrowno == currentrow) allcells[i].cellh += diff;
 	}
 	gridh += diff;
+	totalh += diff;
 }
 
 void gGUIGrid::changeSelectedCell(int amount) {
