@@ -196,6 +196,12 @@ public:
 	void disableAlphaTest();
 	bool isAlphaTestEnabled();
 
+	bool isSSAOEnabled();
+	void enableSSAO();
+	void disableSSAO();
+	void setSSAOBias(float value);
+	float getSSAOBias();
+
 	gShader* getColorShader();
 	gShader* getTextureShader();
 	gShader* getFontShader();
@@ -255,6 +261,9 @@ private:
 	int depthtesttype;
 	unsigned int depthtesttypeid[2];
 	bool isalphablendingenabled, isalphatestenabled;
+
+	bool isssaoenabled;
+	float ssaobias;
 
 	gShader* colorshader;
 	gShader* textureshader;
