@@ -125,6 +125,45 @@ void gModel::loadModelFileWithOriginalVertices(const std::string &fullPath) {
     animate(0);
 }
 
+void gModel::loadMorphingTargetModel(const std::string& modelPath) {
+	loadMorphingTargetModelFile(gGetModelsDir() + modelPath);
+}
+
+void gModel::loadMorphingTargetModelFile(const std::string& fullPath) {
+	int targetid = morphingtargetscenes.size();
+#ifdef LINUX
+	std::shared_ptr<aiPropertyStore> store;
+    store.reset(aiCreatePropertyStore(), aiReleasePropertyStore);
+    // only ever give us triangles.
+    aiSetImportPropertyInteger(store.get(), AI_CONFIG_PP_SBP_REMOVE, aiPrimitiveType_LINE | aiPrimitiveType_POINT );
+    aiSetImportPropertyInteger(store.get(), AI_CONFIG_PP_PTV_NORMALIZE, true);
+
+    morphingtargetscenes.push_back(aiImportFileExWithProperties(fullPath.c_str(), aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace | aiProcess_GenNormals | aiProcess_GenUVCoords | aiProcess_SplitLargeMeshes | aiProcess_SortByPType, NULL, store.get()));
+    // check for errors
+    if(!morphingtargetscenes[targetid] || (morphingtargetscenes[targetid]->mFlags & AI_SCENE_FLAGS_INCOMPLETE) || !morphingtargetscenes[targetid]->mRootNode) { // if is Not Zero
+    	std::cout << "ERROR::ASSIMP:: " << aiGetErrorString() << std::endl;
+        return;
+    }
+#else
+    Assimp::Importer importer;
+    importer.SetPropertyInteger(AI_CONFIG_PP_SBP_REMOVE, aiPrimitiveType_LINE | aiPrimitiveType_POINT);
+    importer.SetPropertyBool(AI_CONFIG_PP_PTV_NORMALIZE, true);
+    importer.ReadFile(fullPath, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace | aiProcess_GenNormals | aiProcess_GenUVCoords | aiProcess_SplitLargeMeshes | aiProcess_SortByPType);
+    morphingtargetscenes.push_back(importer.GetOrphanedScene());
+    // check for errors
+    //aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace | aiProcess_GenNormals | aiProcess_GenUVCoords | aiProcess_SplitLargeMeshes | aiProcess_SortByPType
+    if(!morphingtargetscenes[targetid] || (morphingtargetscenes[targetid]->mFlags & AI_SCENE_FLAGS_INCOMPLETE) || !morphingtargetscenes[targetid]->mRootNode) { // if is Not Zero
+        std::cout << "ERROR::ASSIMP:: " << importer.GetErrorString() << std::endl;
+        return;
+    }
+#endif
+
+    // retrieve the directory path of the filepath
+    directory = fullPath.substr(0, fullPath.find_last_of('/'));
+    filename = fullPath.substr(fullPath.find_last_of('/') + 1, fullPath.length());
+    processMorphingNode(morphingtargetscenes[targetid]->mRootNode, morphingtargetscenes[targetid]);
+}
+
 void gModel::move(float dx, float dy, float dz) {
 	gNode::move(dx, dy, dz);
 	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i].move(dx, dy, dz);
@@ -293,6 +332,7 @@ const std::string gModel::getMeshName(int meshNo) const {
 }
 
 void gModel::processNode(aiNode *node, const aiScene *scene) {
+	static int x = 0;
 	// process each mesh located at the current node
 	for(unsigned int i = 0; i < node->mNumMeshes; i++) {
 		// the node object only contains indices to index the actual objects in the scene.
@@ -303,6 +343,9 @@ void gModel::processNode(aiNode *node, const aiScene *scene) {
 //		if (isanimated) updateBones(&modelmesh, mesh, scene);
 //		modelmesh.setParent(this);
 		meshes.push_back(modelmesh);
+//		gLogi("setting");
+		meshes[meshes.size() - 1].setBaseMesh(&meshes[meshes.size() - 1]);
+//		gLogi("setted");
 	}
 
 	// after we've processed all of the meshes (if any) we then recursively process each of the children nodes
@@ -425,6 +468,58 @@ void gModel::loadMaterialTextures(gSkinnedMesh* mesh, aiMaterial *mat, aiTexture
     }
 }
 
+void gModel::processMorphingNode(aiNode *node, const aiScene *scene) {
+	// process each mesh located at the current node
+	for(unsigned int i = 0; i < node->mNumMeshes; i++) {
+		// the node object only contains indices to index the actual objects in the scene.
+		// the scene contains all the data, node is just to keep stuff organized (like relations between nodes).
+		aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
+		gLogi("gModel") << "Loading morphing mesh:" << mesh->mName.C_Str() << ", tm:" << node->mTransformation[0];
+		gMesh targetmodelmesh = processMorphingMesh(mesh, scene, node->mTransformation);
+//		if (isanimated) updateBones(&modelmesh, mesh, scene);
+//		modelmesh.setParent(this);
+		auto found = std::find_if(meshes.begin(), meshes.end(),
+				[&] (const gSkinnedMesh& mesh) {
+					return mesh.getName() == targetmodelmesh.getName();
+				});
+		if (found == meshes.end()) gLoge("gModel") << "Cannot find appropriate mesh to add the morphing target mesh.";
+		found->addTargetMesh(&targetmodelmesh);
+	}
+
+	// after we've processed all of the meshes (if any) we then recursively process each of the children nodes
+	for(unsigned int i = 0; i < node->mNumChildren; i++) {
+		processMorphingNode(node->mChildren[i], scene);
+	}
+}
+
+gMesh gModel::processMorphingMesh(aiMesh *mesh, const aiScene *scene, aiMatrix4x4 matrix) {
+	 std::vector<gVertex> vertices;
+	glm::mat4 mat = convertMatrix(matrix);
+
+	// walk through each of the mesh's vertices
+	for(unsigned int i = 0; i < mesh->mNumVertices; i++) {
+		gVertex vertex;
+		glm::vec3 vector; // we declare a placeholder vector since assimp uses its own vector class that doesn't directly convert to glm's vec3 class so we transfer the data to this placeholder glm::vec3 first.
+		// positions
+		vector.x = mesh->mVertices[i].x;
+		vector.y = mesh->mVertices[i].y;
+		vector.z = mesh->mVertices[i].z;
+		vertex.position = vector;
+		// normals
+		vector.x = mesh->mNormals[i].x;
+		vector.y = mesh->mNormals[i].y;
+		vector.z = mesh->mNormals[i].z;
+		vertex.normal = vector;
+		vertices.push_back(vertex);
+	}
+
+	gMesh gmesh;
+	gmesh.setName(mesh->mName.C_Str());
+	gmesh.setVertices(vertices);
+
+	return gmesh;
+}
+
 bool gModel::isAnimated() const {
 	return isanimated;
 }
@@ -442,9 +537,15 @@ void gModel::animate(float animationPosition) {
 	animationpositionold = animationposition;
 	animationposition = animationPosition;
 
+	//The comment below this line is replaced with the !isvertexanimationstoredonvram check in the if staement, to perform the necessary operations if the mesh is animated morphing mesh.
+	//(!isvertexanimationstoredonvram || (meshes.size() != 0 && std::find_if(meshes.begin(), meshes.end(), [] (const gSkinnedMesh& mesh) {return mesh.getTargetMeshCount() > 0;}) != meshes.end()))
 	if(!isvertexanimationstoredonvram && animationposition != animationpositionold) {
 		updateAnimationNodes();
 		for (int i=0; i<meshes.size(); i++) {
+			//The if which is commented is a check to prevent unnecessary operation on a non-morphing mesh which is stored on vram. That if commented because it hasn't tested yet.
+//			if (isvertexanimationstoredonvram && meshes[i].getTargetMeshCount() == 0) return;
+			//Below comment line is the third parameter of updateBones which is to perform animating operation on the target mesh of a mesh by taking the scene mesh as a reference if the animated mesh has a target mesh. Haven't tested yet.
+			// (meshes[i].getTargetMeshCount() > 0) ? (morphingtargetscenes[meshes[i].getCurrentTargetMeshId()]->mMeshes[i]) : (nullptr)
 			updateBones(&meshes[i], scene->mMeshes[i]);
 			updateVbo(&meshes[i]);
 		}
@@ -563,6 +664,8 @@ void gModel::updateBones(gSkinnedMesh* gmesh, aiMesh* aimesh) {
 	}
 
 	gmesh->resetAnimation();
+	//Below line is to reset all the data belong to the target mesh. Haven't tested yet.
+	//if (aiTargetMesh != nullptr) gmesh->resetTargetData(gmesh->getCurrentTargetMeshId());
 
 	// loop through all vertex weights of all bones
 	for(unsigned int a = 0; a < aimesh->mNumBones; ++a) {
@@ -578,6 +681,15 @@ void gModel::updateBones(gSkinnedMesh* gmesh, aiMesh* aimesh) {
 			aiVector3D aiaddweight = weight.mWeight * (posTrafo * srcPos);
 			glm::vec3 vPos(oldweightpos.x + aiaddweight.x, oldweightpos.y + aiaddweight.y, oldweightpos.z + aiaddweight.z);
 			gmesh->setVertexPos(vertexId, vPos);
+
+			//The commented lines below are to perform an animation to the morphing target's vertices' position. They haven't tested yet.
+			/*if (aiTargetMesh != nullptr) {
+				const aiVector3D& srcPos = aiTargetMesh->mVertices[vertexId];
+				oldweightpos = gmesh->getTargetPosition(gmesh->getCurrentTargetMeshId(), vertexId);
+				aiaddweight = weight.mWeight * (posTrafo * srcPos);
+				glm::vec3 vPos(oldweightpos.x + aiaddweight.x, oldweightpos.y + aiaddweight.y, oldweightpos.z + aiaddweight.z);
+				gmesh->setTargetPosition(gmesh->getCurrentTargetMeshId(), vertexId, vPos);
+			}*/
 		}
 		if(aimesh->HasNormals()){
 			// 3x3 matrix, contains the bone matrix without the translation, only with rotation and possibly scaling
@@ -590,6 +702,14 @@ void gModel::updateBones(gSkinnedMesh* gmesh, aiMesh* aimesh) {
 				glm::vec3 oldweightnorm = gmesh->getVertexNorm(vertexId);
 				aiVector3D aiaddweight = weight.mWeight * (posTrafo * srcNorm);
 				gmesh->setVertexNorm(vertexId, glm::vec3(oldweightnorm.x + aiaddweight.x, oldweightnorm.y + aiaddweight.y, oldweightnorm.z + aiaddweight.z));
+
+				//The commented lines below are to perform an animation to the morphing target's vertices' normal. They haven't tested yet.
+				/*if (aiTargetMesh != nullptr) {
+					const aiVector3D& srcNorm = aiTargetMesh->mNormals[vertexId];
+					oldweightnorm = gmesh->getTargetNormal(gmesh->getCurrentTargetMeshId(), vertexId);
+					aiaddweight = weight.mWeight * (posTrafo * srcNorm);
+					gmesh->setTargetNormal(gmesh->getCurrentTargetMeshId(), vertexId, glm::vec3(oldweightnorm.x + aiaddweight.x, oldweightnorm.y + aiaddweight.y, oldweightnorm.z + aiaddweight.z));
+				}*/
 			}
 		}
 	}
@@ -656,6 +776,52 @@ int gModel::getAnimationFrameNo() const {
 	return animationframeno;
 }
 
+void gModel::setMorphingFrameNo(int morphingFrameNo) {
+	for (int i = 0; i < meshes.size(); i++) {
+		meshes[i].setCurrentFrameId(morphingFrameNo);
+	}
+}
+
+int gModel::getMorphingFrameNo() const {
+	return meshes[0].getCurrentFrameId();
+}
+
+void gModel::nextMorphingFrame() {
+	for (int i = 0; i < meshes.size(); i++) {
+		meshes[i].nextFrameId();
+	}
+}
+
+void gModel::setMorphingSpeed(int speed) {
+	for (int i = 0; i < meshes.size(); i++) {
+		meshes[i].setSpeed(speed);
+	}
+}
+
+int gModel::getMorphingSpeed() const {
+	return meshes[0].getSpeed();
+}
+
+void gModel::setMorphingTarget(int morphingTargetId) {
+	for (int i = 0; i < meshes.size(); i++) {
+		meshes[i].setCurrentTargetMeshId(morphingTargetId);
+	}
+}
+
+int gModel::getMorphingTarget() const {
+	return meshes[0].getCurrentTargetMeshId();
+}
+
+void gModel::setMorphingFrameNum(int morphingFrameNum) {
+	for (int i = 0; i < meshes.size(); i++) {
+		meshes[i].setFrameCount(meshes[i].getCurrentTargetMeshId(), morphingFrameNum);
+	}
+}
+
+int gModel::getMorphingFrameNum() const {
+	return meshes[0].getFrameCount();
+}
+
 void gModel::generateAnimationKeys() {
 	animationkeys.clear();
 
@@ -699,6 +865,8 @@ void gModel::prepareVertexAnimationData() {
 //            	meshes[i].resizeVertexAnimation(j, k, mesh->mNumVertices);
             	setAnimationFrameNo(k);
                 updateAnimationNodes();
+                //The below line's third parameter is given as a nullptr since the meshes aren't morphing. Haven't tested yet.
+                //updateBones(&meshes[i], scene->mMeshes[i], nullptr);
                 updateBones(&meshes[i], scene->mMeshes[i]);
 
                 // calculate bone matrices
