@@ -244,6 +244,14 @@ void gMesh::drawStart() {
 		} else {
 			colorshader->setBool("fog.enabled", false);
 		}
+
+		if(renderer->isSSAOEnabled()) {
+			colorshader->setBool("ssao_enabled", true);
+			colorshader->setFloat("ssao_bias", renderer->getSSAOBias());
+		} else {
+			colorshader->setBool("ssao_enabled", false);
+		}
+
 	    // Set matrices
 	    if(isprojection2d)colorshader->setMat4("projection", renderer->getProjectionMatrix2d());
 	    else colorshader->setMat4("projection", renderer->getProjectionMatrix());
