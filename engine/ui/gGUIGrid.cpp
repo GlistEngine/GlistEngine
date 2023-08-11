@@ -317,6 +317,32 @@ void gGUIGrid::setCellAlignment(std::string cell, int cellAlignment) {
 	setCellAlignment(c, cellAlignment);
 }
 
+void gGUIGrid::selectCell(Cell* cell) {
+	selectCell(cell, cell);
+}
+
+void gGUIGrid::selectCell(Cell* cell1, Cell* cell2) {
+	isselected = true;
+	firstselectedcell = cell1->cellrowno * columnnum + cell1->cellcolumnno;
+	lastselectedcell = cell2->cellrowno * columnnum + cell2->cellcolumnno;
+	int index = getCellNo(cell1->cellrowno, cell1->cellcolumnno);
+	allcells[selectedbox].iscellselected = false;
+	allcells[index].iscellselected = true;
+	selectedbox = index;
+	setSelectedCells();
+}
+
+void gGUIGrid::selectCell(std::string cell) {
+	Cell* c = getCell(cell);
+	selectCell(c, c);
+}
+
+void gGUIGrid::selectCell(std::string cell1, std::string cell2) {
+	Cell* c1 = getCell(cell1);
+	Cell* c2 = getCell(cell2);
+	selectCell(c1, c2);
+}
+
 gGUIGrid::Cell* gGUIGrid::getCell(std::string cellID) {
 	std::transform(cellID.begin(), cellID.end(), cellID.begin(), ::toupper);
 	std::string column = getTextColumn(cellID);
@@ -337,6 +363,12 @@ gColor* gGUIGrid::getSelectedFrameColor() {
 
 gColor* gGUIGrid::getSelectedAreaColor() {
 	return &selectedareacolor;
+}
+
+std::deque<gGUIGrid::Cell*> gGUIGrid::getSelectedCells() {
+	std::deque<Cell*> sc;
+	for(int i = 0; i < selectedcells.size(); i++) sc.push_back(&allcells[selectedcells[i]]);
+	return sc;
 }
 
 std::string gGUIGrid::fixTextFunction(std::string text, int index) {
