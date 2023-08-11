@@ -58,10 +58,10 @@ gGUINumberBox::gGUINumberBox() {
 	textbox.setNumeric(true);
 	boxsizer.setControl(0, 0, &textbox);
 	setSizer(&boxsizer);
-	maxvalue = -2147483647;
-	minvalue = 2147483647;
-	maxvaluef = -2147483647.0;
-	minvaluef = 2147483647.0;
+	maxvalue = std::numeric_limits<int>::max();
+	minvalue = std::numeric_limits<int>::min();
+	maxvaluef = std::numeric_limits<float>::max();
+	minvaluef = std::numeric_limits<float>::min();
 }
 
 gGUINumberBox::~gGUINumberBox() {
@@ -191,14 +191,20 @@ void gGUINumberBox::mouseReleased(int x, int y, int button) {
 			castcurrtexttoint = castcurrtexttoint + 1;
 			gLogi("current value: ") << castcurrtexttoint;
 			setText(gToStr(castcurrtexttoint));
-			if (castcurrtexttoint == maxvalue) b1isdisabled = true;
+			if (castcurrtexttoint >= maxvalue) {
+			    castcurrtexttoint = maxvalue;
+			    b1isdisabled = true;
+			}
 			if (castcurrtexttoint > minvalue) b2isdisabled = false;
 		} else {
 			castcurrtexttofloat = gToFloat(textbox.getText());
 			castcurrtexttofloat = castcurrtexttofloat + 0.1;
 			gLogi("current value: ") << castcurrtexttofloat;
 			setText(gToStr(castcurrtexttofloat));
-			if (castcurrtexttofloat == maxvaluef) b1isdisabled = true;
+			if (castcurrtexttofloat >= maxvaluef) {
+				castcurrtexttofloat = maxvaluef;
+			    b1isdisabled = true;
+			}
 			if (castcurrtexttofloat > minvaluef) b2isdisabled = false;
 		}
 	} else {
@@ -218,14 +224,20 @@ void gGUINumberBox::mouseReleased(int x, int y, int button) {
 			castcurrtexttoint = castcurrtexttoint - 1;
 			gLogi("current value: ") << castcurrtexttoint;
 			setText(gToStr(castcurrtexttoint));
-			if (castcurrtexttoint == minvalue) b2isdisabled = true;
+			if (castcurrtexttoint <= minvalue) {
+			    castcurrtexttoint = maxvalue;
+			    b2isdisabled = true;
+			}
 			if (castcurrtexttoint < maxvalue) b1isdisabled = false;
 		} else {
 			castcurrtexttofloat = gToFloat(textbox.getText());
 			castcurrtexttofloat = castcurrtexttofloat - 0.1;
 			gLogi("current value: ") << castcurrtexttofloat;
 			setText(gToStr(castcurrtexttofloat));
-			if (castcurrtexttofloat == minvaluef) b2isdisabled = true;
+			if (castcurrtexttofloat <= minvaluef) {
+				castcurrtexttofloat = maxvaluef;
+			    b2isdisabled = true;
+			}
 			if (castcurrtexttofloat < maxvaluef) b1isdisabled = false;
 		}
 	} else {
@@ -275,4 +287,3 @@ void gGUINumberBox::draw() {
 	renderer->setColor(defColor);
 	if(guisizer) guisizer->draw();
 }
-

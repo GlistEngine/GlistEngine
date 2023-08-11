@@ -10,6 +10,7 @@
 
 #include "gGUIContainer.h"
 #include "gGUITextbox.h"
+#include <limits>
 
 class gGUINumberBox: public gGUIContainer {
 public:
