@@ -336,9 +336,9 @@ void gGUINotebook::setActiveTab(int index) {
     }
 }
 
-void gGUINotebook::setSizerSize(int lineNum, int columnNum, std::string sizerLabel) {
+void gGUINotebook::setSizerSize(int lineNum, int columnNum, std::string sizerName) {
 	int i = 0;
-	while (sizerLabel != quisizerlabels.at(i)) {
+	while (sizerName != quisizerlabels.at(i)) {
 		i++;
 		if(i >= quisizerlabels.size()) return;
 	}
@@ -353,10 +353,4 @@ void gGUINotebook::setSizerSize(int lineNum, int columnNum, int sizerIndex) {
 
 gGUISizer* gGUINotebook::getSizer(int sizerIndex) {
     return guisizers[sizerIndex];
-}
-
-gGUISizer* gGUINotebook::getSizer(std::string sizerLabel) {
-	int i = 0;
-	while (sizerLabel != quisizerlabels.at(i))	i++;
-	return guisizers[i];
 }
