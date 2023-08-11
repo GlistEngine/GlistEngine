@@ -76,9 +76,9 @@ public:
      *
      * @param lineNum Number of lines to set to the sizer.
      * @param columnNum Number of columns to set to the sizer.
-     * @param sizerName Label of the sizer to be sized.
+     * @param sizerLabel Label of the sizer to be sized.
      */
-    void setSizerSize(int lineNum, int columnNum, std::string sizerName);
+    void setSizerSize(int lineNum, int columnNum, std::string sizerLabel);
 
     /*
 	 * Sets the size of the sizer at the given index.
@@ -95,6 +95,13 @@ public:
      * @param sizerIndex Index of the sizer to be returned.
      */
     gGUISizer* getSizer(int sizerIndex);
+
+    /*
+	 * Returns the sizer with the given name.
+	 *
+	 * @param sizerLabel Label of the sizer to be returned.
+	 */
+	gGUISizer* getSizer(std::string sizerLabel);
 
 private:
 	void loadFont();
