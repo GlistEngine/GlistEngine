@@ -1,5 +1,7 @@
 var NAVTREEINDEX11 =
 {
+"gInversion_8h_source.html":[1,0,95],
+"gKernelEffect_8h_source.html":[1,0,96],
 "gKeyCode_8h_source.html":[1,0,97],
 "gLight_8h_source.html":[1,0,98],
 "gLine_8h_source.html":[1,0,99],

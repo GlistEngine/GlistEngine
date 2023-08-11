@@ -48,13 +48,13 @@ var NAVTREEINDEX =
 "classgColorCurves.html",
 "classgGUICandleStickChart.html#a788db58bc9f8e922384571a593ac3c91",
 "classgGUIGraph.html#a4b8f312eae9010b4c01c6daa817a7e3c",
-"classgGUINumberBox.html",
-"classgGUIStatusBar.html#ad9b21e01e98e85675bd0b575623eaafa",
-"classgLight.html#a908631ef2a97c8a53b8e33f60eeda0c1",
-"classgMorphingMesh.html#a2e4b24111300ed7f1ef1c01b90d992f1",
-"classgRenderer.html#a8ec397bcdfa025c966222f673b3c5d4a",
-"classgTexture.html#ab48bb8d4a5d1c5e2b043d830ebb71b6d",
-"gKeyCode_8h_source.html"
+"classgGUINotebook.html#aabf88a3a9009772becb200457da73851",
+"classgGUIStatusBar.html#acb0b1fceb4587297d110c2873704010b",
+"classgLight.html#a881c55ce1b972c9cb54a5226c37b8164",
+"classgMorphingMesh.html#a21bfa6f4c6a49dc5c80e3d7a41767fd1",
+"classgRenderer.html#a8d2ad17967d07119cd811f1ed51ef89d",
+"classgTexture.html#aafb9fc45890f8546b311cdd98c9dcb69",
+"gInversion_8h_source.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

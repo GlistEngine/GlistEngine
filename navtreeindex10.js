@@ -1,5 +1,7 @@
 var NAVTREEINDEX10 =
 {
+"classgTexture.html#aafb9fc45890f8546b311cdd98c9dcb69":[0,0,146,44],
+"classgTexture.html#aafc3c50cbe3ccdd485303675ec2432a9":[0,0,146,50],
 "classgTexture.html#ab48bb8d4a5d1c5e2b043d830ebb71b6d":[0,0,146,7],
 "classgTexture.html#ab65d7e140424651d0742f20fd1c837b2":[0,0,146,40],
 "classgTexture.html#ab7c4b21f68d40beacb813edde92ddaee":[0,0,146,67],
@@ -118,8 +120,8 @@ var NAVTREEINDEX10 =
 "classgWindowResizeEvent.html#a12037a9797b82a2efcd950a2e740f344":[0,0,161,2],
 "classgWindowResizeEvent.html#a303c8759dad7cdd6f914b71c1821c6d2":[0,0,161,0],
 "files.html":[1,0],
-"functions.html":[0,3,0,0],
 "functions.html":[0,3,0],
+"functions.html":[0,3,0,0],
 "functions_b.html":[0,3,0,1],
 "functions_c.html":[0,3,0,2],
 "functions_d.html":[0,3,0,3],
@@ -247,7 +249,5 @@ var NAVTREEINDEX10 =
 "gGrayscale_8h_source.html":[1,0,43],
 "gHighContrast_8h_source.html":[1,0,92],
 "gHttpFile_8h_source.html":[1,0,93],
-"gImage_8h_source.html":[1,0,94],
-"gInversion_8h_source.html":[1,0,95],
-"gKernelEffect_8h_source.html":[1,0,96]
+"gImage_8h_source.html":[1,0,94]
 };
