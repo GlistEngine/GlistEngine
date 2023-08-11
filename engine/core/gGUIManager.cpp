@@ -60,8 +60,8 @@ void gGUIManager::setCurrentFrame(gGUIFrame* currentFrame, int width, int height
 
 void gGUIManager::setupDialogue(gGUIDialogue* dialogue) {
 	dialogue->setParentSlotNo(0, 0);
-	dialogue->width = appmanager->getCurrentCanvas()->getScreenWidth() / 1 * 0.84f;
-	dialogue->height = appmanager->getCurrentCanvas()->getScreenHeight() / 1 * 0.84f;
+	dialogue->width = appmanager->getCurrentCanvas()->getScreenWidth() * 0.39f;
+	dialogue->height = appmanager->getCurrentCanvas()->getScreenHeight() * 0.21f;
 	dialogue->left = (appmanager->getCurrentCanvas()->getScreenWidth() - dialogue->width) / 2;
 	dialogue->top = (appmanager->getCurrentCanvas()->getScreenHeight() - dialogue->height) / 2;
 	dialogue->right = dialogue->left + dialogue->width;
@@ -75,6 +75,7 @@ void gGUIManager::setupDialogue(gGUIDialogue* dialogue) {
 	dialogue->getSizer()->enableBackgroundFill(false);
 	dialogue->resetTitleBar();
 	dialogue->resetButtonsBar();
+	dialogue->resetMessageBar();
 
 	dialogues.push_back(dialogue);
 }
