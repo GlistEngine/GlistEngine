@@ -10,7 +10,7 @@
 
 gGUICheckbox::gGUICheckbox() {
 //	gLogi("id") << id;
-	ischecked = true;
+	ischecked = false;
 	istextvisible = true;
 	buttonw = 12;
 	buttonh = 12;
