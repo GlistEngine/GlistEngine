@@ -336,3 +336,19 @@ void gGUINotebook::setActiveTab(int index) {
     }
 }
 
+gGUISizer* gGUINotebook::getSizer(int sizerIndex) {
+    if(sizerIndex >= 0 && sizerIndex < quisizerlabels.size()) return guisizers[sizerIndex];
+    else {
+    	gLoge("gGUINotebook") << "There is no sizer at index " << sizerIndex;
+    	return nullptr;
+    }
+}
+
+gGUISizer* gGUINotebook::getSizer(std::string sizerLabel) {
+	for(int i = 0; i < quisizerlabels.size(); i++) {
+		if(sizerLabel == quisizerlabels.at(i)) return guisizers[i];
+	}
+
+	gLoge("gGUINotebook") << "There is no sizer labeled as " << sizerLabel;
+	return nullptr;
+}
