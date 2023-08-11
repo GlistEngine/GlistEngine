@@ -108,12 +108,12 @@ public:
 	void setRowNum(int rowNum);
 	void setColumnNum(int columnNum);
 
-	void setCellFont(int fontNum);
-	void setCellFont(Cell* cell, int fontNum);
-	void setCellFont(std::string cell, int fontNum);
-	void setCellsFont(std::deque<Cell*> cells, int fontNum);
-	void setCellsFont(Cell* cell1, Cell* cell2, int fontNum);
-	void setCellsFont(std::string cell1, std::string cell2, int fontNum);
+	void setCellFont(int fontNo);
+	void setCellFont(Cell* cell, int fontNo);
+	void setCellFont(std::string cell, int fontNo);
+	void setCellsFont(std::deque<Cell*> cells, int fontNo);
+	void setCellsFont(Cell* cell1, Cell* cell2, int fontNo);
+	void setCellsFont(std::string cell1, std::string cell2, int fontNo);
 
 	void setCellFontBold();
 	void setCellFontBold(Cell* cell);
@@ -205,8 +205,8 @@ private:
 
 	void fillCell(int cellNo, std::string tempstr);
 	float makeSum(int c1, int r1, int c2, int r2);
-	float calculateCurrentX(int columnNum);
-	float calculateCurrentY(int rowNum);
+	float calculateCurrentX(int columnNo);
+	float calculateCurrentY(int rowNo);
 	bool isNumeric(std::string text);
 
 	void addFunction(int functionType, int functionSender);
@@ -215,9 +215,9 @@ private:
 	void addOrChangeColumnWidth(int columnNo, float w);
 	void addOrChangeRowHeight(int rowNo, float h);
 
-	void removeFunction(int functionNum);
+	void removeFunction(int functionNo);
 
-	void operateFunction(int functionNum);
+	void operateFunction(int functionNo);
 	void makeDefaultCell();
 
 	void changeAllAffectedCellsXW(float diff);

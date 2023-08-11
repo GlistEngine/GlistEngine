@@ -93,13 +93,13 @@ void gGUIGrid::update() {
 	textbox.update();
 }
 
-void gGUIGrid::setCellFont(int fontNum) {
+void gGUIGrid::setCellFont(int fontNo) {
 	if(allcells.empty()) return;
 	if(!ctrlzpressed && !ctrlypressed) {
 		setSelectedCells(true);
 		addUndoStack(PROCESS_FONT);
 		for(int i = 0; i < selectedcells.size(); i++) {
-			allcells[selectedcells[i]].fontnum = fontNum;
+			allcells[selectedcells[i]].fontnum = fontNo;
 			allcells[selectedcells[i]].fontstate = gGUIManager::FONTTYPE_REGULAR;
 			if(allcells[selectedcells[i]].isbold) allcells[selectedcells[i]].fontstate += gGUIManager::FONTTYPE_BOLD;
 			if(allcells[selectedcells[i]].isitalic) allcells[selectedcells[i]].fontstate += gGUIManager::FONTTYPE_ITALIC;
@@ -107,13 +107,13 @@ void gGUIGrid::setCellFont(int fontNum) {
 	}
 	else {
 		if(!ctrlypressed) {
-			allcells[undocellstack.top()[0]].fontnum = fontNum;
+			allcells[undocellstack.top()[0]].fontnum = fontNo;
 			allcells[undocellstack.top()[0]].fontstate = gGUIManager::FONTTYPE_REGULAR;
 			if(allcells[undocellstack.top()[0]].isbold) allcells[undocellstack.top()[0]].fontstate += gGUIManager::FONTTYPE_BOLD;
 			if(allcells[undocellstack.top()[0]].isitalic) allcells[undocellstack.top()[0]].fontstate += gGUIManager::FONTTYPE_ITALIC;
 		}
 		else {
-			allcells[redocellstack.top()[0]].fontnum = fontNum;
+			allcells[redocellstack.top()[0]].fontnum = fontNo;
 			allcells[redocellstack.top()[0]].fontstate = gGUIManager::FONTTYPE_REGULAR;
 			if(allcells[redocellstack.top()[0]].isbold) allcells[redocellstack.top()[0]].fontstate += gGUIManager::FONTTYPE_BOLD;
 			if(allcells[redocellstack.top()[0]].isitalic) allcells[redocellstack.top()[0]].fontstate += gGUIManager::FONTTYPE_ITALIC;
@@ -121,20 +121,20 @@ void gGUIGrid::setCellFont(int fontNum) {
 	}
 	textbox.setTextFont(manager->getFont(allcells[selectedbox].fontnum, allcells[selectedbox].fontstate));
 }
-void gGUIGrid::setCellFont(Cell* cell, int fontNum) {
-	cell->fontnum = fontNum;
+void gGUIGrid::setCellFont(Cell* cell, int fontNo) {
+	cell->fontnum = fontNo;
 	cell->fontstate = gGUIManager::FONTTYPE_REGULAR;
 	if(cell->isbold) cell->fontstate += gGUIManager::FONTTYPE_BOLD;
 	if(cell->isitalic) cell->fontstate += gGUIManager::FONTTYPE_ITALIC;
 }
-void gGUIGrid::setCellFont(std::string cell, int fontNum) {
+void gGUIGrid::setCellFont(std::string cell, int fontNo) {
 	Cell* c = getCell(cell);
-	setCellFont(c, fontNum);
+	setCellFont(c, fontNo);
 }
-void gGUIGrid::setCellsFont(std::deque<Cell*> cells, int fontNum) {
-	for(int i = 0; i < cells.size(); i++) setCellFont(cells[i], fontNum);
+void gGUIGrid::setCellsFont(std::deque<Cell*> cells, int fontNo) {
+	for(int i = 0; i < cells.size(); i++) setCellFont(cells[i], fontNo);
 }
-void gGUIGrid::setCellsFont(Cell* cell1, Cell* cell2, int fontNum) {
+void gGUIGrid::setCellsFont(Cell* cell1, Cell* cell2, int fontNo) {
 	int c1 = cell1->cellcolumnno;
 	int c2 = cell2->cellcolumnno;
 	int r1 = cell1->cellrowno;
@@ -157,14 +157,14 @@ void gGUIGrid::setCellsFont(Cell* cell1, Cell* cell2, int fontNum) {
 				index = allcells.size() - 1;
 			}
 			Cell* c = &allcells[index];
-			setCellFont(c, fontNum);
+			setCellFont(c, fontNo);
 		}
 	}
 }
-void gGUIGrid::setCellsFont(std::string cell1, std::string cell2, int fontNum) {
+void gGUIGrid::setCellsFont(std::string cell1, std::string cell2, int fontNo) {
 	Cell* c1 = getCell(cell1);
 	Cell* c2 = getCell(cell2);
-	setCellsFont(c1, c2, fontNum);
+	setCellsFont(c1, c2, fontNo);
 }
 
 void gGUIGrid::setCellFontBold() {
@@ -903,15 +903,15 @@ float gGUIGrid::makeSum(int c1, int r1, int c2, int r2) {
 	return result;
 }
 
-float gGUIGrid::calculateCurrentX(int columnNum) {
+float gGUIGrid::calculateCurrentX(int columnNo) {
 	float currentx = gridx + gridboxw / 2 - firstx;
-	for(int column = 0; column < columnNum; column++) currentx += getColumnWidth(column);
+	for(int column = 0; column < columnNo; column++) currentx += getColumnWidth(column);
 	return currentx;
 }
 
-float gGUIGrid::calculateCurrentY(int rowNum) {
+float gGUIGrid::calculateCurrentY(int rowNo) {
 	float currenty = gridy + gridboxh - firsty;
-	for(int row = 0; row < rowNum; row++) currenty += getRowHeight(row);
+	for(int row = 0; row < rowNo; row++) currenty += getRowHeight(row);
 	return currenty;
 }
 
@@ -1119,21 +1119,21 @@ void gGUIGrid::addOrChangeRowHeight(int rowNo, float h) {
 	else gridboxesh[hindex][1] = h;
 }
 
-void gGUIGrid::removeFunction(int functionNum) {
+void gGUIGrid::removeFunction(int functionNo) {
 	functionindexes.clear();
-	functions.erase(functions.begin() + functionNum);
+	functions.erase(functions.begin() + functionNo);
 }
 
-void gGUIGrid::operateFunction(int functionNum) {
-	switch(functions[functionNum][FUNCTION_TYPE]) {
+void gGUIGrid::operateFunction(int functionNo) {
+	switch(functions[functionNo][FUNCTION_TYPE]) {
 	case FUNCTION_COPY:
-		allcells[functions[functionNum][FUNCTION_FIRSTINDEX]].showncontent = allcells[functions[functionNum][FUNCTION_SENDER]].showncontent;
+		allcells[functions[functionNo][FUNCTION_FIRSTINDEX]].showncontent = allcells[functions[functionNo][FUNCTION_SENDER]].showncontent;
 		break;
 	case FUNCTION_SUM:
-		std::string result = std::to_string(makeSum(functions[functionNum][FUNCTION_FIRSTINDEX] % columnnum, functions[functionNum][FUNCTION_FIRSTINDEX] / columnnum, functions[functionNum][functions[functionNum].size() - 1] % columnnum, functions[functionNum][functions[functionNum].size() - 1] / columnnum));
+		std::string result = std::to_string(makeSum(functions[functionNo][FUNCTION_FIRSTINDEX] % columnnum, functions[functionNo][FUNCTION_FIRSTINDEX] / columnnum, functions[functionNo][functions[functionNo].size() - 1] % columnnum, functions[functionNo][functions[functionNo].size() - 1] / columnnum));
 		while(result[result.size() - 1] == '0') result.erase(result.size() - 1, 1);
 		if(result[result.size() - 1] == '.') result.erase(result.size() - 1, 1);
-		allcells[functions[functionNum][FUNCTION_SENDER]].showncontent = result;
+		allcells[functions[functionNo][FUNCTION_SENDER]].showncontent = result;
 		break;
 	}
 }
