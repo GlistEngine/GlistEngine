@@ -1,5 +1,9 @@
 var NAVTREEINDEX7 =
 {
+"classgLocalization.html#a5bce0e57a537959d8e8bf6d68f3ec489":[0,0,107,1],
+"classgLocalization.html#a701763c62dbd47fab5cec7e13cfd3947":[0,0,107,8],
+"classgLocalization.html#a791bfb5319ad36f0dcc8fdab19f1c632":[0,0,107,4],
+"classgLocalization.html#a8365b5f6ce054cfe28ccadd8bf2749a5":[0,0,107,10],
 "classgLocalization.html#a8fd55fb0195c97a5631e14de4532b8be":[0,0,107,2],
 "classgLocalization.html#a9c578af3cd819dd62aa8d17574e98d21":[0,0,107,3],
 "classgLocalization.html#ac3f976de15ea70f5505488a3d42dfe1e":[0,0,107,6],
@@ -245,9 +249,5 @@ var NAVTREEINDEX7 =
 "classgMouseButtonPressedEvent.html":[0,0,119],
 "classgMouseButtonPressedEvent.html#a5e5e6dd0f0e0e580a0ee63bccc36beb7":[0,0,119,0],
 "classgMouseButtonReleasedEvent.html":[0,0,120],
-"classgMouseButtonReleasedEvent.html#ab7bab8c9b8cab304029028622dc58294":[0,0,120,0],
-"classgMouseMovedEvent.html":[0,0,121],
-"classgMouseMovedEvent.html#a2b9cb2a0559ac27c8e6239ee1fc8ae2b":[0,0,121,2],
-"classgMouseMovedEvent.html#a7f7ed55e1ccd26e40e6036124c452aee":[0,0,121,1],
-"classgMouseMovedEvent.html#a97c9d567f5e97dba91d1b5f394d42bbb":[0,0,121,0]
+"classgMouseButtonReleasedEvent.html#ab7bab8c9b8cab304029028622dc58294":[0,0,120,0]
 };
