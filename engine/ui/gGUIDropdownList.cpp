@@ -14,7 +14,7 @@ gGUIDropdownList::gGUIDropdownList() {
 	listsizer.setSize(1, 2);
 	float columnproportions[2] = {0.8f, 0.2f};
 	listsizer.setColumnProportions(columnproportions);
-	listsizer.enableBorders(true);
+	listsizer.enableBorders(false);
 	setSizer(&listsizer);
 	button.setButtonColor(pressedbuttoncolor);
 	button.setSize(buttonw, buttonw);
