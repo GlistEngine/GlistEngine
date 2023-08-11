@@ -70,6 +70,21 @@ public:
      */
     void closeTab(int index);
     void drawTabs(int x, int tabSize, int index, bool drawFromLeftToRight);
+
+    /*
+     * Returns the sizer at the given index.
+     *
+     * @param sizerIndex Index of the sizer to be returned.
+     */
+    gGUISizer* getSizer(int sizerIndex);
+
+    /*
+     * Returns the sizer with the given name.
+     *
+     * @param sizerLabel Label of the sizer to be returned.
+     */
+    gGUISizer* getSizer(std::string sizerLabel);
+
 private:
 	void loadFont();
 	void mousePressed(int x, int y, int button);
