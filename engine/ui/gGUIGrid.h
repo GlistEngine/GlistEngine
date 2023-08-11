@@ -110,15 +110,19 @@ public:
 	void setCellFont(int fontNum);
 	void setCellFontBold();
 	void setCellFontItalic();
-	void setCellAlignment(int cellAlignment, bool clicked);
+	void setCellAlignment(int cellAlignment, bool clicked = true);
 	void setCellFontColor(gColor* fontColor = fontcolor);
-	void setCellLine(int lineNo, bool clicked);
+	void setCellLine(int lineNo, bool clicked = true);
 	void setSelectedFrameColor(gColor* selectedFrameColor);
 	void setSelectedAreaColor(gColor* selectedAreaColor);
     void setCellContent(Cell* cell, std::string cellContent);
     void setCellContent(std::string cell, std::string cellContent);
     void setCellAlignment(Cell* cell, int cellAlignment);
     void setCellAlignment(std::string cell, int cellAlignment);
+    void selectCell(Cell* cell);
+    void selectCell(Cell* cell1, Cell* cell2);
+    void selectCell(std::string cell);
+    void selectCell(std::string cell1, std::string cell2);
 
 	Cell* getCell(std::string cellID);
 	gColor* getSelectedFrameColor();
