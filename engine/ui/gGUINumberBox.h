@@ -39,6 +39,10 @@ public:
 	void mouseDragged(int x, int y, int button);
 	void update();
 	void draw();
+	void setMaxValue(int maxValue);
+	void setMinValue(int minValue);
+	void setMaxValue(float maxValuef);
+	void setMinValue(float minValuef);
 
 private:
 	int boxwidth, boxheight, numboxwidth, numboxheight, smalboxwidth, smalboxheight;
@@ -64,6 +68,8 @@ private:
 	bool istitleshown;
 	int boxtoph;
 	int smalltriangleheight;
+	int maxvalue, minvalue;
+	float maxvaluef, minvaluef;
 
 };
 #endif /* UI_GGUINUMBERBOX_H_ */
