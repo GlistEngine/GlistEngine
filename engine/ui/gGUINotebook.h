@@ -70,32 +70,6 @@ public:
      */
     void closeTab(int index);
     void drawTabs(int x, int tabSize, int index, bool drawFromLeftToRight);
-
-    /*
-     * Sets the size of the sizer with the given name.
-     *
-     * @param lineNum Number of lines to set to the sizer.
-     * @param columnNum Number of columns to set to the sizer.
-     * @param sizerName Label of the sizer to be sized.
-     */
-    void setSizerSize(int lineNum, int columnNum, std::string sizerName);
-
-    /*
-	 * Sets the size of the sizer at the given index.
-	 *
-	 * @param linenNum Number of lines to set to the sizer.
-	 * @param columnNum Number of columns to set to the sizer.
-	 * @param sizerIndex Index of the sizer to be sized.
-	 */
-    void setSizerSize(int lineNum, int columnNum, int sizerIndex);
-
-    /*
-     * Returns the sizer at the given index.
-     *
-     * @param sizerIndex Index of the sizer to be returned.
-     */
-    gGUISizer* getSizer(int sizerIndex);
-
 private:
 	void loadFont();
 	void mousePressed(int x, int y, int button);
