@@ -127,6 +127,7 @@ public:
 	Cell* getCell(std::string cellID);
 	gColor* getSelectedFrameColor();
 	gColor* getSelectedAreaColor();
+	std::deque<Cell*> getSelectedCells();
 
 	void drawContent();
 	void drawCellBackground();

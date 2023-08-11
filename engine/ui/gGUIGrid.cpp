@@ -365,6 +365,12 @@ gColor* gGUIGrid::getSelectedAreaColor() {
 	return &selectedareacolor;
 }
 
+std::deque<gGUIGrid::Cell*> gGUIGrid::getSelectedCells() {
+	std::deque<Cell*> sc;
+	for(int i = 0; i < selectedcells.size(); i++) sc.push_back(&allcells[selectedcells[i]]);
+	return sc;
+}
+
 std::string gGUIGrid::fixTextFunction(std::string text, int index) {
 	if(text == "") return text;
 	std::string tempstr = text;
