@@ -165,13 +165,11 @@ void gGUINumberBox::mousePressed(int x, int y, int button) {
 		if(b1isdisabled) return;
 		b1ispressed = true;
 		root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_BUTTONPRESSED);
-//		gLogi("Increase Button: ") << "Pressed";
 	}
 	if(x >= decboxposx && x < decboxposx + smalboxwidth && y >= decboxposy && y < decboxposy + smalboxheight) {
 		if(b2isdisabled) return;
 		b2ispressed = true;
 		root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_BUTTONPRESSED);
-//		gLogi("Decrease Button: ") << "Pressed";
 	}
 }
 
@@ -180,16 +178,12 @@ void gGUINumberBox::mouseReleased(int x, int y, int button) {
 	textbox.mouseReleased(x, y, button);
 	if(x >= incboxposx && x < incboxposx + smalboxwidth && y >= incboxposy && y < incboxposy + smalboxheight) {
 		if(b1isdisabled) return;
-		gLogi("NumberBox") << "inc but pressed";
 		b1ispressed = false;
 		root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_BUTTONRELEASED);
-//			gLogi("Increase Button: ") << "Released";
 
 		if(isinteger){
-			gLogi("NumberBox") << "inc integer";
 			castcurrtexttoint = gToInt(textbox.getText());
 			castcurrtexttoint = castcurrtexttoint + 1;
-			gLogi("current value: ") << castcurrtexttoint;
 			setText(gToStr(castcurrtexttoint));
 			if (castcurrtexttoint >= maxvalue) {
 			    castcurrtexttoint = maxvalue;
@@ -199,7 +193,6 @@ void gGUINumberBox::mouseReleased(int x, int y, int button) {
 		} else {
 			castcurrtexttofloat = gToFloat(textbox.getText());
 			castcurrtexttofloat = castcurrtexttofloat + 0.1;
-			gLogi("current value: ") << castcurrtexttofloat;
 			setText(gToStr(castcurrtexttofloat));
 			if (castcurrtexttofloat >= maxvaluef) {
 				castcurrtexttofloat = maxvaluef;
@@ -213,16 +206,12 @@ void gGUINumberBox::mouseReleased(int x, int y, int button) {
 
 	if(x >= decboxposx && x < decboxposx + smalboxwidth && y >= decboxposy && y < decboxposy + smalboxheight) {
 		if(b2isdisabled) return;
-		gLogi("NumberBox") << "dec but pressed";
 		b2ispressed = false;
 		root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_BUTTONRELEASED);
-//			gLogi("Decrease Button: ") << "Released";;
 
 		if(isinteger){
-			gLogi("NumberBox") << "dec integer";
 			castcurrtexttoint = gToInt(textbox.getText());
 			castcurrtexttoint = castcurrtexttoint - 1;
-			gLogi("current value: ") << castcurrtexttoint;
 			setText(gToStr(castcurrtexttoint));
 			if (castcurrtexttoint <= minvalue) {
 			    castcurrtexttoint = maxvalue;
@@ -232,7 +221,6 @@ void gGUINumberBox::mouseReleased(int x, int y, int button) {
 		} else {
 			castcurrtexttofloat = gToFloat(textbox.getText());
 			castcurrtexttofloat = castcurrtexttofloat - 0.1;
-			gLogi("current value: ") << castcurrtexttofloat;
 			setText(gToStr(castcurrtexttofloat));
 			if (castcurrtexttofloat <= minvaluef) {
 				castcurrtexttofloat = maxvaluef;
