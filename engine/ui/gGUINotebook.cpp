@@ -336,3 +336,12 @@ void gGUINotebook::setActiveTab(int index) {
     }
 }
 
+gGUISizer* gGUINotebook::getSizer(int sizerIndex) {
+    return guisizers[sizerIndex];
+}
+
+gGUISizer* gGUINotebook::getSizer(std::string sizerLabel) {
+	int i = 0;
+	while (sizerLabel != quisizerlabels.at(i))	i++;
+	return guisizers[i];
+}
