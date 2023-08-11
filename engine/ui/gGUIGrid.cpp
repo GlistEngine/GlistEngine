@@ -121,6 +121,51 @@ void gGUIGrid::setCellFont(int fontNum) {
 	}
 	textbox.setTextFont(manager->getFont(allcells[selectedbox].fontnum, allcells[selectedbox].fontstate));
 }
+void gGUIGrid::setCellFont(Cell* cell, int fontNum) {
+	cell->fontnum = fontNum;
+	cell->fontstate = gGUIManager::FONTTYPE_REGULAR;
+	if(cell->isbold) cell->fontstate += gGUIManager::FONTTYPE_BOLD;
+	if(cell->isitalic) cell->fontstate += gGUIManager::FONTTYPE_ITALIC;
+}
+void gGUIGrid::setCellFont(std::string cell, int fontNum) {
+	Cell* c = getCell(cell);
+	setCellFont(c, fontNum);
+}
+void gGUIGrid::setCellsFont(std::deque<Cell*> cells, int fontNum) {
+	for(int i = 0; i < cells.size(); i++) setCellFont(cells[i], fontNum);
+}
+void gGUIGrid::setCellsFont(Cell* cell1, Cell* cell2, int fontNum) {
+	int c1 = cell1->cellcolumnno;
+	int c2 = cell2->cellcolumnno;
+	int r1 = cell1->cellrowno;
+	int r2 = cell2->cellrowno;
+	if(c1 > c2) {
+		c1 = c1 ^ c2;
+		c2 = c1 ^ c2;
+		c1 = c1 ^ c2;
+	}
+	if(r1 > r2) {
+		r1 = r1 ^ r2;
+		r2 = r1 ^ r2;
+		r1 = r1 ^ r2;
+	}
+	for(int column = c1; column <= c2; column++) {
+		for(int row = r1; row <= r2; row++) {
+			int index = getCellNo(row, column);
+			if(index == -1) {
+				createCell(row, column);
+				index = allcells.size() - 1;
+			}
+			Cell* c = &allcells[index];
+			setCellFont(c, fontNum);
+		}
+	}
+}
+void gGUIGrid::setCellsFont(std::string cell1, std::string cell2, int fontNum) {
+	Cell* c1 = getCell(cell1);
+	Cell* c2 = getCell(cell2);
+	setCellsFont(c1, c2, fontNum);
+}
 
 void gGUIGrid::setCellFontBold() {
 	if(allcells.empty()) return;
@@ -162,6 +207,55 @@ void gGUIGrid::setCellFontBold() {
 	}
 	textbox.setTextFont(manager->getFont(allcells[selectedbox].fontnum, allcells[selectedbox].fontstate));
 }
+void gGUIGrid::setCellFontBold(Cell* cell) {
+	if(cell->isbold) {
+		cell->isbold = false;
+		cell->fontstate -= gGUIManager::FONTTYPE_BOLD;
+	}
+	else {
+		cell->isbold = true;
+		cell->fontstate += gGUIManager::FONTTYPE_BOLD;
+	}
+}
+void gGUIGrid::setCellFontBold(std::string cell) {
+	Cell* c = getCell(cell);
+	setCellFontBold(c);
+}
+void gGUIGrid::setCellsFontBold(std::deque<Cell*> cells) {
+	for(int i = 0; i < cells.size(); i++) setCellFontBold(cells[i]);
+}
+void gGUIGrid::setCellsFontBold(Cell* cell1, Cell* cell2) {
+	int c1 = cell1->cellcolumnno;
+	int c2 = cell2->cellcolumnno;
+	int r1 = cell1->cellrowno;
+	int r2 = cell2->cellrowno;
+	if(c1 > c2) {
+		c1 = c1 ^ c2;
+		c2 = c1 ^ c2;
+		c1 = c1 ^ c2;
+	}
+	if(r1 > r2) {
+		r1 = r1 ^ r2;
+		r2 = r1 ^ r2;
+		r1 = r1 ^ r2;
+	}
+	for(int column = c1; column <= c2; column++) {
+		for(int row = r1; row <= r2; row++) {
+			int index = getCellNo(row, column);
+			if(index == -1) {
+				createCell(row, column);
+				index = allcells.size() - 1;
+			}
+			Cell* c = &allcells[index];
+			setCellFontBold(c);
+		}
+	}
+}
+void gGUIGrid::setCellsFontBold(std::string cell1, std::string cell2) {
+	Cell* c1 = getCell(cell1);
+	Cell* c2 = getCell(cell2);
+	setCellsFontBold(c1, c2);
+}
 
 void gGUIGrid::setCellFontItalic() {
 	if(allcells.empty()) return;
@@ -202,6 +296,242 @@ void gGUIGrid::setCellFontItalic() {
 		}
 	}
 }
+void gGUIGrid::setCellFontItalic(Cell* cell) {
+	if(cell->isitalic) {
+		cell->isitalic = false;
+		cell->fontstate -= gGUIManager::FONTTYPE_ITALIC;
+	}
+	else {
+		cell->isitalic = true;
+		cell->fontstate += gGUIManager::FONTTYPE_ITALIC;
+	}
+}
+void gGUIGrid::setCellFontItalic(std::string cell) {
+	Cell* c = getCell(cell);
+	setCellFontItalic(c);
+}
+void gGUIGrid::setCellsFontItalic(std::deque<Cell*> cells) {
+	for(int i = 0; i < cells.size(); i++) setCellFontItalic(cells[i]);
+}
+void gGUIGrid::setCellsFontItalic(Cell* cell1, Cell* cell2) {
+	int c1 = cell1->cellcolumnno;
+	int c2 = cell2->cellcolumnno;
+	int r1 = cell1->cellrowno;
+	int r2 = cell2->cellrowno;
+	if(c1 > c2) {
+		c1 = c1 ^ c2;
+		c2 = c1 ^ c2;
+		c1 = c1 ^ c2;
+	}
+	if(r1 > r2) {
+		r1 = r1 ^ r2;
+		r2 = r1 ^ r2;
+		r1 = r1 ^ r2;
+	}
+	for(int column = c1; column <= c2; column++) {
+		for(int row = r1; row <= r2; row++) {
+			int index = getCellNo(row, column);
+			if(index == -1) {
+				createCell(row, column);
+				index = allcells.size() - 1;
+			}
+			Cell* c = &allcells[index];
+			setCellFontItalic(c);
+		}
+	}
+}
+void gGUIGrid::setCellsFontItalic(std::string cell1, std::string cell2) {
+	Cell* c1 = getCell(cell1);
+	Cell* c2 = getCell(cell2);
+	setCellsFontItalic(c1, c2);
+}
+
+void gGUIGrid::setCellFontColor(gColor *fontColor) {
+	if(allcells.empty()) return;
+	if(!ctrlzpressed && !ctrlypressed) {
+		setSelectedCells(true);
+		addUndoStack(PROCESS_COLOR);
+		for(int i = 0; i < selectedcells.size(); i++) {
+			allcells[selectedcells[i]].cellfontcolor = fontColor;
+			if(fontColor != fontcolor) allcells[selectedcells[i]].iscolorchanged = true;
+			else allcells[selectedcells[i]].iscolorchanged = false;
+		}
+	}
+	else {
+		if(!ctrlypressed) {
+			allcells[undocellstack.top()[0]].cellfontcolor = fontColor;
+			if(fontColor != fontcolor) allcells[undocellstack.top()[0]].iscolorchanged = true;
+			else allcells[undocellstack.top()[0]].iscolorchanged = false;
+		}
+		else {
+			allcells[redocellstack.top()[0]].cellfontcolor = fontColor;
+			if(fontColor != fontcolor) allcells[redocellstack.top()[0]].iscolorchanged = true;
+			else allcells[redocellstack.top()[0]].iscolorchanged = false;
+		}
+	}
+	textbox.setTextColor(fontColor);
+}
+void gGUIGrid::setCellFontColor(Cell* cell, gColor* fontColor) {
+	cell->cellfontcolor = fontColor;
+	if(fontColor != fontcolor) cell->iscolorchanged = true;
+	else cell->iscolorchanged = false;
+}
+void gGUIGrid::setCellFontColor(std::string cell, gColor* fontColor) {
+	Cell* c = getCell(cell);
+	setCellFontColor(c, fontColor);
+}
+void gGUIGrid::setCellsFontColor(std::deque<Cell*> cells, gColor* fontColor) {
+	for(int i = 0; i < cells.size(); i++) setCellFontColor(cells[i], fontColor);
+}
+void gGUIGrid::setCellsFontColor(Cell* cell1, Cell* cell2, gColor* fontColor) {
+	int c1 = cell1->cellcolumnno;
+	int c2 = cell2->cellcolumnno;
+	int r1 = cell1->cellrowno;
+	int r2 = cell2->cellrowno;
+	if(c1 > c2) {
+		c1 = c1 ^ c2;
+		c2 = c1 ^ c2;
+		c1 = c1 ^ c2;
+	}
+	if(r1 > r2) {
+		r1 = r1 ^ r2;
+		r2 = r1 ^ r2;
+		r1 = r1 ^ r2;
+	}
+	for(int column = c1; column <= c2; column++) {
+		for(int row = r1; row <= r2; row++) {
+			int index = getCellNo(row, column);
+			if(index == -1) {
+				createCell(row, column);
+				index = allcells.size() - 1;
+			}
+			Cell* c = &allcells[index];
+			setCellFontColor(c, fontColor);
+		}
+	}
+}
+void gGUIGrid::setCellsFontColor(std::string cell1, std::string cell2, gColor* fontColor) {
+	Cell* c1 = getCell(cell1);
+	Cell* c2 = getCell(cell2);
+	setCellsFontColor(c1, c2, fontColor);
+}
+
+void gGUIGrid::setCellLine(int lineNo, bool clicked) {
+	if(allcells.empty()) return;
+	if(!ctrlzpressed && !ctrlypressed) {
+		setSelectedCells(true);
+		addUndoStack(PROCESS_LINE);
+		for(int i = 0; i < selectedcells.size(); i++) {
+			if(clicked && lineNo == allcells[selectedcells[i]].lineno) allcells[selectedcells[i]].lineno = TEXTLINE_NONE;
+			else allcells[selectedcells[i]].lineno = lineNo;
+		}
+	}
+	else {
+		if(!ctrlypressed) allcells[undocellstack.top()[0]].lineno = lineNo;
+		else allcells[redocellstack.top()[0]].lineno = lineNo;
+	}
+}
+void gGUIGrid::setCellLine(Cell* cell, int lineNo, bool clicked) {
+	if(clicked && lineNo == cell->lineno) cell->lineno = TEXTLINE_NONE;
+	else cell->lineno = lineNo;
+}
+void gGUIGrid::setCellLine(std::string cell, int lineNo, bool clicked) {
+	Cell* c = getCell(cell);
+	setCellLine(c, lineNo, clicked);
+}
+void gGUIGrid::setCellsLine(std::deque<Cell*> cells, int lineNo, bool clicked) {
+	for(int i = 0; i < cells.size(); i++) setCellLine(cells[i], lineNo, clicked);
+}
+void gGUIGrid::setCellsLine(Cell* cell1, Cell* cell2, int lineNo, bool clicked) {
+	int c1 = cell1->cellcolumnno;
+	int c2 = cell2->cellcolumnno;
+	int r1 = cell1->cellrowno;
+	int r2 = cell2->cellrowno;
+	if(c1 > c2) {
+		c1 = c1 ^ c2;
+		c2 = c1 ^ c2;
+		c1 = c1 ^ c2;
+	}
+	if(r1 > r2) {
+		r1 = r1 ^ r2;
+		r2 = r1 ^ r2;
+		r1 = r1 ^ r2;
+	}
+	for(int column = c1; column <= c2; column++) {
+		for(int row = r1; row <= r2; row++) {
+			int index = getCellNo(row, column);
+			if(index == -1) {
+				createCell(row, column);
+				index = allcells.size() - 1;
+			}
+			Cell* c = &allcells[index];
+			setCellLine(c, lineNo, clicked);
+		}
+	}
+}
+void gGUIGrid::setCellsLine(std::string cell1, std::string cell2, int lineNo, bool clicked) {
+	Cell* c1 = getCell(cell1);
+	Cell* c2 = getCell(cell2);
+	setCellsLine(c1, c2, lineNo, clicked);
+}
+
+void gGUIGrid::setCellContent(gGUIGrid::Cell* cell, std::string cellContent) {
+	cell->cellcontent = cellContent;
+	int cellno = -1;
+	for(int i = 0; i < allcells.size(); i++) {
+		if(allcells[i].cellrowno == cell->cellrowno && allcells[i].cellcolumnno == cell->cellcolumnno) {
+			cellno = i;
+			break;
+		}
+	}
+	changeCell(cellno);
+}
+void gGUIGrid::setCellContent(std::string cell, std::string cellContent) {
+	Cell* c = getCell(cell);
+	setCellContent(c, cellContent);
+}
+void gGUIGrid::setCellsContent(std::deque<Cell*> cells, std::vector<std::string> contents) {
+	if(cells.size() <= contents.size())
+		for(int i = 0; i < cells.size(); i++) setCellContent(cells[i], contents[i]);
+	else
+		for(int i = 0; i < contents.size(); i++) setCellContent(cells[i], contents[i]);
+}
+void gGUIGrid::setCellsContent(Cell* cell1, Cell* cell2, std::vector<std::string> contents) {
+	int c1 = cell1->cellcolumnno;
+	int c2 = cell2->cellcolumnno;
+	int r1 = cell1->cellrowno;
+	int r2 = cell2->cellrowno;
+	if(c1 > c2) {
+		c1 = c1 ^ c2;
+		c2 = c1 ^ c2;
+		c1 = c1 ^ c2;
+	}
+	if(r1 > r2) {
+		r1 = r1 ^ r2;
+		r2 = r1 ^ r2;
+		r1 = r1 ^ r2;
+	}
+	int i = 0;
+	int cellsize = (r2 - r1 + 1) * (c2 - c1 + 1);
+	for(int column = c1; column <= c2; column++) {
+		for(int row = r1; row <= r2; row++) {
+			if(i + 1 > contents.size()) break;
+			int index = getCellNo(row, column);
+			if(index == -1) {
+				createCell(row, column);
+				index = allcells.size() - 1;
+			}
+			Cell* c = &allcells[index];
+			setCellContent(c, contents[i]);
+			i++;
+		}
+	}
+}
+void gGUIGrid::setCellsContent(std::string cell1, std::string cell2, std::vector<std::string> contents) {
+	Cell* c1 = getCell(cell1);
+	Cell* c2 = getCell(cell2);
+	setCellsContent(c1, c2, contents);
+}
 
 void gGUIGrid::setCellAlignment(int cellAlignment, bool clicked) {
 	if(allcells.empty()) return;
@@ -240,47 +570,48 @@ void gGUIGrid::setCellAlignment(int cellAlignment, bool clicked) {
 	}
 	textbox.setTextAlignment(cellAlignment, allcells[selectedbox].cellw, textbox.getInitX());
 }
-
-void gGUIGrid::setCellFontColor(gColor *fontColor) {
-	if(allcells.empty()) return;
-	if(!ctrlzpressed && !ctrlypressed) {
-		setSelectedCells(true);
-		addUndoStack(PROCESS_COLOR);
-		for(int i = 0; i < selectedcells.size(); i++) {
-			allcells[selectedcells[i]].cellfontcolor = fontColor;
-			if(fontColor != fontcolor) allcells[selectedcells[i]].iscolorchanged = true;
-			else allcells[selectedcells[i]].iscolorchanged = false;
-		}
-	}
-	else {
-		if(!ctrlypressed) {
-			allcells[undocellstack.top()[0]].cellfontcolor = fontColor;
-			if(fontColor != fontcolor) allcells[undocellstack.top()[0]].iscolorchanged = true;
-			else allcells[undocellstack.top()[0]].iscolorchanged = false;
-		}
-		else {
-			allcells[redocellstack.top()[0]].cellfontcolor = fontColor;
-			if(fontColor != fontcolor) allcells[redocellstack.top()[0]].iscolorchanged = true;
-			else allcells[redocellstack.top()[0]].iscolorchanged = false;
-		}
-	}
-	textbox.setTextColor(fontColor);
+void gGUIGrid::setCellAlignment(Cell* cell, int cellAlignment) {
+	cell->cellalignment = cellAlignment;
+	cell->textmoveamount = 0.5f * cellAlignment;
 }
-
-void gGUIGrid::setCellLine(int lineNo, bool clicked) {
-	if(allcells.empty()) return;
-	if(!ctrlzpressed && !ctrlypressed) {
-		setSelectedCells(true);
-		addUndoStack(PROCESS_LINE);
-		for(int i = 0; i < selectedcells.size(); i++) {
-			if(clicked && lineNo == allcells[selectedcells[i]].lineno) allcells[selectedcells[i]].lineno = TEXTLINE_NONE;
-			else allcells[selectedcells[i]].lineno = lineNo;
+void gGUIGrid::setCellAlignment(std::string cell, int cellAlignment) {
+	Cell* c = getCell(cell);
+	setCellAlignment(c, cellAlignment);
+}
+void gGUIGrid::setCellsAlignment(std::deque<Cell*> cells, int cellAlignment) {
+	for(int i = 0; i < cells.size(); i++) setCellAlignment(cells[i], cellAlignment);
+}
+void gGUIGrid::setCellsAlignment(Cell* cell1, Cell* cell2, int cellAlignment) {
+	int c1 = cell1->cellcolumnno;
+	int c2 = cell2->cellcolumnno;
+	int r1 = cell1->cellrowno;
+	int r2 = cell2->cellrowno;
+	if(c1 > c2) {
+		c1 = c1 ^ c2;
+		c2 = c1 ^ c2;
+		c1 = c1 ^ c2;
+	}
+	if(r1 > r2) {
+		r1 = r1 ^ r2;
+		r2 = r1 ^ r2;
+		r1 = r1 ^ r2;
+	}
+	for(int column = c1; column <= c2; column++) {
+		for(int row = r1; row <= r2; row++) {
+			int index = getCellNo(row, column);
+			if(index == -1) {
+				createCell(row, column);
+				index = allcells.size() - 1;
+			}
+			Cell* c = &allcells[index];
+			setCellAlignment(c, cellAlignment);
 		}
 	}
-	else {
-		if(!ctrlypressed) allcells[undocellstack.top()[0]].lineno = lineNo;
-		else allcells[redocellstack.top()[0]].lineno = lineNo;
-	}
+}
+void gGUIGrid::setCellsAlignment(std::string cell1, std::string cell2, int cellAlignment) {
+	Cell* c1 = getCell(cell1);
+	Cell* c2 = getCell(cell2);
+	setCellsAlignment(c1, c2, cellAlignment);
 }
 
 void gGUIGrid::setSelectedFrameColor(gColor* selectedFrameColor) {
@@ -291,36 +622,9 @@ void gGUIGrid::setSelectedAreaColor(gColor* selectedAreaColor) {
 	selectedareacolor = *selectedAreaColor;
 }
 
-void gGUIGrid::setCellContent(gGUIGrid::Cell* cell, std::string cellContent) {
-	cell->cellcontent = cellContent;
-	int cellno = -1;
-	for(int i = 0; i < allcells.size(); i++) {
-		if(allcells[i].cellrowno == cell->cellrowno && allcells[i].cellcolumnno == cell->cellcolumnno) {
-			cellno = i;
-			break;
-		}
-	}
-	changeCell(cellno);
-}
-
-void gGUIGrid::setCellContent(std::string cell, std::string cellContent) {
-	Cell* c = getCell(cell);
-	setCellContent(c, cellContent);
-}
-
-void gGUIGrid::setCellAlignment(Cell* cell, int cellAlignment) {
-	cell->cellalignment = cellAlignment;
-	cell->textmoveamount = 0.5f * cellAlignment;
-}
-void gGUIGrid::setCellAlignment(std::string cell, int cellAlignment) {
-	Cell* c = getCell(cell);
-	setCellAlignment(c, cellAlignment);
-}
-
 void gGUIGrid::selectCell(Cell* cell) {
 	selectCell(cell, cell);
 }
-
 void gGUIGrid::selectCell(Cell* cell1, Cell* cell2) {
 	isselected = true;
 	firstselectedcell = cell1->cellrowno * columnnum + cell1->cellcolumnno;
@@ -331,12 +635,10 @@ void gGUIGrid::selectCell(Cell* cell1, Cell* cell2) {
 	selectedbox = index;
 	setSelectedCells();
 }
-
 void gGUIGrid::selectCell(std::string cell) {
 	Cell* c = getCell(cell);
 	selectCell(c, c);
 }
-
 void gGUIGrid::selectCell(std::string cell1, std::string cell2) {
 	Cell* c1 = getCell(cell1);
 	Cell* c2 = getCell(cell2);
@@ -575,14 +877,14 @@ void gGUIGrid::fillCell(int cellNo, std::string tempstr) { //when rowNo = 1, col
 
 float gGUIGrid::makeSum(int c1, int r1, int c2, int r2) {
 	if(c1 > c2) {
-		int flag = c1;
-		c1 = c2;
-		c2 = flag;
+		c1 = c1 ^ c2;
+		c2 = c1 ^ c2;
+		c1 = c1 ^ c2;
 	}
 	if(r1 > r2) {
-		int flag = r1;
-		r1 = r2;
-		r2 = flag;
+		r1 = r1 ^ r2;
+		r2 = r1 ^ r2;
+		r1 = r1 ^ r2;
 	}
 	float result = 0;
 	for(int row = r1; row <= r2; row++) {
