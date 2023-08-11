@@ -1,5 +1,10 @@
 var NAVTREEINDEX7 =
 {
+"classgLocalization.html#a9c578af3cd819dd62aa8d17574e98d21":[0,0,107,3],
+"classgLocalization.html#ac3f976de15ea70f5505488a3d42dfe1e":[0,0,107,6],
+"classgLocalization.html#ad0ef972562b4682ab67cb216c1347573":[0,0,107,9],
+"classgLocalization.html#ae9dd66ba774aaa131f8afdbcc912555e":[0,0,107,5],
+"classgLog.html":[0,0,108],
 "classgLog.html#a138b84e798b0f1eae0a6b942990a5383":[0,0,108,0],
 "classgLog.html#a150b1e7e081d3bab521bc9e5d7d7e23b":[0,0,108,1],
 "classgLog.html#a29a78ea0379309fda4aa44af3629a12b":[0,0,108,3],
@@ -244,10 +249,5 @@ var NAVTREEINDEX7 =
 "classgMouseMovedEvent.html#a2b9cb2a0559ac27c8e6239ee1fc8ae2b":[0,0,121,2],
 "classgMouseMovedEvent.html#a7f7ed55e1ccd26e40e6036124c452aee":[0,0,121,1],
 "classgMouseMovedEvent.html#a97c9d567f5e97dba91d1b5f394d42bbb":[0,0,121,0],
-"classgMouseScrolledEvent.html":[0,0,122],
-"classgMouseScrolledEvent.html#a9729ebcdb6b785ee393fd207e9e7e980":[0,0,122,2],
-"classgMouseScrolledEvent.html#acd5f9c2bdb997c29406c8449d7d2ba9d":[0,0,122,0],
-"classgMouseScrolledEvent.html#af630d4077282bdfdfbddde57241118ab":[0,0,122,1],
-"classgNode.html":[0,0,123],
-"classgNode.html#a04c602d4814f3caf0afe635942f6c984":[0,0,123,10]
+"classgMouseScrolledEvent.html":[0,0,122]
 };
