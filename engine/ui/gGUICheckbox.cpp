@@ -66,6 +66,10 @@ gColor* gGUICheckbox::getTickColor() {
 	return &tickcolor;
 }
 
+void gGUICheckbox::setChecked(bool isChecked) {
+	ischecked = isChecked;
+}
+
 void gGUICheckbox::update() {
 //	gLogi("gGUICheckbox") << "update";
 }

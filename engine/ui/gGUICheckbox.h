@@ -18,6 +18,7 @@ public:
 	void setTitle(std::string title);
 	void setSize(int width, int height);
 	void setPosition(int left, int top);
+	void setChecked(bool isChecked);
 
 	bool isChecked();
 	bool isTextVisible();
