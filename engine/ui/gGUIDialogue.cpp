@@ -16,6 +16,7 @@ gGUIDialogue::gGUIDialogue() {
 
 	titlebar = nullptr;
 	buttonsbar = nullptr;
+	messagebar = nullptr;
 
 	minimizebutton = nullptr;
 	maximizebutton = nullptr;
@@ -32,6 +33,7 @@ gGUIDialogue::gGUIDialogue() {
 
 	initDefTitleBar();
 	initDefButtonsBar();
+	initDefMessageBar();
 }
 
 gGUIDialogue::~gGUIDialogue() {
@@ -55,6 +57,7 @@ void gGUIDialogue::draw() {
 		if (guisizer) guisizer->draw();
 		if (titlebar) titlebar->draw();
 		if (buttonsbar) buttonsbar->draw();
+		if (messagebar) messagebar->draw();
 	}
 
 	// DIALOGUE BORDERS
@@ -106,6 +109,16 @@ void gGUIDialogue::initDefButtonsBar() {
 	defbuttonsbarokbutton.setTitle("OK");
 }
 
+void gGUIDialogue::initDefMessageBar() {
+	defmessagebar.setSizer(&defmessagebarsizer);
+	defmessagebarsizer.setSize(1, 1);
+
+	defmessagetext.setText("This is a placeholder text.");
+
+	defmessagebartopspace = 5;
+	defmessagebartopspace = 5;
+}
+
 void gGUIDialogue::setTitleBar(gGUIContainer* titleBar) {
 	this->titlebar = titleBar;
 	titlebar->width = width;
@@ -126,6 +139,17 @@ void gGUIDialogue::setButtonsBar(gGUIContainer* buttonsBar) {
 
 gGUIContainer* gGUIDialogue::getButtonsBar() {
 	return buttonsbar;
+}
+
+void gGUIDialogue::setMessageBar(gGUIContainer* messageBar) {
+	this->messagebar = messageBar;
+	messagebar->width = width;
+	messagebar->height = height;
+	messagebar->set(root, this, this, 0, 0, left + defmessagebarleftspace, top + defmessagebartopspace, messagebar->width - defmessagebarleftspace * 2, messagebar->height - defmessagebartopspace * 2);
+}
+
+gGUIContainer* gGUIDialogue::getMessageBar() {
+	return messagebar;
 }
 
 void gGUIDialogue::resetTitleBar() {
@@ -178,6 +202,11 @@ void gGUIDialogue::resetButtonsBar() {
 	defbuttonsbarokbutton.top += (defbuttonsbar.height - defbuttonsbarbuttonh) / 2;
 }
 
+void gGUIDialogue::resetMessageBar() {
+	setMessageBar(&defmessagebar);
+	defmessagebarsizer.setControl(0, 0, &defmessagetext);
+}
+
 void gGUIDialogue::setMinimizeButton(gGUIImageButton* minimizeButton) {
 	this->minimizebutton = minimizeButton;
 }
@@ -222,6 +251,9 @@ void gGUIDialogue::transformDialogue(int left, int top, int width, int height) {
 
 	buttonsbar->left = left; buttonsbar->top = top + height; buttonsbar->width = width; buttonsbar->height = defbuttonsbarh;
 	buttonsbar->right = buttonsbar->left + buttonsbar->width; buttonsbar->bottom = buttonsbar->top + buttonsbar->height;
+	resetTitleBar();
+	resetButtonsBar();
+	resetMessageBar();
 }
 
 int gGUIDialogue::getCursor(int x, int y) {
@@ -336,10 +368,18 @@ void gGUIDialogue::mouseReleased(int x, int y, int button) {
 	if (buttonsbar) buttonsbar->mouseReleased(x, y, button);
 	if (isdragged) isdragged = false;
 
-	if (resizeposition != RESIZE_NONE) {resizeposition = RESIZE_NONE; resetTitleBar(); resetButtonsBar();}
+	if (resizeposition != RESIZE_NONE) {resizeposition = RESIZE_NONE; resetTitleBar(); resetButtonsBar(); resetMessageBar();}
 
 	if (buttontrigger == EVENT_MINIMIZE) {buttonevent = EVENT_MINIMIZE; buttontrigger = EVENT_NONE;}
 	if (buttontrigger == EVENT_MAXIMIZE) {buttonevent = EVENT_MAXIMIZE; buttontrigger = EVENT_NONE;}
 	if (buttontrigger == EVENT_RESTORE) {buttonevent = EVENT_RESTORE; buttontrigger = EVENT_NONE;}
 	if (buttontrigger == EVENT_EXIT) {buttonevent = EVENT_EXIT; buttontrigger = EVENT_NONE;}
+}
+
+void gGUIDialogue::setMessageText(gGUIText *messageText) {
+	defmessagetext.setText(messageText->getText());
+}
+
+std::string gGUIDialogue::getMessageText() {
+	return defmessagetext.getText();
 }
