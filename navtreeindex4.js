@@ -1,5 +1,11 @@
 var NAVTREEINDEX4 =
 {
+"classgGUIGraph.html#a2e66d7016075a36257344031922e9ed3":[0,0,64,23],
+"classgGUIGraph.html#a35405657e861ad6ca649dd26a6b39cc7":[0,0,64,28],
+"classgGUIGraph.html#a3cad850af521be4327832a9aecd3a672":[0,0,64,40],
+"classgGUIGraph.html#a3e60779ba1c38c4807f90c6e44a6893a":[0,0,64,34],
+"classgGUIGraph.html#a47b5e14949eaa5633df6d4aedc2cd17f":[0,0,64,48],
+"classgGUIGraph.html#a4a34d91116060a5911b81b1ecb85fe40":[0,0,64,27],
 "classgGUIGraph.html#a4b8f312eae9010b4c01c6daa817a7e3c":[0,0,64,26],
 "classgGUIGraph.html#a510db11d39ee50ea46d6a98befe1b687":[0,0,64,16],
 "classgGUIGraph.html#a542b7a4d40f36f0108e20b74df5f0a74":[0,0,64,13],
@@ -243,11 +249,5 @@ var NAVTREEINDEX4 =
 "classgGUINotebook.html#a0348b3386e922653b9d43c6e1579d8d7":[0,0,73,6],
 "classgGUINotebook.html#a1af46e39cb61c283a87536f8828f3131":[0,0,73,4],
 "classgGUINotebook.html#a2dd9aa92311d9408caa33cdd405b8404":[0,0,73,9],
-"classgGUINotebook.html#a45ce1655e58cf3b09121fdb2f19e3513":[0,0,73,3],
-"classgGUINotebook.html#a4e7b8adf4e3f427b8bf3575ea98457fc":[0,0,73,1],
-"classgGUINotebook.html#a54401e0759917bf38aba86d802b406cd":[0,0,73,0],
-"classgGUINotebook.html#a55d8df758b034c169da38b3fa5ae6cf6":[0,0,73,5],
-"classgGUINotebook.html#a68c06845e26dae51bada0a7079752e67":[0,0,73,11],
-"classgGUINotebook.html#a6cd87f8a79c84006becaaa80e46decf8":[0,0,73,8],
-"classgGUINotebook.html#a7767891e760f67c23c13c7d4fdab8574":[0,0,73,10]
+"classgGUINotebook.html#a45ce1655e58cf3b09121fdb2f19e3513":[0,0,73,3]
 };
