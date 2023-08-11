@@ -10,6 +10,7 @@ var classgGUICheckbox =
     [ "mousePressed", "classgGUICheckbox.html#ae912d67fe05891a3aede7cdea2f36832", null ],
     [ "mouseReleased", "classgGUICheckbox.html#a011522897edba65ac0d40c56e6f9cd9e", null ],
     [ "setBgColor", "classgGUICheckbox.html#a07763efade7d56ec63bce4929ae97375", null ],
+    [ "setChecked", "classgGUICheckbox.html#a1a2efd96c5906d4c25c0415b9068ca32", null ],
     [ "setPosition", "classgGUICheckbox.html#a8d39e27ed9c1ad9a33156cbadfb93b06", null ],
     [ "setSize", "classgGUICheckbox.html#a883bb353208242baea901a3ec9436740", null ],
     [ "setTickColor", "classgGUICheckbox.html#a0456031be3534502d2a8e3b26d5647f2", null ],

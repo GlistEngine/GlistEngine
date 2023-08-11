@@ -47,14 +47,14 @@ var NAVTREEINDEX =
 "classgBaseParticles.html#a22900021cfeb675625c63b18cd084307",
 "classgColorCurves.html",
 "classgGUICandleStickChart.html#a788db58bc9f8e922384571a593ac3c91",
-"classgGUIGraph.html#a510db11d39ee50ea46d6a98befe1b687",
-"classgGUIPanel.html",
-"classgGUITable.html#ac04db1dd9fd5e71334f1bf72d797b7c0",
-"classgLocalization.html#a9c578af3cd819dd62aa8d17574e98d21",
-"classgMouseScrolledEvent.html#a9729ebcdb6b785ee393fd207e9e7e980",
-"classgRenderer.html#ad3e4ee3f9e9c9a8bf28a96343e82b521",
-"classgThread.html#ac090670cfeaf598e9e318a6b456f206d",
-"gVbo_8h_source.html"
+"classgGUIGraph.html#a4b8f312eae9010b4c01c6daa817a7e3c",
+"classgGUIPane.html#afb14bf71d1434cc09b9b419698e1bbc1",
+"classgGUITable.html#abcf33a8ef70888ca431a2e189f362ebf",
+"classgLocalization.html#a8fd55fb0195c97a5631e14de4532b8be",
+"classgMouseScrolledEvent.html",
+"classgRenderer.html#ad2e29c4a9c36e57fbae9cba16da71452",
+"classgThread.html#aa87ecbc628c14386373e0f5deb8eab8c",
+"gUtils_8h_source.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
