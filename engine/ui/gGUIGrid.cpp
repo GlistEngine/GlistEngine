@@ -2164,8 +2164,23 @@ void gGUIGrid::keyPressed(int key){
 	}
 	else if(key == G_KEY_V && ctrlpressed && appmanager->getClipboardString() != "") {
 		ctrlvpressed = true;
-		addUndoStack(PROCESS_ALL);
-		pasteCells();
+		if(!copiedcellvalues.empty()) {
+			std::string tmpstr = copiedcellvalues[0];
+			tmpstr.erase(0, tmpstr.find(':') + 1);
+			tmpstr = tmpstr.substr(0, tmpstr.find(':'));
+			if(tmpstr == appmanager->getClipboardString()) {
+				addUndoStack(PROCESS_ALL);
+				pasteCells();
+			}
+			else  {
+				addUndoStack(PROCESS_TEXT);
+				fillCell(selectedbox, appmanager->getClipboardString());
+			}
+		}
+		else {
+			addUndoStack(PROCESS_TEXT);
+			fillCell(selectedbox, appmanager->getClipboardString());
+		}
 	}
 	else if(key == G_KEY_X && ctrlpressed) {
 		ctrlcpressed = false;
