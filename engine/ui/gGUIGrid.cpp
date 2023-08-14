@@ -119,7 +119,7 @@ void gGUIGrid::setCellFont(int fontNo) {
 			if(allcells[redocellstack.top()[0]].isitalic) allcells[redocellstack.top()[0]].fontstate += gGUIManager::FONTTYPE_ITALIC;
 		}
 	}
-	textbox.setTextFont(manager->getFont(allcells[selectedbox].fontnum, allcells[selectedbox].fontstate));
+	textbox.setTextFont(manager->getFont(allcells[selectedbox].fontnum, allcells[selectedbox].fontstate/*, allcells[selectedbox].fontsize*/));
 }
 void gGUIGrid::setCellFont(Cell* cell, int fontNo) {
 	cell->fontnum = fontNo;
@@ -205,7 +205,7 @@ void gGUIGrid::setCellFontBold() {
 			}
 		}
 	}
-	textbox.setTextFont(manager->getFont(allcells[selectedbox].fontnum, allcells[selectedbox].fontstate));
+	textbox.setTextFont(manager->getFont(allcells[selectedbox].fontnum, allcells[selectedbox].fontstate/*, allcells[selectedbox].fontsize*/));
 }
 void gGUIGrid::setCellFontBold(Cell* cell) {
 	if(cell->isbold) {
@@ -344,6 +344,64 @@ void gGUIGrid::setCellsFontItalic(std::string cell1, std::string cell2) {
 	Cell* c1 = getCell(cell1);
 	Cell* c2 = getCell(cell2);
 	setCellsFontItalic(c1, c2);
+}
+
+void gGUIGrid::setCellFontSize(int fontSize) {
+	if(allcells.empty()) return;
+	if(!ctrlzpressed && !ctrlypressed) {
+		setSelectedCells(true);
+		addUndoStack(PROCESS_FONTSIZE);
+		for(int i = 0; i < selectedcells.size(); i++) {
+			allcells[selectedcells[i]].fontsize = fontSize;
+		}
+	}
+	else {
+		if(!ctrlypressed) allcells[undocellstack.top()[0]].fontsize = fontSize;
+		else allcells[redocellstack.top()[0]].fontsize = fontSize;
+	}
+}
+void gGUIGrid::setCellFontSize(Cell* cell, int fontSize) {
+	cell->fontsize = fontSize;
+}
+void gGUIGrid::setCellFontSize(std::string cell, int fontSize) {
+	Cell* c = getCell(cell);
+	setCellFontSize(c, fontSize);
+
+}
+void gGUIGrid::setCellsFontSize(std::deque<Cell*> cells, int fontSize) {
+	for(int i = 0; i < cells.size(); i++) setCellFontSize(cells[i], fontSize);
+}
+void gGUIGrid::setCellsFontSize(Cell* cell1, Cell* cell2, int fontSize) {
+	int c1 = cell1->cellcolumnno;
+	int c2 = cell2->cellcolumnno;
+	int r1 = cell1->cellrowno;
+	int r2 = cell2->cellrowno;
+	if(c1 > c2) {
+		c1 = c1 ^ c2;
+		c2 = c1 ^ c2;
+		c1 = c1 ^ c2;
+	}
+	if(r1 > r2) {
+		r1 = r1 ^ r2;
+		r2 = r1 ^ r2;
+		r1 = r1 ^ r2;
+	}
+	for(int column = c1; column <= c2; column++) {
+		for(int row = r1; row <= r2; row++) {
+			int index = getCellNo(row, column);
+			if(index == -1) {
+				createCell(row, column);
+				index = allcells.size() - 1;
+			}
+			Cell* c = &allcells[index];
+			setCellFontSize(c, fontSize);
+		}
+	}
+}
+void gGUIGrid::setCellsFontSize(std::string cell1, std::string cell2, int fontSize) {
+	Cell* c1 = getCell(cell1);
+	Cell* c2 = getCell(cell2);
+	setCellsFontSize(c1, c2, fontSize);
 }
 
 void gGUIGrid::setCellFontColor(gColor *fontColor) {
@@ -959,6 +1017,9 @@ void gGUIGrid::addUndoStack(int process) {
 			case PROCESS_FONTSTATE:
 				undovaluestack.push(std::to_string(allcells[undocellstack.top()[i]].fontstate));
 				break;
+			case PROCESS_FONTSIZE:
+				undovaluestack.push(std::to_string(allcells[undocellstack.top()[i]].fontsize));
+				break;
 			case PROCESS_ALIGNMENT:
 				undovaluestack.push(std::to_string(allcells[undocellstack.top()[i]].cellalignment));
 				break;
@@ -969,7 +1030,7 @@ void gGUIGrid::addUndoStack(int process) {
 				undovaluestack.push(std::to_string(allcells[undocellstack.top()[i]].lineno));
 				break;
 			case PROCESS_ALL:
-				undovaluestack.push(allcells[undocellstack.top()[i]].cellcontent + ":" + std::to_string(allcells[undocellstack.top()[i]].fontnum) + ":" + std::to_string(allcells[undocellstack.top()[i]].fontstate) + ":" + std::to_string(allcells[undocellstack.top()[i]].cellalignment) + ":" + std::to_string(allcells[undocellstack.top()[i]].cellfontcolor.r) + ":" + std::to_string(allcells[undocellstack.top()[i]].cellfontcolor.g) + ":" + std::to_string(allcells[undocellstack.top()[i]].cellfontcolor.b) + ":" + std::to_string(allcells[undocellstack.top()[i]].lineno));
+				undovaluestack.push(allcells[undocellstack.top()[i]].cellcontent + ":" + std::to_string(allcells[undocellstack.top()[i]].fontnum) + ":" + std::to_string(allcells[undocellstack.top()[i]].fontstate) + ":" + std::to_string(allcells[undocellstack.top()[i]].fontsize) + ":" + std::to_string(allcells[undocellstack.top()[i]].cellalignment) + ":" + std::to_string(allcells[undocellstack.top()[i]].cellfontcolor.r) + ":" + std::to_string(allcells[undocellstack.top()[i]].cellfontcolor.g) + ":" + std::to_string(allcells[undocellstack.top()[i]].cellfontcolor.b) + ":" + std::to_string(allcells[undocellstack.top()[i]].lineno));
 				break;
 			}
 		}
@@ -994,6 +1055,13 @@ void gGUIGrid::addUndoStack(int process) {
 			std::reverse(undocellstack.top().begin(), undocellstack.top().end());
 			for(int i = 0; i < selectedcells.size(); i++) {
 				undovaluestack.push(std::to_string(allcells[selectedcells[i]].fontstate));
+			}
+			break;
+		case PROCESS_FONTSIZE:
+			undocellstack.push(selectedcells);
+			std::reverse(undocellstack.top().begin(), undocellstack.top().end());
+			for(int i = 0; i < selectedcells.size(); i++) {
+				undovaluestack.push(std::to_string(allcells[selectedcells[i]].fontsize));
 			}
 			break;
 		case PROCESS_ALIGNMENT:
@@ -1024,7 +1092,7 @@ void gGUIGrid::addUndoStack(int process) {
 				std::reverse(undocellstack.top().begin(), undocellstack.top().end());
 				for(int i = 0; i < selectedcells.size(); i++) {
 					int amount = selectedcells.at(i) - selectedbox;
-					std::string tmpstr = allcells[selectedbox + amount].cellcontent + ":" + std::to_string(allcells[selectedbox + amount].fontnum) + ":" + std::to_string(allcells[selectedbox + amount].fontstate) + ":" + std::to_string(allcells[selectedbox + amount].cellalignment) + ":" + std::to_string(allcells[selectedbox + amount].cellfontcolor.r) + ":" + std::to_string(allcells[selectedbox + amount].cellfontcolor.g) + ":" + std::to_string(allcells[selectedbox + amount].cellfontcolor.b) + ":" + std::to_string(allcells[selectedbox + amount].iscolorchanged) + ":" + std::to_string(allcells[selectedbox + amount].lineno);
+					std::string tmpstr = allcells[selectedbox + amount].cellcontent + ":" + std::to_string(allcells[selectedbox + amount].fontnum) + ":" + std::to_string(allcells[selectedbox + amount].fontstate) + ":" + std::to_string(allcells[selectedbox + amount].fontsize) + ":" + std::to_string(allcells[selectedbox + amount].cellalignment) + ":" + std::to_string(allcells[selectedbox + amount].cellfontcolor.r) + ":" + std::to_string(allcells[selectedbox + amount].cellfontcolor.g) + ":" + std::to_string(allcells[selectedbox + amount].cellfontcolor.b) + ":" + std::to_string(allcells[selectedbox + amount].iscolorchanged) + ":" + std::to_string(allcells[selectedbox + amount].lineno);
 					undovaluestack.push(tmpstr);
 				}
 			}
@@ -1079,6 +1147,9 @@ void gGUIGrid::addRedoStack() {
 		case PROCESS_FONTSTATE:
 			redovaluestack.push(std::to_string(allcells[redocellstack.top()[i]].fontstate));
 			break;
+		case PROCESS_FONTSIZE:
+			redovaluestack.push(std::to_string(allcells[redocellstack.top()[i]].fontsize));
+			break;
 		case PROCESS_ALIGNMENT:
 			redovaluestack.push(std::to_string(allcells[redocellstack.top()[i]].cellalignment));
 			break;
@@ -1089,7 +1160,7 @@ void gGUIGrid::addRedoStack() {
 			redovaluestack.push(std::to_string(allcells[redocellstack.top()[i]].lineno));
 			break;
 		case PROCESS_ALL:
-			redovaluestack.push(allcells[redocellstack.top()[i]].cellcontent + ":" + std::to_string(allcells[redocellstack.top()[i]].fontnum) + ":" + std::to_string(allcells[redocellstack.top()[i]].fontstate) + ":" + std::to_string(allcells[redocellstack.top()[i]].cellalignment) + ":" + std::to_string(allcells[redocellstack.top()[i]].cellfontcolor.r) + ":" + std::to_string(allcells[redocellstack.top()[i]].cellfontcolor.g) + ":" + std::to_string(allcells[redocellstack.top()[i]].cellfontcolor.b) + ":" + std::to_string(allcells[redocellstack.top()[i]].iscolorchanged) + ":" + std::to_string(allcells[redocellstack.top()[i]].lineno));
+			redovaluestack.push(allcells[redocellstack.top()[i]].cellcontent + ":" + std::to_string(allcells[redocellstack.top()[i]].fontnum) + ":" + std::to_string(allcells[redocellstack.top()[i]].fontstate) + ":" + std::to_string(allcells[redocellstack.top()[i]].fontsize) + ":" + std::to_string(allcells[redocellstack.top()[i]].cellalignment) + ":" + std::to_string(allcells[redocellstack.top()[i]].cellfontcolor.r) + ":" + std::to_string(allcells[redocellstack.top()[i]].cellfontcolor.g) + ":" + std::to_string(allcells[redocellstack.top()[i]].cellfontcolor.b) + ":" + std::to_string(allcells[redocellstack.top()[i]].iscolorchanged) + ":" + std::to_string(allcells[redocellstack.top()[i]].lineno));
 			break;
 		}
 	}
@@ -1147,6 +1218,7 @@ void gGUIGrid::makeDefaultCell() {
 		allcells[selectedcells[i]].iscolorchanged = false;
 		allcells[selectedcells[i]].fontnum = gGUIManager::FONT_FREESANS;
 		allcells[selectedcells[i]].fontstate = gGUIManager::FONTTYPE_REGULAR;
+		allcells[selectedcells[i]].fontsize = 11;
 		allcells[selectedcells[i]].cellalignment = gBaseGUIObject::TEXTALIGNMENT_LEFT;
 		allcells[selectedcells[i]].lineno = TEXTLINE_NONE;
 		allcells[selectedcells[i]].celltype = Cell::TYPE_STRING;
@@ -1341,7 +1413,7 @@ void gGUIGrid::resetSelectedIndexes() {
 void gGUIGrid::copyCells() {
 	copiedcellvalues.clear();
 	for(int i = 0; i < selectedcells.size(); i++) {
-		std::string tmpstr = std::to_string(allcells[selectedcells[i]].cellcolumnno) + ":" + allcells[selectedcells[i]].cellcontent + ":" + std::to_string(allcells[selectedcells[i]].fontnum) + ":" + std::to_string(allcells[selectedcells[i]].fontstate) + ":" + std::to_string(allcells[selectedcells[i]].cellalignment) + ":" + std::to_string(allcells[selectedcells[i]].cellfontcolor.r) + ":" + std::to_string(allcells[selectedcells[i]].cellfontcolor.g) + ":" + std::to_string(allcells[selectedcells[i]].cellfontcolor.b) + ":" + std::to_string(allcells[selectedcells[i]].iscolorchanged) + ":" + std::to_string(allcells[selectedcells[i]].lineno);
+		std::string tmpstr = std::to_string(allcells[selectedcells[i]].cellcolumnno) + ":" + allcells[selectedcells[i]].cellcontent + ":" + std::to_string(allcells[selectedcells[i]].fontnum) + ":" + std::to_string(allcells[selectedcells[i]].fontstate) + ":" + std::to_string(allcells[selectedcells[i]].fontsize) + ":" + std::to_string(allcells[selectedcells[i]].cellalignment) + ":" + std::to_string(allcells[selectedcells[i]].cellfontcolor.r) + ":" + std::to_string(allcells[selectedcells[i]].cellfontcolor.g) + ":" + std::to_string(allcells[selectedcells[i]].cellfontcolor.b) + ":" + std::to_string(allcells[selectedcells[i]].iscolorchanged) + ":" + std::to_string(allcells[selectedcells[i]].lineno);
 		copiedcellvalues.push_back(tmpstr);
 	}
 }
@@ -1376,6 +1448,9 @@ void gGUIGrid::pasteCells() {
 				break;
 			case PROCESS_FONTSTATE:
 				allcells[index].fontstate = std::stoi(tmpstr.substr(0, colon));
+				break;
+			case PROCESS_FONTSIZE:
+				allcells[index].fontsize = std::stoi(tmpstr.substr(0, colon));
 				break;
 			case PROCESS_ALIGNMENT:
 				allcells[index].cellalignment = std::stoi(tmpstr.substr(0, colon));
@@ -1439,6 +1514,9 @@ void gGUIGrid::makeUndo() {
 			}
 			else setCellFontItalic();
 		}
+		else if(undoprocessstack.top() == PROCESS_FONTSIZE) {
+			setCellFontSize(std::stoi(undostack.top().top().substr(0, colon)));
+		}
 		else if(undoprocessstack.top() == PROCESS_ALIGNMENT) {
 			setCellAlignment(std::stoi(undostack.top().top().substr(0, colon)), false);
 		}
@@ -1469,6 +1547,9 @@ void gGUIGrid::makeUndo() {
 			colon = undostack.top().top().find(':');
 			if(std::stoi(undostack.top().top().substr(0, colon)) - allcells[undocellstack.top()[0]].fontstate == 1 || std::stoi(undostack.top().top().substr(0, colon)) - allcells[undocellstack.top()[0]].fontstate == -1) setCellFontBold();
 			else if(std::stoi(undostack.top().top().substr(0, colon)) - allcells[undocellstack.top()[0]].fontstate == 2 || std::stoi(undostack.top().top().substr(0, colon)) - allcells[undocellstack.top()[0]].fontstate == -2) setCellFontItalic();
+			undostack.top().top().erase(0, colon + 1);
+			colon = undostack.top().top().find(':');
+			setCellFontSize(std::stoi(undostack.top().top().substr(0, colon)));
 			undostack.top().top().erase(0, colon + 1);
 			colon = undostack.top().top().find(':');
 			setCellAlignment(std::stoi(undostack.top().top().substr(0, colon)), false);
@@ -1518,6 +1599,9 @@ void gGUIGrid::makeRedo() {
 			}
 			else setCellFontItalic();
 		}
+		else if(redoprocessstack.top() == PROCESS_FONTSIZE) {
+			setCellFontSize(std::stoi(redostack.top().top().substr(0, colon)));
+		}
 		else if(redoprocessstack.top() == PROCESS_ALIGNMENT) {
 			setCellAlignment(std::stoi(redostack.top().top().substr(0, colon)), false);
 		}
@@ -1548,6 +1632,9 @@ void gGUIGrid::makeRedo() {
 			colon = redostack.top().top().find(':');
 			if(std::stoi(redostack.top().top().substr(0, colon)) - allcells[redocellstack.top()[0]].fontstate == 1 || std::stoi(redostack.top().top().substr(0, colon)) - allcells[redocellstack.top()[0]].fontstate == -1) setCellFontBold();
 			else if(std::stoi(redostack.top().top().substr(0, colon)) - allcells[redocellstack.top()[0]].fontstate == 2 || std::stoi(redostack.top().top().substr(0, colon)) - allcells[redocellstack.top()[0]].fontstate == -2) setCellFontItalic();
+			redostack.top().top().erase(0, colon + 1);
+			colon = redostack.top().top().find(':');
+			setCellFontSize(std::stoi(redostack.top().top().substr(0, colon)));
 			redostack.top().top().erase(0, colon + 1);
 			colon = redostack.top().top().find(':');
 			setCellAlignment(std::stoi(redostack.top().top().substr(0, colon)), false);
@@ -1596,7 +1683,7 @@ void gGUIGrid::createTextBox() {
 	//allcells[selectedbox].cellx + 1
 	//allcells.at(cellindexcounter).cellx + (allcells.at(cellindexcounter).cellw - font->getStringWidth(allcells.at(cellindexcounter).showncontent)) * textbox.getTextMoveAmount() - textbox.getInitX() * textbox.getTextAlignment() - firstx
 	textbox.set(root, this, this, 0, 0, allcells[selectedbox].cellx + 1, allcells[selectedbox].celly - 2, allcells[selectedbox].cellw - 10, allcells[selectedbox].cellh - 2);
-	textbox.setTextFont(manager->getFont(allcells[selectedbox].fontnum, allcells[selectedbox].fontstate));
+	textbox.setTextFont(manager->getFont(allcells[selectedbox].fontnum, allcells[selectedbox].fontstate/*,allcells[selectedbox].fontsize*/));
 	textbox.setTextAlignment(allcells[selectedbox].cellalignment, allcells[selectedbox].cellw, textbox.getInitX());
 	textbox.setTextColor(&allcells[selectedbox].cellfontcolor);
 	if(allcells[selectedbox].cellcontent != "") {
@@ -1923,23 +2010,23 @@ void gGUIGrid::drawTitleLines() {
 
 void gGUIGrid::drawCellContents() {
 	for(int i = 0; i < allcells.size(); i++) {
-		if(allcells[i].cellx + manager->getFont(allcells[i].fontnum, allcells[i].fontstate)->getStringWidth(allcells[i].showncontent) * allcells[i].textmoveamount - textbox.getInitX() * allcells[i].cellalignment < gridx + firstx || allcells[i].cellx + manager->getFont(allcells[i].fontnum, allcells[i].fontstate)->getStringWidth(allcells[i].showncontent) * allcells[i].textmoveamount - textbox.getInitX() * allcells[i].cellalignment > gridw || allcells[i].celly < gridy + firsty || allcells[i].celly > gridh) continue;
-		if(allcells[i].cellx + manager->getFont(allcells[i].fontnum, allcells[i].fontstate)->getStringWidth(allcells[i].showncontent) * allcells[i].textmoveamount - textbox.getInitX() * allcells[i].cellalignment >= gridx + firstx && allcells[i].cellx + manager->getFont(allcells[i].fontnum, allcells[i].fontstate)->getStringWidth(allcells[i].showncontent) * allcells[i].textmoveamount - textbox.getInitX() * allcells[i].cellalignment <= gridw && allcells[i].celly >= gridy + firsty && allcells[i].celly <= gridh) {
+		if(allcells[i].cellx + manager->getFont(allcells[i].fontnum, allcells[i].fontstate/*,allcells[i].fontsize*/)->getStringWidth(allcells[i].showncontent) * allcells[i].textmoveamount - textbox.getInitX() * allcells[i].cellalignment < gridx + firstx || allcells[i].cellx + manager->getFont(allcells[i].fontnum, allcells[i].fontstate/*, allcells[i].fontsize*/)->getStringWidth(allcells[i].showncontent) * allcells[i].textmoveamount - textbox.getInitX() * allcells[i].cellalignment > gridw || allcells[i].celly < gridy + firsty || allcells[i].celly > gridh) continue;
+		if(allcells[i].cellx + manager->getFont(allcells[i].fontnum, allcells[i].fontstate/*,allcells[i].fontsize*/)->getStringWidth(allcells[i].showncontent) * allcells[i].textmoveamount - textbox.getInitX() * allcells[i].cellalignment >= gridx + firstx && allcells[i].cellx + manager->getFont(allcells[i].fontnum, allcells[i].fontstate/*, allcells[i].fontsize*/)->getStringWidth(allcells[i].showncontent) * allcells[i].textmoveamount - textbox.getInitX() * allcells[i].cellalignment <= gridw && allcells[i].celly >= gridy + firsty && allcells[i].celly <= gridh) {
 			Cell& currentcell = allcells[i];
 			if(!currentcell.iscolorchanged) currentcell.cellfontcolor = fontcolor;
 			float currentstringwidth;
 			float currentstringheight;
 			if(currentcell.overflowcontent.empty()) {
-				currentstringwidth = manager->getFont(currentcell.fontnum, currentcell.fontstate)->getStringWidth(currentcell.showncontent);
-				currentstringheight = manager->getFont(currentcell.fontnum, currentcell.fontstate)->getStringHeight(currentcell.showncontent);
+				currentstringwidth = manager->getFont(currentcell.fontnum, currentcell.fontstate/*, currentcell.fontsize*/)->getStringWidth(currentcell.showncontent);
+				currentstringheight = manager->getFont(currentcell.fontnum, currentcell.fontstate/*, currentcell.fontsize*/)->getStringHeight(currentcell.showncontent);
 			}
 			else {
-				currentstringwidth = manager->getFont(currentcell.fontnum, currentcell.fontstate)->getStringWidth(currentcell.overflowcontent);
-				currentstringheight = manager->getFont(currentcell.fontnum, currentcell.fontstate)->getStringHeight(currentcell.overflowcontent);
+				currentstringwidth = manager->getFont(currentcell.fontnum, currentcell.fontstate/*, currentcell.fontsize*/)->getStringWidth(currentcell.overflowcontent);
+				currentstringheight = manager->getFont(currentcell.fontnum, currentcell.fontstate/*, currentcell.fontsize*/)->getStringHeight(currentcell.overflowcontent);
 			}
 			renderer->setColor(currentcell.cellfontcolor);
-			if(currentcell.overflowcontent.empty()) manager->getFont(currentcell.fontnum, currentcell.fontstate)->drawText(currentcell.showncontent, currentcell.cellx + (currentcell.cellw - currentstringwidth) * currentcell.textmoveamount - textbox.getInitX() * currentcell.cellalignment - firstx, currentcell.celly + (gridboxh / 2) + (currentstringheight / 2) - firsty);
-			else manager->getFont(currentcell.fontnum, currentcell.fontstate)->drawText(currentcell.overflowcontent, currentcell.cellx + (currentcell.cellw - currentstringwidth) * currentcell.textmoveamount - textbox.getInitX() * currentcell.cellalignment - firstx, currentcell.celly + (gridboxh / 2) + (currentstringheight / 2) - firsty);
+			if(currentcell.overflowcontent.empty()) manager->getFont(currentcell.fontnum, currentcell.fontstate/*, currentcell.fontsize*/)->drawText(currentcell.showncontent, currentcell.cellx + (currentcell.cellw - currentstringwidth) * currentcell.textmoveamount - textbox.getInitX() * currentcell.cellalignment - firstx, currentcell.celly + (gridboxh / 2) + (currentstringheight / 2) - firsty);
+			else manager->getFont(currentcell.fontnum, currentcell.fontstate/*, currentcell.fontsize*/)->drawText(currentcell.overflowcontent, currentcell.cellx + (currentcell.cellw - currentstringwidth) * currentcell.textmoveamount - textbox.getInitX() * currentcell.cellalignment - firstx, currentcell.celly + (gridboxh / 2) + (currentstringheight / 2) - firsty);
 			switch(currentcell.lineno) {
 			case TEXTLINE_UNDER:
 				gDrawLine(currentcell.cellx + (currentcell.cellw - currentstringwidth) * currentcell.textmoveamount - textbox.getInitX() * currentcell.cellalignment - firstx, currentcell.celly + (gridboxh / 2) + currentstringheight - firsty,
@@ -2010,8 +2097,8 @@ void gGUIGrid::mousePressed(int x, int y, int button) {
 					index = allcells.size() - 1;
 				}
 				for(int i = 0; i < allcells.size(); i++)
-					if(allcells[i].cellcolumnno == column && manager->getFont(allcells[i].fontnum, allcells[i].fontstate)->getStringWidth(allcells[i].showncontent) > manager->getFont(allcells[index].fontnum, allcells[index].fontstate)->getStringWidth(allcells[index].showncontent)) index = i;
-				float neww = manager->getFont(allcells[index].fontnum, allcells[index].fontstate)->getStringWidth(allcells[index].showncontent) + textbox.getInitX() + 1;
+					if(allcells[i].cellcolumnno == column && manager->getFont(allcells[i].fontnum, allcells[i].fontstate/*, allcells[i].fontsize*/)->getStringWidth(allcells[i].showncontent) > manager->getFont(allcells[index].fontnum, allcells[index].fontstate/*, allcells[index].fontsize*/)->getStringWidth(allcells[index].showncontent)) index = i;
+				float neww = manager->getFont(allcells[index].fontnum, allcells[index].fontstate/*, allcells[index].fontsize*/)->getStringWidth(allcells[index].showncontent) + textbox.getInitX() + 1;
 				if(neww < font->getSize() * 1.8f) neww = font->getSize() * 1.8f;
 				int diff = neww - allcells[index].cellw;
 				currentcolumn = column;
