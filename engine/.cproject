@@ -42,7 +42,7 @@
 				<win32 command="cmake" generator="MinGWMakefiles" use-default="true">
 				</win32>
 			</storageModule>
-			<storageModule buildDir="_build/${ConfigName}" dirtyTs="0" moduleId="de.marw.cmake4eclipse.mbs.settings">
+			<storageModule buildDir="build/${ConfigName}" dirtyTs="0" moduleId="de.marw.cmake4eclipse.mbs.settings">
 				<options/>
 			</storageModule>
 		</cconfiguration>

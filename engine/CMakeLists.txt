@@ -1,4 +1,8 @@
-cmake_minimum_required (VERSION 3.27)
+if(APPLE)
+	cmake_minimum_required (VERSION 3.26)
+else()
+	cmake_minimum_required (VERSION 3.10.2)
+endif()
 
 
 # Configure compiler and linker as you need
@@ -247,15 +251,19 @@ else()
 	add_library(GlistEngine SHARED
 		${SRC_FILES}
 	)
- 
-    set_target_properties(
-        GlistEngine
-            PROPERTIES
-                CXX_STANDARD 17
-                CXX_STANDARD_REQUIRED True
-    )
- 
-    target_link_options(GlistEngine PRIVATE ${GLIST_SHARED_LINKER_FLAGS})
+endif()
+
+set_target_properties(
+    GlistEngine
+        PROPERTIES
+            CXX_STANDARD 14
+            CXX_STANDARD_REQUIRED True
+)
+
+if(APPLE)
+    target_link_options(GlistEngine PRIVATE ${GLIST_SHARED_LINKER_FLAGS} -pthread)
+else()
+	set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} ${GLIST_SHARED_LINKER_FLAGS}")
 endif()
 
 target_compile_options(
@@ -483,11 +491,11 @@ elseif(APPLE)
 		${Lib_fmodL}
 		${Lib_fmod}
 		PkgConfig::assimp
-        PkgConfig::freetype
+		PkgConfig::freetype
 		PkgConfig::curl
 		PkgConfig::glfw
 		${Lib_GL}
-        PkgConfig::glew
+		PkgConfig::glew
 		PkgConfig::crypto
 #		${Lib_cpp}
 	# TODO: FFMPEG
