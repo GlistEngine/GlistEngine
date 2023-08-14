@@ -280,8 +280,6 @@ set(INC_DIRS
 	${LIBS_DIR}/fmod/include
 	${LIBS_DIR}/utf8/include
 	${LIBS_DIR}/ghc/include
-	${PLUGIN_INCLUDES}
-#	${CMAKE_BINARY_DIR}/generated
 )
 
 set(ENGINE_INCLUDES
@@ -298,6 +296,8 @@ set(ENGINE_INCLUDES
     ${ENGINE_DIR}/base
     ${ENGINE_DIR}/core
     ${ENGINE_DIR}/events
+    ${PLUGIN_INCLUDES}
+#	${CMAKE_BINARY_DIR}/generated
 )
 
 list(APPEND INC_DIRS ${ENGINE_INCLUDES})
