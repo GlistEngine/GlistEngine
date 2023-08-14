@@ -1618,55 +1618,173 @@ void gGUIGrid::createTextBox() {
 
 void gGUIGrid::checkCellType(int cellIndex) {
 	if(allcells[cellIndex].showncontent == "") return;
-	bool isnegative = false;
-	bool isfractional = false;
-	bool doubledot = false;
-	bool isdate = true;
-	if(allcells[cellIndex].showncontent.at(0) == '-') isnegative = true;
-	for(int i = 1 + isnegative; i < allcells[cellIndex].showncontent.length(); i++) {
-		if(allcells[cellIndex].showncontent.at(i) == '.') {
-			for(int j = i + 1; j < allcells[cellIndex].showncontent.length(); j++) {
-				if(!isdigit(allcells[cellIndex].showncontent.at(j))) {
+	bool digit;
+	bool isdate;
+	if(int(allcells[cellIndex].cellcontent[0]) != 39) {
+		bool isnegative = false;
+		isdate = true;
+		digit = true;
+		std::stack<int> spaceindexes;
+		bool isfractional = false;
+		if(allcells[cellIndex].showncontent[0] == '-') isnegative = true;
+		if(isdigit(allcells[cellIndex].showncontent[isnegative])) {
+			for(int i = 1 + isnegative; i < allcells[cellIndex].showncontent.length(); i++) {
+				if(allcells[cellIndex].showncontent[i] == ',') {
+					if(!isdigit(allcells[cellIndex].showncontent[i - 1])) {
+						digit = false;
+						break;
+					}
+					isfractional = true;
+					for(int j = i + 1; j < allcells[cellIndex].showncontent.length(); j++) {
+						if(!isdigit(allcells[cellIndex].showncontent[j])) {
+							isfractional = false;
+							digit = false;
+							break;
+						}
+					}
+					if(!isfractional) break;
+				}
+				else if(allcells[cellIndex].showncontent[i] == '.' || allcells[cellIndex].showncontent[i] == ' ') {
+					if(isdigit(allcells[cellIndex].showncontent[i - 1])) {
+						if(i + 1 < allcells[cellIndex].showncontent.length()) {
+							int next = 3;
+							while(next > 0) {
+								if(!isdigit(allcells[cellIndex].showncontent[i + next])) {
+									digit = false;
+									while(!spaceindexes.empty()) spaceindexes.pop();
+									next = 0;
+								}
+								next--;
+							}
+							if(digit) spaceindexes.push(i);
+						}
+						else {
+							digit = false;
+							while(!spaceindexes.empty()) spaceindexes.pop();
+							break;
+						}
+					}
+					else {
+						digit = false;
+						while(!spaceindexes.empty()) spaceindexes.pop();
+						break;
+					}
+				}
+				else if(!isdigit(allcells[cellIndex].showncontent[i])) {
+					digit = false;
+					isnegative = false;
 					isfractional = false;
-					doubledot = true;
+					while(!spaceindexes.empty()) spaceindexes.pop();
 					break;
 				}
-				else isfractional = true;
 			}
-			if(doubledot) break;
 		}
-	}
-	if(allcells[cellIndex].showncontent.length() == 10) {
-	    for(int i = 0; i < 10; i++) {
-	        if(i == 2 || i == 5) {
-	            if(allcells[cellIndex].showncontent[i] != '/' && allcells[cellIndex].showncontent[i] != '.' && allcells[cellIndex].showncontent[i] != '-') {
-	            	isdate = false;
-	            	break;
-	            }
-	        }
-	        else if(!isdigit(allcells[cellIndex].showncontent[i])) {
-	        	isdate = false;
-	        	break;
-	        }
-	    }
-	    if(isdate) {
-		    int day = stoi(allcells[cellIndex].showncontent.substr(0, 2));
-		    int month = stoi(allcells[cellIndex].showncontent.substr(3, 2));
-		    int year = stoi(allcells[cellIndex].showncontent.substr(6, 4));
+		else digit = false;
+		if(digit) {
+			while(!spaceindexes.empty()) {
+				if(allcells[cellIndex].showncontent[spaceindexes.top()] != '.') allcells[cellIndex].showncontent[spaceindexes.top()] = '.';
+				spaceindexes.pop();
+			}
+			if(isfractional) {
+				int commaindex = allcells[cellIndex].showncontent.find(',');
+				for(int i = commaindex + 1; i < allcells[cellIndex].showncontent.length(); i++) {
+					if(allcells[cellIndex].showncontent[i] != '0') {
+						commaindex = -1;
+						break;
+					}
+				}
+				if(commaindex != -1) allcells[cellIndex].showncontent.erase(commaindex, allcells[cellIndex].showncontent.length() - commaindex);
+			}
+		}
+		else if(allcells[cellIndex].showncontent.length() == 10) {
+		    for(int i = 0; i < 10; i++) {
+		        if(i == 2 || i == 5) {
+		            if(allcells[cellIndex].showncontent[i] != '/' && allcells[cellIndex].showncontent[i] != '.' && allcells[cellIndex].showncontent[i] != '-') {
+		            	isdate = false;
+		            	break;
+		            }
+		        }
+		        else if(!isdigit(allcells[cellIndex].showncontent[i])) {
+		        	isdate = false;
+		        	break;
+		        }
+		    }
+		    if(isdate) {
+			    int day = stoi(allcells[cellIndex].showncontent.substr(0, 2));
+			    int month = stoi(allcells[cellIndex].showncontent.substr(3, 2));
+			    int year = stoi(allcells[cellIndex].showncontent.substr(6, 4));
 
-		    if(day < 1 || day > 31 || month < 1 || month > 12 || year < 0) isdate = false;
-	    }
-	}
-	else isdate = false;
-	for(int i = 0 + isnegative; i < allcells[cellIndex].showncontent.length(); i++) {
-		if(!isdigit(allcells[cellIndex].showncontent.at(i)) && !(isfractional && allcells[cellIndex].showncontent.at(i) == '.') && !isdate) {
-			if(allcells[cellIndex].celltype == Cell::TYPE_DIGIT && !allcells[cellIndex].iscellaligned) setCellAlignment(&allcells[cellIndex], gBaseGUIObject::TEXTALIGNMENT_LEFT);
-			allcells[cellIndex].celltype = Cell::TYPE_STRING;
-			break;
+			    if(day < 1 || day > 31 || month < 1 || month > 12 || year < 0) isdate = false;
+			    else {
+			    	if(allcells[cellIndex].showncontent[2] != '.') allcells[cellIndex].showncontent[2] = '.';
+			    	if(allcells[cellIndex].showncontent[5] != '.') allcells[cellIndex].showncontent[5] = '.';
+			    }
+		    }
 		}
-		else allcells[cellIndex].celltype = Cell::TYPE_DIGIT;
+		else if(allcells[cellIndex].showncontent.length() == 12) {
+			std::string tmpstr = allcells[cellIndex].showncontent;
+			std::transform(tmpstr.begin(), tmpstr.end(), tmpstr.begin(), ::toupper);
+			for(int i = 0; i < 12; i++) {
+				if(i == 4) {
+					if(allcells[cellIndex].showncontent[i] != ',') {
+						isdate = false;
+						break;
+					}
+				}
+				else if(i == 5 || i == 8) {
+					if(allcells[cellIndex].showncontent[i] != ' ') {
+						isdate = false;
+						break;
+					}
+				}
+				else if(i > 8) {
+					if(int(tmpstr[i]) < 65 || int(tmpstr[i]) > 90) {
+						isdate = false;
+						break;
+					}
+				}
+				else if(!isdigit(allcells[cellIndex].showncontent[i])) {
+					isdate = false;
+					break;
+				}
+			}
+			if(isdate) {
+				int year = stoi(allcells[cellIndex].showncontent.substr(0, 4));
+			    int day = stoi(allcells[cellIndex].showncontent.substr(6, 2));
+			    std::string month = allcells[cellIndex].showncontent.substr(9, 3);
+			    std::transform(month.begin(), month.end(), month.begin(), ::toupper);
+			    int mon = 0;
+			    if(month == "JAN") mon = 1;
+			    else if(month == "FEB") mon = 2;
+			    else if(month == "MAR") mon = 3;
+			    else if(month == "APR") mon = 4;
+			    else if(month == "MAY") mon = 5;
+			    else if(month == "JUN") mon = 6;
+			    else if(month == "JUL") mon = 7;
+			    else if(month == "AUG") mon = 8;
+			    else if(month == "SEP") mon = 9;
+			    else if(month == "OCT") mon = 10;
+			    else if(month == "NOV") mon = 11;
+			    else if(month == "DEC") mon = 12;
+
+			    if(day < 1 || day > 31 || mon < 1 || mon > 12 || year < 0) isdate = false;
+			    else std::transform(allcells[cellIndex].showncontent.begin(), allcells[cellIndex].showncontent.end(), allcells[cellIndex].showncontent.begin(), ::toupper);
+			}
+		}
+		else isdate = false;
 	}
-	if(allcells[cellIndex].celltype == Cell::TYPE_DIGIT && !allcells[cellIndex].iscellaligned) setCellAlignment(&allcells[cellIndex], gBaseGUIObject::TEXTALIGNMENT_RIGHT);
+	else {
+		digit = false;
+		isdate = false;
+	}
+	if(!digit && !isdate) {
+		if(allcells[cellIndex].celltype == Cell::TYPE_DIGIT && !allcells[cellIndex].iscellaligned) setCellAlignment(&allcells[cellIndex], gBaseGUIObject::TEXTALIGNMENT_LEFT);
+		allcells[cellIndex].celltype = Cell::TYPE_STRING;
+	}
+	else {
+		allcells[cellIndex].celltype = Cell::TYPE_DIGIT;
+		if(!allcells[cellIndex].iscellaligned) setCellAlignment(&allcells[cellIndex], gBaseGUIObject::TEXTALIGNMENT_RIGHT);
+	}
 }
 
 void gGUIGrid::showCells() {
