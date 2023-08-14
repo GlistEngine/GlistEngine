@@ -1681,10 +1681,6 @@ void gGUIGrid::checkCellType(int cellIndex) {
 		}
 		else digit = false;
 		if(digit) {
-			while(!spaceindexes.empty()) {
-				if(allcells[cellIndex].showncontent[spaceindexes.top()] != '.') allcells[cellIndex].showncontent[spaceindexes.top()] = '.';
-				spaceindexes.pop();
-			}
 			if(isfractional) {
 				int commaindex = allcells[cellIndex].showncontent.find(',');
 				for(int i = commaindex + 1; i < allcells[cellIndex].showncontent.length(); i++) {
@@ -1694,6 +1690,32 @@ void gGUIGrid::checkCellType(int cellIndex) {
 					}
 				}
 				if(commaindex != -1) allcells[cellIndex].showncontent.erase(commaindex, allcells[cellIndex].showncontent.length() - commaindex);
+			}
+			if(spaceindexes.empty()) {
+				std::string tmpstr;
+				if(isfractional && allcells[cellIndex].showncontent.find(',') != -1) tmpstr = allcells[cellIndex].showncontent.substr(0, allcells[cellIndex].showncontent.find(','));
+				else tmpstr = allcells[cellIndex].showncontent;
+				int next = 3;
+				std::deque<int> indexes;
+				for(int i = tmpstr.length() - 1; i > 0; i--) {
+					next--;
+					if(next == 0) {
+						next = 3;
+						indexes.push_back(i);
+					}
+				}
+				while(!indexes.empty()) {
+					tmpstr.insert(indexes.front(), ".");
+					indexes.pop_front();
+				}
+				if(isfractional && allcells[cellIndex].showncontent.find(',') != -1) allcells[cellIndex].showncontent = tmpstr + allcells[cellIndex].showncontent.substr(allcells[cellIndex].showncontent.find(','));
+				else allcells[cellIndex].showncontent = tmpstr;
+			}
+			else {
+				while(!spaceindexes.empty()) {
+					if(allcells[cellIndex].showncontent[spaceindexes.top()] != '.') allcells[cellIndex].showncontent[spaceindexes.top()] = '.';
+					spaceindexes.pop();
+				}
 			}
 		}
 		else if(allcells[cellIndex].showncontent.length() == 10) {
