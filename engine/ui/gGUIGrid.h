@@ -36,6 +36,7 @@ public:
 	    int cellcolumnno;
 	    int fontnum;
 	    int fontstate;
+	    int fontsize;
 	    int cellalignment;
 	    int lineno;
 	    int celltype;
@@ -56,6 +57,7 @@ public:
 	    	celly = -1;
 	    	fontnum = gGUIManager::FONT_FREESANS;
 	    	fontstate = gGUIManager::FONTTYPE_REGULAR;
+	    	fontsize = 11;
 	    	cellalignment = gBaseGUIObject::TEXTALIGNMENT_LEFT;
 	    	lineno = TEXTLINE_NONE;
 	    	celltype = TYPE_STRING;
@@ -91,6 +93,7 @@ public:
 		PROCESS_TEXT,
 		PROCESS_FONT,
 		PROCESS_FONTSTATE,
+		PROCESS_FONTSIZE,
 		PROCESS_ALIGNMENT,
 		PROCESS_COLOR,
 		PROCESS_LINE,
@@ -128,6 +131,13 @@ public:
 	void setCellsFontItalic(std::deque<Cell*> cells);
 	void setCellsFontItalic(Cell* cell1, Cell* cell2);
 	void setCellsFontItalic(std::string cell1, std::string cell2);
+
+	void setCellFontSize(int fontSize);
+	void setCellFontSize(Cell* cell, int fontSize);
+	void setCellFontSize(std::string cell, int fontSize);
+	void setCellsFontSize(std::deque<Cell*> cells, int fontSize);
+	void setCellsFontSize(Cell* cell1, Cell* cell2, int fontSize);
+	void setCellsFontSize(std::string cell1, std::string cell2, int fontSize);
 
 	void setCellFontColor(gColor* fontColor = fontcolor);
 	void setCellFontColor(Cell* cell, gColor* fontColor = fontcolor);
