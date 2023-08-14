@@ -58,6 +58,10 @@ gGUINumberBox::gGUINumberBox() {
 	textbox.setNumeric(true);
 	boxsizer.setControl(0, 0, &textbox);
 	setSizer(&boxsizer);
+	maxvalue = std::numeric_limits<int>::max();
+	minvalue = std::numeric_limits<int>::min();
+	maxvaluef = std::numeric_limits<float>::max();
+	minvaluef = std::numeric_limits<float>::min();
 }
 
 gGUINumberBox::~gGUINumberBox() {
@@ -107,6 +111,10 @@ void gGUINumberBox::setText(const std::string& text) {
 	textbox.setText(text);
 }
 
+std::string gGUINumberBox::getText() {
+	 return textbox.getText();
+}
+
 void gGUINumberBox::setSize(int width, int height) {
 	textbox.setSize(width, height);
 }
@@ -119,6 +127,23 @@ void gGUINumberBox::showTitle(bool isShown) {
 bool gGUINumberBox::setType(bool isInteger) {
 	isinteger = isInteger;
 	return isinteger;
+}
+
+void gGUINumberBox::setMaxValue(int maxValue) {
+	maxvalue = maxValue;
+
+}
+
+void gGUINumberBox::setMinValue(int minValue) {
+	minvalue = minValue;
+}
+
+void gGUINumberBox::setMaxValue(float maxValuef) {
+	maxvaluef = maxValuef;
+}
+
+void gGUINumberBox::setMinValue(float minValuef) {
+	minvaluef = minValuef;
 }
 
 void gGUINumberBox::keyPressed(int key) {
@@ -136,62 +161,72 @@ void gGUINumberBox::charPressed(unsigned int codepoint) {
 void gGUINumberBox::mousePressed(int x, int y, int button) {
 	gGUIContainer::mousePressed(x, y, button);
 	textbox.mousePressed(x, y, button);
-	if(b1isdisabled) return;
 	if(x >= incboxposx && x < incboxposx + smalboxwidth && y >= incboxposy && y < incboxposy + smalboxheight) {
+		if(b1isdisabled) return;
 		b1ispressed = true;
 		root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_BUTTONPRESSED);
-//		gLogi("Increase Button: ") << "Pressed";
 	}
 	if(x >= decboxposx && x < decboxposx + smalboxwidth && y >= decboxposy && y < decboxposy + smalboxheight) {
+		if(b2isdisabled) return;
 		b2ispressed = true;
 		root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_BUTTONPRESSED);
-//		gLogi("Decrease Button: ") << "Pressed";
 	}
 }
 
 void gGUINumberBox::mouseReleased(int x, int y, int button) {
 	gGUIContainer::mouseReleased(x, y, button);
 	textbox.mouseReleased(x, y, button);
-	if(b1isdisabled) return;
 	if(x >= incboxposx && x < incboxposx + smalboxwidth && y >= incboxposy && y < incboxposy + smalboxheight) {
-		gLogi("NumberBox") << "inc but pressed";
+		if(b1isdisabled) return;
 		b1ispressed = false;
 		root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_BUTTONRELEASED);
-//			gLogi("Increase Button: ") << "Released";
 
 		if(isinteger){
-			gLogi("NumberBox") << "inc integer";
 			castcurrtexttoint = gToInt(textbox.getText());
 			castcurrtexttoint = castcurrtexttoint + 1;
-			gLogi("current value: ") << castcurrtexttoint;
 			setText(gToStr(castcurrtexttoint));
+			if (castcurrtexttoint >= maxvalue) {
+			    castcurrtexttoint = maxvalue;
+			    b1isdisabled = true;
+			}
+			if (castcurrtexttoint > minvalue) b2isdisabled = false;
 		} else {
 			castcurrtexttofloat = gToFloat(textbox.getText());
 			castcurrtexttofloat = castcurrtexttofloat + 0.1;
-			gLogi("current value: ") << castcurrtexttofloat;
 			setText(gToStr(castcurrtexttofloat));
+			if (castcurrtexttofloat >= maxvaluef) {
+				castcurrtexttofloat = maxvaluef;
+			    b1isdisabled = true;
+			}
+			if (castcurrtexttofloat > minvaluef) b2isdisabled = false;
 		}
 	} else {
 		b1ispressed = false;
 	}
 
 	if(x >= decboxposx && x < decboxposx + smalboxwidth && y >= decboxposy && y < decboxposy + smalboxheight) {
-		gLogi("NumberBox") << "dec but pressed";
+		if(b2isdisabled) return;
 		b2ispressed = false;
 		root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_BUTTONRELEASED);
-//			gLogi("Decrease Button: ") << "Released";;
 
 		if(isinteger){
-			gLogi("NumberBox") << "dec integer";
 			castcurrtexttoint = gToInt(textbox.getText());
 			castcurrtexttoint = castcurrtexttoint - 1;
-			gLogi("current value: ") << castcurrtexttoint;
 			setText(gToStr(castcurrtexttoint));
+			if (castcurrtexttoint <= minvalue) {
+			    castcurrtexttoint = maxvalue;
+			    b2isdisabled = true;
+			}
+			if (castcurrtexttoint < maxvalue) b1isdisabled = false;
 		} else {
 			castcurrtexttofloat = gToFloat(textbox.getText());
 			castcurrtexttofloat = castcurrtexttofloat - 0.1;
-			gLogi("current value: ") << castcurrtexttofloat;
 			setText(gToStr(castcurrtexttofloat));
+			if (castcurrtexttofloat <= minvaluef) {
+				castcurrtexttofloat = maxvaluef;
+			    b2isdisabled = true;
+			}
+			if (castcurrtexttofloat < maxvaluef) b1isdisabled = false;
 		}
 	} else {
 		b2ispressed = false;
@@ -237,7 +272,6 @@ void gGUINumberBox::draw() {
 		renderer->setColor(fontcolor);
 		font->drawText(title, left, top + font->getSize());
 	}
-
 	renderer->setColor(defColor);
 	if(guisizer) guisizer->draw();
 }

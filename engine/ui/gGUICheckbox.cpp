@@ -10,7 +10,7 @@
 
 gGUICheckbox::gGUICheckbox() {
 //	gLogi("id") << id;
-	ischecked = true;
+	ischecked = false;
 	istextvisible = true;
 	buttonw = 12;
 	buttonh = 12;
@@ -64,6 +64,10 @@ gColor* gGUICheckbox::getBgColor() {
 
 gColor* gGUICheckbox::getTickColor() {
 	return &tickcolor;
+}
+
+void gGUICheckbox::setChecked(bool isChecked) {
+	ischecked = isChecked;
 }
 
 void gGUICheckbox::update() {

@@ -41,6 +41,7 @@ int gMorphingMesh::addTargetMesh(gMesh *targetMesh) {
 	vboframes.push_back(std::vector<gVbo>());
 	framepositions.push_back(std::vector<std::vector<glm::vec3>>());
 	framenormals.push_back(std::vector<std::vector<glm::vec3>>());
+	currentframeid = 0;
 	return targetpositions.size() - 1;
 }
 
@@ -52,7 +53,8 @@ void gMorphingMesh::setBaseMesh(gMesh *baseMesh) {
 	this->basemesh = baseMesh;
 	this->setDrawMode(baseMesh->getDrawMode());
 	this->setMaterial(baseMesh->getMaterial());
-	this->setVertices(baseMesh->getVertices(), baseMesh->getIndices());
+	basevertices = baseMesh->getVertices();
+	this->setVertices(basevertices, baseMesh->getIndices());
 }
 
 void gMorphingMesh::setCurrentTargetMeshId(int targetMeshId) {
@@ -77,9 +79,10 @@ void gMorphingMesh::interpolate(bool forceInterpolation) {
 	if (!ismorphinganimationstoredonvram) {
 		if (!ismorphinganimated) {
 			std::vector<gVertex> framevertices;
+			framevertices.reserve(targetpositions[currenttargetmeshid].size());
 			//Filling the framevertices corresponding to the current frame.
 			for (int i = 0; i < targetpositions[currenttargetmeshid].size(); i++) {
-				framevertices.push_back(basemesh->getVertices()[i]);
+				framevertices.push_back(basevertices[i]);
 				framevertices[i].position += ((targetpositions[currenttargetmeshid][i] - framevertices[i].position) * ((float)(currentframeid + 1) / (float)framecounts[currenttargetmeshid]));
 				framevertices[i].normal += ((targetnormals[currenttargetmeshid][i] - framevertices[i].normal) * ((float)(currentframeid + 1) / (float)framecounts[currenttargetmeshid]));
 			}
@@ -90,7 +93,6 @@ void gMorphingMesh::interpolate(bool forceInterpolation) {
 			oldtargetmeshid = currenttargetmeshid;
 		}
 		else {
-			std::vector<gVertex> &basevertices = basemesh->getVertices();
 			//Clearing the old frames' datas and resizing them according to new ones.
 			framepositions[currenttargetmeshid].clear();
 			framepositions[currenttargetmeshid].resize(framecounts[currenttargetmeshid]);
@@ -109,7 +111,6 @@ void gMorphingMesh::interpolate(bool forceInterpolation) {
 		}
 	}
 	else {
-		std::vector<gVertex> &basevertices = basemesh->getVertices();
 		//Clearing the old frames' datas and resizing them according to new ones.
 		vboframes[currenttargetmeshid].clear();
 		vboframes[currenttargetmeshid].resize(framecounts[currenttargetmeshid]);
@@ -172,16 +173,15 @@ void gMorphingMesh::setTargetNormal(int targetId, int normalId, glm::vec3 newNor
 	targetnormals[targetId][normalId] = newNormal;
 }
 
-int gMorphingMesh::getCurrentTargetMeshId() {
+int gMorphingMesh::getCurrentTargetMeshId() const {
 	return currenttargetmeshid;
 }
 
-int gMorphingMesh::getCurrentFrameId() {
-	oldframeid = currentframeid;
+int gMorphingMesh::getCurrentFrameId() const {
 	return currentframeid;
 }
 
-int gMorphingMesh::getFrameCount(int targetMeshId) {
+int gMorphingMesh::getFrameCount(int targetMeshId) const {
 	//Exception check
 	if (targetMeshId < 0 || targetMeshId >= framecounts.size()) {
 		gLoge("gMorphingMesh::getFrameCount::Cannot return the frame count because your desired target mesh's id isn't found in target meshs' vector.");
@@ -191,12 +191,16 @@ int gMorphingMesh::getFrameCount(int targetMeshId) {
 	return framecounts[targetMeshId];
 }
 
-int gMorphingMesh::getFrameCount() {
+int gMorphingMesh::getFrameCount() const {
 	return framecounts[currenttargetmeshid];
 }
 
-int gMorphingMesh::getTargetMeshCount() {
+int gMorphingMesh::getTargetMeshCount() const {
 	return targetpositions.size();
+}
+
+int gMorphingMesh::getSpeed() const {
+	return speed;
 }
 
 void gMorphingMesh::resetTargetData(int targetId) {
@@ -204,11 +208,11 @@ void gMorphingMesh::resetTargetData(int targetId) {
 	targetnormals[targetId].assign(targetnormals[targetId].size(), glm::vec3(0));
 }
 
-const glm::vec3& gMorphingMesh::getTargetPosition(int targetId, int positionId) {
+const glm::vec3& gMorphingMesh::getTargetPosition(int targetId, int positionId) const {
 	return targetpositions[targetId][positionId];
 }
 
-const glm::vec3& gMorphingMesh::getTargetNormal(int targetId, int normalId) {
+const glm::vec3& gMorphingMesh::getTargetNormal(int targetId, int normalId) const {
 	return targetnormals[targetId][normalId];
 }
 

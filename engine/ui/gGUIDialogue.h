@@ -46,12 +46,16 @@ public:
 
 	void initDefTitleBar();
 	void initDefButtonsBar();
+	void initDefMessageBar();
 	void setTitleBar(gGUIContainer* titleBar);
 	gGUIContainer* getTitleBar();
 	void setButtonsBar(gGUIContainer* buttonsBar);
 	gGUIContainer* getButtonsBar();
+	void setMessageBar(gGUIContainer* messageBar);
+	gGUIContainer* getMessageBar();
 	void resetTitleBar();
 	void resetButtonsBar();
+	void resetMessageBar();
 
 	void setMinimizeButton(gGUIImageButton* minimizeButton);
 	void setMaximizeButton(gGUIImageButton* maximizeButton);
@@ -66,6 +70,9 @@ public:
 	void setIsMaximized(bool isMaximized);
 	void transformDialogue(int left, int top, int width, int height);
 
+	void setMessageText(gGUIText* messageText);
+	std::string getMessageText();
+
 	int getCursor(int x, int y);
 	void mouseMoved(int x, int y);
 	void mousePressed(int x, int y, int button);
@@ -76,6 +83,7 @@ private:
 
 	gGUIContainer* titlebar;
 	gGUIContainer* buttonsbar;
+	gGUIContainer* messagebar;
 
 	gGUIImageButton* minimizebutton;
 	gGUIImageButton* maximizebutton;
@@ -96,7 +104,13 @@ private:
 	gGUISizer defbuttonsbarsizer;
 	gGUIButton defbuttonsbarokbutton;
 
+	gGUIContainer defmessagebar;
+	gGUISizer defmessagebarsizer;
+	gGUIText defmessagetext;
+
 	int buttontrigger, buttonevent;
+
+	int defmessagebartopspace, defmessagebarleftspace;
 
 	bool isdragenabled, isresizeenabled;
 	bool ismaximized, isdragged;

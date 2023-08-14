@@ -105,24 +105,48 @@ void gGUILineGraph::addPointToLine(int lineIndex, float x, float y) {
 	graphlines[lineIndex].insert(graphlines[lineIndex].begin() + index, {x, y, axisx1 + axisxw * (x - minx) / (maxx - minx), axisy2 - axisyh * (y - miny) / (maxy - miny)});
 }
 
-void gGUILineGraph::setPointValues(int lineIndex, int pointIndex, float newx, float newy) {
+void gGUILineGraph::setPointValues(int lineIndex, int pointIndex, float newX, float newY) {
 	if(graphlines.size() - 1 < lineIndex) return;
-		if(newx < smallestvaluex) setMinX(newx);
-		else if(newx > largestvaluex) setMaxX(newx);
-		if(newy < smallestvaluey) setMinY(newy);
-		else if(newy > largestvaluey) setMaxY(newy);
+		if(newX < smallestvaluex) setMinX(newX);
+		else if(newX > largestvaluex) setMaxX(newX);
+		if(newY < smallestvaluey) setMinY(newY);
+		else if(newY > largestvaluey) setMaxY(newY);
 		setLabelCountX(getLabelCountX());
 		setLabelCountY(getLabelCountY());
 		int pointcount = graphlines[lineIndex].size();
 		int index = 0;
 		while(index < pointcount) {
-			if(graphlines[lineIndex][index++][0] < newx) continue;
+			if(graphlines[lineIndex][index++][0] < newX) continue;
 			index--;
 			break;
 		}
-		graphlines[lineIndex][pointIndex - 1] = {newx,newy, axisx1 + axisxw * (newx - minx) / (maxx - minx), axisy2 - axisyh * (newy - miny) / (maxy - miny)};
+		graphlines[lineIndex][pointIndex - 1] = {newX,newY, axisx1 + axisxw * (newX - minx) / (maxx - minx), axisy2 - axisyh * (newY - miny) / (maxy - miny)};
 }
 
+void gGUILineGraph::setPointValues(int lineIndex, float oldX, float oldY, float newX, float newY) {
+    if(graphlines.size() - 1 < lineIndex) return;
+    if(newX < smallestvaluex) setMinX(newX);
+    else if(newX > largestvaluex) setMaxX(newX);
+    if(newY < smallestvaluey) setMinY(newY);
+    else if(newY > largestvaluey) setMaxY(newY);
+    setLabelCountX(getLabelCountX());
+    setLabelCountY(getLabelCountY());
+    int pointcount = graphlines[lineIndex].size();
+    int index = 0;
+    while(index < pointcount) {
+        if(graphlines[lineIndex][index++][0] < newX) continue;
+        index--;
+        break;
+    }
+    for (int i = 0; i < pointcount; i++) {
+        if (graphlines[lineIndex][i][0] == oldX && graphlines[lineIndex][i][1] == oldY) {
+            graphlines[lineIndex][i][0] = newX;
+            graphlines[lineIndex][i][1] = newY;
+            graphlines[lineIndex][i][2] = axisx1 + axisxw * (newX - minx) / (maxx - minx);
+            graphlines[lineIndex][i][3] = axisy2 - axisyh * (newY - miny) / (maxy - miny);
+        }
+    }
+}
 
 void gGUILineGraph::drawGraph() {
 	if(graphlines.empty()) return;

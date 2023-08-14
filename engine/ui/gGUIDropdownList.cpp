@@ -1,8 +1,8 @@
-/*
- * gGUIDropdownList.cpp
- *
- *  Created on: 19 A�u 2022
- *      Author: sevval
+ /*
+  * gGUIDropdownList.cpp
+  *
+  *  Created on: 19 A�u 2022
+  *      Author: sevval
  */
 
 #include "gGUIDropdownList.h"
@@ -14,7 +14,7 @@ gGUIDropdownList::gGUIDropdownList() {
 	listsizer.setSize(1, 2);
 	float columnproportions[2] = {0.8f, 0.2f};
 	listsizer.setColumnProportions(columnproportions);
-	listsizer.enableBorders(true);
+	listsizer.enableBorders(false);
 	setSizer(&listsizer);
 	button.setButtonColor(pressedbuttoncolor);
 	button.setSize(buttonw, buttonw);
@@ -121,8 +121,9 @@ void gGUIDropdownList::mousePressed(int x, int y, int button) {
 void gGUIDropdownList::mouseReleased(int x, int y, int button) {
     lopened = listopened;
     gGUIContainer::mouseReleased(x, y, button);
-    if(listopened)
+    if(listopened) {
     	list.mouseReleased(x, y, button);
+    }
     setSelectedTitle();
     //Clicking on the Textbox opens the Treelist.
     if (x >= textbox.left && x <= textbox.right && y >= textbox.top + 5 && y <= textbox.height + buttonw) {
@@ -132,14 +133,13 @@ void gGUIDropdownList::mouseReleased(int x, int y, int button) {
         actionmanager.onGUIEvent(id, G_GUIEVENT_TREELISTOPENEDONDROPDOWNLIST);
         listopened = true;
     }
-    //Clicking on the Textbox closes the Treelist.
-    if(lopened && !pressedonlist) {
+    // Clicking outside the Textbox closes the Treelist.
+    else if (listopened) {
         listopened = false;
         frame->addTreelist(nullptr, listx, listy, listw);
     }
     pressedonlist = false;
 }
-
 
 void gGUIDropdownList::mouseScrolled(int x, int y) {
 	list.mouseScrolled(x, y);
@@ -149,10 +149,13 @@ void gGUIDropdownList::setfirstTitle() {
 	rootelement = list.getRootElement();
 	if(rootelement->sub.size() > 0) {
 		textbox.setText(rootelement->sub[0]->title);
+		title = rootelement->sub[0]->title;
+		fTitle = title;
 	}
 }
 
 void gGUIDropdownList::setSelectedTitle() {
+
 	std::string title = "";
 	bool arrow = false;
 	if(selectedline) {
@@ -178,5 +181,11 @@ void gGUIDropdownList::setSelectedTitle() {
 			}
 		}
 		textbox.setText(title);
+
+		fTitle = title;
 	}
+}
+
+std::string& gGUIDropdownList::getSelectedTitle() {
+	return fTitle;
 }

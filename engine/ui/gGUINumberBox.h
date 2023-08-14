@@ -10,6 +10,7 @@
 
 #include "gGUIContainer.h"
 #include "gGUITextbox.h"
+#include <limits>
 
 class gGUINumberBox: public gGUIContainer {
 public:
@@ -21,6 +22,7 @@ public:
 
 	void setText(const std::string& text);
 
+	std::string getText();
 	/*
 	 * Sets type of number which will be increased or decreased
 	 *
@@ -38,6 +40,10 @@ public:
 	void mouseDragged(int x, int y, int button);
 	void update();
 	void draw();
+	void setMaxValue(int maxValue);
+	void setMinValue(int minValue);
+	void setMaxValue(float maxValuef);
+	void setMinValue(float minValuef);
 
 private:
 	int boxwidth, boxheight, numboxwidth, numboxheight, smalboxwidth, smalboxheight;
@@ -63,6 +69,8 @@ private:
 	bool istitleshown;
 	int boxtoph;
 	int smalltriangleheight;
+	int maxvalue, minvalue;
+	float maxvaluef, minvaluef;
 
 };
 #endif /* UI_GGUINUMBERBOX_H_ */

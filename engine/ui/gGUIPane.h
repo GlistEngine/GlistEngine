@@ -33,6 +33,8 @@ public:
 	void enablePreviousButton(bool isEnabled);
 	void enableNextButton(bool isEnabled);
 
+	gGUIButton getNextButton();
+
 private:
 	gGUISizer panesizer;
 	gFont titlefont;

@@ -7,7 +7,6 @@
 
 #include "gGUIPane.h"
 
-
 gGUIPane::gGUIPane() {
 	setSizer(&panesizer);
 	totalh = 0;
@@ -104,8 +103,11 @@ void gGUIPane::mouseReleased(int x, int y, int button) {
 void gGUIPane::onGUIEvent(int guiObjectId, int eventType, int sourceEventType, std::string value1, std::string value2) {
 	gGUIContainer::onGUIEvent(guiObjectId, eventType, sourceEventType, value1, value2);
 	if(eventType == G_GUIEVENT_PANEACTIVE) {
-		((gGUISizer*)parent)->setControl(0, 1, this);
+		 ((gGUISizer*)parent)->setControl(0, 1, this);
 	}
 }
 
+gGUIButton gGUIPane::getNextButton() {
+	return nextbutton;
+}
 

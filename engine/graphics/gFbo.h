@@ -44,6 +44,7 @@ private:
     gTexture* texture;
     int width, height;
     bool isdepthmap;
+    bool isallocated;
 
     static bool isvaoset;
 	static unsigned int quadVAO, quadVBO;

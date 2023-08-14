@@ -336,6 +336,7 @@ private:
 #ifdef ANDROID
     DeviceOrientation deviceorientation;
     DeviceOrientation olddeviceorientation;
+    bool delayedresize;
 #endif
 
     std::vector<std::function<void()>> mainthreadqueue;
