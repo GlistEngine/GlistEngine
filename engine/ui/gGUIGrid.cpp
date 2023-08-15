@@ -737,13 +737,11 @@ std::string gGUIGrid::fixTextFunction(std::string text, int index) {
 	bool function = (tempstr[0] == '=');
 	if(int(tempstr[0]) == 39) tempstr.erase(0, 1);
 	else if(function) {
-		tempstr.erase(0, function);
-		bool isnegative = false;
+		tempstr.erase(0, 1);
 		std::transform(tempstr.begin(), tempstr.end(), tempstr.begin(), ::toupper);
 		tempstr = fixNumeric(tempstr);
-		isnegative = (tempstr[0] == '-');
+		bool isnegative = (tempstr[0] == '-');
 		tempstr.erase(0, isnegative);
-		bool hasdigit = isNumeric(tempstr);
 
 		if(!isdigit(tempstr[0])) {
 			int parentheses1 = tempstr.find('(');
@@ -774,11 +772,13 @@ std::string gGUIGrid::fixTextFunction(std::string text, int index) {
 					}
 					else {
 						std::string str1 = parenthesesstr.substr(0, doubledat);
-						std::string str2 = parenthesesstr.substr(str1.size() + 1, parenthesesstr.size());
-						int columnno1 = int(str1[0]) % 65;
-						int columnno2 = int(str2[0]) % 65;
-						int rowno1 = std::stoi(str1.substr(1, str1.size())) - 1;
-						int rowno2 = std::stoi(str2.substr(1, str2.size())) - 1;
+						std::string str2 = parenthesesstr.substr(str1.size() + 1);
+						Cell* cell1 = getCell(str1);
+						Cell* cell2 = getCell(str2);
+						int columnno1 = cell1->cellcolumnno;
+						int columnno2 = cell2->cellcolumnno;
+						int rowno1 = cell1->cellrowno;
+						int rowno2 = cell2->cellrowno;
 
 						tempstr = std::to_string(makeSum(columnno1, rowno1, columnno2, rowno2));
 						while(tempstr[tempstr.size() - 1] == '0') tempstr.erase(tempstr.size() - 1, 1);
@@ -954,7 +954,12 @@ float gGUIGrid::makeSum(int c1, int r1, int c2, int r2) {
 			}
 			functionindexes.push_back(currentindex);
 			if(allcells[currentindex].celltype == Cell::TYPE_DIGIT) {
-				result += std::stof(allcells[currentindex].showncontent);
+				std::string value = "";
+				if(allcells[currentindex].showncontent[0] == '-') value += '-';
+				for(int i = value.size(); i < allcells[currentindex].showncontent.size(); i++) {
+					if(isdigit(allcells[currentindex].showncontent[i]) || allcells[currentindex].showncontent[i] == '.') value += allcells[currentindex].showncontent[i];
+				}
+				result += gToFloat(value);
 			}
 		}
 	}
@@ -1201,7 +1206,7 @@ void gGUIGrid::operateFunction(int functionNo) {
 		allcells[functions[functionNo][FUNCTION_FIRSTINDEX]].showncontent = allcells[functions[functionNo][FUNCTION_SENDER]].showncontent;
 		break;
 	case FUNCTION_SUM:
-		std::string result = std::to_string(makeSum(functions[functionNo][FUNCTION_FIRSTINDEX] % columnnum, functions[functionNo][FUNCTION_FIRSTINDEX] / columnnum, functions[functionNo][functions[functionNo].size() - 1] % columnnum, functions[functionNo][functions[functionNo].size() - 1] / columnnum));
+		std::string result = std::to_string(makeSum(allcells[functions[functionNo][FUNCTION_FIRSTINDEX]].cellcolumnno, allcells[functions[functionNo][FUNCTION_FIRSTINDEX]].cellrowno, allcells[functions[functionNo][functions[functionNo].size() - 1]].cellcolumnno, allcells[functions[functionNo][functions[functionNo].size() - 1]].cellrowno));
 		while(result[result.size() - 1] == '0') result.erase(result.size() - 1, 1);
 		if(result[result.size() - 1] == '.') result.erase(result.size() - 1, 1);
 		allcells[functions[functionNo][FUNCTION_SENDER]].showncontent = result;
@@ -1716,7 +1721,7 @@ void gGUIGrid::checkCellType(int cellIndex) {
 		if(allcells[cellIndex].showncontent[0] == '-') isnegative = true;
 		if(isdigit(allcells[cellIndex].showncontent[isnegative])) {
 			for(int i = 1 + isnegative; i < allcells[cellIndex].showncontent.length(); i++) {
-				if(allcells[cellIndex].showncontent[i] == ',') {
+				if(allcells[cellIndex].showncontent[i] == '.') {
 					if(!isdigit(allcells[cellIndex].showncontent[i - 1])) {
 						digit = false;
 						break;
@@ -1731,7 +1736,7 @@ void gGUIGrid::checkCellType(int cellIndex) {
 					}
 					if(!isfractional) break;
 				}
-				else if(allcells[cellIndex].showncontent[i] == '.' || allcells[cellIndex].showncontent[i] == ' ') {
+				else if(allcells[cellIndex].showncontent[i] == ',' || allcells[cellIndex].showncontent[i] == ' ') {
 					if(isdigit(allcells[cellIndex].showncontent[i - 1])) {
 						if(i + 1 < allcells[cellIndex].showncontent.length()) {
 							int next = 3;
@@ -1769,18 +1774,18 @@ void gGUIGrid::checkCellType(int cellIndex) {
 		else digit = false;
 		if(digit) {
 			if(isfractional) {
-				int commaindex = allcells[cellIndex].showncontent.find(',');
-				for(int i = commaindex + 1; i < allcells[cellIndex].showncontent.length(); i++) {
+				int dotindex = allcells[cellIndex].showncontent.find('.');
+				for(int i = dotindex + 1; i < allcells[cellIndex].showncontent.length(); i++) {
 					if(allcells[cellIndex].showncontent[i] != '0') {
-						commaindex = -1;
+						dotindex = -1;
 						break;
 					}
 				}
-				if(commaindex != -1) allcells[cellIndex].showncontent.erase(commaindex, allcells[cellIndex].showncontent.length() - commaindex);
+				if(dotindex != -1) allcells[cellIndex].showncontent.erase(dotindex, allcells[cellIndex].showncontent.length() - dotindex);
 			}
 			if(spaceindexes.empty()) {
 				std::string tmpstr;
-				if(isfractional && allcells[cellIndex].showncontent.find(',') != -1) tmpstr = allcells[cellIndex].showncontent.substr(0, allcells[cellIndex].showncontent.find(','));
+				if(isfractional && allcells[cellIndex].showncontent.find('.') != -1) tmpstr = allcells[cellIndex].showncontent.substr(0, allcells[cellIndex].showncontent.find('.'));
 				else tmpstr = allcells[cellIndex].showncontent;
 				int next = 3;
 				std::deque<int> indexes;
@@ -1792,15 +1797,15 @@ void gGUIGrid::checkCellType(int cellIndex) {
 					}
 				}
 				while(!indexes.empty()) {
-					tmpstr.insert(indexes.front(), ".");
+					tmpstr.insert(indexes.front(), ",");
 					indexes.pop_front();
 				}
-				if(isfractional && allcells[cellIndex].showncontent.find(',') != -1) allcells[cellIndex].showncontent = tmpstr + allcells[cellIndex].showncontent.substr(allcells[cellIndex].showncontent.find(','));
+				if(isfractional && allcells[cellIndex].showncontent.find('.') != -1) allcells[cellIndex].showncontent = tmpstr + allcells[cellIndex].showncontent.substr(allcells[cellIndex].showncontent.find('.'));
 				else allcells[cellIndex].showncontent = tmpstr;
 			}
 			else {
 				while(!spaceindexes.empty()) {
-					if(allcells[cellIndex].showncontent[spaceindexes.top()] != '.') allcells[cellIndex].showncontent[spaceindexes.top()] = '.';
+					if(allcells[cellIndex].showncontent[spaceindexes.top()] != ',') allcells[cellIndex].showncontent[spaceindexes.top()] = ',';
 					spaceindexes.pop();
 				}
 			}
