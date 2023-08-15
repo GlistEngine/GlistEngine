@@ -46,7 +46,7 @@ Glist Engine has one-click installers for Windows, Linux and Mac. You can downlo
 > /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
 - Install libraries via home-brew and make necessary configurations
-> brew install llvm gcc@11 cmake glew glfw glm freetype assimp curl openssl
+> brew install llvm gcc@11 cmake glew glfw glm freetype assimp curl openssl pkg-config
 
 > export PATH=$PATH:~/usr/local/bin/cmake
 
