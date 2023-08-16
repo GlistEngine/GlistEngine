@@ -1,5 +1,6 @@
 var NAVTREEINDEX10 =
 {
+"classgTexture.html#a80580098161b4276b9fc0e0737d060ca":[0,0,146,34],
 "classgTexture.html#a80e9f20fca3a996c92bcbf8d16cf5389":[0,0,146,45],
 "classgTexture.html#a819525baeaf079004ae85a94e598f1a2":[0,0,146,3],
 "classgTexture.html#a84253d5a3bac0822585c6023cb70e566":[0,0,146,27],
@@ -132,8 +133,8 @@ var NAVTREEINDEX10 =
 "classgWindowResizeEvent.html#a12037a9797b82a2efcd950a2e740f344":[0,0,161,2],
 "classgWindowResizeEvent.html#a303c8759dad7cdd6f914b71c1821c6d2":[0,0,161,0],
 "files.html":[1,0],
-"functions.html":[0,3,0,0],
 "functions.html":[0,3,0],
+"functions.html":[0,3,0,0],
 "functions_b.html":[0,3,0,1],
 "functions_c.html":[0,3,0,2],
 "functions_d.html":[0,3,0,3],
@@ -248,6 +249,5 @@ var NAVTREEINDEX10 =
 "gGUISizer_8h_source.html":[1,0,80],
 "gGUISlider_8h_source.html":[1,0,81],
 "gGUIStatusBar_8h_source.html":[1,0,82],
-"gGUISurface_8h_source.html":[1,0,83],
-"gGUISwitchButton_8h_source.html":[1,0,84]
+"gGUISurface_8h_source.html":[1,0,83]
 };

@@ -137,26 +137,27 @@ $(document).ready(function(){initNavTree('gGUIBitmap_8h_source.html',''); initRe
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <span class="keywordtype">void</span> draw();</div>
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160; </div>
 <div class="line"><a name="l00057"></a><span class="lineno"><a class="line" href="classgGUIBitmap.html#acc5909c55cca45588a33f7f3cd57acb3">   57</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classgGUIBitmap.html#acc5909c55cca45588a33f7f3cd57acb3">loadImage</a>(<span class="keyword">const</span> std::string&amp; imagePath, <span class="keywordtype">bool</span> isProportional = <span class="keyword">true</span>);</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160; </div>
-<div class="line"><a name="l00065"></a><span class="lineno"><a class="line" href="classgGUIBitmap.html#a1def71c345c55dcd11d9dbd57e3ea73f">   65</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classgGUIBitmap.html#a1def71c345c55dcd11d9dbd57e3ea73f">setImage</a>(<a class="code" href="classgImage.html">gImage</a> <a class="code" href="classgGUIBitmap.html#a1def71c345c55dcd11d9dbd57e3ea73f">setImage</a>, <span class="keywordtype">bool</span> isProportional = <span class="keyword">false</span>);</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160; </div>
-<div class="line"><a name="l00078"></a><span class="lineno"><a class="line" href="classgGUIBitmap.html#a4c922b70d91fc1844aa4704a7560d611">   78</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classgGUIBitmap.html#a4c922b70d91fc1844aa4704a7560d611">setImageSize</a>(<span class="keywordtype">int</span> x, <span class="keywordtype">int</span> y, <span class="keywordtype">float</span> scalex, <span class="keywordtype">float</span> scaley);</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160; </div>
-<div class="line"><a name="l00083"></a><span class="lineno"><a class="line" href="classgGUIBitmap.html#a28868c1d5eb75d147e700c089f6ec834">   83</a></span>&#160;    std::string <a class="code" href="classgGUIBitmap.html#a28868c1d5eb75d147e700c089f6ec834">getImagePath</a>();</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160; </div>
-<div class="line"><a name="l00089"></a><span class="lineno"><a class="line" href="classgGUIBitmap.html#a243aae1a2db64bd664d3542e08348f06">   89</a></span>&#160;    <span class="keywordtype">int</span> <a class="code" href="classgGUIBitmap.html#a243aae1a2db64bd664d3542e08348f06">getImageWidth</a>();</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    <span class="keywordtype">int</span> getImageHeight();</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160; </div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    <span class="keywordtype">float</span> imagew, imageh, proportion;</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    <span class="keywordtype">int</span> setsizex, setsizey;</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    <span class="keywordtype">float</span> setsizew, setsizeh;</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    <span class="keywordtype">bool</span> stretch;</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    std::string imagepath;</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    <a class="code" href="classgImage.html">gImage</a> image;</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;};</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160; </div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* UI_GGUIBITMAP_H_ */</span><span class="preprocessor"></span></div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    <span class="keywordtype">void</span> load(<span class="keyword">const</span> std::string&amp; fullPath, <span class="keywordtype">bool</span> isProportional = <span class="keyword">true</span>);</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160; </div>
+<div class="line"><a name="l00066"></a><span class="lineno"><a class="line" href="classgGUIBitmap.html#a1def71c345c55dcd11d9dbd57e3ea73f">   66</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classgGUIBitmap.html#a1def71c345c55dcd11d9dbd57e3ea73f">setImage</a>(<a class="code" href="classgImage.html">gImage</a> <a class="code" href="classgGUIBitmap.html#a1def71c345c55dcd11d9dbd57e3ea73f">setImage</a>, <span class="keywordtype">bool</span> isProportional = <span class="keyword">false</span>);</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160; </div>
+<div class="line"><a name="l00079"></a><span class="lineno"><a class="line" href="classgGUIBitmap.html#a4c922b70d91fc1844aa4704a7560d611">   79</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classgGUIBitmap.html#a4c922b70d91fc1844aa4704a7560d611">setImageSize</a>(<span class="keywordtype">int</span> x, <span class="keywordtype">int</span> y, <span class="keywordtype">float</span> scalex, <span class="keywordtype">float</span> scaley);</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160; </div>
+<div class="line"><a name="l00084"></a><span class="lineno"><a class="line" href="classgGUIBitmap.html#a28868c1d5eb75d147e700c089f6ec834">   84</a></span>&#160;    std::string <a class="code" href="classgGUIBitmap.html#a28868c1d5eb75d147e700c089f6ec834">getImagePath</a>();</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160; </div>
+<div class="line"><a name="l00090"></a><span class="lineno"><a class="line" href="classgGUIBitmap.html#a243aae1a2db64bd664d3542e08348f06">   90</a></span>&#160;    <span class="keywordtype">int</span> <a class="code" href="classgGUIBitmap.html#a243aae1a2db64bd664d3542e08348f06">getImageWidth</a>();</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    <span class="keywordtype">int</span> getImageHeight();</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160; </div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    <span class="keywordtype">float</span> imagew, imageh, proportion;</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    <span class="keywordtype">int</span> setsizex, setsizey;</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    <span class="keywordtype">float</span> setsizew, setsizeh;</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    <span class="keywordtype">bool</span> stretch;</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    std::string imagepath;</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    <a class="code" href="classgImage.html">gImage</a> image;</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;};</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160; </div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* UI_GGUIBITMAP_H_ */</span><span class="preprocessor"></span></div>
 <div class="ttc" id="aclassgGUIBitmap_html"><div class="ttname"><a href="classgGUIBitmap.html">gGUIBitmap</a></div><div class="ttdef"><b>Definition:</b> gGUIBitmap.h:45</div></div>
 <div class="ttc" id="aclassgGUIBitmap_html_a1def71c345c55dcd11d9dbd57e3ea73f"><div class="ttname"><a href="classgGUIBitmap.html#a1def71c345c55dcd11d9dbd57e3ea73f">gGUIBitmap::setImage</a></div><div class="ttdeci">void setImage(gImage setImage, bool isProportional=false)</div></div>
 <div class="ttc" id="aclassgGUIBitmap_html_a243aae1a2db64bd664d3542e08348f06"><div class="ttname"><a href="classgGUIBitmap.html#a243aae1a2db64bd664d3542e08348f06">gGUIBitmap::getImageWidth</a></div><div class="ttdeci">int getImageWidth()</div></div>

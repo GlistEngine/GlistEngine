@@ -184,15 +184,16 @@ var NAVTREEINDEX2 =
 "classgGUIActionManager.html#a574e672d24c7a52e7f73c74f2453771c":[0,0,46,1],
 "classgGUIActionManager.html#ae3bbde2fe2441e18a79185b14c182a42":[0,0,46,2],
 "classgGUIBitmap.html":[0,0,47],
-"classgGUIBitmap.html#a1def71c345c55dcd11d9dbd57e3ea73f":[0,0,47,7],
+"classgGUIBitmap.html#a1def71c345c55dcd11d9dbd57e3ea73f":[0,0,47,8],
 "classgGUIBitmap.html#a243aae1a2db64bd664d3542e08348f06":[0,0,47,5],
 "classgGUIBitmap.html#a28868c1d5eb75d147e700c089f6ec834":[0,0,47,4],
-"classgGUIBitmap.html#a4c922b70d91fc1844aa4704a7560d611":[0,0,47,8],
+"classgGUIBitmap.html#a4c922b70d91fc1844aa4704a7560d611":[0,0,47,9],
 "classgGUIBitmap.html#a618e15b8eacc1673bdb6f5e61e2da5aa":[0,0,47,2],
 "classgGUIBitmap.html#a7fc07fdeb9b89410582719d5d7a6a3df":[0,0,47,0],
 "classgGUIBitmap.html#a91f1e300ae0c062822063e863e609ca8":[0,0,47,3],
 "classgGUIBitmap.html#abf9c0fce13593408b7816be48fa4fe0f":[0,0,47,1],
-"classgGUIBitmap.html#acc5909c55cca45588a33f7f3cd57acb3":[0,0,47,6],
+"classgGUIBitmap.html#acc5909c55cca45588a33f7f3cd57acb3":[0,0,47,7],
+"classgGUIBitmap.html#acfc2f07c8a3b22a6384f67de4fd9ae86":[0,0,47,6],
 "classgGUIButton.html":[0,0,48],
 "classgGUIButton.html#a00ef7a79827d55840ac00bacbdce25d5":[0,0,48,23],
 "classgGUIButton.html#a015c058d610c32d69858d227a610b54d":[0,0,48,10],
@@ -248,6 +249,5 @@ var NAVTREEINDEX2 =
 "classgGUICandleStickChart.html#a2d6410758101f30ece907bb6935a5e14":[0,0,49,14],
 "classgGUICandleStickChart.html#a3de061418c3e9f787b9e55ef46f24cf5":[0,0,49,6],
 "classgGUICandleStickChart.html#a44af69480f739ed2262c33b4e2e855d7":[0,0,49,7],
-"classgGUICandleStickChart.html#a46676b296fbf3ab641782897f2392a88":[0,0,49,8],
-"classgGUICandleStickChart.html#a559200bd7991ad4b9033b7f742162dd3":[0,0,49,1]
+"classgGUICandleStickChart.html#a46676b296fbf3ab641782897f2392a88":[0,0,49,8]
 };

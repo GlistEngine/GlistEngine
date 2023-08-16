@@ -6,6 +6,7 @@ var classgGUIBitmap =
     [ "getImageHeight", "classgGUIBitmap.html#a91f1e300ae0c062822063e863e609ca8", null ],
     [ "getImagePath", "classgGUIBitmap.html#a28868c1d5eb75d147e700c089f6ec834", null ],
     [ "getImageWidth", "classgGUIBitmap.html#a243aae1a2db64bd664d3542e08348f06", null ],
+    [ "load", "classgGUIBitmap.html#acfc2f07c8a3b22a6384f67de4fd9ae86", null ],
     [ "loadImage", "classgGUIBitmap.html#acc5909c55cca45588a33f7f3cd57acb3", null ],
     [ "setImage", "classgGUIBitmap.html#a1def71c345c55dcd11d9dbd57e3ea73f", null ],
     [ "setImageSize", "classgGUIBitmap.html#a4c922b70d91fc1844aa4704a7560d611", null ]
