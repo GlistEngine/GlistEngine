@@ -65,7 +65,7 @@ bool gFont::load(const std::string& fullPath, int size, bool isAntialiased, int 
 	letterspacing = 1;
 	spacesize = 1;
 	border = 3;
-	characternumlimit = 10000;
+	characternumlimit = 1000;
 
 	iskerning = FT_HAS_KERNING(fontface);
 
@@ -76,6 +76,9 @@ bool gFont::load(const std::string& fullPath, int size, bool isAntialiased, int 
 }
 
 bool gFont::loadFont(const std::string& fontPath, int size, bool isAntialiased, int dpi) {
+		if(!load(gGetFontsDir() + fontPath, size, isAntialiased, dpi)){
+			return false;
+		}
 	return load(gGetFontsDir() + fontPath, size, isAntialiased, dpi);
 }
 
@@ -207,16 +210,19 @@ int gFont::getCharID(const int& c) {
 	tempint = (int)c;
 	tempcharno = 0;
 	for (; tempcharno != (int)loadedcharacters.size(); ++tempcharno) {
+		//check if the character loaded before
 		if (loadedcharacters[tempcharno] == tempint) {
+			//if loaded before break the loop
 			break;
 		}
 	}
 	if (tempcharno == loadedcharacters.size()) {
-		// char num check
+		//check if reached to max limit
 		if (tempcharno >= characternumlimit) {
-			gLoge("gFont") << "Error: character number limit exceeded!";
-			return tempcharno = 0;
+			//if reached limit resize
+			loadedcharacters.reserve(loadedcharacters.size() + 100);
 		} else {
+			//if not push to last point
 			loadedcharacters.push_back(tempint);
 		}
 	}

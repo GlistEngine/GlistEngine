@@ -19,6 +19,7 @@
 
 #include "gNode.h"
 #include <map>
+#include <vector>
 #include "freetype2/ft2build.h"
 #ifdef ANDROID
 #include "freetype2/freetype/freetype.h"
@@ -157,6 +158,7 @@ private:
 	  int characternumlimit;
 	  int border;
 	  bool iskerning;
+
 
 	  FT_Library ftlib;
 	  FT_Face fontface;
