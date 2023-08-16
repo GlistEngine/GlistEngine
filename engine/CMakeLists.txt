@@ -274,6 +274,7 @@ if(WIN32)
 		${MINGW64_DIR}/include/curl
 		${MINGW64_DIR}/include/fmod
 		${MINGW64_DIR}/include/utf8
+		${MINGW64_DIR}/include/harfbuzz
 	)
 elseif(ANDROID)
     # These are added by gipAndroid plugin
