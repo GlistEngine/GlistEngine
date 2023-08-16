@@ -1789,7 +1789,7 @@ void gGUIGrid::checkCellType(int cellIndex) {
 				else tmpstr = allcells[cellIndex].showncontent;
 				int next = 3;
 				std::deque<int> indexes;
-				for(int i = tmpstr.length() - 1; i > 0; i--) {
+				for(int i = tmpstr.length() - 1; i > isnegative; i--) {
 					next--;
 					if(next == 0) {
 						next = 3;
