@@ -706,12 +706,15 @@ void gGUIGrid::selectCell(std::string cell1, std::string cell2) {
 gGUIGrid::Cell* gGUIGrid::getCell(std::string cellID) {
 	std::transform(cellID.begin(), cellID.end(), cellID.begin(), ::toupper);
 	std::string column = getTextColumn(cellID);
-	std::string row = cellID.substr(column.size(), cellID.size() - column.size());
+	std::string row = cellID.substr(column.size());
+	for(int i = 0; i < row.size(); i++)
+		if(!isdigit(row[i])) return 0;
 	int columnindex = int(column[column.size() - 1]) % 65;
 	for(int i = 0; i < column.size() - 1; i++) columnindex += int((column[i] % 65 + 1) * (26 * ((column.size() - 1) - i)));
+	if(gToInt(row) - 1 < 0 || gToInt(row) - 1 > rownum || columnindex < 0 || columnindex > columnnum) return 0;
 	int index = getCellNo(std::stoi(row) - 1, columnindex);
 	if(index == -1) {
-		createCell(std::stoi(row) - 1, columnindex);
+		createCell(gToInt(row) - 1, columnindex);
 		index = allcells.size() - 1;
 	}
 	return &allcells[index];
@@ -741,9 +744,9 @@ std::string gGUIGrid::fixTextFunction(std::string text, int index) {
 		std::transform(tempstr.begin(), tempstr.end(), tempstr.begin(), ::toupper);
 		tempstr = fixNumeric(tempstr);
 		bool isnegative = (tempstr[0] == '-');
-		tempstr.erase(0, isnegative);
 
-		if(!isdigit(tempstr[0])) {
+		if(!isdigit(tempstr[isnegative])) {
+			tempstr.erase(0, isnegative);
 			int parentheses1 = tempstr.find('(');
 			int parentheses2 = tempstr.find(')');
 			if(parentheses1 != std::string::npos && parentheses2 != std::string::npos) {
@@ -766,8 +769,6 @@ std::string gGUIGrid::fixTextFunction(std::string text, int index) {
 								copiedindex = allcells.size() - 1;
 							}
 							tempstr = allcells[copiedindex].showncontent;
-							functionindexes.push_back(index);
-							if(text != strflag) addFunction(FUNCTION_COPY, copiedindex);
 						}
 					}
 					else {
@@ -783,25 +784,64 @@ std::string gGUIGrid::fixTextFunction(std::string text, int index) {
 						tempstr = std::to_string(makeSum(columnno1, rowno1, columnno2, rowno2));
 						while(tempstr[tempstr.size() - 1] == '0') tempstr.erase(tempstr.size() - 1, 1);
 						if(tempstr[tempstr.size() - 1] == '.') tempstr.erase(tempstr.size() - 1, 1);
-						if(text != strflag) addFunction(FUNCTION_SUM, index);
 					}
 					if((isnegative && !isparenthesesnegative) || (!isnegative && isparenthesesnegative)) tempstr = "-" + tempstr;
 				}
 			}
-			else if(int(tempstr[0]) >= 65 && int(tempstr[0]) < 91) {
-				if(tempstr.size() > 1) {
-					std::string tstr = tempstr.substr(1, tempstr.size());
-					int found = tstr.find_first_not_of("0123456789");
-					if(found == std::string::npos) {
-						int copiedindex = getCellNo(std::stoi(tstr) - 1, int(tempstr[0]) % 65);
-						if(copiedindex == -1) {
-							createCell(std::stoi(tstr) - 1, int(tempstr[0]) % 65);
-							copiedindex = allcells.size() - 1;
+			else {
+				std::string cstr1 = tempstr;
+				int c1lastindex = cstr1.size();
+				if(cstr1.find('/') != std::string::npos) {
+					c1lastindex = cstr1.find('/');
+					if(c1lastindex < cstr1.find('*') && cstr1.find('*') != std::string::npos) c1lastindex = cstr1.find('*');
+				}
+				else if(cstr1.find('*') != std::string::npos) c1lastindex = cstr1.find('*');
+				else if(cstr1.find('+') != std::string::npos) c1lastindex = cstr1.find('+');
+				else if(cstr1.find('-') != std::string::npos) c1lastindex = cstr1.find('-');
+				cstr1 = cstr1.substr(0, c1lastindex);
+				if(!isdigit(cstr1[cstr1.size() - 1])) return tempstr;
+				if(cstr1.size() != tempstr.size()) {
+					std::string cstr2 = tempstr.substr(cstr1.size());
+					char operation;
+					if(cstr2[0] == '/' || cstr2[0] == '*') {
+						operation = cstr2[0];
+						cstr2.erase(0, 1);
+					}
+					cstr2 = fixNumeric(cstr2);
+					if(operation == 0) {
+						if(cstr2[0] != '+' && cstr2[0] != '-' && cstr2[0] != '/' && cstr2[0] != '*') operation = '+';
+						else operation = cstr2[0];
+					}
+					bool c2neg = (cstr2[0] == '-' && operation != '-');
+					if(c2neg || operation == '-') cstr2.erase(0, 1);
+					Cell* c1 = getCell(cstr1);
+					Cell* c2 = getCell(cstr2);
+					std::string value1 = c1->showncontent;
+					if(isnegative) {
+						if(value1[0] == '-') value1.erase(0, 1);
+						else value1 = '-' + value1;
+					}
+					gLogi("Cstr1") << cstr1 << " Operation: " << operation << " Cstr2: " << cstr2;
+					std::string value2 = c2->showncontent;
+					if(operation == '-' || c2neg) {
+						if(value2[0] == '-') {
+							value2.erase(0, 1);
+							if(operation == '-') operation = '+';
 						}
-						tempstr = allcells[copiedindex].showncontent;
-						if(isnegative) tempstr = "-" + tempstr;
-						functionindexes.push_back(index);
-						if(text != strflag) addFunction(FUNCTION_COPY, copiedindex);
+						else value2 = '-' + value2;
+					}
+					if(c1 != 0 && c2 != 0)
+						if(operation == '+' || operation == '-' || operation == '/' || operation == '*')
+							tempstr = gToStr(makeFourOperation(value1, value2, operation));
+				}
+				else {
+					Cell* c = getCell(cstr1);
+					if(c != 0) {
+						tempstr = c->showncontent;
+						if(cstr1[0] == '-') {
+							if(tempstr[0] != '-') tempstr = "-" + tempstr;
+							else tempstr.erase(0, 1);
+						}
 					}
 				}
 			}
@@ -818,7 +858,7 @@ std::string gGUIGrid::fixNumeric(std::string text) {
 		for(int i = 1; i < tempstr.size(); i++) {
 			if(tempstr[i] != '+' && tempstr[i] != '-') break;
 			if(tempstr[i] == '+') unnecessaryindexes.push(i);
-			else if(tempstr[i] != '-') continue;
+			else if(tempstr[i] == '-') continue;
 		}
 		while(!unnecessaryindexes.empty()) {
 			tempstr.erase(unnecessaryindexes.top(), 1);
@@ -952,7 +992,6 @@ float gGUIGrid::makeSum(int c1, int r1, int c2, int r2) {
 				createCell(row, column);
 				currentindex = allcells.size() - 1;
 			}
-			functionindexes.push_back(currentindex);
 			if(allcells[currentindex].celltype == Cell::TYPE_DIGIT) {
 				std::string value = "";
 				if(allcells[currentindex].showncontent[0] == '-') value += '-';
@@ -964,6 +1003,55 @@ float gGUIGrid::makeSum(int c1, int r1, int c2, int r2) {
 		}
 	}
 	return result;
+}
+
+float gGUIGrid::makeFourOperation(std::string value1, std::string value2, char operation) {
+	bool d1 = false;
+	bool d2 = false;
+	std::stack<int> spaceindexes;
+	for(int i = 0; i < value1.size(); i++) {
+		if(value1[i] == ',') spaceindexes.push(i);
+	}
+	while(!spaceindexes.empty()) {
+		value1.erase(spaceindexes.top(), 1);
+		spaceindexes.pop();
+	}
+	for(int i = 0; i < value2.size(); i++) {
+		if(value2[i] == ',') spaceindexes.push(i);
+	}
+	while(!spaceindexes.empty()) {
+		value2.erase(spaceindexes.top(), 1);
+		spaceindexes.pop();
+	}
+	for(int i = (value1[0] == '-'); i < value1.size(); i++) {
+		if(!isdigit(value1[i]) && value1[i] != '.') {
+			value1 = "0";
+			break;
+		}
+		d1 = true;
+	}
+	for(int i = (value2[0] == '-'); i < value2.size(); i++) {
+		if(!isdigit(value2[i]) && value2[i] != '.') {
+			value2 = "0";
+			break;
+		}
+		d2 = true;
+	}
+	if(!d1) value1 = "0";
+	if(!d2) value2 = "0";
+
+	switch(operation) {
+	case '+':
+		return gToFloat(value1) + gToFloat(value2);
+	case '-':
+		return gToFloat(value1) + gToFloat(value2);
+	case '/':
+		return gToFloat(value1) / gToFloat(value2);
+	case '*':
+		return gToFloat(value1) * gToFloat(value2);
+	default:
+		return 0;
+	}
 }
 
 float gGUIGrid::calculateCurrentX(int columnNo) {
@@ -987,22 +1075,6 @@ bool gGUIGrid::isNumeric(std::string text) {
 		}
 	}
 	return hasdigit;
-}
-
-void gGUIGrid::addFunction(int functionType, int functionSender) {
-	int same = -1;
-	functionindexes.insert(functionindexes.begin(), functionSender);
-	functionindexes.insert(functionindexes.begin(), functionType);
-	for(int i = 0; i < functions.size(); i++) {
-		if(functionSender == functions[i][FUNCTION_SENDER] && functions[i][FUNCTION_TYPE] != FUNCTION_COPY) {
-			same = i;
-			break;
-		}
-	}
-	if(same != -1) functions[same] = functionindexes;
-	else functions.push_back(functionindexes);
-	functionindexes.clear();
-	operateFunction(functions.size() - 1);
 }
 
 void gGUIGrid::addUndoStack(int process) {
@@ -1195,25 +1267,6 @@ void gGUIGrid::addOrChangeRowHeight(int rowNo, float h) {
 	else gridboxesh[hindex][1] = h;
 }
 
-void gGUIGrid::removeFunction(int functionNo) {
-	functionindexes.clear();
-	functions.erase(functions.begin() + functionNo);
-}
-
-void gGUIGrid::operateFunction(int functionNo) {
-	switch(functions[functionNo][FUNCTION_TYPE]) {
-	case FUNCTION_COPY:
-		allcells[functions[functionNo][FUNCTION_FIRSTINDEX]].showncontent = allcells[functions[functionNo][FUNCTION_SENDER]].showncontent;
-		break;
-	case FUNCTION_SUM:
-		std::string result = std::to_string(makeSum(allcells[functions[functionNo][FUNCTION_FIRSTINDEX]].cellcolumnno, allcells[functions[functionNo][FUNCTION_FIRSTINDEX]].cellrowno, allcells[functions[functionNo][functions[functionNo].size() - 1]].cellcolumnno, allcells[functions[functionNo][functions[functionNo].size() - 1]].cellrowno));
-		while(result[result.size() - 1] == '0') result.erase(result.size() - 1, 1);
-		if(result[result.size() - 1] == '.') result.erase(result.size() - 1, 1);
-		allcells[functions[functionNo][FUNCTION_SENDER]].showncontent = result;
-		break;
-	}
-}
-
 void gGUIGrid::makeDefaultCell() {
 	for(int i = 0; i < selectedcells.size(); i++) {
 		allcells[selectedcells[i]].iscellselected = false;
@@ -1232,12 +1285,6 @@ void gGUIGrid::makeDefaultCell() {
 		allcells[selectedcells[i]].showncontent = "";
 		allcells[selectedcells[i]].overflowcontent = "";
 		allcells[selectedcells[i]].cellfontcolor = fontcolor;
-		for(int i = 0; i < functions.size(); i++) {
-			if(selectedcells.at(i) == functions[i][FUNCTION_SENDER]) {
-				removeFunction(selectedcells.at(i));
-				break;
-			}
-		}
 	}
 }
 
@@ -1321,21 +1368,6 @@ void gGUIGrid::changeSelectedCell(int amount) {
 }
 
 void gGUIGrid::changeCell(int cellNo) {
-	std::stack<int> removefunctionindexstack;
-	for(int function = 0; function < functions.size(); function++) {
-		if(cellNo == functions[function][FUNCTION_SENDER] && functions[function][FUNCTION_TYPE] == FUNCTION_SUM) {
-			removefunctionindexstack.push(function);
-			continue;
-		}
-		else if(cellNo == functions[function][FUNCTION_FIRSTINDEX] && functions[function][FUNCTION_TYPE] == FUNCTION_COPY) {
-			removefunctionindexstack.push(function);
-			continue;
-		}
-	}
-	while(!removefunctionindexstack.empty()) {
-		removeFunction(removefunctionindexstack.top());
-		removefunctionindexstack.pop();
-	}
 	if(istextboxactive) {
 		fillCell(cellNo, textbox.getText());
 		textbox.cleanText();
@@ -1344,19 +1376,6 @@ void gGUIGrid::changeCell(int cellNo) {
 	else {
 		if(!ctrlzpressed && !ctrlypressed) fillCell(cellNo, allcells[cellNo].cellcontent);
 		ctrlvpressed = false;
-	}
-
-	for(int function = 0; function < functions.size(); function++) {
-		if(selectedbox == functions[function][FUNCTION_SENDER] && functions[function][FUNCTION_TYPE] == FUNCTION_COPY) {
-			operateFunction(function);
-			continue;
-		}
-		for(int functionindex = FUNCTION_FIRSTINDEX; functionindex < functions[function].size(); functionindex++) {
-			if(selectedbox == functions[function][functionindex]) {
-				operateFunction(function);
-				break;
-			}
-		}
 	}
 }
 
