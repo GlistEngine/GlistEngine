@@ -4,6 +4,8 @@ else()
 	cmake_minimum_required (VERSION 3.10.2)
 endif()
 
+set(GLIST_CXX_STANDARD 14)
+set(GLIST_CXX_STANDARD_REQUIRED True)
 
 # Configure compiler and linker as you need
 set(GLIST_CXX_FLAGS_COMMON
@@ -257,8 +259,8 @@ endif()
 set_target_properties(
     GlistEngine
         PROPERTIES
-            CXX_STANDARD 14
-            CXX_STANDARD_REQUIRED True
+            CXX_STANDARD ${GLIST_CXX_STANDARD}
+            CXX_STANDARD_REQUIRED ${GLIST_CXX_STANDARD_REQUIRED}
 )
 
 if(APPLE)
