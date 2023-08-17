@@ -76,9 +76,6 @@ bool gFont::load(const std::string& fullPath, int size, bool isAntialiased, int 
 }
 
 bool gFont::loadFont(const std::string& fontPath, int size, bool isAntialiased, int dpi) {
-		if(!load(gGetFontsDir() + fontPath, size, isAntialiased, dpi)){
-			return false;
-		}
 	return load(gGetFontsDir() + fontPath, size, isAntialiased, dpi);
 }
 
@@ -160,7 +157,6 @@ float gFont::getStringHeight(const std::string& text) {
 
 	    index3++;
 	  }
-
 	  return posy3;
 }
 
@@ -190,7 +186,7 @@ void gFont::resizeVectors(int num) {
 	characternumlimit = num;
 
 	std::vector<charProperties>().swap(cpset);
-	std::vector<int>().swap(loadedcharacters);
+	std::deque<int>().swap(loadedcharacters);
 
 	// initialize character info and textures
 	cpset.resize(characternumlimit);
@@ -209,23 +205,23 @@ void gFont::resizeVectors(int num) {
 int gFont::getCharID(const int& c) {
 	tempint = (int)c;
 	tempcharno = 0;
-	for (; tempcharno != (int)loadedcharacters.size(); ++tempcharno) {
-		//check if the character loaded before
-		if (loadedcharacters[tempcharno] == tempint) {
-			//if loaded before break the loop
-			break;
+	//search the ýd of a character
+	auto it = std::find(loadedcharacters.begin(), loadedcharacters.end(), tempint);
+
+	if(it != loadedcharacters.end()){
+		//if finded calculate position
+		tempcharno = std::distance(loadedcharacters.begin(), it);
+	}else {
+		//if not
+		if(loadedcharacters.size() >= loadedcharacters.max_size()){
+			//if reached the max size, resize deque
+			loadedcharacters.resize(loadedcharacters.size() + 1000);
 		}
+		//add new char to deque
+		loadedcharacters.push_back(tempint);
+		tempcharno = loadedcharacters.size() - 1; //return last index
 	}
-	if (tempcharno == loadedcharacters.size()) {
-		//check if reached to max limit
-		if (tempcharno >= characternumlimit) {
-			//if reached limit resize
-			loadedcharacters.reserve(loadedcharacters.size() + 100);
-		} else {
-			//if not push to last point
-			loadedcharacters.push_back(tempint);
-		}
-	}
+
 	return tempcharno;
 }
 
