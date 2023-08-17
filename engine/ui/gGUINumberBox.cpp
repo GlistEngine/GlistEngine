@@ -158,6 +158,14 @@ void gGUINumberBox::charPressed(unsigned int codepoint) {
 	textbox.charPressed(codepoint);
 }
 
+void gGUINumberBox::setInteger(int value) {
+	textbox.setText(gToStr(value));
+}
+
+int gGUINumberBox::getInteger() {
+	return gToInt(textbox.getText());
+}
+
 void gGUINumberBox::mousePressed(int x, int y, int button) {
 	gGUIContainer::mousePressed(x, y, button);
 	textbox.mousePressed(x, y, button);
@@ -275,3 +283,4 @@ void gGUINumberBox::draw() {
 	renderer->setColor(defColor);
 	if(guisizer) guisizer->draw();
 }
+
