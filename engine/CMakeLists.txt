@@ -430,12 +430,13 @@ elseif(APPLE)
     pkg_check_modules(glew     REQUIRED IMPORTED_TARGET glew)
 
     find_library(Lib_fmodL fmodL HINTS ${MINGW64_DIR}/lib)
-	find_library(Lib_fmod fmod HINTS ${MINGW64_DIR}/lib)
+    find_library(Lib_fmod fmod HINTS ${MINGW64_DIR}/lib)
 
 	find_library(Lib_GL GL HINTS /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries)
 
 	if(${ENGINE_USE_SYMLINKS})
 		pkg_check_modules(crypto REQUIRED IMPORTED_TARGET libcrypto)
+        set(Lib_crypto PkgConfig::crypto)
 	else()
 		# For backwards compatibility
 		find_library(Lib_crypto crypto HINTS ${BREW_PATH}/openssl@${OPENSSL_VER_SHORT}/${OPENSSL_VER_FULL}/lib)
@@ -500,7 +501,7 @@ elseif(APPLE)
 		PkgConfig::glfw
 		${Lib_GL}
 		PkgConfig::glew
-		PkgConfig::crypto
+		${Lib_crypto}
 #		${Lib_cpp}
 	# TODO: FFMPEG
 	)
