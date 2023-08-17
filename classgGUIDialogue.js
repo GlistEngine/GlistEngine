@@ -24,6 +24,7 @@ var classgGUIDialogue =
     [ "resetTitleBar", "classgGUIDialogue.html#a02fa3f3c745e6020295b0a63a116207d", null ],
     [ "setButtonEvent", "classgGUIDialogue.html#a548ccf63ecfdfd4eb238ad2c4a029a68", null ],
     [ "setButtonsBar", "classgGUIDialogue.html#a10770acc4cfc406f86d340bb92e7f984", null ],
+    [ "setDialogueType", "classgGUIDialogue.html#a4269aca9288e53e01ffef8f751e0dda7", null ],
     [ "setExitButton", "classgGUIDialogue.html#a252d18437050c9792272c74bc7d798f8", null ],
     [ "setIsDialogueActive", "classgGUIDialogue.html#a4eab547bc309fca5b36cb964d0b7bb67", null ],
     [ "setIsMaximized", "classgGUIDialogue.html#a057b76ade5eb80c95093f2d14d5bb9e7", null ],

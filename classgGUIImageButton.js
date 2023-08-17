@@ -10,8 +10,8 @@ var classgGUIImageButton =
     [ "loadButtonImages", "classgGUIImageButton.html#a8561fec7ee49f3925d494c28b4d2c656", null ],
     [ "loadPressedButtonImages", "classgGUIImageButton.html#aa26c0ee1e923e62df0b637ace5cf9cb3", null ],
     [ "setButtonImage", "classgGUIImageButton.html#a4569b15eebe737b8c65a1bf31781cd41", null ],
-    [ "setButtonImageFromIcon", "classgGUIImageButton.html#a0b3f18969a06fee07d23e2eb736e0424", null ],
+    [ "setButtonImageFromIcon", "classgGUIImageButton.html#ac665488321e85dc31b3fa470b0aaae9c", null ],
     [ "setImageStretched", "classgGUIImageButton.html#ae82ba5e15b6c4b051cba4b710910cc3b", null ],
     [ "setPressedButtonImage", "classgGUIImageButton.html#a1eef8d162deb726164082a53f0140a04", null ],
-    [ "setPressedButtonImageFromIcon", "classgGUIImageButton.html#a1946e2b0db903ccdddbbb8cbfe031885", null ]
+    [ "setPressedButtonImageFromIcon", "classgGUIImageButton.html#a969d6f28c26fc48f6ffc2f9616bbe3d3", null ]
 ];

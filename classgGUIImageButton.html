@@ -149,10 +149,10 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>draw</b> ()</td></tr>
 <tr class="separator:a12e7b7a2618eee3bffeb598e2ecb1dce"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4a2fc05413de03f439ac07c2e7027927"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgGUIImageButton.html#a4a2fc05413de03f439ac07c2e7027927">getButtonHeight</a> ()</td></tr>
 <tr class="separator:a4a2fc05413de03f439ac07c2e7027927"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0b3f18969a06fee07d23e2eb736e0424"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgGUIImageButton.html#a0b3f18969a06fee07d23e2eb736e0424">setButtonImageFromIcon</a> (int iconId)</td></tr>
-<tr class="separator:a0b3f18969a06fee07d23e2eb736e0424"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1946e2b0db903ccdddbbb8cbfe031885"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgGUIImageButton.html#a1946e2b0db903ccdddbbb8cbfe031885">setPressedButtonImageFromIcon</a> (int pressedIconId)</td></tr>
-<tr class="separator:a1946e2b0db903ccdddbbb8cbfe031885"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac665488321e85dc31b3fa470b0aaae9c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgGUIImageButton.html#ac665488321e85dc31b3fa470b0aaae9c">setButtonImageFromIcon</a> (int iconId, bool isIconBig=false)</td></tr>
+<tr class="separator:ac665488321e85dc31b3fa470b0aaae9c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a969d6f28c26fc48f6ffc2f9616bbe3d3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgGUIImageButton.html#a969d6f28c26fc48f6ffc2f9616bbe3d3">setPressedButtonImageFromIcon</a> (int pressedIconId, bool isIconBig=false)</td></tr>
+<tr class="separator:a969d6f28c26fc48f6ffc2f9616bbe3d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classgGUIButton"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classgGUIButton')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classgGUIButton.html">gGUIButton</a></td></tr>
 <tr class="memitem:a62df27082e3f5760d82f3129b7db4225 inherit pub_methods_classgGUIButton"><td class="memItemLeft" align="right" valign="top"><a id="a62df27082e3f5760d82f3129b7db4225"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>setTitle</b> (std::string title)</td></tr>
@@ -902,8 +902,8 @@ static int&#160;</td><td class="memItemRight" valign="bottom"><b>releaseresoluti
 
 </div>
 </div>
-<a id="a0b3f18969a06fee07d23e2eb736e0424"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0b3f18969a06fee07d23e2eb736e0424">&#9670;&nbsp;</a></span>setButtonImageFromIcon()</h2>
+<a id="ac665488321e85dc31b3fa470b0aaae9c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac665488321e85dc31b3fa470b0aaae9c">&#9670;&nbsp;</a></span>setButtonImageFromIcon()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -912,8 +912,18 @@ static int&#160;</td><td class="memItemRight" valign="bottom"><b>releaseresoluti
           <td class="memname">void gGUIImageButton::setButtonImageFromIcon </td>
           <td>(</td>
           <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>iconId</em></td><td>)</td>
+          <td class="paramname"><em>iconId</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>isIconBig</em> = <code>false</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -969,8 +979,8 @@ static int&#160;</td><td class="memItemRight" valign="bottom"><b>releaseresoluti
 
 </div>
 </div>
-<a id="a1946e2b0db903ccdddbbb8cbfe031885"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1946e2b0db903ccdddbbb8cbfe031885">&#9670;&nbsp;</a></span>setPressedButtonImageFromIcon()</h2>
+<a id="a969d6f28c26fc48f6ffc2f9616bbe3d3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a969d6f28c26fc48f6ffc2f9616bbe3d3">&#9670;&nbsp;</a></span>setPressedButtonImageFromIcon()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -979,8 +989,18 @@ static int&#160;</td><td class="memItemRight" valign="bottom"><b>releaseresoluti
           <td class="memname">void gGUIImageButton::setPressedButtonImageFromIcon </td>
           <td>(</td>
           <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>pressedIconId</em></td><td>)</td>
+          <td class="paramname"><em>pressedIconId</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>isIconBig</em> = <code>false</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">

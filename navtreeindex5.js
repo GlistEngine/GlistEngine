@@ -1,5 +1,6 @@
 var NAVTREEINDEX5 =
 {
+"classgGUINavigation.html#a90c95e623cf1aa48e3fe9abdae00658e":[0,0,72,9],
 "classgGUINavigation.html#a9c286888ad02f6b376db78cd9929672e":[0,0,72,10],
 "classgGUINavigation.html#af0839fe470df6cf6316765d6d2d84ff0":[0,0,72,11],
 "classgGUINotebook.html":[0,0,73],
@@ -142,8 +143,8 @@ var NAVTREEINDEX5 =
 "classgGUIRadioButton.html#af7ef4cab5af8263bfeca9ed991528de8":[0,0,80,12],
 "classgGUIRadioButton.html#af91a614c413c8f97398b82435a77ed8f":[0,0,80,20],
 "classgGUIResources.html":[0,0,81],
+"classgGUIResources.html#a0343e3dcaf2451052887b021fc1de3d8":[0,0,81,4],
 "classgGUIResources.html#a126c1fad2129cdd17efece83a39ec4d5":[0,0,81,8],
-"classgGUIResources.html#a38f5e94dca7cb13f335cc29d1f3006b3":[0,0,81,4],
 "classgGUIResources.html#a53d8951a45d0942bc9fa52f9ac9f75c7":[0,0,81,3],
 "classgGUIResources.html#a829e994695f9f6f6d902148186b758d4":[0,0,81,0],
 "classgGUIResources.html#a8a384d6b2119d1aeafe59cfd6208837d":[0,0,81,6],
@@ -248,6 +249,5 @@ var NAVTREEINDEX5 =
 "classgGUISlider.html#a816cd1dcb4dd70b3c6431bf6b4ce099d":[0,0,84,4],
 "classgGUISlider.html#a96081f951c3f590b6bcdb658d1756365":[0,0,84,25],
 "classgGUISlider.html#a9a8dd2d5130716c93dd9579e9e9708d9":[0,0,84,11],
-"classgGUISlider.html#aa276531cc458e54b32270fe4904b4669":[0,0,84,1],
-"classgGUISlider.html#ae2dde999556eafa845af5fcee8e6b306":[0,0,84,9]
+"classgGUISlider.html#aa276531cc458e54b32270fe4904b4669":[0,0,84,1]
 };

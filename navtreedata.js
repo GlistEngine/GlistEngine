@@ -47,14 +47,14 @@ var NAVTREEINDEX =
 "classgBaseParticles.html#a22900021cfeb675625c63b18cd084307",
 "classgColorCurves.html",
 "classgGUICandleStickChart.html#a559200bd7991ad4b9033b7f742162dd3",
-"classgGUIGraph.html#a291a35d8eb55d99011e0f3cc1298375c",
-"classgGUINavigation.html#a9c286888ad02f6b376db78cd9929672e",
-"classgGUISlider.html#ae452156060aa909b7b0554e6a0b0b5d0",
-"classgLight.html#a361e39ae5aaf9720567890675e643fc8",
-"classgModel.html#aee3bcdb8c8559f2391edad899a109392",
-"classgRenderer.html#a701d66ef123a27d710a2421f73f8cd2f",
-"classgTexture.html#a80580098161b4276b9fc0e0737d060ca",
-"gGUISwitchButton_8h_source.html"
+"classgGUIGraph.html#a28e0ea0a8116edd3754f9dab7f1a7920",
+"classgGUINavigation.html#a90c95e623cf1aa48e3fe9abdae00658e",
+"classgGUISlider.html#ae2dde999556eafa845af5fcee8e6b306",
+"classgLight.html#a2c3f226aec21f0075d230607ac586694",
+"classgModel.html#aeddea4d1557d7bc08f538977c8327f3f",
+"classgRenderer.html#a6f7e9048c772a677ed9d93db1038c5fe",
+"classgTexture.html#a7bb0b70ccf30f2b40899ccdcd4913008",
+"gGUISurface_8h_source.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
