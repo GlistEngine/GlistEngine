@@ -166,6 +166,14 @@ int gGUINumberBox::getInteger() {
 	return gToInt(textbox.getText());
 }
 
+void gGUINumberBox::setFloat(float value) {
+	textbox.setText(gToStr(value));
+}
+
+float gGUINumberBox::getFloat() {
+	return gToFloat(textbox.getText());
+
+}
 void gGUINumberBox::mousePressed(int x, int y, int button) {
 	gGUIContainer::mousePressed(x, y, button);
 	textbox.mousePressed(x, y, button);
