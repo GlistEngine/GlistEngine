@@ -28,7 +28,7 @@ public:
 	 *
 	 * @param texttype for switching between integer and float values
 	 */
-	bool setType(bool isInteger = true);
+	bool setType(int numtype);
 	void setSize(int width, int height);
 	void showTitle(bool isShown);
 
@@ -44,6 +44,9 @@ public:
 	void setMinValue(int minValue);
 	void setMaxValue(float maxValuef);
 	void setMinValue(float minValuef);
+	void setInteger(int value);
+	int numType = 0;
+
 
 private:
 	int boxwidth, boxheight, numboxwidth, numboxheight, smalboxwidth, smalboxheight;
@@ -71,6 +74,7 @@ private:
 	int smalltriangleheight;
 	int maxvalue, minvalue;
 	float maxvaluef, minvaluef;
+	int value, intvalue;
 
 };
 #endif /* UI_GGUINUMBERBOX_H_ */
