@@ -1,5 +1,7 @@
 var NAVTREEINDEX11 =
 {
+"gGUISizer_8h_source.html":[1,0,80],
+"gGUISlider_8h_source.html":[1,0,81],
 "gGUIStatusBar_8h_source.html":[1,0,82],
 "gGUISurface_8h_source.html":[1,0,83],
 "gGUISwitchButton_8h_source.html":[1,0,84],
