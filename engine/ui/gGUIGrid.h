@@ -79,8 +79,12 @@ public:
 	};
 
 	enum {
-		FUNCTION_COPY,
-		FUNCTION_SUM
+		FUNCTIONTYPE_COPY,
+		FUNCTIONTYPE_SUM,
+		FUNCTIONTYPE_ADD,
+		FUNCTIONTYPE_SUB,
+		FUNCTIONTYPE_DIVIDE,
+		FUNCTIONTYPE_MULTIPLY
 	};
 
 	enum {
@@ -215,19 +219,16 @@ private:
 
 	void fillCell(int cellNo, std::string tempstr);
 	float makeSum(int c1, int r1, int c2, int r2);
+	float makeFourOperation(std::string value1, std::string value2, char operation);
 	float calculateCurrentX(int columnNo);
 	float calculateCurrentY(int rowNo);
 	bool isNumeric(std::string text);
 
-	void addFunction(int functionType, int functionSender);
 	void addUndoStack(int process);
 	void addRedoStack();
 	void addOrChangeColumnWidth(int columnNo, float w);
 	void addOrChangeRowHeight(int rowNo, float h);
 
-	void removeFunction(int functionNo);
-
-	void operateFunction(int functionNo);
 	void makeDefaultCell();
 
 	void changeAllAffectedCellsXW(float diff);
@@ -253,8 +254,6 @@ private:
 	std::deque<int> selectedcells;
 	std::deque<std::array<float, 2>> gridboxesw;
 	std::deque<std::array<float, 2>> gridboxesh;
-	std::vector<int> functionindexes;
-	std::vector<std::vector<int>> functions;
 	std::vector<std::string> copiedcellvalues;
 	std::stack<int> undoprocessstack;
 	std::stack<std::string> undovaluestack;
