@@ -74,7 +74,7 @@ private:
 	int smalltriangleheight;
 	int maxvalue, minvalue;
 	float maxvaluef, minvaluef;
-	int value, intvalue;
+	int value;
 
 };
 #endif /* UI_GGUINUMBERBOX_H_ */
