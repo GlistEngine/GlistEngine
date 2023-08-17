@@ -62,6 +62,7 @@ gGUINumberBox::gGUINumberBox() {
 	minvalue = std::numeric_limits<int>::min();
 	maxvaluef = std::numeric_limits<float>::max();
 	minvaluef = std::numeric_limits<float>::min();
+	increment = 1;
 }
 
 gGUINumberBox::~gGUINumberBox() {
@@ -174,6 +175,15 @@ float gGUINumberBox::getFloat() {
 	return gToFloat(textbox.getText());
 
 }
+
+void gGUINumberBox::setIntegerIncrement(int value) {
+	increment = value;
+}
+
+int gGUINumberBox::getIntegerIncrement() {
+	return increment;
+}
+
 void gGUINumberBox::mousePressed(int x, int y, int button) {
 	gGUIContainer::mousePressed(x, y, button);
 	textbox.mousePressed(x, y, button);
