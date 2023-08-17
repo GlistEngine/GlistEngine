@@ -45,6 +45,7 @@ public:
 	void setMaxValue(float maxValuef);
 	void setMinValue(float minValuef);
 	void setInteger(int value);
+	int getInteger();
 	int numType = 0;
 
 

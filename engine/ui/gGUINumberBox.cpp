@@ -166,6 +166,10 @@ void gGUINumberBox::setInteger(int value) {
 	textbox.setText(gToStr(value));
 }
 
+int gGUINumberBox::getInteger() {
+	 return gToInt(textbox.getText());
+}
+
 void gGUINumberBox::mousePressed(int x, int y, int button) {
 	gGUIContainer::mousePressed(x, y, button);
 	textbox.mousePressed(x, y, button);
@@ -190,7 +194,7 @@ void gGUINumberBox::mouseReleased(int x, int y, int button) {
 		root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_BUTTONRELEASED);
 
 		if(isinteger){
-			castcurrtexttoint = gToInt(textbox.getText());
+			castcurrtexttoint = getInteger();
 			castcurrtexttoint = castcurrtexttoint + 1;
 			setInteger(castcurrtexttoint);
 			if (castcurrtexttoint >= maxvalue) {
@@ -218,7 +222,7 @@ void gGUINumberBox::mouseReleased(int x, int y, int button) {
 		root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_BUTTONRELEASED);
 
 		if(isinteger){
-			castcurrtexttoint = gToInt(textbox.getText());
+			castcurrtexttoint = getInteger();
 			castcurrtexttoint = castcurrtexttoint - 1;
 			setInteger(castcurrtexttoint);
 			if (castcurrtexttoint <= minvalue) {
@@ -283,3 +287,4 @@ void gGUINumberBox::draw() {
 	renderer->setColor(defColor);
 	if(guisizer) guisizer->draw();
 }
+
