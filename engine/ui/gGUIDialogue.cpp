@@ -10,7 +10,7 @@
 
 
 gGUIDialogue::gGUIDialogue() {
-	isdialogueactive = false;
+	isdialogueshown = false;
 
 	guisizer = nullptr;
 
@@ -70,12 +70,16 @@ void gGUIDialogue::draw() {
 	renderer->setColor(&oldcolor);
 }
 
-void gGUIDialogue::setIsDialogueActive(bool isDialogueActive) {
-	this->isdialogueactive = isDialogueActive;
+void gGUIDialogue::show() {
+	isdialogueshown = true;
 }
 
-bool gGUIDialogue::getIsDialogueActive() {
-	return isdialogueactive;
+void gGUIDialogue::hide() {
+	isdialogueshown = false;
+}
+
+bool gGUIDialogue::isShown() {
+	return isdialogueshown;
 }
 
 void gGUIDialogue::initDefTitleBar() {
