@@ -62,7 +62,7 @@ gGUINumberBox::gGUINumberBox() {
 	minvalue = std::numeric_limits<int>::min();
 	maxvaluef = std::numeric_limits<float>::max();
 	minvaluef = std::numeric_limits<float>::min();
-	value = 0;
+	numType = 0;
 }
 
 gGUINumberBox::~gGUINumberBox() {

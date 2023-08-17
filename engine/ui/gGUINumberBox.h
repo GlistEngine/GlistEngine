@@ -46,8 +46,7 @@ public:
 	void setMinValue(float minValuef);
 	void setInteger(int value);
 	int getInteger();
-	int numType = 0;
-
+	int numType;
 
 private:
 	int boxwidth, boxheight, numboxwidth, numboxheight, smalboxwidth, smalboxheight;
@@ -75,7 +74,6 @@ private:
 	int smalltriangleheight;
 	int maxvalue, minvalue;
 	float maxvaluef, minvaluef;
-	int value;
 
 };
 #endif /* UI_GGUINUMBERBOX_H_ */
