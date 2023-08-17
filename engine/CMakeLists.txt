@@ -349,7 +349,7 @@ elseif(APPLE)
   	if(${DEVICEARCHITECTURE} STREQUAL "arm64")
 		if(${ENGINE_USE_SYMLINKS})
 			list(APPEND INC_DIRS
-					${BREW_PATH}/llvm@15/include/c++/v1
+					${BREW_PATH}/llvm/include/c++/v1
 			)
 		else()
 			# For backwards compatibility
