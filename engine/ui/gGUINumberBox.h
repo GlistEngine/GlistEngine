@@ -44,6 +44,8 @@ public:
 	void setMinValue(int minValue);
 	void setMaxValue(float maxValuef);
 	void setMinValue(float minValuef);
+	void setInteger(int value);
+	int getInteger();
 
 private:
 	int boxwidth, boxheight, numboxwidth, numboxheight, smalboxwidth, smalboxheight;
