@@ -821,7 +821,6 @@ std::string gGUIGrid::fixTextFunction(std::string text, int index) {
 						if(value1[0] == '-') value1.erase(0, 1);
 						else value1 = '-' + value1;
 					}
-					gLogi("Cstr1") << cstr1 << " Operation: " << operation << " Cstr2: " << cstr2;
 					std::string value2 = c2->showncontent;
 					if(operation == '-' || c2neg) {
 						if(value2[0] == '-') {
