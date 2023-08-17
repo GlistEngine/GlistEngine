@@ -63,6 +63,7 @@ gGUINumberBox::gGUINumberBox() {
 	maxvaluef = std::numeric_limits<float>::max();
 	minvaluef = std::numeric_limits<float>::min();
 	increment = 1;
+	incrementf = 0.1f;
 }
 
 gGUINumberBox::~gGUINumberBox() {
@@ -173,7 +174,6 @@ void gGUINumberBox::setFloat(float value) {
 
 float gGUINumberBox::getFloat() {
 	return gToFloat(textbox.getText());
-
 }
 
 void gGUINumberBox::setIntegerIncrement(int value) {
@@ -182,6 +182,14 @@ void gGUINumberBox::setIntegerIncrement(int value) {
 
 int gGUINumberBox::getIntegerIncrement() {
 	return increment;
+}
+
+void gGUINumberBox::setFloatIncrement(float value) {
+	incrementf = value;
+}
+
+float gGUINumberBox::getFloatIncrement() {
+	return incrementf;
 }
 
 void gGUINumberBox::mousePressed(int x, int y, int button) {
@@ -218,7 +226,7 @@ void gGUINumberBox::mouseReleased(int x, int y, int button) {
 			if (castcurrtexttoint > minvalue) b2isdisabled = false;
 		} else {
 			castcurrtexttofloat = gToFloat(textbox.getText());
-			castcurrtexttofloat = castcurrtexttofloat + 0.1;
+			castcurrtexttofloat = castcurrtexttofloat + incrementf;
 			setText(gToStr(castcurrtexttofloat));
 			if (castcurrtexttofloat >= maxvaluef) {
 				castcurrtexttofloat = maxvaluef;
@@ -246,7 +254,7 @@ void gGUINumberBox::mouseReleased(int x, int y, int button) {
 			if (castcurrtexttoint < maxvalue) b1isdisabled = false;
 		} else {
 			castcurrtexttofloat = gToFloat(textbox.getText());
-			castcurrtexttofloat = castcurrtexttofloat - 0.1;
+			castcurrtexttofloat = castcurrtexttofloat - incrementf;
 			setText(gToStr(castcurrtexttofloat));
 			if (castcurrtexttofloat <= minvaluef) {
 				castcurrtexttofloat = maxvaluef;
@@ -301,4 +309,3 @@ void gGUINumberBox::draw() {
 	renderer->setColor(defColor);
 	if(guisizer) guisizer->draw();
 }
-

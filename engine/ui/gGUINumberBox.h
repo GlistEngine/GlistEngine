@@ -50,6 +50,8 @@ public:
 	float getFloat();
 	void setIntegerIncrement(int value);
 	int getIntegerIncrement();
+	void setFloatIncrement(float value);
+	float getFloatIncrement();
 
 private:
 	int boxwidth, boxheight, numboxwidth, numboxheight, smalboxwidth, smalboxheight;
@@ -78,6 +80,7 @@ private:
 	int maxvalue, minvalue;
 	float maxvaluef, minvaluef;
 	int increment;
+	float incrementf;
 
 };
 #endif /* UI_GGUINUMBERBOX_H_ */
