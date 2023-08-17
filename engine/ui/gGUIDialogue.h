@@ -41,8 +41,9 @@ public:
 	void update();
 	void draw();
 
-	void setIsDialogueActive(bool isDialogueActive);
-	bool getIsDialogueActive();
+	void show();
+	void hide();
+	bool isShown();
 
 	void initDefTitleBar();
 	void initDefButtonsBar();
@@ -80,7 +81,7 @@ public:
 	void mouseDragged(int x, int y, int button);
 	void mouseReleased(int x, int y, int button);
 private:
-	bool isdialogueactive;
+	bool isdialogueshown;
 
 	gGUIContainer* titlebar;
 	gGUIContainer* buttonsbar;
