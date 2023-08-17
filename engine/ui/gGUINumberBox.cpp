@@ -209,7 +209,7 @@ void gGUINumberBox::mouseReleased(int x, int y, int button) {
 
 		if(isinteger){
 			castcurrtexttoint = gToInt(textbox.getText());
-			castcurrtexttoint = castcurrtexttoint + 1;
+			castcurrtexttoint = castcurrtexttoint + increment;
 			setText(gToStr(castcurrtexttoint));
 			if (castcurrtexttoint >= maxvalue) {
 			    castcurrtexttoint = maxvalue;
@@ -237,7 +237,7 @@ void gGUINumberBox::mouseReleased(int x, int y, int button) {
 
 		if(isinteger){
 			castcurrtexttoint = gToInt(textbox.getText());
-			castcurrtexttoint = castcurrtexttoint - 1;
+			castcurrtexttoint = castcurrtexttoint - increment;
 			setText(gToStr(castcurrtexttoint));
 			if (castcurrtexttoint <= minvalue) {
 			    castcurrtexttoint = maxvalue;
