@@ -144,8 +144,8 @@ private:
 	bool isinitialized;
 	int iconw, iconh, bigiconw, bigiconh, iconformat;
 	// The array we keep pictures
-	gTexture* icon;
-	gTexture* bigicon;
+	gTexture** icon;
+	gTexture** bigicon;
 	// Getter functions where we keep images in base64 format
 	std::string getBase64IconFile16();
 	std::string getBase64IconFolder16();
