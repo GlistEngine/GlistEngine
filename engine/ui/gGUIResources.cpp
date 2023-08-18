@@ -25,12 +25,12 @@ gGUIResources::gGUIResources() {
 }
 
 gGUIResources::~gGUIResources() {
-	/*if (isinitialized) {
+	if (isinitialized) {
 		for(int i = 0; i < iconnum; i++) delete icon[i];
 		delete[] icon;
 		for(int i = 0; i < bigiconnum; i++) delete bigicon[i];
 		delete[] bigicon;
-	}*/
+	}
 }
 
 void gGUIResources::initialize() {
