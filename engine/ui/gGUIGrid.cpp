@@ -874,6 +874,54 @@ std::string gGUIGrid::fixTextFunction(std::string text, int index) {
 				}
 			}
 		}
+		else {
+			std::string number1 = "";
+			if(isnegative) number1 += "-";
+			for(int i = isnegative; i < tempstr.size(); i++) {
+				if(isdigit(tempstr[i]) || tempstr[i] == '.') number1 += tempstr[i];
+				else break;
+			}
+			if(number1.size() == tempstr.size()) return tempstr;
+			else {
+				std::string number2 = tempstr.substr(number1.size());
+				char operation;
+				if(number2[0] == '/' || number2[0] == '*') {
+					operation = number2[0];
+					number2.erase(0, 1);
+				}
+				number2 = fixNumeric(number2);
+				if(operation == 0) {
+					if(number2[0] != '+' && number2[0] != '-' && number2[0] != '/' && number2[0] != '*') operation = '+';
+					else {
+						operation = number2[0];
+						number2.erase(0, 1);
+					}
+				}
+				bool digitn2 = (number2.size() > 0);
+				for(int i = (number2[0] == '-'); i < number2.size(); i++) {
+					if(!isdigit(number2[i]) && number2[i] != '.') {
+						digitn2 = false;
+						break;
+					}
+				}
+				if(digitn2) {
+					switch(operation) {
+					case '+':
+						tempstr = gToStr(gToFloat(number1) + gToFloat(number2));
+						break;
+					case '-':
+						tempstr = gToStr(gToFloat(number1) - gToFloat(number2));
+						break;
+					case '/':
+						tempstr = gToStr(gToFloat(number1) / gToFloat(number2));
+						break;
+					case '*':
+						tempstr = gToStr(gToFloat(number1) * gToFloat(number2));
+						break;
+					}
+				}
+			}
+		}
 	}
 	return tempstr;
 }
