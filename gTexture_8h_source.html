@@ -120,7 +120,7 @@ $(document).ready(function(){initNavTree('gTexture_8h_source.html',''); initResi
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; </div>
 <div class="line"><a name="l00060"></a><span class="lineno"><a class="line" href="classgTexture.html#a80e9f20fca3a996c92bcbf8d16cf5389">   60</a></span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> <a class="code" href="classgTexture.html#a80e9f20fca3a996c92bcbf8d16cf5389">loadMaskTexture</a>(<span class="keyword">const</span> std::string&amp; maskTexturePath);</div>
 <div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160; </div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> loadData(<span class="keywordtype">unsigned</span> <span class="keywordtype">char</span>* textureData, <span class="keywordtype">int</span> width, <span class="keywordtype">int</span> height, <span class="keywordtype">int</span> componentNum, <span class="keywordtype">bool</span> isFont = <span class="keyword">false</span>);</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> loadData(<span class="keywordtype">unsigned</span> <span class="keywordtype">char</span>* textureData, <span class="keywordtype">int</span> width, <span class="keywordtype">int</span> height, <span class="keywordtype">int</span> componentNum, <span class="keywordtype">bool</span> isMutable = <span class="keyword">false</span>, <span class="keywordtype">bool</span> isStbImage = <span class="keyword">false</span>);</div>
 <div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160; </div>
 <div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    <span class="keywordtype">void</span> bind() <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <span class="keywordtype">void</span> bind(<span class="keywordtype">int</span> textureSlotNo) <span class="keyword">const</span>;</div>
@@ -165,7 +165,7 @@ $(document).ready(function(){initNavTree('gTexture_8h_source.html',''); initResi
 <div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    <span class="keywordtype">void</span> drawSub(<span class="keyword">const</span> <a class="code" href="classgRect.html">gRect</a>&amp; src, <span class="keyword">const</span> <a class="code" href="classgRect.html">gRect</a>&amp; dst, <span class="keywordtype">int</span> pivotx, <span class="keywordtype">int</span> pivoty, <span class="keywordtype">float</span> rotate = 0.f);</div>
 <div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    <span class="keywordtype">void</span> drawSub(<span class="keyword">const</span> <a class="code" href="classgRect.html">gRect</a>&amp; src, <span class="keyword">const</span> <a class="code" href="classgRect.html">gRect</a>&amp; dst, glm::vec2 pivotPointCoords, <span class="keywordtype">float</span> rotate = 0.f);</div>
 <div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160; </div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    <span class="keywordtype">void</span> setData(<span class="keywordtype">unsigned</span> <span class="keywordtype">char</span>* textureData, <span class="keywordtype">bool</span> isMutable = <span class="keyword">false</span>);</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    <span class="keywordtype">void</span> setData(<span class="keywordtype">unsigned</span> <span class="keywordtype">char</span>* textureData, <span class="keywordtype">bool</span> isMutable = <span class="keyword">false</span>, <span class="keywordtype">bool</span> isStbImage = <span class="keyword">false</span>);</div>
 <div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160; </div>
 <div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;    <span class="keywordtype">void</span> setupRenderData();</div>
 <div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160; </div>
@@ -177,8 +177,8 @@ $(document).ready(function(){initNavTree('gTexture_8h_source.html',''); initResi
 <div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;    <span class="keywordtype">int</span> width, height, componentnum;</div>
 <div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span>* data;</div>
 <div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;    <span class="keywordtype">bool</span> ismutable;</div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;    <span class="keywordtype">int</span> wraps, wrapt, filtermin, filtermag;</div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;    <span class="keywordtype">bool</span> isfont;</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;    <span class="keywordtype">bool</span> isstbimage;</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;    <span class="keywordtype">int</span> wraps, wrapt, filtermin, filtermag;</div>
 <div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160; </div>
 <div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span>* getData();</div>
 <div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;    <span class="keywordtype">bool</span> isMutable();</div>
@@ -188,7 +188,7 @@ $(document).ready(function(){initNavTree('gTexture_8h_source.html',''); initResi
 <div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160; </div>
 <div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;    <span class="keywordtype">bool</span> ishdr;</div>
 <div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;    <span class="keywordtype">float</span>* datahdr;</div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;    <span class="keywordtype">void</span> setDataHDR(<span class="keywordtype">float</span>* textureData, <span class="keywordtype">bool</span> isMutable = <span class="keyword">false</span>);</div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;    <span class="keywordtype">void</span> setDataHDR(<span class="keywordtype">float</span>* textureData, <span class="keywordtype">bool</span> isMutable = <span class="keyword">false</span>, <span class="keywordtype">bool</span>  isStbImage = <span class="keyword">false</span>);</div>
 <div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;    <span class="keywordtype">float</span>* getDataHDR();</div>
 <div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;    <span class="keywordtype">bool</span> ismaskloaded;</div>
 <div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;    <a class="code" href="classgTexture.html">gTexture</a>* masktexture;</div>

@@ -130,9 +130,9 @@ unsigned int&#160;</td><td class="memItemRight" valign="bottom"><b>loadTexture</
 <tr class="separator:aafb9fc45890f8546b311cdd98c9dcb69"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a80e9f20fca3a996c92bcbf8d16cf5389"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgTexture.html#a80e9f20fca3a996c92bcbf8d16cf5389">loadMaskTexture</a> (const std::string &amp;maskTexturePath)</td></tr>
 <tr class="separator:a80e9f20fca3a996c92bcbf8d16cf5389"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4c32f790267342e4673d3a87cc1b0517"><td class="memItemLeft" align="right" valign="top"><a id="a4c32f790267342e4673d3a87cc1b0517"></a>
-unsigned int&#160;</td><td class="memItemRight" valign="bottom"><b>loadData</b> (unsigned char *textureData, int width, int height, int componentNum, bool isFont=false)</td></tr>
-<tr class="separator:a4c32f790267342e4673d3a87cc1b0517"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2c40fcb4aaf459b7f628b483181c06e7"><td class="memItemLeft" align="right" valign="top"><a id="a2c40fcb4aaf459b7f628b483181c06e7"></a>
+unsigned int&#160;</td><td class="memItemRight" valign="bottom"><b>loadData</b> (unsigned char *textureData, int width, int height, int componentNum, bool isMutable=false, bool isStbImage=false)</td></tr>
+<tr class="separator:a2c40fcb4aaf459b7f628b483181c06e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a819525baeaf079004ae85a94e598f1a2"><td class="memItemLeft" align="right" valign="top"><a id="a819525baeaf079004ae85a94e598f1a2"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>bind</b> () const</td></tr>
 <tr class="separator:a819525baeaf079004ae85a94e598f1a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -247,9 +247,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>drawSub</b> (const <a
 <tr class="memitem:a7bb0b70ccf30f2b40899ccdcd4913008"><td class="memItemLeft" align="right" valign="top"><a id="a7bb0b70ccf30f2b40899ccdcd4913008"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>drawSub</b> (const <a class="el" href="classgRect.html">gRect</a> &amp;src, const <a class="el" href="classgRect.html">gRect</a> &amp;dst, glm::vec2 pivotPointCoords, float rotate=0.f)</td></tr>
 <tr class="separator:a7bb0b70ccf30f2b40899ccdcd4913008"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5f4da0882276bec381806870f7c1447b"><td class="memItemLeft" align="right" valign="top"><a id="a5f4da0882276bec381806870f7c1447b"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>setData</b> (unsigned char *textureData, bool isMutable=false)</td></tr>
-<tr class="separator:a5f4da0882276bec381806870f7c1447b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a13affa81c2c4bc19bbfd49ae3ecae40a"><td class="memItemLeft" align="right" valign="top"><a id="a13affa81c2c4bc19bbfd49ae3ecae40a"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setData</b> (unsigned char *textureData, bool isMutable=false, bool isStbImage=false)</td></tr>
+<tr class="separator:a13affa81c2c4bc19bbfd49ae3ecae40a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae9581a25115b2be9c2e7915753c6980c"><td class="memItemLeft" align="right" valign="top"><a id="ae9581a25115b2be9c2e7915753c6980c"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>setupRenderData</b> ()</td></tr>
 <tr class="separator:ae9581a25115b2be9c2e7915753c6980c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -362,9 +362,9 @@ std::string&#160;</td><td class="memItemRight" valign="bottom"><b>getDirName</b>
 <tr class="memitem:ad2e53e2c567e7fecb48bd43424542bfb"><td class="memItemLeft" align="right" valign="top"><a id="ad2e53e2c567e7fecb48bd43424542bfb"></a>
 std::string&#160;</td><td class="memItemRight" valign="bottom"><b>getFileName</b> (const std::string &amp;fname)</td></tr>
 <tr class="separator:ad2e53e2c567e7fecb48bd43424542bfb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1dd0501decd2e6890d7047aa7683c75c"><td class="memItemLeft" align="right" valign="top"><a id="a1dd0501decd2e6890d7047aa7683c75c"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>setDataHDR</b> (float *textureData, bool isMutable=false)</td></tr>
-<tr class="separator:a1dd0501decd2e6890d7047aa7683c75c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aef6ecae0347dfd832627cbf50a9df2ef"><td class="memItemLeft" align="right" valign="top"><a id="aef6ecae0347dfd832627cbf50a9df2ef"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setDataHDR</b> (float *textureData, bool isMutable=false, bool isStbImage=false)</td></tr>
+<tr class="separator:aef6ecae0347dfd832627cbf50a9df2ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3898fdefb31b5a30ccab94b2e04e077c"><td class="memItemLeft" align="right" valign="top"><a id="a3898fdefb31b5a30ccab94b2e04e077c"></a>
 float *&#160;</td><td class="memItemRight" valign="bottom"><b>getDataHDR</b> ()</td></tr>
 <tr class="separator:a3898fdefb31b5a30ccab94b2e04e077c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -407,6 +407,9 @@ unsigned char *&#160;</td><td class="memItemRight" valign="bottom"><b>data</b></
 <tr class="memitem:a26caed93a0b856a084a52cbfa7ceabd3"><td class="memItemLeft" align="right" valign="top"><a id="a26caed93a0b856a084a52cbfa7ceabd3"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>ismutable</b></td></tr>
 <tr class="separator:a26caed93a0b856a084a52cbfa7ceabd3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1f566477436a8f84cd16a2acb080cff5"><td class="memItemLeft" align="right" valign="top"><a id="a1f566477436a8f84cd16a2acb080cff5"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>isstbimage</b></td></tr>
+<tr class="separator:a1f566477436a8f84cd16a2acb080cff5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1d1d3ad7667bf945b3c4dfe2054b374c"><td class="memItemLeft" align="right" valign="top"><a id="a1d1d3ad7667bf945b3c4dfe2054b374c"></a>
 int&#160;</td><td class="memItemRight" valign="bottom"><b>wraps</b></td></tr>
 <tr class="separator:a1d1d3ad7667bf945b3c4dfe2054b374c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -419,9 +422,6 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>filtermin</b></td></tr
 <tr class="memitem:a19a12b53996528fae48857bacff67bf4"><td class="memItemLeft" align="right" valign="top"><a id="a19a12b53996528fae48857bacff67bf4"></a>
 int&#160;</td><td class="memItemRight" valign="bottom"><b>filtermag</b></td></tr>
 <tr class="separator:a19a12b53996528fae48857bacff67bf4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a35f010b45b9a3e63f776772d5b53bf94"><td class="memItemLeft" align="right" valign="top"><a id="a35f010b45b9a3e63f776772d5b53bf94"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>isfont</b></td></tr>
-<tr class="separator:a35f010b45b9a3e63f776772d5b53bf94"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a28c6f3073b6838333bc732206200c06c"><td class="memItemLeft" align="right" valign="top"><a id="a28c6f3073b6838333bc732206200c06c"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>ishdr</b></td></tr>
 <tr class="separator:a28c6f3073b6838333bc732206200c06c"><td class="memSeparator" colspan="2">&#160;</td></tr>
