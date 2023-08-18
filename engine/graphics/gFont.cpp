@@ -205,7 +205,7 @@ void gFont::resizeVectors(int num) {
 int gFont::getCharID(const int& c) {
 	tempint = (int)c;
 	tempcharno = 0;
-	//search the ýd of a character
+	//search the ï¿½d of a character
 	auto it = std::find(loadedcharacters.begin(), loadedcharacters.end(), tempint);
 
 	if(it != loadedcharacters.end()){
@@ -325,7 +325,7 @@ void gFont::loadChar(const int& charID) {
 		  textures[lci]->setFiltering(gTexture::TEXTUREMINMAGFILTER_NEAREST, gTexture::TEXTUREMINMAGFILTER_NEAREST);
 	  }
 
-	  textures[lci]->loadData(lcpixels, lcpixelsw, lcpixelsh, 4, true);
+	  textures[lci]->loadData(lcpixels, lcpixelsw, lcpixelsh, 4, false, false);
 	  delete[] lcpixels;
 }
 

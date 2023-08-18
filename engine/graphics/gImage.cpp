@@ -42,10 +42,10 @@ unsigned int gImage::load(const std::string& fullPath) {
 	if (ishdr) {
 		stbi_set_flip_vertically_on_load(true);
 		datahdr = stbi_loadf(fullpath.c_str(), &width, &height, &componentnum, 0);
-		setDataHDR(datahdr, true);
+		setDataHDR(datahdr, true, true);
 	} else {
 		data = stbi_load(fullpath.c_str(), &width, &height, &componentnum, 0);
-		setData(data, true);
+		setData(data, true, true);
 	}
 
 	//	setupRenderData();
@@ -108,9 +108,9 @@ unsigned int gImage::useData() {
 	glGenTextures(1, &id);
 
 	if (ishdr) {
-		setDataHDR(datahdr, true);
+		setDataHDR(datahdr, true, true);
 	} else {
-		setData(data, true);
+		setData(data, true, true);
 	}
 
 	//	setupRenderData();
