@@ -5,6 +5,9 @@ else()
 endif()
 
 
+set(GLIST_CXX_STANDARD 14)
+set(GLIST_CXX_STANDARD_REQUIRED True)
+
 # Configure compiler and linker as you need
 set(GLIST_CXX_FLAGS_COMMON
     -stdlib=libc++
@@ -17,8 +20,8 @@ set(GLIST_CXX_FLAGS_COMMON
     -fpermissive
     -fPIC
 )
-list(APPEND GLIST_CXX_FLAGS_DEBUG "-DDEBUG -Og")
-list(APPEND GLIST_CXX_FLAGS_RELEASE "-DEIGEN_NO_CUDA -DNDEBUG -O2")
+list(APPEND GLIST_CXX_FLAGS_DEBUG -DDEBUG -Og)
+list(APPEND GLIST_CXX_FLAGS_RELEASE -DEIGEN_NO_CUDA -DNDEBUG -O2)
 if(NOT APPLE)
 	set(GLIST_SHARED_LINKER_FLAGS "-v -pthread -Wl,--gc-sections")
 endif()
@@ -93,6 +96,14 @@ set(PLUGIN_LIBDIRS)
 
 foreach(pluginname ${PLUGINS})
 	include(${PLUGINS_DIR}/${pluginname}/CMakeLists.txt)
+	
+	if(${pluginname} STREQUAL "gipIOS")
+		set(IOS_PLUGIN_PRESENT)
+	endif()
+
+	if(${pluginname} STREQUAL "gipAndroid")
+		set(ANDROID_PLUGIN_PRESENT)
+	endif()
 endforeach()
 
 
@@ -376,10 +387,28 @@ if(WIN32)
 			${MINGW64_DIR}/lib
 			${PLUGIN_LINKDIRS}
 	)
-
 elseif(ANDROID)
     # These are added by gipAndroid plugin
     # Do not remove the if, otherwise linux libraries will be linked/included.
+	if(NOT DEFINED ANDROID_PLUGIN_PRESENT)
+        message(FATAL_ERROR
+        " gipAndroid was not found in the active plugins list while trying to create an Android app. \n\n"
+        "This might be caused by not passing gipAndroid to the GlistApp's used plugins\n"
+        "list. You may also not have the gipAndroid plugin installed in the correct\n"
+        "folder and not with the correct name. Check if you have installed the plugin\n"
+        "under dev/glist/glistplugins."
+        )
+	endif()
+elseif(IOS)
+    if(NOT DEFINED IOS_PLUGIN_PRESENT)
+    message(FATAL_ERROR
+        " gipIOS was not found in the active plugins list while trying to create an IOS app. \n\n"
+        "This might be caused by not passing gipIOS to the GlistApp's used plugins\n"
+        "list. You may also not have the gipIOS plugin installed in the correct\n"
+        "folder and not with the correct name. Check if you have installed the plugin\n"
+        "under dev/glist/glistplugins."
+    )
+    endif()
 elseif(LINUX)
 	# TODO: FFMPEG
 #	find_library(Lib_Freetype2 freetype HINTS /usr/lib/x86_64-linux-gnu)
@@ -425,20 +454,19 @@ elseif(APPLE)
     pkg_check_modules(glfw     REQUIRED IMPORTED_TARGET glfw3)
     pkg_check_modules(assimp   REQUIRED IMPORTED_TARGET assimp)
     pkg_check_modules(glew     REQUIRED IMPORTED_TARGET glew)
-
+    
     find_library(Lib_fmodL fmodL HINTS ${MINGW64_DIR}/lib)
-	find_library(Lib_fmod fmod HINTS ${MINGW64_DIR}/lib)
+    find_library(Lib_fmod fmod HINTS ${MINGW64_DIR}/lib)
 
-	find_library(Lib_GL GL HINTS /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries)
+    find_library(Lib_GL GL HINTS /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries)
 
-	if(${ENGINE_USE_SYMLINKS})
-		pkg_check_modules(crypto REQUIRED IMPORTED_TARGET libcrypto)
-	else()
-		# For backwards compatibility
-		find_library(Lib_crypto crypto HINTS ${BREW_PATH}/openssl@${OPENSSL_VER_SHORT}/${OPENSSL_VER_FULL}/lib)
-	endif()
- 
- MESSAGE("${crypto_LINK_LIBRARIES}")
+    if(${ENGINE_USE_SYMLINKS})
+        pkg_check_modules(crypto REQUIRED IMPORTED_TARGET libcrypto)
+        set(Lib_crypto PkgConfig::crypto)
+    else()
+        # For backwards compatibility
+        find_library(Lib_crypto crypto HINTS ${BREW_PATH}/openssl@${OPENSSL_VER_SHORT}/${OPENSSL_VER_FULL}/lib)
+    endif()
 endif (WIN32)
 
 
