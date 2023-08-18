@@ -1553,7 +1553,7 @@ void gGUIGrid::resetSelectedIndexes() {
 void gGUIGrid::copyCells() {
 	copiedcellvalues.clear();
 	for(int i = 0; i < selectedcells.size(); i++) {
-		std::string tmpstr = std::to_string(allcells[selectedcells[i]].cellcolumnno) + ":" + allcells[selectedcells[i]].cellcontent + ":" + std::to_string(allcells[selectedcells[i]].fontnum) + ":" + std::to_string(allcells[selectedcells[i]].fontstate) + ":" + std::to_string(allcells[selectedcells[i]].fontsize) + ":" + std::to_string(allcells[selectedcells[i]].cellalignment) + ":" + std::to_string(allcells[selectedcells[i]].cellfontcolor.r) + ":" + std::to_string(allcells[selectedcells[i]].cellfontcolor.g) + ":" + std::to_string(allcells[selectedcells[i]].cellfontcolor.b) + ":" + std::to_string(allcells[selectedcells[i]].iscolorchanged) + ":" + std::to_string(allcells[selectedcells[i]].lineno);
+		std::string tmpstr = std::to_string(allcells[selectedcells[i]].cellrowno) + ":" + allcells[selectedcells[i]].cellcontent + ":" + std::to_string(allcells[selectedcells[i]].fontnum) + ":" + std::to_string(allcells[selectedcells[i]].fontstate) + ":" + std::to_string(allcells[selectedcells[i]].fontsize) + ":" + std::to_string(allcells[selectedcells[i]].cellalignment) + ":" + std::to_string(allcells[selectedcells[i]].cellfontcolor.r) + ":" + std::to_string(allcells[selectedcells[i]].cellfontcolor.g) + ":" + std::to_string(allcells[selectedcells[i]].cellfontcolor.b) + ":" + std::to_string(allcells[selectedcells[i]].iscolorchanged) + ":" + std::to_string(allcells[selectedcells[i]].lineno);
 		copiedcellvalues.push_back(tmpstr);
 	}
 }
@@ -1563,9 +1563,9 @@ void gGUIGrid::pasteCells() {
 	int row = (allcells[selectedbox].cellrowno * columnnum + allcells[selectedbox].cellcolumnno) / columnnum;
 	int column = (allcells[selectedbox].cellrowno * columnnum + allcells[selectedbox].cellcolumnno) % columnnum;
 	int colon = copiedcellvalues.at(copiedcellvalues.size() - 1).find(':');
-	int maxcolumn = column + std::stoi(copiedcellvalues.at(copiedcellvalues.size() - 1).substr(0, colon));
+	int maxrow = row + std::stoi(copiedcellvalues.at(copiedcellvalues.size() - 1).substr(0, colon));
 	colon = copiedcellvalues.at(0).find(':');
-	maxcolumn -= std::stoi(copiedcellvalues.at(0).substr(0, colon));
+	maxrow -= std::stoi(copiedcellvalues.at(0).substr(0, colon));
 	std::vector<std::string> tmpval;
 
 	for(int i = 0; i < copiedcellvalues.size(); i++) {
@@ -1625,10 +1625,10 @@ void gGUIGrid::pasteCells() {
 		}
 
 		fillCell(index, allcells[index].cellcontent);
-		column++;
-		if(column > maxcolumn) {
-			column = (allcells[selectedbox].cellrowno * columnnum + allcells[selectedbox].cellcolumnno) % columnnum;
-			row++;
+		row++;
+		if(row > maxrow) {
+			row = (allcells[selectedbox].cellrowno * columnnum + allcells[selectedbox].cellcolumnno) / columnnum;
+			column++;
 		}
 		index = getCellNo(row, column);
 		if(index == -1) {
