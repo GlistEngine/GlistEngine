@@ -4,7 +4,6 @@ else()
 	cmake_minimum_required (VERSION 3.10.2)
 endif()
 
-
 set(GLIST_CXX_STANDARD 14)
 set(GLIST_CXX_STANDARD_REQUIRED True)
 
@@ -268,8 +267,8 @@ endif()
 set_target_properties(
     GlistEngine
         PROPERTIES
-            CXX_STANDARD 14
-            CXX_STANDARD_REQUIRED True
+            CXX_STANDARD ${GLIST_CXX_STANDARD}
+            CXX_STANDARD_REQUIRED ${GLIST_CXX_STANDARD_REQUIRED}
 )
 
 if(APPLE)
@@ -278,12 +277,13 @@ else()
 	set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} ${GLIST_SHARED_LINKER_FLAGS}")
 endif()
 
+list(APPEND GLIST_CXX_FLAGS_DEBUG ${GLIST_CXX_FLAGS_COMMON} ${GLIST_CXX_FLAGS_DEBUG})
+list(APPEND GLIST_CXX_FLAGS_RELEASE ${GLIST_CXX_FLAGS_COMMON} ${GLIST_CXX_FLAGS_RELEASE})
 target_compile_options(
     GlistEngine
         PRIVATE
-            ${GLIST_CXX_FLAGS_COMMON}
-            $<$<CONFIG:Debug>:${GLIST_CXX_FLAGS_DEBUG}>
-            $<$<CONFIG:Release>:${GLIST_CXX_FLAGS_RELEASE}>
+            $<$<AND:$<COMPILE_LANGUAGE:CXX>,$<CONFIG:Debug>>:${GLIST_CXX_FLAGS_DEBUG}>
+            $<$<AND:$<COMPILE_LANGUAGE:CXX>,$<CONFIG:Release>>:${GLIST_CXX_FLAGS_RELEASE}>
 )
 
 ########## INCLUDE DIRECTORIES ##########
@@ -323,6 +323,7 @@ if(WIN32)
 		${MINGW64_DIR}/include/curl
 		${MINGW64_DIR}/include/fmod
 		${MINGW64_DIR}/include/utf8
+		${MINGW64_DIR}/include/harfbuzz
 	)
 elseif(ANDROID)
     # These are added by gipAndroid plugin
@@ -360,7 +361,7 @@ elseif(APPLE)
   	if(${DEVICEARCHITECTURE} STREQUAL "arm64")
 		if(${ENGINE_USE_SYMLINKS})
 			list(APPEND INC_DIRS
-					${BREW_PATH}/llvm@15/include/c++/v1
+					${BREW_PATH}/llvm/include/c++/v1
 			)
 		else()
 			# For backwards compatibility
@@ -467,6 +468,15 @@ elseif(APPLE)
         # For backwards compatibility
         find_library(Lib_crypto crypto HINTS ${BREW_PATH}/openssl@${OPENSSL_VER_SHORT}/${OPENSSL_VER_FULL}/lib)
     endif()
+	if(${ENGINE_USE_SYMLINKS})
+		pkg_check_modules(crypto REQUIRED IMPORTED_TARGET libcrypto)
+        set(Lib_crypto PkgConfig::crypto)
+	else()
+		# For backwards compatibility
+		find_library(Lib_crypto crypto HINTS ${BREW_PATH}/openssl@${OPENSSL_VER_SHORT}/${OPENSSL_VER_FULL}/lib)
+	endif()
+ 
+ MESSAGE("${crypto_LINK_LIBRARIES}")
 endif (WIN32)
 
 
@@ -525,7 +535,7 @@ elseif(APPLE)
 		PkgConfig::glfw
 		${Lib_GL}
 		PkgConfig::glew
-		PkgConfig::crypto
+		${Lib_crypto}
 #		${Lib_cpp}
 	# TODO: FFMPEG
 	)

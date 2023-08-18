@@ -55,6 +55,7 @@ public:
  *  will stretch in picturebox.
  */
 	void loadImage(const std::string& imagePath, bool isProportional = true);
+	void load(const std::string& fullPath, bool isProportional = true);
 
 /**
  * Sets the specific picture file

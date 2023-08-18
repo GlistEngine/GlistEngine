@@ -36,6 +36,7 @@ public:
 	    int cellcolumnno;
 	    int fontnum;
 	    int fontstate;
+	    int fontsize;
 	    int cellalignment;
 	    int lineno;
 	    int celltype;
@@ -56,6 +57,7 @@ public:
 	    	celly = -1;
 	    	fontnum = gGUIManager::FONT_FREESANS;
 	    	fontstate = gGUIManager::FONTTYPE_REGULAR;
+	    	fontsize = 11;
 	    	cellalignment = gBaseGUIObject::TEXTALIGNMENT_LEFT;
 	    	lineno = TEXTLINE_NONE;
 	    	celltype = TYPE_STRING;
@@ -77,8 +79,13 @@ public:
 	};
 
 	enum {
-		FUNCTION_COPY,
-		FUNCTION_SUM
+		FUNCTIONTYPE_NONE,
+		FUNCTIONTYPE_COPY,
+		FUNCTIONTYPE_SUM,
+		FUNCTIONTYPE_ADD,
+		FUNCTIONTYPE_SUB,
+		FUNCTIONTYPE_DIVIDE,
+		FUNCTIONTYPE_MULTIPLY
 	};
 
 	enum {
@@ -91,6 +98,7 @@ public:
 		PROCESS_TEXT,
 		PROCESS_FONT,
 		PROCESS_FONTSTATE,
+		PROCESS_FONTSIZE,
 		PROCESS_ALIGNMENT,
 		PROCESS_COLOR,
 		PROCESS_LINE,
@@ -128,6 +136,13 @@ public:
 	void setCellsFontItalic(std::deque<Cell*> cells);
 	void setCellsFontItalic(Cell* cell1, Cell* cell2);
 	void setCellsFontItalic(std::string cell1, std::string cell2);
+
+	void setCellFontSize(int fontSize);
+	void setCellFontSize(Cell* cell, int fontSize);
+	void setCellFontSize(std::string cell, int fontSize);
+	void setCellsFontSize(std::deque<Cell*> cells, int fontSize);
+	void setCellsFontSize(Cell* cell1, Cell* cell2, int fontSize);
+	void setCellsFontSize(std::string cell1, std::string cell2, int fontSize);
 
 	void setCellFontColor(gColor* fontColor = fontcolor);
 	void setCellFontColor(Cell* cell, gColor* fontColor = fontcolor);
@@ -205,20 +220,20 @@ private:
 
 	void fillCell(int cellNo, std::string tempstr);
 	float makeSum(int c1, int r1, int c2, int r2);
+	float makeFourOperation(std::string cell1, std::string cell2, char operation, std::string value1symbol = "", std::string value2symbol = "");
 	float calculateCurrentX(int columnNo);
 	float calculateCurrentY(int rowNo);
 	bool isNumeric(std::string text);
 
-	void addFunction(int functionType, int functionSender);
 	void addUndoStack(int process);
 	void addRedoStack();
 	void addOrChangeColumnWidth(int columnNo, float w);
 	void addOrChangeRowHeight(int rowNo, float h);
+	void addOrChangeFunction(int functionSenderNo);
 
-	void removeFunction(int functionNo);
-
-	void operateFunction(int functionNo);
 	void makeDefaultCell();
+	void removeFunction(int cellNo);
+	void operateFunction(int functionNo);
 
 	void changeAllAffectedCellsXW(float diff);
 	void changeAllAffectedCellsYH(float diff);
@@ -243,8 +258,8 @@ private:
 	std::deque<int> selectedcells;
 	std::deque<std::array<float, 2>> gridboxesw;
 	std::deque<std::array<float, 2>> gridboxesh;
-	std::vector<int> functionindexes;
-	std::vector<std::vector<int>> functions;
+	std::deque<std::string> functionindexes;
+	std::deque<std::deque<std::string>> functions;
 	std::vector<std::string> copiedcellvalues;
 	std::stack<int> undoprocessstack;
 	std::stack<std::string> undovaluestack;

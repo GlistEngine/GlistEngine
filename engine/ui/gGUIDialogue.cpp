@@ -10,7 +10,7 @@
 
 
 gGUIDialogue::gGUIDialogue() {
-	isdialogueactive = false;
+	isdialogueshown = false;
 
 	guisizer = nullptr;
 
@@ -70,12 +70,16 @@ void gGUIDialogue::draw() {
 	renderer->setColor(&oldcolor);
 }
 
-void gGUIDialogue::setIsDialogueActive(bool isDialogueActive) {
-	this->isdialogueactive = isDialogueActive;
+void gGUIDialogue::show() {
+	isdialogueshown = true;
 }
 
-bool gGUIDialogue::getIsDialogueActive() {
-	return isdialogueactive;
+void gGUIDialogue::hide() {
+	isdialogueshown = false;
+}
+
+bool gGUIDialogue::isShown() {
+	return isdialogueshown;
 }
 
 void gGUIDialogue::initDefTitleBar() {
@@ -111,12 +115,14 @@ void gGUIDialogue::initDefButtonsBar() {
 
 void gGUIDialogue::initDefMessageBar() {
 	defmessagebar.setSizer(&defmessagebarsizer);
-	defmessagebarsizer.setSize(1, 1);
+	defmessagebarsizer.setSize(1, 4);
 
 	defmessagetext.setText("This is a placeholder text.");
+	defdialoguetype.setPressedButtonImageFromIcon(gGUIResources::ICONBIG_INFO, true);
+	defdialoguetype.setDisabled(true);
 
-	defmessagebartopspace = 5;
-	defmessagebartopspace = 5;
+	defmessagebartopspace = 25;
+	defmessagebarrightspace = 15;
 }
 
 void gGUIDialogue::setTitleBar(gGUIContainer* titleBar) {
@@ -145,7 +151,7 @@ void gGUIDialogue::setMessageBar(gGUIContainer* messageBar) {
 	this->messagebar = messageBar;
 	messagebar->width = width;
 	messagebar->height = height;
-	messagebar->set(root, this, this, 0, 0, left + defmessagebarleftspace, top + defmessagebartopspace, messagebar->width - defmessagebarleftspace * 2, messagebar->height - defmessagebartopspace * 2);
+	messagebar->set(root, this, this, 0, 0, left, top + defmessagebartopspace, messagebar->width - defmessagebarrightspace, messagebar->height - defmessagebartopspace * 2);
 }
 
 gGUIContainer* gGUIDialogue::getMessageBar() {
@@ -155,7 +161,7 @@ gGUIContainer* gGUIDialogue::getMessageBar() {
 void gGUIDialogue::resetTitleBar() {
 	setTitleBar(&deftitlebar);
 
-	float tbbitp = ((float)deftitlebarbitmapw + 10) / (float)deftitlebar.width;
+	float tbbitp = ((float)deftitlebarbitmapw + 15) / (float)deftitlebar.width;
 	float tbbutp = (float)deftitlebarbuttonw / (float)deftitlebar.width;
 	float tbtxtp = 1 - (tbbitp + 3 * tbbutp);
 	float tbcolproportions[5] = {tbbitp, tbtxtp, tbbutp, tbbutp, tbbutp};
@@ -204,7 +210,16 @@ void gGUIDialogue::resetButtonsBar() {
 
 void gGUIDialogue::resetMessageBar() {
 	setMessageBar(&defmessagebar);
-	defmessagebarsizer.setControl(0, 0, &defmessagetext);
+	float mbspace = 0.05f;
+	float mbsmgp = 0.07f;
+	float mbdtp = 0.9f;
+	float mbcolproportions[4] = {mbspace, mbsmgp, mbspace, mbdtp};
+	defmessagebarsizer.setColumnProportions(mbcolproportions);
+
+	defmessagebarsizer.setControl(0, 3, &defmessagetext);
+	defmessagebarsizer.setControl(0, 1, &defdialoguetype);
+	defdialoguetype.setSize(deftitlebar.height, deftitlebar.height);
+	defdialoguetype.top += (defmessagebar.height - defdialoguetype.width) / 2;
 }
 
 void gGUIDialogue::setMinimizeButton(gGUIImageButton* minimizeButton) {
@@ -382,4 +397,8 @@ void gGUIDialogue::setMessageText(gGUIText *messageText) {
 
 std::string gGUIDialogue::getMessageText() {
 	return defmessagetext.getText();
+}
+
+void gGUIDialogue::setDialogueType(int typeId, bool isIconBig) {
+	defdialoguetype.setPressedButtonImageFromIcon(typeId, isIconBig);
 }

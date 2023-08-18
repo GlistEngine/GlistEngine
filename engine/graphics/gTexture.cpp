@@ -76,6 +76,7 @@ gTexture::gTexture() {
 	isfont = false;
 	ismaskloaded = false;
 	isloaded = false;
+	masktexture = nullptr;
 	setupRenderData();
 }
 
@@ -102,6 +103,7 @@ gTexture::gTexture(int w, int h, int format, bool isFbo) {
 	isfont = false;
 	ismaskloaded = false;
 	isloaded = false;
+	masktexture = nullptr;
 	glGenTextures(1, &id);
 	bind();
 	G_CHECK_GL(glTexImage2D(GL_TEXTURE_2D, 0, internalformat, width, height, 0, format, GL_UNSIGNED_BYTE, nullptr));
@@ -121,7 +123,15 @@ gTexture::gTexture(int w, int h, int format, bool isFbo) {
 }
 
 gTexture::~gTexture() {
-	if (ismutable && !isfont) stbi_image_free(data);
+	if(isloaded) {
+		G_CHECK_GL(glDeleteBuffers(1, &quadVBO));
+		G_CHECK_GL(glDeleteVertexArrays(1, &quadVAO));
+	}
+	G_CHECK_GL(glDeleteTextures(1, &id));
+	if (ismutable && !isfont) {
+		stbi_image_free(data);
+	}
+	delete masktexture;
 }
 
 unsigned int gTexture::load(const std::string& fullPath) {
