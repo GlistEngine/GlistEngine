@@ -207,6 +207,7 @@ public:
 
 private:
 	static const int mousetolerance = 5;
+	const std::string errormessage = "Error";
 
 	std::string fixTextFunction(std::string text, int index);
 	std::string fixNumeric(std::string text);
