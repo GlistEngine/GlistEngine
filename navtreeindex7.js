@@ -1,5 +1,6 @@
 var NAVTREEINDEX7 =
 {
+"classgKeyReleasedEvent.html#a2ea00d1ea46d7730e666915f85653922":[0,0,104,0],
 "classgLight.html":[0,0,105],
 "classgLight.html#a0670831f80e2b7d339e20eac01a10e83":[0,0,105,23],
 "classgLight.html#a0ce811674eac027a5fb9815e566ae183":[0,0,105,42],
@@ -248,6 +249,5 @@ var NAVTREEINDEX7 =
 "classgModel.html#ab9aac3bd4d83708a8d52344ad6f3d7a1":[0,0,116,53],
 "classgModel.html#abb492dfc4516c95822ab56ddeb235de7":[0,0,116,13],
 "classgModel.html#abdb6cad33be7d2de7ae00a526fe7a8a4":[0,0,116,15],
-"classgModel.html#abe1c7042f567b4adf2b68ebcbaab3377":[0,0,116,7],
-"classgModel.html#ac13512d0d9c9af37a97e11e8380487e8":[0,0,116,31]
+"classgModel.html#abe1c7042f567b4adf2b68ebcbaab3377":[0,0,116,7]
 };

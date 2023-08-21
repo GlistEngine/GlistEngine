@@ -83,6 +83,7 @@ $(document).ready(function(){initNavTree('classgGUIDialogue.html',''); initResiz
 
 <div class="header">
   <div class="summary">
+<a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-static-attribs">Static Public Attributes</a> &#124;
 <a href="classgGUIDialogue-members.html">List of all members</a>  </div>
@@ -134,6 +135,32 @@ Collaboration diagram for gGUIDialogue:</div>
 </map>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:a83a4da3b71c0e596fc7d24e07499efe1"><td class="memItemLeft" align="right" valign="top"><a id="a83a4da3b71c0e596fc7d24e07499efe1"></a>enum &#160;</td><td class="memItemRight" valign="bottom">{ <b>DIALOGUETYPE_OK</b>
+, <b>DIALOGUETYPE_YESNOCANCEL</b>
+ }</td></tr>
+<tr class="separator:a83a4da3b71c0e596fc7d24e07499efe1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a439ea48d303cbf2e1622d3993407b852"><td class="memItemLeft" align="right" valign="top"><a id="a439ea48d303cbf2e1622d3993407b852"></a>enum &#160;</td><td class="memItemRight" valign="bottom">{ <b>ICONTYPE_NONE</b>
+, <b>ICONTYPE_ERROR</b>
+, <b>ICONTYPE_INFO</b>
+, <b>ICONTYPE_WARNING</b>
+ }</td></tr>
+<tr class="separator:a439ea48d303cbf2e1622d3993407b852"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_types_classgGUIForm"><td colspan="2" onclick="javascript:toggleInherit('pub_types_classgGUIForm')"><img src="closed.png" alt="-"/>&#160;Public Types inherited from <a class="el" href="classgGUIForm.html">gGUIForm</a></td></tr>
+<tr class="memitem:a114347f854289ea983b8ee82ce5fce83 inherit pub_types_classgGUIForm"><td class="memItemLeft" align="right" valign="top"><a id="a114347f854289ea983b8ee82ce5fce83"></a>enum &#160;</td><td class="memItemRight" valign="bottom">{ <b>RESIZE_MENUBAR</b>
+, <b>RESIZE_STATUSBAR</b>
+, <b>RESIZE_TOOLBAR_HORIZONTAL</b>
+, <b>RESIZE_TOOLBAR_VERTICAL</b>
+ }</td></tr>
+<tr class="separator:a114347f854289ea983b8ee82ce5fce83 inherit pub_types_classgGUIForm"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_types_classgBaseGUIObject"><td colspan="2" onclick="javascript:toggleInherit('pub_types_classgBaseGUIObject')"><img src="closed.png" alt="-"/>&#160;Public Types inherited from <a class="el" href="classgBaseGUIObject.html">gBaseGUIObject</a></td></tr>
+<tr class="memitem:a481c27c2e5386988f2c965b9ff4761c0 inherit pub_types_classgBaseGUIObject"><td class="memItemLeft" align="right" valign="top"><a id="a481c27c2e5386988f2c965b9ff4761c0"></a>enum &#160;</td><td class="memItemRight" valign="bottom">{ <b>TEXTALIGNMENT_LEFT</b>
+, <b>TEXTALIGNMENT_MIDDLE</b>
+, <b>TEXTALIGNMENT_RIGHT</b>
+ }</td></tr>
+<tr class="separator:a481c27c2e5386988f2c965b9ff4761c0 inherit pub_types_classgBaseGUIObject"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:ac502b48b983ad2085e61f2275cbb3990"><td class="memItemLeft" align="right" valign="top"><a id="ac502b48b983ad2085e61f2275cbb3990"></a>
@@ -220,9 +247,12 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>setMessageText</b> (<
 <tr class="memitem:ad073fd797a250814116fda17c2167256"><td class="memItemLeft" align="right" valign="top"><a id="ad073fd797a250814116fda17c2167256"></a>
 std::string&#160;</td><td class="memItemRight" valign="bottom"><b>getMessageText</b> ()</td></tr>
 <tr class="separator:ad073fd797a250814116fda17c2167256"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4269aca9288e53e01ffef8f751e0dda7"><td class="memItemLeft" align="right" valign="top"><a id="a4269aca9288e53e01ffef8f751e0dda7"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>setDialogueType</b> (int typeId, bool isIconBig=false)</td></tr>
-<tr class="separator:a4269aca9288e53e01ffef8f751e0dda7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad7059719e1144c4256cf2aed4224b95b"><td class="memItemLeft" align="right" valign="top"><a id="ad7059719e1144c4256cf2aed4224b95b"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setIconType</b> (int iconId)</td></tr>
+<tr class="separator:ad7059719e1144c4256cf2aed4224b95b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab79e63cac82465034228387247185a4f"><td class="memItemLeft" align="right" valign="top"><a id="ab79e63cac82465034228387247185a4f"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setDialogueType</b> (int typeId)</td></tr>
+<tr class="separator:ab79e63cac82465034228387247185a4f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a49a26c7ca361705eff53baa51bb60bc9"><td class="memItemLeft" align="right" valign="top"><a id="a49a26c7ca361705eff53baa51bb60bc9"></a>
 int&#160;</td><td class="memItemRight" valign="bottom"><b>getCursor</b> (int x, int y)</td></tr>
 <tr class="separator:a49a26c7ca361705eff53baa51bb60bc9"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -506,19 +536,6 @@ static const int&#160;</td><td class="memItemRight" valign="bottom"><b>LOGLEVEL_
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
-<tr class="inherit_header pub_types_classgGUIForm"><td colspan="2" onclick="javascript:toggleInherit('pub_types_classgGUIForm')"><img src="closed.png" alt="-"/>&#160;Public Types inherited from <a class="el" href="classgGUIForm.html">gGUIForm</a></td></tr>
-<tr class="memitem:aaccfbca3ed4813f2d053b1e3b7f98615 inherit pub_types_classgGUIForm"><td class="memItemLeft" align="right" valign="top"><a id="aaccfbca3ed4813f2d053b1e3b7f98615"></a>enum &#160;</td><td class="memItemRight" valign="bottom">{ <b>RESIZE_MENUBAR</b>
-, <b>RESIZE_STATUSBAR</b>
-, <b>RESIZE_TOOLBAR_HORIZONTAL</b>
-, <b>RESIZE_TOOLBAR_VERTICAL</b>
- }</td></tr>
-<tr class="separator:aaccfbca3ed4813f2d053b1e3b7f98615 inherit pub_types_classgGUIForm"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="inherit_header pub_types_classgBaseGUIObject"><td colspan="2" onclick="javascript:toggleInherit('pub_types_classgBaseGUIObject')"><img src="closed.png" alt="-"/>&#160;Public Types inherited from <a class="el" href="classgBaseGUIObject.html">gBaseGUIObject</a></td></tr>
-<tr class="memitem:a481c27c2e5386988f2c965b9ff4761c0 inherit pub_types_classgBaseGUIObject"><td class="memItemLeft" align="right" valign="top"><a id="a481c27c2e5386988f2c965b9ff4761c0"></a>enum &#160;</td><td class="memItemRight" valign="bottom">{ <b>TEXTALIGNMENT_LEFT</b>
-, <b>TEXTALIGNMENT_MIDDLE</b>
-, <b>TEXTALIGNMENT_RIGHT</b>
- }</td></tr>
-<tr class="separator:a481c27c2e5386988f2c965b9ff4761c0 inherit pub_types_classgBaseGUIObject"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_static_methods_classgBaseGUIObject"><td colspan="2" onclick="javascript:toggleInherit('pub_static_methods_classgBaseGUIObject')"><img src="closed.png" alt="-"/>&#160;Static Public Member Functions inherited from <a class="el" href="classgBaseGUIObject.html">gBaseGUIObject</a></td></tr>
 <tr class="memitem:a05bed376bfb1385038453a0c5617c61f inherit pub_static_methods_classgBaseGUIObject"><td class="memItemLeft" align="right" valign="top"><a id="a05bed376bfb1385038453a0c5617c61f"></a>
 static void&#160;</td><td class="memItemRight" valign="bottom"><b>setBackgroundColor</b> (<a class="el" href="classgColor.html">gColor</a> *backgroundColor)</td></tr>
