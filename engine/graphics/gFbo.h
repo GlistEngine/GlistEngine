@@ -41,6 +41,7 @@ public:
 	static unsigned int getQuadVao();
 private:
     unsigned int framebuffer;
+    unsigned int rbo;
     gTexture* texture;
     int width, height;
     bool isdepthmap;

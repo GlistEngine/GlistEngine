@@ -122,17 +122,17 @@ public:
 /**
  * Sets the button image using icons from the resources.
  */
-    void setButtonImageFromIcon(int iconId);
+    void setButtonImageFromIcon(int iconId, bool isIconBig = false);
 
 /**
  * Sets the pressed button image using icons from the resources.
  */
-    void setPressedButtonImageFromIcon(int pressedIconId);
+    void setPressedButtonImageFromIcon(int pressedIconId, bool isIconBig = false);
 
 
 private:
         float imagew, imageh, proportion;
-        bool stretch;
+        bool stretch, isiconbig;
         std::string buttonimagepath;
         std::string pressedbuttonimagepath;
         gImage buttonimage;

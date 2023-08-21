@@ -64,6 +64,12 @@ void gGUIBitmap::loadImage(const std::string& imagePath , bool isProportional) {
 
 }
 
+void gGUIBitmap::load(const std::string &fullPath, bool isProportional) {
+	imagepath = fullPath;
+	image.load(imagepath);
+	stretch = isProportional;
+}
+
 void gGUIBitmap::setImage(gImage setImage, bool isProportional) {
 	image=setImage;
 	stretch = isProportional;
@@ -80,4 +86,5 @@ int gGUIBitmap::getImageHeight() {
 std::string gGUIBitmap::getImagePath() {
 	return imagepath;
 }
+
 

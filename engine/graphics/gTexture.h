@@ -59,7 +59,7 @@ public:
 	*/
 	unsigned int loadMaskTexture(const std::string& maskTexturePath);
 
-	unsigned int loadData(unsigned char* textureData, int width, int height, int componentNum, bool isFont = false);
+	unsigned int loadData(unsigned char* textureData, int width, int height, int componentNum, bool isMutable = false, bool isStbImage = false);
 
 	void bind() const;
 	void bind(int textureSlotNo) const;
@@ -104,7 +104,7 @@ public:
 	void drawSub(const gRect& src, const gRect& dst, int pivotx, int pivoty, float rotate = 0.f);
 	void drawSub(const gRect& src, const gRect& dst, glm::vec2 pivotPointCoords, float rotate = 0.f);
 
-	void setData(unsigned char* textureData, bool isMutable = false);
+	void setData(unsigned char* textureData, bool isMutable = false, bool isStbImage = false);
 
 	void setupRenderData();
 
@@ -116,8 +116,8 @@ protected:
 	int width, height, componentnum;
 	unsigned char* data;
 	bool ismutable;
+	bool isstbimage;
 	int wraps, wrapt, filtermin, filtermag;
-	bool isfont;
 
 	unsigned char* getData();
 	bool isMutable();
@@ -127,7 +127,7 @@ protected:
 
 	bool ishdr;
 	float* datahdr;
-	void setDataHDR(float* textureData, bool isMutable = false);
+	void setDataHDR(float* textureData, bool isMutable = false, bool  isStbImage = false);
 	float* getDataHDR();
 	bool ismaskloaded;
 	gTexture* masktexture;

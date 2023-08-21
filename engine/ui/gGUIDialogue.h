@@ -41,8 +41,9 @@ public:
 	void update();
 	void draw();
 
-	void setIsDialogueActive(bool isDialogueActive);
-	bool getIsDialogueActive();
+	void show();
+	void hide();
+	bool isShown();
 
 	void initDefTitleBar();
 	void initDefButtonsBar();
@@ -72,6 +73,7 @@ public:
 
 	void setMessageText(gGUIText* messageText);
 	std::string getMessageText();
+	void setDialogueType(int typeId, bool isIconBig = false);
 
 	int getCursor(int x, int y);
 	void mouseMoved(int x, int y);
@@ -79,7 +81,7 @@ public:
 	void mouseDragged(int x, int y, int button);
 	void mouseReleased(int x, int y, int button);
 private:
-	bool isdialogueactive;
+	bool isdialogueshown;
 
 	gGUIContainer* titlebar;
 	gGUIContainer* buttonsbar;
@@ -89,7 +91,7 @@ private:
 	gGUIImageButton* maximizebutton;
 	gGUIImageButton* exitbutton;
 
-	static const int deftitlebarh = 27, deftitlebarbitmapw = 24, deftitlebarbuttonw = 48;
+	static const int deftitlebarh = 35, deftitlebarbitmapw = 24, deftitlebarbuttonw = 48;
 	static const int defbuttonsbarh = 45, defbuttonsbarbuttonw = 100, defbuttonsbarbuttonh = 27;
 
 	gGUIContainer deftitlebar;
@@ -107,10 +109,11 @@ private:
 	gGUIContainer defmessagebar;
 	gGUISizer defmessagebarsizer;
 	gGUIText defmessagetext;
+	gGUIImageButton defdialoguetype;
 
 	int buttontrigger, buttonevent;
 
-	int defmessagebartopspace, defmessagebarleftspace;
+	int defmessagebartopspace, defmessagebarrightspace;
 
 	bool isdragenabled, isresizeenabled;
 	bool ismaximized, isdragged;

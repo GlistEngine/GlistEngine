@@ -13,6 +13,7 @@ gGUIImageButton::gGUIImageButton() {
 	imageh = 0;
 	proportion = 0;
 	stretch = true;
+	isiconbig = false;
 	buttonimagepath = "";
 	pressedbuttonimagepath = "";
 
@@ -44,11 +45,11 @@ void gGUIImageButton::draw() {
             imageh = buttonh;
         }
     if(isPressed()) {
-    	if (iconid != gGUIResources::ICON_NONE) res.getIconImage(iconid)->draw(left, top + ispressed, buttonw, buttonh);
+    	if (iconid != gGUIResources::ICON_NONE) res.getIconImage(iconid, isiconbig)->draw(left, top + ispressed, buttonw, buttonh);
     	else buttonimage.draw(left, top + ispressed, buttonw, buttonh);
     }
     else {
-    	if (pressediconid != gGUIResources::ICON_NONE) res.getIconImage(pressediconid)->draw(left, top + ispressed, buttonw, buttonh);
+    	if (pressediconid != gGUIResources::ICON_NONE) res.getIconImage(pressediconid, isiconbig)->draw(left, top + ispressed, buttonw, buttonh);
     	else pressedbuttonimage.draw(left, top + ispressed, buttonw, buttonh);
     }
     setSize(imagew, imageh);
@@ -91,9 +92,11 @@ void gGUIImageButton::setImageStretched(bool stretchMod) {
     return pressedbuttonimagepath;
    }
 
-   void gGUIImageButton::setButtonImageFromIcon(int iconId){
+   void gGUIImageButton::setButtonImageFromIcon(int iconId, bool isIconBig){
    	iconid = iconId;
+   	isiconbig = isIconBig;
    }
-   void gGUIImageButton::setPressedButtonImageFromIcon(int pressedIconId){
+   void gGUIImageButton::setPressedButtonImageFromIcon(int pressedIconId, bool isIconBig){
    	pressediconid = pressedIconId;
+   	isiconbig = isIconBig;
    }

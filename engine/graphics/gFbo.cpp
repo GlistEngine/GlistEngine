@@ -46,6 +46,7 @@ gFbo::gFbo() {
 
 gFbo::~gFbo() {
 	delete texture;
+	glDeleteRenderbuffers(1, &rbo);
 	glDeleteFramebuffers(1, &framebuffer);
 	glDeleteVertexArrays(1, &gFbo::quadVAO);
 	glDeleteBuffers(1, &gFbo::quadVBO);
@@ -53,52 +54,53 @@ gFbo::~gFbo() {
 
 void gFbo::allocate(int width, int height, bool isDepthMap) {
 	// check if is not allocated
-	if(!isallocated) {
-		this->width = width;
-		this->height = height;
-		isdepthmap = isDepthMap;
-
-		G_CHECK_GL(glGenFramebuffers(1, &framebuffer));
-		G_CHECK_GL(glBindFramebuffer(GL_FRAMEBUFFER, framebuffer));
-
+	if(isallocated) {
 		delete texture;
+		G_CHECK_GL(glDeleteRenderbuffers(1, &rbo));
+		G_CHECK_GL(glDeleteFramebuffers(1, &framebuffer));
+
 		texture = nullptr;
-
-		if(!isDepthMap) {
-			// create a color attachment texture
-			texture = new gTexture(width, height, GL_RGBA, true);
-			texture->bind();
-			G_CHECK_GL(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture->getId(), 0));
-
-			// create a renderbuffer object for depth and stencil attachment (we won't be sampling these)
-			unsigned int rbo;
-			G_CHECK_GL(glGenRenderbuffers(1, &rbo));
-			G_CHECK_GL(glBindRenderbuffer(GL_RENDERBUFFER, rbo));
-			G_CHECK_GL(glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height)); // use a single renderbuffer object for both a depth AND stencil buffer.
-			G_CHECK_GL(glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo)); // now actually attach it
-		} else {
-			// create a depth attachment texture
-			texture = new gTexture(width, height, GL_DEPTH_COMPONENT, true);
-			texture->bind();
-			G_CHECK_GL(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, texture->getId(), 0));
-	#if(ANDROID)
-			G_CHECK_GL(glDrawBuffers(0, GL_NONE));
-	#else
-			G_CHECK_GL(glDrawBuffer(GL_NONE));
-	#endif
-			G_CHECK_GL(glReadBuffer(GL_NONE));
-		}
-
-		// check if fbo complete
-		GLuint status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
-		if (status != GL_FRAMEBUFFER_COMPLETE) {
-			gLogi("gFbo") << "Framebuffer is not complete! status:" << gToHex(status, 4);
-		}
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-		// mark as allocated
-		isallocated = true;
+		isallocated = false;
 	}
+
+	this->width = width;
+	this->height = height;
+	isdepthmap = isDepthMap;
+
+	G_CHECK_GL(glGenFramebuffers(1, &framebuffer));
+	G_CHECK_GL(glBindFramebuffer(GL_FRAMEBUFFER, framebuffer));
+
+	if(!isDepthMap) {
+		// create a color attachment texture
+		texture = new gTexture(width, height, GL_RGBA, true);
+		texture->bind();
+		G_CHECK_GL(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture->getId(), 0));
+
+		// create a renderbuffer object for depth and stencil attachment (we won't be sampling these)
+		G_CHECK_GL(glGenRenderbuffers(1, &rbo));
+		G_CHECK_GL(glBindRenderbuffer(GL_RENDERBUFFER, rbo));
+		G_CHECK_GL(glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height)); // use a single renderbuffer object for both a depth AND stencil buffer.
+		G_CHECK_GL(glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo)); // now actually attach it
+	} else {
+		// create a depth attachment texture
+		texture = new gTexture(width, height, GL_DEPTH_COMPONENT, true);
+		texture->bind();
+		G_CHECK_GL(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, texture->getId(), 0));
+#if(ANDROID)
+		G_CHECK_GL(glDrawBuffers(0, GL_NONE));
+#else
+		G_CHECK_GL(glDrawBuffer(GL_NONE));
+#endif
+		G_CHECK_GL(glReadBuffer(GL_NONE));
+	}
+
+	// check if fbo complete
+	GLuint status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+	if (status != GL_FRAMEBUFFER_COMPLETE) {
+		gLogi("gFbo") << "Framebuffer is not complete! status:" << gToHex(status, 4);
+	}
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	isallocated = true;
 }
 
 unsigned int gFbo::getId() {

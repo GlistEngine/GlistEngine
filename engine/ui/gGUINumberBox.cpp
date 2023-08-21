@@ -62,6 +62,8 @@ gGUINumberBox::gGUINumberBox() {
 	minvalue = std::numeric_limits<int>::min();
 	maxvaluef = std::numeric_limits<float>::max();
 	minvaluef = std::numeric_limits<float>::min();
+	increment = 1;
+	incrementf = 0.1f;
 }
 
 gGUINumberBox::~gGUINumberBox() {
@@ -158,6 +160,38 @@ void gGUINumberBox::charPressed(unsigned int codepoint) {
 	textbox.charPressed(codepoint);
 }
 
+void gGUINumberBox::setInteger(int value) {
+	textbox.setText(gToStr(value));
+}
+
+int gGUINumberBox::getInteger() {
+	return gToInt(textbox.getText());
+}
+
+void gGUINumberBox::setFloat(float value) {
+	textbox.setText(gToStr(value));
+}
+
+float gGUINumberBox::getFloat() {
+	return gToFloat(textbox.getText());
+}
+
+void gGUINumberBox::setIntegerIncrement(int value) {
+	increment = value;
+}
+
+int gGUINumberBox::getIntegerIncrement() {
+	return increment;
+}
+
+void gGUINumberBox::setFloatIncrement(float value) {
+	incrementf = value;
+}
+
+float gGUINumberBox::getFloatIncrement() {
+	return incrementf;
+}
+
 void gGUINumberBox::mousePressed(int x, int y, int button) {
 	gGUIContainer::mousePressed(x, y, button);
 	textbox.mousePressed(x, y, button);
@@ -183,7 +217,7 @@ void gGUINumberBox::mouseReleased(int x, int y, int button) {
 
 		if(isinteger){
 			castcurrtexttoint = gToInt(textbox.getText());
-			castcurrtexttoint = castcurrtexttoint + 1;
+			castcurrtexttoint = castcurrtexttoint + increment;
 			setText(gToStr(castcurrtexttoint));
 			if (castcurrtexttoint >= maxvalue) {
 			    castcurrtexttoint = maxvalue;
@@ -192,7 +226,7 @@ void gGUINumberBox::mouseReleased(int x, int y, int button) {
 			if (castcurrtexttoint > minvalue) b2isdisabled = false;
 		} else {
 			castcurrtexttofloat = gToFloat(textbox.getText());
-			castcurrtexttofloat = castcurrtexttofloat + 0.1;
+			castcurrtexttofloat = castcurrtexttofloat + incrementf;
 			setText(gToStr(castcurrtexttofloat));
 			if (castcurrtexttofloat >= maxvaluef) {
 				castcurrtexttofloat = maxvaluef;
@@ -211,7 +245,7 @@ void gGUINumberBox::mouseReleased(int x, int y, int button) {
 
 		if(isinteger){
 			castcurrtexttoint = gToInt(textbox.getText());
-			castcurrtexttoint = castcurrtexttoint - 1;
+			castcurrtexttoint = castcurrtexttoint - increment;
 			setText(gToStr(castcurrtexttoint));
 			if (castcurrtexttoint <= minvalue) {
 			    castcurrtexttoint = maxvalue;
@@ -220,7 +254,7 @@ void gGUINumberBox::mouseReleased(int x, int y, int button) {
 			if (castcurrtexttoint < maxvalue) b1isdisabled = false;
 		} else {
 			castcurrtexttofloat = gToFloat(textbox.getText());
-			castcurrtexttofloat = castcurrtexttofloat - 0.1;
+			castcurrtexttofloat = castcurrtexttofloat - incrementf;
 			setText(gToStr(castcurrtexttofloat));
 			if (castcurrtexttofloat <= minvaluef) {
 				castcurrtexttofloat = maxvaluef;

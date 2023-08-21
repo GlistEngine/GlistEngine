@@ -19,6 +19,7 @@
 
 #include "gNode.h"
 #include <map>
+#include <vector>
 #include "freetype2/ft2build.h"
 #ifdef ANDROID
 #include "freetype2/freetype/freetype.h"
@@ -158,6 +159,7 @@ private:
 	  int border;
 	  bool iskerning;
 
+
 	  FT_Library ftlib;
 	  FT_Face fontface;
 
@@ -179,7 +181,7 @@ private:
 
 	  std::vector<charProperties> cpset;
 	  std::vector<gTexture*> textures;
-	  std::vector<int> loadedcharacters;
+	  std::deque<int> loadedcharacters;
 	  static const int unloadedchar = 0;
 
 

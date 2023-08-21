@@ -1,14 +1,29 @@
-cmake_minimum_required (VERSION 3.10.2)
+if(APPLE)
+	cmake_minimum_required (VERSION 3.26)
+else()
+	cmake_minimum_required (VERSION 3.10.2)
+endif()
 
+set(GLIST_CXX_STANDARD 14)
+set(GLIST_CXX_STANDARD_REQUIRED True)
 
 # Configure compiler and linker as you need
-set(CMAKE_CXX_FLAGS_COMMON "${CMAKE_CXX_FLAGS} -stdlib=libc++ -Wuninitialized -Wmultichar -ffunction-sections -fdata-sections -fexceptions -frtti -fpermissive -fPIC")
-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_COMMON} -DEIGEN_NO_CUDA -DNDEBUG -O2")
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_COMMON} -g -DDEBUG -O0")
+set(GLIST_CXX_FLAGS_COMMON
+    -stdlib=libc++
+    -Wuninitialized
+    -Wmultichar
+    -ffunction-sections
+    -fdata-sections
+    -fexceptions
+    -frtti
+    -fpermissive
+    -fPIC
+)
+list(APPEND GLIST_CXX_FLAGS_DEBUG -DDEBUG -Og)
+list(APPEND GLIST_CXX_FLAGS_RELEASE -DEIGEN_NO_CUDA -DNDEBUG -O2)
 if(NOT APPLE)
-	set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -v -pthread -Wl,--gc-sections")
+	set(GLIST_SHARED_LINKER_FLAGS "-v -pthread -Wl,--gc-sections")
 endif()
-set(CMAKE_CXX_STANDARD 14)
 
 ##################################################
 # DO NOT CHANGE BELOW
@@ -21,8 +36,8 @@ if(UNIX AND NOT APPLE)
 endif()
     
 if(WIN32)
-	set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS} -march=x86-64")
-	set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} -march=x86-64")
+    list(APPEND GLIST_CXX_FLAGS_RELEASE "-march=x86-64")
+	list(APPEND GLIST_CXX_FLAGS_DEBUG "-march=x86-64")
 	set(SYS_NAME "win64")
 endif(WIN32)
 
@@ -241,12 +256,37 @@ else()
 	)
 endif()
 
+set_target_properties(
+    GlistEngine
+        PROPERTIES
+            CXX_STANDARD ${GLIST_CXX_STANDARD}
+            CXX_STANDARD_REQUIRED ${GLIST_CXX_STANDARD_REQUIRED}
+)
+
+if(APPLE)
+    target_link_options(GlistEngine PRIVATE ${GLIST_SHARED_LINKER_FLAGS} -pthread)
+else()
+	set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} ${GLIST_SHARED_LINKER_FLAGS}")
+endif()
+
+list(APPEND GLIST_CXX_FLAGS_DEBUG ${GLIST_CXX_FLAGS_COMMON} ${GLIST_CXX_FLAGS_DEBUG})
+list(APPEND GLIST_CXX_FLAGS_RELEASE ${GLIST_CXX_FLAGS_COMMON} ${GLIST_CXX_FLAGS_RELEASE})
+target_compile_options(
+    GlistEngine
+        PRIVATE
+            $<$<AND:$<COMPILE_LANGUAGE:CXX>,$<CONFIG:Debug>>:${GLIST_CXX_FLAGS_DEBUG}>
+            $<$<AND:$<COMPILE_LANGUAGE:CXX>,$<CONFIG:Release>>:${GLIST_CXX_FLAGS_RELEASE}>
+)
+
 ########## INCLUDE DIRECTORIES ##########
 set(INC_DIRS
 	${LIBS_DIR}/stb/include
 	${LIBS_DIR}/fmod/include
 	${LIBS_DIR}/utf8/include
 	${LIBS_DIR}/ghc/include
+)
+
+set(ENGINE_INCLUDES
     ${ENGINE_DIR}/ui
     ${ENGINE_DIR}/utils
     ${ENGINE_DIR}/types
@@ -260,10 +300,11 @@ set(INC_DIRS
     ${ENGINE_DIR}/base
     ${ENGINE_DIR}/core
     ${ENGINE_DIR}/events
-	${PLUGIN_INCLUDES}
+    ${PLUGIN_INCLUDES}
 #	${CMAKE_BINARY_DIR}/generated
 )
 
+list(APPEND INC_DIRS ${ENGINE_INCLUDES})
 
 if(WIN32)
 	list(APPEND INC_DIRS
@@ -274,6 +315,7 @@ if(WIN32)
 		${MINGW64_DIR}/include/curl
 		${MINGW64_DIR}/include/fmod
 		${MINGW64_DIR}/include/utf8
+		${MINGW64_DIR}/include/harfbuzz
 	)
 elseif(ANDROID)
     # These are added by gipAndroid plugin
@@ -309,7 +351,7 @@ elseif(APPLE)
 	endif()
 
   	if(${DEVICEARCHITECTURE} STREQUAL "arm64")
-		if(DEFINED ENGINE_USE_SYMLINKS)
+		if(${ENGINE_USE_SYMLINKS})
 			list(APPEND INC_DIRS
 					${BREW_PATH}/llvm/include/c++/v1
 			)
@@ -323,7 +365,8 @@ elseif(APPLE)
 endif(WIN32)
 
 
-include_directories(${INC_DIRS})
+target_include_directories(GlistEngine PUBLIC ${INC_DIRS})
+target_sources(GlistEngine PRIVATE ${ENGINE_INCLUDES})
 
 #message(WARNING "PLUGIN_LIBDIRS: ${PLUGIN_LIBDIRS}")
 FOREACH(PLIBDIR ${PLUGIN_LIBDIRS})
@@ -377,101 +420,30 @@ elseif(LINUX)
 	set_target_properties(freetype PROPERTIES IMPORTED_LOCATION
 			${MINGW64_DIR}/lib/libfreetype.so)
 elseif(APPLE)
-	find_library(Lib_freetype freetype HINTS /usr/local/lib)
-	execute_process(COMMAND 
-	    pkg-config --cflags freetype
-	    OUTPUT_VARIABLE
-	    CL_TMP_VAR
-	    OUTPUT_STRIP_TRAILING_WHITESPACE)
-	string(STRIP "${CL_TMP_VAR}" CL_VAR_1)
-	add_definitions(${CL_VAR_1})
+    set(APPLE_LIBDIR "/opt/homebrew/lib")
+    find_package(PkgConfig REQUIRED)
+    set(ENV{PKG_CONFIG_PATH} "${APPLE_LIBDIR}/pkgconfig")
+    
+    pkg_check_modules(curl     REQUIRED IMPORTED_TARGET libcurl)
+    pkg_check_modules(freetype REQUIRED IMPORTED_TARGET freetype2)
+    pkg_check_modules(glfw     REQUIRED IMPORTED_TARGET glfw3)
+    pkg_check_modules(assimp   REQUIRED IMPORTED_TARGET assimp)
+    pkg_check_modules(glew     REQUIRED IMPORTED_TARGET glew)
 
-	find_library(Lib_assimp assimp HINTS /usr/local/lib)
-	execute_process(COMMAND 
-	    pkg-config --cflags assimp
-	    OUTPUT_VARIABLE
-	    CL_TMP_VAR
-	    OUTPUT_STRIP_TRAILING_WHITESPACE)
-	string(STRIP "${CL_TMP_VAR}" CL_VAR_2)
-	add_definitions(${CL_VAR_2})
-
-	find_library(Lib_fmodL fmodL HINTS ${MINGW64_DIR}/lib)
-	execute_process(COMMAND 
-	    pkg-config --cflags fmod
-	    OUTPUT_VARIABLE
-	    CL_TMP_VAR
-	    OUTPUT_STRIP_TRAILING_WHITESPACE)
-	string(STRIP "${CL_TMP_VAR}" CL_VAR_3)
-	add_definitions(${CL_VAR_3})
-
-	find_library(Lib_fmod fmod HINTS ${MINGW64_DIR}/lib)
-	execute_process(COMMAND 
-	    pkg-config --cflags fmod
-	    OUTPUT_VARIABLE
-	    CL_TMP_VAR
-	    OUTPUT_STRIP_TRAILING_WHITESPACE)
-	string(STRIP "${CL_TMP_VAR}" CL_VAR_4)
-	add_definitions(${CL_VAR_4})
-
-	find_library(Lib_glfw glfw HINTS /usr/local/lib)
-	execute_process(COMMAND 
-	    pkg-config --cflags glfw
-	    OUTPUT_VARIABLE
-	    CL_TMP_VAR
-	    OUTPUT_STRIP_TRAILING_WHITESPACE)
-	string(STRIP "${CL_TMP_VAR}" CL_VAR_5)
-	add_definitions(${CL_VAR_5})
+    find_library(Lib_fmodL fmodL HINTS ${MINGW64_DIR}/lib)
+    find_library(Lib_fmod fmod HINTS ${MINGW64_DIR}/lib)
 
 	find_library(Lib_GL GL HINTS /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries)
-	execute_process(COMMAND 
-	    pkg-config --cflags GL
-	    OUTPUT_VARIABLE
-	    CL_TMP_VAR
-	    OUTPUT_STRIP_TRAILING_WHITESPACE)
-	string(STRIP "${CL_TMP_VAR}" CL_VAR_6)
-	add_definitions(${CL_VAR_6})
 
-	find_library(Lib_GLEW GLEW HINTS /usr/local/lib)
-	execute_process(COMMAND 
-	    pkg-config --cflags GLEW
-	    OUTPUT_VARIABLE
-	    CL_TMP_VAR
-	    OUTPUT_STRIP_TRAILING_WHITESPACE)
-	string(STRIP "${CL_TMP_VAR}" CL_VAR_7)
-	add_definitions(${CL_VAR_7})
-	
-	find_library(Lib_curl curl HINTS /usr/local/lib)
-	execute_process(COMMAND 
-	    pkg-config --cflags curl
-	    OUTPUT_VARIABLE
-	    CL_TMP_VAR
-	    OUTPUT_STRIP_TRAILING_WHITESPACE)
-	string(STRIP "${CL_TMP_VAR}" CL_VAR_8)
-	add_definitions(${CL_VAR_8})
-
-	if(DEFINED ENGINE_USE_SYMLINKS)
-		find_library(Lib_crypto crypto HINTS ${BREW_PATH}/openssl@3/lib)
+	if(${ENGINE_USE_SYMLINKS})
+		pkg_check_modules(crypto REQUIRED IMPORTED_TARGET libcrypto)
+        set(Lib_crypto PkgConfig::crypto)
 	else()
 		# For backwards compatibility
 		find_library(Lib_crypto crypto HINTS ${BREW_PATH}/openssl@${OPENSSL_VER_SHORT}/${OPENSSL_VER_FULL}/lib)
 	endif()
-
-	execute_process(COMMAND
-	    pkg-config --cflags crypto
-	    OUTPUT_VARIABLE
-	    CL_TMP_VAR
-	    OUTPUT_STRIP_TRAILING_WHITESPACE)
-	string(STRIP "${CL_TMP_VAR}" CL_VAR_9)
-	add_definitions(${CL_VAR_9})
-
-#	find_library(Lib_cpp c++ HINTS ${BREW_PATH}/llvm/${LLVM_VER}/lib/c++)
-#	execute_process(COMMAND
-#	    pkg-config --cflags c++
-#	    OUTPUT_VARIABLE
-#	    CL_TMP_VAR
-#	    OUTPUT_STRIP_TRAILING_WHITESPACE)
-#	string(STRIP "${CL_TMP_VAR}" CL_VAR_10)
-#	add_definitions(${CL_VAR_10})
+ 
+ MESSAGE("${crypto_LINK_LIBRARIES}")
 endif (WIN32)
 
 
@@ -524,12 +496,12 @@ elseif(APPLE)
 	list(APPEND LINK_LIBS
 		${Lib_fmodL}
 		${Lib_fmod}
-		${Lib_assimp}
-		${Lib_freetype}
-		${Lib_curl}
-		${Lib_glfw}
+		PkgConfig::assimp
+		PkgConfig::freetype
+		PkgConfig::curl
+		PkgConfig::glfw
 		${Lib_GL}
-		${Lib_GLEW}
+		PkgConfig::glew
 		${Lib_crypto}
 #		${Lib_cpp}
 	# TODO: FFMPEG
@@ -538,5 +510,6 @@ endif(WIN32)
 
 # add lib dependencies
 target_link_libraries(GlistEngine
-	${LINK_LIBS}
+    PUBLIC
+        ${LINK_LIBS}
 )

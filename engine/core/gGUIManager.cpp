@@ -87,21 +87,21 @@ gGUIFrame* gGUIManager::getCurrentFrame() {
 void gGUIManager::keyPressed(int key) {
 	currentframe->keyPressed(key);
 	for (int i = 0; i < dialogues.size(); i++) {
-		if (dialogues[i]->getIsDialogueActive()) dialogues[i]->keyPressed(key);
+		if (dialogues[i]->isShown()) dialogues[i]->keyPressed(key);
 	}
 }
 
 void gGUIManager::keyReleased(int key) {
 	currentframe->keyReleased(key);
 	for (int i = 0; i < dialogues.size(); i++) {
-		if (dialogues[i]->getIsDialogueActive()) dialogues[i]->keyReleased(key);
+		if (dialogues[i]->isShown()) dialogues[i]->keyReleased(key);
 	}
 }
 
 void gGUIManager::charPressed(unsigned int key) {
 	currentframe->charPressed(key);
 	for (int i = 0; i < dialogues.size(); i++) {
-		if (dialogues[i]->getIsDialogueActive()) dialogues[i]->charPressed(key);
+		if (dialogues[i]->isShown()) dialogues[i]->charPressed(key);
 	}
 }
 
@@ -110,7 +110,7 @@ void gGUIManager::mouseMoved(int x, int y) {
 	currentframe->mouseMoved(x, y);
 
 	for (int i = 0; i < dialogues.size(); i++) {
-		if (dialogues[i]->getIsDialogueActive()) {
+		if (dialogues[i]->isShown()) {
 			appmanager->setCursor(dialogues[i]->getCursor(x, y));
 			dialogues[i]->mouseMoved(x, y);
 		}
@@ -130,28 +130,28 @@ void gGUIManager::mouseDragged(int x, int y, int button) {
 void gGUIManager::mouseReleased(int x, int y, int button) {
 	currentframe->mouseReleased(x, y, button);
 	for (int i = 0; i < dialogues.size(); i++) {
-		if (dialogues[i]->getIsDialogueActive()) dialogues[i]->mouseReleased(x, y, button);
+		if (dialogues[i]->isShown()) dialogues[i]->mouseReleased(x, y, button);
 	}
 }
 
 void gGUIManager::mouseScrolled(int x, int y) {
 	currentframe->mouseScrolled(x, y);
 	for (int i = 0; i < dialogues.size(); i++) {
-		if (dialogues[i]->getIsDialogueActive()) dialogues[i]->mouseScrolled(x, y);
+		if (dialogues[i]->isShown()) dialogues[i]->mouseScrolled(x, y);
 	}
 }
 
 void gGUIManager::mouseEntered() {
 	currentframe->mouseEntered();
 	for (int i = 0; i < dialogues.size(); i++) {
-		if (dialogues[i]->getIsDialogueActive()) dialogues[i]->mouseEntered();
+		if (dialogues[i]->isShown()) dialogues[i]->mouseEntered();
 	}
 }
 
 void gGUIManager::mouseExited() {
 	currentframe->mouseExited();
 	for (int i = 0; i < dialogues.size(); i++) {
-		if (dialogues[i]->getIsDialogueActive()) dialogues[i]->mouseEntered();
+		if (dialogues[i]->isShown()) dialogues[i]->mouseEntered();
 	}
 }
 
@@ -167,18 +167,18 @@ void gGUIManager::update() {
 	currentframe->update();
 
 	for (int i = dialogues.size() - 1; i >= 0; i--) {
-		if (dialogues[i]->getIsDialogueActive()) {selecteddialogue = dialogues[i]; break;}
+		if (dialogues[i]->isShown()) {selecteddialogue = dialogues[i]; break;}
 		selecteddialogue = nullptr;
 	}
 
 	if (selecteddialogue != nullptr) {
 		selecteddialogue->update();
 		if (selecteddialogue->getButtonEvent() == gGUIDialogue::EVENT_EXIT) {
-			selecteddialogue->setIsDialogueActive(false);
+			selecteddialogue->hide();
 			selecteddialogue->setButtonEvent(gGUIDialogue::EVENT_NONE);
 		}
 		if (selecteddialogue->getButtonEvent() == gGUIDialogue::EVENT_MINIMIZE) {
-			selecteddialogue->setIsDialogueActive(false);
+			selecteddialogue->hide();
 			selecteddialogue->setButtonEvent(gGUIDialogue::EVENT_NONE);
 		}
 		if (selecteddialogue->getButtonEvent() == gGUIDialogue::EVENT_MAXIMIZE) {
@@ -197,8 +197,8 @@ void gGUIManager::update() {
 			selecteddialogue->setButtonEvent(gGUIDialogue::EVENT_NONE);
 		}
 		if (selecteddialogue->getButtonEvent() == gGUIDialogue::EVENT_RESTORE) {
-			int twidth = appmanager->getCurrentCanvas()->getScreenWidth() / 1 * 0.84f;
-			int theight = appmanager->getCurrentCanvas()->getScreenHeight() / 1 * 0.84f;
+			int twidth = appmanager->getCurrentCanvas()->getScreenWidth() / 1 * 0.39f;
+			int theight = appmanager->getCurrentCanvas()->getScreenHeight() / 1 * 0.21f;
 			int tleft = (appmanager->getCurrentCanvas()->getScreenWidth() - twidth) / 2;
 			int ttop = (appmanager->getCurrentCanvas()->getScreenHeight() - theight) / 2;
 			selecteddialogue->transformDialogue(tleft, ttop, twidth, theight);
@@ -217,7 +217,7 @@ void gGUIManager::draw() {
 
 	currentframe->draw();
 	for (int i = 0; i < dialogues.size(); i++) {
-		if (dialogues[i]->getIsDialogueActive()) dialogues[i]->draw();
+		if (dialogues[i]->isShown()) dialogues[i]->draw();
 	}
 }
 

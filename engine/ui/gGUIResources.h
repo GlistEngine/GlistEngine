@@ -117,6 +117,12 @@ public:
 		ICON_EXITWHITE,
 		COLORPICKER
 	};
+	//bigicon
+	enum {
+		ICONBIG_ERROR,
+		ICONBIG_INFO,
+		ICONBIG_WARNING
+	};
 
 	gGUIResources();
 	virtual ~gGUIResources();
@@ -129,15 +135,17 @@ public:
 	int getIconFormat();
 
 	int getIconNum();
-	gTexture* getIconImage(int iconId);
+	gTexture* getIconImage(int iconId, bool isIconBig = false);
 
 private:
 	static const int iconnum;
+	static const int bigiconnum;
 
 	bool isinitialized;
-	int iconw, iconh, iconformat;
+	int iconw, iconh, bigiconw, bigiconh, iconformat;
 	// The array we keep pictures
-	gTexture* icon;
+	gTexture** icon;
+	gTexture** bigicon;
 	// Getter functions where we keep images in base64 format
 	std::string getBase64IconFile16();
 	std::string getBase64IconFolder16();
@@ -190,6 +198,10 @@ private:
 	std::string getBase64IconFolder40();
 	std::string getBase64IconFolderOpened40();
 	std::string getBase64IconSave40();
+
+	std::string getBase64IconBigError64();
+	std::string getBase64IconBigInfo64();
+	std::string getBase64IconBigWarning64();
 };
 
 #endif /* UI_GGUIRESOURCES_H_ */

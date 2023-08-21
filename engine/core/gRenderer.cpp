@@ -625,6 +625,11 @@ gRenderer::gRenderer() {
 	viewmatrixold = viewmatrix;
 	cameraposition = glm::vec3(0.0f);
 
+	// This changes pack and unpack alignments
+	// Fixes alignment issues with 3 channel images
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+	glPixelStorei(GL_PACK_ALIGNMENT, 1);
+
 	colorshader = new gShader();
 	colorshader->loadProgram(getShaderSrcColorVertex(), getShaderSrcColorFragment());
 
