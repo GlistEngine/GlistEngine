@@ -7,6 +7,8 @@
 
 #include "gFont.h"
 #include <iostream>
+#include <locale>
+#include <codecvt>
 #ifdef ANDROID
 #include "gAndroidUtil.h"
 #endif
@@ -186,7 +188,7 @@ void gFont::resizeVectors(int num) {
 	characternumlimit = num;
 
 	std::vector<charProperties>().swap(cpset);
-	std::deque<int>().swap(loadedcharacters);
+	std::vector<int>().swap(loadedcharacters);
 
 	// initialize character info and textures
 	cpset.resize(characternumlimit);
@@ -371,14 +373,6 @@ int gFont::getKerning(int c, int previousC) {
 }
 
 std::wstring gFont::s2ws(const std::string& s) {
-    std::string curLocale = setlocale(LC_ALL, "");
-    const char* _Source = s.c_str();
-    size_t _Dsize = mbstowcs(NULL, _Source, 0) + 1;
-    wchar_t *_Dest = new wchar_t[_Dsize];
-    wmemset(_Dest, 0, _Dsize);
-    mbstowcs(_Dest,_Source,_Dsize);
-    std::wstring result = _Dest;
-    delete []_Dest;
-    setlocale(LC_ALL, curLocale.c_str());
-    return result;
+    std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+    return converter.from_bytes(s);
 }
