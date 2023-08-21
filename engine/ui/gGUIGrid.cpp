@@ -734,6 +734,13 @@ std::deque<gGUIGrid::Cell*> gGUIGrid::getSelectedCells() {
 	return sc;
 }
 
+void gGUIGrid::digitToString() {
+	if(allcells.empty()) return;
+	allcells[selectedbox].celltype = Cell::TYPE_STRING;
+	allcells[selectedbox].iscellaligned = true;
+	setCellAlignment(gBaseGUIObject::TEXTALIGNMENT_LEFT, false);
+}
+
 std::string gGUIGrid::fixTextFunction(std::string text, int index) {
 	std::string tempstr = text;
 	for(int i = 0; i < functions.size(); i++) {
