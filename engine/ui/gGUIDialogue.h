@@ -74,6 +74,7 @@ public:
 	void setMessageText(gGUIText* messageText);
 	std::string getMessageText();
 	void setDialogueType(int typeId, bool isIconBig = false);
+	void setIconEnabled(bool isEnabled);
 
 	int getCursor(int x, int y);
 	void mouseMoved(int x, int y);
@@ -117,6 +118,7 @@ private:
 
 	bool isdragenabled, isresizeenabled;
 	bool ismaximized, isdragged;
+	bool isiconenabled;
 
 	int dragposx, dragposy, sizeposx, sizeposy;
 

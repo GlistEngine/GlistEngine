@@ -26,6 +26,7 @@ gGUIDialogue::gGUIDialogue() {
 
 	isdragenabled = true; isresizeenabled = true;
 	ismaximized = false; isdragged = false;
+	isiconenabled = false;
 
 	dragposx = 0; dragposy = 0; sizeposx = 0; sizeposy = 0;
 
@@ -211,13 +212,19 @@ void gGUIDialogue::resetButtonsBar() {
 void gGUIDialogue::resetMessageBar() {
 	setMessageBar(&defmessagebar);
 	float mbspace = 0.05f;
-	float mbsmgp = 0.07f;
-	float mbdtp = 0.9f;
-	float mbcolproportions[4] = {mbspace, mbsmgp, mbspace, mbdtp};
-	defmessagebarsizer.setColumnProportions(mbcolproportions);
+	float mbdtp = 0.07f;
+	float mbsmgp = 0.9f;
+	if(isiconenabled){
+		float mbcolproportions[4] = {mbspace, mbdtp, mbspace, mbsmgp};
+		defmessagebarsizer.setColumnProportions(mbcolproportions);
+	}
+	else{
+		float mbcolproportions[4] = {mbspace, 0.0f, 0.0f, mbdtp};
+		defmessagebarsizer.setColumnProportions(mbcolproportions);
+	}
 
 	defmessagebarsizer.setControl(0, 3, &defmessagetext);
-	defmessagebarsizer.setControl(0, 1, &defdialoguetype);
+	if(isiconenabled) defmessagebarsizer.setControl(0, 1, &defdialoguetype);
 	defdialoguetype.setSize(deftitlebar.height, deftitlebar.height);
 	defdialoguetype.top += (defmessagebar.height - defdialoguetype.width) / 2;
 }
@@ -401,4 +408,8 @@ std::string gGUIDialogue::getMessageText() {
 
 void gGUIDialogue::setDialogueType(int typeId, bool isIconBig) {
 	defdialoguetype.setPressedButtonImageFromIcon(typeId, isIconBig);
+}
+
+void gGUIDialogue::setIconEnabled(bool isEnabled) {
+	isiconenabled = isEnabled;
 }
