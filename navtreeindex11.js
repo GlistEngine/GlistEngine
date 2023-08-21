@@ -1,5 +1,6 @@
 var NAVTREEINDEX11 =
 {
+"gGUIPanel_8h_source.html":[1,0,73],
 "gGUIPieGraph_8h_source.html":[1,0,74],
 "gGUIProgressBar_8h_source.html":[1,0,75],
 "gGUIRadarChart_8h_source.html":[1,0,76],

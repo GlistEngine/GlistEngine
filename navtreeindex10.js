@@ -1,5 +1,6 @@
 var NAVTREEINDEX10 =
 {
+"classgTexture.html#a53e03ce750204e5e121466f3ab68bce1":[0,0,146,21],
 "classgTexture.html#a55045853851361e6460c6f74656fd590":[0,0,146,25],
 "classgTexture.html#a5a11b1b5b34ef9b758ae1258f0f26bdc":[0,0,146,38],
 "classgTexture.html#a5df0a8abb590b8bd9d1dd261357e1db6":[0,0,146,13],
@@ -248,6 +249,5 @@ var NAVTREEINDEX10 =
 "gGUINavigation_8h_source.html":[1,0,69],
 "gGUINotebook_8h_source.html":[1,0,70],
 "gGUINumberBox_8h_source.html":[1,0,71],
-"gGUIPane_8h_source.html":[1,0,72],
-"gGUIPanel_8h_source.html":[1,0,73]
+"gGUIPane_8h_source.html":[1,0,72]
 };
