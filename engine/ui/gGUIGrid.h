@@ -184,6 +184,8 @@ public:
 	gColor* getSelectedAreaColor();
 	std::deque<Cell*> getSelectedCells();
 
+	void digitToString();
+
 	void drawContent();
 	void drawCellBackground();
 	void drawTitleRowBackground();
