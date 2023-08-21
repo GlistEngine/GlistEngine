@@ -34,6 +34,16 @@ class gGUIDialogue: public gGUIForm {
 public:
 	static const int EVENT_NONE = 0, EVENT_MINIMIZE = 1, EVENT_MAXIMIZE = 2, EVENT_RESTORE = 3, EVENT_EXIT = 4;
 	static const int RESIZE_NONE = 0, RESIZE_LEFT = 1, RESIZE_RIGHT = 2, RESIZE_TOP = 3, RESIZE_BOTTOM = 4;
+	enum{
+		DIALOGUETYPE_OK,
+		DIALOGUETYPE_YESNOCANCEL
+	};
+	enum{
+		ICONTYPE_NONE,
+		ICONTYPE_ERROR,
+		ICONTYPE_INFO,
+		ICONTYPE_WARNING
+	};
 
 	gGUIDialogue();
 	virtual ~gGUIDialogue();
@@ -73,7 +83,8 @@ public:
 
 	void setMessageText(gGUIText* messageText);
 	std::string getMessageText();
-	void setDialogueType(int typeId, bool isIconBig = false);
+	void setIconType(int iconId);
+	void setDialogueType(int typeId);
 
 	int getCursor(int x, int y);
 	void mouseMoved(int x, int y);
@@ -105,18 +116,24 @@ private:
 	gGUIContainer defbuttonsbar;
 	gGUISizer defbuttonsbarsizer;
 	gGUIButton defbuttonsbarokbutton;
+	gGUIButton defbuttonsbaryesbutton;
+	gGUIButton defbuttonsbarnobutton;
+	gGUIButton defbuttonsbarcancelbutton;
 
 	gGUIContainer defmessagebar;
 	gGUISizer defmessagebarsizer;
 	gGUIText defmessagetext;
-	gGUIImageButton defdialoguetype;
+	gGUIImageButton defdialogueicon;
 
 	int buttontrigger, buttonevent;
 
 	int defmessagebartopspace, defmessagebarrightspace;
 
+	int dialoguetype;
+
 	bool isdragenabled, isresizeenabled;
 	bool ismaximized, isdragged;
+	bool isiconenabled;
 
 	int dragposx, dragposy, sizeposx, sizeposy;
 
