@@ -93,7 +93,7 @@ void gFont::drawText(const std::string& text, float x, float y) {
 	      else cold1 = -1;
 	      if (c1 == '\n') {
 	          posy1 += lineheight;
-	          posx1 = x ; //reset X Pos back to zero
+	          posx1 = x; //reset X Pos back to zero
 	      } else if (c1 == ' ') {
 	          cid1 = getCharID('a');
 	          posx1 += cpset[cid1].width * letterspacing * spacesize;
@@ -101,7 +101,7 @@ void gFont::drawText(const std::string& text, float x, float y) {
 	          cid1 = getCharID(c1);
 	          if (cpset[cid1].character == unloadedchar) loadChar(cid1);
 	          posx1 += getKerning(cid1, cold1);
-	          textures[cid1]->draw(posx1, posy1 + cpset[cid1].dytop);
+	          textures[cid1]->draw(posx1 + cpset[cid1].leftmargin, posy1 + cpset[cid1].dytop);
 	          posx1 += cpset[cid1].advance * letterspacing;
 	      }
 	    index1++;
