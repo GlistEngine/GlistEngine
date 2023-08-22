@@ -185,7 +185,7 @@ unsigned int gImage::loadMaskImage(const std::string& maskImagePath) {
 	return masktexture->load(gGetImagesDir() + maskImagePath);
 }
 
-bool gImage::gImage::checkPixelPerfectCollision(gImage *otherImage,
+bool gImage::checkPixelPerfectCollision(gImage *otherImage,
 	float imgposX, float imgposY, float otherimgposX, float otherimgposY) {
 	unsigned char* data2 = otherImage->data;
 	if (gCheckCollision(imgposX, imgposY, (imgposX + getWidth()), (imgposY + getHeight()), otherimgposX, otherimgposY, (otherimgposX + otherImage->getWidth()), (otherimgposY + otherImage->getHeight()))) {

@@ -199,9 +199,9 @@ private:
 	std::string getBase64IconFolderOpened40();
 	std::string getBase64IconSave40();
 
-	std::string getBase64IconBigError64();
-	std::string getBase64IconBigInfo64();
-	std::string getBase64IconBigWarning64();
+	std::string getBase64IconBigError256();
+	std::string getBase64IconBigInfo256();
+	std::string getBase64IconBigWarning256();
 };
 
 #endif /* UI_GGUIRESOURCES_H_ */

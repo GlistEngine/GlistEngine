@@ -7,7 +7,6 @@
 
 #include "gGUIGrid.h"
 #include "gBaseApp.h"
-#include <array>
 
 gGUIGrid::gGUIGrid() {
 	selectedframecolor = gColor(0.1f, 0.45f, 0.87f, 1.0f);
