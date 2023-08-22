@@ -114,9 +114,9 @@ void gGUIDialogue::initDefButtonsBar() {
 	defbuttonsbar.setSizer(&defbuttonsbarsizer);
 
 	defbuttonsbarokbutton.setTitle("OK");
-	defbuttonsbaryesbutton.setTitle("YES");
-	defbuttonsbarnobutton.setTitle("NO");
-	defbuttonsbarcancelbutton.setTitle("CANCEL");
+	defbuttonsbaryesbutton.setTitle("Yes");
+	defbuttonsbarnobutton.setTitle("No");
+	defbuttonsbarcancelbutton.setTitle("Cancel");
 }
 
 void gGUIDialogue::initDefMessageBar() {
@@ -203,20 +203,62 @@ void gGUIDialogue::resetButtonsBar() {
 	setButtonsBar(&defbuttonsbar);
 	if(dialoguetype == DIALOGUETYPE_OK) defbuttonsbarsizer.setSize(1, 2);
 	if(dialoguetype == DIALOGUETYPE_YESNOCANCEL) defbuttonsbarsizer.setSize(1, 4);
+	if(dialoguetype == DIALOGUETYPE_OKCANCEL || dialoguetype == DIALOGUETYPE_YESNO) defbuttonsbarsizer.setSize(1, 3);
 
 	if(dialoguetype == DIALOGUETYPE_OK){
-		float bbbutp = ((float)defbuttonsbarbuttonw + 30) / (float)defbuttonsbar.width;
+		float bbbutp = ((float)defbuttonsbarbuttonw + 10) / (float)defbuttonsbar.width;
 		float bbempp = 1 - bbbutp;
 		float bbcolproportions[2] = {bbempp, bbbutp};
 		defbuttonsbarsizer.setColumnProportions(bbcolproportions);
+		// OK BUTTON
+		defbuttonsbarsizer.setControl(0, 1, &defbuttonsbarokbutton);
+		defbuttonsbarokbutton.setSize(defbuttonsbarbuttonw, defbuttonsbarbuttonh);
+		defbuttonsbarokbutton.left += (defbuttonsbar.width * bbbutp - defbuttonsbarbuttonw) / 2 - 5;
+		defbuttonsbarokbutton.top += (defbuttonsbar.height - defbuttonsbarbuttonh) / 2;
+	}
+
+	if(dialoguetype == DIALOGUETYPE_YESNOCANCEL){
+		float bbbutp = ((float)defbuttonsbarbuttonw + 10) / (float)defbuttonsbar.width;
+		float bbempp = 1 - bbbutp * 3;
+		float bbcolproportions[4] = {bbempp, bbbutp, bbbutp, bbbutp};
+		defbuttonsbarsizer.setColumnProportions(bbcolproportions);
+		// YES BUTTON
+		defbuttonsbarsizer.setControl(0, 1, &defbuttonsbaryesbutton);
+		defbuttonsbaryesbutton.setSize(defbuttonsbarbuttonw, defbuttonsbarbuttonh);
+		defbuttonsbaryesbutton.left += (defbuttonsbar.width * bbbutp - defbuttonsbarbuttonw) / 2 + 5;
+		defbuttonsbaryesbutton.top += (defbuttonsbar.height - defbuttonsbarbuttonh) / 2;
+		// NO BUTTON
+		defbuttonsbarsizer.setControl(0, 2, &defbuttonsbarnobutton);
+		defbuttonsbarnobutton.setSize(defbuttonsbarbuttonw, defbuttonsbarbuttonh);
+		defbuttonsbarnobutton.left += (defbuttonsbar.width * bbbutp - defbuttonsbarbuttonw) / 2;
+		defbuttonsbarnobutton.top += (defbuttonsbar.height - defbuttonsbarbuttonh) / 2;
+		// CANCEL BUTTON
+		defbuttonsbarsizer.setControl(0, 3, &defbuttonsbarcancelbutton);
+		defbuttonsbarcancelbutton.setSize(defbuttonsbarbuttonw, defbuttonsbarbuttonh);
+		defbuttonsbarcancelbutton.left += (defbuttonsbar.width * bbbutp - defbuttonsbarbuttonw) / 2 - 5;
+		defbuttonsbarcancelbutton.top += (defbuttonsbar.height - defbuttonsbarbuttonh) / 2;
+	}
+
+	if(dialoguetype == DIALOGUETYPE_OKCANCEL){
+		float bbbutp = ((float)defbuttonsbarbuttonw + 10) / (float)defbuttonsbar.width;
+		float bbempp = 1 - bbbutp * 2;
+		float bbcolproportions[4] = {bbempp, bbbutp, bbbutp, bbbutp};
+		defbuttonsbarsizer.setColumnProportions(bbcolproportions);
+		// OK BUTTON
 		defbuttonsbarsizer.setControl(0, 1, &defbuttonsbarokbutton);
 		defbuttonsbarokbutton.setSize(defbuttonsbarbuttonw, defbuttonsbarbuttonh);
 		defbuttonsbarokbutton.left += (defbuttonsbar.width * bbbutp - defbuttonsbarbuttonw) / 2;
 		defbuttonsbarokbutton.top += (defbuttonsbar.height - defbuttonsbarbuttonh) / 2;
+		// CANCEL BUTTON
+		defbuttonsbarsizer.setControl(0, 2, &defbuttonsbarcancelbutton);
+		defbuttonsbarcancelbutton.setSize(defbuttonsbarbuttonw, defbuttonsbarbuttonh);
+		defbuttonsbarcancelbutton.left += (defbuttonsbar.width * bbbutp - defbuttonsbarbuttonw) / 2 - 5;
+		defbuttonsbarcancelbutton.top += (defbuttonsbar.height - defbuttonsbarbuttonh) / 2;
 	}
-	if(dialoguetype == DIALOGUETYPE_YESNOCANCEL){
-		float bbbutp = ((float)defbuttonsbarbuttonw + 30) / (float)defbuttonsbar.width;
-		float bbempp = 1 - bbbutp * 3;
+
+	if(dialoguetype == DIALOGUETYPE_YESNO){
+		float bbbutp = ((float)defbuttonsbarbuttonw + 10) / (float)defbuttonsbar.width;
+		float bbempp = 1 - bbbutp * 2;
 		float bbcolproportions[4] = {bbempp, bbbutp, bbbutp, bbbutp};
 		defbuttonsbarsizer.setColumnProportions(bbcolproportions);
 		// YES BUTTON
@@ -227,14 +269,8 @@ void gGUIDialogue::resetButtonsBar() {
 		// NO BUTTON
 		defbuttonsbarsizer.setControl(0, 2, &defbuttonsbarnobutton);
 		defbuttonsbarnobutton.setSize(defbuttonsbarbuttonw, defbuttonsbarbuttonh);
-		defbuttonsbarnobutton.left += (defbuttonsbar.width * bbbutp - defbuttonsbarbuttonw) / 2;
+		defbuttonsbarnobutton.left += (defbuttonsbar.width * bbbutp - defbuttonsbarbuttonw) / 2 - 5;
 		defbuttonsbarnobutton.top += (defbuttonsbar.height - defbuttonsbarbuttonh) / 2;
-		// CANCEL BUTTON
-		defbuttonsbarsizer.setControl(0, 3, &defbuttonsbarcancelbutton);
-		defbuttonsbarcancelbutton.setSize(defbuttonsbarbuttonw, defbuttonsbarbuttonh);
-		defbuttonsbarcancelbutton.left += (defbuttonsbar.width * bbbutp - defbuttonsbarbuttonw) / 2;
-		defbuttonsbarcancelbutton.top += (defbuttonsbar.height - defbuttonsbarbuttonh) / 2;
-
 	}
 }
 
