@@ -16,6 +16,7 @@ var classgGUICheckbox =
     [ "setTickColor", "classgGUICheckbox.html#a0456031be3534502d2a8e3b26d5647f2", null ],
     [ "setTitle", "classgGUICheckbox.html#a5783a5587532a4bf5e84813945f8e473", null ],
     [ "update", "classgGUICheckbox.html#a1fbed0d5dd47c9d5e85060a7b10b43bd", null ],
+    [ "gGUIToolbar", "classgGUICheckbox.html#abca0955883a4320f4ed9965d71443713", null ],
     [ "buttonh", "classgGUICheckbox.html#ace3294ff1c101ef3353b78f92bec1073", null ],
     [ "buttonw", "classgGUICheckbox.html#a646c5a96fef73d6195bbdbd1f7e83b1f", null ],
     [ "ischecked", "classgGUICheckbox.html#a63b5679a895d6c53a434f82f7e4c5102", null ],

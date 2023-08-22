@@ -20,6 +20,8 @@ var classgGUIButton =
     [ "resetTitlePosition", "classgGUIButton.html#aab362cc54b001dd9b5ae1bf6fdcf5f2c", null ],
     [ "setButtonColor", "classgGUIButton.html#ad6869b2b3efeca846d8e7b01bf264bdd", null ],
     [ "setButtonFontColor", "classgGUIButton.html#ac69523e80c8422f7a4d8a9d65980b87c", null ],
+    [ "setButtonh", "classgGUIButton.html#a4bca508d5a4b4ac9c6143fb97051c404", null ],
+    [ "setButtonw", "classgGUIButton.html#a788e5757da2c3097c49e15cbd54a7dbf", null ],
     [ "setDisabled", "classgGUIButton.html#afc99fa00ee92bbcce412a4d853ce9b8d", null ],
     [ "setDisabledButtonColor", "classgGUIButton.html#abec0f91b86b793b6b899c1c03fde8c5a", null ],
     [ "setDisabledButtonFontColor", "classgGUIButton.html#a366714acb9fd5a279ce0c5ed8f89f8fa", null ],

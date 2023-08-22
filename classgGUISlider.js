@@ -32,5 +32,6 @@ var classgGUISlider =
     [ "setTickColor", "classgGUISlider.html#a3706b3c780c71fa80b8d1421485d1ebd", null ],
     [ "setTicknum", "classgGUISlider.html#ae452156060aa909b7b0554e6a0b0b5d0", null ],
     [ "setTickVisibility", "classgGUISlider.html#a0827b92935e668275ba4ede35ae02b6b", null ],
-    [ "update", "classgGUISlider.html#a5fd4f5877a1e6b0ee94221f983a78042", null ]
+    [ "update", "classgGUISlider.html#a5fd4f5877a1e6b0ee94221f983a78042", null ],
+    [ "gGUIToolbar", "classgGUISlider.html#abca0955883a4320f4ed9965d71443713", null ]
 ];

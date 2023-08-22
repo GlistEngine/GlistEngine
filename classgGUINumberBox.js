@@ -28,5 +28,6 @@ var classgGUINumberBox =
     [ "setText", "classgGUINumberBox.html#a32a3807d00f0ae2f373f87810e0eba15", null ],
     [ "setType", "classgGUINumberBox.html#a495e4ebf0fa7f76ad8b5b095b513bb48", null ],
     [ "showTitle", "classgGUINumberBox.html#a0de230ac0cb8e7d51470a609c096f5db", null ],
-    [ "update", "classgGUINumberBox.html#a77e08b7705f0d509f4bb1b2069555635", null ]
+    [ "update", "classgGUINumberBox.html#a77e08b7705f0d509f4bb1b2069555635", null ],
+    [ "gGUIToolbar", "classgGUINumberBox.html#abca0955883a4320f4ed9965d71443713", null ]
 ];

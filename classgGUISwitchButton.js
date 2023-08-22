@@ -4,5 +4,6 @@ var classgGUISwitchButton =
     [ "~gGUISwitchButton", "classgGUISwitchButton.html#aca220b9117d5612a9f99a82449b2c029", null ],
     [ "draw", "classgGUISwitchButton.html#ab221284ef55c3ec4bf80dae7dea731de", null ],
     [ "isOn", "classgGUISwitchButton.html#a584ef254a092d3933505a220bb158c33", null ],
-    [ "mousePressed", "classgGUISwitchButton.html#a429f7138a2fb8d52c255624966c9cec1", null ]
+    [ "mousePressed", "classgGUISwitchButton.html#a429f7138a2fb8d52c255624966c9cec1", null ],
+    [ "gGUIToolbar", "classgGUISwitchButton.html#abca0955883a4320f4ed9965d71443713", null ]
 ];
