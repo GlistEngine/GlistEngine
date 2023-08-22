@@ -14,6 +14,8 @@
 #include "gGUIManager.h"
 #include <deque>
 #include <string.h>
+#include <array>
+#include <vector>
 
 //#include "gGUISizer.h"
 
