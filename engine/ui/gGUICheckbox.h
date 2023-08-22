@@ -34,6 +34,8 @@ public:
 	void mousePressed(int x, int y, int button);
 	void mouseReleased(int x, int y, int button);
 
+	friend class gGUIToolbar;
+
 protected:
 	bool ischecked;
 
