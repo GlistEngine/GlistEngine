@@ -53,6 +53,8 @@ public:
 	void setFloatIncrement(float value);
 	float getFloatIncrement();
 
+	friend class gGUIToolbar;
+
 private:
 	int boxwidth, boxheight, numboxwidth, numboxheight, smalboxwidth, smalboxheight;
 

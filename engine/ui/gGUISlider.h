@@ -211,6 +211,8 @@ public:
 
 	virtual void set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIObject* parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h);
 
+	friend class gGUIToolbar;
+
 private:
 	void drawSliderBar();
 	void drawSlider();

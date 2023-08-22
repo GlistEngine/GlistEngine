@@ -191,3 +191,11 @@ int gGUIButton::getButtonWidth() {
 int gGUIButton::getButtonHeight() {
 	return buttonh;
 }
+
+void gGUIButton::setButtonh(int buttonh) {
+	this->buttonh = buttonh;
+}
+
+void gGUIButton::setButtonw(int buttonw) {
+	this->buttonw = buttonw;
+}

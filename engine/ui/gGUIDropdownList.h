@@ -38,6 +38,8 @@ public:
 
 	std::string& getSelectedTitle();
 
+	friend class gGUIToolbar;
+
 private:
 	gGUISizer listsizer;
 	gGUIButton button;
