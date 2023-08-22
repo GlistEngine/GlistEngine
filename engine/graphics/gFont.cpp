@@ -94,15 +94,12 @@ void gFont::drawText(const std::string& text, float x, float y) {
 	      if (c1 == '\n') {
 	          posy1 += lineheight;
 	          posx1 = x; //reset X Pos back to zero
-	      } else if (c1 == ' ') {
-	          cid1 = getCharID('a');
-	          posx1 += cpset[cid1].width * letterspacing * spacesize;
 	      } else {
 	          cid1 = getCharID(c1);
 	          if (cpset[cid1].character == unloadedchar) loadChar(cid1);
 	          posx1 += getKerning(cid1, cold1);
 	          textures[cid1]->draw(posx1 + cpset[cid1].leftmargin, posy1 + cpset[cid1].dytop);
-	          posx1 += cpset[cid1].advance * letterspacing;
+	          posx1 += cpset[cid1].advance * letterspacing * (c1 == ' ' ? spacesize : 1);
 	      }
 	    index1++;
 	  }
@@ -119,16 +116,11 @@ float gFont::getStringWidth(const std::string& text) {
 	      cid2 = text2[index2];
 	      if(index2 > 0) cold2 = text2[index2 - 1];
 	      else cold2 = -1;
-	      if (cid2 == ' ') {
-	          cy2 = getCharID('a');
-	          posx2 += cpset[cy2].width * letterspacing * spacesize;
-	      } else {
-	          cy2 = getCharID(cid2);
-	          if (cpset[cy2].character == unloadedchar) loadChar(cy2);
-	          posx2 += getKerning(cid2, cold2);
-	          posx2 += cpset[cy2].advance * letterspacing;
-	      }
-	    index2++;
+	      cy2 = getCharID(cid2);
+	      if (cpset[cy2].character == unloadedchar) loadChar(cy2);
+	      posx2 += getKerning(cid2, cold2);
+	      posx2 += cpset[cy2].advance * letterspacing * (cid2 == ' ' ? spacesize : 1);
+	      index2++;
 	  }
 
 	  return posx2;
@@ -144,18 +136,11 @@ float gFont::getStringHeight(const std::string& text) {
 	  while (index3 < len3) {
 	      cid3 = text3[index3];
 	      y3 = 0;
-	      if (cid3 == ' ') {
-	          cy3 = getCharID('a');
-	          y3 = -cpset[cy3].dytop;
-	      } else {
-	          cy3 = getCharID(cid3);
-	          if (cpset[cy3].character == unloadedchar) loadChar(cy3);
-	          y3 = -cpset[cy3].dytop;
-	      }
-
+	      cy3 = getCharID(cid3);
+	      if (cpset[cy3].character == unloadedchar) loadChar(cy3);
+	      y3 = -cpset[cy3].dytop;
 	      if (y3 > posy3) posy3 = y3;
-
-	    index3++;
+	      index3++;
 	  }
 	  return posy3;
 }
@@ -198,8 +183,8 @@ void gFont::resizeVectors(int num) {
 	textures.clear();
 	textures.resize(characternumlimit);
 
-	// load 'a' character for display space char
-	loadChar(getCharID('a'));
+	// load ' ' character for display space char
+	loadChar(getCharID(' '));
 }
 
 int gFont::getCharID(const int& c) {
