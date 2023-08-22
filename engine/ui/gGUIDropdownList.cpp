@@ -36,6 +36,7 @@ gGUIDropdownList::gGUIDropdownList() {
 	textboxh = 0;
 	textboxw = 0;
 	rootelement = nullptr;
+	list.setTitleOn(false);
 
 
 	actionmanager.addAction(&button, G_GUIEVENT_BUTTONRELEASED, this, G_GUIEVENT_TREELISTOPENEDONDROPDOWNLIST);
