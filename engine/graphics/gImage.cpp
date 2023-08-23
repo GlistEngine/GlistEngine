@@ -37,7 +37,10 @@ unsigned int gImage::load(const std::string& fullPath) {
 	ishdr = false;
 	if (gToLower(fullpath.substr(fullpath.length() - 3, 3)) == "hdr") ishdr = true;
 
-	glGenTextures(1, &id);
+  if (!istextureallocated) {
+    glGenTextures(1, &id);
+    istextureallocated = true;
+  }
 
 	if (ishdr) {
 		stbi_set_flip_vertically_on_load(true);
@@ -105,12 +108,15 @@ void gImage::loadImageData(const std::string& imagePath) {
 }
 
 unsigned int gImage::useData() {
-	glGenTextures(1, &id);
+  if (!istextureallocated) {
+    glGenTextures(1, &id);
+    istextureallocated = true;
+  }
 
 	if (ishdr) {
-		setDataHDR(datahdr, true, true);
+		setDataHDR(datahdr, ismutable, isstbimage);
 	} else {
-		setData(data, true, true);
+		setData(data, ismutable, isstbimage);
 	}
 
 	//	setupRenderData();
@@ -121,8 +127,8 @@ void gImage::setImageData(unsigned char* imageData) {
 	setData(imageData, true);
 }
 
-void gImage::setImageData(unsigned char* imageData, int width, int height, int componentNum) {
-	gTexture::loadData(imageData, width, height, componentNum);
+void gImage::setImageData(unsigned char* imageData, int width, int height, int componentNum, bool isMutable, bool isStbImage) {
+  gTexture::loadData(imageData, width, height, componentNum, isMutable, isStbImage);
 }
 
 unsigned char* gImage::getImageData() {

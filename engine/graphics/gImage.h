@@ -147,7 +147,7 @@ public:
 	 */
 	void setImageData(unsigned char* imageData);
 
-	void setImageData(unsigned char* imageData, int width, int height, int componentNum);
+	void setImageData(unsigned char* imageData, int width, int height, int componentNum, bool isMutable = false, bool isStbImage = false);
 
 	/**
 	 * Accesses an image's original or edited data in integer format.
