@@ -257,7 +257,6 @@ void gGUITextbox::update() {
 	else if(boxw - width < 0) boxexpanded = true;
 	boxw = width;
 	if(textfont->getStringWidth(text.substr(firstutf, lastutf)) >= width - 2 * initx && boxshrinked && !ismultiline) {
-		gLogi("update") << "GOT HERE!";
 		if(!ismultiline && !ispassword) {
 			do {
 				firstutf += letterlength[firstchar];
