@@ -139,9 +139,9 @@ unsigned int&#160;</td><td class="memItemRight" valign="bottom"><b>loadImageFrom
 <tr class="separator:a6ea46b2345a4e44d0ae14104d9310838"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1f89f293d4f170651a967145a829d2b6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgImage.html#a1f89f293d4f170651a967145a829d2b6">setImageData</a> (unsigned char *imageData)</td></tr>
 <tr class="separator:a1f89f293d4f170651a967145a829d2b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7a81937ff1062436da3565726234936f"><td class="memItemLeft" align="right" valign="top"><a id="a7a81937ff1062436da3565726234936f"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>setImageData</b> (unsigned char *imageData, int width, int height, int componentNum)</td></tr>
-<tr class="separator:a7a81937ff1062436da3565726234936f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2c3514200bc2232d9442c790d1a071ea"><td class="memItemLeft" align="right" valign="top"><a id="a2c3514200bc2232d9442c790d1a071ea"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setImageData</b> (unsigned char *imageData, int width, int height, int componentNum, bool isMutable=false, bool isStbImage=false)</td></tr>
+<tr class="separator:a2c3514200bc2232d9442c790d1a071ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6d533660d45d58276864100fae9f0293"><td class="memItemLeft" align="right" valign="top">unsigned char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgImage.html#a6d533660d45d58276864100fae9f0293">getImageData</a> ()</td></tr>
 <tr class="separator:a6d533660d45d58276864100fae9f0293"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae522aed63ca8d31d8766f1fe5ab61d04"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgImage.html#ae522aed63ca8d31d8766f1fe5ab61d04">setImageDataHDR</a> (float *imageData)</td></tr>
@@ -294,6 +294,12 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>setData</b> (unsigned
 <tr class="memitem:ae9581a25115b2be9c2e7915753c6980c inherit pub_methods_classgTexture"><td class="memItemLeft" align="right" valign="top"><a id="ae9581a25115b2be9c2e7915753c6980c"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>setupRenderData</b> ()</td></tr>
 <tr class="separator:ae9581a25115b2be9c2e7915753c6980c inherit pub_methods_classgTexture"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a89ec99d57b0581e725e01971ac605044 inherit pub_methods_classgTexture"><td class="memItemLeft" align="right" valign="top"><a id="a89ec99d57b0581e725e01971ac605044"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>cleanupData</b> ()</td></tr>
+<tr class="separator:a89ec99d57b0581e725e01971ac605044 inherit pub_methods_classgTexture"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aff936e28510cbf946e8a5fd95a007ca3 inherit pub_methods_classgTexture"><td class="memItemLeft" align="right" valign="top"><a id="aff936e28510cbf946e8a5fd95a007ca3"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>cleanupAll</b> ()</td></tr>
+<tr class="separator:aff936e28510cbf946e8a5fd95a007ca3 inherit pub_methods_classgTexture"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classgRenderObject"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classgRenderObject')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classgRenderObject.html">gRenderObject</a></td></tr>
 <tr class="memitem:a82735e992a4b11ecf603efb17992c4af inherit pub_methods_classgRenderObject"><td class="memItemLeft" align="right" valign="top"><a id="a82735e992a4b11ecf603efb17992c4af"></a>
 int&#160;</td><td class="memItemRight" valign="bottom"><b>getScreenWidth</b> ()</td></tr>
@@ -535,6 +541,9 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>ismaskloaded</b></td>
 <tr class="memitem:ae81df34037306447d5168660adeeec1a inherit pro_attribs_classgTexture"><td class="memItemLeft" align="right" valign="top"><a id="ae81df34037306447d5168660adeeec1a"></a>
 <a class="el" href="classgTexture.html">gTexture</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>masktexture</b></td></tr>
 <tr class="separator:ae81df34037306447d5168660adeeec1a inherit pro_attribs_classgTexture"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aab9d161137770ed0e1d7d1279171b724 inherit pro_attribs_classgTexture"><td class="memItemLeft" align="right" valign="top"><a id="aab9d161137770ed0e1d7d1279171b724"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>istextureallocated</b></td></tr>
+<tr class="separator:aab9d161137770ed0e1d7d1279171b724 inherit pro_attribs_classgTexture"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_static_attribs_classgRenderObject"><td colspan="2" onclick="javascript:toggleInherit('pro_static_attribs_classgRenderObject')"><img src="closed.png" alt="-"/>&#160;Static Protected Attributes inherited from <a class="el" href="classgRenderObject.html">gRenderObject</a></td></tr>
 <tr class="memitem:a33bb9342f1ac27b19efcde25724571f5 inherit pro_static_attribs_classgRenderObject"><td class="memItemLeft" align="right" valign="top"><a id="a33bb9342f1ac27b19efcde25724571f5"></a>
 static <a class="el" href="classgRenderer.html">gRenderer</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>renderer</b></td></tr>
