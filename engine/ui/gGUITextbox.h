@@ -242,8 +242,8 @@ private:
 	std::vector<int> calculateAllLetterPositions();
 	void calculateLines();
 	int calculateLastUtf();
-	int calculateFirstUtf();
 	int calculateCharNoFromUtf(int letterUtfNo);
+	int calculateCharNum(std::string str);
 	int findFirstSpace(int lineend);
 	void startSelection();
 	std::vector<short> readString(const std::string& str);
