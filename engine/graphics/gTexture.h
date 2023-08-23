@@ -108,6 +108,9 @@ public:
 
 	void setupRenderData();
 
+  void cleanupData();
+  void cleanupAll();
+
 protected:
 	std::string fullpath, directory;
 	unsigned int id, internalformat, format;
@@ -131,6 +134,7 @@ protected:
 	float* getDataHDR();
 	bool ismaskloaded;
 	gTexture* masktexture;
+  bool istextureallocated;
 
 private:
 	std::string texturetype[4];

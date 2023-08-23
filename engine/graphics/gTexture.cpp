@@ -77,6 +77,7 @@ gTexture::gTexture() {
 	ismaskloaded = false;
 	isloaded = false;
 	masktexture = nullptr;
+  istextureallocated = false;
 	setupRenderData();
 }
 
@@ -104,7 +105,9 @@ gTexture::gTexture(int w, int h, int format, bool isFbo) {
 	ismaskloaded = false;
 	isloaded = false;
 	masktexture = nullptr;
-	glGenTextures(1, &id);
+
+  glGenTextures(1, &id);
+  istextureallocated = true;
 	bind();
 	G_CHECK_GL(glTexImage2D(GL_TEXTURE_2D, 0, internalformat, width, height, 0, format, GL_UNSIGNED_BYTE, nullptr));
 
@@ -123,17 +126,7 @@ gTexture::gTexture(int w, int h, int format, bool isFbo) {
 }
 
 gTexture::~gTexture() {
-	if(isloaded) {
-		G_CHECK_GL(glDeleteBuffers(1, &quadVBO));
-		G_CHECK_GL(glDeleteVertexArrays(1, &quadVAO));
-	}
-	G_CHECK_GL(glDeleteTextures(1, &id));
-	if (isstbimage && !ismutable) {
-		stbi_image_free(data);
-	} else if (ismutable) {
-		delete[] data;
-	}
-	delete masktexture;
+	cleanupAll();
 }
 
 unsigned int gTexture::load(const std::string& fullPath) {
@@ -143,7 +136,10 @@ unsigned int gTexture::load(const std::string& fullPath) {
 	ishdr = false;
 	if (gToLower(fullpath.substr(fullpath.length() - 3, 3)) == "hdr") ishdr = true;
 
-	glGenTextures(1, &id);
+	if (!istextureallocated) {
+		glGenTextures(1, &id);
+		istextureallocated = true;
+	}
 
 	if (ishdr) {
 		stbi_set_flip_vertically_on_load(true);
@@ -179,7 +175,10 @@ unsigned int gTexture::loadData(unsigned char* textureData, int width, int heigh
 	this->height = height;
 	this->componentnum = componentNum;
 
-	glGenTextures(1, &id);
+	if (!istextureallocated) {
+		glGenTextures(1, &id);
+		istextureallocated = true;
+  }
 
 	setData(textureData, isMutable, isStbImage);
 
@@ -188,6 +187,8 @@ unsigned int gTexture::loadData(unsigned char* textureData, int width, int heigh
 }
 
 void gTexture::setData(unsigned char* textureData, bool isMutable, bool isStbImage) {
+	cleanupData();
+
 	ismutable = isMutable;
 	isstbimage = isStbImage;
 	ishdr = false;
@@ -238,6 +239,8 @@ void gTexture::setData(unsigned char* textureData, bool isMutable, bool isStbIma
 }
 
 void gTexture::setDataHDR(float* textureData, bool isMutable, bool isStbImage) {
+	cleanupData();
+
 	ismutable = isMutable;
 	isstbimage = isStbImage;
 	ishdr = true;
@@ -507,6 +510,31 @@ void gTexture::endDraw() {
 void gTexture::setupRenderData() {
 	setupRenderData(0, 0, width, height);
 	bsubpartdrawn = false;
+}
+
+void gTexture::cleanupAll() {
+	if(isloaded) {
+		G_CHECK_GL(glDeleteBuffers(1, &quadVBO));
+		G_CHECK_GL(glDeleteVertexArrays(1, &quadVAO));
+		isloaded = false;
+	}
+	if(istextureallocated) {
+		G_CHECK_GL(glDeleteTextures(1, &id));
+		istextureallocated = false;
+	}
+	cleanupData();
+	delete masktexture;
+	masktexture = nullptr;
+}
+
+void gTexture::cleanupData() {
+	if(isstbimage && !ismutable) {
+		stbi_image_free(data);
+		data = nullptr;
+	} else if(ismutable) {
+		delete[] data;
+		data = nullptr;
+	}
 }
 
 void gTexture::setupRenderData(int sx, int sy, int sw, int sh) {
