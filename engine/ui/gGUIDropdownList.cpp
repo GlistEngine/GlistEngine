@@ -135,7 +135,7 @@ void gGUIDropdownList::mouseReleased(int x, int y, int button) {
         listopened = true;
     }
     // Clicking outside the Textbox closes the Treelist.
-    else if (listopened) {
+    else if (lopened) {
         listopened = false;
         frame->addTreelist(nullptr, listx, listy, listw);
     }
