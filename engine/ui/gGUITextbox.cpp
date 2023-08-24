@@ -356,12 +356,19 @@ void gGUITextbox::draw() {
 		}
 		if(isfocused) renderer->setColor(255, 128, 0);
 		else renderer->setColor(middlegroundcolor);
-		int line = rowsnum - (lastdrawnline - currentline);
-		bool firstline = false;
-		if(line <= 1 || currentline == 1) firstline = true;
-		//check selection box drawing
-		gDrawRectangle(left + selectionboxx1 - firstx + textalignmentamount - (textfont->getStringWidth(text) / 2 * textalignment), top + hdiff + linetopmargin * firstline - firsty + lineheight * 3/2  * ((currentline - 1) * !rowsnumexceeded + (line - 1) * rowsnumexceeded) , selectionboxw, lineheight * 5 / 3, true);
-		firstline = false;
+		if(isselectedall) {
+			int lastline = 0;
+			if(lastdrawnline > rowsnum) lastline = rowsnum;
+			else lastline = lastdrawnline;
+			gDrawRectangle(left - firstx + textalignmentamount - (textfont->getStringWidth(text) / 2 * textalignment), top + hdiff + linetopmargin - firsty, boxw, linetopmargin + (lastline + 1) * lineheight, true);
+		} else {
+			int line = rowsnum - (lastdrawnline - currentline);
+			bool firstline = false;
+			if(line <= 1 || currentline == 1) firstline = true;
+			//check selection box drawing
+			gDrawRectangle(left + selectionboxx1 - firstx + textalignmentamount - (textfont->getStringWidth(text) / 2 * textalignment), top + hdiff + linetopmargin * firstline - firsty + lineheight * 3/2  * ((currentline - 1) * !rowsnumexceeded + (line - 1) * rowsnumexceeded) , selectionboxw, lineheight * 5 / 3, true);
+			firstline = false;
+		}
 	}
 	if(!colorset) textcolor = fontcolor;
 	renderer->setColor(textcolor);
@@ -999,10 +1006,11 @@ void gGUITextbox::pressKey() {
 			}
 		}
 	} else if(ctrlapressed || commandapressed) { //ctrl a
-		//in multiline all lines should be selected
+		//in multiline all lines should be selecte
+		int prevline = currentline;
 		selectionmode = true;
 		isselectedall = true;
-		if(!ispassword) {
+		if(!ispassword && !ismultiline) {
 			std::vector<int> clickpos = clickTextbox(left + 1, top + 1);
 			selectionposchar1 = clickpos[0];
 			selectionposx1 = clickpos[1];
@@ -1011,6 +1019,7 @@ void gGUITextbox::pressKey() {
 			selectionposchar2 = clickpos2[0];
 			selectionposx2 = clickpos2[1];
 			selectionposutf2 = clickpos2[2];
+			currentline = prevline;
 		} else if(ispassword) {
 			selectionposchar1 = 0;
 			selectionposx1 = left;
@@ -1021,9 +1030,11 @@ void gGUITextbox::pressKey() {
 			if(selectionposx2 > right) selectionposx2 = right;
 			selectionposutf2 = text.size() - 1;
 		}
-		cursorposchar = selectionposchar2;
-		cursorposx = selectionposx2;
-		cursorposutf = selectionposutf2;
+		if(!ismultiline) {
+			cursorposchar = selectionposchar2;
+			cursorposx = selectionposx2;
+			cursorposutf = selectionposutf2;
+		}
 	} else if(ctrlvpressed || commandvpressed) { //ctrl v
 		pushToStack();
 		if(isnumeric) {
