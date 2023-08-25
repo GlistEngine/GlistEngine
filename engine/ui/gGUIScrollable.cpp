@@ -57,6 +57,7 @@ gGUIScrollable::gGUIScrollable() {
 	titley = top + font->getStringHeight("AE");
 	titledy = font->getSize() * 1.8f;
 	boxfbo = new gFbo();
+	setTitleOn(false);
 }
 
 gGUIScrollable::~gGUIScrollable() {
