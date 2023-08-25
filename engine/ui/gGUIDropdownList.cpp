@@ -190,3 +190,7 @@ void gGUIDropdownList::setSelectedTitle() {
 std::string& gGUIDropdownList::getSelectedTitle() {
 	return fTitle;
 }
+
+void gGUIDropdownList::clearTitle() {
+	textbox.setText("");
+}
