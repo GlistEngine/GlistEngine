@@ -14,6 +14,8 @@
 #include "gGUIManager.h"
 #include <deque>
 #include <string.h>
+#include <array>
+#include <vector>
 
 //#include "gGUISizer.h"
 
@@ -183,6 +185,8 @@ public:
 	gColor* getSelectedFrameColor();
 	gColor* getSelectedAreaColor();
 	std::deque<Cell*> getSelectedCells();
+
+	void digitToString();
 
 	void drawContent();
 	void drawCellBackground();

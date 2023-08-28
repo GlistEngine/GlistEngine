@@ -18,7 +18,7 @@
 int gImage::downloadno = 1;
 
 
-gImage::gImage() {
+gImage::gImage() : gTexture() {
 	ishdr = false;
 	loadedfromurl = false;
 	imageurl = "";
@@ -31,13 +31,18 @@ gImage::~gImage() {
 }
 
 unsigned int gImage::load(const std::string& fullPath) {
+	cleanupData();
+
 	fullpath = fullPath;
 	directory = getDirName(fullpath);
 	path = getFileName(fullpath);
 	ishdr = false;
 	if (gToLower(fullpath.substr(fullpath.length() - 3, 3)) == "hdr") ishdr = true;
 
-	glGenTextures(1, &id);
+	if (!istextureallocated) {
+		glGenTextures(1, &id);
+		istextureallocated = true;
+	}
 
 	if (ishdr) {
 		stbi_set_flip_vertically_on_load(true);
@@ -95,8 +100,10 @@ void gImage::loadData(const std::string& fullPath) {
 	if (ishdr) {
 		stbi_set_flip_vertically_on_load(true);
 		datahdr = stbi_loadf(fullpath.c_str(), &width, &height, &componentnum, 0);
+		isstbimage = true;
 	} else {
 		data = stbi_load(fullpath.c_str(), &width, &height, &componentnum, 0);
+		isstbimage = true;
 	}
 }
 
@@ -105,12 +112,15 @@ void gImage::loadImageData(const std::string& imagePath) {
 }
 
 unsigned int gImage::useData() {
-	glGenTextures(1, &id);
+  if (!istextureallocated) {
+    glGenTextures(1, &id);
+    istextureallocated = true;
+  }
 
 	if (ishdr) {
-		setDataHDR(datahdr, true, true);
+		setDataHDR(datahdr, ismutable, isstbimage);
 	} else {
-		setData(data, true, true);
+		setData(data, ismutable, isstbimage);
 	}
 
 	//	setupRenderData();
@@ -118,11 +128,11 @@ unsigned int gImage::useData() {
 }
 
 void gImage::setImageData(unsigned char* imageData) {
-	setData(imageData, true);
+	setData(imageData, true, false);
 }
 
-void gImage::setImageData(unsigned char* imageData, int width, int height, int componentNum) {
-	gTexture::loadData(imageData, width, height, componentNum);
+void gImage::setImageData(unsigned char* imageData, int width, int height, int componentNum, bool isMutable, bool isStbImage) {
+  gTexture::loadData(imageData, width, height, componentNum, isMutable, isStbImage);
 }
 
 unsigned char* gImage::getImageData() {
@@ -130,7 +140,7 @@ unsigned char* gImage::getImageData() {
 }
 
 void gImage::setImageDataHDR(float* imageData) {
-	setDataHDR(imageData, true);
+	setDataHDR(imageData, true, false);
 }
 
 float* gImage::getImageDataHDR() {
@@ -138,8 +148,13 @@ float* gImage::getImageDataHDR() {
 }
 
 void gImage::clearData() {
-	if (ishdr) stbi_image_free(datahdr);
-	else stbi_image_free(data);
+	if (ishdr) {
+		stbi_image_free(datahdr);
+		datahdr = nullptr;
+	} else {
+		stbi_image_free(data);
+		data = nullptr;
+	}
 }
 
 void gImage::saveImage(std::string fileName) {
@@ -185,7 +200,7 @@ unsigned int gImage::loadMaskImage(const std::string& maskImagePath) {
 	return masktexture->load(gGetImagesDir() + maskImagePath);
 }
 
-bool gImage::gImage::checkPixelPerfectCollision(gImage *otherImage,
+bool gImage::checkPixelPerfectCollision(gImage *otherImage,
 	float imgposX, float imgposY, float otherimgposX, float otherimgposY) {
 	unsigned char* data2 = otherImage->data;
 	if (gCheckCollision(imgposX, imgposY, (imgposX + getWidth()), (imgposY + getHeight()), otherimgposX, otherimgposY, (otherimgposX + otherImage->getWidth()), (otherimgposY + otherImage->getHeight()))) {

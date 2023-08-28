@@ -683,6 +683,7 @@ gRenderer::gRenderer() {
 	lightingposition = glm::vec3(0.0f);
 	li = 0;
 
+	isfogenabled = false;
 	fogno = -1;
 	fogcolor.set(0.3f, 0.3f, 0.3f);
 	fogmode = gRenderer::FOGMODE_EXP;

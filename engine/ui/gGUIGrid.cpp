@@ -7,7 +7,6 @@
 
 #include "gGUIGrid.h"
 #include "gBaseApp.h"
-#include <array>
 
 gGUIGrid::gGUIGrid() {
 	selectedframecolor = gColor(0.1f, 0.45f, 0.87f, 1.0f);
@@ -732,6 +731,13 @@ std::deque<gGUIGrid::Cell*> gGUIGrid::getSelectedCells() {
 	std::deque<Cell*> sc;
 	for(int i = 0; i < selectedcells.size(); i++) sc.push_back(&allcells[selectedcells[i]]);
 	return sc;
+}
+
+void gGUIGrid::digitToString() {
+	if(allcells.empty()) return;
+	allcells[selectedbox].celltype = Cell::TYPE_STRING;
+	allcells[selectedbox].iscellaligned = true;
+	setCellAlignment(gBaseGUIObject::TEXTALIGNMENT_LEFT, false);
 }
 
 std::string gGUIGrid::fixTextFunction(std::string text, int index) {

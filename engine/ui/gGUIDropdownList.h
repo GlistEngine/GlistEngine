@@ -35,8 +35,11 @@ public:
 	void setSelectedTitle();
 	void addElement(gGUITreelist::Element* element);
 	void addElement(gGUITreelist::Element* element, gGUITreelist::Element* parentelement);
+	void clearTitle();
 
 	std::string& getSelectedTitle();
+
+	friend class gGUIToolbar;
 
 private:
 	gGUISizer listsizer;

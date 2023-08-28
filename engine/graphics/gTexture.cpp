@@ -77,6 +77,10 @@ gTexture::gTexture() {
 	ismaskloaded = false;
 	isloaded = false;
 	masktexture = nullptr;
+	componentnum = 0;
+	istextureallocated = false;
+	data = nullptr;
+	datahdr = nullptr;
 	setupRenderData();
 }
 
@@ -104,7 +108,11 @@ gTexture::gTexture(int w, int h, int format, bool isFbo) {
 	ismaskloaded = false;
 	isloaded = false;
 	masktexture = nullptr;
+	componentnum = 0;
+    data = nullptr;
+	datahdr = nullptr;
 	glGenTextures(1, &id);
+	istextureallocated = true;
 	bind();
 	G_CHECK_GL(glTexImage2D(GL_TEXTURE_2D, 0, internalformat, width, height, 0, format, GL_UNSIGNED_BYTE, nullptr));
 
@@ -123,27 +131,22 @@ gTexture::gTexture(int w, int h, int format, bool isFbo) {
 }
 
 gTexture::~gTexture() {
-	if(isloaded) {
-		G_CHECK_GL(glDeleteBuffers(1, &quadVBO));
-		G_CHECK_GL(glDeleteVertexArrays(1, &quadVAO));
-	}
-	G_CHECK_GL(glDeleteTextures(1, &id));
-	if (isstbimage && !ismutable) {
-		stbi_image_free(data);
-	} else if (ismutable) {
-		delete[] data;
-	}
-	delete masktexture;
+	cleanupAll();
 }
 
 unsigned int gTexture::load(const std::string& fullPath) {
+	cleanupData();
+
 	fullpath = fullPath;
 	directory = getDirName(fullpath);
 	path = getFileName(fullpath);
 	ishdr = false;
 	if (gToLower(fullpath.substr(fullpath.length() - 3, 3)) == "hdr") ishdr = true;
 
-	glGenTextures(1, &id);
+	if (!istextureallocated) {
+		glGenTextures(1, &id);
+		istextureallocated = true;
+	}
 
 	if (ishdr) {
 		stbi_set_flip_vertically_on_load(true);
@@ -179,7 +182,10 @@ unsigned int gTexture::loadData(unsigned char* textureData, int width, int heigh
 	this->height = height;
 	this->componentnum = componentNum;
 
-	glGenTextures(1, &id);
+	if (!istextureallocated) {
+		glGenTextures(1, &id);
+		istextureallocated = true;
+	}
 
 	setData(textureData, isMutable, isStbImage);
 
@@ -188,6 +194,8 @@ unsigned int gTexture::loadData(unsigned char* textureData, int width, int heigh
 }
 
 void gTexture::setData(unsigned char* textureData, bool isMutable, bool isStbImage) {
+	cleanupData();
+
 	ismutable = isMutable;
 	isstbimage = isStbImage;
 	ishdr = false;
@@ -223,14 +231,20 @@ void gTexture::setData(unsigned char* textureData, bool isMutable, bool isStbIma
 
 		if (isstbimage && !ismutable) {
 			stbi_image_free(data);
-		  data = nullptr;
-    }
+			data = nullptr;
+		} else if(!ismutable) {
+			delete[] data;
+			data = nullptr;
+		}
 		unbind();
 	} else {
 		gLoge("gTexture") << "Texture failed to load at path: " << fullpath;
 		if (isstbimage && !ismutable) {
 			stbi_image_free(data);
-      data = nullptr;
+			data = nullptr;
+		} else if(!ismutable) {
+			delete[] data;
+			data = nullptr;
 		}
 	}
 
@@ -238,6 +252,8 @@ void gTexture::setData(unsigned char* textureData, bool isMutable, bool isStbIma
 }
 
 void gTexture::setDataHDR(float* textureData, bool isMutable, bool isStbImage) {
+	cleanupData();
+
 	ismutable = isMutable;
 	isstbimage = isStbImage;
 	ishdr = true;
@@ -251,14 +267,22 @@ void gTexture::setDataHDR(float* textureData, bool isMutable, bool isStbImage) {
 		G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
 		G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
 
-		if (isstbimage) {
-			stbi_image_free(data);
+		if (isstbimage && !ismutable) {
+			stbi_image_free(datahdr);
+			datahdr = nullptr;
+		} else if(!ismutable) {
+			delete[] datahdr;
+			datahdr = nullptr;
 		}
 		unbind();
 	} else {
 		gLoge("gTexture") << "Failed to load HDR image at path: " << fullpath;
-		if (isstbimage) {
-			stbi_image_free(data);
+		if(isstbimage && !ismutable) {
+			stbi_image_free(datahdr);
+			datahdr = nullptr;
+		} else if(!ismutable) {
+			delete[] datahdr;
+			datahdr = nullptr;
 		}
 	}
 
@@ -509,13 +533,45 @@ void gTexture::setupRenderData() {
 	bsubpartdrawn = false;
 }
 
+void gTexture::cleanupAll() {
+	if(isloaded) {
+		G_CHECK_GL(glDeleteBuffers(1, &quadVBO));
+		G_CHECK_GL(glDeleteVertexArrays(1, &quadVAO));
+		isloaded = false;
+	}
+	if(istextureallocated) {
+		G_CHECK_GL(glDeleteTextures(1, &id));
+		istextureallocated = false;
+	}
+	cleanupData();
+	delete masktexture;
+	masktexture = nullptr;
+}
+
+void gTexture::cleanupData() {
+	if(isstbimage) {
+		if (datahdr) {
+			stbi_image_free(datahdr);
+			datahdr = nullptr;
+		} else if (data) {
+			stbi_image_free(data);
+			data = nullptr;
+		}
+	} else if(ismutable) {
+		delete[] data;
+		data = nullptr;
+		delete[] datahdr;
+		datahdr = nullptr;
+	}
+}
+
 void gTexture::setupRenderData(int sx, int sy, int sw, int sh) {
 	if(!isloaded) {
 //		G_CHECK_GL(glDeleteBuffers(1, &quadVBO));
 //		G_CHECK_GL(glDeleteVertexArrays(1, &quadVAO));
-    G_CHECK_GL(glGenVertexArrays(1, &quadVAO));
-    G_CHECK_GL(glGenBuffers(1, &quadVBO));
-    isloaded = true;
+		G_CHECK_GL(glGenVertexArrays(1, &quadVAO));
+		G_CHECK_GL(glGenBuffers(1, &quadVBO));
+		isloaded = true;
 	}
 	float vertices[] = {
 			// pos      // tex

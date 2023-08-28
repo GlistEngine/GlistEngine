@@ -36,6 +36,7 @@ gGUIDropdownList::gGUIDropdownList() {
 	textboxh = 0;
 	textboxw = 0;
 	rootelement = nullptr;
+	list.setTitleOn(false);
 
 
 	actionmanager.addAction(&button, G_GUIEVENT_BUTTONRELEASED, this, G_GUIEVENT_TREELISTOPENEDONDROPDOWNLIST);
@@ -134,7 +135,7 @@ void gGUIDropdownList::mouseReleased(int x, int y, int button) {
         listopened = true;
     }
     // Clicking outside the Textbox closes the Treelist.
-    else if (listopened) {
+    else if (lopened) {
         listopened = false;
         frame->addTreelist(nullptr, listx, listy, listw);
     }
@@ -188,4 +189,8 @@ void gGUIDropdownList::setSelectedTitle() {
 
 std::string& gGUIDropdownList::getSelectedTitle() {
 	return fTitle;
+}
+
+void gGUIDropdownList::clearTitle() {
+	textbox.setText("");
 }
