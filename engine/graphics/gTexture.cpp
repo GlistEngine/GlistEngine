@@ -232,20 +232,10 @@ void gTexture::setData(unsigned char* textureData, bool isMutable, bool isStbIma
 		if (isstbimage && !ismutable) {
 			stbi_image_free(data);
 			data = nullptr;
-		} else if(!ismutable) {
-			delete[] data;
-			data = nullptr;
 		}
 		unbind();
 	} else {
 		gLoge("gTexture") << "Texture failed to load at path: " << fullpath;
-		if (isstbimage && !ismutable) {
-			stbi_image_free(data);
-			data = nullptr;
-		} else if(!ismutable) {
-			delete[] data;
-			data = nullptr;
-		}
 	}
 
 	setupRenderData();
@@ -270,20 +260,10 @@ void gTexture::setDataHDR(float* textureData, bool isMutable, bool isStbImage) {
 		if (isstbimage && !ismutable) {
 			stbi_image_free(datahdr);
 			datahdr = nullptr;
-		} else if(!ismutable) {
-			delete[] datahdr;
-			datahdr = nullptr;
 		}
 		unbind();
 	} else {
 		gLoge("gTexture") << "Failed to load HDR image at path: " << fullpath;
-		if(isstbimage && !ismutable) {
-			stbi_image_free(datahdr);
-			datahdr = nullptr;
-		} else if(!ismutable) {
-			delete[] datahdr;
-			datahdr = nullptr;
-		}
 	}
 
 	setupRenderData();
