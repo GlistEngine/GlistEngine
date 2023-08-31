@@ -33,7 +33,7 @@ public:
 	gColor* getTableColor();
 	gColor* getFontColor();
 	void getSelectedTable();
-	int setSelectedFileNo(int _selectedfileno);
+	int setSelectedFileNo(int selectedFileNo);
 	int getSelectedFileNo();
 
 private:

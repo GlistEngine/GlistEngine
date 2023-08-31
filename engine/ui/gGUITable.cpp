@@ -77,24 +77,6 @@ void gGUITable::draw() {
 	renderer->setColor(backgroundcolor);
 	gDrawRectangle(0, 0, screenwidth, screenheight, true);
 	renderer->setColor(oldcolor);
-
-	//draw selected rectangle
-	if(isselected) {
-		gColor oldcolor = renderer->getColor();
-		gColor selected = gColor(0.8f, 0.7f, 0.5f);
-		renderer->setColor(selected);
-		gDrawRectangle(filex[selectedfileno], filey[selectedfileno], filew, fileh, true);
-		renderer->setColor(oldcolor);
-	}
-	//draw moved rectangle
-	if(ismoved) {
-		gColor oldcolor = renderer->getColor();
-		gColor moved = gColor(0.8f, 0.7f, 0.5f);
-		renderer->setColor(moved);
-		gDrawRectangle(filex[movedfileno], filey[movedfileno], filew, fileh, false);
-		renderer->setColor(oldcolor);
-	}
-
 	//draw selected rectangle
 	if(isselected) {
 		gColor oldcolor = renderer->getColor();
@@ -151,8 +133,8 @@ void gGUITable::setTableColor(gColor color) {
 	backgroundcolor = color;
 }
 
-int gGUITable::setSelectedFileNo(int _selectedfileno) {
-	selectedfileno = _selectedfileno;
+int gGUITable::setSelectedFileNo(int selectedFileNo) {
+	selectedfileno = selectedFileNo;
 	return selectedfileno;
 }
 
