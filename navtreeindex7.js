@@ -1,7 +1,5 @@
 var NAVTREEINDEX7 =
 {
-"classgJoystickConnectEvent.html#af4e7100feffdd911e59c15259b09a00f":[0,0,99,1],
-"classgJoystickConnectEvent.html#aff65c19ed83656186a5bb592cb9dcc84":[0,0,99,0],
 "classgJoystickDisconnectEvent.html":[0,0,100],
 "classgJoystickDisconnectEvent.html#a53d9e5e04f4690866df9438193020f5a":[0,0,100,1],
 "classgJoystickDisconnectEvent.html#aeeb81a07d969e9fb69f0ff4546d2267e":[0,0,100,0],
@@ -249,5 +247,7 @@ var NAVTREEINDEX7 =
 "classgModel.html#a75abcbb228de2a92ab39ebbf764a8805":[0,0,116,18],
 "classgModel.html#a779afc6df5dfeb8df5d8deb02fa7a92a":[0,0,116,6],
 "classgModel.html#a79c8bd1166ad5429e6dea6a87c05ad9b":[0,0,116,57],
-"classgModel.html#a7a636e92ccd27653690fe04acc81e1e5":[0,0,116,9]
+"classgModel.html#a7a636e92ccd27653690fe04acc81e1e5":[0,0,116,9],
+"classgModel.html#a80189770da5bfe07724807cebb7e5693":[0,0,116,19],
+"classgModel.html#a82abf38c7cfb26b51a09fdae425fb048":[0,0,116,51]
 };

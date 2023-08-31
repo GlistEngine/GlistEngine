@@ -50,11 +50,11 @@ var NAVTREEINDEX =
 "classgGUIGraph.html#a028f9e558a75d13d9729fa0f6f0c5d07",
 "classgGUINavigation.html#a147feb029377b3903277d21c9e0eaf78",
 "classgGUISlider.html#a37693d705837bee2b218e0c4b615c276",
-"classgJoystickConnectEvent.html#af4e7100feffdd911e59c15259b09a00f",
-"classgModel.html#a80189770da5bfe07724807cebb7e5693",
-"classgRenderer.html#a30790ba729909b3fabeea48e40f04ec2",
-"classgTexture.html#a1f76e643fca3cf54e872f025e5f4d97f",
-"gGUIColumnChart_8h_source.html"
+"classgJoystickDisconnectEvent.html",
+"classgModel.html#a8c5fac17d63053692a7eff4178823315",
+"classgRenderer.html#a34d0ac5855977c13a305427707a3b3a0",
+"classgTexture.html#a22a146e8f4687917bf5336ad32839ee5",
+"gGUIContextMenu_8h_source.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
