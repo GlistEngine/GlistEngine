@@ -12,7 +12,7 @@ var classgGUITable =
     [ "mousePressed", "classgGUITable.html#a451d5d5015cced85aa693bf4c80a2338", null ],
     [ "set", "classgGUITable.html#a914ce82f776a034352745f0a943ec8fd", null ],
     [ "setFontColor", "classgGUITable.html#a679a30ad86a7309aaf8eefd027e56583", null ],
-    [ "setSelectedFileNo", "classgGUITable.html#a2c91cc4a6dd093fb9b6a26bd124f2efc", null ],
+    [ "setSelectedFileNo", "classgGUITable.html#a74fe2ed31643cd7eb4e0f421c0b3d88b", null ],
     [ "setSelectedTable", "classgGUITable.html#abcf33a8ef70888ca431a2e189f362ebf", null ],
     [ "setTableColor", "classgGUITable.html#a9aaaf3c7af9e1e07e0394fee612f88d2", null ],
     [ "setup", "classgGUITable.html#a7309baf064186435bdc25a542bf8144f", null ],
