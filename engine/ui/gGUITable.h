@@ -13,31 +13,28 @@
 #include "gFont.h"
 #include "gBaseGUIObject.h"
 #include "gColor.h"
+#include "gGUIScrollable.h"
 
-class gGUITable : public gGUIControl{
+class gGUITable : public gGUIScrollable{
 public:
 	gGUITable();
 	virtual ~gGUITable();
-
 	void setup();
 	void update();
 	void draw();
 	void mouseMoved(int x, int y );
-	void mouseDragged(int x, int y, int button);
 	void mousePressed(int x, int y, int button);
-	void mouseReleased(int x, int y, int button);
-	void mouseScrolled(int x, int y);
-	void mouseEntered();
-	void mouseExited();
-	//void set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIObject* parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h);
+	void set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIObject* parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h);
 	void addItem(gImage* image, std::string title = "New File");
 	void setFontColor(gColor color);
-	void setBackgroundTableColor(gColor color);
+	void setTableColor(gColor color);
 	void setSelectedTable();
-	void getSelectedTable();
-	gColor* getBackgroundTableColor();
+
+	gColor* getTableColor();
 	gColor* getFontColor();
-	//gGUISizer tablesizer;
+	void getSelectedTable();
+	int setSelectedFileNo(int _selectedfileno);
+	int getSelectedFileNo();
 
 private:
 	void generateFile();
@@ -47,7 +44,6 @@ private:
 	std::deque<std::string> imagetextlist;
 	std::deque<int> imageparameterlist;
 	int x, y, filew, fileh;
-	int selectedx, selectedy, selectedw, selectedh, selectedid;
 	int screenwidth, screenheight;
 	int maxcolumncount;
 	std::vector<int> imagew;
@@ -58,9 +54,9 @@ private:
 	int sonucw, sonuch;
 	gColor fcolor, backgroundcolor;
 	int minh, minw;
-	bool isselected;
-	bool ismoved;
+	bool isselected, ismoved;
 	int movedfileno, selectedfileno;
+	bool mousepressedonlist;
 };
 
 #endif /* UI_GGUITABLE_H_ */
