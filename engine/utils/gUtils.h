@@ -24,6 +24,7 @@
 #include "gGUIEvents.h"
 #include "tinyfiledialogs.h"
 #include "gColor.h"
+#include <cstdint>
 
 /*
 #ifndef LINUX
