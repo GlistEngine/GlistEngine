@@ -58,12 +58,12 @@ gGUIGraph::~gGUIGraph() {
 
 void gGUIGraph::set(gBaseApp *root, gBaseGUIObject *topParentGUIObject, gBaseGUIObject *parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h) {
 	gGUIControl::set(root, topParentGUIObject, parentGUIObject, parentSlotLineNo, parentSlotColumnNo, x, y, w, h);
-	axisxw = width * 3 / 4;
+	axisxw = width * 9 / 10;
 	axisyh = height * 3 / 4;
 //	gLogi("HEIGHT") << height;
 //	gLogi("WIDTH") << width;
 //	gLogi("/////////////////////") << top;
-	axisx1 = left + 60;
+	axisx1 = left + 80;
 	axisy1 = top + 0.14f * height;
 	axisx2 = axisx1 + axisxw;
 	axisy2 = axisy1 + axisyh;
