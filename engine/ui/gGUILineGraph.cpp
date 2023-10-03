@@ -41,7 +41,7 @@ void gGUILineGraph::setMinX(int minX) {
 }
 
 void gGUILineGraph::setMaxY(int maxY) {
-	gGUIGraph::setMaxY(maxY);
+	gGUIGraph::setMaxY(maxY - 1);
 	updatePoints();
 }
 
@@ -74,11 +74,11 @@ gColor gGUILineGraph::getLineColor(int lineIndex) {
 }
 
 void gGUILineGraph::addLine() {
-	std::vector<std::array<float, 4>> newline;
+	std::deque<std::array<float, 4>> newline;
 	graphlines.push_back(newline);
 }
 
-void gGUILineGraph::addData(int lineIndex, std::vector<std::array<float, 2>> dataToAdd) {
+void gGUILineGraph::addData(int lineIndex, std::deque<std::array<float, 2>> dataToAdd) {
 	int datasize = dataToAdd.size();
 	for(int i = 0; i < datasize; i++) addPointToLine(lineIndex, dataToAdd[i][0], dataToAdd[i][1]);
 }
@@ -184,4 +184,12 @@ void gGUILineGraph::updatePoints() {
 			graphlines[i][j][3] = axisy2 - axisyh * (graphlines[i][j][1] - miny) / (maxy - miny);
 		}
 	}
+}
+
+void gGUILineGraph::removeFirstPointsFromLine(int lineIndex, int pointNumLimit) {
+    if (!graphlines.empty()) {
+        if (graphlines[lineIndex].size() >= pointNumLimit) {
+            graphlines[lineIndex].pop_front();
+        }
+    }
 }

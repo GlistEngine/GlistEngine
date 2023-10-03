@@ -51,6 +51,7 @@
 #include "gRectangle.h"
 #include "gCircle.h"
 #include <array>
+#include <deque>
 
 
 class gGUILineGraph: public gGUIGraph  {
@@ -74,16 +75,17 @@ public:
 	gColor getLineColor(int lineIndex);
 
 	void addLine();
-	void addData(int lineIndex, std::vector<std::array<float, 2>> dataToAdd);
+	void addData(int lineIndex, std::deque<std::array<float, 2>> dataToAdd);
 	void addPointToLine(int lineIndex, float x, float y);
 	void setPointValues(int lineIndex, int pointIndex, float newX, float newY);
 	void setPointValues(int lineIndex, float oldX, float oldY, float newX, float newY);
+	void removeFirstPointsFromLine(int lineIndex, int pointNumLimit);
 
 private:
 	void drawGraph();
 	void updatePoints();
 
-	std::vector<std::vector<std::array<float, 4>>> graphlines;
+	std::deque<std::deque<std::array<float, 4>>> graphlines;
 	gColor linecolors[5];
 
 	bool arepointsenabled;
