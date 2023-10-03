@@ -2,11 +2,12 @@ var classgGUILineGraph =
 [
     [ "gGUILineGraph", "classgGUILineGraph.html#a42822c79f8e7c4b21b20ac521a79f1bf", null ],
     [ "~gGUILineGraph", "classgGUILineGraph.html#a2ac847f8d37872e30047cf75f1a17959", null ],
-    [ "addData", "classgGUILineGraph.html#a8d630eadf2f19b7770a50e2d200f4433", null ],
+    [ "addData", "classgGUILineGraph.html#ae73e143cb48dc69118e400aa18608ce7", null ],
     [ "addLine", "classgGUILineGraph.html#a9915d1923721446eaee7f5eb4d8bc143", null ],
     [ "addPointToLine", "classgGUILineGraph.html#a6df73078a6e895a36e015514a7f2ba8c", null ],
     [ "enablePoints", "classgGUILineGraph.html#a8b91871d2e23e0552c961cac26e2b07d", null ],
     [ "getLineColor", "classgGUILineGraph.html#ade386621d3080394dc924e35459ef328", null ],
+    [ "removeFirstPointsFromLine", "classgGUILineGraph.html#a48d06470d7f209d0c37445b0512fb5ba", null ],
     [ "set", "classgGUILineGraph.html#af2a58aa1af10a1fbcc5abc5d89626793", null ],
     [ "setLabelCountX", "classgGUILineGraph.html#a84ffe3ffc44de757d2e7230ae4c17fda", null ],
     [ "setLabelCountY", "classgGUILineGraph.html#a06cbe1635f8852b9d7dd84031ed40c7c", null ],

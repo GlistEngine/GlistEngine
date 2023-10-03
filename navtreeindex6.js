@@ -1,5 +1,6 @@
 var NAVTREEINDEX6 =
 {
+"classgGUISlider.html#a3706b3c780c71fa80b8d1421485d1ebd":[0,0,84,29],
 "classgGUISlider.html#a37693d705837bee2b218e0c4b615c276":[0,0,84,28],
 "classgGUISlider.html#a37959e5e554e356b7ecd4948e0ca740d":[0,0,84,27],
 "classgGUISlider.html#a3cfd48ce0e03ec1a94c309162ae0d01e":[0,0,84,15],
@@ -248,6 +249,5 @@ var NAVTREEINDEX6 =
 "classgInversion.html#ae11536c7489a82ed75ce100d5ac920c4":[0,0,98,1],
 "classgJoystickConnectEvent.html":[0,0,99],
 "classgJoystickConnectEvent.html#a45850d7839135c15b2f197219d97e830":[0,0,99,2],
-"classgJoystickConnectEvent.html#af4e7100feffdd911e59c15259b09a00f":[0,0,99,1],
-"classgJoystickConnectEvent.html#aff65c19ed83656186a5bb592cb9dcc84":[0,0,99,0]
+"classgJoystickConnectEvent.html#af4e7100feffdd911e59c15259b09a00f":[0,0,99,1]
 };
