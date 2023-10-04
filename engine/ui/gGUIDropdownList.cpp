@@ -1,7 +1,7 @@
  /*
   * gGUIDropdownList.cpp
   *
-  *  Created on: 19 A�u 2022
+  *  Created on: 19 Aï¿½u 2022
   *      Author: sevval
  */
 
@@ -18,7 +18,7 @@ gGUIDropdownList::gGUIDropdownList() {
 	setSizer(&listsizer);
 	button.setButtonColor(pressedbuttoncolor);
 	button.setSize(buttonw, buttonw);
-	button.setTitle("-");
+	button.setTitle("");
 	textbox.setEditable(false);
 	textbox.enableVerticalMargin(false);
 	listsizer.setControl(0, 0, &textbox);
@@ -90,11 +90,21 @@ void gGUIDropdownList::onGUIEvent(int guiObjectId, int eventType, int sourceEven
 
 void gGUIDropdownList::draw() {
 	gGUIContainer::draw();
-	if(listopened) {
+//		if(listopened) {
 //		list.draw();
-	}
+//	}
 //	gColor* oldcolor = renderer->getColor();
 //	renderer->setColor(oldcolor);
+
+
+	renderer->setColor(gColor(0.1f, 0.1f, 0.1f));
+	gDrawTriangle((button.left + (buttonw/2)) - 7.5,
+	                (top) + ((buttonw/2) - 4.33),
+	                (button.left + (buttonw/2)) + 7.5,
+	                (top) + ((buttonw/2) - 4.33),
+	                (button.left + (buttonw/2)),
+	                (button.top) + ((buttonw/2) + 8.66),
+	                true);
 
 }
 
