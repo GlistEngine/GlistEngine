@@ -90,22 +90,22 @@ void gGUIDropdownList::onGUIEvent(int guiObjectId, int eventType, int sourceEven
 
 void gGUIDropdownList::draw() {
 	gGUIContainer::draw();
+
 //		if(listopened) {
 //		list.draw();
 //	}
-//	gColor* oldcolor = renderer->getColor();
-//	renderer->setColor(oldcolor);
 
-
-	renderer->setColor(gColor(0.1f, 0.1f, 0.1f));
-	gDrawTriangle((button.left + (buttonw/2)) - 7.5,
-	                (top) + ((buttonw/2) - 4.33),
-	                (button.left + (buttonw/2)) + 7.5,
-	                (top) + ((buttonw/2) - 4.33),
+gColor* oldcolor = renderer->getColor();
+	renderer->setColor(oldcolor);
+	renderer->setColor(buttonfontcolor);
+	gDrawTriangle((button.left + (buttonw/2)) - 6.5,
+	                (top) + ((buttonw/2) - 3),
+	                (button.left + (buttonw/2)) + 6.5,
+	                (top) + ((buttonw/2) - 3),
 	                (button.left + (buttonw/2)),
-	                (button.top) + ((buttonw/2) + 8.66),
+	                (button.top) + ((buttonw/2) + 3),
 	                true);
-
+	renderer->setColor(oldcolor);
 }
 
 void gGUIDropdownList::setParentFrame(gGUIFrame *frame) {
