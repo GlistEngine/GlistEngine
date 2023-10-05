@@ -95,8 +95,7 @@ void gGUIDropdownList::draw() {
 //		list.draw();
 //	}
 
-gColor* oldcolor = renderer->getColor();
-	renderer->setColor(oldcolor);
+	gColor* oldcolor = renderer->getColor();
 	renderer->setColor(buttonfontcolor);
 	gDrawTriangle((button.left + (buttonw/2)) - 6.5,
 	                (top) + ((buttonw/2) - 3),
