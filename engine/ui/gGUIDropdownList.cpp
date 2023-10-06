@@ -11,6 +11,7 @@
 
 gGUIDropdownList::gGUIDropdownList() {
 	buttonw = 24;
+	buttonh = 24;
 	listsizer.setSize(1, 2);
 	float columnproportions[2] = {0.8f, 0.2f};
 	listsizer.setColumnProportions(columnproportions);
@@ -90,6 +91,9 @@ void gGUIDropdownList::onGUIEvent(int guiObjectId, int eventType, int sourceEven
 
 void gGUIDropdownList::draw() {
 	gGUIContainer::draw();
+
+	//gDrawTriangle(left + button.width/2 - 9 , top + button.height/2 - 4 , left + button.height/2 + 9 , top + button.height/2 - 4 ,left + button.width / 2, top + button.height/2 + 8 , true );
+	gDrawTriangle(left + 5, top + 5, 2, 2, 2, 2, true);
 	if(listopened) {
 //		list.draw();
 	}
@@ -193,4 +197,12 @@ std::string& gGUIDropdownList::getSelectedTitle() {
 
 void gGUIDropdownList::clearTitle() {
 	textbox.setText("");
+}
+
+void gGUIDropdownList::setSelectLastTitle() {
+    if (rootelement && rootelement->sub.size() > 0) {
+        int lastIndex = rootelement->sub.size() - 1;
+        textbox.setText(rootelement->sub[lastIndex]->title);
+        fTitle = rootelement->sub[lastIndex]->title;
+    }
 }
