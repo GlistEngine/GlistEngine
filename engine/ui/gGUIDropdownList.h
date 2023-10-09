@@ -48,7 +48,7 @@ private:
 	gGUIImageButton ibutton;
 	gGUITextbox textbox;
 	gGUITreelist::Element* rootelement;
-	int textboxw, buttonw, buttonh;
+	int textboxw, buttonw;
 	int textboxh;
 	int listx, listy, listw;
 	bool listopened, selectedline, listexpanded, pressedonlist, buttonpressed, ispressed;
