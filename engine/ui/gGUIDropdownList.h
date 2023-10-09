@@ -36,6 +36,7 @@ public:
 	void addElement(gGUITreelist::Element* element);
 	void addElement(gGUITreelist::Element* element, gGUITreelist::Element* parentelement);
 	void clearTitle();
+	void setSelectLastTitle();
 
 	std::string& getSelectedTitle();
 
@@ -47,10 +48,10 @@ private:
 	gGUIImageButton ibutton;
 	gGUITextbox textbox;
 	gGUITreelist::Element* rootelement;
-	int textboxw, buttonw;
+	int textboxw, buttonw, buttonh;
 	int textboxh;
 	int listx, listy, listw;
-	bool listopened, selectedline, listexpanded, pressedonlist, buttonpressed;
+	bool listopened, selectedline, listexpanded, pressedonlist, buttonpressed, ispressed;
 	bool lopened;
 	gGUIFrame *frame;
 	std::string fTitle;
