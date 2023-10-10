@@ -112,15 +112,15 @@ void gImage::loadImageData(const std::string& imagePath) {
 }
 
 unsigned int gImage::useData() {
-  if (!istextureallocated) {
-    glGenTextures(1, &id);
-    istextureallocated = true;
-  }
+	if (!istextureallocated) {
+		glGenTextures(1, &id);
+		istextureallocated = true;
+	}
 
 	if (ishdr) {
-		setDataHDR(datahdr, ismutable, isstbimage);
+		setDataHDR(datahdr, ismutable, isstbimage, false);
 	} else {
-		setData(data, ismutable, isstbimage);
+		setData(data, ismutable, isstbimage, false);
 	}
 
 	//	setupRenderData();

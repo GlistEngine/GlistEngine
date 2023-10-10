@@ -193,8 +193,8 @@ unsigned int gTexture::loadData(unsigned char* textureData, int width, int heigh
 	return id;
 }
 
-void gTexture::setData(unsigned char* textureData, bool isMutable, bool isStbImage) {
-	cleanupData();
+void gTexture::setData(unsigned char* textureData, bool isMutable, bool isStbImage, bool clean) {
+	if(clean) cleanupData();
 
 	ismutable = isMutable;
 	isstbimage = isStbImage;
@@ -241,8 +241,8 @@ void gTexture::setData(unsigned char* textureData, bool isMutable, bool isStbIma
 	setupRenderData();
 }
 
-void gTexture::setDataHDR(float* textureData, bool isMutable, bool isStbImage) {
-	cleanupData();
+void gTexture::setDataHDR(float* textureData, bool isMutable, bool isStbImage, bool clean) {
+	if(clean)cleanupData();
 
 	ismutable = isMutable;
 	isstbimage = isStbImage;
