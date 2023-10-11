@@ -306,7 +306,7 @@ void gFont::loadChar(const int& charID) {
 
 	  textures[lci] = new gTexture(lcpixelsw, lcpixelsh, GL_RGBA, false);
 
-	  if (isantialiased && fontsize > 20) {
+	  if (isantialiased) {
 	    textures[lci]->setFiltering(gTexture::TEXTUREMINMAGFILTER_LINEAR, gTexture::TEXTUREMINMAGFILTER_LINEAR);
 	  } else {
 		  textures[lci]->setFiltering(gTexture::TEXTUREMINMAGFILTER_NEAREST, gTexture::TEXTUREMINMAGFILTER_NEAREST);
