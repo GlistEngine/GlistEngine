@@ -49,8 +49,8 @@ const int gTexture::TEXTUREMINMAGFILTER_NEAREST = 2;
 static const int texturewrap[3] = {GL_REPEAT, GL_NEAREST, GL_NEAREST};
 static const int texturefilter[3] = {GL_LINEAR, GL_NEAREST, GL_NEAREST};
 #else
-static const int texturewrap[3] = {GL_REPEAT, GL_CLAMP, GL_CLAMP_TO_EDGE};
-static const int texturefilter[3] = {GL_LINEAR, GL_CLAMP, GL_CLAMP_TO_EDGE};
+static const int texturewrap[3] = {GL_REPEAT, GL_CLAMP, GL_NEAREST};
+static const int texturefilter[3] = {GL_LINEAR, GL_CLAMP, GL_NEAREST};
 #endif
 
 gTexture::gTexture() {
@@ -125,8 +125,8 @@ gTexture::gTexture(int w, int h, int format, bool isFbo) {
 	G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP));
 #endif
 
-	G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
-	G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
+	G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, texturefilter[filtermin]));
+	G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, texturefilter[filtermag]));
 	setupRenderData();
 }
 
@@ -214,8 +214,8 @@ void gTexture::setData(unsigned char* textureData, bool isMutable, bool isStbIma
 
 		G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT));
 		G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT));
-		G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR));
-		G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
+		G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, texturefilter[filtermin]));
+		G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, texturefilter[filtermag]));
 
 		if (format == GL_RG) {
 			GLint swizzleMask[] = {GL_RED, GL_RED, GL_RED, GL_GREEN};
@@ -254,8 +254,8 @@ void gTexture::setDataHDR(float* textureData, bool isMutable, bool isStbImage, b
 
 		G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE));
 		G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE));
-		G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
-		G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
+		G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, texturefilter[filtermin]));
+		G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, texturefilter[filtermag]));
 
 		if (isstbimage && !ismutable) {
 			stbi_image_free(datahdr);
