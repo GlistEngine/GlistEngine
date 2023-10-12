@@ -191,7 +191,7 @@ void gMesh::drawStart() {
 //		if(material.isDiffuseMapEnabled()) gLogi("gModel") << "mesh name:" << name;
 //		if(material.isDiffuseMapEnabled()) gLogi("gModel") << "diffuse texture name:" << material.getDiffuseMap()->getFilename();
 	    if (material.isDiffuseMapEnabled()) {
-		    colorshader->setInt("material.diffusemap", 0); // Diffuse texture unit
+			colorshader->setInt("material.diffusemap", 0); // Diffuse texture unit
 			G_CHECK_GL(glActiveTexture(GL_TEXTURE0));
 		    material.bindDiffuseMap();
 	    }
@@ -199,7 +199,7 @@ void gMesh::drawStart() {
 	    // Bind specular textures
 	    colorshader->setInt("material.useSpecularMap", material.isDiffuseMapEnabled() && material.isSpecularMapEnabled());
 	    if (material.isDiffuseMapEnabled() && material.isSpecularMapEnabled()) {
-		    colorshader->setInt("material.specularmap", 1); // Specular texture unit
+			colorshader->setInt("material.specularmap", 1); // Specular texture unit
 		    G_CHECK_GL(glActiveTexture(GL_TEXTURE1));
 		    material.bindSpecularMap();
 	    }
@@ -207,7 +207,7 @@ void gMesh::drawStart() {
 	    // Bind normal textures
 	    colorshader->setInt("aUseNormalMap", material.isDiffuseMapEnabled() && material.isNormalMapEnabled());
 	    if (material.isDiffuseMapEnabled() && material.isNormalMapEnabled()) {
-		    colorshader->setInt("material.normalmap", 2); // Normal texture unit
+			colorshader->setInt("material.normalmap", 2); // Normal texture unit
 		    G_CHECK_GL(glActiveTexture(GL_TEXTURE2));
 		    material.bindNormalMap();
 	    }
