@@ -39,18 +39,20 @@ const int gTexture::TEXTURETYPE_PBR_AO = 8;
 const int gTexture::TEXTUREWRAP_REPEAT = 0;
 const int gTexture::TEXTUREWRAP_CLAMP = 1;
 const int gTexture::TEXTUREWRAP_CLAMPTOEDGE = 2;
+const int gTexture::TEXTUREWRAP_NEAREST = 3;
 
 const int gTexture::TEXTUREMINMAGFILTER_LINEAR = 0;
 const int gTexture::TEXTUREMINMAGFILTER_MIPMAPLINEAR = 1;
 const int gTexture::TEXTUREMINMAGFILTER_NEAREST = 2;
+const int gTexture::TEXTUREMINMAGFILTER_CLAMP = 3;
 
 #if(ANDROID)
 // todo alternatives?
-static const int texturewrap[3] = {GL_REPEAT, GL_NEAREST, GL_NEAREST};
-static const int texturefilter[3] = {GL_LINEAR, GL_NEAREST, GL_NEAREST};
+static const int texturewrap[4] = {GL_REPEAT, GL_NEAREST, GL_NEAREST, GL_NEAREST};
+static const int texturefilter[4] = {GL_LINEAR, GL_NEAREST, GL_NEAREST, GL_NEAREST};
 #else
-static const int texturewrap[3] = {GL_REPEAT, GL_CLAMP, GL_NEAREST};
-static const int texturefilter[3] = {GL_LINEAR, GL_CLAMP, GL_NEAREST};
+static const int texturewrap[4] = {GL_REPEAT, GL_CLAMP, GL_CLAMP_TO_EDGE, GL_NEAREST};
+static const int texturefilter[4] = {GL_LINEAR, GL_LINEAR_MIPMAP_LINEAR, GL_NEAREST, GL_CLAMP};
 #endif
 
 gTexture::gTexture() {
@@ -59,7 +61,7 @@ gTexture::gTexture() {
 	format = GL_RGBA;
 	wraps = TEXTUREWRAP_REPEAT;
 	wrapt = TEXTUREWRAP_REPEAT;
-	filtermin = TEXTUREMINMAGFILTER_LINEAR;
+	filtermin = TEXTUREMINMAGFILTER_MIPMAPLINEAR;
 	filtermag = TEXTUREMINMAGFILTER_LINEAR;
 	texturetype[0] = "texture_diffuse";
 	texturetype[1] = "texture_specular";
