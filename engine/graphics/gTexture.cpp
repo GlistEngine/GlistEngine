@@ -477,13 +477,13 @@ void gTexture::endDraw() {
 	renderer->getImageShader()->setMat4("model", imagematrix);
 	renderer->getImageShader()->setVec4("spriteColor", glm::vec4(renderer->getColor()->r, renderer->getColor()->g, renderer->getColor()->b, renderer->getColor()->a));
 	renderer->getImageShader()->setInt("image", 0);
-	renderer->getImageShader()->setInt("maskimage", 1);
-	renderer->getImageShader()->setBool("isAlphaMasking", ismaskloaded);
 
 	G_CHECK_GL(glActiveTexture(GL_TEXTURE0));
 
 	bind();
+	renderer->getImageShader()->setBool("isAlphaMasking", ismaskloaded);
 	if(ismaskloaded) {
+		renderer->getImageShader()->setInt("maskimage", 1);
 		G_CHECK_GL(glActiveTexture(GL_TEXTURE0 + 1)); // GL_TEXTURE1
 		masktexture->bind(1);
 	}
