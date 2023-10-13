@@ -50,7 +50,7 @@ gGUINumberBox::gGUINumberBox() {
 
 	boxsizer.setSize(lineno, columno);
 	float lineprops[] = {0.43f, 0.06f, 0.2f, 0.01f};
-	float columnprops[] = {0.20f, 0.80f};
+	float columnprops[] = {0.50f, 0.50f};
 	boxsizer.enableBorders(false);
 	boxsizer.setColumnProportions(columnprops);
 	boxsizer.setLineProportions(lineprops);
