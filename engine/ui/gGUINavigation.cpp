@@ -31,7 +31,7 @@ void gGUINavigation::draw() {
 	gColor* oldcolor = renderer->getColor();
 	gGUIScrollable::drawContent();
 	renderer->setColor(navigationbackgroundcolor);
-	gDrawRectangle(0, 0, boxw, boxh, true);
+	gDrawRectangle(0, 0, boxw, boxh + panetoph, true);
 
 	renderer->setColor(255, 255, 255);
 	for(int i = 0; i < panes.size(); i++) {
