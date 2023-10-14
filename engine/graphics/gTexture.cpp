@@ -71,7 +71,6 @@ gTexture::gTexture() {
 	path = "";
 	width = 0;
 	height = 0;
-	bsubpartdrawn = false;
 	ismutable = false;
 	isstbimage = false;
 	isfbo = false;
@@ -102,7 +101,6 @@ gTexture::gTexture(int w, int h, int format, bool isFbo) {
 	path = "";
 	width = w;
 	height = h;
-	bsubpartdrawn = false;
 	ismutable = false;
 	isstbimage = false;
 	isfbo = isFbo;
@@ -387,6 +385,7 @@ void gTexture::draw(int x, int y) {
 }
 
 void gTexture::draw(int x, int y, int w, int h) {
+	issubpart = false;
 	beginDraw();
 	imagematrix = glm::translate(imagematrix, glm::vec3(x, y, 0.0f));  // first translate (transformations are: scale happens first, then rotation, and then final translation happens; reversed order)
 	imagematrix = glm::scale(imagematrix, glm::vec3(w, h, 1.0f));
@@ -403,24 +402,17 @@ void gTexture::draw(int x, int y, int w, int h, int pivotx, int pivoty, float ro
 
 
 void gTexture::draw(glm::vec2 position, glm::vec2 size, float rotate) {
-	beginDraw();
-	imagematrix = glm::translate(imagematrix, glm::vec3(position, 0.0f));  // first translate (transformations are: scale happens first, then rotation, and then final translation happens; reversed order)
-
-	imagematrix = glm::translate(imagematrix, glm::vec3(0.5f * size.x, 0.5f * size.y, 0.0f));
-	imagematrix = glm::rotate(imagematrix, glm::radians(rotate), glm::vec3(0.0f, 0.0f, 1.0f));
-	imagematrix = glm::translate(imagematrix, glm::vec3(-0.5f * size.x, -0.5f * size.y, 0.0f));
-
-	imagematrix = glm::scale(imagematrix, glm::vec3(size.x, size.y, 1.0f));
-	endDraw();
+	draw(position, size, glm::vec2(0.5f * size.x, 0.5f * size.y), rotate);
 }
 
-void gTexture::draw(glm::vec2 position, glm::vec2 size, glm::vec2 pivotPointCoords, float rotate) {
+void gTexture::draw(glm::vec2 position, glm::vec2 size, glm::vec2 pivot, float rotate) {
+	issubpart = false;
 	beginDraw();
 	imagematrix = glm::translate(imagematrix, glm::vec3(position, 0.0f));  // first translate (transformations are: scale happens first, then rotation, and then final translation happens; reversed order)
 
-	imagematrix = glm::translate(imagematrix, glm::vec3(pivotPointCoords.x, pivotPointCoords.y, 0.0f));
+	imagematrix = glm::translate(imagematrix, glm::vec3(pivot.x, pivot.y, 0.0f));
 	imagematrix = glm::rotate(imagematrix, glm::radians(rotate), glm::vec3(0.0f, 0.0f, 1.0f));
-	imagematrix = glm::translate(imagematrix, glm::vec3(-pivotPointCoords.x, -pivotPointCoords.y, 0.0f));
+	imagematrix = glm::translate(imagematrix, glm::vec3(-pivot.x, -pivot.y, 0.0f));
 
 	imagematrix = glm::scale(imagematrix, glm::vec3(size.x, size.y, 1.0f));
 	endDraw();
@@ -431,9 +423,7 @@ void gTexture::drawSub(int x, int y, int sx, int sy, int sw, int sh) {
 }
 
 void gTexture::drawSub(int x, int y, int w, int h, int sx, int sy, int sw, int sh) {
-	setupRenderData(sx, sy, sw, sh);
-	bsubpartdrawn = true;
-	draw(x, y, w, h);
+	drawSub(x, y, w, h, sx, sy, sw, sh, 0.0f);
 }
 
 void gTexture::drawSub(int x, int y, int w, int h, int sx, int sy, int sw, int sh, float rotate) {
@@ -452,20 +442,29 @@ void gTexture::drawSub(const gRect& src, const gRect& dst, int pivotx, int pivot
 	drawSub(dst.left(), dst.top(), dst.getWidth(), dst.getHeight(), src.left(), src.top(), src.getWidth(), src.getHeight(), pivotx, pivoty, rotate);
 }
 
-void gTexture::drawSub(const gRect& src, const gRect& dst, glm::vec2 pivotPointCoords, float rotate) {
-	drawSub(dst.left(), dst.top(), dst.getWidth(), dst.getHeight(), src.left(), src.top(), src.getWidth(), src.getHeight(), pivotPointCoords.x, pivotPointCoords.y, rotate);
+void gTexture::drawSub(const gRect& src, const gRect& dst, glm::vec2 pivot, float rotate) {
+	drawSub(dst.left(), dst.top(), dst.getWidth(), dst.getHeight(), src.left(), src.top(), src.getWidth(), src.getHeight(), pivot.x, pivot.y, rotate);
 }
 
-void gTexture::drawSub(glm::vec2 pos, glm::vec2 size, glm::vec2 subpos, glm::vec2 subsize, float rotate) {
-	setupRenderData(subpos.x, subpos.y, subsize.x, subsize.y);
-	bsubpartdrawn = true;
-	draw(pos, size, rotate);
+void gTexture::drawSub(glm::vec2 pos, glm::vec2 size, glm::vec2 subPos, glm::vec2 subSize, float rotate) {
+	drawSub(pos, size, subPos, subSize, glm::vec2(size.x / 2.0f, size.y / 2.0f), rotate);
 }
 
-void gTexture::drawSub(glm::vec2 pos, glm::vec2 size, glm::vec2 subpos, glm::vec2 subsize, glm::vec2 pivotPointCoords, float rotate) {
-	setupRenderData(subpos.x, subpos.y, subsize.x, subsize.y);
-	bsubpartdrawn = true;
-	draw(pos, size, pivotPointCoords, rotate);
+void gTexture::drawSub(glm::vec2 pos, glm::vec2 size, glm::vec2 subPos, glm::vec2 subSize, glm::vec2 pivot, float rotate) {
+	issubpart = true;
+	glm::vec2 texturesize = glm::vec2(getWidth(), getHeight());
+	subscale = texturesize / subSize;
+	subpos = subscale * (subPos / texturesize);
+
+	beginDraw();
+	imagematrix = glm::translate(imagematrix, glm::vec3(pos, 0.0f));  // first translate (transformations are: scale happens first, then rotation, and then final translation happens; reversed order)
+
+	imagematrix = glm::translate(imagematrix, glm::vec3(pivot.x, pivot.y, 0.0f));
+	imagematrix = glm::rotate(imagematrix, glm::radians(rotate), glm::vec3(0.0f, 0.0f, 1.0f));
+	imagematrix = glm::translate(imagematrix, glm::vec3(-pivot.x, -pivot.y, 0.0f));
+
+	imagematrix = glm::scale(imagematrix, glm::vec3(size.x, size.y, 1.0f));
+	endDraw();
 }
 
 void gTexture::beginDraw() {
@@ -479,6 +478,13 @@ void gTexture::endDraw() {
 	renderer->getImageShader()->setMat4("model", imagematrix);
 	renderer->getImageShader()->setVec4("spriteColor", glm::vec4(renderer->getColor()->r, renderer->getColor()->g, renderer->getColor()->b, renderer->getColor()->a));
 	renderer->getImageShader()->setInt("image", 0);
+	renderer->getImageShader()->setInt("maskimage", 1);
+	renderer->getImageShader()->setBool("isAlphaMasking", ismaskloaded);
+	renderer->getImageShader()->setBool("isSubPart", issubpart);
+	if (issubpart) {
+		renderer->getImageShader()->setVec2("subPos", subpos);
+		renderer->getImageShader()->setVec2("subScale", subscale);
+	}
 
 	G_CHECK_GL(glActiveTexture(GL_TEXTURE0));
 
@@ -502,12 +508,10 @@ void gTexture::endDraw() {
 		G_CHECK_GL(glDisable(GL_BLEND));
 	}
 	unbind();
-	if(bsubpartdrawn) {	setupRenderData(); }
 }
 
 void gTexture::setupRenderData() {
 	setupRenderData(0, 0, width, height);
-	bsubpartdrawn = false;
 }
 
 void gTexture::cleanupAll() {
@@ -544,37 +548,34 @@ void gTexture::cleanupData() {
 
 void gTexture::setupRenderData(int sx, int sy, int sw, int sh) {
 	if(!isloaded) {
-//		G_CHECK_GL(glDeleteBuffers(1, &quadVBO));
-//		G_CHECK_GL(glDeleteVertexArrays(1, &quadVAO));
 		G_CHECK_GL(glGenVertexArrays(1, &quadVAO));
 		G_CHECK_GL(glGenBuffers(1, &quadVBO));
 		isloaded = true;
 	}
-	float vertices[] = {
-			// pos      // tex
-			0.0f, 1.0f, (float)sx / width, (float)(sy + sh) / height,
-			1.0f, 0.0f, (float)(sx + sw) / width, (float)sy / height,
-			0.0f, 0.0f, (float)sx / width, (float)sy / height,
-
-			0.0f, 1.0f, (float)sx / width, (float)(sy + sh) / height,
-			1.0f, 1.0f, (float)(sx + sw) / width, (float)(sy + sh) / height,
-			1.0f, 0.0f, (float)(sx + sw) / width, (float)sy / height
-	};
-	float vertices2[] = {
-			// pos      // tex
-			0.0f, 1.0f, (float)sx / width, (float)(sy) / height,
-			1.0f, 0.0f, (float)(sx + sw) / width, (float)(sy + sh) / height,
-			0.0f, 0.0f, (float)sx / width, (float)(sy + sh) / height,
-
-			0.0f, 1.0f, (float)sx / width, (float)(sy) / height,
-			1.0f, 1.0f, (float)(sx + sw) / width, (float)(sy) / height,
-			1.0f, 0.0f, (float)(sx + sw) / width, (float)(sy + sh) / height
-	};
-
 	G_CHECK_GL(glBindBuffer(GL_ARRAY_BUFFER, quadVBO));
 	if (isfbo || ishdr) {
-		G_CHECK_GL(glBufferData(GL_ARRAY_BUFFER, sizeof(vertices2), vertices2, GL_STATIC_DRAW));
+		float vertices[] = {
+				// pos      // tex
+				0.0f, 1.0f, (float)sx / width, (float)(sy) / height,
+				1.0f, 0.0f, (float)(sx + sw) / width, (float)(sy + sh) / height,
+				0.0f, 0.0f, (float)sx / width, (float)(sy + sh) / height,
+
+				0.0f, 1.0f, (float)sx / width, (float)(sy) / height,
+				1.0f, 1.0f, (float)(sx + sw) / width, (float)(sy) / height,
+				1.0f, 0.0f, (float)(sx + sw) / width, (float)(sy + sh) / height
+		};
+		G_CHECK_GL(glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW));
 	} else {
+		float vertices[] = {
+				// pos      // tex
+				0.0f, 1.0f, (float)sx / width, (float)(sy + sh) / height,
+				1.0f, 0.0f, (float)(sx + sw) / width, (float)sy / height,
+				0.0f, 0.0f, (float)sx / width, (float)sy / height,
+
+				0.0f, 1.0f, (float)sx / width, (float)(sy + sh) / height,
+				1.0f, 1.0f, (float)(sx + sw) / width, (float)(sy + sh) / height,
+				1.0f, 0.0f, (float)(sx + sw) / width, (float)sy / height
+		};
 		G_CHECK_GL(glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW));
 	}
 

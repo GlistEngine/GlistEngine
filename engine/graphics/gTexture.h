@@ -92,24 +92,24 @@ public:
 	void draw(int x, int y, int w, int h, float rotate);
 	void draw(int x, int y, int w, int h, int pivotx, int pivoty, float rotate);
 	void draw(glm::vec2 position, glm::vec2 size, float rotate = 0.0f);
-	void draw(glm::vec2 position, glm::vec2 size, glm::vec2 pivotPointCoords, float rotate = 0.0f);
+	void draw(glm::vec2 position, glm::vec2 size, glm::vec2 pivot, float rotate = 0.0f);
 
 	void drawSub(int x, int y, int sx, int sy, int sw, int sh);
 	void drawSub(int x, int y, int w, int h, int sx, int sy, int sw, int sh);
 	void drawSub(int x, int y, int w, int h, int sx, int sy, int sw, int sh, float rotate);
 	void drawSub(int x, int y, int w, int h, int sx, int sy, int sw, int sh, int pivotx, int pivoty, float rotate);
 	void drawSub(glm::vec2 pos, glm::vec2 size, glm::vec2 subpos, glm::vec2 subsize, float rotate = 0.0f);
-	void drawSub(glm::vec2 pos, glm::vec2 size, glm::vec2 subpos, glm::vec2 subsize, glm::vec2 pivotPointCoords, float rotate = 0.0f);
+	void drawSub(glm::vec2 pos, glm::vec2 size, glm::vec2 subpos, glm::vec2 subsize, glm::vec2 pivot, float rotate = 0.0f);
 	void drawSub(const gRect& src, const gRect& dst, float rotate = 0.f);
 	void drawSub(const gRect& src, const gRect& dst, int pivotx, int pivoty, float rotate = 0.f);
-	void drawSub(const gRect& src, const gRect& dst, glm::vec2 pivotPointCoords, float rotate = 0.f);
+	void drawSub(const gRect& src, const gRect& dst, glm::vec2 pivot, float rotate = 0.f);
 
 	void setData(unsigned char* textureData, bool isMutable = false, bool isStbImage = false, bool clean = true);
 
 	void setupRenderData();
 
-  void cleanupData();
-  void cleanupAll();
+	void cleanupData();
+	void cleanupAll();
 
 protected:
 	std::string fullpath, directory;
@@ -134,7 +134,7 @@ protected:
 	float* getDataHDR();
 	bool ismaskloaded;
 	gTexture* masktexture;
-  bool istextureallocated;
+	bool istextureallocated;
 
 private:
 	std::string texturetype[4];
@@ -144,9 +144,11 @@ private:
 	void setupRenderData(int sx, int sy, int sw, int sh);
 	void beginDraw();
 	void endDraw();
-	bool bsubpartdrawn;
 	bool isfbo;
 	bool isloaded;
+	bool issubpart;
+	glm::vec2 subpos;
+	glm::vec2 subscale;
 };
 
 #endif /* ENGINE_GRAPHICS_GTEXTURE_H_ */
