@@ -90,19 +90,20 @@ void gGUIListbox::insertData(int lineNo, std::string lineData) {
 }
 
 void gGUIListbox::removeData(int lineNo) {
-	data.erase(data.begin() + lineNo - 1);
-	icons.erase(icons.begin() + lineNo - 1);
+	if(lineNo>=0 && lineNo < data.size()) data.erase(data.begin() + lineNo);
+	if(lineNo>=0 && lineNo < icons.size()) icons.erase(icons.begin() + lineNo);
 	linenum = data.size();
 	if(linenum > maxlinenum) linenum = maxlinenum;
 	totalh = data.size() * lineh;
 	if(totalh < height) totalh = height;
 	if(selectedno > data.size() - 1) {
-		selectedno = data.size() - 1;
-		flno -= 1;
-		if(flno < 0) flno = 0;
-		firsty -= 3 * scrolldiff;
-		if(firsty < 0) firsty = 0;
+		selectedno = data.size();
 	}
+	if (flno > selectedno) {
+		flno = selectedno;
+		firsty = flno * lineh;
+	}
+	if (firsty < 0) firsty = 0;
 }
 
 void gGUIListbox::removeSelected() {
@@ -237,4 +238,8 @@ gColor gGUIListbox::getIconsColor() {
 
 int gGUIListbox::getVisibleLineNumber() {
 	return minlinenum;
+}
+
+void gGUIListbox::keyPressed(int key) {
+
 }
