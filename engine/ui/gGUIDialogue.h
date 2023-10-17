@@ -83,7 +83,7 @@ public:
 	void setIsMaximized(bool isMaximized);
 	void transformDialogue(int left, int top, int width, int height);
 
-	void setMessageText(gGUIText* messageText);
+	void setMessageText(std::string messageText);
 	std::string getMessageText();
 	void setIconType(int iconId);
 	void setDialogueType(int typeId);
