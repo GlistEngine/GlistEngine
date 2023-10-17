@@ -31,7 +31,7 @@ var classgGUIDialogue =
     [ "setIsMaximized", "classgGUIDialogue.html#a057b76ade5eb80c95093f2d14d5bb9e7", null ],
     [ "setMaximizeButton", "classgGUIDialogue.html#a587591f0cca8e6f8d7df96c135b0481d", null ],
     [ "setMessageBar", "classgGUIDialogue.html#ad19a3db8e4a8454b391f1e3bbd2550e8", null ],
-    [ "setMessageText", "classgGUIDialogue.html#a86f6eb95085ed8f595b9db13dbb70933", null ],
+    [ "setMessageText", "classgGUIDialogue.html#a553f9f53c437628467c25d68ac32fc88", null ],
     [ "setMinimizeButton", "classgGUIDialogue.html#a859a8f699009a60d10a9ec713228f243", null ],
     [ "setTitleBar", "classgGUIDialogue.html#a4c1e5bd6a8b6769b9181083c2c87b510", null ],
     [ "show", "classgGUIDialogue.html#a0e5dca69dead2bc754818a10c25f6d19", null ],
