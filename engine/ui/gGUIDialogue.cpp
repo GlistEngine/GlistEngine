@@ -463,8 +463,8 @@ void gGUIDialogue::mouseReleased(int x, int y, int button) {
 	if (buttontrigger == EVENT_EXIT) {buttonevent = EVENT_EXIT; buttontrigger = EVENT_NONE;}
 }
 
-void gGUIDialogue::setMessageText(gGUIText *messageText) {
-	defmessagetext.setText(messageText->getText());
+void gGUIDialogue::setMessageText(std::string messageText) {
+	defmessagetext.setText(messageText);
 }
 
 std::string gGUIDialogue::getMessageText() {
