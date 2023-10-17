@@ -50,7 +50,7 @@ private:
 	int textboxw, buttonw;
 	int textboxh;
 	int listx, listy, listw;
-	bool listopened, selectedline, listexpanded, pressedonlist, buttonpressed;
+	bool listopened, selectedline, listexpanded, pressedonlist, buttonpressed, ispressed;
 	bool lopened;
 	gGUIFrame *frame;
 	std::string fTitle;

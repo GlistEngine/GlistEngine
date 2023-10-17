@@ -37,6 +37,7 @@ gGUIDropdownList::gGUIDropdownList() {
 	textboxw = 0;
 	rootelement = nullptr;
 	list.setTitleOn(false);
+	ispressed = false;
 
 
 	actionmanager.addAction(&button, G_GUIEVENT_BUTTONRELEASED, this, G_GUIEVENT_TREELISTOPENEDONDROPDOWNLIST);
@@ -72,10 +73,14 @@ void gGUIDropdownList::set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, g
 void gGUIDropdownList::onGUIEvent(int guiObjectId, int eventType, int sourceEventType, std::string value1, std::string value2) {
 	if(sourceEventType == G_GUIEVENT_BUTTONRELEASED) {
 		buttonpressed = listopened;
+		ispressed = false;
 		frame->addTreelist(&list, listx, listy, listw);
 		root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_TREELISTOPENEDONDROPDOWNLIST);
 		actionmanager.onGUIEvent(id, G_GUIEVENT_TREELISTOPENEDONDROPDOWNLIST);
 		listopened = !listopened;
+	}
+	if(sourceEventType == G_GUIEVENT_BUTTONPRESSED){
+		ispressed = true;
 	}
 	if(sourceEventType == G_GUIEVENT_TREELISTSELECTED) {
 		selectedline = listopened;
@@ -126,6 +131,7 @@ void gGUIDropdownList::mousePressed(int x, int y, int button) {
 	gGUIContainer::mousePressed(x, y, button);
 	if(listopened)
 		list.mousePressed(x, y, button);
+	ispressed = true;
 }
 
 void gGUIDropdownList::mouseReleased(int x, int y, int button) {
@@ -149,6 +155,7 @@ void gGUIDropdownList::mouseReleased(int x, int y, int button) {
         frame->addTreelist(nullptr, listx, listy, listw);
     }
     pressedonlist = false;
+    ispressed = false;
 }
 
 void gGUIDropdownList::mouseScrolled(int x, int y) {
