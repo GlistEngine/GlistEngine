@@ -4,8 +4,12 @@ else()
 	cmake_minimum_required (VERSION 3.10.2)
 endif()
 
-set(GLIST_CXX_STANDARD 14)
-set(GLIST_CXX_STANDARD_REQUIRED True)
+if(NOT DEFINED GLIST_CXX_STANDARD)
+	set(GLIST_CXX_STANDARD 14)
+endif()
+if(NOT DEFINED GLIST_CXX_STANDARD_REQUIRED)
+	set(GLIST_CXX_STANDARD_REQUIRED True)
+endif()
 
 # Configure compiler and linker as you need
 set(GLIST_CXX_FLAGS_COMMON
