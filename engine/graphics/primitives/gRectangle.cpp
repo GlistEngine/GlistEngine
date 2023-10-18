@@ -69,17 +69,21 @@ void gRectangle::setRectanglePoints(float x, float y, float w, float h, bool isF
 	vertex4.position.z = 0.0f;
 	verticessb.push_back(vertex4);
 
-	indicessb.push_back(0);
-	indicessb.push_back(1);
-	indicessb.push_back(2);
-	indicessb.push_back(3);
-	indicessb.push_back(0);
-
-
+	if (isFilled) {
+		indicessb.push_back(0);
+        indicessb.push_back(1);
+		indicessb.push_back(3);
+		indicessb.push_back(2);
+		setDrawMode(gMesh::DRAWMODE_TRIANGLESTRIP);
+	} else {
+		indicessb.push_back(0);
+		indicessb.push_back(1);
+		indicessb.push_back(2);
+		indicessb.push_back(3);
+		indicessb.push_back(0);
+		setDrawMode(gMesh::DRAWMODE_LINESTRIP);
+	}
 	setVertices(verticessb, indicessb);
-    if(!isFilled) setDrawMode(gMesh::DRAWMODE_LINESTRIP);
-    else setDrawMode(gMesh::DRAWMODE_TRIANGLESTRIP);
-
 }
 
 gRectangle::~gRectangle() {
