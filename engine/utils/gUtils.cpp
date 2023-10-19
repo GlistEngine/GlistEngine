@@ -11,9 +11,11 @@
 #include <chrono>
 #include <stdio.h>
 #include <ctype.h>
+#include <codecvt>
 #include <iterator>
 #include <unistd.h>
-#if defined(WIN32) || defined(LINUX) || TARGET_OS_OSX
+#include <sstream>
+#if defined(WIN32) || defined(LINUX) || defined(APPLE)
 #include <GLFW/glfw3.h>
 #endif
 #if defined(ANDROID)
@@ -376,10 +378,15 @@ std::string gToUpper(const std::string& src, const std::string & locale) {
 
 #ifdef WIN32
 std::string gCodepointToStr(unsigned int codepoint) {
-	char c;
-	wchar_t ch = (wchar_t)codepoint;
-	std::wctomb(&c, ch);
-	return std::string(1, c);
+    wchar_t wideCharacter = static_cast<wchar_t>(codepoint);
+
+    // Convert the wide character to a narrow string
+    std::wstringstream wss;
+    wss << wideCharacter;
+    std::wstring wideString = wss.str();
+    std::wstring_convert<std::codecvt_utf8<wchar_t>> utf8Converter;
+	std::string word = utf8Converter.to_bytes(wideString);
+    return word;
 }
 #else
 std::string gCodepointToStr(unsigned int codepoint) {

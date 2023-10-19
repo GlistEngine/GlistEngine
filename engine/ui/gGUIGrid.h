@@ -14,6 +14,8 @@
 #include "gGUIManager.h"
 #include <deque>
 #include <string.h>
+#include <array>
+#include <vector>
 
 //#include "gGUISizer.h"
 
@@ -184,6 +186,8 @@ public:
 	gColor* getSelectedAreaColor();
 	std::deque<Cell*> getSelectedCells();
 
+	void digitToString();
+
 	void drawContent();
 	void drawCellBackground();
 	void drawTitleRowBackground();
@@ -207,6 +211,7 @@ public:
 
 private:
 	static const int mousetolerance = 5;
+	const std::string errormessage = "Error";
 
 	std::string fixTextFunction(std::string text, int index);
 	std::string fixNumeric(std::string text);

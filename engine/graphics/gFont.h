@@ -184,7 +184,7 @@ private:
 
 	  std::vector<charProperties> cpset;
 	  std::vector<gTexture*> textures;
-	  std::deque<int> loadedcharacters;
+	  std::vector<int> loadedcharacters;
 	  static const int unloadedchar = 0;
 
 

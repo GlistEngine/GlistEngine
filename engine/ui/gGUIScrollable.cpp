@@ -57,6 +57,7 @@ gGUIScrollable::gGUIScrollable() {
 	titley = top + font->getStringHeight("AE");
 	titledy = font->getSize() * 1.8f;
 	boxfbo = new gFbo();
+	setTitleOn(false);
 }
 
 gGUIScrollable::~gGUIScrollable() {
@@ -103,8 +104,9 @@ void gGUIScrollable::draw() {
 		renderer->disableAlphaTest();
 		renderer->disableAlphaBlending();
 	}
+	renderer->setColor(fontcolor);
+	if(istitleon) font->drawText(title, titlex, titley);
 	renderer->setColor(0, 0, 0);
-	if(istitleon) font->drawText(title + ":", titlex, titley);
 	boxfbo->bind();
 	renderer->clearColor(0, 0, 0, 0);
 	drawContent();

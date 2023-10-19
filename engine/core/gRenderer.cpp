@@ -635,11 +635,13 @@ gRenderer::gRenderer() {
 
 	textureshader = new gShader();
 	textureshader->loadProgram(getShaderSrcTextureVertex(), getShaderSrcTextureFragment());
+	textureshader->use();
     textureshader->setMat4("projection", projectionmatrix);
     textureshader->setMat4("view", viewmatrix);
 
 	imageshader = new gShader();
 	imageshader->loadProgram(getShaderSrcImageVertex(), getShaderSrcImageFragment());
+	imageshader->use();
 	imageshader->setMat4("projection", projectionmatrix2d);
 
 	fontshader = new gShader();
@@ -647,6 +649,7 @@ gRenderer::gRenderer() {
 
 	skyboxshader = new gShader();
 	skyboxshader->loadProgram(getShaderSrcSkyboxVertex(), getShaderSrcSkyboxFragment());
+	skyboxshader->use();
 	skyboxshader->setMat4("projection", projectionmatrix);
 	skyboxshader->setMat4("view", viewmatrix);
 
@@ -683,6 +686,7 @@ gRenderer::gRenderer() {
 	lightingposition = glm::vec3(0.0f);
 	li = 0;
 
+	isfogenabled = false;
 	fogno = -1;
 	fogcolor.set(0.3f, 0.3f, 0.3f);
 	fogmode = gRenderer::FOGMODE_EXP;
@@ -1329,10 +1333,10 @@ const std::string gRenderer::getShaderSrcColorFragment() {
 "       vec3 lightDir = normalize(shadowLightPos - FragPos);\n"
 "       float bias = max(0.05 * (1.0 - dot(normal, lightDir)), 0.005);\n"
 "       float shadow = 0.0;\n"
-"       ivec2 texelSize = ivec2(1, 1) / textureSize(shadowMap, 0);\n"
+"       vec2 texelSize = 0.5 / textureSize(shadowMap, 0);\n"
 "       for(int x = -1; x <= 1; ++x) {\n"
 "           for(int y = -1; y <= 1; ++y) {\n"
-"               float pcfDepth = texture(shadowMap, projCoords.xy + vec2(x, y) * vec2(texelSize.x, texelSize.y)).r;\n"
+"               float pcfDepth = texture(shadowMap, projCoords.xy + vec2(x, y) * texelSize).r;\n"
 "               shadow += currentDepth - bias > pcfDepth  ? 1.0 : 0.0;\n"
 "           }\n"
 "       }\n"
@@ -1623,10 +1627,17 @@ const std::string gRenderer::getShaderSrcImageVertex() {
 "\n"
 "uniform mat4 model;\n"
 "uniform mat4 projection;\n"
+"uniform bool isSubPart;\n"
+"uniform vec2 subPos;\n"
+"uniform vec2 subScale;\n"
 "\n"
 "void main()\n"
 "{\n"
-"    TexCoords = vertex.zw;\n"
+"    if (isSubPart) {\n"
+"        TexCoords = (vertex.zw + subPos) / subScale;\n"
+"    } else {\n"
+"        TexCoords = vertex.zw;\n"
+"    }\n"
 "    gl_Position = projection * model * vec4(vertex.xy, 0.0, 1.0);\n"
 "}\n";
 
@@ -1648,6 +1659,7 @@ const std::string gRenderer::getShaderSrcImageFragment() {
 "uniform sampler2D maskimage;\n"
 "uniform vec4 spriteColor;\n"
 "uniform int isAlphaMasking;\n"
+
 "vec4 mask;\n"
 "\n"
 "void main()\n"

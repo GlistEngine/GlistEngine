@@ -40,6 +40,7 @@ private:
 	void statusbarAllTextDraw();
 	void updateStatusBarCoordinate(int w, int h);
 	void updateTextCoordinate(int w, int h);
+	int statusbarx, statusbary, statusbarw, statusbarh;
 };
 
 #endif /* UI_GGUISTATUSBAR_H_ */

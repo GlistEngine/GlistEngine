@@ -18,8 +18,8 @@ class gTexture : public gRenderObject {
 public:
 	static const int TEXTURETYPE_DIFFUSE, TEXTURETYPE_SPECULAR, TEXTURETYPE_NORMAL, TEXTURETYPE_HEIGHT;
 	static const int TEXTURETYPE_PBR_ALBEDO, TEXTURETYPE_PBR_ROUGHNESS, TEXTURETYPE_PBR_METALNESS, TEXTURETYPE_PBR_NORMAL, TEXTURETYPE_PBR_AO;
-	static const int TEXTUREWRAP_REPEAT, TEXTUREWRAP_CLAMP, TEXTUREWRAP_CLAMPTOEDGE;
-	static const int TEXTUREMINMAGFILTER_LINEAR, TEXTUREMINMAGFILTER_MIPMAPLINEAR, TEXTUREMINMAGFILTER_NEAREST;
+	static const int TEXTUREWRAP_REPEAT, TEXTUREWRAP_CLAMP, TEXTUREWRAP_CLAMPTOEDGE, TEXTUREWRAP_NEAREST;
+	static const int TEXTUREMINMAGFILTER_LINEAR, TEXTUREMINMAGFILTER_MIPMAPLINEAR, TEXTUREMINMAGFILTER_NEAREST, TEXTUREMINMAGFILTER_CLAMP;
 
 	gTexture();
 	gTexture(int w, int h, int format = GL_RGBA, bool isFbo = false);
@@ -59,7 +59,7 @@ public:
 	*/
 	unsigned int loadMaskTexture(const std::string& maskTexturePath);
 
-	unsigned int loadData(unsigned char* textureData, int width, int height, int componentNum, bool isFont = false);
+	unsigned int loadData(unsigned char* textureData, int width, int height, int componentNum, bool isMutable = false, bool isStbImage = false);
 
 	void bind() const;
 	void bind(int textureSlotNo) const;
@@ -92,21 +92,24 @@ public:
 	void draw(int x, int y, int w, int h, float rotate);
 	void draw(int x, int y, int w, int h, int pivotx, int pivoty, float rotate);
 	void draw(glm::vec2 position, glm::vec2 size, float rotate = 0.0f);
-	void draw(glm::vec2 position, glm::vec2 size, glm::vec2 pivotPointCoords, float rotate = 0.0f);
+	void draw(glm::vec2 position, glm::vec2 size, glm::vec2 pivot, float rotate = 0.0f);
 
 	void drawSub(int x, int y, int sx, int sy, int sw, int sh);
 	void drawSub(int x, int y, int w, int h, int sx, int sy, int sw, int sh);
 	void drawSub(int x, int y, int w, int h, int sx, int sy, int sw, int sh, float rotate);
 	void drawSub(int x, int y, int w, int h, int sx, int sy, int sw, int sh, int pivotx, int pivoty, float rotate);
 	void drawSub(glm::vec2 pos, glm::vec2 size, glm::vec2 subpos, glm::vec2 subsize, float rotate = 0.0f);
-	void drawSub(glm::vec2 pos, glm::vec2 size, glm::vec2 subpos, glm::vec2 subsize, glm::vec2 pivotPointCoords, float rotate = 0.0f);
+	void drawSub(glm::vec2 pos, glm::vec2 size, glm::vec2 subpos, glm::vec2 subsize, glm::vec2 pivot, float rotate = 0.0f);
 	void drawSub(const gRect& src, const gRect& dst, float rotate = 0.f);
 	void drawSub(const gRect& src, const gRect& dst, int pivotx, int pivoty, float rotate = 0.f);
-	void drawSub(const gRect& src, const gRect& dst, glm::vec2 pivotPointCoords, float rotate = 0.f);
+	void drawSub(const gRect& src, const gRect& dst, glm::vec2 pivot, float rotate = 0.f);
 
-	void setData(unsigned char* textureData, bool isMutable = false);
+	void setData(unsigned char* textureData, bool isMutable = false, bool isStbImage = false, bool clean = true);
 
 	void setupRenderData();
+
+	void cleanupData();
+	void cleanupAll();
 
 protected:
 	std::string fullpath, directory;
@@ -116,8 +119,8 @@ protected:
 	int width, height, componentnum;
 	unsigned char* data;
 	bool ismutable;
+	bool isstbimage;
 	int wraps, wrapt, filtermin, filtermag;
-	bool isfont;
 
 	unsigned char* getData();
 	bool isMutable();
@@ -127,10 +130,11 @@ protected:
 
 	bool ishdr;
 	float* datahdr;
-	void setDataHDR(float* textureData, bool isMutable = false);
+	void setDataHDR(float* textureData, bool isMutable = false, bool  isStbImage = false, bool clean = true);
 	float* getDataHDR();
 	bool ismaskloaded;
 	gTexture* masktexture;
+	bool istextureallocated;
 
 private:
 	std::string texturetype[4];
@@ -140,9 +144,11 @@ private:
 	void setupRenderData(int sx, int sy, int sw, int sh);
 	void beginDraw();
 	void endDraw();
-	bool bsubpartdrawn;
 	bool isfbo;
 	bool isloaded;
+	bool issubpart;
+	glm::vec2 subpos;
+	glm::vec2 subscale;
 };
 
 #endif /* ENGINE_GRAPHICS_GTEXTURE_H_ */

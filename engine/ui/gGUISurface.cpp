@@ -16,6 +16,7 @@ gGUISurface::gGUISurface() {
 	imageNum = 0;
 	totalh = 0;
 	maxHeight = bottom;
+	title = "Surface";
 }
 gGUISurface::~gGUISurface() {
 
@@ -43,10 +44,6 @@ void gGUISurface::set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseG
 }
 
 void gGUISurface::drawContent() {
-	renderer->setColor(gColor(0.0f, 0.0f, 0.0f, 0.0f));
-	title = "Surface";
-	font->drawText(title + ":", titlex, titley);
-
 	drawBackground();
 	drawShapes();
 }
@@ -125,9 +122,10 @@ void gGUISurface::drawShapes() {
 }
 
 void gGUISurface::drawBackground() {
-	renderer->setColor(gColor(1.0f, 	1.0f, 	1.0f, 	1.0f));//white
-	gDrawRectangle(0, 0, right, maxHeight, true);
-	totalh= maxHeight;
+	renderer->setColor(backgroundcolor);//white
+	gDrawRectangle(0, 0, right, bottom, true);
+	renderer->setColor(gColor(1.0f, 1.0f, 1.0f, 1.0f));//white
+	totalh = maxHeight;
 }
 
 void gGUISurface::setBorder(float thickness, float borderposition) {
@@ -293,6 +291,7 @@ void gGUISurface::mousePressed(int x, int y, int button) {
 	if(x >= (boxw - vsbw) && x < vsbw && y >= 0 && y < vsbh) {
 		mousepressedonlist = true;
 	}
+	root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_MOUSEPRESSED, gToStr(x), gToStr(y));
 }
 
 void gGUISurface::mouseReleased(int x, int y, int button) {
@@ -301,6 +300,7 @@ void gGUISurface::mouseReleased(int x, int y, int button) {
 		mousepressedonlist = false;
 		firsty = y;
 	}
+	root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_MOUSERELEASED, gToStr(x), gToStr(y));
 }
 
 //void gGUISurface::drawLine(float x1, float y1, float z1, float x2, float y2, float z2) {

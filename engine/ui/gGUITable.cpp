@@ -14,11 +14,6 @@ gGUITable::gGUITable() {
 	filew = 90;
 	fileh = 160;
 	maxcolumncount = screenwidth / (filew * 2);
-	selectedx = 0;
-	selectedy = 0;
-	selectedw = 0;
-	selectedh = 0;
-	selectedid = 0;
 	sonucw = 0;
 	sonuch = 0;
 	cornerspace = 10;
@@ -28,13 +23,23 @@ gGUITable::gGUITable() {
 	isselected = false;
 	ismoved = false;
 	screenwidth = 0;
-	screenheight = 0;
-	movedfileno = 0;
-	selectedfileno = 0;
+	screenheight = getScreenWidth();
+	movedfileno = getScreenHeight();
+	selectedfileno = -1;
+	mousepressedonlist = false;
 }
 
 gGUITable::~gGUITable() {
 
+}
+
+void gGUITable::set(gBaseApp *root, gBaseGUIObject *topParentGUIObject,
+		gBaseGUIObject *parentGUIObject, int parentSlotLineNo,
+		int parentSlotColumnNo, int x, int y, int w, int h) {
+	totalw = screenwidth;
+	totalh = screenheight;
+	gGUIScrollable::set(root, topParentGUIObject, parentGUIObject, parentSlotLineNo, parentSlotColumnNo, x, y, w, h);
+	setDimensions(totalw, totalh);
 }
 
 void gGUITable::update() {
@@ -72,7 +77,6 @@ void gGUITable::draw() {
 	renderer->setColor(backgroundcolor);
 	gDrawRectangle(0, 0, screenwidth, screenheight, true);
 	renderer->setColor(oldcolor);
-
 	//draw selected rectangle
 	if(isselected) {
 		gColor oldcolor = renderer->getColor();
@@ -110,7 +114,6 @@ void gGUITable::draw() {
 				 y + fileh + 10 + (index / maxcolumncount) * 200);
 		renderer->setColor(&oldcolor);
 	}
-
 }
 
 void gGUITable::addItem(gImage* image, std::string title) {
@@ -126,16 +129,21 @@ gColor* gGUITable::getFontColor() {
 	return &fcolor;
 }
 
-void gGUITable::setBackgroundTableColor(gColor color) {
+void gGUITable::setTableColor(gColor color) {
 	backgroundcolor = color;
 }
 
-gColor* gGUITable::getBackgroundTableColor() {
-	return &backgroundcolor;
+int gGUITable::setSelectedFileNo(int selectedFileNo) {
+	selectedfileno = selectedFileNo;
+	return selectedfileno;
 }
 
-void gGUITable::mouseDragged(int x, int y, int button) {
+int gGUITable::getSelectedFileNo() {
+	return selectedfileno;
+}
 
+gColor* gGUITable::getTableColor() {
+	return &backgroundcolor;
 }
 
 void gGUITable::mousePressed(int x, int y, int button) {
@@ -149,18 +157,6 @@ void gGUITable::mousePressed(int x, int y, int button) {
 			isselected = false;
 		}
 	}
-}
-
-void gGUITable::mouseReleased(int x, int y, int button) {
-}
-
-void gGUITable::mouseScrolled(int x, int y) {
-}
-
-void gGUITable::mouseEntered() {
-}
-
-void gGUITable::mouseExited() {
 }
 
 void gGUITable::mouseMoved(int x, int y) {

@@ -121,6 +121,7 @@ int gBaseGUIObject::getParentSlotColumnNo() {
 
 void gBaseGUIObject::setTitle(std::string title) {
 	this->title = title;
+	setTitleOn(true);
 }
 
 std::string gBaseGUIObject::getTitle() {

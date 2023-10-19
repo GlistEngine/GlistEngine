@@ -13,17 +13,17 @@ gGUIStatusBar::gGUIStatusBar() {
 
 	sizerrescaling = true;
 	selectedtext = -1;
-	width = getScreenWidth();
+	width = getScreenWidth() + 1;
 	height = 30;
 	top = 0;
 	left = getScreenHeight() - height;
 	//top = getScreenHeight() - statusbarh;
 	setSizer(&statussizer);
 	//text font
-	textx[0] = 15;
-	textx[1] = left + width / 2;
-	textx[2] = textx[1] + width / 6;
-	textx[3] = textx[2] + width / 6;
+	 	textx[0] = 15;
+	    textx[1] = textx[0] + width / 6;
+	    textx[2] = textx[1] + width / 6;
+	    textx[3] = textx[2] + width / 3;
 	for (int order = 0; order < textobjectsize; ++order) {
 		text[order] = "";
 		texty[order] = left + height / 2;
@@ -68,18 +68,19 @@ void gGUIStatusBar::windowResized(int w, int h) {
 
 void gGUIStatusBar::updateStatusBarCoordinate(int w, int h) {
 	 //update necessary coordinate update x and h not needed
-//	 statusbary = h - height;
-//	 statusbarw = getScreenWidth();
-//	 statusbarx = 0;
-//	 statusbary = getScreenHeight() - statusbarh;
+	// statusbary = h - height;
+	 //statusbarw = getScreenWidth();
+	 //statusbarx = 0;
+	 //statusbary = getScreenHeight() - statusbarh;
 }
 
 void gGUIStatusBar::updateTextCoordinate(int w, int h) {
  	for (int order = 0; order < textobjectsize; ++order) {
  		textx[0] = 15;
- 		textx[1] = left + width / 2;
+ 		textx[1] = textx[0] + width / 6;
  		textx[2] = textx[1] + width / 6;
- 		textx[3] = textx[2] + width / 6;
+ 	    textx[3] = textx[2] + width / 3;
+
  		texty[order] = top + height / 2;
  		textsliderx[order] = textx[order];
  		textslidery[order] = top;
