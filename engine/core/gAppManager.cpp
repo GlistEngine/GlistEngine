@@ -28,12 +28,6 @@
 #   include "gIOSMain.h"
 #endif
 
-static void clearfn()
-{
-    glClearColor(1.0f, 1.0f, 0.0f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-}
-
 void gStartEngine(gBaseApp* baseApp, const std::string& appName, int windowMode, int width, int height, bool isResizable) {
     gStartEngine(baseApp, appName, windowMode, width, height, G_SCREENSCALING_AUTO, width, height, isResizable);
 }
@@ -384,7 +378,6 @@ void gAppManager::setDeviceOrientation(DeviceOrientation orientation) {
 #endif
 
 void gAppManager::tick() {
-    clearfn();
     totalupdates++;
     if(!usewindow) {
         app->update();
