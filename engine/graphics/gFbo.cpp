@@ -87,7 +87,7 @@ void gFbo::allocate(int width, int height, bool isDepthMap) {
 		texture = new gTexture(width, height, GL_DEPTH_COMPONENT, true);
 		texture->bind();
 		G_CHECK_GL(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, texture->getId(), 0));
-#if defined(ANDROID) || TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
+#if defined(GLIST_MOBILE)
 		G_CHECK_GL(glDrawBuffers(0, GL_NONE));
 #else
 		G_CHECK_GL(glDrawBuffer(GL_NONE));

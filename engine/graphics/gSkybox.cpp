@@ -84,7 +84,7 @@ void gSkybox::loadSkybox(gImage* images) {
 	skymapslot = GL_TEXTURE0;
 	skymapint = 0;
 
-#if defined(ANDROID) || TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
+#if defined(GLIST_MOBILE)
 	glEnable(GL_TEXTURE_CUBE_MAP); // OpenGL ES does not support GL_TEXTURE_CUBE_MAP_SEAMLESS
 #else
 	glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
@@ -120,7 +120,7 @@ void gSkybox::loadDataSkybox(std::string *data, int width, int height) {
 	skymapslot = GL_TEXTURE0;
 	skymapint = 0;
 
-#if defined(ANDROID) || TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
+#if defined(GLIST_MOBILE)
 	glEnable(GL_TEXTURE_CUBE_MAP); // OpenGL ES does not support GL_TEXTURE_CUBE_MAP_SEAMLESS
 #else
 	glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
@@ -164,7 +164,7 @@ unsigned int gSkybox::loadEquirectangular(const std::string& fullPath) {
 //	glGenTextures(1, &id);
 //	glBindTexture(GL_TEXTURE_CUBE_MAP, id);
 
-#if defined(ANDROID) || TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
+#if defined(GLIST_MOBILE)
 	glEnable(GL_TEXTURE_CUBE_MAP); // OpenGL ES does not support GL_TEXTURE_CUBE_MAP_SEAMLESS
 #else
 	glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);

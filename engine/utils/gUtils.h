@@ -69,6 +69,12 @@
     // POSIX
 #endif
 
+#if defined(ANDROID) || TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
+#   ifndef GLIST_MOBILE
+#       define GLIST_MOBILE
+#   endif
+#endif
+
 
 #ifndef PI
 	#define PI       3.14159265358979323846

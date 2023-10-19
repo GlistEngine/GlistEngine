@@ -9,6 +9,7 @@
 #define GWINDOWEVENTS_H_
 
 #include "gEvent.h"
+#include "gUtils.h"
 
 class gKeyEvent : public gEvent {
 public:
@@ -204,7 +205,7 @@ private:
 };
 
 
-#if defined(ANDROID) || TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
+#if defined(GLIST_MOBILE)
 enum InputType {
 	INPUTTYPE_UNKNOWN = 0,
 	INPUTTYPE_FINGER = 1,
@@ -289,6 +290,6 @@ private:
 	DeviceOrientation orientation;
 };
 
-#endif /* defined(ANDROID) || TARGET_OS_IPHONE || TARGET_OS_SIMULATOR */
+#endif /* defined(GLIST_MOBILE) */
 
 #endif /* GWINDOWEVENTS_H_ */
