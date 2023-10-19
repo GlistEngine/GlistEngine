@@ -1626,10 +1626,17 @@ const std::string gRenderer::getShaderSrcImageVertex() {
 "\n"
 "uniform mat4 model;\n"
 "uniform mat4 projection;\n"
+"uniform bool isSubPart;\n"
+"uniform vec2 subPos;\n"
+"uniform vec2 subScale;\n"
 "\n"
 "void main()\n"
 "{\n"
-"    TexCoords = vertex.zw;\n"
+"    if (isSubPart) {\n"
+"        TexCoords = (vertex.zw + subPos) / subScale;\n"
+"    } else {\n"
+"        TexCoords = vertex.zw;\n"
+"    }\n"
 "    gl_Position = projection * model * vec4(vertex.xy, 0.0, 1.0);\n"
 "}\n";
 
@@ -1651,6 +1658,7 @@ const std::string gRenderer::getShaderSrcImageFragment() {
 "uniform sampler2D maskimage;\n"
 "uniform vec4 spriteColor;\n"
 "uniform int isAlphaMasking;\n"
+
 "vec4 mask;\n"
 "\n"
 "void main()\n"

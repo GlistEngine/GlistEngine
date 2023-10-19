@@ -87,8 +87,8 @@ bool gFile::openStream(int fileMode, bool isBinary) {
 	}
 
 	if(!stream) {
-		std::cerr << "Error opening file " + path.u8string() << std::endl;
-		return -1 ;
+        gLoge("gFile") << "Error opening file " << path;
+		return -1;
 	}
 
 	return stream.good();
@@ -117,19 +117,19 @@ std::string gFile::getDirectory() {
 }
 
 bool gFile::exists() {
-	return doesFileExist(path.u8string());
+	return doesFileExist(path.string());
 }
 
 bool gFile::isFile() {
-	return isFile(path.u8string());
+	return isFile(path.string());
 }
 
 bool gFile::isLink() {
-	return isLink(path.u8string());
+	return isLink(path.string());
 }
 
 bool gFile::isDirectory() {
-	return isDirectory(path.u8string());
+	return isDirectory(path.string());
 }
 
 bool gFile::isDevice() {
