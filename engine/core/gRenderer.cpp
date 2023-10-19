@@ -635,13 +635,11 @@ gRenderer::gRenderer() {
 
 	textureshader = new gShader();
 	textureshader->loadProgram(getShaderSrcTextureVertex(), getShaderSrcTextureFragment());
-	textureshader->use();
     textureshader->setMat4("projection", projectionmatrix);
     textureshader->setMat4("view", viewmatrix);
 
 	imageshader = new gShader();
 	imageshader->loadProgram(getShaderSrcImageVertex(), getShaderSrcImageFragment());
-	imageshader->use();
 	imageshader->setMat4("projection", projectionmatrix2d);
 
 	fontshader = new gShader();
@@ -649,7 +647,6 @@ gRenderer::gRenderer() {
 
 	skyboxshader = new gShader();
 	skyboxshader->loadProgram(getShaderSrcSkyboxVertex(), getShaderSrcSkyboxFragment());
-	skyboxshader->use();
 	skyboxshader->setMat4("projection", projectionmatrix);
 	skyboxshader->setMat4("view", viewmatrix);
 

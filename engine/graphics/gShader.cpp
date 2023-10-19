@@ -235,6 +235,7 @@ void gShader::setMat2(const std::string &name, const glm::mat2 &mat) const {
 #ifdef DEBUG
     assert(loaded);
 #endif
+    use();
     G_CHECK_GL(glUniformMatrix2fv(glGetUniformLocation(id, name.c_str()), 1, GL_FALSE, &mat[0][0]));
 }
 
@@ -243,6 +244,7 @@ void gShader::setMat3(const std::string &name, const glm::mat3 &mat) const {
 #ifdef DEBUG
     assert(loaded);
 #endif
+    use();
     G_CHECK_GL(glUniformMatrix3fv(glGetUniformLocation(id, name.c_str()), 1, GL_FALSE, &mat[0][0]));
 }
 
