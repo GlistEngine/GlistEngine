@@ -22,6 +22,11 @@
 #include <GLES3/gl3ext.h>
 #include <GLES3/gl3platform.h>
 #endif
+#if TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
+#	include <OpenGLES/ES3/gl.h>
+#	include <OpenGLES/ES3/glext.h>
+#	include <OpenGLES/gltypes.h>
+#endif
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp> // glm::translate, glm::rotate, glm::scale, glm::perspective

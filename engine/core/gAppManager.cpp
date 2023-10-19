@@ -15,13 +15,24 @@
 #include <thread>
 
 // Platform specific window implementation
-#if defined(WIN32) || defined(LINUX) || defined(APPLE)
+#if defined(WIN32) || defined(LINUX) || TARGET_OS_OSX
 #include "gGLFWWindow.h"
 #elif defined(ANDROID)
 #include "gAndroidWindow.h"
 #include "gAndroidCanvas.h"
 #include "gAndroidApp.h"
+#elif TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
+#   include "gIOSWindow.h"
+#   include "gIOSCanvas.h"
+#   include "gIOSApp.h"
+#   include "gIOSMain.h"
 #endif
+
+static void clearfn()
+{
+    glClearColor(1.0f, 1.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
 
 void gStartEngine(gBaseApp* baseApp, const std::string& appName, int windowMode, int width, int height, bool isResizable) {
     gStartEngine(baseApp, appName, windowMode, width, height, G_SCREENSCALING_AUTO, width, height, isResizable);
@@ -30,16 +41,18 @@ void gStartEngine(gBaseApp* baseApp, const std::string& appName, int windowMode,
 void gStartEngine(gBaseApp* baseApp, const std::string& appName, int windowMode, int unitWidth, int unitHeight, int screenScaling, int width, int height, bool isResizable) {
     if(windowMode == G_WINDOWMODE_NONE) windowMode = G_WINDOWMODE_APP;
     if(windowMode == G_WINDOWMODE_FULLSCREENGUIAPP || windowMode == G_WINDOWMODE_GUIAPP) screenScaling = G_SCREENSCALING_NONE;
-#ifndef ANDROID
+#if TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
+    ios_main(baseApp, appName.c_str(), windowMode, unitWidth, unitHeight, screenScaling, width, height, isResizable);
+#elif defined(ANDROID)
+    new gAppManager(appName, baseApp, width, height, windowMode, unitWidth, unitHeight, screenScaling, isResizable, G_LOOPMODE_NORMAL);
+#else
     gAppManager manager(appName, baseApp, width, height, windowMode, unitWidth, unitHeight, screenScaling, isResizable, G_LOOPMODE_NORMAL);
 	manager.runApp();
-#else
-    new gAppManager(appName, baseApp, width, height, windowMode, unitWidth, unitHeight, screenScaling, isResizable, G_LOOPMODE_NORMAL);
 #endif
 }
 
 void gStartEngine(gBaseApp* baseApp, const std::string& appName, int loopMode) {
-#ifndef ANDROID
+#if !(defined(ANDROID) || TARGET_OS_IPHONE || TARGET_OS_SIMULATOR)
 	gAppManager manager(appName, baseApp, 0, 0, G_WINDOWMODE_NONE, 0, 0, G_SCREENSCALING_NONE, false, loopMode);
 	manager.runApp();
 #else
@@ -112,8 +125,10 @@ gAppManager::gAppManager(const std::string& appName, gBaseApp *baseApp, int widt
 	}
 	if(windowMode != G_WINDOWMODE_NONE) {
 		usewindow = true;
-#ifdef ANDROID
+#if defined(ANDROID)
 		window = new gAndroidWindow();
+#elif TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
+        window = new gIOSWindow();
 #else
 		window = new gGLFWWindow();
 #endif
@@ -190,7 +205,7 @@ void gAppManager::loop() {
 #ifdef DEBUG
     if(usewindow) {
 		assert(window);
-        assert(gRenderObject::getRenderer());
+//        assert(gRenderObject::getRenderer());
     }
 #endif
     //gLogi("gAppManager") << "starting loop";
@@ -205,6 +220,7 @@ void gAppManager::loop() {
 	}
 #endif
 
+#if !(TARGET_OS_IPHONE || TARGET_OS_SIMULATOR)
     while (isrunning && (!usewindow || !window->getShouldClose())) {
         // Delta time calculations
         endtime = AppClock::now();
@@ -234,6 +250,7 @@ void gAppManager::loop() {
         window->close();
     }
     initialized = false;
+#endif // !(TARGET_OS_IPHONE || TARGET_OS_SIMULATOR)
 }
 
 void gAppManager::stop() {
@@ -367,6 +384,7 @@ void gAppManager::setDeviceOrientation(DeviceOrientation orientation) {
 #endif
 
 void gAppManager::tick() {
+    clearfn();
     totalupdates++;
     if(!usewindow) {
         app->update();
@@ -443,7 +461,7 @@ void gAppManager::onEvent(gEvent& event) {
     dispatcher.dispatch<gWindowLoseFocusEvent>(G_BIND_FUNCTION(onWindowLoseFocusEvent));
     dispatcher.dispatch<gJoystickConnectEvent>(G_BIND_FUNCTION(onJoystickConnectEvent));
     dispatcher.dispatch<gJoystickDisconnectEvent>(G_BIND_FUNCTION(onJoystickDisconnectEvent));
-#ifdef ANDROID
+#if defined(ANDROID) || TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
     dispatcher.dispatch<gAppPauseEvent>(G_BIND_FUNCTION(onAppPauseEvent));
     dispatcher.dispatch<gAppResumeEvent>(G_BIND_FUNCTION(onAppResumeEvent));
     dispatcher.dispatch<gDeviceOrientationChangedEvent>(G_BIND_FUNCTION(onDeviceOrientationChangedEvent));
@@ -635,19 +653,71 @@ bool gAppManager::onJoystickDisconnectEvent(gJoystickDisconnectEvent& event) {
     return false;
 }
 
-#ifdef ANDROID
+#if TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
+
+void gAppManager::iosLoop()
+{
+    if(!(isrunning && (!usewindow || !window->getShouldClose())))
+    {
+        app->stop();
+        gRenderObject::destroyRenderer();
+        if(usewindow) {
+            window->close();
+        }
+        initialized = false;
+    }
+    
+    // Delta time calculations
+    endtime = AppClock::now();
+    deltatime = endtime - starttime;
+    totaltime += deltatime.count();
+    starttime = endtime;
+
+    tick();
+
+    if(totaltime >= 1'000'000'000) {
+        totaltime = 0;
+        totalupdates = 0;
+        totaldraws = 0;
+    }
+
+    if(!usewindow || !window->vsync) {
+        double sleepTime = (targettimestep - (AppClock::now() - starttime)).count() / 1'000'000'000.0;
+        if(sleepTime > 0) {
+            preciseSleep(sleepTime);
+        }
+    }
+    //gLogi("gAppManager") << "stopping loop";
+}
+
+#endif // TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
+
+#if defined(ANDROID) || TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
+
 bool gAppManager::onAppPauseEvent(gAppPauseEvent& event) {
     submitToMainThread([this]() {
 		if(!isrendering) {
 			return;
 		}
         isrendering = false;
-		if (auto* androidapp = dynamic_cast<gAndroidApp*>(app)) {
-			androidapp->pause();
+		if (
+#if defined(ANDROID)
+            auto* mobileapp = dynamic_cast<gAndroidApp*>(app)
+#elif TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
+			auto* mobileapp = static_cast<gIOSApp*>(app)
+#endif
+        ) {
+            mobileapp->pause();
 		}
 		if(canvasmanager && getCurrentCanvas()) {
-			if (auto* androidcanvas = dynamic_cast<gAndroidCanvas*>(getCurrentCanvas())) {
-				androidcanvas->pause();
+			if (
+#if defined(ANDROID)
+                auto* mobilecanvas = dynamic_cast<gAndroidCanvas*>(getCurrentCanvas())
+#elif TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
+                auto* mobilecanvas = static_cast<gIOSCanvas*>(getCurrentCanvas())
+#endif
+            ) {
+				mobilecanvas->pause();
 			}
 		}
 	});
@@ -660,12 +730,24 @@ bool gAppManager::onAppResumeEvent(gAppResumeEvent& event) {
 			return;
 		}
         isrendering = true;
-		if (auto* androidapp = dynamic_cast<gAndroidApp*>(app)) {
-			androidapp->resume();
+		if (
+#if defined(ANDROID)
+            auto* mobileapp = dynamic_cast<gAndroidApp*>(app)
+#elif TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
+            auto* mobileapp = static_cast<gIOSApp*>(app)
+#endif
+        ) {
+            mobileapp->resume();
 		}
 		if(canvasmanager && getCurrentCanvas()) {
-			if (auto* androidcanvas = dynamic_cast<gAndroidCanvas*>(getCurrentCanvas())) {
-				androidcanvas->resume();
+			if (
+#if defined(ANDROID)
+                auto* mobilcanvas = dynamic_cast<gAndroidCanvas*>(getCurrentCanvas())
+#elif TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
+                auto* mobilecanvas = static_cast<gIOSCanvas*>(getCurrentCanvas())
+#endif
+            ) {
+				mobilecanvas->resume();
 			}
 		}
 	});
@@ -675,8 +757,14 @@ bool gAppManager::onAppResumeEvent(gAppResumeEvent& event) {
 bool gAppManager::onDeviceOrientationChangedEvent(gDeviceOrientationChangedEvent& event) {
     deviceorientation = event.getOrientation();
     if(canvasmanager && getCurrentCanvas()) {
-		if (auto* androidcanvas = dynamic_cast<gAndroidCanvas*>(getCurrentCanvas())) {
-			androidcanvas->deviceOrientationChanged(event.getOrientation());
+		if (
+#if defined(ANDROID)
+            auto* mobilecanvas = dynamic_cast<gAndroidCanvas*>(getCurrentCanvas())
+#elif TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
+            auto* mobilecanvas = static_cast<gIOSCanvas*>(getCurrentCanvas())
+#endif
+        ) {
+			mobilecanvas->deviceOrientationChanged(event.getOrientation());
 		}
     }
     return false;
@@ -684,7 +772,13 @@ bool gAppManager::onDeviceOrientationChangedEvent(gDeviceOrientationChangedEvent
 
 bool gAppManager::onTouchEvent(gTouchEvent& event) {
 	if(canvasmanager && getCurrentCanvas()) {
-		if (auto* androidcanvas = dynamic_cast<gAndroidCanvas*>(getCurrentCanvas())) {
+		if (
+#if defined(ANDROID)
+            auto* mobilecanvas = dynamic_cast<gAndroidCanvas*>(getCurrentCanvas())
+#elif TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
+            auto* mobilecanvas = static_cast<gIOSCanvas*>(getCurrentCanvas())
+#endif
+        ) {
 			if (event.getAction() == ACTIONTYPE_POINTER_DOWN || (event.getInputCount() == 1 && event.getAction() == ACTIONTYPE_DOWN)) {
 				int inputindex = event.getActionIndex();
 				TouchInput& input = event.getInputs()[inputindex];
@@ -694,7 +788,7 @@ bool gAppManager::onTouchEvent(gTouchEvent& event) {
 					x = gRenderer::scaleX(x);
 					y = gRenderer::scaleY(y);
 				}
-				androidcanvas->touchPressed(x, y, input.fingerid);
+				mobilecanvas->touchPressed(x, y, input.fingerid);
 			} else if (event.getAction() == ACTIONTYPE_POINTER_UP || (event.getInputCount() == 1 && event.getAction() == ACTIONTYPE_UP)) {
 				int inputindex = event.getActionIndex();
 				TouchInput& input = event.getInputs()[inputindex];
@@ -704,7 +798,7 @@ bool gAppManager::onTouchEvent(gTouchEvent& event) {
 					x = gRenderer::scaleX(x);
 					y = gRenderer::scaleY(y);
 				}
-				androidcanvas->touchReleased(x, y, input.fingerid);
+				mobilecanvas->touchReleased(x, y, input.fingerid);
 			} else if (event.getAction() == ACTIONTYPE_MOVE) {
 				int inputindex = event.getActionIndex();
 				TouchInput& input = event.getInputs()[inputindex];
@@ -714,14 +808,14 @@ bool gAppManager::onTouchEvent(gTouchEvent& event) {
 					x = gRenderer::scaleX(x);
 					y = gRenderer::scaleY(y);
 				}
-				androidcanvas->touchMoved(x, y, input.fingerid);
+				mobilecanvas->touchMoved(x, y, input.fingerid);
 			}
 		}
 	}
 	return false;
 }
 
-#endif
+#endif // defined(ANDROID) || TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
 
 void gAppManager::updateTime() {
 	targettimestep = AppClockDuration(1'000'000'000 / (targetframerate + 1));

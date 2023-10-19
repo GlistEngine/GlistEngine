@@ -15,7 +15,7 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 #endif
-#if defined(APPLE)
+#if TARGET_OS_OSX
 #include <GL/glew.h>
 #include <OpenGL/gl.h>
 #include <OpenGL/glu.h>
@@ -27,7 +27,11 @@
 #ifdef ANDROID
 #include <GLES3/gl3.h>
 #endif
-
+#if TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
+#   include <OpenGLES/ES3/gl.h>
+#   include <OpenGLES/ES3/glext.h>
+#   include <OpenGLES/gltypes.h>
+#endif
 
 class gShader : public gObject {
 public:

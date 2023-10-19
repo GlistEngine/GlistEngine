@@ -25,7 +25,10 @@
 #include "freetype2/freetype/freetype.h"
 #include <android/asset_manager.h>
 #endif
-#if defined(WIN32) || defined(LINUX) || defined(APPLE)
+#if TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
+#    include "freetype2/freetype/freetype.h"
+#endif
+#if defined(WIN32) || defined(LINUX) || TARGET_OS_OSX
 #include FT_FREETYPE_H
 #endif
 

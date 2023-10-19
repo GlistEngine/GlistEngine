@@ -12,7 +12,7 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 #endif
-#if defined(APPLE)
+#if TARGET_OS_OSX
 #include <OpenGL/gl.h>
 #include <GL/glew.h>
 #include <OpenGL/glu.h>
@@ -44,7 +44,7 @@ const int gTexture::TEXTUREMINMAGFILTER_LINEAR = 0;
 const int gTexture::TEXTUREMINMAGFILTER_MIPMAPLINEAR = 1;
 const int gTexture::TEXTUREMINMAGFILTER_NEAREST = 2;
 
-#if(ANDROID)
+#if defined(ANDROID) || TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
 // todo alternatives?
 static const int texturewrap[3] = {GL_REPEAT, GL_NEAREST, GL_NEAREST};
 static const int texturefilter[3] = {GL_LINEAR, GL_NEAREST, GL_NEAREST};
@@ -82,8 +82,24 @@ gTexture::gTexture() {
 
 gTexture::gTexture(int w, int h, int format, bool isFbo) {
 	id = GL_NONE;
-	internalformat = format;
-	this->format = format;
+    int valuetype = GL_UNSIGNED_BYTE;
+    internalformat = format;
+    this->format = format;
+#if TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
+    if(format != GL_RGBA || format != GL_RGB)
+    {
+        if(format == GL_DEPTH_COMPONENT)
+        {
+            internalformat = GL_DEPTH_COMPONENT24;
+            valuetype = GL_UNSIGNED_INT;
+        }
+        if(format == GL_DEPTH_STENCIL)
+        {
+            internalformat = GL_DEPTH24_STENCIL8;
+            valuetype = GL_UNSIGNED_INT_24_8;
+        }
+    }
+#endif
 	wraps = TEXTUREWRAP_REPEAT;
 	wrapt = TEXTUREWRAP_REPEAT;
 	filtermin = TEXTUREMINMAGFILTER_LINEAR;
@@ -106,10 +122,10 @@ gTexture::gTexture(int w, int h, int format, bool isFbo) {
 	masktexture = nullptr;
 	glGenTextures(1, &id);
 	bind();
-	G_CHECK_GL(glTexImage2D(GL_TEXTURE_2D, 0, internalformat, width, height, 0, format, GL_UNSIGNED_BYTE, nullptr));
+    G_CHECK_GL(glTexImage2D(GL_TEXTURE_2D, 0, internalformat, width, height, 0, format, valuetype, nullptr));
 
 	// TODO: BEFORE SHADOWMAP GL_REPEAT
-#ifdef ANDROID
+#if defined(ANDROID) || TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
 	G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE));
 	G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE));
 #else
@@ -210,7 +226,7 @@ void gTexture::setData(unsigned char* textureData, bool isMutable) {
 
 		if (format == GL_RG) {
 			GLint swizzleMask[] = {GL_RED, GL_RED, GL_RED, GL_GREEN};
-#if(ANDROID)
+#if defined(ANDROID) || TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
 			G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_R, swizzleMask[0]));
 			G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_G, swizzleMask[1]));
 			G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_B, swizzleMask[2]));

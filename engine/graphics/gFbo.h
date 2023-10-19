@@ -39,6 +39,8 @@ public:
     void drawSub(const gRect& src, const gRect& dst, float rotate = 0.f);
 
 	static unsigned int getQuadVao();
+public:
+    static int defaultfbo;
 private:
     unsigned int framebuffer;
     unsigned int rbo;

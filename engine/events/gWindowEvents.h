@@ -204,7 +204,7 @@ private:
 };
 
 
-#ifdef ANDROID
+#if defined(ANDROID) || TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
 enum InputType {
 	INPUTTYPE_UNKNOWN = 0,
 	INPUTTYPE_FINGER = 1,
@@ -289,6 +289,6 @@ private:
 	DeviceOrientation orientation;
 };
 
-#endif /* ANDROID */
+#endif /* defined(ANDROID) || TARGET_OS_IPHONE || TARGET_OS_SIMULATOR */
 
 #endif /* GWINDOWEVENTS_H_ */
