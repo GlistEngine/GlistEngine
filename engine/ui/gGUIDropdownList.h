@@ -35,8 +35,11 @@ public:
 	void setSelectedTitle();
 	void addElement(gGUITreelist::Element* element);
 	void addElement(gGUITreelist::Element* element, gGUITreelist::Element* parentelement);
+	void clearTitle();
 
 	std::string& getSelectedTitle();
+
+	friend class gGUIToolbar;
 
 private:
 	gGUISizer listsizer;
@@ -47,7 +50,7 @@ private:
 	int textboxw, buttonw;
 	int textboxh;
 	int listx, listy, listw;
-	bool listopened, selectedline, listexpanded, pressedonlist, buttonpressed;
+	bool listopened, selectedline, listexpanded, pressedonlist, buttonpressed, ispressed;
 	bool lopened;
 	gGUIFrame *frame;
 	std::string fTitle;

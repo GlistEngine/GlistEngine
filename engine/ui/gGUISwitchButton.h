@@ -61,6 +61,8 @@ public:
 	 */
 	bool isOn();
 
+	friend class gGUIToolbar;
+
 private:
 	int togglew, toggleh;
 	bool ison;

@@ -39,18 +39,20 @@ const int gTexture::TEXTURETYPE_PBR_AO = 8;
 const int gTexture::TEXTUREWRAP_REPEAT = 0;
 const int gTexture::TEXTUREWRAP_CLAMP = 1;
 const int gTexture::TEXTUREWRAP_CLAMPTOEDGE = 2;
+const int gTexture::TEXTUREWRAP_NEAREST = 3;
 
 const int gTexture::TEXTUREMINMAGFILTER_LINEAR = 0;
 const int gTexture::TEXTUREMINMAGFILTER_MIPMAPLINEAR = 1;
 const int gTexture::TEXTUREMINMAGFILTER_NEAREST = 2;
+const int gTexture::TEXTUREMINMAGFILTER_CLAMP = 3;
 
 #if(ANDROID)
 // todo alternatives?
-static const int texturewrap[3] = {GL_REPEAT, GL_NEAREST, GL_NEAREST};
-static const int texturefilter[3] = {GL_LINEAR, GL_NEAREST, GL_NEAREST};
+static const int texturewrap[4] = {GL_REPEAT, GL_NEAREST, GL_NEAREST, GL_NEAREST};
+static const int texturefilter[4] = {GL_LINEAR, GL_NEAREST, GL_NEAREST, GL_NEAREST};
 #else
-static const int texturewrap[3] = {GL_REPEAT, GL_CLAMP, GL_CLAMP_TO_EDGE};
-static const int texturefilter[3] = {GL_LINEAR, GL_CLAMP, GL_CLAMP_TO_EDGE};
+static const int texturewrap[4] = {GL_REPEAT, GL_CLAMP, GL_CLAMP_TO_EDGE, GL_NEAREST};
+static const int texturefilter[4] = {GL_LINEAR, GL_LINEAR_MIPMAP_LINEAR, GL_NEAREST, GL_CLAMP};
 #endif
 
 gTexture::gTexture() {
@@ -59,7 +61,7 @@ gTexture::gTexture() {
 	format = GL_RGBA;
 	wraps = TEXTUREWRAP_REPEAT;
 	wrapt = TEXTUREWRAP_REPEAT;
-	filtermin = TEXTUREMINMAGFILTER_LINEAR;
+	filtermin = TEXTUREMINMAGFILTER_MIPMAPLINEAR;
 	filtermag = TEXTUREMINMAGFILTER_LINEAR;
 	texturetype[0] = "texture_diffuse";
 	texturetype[1] = "texture_specular";
@@ -69,14 +71,17 @@ gTexture::gTexture() {
 	path = "";
 	width = 0;
 	height = 0;
-	bsubpartdrawn = false;
 	ismutable = false;
+	isstbimage = false;
 	isfbo = false;
 	ishdr = false;
-	isfont = false;
 	ismaskloaded = false;
 	isloaded = false;
 	masktexture = nullptr;
+	componentnum = 0;
+	istextureallocated = false;
+	data = nullptr;
+	datahdr = nullptr;
 	setupRenderData();
 }
 
@@ -96,60 +101,55 @@ gTexture::gTexture(int w, int h, int format, bool isFbo) {
 	path = "";
 	width = w;
 	height = h;
-	bsubpartdrawn = false;
 	ismutable = false;
+	isstbimage = false;
 	isfbo = isFbo;
 	ishdr = false;
-	isfont = false;
 	ismaskloaded = false;
 	isloaded = false;
 	masktexture = nullptr;
+	componentnum = 0;
+    data = nullptr;
+	datahdr = nullptr;
 	glGenTextures(1, &id);
+	istextureallocated = true;
 	bind();
 	G_CHECK_GL(glTexImage2D(GL_TEXTURE_2D, 0, internalformat, width, height, 0, format, GL_UNSIGNED_BYTE, nullptr));
 
 	// TODO: BEFORE SHADOWMAP GL_REPEAT
-#ifdef ANDROID
 	G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE));
 	G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE));
-#else
-	G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP));
-	G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP));
-#endif
 
-	G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
-	G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
+	G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, texturefilter[filtermin]));
+	G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, texturefilter[filtermag]));
 	setupRenderData();
 }
 
 gTexture::~gTexture() {
-	if(isloaded) {
-		G_CHECK_GL(glDeleteBuffers(1, &quadVBO));
-		G_CHECK_GL(glDeleteVertexArrays(1, &quadVAO));
-	}
-	G_CHECK_GL(glDeleteTextures(1, &id));
-	if (ismutable && !isfont) {
-		stbi_image_free(data);
-	}
-	delete masktexture;
+	cleanupAll();
 }
 
 unsigned int gTexture::load(const std::string& fullPath) {
+	cleanupData();
+
 	fullpath = fullPath;
 	directory = getDirName(fullpath);
 	path = getFileName(fullpath);
 	ishdr = false;
 	if (gToLower(fullpath.substr(fullpath.length() - 3, 3)) == "hdr") ishdr = true;
 
-	glGenTextures(1, &id);
+	if (!istextureallocated) {
+		glGenTextures(1, &id);
+		istextureallocated = true;
+	}
 
 	if (ishdr) {
 		stbi_set_flip_vertically_on_load(true);
 		datahdr = stbi_loadf(fullpath.c_str(), &width, &height, &componentnum, 0);
-		setDataHDR(datahdr, false);
+		setDataHDR(datahdr, false, true);
 	} else {
 		data = stbi_load(fullpath.c_str(), &width, &height, &componentnum, 0);
-		setData(data, false);
+		setData(data, false, true);
 	}
 
 	//	setupRenderData();
@@ -172,23 +172,27 @@ unsigned int gTexture::loadMaskTexture(const std::string& maskTexturePath) {
 	return masktexture->load(gGetTexturesDir() + maskTexturePath);
 }
 
-unsigned int gTexture::loadData(unsigned char* textureData, int width, int height, int componentNum, bool isFont) {
+unsigned int gTexture::loadData(unsigned char* textureData, int width, int height, int componentNum, bool isMutable, bool isStbImage) {
 	this->width = width;
 	this->height = height;
 	this->componentnum = componentNum;
-	isfont = isFont;
 
+	if (!istextureallocated) {
+		glGenTextures(1, &id);
+		istextureallocated = true;
+	}
 
-	glGenTextures(1, &id);
-
-	setData(textureData, true);
+	setData(textureData, isMutable, isStbImage);
 
 	//	setupRenderData();
 	return id;
 }
 
-void gTexture::setData(unsigned char* textureData, bool isMutable) {
+void gTexture::setData(unsigned char* textureData, bool isMutable, bool isStbImage, bool clean) {
+	if(clean) cleanupData();
+
 	ismutable = isMutable;
+	isstbimage = isStbImage;
 	ishdr = false;
 	data = textureData;
 	if (componentnum == 1) format = GL_RED;
@@ -205,8 +209,8 @@ void gTexture::setData(unsigned char* textureData, bool isMutable) {
 
 		G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT));
 		G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT));
-		G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR));
-		G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
+		G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, texturefilter[filtermin]));
+		G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, texturefilter[filtermag]));
 
 		if (format == GL_RG) {
 			GLint swizzleMask[] = {GL_RED, GL_RED, GL_RED, GL_GREEN};
@@ -220,18 +224,23 @@ void gTexture::setData(unsigned char* textureData, bool isMutable) {
 #endif
 		}
 
-		if (!ismutable) stbi_image_free(data);
+		if (isstbimage && !ismutable) {
+			stbi_image_free(data);
+			data = nullptr;
+		}
 		unbind();
 	} else {
 		gLoge("gTexture") << "Texture failed to load at path: " << fullpath;
-		stbi_image_free(data);
 	}
 
 	setupRenderData();
 }
 
-void gTexture::setDataHDR(float* textureData, bool isMutable) {
+void gTexture::setDataHDR(float* textureData, bool isMutable, bool isStbImage, bool clean) {
+	if(clean)cleanupData();
+
 	ismutable = isMutable;
+	isstbimage = isStbImage;
 	ishdr = true;
 	datahdr = textureData;
 	if (datahdr) {
@@ -240,14 +249,16 @@ void gTexture::setDataHDR(float* textureData, bool isMutable) {
 
 		G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE));
 		G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE));
-		G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
-		G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
+		G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, texturefilter[filtermin]));
+		G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, texturefilter[filtermag]));
 
-		if (!ismutable) stbi_image_free(datahdr);
+		if (isstbimage && !ismutable) {
+			stbi_image_free(datahdr);
+			datahdr = nullptr;
+		}
 		unbind();
 	} else {
 		gLoge("gTexture") << "Failed to load HDR image at path: " << fullpath;
-		stbi_image_free(datahdr);
 	}
 
 	setupRenderData();
@@ -374,6 +385,7 @@ void gTexture::draw(int x, int y) {
 }
 
 void gTexture::draw(int x, int y, int w, int h) {
+	issubpart = false;
 	beginDraw();
 	imagematrix = glm::translate(imagematrix, glm::vec3(x, y, 0.0f));  // first translate (transformations are: scale happens first, then rotation, and then final translation happens; reversed order)
 	imagematrix = glm::scale(imagematrix, glm::vec3(w, h, 1.0f));
@@ -390,24 +402,17 @@ void gTexture::draw(int x, int y, int w, int h, int pivotx, int pivoty, float ro
 
 
 void gTexture::draw(glm::vec2 position, glm::vec2 size, float rotate) {
-	beginDraw();
-	imagematrix = glm::translate(imagematrix, glm::vec3(position, 0.0f));  // first translate (transformations are: scale happens first, then rotation, and then final translation happens; reversed order)
-
-	imagematrix = glm::translate(imagematrix, glm::vec3(0.5f * size.x, 0.5f * size.y, 0.0f));
-	imagematrix = glm::rotate(imagematrix, glm::radians(rotate), glm::vec3(0.0f, 0.0f, 1.0f));
-	imagematrix = glm::translate(imagematrix, glm::vec3(-0.5f * size.x, -0.5f * size.y, 0.0f));
-
-	imagematrix = glm::scale(imagematrix, glm::vec3(size.x, size.y, 1.0f));
-	endDraw();
+	draw(position, size, glm::vec2(0.5f * size.x, 0.5f * size.y), rotate);
 }
 
-void gTexture::draw(glm::vec2 position, glm::vec2 size, glm::vec2 pivotPointCoords, float rotate) {
+void gTexture::draw(glm::vec2 position, glm::vec2 size, glm::vec2 pivot, float rotate) {
+	issubpart = false;
 	beginDraw();
 	imagematrix = glm::translate(imagematrix, glm::vec3(position, 0.0f));  // first translate (transformations are: scale happens first, then rotation, and then final translation happens; reversed order)
 
-	imagematrix = glm::translate(imagematrix, glm::vec3(pivotPointCoords.x, pivotPointCoords.y, 0.0f));
+	imagematrix = glm::translate(imagematrix, glm::vec3(pivot.x, pivot.y, 0.0f));
 	imagematrix = glm::rotate(imagematrix, glm::radians(rotate), glm::vec3(0.0f, 0.0f, 1.0f));
-	imagematrix = glm::translate(imagematrix, glm::vec3(-pivotPointCoords.x, -pivotPointCoords.y, 0.0f));
+	imagematrix = glm::translate(imagematrix, glm::vec3(-pivot.x, -pivot.y, 0.0f));
 
 	imagematrix = glm::scale(imagematrix, glm::vec3(size.x, size.y, 1.0f));
 	endDraw();
@@ -418,9 +423,7 @@ void gTexture::drawSub(int x, int y, int sx, int sy, int sw, int sh) {
 }
 
 void gTexture::drawSub(int x, int y, int w, int h, int sx, int sy, int sw, int sh) {
-	setupRenderData(sx, sy, sw, sh);
-	bsubpartdrawn = true;
-	draw(x, y, w, h);
+	drawSub(x, y, w, h, sx, sy, sw, sh, 0.0f);
 }
 
 void gTexture::drawSub(int x, int y, int w, int h, int sx, int sy, int sw, int sh, float rotate) {
@@ -439,20 +442,29 @@ void gTexture::drawSub(const gRect& src, const gRect& dst, int pivotx, int pivot
 	drawSub(dst.left(), dst.top(), dst.getWidth(), dst.getHeight(), src.left(), src.top(), src.getWidth(), src.getHeight(), pivotx, pivoty, rotate);
 }
 
-void gTexture::drawSub(const gRect& src, const gRect& dst, glm::vec2 pivotPointCoords, float rotate) {
-	drawSub(dst.left(), dst.top(), dst.getWidth(), dst.getHeight(), src.left(), src.top(), src.getWidth(), src.getHeight(), pivotPointCoords.x, pivotPointCoords.y, rotate);
+void gTexture::drawSub(const gRect& src, const gRect& dst, glm::vec2 pivot, float rotate) {
+	drawSub(dst.left(), dst.top(), dst.getWidth(), dst.getHeight(), src.left(), src.top(), src.getWidth(), src.getHeight(), pivot.x, pivot.y, rotate);
 }
 
-void gTexture::drawSub(glm::vec2 pos, glm::vec2 size, glm::vec2 subpos, glm::vec2 subsize, float rotate) {
-	setupRenderData(subpos.x, subpos.y, subsize.x, subsize.y);
-	bsubpartdrawn = true;
-	draw(pos, size, rotate);
+void gTexture::drawSub(glm::vec2 pos, glm::vec2 size, glm::vec2 subPos, glm::vec2 subSize, float rotate) {
+	drawSub(pos, size, subPos, subSize, glm::vec2(size.x / 2.0f, size.y / 2.0f), rotate);
 }
 
-void gTexture::drawSub(glm::vec2 pos, glm::vec2 size, glm::vec2 subpos, glm::vec2 subsize, glm::vec2 pivotPointCoords, float rotate) {
-	setupRenderData(subpos.x, subpos.y, subsize.x, subsize.y);
-	bsubpartdrawn = true;
-	draw(pos, size, pivotPointCoords, rotate);
+void gTexture::drawSub(glm::vec2 pos, glm::vec2 size, glm::vec2 subPos, glm::vec2 subSize, glm::vec2 pivot, float rotate) {
+	issubpart = true;
+	glm::vec2 texturesize = glm::vec2(getWidth(), getHeight());
+	subscale = texturesize / subSize;
+	subpos = subscale * (subPos / texturesize);
+
+	beginDraw();
+	imagematrix = glm::translate(imagematrix, glm::vec3(pos, 0.0f));  // first translate (transformations are: scale happens first, then rotation, and then final translation happens; reversed order)
+
+	imagematrix = glm::translate(imagematrix, glm::vec3(pivot.x, pivot.y, 0.0f));
+	imagematrix = glm::rotate(imagematrix, glm::radians(rotate), glm::vec3(0.0f, 0.0f, 1.0f));
+	imagematrix = glm::translate(imagematrix, glm::vec3(-pivot.x, -pivot.y, 0.0f));
+
+	imagematrix = glm::scale(imagematrix, glm::vec3(size.x, size.y, 1.0f));
+	endDraw();
 }
 
 void gTexture::beginDraw() {
@@ -468,11 +480,18 @@ void gTexture::endDraw() {
 	renderer->getImageShader()->setInt("image", 0);
 	renderer->getImageShader()->setInt("maskimage", 1);
 	renderer->getImageShader()->setBool("isAlphaMasking", ismaskloaded);
+	renderer->getImageShader()->setBool("isSubPart", issubpart);
+	if (issubpart) {
+		renderer->getImageShader()->setVec2("subPos", subpos);
+		renderer->getImageShader()->setVec2("subScale", subscale);
+	}
 
 	G_CHECK_GL(glActiveTexture(GL_TEXTURE0));
 
 	bind();
+	renderer->getImageShader()->setBool("isAlphaMasking", ismaskloaded);
 	if(ismaskloaded) {
+		renderer->getImageShader()->setInt("maskimage", 1);
 		G_CHECK_GL(glActiveTexture(GL_TEXTURE0 + 1)); // GL_TEXTURE1
 		masktexture->bind(1);
 	}
@@ -489,47 +508,74 @@ void gTexture::endDraw() {
 		G_CHECK_GL(glDisable(GL_BLEND));
 	}
 	unbind();
-	if(bsubpartdrawn) {	setupRenderData(); }
 }
 
 void gTexture::setupRenderData() {
 	setupRenderData(0, 0, width, height);
-	bsubpartdrawn = false;
 }
 
-void gTexture::setupRenderData(int sx, int sy, int sw, int sh) {
+void gTexture::cleanupAll() {
 	if(isloaded) {
 		G_CHECK_GL(glDeleteBuffers(1, &quadVBO));
 		G_CHECK_GL(glDeleteVertexArrays(1, &quadVAO));
+		isloaded = false;
 	}
-	float vertices[] = {
-			// pos      // tex
-			0.0f, 1.0f, (float)sx / width, (float)(sy + sh) / height,
-			1.0f, 0.0f, (float)(sx + sw) / width, (float)sy / height,
-			0.0f, 0.0f, (float)sx / width, (float)sy / height,
+	if(istextureallocated) {
+		G_CHECK_GL(glDeleteTextures(1, &id));
+		istextureallocated = false;
+	}
+	cleanupData();
+	delete masktexture;
+	masktexture = nullptr;
+}
 
-			0.0f, 1.0f, (float)sx / width, (float)(sy + sh) / height,
-			1.0f, 1.0f, (float)(sx + sw) / width, (float)(sy + sh) / height,
-			1.0f, 0.0f, (float)(sx + sw) / width, (float)sy / height
-	};
-	float vertices2[] = {
-			// pos      // tex
-			0.0f, 1.0f, (float)sx / width, (float)(sy) / height,
-			1.0f, 0.0f, (float)(sx + sw) / width, (float)(sy + sh) / height,
-			0.0f, 0.0f, (float)sx / width, (float)(sy + sh) / height,
+void gTexture::cleanupData() {
+	if(isstbimage) {
+		if (datahdr) {
+			stbi_image_free(datahdr);
+			datahdr = nullptr;
+		} else if (data) {
+			stbi_image_free(data);
+			data = nullptr;
+		}
+	} else if(ismutable) {
+		delete[] data;
+		data = nullptr;
+		delete[] datahdr;
+		datahdr = nullptr;
+	}
+}
 
-			0.0f, 1.0f, (float)sx / width, (float)(sy) / height,
-			1.0f, 1.0f, (float)(sx + sw) / width, (float)(sy) / height,
-			1.0f, 0.0f, (float)(sx + sw) / width, (float)(sy + sh) / height
-	};
-
-	G_CHECK_GL(glGenVertexArrays(1, &quadVAO));
-	G_CHECK_GL(glGenBuffers(1, &quadVBO));
-
+void gTexture::setupRenderData(int sx, int sy, int sw, int sh) {
+	if(!isloaded) {
+		G_CHECK_GL(glGenVertexArrays(1, &quadVAO));
+		G_CHECK_GL(glGenBuffers(1, &quadVBO));
+		isloaded = true;
+	}
 	G_CHECK_GL(glBindBuffer(GL_ARRAY_BUFFER, quadVBO));
 	if (isfbo || ishdr) {
-		G_CHECK_GL(glBufferData(GL_ARRAY_BUFFER, sizeof(vertices2), vertices2, GL_STATIC_DRAW));
+		float vertices[] = {
+				// pos      // tex
+				0.0f, 1.0f, (float)sx / width, (float)(sy) / height,
+				1.0f, 0.0f, (float)(sx + sw) / width, (float)(sy + sh) / height,
+				0.0f, 0.0f, (float)sx / width, (float)(sy + sh) / height,
+
+				0.0f, 1.0f, (float)sx / width, (float)(sy) / height,
+				1.0f, 1.0f, (float)(sx + sw) / width, (float)(sy) / height,
+				1.0f, 0.0f, (float)(sx + sw) / width, (float)(sy + sh) / height
+		};
+		G_CHECK_GL(glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW));
 	} else {
+		float vertices[] = {
+				// pos      // tex
+				0.0f, 1.0f, (float)sx / width, (float)(sy + sh) / height,
+				1.0f, 0.0f, (float)(sx + sw) / width, (float)sy / height,
+				0.0f, 0.0f, (float)sx / width, (float)sy / height,
+
+				0.0f, 1.0f, (float)sx / width, (float)(sy + sh) / height,
+				1.0f, 1.0f, (float)(sx + sw) / width, (float)(sy + sh) / height,
+				1.0f, 0.0f, (float)(sx + sw) / width, (float)sy / height
+		};
 		G_CHECK_GL(glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW));
 	}
 
@@ -538,7 +584,6 @@ void gTexture::setupRenderData(int sx, int sy, int sw, int sh) {
 	G_CHECK_GL(glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0));
 	G_CHECK_GL(glBindBuffer(GL_ARRAY_BUFFER, 0));
 	G_CHECK_GL(glBindVertexArray(0));
-	isloaded = true;
 }
 
 std::string gTexture::getDirName(const std::string& fname) {

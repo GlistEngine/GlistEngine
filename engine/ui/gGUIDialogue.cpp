@@ -26,8 +26,11 @@ gGUIDialogue::gGUIDialogue() {
 
 	isdragenabled = true; isresizeenabled = true;
 	ismaximized = false; isdragged = false;
+	isiconenabled = false;
 
 	dragposx = 0; dragposy = 0; sizeposx = 0; sizeposy = 0;
+
+	dialoguetype = DIALOGUETYPE_OK;
 
 	resizeposition = RESIZE_NONE;
 
@@ -107,10 +110,13 @@ void gGUIDialogue::initDefTitleBar() {
 }
 
 void gGUIDialogue::initDefButtonsBar() {
+	dialoguetype = DIALOGUETYPE_OK;
 	defbuttonsbar.setSizer(&defbuttonsbarsizer);
-	defbuttonsbarsizer.setSize(1, 2);
 
 	defbuttonsbarokbutton.setTitle("OK");
+	defbuttonsbaryesbutton.setTitle("Yes");
+	defbuttonsbarnobutton.setTitle("No");
+	defbuttonsbarcancelbutton.setTitle("Cancel");
 }
 
 void gGUIDialogue::initDefMessageBar() {
@@ -118,8 +124,7 @@ void gGUIDialogue::initDefMessageBar() {
 	defmessagebarsizer.setSize(1, 4);
 
 	defmessagetext.setText("This is a placeholder text.");
-	defdialoguetype.setPressedButtonImageFromIcon(gGUIResources::ICONBIG_INFO, true);
-	defdialoguetype.setDisabled(true);
+	defdialogueicon.setDisabled(true);
 
 	defmessagebartopspace = 25;
 	defmessagebarrightspace = 15;
@@ -196,30 +201,97 @@ void gGUIDialogue::resetTitleBar() {
 
 void gGUIDialogue::resetButtonsBar() {
 	setButtonsBar(&defbuttonsbar);
+	if(dialoguetype == DIALOGUETYPE_OK) defbuttonsbarsizer.setSize(1, 2);
+	if(dialoguetype == DIALOGUETYPE_YESNOCANCEL) defbuttonsbarsizer.setSize(1, 4);
+	if(dialoguetype == DIALOGUETYPE_OKCANCEL || dialoguetype == DIALOGUETYPE_YESNO) defbuttonsbarsizer.setSize(1, 3);
 
-	float bbbutp = ((float)defbuttonsbarbuttonw + 30) / (float)defbuttonsbar.width;
-	float bbempp = 1 - bbbutp;
-	float bbcolproportions[2] = {bbempp, bbbutp};
-	defbuttonsbarsizer.setColumnProportions(bbcolproportions);
+	if(dialoguetype == DIALOGUETYPE_OK){
+		float bbbutp = ((float)defbuttonsbarbuttonw + 10) / (float)defbuttonsbar.width;
+		float bbempp = 1 - bbbutp;
+		float bbcolproportions[2] = {bbempp, bbbutp};
+		defbuttonsbarsizer.setColumnProportions(bbcolproportions);
+		// OK BUTTON
+		defbuttonsbarsizer.setControl(0, 1, &defbuttonsbarokbutton);
+		defbuttonsbarokbutton.setSize(defbuttonsbarbuttonw, defbuttonsbarbuttonh);
+		defbuttonsbarokbutton.left += (defbuttonsbar.width * bbbutp - defbuttonsbarbuttonw) / 2 - 5;
+		defbuttonsbarokbutton.top += (defbuttonsbar.height - defbuttonsbarbuttonh) / 2;
+	}
 
-	defbuttonsbarsizer.setControl(0, 1, &defbuttonsbarokbutton);
-	defbuttonsbarokbutton.setSize(defbuttonsbarbuttonw, defbuttonsbarbuttonh);
-	defbuttonsbarokbutton.left += (defbuttonsbar.width * bbbutp - defbuttonsbarbuttonw) / 2;
-	defbuttonsbarokbutton.top += (defbuttonsbar.height - defbuttonsbarbuttonh) / 2;
+	if(dialoguetype == DIALOGUETYPE_YESNOCANCEL){
+		float bbbutp = ((float)defbuttonsbarbuttonw + 10) / (float)defbuttonsbar.width;
+		float bbempp = 1 - bbbutp * 3;
+		float bbcolproportions[4] = {bbempp, bbbutp, bbbutp, bbbutp};
+		defbuttonsbarsizer.setColumnProportions(bbcolproportions);
+		// YES BUTTON
+		defbuttonsbarsizer.setControl(0, 1, &defbuttonsbaryesbutton);
+		defbuttonsbaryesbutton.setSize(defbuttonsbarbuttonw, defbuttonsbarbuttonh);
+		defbuttonsbaryesbutton.left += (defbuttonsbar.width * bbbutp - defbuttonsbarbuttonw) / 2 + 5;
+		defbuttonsbaryesbutton.top += (defbuttonsbar.height - defbuttonsbarbuttonh) / 2;
+		// NO BUTTON
+		defbuttonsbarsizer.setControl(0, 2, &defbuttonsbarnobutton);
+		defbuttonsbarnobutton.setSize(defbuttonsbarbuttonw, defbuttonsbarbuttonh);
+		defbuttonsbarnobutton.left += (defbuttonsbar.width * bbbutp - defbuttonsbarbuttonw) / 2;
+		defbuttonsbarnobutton.top += (defbuttonsbar.height - defbuttonsbarbuttonh) / 2;
+		// CANCEL BUTTON
+		defbuttonsbarsizer.setControl(0, 3, &defbuttonsbarcancelbutton);
+		defbuttonsbarcancelbutton.setSize(defbuttonsbarbuttonw, defbuttonsbarbuttonh);
+		defbuttonsbarcancelbutton.left += (defbuttonsbar.width * bbbutp - defbuttonsbarbuttonw) / 2 - 5;
+		defbuttonsbarcancelbutton.top += (defbuttonsbar.height - defbuttonsbarbuttonh) / 2;
+	}
+
+	if(dialoguetype == DIALOGUETYPE_OKCANCEL){
+		float bbbutp = ((float)defbuttonsbarbuttonw + 10) / (float)defbuttonsbar.width;
+		float bbempp = 1 - bbbutp * 2;
+		float bbcolproportions[4] = {bbempp, bbbutp, bbbutp, bbbutp};
+		defbuttonsbarsizer.setColumnProportions(bbcolproportions);
+		// OK BUTTON
+		defbuttonsbarsizer.setControl(0, 1, &defbuttonsbarokbutton);
+		defbuttonsbarokbutton.setSize(defbuttonsbarbuttonw, defbuttonsbarbuttonh);
+		defbuttonsbarokbutton.left += (defbuttonsbar.width * bbbutp - defbuttonsbarbuttonw) / 2;
+		defbuttonsbarokbutton.top += (defbuttonsbar.height - defbuttonsbarbuttonh) / 2;
+		// CANCEL BUTTON
+		defbuttonsbarsizer.setControl(0, 2, &defbuttonsbarcancelbutton);
+		defbuttonsbarcancelbutton.setSize(defbuttonsbarbuttonw, defbuttonsbarbuttonh);
+		defbuttonsbarcancelbutton.left += (defbuttonsbar.width * bbbutp - defbuttonsbarbuttonw) / 2 - 5;
+		defbuttonsbarcancelbutton.top += (defbuttonsbar.height - defbuttonsbarbuttonh) / 2;
+	}
+
+	if(dialoguetype == DIALOGUETYPE_YESNO){
+		float bbbutp = ((float)defbuttonsbarbuttonw + 10) / (float)defbuttonsbar.width;
+		float bbempp = 1 - bbbutp * 2;
+		float bbcolproportions[4] = {bbempp, bbbutp, bbbutp, bbbutp};
+		defbuttonsbarsizer.setColumnProportions(bbcolproportions);
+		// YES BUTTON
+		defbuttonsbarsizer.setControl(0, 1, &defbuttonsbaryesbutton);
+		defbuttonsbaryesbutton.setSize(defbuttonsbarbuttonw, defbuttonsbarbuttonh);
+		defbuttonsbaryesbutton.left += (defbuttonsbar.width * bbbutp - defbuttonsbarbuttonw) / 2;
+		defbuttonsbaryesbutton.top += (defbuttonsbar.height - defbuttonsbarbuttonh) / 2;
+		// NO BUTTON
+		defbuttonsbarsizer.setControl(0, 2, &defbuttonsbarnobutton);
+		defbuttonsbarnobutton.setSize(defbuttonsbarbuttonw, defbuttonsbarbuttonh);
+		defbuttonsbarnobutton.left += (defbuttonsbar.width * bbbutp - defbuttonsbarbuttonw) / 2 - 5;
+		defbuttonsbarnobutton.top += (defbuttonsbar.height - defbuttonsbarbuttonh) / 2;
+	}
 }
 
 void gGUIDialogue::resetMessageBar() {
 	setMessageBar(&defmessagebar);
 	float mbspace = 0.05f;
-	float mbsmgp = 0.07f;
-	float mbdtp = 0.9f;
-	float mbcolproportions[4] = {mbspace, mbsmgp, mbspace, mbdtp};
-	defmessagebarsizer.setColumnProportions(mbcolproportions);
+	float mbdtp = 0.07f;
+	float mbsmgp = 0.9f;
+	if(isiconenabled){
+		float mbcolproportions[4] = {mbspace, mbdtp, mbspace, mbsmgp};
+		defmessagebarsizer.setColumnProportions(mbcolproportions);
+	}
+	else{
+		float mbcolproportions[4] = {mbspace, 0.0f, 0.0f, mbdtp};
+		defmessagebarsizer.setColumnProportions(mbcolproportions);
+	}
 
 	defmessagebarsizer.setControl(0, 3, &defmessagetext);
-	defmessagebarsizer.setControl(0, 1, &defdialoguetype);
-	defdialoguetype.setSize(deftitlebar.height, deftitlebar.height);
-	defdialoguetype.top += (defmessagebar.height - defdialoguetype.width) / 2;
+	if(isiconenabled) defmessagebarsizer.setControl(0, 1, &defdialogueicon);
+	defdialogueicon.setSize(deftitlebar.height, deftitlebar.height);
+	defdialogueicon.top += (defmessagebar.height - defdialogueicon.width) / 2;
 }
 
 void gGUIDialogue::setMinimizeButton(gGUIImageButton* minimizeButton) {
@@ -391,14 +463,24 @@ void gGUIDialogue::mouseReleased(int x, int y, int button) {
 	if (buttontrigger == EVENT_EXIT) {buttonevent = EVENT_EXIT; buttontrigger = EVENT_NONE;}
 }
 
-void gGUIDialogue::setMessageText(gGUIText *messageText) {
-	defmessagetext.setText(messageText->getText());
+void gGUIDialogue::setMessageText(std::string messageText) {
+	defmessagetext.setText(messageText);
 }
 
 std::string gGUIDialogue::getMessageText() {
 	return defmessagetext.getText();
 }
 
-void gGUIDialogue::setDialogueType(int typeId, bool isIconBig) {
-	defdialoguetype.setPressedButtonImageFromIcon(typeId, isIconBig);
+void gGUIDialogue::setIconType(int iconId) {
+	if(iconId == ICONTYPE_NONE) {
+		isiconenabled = false;
+	}
+	else{
+		isiconenabled = true;
+		defdialogueicon.setPressedButtonImageFromIcon(iconId - 1, true);
+	}
+}
+
+void gGUIDialogue::setDialogueType(int typeId) {
+	dialoguetype = typeId;
 }
