@@ -7,6 +7,7 @@
 
 #include "gSkybox.h"
 #include "gTexture.h"
+#include "gFbo.h"
 
 glm::mat4 captureProjection = glm::perspective(glm::radians(90.0f), 1.0f, 0.1f, 10.0f);
 glm::mat4 captureViews[] = {
@@ -43,20 +44,18 @@ unsigned int gSkybox::load(std::vector<std::string>& fullPaths) {
 	skymapslot = GL_TEXTURE0;
 	skymapint = 0;
 
-#if(ANDROID)
-	glEnable(GL_TEXTURE_CUBE_MAP); // OpenGL ES does not support GL_TEXTURE_CUBE_MAP_SEAMLESS
-#else
-	glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
+#if defined(ANDROID)
+    G_CHECK_GL(glEnable(GL_TEXTURE_CUBE_MAP)); // OpenGL ES does not support GL_TEXTURE_CUBE_MAP_SEAMLESS
 #endif
 
-	glActiveTexture(skymapslot);
-	glGenTextures(1, &id);
-	glBindTexture(GL_TEXTURE_CUBE_MAP, id);
+	G_CHECK_GL(glActiveTexture(skymapslot));
+	G_CHECK_GL(glGenTextures(1, &id));
+	G_CHECK_GL(glBindTexture(GL_TEXTURE_CUBE_MAP, id));
 
 	for (unsigned int i = 0; i < fullPaths.size(); i++) {
         unsigned char *data = stbi_load(fullPaths[i].c_str(), &width, &height, &nrChannels, 0);
         if (data) {
-            glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+            G_CHECK_GL(glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data));
             stbi_image_free(data);
         } else {
             std::cout << "Cubemap tex failed to load at path: " << fullPaths[i] << std::endl;
@@ -64,19 +63,19 @@ unsigned int gSkybox::load(std::vector<std::string>& fullPaths) {
         }
     }
 
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+    G_CHECK_GL(glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
+    G_CHECK_GL(glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
+    G_CHECK_GL(glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE));
+    G_CHECK_GL(glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE));
+    G_CHECK_GL(glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE));
 
 	renderer->getSkyboxShader()->use();
 	renderer->getSkyboxShader()->setInt("skymap", skymapint);
 
 	if(ispbr) generatePbrMaps();
 
-	glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
-	glActiveTexture(GL_TEXTURE0);
+	G_CHECK_GL(glBindTexture(GL_TEXTURE_CUBE_MAP, 0));
+	G_CHECK_GL(glActiveTexture(GL_TEXTURE0));
 
     return id;
 }
@@ -85,7 +84,7 @@ void gSkybox::loadSkybox(gImage* images) {
 	skymapslot = GL_TEXTURE0;
 	skymapint = 0;
 
-#if(ANDROID)
+#if defined(ANDROID) || TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
 	glEnable(GL_TEXTURE_CUBE_MAP); // OpenGL ES does not support GL_TEXTURE_CUBE_MAP_SEAMLESS
 #else
 	glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
@@ -121,7 +120,7 @@ void gSkybox::loadDataSkybox(std::string *data, int width, int height) {
 	skymapslot = GL_TEXTURE0;
 	skymapint = 0;
 
-#if(ANDROID)
+#if defined(ANDROID) || TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
 	glEnable(GL_TEXTURE_CUBE_MAP); // OpenGL ES does not support GL_TEXTURE_CUBE_MAP_SEAMLESS
 #else
 	glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
@@ -165,7 +164,7 @@ unsigned int gSkybox::loadEquirectangular(const std::string& fullPath) {
 //	glGenTextures(1, &id);
 //	glBindTexture(GL_TEXTURE_CUBE_MAP, id);
 
-#if(ANDROID)
+#if defined(ANDROID) || TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
 	glEnable(GL_TEXTURE_CUBE_MAP); // OpenGL ES does not support GL_TEXTURE_CUBE_MAP_SEAMLESS
 #else
 	glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
@@ -213,7 +212,7 @@ unsigned int gSkybox::loadEquirectangular(const std::string& fullPath) {
 
 		renderCube();
 	}
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glBindFramebuffer(GL_FRAMEBUFFER, gFbo::defaultfbo);
 
 	// then let OpenGL generate mipmaps from first mip face (combatting visible dots artifact)
 	glBindTexture(GL_TEXTURE_CUBE_MAP, id);
@@ -268,7 +267,7 @@ void gSkybox::generatePbrMaps() {
 
 		renderCube();
 	}
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glBindFramebuffer(GL_FRAMEBUFFER, gFbo::defaultfbo);
 
 	// pbr: create a pre-filter cubemap, and re-scale capture FBO to pre-filter scale.
 	// --------------------------------------------------------------------------------
@@ -314,7 +313,7 @@ void gSkybox::generatePbrMaps() {
 			renderCube();
 		}
 	}
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glBindFramebuffer(GL_FRAMEBUFFER, gFbo::defaultfbo);
 
 	// pbr: generate a 2D LUT from the BRDF equations used.
 	// ----------------------------------------------------
@@ -341,7 +340,7 @@ void gSkybox::generatePbrMaps() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	renderQuad();
 
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glBindFramebuffer(GL_FRAMEBUFFER, gFbo::defaultfbo);
 
 	pbrShader->use();
 	pbrShader->setInt("irradianceMap", 0);

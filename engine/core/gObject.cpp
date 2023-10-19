@@ -7,8 +7,10 @@
 
 #include "gObject.h"
 #include <unistd.h>
-#ifdef ANDROID
+#if defined(ANDROID)
 #include "gAndroidUtil.h"
+#elif TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
+#include "gIOSUtil.h"
 #endif
 
 const int gObject::LOGLEVEL_SILENT = 0;
@@ -49,16 +51,18 @@ gObject::gObject() {
 	    	exepath[i] = '/';
 	    }
 	}
-#ifndef ANDROID
-	if(assetsdir == "") {
-		assetsdir = exepath + "assets/";
-	}
+#if defined(ANDROID)
+    if(gAndroidUtil::datadirectory.empty()) {
+        assetsdir = "";
+    } else {
+        assetsdir = gAndroidUtil::datadirectory + "/";
+    }
+#elif TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
+    assetsdir = gGetIOSResourceDirectory() + "/";
 #else
-	if(gAndroidUtil::datadirectory.empty()) {
-		assetsdir = "";
-	} else {
-		assetsdir = gAndroidUtil::datadirectory + "/";
-	}
+    if(assetsdir == "") {
+        assetsdir = exepath + "assets/";
+    }
 #endif
 }
 

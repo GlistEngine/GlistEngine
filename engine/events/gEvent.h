@@ -27,7 +27,7 @@ enum EventType {
 	EventTypeJoystickConnect,
 	EventTypeJoystickDisconnect,
 	EventTypeReallocateRenderData,
-#ifdef ANDROID
+#if defined(APPLE) || TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
 	EventTypeAppPause,
 	EventTypeAppResume,
 	EventTypeTouch,
@@ -97,7 +97,7 @@ class gEventDispatcher {
 	template<typename T, typename F>
 	bool dispatch(const F& func) {
 		if (event.getEventType() == T::getStaticType()) {
-			event.ishandled |= func(static_cast<T&>(event));
+			event.ishandled |= func(*static_cast<T*>(&event));
 			return true;
 		}
 		return false;

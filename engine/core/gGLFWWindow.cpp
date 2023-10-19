@@ -37,17 +37,8 @@ void gGLFWWindow::initialize(int width, int height, int windowMode, bool isResiz
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-#if __APPLE__
-    #include "TargetConditionals.h"
-    #if TARGET_IPHONE_SIMULATOR
-        // define something for simulator
-    #elif TARGET_OS_IPHONE
-        // define something for iphone
-    #else
-        #define TARGET_OS_OSX 1
-        // define something for OSX
-		glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); //case_mac
-    #endif
+#if TARGET_OS_OSX
+	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); //case_mac
 #endif
 
 	// All hints available at https://www.glfw.org/docs/latest/window.html#window_hints

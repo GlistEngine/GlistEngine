@@ -10,6 +10,7 @@
 bool gFbo::isvaoset = false;
 unsigned int gFbo::quadVAO = 0;
 unsigned int gFbo::quadVBO = 0;
+int gFbo::defaultfbo = 0;
 
 gFbo::gFbo() {
 	width = 0;
@@ -86,7 +87,7 @@ void gFbo::allocate(int width, int height, bool isDepthMap) {
 		texture = new gTexture(width, height, GL_DEPTH_COMPONENT, true);
 		texture->bind();
 		G_CHECK_GL(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, texture->getId(), 0));
-#if(ANDROID)
+#if defined(ANDROID) || TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
 		G_CHECK_GL(glDrawBuffers(0, GL_NONE));
 #else
 		G_CHECK_GL(glDrawBuffer(GL_NONE));
@@ -99,7 +100,7 @@ void gFbo::allocate(int width, int height, bool isDepthMap) {
 	if (status != GL_FRAMEBUFFER_COMPLETE) {
 		gLogi("gFbo") << "Framebuffer is not complete! status:" << gToHex(status, 4);
 	}
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glBindFramebuffer(GL_FRAMEBUFFER, gFbo::defaultfbo);
 	isallocated = true;
 }
 
@@ -129,7 +130,7 @@ void gFbo::bind() {
 }
 
 void gFbo::unbind() {
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glBindFramebuffer(GL_FRAMEBUFFER, gFbo::defaultfbo);
 	glViewport(0, 0, renderer->getWidth(), renderer->getHeight());
 }
 

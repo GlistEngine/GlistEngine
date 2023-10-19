@@ -55,7 +55,7 @@ void gPostProcessManager::disable() {
 		fbotowrite = temp;
 	}
 
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glBindFramebuffer(GL_FRAMEBUFFER, gFbo::defaultfbo);
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	gRenderObject::getRenderer()->getFboShader()->use();

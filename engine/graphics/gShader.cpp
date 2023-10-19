@@ -125,7 +125,7 @@ void gShader::checkCompileErrors(GLuint shader, const std::string& type) {
     GLint success;
     GLchar infoLog[1024];
     if(type != "PROGRAM") {
-        glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
+        G_CHECK_GL(glGetShaderiv(shader, GL_COMPILE_STATUS, &success));
         if(!success) {
             glGetShaderInfoLog(shader, 1024, nullptr, infoLog);
             gLoge("gShader") << "ERROR::SHADER_COMPILATION_ERROR of type: " << type << "\n" << infoLog << "\n -- --------------------------------------------------- -- " << std::endl;
@@ -157,6 +157,7 @@ void gShader::setBool(const std::string &name, bool value) const {
 #ifdef DEBUG
     assert(loaded);
 #endif
+    use();
     G_CHECK_GL(glUniform1i(glGetUniformLocation(id, name.c_str()), (int)value));
 }
 
@@ -165,6 +166,7 @@ void gShader::setInt(const std::string &name, int value) const {
 #ifdef DEBUG
     assert(loaded);
 #endif
+    use();
     G_CHECK_GL(glUniform1i(glGetUniformLocation(id, name.c_str()), value));
 }
 
@@ -173,6 +175,7 @@ void gShader::setFloat(const std::string &name, float value) const {
 #ifdef DEBUG
     assert(loaded);
 #endif
+    use();
     G_CHECK_GL(glUniform1f(glGetUniformLocation(id, name.c_str()), value));
 }
 
@@ -181,6 +184,7 @@ void gShader::setVec2(const std::string &name, const glm::vec2 &value) const {
 #ifdef DEBUG
     assert(loaded);
 #endif
+    use();
     G_CHECK_GL(glUniform2fv(glGetUniformLocation(id, name.c_str()), 1, &value[0]));
 }
 
@@ -188,6 +192,7 @@ void gShader::setVec2(const std::string &name, float x, float y) const {
 #ifdef DEBUG
     assert(loaded);
 #endif
+    use();
     G_CHECK_GL(glUniform2f(glGetUniformLocation(id, name.c_str()), x, y));
 }
 
@@ -196,6 +201,7 @@ void gShader::setVec3(const std::string &name, const glm::vec3 &value) const {
 #ifdef DEBUG
     assert(loaded);
 #endif
+    use();
     G_CHECK_GL(glUniform3fv(glGetUniformLocation(id, name.c_str()), 1, &value[0]));
 }
 
@@ -203,6 +209,7 @@ void gShader::setVec3(const std::string &name, float x, float y, float z) const 
 #ifdef DEBUG
     assert(loaded);
 #endif
+    use();
     G_CHECK_GL(glUniform3f(glGetUniformLocation(id, name.c_str()), x, y, z));
 }
 
@@ -211,6 +218,7 @@ void gShader::setVec4(const std::string &name, const glm::vec4 &value) const {
 #ifdef DEBUG
     assert(loaded);
 #endif
+    use();
     G_CHECK_GL(glUniform4fv(glGetUniformLocation(id, name.c_str()), 1, &value[0]));
 }
 
@@ -218,6 +226,7 @@ void gShader::setVec4(const std::string &name, float x, float y, float z, float 
 #ifdef DEBUG
     assert(loaded);
 #endif
+    use();
     G_CHECK_GL(glUniform4f(glGetUniformLocation(id, name.c_str()), x, y, z, w));
 }
 
@@ -242,6 +251,7 @@ void gShader::setMat4(const std::string &name, const glm::mat4 &mat) const {
 #ifdef DEBUG
     assert(loaded);
 #endif
+    use();
     G_CHECK_GL(glUniformMatrix4fv(glGetUniformLocation(id, name.c_str()), 1, GL_FALSE, &mat[0][0]));
 }
 

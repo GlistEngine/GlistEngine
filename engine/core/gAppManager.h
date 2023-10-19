@@ -281,6 +281,10 @@ public:
 	DeviceOrientation getDeviceOrientation() { return deviceorientation; }
 	void setDeviceOrientation(DeviceOrientation orientation);
 #endif
+    
+#if TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
+    void iosLoop();
+#endif // TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
 
 private:
     static const int maxjoysticknum = 4;
@@ -333,7 +337,7 @@ private:
     bool joystickbuttonstate[maxjoysticknum][maxjoystickbuttonnum];
     int joystickaxecount;
 
-#ifdef ANDROID
+#if defined(ANDROID) || TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
     DeviceOrientation deviceorientation;
     DeviceOrientation olddeviceorientation;
     bool delayedresize;
@@ -361,7 +365,7 @@ private:
     bool onWindowLoseFocusEvent(gWindowLoseFocusEvent&);
     bool onJoystickConnectEvent(gJoystickConnectEvent&);
     bool onJoystickDisconnectEvent(gJoystickDisconnectEvent&);
-#ifdef ANDROID
+#if defined(ANDROID) || TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
     bool onAppPauseEvent(gAppPauseEvent&);
     bool onAppResumeEvent(gAppResumeEvent&);
     bool onDeviceOrientationChangedEvent(gDeviceOrientationChangedEvent&);

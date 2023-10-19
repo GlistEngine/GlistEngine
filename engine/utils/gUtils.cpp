@@ -43,7 +43,7 @@ int gDefaultUnitHeight() {
 }
 
 int gDefaultMonitorWidth() {
-#ifndef ANDROID
+#if !(defined(ANDROID) || TARGET_OS_IPHONE || TARGET_OS_SIMULATOR)
 	int w = gDefaultWidth();
 	glfwInit();
 	const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
@@ -56,7 +56,7 @@ int gDefaultMonitorWidth() {
 }
 
 int gDefaultMonitorHeight() {
-#ifndef ANDROID
+#if !(defined(ANDROID) || TARGET_OS_IPHONE || TARGET_OS_SIMULATOR)
 	int h = gDefaultHeight();
 	glfwInit();
 	const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());

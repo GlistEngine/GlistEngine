@@ -1,5 +1,5 @@
 if(APPLE)
-	cmake_minimum_required (VERSION 3.26)
+	cmake_minimum_required (VERSION 3.27)
 else()
 	cmake_minimum_required (VERSION 3.10.2)
 endif()
@@ -98,7 +98,20 @@ set(PLUGIN_LINKLIBS)
 set(PLUGIN_LIBDIRS)
 
 foreach(pluginname ${PLUGINS})
-	include(${PLUGINS_DIR}/${pluginname}/CMakeLists.txt)
+	if(IOS)
+        if(${pluginname} STREQUAL "gipIOS")
+            set(IOS_PLUGIN_PRESENT 1)
+			# We do not compile the gipIOS inside glistengine.
+			continue()
+        endif()
+    endif()
+
+    if(ANDROID)
+        if(${pluginname} STREQUAL "gipAndroid")
+            set(ANDROID_PLUGIN_PRESENT 1)
+        endif()
+    endif()
+    include(${PLUGINS_DIR}/${pluginname}/CMakeLists.txt)
 endforeach()
 
 
@@ -239,15 +252,15 @@ set(SRC_FILES
 	${ENGINE_DIR}/graphics/posteffects/kerneleffects/gEdgeDetection.cpp
 )
 
-if(NOT ANDROID)
+if(NOT (ANDROID OR IOS))
 	list(APPEND SRC_FILES
 		${MINGW64_DIR}/lib/sqlite3.c
 		${ENGINE_DIR}/core/backward.cpp
 		${ENGINE_DIR}/core/gGLFWWindow.cpp
 	)
-endif(NOT ANDROID)
+endif()
 
-if(ANDROID)
+if(ANDROID OR IOS)
 	# We have androidMain function that is
 	# defined inside the GlistEngine but implemented by the
 	# GlistApp. To have this behavior, library should be static.
@@ -259,13 +272,6 @@ else()
 		${SRC_FILES}
 	)
 endif()
-
-set_target_properties(
-    GlistEngine
-        PROPERTIES
-            CXX_STANDARD ${GLIST_CXX_STANDARD}
-            CXX_STANDARD_REQUIRED ${GLIST_CXX_STANDARD_REQUIRED}
-)
 
 if(APPLE)
     target_link_options(GlistEngine PRIVATE ${GLIST_SHARED_LINKER_FLAGS} -pthread)
@@ -323,6 +329,9 @@ if(WIN32)
 	)
 elseif(ANDROID)
     # These are added by gipAndroid plugin
+    # Do not remove the if, otherwise linux libraries will be linked/included.
+elseif(IOS)
+    # These are added by gipIOS plugin
     # Do not remove the if, otherwise linux libraries will be linked/included.
 elseif(LINUX)
 	list(APPEND INC_DIRS
@@ -384,10 +393,28 @@ if(WIN32)
 			${MINGW64_DIR}/lib
 			${PLUGIN_LINKDIRS}
 	)
-
 elseif(ANDROID)
     # These are added by gipAndroid plugin
     # Do not remove the if, otherwise linux libraries will be linked/included.
+	if(NOT DEFINED ANDROID_PLUGIN_PRESENT)
+        message(FATAL_ERROR
+        " gipAndroid was not found in the active plugins list while trying to create an Android app. \n\n"
+        "This might be caused by not passing gipAndroid to the GlistApp's used plugins\n"
+        "list. You may also not have the gipAndroid plugin installed in the correct\n"
+        "folder and not with the correct name. Check if you have installed the plugin\n"
+        "under dev/glist/glistplugins."
+        )
+	endif()
+elseif(IOS)
+    if(NOT DEFINED IOS_PLUGIN_PRESENT)
+		message(FATAL_ERROR
+			" gipIOS was not found in the active plugins list while trying to create an IOS app. \n\n"
+			"This might be caused by not passing gipIOS to the GlistApp's used plugins\n"
+			"list. You may also not have the gipIOS plugin installed in the correct\n"
+			"folder and not with the correct name. Check if you have installed the plugin\n"
+			"under dev/glist/glistplugins."
+		)
+    endif()
 elseif(LINUX)
 	# TODO: FFMPEG
 #	find_library(Lib_Freetype2 freetype HINTS /usr/lib/x86_64-linux-gnu)
@@ -433,21 +460,19 @@ elseif(APPLE)
     pkg_check_modules(glfw     REQUIRED IMPORTED_TARGET glfw3)
     pkg_check_modules(assimp   REQUIRED IMPORTED_TARGET assimp)
     pkg_check_modules(glew     REQUIRED IMPORTED_TARGET glew)
-
+    
     find_library(Lib_fmodL fmodL HINTS ${MINGW64_DIR}/lib)
     find_library(Lib_fmod fmod HINTS ${MINGW64_DIR}/lib)
 
-	find_library(Lib_GL GL HINTS /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries)
+    find_library(Lib_GL GL HINTS /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries)
 
-	if(${ENGINE_USE_SYMLINKS})
-		pkg_check_modules(crypto REQUIRED IMPORTED_TARGET libcrypto)
+    if(${ENGINE_USE_SYMLINKS})
+        pkg_check_modules(crypto REQUIRED IMPORTED_TARGET libcrypto)
         set(Lib_crypto PkgConfig::crypto)
-	else()
-		# For backwards compatibility
-		find_library(Lib_crypto crypto HINTS ${BREW_PATH}/openssl@${OPENSSL_VER_SHORT}/${OPENSSL_VER_FULL}/lib)
-	endif()
- 
- MESSAGE("${crypto_LINK_LIBRARIES}")
+    else()
+        # For backwards compatibility
+        find_library(Lib_crypto crypto HINTS ${BREW_PATH}/openssl@${OPENSSL_VER_SHORT}/${OPENSSL_VER_FULL}/lib)
+    endif()
 endif (WIN32)
 
 
@@ -481,6 +506,9 @@ if(WIN32)
 elseif(ANDROID)
     # These are added by gipAndroid plugin
     # Do not remove the if, otherwise linux libraries will be linked/included.
+elseif(IOS)
+    # These are added by gipIOS plugin
+    # Do not remove the if, otherwise MacOS libraries will be linked/included.
 elseif(LINUX)
 	list(APPEND LINK_LIBS
 		fmodL
