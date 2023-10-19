@@ -57,6 +57,7 @@ public:
 
 	void setCursor(int cursorNo) override;
 	void setCursorMode(int cursorMode) override;
+	void setCursorPos(int x, int y) override;
 
 	void setClipboardString(std::string text) override;
 	std::string getClipboardString() override;

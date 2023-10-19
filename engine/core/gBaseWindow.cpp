@@ -115,6 +115,10 @@ void gBaseWindow::setCursorMode(int cursorMode) {
 
 }
 
+void gBaseWindow::setCursorPos(int x, int y) {
+
+}
+
 void gBaseWindow::setClipboardString(std::string text) {
 
 }
