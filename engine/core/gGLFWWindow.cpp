@@ -159,7 +159,7 @@ void gGLFWWindow::setCursorMode(int cursorMode) {
 }
 
 void gGLFWWindow::setCursorPos(int x, int y) {
-	glfwSetCursorPos(window, x, y);
+	glfwSetCursorPos(window, x / scalex, y / scaley);
 }
 
 void gGLFWWindow::setClipboardString(std::string text) {
