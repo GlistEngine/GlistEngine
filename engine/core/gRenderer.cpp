@@ -1333,7 +1333,7 @@ const std::string gRenderer::getShaderSrcColorFragment() {
 "       vec3 lightDir = normalize(shadowLightPos - FragPos);\n"
 "       float bias = max(0.05 * (1.0 - dot(normal, lightDir)), 0.005);\n"
 "       float shadow = 0.0;\n"
-"       vec2 texelSize = 0.5 / textureSize(shadowMap, 0);\n"
+"       vec2 texelSize = vec2(0.5, 0.5) / vec2(textureSize(shadowMap, 0));\n"
 "       for(int x = -1; x <= 1; ++x) {\n"
 "           for(int y = -1; y <= 1; ++y) {\n"
 "               float pcfDepth = texture(shadowMap, projCoords.xy + vec2(x, y) * texelSize).r;\n"
