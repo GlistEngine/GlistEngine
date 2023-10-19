@@ -292,7 +292,7 @@ $(document).ready(function(){initNavTree('gWindowEvents_8h_source.html',''); ini
 <div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;};</div>
 <div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160; </div>
 <div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160; </div>
-<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;<span class="preprocessor">#ifdef ANDROID</span></div>
+<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;<span class="preprocessor">#if defined(ANDROID) || TARGET_OS_IPHONE || TARGET_OS_SIMULATOR</span></div>
 <div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;<span class="keyword">enum</span> InputType {</div>
 <div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160;    INPUTTYPE_UNKNOWN = 0,</div>
 <div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;    INPUTTYPE_FINGER = 1,</div>
@@ -377,7 +377,7 @@ $(document).ready(function(){initNavTree('gWindowEvents_8h_source.html',''); ini
 <div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160;    DeviceOrientation orientation;</div>
 <div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160;};</div>
 <div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160; </div>
-<div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* ANDROID */</span><span class="preprocessor"></span></div>
+<div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* defined(ANDROID) || TARGET_OS_IPHONE || TARGET_OS_SIMULATOR */</span><span class="preprocessor"></span></div>
 <div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160; </div>
 <div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* GWINDOWEVENTS_H_ */</span><span class="preprocessor"></span></div>
 <div class="ttc" id="aclassgCharTypedEvent_html"><div class="ttname"><a href="classgCharTypedEvent.html">gCharTypedEvent</a></div><div class="ttdef"><b>Definition:</b> gWindowEvents.h:25</div></div>

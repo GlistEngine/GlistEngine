@@ -1,5 +1,6 @@
 var NAVTREEINDEX3 =
 {
+"classgGUICandleStickChart.html#a2b279f13aab91dea10f70e16b76b9fb4":[0,0,49,2],
 "classgGUICandleStickChart.html#a2d6410758101f30ece907bb6935a5e14":[0,0,49,14],
 "classgGUICandleStickChart.html#a3de061418c3e9f787b9e55ef46f24cf5":[0,0,49,6],
 "classgGUICandleStickChart.html#a44af69480f739ed2262c33b4e2e855d7":[0,0,49,7],
@@ -248,6 +249,5 @@ var NAVTREEINDEX3 =
 "classgGUIFrame.html":[0,0,63],
 "classgGUIFrame.html#a2eb93a354c2ca9605a2c8eb5d113da01":[0,0,63,2],
 "classgGUIFrame.html#a672261b0678d45a6d88c6d321c87d073":[0,0,63,0],
-"classgGUIFrame.html#a80ac39cc5f3c2107c6375999aa7ed992":[0,0,63,1],
-"classgGUIFrame.html#ab6e1c7302ff2f32bad4a31dd28e09aee":[0,0,63,3]
+"classgGUIFrame.html#a80ac39cc5f3c2107c6375999aa7ed992":[0,0,63,1]
 };

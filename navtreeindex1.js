@@ -1,5 +1,6 @@
 var NAVTREEINDEX1 =
 {
+"classgBaseParticles.html#a1f39ac3ce36a9bcd22ea3ba3b5c9049f":[0,0,10,8],
 "classgBaseParticles.html#a22900021cfeb675625c63b18cd084307":[0,0,10,23],
 "classgBaseParticles.html#a2c2812af4e2c1d892ed909c17f87c0d4":[0,0,10,28],
 "classgBaseParticles.html#a2e09c496ad62f193801391b5bcdc90aa":[0,0,10,13],
@@ -248,6 +249,5 @@ var NAVTREEINDEX1 =
 "classgColorChannelMixer.html":[0,0,26],
 "classgColorChannelMixer.html#a322e32918b5aaaf1db61d75c67dd6077":[0,0,26,0],
 "classgColorChannelMixer.html#a35c5b7b5260b917bdeb55003df3cf72f":[0,0,26,1],
-"classgColorChannelMixer.html#a4700a68e327d977e835c00e62681771c":[0,0,26,2],
-"classgColorChannelMixer.html#a76d48697a410879d5c3a3c2e6cafc3dd":[0,0,26,3]
+"classgColorChannelMixer.html#a4700a68e327d977e835c00e62681771c":[0,0,26,2]
 };

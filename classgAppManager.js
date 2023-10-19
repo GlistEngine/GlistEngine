@@ -23,6 +23,7 @@ var classgAppManager =
     [ "getWindow", "classgAppManager.html#a86721d4592b603284702f88b01c8206f", null ],
     [ "getWindowMode", "classgAppManager.html#aafa998e13fbeee554d72e867fd58d3f7", null ],
     [ "initialize", "classgAppManager.html#a7dbf3c16fb2a6847df489cad291804c4", null ],
+    [ "iosLoop", "classgAppManager.html#a75bc57cbce5ac601329df9bb6d5258b5", null ],
     [ "isGamepadButtonPressed", "classgAppManager.html#af2db5faa194ca30a7843621971448ef5", null ],
     [ "isGamepadEnabled", "classgAppManager.html#a40579fa439c5443f4831c54787a90367", null ],
     [ "isJoystickConnected", "classgAppManager.html#a84a33be14e20fd6732bdaa62edec44b6", null ],

@@ -1,5 +1,6 @@
 var NAVTREEINDEX4 =
 {
+"classgGUIFrame.html#ab6e1c7302ff2f32bad4a31dd28e09aee":[0,0,63,3],
 "classgGUIGraph.html":[0,0,64],
 "classgGUIGraph.html#a01ce10c83b5faaa2bf88ffb250701f66":[0,0,64,24],
 "classgGUIGraph.html#a028f9e558a75d13d9729fa0f6f0c5d07":[0,0,64,29],
@@ -248,6 +249,5 @@ var NAVTREEINDEX4 =
 "classgGUIMenuItem.html#afe08e1c724987ca20c6aa02230efd34b":[0,0,71,15],
 "classgGUIMenubar.html":[0,0,70],
 "classgGUIMenubar.html#a25d150b4d9ec5f66b30b799dc104155a":[0,0,70,0],
-"classgGUIMenubar.html#a872b2586b6e307008d44c66fb0fedac7":[0,0,70,2],
-"classgGUIMenubar.html#a9bf9f134bbf68989ed274fc6f33618e7":[0,0,70,1]
+"classgGUIMenubar.html#a872b2586b6e307008d44c66fb0fedac7":[0,0,70,2]
 };
