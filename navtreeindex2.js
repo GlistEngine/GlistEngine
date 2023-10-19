@@ -1,5 +1,6 @@
 var NAVTREEINDEX2 =
 {
+"classgColorChannelMixer.html#acecda00f5758e18c7fb1997e0b8e88ca":[0,0,26,4],
 "classgColorCurves.html":[0,0,27],
 "classgColorCurves.html#a15b9a990800f867cabe247c9466e3974":[0,0,27,0],
 "classgColorCurves.html#a39e4fa4de7c7f2344323c83d1d8c9d73":[0,0,27,4],
@@ -163,13 +164,14 @@ var NAVTREEINDEX2 =
 "classgGLFWWindow.html#a08b6f75645fdb36da4731759e2a8e604":[0,0,43,5],
 "classgGLFWWindow.html#a15dc67d582f90b88049e03f21a3e657a":[0,0,43,7],
 "classgGLFWWindow.html#a1dd02adc9e910380e1a0cac1b400b0e5":[0,0,43,0],
-"classgGLFWWindow.html#a2480f711c72c0e4f963e70a704bc971f":[0,0,43,16],
+"classgGLFWWindow.html#a2480f711c72c0e4f963e70a704bc971f":[0,0,43,17],
 "classgGLFWWindow.html#a379c147808dfeeefa7a4f4862803b819":[0,0,43,6],
-"classgGLFWWindow.html#a3d44cb80525f64095977fcd9194fb021":[0,0,43,15],
-"classgGLFWWindow.html#a7a5ad603510df5bea81eb9098ef11718":[0,0,43,14],
-"classgGLFWWindow.html#a88b0793816aa79f3667ac13d6432800e":[0,0,43,13],
+"classgGLFWWindow.html#a3d44cb80525f64095977fcd9194fb021":[0,0,43,16],
+"classgGLFWWindow.html#a45a407047573e2385e5b2f9b89c1c9b6":[0,0,43,12],
+"classgGLFWWindow.html#a7a5ad603510df5bea81eb9098ef11718":[0,0,43,15],
+"classgGLFWWindow.html#a88b0793816aa79f3667ac13d6432800e":[0,0,43,14],
 "classgGLFWWindow.html#aad0f9c5efce47b2588c9ea96a4c3c099":[0,0,43,10],
-"classgGLFWWindow.html#ac77ae081eb18e471d7a5533443253fcf":[0,0,43,12],
+"classgGLFWWindow.html#ac77ae081eb18e471d7a5533443253fcf":[0,0,43,13],
 "classgGLFWWindow.html#acd4fb915673ad68f52190337c25967d8":[0,0,43,2],
 "classgGLFWWindow.html#ad61bc4c718fc6a0cb7e88e1470b15122":[0,0,43,8],
 "classgGLFWWindow.html#adad54bb27d902185a85c02b8ae77079d":[0,0,43,9],
@@ -247,7 +249,5 @@ var NAVTREEINDEX2 =
 "classgGUICandleStickChart.html#a1310bf56b9d80ef3aa490eda67040ce7":[0,0,49,12],
 "classgGUICandleStickChart.html#a151e5d9bd349bd3b08de15a151840f5a":[0,0,49,11],
 "classgGUICandleStickChart.html#a23f71d877e1527c4896c8381e5adbae5":[0,0,49,3],
-"classgGUICandleStickChart.html#a2b279f13aab91dea10f70e16b76b9fb4":[0,0,49,2],
-"classgGUICandleStickChart.html#a2d6410758101f30ece907bb6935a5e14":[0,0,49,14],
-"classgGUICandleStickChart.html#a3de061418c3e9f787b9e55ef46f24cf5":[0,0,49,6]
+"classgGUICandleStickChart.html#a2b279f13aab91dea10f70e16b76b9fb4":[0,0,49,2]
 };

@@ -1,5 +1,7 @@
 var NAVTREEINDEX11 =
 {
+"gGUIColorbox_8h_source.html":[1,0,49],
+"gGUIColumnChart_8h_source.html":[1,0,51],
 "gGUIContainer_8h_source.html":[1,0,52],
 "gGUIContextMenu_8h_source.html":[1,0,53],
 "gGUIControl_8h_source.html":[1,0,54],
