@@ -46,7 +46,7 @@ void gStartEngine(gBaseApp* baseApp, const std::string& appName, int windowMode,
 }
 
 void gStartEngine(gBaseApp* baseApp, const std::string& appName, int loopMode) {
-#if !(defined(ANDROID) || TARGET_OS_IPHONE || TARGET_OS_SIMULATOR)
+#if !(defined(GLIST_MOBILE))
 	gAppManager manager(appName, baseApp, 0, 0, G_WINDOWMODE_NONE, 0, 0, G_SCREENSCALING_NONE, false, loopMode);
 	manager.runApp();
 #else
@@ -454,7 +454,7 @@ void gAppManager::onEvent(gEvent& event) {
     dispatcher.dispatch<gWindowLoseFocusEvent>(G_BIND_FUNCTION(onWindowLoseFocusEvent));
     dispatcher.dispatch<gJoystickConnectEvent>(G_BIND_FUNCTION(onJoystickConnectEvent));
     dispatcher.dispatch<gJoystickDisconnectEvent>(G_BIND_FUNCTION(onJoystickDisconnectEvent));
-#if defined(ANDROID) || TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
+#if defined(GLIST_MOBILE)
     dispatcher.dispatch<gAppPauseEvent>(G_BIND_FUNCTION(onAppPauseEvent));
     dispatcher.dispatch<gAppResumeEvent>(G_BIND_FUNCTION(onAppResumeEvent));
     dispatcher.dispatch<gDeviceOrientationChangedEvent>(G_BIND_FUNCTION(onDeviceOrientationChangedEvent));
@@ -685,7 +685,7 @@ void gAppManager::iosLoop()
 
 #endif // TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
 
-#if defined(ANDROID) || TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
+#if defined(GLIST_MOBILE)
 
 bool gAppManager::onAppPauseEvent(gAppPauseEvent& event) {
     submitToMainThread([this]() {
@@ -808,7 +808,7 @@ bool gAppManager::onTouchEvent(gTouchEvent& event) {
 	return false;
 }
 
-#endif // defined(ANDROID) || TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
+#endif // defined(GLIST_MOBILE)
 
 void gAppManager::updateTime() {
 	targettimestep = AppClockDuration(1'000'000'000 / (targetframerate + 1));

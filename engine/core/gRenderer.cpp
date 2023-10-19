@@ -1184,7 +1184,7 @@ bool gRenderer::isAlphaTestEnabled() {
 
 const std::string gRenderer::getShaderSrcColorVertex() {
 	const char* shadersource =
-#if defined(ANDROID) || TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
+#if defined(GLIST_MOBILE)
 "	#version 300 es\n"
 "	precision highp float;\n"
 #else
@@ -1250,7 +1250,7 @@ const std::string gRenderer::getShaderSrcColorVertex() {
 
 const std::string gRenderer::getShaderSrcColorFragment() {
 	const char* shadersource =
-#if defined(ANDROID) || TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
+#if defined(GLIST_MOBILE)
 "	#version 300 es\n"
 "	precision highp float;\n"
 #else
@@ -1567,7 +1567,7 @@ const std::string gRenderer::getShaderSrcColorFragment() {
 
 const std::string gRenderer::getShaderSrcTextureVertex() {
 	const char* shadersource =
-#if defined(ANDROID) || TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
+#if defined(GLIST_MOBILE)
 "#version 300 es\n"
 "precision highp float;\n"
 #else
@@ -1593,7 +1593,7 @@ const std::string gRenderer::getShaderSrcTextureVertex() {
 
 const std::string gRenderer::getShaderSrcTextureFragment() {
 	const char* shadersource =
-#if defined(ANDROID) || TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
+#if defined(GLIST_MOBILE)
 "#version 300 es\n"
 "precision highp float;\n"
 #else
@@ -1615,7 +1615,7 @@ const std::string gRenderer::getShaderSrcTextureFragment() {
 
 const std::string gRenderer::getShaderSrcImageVertex() {
 	const char* shadersource =
-#if defined(ANDROID) || TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
+#if defined(GLIST_MOBILE)
 "#version 300 es\n"
 "precision highp float;\n"
 #else
@@ -1646,7 +1646,7 @@ const std::string gRenderer::getShaderSrcImageVertex() {
 
 const std::string gRenderer::getShaderSrcImageFragment() {
 	const char* shadersource =
-#if defined(ANDROID) || TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
+#if defined(GLIST_MOBILE)
 "#version 300 es\n"
 "precision highp float;\n"
 #else
@@ -1681,7 +1681,7 @@ const std::string gRenderer::getShaderSrcImageFragment() {
 
 const std::string gRenderer::getShaderSrcFontVertex() {
 	const char* shadersource =
-#if defined(ANDROID) || TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
+#if defined(GLIST_MOBILE)
 "#version 300 es\n"
 "precision highp float;\n"
 #else
@@ -1702,7 +1702,7 @@ const std::string gRenderer::getShaderSrcFontVertex() {
 
 const std::string gRenderer::getShaderSrcFontFragment() {
 	const char* shadersource =
-#if defined(ANDROID) || TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
+#if defined(GLIST_MOBILE)
 "#version 300 es\n"
 "precision highp float;\n"
 #else
@@ -1724,7 +1724,7 @@ const std::string gRenderer::getShaderSrcFontFragment() {
 
 const std::string gRenderer::getShaderSrcSkyboxVertex() {
 	const char* shadersource =
-#if defined(ANDROID) || TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
+#if defined(GLIST_MOBILE)
 "#version 300 es\n"
 "precision highp float;\n"
 #else
@@ -1753,7 +1753,7 @@ const std::string gRenderer::getShaderSrcSkyboxVertex() {
 
 const std::string gRenderer::getShaderSrcSkyboxFragment() {
 	const char* shadersource =
-#if defined(ANDROID) || TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
+#if defined(GLIST_MOBILE)
 "#version 300 es\n"
 "precision highp float;\n"
 #else
@@ -1788,7 +1788,7 @@ const std::string gRenderer::getShaderSrcSkyboxFragment() {
 
 const std::string gRenderer::getShaderSrcShadowmapVertex() {
 	const char* shadersource =
-#if defined(ANDROID) || TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
+#if defined(GLIST_MOBILE)
 "#version 300 es\n"
 "precision highp float;\n"
 #else
@@ -1809,7 +1809,7 @@ const std::string gRenderer::getShaderSrcShadowmapVertex() {
 
 const std::string gRenderer::getShaderSrcShadowmapFragment() {
 	const char* shadersource =
-#if defined(ANDROID) || TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
+#if defined(GLIST_MOBILE)
 "#version 300 es\n"
 "precision highp float;\n"
 #else
@@ -1825,7 +1825,7 @@ const std::string gRenderer::getShaderSrcShadowmapFragment() {
 
 const std::string gRenderer::getShaderSrcPbrVertex() {
 	const char* shadersource =
-#if defined(ANDROID) || TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
+#if defined(GLIST_MOBILE)
 "#version 300 es\n"
 "precision highp float;\n"
 #else
@@ -1857,7 +1857,7 @@ const std::string gRenderer::getShaderSrcPbrVertex() {
 
 const std::string gRenderer::getShaderSrcPbrFragment() {
 	const char* shadersource =
-#if defined(ANDROID) || TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
+#if defined(GLIST_MOBILE)
 "#version 300 es\n"
 "precision highp float;\n"
 #else
@@ -2043,7 +2043,7 @@ const std::string gRenderer::getShaderSrcPbrFragment() {
 
 const std::string gRenderer::getShaderSrcCubemapVertex() {
 	const char* shadersource =
-#if defined(ANDROID) || TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
+#if defined(GLIST_MOBILE)
 "#version 300 es\n"
 "precision highp float;\n"
 #else
@@ -2067,7 +2067,7 @@ const std::string gRenderer::getShaderSrcCubemapVertex() {
 
 const std::string gRenderer::getShaderSrcEquirectangularFragment() {
 	const char* shadersource =
-#if defined(ANDROID) || TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
+#if defined(GLIST_MOBILE)
 "#version 300 es\n"
 "precision highp float;\n"
 #else
@@ -2099,7 +2099,7 @@ const std::string gRenderer::getShaderSrcEquirectangularFragment() {
 
 const std::string gRenderer::getShaderSrcIrradianceFragment() {
 	const char* shadersource =
-#if defined(ANDROID) || TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
+#if defined(GLIST_MOBILE)
 "#version 300 es\n"
 "precision highp float;\n"
 #else
@@ -2206,7 +2206,7 @@ const std::string gRenderer::getShaderSrcIrradianceFragment() {
 
 const std::string gRenderer::getShaderSrcPrefilterFragment() {
 	const char* shadersource =
-#if defined(ANDROID) || TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
+#if defined(GLIST_MOBILE)
 "#version 300 es\n"
 "precision highp float;\n"
 #else
@@ -2323,7 +2323,7 @@ const std::string gRenderer::getShaderSrcPrefilterFragment() {
 
 const std::string gRenderer::getShaderSrcBrdfVertex() {
 	const char* shadersource =
-#if defined(ANDROID) || TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
+#if defined(GLIST_MOBILE)
 "#version 300 es\n"
 "precision highp float;\n"
 #else
@@ -2345,7 +2345,7 @@ const std::string gRenderer::getShaderSrcBrdfVertex() {
 
 const std::string gRenderer::getShaderSrcBrdfFragment() {
 	const char* shadersource =
-#if defined(ANDROID) || TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
+#if defined(GLIST_MOBILE)
 "#version 300 es\n"
 "precision highp float;\n"
 #else
@@ -2469,7 +2469,7 @@ const std::string gRenderer::getShaderSrcBrdfFragment() {
 
 const std::string gRenderer::getShaderSrcFboVertex() {
 	const char* shadersource =
-#if defined(ANDROID) || TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
+#if defined(GLIST_MOBILE)
 			"#version 300 es\n"
 			"precision highp float;\n"
 #else
@@ -2491,7 +2491,7 @@ const std::string gRenderer::getShaderSrcFboVertex() {
 
 const std::string gRenderer::getShaderSrcFboFragment() {
 	const char* shadersource =
-#if defined(ANDROID) || TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
+#if defined(GLIST_MOBILE)
 			"#version 300 es\n"
 			"precision highp float;\n"
 #else

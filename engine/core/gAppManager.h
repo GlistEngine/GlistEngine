@@ -337,7 +337,7 @@ private:
     bool joystickbuttonstate[maxjoysticknum][maxjoystickbuttonnum];
     int joystickaxecount;
 
-#if defined(ANDROID) || TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
+#if defined(GLIST_MOBILE)
     DeviceOrientation deviceorientation;
     DeviceOrientation olddeviceorientation;
     bool delayedresize;
@@ -365,7 +365,7 @@ private:
     bool onWindowLoseFocusEvent(gWindowLoseFocusEvent&);
     bool onJoystickConnectEvent(gJoystickConnectEvent&);
     bool onJoystickDisconnectEvent(gJoystickDisconnectEvent&);
-#if defined(ANDROID) || TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
+#if defined(GLIST_MOBILE)
     bool onAppPauseEvent(gAppPauseEvent&);
     bool onAppResumeEvent(gAppResumeEvent&);
     bool onDeviceOrientationChangedEvent(gDeviceOrientationChangedEvent&);

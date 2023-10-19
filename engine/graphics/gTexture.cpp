@@ -46,7 +46,7 @@ const int gTexture::TEXTUREMINMAGFILTER_MIPMAPLINEAR = 1;
 const int gTexture::TEXTUREMINMAGFILTER_NEAREST = 2;
 const int gTexture::TEXTUREMINMAGFILTER_CLAMP = 3;
 
-#if defined(ANDROID) || TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
+#if defined(GLIST_MOBILE)
 // todo alternatives?
 static const int texturewrap[4] = {GL_REPEAT, GL_NEAREST, GL_NEAREST, GL_NEAREST};
 static const int texturefilter[4] = {GL_LINEAR, GL_NEAREST, GL_NEAREST, GL_NEAREST};
@@ -230,7 +230,7 @@ void gTexture::setData(unsigned char* textureData, bool isMutable, bool isStbIma
 
 		if (format == GL_RG) {
 			GLint swizzleMask[] = {GL_RED, GL_RED, GL_RED, GL_GREEN};
-#if defined(ANDROID) || TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
+#if defined(GLIST_MOBILE)
 			G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_R, swizzleMask[0]));
 			G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_G, swizzleMask[1]));
 			G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_B, swizzleMask[2]));
