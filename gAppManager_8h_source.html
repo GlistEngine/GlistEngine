@@ -284,7 +284,7 @@ $(document).ready(function(){initNavTree('gAppManager_8h_source.html',''); initR
 <div class="line"><a name="l00337"></a><span class="lineno">  337</span>&#160;    <span class="keywordtype">bool</span> joystickbuttonstate[maxjoysticknum][maxjoystickbuttonnum];</div>
 <div class="line"><a name="l00338"></a><span class="lineno">  338</span>&#160;    <span class="keywordtype">int</span> joystickaxecount;</div>
 <div class="line"><a name="l00339"></a><span class="lineno">  339</span>&#160; </div>
-<div class="line"><a name="l00340"></a><span class="lineno">  340</span>&#160;<span class="preprocessor">#if defined(ANDROID) || TARGET_OS_IPHONE || TARGET_OS_SIMULATOR</span></div>
+<div class="line"><a name="l00340"></a><span class="lineno">  340</span>&#160;<span class="preprocessor">#if defined(GLIST_MOBILE)</span></div>
 <div class="line"><a name="l00341"></a><span class="lineno">  341</span>&#160;    DeviceOrientation deviceorientation;</div>
 <div class="line"><a name="l00342"></a><span class="lineno">  342</span>&#160;    DeviceOrientation olddeviceorientation;</div>
 <div class="line"><a name="l00343"></a><span class="lineno">  343</span>&#160;    <span class="keywordtype">bool</span> delayedresize;</div>
@@ -312,7 +312,7 @@ $(document).ready(function(){initNavTree('gAppManager_8h_source.html',''); initR
 <div class="line"><a name="l00365"></a><span class="lineno">  365</span>&#160;    <span class="keywordtype">bool</span> onWindowLoseFocusEvent(<a class="code" href="classgWindowLoseFocusEvent.html">gWindowLoseFocusEvent</a>&amp;);</div>
 <div class="line"><a name="l00366"></a><span class="lineno">  366</span>&#160;    <span class="keywordtype">bool</span> onJoystickConnectEvent(<a class="code" href="classgJoystickConnectEvent.html">gJoystickConnectEvent</a>&amp;);</div>
 <div class="line"><a name="l00367"></a><span class="lineno">  367</span>&#160;    <span class="keywordtype">bool</span> onJoystickDisconnectEvent(<a class="code" href="classgJoystickDisconnectEvent.html">gJoystickDisconnectEvent</a>&amp;);</div>
-<div class="line"><a name="l00368"></a><span class="lineno">  368</span>&#160;<span class="preprocessor">#if defined(ANDROID) || TARGET_OS_IPHONE || TARGET_OS_SIMULATOR</span></div>
+<div class="line"><a name="l00368"></a><span class="lineno">  368</span>&#160;<span class="preprocessor">#if defined(GLIST_MOBILE)</span></div>
 <div class="line"><a name="l00369"></a><span class="lineno">  369</span>&#160;    <span class="keywordtype">bool</span> onAppPauseEvent(gAppPauseEvent&amp;);</div>
 <div class="line"><a name="l00370"></a><span class="lineno">  370</span>&#160;    <span class="keywordtype">bool</span> onAppResumeEvent(gAppResumeEvent&amp;);</div>
 <div class="line"><a name="l00371"></a><span class="lineno">  371</span>&#160;    <span class="keywordtype">bool</span> onDeviceOrientationChangedEvent(gDeviceOrientationChangedEvent&amp;);</div>
@@ -343,24 +343,24 @@ $(document).ready(function(){initNavTree('gAppManager_8h_source.html',''); initR
 <div class="ttc" id="aclassgBaseCanvas_html"><div class="ttname"><a href="classgBaseCanvas.html">gBaseCanvas</a></div><div class="ttdef"><b>Definition:</b> gBaseCanvas.h:15</div></div>
 <div class="ttc" id="aclassgBaseWindow_html"><div class="ttname"><a href="classgBaseWindow.html">gBaseWindow</a></div><div class="ttdef"><b>Definition:</b> gBaseWindow.h:26</div></div>
 <div class="ttc" id="aclassgCanvasManager_html"><div class="ttname"><a href="classgCanvasManager.html">gCanvasManager</a></div><div class="ttdef"><b>Definition:</b> gCanvasManager.h:13</div></div>
-<div class="ttc" id="aclassgCharTypedEvent_html"><div class="ttname"><a href="classgCharTypedEvent.html">gCharTypedEvent</a></div><div class="ttdef"><b>Definition:</b> gWindowEvents.h:25</div></div>
+<div class="ttc" id="aclassgCharTypedEvent_html"><div class="ttname"><a href="classgCharTypedEvent.html">gCharTypedEvent</a></div><div class="ttdef"><b>Definition:</b> gWindowEvents.h:26</div></div>
 <div class="ttc" id="aclassgEvent_html"><div class="ttname"><a href="classgEvent.html">gEvent</a></div><div class="ttdef"><b>Definition:</b> gEvent.h:56</div></div>
 <div class="ttc" id="aclassgGUIFrame_html"><div class="ttname"><a href="classgGUIFrame.html">gGUIFrame</a></div><div class="ttdef"><b>Definition:</b> gGUIFrame.h:14</div></div>
 <div class="ttc" id="aclassgGUIManager_html"><div class="ttname"><a href="classgGUIManager.html">gGUIManager</a></div><div class="ttdef"><b>Definition:</b> gGUIManager.h:36</div></div>
-<div class="ttc" id="aclassgJoystickConnectEvent_html"><div class="ttname"><a href="classgJoystickConnectEvent.html">gJoystickConnectEvent</a></div><div class="ttdef"><b>Definition:</b> gWindowEvents.h:168</div></div>
-<div class="ttc" id="aclassgJoystickDisconnectEvent_html"><div class="ttname"><a href="classgJoystickDisconnectEvent.html">gJoystickDisconnectEvent</a></div><div class="ttdef"><b>Definition:</b> gWindowEvents.h:184</div></div>
-<div class="ttc" id="aclassgKeyPressedEvent_html"><div class="ttname"><a href="classgKeyPressedEvent.html">gKeyPressedEvent</a></div><div class="ttdef"><b>Definition:</b> gWindowEvents.h:38</div></div>
-<div class="ttc" id="aclassgKeyReleasedEvent_html"><div class="ttname"><a href="classgKeyReleasedEvent.html">gKeyReleasedEvent</a></div><div class="ttdef"><b>Definition:</b> gWindowEvents.h:51</div></div>
-<div class="ttc" id="aclassgMouseButtonPressedEvent_html"><div class="ttname"><a href="classgMouseButtonPressedEvent.html">gMouseButtonPressedEvent</a></div><div class="ttdef"><b>Definition:</b> gWindowEvents.h:106</div></div>
-<div class="ttc" id="aclassgMouseButtonReleasedEvent_html"><div class="ttname"><a href="classgMouseButtonReleasedEvent.html">gMouseButtonReleasedEvent</a></div><div class="ttdef"><b>Definition:</b> gWindowEvents.h:114</div></div>
-<div class="ttc" id="aclassgMouseMovedEvent_html"><div class="ttname"><a href="classgMouseMovedEvent.html">gMouseMovedEvent</a></div><div class="ttdef"><b>Definition:</b> gWindowEvents.h:60</div></div>
-<div class="ttc" id="aclassgMouseScrolledEvent_html"><div class="ttname"><a href="classgMouseScrolledEvent.html">gMouseScrolledEvent</a></div><div class="ttdef"><b>Definition:</b> gWindowEvents.h:75</div></div>
+<div class="ttc" id="aclassgJoystickConnectEvent_html"><div class="ttname"><a href="classgJoystickConnectEvent.html">gJoystickConnectEvent</a></div><div class="ttdef"><b>Definition:</b> gWindowEvents.h:169</div></div>
+<div class="ttc" id="aclassgJoystickDisconnectEvent_html"><div class="ttname"><a href="classgJoystickDisconnectEvent.html">gJoystickDisconnectEvent</a></div><div class="ttdef"><b>Definition:</b> gWindowEvents.h:185</div></div>
+<div class="ttc" id="aclassgKeyPressedEvent_html"><div class="ttname"><a href="classgKeyPressedEvent.html">gKeyPressedEvent</a></div><div class="ttdef"><b>Definition:</b> gWindowEvents.h:39</div></div>
+<div class="ttc" id="aclassgKeyReleasedEvent_html"><div class="ttname"><a href="classgKeyReleasedEvent.html">gKeyReleasedEvent</a></div><div class="ttdef"><b>Definition:</b> gWindowEvents.h:52</div></div>
+<div class="ttc" id="aclassgMouseButtonPressedEvent_html"><div class="ttname"><a href="classgMouseButtonPressedEvent.html">gMouseButtonPressedEvent</a></div><div class="ttdef"><b>Definition:</b> gWindowEvents.h:107</div></div>
+<div class="ttc" id="aclassgMouseButtonReleasedEvent_html"><div class="ttname"><a href="classgMouseButtonReleasedEvent.html">gMouseButtonReleasedEvent</a></div><div class="ttdef"><b>Definition:</b> gWindowEvents.h:115</div></div>
+<div class="ttc" id="aclassgMouseMovedEvent_html"><div class="ttname"><a href="classgMouseMovedEvent.html">gMouseMovedEvent</a></div><div class="ttdef"><b>Definition:</b> gWindowEvents.h:61</div></div>
+<div class="ttc" id="aclassgMouseScrolledEvent_html"><div class="ttname"><a href="classgMouseScrolledEvent.html">gMouseScrolledEvent</a></div><div class="ttdef"><b>Definition:</b> gWindowEvents.h:76</div></div>
 <div class="ttc" id="aclassgObject_html"><div class="ttname"><a href="classgObject.html">gObject</a></div><div class="ttdef"><b>Definition:</b> gObject.h:33</div></div>
-<div class="ttc" id="aclassgWindowFocusEvent_html"><div class="ttname"><a href="classgWindowFocusEvent.html">gWindowFocusEvent</a></div><div class="ttdef"><b>Definition:</b> gWindowEvents.h:136</div></div>
-<div class="ttc" id="aclassgWindowLoseFocusEvent_html"><div class="ttname"><a href="classgWindowLoseFocusEvent.html">gWindowLoseFocusEvent</a></div><div class="ttdef"><b>Definition:</b> gWindowEvents.h:144</div></div>
-<div class="ttc" id="aclassgWindowMouseEnterEvent_html"><div class="ttname"><a href="classgWindowMouseEnterEvent.html">gWindowMouseEnterEvent</a></div><div class="ttdef"><b>Definition:</b> gWindowEvents.h:152</div></div>
-<div class="ttc" id="aclassgWindowMouseExitEvent_html"><div class="ttname"><a href="classgWindowMouseExitEvent.html">gWindowMouseExitEvent</a></div><div class="ttdef"><b>Definition:</b> gWindowEvents.h:160</div></div>
-<div class="ttc" id="aclassgWindowResizeEvent_html"><div class="ttname"><a href="classgWindowResizeEvent.html">gWindowResizeEvent</a></div><div class="ttdef"><b>Definition:</b> gWindowEvents.h:122</div></div>
+<div class="ttc" id="aclassgWindowFocusEvent_html"><div class="ttname"><a href="classgWindowFocusEvent.html">gWindowFocusEvent</a></div><div class="ttdef"><b>Definition:</b> gWindowEvents.h:137</div></div>
+<div class="ttc" id="aclassgWindowLoseFocusEvent_html"><div class="ttname"><a href="classgWindowLoseFocusEvent.html">gWindowLoseFocusEvent</a></div><div class="ttdef"><b>Definition:</b> gWindowEvents.h:145</div></div>
+<div class="ttc" id="aclassgWindowMouseEnterEvent_html"><div class="ttname"><a href="classgWindowMouseEnterEvent.html">gWindowMouseEnterEvent</a></div><div class="ttdef"><b>Definition:</b> gWindowEvents.h:153</div></div>
+<div class="ttc" id="aclassgWindowMouseExitEvent_html"><div class="ttname"><a href="classgWindowMouseExitEvent.html">gWindowMouseExitEvent</a></div><div class="ttdef"><b>Definition:</b> gWindowEvents.h:161</div></div>
+<div class="ttc" id="aclassgWindowResizeEvent_html"><div class="ttname"><a href="classgWindowResizeEvent.html">gWindowResizeEvent</a></div><div class="ttdef"><b>Definition:</b> gWindowEvents.h:123</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
