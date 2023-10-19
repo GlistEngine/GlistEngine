@@ -961,7 +961,7 @@ void gRenderer::clear() {
 }
 
 void gRenderer::clearColor(int r, int g, int b, int a) {
-    glBindFramebuffer(GL_FRAMEBUFFER, gFbo::defaultfbo);
+//    glBindFramebuffer(GL_FRAMEBUFFER, gFbo::defaultfbo);
 	G_CHECK_GL(glClearColor((float)r / 255, (float)g / 255, (float)b / 255, (float)a / 255));
 	G_CHECK_GL(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
 }
