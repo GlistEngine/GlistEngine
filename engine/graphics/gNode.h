@@ -144,16 +144,11 @@ protected:
 	glm::quat orientation;
 	glm::vec3 scalevec;
 
+	void processTransformationMatrix();
+
 private:
 	static int lastid;
 	int id;
-	void processTransformationMatrix();
-
-/*
-	inline const glm::vec3 & toGlm(const glm::vec3 & v){
-		return *reinterpret_cast<const glm::vec3*>(&v);
-	}
-*/
 };
 
 #endif /* ENGINE_BASE_GNODE_H_ */
