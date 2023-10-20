@@ -97,13 +97,12 @@ void gGUIListbox::removeData(int lineNo) {
 	totalh = data.size() * lineh;
 	if(totalh < height) totalh = height;
 	if(selectedno > data.size() - 1) {
-		selectedno = data.size();
+		selectedno = data.size() - 1;
+		flno -= 1;
+		if(flno < 0) flno = 0;
+		firsty -= 3 * scrolldiff;
+		if(firsty < 0) firsty = 0;
 	}
-	if (flno > selectedno) {
-		flno = selectedno;
-		firsty = flno * lineh;
-	}
-	if (firsty < 0) firsty = 0;
 }
 
 void gGUIListbox::removeSelected() {
@@ -238,8 +237,4 @@ gColor gGUIListbox::getIconsColor() {
 
 int gGUIListbox::getVisibleLineNumber() {
 	return minlinenum;
-}
-
-void gGUIListbox::keyPressed(int key) {
-
 }
