@@ -1292,9 +1292,9 @@ void gGUITextbox::charPressed(unsigned int codepoint) {
 		if(cursorposchar > 0) oldtext = text.substr(0, cursorposutf);
 		addedtext = gCodepointToStr(codepoint);
 		if(linecount > currentline && ismultiline) {
-			if(textfont->getStringWidth(lines[linecount - 1]) + textfont->getStringWidth(addedtext) >= width - 2 *initx)
+			if(textfont->getStringWidth(lines[linecount - 1]) + textfont->getStringWidth(addedtext) >= width - 2 * initx)
 				widthexceeded = true;
-		} else if(textfont->getStringWidth(lines[currentline - 1]) + textfont->getStringWidth(addedtext) >= width - 2 *initx  && ismultiline)
+		} else if(textfont->getStringWidth(lines[currentline - 1]) + textfont->getStringWidth(addedtext) >= width - 2 * initx  && ismultiline)
 			widthexceeded = true;
 		newtext = oldtext + addedtext;
 		if(cursorposchar < letterlength.size()) newtext += text.substr(cursorposutf, text.length() - cursorposutf);
@@ -1476,7 +1476,7 @@ std::vector<int> gGUITextbox::calculateClickPosition(int x, int y) {
 	std::vector<int> result;
 	for(int i = 0; i < 3; i++) result.push_back(0);
 	if(letterlength.size() != 0) {
-		float alignmentamount = textalignmentamount - 5 - (textfont->getStringWidth(text) * ((float)textalignment / 2));
+		float alignmentamount = textalignmentamount - initx - (textfont->getStringWidth(text) * ((float)textalignment / 2));
 		int clickxdiff = x - left;
 		int poschar = firstchar;
 		int posutf = firstutf;
