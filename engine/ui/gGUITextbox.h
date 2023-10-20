@@ -40,7 +40,7 @@
 
 #include "gGUIControl.h"
 #include <stack>
-#include "gGUIManager.h"
+class gGUIManager;
 
 
 class gGUITextbox: public gGUIControl {
