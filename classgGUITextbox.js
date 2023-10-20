@@ -15,7 +15,6 @@ var classgGUITextbox =
     [ "getLineCount", "classgGUITextbox.html#a63d11404b44c7133e1df949706841a1f", null ],
     [ "getText", "classgGUITextbox.html#a313df9db46518f9842c88241656404ad", null ],
     [ "getTextboxh", "classgGUITextbox.html#ad87e0fecb6fb23a782e27883e3cc1571", null ],
-    [ "getTextMoveAmount", "classgGUITextbox.html#a9e43ada739a2b49be86ad50a1674deef", null ],
     [ "isBackgroundEnabled", "classgGUITextbox.html#a4b4be9e6b21fcb1c2c1263d40f6ac1be", null ],
     [ "isEditable", "classgGUITextbox.html#a508bb63272338ed3a04a1daf02ca3353", null ],
     [ "isNumeric", "classgGUITextbox.html#a21c9fe385926848602d3382c6d58694c", null ],

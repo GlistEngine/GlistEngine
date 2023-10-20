@@ -1,6 +1,5 @@
 var NAVTREEINDEX7 =
 {
-"classgJoystickConnectEvent.html":[0,0,99],
 "classgJoystickConnectEvent.html#a45850d7839135c15b2f197219d97e830":[0,0,99,2],
 "classgJoystickConnectEvent.html#af4e7100feffdd911e59c15259b09a00f":[0,0,99,1],
 "classgJoystickConnectEvent.html#aff65c19ed83656186a5bb592cb9dcc84":[0,0,99,0],
@@ -249,5 +248,6 @@ var NAVTREEINDEX7 =
 "classgModel.html#a7068099a36182446d76bf65cf7f0c73d":[0,0,116,48],
 "classgModel.html#a735eca76a2f49b924845843e172a89ca":[0,0,116,50],
 "classgModel.html#a75abcbb228de2a92ab39ebbf764a8805":[0,0,116,18],
-"classgModel.html#a779afc6df5dfeb8df5d8deb02fa7a92a":[0,0,116,6]
+"classgModel.html#a779afc6df5dfeb8df5d8deb02fa7a92a":[0,0,116,6],
+"classgModel.html#a79c8bd1166ad5429e6dea6a87c05ad9b":[0,0,116,57]
 };

@@ -1,6 +1,5 @@
 var NAVTREEINDEX10 =
 {
-"classgTexture.html#a19a12b53996528fae48857bacff67bf4":[0,0,146,60],
 "classgTexture.html#a1ba5eb1eacf813c037930dec5c46516b":[0,0,146,37],
 "classgTexture.html#a1d1d3ad7667bf945b3c4dfe2054b374c":[0,0,146,76],
 "classgTexture.html#a1f566477436a8f84cd16a2acb080cff5":[0,0,146,70],
@@ -249,5 +248,6 @@ var NAVTREEINDEX10 =
 "gGUIActionManager_8h_source.html":[1,0,44],
 "gGUIBitmap_8h_source.html":[1,0,45],
 "gGUIButton_8h_source.html":[1,0,46],
-"gGUICandleStickChart_8h_source.html":[1,0,47]
+"gGUICandleStickChart_8h_source.html":[1,0,47],
+"gGUICheckbox_8h_source.html":[1,0,48]
 };
