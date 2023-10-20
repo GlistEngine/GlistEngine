@@ -22,6 +22,7 @@ var classgNode =
     [ "pan", "classgNode.html#aaa50b0228f1afa2fb06b1aeac5959699", null ],
     [ "panDeg", "classgNode.html#ae28250b69ddd6462d84cbb2c4300a7d3", null ],
     [ "popMatrix", "classgNode.html#a41a65cf61c60c82b19ce140364f98a26", null ],
+    [ "processTransformationMatrix", "classgNode.html#a17bda4bce2883efc9b305665ef408f59", null ],
     [ "pushMatrix", "classgNode.html#aa3a5c83ced88cd5ed716849c690c9283", null ],
     [ "removeParent", "classgNode.html#a47b3c02a129b0fcbdd488583f97a1033", null ],
     [ "roll", "classgNode.html#ad87e369cc84a3bedf212b1096fba9024", null ],
