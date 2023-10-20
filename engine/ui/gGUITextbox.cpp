@@ -9,6 +9,7 @@
 #include "gAppManager.h"
 #include "gBaseApp.h"
 #include "gBaseCanvas.h"
+#include "gGUIManager.h"
 
 #include <cwchar>
 #include <codecvt>
