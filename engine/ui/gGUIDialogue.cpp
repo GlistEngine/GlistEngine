@@ -169,14 +169,13 @@ void gGUIDialogue::resetTitleBar() {
 	float tbbitp = ((float)deftitlebarbitmapw + 15) / (float)deftitlebar.width;
 	float tbbutp = (float)deftitlebarbuttonw / (float)deftitlebar.width;
 	float tbtxtp = 1 - (tbbitp + 3 * tbbutp);
-	float tbcolproportions[5] = {tbbitp, tbtxtp, tbbutp, tbbutp, tbbutp};
+	float tbcolproportions[4] = {tbtxtp, tbbutp, tbbutp, tbbutp};
 	deftitlebarsizer.setColumnProportions(tbcolproportions);
 
-	deftitlebarsizer.setControl(0, 0, &deftitlebarbitmap);
 	deftitlebarbitmap.top += (deftitlebar.height - deftitlebarbitmap.height) / 2;
 	deftitlebarbitmap.left += (deftitlebar.width * tbbitp - deftitlebarbitmap.width) / 2;
 
-	deftitlebarsizer.setControl(0, 1, &deftitlebartext);
+	deftitlebarsizer.setControl(0, 0, &deftitlebartext);
 	deftitlebartext.height = deftitlebarbitmapw / 1.5f;
 	deftitlebartext.top += (deftitlebar.height - deftitlebartext.height) / 2;
 

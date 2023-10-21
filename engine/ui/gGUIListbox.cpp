@@ -90,8 +90,8 @@ void gGUIListbox::insertData(int lineNo, std::string lineData) {
 }
 
 void gGUIListbox::removeData(int lineNo) {
-	data.erase(data.begin() + lineNo - 1);
-	icons.erase(icons.begin() + lineNo - 1);
+	if(lineNo>=0 && lineNo < data.size()) data.erase(data.begin() + lineNo);
+	if(lineNo>=0 && lineNo < icons.size()) icons.erase(icons.begin() + lineNo);
 	linenum = data.size();
 	if(linenum > maxlinenum) linenum = maxlinenum;
 	totalh = data.size() * lineh;

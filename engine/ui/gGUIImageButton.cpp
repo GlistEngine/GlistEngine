@@ -45,11 +45,11 @@ void gGUIImageButton::draw() {
             imageh = buttonh;
         }
     if(isPressed()) {
-    	if (iconid != gGUIResources::ICON_NONE) res.getIconImage(iconid, isiconbig)->draw(left, top + ispressed, buttonw, buttonh);
+    	if (iconid != gGUIResources::ICON_NONE) res.getIconImage(iconid, isiconbig)->draw(left + 4, top + ispressed + 4, buttonw - 10, buttonh - 10);
     	else buttonimage.draw(left, top + ispressed, buttonw, buttonh);
     }
     else {
-    	if (pressediconid != gGUIResources::ICON_NONE) res.getIconImage(pressediconid, isiconbig)->draw(left, top + ispressed, buttonw, buttonh);
+    	if (pressediconid != gGUIResources::ICON_NONE) res.getIconImage(pressediconid, isiconbig)->draw(left + 4 , top + ispressed + 4, buttonw - 10, buttonh - 10);
     	else pressedbuttonimage.draw(left, top + ispressed, buttonw, buttonh);
     }
     setSize(imagew, imageh);

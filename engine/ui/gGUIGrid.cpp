@@ -1881,6 +1881,7 @@ void gGUIGrid::createCell(int rowNo, int columnNo) {
 void gGUIGrid::createTextBox() {
 	//allcells[selectedbox].cellx + 1
 	//allcells.at(cellindexcounter).cellx + (allcells.at(cellindexcounter).cellw - font->getStringWidth(allcells.at(cellindexcounter).showncontent)) * textbox.getTextMoveAmount() - textbox.getInitX() * textbox.getTextAlignment() - firstx
+	textbox.setEditable(true);
 	textbox.set(root, this, this, 0, 0, allcells[selectedbox].cellx + 1, allcells[selectedbox].celly - 2, allcells[selectedbox].cellw - 10, allcells[selectedbox].cellh - 2);
 	textbox.setTextFont(manager->getFont(allcells[selectedbox].fontnum, allcells[selectedbox].fontstate/*,allcells[selectedbox].fontsize*/));
 	textbox.setTextAlignment(allcells[selectedbox].cellalignment, allcells[selectedbox].cellw, textbox.getInitX());

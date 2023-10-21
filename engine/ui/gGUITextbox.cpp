@@ -9,6 +9,7 @@
 #include "gAppManager.h"
 #include "gBaseApp.h"
 #include "gBaseCanvas.h"
+#include "gGUIManager.h"
 
 #include <cwchar>
 #include <codecvt>
@@ -94,11 +95,8 @@ gGUITextbox::gGUITextbox() {
 	boxshrinked = false;
 	boxexpanded = false;
 	arrowkeypressed = false;
-	arrowamount = 0;
 	textalignment = TEXTALIGNMENT_LEFT;
 	textalignmentamount = 5;
-	cursormoveamount = 1;
-	textmoveamount = 0;
 	textcolor = fontcolor;
 	colorset = false;
 	setTextAlignment(textalignment, boxw, initx);
@@ -117,7 +115,6 @@ void gGUITextbox::set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseG
 	rightlimit = right;
 	toplimit = top;
 	bottomlimit = bottom;
-	arrowamount = 0;
 	if(!root) return;
 	manager = root->getAppManager()->getGUIManager();
 	textfont = manager->getFont(gGUIManager::FONT_FREESANS);
@@ -380,12 +377,12 @@ void gGUITextbox::draw() {
 		if(dotlimit > text.size()) dotlimit = text.size();
 		for(int i = 0; i < dotlimit; i++) gDrawCircle(left + dotinit + i * dotlen, doty, dotradius, true);
 	} else if(rowsnum == 1) {
-		textfont->drawText(text.substr(firstutf, lastutf), left - (cursorposx * textmoveamount - arrowamount) - textfont->getStringWidth(" ") / 2 - firstx + textalignmentamount, top + hdiff + lineheight + linetopmargin - firsty);
+		textfont->drawText(text.substr(firstutf, lastutf), left - textfont->getStringWidth(" ") / 2 - firstx + textalignmentamount - (textfont->getStringWidth(text) * ((float)textalignment / 2)), top + hdiff + lineheight + linetopmargin - firsty);
 	} else {
 		if(text.size() == 0) currentline = 1;
 		for(int i = 0; i < rowsnum; i++) {
 			if(lines[i] == "") continue;
-			textfont->drawText(lines[i + (lastdrawnline - rowsnum) * rowsnumexceeded], left - (cursorposx * textmoveamount) - textfont->getStringWidth(" ") / 2 - firstx + textalignmentamount, top + hdiff + (i + 1) * (lineheight + linetopmargin) - firsty);
+			textfont->drawText(lines[i + (lastdrawnline - rowsnum) * rowsnumexceeded], left - textfont->getStringWidth(" ") / 2 - firstx + textalignmentamount - (textfont->getStringWidth(text) * ((float)textalignment / 2)), top + hdiff + (i + 1) * (lineheight + linetopmargin) - firsty);
 		}
 	}
 
@@ -393,8 +390,8 @@ void gGUITextbox::draw() {
 		int linebottom = 0;
 		if(currentline <= rowsnum && lastdrawnline <= rowsnum) linebottom = top + hdiff +  currentline * (lineheight + linetopmargin) - firsty;
 		else linebottom = top + hdiff + (rowsnum - (lastdrawnline - currentline)) * (lineheight + linetopmargin) - firsty;
-		gDrawLine(left + (cursorposx * cursormoveamount + arrowamount) - firstx + textalignmentamount, linebottom - lineheight,
-				left + (cursorposx * cursormoveamount + arrowamount) - firstx + textalignmentamount, linebottom + lineheight * 2 / 3);
+		gDrawLine(left + cursorposx - firstx + textalignmentamount - (textfont->getStringWidth(text) * ((float)textalignment / 2)), linebottom - lineheight,
+				left + cursorposx - firstx + textalignmentamount - (textfont->getStringWidth(text) * ((float)textalignment / 2)), linebottom + lineheight * 2 / 3);
 	}
 	renderer->setColor(&oldcolor);
 }
@@ -691,17 +688,6 @@ void gGUITextbox::pressKey() {
 		else {
 			int cw = textfont->getStringWidth(text.substr(cursorposutf - letterlength[cursorposchar - 1], letterlength[cursorposchar - 1]));
 			cursorposx -= cw;
-			if(textalignment == gBaseGUIObject::TEXTALIGNMENT_RIGHT) {
-				arrowamount -= textfont->getStringWidth(text.substr(cursorposutf - letterlength[cursorposchar - 1], letterlength[cursorposchar - 1]));
-				if(arrowamount < -textfont->getStringWidth(text)) arrowamount = -textfont->getStringWidth(text);
-			}
-			else if(textalignment == gBaseGUIObject::TEXTALIGNMENT_MIDDLE) {
-				arrowamount -= textfont->getStringWidth(text.substr(cursorposutf - letterlength[cursorposchar - 1], letterlength[cursorposchar - 1])) / 2;
-				int middle;
-				if(text.length() % 2 == 0) middle = text.length() / 2;
-				else middle = text.length() / 2 + 1;
-				if(arrowamount < -textfont->getStringWidth(text.substr(0, middle))) arrowamount = -textfont->getStringWidth(text.substr(0, middle));
-			}
 		}
 		cursorposutf -= letterlength[cursorposchar - 1];
 		cursorposchar--;
@@ -745,17 +731,7 @@ void gGUITextbox::pressKey() {
 		if(!shiftpressed) selectionmode = false;
 		int cw = textfont->getStringWidth(text.substr(cursorposutf, letterlength[cursorposchar]));
 		if(ispassword) cursorposx += 3 * dotradius;
-		else {
-			cursorposx += cw;
-			if(textalignment == gBaseGUIObject::TEXTALIGNMENT_RIGHT) {
-				arrowamount += textfont->getStringWidth(text.substr(cursorposutf, letterlength[cursorposchar]));
-				if(arrowamount > 0) arrowamount = 0;
-			}
-			else if(textalignment == gBaseGUIObject::TEXTALIGNMENT_MIDDLE) {
-				arrowamount += textfont->getStringWidth(text.substr(cursorposutf, letterlength[cursorposchar])) / 2;
-				if(arrowamount > textfont->getStringWidth(text) / 2) arrowamount = textfont->getStringWidth(text) / 2;
-			}
-		}
+		else cursorposx += cw;
 		cursorposutf += letterlength[cursorposchar];
 		cursorposchar++;
 		if(cursorposx >= width - 2 * initx) {
@@ -1317,9 +1293,9 @@ void gGUITextbox::charPressed(unsigned int codepoint) {
 		if(cursorposchar > 0) oldtext = text.substr(0, cursorposutf);
 		addedtext = gCodepointToStr(codepoint);
 		if(linecount > currentline && ismultiline) {
-			if(textfont->getStringWidth(lines[linecount - 1]) + textfont->getStringWidth(addedtext) >= width - 2 *initx)
+			if(textfont->getStringWidth(lines[linecount - 1]) + textfont->getStringWidth(addedtext) >= width - 2 * initx)
 				widthexceeded = true;
-		} else if(textfont->getStringWidth(lines[currentline - 1]) + textfont->getStringWidth(addedtext) >= width - 2 *initx  && ismultiline)
+		} else if(textfont->getStringWidth(lines[currentline - 1]) + textfont->getStringWidth(addedtext) >= width - 2 * initx  && ismultiline)
 			widthexceeded = true;
 		newtext = oldtext + addedtext;
 		if(cursorposchar < letterlength.size()) newtext += text.substr(cursorposutf, text.length() - cursorposutf);
@@ -1501,6 +1477,7 @@ std::vector<int> gGUITextbox::calculateClickPosition(int x, int y) {
 	std::vector<int> result;
 	for(int i = 0; i < 3; i++) result.push_back(0);
 	if(letterlength.size() != 0) {
+		float alignmentamount = textalignmentamount - initx - (textfont->getStringWidth(text) * ((float)textalignment / 2));
 		int clickxdiff = x - left;
 		int poschar = firstchar;
 		int posutf = firstutf;
@@ -1511,7 +1488,7 @@ std::vector<int> gGUITextbox::calculateClickPosition(int x, int y) {
 				posutf += letterlength[i];
 			}
 			posx = textfont->getStringWidth(text.substr(firstutf, posutf - firstutf));
-			if(posx >= clickxdiff) {
+			if(posx >= clickxdiff - alignmentamount) {
 				poschar -= 1;
 				posutf -= letterlength[i];
 				posx = textfont->getStringWidth(text.substr(firstutf, posutf - firstutf));
@@ -1849,24 +1826,14 @@ void gGUITextbox::setTextAlignment(int textAlignment, float cellW, int initX) {
 	switch(textalignment) {
 	case TEXTALIGNMENT_LEFT:
 		textalignmentamount = initX + 1;
-		cursormoveamount = 1;
-		textmoveamount = 0;
 		break;
 	case TEXTALIGNMENT_MIDDLE:
 		textalignmentamount = cellW / 2;
-		cursormoveamount = 0.5f;
-		textmoveamount = 0.5f;
 		break;
 	case TEXTALIGNMENT_RIGHT:
 		textalignmentamount = cellW - initX - 1;
-		cursormoveamount = 0;
-		textmoveamount = 1;
 		break;
 	}
-}
-
-float gGUITextbox::getTextMoveAmount() {
-	return textmoveamount;
 }
 
 void gGUITextbox::setTextColor(gColor *textColor) {
@@ -1882,5 +1849,4 @@ void gGUITextbox::setCursorPosX(int cursorPosX, int length) {
 	cursorposx = cursorPosX;
 	cursorposchar = text.size() - (text.size() - length);
 	cursorposutf = length;
-	if(textalignment == gBaseGUIObject::TEXTALIGNMENT_MIDDLE) arrowamount -= cursorposx / 2;
 }

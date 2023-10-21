@@ -40,7 +40,7 @@
 
 #include "gGUIControl.h"
 #include <stack>
-#include "gGUIManager.h"
+class gGUIManager;
 
 
 class gGUITextbox: public gGUIControl {
@@ -209,7 +209,6 @@ public:
 	void setTextFont(gFont* textFont);
 
 	void setTextAlignment(int textAlignment, float cellW, int initX);
-	float getTextMoveAmount();
 
 	void setTextColor(gColor* textColor);
 
@@ -283,13 +282,10 @@ private:
 	int firstx, firsty;
 	bool boxshrinked, boxexpanded;
 	bool arrowkeypressed;
-	int arrowamount;
 	gFont* textfont;
 	gGUIManager* manager;
 	int textalignment;
 	int textalignmentamount;
-	float cursormoveamount;
-	float textmoveamount;
 	gColor* textcolor;
 	bool colorset;
 

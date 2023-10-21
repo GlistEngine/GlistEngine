@@ -194,7 +194,7 @@ If you want to send PR, please open the staging view via
 
 > Window->Show View->Other..->Git->Git Staging.
 
-On the Staged Changes list, remove unnecessasy files by selecting them and clicking the - (Remove selected files from the index) button on up-right corner of the list. Add your commit message and send the commit to your fork repo. Then login Github and send PR to our repos.
+On the Staged Changes list, remove unnecessary files by selecting them and clicking the - (Remove selected files from the index) button on up-right corner of the list. Add your commit message and send the commit to your fork repo. Then login Github and send PR to our repos.
 
 ***If you installed GlistEngine using the installer***
 
