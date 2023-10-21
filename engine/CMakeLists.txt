@@ -1,8 +1,4 @@
-if(APPLE)
-	cmake_minimum_required (VERSION 3.27)
-else()
-	cmake_minimum_required (VERSION 3.10.2)
-endif()
+cmake_minimum_required (VERSION 3.10.2)
 
 if(NOT DEFINED GLIST_CXX_STANDARD)
 	set(GLIST_CXX_STANDARD 14)
