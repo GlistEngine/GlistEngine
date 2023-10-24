@@ -128,9 +128,13 @@ void gGUIManager::mouseDragged(int x, int y, int button) {
 }
 
 void gGUIManager::mouseReleased(int x, int y, int button) {
-	currentframe->mouseReleased(x, y, button);
-	for (int i = 0; i < dialogues.size(); i++) {
-		if (dialogues[i]->isShown()) dialogues[i]->mouseReleased(x, y, button);
+	if (selecteddialogue == nullptr) {
+		currentframe->mouseReleased(x, y, button);
+	}
+	else {
+		for (int i = 0; i < dialogues.size(); i++) {
+			if (dialogues[i]->isShown()) dialogues[i]->mouseReleased(x, y, button);
+		}
 	}
 }
 
