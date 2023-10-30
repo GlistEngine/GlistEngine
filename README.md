@@ -207,7 +207,7 @@ One can contribute into the code when working on the cloned versions of the repo
 
 ## Licence
 
-This project is under heavy development and has a Apache Licence 2.0.
+This project is under heavy development and has a Apache License 2.0.
 
 
 ## Version
