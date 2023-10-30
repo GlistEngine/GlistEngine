@@ -121,7 +121,7 @@ void gGUIDialogue::initDefButtonsBar() {
 
 void gGUIDialogue::initDefMessageBar() {
 	defmessagebar.setSizer(&defmessagebarsizer);
-	defmessagebarsizer.setSize(1, 4);
+	defmessagebarsizer.setSize(2, 4);
 
 	defmessagetext.setText("This is a placeholder text.");
 	defdialogueicon.setDisabled(true);
@@ -172,6 +172,7 @@ void gGUIDialogue::resetTitleBar() {
 	float tbcolproportions[4] = {tbtxtp, tbbutp, tbbutp, tbbutp};
 	deftitlebarsizer.setColumnProportions(tbcolproportions);
 
+	//deftitlebarsizer.setControl(0, 0, &deftitlebarbitmap);
 	deftitlebarbitmap.top += (deftitlebar.height - deftitlebarbitmap.height) / 2;
 	deftitlebarbitmap.left += (deftitlebar.width * tbbitp - deftitlebarbitmap.width) / 2;
 
@@ -361,12 +362,14 @@ void gGUIDialogue::mouseMoved(int x, int y) {
 		}
 	}
 	if(buttonsbar) buttonsbar->mouseMoved(x, y);
+	if(messagebar) messagebar->mouseMoved(x, y);
 }
 
 void gGUIDialogue::mousePressed(int x, int y, int button) {
 	if (titlebar) titlebar->mousePressed(x, y, button);
 	if (guisizer) guisizer->mousePressed(x, y, button);
 	if (buttonsbar) buttonsbar->mousePressed(x, y, button);
+	if (messagebar) messagebar->mousePressed(x, y, button);
 
 	if (minimizebutton->isPressed()) buttontrigger = EVENT_MINIMIZE;
 	if (!ismaximized && maximizebutton->isPressed()) buttontrigger = EVENT_MAXIMIZE;
@@ -442,6 +445,7 @@ void gGUIDialogue::mouseDragged(int x, int y, int button) {
 	if (resizeposition == RESIZE_RIGHT) {twidth += sx;}
 	if (resizeposition == RESIZE_TOP) {theight -= sy; ttop += sy;}
 	if (resizeposition == RESIZE_BOTTOM) {theight += sy;}
+	if (messagebar) messagebar->mouseDragged(x, y, button);
 
 	transformDialogue(tleft, ttop, twidth, theight);
 
@@ -452,6 +456,8 @@ void gGUIDialogue::mouseReleased(int x, int y, int button) {
 	if (titlebar) titlebar->mouseReleased(x, y, button);
 	if (guisizer) guisizer->mouseReleased(x, y, button);
 	if (buttonsbar) buttonsbar->mouseReleased(x, y, button);
+	if (messagebar) messagebar->mouseReleased(x, y, button);
+
 	if (isdragged) isdragged = false;
 
 	if (resizeposition != RESIZE_NONE) {resizeposition = RESIZE_NONE; resetTitleBar(); resetButtonsBar(); resetMessageBar();}
@@ -462,8 +468,8 @@ void gGUIDialogue::mouseReleased(int x, int y, int button) {
 	if (buttontrigger == EVENT_EXIT) {buttonevent = EVENT_EXIT; buttontrigger = EVENT_NONE;}
 }
 
-void gGUIDialogue::setMessageText(std::string messageText) {
-	defmessagetext.setText(messageText);
+void gGUIDialogue::setMessageText(gGUIText *messageText) {
+	defmessagetext.setText(messageText->getText());
 }
 
 std::string gGUIDialogue::getMessageText() {
@@ -482,4 +488,23 @@ void gGUIDialogue::setIconType(int iconId) {
 
 void gGUIDialogue::setDialogueType(int typeId) {
 	dialoguetype = typeId;
+}
+
+void gGUIDialogue::setNumberbox(gGUINumberBox* numberbox) {
+	defmessagebarsizer.setControl(1, 3, &numberboxsizer);
+	numberboxsizer.setSize(1, 1);
+	numberboxsizer.setControl(0, 0, numberbox);
+	}
+
+gGUIButton gGUIDialogue::getOkButton() {
+	return defbuttonsbarokbutton;
+}
+
+gGUIButton gGUIDialogue::getCancelButton() {
+	return defbuttonsbarcancelbutton;
+}
+
+void gGUIDialogue::charPressed(unsigned int codepoint) {
+	 if(guisizer) guisizer->charPressed(codepoint);
+	 if(messagebar) messagebar->charPressed(codepoint);
 }

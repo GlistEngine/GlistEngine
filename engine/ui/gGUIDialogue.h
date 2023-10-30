@@ -29,16 +29,19 @@
 #include "gGUIImageButton.h"
 #include "gGUIBitmap.h"
 #include "gGUIText.h"
+#include "gGUINumberBox.h"
+
 
 class gGUIDialogue: public gGUIForm {
 public:
-	static const int EVENT_NONE = 0, EVENT_MINIMIZE = 1, EVENT_MAXIMIZE = 2, EVENT_RESTORE = 3, EVENT_EXIT = 4;
+    static const int EVENT_NONE = 0, EVENT_MINIMIZE = 1, EVENT_MAXIMIZE = 2, EVENT_RESTORE = 3, EVENT_EXIT = 4;
 	static const int RESIZE_NONE = 0, RESIZE_LEFT = 1, RESIZE_RIGHT = 2, RESIZE_TOP = 3, RESIZE_BOTTOM = 4;
 	enum{
 		DIALOGUETYPE_OK,
 		DIALOGUETYPE_YESNOCANCEL,
 		DIALOGUETYPE_OKCANCEL,
-		DIALOGUETYPE_YESNO
+		DIALOGUETYPE_YESNO,
+
 	};
 	enum{
 		ICONTYPE_NONE,
@@ -83,7 +86,7 @@ public:
 	void setIsMaximized(bool isMaximized);
 	void transformDialogue(int left, int top, int width, int height);
 
-	void setMessageText(std::string messageText);
+	void setMessageText(gGUIText* messageText);
 	std::string getMessageText();
 	void setIconType(int iconId);
 	void setDialogueType(int typeId);
@@ -93,6 +96,15 @@ public:
 	void mousePressed(int x, int y, int button);
 	void mouseDragged(int x, int y, int button);
 	void mouseReleased(int x, int y, int button);
+	void setNumberbox(gGUINumberBox* numberbox);
+	void charPressed(unsigned int codepoint);
+
+	gGUIButton getOkButton();
+	gGUIButton getCancelButton();
+
+	gGUINumberBox numberbox;
+	gGUISizer numberboxsizer;
+
 private:
 	bool isdialogueshown;
 
@@ -122,10 +134,12 @@ private:
 	gGUIButton defbuttonsbarnobutton;
 	gGUIButton defbuttonsbarcancelbutton;
 
+
 	gGUIContainer defmessagebar;
 	gGUISizer defmessagebarsizer;
 	gGUIText defmessagetext;
 	gGUIImageButton defdialogueicon;
+
 
 	int buttontrigger, buttonevent;
 
