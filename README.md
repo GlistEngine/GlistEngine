@@ -198,7 +198,7 @@ On the Staged Changes list, remove unnecessary files by selecting them and click
 
 ***If you installed GlistEngine using the installer***
 
-One can contribute into the code when working on the cloned versions of the repos. If you installed GlistEngine by the installer (student installation above) and want to contribute the repo, you can do the following configuration:
+One can contribute to the code when working on the cloned versions of the repos. If you installed GlistEngine by the installer (student installation above) and want to contribute the repo, you can do the following configuration:
 
 1- Right click on the GlistApp and GlistEngine on the left column and select Delete from the drop down menu. (Unselect delete project content on disk)
 
@@ -212,4 +212,4 @@ This project is under heavy development and has a Apache License 2.0.
 
 ## Version
 
-GlistEngine has a semantic versioning system. Current version is 0.1.2
+GlistEngine has a semantic versioning system. The current version is 0.1.2
