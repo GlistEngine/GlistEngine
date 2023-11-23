@@ -735,7 +735,7 @@ bool gAppManager::onAppResumeEvent(gAppResumeEvent& event) {
 		if(canvasmanager && getCurrentCanvas()) {
 			if (
 #if defined(ANDROID)
-                auto* mobilcanvas = dynamic_cast<gAndroidCanvas*>(getCurrentCanvas())
+                auto* mobilecanvas = dynamic_cast<gAndroidCanvas*>(getCurrentCanvas())
 #elif TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
                 auto* mobilecanvas = static_cast<gIOSCanvas*>(getCurrentCanvas())
 #endif
