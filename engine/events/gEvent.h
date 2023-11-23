@@ -27,7 +27,7 @@ enum EventType {
 	EventTypeJoystickConnect,
 	EventTypeJoystickDisconnect,
 	EventTypeReallocateRenderData,
-#if defined(APPLE) || TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
+#if defined(ANDROID) || TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
 	EventTypeAppPause,
 	EventTypeAppResume,
 	EventTypeTouch,
