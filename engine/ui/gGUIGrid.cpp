@@ -84,8 +84,16 @@ void gGUIGrid::setRowNum(int rowNum) {
 	rownum = rowNum;
 }
 
+int gGUIGrid::getRowNum() {
+	return rownum;
+}
+
 void gGUIGrid::setColumnNum(int columnNum) {
 	columnnum = columnNum;
+}
+
+int gGUIGrid::getColumnNum() {
+	return columnnum;
 }
 
 void gGUIGrid::update() {
@@ -719,6 +727,15 @@ gGUIGrid::Cell* gGUIGrid::getCell(std::string cellID) {
 	return &allcells[index];
 }
 
+gGUIGrid::Cell* gGUIGrid::getCell(int rowNo, int columnNo) {
+	int index = getCellNo(rowNo, columnNo);
+	if(index == -1) {
+		createCell(rowNo, columnNo);
+		index = allcells.size() - 1;
+	}
+	return &allcells[index];
+}
+
 gColor* gGUIGrid::getSelectedFrameColor() {
 	return &selectedframecolor;
 }
@@ -731,6 +748,17 @@ std::deque<gGUIGrid::Cell*> gGUIGrid::getSelectedCells() {
 	std::deque<Cell*> sc;
 	for(int i = 0; i < selectedcells.size(); i++) sc.push_back(&allcells[selectedcells[i]]);
 	return sc;
+}
+
+std::string gGUIGrid::getColumnName(int columnNo) {
+	std::string result = "";
+    while (columnNo >= 0) {
+        int remainder = columnNo % 26;
+        char letter = 'A' + remainder;
+        result = letter + result;
+        columnNo = (columnNo - remainder) / 26 - 1;
+    }
+	return result;
 }
 
 void gGUIGrid::digitToString() {

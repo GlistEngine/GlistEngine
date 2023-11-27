@@ -116,7 +116,9 @@ public:
 	void set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIObject* parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h);
 	void setGrid(int rowNum, int columnNum);
 	void setRowNum(int rowNum);
+	int getRowNum();
 	void setColumnNum(int columnNum);
+	int getColumnNum();
 
 	void setCellFont(int fontNo);
 	void setCellFont(Cell* cell, int fontNo);
@@ -182,9 +184,11 @@ public:
     void selectCell(std::string cell1, std::string cell2);
 
 	Cell* getCell(std::string cellID);
+	Cell* getCell(int rowNo, int columnNo);
 	gColor* getSelectedFrameColor();
 	gColor* getSelectedAreaColor();
 	std::deque<Cell*> getSelectedCells();
+	std::string getColumnName(int columnNo);
 
 	void digitToString();
 
