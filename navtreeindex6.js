@@ -1,5 +1,9 @@
 var NAVTREEINDEX6 =
 {
+"classgGUISlider.html#a180e9bf1b15d7f3860d914ea1310cbce":[0,0,84,18],
+"classgGUISlider.html#a227be15f18cff63ea1d7d6deb1429877":[0,0,84,17],
+"classgGUISlider.html#a282e76f48dbec7aaf476e778fec174a5":[0,0,84,2],
+"classgGUISlider.html#a2a0d23591165de5866e5ecceae8a9f3a":[0,0,84,13],
 "classgGUISlider.html#a2e1a7a7bb249fa8f91b0ac560918c494":[0,0,84,24],
 "classgGUISlider.html#a33939f1305f392a45dbda4fa837b05b9":[0,0,84,3],
 "classgGUISlider.html#a360fc0cfb6acda91d77575d8a42dd463":[0,0,84,26],
@@ -245,9 +249,5 @@ var NAVTREEINDEX6 =
 "classgImage.html#ae522aed63ca8d31d8766f1fe5ab61d04":[0,0,97,18],
 "classgInversion.html":[0,0,98],
 "classgInversion.html#a249e68fefba04af53c37e2d2d6c51d9d":[0,0,98,2],
-"classgInversion.html#a3ffbf771a2419bdbaaa9eebcc16da392":[0,0,98,3],
-"classgInversion.html#a6cce2a914986f50da46e7cc456b71755":[0,0,98,4],
-"classgInversion.html#abcf8beaac3df9f89b35c2c15a72ca9ad":[0,0,98,0],
-"classgInversion.html#ae11536c7489a82ed75ce100d5ac920c4":[0,0,98,1],
-"classgJoystickConnectEvent.html":[0,0,99]
+"classgInversion.html#a3ffbf771a2419bdbaaa9eebcc16da392":[0,0,98,3]
 };
