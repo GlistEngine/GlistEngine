@@ -687,6 +687,48 @@ void gGUIGrid::setSelectedAreaColor(gColor* selectedAreaColor) {
 	selectedareacolor = *selectedAreaColor;
 }
 
+void gGUIGrid::setColumnWidth(int columnNo, float width) {
+	currentcolumn = columnNo;
+	int windex = -1;
+	float diff = 0.0f;
+	for(int i = 0; i < gridboxesw.size(); i++) {
+		if(columnNo == gridboxesw[i][0]) {
+			windex = i;
+			break;
+		}
+	}
+	if(windex == -1) {
+		diff = width - gridboxw;
+		gridboxesw.push_back({(float)columnNo, width});
+	}
+	else {
+		diff = width - gridboxesw[windex][1];
+		gridboxesw[windex][1] = width;
+	}
+	changeAllAffectedCellsXW(diff);
+}
+
+void gGUIGrid::setRowHeight(int rowNo, float height) {
+	currentrow = rowNo;
+	int hindex = -1;
+	float diff = 0.0f;
+	for(int i = 0; i < gridboxesh.size(); i++) {
+		if(rowNo == gridboxesh[i][0]) {
+			hindex = i;
+			break;
+		}
+	}
+	if(hindex == -1) {
+		diff = height - gridboxh;
+		gridboxesh.push_back({(float)rowNo, height});
+	}
+	else {
+		diff = height - gridboxesh[hindex][1];
+		gridboxesh[hindex][1] = height;
+	}
+	changeAllAffectedCellsYH(diff);
+}
+
 void gGUIGrid::selectCell(Cell* cell) {
 	selectCell(cell, cell);
 }

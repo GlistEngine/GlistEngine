@@ -178,6 +178,9 @@ public:
 	void setSelectedFrameColor(gColor* selectedFrameColor);
 	void setSelectedAreaColor(gColor* selectedAreaColor);
 
+	void setColumnWidth(int columnNo, float width);
+	void setRowHeight(int rowNo, float height);
+
     void selectCell(Cell* cell);
     void selectCell(Cell* cell1, Cell* cell2);
     void selectCell(std::string cell);
