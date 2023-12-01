@@ -192,6 +192,7 @@ public:
 	gColor* getSelectedAreaColor();
 	std::deque<Cell*> getSelectedCells();
 	std::string getColumnName(int columnNo);
+	int getColumnNo(std::string columnName);
 
 	void digitToString();
 
