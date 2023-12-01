@@ -1,5 +1,7 @@
 var NAVTREEINDEX11 =
 {
+"gGLFWWindow_8h_source.html":[1,0,41],
+"gGUIActionManager_8h_source.html":[1,0,44],
 "gGUIBitmap_8h_source.html":[1,0,45],
 "gGUIButton_8h_source.html":[1,0,46],
 "gGUICandleStickChart_8h_source.html":[1,0,47],
