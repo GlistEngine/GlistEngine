@@ -17,6 +17,7 @@ var classgGUIGrid =
     [ "getCell", "classgGUIGrid.html#a4f8b2f79df84c4183185a5e2e8d86eba", null ],
     [ "getCell", "classgGUIGrid.html#aff4d04bfd2da4d1c38201529866ff307", null ],
     [ "getColumnName", "classgGUIGrid.html#ac967cb0b987feff4ab3b8edeb1af531e", null ],
+    [ "getColumnNo", "classgGUIGrid.html#a836400146860e6943dcf7a204a3c0502", null ],
     [ "getColumnNum", "classgGUIGrid.html#ab3f8a91a888e7f1d9aaca45d32d71a1c", null ],
     [ "getCursor", "classgGUIGrid.html#a8d053370b4db7e8727e22589534bc0ab", null ],
     [ "getRowNum", "classgGUIGrid.html#aae580df07efa185200c4dd5079640ba4", null ],
