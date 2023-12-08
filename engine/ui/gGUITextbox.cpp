@@ -1488,7 +1488,7 @@ std::vector<int> gGUITextbox::calculateClickPosition(int x, int y) {
 				posutf += letterlength[i];
 			}
 			posx = textfont->getStringWidth(text.substr(firstutf, posutf - firstutf));
-			if(posx >= clickxdiff - alignmentamount) {
+			if(posx >= clickxdiff) {
 				poschar -= 1;
 				posutf -= letterlength[i];
 				posx = textfont->getStringWidth(text.substr(firstutf, posutf - firstutf));
