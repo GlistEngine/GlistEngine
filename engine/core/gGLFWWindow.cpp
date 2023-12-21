@@ -135,8 +135,8 @@ bool gGLFWWindow::getShouldClose() {
 
 void gGLFWWindow::update() {
 	// End window drawing
-	glfwSwapBuffers(window);
-	glfwPollEvents();
+	G_CHECK_GL(glfwSwapBuffers(window));
+	G_CHECK_GL(glfwPollEvents());
 //    std::cout << "width:" << width << ", height:" << height << std::endl;
 }
 

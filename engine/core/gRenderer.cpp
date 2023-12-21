@@ -49,7 +49,7 @@ int gRenderer::unitresolution;
 void gCheckGLErrorAndPrint(const std::string& prefix, const std::string& func, int line) {
 	GLenum error = glGetError();
 	if (error != GL_NO_ERROR) {
-		gLogi("gRenderer") << prefix << "OpenGL ERROR at " << func << ", line " << line << ", error code: " << gToHex(error, 4);
+		gLogi("gRenderer") << prefix << "OpenGL ERROR at " << func << ", line " << line << ", error: " << gToHex(error, 4);
 	}
 }
 

@@ -406,7 +406,7 @@ void gAppManager::tick() {
 
     if(isrendering) {
         if(canvas) {
-            canvas->clearBackground();
+			canvas->clearBackground();
             for (int i = 0; i < renderpassnum; i++) {
                 renderpassno = i;
 				canvas->getRenderer()->updateLights();
