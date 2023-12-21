@@ -34,7 +34,7 @@ public:
 		unsigned int blockIndex;
 		G_CHECK_GL2(blockIndex, glGetUniformBlockIndex(id, uboName.c_str()));
 		G_CHECK_GL(glUniformBlockBinding(id, blockIndex, ubo->getBindingPoint()));
-		if (blockIndex != GL_INVALID_INDEX) {
+		/*if (blockIndex != GL_INVALID_INDEX) {
 			GLint blockSize;
 			G_CHECK_GL(glGetActiveUniformBlockiv(id, blockIndex, GL_UNIFORM_BLOCK_DATA_SIZE, &blockSize));
 
@@ -50,7 +50,7 @@ public:
 			}
 		} else {
 			std::cerr << "Error: Unable to find uniform block index." << std::endl;
-		}
+		}*/
 	}
 
 	bool loaded;
