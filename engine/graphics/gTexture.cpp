@@ -7,24 +7,13 @@
 
 #include "gTexture.h"
 #include <iostream>
-#if defined(WIN32) || defined(LINUX)
-#include <GL/glew.h>
-#include <GL/gl.h>
-#include <GL/glu.h>
-#endif
-#if TARGET_OS_OSX
-#include <OpenGL/gl.h>
-#include <GL/glew.h>
-#include <OpenGL/glu.h>
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtx/quaternion.hpp>
-#endif
-#include "gPlane.h"
 #ifndef STB_IMAGE_IMPLEMENTATION
 #define STB_IMAGE_IMPLEMENTATION
 #endif
 #include "stb/stb_image.h"
+
+#include "gPlane.h"
+#include "gShader.h"
 
 const int gTexture::TEXTURETYPE_DIFFUSE = 0;
 const int gTexture::TEXTURETYPE_SPECULAR = 1;

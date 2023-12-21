@@ -47,6 +47,14 @@ public:
 	bool isEnabled() const;
 
 	/**
+	 *
+	 * @return true if light data is changed and not uploaded to the GPU yet, false if not
+	 */
+	bool isChanged() const;
+
+	void setChanged(bool isChanged);
+
+	/**
 	 * Changing type of light using id
 	 *
 	 * @param lightType light id no
@@ -362,11 +370,15 @@ public:
 	 * @return spot angle between maximum angle
 	 */
 	float getSpotCutOffSpread() const;
+protected:
+
+	void processTransformationMatrix() override;
 
 private:
 	int type;
 	gColor ambientcolor, diffusecolor, specularcolor;
 	bool isenabled;
+	bool ischanged;
 	glm::vec3 attenuation;
 	glm::vec2 spotcutoff;
 	glm::vec3 directioneuler;

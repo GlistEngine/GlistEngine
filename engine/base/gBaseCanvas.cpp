@@ -151,50 +151,6 @@ void gBaseCanvas::clearColor(gColor color) {
 	renderer->clearColor(color);
 }
 
-void gBaseCanvas::enableLighting() {
-	renderer->enableLighting();
-}
-
-void gBaseCanvas::disableLighting() {
-	renderer->disableLighting();
-}
-
-bool gBaseCanvas::isLightingEnabled() {
-	return renderer->isLightingEnabled();
-}
-
-void gBaseCanvas::setLightingColor(int r, int g, int b, int a) {
-	renderer->setLightingColor(r, g, b, a);
-}
-
-void gBaseCanvas::setLightingColor(gColor* color) {
-	renderer->setLightingColor(color);
-}
-
-gColor* gBaseCanvas::getLightingColor() {
-	return renderer->getLightingColor();
-}
-
-void gBaseCanvas::setLightingPosition(glm::vec3 lightingPosition) {
-	renderer->setLightingPosition(lightingPosition);
-}
-
-glm::vec3 gBaseCanvas::getLightingPosition() {
-	return renderer->getLightingPosition();
-}
-
-void gBaseCanvas::setGlobalAmbientColor(int r, int g, int b, int a) {
-	renderer->setGlobalAmbientColor(r, g, b, a);
-}
-
-void gBaseCanvas::setGlobalAmbientColor(gColor color) {
-	renderer->setGlobalAmbientColor(color);
-}
-
-gColor* gBaseCanvas::getGlobalAmbientColor() {
-	return renderer->getGlobalAmbientColor();
-}
-
 void gBaseCanvas::addSceneLight(gLight* light) {
 	renderer->addSceneLight(light);
 }

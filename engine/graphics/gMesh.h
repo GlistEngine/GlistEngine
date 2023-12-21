@@ -7,13 +7,7 @@
 
 #ifndef ENGINE_GRAPHICS_GMESH_H_
 #define ENGINE_GRAPHICS_GMESH_H_
-/*
-#include <GL/glew.h>
-#include <GL/gl.h>
-#include <GL/glu.h>
-#include <glm/glm.hpp>
-#include "glm/gtc/matrix_transform.hpp"
-*/
+
 #include <vector>
 
 #include "gNode.h"

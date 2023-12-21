@@ -161,6 +161,7 @@ set(SRC_FILES
 	${ENGINE_DIR}/graphics/primitives/gTube.cpp
 	${ENGINE_DIR}/graphics/gVbo.cpp
 	${ENGINE_DIR}/graphics/gFbo.cpp
+	${ENGINE_DIR}/graphics/gUbo.cpp
 	${ENGINE_DIR}/graphics/gRay.cpp
 	${ENGINE_DIR}/graphics/gBoundingBox.cpp
 	${ENGINE_DIR}/graphics/gRect.cpp
