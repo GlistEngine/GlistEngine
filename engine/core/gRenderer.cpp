@@ -460,7 +460,7 @@ void gDrawArc(float xCenter, float yCenter, float radius, bool isFilled, int num
 }
 
 void gDrawArrow(float x1, float y1, float length, float angle, float tipLength, float tipAngle) {
-	gLine linemesh, linemesh2, linemesh3;
+	static gLine linemesh, linemesh2, linemesh3;
 	float x2, y2;
 	x2 = x1 + std::cos(gDegToRad(angle)) * length;
 	y2 = y1 + std::sin(gDegToRad(angle)) * length;;
@@ -473,9 +473,8 @@ void gDrawArrow(float x1, float y1, float length, float angle, float tipLength, 
 }
 
 void gDrawRectangle(float x, float y, float w, float h, bool isFilled) {
-	gRectangle rectanglemesh;
+	static gRectangle rectanglemesh;
  	rectanglemesh.draw(x, y, w, h, isFilled);
- 	rectanglemesh.clear();
 }
 
 void gDrawRoundedRectangle(float x, float y, float w, float h, int radius, bool isFilled) {

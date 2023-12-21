@@ -44,9 +44,9 @@ private:
 	std::vector<glm::vec3> animatedPos;
 	std::vector<glm::vec3> animatedNorm;
 
-	std::vector< std::vector< std::vector< glm::vec3 > > > animatedPosData;
-	std::vector< std::vector< std::vector< glm::vec3 > > > animatedNormData;
-	std::vector< std::vector< gVbo > > vboframe;
+	std::vector<std::vector<std::vector<glm::vec3>>> animatedPosData;
+	std::vector<std::vector<std::vector<glm::vec3>>> animatedNormData;
+	std::vector<std::vector<gVbo>> vboframe;
 
 	void drawVboFrame();
 	bool isvertexanimated, isvertexanimationstoredonvram;
