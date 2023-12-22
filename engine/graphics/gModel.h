@@ -110,6 +110,8 @@ public:
 
     gBoundingBox& getInitialBoundingBox();
 
+	void setEnableFrustumCulling(bool enable);
+
 private:
 	const aiScene* scene;
 	std::vector<const aiScene*> morphingtargetscenes;
@@ -156,6 +158,7 @@ private:
 
     glm::mat4 convertMatrix(const aiMatrix4x4 &aiMat);
     gBoundingBox initialboundingbox;
+	bool isenablefrustumculling;
 
 };
 

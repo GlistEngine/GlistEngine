@@ -11,6 +11,10 @@
 //#include <GL/glew.h>
 #include "gNode.h"
 #include "gSkybox.h"
+#include "gBoundingBox.h"
+
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 class gCamera : public gNode {
 public:
@@ -61,8 +65,45 @@ public:
 
 	void drawGizmos();
 
+	bool isInFrustum(const gBoundingBox& box) const;
+
 private:
     float fov, nearclip, farclip;
+
+	struct Plane {
+		glm::vec3 normal;
+		float distance;
+
+		Plane() = default;
+
+		Plane(const glm::vec3& p1, const glm::vec3& norm)
+			: normal(glm::normalize(norm)),
+			  distance(glm::dot(normal, p1)) {
+		}
+
+		float getSignedDistanceToPlane(const glm::vec3& point) const {
+			return glm::dot(normal, point) - distance;
+		}
+
+		bool checkAABB(const gBoundingBox& aabb) const {
+			// Compute the projection interval radius of b onto L(t) = b.c + t * p.n
+			const float r = aabb.getWidth() * std::abs(normal.x) + aabb.getHeight() * std::abs(normal.y) +
+							aabb.getDepth() * std::abs(normal.z);
+			return -r <= getSignedDistanceToPlane(aabb.getOrigin());
+		}
+	};
+	struct Frustum {
+		Plane topFace;
+		Plane bottomFace;
+
+		Plane rightFace;
+		Plane leftFace;
+
+		Plane farFace;
+		Plane nearFace;
+	};
+
+	Frustum frustum;
 
 	glm::vec3 lookposition;
 	glm::quat lookorientation;

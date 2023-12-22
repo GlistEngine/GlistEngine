@@ -22,6 +22,7 @@
 #include "gTube.h"
 #include "gUbo.h"
 #include "gShader.h"
+#include "gCamera.h"
 
 //screenShot Related includes
 #include "stb/stb_image_write.h"
@@ -803,6 +804,10 @@ void gRenderer::setCameraPosition(glm::vec3 cameraPosition) {
 	cameraposition = cameraPosition;
 }
 
+void gRenderer::setCamera(gCamera* camera) {
+	this->camera = camera;
+}
+
 const glm::mat4& gRenderer::getProjectionMatrix() const {
 	return projectionmatrix;
 }
@@ -817,6 +822,10 @@ const glm::mat4& gRenderer::getViewMatrix() const {
 
 const glm::vec3& gRenderer::getCameraPosition() const {
 	return cameraposition;
+}
+
+const gCamera* gRenderer::getCamera() const {
+	return camera;
 }
 
 void gRenderer::backupMatrices() {

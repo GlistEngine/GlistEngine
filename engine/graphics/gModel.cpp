@@ -8,6 +8,8 @@
 #include "gModel.h"
 #include <memory>
 
+#include "gCamera.h"
+
 
 gModel::gModel() {
 	scene = nullptr;
@@ -20,6 +22,7 @@ gModel::gModel() {
 	animationframeno = 0;
 	isvertexanimated = false;
 	isvertexanimationstoredonvram = false;
+	isenablefrustumculling = false;
 	bbminx = 0.0f, bbminy = 0.0f, bbminz = 0.0f;
 	bbmaxx = 0.0f, bbmaxy = 0.0f, bbmaxz = 0.0f;
 }
@@ -296,6 +299,11 @@ void gModel::setTransformationMatrix(const glm::mat4& transformationMatrix) {
 
 void gModel::draw() {
 	for(int i = 0; i < meshes.size(); i++) {
+		if (isenablefrustumculling &&
+				renderer->getCamera() &&
+				!renderer->getCamera()->isInFrustum(meshes[i]->getInitialBoundingBox())) {
+			continue;
+		}
 		meshes[i]->draw();
 	}
 }
@@ -970,4 +978,8 @@ glm::mat4 gModel::convertMatrix(const aiMatrix4x4 &aiMat) {
 gBoundingBox& gModel::getInitialBoundingBox() {
 	initialboundingbox.setTransformationMatrix(localtransformationmatrix);
 	return initialboundingbox;
+}
+
+void gModel::setEnableFrustumCulling(bool enable) {
+	isenablefrustumculling = enable;
 }
