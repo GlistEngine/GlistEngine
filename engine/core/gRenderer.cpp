@@ -460,7 +460,7 @@ void gDrawArc(float xCenter, float yCenter, float radius, bool isFilled, int num
 }
 
 void gDrawArrow(float x1, float y1, float length, float angle, float tipLength, float tipAngle) {
-	static gLine linemesh, linemesh2, linemesh3;
+	gLine linemesh, linemesh2, linemesh3;
 	float x2, y2;
 	x2 = x1 + std::cos(gDegToRad(angle)) * length;
 	y2 = y1 + std::sin(gDegToRad(angle)) * length;;
