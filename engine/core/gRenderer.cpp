@@ -1073,11 +1073,7 @@ void gRenderer::updateLights() {
 		const auto& item = scenelights[i];
 		if (item->isChanged()) {
 			data->lights[i].type = item->getType();
-			if (item->getType() == gLight::LIGHTTYPE_DIRECTIONAL) {
-				data->lights[i].position = glm::normalize(item->getPosition());
-			} else {
-				data->lights[i].position = item->getPosition();
-			}
+			data->lights[i].position = item->getPosition();
 			data->lights[i].direction = item->getDirection();
 			data->lights[i].ambient = item->getAmbientColor()->asVec4();
 			data->lights[i].diffuse = item->getDiffuseColor()->asVec4();
