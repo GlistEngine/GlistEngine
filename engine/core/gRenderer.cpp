@@ -1086,17 +1086,19 @@ void gRenderer::updateLights() {
 			item->setChanged(false);
 			ischanged = true;
 		}
-		bool previous = data->enabledlights & (1 << i);
+		int bit = (1 << i);
+		bool previous = data->enabledlights & bit;
 		if (previous != item->isEnabled()) {
 			isenabledchanged = true;
-		}
-		// ~ flips the value bitwise
-		// &= applies bitwise and
-		// x << n shifts x by n amount bits to the left, for example shifting 0b0001 (1) by 4 results in binary 0b1000
-		if (item->isEnabled()) {
-			data->enabledlights |= (1 << i); // Set the bit at the given index
-		} else {
-			data->enabledlights &= ~(1 << i); // Clear the bit at the given index
+
+			// ~ flips the value bitwise
+			// &= applies bitwise and
+			// x << n shifts x by n amount bits to the left, for example shifting 0b0001 (1) by 4 results in binary 0b1000
+			if (item->isEnabled()) {
+				data->enabledlights |= bit; // Set the bit at the given index
+			} else {
+				data->enabledlights &= ~bit; // Clear the bit at the given index
+			}
 		}
 	}
 	if (ischanged) {
