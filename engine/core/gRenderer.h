@@ -42,6 +42,8 @@
 #include "gColor.h"
 #include "gConstants.h"
 #include <deque>
+// amount of maximum lights, this is used to allocate memory for the light uniform buffer
+#define GLIST_MAX_LIGHTS 8
 
 // You can define ENGINE_OPENGL_CHECKS to enable OpenGL checks
 // without debugging.
@@ -99,7 +101,6 @@ public:
 	static const int SCREENSCALING_NONE, SCREENSCALING_MIPMAP, SCREENSCALING_AUTO;
 	static const int DEPTHTESTTYPE_LESS, DEPTHTESTTYPE_ALWAYS;
 	static const int FOGMODE_LINEAR, FOGMODE_EXP;
-	static const int MAX_LIGHTS = 8;
 
 	gRenderer();
 	virtual ~gRenderer();
@@ -263,9 +264,9 @@ private:
 
 	struct alignas(16) gSceneLights {
 		alignas(4) int lightnum = 0;
-		gSceneLightData lights[MAX_LIGHTS];
+		gSceneLightData lights[GLIST_MAX_LIGHTS];
 		// bitwise enabled lights, 1 means enabled, 0 means disabled, 32-bit integer
-		// supports only 32 max lights, make sure to change this if MAX_LIGHTS is changed to be something above 32
+		// supports only 32 max lights, make sure to change this if max lights is changed to be something above 32
 		int enabledlights;
 	};
 

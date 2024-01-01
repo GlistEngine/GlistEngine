@@ -1066,7 +1066,7 @@ void gRenderer::removeAllSceneLights() {
 void gRenderer::updateLights() {
 	gSceneLights* data = lightsubo->getData();
 	int previouslightnum = data->lightnum;
-	data->lightnum = std::min((int) scenelights.size(), MAX_LIGHTS);
+	data->lightnum = std::min((int) scenelights.size(), GLIST_MAX_LIGHTS);
 	bool ischanged = false;
 	bool isenabledchanged = false;
 	for (int i = 0; i < data->lightnum; ++i) {
@@ -1173,6 +1173,10 @@ void gRenderer::disableAlphaTest() {
 bool gRenderer::isAlphaTestEnabled() {
 	return isalphatestenabled;
 }
+
+#define STRINGIFY(x) #x
+#define TOSTRING(x) STRINGIFY(x)
+// this macro is undefined at the end of the file
 
 const std::string gRenderer::getShaderSrcColorVertex() {
 	const char* shadersource =
@@ -1292,7 +1296,7 @@ const std::string gRenderer::getShaderSrcColorFragment() {
 "	uniform Material material;\n"
 "	layout(std140) uniform Lights { "
 "		int lightnum;"
-"		Light lights[8];"
+"		Light lights[" TOSTRING(GLIST_MAX_LIGHTS) "];"
 "		int enabledlights;"
 "	};\n"
 "\n"
@@ -1857,7 +1861,6 @@ const std::string gRenderer::getShaderSrcPbrVertex() {
 
 	return std::string(shadersource);
 }
-
 const std::string gRenderer::getShaderSrcPbrFragment() {
 	const char* shadersource =
 #if defined(GLIST_MOBILE)
@@ -1901,7 +1904,7 @@ const std::string gRenderer::getShaderSrcPbrFragment() {
 "};\n"
 "layout(std140) uniform Lights { "
 "	int lightnum;"
-"	Light lights[8];"
+"	Light lights[" TOSTRING(GLIST_MAX_LIGHTS) "];"
 "	int enabledlights;"
 "};\n"
 "\n"
@@ -2583,3 +2586,5 @@ float gRenderer::getSSAOBias() {
 	return ssaobias;
 }
 
+#undef STRINGIFY
+#undef TOSTRING
