@@ -4,6 +4,7 @@ var classgFont =
     [ "~gFont", "classgFont.html#a3c871e4333d5112844bb10cc27539578", null ],
     [ "drawText", "classgFont.html#af12e725c755b22443a139c3e6a4353aa", null ],
     [ "getDpi", "classgFont.html#a8aff4ae7c2656f33b527718ee76c8e0a", null ],
+    [ "getLineHeight", "classgFont.html#aad38c9c3c52d0c4097a312014a5843b4", null ],
     [ "getPath", "classgFont.html#a910a68c5f39d3ff2bba8cd963f06a059", null ],
     [ "getSize", "classgFont.html#a590ce35bafd0c0c0065a9204e1a91b62", null ],
     [ "getStringHeight", "classgFont.html#aae027bba23783b011117e36e7510c374", null ],
