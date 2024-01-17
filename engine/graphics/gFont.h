@@ -26,7 +26,7 @@
 #include <android/asset_manager.h>
 #endif
 #if TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
-#    include "freetype2/freetype/freetype.h"
+#include "freetype2/freetype/freetype.h"
 #endif
 #if defined(WIN32) || defined(LINUX) || TARGET_OS_OSX
 #include FT_FREETYPE_H
@@ -114,6 +114,13 @@ public:
 	 * @return The height of the given text
 	 */
 	float getStringHeight(const std::string& text);
+
+	/**
+	 * Returns the line's height
+	 *
+	 * @return Line height
+	 */
+	float getLineHeight();
 
 	/**
 	 * Returns the path of the loaded font.

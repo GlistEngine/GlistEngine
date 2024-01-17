@@ -147,6 +147,10 @@ float gFont::getStringHeight(const std::string& text) {
 	  return posy3;
 }
 
+float gFont::getLineHeight() {
+	return lineheight;
+}
+
 const std::string& gFont::getPath() const {
 	return fullpath;
 }
