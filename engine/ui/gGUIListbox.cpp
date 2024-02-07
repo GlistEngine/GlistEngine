@@ -81,6 +81,11 @@ void gGUIListbox::addData(std::string lineData) {
 	if(totalh < height) totalh = height;
 }
 
+void gGUIListbox::setData(int lineNo, std::string lineData) {
+	if(lineNo < 0 || lineNo >= linenum) return;
+	data[lineNo] = lineData;
+}
+
 void gGUIListbox::insertData(int lineNo, std::string lineData) {
 	data.insert(data.begin() + lineNo, lineData);
 	linenum = data.size();

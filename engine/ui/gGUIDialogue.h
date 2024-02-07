@@ -34,13 +34,19 @@ class gGUIDialogue: public gGUIForm {
 public:
 	static const int EVENT_NONE = 0, EVENT_MINIMIZE = 1, EVENT_MAXIMIZE = 2, EVENT_RESTORE = 3, EVENT_EXIT = 4;
 	static const int RESIZE_NONE = 0, RESIZE_LEFT = 1, RESIZE_RIGHT = 2, RESIZE_TOP = 3, RESIZE_BOTTOM = 4;
-	enum{
+	enum {
 		DIALOGUETYPE_OK,
 		DIALOGUETYPE_YESNOCANCEL,
 		DIALOGUETYPE_OKCANCEL,
 		DIALOGUETYPE_YESNO
 	};
-	enum{
+	enum {
+		TITLETYPE_EXITMINMAX,
+		TITLETYPE_EXITMAX,
+		TITLETYPE_EXITMIN,
+		TITLETYPE_EXIT
+	};
+	enum {
 		ICONTYPE_NONE,
 		ICONTYPE_ERROR,
 		ICONTYPE_INFO,
@@ -57,18 +63,18 @@ public:
 	void hide();
 	bool isShown();
 
-	void initDefTitleBar();
-	void initDefButtonsBar();
-	void initDefMessageBar();
 	void setTitleBar(gGUIContainer* titleBar);
-	gGUIContainer* getTitleBar();
 	void setButtonsBar(gGUIContainer* buttonsBar);
-	gGUIContainer* getButtonsBar();
 	void setMessageBar(gGUIContainer* messageBar);
+	gGUIContainer* getTitleBar();
+	gGUIContainer* getButtonsBar();
 	gGUIContainer* getMessageBar();
 	void resetTitleBar();
 	void resetButtonsBar();
 	void resetMessageBar();
+
+	void setTitle(std::string title);
+	void setMessageBarSizer(gGUISizer* sizer);
 
 	void setMinimizeButton(gGUIImageButton* minimizeButton);
 	void setMaximizeButton(gGUIImageButton* maximizeButton);
@@ -87,12 +93,19 @@ public:
 	std::string getMessageText();
 	void setIconType(int iconId);
 	void setDialogueType(int typeId);
+	void setTitleType(int typeId);
 
 	int getCursor(int x, int y);
 	void mouseMoved(int x, int y);
 	void mousePressed(int x, int y, int button);
 	void mouseDragged(int x, int y, int button);
 	void mouseReleased(int x, int y, int button);
+
+	int getOKButtonId();
+	int getCancelButtonId();
+	int getYesButtonId();
+	int getNoButtonId();
+
 private:
 	bool isdialogueshown;
 
@@ -106,6 +119,10 @@ private:
 
 	static const int deftitlebarh = 35, deftitlebarbitmapw = 24, deftitlebarbuttonw = 48;
 	static const int defbuttonsbarh = 45, defbuttonsbarbuttonw = 100, defbuttonsbarbuttonh = 27;
+
+	void initDefTitleBar();
+	void initDefButtonsBar();
+	void initDefMessageBar();
 
 	gGUIContainer deftitlebar;
 	gGUISizer deftitlebarsizer;
@@ -132,6 +149,7 @@ private:
 	int defmessagebartopspace, defmessagebarrightspace;
 
 	int dialoguetype;
+	int titletype;
 
 	bool isdragenabled, isresizeenabled;
 	bool ismaximized, isdragged;
