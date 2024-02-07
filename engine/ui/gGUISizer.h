@@ -30,6 +30,7 @@ public:
 	void setSlotPadding(int padding);
 
 	void setControl(int lineNo, int columnNo, gGUIControl* guiControl);
+	void removeControl(int lineNo, int columnNo);
 	gGUIControl* getControl(int lineNo, int columnNo);
 
 	void update();

@@ -278,6 +278,11 @@ void gGUISizer::setControl(int lineNo, int columnNo, gGUIControl* guiControl) {
 //	guicontrol[lineNo][columnNo]->height = guicontrol[lineNo][columnNo]->bottom - guicontrol[lineNo][columnNo]->top;
 }
 
+void gGUISizer::removeControl(int lineNo, int columnNo) {
+	guicontrol[lineNo][columnNo] = nullptr;
+	iscontrolset[lineNo][columnNo] = false;
+}
+
 gGUIControl* gGUISizer::getControl(int lineNo, int columnNo) {
 	if (!iscontrolset[lineNo][columnNo]) return nullptr;
 	return guicontrol[lineNo][columnNo];

@@ -78,6 +78,13 @@ public:
 	void addData(std::string lineData);
 
 	/*
+	 * Changes the data of the given line no.
+	 *
+	 * @param lineData is the string value that stored in the data list.
+	 */
+	void setData(int lineNo, std::string lineData);
+
+	/*
 	 *  Renamed title of the given line number with the given text.
 	 *
 	 *  @lineNo is the line number that changed the title.

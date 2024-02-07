@@ -31,6 +31,7 @@ gGUIDialogue::gGUIDialogue() {
 	dragposx = 0; dragposy = 0; sizeposx = 0; sizeposy = 0;
 
 	dialoguetype = DIALOGUETYPE_OK;
+	titletype = TITLETYPE_EXITMINMAX;
 
 	resizeposition = RESIZE_NONE;
 
@@ -179,20 +180,27 @@ void gGUIDialogue::resetTitleBar() {
 	deftitlebartext.height = deftitlebarbitmapw / 1.5f;
 	deftitlebartext.top += (deftitlebar.height - deftitlebartext.height) / 2;
 
-	deftitlebarsizer.setControl(0, 2, &deftitlebarminimizebutton);
-	deftitlebarminimizebutton.setSize(deftitlebar.height, deftitlebar.height);
+	if(titletype == TITLETYPE_EXITMINMAX || titletype == TITLETYPE_EXITMIN) {
+		deftitlebarsizer.setControl(0, 2, &deftitlebarminimizebutton);
+		deftitlebarminimizebutton.setSize(deftitlebar.height, deftitlebar.height);
+	} else {
+		deftitlebarsizer.removeControl(0, 2);
+	}
 
 	if (ismaximized) {
 		deftitlebarmaximizebutton.setButtonImageFromIcon(gGUIResources::ICON_RESTOREBLACK);
 		deftitlebarmaximizebutton.setPressedButtonImageFromIcon(gGUIResources::ICON_RESTOREBLACK);
-	}
-	else {
+	} else {
 		deftitlebarmaximizebutton.setButtonImageFromIcon(gGUIResources::ICON_MAXIMIZEBLACK);
 		deftitlebarmaximizebutton.setPressedButtonImageFromIcon(gGUIResources::ICON_MAXIMIZEBLACK);
 	}
 
-	deftitlebarsizer.setControl(0, 3, &deftitlebarmaximizebutton);
-	deftitlebarmaximizebutton.setSize(deftitlebar.height, deftitlebar.height);
+	if(titletype == TITLETYPE_EXITMINMAX || titletype == TITLETYPE_EXITMAX) {
+		deftitlebarsizer.setControl(0, 3, &deftitlebarmaximizebutton);
+		deftitlebarmaximizebutton.setSize(deftitlebar.height, deftitlebar.height);
+	} else {
+		deftitlebarsizer.removeControl(0, 3);
+	}
 
 	deftitlebarsizer.setControl(0, 4, &deftitlebarexitbutton);
 	deftitlebarexitbutton.setSize(deftitlebar.height, deftitlebar.height);
@@ -293,6 +301,14 @@ void gGUIDialogue::resetMessageBar() {
 	defdialogueicon.top += (defmessagebar.height - defdialogueicon.width) / 2;
 }
 
+void gGUIDialogue::setTitle(std::string title) {
+	deftitlebartext.setText(title);
+}
+
+void gGUIDialogue::setMessageBarSizer(gGUISizer* sizer) {
+	defmessagebar.setSizer(sizer);
+}
+
 void gGUIDialogue::setMinimizeButton(gGUIImageButton* minimizeButton) {
 	this->minimizebutton = minimizeButton;
 }
@@ -367,6 +383,7 @@ void gGUIDialogue::mousePressed(int x, int y, int button) {
 	if (titlebar) titlebar->mousePressed(x, y, button);
 	if (guisizer) guisizer->mousePressed(x, y, button);
 	if (buttonsbar) buttonsbar->mousePressed(x, y, button);
+	if (messagebar) messagebar->mousePressed(x, y, button);
 
 	if (minimizebutton->isPressed()) buttontrigger = EVENT_MINIMIZE;
 	if (!ismaximized && maximizebutton->isPressed()) buttontrigger = EVENT_MAXIMIZE;
@@ -452,6 +469,7 @@ void gGUIDialogue::mouseReleased(int x, int y, int button) {
 	if (titlebar) titlebar->mouseReleased(x, y, button);
 	if (guisizer) guisizer->mouseReleased(x, y, button);
 	if (buttonsbar) buttonsbar->mouseReleased(x, y, button);
+	if (messagebar) messagebar->mouseReleased(x, y, button);
 	if (isdragged) isdragged = false;
 
 	if (resizeposition != RESIZE_NONE) {resizeposition = RESIZE_NONE; resetTitleBar(); resetButtonsBar(); resetMessageBar();}
@@ -482,4 +500,28 @@ void gGUIDialogue::setIconType(int iconId) {
 
 void gGUIDialogue::setDialogueType(int typeId) {
 	dialoguetype = typeId;
+	resetButtonsBar();
 }
+
+void gGUIDialogue::setTitleType(int typeId) {
+	titletype = typeId;
+	resetTitleBar();
+}
+
+
+int gGUIDialogue::getOKButtonId() {
+	return defbuttonsbarokbutton.getId();
+}
+
+int gGUIDialogue::getCancelButtonId() {
+	return defbuttonsbarcancelbutton.getId();
+}
+
+int gGUIDialogue::getYesButtonId() {
+	return defbuttonsbaryesbutton.getId();
+}
+
+int gGUIDialogue::getNoButtonId() {
+	return defbuttonsbarnobutton.getId();
+}
+
