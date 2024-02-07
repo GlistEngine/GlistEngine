@@ -26,6 +26,7 @@ var classgGUISizer =
     [ "mousePressed", "classgGUISizer.html#a0ad0174dcd1f3ab99d68f07e6bb5013f", null ],
     [ "mouseReleased", "classgGUISizer.html#ad3627f8407393ad42f63f9fefc9d8c35", null ],
     [ "mouseScrolled", "classgGUISizer.html#a6528e291595110b6e616a1c9f1506d27", null ],
+    [ "removeControl", "classgGUISizer.html#ae46894a49dc5ccd198d6a421a67474ff", null ],
     [ "set", "classgGUISizer.html#a493dc3b76d37aa6eaa9a9fb621db0cfd", null ],
     [ "set", "classgGUISizer.html#aeeab1473e98d9e469f311554074ba271", null ],
     [ "setColumnProportions", "classgGUISizer.html#a8ca1c78d0efcfcf2c20c218806d22fd3", null ],

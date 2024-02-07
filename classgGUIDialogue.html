@@ -143,19 +143,25 @@ Public Types</h2></td></tr>
 , <b>DIALOGUETYPE_YESNO</b>
  }</td></tr>
 <tr class="separator:a83a4da3b71c0e596fc7d24e07499efe1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a439ea48d303cbf2e1622d3993407b852"><td class="memItemLeft" align="right" valign="top"><a id="a439ea48d303cbf2e1622d3993407b852"></a>enum &#160;</td><td class="memItemRight" valign="bottom">{ <b>ICONTYPE_NONE</b>
+<tr class="memitem:a439ea48d303cbf2e1622d3993407b852"><td class="memItemLeft" align="right" valign="top"><a id="a439ea48d303cbf2e1622d3993407b852"></a>enum &#160;</td><td class="memItemRight" valign="bottom">{ <b>TITLETYPE_EXITMINMAX</b>
+, <b>TITLETYPE_EXITMAX</b>
+, <b>TITLETYPE_EXITMIN</b>
+, <b>TITLETYPE_EXIT</b>
+ }</td></tr>
+<tr class="separator:a439ea48d303cbf2e1622d3993407b852"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4b63570a14624b91ed2030b411126724"><td class="memItemLeft" align="right" valign="top"><a id="a4b63570a14624b91ed2030b411126724"></a>enum &#160;</td><td class="memItemRight" valign="bottom">{ <b>ICONTYPE_NONE</b>
 , <b>ICONTYPE_ERROR</b>
 , <b>ICONTYPE_INFO</b>
 , <b>ICONTYPE_WARNING</b>
  }</td></tr>
-<tr class="separator:a439ea48d303cbf2e1622d3993407b852"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:a4b63570a14624b91ed2030b411126724"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_types_classgGUIForm"><td colspan="2" onclick="javascript:toggleInherit('pub_types_classgGUIForm')"><img src="closed.png" alt="-"/>&#160;Public Types inherited from <a class="el" href="classgGUIForm.html">gGUIForm</a></td></tr>
-<tr class="memitem:a114347f854289ea983b8ee82ce5fce83 inherit pub_types_classgGUIForm"><td class="memItemLeft" align="right" valign="top"><a id="a114347f854289ea983b8ee82ce5fce83"></a>enum &#160;</td><td class="memItemRight" valign="bottom">{ <b>RESIZE_MENUBAR</b>
+<tr class="memitem:ad4968e737ca176418ec3a6721853aadf inherit pub_types_classgGUIForm"><td class="memItemLeft" align="right" valign="top"><a id="ad4968e737ca176418ec3a6721853aadf"></a>enum &#160;</td><td class="memItemRight" valign="bottom">{ <b>RESIZE_MENUBAR</b>
 , <b>RESIZE_STATUSBAR</b>
 , <b>RESIZE_TOOLBAR_HORIZONTAL</b>
 , <b>RESIZE_TOOLBAR_VERTICAL</b>
  }</td></tr>
-<tr class="separator:a114347f854289ea983b8ee82ce5fce83 inherit pub_types_classgGUIForm"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:ad4968e737ca176418ec3a6721853aadf inherit pub_types_classgGUIForm"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_types_classgBaseGUIObject"><td colspan="2" onclick="javascript:toggleInherit('pub_types_classgBaseGUIObject')"><img src="closed.png" alt="-"/>&#160;Public Types inherited from <a class="el" href="classgBaseGUIObject.html">gBaseGUIObject</a></td></tr>
 <tr class="memitem:a481c27c2e5386988f2c965b9ff4761c0 inherit pub_types_classgBaseGUIObject"><td class="memItemLeft" align="right" valign="top"><a id="a481c27c2e5386988f2c965b9ff4761c0"></a>enum &#160;</td><td class="memItemRight" valign="bottom">{ <b>TEXTALIGNMENT_LEFT</b>
 , <b>TEXTALIGNMENT_MIDDLE</b>
@@ -180,30 +186,21 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>hide</b> ()</td></tr>
 <tr class="memitem:a45fb041179a3b87a55fe2512da74e805"><td class="memItemLeft" align="right" valign="top"><a id="a45fb041179a3b87a55fe2512da74e805"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>isShown</b> ()</td></tr>
 <tr class="separator:a45fb041179a3b87a55fe2512da74e805"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4290c525fc5c465c1136d79e0f7ef91d"><td class="memItemLeft" align="right" valign="top"><a id="a4290c525fc5c465c1136d79e0f7ef91d"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>initDefTitleBar</b> ()</td></tr>
-<tr class="separator:a4290c525fc5c465c1136d79e0f7ef91d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad8a0d5092e5f78f60a89bf2c37196275"><td class="memItemLeft" align="right" valign="top"><a id="ad8a0d5092e5f78f60a89bf2c37196275"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>initDefButtonsBar</b> ()</td></tr>
-<tr class="separator:ad8a0d5092e5f78f60a89bf2c37196275"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3fd36d82e5c1ceb09f4d03361ef2c5b7"><td class="memItemLeft" align="right" valign="top"><a id="a3fd36d82e5c1ceb09f4d03361ef2c5b7"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>initDefMessageBar</b> ()</td></tr>
-<tr class="separator:a3fd36d82e5c1ceb09f4d03361ef2c5b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4c1e5bd6a8b6769b9181083c2c87b510"><td class="memItemLeft" align="right" valign="top"><a id="a4c1e5bd6a8b6769b9181083c2c87b510"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>setTitleBar</b> (<a class="el" href="classgGUIContainer.html">gGUIContainer</a> *titleBar)</td></tr>
 <tr class="separator:a4c1e5bd6a8b6769b9181083c2c87b510"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a333f36f719f376b79af31147492dff36"><td class="memItemLeft" align="right" valign="top"><a id="a333f36f719f376b79af31147492dff36"></a>
-<a class="el" href="classgGUIContainer.html">gGUIContainer</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>getTitleBar</b> ()</td></tr>
-<tr class="separator:a333f36f719f376b79af31147492dff36"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a10770acc4cfc406f86d340bb92e7f984"><td class="memItemLeft" align="right" valign="top"><a id="a10770acc4cfc406f86d340bb92e7f984"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>setButtonsBar</b> (<a class="el" href="classgGUIContainer.html">gGUIContainer</a> *buttonsBar)</td></tr>
 <tr class="separator:a10770acc4cfc406f86d340bb92e7f984"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8c958404615edc40c302ce9ed2a24c44"><td class="memItemLeft" align="right" valign="top"><a id="a8c958404615edc40c302ce9ed2a24c44"></a>
-<a class="el" href="classgGUIContainer.html">gGUIContainer</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>getButtonsBar</b> ()</td></tr>
-<tr class="separator:a8c958404615edc40c302ce9ed2a24c44"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad19a3db8e4a8454b391f1e3bbd2550e8"><td class="memItemLeft" align="right" valign="top"><a id="ad19a3db8e4a8454b391f1e3bbd2550e8"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>setMessageBar</b> (<a class="el" href="classgGUIContainer.html">gGUIContainer</a> *messageBar)</td></tr>
 <tr class="separator:ad19a3db8e4a8454b391f1e3bbd2550e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a333f36f719f376b79af31147492dff36"><td class="memItemLeft" align="right" valign="top"><a id="a333f36f719f376b79af31147492dff36"></a>
+<a class="el" href="classgGUIContainer.html">gGUIContainer</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>getTitleBar</b> ()</td></tr>
+<tr class="separator:a333f36f719f376b79af31147492dff36"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8c958404615edc40c302ce9ed2a24c44"><td class="memItemLeft" align="right" valign="top"><a id="a8c958404615edc40c302ce9ed2a24c44"></a>
+<a class="el" href="classgGUIContainer.html">gGUIContainer</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>getButtonsBar</b> ()</td></tr>
+<tr class="separator:a8c958404615edc40c302ce9ed2a24c44"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae1364ed32ef308d77fd22490bd63fc64"><td class="memItemLeft" align="right" valign="top"><a id="ae1364ed32ef308d77fd22490bd63fc64"></a>
 <a class="el" href="classgGUIContainer.html">gGUIContainer</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>getMessageBar</b> ()</td></tr>
 <tr class="separator:ae1364ed32ef308d77fd22490bd63fc64"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -216,6 +213,12 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>resetButtonsBar</b> (
 <tr class="memitem:aa69727a9aa4e03fb6b4140edccfa1602"><td class="memItemLeft" align="right" valign="top"><a id="aa69727a9aa4e03fb6b4140edccfa1602"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>resetMessageBar</b> ()</td></tr>
 <tr class="separator:aa69727a9aa4e03fb6b4140edccfa1602"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a06f9dbaade2a20dbb5b1feec728e1f7a"><td class="memItemLeft" align="right" valign="top"><a id="a06f9dbaade2a20dbb5b1feec728e1f7a"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setTitle</b> (std::string title)</td></tr>
+<tr class="separator:a06f9dbaade2a20dbb5b1feec728e1f7a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afb8e3ae05dbc095dc1ffa9fac591e79b"><td class="memItemLeft" align="right" valign="top"><a id="afb8e3ae05dbc095dc1ffa9fac591e79b"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setMessageBarSizer</b> (<a class="el" href="classgGUISizer.html">gGUISizer</a> *sizer)</td></tr>
+<tr class="separator:afb8e3ae05dbc095dc1ffa9fac591e79b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a859a8f699009a60d10a9ec713228f243"><td class="memItemLeft" align="right" valign="top"><a id="a859a8f699009a60d10a9ec713228f243"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>setMinimizeButton</b> (<a class="el" href="classgGUIImageButton.html">gGUIImageButton</a> *minimizeButton)</td></tr>
 <tr class="separator:a859a8f699009a60d10a9ec713228f243"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -255,6 +258,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>setIconType</b> (int 
 <tr class="memitem:ab79e63cac82465034228387247185a4f"><td class="memItemLeft" align="right" valign="top"><a id="ab79e63cac82465034228387247185a4f"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>setDialogueType</b> (int typeId)</td></tr>
 <tr class="separator:ab79e63cac82465034228387247185a4f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af6bc870904335aea1b18ec4dc3b006f0"><td class="memItemLeft" align="right" valign="top"><a id="af6bc870904335aea1b18ec4dc3b006f0"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setTitleType</b> (int typeId)</td></tr>
+<tr class="separator:af6bc870904335aea1b18ec4dc3b006f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a49a26c7ca361705eff53baa51bb60bc9"><td class="memItemLeft" align="right" valign="top"><a id="a49a26c7ca361705eff53baa51bb60bc9"></a>
 int&#160;</td><td class="memItemRight" valign="bottom"><b>getCursor</b> (int x, int y)</td></tr>
 <tr class="separator:a49a26c7ca361705eff53baa51bb60bc9"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -270,6 +276,18 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>mouseDragged</b> (int
 <tr class="memitem:a211c7374ad6e42a11e465de9b059cf2a"><td class="memItemLeft" align="right" valign="top"><a id="a211c7374ad6e42a11e465de9b059cf2a"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>mouseReleased</b> (int x, int y, int button)</td></tr>
 <tr class="separator:a211c7374ad6e42a11e465de9b059cf2a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6605ef40828e8a91d204965c04a7f019"><td class="memItemLeft" align="right" valign="top"><a id="a6605ef40828e8a91d204965c04a7f019"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>getOKButtonId</b> ()</td></tr>
+<tr class="separator:a6605ef40828e8a91d204965c04a7f019"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a21c3fa35d355ad581c4109e83b5231d2"><td class="memItemLeft" align="right" valign="top"><a id="a21c3fa35d355ad581c4109e83b5231d2"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>getCancelButtonId</b> ()</td></tr>
+<tr class="separator:a21c3fa35d355ad581c4109e83b5231d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae2cd1d8cf51fb31ae4700df87a1dddb1"><td class="memItemLeft" align="right" valign="top"><a id="ae2cd1d8cf51fb31ae4700df87a1dddb1"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>getYesButtonId</b> ()</td></tr>
+<tr class="separator:ae2cd1d8cf51fb31ae4700df87a1dddb1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a08ce5f6adcc1bd1899a5a3f632237bd3"><td class="memItemLeft" align="right" valign="top"><a id="a08ce5f6adcc1bd1899a5a3f632237bd3"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>getNoButtonId</b> ()</td></tr>
+<tr class="separator:a08ce5f6adcc1bd1899a5a3f632237bd3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classgGUIForm"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classgGUIForm')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classgGUIForm.html">gGUIForm</a></td></tr>
 <tr class="memitem:af70dac21805e7d28e4da0ebf796310e5 inherit pub_methods_classgGUIForm"><td class="memItemLeft" align="right" valign="top"><a id="af70dac21805e7d28e4da0ebf796310e5"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>setMenuBar</b> (<a class="el" href="classgGUIMenubar.html">gGUIMenubar</a> *menuBar)</td></tr>

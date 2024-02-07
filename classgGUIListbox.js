@@ -21,6 +21,7 @@ var classgGUIListbox =
     [ "removeSelected", "classgGUIListbox.html#a606825e5cc57ea613ce94e58bd010f14", null ],
     [ "set", "classgGUIListbox.html#a720a8bfcfe15afa074eac57baffc9d1d", null ],
     [ "setChosenColor", "classgGUIListbox.html#aec02b9f7f3e7e8582d1a1b4c56459ac4", null ],
+    [ "setData", "classgGUIListbox.html#a96831658bb12b1bf9bb57920e5091281", null ],
     [ "setIcon", "classgGUIListbox.html#a6cbb7f4e8504bdcf72510dfb67dc6bf2", null ],
     [ "setIcon", "classgGUIListbox.html#a5b7fe0ccc039c2f616b75952c56c2725", null ],
     [ "setIcons", "classgGUIListbox.html#a6c2a0c9c752e216e30a855487339e9bc", null ],
