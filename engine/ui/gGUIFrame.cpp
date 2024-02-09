@@ -12,6 +12,7 @@
 #include "gGUIStatusBar.h"
 #include "gGUIContextMenu.h"
 #include "gGUITreelist.h"
+#include "gTooltipText.h"
 
 
 gGUIFrame::gGUIFrame() {
@@ -20,6 +21,7 @@ gGUIFrame::gGUIFrame() {
 	statusbar = nullptr;
 	contextmenu = nullptr;
 	treelist = nullptr;
+	for(int i = 0; i < vectooltiptext.size(); i++) { vectooltiptext[i] = nullptr;}
 }
 
 gGUIFrame::~gGUIFrame() {
@@ -39,4 +41,5 @@ void gGUIFrame::draw() {
 	if(statusbar) statusbar->draw();
 	if(contextmenu) contextmenu->draw();
 	if(treelist) treelist->draw();
+	for(int i = 0; i < vectooltiptext.size(); i++) vectooltiptext[i]->draw();
 }
