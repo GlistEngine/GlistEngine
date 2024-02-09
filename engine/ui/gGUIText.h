@@ -14,7 +14,7 @@
 class gGUIText: public gGUIControl {
 public:
 
-    static const int TEXTALIGNMENT_LEFT = 0, TEXTALIGNMENT_CENTER = 1, TEXTALIGNMENT_RIGHT = 2, TEXTALIGNMENT_JUSTIFY = 3;
+    static const int TEXTALIGNMENT_LEFT = 0, TEXTALIGNMENT_CENTER = 1, TEXTALIGNMENT_RIGHT = 2, TEXTALIGNMENT_JUSTIFY = 3, TEXTVERTICALALIGNMENT_BYTEXTBOX = 4;
 
     gGUIText();
     virtual ~gGUIText();
@@ -26,6 +26,7 @@ public:
     std::string getText();
 
     void setTextAlignment(int textAligment);
+    void setTextVerticalAlignment(int verticalalignment);
 
     void draw();
 
@@ -35,6 +36,7 @@ private:
     std::vector<int> linefirstx;
     int linenum;
     int textalignment;
+    int textverticalalignment;
     int fontsize, lineh;
     float linespacingfactor;
 

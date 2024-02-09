@@ -10,6 +10,7 @@
 
 gGUIText::gGUIText() {
     textalignment = TEXTALIGNMENT_LEFT;
+    textverticalalignment = 0;
     text = "";
     fontsize = font->getSize();
     linespacingfactor = 0.4f;
@@ -43,10 +44,14 @@ void gGUIText::setTextAlignment(int textAligment) {
     resetAlignment();
 }
 
+void gGUIText::setTextVerticalAlignment(int verticalalignment) {
+	textverticalalignment = font->getStringHeight("a");
+}
+
 void gGUIText::draw() {
     gColor oldcolor = *renderer->getColor();
     renderer->setColor(fontcolor);
-    for (int i = 0; i < linenum; i++) font->drawText(line[i], left + linefirstx[i], top + fontsize + (i * lineh));
+    for (int i = 0; i < linenum; i++) font->drawText(line[i], left + linefirstx[i], top + fontsize + (i * lineh) + textverticalalignment);
     renderer->setColor(&oldcolor);
 }
 
