@@ -7,12 +7,21 @@
 
 #include "gGUIDialogue.h"
 #include "gGUISizer.h"
+#include "gGUIMenubar.h"
+#include "gGUIStatusBar.h"
+#include "gGUIContextMenu.h"
+#include "gGUITreelist.h"
+#include "gBaseApp.h"
 
 
 gGUIDialogue::gGUIDialogue() {
 	isdialogueshown = false;
 
 	guisizer = nullptr;
+	menubar = nullptr;
+	statusbar = nullptr;
+	contextmenu = nullptr;
+	treelist = nullptr;
 
 	titlebar = nullptr;
 	buttonsbar = nullptr;
@@ -72,14 +81,24 @@ void gGUIDialogue::draw() {
 	gDrawLine(right, top - titlebar->height, right, bottom + buttonsbar->height);
 
 	renderer->setColor(&oldcolor);
+
+	if(menubar) menubar->draw();
+	if(statusbar) statusbar->draw();
+	if(contextmenu) contextmenu->draw();
+	if(treelist) treelist->draw();
 }
 
-void gGUIDialogue::show() {
-	isdialogueshown = true;
+bool gGUIDialogue::show() {
+	if(isdialogueshown) return false;
+	if(root->getAppManager()->getGUIManager()->showDialogue(this)) isdialogueshown = true;
+	else isdialogueshown = false;
+	return isdialogueshown;
 }
 
-void gGUIDialogue::hide() {
-	isdialogueshown = false;
+bool gGUIDialogue::hide() {
+	if(!isdialogueshown) return true;
+	if(root->getAppManager()->getGUIManager()->hideDialogue(this)) isdialogueshown = false;
+	return !isdialogueshown;
 }
 
 bool gGUIDialogue::isShown() {
@@ -524,4 +543,21 @@ int gGUIDialogue::getYesButtonId() {
 int gGUIDialogue::getNoButtonId() {
 	return defbuttonsbarnobutton.getId();
 }
+
+gGUIButton* gGUIDialogue::getOKButton() {
+	return &defbuttonsbarokbutton;
+}
+
+gGUIButton* gGUIDialogue::getCancelButton() {
+	return &defbuttonsbarcancelbutton;
+}
+
+gGUIButton* gGUIDialogue::getYesButton() {
+	return &defbuttonsbaryesbutton;
+}
+
+gGUIButton* gGUIDialogue::getNoButton() {
+	return &defbuttonsbarnobutton;
+}
+
 

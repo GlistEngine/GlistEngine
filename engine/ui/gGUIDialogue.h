@@ -59,8 +59,8 @@ public:
 	void update();
 	void draw();
 
-	void show();
-	void hide();
+	bool show();
+	bool hide();
 	bool isShown();
 
 	void setTitleBar(gGUIContainer* titleBar);
@@ -105,6 +105,11 @@ public:
 	int getCancelButtonId();
 	int getYesButtonId();
 	int getNoButtonId();
+
+	gGUIButton* getOKButton();
+	gGUIButton* getCancelButton();
+	gGUIButton* getYesButton();
+	gGUIButton* getNoButton();
 
 private:
 	bool isdialogueshown;
