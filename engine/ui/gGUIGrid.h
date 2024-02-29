@@ -163,6 +163,7 @@ public:
 	void setCellsLine(std::string cell1, std::string cell2, int lineNo, bool clicked = true);
 
     void setCellContent(Cell* cell, std::string cellContent);
+    void setCellContent(int rowNo, int columnNo, std::string cellContent);
     void setCellContent(std::string cell, std::string cellContent);
     void setCellsContent(std::deque<Cell*> cells, std::vector<std::string> contents);
     void setCellsContent(Cell* cell1, Cell* cell2, std::vector<std::string> contents);
@@ -182,6 +183,7 @@ public:
 	void setRowHeight(int rowNo, float height);
 
     void selectCell(Cell* cell);
+    void selectCell(int rowNo, int columnNo);
     void selectCell(Cell* cell1, Cell* cell2);
     void selectCell(std::string cell);
     void selectCell(std::string cell1, std::string cell2);
