@@ -130,6 +130,7 @@ var files_dup =
     [ "gTexture.h", "gTexture_8h_source.html", null ],
     [ "gThread.h", "gThread_8h_source.html", null ],
     [ "gTiltShift.h", "gTiltShift_8h_source.html", null ],
+    [ "gTooltipText.h", "gTooltipText_8h_source.html", null ],
     [ "gTriangle.h", "gTriangle_8h_source.html", null ],
     [ "gTube.h", "gTube_8h_source.html", null ],
     [ "gUtils.h", "gUtils_8h_source.html", null ],

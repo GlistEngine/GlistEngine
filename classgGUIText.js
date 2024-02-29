@@ -6,5 +6,6 @@ var classgGUIText =
     [ "getText", "classgGUIText.html#a5d62be43ece08ff362063b5863caf2ca", null ],
     [ "set", "classgGUIText.html#a0bbf772a17e46e48e5619c8e01107c8a", null ],
     [ "setText", "classgGUIText.html#ade299582efc36e8c4b58ab7d79b46323", null ],
-    [ "setTextAlignment", "classgGUIText.html#a7a23591745d6cecf0e0fc8db1090bfe7", null ]
+    [ "setTextAlignment", "classgGUIText.html#a7a23591745d6cecf0e0fc8db1090bfe7", null ],
+    [ "setTextVerticalAlignment", "classgGUIText.html#a803174614f354484b6cf65672d879677", null ]
 ];

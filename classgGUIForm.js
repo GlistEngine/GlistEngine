@@ -31,6 +31,7 @@ var classgGUIForm =
     [ "setSizer", "classgGUIForm.html#ad7de79f1f95b36356d2e6cd7ad692d5b", null ],
     [ "setStatusBar", "classgGUIForm.html#abc392fdc9e64c1e32f8c2d0534090765", null ],
     [ "setToolbarHeight", "classgGUIForm.html#aa3f6e5eae630a57f7cb2927dde283870", null ],
+    [ "setTooltipText", "classgGUIForm.html#a698d66209bef5f5488040da4e094c3d2", null ],
     [ "setVerticalToolbarWidth", "classgGUIForm.html#a90e0d297a902d77f04a2a897c7d0f1c6", null ],
     [ "show", "classgGUIForm.html#af6c3e8f504437f1b0e1596d0a6df802d", null ],
     [ "updateSizer", "classgGUIForm.html#a9c364fb1c9a761c8a758b2f3fa204d09", null ],
@@ -54,6 +55,7 @@ var classgGUIForm =
     [ "treelist", "classgGUIForm.html#a61abab9738af7ee952883ec8b0cdade4", null ],
     [ "treelisth", "classgGUIForm.html#a177497d29d1c9a6a21cb6cff82116d49", null ],
     [ "treelistw", "classgGUIForm.html#a786fd6073e756866732f7b630946ab0e", null ],
+    [ "vectooltiptext", "classgGUIForm.html#a4f591f86423b1cbb24c27058e018012e", null ],
     [ "verticaltoolbarnum", "classgGUIForm.html#a0fb6b65e152d09c37cb116c60923b766", null ],
     [ "verticaltoolbars", "classgGUIForm.html#a988905e8250383ef5ddbe43886aab9c2", null ],
     [ "verticaltoolbarw", "classgGUIForm.html#a41df19d497cd0a4426e55b064af812f4", null ]

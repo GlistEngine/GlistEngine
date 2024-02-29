@@ -1,5 +1,5 @@
 <map id="gGUIControl" name="gGUIControl">
-<area shape="rect" id="node1" title=" " alt="" coords="468,487,569,513"/>
+<area shape="rect" id="node1" title=" " alt="" coords="468,512,569,539"/>
 <area shape="rect" id="node5" href="$classgGUIBitmap.html" title=" " alt="" coords="652,5,753,32"/>
 <area shape="rect" id="node6" href="$classgGUIButton.html" title=" " alt="" coords="654,56,751,83"/>
 <area shape="rect" id="node10" href="$classgGUIColorPicker.html" title=" " alt="" coords="639,107,766,133"/>
@@ -20,9 +20,10 @@
 <area shape="rect" id="node44" href="$classgGUISwitchButton.html" title=" " alt="" coords="633,867,773,893"/>
 <area shape="rect" id="node45" href="$classgGUIText.html" title=" " alt="" coords="662,917,743,944"/>
 <area shape="rect" id="node46" href="$classgGUITextbox.html" title=" " alt="" coords="650,968,755,995"/>
-<area shape="rect" id="node2" href="$classgBaseGUIObject.html" title=" " alt="" coords="292,487,420,513"/>
-<area shape="rect" id="node3" href="$classgRenderObject.html" title=" " alt="" coords="125,487,244,513"/>
-<area shape="rect" id="node4" href="$classgObject.html" title=" " alt="" coords="5,487,77,513"/>
+<area shape="rect" id="node47" href="$classgTooltipText.html" title=" " alt="" coords="653,1019,753,1045"/>
+<area shape="rect" id="node2" href="$classgBaseGUIObject.html" title=" " alt="" coords="292,512,420,539"/>
+<area shape="rect" id="node3" href="$classgRenderObject.html" title=" " alt="" coords="125,512,244,539"/>
+<area shape="rect" id="node4" href="$classgObject.html" title=" " alt="" coords="5,512,77,539"/>
 <area shape="rect" id="node7" href="$classgGUICheckbox.html" title=" " alt="" coords="860,5,979,32"/>
 <area shape="rect" id="node8" href="$classgGUIImageButton.html" title=" " alt="" coords="850,56,989,83"/>
 <area shape="rect" id="node9" href="$classgGUIToolbarButton.html" title=" " alt="" coords="847,107,991,133"/>
