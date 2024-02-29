@@ -7,6 +7,7 @@
 
 #include "gFile.h"
 
+fs::copy_options gFile::copyOptions[3] = {fs::copy_options::none, fs::copy_options::skip_existing, fs::copy_options::overwrite_existing};
 
 gFile::gFile() : mode(FILEMODE_READONLY), binary(true), size(0) {}
 
@@ -216,6 +217,50 @@ std::string gFile::addComplementarySlashIfNeeded(const fs::path& path) {
 		}
 	}
 	return fpath;
+}
+
+void gFile::copy(const std::string& fromFullPath, const std::string& toFullPath, int copyOption) {
+	fs::copy(fromFullPath, toFullPath, copyOptions[copyOption]);
+}
+
+bool gFile::copyFile(const std::string& fromFullPath, const std::string& toFullPath, int copyOption) {
+	return fs::copy_file(fromFullPath, toFullPath, copyOptions[copyOption]);
+}
+
+void gFile::copySymlink(const std::string& existingSymlinkFullPath, const std::string& newSymlinkFullPath) {
+	fs::copy_symlink(existingSymlinkFullPath, newSymlinkFullPath);
+}
+
+bool gFile::createDirectory(const std::string& fullPath) {
+	return fs::create_directory(fullPath);
+}
+
+void gFile::createDirectorySymlink(const std::string& toFullPath, const std::string& symlinkFullPath) {
+	fs::create_directory_symlink(toFullPath, symlinkFullPath);
+}
+
+void gFile::createSymlink(const std::string& toFullPath, const std::string& symlinkFullPath) {
+	fs::create_symlink(toFullPath, symlinkFullPath);
+}
+
+bool gFile::isEmpty(const std::string& fullPath) {
+	return fs::is_empty(fullPath);
+}
+
+bool gFile::isEquivalent(const std::string& fullPath1, const std::string& fullPath2) {
+	return fs::equivalent(fullPath1, fullPath2);
+}
+
+bool gFile::isSymlink(const std::string& fullPath) {
+	return fs::is_symlink(fullPath);
+}
+
+bool gFile::remove(const std::string& fullPath) {
+	return fs::remove(fullPath);
+}
+
+void gFile::rename(const std::string& fromFullPath, const std::string& toFullPath) {
+	fs::rename(fromFullPath, toFullPath);
 }
 
 
