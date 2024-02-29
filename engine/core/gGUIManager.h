@@ -20,6 +20,7 @@
 #include "gGUIFrame.h"
 #include "gGUISizer.h"
 #include "gGUIDialogue.h"
+#include <deque>
 
 class gBaseApp;
 
@@ -62,6 +63,9 @@ public:
 	void setCurrentFrame(gGUIFrame* currentFrame, int width, int height);
 	void setupDialogue(gGUIDialogue* dialogue);
 	gGUIFrame* getCurrentFrame();
+
+	bool showDialogue(gGUIDialogue* dialogue);
+	bool hideDialogue(gGUIDialogue* dialogue);
 
 	void keyPressed(int key);
 	void keyReleased(int key);
@@ -107,7 +111,8 @@ private:
 
 	gGUISizer defdialoguesizer;
 
-	std::vector<gGUIDialogue*> dialogues;
+	std::deque<gGUIDialogue*> dialogues;
+	std::deque<gGUIDialogue*> dialoguesshown;
 	gGUIDialogue* selecteddialogue;
 
 };

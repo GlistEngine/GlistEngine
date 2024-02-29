@@ -84,79 +84,100 @@ gGUIFrame* gGUIManager::getCurrentFrame() {
 	return currentframe;
 }
 
-void gGUIManager::keyPressed(int key) {
-	currentframe->keyPressed(key);
-	for (int i = 0; i < dialogues.size(); i++) {
-		if (dialogues[i]->isShown()) dialogues[i]->keyPressed(key);
+bool gGUIManager::showDialogue(gGUIDialogue* dialogue) {
+	dialoguesshown.push_back(dialogue);
+	return true;
+}
+
+bool gGUIManager::hideDialogue(gGUIDialogue* dialogue) {
+	if(dialoguesshown.empty()) return false;
+	if(dialoguesshown[dialoguesshown.size() - 1] == dialogue) {
+		dialoguesshown.pop_back();
+		return true;
 	}
+	return false;
+}
+
+void gGUIManager::keyPressed(int key) {
+	if(!dialoguesshown.empty()) {
+		dialoguesshown[dialoguesshown.size() - 1]->keyPressed(key);
+		return;
+	}
+	currentframe->keyPressed(key);
 }
 
 void gGUIManager::keyReleased(int key) {
-	currentframe->keyReleased(key);
-	for (int i = 0; i < dialogues.size(); i++) {
-		if (dialogues[i]->isShown()) dialogues[i]->keyReleased(key);
+	if(!dialoguesshown.empty()) {
+		dialoguesshown[dialoguesshown.size() - 1]->keyReleased(key);
+		return;
 	}
+	currentframe->keyReleased(key);
 }
 
 void gGUIManager::charPressed(unsigned int key) {
-	currentframe->charPressed(key);
-	for (int i = 0; i < dialogues.size(); i++) {
-		if (dialogues[i]->isShown()) dialogues[i]->charPressed(key);
+	if(!dialoguesshown.empty()) {
+		dialoguesshown[dialoguesshown.size() - 1]->charPressed(key);
+		return;
 	}
+	currentframe->charPressed(key);
 }
 
 void gGUIManager::mouseMoved(int x, int y) {
+	if(!dialoguesshown.empty()) {
+		appmanager->setCursor(dialoguesshown[dialoguesshown.size() - 1]->getCursor(x, y));
+		dialoguesshown[dialoguesshown.size() - 1]->mouseMoved(x, y);
+		return;
+	}
 	appmanager->setCursor(currentframe->getCursor(x, y));
 	currentframe->mouseMoved(x, y);
-
-	for (int i = 0; i < dialogues.size(); i++) {
-		if (dialogues[i]->isShown()) {
-			appmanager->setCursor(dialogues[i]->getCursor(x, y));
-			dialogues[i]->mouseMoved(x, y);
-		}
-	}
 }
 
 void gGUIManager::mousePressed(int x, int y, int button) {
-	if (selecteddialogue == nullptr) currentframe->mousePressed(x, y, button);
-	else selecteddialogue->mousePressed(x, y, button);
+	if(!dialoguesshown.empty()) {
+		dialoguesshown[dialoguesshown.size() - 1]->mousePressed(x, y, button);
+		return;
+	}
+	currentframe->mousePressed(x, y, button);
 }
 
 void gGUIManager::mouseDragged(int x, int y, int button) {
-	if (selecteddialogue == nullptr) currentframe->mouseDragged(x, y, button);
-	else selecteddialogue->mouseDragged(x, y, button);
+	if(!dialoguesshown.empty()) {
+		dialoguesshown[dialoguesshown.size() - 1]->mouseDragged(x, y, button);
+		return;
+	}
+	currentframe->mouseDragged(x, y, button);
 }
 
 void gGUIManager::mouseReleased(int x, int y, int button) {
-	if (selecteddialogue == nullptr) {
-		currentframe->mouseReleased(x, y, button);
+	if(!dialoguesshown.empty()) {
+		dialoguesshown[dialoguesshown.size() - 1]->mouseReleased(x, y, button);
+		return;
 	}
-	else {
-		for (int i = 0; i < dialogues.size(); i++) {
-			if (dialogues[i]->isShown()) dialogues[i]->mouseReleased(x, y, button);
-		}
-	}
+	currentframe->mouseReleased(x, y, button);
 }
 
 void gGUIManager::mouseScrolled(int x, int y) {
-	currentframe->mouseScrolled(x, y);
-	for (int i = 0; i < dialogues.size(); i++) {
-		if (dialogues[i]->isShown()) dialogues[i]->mouseScrolled(x, y);
+	if(!dialoguesshown.empty()) {
+		dialoguesshown[dialoguesshown.size() - 1]->mouseScrolled(x, y);
+		return;
 	}
+	currentframe->mouseScrolled(x, y);
 }
 
 void gGUIManager::mouseEntered() {
-	currentframe->mouseEntered();
-	for (int i = 0; i < dialogues.size(); i++) {
-		if (dialogues[i]->isShown()) dialogues[i]->mouseEntered();
+	if(!dialoguesshown.empty()) {
+		dialoguesshown[dialoguesshown.size() - 1]->mouseEntered();
+		return;
 	}
+	currentframe->mouseEntered();
 }
 
 void gGUIManager::mouseExited() {
-	currentframe->mouseExited();
-	for (int i = 0; i < dialogues.size(); i++) {
-		if (dialogues[i]->isShown()) dialogues[i]->mouseEntered();
+	if(!dialoguesshown.empty()) {
+		dialoguesshown[dialoguesshown.size() - 1]->mouseExited();
+		return;
 	}
+	currentframe->mouseExited();
 }
 
 void gGUIManager::windowResized(int w, int h) {
@@ -170,10 +191,8 @@ void gGUIManager::update() {
 
 	currentframe->update();
 
-	for (int i = dialogues.size() - 1; i >= 0; i--) {
-		if (dialogues[i]->isShown()) {selecteddialogue = dialogues[i]; break;}
-		selecteddialogue = nullptr;
-	}
+	selecteddialogue = nullptr;
+	if(!dialoguesshown.empty()) selecteddialogue = dialoguesshown[dialoguesshown.size() - 1];
 
 	if (selecteddialogue != nullptr) {
 		selecteddialogue->update();
@@ -220,8 +239,10 @@ void gGUIManager::draw() {
 	if(!isframeset) return;
 
 	currentframe->draw();
-	for (int i = 0; i < dialogues.size(); i++) {
-		if (dialogues[i]->isShown()) dialogues[i]->draw();
+	if(!dialoguesshown.empty()) {
+		for (int i = 0; i < dialoguesshown.size(); i++) {
+			dialoguesshown[i]->draw();
+		}
 	}
 }
 
