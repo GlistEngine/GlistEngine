@@ -1,5 +1,11 @@
 var NAVTREEINDEX6 =
 {
+"classgGUISizer.html#a6528e291595110b6e616a1c9f1506d27":[0,0,83,25],
+"classgGUISizer.html#a7ab6b5531f15e0beb45e39e2d429cced":[0,0,83,5],
+"classgGUISizer.html#a81a4769ca9b69780a7feec9139591b3e":[0,0,83,31],
+"classgGUISizer.html#a8245b1f5ae3970668709e2b579123603":[0,0,83,30],
+"classgGUISizer.html#a857b1378215796089121456faea0e2c8":[0,0,83,2],
+"classgGUISizer.html#a8ca1c78d0efcfcf2c20c218806d22fd3":[0,0,83,29],
 "classgGUISizer.html#a8f99b2a44be6584f58c85d0118992806":[0,0,83,35],
 "classgGUISizer.html#a9d7ee6b06e2727b212887a85fd9dcbd5":[0,0,83,8],
 "classgGUISizer.html#ab0611d336533695f6f50f15f336f7854":[0,0,83,22],
@@ -243,11 +249,5 @@ var NAVTREEINDEX6 =
 "classgHttpFile.html#ac469b5fd7ec4178d9fcfab78a41e697c":[0,0,96,10],
 "classgHttpFile.html#ad383056ff7ba0f3245a6bf65a68078bd":[0,0,96,1],
 "classgHttpFile.html#ad3e895706fe1b490c497c27d70b76112":[0,0,96,8],
-"classgHttpFile.html#afb86c79f2878dae8799e1f28222ec0c9":[0,0,96,4],
-"classgImage.html":[0,0,97],
-"classgImage.html#a1e521117158e56ebdcd9e4a34c9af481":[0,0,97,7],
-"classgImage.html#a1f89f293d4f170651a967145a829d2b6":[0,0,97,16],
-"classgImage.html#a21697d66bb4f45a23073ea66e8e72067":[0,0,97,1],
-"classgImage.html#a25cd5df20e2d778e906767859c95f96f":[0,0,97,4],
-"classgImage.html#a2c3514200bc2232d9442c790d1a071ea":[0,0,97,17]
+"classgHttpFile.html#afb86c79f2878dae8799e1f28222ec0c9":[0,0,96,4]
 };
