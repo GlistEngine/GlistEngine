@@ -239,6 +239,8 @@ public:
 	 */
 	int getVisibleLineNumber();
 
+	int getTotalHeight();
+
 private:
 	int listboxh;
 	int lineh, linenum;
