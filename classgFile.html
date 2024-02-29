@@ -118,6 +118,11 @@ Public Types</h2></td></tr>
 , <b>FILEMODE_APPEND</b>
  }</td></tr>
 <tr class="separator:a3819f303037060ce0d25aa23a135d94f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae0409e2a1e11645fb3301ded923fe7cb"><td class="memItemLeft" align="right" valign="top"><a id="ae0409e2a1e11645fb3301ded923fe7cb"></a>enum &#160;</td><td class="memItemRight" valign="bottom"><b>CopyOptions</b> { <b>NONE</b>
+, <b>SKIP_EXISTING</b>
+, <b>OVERWRITE_EXISTING</b>
+ }</td></tr>
+<tr class="separator:ae0409e2a1e11645fb3301ded923fe7cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -234,6 +239,39 @@ static std::string&#160;</td><td class="memItemRight" valign="bottom"><b>getDire
 <tr class="memitem:a708b4c6763e8840a149dda35ba96d78b"><td class="memItemLeft" align="right" valign="top"><a id="a708b4c6763e8840a149dda35ba96d78b"></a>
 static std::string&#160;</td><td class="memItemRight" valign="bottom"><b>addComplementarySlashIfNeeded</b> (const fs::path &amp;filePath)</td></tr>
 <tr class="separator:a708b4c6763e8840a149dda35ba96d78b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad4c8d534a21435e7d7c8491975a9f7c6"><td class="memItemLeft" align="right" valign="top"><a id="ad4c8d534a21435e7d7c8491975a9f7c6"></a>
+static void&#160;</td><td class="memItemRight" valign="bottom"><b>copy</b> (const std::string &amp;fromFullPath, const std::string &amp;toFullPath, int copyOption=CopyOptions::NONE)</td></tr>
+<tr class="separator:ad4c8d534a21435e7d7c8491975a9f7c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad94e2f95347238c2eaf877855fb41720"><td class="memItemLeft" align="right" valign="top"><a id="ad94e2f95347238c2eaf877855fb41720"></a>
+static bool&#160;</td><td class="memItemRight" valign="bottom"><b>copyFile</b> (const std::string &amp;fromFullPath, const std::string &amp;toFullPath, int copyOption=CopyOptions::NONE)</td></tr>
+<tr class="separator:ad94e2f95347238c2eaf877855fb41720"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5700729c2c301588316420f4b18c7ae4"><td class="memItemLeft" align="right" valign="top"><a id="a5700729c2c301588316420f4b18c7ae4"></a>
+static void&#160;</td><td class="memItemRight" valign="bottom"><b>copySymlink</b> (const std::string &amp;existingSymlinkFullPath, const std::string &amp;newSymlinkFullPath)</td></tr>
+<tr class="separator:a5700729c2c301588316420f4b18c7ae4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2f00c24c5c060d1797764a869009efce"><td class="memItemLeft" align="right" valign="top"><a id="a2f00c24c5c060d1797764a869009efce"></a>
+static bool&#160;</td><td class="memItemRight" valign="bottom"><b>createDirectory</b> (const std::string &amp;fullPath)</td></tr>
+<tr class="separator:a2f00c24c5c060d1797764a869009efce"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a83170762521fcd432e8481e08e243665"><td class="memItemLeft" align="right" valign="top"><a id="a83170762521fcd432e8481e08e243665"></a>
+static void&#160;</td><td class="memItemRight" valign="bottom"><b>createDirectorySymlink</b> (const std::string &amp;toFullPath, const std::string &amp;symlinkFullPath)</td></tr>
+<tr class="separator:a83170762521fcd432e8481e08e243665"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2806e33e27cb0cb2bc2182d0e6dcb577"><td class="memItemLeft" align="right" valign="top"><a id="a2806e33e27cb0cb2bc2182d0e6dcb577"></a>
+static void&#160;</td><td class="memItemRight" valign="bottom"><b>createSymlink</b> (const std::string &amp;toFullPath, const std::string &amp;symlinkFullPath)</td></tr>
+<tr class="separator:a2806e33e27cb0cb2bc2182d0e6dcb577"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a706f5b4042ab906a62585e36190d4994"><td class="memItemLeft" align="right" valign="top"><a id="a706f5b4042ab906a62585e36190d4994"></a>
+static bool&#160;</td><td class="memItemRight" valign="bottom"><b>isEmpty</b> (const std::string &amp;fullPath)</td></tr>
+<tr class="separator:a706f5b4042ab906a62585e36190d4994"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae681aade270f1ea1cac67b685ec1610a"><td class="memItemLeft" align="right" valign="top"><a id="ae681aade270f1ea1cac67b685ec1610a"></a>
+static bool&#160;</td><td class="memItemRight" valign="bottom"><b>isEquivalent</b> (const std::string &amp;fullPath1, const std::string &amp;fullPath2)</td></tr>
+<tr class="separator:ae681aade270f1ea1cac67b685ec1610a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a41e53dd6fbac2ceb2891f7e61a3d117b"><td class="memItemLeft" align="right" valign="top"><a id="a41e53dd6fbac2ceb2891f7e61a3d117b"></a>
+static bool&#160;</td><td class="memItemRight" valign="bottom"><b>isSymlink</b> (const std::string &amp;fullPath)</td></tr>
+<tr class="separator:a41e53dd6fbac2ceb2891f7e61a3d117b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6856d33e214eccc4a8de172912e48c4f"><td class="memItemLeft" align="right" valign="top"><a id="a6856d33e214eccc4a8de172912e48c4f"></a>
+static bool&#160;</td><td class="memItemRight" valign="bottom"><b>remove</b> (const std::string &amp;fullPath)</td></tr>
+<tr class="separator:a6856d33e214eccc4a8de172912e48c4f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a19362b52b3dfec38943e3138ca679f8a"><td class="memItemLeft" align="right" valign="top"><a id="a19362b52b3dfec38943e3138ca679f8a"></a>
+static void&#160;</td><td class="memItemRight" valign="bottom"><b>rename</b> (const std::string &amp;fromFullPath, const std::string &amp;toFullPath)</td></tr>
+<tr class="separator:a19362b52b3dfec38943e3138ca679f8a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_static_methods_classgObject"><td colspan="2" onclick="javascript:toggleInherit('pub_static_methods_classgObject')"><img src="closed.png" alt="-"/>&#160;Static Public Member Functions inherited from <a class="el" href="classgObject.html">gObject</a></td></tr>
 <tr class="memitem:a241585065215d0640b48a1d628713067 inherit pub_static_methods_classgObject"><td class="memItemLeft" align="right" valign="top">static std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgObject.html#a241585065215d0640b48a1d628713067">gGetAppDir</a> ()</td></tr>
 <tr class="separator:a241585065215d0640b48a1d628713067 inherit pub_static_methods_classgObject"><td class="memSeparator" colspan="2">&#160;</td></tr>

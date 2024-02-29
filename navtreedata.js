@@ -46,15 +46,15 @@ var NAVTREEINDEX =
 "annotated.html",
 "classgBaseParticles.html#a1f39ac3ce36a9bcd22ea3ba3b5c9049f",
 "classgColorChannelMixer.html#a76d48697a410879d5c3a3c2e6cafc3dd",
-"classgGUICandleStickChart.html#a23f71d877e1527c4896c8381e5adbae5",
-"classgGUIForm.html#af70dac21805e7d28e4da0ebf796310e5",
-"classgGUIMenuItem.html#a78b4a63d93fa71d6822c746091cc8508",
-"classgGUISizer.html#ad3627f8407393ad42f63f9fefc9d8c35",
-"classgImage.html#a6d533660d45d58276864100fae9f0293",
-"classgModel.html#a3424d800b0a40000df44b8a486a45f82",
-"classgRenderer.html#a016450dd5476e0ab4236c891fe05e464",
-"classgSpriteAnimator.html",
-"gBloom_8h_source.html"
+"classgGUICandleStickChart.html",
+"classgGUIForm.html#ae78c467fccdb8840ad3bb85709c78d6f",
+"classgGUIMenuItem.html#a35f590600d3ed263db96d759d5f752eb",
+"classgGUISizer.html#a8f99b2a44be6584f58c85d0118992806",
+"classgImage.html#a30338f87dc86158460c014bbc2dc3795",
+"classgModel.html#a1c9a9d59bed8b954e7c81db65f939028",
+"classgRenderObject.html#a9aed705f1e1a4e4cdacfbfe13179a28f",
+"classgSpriteAnimation.html#ab03b5e581b78eae59e58f97011acb8e6",
+"gBasePlugin_8h_source.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

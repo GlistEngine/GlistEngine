@@ -1,5 +1,9 @@
 var NAVTREEINDEX3 =
 {
+"classgGUICandleStickChart.html":[0,0,49],
+"classgGUICandleStickChart.html#a0b3f2bd19fd8cbc11f1b55f3db79a990":[0,0,49,15],
+"classgGUICandleStickChart.html#a1310bf56b9d80ef3aa490eda67040ce7":[0,0,49,12],
+"classgGUICandleStickChart.html#a151e5d9bd349bd3b08de15a151840f5a":[0,0,49,11],
 "classgGUICandleStickChart.html#a23f71d877e1527c4896c8381e5adbae5":[0,0,49,3],
 "classgGUICandleStickChart.html#a2b279f13aab91dea10f70e16b76b9fb4":[0,0,49,2],
 "classgGUICandleStickChart.html#a2d6410758101f30ece907bb6935a5e14":[0,0,49,14],
@@ -245,9 +249,5 @@ var NAVTREEINDEX3 =
 "classgGUIForm.html#ad7de79f1f95b36356d2e6cd7ad692d5b":[0,0,62,28],
 "classgGUIForm.html#ad93f28bb3599f74d58e4c01ef0d81eca":[0,0,62,45],
 "classgGUIForm.html#ae17f0e6b2f43b36beb8f685cfdcd0be3":[0,0,62,41],
-"classgGUIForm.html#ae577d28d9f33e27b9763623b80a7c24c":[0,0,62,40],
-"classgGUIForm.html#ae78c467fccdb8840ad3bb85709c78d6f":[0,0,62,26],
-"classgGUIForm.html#aef18fe582107844a534abc8b4e003c79":[0,0,62,24],
-"classgGUIForm.html#aef4f88a9872d7610048804a52ef19299":[0,0,62,17],
-"classgGUIForm.html#af6c3e8f504437f1b0e1596d0a6df802d":[0,0,62,33]
+"classgGUIForm.html#ae577d28d9f33e27b9763623b80a7c24c":[0,0,62,40]
 };
