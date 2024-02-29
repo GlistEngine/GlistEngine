@@ -58,6 +58,7 @@ gGUIScrollable::gGUIScrollable() {
 	titledy = font->getSize() * 1.8f;
 	boxfbo = new gFbo();
 	setTitleOn(false);
+	isalpha = false;
 }
 
 gGUIScrollable::~gGUIScrollable() {
