@@ -83,7 +83,7 @@ void gGUIDropdownList::onGUIEvent(int guiObjectId, int eventType, int sourceEven
 		ispressed = true;
 	}
 	if(sourceEventType == G_GUIEVENT_TREELISTSELECTED) {
-		selectedline = listopened;
+		selectedline = true;
 	}
 	if(sourceEventType == G_GUIEVENT_TREELISTEXPANDED) {
 		listexpanded = true;
@@ -112,9 +112,12 @@ void gGUIDropdownList::draw() {
 	renderer->setColor(oldcolor);
 }
 
-void gGUIDropdownList::setParentFrame(gGUIFrame *frame) {
-	this->frame = frame;
-//	(*frame).addTreelist(&list, listx, listy, listw);
+void gGUIDropdownList::setParentFrame(gGUIForm* form) {
+	setParentForm(form);
+}
+
+void gGUIDropdownList::setParentForm(gGUIForm* form) {
+	this->frame = form;
 }
 
 
@@ -209,4 +212,9 @@ std::string& gGUIDropdownList::getSelectedTitle() {
 
 void gGUIDropdownList::clearTitle() {
 	textbox.setText("");
+}
+
+void gGUIDropdownList::clear() {
+	list.clear();
+	clearTitle();
 }
