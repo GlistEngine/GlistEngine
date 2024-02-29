@@ -267,6 +267,8 @@ public:
 	 */
 	void refreshList();
 
+	void clear();
+
 	void drawContent();
 
 	void mousePressed(int x, int y, int button);
@@ -403,6 +405,7 @@ public:
 	 */
 	Element* getRootElement();
 
+	void setSelectedLineNumber(int lineNo);
 	int getSelectedLineNumber();
 
 	int nodenum;

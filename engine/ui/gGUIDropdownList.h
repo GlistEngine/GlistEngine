@@ -27,7 +27,8 @@ public:
 	virtual ~gGUIDropdownList();
 	void set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIObject* parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h);
 	void draw();
-	void setParentFrame(gGUIFrame *frame);
+	void setParentFrame(gGUIForm* form);
+	void setParentForm(gGUIForm* form);
 	void mousePressed(int x, int y, int button);
 	void mouseReleased(int x, int y, int button);
 	void mouseScrolled(int x, int y);
@@ -36,6 +37,7 @@ public:
 	void addElement(gGUITreelist::Element* element);
 	void addElement(gGUITreelist::Element* element, gGUITreelist::Element* parentelement);
 	void clearTitle();
+	void clear();
 
 	std::string& getSelectedTitle();
 
@@ -52,7 +54,7 @@ private:
 	int listx, listy, listw;
 	bool listopened, selectedline, listexpanded, pressedonlist, buttonpressed, ispressed;
 	bool lopened;
-	gGUIFrame *frame;
+	gGUIForm* frame;
 	std::string fTitle;
 };
 
