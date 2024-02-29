@@ -12,6 +12,7 @@
 #include "gGUIContextMenu.h"
 #include "gGUIStatusBar.h"
 #include "gGUITreelist.h"
+#include "gTooltipText.h"
 
 
 gGUIForm::gGUIForm() {
@@ -265,6 +266,7 @@ void gGUIForm::mouseMoved(int x, int y) {
 		}
 	}
 	if(contextmenu) contextmenu->mouseMoved(x, y);
+	for(int i = 0; i < vectooltiptext.size(); i++) { vectooltiptext[i]->mouseMoved(x, y);}
 }
 
 void gGUIForm::mousePressed(int x, int y, int button) {
@@ -337,4 +339,6 @@ void gGUIForm::windowResized(int w, int h) {
 	}
 }
 
-
+void gGUIForm::setTooltipText(gTooltipText *tooltiptext) {
+	this->vectooltiptext.push_back(tooltiptext);
+}

@@ -189,6 +189,7 @@ set(SRC_FILES
 	${ENGINE_DIR}/ui/gGUIColumnChart.cpp
 	${ENGINE_DIR}/ui/gGUITextbox.cpp
 	${ENGINE_DIR}/ui/gGUIText.cpp
+	${ENGINE_DIR}/ui/gTooltipText.cpp
 	${ENGINE_DIR}/ui/gGUIDivider.cpp
 	${ENGINE_DIR}/ui/gGUIToolbarButton.cpp
 	${ENGINE_DIR}/ui/gGUIProgressBar.cpp
