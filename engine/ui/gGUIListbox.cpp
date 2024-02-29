@@ -35,8 +35,10 @@ gGUIListbox::~gGUIListbox() {
 }
 
 void gGUIListbox::set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIObject* parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h) {
-	totalh = h;
+	if(totalh < h) totalh = h;
 	gGUIScrollable::set(root, topParentGUIObject, parentGUIObject, parentSlotLineNo, parentSlotColumnNo, x, y, w, h);
+	listboxh = h;
+	linenum = listboxh / lineh;
 	gGUIScrollable::setDimensions(width, listboxh);
 }
 
@@ -138,7 +140,6 @@ void gGUIListbox::mouseReleased(int x, int y, int button) {
 		if(newselectedno < data.size() + 1) selectedno = newselectedno;
 		isfocused = true;
 		root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_LISTBOXSELECTED, gToStr(selectedno));
-
 	}
 }
 
@@ -146,6 +147,7 @@ void gGUIListbox::setSelected(int lineNo) {
 	if(lineNo < 0 || lineNo > data.size() - 1) return;
 
 	selectedno = lineNo;
+	root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_LISTBOXSELECTED, gToStr(selectedno));
 }
 
 void gGUIListbox::setChosenColor(float r, float g, float b) {
@@ -242,4 +244,8 @@ gColor gGUIListbox::getIconsColor() {
 
 int gGUIListbox::getVisibleLineNumber() {
 	return minlinenum;
+}
+
+int gGUIListbox::getTotalHeight() {
+	return totalh;
 }
