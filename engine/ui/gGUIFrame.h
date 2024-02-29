@@ -14,6 +14,7 @@
 class gGUIFrame : public gGUIForm {
 public:
 	gGUIFrame();
+	gGUIFrame(gBaseApp* root);
 	virtual ~gGUIFrame();
 
 	void update();
