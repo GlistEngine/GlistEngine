@@ -24,6 +24,22 @@ gGUIFrame::gGUIFrame() {
 	for(int i = 0; i < vectooltiptext.size(); i++) { vectooltiptext[i] = nullptr;}
 }
 
+gGUIFrame::gGUIFrame(gBaseApp* root) {
+	guisizer = nullptr;
+	menubar = nullptr;
+	statusbar = nullptr;
+	contextmenu = nullptr;
+	treelist = nullptr;
+	setParentSlotNo(0, 0);
+	left = 0;
+	top = 0;
+	right = root->getAppManager()->getCurrentCanvas()->getScreenWidth();
+	bottom = root->getAppManager()->getCurrentCanvas()->getScreenHeight();
+	width = root->getAppManager()->getCurrentCanvas()->getScreenWidth();
+	height = root->getAppManager()->getCurrentCanvas()->getScreenHeight();
+	setRootApp(root);
+}
+
 gGUIFrame::~gGUIFrame() {
 }
 
