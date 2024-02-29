@@ -73,6 +73,12 @@ void gGUITreelist::addElement(Element* element) {
 	refreshList();
 }
 
+void gGUITreelist::clear() {
+	topelement.sub.clear();
+	linenum = 0;
+	totalh = linenum * lineh;
+}
+
 void gGUITreelist::drawContent() {
 	//topelement.logTitle();
 
@@ -293,6 +299,12 @@ int gGUITreelist::getVisibleLineNumber() {
 
 gGUITreelist::Element* gGUITreelist::getRootElement() {
 	return (&topelement);
+}
+
+void gGUITreelist::setSelectedLineNumber(int lineNo) {
+	selectedno = lineNo;
+	root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_TREELISTSELECTED, gToStr(selectedno));
+	actionmanager.onGUIEvent(id, G_GUIEVENT_TREELISTSELECTED);
 }
 
 int gGUITreelist::getSelectedLineNumber() {
