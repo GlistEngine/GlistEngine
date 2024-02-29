@@ -1,5 +1,6 @@
 var NAVTREEINDEX9 =
 {
+"classgRectangle.html#a7501a0a948151e8ec0eb7f527041dc20":[0,0,131,0],
 "classgRectangle.html#a990f735f069715bcaa27254521487c26":[0,0,131,5],
 "classgRectangle.html#aa5570b3e6d30ebb92b62451df8e73363":[0,0,131,1],
 "classgRectangle.html#aae9101ca942db25f498113495712a165":[0,0,131,4],
@@ -248,6 +249,5 @@ var NAVTREEINDEX9 =
 "classgSphere.html#a94dea51c71a9f41b3884d5e297ec0979":[0,0,143,1],
 "classgSphere.html#aeac8f32eeb095b7656089b5cbe9ff43e":[0,0,143,0],
 "classgSpriteAnimation.html":[0,0,144],
-"classgSpriteAnimation.html#a1a0900bed280e4c5bac499ce494ef620":[0,0,144,1],
-"classgSpriteAnimation.html#a1b8cf7371ac691da6112c6635427c15c":[0,0,144,4]
+"classgSpriteAnimation.html#a1a0900bed280e4c5bac499ce494ef620":[0,0,144,1]
 };

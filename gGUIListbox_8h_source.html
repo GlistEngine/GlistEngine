@@ -327,23 +327,25 @@ $(document).ready(function(){initNavTree('gGUIListbox_8h_source.html',''); initR
 <div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160;<span class="comment">     */</span></div>
 <div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160;    <span class="keywordtype">int</span> getVisibleLineNumber();</div>
 <div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160; </div>
-<div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160;    <span class="keywordtype">int</span> listboxh;</div>
-<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;    <span class="keywordtype">int</span> lineh, linenum;</div>
-<div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160;    <span class="keywordtype">int</span> minlinenum, minboxh;</div>
-<div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;    <span class="keywordtype">int</span> maxlinenum;</div>
-<div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160;    std::vector&lt;std::string&gt; data;</div>
-<div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;    std::deque&lt;gTexture*&gt; icons;</div>
-<div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160;    <span class="keywordtype">float</span> datady;</div>
-<div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160;    <span class="keywordtype">int</span> firstlineno, flno, fldy;</div>
-<div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160;    <span class="keywordtype">int</span> selectedno;</div>
-<div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160;    <span class="keywordtype">bool</span> mousepressedonlist;</div>
-<div class="line"><a name="l00253"></a><span class="lineno">  253</span>&#160;    <span class="keywordtype">bool</span> isicon;</div>
-<div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160;    <a class="code" href="classgColor.html">gColor</a> chosencolor, iconcolor;</div>
-<div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160;    <span class="keywordtype">int</span> iconw;</div>
-<div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;};</div>
-<div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160; </div>
-<div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* UI_GGUILISTBOX_H_ */</span><span class="preprocessor"></span></div>
+<div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;    <span class="keywordtype">int</span> getTotalHeight();</div>
+<div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160; </div>
+<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160;    <span class="keywordtype">int</span> listboxh;</div>
+<div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;    <span class="keywordtype">int</span> lineh, linenum;</div>
+<div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160;    <span class="keywordtype">int</span> minlinenum, minboxh;</div>
+<div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;    <span class="keywordtype">int</span> maxlinenum;</div>
+<div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160;    std::vector&lt;std::string&gt; data;</div>
+<div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160;    std::deque&lt;gTexture*&gt; icons;</div>
+<div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160;    <span class="keywordtype">float</span> datady;</div>
+<div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160;    <span class="keywordtype">int</span> firstlineno, flno, fldy;</div>
+<div class="line"><a name="l00253"></a><span class="lineno">  253</span>&#160;    <span class="keywordtype">int</span> selectedno;</div>
+<div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160;    <span class="keywordtype">bool</span> mousepressedonlist;</div>
+<div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160;    <span class="keywordtype">bool</span> isicon;</div>
+<div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;    <a class="code" href="classgColor.html">gColor</a> chosencolor, iconcolor;</div>
+<div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;    <span class="keywordtype">int</span> iconw;</div>
+<div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;};</div>
+<div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160; </div>
+<div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* UI_GGUILISTBOX_H_ */</span><span class="preprocessor"></span></div>
 <div class="ttc" id="aclassgBaseApp_html"><div class="ttname"><a href="classgBaseApp.html">gBaseApp</a></div><div class="ttdef"><b>Definition:</b> gBaseApp.h:16</div></div>
 <div class="ttc" id="aclassgBaseGUIObject_html"><div class="ttname"><a href="classgBaseGUIObject.html">gBaseGUIObject</a></div><div class="ttdef"><b>Definition:</b> gBaseGUIObject.h:18</div></div>
 <div class="ttc" id="aclassgColor_html"><div class="ttname"><a href="classgColor.html">gColor</a></div><div class="ttdef"><b>Definition:</b> gColor.h:12</div></div>

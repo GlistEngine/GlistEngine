@@ -1,5 +1,6 @@
 var NAVTREEINDEX10 =
 {
+"classgSpriteAnimation.html#a1b8cf7371ac691da6112c6635427c15c":[0,0,144,4],
 "classgSpriteAnimation.html#a44d625853890bd4504570ba1fcbc0b27":[0,0,144,3],
 "classgSpriteAnimation.html#a59504f31ccf9d34be42cfa3de20fcf1a":[0,0,144,7],
 "classgSpriteAnimation.html#a881cb855d95e3bae36843f0369bda1ba":[0,0,144,5],
@@ -211,8 +212,8 @@ var NAVTREEINDEX10 =
 "classgWindowResizeEvent.html#a12037a9797b82a2efcd950a2e740f344":[0,0,162,2],
 "classgWindowResizeEvent.html#a303c8759dad7cdd6f914b71c1821c6d2":[0,0,162,0],
 "files.html":[1,0],
-"functions.html":[0,3,0],
 "functions.html":[0,3,0,0],
+"functions.html":[0,3,0],
 "functions_b.html":[0,3,0,1],
 "functions_c.html":[0,3,0,2],
 "functions_d.html":[0,3,0,3],
@@ -248,6 +249,5 @@ var NAVTREEINDEX10 =
 "functions_vars.html":[0,3,2],
 "gAES_8h_source.html":[1,0,0],
 "gAppManager_8h_source.html":[1,0,1],
-"gAppObject_8h_source.html":[1,0,2],
-"gArc_8h_source.html":[1,0,3]
+"gAppObject_8h_source.html":[1,0,2]
 };

@@ -13,6 +13,7 @@ var classgGUIListbox =
     [ "getIconType", "classgGUIListbox.html#a2e4cf0b5ee0a68f51d57cbbb27bfe7cc", null ],
     [ "getSelected", "classgGUIListbox.html#a26445163ec8d05f342ea1dfbe74b7fd1", null ],
     [ "getSelectedData", "classgGUIListbox.html#a30201f38ca5055a9180263755af95c07", null ],
+    [ "getTotalHeight", "classgGUIListbox.html#a139cb19587628e7e0a9f9523d40503bf", null ],
     [ "getVisibleLineNumber", "classgGUIListbox.html#a458887cdb473ab8c204f1415e33b4498", null ],
     [ "insertData", "classgGUIListbox.html#a2ecd6fb791cc8bf8acfa387231215736", null ],
     [ "mousePressed", "classgGUIListbox.html#a5439b8f32806cc771d01c7605eae711c", null ],
