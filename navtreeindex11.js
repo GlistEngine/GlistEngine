@@ -1,5 +1,6 @@
 var NAVTREEINDEX11 =
 {
+"gBloom_8h_source.html":[1,0,14],
 "gBlur_8h_source.html":[1,0,15],
 "gBoundingBox_8h_source.html":[1,0,16],
 "gBox_8h_source.html":[1,0,17],

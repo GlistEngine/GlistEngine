@@ -1,5 +1,6 @@
 var NAVTREEINDEX10 =
 {
+"classgSpriteAnimator.html":[0,0,145],
 "classgSpriteAnimator.html#a3dc3a6a735116fb46c3be8a1f20aad51":[0,0,145,4],
 "classgSpriteAnimator.html#a73d5ebd0f5bf2ec7cdd701b145705e5d":[0,0,145,0],
 "classgSpriteAnimator.html#a766644582b18c2cd663cd518f12047f6":[0,0,145,6],
@@ -200,8 +201,8 @@ var NAVTREEINDEX10 =
 "classgWindowResizeEvent.html#a12037a9797b82a2efcd950a2e740f344":[0,0,162,2],
 "classgWindowResizeEvent.html#a303c8759dad7cdd6f914b71c1821c6d2":[0,0,162,0],
 "files.html":[1,0],
-"functions.html":[0,3,0],
 "functions.html":[0,3,0,0],
+"functions.html":[0,3,0],
 "functions_b.html":[0,3,0,1],
 "functions_c.html":[0,3,0,2],
 "functions_d.html":[0,3,0,3],
@@ -248,6 +249,5 @@ var NAVTREEINDEX10 =
 "gBasePlugin_8h_source.html":[1,0,10],
 "gBasePostProcess_8h_source.html":[1,0,11],
 "gBaseSound_8h_source.html":[1,0,12],
-"gBaseWindow_8h_source.html":[1,0,13],
-"gBloom_8h_source.html":[1,0,14]
+"gBaseWindow_8h_source.html":[1,0,13]
 };
