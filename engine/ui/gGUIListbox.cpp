@@ -12,6 +12,7 @@
 
 gGUIListbox::gGUIListbox() {
 	lineh = 2 * font->getSize() + 2;
+	linehalf = lineh / 2;
 	minlinenum = 4;
 	linenum = 0;
 	totalh = linenum * lineh;
@@ -39,6 +40,7 @@ void gGUIListbox::set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseG
 	gGUIScrollable::set(root, topParentGUIObject, parentGUIObject, parentSlotLineNo, parentSlotColumnNo, x, y, w, h);
 	listboxh = h;
 	linenum = listboxh / lineh;
+	maxlinenum = listboxh / lineh;
 	gGUIScrollable::setDimensions(width, listboxh);
 }
 
