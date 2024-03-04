@@ -1,5 +1,6 @@
 var NAVTREEINDEX10 =
 {
+"classgSoftFocus.html#a680f9e93fc80da777a606b42288d3d14":[0,0,142,3],
 "classgSoftFocus.html#a8eb3f7a706bc499a7991c4c6b08a4bc4":[0,0,142,0],
 "classgSphere.html":[0,0,143],
 "classgSphere.html#a94dea51c71a9f41b3884d5e297ec0979":[0,0,143,1],
@@ -248,6 +249,5 @@ var NAVTREEINDEX10 =
 "functions_m.html":[0,3,0,9],
 "functions_o.html":[0,3,0,10],
 "functions_p.html":[0,3,0,11],
-"functions_r.html":[0,3,0,12],
-"functions_s.html":[0,3,0,13]
+"functions_r.html":[0,3,0,12]
 };

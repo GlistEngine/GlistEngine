@@ -24,6 +24,7 @@ var classgGUIScrollable =
     [ "hsbw", "classgGUIScrollable.html#a19f62e56d6c68c1e59fcc1cf170048ca", null ],
     [ "hsbx", "classgGUIScrollable.html#aea8aa8d5b07d47561848c12010d32abc", null ],
     [ "hsby", "classgGUIScrollable.html#acc1cd325b8c68c8d1040faed6a275a60", null ],
+    [ "linehalf", "classgGUIScrollable.html#a1bb1cc033f1f013f9914ca3685528892", null ],
     [ "scrolldiff", "classgGUIScrollable.html#a50ac9831b2a9c4315b28fab66c697913", null ],
     [ "titlediff", "classgGUIScrollable.html#ae0ff1f7cd880b3157bd39210a5c85faa", null ],
     [ "titletopmargin", "classgGUIScrollable.html#a2417cc04aa7741705cfccf9171e25635", null ],
