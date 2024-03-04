@@ -22,6 +22,7 @@ gGUIScrollable::gGUIScrollable() {
 	totalw = boxw;
 	totalh = boxh;
 	scrolldiff = 8;
+	linehalf = scrolldiff / 2;
 	vsbenabled = false;
 	hsbenabled = false;
 	sbenabled = false;
@@ -215,7 +216,7 @@ void gGUIScrollable::mouseDragged(int x, int y, int button) {
 
 		firsty += (y - vsbmy) * vsbh / vrh;
 		if(firsty < 0) firsty = 0;
-		if(firsty > totalh - boxh + (titlediff * istitleon) + marginy + hsbh) firsty = totalh - boxh + (titlediff * istitleon) + marginy + hsbh;
+		if(firsty > totalh - boxh + linehalf + (titlediff * istitleon) + marginy + hsbh) firsty = totalh - boxh + linehalf + (titlediff * istitleon) + marginy + hsbh;
 		if(totalh < boxh) firsty = 0;
 
 		vsbmy = y;
@@ -245,7 +246,7 @@ void gGUIScrollable::mouseReleased(int x, int y, int button) {
 void gGUIScrollable::mouseScrolled(int x, int y) {
 	firsty -= y * scrolldiff;
 	if(firsty < 0) firsty = 0;
-	if(firsty > totalh - boxh + (titlediff * istitleon) + marginy + hsbh) firsty = totalh - boxh + (titlediff * istitleon) + marginy + hsbh;
+	if(firsty > totalh - boxh + linehalf + (titlediff * istitleon) + marginy + hsbh) firsty = totalh - boxh + linehalf + (titlediff * istitleon) + marginy + hsbh;
 	if(totalh < boxh) firsty = 0;
 	if(vsbenabled && firsty >= 0) vry = firsty * (boxh - hsbh) / totalh;
 

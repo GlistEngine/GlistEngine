@@ -147,6 +147,7 @@ protected:
 	int hsbx, hsby, hsbw, hsbh;
 	int scrolldiff;
 	int titlediff;
+	int linehalf;
 
 private:
 	gFbo* boxfbo;
