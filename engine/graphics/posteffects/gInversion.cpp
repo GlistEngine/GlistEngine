@@ -5,7 +5,7 @@
  *      Author: kayra
  */
 
-#include <gInversion.h>
+#include "gInversion.h"
 
 gInversion::gInversion() {
 	shader = new gShader();

@@ -11,7 +11,6 @@
 #define ENGINE_BASE_GRENDEROBJECT_H_
 
 #include "gRenderer.h"
-//#include "gColor.h"
 
 #ifdef ANDROID
 using gIndex = unsigned short;

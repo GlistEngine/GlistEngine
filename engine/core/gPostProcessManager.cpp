@@ -58,7 +58,7 @@ void gPostProcessManager::disable() {
 	glBindFramebuffer(GL_FRAMEBUFFER, gFbo::defaultfbo);
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	gRenderObject::getRenderer()->getFboShader()->use();
+	renderer->getFboShader()->use();
 	glBindVertexArray(gFbo::getQuadVao());
 	fbos[lastwrittenfbo].getTexture().bind();
 	glDrawArrays(GL_TRIANGLES, 0, 6);

@@ -11,11 +11,17 @@
 #define CORE_GRENDERER_H_
 
 #include "gObject.h"
+
 #if defined(WIN32) || defined(LINUX)
 //#include <GL/glext.h>
 #include <GL/glew.h>
 #include <GL/gl.h>
 #include <GL/glu.h>
+#endif
+#if TARGET_OS_OSX
+#include <GL/glew.h>
+#include <OpenGL/gl.h>
+#include <OpenGL/glu.h>
 #endif
 #ifdef ANDROID
 #include <GLES3/gl3.h>
@@ -23,22 +29,21 @@
 #include <GLES3/gl3platform.h>
 #endif
 #if TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
-#	include <OpenGLES/ES3/gl.h>
-#	include <OpenGLES/ES3/glext.h>
-#	include <OpenGLES/gltypes.h>
+#include <OpenGLES/ES3/gl.h>
+#include <OpenGLES/ES3/glext.h>
+#include <OpenGLES/gltypes.h>
 #endif
 #define GLM_ENABLE_EXPERIMENTAL
+#define GLM_FORCE_DEFAULT_ALIGNED_GENTYPES
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp> // glm::translate, glm::rotate, glm::scale, glm::perspective
 #include <glm/gtx/quaternion.hpp>
 
-#include <deque>
-#include "gShader.h"
 #include "gColor.h"
 #include "gConstants.h"
-class gLight;
-class gImage;
-//#include "gLight.h"
+#include <deque>
+// amount of maximum lights, this is used to allocate memory for the light uniform buffer
+#define GLIST_MAX_LIGHTS 8
 
 // You can define ENGINE_OPENGL_CHECKS to enable OpenGL checks
 // without debugging.
@@ -85,6 +90,11 @@ void gDrawTubeOblique(float x, float y, float z, int outerradius,int innerradiou
 void gDrawTubeTrapezodial(float x, float y, float z, int topouterradius,int topinnerradious, int buttomouterradious, int buttominnerradious, int h, glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f), int segmentnum = 32, bool isFilled = true);
 void gDrawTubeObliqueTrapezodial(float x, float y, float z, int topouterradius,int topinnerradious, int buttomouterradious, int buttominnerradious, int h, glm::vec2 shiftdistance, glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f), int segmentnum = 32, bool isFilled = true);
 
+template<typename T>
+class gUbo;
+class gLight;
+class gImage;
+class gShader;
 
 class gRenderer: public gObject {
 public:
@@ -156,18 +166,6 @@ public:
 	void clearColor(int r, int g, int b, int a = 255);
 	void clearColor(gColor color);
 
-	void enableLighting();
-	void disableLighting();
-	bool isLightingEnabled();
-	void setLightingColor(int r, int g, int b, int a = 255);
-	void setLightingColor(gColor* color);
-	gColor* getLightingColor();
-	void setLightingPosition(glm::vec3 lightingPosition);
-	glm::vec3 getLightingPosition();
-	void setGlobalAmbientColor(int r, int g, int b, int a = 255);
-	void setGlobalAmbientColor(gColor color);
-	gColor* getGlobalAmbientColor();
-
 	void enableFog();
 	void disableFog();
 	void setFogNo(int no);
@@ -188,11 +186,14 @@ public:
 	float getFogLinearStart() const;
 	float getFogLinearEnd() const;
 
+	// add and remove functions are called by gLight class automatically,
+	// so you don't need to
 	void addSceneLight(gLight* light);
+	void removeSceneLight(gLight* light);
 	gLight* getSceneLight(int lightNo);
 	int getSceneLightNum();
-	void removeSceneLight(gLight* light);
 	void removeAllSceneLights();
+	void updateLights();
 
 	void enableDepthTest();
 	void enableDepthTest(int depthTestType);
@@ -244,6 +245,31 @@ public:
 	gImage takeScreenshot();
 
 private:
+	// this is an object that is sent to the gpu
+	struct alignas(16) gSceneLightData {
+		alignas(4) int type;
+		alignas(16) glm::vec3 position;
+		alignas(16) glm::vec3 direction;
+		alignas(16) glm::vec4 ambient;
+		alignas(16) glm::vec4 diffuse;
+		alignas(16) glm::vec4 specular;
+
+		alignas(4) float constant;
+		alignas(4) float linear;
+		alignas(4) float quadratic;
+
+		alignas(4) float spotcutoffangle;
+		alignas(4) float spotoutercutoffangle;
+	};
+
+	struct alignas(16) gSceneLights {
+		alignas(4) int lightnum = 0;
+		gSceneLightData lights[GLIST_MAX_LIGHTS];
+		// bitwise enabled lights, 1 means enabled, 0 means disabled, 32-bit integer
+		// supports only 32 max lights, make sure to change this if max lights is changed to be something above 32
+		int enabledlights;
+	};
+
 	static int width, height;
 	static int unitwidth, unitheight;
 	static int screenscaling;
@@ -256,9 +282,6 @@ private:
 	//grid - END
 	gColor* rendercolor;
 
-	gColor* lightingcolor;
-	bool islightingenabled;
-
 	bool isfogenabled;
 	int fogno;
 	gColor fogcolor;
@@ -268,11 +291,8 @@ private:
 	float foglinearstart;
 	float foglinearend;
 
-	glm::vec3 lightingposition;
-	gColor* globalambientcolor;
-	int li;
 	std::deque<gLight*> scenelights;
-
+	gUbo<gSceneLights>* lightsubo;
 
 	bool isdepthtestenabled;
 	int depthtesttype;

@@ -9,7 +9,7 @@
 #define CORE_GPOSTPROCESSMANAGER_H_
 
 #include "gFbo.h"
-#include "gObject.h"
+#include "gRenderObject.h"
 #include "gBasePostProcess.h"
 
 /**
@@ -33,7 +33,7 @@
  * effect. After the draw calls of the ones that needs to get affected by post-
  * process effects, simply call disable().
  */
-class gPostProcessManager : public gObject{
+class gPostProcessManager : public gRenderObject {
 public:
 	gPostProcessManager();
 	virtual ~gPostProcessManager();
@@ -72,7 +72,7 @@ private:
 	static const int fbocount;
 	std::vector<gBasePostProcess*> effects;
 
-	gFbo *fbos;
+	gFbo* fbos;
 	int fbotoread, fbotowrite, lastwrittenfbo;
 
 	int width, height;

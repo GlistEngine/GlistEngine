@@ -22,10 +22,10 @@
 #include "gAndroidCanvas.h"
 #include "gAndroidApp.h"
 #elif TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
-#   include "gIOSWindow.h"
-#   include "gIOSCanvas.h"
-#   include "gIOSApp.h"
-#   include "gIOSMain.h"
+#include "gIOSWindow.h"
+#include "gIOSCanvas.h"
+#include "gIOSApp.h"
+#include "gIOSMain.h"
 #endif
 
 void gStartEngine(gBaseApp* baseApp, const std::string& appName, int windowMode, int width, int height, bool isResizable) {
@@ -406,9 +406,10 @@ void gAppManager::tick() {
 
     if(isrendering) {
         if(canvas) {
-            canvas->clearBackground();
+			canvas->clearBackground();
             for (int i = 0; i < renderpassnum; i++) {
                 renderpassno = i;
+				canvas->getRenderer()->updateLights();
                 canvas->draw();
             }
         }

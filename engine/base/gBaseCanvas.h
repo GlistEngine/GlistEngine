@@ -60,18 +60,6 @@ protected:
 	void clearColor(int r, int g, int b, int a = 255);
 	void clearColor(gColor color);
 
-	void enableLighting();
-	void disableLighting();
-	bool isLightingEnabled();
-	void setLightingColor(int r, int g, int b, int a = 255);
-	void setLightingColor(gColor* color);
-	gColor* getLightingColor();
-	void setLightingPosition(glm::vec3 lightingPosition);
-	glm::vec3 getLightingPosition();
-	void setGlobalAmbientColor(int r, int g, int b, int a = 255);
-	void setGlobalAmbientColor(gColor color);
-	gColor* getGlobalAmbientColor();
-
 	void addSceneLight(gLight* light);
 	gLight* getSceneLight(int lightNo);
 	int getSceneLightNum();
