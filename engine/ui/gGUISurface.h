@@ -16,6 +16,9 @@
 
 class gGUISurface: public gGUIScrollable {
 public:
+	enum {
+		SHAPE_RECTANGLE, SHAPE_CIRCLE, SHAPE_LINE, SHAPE_ARROW, SHAPE_TRIANGLE, SHAPE_IMAGE
+	};
 	gGUISurface();
 	virtual ~gGUISurface();
 	void set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIObject* parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h);
@@ -30,6 +33,8 @@ public:
 	void addArrow(float x1, float y1, float length, float angle, float tipLength, float tipAngle, gColor color = gColor(0.0f, 0.0f, 0.0f));
 	void addTriangle(float px, float py, float qx, float qy, float rx, float ry, bool isFilled, gColor color = gColor(0.0f, 0.0f, 0.0f));
 	void addImage(float x, float y, float w, float h, gImage* image);
+
+	void clear();
 
 	//void drawImage(float x, float y, float w, float h, std::string fullPath);
 	//	void drawBox(float x, float y, float z, float w = 1.0f, float h = 1.0f, float d = 1.0f, bool isFilled = true);
