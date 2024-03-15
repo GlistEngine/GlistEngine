@@ -30,6 +30,8 @@ public:
 	int getPaneNum();
 	void clear();
 
+	void setSelectedPane(int paneNo);
+
 	virtual void mousePressed(int x, int y, int button);
 	virtual void mouseReleased(int x, int y, int button);
 
@@ -38,6 +40,7 @@ private:
 	int panetoph;
 	int panelineh;
 	int panelinepad;
+	int selectedpane;
 };
 
 #endif /* UI_GGUINAVIGATION_H_ */

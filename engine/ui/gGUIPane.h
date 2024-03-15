@@ -13,6 +13,8 @@
 #include "gColor.h"
 #include "gGUIButton.h"
 
+class gGUINavigation;
+
 
 class gGUIPane: public gGUIContainer {
 public:
@@ -20,6 +22,10 @@ public:
 	virtual ~gGUIPane();
 
 	virtual void set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIObject* parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h);
+
+	void setNavigation(gGUINavigation* nav);
+	void setNavigationOrder(int orderNo);
+	int getNavigationOrder();
 
 	virtual void draw();
 
@@ -36,6 +42,8 @@ public:
 	gGUIButton getNextButton();
 
 private:
+	gGUINavigation* navigation;
+	int navorder;
 	gGUISizer panesizer;
 	gFont titlefont;
 	gColor titlecolor;

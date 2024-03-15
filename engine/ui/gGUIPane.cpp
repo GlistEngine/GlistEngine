@@ -6,8 +6,12 @@
  */
 
 #include "gGUIPane.h"
+#include "gGUINavigation.h"
+
 
 gGUIPane::gGUIPane() {
+	navigation = nullptr;
+	navorder = -1;
 	setSizer(&panesizer);
 	totalh = 0;
 	title = "Pane";
@@ -39,6 +43,18 @@ void gGUIPane::set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIO
 	totalh = h;
 	gGUIContainer::set(root, topParentGUIObject, parentGUIObject, parentSlotLineNo, parentSlotColumnNo, x, y, w, h);
 	buttonsizer.set(root, topparent, this, 0, 0, left, top + height - 50, width, 50);
+}
+
+void gGUIPane::setNavigation(gGUINavigation* nav) {
+	navigation = nav;
+}
+
+void gGUIPane::setNavigationOrder(int orderNo) {
+	navorder = orderNo;
+}
+
+int gGUIPane::getNavigationOrder() {
+	return navorder;
 }
 
 void gGUIPane::setPreviousPane(gGUIPane* previousPane) {
@@ -103,6 +119,7 @@ void gGUIPane::mouseReleased(int x, int y, int button) {
 void gGUIPane::onGUIEvent(int guiObjectId, int eventType, int sourceEventType, std::string value1, std::string value2) {
 	gGUIContainer::onGUIEvent(guiObjectId, eventType, sourceEventType, value1, value2);
 	if(eventType == G_GUIEVENT_PANEACTIVE) {
+		if(navigation != nullptr) navigation->setSelectedPane(navorder);
 		 ((gGUISizer*)parent)->setControl(0, 1, this);
 	}
 }
