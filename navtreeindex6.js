@@ -83,10 +83,11 @@ var NAVTREEINDEX6 =
 "classgGUISurface.html#a541d83377b95417284dd5f4d89f43b7b":[0,0,86,6],
 "classgGUISurface.html#a6661e88da90ac573cfb686c9706c2aeb":[0,0,86,0],
 "classgGUISurface.html#a6e8de5a1e79c59fee789598b9c31f463":[0,0,86,1],
-"classgGUISurface.html#a9b19db8c581e72b15b306ab2f36dd64e":[0,0,86,9],
+"classgGUISurface.html#a949b0572a6b3b5f1dcf04b1ba18d1b8e":[0,0,86,8],
+"classgGUISurface.html#a9b19db8c581e72b15b306ab2f36dd64e":[0,0,86,10],
 "classgGUISurface.html#a9ee56f537ebfa7e739a8c01d3c4543b0":[0,0,86,2],
-"classgGUISurface.html#ac0197947239412cd9a8ec624934797d5":[0,0,86,10],
-"classgGUISurface.html#aec3b7357c47baba40b76de5d44f963e7":[0,0,86,8],
+"classgGUISurface.html#ac0197947239412cd9a8ec624934797d5":[0,0,86,11],
+"classgGUISurface.html#aec3b7357c47baba40b76de5d44f963e7":[0,0,86,9],
 "classgGUISurface.html#afa9fd162e11bdb332f2420924863a4d8":[0,0,86,3],
 "classgGUISwitchButton.html":[0,0,87],
 "classgGUISwitchButton.html#a32b59a56804861997ab39a3a271cf4eb":[0,0,87,0],
@@ -248,6 +249,5 @@ var NAVTREEINDEX6 =
 "classgHighContrast.html":[0,0,95],
 "classgHighContrast.html#a2fac55600b0932fc151687acc155dbc4":[0,0,95,0],
 "classgHighContrast.html#a339223b6491414387f438e985c736a2c":[0,0,95,1],
-"classgHighContrast.html#a77a8b0a4ce27ff7af4cfc31c54d68f6a":[0,0,95,2],
-"classgHighContrast.html#ac8a939fca32a975a439ebb49ed15589d":[0,0,95,4]
+"classgHighContrast.html#a77a8b0a4ce27ff7af4cfc31c54d68f6a":[0,0,95,2]
 };
