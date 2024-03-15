@@ -93,6 +93,9 @@ void gGUIScrollable::setDimensions(int width, int height) {
 	hrx = hsbx;
 	hry = hsby;
 
+	totalw = boxw;
+	totalh = boxh;
+
 	titlex = left + font->getStringWidth("i");
 	titley = top + font->getStringHeight("AE");
 
