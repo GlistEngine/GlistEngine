@@ -35,8 +35,8 @@ int gGUIManager::getTheme() {
 	return guitheme;
 }
 
-gFont* gGUIManager::getFont(int fontNum, int fontType) {
-	return &themefonts[fontNum][fontType];
+gFont* gGUIManager::getFont(int fontNo, int fontType) {
+	return &themefonts[fontNo][fontType];
 }
 
 void gGUIManager::setCurrentFrame(gGUIFrame* currentFrame) {
