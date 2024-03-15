@@ -12,5 +12,6 @@ var classgGUINavigation =
     [ "removePane", "classgGUINavigation.html#a90c95e623cf1aa48e3fe9abdae00658e", null ],
     [ "set", "classgGUINavigation.html#a9c286888ad02f6b376db78cd9929672e", null ],
     [ "setPane", "classgGUINavigation.html#af0839fe470df6cf6316765d6d2d84ff0", null ],
+    [ "setSelectedPane", "classgGUINavigation.html#a84f251e909713441f5fe1972eea04634", null ],
     [ "update", "classgGUINavigation.html#a2588544a29d138d9931cec05bd83a904", null ]
 ];
