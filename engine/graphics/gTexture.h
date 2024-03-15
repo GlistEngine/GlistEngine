@@ -111,6 +111,8 @@ public:
 	void cleanupData();
 	void cleanupAll();
 
+	void saveTexture(std::string fileName);
+
 protected:
 	std::string fullpath, directory;
 	unsigned int id, internalformat, format;
