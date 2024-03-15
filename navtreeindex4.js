@@ -230,6 +230,7 @@ var NAVTREEINDEX4 =
 "classgGUIManager.html":[0,0,69],
 "classgGUIManager.html#a070c7ecd89ce9e355f2fe9f268ac8f02":[0,0,69,17],
 "classgGUIManager.html#a333685db5c99906fa6037faa2715d0ea":[0,0,69,11],
+"classgGUIManager.html#a35732bd8a5b56a386826393f3b7c8818":[0,0,69,5],
 "classgGUIManager.html#a3a3ef3458cfc90c06399b94bde8a6b9a":[0,0,69,13],
 "classgGUIManager.html#a3e32785261a3723ab570a9366a34804c":[0,0,69,9],
 "classgGUIManager.html#a3e38953ec23834fd26a08be9768a8e24":[0,0,69,24],
@@ -247,7 +248,6 @@ var NAVTREEINDEX4 =
 "classgGUIManager.html#aae7e2b2d00a5066e31c8e2b52b831d29":[0,0,69,19],
 "classgGUIManager.html#aafee1530e562cae39d380220d7e8d43a":[0,0,69,2],
 "classgGUIManager.html#ab3a630c0ee5efc18f16a72c66011c2a5":[0,0,69,21],
-"classgGUIManager.html#abb7a511de31dacbfa2e1f5c2bb5fbbb7":[0,0,69,5],
 "classgGUIManager.html#abccf7c58c565d3bbba93ec673102ddc6":[0,0,69,8],
 "classgGUIManager.html#ac99d1cdee174f2df0b2fcc374de6063e":[0,0,69,7]
 };
