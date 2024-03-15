@@ -215,24 +215,27 @@ void gGUINumberBox::mouseReleased(int x, int y, int button) {
 		b1ispressed = false;
 		root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_BUTTONRELEASED);
 
+		std::string oldvaluestr = textbox.getText();
 		if(isinteger){
 			castcurrtexttoint = gToInt(textbox.getText());
 			castcurrtexttoint = castcurrtexttoint + increment;
-			setText(gToStr(castcurrtexttoint));
 			if (castcurrtexttoint >= maxvalue) {
 			    castcurrtexttoint = maxvalue;
 			    b1isdisabled = true;
 			}
+			setText(gToStr(castcurrtexttoint));
 			if (castcurrtexttoint > minvalue) b2isdisabled = false;
+			if(oldvaluestr != getText()) root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_VALUECHANGED, getText(), oldvaluestr);
 		} else {
 			castcurrtexttofloat = gToFloat(textbox.getText());
 			castcurrtexttofloat = castcurrtexttofloat + incrementf;
-			setText(gToStr(castcurrtexttofloat));
 			if (castcurrtexttofloat >= maxvaluef) {
 				castcurrtexttofloat = maxvaluef;
 			    b1isdisabled = true;
 			}
+			setText(gToStr(castcurrtexttofloat));
 			if (castcurrtexttofloat > minvaluef) b2isdisabled = false;
+			if(oldvaluestr != getText()) root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_VALUECHANGED, getText(), oldvaluestr);
 		}
 	} else {
 		b1ispressed = false;
@@ -243,24 +246,27 @@ void gGUINumberBox::mouseReleased(int x, int y, int button) {
 		b2ispressed = false;
 		root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_BUTTONRELEASED);
 
+		std::string oldvaluestr = textbox.getText();
 		if(isinteger){
 			castcurrtexttoint = gToInt(textbox.getText());
 			castcurrtexttoint = castcurrtexttoint - increment;
-			setText(gToStr(castcurrtexttoint));
 			if (castcurrtexttoint <= minvalue) {
-			    castcurrtexttoint = maxvalue;
+			    castcurrtexttoint = minvalue;
 			    b2isdisabled = true;
 			}
+			setText(gToStr(castcurrtexttoint));
 			if (castcurrtexttoint < maxvalue) b1isdisabled = false;
+			if(oldvaluestr != getText()) root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_VALUECHANGED, getText(), oldvaluestr);
 		} else {
 			castcurrtexttofloat = gToFloat(textbox.getText());
 			castcurrtexttofloat = castcurrtexttofloat - incrementf;
-			setText(gToStr(castcurrtexttofloat));
 			if (castcurrtexttofloat <= minvaluef) {
-				castcurrtexttofloat = maxvaluef;
+				castcurrtexttofloat = minvaluef;
 			    b2isdisabled = true;
 			}
+			setText(gToStr(castcurrtexttofloat));
 			if (castcurrtexttofloat < maxvaluef) b1isdisabled = false;
+			if(oldvaluestr != getText()) root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_VALUECHANGED, getText(), oldvaluestr);
 		}
 	} else {
 		b2ispressed = false;
