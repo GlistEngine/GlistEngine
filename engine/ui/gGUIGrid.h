@@ -195,6 +195,8 @@ public:
 	std::deque<Cell*> getSelectedCells();
 	std::string getColumnName(int columnNo);
 	int getColumnNo(std::string columnName);
+	float getColumnWidth(int columnNo);
+	float getRowHeight(int rowNo);
 
 	void digitToString();
 
@@ -230,8 +232,6 @@ private:
 	std::string getTextColumn(std::string text);
 	int getCellNo(int rowNo, int columnNo);
 	int getNearestFilledCell(int index);
-	float getColumnWidth(int columnNo);
-	float getRowHeight(int rowNo);
 
 	void fillCell(int cellNo, std::string tempstr);
 	float makeSum(int c1, int r1, int c2, int r2);
@@ -250,7 +250,7 @@ private:
 	void removeFunction(int cellNo);
 	void operateFunction(int functionNo);
 
-	void changeAllAffectedCellsXW(float diff);
+	void changeAllAffectedCellsXW(int columnNo, float diff);
 	void changeAllAffectedCellsYH(float diff);
 	void changeSelectedCell(int amount);
 	void changeCell(int cellNo);

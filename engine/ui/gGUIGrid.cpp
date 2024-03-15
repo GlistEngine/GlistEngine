@@ -52,6 +52,7 @@ gGUIGrid::gGUIGrid() {
 	enableScrollbars(true, false);
 	Cell tempcell;
 	setMargin(tempcell.cellw / 2, tempcell.cellh);
+	istextboxactive = false;
 }
 
 gGUIGrid::~gGUIGrid() {
@@ -60,7 +61,6 @@ gGUIGrid::~gGUIGrid() {
 
 void gGUIGrid::set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIObject* parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h) {
 	totalw = columnnum * gridboxw;
-	totalh = h;
 	totalh = rownum * gridboxh;
 	gGUIScrollable::set(root, topParentGUIObject, parentGUIObject, parentSlotLineNo, parentSlotColumnNo, x, y, w, h);
 	setDimensions(w, h);
@@ -77,7 +77,12 @@ void gGUIGrid::setGrid(int rowNum, int columnNum) {
 	if(columnNum > maxcolumnnum) columnnum = maxcolumnnum;
 	else columnnum = columnNum;
 	gridw = gridboxw * columnnum;
+	for(int i = 0; i < gridboxesw.size(); i++) {
+		gridw += gridboxesw[i][1] - gridboxw;
+	}
 	gridh = gridboxh * rownum;
+//	totalw = gridw;
+	totalh = gridh;
 }
 
 void gGUIGrid::setRowNum(int rowNum) {
@@ -746,7 +751,7 @@ void gGUIGrid::setColumnWidth(int columnNo, float width) {
 		diff = width - gridboxesw[windex][1];
 		gridboxesw[windex][1] = width;
 	}
-	changeAllAffectedCellsXW(diff);
+	changeAllAffectedCellsXW(columnNo, diff);
 }
 
 void gGUIGrid::setRowHeight(int rowNo, float height) {
@@ -1592,10 +1597,10 @@ void gGUIGrid::operateFunction(int functionNo) {
 	checkCellType(gToInt(functions[functionNo][FUNCTION_SENDER]));
 }
 
-void gGUIGrid::changeAllAffectedCellsXW(float diff) {
+void gGUIGrid::changeAllAffectedCellsXW(int columnNo, float diff) {
 	for(int i = 0; i < allcells.size(); i++) {
-		if(allcells[i].cellcolumnno > currentcolumn) allcells[i].cellx += diff;
-		else if(allcells[i].cellcolumnno == currentcolumn) allcells[i].cellw += diff;
+		if(allcells[i].cellcolumnno > columnNo) allcells[i].cellx += diff;
+		else if(allcells[i].cellcolumnno == columnNo) allcells[i].cellw += diff;
 	}
 	gridw += diff;
 	totalw += diff;
@@ -2253,6 +2258,7 @@ void gGUIGrid::showCell(int rowNo , int columnNo) {
 }
 
 void gGUIGrid::drawContent() {
+//	gLogi("Scrollable") << "drawContent fx:" << firstx << ", fy:" << firsty;
 	gColor oldcolor = renderer->getColor();
 	drawCellBackground();
 	if(isselected || isrowselected || iscolumnselected) drawSelectedArea();
@@ -2311,23 +2317,22 @@ void gGUIGrid::drawColumnContents() {
 			if(!inframe) continue;
 			else break;
 		}
-		if(calculateCurrentX(i + 1) >= gridx && calculateCurrentX(i + 1) <= boxw) {
-			if(i / 26 > 26) {
-				columntitlestring = (char)(columntitle + i / (26 * 26) - 1);
-				columntitlestring += (char)(columntitle + (i / 26 - 1) % 26);
-				columntitlestring += (char)(columntitle + i % 26);
-			}
-			else if(i / 26 > 0) {
-				columntitlestring = (char)(columntitle + i / 26 - 1);
-				columntitlestring += (char)(columntitle + i % 26);
-			}
-			else columntitlestring = (char)(columntitle + i);
-			renderer->setColor(*fontcolor);
-			font->drawText(columntitlestring, calculateCurrentX(i + 1) - getColumnWidth(i) / 2 - (font->getStringWidth(columntitlestring) / 2), gridy + (gridboxh / 2) + (font->getStringHeight(columntitlestring) / 2));
-			renderer->setColor(*pressedbuttoncolor);
-			gDrawLine(calculateCurrentX(i + 1), gridy - firsty, calculateCurrentX(i + 1), gridy + gridboxh + gridh - firsty);
-			inframe = true;
+
+		if(i / 26 > 26) {
+			columntitlestring = (char)(columntitle + i / (26 * 26) - 1);
+			columntitlestring += (char)(columntitle + (i / 26 - 1) % 26);
+			columntitlestring += (char)(columntitle + i % 26);
 		}
+		else if(i / 26 > 0) {
+			columntitlestring = (char)(columntitle + i / 26 - 1);
+			columntitlestring += (char)(columntitle + i % 26);
+		}
+		else columntitlestring = (char)(columntitle + i);
+		renderer->setColor(*fontcolor);
+		font->drawText(columntitlestring, calculateCurrentX(i + 1) - getColumnWidth(i) / 2 - (font->getStringWidth(columntitlestring) / 2), gridy + (gridboxh / 2) + (font->getStringHeight(columntitlestring) / 2));
+		renderer->setColor(*pressedbuttoncolor);
+		gDrawLine(calculateCurrentX(i + 1), gridy - firsty, calculateCurrentX(i + 1), gridy + gridboxh + gridh - firsty);
+		inframe = true;
 	}
 	gDrawRectangle(gridx, gridy, gridboxw / 2, gridboxh, true);
 }
@@ -2340,41 +2345,56 @@ void gGUIGrid::drawTitleLines() {
 
 void gGUIGrid::drawCellContents() {
 	for(int i = 0; i < allcells.size(); i++) {
-		if(allcells[i].cellx + manager->getFont(allcells[i].fontnum, allcells[i].fontstate/*,allcells[i].fontsize*/)->getStringWidth(allcells[i].showncontent) * allcells[i].textmoveamount - textbox.getInitX() * allcells[i].cellalignment < gridx + firstx || allcells[i].cellx + manager->getFont(allcells[i].fontnum, allcells[i].fontstate/*, allcells[i].fontsize*/)->getStringWidth(allcells[i].showncontent) * allcells[i].textmoveamount - textbox.getInitX() * allcells[i].cellalignment > gridw || allcells[i].celly < gridy + firsty || allcells[i].celly > gridh) continue;
-		if(allcells[i].cellx + manager->getFont(allcells[i].fontnum, allcells[i].fontstate/*,allcells[i].fontsize*/)->getStringWidth(allcells[i].showncontent) * allcells[i].textmoveamount - textbox.getInitX() * allcells[i].cellalignment >= gridx + firstx && allcells[i].cellx + manager->getFont(allcells[i].fontnum, allcells[i].fontstate/*, allcells[i].fontsize*/)->getStringWidth(allcells[i].showncontent) * allcells[i].textmoveamount - textbox.getInitX() * allcells[i].cellalignment <= gridw && allcells[i].celly >= gridy + firsty && allcells[i].celly <= gridh) {
-			Cell& currentcell = allcells[i];
-			if(!currentcell.iscolorchanged) currentcell.cellfontcolor = fontcolor;
-			float currentstringwidth;
-			float currentstringheight;
-			if(currentcell.overflowcontent.empty()) {
-				currentstringwidth = manager->getFont(currentcell.fontnum, currentcell.fontstate/*, currentcell.fontsize*/)->getStringWidth(currentcell.showncontent);
-				currentstringheight = manager->getFont(currentcell.fontnum, currentcell.fontstate/*, currentcell.fontsize*/)->getStringHeight(currentcell.showncontent);
-			}
-			else {
-				currentstringwidth = manager->getFont(currentcell.fontnum, currentcell.fontstate/*, currentcell.fontsize*/)->getStringWidth(currentcell.overflowcontent);
-				currentstringheight = manager->getFont(currentcell.fontnum, currentcell.fontstate/*, currentcell.fontsize*/)->getStringHeight(currentcell.overflowcontent);
-			}
-			renderer->setColor(currentcell.cellfontcolor);
-			if(currentcell.overflowcontent.empty()) manager->getFont(currentcell.fontnum, currentcell.fontstate/*, currentcell.fontsize*/)->drawText(currentcell.showncontent, currentcell.cellx + (currentcell.cellw - currentstringwidth) * currentcell.textmoveamount - textbox.getInitX() * currentcell.cellalignment - firstx, currentcell.celly + (gridboxh / 2) + (currentstringheight / 2) - firsty);
-			else manager->getFont(currentcell.fontnum, currentcell.fontstate/*, currentcell.fontsize*/)->drawText(currentcell.overflowcontent, currentcell.cellx + (currentcell.cellw - currentstringwidth) * currentcell.textmoveamount - textbox.getInitX() * currentcell.cellalignment - firstx, currentcell.celly + (gridboxh / 2) + (currentstringheight / 2) - firsty);
-			switch(currentcell.lineno) {
-			case TEXTLINE_UNDER:
-				gDrawLine(currentcell.cellx + (currentcell.cellw - currentstringwidth) * currentcell.textmoveamount - textbox.getInitX() * currentcell.cellalignment - firstx, currentcell.celly + (gridboxh / 2) + currentstringheight - firsty,
-						currentcell.cellx + currentstringwidth + ((currentcell.cellw - currentstringwidth) * currentcell.textmoveamount) - firstx, currentcell.celly + (gridboxh / 2) + currentstringheight - firsty);
-				break;
-			case TEXTLINE_DOUBLEUNDER:
-				gDrawLine(currentcell.cellx + (currentcell.cellw - currentstringwidth) * currentcell.textmoveamount - textbox.getInitX() * currentcell.cellalignment - firstx, currentcell.celly + (gridboxh / 2) + currentstringheight - firsty,
-						currentcell.cellx + currentstringwidth + ((currentcell.cellw - currentstringwidth) * currentcell.textmoveamount) - firstx, currentcell.celly + (gridboxh / 2) + currentstringheight - firsty);
-				gDrawLine(currentcell.cellx + (currentcell.cellw - currentstringwidth) * currentcell.textmoveamount - textbox.getInitX() * currentcell.cellalignment - firstx, currentcell.celly + (gridboxh / 2) + currentstringheight - firsty + 2,
-						currentcell.cellx + currentstringwidth + ((currentcell.cellw - currentstringwidth) * currentcell.textmoveamount) - firstx, currentcell.celly + (gridboxh / 2) + currentstringheight - firsty + 2);
-				break;
-			case TEXTLINE_STRIKE:
-				gDrawLine(currentcell.cellx + (currentcell.cellw - currentstringwidth) * currentcell.textmoveamount - textbox.getInitX() * currentcell.cellalignment - firstx, currentcell.celly + currentcell.cellh / 2 + textbox.getInitX() - firsty,
-						currentcell.cellx + currentstringwidth + ((currentcell.cellw - currentstringwidth) * currentcell.textmoveamount) - firstx, currentcell.celly + currentcell.cellh / 2 + textbox.getInitX() - firsty);
-				break;
-			default:
-				break;
-			}
+		int csw = manager->getFont(allcells[i].fontnum, allcells[i].fontstate/*, allcells[i].fontsize*/)->getStringWidth(allcells[i].showncontent);
+		if(allcells[i].cellx + csw * allcells[i].textmoveamount - textbox.getInitX() * allcells[i].cellalignment < gridx + firstx) {
+//			gLogi("Grid") << "continue 1";
+			continue;
+		}
+//		if(allcells[i].cellx + csw * allcells[i].textmoveamount - textbox.getInitX() * allcells[i].cellalignment > gridw) {
+//			gLogi("Grid") << "continue 2";
+//			continue;
+//		}
+		if(allcells[i].celly < gridy + firsty) {
+//			gLogi("Grid") << "continue 3";
+			continue;
+		}
+		if(allcells[i].celly > gridh) {
+//			gLogi("Grid") << "continue 4";
+			continue;
+		}
+
+		Cell& currentcell = allcells[i];
+		if(!currentcell.iscolorchanged) currentcell.cellfontcolor = fontcolor;
+		float currentstringwidth;
+		float currentstringheight;
+		if(currentcell.overflowcontent.empty()) {
+			currentstringwidth = csw;
+			currentstringheight = manager->getFont(allcells[i].fontnum, allcells[i].fontstate/*, allcells[i].fontsize*/)->getStringHeight(allcells[i].showncontent);
+		}
+		else {
+			currentstringwidth = manager->getFont(currentcell.fontnum, currentcell.fontstate/*, currentcell.fontsize*/)->getStringWidth(currentcell.overflowcontent);
+			currentstringheight = manager->getFont(currentcell.fontnum, currentcell.fontstate/*, currentcell.fontsize*/)->getStringHeight(currentcell.overflowcontent);
+		}
+		renderer->setColor(currentcell.cellfontcolor);
+		if(currentcell.overflowcontent.empty()) manager->getFont(currentcell.fontnum, currentcell.fontstate/*, currentcell.fontsize*/)->drawText(currentcell.showncontent, currentcell.cellx + (currentcell.cellw - currentstringwidth) * currentcell.textmoveamount - textbox.getInitX() * currentcell.cellalignment - firstx, currentcell.celly + (gridboxh / 2) + (currentstringheight / 2) - firsty);
+		else manager->getFont(currentcell.fontnum, currentcell.fontstate/*, currentcell.fontsize*/)->drawText(currentcell.overflowcontent, currentcell.cellx + (currentcell.cellw - currentstringwidth) * currentcell.textmoveamount - textbox.getInitX() * currentcell.cellalignment - firstx, currentcell.celly + (gridboxh / 2) + (currentstringheight / 2) - firsty);
+		switch(currentcell.lineno) {
+		case TEXTLINE_UNDER:
+			gDrawLine(currentcell.cellx + (currentcell.cellw - currentstringwidth) * currentcell.textmoveamount - textbox.getInitX() * currentcell.cellalignment - firstx, currentcell.celly + (gridboxh / 2) + currentstringheight - firsty,
+					currentcell.cellx + currentstringwidth + ((currentcell.cellw - currentstringwidth) * currentcell.textmoveamount) - firstx, currentcell.celly + (gridboxh / 2) + currentstringheight - firsty);
+			break;
+		case TEXTLINE_DOUBLEUNDER:
+			gDrawLine(currentcell.cellx + (currentcell.cellw - currentstringwidth) * currentcell.textmoveamount - textbox.getInitX() * currentcell.cellalignment - firstx, currentcell.celly + (gridboxh / 2) + currentstringheight - firsty,
+					currentcell.cellx + currentstringwidth + ((currentcell.cellw - currentstringwidth) * currentcell.textmoveamount) - firstx, currentcell.celly + (gridboxh / 2) + currentstringheight - firsty);
+			gDrawLine(currentcell.cellx + (currentcell.cellw - currentstringwidth) * currentcell.textmoveamount - textbox.getInitX() * currentcell.cellalignment - firstx, currentcell.celly + (gridboxh / 2) + currentstringheight - firsty + 2,
+					currentcell.cellx + currentstringwidth + ((currentcell.cellw - currentstringwidth) * currentcell.textmoveamount) - firstx, currentcell.celly + (gridboxh / 2) + currentstringheight - firsty + 2);
+			break;
+		case TEXTLINE_STRIKE:
+			gDrawLine(currentcell.cellx + (currentcell.cellw - currentstringwidth) * currentcell.textmoveamount - textbox.getInitX() * currentcell.cellalignment - firstx, currentcell.celly + currentcell.cellh / 2 + textbox.getInitX() - firsty,
+					currentcell.cellx + currentstringwidth + ((currentcell.cellw - currentstringwidth) * currentcell.textmoveamount) - firstx, currentcell.celly + currentcell.cellh / 2 + textbox.getInitX() - firsty);
+			break;
+		default:
+			break;
 		}
 	}
 }
@@ -2433,7 +2453,7 @@ void gGUIGrid::mousePressed(int x, int y, int button) {
 				int diff = neww - allcells[index].cellw;
 				currentcolumn = column;
 				addOrChangeColumnWidth(currentcolumn, neww);
-				changeAllAffectedCellsXW(diff);
+				changeAllAffectedCellsXW(currentcolumn, diff);
 			}
 		}
 	}
@@ -2555,7 +2575,7 @@ void gGUIGrid::mouseDragged(int x, int y, int button) {
 				diff = gridboxw - w;
 				addOrChangeColumnWidth(currentcolumn, w + diff);
 			}
-			changeAllAffectedCellsXW(diff);
+			changeAllAffectedCellsXW(currentcolumn, diff);
 		}
 	}
 	else if(isselected ||isrowselected || iscolumnselected) {
