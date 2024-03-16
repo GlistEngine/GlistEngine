@@ -17,7 +17,7 @@
 class gGUISurface: public gGUIScrollable {
 public:
 	enum {
-		SHAPE_RECTANGLE, SHAPE_CIRCLE, SHAPE_LINE, SHAPE_ARROW, SHAPE_TRIANGLE, SHAPE_IMAGE
+		SHAPE_RECTANGLE, SHAPE_CIRCLE, SHAPE_LINE, SHAPE_ARROW, SHAPE_TRIANGLE, SHAPE_IMAGE, SHAPE_TEXT
 	};
 	gGUISurface();
 	virtual ~gGUISurface();
@@ -33,6 +33,7 @@ public:
 	void addArrow(float x1, float y1, float length, float angle, float tipLength, float tipAngle, gColor color = gColor(0.0f, 0.0f, 0.0f));
 	void addTriangle(float px, float py, float qx, float qy, float rx, float ry, bool isFilled, gColor color = gColor(0.0f, 0.0f, 0.0f));
 	void addImage(float x, float y, float w, float h, gImage* image);
+	void addText(std::string text, float x, float y, int fontFace, int fontType, gColor color = gColor(0.0f, 0.0f, 0.0f));
 
 	void clear();
 
@@ -51,8 +52,9 @@ private:
 
 	std::vector<std::vector<float>> shapes;
 	std::deque<gImage*> images;
+	std::deque<std::string> texts;
 
-	int imageNum;
+	int imageNum, textnum;
 	int maxHeight;
 	//color
 	float r, g, b, a;

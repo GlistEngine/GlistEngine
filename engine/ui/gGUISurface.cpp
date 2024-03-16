@@ -14,6 +14,7 @@
 gGUISurface::gGUISurface() {
 	resetColorAndBorder();
 	imageNum = 0;
+	textnum = 0;
 	totalh = 0;
 	maxHeight = bottom;
 	title = "Surface";
@@ -77,10 +78,13 @@ void gGUISurface::drawShapes() {
 		}
 		//image = 5
 		else if((int)shapes[i][0] == SHAPE_IMAGE) {//for drawing 3D LINE first index decides to the shape type
-			//images[shapes[i][5]]->loadImage(paths[shapes[i][5]]);
 			renderer->setColor(gColor(1.0f,	1.0f, 1.0f, 1.0f));
 			images[shapes[i][5]]->draw(shapes[i][1], shapes[i][2] - firsty, shapes[i][3], shapes[i][4]);
-			//images[1].draw(shapes[i+1][1] + left, shapes[i+1][2] + top, shapes[i+1][3], shapes[i+1][4]);
+		}
+		//text = 6
+		else if((int)shapes[i][0] == SHAPE_TEXT) {//for drawing 3D LINE first index decides to the shape type
+			renderer->setColor(gColor(shapes[i][6], shapes[i][7], shapes[i][8], shapes[i][9]));
+			root->getAppManager()->getGUIManager()->getFont(shapes[i][3], shapes[i][4])->drawText(texts[shapes[i][5]], shapes[i][1], shapes[i][2]);
 		}
 	}
 }
@@ -240,11 +244,34 @@ void gGUISurface::addImage(float x, float y, float w, float h, gImage* image) {
 	shapes.push_back(newShape);
 	resetColorAndBorder();
 }
+void gGUISurface::addText(std::string text, float x, float y, int fontFace, int fontType, gColor color) {
+	std::vector<float> newShape;
+	newShape.push_back(SHAPE_TEXT); //for drawing IMAGE //shapes[i][0]
+	newShape.push_back(x); //shapes[i][x] 1
+	newShape.push_back(y); //shapes[i][y] 2
+	newShape.push_back(fontFace); //shapes[i][fontFace] 3
+	newShape.push_back(fontType); //shapes[i][h] 4
+	newShape.push_back(textnum);
+	textnum++;
+	newShape.push_back(color.r); //shapes[i][r] 6
+	newShape.push_back(color.g); //shapes[i][g] 7
+	newShape.push_back(color.b); //shapes[i][b] 8
+	newShape.push_back(color.a); //shapes[i][a] 9
+
+	//paths.push_back(pathOfImage);
+	texts.push_back(text); //
+
+	shapes.push_back(newShape);
+	resetColorAndBorder();
+}
 
 void gGUISurface::clear() {
 	images.clear();
+	texts.clear();
 	shapes.clear();
 	resetColorAndBorder();
+	imageNum = 0;
+	textnum = 0;
 }
 
 void gGUISurface::mousePressed(int x, int y, int button) {
