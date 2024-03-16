@@ -7,6 +7,7 @@ var classgGUISurface =
     [ "addImage", "classgGUISurface.html#a47d227ebc983764be1838d74ce5f8c6a", null ],
     [ "addLine", "classgGUISurface.html#a37546d36e374c23ddc75a2465d9d9a83", null ],
     [ "addRectangle", "classgGUISurface.html#a541d83377b95417284dd5f4d89f43b7b", null ],
+    [ "addText", "classgGUISurface.html#aaf2d9f419808f9251002c94c908fe517", null ],
     [ "addTriangle", "classgGUISurface.html#a485eb28e8cc6d61a79d7500b486369d8", null ],
     [ "clear", "classgGUISurface.html#a949b0572a6b3b5f1dcf04b1ba18d1b8e", null ],
     [ "drawContent", "classgGUISurface.html#aec3b7357c47baba40b76de5d44f963e7", null ],
