@@ -626,11 +626,29 @@ void gTexture::saveTexture(std::string fileName) {
 	std::string path = gGetTexturesDir() + fileName;
 	unsigned char* pixels = new unsigned char[width * height * componentnum];
 	bind();
+
 	glGetTexImage(GL_TEXTURE_2D,
 	    0,
 	    format,
 	    GL_UNSIGNED_BYTE,
 	    pixels);
+
+	// flip back vertically if fbo or hdr
+	if (isfbo || ishdr) {
+		unsigned char* temppix = new unsigned char[width * componentnum];
+		int linenum = height / 2;
+		for(int i = 0; i < linenum; i++) {
+			int afirst = i * width * componentnum;
+			int alast = afirst + width * componentnum;
+			int bfirst = (height - i - 1) * width * componentnum;
+			int blast = bfirst + width * componentnum;
+			std::copy(pixels + afirst, pixels + alast, temppix);
+			std::copy(pixels + bfirst, pixels + blast, pixels + afirst);
+			std::copy(temppix, temppix + (width * componentnum), pixels + bfirst);
+		}
+		delete[] temppix;
+	}
+
 	stbi_write_png(path.c_str(), width, height, componentnum, pixels, width * componentnum * sizeof(unsigned char));
 	delete[] pixels;
 }
