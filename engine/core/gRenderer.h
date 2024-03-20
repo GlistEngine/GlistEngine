@@ -243,6 +243,11 @@ public:
 	 */
 	gImage takeScreenshot();
 
+	/*
+	 * Takes Screen Shot of the part of current Rendered Screen and returns it as an gImage class
+	 */
+	gImage takeScreenshot(int x, int y, int width, int height);
+
 private:
 	static int width, height;
 	static int unitwidth, unitheight;
