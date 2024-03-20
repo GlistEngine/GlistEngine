@@ -221,6 +221,8 @@ public:
 	void mouseScrolled(int x, int y);
 	int getCursor(int x, int y);
 
+	void clear();
+
 private:
 	static const int mousetolerance = 5;
 	const std::string errormessage = "Error";
@@ -302,7 +304,7 @@ private:
 	int firstcursorposx, firstcursorposy;
 	int firstselectedcell, lastselectedcell;
 	int lastdraggedcell;
-	float gridboxw, gridboxh;
+	float gridboxw, gridboxh, gridboxwhalf;
 	float gridx, gridy, gridw, gridh;
 	long clicktime, previousclicktime, firstclicktime, clicktimediff;
 	std::string strflag;

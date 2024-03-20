@@ -37,6 +37,7 @@ gGUIGrid::gGUIGrid() {
 	lastselectedcell = -1;
 	gridboxw = 80.0f;
 	gridboxh = 30.0f;
+	gridboxwhalf = gridboxw / 2;
 	gridx = 0.0f;
 	gridy = 0.0f;
 	gridw = gridboxw * columnnum;
@@ -64,7 +65,7 @@ void gGUIGrid::set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIO
 	totalh = rownum * gridboxh;
 	gGUIScrollable::set(root, topParentGUIObject, parentGUIObject, parentSlotLineNo, parentSlotColumnNo, x, y, w, h);
 	setDimensions(w, h);
-	textbox.set(root, this, this, 0, 0, gridx + (gridboxw / 2) + 1, gridy + gridboxh - 5, gridboxw - 6, gridboxh);
+	textbox.set(root, this, this, 0, 0, gridx + gridboxwhalf + 1, gridy + gridboxh - 5, gridboxw - 6, gridboxh);
 	textbox.setSize(gridboxw - 6, gridboxh - 2);
 	textbox.enableBackground(false);
 	manager = root->getAppManager()->getGUIManager();
@@ -1308,7 +1309,7 @@ float gGUIGrid::makeFourOperation(std::string cell1, std::string cell2, char ope
 }
 
 float gGUIGrid::calculateCurrentX(int columnNo) {
-	float currentx = gridx + gridboxw / 2 - firstx;
+	float currentx = gridx + gridboxwhalf - firstx;
 	for(int column = 0; column < columnNo; column++) currentx += getColumnWidth(column);
 	return currentx;
 }
@@ -1665,13 +1666,13 @@ void gGUIGrid::changeSelectedCell(int amount) {
 	if(firstcellbefore != firstselectedcell) {
 		if(calculateCurrentY(firstselectedcell / columnnum) < gridy + gridboxh) firsty += calculateCurrentY(firstselectedcell / columnnum) - gridboxh;
 		else if(calculateCurrentY(firstselectedcell / columnnum) + getRowHeight(firstselectedcell / columnnum) > gridy + boxh - titledy) firsty += calculateCurrentY(firstselectedcell / columnnum) - (gridy + boxh - titledy) + getRowHeight(firstselectedcell / columnnum);
-		else if(calculateCurrentX(firstselectedcell % columnnum) < gridx + gridboxw / 2) firstx += calculateCurrentX(firstselectedcell % columnnum) - gridboxw / 2;
+		else if(calculateCurrentX(firstselectedcell % columnnum) < gridx + gridboxwhalf) firstx += calculateCurrentX(firstselectedcell % columnnum) - gridboxwhalf;
 		else if(calculateCurrentX(firstselectedcell % columnnum) + getColumnWidth(firstselectedcell % columnnum) > gridx + boxw) firstx += calculateCurrentX(firstselectedcell % columnnum) - (gridx + boxw) + getColumnWidth(firstselectedcell % columnnum);
 	}
 	else if(lastcellbefore != lastselectedcell){
 		if(calculateCurrentY(lastselectedcell / columnnum) < gridy + gridboxh) firsty += calculateCurrentY(lastselectedcell / columnnum) - gridboxh;
 		else if(calculateCurrentY(lastselectedcell / columnnum) + getRowHeight(lastselectedcell / columnnum) > gridy + boxh - titledy) firsty += calculateCurrentY(lastselectedcell / columnnum) - (gridy + boxh - titledy) + getRowHeight(lastselectedcell / columnnum);
-		else if(calculateCurrentX(lastselectedcell % columnnum) < gridx + gridboxw / 2) firstx += calculateCurrentX(lastselectedcell % columnnum) - gridboxw / 2;
+		else if(calculateCurrentX(lastselectedcell % columnnum) < gridx + gridboxwhalf) firstx += calculateCurrentX(lastselectedcell % columnnum) - gridboxwhalf;
 		else if(calculateCurrentX(lastselectedcell % columnnum) + getColumnWidth(lastselectedcell % columnnum) > gridx + boxw) firstx += calculateCurrentX(lastselectedcell % columnnum) - (gridx + boxw) + getColumnWidth(lastselectedcell % columnnum);
 	}
 	setSelectedCells();
@@ -2278,17 +2279,17 @@ void gGUIGrid::drawContent() {
 
 void gGUIGrid::drawCellBackground() {
 	renderer->setColor(*textbackgroundcolor);
-	gDrawRectangle(gridx + (gridboxw / 2), gridy + gridboxh, gridw - firstx, gridh - firsty, true);
+	gDrawRectangle(gridx + gridboxwhalf, gridy + gridboxh, gridw - firstx, gridh - firsty, true);
 }
 
 void gGUIGrid::drawTitleRowBackground() {
 	renderer->setColor(*buttoncolor);
-	gDrawRectangle(gridx, gridy + gridboxh, gridboxw / 2, gridh - firsty, true);
+	gDrawRectangle(gridx, gridy + gridboxh, gridboxwhalf, gridh - firsty, true);
 }
 
 void gGUIGrid::drawTitleColumnBackground() {
 	renderer->setColor(*buttoncolor);
-	gDrawRectangle(gridx + gridboxw / 2, gridy, gridw - firstx, gridboxh, true);
+	gDrawRectangle(gridx + gridboxwhalf, gridy, gridw - firstx, gridboxh, true);
 }
 
 void gGUIGrid::drawRowContents() {
@@ -2303,7 +2304,7 @@ void gGUIGrid::drawRowContents() {
 			renderer->setColor(*fontcolor);
 			font->drawText(rowtitlestring, gridx + gridboxw / 4 - font->getStringWidth(rowtitlestring) / 2, calculateCurrentY(i) - getRowHeight(i - 1) / 2 + font->getStringHeight(rowtitlestring) / 2);
 			renderer->setColor(*pressedbuttoncolor);
-			gDrawLine(gridx - firstx, calculateCurrentY(i), gridx + gridw + gridboxw / 2 - firstx, calculateCurrentY(i));
+			gDrawLine(gridx - firstx, calculateCurrentY(i), gridx + gridw + gridboxwhalf - firstx, calculateCurrentY(i));
 			inframe = true;
 		}
 	}
@@ -2334,13 +2335,13 @@ void gGUIGrid::drawColumnContents() {
 		gDrawLine(calculateCurrentX(i + 1), gridy - firsty, calculateCurrentX(i + 1), gridy + gridboxh + gridh - firsty);
 		inframe = true;
 	}
-	gDrawRectangle(gridx, gridy, gridboxw / 2, gridboxh, true);
+	gDrawRectangle(gridx, gridy, gridboxwhalf, gridboxh, true);
 }
 
 void gGUIGrid::drawTitleLines() {
 	renderer->setColor(*backgroundcolor);
-	gDrawLine(gridx + (gridboxw / 2) + 1, gridy, gridx + (gridboxw / 2) + 1, gridh + gridboxh - firsty);
-	gDrawLine(gridx, gridy + gridboxh, gridw + gridboxw / 2 - firstx, gridy + gridboxh);
+	gDrawLine(gridx + gridboxwhalf + 1, gridy, gridx + gridboxwhalf + 1, gridh + gridboxh - firsty);
+	gDrawLine(gridx, gridy + gridboxh, gridw + gridboxwhalf - firstx, gridy + gridboxh);
 }
 
 void gGUIGrid::drawCellContents() {
@@ -2397,6 +2398,13 @@ void gGUIGrid::drawCellContents() {
 			break;
 		}
 	}
+}
+
+void gGUIGrid::clear() {
+	allcells.clear();
+	selectedcells.clear();
+	gridboxesw.clear();
+	setGrid(1, 1);
 }
 
 void gGUIGrid::drawSelectedArea() {
@@ -2457,7 +2465,7 @@ void gGUIGrid::mousePressed(int x, int y, int button) {
 			}
 		}
 	}
-	else if(pressedx >= gridx + firstx && pressedx < gridx + gridboxw / 2 + firstx && pressedy >= gridy + firsty && pressedy < gridy + gridboxh + firsty) {
+	else if(pressedx >= gridx + firstx && pressedx < gridx + gridboxwhalf + firstx && pressedy >= gridy + firsty && pressedy < gridy + gridboxh + firsty) {
 		isselected = true;
 		isrowselected = true;
 		iscolumnselected = true;
@@ -2466,8 +2474,8 @@ void gGUIGrid::mousePressed(int x, int y, int button) {
 		lastselectedcell = rownum * columnnum - 1;
 		setSelectedCells();
 	}
-	else if(pressedx >= gridx + firstx && pressedx <= gridx + gridboxw / 2 + gridw && pressedy >= gridy + firsty && pressedy <= gridy + gridboxh + gridh) {
-		if(pressedx >= gridx + gridboxw / 2 + firstx && pressedx <= gridx + gridboxw / 2 + gridw && pressedy >= gridy + gridboxh + firsty && pressedy <= gridy + gridboxh + gridh) {
+	else if(pressedx >= gridx + firstx && pressedx <= gridx + gridboxwhalf + gridw && pressedy >= gridy + firsty && pressedy <= gridy + gridboxh + gridh) {
+		if(pressedx >= gridx + gridboxwhalf + firstx && pressedx <= gridx + gridboxwhalf + gridw && pressedy >= gridy + gridboxh + firsty && pressedy <= gridy + gridboxh + gridh) {
 			isselected = true;
 			isrowselected = false;
 			iscolumnselected = false;
@@ -2485,8 +2493,9 @@ void gGUIGrid::mousePressed(int x, int y, int button) {
 			allcells[index].iscellselected = true;
 			selectedbox = index;
 			resetSelectedIndexes();
+			root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_CELLSELECTED, gToStr(row), gToStr(column));
 		}
-		else if(pressedx >= gridx + firstx && pressedx < gridx + (gridboxw / 2) + firstx && pressedy >= gridy + gridboxh + firsty && pressedy <= gridy + gridboxh + gridh) {
+		else if(pressedx >= gridx + firstx && pressedx < gridx + gridboxwhalf + firstx && pressedy >= gridy + gridboxh + firsty && pressedy <= gridy + gridboxh + gridh) {
 			int row = 0;
 			while(calculateCurrentY(row) + getRowHeight(row) < pressedy - firsty) row++;
 			int index = getCellNo(row, 0);
@@ -2506,7 +2515,7 @@ void gGUIGrid::mousePressed(int x, int y, int button) {
 			lastselectedcell = row * columnnum + columnnum - 1;
 			setSelectedCells();
 		}
-		else if(pressedx >= gridx + (gridboxw / 2) + firstx && pressedx < gridx + (gridboxw / 2) + gridw && pressedy >= gridy + firsty && pressedy <= gridy + gridboxh + firsty) {
+		else if(pressedx >= gridx + gridboxwhalf + firstx && pressedx < gridx + gridboxwhalf + gridw && pressedy >= gridy + firsty && pressedy <= gridy + gridboxh + firsty) {
 			int column = 0;
 			while(calculateCurrentX(column) + getColumnWidth(column) < pressedx - firstx) column++;
 			int index = getCellNo(0, column);
@@ -2792,7 +2801,7 @@ int gGUIGrid::getCursor(int x, int y) {
 	cursor = gGUIForm::CURSOR_ARROW;
 	currentrow = 0;
 	currentcolumn = 0;
-	if(currentx >= gridx + firstx && currentx < gridx + (gridboxw / 2) + firstx && currenty >= gridy + gridboxh + getRowHeight(currentrow) - mousetolerance - firsty && currenty <= gridy + gridh + mousetolerance + getRowHeight(rownum)) {
+	if(currentx >= gridx + firstx && currentx < gridx + gridboxwhalf + firstx && currenty >= gridy + gridboxh + getRowHeight(currentrow) - mousetolerance - firsty && currenty <= gridy + gridh + mousetolerance + getRowHeight(rownum)) {
 		int currenth = gridy + gridboxh + getRowHeight(currentrow) - mousetolerance;
 		while(currentrow + 1 < rownum && currenth + getRowHeight(currentrow + 1) <= currenty) {
 			currenth += getRowHeight(currentrow + 1);
@@ -2800,8 +2809,8 @@ int gGUIGrid::getCursor(int x, int y) {
 		}
 		if(currenth <= currenty && currenth + mousetolerance * 2 >= currenty) cursor = gGUIForm::CURSOR_VRESIZE;
 	}
-	else if(currentx >= gridx + (gridboxw / 2) + getColumnWidth(currentcolumn) - mousetolerance - firstx && currentx < gridx + gridw + mousetolerance + getColumnWidth(columnnum) && currenty >= gridy + firsty && currenty <= gridy + gridboxh + firsty) {
-		int currentw = gridx + (gridboxw / 2) + getColumnWidth(currentcolumn) - mousetolerance;
+	else if(currentx >= gridx + gridboxwhalf + getColumnWidth(currentcolumn) - mousetolerance - firstx && currentx < gridx + gridw + mousetolerance + getColumnWidth(columnnum) && currenty >= gridy + firsty && currenty <= gridy + gridboxh + firsty) {
+		int currentw = gridx + gridboxwhalf + getColumnWidth(currentcolumn) - mousetolerance;
 		while(currentcolumn + 1 < columnnum && currentw + getColumnWidth(currentcolumn + 1) <= currentx) {
 			currentw += getColumnWidth(currentcolumn + 1);
 			currentcolumn++;
