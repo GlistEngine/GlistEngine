@@ -81,12 +81,15 @@ public:
 	void setPointValues(int lineIndex, float oldX, float oldY, float newX, float newY);
 	void removeFirstPointsFromLine(int lineIndex, int pointNumLimit);
 
+	int getPointNum(int lineIndex);
+
 private:
+	static const int linecolornum = 6;
 	void drawGraph();
 	void updatePoints();
 
 	std::deque<std::deque<std::array<float, 4>>> graphlines;
-	gColor linecolors[5];
+	gColor linecolors[linecolornum];
 
 	bool arepointsenabled;
 };
