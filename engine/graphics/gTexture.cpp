@@ -622,8 +622,7 @@ std::string gTexture::getFileName(const std::string& fname) {
 				   : fname.substr(pos + 1, fname.size());
 }
 
-void gTexture::saveTexture(std::string fileName) {
-	std::string path = gGetTexturesDir() + fileName;
+void gTexture::save(std::string fullpath) {
 	unsigned char* pixels = new unsigned char[width * height * componentnum];
 	bind();
 
@@ -649,7 +648,11 @@ void gTexture::saveTexture(std::string fileName) {
 		delete[] temppix;
 	}
 
-	stbi_write_png(path.c_str(), width, height, componentnum, pixels, width * componentnum * sizeof(unsigned char));
+	stbi_write_png(fullpath.c_str(), width, height, componentnum, pixels, width * componentnum * sizeof(unsigned char));
 	delete[] pixels;
+}
+
+void gTexture::saveTexture(std::string fileName) {
+	save(gGetTexturesDir() + fileName);
 }
 

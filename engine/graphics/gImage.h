@@ -181,6 +181,7 @@ public:
 	 * This file will be exist in the GlistApp's assets clasor
 	 * after saving process.
 	 */
+	void save(std::string fullpath);
 	void saveImage(std::string fileName);
 	/**
 	 * Used to check pixel perfect collision between 2 images.
