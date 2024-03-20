@@ -132,7 +132,7 @@ void gGUIButton::mouseReleased(int x, int y, int button) {
 }
 
 void gGUIButton::resetTitlePosition() {
-	tx = (buttonw - font->getStringWidth(title)) / 2;
+	tx = (buttonw - font->getStringWidth(title)) / 2 - 1;
 	ty = (buttonh - font->getStringHeight("a")) / 2;
 }
 
