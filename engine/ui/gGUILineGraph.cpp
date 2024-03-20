@@ -13,11 +13,12 @@ gGUILineGraph::gGUILineGraph() {
 	title = "Graph";
 	arepointsenabled = true;
 
-	linecolors[0] = {0.96f, 0.46f, 0.55f};
-	linecolors[1] = {0.62f, 0.80f, 0.41f};
-	linecolors[2] = {0.47f, 0.63f, 0.96f};
-	linecolors[3] = {0.87f, 0.68f, 0.40f};
-	linecolors[4] = {0.73f, 0.60f, 0.96f};
+	linecolors[0] = {0.20f, 0.20f, 0.96f};
+	linecolors[1] = {0.96f, 0.46f, 0.55f};
+	linecolors[2] = {0.62f, 0.80f, 0.41f};
+	linecolors[3] = {0.47f, 0.63f, 0.96f};
+	linecolors[4] = {0.87f, 0.68f, 0.40f};
+	linecolors[5] = {0.73f, 0.60f, 0.96f};
 }
 
 gGUILineGraph::~gGUILineGraph() {
@@ -155,7 +156,7 @@ void gGUILineGraph::drawGraph() {
 
 	int linecount = graphlines.size();
 	for(int i = 0; i < linecount; i++) {
-		renderer->setColor(linecolors[i]);
+		renderer->setColor(linecolors[i % linecolornum]);
 		int pointcount = graphlines[i].size();
 		bool skipped = true;
 		for(int j = 0; j < pointcount; j++) {
@@ -189,7 +190,11 @@ void gGUILineGraph::updatePoints() {
 void gGUILineGraph::removeFirstPointsFromLine(int lineIndex, int pointNumLimit) {
     if (!graphlines.empty()) {
         if (graphlines[lineIndex].size() >= pointNumLimit) {
-            graphlines[lineIndex].pop_front();
+            for(int i = 0; i < pointNumLimit; i++) graphlines[lineIndex].pop_front();
         }
     }
+}
+
+int gGUILineGraph::getPointNum(int lineIndex) {
+	return graphlines[lineIndex].size();
 }
