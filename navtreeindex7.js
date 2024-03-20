@@ -1,5 +1,6 @@
 var NAVTREEINDEX7 =
 {
+"classgGrayscale.html#ab8bd28550b38a702d0952cf5735d1361":[0,0,45,0],
 "classgHighContrast.html":[0,0,95],
 "classgHighContrast.html#a2fac55600b0932fc151687acc155dbc4":[0,0,95,0],
 "classgHighContrast.html#a339223b6491414387f438e985c736a2c":[0,0,95,1],
@@ -248,6 +249,5 @@ var NAVTREEINDEX7 =
 "classgMesh.html#a54d31533719ff60d4d1e5c3f24589e05":[0,0,115,20],
 "classgMesh.html#a6502b918df5354a3ae9b8722558e5511":[0,0,115,13],
 "classgMesh.html#a6945618070a1b807cf56a41cf1c89f9a":[0,0,115,12],
-"classgMesh.html#a78253a7b1a0778f2e2791c3b6c0350f9":[0,0,115,16],
-"classgMesh.html#a793d2b7855545e2f8f16e73512bc6461":[0,0,115,11]
+"classgMesh.html#a78253a7b1a0778f2e2791c3b6c0350f9":[0,0,115,16]
 };
