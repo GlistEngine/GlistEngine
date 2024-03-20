@@ -7,7 +7,6 @@ var classgGUILineGraph =
     [ "addPointToLine", "classgGUILineGraph.html#a6df73078a6e895a36e015514a7f2ba8c", null ],
     [ "enablePoints", "classgGUILineGraph.html#a8b91871d2e23e0552c961cac26e2b07d", null ],
     [ "getLineColor", "classgGUILineGraph.html#ade386621d3080394dc924e35459ef328", null ],
-    [ "getPointNum", "classgGUILineGraph.html#a4cda8291a9efbc51340df5a4d6e1a870", null ],
     [ "removeFirstPointsFromLine", "classgGUILineGraph.html#a48d06470d7f209d0c37445b0512fb5ba", null ],
     [ "set", "classgGUILineGraph.html#af2a58aa1af10a1fbcc5abc5d89626793", null ],
     [ "setLabelCountX", "classgGUILineGraph.html#a84ffe3ffc44de757d2e7230ae4c17fda", null ],

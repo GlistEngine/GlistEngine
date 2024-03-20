@@ -49,7 +49,6 @@ var classgTexture =
     [ "loadMask", "classgTexture.html#aafb9fc45890f8546b311cdd98c9dcb69", null ],
     [ "loadMaskTexture", "classgTexture.html#a80e9f20fca3a996c92bcbf8d16cf5389", null ],
     [ "loadTexture", "classgTexture.html#a37460e952821e7ab3d0fa37bafe8b795", null ],
-    [ "save", "classgTexture.html#af47c47fd38a9cc806d1c7e492f110f84", null ],
     [ "saveTexture", "classgTexture.html#a937dffd479d8bae4e2a7b35f8781ebd3", null ],
     [ "setData", "classgTexture.html#a019e646955bb14ae419a19c93244aef7", null ],
     [ "setDataHDR", "classgTexture.html#a0212416373ed7392ce4444ee243be9cf", null ],

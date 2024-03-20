@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['save_343',['save',['../classgImage.html#a42fa7032f3805d68ee591ee446d64462',1,'gImage']]],
+  ['saveimage_343',['saveImage',['../classgImage.html#a815510984b1d92b4d67f43889a29afbd',1,'gImage']]],
   ['set_344',['set',['../classgRect.html#a751f2d93f434d2e2fb9d66c0b63bb1f4',1,'gRect::set(int left, int top, int right, int bottom)'],['../classgRect.html#a12518776ff9c1483ab6ea4807a4d6fb6',1,'gRect::set(const gRect &amp;r)']]],
   ['setambientcolor_345',['setAmbientColor',['../classgLight.html#a68d165fa658a5be0f18b886a2349ae9f',1,'gLight::setAmbientColor(int r, int g, int b, int a=255)'],['../classgLight.html#a395dc99188152510f5dcc8aba768aba8',1,'gLight::setAmbientColor(gColor *color)']]],
   ['setattenuation_346',['setAttenuation',['../classgLight.html#a396095b510a3afec75eb0aa3e2e6d202',1,'gLight::setAttenuation(float constant, float linear, float quadratic)'],['../classgLight.html#a4060960d8fb387c1a09adfccf2d2d138',1,'gLight::setAttenuation(glm::vec3 attenuation)']]],
