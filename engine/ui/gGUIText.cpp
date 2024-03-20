@@ -44,14 +44,23 @@ void gGUIText::setTextAlignment(int textAligment) {
     resetAlignment();
 }
 
-void gGUIText::setTextVerticalAlignment(int verticalalignment) {
-	textverticalalignment = font->getStringHeight("a");
+void gGUIText::setTextVerticalAlignment(int verticalTextAlignment) {
+	textverticalalignment = verticalTextAlignment;
+	linetopx = font->getStringHeight("a") * verticalTextAlignment / 2;
+}
+
+int gGUIText::getTextAlignment() {
+	return textalignment;
+}
+
+int gGUIText::getVerticalTextAlignment() {
+	return textverticalalignment;
 }
 
 void gGUIText::draw() {
     gColor oldcolor = *renderer->getColor();
     renderer->setColor(fontcolor);
-    for (int i = 0; i < linenum; i++) font->drawText(line[i], left + linefirstx[i], top + fontsize + (i * lineh) + textverticalalignment);
+    for (int i = 0; i < linenum; i++) font->drawText(line[i], left + linefirstx[i], top + fontsize + (i * lineh) + linetopx);
     renderer->setColor(&oldcolor);
 }
 
