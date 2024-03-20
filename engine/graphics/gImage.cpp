@@ -157,24 +157,27 @@ void gImage::clearData() {
 	}
 }
 
-void gImage::saveImage(std::string fileName) {
-	std::string path = gGetImagesDir() + fileName;
-	int lastdot = fileName.find_last_of('.');
-	std::string imagetype = gToLower(fileName.substr(lastdot + 1, fileName.size() - lastdot - 1));
+void gImage::save(std::string fullpath) {
+	int lastdot = fullpath.find_last_of('.');
+	std::string imagetype = gToLower(fullpath.substr(lastdot + 1, fullpath.size() - lastdot - 1));
 
 	if(imagetype == "png") {
-		stbi_write_png(path.c_str(), width, height, componentnum, data, width * componentnum * sizeof(unsigned char));
+		stbi_write_png(fullpath.c_str(), width, height, componentnum, data, width * componentnum * sizeof(unsigned char));
 	} else if(imagetype == "jpg" || imagetype == "jpeg") {
-		stbi_write_jpg(path.c_str(), width, height, componentnum, data, 100);
+		stbi_write_jpg(fullpath.c_str(), width, height, componentnum, data, 100);
 	} else if(imagetype == "bmp") {
-		stbi_write_bmp(path.c_str(), width, height, componentnum, data);
+		stbi_write_bmp(fullpath.c_str(), width, height, componentnum, data);
 	} else if(imagetype == "tga") {
-		stbi_write_tga(path.c_str(), width, height, componentnum, data);
+		stbi_write_tga(fullpath.c_str(), width, height, componentnum, data);
 	} else if(imagetype == "hdr") {
-		stbi_write_hdr(path.c_str(), width, height, componentnum, datahdr);
+		stbi_write_hdr(fullpath.c_str(), width, height, componentnum, datahdr);
 	} else {
-		stbi_write_png(path.c_str(), width, height, componentnum, data, width * componentnum * sizeof(unsigned char));
+		stbi_write_png(fullpath.c_str(), width, height, componentnum, data, width * componentnum * sizeof(unsigned char));
 	}
+}
+
+void gImage::saveImage(std::string fileName) {
+	save(gGetImagesDir() + fileName);
 }
 
 std::string gImage::getImageUrl() {
