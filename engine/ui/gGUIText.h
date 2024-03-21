@@ -41,7 +41,7 @@ private:
     int linenum;
     int textalignment;
     int textverticalalignment;
-    int linetopx;
+    int linetopy;
     int fontsize, lineh;
     float linespacingfactor;
 
