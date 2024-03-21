@@ -34,6 +34,12 @@ gGUIPane::gGUIPane() {
 	buttonsizer.setControl(0, 2, &nextbutton);
 	previousbuttonenabled = true;
 	nextbuttonenabled = true;
+	issubtitleset = false;
+	subtitle = "";
+	titlex = 0;
+	titley = 0;
+	subtitlex = 0;
+	subtitley = 0;
 }
 
 gGUIPane::~gGUIPane() {
@@ -43,6 +49,16 @@ void gGUIPane::set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIO
 	totalh = h;
 	gGUIContainer::set(root, topParentGUIObject, parentGUIObject, parentSlotLineNo, parentSlotColumnNo, x, y, w, h);
 	buttonsizer.set(root, topparent, this, 0, 0, left, top + height - 50, width, 50);
+	titlex = left + titlefontsize * 2;
+	titley = top + titlefontsize * 3;
+	subtitlex = titlex;
+	subtitley = titley + 3 * font->getSize();
+}
+
+void gGUIPane::setSubTitle(std::string subTitle) {
+	subtitle = subTitle;
+	issubtitleset = true;
+	if(subtitle == "") issubtitleset = false;
 }
 
 void gGUIPane::setNavigation(gGUINavigation* nav) {
@@ -90,7 +106,11 @@ void gGUIPane::draw() {
 	gDrawRectangle(left, top, width, height, true);
 
 	renderer->setColor(212, 212, 212);
-	titlefont.drawText(title, left + titlefontsize * 2, top + titlefontsize * 3);
+	titlefont.drawText(title, titlex, titley);
+	if(issubtitleset) {
+		renderer->setColor(150, 150, 150);
+		font->drawText(subtitle, subtitlex, subtitley);
+	}
 
 	renderer->setColor(&oldcolor);
 	if(guisizer) guisizer->draw();

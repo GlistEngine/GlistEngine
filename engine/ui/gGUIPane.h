@@ -27,6 +27,8 @@ public:
 	void setNavigationOrder(int orderNo);
 	int getNavigationOrder();
 
+	void setSubTitle(std::string subTitle);
+
 	virtual void draw();
 
 	virtual void mouseMoved(int x, int y);
@@ -48,11 +50,15 @@ private:
 	gFont titlefont;
 	gColor titlecolor;
 	int titlefontsize;
+	std::string subtitle;
+	bool issubtitleset;
 	bool navbuttonsenabled;
 	gGUISizer buttonsizer;
 	gGUIPane *previouspane, *nextpane;
 	gGUIButton previousbutton, nextbutton;
 	bool previousbuttonenabled, nextbuttonenabled;
+	int titlex, titley;
+	int subtitlex, subtitley;
 };
 
 #endif /* UI_GGUIPANE_H_ */
