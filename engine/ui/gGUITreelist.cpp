@@ -261,6 +261,14 @@ std::string gGUITreelist::getTitle(Element* element) {
 	return element->title;
 }
 
+std::string gGUITreelist::getTitle(int elementNo) {
+	return allsubtitles[elementNo];
+}
+
+std::string gGUITreelist::getSelectedTitle() {
+	return allsubtitles[selectedno];
+}
+
 int gGUITreelist::getNodenum() {
 	return nodenum;
 }
