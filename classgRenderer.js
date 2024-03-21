@@ -121,5 +121,6 @@ var classgRenderer =
     [ "setProjectionMatrix2d", "classgRenderer.html#addf7108c9745cdb092bf888b99418d1f", null ],
     [ "setSSAOBias", "classgRenderer.html#a14f49dde3312311288f0ca34c847efc4", null ],
     [ "setViewMatrix", "classgRenderer.html#add20288b75535a460ccaf6615b2dcbd9", null ],
-    [ "takeScreenshot", "classgRenderer.html#a08f1eb36d7d25fad01f56695a10889ee", null ]
+    [ "takeScreenshot", "classgRenderer.html#a08f1eb36d7d25fad01f56695a10889ee", null ],
+    [ "takeScreenshot", "classgRenderer.html#ab715d08fef850135dc2e48568c3f057a", null ]
 ];

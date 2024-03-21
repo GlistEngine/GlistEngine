@@ -15,6 +15,7 @@ var classgImage =
     [ "loadImageFromURL", "classgImage.html#ae3bc78ef732c19fc881dccbf96e81297", null ],
     [ "loadImageFromURL", "classgImage.html#abaf8f78af9a869c29f38b3c02865c836", null ],
     [ "loadMaskImage", "classgImage.html#a618cc28c6c587bfdbf025800c6ccf5a7", null ],
+    [ "save", "classgImage.html#a42fa7032f3805d68ee591ee446d64462", null ],
     [ "saveImage", "classgImage.html#a815510984b1d92b4d67f43889a29afbd", null ],
     [ "setImageData", "classgImage.html#a1f89f293d4f170651a967145a829d2b6", null ],
     [ "setImageData", "classgImage.html#a2c3514200bc2232d9442c790d1a071ea", null ],
