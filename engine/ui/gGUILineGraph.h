@@ -83,6 +83,9 @@ public:
 
 	int getPointNum(int lineIndex);
 
+	float getPointXValue(int lineIndex, int pointIndex);
+	float getPointYValue(int lineIndex, int pointIndex);
+
 private:
 	static const int linecolornum = 6;
 	void drawGraph();

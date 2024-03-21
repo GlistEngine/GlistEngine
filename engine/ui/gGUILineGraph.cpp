@@ -198,3 +198,12 @@ void gGUILineGraph::removeFirstPointsFromLine(int lineIndex, int pointNumLimit) 
 int gGUILineGraph::getPointNum(int lineIndex) {
 	return graphlines[lineIndex].size();
 }
+
+float gGUILineGraph::getPointXValue(int lineIndex, int pointIndex) {
+	return graphlines[lineIndex][pointIndex][0];
+}
+
+float gGUILineGraph::getPointYValue(int lineIndex, int pointIndex) {
+	return graphlines[lineIndex][pointIndex][1];
+}
+
