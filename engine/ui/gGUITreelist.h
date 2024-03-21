@@ -340,6 +340,21 @@ public:
 	 */
 	std::string getTitle(Element* element);
 
+
+	/*
+	 * Returns given struct object's title.
+	 *
+	 * @param No of the element to get it's title
+	 */
+	std::string getTitle(int elementNo);
+
+
+	/*
+	 * Returns selected struct object's title.
+	 *
+	 */
+	std::string getSelectedTitle();
+
 	/*
 	 * Returns given struct object's node number. Node number is a static integer
 	 * value. It contains the total number of the elements.
