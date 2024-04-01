@@ -1,5 +1,8 @@
 var NAVTREEINDEX8 =
 {
+"classgMatrix4.html":[0,0,114],
+"classgMatrix4.html#a13ac8e20191f7582623552445f6e5a8b":[0,0,114,0],
+"classgMatrix4.html#ae08e86e98386c7f4e605763d085ea568":[0,0,114,1],
 "classgMesh.html":[0,0,115],
 "classgMesh.html#a02bb3a25b524c3a8fce7dae9c08a1742":[0,0,115,18],
 "classgMesh.html#a0847d975f75e66d3c61a3e3af9b7868e":[0,0,115,4],
@@ -246,8 +249,5 @@ var NAVTREEINDEX8 =
 "classgRay.html#a177d766bd4faaf35685a1d96cd206f64":[0,0,128,3],
 "classgRay.html#a258cdff770910b204966d00248a017c3":[0,0,128,11],
 "classgRay.html#a285c31899bd2add727c75e34bad493f0":[0,0,128,2],
-"classgRay.html#a6548dc81662f0be8d9ffb65b495570ec":[0,0,128,7],
-"classgRay.html#a7a3dff0c5cf1f65c929d958624171828":[0,0,128,12],
-"classgRay.html#aa8f9c8ab950c9446d4647f66d8e4d7a2":[0,0,128,8],
-"classgRay.html#aaf10c6e8ef7c3ecd6a139c57a4113303":[0,0,128,4]
+"classgRay.html#a6548dc81662f0be8d9ffb65b495570ec":[0,0,128,7]
 };
