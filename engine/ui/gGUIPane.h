@@ -28,6 +28,7 @@ public:
 	int getNavigationOrder();
 
 	void setSubTitle(std::string subTitle);
+	void show();
 
 	virtual void draw();
 

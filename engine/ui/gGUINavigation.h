@@ -10,6 +10,7 @@
 
 #include "gGUIScrollable.h"
 #include "gGUIPane.h"
+#include "gGUIToolbar.h"
 #include <deque>
 
 
@@ -32,8 +33,13 @@ public:
 
 	void setSelectedPane(int paneNo);
 
+	void showPane(gGUIPane* paneToShow);
+
 	virtual void mousePressed(int x, int y, int button);
 	virtual void mouseReleased(int x, int y, int button);
+
+	void enableToolbar();
+	gGUISizer* getToolbarSizer();
 
 private:
 	std::deque<gGUIPane*> panes;
@@ -41,6 +47,11 @@ private:
 	int panelineh;
 	int panelinepad;
 	int selectedpane;
+
+	gGUISizer maintoolbarsizer;
+	gGUIToolbar toolbar;
+	gGUISizer toolbarsizer;
+	bool toolbarenabled;
 };
 
 #endif /* UI_GGUINAVIGATION_H_ */
