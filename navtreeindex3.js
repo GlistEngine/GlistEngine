@@ -1,11 +1,13 @@
 var NAVTREEINDEX3 =
 {
-"classgGUIButton.html#ac69523e80c8422f7a4d8a9d65980b87c":[0,0,48,19],
-"classgGUIButton.html#ad5f32e416dfc240da4d0982f9288d1e2":[0,0,48,37],
-"classgGUIButton.html#ad6869b2b3efeca846d8e7b01bf264bdd":[0,0,48,18],
-"classgGUIButton.html#aef12291d5d59cf08a07e73697515ee86":[0,0,48,16],
-"classgGUIButton.html#afbba78f123bea6029f2d302f9782a5cc":[0,0,48,26],
-"classgGUIButton.html#afc99fa00ee92bbcce412a4d853ce9b8d":[0,0,48,22],
+"classgGUIButton.html#ac5dafee1d7e16efca2e774a5384ce5e8":[0,0,48,43],
+"classgGUIButton.html#ac69523e80c8422f7a4d8a9d65980b87c":[0,0,48,20],
+"classgGUIButton.html#ad5f32e416dfc240da4d0982f9288d1e2":[0,0,48,38],
+"classgGUIButton.html#ad6869b2b3efeca846d8e7b01bf264bdd":[0,0,48,19],
+"classgGUIButton.html#ae55dafff1fcbd69c4d35752552d763e7":[0,0,48,39],
+"classgGUIButton.html#aef12291d5d59cf08a07e73697515ee86":[0,0,48,17],
+"classgGUIButton.html#afbba78f123bea6029f2d302f9782a5cc":[0,0,48,27],
+"classgGUIButton.html#afc99fa00ee92bbcce412a4d853ce9b8d":[0,0,48,23],
 "classgGUICandleStickChart.html":[0,0,49],
 "classgGUICandleStickChart.html#a0b3f2bd19fd8cbc11f1b55f3db79a990":[0,0,49,15],
 "classgGUICandleStickChart.html#a1310bf56b9d80ef3aa490eda67040ce7":[0,0,49,12],
@@ -247,7 +249,5 @@ var NAVTREEINDEX3 =
 "classgGUIForm.html#a96c5d971c8dc743a04cdedc198b6f33a":[0,0,62,18],
 "classgGUIForm.html#a988905e8250383ef5ddbe43886aab9c2":[0,0,62,57],
 "classgGUIForm.html#a98c87769c703f359aa16b887b9243a75":[0,0,62,36],
-"classgGUIForm.html#a9c364fb1c9a761c8a758b2f3fa204d09":[0,0,62,34],
-"classgGUIForm.html#aa1e9dd8ca6ad0a9d4532a087ac7f30cd":[0,0,62,10],
-"classgGUIForm.html#aa3f6e5eae630a57f7cb2927dde283870":[0,0,62,30]
+"classgGUIForm.html#a9c364fb1c9a761c8a758b2f3fa204d09":[0,0,62,34]
 };
