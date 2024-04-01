@@ -14,6 +14,7 @@ gGUINavigation::gGUINavigation() {
 	panelineh = 40;
 	panelinepad = 20;
 	selectedpane = 0;
+	toolbarenabled = false;
 }
 
 gGUINavigation::~gGUINavigation() {
@@ -40,6 +41,8 @@ void gGUINavigation::draw() {
 		if(i == selectedpane) root->getAppManager()->getGUIManager()->getFont(0, 1)->drawText(gToStr(i + 1) + ". " + panes[i]->getTitle(), panelinepad, panetoph + i * panelineh);
 		else font->drawText(gToStr(i + 1) + ". " + panes[i]->getTitle(), panelinepad, panetoph + i * panelineh);
 	}
+
+	if(toolbarenabled) toolbar.draw();
 
 	renderer->setColor(oldcolor);
 }
@@ -80,6 +83,10 @@ void gGUINavigation::setSelectedPane(int paneNo) {
 	selectedpane = paneNo;
 }
 
+void gGUINavigation::showPane(gGUIPane* paneToShow) {
+	((gGUISizer*)parent)->setControl(0, 1, paneToShow);
+}
+
 void gGUINavigation::mousePressed(int x, int y, int button) {
 	gGUIScrollable::mousePressed(x, y, button);
 }
@@ -94,5 +101,26 @@ void gGUINavigation::mouseReleased(int x, int y, int button) {
 			break;
 		}
 	}
+
+	if(toolbarenabled && x >= 0 && y >= height - 40 && x < width && y < height - 40 + 32) {
+		toolbar.mouseReleased(x, y, button);
+	}
+}
+
+void gGUINavigation::enableToolbar() {
+//	this->toolbar = toolbar;
+	maintoolbarsizer.set(root, topparent, this, 0, 0, 0, height - 40, width, 32);
+	maintoolbarsizer.setSize(1, 1);
+	toolbar.setSizer(&toolbarsizer);
+	maintoolbarsizer.setControl(0, 0, &toolbar);
+	toolbarsizer.setRootApp(root);
+	toolbarsizer.setSize(1, 10);
+	toolbar.setToolbarForegroundColor(navigationbackgroundcolor);
+	toolbar.setToolbarBottomLineColor(navigationbackgroundcolor);
+	toolbarenabled = true;
+}
+
+gGUISizer* gGUINavigation::getToolbarSizer() {
+	return &toolbarsizer;
 }
 

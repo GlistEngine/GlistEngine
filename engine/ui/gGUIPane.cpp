@@ -99,6 +99,11 @@ void gGUIPane::enableNextButton(bool isEnabled) {
 	if(nextpane && nextbuttonenabled) nextbutton.setDisabled(false);
 }
 
+void gGUIPane::show() {
+	if(navigation != nullptr) navigation->setSelectedPane(navorder);
+	 ((gGUISizer*)parent)->setControl(0, 1, this);
+}
+
 void gGUIPane::draw() {
 	gColor oldcolor = *renderer->getColor();
 
