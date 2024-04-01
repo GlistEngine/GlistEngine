@@ -66,6 +66,9 @@ public:
 	void setWindowResizable(bool isResizable) override;
 	void setWindowSizeLimits(int minWidth, int minHeight, int maxWidth, int maxHeight) override;
 
+	void setIcon(std::string pngFullpath) override;
+	void setIcon(unsigned char* imageData, int w, int h) override;
+
 	bool isJoystickPresent(int joystickId) override;
 	bool isGamepadButtonPressed(int joystickId, int buttonId) override;
 	const float* getJoystickAxes(int joystickId, int* axisCountPtr) override;

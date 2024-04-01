@@ -66,6 +66,9 @@ public:
 	virtual void setCursorMode(int cursorMode);
 	virtual void setCursorPos(int x, int y);
 
+	virtual void setIcon(std::string pngFullpath);
+	virtual void setIcon(unsigned char* imageData, int w, int h);
+
 	virtual void setClipboardString(std::string text);
 	virtual std::string getClipboardString();
 
