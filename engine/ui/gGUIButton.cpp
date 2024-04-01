@@ -28,6 +28,7 @@ gGUIButton::gGUIButton() {
 	fcolor = *buttonfontcolor;
 	pressedfcolor = *pressedbuttonfontcolor;
 	disabledfcolor = *disabledbuttonfontcolor;
+	fillbackground = true;
 	resetTitlePosition();
 }
 
@@ -81,13 +82,15 @@ void gGUIButton::update() {
 void gGUIButton::draw() {
 //	gLogi("gGUIButton") << "draw, w:" << width;
 	gColor oldcolor = *renderer->getColor();
-	if(isdisabled) renderer->setColor(&disabledbcolor);
-	else {
-		if(ispressed) renderer->setColor(&pressedbcolor);
-		else renderer->setColor(&bcolor);
+	if(fillbackground) {
+		if(isdisabled) renderer->setColor(&disabledbcolor);
+		else {
+			if(ispressed) renderer->setColor(&pressedbcolor);
+			else renderer->setColor(&bcolor);
+		}
+	//	renderer->setColor(gColor(0.1f, 0.45f, 0.87f));
+		gDrawRectangle(left, top + ispressed, buttonw, buttonh, true);
 	}
-//	renderer->setColor(gColor(0.1f, 0.45f, 0.87f));
-	gDrawRectangle(left, top + ispressed, buttonw, buttonh, true);
 
 	if(istextvisible) {
 		if(isdisabled) renderer->setColor(&disabledfcolor);
@@ -182,6 +185,10 @@ gColor* gGUIButton::getPressedButtonFontColor() {
 
 gColor* gGUIButton::getDisabledButtonFontColor() {
 	return &disabledfcolor;
+}
+
+void gGUIButton::enableBackgroundFill(bool isEnabled) {
+	fillbackground = isEnabled;
 }
 
 int gGUIButton::getButtonWidth() {
