@@ -341,15 +341,36 @@ void gStringReplace(std::string& input, const std::string& searchStr, const std:
 
 std::vector<std::string> gSplitString(const std::string& textToSplit, const std::string& delimiter) {
 	std::vector<std::string> tokens;
+	int tl = textToSplit.length();
+	int dl = delimiter.length();
 	size_t prev = 0, pos = 0;
 	do {
 		pos = textToSplit.find(delimiter, prev);
-		if (pos == std::string::npos) pos = textToSplit.length();
+		if (pos == std::string::npos) pos = tl;
 		std::string token = textToSplit.substr(prev, pos - prev);
 		if (!token.empty()) tokens.push_back(token);
-		prev = pos + delimiter.length();
-	} while (pos < textToSplit.length() && prev < textToSplit.length());
+		else tokens.push_back("");
+		prev = pos + dl;
+		if(prev == tl) tokens.push_back("");
+	} while (pos < tl && prev < tl);
 	return tokens;
+}
+
+std::string gReplaceAll(std::string& source, const std::string& from, const std::string& to) {
+    std::string newstring;
+    newstring.reserve(source.length());
+    int fl = from.length();
+
+    std::string::size_type lastpos = 0;
+    std::string::size_type findpos;
+
+    while(std::string::npos != (findpos = source.find(from, lastpos))) {
+        newstring.append(source, lastpos, findpos - lastpos);
+        newstring += to;
+        lastpos = findpos + fl;
+    }
+    newstring += source.substr(lastpos);
+    return newstring;
 }
 
 std::string gToLower(const std::string& src, const std::string & locale) {

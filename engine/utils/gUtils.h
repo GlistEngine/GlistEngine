@@ -124,6 +124,7 @@ std::locale gGetLocale(const std::string & locale);
 std::string gToLower(const std::string& src, const std::string & locale = "");
 std::string gToUpper(const std::string& src, const std::string & locale = "");
 std::vector<std::string> gSplitString(const std::string& textToSplit, const std::string& delimiter);
+std::string gReplaceAll(std::string& source, const std::string& from, const std::string& to);
 
 template <class T>
 std::string gToStr(const T& numValue) {
