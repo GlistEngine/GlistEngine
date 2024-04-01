@@ -41,6 +41,8 @@ public:
 	gColor* getPressedButtonFontColor();
 	gColor* getDisabledButtonFontColor();
 
+	void enableBackgroundFill(bool isEnabled);
+
 	int getButtonWidth();
 	int getButtonHeight();
 
@@ -62,6 +64,7 @@ protected:
 	bool isdisabled;
 	gColor bcolor, pressedbcolor, disabledbcolor;
 	gColor fcolor, pressedfcolor, disabledfcolor;
+	bool fillbackground;
 
 	void resetTitlePosition();
 
