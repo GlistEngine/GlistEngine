@@ -87,7 +87,7 @@ public:
 	static std::string addComplementarySlashIfNeeded(const fs::path& filePath);
 
 	//copyOptions can be one of;
-	//gFile::copyOptions::none, gFile::copyOptions::skip_existing, gFile::copyOptions::overwrite_existing
+	//gFile::CopyOptions::NONE, gFile::CopyOptions::SKIP_EXISTING, gFile::CopyOptions::OVERWRITE_EXISTING
 	static void copy(const std::string& fromFullPath, const std::string& toFullPath, int copyOption = CopyOptions::NONE);
 	static bool copyFile(const std::string& fromFullPath, const std::string& toFullPath, int copyOption = CopyOptions::NONE);
 	static void copySymlink(const std::string& existingSymlinkFullPath, const std::string& newSymlinkFullPath);
