@@ -219,6 +219,10 @@ std::string gGUIListbox::getData(int lineNo) {
 	return data[lineNo];
 }
 
+std::vector<std::string> gGUIListbox::getData() {
+	return data;
+}
+
 int gGUIListbox::getDataNum() {
 	return data.size();
 }

@@ -137,6 +137,12 @@ public:
 	std::string getData(int lineNo);
 
 	/*
+	 * Returns all the titles in a vector.
+	 *
+	 */
+	std::vector<std::string> getData();
+
+	/*
 	 * Returns the size of data list.
 	 */
 	int getDataNum();
