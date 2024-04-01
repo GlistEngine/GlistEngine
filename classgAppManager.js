@@ -39,6 +39,8 @@ var classgAppManager =
     [ "setScreenSize", "classgAppManager.html#acf7a4fea9ef8c145ff361348fc0cdd9b", null ],
     [ "setTargetFramerate", "classgAppManager.html#aa3264476347b548da39873479f20c38d", null ],
     [ "setup", "classgAppManager.html#aec97be4180d7443499903e328b2f2ad7", null ],
+    [ "setWindowIcon", "classgAppManager.html#ad26bbe064f8f24bfe4815a8f81f589a2", null ],
+    [ "setWindowIcon", "classgAppManager.html#a6f1043e7c54fa444624789539b40eb1b", null ],
     [ "setWindowResizable", "classgAppManager.html#a6c342aa5fe7502faeecb59fdccdd8e27", null ],
     [ "setWindowSize", "classgAppManager.html#a3b8934e9e1d0bc2e6ad9ab3ef7f708ad", null ],
     [ "setWindowSizeLimits", "classgAppManager.html#a39e24499be52efca66b2afc9a650b0e1", null ],
