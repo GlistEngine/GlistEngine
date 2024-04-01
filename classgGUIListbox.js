@@ -6,6 +6,7 @@ var classgGUIListbox =
     [ "clear", "classgGUIListbox.html#a874debae00b76010913ba6bc1afc50bf", null ],
     [ "drawContent", "classgGUIListbox.html#a8af425434a393a4b45d3533edde8feea", null ],
     [ "getChosenColor", "classgGUIListbox.html#ac5f77593fb27bb2fe14e85a1e5d10d19", null ],
+    [ "getData", "classgGUIListbox.html#ab81119840fdbb1f00b6c912a3f57f2c0", null ],
     [ "getData", "classgGUIListbox.html#ad1f7ef7f81ade4da7d93b957fb74780e", null ],
     [ "getDataNum", "classgGUIListbox.html#ab05960037a8adc84eaea1c813dde04e9", null ],
     [ "getIcon", "classgGUIListbox.html#a35dac437d2a23cbbb09eaf79218db4d5", null ],
