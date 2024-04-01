@@ -269,6 +269,9 @@ public:
     void setCursor(int cursorId);
     void setCursorMode(int cursorMode);
 
+    void setWindowIcon(std::string pngFullpath);
+    void setWindowIcon(unsigned char* imageData, int w, int h);
+
     bool isJoystickConnected(int joystickId);
     int getJoystickAxesCount(int joystickId);
     const float* getJoystickAxes(int joystickId);

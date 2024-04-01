@@ -119,6 +119,14 @@ void gBaseWindow::setCursorPos(int x, int y) {
 
 }
 
+void gBaseWindow::setIcon(std::string pngFullpath) {
+
+}
+
+void gBaseWindow::setIcon(unsigned char* imageData, int w, int h) {
+
+}
+
 void gBaseWindow::setClipboardString(std::string text) {
 
 }

@@ -343,6 +343,14 @@ void gAppManager::setCursorMode(int cursorMode) {
     window->setCursorMode(cursorMode);
 }
 
+void gAppManager::setWindowIcon(std::string pngFullpath) {
+	window->setIcon(pngFullpath);
+}
+
+void gAppManager::setWindowIcon(unsigned char* imageData, int w, int h) {
+	window->setIcon(imageData, w, h);
+}
+
 bool gAppManager::isJoystickConnected(int joystickId) {
     if(joystickId >= maxjoysticknum) return false;
     return joystickconnected[joystickId];
