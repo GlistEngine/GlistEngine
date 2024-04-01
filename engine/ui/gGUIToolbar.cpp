@@ -13,6 +13,8 @@ gGUIToolbar::gGUIToolbar() {
 	sizerrescaling = false;
 	isSpaceAdded = false;
 	toolbartype = TOOLBAR_HORIZONTAL;
+	toolbarforegroundcolor = foregroundcolor;
+	toolbarbottomlinecolor = backgroundcolor;
 }
 
 gGUIToolbar::~gGUIToolbar() {
@@ -31,15 +33,15 @@ void gGUIToolbar::draw() {
 //	gLogi("gGUIToolbar") << "l:" << left << ", t:" << top << ", w:" << width << ", h:" << height;
 	gColor oldcolor = *renderer->getColor();
 	if(toolbartype == TOOLBAR_HORIZONTAL) {
-		renderer->setColor(foregroundcolor);
+		renderer->setColor(&toolbarforegroundcolor);
 		gDrawRectangle(left, top, width, height, true);
-		renderer->setColor(backgroundcolor);
+		renderer->setColor(&toolbarbottomlinecolor);
 		gDrawLine(left, bottom, right, bottom);
 	//	gDrawRectangle(left, top, width, height, false);
 	} else {
-		renderer->setColor(foregroundcolor);
+		renderer->setColor(&toolbarforegroundcolor);
 		gDrawRectangle(left, top, width, height, true);
-		renderer->setColor(backgroundcolor);
+		renderer->setColor(&toolbarbottomlinecolor);
 		gDrawLine(right, top, right, bottom);
 	}
 	renderer->setColor(&oldcolor);
@@ -184,6 +186,13 @@ void gGUIToolbar::addText(gGUIText *text) {
 	resizeSizer();
 }
 
+void gGUIToolbar::addImage(gGUIBitmap* image) {
+	controlObjects.push_back(image);
+	float margin = image->getImageWidth() * 0.008;
+	sizerPrs.push_back(margin);
+	resizeSizer();
+}
+
 void gGUIToolbar::addDivider(gGUIDivider *divider, float margin) {
 	controlObjects.push_back(divider);
 	sizerPrs.push_back(margin);
@@ -236,4 +245,12 @@ void gGUIToolbar::resizeSizer() {
 
 void gGUIToolbar::addSpace() {
 	isSpaceAdded = true;
+}
+
+void gGUIToolbar::setToolbarForegroundColor(gColor color) {
+	toolbarforegroundcolor = color;
+}
+
+void gGUIToolbar::setToolbarBottomLineColor(gColor color) {
+	toolbarbottomlinecolor = color;
 }

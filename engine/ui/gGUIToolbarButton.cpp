@@ -56,13 +56,16 @@ void gGUIToolbarButton::draw() {
 //	gLogi("gGUIToolbarButton") << "draw";
 //	gLogi("gGUIToolbarButton") << "l:" << left << ", t:" << top << ", w:" << width << ", h:" << height << ", bw:" << buttonw << ", bh:" << buttonh;
 	gColor oldcolor = *renderer->getColor();
-	if(isdisabled) renderer->setColor(&disabledbcolor);
-	else {
-		if(ispressed) renderer->setColor(&pressedbcolor);
-		else renderer->setColor(&bcolor);
+	if(fillbackground) {
+		if(isdisabled) renderer->setColor(&disabledbcolor);
+		else {
+			if(ispressed) renderer->setColor(&pressedbcolor);
+			else renderer->setColor(&bcolor);
+		}
+	//	renderer->setColor(gColor(0.1f, 0.45f, 0.87f));
+		gDrawRectangle(left, top + ispressed, buttonw, buttonh * 3 / 4, true);
 	}
-//	renderer->setColor(gColor(0.1f, 0.45f, 0.87f));
-	gDrawRectangle(left, top + ispressed, buttonw, buttonh * 3 / 4, true);
+
 	renderer->setColor(255, 255, 255);
 	// icon image
 	if(iconid != gGUIResources::ICON_NONE) res.getIconImage(iconid)->draw(left + ix, top + iy, iw, ih);
