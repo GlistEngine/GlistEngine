@@ -100,7 +100,7 @@ public:
 	 *
 	 * @param windowTitle The text to be written in the title of the window.
 	 */
-	void setTitle(const std::string& windowTitle);
+	virtual void setTitle(const std::string& windowTitle);
 	void setTitle(std::string&& windowTitle);
 
 	/**

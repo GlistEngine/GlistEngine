@@ -209,6 +209,11 @@ void gGLFWWindow::setIcon(unsigned char* imageData, int w, int h) {
 	glfwSetWindowIcon(window, 1, images);
 }
 
+void gGLFWWindow::setTitle(const std::string& windowTitle) {
+	title = windowTitle;
+	glfwSetWindowTitle(window, windowTitle.c_str());
+}
+
 bool gGLFWWindow::isJoystickPresent(int joystickId) {
 	return glfwJoystickPresent(joystickId);
 }
