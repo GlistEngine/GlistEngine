@@ -34,6 +34,8 @@ public:
 
     void draw();
 
+    void setDisabled(bool isDisabled);
+
 private:
     std::string text;
     std::vector<std::string> line;
@@ -44,6 +46,7 @@ private:
     int linetopy;
     int fontsize, lineh;
     float linespacingfactor;
+    bool isdisabled;
 
     void resetText();
     void resetAlignment();
