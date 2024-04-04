@@ -1,5 +1,5 @@
-<map id="gTooltipText" name="gTooltipText">
-<area shape="rect" id="node1" title=" " alt="" coords="19,304,119,331"/>
+<map id="gGUITooltipText" name="gGUITooltipText">
+<area shape="rect" id="node1" title=" " alt="" coords="7,304,131,331"/>
 <area shape="rect" id="node2" href="$classgGUIControl.html" title=" " alt="" coords="19,229,120,256"/>
 <area shape="rect" id="node3" href="$classgBaseGUIObject.html" title=" " alt="" coords="5,155,133,181"/>
 <area shape="rect" id="node4" href="$classgRenderObject.html" title=" " alt="" coords="10,80,129,107"/>

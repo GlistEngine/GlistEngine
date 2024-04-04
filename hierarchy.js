@@ -108,7 +108,7 @@ var hierarchy =
             [ "gGUISwitchButton", "classgGUISwitchButton.html", null ],
             [ "gGUIText", "classgGUIText.html", null ],
             [ "gGUITextbox", "classgGUITextbox.html", null ],
-            [ "gTooltipText", "classgTooltipText.html", null ]
+            [ "gGUITooltipText", "classgGUITooltipText.html", null ]
           ] ],
           [ "gGUIForm", "classgGUIForm.html", [
             [ "gGUIDialogue", "classgGUIDialogue.html", null ],
@@ -186,7 +186,8 @@ var hierarchy =
       [ "gSpriteAnimator", "classgSpriteAnimator.html", null ],
       [ "gThread", "classgThread.html", [
         [ "gAssetLoader", "classgAssetLoader.html", null ]
-      ] ]
+      ] ],
+      [ "gWindows", "classgWindows.html", null ]
     ] ],
     [ "gRect", "classgRect.html", null ],
     [ "gUTF8Iterator", "classgUTF8Iterator.html", null ],
