@@ -6,9 +6,9 @@
  */
 
 
-#include <gTooltipText.h>
+#include "gGUITooltipText.h"
 
-gTooltipText::gTooltipText() {
+gGUITooltipText::gGUITooltipText() {
 	text = "";
 	textlist.push_back("");
 	texth = 0;
@@ -16,22 +16,22 @@ gTooltipText::gTooltipText() {
 	margin = 2;
 }
 
-gTooltipText::~gTooltipText() {
+gGUITooltipText::~gGUITooltipText() {
 }
 
-void gTooltipText::setText(std::string text) {
+void gGUITooltipText::setText(std::string text) {
 	this->text = text;
 	textlist.push_back(this->text);
 }
 
-std::string gTooltipText::getText() {
+std::string gGUITooltipText::getText() {
 	return this->text;
 }
 
-void gTooltipText::update() {
+void gGUITooltipText::update() {
 }
 
-void gTooltipText::draw() {
+void gGUITooltipText::draw() {
 	if(cursorx >= sizerx && cursorx <= sizerw && cursory >= sizery && cursory <= sizerh) {
 		gColor oldcolor = *renderer->getColor();
 		color.set(0.85f, 0.85f, 0.0f);
@@ -43,7 +43,7 @@ void gTooltipText::draw() {
 	}
 }
 
-void gTooltipText::gTooltipActivate(gGUISizer* sizer, objects guiobject, int lineNo, int columnNo, std::string text) {
+void gGUITooltipText::activate(gGUISizer* sizer, objects guiobject, int lineNo, int columnNo, std::string text) {
 	setText(text);
 	sizerx = sizer->getSlotX(lineNo, columnNo);
 	sizery = sizer->getSlotY(lineNo, columnNo);
@@ -74,14 +74,14 @@ void gTooltipText::gTooltipActivate(gGUISizer* sizer, objects guiobject, int lin
 	setTitleLength(text);
 }
 
-void gTooltipText::setTitleLength(std::string text) {
+void gGUITooltipText::setTitleLength(std::string text) {
 	texth = font->getStringHeight("A");
 	textw = font->getStringWidth(text);
 	tx = font->getStringWidth("a") / 2;
 	//gLogi("gCanvas") << texth << " " << textw << " " << tx;
 }
 
-void gTooltipText::mouseMoved(int x, int y) {
+void gGUITooltipText::mouseMoved(int x, int y) {
 	cursorx = x;
 	cursory = y;
 }
