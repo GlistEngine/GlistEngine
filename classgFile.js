@@ -3,7 +3,8 @@ var classgFile =
     [ "CopyOptions", "classgFile.html#ae0409e2a1e11645fb3301ded923fe7cb", [
       [ "NONE", "classgFile.html#ae0409e2a1e11645fb3301ded923fe7cba3d05a626a7fa58f15a303dd336d863e1", null ],
       [ "SKIP_EXISTING", "classgFile.html#ae0409e2a1e11645fb3301ded923fe7cbae9ec4853a6e3e3fc0344290d28db05e3", null ],
-      [ "OVERWRITE_EXISTING", "classgFile.html#ae0409e2a1e11645fb3301ded923fe7cba0c6de1f6458bcaa579ac30cb9ba38c5a", null ]
+      [ "OVERWRITE_EXISTING", "classgFile.html#ae0409e2a1e11645fb3301ded923fe7cba0c6de1f6458bcaa579ac30cb9ba38c5a", null ],
+      [ "RECURSIVE", "classgFile.html#ae0409e2a1e11645fb3301ded923fe7cba3a061ff8df6149a29dd7d52a930f69ee", null ]
     ] ],
     [ "Mode", "classgFile.html#a3819f303037060ce0d25aa23a135d94f", [
       [ "FILEMODE_READONLY", "classgFile.html#a3819f303037060ce0d25aa23a135d94fafa99039afb4a11bef6e5af2d6d913a14", null ],

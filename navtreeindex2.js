@@ -108,6 +108,7 @@ var NAVTREEINDEX2 =
 "classgFile.html#adba2c006943d02a2a0dcbb66cc967290":[0,0,37,19],
 "classgFile.html#ae0409e2a1e11645fb3301ded923fe7cb":[0,0,37,0],
 "classgFile.html#ae0409e2a1e11645fb3301ded923fe7cba0c6de1f6458bcaa579ac30cb9ba38c5a":[0,0,37,0,2],
+"classgFile.html#ae0409e2a1e11645fb3301ded923fe7cba3a061ff8df6149a29dd7d52a930f69ee":[0,0,37,0,3],
 "classgFile.html#ae0409e2a1e11645fb3301ded923fe7cba3d05a626a7fa58f15a303dd336d863e1":[0,0,37,0,0],
 "classgFile.html#ae0409e2a1e11645fb3301ded923fe7cbae9ec4853a6e3e3fc0344290d28db05e3":[0,0,37,0,1],
 "classgFile.html#ae634889c4747c8484a0c4294f9b38a30":[0,0,37,7],
@@ -248,6 +249,5 @@ var NAVTREEINDEX2 =
 "classgGUIButton.html#aab362cc54b001dd9b5ae1bf6fdcf5f2c":[0,0,48,18],
 "classgGUIButton.html#aab839072fa7acc69477a03de19879900":[0,0,48,8],
 "classgGUIButton.html#ab208930c3dc5e4c94eb1bde5f7e69e6e":[0,0,48,48],
-"classgGUIButton.html#ab4f461618f04ed0381235841daf8f1be":[0,0,48,47],
-"classgGUIButton.html#abdd7d6ed40d29fb8ccb949409d877784":[0,0,48,29]
+"classgGUIButton.html#ab4f461618f04ed0381235841daf8f1be":[0,0,48,47]
 };
