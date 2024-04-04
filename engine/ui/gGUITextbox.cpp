@@ -99,6 +99,7 @@ gGUITextbox::gGUITextbox() {
 	textalignmentamount = 5;
 	textcolor = fontcolor;
 	colorset = false;
+	isdisabled = false;
 	setTextAlignment(textalignment, boxw, initx);
 	
 	widthexceeded = false;
@@ -368,7 +369,8 @@ void gGUITextbox::draw() {
 		}
 	}
 	if(!colorset) textcolor = fontcolor;
-	renderer->setColor(textcolor);
+	if(isdisabled) renderer->setColor(disabledbuttonfontcolor);
+	else renderer->setColor(textcolor);
 	if(ispassword) {
 		int doty = top + lineheight + linetopmargin;
 		int dotlen = 3 * dotradius;
@@ -398,6 +400,7 @@ void gGUITextbox::draw() {
 
 void gGUITextbox::keyPressed(int key) {
 //	gLogi("Textbox") << "keyPressed:" << key;
+	if(isdisabled) return;
 	if(key == G_KEY_C && ctrlpressed) ctrlcpressed = true;
 	else if(key == G_KEY_V && ctrlpressed) ctrlvpressed = true;
 	else if(key == G_KEY_X && ctrlpressed) ctrlxpressed = true;
@@ -468,6 +471,7 @@ void gGUITextbox::keyPressed(int key) {
 }
 
 void gGUITextbox::keyReleased(int key) {
+	if(isdisabled) return;
 	int pressedkey = KEY_NONE;
 	switch(key) {
 	case G_KEY_BACKSPACE:
@@ -528,6 +532,7 @@ void gGUITextbox::keyReleased(int key) {
 }
 
 void gGUITextbox::handleKeys() {
+	if(isdisabled) return;
 	if(keypresstime >= 0) {
 		keypresstime++;
 		if(keypresstime >= keypresstimelimit2) keypresstime = keypresstimelimit1;
@@ -560,6 +565,7 @@ void gGUITextbox::handleKeys() {
 }
 
 void gGUITextbox::pressKey() {
+	if(isdisabled) return;
 	if((keystate & KEY_BACKSPACE) && (cursorposchar > 0 || (selectionmode && (selectionposchar1 > 0 || selectionposchar2 > 0)))) { // BACKSPACE
 		pushToStack();
 		if(selectionmode && selectionposchar1 != selectionposchar2) {
@@ -1255,6 +1261,7 @@ void gGUITextbox::pressKey() {
 void gGUITextbox::charPressed(unsigned int codepoint) {
 //	gLogi("Textbox") << "charPressed:" << codepoint;
 //	gLogi("Textbox") << "cp:" << gCodepointToStr(codepoint);
+	if(isdisabled) return;
 	pushToStack();
 	if(editmode) {
 		if(isnumeric && (codepoint < 48 || codepoint > 57) && codepoint != 44 && codepoint != 46) return;
@@ -1391,6 +1398,7 @@ int gGUITextbox::findFirstSpace(int lineend) {
 }
 
 void gGUITextbox::mousePressed(int x, int y, int button) {
+	if(isdisabled) return;
 	if(!iseditable) return;
 
 	if(x >= left - (firstx * 2) && x < right - (firstx * 2) && y >= top + hdiff - (firsty * 2) && y < top + totalh + hdiff - (firsty * 2) && button == 0) {
@@ -1436,6 +1444,7 @@ void gGUITextbox::mousePressed(int x, int y, int button) {
 }
 
 void gGUITextbox::mouseReleased(int x, int y, int button) {
+	if(isdisabled) return;
 	if(!iseditable) return;
 
 	if(x >= left && x < right && y >= top + hdiff && y < top + totalh + hdiff && button == 0) {
@@ -1446,6 +1455,7 @@ void gGUITextbox::mouseReleased(int x, int y, int button) {
 }
 
 void gGUITextbox::mouseDragged(int x, int y, int button) {
+	if(isdisabled) return;
 	if(editmode && x >= left && x < right && y >= top && y < top + totalh && button == 2) {
 		if(!selectionmode) startSelection();
 
@@ -1850,4 +1860,8 @@ void gGUITextbox::setCursorPosX(int cursorPosX, int length) {
 	cursorposx = cursorPosX;
 	cursorposchar = text.size() - (text.size() - length);
 	cursorposutf = length;
+}
+
+void gGUITextbox::setDisabled(bool isDisabled) {
+	isdisabled = isDisabled;
 }
