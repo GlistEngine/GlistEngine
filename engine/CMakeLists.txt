@@ -190,7 +190,7 @@ set(SRC_FILES
 	${ENGINE_DIR}/ui/gGUIColumnChart.cpp
 	${ENGINE_DIR}/ui/gGUITextbox.cpp
 	${ENGINE_DIR}/ui/gGUIText.cpp
-	${ENGINE_DIR}/ui/gTooltipText.cpp
+	${ENGINE_DIR}/ui/gGUITooltipText.cpp
 	${ENGINE_DIR}/ui/gGUIDivider.cpp
 	${ENGINE_DIR}/ui/gGUIToolbarButton.cpp
 	${ENGINE_DIR}/ui/gGUIProgressBar.cpp
@@ -249,6 +249,12 @@ set(SRC_FILES
 	${ENGINE_DIR}/graphics/posteffects/kerneleffects/gSharpen.cpp
 	${ENGINE_DIR}/graphics/posteffects/kerneleffects/gEdgeDetection.cpp
 )
+
+if(WIN32)
+	list(APPEND SRC_FILES
+		${ENGINE_DIR}/utils/gWindows.cpp
+	)
+endif()
 
 if(NOT (ANDROID OR IOS))
 	list(APPEND SRC_FILES
