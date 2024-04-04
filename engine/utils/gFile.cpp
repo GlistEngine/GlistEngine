@@ -7,7 +7,7 @@
 
 #include "gFile.h"
 
-fs::copy_options gFile::copyOptions[3] = {fs::copy_options::none, fs::copy_options::skip_existing, fs::copy_options::overwrite_existing};
+fs::copy_options gFile::copyOptions[4] = {fs::copy_options::none, fs::copy_options::skip_existing, fs::copy_options::overwrite_existing, fs::copy_options::recursive};
 
 gFile::gFile() : mode(FILEMODE_READONLY), binary(true), size(0) {}
 
@@ -257,6 +257,10 @@ bool gFile::isSymlink(const std::string& fullPath) {
 
 bool gFile::remove(const std::string& fullPath) {
 	return fs::remove(fullPath);
+}
+
+bool gFile::removeAll(const std::string& fullPath) {
+	return fs::remove_all(fullPath);
 }
 
 void gFile::rename(const std::string& fromFullPath, const std::string& toFullPath) {

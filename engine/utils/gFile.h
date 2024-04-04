@@ -42,7 +42,8 @@ public:
 	enum CopyOptions {
 		NONE,
 		SKIP_EXISTING,
-		OVERWRITE_EXISTING
+		OVERWRITE_EXISTING,
+		RECURSIVE
 	};
 
 	gFile();
@@ -98,6 +99,7 @@ public:
 	static bool isEquivalent(const std::string& fullPath1, const std::string& fullPath2);
 	static bool isSymlink(const std::string& fullPath);
 	static bool remove(const std::string& fullPath);
+	static bool removeAll(const std::string& fullPath);
 	static void rename(const std::string& fromFullPath, const std::string& toFullPath);
 
 private:
@@ -113,7 +115,7 @@ private:
 	bool openStream(int fileMode, bool isBinary);
 	void readFile();
 
-	static fs::copy_options copyOptions[3];
+	static fs::copy_options copyOptions[4];
 };
 
 #endif /* UTILS_GFILE_H_ */
