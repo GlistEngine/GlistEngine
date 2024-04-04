@@ -18,6 +18,7 @@ gGUIText::gGUIText() {
     width = 0;
     linenum = 0;
     linetopy = font->getStringHeight("a") * textverticalalignment / 2;
+    isdisabled = false;
 }
 
 gGUIText::~gGUIText() {
@@ -60,7 +61,8 @@ int gGUIText::getVerticalTextAlignment() {
 
 void gGUIText::draw() {
     gColor oldcolor = *renderer->getColor();
-    renderer->setColor(fontcolor);
+    if(isdisabled) renderer->setColor(disabledbuttonfontcolor);
+    else renderer->setColor(fontcolor);
     for (int i = 0; i < linenum; i++) font->drawText(line[i], left + linefirstx[i], top + fontsize + (i * lineh) + linetopy);
     renderer->setColor(&oldcolor);
 }
@@ -166,4 +168,8 @@ std::vector<std::string> gGUIText::splitString(const std::string& textToSplit, g
         tokens.push_back(line);
     }
     return tokens;
+}
+
+void gGUIText::setDisabled(bool isDisabled) {
+	isdisabled = isDisabled;
 }
