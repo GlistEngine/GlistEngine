@@ -373,6 +373,18 @@ std::string gReplaceAll(std::string& source, const std::string& from, const std:
     return newstring;
 }
 
+bool gIsValidFilename(std::string fileName) {
+	std::string invalidchars = "<>:\"/|?*\\";
+	bool valid = true;
+	for(int i = 0; i < invalidchars.length(); i++) {
+		if(fileName.find(invalidchars[i]) != std::string::npos) {
+			valid = false;
+			break;
+		}
+	}
+	return valid;
+}
+
 std::string gToLower(const std::string& src, const std::string & locale) {
 	std::string dst;
 	std::locale loc = gGetLocale(locale);
@@ -754,6 +766,7 @@ bool gCheckCollision(int xLeft1, int yUp1, int xRight1, int yBottom1,
 		int xLeft2, int yUp2, int xRight2, int yBottom2) {
 	return xLeft1 < xRight2 && xRight1 > xLeft2 && yBottom1 > yUp2 && yUp1 < yBottom2;
 }
+
 
 gUtils::gUtils() {
 
