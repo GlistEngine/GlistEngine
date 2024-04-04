@@ -1,5 +1,6 @@
 var NAVTREEINDEX2 =
 {
+"classgColorAdjustments.html#aabadf702eadf8c095fedb1bff2eff303":[0,0,25,0],
 "classgColorChannelMixer.html":[0,0,26],
 "classgColorChannelMixer.html#a322e32918b5aaaf1db61d75c67dd6077":[0,0,26,0],
 "classgColorChannelMixer.html#a35c5b7b5260b917bdeb55003df3cf72f":[0,0,26,1],
@@ -176,14 +177,15 @@ var NAVTREEINDEX2 =
 "classgGLFWWindow.html#a15dc67d582f90b88049e03f21a3e657a":[0,0,43,7],
 "classgGLFWWindow.html#a1dd02adc9e910380e1a0cac1b400b0e5":[0,0,43,0],
 "classgGLFWWindow.html#a217f7bd65526fd0243e848cb8604e82f":[0,0,43,13],
-"classgGLFWWindow.html#a2480f711c72c0e4f963e70a704bc971f":[0,0,43,19],
+"classgGLFWWindow.html#a2480f711c72c0e4f963e70a704bc971f":[0,0,43,20],
 "classgGLFWWindow.html#a379c147808dfeeefa7a4f4862803b819":[0,0,43,6],
-"classgGLFWWindow.html#a3d44cb80525f64095977fcd9194fb021":[0,0,43,18],
+"classgGLFWWindow.html#a3d44cb80525f64095977fcd9194fb021":[0,0,43,19],
 "classgGLFWWindow.html#a45a407047573e2385e5b2f9b89c1c9b6":[0,0,43,12],
-"classgGLFWWindow.html#a7a5ad603510df5bea81eb9098ef11718":[0,0,43,17],
-"classgGLFWWindow.html#a88b0793816aa79f3667ac13d6432800e":[0,0,43,16],
+"classgGLFWWindow.html#a5796a0f73e65428f97cfeff5ca737d52":[0,0,43,15],
+"classgGLFWWindow.html#a7a5ad603510df5bea81eb9098ef11718":[0,0,43,18],
+"classgGLFWWindow.html#a88b0793816aa79f3667ac13d6432800e":[0,0,43,17],
 "classgGLFWWindow.html#aad0f9c5efce47b2588c9ea96a4c3c099":[0,0,43,10],
-"classgGLFWWindow.html#ac77ae081eb18e471d7a5533443253fcf":[0,0,43,15],
+"classgGLFWWindow.html#ac77ae081eb18e471d7a5533443253fcf":[0,0,43,16],
 "classgGLFWWindow.html#acd4fb915673ad68f52190337c25967d8":[0,0,43,2],
 "classgGLFWWindow.html#ad61bc4c718fc6a0cb7e88e1470b15122":[0,0,43,8],
 "classgGLFWWindow.html#adad54bb27d902185a85c02b8ae77079d":[0,0,43,9],
@@ -247,7 +249,5 @@ var NAVTREEINDEX2 =
 "classgGUIButton.html#aab839072fa7acc69477a03de19879900":[0,0,48,8],
 "classgGUIButton.html#ab208930c3dc5e4c94eb1bde5f7e69e6e":[0,0,48,48],
 "classgGUIButton.html#ab4f461618f04ed0381235841daf8f1be":[0,0,48,47],
-"classgGUIButton.html#abdd7d6ed40d29fb8ccb949409d877784":[0,0,48,29],
-"classgGUIButton.html#abec0f91b86b793b6b899c1c03fde8c5a":[0,0,48,24],
-"classgGUIButton.html#ac56d78d8ec99d201e4674e2608006c2d":[0,0,48,1]
+"classgGUIButton.html#abdd7d6ed40d29fb8ccb949409d877784":[0,0,48,29]
 };

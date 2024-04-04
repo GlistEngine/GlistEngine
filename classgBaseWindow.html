@@ -171,8 +171,8 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>setWindowSize
 <tr class="separator:a1a18778e3537b13d1962bb9f39cd8340"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9d71d3bba9233a0aef11cb7f322bf175"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBaseWindow.html#a9d71d3bba9233a0aef11cb7f322bf175">getHeight</a> ()</td></tr>
 <tr class="separator:a9d71d3bba9233a0aef11cb7f322bf175"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab14f157111f387dba0825531cead92ca"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBaseWindow.html#ab14f157111f387dba0825531cead92ca">setTitle</a> (const std::string &amp;windowTitle)</td></tr>
-<tr class="separator:ab14f157111f387dba0825531cead92ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aafb72859d280c3f6e0617f5c44119a2c"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBaseWindow.html#aafb72859d280c3f6e0617f5c44119a2c">setTitle</a> (const std::string &amp;windowTitle)</td></tr>
+<tr class="separator:aafb72859d280c3f6e0617f5c44119a2c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a31fa7835854c7b0cdbbf265811569810"><td class="memItemLeft" align="right" valign="top"><a id="a31fa7835854c7b0cdbbf265811569810"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>setTitle</b> (std::string &amp;&amp;windowTitle)</td></tr>
 <tr class="separator:a31fa7835854c7b0cdbbf265811569810"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -486,20 +486,28 @@ static int&#160;</td><td class="memItemRight" valign="bottom"><b>releaseresoluti
 
 </div>
 </div>
-<a id="ab14f157111f387dba0825531cead92ca"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab14f157111f387dba0825531cead92ca">&#9670;&nbsp;</a></span>setTitle()</h2>
+<a id="aafb72859d280c3f6e0617f5c44119a2c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aafb72859d280c3f6e0617f5c44119a2c">&#9670;&nbsp;</a></span>setTitle()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void gBaseWindow::setTitle </td>
+          <td class="memname">virtual void gBaseWindow::setTitle </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;&#160;</td>
           <td class="paramname"><em>windowTitle</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 <p>The title at the top of the window is changed with the entered value.</p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -508,6 +516,8 @@ static int&#160;</td><td class="memItemRight" valign="bottom"><b>releaseresoluti
   </table>
   </dd>
 </dl>
+
+<p>Reimplemented in <a class="el" href="classgGLFWWindow.html#a5796a0f73e65428f97cfeff5ca737d52">gGLFWWindow</a>.</p>
 
 </div>
 </div>

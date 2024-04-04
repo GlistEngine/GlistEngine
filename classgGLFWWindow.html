@@ -156,6 +156,8 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>setIcon</b> (std::str
 <tr class="memitem:a13696596213ac7c22ff5d0a6e7b3b62b"><td class="memItemLeft" align="right" valign="top"><a id="a13696596213ac7c22ff5d0a6e7b3b62b"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>setIcon</b> (unsigned char *imageData, int w, int h) override</td></tr>
 <tr class="separator:a13696596213ac7c22ff5d0a6e7b3b62b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5796a0f73e65428f97cfeff5ca737d52"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgGLFWWindow.html#a5796a0f73e65428f97cfeff5ca737d52">setTitle</a> (const std::string &amp;windowTitle) override</td></tr>
+<tr class="separator:a5796a0f73e65428f97cfeff5ca737d52"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad61bc4c718fc6a0cb7e88e1470b15122"><td class="memItemLeft" align="right" valign="top"><a id="ad61bc4c718fc6a0cb7e88e1470b15122"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>isJoystickPresent</b> (int joystickId) override</td></tr>
 <tr class="separator:ad61bc4c718fc6a0cb7e88e1470b15122"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -187,8 +189,6 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>disableVsync</b> ()</
 <tr class="separator:a1a18778e3537b13d1962bb9f39cd8340 inherit pub_methods_classgBaseWindow"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9d71d3bba9233a0aef11cb7f322bf175 inherit pub_methods_classgBaseWindow"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBaseWindow.html#a9d71d3bba9233a0aef11cb7f322bf175">getHeight</a> ()</td></tr>
 <tr class="separator:a9d71d3bba9233a0aef11cb7f322bf175 inherit pub_methods_classgBaseWindow"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab14f157111f387dba0825531cead92ca inherit pub_methods_classgBaseWindow"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBaseWindow.html#ab14f157111f387dba0825531cead92ca">setTitle</a> (const std::string &amp;windowTitle)</td></tr>
-<tr class="separator:ab14f157111f387dba0825531cead92ca inherit pub_methods_classgBaseWindow"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a31fa7835854c7b0cdbbf265811569810 inherit pub_methods_classgBaseWindow"><td class="memItemLeft" align="right" valign="top"><a id="a31fa7835854c7b0cdbbf265811569810"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>setTitle</b> (std::string &amp;&amp;windowTitle)</td></tr>
 <tr class="separator:a31fa7835854c7b0cdbbf265811569810 inherit pub_methods_classgBaseWindow"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -439,6 +439,41 @@ static int&#160;</td><td class="memItemRight" valign="bottom"><b>releaseresoluti
 </dl>
 
 <p>Reimplemented from <a class="el" href="classgBaseWindow.html#ad9b39abff15d1ceb60428971f8c78748">gBaseWindow</a>.</p>
+
+</div>
+</div>
+<a id="a5796a0f73e65428f97cfeff5ca737d52"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5796a0f73e65428f97cfeff5ca737d52">&#9670;&nbsp;</a></span>setTitle()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gGLFWWindow::setTitle </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>windowTitle</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>The title at the top of the window is changed with the entered value.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">windowTitle</td><td>The text to be written in the title of the window. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Reimplemented from <a class="el" href="classgBaseWindow.html#aafb72859d280c3f6e0617f5c44119a2c">gBaseWindow</a>.</p>
 
 </div>
 </div>

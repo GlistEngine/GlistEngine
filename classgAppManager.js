@@ -44,6 +44,7 @@ var classgAppManager =
     [ "setWindowResizable", "classgAppManager.html#a6c342aa5fe7502faeecb59fdccdd8e27", null ],
     [ "setWindowSize", "classgAppManager.html#a3b8934e9e1d0bc2e6ad9ab3ef7f708ad", null ],
     [ "setWindowSizeLimits", "classgAppManager.html#a39e24499be52efca66b2afc9a650b0e1", null ],
+    [ "setWindowTitle", "classgAppManager.html#ae702a908d8c220a52a2fae601baebf79", null ],
     [ "stop", "classgAppManager.html#a1b0aa3043c4b905a2735e811e36a71f3", null ],
     [ "submitToMainThread", "classgAppManager.html#a7ec1b448edd49af1edf578955bf11d26", null ]
 ];

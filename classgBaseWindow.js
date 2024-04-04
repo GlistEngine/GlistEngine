@@ -21,7 +21,7 @@ var classgBaseWindow =
     [ "setIcon", "classgBaseWindow.html#a40fa3c00c45942ae7d1ab735f1cd8f52", null ],
     [ "setIcon", "classgBaseWindow.html#abd56ee8ce4586868ed9716c2dd68d74f", null ],
     [ "setSize", "classgBaseWindow.html#a4cf9a0bce0544fac4c51c6aedcc05d4b", null ],
-    [ "setTitle", "classgBaseWindow.html#ab14f157111f387dba0825531cead92ca", null ],
+    [ "setTitle", "classgBaseWindow.html#aafb72859d280c3f6e0617f5c44119a2c", null ],
     [ "setTitle", "classgBaseWindow.html#a31fa7835854c7b0cdbbf265811569810", null ],
     [ "setVsync", "classgBaseWindow.html#af4c9f98c827b64968159c2335231c7c2", null ],
     [ "setWindowResizable", "classgBaseWindow.html#a7a630098e306f9e43593694eb28d3a9e", null ],

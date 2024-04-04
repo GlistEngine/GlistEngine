@@ -1,5 +1,7 @@
 var NAVTREEINDEX10 =
 {
+"classgShadowMap.html#ae8af34c4cec04816fbad8aa3299504b3":[0,0,138,13],
+"classgShadowMap.html#af5a94cc07ece8e6ca39fb65a2e2ad6a7":[0,0,138,14],
 "classgShadowsMidtonesHighlights.html":[0,0,139],
 "classgShadowsMidtonesHighlights.html#a03604b498c897792ca945f6e08e36227":[0,0,139,0],
 "classgShadowsMidtonesHighlights.html#a1a707ac67a34bd1d2d551e59ad1b369b":[0,0,139,2],
@@ -247,7 +249,5 @@ var NAVTREEINDEX10 =
 "classgWindowFocusEvent.html#add3846b785969c0cf7bd49a61e057fa7":[0,0,158,0],
 "classgWindowLoseFocusEvent.html":[0,0,159],
 "classgWindowLoseFocusEvent.html#a7f702e57d8bf70f89350b1c0ccc7977f":[0,0,159,0],
-"classgWindowMouseEnterEvent.html":[0,0,160],
-"classgWindowMouseEnterEvent.html#ad100f2352f44ee63642ba2d5e3c0dba4":[0,0,160,0],
-"classgWindowMouseExitEvent.html":[0,0,161]
+"classgWindowMouseEnterEvent.html":[0,0,160]
 };
