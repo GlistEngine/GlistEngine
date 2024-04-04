@@ -351,6 +351,10 @@ void gAppManager::setWindowIcon(unsigned char* imageData, int w, int h) {
 	window->setIcon(imageData, w, h);
 }
 
+void gAppManager::setWindowTitle(const std::string& windowTitle) {
+	window->setTitle(windowTitle);
+}
+
 bool gAppManager::isJoystickConnected(int joystickId) {
     if(joystickId >= maxjoysticknum) return false;
     return joystickconnected[joystickId];

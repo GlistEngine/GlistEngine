@@ -170,11 +170,25 @@ public:
      */
 	void submitToMainThread(std::function<void()> fn);
 
-
+	/**
+	 * Returns app's name
+	 *
+	 * @return App name
+	 */
 	std::string getAppName();
 
+	/**
+	 * Getter for the Canvas Manager
+	 *
+	 * @return Pointer of the Canvas Manager
+	 */
 	gCanvasManager* getCanvasManager();
 
+	/**
+	 * Getter for the GUI Manager
+	 *
+	 * @return Pointer of the GUI Manager
+	 */
 	gGUIManager* getGUIManager();
 
 	/**
@@ -185,11 +199,18 @@ public:
 	 */
 	int getLoopMode();
 
+	/**
+	 * Returns if the current window is focused by operating system
+	 *
+	 * @return Is current window focused
+	 */
 	bool isWindowFocused();
 
 	EventHandlerFn getEventHandler() { return eventhandler; }
 
 	/**
+	 * Returns a pointer of the current canvas
+	 *
 	 * @return Current canvas.
 	 */
 	gBaseCanvas* getCurrentCanvas();
@@ -219,7 +240,17 @@ public:
 	 */
 	gGUIFrame* getCurrentGUIFrame();
 
+	/**
+	 * Function to save a string into the system clipboard. Clipboard string
+	 * should be arranged by the app developer.
+	 *
+	 * @param String to save
+	 */
 	void setClipboardString(const std::string& clipboard);
+
+	/**
+	 * Reads and returns the string saved to clipboard.
+	 */
     std::string getClipboardString();
 
 	/**
@@ -271,6 +302,8 @@ public:
 
     void setWindowIcon(std::string pngFullpath);
     void setWindowIcon(unsigned char* imageData, int w, int h);
+
+    void setWindowTitle(const std::string& windowTitle);
 
     bool isJoystickConnected(int joystickId);
     int getJoystickAxesCount(int joystickId);
