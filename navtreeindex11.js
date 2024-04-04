@@ -1,5 +1,8 @@
 var NAVTREEINDEX11 =
 {
+"classgWindowFocusEvent.html#add3846b785969c0cf7bd49a61e057fa7":[0,0,158,0],
+"classgWindowLoseFocusEvent.html":[0,0,159],
+"classgWindowLoseFocusEvent.html#a7f702e57d8bf70f89350b1c0ccc7977f":[0,0,159,0],
 "classgWindowMouseEnterEvent.html":[0,0,160],
 "classgWindowMouseEnterEvent.html#ad100f2352f44ee63642ba2d5e3c0dba4":[0,0,160,0],
 "classgWindowMouseExitEvent.html":[0,0,161],
@@ -18,8 +21,8 @@ var NAVTREEINDEX11 =
 "functions_c.html":[0,3,0,2],
 "functions_d.html":[0,3,0,3],
 "functions_e.html":[0,3,0,4],
-"functions_func.html":[0,3,1,0],
 "functions_func.html":[0,3,1],
+"functions_func.html":[0,3,1,0],
 "functions_func_b.html":[0,3,1,1],
 "functions_func_c.html":[0,3,1,2],
 "functions_func_d.html":[0,3,1,3],
@@ -246,6 +249,5 @@ var NAVTREEINDEX11 =
 "structgVertex.html#a40ef96826fed631764f3e57455aaea06":[0,0,155,0],
 "structgVertex.html#a8cdcce468b4c82eba1a8e4f82eb4e4a2":[0,0,155,3],
 "structgVertex.html#a9ab67e1c2077cb5921f8df6772ddffd4":[0,0,155,1],
-"structgVertex.html#af029e1e0ad82c2057ae426a2af114ced":[0,0,155,4],
-"tinyfiledialogs_8h_source.html":[1,0,139]
+"structgVertex.html#af029e1e0ad82c2057ae426a2af114ced":[0,0,155,4]
 };
