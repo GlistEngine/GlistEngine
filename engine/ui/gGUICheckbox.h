@@ -34,6 +34,8 @@ public:
 	void mousePressed(int x, int y, int button);
 	void mouseReleased(int x, int y, int button);
 
+	void setDisabled(bool isDisabled);
+
 	friend class gGUIToolbar;
 
 protected:
@@ -43,6 +45,7 @@ protected:
 	int titlew, titleh;
 
 	gColor tickcolor, titlecolor;
+	bool isdisabled;
 };
 
 #endif /* UI_GGUICHECKBOX_H_ */

@@ -20,6 +20,7 @@ gGUICheckbox::gGUICheckbox() {
 	title = "Checkbox";
 	titlew = font->getStringWidth(title);
 	titleh = font->getStringHeight(title);
+	isdisabled = false;
 }
 
 gGUICheckbox::~gGUICheckbox() {
@@ -79,22 +80,26 @@ void gGUICheckbox::draw() {
 		renderer->setColor(&bcolor);
 		gDrawRectangle(left, top, buttonw, buttonh, true);
 	}
-	renderer->setColor(middlegroundcolor);
+	if(isdisabled) renderer->setColor(disabledbcolor);
+	else renderer->setColor(middlegroundcolor);
 	gDrawRectangle(left, top, buttonw, buttonh, false);
 	renderer->setColor(255, 255, 255);
 
 	if (ischecked) {
-		renderer->setColor(26, 115, 222);
+		if(isdisabled) renderer->setColor(disabledbcolor);
+		else renderer->setColor(26, 115, 222);
 		gDrawRectangle(left, top, buttonw, buttonh, true);
 //		renderer->setColor(fontcolor);
-		renderer->setColor(255, 255, 255);
+		if(isdisabled) renderer->setColor(foregroundcolor);
+		else renderer->setColor(255, 255, 255);
 		gDrawLine(left + 2, top + buttonh / 2, left + buttonw / 2, top + buttonh - 2);
 		gDrawLine(left + buttonw / 2, top + buttonh - 2, left + buttonw - 2, top + 2);
 		renderer->setColor(255, 255, 255);
 	}
 
 	if (istextvisible) {
-		renderer->setColor(fontcolor);
+		if(isdisabled) renderer->setColor(disabledbcolor);
+		else renderer->setColor(fontcolor);
 		font->drawText(title, left + buttonw, top - 2 + (buttonh + titleh) / 2);
 		renderer->setColor(255, 255, 255);
 	}
@@ -102,6 +107,7 @@ void gGUICheckbox::draw() {
 
 void gGUICheckbox::mousePressed(int x, int y, int button) {
 //	gLogi("gGUICheckbox") << "pressed, id:" << id;
+	if(isdisabled) return;
 	if(x >= left && x < left + buttonw + titlew && y >= top && y < top + buttonh) {
 
 	}
@@ -109,10 +115,15 @@ void gGUICheckbox::mousePressed(int x, int y, int button) {
 
 void gGUICheckbox::mouseReleased(int x, int y, int button) {
 //	gLogi("gGUICheckbox") << "released, id:" << id;
+	if(isdisabled) return;
 	if(x >= left && x < left + buttonw + titlew && y >= top && y < top + buttonh) {
 		ischecked = !ischecked;
 		if(ischecked) root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_CHECKBOXTICKED);
 		else root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_CHECKBOXUNTICKED);
 	}
+}
+
+void gGUICheckbox::setDisabled(bool isDisabled) {
+	isdisabled = isDisabled;
 }
 
