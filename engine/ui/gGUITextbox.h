@@ -215,6 +215,8 @@ public:
 	int getCursorPosX();
 	void setCursorPosX(int cursorPosX, int length);
 
+	void setDisabled(bool isDisabled);
+
 private:
 	static const int KEY_NONE = 0, KEY_BACKSPACE = 1, KEY_LEFT = 2, KEY_RIGHT = 4, KEY_DELETE = 8, KEY_ENTER = 16, KEY_UP = 32, KEY_DOWN = 64;
 
@@ -288,6 +290,7 @@ private:
 	int textalignmentamount;
 	gColor* textcolor;
 	bool colorset;
+	bool isdisabled;
 
 	bool widthexceeded;
 	int widthAdjusmentDelay;
