@@ -2,7 +2,7 @@
 
 Glist Engine is a cross platform OpenGL game engine written in C++.
 
-The engine supports OpenGL 3.3 and OpenGL ES 3.0. It can be used to develop Windows, macOS, Linux and Android games. iOS platform coming soon.
+The engine supports OpenGL 3.3 and OpenGL ES 3.0. It can be used to develop Windows, macOS, Linux, Android and iOS games and applications. WebGL platform coming soon.
 
 Glist Engine consists of 3 repositories:
 - Glist App
@@ -22,7 +22,7 @@ Glist Engine has one-click installers for Windows, Linux and Mac. You can downlo
 
 - Windows Installer - [https://www.glistengine.com/download](https://www.glistengine.com/download)
 - Linux installer (coming soon)
-- Mac installer (coming soon)
+- Mac installer [https://github.com/GlistEngine/InstallScripts/blob/main/scripts/macos/install-glist.sh](https://github.com/GlistEngine/InstallScripts/blob/main/scripts/macos/install-glist.sh)
 
 
 ### II. Installation For Developers
