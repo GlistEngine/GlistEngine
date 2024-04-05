@@ -22,7 +22,7 @@ Glist Engine has one-click installers for Windows, Linux and Mac. You can downlo
 
 - Windows Installer - [https://www.glistengine.com/download](https://www.glistengine.com/download)
 - Linux installer (coming soon)
-- Mac installer [https://github.com/GlistEngine/InstallScripts/blob/main/scripts/macos/install-glist.sh](https://github.com/GlistEngine/InstallScripts/blob/main/scripts/macos/install-glist.sh)
+- Mac installer [https://github.com/GlistEngine/InstallScripts/raw/main/scripts/macos/install-glist.sh](https://github.com/GlistEngine/InstallScripts/raw/main/scripts/macos/install-glist.sh)
 
 
 ### II. Installation For Developers
