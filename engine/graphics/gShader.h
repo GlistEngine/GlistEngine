@@ -9,29 +9,12 @@
 #define ENGINE_GRAPHICS_GSHADER_H_
 
 #include "gObject.h"
+#include "gRenderer.h"
 #include <string>
-#if defined(WIN32) || defined(LINUX)
-#include <GL/glew.h>
-#include <GL/gl.h>
-#include <GL/glu.h>
-#endif
-#if TARGET_OS_OSX
-#include <GL/glew.h>
-#include <OpenGL/gl.h>
-#include <OpenGL/glu.h>
-#endif
-#define GLM_ENABLE_EXPERIMENTAL
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtx/quaternion.hpp>
-#ifdef ANDROID
-#include <GLES3/gl3.h>
-#endif
-#if TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
-#   include <OpenGLES/ES3/gl.h>
-#   include <OpenGLES/ES3/glext.h>
-#   include <OpenGLES/gltypes.h>
-#endif
+#include <unordered_map>
+
+template<typename T>
+class gUbo;
 
 class gShader : public gObject {
 public:
@@ -43,6 +26,32 @@ public:
 	void loadShader(const std::string& vertexFileName, const std::string& fragmentFileName, const std::string& geometryFileName = "");
 
 	void loadProgram(const std::string& vertexShaderStr, const std::string& fragmentShaderStr, const std::string& geometryShaderStr = "");
+
+	template<typename T>
+	void attachUbo(const std::string& uboName, const gUbo<T>* ubo) {
+		ubos[uboName] = ubo->getBindingPoint();
+		use();
+		unsigned int blockIndex;
+		G_CHECK_GL2(blockIndex, glGetUniformBlockIndex(id, uboName.c_str()));
+		G_CHECK_GL(glUniformBlockBinding(id, blockIndex, ubo->getBindingPoint()));
+		/*if (blockIndex != GL_INVALID_INDEX) {
+			GLint blockSize;
+			G_CHECK_GL(glGetActiveUniformBlockiv(id, blockIndex, GL_UNIFORM_BLOCK_DATA_SIZE, &blockSize));
+
+			GLint blockAlignment;
+			G_CHECK_GL(glGetIntegerv(GL_UNIFORM_BUFFER_OFFSET_ALIGNMENT, &blockAlignment));
+
+			std::cout << "Uniform block alignment: " << blockAlignment << " bytes" << std::endl;
+
+			// Now 'blockSize' contains the size of the uniform block in bytes
+			std::cout << "Uniform block size: " << blockSize << " bytes" << std::endl;
+			if (ubo->getSize() != blockSize) {
+				std::cout << "Error: Uniform block size mismatch. actual size: " << ubo->getSize() << ", block size: " << blockSize << std::endl;
+			}
+		} else {
+			std::cerr << "Error: Unable to find uniform block index." << std::endl;
+		}*/
+	}
 
 	bool loaded;
 	GLuint id;
@@ -64,6 +73,8 @@ public:
 
 private:
 	void checkCompileErrors(GLuint shader, const std::string& type);
+
+	std::unordered_map<std::string, GLuint> ubos;
 };
 
 #endif /* ENGINE_GRAPHICS_GSHADER_H_ */

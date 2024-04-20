@@ -6,6 +6,7 @@
  */
 
 #include "gSkybox.h"
+#include "gShader.h"
 #include "gTexture.h"
 #include "gFbo.h"
 

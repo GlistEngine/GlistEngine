@@ -8,8 +8,9 @@
 #ifndef BASE_GBASEPOSTPROCESS_H_
 #define BASE_GBASEPOSTPROCESS_H_
 
-#include "gObject.h"
+#include "gRenderObject.h"
 #include "gFbo.h"
+#include "gShader.h"
 
 class gBasePostProcess : public gRenderObject {
 public:

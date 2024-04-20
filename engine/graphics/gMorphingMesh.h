@@ -8,6 +8,7 @@
 #ifndef GRAPHICS_GMORPHINGMESH_H_
 #define GRAPHICS_GMORPHINGMESH_H_
 
+#define GLM_FORCE_DEFAULT_ALIGNED_GENTYPES
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <assimp/Importer.hpp>

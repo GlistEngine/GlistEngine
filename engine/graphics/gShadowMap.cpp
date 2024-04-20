@@ -5,7 +5,8 @@
  *      Author: noyan
  */
 
-#include <gShadowMap.h>
+#include "gShadowMap.h"
+#include "gShader.h"
 
 gShadowMap::gShadowMap() {
 	isallocated = false;

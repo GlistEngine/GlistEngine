@@ -5,15 +5,16 @@
  *      Author: noyan
  */
 
+#include "gMesh.h"
 #include <iosfwd>
 #include <sstream>
 #include <iostream>
 #include <fstream>
 #include <vector>
-#include "gMesh.h"
-#include "gLight.h"
 #include <glm/gtx/intersect.hpp>
 
+#include "gLight.h"
+#include "gShader.h"
 
 gMesh::gMesh() {
 	name = "";
@@ -177,7 +178,7 @@ void gMesh::drawStart() {
 		colorshader->use();
 
 	    // Set scene properties
-//	    colorshader->setVec3("viewPos", 0.0f, 0.0f, 0.0f); //bunu shadowmap testi için kapattim
+	    colorshader->setVec3("viewPos", renderer->getCameraPosition());
 	    colorshader->setVec4("renderColor", renderer->getColor()->r, renderer->getColor()->g, renderer->getColor()->b, renderer->getColor()->a);
 
 	    // Set material colors
@@ -212,27 +213,7 @@ void gMesh::drawStart() {
 		    material.bindNormalMap();
 	    }
 
-	    // Set lights
-		if (renderer->isLightingEnabled()) {
-			for (sli = 0; sli < renderer->getSceneLightNum(); sli++) {
-				scenelight = renderer->getSceneLight(sli);
-				colorshader->setInt("lights[" + gToStr(sli) + "].type", scenelight->getType());
-				colorshader->setVec3("lights[" + gToStr(sli) + "].position", scenelight->getPosition());
-				colorshader->setVec3("lights[" + gToStr(sli) + "].direction", scenelight->getDirection());
-				colorshader->setFloat("lights[" + gToStr(sli) + "].cutOff", scenelight->getSpotCutOffAngle());
-				colorshader->setFloat("lights[" + gToStr(sli) + "].outerCutOff", scenelight->getSpotOuterCutOffAngle());
-				colorshader->setVec4("lights[" + gToStr(sli) + "].ambient", scenelight->getAmbientColorRed(), scenelight->getAmbientColorGreen(), scenelight->getAmbientColorBlue(), scenelight->getAmbientColorAlpha());
-				colorshader->setVec4("lights[" + gToStr(sli) + "].diffuse", scenelight->getDiffuseColorRed(), scenelight->getDiffuseColorGreen(), scenelight->getDiffuseColorBlue(), scenelight->getDiffuseColorAlpha());
-				colorshader->setVec4("lights[" + gToStr(sli) + "].specular", scenelight->getSpecularColorRed(), scenelight->getSpecularColorGreen(), scenelight->getSpecularColorBlue(), scenelight->getSpecularColorAlpha());
-				colorshader->setFloat("lights[" + gToStr(sli) + "].constant", scenelight->getAttenuationConstant());
-				colorshader->setFloat("lights[" + gToStr(sli) + "].linear", scenelight->getAttenuationLinear());
-				colorshader->setFloat("lights[" + gToStr(sli) + "].quadratic", scenelight->getAttenuationQuadratic());
-			}
-		} else {
-			colorshader->setInt("lights[0].type", gLight::LIGHTTYPE_AMBIENT);
-			colorshader->setVec4("lights[0].ambient", renderer->getLightingColor()->r, renderer->getLightingColor()->g, renderer->getLightingColor()->b, renderer->getLightingColor()->a);
-		}
-
+		// todo use uniform buffer objects for fog too
 		if(renderer->isFogEnabled()) {
 			colorshader->setBool("fog.enabled", true);
 			colorshader->setVec3("fog.color", renderer->getFogColor().r, renderer->getFogColor().g, renderer->getFogColor().b);
@@ -273,15 +254,6 @@ void gMesh::drawStart() {
     	material.bindMetalnessMap();
     	material.bindRoughnessMap();
     	material.bindAOMap();
-	    if (renderer->isLightingEnabled()) {
-    		pbrshader->setInt("lightNum", renderer->getSceneLightNum());
-	    	for (sli = 0; sli < renderer->getSceneLightNum(); sli++) {
-	    		pbrshader->setVec3("lightPositions[" + gToStr(sli) + "]", renderer->getSceneLight(sli)->getPosition());
-	    		pbrshader->setVec3("lightColors[" + gToStr(sli) + "]", glm::vec3(renderer->getSceneLight(sli)->getDiffuseColor()->r, renderer->getSceneLight(sli)->getDiffuseColor()->g, renderer->getSceneLight(sli)->getDiffuseColor()->b));
-	    	}
-	    }
-
-
 	} else {
 		textureshader = renderer->getTextureShader();
         textureshader->use();

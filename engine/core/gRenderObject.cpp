@@ -87,6 +87,7 @@ gRenderer* gRenderObject::getRenderer() {
 void gRenderObject::createRenderer() {
 	destroyRenderer(); // Delete the previous renderer if exists. If renderer is null, this will have no effect.
 	renderer = new gRenderer();
+	renderer->init();
 }
 
 void gRenderObject::destroyRenderer() {

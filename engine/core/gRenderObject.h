@@ -11,7 +11,6 @@
 #define ENGINE_BASE_GRENDEROBJECT_H_
 
 #include "gRenderer.h"
-//#include "gColor.h"
 
 #ifdef ANDROID
 using gIndex = unsigned short;
@@ -43,6 +42,7 @@ public:
 	static void destroyRenderer();
 	static void createRenderer();
 protected:
+	friend class gRenderer;
 	static gRenderer* renderer;
 	static bool isshadowmappingenabled;
 };
