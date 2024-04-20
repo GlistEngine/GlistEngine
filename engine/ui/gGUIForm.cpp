@@ -11,8 +11,8 @@
 #include "gGUIToolbar.h"
 #include "gGUIContextMenu.h"
 #include "gGUIStatusBar.h"
+#include "gGUITooltipText.h"
 #include "gGUITreelist.h"
-#include "gTooltipText.h"
 
 
 gGUIForm::gGUIForm() {
@@ -266,6 +266,7 @@ void gGUIForm::mouseMoved(int x, int y) {
 		}
 	}
 	if(contextmenu) contextmenu->mouseMoved(x, y);
+	if(treelist) treelist->mouseMoved(x, y);
 	for(int i = 0; i < vectooltiptext.size(); i++) { vectooltiptext[i]->mouseMoved(x, y);}
 }
 
@@ -276,6 +277,7 @@ void gGUIForm::mousePressed(int x, int y, int button) {
 	for(int i = 0; i < verticaltoolbarnum; i++) verticaltoolbars[i]->mousePressed(x, y, button);
 	if(guisizer) guisizer->mousePressed(x, y, button);
 	if(contextmenu) contextmenu->mousePressed(x, y, button);
+	if(treelist) treelist->mousePressed(x, y, button);
 }
 
 void gGUIForm::mouseDragged(int x, int y, int button) {
@@ -285,6 +287,7 @@ void gGUIForm::mouseDragged(int x, int y, int button) {
 	for(int i = 0; i < verticaltoolbarnum; i++) verticaltoolbars[i]->mouseDragged(x, y, button);
 	if(guisizer) guisizer->mouseDragged(x, y, button);
 	if(contextmenu) contextmenu->mouseDragged(x, y, button);
+	if(treelist) treelist->mouseDragged(x, y, button);
 }
 
 void gGUIForm::mouseReleased(int x, int y, int button) {
@@ -294,10 +297,12 @@ void gGUIForm::mouseReleased(int x, int y, int button) {
 	for(int i = 0; i < verticaltoolbarnum; i++) verticaltoolbars[i]->mouseReleased(x, y, button);
 	if(guisizer) guisizer->mouseReleased(x, y, button);
 	if(contextmenu) contextmenu->mouseReleased(x, y, button);
+	if(treelist) treelist->mouseReleased(x, y, button);
 }
 
 void gGUIForm::mouseScrolled(int x, int y) {
 	if(guisizer) guisizer->mouseScrolled(x, y);
+	if(treelist) treelist->mouseScrolled(x, y);
 }
 
 void gGUIForm::mouseEntered() {
@@ -339,6 +344,6 @@ void gGUIForm::windowResized(int w, int h) {
 	}
 }
 
-void gGUIForm::setTooltipText(gTooltipText *tooltiptext) {
+void gGUIForm::setTooltipText(gGUITooltipText *tooltiptext) {
 	this->vectooltiptext.push_back(tooltiptext);
 }

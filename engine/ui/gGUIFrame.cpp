@@ -11,8 +11,8 @@
 #include "gGUIToolbar.h"
 #include "gGUIStatusBar.h"
 #include "gGUIContextMenu.h"
+#include "gGUITooltipText.h"
 #include "gGUITreelist.h"
-#include "gTooltipText.h"
 
 
 gGUIFrame::gGUIFrame() {
