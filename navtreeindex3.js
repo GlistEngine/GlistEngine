@@ -233,13 +233,11 @@ var NAVTREEINDEX3 =
 "classgGUIForm.html#a41df19d497cd0a4426e55b064af812f4":[0,0,62,58],
 "classgGUIForm.html#a4806bf34d145c7570206573227d8ceb5":[0,0,62,19],
 "classgGUIForm.html#a4831b59c132974d506354bf8b7d5b2ab":[0,0,62,7],
-"classgGUIForm.html#a4f591f86423b1cbb24c27058e018012e":[0,0,62,55],
 "classgGUIForm.html#a5207fc3a9149e9b5d3bd74201c33e3f8":[0,0,62,46],
 "classgGUIForm.html#a53ddf40c4429dad0ceecb37b3fc7e30c":[0,0,62,9],
 "classgGUIForm.html#a5d18e0def7f0600a1dd984a96b334f52":[0,0,62,15],
 "classgGUIForm.html#a61abab9738af7ee952883ec8b0cdade4":[0,0,62,52],
 "classgGUIForm.html#a64e3bb067463a024cb3aa50c7e029f84":[0,0,62,16],
-"classgGUIForm.html#a698d66209bef5f5488040da4e094c3d2":[0,0,62,31],
 "classgGUIForm.html#a6d8946a9dee952a79114fb70078deb67":[0,0,62,22],
 "classgGUIForm.html#a7766ed10d8e46e7a0543f60f7e23a8f6":[0,0,62,37],
 "classgGUIForm.html#a786fd6073e756866732f7b630946ab0e":[0,0,62,54],
@@ -249,5 +247,7 @@ var NAVTREEINDEX3 =
 "classgGUIForm.html#a8c1cedd62b1d87200530bc56044ddfdf":[0,0,62,12],
 "classgGUIForm.html#a8de2fca75252796be57e621dec2eafef":[0,0,62,11],
 "classgGUIForm.html#a8e25814749842b3377cf23248af47551":[0,0,62,4],
-"classgGUIForm.html#a90e0d297a902d77f04a2a897c7d0f1c6":[0,0,62,32]
+"classgGUIForm.html#a90e0d297a902d77f04a2a897c7d0f1c6":[0,0,62,32],
+"classgGUIForm.html#a96a231bef37fe2fdc5cd3c00900d4aa6":[0,0,62,42],
+"classgGUIForm.html#a96c5d971c8dc743a04cdedc198b6f33a":[0,0,62,18]
 };
