@@ -15,7 +15,7 @@ class gGUIToolbar;
 class gGUIContextMenu;
 class gGUIStatusBar;
 class gGUITreelist;
-class gTooltipText;
+class gGUITooltipText;
 
 class gGUIForm: public gBaseGUIObject {
 public:
@@ -68,7 +68,7 @@ public:
 	void mouseExited();
 	void windowResized(int w, int h);
 
-	void setTooltipText(gTooltipText* tooltiptext);
+	void setTooltipText(gGUITooltipText* tooltiptext);
 
 protected:
 	static const int maxtoolbarnum = 9;
@@ -88,7 +88,7 @@ protected:
 	int contextmenux, contextmenuy;
 	gGUITreelist* treelist;
 	int treelistw, treelisth;
-	std::vector<gTooltipText*> vectooltiptext;
+	std::vector<gGUITooltipText*> vectooltiptext;
 };
 
 #endif /* UI_GGUIFORM_H_ */

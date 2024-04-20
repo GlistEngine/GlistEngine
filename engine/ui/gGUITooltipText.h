@@ -1,12 +1,12 @@
 /*
- * gTooltipText.h
+ * gGUITooltipText.h
  *
  *  Created on: 03 Jan 2024
  *  Author    : Furkan
  */
 
-#ifndef SRC_GTOOLTIPTEXT_H_
-#define SRC_GTOOLTIPTEXT_H_
+#ifndef SRC_GGUITOOLTIPTEXT_H_
+#define SRC_GGUITOOLTIPTEXT_H_
 
 #include "gGUISizer.h"
 #include "gFont.h"
@@ -77,4 +77,4 @@ private:
 	float texth, textw, tx;
 };
 
-#endif /* SRC_GTOOLTIPTEXT_H_ */
+#endif /* SRC_GGUITOOLTIPTEXT_H_ */
