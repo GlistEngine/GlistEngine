@@ -38,6 +38,7 @@ public:
 	void addElement(gGUITreelist::Element* element, gGUITreelist::Element* parentelement);
 	void clearTitle();
 	void clear();
+	void setDisabled(bool isDisabled);
 
 	std::string& getSelectedTitle();
 
@@ -56,6 +57,7 @@ private:
 	bool lopened;
 	gGUIForm* frame;
 	std::string fTitle;
+	bool isdisabled;
 };
 
 #endif /* UI_GGUIDROPDOWNLIST_H_ */

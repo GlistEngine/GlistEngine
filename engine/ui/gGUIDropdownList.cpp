@@ -38,6 +38,7 @@ gGUIDropdownList::gGUIDropdownList() {
 	rootelement = nullptr;
 	list.setTitleOn(false);
 	ispressed = false;
+	isdisabled = false;
 
 
 	actionmanager.addAction(&button, G_GUIEVENT_BUTTONRELEASED, this, G_GUIEVENT_TREELISTOPENEDONDROPDOWNLIST);
@@ -101,7 +102,8 @@ void gGUIDropdownList::draw() {
 //	}
 
 	gColor* oldcolor = renderer->getColor();
-	renderer->setColor(buttonfontcolor);
+	if(isdisabled) renderer->setColor(disabledbuttonfontcolor);
+	else renderer->setColor(buttonfontcolor);
 	gDrawTriangle((button.left + (buttonw/2)) - 6.5,
 	                (top) + ((buttonw/2) - 3),
 	                (button.left + (buttonw/2)) + 6.5,
@@ -131,6 +133,7 @@ void gGUIDropdownList::addElement(gGUITreelist::Element* element, gGUITreelist::
 }
 
 void gGUIDropdownList::mousePressed(int x, int y, int button) {
+	if(isdisabled) return;
 	gGUIContainer::mousePressed(x, y, button);
 	if(listopened)
 		list.mousePressed(x, y, button);
@@ -138,6 +141,7 @@ void gGUIDropdownList::mousePressed(int x, int y, int button) {
 }
 
 void gGUIDropdownList::mouseReleased(int x, int y, int button) {
+	if(isdisabled) return;
     lopened = listopened;
     gGUIContainer::mouseReleased(x, y, button);
     if(listopened) {
@@ -162,6 +166,7 @@ void gGUIDropdownList::mouseReleased(int x, int y, int button) {
 }
 
 void gGUIDropdownList::mouseScrolled(int x, int y) {
+	if(isdisabled) return;
 	list.mouseScrolled(x, y);
 }
 
@@ -217,4 +222,9 @@ void gGUIDropdownList::clearTitle() {
 void gGUIDropdownList::clear() {
 	list.clear();
 	clearTitle();
+}
+
+void gGUIDropdownList::setDisabled(bool isDisabled) {
+	isdisabled = isDisabled;
+	textbox.setDisabled(isDisabled);
 }
