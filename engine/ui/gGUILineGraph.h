@@ -86,6 +86,8 @@ public:
 	float getPointXValue(int lineIndex, int pointIndex);
 	float getPointYValue(int lineIndex, int pointIndex);
 
+	void clear() override;
+
 private:
 	static const int linecolornum = 6;
 	void drawGraph();

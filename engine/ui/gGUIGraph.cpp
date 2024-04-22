@@ -290,3 +290,7 @@ void gGUIGraph::updateLabelsY() {
 int gGUIGraph::countDigits(int number) {
 	return std::to_string(number).size();
 }
+
+void gGUIGraph::clear() {
+
+}

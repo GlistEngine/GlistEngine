@@ -82,6 +82,8 @@ public:
 
 	void draw();
 
+	virtual void clear();
+
 protected:
 	float axisx1, axisy1, axisx2, axisy2, axisxstart, axisystart;
 	float axisxw, axisyh;
