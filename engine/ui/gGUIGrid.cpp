@@ -2435,7 +2435,6 @@ void gGUIGrid::drawCellContents() {
 		}
 		drawn++;
 	}
-	gLogi("Grid") << "drawn: " << drawn;
 }
 
 void gGUIGrid::clear() {
