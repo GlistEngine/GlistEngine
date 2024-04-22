@@ -1,7 +1,5 @@
 var NAVTREEINDEX10 =
 {
-"classgShadowMap.html#ac8c86daed14734b31cd2d65f871b0091":[0,0,138,17],
-"classgShadowMap.html#ad1b0eeb357ebd6d7dc27f91b91fc4a92":[0,0,138,18],
 "classgShadowMap.html#ada1b4cac29cbb41b495fc1b9e2e2c204":[0,0,138,23],
 "classgShadowMap.html#ae30080c15bc996c9fedf58990f69ff40":[0,0,138,1],
 "classgShadowMap.html#ae8af34c4cec04816fbad8aa3299504b3":[0,0,138,13],
@@ -249,5 +247,7 @@ var NAVTREEINDEX10 =
 "classgWhiteBalance.html#a8165820b0db38a930dcb26f3eac888d2":[0,0,157,0],
 "classgWhiteBalance.html#a8abf85738632cfc32f404ff394638430":[0,0,157,4],
 "classgWhiteBalance.html#ab6da8400abfcd54fab26288bf5a0113d":[0,0,157,1],
-"classgWindowFocusEvent.html":[0,0,158]
+"classgWindowFocusEvent.html":[0,0,158],
+"classgWindowFocusEvent.html#add3846b785969c0cf7bd49a61e057fa7":[0,0,158,0],
+"classgWindowLoseFocusEvent.html":[0,0,159]
 };
