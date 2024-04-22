@@ -207,3 +207,7 @@ float gGUILineGraph::getPointYValue(int lineIndex, int pointIndex) {
 	return graphlines[lineIndex][pointIndex][1];
 }
 
+void gGUILineGraph::clear() {
+	graphlines.clear();
+}
+
