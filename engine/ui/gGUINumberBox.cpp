@@ -48,12 +48,15 @@ gGUINumberBox::gGUINumberBox() {
 	istitleshown = false;
 	boxtoph = istitleshown * font->getSize();
 
-	boxsizer.setSize(lineno, columno);
-	float lineprops[] = {0.43f, 0.06f, 0.2f, 0.01f};
-	float columnprops[] = {0.50f, 0.50f};
-	boxsizer.enableBorders(false);
+	boxsizer.setSize(1, 2);
+	float columnprops[2] = {0.70f, 0.30f};
 	boxsizer.setColumnProportions(columnprops);
-	boxsizer.setLineProportions(lineprops);
+//	boxsizer.setSize(lineno, columno);
+//	float lineprops[] = {0.43f, 0.06f, 0.2f, 0.01f};
+//	float columnprops[] = {0.50f, 0.50f};
+	boxsizer.enableBorders(false);
+//	boxsizer.setColumnProportions(columnprops);
+//	boxsizer.setLineProportions(lineprops);
 	textbox.setEditable(true);
 	textbox.setNumeric(true);
 	boxsizer.setControl(0, 0, &textbox);
@@ -282,22 +285,16 @@ void gGUINumberBox::update() {
 }
 
 void gGUINumberBox::draw() {
-	gColor defColor = renderer->getColor();
-	gColor frameColor = gColor(0.9f, 0.9f, 0.9f, 1.0f);
-	gColor black = gColor(0.0f, 0.0f, 0.0f, 1.0f);
-	gColor white = gColor(1.0f, 1.0f, 1.0f, 1.0f);
+	gColor oldcolor = renderer->getColor();
 	gColor buttonColor = gColor(0.1f, 0.45f, 0.87f, 1.0f);
 	gColor pressedButtonColor = gColor(0.08f, 0.36f, 0.71f, 1.0f);
-
-//	renderer->setColor(frameColor);
-//	gDrawRectangle(left, top, boxwidth, boxheight, true);
 
 	if(b1ispressed) renderer->setColor(pressedButtonColor);
 	else renderer->setColor(buttonColor);
 	gDrawRectangle(incboxposx, incboxposy + b1ispressed, smalboxwidth, smalboxheight, true);
 
 	if(b1ispressed) renderer->setColor(middlegroundcolor);
-	else renderer->setColor(white);
+	else renderer->setColor(textbackgroundcolor);
 	gDrawTriangle(inctriucorpx, inctriucorpy, inctrilcorpx, inctrilcorpy, inctrircorpx, inctrircorpy, true);
 
 	if(b2ispressed) renderer->setColor(pressedButtonColor);
@@ -305,13 +302,13 @@ void gGUINumberBox::draw() {
 	gDrawRectangle(decboxposx, decboxposy + b2ispressed, smalboxwidth, smalboxheight, true);
 
 	if(b2ispressed) renderer->setColor(middlegroundcolor);
-	else renderer->setColor(white);
+	else renderer->setColor(textbackgroundcolor);
 	gDrawTriangle(dectriucorpx, dectriucorpy, dectrilcorpx, dectrilcorpy, dectrircorpx, dectrircorpy, true);
 
 	if(istitleshown) {
 		renderer->setColor(fontcolor);
 		font->drawText(title, left, top + font->getSize());
 	}
-	renderer->setColor(defColor);
+	renderer->setColor(oldcolor);
 	if(guisizer) guisizer->draw();
 }
