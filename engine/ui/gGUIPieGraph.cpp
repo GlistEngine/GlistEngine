@@ -10,7 +10,21 @@
 #include "gBaseCanvas.h"
 
 gGUIPieGraph::gGUIPieGraph() {
-	setRadius();
+	additionallabely = 0;
+	radius = 180.0f;
+	cursordegree = -1;
+	radiusreduction = 0.45f;
+	oncursorcolorreduction = - 0.1f;
+	rotationforothers = 0.0f;
+	isFilled = true;
+	isshown = true;
+	numberofsidesratio = 60;
+	sideofothers = 2;
+	infotextshift = 10;
+	fontsize = 9;
+	outlinecolor = color.WHITE;
+	otherscolor = color.GRAY;
+	infotextcolor = color.BLACK;
 	loadFont();
 }
 
@@ -18,50 +32,71 @@ gGUIPieGraph::~gGUIPieGraph() {
 
 }
 
+void gGUIPieGraph::set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIObject* parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h) {
+	gGUIControl::set(root, topParentGUIObject, parentGUIObject, parentSlotLineNo, parentSlotColumnNo, x, y, w, h);
+	int smaller = height;
+	if(width < height) smaller = width;
+	radius = smaller * 7 / 16;
+	widthhalf = width / 2;
+	heighthalf = height / 2;
+}
+
 void gGUIPieGraph::draw() {
+	gColor oldcolor = *renderer->getColor();
+	renderer->setColor(textbackgroundcolor);
+	gDrawRectangle(left, top, width, height, true);
+
 	float degree = 0.0f;
 	float rotationdegree = rotationforothers;
 	int i = 0;
-	for(; i < variablevalues.size() - othersindex.size() - othersindex.empty(); i++){
+	for(i = 0; i < variablevalues.size(); i++){
+//	for(; i < variablevalues.size() - othersindex.size() - othersindex.empty(); i++){
 		degree = degree + valuesdegree.at(i);
 		renderer->setColor(variablecolors.at(i));
-		if(cursordegree > rotationdegree && cursordegree < degree)
-			arrangeOnCursor(i);
-		gDrawArc((width/2) + left, (height/2) + top, radius - radiusreduction, isFilled, valuessides.at(i), valuesdegree.at(i), rotationdegree);
+		if(cursordegree > rotationdegree && cursordegree < degree) arrangeOnCursor(i);
+		gDrawArc(widthhalf + left, heighthalf + top, radius - radiusreduction, isFilled, valuessides[i], valuesdegree[i], rotationdegree);
 		renderer->setColor(outlinecolor);
-		gDrawArc((width/2) + left, (height/2) + top, radius, !isFilled, valuessides.at(i), valuesdegree.at(i), rotationdegree);
+		gDrawArc(widthhalf + left, heighthalf + top, radius, !isFilled, valuessides[i], valuesdegree[i], rotationdegree);
 		rotationdegree = rotationdegree + valuesdegree.at(i);
+
+		//Labels
+		renderer->setColor(255, 255, 255);
+		font->drawText(labelstr[i], labelx[i], labely[i]);
 	}
+/*
 	if(!othersindex.empty()) {
 		renderer->setColor(otherscolor);
 		if(cursordegree > rotationdegree && cursordegree < 360)
 			arrangeOnCursor(-1);
-		gDrawArc((width/2) + left, (height/2) + top, radius - radiusreduction, isFilled, sideofothers, 360.0f - degree, rotationdegree);
+		gDrawArc(widthhalf + left, heighthalf + top, radius - radiusreduction, isFilled, sideofothers, 360.0f - degree, rotationdegree);
 		renderer->setColor(outlinecolor);
-		gDrawArc((width/2) + left, (height/2) + top, radius, !isFilled, sideofothers, 360.0f - degree, rotationdegree);
+		gDrawArc(widthhalf + left, heighthalf + top, radius, !isFilled, sideofothers, 360.0f - degree, rotationdegree);
 	}
 	else {
 		renderer->setColor(variablecolors.at(i));
 		if(cursordegree > rotationdegree && cursordegree < 360)
 			arrangeOnCursor(i);
-		gDrawArc((width/2) + left, (height/2) + top, radius - radiusreduction, isFilled, valuessides.at(i), 360.0f - degree, rotationdegree);
+		gDrawArc(widthhalf + left, heighthalf + top, radius - radiusreduction, isFilled, valuessides.at(i), 360.0f - degree, rotationdegree);
 		renderer->setColor(outlinecolor);
-		gDrawArc((width/2) + left, (height/2) + top, radius, !isFilled, valuessides.at(i), 360.0f - degree, rotationdegree);
+		gDrawArc(widthhalf + left, heighthalf + top, radius, !isFilled, valuessides.at(i), 360.0f - degree, rotationdegree);
 	}
+*/
+
 	showInfoOnCursor();
+	renderer->setColor(oldcolor);
 }
 
 void gGUIPieGraph::mouseMoved(int x, int y) {
 	cursorx = x;
 	cursory = y;
-	if(pow((x - (width/2) - left), 2.0f) + pow((y - (height/2) - top), 2.0f) < pow(radius, 2.0f)) {
-		float cosedge = x - (width/2) - left;
-		float sinedge = y - (height/2) - top;
+	if(pow((x - widthhalf - left), 2.0f) + pow((y - heighthalf - top), 2.0f) < pow(radius, 2.0f)) {
+		float cosedge = x - widthhalf - left;
+		float sinedge = y - heighthalf - top;
 		float r = sqrt(pow(sinedge, 2.0) + pow(cosedge, 2.0));
-		if(x >= (width/2) + left && y >= (height/2) + top) cursordegree = std::asin(sinedge/r) * 180 / PI;
-		else if(x < (width/2) + left && y >= (height/2) + top) cursordegree = 180 - std::asin(sinedge/r) * 180 / PI;
-		else if(x < (width/2) + left && y < (height/2) + top) cursordegree = 180 - std::asin(sinedge/r) * 180 / PI;
-		else if (x >= (width/2) + left && y < (height/2) + top) cursordegree = 360 + std::asin(sinedge/r) * 180 / PI;
+		if(x >= widthhalf + left && y >= heighthalf + top) cursordegree = std::asin(sinedge/r) * 180 / PI;
+		else if(x < widthhalf + left && y >= heighthalf + top) cursordegree = 180 - std::asin(sinedge/r) * 180 / PI;
+		else if(x < widthhalf + left && y < heighthalf + top) cursordegree = 180 - std::asin(sinedge/r) * 180 / PI;
+		else if (x >= widthhalf + left && y < heighthalf + top) cursordegree = 360 + std::asin(sinedge/r) * 180 / PI;
 	}
 	else
 		cursordegree = -1;
@@ -71,19 +106,15 @@ void gGUIPieGraph::mouseMoved(int x, int y) {
 
 void gGUIPieGraph::setRadius(float radius) {
 	this->radius = radius;
+	calculateLabelPositions();
+}
+
+float gGUIPieGraph::getRadius() {
+	return radius;
 }
 
 void gGUIPieGraph::addVariable(std::string variableLabel, float variableValue) {
-	variablelabels.push_back(variableLabel);
-	variablevalues.push_back(variableValue);
-	float randomr = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
-	float randomg = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
-	float randomb = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
-	color.set(randomr, randomg, randomb, 1.0f);
-	variablecolors.push_back(color);
-	arrangePieGraph();
-	//gLogi("gGUIPieGraph.h") << "The added variable -> " << variableLabel << ", " << variableValue;
-	//gLogi("gGUIPieGraph.h") << "Color rgb -> " << color.r << ", " << color.g << ", " << color.b << ", " << color.a;
+	addVariable(variableLabel, variableValue, gColor(0.4f + gRandom(0.3f), 0.4f + gRandom(0.3f), 0.4f + gRandom(0.3f)));
 }
 
 void gGUIPieGraph::addVariable(std::string variableLabel, float variableValue, gColor variableColor) {
@@ -91,8 +122,6 @@ void gGUIPieGraph::addVariable(std::string variableLabel, float variableValue, g
 	variablevalues.push_back(variableValue);
 	variablecolors.push_back(variableColor);
 	arrangePieGraph();
-	//gLogi("gGUIPieGraph.h") << "The added variable -> " << variableLabel << ", " << variableValue;
-	//gLogi("gGUIPieGraph.h") << "Color rgb -> " << variableColor.r << ", " << variableColor.g << ", " << variableColor.b << ", " << variableColor.a;
 }
 
 float gGUIPieGraph::getTotalValue(std::vector<float> vector) {
@@ -107,12 +136,13 @@ float gGUIPieGraph::getTotalValue(std::vector<float> vector) {
 }
 
 void gGUIPieGraph::arrangePieGraph() {
-	this->valuesdegree.clear();
-	this->valuespercentage.clear();
-	this->valuessides.clear();
-	this->othersindex.clear();
-	this->valuefortext.clear();
-	this->percentagefortext.clear();
+	valuesdegree.clear();
+	valuespercentage.clear();
+	valuessides.clear();
+	othersindex.clear();
+	valuefortext.clear();
+	percentagefortext.clear();
+	labelstr.clear();
 
 	int size = variablevalues.size();
 	float totalvalue = getTotalValue(variablevalues);
@@ -134,9 +164,9 @@ void gGUIPieGraph::arrangePieGraph() {
 		variablelabels.erase(variablelabels.begin() + maxelementindex);
 		variablecolors.erase(variablecolors.begin() + maxelementindex);
 	}
-	this->variablelabels = tempvariablelabels;
-	this->variablevalues = tempvariablevalues;
-	this->variablecolors = tempvariablecolors;
+	variablelabels = tempvariablelabels;
+	variablevalues = tempvariablevalues;
+	variablecolors = tempvariablecolors;
 	for(int i = 0; i < variablelabels.size(); i++) {
 		degree = (360.0f * variablevalues.at(i)) / totalvalue;
 		percentage = degree / 360 * 100;
@@ -149,7 +179,7 @@ void gGUIPieGraph::arrangePieGraph() {
 		valuespercentage.push_back(percentage);
 		valuessides.push_back(side);
 		std::string value;
-		std::string percentage;
+		std::string percentagestr;
 		if(variablevalues.at(i) - int(variablevalues.at(i)) > 0) {
 			value = std::to_string(variablevalues.at(i));
 			valuefortext.push_back(value.substr(0, value.find(".")+3));
@@ -158,14 +188,34 @@ void gGUIPieGraph::arrangePieGraph() {
 			value = std::to_string((int)variablevalues.at(i));
 			valuefortext.push_back(value);
 		}
-		percentage = std::to_string(valuespercentage.at(i));
-		percentagefortext.push_back(percentage.substr(0, percentage.find(".")+3));
-		//gLogi("gGUIPieGraph.h") << "Label -> " << variablelabels.at(i) << ", Value -> " << variablevalues.at(i) << ", Degree -> " << degree << ", Percantage -> " << percentage << ", Side -> " << side;
-		//gLogi("gGUIPieGraph.h") << "Color rgb -> " << variablecolors.at(i).r << ", " << variablecolors.at(i).g << ", " << variablecolors.at(i).b << ", " << variablecolors.at(i).a;
+		percentagestr = std::to_string(valuespercentage.at(i));
+		percentagefortext.push_back(gToStr((int)round(percentage)));
+
+		std::string labelstrdef = variablelabels[i] + " (" + percentagefortext[i] + "%)";
+		labelstr.push_back(labelstrdef);
+		calculateLabelPositions();
 	}
 	if(orherspercentage < 0.5f && !othersindex.empty()) {
 		valuesdegree.at(0) -= 0.5f;
 		rotationforothers = -0.5f;
+	}
+}
+
+void gGUIPieGraph::calculateLabelPositions() {
+	if(variablelabels.empty()) return;
+	labelx.clear();
+	labely.clear();
+	float degree;
+	float totaldegree = 0;
+	float totalvalue = getTotalValue(variablevalues);
+	for(int i = 0; i < variablelabels.size(); i++) {
+		degree = (360.0f * variablevalues.at(i)) / totalvalue;
+		float meandeg = totaldegree + degree / 2.0f;
+		float lx = widthhalf + (std::cos(gDegToRad(meandeg)) * radius / 2) - (font->getStringWidth("Group 0 (50%") / 2);
+		float ly = heighthalf + additionallabely + (std::sin(gDegToRad(meandeg)) * radius / 2);
+		labelx.push_back(lx);
+		labely.push_back(ly);
+		totaldegree += degree;
 	}
 }
 
@@ -219,6 +269,27 @@ void gGUIPieGraph::setInfoTextSize(int size) {
 	loadFont();
 }
 
+void gGUIPieGraph::setAdditionalLabelY(float diff) {
+	additionallabely = diff;
+}
+
 void gGUIPieGraph::loadFont() {
 	fontforinfotext.load(font->getPath(), fontsize, font->isAntialised(), font->getDpi());
+}
+
+void gGUIPieGraph::clear() {
+	variablelabels.clear();
+	variablevalues.clear();
+	variablecolors.clear();
+
+	valuesdegree.clear();
+	valuespercentage.clear();
+	valuessides.clear();
+	othersindex.clear();
+	labelstr.clear();
+	labelx.clear();
+	labely.clear();
+
+	valuefortext.clear();
+	percentagefortext.clear();
 }

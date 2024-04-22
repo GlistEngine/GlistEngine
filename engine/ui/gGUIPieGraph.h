@@ -15,15 +15,23 @@ public:
 	gGUIPieGraph();
 	virtual ~gGUIPieGraph();
 
+	void set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIObject* parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h);
+
 	void draw();
-	void setRadius(float radius = 80.0f);
+
+	void setRadius(float radius);
+	float getRadius();
+
 	void addVariable(std::string variableLabel, float variableValue);
 	void addVariable(std::string variableLabel, float variableValue, gColor variableColor);
-	void arrangePieGraph();
+
 	void setOutLineColor(gColor color);
 	void setInfoTextColor(gColor color);
 	void setShowInfoOnCursor(bool isShown);
 	void setInfoTextSize(int size);
+	void setAdditionalLabelY(float diff);
+
+	void clear();
 
 private:
 	float getTotalValue(std::vector<float> vector);
@@ -31,6 +39,8 @@ private:
 	void arrangeOnCursor(int index);
 	void showInfoOnCursor();
 	void loadFont();
+	void arrangePieGraph();
+	void calculateLabelPositions();
 
 	std::vector<std::string> variablelabels;
 	std::vector<float> variablevalues;
@@ -40,18 +50,20 @@ private:
 	std::vector<float> valuespercentage;
 	std::vector<int> valuessides;
 	std::vector<int> othersindex;
+	std::vector<std::string> labelstr;
+	std::vector<int> labelx, labely;
 
 	std::vector<std::string> valuefortext;
 	std::vector<std::string> percentagefortext;
 
-	float radius, cursordegree = -1, radiusreduction = 0.45f, oncursorcolorreduction = - 0.1f, rotationforothers = 0.0f;
-	bool isFilled = true, isshown = true;
-	int numberofsidesratio = 60, sideofothers = 2, cursorx, cursory, infotextshift = 10, showinfoindex, fontsize = 9;
+	float radius, cursordegree, radiusreduction, oncursorcolorreduction, rotationforothers;
+	bool isFilled, isshown;
+	int numberofsidesratio, sideofothers, cursorx, cursory, infotextshift, showinfoindex, fontsize;
 	gColor color;
-	gColor outlinecolor = color.WHITE;
-	gColor otherscolor = color.GRAY;
-	gColor infotextcolor = color.BLACK;
+	gColor outlinecolor, otherscolor, infotextcolor;
 	gFont fontforinfotext;
+	float additionallabely;
+	int widthhalf, heighthalf;
 };
 
 #endif /* UI_gGUIPieGraph_H_ */

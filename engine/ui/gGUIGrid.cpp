@@ -2424,6 +2424,8 @@ void gGUIGrid::drawSelectedArea() {
 
 void gGUIGrid::mousePressed(int x, int y, int button) {
 	gGUIScrollable::mousePressed(x, y, button);
+	if(x >= left + vrx) return;
+	if(y >= top + titledy + hry - (titlediff * istitleon)) return;
 	int pressedx = x - left + firstx;
 	int pressedy = y - top + firsty - titledy;
 	if(cursor == gGUIForm::CURSOR_VRESIZE || cursor == gGUIForm::CURSOR_HRESIZE) {
@@ -2561,6 +2563,8 @@ void gGUIGrid::mouseDragged(int x, int y, int button) {
 //	gLogi("Grid") << x << " " << y;
 	if(istextboxactive) textbox.mouseDragged((x - left), (y - top - firsty), button);
 	gGUIScrollable::mouseDragged(x, y, button);
+	if(vsbmy > -1) return;
+	if(hsbmx > -1) return;
 	if(cursor == gGUIForm::CURSOR_VRESIZE) {
 		int diff = y - firstcursorposy;
 		firstcursorposy = y;
