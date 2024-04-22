@@ -13,6 +13,7 @@ var classgGUIDropdownList =
     [ "mouseScrolled", "classgGUIDropdownList.html#afa5bafef9cd007622f45087acffc47f4", null ],
     [ "onGUIEvent", "classgGUIDropdownList.html#a88d10d87eb1b8e3c2b39efdc9cb4ab2c", null ],
     [ "set", "classgGUIDropdownList.html#a0890930a66dc8f5cb990e539c38e6201", null ],
+    [ "setDisabled", "classgGUIDropdownList.html#aee988d0d2de27b0b90bafcec6292decc", null ],
     [ "setfirstTitle", "classgGUIDropdownList.html#ac99c861078bc3fd811def9ae8bbb21d8", null ],
     [ "setParentForm", "classgGUIDropdownList.html#af39ca35537af1ce26177b0fd647ee539", null ],
     [ "setParentFrame", "classgGUIDropdownList.html#af38429cdf737221a61fb3ed8accac487", null ],

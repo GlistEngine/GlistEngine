@@ -1,5 +1,6 @@
 var NAVTREEINDEX11 =
 {
+"classgWindowLoseFocusEvent.html":[0,0,159],
 "classgWindowLoseFocusEvent.html#a7f702e57d8bf70f89350b1c0ccc7977f":[0,0,159,0],
 "classgWindowMouseEnterEvent.html":[0,0,160],
 "classgWindowMouseEnterEvent.html#ad100f2352f44ee63642ba2d5e3c0dba4":[0,0,160,0],
