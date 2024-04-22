@@ -56,6 +56,8 @@ public:
 	gGUIDialogue();
 	virtual ~gGUIDialogue();
 
+	void setSizer(gGUISizer* guiSizer);
+
 	void update();
 	void draw();
 
@@ -63,9 +65,6 @@ public:
 	bool hide();
 	bool isShown();
 
-	void setTitleBar(gGUIContainer* titleBar);
-	void setButtonsBar(gGUIContainer* buttonsBar);
-	void setMessageBar(gGUIContainer* messageBar);
 	gGUIContainer* getTitleBar();
 	gGUIContainer* getButtonsBar();
 	gGUIContainer* getMessageBar();
@@ -75,10 +74,6 @@ public:
 
 	void setTitle(std::string title);
 	void setMessageBarSizer(gGUISizer* sizer);
-
-	void setMinimizeButton(gGUIImageButton* minimizeButton);
-	void setMaximizeButton(gGUIImageButton* maximizeButton);
-	void setExitButton(gGUIImageButton* exitButton);
 
 	void setButtonEvent(int buttonEvent);
 	int getButtonEvent();
@@ -96,6 +91,9 @@ public:
 	void setTitleType(int typeId);
 
 	int getCursor(int x, int y);
+	void keyPressed(int key);
+	void keyReleased(int key);
+	void charPressed(unsigned int codepoint);
 	void mouseMoved(int x, int y);
 	void mousePressed(int x, int y, int button);
 	void mouseDragged(int x, int y, int button);
@@ -114,37 +112,31 @@ public:
 private:
 	bool isdialogueshown;
 
-	gGUIContainer* titlebar;
-	gGUIContainer* buttonsbar;
-	gGUIContainer* messagebar;
+	gGUIContainer titlebar;
+	gGUISizer titlebarsizer;
+	gGUIContainer buttonsbar;
+	gGUISizer buttonsbarsizer;
+	gGUIContainer messagebar;
 
-	gGUIImageButton* minimizebutton;
-	gGUIImageButton* maximizebutton;
-	gGUIImageButton* exitbutton;
+	gGUIImageButton minimizebutton;
+	gGUIImageButton maximizebutton;
+	gGUIImageButton exitbutton;
 
-	static const int deftitlebarh = 35, deftitlebarbitmapw = 24, deftitlebarbuttonw = 48;
-	static const int defbuttonsbarh = 45, defbuttonsbarbuttonw = 100, defbuttonsbarbuttonh = 27;
+	static const int titlebarh = 35, titlebarbitmapw = 24, titlebarbuttonw = 48;
+	static const int buttonsbarh = 45, buttonsbarbuttonw = 100, buttonsbarbuttonh = 27;
 
-	void initDefTitleBar();
-	void initDefButtonsBar();
+	void initTitleBar();
+	void initButtonsBar();
 	void initDefMessageBar();
 
-	gGUIContainer deftitlebar;
-	gGUISizer deftitlebarsizer;
-	gGUIBitmap deftitlebarbitmap;
-	gGUIText deftitlebartext;
-	gGUIImageButton deftitlebarminimizebutton;
-	gGUIImageButton deftitlebarmaximizebutton;
-	gGUIImageButton deftitlebarexitbutton;
+	gGUIBitmap titlebarbitmap;
+	gGUIText titlebartext;
 
-	gGUIContainer defbuttonsbar;
-	gGUISizer defbuttonsbarsizer;
-	gGUIButton defbuttonsbarokbutton;
-	gGUIButton defbuttonsbaryesbutton;
-	gGUIButton defbuttonsbarnobutton;
-	gGUIButton defbuttonsbarcancelbutton;
+	gGUIButton buttonsbarokbutton;
+	gGUIButton buttonsbaryesbutton;
+	gGUIButton buttonsbarnobutton;
+	gGUIButton buttonsbarcancelbutton;
 
-	gGUIContainer defmessagebar;
 	gGUISizer defmessagebarsizer;
 	gGUIText defmessagetext;
 	gGUIImageButton defdialogueicon;
