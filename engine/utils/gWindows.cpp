@@ -7,19 +7,20 @@
 
 #include "gWindows.h"
 
+std::string gWindows::regpath = "SOFTWARE\\GlistApp\\Keys";
+
 gWindows::gWindows() {
-	regpath = "SOFTWARE\\GlistApp\\Keys";
 }
 
 gWindows::~gWindows() {
 }
 
 void gWindows::setRegPath(std::string regPath) {
-	regpath = regPath.c_str();
+	regpath = regPath;
 }
 
 std::string gWindows::getRegPath() {
-	return std::string(regpath);
+	return regpath;
 }
 
 const char* gWindows::getMachineName() {
@@ -51,36 +52,39 @@ uint16_t gWindows::getCpuHash() {
 }
 
 std::string gWindows::getMachineGUID() {
-    char val[128];
+//	return getRegistryValue("MachineGuid", "SOFTWARE\\Microsoft\\Cryptography", HKEY_LOCAL_MACHINE);
+
+	char val[128];
     DWORD dataSize = sizeof(val);
     if(ERROR_SUCCESS == RegGetValueA(HKEY_LOCAL_MACHINE, "SOFTWARE\\Microsoft\\Cryptography", "MachineGuid", RRF_RT_ANY, nullptr, &val, &dataSize))
     	return std::string(val);
-    return "0";
+    return "";
 }
 
-long gWindows::createRegistryKey(HKEY* hKey) {
+long gWindows::createRegistryKey(HKEY* hKey, std::string regPath, HKEY registryHive) {
 	DWORD dwDisp = 0;
 	LPDWORD lpdwDisp = &dwDisp;
 
 	return RegCreateKeyEx(
-	      HKEY_CURRENT_USER,
-		  regpath,
-	      0L,
-	      NULL,
-	      REG_OPTION_NON_VOLATILE,
-	      KEY_ALL_ACCESS,
-	      NULL,
-	      hKey,
-	      lpdwDisp);
+		registryHive,
+		regPath.c_str(),
+	    0L,
+	    NULL,
+	    REG_OPTION_NON_VOLATILE,
+	    KEY_ALL_ACCESS,
+	    NULL,
+	    hKey,
+	    lpdwDisp);
 }
 
 long gWindows::deleteRegistryKey(HKEY hKey, std::string keyPath) {
 	return RegDeleteKey(hKey, keyPath.c_str());
 }
 
-long gWindows::openRegistryKey(HKEY* hKey) {
-	return RegOpenKeyEx(HKEY_CURRENT_USER,
-			regpath,
+long gWindows::openRegistryKey(HKEY* hKey, std::string regPath, HKEY registryHive) {
+	return RegOpenKeyEx(
+			registryHive,
+			regPath.c_str(),
 	        0L,
 	        KEY_ALL_ACCESS,
 	        hKey);
@@ -93,6 +97,21 @@ long gWindows::closeRegistryKey(HKEY hKey) {
 
 long gWindows::setRegistryValue(HKEY hKey, std::string name, std::string value) {
 	return RegSetValueEx(hKey, name.c_str(), 0, REG_SZ, (const BYTE*)value.c_str(), value.size() + 1);
+}
+
+std::string gWindows::getRegistryValue(std::string name, std::string regPath, HKEY registryHive) {
+	HKEY hKey;
+	long res = RegOpenKey(registryHive, regPath.c_str(), &hKey);
+	if(res != ERROR_SUCCESS) {
+		gLoge("gWindows") << "Error in opening " << name << " key: Error " << res;
+		return "";
+	}
+
+    char val[128];
+    DWORD dataSize = sizeof(val);
+    if(ERROR_SUCCESS == RegQueryValueEx(hKey, name.c_str(), nullptr, nullptr, (LPBYTE)&val, &dataSize))
+    	return std::string(val);
+    return "";
 }
 
 long gWindows::deleteRegistryValue(HKEY hKey, std::string name) {

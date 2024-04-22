@@ -20,26 +20,27 @@ public:
 	virtual ~gWindows();
 
 #ifdef WIN32
-	void setRegPath(std::string regPath);
-	std::string getRegPath();
+	static void setRegPath(std::string regPath);
+	static std::string getRegPath();
 
-	const char* getMachineName();
-	uint16_t getVolumeHash();
-	uint16_t getCpuHash();
-	std::string getMachineGUID();
+	static const char* getMachineName();
+	static uint16_t getVolumeHash();
+	static uint16_t getCpuHash();
+	static std::string getMachineGUID();
 
-	long createRegistryKey(HKEY* hKey);
-	long deleteRegistryKey(HKEY hKey, std::string keyPath);
+	static long createRegistryKey(HKEY* hKey, std::string regPath = regpath, HKEY registryHive = HKEY_CURRENT_USER);
+	static long deleteRegistryKey(HKEY hKey, std::string keyPath);
 
-	long openRegistryKey(HKEY* hKey);
-	long closeRegistryKey(HKEY hKey);
+	static long openRegistryKey(HKEY* hKey, std::string regPath = regpath, HKEY registryHive = HKEY_CURRENT_USER);
+	static long closeRegistryKey(HKEY hKey);
 
-	long setRegistryValue(HKEY hKey, std::string name, std::string value);
-	long deleteRegistryValue(HKEY hKey, std::string name);
+	static long setRegistryValue(HKEY hKey, std::string name, std::string value);
+	static std::string getRegistryValue(std::string name, std::string regPath = regpath, HKEY registryHive = HKEY_CURRENT_USER);
+	static long deleteRegistryValue(HKEY hKey, std::string name);
 #endif
 
 private:
-	const char* regpath;
+	static std::string regpath;
 
 };
 
