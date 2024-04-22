@@ -25,7 +25,7 @@ public:
     std::string encrypt(std::string plainText); //AES-256
     std::string decrypt(std::string cipherText); //AES-256
 
-    std::string encodeMD5(std::string plainText); //MD5
+    static std::string encodeMD5(std::string plainText); //MD5
 
 private:
     unsigned char *initkey, *initvector;
