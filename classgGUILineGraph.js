@@ -5,6 +5,7 @@ var classgGUILineGraph =
     [ "addData", "classgGUILineGraph.html#ae73e143cb48dc69118e400aa18608ce7", null ],
     [ "addLine", "classgGUILineGraph.html#a9915d1923721446eaee7f5eb4d8bc143", null ],
     [ "addPointToLine", "classgGUILineGraph.html#a6df73078a6e895a36e015514a7f2ba8c", null ],
+    [ "clear", "classgGUILineGraph.html#a9ac7690c53900da59937637d907cae9d", null ],
     [ "enablePoints", "classgGUILineGraph.html#a8b91871d2e23e0552c961cac26e2b07d", null ],
     [ "getLineColor", "classgGUILineGraph.html#ade386621d3080394dc924e35459ef328", null ],
     [ "getPointNum", "classgGUILineGraph.html#a4cda8291a9efbc51340df5a4d6e1a870", null ],

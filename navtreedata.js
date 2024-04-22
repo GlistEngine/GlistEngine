@@ -48,13 +48,14 @@ var NAVTREEINDEX =
 "classgColorChannelMixer.html",
 "classgGUIButton.html#abec0f91b86b793b6b899c1c03fde8c5a",
 "classgGUIForm.html#a9c364fb1c9a761c8a758b2f3fa204d09",
-"classgGUIManager.html#a3e32785261a3723ab570a9366a34804c",
-"classgGUIScrollable.html#a64c6441fb0d696e4de378dcbd8f2ac7a",
-"classgGUITreelist.html#a39916020d3036d38eb7212c39f48778d",
-"classgMaterial.html#aa19c50ce35e8de704a27feeb2dea042a",
-"classgParticle.html#ad9fabdc524540f604401e30f4a1c0c57",
-"classgShadowMap.html#ad1b0eeb357ebd6d7dc27f91b91fc4a92",
-"classgWindowLoseFocusEvent.html"
+"classgGUIManager.html#a35732bd8a5b56a386826393f3b7c8818",
+"classgGUIScrollable.html#a5a52cffe617e722c824ff1871032dd81",
+"classgGUITreelist.html#a2f76e15f45ce069687b409121a068bdd",
+"classgMaterial.html#a9ec28dec50f4347adfc3a5fc13a5c570",
+"classgParticle.html#a94e52de83959e14f87bcc333e72de7dc",
+"classgShadowMap.html#ac7f5a2c69d2f01bb7e8f23f59faee111",
+"classgWindowFocusEvent.html",
+"structgVertex.html#af029e1e0ad82c2057ae426a2af114ced"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

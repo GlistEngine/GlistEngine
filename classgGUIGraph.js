@@ -2,6 +2,7 @@ var classgGUIGraph =
 [
     [ "gGUIGraph", "classgGUIGraph.html#a61adfa9e54a68eb97dc4c158c21fdf12", null ],
     [ "~gGUIGraph", "classgGUIGraph.html#ae91ce270173055f11a1d792def6eb3ed", null ],
+    [ "clear", "classgGUIGraph.html#acd6d25a2d14f358027f06a36292f712e", null ],
     [ "draw", "classgGUIGraph.html#aa75e83f42eed80a72a65614cc353121e", null ],
     [ "enableGridlinesX", "classgGUIGraph.html#a5d0d0569a5100a9f07950aafdd1ac9d5", null ],
     [ "enableGridlinesY", "classgGUIGraph.html#aed707c32ccf671c32854eb55da910541", null ],
