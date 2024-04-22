@@ -312,7 +312,7 @@ gGUITreelist::Element* gGUITreelist::getRootElement() {
 void gGUITreelist::setSelectedLineNumber(int lineNo) {
 	selectedno = lineNo;
 	root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_TREELISTSELECTED, gToStr(selectedno));
-	actionmanager.onGUIEvent(id, G_GUIEVENT_TREELISTSELECTED);
+	actionmanager.onGUIEvent(id, G_GUIEVENT_TREELISTSELECTED, gToStr(selectedno));
 }
 
 int gGUITreelist::getSelectedLineNumber() {
