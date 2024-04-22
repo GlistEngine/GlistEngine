@@ -49,6 +49,7 @@ public:
 	    std::string showncontent;
 	    std::string overflowcontent;
 	    gColor cellfontcolor;
+
 	    Cell(){
 	    	iscellselected = false;
 	    	iscellaligned = false;
@@ -122,59 +123,59 @@ public:
 
 	void setCellFont(int fontNo);
 	void setCellFont(Cell* cell, int fontNo);
-	void setCellFont(std::string cell, int fontNo);
+	void setCellFont(const std::string& cell, int fontNo);
 	void setCellsFont(std::deque<Cell*> cells, int fontNo);
 	void setCellsFont(Cell* cell1, Cell* cell2, int fontNo);
-	void setCellsFont(std::string cell1, std::string cell2, int fontNo);
+	void setCellsFont(const std::string& cell1, const std::string& cell2, int fontNo);
 
 	void setCellFontBold();
 	void setCellFontBold(Cell* cell);
-	void setCellFontBold(std::string cell);
+	void setCellFontBold(const std::string& cell);
 	void setCellsFontBold(std::deque<Cell*> cells);
 	void setCellsFontBold(Cell* cell1, Cell* cell2);
-	void setCellsFontBold(std::string cell1, std::string cell2);
+	void setCellsFontBold(const std::string& cell1, const std::string& cell2);
 
 	void setCellFontItalic();
 	void setCellFontItalic(Cell* cell);
-	void setCellFontItalic(std::string cell);
+	void setCellFontItalic(const std::string& cell);
 	void setCellsFontItalic(std::deque<Cell*> cells);
 	void setCellsFontItalic(Cell* cell1, Cell* cell2);
-	void setCellsFontItalic(std::string cell1, std::string cell2);
+	void setCellsFontItalic(const std::string& cell1, const std::string& cell2);
 
 	void setCellFontSize(int fontSize);
 	void setCellFontSize(Cell* cell, int fontSize);
-	void setCellFontSize(std::string cell, int fontSize);
+	void setCellFontSize(const std::string& cell, int fontSize);
 	void setCellsFontSize(std::deque<Cell*> cells, int fontSize);
 	void setCellsFontSize(Cell* cell1, Cell* cell2, int fontSize);
-	void setCellsFontSize(std::string cell1, std::string cell2, int fontSize);
+	void setCellsFontSize(const std::string& cell1, const std::string& cell2, int fontSize);
 
 	void setCellFontColor(gColor* fontColor = fontcolor);
 	void setCellFontColor(Cell* cell, gColor* fontColor = fontcolor);
-	void setCellFontColor(std::string cell, gColor* fontColor = fontcolor);
+	void setCellFontColor(const std::string& cell, gColor* fontColor = fontcolor);
 	void setCellsFontColor(std::deque<Cell*> cells, gColor* fontColor = fontcolor);
 	void setCellsFontColor(Cell* cell1, Cell* cell2, gColor* fontColor = fontcolor);
-	void setCellsFontColor(std::string cell1, std::string cell2, gColor* fontColor = fontcolor);
+	void setCellsFontColor(const std::string& cell1, const std::string& cell2, gColor* fontColor = fontcolor);
 
 	void setCellLine(int lineNo, bool clicked = true);
 	void setCellLine(Cell* cell, int lineNo, bool clicked = true);
-	void setCellLine(std::string cell, int lineNo, bool clicked = true);
+	void setCellLine(const std::string& cell, int lineNo, bool clicked = true);
 	void setCellsLine(std::deque<Cell*> cells, int lineNo, bool clicked = true);
 	void setCellsLine(Cell* cell1, Cell* cell2, int lineNo, bool clicked = true);
-	void setCellsLine(std::string cell1, std::string cell2, int lineNo, bool clicked = true);
+	void setCellsLine(const std::string& cell1, const std::string& cell2, int lineNo, bool clicked = true);
 
-    void setCellContent(Cell* cell, std::string cellContent);
-    void setCellContent(int rowNo, int columnNo, std::string cellContent);
-    void setCellContent(std::string cell, std::string cellContent);
+    void setCellContent(Cell* cell, const std::string& cellContent);
+    void setCellContent(int rowNo, int columnNo, const std::string& cellContent);
+    void setCellContent(const std::string& cell, const std::string& cellContent);
     void setCellsContent(std::deque<Cell*> cells, std::vector<std::string> contents);
     void setCellsContent(Cell* cell1, Cell* cell2, std::vector<std::string> contents);
-    void setCellsContent(std::string cell1, std::string cell2, std::vector<std::string> contents);
+    void setCellsContent(const std::string& cell1, const std::string& cell2, std::vector<std::string> contents);
 
 	void setCellAlignment(int cellAlignment, bool clicked = true);
     void setCellAlignment(Cell* cell, int cellAlignment);
-    void setCellAlignment(std::string cell, int cellAlignment);
+    void setCellAlignment(const std::string& cell, int cellAlignment);
     void setCellsAlignment(std::deque<Cell*> cells, int cellAlignment);
     void setCellsAlignment(Cell* cell1, Cell* cell2, int cellAlignment);
-    void setCellsAlignment(std::string cell1, std::string cell2, int cellAlignment);
+    void setCellsAlignment(const std::string& cell1, const std::string& cell2, int cellAlignment);
 
 	void setSelectedFrameColor(gColor* selectedFrameColor);
 	void setSelectedAreaColor(gColor* selectedAreaColor);
@@ -185,16 +186,16 @@ public:
     void selectCell(Cell* cell);
     void selectCell(int rowNo, int columnNo);
     void selectCell(Cell* cell1, Cell* cell2);
-    void selectCell(std::string cell);
-    void selectCell(std::string cell1, std::string cell2);
+    void selectCell(const std::string& cell);
+    void selectCell(const std::string& cell1, const std::string& cell2);
 
-	Cell* getCell(std::string cellID);
+	Cell* getCell(const std::string& cellID);
 	Cell* getCell(int rowNo, int columnNo);
 	gColor* getSelectedFrameColor();
 	gColor* getSelectedAreaColor();
 	std::deque<Cell*> getSelectedCells();
 	std::string getColumnName(int columnNo);
-	int getColumnNo(std::string columnName);
+	int getColumnNo(const std::string& columnName);
 	float getColumnWidth(int columnNo);
 	float getRowHeight(int rowNo);
 
@@ -227,20 +228,20 @@ private:
 	static const int mousetolerance = 5;
 	const std::string errormessage = "Error";
 
-	std::string fixTextFunction(std::string text, int index);
-	std::string fixNumeric(std::string text);
+	std::string fixTextFunction(const std::string& text, int index);
+	std::string fixNumeric(const std::string& text);
 	std::string fixOverflowText(Cell& thisCell, Cell& otherCell);
 
-	std::string getTextColumn(std::string text);
+	std::string getTextColumn(const std::string& text);
 	int getCellNo(int rowNo, int columnNo);
 	int getNearestFilledCell(int index);
 
-	void fillCell(int cellNo, std::string tempstr);
+	void fillCell(int cellNo, const std::string& tempstr);
 	float makeSum(int c1, int r1, int c2, int r2);
-	float makeFourOperation(std::string cell1, std::string cell2, char operation, std::string value1symbol = "", std::string value2symbol = "");
+	float makeFourOperation(const std::string& cell1, const std::string& cell2, char operation, const std::string& value1symbol = "", const std::string& value2symbol = "");
 	float calculateCurrentX(int columnNo);
 	float calculateCurrentY(int rowNo);
-	bool isNumeric(std::string text);
+	bool isNumeric(const std::string& text);
 
 	void addUndoStack(int process);
 	void addRedoStack();
@@ -264,13 +265,18 @@ private:
 	void makeUndo();
 	void makeRedo();
 
-	void createCell(int rowNo, int columnNo);
+	int createCell(int rowNo, int columnNo);
 	void createTextBox();
 
 	void checkCellType(int cellIndex);
 	void showCells();
 	void showCell(int rowNo, int columnNo);
 
+	uint64_t hashCell(int row, int column) {
+		return (uint64_t)row << 32L | column;
+	}
+
+	std::unordered_map<uint64_t, int> cellmap;
 	std::deque<Cell> allcells;
 	std::deque<int> selectedcells;
 	std::deque<std::array<float, 2>> gridboxesw;
