@@ -149,6 +149,11 @@ protected:
 	int titlediff;
 	int linehalf;
 
+	int vrx, vry, vrw, vrh;
+	int hrx, hry, hrw, hrh;
+	int vsbmy;
+	int hsbmx;
+
 private:
 	gFbo* boxfbo;
 
@@ -159,10 +164,7 @@ private:
 	float vsbalpha, hsbalpha;
 	float sbalphaboxlimit, sbalphasblimit;
 	bool alphablending;
-	int vrx, vry, vrw, vrh;
-	int hrx, hry, hrw, hrh;
-	int vsbmy;
-	int hsbmx;
+	int vmaxy, hmaxx;
 	bool isalpha;
 	float marginx, marginy;
 };

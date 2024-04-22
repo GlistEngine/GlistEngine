@@ -9,10 +9,10 @@
 
 
 gGUIScrollable::gGUIScrollable() {
-	vsbw = 8;
+	vsbw = 12;
 	vsbh = height;
 	hsbw = width;
-	hsbh = 8;
+	hsbh = 12;
 	vsbx = right - vsbw;
 	vsby = top;
 	hsbx = left;
@@ -57,6 +57,8 @@ gGUIScrollable::gGUIScrollable() {
 	titlex = left;
 	titley = top + font->getStringHeight("AE");
 	titledy = font->getSize() * 1.8f;
+	vmaxy = totalh - boxh + linehalf + (titlediff * istitleon) + marginy + hsbh;
+	hmaxx = totalw - boxw + marginx + vsbw;
 	boxfbo = new gFbo();
 	setTitleOn(false);
 	isalpha = false;
@@ -95,9 +97,16 @@ void gGUIScrollable::setDimensions(int width, int height) {
 
 	totalw = boxw;
 	totalh = boxh;
+	if(totalw != 0 && totalw != boxw) hrw = hsbw * boxw / totalw;
+	else hrw = hsbw;
+
+	vmaxy = totalh - boxh + linehalf + (titlediff * istitleon) + marginy + hsbh;
+	hmaxx = totalw - boxw + marginx + vsbw;
 
 	titlex = left + font->getStringWidth("i");
 	titley = top + font->getStringHeight("AE");
+	scrolldiff = height / 10;
+	linehalf = scrolldiff / 2;
 
 	boxfbo->allocate(renderer->getWidth(), renderer->getHeight());
 
@@ -212,14 +221,18 @@ void gGUIScrollable::mousePressed(int x, int y, int button) {
 
 void gGUIScrollable::mouseDragged(int x, int y, int button) {
 	if(vsbmy > -1) {
+		if(totalh <= boxh) return;
+		if(vry >= boxh - vrh && y > vsbmy) return;
 		vry += y - vsbmy;
 		if(vry < 0) vry = 0;
 		if(vry > boxh - vrh) vry = boxh - vrh;
 		if(totalh < boxh) vry = vsby;
 
-		firsty += (y - vsbmy) * vsbh / vrh;
+		vmaxy = totalh - boxh + linehalf + (titlediff * istitleon) + marginy + hsbh;
+		firsty = vry * vmaxy / (boxh - vrh);
+//		firsty += (y - vsbmy) * vsbh / vrh;
 		if(firsty < 0) firsty = 0;
-		if(firsty > totalh - boxh + linehalf + (titlediff * istitleon) + marginy + hsbh) firsty = totalh - boxh + linehalf + (titlediff * istitleon) + marginy + hsbh;
+		if(firsty > vmaxy) firsty = vmaxy;
 		if(totalh < boxh) firsty = 0;
 
 		vsbmy = y;
@@ -227,14 +240,17 @@ void gGUIScrollable::mouseDragged(int x, int y, int button) {
 
 	if(hsbmx > -1) {
 		if(totalw == boxw) totalw = (boxw + marginx + vsbw) * 2;
+		hmaxx = totalw - boxw + marginx + vsbw;
+
 		hrx += x - hsbmx;
 		if(hrx < 0) hrx = 0;
 		if(hrx > boxw - hrw) hrx = boxw - hrw;
 		if(totalw < boxw) hrx = hsbx;
 
-		firstx += (x - hsbmx) * hsbw / hrw;
+		firstx = hrx * hmaxx / (boxw - hrw);
+//		firstx += (x - hsbmx) * hsbw / hrw;
 		if(firstx < 0) firstx = 0;
-		if(firstx > totalw - boxw + marginx + vsbw) firstx = totalw - boxw + marginx + vsbw;
+		if(firstx > hmaxx) firstx = hmaxx;
 		if(totalw < boxw) firstx = 0;
 
 		hsbmx = x;
@@ -249,16 +265,31 @@ void gGUIScrollable::mouseReleased(int x, int y, int button) {
 void gGUIScrollable::mouseScrolled(int x, int y) {
 	firsty -= y * scrolldiff;
 	if(firsty < 0) firsty = 0;
-	if(firsty > totalh - boxh + linehalf + (titlediff * istitleon) + marginy + hsbh) firsty = totalh - boxh + linehalf + (titlediff * istitleon) + marginy + hsbh;
+	vmaxy = totalh - boxh + linehalf + (titlediff * istitleon) + marginy + hsbh;
+	if(id == 264) gLogi("Scrollable") << "firsty:" << firsty << ", vmaxy:" << vmaxy;
+	if(firsty > vmaxy) firsty = vmaxy;
 	if(totalh < boxh) firsty = 0;
 	if(vsbenabled && firsty >= 0) vry = firsty * (boxh - hsbh) / totalh;
 
+	vry = firsty * (boxh - vrh) / vmaxy;
+	if(vry < 0) vry = 0;
+	if(vry > boxh - vrh) vry = boxh - vrh;
+	if(totalh < boxh) vry = vsby;
+
+/*
 	firstx -= x * scrolldiff;
 	if(firstx < 0) firstx = 0;
 	if(totalw == boxw || totalw == 0) totalw = (boxw + marginx + vsbw) * 2;
 	if(totalw != boxw + marginx + vsbw - (2 * scrolldiff) && titlediff == 0) totalw = boxw + marginx + vsbw - (2 * scrolldiff);
-	if(firstx > totalw - boxw + marginx + vsbw) firstx = totalw - boxw + marginx + vsbw;
+	hmaxx = totalw - boxw + marginx + vsbw;
+	if(firstx > hmaxx) firstx = hmaxx;
 	if(hsbenabled) hrx = firstx * (boxw - vsbw) / totalw;
+
+	hrx = firstx * (boxw - hrw) / hmaxx;
+	if(hrx < 0) hrx = 0;
+	if(hrx > boxw - hrw) hrx = boxw - hrw;
+	if(totalw < boxw) hrx = hsbx;
+*/
 }
 
 void gGUIScrollable::windowResized(int w, int h) {
