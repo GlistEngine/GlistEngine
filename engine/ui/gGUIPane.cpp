@@ -110,10 +110,12 @@ void gGUIPane::draw() {
 	renderer->setColor(255, 255, 255);
 	gDrawRectangle(left, top, width, height, true);
 
-	renderer->setColor(212, 212, 212);
+	renderer->setColor(navigationbackgroundcolor);
+//	renderer->setColor(212, 212, 212);
 	titlefont.drawText(title, titlex, titley);
 	if(issubtitleset) {
-		renderer->setColor(150, 150, 150);
+		renderer->setColor(40, 80, 120);
+//		renderer->setColor(150, 150, 150);
 		font->drawText(subtitle, subtitlex, subtitley);
 	}
 
