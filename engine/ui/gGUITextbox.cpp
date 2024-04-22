@@ -1306,7 +1306,7 @@ void gGUITextbox::charPressed(unsigned int codepoint) {
 			widthexceeded = true;
 		newtext = oldtext + addedtext;
 		if(cursorposchar < letterlength.size()) newtext += text.substr(cursorposutf, text.length() - cursorposutf);
-		if(newtext != text) root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_TEXTBOXENTRY, newtext);
+		std::string oldtextfull = text;
 		text = newtext;
 		int diffutf = text.length() - previouslengthutf;
 		if(previouslengthutf == 0 || cursorposchar == letterlength.size()) letterlength.push_back(diffutf);
@@ -1347,8 +1347,7 @@ void gGUITextbox::charPressed(unsigned int codepoint) {
 				cursorposx = 0;
 			}
 		}
-
-//		gLogi("Textbox") << "cp cx:" << cursorposx;
+		if(newtext != oldtextfull) root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_TEXTBOXENTRY, newtext);
 	}
 }
 
