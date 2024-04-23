@@ -94,9 +94,18 @@ private:
 	void updatePoints();
 
 	std::deque<std::deque<std::array<float, 4>>> graphlines;
+	std::vector<gLine> cachedlines;
+	std::vector<gCircle> cachedcircles;
+	std::unordered_map<uint64_t, gLine*> linesmap;
+	std::unordered_map<uint64_t, gCircle*> circlesmap;
 	gColor linecolors[linecolornum];
 
-	bool arepointsenabled;
+	bool pointsenabled;
+	bool needsupdate = false;
+
+	uint64_t hash(uint32_t a, uint32_t b) {
+		return ((uint64_t)a << 32) | b;
+	}
 };
 
 
