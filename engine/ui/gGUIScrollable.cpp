@@ -266,7 +266,6 @@ void gGUIScrollable::mouseScrolled(int x, int y) {
 	firsty -= y * scrolldiff;
 	if(firsty < 0) firsty = 0;
 	vmaxy = totalh - boxh + linehalf + (titlediff * istitleon) + marginy + hsbh;
-	if(id == 264) gLogi("Scrollable") << "firsty:" << firsty << ", vmaxy:" << vmaxy;
 	if(firsty > vmaxy) firsty = vmaxy;
 	if(totalh < boxh) firsty = 0;
 	if(vsbenabled && firsty >= 0) vry = firsty * (boxh - hsbh) / totalh;
