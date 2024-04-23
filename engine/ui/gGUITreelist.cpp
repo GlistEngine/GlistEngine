@@ -18,12 +18,7 @@ gGUITreelist::gGUITreelist() {
 	topelement.title = "Top";
 	topelement.isexpanded = true;
 	lineh = 2 * font->getSize() + 2;
-	minlinenum = 5;
-	linenum = 0;
-	totalh = linenum * lineh;
-	minboxh = minlinenum * lineh;
 	listboxh = minboxh;
-	maxlinenum = listboxh / lineh;
 	firstlineno = 0;
 	flno = firstlineno;
 	selectedno = 0;
@@ -38,15 +33,17 @@ gGUITreelist::gGUITreelist() {
 	iconh = iconw;
 	iconx = 0;
 	nodenum = 0;
+	updateTotalHeight();
+	setVisibleLineNumber(5);
 }
 
 gGUITreelist::~gGUITreelist() {
 }
 
 void gGUITreelist::set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIObject* parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h) {
-	totalh = h;
 	gGUIControl::set(root, topParentGUIObject, parentGUIObject, parentSlotLineNo, parentSlotColumnNo, x, y, w, h);
-	gGUIScrollable::setDimensions(width, listboxh);
+	gGUIScrollable::setDimensions(width, listboxh + datady);
+	updateTotalHeight();
 }
 
 void  gGUITreelist::addElement(Element* element, Element* parent) {
@@ -54,7 +51,7 @@ void  gGUITreelist::addElement(Element* element, Element* parent) {
 	parent->sub.push_back(element);
 	element->parent = parent;
 	element->orderno = parent->orderno + 1;
-	nodenum = nodenum + 1;
+	nodenum++;
 
 	refreshList();
 	topelement.setIcon();
@@ -66,7 +63,7 @@ void gGUITreelist::addElement(Element* element) {
 	topelement.sub.push_back(element);
 	element->parent = &topelement;
 	element->orderno = topelement.orderno;
-	nodenum = nodenum + 1;
+	nodenum++;
 
 	refreshList();
 	topelement.setIcon();
@@ -75,8 +72,14 @@ void gGUITreelist::addElement(Element* element) {
 
 void gGUITreelist::clear() {
 	topelement.sub.clear();
-	linenum = 0;
-	totalh = linenum * lineh;
+	updateTotalHeight();
+}
+
+void gGUITreelist::updateTotalHeight() {
+	totalh = allsubtitles.size() * lineh;
+	if(totalh < minboxh) {
+		totalh = minboxh;
+	}
 }
 
 void gGUITreelist::drawContent() {
@@ -84,25 +87,33 @@ void gGUITreelist::drawContent() {
 
 	gColor* oldcolor = renderer->getColor();
 	renderer->setColor(textbackgroundcolor);
-	gDrawRectangle(0, 0, boxw, boxh , true);
+	gDrawRectangle(0, 0, boxw, boxh, true);
 
 	flno = firsty / lineh;
 	fldy = firsty % lineh;
 
+	int linenum = allsubtitles.size();
 	if(selectedno >= flno && selectedno <= flno + linenum) {
 		if(isfocused) renderer->setColor(chosencolor);
 		else renderer->setColor(middlegroundcolor);
 		gDrawRectangle(0, -fldy + (selectedno - flno) * lineh, boxw, lineh, true);
 	}
-	for(int i = 0; i < linenum + 1; i++) {
-		if(flno + i < allsubtitles.size()) {
-			if(topelement.isicon) {
-				renderer->setColor(iconcolor);
-				icons[i + flno]->draw(allorderno[i + flno] * spacesize - (iconw * 2 / 3), - fldy + (i * lineh) - datady / 2 + lineh / 2, iconw, iconh);
-			}
-			renderer->setColor(fontcolor);
-			font->drawText(allsubtitles[flno + i], 2, - fldy + (i * lineh) + lineh - datady);
+
+	int startindex = flno;
+	int endindex = flno + visibilelinenum + 1;
+	if(endindex > linenum) {
+		endindex = linenum;
+	}
+	if(startindex < 0) {
+		startindex = 0;
+	}
+	for(int i = startindex; i < endindex; i++) {
+		if(topelement.isicon) {
+			renderer->setColor(iconcolor);
+			icons[i]->draw(allorderno[i] * spacesize - (iconw * 2 / 3), (i * lineh) - datady / 2 + lineh / 2 - firsty, iconw, iconh);
 		}
+		renderer->setColor(fontcolor);
+		font->drawText(allsubtitles[i], 2, (i * lineh) + lineh - datady - firsty);
 	}
 
 	renderer->setColor(oldcolor);
@@ -124,10 +135,7 @@ void gGUITreelist::refreshList() {
     topelement.clearAllSubTitlesList();
     topelement.addSelfToList();
 
-    linenum = nodenum;
-    if(linenum > maxlinenum) linenum = maxlinenum;
-    totalh = allsubtitles.size() * lineh;
-    if(totalh < height) totalh = height;
+	updateTotalHeight();
 }
 
 void gGUITreelist::mousePressed(int x, int y, int button) {
@@ -222,12 +230,12 @@ void gGUITreelist::setChosenColor(float r, float g, float b) {
 }
 
 void gGUITreelist::setVisibleLineNumber(int linenumber) {
-	if(linenumber > 0) {
-		minlinenum = linenumber;
-		minboxh = minlinenum * lineh;
-		listboxh = minboxh;
-		maxlinenum = listboxh / lineh;
+	if(linenumber <= 0) {
+		return;
 	}
+	visibilelinenum = linenumber;
+	minboxh = visibilelinenum * lineh;
+	listboxh = minboxh + datady;
 }
 
 void gGUITreelist::setIconType(bool isicon) {
@@ -302,7 +310,7 @@ gColor gGUITreelist::getIconsColor() {
 }
 
 int gGUITreelist::getVisibleLineNumber() {
-	return minlinenum;
+	return visibilelinenum;
 }
 
 gGUITreelist::Element* gGUITreelist::getRootElement() {

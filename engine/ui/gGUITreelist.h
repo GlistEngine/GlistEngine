@@ -430,9 +430,8 @@ public:
 
 private:
 	int listboxh;
-	int lineh, linenum;
-	int minlinenum, minboxh;
-	int maxlinenum;
+	int lineh;
+	int visibilelinenum, minboxh;
 	int fldy, flno;
 	float datady;
 	int firstlineno;
@@ -442,6 +441,9 @@ private:
 	Element topelement;
 	gColor chosencolor, iconcolor;
 	int iconx, iconw, iconh;
+
+private:
+	void updateTotalHeight();
 };
 
 #endif /* UI_GGUITREELIST_H_ */
