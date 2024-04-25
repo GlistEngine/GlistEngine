@@ -240,6 +240,11 @@ void gEnableLogging();
 void gDisableLogging();
 bool gIsLoggingEnabled();
 
+template<typename T>
+T gClamp(T t, T min, T max) {
+	return t > max ? max : t < min ? min : t;
+}
+
 /**
  * Shows operating system's open file dialog
  *

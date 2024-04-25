@@ -253,8 +253,8 @@ private:
 	void removeFunction(int cellNo);
 	void operateFunction(int functionNo);
 
-	void changeAllAffectedCellsXW(int columnNo, float diff);
-	void changeAllAffectedCellsYH(float diff);
+	void updateAllAffectedCellWidths(int columnNo, float diff);
+	void updateAllAffectedCellHeights(int rowNo, float diff);
 	void changeSelectedCell(int amount);
 	void changeCell(int cellNo);
 	void setSelectedCells(bool takeAll = false);
@@ -271,6 +271,8 @@ private:
 	void checkCellType(int cellIndex);
 	void showCells();
 	void showCell(int rowNo, int columnNo);
+
+	void updateTotalSize();
 
 	uint64_t hashCell(int row, int column) {
 		return (uint64_t)row << 32L | column;

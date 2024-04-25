@@ -87,6 +87,7 @@ public:
 	void enableScrollbars(bool isVerticalEnabled, bool isHorizontalEnabled);
 
 	void draw();
+
 	/*
 	 * Draws contents of class. But it is empty for now, must be overrided in
 	 * child classes from this parent class.
@@ -126,9 +127,9 @@ public:
 
 	int getTitleTop();
 
-	const int titletopmargin = 20;
-
 protected:
+	bool isPointInsideVerticalScrollbar(int x, int y, bool checkFullSize = false);
+	bool isPointInsideHorizontalScrollbar(int x, int y, bool checkFullSize = false);
 
 	/*
 	 *	Updates the values of variables that we use to draw window and scrollbars
@@ -139,34 +140,31 @@ protected:
 	 *	@param h is the new height value.
 	 */
 	void setDimensions(int width, int height);
-	void setMargin(float marginx, float marginy);
-	int boxw, boxh;
-	int totalw, totalh;
-	int firstx, firsty;
-	int vsbx, vsby, vsbw, vsbh;
-	int hsbx, hsby, hsbw, hsbh;
-	int scrolldiff;
-	int titlediff;
-	int linehalf;
 
-	int vrx, vry, vrw, vrh;
-	int hrx, hry, hrw, hrh;
-	int vsbmy;
-	int hsbmx;
+protected:
+	const int barsize = 12;
 
+	int scrollamount = 8;
+
+	int boxw = 0, boxh = 0; // viewport size
+	int totalw = 0, totalh = 0; // content size
+	int verticalscroll = 0, horizontalscroll = 0; // content scroll amounts
+
+	int verticalscrollbarpos = 0, horizontalscrollbarpos = 0; // scaled scrollbar position for rendering
+	int scrollbarverticalsize = 0, scrollbarhorizontalsize = 0; // scrollbar size for rendering
+
+	// for dragging the bars
+	bool isdraggingverticalscroll = false;
+	int verticalscrolldragstart = 0;
+	float verticalscrollclickedtime = 0.0f;
+	bool isdragginghorizontalscroll = false;
+	int horizontalscrolldragstart = 0;
+	float horizontalscrollclickedtime = 0.0f;
 private:
 	gFbo* boxfbo;
 
-	bool vsbenabled, hsbenabled, sbenabled;
-	bool vsbactive, hsbactive;
-	bool iscursoronvsb, iscursoronhsb;
-	gColor sbbgcolor, sbfgcolor, sbdragcolor;
-	float vsbalpha, hsbalpha;
-	float sbalphaboxlimit, sbalphasblimit;
-	bool alphablending;
-	int vmaxy, hmaxx;
-	bool isalpha;
-	float marginx, marginy;
+	bool enableverticalscroll, enablehorizontalscroll;
+	gColor barbackgroundcolor, barforegroundcolor;
 };
 
 #endif /* UI_GGUISCROLLABLE_H_ */

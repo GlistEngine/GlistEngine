@@ -54,32 +54,32 @@ void gGUISurface::drawShapes() {
 		//rectangle = 0
 		if((int)shapes[i][0] == SHAPE_RECTANGLE) {//for drawing RECTANGLE first index decides to the shape type
 			renderer->setColor(gColor(shapes[i][9], shapes[i][10], shapes[i][11], shapes[i][12]));
-			gDrawRectangle(shapes[i][1], shapes[i][2] - firsty, shapes[i][3], shapes[i][4], (int)shapes[i][5]);
+			gDrawRectangle(shapes[i][1], shapes[i][2] - verticalscroll, shapes[i][3], shapes[i][4], (int)shapes[i][5]);
 		}
 		//circle = 1
 		else if((int)shapes[i][0] == SHAPE_CIRCLE) {//for drawing CIRCLE first index decides to the shape type
 			renderer->setColor(gColor(shapes[i][6], shapes[i][7], shapes[i][8], shapes[i][9]));
-			gDrawCircle(shapes[i][1], shapes[i][2]  - firsty, shapes[i][3], (int)shapes[i][4], shapes[i][5]);
+			gDrawCircle(shapes[i][1], shapes[i][2]  - verticalscroll, shapes[i][3], (int)shapes[i][4], shapes[i][5]);
 		}
 		//2d line = 2
 		else if((int)shapes[i][0] == SHAPE_LINE) {//for drawing 2D LINE first index decides to the shape type
 			renderer->setColor(gColor(shapes[i][5], shapes[i][6], shapes[i][7], shapes[i][8]));
-			gDrawLine(shapes[i][1], shapes[i][2] - firsty, shapes[i][3], shapes[i][4] - firsty);
+			gDrawLine(shapes[i][1], shapes[i][2] - verticalscroll, shapes[i][3], shapes[i][4] - verticalscroll);
 		}
 		//arrow = 3
 		else if((int)shapes[i][0] == SHAPE_ARROW) {//for drawing 3D LINE first index decides to the shape type
 			renderer->setColor(gColor(shapes[i][7], shapes[i][8], shapes[i][9], shapes[i][10]));
-			gDrawArrow(shapes[i][1], shapes[i][2] - firsty, shapes[i][3], shapes[i][4], shapes[i][5], shapes[i][6]);
+			gDrawArrow(shapes[i][1], shapes[i][2] - verticalscroll, shapes[i][3], shapes[i][4], shapes[i][5], shapes[i][6]);
 		}
 		//triangle = 4
 		else if((int)shapes[i][0] == SHAPE_TRIANGLE) {//for drawing 3D LINE first index decides to the shape type
 			renderer->setColor(gColor(shapes[i][8], shapes[i][9], shapes[i][10], shapes[i][11]));
-			gDrawTriangle(shapes[i][1], shapes[i][2] - firsty, shapes[i][3], shapes[i][4] - firsty, shapes[i][5], shapes[i][6] - firsty, (int)shapes[i][7]);
+			gDrawTriangle(shapes[i][1], shapes[i][2] - verticalscroll, shapes[i][3], shapes[i][4] - verticalscroll, shapes[i][5], shapes[i][6] - verticalscroll, (int)shapes[i][7]);
 		}
 		//image = 5
 		else if((int)shapes[i][0] == SHAPE_IMAGE) {//for drawing 3D LINE first index decides to the shape type
 			renderer->setColor(gColor(1.0f,	1.0f, 1.0f, 1.0f));
-			images[shapes[i][5]]->draw(shapes[i][1], shapes[i][2] - firsty, shapes[i][3], shapes[i][4]);
+			images[shapes[i][5]]->draw(shapes[i][1], shapes[i][2] - verticalscroll, shapes[i][3], shapes[i][4]);
 		}
 		//text = 6
 		else if((int)shapes[i][0] == SHAPE_TEXT) {//for drawing 3D LINE first index decides to the shape type
@@ -276,7 +276,7 @@ void gGUISurface::clear() {
 
 void gGUISurface::mousePressed(int x, int y, int button) {
 	gGUIScrollable::mousePressed(x, y, button);
-	if(x >= (boxw - vsbw) && x < vsbw && y >= 0 && y < vsbh) {
+	if(!isPointInsideVerticalScrollbar(x, y, true)) {
 		mousepressedonlist = true;
 	}
 	root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_MOUSEPRESSED, gToStr(x), gToStr(y));
@@ -286,7 +286,7 @@ void gGUISurface::mouseReleased(int x, int y, int button) {
 	gGUIScrollable::mouseReleased(x, y, button);
 	if(mousepressedonlist) {
 		mousepressedonlist = false;
-		firsty = y;
+		verticalscroll = y;
 	}
 	root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_MOUSERELEASED, gToStr(x), gToStr(y));
 }

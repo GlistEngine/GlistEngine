@@ -250,6 +250,7 @@ public:
 private:
 	int listboxh;
 	int lineh, linenum;
+	int linehalf;
 	int minlinenum, minboxh;
 	int maxlinenum;
 	std::vector<std::string> data;

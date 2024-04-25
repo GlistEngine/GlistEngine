@@ -50,8 +50,8 @@ void gGUIListbox::drawContent() {
 	renderer->setColor(textbackgroundcolor);
 	gDrawRectangle(0, 0, boxw, boxh, true);
 
-	flno = firsty / lineh;
-	fldy = firsty % lineh;
+	flno = verticalscroll / lineh;
+	fldy = verticalscroll % lineh;
 
 	if(selectedno >= flno && selectedno < flno + linenum) {
 		if(isfocused) renderer->setColor(chosencolor);
@@ -109,8 +109,10 @@ void gGUIListbox::removeData(int lineNo) {
 		selectedno = data.size() - 1;
 		flno -= 1;
 		if(flno < 0) flno = 0;
-		firsty -= 3 * scrolldiff;
-		if(firsty < 0) firsty = 0;
+		verticalscroll -= 3 * scrollamount;
+		if(verticalscroll < 0) {
+			verticalscroll = 0;
+		}
 	}
 }
 
@@ -123,13 +125,13 @@ void gGUIListbox::clear() {
 	icons.clear();
 	linenum = 0;
 	totalh = height;
-	firsty = 0;
+	verticalscroll = 0;
 }
 
 
 void gGUIListbox::mousePressed(int x, int y, int button) {
 	gGUIScrollable::mousePressed(x, y, button);
-	if(x >= left && x < left + vsbx && y >= top + titledy && y < top + titledy + hsby) {
+	if(x >= left && x < left + boxw && y >= top + titleheight && y < top + titleheight + boxh) {
 		mousepressedonlist = true;
 	}
 }
@@ -137,8 +139,8 @@ void gGUIListbox::mousePressed(int x, int y, int button) {
 void gGUIListbox::mouseReleased(int x, int y, int button) {
 	gGUIScrollable::mouseReleased(x, y, button);
 	if(mousepressedonlist) mousepressedonlist = false;
-	if(x >= left && x < left + vsbx && y >= top + titledy && y < top + titledy + hsby) {
-		int newselectedno = (y - top - titledy + firsty) / lineh;
+	if(x >= left && x < left + boxw && y >= top + titleheight && y < top + titleheight + boxh) {
+		int newselectedno = (y - top - titleheight + verticalscroll) / lineh;
 		if(newselectedno < data.size() + 1) selectedno = newselectedno;
 		isfocused = true;
 		root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_LISTBOXSELECTED, gToStr(selectedno));
