@@ -108,8 +108,8 @@ public:
 		PROCESS_ALL
 	};
 
-	static const int maxcolumnnum = 16384;
-	static const int maxrownum = 131071;
+	const int maxcolumnnum = 16384;
+	const int maxrownum = 131071;
 
 	gGUIGrid();
 	virtual ~gGUIGrid();
