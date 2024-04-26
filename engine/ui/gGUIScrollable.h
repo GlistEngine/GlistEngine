@@ -86,6 +86,8 @@ public:
 	 */
 	void enableScrollbars(bool isVerticalEnabled, bool isHorizontalEnabled);
 
+	void updateScrollbar();
+
 	void draw();
 
 	/*

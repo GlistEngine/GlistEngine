@@ -57,7 +57,7 @@ void gGUIScrollable::setDimensions(int newWidth, int newHeight) {
 	boxfbo->allocate(renderer->getWidth(), renderer->getHeight());
 }
 
-void gGUIScrollable::draw() {
+void gGUIScrollable::updateScrollbar() {
 	float deltat = appmanager->getElapsedTime();
 	if (verticalscrollclickedtime > 0) {
 		verticalscrollclickedtime -= deltat;
@@ -71,6 +71,49 @@ void gGUIScrollable::draw() {
 			horizontalscrollclickedtime = 0;
 		}
 	}
+
+	// update scroll bar
+	// vertical bar
+	int scrollableheight = totalh - boxh;
+	if (scrollableheight > 0) {
+		verticalscroll = gClamp(verticalscroll, 0, scrollableheight);
+	} else {
+		verticalscroll = 0;
+	}
+
+	scrollbarverticalsize = ((float) boxh / totalh) * boxh;
+	if (scrollbarverticalsize < barsize) {
+		scrollbarverticalsize = barsize;
+	}
+	if (scrollableheight > 0) {
+		// Calculate the position of the scrollbar thumb within the viewport
+		verticalscrollbarpos = ((float) verticalscroll / scrollableheight) * (boxh - scrollbarverticalsize);
+	} else {
+		verticalscrollbarpos = 0; // Set scrollbar position to the top if no scrolling is needed
+	}
+
+	// horizontal bar
+	int scrollablewidth = totalw - boxw;
+	if (scrollablewidth > 0) {
+		horizontalscroll = gClamp(horizontalscroll, 0, scrollablewidth);
+	} else {
+		horizontalscroll = 0;
+	}
+
+	scrollbarhorizontalsize = ((float) boxw / totalw) * boxw;
+	if (scrollbarhorizontalsize < barsize) {
+		scrollbarhorizontalsize = barsize;
+	}
+	if (scrollablewidth > 0) {
+		// Calculate the position of the scrollbar thumb within the viewport
+		horizontalscrollbarpos = ((float) horizontalscroll / scrollablewidth) * (boxw - scrollbarhorizontalsize);
+	} else {
+		horizontalscrollbarpos = 0; // Set scrollbar position to the top if no scrolling is needed
+	}
+}
+
+void gGUIScrollable::draw() {
+	updateScrollbar();
 
 	bool isalpha = renderer->isAlphaBlendingEnabled();
 	bool isalphatest = renderer->isAlphaTestEnabled();
@@ -107,45 +150,6 @@ void gGUIScrollable::drawContent() {
 }
 
 void gGUIScrollable::drawScrollbars() {
-	// update scroll bar
-	// vertical bar
-	int scrollableheight = totalh - boxh;
-	if (scrollableheight > 0) {
-		verticalscroll = gClamp(verticalscroll, 0, scrollableheight);
-	} else {
-		verticalscroll = 0.0f;
-	}
-
-	scrollbarverticalsize = ((float) boxh / totalh) * boxh;
-	if (scrollbarverticalsize < barsize) {
-		scrollbarverticalsize = barsize;
-	}
-	if (scrollableheight > 0) {
-		// Calculate the position of the scrollbar thumb within the viewport
-		verticalscrollbarpos = ((float) verticalscroll / scrollableheight) * (boxh - scrollbarverticalsize);
-	} else {
-		verticalscrollbarpos = 0; // Set scrollbar position to the top if no scrolling is needed
-	}
-
-	// horizontal bar
-	int scrollablewidth = totalw - boxw;
-	if (scrollablewidth > 0) {
-		horizontalscroll = gClamp(horizontalscroll, 0, scrollablewidth);
-	} else {
-		horizontalscroll = 0;
-	}
-
-	scrollbarhorizontalsize = ((float) boxw / totalw) * boxw;
-	if (scrollbarhorizontalsize < barsize) {
-		scrollbarhorizontalsize = barsize;
-	}
-	if (scrollablewidth > 0) {
-		// Calculate the position of the scrollbar thumb within the viewport
-		horizontalscrollbarpos = ((float) horizontalscroll / scrollablewidth) * (boxw - scrollbarhorizontalsize);
-	} else {
-		horizontalscrollbarpos = 0; // Set scrollbar position to the top if no scrolling is needed
-	}
-
 	// render
 	gColor* oldcolor = renderer->getColor();
 	if(enableverticalscroll) {
