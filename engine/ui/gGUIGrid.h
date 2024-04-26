@@ -207,7 +207,6 @@ public:
 	void drawRowLines();
 	void drawColumnHeader();
 	void drawColumnLines();
-	void drawHeaderFinal();
 	void drawCellContents();
 	void drawSelectedArea();
 
