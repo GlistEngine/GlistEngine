@@ -1715,6 +1715,7 @@ void gGUIGrid::changeSelectedCell(int amount) {
 		}
 	}
 	setSelectedCells();
+	adjustScrollToFocusSelected();
 }
 
 void gGUIGrid::changeCell(int cellNo) {
@@ -2312,6 +2313,30 @@ void gGUIGrid::updateTotalSize() {
 	totalh = gridh + gridboxh + titleheight;
 }
 
+void gGUIGrid::adjustScrollToFocusSelected() {
+	int cellindex = selectedbox;
+	if (cellindex < 0) {
+		return;
+	}
+	int cellx = allcells[cellindex].cellx - gridboxwhalf;
+	int celly = allcells[cellindex].celly - gridboxh;
+	int cellw = allcells[cellindex].cellw + gridboxwhalf;
+	int cellh = allcells[cellindex].cellh + gridboxh;
+	int cellx2 = cellx + cellw;
+	int celly2 = celly + cellh;
+	if(cellx < horizontalscroll) {
+		horizontalscroll = cellx;
+	} else if(cellx2 > horizontalscroll + boxw) {
+		horizontalscroll = cellx2 - boxw;
+	}
+
+	if(celly < verticalscroll) {
+		verticalscroll = celly;
+	} else if(celly2 > verticalscroll + boxh) {
+		verticalscroll = celly2 - boxh;
+	}
+}
+
 void gGUIGrid::drawContent() {
 //	gLogi("Scrollable") << "drawContent fx:" << horizontalscroll << ", fy:" << verticalscroll;
 	gColor oldcolor = renderer->getColor();
@@ -2865,6 +2890,7 @@ void gGUIGrid::keyReleased(int key) {
 		}
 		selectedbox = index;
 		resetSelectedIndexes();
+		adjustScrollToFocusSelected();
 	}
 	else if(key == G_KEY_UP && !istextboxactive) {
 		if(!shiftpressed && allcells[selectedbox].cellrowno - 1 >= 0) {
@@ -2877,6 +2903,7 @@ void gGUIGrid::keyReleased(int key) {
 			}
 			selectedbox = index;
 			resetSelectedIndexes();
+			adjustScrollToFocusSelected();
 		}
 	}
 	else if(key == G_KEY_RIGHT && !istextboxactive) {
@@ -2890,6 +2917,7 @@ void gGUIGrid::keyReleased(int key) {
 			}
 			selectedbox = index;
 			resetSelectedIndexes();
+			adjustScrollToFocusSelected();
 		}
 	}
 	else if(key == G_KEY_LEFT && !istextboxactive) {
@@ -2903,6 +2931,7 @@ void gGUIGrid::keyReleased(int key) {
 			}
 			selectedbox = index;
 			resetSelectedIndexes();
+			adjustScrollToFocusSelected();
 		}
 	}
 	else if(key == G_KEY_F2) {

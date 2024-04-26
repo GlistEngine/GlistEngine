@@ -273,6 +273,7 @@ private:
 	void showCell(int rowNo, int columnNo);
 
 	void updateTotalSize();
+	void adjustScrollToFocusSelected();
 
 	uint64_t hashCell(int row, int column) {
 		return (uint64_t)row << 32L | column;
