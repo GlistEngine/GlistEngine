@@ -2356,7 +2356,15 @@ void gGUIGrid::drawContent() {
 
 	drawColumnHeader();
 	drawRowHeader();
-	drawHeaderFinal();
+
+    // draws the square at the top left
+    renderer->setColor(pressedbuttoncolor);
+    gDrawRectangle(gridx, gridy, gridboxwhalf, gridboxh, true);
+
+    // draw the lines for the headers (column and row)
+    renderer->setColor(backgroundcolor);
+    gDrawLine(gridx + gridboxwhalf + 1, gridy, gridx + gridboxwhalf + 1, gridh + gridboxh - verticalscroll);
+    gDrawLine(gridx, gridy + gridboxh, gridw + gridboxwhalf - horizontalscroll, gridy + gridboxh);
 
 	renderer->setColor(oldcolor);
 }
@@ -2462,17 +2470,6 @@ void gGUIGrid::drawColumnLines() {
 		renderer->setColor(pressedbuttoncolor);
 		gDrawLine(currentx, gridy - verticalscroll + gridboxh, currentx, gridy + gridboxh + gridh - verticalscroll);
 	}
-}
-
-void gGUIGrid::drawHeaderFinal() {
-	// draws the square at the top left
-	renderer->setColor(pressedbuttoncolor);
-	gDrawRectangle(gridx, gridy, gridboxwhalf, gridboxh, true);
-
-	// draw the lines for the headers (column and row)
-	renderer->setColor(backgroundcolor);
-	gDrawLine(gridx + gridboxwhalf + 1, gridy, gridx + gridboxwhalf + 1, gridh + gridboxh - verticalscroll);
-	gDrawLine(gridx, gridy + gridboxh, gridw + gridboxwhalf - horizontalscroll, gridy + gridboxh);
 }
 
 void gGUIGrid::drawCellContents() {
