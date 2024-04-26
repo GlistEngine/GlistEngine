@@ -203,11 +203,11 @@ public:
 
 	void drawContent();
 	void drawCellBackground();
-	void drawTitleRowBackground();
-	void drawTitleColumnBackground();
-	void drawRowContents();
-	void drawColumnContents();
-	void drawTitleLines();
+	void drawRowHeader();
+	void drawRowLines();
+	void drawColumnHeader();
+	void drawColumnLines();
+	void drawHeaderFinal();
 	void drawCellContents();
 	void drawSelectedArea();
 

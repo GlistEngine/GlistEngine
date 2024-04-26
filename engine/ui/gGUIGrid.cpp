@@ -2316,37 +2316,36 @@ void gGUIGrid::drawContent() {
 //	gLogi("Scrollable") << "drawContent fx:" << horizontalscroll << ", fy:" << verticalscroll;
 	gColor oldcolor = renderer->getColor();
 	drawCellBackground();
-	if(isselected || isrowselected || iscolumnselected) drawSelectedArea();
+	if(isselected || isrowselected || iscolumnselected) {
+		drawSelectedArea();
+	}
 	drawCellContents();
 	if(istextboxactive) {
 		textbox.setFirstX(horizontalscroll);
 		textbox.setFirstY(verticalscroll);
 		textbox.draw();
 	}
-	drawTitleRowBackground();
-	drawRowContents();
-	drawTitleColumnBackground();
-	drawColumnContents();
-	drawTitleLines();
+
+	drawColumnLines();
+	drawRowLines();
+
+	drawColumnHeader();
+	drawRowHeader();
+	drawHeaderFinal();
+
 	renderer->setColor(oldcolor);
 }
 
 void gGUIGrid::drawCellBackground() {
-	renderer->setColor(*textbackgroundcolor);
+	renderer->setColor(textbackgroundcolor);
 	gDrawRectangle(gridx + gridboxwhalf, gridy + gridboxh, gridw - horizontalscroll, gridh - verticalscroll, true);
 }
 
-void gGUIGrid::drawTitleRowBackground() {
-	renderer->setColor(*buttoncolor);
+void gGUIGrid::drawRowHeader() {
+	// draw header
+	renderer->setColor(buttoncolor);
 	gDrawRectangle(gridx, gridy + gridboxh, gridboxwhalf, gridh - verticalscroll, true);
-}
 
-void gGUIGrid::drawTitleColumnBackground() {
-	renderer->setColor(*buttoncolor);
-	gDrawRectangle(gridx + gridboxwhalf, gridy, gridw - horizontalscroll, gridboxh, true);
-}
-
-void gGUIGrid::drawRowContents() {
 	for(int i = 0; i < rownum; i++) {
 		Cell* cell = getCell(i + 1, 0);
 		int currenty = cell->celly - verticalscroll;
@@ -2359,16 +2358,36 @@ void gGUIGrid::drawRowContents() {
 		}
 		Cell* previouscell = getCell(i, 0);
 		std::string rowtitlestring = std::to_string(i + 1);
-		renderer->setColor(*fontcolor);
+		renderer->setColor(fontcolor);
 		font->drawText(rowtitlestring,gridx + (gridboxw / 4) - (font->getStringWidth(rowtitlestring) / 2),
 					   currenty - (previouscell->cellh / 2) + (font->getStringHeight(rowtitlestring) / 2)
 		);
-		renderer->setColor(*pressedbuttoncolor);
-		gDrawLine(gridx - horizontalscroll, currenty, gridx + gridw + gridboxwhalf - horizontalscroll, currenty);
+		renderer->setColor(pressedbuttoncolor);
+		gDrawLine(gridx, currenty, gridx + gridboxwhalf, currenty);
 	}
 }
 
-void gGUIGrid::drawColumnContents() {
+void gGUIGrid::drawRowLines() {
+	// draw content lines
+	for(int i = 0; i < rownum; i++) {
+		Cell* cell = getCell(i + 1, 0);
+		int currenty = cell->celly - verticalscroll;
+		if(currenty < gridx) {
+			continue;
+		}
+		int rowheight = cell->cellh;
+		if (currenty - rowheight > boxh) {
+			break;
+		}
+		renderer->setColor(pressedbuttoncolor);
+		gDrawLine(gridx - horizontalscroll + gridboxwhalf, currenty, gridx + gridw + gridboxwhalf - horizontalscroll, currenty);
+	}
+}
+
+void gGUIGrid::drawColumnHeader() {
+	renderer->setColor(buttoncolor);
+	gDrawRectangle(gridx + gridboxwhalf, gridy, gridw - horizontalscroll, gridboxh, true);
+
 	for(int i = 0; i < columnnum; i++) {
 		Cell* cell = getCell(0, i + 1);
 		int currentx = cell->cellx - horizontalscroll;
@@ -2392,17 +2411,41 @@ void gGUIGrid::drawColumnContents() {
 		} else {
 			columntitlestring = (char)(columntitle + i);
 		}
-		renderer->setColor(*fontcolor);
+		renderer->setColor(fontcolor);
 		font->drawText(columntitlestring,currentx - (previouscell->cellw / 2) - (font->getStringWidth(columntitlestring) / 2),
 					   gridy + (gridboxh / 2) + (font->getStringHeight(columntitlestring) / 2));
-		renderer->setColor(*pressedbuttoncolor);
-		gDrawLine(currentx, gridy - verticalscroll, currentx, gridy + gridboxh + gridh - verticalscroll);
+		renderer->setColor(pressedbuttoncolor);
+		gDrawLine(currentx,
+				  gridy,
+				  currentx,
+				  gridy + gridboxh);
 	}
-	gDrawRectangle(gridx, gridy, gridboxwhalf, gridboxh, true);
 }
 
-void gGUIGrid::drawTitleLines() {
-	renderer->setColor(*backgroundcolor);
+void gGUIGrid::drawColumnLines() {
+	// draw content lines
+	for(int i = 0; i < columnnum; i++) {
+		Cell* cell = getCell(0, i + 1);
+		int currentx = cell->cellx - horizontalscroll;
+		if(currentx < gridx) {
+			continue;
+		}
+		int columnwidth = cell->cellw;
+		if(currentx - columnwidth > boxw) {
+			break;
+		}
+		renderer->setColor(pressedbuttoncolor);
+		gDrawLine(currentx, gridy - verticalscroll + gridboxh, currentx, gridy + gridboxh + gridh - verticalscroll);
+	}
+}
+
+void gGUIGrid::drawHeaderFinal() {
+	// draws the square at the top left
+	renderer->setColor(pressedbuttoncolor);
+	gDrawRectangle(gridx, gridy, gridboxwhalf, gridboxh, true);
+
+	// draw the lines for the headers (column and row)
+	renderer->setColor(backgroundcolor);
 	gDrawLine(gridx + gridboxwhalf + 1, gridy, gridx + gridboxwhalf + 1, gridh + gridboxh - verticalscroll);
 	gDrawLine(gridx, gridy + gridboxh, gridw + gridboxwhalf - horizontalscroll, gridy + gridboxh);
 }
@@ -2488,7 +2531,7 @@ void gGUIGrid::drawSelectedArea() {
 	int sh = calculateCurrentY(int(lastselectedcell / columnnum)) - sy + getRowHeight(int(lastselectedcell / columnnum));
 	if(appmanager->getGUIManager()->getTheme() == gGUIManager::GUITHEME_DARK) renderer->setColor(selectedareadarkcolor);
 	else renderer->setColor(selectedareacolor);
-	gDrawRectangle(sx, sy, sw, sh, true);
+	gDrawRectangle(sx , sy, sw, sh, true);
 	renderer->setColor(*textbackgroundcolor);
 	gDrawRectangle(allcells[selectedbox].cellx - horizontalscroll, allcells[selectedbox].celly - verticalscroll, allcells[selectedbox].cellw, allcells[selectedbox].cellh, true);
 	renderer->setColor(selectedframecolor);
