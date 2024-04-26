@@ -801,7 +801,7 @@ gGUIGrid::Cell* gGUIGrid::getCell(const std::string& cellID) {
 	std::string row = temp.substr(column.size());
 	for(int i = 0; i < row.size(); i++) {
 		if(!isdigit(row[i])) {
-			return 0;
+			return nullptr;
 		}
 	}
 	int columnindex = int(column[column.size() - 1]) % 65;
@@ -923,7 +923,9 @@ std::string gGUIGrid::fixTextFunction(const std::string& text, int index) {
 						std::string str2 = parenthesesstr.substr(str1.size() + 1);
 						Cell* cell1 = getCell(str1);
 						Cell* cell2 = getCell(str2);
-						if(cell1 == 0 || cell2 == 0) return errormessage;
+						if(cell1 == nullptr || cell2 == nullptr) {
+							return errormessage;
+						}
 						int columnno1 = cell1->cellcolumnno;
 						int columnno2 = cell2->cellcolumnno;
 						int rowno1 = cell1->cellrowno;
@@ -935,7 +937,9 @@ std::string gGUIGrid::fixTextFunction(const std::string& text, int index) {
 						tempstr = std::to_string(makeSum(columnno1, rowno1, columnno2, rowno2));
 						addOrChangeFunction(index);
 					}
-					if((isnegative && !isparenthesesnegative) || (!isnegative && isparenthesesnegative)) tempstr = "-" + tempstr;
+					if(isnegative != !isparenthesesnegative) {
+						tempstr = "-" + tempstr;
+					}
 				}
 			}
 			else {
@@ -955,13 +959,13 @@ std::string gGUIGrid::fixTextFunction(const std::string& text, int index) {
 				if(cstr1.size() != tempstr.size()) {
 					std::string cstr2 = tempstr.substr(cstr1.size());
 					std::string csymbol2 = "";
-					char operation;
+					char operation = '\0';
 					if(cstr2[0] == '/' || cstr2[0] == '*') {
 						operation = cstr2[0];
 						cstr2.erase(0, 1);
 					}
 					cstr2 = fixNumeric(cstr2);
-					if(operation == 0) {
+					if(operation == '\0') {
 						if(cstr2[0] != '+' && cstr2[0] != '-' && cstr2[0] != '/' && cstr2[0] != '*') operation = '+';
 						else operation = cstr2[0];
 					}
@@ -997,7 +1001,9 @@ std::string gGUIGrid::fixTextFunction(const std::string& text, int index) {
 				}
 				else {
 					Cell* c = getCell(cstr1);
-					if(c == 0) return errormessage;
+					if(c == nullptr) {
+						return errormessage;
+					}
 					tempstr = c->showncontent;
 					if(cstr1[0] == '-') {
 						if(tempstr[0] != '-') tempstr = "-" + tempstr;
@@ -1021,13 +1027,13 @@ std::string gGUIGrid::fixTextFunction(const std::string& text, int index) {
 			if(number1.size() == tempstr.size()) return tempstr;
 			else {
 				std::string number2 = tempstr.substr(number1.size());
-				char operation;
+				char operation = '\0';
 				if(number2[0] == '/' || number2[0] == '*') {
 					operation = number2[0];
 					number2.erase(0, 1);
 				}
 				number2 = fixNumeric(number2);
-				if(operation == 0) {
+				if(operation == '\0') {
 					if(number2[0] != '+' && number2[0] != '-' && number2[0] != '/' && number2[0] != '*') operation = '+';
 					else {
 						operation = number2[0];
