@@ -108,8 +108,8 @@ public:
 		PROCESS_ALL
 	};
 
-	static const int maxcolumnnum = 16384;
-	static const int maxrownum = 131071;
+	const int maxcolumnnum = 16384;
+	const int maxrownum = 131071;
 
 	gGUIGrid();
 	virtual ~gGUIGrid();
@@ -203,11 +203,11 @@ public:
 
 	void drawContent();
 	void drawCellBackground();
-	void drawTitleRowBackground();
-	void drawTitleColumnBackground();
-	void drawRowContents();
-	void drawColumnContents();
-	void drawTitleLines();
+	void drawRowHeader();
+	void drawRowLines();
+	void drawColumnHeader();
+	void drawColumnLines();
+	void drawHeaderFinal();
 	void drawCellContents();
 	void drawSelectedArea();
 
@@ -253,8 +253,8 @@ private:
 	void removeFunction(int cellNo);
 	void operateFunction(int functionNo);
 
-	void changeAllAffectedCellsXW(int columnNo, float diff);
-	void changeAllAffectedCellsYH(float diff);
+	void updateAllAffectedCellWidths(int columnNo, float diff);
+	void updateAllAffectedCellHeights(int rowNo, float diff);
 	void changeSelectedCell(int amount);
 	void changeCell(int cellNo);
 	void setSelectedCells(bool takeAll = false);
@@ -271,6 +271,9 @@ private:
 	void checkCellType(int cellIndex);
 	void showCells();
 	void showCell(int rowNo, int columnNo);
+
+	void updateTotalSize();
+	void adjustScrollToFocusSelected();
 
 	uint64_t hashCell(int row, int column) {
 		return (uint64_t)row << 32L | column;

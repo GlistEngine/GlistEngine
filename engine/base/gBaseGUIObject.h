@@ -121,7 +121,7 @@ public:
 
 	int id, type;
 	int left, top, right, bottom, width, height;
-	int titlex, titley, titledy;
+	int titlex, titley, titleheight;
 	bool isfocused, iscursoron;
 	bool issizer, iscontainer;
 	static int focusid, previousfocusid;

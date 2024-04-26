@@ -77,11 +77,11 @@ void gBaseGUIObject::setTitleOn(bool isTitleOn) {
 	if(istitleon) {
 		titlex = left + font->getStringWidth("i");
 		titley = top + font->getStringHeight("AE");
-		titledy = font->getSize() * 1.8f;
+		titleheight = font->getSize() * 1.8f;
 	} else {
 		titlex = 0;
 		titley = 0;
-		titledy = 0;
+		titleheight = 0;
 	}
 }
 

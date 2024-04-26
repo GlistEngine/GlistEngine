@@ -850,8 +850,6 @@ void gModel::prepareVertexAnimationData() {
     int mnum = meshes.size();
     int anum = scene->mNumAnimations;
     int fnum = getAnimationFrameNum();
-    int vnum = scene->mMeshes[0]->mNumVertices;
-    for (int i=0; i<scene->mNumMeshes; i++) if (scene->mMeshes[i]->mNumVertices > vnum) scene->mMeshes[i]->mNumVertices;
 
     // update mesh position for the animation
     for(unsigned int i=0; i<meshes.size(); ++i) {

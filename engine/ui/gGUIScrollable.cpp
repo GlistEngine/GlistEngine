@@ -6,62 +6,24 @@
  */
 
 #include "gGUIScrollable.h"
+#include "gAppManager.h"
 
 
 gGUIScrollable::gGUIScrollable() {
-	vsbw = 12;
-	vsbh = height;
-	hsbw = width;
-	hsbh = 12;
-	vsbx = right - vsbw;
-	vsby = top;
-	hsbx = left;
-	hsby = bottom - hsbh;
 	boxw = width;
 	boxh = height;
 	totalw = boxw;
 	totalh = boxh;
-	scrolldiff = 8;
-	linehalf = scrolldiff / 2;
-	vsbenabled = false;
-	hsbenabled = false;
-	sbenabled = false;
-	vsbactive = true;
-	hsbactive = true;
-	iscursoronvsb = false;
-	iscursoronhsb = false;
-	sbbgcolor = middlegroundcolor;
-	sbfgcolor = backgroundcolor;
-	sbdragcolor.set(0, 0, 255, 255);
-	vsbalpha = 1.0f;
-	hsbalpha = 1.0f;
-	sbalphaboxlimit = 1.0f;
-//	sbalphaboxlimit = 0.2f;
-	sbalphasblimit = 1.0f;
-	alphablending = false;
-	vrw = vsbw;
-	vrh = vsbh;
-	vrx = vsbx;
-	vry = vsby;
-	hrw = hsbw;
-	hrh = hsbh;
-	hrx = hsbx;
-	hry = hsby;
-	firstx = 0;
-	firsty = 0;
-	vsbmy = -1;
-	hsbmx = -1;
-	marginx = 0;
-	marginy = 0;
-	titlediff = 0;
+	scrollamount = 8;
+	enableverticalscroll = false;
+	enablehorizontalscroll = false;
+	barbackgroundcolor = middlegroundcolor;
+	barforegroundcolor = backgroundcolor;
 	titlex = left;
 	titley = top + font->getStringHeight("AE");
-	titledy = font->getSize() * 1.8f;
-	vmaxy = totalh - boxh + linehalf + (titlediff * istitleon) + marginy + hsbh;
-	hmaxx = totalw - boxw + marginx + vsbw;
+	titleheight = font->getSize() * 1.8f;
 	boxfbo = new gFbo();
 	setTitleOn(false);
-	isalpha = false;
 }
 
 gGUIScrollable::~gGUIScrollable() {
@@ -69,54 +31,97 @@ gGUIScrollable::~gGUIScrollable() {
 }
 
 void gGUIScrollable::enableScrollbars(bool isVerticalEnabled, bool isHorizontalEnabled) {
-	vsbenabled = isVerticalEnabled;
-	hsbenabled = isHorizontalEnabled;
-	if(vsbenabled || hsbenabled) sbenabled = true;
-	else sbenabled = false;
+	enableverticalscroll = isVerticalEnabled;
+	enablehorizontalscroll = isHorizontalEnabled;
+	setDimensions(width, height);
 }
 
-void gGUIScrollable::setDimensions(int width, int height) {
-	boxw = width;
-	boxh = height;
-	vsbh = height - hsbh;
-	hsbw = width - vsbw;
-	vsbx = boxw - vsbw;
-	vsby = 0;
-	hsbx = 0;
-	hsby = boxh - hsbh;
+void gGUIScrollable::setDimensions(int newWidth, int newHeight) {
+	height = newHeight;
+	width = newWidth;
 
-	vrw = vsbw;
-	vrh = vsbh * boxh / totalh;
-	vrx = vsbx;
-	vry = vsby;
-	if(totalw != 0 && totalw != boxw) hrw = hsbw * boxw / totalw;
-	else hrw = hsbw;
-	hrh = hsbh;
-	hrx = hsbx;
-	hry = hsby;
-
+	boxw = newWidth;
+	if (enableverticalscroll) {
+		boxw -= barsize;
+	}
+	boxh = newHeight;
+	if (enablehorizontalscroll) {
+		boxh -= barsize;
+	}
 	totalw = boxw;
 	totalh = boxh;
-	if(totalw != 0 && totalw != boxw) hrw = hsbw * boxw / totalw;
-	else hrw = hsbw;
-
-	vmaxy = totalh - boxh + linehalf + (titlediff * istitleon) + marginy + hsbh;
-	hmaxx = totalw - boxw + marginx + vsbw;
 
 	titlex = left + font->getStringWidth("i");
 	titley = top + font->getStringHeight("AE");
-	scrolldiff = height / 10;
-	linehalf = scrolldiff / 2;
 
 	boxfbo->allocate(renderer->getWidth(), renderer->getHeight());
+}
 
+void gGUIScrollable::updateScrollbar() {
+	float deltat = appmanager->getElapsedTime();
+	if (verticalscrollclickedtime > 0) {
+		verticalscrollclickedtime -= deltat;
+		if (verticalscrollclickedtime < 0) {
+			verticalscrollclickedtime = 0;
+		}
+	}
+	if (horizontalscrollclickedtime > 0) {
+		horizontalscrollclickedtime -= deltat;
+		if (horizontalscrollclickedtime < 0) {
+			horizontalscrollclickedtime = 0;
+		}
+	}
+
+	// update scroll bar
+	// vertical bar
+	int scrollableheight = totalh - boxh;
+	if (scrollableheight > 0) {
+		verticalscroll = gClamp(verticalscroll, 0, scrollableheight);
+	} else {
+		verticalscroll = 0;
+	}
+
+	scrollbarverticalsize = ((float) boxh / totalh) * boxh;
+	if (scrollbarverticalsize < barsize) {
+		scrollbarverticalsize = barsize;
+	}
+	if (scrollableheight > 0) {
+		// Calculate the position of the scrollbar thumb within the viewport
+		verticalscrollbarpos = ((float) verticalscroll / scrollableheight) * (boxh - scrollbarverticalsize);
+	} else {
+		verticalscrollbarpos = 0; // Set scrollbar position to the top if no scrolling is needed
+	}
+
+	// horizontal bar
+	int scrollablewidth = totalw - boxw;
+	if (scrollablewidth > 0) {
+		horizontalscroll = gClamp(horizontalscroll, 0, scrollablewidth);
+	} else {
+		horizontalscroll = 0;
+	}
+
+	scrollbarhorizontalsize = ((float) boxw / totalw) * boxw;
+	if (scrollbarhorizontalsize < barsize) {
+		scrollbarhorizontalsize = barsize;
+	}
+	if (scrollablewidth > 0) {
+		// Calculate the position of the scrollbar thumb within the viewport
+		horizontalscrollbarpos = ((float) horizontalscroll / scrollablewidth) * (boxw - scrollbarhorizontalsize);
+	} else {
+		horizontalscrollbarpos = 0; // Set scrollbar position to the top if no scrolling is needed
+	}
 }
 
 void gGUIScrollable::draw() {
-	isalpha = renderer->isAlphaBlendingEnabled();
+	updateScrollbar();
+
+	bool isalpha = renderer->isAlphaBlendingEnabled();
+	bool isalphatest = renderer->isAlphaTestEnabled();
 	if(isalpha) {
-		renderer->disableAlphaTest();
 		renderer->disableAlphaBlending();
+	}
+	if (isalphatest) {
+		renderer->disableAlphaTest();
 	}
 	renderer->setColor(fontcolor);
 	if(istitleon) font->drawText(title, titlex, titley);
@@ -127,11 +132,13 @@ void gGUIScrollable::draw() {
 	drawScrollbars();
 	boxfbo->unbind();
 	renderer->setColor(255, 255, 255);
-	boxfbo->drawSub(left, top + titledy, boxw, boxh, 0, renderer->getHeight() - boxh, boxw, boxh);
+	boxfbo->drawSub(left, top + titleheight, width, height, 0, renderer->getHeight() - height, width, height);
 	renderer->setColor(foregroundcolor);
-	gDrawRectangle(left, top + titledy, boxw, boxh, false);
+	gDrawRectangle(left, top + titleheight, width, height, false);
 	if(isalpha) {
 		renderer->enableAlphaBlending();
+	}
+	if (isalphatest) {
 		renderer->enableAlphaTest();
 	}
 }
@@ -143,158 +150,95 @@ void gGUIScrollable::drawContent() {
 }
 
 void gGUIScrollable::drawScrollbars() {
-	if(sbenabled) {
-		gColor* oldcolor = renderer->getColor();
-		alphablending = renderer->isAlphaBlendingEnabled();
-		if(!alphablending) {
-//			renderer->enableAlphaBlending();
-//			renderer->enableAlphaTest();
-		}
+	// render
+	gColor* oldcolor = renderer->getColor();
+	if(enableverticalscroll) {
+		renderer->setColor(&barbackgroundcolor);
+		gDrawRectangle(boxw, 0, barsize, boxh, true);
 
-		if(vsbenabled) {
-/*
-			vsbalpha += 0.01f;
-			if(!iscursoronvsb) {
-				if(vsbalpha > sbalphaboxlimit) vsbalpha = sbalphaboxlimit;
-			} else {
-				vsbalpha += 0.04f;
-				if(vsbalpha > sbalphasblimit) vsbalpha = sbalphasblimit;
-			}
-*/
-//			sbbgcolor.a = vsbalpha;
-			renderer->setColor(&sbbgcolor);
-			gDrawRectangle(vsbx, vsby, vsbw, vsbh, true);
+		renderer->setColor(&barforegroundcolor);
+		gDrawRectangle(boxw, verticalscrollbarpos, barsize, scrollbarverticalsize, true);
+	}
 
-//			sbfgcolor.a = vsbalpha;
-			renderer->setColor(&sbfgcolor);
-			gDrawRectangle(vrx, vry, vrw, vrh, true);
-		}
+	if(enablehorizontalscroll) {
+		renderer->setColor(&barbackgroundcolor);
+		gDrawRectangle(0, boxh, boxw, barsize, true);
 
-		if(hsbenabled) {
-/*
-			hsbalpha += 0.01f;
-			if(!iscursoronhsb) {
-				if(hsbalpha > sbalphaboxlimit) hsbalpha = sbalphaboxlimit;
-			} else {
-				hsbalpha += 0.04f;
-				if(hsbalpha > sbalphasblimit) hsbalpha = sbalphasblimit;
-			}
-*/
-			sbbgcolor.a = hsbalpha;
-			renderer->setColor(&sbbgcolor);
-			gDrawRectangle(hsbx, hsby - (titlediff * istitleon), hsbw, hsbh, true);
-
-			sbfgcolor.a = hsbalpha;
-			renderer->setColor(&sbfgcolor);
-			gDrawRectangle(hrx, hry - (titlediff * istitleon), hrw, hrh, true);
-		}
-
-		if(!alphablending) {
-//			renderer->disableAlphaTest();
-//			renderer->disableAlphaBlending();
-		}
-		renderer->setColor(oldcolor);
-	} else {
-//		vsbalpha = 0.0f;
-//		hsbalpha = 0.0f;
+		renderer->setColor(&barforegroundcolor);
+		gDrawRectangle(horizontalscrollbarpos, boxh, scrollbarhorizontalsize, barsize, true);
 	}
 
 	renderer->setColor(foregroundcolor);
-	gDrawRectangle(vsbx, hsby - (titlediff * istitleon), vsbw, hsbh, true);
+	gDrawRectangle(boxw, boxh, barsize, barsize, true);
+
+	// reset color back to before
+	renderer->setColor(oldcolor);
 }
 
 void gGUIScrollable::mouseMoved(int x, int y) {
-	iscursoronvsb = false;
-	iscursoronhsb = false;
-	if(x >= left + vsbx && x < left + vsbx + vsbw && y >= top + titledy + vsby && y < top + titledy + vsby + vsbh) iscursoronvsb = true;
-	if(x >= left + hsbx && x < left + hsbx + hsbw && y >= top + titledy + hsby - (titlediff * istitleon) && y < top + titledy + hsby - (titlediff * istitleon) + hsbh) iscursoronhsb = true;
 }
 
 void gGUIScrollable::mousePressed(int x, int y, int button) {
-	if(vsbenabled && x >= left + vrx && x < left + vrx + vrw && y >= top + titledy + vry && y < top + titledy + vry + vrh) {
-		vsbmy = y;
+	isdraggingverticalscroll = isPointInsideVerticalScrollbar(x, y);
+	isdragginghorizontalscroll = isPointInsideHorizontalScrollbar(x, y);
+	// double click behavior
+	if (!isdragginghorizontalscroll && isPointInsideHorizontalScrollbar(x, y, true)  && horizontalscrollclickedtime > 0.2f) {
+		verticalscrolldragstart = 0;
+		isdragginghorizontalscroll = true;
+		mouseDragged(x, y, button);
+		isdragginghorizontalscroll = false;
+	} else if (isdraggingverticalscroll) {
+		verticalscrolldragstart = y;
 	}
-	if(hsbenabled && x >= left + hrx && x < left + hrx + hrw && y >= top + titledy + hry - (titlediff * istitleon) && y < top + titledy + hry - (titlediff * istitleon) + hrh) {
-		hsbmx = x;
+	horizontalscrollclickedtime = 0.4f;
+	if (!isdraggingverticalscroll && isPointInsideVerticalScrollbar(x, y, true) && verticalscrollclickedtime > 0.2f) {
+		horizontalscrolldragstart = 0;
+		isdraggingverticalscroll = true;
+		mouseDragged(x, y, button);
+		isdraggingverticalscroll = false;
+	} else if (isdragginghorizontalscroll) {
+		horizontalscrolldragstart = x;
 	}
+	verticalscrollclickedtime = 0.4f;
 }
 
 void gGUIScrollable::mouseDragged(int x, int y, int button) {
-	if(vsbmy > -1) {
-		if(totalh <= boxh) return;
-		if(vry >= boxh - vrh && y > vsbmy) return;
-		vry += y - vsbmy;
-		if(vry < 0) vry = 0;
-		if(vry > boxh - vrh) vry = boxh - vrh;
-		if(totalh < boxh) vry = vsby;
-
-		vmaxy = totalh - boxh + linehalf + (titlediff * istitleon) + marginy + hsbh;
-		firsty = vry * vmaxy / (boxh - vrh);
-//		firsty += (y - vsbmy) * vsbh / vrh;
-		if(firsty < 0) firsty = 0;
-		if(firsty > vmaxy) firsty = vmaxy;
-		if(totalh < boxh) firsty = 0;
-
-		vsbmy = y;
+	if(isdraggingverticalscroll && totalh > boxh) {
+		int pos = y - verticalscrolldragstart;
+		int diff = (float)pos / boxh * totalh;
+		verticalscroll = gClamp(verticalscroll + diff, 0, totalh - boxh);
+		verticalscrolldragstart = y;
 	}
-
-	if(hsbmx > -1) {
-		if(totalw == boxw) totalw = (boxw + marginx + vsbw) * 2;
-		hmaxx = totalw - boxw + marginx + vsbw;
-
-		hrx += x - hsbmx;
-		if(hrx < 0) hrx = 0;
-		if(hrx > boxw - hrw) hrx = boxw - hrw;
-		if(totalw < boxw) hrx = hsbx;
-
-		firstx = hrx * hmaxx / (boxw - hrw);
-//		firstx += (x - hsbmx) * hsbw / hrw;
-		if(firstx < 0) firstx = 0;
-		if(firstx > hmaxx) firstx = hmaxx;
-		if(totalw < boxw) firstx = 0;
-
-		hsbmx = x;
+	if(isdragginghorizontalscroll && totalw > boxw) {
+		int pos = x - horizontalscrolldragstart;
+		int diff = (float)pos / boxw * totalw;
+		horizontalscroll = gClamp(horizontalscroll + diff, 0, totalw - boxw);
+		horizontalscrolldragstart = x;
 	}
 }
 
 void gGUIScrollable::mouseReleased(int x, int y, int button) {
-	vsbmy = -1;
-	hsbmx = -1;
+	isdraggingverticalscroll = false;
+	isdragginghorizontalscroll = false;
 }
 
 void gGUIScrollable::mouseScrolled(int x, int y) {
-	firsty -= y * scrolldiff;
-	if(firsty < 0) firsty = 0;
-	vmaxy = totalh - boxh + linehalf + (titlediff * istitleon) + marginy + hsbh;
-	if(firsty > vmaxy) firsty = vmaxy;
-	if(totalh < boxh) firsty = 0;
-	if(vsbenabled && firsty >= 0) vry = firsty * (boxh - hsbh) / totalh;
-
-	vry = firsty * (boxh - vrh) / vmaxy;
-	if(vry < 0) vry = 0;
-	if(vry > boxh - vrh) vry = boxh - vrh;
-	if(totalh < boxh) vry = vsby;
-
-/*
-	firstx -= x * scrolldiff;
-	if(firstx < 0) firstx = 0;
-	if(totalw == boxw || totalw == 0) totalw = (boxw + marginx + vsbw) * 2;
-	if(totalw != boxw + marginx + vsbw - (2 * scrolldiff) && titlediff == 0) totalw = boxw + marginx + vsbw - (2 * scrolldiff);
-	hmaxx = totalw - boxw + marginx + vsbw;
-	if(firstx > hmaxx) firstx = hmaxx;
-	if(hsbenabled) hrx = firstx * (boxw - vsbw) / totalw;
-
-	hrx = firstx * (boxw - hrw) / hmaxx;
-	if(hrx < 0) hrx = 0;
-	if(hrx > boxw - hrw) hrx = boxw - hrw;
-	if(totalw < boxw) hrx = hsbx;
-*/
+	if(enableverticalscroll && totalh > boxh) {
+		int diff = -y * scrollamount;
+		verticalscroll = gClamp(verticalscroll + diff, 0, totalh - boxh);
+		verticalscrolldragstart = y;
+	}
+	if(enablehorizontalscroll && totalw > boxw) {
+		int diff = -x * scrollamount;
+		horizontalscroll = gClamp(horizontalscroll + diff, 0, totalw - boxw);
+		horizontalscrolldragstart = x;
+	}
 }
 
 void gGUIScrollable::windowResized(int w, int h) {
 	delete boxfbo;
 	boxfbo = new gFbo();
-	setDimensions(boxw, boxh);
+	setDimensions(width, height);
 	gGUIControl::windowResized(w, h);
 }
 
@@ -303,10 +247,27 @@ gFbo* gGUIScrollable::getFbo() {
 }
 
 int gGUIScrollable::getTitleTop() {
-	return titledy;
+	return titleheight;
 }
 
-void gGUIScrollable::setMargin(float marginx, float marginy) {
-	this->marginx = marginx;
-	this->marginy = marginy;
+bool gGUIScrollable::isPointInsideVerticalScrollbar(int x, int y, bool checkFullSize) {
+	int scrollbarsize = checkFullSize ? boxh : scrollbarverticalsize;
+	int scrollbarpos = checkFullSize ? 0 : verticalscrollbarpos;
+	int startx = left + boxw;
+	int starty = top + scrollbarpos;
+	int endx = startx + barsize;
+	int endy = starty + scrollbarsize;
+
+	return x >= startx && x < endx && y >= starty && y < endy;
+}
+
+bool gGUIScrollable::isPointInsideHorizontalScrollbar(int x, int y, bool checkFullSize) {
+	int scrollbarsize = checkFullSize ? boxw : scrollbarhorizontalsize;
+	int scrollbarpos = checkFullSize ? 0 : horizontalscrollbarpos;
+	int startx = left + scrollbarpos;
+	int starty = top + boxh;
+	int endx = startx + scrollbarsize;
+	int endy = starty + barsize;
+
+	return x >= startx && x < endx && y >= starty && y < endy;
 }

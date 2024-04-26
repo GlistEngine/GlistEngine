@@ -89,8 +89,8 @@ void gGUITreelist::drawContent() {
 	renderer->setColor(textbackgroundcolor);
 	gDrawRectangle(0, 0, boxw, boxh, true);
 
-	flno = firsty / lineh;
-	fldy = firsty % lineh;
+	flno = verticalscroll / lineh;
+	fldy = verticalscroll % lineh;
 
 	int linenum = allsubtitles.size();
 	if(selectedno >= flno && selectedno <= flno + linenum) {
@@ -110,10 +110,10 @@ void gGUITreelist::drawContent() {
 	for(int i = startindex; i < endindex; i++) {
 		if(topelement.isicon) {
 			renderer->setColor(iconcolor);
-			icons[i]->draw(allorderno[i] * spacesize - (iconw * 2 / 3), (i * lineh) - datady / 2 + lineh / 2 - firsty, iconw, iconh);
+			icons[i]->draw(allorderno[i] * spacesize - (iconw * 2 / 3), (i * lineh) - datady / 2 + lineh / 2 - verticalscroll, iconw, iconh);
 		}
 		renderer->setColor(fontcolor);
-		font->drawText(allsubtitles[i], 2, (i * lineh) + lineh - datady - firsty);
+		font->drawText(allsubtitles[i], 2, (i * lineh) + lineh - datady - verticalscroll);
 	}
 
 	renderer->setColor(oldcolor);
@@ -140,7 +140,7 @@ void gGUITreelist::refreshList() {
 
 void gGUITreelist::mousePressed(int x, int y, int button) {
 	gGUIScrollable::mousePressed(x, y, button);
-	if(x >= left && x < left + vsbx && y >= top + titledy && y < top + titledy + hsby) {
+	if(x >= left && x < left + boxw && y >= top + titleheight && y < top + titleheight + boxh) {
 		mousepressedonlist = true;
 	}
 }
@@ -154,8 +154,8 @@ void gGUITreelist::mouseReleased(int x, int y, int button) {
 
 	gGUIScrollable::mouseReleased(x, y, button);
 	if(mousepressedonlist) mousepressedonlist = false;
-	if(x >= left && x < left + vsbx && y >= top + titledy && y < top + titledy + hsby) {
-		int newselectedno = (y - top - titledy + firsty) / lineh;
+	if(x >= left && x < left + boxw && y >= top + titleheight && y < top + titleheight + boxh) {
+		int newselectedno = (y - top - titleheight + verticalscroll) / lineh;
 		if(newselectedno <= allsubtitles.size() - 1) selectedno = newselectedno;
 		tmptitle = allsubtitles[selectedno];
 
