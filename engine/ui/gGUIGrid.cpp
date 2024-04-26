@@ -2423,7 +2423,7 @@ void gGUIGrid::drawColumnHeader() {
 		if (currentx - columnwidth > boxw) {
 			break;
 		}
-		Cell* previouscell = getCell(i, 0);
+		Cell* previouscell = getCell(0, i);
 
 		std::string columntitlestring;
 		if(i / 26 > 26) {
