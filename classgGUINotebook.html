@@ -200,6 +200,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>setCursorOn</b> (bool
 <tr class="memitem:a6a5698aaf73204b817e93440d50fc72d inherit pub_methods_classgGUIScrollable"><td class="memItemLeft" align="right" valign="top"><a id="a6a5698aaf73204b817e93440d50fc72d"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>enableScrollbars</b> (bool isVerticalEnabled, bool isHorizontalEnabled)</td></tr>
 <tr class="separator:a6a5698aaf73204b817e93440d50fc72d inherit pub_methods_classgGUIScrollable"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a87800ef0653a28e35a4807a7c8aa3a51 inherit pub_methods_classgGUIScrollable"><td class="memItemLeft" align="right" valign="top"><a id="a87800ef0653a28e35a4807a7c8aa3a51"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>updateScrollbar</b> ()</td></tr>
+<tr class="separator:a87800ef0653a28e35a4807a7c8aa3a51 inherit pub_methods_classgGUIScrollable"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a03b433d4470cdd14ec46d782565b75e1 inherit pub_methods_classgGUIScrollable"><td class="memItemLeft" align="right" valign="top"><a id="a03b433d4470cdd14ec46d782565b75e1"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>draw</b> ()</td></tr>
 <tr class="separator:a03b433d4470cdd14ec46d782565b75e1 inherit pub_methods_classgGUIScrollable"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -454,10 +457,6 @@ static std::string&#160;</td><td class="memItemRight" valign="bottom"><b>gGetVid
 <tr class="memitem:aaebd7b33318f1c3936706759972f9ba2 inherit pub_static_methods_classgObject"><td class="memItemLeft" align="right" valign="top"><a id="aaebd7b33318f1c3936706759972f9ba2"></a>
 static void&#160;</td><td class="memItemRight" valign="bottom"><b>setCurrentResolution</b> (int scalingNo, int currentResolutionNo)</td></tr>
 <tr class="separator:aaebd7b33318f1c3936706759972f9ba2 inherit pub_static_methods_classgObject"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="inherit_header pub_attribs_classgGUIScrollable"><td colspan="2" onclick="javascript:toggleInherit('pub_attribs_classgGUIScrollable')"><img src="closed.png" alt="-"/>&#160;Public Attributes inherited from <a class="el" href="classgGUIScrollable.html">gGUIScrollable</a></td></tr>
-<tr class="memitem:a2417cc04aa7741705cfccf9171e25635 inherit pub_attribs_classgGUIScrollable"><td class="memItemLeft" align="right" valign="top"><a id="a2417cc04aa7741705cfccf9171e25635"></a>
-const int&#160;</td><td class="memItemRight" valign="bottom"><b>titletopmargin</b> = 20</td></tr>
-<tr class="separator:a2417cc04aa7741705cfccf9171e25635 inherit pub_attribs_classgGUIScrollable"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_attribs_classgBaseGUIObject"><td colspan="2" onclick="javascript:toggleInherit('pub_attribs_classgBaseGUIObject')"><img src="closed.png" alt="-"/>&#160;Public Attributes inherited from <a class="el" href="classgBaseGUIObject.html">gBaseGUIObject</a></td></tr>
 <tr class="memitem:ad906f7ad3dc14a9c27f5fe26c779051e inherit pub_attribs_classgBaseGUIObject"><td class="memItemLeft" align="right" valign="top"><a id="ad906f7ad3dc14a9c27f5fe26c779051e"></a>
 int&#160;</td><td class="memItemRight" valign="bottom"><b>id</b></td></tr>
@@ -489,9 +488,9 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>titlex</b></td></tr>
 <tr class="memitem:a459e9346f16e0457af3c1a4037d0d81d inherit pub_attribs_classgBaseGUIObject"><td class="memItemLeft" align="right" valign="top"><a id="a459e9346f16e0457af3c1a4037d0d81d"></a>
 int&#160;</td><td class="memItemRight" valign="bottom"><b>titley</b></td></tr>
 <tr class="separator:a459e9346f16e0457af3c1a4037d0d81d inherit pub_attribs_classgBaseGUIObject"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5685965bd718b132bc8f083fbd3ceec3 inherit pub_attribs_classgBaseGUIObject"><td class="memItemLeft" align="right" valign="top"><a id="a5685965bd718b132bc8f083fbd3ceec3"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>titledy</b></td></tr>
-<tr class="separator:a5685965bd718b132bc8f083fbd3ceec3 inherit pub_attribs_classgBaseGUIObject"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aed67c5e826a9bf7ff061d90c904f0369 inherit pub_attribs_classgBaseGUIObject"><td class="memItemLeft" align="right" valign="top"><a id="aed67c5e826a9bf7ff061d90c904f0369"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>titleheight</b></td></tr>
+<tr class="separator:aed67c5e826a9bf7ff061d90c904f0369 inherit pub_attribs_classgBaseGUIObject"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1033bbcc5ec5af6119eedaac188505e8 inherit pub_attribs_classgBaseGUIObject"><td class="memItemLeft" align="right" valign="top"><a id="a1033bbcc5ec5af6119eedaac188505e8"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>isfocused</b></td></tr>
 <tr class="separator:a1033bbcc5ec5af6119eedaac188505e8 inherit pub_attribs_classgBaseGUIObject"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -558,12 +557,15 @@ static const int&#160;</td><td class="memItemRight" valign="bottom"><b>LOGLEVEL_
 static const int&#160;</td><td class="memItemRight" valign="bottom"><b>LOGLEVEL_ERROR</b></td></tr>
 <tr class="separator:a2e7e512031a455faf43eb905a1e1b67e inherit pub_static_attribs_classgObject"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_methods_classgGUIScrollable"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_classgGUIScrollable')"><img src="closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="classgGUIScrollable.html">gGUIScrollable</a></td></tr>
+<tr class="memitem:a2d1e0470f493951029f33b63143f2c1f inherit pro_methods_classgGUIScrollable"><td class="memItemLeft" align="right" valign="top"><a id="a2d1e0470f493951029f33b63143f2c1f"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>isPointInsideVerticalScrollbar</b> (int x, int y, bool checkFullSize=false)</td></tr>
+<tr class="separator:a2d1e0470f493951029f33b63143f2c1f inherit pro_methods_classgGUIScrollable"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a96e3fa713e71536495f6060753ccf6d6 inherit pro_methods_classgGUIScrollable"><td class="memItemLeft" align="right" valign="top"><a id="a96e3fa713e71536495f6060753ccf6d6"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>isPointInsideHorizontalScrollbar</b> (int x, int y, bool checkFullSize=false)</td></tr>
+<tr class="separator:a96e3fa713e71536495f6060753ccf6d6 inherit pro_methods_classgGUIScrollable"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7bff89f6fed1ca4863870d856a3f0c4e inherit pro_methods_classgGUIScrollable"><td class="memItemLeft" align="right" valign="top"><a id="a7bff89f6fed1ca4863870d856a3f0c4e"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>setDimensions</b> (int width, int height)</td></tr>
 <tr class="separator:a7bff89f6fed1ca4863870d856a3f0c4e inherit pro_methods_classgGUIScrollable"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a64c6441fb0d696e4de378dcbd8f2ac7a inherit pro_methods_classgGUIScrollable"><td class="memItemLeft" align="right" valign="top"><a id="a64c6441fb0d696e4de378dcbd8f2ac7a"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>setMargin</b> (float marginx, float marginy)</td></tr>
-<tr class="separator:a64c6441fb0d696e4de378dcbd8f2ac7a inherit pro_methods_classgGUIScrollable"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_attribs_classgGUIContainer"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_classgGUIContainer')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="classgGUIContainer.html">gGUIContainer</a></td></tr>
 <tr class="memitem:a63aa3c35c36a900b95be7925e054c95a inherit pro_attribs_classgGUIContainer"><td class="memItemLeft" align="right" valign="top"><a id="a63aa3c35c36a900b95be7925e054c95a"></a>
 <a class="el" href="classgGUISizer.html">gGUISizer</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>guisizer</b></td></tr>
@@ -575,87 +577,60 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>topbarh</b></td></tr>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>sizerrescaling</b></td></tr>
 <tr class="separator:a610608eca4a2ff7b057f423ed9e4427a inherit pro_attribs_classgGUIContainer"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_attribs_classgGUIScrollable"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_classgGUIScrollable')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="classgGUIScrollable.html">gGUIScrollable</a></td></tr>
+<tr class="memitem:a217a9cc2c8041d091b399a64ec4a5c93 inherit pro_attribs_classgGUIScrollable"><td class="memItemLeft" align="right" valign="top"><a id="a217a9cc2c8041d091b399a64ec4a5c93"></a>
+const int&#160;</td><td class="memItemRight" valign="bottom"><b>barsize</b> = 12</td></tr>
+<tr class="separator:a217a9cc2c8041d091b399a64ec4a5c93 inherit pro_attribs_classgGUIScrollable"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af89c69ca8b1a059e05244ac4b2cd6675 inherit pro_attribs_classgGUIScrollable"><td class="memItemLeft" align="right" valign="top"><a id="af89c69ca8b1a059e05244ac4b2cd6675"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>scrollamount</b> = 8</td></tr>
+<tr class="separator:af89c69ca8b1a059e05244ac4b2cd6675 inherit pro_attribs_classgGUIScrollable"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab1e5927510b754517e6369b90b0a43a5 inherit pro_attribs_classgGUIScrollable"><td class="memItemLeft" align="right" valign="top"><a id="ab1e5927510b754517e6369b90b0a43a5"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>boxw</b></td></tr>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>boxw</b> = 0</td></tr>
 <tr class="separator:ab1e5927510b754517e6369b90b0a43a5 inherit pro_attribs_classgGUIScrollable"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2cb0843d9dc9f0afecfad31d034cd8c1 inherit pro_attribs_classgGUIScrollable"><td class="memItemLeft" align="right" valign="top"><a id="a2cb0843d9dc9f0afecfad31d034cd8c1"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>boxh</b></td></tr>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>boxh</b> = 0</td></tr>
 <tr class="separator:a2cb0843d9dc9f0afecfad31d034cd8c1 inherit pro_attribs_classgGUIScrollable"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a74b5e0150923b834478b8b9b6839bd09 inherit pro_attribs_classgGUIScrollable"><td class="memItemLeft" align="right" valign="top"><a id="a74b5e0150923b834478b8b9b6839bd09"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>totalw</b></td></tr>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>totalw</b> = 0</td></tr>
 <tr class="separator:a74b5e0150923b834478b8b9b6839bd09 inherit pro_attribs_classgGUIScrollable"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2d1a692bf052403c116275b273270904 inherit pro_attribs_classgGUIScrollable"><td class="memItemLeft" align="right" valign="top"><a id="a2d1a692bf052403c116275b273270904"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>totalh</b></td></tr>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>totalh</b> = 0</td></tr>
 <tr class="separator:a2d1a692bf052403c116275b273270904 inherit pro_attribs_classgGUIScrollable"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5a52cffe617e722c824ff1871032dd81 inherit pro_attribs_classgGUIScrollable"><td class="memItemLeft" align="right" valign="top"><a id="a5a52cffe617e722c824ff1871032dd81"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>firstx</b></td></tr>
-<tr class="separator:a5a52cffe617e722c824ff1871032dd81 inherit pro_attribs_classgGUIScrollable"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8dcc0b49538bee3aeda7682fcbe3c5bc inherit pro_attribs_classgGUIScrollable"><td class="memItemLeft" align="right" valign="top"><a id="a8dcc0b49538bee3aeda7682fcbe3c5bc"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>firsty</b></td></tr>
-<tr class="separator:a8dcc0b49538bee3aeda7682fcbe3c5bc inherit pro_attribs_classgGUIScrollable"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a27995826cd90107dab5da2224d38c81e inherit pro_attribs_classgGUIScrollable"><td class="memItemLeft" align="right" valign="top"><a id="a27995826cd90107dab5da2224d38c81e"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>vsbx</b></td></tr>
-<tr class="separator:a27995826cd90107dab5da2224d38c81e inherit pro_attribs_classgGUIScrollable"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0e389f490ad9e202226a33e9c417ff47 inherit pro_attribs_classgGUIScrollable"><td class="memItemLeft" align="right" valign="top"><a id="a0e389f490ad9e202226a33e9c417ff47"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>vsby</b></td></tr>
-<tr class="separator:a0e389f490ad9e202226a33e9c417ff47 inherit pro_attribs_classgGUIScrollable"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae12d39ca30cd59f556d4d6c844f1f60c inherit pro_attribs_classgGUIScrollable"><td class="memItemLeft" align="right" valign="top"><a id="ae12d39ca30cd59f556d4d6c844f1f60c"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>vsbw</b></td></tr>
-<tr class="separator:ae12d39ca30cd59f556d4d6c844f1f60c inherit pro_attribs_classgGUIScrollable"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a60b37750f8f4d6921941fc8c8e702fb5 inherit pro_attribs_classgGUIScrollable"><td class="memItemLeft" align="right" valign="top"><a id="a60b37750f8f4d6921941fc8c8e702fb5"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>vsbh</b></td></tr>
-<tr class="separator:a60b37750f8f4d6921941fc8c8e702fb5 inherit pro_attribs_classgGUIScrollable"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aea8aa8d5b07d47561848c12010d32abc inherit pro_attribs_classgGUIScrollable"><td class="memItemLeft" align="right" valign="top"><a id="aea8aa8d5b07d47561848c12010d32abc"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>hsbx</b></td></tr>
-<tr class="separator:aea8aa8d5b07d47561848c12010d32abc inherit pro_attribs_classgGUIScrollable"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acc1cd325b8c68c8d1040faed6a275a60 inherit pro_attribs_classgGUIScrollable"><td class="memItemLeft" align="right" valign="top"><a id="acc1cd325b8c68c8d1040faed6a275a60"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>hsby</b></td></tr>
-<tr class="separator:acc1cd325b8c68c8d1040faed6a275a60 inherit pro_attribs_classgGUIScrollable"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a19f62e56d6c68c1e59fcc1cf170048ca inherit pro_attribs_classgGUIScrollable"><td class="memItemLeft" align="right" valign="top"><a id="a19f62e56d6c68c1e59fcc1cf170048ca"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>hsbw</b></td></tr>
-<tr class="separator:a19f62e56d6c68c1e59fcc1cf170048ca inherit pro_attribs_classgGUIScrollable"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7c1c2a191cdc6597defa06fa8ae60f9e inherit pro_attribs_classgGUIScrollable"><td class="memItemLeft" align="right" valign="top"><a id="a7c1c2a191cdc6597defa06fa8ae60f9e"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>hsbh</b></td></tr>
-<tr class="separator:a7c1c2a191cdc6597defa06fa8ae60f9e inherit pro_attribs_classgGUIScrollable"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a50ac9831b2a9c4315b28fab66c697913 inherit pro_attribs_classgGUIScrollable"><td class="memItemLeft" align="right" valign="top"><a id="a50ac9831b2a9c4315b28fab66c697913"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>scrolldiff</b></td></tr>
-<tr class="separator:a50ac9831b2a9c4315b28fab66c697913 inherit pro_attribs_classgGUIScrollable"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae0ff1f7cd880b3157bd39210a5c85faa inherit pro_attribs_classgGUIScrollable"><td class="memItemLeft" align="right" valign="top"><a id="ae0ff1f7cd880b3157bd39210a5c85faa"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>titlediff</b></td></tr>
-<tr class="separator:ae0ff1f7cd880b3157bd39210a5c85faa inherit pro_attribs_classgGUIScrollable"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1bb1cc033f1f013f9914ca3685528892 inherit pro_attribs_classgGUIScrollable"><td class="memItemLeft" align="right" valign="top"><a id="a1bb1cc033f1f013f9914ca3685528892"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>linehalf</b></td></tr>
-<tr class="separator:a1bb1cc033f1f013f9914ca3685528892 inherit pro_attribs_classgGUIScrollable"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4bf2919b53f10972786da09cfcf947f7 inherit pro_attribs_classgGUIScrollable"><td class="memItemLeft" align="right" valign="top"><a id="a4bf2919b53f10972786da09cfcf947f7"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>vrx</b></td></tr>
-<tr class="separator:a4bf2919b53f10972786da09cfcf947f7 inherit pro_attribs_classgGUIScrollable"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae8b02e04c45fadc36027cc04cfe06009 inherit pro_attribs_classgGUIScrollable"><td class="memItemLeft" align="right" valign="top"><a id="ae8b02e04c45fadc36027cc04cfe06009"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>vry</b></td></tr>
-<tr class="separator:ae8b02e04c45fadc36027cc04cfe06009 inherit pro_attribs_classgGUIScrollable"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae3ae841fa8da2cfead44031dbbb81b3b inherit pro_attribs_classgGUIScrollable"><td class="memItemLeft" align="right" valign="top"><a id="ae3ae841fa8da2cfead44031dbbb81b3b"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>vrw</b></td></tr>
-<tr class="separator:ae3ae841fa8da2cfead44031dbbb81b3b inherit pro_attribs_classgGUIScrollable"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8a850c1ce2da71098fcd71860450e651 inherit pro_attribs_classgGUIScrollable"><td class="memItemLeft" align="right" valign="top"><a id="a8a850c1ce2da71098fcd71860450e651"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>vrh</b></td></tr>
-<tr class="separator:a8a850c1ce2da71098fcd71860450e651 inherit pro_attribs_classgGUIScrollable"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa71d516e136188d8a712a6002fc7aaf1 inherit pro_attribs_classgGUIScrollable"><td class="memItemLeft" align="right" valign="top"><a id="aa71d516e136188d8a712a6002fc7aaf1"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>hrx</b></td></tr>
-<tr class="separator:aa71d516e136188d8a712a6002fc7aaf1 inherit pro_attribs_classgGUIScrollable"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9cc34d40d47ba038eb5d6ca64c7b6ae9 inherit pro_attribs_classgGUIScrollable"><td class="memItemLeft" align="right" valign="top"><a id="a9cc34d40d47ba038eb5d6ca64c7b6ae9"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>hry</b></td></tr>
-<tr class="separator:a9cc34d40d47ba038eb5d6ca64c7b6ae9 inherit pro_attribs_classgGUIScrollable"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7aa22aba783465bea257e17a59497d27 inherit pro_attribs_classgGUIScrollable"><td class="memItemLeft" align="right" valign="top"><a id="a7aa22aba783465bea257e17a59497d27"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>hrw</b></td></tr>
-<tr class="separator:a7aa22aba783465bea257e17a59497d27 inherit pro_attribs_classgGUIScrollable"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5d97ab7bbf8e9b82113429ead205988b inherit pro_attribs_classgGUIScrollable"><td class="memItemLeft" align="right" valign="top"><a id="a5d97ab7bbf8e9b82113429ead205988b"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>hrh</b></td></tr>
-<tr class="separator:a5d97ab7bbf8e9b82113429ead205988b inherit pro_attribs_classgGUIScrollable"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab29627ebb17cd173428c97c100113023 inherit pro_attribs_classgGUIScrollable"><td class="memItemLeft" align="right" valign="top"><a id="ab29627ebb17cd173428c97c100113023"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>vsbmy</b></td></tr>
-<tr class="separator:ab29627ebb17cd173428c97c100113023 inherit pro_attribs_classgGUIScrollable"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa90ef150940cb7e191ec39f6aefb3994 inherit pro_attribs_classgGUIScrollable"><td class="memItemLeft" align="right" valign="top"><a id="aa90ef150940cb7e191ec39f6aefb3994"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>hsbmx</b></td></tr>
-<tr class="separator:aa90ef150940cb7e191ec39f6aefb3994 inherit pro_attribs_classgGUIScrollable"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0fade0f4135532d609133e187b76ba89 inherit pro_attribs_classgGUIScrollable"><td class="memItemLeft" align="right" valign="top"><a id="a0fade0f4135532d609133e187b76ba89"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>verticalscroll</b> = 0</td></tr>
+<tr class="separator:a0fade0f4135532d609133e187b76ba89 inherit pro_attribs_classgGUIScrollable"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a77b4beafa79ff7aca67fa85c6337d6eb inherit pro_attribs_classgGUIScrollable"><td class="memItemLeft" align="right" valign="top"><a id="a77b4beafa79ff7aca67fa85c6337d6eb"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>horizontalscroll</b> = 0</td></tr>
+<tr class="separator:a77b4beafa79ff7aca67fa85c6337d6eb inherit pro_attribs_classgGUIScrollable"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa4cbb56b9b0356ff4440ed6129caf0c6 inherit pro_attribs_classgGUIScrollable"><td class="memItemLeft" align="right" valign="top"><a id="aa4cbb56b9b0356ff4440ed6129caf0c6"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>verticalscrollbarpos</b> = 0</td></tr>
+<tr class="separator:aa4cbb56b9b0356ff4440ed6129caf0c6 inherit pro_attribs_classgGUIScrollable"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a98a011c866297b5cac788756e9731a0e inherit pro_attribs_classgGUIScrollable"><td class="memItemLeft" align="right" valign="top"><a id="a98a011c866297b5cac788756e9731a0e"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>horizontalscrollbarpos</b> = 0</td></tr>
+<tr class="separator:a98a011c866297b5cac788756e9731a0e inherit pro_attribs_classgGUIScrollable"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a94129ae7d1b3707b1422c1c93e49eeb1 inherit pro_attribs_classgGUIScrollable"><td class="memItemLeft" align="right" valign="top"><a id="a94129ae7d1b3707b1422c1c93e49eeb1"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>scrollbarverticalsize</b> = 0</td></tr>
+<tr class="separator:a94129ae7d1b3707b1422c1c93e49eeb1 inherit pro_attribs_classgGUIScrollable"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aca88efba338de5d8c6881145f7ccd136 inherit pro_attribs_classgGUIScrollable"><td class="memItemLeft" align="right" valign="top"><a id="aca88efba338de5d8c6881145f7ccd136"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>scrollbarhorizontalsize</b> = 0</td></tr>
+<tr class="separator:aca88efba338de5d8c6881145f7ccd136 inherit pro_attribs_classgGUIScrollable"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5e5522e87ed532140d69460e2c1f9718 inherit pro_attribs_classgGUIScrollable"><td class="memItemLeft" align="right" valign="top"><a id="a5e5522e87ed532140d69460e2c1f9718"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>isdraggingverticalscroll</b> = false</td></tr>
+<tr class="separator:a5e5522e87ed532140d69460e2c1f9718 inherit pro_attribs_classgGUIScrollable"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aee54942987216f4971d98dd455d30f32 inherit pro_attribs_classgGUIScrollable"><td class="memItemLeft" align="right" valign="top"><a id="aee54942987216f4971d98dd455d30f32"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>verticalscrolldragstart</b> = 0</td></tr>
+<tr class="separator:aee54942987216f4971d98dd455d30f32 inherit pro_attribs_classgGUIScrollable"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aae4b9f1828edfe56ab6ffd8f34119bdf inherit pro_attribs_classgGUIScrollable"><td class="memItemLeft" align="right" valign="top"><a id="aae4b9f1828edfe56ab6ffd8f34119bdf"></a>
+float&#160;</td><td class="memItemRight" valign="bottom"><b>verticalscrollclickedtime</b> = 0.0f</td></tr>
+<tr class="separator:aae4b9f1828edfe56ab6ffd8f34119bdf inherit pro_attribs_classgGUIScrollable"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af199fb17424c0f82579edbeeb8dd9054 inherit pro_attribs_classgGUIScrollable"><td class="memItemLeft" align="right" valign="top"><a id="af199fb17424c0f82579edbeeb8dd9054"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>isdragginghorizontalscroll</b> = false</td></tr>
+<tr class="separator:af199fb17424c0f82579edbeeb8dd9054 inherit pro_attribs_classgGUIScrollable"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aee58c998062bf6de5bcdfb1a11c0651f inherit pro_attribs_classgGUIScrollable"><td class="memItemLeft" align="right" valign="top"><a id="aee58c998062bf6de5bcdfb1a11c0651f"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>horizontalscrolldragstart</b> = 0</td></tr>
+<tr class="separator:aee58c998062bf6de5bcdfb1a11c0651f inherit pro_attribs_classgGUIScrollable"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab82e97a19da3dc380a2cc69aefa1f83f inherit pro_attribs_classgGUIScrollable"><td class="memItemLeft" align="right" valign="top"><a id="ab82e97a19da3dc380a2cc69aefa1f83f"></a>
+float&#160;</td><td class="memItemRight" valign="bottom"><b>horizontalscrollclickedtime</b> = 0.0f</td></tr>
+<tr class="separator:ab82e97a19da3dc380a2cc69aefa1f83f inherit pro_attribs_classgGUIScrollable"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_attribs_classgBaseGUIObject"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_classgBaseGUIObject')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="classgBaseGUIObject.html">gBaseGUIObject</a></td></tr>
 <tr class="memitem:a6f768f37eb2433acaf02c0b2d543205b inherit pro_attribs_classgBaseGUIObject"><td class="memItemLeft" align="right" valign="top"><a id="a6f768f37eb2433acaf02c0b2d543205b"></a>
 std::string&#160;</td><td class="memItemRight" valign="bottom"><b>title</b></td></tr>

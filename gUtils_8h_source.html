@@ -328,54 +328,59 @@ $(document).ready(function(){initNavTree('gUtils_8h_source.html',''); initResiza
 <div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160;<span class="keywordtype">void</span> gDisableLogging();</div>
 <div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160;<span class="keywordtype">bool</span> gIsLoggingEnabled();</div>
 <div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160; </div>
-<div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160;std::string gShowOpenFileDialog(</div>
-<div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160;    std::string dialogTitle,</div>
-<div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160;    std::string defaultPathAndFile,</div>
-<div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160;    <span class="keywordtype">int</span> filterNum,</div>
-<div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160;    std::string* filterPatterns,</div>
-<div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160;    std::string filterDescription,</div>
-<div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160;    <span class="keywordtype">bool</span> isMultipleSelectionAllowed = <span class="keyword">false</span>);</div>
-<div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160; </div>
-<div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160;std::string gShowSaveFileDialog(</div>
-<div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160;    std::string dialogTitle,</div>
-<div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160;    std::string defaultPathAndFile,</div>
-<div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160;    <span class="keywordtype">int</span> filterNum,</div>
-<div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160;    std::string* filterPatterns,</div>
-<div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160;    std::string filterDescription);</div>
-<div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160; </div>
-<div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160;std::string gShowSelectFolderDialog(</div>
-<div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160;    std::string dialogTitle,</div>
-<div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160;    std::string defaultPath);</div>
-<div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160; </div>
+<div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;T gClamp(T t, T min, T max) {</div>
+<div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160;    <span class="keywordflow">return</span> t &gt; max ? max : t &lt; min ? min : t;</div>
+<div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;}</div>
+<div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160; </div>
+<div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160;std::string gShowOpenFileDialog(</div>
+<div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160;    std::string dialogTitle,</div>
+<div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160;    std::string defaultPathAndFile,</div>
+<div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160;    <span class="keywordtype">int</span> filterNum,</div>
+<div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160;    std::string* filterPatterns,</div>
+<div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160;    std::string filterDescription,</div>
+<div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160;    <span class="keywordtype">bool</span> isMultipleSelectionAllowed = <span class="keyword">false</span>);</div>
+<div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160; </div>
+<div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160;std::string gShowSaveFileDialog(</div>
+<div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160;    std::string dialogTitle,</div>
+<div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160;    std::string defaultPathAndFile,</div>
+<div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160;    <span class="keywordtype">int</span> filterNum,</div>
+<div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160;    std::string* filterPatterns,</div>
+<div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160;    std::string filterDescription);</div>
 <div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160; </div>
-<div class="line"><a name="l00306"></a><span class="lineno">  306</span>&#160; </div>
-<div class="line"><a name="l00316"></a><span class="lineno">  316</span>&#160;<span class="keywordtype">int</span> gShowMessageBox(</div>
-<div class="line"><a name="l00317"></a><span class="lineno">  317</span>&#160;    std::string aTitle , <span class="comment">/* NULL or &quot;&quot; */</span></div>
-<div class="line"><a name="l00318"></a><span class="lineno">  318</span>&#160;    std::string aMessage , <span class="comment">/* NULL or &quot;&quot;  may contain \n and \t */</span></div>
-<div class="line"><a name="l00319"></a><span class="lineno">  319</span>&#160;    std::string aDialogType , <span class="comment">/* &quot;ok&quot; &quot;okcancel&quot; &quot;yesno&quot; &quot;yesnocancel&quot; */</span></div>
-<div class="line"><a name="l00320"></a><span class="lineno">  320</span>&#160;    std::string aIconType , <span class="comment">/* &quot;info&quot; &quot;warning&quot; &quot;error&quot; &quot;question&quot; */</span></div>
-<div class="line"><a name="l00321"></a><span class="lineno">  321</span>&#160;    <span class="keywordtype">int</span> aDefaultButton) <span class="comment">/* 0 for cancel/no , 1 for ok/yes , 2 for no in yesnocancel */</span>;</div>
-<div class="line"><a name="l00322"></a><span class="lineno">  322</span>&#160; </div>
-<div class="line"><a name="l00323"></a><span class="lineno">  323</span>&#160;std::string gShowInputBox(</div>
-<div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160;        std::string aTitle , <span class="comment">/* NULL or &quot;&quot; */</span></div>
-<div class="line"><a name="l00325"></a><span class="lineno">  325</span>&#160;        std::string aMessage , <span class="comment">/* NULL or &quot;&quot;  may contain \n and \t */</span></div>
-<div class="line"><a name="l00326"></a><span class="lineno">  326</span>&#160;        std::string aDefaultInput) <span class="comment">/* &quot;&quot; , if NULL it&#39;s a passwordBox */</span>;</div>
+<div class="line"><a name="l00306"></a><span class="lineno">  306</span>&#160;std::string gShowSelectFolderDialog(</div>
+<div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160;    std::string dialogTitle,</div>
+<div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160;    std::string defaultPath);</div>
+<div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160; </div>
+<div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160; </div>
+<div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160; </div>
+<div class="line"><a name="l00321"></a><span class="lineno">  321</span>&#160;<span class="keywordtype">int</span> gShowMessageBox(</div>
+<div class="line"><a name="l00322"></a><span class="lineno">  322</span>&#160;    std::string aTitle , <span class="comment">/* NULL or &quot;&quot; */</span></div>
+<div class="line"><a name="l00323"></a><span class="lineno">  323</span>&#160;    std::string aMessage , <span class="comment">/* NULL or &quot;&quot;  may contain \n and \t */</span></div>
+<div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160;    std::string aDialogType , <span class="comment">/* &quot;ok&quot; &quot;okcancel&quot; &quot;yesno&quot; &quot;yesnocancel&quot; */</span></div>
+<div class="line"><a name="l00325"></a><span class="lineno">  325</span>&#160;    std::string aIconType , <span class="comment">/* &quot;info&quot; &quot;warning&quot; &quot;error&quot; &quot;question&quot; */</span></div>
+<div class="line"><a name="l00326"></a><span class="lineno">  326</span>&#160;    <span class="keywordtype">int</span> aDefaultButton) <span class="comment">/* 0 for cancel/no , 1 for ok/yes , 2 for no in yesnocancel */</span>;</div>
 <div class="line"><a name="l00327"></a><span class="lineno">  327</span>&#160; </div>
-<div class="line"><a name="l00328"></a><span class="lineno">  328</span>&#160;<a class="code" href="classgColor.html">gColor</a> gShowColorChooser(</div>
-<div class="line"><a name="l00329"></a><span class="lineno">  329</span>&#160;    std::string aTitle , <span class="comment">/* &quot;&quot; */</span></div>
-<div class="line"><a name="l00330"></a><span class="lineno">  330</span>&#160;    std::string aDefaultHexRGB , <span class="comment">/* NULL or &quot;#FF0000&quot; */</span></div>
-<div class="line"><a name="l00331"></a><span class="lineno">  331</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> <span class="keyword">const</span> aDefaultRGB[3]) <span class="comment">/* { 0 , 255 , 255 } */</span>;</div>
+<div class="line"><a name="l00328"></a><span class="lineno">  328</span>&#160;std::string gShowInputBox(</div>
+<div class="line"><a name="l00329"></a><span class="lineno">  329</span>&#160;        std::string aTitle , <span class="comment">/* NULL or &quot;&quot; */</span></div>
+<div class="line"><a name="l00330"></a><span class="lineno">  330</span>&#160;        std::string aMessage , <span class="comment">/* NULL or &quot;&quot;  may contain \n and \t */</span></div>
+<div class="line"><a name="l00331"></a><span class="lineno">  331</span>&#160;        std::string aDefaultInput) <span class="comment">/* &quot;&quot; , if NULL it&#39;s a passwordBox */</span>;</div>
 <div class="line"><a name="l00332"></a><span class="lineno">  332</span>&#160; </div>
-<div class="line"><a name="l00333"></a><span class="lineno">  333</span>&#160;<span class="keywordtype">bool</span> gCheckCollision(<span class="keywordtype">int</span> xLeft1, <span class="keywordtype">int</span> yUp1, <span class="keywordtype">int</span> xRight1, <span class="keywordtype">int</span> yBottom1,</div>
-<div class="line"><a name="l00334"></a><span class="lineno">  334</span>&#160;        <span class="keywordtype">int</span> xLeft2, <span class="keywordtype">int</span> yUp2, <span class="keywordtype">int</span> xRight2, <span class="keywordtype">int</span> yBottom2);</div>
-<div class="line"><a name="l00335"></a><span class="lineno">  335</span>&#160; </div>
-<div class="line"><a name="l00336"></a><span class="lineno"><a class="line" href="classgUtils.html">  336</a></span>&#160;<span class="keyword">class </span><a class="code" href="classgUtils.html">gUtils</a> {</div>
-<div class="line"><a name="l00337"></a><span class="lineno">  337</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00338"></a><span class="lineno">  338</span>&#160;    <a class="code" href="classgUtils.html">gUtils</a>();</div>
-<div class="line"><a name="l00339"></a><span class="lineno">  339</span>&#160;    <span class="keyword">virtual</span> ~<a class="code" href="classgUtils.html">gUtils</a>();</div>
-<div class="line"><a name="l00340"></a><span class="lineno">  340</span>&#160;};</div>
-<div class="line"><a name="l00341"></a><span class="lineno">  341</span>&#160; </div>
-<div class="line"><a name="l00342"></a><span class="lineno">  342</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* UTILS_GUTILS_H_ */</span><span class="preprocessor"></span></div>
+<div class="line"><a name="l00333"></a><span class="lineno">  333</span>&#160;<a class="code" href="classgColor.html">gColor</a> gShowColorChooser(</div>
+<div class="line"><a name="l00334"></a><span class="lineno">  334</span>&#160;    std::string aTitle , <span class="comment">/* &quot;&quot; */</span></div>
+<div class="line"><a name="l00335"></a><span class="lineno">  335</span>&#160;    std::string aDefaultHexRGB , <span class="comment">/* NULL or &quot;#FF0000&quot; */</span></div>
+<div class="line"><a name="l00336"></a><span class="lineno">  336</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> <span class="keyword">const</span> aDefaultRGB[3]) <span class="comment">/* { 0 , 255 , 255 } */</span>;</div>
+<div class="line"><a name="l00337"></a><span class="lineno">  337</span>&#160; </div>
+<div class="line"><a name="l00338"></a><span class="lineno">  338</span>&#160;<span class="keywordtype">bool</span> gCheckCollision(<span class="keywordtype">int</span> xLeft1, <span class="keywordtype">int</span> yUp1, <span class="keywordtype">int</span> xRight1, <span class="keywordtype">int</span> yBottom1,</div>
+<div class="line"><a name="l00339"></a><span class="lineno">  339</span>&#160;        <span class="keywordtype">int</span> xLeft2, <span class="keywordtype">int</span> yUp2, <span class="keywordtype">int</span> xRight2, <span class="keywordtype">int</span> yBottom2);</div>
+<div class="line"><a name="l00340"></a><span class="lineno">  340</span>&#160; </div>
+<div class="line"><a name="l00341"></a><span class="lineno"><a class="line" href="classgUtils.html">  341</a></span>&#160;<span class="keyword">class </span><a class="code" href="classgUtils.html">gUtils</a> {</div>
+<div class="line"><a name="l00342"></a><span class="lineno">  342</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00343"></a><span class="lineno">  343</span>&#160;    <a class="code" href="classgUtils.html">gUtils</a>();</div>
+<div class="line"><a name="l00344"></a><span class="lineno">  344</span>&#160;    <span class="keyword">virtual</span> ~<a class="code" href="classgUtils.html">gUtils</a>();</div>
+<div class="line"><a name="l00345"></a><span class="lineno">  345</span>&#160;};</div>
+<div class="line"><a name="l00346"></a><span class="lineno">  346</span>&#160; </div>
+<div class="line"><a name="l00347"></a><span class="lineno">  347</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* UTILS_GUTILS_H_ */</span><span class="preprocessor"></span></div>
 <div class="ttc" id="aclassgColor_html"><div class="ttname"><a href="classgColor.html">gColor</a></div><div class="ttdef"><b>Definition:</b> gColor.h:12</div></div>
 <div class="ttc" id="aclassgLog_html"><div class="ttname"><a href="classgLog.html">gLog</a></div><div class="ttdef"><b>Definition:</b> gUtils.h:182</div></div>
 <div class="ttc" id="aclassgLogd_html"><div class="ttname"><a href="classgLogd.html">gLogd</a></div><div class="ttdef"><b>Definition:</b> gUtils.h:224</div></div>
@@ -383,7 +388,7 @@ $(document).ready(function(){initNavTree('gUtils_8h_source.html',''); initResiza
 <div class="ttc" id="aclassgLogi_html"><div class="ttname"><a href="classgLogi.html">gLogi</a></div><div class="ttdef"><b>Definition:</b> gUtils.h:219</div></div>
 <div class="ttc" id="aclassgLogw_html"><div class="ttname"><a href="classgLogw.html">gLogw</a></div><div class="ttdef"><b>Definition:</b> gUtils.h:229</div></div>
 <div class="ttc" id="aclassgUTF8Iterator_html"><div class="ttname"><a href="classgUTF8Iterator.html">gUTF8Iterator</a></div><div class="ttdef"><b>Definition:</b> gUtils.h:170</div></div>
-<div class="ttc" id="aclassgUtils_html"><div class="ttname"><a href="classgUtils.html">gUtils</a></div><div class="ttdef"><b>Definition:</b> gUtils.h:336</div></div>
+<div class="ttc" id="aclassgUtils_html"><div class="ttname"><a href="classgUtils.html">gUtils</a></div><div class="ttdef"><b>Definition:</b> gUtils.h:341</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
