@@ -168,7 +168,8 @@ void gGUIDialogue::resetTitleBar() {
 	float tbbitp = ((float)titlebarbitmapw + 15) / (float)titlebar.width;
 	float tbbutp = (float)titlebarbuttonw / (float)titlebar.width;
 	float tbtxtp = 1 - (tbbitp + 3 * tbbutp);
-	float tbcolproportions[4] = {tbtxtp, tbbutp, tbbutp, tbbutp};
+	// 5th one is for the exit button
+	float tbcolproportions[5] = {tbtxtp, tbbutp, tbbutp, tbbutp, 0};
 	titlebarsizer.setColumnProportions(tbcolproportions);
 
 	titlebarbitmap.top += (titlebar.height - titlebarbitmap.height) / 2;
