@@ -73,9 +73,12 @@ void gGUIScrollable::draw() {
 	}
 
 	bool isalpha = renderer->isAlphaBlendingEnabled();
+	bool isalphatest = renderer->isAlphaTestEnabled();
 	if(isalpha) {
-		renderer->disableAlphaTest();
 		renderer->disableAlphaBlending();
+	}
+	if (isalphatest) {
+		renderer->disableAlphaTest();
 	}
 	renderer->setColor(fontcolor);
 	if(istitleon) font->drawText(title, titlex, titley);
@@ -91,6 +94,8 @@ void gGUIScrollable::draw() {
 	gDrawRectangle(left, top + titleheight, width, height, false);
 	if(isalpha) {
 		renderer->enableAlphaBlending();
+	}
+	if (isalphatest) {
 		renderer->enableAlphaTest();
 	}
 }
