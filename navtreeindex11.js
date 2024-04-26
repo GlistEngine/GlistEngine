@@ -1,6 +1,5 @@
 var NAVTREEINDEX11 =
 {
-"classgVignette.html#ad6c0700e597163bb3581c8a72b19a549":[0,0,156,3],
 "classgWhiteBalance.html":[0,0,157],
 "classgWhiteBalance.html#a4a4c798c7f480eca23aff77a79721857":[0,0,157,3],
 "classgWhiteBalance.html#a73d1de622aabfcd9ed83c6d1827df919":[0,0,157,2],
@@ -23,8 +22,8 @@ var NAVTREEINDEX11 =
 "classgWindows.html#a7367ee868f779e088558d991671a7f46":[0,0,163,1],
 "classgWindows.html#adf4efe42e4244ac5b71cb4cd728960ec":[0,0,163,0],
 "files.html":[1,0],
-"functions.html":[0,3,0],
 "functions.html":[0,3,0,0],
+"functions.html":[0,3,0],
 "functions_b.html":[0,3,0,1],
 "functions_c.html":[0,3,0,2],
 "functions_d.html":[0,3,0,3],
@@ -249,5 +248,6 @@ var NAVTREEINDEX11 =
 "structgGUITreelist_1_1Element.html#ae15262952067b08db14649f725ec1fe5":[0,0,95,0,9],
 "structgGUITreelist_1_1Element.html#ae4ecaf6f24e27664f5fd697640518535":[0,0,95,0,15],
 "structgGUITreelist_1_1Element.html#ae817e2c74c50f61b689faf486deec626":[0,0,95,0,2],
-"structgHttpFile_1_1ProgressData.html":[0,0,97,0]
+"structgHttpFile_1_1ProgressData.html":[0,0,97,0],
+"structgHttpFile_1_1ProgressData.html#a437d4db25e3c8db350206cb7de706e3f":[0,0,97,0,1]
 };
