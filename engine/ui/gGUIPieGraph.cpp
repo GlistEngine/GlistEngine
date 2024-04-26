@@ -148,7 +148,7 @@ void gGUIPieGraph::arrangePieGraph() {
 	float totalvalue = getTotalValue(variablevalues);
 	float degree;
 	float percentage;
-	float orherspercentage;
+	float orherspercentage = 0;
 	int maxelementindex;
 	int side;
 
