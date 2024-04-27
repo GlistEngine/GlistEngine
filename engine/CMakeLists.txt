@@ -497,7 +497,8 @@ if(WIN32)
 		opengl32
 		glew32
 		dbghelp
-		msvcr100
+		# If msvcr110.dll is missing, it can be downloaded from https://www.microsoft.com/en-au/download/details.aspx?id=30679
+		msvcr110
 		psapi
 #		swscale-5
 #		swresample-3
