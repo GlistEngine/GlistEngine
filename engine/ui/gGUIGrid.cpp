@@ -2119,7 +2119,7 @@ int gGUIGrid::createCell(int rowNo, int columnNo) {
 	return createCell(index, rowNo, columnNo);
 }
 
-void gGUIGrid::createCell(int index, int rowNo, int columnNo) {
+int gGUIGrid::createCell(int index, int rowNo, int columnNo) {
 	Cell tempcell;
 	tempcell.cellx = calculateCurrentX(columnNo) + horizontalscroll;
 	tempcell.celly = calculateCurrentY(rowNo) + verticalscroll;
