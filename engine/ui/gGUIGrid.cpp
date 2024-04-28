@@ -779,6 +779,18 @@ void gGUIGrid::setCellsAlignment(const std::string& cell1, const std::string& ce
 	setCellsAlignment(c1, c2, cellAlignment);
 }
 
+void gGUIGrid::setCellReadOnly(Cell* cell, bool readonly) {
+	cell->readonly = readonly;
+}
+
+void gGUIGrid::setCellReadOnly(int rowNo, int columnNo, bool readonly) {
+	setCellReadOnly(getCell(rowNo, columnNo), readonly);
+
+}
+void gGUIGrid::setCellReadOnly(const std::string& cell, bool readonly) {
+	setCellReadOnly(getCell(cell), readonly);
+}
+
 void gGUIGrid::setSelectedFrameColor(gColor* selectedFrameColor) {
 	selectedframecolor = *selectedFrameColor;
 }
@@ -2381,6 +2393,21 @@ void gGUIGrid::showCell(int rowNo , int columnNo) {
 //		<< " celltype: " << allcells[cellindex].celltype;
 }
 
+void gGUIGrid::editCell(Cell& cell, bool clear) {
+	if (cell.readonly) {
+		return;
+	}
+	if (clear) {
+		cell.cellcontent = "";
+		cell.showncontent = "";
+	}
+	strflag = cell.cellcontent;
+	textbox.cleanText();
+	createTextBox();
+	textbox.setEditable(true);
+	istextboxactive = true;
+}
+
 void gGUIGrid::updateTotalSize() {
 	gridw = 0;
 	gridh = 0;
@@ -2773,14 +2800,17 @@ void gGUIGrid::mousePressed(int x, int y, int button) {
 		if(clicktime - previousclicktime <= clicktimediff) {
 			isdoubleclicked = true;
 //			gLogi("Grid") << "doubleclicked.";
-		} else isdoubleclicked = false;
+		} else {
+			isdoubleclicked = false;
+		}
 		if(isdoubleclicked) {
-			strflag = allcells[selectedbox].cellcontent;
-			textbox.cleanText();
-			createTextBox();
-			textbox.mousePressed(pressedx, pressedy, button);
-			istextboxactive = true;
-		} else istextboxactive = false;
+			if (istextboxactive) {
+				return;
+			}
+			editCell(allcells[selectedbox]);
+		} else {
+			istextboxactive = false;
+		}
 	}
 }
 
@@ -2909,20 +2939,18 @@ void gGUIGrid::keyPressed(int key){
 		}
 	}
 	else if((isselected || isrowselected || iscolumnselected) && !ctrlpressed && key != G_KEY_ENTER && key != G_KEY_UP && key != G_KEY_DOWN && key != G_KEY_RIGHT && key != G_KEY_LEFT && key != G_KEY_ESC && key != G_KEY_F2) {
-		textbox.cleanText();
-		strflag = allcells[selectedbox].cellcontent;
-		allcells[selectedbox].cellcontent = "";
-		allcells[selectedbox].showncontent = "";
-		createTextBox();
-		textbox.mousePressed(allcells[selectedbox].cellx + textbox.getInitX(), allcells[selectedbox].celly + textbox.getInitX(), 0);
-		textbox.keyPressed(key);
-		istextboxactive = true;
-		isdoubleclicked = true;
+		editCell(allcells[selectedbox], true);
+		if (istextboxactive) {
+			textbox.mousePressed(allcells[selectedbox].cellx + textbox.getInitX(), allcells[selectedbox].celly + textbox.getInitX(), 0);
+			textbox.keyPressed(key);
+		}
 	}
 }
 
 void gGUIGrid::keyReleased(int key) {
-	if(istextboxactive) textbox.keyReleased(key);
+	if(istextboxactive) {
+		textbox.keyReleased(key);
+	}
 	if(key == G_KEY_ENTER && isdoubleclicked && (strflag != allcells[selectedbox].cellcontent || (strflag == "" && textbox.getText() != ""))) addUndoStack(PROCESS_TEXT);
 	if((key == G_KEY_ENTER && firstselectedcell != lastselectedcell)) {
 		changeCell(selectedbox);
@@ -3010,13 +3038,8 @@ void gGUIGrid::keyReleased(int key) {
 			resetSelectedIndexes();
 			adjustScrollToFocusSelected();
 		}
-	}
-	else if(key == G_KEY_F2) {
-		strflag = allcells[selectedbox].cellcontent;
-		textbox.cleanText();
-		createTextBox();
-		istextboxactive = true;
-		textbox.setEditable(true);
+	} else if(key == G_KEY_F2) {
+		editCell(allcells[selectedbox]);
 	}
 	else if(key == G_KEY_LEFT_CONTROL || key == G_KEY_RIGHT_CONTROL) ctrlpressed = false;
 	else if(key == G_KEY_LEFT_SHIFT || key == G_KEY_RIGHT_SHIFT) shiftpressed = false;
