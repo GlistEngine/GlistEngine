@@ -1,5 +1,8 @@
 var NAVTREEINDEX7 =
 {
+"classgGUITooltipText.html#a9aa755846588106a21982c9c25e82ace":[0,0,94,8],
+"classgGUITooltipText.html#aa5b537e838207f68f241e765c49d45c4":[0,0,94,6],
+"classgGUITooltipText.html#aba143258b5a676d3123d8cc6e661e0d3":[0,0,94,4],
 "classgGUITooltipText.html#ae6ca1bc970f98460b2af85a6ab00520d":[0,0,94,2],
 "classgGUITooltipText.html#aef3cf9ebb724d179c6b12719c074ab94":[0,0,94,9],
 "classgGUITreelist.html":[0,0,95],
@@ -246,8 +249,5 @@ var NAVTREEINDEX7 =
 "classgMaterial.html#a79cbb226af21c51ba284c03c1fd2e7d4":[0,0,114,73],
 "classgMaterial.html#a7b418a9f7fad7df28529ff7023182f43":[0,0,114,6],
 "classgMaterial.html#a7f959d961d9f1bff729264e5400425eb":[0,0,114,11],
-"classgMaterial.html#a817432eabe14856192659a3906e4425d":[0,0,114,75],
-"classgMaterial.html#a8675c6bcd071eea14fa16d8213f90238":[0,0,114,52],
-"classgMaterial.html#a877ba88a0cfb5daae2647dbbc2f627de":[0,0,114,51],
-"classgMaterial.html#a8c6589787cea268ec3fadc9b39106b25":[0,0,114,0]
+"classgMaterial.html#a817432eabe14856192659a3906e4425d":[0,0,114,75]
 };

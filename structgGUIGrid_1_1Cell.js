@@ -21,6 +21,7 @@ var structgGUIGrid_1_1Cell =
     [ "isitalic", "structgGUIGrid_1_1Cell.html#a9b3e983bf53e765470bebdb8dd18ba8b", null ],
     [ "lineno", "structgGUIGrid_1_1Cell.html#a62c65d1287779290a5cabf4eabec45c2", null ],
     [ "overflowcontent", "structgGUIGrid_1_1Cell.html#a6a6f3a8c1cbd138a9de68cfbae382f18", null ],
+    [ "readonly", "structgGUIGrid_1_1Cell.html#a1f485137b0c94db83a51472da3cb3a53", null ],
     [ "removed", "structgGUIGrid_1_1Cell.html#a44181ae7a5a3f3f8e3c2a8c36a90211a", null ],
     [ "showncontent", "structgGUIGrid_1_1Cell.html#abb6437a9c53cf19334448c01d1c34085", null ],
     [ "textmoveamount", "structgGUIGrid_1_1Cell.html#a771d15da4e462d0e28cb16cc3229a986", null ]
