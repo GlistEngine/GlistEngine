@@ -1,5 +1,6 @@
 var NAVTREEINDEX12 =
 {
+"structgHttpFile_1_1ProgressData.html#a437d4db25e3c8db350206cb7de706e3f":[0,0,97,0,1],
 "structgHttpFile_1_1ProgressData.html#a7d3ae2b5d14fb694f338f136d344524c":[0,0,97,0,0],
 "structgVertex.html":[0,0,155],
 "structgVertex.html#a1307c4e7fc374612cd8e583ce90e8115":[0,0,155,2],
