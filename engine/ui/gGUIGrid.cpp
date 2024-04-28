@@ -71,7 +71,73 @@ void gGUIGrid::set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIO
 }
 
 void gGUIGrid::setGrid(int rowNum, int columnNum) {
+	int rowdiff = rownum - rowNum;
+	int columndiff = columnnum - columnNum;
+	// delete rows
+	if(rowdiff > 0) {
+		auto end = cellmap.end();
+		bool hasgridboxesh = !gridboxesh.empty();
+		for(int i = 0; i <= rowdiff; i++) {
+			for(int column = 0; column < columnNum; column++) {
+				int row = rownum - i;
+				auto it = cellmap.find(hashCell(row, column));
+				if (it != end) {
+					Cell& cell = allcells[it->second];
+					cell.removed = true;
+				}
+				if (hasgridboxesh) {
+					gridboxesh.erase(std::remove_if(gridboxesh.begin(), gridboxesh.end(), [row](const std::array<float, 2>& v) {
+						return (int)v[0] == row;
+					}));
+				}
+			}
+		}
+	} else {
+		// recreate removed cells
+		auto end = cellmap.end();
+		for(int i = 0; i < -rowdiff; i++) {
+			for(int column = 0; column < columnNum; column++) {
+				int row = rownum - i;
+				auto it = cellmap.find(hashCell(row, column));
+				if (it != end) {
+					createCell(it->second, row, column);
+				}
+			}
+		}
+	}
 	rownum = std::min(rowNum, maxrownum);
+	// delete columns
+	if(columndiff > 0) {
+		auto end = cellmap.end();
+		bool hasgridboxesw = !gridboxesw.empty();
+		for(int i = 0; i <= columndiff; i++) {
+			for(int row = 0; row < rowNum; row++) {
+				int column = columnnum - i;
+				auto it = cellmap.find(hashCell(row, column));
+				if (it != end) {
+					Cell& cell = allcells[it->second];
+					cell.removed = true;
+				}
+				if (hasgridboxesw) {
+					gridboxesw.erase(std::remove_if(gridboxesw.begin(), gridboxesw.end(), [column](const std::array<float, 2>& v) {
+						return (int)v[0] == column;
+					}));
+				}
+			}
+		}
+	} else {
+		// recreate removed cells
+		auto end = cellmap.end();
+		for(int i = 0; i < -columndiff; i++) {
+			for(int row = 0; row < rowNum; row++) {
+				int column = columnnum - i;
+				auto it = cellmap.find(hashCell(row, column));
+				if (it != end) {
+					createCell(it->second, row, column);
+				}
+			}
+		}
+	}
 	columnnum = std::min(columnNum, maxcolumnnum);
 	updateTotalSize();
 }
@@ -160,8 +226,7 @@ void gGUIGrid::setCellsFont(Cell* cell1, Cell* cell2, int fontNo) {
 		for(int row = r1; row <= r2; row++) {
 			int index = getCellNo(row, column);
 			if(index == -1) {
-				createCell(row, column);
-				index = allcells.size() - 1;
+				index = createCell(row, column);
 			}
 			Cell* c = &allcells[index];
 			setCellFont(c, fontNo);
@@ -255,8 +320,7 @@ void gGUIGrid::setCellsFontBold(Cell* cell1, Cell* cell2) {
 		for(int row = r1; row <= r2; row++) {
 			int index = getCellNo(row, column);
 			if(index == -1) {
-				createCell(row, column);
-				index = allcells.size() - 1;
+				index = createCell(row, column);
 			}
 			Cell* c = &allcells[index];
 			setCellFontBold(c);
@@ -773,6 +837,12 @@ void gGUIGrid::selectCell(int rowNo, int columnNo) {
 }
 
 void gGUIGrid::selectCell(Cell* cell1, Cell* cell2) {
+	if (cell1 == nullptr || cell2 == nullptr) {
+		isselected = false;
+		firstselectedcell = -1;
+		lastselectedcell = -1;
+		return;
+	}
 	isselected = true;
 	firstselectedcell = cell1->cellrowno * columnnum + cell1->cellcolumnno;
 	lastselectedcell = cell2->cellrowno * columnnum + cell2->cellcolumnno;
@@ -1189,7 +1259,9 @@ float gGUIGrid::getRowHeight(int rowNo) {
 }
 
 void gGUIGrid::fillCell(int cellNo, const std::string& tempstr) {
-	if(cellNo > rownum * columnnum - 1) return;
+	if (cellNo >= allcells.size()) {
+		return;
+	}
 	allcells[cellNo].cellcontent = tempstr;
 	allcells[cellNo].showncontent = fixTextFunction(tempstr, cellNo);
 
@@ -2043,6 +2115,11 @@ void gGUIGrid::makeRedo() {
 }
 
 int gGUIGrid::createCell(int rowNo, int columnNo) {
+	int index = allcells.size();
+	return createCell(index, rowNo, columnNo);
+}
+
+void gGUIGrid::createCell(int index, int rowNo, int columnNo) {
 	Cell tempcell;
 	tempcell.cellx = calculateCurrentX(columnNo) + horizontalscroll;
 	tempcell.celly = calculateCurrentY(rowNo) + verticalscroll;
@@ -2050,10 +2127,14 @@ int gGUIGrid::createCell(int rowNo, int columnNo) {
 	tempcell.cellh = getRowHeight(rowNo);
 	tempcell.cellrowno = rowNo;
 	tempcell.cellcolumnno = columnNo;
-	allcells.push_back(tempcell);
-	int index = allcells.size() - 1;
+	if (allcells.size() <= index) {
+		allcells.push_back(tempcell);
+        index = allcells.size() - 1;
+	} else {
+		allcells[index] = tempcell;
+	}
 	cellmap[hashCell(rowNo, columnNo)] = index;
-	return index;
+    return index;
 }
 
 void gGUIGrid::createTextBox() {
@@ -2475,6 +2556,9 @@ void gGUIGrid::drawColumnLines() {
 void gGUIGrid::drawCellContents() {
 	for(int i = 0; i < allcells.size(); i++) {
 		Cell& currentcell = allcells[i];
+		if (currentcell.removed) {
+			continue;
+		}
 		// visibility checks
 		if(currentcell.cellx + currentcell.cellw - horizontalscroll < gridx) {
 			continue;
@@ -2882,8 +2966,7 @@ void gGUIGrid::keyReleased(int key) {
 		}
 		int index = getCellNo(newrow, newcolumn);
 		if(index == -1) {
-			createCell(newrow, newcolumn);
-			index = allcells.size() - 1;
+			index = createCell(newrow, newcolumn);
 		}
 		selectedbox = index;
 		resetSelectedIndexes();
@@ -2895,8 +2978,7 @@ void gGUIGrid::keyReleased(int key) {
 			isselected = true;
 			int index = getCellNo(allcells[selectedbox].cellrowno - 1, allcells[selectedbox].cellcolumnno);
 			if(index == -1) {
-				createCell(allcells[selectedbox].cellrowno - 1, allcells[selectedbox].cellcolumnno);
-				index = allcells.size() - 1;
+				index = createCell(allcells[selectedbox].cellrowno - 1, allcells[selectedbox].cellcolumnno);
 			}
 			selectedbox = index;
 			resetSelectedIndexes();
@@ -2909,8 +2991,7 @@ void gGUIGrid::keyReleased(int key) {
 			isselected = true;
 			int index = getCellNo(allcells[selectedbox].cellrowno, allcells[selectedbox].cellcolumnno + 1);
 			if(index == -1) {
-				createCell(allcells[selectedbox].cellrowno, allcells[selectedbox].cellcolumnno + 1);
-				index = allcells.size() - 1;
+				index = createCell(allcells[selectedbox].cellrowno, allcells[selectedbox].cellcolumnno + 1);
 			}
 			selectedbox = index;
 			resetSelectedIndexes();
@@ -2923,8 +3004,7 @@ void gGUIGrid::keyReleased(int key) {
 			isselected = true;
 			int index = getCellNo(allcells[selectedbox].cellrowno, allcells[selectedbox].cellcolumnno - 1);
 			if(index == -1) {
-				createCell(allcells[selectedbox].cellrowno, allcells[selectedbox].cellcolumnno - 1);
-				index = allcells.size() - 1;
+				index = createCell(allcells[selectedbox].cellrowno, allcells[selectedbox].cellcolumnno - 1);
 			}
 			selectedbox = index;
 			resetSelectedIndexes();

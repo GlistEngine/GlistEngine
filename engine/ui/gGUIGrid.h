@@ -49,8 +49,10 @@ public:
 	    std::string showncontent;
 	    std::string overflowcontent;
 	    gColor cellfontcolor;
+		bool removed;
 
-	    Cell(){
+	    Cell() {
+			removed = false;
 	    	iscellselected = false;
 	    	iscellaligned = false;
 	    	isbold = false;
@@ -265,6 +267,11 @@ private:
 	void makeRedo();
 
 	int createCell(int rowNo, int columnNo);
+	/**
+	 * Creates and overrides the cell at given index.
+	 * If the given index is out of bounds, it creates a new cell at the end of the list.
+	 */
+	int createCell(int index, int rowNo, int columnNo);
 	void createTextBox();
 
 	void checkCellType(int cellIndex);
