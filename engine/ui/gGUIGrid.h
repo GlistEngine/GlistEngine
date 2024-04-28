@@ -19,7 +19,7 @@
 
 //#include "gGUISizer.h"
 
-class gGUIGrid: public gGUIScrollable {
+class gGUIGrid : public gGUIScrollable {
 public:
 	struct Cell {
 	    enum {
@@ -50,8 +50,10 @@ public:
 	    std::string overflowcontent;
 	    gColor cellfontcolor;
 		bool removed;
+		bool readonly;
 
 	    Cell() {
+			readonly = false;
 			removed = false;
 	    	iscellselected = false;
 	    	iscellaligned = false;
@@ -179,6 +181,10 @@ public:
     void setCellsAlignment(Cell* cell1, Cell* cell2, int cellAlignment);
     void setCellsAlignment(const std::string& cell1, const std::string& cell2, int cellAlignment);
 
+	void setCellReadOnly(Cell* cell, bool readonly);
+	void setCellReadOnly(int rowNo, int columnNo, bool readonly);
+	void setCellReadOnly(const std::string& cell, bool readonly);
+
 	void setSelectedFrameColor(gColor* selectedFrameColor);
 	void setSelectedAreaColor(gColor* selectedAreaColor);
 
@@ -277,6 +283,14 @@ private:
 	void checkCellType(int cellIndex);
 	void showCells();
 	void showCell(int rowNo, int columnNo);
+
+	/**
+	 * Enables the text input for cell. If cell is read-only, it will do nothing.
+	 *
+	 * @param cell Target cell
+	 * @param clear Whether or not to clear the text before enabling the input
+	 */
+	void editCell(Cell& cell, bool clear = false);
 
 	void updateTotalSize();
 	void adjustScrollToFocusSelected();
