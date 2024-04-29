@@ -630,6 +630,7 @@ void gGUIGrid::setCellsLine(const std::string& cell1, const std::string& cell2, 
 }
 
 void gGUIGrid::setCellContent(gGUIGrid::Cell* cell, const std::string& cellContent) {
+	disableTextbox();
 	cell->cellcontent = cellContent;
 	uint64_t hash = hashCell(cell->cellrowno, cell->cellcolumnno);
 	auto it = cellmap.find(hash);
@@ -650,10 +651,15 @@ void gGUIGrid::setCellContent(const std::string& cell, const std::string& cellCo
 }
 
 void gGUIGrid::setCellsContent(std::deque<Cell*> cells, std::vector<std::string> contents) {
-	if(cells.size() <= contents.size())
-		for(int i = 0; i < cells.size(); i++) setCellContent(cells[i], contents[i]);
-	else
-		for(int i = 0; i < contents.size(); i++) setCellContent(cells[i], contents[i]);
+	if(cells.size() <= contents.size()) {
+		for(int i = 0; i < cells.size(); i++) {
+			setCellContent(cells[i], contents[i]);
+		}
+	} else {
+		for(int i = 0; i < contents.size(); i++) {
+			setCellContent(cells[i], contents[i]);
+		}
+	}
 }
 
 void gGUIGrid::setCellsContent(Cell* cell1, Cell* cell2, std::vector<std::string> contents) {
@@ -1294,7 +1300,9 @@ void gGUIGrid::fillCell(int cellNo, const std::string& tempstr) {
 			}
 		}
 	}
-	if(delindex != -1) functions.erase(functions.begin() + delindex);
+	if(delindex != -1) {
+		functions.erase(functions.begin() + delindex);
+	}
 
 	Cell& cell = allcells[cellNo];
 	int nearestindex = -1;
@@ -1805,8 +1813,7 @@ void gGUIGrid::changeSelectedCell(int amount) {
 void gGUIGrid::changeCell(int cellNo) {
 	if(istextboxactive) {
 		fillCell(cellNo, textbox.getText());
-		textbox.cleanText();
-		istextboxactive = false;
+		disableTextbox();
 	} else {
 		if(!ctrlzpressed && !ctrlypressed) {
 			fillCell(cellNo, allcells[cellNo].cellcontent);
@@ -2157,12 +2164,13 @@ void gGUIGrid::createTextBox() {
 	textbox.setTextFont(manager->getFont(allcells[selectedbox].fontnum, allcells[selectedbox].fontstate/*,allcells[selectedbox].fontsize*/));
 	textbox.setTextAlignment(allcells[selectedbox].cellalignment, allcells[selectedbox].cellw, textbox.getInitX());
 	textbox.setTextColor(&allcells[selectedbox].cellfontcolor);
+	textbox.setEditMode(true);
 	if(allcells[selectedbox].cellcontent != "") {
 		textbox.setText(allcells[selectedbox].cellcontent);
 		int length = allcells[selectedbox].cellcontent.length();
-		if(allcells[selectedbox].cellalignment == gBaseGUIObject::TEXTALIGNMENT_LEFT || allcells[selectedbox].cellalignment == gBaseGUIObject::TEXTALIGNMENT_RIGHT)
+		if(allcells[selectedbox].cellalignment == gBaseGUIObject::TEXTALIGNMENT_LEFT || allcells[selectedbox].cellalignment == gBaseGUIObject::TEXTALIGNMENT_RIGHT) {
 			textbox.setCursorPosX(font->getStringWidth(allcells[selectedbox].cellcontent), length);
-		else {
+		} else {
 			std::string mid;
 			int middle;
 			if(length % 2 == 0) middle = length / 2;
@@ -2171,6 +2179,9 @@ void gGUIGrid::createTextBox() {
 			textbox.setCursorPosX(font->getStringWidth(mid), middle);
 		}
 		allcells[selectedbox].showncontent = "";
+	} else {
+		textbox.setText("");
+		textbox.setCursorPosX(0, 0);
 	}
 }
 
@@ -2406,6 +2417,12 @@ void gGUIGrid::editCell(Cell& cell, bool clear) {
 	createTextBox();
 	textbox.setEditable(true);
 	istextboxactive = true;
+}
+
+void gGUIGrid::disableTextbox() {
+	textbox.cleanText();
+	textbox.setEditable(false);
+	istextboxactive = false;
 }
 
 void gGUIGrid::updateTotalSize() {
@@ -2809,7 +2826,7 @@ void gGUIGrid::mousePressed(int x, int y, int button) {
 			}
 			editCell(allcells[selectedbox]);
 		} else {
-			istextboxactive = false;
+			disableTextbox();
 		}
 	}
 }
@@ -2954,8 +2971,7 @@ void gGUIGrid::keyReleased(int key) {
 	if(key == G_KEY_ENTER && isdoubleclicked && (strflag != allcells[selectedbox].cellcontent || (strflag == "" && textbox.getText() != ""))) addUndoStack(PROCESS_TEXT);
 	if((key == G_KEY_ENTER && firstselectedcell != lastselectedcell)) {
 		changeCell(selectedbox);
-		istextboxactive = false;
-		textbox.setEditable(false);
+		disableTextbox();
 		bool godown = (allcells[selectedbox].cellrowno + 1 <= int(lastselectedcell / columnnum));
 		int newrow;
 		int newcolumn;
@@ -2976,7 +2992,7 @@ void gGUIGrid::keyReleased(int key) {
 	}
 	else if ((key == G_KEY_ENTER || key == G_KEY_DOWN) && !shiftpressed) {
 		changeCell(selectedbox);
-		istextboxactive = false;
+		disableTextbox();
 		textbox.setEditable(false);
 		isrowselected = false;
 		isselected = true;

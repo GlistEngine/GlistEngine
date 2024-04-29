@@ -1449,7 +1449,6 @@ void gGUITextbox::mouseReleased(int x, int y, int button) {
 	if(x >= left && x < right && y >= top + hdiff && y < top + totalh + hdiff && button == 0) {
 		return;
 	}
-	if(!isdragging) editmode = false;
 	isdragging = false;
 }
 
@@ -1479,7 +1478,9 @@ std::vector<int> gGUITextbox::clickTextbox(int x, int y) {
 	if(!editmode) cursorshowcounter = 0;
 	editmode = true;
 
-	if(!ismultiline) return calculateClickPosition(x, y);
+	if(!ismultiline) {
+		return calculateClickPosition(x, y);
+	}
 	return calculateClickPositionMultiline(x, y);
 }
 
@@ -1863,4 +1864,8 @@ void gGUITextbox::setCursorPosX(int cursorPosX, int length) {
 
 void gGUITextbox::setDisabled(bool isDisabled) {
 	isdisabled = isDisabled;
+}
+
+void gGUITextbox::setEditMode(bool editMode) {
+	editmode = editMode;
 }

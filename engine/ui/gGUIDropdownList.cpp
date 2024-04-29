@@ -85,6 +85,9 @@ void gGUIDropdownList::onGUIEvent(int guiObjectId, int eventType, int sourceEven
 	}
 	if(sourceEventType == G_GUIEVENT_TREELISTSELECTED) {
 		selectedline = true;
+		setSelectedTitle();
+		listopened = false;
+		frame->addTreelist(nullptr, listx, listy, listw);
 	}
 	if(sourceEventType == G_GUIEVENT_TREELISTEXPANDED) {
 		listexpanded = true;

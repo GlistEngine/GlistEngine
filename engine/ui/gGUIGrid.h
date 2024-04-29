@@ -292,6 +292,8 @@ private:
 	 */
 	void editCell(Cell& cell, bool clear = false);
 
+	void disableTextbox();
+
 	void updateTotalSize();
 	void adjustScrollToFocusSelected();
 
