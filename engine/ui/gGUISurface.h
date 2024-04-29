@@ -11,13 +11,15 @@
 #include "gGUIScrollable.h"
 #include "gRenderer.h"
 #include "gImage.h"
+#include "gGUISizer.h"
 #include <deque>
 
 
 class gGUISurface: public gGUIScrollable {
 public:
 	enum {
-		SHAPE_RECTANGLE, SHAPE_CIRCLE, SHAPE_LINE, SHAPE_ARROW, SHAPE_TRIANGLE, SHAPE_IMAGE, SHAPE_TEXT
+		SHAPE_RECTANGLE, SHAPE_CIRCLE, SHAPE_LINE, SHAPE_ARROW, SHAPE_TRIANGLE,
+		SHAPE_IMAGE, SHAPE_TEXT, SHAPE_GUISIZER
 	};
 	gGUISurface();
 	virtual ~gGUISurface();
@@ -34,6 +36,7 @@ public:
 	void addTriangle(float px, float py, float qx, float qy, float rx, float ry, bool isFilled, gColor color = gColor(0.0f, 0.0f, 0.0f));
 	void addImage(float x, float y, float w, float h, gImage* image);
 	void addText(std::string text, float x, float y, int fontFace, int fontType, gColor color = gColor(0.0f, 0.0f, 0.0f));
+	void addSizer(float x, float y, float w, float h, gGUISizer* newSizer);
 
 	void clear();
 
@@ -53,8 +56,9 @@ private:
 	std::vector<std::vector<float>> shapes;
 	std::deque<gImage*> images;
 	std::deque<std::string> texts;
+	std::deque<gGUISizer*> sizers;
 
-	int imageNum, textnum;
+	int imageNum, textnum, sizernum;
 	int maxHeight;
 	//color
 	float r, g, b, a;
