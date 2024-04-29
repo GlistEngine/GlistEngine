@@ -36,26 +36,38 @@ void gGUINavigation::draw() {
 	renderer->setColor(navigationbackgroundcolor);
 	gDrawRectangle(0, 0, boxw, boxh + panetoph, true);
 
-	renderer->setColor(255, 255, 255);
 	for(int i = 0; i < panes.size(); i++) {
-		if(i == selectedpane) root->getAppManager()->getGUIManager()->getFont(0, 1)->drawText(gToStr(i + 1) + ". " + panes[i]->getTitle(), panelinepad, panetoph + i * panelineh);
-		else font->drawText(gToStr(i + 1) + ". " + panes[i]->getTitle(), panelinepad, panetoph + i * panelineh);
+		if(!paneenabled[i]) {
+			renderer->setColor(196, 196, 196);
+			font->drawText(gToStr(i + 1) + ". " + panes[i]->getTitle(), panelinepad, panetoph + i * panelineh);
+		} else if(i == selectedpane) {
+			renderer->setColor(255, 255, 255);
+			root->getAppManager()->getGUIManager()->getFont(0, 1)->drawText(gToStr(i + 1) + ". " + panes[i]->getTitle(), panelinepad, panetoph + i * panelineh);
+		} else {
+			renderer->setColor(255, 255, 255);
+			font->drawText(gToStr(i + 1) + ". " + panes[i]->getTitle(), panelinepad, panetoph + i * panelineh);
+		}
 	}
 
-	if(toolbarenabled) toolbar.draw();
+	if(toolbarenabled) {
+		renderer->setColor(255, 255, 255);
+		toolbar.draw();
+	}
 
 	renderer->setColor(oldcolor);
 }
 
-void gGUINavigation::addPane(gGUIPane* newPane) {
+void gGUINavigation::addPane(gGUIPane* newPane, bool isEnabled) {
 	newPane->setNavigation(this);
 	panes.push_back(newPane);
+	paneenabled.push_back(isEnabled);
 	newPane->setNavigationOrder(panes.size() - 1);
 }
 
-void gGUINavigation::setPane(int paneNo, gGUIPane* newPane) {
+void gGUINavigation::setPane(int paneNo, gGUIPane* newPane, bool isEnabled) {
 	newPane->setNavigation(this);
 	panes.insert(panes.begin() + paneNo, newPane);
+	paneenabled.insert(paneenabled.begin() + paneNo, isEnabled);
 	newPane->setNavigationOrder(paneNo);
 	for(int i = paneNo + 1; i < panes.size(); i++) panes[i]->setNavigationOrder(i);
 }
@@ -63,6 +75,7 @@ void gGUINavigation::setPane(int paneNo, gGUIPane* newPane) {
 void gGUINavigation::removePane(int paneNo) {
 	panes[paneNo]->setNavigation(nullptr);
 	panes.erase(panes.begin() + paneNo);
+	paneenabled.erase(paneenabled.begin() + paneNo);
 	for(int i = paneNo; i < panes.size(); i++) panes[i]->setNavigationOrder(i);
 }
 
@@ -74,8 +87,17 @@ int gGUINavigation::getPaneNum() {
 	return panes.size();
 }
 
+void gGUINavigation::setPaneEnabled(int paneNo, bool isEnabled) {
+	paneenabled[paneNo] = isEnabled;
+}
+
+bool gGUINavigation::isPaneEnabled(int paneNo) {
+	return paneenabled[paneNo];
+}
+
 void gGUINavigation::clear() {
 	panes.clear();
+	paneenabled.clear();
 }
 
 void gGUINavigation::setSelectedPane(int paneNo) {
@@ -93,8 +115,8 @@ void gGUINavigation::mousePressed(int x, int y, int button) {
 
 void gGUINavigation::mouseReleased(int x, int y, int button) {
 	gGUIScrollable::mouseReleased(x, y, button);
-	int selected = -1;
 	for(int i = 0; i < panes.size(); i++) {
+		if(!paneenabled[i]) continue;
 		if(x >= panelinepad && x < width - panelinepad && y >= panetoph + i * panelineh - font->getSize() && y < panetoph + i * panelineh + font->getSize() / 2) {
 			selectedpane = i;
 			((gGUISizer*)parent)->setControl(0, 1, panes[selectedpane]);

@@ -24,11 +24,13 @@ public:
 	virtual void update();
 	virtual void draw();
 
-	void addPane(gGUIPane* newPane);
-	void setPane(int paneNo, gGUIPane* newPane);
+	void addPane(gGUIPane* newPane, bool isEnabled = true);
+	void setPane(int paneNo, gGUIPane* newPane, bool isEnabled = true);
 	void removePane(int paneNo);
 	gGUIPane* getPane(int paneNo);
 	int getPaneNum();
+	void setPaneEnabled(int paneNo, bool isEnabled);
+	bool isPaneEnabled(int paneNo);
 	void clear();
 
 	void setSelectedPane(int paneNo);
@@ -43,6 +45,7 @@ public:
 
 private:
 	std::deque<gGUIPane*> panes;
+	std::deque<bool> paneenabled;
 	int panetoph;
 	int panelineh;
 	int panelinepad;
