@@ -148,15 +148,15 @@ $(document).ready(function(){initNavTree('gGUILineGraph_8h_source.html',''); ini
 <div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <a class="code" href="classgGUILineGraph.html">gGUILineGraph</a>();</div>
 <div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <span class="keyword">virtual</span> ~<a class="code" href="classgGUILineGraph.html">gGUILineGraph</a>();</div>
 <div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160; </div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <span class="keywordtype">void</span> set(<a class="code" href="classgBaseApp.html">gBaseApp</a>* root, <a class="code" href="classgBaseGUIObject.html">gBaseGUIObject</a>* topParentGUIObject, <a class="code" href="classgBaseGUIObject.html">gBaseGUIObject</a>* parentGUIObject, <span class="keywordtype">int</span> parentSlotLineNo, <span class="keywordtype">int</span> parentSlotColumnNo, <span class="keywordtype">int</span> x, <span class="keywordtype">int</span> y, <span class="keywordtype">int</span> w, <span class="keywordtype">int</span> h);</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <span class="keywordtype">void</span> set(<a class="code" href="classgBaseApp.html">gBaseApp</a>* root, <a class="code" href="classgBaseGUIObject.html">gBaseGUIObject</a>* topParentGUIObject, <a class="code" href="classgBaseGUIObject.html">gBaseGUIObject</a>* parentGUIObject, <span class="keywordtype">int</span> parentSlotLineNo, <span class="keywordtype">int</span> parentSlotColumnNo, <span class="keywordtype">int</span> x, <span class="keywordtype">int</span> y, <span class="keywordtype">int</span> w, <span class="keywordtype">int</span> h) <span class="keyword">override</span>;</div>
 <div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160; </div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <span class="keywordtype">void</span> setMaxX(<span class="keywordtype">int</span> maxX);</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    <span class="keywordtype">void</span> setMinX(<span class="keywordtype">int</span> minX);</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    <span class="keywordtype">void</span> setMaxY(<span class="keywordtype">int</span> maxY);</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    <span class="keywordtype">void</span> setMinY(<span class="keywordtype">int</span> minY);</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <span class="keywordtype">void</span> setMaxX(<span class="keywordtype">int</span> maxX) <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    <span class="keywordtype">void</span> setMinX(<span class="keywordtype">int</span> minX) <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    <span class="keywordtype">void</span> setMaxY(<span class="keywordtype">int</span> maxY) <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    <span class="keywordtype">void</span> setMinY(<span class="keywordtype">int</span> minY) <span class="keyword">override</span>;</div>
 <div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160; </div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <span class="keywordtype">void</span> setLabelCountX(<span class="keywordtype">int</span> labelCount);</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    <span class="keywordtype">void</span> setLabelCountY(<span class="keywordtype">int</span> labelCount);</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <span class="keywordtype">void</span> setLabelCountX(<span class="keywordtype">int</span> labelCount) <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    <span class="keywordtype">void</span> setLabelCountY(<span class="keywordtype">int</span> labelCount) <span class="keyword">override</span>;</div>
 <div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160; </div>
 <div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    <span class="keywordtype">void</span> enablePoints(<span class="keywordtype">bool</span> arePointsEnabled);</div>
 <div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <span class="keywordtype">void</span> setLineColor(<span class="keywordtype">int</span> lineIndex, <a class="code" href="classgColor.html">gColor</a> lineColor);</div>
@@ -178,7 +178,7 @@ $(document).ready(function(){initNavTree('gGUILineGraph_8h_source.html',''); ini
 <div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160; </div>
 <div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;<span class="keyword">private</span>:</div>
 <div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">int</span> linecolornum = 6;</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    <span class="keywordtype">void</span> drawGraph();</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    <span class="keywordtype">void</span> drawGraph() <span class="keyword">override</span>;</div>
 <div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    <span class="keywordtype">void</span> updatePoints();</div>
 <div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160; </div>
 <div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    std::deque&lt;std::deque&lt;std::array&lt;float, 4&gt;&gt;&gt; graphlines;</div>
