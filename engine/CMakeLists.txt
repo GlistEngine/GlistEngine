@@ -497,8 +497,8 @@ if(WIN32)
 		opengl32
 		glew32
 		dbghelp
-		msvcr100
-		psapi
+#		msvcr100
+#		psapi
 #		swscale-5
 #		swresample-3
 #		avutil-56
