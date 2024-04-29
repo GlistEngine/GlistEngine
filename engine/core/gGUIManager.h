@@ -23,6 +23,7 @@
 #include <deque>
 
 class gBaseApp;
+class gGUIRendererContext;
 
 /**
  * GUI Manager for GlistEngine
@@ -79,6 +80,8 @@ public:
 	void mouseExited();
 	void windowResized(int w, int h);
 
+	void onEvent(gEvent& event);
+
 	void update();
 	void draw();
 
@@ -86,6 +89,7 @@ public:
 
 private:
 	gBaseApp* root;
+	gGUIRendererContext ctx;
 	gGUIFrame* currentframe;
 	gGUIFrame emptyframe;
 	gGUISizer emptysizer;

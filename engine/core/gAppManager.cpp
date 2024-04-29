@@ -425,7 +425,9 @@ void gAppManager::tick() {
             }
         }
 
-		if(guimanager) guimanager->draw();
+		if(guimanager) {
+			guimanager->draw();
+		}
         totaldraws++;
     }
 	if(usewindow) {
@@ -449,9 +451,17 @@ void gAppManager::tick() {
 
 
 void gAppManager::onEvent(gEvent& event) {
-    if(event.ishandled) return;
+    if(event.ishandled) {
+		return;
+	}
 
     gEventDispatcher dispatcher(event);
+	if (guimanager) {
+		guimanager->onEvent(event);
+		if (event.ishandled) {
+			return;
+		}
+	}
     dispatcher.dispatch<gWindowResizeEvent>(G_BIND_FUNCTION(onWindowResizedEvent));
     dispatcher.dispatch<gCharTypedEvent>(G_BIND_FUNCTION(onCharTypedEvent));
     dispatcher.dispatch<gKeyPressedEvent>(G_BIND_FUNCTION(onKeyPressedEvent));
@@ -472,7 +482,9 @@ void gAppManager::onEvent(gEvent& event) {
     dispatcher.dispatch<gDeviceOrientationChangedEvent>(G_BIND_FUNCTION(onDeviceOrientationChangedEvent));
     dispatcher.dispatch<gTouchEvent>(G_BIND_FUNCTION(onTouchEvent));
 #endif
-    if(canvasmanager && getCurrentCanvas()) getCurrentCanvas()->onEvent(event);
+    if(canvasmanager && getCurrentCanvas()) {
+		getCurrentCanvas()->onEvent(event);
+	}
     // todo pass event to app and plugins
 }
 

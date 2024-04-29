@@ -271,9 +271,6 @@ public:
 
 	void drawContent();
 
-	void mousePressed(int x, int y, int button);
-	void mouseReleased(int x, int y, int button);
-
 	/*
  	 * Sets the color of the row which developer click and select, with the
  	 * given color. Colors consist of RGB values float between 0.0f-1.0f.
@@ -443,6 +440,9 @@ private:
 	int iconx, iconw, iconh;
 
 private:
+	bool onMousePressedEvent(gMouseButtonPressedEvent& event);
+	bool onMouseReleasedEvent(gMouseButtonReleasedEvent& event);
+
 	void updateTotalHeight();
 };
 

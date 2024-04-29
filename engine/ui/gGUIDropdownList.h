@@ -42,9 +42,10 @@ public:
 
 	std::string& getSelectedTitle();
 
-	friend class gGUIToolbar;
 
 private:
+	friend class gGUIToolbar;
+
 	gGUISizer listsizer;
 	gGUIButton button;
 	gGUIImageButton ibutton;
@@ -53,11 +54,15 @@ private:
 	int textboxw, buttonw;
 	int textboxh;
 	int listx, listy, listw;
-	bool listopened, selectedline, listexpanded, pressedonlist, buttonpressed, ispressed;
-	bool lopened;
+	bool listopen, selectedline;
 	gGUIForm* frame;
 	std::string fTitle;
 	bool isdisabled;
+
+private:
+	bool onMousePressedEvent(gMouseButtonPressedEvent& event);
+	bool onMouseReleasedEvent(gMouseButtonReleasedEvent& event);
+
 };
 
 #endif /* UI_GGUIDROPDOWNLIST_H_ */

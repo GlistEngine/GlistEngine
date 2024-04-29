@@ -75,6 +75,98 @@ void gGUITreelist::clear() {
 	selectedno = 0;
 }
 
+bool gGUITreelist::onMousePressedEvent(gMouseButtonPressedEvent& event) {
+	int x = event.getX();
+	int y = event.getY();
+	if(x >= left && x < left + boxw && y >= top + titleheight && y < top + titleheight + boxh) {
+		mousepressedonlist = true;
+		return true;
+	}
+	return false;
+}
+
+bool gGUITreelist::onMouseReleasedEvent(gMouseButtonReleasedEvent& event) {
+	int x = event.getX();
+	int y = event.getY();
+	if(mousepressedonlist) {
+		mousepressedonlist = false;
+	}
+	if(x >= left && x < left + boxw && y >= top + titleheight && y < top + titleheight + boxh) {
+		int newselectedno = (y - top - titleheight + verticalscroll) / lineh;
+		if(newselectedno <= allsubtitles.size() - 1) {
+			selectedno = newselectedno;
+		}
+		std::string tmptitle = allsubtitles[selectedno];
+		std::string parsedtitle = "";
+		int arrowposx = 0;
+		bool arrow = false;
+
+		if(!topelement.isicon) { // Process which using default symbols '>' and '-'
+			int i = 0;
+			while(i < tmptitle.size() && !arrow) {
+				if(tmptitle[i] == '>') {
+					arrow = true;
+					parsedtitle = tmptitle.substr(i + 2, tmptitle.size() - i);
+					arrowposx = font->getStringWidth(tmptitle.substr(0, i + 1));
+				}
+				i++;
+			}
+
+			if(x < left + arrowposx  - arrowsize || x > left + arrowposx) {
+				isfocused = true;
+				root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_TREELISTSELECTED, gToStr(selectedno));
+				actionmanager.onGUIEvent(id, G_GUIEVENT_TREELISTSELECTED);
+			} else if(x > left + arrowposx  - arrowsize && x < left + arrowposx) {
+				Element* element = topelement.findElement(parsedtitle);
+				element->isexpanded = !element->isexpanded;
+				root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_TREELISTEXPANDED, gToStr(selectedno));
+				actionmanager.onGUIEvent(id, G_GUIEVENT_TREELISTEXPANDED);
+				refreshList();
+			}
+		} else { // Process which using icons
+			int i = 0;
+			while(i < tmptitle.size() && !arrow) {
+				if(tmptitle[i] == ' ') {
+					i++;
+				} else {
+					arrow = true;
+				}
+			}
+			parsedtitle = tmptitle.substr(i, tmptitle.size() - i);
+			Element* element = topelement.findElement(parsedtitle);
+			if(element->isparent) {
+				iconx = element->orderno * spacesize + (iconw * 2 / 3);
+				if(x < left + iconx || x > left + iconx + iconw) {
+					isfocused = true;
+					root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_TREELISTSELECTED, gToStr(selectedno));
+					actionmanager.onGUIEvent(id, G_GUIEVENT_TREELISTSELECTED);
+				} else if(x > left + iconx && x < left + iconx + iconw) {
+					element->isexpanded = !(element->isexpanded);
+					root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_TREELISTEXPANDED, gToStr(selectedno));
+					actionmanager.onGUIEvent(id, G_GUIEVENT_TREELISTEXPANDED);
+					if(!element->isiconchanged) {
+						if(element->isexpanded) {
+							setIcon(gGUIResources::ICON_FOLDEROPENED, element);
+						} else {
+							setIcon(gGUIResources::ICON_FOLDER, element);
+						}
+					}
+					refreshList();
+				}
+			} else {
+				isfocused = true;
+				root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_TREELISTSELECTED, gToStr(selectedno));
+				actionmanager.onGUIEvent(id, G_GUIEVENT_TREELISTSELECTED);
+			}
+		}
+
+		root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_MOUSEPRESSEDONTREELIST, gToStr(selectedno));
+		actionmanager.onGUIEvent(id, G_GUIEVENT_MOUSEPRESSEDONTREELIST);
+		return true;
+	}
+	return false;
+}
+
 void gGUITreelist::updateTotalHeight() {
 	totalh = allsubtitles.size() * lineh;
 	if(totalh < minboxh) {
@@ -118,6 +210,8 @@ void gGUITreelist::drawContent() {
 
 	renderer->setColor(oldcolor);
 
+	BIND_GUI_EVENT(gMouseButtonPressedEvent, onMousePressedEvent);
+	BIND_GUI_EVENT(gMouseButtonReleasedEvent, onMouseReleasedEvent);
 }
 
 void gGUITreelist::insertData(Element* element, std::string lineData) {
@@ -137,93 +231,6 @@ void gGUITreelist::refreshList() {
 
 	updateTotalHeight();
 }
-
-void gGUITreelist::mousePressed(int x, int y, int button) {
-	gGUIScrollable::mousePressed(x, y, button);
-	if(x >= left && x < left + boxw && y >= top + titleheight && y < top + titleheight + boxh) {
-		mousepressedonlist = true;
-	}
-}
-
-void gGUITreelist::mouseReleased(int x, int y, int button) {
-	std::string tmptitle = "";
-	std::string parsedtitle = "";
-	Element* element;
-	bool arrow = false;
-	int arrowposx = 0;
-
-	gGUIScrollable::mouseReleased(x, y, button);
-	if(mousepressedonlist) mousepressedonlist = false;
-	if(x >= left && x < left + boxw && y >= top + titleheight && y < top + titleheight + boxh) {
-		int newselectedno = (y - top - titleheight + verticalscroll) / lineh;
-		if(newselectedno <= allsubtitles.size() - 1) selectedno = newselectedno;
-		tmptitle = allsubtitles[selectedno];
-
-		if(topelement.isicon == false) { // Process which using default symbols '>' and '-'
-			int i = 0;
-			while(i < tmptitle.size() && arrow == false) {
-				if(tmptitle[i] == '>') {
-					arrow = true;
-					parsedtitle = tmptitle.substr(i + 2, tmptitle.size() - i);
-					arrowposx = font->getStringWidth(tmptitle.substr(0, i + 1));
-				}
-				i++;
-			}
-
-			if(x < left + arrowposx  - arrowsize || x > left + arrowposx) {
-				isfocused = true;
-				root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_TREELISTSELECTED, gToStr(selectedno));
-				actionmanager.onGUIEvent(id, G_GUIEVENT_TREELISTSELECTED);
-			}
-			else if(x > left + arrowposx  - arrowsize && x < left + arrowposx) {
-				element = topelement.findElement(parsedtitle);
-				element->isexpanded = !element->isexpanded;
-				root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_TREELISTEXPANDED, gToStr(selectedno));
-				actionmanager.onGUIEvent(id, G_GUIEVENT_TREELISTEXPANDED);
-				refreshList();
-			}
-		}
-
-		else { // Process which using icons
-			int i = 0;
-			while(i < tmptitle.size() && arrow == false) {
-				if(tmptitle[i] == ' ') {
-					i++;
-				}
-				else arrow = true;
-			}
-			parsedtitle = tmptitle.substr(i, tmptitle.size() - i);
-			element = topelement.findElement(parsedtitle);
-			if(element->isparent) {
-				iconx = element->orderno * spacesize + (iconw * 2 / 3);
-				if(x < left + iconx || x > left + iconx + iconw) {
-					isfocused = true;
-					root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_TREELISTSELECTED, gToStr(selectedno));
-					actionmanager.onGUIEvent(id, G_GUIEVENT_TREELISTSELECTED);
-				}
-				else if(x > left + iconx && x < left + iconx + iconw) {
-					element->isexpanded = !(element->isexpanded);
-					root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_TREELISTEXPANDED, gToStr(selectedno));
-					actionmanager.onGUIEvent(id, G_GUIEVENT_TREELISTEXPANDED);
-					if(element->isiconchanged == false) {
-						if(element->isexpanded) setIcon(gGUIResources::ICON_FOLDEROPENED, element);
-						else setIcon(gGUIResources::ICON_FOLDER, element);
-					}
-					refreshList();
-				}
-			}
-			else {
-				isfocused = true;
-				root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_TREELISTSELECTED, gToStr(selectedno));
-				actionmanager.onGUIEvent(id, G_GUIEVENT_TREELISTSELECTED);
-			}
-		}
-
-		root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_MOUSEPRESSEDONTREELIST, gToStr(selectedno));
-		actionmanager.onGUIEvent(id, G_GUIEVENT_MOUSEPRESSEDONTREELIST);
-	}
-}
-
 
 void gGUITreelist::setChosenColor(float r, float g, float b) {
 	chosencolor = gColor(r, g, b);

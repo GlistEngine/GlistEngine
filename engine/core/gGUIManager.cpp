@@ -9,6 +9,7 @@
 #include "gBaseApp.h"
 #include "gBaseCanvas.h"
 #include "gAppManager.h"
+#include "gGUIRendererContext.h"
 
 
 gGUIManager::gGUIManager(gBaseApp* root, int width, int height) {
@@ -22,6 +23,7 @@ gGUIManager::gGUIManager(gBaseApp* root, int width, int height) {
 		emptyframe.setSizer(&emptysizer);
 		emptysizer.enableBackgroundFill(true);
 	}
+	gBaseGUIObject::ctx = &ctx;
 }
 
 gGUIManager::~gGUIManager() {
@@ -186,8 +188,14 @@ void gGUIManager::windowResized(int w, int h) {
 	currentframe->windowResized(w, h);
 }
 
+void gGUIManager::onEvent(gEvent& event) {
+	ctx.dispatch(event);
+}
+
 void gGUIManager::update() {
-	if(!isframeset) return;
+	if(!isframeset) {
+		return;
+	}
 
 	currentframe->update();
 
@@ -236,7 +244,10 @@ void gGUIManager::update() {
 }
 
 void gGUIManager::draw() {
-	if(!isframeset) return;
+	if(!isframeset) {
+		return;
+	}
+	ctx.begin();
 
 	currentframe->draw();
 	if(!dialoguesshown.empty()) {
@@ -244,6 +255,8 @@ void gGUIManager::draw() {
 			dialoguesshown[i]->draw();
 		}
 	}
+
+	ctx.end();
 }
 
 void gGUIManager::resetTheme(int guiTheme) {

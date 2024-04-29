@@ -13,11 +13,13 @@
 class gBaseApp;
 #include "gGUIActionManager.h"
 #include "gGUIResources.h"
+#include "gGUIRendererContext.h"
 
 
 class gBaseGUIObject : public gRenderObject {
 public:
 	static gGUIActionManager actionmanager;
+	static gGUIRendererContext* ctx;
 
 	static const int GUIEVENT_FOCUSED = -1, GUIEVENT_UNFOCUSED = -2;
 

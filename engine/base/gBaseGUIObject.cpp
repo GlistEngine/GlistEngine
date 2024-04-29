@@ -27,6 +27,7 @@ gColor* gBaseGUIObject::disabledbuttonfontcolor;
 int gBaseGUIObject::focusid;
 int gBaseGUIObject::previousfocusid;
 gGUIActionManager gBaseGUIObject::actionmanager;
+gGUIRendererContext* gBaseGUIObject::ctx = nullptr;
 
 
 gBaseGUIObject::gBaseGUIObject() {
