@@ -15,6 +15,7 @@ gGUISurface::gGUISurface() {
 	resetColorAndBorder();
 	imageNum = 0;
 	textnum = 0;
+	sizernum = 0;
 	totalh = 0;
 	maxHeight = bottom;
 	title = "Surface";
@@ -67,24 +68,29 @@ void gGUISurface::drawShapes() {
 			gDrawLine(shapes[i][1], shapes[i][2] - verticalscroll, shapes[i][3], shapes[i][4] - verticalscroll);
 		}
 		//arrow = 3
-		else if((int)shapes[i][0] == SHAPE_ARROW) {//for drawing 3D LINE first index decides to the shape type
+		else if((int)shapes[i][0] == SHAPE_ARROW) {//for drawing ARROW first index decides to the shape type
 			renderer->setColor(gColor(shapes[i][7], shapes[i][8], shapes[i][9], shapes[i][10]));
 			gDrawArrow(shapes[i][1], shapes[i][2] - verticalscroll, shapes[i][3], shapes[i][4], shapes[i][5], shapes[i][6]);
 		}
 		//triangle = 4
-		else if((int)shapes[i][0] == SHAPE_TRIANGLE) {//for drawing 3D LINE first index decides to the shape type
+		else if((int)shapes[i][0] == SHAPE_TRIANGLE) {//for drawing TRIANGLE first index decides to the shape type
 			renderer->setColor(gColor(shapes[i][8], shapes[i][9], shapes[i][10], shapes[i][11]));
 			gDrawTriangle(shapes[i][1], shapes[i][2] - verticalscroll, shapes[i][3], shapes[i][4] - verticalscroll, shapes[i][5], shapes[i][6] - verticalscroll, (int)shapes[i][7]);
 		}
 		//image = 5
-		else if((int)shapes[i][0] == SHAPE_IMAGE) {//for drawing 3D LINE first index decides to the shape type
+		else if((int)shapes[i][0] == SHAPE_IMAGE) {//for drawing IMAGE first index decides to the shape type
 			renderer->setColor(gColor(1.0f,	1.0f, 1.0f, 1.0f));
 			images[shapes[i][5]]->draw(shapes[i][1], shapes[i][2] - verticalscroll, shapes[i][3], shapes[i][4]);
 		}
 		//text = 6
-		else if((int)shapes[i][0] == SHAPE_TEXT) {//for drawing 3D LINE first index decides to the shape type
+		else if((int)shapes[i][0] == SHAPE_TEXT) {//for drawing TEXT first index decides to the shape type
 			renderer->setColor(gColor(shapes[i][6], shapes[i][7], shapes[i][8], shapes[i][9]));
 			root->getAppManager()->getGUIManager()->getFont(shapes[i][3], shapes[i][4])->drawText(texts[shapes[i][5]], shapes[i][1], shapes[i][2]);
+		}
+		//gGUISizer = 7
+		else if((int)shapes[i][0] == SHAPE_GUISIZER) {//for drawing GGUICONTROLS first index decides to the shape type
+			renderer->setColor(gColor(1.0f,	1.0f, 1.0f, 1.0f));
+			sizers[shapes[i][5]]->draw();
 		}
 	}
 }
@@ -244,6 +250,7 @@ void gGUISurface::addImage(float x, float y, float w, float h, gImage* image) {
 	shapes.push_back(newShape);
 	resetColorAndBorder();
 }
+
 void gGUISurface::addText(std::string text, float x, float y, int fontFace, int fontType, gColor color) {
 	std::vector<float> newShape;
 	newShape.push_back(SHAPE_TEXT); //for drawing IMAGE //shapes[i][0]
@@ -265,13 +272,32 @@ void gGUISurface::addText(std::string text, float x, float y, int fontFace, int 
 	resetColorAndBorder();
 }
 
+void gGUISurface::addSizer(float x, float y, float w, float h, gGUISizer* newSizer) {
+	std::vector<float> newShape;
+	newShape.push_back(SHAPE_GUISIZER); //for drawing GGUILINEGRAPH //shapes[i][0]
+	newShape.push_back(x); //shapes[i][x] 1
+	newShape.push_back(y); //shapes[i][y] 2
+	newShape.push_back(w); //shapes[i][w] 3
+	newShape.push_back(h); //shapes[i][h] 4
+	newShape.push_back(sizernum);
+	newSizer->set(root, topparent, this, 0, 0, x, y, w, h);
+	sizernum++;
+
+	sizers.push_back(newSizer); //
+
+	shapes.push_back(newShape);
+	resetColorAndBorder();
+}
+
 void gGUISurface::clear() {
 	images.clear();
 	texts.clear();
+	sizers.clear();
 	shapes.clear();
 	resetColorAndBorder();
 	imageNum = 0;
 	textnum = 0;
+	sizernum = 0;
 }
 
 void gGUISurface::mousePressed(int x, int y, int button) {
