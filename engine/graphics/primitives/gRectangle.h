@@ -21,11 +21,12 @@ public:
 	void draw();
 	void draw(float x, float y, float w, float h, bool isFilled);
 
-	private:
+private:
 	std::vector<gVertex> verticessb;
-	void setRectanglePoints(float x, float y, float w, float h, bool isFilled);
-	gVertex vertex1, vertex2, vertex3, vertex4;
 	std::vector<gIndex> indicessb;
+
+private:
+	void setRectanglePoints(float x, float y, float w, float h, bool isFilled);
 };
 
 
