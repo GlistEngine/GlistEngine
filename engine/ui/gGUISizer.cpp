@@ -344,6 +344,10 @@ void gGUISizer::enableBackgroundFill(bool isEnabled) {
 	fillbackground = isEnabled;
 }
 
+bool gGUISizer::isControlSet(int lineNo, int columnNo) {
+	return iscontrolset[lineNo][columnNo];
+}
+
 void gGUISizer::update() {
 //	gLogi("gGUISizer") << "update, c0pr:" << linetprs[1];
 //	appmanager->setCursor(3);

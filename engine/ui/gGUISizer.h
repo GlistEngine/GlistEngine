@@ -58,6 +58,8 @@ public:
 	int getSlotX(int lineNo, int columnNo);
 	int getSlotY(int lineNo, int columnNo);
 
+	bool isControlSet(int lineNo, int columnNo);
+
 private:
 	int sizertype;
 	int linenum, columnnum;
