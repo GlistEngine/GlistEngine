@@ -36,9 +36,11 @@ public:
 
 	void setDisabled(bool isDisabled);
 
-	friend class gGUIToolbar;
+	int calculateContentHeight() override;
 
 protected:
+	friend class gGUIToolbar;
+
 	bool ischecked;
 
 	int buttonw, buttonh;

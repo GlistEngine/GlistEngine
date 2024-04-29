@@ -11,18 +11,18 @@
 
 gGUIDropdownList::gGUIDropdownList() {
 	buttonw = 24;
-	listsizer.setSize(1, 2);
-	float columnproportions[2] = {0.8f, 0.2f};
-	listsizer.setColumnProportions(columnproportions);
-	listsizer.enableBorders(false);
 	setSizer(&listsizer);
+	guisizer->setSize(1, 2);
+	float columnproportions[2] = {0.8f, 0.2f};
+	guisizer->setColumnProportions(columnproportions);
+	guisizer->enableBorders(false);
 	button.setButtonColor(pressedbuttoncolor);
 	button.setSize(buttonw, buttonw);
 	button.setTitle("");
 	textbox.setEditable(false);
 	textbox.enableVerticalMargin(false);
-	listsizer.setControl(0, 0, &textbox);
-	listsizer.setControl(0, 1, &button);
+	guisizer->setControl(0, 0, &textbox);
+	guisizer->setControl(0, 1, &button);
 	listx = textbox.left;
 	listy = textbox.top + textbox.height;
 	listw = textbox.width + button.width + 1;
@@ -53,12 +53,6 @@ gGUIDropdownList::~gGUIDropdownList() {
 
 void gGUIDropdownList::set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIObject* parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h) {
     totalh = h;
-    left = x;
-    top = y;
-    right = x + w;
-    bottom = y + h;
-    width = w;
-    height = h;
     gGUIScrollable::set(root, topParentGUIObject, parentGUIObject, parentSlotLineNo, parentSlotColumnNo, x, y, w, h);
     gGUIScrollable::setDimensions(w, h);
     guisizer->set(root, topParentGUIObject, parentGUIObject, parentSlotLineNo, parentSlotColumnNo, x, y + topbarh, w, h - topbarh);
@@ -66,6 +60,7 @@ void gGUIDropdownList::set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, g
 	textboxw = textbox.width;
 	textboxh = textbox.getTextboxh();
 	buttonw = textboxh;
+	button.setSize(buttonw, buttonw);
 	listw = textboxw + buttonw + 5;
 	listx = textbox.left;
 	listy = textbox.top + textboxh - list.getTitleTop() + 5;
@@ -183,24 +178,23 @@ void gGUIDropdownList::setfirstTitle() {
 }
 
 void gGUIDropdownList::setSelectedTitle() {
-
 	std::string title = "";
 	bool arrow = false;
 	if(selectedline) {
 		title = rootelement->parentlist->allsubtitles[list.getSelectedLineNumber()];
 		if(rootelement->isicon) {
 			int i = 0;
-			while(i < title.size() && arrow == false) {
+			while(i < title.size() && !arrow) {
 				if(title[i] == ' ') {
 					i++;
+				} else {
+					arrow = true;
 				}
-				else arrow = true;
 			}
 			title = title.substr(i, title.size() - i);
-		}
-		else {
+		} else {
 			int i = 0;
-			while(i < title.size() && arrow == false) {
+			while(i < title.size() && !arrow) {
 				if(title[i] == '>' || title[i] == '-') {
 					arrow = true;
 					title = title.substr(i + 2, title.size() - i);
@@ -230,4 +224,8 @@ void gGUIDropdownList::clear() {
 void gGUIDropdownList::setDisabled(bool isDisabled) {
 	isdisabled = isDisabled;
 	textbox.setDisabled(isDisabled);
+}
+
+int gGUIDropdownList::calculateContentHeight() {
+	return textbox.calculateContentHeight();
 }

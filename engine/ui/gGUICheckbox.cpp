@@ -100,7 +100,7 @@ void gGUICheckbox::draw() {
 	if (istextvisible) {
 		if(isdisabled) renderer->setColor(disabledbcolor);
 		else renderer->setColor(fontcolor);
-		font->drawText(title, left + buttonw, top - 2 + (buttonh + titleh) / 2);
+		font->drawText(title, left + buttonw, top - 2 + (buttonh + titleh) / 2 - 1);
 		renderer->setColor(255, 255, 255);
 	}
 }
@@ -127,3 +127,6 @@ void gGUICheckbox::setDisabled(bool isDisabled) {
 	isdisabled = isDisabled;
 }
 
+int gGUICheckbox::calculateContentHeight() {
+	return buttonh - 2;
+}

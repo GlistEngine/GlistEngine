@@ -38,8 +38,10 @@ public:
 
 	void enableBorders(bool isEnabled);
 	void enableResizing(bool isEnabled);
-	void enableRescaling(bool isEnabled);
 	void enableBackgroundFill(bool isEnabled);
+
+	void setAlignContentVertically(bool enabled);
+	bool isAlignContentVertically();
 
 	int getCursor(int x, int y);
 	void keyPressed(int key);
@@ -61,10 +63,14 @@ public:
 	bool isControlSet(int lineNo, int columnNo);
 
 private:
+	struct Entry {
+		gGUIControl* control = nullptr;
+		bool isset = false;
+	};
+
 	int sizertype;
 	int linenum, columnnum;
-	gGUIControl*** guicontrol;
-	bool** iscontrolset;
+	std::vector<Entry> guicontrols;
 	bool bordersenabled;
 	float* lineprs;
 	float* columnprs;
@@ -75,9 +81,15 @@ private:
 	int resizex, resizey;
 	bool fillbackground;
 	int slotpadding;
-	bool rescaling;
+	bool alignvertically;
 
+private:
 	int detectSizerType();
+	void reloadControls();
+	void reloadControl(gGUIControl& control);
+	void reloadControl(gGUIControl& control, int line, int column);
+
+	int indexOf(int line, int column) const;
 };
 
 #endif /* UI_GGUISIZER_H_ */

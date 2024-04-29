@@ -10,8 +10,6 @@
 #include "gBaseApp.h"
 
 gGUIStatusBar::gGUIStatusBar() {
-
-	sizerrescaling = true;
 	selectedtext = -1;
 	width = getScreenWidth() + 1;
 	height = 30;

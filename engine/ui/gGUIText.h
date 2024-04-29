@@ -43,7 +43,7 @@ private:
     int linenum;
     int textalignment;
     int textverticalalignment;
-    int linetopy;
+	int verticaloffset;
     int fontsize, lineh;
     float linespacingfactor;
     bool isdisabled;

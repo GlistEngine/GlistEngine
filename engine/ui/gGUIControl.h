@@ -39,6 +39,9 @@ public:
 	virtual void update();
 	virtual void draw();
 
+	virtual int calculateContentHeight() {
+		return height;
+	}
 protected:
 };
 

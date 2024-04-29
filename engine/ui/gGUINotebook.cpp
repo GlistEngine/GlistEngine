@@ -318,7 +318,6 @@ void gGUINotebook::setSizerFromDeque(int guiSizersIndex) {
 	guisizer->setParentSlotNo(0, 0);
 	guisizer->setRootApp(root);
 	guisizer->set(left, topbarh, width, height - topbarh);
-	if(!sizerrescaling) guisizer->enableRescaling(false);
 }
 
 void gGUINotebook::addSizerToDeque(gGUISizer* guiSizer, std::string sizerLabel) {
