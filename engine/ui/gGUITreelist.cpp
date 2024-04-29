@@ -18,12 +18,11 @@ gGUITreelist::gGUITreelist() {
 	topelement.title = "Top";
 	topelement.isexpanded = true;
 	lineh = 2 * font->getSize() + 2;
-	listboxh = minboxh;
 	firstlineno = 0;
 	flno = firstlineno;
 	selectedno = 0;
 	mousepressedonlist = false;
-	datady = (lineh - font->getStringHeight("ae")) / 2 + 1;
+	textoffset = (lineh - font->getStringHeight("ae")) / 2 + 1;
 	fldy = 0;
 	arrowsize = font->getStringWidth(">");
 	spacesize = font->getStringWidth("  ");
@@ -42,7 +41,7 @@ gGUITreelist::~gGUITreelist() {
 
 void gGUITreelist::set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIObject* parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h) {
 	gGUIControl::set(root, topParentGUIObject, parentGUIObject, parentSlotLineNo, parentSlotColumnNo, x, y, w, h);
-	gGUIScrollable::setDimensions(width, listboxh + datady);
+	gGUIScrollable::setDimensions(width, listboxh + textoffset);
 	updateTotalHeight();
 }
 
@@ -95,26 +94,26 @@ void gGUITreelist::drawContent() {
 
 	int linenum = allsubtitles.size();
 	if(selectedno >= flno && selectedno <= flno + linenum) {
-		if(isfocused) renderer->setColor(chosencolor);
-		else renderer->setColor(middlegroundcolor);
+		if(isfocused) {
+			renderer->setColor(chosencolor);
+		} else {
+			renderer->setColor(middlegroundcolor);
+		}
 		gDrawRectangle(0, -fldy + (selectedno - flno) * lineh, boxw, lineh, true);
 	}
 
 	int startindex = flno;
 	int endindex = flno + visibilelinenum + 1;
-	if(endindex > linenum) {
-		endindex = linenum;
-	}
-	if(startindex < 0) {
-		startindex = 0;
-	}
+	endindex = std::min(endindex, linenum);
+	startindex = std::max(startindex, 0);
+
 	for(int i = startindex; i < endindex; i++) {
 		if(topelement.isicon) {
 			renderer->setColor(iconcolor);
-			icons[i]->draw(allorderno[i] * spacesize - (iconw * 2 / 3), (i * lineh) - datady / 2 + lineh / 2 - verticalscroll, iconw, iconh);
+			icons[i]->draw(allorderno[i] * spacesize - (iconw * 2 / 3), (i * lineh) - textoffset / 2 + lineh / 2 - verticalscroll, iconw, iconh);
 		}
 		renderer->setColor(fontcolor);
-		font->drawText(allsubtitles[i], 2, (i * lineh) + lineh - datady - verticalscroll);
+		font->drawText(allsubtitles[i], 2, (i * lineh) + lineh - textoffset - verticalscroll);
 	}
 
 	renderer->setColor(oldcolor);
@@ -236,7 +235,7 @@ void gGUITreelist::setVisibleLineNumber(int linenumber) {
 	}
 	visibilelinenum = linenumber;
 	minboxh = visibilelinenum * lineh;
-	listboxh = minboxh + datady;
+	listboxh = minboxh + textoffset;
 }
 
 void gGUITreelist::setIconType(bool isicon) {

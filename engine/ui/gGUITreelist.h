@@ -433,7 +433,7 @@ private:
 	int lineh;
 	int visibilelinenum, minboxh;
 	int fldy, flno;
-	float datady;
+	float textoffset;
 	int firstlineno;
 	int selectedno;
 	float arrowsize, spacesize;
