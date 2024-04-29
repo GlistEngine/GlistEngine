@@ -28,6 +28,7 @@ var classgGUITextbox =
     [ "setCursorPosX", "classgGUITextbox.html#afe98775467848269a13aa24c03f8aa15", null ],
     [ "setDisabled", "classgGUITextbox.html#a498330c5191d9057a42d6be6d4b241bf", null ],
     [ "setEditable", "classgGUITextbox.html#aa689bb1a1633dd1c03bf5a2cb0e8f652", null ],
+    [ "setEditMode", "classgGUITextbox.html#a487a2f2e78585c9625e82f45beb476c2", null ],
     [ "setFirstX", "classgGUITextbox.html#af056405b640b2578281f4baae09484cf", null ],
     [ "setFirstY", "classgGUITextbox.html#ae165f54e3bc8eaeafa497393bfb4e233", null ],
     [ "setLineCount", "classgGUITextbox.html#a35c6bc9259522115233412f72383d3f5", null ],

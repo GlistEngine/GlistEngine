@@ -370,54 +370,56 @@ $(document).ready(function(){initNavTree('gGUIGrid_8h_source.html',''); initResi
 <div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160; </div>
 <div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160;    <span class="keywordtype">void</span> editCell(Cell&amp; cell, <span class="keywordtype">bool</span> clear = <span class="keyword">false</span>);</div>
 <div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160; </div>
-<div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160;    <span class="keywordtype">void</span> updateTotalSize();</div>
-<div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160;    <span class="keywordtype">void</span> adjustScrollToFocusSelected();</div>
-<div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160; </div>
-<div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160;    uint64_t hashCell(<span class="keywordtype">int</span> row, <span class="keywordtype">int</span> column) {</div>
-<div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160;        <span class="keywordflow">return</span> (uint64_t)row &lt;&lt; 32L | column;</div>
-<div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160;    }</div>
-<div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160; </div>
-<div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160;    std::unordered_map&lt;uint64_t, int&gt; cellmap;</div>
-<div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160;    std::deque&lt;Cell&gt; allcells;</div>
-<div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160;    std::deque&lt;int&gt; selectedcells;</div>
-<div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160;    std::deque&lt;std::array&lt;float, 2&gt;&gt; gridboxesw;</div>
-<div class="line"><a name="l00306"></a><span class="lineno">  306</span>&#160;    std::deque&lt;std::array&lt;float, 2&gt;&gt; gridboxesh;</div>
-<div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160;    std::deque&lt;std::string&gt; functionindexes;</div>
-<div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160;    std::deque&lt;std::deque&lt;std::string&gt;&gt; functions;</div>
-<div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160;    std::vector&lt;std::string&gt; copiedcellvalues;</div>
-<div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;    std::stack&lt;int&gt; undoprocessstack;</div>
-<div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160;    std::stack&lt;std::string&gt; undovaluestack;</div>
-<div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160;    std::stack&lt;std::stack&lt;std::string&gt;&gt; undostack;</div>
-<div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160;    std::stack&lt;std::deque&lt;int&gt;&gt; undocellstack;</div>
-<div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160;    std::stack&lt;int&gt; redoprocessstack;</div>
-<div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160;    std::stack&lt;std::string&gt; redovaluestack;</div>
-<div class="line"><a name="l00316"></a><span class="lineno">  316</span>&#160;    std::stack&lt;std::stack&lt;std::string&gt;&gt; redostack;</div>
-<div class="line"><a name="l00317"></a><span class="lineno">  317</span>&#160;    std::stack&lt;std::deque&lt;int&gt;&gt; redocellstack;</div>
-<div class="line"><a name="l00318"></a><span class="lineno">  318</span>&#160;    <a class="code" href="classgGUIManager.html">gGUIManager</a>* manager;</div>
-<div class="line"><a name="l00319"></a><span class="lineno">  319</span>&#160;    <a class="code" href="classgGUITextbox.html">gGUITextbox</a> textbox;</div>
-<div class="line"><a name="l00320"></a><span class="lineno">  320</span>&#160;    <a class="code" href="classgColor.html">gColor</a> selectedframecolor, selectedareacolor, selectedareadarkcolor;</div>
-<div class="line"><a name="l00321"></a><span class="lineno">  321</span>&#160;    <span class="keywordtype">bool</span> isselected, isrowselected, iscolumnselected;</div>
-<div class="line"><a name="l00322"></a><span class="lineno">  322</span>&#160;    <span class="keywordtype">bool</span> istextboxactive;</div>
-<div class="line"><a name="l00323"></a><span class="lineno">  323</span>&#160;    <span class="keywordtype">bool</span> isdoubleclicked;</div>
-<div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160;    <span class="keywordtype">bool</span> shiftpressed, ctrlpressed;</div>
-<div class="line"><a name="l00325"></a><span class="lineno">  325</span>&#160;    <span class="keywordtype">bool</span> ctrlcpressed, ctrlvpressed, ctrlzpressed, ctrlypressed;</div>
-<div class="line"><a name="l00326"></a><span class="lineno">  326</span>&#160;    <span class="keywordtype">int</span> selectedbox;</div>
-<div class="line"><a name="l00327"></a><span class="lineno">  327</span>&#160;    <span class="keywordtype">int</span> selectedtitle;</div>
-<div class="line"><a name="l00328"></a><span class="lineno">  328</span>&#160;    <span class="keywordtype">int</span> rownum, columnnum;</div>
-<div class="line"><a name="l00329"></a><span class="lineno">  329</span>&#160;    <span class="keywordtype">int</span> rowtitle;</div>
-<div class="line"><a name="l00330"></a><span class="lineno">  330</span>&#160;    <span class="keywordtype">int</span> columntitle;</div>
-<div class="line"><a name="l00331"></a><span class="lineno">  331</span>&#160;    <span class="keywordtype">int</span> cursor;</div>
-<div class="line"><a name="l00332"></a><span class="lineno">  332</span>&#160;    <span class="keywordtype">int</span> currentrow, currentcolumn;</div>
-<div class="line"><a name="l00333"></a><span class="lineno">  333</span>&#160;    <span class="keywordtype">int</span> firstcursorposx, firstcursorposy;</div>
-<div class="line"><a name="l00334"></a><span class="lineno">  334</span>&#160;    <span class="keywordtype">int</span> firstselectedcell, lastselectedcell;</div>
-<div class="line"><a name="l00335"></a><span class="lineno">  335</span>&#160;    <span class="keywordtype">int</span> lastdraggedcell;</div>
-<div class="line"><a name="l00336"></a><span class="lineno">  336</span>&#160;    <span class="keywordtype">float</span> gridboxw, gridboxh, gridboxwhalf;</div>
-<div class="line"><a name="l00337"></a><span class="lineno">  337</span>&#160;    <span class="keywordtype">float</span> gridx, gridy, gridw, gridh;</div>
-<div class="line"><a name="l00338"></a><span class="lineno">  338</span>&#160;    <span class="keywordtype">long</span> clicktime, previousclicktime, firstclicktime, clicktimediff;</div>
-<div class="line"><a name="l00339"></a><span class="lineno">  339</span>&#160;    std::string strflag;</div>
-<div class="line"><a name="l00340"></a><span class="lineno">  340</span>&#160;};</div>
-<div class="line"><a name="l00341"></a><span class="lineno">  341</span>&#160; </div>
-<div class="line"><a name="l00342"></a><span class="lineno">  342</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* UI_GGUIGRID_H_ */</span><span class="preprocessor"></span></div>
+<div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160;    <span class="keywordtype">void</span> disableTextbox();</div>
+<div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160; </div>
+<div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160;    <span class="keywordtype">void</span> updateTotalSize();</div>
+<div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160;    <span class="keywordtype">void</span> adjustScrollToFocusSelected();</div>
+<div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160; </div>
+<div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160;    uint64_t hashCell(<span class="keywordtype">int</span> row, <span class="keywordtype">int</span> column) {</div>
+<div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160;        <span class="keywordflow">return</span> (uint64_t)row &lt;&lt; 32L | column;</div>
+<div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160;    }</div>
+<div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160; </div>
+<div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160;    std::unordered_map&lt;uint64_t, int&gt; cellmap;</div>
+<div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160;    std::deque&lt;Cell&gt; allcells;</div>
+<div class="line"><a name="l00306"></a><span class="lineno">  306</span>&#160;    std::deque&lt;int&gt; selectedcells;</div>
+<div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160;    std::deque&lt;std::array&lt;float, 2&gt;&gt; gridboxesw;</div>
+<div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160;    std::deque&lt;std::array&lt;float, 2&gt;&gt; gridboxesh;</div>
+<div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160;    std::deque&lt;std::string&gt; functionindexes;</div>
+<div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;    std::deque&lt;std::deque&lt;std::string&gt;&gt; functions;</div>
+<div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160;    std::vector&lt;std::string&gt; copiedcellvalues;</div>
+<div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160;    std::stack&lt;int&gt; undoprocessstack;</div>
+<div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160;    std::stack&lt;std::string&gt; undovaluestack;</div>
+<div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160;    std::stack&lt;std::stack&lt;std::string&gt;&gt; undostack;</div>
+<div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160;    std::stack&lt;std::deque&lt;int&gt;&gt; undocellstack;</div>
+<div class="line"><a name="l00316"></a><span class="lineno">  316</span>&#160;    std::stack&lt;int&gt; redoprocessstack;</div>
+<div class="line"><a name="l00317"></a><span class="lineno">  317</span>&#160;    std::stack&lt;std::string&gt; redovaluestack;</div>
+<div class="line"><a name="l00318"></a><span class="lineno">  318</span>&#160;    std::stack&lt;std::stack&lt;std::string&gt;&gt; redostack;</div>
+<div class="line"><a name="l00319"></a><span class="lineno">  319</span>&#160;    std::stack&lt;std::deque&lt;int&gt;&gt; redocellstack;</div>
+<div class="line"><a name="l00320"></a><span class="lineno">  320</span>&#160;    <a class="code" href="classgGUIManager.html">gGUIManager</a>* manager;</div>
+<div class="line"><a name="l00321"></a><span class="lineno">  321</span>&#160;    <a class="code" href="classgGUITextbox.html">gGUITextbox</a> textbox;</div>
+<div class="line"><a name="l00322"></a><span class="lineno">  322</span>&#160;    <a class="code" href="classgColor.html">gColor</a> selectedframecolor, selectedareacolor, selectedareadarkcolor;</div>
+<div class="line"><a name="l00323"></a><span class="lineno">  323</span>&#160;    <span class="keywordtype">bool</span> isselected, isrowselected, iscolumnselected;</div>
+<div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160;    <span class="keywordtype">bool</span> istextboxactive;</div>
+<div class="line"><a name="l00325"></a><span class="lineno">  325</span>&#160;    <span class="keywordtype">bool</span> isdoubleclicked;</div>
+<div class="line"><a name="l00326"></a><span class="lineno">  326</span>&#160;    <span class="keywordtype">bool</span> shiftpressed, ctrlpressed;</div>
+<div class="line"><a name="l00327"></a><span class="lineno">  327</span>&#160;    <span class="keywordtype">bool</span> ctrlcpressed, ctrlvpressed, ctrlzpressed, ctrlypressed;</div>
+<div class="line"><a name="l00328"></a><span class="lineno">  328</span>&#160;    <span class="keywordtype">int</span> selectedbox;</div>
+<div class="line"><a name="l00329"></a><span class="lineno">  329</span>&#160;    <span class="keywordtype">int</span> selectedtitle;</div>
+<div class="line"><a name="l00330"></a><span class="lineno">  330</span>&#160;    <span class="keywordtype">int</span> rownum, columnnum;</div>
+<div class="line"><a name="l00331"></a><span class="lineno">  331</span>&#160;    <span class="keywordtype">int</span> rowtitle;</div>
+<div class="line"><a name="l00332"></a><span class="lineno">  332</span>&#160;    <span class="keywordtype">int</span> columntitle;</div>
+<div class="line"><a name="l00333"></a><span class="lineno">  333</span>&#160;    <span class="keywordtype">int</span> cursor;</div>
+<div class="line"><a name="l00334"></a><span class="lineno">  334</span>&#160;    <span class="keywordtype">int</span> currentrow, currentcolumn;</div>
+<div class="line"><a name="l00335"></a><span class="lineno">  335</span>&#160;    <span class="keywordtype">int</span> firstcursorposx, firstcursorposy;</div>
+<div class="line"><a name="l00336"></a><span class="lineno">  336</span>&#160;    <span class="keywordtype">int</span> firstselectedcell, lastselectedcell;</div>
+<div class="line"><a name="l00337"></a><span class="lineno">  337</span>&#160;    <span class="keywordtype">int</span> lastdraggedcell;</div>
+<div class="line"><a name="l00338"></a><span class="lineno">  338</span>&#160;    <span class="keywordtype">float</span> gridboxw, gridboxh, gridboxwhalf;</div>
+<div class="line"><a name="l00339"></a><span class="lineno">  339</span>&#160;    <span class="keywordtype">float</span> gridx, gridy, gridw, gridh;</div>
+<div class="line"><a name="l00340"></a><span class="lineno">  340</span>&#160;    <span class="keywordtype">long</span> clicktime, previousclicktime, firstclicktime, clicktimediff;</div>
+<div class="line"><a name="l00341"></a><span class="lineno">  341</span>&#160;    std::string strflag;</div>
+<div class="line"><a name="l00342"></a><span class="lineno">  342</span>&#160;};</div>
+<div class="line"><a name="l00343"></a><span class="lineno">  343</span>&#160; </div>
+<div class="line"><a name="l00344"></a><span class="lineno">  344</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* UI_GGUIGRID_H_ */</span><span class="preprocessor"></span></div>
 <div class="ttc" id="aclassgBaseApp_html"><div class="ttname"><a href="classgBaseApp.html">gBaseApp</a></div><div class="ttdef"><b>Definition:</b> gBaseApp.h:16</div></div>
 <div class="ttc" id="aclassgBaseGUIObject_html"><div class="ttname"><a href="classgBaseGUIObject.html">gBaseGUIObject</a></div><div class="ttdef"><b>Definition:</b> gBaseGUIObject.h:18</div></div>
 <div class="ttc" id="aclassgColor_html"><div class="ttname"><a href="classgColor.html">gColor</a></div><div class="ttdef"><b>Definition:</b> gColor.h:12</div></div>
