@@ -249,19 +249,19 @@ public:
 
 private:
 	int listboxh;
-	int lineh, linenum;
-	int linehalf;
-	int minlinenum, minboxh;
-	int maxlinenum;
+	int lineh;
+	int visibilelinenum, minboxh;
 	std::vector<std::string> data;
 	std::deque<gTexture*> icons;
-	float datady;
+	float textoffset;
 	int firstlineno, flno, fldy;
 	int selectedno;
 	bool mousepressedonlist;
 	bool isicon;
 	gColor chosencolor, iconcolor;
-	int iconw;
+
+private:
+	void updateTotalHeight();
 };
 
 #endif /* UI_GGUILISTBOX_H_ */
