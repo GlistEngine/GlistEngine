@@ -13,15 +13,15 @@
 
 struct gVertex {
     // position
-    glm::vec3 position;
+    glm::vec3 position{0};
     // normal
-    glm::vec3 normal;
+    glm::vec3 normal{0};
     // texCoords
-    glm::vec2 texcoords;
+    glm::vec2 texcoords{0};
     // tangent
-    glm::vec3 tangent;
+    glm::vec3 tangent{0};
     // bitangent
-    glm::vec3 bitangent;
+    glm::vec3 bitangent{0};
 };
 
 
