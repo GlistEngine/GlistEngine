@@ -1,5 +1,6 @@
 var NAVTREEINDEX11 =
 {
+"classgVignette.html":[0,0,156],
 "classgVignette.html#a219700a47ff1bf5bfdd720aa9df82d64":[0,0,156,1],
 "classgVignette.html#a5ad26d8923d1f9e8ff86ebd7979e28e8":[0,0,156,2],
 "classgVignette.html#a9ba91dcc7f11895b01e277ee6fef410b":[0,0,156,0],
@@ -27,8 +28,8 @@ var NAVTREEINDEX11 =
 "classgWindows.html#a7367ee868f779e088558d991671a7f46":[0,0,163,1],
 "classgWindows.html#adf4efe42e4244ac5b71cb4cd728960ec":[0,0,163,0],
 "files.html":[1,0],
-"functions.html":[0,3,0],
 "functions.html":[0,3,0,0],
+"functions.html":[0,3,0],
 "functions_b.html":[0,3,0,1],
 "functions_c.html":[0,3,0,2],
 "functions_d.html":[0,3,0,3],
@@ -248,6 +249,5 @@ var NAVTREEINDEX11 =
 "structgGUITreelist_1_1Element.html#a8ea2dd9c14946f3bd76c43c3d3d64a81":[0,0,95,0,6],
 "structgGUITreelist_1_1Element.html#ab8bd701321f295282c16ec11b0c1b4ad":[0,0,95,0,10],
 "structgGUITreelist_1_1Element.html#ac088cd0fb12b222a83e0cbe2f280533b":[0,0,95,0,17],
-"structgGUITreelist_1_1Element.html#ac13f9e0f37534ed4bd26736b8de172be":[0,0,95,0,12],
-"structgGUITreelist_1_1Element.html#ac68c9ac98baeb4fca05a692b901f223d":[0,0,95,0,1]
+"structgGUITreelist_1_1Element.html#ac13f9e0f37534ed4bd26736b8de172be":[0,0,95,0,12]
 };
