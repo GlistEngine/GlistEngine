@@ -73,6 +73,7 @@ void gGUITreelist::addElement(Element* element) {
 void gGUITreelist::clear() {
 	topelement.sub.clear();
 	updateTotalHeight();
+	selectedno = 0;
 }
 
 void gGUITreelist::updateTotalHeight() {

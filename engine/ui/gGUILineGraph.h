@@ -60,15 +60,15 @@ public:
 	gGUILineGraph();
 	virtual ~gGUILineGraph();
 
-	void set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIObject* parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h);
+	void set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIObject* parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h) override;
 
-	void setMaxX(int maxX);
-	void setMinX(int minX);
-	void setMaxY(int maxY);
-	void setMinY(int minY);
+	void setMaxX(int maxX) override;
+	void setMinX(int minX) override;
+	void setMaxY(int maxY) override;
+	void setMinY(int minY) override;
 
-	void setLabelCountX(int labelCount);
-	void setLabelCountY(int labelCount);
+	void setLabelCountX(int labelCount) override;
+	void setLabelCountY(int labelCount) override;
 
 	void enablePoints(bool arePointsEnabled);
 	void setLineColor(int lineIndex, gColor lineColor);
@@ -90,7 +90,7 @@ public:
 
 private:
 	static const int linecolornum = 6;
-	void drawGraph();
+	void drawGraph() override;
 	void updatePoints();
 
 	std::deque<std::deque<std::array<float, 4>>> graphlines;
