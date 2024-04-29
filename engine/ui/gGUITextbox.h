@@ -217,6 +217,8 @@ public:
 
 	void setDisabled(bool isDisabled);
 
+	void setEditMode(bool editMode);
+
 private:
 	static const int KEY_NONE = 0, KEY_BACKSPACE = 1, KEY_LEFT = 2, KEY_RIGHT = 4, KEY_DELETE = 8, KEY_ENTER = 16, KEY_UP = 32, KEY_DOWN = 64;
 
