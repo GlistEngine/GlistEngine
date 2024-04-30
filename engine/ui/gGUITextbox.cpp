@@ -116,9 +116,7 @@ void gGUITextbox::set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseG
 	rightlimit = right;
 	toplimit = top;
 	bottomlimit = bottom;
-	if(!root) return;
-	manager = root->getAppManager()->getGUIManager();
-	textfont = manager->getFont(gGUIManager::FONT_FREESANS);
+	textfont = appmanager->getGUIManager()->getFont(gGUIManager::FONT_FREESANS);
 }
 
 void gGUITextbox::setText(const std::string& text) {
@@ -339,7 +337,7 @@ void gGUITextbox::draw() {
 	gColor oldcolor = *renderer->getColor();
 	if(isbackgroundenabled) {
 		renderer->setColor(foregroundcolor);
-		gDrawRectangle(left - firstx, top + hdiff - firsty, width, boxh / 2 + totalh, false);
+		gDrawRectangle(left - firstx, top + hdiff - firsty, width,  totalh, false);
 	}
 	renderer->setColor(textbackgroundcolor);
 	gDrawRectangle(left - firstx, top + hdiff - firsty, width,  totalh, true);
@@ -1868,4 +1866,8 @@ void gGUITextbox::setDisabled(bool isDisabled) {
 
 void gGUITextbox::setEditMode(bool editMode) {
 	editmode = editMode;
+}
+
+int gGUITextbox::calculateContentHeight() {
+	return totalh;
 }

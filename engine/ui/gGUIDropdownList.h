@@ -42,9 +42,11 @@ public:
 
 	std::string& getSelectedTitle();
 
-	friend class gGUIToolbar;
+	int calculateContentHeight() override;
 
 private:
+	friend class gGUIToolbar;
+
 	gGUISizer listsizer;
 	gGUIButton button;
 	gGUIImageButton ibutton;

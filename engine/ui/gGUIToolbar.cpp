@@ -10,7 +10,6 @@
 
 gGUIToolbar::gGUIToolbar() {
 	spaceLocation = 0;
-	sizerrescaling = false;
 	isSpaceAdded = false;
 	toolbartype = TOOLBAR_HORIZONTAL;
 	toolbarforegroundcolor = foregroundcolor;
@@ -31,9 +30,9 @@ int gGUIToolbar::getToolbarType() {
 void gGUIToolbar::draw() {
 //	gLogi("gGUIToolbar") << "draw";
 //	gLogi("gGUIToolbar") << "l:" << left << ", t:" << top << ", w:" << width << ", h:" << height;
-	gColor oldcolor = *renderer->getColor();
+	gColor* oldcolor = renderer->getColor();
 	if(toolbartype == TOOLBAR_HORIZONTAL) {
-		renderer->setColor(&toolbarforegroundcolor);
+		renderer->setColor(toolbarforegroundcolor);
 		gDrawRectangle(left, top, width, height, true);
 		renderer->setColor(&toolbarbottomlinecolor);
 		gDrawLine(left, bottom, right, bottom);
@@ -44,8 +43,10 @@ void gGUIToolbar::draw() {
 		renderer->setColor(&toolbarbottomlinecolor);
 		gDrawLine(right, top, right, bottom);
 	}
-	renderer->setColor(&oldcolor);
-	if(guisizer) guisizer->draw();
+	renderer->setColor(oldcolor);
+	if(guisizer) {
+		guisizer->draw();
+	}
 }
 
 void gGUIToolbar::addControl(gGUIControl *control) {
@@ -83,49 +84,6 @@ void gGUIToolbar::addControl(gGUIControl *control) {
 		resizeSizer();
 	}
 }
-
-/*void gGUIToolbar::addControl(std::vector<gGUIControl*> control) {
-	controls = control;
-	int totalElements = controls.size();
-	float totalLen = 0, margin;
-
-	float *toolbarSizerprs = new float[totalElements + 1];
-	for (int i = 0; i < totalElements; ++i) {
-		if(typeid(*controls.at(i)) == typeid(gGUIToolbarButton)) {
-			if(toolbartype == TOOLBAR_HORIZONTAL) margin = 0.03f;
-			else margin = 0.05f;
-		}
-		else if(typeid(*controls.at(i)) == typeid(gGUIDropdownList)) {
-			if(toolbartype == TOOLBAR_HORIZONTAL) margin = 0.15f;
-			else margin = 0.05f;
-		}
-		else {
-			margin = 0.05f;
-		}
-		toolbarSizerprs[i] = margin;
-		totalLen += margin;
-	}
-	toolbarSizerprs[totalElements] = 1.0f - totalLen;
-
-	if(toolbartype == TOOLBAR_HORIZONTAL) {
-		guisizer->setSize(1, totalElements + 1);
-		guisizer->setColumnProportions(toolbarSizerprs);
-
-		for (int i = 0; i < totalElements; ++i) {
-			guisizer->setControl(0, i, controls.at(i));
-		}
-	} else {
-		guisizer->setSize(totalElements + 1, 1);
-		guisizer->setLineProportions(toolbarSizerprs);
-
-		for (int i = 0; i < totalElements; ++i) {
-			guisizer->setControl(i, 0, controls.at(i));
-		}
-	}
-
-	guisizer->enableBorders(true);
-	delete[] toolbarSizerprs;
-}*/
 
 void gGUIToolbar::addToolbarButton(gGUIToolbarButton *toolbarButton) {
 	controlObjects.push_back(toolbarButton);
@@ -179,7 +137,7 @@ void gGUIToolbar::addSwitchButton(gGUISwitchButton *switchButton) {
 	switchButton->togglew = guisizer->getSlotWidth(0, 0) * 2;
 }
 
-void gGUIToolbar::addText(gGUIText *text) {
+void gGUIToolbar::addText(gGUIText* text) {
 	controlObjects.push_back(text);
 	float margin = text->getText().length() * 0.008;
 	sizerPrs.push_back(margin);
@@ -203,7 +161,7 @@ void gGUIToolbar::resizeSizer() {
 	if(!isSpaceAdded) spaceLocation++;
 	int totalElements = controlObjects.size();
 	float spaceLen = 0, totalLen = 0;
-	float *toolbarSizerprs = new float[totalElements + 1];
+	float* toolbarSizerprs = new float[totalElements + 1];
 
 	for (int i = 0; i < totalElements; ++i) {
 		totalLen += sizerPrs.at(i);

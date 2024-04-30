@@ -43,7 +43,6 @@ public:
 protected:
 	gGUISizer* guisizer;
 	int topbarh;
-	bool sizerrescaling;
 };
 
 #endif /* UI_GGUICONTAINER_H_ */
