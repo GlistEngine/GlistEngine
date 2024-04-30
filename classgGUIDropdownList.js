@@ -4,6 +4,7 @@ var classgGUIDropdownList =
     [ "~gGUIDropdownList", "classgGUIDropdownList.html#add0715129ffde082292b73aee9d06282", null ],
     [ "addElement", "classgGUIDropdownList.html#aa474389deeb0013fa8574b4a51db9800", null ],
     [ "addElement", "classgGUIDropdownList.html#ac984e25a1447de2f00f1efb8642365c5", null ],
+    [ "calculateContentHeight", "classgGUIDropdownList.html#a7d050c7e6445ac34c99dff7bfc62df40", null ],
     [ "clear", "classgGUIDropdownList.html#ad3dcee213b082bd76f1775ce23ef4ace", null ],
     [ "clearTitle", "classgGUIDropdownList.html#a078b2f34726fbe05f5fcc9aed7bf768c", null ],
     [ "draw", "classgGUIDropdownList.html#a7c7e528400bff71e5a0b3ef65dd23334", null ],

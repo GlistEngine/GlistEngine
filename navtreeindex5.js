@@ -1,5 +1,7 @@
 var NAVTREEINDEX5 =
 {
+"classgGUIListbox.html#ad1f7ef7f81ade4da7d93b957fb74780e":[0,0,68,7],
+"classgGUIListbox.html#ae7ba37242487d485f1e085c98639d1ba":[0,0,68,27],
 "classgGUIListbox.html#aec02b9f7f3e7e8582d1a1b4c56459ac4":[0,0,68,22],
 "classgGUIManager.html":[0,0,69],
 "classgGUIManager.html#a070c7ecd89ce9e355f2fe9f268ac8f02":[0,0,69,17],
@@ -247,7 +249,5 @@ var NAVTREEINDEX5 =
 "classgGUIScrollable.html":[0,0,82],
 "classgGUIScrollable.html#a031b8249d8686e0109167e412f22d78a":[0,0,82,1],
 "classgGUIScrollable.html#a03b433d4470cdd14ec46d782565b75e1":[0,0,82,2],
-"classgGUIScrollable.html#a0fade0f4135532d609133e187b76ba89":[0,0,82,32],
-"classgGUIScrollable.html#a1075e4994f58eca8827bcf4ee24c5b3b":[0,0,82,4],
-"classgGUIScrollable.html#a1871b76ea2ca231f53aac2074d45dab2":[0,0,82,7]
+"classgGUIScrollable.html#a0fade0f4135532d609133e187b76ba89":[0,0,82,32]
 };

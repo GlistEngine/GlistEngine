@@ -20,6 +20,5 @@ var classgGUIContainer =
     [ "update", "classgGUIContainer.html#a0ccbebe1d1d4eacf91e13162d2b71d17", null ],
     [ "windowResized", "classgGUIContainer.html#ae03271ea11c5b1e791b98ff6c93d45b6", null ],
     [ "guisizer", "classgGUIContainer.html#a63aa3c35c36a900b95be7925e054c95a", null ],
-    [ "sizerrescaling", "classgGUIContainer.html#a610608eca4a2ff7b057f423ed9e4427a", null ],
     [ "topbarh", "classgGUIContainer.html#a9db20077a66590ff590e29f5c386ff54", null ]
 ];

@@ -4,6 +4,7 @@ var classgGUITextbox =
     [ "~gGUITextbox", "classgGUITextbox.html#aaf63a9747057101d493deaa78ddfe00b", null ],
     [ "addLeftMargin", "classgGUITextbox.html#abf3e7e720d587112fc9293e3d481edcd", null ],
     [ "addTopMargin", "classgGUITextbox.html#af621f2789dedabf5371bdcd3408d5d50", null ],
+    [ "calculateContentHeight", "classgGUITextbox.html#a6895cac7e74289d78d7bf07c211ca023", null ],
     [ "charPressed", "classgGUITextbox.html#ad51b6693e8bec5276b62654046fb069b", null ],
     [ "cleanText", "classgGUITextbox.html#aa55684fd12dba93a5a9a91858a5592d5", null ],
     [ "draw", "classgGUITextbox.html#a19dad1764deec36abc1bf31a809c4e86", null ],

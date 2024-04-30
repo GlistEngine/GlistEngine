@@ -2,6 +2,7 @@ var classgGUICheckbox =
 [
     [ "gGUICheckbox", "classgGUICheckbox.html#acf9d906dfe72ab53b2b0171728764744", null ],
     [ "~gGUICheckbox", "classgGUICheckbox.html#a362bd5e575d6ea6cfed4db9a927ace0e", null ],
+    [ "calculateContentHeight", "classgGUICheckbox.html#a3acce7838711fc3bee82ea661190ea53", null ],
     [ "draw", "classgGUICheckbox.html#a9dc8c3574f68ea4457ca345f57e2c010", null ],
     [ "getBgColor", "classgGUICheckbox.html#a02bb4d1137870dc05f2307d6dd6725fc", null ],
     [ "getTickColor", "classgGUICheckbox.html#a3f96849da3a06e8bc6a99376201065a6", null ],
