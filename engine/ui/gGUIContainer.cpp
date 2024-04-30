@@ -11,6 +11,7 @@
 gGUIContainer::gGUIContainer() {
 	iscontainer = true;
 	topbarh = 0;
+	guisizer = nullptr;
 }
 
 gGUIContainer::~gGUIContainer() {

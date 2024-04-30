@@ -33,6 +33,13 @@ gGUIForm::gGUIForm() {
 	contextmenuy = 0;
 	treelisth = 0;
 	treelistw = 0;
+	menubar = nullptr;
+	isshown = true;
+	contextmenu = nullptr;
+	statusw = 0;
+	statusbar = nullptr;
+	guisizer = nullptr;
+	treelist = nullptr;
 }
 
 gGUIForm::~gGUIForm() {
