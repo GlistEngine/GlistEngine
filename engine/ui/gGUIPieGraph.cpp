@@ -36,7 +36,7 @@ void gGUIPieGraph::set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBase
 	gGUIControl::set(root, topParentGUIObject, parentGUIObject, parentSlotLineNo, parentSlotColumnNo, x, y, w, h);
 	int smaller = height;
 	if(width < height) smaller = width;
-	radius = smaller * 7 / 16;
+	radius = smaller * 7 / 18;
 	widthhalf = width / 2;
 	heighthalf = height / 2;
 }
