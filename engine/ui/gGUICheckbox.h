@@ -28,11 +28,11 @@ public:
 	gColor* getBgColor();
 	gColor* getTickColor();
 
-	void update();
-	void draw();
+	void update() override;
+	void draw() override;
 
-	void mousePressed(int x, int y, int button);
-	void mouseReleased(int x, int y, int button);
+	void mousePressed(int x, int y, int button) override;
+	void mouseReleased(int x, int y, int button) override;
 
 	void setDisabled(bool isDisabled);
 
