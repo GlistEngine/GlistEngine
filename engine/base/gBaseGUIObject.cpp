@@ -241,7 +241,7 @@ gColor* gBaseGUIObject::getDisabledButtonFontColor() {
 }
 
 int gBaseGUIObject::getCursor(int x, int y) {
-	return 0;
+	return CURSOR_KEEP;
 }
 
 void gBaseGUIObject::keyPressed(int key) {

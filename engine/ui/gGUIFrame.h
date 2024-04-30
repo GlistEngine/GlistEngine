@@ -20,6 +20,7 @@ public:
 	void update();
 	void draw();
 
+	int getCursor(int x, int y) override;
 private:
 };
 

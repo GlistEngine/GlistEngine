@@ -54,6 +54,8 @@ public:
 	void setButtonh(int buttonh);
 	void setButtonw(int buttonw);
 
+	int getCursor(int x, int y) override;
+
 protected:
 	bool ispressed;
 	int buttonw, buttonh;

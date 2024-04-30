@@ -353,12 +353,20 @@ void gGUIDialogue::transformDialogue(int left, int top, int width, int height) {
 
 int gGUIDialogue::getCursor(int x, int y) {
 	if (!ismaximized && isresizeenabled) {
-		if ((x > left - 5 && x < left + 5) && (y > titlebar.top && y < buttonsbar.bottom)) return CURSOR_HRESIZE;
-		if ((x > right - 5 && x < right + 5) && (y > titlebar.top && y < buttonsbar.bottom)) return CURSOR_HRESIZE;
-		if ((y > titlebar.top - 5 && y < titlebar.top + 5) && (x > left && x < right)) return CURSOR_VRESIZE;
-		if ((y > buttonsbar.bottom - 5 && y < buttonsbar.bottom + 5) && (x > left && x < right)) return CURSOR_VRESIZE;
+		if ((x > left - 5 && x < left + 5) && (y > titlebar.top && y < buttonsbar.bottom)) {
+			return CURSOR_HRESIZE;
+		}
+		if ((x > right - 5 && x < right + 5) && (y > titlebar.top && y < buttonsbar.bottom)) {
+			return CURSOR_HRESIZE;
+		}
+		if ((y > titlebar.top - 5 && y < titlebar.top + 5) && (x > left && x < right)) {
+			return CURSOR_VRESIZE;
+		}
+		if ((y > buttonsbar.bottom - 5 && y < buttonsbar.bottom + 5) && (x > left && x < right)) {
+			return CURSOR_VRESIZE;
+		}
 	}
-	return CURSOR_ARROW;
+	return CURSOR_KEEP;
 }
 
 void gGUIDialogue::keyPressed(int key) {

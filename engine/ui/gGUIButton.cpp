@@ -206,3 +206,10 @@ void gGUIButton::setButtonh(int buttonh) {
 void gGUIButton::setButtonw(int buttonw) {
 	this->buttonw = buttonw;
 }
+
+int gGUIButton::getCursor(int x, int y) {
+	if (!isdisabled && x >= left && x < left + buttonw && y >= top && y < top + buttonh) {
+		return CURSOR_HAND;
+	}
+	return CURSOR_KEEP;
+}

@@ -311,15 +311,18 @@ int gGUISizer::getCursor(int x, int y) {
 			break;
 		}
 	}
-
-	if(cl == -1 || cc == -1) return CURSOR_ARROW;
+	if(cl == -1 || cc == -1) {
+		return CURSOR_KEEP;
+	}
 
 	if(iscontrolset[cl][cc]) {
 		int gc = guicontrol[cl][cc]->getCursor(x, y);
-		return gc;
+		if (gc != CURSOR_KEEP) {
+			return gc;
+		}
 
 	}
-	return CURSOR_ARROW;
+	return CURSOR_KEEP;
 }
 
 int gGUISizer::detectSizerType() {

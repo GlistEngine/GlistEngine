@@ -146,3 +146,26 @@ gGUISizer* gGUINavigation::getToolbarSizer() {
 	return &toolbarsizer;
 }
 
+int gGUINavigation::getCursor(int x, int y) {
+	int cursor = maintoolbarsizer.getCursor(x, y);
+	if (cursor != CURSOR_KEEP) {
+		return cursor;
+	}
+	if (toolbarenabled) {
+		cursor = toolbarsizer.getCursor(x, y);
+		if (cursor != CURSOR_KEEP) {
+			return cursor;
+		}
+	}
+	for(int i = 0; i < panes.size(); i++) {
+		if(!paneenabled[i]) {
+			continue;
+		}
+		if(x >= panelinepad && x < width - panelinepad && y >= panetoph + i * panelineh - font->getSize() && y < panetoph + i * panelineh + font->getSize() / 2) {
+			cursor = CURSOR_HAND;
+			break;
+		}
+	}
+	return cursor;
+}
+

@@ -312,3 +312,13 @@ void gGUINumberBox::draw() {
 	renderer->setColor(oldcolor);
 	if(guisizer) guisizer->draw();
 }
+
+int gGUINumberBox::getCursor(int x, int y) {
+	if (x >= incboxposx && x < incboxposx + smalboxwidth && y >= incboxposy && y < incboxposy + smalboxheight) {
+		return CURSOR_HAND;
+	}
+	if (x >= decboxposx && x < decboxposx + smalboxwidth && y >= decboxposy && y < decboxposy + smalboxheight) {
+		return CURSOR_HAND;
+	}
+	return CURSOR_KEEP;
+}

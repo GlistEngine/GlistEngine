@@ -101,7 +101,7 @@ public:
 	int getLineCount();
 
 	/**
-	 * Returns the current position of the cursor.
+	 * Returns the current type of the cursor.
 	 */
 	int getCursor(int x, int y);
 

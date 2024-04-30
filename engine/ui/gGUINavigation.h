@@ -43,6 +43,8 @@ public:
 	void enableToolbar();
 	gGUISizer* getToolbarSizer();
 
+	int getCursor(int x, int y) override;
+
 private:
 	std::deque<gGUIPane*> panes;
 	std::deque<bool> paneenabled;

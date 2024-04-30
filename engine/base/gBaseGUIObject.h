@@ -21,7 +21,11 @@ public:
 
 	static const int GUIEVENT_FOCUSED = -1, GUIEVENT_UNFOCUSED = -2;
 
-	static const int CURSOR_ARROW = 0, CURSOR_IBEAM = 1, CURSOR_CROSSHAIR = 2, CURSOR_HAND = 3, CURSOR_HRESIZE = 4, CURSOR_VRESIZE = 5;
+	/**
+	 * Cursor keep is used to let the parent know that it hasn't modified the cursor
+	 * so it can ask other gui elements instead of setting the cursor to arrow.
+	 */
+	static const int CURSOR_KEEP = -1, CURSOR_ARROW = 0, CURSOR_IBEAM = 1, CURSOR_CROSSHAIR = 2, CURSOR_HAND = 3, CURSOR_HRESIZE = 4, CURSOR_VRESIZE = 5;
 
 	enum {
 		TEXTALIGNMENT_LEFT,

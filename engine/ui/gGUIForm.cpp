@@ -219,8 +219,10 @@ gGUISizer* gGUIForm::getSizer() {
 }
 
 int gGUIForm::getCursor(int x, int y) {
-	if(guisizer) return guisizer->getCursor(x, y);
-	return CURSOR_ARROW;
+	if(guisizer) {
+		return guisizer->getCursor(x, y);
+	}
+	return CURSOR_KEEP;
 }
 
 int gGUIForm::getFocusId() {

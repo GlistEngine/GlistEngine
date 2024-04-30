@@ -144,8 +144,10 @@ bool gGUITextbox::isEditable() {
 }
 
 int gGUITextbox::getCursor(int x, int y) {
-	if(iseditable && x >= left && x < right && y >= top + hdiff && y < top + totalh + hdiff) return CURSOR_IBEAM;
-	return CURSOR_ARROW;
+	if(iseditable && x >= left && x < right && y >= top + hdiff && y < top + totalh + hdiff) {
+		return CURSOR_IBEAM;
+	}
+	return CURSOR_KEEP;
 }
 
 void gGUITextbox::setLineCount(int linecount) {

@@ -29,7 +29,7 @@ void gGUIControl::set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseG
 }
 
 int gGUIControl::getCursor(int x, int y) {
-	return 0;
+	return CURSOR_KEEP;
 }
 
 void gGUIControl::update() {

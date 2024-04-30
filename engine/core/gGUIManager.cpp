@@ -124,11 +124,21 @@ void gGUIManager::charPressed(unsigned int key) {
 
 void gGUIManager::mouseMoved(int x, int y) {
 	if(!dialoguesshown.empty()) {
-		appmanager->setCursor(dialoguesshown[dialoguesshown.size() - 1]->getCursor(x, y));
+		int cursor = dialoguesshown[dialoguesshown.size() - 1]->getCursor(x, y);
+		if (cursor == gBaseGUIObject::CURSOR_KEEP) {
+			appmanager->setCursor(gBaseGUIObject::CURSOR_ARROW);
+		} else {
+			appmanager->setCursor(cursor);
+		}
 		dialoguesshown[dialoguesshown.size() - 1]->mouseMoved(x, y);
 		return;
 	}
-	appmanager->setCursor(currentframe->getCursor(x, y));
+	int cursor = currentframe->getCursor(x, y);
+	if (cursor == gBaseGUIObject::CURSOR_KEEP) {
+		appmanager->setCursor(gBaseGUIObject::CURSOR_ARROW);
+	} else {
+		appmanager->setCursor(cursor);
+	}
 	currentframe->mouseMoved(x, y);
 }
 

@@ -155,3 +155,14 @@ gGUIButton gGUIPane::getNextButton() {
 	return nextbutton;
 }
 
+int gGUIPane::getCursor(int x, int y) {
+	int cursor = previousbutton.getCursor(x, y);
+	if (cursor != CURSOR_KEEP) {
+		return cursor;
+	}
+	cursor = nextbutton.getCursor(x, y);
+	if (cursor != CURSOR_KEEP) {
+		return cursor;
+	}
+	return guisizer->getCursor(x, y);
+}

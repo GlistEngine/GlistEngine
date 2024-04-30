@@ -49,7 +49,7 @@ public:
 	void updateSizer();
 	gGUISizer* getSizer();
 
-	virtual int getCursor(int x, int y);
+	virtual int getCursor(int x, int y) override;
 	int getFocusId();
 	int getPreviousFocusId();
 

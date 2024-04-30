@@ -44,6 +44,8 @@ public:
 
 	gGUIButton getNextButton();
 
+	int getCursor(int x, int y) override;
+
 private:
 	gGUINavigation* navigation;
 	int navorder;
