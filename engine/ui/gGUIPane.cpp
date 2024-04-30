@@ -100,7 +100,7 @@ void gGUIPane::enableNextButton(bool isEnabled) {
 }
 
 void gGUIPane::show() {
-	if(navigation != nullptr) navigation->setSelectedPane(navorder);
+	if(navigation != nullptr) navigation->setSelectedPaneNo(navorder);
 	 ((gGUISizer*)parent)->setControl(0, 1, this);
 }
 
@@ -146,7 +146,7 @@ void gGUIPane::mouseReleased(int x, int y, int button) {
 void gGUIPane::onGUIEvent(int guiObjectId, int eventType, int sourceEventType, std::string value1, std::string value2) {
 	gGUIContainer::onGUIEvent(guiObjectId, eventType, sourceEventType, value1, value2);
 	if(eventType == G_GUIEVENT_PANEACTIVE) {
-		if(navigation != nullptr) navigation->setSelectedPane(navorder);
+		if(navigation != nullptr) navigation->setSelectedPaneNo(navorder);
 		 ((gGUISizer*)parent)->setControl(0, 1, this);
 	}
 }

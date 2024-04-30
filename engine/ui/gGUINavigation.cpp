@@ -100,10 +100,19 @@ void gGUINavigation::clear() {
 	paneenabled.clear();
 }
 
-void gGUINavigation::setSelectedPane(int paneNo) {
+void gGUINavigation::setSelectedPaneNo(int paneNo) {
 	if(paneNo < 0 || paneNo >= panes.size()) return;
 	selectedpane = paneNo;
 }
+
+int gGUINavigation::getSelectedPaneNo() {
+	return selectedpane;
+}
+
+gGUIPane* gGUINavigation::getSelectedPane() {
+	return panes[selectedpane];
+}
+
 
 void gGUINavigation::showPane(gGUIPane* paneToShow) {
 	((gGUISizer*)parent)->setControl(0, 1, paneToShow);
