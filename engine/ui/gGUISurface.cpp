@@ -107,7 +107,7 @@ void gGUISurface::setBorder(float thickness, float borderposition) {
 	this->borderposition = borderposition;
 }
 
-void gGUISurface::addRectangle(float x, float y, float w, float h, bool isFilled, gColor color) {
+int gGUISurface::addRectangle(float x, float y, float w, float h, bool isFilled, gColor color) {
 	if(y >= maxHeight)
 		maxHeight = y + h + 30;
 
@@ -134,10 +134,11 @@ void gGUISurface::addRectangle(float x, float y, float w, float h, bool isFilled
 	newShape.push_back(color.a); //shapes[i][a] 10 (if it does not have a thickness) or 12
 	shapes.push_back(newShape);
 	resetColorAndBorder();
+	return shapes.size() - 1;
 }
 
 
-void gGUISurface::addCircle(float xCenter, float yCenter, float radius, bool isFilled, float numberOfSides, gColor color) {
+int gGUISurface::addCircle(float xCenter, float yCenter, float radius, bool isFilled, float numberOfSides, gColor color) {
 	if(yCenter >= maxHeight)
 		maxHeight = yCenter + radius + 30;
 	std::vector<float> newShape;
@@ -154,9 +155,10 @@ void gGUISurface::addCircle(float xCenter, float yCenter, float radius, bool isF
 
 	shapes.push_back(newShape);
 	resetColorAndBorder();
+	return shapes.size() - 1;
 }
 
-void gGUISurface::addLine(float x1, float y1, float x2, float y2, gColor color) {
+int gGUISurface::addLine(float x1, float y1, float x2, float y2, gColor color) {
 	if(y1 >= maxHeight || y2 >= maxHeight) {
 		if(y1 >= y2)
 			maxHeight = y1 + 30;
@@ -178,9 +180,10 @@ void gGUISurface::addLine(float x1, float y1, float x2, float y2, gColor color) 
 
 	shapes.push_back(newShape);
 	resetColorAndBorder();
+	return shapes.size() - 1;
 }
 
-void gGUISurface::addArrow(float x1, float y1, float length, float angle, float tipLength, float tipAngle, gColor color) {
+int gGUISurface::addArrow(float x1, float y1, float length, float angle, float tipLength, float tipAngle, gColor color) {
 	if(y1 >= maxHeight)
 		maxHeight = y1 + length + tipLength;
 
@@ -200,9 +203,10 @@ void gGUISurface::addArrow(float x1, float y1, float length, float angle, float 
 
 	shapes.push_back(newShape);
 	resetColorAndBorder();
+	return shapes.size() - 1;
 }
 
-void gGUISurface::addTriangle(float px, float py, float qx, float qy, float rx, float ry, bool isFilled, gColor color) {
+int gGUISurface::addTriangle(float px, float py, float qx, float qy, float rx, float ry, bool isFilled, gColor color) {
 	if(py >= maxHeight || qy >= maxHeight || ry >= maxHeight) {
 		if(py >= qy && py >= ry)
 			maxHeight = py + 30;
@@ -229,9 +233,10 @@ void gGUISurface::addTriangle(float px, float py, float qx, float qy, float rx, 
 
 	shapes.push_back(newShape);
 	resetColorAndBorder();
+	return shapes.size() - 1;
 }
 
-void gGUISurface::addImage(float x, float y, float w, float h, gImage* image) {
+int gGUISurface::addImage(float x, float y, float w, float h, gImage* image) {
 	if(y >= maxHeight)
 		maxHeight = y + h + 30;
 
@@ -249,9 +254,10 @@ void gGUISurface::addImage(float x, float y, float w, float h, gImage* image) {
 
 	shapes.push_back(newShape);
 	resetColorAndBorder();
+	return shapes.size() - 1;
 }
 
-void gGUISurface::addText(std::string text, float x, float y, int fontFace, int fontType, gColor color) {
+int gGUISurface::addText(std::string text, float x, float y, int fontFace, int fontType, gColor color) {
 	std::vector<float> newShape;
 	newShape.push_back(SHAPE_TEXT); //for drawing IMAGE //shapes[i][0]
 	newShape.push_back(x); //shapes[i][x] 1
@@ -270,9 +276,23 @@ void gGUISurface::addText(std::string text, float x, float y, int fontFace, int 
 
 	shapes.push_back(newShape);
 	resetColorAndBorder();
+	return shapes.size() - 1;
 }
 
-void gGUISurface::addSizer(float x, float y, float w, float h, gGUISizer* newSizer) {
+void gGUISurface::setText(int shapeNo, std::string text, float x, float y, int fontFace, int fontType, gColor color) {
+	shapes[shapeNo][1] = x;
+	shapes[shapeNo][2] = y;
+	shapes[shapeNo][3] = fontFace;
+	shapes[shapeNo][4] = fontType;
+	texts[shapes[shapeNo][5]] = text;
+	shapes[shapeNo][6] = color.r;
+	shapes[shapeNo][7] = color.g;
+	shapes[shapeNo][8] = color.b;
+	shapes[shapeNo][9] = color.a;
+	resetColorAndBorder();
+}
+
+int gGUISurface::addSizer(float x, float y, float w, float h, gGUISizer* newSizer) {
 	std::vector<float> newShape;
 	newShape.push_back(SHAPE_GUISIZER); //for drawing GGUILINEGRAPH //shapes[i][0]
 	newShape.push_back(x); //shapes[i][x] 1
@@ -287,6 +307,7 @@ void gGUISurface::addSizer(float x, float y, float w, float h, gGUISizer* newSiz
 
 	shapes.push_back(newShape);
 	resetColorAndBorder();
+	return shapes.size() - 1;
 }
 
 void gGUISurface::clear() {
