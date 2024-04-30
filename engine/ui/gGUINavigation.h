@@ -33,7 +33,9 @@ public:
 	bool isPaneEnabled(int paneNo);
 	void clear();
 
-	void setSelectedPane(int paneNo);
+	void setSelectedPaneNo(int paneNo);
+	int getSelectedPaneNo();
+	gGUIPane* getSelectedPane();
 
 	void showPane(gGUIPane* paneToShow);
 
