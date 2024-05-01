@@ -1,8 +1,8 @@
 /*
  * gGUINotebook.h
  *
- *  Created on: 10 Aug 2022
- *      Author: burakmeydan
+ *  Created on: 30 Apr 2024
+ *      Author: Metehan Gezer
  */
 
 #ifndef UI_GGUINOTEBOOK_H_
@@ -14,106 +14,225 @@
 #include "gFont.h"
 #include <deque>
 
-/**
- * gGUINotebook provides displaying multiple sizers for one frame.
- * gGUINotebook is set to framesizer by using "setControl" function.
- * For each gGUISizer which you want to display on gGUINotebook, the
- * addSizerToDeque(&gGUISizer, "sizerNameThatShownOnTab") function is
- * called (gGUISizers must be arranged as you like before calling
- * addSizerToDeque).
- */
-class gGUINotebook: public gGUIContainer {
+class gGUINotebook : public gGUIContainer {
 public:
+	enum class TabPosition {
+		TOP,
+		BOTTOM,
+		LEFT,
+		RIGHT
+	};
+
 	gGUINotebook();
 	virtual ~gGUINotebook();
 
+	void set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIObject* parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h) override;
+
+	void draw() override;
+
+
+	/**
+	 * @brief Sets the position of the tab bar.
+	 *
+	 * @param position The desired tab position. ex: gGUINotebook::TabPosition::LEFT
+	 * @see getTabPosition
+	 */
+	void setTabPosition(TabPosition position);
+
+	/**
+	 * @brief Get the current tab position.
+	 *
+	 * Tab position determines where the tab bar is
+	 * displayed relative to the tab contents.
+	 *
+	 * @return The current tab position as TabPosition enum.
+	 */
+	TabPosition getTabPosition() const;
+
+	/**
+	 * Sets the visibility of the tab header.
+	 *
+	 * @param visible Whether the tab header should be visible or not.
+	 */
+	void setTabVisibility(bool visible);
+
+	/**
+	 * @brief Sets the active tab of the notebook.
+	 *
+	 * This function sets the active tab of the notebook to the tab at the given index.
+	 * If the index is out of range, the active tab is set to -1 and no tab will be selected.
+	 *
+	 * @param index The index of the tab to set as active.
+	 */
 	void setActiveTab(int index);
 
-	void draw();
+	/**
+	 * @brief Gets the index of the active tab.
+	 *
+	 * This function returns the index of the active tab in the notebook.
+	 *
+	 * @return The index of the active tab. -1 if none is selected
+	 */
+	int getActiveTab() const;
 
 	/**
-	 * Sets the visibility of the title.
+	 * @brief Sets whether a tab is closable or not.
 	 *
-	 * @param is title visible or not.
+	 * @param index The index of the tab.
+	 * @param isClosable True if the tab should be closable, false otherwise.
 	 */
-	void setTitleVisibility(bool isVisible);
+	void setTabClosable(int index, bool isClosable);
 
 	/**
-	 * Sets the closable property of tabs.
+	 * @brief Add a tab to a GUI sizer.
 	 *
-	 * @param is closable or not.
+	 * @param sizer The GUI sizer to which the tab is added.
+	 * @param title The title of the tab.
+	 * @param closable Whether the tab should be closable. Default is true.
 	 */
-	void setClosableTab(bool isClosableTab);
+	void addTab(gGUISizer* sizer, std::string title, bool closable = true);
 
 	/**
-	 * Adds gGUISizer and store it.
+	 * @brief Closes the tab at the specified index.
 	 *
-	 * @param is gGUISizer that is stored in "guisizers" deque.
+	 * If the index is out of range, or if there are no tabs in the notebook, the function does nothing.
+	 * If the active tab is closed, previous tab will be active (if available).
 	 *
-	 * @param is gGUISizer name that is stored in "quisizerlabels" vector
-	 * and the label of tab.
+	 * @param index The index of the tab to be closed.
 	 */
-	void addSizerToDeque(gGUISizer* guiSizer, std::string sizerLabel = "");
+	void closeTab(int index);
 
-    /**
-     * Opens a new tab with the specified gGUISizer.
-     *
-     * @param guiSizer gGUISizer to be displayed in the new tab.
-     * @param sizerLabel Label of the new tab.
-     */
-    void openTab(gGUISizer* guiSizer, const std::string& sizerLabel);
+	/**
+	 * @brief Gets the tab sizer of the tab at the given index.
+	 *
+	 * @param index The index of the tab sizer to retrieve.
+	 * @return The tab sizer object. It will return nullptr if index is out of bounds.
+	 *
+	 * @warning It is the responsibility of the caller to handle null pointers returned by this function!
+	 */
+	gGUISizer* getTabSizer(int index);
 
-    /**
-     * Closes the tab at the specified index.
-     *
-     * @param index Index of the tab to be closed.
-     */
-    void closeTab(int index);
-    void drawTabs(int x, int tabSize, int index, bool drawFromLeftToRight);
-
-    /*
-     * Returns the sizer at the given index.
-     *
-     * @param sizerIndex Index of the sizer to be returned.
-     */
-    gGUISizer* getSizer(int sizerIndex);
-
-    /*
-     * Returns the sizer with the given name.
-     *
-     * @param sizerLabel Label of the sizer to be returned.
-     */
-    gGUISizer* getSizer(std::string sizerLabel);
+	/**
+	 * @brief Gets the tab sizer by its title.
+	 *
+	 * @param title Title of the tab sizer to get.
+	 * @return gGUISizer object of the matching tab title, nullptr if none matches.
+	 *
+	 * @note This function assumes that all tab sizes have unique titles. If not, first matching will be returned.
+	 * @warning It is the responsibility of the caller to handle null pointers returned by this function!
+	 */
+	gGUISizer* getTabSizerByTitle(const std::string& title);
 
 private:
-	void loadFont();
-	void mousePressed(int x, int y, int button);
-	void mouseMoved(int x, int y);
-	void slideButtonPressed(int x, int y);
+	struct Box {
+		int ox = 0, oy = 0, x, y, w, h;
 
-	void drawSlideButtons(bool isRightButton);
-	gColor colorReductionOnCursor(gColor color);
-	int getWidthOfTabLabels();
-	void setSizerFromDeque(int guiSizersIndex);
-	void set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIObject* parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h);
+		bool enabled = false;
 
-	std::deque<gGUISizer*> guisizers;
-	std::vector<std::string> quisizerlabels;
-	bool istitlevisible = false, drawfromlefttoright = true, isslidingleft = false, isslidingright = false, colorreductionl = false, colorreductionr = false, isclosabletab = true;
-	int tablinetop = 0, titleh = 20, tabsizersh = 22, tablabelssizew, tabfontsize = 11;
-	int spaceforleft = 4, spaceforright = 4, slidebuttonw = 11;
-	int indexleft = 0, indexright, indexcursoroncross, activesizerindex = -1;
-	float oncursorcolorreduction = - 0.1f;
-	int tabSize = 20;
+		bool isPointInside(int tx, int ty) {
+			if (!enabled) {
+				return false;
+			}
+			return tx >= ox + x && tx <= ox + x + w && ty >= oy + y && ty <= oy + y + h;
+		}
+
+		void flipXY() {
+			int t = x;
+			x = y,
+			y = t;
+
+			t = h;
+			h = w;
+			w = t;
+		}
+
+		Box rotate(TabPosition pos, int boxw, int boxh) const {
+			switch (pos) {
+			case TabPosition::TOP: {
+				return *this;
+			}
+			case TabPosition::LEFT: {
+				Box box = *this;
+				box.flipXY();
+				return box;
+			}
+			case TabPosition::RIGHT: {
+				Box box = *this;
+				box.flipXY();
+				box.x = boxw - box.w;
+				return box;
+			}
+			case TabPosition::BOTTOM: {
+				Box box = *this;
+				box.y = boxh - box.h;
+				return box;
+			}
+			}
+		}
+
+		void render() const {
+			gDrawRectangle(x + ox, y + oy, w, h);
+		}
+
+	};
+	struct Tab {
+		gGUISizer* sizer;
+		std::string title;
+		bool closable;
+
+		// text size of the title tab
+		int titlewidth;
+		int titleheight;
+
+		// total size of the title tab
+		int tabwidth;
+		int tabheight;
+
+		Box tabbox;
+		Box closebox;
+
+		Tab(gGUISizer* sizer, std::string title,  bool closable, int titlewidth, int titleheight)
+			: sizer(sizer), title(title), closable(closable), titlewidth(titlewidth), titleheight(titleheight) {
+
+		}
+	};
 
 
+	void drawHeader();
+	void drawHeaderBackground();
+
+	void mousePressed(int x, int y, int button) override;
+	void mouseMoved(int x, int y) override;
+	void mouseScrolled(int x, int y) override;
+
+	void updateSizer();
+
+	Tab* getTab(int index);
+	int findIndexByTitle(const std::string& title);
+
+private:
+	std::vector<Tab> tabs;
+	int tabscroll;
+	int activetab;
+	int headerheight;
+
+	int titlepadding;
+	int tabgap; // gap between each tab
+	int scrollbuttonwidth;
+	int closebuttonsize;
+
+	int lastmousex = 0;
+	int lastmousey = 0;
+
+	bool tabvisibility;
+	Box scrollpreviousbutton;
+	Box scrollnextbutton;
+	Box headerbox;
+	Box notebookbox;
+
+	TabPosition tabposition;
 	gGUISizer notebooksizer;
-	gColor color;
-	gColor tablinecolor = color.LIGHT_GRAY;
-	gColor slidebuttoncolor = color.GRAY;
-	gColor crossoutlinecolor = color.DARK_GRAY;
-	gColor cursoroncrosscolor = color.RED;
-	gFont fontfortabs;
+	gFont* titlefont;
 	gFbo fbo;
 };
 
