@@ -67,13 +67,27 @@ void gGUINotebook::setTabVisibility(bool visible) {
 }
 
 void gGUINotebook::setActiveTab(int index) {
-	if (index < 0 || index >= tabs.size()) {
+	if (index == activetab) {
+		return;
+	}
+	Tab* oldtab = getTab(activetab);
+	if (oldtab != nullptr && oldtab->autoclose) {
+		int tmp = activetab;
+		// we set the active tab to -1, so it won't try to call
+		// setActiveTab again to open the previous tab
+		activetab = -1;
+		closeTab(tmp);
+	}
+	Tab* newtab = getTab(index);
+	if (newtab == nullptr) {
+		// set tab to inactive
 		activetab = -1;
 		guisizer->removeControl(0, 0);
 		return;
 	}
+	// set new tab as active
 	activetab = index;
-	guisizer->setControl(0, 0, getTab(activetab)->sizer);
+	guisizer->setControl(0, 0, newtab->sizer);
 }
 
 int gGUINotebook::getActiveTab() const {
@@ -88,11 +102,36 @@ void gGUINotebook::setTabClosable(int index, bool isClosable) {
 	tab->closable = isClosable;
 }
 
-void gGUINotebook::addTab(gGUISizer* sizer, std::string title, bool closable) {
+bool gGUINotebook::isTabClosable(int index) {
+	Tab* tab = getTab(index);
+	if (tab == nullptr) {
+		return false;
+	}
+	return tab->closable;
+}
+
+void gGUINotebook::setTabAutoClose(int index, bool autoClose) {
+	Tab* tab = getTab(index);
+	if (tab == nullptr) {
+		return;
+	}
+	tab->autoclose = autoClose;
+}
+
+bool gGUINotebook::isTabAutoClose(int index) {
+	Tab* tab = getTab(index);
+	if (tab == nullptr) {
+		return false;
+	}
+	return tab->autoclose;
+}
+
+int gGUINotebook::addTab(gGUISizer* sizer, std::string title, bool closable) {
 	tabs.emplace_back(sizer, title, closable, (int) titlefont->getStringWidth(title), (int) titlefont->getStringHeight(title));
 	if (activetab < 0) {
 		setActiveTab(tabs.size() - 1);
 	}
+	return tabs.size() - 1;
 }
 
 void gGUINotebook::closeTab(int index) {

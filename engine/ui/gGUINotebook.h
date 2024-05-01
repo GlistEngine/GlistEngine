@@ -13,6 +13,7 @@
 #include "gRenderer.h"
 #include "gFont.h"
 #include <deque>
+#include <utility>
 
 class gGUINotebook : public gGUIContainer {
 public:
@@ -83,14 +84,46 @@ public:
 	 */
 	void setTabClosable(int index, bool isClosable);
 
+
+	/**
+	 * @brief Returns if a tab is closable or not.
+	 *
+	 * @param index The index of the tab to get.
+	 * @return True if the tab is closable, false otherwise.
+	 *
+	 * @note If the index is out of range or if there are no tabs in the notebook, false will be returned.
+	 */
+	bool isTabClosable(int index);
+
+
+	/**
+	 * @brief Sets whether a tab is automatically closed when switched out of it.
+	 *
+	 * @param index The index of the tab.
+	 * @param autoClose True if the tab should be automatically closed, false otherwise.
+	 */
+	void setTabAutoClose(int index, bool autoClose);
+
+	/**
+	 * @brief Returns if a tab is set to automatically close when switched out of it.
+	 *
+	 * @param index The index of the tab.
+	 * @return True if the tab is set to automatically close, false otherwise.
+	 */
+	bool isTabAutoClose(int index);
+
+
 	/**
 	 * @brief Add a tab to a GUI sizer.
 	 *
 	 * @param sizer The GUI sizer to which the tab is added.
 	 * @param title The title of the tab.
 	 * @param closable Whether the tab should be closable. Default is true.
+	 *
+	 * @return Index that the tab is added, do not store this return value as it can change when a tab before this has closed!
+	 *
 	 */
-	void addTab(gGUISizer* sizer, std::string title, bool closable = true);
+	int addTab(gGUISizer* sizer, std::string title, bool closable = true);
 
 	/**
 	 * @brief Closes the tab at the specified index.
@@ -179,6 +212,7 @@ private:
 		gGUISizer* sizer;
 		std::string title;
 		bool closable;
+		bool autoclose;
 
 		// text size of the title tab
 		int titlewidth;
@@ -186,13 +220,13 @@ private:
 
 		// total size of the title tab
 		int tabwidth;
-		int tabheight;
 
 		Box tabbox;
 		Box closebox;
 
 		Tab(gGUISizer* sizer, std::string title,  bool closable, int titlewidth, int titleheight)
-			: sizer(sizer), title(title), closable(closable), titlewidth(titlewidth), titleheight(titleheight) {
+			: sizer(sizer), title(std::move(title)), closable(closable), autoclose(false),
+			  titlewidth(titlewidth), titleheight(titleheight), tabwidth(0) {
 
 		}
 	};
