@@ -92,6 +92,21 @@ public:
 	 */
 	void drawText(const std::string& text, float x, float y);
 
+
+	/**
+	 * @brief Draws the given text vertically flipped at the specified position.
+	 *
+	 * @see drawText
+	 */
+	void drawTextVerticallyFlipped(const std::string& text, float x, float y);
+
+	/**
+	 * @brief Draws the given text horizontally flipped at the specified location.
+	 *
+	 * @see drawText
+	 */
+	void drawTextHorizontallyFlipped(const std::string& text, float x, float y);
+
 	/**
 	 * Calculates text's width
 	 *

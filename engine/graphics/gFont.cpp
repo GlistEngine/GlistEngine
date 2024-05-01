@@ -107,6 +107,70 @@ void gFont::drawText(const std::string& text, float x, float y) {
 	  }
 }
 
+void gFont::drawTextVerticallyFlipped(const std::string& text, float x, float y) {
+	index1 = 0;
+	posx1 = x;
+	posy1 = y;
+
+	text1 = s2ws(text);
+	len1 = text1.length();
+
+	while (index1 < len1) {
+		c1 = text1[index1];
+		if(index1 > 0) {
+			cold1 = text1[index1 - 1];
+		} else {
+			cold1 = -1;
+		}
+		if (c1 == '\n') {
+			posy1 -= lineheight;
+			posx1 = x; //reset X Pos back to zero
+		} else {
+			cid1 = getCharID(c1);
+			if (cpset[cid1].character == unloadedchar) {
+				loadChar(cid1);
+			}
+			posx1 += getKerning(cid1, cold1);
+			gTexture* texture = textures[cid1];
+			texture->draw(posx1 + cpset[cid1].leftmargin, posy1 - cpset[cid1].dytop, texture->getWidth(), -texture->getHeight());
+			posx1 += cpset[cid1].advance * letterspacing * (c1 == ' ' ? spacesize : 1);
+		}
+		index1++;
+	}
+}
+
+void gFont::drawTextHorizontallyFlipped(const std::string& text, float x, float y) {
+	index1 = 0;
+	posx1 = x;
+	posy1 = y;
+
+	text1 = s2ws(text);
+	len1 = text1.length();
+
+	while (index1 < len1) {
+		c1 = text1[index1];
+		if (index1 > 0) {
+			cold1 = text1[index1 - 1];
+		} else {
+			cold1 = -1;
+		}
+		if (c1 == '\n') {
+			posy1 += lineheight;
+			posx1 = x;//reset X Pos back to zero
+		} else {
+			cid1 = getCharID(c1);
+			if (cpset[cid1].character == unloadedchar) {
+				loadChar(cid1);
+			}
+			posx1 -= getKerning(cid1, cold1);
+			gTexture* texture = textures[cid1];
+			texture->draw(posx1 + cpset[cid1].leftmargin, posy1 + cpset[cid1].dytop, -texture->getWidth(), texture->getHeight());
+			posx1 -= cpset[cid1].advance * letterspacing * (c1 == ' ' ? spacesize : 1);
+		}
+		index1++;
+	}
+}
+
 float gFont::getStringWidth(const std::string& text) {
 	  index2 = 0;
 	  posx2 = 0;
