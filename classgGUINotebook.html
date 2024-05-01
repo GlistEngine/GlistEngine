@@ -83,14 +83,14 @@ $(document).ready(function(){initNavTree('classgGUINotebook.html',''); initResiz
 
 <div class="header">
   <div class="summary">
+<a href="#nested-classes">Classes</a> &#124;
+<a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="classgGUINotebook-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">gGUINotebook Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-
-<p><code>#include &lt;<a class="el" href="gGUINotebook_8h_source.html">gGUINotebook.h</a>&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for gGUINotebook:</div>
 <div class="dyncontent">
@@ -129,33 +129,67 @@ Collaboration diagram for gGUINotebook:</div>
 </map>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:ad07430b2272895bd64cdfd33a1c2cf3b"><td class="memItemLeft" align="right" valign="top"><a id="ad07430b2272895bd64cdfd33a1c2cf3b"></a>enum class &#160;</td><td class="memItemRight" valign="bottom"><b>TabPosition</b> { <b>TOP</b>
+, <b>BOTTOM</b>
+, <b>LEFT</b>
+, <b>RIGHT</b>
+ }</td></tr>
+<tr class="separator:ad07430b2272895bd64cdfd33a1c2cf3b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_types_classgBaseGUIObject"><td colspan="2" onclick="javascript:toggleInherit('pub_types_classgBaseGUIObject')"><img src="closed.png" alt="-"/>&#160;Public Types inherited from <a class="el" href="classgBaseGUIObject.html">gBaseGUIObject</a></td></tr>
+<tr class="memitem:a481c27c2e5386988f2c965b9ff4761c0 inherit pub_types_classgBaseGUIObject"><td class="memItemLeft" align="right" valign="top"><a id="a481c27c2e5386988f2c965b9ff4761c0"></a>enum &#160;</td><td class="memItemRight" valign="bottom">{ <b>TEXTALIGNMENT_LEFT</b>
+, <b>TEXTALIGNMENT_MIDDLE</b>
+, <b>TEXTALIGNMENT_RIGHT</b>
+ }</td></tr>
+<tr class="separator:a481c27c2e5386988f2c965b9ff4761c0 inherit pub_types_classgBaseGUIObject"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a2dd9aa92311d9408caa33cdd405b8404"><td class="memItemLeft" align="right" valign="top"><a id="a2dd9aa92311d9408caa33cdd405b8404"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>setActiveTab</b> (int index)</td></tr>
+<tr class="memitem:a23503a8f9b79ebc1e553202b0606711f"><td class="memItemLeft" align="right" valign="top"><a id="a23503a8f9b79ebc1e553202b0606711f"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>set</b> (<a class="el" href="classgBaseApp.html">gBaseApp</a> *root, <a class="el" href="classgBaseGUIObject.html">gBaseGUIObject</a> *topParentGUIObject, <a class="el" href="classgBaseGUIObject.html">gBaseGUIObject</a> *parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h) override</td></tr>
+<tr class="separator:a23503a8f9b79ebc1e553202b0606711f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa7bcebdf823fb1eab60718435d31d9e7"><td class="memItemLeft" align="right" valign="top"><a id="aa7bcebdf823fb1eab60718435d31d9e7"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>draw</b> () override</td></tr>
+<tr class="separator:aa7bcebdf823fb1eab60718435d31d9e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad7d6ef157d74472cf606847041c0c1ef"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgGUINotebook.html#ad7d6ef157d74472cf606847041c0c1ef">setTabPosition</a> (TabPosition position)</td></tr>
+<tr class="memdesc:ad7d6ef157d74472cf606847041c0c1ef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the position of the tab bar.  <a href="classgGUINotebook.html#ad7d6ef157d74472cf606847041c0c1ef">More...</a><br /></td></tr>
+<tr class="separator:ad7d6ef157d74472cf606847041c0c1ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3cfbe1f37a0a4c85c37bfd4c4be14a3e"><td class="memItemLeft" align="right" valign="top">TabPosition&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgGUINotebook.html#a3cfbe1f37a0a4c85c37bfd4c4be14a3e">getTabPosition</a> () const</td></tr>
+<tr class="memdesc:a3cfbe1f37a0a4c85c37bfd4c4be14a3e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the current tab position.  <a href="classgGUINotebook.html#a3cfbe1f37a0a4c85c37bfd4c4be14a3e">More...</a><br /></td></tr>
+<tr class="separator:a3cfbe1f37a0a4c85c37bfd4c4be14a3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae21f6b129184d2f4c4786f62a69a47ec"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgGUINotebook.html#ae21f6b129184d2f4c4786f62a69a47ec">setTabVisibility</a> (bool visible)</td></tr>
+<tr class="separator:ae21f6b129184d2f4c4786f62a69a47ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2dd9aa92311d9408caa33cdd405b8404"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgGUINotebook.html#a2dd9aa92311d9408caa33cdd405b8404">setActiveTab</a> (int index)</td></tr>
+<tr class="memdesc:a2dd9aa92311d9408caa33cdd405b8404"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the active tab of the notebook.  <a href="classgGUINotebook.html#a2dd9aa92311d9408caa33cdd405b8404">More...</a><br /></td></tr>
 <tr class="separator:a2dd9aa92311d9408caa33cdd405b8404"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1af46e39cb61c283a87536f8828f3131"><td class="memItemLeft" align="right" valign="top"><a id="a1af46e39cb61c283a87536f8828f3131"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>draw</b> ()</td></tr>
-<tr class="separator:a1af46e39cb61c283a87536f8828f3131"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a68c06845e26dae51bada0a7079752e67"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgGUINotebook.html#a68c06845e26dae51bada0a7079752e67">setTitleVisibility</a> (bool isVisible)</td></tr>
-<tr class="separator:a68c06845e26dae51bada0a7079752e67"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7767891e760f67c23c13c7d4fdab8574"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgGUINotebook.html#a7767891e760f67c23c13c7d4fdab8574">setClosableTab</a> (bool isClosableTab)</td></tr>
-<tr class="separator:a7767891e760f67c23c13c7d4fdab8574"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aff6d0b7a820f603f90b67bbb3faf76e3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgGUINotebook.html#aff6d0b7a820f603f90b67bbb3faf76e3">addSizerToDeque</a> (<a class="el" href="classgGUISizer.html">gGUISizer</a> *guiSizer, std::string sizerLabel=&quot;&quot;)</td></tr>
-<tr class="separator:aff6d0b7a820f603f90b67bbb3faf76e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6cd87f8a79c84006becaaa80e46decf8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgGUINotebook.html#a6cd87f8a79c84006becaaa80e46decf8">openTab</a> (<a class="el" href="classgGUISizer.html">gGUISizer</a> *guiSizer, const std::string &amp;sizerLabel)</td></tr>
-<tr class="separator:a6cd87f8a79c84006becaaa80e46decf8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a44ec97529d007da2132f8f08d78b4590"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgGUINotebook.html#a44ec97529d007da2132f8f08d78b4590">getActiveTab</a> () const</td></tr>
+<tr class="memdesc:a44ec97529d007da2132f8f08d78b4590"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the index of the active tab.  <a href="classgGUINotebook.html#a44ec97529d007da2132f8f08d78b4590">More...</a><br /></td></tr>
+<tr class="separator:a44ec97529d007da2132f8f08d78b4590"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a68614df66b248d537340cdbc006a9570"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgGUINotebook.html#a68614df66b248d537340cdbc006a9570">setTabClosable</a> (int index, bool isClosable)</td></tr>
+<tr class="memdesc:a68614df66b248d537340cdbc006a9570"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets whether a tab is closable or not.  <a href="classgGUINotebook.html#a68614df66b248d537340cdbc006a9570">More...</a><br /></td></tr>
+<tr class="separator:a68614df66b248d537340cdbc006a9570"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a536252bdd66a3b1784ccb2f4c2a71f76"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgGUINotebook.html#a536252bdd66a3b1784ccb2f4c2a71f76">isTabClosable</a> (int index)</td></tr>
+<tr class="memdesc:a536252bdd66a3b1784ccb2f4c2a71f76"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns if a tab is closable or not.  <a href="classgGUINotebook.html#a536252bdd66a3b1784ccb2f4c2a71f76">More...</a><br /></td></tr>
+<tr class="separator:a536252bdd66a3b1784ccb2f4c2a71f76"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5ce4637f129724dd6ec2c3590d20a18b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgGUINotebook.html#a5ce4637f129724dd6ec2c3590d20a18b">setTabAutoClose</a> (int index, bool autoClose)</td></tr>
+<tr class="memdesc:a5ce4637f129724dd6ec2c3590d20a18b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets whether a tab is automatically closed when switched out of it.  <a href="classgGUINotebook.html#a5ce4637f129724dd6ec2c3590d20a18b">More...</a><br /></td></tr>
+<tr class="separator:a5ce4637f129724dd6ec2c3590d20a18b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a52c5182cdcafa009765552c300196996"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgGUINotebook.html#a52c5182cdcafa009765552c300196996">isTabAutoClose</a> (int index)</td></tr>
+<tr class="memdesc:a52c5182cdcafa009765552c300196996"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns if a tab is set to automatically close when switched out of it.  <a href="classgGUINotebook.html#a52c5182cdcafa009765552c300196996">More...</a><br /></td></tr>
+<tr class="separator:a52c5182cdcafa009765552c300196996"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a23593f69cce58c7653e1c67e58364e3b"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgGUINotebook.html#a23593f69cce58c7653e1c67e58364e3b">addTab</a> (<a class="el" href="classgGUISizer.html">gGUISizer</a> *sizer, std::string title, bool closable=true)</td></tr>
+<tr class="memdesc:a23593f69cce58c7653e1c67e58364e3b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add a tab to a GUI sizer.  <a href="classgGUINotebook.html#a23593f69cce58c7653e1c67e58364e3b">More...</a><br /></td></tr>
+<tr class="separator:a23593f69cce58c7653e1c67e58364e3b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a45ce1655e58cf3b09121fdb2f19e3513"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgGUINotebook.html#a45ce1655e58cf3b09121fdb2f19e3513">closeTab</a> (int index)</td></tr>
+<tr class="memdesc:a45ce1655e58cf3b09121fdb2f19e3513"><td class="mdescLeft">&#160;</td><td class="mdescRight">Closes the tab at the specified index.  <a href="classgGUINotebook.html#a45ce1655e58cf3b09121fdb2f19e3513">More...</a><br /></td></tr>
 <tr class="separator:a45ce1655e58cf3b09121fdb2f19e3513"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a55d8df758b034c169da38b3fa5ae6cf6"><td class="memItemLeft" align="right" valign="top"><a id="a55d8df758b034c169da38b3fa5ae6cf6"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>drawTabs</b> (int x, int tabSize, int index, bool drawFromLeftToRight)</td></tr>
-<tr class="separator:a55d8df758b034c169da38b3fa5ae6cf6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0348b3386e922653b9d43c6e1579d8d7"><td class="memItemLeft" align="right" valign="top"><a id="a0348b3386e922653b9d43c6e1579d8d7"></a>
-<a class="el" href="classgGUISizer.html">gGUISizer</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>getSizer</b> (int sizerIndex)</td></tr>
-<tr class="separator:a0348b3386e922653b9d43c6e1579d8d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aabf88a3a9009772becb200457da73851"><td class="memItemLeft" align="right" valign="top"><a id="aabf88a3a9009772becb200457da73851"></a>
-<a class="el" href="classgGUISizer.html">gGUISizer</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>getSizer</b> (std::string sizerLabel)</td></tr>
-<tr class="separator:aabf88a3a9009772becb200457da73851"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a09da809b3bfd46a23b46563da9a1211f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgGUISizer.html">gGUISizer</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgGUINotebook.html#a09da809b3bfd46a23b46563da9a1211f">getTabSizer</a> (int index)</td></tr>
+<tr class="memdesc:a09da809b3bfd46a23b46563da9a1211f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the tab sizer of the tab at the given index.  <a href="classgGUINotebook.html#a09da809b3bfd46a23b46563da9a1211f">More...</a><br /></td></tr>
+<tr class="separator:a09da809b3bfd46a23b46563da9a1211f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aad93ceecc0a731fc31ead7918bfffb63"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgGUISizer.html">gGUISizer</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgGUINotebook.html#aad93ceecc0a731fc31ead7918bfffb63">getTabSizerByTitle</a> (const std::string &amp;title)</td></tr>
+<tr class="memdesc:aad93ceecc0a731fc31ead7918bfffb63"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the tab sizer by its title.  <a href="classgGUINotebook.html#aad93ceecc0a731fc31ead7918bfffb63">More...</a><br /></td></tr>
+<tr class="separator:aad93ceecc0a731fc31ead7918bfffb63"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classgGUIContainer"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classgGUIContainer')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classgGUIContainer.html">gGUIContainer</a></td></tr>
 <tr class="memitem:a187dc9343bb98b78633975a5aad3baf0 inherit pub_methods_classgGUIContainer"><td class="memItemLeft" align="right" valign="top"><a id="a187dc9343bb98b78633975a5aad3baf0"></a>
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>set</b> (int x, int y, int w, int h)</td></tr>
@@ -184,9 +218,6 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>mouseDragged<
 <tr class="memitem:a31a14ad8324c12ab8808b1a8912b383b inherit pub_methods_classgGUIContainer"><td class="memItemLeft" align="right" valign="top"><a id="a31a14ad8324c12ab8808b1a8912b383b"></a>
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>mouseReleased</b> (int x, int y, int button)</td></tr>
 <tr class="separator:a31a14ad8324c12ab8808b1a8912b383b inherit pub_methods_classgGUIContainer"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aba07d9ea2f5856241a0bea679fe8c3f5 inherit pub_methods_classgGUIContainer"><td class="memItemLeft" align="right" valign="top"><a id="aba07d9ea2f5856241a0bea679fe8c3f5"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>mouseScrolled</b> (int x, int y)</td></tr>
-<tr class="separator:aba07d9ea2f5856241a0bea679fe8c3f5 inherit pub_methods_classgGUIContainer"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae03271ea11c5b1e791b98ff6c93d45b6 inherit pub_methods_classgGUIContainer"><td class="memItemLeft" align="right" valign="top"><a id="ae03271ea11c5b1e791b98ff6c93d45b6"></a>
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>windowResized</b> (int w, int h)</td></tr>
 <tr class="separator:ae03271ea11c5b1e791b98ff6c93d45b6 inherit pub_methods_classgGUIContainer"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -313,12 +344,6 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>popMatrix</b> ()</td>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
-<tr class="inherit_header pub_types_classgBaseGUIObject"><td colspan="2" onclick="javascript:toggleInherit('pub_types_classgBaseGUIObject')"><img src="closed.png" alt="-"/>&#160;Public Types inherited from <a class="el" href="classgBaseGUIObject.html">gBaseGUIObject</a></td></tr>
-<tr class="memitem:a481c27c2e5386988f2c965b9ff4761c0 inherit pub_types_classgBaseGUIObject"><td class="memItemLeft" align="right" valign="top"><a id="a481c27c2e5386988f2c965b9ff4761c0"></a>enum &#160;</td><td class="memItemRight" valign="bottom">{ <b>TEXTALIGNMENT_LEFT</b>
-, <b>TEXTALIGNMENT_MIDDLE</b>
-, <b>TEXTALIGNMENT_RIGHT</b>
- }</td></tr>
-<tr class="separator:a481c27c2e5386988f2c965b9ff4761c0 inherit pub_types_classgBaseGUIObject"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_static_methods_classgBaseGUIObject"><td colspan="2" onclick="javascript:toggleInherit('pub_static_methods_classgBaseGUIObject')"><img src="closed.png" alt="-"/>&#160;Static Public Member Functions inherited from <a class="el" href="classgBaseGUIObject.html">gBaseGUIObject</a></td></tr>
 <tr class="memitem:a05bed376bfb1385038453a0c5617c61f inherit pub_static_methods_classgBaseGUIObject"><td class="memItemLeft" align="right" valign="top"><a id="a05bed376bfb1385038453a0c5617c61f"></a>
 static void&#160;</td><td class="memItemRight" valign="bottom"><b>setBackgroundColor</b> (<a class="el" href="classgColor.html">gColor</a> *backgroundColor)</td></tr>
@@ -724,26 +749,30 @@ static int&#160;</td><td class="memItemRight" valign="bottom"><b>releasescaling<
 static int&#160;</td><td class="memItemRight" valign="bottom"><b>releaseresolution</b></td></tr>
 <tr class="separator:a9a7e5f300e8e38ad6f0beb85ad840c52 inherit pro_static_attribs_classgObject"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p><a class="el" href="classgGUINotebook.html">gGUINotebook</a> provides displaying multiple sizers for one frame. <a class="el" href="classgGUINotebook.html">gGUINotebook</a> is set to framesizer by using "setControl" function. For each <a class="el" href="classgGUISizer.html">gGUISizer</a> which you want to display on <a class="el" href="classgGUINotebook.html">gGUINotebook</a>, the addSizerToDeque(&amp;<a class="el" href="classgGUISizer.html">gGUISizer</a>, "sizerNameThatShownOnTab") function is called (gGUISizers must be arranged as you like before calling addSizerToDeque). </p>
-</div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="aff6d0b7a820f603f90b67bbb3faf76e3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aff6d0b7a820f603f90b67bbb3faf76e3">&#9670;&nbsp;</a></span>addSizerToDeque()</h2>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a23593f69cce58c7653e1c67e58364e3b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a23593f69cce58c7653e1c67e58364e3b">&#9670;&nbsp;</a></span>addTab()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void gGUINotebook::addSizerToDeque </td>
+          <td class="memname">int gGUINotebook::addTab </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classgGUISizer.html">gGUISizer</a> *&#160;</td>
-          <td class="paramname"><em>guiSizer</em>, </td>
+          <td class="paramname"><em>sizer</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">std::string&#160;</td>
-          <td class="paramname"><em>sizerLabel</em> = <code>&quot;&quot;</code>&#160;</td>
+          <td class="paramname"><em>title</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>closable</em> = <code>true</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -752,14 +781,17 @@ static int&#160;</td><td class="memItemRight" valign="bottom"><b>releaseresoluti
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Adds <a class="el" href="classgGUISizer.html">gGUISizer</a> and store it.</p>
+
+<p>Add a tab to a GUI sizer. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">is</td><td><a class="el" href="classgGUISizer.html">gGUISizer</a> that is stored in "guisizers" deque.</td></tr>
-    <tr><td class="paramname">is</td><td><a class="el" href="classgGUISizer.html">gGUISizer</a> name that is stored in "quisizerlabels" vector and the label of tab. </td></tr>
+    <tr><td class="paramname">sizer</td><td>The GUI sizer to which the tab is added. </td></tr>
+    <tr><td class="paramname">title</td><td>The title of the tab. </td></tr>
+    <tr><td class="paramname">closable</td><td>Whether the tab should be closable. Default is true.</td></tr>
   </table>
   </dd>
 </dl>
+<dl class="section return"><dt>Returns</dt><dd>Index that the tab is added, do not store this return value as it can change when a tab before this has closed! </dd></dl>
 
 </div>
 </div>
@@ -778,33 +810,216 @@ static int&#160;</td><td class="memItemRight" valign="bottom"><b>releaseresoluti
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Closes the tab at the specified index.</p>
+
+<p>Closes the tab at the specified index. </p>
+<p>If the index is out of range, or if there are no tabs in the notebook, the function does nothing. If the active tab is closed, previous tab will be active (if available).</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">index</td><td>Index of the tab to be closed. </td></tr>
+    <tr><td class="paramname">index</td><td>The index of the tab to be closed. </td></tr>
   </table>
   </dd>
 </dl>
 
 </div>
 </div>
-<a id="a6cd87f8a79c84006becaaa80e46decf8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6cd87f8a79c84006becaaa80e46decf8">&#9670;&nbsp;</a></span>openTab()</h2>
+<a id="a44ec97529d007da2132f8f08d78b4590"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a44ec97529d007da2132f8f08d78b4590">&#9670;&nbsp;</a></span>getActiveTab()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void gGUINotebook::openTab </td>
+          <td class="memname">int gGUINotebook::getActiveTab </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classgGUISizer.html">gGUISizer</a> *&#160;</td>
-          <td class="paramname"><em>guiSizer</em>, </td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Gets the index of the active tab. </p>
+<p>This function returns the index of the active tab in the notebook.</p>
+<dl class="section return"><dt>Returns</dt><dd>The index of the active tab. -1 if none is selected </dd></dl>
+
+</div>
+</div>
+<a id="a3cfbe1f37a0a4c85c37bfd4c4be14a3e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3cfbe1f37a0a4c85c37bfd4c4be14a3e">&#9670;&nbsp;</a></span>getTabPosition()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">TabPosition gGUINotebook::getTabPosition </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the current tab position. </p>
+<p>Tab position determines where the tab bar is displayed relative to the tab contents.</p>
+<dl class="section return"><dt>Returns</dt><dd>The current tab position as TabPosition enum. </dd></dl>
+
+</div>
+</div>
+<a id="a09da809b3bfd46a23b46563da9a1211f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a09da809b3bfd46a23b46563da9a1211f">&#9670;&nbsp;</a></span>getTabSizer()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classgGUISizer.html">gGUISizer</a>* gGUINotebook::getTabSizer </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>index</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Gets the tab sizer of the tab at the given index. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">index</td><td>The index of the tab sizer to retrieve. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The tab sizer object. It will return nullptr if index is out of bounds.</dd></dl>
+<dl class="section warning"><dt>Warning</dt><dd>It is the responsibility of the caller to handle null pointers returned by this function! </dd></dl>
+
+</div>
+</div>
+<a id="aad93ceecc0a731fc31ead7918bfffb63"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aad93ceecc0a731fc31ead7918bfffb63">&#9670;&nbsp;</a></span>getTabSizerByTitle()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classgGUISizer.html">gGUISizer</a>* gGUINotebook::getTabSizerByTitle </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>title</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Gets the tab sizer by its title. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">title</td><td>Title of the tab sizer to get. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><a class="el" href="classgGUISizer.html">gGUISizer</a> object of the matching tab title, nullptr if none matches.</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>This function assumes that all tab sizes have unique titles. If not, first matching will be returned. </dd></dl>
+<dl class="section warning"><dt>Warning</dt><dd>It is the responsibility of the caller to handle null pointers returned by this function! </dd></dl>
+
+</div>
+</div>
+<a id="a52c5182cdcafa009765552c300196996"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a52c5182cdcafa009765552c300196996">&#9670;&nbsp;</a></span>isTabAutoClose()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool gGUINotebook::isTabAutoClose </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>index</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns if a tab is set to automatically close when switched out of it. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">index</td><td>The index of the tab. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>True if the tab is set to automatically close, false otherwise. </dd></dl>
+
+</div>
+</div>
+<a id="a536252bdd66a3b1784ccb2f4c2a71f76"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a536252bdd66a3b1784ccb2f4c2a71f76">&#9670;&nbsp;</a></span>isTabClosable()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool gGUINotebook::isTabClosable </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>index</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns if a tab is closable or not. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">index</td><td>The index of the tab to get. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>True if the tab is closable, false otherwise.</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>If the index is out of range or if there are no tabs in the notebook, false will be returned. </dd></dl>
+
+</div>
+</div>
+<a id="a2dd9aa92311d9408caa33cdd405b8404"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2dd9aa92311d9408caa33cdd405b8404">&#9670;&nbsp;</a></span>setActiveTab()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gGUINotebook::setActiveTab </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>index</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Sets the active tab of the notebook. </p>
+<p>This function sets the active tab of the notebook to the tab at the given index. If the index is out of range, the active tab is set to -1 and no tab will be selected.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">index</td><td>The index of the tab to set as active. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a5ce4637f129724dd6ec2c3590d20a18b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5ce4637f129724dd6ec2c3590d20a18b">&#9670;&nbsp;</a></span>setTabAutoClose()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gGUINotebook::setTabAutoClose </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>index</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const std::string &amp;&#160;</td>
-          <td class="paramname"><em>sizerLabel</em>&#160;</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>autoClose</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -813,61 +1028,101 @@ static int&#160;</td><td class="memItemRight" valign="bottom"><b>releaseresoluti
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Opens a new tab with the specified <a class="el" href="classgGUISizer.html">gGUISizer</a>.</p>
+
+<p>Sets whether a tab is automatically closed when switched out of it. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">guiSizer</td><td><a class="el" href="classgGUISizer.html">gGUISizer</a> to be displayed in the new tab. </td></tr>
-    <tr><td class="paramname">sizerLabel</td><td>Label of the new tab. </td></tr>
+    <tr><td class="paramname">index</td><td>The index of the tab. </td></tr>
+    <tr><td class="paramname">autoClose</td><td>True if the tab should be automatically closed, false otherwise. </td></tr>
   </table>
   </dd>
 </dl>
 
 </div>
 </div>
-<a id="a7767891e760f67c23c13c7d4fdab8574"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7767891e760f67c23c13c7d4fdab8574">&#9670;&nbsp;</a></span>setClosableTab()</h2>
+<a id="a68614df66b248d537340cdbc006a9570"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a68614df66b248d537340cdbc006a9570">&#9670;&nbsp;</a></span>setTabClosable()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void gGUINotebook::setClosableTab </td>
+          <td class="memname">void gGUINotebook::setTabClosable </td>
           <td>(</td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>isClosableTab</em></td><td>)</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>index</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>isClosable</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Sets the closable property of tabs.</p>
+
+<p>Sets whether a tab is closable or not. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">is</td><td>closable or not. </td></tr>
+    <tr><td class="paramname">index</td><td>The index of the tab. </td></tr>
+    <tr><td class="paramname">isClosable</td><td>True if the tab should be closable, false otherwise. </td></tr>
   </table>
   </dd>
 </dl>
 
 </div>
 </div>
-<a id="a68c06845e26dae51bada0a7079752e67"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a68c06845e26dae51bada0a7079752e67">&#9670;&nbsp;</a></span>setTitleVisibility()</h2>
+<a id="ad7d6ef157d74472cf606847041c0c1ef"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad7d6ef157d74472cf606847041c0c1ef">&#9670;&nbsp;</a></span>setTabPosition()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void gGUINotebook::setTitleVisibility </td>
+          <td class="memname">void gGUINotebook::setTabPosition </td>
           <td>(</td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>isVisible</em></td><td>)</td>
+          <td class="paramtype">TabPosition&#160;</td>
+          <td class="paramname"><em>position</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Sets the visibility of the title.</p>
+
+<p>Sets the position of the tab bar. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">is</td><td>title visible or not. </td></tr>
+    <tr><td class="paramname">position</td><td>The desired tab position. ex: gGUINotebook::TabPosition::LEFT </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classgGUINotebook.html#a3cfbe1f37a0a4c85c37bfd4c4be14a3e" title="Get the current tab position.">getTabPosition</a> </dd></dl>
+
+</div>
+</div>
+<a id="ae21f6b129184d2f4c4786f62a69a47ec"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae21f6b129184d2f4c4786f62a69a47ec">&#9670;&nbsp;</a></span>setTabVisibility()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gGUINotebook::setTabVisibility </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>visible</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Sets the visibility of the tab header.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">visible</td><td>Whether the tab header should be visible or not. </td></tr>
   </table>
   </dd>
 </dl>

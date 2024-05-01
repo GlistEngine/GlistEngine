@@ -89,8 +89,8 @@ $(document).ready(function(){initNavTree('gGUINotebook_8h_source.html',''); init
 <div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment"> * gGUINotebook.h</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment"> *</span></div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment"> *  Created on: 10 Aug 2022</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment"> *      Author: burakmeydan</span></div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment"> *  Created on: 30 Apr 2024</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment"> *      Author: Metehan Gezer</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160; </div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#ifndef UI_GGUINOTEBOOK_H_</span></div>
@@ -101,86 +101,188 @@ $(document).ready(function(){initNavTree('gGUINotebook_8h_source.html',''); init
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="preprocessor">#include &quot;gRenderer.h&quot;</span></div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="preprocessor">#include &quot;gFont.h&quot;</span></div>
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="preprocessor">#include &lt;deque&gt;</span></div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160; </div>
-<div class="line"><a name="l00025"></a><span class="lineno"><a class="line" href="classgGUINotebook.html">   25</a></span>&#160;<span class="keyword">class </span><a class="code" href="classgGUINotebook.html">gGUINotebook</a>: <span class="keyword">public</span> <a class="code" href="classgGUIContainer.html">gGUIContainer</a> {</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="preprocessor">#include &lt;utility&gt;</span></div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160; </div>
+<div class="line"><a name="l00018"></a><span class="lineno"><a class="line" href="classgGUINotebook.html">   18</a></span>&#160;<span class="keyword">class </span><a class="code" href="classgGUINotebook.html">gGUINotebook</a> : <span class="keyword">public</span> <a class="code" href="classgGUIContainer.html">gGUIContainer</a> {</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    <span class="keyword">enum class</span> TabPosition {</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;        TOP,</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;        BOTTOM,</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;        LEFT,</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;        RIGHT</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    };</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    <a class="code" href="classgGUINotebook.html">gGUINotebook</a>();</div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    <span class="keyword">virtual</span> ~<a class="code" href="classgGUINotebook.html">gGUINotebook</a>();</div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    <span class="keywordtype">void</span> setActiveTab(<span class="keywordtype">int</span> index);</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    <span class="keywordtype">void</span> set(<a class="code" href="classgBaseApp.html">gBaseApp</a>* root, <a class="code" href="classgBaseGUIObject.html">gBaseGUIObject</a>* topParentGUIObject, <a class="code" href="classgBaseGUIObject.html">gBaseGUIObject</a>* parentGUIObject, <span class="keywordtype">int</span> parentSlotLineNo, <span class="keywordtype">int</span> parentSlotColumnNo, <span class="keywordtype">int</span> x, <span class="keywordtype">int</span> y, <span class="keywordtype">int</span> w, <span class="keywordtype">int</span> h) <span class="keyword">override</span>;</div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160; </div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    <span class="keywordtype">void</span> draw();</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    <span class="keywordtype">void</span> draw() <span class="keyword">override</span>;</div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160; </div>
-<div class="line"><a name="l00039"></a><span class="lineno"><a class="line" href="classgGUINotebook.html#a68c06845e26dae51bada0a7079752e67">   39</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classgGUINotebook.html#a68c06845e26dae51bada0a7079752e67">setTitleVisibility</a>(<span class="keywordtype">bool</span> isVisible);</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160; </div>
-<div class="line"><a name="l00046"></a><span class="lineno"><a class="line" href="classgGUINotebook.html#a7767891e760f67c23c13c7d4fdab8574">   46</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classgGUINotebook.html#a7767891e760f67c23c13c7d4fdab8574">setClosableTab</a>(<span class="keywordtype">bool</span> isClosableTab);</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160; </div>
-<div class="line"><a name="l00056"></a><span class="lineno"><a class="line" href="classgGUINotebook.html#aff6d0b7a820f603f90b67bbb3faf76e3">   56</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classgGUINotebook.html#aff6d0b7a820f603f90b67bbb3faf76e3">addSizerToDeque</a>(<a class="code" href="classgGUISizer.html">gGUISizer</a>* guiSizer, std::string sizerLabel = <span class="stringliteral">&quot;&quot;</span>);</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160; </div>
-<div class="line"><a name="l00064"></a><span class="lineno"><a class="line" href="classgGUINotebook.html#a6cd87f8a79c84006becaaa80e46decf8">   64</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classgGUINotebook.html#a6cd87f8a79c84006becaaa80e46decf8">openTab</a>(<a class="code" href="classgGUISizer.html">gGUISizer</a>* guiSizer, <span class="keyword">const</span> std::string&amp; sizerLabel);</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160; </div>
-<div class="line"><a name="l00071"></a><span class="lineno"><a class="line" href="classgGUINotebook.html#a45ce1655e58cf3b09121fdb2f19e3513">   71</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classgGUINotebook.html#a45ce1655e58cf3b09121fdb2f19e3513">closeTab</a>(<span class="keywordtype">int</span> index);</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <span class="keywordtype">void</span> drawTabs(<span class="keywordtype">int</span> x, <span class="keywordtype">int</span> tabSize, <span class="keywordtype">int</span> index, <span class="keywordtype">bool</span> drawFromLeftToRight);</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160; </div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <span class="comment">/*</span></div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="comment">     * Returns the sizer at the given index.</span></div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;<span class="comment">     *</span></div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;<span class="comment">     * @param sizerIndex Index of the sizer to be returned.</span></div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;<span class="comment">     */</span></div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    <a class="code" href="classgGUISizer.html">gGUISizer</a>* getSizer(<span class="keywordtype">int</span> sizerIndex);</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160; </div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    <span class="comment">/*</span></div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;<span class="comment">     * Returns the sizer with the given name.</span></div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;<span class="comment">     *</span></div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;<span class="comment">     * @param sizerLabel Label of the sizer to be returned.</span></div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;<span class="comment">     */</span></div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    <a class="code" href="classgGUISizer.html">gGUISizer</a>* getSizer(std::string sizerLabel);</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160; </div>
+<div class="line"><a name="l00041"></a><span class="lineno"><a class="line" href="classgGUINotebook.html#ad7d6ef157d74472cf606847041c0c1ef">   41</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classgGUINotebook.html#ad7d6ef157d74472cf606847041c0c1ef">setTabPosition</a>(TabPosition position);</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; </div>
+<div class="line"><a name="l00051"></a><span class="lineno"><a class="line" href="classgGUINotebook.html#a3cfbe1f37a0a4c85c37bfd4c4be14a3e">   51</a></span>&#160;    TabPosition <a class="code" href="classgGUINotebook.html#a3cfbe1f37a0a4c85c37bfd4c4be14a3e">getTabPosition</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160; </div>
+<div class="line"><a name="l00058"></a><span class="lineno"><a class="line" href="classgGUINotebook.html#ae21f6b129184d2f4c4786f62a69a47ec">   58</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classgGUINotebook.html#ae21f6b129184d2f4c4786f62a69a47ec">setTabVisibility</a>(<span class="keywordtype">bool</span> visible);</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160; </div>
+<div class="line"><a name="l00068"></a><span class="lineno"><a class="line" href="classgGUINotebook.html#a2dd9aa92311d9408caa33cdd405b8404">   68</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classgGUINotebook.html#a2dd9aa92311d9408caa33cdd405b8404">setActiveTab</a>(<span class="keywordtype">int</span> index);</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160; </div>
+<div class="line"><a name="l00077"></a><span class="lineno"><a class="line" href="classgGUINotebook.html#a44ec97529d007da2132f8f08d78b4590">   77</a></span>&#160;    <span class="keywordtype">int</span> <a class="code" href="classgGUINotebook.html#a44ec97529d007da2132f8f08d78b4590">getActiveTab</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160; </div>
+<div class="line"><a name="l00085"></a><span class="lineno"><a class="line" href="classgGUINotebook.html#a68614df66b248d537340cdbc006a9570">   85</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classgGUINotebook.html#a68614df66b248d537340cdbc006a9570">setTabClosable</a>(<span class="keywordtype">int</span> index, <span class="keywordtype">bool</span> isClosable);</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160; </div>
 <div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160; </div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    <span class="keywordtype">void</span> loadFont();</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    <span class="keywordtype">void</span> mousePressed(<span class="keywordtype">int</span> x, <span class="keywordtype">int</span> y, <span class="keywordtype">int</span> button);</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    <span class="keywordtype">void</span> mouseMoved(<span class="keywordtype">int</span> x, <span class="keywordtype">int</span> y);</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    <span class="keywordtype">void</span> slideButtonPressed(<span class="keywordtype">int</span> x, <span class="keywordtype">int</span> y);</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160; </div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    <span class="keywordtype">void</span> drawSlideButtons(<span class="keywordtype">bool</span> isRightButton);</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    <a class="code" href="classgColor.html">gColor</a> colorReductionOnCursor(<a class="code" href="classgColor.html">gColor</a> color);</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    <span class="keywordtype">int</span> getWidthOfTabLabels();</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    <span class="keywordtype">void</span> setSizerFromDeque(<span class="keywordtype">int</span> guiSizersIndex);</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    <span class="keywordtype">void</span> set(<a class="code" href="classgBaseApp.html">gBaseApp</a>* root, <a class="code" href="classgBaseGUIObject.html">gBaseGUIObject</a>* topParentGUIObject, <a class="code" href="classgBaseGUIObject.html">gBaseGUIObject</a>* parentGUIObject, <span class="keywordtype">int</span> parentSlotLineNo, <span class="keywordtype">int</span> parentSlotColumnNo, <span class="keywordtype">int</span> x, <span class="keywordtype">int</span> y, <span class="keywordtype">int</span> w, <span class="keywordtype">int</span> h);</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160; </div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    std::deque&lt;gGUISizer*&gt; guisizers;</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    std::vector&lt;std::string&gt; quisizerlabels;</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    <span class="keywordtype">bool</span> istitlevisible = <span class="keyword">false</span>, drawfromlefttoright = <span class="keyword">true</span>, isslidingleft = <span class="keyword">false</span>, isslidingright = <span class="keyword">false</span>, colorreductionl = <span class="keyword">false</span>, colorreductionr = <span class="keyword">false</span>, isclosabletab = <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    <span class="keywordtype">int</span> tablinetop = 0, titleh = 20, tabsizersh = 22, tablabelssizew, tabfontsize = 11;</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    <span class="keywordtype">int</span> spaceforleft = 4, spaceforright = 4, slidebuttonw = 11;</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    <span class="keywordtype">int</span> indexleft = 0, indexright, indexcursoroncross, activesizerindex = -1;</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    <span class="keywordtype">float</span> oncursorcolorreduction = - 0.1f;</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    <span class="keywordtype">int</span> tabSize = 20;</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160; </div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160; </div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;    <a class="code" href="classgGUISizer.html">gGUISizer</a> notebooksizer;</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;    <a class="code" href="classgColor.html">gColor</a> color;</div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;    <a class="code" href="classgColor.html">gColor</a> tablinecolor = color.LIGHT_GRAY;</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;    <a class="code" href="classgColor.html">gColor</a> slidebuttoncolor = color.GRAY;</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    <a class="code" href="classgColor.html">gColor</a> crossoutlinecolor = color.DARK_GRAY;</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;    <a class="code" href="classgColor.html">gColor</a> cursoroncrosscolor = color.RED;</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;    <a class="code" href="classgFont.html">gFont</a> fontfortabs;</div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;    <a class="code" href="classgFbo.html">gFbo</a> fbo;</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;};</div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160; </div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* UI_GGUINOTEBOOK_H_ */</span><span class="preprocessor"></span></div>
+<div class="line"><a name="l00096"></a><span class="lineno"><a class="line" href="classgGUINotebook.html#a536252bdd66a3b1784ccb2f4c2a71f76">   96</a></span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classgGUINotebook.html#a536252bdd66a3b1784ccb2f4c2a71f76">isTabClosable</a>(<span class="keywordtype">int</span> index);</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160; </div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160; </div>
+<div class="line"><a name="l00105"></a><span class="lineno"><a class="line" href="classgGUINotebook.html#a5ce4637f129724dd6ec2c3590d20a18b">  105</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classgGUINotebook.html#a5ce4637f129724dd6ec2c3590d20a18b">setTabAutoClose</a>(<span class="keywordtype">int</span> index, <span class="keywordtype">bool</span> autoClose);</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160; </div>
+<div class="line"><a name="l00113"></a><span class="lineno"><a class="line" href="classgGUINotebook.html#a52c5182cdcafa009765552c300196996">  113</a></span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classgGUINotebook.html#a52c5182cdcafa009765552c300196996">isTabAutoClose</a>(<span class="keywordtype">int</span> index);</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160; </div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160; </div>
+<div class="line"><a name="l00126"></a><span class="lineno"><a class="line" href="classgGUINotebook.html#a23593f69cce58c7653e1c67e58364e3b">  126</a></span>&#160;    <span class="keywordtype">int</span> <a class="code" href="classgGUINotebook.html#a23593f69cce58c7653e1c67e58364e3b">addTab</a>(<a class="code" href="classgGUISizer.html">gGUISizer</a>* sizer, std::string title, <span class="keywordtype">bool</span> closable = <span class="keyword">true</span>);</div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160; </div>
+<div class="line"><a name="l00136"></a><span class="lineno"><a class="line" href="classgGUINotebook.html#a45ce1655e58cf3b09121fdb2f19e3513">  136</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classgGUINotebook.html#a45ce1655e58cf3b09121fdb2f19e3513">closeTab</a>(<span class="keywordtype">int</span> index);</div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160; </div>
+<div class="line"><a name="l00146"></a><span class="lineno"><a class="line" href="classgGUINotebook.html#a09da809b3bfd46a23b46563da9a1211f">  146</a></span>&#160;    <a class="code" href="classgGUISizer.html">gGUISizer</a>* <a class="code" href="classgGUINotebook.html#a09da809b3bfd46a23b46563da9a1211f">getTabSizer</a>(<span class="keywordtype">int</span> index);</div>
+<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160; </div>
+<div class="line"><a name="l00157"></a><span class="lineno"><a class="line" href="classgGUINotebook.html#aad93ceecc0a731fc31ead7918bfffb63">  157</a></span>&#160;    <a class="code" href="classgGUISizer.html">gGUISizer</a>* <a class="code" href="classgGUINotebook.html#aad93ceecc0a731fc31ead7918bfffb63">getTabSizerByTitle</a>(<span class="keyword">const</span> std::string&amp; title);</div>
+<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160; </div>
+<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;    <span class="keyword">struct </span>Box {</div>
+<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;        <span class="keywordtype">int</span> ox = 0, oy = 0, x, y, w, h;</div>
+<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160; </div>
+<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;        <span class="keywordtype">bool</span> enabled = <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160; </div>
+<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;        <span class="keywordtype">bool</span> isPointInside(<span class="keywordtype">int</span> tx, <span class="keywordtype">int</span> ty) {</div>
+<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;            <span class="keywordflow">if</span> (!enabled) {</div>
+<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;                <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;            }</div>
+<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;            <span class="keywordflow">return</span> tx &gt;= ox + x &amp;&amp; tx &lt;= ox + x + w &amp;&amp; ty &gt;= oy + y &amp;&amp; ty &lt;= oy + y + h;</div>
+<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;        }</div>
+<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160; </div>
+<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;        <span class="keywordtype">void</span> flipXY() {</div>
+<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;            <span class="keywordtype">int</span> t = x;</div>
+<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;            x = y,</div>
+<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;            y = t;</div>
+<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160; </div>
+<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;            t = h;</div>
+<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;            h = w;</div>
+<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;            w = t;</div>
+<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;        }</div>
+<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160; </div>
+<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;        Box rotate(TabPosition pos, <span class="keywordtype">int</span> boxw, <span class="keywordtype">int</span> boxh)<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;            <span class="keywordflow">switch</span> (pos) {</div>
+<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;            <span class="keywordflow">case</span> TabPosition::TOP: {</div>
+<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;                <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
+<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;            }</div>
+<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;            <span class="keywordflow">case</span> TabPosition::LEFT: {</div>
+<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;                Box box = *<span class="keyword">this</span>;</div>
+<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;                box.flipXY();</div>
+<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;                <span class="keywordflow">return</span> box;</div>
+<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;            }</div>
+<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;            <span class="keywordflow">case</span> TabPosition::RIGHT: {</div>
+<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;                Box box = *<span class="keyword">this</span>;</div>
+<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;                box.flipXY();</div>
+<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;                box.x = boxw - box.w;</div>
+<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;                <span class="keywordflow">return</span> box;</div>
+<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;            }</div>
+<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;            <span class="keywordflow">case</span> TabPosition::BOTTOM: {</div>
+<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;                Box box = *<span class="keyword">this</span>;</div>
+<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;                box.y = boxh - box.h;</div>
+<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;                <span class="keywordflow">return</span> box;</div>
+<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;            }</div>
+<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;            }</div>
+<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;        }</div>
+<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160; </div>
+<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;        <span class="keywordtype">void</span> render()<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;            gDrawRectangle(x + ox, y + oy, w, h);</div>
+<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;        }</div>
+<div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160; </div>
+<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;    };</div>
+<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;    <span class="keyword">struct </span>Tab {</div>
+<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;        <a class="code" href="classgGUISizer.html">gGUISizer</a>* sizer;</div>
+<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;        std::string title;</div>
+<div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160;        <span class="keywordtype">bool</span> closable;</div>
+<div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160;        <span class="keywordtype">bool</span> autoclose;</div>
+<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160; </div>
+<div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;        <span class="comment">// text size of the title tab</span></div>
+<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;        <span class="keywordtype">int</span> titlewidth;</div>
+<div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;        <span class="keywordtype">int</span> titleheight;</div>
+<div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160; </div>
+<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;        <span class="comment">// total size of the title tab</span></div>
+<div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;        <span class="keywordtype">int</span> tabwidth;</div>
+<div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160; </div>
+<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;        Box tabbox;</div>
+<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;        Box closebox;</div>
+<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160; </div>
+<div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;        Tab(<a class="code" href="classgGUISizer.html">gGUISizer</a>* sizer, std::string title,  <span class="keywordtype">bool</span> closable, <span class="keywordtype">int</span> titlewidth, <span class="keywordtype">int</span> titleheight)</div>
+<div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;            : sizer(sizer), title(std::move(title)), closable(closable), autoclose(false),</div>
+<div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160;              titlewidth(titlewidth), titleheight(titleheight), tabwidth(0) {</div>
+<div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160; </div>
+<div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;        }</div>
+<div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;    };</div>
+<div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160; </div>
+<div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160; </div>
+<div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;    <span class="keywordtype">void</span> drawHeader();</div>
+<div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160;    <span class="keywordtype">void</span> drawHeaderBackground();</div>
+<div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160; </div>
+<div class="line"><a name="l00238"></a><span class="lineno">  238</span>&#160;    <span class="keywordtype">void</span> mousePressed(<span class="keywordtype">int</span> x, <span class="keywordtype">int</span> y, <span class="keywordtype">int</span> button) <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160;    <span class="keywordtype">void</span> mouseMoved(<span class="keywordtype">int</span> x, <span class="keywordtype">int</span> y) <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160;    <span class="keywordtype">void</span> mouseScrolled(<span class="keywordtype">int</span> x, <span class="keywordtype">int</span> y) <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160; </div>
+<div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;    <span class="keywordtype">void</span> updateSizer();</div>
+<div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160; </div>
+<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;    Tab* getTab(<span class="keywordtype">int</span> index);</div>
+<div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160;    <span class="keywordtype">int</span> findIndexByTitle(<span class="keyword">const</span> std::string&amp; title);</div>
+<div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160; </div>
+<div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;    std::vector&lt;Tab&gt; tabs;</div>
+<div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160;    <span class="keywordtype">int</span> tabscroll;</div>
+<div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160;    <span class="keywordtype">int</span> activetab;</div>
+<div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160;    <span class="keywordtype">int</span> headerheight;</div>
+<div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160; </div>
+<div class="line"><a name="l00253"></a><span class="lineno">  253</span>&#160;    <span class="keywordtype">int</span> titlepadding;</div>
+<div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160;    <span class="keywordtype">int</span> tabgap; <span class="comment">// gap between each tab</span></div>
+<div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160;    <span class="keywordtype">int</span> scrollbuttonwidth;</div>
+<div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;    <span class="keywordtype">int</span> closebuttonsize;</div>
+<div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160; </div>
+<div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;    <span class="keywordtype">int</span> lastmousex = 0;</div>
+<div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;    <span class="keywordtype">int</span> lastmousey = 0;</div>
+<div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160; </div>
+<div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;    <span class="keywordtype">bool</span> tabvisibility;</div>
+<div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;    Box scrollpreviousbutton;</div>
+<div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;    Box scrollnextbutton;</div>
+<div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;    Box headerbox;</div>
+<div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;    Box notebookbox;</div>
+<div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160; </div>
+<div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160;    TabPosition tabposition;</div>
+<div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160;    <a class="code" href="classgGUISizer.html">gGUISizer</a> notebooksizer;</div>
+<div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160;    <a class="code" href="classgFont.html">gFont</a>* titlefont;</div>
+<div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160;    <a class="code" href="classgFbo.html">gFbo</a> fbo;</div>
+<div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160;};</div>
+<div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160; </div>
+<div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* UI_GGUINOTEBOOK_H_ */</span><span class="preprocessor"></span></div>
 <div class="ttc" id="aclassgBaseApp_html"><div class="ttname"><a href="classgBaseApp.html">gBaseApp</a></div><div class="ttdef"><b>Definition:</b> gBaseApp.h:16</div></div>
 <div class="ttc" id="aclassgBaseGUIObject_html"><div class="ttname"><a href="classgBaseGUIObject.html">gBaseGUIObject</a></div><div class="ttdef"><b>Definition:</b> gBaseGUIObject.h:18</div></div>
-<div class="ttc" id="aclassgColor_html"><div class="ttname"><a href="classgColor.html">gColor</a></div><div class="ttdef"><b>Definition:</b> gColor.h:12</div></div>
 <div class="ttc" id="aclassgFbo_html"><div class="ttname"><a href="classgFbo.html">gFbo</a></div><div class="ttdef"><b>Definition:</b> gFbo.h:15</div></div>
 <div class="ttc" id="aclassgFont_html"><div class="ttname"><a href="classgFont.html">gFont</a></div><div class="ttdef"><b>Definition:</b> gFont.h:41</div></div>
 <div class="ttc" id="aclassgGUIContainer_html"><div class="ttname"><a href="classgGUIContainer.html">gGUIContainer</a></div><div class="ttdef"><b>Definition:</b> gGUIContainer.h:15</div></div>
-<div class="ttc" id="aclassgGUINotebook_html"><div class="ttname"><a href="classgGUINotebook.html">gGUINotebook</a></div><div class="ttdef"><b>Definition:</b> gGUINotebook.h:25</div></div>
-<div class="ttc" id="aclassgGUINotebook_html_a45ce1655e58cf3b09121fdb2f19e3513"><div class="ttname"><a href="classgGUINotebook.html#a45ce1655e58cf3b09121fdb2f19e3513">gGUINotebook::closeTab</a></div><div class="ttdeci">void closeTab(int index)</div></div>
-<div class="ttc" id="aclassgGUINotebook_html_a68c06845e26dae51bada0a7079752e67"><div class="ttname"><a href="classgGUINotebook.html#a68c06845e26dae51bada0a7079752e67">gGUINotebook::setTitleVisibility</a></div><div class="ttdeci">void setTitleVisibility(bool isVisible)</div></div>
-<div class="ttc" id="aclassgGUINotebook_html_a6cd87f8a79c84006becaaa80e46decf8"><div class="ttname"><a href="classgGUINotebook.html#a6cd87f8a79c84006becaaa80e46decf8">gGUINotebook::openTab</a></div><div class="ttdeci">void openTab(gGUISizer *guiSizer, const std::string &amp;sizerLabel)</div></div>
-<div class="ttc" id="aclassgGUINotebook_html_a7767891e760f67c23c13c7d4fdab8574"><div class="ttname"><a href="classgGUINotebook.html#a7767891e760f67c23c13c7d4fdab8574">gGUINotebook::setClosableTab</a></div><div class="ttdeci">void setClosableTab(bool isClosableTab)</div></div>
-<div class="ttc" id="aclassgGUINotebook_html_aff6d0b7a820f603f90b67bbb3faf76e3"><div class="ttname"><a href="classgGUINotebook.html#aff6d0b7a820f603f90b67bbb3faf76e3">gGUINotebook::addSizerToDeque</a></div><div class="ttdeci">void addSizerToDeque(gGUISizer *guiSizer, std::string sizerLabel=&quot;&quot;)</div></div>
+<div class="ttc" id="aclassgGUINotebook_html"><div class="ttname"><a href="classgGUINotebook.html">gGUINotebook</a></div><div class="ttdef"><b>Definition:</b> gGUINotebook.h:18</div></div>
+<div class="ttc" id="aclassgGUINotebook_html_a09da809b3bfd46a23b46563da9a1211f"><div class="ttname"><a href="classgGUINotebook.html#a09da809b3bfd46a23b46563da9a1211f">gGUINotebook::getTabSizer</a></div><div class="ttdeci">gGUISizer * getTabSizer(int index)</div><div class="ttdoc">Gets the tab sizer of the tab at the given index.</div></div>
+<div class="ttc" id="aclassgGUINotebook_html_a23593f69cce58c7653e1c67e58364e3b"><div class="ttname"><a href="classgGUINotebook.html#a23593f69cce58c7653e1c67e58364e3b">gGUINotebook::addTab</a></div><div class="ttdeci">int addTab(gGUISizer *sizer, std::string title, bool closable=true)</div><div class="ttdoc">Add a tab to a GUI sizer.</div></div>
+<div class="ttc" id="aclassgGUINotebook_html_a2dd9aa92311d9408caa33cdd405b8404"><div class="ttname"><a href="classgGUINotebook.html#a2dd9aa92311d9408caa33cdd405b8404">gGUINotebook::setActiveTab</a></div><div class="ttdeci">void setActiveTab(int index)</div><div class="ttdoc">Sets the active tab of the notebook.</div></div>
+<div class="ttc" id="aclassgGUINotebook_html_a3cfbe1f37a0a4c85c37bfd4c4be14a3e"><div class="ttname"><a href="classgGUINotebook.html#a3cfbe1f37a0a4c85c37bfd4c4be14a3e">gGUINotebook::getTabPosition</a></div><div class="ttdeci">TabPosition getTabPosition() const</div><div class="ttdoc">Get the current tab position.</div></div>
+<div class="ttc" id="aclassgGUINotebook_html_a44ec97529d007da2132f8f08d78b4590"><div class="ttname"><a href="classgGUINotebook.html#a44ec97529d007da2132f8f08d78b4590">gGUINotebook::getActiveTab</a></div><div class="ttdeci">int getActiveTab() const</div><div class="ttdoc">Gets the index of the active tab.</div></div>
+<div class="ttc" id="aclassgGUINotebook_html_a45ce1655e58cf3b09121fdb2f19e3513"><div class="ttname"><a href="classgGUINotebook.html#a45ce1655e58cf3b09121fdb2f19e3513">gGUINotebook::closeTab</a></div><div class="ttdeci">void closeTab(int index)</div><div class="ttdoc">Closes the tab at the specified index.</div></div>
+<div class="ttc" id="aclassgGUINotebook_html_a52c5182cdcafa009765552c300196996"><div class="ttname"><a href="classgGUINotebook.html#a52c5182cdcafa009765552c300196996">gGUINotebook::isTabAutoClose</a></div><div class="ttdeci">bool isTabAutoClose(int index)</div><div class="ttdoc">Returns if a tab is set to automatically close when switched out of it.</div></div>
+<div class="ttc" id="aclassgGUINotebook_html_a536252bdd66a3b1784ccb2f4c2a71f76"><div class="ttname"><a href="classgGUINotebook.html#a536252bdd66a3b1784ccb2f4c2a71f76">gGUINotebook::isTabClosable</a></div><div class="ttdeci">bool isTabClosable(int index)</div><div class="ttdoc">Returns if a tab is closable or not.</div></div>
+<div class="ttc" id="aclassgGUINotebook_html_a5ce4637f129724dd6ec2c3590d20a18b"><div class="ttname"><a href="classgGUINotebook.html#a5ce4637f129724dd6ec2c3590d20a18b">gGUINotebook::setTabAutoClose</a></div><div class="ttdeci">void setTabAutoClose(int index, bool autoClose)</div><div class="ttdoc">Sets whether a tab is automatically closed when switched out of it.</div></div>
+<div class="ttc" id="aclassgGUINotebook_html_a68614df66b248d537340cdbc006a9570"><div class="ttname"><a href="classgGUINotebook.html#a68614df66b248d537340cdbc006a9570">gGUINotebook::setTabClosable</a></div><div class="ttdeci">void setTabClosable(int index, bool isClosable)</div><div class="ttdoc">Sets whether a tab is closable or not.</div></div>
+<div class="ttc" id="aclassgGUINotebook_html_aad93ceecc0a731fc31ead7918bfffb63"><div class="ttname"><a href="classgGUINotebook.html#aad93ceecc0a731fc31ead7918bfffb63">gGUINotebook::getTabSizerByTitle</a></div><div class="ttdeci">gGUISizer * getTabSizerByTitle(const std::string &amp;title)</div><div class="ttdoc">Gets the tab sizer by its title.</div></div>
+<div class="ttc" id="aclassgGUINotebook_html_ad7d6ef157d74472cf606847041c0c1ef"><div class="ttname"><a href="classgGUINotebook.html#ad7d6ef157d74472cf606847041c0c1ef">gGUINotebook::setTabPosition</a></div><div class="ttdeci">void setTabPosition(TabPosition position)</div><div class="ttdoc">Sets the position of the tab bar.</div></div>
+<div class="ttc" id="aclassgGUINotebook_html_ae21f6b129184d2f4c4786f62a69a47ec"><div class="ttname"><a href="classgGUINotebook.html#ae21f6b129184d2f4c4786f62a69a47ec">gGUINotebook::setTabVisibility</a></div><div class="ttdeci">void setTabVisibility(bool visible)</div></div>
 <div class="ttc" id="aclassgGUISizer_html"><div class="ttname"><a href="classgGUISizer.html">gGUISizer</a></div><div class="ttdef"><b>Definition:</b> gGUISizer.h:14</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

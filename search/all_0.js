@@ -6,6 +6,6 @@ var searchData=
   ['addeffect_3',['addEffect',['../classgPostProcessManager.html#a5458bd792a9ff17a2986b030ca4c9149',1,'gPostProcessManager']]],
   ['additem_4',['addItem',['../classgGUIContextMenuItem.html#acc2bf90110c65422cf926f29b5e867e8',1,'gGUIContextMenuItem']]],
   ['addleftmargin_5',['addLeftMargin',['../classgGUITextbox.html#abf3e7e720d587112fc9293e3d481edcd',1,'gGUITextbox']]],
-  ['addsizertodeque_6',['addSizerToDeque',['../classgGUINotebook.html#aff6d0b7a820f603f90b67bbb3faf76e3',1,'gGUINotebook']]],
+  ['addtab_6',['addTab',['../classgGUINotebook.html#a23593f69cce58c7653e1c67e58364e3b',1,'gGUINotebook']]],
   ['addtopmargin_7',['addTopMargin',['../classgGUITextbox.html#af621f2789dedabf5371bdcd3408d5d50',1,'gGUITextbox']]]
 ];

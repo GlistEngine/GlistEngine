@@ -3,6 +3,8 @@ var classgFont =
     [ "gFont", "classgFont.html#ac47bcd67e802ea5b562e026cb5ee0b23", null ],
     [ "~gFont", "classgFont.html#a3c871e4333d5112844bb10cc27539578", null ],
     [ "drawText", "classgFont.html#af12e725c755b22443a139c3e6a4353aa", null ],
+    [ "drawTextHorizontallyFlipped", "classgFont.html#af5385aa7cc1b384269332b3d5ed67af6", null ],
+    [ "drawTextVerticallyFlipped", "classgFont.html#a82fee83cf0e7d88e24b1f3689c5c0070", null ],
     [ "getDpi", "classgFont.html#a8aff4ae7c2656f33b527718ee76c8e0a", null ],
     [ "getLineHeight", "classgFont.html#aad38c9c3c52d0c4097a312014a5843b4", null ],
     [ "getPath", "classgFont.html#a910a68c5f39d3ff2bba8cd963f06a059", null ],
