@@ -1,6 +1,6 @@
 <map id="gGUIButton" name="gGUIButton">
-<area shape="rect" id="node1" title=" " alt="" coords="600,997,697,1024"/>
-<area shape="rect" id="node2" href="$classgGUIControl.html" title=" " alt="" coords="313,921,414,948"/>
+<area shape="rect" id="node1" title=" " alt="" coords="600,1012,697,1039"/>
+<area shape="rect" id="node2" href="$classgGUIControl.html" title=" " alt="" coords="313,936,414,963"/>
 <area shape="rect" id="node3" href="$classgBaseGUIObject.html" title=" " alt="" coords="227,757,355,784"/>
 <area shape="rect" id="node4" href="$classgRenderObject.html" title=" " alt="" coords="5,183,124,209"/>
 <area shape="rect" id="node12" href="$classgNode.html" title=" " alt="" coords="58,284,122,311"/>

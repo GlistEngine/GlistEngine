@@ -1,7 +1,7 @@
 <map id="gGUICheckbox" name="gGUICheckbox">
-<area shape="rect" id="node1" title=" " alt="" coords="686,1076,805,1103"/>
-<area shape="rect" id="node2" href="$classgGUIButton.html" title=" " alt="" coords="639,1000,737,1027"/>
-<area shape="rect" id="node3" href="$classgGUIControl.html" title=" " alt="" coords="387,923,488,949"/>
+<area shape="rect" id="node1" title=" " alt="" coords="686,1091,805,1117"/>
+<area shape="rect" id="node2" href="$classgGUIButton.html" title=" " alt="" coords="639,1015,737,1041"/>
+<area shape="rect" id="node3" href="$classgGUIControl.html" title=" " alt="" coords="387,937,488,964"/>
 <area shape="rect" id="node4" href="$classgBaseGUIObject.html" title=" " alt="" coords="243,757,371,784"/>
 <area shape="rect" id="node5" href="$classgRenderObject.html" title=" " alt="" coords="33,183,151,209"/>
 <area shape="rect" id="node13" href="$classgNode.html" title=" " alt="" coords="5,284,69,311"/>
