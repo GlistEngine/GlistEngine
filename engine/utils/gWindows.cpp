@@ -103,7 +103,7 @@ std::string gWindows::getRegistryValue(std::string name, std::string regPath, HK
 	HKEY hKey;
 	long res = RegOpenKey(registryHive, regPath.c_str(), &hKey);
 	if(res != ERROR_SUCCESS) {
-		gLoge("gWindows") << "Error in opening " << name << " key: Error " << res;
+//		gLoge("gWindows") << "Error in opening " << name << " key: Error " << res;
 		return "";
 	}
 

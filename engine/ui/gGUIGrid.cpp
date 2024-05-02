@@ -2672,6 +2672,10 @@ void gGUIGrid::clear() {
 	gridboxesw.clear();
 	gridboxesh.clear();
 	setGrid(1, 1);
+	verticalscroll = 0;
+	horizontalscroll = 0;
+	verticalscrolldragstart = 0;
+	horizontalscrolldragstart = 0;
 }
 
 void gGUIGrid::drawSelectedArea() {
