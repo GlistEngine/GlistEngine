@@ -32,6 +32,9 @@ public:
     int getTextAlignment();
     int getVerticalTextAlignment();
 
+    void setTextColor(const gColor& color);
+    gColor* getTextColor();
+
     void draw();
 
     void setDisabled(bool isDisabled);
@@ -47,6 +50,7 @@ private:
     int fontsize, lineh;
     float linespacingfactor;
     bool isdisabled;
+    gColor textcolor;
 
     void resetText();
     void resetAlignment();
