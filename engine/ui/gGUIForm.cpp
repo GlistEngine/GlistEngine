@@ -282,9 +282,12 @@ void gGUIForm::mousePressed(int x, int y, int button) {
 	if(menubar) menubar->mousePressed(x, y, button);
 	for(int i = 0; i < toolbarnum; i++) toolbars[i]->mousePressed(x, y, button);
 	for(int i = 0; i < verticaltoolbarnum; i++) verticaltoolbars[i]->mousePressed(x, y, button);
-	if(guisizer) guisizer->mousePressed(x, y, button);
+	if(treelist) {
+		treelist->mousePressed(x, y, button);
+		return;
+	}
 	if(contextmenu) contextmenu->mousePressed(x, y, button);
-	if(treelist) treelist->mousePressed(x, y, button);
+	if(guisizer) guisizer->mousePressed(x, y, button);
 }
 
 void gGUIForm::mouseDragged(int x, int y, int button) {
@@ -292,9 +295,12 @@ void gGUIForm::mouseDragged(int x, int y, int button) {
 	if(menubar) menubar->mouseDragged(x, y, button);
 	for(int i = 0; i < toolbarnum; i++) toolbars[i]->mouseDragged(x, y, button);
 	for(int i = 0; i < verticaltoolbarnum; i++) verticaltoolbars[i]->mouseDragged(x, y, button);
-	if(guisizer) guisizer->mouseDragged(x, y, button);
+	if(treelist) {
+		treelist->mouseDragged(x, y, button);
+		return;
+	}
 	if(contextmenu) contextmenu->mouseDragged(x, y, button);
-	if(treelist) treelist->mouseDragged(x, y, button);
+	if(guisizer) guisizer->mouseDragged(x, y, button);
 }
 
 void gGUIForm::mouseReleased(int x, int y, int button) {
@@ -302,14 +308,20 @@ void gGUIForm::mouseReleased(int x, int y, int button) {
 	if(menubar) menubar->mouseReleased(x, y, button);
 	for(int i = 0; i < toolbarnum; i++) toolbars[i]->mouseReleased(x, y, button);
 	for(int i = 0; i < verticaltoolbarnum; i++) verticaltoolbars[i]->mouseReleased(x, y, button);
-	if(guisizer) guisizer->mouseReleased(x, y, button);
+	if(treelist) {
+		treelist->mouseReleased(x, y, button);
+		return;
+	}
 	if(contextmenu) contextmenu->mouseReleased(x, y, button);
-	if(treelist) treelist->mouseReleased(x, y, button);
+	if(guisizer) guisizer->mouseReleased(x, y, button);
 }
 
 void gGUIForm::mouseScrolled(int x, int y) {
+	if(treelist) {
+		treelist->mouseScrolled(x, y);
+		return;
+	}
 	if(guisizer) guisizer->mouseScrolled(x, y);
-	if(treelist) treelist->mouseScrolled(x, y);
 }
 
 void gGUIForm::mouseEntered() {
