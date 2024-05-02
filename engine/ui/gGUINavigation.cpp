@@ -120,6 +120,10 @@ void gGUINavigation::showPane(gGUIPane* paneToShow) {
 
 void gGUINavigation::mousePressed(int x, int y, int button) {
 	gGUIScrollable::mousePressed(x, y, button);
+
+	if(toolbarenabled && x >= 0 && y >= height - 40 && x < width && y < height - 40 + 32) {
+		toolbar.mousePressed(x, y, button);
+	}
 }
 
 void gGUINavigation::mouseReleased(int x, int y, int button) {
@@ -135,6 +139,30 @@ void gGUINavigation::mouseReleased(int x, int y, int button) {
 
 	if(toolbarenabled && x >= 0 && y >= height - 40 && x < width && y < height - 40 + 32) {
 		toolbar.mouseReleased(x, y, button);
+	}
+}
+
+void gGUINavigation::mouseMoved(int x, int y) {
+	if(toolbarenabled && x >= 0 && y >= height - 40 && x < width && y < height - 40 + 32) {
+		toolbar.mouseMoved(x, y);
+	}
+}
+
+void gGUINavigation::mouseDragged(int x, int y, int button) {
+	if(toolbarenabled && x >= 0 && y >= height - 40 && x < width && y < height - 40 + 32) {
+		toolbar.mouseDragged(x, y, button);
+	}
+}
+
+void gGUINavigation::mouseEntered() {
+	if(toolbarenabled) {
+		toolbar.mouseEntered();
+	}
+}
+
+void gGUINavigation::mouseExited() {
+	if(toolbarenabled) {
+		toolbar.mouseExited();
 	}
 }
 

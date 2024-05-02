@@ -51,11 +51,16 @@ public:
 
 	virtual void mousePressed(int x, int y, int button);
 	virtual void mouseReleased(int x, int y, int button);
+	virtual void mouseMoved(int x, int y);
+	virtual void mouseDragged(int x, int y, int button);
+	virtual void mouseEntered();
+	virtual void mouseExited();
 	void setButtonh(int buttonh);
 	void setButtonw(int buttonw);
 
 protected:
 	bool ispressed;
+	bool ishover;
 	int buttonw, buttonh;
 	int tx, ty;
 	bool istextvisible;
@@ -64,6 +69,7 @@ protected:
 	bool isdisabled;
 	gColor bcolor, pressedbcolor, disabledbcolor;
 	gColor fcolor, pressedfcolor, disabledfcolor;
+	gColor hcolor;
 	bool fillbackground;
 
 	void resetTitlePosition();
