@@ -8,6 +8,8 @@
 #include "gModel.h"
 #include <memory>
 
+#include "gCamera.h"
+
 
 gModel::gModel() {
 	scene = nullptr;
@@ -20,6 +22,7 @@ gModel::gModel() {
 	animationframeno = 0;
 	isvertexanimated = false;
 	isvertexanimationstoredonvram = false;
+	isenablefrustumculling = false;
 	bbminx = 0.0f, bbminy = 0.0f, bbminz = 0.0f;
 	bbmaxx = 0.0f, bbmaxy = 0.0f, bbmaxz = 0.0f;
 }
@@ -166,137 +169,142 @@ void gModel::loadMorphingTargetModelFile(const std::string& fullPath) {
 
 void gModel::move(float dx, float dy, float dz) {
 	gNode::move(dx, dy, dz);
-	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i].move(dx, dy, dz);
+	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i]->move(dx, dy, dz);
 }
 
 void gModel::move(const glm::vec3& dv) {
 	gNode::move(dv);
-	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i].move(dv);
+	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i]->move(dv);
 }
 
 void gModel::rotate(const glm::quat& q) {
 	gNode::rotate(q);
-	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i].rotate(q);
+	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i]->rotate(q);
 }
 
 void gModel::rotate(float radians, float ax, float ay, float az) {
 	gNode::rotate(radians, ax, ay, az);
-	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i].rotate(radians, ax, ay, az);
+	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i]->rotate(radians, ax, ay, az);
 }
 
 void gModel::rotateDeg(float degrees, float ax, float ay, float az) {
 	gNode::rotateDeg(degrees, ax, ay, az);
-	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i].rotateDeg(degrees, ax, ay, az);
+	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i]->rotateDeg(degrees, ax, ay, az);
 }
 
 void gModel::rotateAround(float radians, const glm::vec3& axis, const glm::vec3& point) {
 	gNode::rotateAround(radians, axis, point);
-	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i].rotateAround(radians, axis, point);
+	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i]->rotateAround(radians, axis, point);
 }
 
 void gModel::rotateAroundDeg(float degrees, const glm::vec3& axis, const glm::vec3& point) {
 	gNode::rotateAroundDeg(degrees, axis, point);
-	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i].rotateAroundDeg(degrees, axis, point);
+	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i]->rotateAroundDeg(degrees, axis, point);
 }
 
 void gModel::scale(float sx, float sy, float sz) {
 	gNode::scale(sx, sy, sz);
-	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i].scale(sx, sy, sz);
+	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i]->scale(sx, sy, sz);
 }
 
 void gModel::scale(float s) {
 	gNode::scale(s);
-	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i].scale(s);
+	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i]->scale(s);
 }
 
 void gModel::setPosition(float px, float py, float pz) {
 	gNode::setPosition(px, py, pz);
-	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i].setPosition(px, py, pz);
+	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i]->setPosition(px, py, pz);
 }
 
 void gModel::setPosition(const glm::vec3& p) {
 	gNode::setPosition(p);
-	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i].setPosition(p);
+	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i]->setPosition(p);
 }
 
 void gModel::setOrientation(const glm::quat& o) {
 	gNode::setOrientation(o);
-	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i].setOrientation(o);
+	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i]->setOrientation(o);
 }
 
 void gModel::setOrientation(const glm::vec3& angles) {
 	gNode::setOrientation(angles);
-	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i].setOrientation(angles);
+	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i]->setOrientation(angles);
 }
 
 void gModel::setScale(const glm::vec3& s) {
 	gNode::setScale(s);
-	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i].setScale(s);
+	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i]->setScale(s);
 }
 
 void gModel::setScale(float sx, float sy, float sz) {
 	gNode::setScale(sx, sy, sz);
-	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i].setScale(sx, sy, sz);
+	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i]->setScale(sx, sy, sz);
 }
 
 void gModel::setScale(float s) {
 	gNode::setScale(s);
-	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i].setScale(s);
+	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i]->setScale(s);
 }
 
 void gModel::dolly(float distance) {
 	gNode::dolly(distance);
-	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i].dolly(distance);
+	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i]->dolly(distance);
 }
 
 void gModel::truck(float distance) {
 	gNode::truck(distance);
-	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i].truck(distance);
+	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i]->truck(distance);
 }
 
 void gModel::boom(float distance) {
 	gNode::boom(distance);
-	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i].boom(distance);
+	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i]->boom(distance);
 }
 
 void gModel::tilt(float radians) {
 	gNode::tilt(radians);
-	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i].tilt(radians);
+	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i]->tilt(radians);
 }
 
 void gModel::tiltDeg(float degrees) {
 	gNode::tiltDeg(degrees);
-	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i].tiltDeg(degrees);
+	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i]->tiltDeg(degrees);
 }
 
 void gModel::pan(float radians) {
 	gNode::pan(radians);
-	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i].pan(radians);
+	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i]->pan(radians);
 }
 
 void gModel::panDeg(float degrees) {
 	gNode::panDeg(degrees);
-	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i].panDeg(degrees);
+	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i]->panDeg(degrees);
 }
 
 void gModel::roll(float radians) {
 	gNode::roll(radians);
-	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i].roll(radians);
+	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i]->roll(radians);
 }
 
 void gModel::rollDeg(float degrees) {
 	gNode::rollDeg(degrees);
-	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i].rollDeg(degrees);
+	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i]->rollDeg(degrees);
 }
 
 void gModel::setTransformationMatrix(const glm::mat4& transformationMatrix) {
 	gNode::setTransformationMatrix(transformationMatrix);
-	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i].setTransformationMatrix(transformationMatrix);
+	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i]->setTransformationMatrix(transformationMatrix);
 }
 
 void gModel::draw() {
-	for(dri = 0; dri < meshes.size(); dri++) {
-		meshes[dri].draw();
+	for(int i = 0; i < meshes.size(); i++) {
+		if (isenablefrustumculling &&
+				renderer->getCamera() &&
+				!renderer->getCamera()->isInFrustum(meshes[i]->getInitialBoundingBox())) {
+			continue;
+		}
+		meshes[i]->draw();
 	}
 }
 
@@ -320,11 +328,11 @@ int gModel::getMeshNo(const std::string& meshName) const {
 }
 
 gSkinnedMesh& gModel::getMesh(int meshNo) {
-	return meshes[meshNo];
+	return *meshes[meshNo];
 }
 
 gSkinnedMesh* gModel::getMeshPtr(int meshNo) {
-	return &meshes[meshNo];
+	return meshes[meshNo];
 }
 
 const std::string gModel::getMeshName(int meshNo) const {
@@ -338,15 +346,17 @@ void gModel::processNode(aiNode *node, const aiScene *scene) {
 		// the scene contains all the data, node is just to keep stuff organized (like relations between nodes).
 		aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
 		gLogi("gModel") << "Loading mesh:" << mesh->mName.C_Str() << ", tm:" << node->mTransformation[0];
-		gSkinnedMesh modelmesh = processMesh(mesh, scene, node->mTransformation);
+		gSkinnedMesh* modelmesh = processMesh(mesh, scene, node->mTransformation);
 //		if (isanimated) updateBones(&modelmesh, mesh, scene);
 //		modelmesh.setParent(this);
 		meshes.push_back(modelmesh);
 //		gLogi("setting");
-		meshes[meshes.size() - 1].setBaseMesh(&meshes[meshes.size() - 1]);
+		meshes[meshes.size() - 1]->setBaseMesh(meshes[meshes.size() - 1]);
 //		gLogi("setted");
 	}
-
+	// we cache nodes because FindNodes is costly to run
+	// hashing is faster
+	nodemap[node->mName.C_Str()] = node;
 	// after we've processed all of the meshes (if any) we then recursively process each of the children nodes
 	for(unsigned int i = 0; i < node->mNumChildren; i++) {
 		processNode(node->mChildren[i], scene);
@@ -354,7 +364,7 @@ void gModel::processNode(aiNode *node, const aiScene *scene) {
 
 }
 
-gSkinnedMesh gModel::processMesh(aiMesh *mesh, const aiScene *scene, aiMatrix4x4 matrix) {
+gSkinnedMesh* gModel::processMesh(aiMesh *mesh, const aiScene *scene, aiMatrix4x4 matrix) {
     // data to fill
     std::vector<gVertex> vertices;
     std::vector<gIndex> indices;
@@ -418,20 +428,20 @@ gSkinnedMesh gModel::processMesh(aiMesh *mesh, const aiScene *scene, aiMatrix4x4
     // normal: texture_normalN
 
     // return a mesh object created from the extracted mesh data
-    gSkinnedMesh gmesh;
-    gmesh.setName(mesh->mName.C_Str());
-    gmesh.setVertices(vertices, indices);
+    gSkinnedMesh* gmesh = new gSkinnedMesh();
+    gmesh->setName(mesh->mName.C_Str());
+    gmesh->setVertices(vertices, indices);
 //    gmesh.setTransformationMatrix(convertMatrix(matrix));
 
-    loadMaterialTextures(&gmesh, material, aiTextureType_DIFFUSE, gTexture::TEXTURETYPE_DIFFUSE);
-    loadMaterialTextures(&gmesh, material, aiTextureType_SPECULAR, gTexture::TEXTURETYPE_SPECULAR);
-    loadMaterialTextures(&gmesh, material, aiTextureType_NORMALS, gTexture::TEXTURETYPE_NORMAL);
-    loadMaterialTextures(&gmesh, material, aiTextureType_HEIGHT, gTexture::TEXTURETYPE_HEIGHT);
-    loadMaterialTextures(&gmesh, material, aiTextureType_BASE_COLOR, gTexture::TEXTURETYPE_PBR_ALBEDO); // @suppress("Invalid arguments")
-    loadMaterialTextures(&gmesh, material, aiTextureType_DIFFUSE_ROUGHNESS, gTexture::TEXTURETYPE_PBR_ROUGHNESS);
-    loadMaterialTextures(&gmesh, material, aiTextureType_METALNESS, gTexture::TEXTURETYPE_PBR_METALNESS);
-    loadMaterialTextures(&gmesh, material, aiTextureType_NORMAL_CAMERA, gTexture::TEXTURETYPE_PBR_NORMAL);
-    loadMaterialTextures(&gmesh, material, aiTextureType_AMBIENT_OCCLUSION, gTexture::TEXTURETYPE_PBR_AO);
+    loadMaterialTextures(gmesh, material, aiTextureType_DIFFUSE, gTexture::TEXTURETYPE_DIFFUSE);
+    loadMaterialTextures(gmesh, material, aiTextureType_SPECULAR, gTexture::TEXTURETYPE_SPECULAR);
+    loadMaterialTextures(gmesh, material, aiTextureType_NORMALS, gTexture::TEXTURETYPE_NORMAL);
+    loadMaterialTextures(gmesh, material, aiTextureType_HEIGHT, gTexture::TEXTURETYPE_HEIGHT);
+    loadMaterialTextures(gmesh, material, aiTextureType_BASE_COLOR, gTexture::TEXTURETYPE_PBR_ALBEDO); // @suppress("Invalid arguments")
+    loadMaterialTextures(gmesh, material, aiTextureType_DIFFUSE_ROUGHNESS, gTexture::TEXTURETYPE_PBR_ROUGHNESS);
+    loadMaterialTextures(gmesh, material, aiTextureType_METALNESS, gTexture::TEXTURETYPE_PBR_METALNESS);
+    loadMaterialTextures(gmesh, material, aiTextureType_NORMAL_CAMERA, gTexture::TEXTURETYPE_PBR_NORMAL);
+    loadMaterialTextures(gmesh, material, aiTextureType_AMBIENT_OCCLUSION, gTexture::TEXTURETYPE_PBR_AO);
 
     return gmesh;
 }
@@ -474,15 +484,15 @@ void gModel::processMorphingNode(aiNode *node, const aiScene *scene) {
 		// the scene contains all the data, node is just to keep stuff organized (like relations between nodes).
 		aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
 		gLogi("gModel") << "Loading morphing mesh:" << mesh->mName.C_Str() << ", tm:" << node->mTransformation[0];
-		gMesh targetmodelmesh = processMorphingMesh(mesh, scene, node->mTransformation);
+		gMesh* targetmodelmesh = processMorphingMesh(mesh, scene, node->mTransformation);
 //		if (isanimated) updateBones(&modelmesh, mesh, scene);
 //		modelmesh.setParent(this);
 		auto found = std::find_if(meshes.begin(), meshes.end(),
-				[&] (const gSkinnedMesh& mesh) {
-					return mesh.getName() == targetmodelmesh.getName();
+				[&] (const gSkinnedMesh* mesh) {
+					return mesh->getName() == targetmodelmesh->getName();
 				});
 		if (found == meshes.end()) gLoge("gModel") << "Cannot find appropriate mesh to add the morphing target mesh.";
-		found->addTargetMesh(&targetmodelmesh);
+		(*found)->addTargetMesh(targetmodelmesh);
 	}
 
 	// after we've processed all of the meshes (if any) we then recursively process each of the children nodes
@@ -491,8 +501,8 @@ void gModel::processMorphingNode(aiNode *node, const aiScene *scene) {
 	}
 }
 
-gMesh gModel::processMorphingMesh(aiMesh *mesh, const aiScene *scene, aiMatrix4x4 matrix) {
-	 std::vector<gVertex> vertices;
+gMesh* gModel::processMorphingMesh(aiMesh *mesh, const aiScene *scene, aiMatrix4x4 matrix) {
+	std::vector<gVertex> vertices;
 	glm::mat4 mat = convertMatrix(matrix);
 
 	// walk through each of the mesh's vertices
@@ -512,9 +522,9 @@ gMesh gModel::processMorphingMesh(aiMesh *mesh, const aiScene *scene, aiMatrix4x
 		vertices.push_back(vertex);
 	}
 
-	gMesh gmesh;
-	gmesh.setName(mesh->mName.C_Str());
-	gmesh.setVertices(vertices);
+	gMesh* gmesh = new gMesh();
+	gmesh->setName(mesh->mName.C_Str());
+	gmesh->setVertices(vertices);
 
 	return gmesh;
 }
@@ -542,11 +552,11 @@ void gModel::animate(float animationPosition) {
 		updateAnimationNodes();
 		for (int i=0; i<meshes.size(); i++) {
 			//The if which is commented is a check to prevent unnecessary operation on a non-morphing mesh which is stored on vram. That if commented because it hasn't tested yet.
-//			if (isvertexanimationstoredonvram && meshes[i].getTargetMeshCount() == 0) return;
+//			if (isvertexanimationstoredonvram && meshes[i]->getTargetMeshCount() == 0) return;
 			//Below comment line is the third parameter of updateBones which is to perform animating operation on the target mesh of a mesh by taking the scene mesh as a reference if the animated mesh has a target mesh. Haven't tested yet.
-			// (meshes[i].getTargetMeshCount() > 0) ? (morphingtargetscenes[meshes[i].getCurrentTargetMeshId()]->mMeshes[i]) : (nullptr)
-			updateBones(&meshes[i], scene->mMeshes[i]);
-			updateVbo(&meshes[i]);
+			// (meshes[i]->getTargetMeshCount() > 0) ? (morphingtargetscenes[meshes[i]->getCurrentTargetMeshId()]->mMeshes[i]) : (nullptr)
+			updateBones(meshes[i], scene->mMeshes[i]);
+			updateVbo(meshes[i]);
 		}
 	}
 }
@@ -629,7 +639,7 @@ void gModel::updateAnimationNodes() {
 			}
 
 			aiMatrix4x4 mat = aiMatrix4x4(presentRotation.GetMatrix());
-			aiNode * targetNode = scene->mRootNode->FindNode(channel->mNodeName);
+			aiNode* targetNode = findNodeFast(channel->mNodeName.C_Str());
 			mat.a1 *= presentScaling.x; mat.b1 *= presentScaling.x; mat.c1 *= presentScaling.x;
 			mat.a2 *= presentScaling.y; mat.b2 *= presentScaling.y; mat.c2 *= presentScaling.y;
 			mat.a3 *= presentScaling.z; mat.b3 *= presentScaling.z; mat.c3 *= presentScaling.z;
@@ -648,7 +658,7 @@ void gModel::updateBones(gSkinnedMesh* gmesh, aiMesh* aimesh) {
 		const aiBone* bone = aimesh->mBones[a];
 
 		// find the corresponding node by again looking recursively through the node hierarchy for the same name
-		aiNode* node = scene->mRootNode->FindNode(bone->mName);
+		aiNode* node = findNodeFast(bone->mName.C_Str());
 
 		// start with the mesh-to-bone matrix
 		boneMatrices[a] = bone->mOffsetMatrix;
@@ -678,46 +688,26 @@ void gModel::updateBones(gSkinnedMesh* gmesh, aiMesh* aimesh) {
 
 			glm::vec3 oldweightpos = gmesh->getVertexPos(vertexId);
 			aiVector3D aiaddweight = weight.mWeight * (posTrafo * srcPos);
-			glm::vec3 vPos(oldweightpos.x + aiaddweight.x, oldweightpos.y + aiaddweight.y, oldweightpos.z + aiaddweight.z);
+			glm::vec3 vPos{oldweightpos.x + aiaddweight.x, oldweightpos.y + aiaddweight.y, oldweightpos.z + aiaddweight.z};
 			gmesh->setVertexPos(vertexId, vPos);
 
-			//The commented lines below are to perform an animation to the morphing target's vertices' position. They haven't tested yet.
-			/*if (aiTargetMesh != nullptr) {
-				const aiVector3D& srcPos = aiTargetMesh->mVertices[vertexId];
-				oldweightpos = gmesh->getTargetPosition(gmesh->getCurrentTargetMeshId(), vertexId);
-				aiaddweight = weight.mWeight * (posTrafo * srcPos);
-				glm::vec3 vPos(oldweightpos.x + aiaddweight.x, oldweightpos.y + aiaddweight.y, oldweightpos.z + aiaddweight.z);
-				gmesh->setTargetPosition(gmesh->getCurrentTargetMeshId(), vertexId, vPos);
-			}*/
-		}
-		if(aimesh->HasNormals()){
-			// 3x3 matrix, contains the bone matrix without the translation, only with rotation and possibly scaling
-			aiMatrix3x3 normTrafo = aiMatrix3x3( posTrafo);
-			for(unsigned int b = 0; b < bone->mNumWeights; ++b) {
-				const aiVertexWeight& weight = bone->mWeights[b];
-				size_t vertexId = weight.mVertexId;
+			if(aimesh->HasNormals()) {
+				// 3x3 matrix, contains the bone matrix without the translation, only with rotation and possibly scaling
 				const aiVector3D& srcNorm = aimesh->mNormals[vertexId];
 
 				glm::vec3 oldweightnorm = gmesh->getVertexNorm(vertexId);
 				aiVector3D aiaddweight = weight.mWeight * (posTrafo * srcNorm);
-				gmesh->setVertexNorm(vertexId, glm::vec3(oldweightnorm.x + aiaddweight.x, oldweightnorm.y + aiaddweight.y, oldweightnorm.z + aiaddweight.z));
-
-				//The commented lines below are to perform an animation to the morphing target's vertices' normal. They haven't tested yet.
-				/*if (aiTargetMesh != nullptr) {
-					const aiVector3D& srcNorm = aiTargetMesh->mNormals[vertexId];
-					oldweightnorm = gmesh->getTargetNormal(gmesh->getCurrentTargetMeshId(), vertexId);
-					aiaddweight = weight.mWeight * (posTrafo * srcNorm);
-					gmesh->setTargetNormal(gmesh->getCurrentTargetMeshId(), vertexId, glm::vec3(oldweightnorm.x + aiaddweight.x, oldweightnorm.y + aiaddweight.y, oldweightnorm.z + aiaddweight.z));
-				}*/
+				glm::vec3 vNorm{oldweightnorm.x + aiaddweight.x, oldweightnorm.y + aiaddweight.y, oldweightnorm.z + aiaddweight.z};
+				gmesh->setVertexNorm(vertexId, vNorm);
 			}
 		}
 	}
 }
 
 void gModel::updateVbo(gSkinnedMesh* gmesh) {
-	std::vector<gVertex> vertexarray = gmesh->getVertices();
-	std::vector<gIndex> indexarray = gmesh->getIndices();
-	for (int i=0; i<gmesh->getVbo()->getVerticesNum(); i++) {
+	std::vector<gVertex>& vertexarray = gmesh->getVertices();
+	std::vector<gIndex>& indexarray = gmesh->getIndices();
+	for (int i = 0; i < gmesh->getVbo()->getVerticesNum(); i++) {
 		vertexarray[i].position = gmesh->getVertexPos(i);
 		vertexarray[i].normal = gmesh->getVertexNorm(i);
 	}
@@ -761,7 +751,7 @@ int gModel::getAnimationFrameNum() const {
 
 void gModel::setAnimationFrameNo(int frameNo) {
 	animationframeno = frameNo;
-	for(int i=0; i<meshes.size(); i++) meshes[i].setFrameNo(frameNo);
+	for(int i=0; i<meshes.size(); i++) meshes[i]->setFrameNo(frameNo);
 	animate(animationkeys[frameNo]);
 }
 
@@ -777,48 +767,48 @@ int gModel::getAnimationFrameNo() const {
 
 void gModel::setMorphingFrameNo(int morphingFrameNo) {
 	for (int i = 0; i < meshes.size(); i++) {
-		meshes[i].setCurrentFrameId(morphingFrameNo);
+		meshes[i]->setCurrentFrameId(morphingFrameNo);
 	}
 }
 
 int gModel::getMorphingFrameNo() const {
-	return meshes[0].getCurrentFrameId();
+	return meshes[0]->getCurrentFrameId();
 }
 
 void gModel::nextMorphingFrame() {
 	for (int i = 0; i < meshes.size(); i++) {
-		meshes[i].nextFrameId();
+		meshes[i]->nextFrameId();
 	}
 }
 
 void gModel::setMorphingSpeed(int speed) {
 	for (int i = 0; i < meshes.size(); i++) {
-		meshes[i].setSpeed(speed);
+		meshes[i]->setSpeed(speed);
 	}
 }
 
 int gModel::getMorphingSpeed() const {
-	return meshes[0].getSpeed();
+	return meshes[0]->getSpeed();
 }
 
 void gModel::setMorphingTarget(int morphingTargetId) {
 	for (int i = 0; i < meshes.size(); i++) {
-		meshes[i].setCurrentTargetMeshId(morphingTargetId);
+		meshes[i]->setCurrentTargetMeshId(morphingTargetId);
 	}
 }
 
 int gModel::getMorphingTarget() const {
-	return meshes[0].getCurrentTargetMeshId();
+	return meshes[0]->getCurrentTargetMeshId();
 }
 
 void gModel::setMorphingFrameNum(int morphingFrameNum) {
 	for (int i = 0; i < meshes.size(); i++) {
-		meshes[i].setFrameCount(meshes[i].getCurrentTargetMeshId(), morphingFrameNum);
+		meshes[i]->setFrameCount(meshes[i]->getCurrentTargetMeshId(), morphingFrameNum);
 	}
 }
 
 int gModel::getMorphingFrameNum() const {
-	return meshes[0].getFrameCount();
+	return meshes[0]->getFrameCount();
 }
 
 void gModel::generateAnimationKeys() {
@@ -838,8 +828,8 @@ void gModel::makeVertexAnimated(bool storeOnVram) {
 		prepareVertexAnimationData();
 		isvertexanimated = true;
 		for(int i=0; i<meshes.size(); i++) {
-			meshes[i].setVertexAnimated(true);
-			meshes[i].setVertexAnimationStoredOnVram(storeOnVram);
+			meshes[i]->setVertexAnimated(true);
+			meshes[i]->setVertexAnimationStoredOnVram(storeOnVram);
 		}
 	} else {
 		logi("The model is already vertex animated!");
@@ -853,18 +843,18 @@ void gModel::prepareVertexAnimationData() {
 
     // update mesh position for the animation
     for(unsigned int i=0; i<meshes.size(); ++i) {
-    	meshes[i].resizeVertexAnimationData(anum, fnum, scene->mMeshes[i]->mNumVertices, isvertexanimationstoredonvram);
+    	meshes[i]->resizeVertexAnimationData(anum, fnum, scene->mMeshes[i]->mNumVertices, isvertexanimationstoredonvram);
 
         // current mesh we are introspecting
         const aiMesh* mesh = scene->mMeshes[i];
         for (unsigned int j=0; j<scene->mNumAnimations; j++) {
             for (unsigned int k=0; k<fnum; k++) {
-//            	meshes[i].resizeVertexAnimation(j, k, mesh->mNumVertices);
+//            	meshes[i]->resizeVertexAnimation(j, k, mesh->mNumVertices);
             	setAnimationFrameNo(k);
                 updateAnimationNodes();
                 //The below line's third parameter is given as a nullptr since the meshes aren't morphing. Haven't tested yet.
                 //updateBones(&meshes[i], scene->mMeshes[i], nullptr);
-                updateBones(&meshes[i], scene->mMeshes[i]);
+                updateBones(meshes[i], scene->mMeshes[i]);
 
                 // calculate bone matrices
                 std::vector<aiMatrix4x4> boneMatrices(mesh->mNumBones);
@@ -886,7 +876,7 @@ void gModel::prepareVertexAnimationData() {
                     }
                 }
 
-                meshes[i].resetVertexAnimationData(j, k);
+                meshes[i]->resetVertexAnimationData(j, k);
 
                 // loop through all vertex weights of all bones
                 for(unsigned int a=0; a<mesh->mNumBones; ++a) {
@@ -898,10 +888,10 @@ void gModel::prepareVertexAnimationData() {
                         size_t vertexId = weight.mVertexId;
                         const aiVector3D& srcPos = mesh->mVertices[vertexId];
 
-            			glm::vec3 oldweightpos = meshes[i].getVertexPosData(j, k, vertexId);
+            			glm::vec3 oldweightpos = meshes[i]->getVertexPosData(j, k, vertexId);
             			aiVector3D aiaddweight = weight.mWeight * (posTrafo * srcPos);
             			glm::vec3 vPos(oldweightpos.x + aiaddweight.x, oldweightpos.y + aiaddweight.y, oldweightpos.z + aiaddweight.z);
-            			meshes[i].setVertexPosData(j, k, vertexId, vPos);
+            			meshes[i]->setVertexPosData(j, k, vertexId, vPos);
                     }
                     if(mesh->HasNormals()){
                         // 3x3 matrix, contains the bone matrix without the translation, only with rotation and possibly scaling
@@ -912,30 +902,30 @@ void gModel::prepareVertexAnimationData() {
 
                             const aiVector3D& srcNorm = mesh->mNormals[vertexId];
 
-            				glm::vec3 oldweightnorm = meshes[i].getVertexNormData(j, k, vertexId);
+            				glm::vec3 oldweightnorm = meshes[i]->getVertexNormData(j, k, vertexId);
             				aiVector3D aiaddweight = weight.mWeight * (posTrafo * srcNorm);
-            				meshes[i].setVertexNormData(j, k, vertexId, glm::vec3(oldweightnorm.x + aiaddweight.x, oldweightnorm.y + aiaddweight.y, oldweightnorm.z + aiaddweight.z));
+            				meshes[i]->setVertexNormData(j, k, vertexId, glm::vec3(oldweightnorm.x + aiaddweight.x, oldweightnorm.y + aiaddweight.y, oldweightnorm.z + aiaddweight.z));
                         }
                     }
                 }
 
                 if (isvertexanimationstoredonvram) {
-                	std::vector<gVertex> vertexarray = meshes[i].getVertices();
-                	std::vector<gIndex> indexarray = meshes[i].getIndices();
-                	for (int l=0; l<meshes[i].getVbo()->getVerticesNum(); l++) {
-                		vertexarray[l].position = meshes[i].getVertexPosData(j, k, l);
-                		vertexarray[l].normal = meshes[i].getVertexNormData(j, k, l);
+                	std::vector<gVertex> vertexarray = meshes[i]->getVertices();
+                	std::vector<gIndex> indexarray = meshes[i]->getIndices();
+                	for (int l=0; l<meshes[i]->getVbo()->getVerticesNum(); l++) {
+                		vertexarray[l].position = meshes[i]->getVertexPosData(j, k, l);
+                		vertexarray[l].normal = meshes[i]->getVertexNormData(j, k, l);
                 	}
                 	// TODO Set vertices into vboframes!!!
-                	meshes[i].setVerticesData(j, k, vertexarray, indexarray);
-//                	meshes[i].animatedPosData[j][k].clear();
-//                	meshes[i].animatedNormData[j][k].clear();
-//                	meshes[i].getVbo()->clear(); // clear vbo
+                	meshes[i]->setVerticesData(j, k, vertexarray, indexarray);
+//                	meshes[i]->animatedPosData[j][k].clear();
+//                	meshes[i]->animatedNormData[j][k].clear();
+//                	meshes[i]->getVbo()->clear(); // clear vbo
                 }
             }
         }
         if (isvertexanimationstoredonvram) {
-        	meshes[i].clearAnimation();
+        	meshes[i]->clearAnimation();
         }
     }
     if (!isvertexanimationstoredonvram) {
@@ -952,13 +942,13 @@ bool gModel::isVertexAnimationStoredOnVram() const {
 }
 
 gBoundingBox gModel::getBoundingBox() {
-	for (bbi = 0; bbi< meshes.size(); bbi++) {
-		bbvertices = meshes[bbi].getVertices();
-		for (bbj = 0; bbj < bbvertices.size(); bbj++) {
-			bbv = bbvertices[bbj];
+	for (int i = 0; i< meshes.size(); i++) {
+		bbvertices = meshes[i]->getVertices();
+		for (int j = 0; j < bbvertices.size(); j++) {
+			bbv = bbvertices[j];
 			bbvpos = glm::vec3(localtransformationmatrix * glm::vec4(bbv.position, 1.0));
 
-			if (bbi == 0 && bbj == 0) {
+			if (i == 0 && j == 0) {
 				bbminx = bbvpos.x, bbminy = bbvpos.y, bbminz = bbvpos.z;
 				bbmaxx = bbvpos.x, bbmaxy = bbvpos.y, bbmaxz = bbvpos.z;
 				continue;
@@ -973,7 +963,7 @@ gBoundingBox gModel::getBoundingBox() {
 		}
 	}
 
-	return gBoundingBox(bbminx, bbminy, bbminz, bbmaxx, bbmaxy, bbmaxz, localtransformationmatrix);
+	return {bbminx, bbminy, bbminz, bbmaxx, bbmaxy, bbmaxz, localtransformationmatrix};
 }
 
 glm::mat4 gModel::convertMatrix(const aiMatrix4x4 &aiMat) {
@@ -988,4 +978,8 @@ glm::mat4 gModel::convertMatrix(const aiMatrix4x4 &aiMat) {
 gBoundingBox& gModel::getInitialBoundingBox() {
 	initialboundingbox.setTransformationMatrix(localtransformationmatrix);
 	return initialboundingbox;
+}
+
+void gModel::setEnableFrustumCulling(bool enable) {
+	isenablefrustumculling = enable;
 }

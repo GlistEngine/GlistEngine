@@ -24,13 +24,14 @@
 #include "gSkinnedMesh.h"
 #include <vector>
 #include <deque>
+#include <thread>
 
 
 class gModel : public gNode {
 public:
     // model data
     std::deque<gTexture*> textures_loaded;	// stores all the textures loaded so far, optimization to make sure textures aren't loaded more than once.
-    std::deque<gSkinnedMesh>    meshes;
+    std::deque<gSkinnedMesh*> meshes;
     std::string directory;
 
     // constructor, expects a filepath to a 3D model.
@@ -109,6 +110,8 @@ public:
 
     gBoundingBox& getInitialBoundingBox();
 
+	void setEnableFrustumCulling(bool enable);
+
 private:
 	const aiScene* scene;
 	std::vector<const aiScene*> morphingtargetscenes;
@@ -116,16 +119,22 @@ private:
 	void loadModelFileWithOriginalVertices(const std::string& fullPath);
 	void loadMorphingTargetModelFile(const std::string& fullPath);
 	void processNode(aiNode *node, const aiScene *scene);
-	gSkinnedMesh processMesh(aiMesh *mesh, const aiScene *scene, aiMatrix4x4 matrix);
+	gSkinnedMesh* processMesh(aiMesh *mesh, const aiScene *scene, aiMatrix4x4 matrix);
 	void loadMaterialTextures(gSkinnedMesh* mesh, aiMaterial *mat, aiTextureType type, int textureType);
 	void processMorphingNode(aiNode *node, const aiScene *scene);
-	gMesh processMorphingMesh(aiMesh *mesh, const aiScene *scene, aiMatrix4x4 matrix);
+	gMesh* processMorphingMesh(aiMesh *mesh, const aiScene *scene, aiMatrix4x4 matrix);
 	//The below line's third parameter is to perform the animation on the target mesh by taking the aiTargetMesh as a reference. Haven't tested yet.
 	//void updateBones(gSkinnedMesh* gmesh, aiMesh* aimesh, aiMesh* aiTargetMesh);
 	void updateBones(gSkinnedMesh* gmesh, aiMesh* aimesh);
 	void updateVbo(gSkinnedMesh* gmesh);
 	void updateAnimationNodes();
 	void generateAnimationKeys();
+
+	// Find a node using the map
+	aiNode* findNodeFast(const std::string& name) {
+		auto it = nodemap.find(name);
+		return (it != nodemap.end()) ? it->second : nullptr;
+	}
 
 	std::string filename;
 	int animationnum;
@@ -141,16 +150,16 @@ private:
 	bool isvertexanimationstoredonvram;
 
     float bbminx, bbminy, bbminz, bbmaxx, bbmaxy, bbmaxz;
-    int bbi, bbj;
     std::vector<gVertex> bbvertices;
     glm::vec3 bbvpos;
     gVertex bbv;
+	// this is used to find the nodes fast because assimp code is slow, it might consume little more memory
+	std::unordered_map<std::string, aiNode*> nodemap;
 
     glm::mat4 convertMatrix(const aiMatrix4x4 &aiMat);
     gBoundingBox initialboundingbox;
+	bool isenablefrustumculling;
 
-    bool oldalpha;
-    unsigned int dri;
 };
 
 #endif /* ENGINE_GRAPHICS_GMODEL_H_ */

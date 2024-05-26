@@ -22,6 +22,7 @@
 #include "gTube.h"
 #include "gUbo.h"
 #include "gShader.h"
+#include "gCamera.h"
 
 //screenShot Related includes
 #include "stb/stb_image_write.h"
@@ -460,7 +461,7 @@ void gDrawArc(float xCenter, float yCenter, float radius, bool isFilled, int num
 }
 
 void gDrawArrow(float x1, float y1, float length, float angle, float tipLength, float tipAngle) {
-	gLine linemesh, linemesh2, linemesh3;
+	static gLine linemesh, linemesh2, linemesh3;
 	float x2, y2;
 	x2 = x1 + std::cos(gDegToRad(angle)) * length;
 	y2 = y1 + std::sin(gDegToRad(angle)) * length;;
@@ -473,9 +474,8 @@ void gDrawArrow(float x1, float y1, float length, float angle, float tipLength, 
 }
 
 void gDrawRectangle(float x, float y, float w, float h, bool isFilled) {
-	gRectangle rectanglemesh;
+	static gRectangle rectanglemesh;
  	rectanglemesh.draw(x, y, w, h, isFilled);
- 	rectanglemesh.clear();
 }
 
 void gDrawRoundedRectangle(float x, float y, float w, float h, int radius, bool isFilled) {
@@ -804,6 +804,10 @@ void gRenderer::setCameraPosition(glm::vec3 cameraPosition) {
 	cameraposition = cameraPosition;
 }
 
+void gRenderer::setCamera(gCamera* camera) {
+	this->camera = camera;
+}
+
 const glm::mat4& gRenderer::getProjectionMatrix() const {
 	return projectionmatrix;
 }
@@ -818,6 +822,10 @@ const glm::mat4& gRenderer::getViewMatrix() const {
 
 const glm::vec3& gRenderer::getCameraPosition() const {
 	return cameraposition;
+}
+
+const gCamera* gRenderer::getCamera() const {
+	return camera;
 }
 
 void gRenderer::backupMatrices() {

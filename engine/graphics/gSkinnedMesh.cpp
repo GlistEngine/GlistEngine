@@ -99,7 +99,9 @@ void gSkinnedMesh::clearAnimation() {
 void gSkinnedMesh::resizeVertexAnimationData(int animationNum, int frameNum, int verticesNum, bool isOnVram) {
 	animatedPosData = std::vector< std::vector< std::vector< glm::vec3 > > >(animationNum, std::vector< std::vector< glm::vec3 > >(frameNum, std::vector< glm::vec3 >(verticesNum)));
 	animatedNormData = std::vector< std::vector< std::vector< glm::vec3 > > >(animationNum, std::vector< std::vector< glm::vec3 > >(frameNum, std::vector< glm::vec3 >(verticesNum)));
-    if (isOnVram) vboframe = std::vector< std::vector< gVbo > >(animationNum, std::vector< gVbo >(frameNum));
+    if (isOnVram) {
+		vboframe = std::vector<std::vector<gVbo>>(animationNum, std::vector<gVbo>(frameNum));
+	}
 //	animatedPosData[animationNo][frameNo].resize(verticesNum);
 //	animatedNormData[animationNo][frameNo].resize(verticesNum);
 }

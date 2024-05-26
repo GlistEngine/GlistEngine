@@ -81,8 +81,8 @@ public:
 	bool intersectsOBB(gRay* ray);
 	float distanceOBB(gRay* ray);
 
-	void draw();
-	void drawOBB();
+	void draw() const;
+	void drawOBB() const;
 
 private:
 	static const int componentnum = 3;

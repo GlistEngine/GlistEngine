@@ -34,16 +34,19 @@ gVbo::gVbo() {
 }
 
 gVbo::~gVbo() {
+	clear();
 }
 
 void gVbo::setVertexData(gVertex* vertices, int coordNum, int total) {
-    glBindVertexArray(vao);
-	if (!isvertexdataallocated) glGenBuffers(1, &vbo);
+	bind();
+	if (!isvertexdataallocated) {
+		glGenBuffers(1, &vbo);
+		isvertexdataallocated = true;
+	}
 	verticesptr = &vertices[0];
 	vertexarrayptr = &vertices[0].position.x;
 	vertexdatacoordnum = coordNum;
 	totalvertexnum = total;
-	isvertexdataallocated = true;
 
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
     glBufferData(GL_ARRAY_BUFFER, totalvertexnum * sizeof(gVertex), vertexarrayptr, GL_STATIC_DRAW);
@@ -61,52 +64,54 @@ void gVbo::setVertexData(gVertex* vertices, int coordNum, int total) {
     // vertex bitangent
     glEnableVertexAttribArray(4);
     glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(gVertex), (void*)offsetof(gVertex, bitangent));
-    glBindVertexArray(0);
-
-    /* Because of a bug with AMD drivers, glDeleteBuffers function must be called
-     * only while exiting the application.
-     */
-    if(!isAMD) {
-		glDeleteBuffers(1, &vbo);
-		isvertexdataallocated = false;
-	  }
+	unbind();
 }
 
 void gVbo::setVertexData(const float* vert0x, int coordNum, int total, int usage, int stride) {
-    glBindVertexArray(vao);
-	if (!isvertexdataallocated) glGenBuffers(1, &vbo);
+	bind();
+	if (!isvertexdataallocated) {
+      glGenBuffers(1, &vbo);
+      isvertexdataallocated = true;
+    }
 	vertexarrayptr = vert0x;
 	vertexdatacoordnum = coordNum;
 	totalvertexnum = total;
-	isvertexdataallocated = true;
 
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	GLsizeiptr size = (stride == 0) ? vertexdatacoordnum * sizeof(float) : stride;
 	glBufferData(GL_ARRAY_BUFFER, totalvertexnum * size, vertexarrayptr, usage);
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, vertexdatacoordnum, GL_FLOAT, GL_FALSE, vertexdatacoordnum * sizeof(float),nullptr);
-	glBindVertexArray(0);
+	unbind();
 }
 
 void gVbo::setIndexData(gIndex* indices, int total) {
-    glBindVertexArray(vao);
-	if (!isindexdataallocated) glGenBuffers(1, &ebo);
+	bind();
+	if (!isindexdataallocated) {
+      glGenBuffers(1, &ebo);
+      isindexdataallocated = true;
+    }
 	indexarrayptr = indices;
 	totalindexnum = total;
-	isindexdataallocated = true;
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, totalindexnum * sizeof(gIndex), indexarrayptr, GL_STATIC_DRAW);
-    glBindVertexArray(0);
+	unbind();
 }
 
 void gVbo::clear() {
-	glDeleteVertexArrays(1, &vao);
 	if(isvertexdataallocated) {
 	  glDeleteBuffers(1, &vbo);
 	  isvertexdataallocated = false;
 	}
-	if(isindexdataallocated) glDeleteBuffers(1, &ebo);
+	if(isindexdataallocated) {
+      glDeleteBuffers(1, &ebo);
+      isvertexdataallocated = false;
+    }
+	if (vao != GL_NONE) {
+	  glDeleteVertexArrays(1, &vao);
+	  vao = GL_NONE;
+	}
 }
 
 gVertex* gVbo::getVertices() const {

@@ -98,6 +98,7 @@ class gUbo;
 class gLight;
 class gImage;
 class gShader;
+class gCamera;
 
 class gRenderer: public gObject {
 public:
@@ -248,10 +249,12 @@ public:
 	void setProjectionMatrix2d(glm::mat4 projectionMatrix2d);
 	void setViewMatrix(glm::mat4 viewMatrix);
 	void setCameraPosition(glm::vec3 cameraPosition);
+	void setCamera(gCamera* camera);
 	const glm::mat4& getProjectionMatrix() const;
 	const glm::mat4& getProjectionMatrix2d() const;
 	const glm::mat4& getViewMatrix() const;
 	const glm::vec3& getCameraPosition() const;
+	const gCamera* getCamera() const;
 	void backupMatrices();
 	void restoreMatrices();
 
@@ -350,6 +353,7 @@ private:
 	glm::mat4 viewmatrix;
 	glm::mat4 viewmatrixold;
 	glm::vec3 cameraposition;
+	gCamera* camera;
 
 	void init();
 

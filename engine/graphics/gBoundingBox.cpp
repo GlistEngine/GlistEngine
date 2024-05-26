@@ -305,14 +305,14 @@ float gBoundingBox::distanceOBB(gRay* ray) {
     return tMin;
 }
 
-void gBoundingBox::draw() {
+void gBoundingBox::draw() const {
 	gColor oldrendercolor = *renderer->getColor();
 	renderer->setColor(0, 255, 0);
 	gDrawBox(origin.x, origin.y, origin.z, widthhalf, heighthalf, depthhalf, false);
 	renderer->setColor(oldrendercolor);
 }
 
-void gBoundingBox::drawOBB() {
+void gBoundingBox::drawOBB() const {
 	gColor oldrendercolor = *renderer->getColor();
 	renderer->setColor(0, 255, 0);
 	gDrawBox(transformationmatrix, false);
