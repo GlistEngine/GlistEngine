@@ -7,6 +7,7 @@
 
 #include "gVbo.h"
 #include "gLight.h"
+#include "gShader.h"
 
 gVbo::gVbo() {
 	glGenVertexArrays(1, &vao);
@@ -143,27 +144,6 @@ void gVbo::draw(int drawMode) {
 
     // Set scene properties
     colorshader->setVec4("renderColor", renderer->getColor()->r, renderer->getColor()->g, renderer->getColor()->b, renderer->getColor()->a);
-
-    // Set lights
-    if (renderer->isLightingEnabled()) {
-    	for (sli = 0; sli < renderer->getSceneLightNum(); sli++) {
-    		scenelight = renderer->getSceneLight(sli);
-    	    colorshader->setInt("light.type", scenelight->getType());
-    	    colorshader->setVec3("light.position", scenelight->getPosition());
-    	    colorshader->setVec3("light.direction", scenelight->getDirection());
-    	    colorshader->setFloat("light.cutOff", scenelight->getSpotCutOffAngle());
-    	    colorshader->setFloat("light.outerCutOff", scenelight->getSpotOuterCutOffAngle());
-    	    colorshader->setVec4("light.ambient", scenelight->getAmbientColorRed(), scenelight->getAmbientColorGreen(), scenelight->getAmbientColorBlue(), scenelight->getAmbientColorAlpha());
-    	    colorshader->setVec4("light.diffuse",  scenelight->getDiffuseColorRed(), scenelight->getDiffuseColorGreen(), scenelight->getDiffuseColorBlue(), scenelight->getDiffuseColorAlpha());
-    	    colorshader->setVec4("light.specular", scenelight->getSpecularColorRed(), scenelight->getSpecularColorGreen(), scenelight->getSpecularColorBlue(), scenelight->getSpecularColorAlpha());
-    	    colorshader->setFloat("light.constant", scenelight->getAttenuationConstant());
-    	    colorshader->setFloat("light.linear", scenelight->getAttenuationLinear());
-    	    colorshader->setFloat("light.quadratic", scenelight->getAttenuationQuadratic());
-    	}
-    } else {
-	    colorshader->setInt("light.type", gLight::LIGHTTYPE_AMBIENT);
-	    colorshader->setVec4("light.ambient", renderer->getLightingColor()->r, renderer->getLightingColor()->g, renderer->getLightingColor()->b, renderer->getLightingColor()->a);
-    }
 
     // Set matrices
     colorshader->setMat4("projection", glm::mat4(1.0f));

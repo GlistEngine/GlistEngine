@@ -11,6 +11,7 @@
 gLight::gLight(int lightType) {
 	type = lightType;
 	isenabled = false;
+	ischanged = true;
 
 	ambientcolor = gColor(1.0f, 1.0f, 1.0f, 1.0f);
 	diffusecolor = gColor(1.0f, 1.0f, 1.0f, 1.0f);
@@ -19,40 +20,48 @@ gLight::gLight(int lightType) {
 	attenuation = glm::vec3(1.0f, 0.0014f, 0.000007f);
 	spotcutoff = glm::vec2(15.0f, 5.0f);
 	directioneuler = glm::vec3(0, 0, -1);
+	renderer->addSceneLight(this);
 }
 
 gLight::~gLight() {
+	renderer->removeSceneLight(this);
 }
 
 void gLight::enable() {
-	renderer->enableLighting();
-	renderer->setLightingColor(ambientcolor.r, ambientcolor.g, ambientcolor.b, ambientcolor.a);
-	renderer->setLightingPosition(position);
-	renderer->addSceneLight(this);
 	isenabled = true;
+	renderer->updateLights();
 }
 
 void gLight::disable() {
-	renderer->removeSceneLight(this);
-	renderer->disableLighting();
 	isenabled = false;
+	renderer->updateLights();
 }
 
 bool gLight::isEnabled() const {
 	return isenabled;
 }
 
-void gLight::setType(int lightType) {
-	type = lightType;
+bool gLight::isChanged() const {
+	return ischanged;
 }
 
-int gLight::getType() const{
+void gLight::setChanged(bool isChanged) {
+	ischanged = isChanged;
+}
+
+void gLight::setType(int lightType) {
+	type = lightType;
+	ischanged = true;
+}
+
+int gLight::getType() const {
 	return type;
 }
 
 void gLight::rotate(float angle, float ax, float ay, float az) {
 	gNode::rotate(angle, ax, ay, az);
 	directioneuler = glm::vec3(0, 0, -1) * orientation;
+	ischanged = true;
 }
 
 const glm::vec3& gLight::getDirection() const {
@@ -63,10 +72,12 @@ const glm::vec3& gLight::getDirection() const {
 
 void gLight::setAmbientColor(int r, int g, int b, int a) {
 	ambientcolor.set(r, g, b, a);
+	ischanged = true;
 }
 
 void gLight::setAmbientColor(gColor* color) {
 	ambientcolor.set(color->r, color->g, color->b, color->a);
+	ischanged = true;
 }
 
 gColor* gLight::getAmbientColor() {
@@ -108,10 +119,12 @@ float gLight::getDiffuseColorAlpha() const {
 
 void gLight::setDiffuseColor(int r, int g, int b, int a) {
 	diffusecolor.set(r, g, b, a);
+	ischanged = true;
 }
 
 void gLight::setDiffuseColor(gColor* color) {
 	diffusecolor.set(color->r, color->g, color->b, color->a);
+	ischanged = true;
 }
 
 gColor* gLight::getDiffuseColor() {
@@ -120,10 +133,12 @@ gColor* gLight::getDiffuseColor() {
 
 void gLight::setSpecularColor(int r, int g, int b, int a) {
 	specularcolor.set(r, g, b, a);
+	ischanged = true;
 }
 
 void gLight::setSpecularColor(gColor* color) {
 	specularcolor.set(color->r, color->g, color->b, color->a);
+	ischanged = true;
 }
 
 gColor* gLight::getSpecularColor() {
@@ -150,10 +165,12 @@ void gLight::setAttenuation(float constant, float linear, float quadratic) {
 	attenuation.x = constant;
 	attenuation.y = linear;
 	attenuation.z = quadratic;
+	ischanged = true;
 }
 
 void gLight::setAttenuation(glm::vec3 attenuation) {
 	this->attenuation = attenuation;
+	ischanged = true;
 }
 
 const glm::vec3& gLight::getAttenuation() const {
@@ -174,6 +191,7 @@ float gLight::getAttenuationQuadratic() const {
 
 void gLight::setSpotCutOff(glm::vec2 spotCutOff) {
 	spotcutoff = spotCutOff;
+	ischanged = true;
 }
 
 const glm::vec2& gLight::getSpotCutOff() const {
@@ -182,6 +200,7 @@ const glm::vec2& gLight::getSpotCutOff() const {
 
 void gLight::setSpotCutOffAngle(float cutOffAngle) {
 	spotcutoff.x = cutOffAngle;
+	ischanged = true;
 }
 
 float gLight::getSpotCutOffAngle() const {
@@ -194,10 +213,15 @@ float gLight::getSpotOuterCutOffAngle() const {
 
 void gLight::setSpotCutOffSpread(float cutOffSpreadAngle) {
 	spotcutoff.y = cutOffSpreadAngle;
+	ischanged = true;
 }
 
 float gLight::getSpotCutOffSpread() const {
 	return spotcutoff.y;
 }
 
+void gLight::processTransformationMatrix() {
+	gNode::processTransformationMatrix();
+	ischanged = true;
+}
 

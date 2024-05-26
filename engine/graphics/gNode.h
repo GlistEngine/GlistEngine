@@ -144,7 +144,7 @@ protected:
 	glm::quat orientation;
 	glm::vec3 scalevec;
 
-	void processTransformationMatrix();
+	virtual void processTransformationMatrix();
 
 private:
 	static int lastid;
