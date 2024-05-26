@@ -10,6 +10,7 @@ var classgCamera =
     [ "end", "classgCamera.html#a9531201ad24b93d7826ef4c1b1fbbed7", null ],
     [ "getLookMatrix", "classgCamera.html#a4e86d1783d852b4a9e0fd2e8bba06e99", null ],
     [ "getLookOrientation", "classgCamera.html#a617dcb5594710bae84c7d8cbd9bec3cf", null ],
+    [ "isInFrustum", "classgCamera.html#adb45c0d3db1194968e5b08de917f8985", null ],
     [ "lookAt", "classgCamera.html#ad05ed7f6287170f4f7f5a7ebcadc1d64", null ],
     [ "move", "classgCamera.html#a55f504c6e9ff39ddfd17ef7da1087ba9", null ],
     [ "move", "classgCamera.html#ac24e80c04e36ac74fcd70f6cb538539b", null ],

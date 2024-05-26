@@ -112,139 +112,148 @@ $(document).ready(function(){initNavTree('gModel_8h_source.html',''); initResiza
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor">#include &quot;gSkinnedMesh.h&quot;</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="preprocessor">#include &lt;vector&gt;</span></div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &lt;deque&gt;</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160; </div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &lt;thread&gt;</span></div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160; </div>
-<div class="line"><a name="l00029"></a><span class="lineno"><a class="line" href="classgModel.html">   29</a></span>&#160;<span class="keyword">class </span><a class="code" href="classgModel.html">gModel</a> : <span class="keyword">public</span> <a class="code" href="classgNode.html">gNode</a> {</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    <span class="comment">// model data</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    std::deque&lt;gTexture*&gt; textures_loaded;  <span class="comment">// stores all the textures loaded so far, optimization to make sure textures aren&#39;t loaded more than once.</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    std::deque&lt;gSkinnedMesh&gt;    meshes;</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    std::string directory;</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160; </div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <span class="comment">// constructor, expects a filepath to a 3D model.</span></div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <a class="code" href="classgModel.html">gModel</a>();</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <span class="keyword">virtual</span> ~<a class="code" href="classgModel.html">gModel</a>();</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160; </div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <span class="keywordtype">void</span> loadModel(<span class="keyword">const</span> std::string&amp; modelPath);</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="keywordtype">void</span> loadModelWithOriginalVertices(<span class="keyword">const</span> std::string&amp; modelPath);</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <span class="keywordtype">void</span> loadMorphingTargetModel(<span class="keyword">const</span> std::string&amp; modelPath);</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <span class="keywordtype">void</span> load(<span class="keyword">const</span> std::string&amp; fullPath);</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <span class="keywordtype">void</span> draw();</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; </div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <span class="keyword">const</span> std::string&amp; getFilename() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <span class="keyword">const</span> std::string getFullpath() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <span class="keywordtype">int</span> getMeshNum() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <span class="keywordtype">int</span> getMeshNo(<span class="keyword">const</span> std::string&amp; meshName) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <a class="code" href="classgSkinnedMesh.html">gSkinnedMesh</a>&amp; getMesh(<span class="keywordtype">int</span> meshNo);</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <a class="code" href="classgSkinnedMesh.html">gSkinnedMesh</a>* getMeshPtr(<span class="keywordtype">int</span> meshNo);</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <span class="keyword">const</span> std::string getMeshName(<span class="keywordtype">int</span> meshNo) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <a class="code" href="classgBoundingBox.html">gBoundingBox</a> getBoundingBox();</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160; </div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="keywordtype">void</span> move(<span class="keywordtype">float</span> dx, <span class="keywordtype">float</span> dy, <span class="keywordtype">float</span> dz);</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <span class="keywordtype">void</span> move(<span class="keyword">const</span> glm::vec3&amp; dv);</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <span class="keywordtype">void</span> rotate(<span class="keyword">const</span> glm::quat&amp; q);</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    <span class="keywordtype">void</span> rotate(<span class="keywordtype">float</span> radians, <span class="keywordtype">float</span> ax, <span class="keywordtype">float</span> ay, <span class="keywordtype">float</span> az); <span class="comment">//first change</span></div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    <span class="keywordtype">void</span> rotateDeg(<span class="keywordtype">float</span> degrees, <span class="keywordtype">float</span> ax, <span class="keywordtype">float</span> ay, <span class="keywordtype">float</span> az);</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <span class="keywordtype">void</span> rotateAround(<span class="keywordtype">float</span> radians, <span class="keyword">const</span> glm::vec3&amp; axis, <span class="keyword">const</span> glm::vec3&amp; point);</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <span class="keywordtype">void</span> rotateAroundDeg(<span class="keywordtype">float</span> degrees, <span class="keyword">const</span> glm::vec3&amp; axis, <span class="keyword">const</span> glm::vec3&amp; point);</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    <span class="keywordtype">void</span> scale(<span class="keywordtype">float</span> sx, <span class="keywordtype">float</span> sy, <span class="keywordtype">float</span> sz);</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <span class="keywordtype">void</span> scale(<span class="keywordtype">float</span> s);</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    <span class="keywordtype">void</span> dolly(<span class="keywordtype">float</span> distance);</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <span class="keywordtype">void</span> truck(<span class="keywordtype">float</span> distance);</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    <span class="keywordtype">void</span> boom(<span class="keywordtype">float</span> distance);</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    <span class="keywordtype">void</span> tilt(<span class="keywordtype">float</span> radians);</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    <span class="keywordtype">void</span> tiltDeg(<span class="keywordtype">float</span> degrees);</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    <span class="keywordtype">void</span> pan(<span class="keywordtype">float</span> radians);</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <span class="keywordtype">void</span> panDeg(<span class="keywordtype">float</span> degrees);</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    <span class="keywordtype">void</span> roll(<span class="keywordtype">float</span> radians);</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <span class="keywordtype">void</span> rollDeg(<span class="keywordtype">float</span> degrees);</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160; </div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <span class="keywordtype">void</span> setPosition(<span class="keywordtype">float</span> px, <span class="keywordtype">float</span> py, <span class="keywordtype">float</span> pz);</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    <span class="keywordtype">void</span> setPosition(<span class="keyword">const</span> glm::vec3&amp; p);</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    <span class="keywordtype">void</span> setOrientation(<span class="keyword">const</span> glm::quat&amp; o);</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    <span class="keywordtype">void</span> setOrientation(<span class="keyword">const</span> glm::vec3&amp; angles);</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    <span class="keywordtype">void</span> setScale(<span class="keyword">const</span> glm::vec3&amp; s);</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    <span class="keywordtype">void</span> setScale(<span class="keywordtype">float</span> sx, <span class="keywordtype">float</span> sy, <span class="keywordtype">float</span> sz);</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    <span class="keywordtype">void</span> setScale(<span class="keywordtype">float</span> s);</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160; </div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    <span class="keywordtype">void</span> setTransformationMatrix(<span class="keyword">const</span> glm::mat4&amp; transformationMatrix);</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160; </div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <span class="keywordtype">bool</span> isAnimated() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    <span class="keywordtype">int</span> getAnimationNum() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    <span class="keywordtype">float</span> getAnimationDuration(<span class="keywordtype">int</span> animationNo = 0) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    <span class="keywordtype">void</span> animate(<span class="keywordtype">float</span> animationPosition);</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    <span class="keywordtype">float</span> getAnimationPosition() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    <span class="keywordtype">void</span> setAnimationFrameNo(<span class="keywordtype">int</span> frameNo);</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    <span class="keywordtype">void</span> nextAnimationFrame();</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    <span class="keywordtype">int</span> getAnimationFrameNo() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    <span class="keywordtype">void</span> setAnimationFrameNum(<span class="keywordtype">int</span> animationKeyNum);</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    <span class="keywordtype">int</span> getAnimationFrameNum() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    <span class="keywordtype">void</span> setAnimationFramerate(<span class="keywordtype">float</span> animationFramerate);</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    <span class="keywordtype">float</span> getAnimationFramerate() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    <span class="keywordtype">void</span> setMorphingFrameNo(<span class="keywordtype">int</span> morphingAnimationNo);</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    <span class="keywordtype">int</span> getMorphingFrameNo() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    <span class="keywordtype">void</span> nextMorphingFrame();</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    <span class="keywordtype">void</span> setMorphingSpeed(<span class="keywordtype">int</span> speed);</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    <span class="keywordtype">int</span> getMorphingSpeed() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    <span class="keywordtype">void</span> setMorphingFrameNum(<span class="keywordtype">int</span> morphingFrameNum);</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    <span class="keywordtype">int</span> getMorphingFrameNum() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    <span class="keywordtype">void</span> setMorphingTarget(<span class="keywordtype">int</span> morphingTargetId);</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    <span class="keywordtype">int</span> getMorphingTarget() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160; </div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    <span class="keywordtype">bool</span> isVertexAnimated() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    <span class="keywordtype">bool</span> isVertexAnimationStoredOnVram() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    <span class="keywordtype">void</span> makeVertexAnimated(<span class="keywordtype">bool</span> storeOnVram = <span class="keyword">true</span>);</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160; </div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;    <a class="code" href="classgBoundingBox.html">gBoundingBox</a>&amp; getInitialBoundingBox();</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160; </div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;    <span class="keyword">const</span> aiScene* scene;</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    std::vector&lt;const aiScene*&gt; morphingtargetscenes;</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;    <span class="keywordtype">void</span> loadModelFile(<span class="keyword">const</span> std::string&amp; fullPath);</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;    <span class="keywordtype">void</span> loadModelFileWithOriginalVertices(<span class="keyword">const</span> std::string&amp; fullPath);</div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;    <span class="keywordtype">void</span> loadMorphingTargetModelFile(<span class="keyword">const</span> std::string&amp; fullPath);</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;    <span class="keywordtype">void</span> processNode(aiNode *node, <span class="keyword">const</span> aiScene *scene);</div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;    <a class="code" href="classgSkinnedMesh.html">gSkinnedMesh</a> processMesh(aiMesh *mesh, <span class="keyword">const</span> aiScene *scene, aiMatrix4x4 matrix);</div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;    <span class="keywordtype">void</span> loadMaterialTextures(<a class="code" href="classgSkinnedMesh.html">gSkinnedMesh</a>* mesh, aiMaterial *mat, aiTextureType type, <span class="keywordtype">int</span> textureType);</div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;    <span class="keywordtype">void</span> processMorphingNode(aiNode *node, <span class="keyword">const</span> aiScene *scene);</div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;    <a class="code" href="classgMesh.html">gMesh</a> processMorphingMesh(aiMesh *mesh, <span class="keyword">const</span> aiScene *scene, aiMatrix4x4 matrix);</div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;    <span class="comment">//The below line&#39;s third parameter is to perform the animation on the target mesh by taking the aiTargetMesh as a reference. Haven&#39;t tested yet.</span></div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;    <span class="comment">//void updateBones(gSkinnedMesh* gmesh, aiMesh* aimesh, aiMesh* aiTargetMesh);</span></div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;    <span class="keywordtype">void</span> updateBones(<a class="code" href="classgSkinnedMesh.html">gSkinnedMesh</a>* gmesh, aiMesh* aimesh);</div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;    <span class="keywordtype">void</span> updateVbo(<a class="code" href="classgSkinnedMesh.html">gSkinnedMesh</a>* gmesh);</div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;    <span class="keywordtype">void</span> updateAnimationNodes();</div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;    <span class="keywordtype">void</span> generateAnimationKeys();</div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160; </div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;    std::string filename;</div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;    <span class="keywordtype">int</span> animationnum;</div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;    <span class="keywordtype">bool</span> isanimated;</div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;    <span class="keywordtype">float</span> animationposition, animationpositionold;</div>
-<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;    <span class="keywordtype">float</span> animationframerate;</div>
-<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;    <span class="keywordtype">int</span> animationframenum;</div>
-<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;    std::vector&lt;float&gt; animationkeys;</div>
-<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;    <span class="keywordtype">int</span> animationframeno;</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
+<div class="line"><a name="l00030"></a><span class="lineno"><a class="line" href="classgModel.html">   30</a></span>&#160;<span class="keyword">class </span><a class="code" href="classgModel.html">gModel</a> : <span class="keyword">public</span> <a class="code" href="classgNode.html">gNode</a> {</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    <span class="comment">// model data</span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    std::deque&lt;gTexture*&gt; textures_loaded;  <span class="comment">// stores all the textures loaded so far, optimization to make sure textures aren&#39;t loaded more than once.</span></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    std::deque&lt;gSkinnedMesh*&gt; meshes;</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    std::string directory;</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160; </div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <span class="comment">// constructor, expects a filepath to a 3D model.</span></div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <a class="code" href="classgModel.html">gModel</a>();</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <span class="keyword">virtual</span> ~<a class="code" href="classgModel.html">gModel</a>();</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160; </div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="keywordtype">void</span> loadModel(<span class="keyword">const</span> std::string&amp; modelPath);</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <span class="keywordtype">void</span> loadModelWithOriginalVertices(<span class="keyword">const</span> std::string&amp; modelPath);</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <span class="keywordtype">void</span> loadMorphingTargetModel(<span class="keyword">const</span> std::string&amp; modelPath);</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <span class="keywordtype">void</span> load(<span class="keyword">const</span> std::string&amp; fullPath);</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="keywordtype">void</span> draw();</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160; </div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <span class="keyword">const</span> std::string&amp; getFilename() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <span class="keyword">const</span> std::string getFullpath() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <span class="keywordtype">int</span> getMeshNum() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <span class="keywordtype">int</span> getMeshNo(<span class="keyword">const</span> std::string&amp; meshName) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <a class="code" href="classgSkinnedMesh.html">gSkinnedMesh</a>&amp; getMesh(<span class="keywordtype">int</span> meshNo);</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <a class="code" href="classgSkinnedMesh.html">gSkinnedMesh</a>* getMeshPtr(<span class="keywordtype">int</span> meshNo);</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <span class="keyword">const</span> std::string getMeshName(<span class="keywordtype">int</span> meshNo) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <a class="code" href="classgBoundingBox.html">gBoundingBox</a> getBoundingBox();</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160; </div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <span class="keywordtype">void</span> move(<span class="keywordtype">float</span> dx, <span class="keywordtype">float</span> dy, <span class="keywordtype">float</span> dz);</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <span class="keywordtype">void</span> move(<span class="keyword">const</span> glm::vec3&amp; dv);</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    <span class="keywordtype">void</span> rotate(<span class="keyword">const</span> glm::quat&amp; q);</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    <span class="keywordtype">void</span> rotate(<span class="keywordtype">float</span> radians, <span class="keywordtype">float</span> ax, <span class="keywordtype">float</span> ay, <span class="keywordtype">float</span> az); <span class="comment">//first change</span></div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <span class="keywordtype">void</span> rotateDeg(<span class="keywordtype">float</span> degrees, <span class="keywordtype">float</span> ax, <span class="keywordtype">float</span> ay, <span class="keywordtype">float</span> az);</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <span class="keywordtype">void</span> rotateAround(<span class="keywordtype">float</span> radians, <span class="keyword">const</span> glm::vec3&amp; axis, <span class="keyword">const</span> glm::vec3&amp; point);</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    <span class="keywordtype">void</span> rotateAroundDeg(<span class="keywordtype">float</span> degrees, <span class="keyword">const</span> glm::vec3&amp; axis, <span class="keyword">const</span> glm::vec3&amp; point);</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <span class="keywordtype">void</span> scale(<span class="keywordtype">float</span> sx, <span class="keywordtype">float</span> sy, <span class="keywordtype">float</span> sz);</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    <span class="keywordtype">void</span> scale(<span class="keywordtype">float</span> s);</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <span class="keywordtype">void</span> dolly(<span class="keywordtype">float</span> distance);</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    <span class="keywordtype">void</span> truck(<span class="keywordtype">float</span> distance);</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    <span class="keywordtype">void</span> boom(<span class="keywordtype">float</span> distance);</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    <span class="keywordtype">void</span> tilt(<span class="keywordtype">float</span> radians);</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    <span class="keywordtype">void</span> tiltDeg(<span class="keywordtype">float</span> degrees);</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <span class="keywordtype">void</span> pan(<span class="keywordtype">float</span> radians);</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    <span class="keywordtype">void</span> panDeg(<span class="keywordtype">float</span> degrees);</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <span class="keywordtype">void</span> roll(<span class="keywordtype">float</span> radians);</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    <span class="keywordtype">void</span> rollDeg(<span class="keywordtype">float</span> degrees);</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160; </div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    <span class="keywordtype">void</span> setPosition(<span class="keywordtype">float</span> px, <span class="keywordtype">float</span> py, <span class="keywordtype">float</span> pz);</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    <span class="keywordtype">void</span> setPosition(<span class="keyword">const</span> glm::vec3&amp; p);</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    <span class="keywordtype">void</span> setOrientation(<span class="keyword">const</span> glm::quat&amp; o);</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    <span class="keywordtype">void</span> setOrientation(<span class="keyword">const</span> glm::vec3&amp; angles);</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    <span class="keywordtype">void</span> setScale(<span class="keyword">const</span> glm::vec3&amp; s);</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    <span class="keywordtype">void</span> setScale(<span class="keywordtype">float</span> sx, <span class="keywordtype">float</span> sy, <span class="keywordtype">float</span> sz);</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    <span class="keywordtype">void</span> setScale(<span class="keywordtype">float</span> s);</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160; </div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    <span class="keywordtype">void</span> setTransformationMatrix(<span class="keyword">const</span> glm::mat4&amp; transformationMatrix);</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160; </div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    <span class="keywordtype">bool</span> isAnimated() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    <span class="keywordtype">int</span> getAnimationNum() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    <span class="keywordtype">float</span> getAnimationDuration(<span class="keywordtype">int</span> animationNo = 0) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    <span class="keywordtype">void</span> animate(<span class="keywordtype">float</span> animationPosition);</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    <span class="keywordtype">float</span> getAnimationPosition() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    <span class="keywordtype">void</span> setAnimationFrameNo(<span class="keywordtype">int</span> frameNo);</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    <span class="keywordtype">void</span> nextAnimationFrame();</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    <span class="keywordtype">int</span> getAnimationFrameNo() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    <span class="keywordtype">void</span> setAnimationFrameNum(<span class="keywordtype">int</span> animationKeyNum);</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    <span class="keywordtype">int</span> getAnimationFrameNum() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    <span class="keywordtype">void</span> setAnimationFramerate(<span class="keywordtype">float</span> animationFramerate);</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    <span class="keywordtype">float</span> getAnimationFramerate() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    <span class="keywordtype">void</span> setMorphingFrameNo(<span class="keywordtype">int</span> morphingAnimationNo);</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    <span class="keywordtype">int</span> getMorphingFrameNo() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    <span class="keywordtype">void</span> nextMorphingFrame();</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    <span class="keywordtype">void</span> setMorphingSpeed(<span class="keywordtype">int</span> speed);</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    <span class="keywordtype">int</span> getMorphingSpeed() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    <span class="keywordtype">void</span> setMorphingFrameNum(<span class="keywordtype">int</span> morphingFrameNum);</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    <span class="keywordtype">int</span> getMorphingFrameNum() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    <span class="keywordtype">void</span> setMorphingTarget(<span class="keywordtype">int</span> morphingTargetId);</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    <span class="keywordtype">int</span> getMorphingTarget() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160; </div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    <span class="keywordtype">bool</span> isVertexAnimated() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    <span class="keywordtype">bool</span> isVertexAnimationStoredOnVram() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;    <span class="keywordtype">void</span> makeVertexAnimated(<span class="keywordtype">bool</span> storeOnVram = <span class="keyword">true</span>);</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160; </div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;    <a class="code" href="classgBoundingBox.html">gBoundingBox</a>&amp; getInitialBoundingBox();</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160; </div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;    <span class="keywordtype">void</span> setEnableFrustumCulling(<span class="keywordtype">bool</span> enable);</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160; </div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;    <span class="keyword">const</span> aiScene* scene;</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;    std::vector&lt;const aiScene*&gt; morphingtargetscenes;</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;    <span class="keywordtype">void</span> loadModelFile(<span class="keyword">const</span> std::string&amp; fullPath);</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;    <span class="keywordtype">void</span> loadModelFileWithOriginalVertices(<span class="keyword">const</span> std::string&amp; fullPath);</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;    <span class="keywordtype">void</span> loadMorphingTargetModelFile(<span class="keyword">const</span> std::string&amp; fullPath);</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;    <span class="keywordtype">void</span> processNode(aiNode *node, <span class="keyword">const</span> aiScene *scene);</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;    <a class="code" href="classgSkinnedMesh.html">gSkinnedMesh</a>* processMesh(aiMesh *mesh, <span class="keyword">const</span> aiScene *scene, aiMatrix4x4 matrix);</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;    <span class="keywordtype">void</span> loadMaterialTextures(<a class="code" href="classgSkinnedMesh.html">gSkinnedMesh</a>* mesh, aiMaterial *mat, aiTextureType type, <span class="keywordtype">int</span> textureType);</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;    <span class="keywordtype">void</span> processMorphingNode(aiNode *node, <span class="keyword">const</span> aiScene *scene);</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;    <a class="code" href="classgMesh.html">gMesh</a>* processMorphingMesh(aiMesh *mesh, <span class="keyword">const</span> aiScene *scene, aiMatrix4x4 matrix);</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;    <span class="comment">//The below line&#39;s third parameter is to perform the animation on the target mesh by taking the aiTargetMesh as a reference. Haven&#39;t tested yet.</span></div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;    <span class="comment">//void updateBones(gSkinnedMesh* gmesh, aiMesh* aimesh, aiMesh* aiTargetMesh);</span></div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;    <span class="keywordtype">void</span> updateBones(<a class="code" href="classgSkinnedMesh.html">gSkinnedMesh</a>* gmesh, aiMesh* aimesh);</div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;    <span class="keywordtype">void</span> updateVbo(<a class="code" href="classgSkinnedMesh.html">gSkinnedMesh</a>* gmesh);</div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;    <span class="keywordtype">void</span> updateAnimationNodes();</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;    <span class="keywordtype">void</span> generateAnimationKeys();</div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160; </div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;    <span class="comment">// Find a node using the map</span></div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;    aiNode* findNodeFast(<span class="keyword">const</span> std::string&amp; name) {</div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;        <span class="keyword">auto</span> it = nodemap.find(name);</div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;        <span class="keywordflow">return</span> (it != nodemap.end()) ? it-&gt;second : <span class="keyword">nullptr</span>;</div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;    }</div>
 <div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160; </div>
-<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;    <span class="keywordtype">void</span> prepareVertexAnimationData();</div>
-<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;    <span class="keywordtype">bool</span> isvertexanimated;</div>
-<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;    <span class="keywordtype">bool</span> isvertexanimationstoredonvram;</div>
-<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160; </div>
-<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;    <span class="keywordtype">float</span> bbminx, bbminy, bbminz, bbmaxx, bbmaxy, bbmaxz;</div>
-<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;    <span class="keywordtype">int</span> bbi, bbj;</div>
-<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;    std::vector&lt;gVertex&gt; bbvertices;</div>
-<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;    glm::vec3 bbvpos;</div>
-<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;    <a class="code" href="structgVertex.html">gVertex</a> bbv;</div>
-<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160; </div>
-<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;    glm::mat4 convertMatrix(<span class="keyword">const</span> aiMatrix4x4 &amp;aiMat);</div>
-<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;    <a class="code" href="classgBoundingBox.html">gBoundingBox</a> initialboundingbox;</div>
+<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;    std::string filename;</div>
+<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;    <span class="keywordtype">int</span> animationnum;</div>
+<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;    <span class="keywordtype">bool</span> isanimated;</div>
+<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;    <span class="keywordtype">float</span> animationposition, animationpositionold;</div>
+<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;    <span class="keywordtype">float</span> animationframerate;</div>
+<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;    <span class="keywordtype">int</span> animationframenum;</div>
+<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;    std::vector&lt;float&gt; animationkeys;</div>
+<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;    <span class="keywordtype">int</span> animationframeno;</div>
+<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160; </div>
+<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;    <span class="keywordtype">void</span> prepareVertexAnimationData();</div>
+<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;    <span class="keywordtype">bool</span> isvertexanimated;</div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;    <span class="keywordtype">bool</span> isvertexanimationstoredonvram;</div>
 <div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160; </div>
-<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;    <span class="keywordtype">bool</span> oldalpha;</div>
-<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> dri;</div>
-<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;};</div>
-<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160; </div>
-<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* ENGINE_GRAPHICS_GMODEL_H_ */</span><span class="preprocessor"></span></div>
+<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;    <span class="keywordtype">float</span> bbminx, bbminy, bbminz, bbmaxx, bbmaxy, bbmaxz;</div>
+<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;    std::vector&lt;gVertex&gt; bbvertices;</div>
+<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;    glm::vec3 bbvpos;</div>
+<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;    <a class="code" href="structgVertex.html">gVertex</a> bbv;</div>
+<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;    <span class="comment">// this is used to find the nodes fast because assimp code is slow, it might consume little more memory</span></div>
+<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;    std::unordered_map&lt;std::string, aiNode*&gt; nodemap;</div>
+<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160; </div>
+<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;    glm::mat4 convertMatrix(<span class="keyword">const</span> aiMatrix4x4 &amp;aiMat);</div>
+<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;    <a class="code" href="classgBoundingBox.html">gBoundingBox</a> initialboundingbox;</div>
+<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;    <span class="keywordtype">bool</span> isenablefrustumculling;</div>
+<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160; </div>
+<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;};</div>
+<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160; </div>
+<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* ENGINE_GRAPHICS_GMODEL_H_ */</span><span class="preprocessor"></span></div>
 <div class="ttc" id="aclassgBoundingBox_html"><div class="ttname"><a href="classgBoundingBox.html">gBoundingBox</a></div><div class="ttdef"><b>Definition:</b> gBoundingBox.h:36</div></div>
 <div class="ttc" id="aclassgMesh_html"><div class="ttname"><a href="classgMesh.html">gMesh</a></div><div class="ttdef"><b>Definition:</b> gMesh.h:25</div></div>
-<div class="ttc" id="aclassgModel_html"><div class="ttname"><a href="classgModel.html">gModel</a></div><div class="ttdef"><b>Definition:</b> gModel.h:29</div></div>
+<div class="ttc" id="aclassgModel_html"><div class="ttname"><a href="classgModel.html">gModel</a></div><div class="ttdef"><b>Definition:</b> gModel.h:30</div></div>
 <div class="ttc" id="aclassgNode_html"><div class="ttname"><a href="classgNode.html">gNode</a></div><div class="ttdef"><b>Definition:</b> gNode.h:14</div></div>
 <div class="ttc" id="aclassgSkinnedMesh_html"><div class="ttname"><a href="classgSkinnedMesh.html">gSkinnedMesh</a></div><div class="ttdef"><b>Definition:</b> gSkinnedMesh.h:15</div></div>
 <div class="ttc" id="astructgVertex_html"><div class="ttname"><a href="structgVertex.html">gVertex</a></div><div class="ttdef"><b>Definition:</b> gVbo.h:14</div></div>

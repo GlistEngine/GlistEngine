@@ -51,6 +51,7 @@ var classgModel =
     [ "setAnimationFrameNo", "classgModel.html#a7068099a36182446d76bf65cf7f0c73d", null ],
     [ "setAnimationFrameNum", "classgModel.html#adffdfd95a243a6681998e47264853ea6", null ],
     [ "setAnimationFramerate", "classgModel.html#a735eca76a2f49b924845843e172a89ca", null ],
+    [ "setEnableFrustumCulling", "classgModel.html#ae21f13df1e76736cc6a31529cdaca3d6", null ],
     [ "setMorphingFrameNo", "classgModel.html#a82abf38c7cfb26b51a09fdae425fb048", null ],
     [ "setMorphingFrameNum", "classgModel.html#aed790cb190cc47e35421754564195dad", null ],
     [ "setMorphingSpeed", "classgModel.html#ab9aac3bd4d83708a8d52344ad6f3d7a1", null ],
@@ -67,6 +68,6 @@ var classgModel =
     [ "tiltDeg", "classgModel.html#ab580e6aa64b9d448d20d04f139fcd9f0", null ],
     [ "truck", "classgModel.html#a47b8a9ab9025c504729339ce5f5f2e45", null ],
     [ "directory", "classgModel.html#a132fda4d09c27d33002f710a277e03dc", null ],
-    [ "meshes", "classgModel.html#af42cbd53f51a091594e5900a9a147bf7", null ],
+    [ "meshes", "classgModel.html#ac86fbf79931314dbe9e4022bb4581ebc", null ],
     [ "textures_loaded", "classgModel.html#a474d45544560276725a46b446b693e2c", null ]
 ];
