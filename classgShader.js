@@ -3,6 +3,7 @@ var classgShader =
     [ "gShader", "classgShader.html#a65e45f7547ab77613417cd735c36e1c8", null ],
     [ "gShader", "classgShader.html#a0e7b3bf647a9cc5b10144a97ad53c437", null ],
     [ "~gShader", "classgShader.html#aca29cff5650c2e994cd21d20ffef9654", null ],
+    [ "attachUbo", "classgShader.html#a5b122e472ab28a85f290aa77f71bd284", null ],
     [ "load", "classgShader.html#ae0d1457caa2cfb412d43ef055136288f", null ],
     [ "loadProgram", "classgShader.html#a2865be1b6cc816443b54365075f9fe21", null ],
     [ "loadShader", "classgShader.html#a532d37218603f8fb84e8f42e3330693c", null ],

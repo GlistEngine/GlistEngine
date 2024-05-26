@@ -108,52 +108,53 @@ $(document).ready(function(){initNavTree('gRay_8h_source.html',''); initResizabl
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="preprocessor">#include &quot;gRenderObject.h&quot;</span></div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160; </div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">#define GLM_ENABLE_EXPERIMENTAL</span></div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="preprocessor">#include &lt;glm/glm.hpp&gt;</span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor">#include &lt;glm/gtc/matrix_transform.hpp&gt;</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="preprocessor">#include &lt;glm/gtx/quaternion.hpp&gt;</span></div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="keyword">class </span><a class="code" href="classgMesh.html">gMesh</a>;</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="keyword">class </span><a class="code" href="classgBoundingBox.html">gBoundingBox</a>;</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="preprocessor">#define GLM_FORCE_DEFAULT_ALIGNED_GENTYPES</span></div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor">#include &lt;glm/glm.hpp&gt;</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="preprocessor">#include &lt;glm/gtc/matrix_transform.hpp&gt;</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &lt;glm/gtx/quaternion.hpp&gt;</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160; </div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="keyword">class </span><a class="code" href="classgMesh.html">gMesh</a>;</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="keyword">class </span><a class="code" href="classgBoundingBox.html">gBoundingBox</a>;</div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160; </div>
-<div class="line"><a name="l00031"></a><span class="lineno"><a class="line" href="classgRay.html">   31</a></span>&#160;<span class="keyword">class </span><a class="code" href="classgRay.html">gRay</a> : <span class="keyword">public</span> <a class="code" href="classgRenderObject.html">gRenderObject</a> {</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <a class="code" href="classgRay.html">gRay</a>();</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <a class="code" href="classgRay.html">gRay</a>(<span class="keyword">const</span> glm::vec3&amp; originPoint, <span class="keyword">const</span> glm::vec3&amp; directionVector);</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <span class="keyword">virtual</span> ~<a class="code" href="classgRay.html">gRay</a>();</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160; </div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <span class="keywordtype">void</span> setOrigin(<span class="keyword">const</span> glm::vec3&amp; originPoint);</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <span class="keywordtype">void</span> setDirection(<span class="keyword">const</span> glm::vec3&amp; directionVector);</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <span class="keyword">const</span> glm::vec3&amp; getOrigin();</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <span class="keyword">const</span> glm::vec3 getDirection();</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="keywordtype">float</span> getLength() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; </div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <span class="keywordtype">bool</span> intersects(<a class="code" href="classgBoundingBox.html">gBoundingBox</a>&amp; boundingBox);</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <span class="keywordtype">float</span> distance(<a class="code" href="classgBoundingBox.html">gBoundingBox</a>&amp; boundingBox);</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; </div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <span class="keywordtype">void</span> link(<a class="code" href="classgMesh.html">gMesh</a>* mesh, <span class="keywordtype">float</span> rayScale = 1.0f, <span class="keywordtype">bool</span> isNormalized = <span class="keyword">false</span>, <span class="keywordtype">float</span> dx = 0.0f, <span class="keywordtype">float</span> dy = 0.0f, <span class="keywordtype">float</span> dz = 0.0f);</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <span class="keywordtype">void</span> unlink();</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160; </div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <span class="keywordtype">void</span> draw();</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160; </div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    glm::vec3 origin, direction;</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <span class="keywordtype">bool</span> islinked;</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <a class="code" href="classgMesh.html">gMesh</a>* linkedmesh;</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="keywordtype">float</span> scale;</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <span class="keywordtype">bool</span> isnormalized;</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    glm::vec3 pdiff;</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    <span class="keywordtype">float</span> length;</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    glm::vec3 originpoint, directionpoint;</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    glm::vec3 linkedmeshpos;</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    glm::mat4 linkedmeshorientation;</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;};</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160; </div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* GRAPHICS_GRAY_H_ */</span><span class="preprocessor"></span></div>
-<div class="ttc" id="aclassgBoundingBox_html"><div class="ttname"><a href="classgBoundingBox.html">gBoundingBox</a></div><div class="ttdef"><b>Definition:</b> gBoundingBox.h:35</div></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160; </div>
+<div class="line"><a name="l00032"></a><span class="lineno"><a class="line" href="classgRay.html">   32</a></span>&#160;<span class="keyword">class </span><a class="code" href="classgRay.html">gRay</a> : <span class="keyword">public</span> <a class="code" href="classgRenderObject.html">gRenderObject</a> {</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <a class="code" href="classgRay.html">gRay</a>();</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <a class="code" href="classgRay.html">gRay</a>(<span class="keyword">const</span> glm::vec3&amp; originPoint, <span class="keyword">const</span> glm::vec3&amp; directionVector);</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <span class="keyword">virtual</span> ~<a class="code" href="classgRay.html">gRay</a>();</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160; </div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <span class="keywordtype">void</span> setOrigin(<span class="keyword">const</span> glm::vec3&amp; originPoint);</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <span class="keywordtype">void</span> setDirection(<span class="keyword">const</span> glm::vec3&amp; directionVector);</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <span class="keyword">const</span> glm::vec3&amp; getOrigin();</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="keyword">const</span> glm::vec3 getDirection();</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <span class="keywordtype">float</span> getLength() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160; </div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <span class="keywordtype">bool</span> intersects(<a class="code" href="classgBoundingBox.html">gBoundingBox</a>&amp; boundingBox);</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="keywordtype">float</span> distance(<a class="code" href="classgBoundingBox.html">gBoundingBox</a>&amp; boundingBox);</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160; </div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <span class="keywordtype">void</span> link(<a class="code" href="classgMesh.html">gMesh</a>* mesh, <span class="keywordtype">float</span> rayScale = 1.0f, <span class="keywordtype">bool</span> isNormalized = <span class="keyword">false</span>, <span class="keywordtype">float</span> dx = 0.0f, <span class="keywordtype">float</span> dy = 0.0f, <span class="keywordtype">float</span> dz = 0.0f);</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <span class="keywordtype">void</span> unlink();</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160; </div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <span class="keywordtype">void</span> draw();</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160; </div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    glm::vec3 origin, direction;</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <span class="keywordtype">bool</span> islinked;</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <a class="code" href="classgMesh.html">gMesh</a>* linkedmesh;</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <span class="keywordtype">float</span> scale;</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <span class="keywordtype">bool</span> isnormalized;</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    glm::vec3 pdiff;</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    <span class="keywordtype">float</span> length;</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    glm::vec3 originpoint, directionpoint;</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    glm::vec3 linkedmeshpos;</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    glm::mat4 linkedmeshorientation;</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;};</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160; </div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* GRAPHICS_GRAY_H_ */</span><span class="preprocessor"></span></div>
+<div class="ttc" id="aclassgBoundingBox_html"><div class="ttname"><a href="classgBoundingBox.html">gBoundingBox</a></div><div class="ttdef"><b>Definition:</b> gBoundingBox.h:36</div></div>
 <div class="ttc" id="aclassgMesh_html"><div class="ttname"><a href="classgMesh.html">gMesh</a></div><div class="ttdef"><b>Definition:</b> gMesh.h:25</div></div>
-<div class="ttc" id="aclassgRay_html"><div class="ttname"><a href="classgRay.html">gRay</a></div><div class="ttdef"><b>Definition:</b> gRay.h:31</div></div>
-<div class="ttc" id="aclassgRenderObject_html"><div class="ttname"><a href="classgRenderObject.html">gRenderObject</a></div><div class="ttdef"><b>Definition:</b> gRenderObject.h:24</div></div>
+<div class="ttc" id="aclassgRay_html"><div class="ttname"><a href="classgRay.html">gRay</a></div><div class="ttdef"><b>Definition:</b> gRay.h:32</div></div>
+<div class="ttc" id="aclassgRenderObject_html"><div class="ttname"><a href="classgRenderObject.html">gRenderObject</a></div><div class="ttdef"><b>Definition:</b> gRenderObject.h:23</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

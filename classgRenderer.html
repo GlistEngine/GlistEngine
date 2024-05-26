@@ -83,9 +83,11 @@ $(document).ready(function(){initNavTree('classgRenderer.html',''); initResizabl
 
 <div class="header">
   <div class="summary">
+<a href="#nested-classes">Classes</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="#pub-static-attribs">Static Public Attributes</a> &#124;
+<a href="#friends">Friends</a> &#124;
 <a href="classgRenderer-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">gRenderer Class Reference</div>  </div>
@@ -340,18 +342,21 @@ float&#160;</td><td class="memItemRight" valign="bottom"><b>getFogLinearEnd</b> 
 <tr class="memitem:a4f8d6e66dd74cd897999186f87c0f728"><td class="memItemLeft" align="right" valign="top"><a id="a4f8d6e66dd74cd897999186f87c0f728"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>addSceneLight</b> (<a class="el" href="classgLight.html">gLight</a> *light)</td></tr>
 <tr class="separator:a4f8d6e66dd74cd897999186f87c0f728"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a85ea5e805da1e3463ea4f4b26ade5987"><td class="memItemLeft" align="right" valign="top"><a id="a85ea5e805da1e3463ea4f4b26ade5987"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>removeSceneLight</b> (<a class="el" href="classgLight.html">gLight</a> *light)</td></tr>
+<tr class="separator:a85ea5e805da1e3463ea4f4b26ade5987"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a67c27bd0d1fe6e2cfc935f1a73fbfeee"><td class="memItemLeft" align="right" valign="top"><a id="a67c27bd0d1fe6e2cfc935f1a73fbfeee"></a>
 <a class="el" href="classgLight.html">gLight</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>getSceneLight</b> (int lightNo)</td></tr>
 <tr class="separator:a67c27bd0d1fe6e2cfc935f1a73fbfeee"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab2d563ee0fc6bfacc1739ee9832fd035"><td class="memItemLeft" align="right" valign="top"><a id="ab2d563ee0fc6bfacc1739ee9832fd035"></a>
 int&#160;</td><td class="memItemRight" valign="bottom"><b>getSceneLightNum</b> ()</td></tr>
 <tr class="separator:ab2d563ee0fc6bfacc1739ee9832fd035"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a85ea5e805da1e3463ea4f4b26ade5987"><td class="memItemLeft" align="right" valign="top"><a id="a85ea5e805da1e3463ea4f4b26ade5987"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>removeSceneLight</b> (<a class="el" href="classgLight.html">gLight</a> *light)</td></tr>
-<tr class="separator:a85ea5e805da1e3463ea4f4b26ade5987"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abcce0b37dc08774eb073ebc6bc4fa10c"><td class="memItemLeft" align="right" valign="top"><a id="abcce0b37dc08774eb073ebc6bc4fa10c"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>removeAllSceneLights</b> ()</td></tr>
 <tr class="separator:abcce0b37dc08774eb073ebc6bc4fa10c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af52cd93978e1bbe6f89f1d3a6d74f3c6"><td class="memItemLeft" align="right" valign="top"><a id="af52cd93978e1bbe6f89f1d3a6d74f3c6"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>updateLights</b> ()</td></tr>
+<tr class="separator:af52cd93978e1bbe6f89f1d3a6d74f3c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aad776f744e01ca4f374c771c1de069ea"><td class="memItemLeft" align="right" valign="top"><a id="aad776f744e01ca4f374c771c1de069ea"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>enableDepthTest</b> ()</td></tr>
 <tr class="separator:aad776f744e01ca4f374c771c1de069ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -597,6 +602,12 @@ static const int&#160;</td><td class="memItemRight" valign="bottom"><b>LOGLEVEL_
 <tr class="memitem:a2e7e512031a455faf43eb905a1e1b67e inherit pub_static_attribs_classgObject"><td class="memItemLeft" align="right" valign="top"><a id="a2e7e512031a455faf43eb905a1e1b67e"></a>
 static const int&#160;</td><td class="memItemRight" valign="bottom"><b>LOGLEVEL_ERROR</b></td></tr>
 <tr class="separator:a2e7e512031a455faf43eb905a1e1b67e inherit pub_static_attribs_classgObject"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="friends"></a>
+Friends</h2></td></tr>
+<tr class="memitem:a9acbb4fb4810b70c2b1467d45a86215e"><td class="memItemLeft" align="right" valign="top"><a id="a9acbb4fb4810b70c2b1467d45a86215e"></a>
+class&#160;</td><td class="memItemRight" valign="bottom"><b>gRenderObject</b></td></tr>
+<tr class="separator:a9acbb4fb4810b70c2b1467d45a86215e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
 Additional Inherited Members</h2></td></tr>

@@ -85,6 +85,8 @@ $(document).ready(function(){initNavTree('classgLight.html',''); initResizable()
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-static-attribs">Static Public Attributes</a> &#124;
+<a href="#pro-methods">Protected Member Functions</a> &#124;
+<a href="#friends">Friends</a> &#124;
 <a href="classgLight-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">gLight Class Reference</div>  </div>
@@ -127,6 +129,11 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:aa3f8b4bbb816a4d56a34d8e761d6a181"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1ce832772a9bf46e8b109283180df184"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgLight.html#a1ce832772a9bf46e8b109283180df184">isEnabled</a> () const</td></tr>
 <tr class="separator:a1ce832772a9bf46e8b109283180df184"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa0d0476dc74d772414f4e34f86a1ab9b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgLight.html#aa0d0476dc74d772414f4e34f86a1ab9b">isChanged</a> () const</td></tr>
+<tr class="separator:aa0d0476dc74d772414f4e34f86a1ab9b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a38a21eb7e58ad39ab85ef653f2af7bad"><td class="memItemLeft" align="right" valign="top"><a id="a38a21eb7e58ad39ab85ef653f2af7bad"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setChanged</b> (bool <a class="el" href="classgLight.html#aa0d0476dc74d772414f4e34f86a1ab9b">isChanged</a>)</td></tr>
+<tr class="separator:a38a21eb7e58ad39ab85ef653f2af7bad"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0ce811674eac027a5fb9815e566ae183"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgLight.html#a0ce811674eac027a5fb9815e566ae183">setType</a> (int lightType)</td></tr>
 <tr class="separator:a0ce811674eac027a5fb9815e566ae183"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a79f4aa787b84511e22a8906b8b1c87de"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgLight.html#a79f4aa787b84511e22a8906b8b1c87de">getType</a> () const</td></tr>
@@ -395,6 +402,18 @@ static const int&#160;</td><td class="memItemRight" valign="bottom"><b>LOGLEVEL_
 static const int&#160;</td><td class="memItemRight" valign="bottom"><b>LOGLEVEL_ERROR</b></td></tr>
 <tr class="separator:a2e7e512031a455faf43eb905a1e1b67e inherit pub_static_attribs_classgObject"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
+Protected Member Functions</h2></td></tr>
+<tr class="memitem:a69ace8697040e8443a4298f1629fd732"><td class="memItemLeft" align="right" valign="top"><a id="a69ace8697040e8443a4298f1629fd732"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>processTransformationMatrix</b> () override</td></tr>
+<tr class="separator:a69ace8697040e8443a4298f1629fd732"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="friends"></a>
+Friends</h2></td></tr>
+<tr class="memitem:ae3c16ffb53dfd4ee129a25dd9a637408"><td class="memItemLeft" align="right" valign="top"><a id="ae3c16ffb53dfd4ee129a25dd9a637408"></a>
+class&#160;</td><td class="memItemRight" valign="bottom"><b>gRenderer</b></td></tr>
+<tr class="separator:ae3c16ffb53dfd4ee129a25dd9a637408"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
 <tr class="inherit_header pub_static_methods_classgRenderObject"><td colspan="2" onclick="javascript:toggleInherit('pub_static_methods_classgRenderObject')"><img src="closed.png" alt="-"/>&#160;Static Public Member Functions inherited from <a class="el" href="classgRenderObject.html">gRenderObject</a></td></tr>
@@ -454,10 +473,6 @@ static std::string&#160;</td><td class="memItemRight" valign="bottom"><b>gGetVid
 <tr class="memitem:aaebd7b33318f1c3936706759972f9ba2 inherit pub_static_methods_classgObject"><td class="memItemLeft" align="right" valign="top"><a id="aaebd7b33318f1c3936706759972f9ba2"></a>
 static void&#160;</td><td class="memItemRight" valign="bottom"><b>setCurrentResolution</b> (int scalingNo, int currentResolutionNo)</td></tr>
 <tr class="separator:aaebd7b33318f1c3936706759972f9ba2 inherit pub_static_methods_classgObject"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="inherit_header pro_methods_classgNode"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_classgNode')"><img src="closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="classgNode.html">gNode</a></td></tr>
-<tr class="memitem:a17bda4bce2883efc9b305665ef408f59 inherit pro_methods_classgNode"><td class="memItemLeft" align="right" valign="top"><a id="a17bda4bce2883efc9b305665ef408f59"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>processTransformationMatrix</b> ()</td></tr>
-<tr class="separator:a17bda4bce2883efc9b305665ef408f59 inherit pro_methods_classgNode"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_attribs_classgNode"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_classgNode')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="classgNode.html">gNode</a></td></tr>
 <tr class="memitem:a1b05034284ccbf2446c1dd82dfaef004 inherit pro_attribs_classgNode"><td class="memItemLeft" align="right" valign="top"><a id="a1b05034284ccbf2446c1dd82dfaef004"></a>
 <a class="el" href="classgNode.html">gNode</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>parent</b></td></tr>
@@ -1005,6 +1020,24 @@ static int&#160;</td><td class="memItemRight" valign="bottom"><b>releaseresoluti
 </div><div class="memdoc">
 <p>Gives using type of light id</p>
 <dl class="section return"><dt>Returns</dt><dd>light type id no </dd></dl>
+
+</div>
+</div>
+<a id="aa0d0476dc74d772414f4e34f86a1ab9b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa0d0476dc74d772414f4e34f86a1ab9b">&#9670;&nbsp;</a></span>isChanged()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool gLight::isChanged </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="section return"><dt>Returns</dt><dd>true if light data is changed and not uploaded to the GPU yet, false if not </dd></dl>
 
 </div>
 </div>

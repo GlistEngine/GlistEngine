@@ -152,6 +152,7 @@ var annotated_dup =
     [ "gTiltShift", "classgTiltShift.html", "classgTiltShift" ],
     [ "gTriangle", "classgTriangle.html", "classgTriangle" ],
     [ "gTube", "classgTube.html", "classgTube" ],
+    [ "gUbo", "classgUbo.html", "classgUbo" ],
     [ "gUTF8Iterator", "classgUTF8Iterator.html", "classgUTF8Iterator" ],
     [ "gUtils", "classgUtils.html", "classgUtils" ],
     [ "gVbo", "classgVbo.html", "classgVbo" ],

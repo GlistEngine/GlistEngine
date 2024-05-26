@@ -122,5 +122,7 @@ var classgRenderer =
     [ "setSSAOBias", "classgRenderer.html#a14f49dde3312311288f0ca34c847efc4", null ],
     [ "setViewMatrix", "classgRenderer.html#add20288b75535a460ccaf6615b2dcbd9", null ],
     [ "takeScreenshot", "classgRenderer.html#a08f1eb36d7d25fad01f56695a10889ee", null ],
-    [ "takeScreenshot", "classgRenderer.html#ab715d08fef850135dc2e48568c3f057a", null ]
+    [ "takeScreenshot", "classgRenderer.html#ab715d08fef850135dc2e48568c3f057a", null ],
+    [ "updateLights", "classgRenderer.html#af52cd93978e1bbe6f89f1d3a6d74f3c6", null ],
+    [ "gRenderObject", "classgRenderer.html#a9acbb4fb4810b70c2b1467d45a86215e", null ]
 ];

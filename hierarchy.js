@@ -37,6 +37,7 @@ var hierarchy =
     ] ],
     [ "gMatrix4", "classgMatrix4.html", null ],
     [ "gObject", "classgObject.html", [
+      [ "gUbo< gSceneLights >", "classgUbo.html", null ],
       [ "gAES", "classgAES.html", null ],
       [ "gAppManager", "classgAppManager.html", null ],
       [ "gAppObject", "classgAppObject.html", [
@@ -187,6 +188,7 @@ var hierarchy =
       [ "gThread", "classgThread.html", [
         [ "gAssetLoader", "classgAssetLoader.html", null ]
       ] ],
+      [ "gUbo< T >", "classgUbo.html", null ],
       [ "gWindows", "classgWindows.html", null ]
     ] ],
     [ "gRect", "classgRect.html", null ],

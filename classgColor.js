@@ -4,6 +4,8 @@ var classgColor =
     [ "gColor", "classgColor.html#a2e3706bb2182bf3193ebcd85e6dc1900", null ],
     [ "gColor", "classgColor.html#a5fdd97770c5fc68828d3492191ac39ce", null ],
     [ "~gColor", "classgColor.html#a61614b0976e64607ed6579815410275f", null ],
+    [ "asVec3", "classgColor.html#a1736050716c382dfb28b057e64aad9a2", null ],
+    [ "asVec4", "classgColor.html#a7ebe66c354dd438998e03237ea1906db", null ],
     [ "set", "classgColor.html#a2f089d8503434c57279ef70c085c5a66", null ],
     [ "set", "classgColor.html#a833fbc4beeb682297c9d10fbba58e074", null ],
     [ "set", "classgColor.html#ac6bf016844ba31d70417e9e611005ff1", null ],

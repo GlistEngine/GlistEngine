@@ -29,12 +29,15 @@ var classgLight =
     [ "getSpotCutOffSpread", "classgLight.html#a3d730e54ea5052c59e7cecc7613525c2", null ],
     [ "getSpotOuterCutOffAngle", "classgLight.html#a751c2f44e8b16fc968abac96f677394b", null ],
     [ "getType", "classgLight.html#a79f4aa787b84511e22a8906b8b1c87de", null ],
+    [ "isChanged", "classgLight.html#aa0d0476dc74d772414f4e34f86a1ab9b", null ],
     [ "isEnabled", "classgLight.html#a1ce832772a9bf46e8b109283180df184", null ],
+    [ "processTransformationMatrix", "classgLight.html#a69ace8697040e8443a4298f1629fd732", null ],
     [ "rotate", "classgLight.html#a75b058eae4c870cbf951a39d8c7b0939", null ],
     [ "setAmbientColor", "classgLight.html#a395dc99188152510f5dcc8aba768aba8", null ],
     [ "setAmbientColor", "classgLight.html#a68d165fa658a5be0f18b886a2349ae9f", null ],
     [ "setAttenuation", "classgLight.html#a396095b510a3afec75eb0aa3e2e6d202", null ],
     [ "setAttenuation", "classgLight.html#a4060960d8fb387c1a09adfccf2d2d138", null ],
+    [ "setChanged", "classgLight.html#a38a21eb7e58ad39ab85ef653f2af7bad", null ],
     [ "setDiffuseColor", "classgLight.html#a1338a7551806df39eb8e59961c8cae5f", null ],
     [ "setDiffuseColor", "classgLight.html#ad017a444feff10d5040bbc586881a3f0", null ],
     [ "setSpecularColor", "classgLight.html#a2b722d6e2687f9f9b1e5a5e9be35dc2a", null ],
@@ -42,5 +45,6 @@ var classgLight =
     [ "setSpotCutOff", "classgLight.html#a37651b6dfc093b75c8ff0d41b338ebb8", null ],
     [ "setSpotCutOffAngle", "classgLight.html#a9d3eb73af50da4e41c242ac276b7928c", null ],
     [ "setSpotCutOffSpread", "classgLight.html#ac5b36d3655999435aa27b853f9b0cc2d", null ],
-    [ "setType", "classgLight.html#a0ce811674eac027a5fb9815e566ae183", null ]
+    [ "setType", "classgLight.html#a0ce811674eac027a5fb9815e566ae183", null ],
+    [ "gRenderer", "classgLight.html#ae3c16ffb53dfd4ee129a25dd9a637408", null ]
 ];
