@@ -24,6 +24,7 @@ int gObject::releaseresolution;
 
 std::string gObject::exepath;
 std::string gObject::assetsdir;
+bool gObject::initializedpaths = false;
 
 
 static const std::string resolutiondirs[] = {
@@ -33,37 +34,42 @@ static const std::string resolutiondirs[] = {
 int gObject::renderpassnum = 1;
 int gObject::renderpassno = 0;
 
-inline bool endsWith(std::string const & value, std::string const & ending)
-{
-	if (ending.size() > value.size()) return false;
+inline bool endsWith(std::string const & value, std::string const & ending) {
+	if (ending.size() > value.size()) {
+		return false;
+	}
 	return std::equal(ending.rbegin(), ending.rend(), value.rbegin());
 }
 
 gObject::gObject() {
-	char temp[256];
-	exepath = getcwd(temp, sizeof(temp));
-	if(!endsWith(exepath, "/")) {
-		exepath += "/";
+	if (!initializedpaths) {
+		char temp[256];
+		exepath = getcwd(temp, sizeof(temp));
+		if(!endsWith(exepath, "/")) {
+			exepath += "/";
+		}
+
+		for (int i = 0; i < exepath.size(); i++) {
+			if (exepath[i] == '\\') {
+				exepath[i] = '/';
+			}
+		}
+#if defined(ANDROID)
+		if(gAndroidUtil::datadirectory.empty()) {
+			assetsdir = "";
+		} else {
+			assetsdir = gAndroidUtil::datadirectory + "/";
+		}
+#elif TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
+		assetsdir = gGetIOSResourceDirectory() + "/";
+#else
+		if(assetsdir.empty()) {
+			assetsdir = exepath + "assets/";
+		}
+#endif
+		initializedpaths = true;
 	}
 
-	for (int i = 0; i < exepath.size(); i++) {
-	    if (exepath[i] == '\\') {
-	    	exepath[i] = '/';
-	    }
-	}
-#if defined(ANDROID)
-    if(gAndroidUtil::datadirectory.empty()) {
-        assetsdir = "";
-    } else {
-        assetsdir = gAndroidUtil::datadirectory + "/";
-    }
-#elif TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
-    assetsdir = gGetIOSResourceDirectory() + "/";
-#else
-    if(assetsdir == "") {
-        assetsdir = exepath + "assets/";
-    }
-#endif
 }
 
 std::string gObject::gGetAppDir() {

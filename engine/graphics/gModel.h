@@ -51,7 +51,7 @@ public:
 	gSkinnedMesh& getMesh(int meshNo);
 	gSkinnedMesh* getMeshPtr(int meshNo);
 	const std::string getMeshName(int meshNo) const;
-	gBoundingBox getBoundingBox();
+	const gBoundingBox& getBoundingBox();
 
 	void move(float dx, float dy, float dz);
 	void move(const glm::vec3& dv);
@@ -110,7 +110,12 @@ public:
 
     gBoundingBox& getInitialBoundingBox();
 
+	void recalculateBoundingBox();
+
 	void setEnableFrustumCulling(bool enable);
+
+protected:
+	void processTransformationMatrix() override;
 
 private:
 	const aiScene* scene;
@@ -149,16 +154,14 @@ private:
 	bool isvertexanimated;
 	bool isvertexanimationstoredonvram;
 
-    float bbminx, bbminy, bbminz, bbmaxx, bbmaxy, bbmaxz;
-    std::vector<gVertex> bbvertices;
-    glm::vec3 bbvpos;
-    gVertex bbv;
 	// this is used to find the nodes fast because assimp code is slow, it might consume little more memory
 	std::unordered_map<std::string, aiNode*> nodemap;
 
     glm::mat4 convertMatrix(const aiMatrix4x4 &aiMat);
     gBoundingBox initialboundingbox;
+    gBoundingBox boundingbox;
 	bool isenablefrustumculling;
+	bool needsboundingboxrecalculation;
 
 };
 

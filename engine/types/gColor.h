@@ -27,11 +27,11 @@ public:
 	void set(int r, int g, int b, int a = 255);
 	void set(gColor* color);
 
-	glm::vec4 asVec4() {
+	glm::vec4 asVec4() const {
 		return {r, g, b, a};
 	}
 
-	glm::vec3 asVec3() {
+	glm::vec3 asVec3() const {
 		return {r, g, b};
 	}
 
