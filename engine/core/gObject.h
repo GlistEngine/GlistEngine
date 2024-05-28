@@ -197,6 +197,8 @@ private:
 	static std::string exepath;
 	static std::string assetsdir;
 	static bool initializedpaths;
+
+	static void initPaths();
 };
 
 #endif /* ENGINE_BASE_GOBJECT_H_ */
