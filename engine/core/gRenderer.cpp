@@ -738,6 +738,7 @@ gRenderer::~gRenderer() {
 	delete brdfshader;
 	delete fboshader;
 	delete rendercolor;
+	delete lightsubo;
 }
 
 gShader* gRenderer::getColorShader() {

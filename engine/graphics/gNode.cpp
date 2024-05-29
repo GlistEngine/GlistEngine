@@ -228,6 +228,9 @@ void gNode::processTransformationMatrix() {
 	localtransformationmatrix = glm::translate(glm::mat4(1.0f), position);
 	localtransformationmatrix = localtransformationmatrix * glm::toMat4((const glm::quat&)orientation);
 	localtransformationmatrix = glm::scale(localtransformationmatrix, scalevec);
+	prevposition = position;
+	prevorientation = orientation;
+	prevscalevec = scalevec;
 }
 
 void gNode::setEnabled(bool isEnabled) {

@@ -22,9 +22,8 @@ gModel::gModel() {
 	animationframeno = 0;
 	isvertexanimated = false;
 	isvertexanimationstoredonvram = false;
-	isenablefrustumculling = false;
-	bbminx = 0.0f, bbminy = 0.0f, bbminz = 0.0f;
-	bbmaxx = 0.0f, bbmaxy = 0.0f, bbmaxz = 0.0f;
+	isenablefrustumculling = true;
+	needsboundingboxrecalculation = false;
 }
 
 
@@ -78,7 +77,8 @@ void gModel::loadModelFile(const std::string& fullPath) {
 
     // process ASSIMP's root node recursively
     processNode(scene->mRootNode, scene);
-    initialboundingbox = getBoundingBox();
+	recalculateBoundingBox();
+    initialboundingbox = boundingbox;
     if (isanimated) setAnimationFramerate(animationframerate);
     animate(0);
 }
@@ -123,7 +123,8 @@ void gModel::loadModelFileWithOriginalVertices(const std::string &fullPath) {
 
     // process ASSIMP's root node recursively
     processNode(scene->mRootNode, scene);
-    initialboundingbox = getBoundingBox();
+	recalculateBoundingBox();
+	initialboundingbox = boundingbox;
     if (isanimated) setAnimationFramerate(animationframerate);
     animate(0);
 }
@@ -299,9 +300,8 @@ void gModel::setTransformationMatrix(const glm::mat4& transformationMatrix) {
 
 void gModel::draw() {
 	for(int i = 0; i < meshes.size(); i++) {
-		if (isenablefrustumculling &&
-				renderer->getCamera() &&
-				!renderer->getCamera()->isInFrustum(meshes[i]->getInitialBoundingBox())) {
+		if (isenablefrustumculling && renderer->getCamera() &&
+			!renderer->getCamera()->isInFrustum(meshes[i]->getBoundingBox())) {
 			continue;
 		}
 		meshes[i]->draw();
@@ -447,13 +447,13 @@ gSkinnedMesh* gModel::processMesh(aiMesh *mesh, const aiScene *scene, aiMatrix4x
 }
 
 void gModel::loadMaterialTextures(gSkinnedMesh* mesh, aiMaterial *mat, aiTextureType type, int textureType) {
+	aiString str;
     for(unsigned int i = 0; i < mat->GetTextureCount(type); i++) {
-    	int texno = -1;
-        aiString str;
+		size_t texno;
         mat->GetTexture(type, i, &str);
         // check if texture was loaded before and if so, continue to next iteration: skip loading a new texture
         bool skip = false;
-        for(unsigned int j = 0; j < textures_loaded.size(); j++) {
+        for(size_t j = 0; j < textures_loaded.size(); j++) {
         	std::string aip = str.C_Str();
         	int aipspos = aip.find_last_of('/');
         	aip = aip.substr(aipspos + 1, aip.length() - aipspos - 1);
@@ -663,8 +663,8 @@ void gModel::updateBones(gSkinnedMesh* gmesh, aiMesh* aimesh) {
 		// start with the mesh-to-bone matrix
 		boneMatrices[a] = bone->mOffsetMatrix;
 		// and now append all node transformations down the parent chain until we're back at mesh coordinates again
-		const aiNode* tempNode = node;
-		while(tempNode) {
+		aiNode* tempNode = node;
+		while(tempNode != nullptr) {
 			// check your matrix multiplication order here!!!
 			boneMatrices[a] = tempNode->mTransformation * boneMatrices[a];
 			// boneMatrices[a] = boneMatrices[a] * tempNode->mTransformation;
@@ -941,29 +941,11 @@ bool gModel::isVertexAnimationStoredOnVram() const {
 	return isvertexanimationstoredonvram;
 }
 
-gBoundingBox gModel::getBoundingBox() {
-	for (int i = 0; i< meshes.size(); i++) {
-		bbvertices = meshes[i]->getVertices();
-		for (int j = 0; j < bbvertices.size(); j++) {
-			bbv = bbvertices[j];
-			bbvpos = glm::vec3(localtransformationmatrix * glm::vec4(bbv.position, 1.0));
-
-			if (i == 0 && j == 0) {
-				bbminx = bbvpos.x, bbminy = bbvpos.y, bbminz = bbvpos.z;
-				bbmaxx = bbvpos.x, bbmaxy = bbvpos.y, bbmaxz = bbvpos.z;
-				continue;
-			}
-
-			bbminx = std::min(bbminx, bbvpos.x);
-			bbminy = std::min(bbminy, bbvpos.y);
-			bbminz = std::min(bbminz, bbvpos.z);
-			bbmaxx = std::max(bbmaxx, bbvpos.x);
-			bbmaxy = std::max(bbmaxy, bbvpos.y);
-			bbmaxz = std::max(bbmaxz, bbvpos.z);
-		}
+const gBoundingBox& gModel::getBoundingBox() {
+	if (needsboundingboxrecalculation) {
+		recalculateBoundingBox();
 	}
-
-	return {bbminx, bbminy, bbminz, bbmaxx, bbmaxy, bbmaxz, localtransformationmatrix};
+	return boundingbox;
 }
 
 glm::mat4 gModel::convertMatrix(const aiMatrix4x4 &aiMat) {
@@ -980,6 +962,45 @@ gBoundingBox& gModel::getInitialBoundingBox() {
 	return initialboundingbox;
 }
 
+void gModel::recalculateBoundingBox() {
+	float minx = 0.0f, miny = 0.0f, minz = 0.0f;
+	float maxx = 0.0f, maxy = 0.0f, maxz = 0.0f;
+
+	for (gSkinnedMesh*& mesh : meshes) {
+		const gBoundingBox& bb = mesh->getBoundingBox();
+		minx = std::min(bb.minX(), minx);
+		miny = std::min(bb.minY(), miny);
+		minz = std::min(bb.minZ(), minz);
+		maxx = std::min(bb.maxX(), maxx);
+		maxy = std::min(bb.maxY(), maxy);
+		maxz = std::min(bb.maxZ(), maxz);
+	}
+
+	boundingbox = {minx, miny, minz, maxx, maxy, maxz};
+	needsboundingboxrecalculation = false;
+}
+
 void gModel::setEnableFrustumCulling(bool enable) {
 	isenablefrustumculling = enable;
+}
+
+void gModel::processTransformationMatrix() {
+	if (needsboundingboxrecalculation) {
+		gNode::processTransformationMatrix();
+		return;
+	}
+	bool positionchanged = (position != prevposition);
+	bool orientationchanged = (orientation != prevorientation);
+	bool scalechanged = (scalevec != prevscalevec);
+	// Recalculate bounding box only if orientation or scale has changed
+	if (orientationchanged || scalechanged) {
+		// todo maybe impelement a way to rotate and scale the bb without fully recalculating?
+		needsboundingboxrecalculation = true;
+	}
+	if (positionchanged && !needsboundingboxrecalculation) {
+		glm::vec3 posdiff = position - prevposition;
+		boundingbox.set(boundingbox.minX() + posdiff.x, boundingbox.minY() + posdiff.y, boundingbox.minZ() + posdiff.z,
+						boundingbox.maxX() + posdiff.x, boundingbox.maxY() + posdiff.y, boundingbox.maxZ() + posdiff.z);
+	}
+	gNode::processTransformationMatrix();
 }

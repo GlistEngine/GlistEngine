@@ -31,8 +31,7 @@ gMesh::gMesh() {
     colorshader = nullptr;
     textureshader = nullptr;
     pbrshader = nullptr;
-	bbminx = 0.0f, bbminy = 0.0f, bbminz = 0.0f;
-	bbmaxx = 0.0f, bbmaxy = 0.0f, bbmaxz = 0.0f;
+	needsboundingboxrecalculation = false;
 }
 
 gMesh::gMesh(std::vector<gVertex> vertices, std::vector<gIndex> indices, std::vector<gTexture*> textures) {
@@ -70,8 +69,11 @@ void gMesh::setVertices(std::vector<gVertex> vertices, std::vector<gIndex> indic
 	this->vertices = vertices;
 	this->indices = indices;
 	vbo.setVertexData(vertices.data(), sizeof(gVertex), vertices.size());
-	if (indices.size() != 0) vbo.setIndexData(indices.data(), indices.size());
-    initialboundingbox = getBoundingBox();
+	if (!indices.empty()) {
+		vbo.setIndexData(indices.data(), indices.size());
+	}
+	recalculateBoundingBox();
+	initialboundingbox = boundingbox;
 //	initialboundingbox.setTransformationMatrix(localtransformationmatrix);
 }
 
@@ -166,6 +168,28 @@ void gMesh::draw() {
 	drawEnd();
 }
 
+void gMesh::processTransformationMatrix() {
+	if (needsboundingboxrecalculation) {
+		gNode::processTransformationMatrix();
+		return;
+	}
+
+	bool positionchanged = (position != prevposition);
+	bool orientationchanged = (orientation != prevorientation);
+	bool scalechanged = (scalevec != prevscalevec);
+	// Recalculate bounding box only if orientation or scale has changed
+	if (orientationchanged || scalechanged) {
+		// todo maybe impelement a way to rotate and scale the bb without fully recalculating?
+		needsboundingboxrecalculation = true;
+	}
+	if (positionchanged && !needsboundingboxrecalculation) {
+		glm::vec3 posdiff = position - prevposition;
+		boundingbox.set(boundingbox.minX() + posdiff.x, boundingbox.minY() + posdiff.y, boundingbox.minZ() + posdiff.z,
+						boundingbox.maxX() + posdiff.x, boundingbox.maxY() + posdiff.y, boundingbox.maxZ() + posdiff.z);
+	}
+	gNode::processTransformationMatrix();
+}
+
 void gMesh::drawStart() {
 	if (isshadowmappingenabled && renderpassno == 0) {
 		renderer->getShadowmapShader()->use();
@@ -173,7 +197,7 @@ void gMesh::drawStart() {
 		return;
 	}
 
-    if (textures.size() == 0 && !material.isPBR()) {
+    if (textures.empty() && !material.isPBR()) {
     	colorshader = renderer->getColorShader();
 		colorshader->use();
 
@@ -238,7 +262,7 @@ void gMesh::drawStart() {
 	    else colorshader->setMat4("projection", renderer->getProjectionMatrix());
 		colorshader->setMat4("view", renderer->getViewMatrix());
 		colorshader->setMat4("model", localtransformationmatrix);
-    } else if (textures.size() == 0 && material.isPBR()) {
+    } else if (textures.empty() && material.isPBR()) {
     	pbrshader = renderer->getPbrShader();
     	pbrshader->use();
     	pbrshader->setMat4("projection", renderer->getProjectionMatrix());
@@ -320,28 +344,42 @@ gVbo* gMesh::getVbo() {
 	return &vbo;
 }
 
-gBoundingBox gMesh::getBoundingBox() {
-	for (bbi = 0; bbi< vertices.size(); bbi++) {
-//		bbvpos = vertices[bbi].position;
-		bbvpos = glm::vec3(localtransformationmatrix * glm::vec4(vertices[bbi].position, 1.0));
-
-		if (bbi == 0) {
-			bbminx = bbvpos.x, bbminy = bbvpos.y, bbminz = bbvpos.z;
-			bbmaxx = bbvpos.x, bbmaxy = bbvpos.y, bbmaxz = bbvpos.z;
-			continue;
-		}
-
-		bbminx = std::min(bbminx, bbvpos.x);
-		bbminy = std::min(bbminy, bbvpos.y);
-		bbminz = std::min(bbminz, bbvpos.z);
-		bbmaxx = std::max(bbmaxx, bbvpos.x);
-		bbmaxy = std::max(bbmaxy, bbvpos.y);
-		bbmaxz = std::max(bbmaxz, bbvpos.z);
+const gBoundingBox& gMesh::getBoundingBox() {
+	if (needsboundingboxrecalculation) {
+		recalculateBoundingBox();
 	}
-
-	return gBoundingBox(bbminx, bbminy, bbminz, bbmaxx, bbmaxy, bbmaxz);
+	return boundingbox;
 }
 
+void gMesh::recalculateBoundingBox() {
+	// Ensure the vertex list is not empty
+	if (vertices.empty()) {
+		// Handle empty vertices case appropriately
+		boundingbox = {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
+		needsboundingboxrecalculation = false;
+		return;
+	}
+
+	// Calculate the local bounding box
+	glm::vec4 pos1 = localtransformationmatrix * glm::vec4(vertices[0].position, 1.0f);
+
+	float minx = pos1.x, miny = pos1.y, minz = pos1.z;
+	float maxx = pos1.x, maxy = pos1.y, maxz = pos1.z;
+
+	for (size_t i = 1; i < vertices.size(); ++i) {
+		glm::vec4 pos = localtransformationmatrix * glm::vec4(vertices[i].position, 1.0f);
+
+		minx = std::min(minx, pos.x);
+		miny = std::min(miny, pos.y);
+		minz = std::min(minz, pos.z);
+		maxx = std::max(maxx, pos.x);
+		maxy = std::max(maxy, pos.y);
+		maxz = std::max(maxz, pos.z);
+	}
+
+	boundingbox = {minx, miny, minz, maxx, maxy, maxz};
+	needsboundingboxrecalculation = false;
+}
 
 const gBoundingBox& gMesh::getInitialBoundingBox() const {
 	return initialboundingbox;

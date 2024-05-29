@@ -41,7 +41,7 @@ public:
 	std::vector<gIndex>& getIndices();
 	int getVerticesNum() const;
 	int getIndicesNum() const;
-	gBoundingBox getBoundingBox();
+	const gBoundingBox& getBoundingBox();
 	gVbo* getVbo();
 	void clear();
 
@@ -60,7 +60,11 @@ public:
     bool intersectsTriangles(gRay* ray);
     float distanceTriangles(gRay* ray);
 
+	void recalculateBoundingBox();
+
 protected:
+	void processTransformationMatrix() override;
+
     void drawStart();
     void drawVbo();
     void drawEnd();
@@ -86,11 +90,9 @@ private:
     gShader* textureshader;
     gShader *pbrshader;
 
-    float bbminx, bbminy, bbminz, bbmaxx, bbmaxy, bbmaxz;
-    glm::vec3 bbvpos;
-    int bbi;
-
     gBoundingBox initialboundingbox;
+    gBoundingBox boundingbox;
+	bool needsboundingboxrecalculation;
 };
 
 #endif /* ENGINE_GRAPHICS_GMESH_H_ */

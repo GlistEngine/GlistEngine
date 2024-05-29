@@ -24,6 +24,7 @@ int gObject::releaseresolution;
 
 std::string gObject::exepath;
 std::string gObject::assetsdir;
+bool gObject::initializedpaths = false;
 
 
 static const std::string resolutiondirs[] = {
@@ -33,86 +34,66 @@ static const std::string resolutiondirs[] = {
 int gObject::renderpassnum = 1;
 int gObject::renderpassno = 0;
 
-inline bool endsWith(std::string const & value, std::string const & ending)
-{
-	if (ending.size() > value.size()) return false;
+inline bool endsWith(std::string const & value, std::string const & ending) {
+	if (ending.size() > value.size()) {
+		return false;
+	}
 	return std::equal(ending.rbegin(), ending.rend(), value.rbegin());
 }
 
 gObject::gObject() {
-	char temp[256];
-	exepath = getcwd(temp, sizeof(temp));
-	if(!endsWith(exepath, "/")) {
-		exepath += "/";
-	}
-
-	for (int i = 0; i < exepath.size(); i++) {
-	    if (exepath[i] == '\\') {
-	    	exepath[i] = '/';
-	    }
-	}
-#if defined(ANDROID)
-    if(gAndroidUtil::datadirectory.empty()) {
-        assetsdir = "";
-    } else {
-        assetsdir = gAndroidUtil::datadirectory + "/";
-    }
-#elif TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
-    assetsdir = gGetIOSResourceDirectory() + "/";
-#else
-    if(assetsdir == "") {
-        assetsdir = exepath + "assets/";
-    }
-#endif
 }
 
 std::string gObject::gGetAppDir() {
+	initPaths();
 	return exepath;
 }
 
 std::string gObject::gGetAssetsDir() {
+	initPaths();
 	return assetsdir;
 }
 
 void gObject::gSetAssetsDir(std::string assetsDir) {
+	initPaths();
 	gObject::assetsdir = assetsDir;
 }
 
 std::string gObject::gGetFilesDir() {
-	return assetsdir + "files/";
+	return gGetAssetsDir() + "files/";
 }
 
 std::string gObject::gGetImagesDir() {
-	if (releasescaling == 1) return assetsdir + "mipmaps/" + resolutiondirs[releaseresolution];
-	return assetsdir + "images/";
+	if (releasescaling == 1) return gGetAssetsDir() + "mipmaps/" + resolutiondirs[releaseresolution];
+	return gGetAssetsDir() + "images/";
 }
 
 std::string gObject::gGetFontsDir() {
-	return assetsdir + "fonts/";
+	return gGetAssetsDir() + "fonts/";
 }
 
 std::string gObject::gGetModelsDir() {
-	return assetsdir + "models/";
+	return gGetAssetsDir() + "models/";
 }
 
 std::string gObject::gGetTexturesDir() {
-	return assetsdir + "textures/";
+	return gGetAssetsDir() + "textures/";
 }
 
 std::string gObject::gGetShadersDir() {
-	return assetsdir + "shaders/";
+	return gGetAssetsDir() + "shaders/";
 }
 
 std::string gObject::gGetSoundsDir() {
-	return assetsdir + "sounds/";
+	return gGetAssetsDir() + "sounds/";
 }
 
 std::string gObject::gGetDatabasesDir() {
-	return assetsdir + "databases/";
+	return gGetAssetsDir() + "databases/";
 }
 
 std::string gObject::gGetVideosDir() {
-	return assetsdir + "videos/";
+	return gGetAssetsDir() + "videos/";
 }
 
 void gObject::setCurrentResolution(int scalingNo, int currentResolutionNo) {
@@ -120,6 +101,36 @@ void gObject::setCurrentResolution(int scalingNo, int currentResolutionNo) {
 	releaseresolution = currentResolutionNo;
 }
 
+void gObject::initPaths() {
+	if (initializedpaths) {
+		return;
+	}
+	char temp[256];
+	exepath = getcwd(temp, sizeof(temp));
+	if(!endsWith(exepath, "/")) {
+		exepath += "/";
+	}
+
+	for (int i = 0; i < exepath.size(); i++) {
+		if (exepath[i] == '\\') {
+			exepath[i] = '/';
+		}
+	}
+#if defined(ANDROID)
+	if(gAndroidUtil::datadirectory.empty()) {
+			assetsdir = "";
+		} else {
+			assetsdir = gAndroidUtil::datadirectory + "/";
+		}
+#elif TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
+	assetsdir = gGetIOSResourceDirectory() + "/";
+#else
+	if(assetsdir.empty()) {
+		assetsdir = exepath + "assets/";
+	}
+#endif
+	initializedpaths = true;
+}
 
 void gObject::logi(std::string tag, std::string message) {
 	if(!gIsLoggingEnabled()) return;
