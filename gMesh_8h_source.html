@@ -129,7 +129,7 @@ $(document).ready(function(){initNavTree('gMesh_8h_source.html',''); initResizab
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    std::vector&lt;gIndex&gt;&amp; getIndices();</div>
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <span class="keywordtype">int</span> getVerticesNum() <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <span class="keywordtype">int</span> getIndicesNum() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <a class="code" href="classgBoundingBox.html">gBoundingBox</a> getBoundingBox();</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <span class="keyword">const</span> <a class="code" href="classgBoundingBox.html">gBoundingBox</a>&amp; getBoundingBox();</div>
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <a class="code" href="classgVbo.html">gVbo</a>* getVbo();</div>
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <span class="keywordtype">void</span> clear();</div>
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160; </div>
@@ -148,40 +148,42 @@ $(document).ready(function(){initNavTree('gMesh_8h_source.html',''); initResizab
 <div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <span class="keywordtype">bool</span> intersectsTriangles(<a class="code" href="classgRay.html">gRay</a>* ray);</div>
 <div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <span class="keywordtype">float</span> distanceTriangles(<a class="code" href="classgRay.html">gRay</a>* ray);</div>
 <div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160; </div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="keyword">protected</span>:</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    <span class="keywordtype">void</span> drawStart();</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <span class="keywordtype">void</span> drawVbo();</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    <span class="keywordtype">void</span> drawEnd();</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    <a class="code" href="classgVbo.html">gVbo</a> vbo;</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    std::vector&lt;gVertex&gt; vertices;</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    <span class="keywordtype">bool</span> isprojection2d;</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160; </div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    std::string name;</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    std::vector&lt;gIndex&gt; indices;</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    std::vector&lt;gTexture*&gt; textures;</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    <span class="keywordtype">int</span> drawmode;</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    <a class="code" href="classgMaterial.html">gMaterial</a> material;</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    <span class="keywordtype">int</span> sli;</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> ti;</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160; </div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> diffuseNr, specularNr, normalNr, heightNr;</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    std::string texnumber;</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    <span class="keywordtype">int</span> textype;</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <span class="keywordtype">void</span> recalculateBoundingBox();</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160; </div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="keyword">protected</span>:</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    <span class="keywordtype">void</span> processTransformationMatrix() <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160; </div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    <span class="keywordtype">void</span> drawStart();</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    <span class="keywordtype">void</span> drawVbo();</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <span class="keywordtype">void</span> drawEnd();</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    <a class="code" href="classgVbo.html">gVbo</a> vbo;</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    std::vector&lt;gVertex&gt; vertices;</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    <span class="keywordtype">bool</span> isprojection2d;</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160; </div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    std::string name;</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    std::vector&lt;gIndex&gt; indices;</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    std::vector&lt;gTexture*&gt; textures;</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    <span class="keywordtype">int</span> drawmode;</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    <a class="code" href="classgMaterial.html">gMaterial</a> material;</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    <span class="keywordtype">int</span> sli;</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> ti;</div>
 <div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160; </div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <a class="code" href="classgLight.html">gLight</a>* scenelight;</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    <a class="code" href="classgShader.html">gShader</a>* colorshader;</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    <a class="code" href="classgShader.html">gShader</a>* textureshader;</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    <a class="code" href="classgShader.html">gShader</a> *pbrshader;</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160; </div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    <span class="keywordtype">float</span> bbminx, bbminy, bbminz, bbmaxx, bbmaxy, bbmaxz;</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    glm::vec3 bbvpos;</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    <span class="keywordtype">int</span> bbi;</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> diffuseNr, specularNr, normalNr, heightNr;</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    std::string texnumber;</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    <span class="keywordtype">int</span> textype;</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160; </div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    <a class="code" href="classgLight.html">gLight</a>* scenelight;</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    <a class="code" href="classgShader.html">gShader</a>* colorshader;</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    <a class="code" href="classgShader.html">gShader</a>* textureshader;</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    <a class="code" href="classgShader.html">gShader</a> *pbrshader;</div>
 <div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160; </div>
 <div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    <a class="code" href="classgBoundingBox.html">gBoundingBox</a> initialboundingbox;</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;};</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160; </div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* ENGINE_GRAPHICS_GMESH_H_ */</span><span class="preprocessor"></span></div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    <a class="code" href="classgBoundingBox.html">gBoundingBox</a> boundingbox;</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    <span class="keywordtype">bool</span> needsboundingboxrecalculation;</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;};</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160; </div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* ENGINE_GRAPHICS_GMESH_H_ */</span><span class="preprocessor"></span></div>
 <div class="ttc" id="aclassgBoundingBox_html"><div class="ttname"><a href="classgBoundingBox.html">gBoundingBox</a></div><div class="ttdef"><b>Definition:</b> gBoundingBox.h:36</div></div>
 <div class="ttc" id="aclassgLight_html"><div class="ttname"><a href="classgLight.html">gLight</a></div><div class="ttdef"><b>Definition:</b> gLight.h:22</div></div>
 <div class="ttc" id="aclassgMaterial_html"><div class="ttname"><a href="classgMaterial.html">gMaterial</a></div><div class="ttdef"><b>Definition:</b> gMaterial.h:17</div></div>

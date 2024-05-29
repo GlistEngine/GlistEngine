@@ -1,5 +1,12 @@
 var NAVTREEINDEX12 =
 {
+"gSkinnedMesh_8h_source.html":[1,0,122],
+"gSkybox_8h_source.html":[1,0,123],
+"gSoftFocus_8h_source.html":[1,0,124],
+"gSphere_8h_source.html":[1,0,125],
+"gSpriteAnimation_8h_source.html":[1,0,126],
+"gSpriteAnimator_8h_source.html":[1,0,127],
+"gTexture_8h_source.html":[1,0,128],
 "gThread_8h_source.html":[1,0,129],
 "gTiltShift_8h_source.html":[1,0,130],
 "gTriangle_8h_source.html":[1,0,131],

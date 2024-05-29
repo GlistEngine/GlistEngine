@@ -223,14 +223,18 @@ $(document).ready(function(){initNavTree('gNode_8h_source.html',''); initResizab
 <div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;    glm::quat orientation;</div>
 <div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;    glm::vec3 scalevec;</div>
 <div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160; </div>
-<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> processTransformationMatrix();</div>
-<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160; </div>
-<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;    <span class="keyword">static</span> <span class="keywordtype">int</span> lastid;</div>
-<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;    <span class="keywordtype">int</span> id;</div>
-<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;};</div>
-<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160; </div>
-<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* ENGINE_BASE_GNODE_H_ */</span><span class="preprocessor"></span></div>
+<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;    glm::vec3 prevposition;</div>
+<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;    glm::quat prevorientation;</div>
+<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;    glm::vec3 prevscalevec;</div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160; </div>
+<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> processTransformationMatrix();</div>
+<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160; </div>
+<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;    <span class="keyword">static</span> <span class="keywordtype">int</span> lastid;</div>
+<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;    <span class="keywordtype">int</span> id;</div>
+<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;};</div>
+<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160; </div>
+<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* ENGINE_BASE_GNODE_H_ */</span><span class="preprocessor"></span></div>
 <div class="ttc" id="aclassgNode_html"><div class="ttname"><a href="classgNode.html">gNode</a></div><div class="ttdef"><b>Definition:</b> gNode.h:14</div></div>
 <div class="ttc" id="aclassgNode_html_a1430f454e797d1aad2f682fd2749deb8"><div class="ttname"><a href="classgNode.html#a1430f454e797d1aad2f682fd2749deb8">gNode::getScalarDirectionZ</a></div><div class="ttdeci">glm::vec3 getScalarDirectionZ() const</div></div>
 <div class="ttc" id="aclassgNode_html_a1dd1a112372f97a8c0132af7fd31ccb4"><div class="ttname"><a href="classgNode.html#a1dd1a112372f97a8c0132af7fd31ccb4">gNode::getScalarDirectionX</a></div><div class="ttdeci">glm::vec3 getScalarDirectionX() const</div></div>

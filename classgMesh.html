@@ -164,9 +164,9 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>getVerticesNum</b> () 
 <tr class="memitem:a6502b918df5354a3ae9b8722558e5511"><td class="memItemLeft" align="right" valign="top"><a id="a6502b918df5354a3ae9b8722558e5511"></a>
 int&#160;</td><td class="memItemRight" valign="bottom"><b>getIndicesNum</b> () const</td></tr>
 <tr class="separator:a6502b918df5354a3ae9b8722558e5511"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab708d882755e1caaf2163282276dcb1e"><td class="memItemLeft" align="right" valign="top"><a id="ab708d882755e1caaf2163282276dcb1e"></a>
-<a class="el" href="classgBoundingBox.html">gBoundingBox</a>&#160;</td><td class="memItemRight" valign="bottom"><b>getBoundingBox</b> ()</td></tr>
-<tr class="separator:ab708d882755e1caaf2163282276dcb1e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a936a6f82dd57445655e1fceaaeb112c5"><td class="memItemLeft" align="right" valign="top"><a id="a936a6f82dd57445655e1fceaaeb112c5"></a>
+const <a class="el" href="classgBoundingBox.html">gBoundingBox</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>getBoundingBox</b> ()</td></tr>
+<tr class="separator:a936a6f82dd57445655e1fceaaeb112c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a02bb3a25b524c3a8fce7dae9c08a1742"><td class="memItemLeft" align="right" valign="top"><a id="a02bb3a25b524c3a8fce7dae9c08a1742"></a>
 <a class="el" href="classgVbo.html">gVbo</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>getVbo</b> ()</td></tr>
 <tr class="separator:a02bb3a25b524c3a8fce7dae9c08a1742"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -203,6 +203,9 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>intersectsTriangles</
 <tr class="memitem:a291053f55855da58d0f0bc65237d9250"><td class="memItemLeft" align="right" valign="top"><a id="a291053f55855da58d0f0bc65237d9250"></a>
 float&#160;</td><td class="memItemRight" valign="bottom"><b>distanceTriangles</b> (<a class="el" href="classgRay.html">gRay</a> *ray)</td></tr>
 <tr class="separator:a291053f55855da58d0f0bc65237d9250"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0dfa7f6ab07b6c4b65870c237b7e93a5"><td class="memItemLeft" align="right" valign="top"><a id="a0dfa7f6ab07b6c4b65870c237b7e93a5"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>recalculateBoundingBox</b> ()</td></tr>
+<tr class="separator:a0dfa7f6ab07b6c4b65870c237b7e93a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classgNode"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classgNode')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classgNode.html">gNode</a></td></tr>
 <tr class="memitem:a13c10e69cf1315d68c1b6d4389d060b4 inherit pub_methods_classgNode"><td class="memItemLeft" align="right" valign="top"><a id="a13c10e69cf1315d68c1b6d4389d060b4"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>move</b> (float dx, float dy, float dz)</td></tr>
@@ -406,6 +409,9 @@ static const int&#160;</td><td class="memItemRight" valign="bottom"><b>LOGLEVEL_
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
+<tr class="memitem:abb9b58b1d1ea74d5fd735cc18b2c6244"><td class="memItemLeft" align="right" valign="top"><a id="abb9b58b1d1ea74d5fd735cc18b2c6244"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>processTransformationMatrix</b> () override</td></tr>
+<tr class="separator:abb9b58b1d1ea74d5fd735cc18b2c6244"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a912e0351536df6d94cd449937bd02420"><td class="memItemLeft" align="right" valign="top"><a id="a912e0351536df6d94cd449937bd02420"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>drawStart</b> ()</td></tr>
 <tr class="separator:a912e0351536df6d94cd449937bd02420"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -415,10 +421,6 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>drawVbo</b> ()</td></
 <tr class="memitem:a2a2fc4bc184a831caafdcbea463219ff"><td class="memItemLeft" align="right" valign="top"><a id="a2a2fc4bc184a831caafdcbea463219ff"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>drawEnd</b> ()</td></tr>
 <tr class="separator:a2a2fc4bc184a831caafdcbea463219ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="inherit_header pro_methods_classgNode"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_classgNode')"><img src="closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="classgNode.html">gNode</a></td></tr>
-<tr class="memitem:a3059566fe5fb524cb5c25d9c6065f48c inherit pro_methods_classgNode"><td class="memItemLeft" align="right" valign="top"><a id="a3059566fe5fb524cb5c25d9c6065f48c"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>processTransformationMatrix</b> ()</td></tr>
-<tr class="separator:a3059566fe5fb524cb5c25d9c6065f48c inherit pro_methods_classgNode"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
@@ -450,6 +452,15 @@ glm::quat&#160;</td><td class="memItemRight" valign="bottom"><b>orientation</b><
 <tr class="memitem:a56adfd3650a4955e33e0a2ee7d94766f inherit pro_attribs_classgNode"><td class="memItemLeft" align="right" valign="top"><a id="a56adfd3650a4955e33e0a2ee7d94766f"></a>
 glm::vec3&#160;</td><td class="memItemRight" valign="bottom"><b>scalevec</b></td></tr>
 <tr class="separator:a56adfd3650a4955e33e0a2ee7d94766f inherit pro_attribs_classgNode"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae84e1d6726fd6561e73f05f7201c25ff inherit pro_attribs_classgNode"><td class="memItemLeft" align="right" valign="top"><a id="ae84e1d6726fd6561e73f05f7201c25ff"></a>
+glm::vec3&#160;</td><td class="memItemRight" valign="bottom"><b>prevposition</b></td></tr>
+<tr class="separator:ae84e1d6726fd6561e73f05f7201c25ff inherit pro_attribs_classgNode"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a59e5322d62b36071004fc30f95c64d26 inherit pro_attribs_classgNode"><td class="memItemLeft" align="right" valign="top"><a id="a59e5322d62b36071004fc30f95c64d26"></a>
+glm::quat&#160;</td><td class="memItemRight" valign="bottom"><b>prevorientation</b></td></tr>
+<tr class="separator:a59e5322d62b36071004fc30f95c64d26 inherit pro_attribs_classgNode"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a83b9727a9ec13a3615bba4156ff19092 inherit pro_attribs_classgNode"><td class="memItemLeft" align="right" valign="top"><a id="a83b9727a9ec13a3615bba4156ff19092"></a>
+glm::vec3&#160;</td><td class="memItemRight" valign="bottom"><b>prevscalevec</b></td></tr>
+<tr class="separator:a83b9727a9ec13a3615bba4156ff19092 inherit pro_attribs_classgNode"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
 Additional Inherited Members</h2></td></tr>

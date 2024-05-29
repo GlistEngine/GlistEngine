@@ -52,5 +52,8 @@ var classgNode =
     [ "orientation", "classgNode.html#a0d3a820f6eab89ba1533c6085e178681", null ],
     [ "parent", "classgNode.html#a1b05034284ccbf2446c1dd82dfaef004", null ],
     [ "position", "classgNode.html#ac667146bf0d8c83ea4be5dad35a0a490", null ],
+    [ "prevorientation", "classgNode.html#a59e5322d62b36071004fc30f95c64d26", null ],
+    [ "prevposition", "classgNode.html#ae84e1d6726fd6561e73f05f7201c25ff", null ],
+    [ "prevscalevec", "classgNode.html#a83b9727a9ec13a3615bba4156ff19092", null ],
     [ "scalevec", "classgNode.html#a56adfd3650a4955e33e0a2ee7d94766f", null ]
 ];

@@ -115,11 +115,11 @@ $(document).ready(function(){initNavTree('gColor_8h_source.html',''); initResiza
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    <span class="keywordtype">void</span> set(<span class="keywordtype">int</span> r, <span class="keywordtype">int</span> g, <span class="keywordtype">int</span> b, <span class="keywordtype">int</span> a = 255);</div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    <span class="keywordtype">void</span> set(<a class="code" href="classgColor.html">gColor</a>* color);</div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    glm::vec4 asVec4() {</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    glm::vec4 asVec4()<span class="keyword"> const </span>{</div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;        <span class="keywordflow">return</span> {r, g, b, a};</div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    }</div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160; </div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    glm::vec3 asVec3() {</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    glm::vec3 asVec3()<span class="keyword"> const </span>{</div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;        <span class="keywordflow">return</span> {r, g, b};</div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    }</div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160; </div>
