@@ -7,6 +7,11 @@
 
 #include "gModel.h"
 #include <memory>
+#if defined(__i386__) || defined(__x86_64__)
+#include <immintrin.h>
+#elif defined(__ARM_NEON)
+#include <arm_neon.h>
+#endif
 
 #include "gCamera.h"
 
@@ -963,18 +968,79 @@ gBoundingBox& gModel::getInitialBoundingBox() {
 }
 
 void gModel::recalculateBoundingBox() {
-	float minx = 0.0f, miny = 0.0f, minz = 0.0f;
-	float maxx = 0.0f, maxy = 0.0f, maxz = 0.0f;
+	// Ensure the mesh list is not empty
+	if (meshes.empty()) {
+		// Handle empty meshes case appropriately
+		boundingbox = {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
+		needsboundingboxrecalculation = false;
+		return;
+	}
+	const gBoundingBox& bb1 = meshes[0]->getBoundingBox();
 
-	for (gSkinnedMesh*& mesh : meshes) {
+	float minx = bb1.minX(), miny = bb1.minY(), minz = bb1.minZ();
+	float maxx = bb1.maxX(), maxy = bb1.maxY(), maxz = bb1.maxZ();
+
+#if defined(__i386__) || defined(__x86_64__)
+	__m128 minvals = _mm_set_ps(minz, miny, minx, 0);
+	__m128 maxvals = _mm_set_ps(maxz, maxy, maxx, 0);
+
+	for (size_t i = 1; i < meshes.size(); ++i) {
+		gSkinnedMesh*& mesh = meshes[i];
+		const gBoundingBox& bb = mesh->getBoundingBox();
+
+		__m128 mincurrent = _mm_set_ps(bb.minZ(), bb.minY(), bb.minX(), 0);
+		__m128 maxcurrent = _mm_set_ps(bb.maxZ(), bb.maxY(), bb.maxX(), 0);
+
+		minvals = _mm_min_ps(minvals, mincurrent);
+		maxvals = _mm_max_ps(maxvals, maxcurrent);
+	}
+
+	float minarray[4], maxarray[4];
+	_mm_store_ps(minarray, minvals);
+	_mm_store_ps(maxarray, maxvals);
+
+	minx = minarray[1];
+	miny = minarray[2];
+	minz = minarray[3];
+	maxx = maxarray[1];
+	maxy = maxarray[2];
+	maxz = maxarray[3];
+#elif defined(__ARM_NEON)
+	float32x4_t minvals = {minz, miny, minx, 0};
+	float32x4_t maxvals = {maxz, maxy, maxx, 0};
+
+	for (size_t i = 1; i < meshes.size(); ++i) {
+		gSkinnedMesh*& mesh = meshes[i];
+		const gBoundingBox& bb = mesh->getBoundingBox();
+
+		float32x4_t mincurrent = {bb.minZ(), bb.minY(), bb.minX(), 0};
+		float32x4_t maxcurrent = {bb.maxZ(), bb.maxY(), bb.maxX(), 0};
+
+		minvals = vminq_f32(minvals, mincurrent);
+		maxvals = vmaxq_f32(maxvals, maxcurrent);
+	}
+	float minarray[4], maxarray[4];
+	vst1q_f32(minarray, minvals);
+	vst1q_f32(maxarray, maxvals);
+
+	minx = minarray[2];
+	miny = minarray[1];
+	minz = minarray[0];
+	maxx = maxarray[2];
+	maxy = maxarray[1];
+	maxz = maxarray[0];
+#else
+	for (int i = 1; i < meshes.size(); ++i) {
+		gSkinnedMesh*& mesh = meshes[i];
 		const gBoundingBox& bb = mesh->getBoundingBox();
 		minx = std::min(bb.minX(), minx);
 		miny = std::min(bb.minY(), miny);
 		minz = std::min(bb.minZ(), minz);
-		maxx = std::min(bb.maxX(), maxx);
-		maxy = std::min(bb.maxY(), maxy);
-		maxz = std::min(bb.maxZ(), maxz);
+		maxx = std::max(bb.maxX(), maxx);
+		maxy = std::max(bb.maxY(), maxy);
+		maxz = std::max(bb.maxZ(), maxz);
 	}
+#endif
 
 	boundingbox = {minx, miny, minz, maxx, maxy, maxz};
 	needsboundingboxrecalculation = false;

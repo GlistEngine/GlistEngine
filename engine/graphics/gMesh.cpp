@@ -6,12 +6,13 @@
  */
 
 #include "gMesh.h"
-#include <iosfwd>
-#include <sstream>
-#include <iostream>
-#include <fstream>
 #include <vector>
 #include <glm/gtx/intersect.hpp>
+#if defined(__i386__) || defined(__x86_64__)
+#include <immintrin.h>
+#elif defined(__ARM_NEON)
+#include <arm_neon.h>
+#endif
 
 #include "gLight.h"
 #include "gShader.h"
@@ -366,16 +367,61 @@ void gMesh::recalculateBoundingBox() {
 	float minx = pos1.x, miny = pos1.y, minz = pos1.z;
 	float maxx = pos1.x, maxy = pos1.y, maxz = pos1.z;
 
+#if defined(__i386__) || defined(__x86_64__)
+	__m128 minvals = _mm_set_ps(minz, miny, minx, 0);
+	__m128 maxvals = _mm_set_ps(maxz, maxy, maxx, 0);
+
+	for (size_t i = 1; i < vertices.size(); ++i) {
+		glm::vec4 pos = localtransformationmatrix * glm::vec4(vertices[i].position, 1.0f);
+		__m128 current = _mm_set_ps(pos.z, pos.y, pos.x, 0);
+
+		minvals = _mm_min_ps(minvals, current);
+		maxvals = _mm_max_ps(maxvals, current);
+	}
+
+	float minarray[4], maxarray[4];
+	_mm_store_ps(minarray, minvals);
+	_mm_store_ps(maxarray, maxvals);
+
+	minx = minarray[1];
+	miny = minarray[2];
+	minz = minarray[3];
+	maxx = maxarray[1];
+	maxy = maxarray[2];
+	maxz = maxarray[3];
+#elif defined(__ARM_NEON)
+	float32x4_t minvals = {minz, miny, minx, 0};
+	float32x4_t maxvals = {maxz, maxy, maxx, 0};
+
+	for (size_t i = 1; i < vertices.size(); ++i) {
+		glm::vec4 pos = localtransformationmatrix * glm::vec4(vertices[i].position, 1.0f);
+		float32x4_t current = {pos.z, pos.y, pos.x, 0};
+
+		minvals = vminq_f32(minvals, current);
+		maxvals = vmaxq_f32(maxvals, current);
+	}
+	float minarray[4], maxarray[4];
+	vst1q_f32(minarray, minvals);
+	vst1q_f32(maxarray, maxvals);
+
+	minx = minarray[2];
+	miny = minarray[1];
+	minz = minarray[0];
+	maxx = maxarray[2];
+	maxy = maxarray[1];
+	maxz = maxarray[0];
+#else
 	for (size_t i = 1; i < vertices.size(); ++i) {
 		glm::vec4 pos = localtransformationmatrix * glm::vec4(vertices[i].position, 1.0f);
 
-		minx = std::min(minx, pos.x);
-		miny = std::min(miny, pos.y);
-		minz = std::min(minz, pos.z);
-		maxx = std::max(maxx, pos.x);
-		maxy = std::max(maxy, pos.y);
-		maxz = std::max(maxz, pos.z);
+		minx = std::min(pos.x, minx);
+		miny = std::min(pos.y, miny);
+		minz = std::min(pos.z, minz);
+		maxx = std::max(pos.x, maxx);
+		maxy = std::max(pos.y, maxy);
+		maxz = std::max(pos.z, maxz);
 	}
+#endif
 
 	boundingbox = {minx, miny, minz, maxx, maxy, maxz};
 	needsboundingboxrecalculation = false;
