@@ -16,6 +16,7 @@
 #include <string.h>
 #include <array>
 #include <vector>
+#include <unordered_map>
 
 //#include "gGUISizer.h"
 

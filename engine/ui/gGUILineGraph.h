@@ -52,6 +52,7 @@
 #include "gCircle.h"
 #include <array>
 #include <deque>
+#include <unordered_map>
 
 
 class gGUILineGraph: public gGUIGraph  {
