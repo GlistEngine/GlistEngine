@@ -36,9 +36,10 @@ class gBaseApp;
  */
 class gGUIManager {
 public:
-	static const int GUITHEME_LIGHT = 0, GUITHEME_DARK = 1, GUITHEME_LIGHTBLUE = 2, GUITHEME_DARKBLUE = 3;
+	static const int GUITHEME_LIGHT = 0, GUITHEME_DARK = 1, GUITHEME_LIGHTBLUE = 2, GUITHEME_DARKBLUE = 3,
+	GUITHEME_UMUTCANTHEME = 4;
 	static const int fontnum = 1;
-	static const int fonttypenum = 4;
+	static const int fonttypenum = 5;
 
 	enum {
 		FONTTYPE_REGULAR,
@@ -91,7 +92,7 @@ private:
 	gGUISizer emptysizer;
 	int guitheme;
 
-	static const int themenum = 4;
+	static const int themenum = 5;
 	gColor themebackgroundcolor[themenum];
 	gColor thememiddlegroundcolor[themenum];
 	gColor themeforegroundcolor[themenum];
