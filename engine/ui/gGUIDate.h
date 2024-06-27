@@ -20,7 +20,7 @@ public:
 	void drawCalendar(int month, int year);
 	void setSize(int w, int h);
 	void setPosition(int x, int y);
-	void setDaysName(std::vector<std::string> days);
+	void setDaysName(std::vector<std::string> days , int cropLimit = 3, bool cropmode = false);
 private:
 	int getStartDay(int month, int year);
 	int getDaysInMonth(int month, int year);

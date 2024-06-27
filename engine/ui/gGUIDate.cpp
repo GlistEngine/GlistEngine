@@ -7,6 +7,7 @@
 
 #include "gGUIDate.h"
 
+
 gGUIDate::gGUIDate() {
     // TODO Auto-generated constructor stub
     w = 270;
@@ -23,7 +24,7 @@ gGUIDate::gGUIDate() {
 	daysnames.push_back("Fri");
 	daysnames.push_back("Sat");
 	daysnames.push_back("Sun");
-	setDaysName(daysnames);
+	setDaysName(daysnames); //cropLimit parameter have been added
     for (int i = 0; i < 31; i++) {
         daysnumderswidths[i] = font->getStringWidth(std::to_string(i));
     }
@@ -115,11 +116,21 @@ void gGUIDate::setSize(int w, int h) {
     this->h = h;
 }
 
-void gGUIDate::setDaysName(std::vector<std::string> days) {
+void gGUIDate::setDaysName(std::vector<std::string> days, int cropLimit, bool cropmode) {
     for (int i = 0; i < 7; i++) {
-        this->days[i] = days[i];
+    	//STRING SINIRLAMA - if cropmode is false, it works the old way
+    	if(!cropmode) {
+    		this->days[i] = days[i];
+    	} else {
+        	if(days[i].size() > cropLimit) {
+        		this->days[i] = days[i].substr(0 , cropLimit);
+        	} else {
+        		this->days[i] = days[i];
+        	}
+    	}
     }
     for (int i = 0; i < 7; i++) {
+
 		this->daysnameswidths[i] = font->getStringWidth(this->days[i]);
 	}
 }
