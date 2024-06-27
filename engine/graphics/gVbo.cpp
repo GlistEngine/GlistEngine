@@ -22,22 +22,41 @@ gVbo::gVbo() {
 	isindexdataallocated = false;
 	indexarrayptr = nullptr;
 	totalindexnum = 0;
-	sli = 0;
-	scenelight = nullptr;
-	colorshader = nullptr;
-
-	isAMD = false;
-    const unsigned char* vendorname = glGetString(GL_VENDOR);
-    std::string glven(reinterpret_cast<const char*>(vendorname));
-
-    if (glven.find("ATI") != std::string::npos) isAMD = true;
 }
 
 gVbo::~gVbo() {
 	clear();
 }
 
+gVbo::gVbo(const gVbo& other) {
+	glGenVertexArrays(1, &vao);
+	vbo = 0;
+	ebo = 0;
+	isenabled = true;
+	isvertexdataallocated = false;
+	verticesptr = nullptr;
+	vertexarrayptr = nullptr;
+	vertexdatacoordnum = 0;
+	totalvertexnum = 0;
+	isindexdataallocated = false;
+	indexarrayptr = nullptr;
+	totalindexnum = 0;
+
+	isenabled = other.isenabled;
+	if (other.verticesptr) {
+		setVertexData(other.verticesptr, other.vertexdatacoordnum, other.totalvertexnum);
+	} else if (other.vertexarrayptr) {
+		setVertexData(other.vertexarrayptr, other.vertexdatacoordnum, other.totalvertexnum, other.vertexusage, other.vertexstride);
+	}
+	if (other.indexarrayptr) {
+		setIndexData(other.indexarrayptr, other.totalindexnum);
+	}
+}
+
 void gVbo::setVertexData(gVertex* vertices, int coordNum, int total) {
+	if (vao == GL_NONE) {
+		glGenVertexArrays(1, &vao);
+	}
 	bind();
 	if (!isvertexdataallocated) {
 		glGenBuffers(1, &vbo);
@@ -67,15 +86,20 @@ void gVbo::setVertexData(gVertex* vertices, int coordNum, int total) {
 	unbind();
 }
 
-void gVbo::setVertexData(const float* vert0x, int coordNum, int total, int usage, int stride) {
+void gVbo::setVertexData(const float* vertexData, int coordNum, int total, int usage, int stride) {
+	if (vao == GL_NONE) {
+		glGenVertexArrays(1, &vao);
+	}
 	bind();
 	if (!isvertexdataallocated) {
       glGenBuffers(1, &vbo);
       isvertexdataallocated = true;
     }
-	vertexarrayptr = vert0x;
+	vertexarrayptr = vertexData;
 	vertexdatacoordnum = coordNum;
 	totalvertexnum = total;
+	vertexusage = usage;
+	vertexstride = stride;
 
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	GLsizeiptr size = (stride == 0) ? vertexdatacoordnum * sizeof(float) : stride;
@@ -86,6 +110,9 @@ void gVbo::setVertexData(const float* vert0x, int coordNum, int total, int usage
 }
 
 void gVbo::setIndexData(gIndex* indices, int total) {
+	if (vao == GL_NONE) {
+		glGenVertexArrays(1, &vao);
+	}
 	bind();
 	if (!isindexdataallocated) {
       glGenBuffers(1, &ebo);
@@ -123,6 +150,9 @@ gIndex* gVbo::getIndices() const {
 }
 
 void gVbo::bind() const {
+#ifdef DEBUG
+	assert(vao != GL_NONE);
+#endif
 	glBindVertexArray(vao);
 }
 
@@ -144,7 +174,7 @@ void gVbo::draw(int drawMode) {
 		return;
 	}
 
-	colorshader = renderer->getColorShader();
+	gShader* colorshader = renderer->getColorShader();
 	colorshader->use();
 
     // Set scene properties
