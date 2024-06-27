@@ -53,6 +53,34 @@ gVbo::gVbo(const gVbo& other) {
 	}
 }
 
+gVbo& gVbo::operator=(const gVbo& other) {
+	if (this == &other) {
+		return *this;
+	}
+	// clear current 
+	clear();
+	verticesptr = nullptr;
+	vertexarrayptr = nullptr;
+	vertexdatacoordnum = 0;
+	totalvertexnum = 0;
+	isindexdataallocated = false;
+	indexarrayptr = nullptr;
+	totalindexnum = 0;
+	// generate vao
+	glGenVertexArrays(1, &vao);
+	// copy from the other gVbo
+	isenabled = other.isenabled;
+	if (other.verticesptr) {
+		setVertexData(other.verticesptr, other.vertexdatacoordnum, other.totalvertexnum);
+	} else if (other.vertexarrayptr) {
+		setVertexData(other.vertexarrayptr, other.vertexdatacoordnum, other.totalvertexnum, other.vertexusage, other.vertexstride);
+	}
+	if (other.indexarrayptr) {
+		setIndexData(other.indexarrayptr, other.totalindexnum);
+	}
+	return *this;
+}
+
 void gVbo::setVertexData(gVertex* vertices, int coordNum, int total) {
 	if (vao == GL_NONE) {
 		glGenVertexArrays(1, &vao);
@@ -209,47 +237,6 @@ bool gVbo::isVertexDataAllocated() const {
 bool gVbo::isIndexDataAllocated() const {
 	return isindexdataallocated;
 }
-
-void gVbo::setupVbo() {
-    // create buffers/arrays
-//    glGenVertexArrays(1, &vao);
-//    glGenBuffers(1, &vbo);
-//    glGenBuffers(1, &ebo);
-
-//    glBindVertexArray(vao);
-    // load data into vertex buffers
-//    glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    // A great thing about structs is that their memory layout is sequential for all its items.
-    // The effect is that we can simply pass a pointer to the struct and it translates perfectly to a glm::vec3/2 array which
-    // again translates to 3/2 floats which translates to a byte array.
-//    glBufferData(GL_ARRAY_BUFFER, totalvertexnum * sizeof(gVertex), vertexarrayptr, GL_STATIC_DRAW);
-
-//    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-//    glBufferData(GL_ELEMENT_ARRAY_BUFFER, totalindexnum * sizeof(unsigned int), indexarrayptr, GL_STATIC_DRAW);
-/*
-    // set the vertex attribute pointers
-    // vertex Positions
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(gVertex), (void*)0);
-    // vertex normals
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(gVertex), (void*)offsetof(gVertex, normal));
-    // vertex texture coords
-    glEnableVertexAttribArray(2);
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(gVertex), (void*)offsetof(gVertex, texcoords));
-    // vertex tangent
-    glEnableVertexAttribArray(3);
-    glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(gVertex), (void*)offsetof(gVertex, tangent));
-    // vertex bitangent
-    glEnableVertexAttribArray(4);
-    glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(gVertex), (void*)offsetof(gVertex, bitangent));
-
-    glBindVertexArray(0);
-*/
-}
-
-//void gVbo::setMesh(const gMesh* mesh, int usage) {
-//}
 
 void gVbo::setVertexData(const glm::vec3* vertices, int total, int usage) {
 	setVertexData(&vertices[0].x, 3, total, usage);

@@ -31,8 +31,8 @@ public:
 	virtual ~gVbo();
 
 	gVbo(const gVbo&);
-	// todo maybe implement copy assignment operator, as well as move constructor and move assignment operator
-	gVbo& operator=(const gVbo& other) = delete;
+	gVbo& operator=(const gVbo& other);
+	// todo maybe implement move constructor and move assignment operator
 
 	void setVertexData(gVertex* vertices, int coordNum, int total);
 	void setIndexData(gIndex* indices, int total);
@@ -73,8 +73,6 @@ private:
     GLuint vao;
     GLuint vbo, ebo;
     bool isenabled;
-
-    void setupVbo();
 
     bool isvertexdataallocated;
     const float* vertexarrayptr;
