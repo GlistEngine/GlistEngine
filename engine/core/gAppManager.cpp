@@ -127,7 +127,6 @@ gAppManager::gAppManager(const std::string& appName, gBaseApp *baseApp, int widt
 		window = new gGLFWWindow();
 #endif
 		window->setEventHandler(eventhandler);
-		window->setTitle(appname);
 	} else {
 		usewindow = false;
 		window = nullptr;
@@ -166,6 +165,7 @@ void gAppManager::initialize() {
 
 	if(usewindow) {
 		window->initialize(width, height, windowmode, isresizable);
+		window->setTitle(appname);
 		// Update size
 		width = window->getWidth();
 		height = window->getHeight();
