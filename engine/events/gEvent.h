@@ -26,10 +26,11 @@ enum EventType {
 	EventTypeWindowMouseExit,
 	EventTypeJoystickConnect,
 	EventTypeJoystickDisconnect,
-	EventTypeReallocateRenderData,
-#if defined(ANDROID) || TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
+#if GLIST_WEB || GLIST_IOS || GLIST_ANDROID
 	EventTypeAppPause,
 	EventTypeAppResume,
+#endif
+#if GLIST_IOS || GLIST_ANDROID
 	EventTypeTouch,
 	EventTypeDeviceOrientationChanged
 #endif

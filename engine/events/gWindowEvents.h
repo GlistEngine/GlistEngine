@@ -195,17 +195,27 @@ private:
 	int joystickid;
 };
 
-class gReallocateRenderDataEvent : public gEvent {
+#if GLIST_ANDROID || GLIST_IOS || GLIST_WEB
+class gAppPauseEvent : public gEvent {
 public:
-    gReallocateRenderDataEvent() {}
+	gAppPauseEvent() {}
 
-    G_EVENT_CLASS_TYPE(EventTypeReallocateRenderData)
-    G_EVENT_CLASS_CATEGORY(EventCategoryRenderer | EventCategoryApp)
+	G_EVENT_CLASS_TYPE(EventTypeAppPause)
+	G_EVENT_CLASS_CATEGORY(EventCategoryApp)
 private:
 };
 
+class gAppResumeEvent : public gEvent {
+public:
+	gAppResumeEvent() {}
 
-#if defined(GLIST_MOBILE)
+	G_EVENT_CLASS_TYPE(EventTypeAppResume)
+	G_EVENT_CLASS_CATEGORY(EventCategoryApp)
+private:
+};
+#endif
+
+#if GLIST_ANDROID || GLIST_IOS
 enum InputType {
 	INPUTTYPE_UNKNOWN = 0,
 	INPUTTYPE_FINGER = 1,
@@ -252,24 +262,6 @@ private:
 	ActionType action;
 };
 
-class gAppPauseEvent : public gEvent {
-public:
-	gAppPauseEvent() {}
-
-	G_EVENT_CLASS_TYPE(EventTypeAppPause)
-	G_EVENT_CLASS_CATEGORY(EventCategoryApp)
-private:
-};
-
-class gAppResumeEvent : public gEvent {
-public:
-	gAppResumeEvent() {}
-
-	G_EVENT_CLASS_TYPE(EventTypeAppResume)
-	G_EVENT_CLASS_CATEGORY(EventCategoryApp)
-private:
-};
-
 enum DeviceOrientation {
 	DEVICEORIENTATION_UNSPECIFIED = -1,
 	DEVICEORIENTATION_LANDSCAPE = 0,
@@ -290,6 +282,6 @@ private:
 	DeviceOrientation orientation;
 };
 
-#endif /* defined(GLIST_MOBILE) */
+#endif
 
 #endif /* GWINDOWEVENTS_H_ */

@@ -9,13 +9,11 @@
 #include <sys/time.h>
 #include <limits>
 #include <chrono>
-#include <stdio.h>
 #include <ctype.h>
 #include <codecvt>
 #include <iterator>
-#include <unistd.h>
 #include <sstream>
-#if defined(WIN32) || defined(LINUX) || defined(APPLE)
+#if defined(WIN32) || defined(LINUX) || defined(APPLE) || defined(EMSCRIPTEN)
 #include <GLFW/glfw3.h>
 #endif
 #if defined(ANDROID)
@@ -43,7 +41,7 @@ int gDefaultUnitHeight() {
 }
 
 int gDefaultMonitorWidth() {
-#if !(defined(GLIST_MOBILE))
+#if !defined(GLIST_OPENGLES)
 	int w = gDefaultWidth();
 	glfwInit();
 	const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
@@ -51,12 +49,13 @@ int gDefaultMonitorWidth() {
 	glfwTerminate();
 	return w;
 #else
+	// todo web
 	throw std::runtime_error("not implemented!");
 #endif
 }
 
 int gDefaultMonitorHeight() {
-#if !(defined(GLIST_MOBILE))
+#if !defined(GLIST_OPENGLES)
 	int h = gDefaultHeight();
 	glfwInit();
 	const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
@@ -64,6 +63,7 @@ int gDefaultMonitorHeight() {
 	glfwTerminate();
 	return h;
 #else
+	// todo web
 	throw std::runtime_error("not implemented!");
 #endif
 }
@@ -300,6 +300,25 @@ uint64_t gGetRAMSizeUsedbyGE() {
 }
 #endif
 
+
+void gFlipImageDataVertically(unsigned char* pixelData, int width, int height, int numChannels) {
+	int rowsize = width * numChannels;
+	// 8 * 4 = 32
+	unsigned char* temprow = new unsigned char[rowsize];
+
+	// 4
+	for (int row = 0; row < height / 2; ++row) {
+		// Calculate the corresponding row from the bottom
+		int bottomrow = height - row - 1;
+
+		// Swap the rows
+		memcpy(temprow, pixelData + row * rowsize, rowsize);
+		memcpy(pixelData + row * rowsize, pixelData + bottomrow * rowsize, rowsize);
+		memcpy(pixelData + bottomrow * rowsize, temprow, rowsize);
+	}
+
+	delete[] temprow;
+}
 
 std::string gGetTimestampString() {
 	return gGetTimestampString("%Y-%m-%d-%H-%M-%S-%i");

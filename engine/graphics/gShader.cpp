@@ -77,51 +77,51 @@ void gShader::load(const std::string& vertexFullPath, const std::string& fragmen
 }
 
 void gShader::loadProgram(const std::string& vertexShaderStr, const std::string& fragmentShaderStr, const std::string& geometryShaderStr) {
-    const char* vShaderCode = vertexShaderStr.c_str();
-    const char * fShaderCode = fragmentShaderStr.c_str();
-    // 2. compile shaders
-    unsigned int vertex, fragment;
-    // vertex shader
-    G_CHECK_GL2(vertex, glCreateShader(GL_VERTEX_SHADER));
-    glShaderSource(vertex, 1, &vShaderCode, NULL);
-    glCompileShader(vertex);
-    checkCompileErrors(vertex, "VERTEX");
-    // fragment Shader
-    G_CHECK_GL2(fragment, glCreateShader(GL_FRAGMENT_SHADER));
-    glShaderSource(fragment, 1, &fShaderCode, NULL);
-    glCompileShader(fragment);
-    checkCompileErrors(fragment, "FRAGMENT");
-    // if geometry shader is given, compile geometry shader
-#if defined(WIN32) || defined(LINUX)
-    unsigned int geometry;
-    if(geometryShaderStr != "") {
-        const char * gShaderCode = geometryShaderStr.c_str();
-        geometry = glCreateShader(GL_GEOMETRY_SHADER);
-        glShaderSource(geometry, 1, &gShaderCode, NULL);
-        glCompileShader(geometry);
-        checkCompileErrors(geometry, "GEOMETRY");
-    }
-#endif
-
-    // shader Program
-    id = glCreateProgram();
-    loaded = true;
-    glAttachShader(id, vertex);
-    glAttachShader(id, fragment);
-#if defined(WIN32) || defined(LINUX)
-    if(geometryShaderStr != "") glAttachShader(id, geometry);
-#endif
-    glLinkProgram(id);
-    checkCompileErrors(id, "PROGRAM");
-    // delete the shaders as they're linked into our program now and no longer necessery
-    glDeleteShader(vertex);
-    glDeleteShader(fragment);
-#if defined(WIN32) || defined(LINUX)
-    if(geometryShaderStr != "") glDeleteShader(geometry);
-#endif
+	loadProgram(vertexShaderStr.c_str(), fragmentShaderStr.c_str(), geometryShaderStr != "" ? geometryShaderStr.c_str() : nullptr);
 }
 
-void gShader::checkCompileErrors(GLuint shader, const std::string& type) {
+void gShader::loadProgram(const char* vertexShaderStr, const char* fragmentShaderStr, const char* geometryShaderStr) {
+	// compile shaders
+	unsigned int vertex, fragment;
+	// vertex shader
+	G_CHECK_GL2(vertex, glCreateShader(GL_VERTEX_SHADER));
+	glShaderSource(vertex, 1, &vertexShaderStr, nullptr);
+	glCompileShader(vertex);
+	checkCompileErrors(vertex, "VERTEX", vertexShaderStr);
+	// fragment Shader
+	G_CHECK_GL2(fragment, glCreateShader(GL_FRAGMENT_SHADER));
+	glShaderSource(fragment, 1, &fragmentShaderStr, nullptr);
+	glCompileShader(fragment);
+	checkCompileErrors(fragment, "FRAGMENT", fragmentShaderStr);
+	// if geometry shader is given, compile geometry shader
+#if defined(WIN32) || defined(LINUX)
+	unsigned int geometry;
+	if(geometryShaderStr) {
+		geometry = glCreateShader(GL_GEOMETRY_SHADER);
+		glShaderSource(geometry, 1, &geometryShaderStr, NULL);
+		glCompileShader(geometry);
+		checkCompileErrors(geometry, "GEOMETRY", geometryShaderStr);
+	}
+#endif
+
+	// shader Program
+	id = glCreateProgram();
+	loaded = true;
+	glAttachShader(id, vertex);
+	glAttachShader(id, fragment);
+#if defined(WIN32) || defined(LINUX)
+	if(geometryShaderStr) glAttachShader(id, geometry);
+#endif
+	glLinkProgram(id);
+	checkCompileErrors(id, "PROGRAM", "");
+	// delete the shaders as they're linked into our program now and no longer necessery
+	glDeleteShader(vertex);
+	glDeleteShader(fragment);
+#if defined(WIN32) || defined(LINUX)
+	if(geometryShaderStr) glDeleteShader(geometry);
+#endif
+}
+void gShader::checkCompileErrors(GLuint shader, const std::string& type, const std::string& shaderCode) {
     GLint success;
     GLchar infoLog[1024];
     if(type != "PROGRAM") {
@@ -129,12 +129,14 @@ void gShader::checkCompileErrors(GLuint shader, const std::string& type) {
         if(!success) {
             glGetShaderInfoLog(shader, 1024, nullptr, infoLog);
             gLoge("gShader") << "ERROR::SHADER_COMPILATION_ERROR of type: " << type << "\n" << infoLog << "\n -- --------------------------------------------------- -- " << std::endl;
+			gLoge("gShader") << "Shader code: " << shaderCode << std::endl;
         }
     } else {
-        glGetProgramiv(shader, GL_LINK_STATUS, &success);
+        G_CHECK_GL(glGetProgramiv(shader, GL_LINK_STATUS, &success));
         if(!success) {
             glGetProgramInfoLog(shader, 1024, nullptr, infoLog);
             gLoge("gShader") << "ERROR::PROGRAM_LINKING_ERROR of type: " << type << "\n" << infoLog << "\n -- --------------------------------------------------- -- " << std::endl;
+			gLoge("gShader") << "Shader code: " << shaderCode << std::endl;
         }
     }
 #ifdef DEBUG

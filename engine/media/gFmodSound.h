@@ -1,3 +1,4 @@
+#if !defined(EMSCRIPTEN)
 /*
  * gFmodSound.h
  *
@@ -117,3 +118,4 @@ private:
 
 
 #endif /* MEDIA_GFMODSOUND_H_ */
+#endif
