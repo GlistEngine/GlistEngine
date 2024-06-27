@@ -194,7 +194,7 @@ private:
 	int joystickid;
 };
 
-#if defined(GLIST_MOBILE)
+#if GLIST_ANDROID || GLIST_IOS
 enum InputType {
 	INPUTTYPE_UNKNOWN = 0,
 	INPUTTYPE_FINGER = 1,
@@ -279,6 +279,6 @@ private:
 	DeviceOrientation orientation;
 };
 
-#endif /* defined(GLIST_MOBILE) */
+#endif
 
 #endif /* GWINDOWEVENTS_H_ */

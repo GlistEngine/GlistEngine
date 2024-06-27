@@ -6,14 +6,12 @@
  */
 
 #include "gTexture.h"
-#include <iostream>
 #ifndef STB_IMAGE_IMPLEMENTATION
 #define STB_IMAGE_IMPLEMENTATION
 #endif
 #include "stb/stb_image.h"
 #include "stb/stb_image_write.h"
 
-#include "gPlane.h"
 #include "gShader.h"
 
 const int gTexture::TEXTURETYPE_DIFFUSE = 0;
@@ -36,10 +34,10 @@ const int gTexture::TEXTUREMINMAGFILTER_MIPMAPLINEAR = 1;
 const int gTexture::TEXTUREMINMAGFILTER_NEAREST = 2;
 const int gTexture::TEXTUREMINMAGFILTER_CLAMP = 3;
 
-#if defined(GLIST_MOBILE)
+#if defined(GLIST_OPENGLES)
 // todo alternatives?
-static const int texturewrap[4] = {GL_REPEAT, GL_NEAREST, GL_NEAREST, GL_NEAREST};
-static const int texturefilter[4] = {GL_LINEAR, GL_NEAREST, GL_NEAREST, GL_NEAREST};
+static const int texturewrap[4] = {GL_REPEAT, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE};
+static const int texturefilter[4] = {GL_LINEAR, GL_LINEAR_MIPMAP_LINEAR, GL_NEAREST, GL_NEAREST};
 #else
 static const int texturewrap[4] = {GL_REPEAT, GL_CLAMP, GL_CLAMP_TO_EDGE, GL_NEAREST};
 static const int texturefilter[4] = {GL_LINEAR, GL_LINEAR_MIPMAP_LINEAR, GL_NEAREST, GL_CLAMP};
@@ -80,25 +78,23 @@ gTexture::gTexture(int w, int h, int format, bool isFbo) {
     int valuetype = GL_UNSIGNED_BYTE;
     internalformat = format;
     this->format = format;
-#if TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
-    if(format != GL_RGBA || format != GL_RGB)
-    {
-        if(format == GL_DEPTH_COMPONENT)
-        {
-            internalformat = GL_DEPTH_COMPONENT24;
-            valuetype = GL_UNSIGNED_INT;
-        }
-        if(format == GL_DEPTH_STENCIL)
-        {
-            internalformat = GL_DEPTH24_STENCIL8;
-            valuetype = GL_UNSIGNED_INT_24_8;
-        }
-    }
-#endif
 	wraps = TEXTUREWRAP_REPEAT;
 	wrapt = TEXTUREWRAP_REPEAT;
 	filtermin = TEXTUREMINMAGFILTER_LINEAR;
 	filtermag = TEXTUREMINMAGFILTER_LINEAR;
+#if TARGET_OS_IPHONE || TARGET_OS_SIMULATOR || EMSCRIPTEN
+	if(format == GL_DEPTH_COMPONENT) {
+		internalformat = GL_DEPTH_COMPONENT24;
+		valuetype = GL_UNSIGNED_INT;
+		wrapt = TEXTUREWRAP_CLAMPTOEDGE;
+		wraps = TEXTUREWRAP_CLAMPTOEDGE;
+		filtermin = TEXTUREMINMAGFILTER_NEAREST;
+		filtermag = TEXTUREMINMAGFILTER_NEAREST;
+	} else if(format == GL_DEPTH_STENCIL) {
+		internalformat = GL_DEPTH24_STENCIL8;
+		valuetype = GL_UNSIGNED_INT_24_8;
+	}
+#endif
 	texturetype[0] = "texture_diffuse";
 	texturetype[1] = "texture_specular";
 	texturetype[2] = "texture_normal";
@@ -160,6 +156,9 @@ unsigned int gTexture::load(const std::string& fullPath) {
 		setDataHDR(datahdr, false, true);
 	} else {
 		unsigned char* data = stbi_load(fullpath.c_str(), &width, &height, &componentnum, 0);
+#ifdef EMSCRIPTEN
+		gFlipImageDataVertically(data, width, height, componentnum);
+#endif
 		setData(data, false, true);
 	}
 
@@ -227,7 +226,7 @@ void gTexture::setData(unsigned char* textureData, bool isMutable, bool isStbIma
 
 		if (format == GL_RG) {
 			GLint swizzleMask[] = {GL_RED, GL_RED, GL_RED, GL_GREEN};
-#if defined(GLIST_MOBILE)
+#if defined(GLIST_OPENGLES)
 			G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_R, swizzleMask[0]));
 			G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_G, swizzleMask[1]));
 			G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_B, swizzleMask[2]));
@@ -258,6 +257,7 @@ void gTexture::setDataHDR(float* textureData, bool isMutable, bool isStbImage, b
 	isstbimage = isStbImage;
 	ishdr = true;
 	datahdr = textureData;
+
 	if (datahdr) {
 		bind();
 		G_CHECK_GL(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB32F, width, height, 0, GL_RGB, GL_FLOAT, datahdr)); // note how we specify the texture's data value to be float

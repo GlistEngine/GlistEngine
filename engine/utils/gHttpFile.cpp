@@ -7,6 +7,8 @@
 
 #include "gHttpFile.h"
 
+#ifndef EMSCRIPTEN
+
 gHttpFile::gHttpFile() {
 	statuscode = -1;
 }
@@ -122,3 +124,5 @@ double gHttpFile::getProgressLength() {
 double gHttpFile::getFileLength() {
 	return prog.filelength;
 }
+
+#endif

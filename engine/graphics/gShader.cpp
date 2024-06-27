@@ -200,8 +200,7 @@ void gShader::loadProgramInternal(const char* vertexSource, const char* fragment
 	if(geometrySource != nullptr) glDeleteShader(geometry);
 #endif
 }
-
-void gShader::checkCompileErrors(GLuint shader, const std::string& type) {
+void gShader::checkCompileErrors(GLuint shader, const std::string& type, const std::string& shaderCode) {
     GLint success;
     GLchar infoLog[1024];
     if(type != "PROGRAM") {
@@ -209,12 +208,14 @@ void gShader::checkCompileErrors(GLuint shader, const std::string& type) {
         if(!success) {
             glGetShaderInfoLog(shader, 1024, nullptr, infoLog);
             gLoge("gShader") << "ERROR::SHADER_COMPILATION_ERROR of type: " << type << "\n" << infoLog << "\n -- --------------------------------------------------- -- " << std::endl;
+			gLoge("gShader") << "Shader code: " << shaderCode << std::endl;
         }
     } else {
-        glGetProgramiv(shader, GL_LINK_STATUS, &success);
+        G_CHECK_GL(glGetProgramiv(shader, GL_LINK_STATUS, &success));
         if(!success) {
             glGetProgramInfoLog(shader, 1024, nullptr, infoLog);
             gLoge("gShader") << "ERROR::PROGRAM_LINKING_ERROR of type: " << type << "\n" << infoLog << "\n -- --------------------------------------------------- -- " << std::endl;
+			gLoge("gShader") << "Shader code: " << shaderCode << std::endl;
         }
     }
 #ifdef DEBUG
