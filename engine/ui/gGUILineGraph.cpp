@@ -27,39 +27,39 @@ gGUILineGraph::~gGUILineGraph() {
 
 void gGUILineGraph::set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIObject* parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h) {
 	gGUIGraph::set(root, topParentGUIObject, parentGUIObject, parentSlotLineNo, parentSlotColumnNo, x, y, w, h);
-	needsupdate = true;
+	updatePoints();
 }
 
 void gGUILineGraph::setMaxX(int maxX){
 	gGUIGraph::setMaxX(maxX);
-	needsupdate = true;
+	updatePoints();
 }
 
 
 void gGUILineGraph::setMinX(int minX) {
 	gGUIGraph::setMinX(minX);
-	needsupdate = true;
+	updatePoints();
 }
 
 void gGUILineGraph::setMaxY(int maxY) {
 	gGUIGraph::setMaxY(maxY - 1);
-	needsupdate = true;
+	updatePoints();
 }
 
 
 void gGUILineGraph::setMinY(int minY) {
 	gGUIGraph::setMinY(minY);
-	needsupdate = true;
+	updatePoints();
 }
 
 void gGUILineGraph::setLabelCountX(int labelCount){
 	gGUIGraph::setLabelCountX(labelCount);
-	needsupdate = true;
+	updatePoints();
 }
 
 void gGUILineGraph::setLabelCountY(int labelCount) {
 	gGUIGraph::setLabelCountY(labelCount);
-	needsupdate = true;
+	updatePoints();
 }
 
 void gGUILineGraph::enablePoints(bool arePointsEnabled) {
@@ -179,23 +179,10 @@ void gGUILineGraph::drawGraph() {
 					continue;
 				}
 			}
-			if(pointsenabled) {
-				size_t index = hash(i, j);
-				gCircle* circle = circlesmap[index];
-				if (circle) {
-					circle->draw();
-				}
-			}
-			if(skipped) {
-				skipped = false;
-				continue;
-			}
+            if(pointsenabled) gDrawCircle(graphlines[i][j][2], graphlines[i][j][3], 5, true);
 
-			size_t index = hash(i, j);
-			gLine* line = linesmap[index];
-			if (line) {
-				line->draw();
-			}
+            if(!skipped) gDrawLine(graphlines[i][j-1][2], graphlines[i][j-1][3], graphlines[i][j][2], graphlines[i][j][3]);
+            skipped = false;
 		}
 	}
 
@@ -296,8 +283,6 @@ void gGUILineGraph::updatePoints() {
 			circleit++; // get the next circle from the list
 		}
 	}
-
-
 }
 
 void gGUILineGraph::removeFirstPointsFromLine(int lineIndex, int pointNumLimit) {
@@ -323,4 +308,3 @@ float gGUILineGraph::getPointYValue(int lineIndex, int pointIndex) {
 void gGUILineGraph::clear() {
 	graphlines.clear();
 }
-
