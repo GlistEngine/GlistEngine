@@ -63,6 +63,9 @@ endif(WIN32)
 if(NOT DEFINED BUILD_TYPE)
     set(BUILD_TYPE SHARED)
 endif()
+if(EMSCRIPTEN)
+    set(CMAKE_EXECUTABLE_SUFFIX ".html")
+endif()
 
 option(ENABLE_TRACY "Enables the tracy profiler." OFF)
 
@@ -151,6 +154,11 @@ set(PLUGIN_LINKDIRS)
 set(PLUGIN_LINKLIBS)
 set(PLUGIN_LIBDIRS)
 
+if(EMSCRIPTEN)
+	# If emscripten is added, we auto-add gipWebGL, you don't have to.
+	list(APPEND PLUGINS gipWebGL)
+endif()
+
 foreach(pluginname ${PLUGINS})
 	if(IOS)
         if(${pluginname} STREQUAL "gipIOS")
@@ -158,13 +166,21 @@ foreach(pluginname ${PLUGINS})
 			# We do not compile the gipIOS inside glistengine.
 			continue()
         endif()
-    endif()
+	endif()
 
     if(ANDROID)
         if(${pluginname} STREQUAL "gipAndroid")
             set(ANDROID_PLUGIN_PRESENT 1)
         endif()
-    endif()
+	endif()
+
+	if(EMSCRIPTEN)
+		if(${pluginname} STREQUAL "gipWebGL")
+			set(WEBGL_PLUGIN_PRESENT 1)
+		endif()
+	endif()
+
+	# Include the plugin cmake
     include(${PLUGINS_DIR}/${pluginname}/CMakeLists.txt)
 endforeach()
 
@@ -173,7 +189,7 @@ endforeach()
 ########## CPP SOURCE FILES ##########
 set(SRC_FILES
 	${PLUGIN_SRCS}
-	${ENGINE_DIR}/graphics/particles/gFireworksParticles.cpp	
+	${ENGINE_DIR}/graphics/particles/gFireworksParticles.cpp
 	${ENGINE_DIR}/graphics/particles/gFireParticles.cpp
 	${ENGINE_DIR}/base/gBaseParticles.cpp
 	${ENGINE_DIR}/types/gColor.cpp
@@ -282,7 +298,6 @@ set(SRC_FILES
 	${ENGINE_DIR}/core/gAppObject.cpp
 	${ENGINE_DIR}/base/gBaseComponent.cpp
 	${ENGINE_DIR}/base/gBasePlugin.cpp
-	${ENGINE_DIR}/media/gFmodSound.cpp
 	${ENGINE_DIR}/media/gSound.cpp
 	${ENGINE_DIR}/base/gBaseApp.cpp
 	${ENGINE_DIR}/base/gBaseCanvas.cpp
@@ -325,7 +340,8 @@ if(WIN32)
 	)
 endif()
 
-if(NOT (ANDROID OR IOS))
+# These are handled from the appropriate plugin.
+if(NOT (ANDROID OR IOS OR EMSCRIPTEN))
 	list(APPEND SRC_FILES
 		${MINGW64_DIR}/lib/sqlite3.c
 		${ENGINE_DIR}/core/backward.cpp
@@ -391,6 +407,38 @@ target_compile_options(
             $<$<AND:$<COMPILE_LANGUAGE:CXX>,$<CONFIG:Release>>:${GLIST_CXX_FLAGS_RELEASE}>
 )
 
+
+if(EMSCRIPTEN)
+	add_link_options(
+			-sFULL_ES3
+            -sUSE_WEBGL2=1
+            -sUSE_GLFW=3
+            -sUSE_FREETYPE=1
+			-sUSE_LIBPNG=1
+			-sUSE_ZLIB=1
+			-sUSE_SQLITE3
+			-sUSE_HARFBUZZ=1
+            -lGL
+            -lglfw
+            -sFORCE_FILESYSTEM
+            -sGL_PREINITIALIZED_CONTEXT
+			-sALLOW_MEMORY_GROWTH=1
+			-sSTACK_SIZE=1049088
+			-sFORCE_FILESYSTEM
+			-sINITIAL_MEMORY=256MB
+    )
+    if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+        add_link_options(
+                ## debug stuff
+                -sASSERTIONS
+                -sSAFE_HEAP=1
+                -sSTACK_OVERFLOW_CHECK=2
+                -g3
+        )
+    endif()
+endif()
+
+
 ########## INCLUDE DIRECTORIES ##########
 set(INC_DIRS
 	${LIBS_DIR}/stb/include
@@ -436,12 +484,15 @@ if(WIN32)
 		${MINGW64_DIR}/include/utf8
 		${MINGW64_DIR}/include/harfbuzz
 	)
+elseif(EMSCRIPTEN)
+	# These are added by gipWebGL plugin
+	# Do not remove this scope
 elseif(ANDROID)
     # These are added by gipAndroid plugin
-    # Do not remove the if, otherwise linux libraries will be linked/included.
+	# Do not remove this scope
 elseif(IOS)
     # These are added by gipIOS plugin
-    # Do not remove the if, otherwise linux libraries will be linked/included.
+	# Do not remove this scope
 elseif(LINUX)
 	list(APPEND INC_DIRS
 		${MINGW64_DIR}/include
@@ -491,39 +542,49 @@ target_include_directories(GlistEngine PUBLIC ${INC_DIRS})
 target_sources(GlistEngine PRIVATE ${ENGINE_INCLUDES})
 
 #message(WARNING "PLUGIN_LIBDIRS: ${PLUGIN_LIBDIRS}")
-FOREACH(PLIBDIR ${PLUGIN_LIBDIRS})
+foreach(PLIBDIR ${PLUGIN_LIBDIRS})
 	set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -L${PLIBDIR}")
-ENDFOREACH()
+endforeach()
 
 ########## FIND LIBRARIES ##########
-if(WIN32)
-	link_directories(
-			${MINGW64_DIR}/bin
-			${MINGW64_DIR}/lib
-			${PLUGIN_LINKDIRS}
-	)
+if(EMSCRIPTEN)
+    if(NOT DEFINED WEBGL_PLUGIN_PRESENT)
+        message(FATAL_ERROR
+                "gipWebGL was not found in the active plugins list while trying to create a web app.\n\n"
+                "This might be caused by not passing gipWebGL to the GlistApp's used plugins list.\n"
+                "You may also not have the gipIOS plugin installed in the correct\n"
+                "folder and not with the correct name. Check if you have installed the plugin\n"
+                "under ~/dev/glist/glistplugins/"
+        )
+    endif()
 elseif(ANDROID)
     # These are added by gipAndroid plugin
     # Do not remove the if, otherwise linux libraries will be linked/included.
 	if(NOT DEFINED ANDROID_PLUGIN_PRESENT)
         message(FATAL_ERROR
-        " gipAndroid was not found in the active plugins list while trying to create an Android app. \n\n"
-        "This might be caused by not passing gipAndroid to the GlistApp's used plugins\n"
-        "list. You may also not have the gipAndroid plugin installed in the correct\n"
-        "folder and not with the correct name. Check if you have installed the plugin\n"
-        "under dev/glist/glistplugins."
+        	"gipAndroid was not found in the active plugins list while trying to create an Android app.\n\n"
+        	"This might be caused by not passing gipAndroid to the GlistApp's used plugins list.\n"
+        	"You may also not have the gipAndroid plugin installed in the correct\n"
+        	"folder and not with the correct name. Check if you have installed the plugin\n"
+        	"under ~/dev/glist/glistplugins/"
         )
 	endif()
 elseif(IOS)
     if(NOT DEFINED IOS_PLUGIN_PRESENT)
 		message(FATAL_ERROR
-			" gipIOS was not found in the active plugins list while trying to create an IOS app. \n\n"
-			"This might be caused by not passing gipIOS to the GlistApp's used plugins\n"
-			"list. You may also not have the gipIOS plugin installed in the correct\n"
+			"gipIOS was not found in the active plugins list while trying to create an iOS app.\n\n"
+			"This might be caused by not passing gipIOS to the GlistApp's used plugins list.\n"
+			"You may also not have the gipIOS plugin installed in the correct\n"
 			"folder and not with the correct name. Check if you have installed the plugin\n"
-			"under dev/glist/glistplugins."
+			"under ~/dev/glist/glistplugins/"
 		)
     endif()
+elseif(WIN32)
+    link_directories(
+            ${MINGW64_DIR}/bin
+            ${MINGW64_DIR}/lib
+            ${PLUGIN_LINKDIRS}
+    )
 elseif(LINUX)
 	# TODO: FFMPEG
 #	find_library(Lib_Freetype2 freetype HINTS /usr/lib/x86_64-linux-gnu)
@@ -571,7 +632,7 @@ elseif(APPLE)
         # For backwards compatibility
         find_library(Lib_crypto crypto HINTS ${BREW_PATH}/openssl@${OPENSSL_VER_SHORT}/${OPENSSL_VER_FULL}/lib)
     endif()
-endif (WIN32)
+endif()
 
 
 ########## LINK LIBRARIES ##########
@@ -579,7 +640,16 @@ set(LINK_LIBS
 	${PLUGIN_LINKLIBS}
 )
 
-if(WIN32)
+if(EMSCRIPTEN)
+	# These are added by gipWebGL plugin
+	# Do not remove this block
+elseif(ANDROID)
+	# These are added by gipAndroid plugin
+	# Do not remove this block
+elseif(IOS)
+	# These are added by gipIOS plugin
+	# Do not remove this block
+elseif(WIN32)
 	list(APPEND LINK_LIBS
 		assimp
 		freetype
@@ -606,12 +676,6 @@ if(WIN32)
 				${LIB_TRACY}
 		)
 	endif()
-elseif(ANDROID)
-    # These are added by gipAndroid plugin
-    # Do not remove the if, otherwise linux libraries will be linked/included.
-elseif(IOS)
-    # These are added by gipIOS plugin
-    # Do not remove the if, otherwise MacOS libraries will be linked/included.
 elseif(LINUX)
 	list(APPEND LINK_LIBS
 		assimp
@@ -637,10 +701,7 @@ elseif(APPLE)
 #		${Lib_cpp}
 	# TODO: FFMPEG
 	)
-endif(WIN32)
+endif()
 
 # add lib dependencies
-target_link_libraries(GlistEngine
-    PUBLIC
-        ${LINK_LIBS}
-)
+target_link_libraries(GlistEngine PUBLIC ${LINK_LIBS})

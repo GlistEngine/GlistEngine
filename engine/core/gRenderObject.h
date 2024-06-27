@@ -12,7 +12,7 @@
 
 #include "gRenderer.h"
 
-#ifdef ANDROID
+#if defined(ANDROID)
 using gIndex = unsigned short;
 #define G_INDEX_SIZE GL_UNSIGNED_SHORT
 #else

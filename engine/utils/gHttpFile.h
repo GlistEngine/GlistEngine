@@ -8,6 +8,7 @@
 #ifndef UTILS_GHTTPFILE_H_
 #define UTILS_GHTTPFILE_H_
 
+#ifndef EMSCRIPTEN
 #include <curl/curl.h>
 #include <stdio.h>
 #include <iostream>
@@ -18,7 +19,6 @@
 
 class gHttpFile : public gObject {
 public:
-
 	gHttpFile();
 	virtual ~gHttpFile();
 	struct ProgressData {
@@ -49,5 +49,7 @@ private:
 
 	void loadHtml();
 };
+
+#endif
 
 #endif /* UTILS_GHTTPFILE_H_ */

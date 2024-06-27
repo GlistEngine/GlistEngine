@@ -68,7 +68,7 @@ private:
 
 	void loadProgramInternal(const char* vertexSource, const char* fragmentSource, const char* geometrySource);
 
-	void checkCompileErrors(GLuint shader, const std::string& type);
+	void checkCompileErrors(GLuint shader, const std::string& type, const char* shaderCode);
 	std::string preprocessShader(const std::string& shaderCode, std::unordered_map<std::string, std::string> defines);
 	std::unordered_map<std::string, std::string> generateDefines(ShaderType type);
 
