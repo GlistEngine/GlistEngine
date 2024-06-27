@@ -13,8 +13,13 @@
 gGUIButton::gGUIButton() {
 	ispressed = false;
 	ishover = false;
+	isstatic = true;
+	issetupped = false;
 	buttonw = 96;
 	buttonh = 32;
+	buttonx = left;
+	buttony = top;
+	buttonmargin = 0;
 	istoggle = false;
 	title = "Button";
 	istextvisible = true;
@@ -31,6 +36,12 @@ gGUIButton::gGUIButton() {
 	pressedfcolor = *pressedbuttonfontcolor;
 	disabledfcolor = *disabledbuttonfontcolor;
 	fillbackground = true;
+	freesans12.loadFont("FreeSans.ttf", 12);
+	freesans18.loadFont("FreeSans.ttf", 18);
+	freesans24.loadFont("FreeSans.ttf", 24);
+	freesans36.loadFont("FreeSans.ttf", 36);
+	freesans48.loadFont("FreeSans.ttf", 48);
+	freesans60.loadFont("FreeSans.ttf", 60);
 	resetTitlePosition();
 }
 
@@ -79,11 +90,25 @@ bool gGUIButton::isPressed() {
 
 void gGUIButton::update() {
 //	gLogi("gGUIButton") << "update";
+	if(issetupped == false) {
+		if(!isstatic) {
+			buttonx = left + buttonmargin;
+			buttony = top + buttonmargin;
+			buttonw = width - buttonmargin * 2;
+			buttonh = height - buttonmargin * 2;
+			resetTitlePosition();
+		}else {
+			buttonx = left;
+			buttony = top;
+		}
+		issetupped = true;
+	}
 }
 
 void gGUIButton::draw() {
 //	gLogi("gGUIButton") << "draw, w:" << width;
 	gColor* oldcolor = renderer->getColor();
+
 	if(fillbackground) {
 		if(isdisabled) renderer->setColor(&disabledbcolor);
 		else {
@@ -92,7 +117,11 @@ void gGUIButton::draw() {
 			else renderer->setColor(&bcolor);
 		}
 	//	renderer->setColor(gColor(0.1f, 0.45f, 0.87f));
-		gDrawRectangle(left, top + ispressed, buttonw, buttonh, true);
+		if(buttonmargin > 0 && isstatic == false) {
+			gDrawRectangle(buttonx, buttony + ispressed, buttonw, buttonh, true);
+		}else {
+			gDrawRectangle(left, top + ispressed, buttonw, buttonh, true);
+		}
 	}
 
 	if(istextvisible) {
@@ -101,7 +130,35 @@ void gGUIButton::draw() {
 			if(ispressed) renderer->setColor(&pressedfcolor);
 			else renderer->setColor(&fcolor);
 		}
-		font->drawText(title, left + tx - 1, top + buttonh - ty + ispressed - 2);
+
+		if((buttonw > 0) && (buttonh > 0))  fontsize = 12;
+		if((buttonw > 100) && (buttonh > 50)) fontsize = 18;
+		if((buttonw > 200) && (buttonh > 80)) fontsize = 24;
+		if((buttonw > 300) && (buttonh > 110)) fontsize = 36;
+		if((buttonw > 400) && (buttonh > 140)) fontsize = 48;
+		if((buttonw > 500) && (buttonh > 170)) fontsize = 60;
+
+		switch(fontsize) {
+		case 12:
+			freesans12.drawText(title, buttonx + tx - 1 - 12, buttony + buttonh - ty + ispressed - 2 );
+		break;
+		case 18:
+			freesans18.drawText(title, buttonx + tx - 1 - 18, buttony + buttonh - ty + ispressed - 2 );
+		break;
+		case 24:
+			freesans24.drawText(title, buttonx + tx - 1 - 24, buttony + buttonh - ty + ispressed - 2 );
+		break;
+		case 36:
+			freesans36.drawText(title, buttonx + tx - 1 - 36, buttony + buttonh - ty + ispressed - 2 );
+		break;
+		case 48:
+			freesans48.drawText(title, buttonx + tx - 1 - 48, buttony + buttonh - ty + ispressed - 2 );
+		break;
+		case 60:
+			freesans60.drawText(title, buttonx + tx - 1 - 60, buttony + buttonh - ty + ispressed - 2 );
+		break;
+		}
+
 	}
 	renderer->setColor(oldcolor);
 }
@@ -109,7 +166,7 @@ void gGUIButton::draw() {
 void gGUIButton::mousePressed(int x, int y, int button) {
 //	gLogi("Button") << "pressed, id:" << id;
 	if(isdisabled) return;
-	if(x >= left && x < left + buttonw && y >= top && y < top + buttonh) {
+	if(x >= buttonx && x < buttonx + buttonw && y >= buttony && y < buttony + buttonh) {
 		if(!istoggle) ispressed = true;
 		else {
 			if(!ispressed) {
@@ -124,7 +181,7 @@ void gGUIButton::mousePressed(int x, int y, int button) {
 void gGUIButton::mouseReleased(int x, int y, int button) {
 //	gLogi("Button") << "released, id:" << id;
 	if(isdisabled) return;
-	if(ispressed && x >= left && x < left + buttonw && y >= top && y < top + buttonh) {
+	if(ispressed && x >= buttonx && x < buttonx + buttonw && y >= buttony && y < buttony + buttonh) {
 		if(!istoggle) ispressed = false;
 		else {
 			if(!ispressednow) ispressed = false;
@@ -138,12 +195,12 @@ void gGUIButton::mouseReleased(int x, int y, int button) {
 }
 
 void gGUIButton::mouseMoved(int x, int y) {
-	if(iscursoron && x >= left && y >= top && x < left + buttonw && y < top + buttonh) ishover = true;
+	if(iscursoron && x >= buttonx && y >= buttony && x < buttonx + buttonw && y < buttony + buttonh) ishover = true;
 	else ishover = false;
 }
 
 void gGUIButton::mouseDragged(int x, int y, int button) {
-	if(iscursoron && x >= left && y >= top && x < left + buttonw && y < top + buttonh) ishover = true;
+	if(iscursoron && x >= buttonx && y >= buttony && x < buttonx + buttonw && y < buttony + buttonh) ishover = true;
 	else ishover = false;
 }
 
@@ -156,8 +213,8 @@ void gGUIButton::mouseExited() {
 }
 
 void gGUIButton::resetTitlePosition() {
-	tx = (buttonw - font->getStringWidth(title)) / 2 - 1;
-	ty = (buttonh - font->getStringHeight("a")) / 2;
+	tx = (buttonw + buttonmargin - font->getStringWidth(title)) / 2 - 1;
+	ty = (buttonh - buttonmargin - font->getStringHeight("a")) / 2;
 }
 
 void gGUIButton::setButtonColor(gColor color) {
@@ -228,4 +285,12 @@ void gGUIButton::setButtonh(int buttonh) {
 
 void gGUIButton::setButtonw(int buttonw) {
 	this->buttonw = buttonw;
+}
+
+void gGUIButton::setStaticness(bool isStatic) {
+	isstatic = isStatic;
+}
+
+void gGUIButton::setButtonMargin(int margin) {
+	buttonmargin = margin;
 }

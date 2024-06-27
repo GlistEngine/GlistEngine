@@ -9,6 +9,8 @@
 #define UI_GGUIBUTTON_H_
 
 #include "gGUIControl.h"
+#include "gGUIScrollable.h"
+#include "gFont.h"
 
 
 class gGUIButton: public gGUIControl {
@@ -17,9 +19,13 @@ public:
 	gGUIButton();
 	virtual ~gGUIButton();
 
+	//void set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIObject* parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h);
+
 	void setTitle(std::string title);
 	void setSize(int width, int height);
 	void setToggle(bool isToggle);
+	void setStaticness(bool isStatic); //must be set to false if button is used for static elements such as dropdownlist
+	void setButtonMargin(int margin);  //given margin would compress the button in the panel by the given amount
 	void setDisabled(bool isDisabled);
 	void setTextVisibility(bool isVisible);
 
@@ -61,7 +67,7 @@ public:
 protected:
 	bool ispressed;
 	bool ishover;
-	int buttonw, buttonh;
+	int buttonx, buttony, buttonw, buttonh;
 	int tx, ty;
 	bool istextvisible;
 	bool istoggle;
@@ -75,6 +81,16 @@ protected:
 	void resetTitlePosition();
 
 private:
+	int fontsize;
+	int buttonmargin;
+	bool isstatic;
+	bool issetupped;
+	gFont freesans12;
+	gFont freesans18;
+	gFont freesans24;
+	gFont freesans36;
+	gFont freesans48;
+	gFont freesans60;
 };
 
 #endif /* UI_GGUIBUTTON_H_ */
