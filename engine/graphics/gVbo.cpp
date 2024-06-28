@@ -123,11 +123,11 @@ gIndex* gVbo::getIndices() const {
 }
 
 void gVbo::bind() const {
-	glBindVertexArray(vao);
+	G_CHECK_GL(glBindVertexArray(vao));
 }
 
 void gVbo::unbind() const {
-	glBindVertexArray(0);
+	G_CHECK_GL(glBindVertexArray(0));
 }
 
 void gVbo::draw() {
