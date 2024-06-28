@@ -57,7 +57,7 @@ gVbo& gVbo::operator=(const gVbo& other) {
 	if (this == &other) {
 		return *this;
 	}
-	// clear current 
+	// clear current
 	clear();
 	verticesptr = nullptr;
 	vertexarrayptr = nullptr;
@@ -181,11 +181,11 @@ void gVbo::bind() const {
 #ifdef DEBUG
 	assert(vao != GL_NONE);
 #endif
-	glBindVertexArray(vao);
+	G_CHECK_GL(glBindVertexArray(vao));
 }
 
 void gVbo::unbind() const {
-	glBindVertexArray(0);
+	G_CHECK_GL(glBindVertexArray(0));
 }
 
 void gVbo::draw() {
