@@ -57,7 +57,7 @@ public:
 	bool contains(const gBoundingBox& b) const;
 	bool contains(float x, float y, float z) const;
 
-	gBoundingBox merge(const gBoundingBox& other);
+	gBoundingBox merge(const gBoundingBox& other) const;
 
 	bool intersects(gRay& ray) const;
 	float distance(gRay& ray) const;

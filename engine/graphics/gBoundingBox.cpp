@@ -82,7 +82,7 @@ bool gBoundingBox::contains(float x, float y, float z) const {
 	return contains(minf[0], minf[1], minf[2], maxf[0], maxf[1], maxf[2], x, y, z, x, y, z);
 }
 
-gBoundingBox gBoundingBox::merge(const gBoundingBox& other) {
+gBoundingBox gBoundingBox::merge(const gBoundingBox& other) const {
 	if (width == 0.0f && height == 0.0f && depth == 0.0f) {
 		return other;
 	}
