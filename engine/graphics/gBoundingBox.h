@@ -47,22 +47,22 @@ public:
 	static bool intersects(float minX1, float minY1, float minZ1, float maxX1, float maxY1, float maxZ1, float minX2, float minY2, float minZ2, float maxX2, float maxY2, float maxZ2);
 	static bool intersects(const gBoundingBox& b1, const gBoundingBox& b2);
 
-	bool intersects(float minX, float minY, float minZ, float maxX, float maxY, float maxZ);
-	bool intersects(const gBoundingBox& b);
+	bool intersects(float minX, float minY, float minZ, float maxX, float maxY, float maxZ) const;
+	bool intersects(const gBoundingBox& b) const;
 
 	static bool contains(float minX1, float minY1, float minZ1, float maxX1, float maxY1, float maxZ1, float minX2, float minY2, float minZ2, float maxX2, float maxY2, float maxZ2);
 	static bool contains(const gBoundingBox& b1, const gBoundingBox& b2);
 
-	bool contains(float minX, float minY, float minZ, float maxX, float maxY, float maxZ);
-	bool contains(const gBoundingBox& b);
-	bool contains(float x, float y, float z);
+	bool contains(float minX, float minY, float minZ, float maxX, float maxY, float maxZ) const;
+	bool contains(const gBoundingBox& b) const;
+	bool contains(float x, float y, float z) const;
 
 	gBoundingBox merge(const gBoundingBox& other);
 
-	bool intersects(gRay& ray);
-	float distance(gRay& ray);
-	bool intersects(gRay* ray);
-	float distance(gRay* ray);
+	bool intersects(gRay& ray) const;
+	float distance(gRay& ray) const;
+	bool intersects(gRay* ray) const;
+	float distance(gRay* ray) const;
 
 	const glm::vec3& getMin() const;
 	const glm::vec3& getMax() const;
@@ -78,8 +78,8 @@ public:
 	const glm::vec3& getOrigin() const;
 
 	void setTransformationMatrix(const glm::mat4& matrix);
-	bool intersectsOBB(gRay* ray);
-	float distanceOBB(gRay* ray);
+	bool intersectsOBB(gRay* ray) const;
+	float distanceOBB(gRay* ray) const;
 
 	void draw() const;
 	void drawOBB() const;
@@ -92,12 +92,6 @@ private:
 	glm::vec3 origin;
 	glm::mat4 transformationmatrix;
 
-	float inverted, direction1, direction2, tempdirection;
-	float dimlo, dimhi, dimtemp;
-	int di;
-	glm::vec3 ro, rd;
-	float dmin, dmax;
-	float raydist;
 };
 
 #endif /* GRAPHICS_GBOUNDINGBOX_H_ */

@@ -6,6 +6,8 @@
  */
 
 #include "gBoundingBox.h"
+
+#include <algorithm>
 #include "gRay.h"
 #include "gRenderer.h"
 
@@ -52,11 +54,11 @@ bool gBoundingBox::intersects(const gBoundingBox& b1, const gBoundingBox& b2) {
 	return intersects(b1.minX(), b1.minY(), b1.minZ(), b1.maxX(), b1.maxY(), b1.maxZ(), b2.minX(), b2.minY(), b2.minZ(), b2.maxX(), b2.maxY(), b2.maxZ());
 }
 
-bool gBoundingBox::intersects(float minX, float minY, float minZ, float maxX, float maxY, float maxZ) {
+bool gBoundingBox::intersects(float minX, float minY, float minZ, float maxX, float maxY, float maxZ) const {
 	return intersects(minf[0], minf[1], minf[2], maxf[0], maxf[1], maxf[2], minX, minY, minZ, maxX, maxY, maxZ);
 }
 
-bool gBoundingBox::intersects(const gBoundingBox& b) {
+bool gBoundingBox::intersects(const gBoundingBox& b) const {
 	return intersects(minf[0], minf[1], minf[2], maxf[0], maxf[1], maxf[2], b.minX(), b.minY(), b.minZ(), b.maxX(), b.maxY(), b.maxZ());
 }
 
@@ -68,21 +70,25 @@ bool gBoundingBox::contains(const gBoundingBox& b1, const gBoundingBox& b2) {
 	return contains(b1.minX(), b1.minY(), b1.minZ(), b1.maxX(), b1.maxY(), b1.maxZ(), b2.minX(), b2.minY(), b2.minZ(), b2.maxX(), b2.maxY(), b2.maxZ());
 }
 
-bool gBoundingBox::contains(float minX, float minY, float minZ, float maxX, float maxY, float maxZ) {
+bool gBoundingBox::contains(float minX, float minY, float minZ, float maxX, float maxY, float maxZ) const {
 	return contains(minf[0], minf[1], minf[2], maxf[0], maxf[1], maxf[2], minX, minY, minZ, maxX, maxY, maxZ);
 }
 
-bool gBoundingBox::contains(const gBoundingBox& b) {
+bool gBoundingBox::contains(const gBoundingBox& b) const {
 	return contains(minf[0], minf[1], minf[2], maxf[0], maxf[1], maxf[2], b.minX(), b.minY(), b.minZ(), b.maxX(), b.maxY(), b.maxZ());
 }
 
-bool gBoundingBox::contains(float x, float y, float z) {
+bool gBoundingBox::contains(float x, float y, float z) const {
 	return contains(minf[0], minf[1], minf[2], maxf[0], maxf[1], maxf[2], x, y, z, x, y, z);
 }
 
 gBoundingBox gBoundingBox::merge(const gBoundingBox& other) {
-	if (width == 0.0f && height == 0.0f && depth == 0.0f) return other;
-	else if (other.getWidth() == 0.0f && other.getHeight() == 0.0f && other.getDepth() == 0.0f) return *this;
+	if (width == 0.0f && height == 0.0f && depth == 0.0f) {
+		return other;
+	}
+	if (other.getWidth() == 0.0f && other.getHeight() == 0.0f && other.getDepth() == 0.0f) {
+		return *this;
+	}
 
 	return gBoundingBox(
 			std::min(minf[0], other.minX()),
@@ -94,65 +100,71 @@ gBoundingBox gBoundingBox::merge(const gBoundingBox& other) {
 	);
 }
 
-bool gBoundingBox::intersects(gRay& ray) {
-	raydist = distance(ray);
-	return raydist == std::numeric_limits<float>::min() ? false : true && raydist <= glm::length(ray.getDirection());
+bool gBoundingBox::intersects(gRay& ray) const {
+	float dist = distance(ray);
+	return dist == std::numeric_limits<float>::min() ? false : true && dist <= glm::length(ray.getDirection());
 }
 
-float gBoundingBox::distance(gRay& ray) {
-	ro = ray.getOrigin();
-	rd = ray.getDirection();
-	dmin = std::numeric_limits<float>::min();
-	dmax = std::numeric_limits<float>::max();
+float gBoundingBox::distance(gRay& ray) const {
+	const glm::vec3& ro = ray.getOrigin();
+	const glm::vec3& rd = ray.getDirection();
+	float dmin = std::numeric_limits<float>::min();
+	float dmax = std::numeric_limits<float>::max();
 
-	for (di = 0; di < componentnum; di++) {
-		dimlo = (minf[di] - ro[di]) / rd[di];
-		dimhi = (maxf[di] - ro[di]) / rd[di];
+	float low;
+	float high;
+	float temp;
+	for (int i = 0; i < componentnum; i++) {
+		low = (minf[i] - ro[i]) / rd[i];
+		high = (maxf[i] - ro[i]) / rd[i];
 
-		if (dimlo > dimhi) {
-			dimtemp = dimlo;
-			dimlo = dimhi;
-			dimhi = dimtemp;
+		if (low > high) {
+			temp = low;
+			low = high;
+			high = temp;
 		}
 
-		if (dimhi < dmin || dimlo > dmax) {
+		if (high < dmin || low > dmax) {
 			return std::numeric_limits<float>::min();
 		}
 
-		if (dimlo > dmin) dmin = dimlo;
-		if (dimhi < dmax) dmax = dimhi;
+		dmin = std::max(low, dmin);
+		dmax = std::min(high, dmax);
 	}
 
 	return dmin > dmax ? std::numeric_limits<float>::min() : dmin;
 }
 
-bool gBoundingBox::intersects(gRay* ray) {
-	raydist = distance(ray);
-	return raydist == std::numeric_limits<float>::min() ? false : true && raydist <= ray->getLength();
+bool gBoundingBox::intersects(gRay* ray) const {
+	float dist = distance(ray);
+	return dist != std::numeric_limits<float>::min() && dist <= ray->getLength();
 }
 
-float gBoundingBox::distance(gRay* ray) {
-	ro = ray->getOrigin();
-	rd = ray->getDirection();
-	dmin = std::numeric_limits<float>::min();
-	dmax = std::numeric_limits<float>::max();
+float gBoundingBox::distance(gRay* ray) const {
+	const glm::vec3& ro = ray->getOrigin();
+	const glm::vec3& rd = ray->getDirection();
+	float dmin = std::numeric_limits<float>::min();
+	float dmax = std::numeric_limits<float>::max();
 
-	for (di = 0; di < componentnum; di++) {
-		dimlo = (minf[di] - ro[di]) / rd[di];
-		dimhi = (maxf[di] - ro[di]) / rd[di];
+	float low;
+	float high;
+	float temp;
+	for (int di = 0; di < componentnum; di++) {
+		low = (minf[di] - ro[di]) / rd[di];
+		high = (maxf[di] - ro[di]) / rd[di];
 
-		if (dimlo > dimhi) {
-			dimtemp = dimlo;
-			dimlo = dimhi;
-			dimhi = dimtemp;
+		if (low > high) {
+			temp = low;
+			low = high;
+			high = temp;
 		}
 
-		if (dimhi < dmin || dimlo > dmax) {
+		if (high < dmin || low > dmax) {
 			return std::numeric_limits<float>::min();
 		}
 
-		if (dimlo > dmin) dmin = dimlo;
-		if (dimhi < dmax) dmax = dimhi;
+		dmin = std::max(low, dmin);
+		dmax = std::min(high, dmax);
 	}
 
 	return dmin > dmax ? std::numeric_limits<float>::min() : dmin;
@@ -210,12 +222,12 @@ void gBoundingBox::setTransformationMatrix(const glm::mat4& matrix) {
 	transformationmatrix = matrix;
 }
 
-bool gBoundingBox::intersectsOBB(gRay* ray) {
-	raydist = distanceOBB(ray);
-	return raydist == 0.0f ? false : true && raydist <= ray->getLength();
+bool gBoundingBox::intersectsOBB(gRay* ray) const {
+	float dist = distanceOBB(ray);
+	return dist == 0.0f ? false : true && dist <= ray->getLength();
 }
 
-float gBoundingBox::distanceOBB(gRay* ray) {
+float gBoundingBox::distanceOBB(gRay* ray) const {
     float tMin = 0.0f;
     float tMax = 100000.0f;
     float tTemp;
