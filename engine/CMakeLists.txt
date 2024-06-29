@@ -43,6 +43,10 @@ if(WIN32)
 	set(SYS_NAME "win64")
 endif(WIN32)
 
+if(EMSCRIPTEN)
+	set(CMAKE_EXECUTABLE_SUFFIX ".html")
+endif()
+
 set(CMAKE_THREAD_LIBS_INIT "-lpthread")
 set(CMAKE_HAVE_THREADS_LIBRARY 1)
 set(CMAKE_USE_WIN32_THREADS_INIT 0)
@@ -291,7 +295,6 @@ foreach(SHADER_FILE ${SHADER_FILES})
 	list(APPEND SRC_FILES ${GENERATED_HEADER_FILE})
 endforeach()
 
-
 if(ANDROID OR IOS)
 	# We have androidMain function that is
 	# defined inside the GlistEngine but implemented by the
@@ -316,7 +319,9 @@ target_compile_options(
             $<$<AND:$<COMPILE_LANGUAGE:CXX>,$<CONFIG:Release>>:${GLIST_CXX_FLAGS_RELEASE}>
 )
 
+
 if(EMSCRIPTEN)
+
 	add_link_options(
 			-sUSE_WEBGL2=1
 			-sUSE_GLFW=3
@@ -329,6 +334,7 @@ if(EMSCRIPTEN)
 			# Memory growth is pretty slow, you might want to prefer fixed amount of memory
 			-sALLOW_MEMORY_GROWTH
 			#-sINITIAL_MEMORY=2684354560
+
 	)
 	if(CMAKE_BUILD_TYPE STREQUAL "Debug")
 		add_link_options(
@@ -383,13 +389,13 @@ if(WIN32)
 	)
 elseif(EMSCRIPTEN)
 	# These are added by gipWeb plugin
-	# Do not remove the if, otherwise linux libraries will be linked/included.
+	# Do not remove this scope
 elseif(ANDROID)
     # These are added by gipAndroid plugin
-    # Do not remove the if, otherwise linux libraries will be linked/included.
+	# Do not remove this scope
 elseif(IOS)
     # These are added by gipIOS plugin
-    # Do not remove the if, otherwise linux libraries will be linked/included.
+	# Do not remove this scope
 elseif(LINUX)
 	list(APPEND INC_DIRS
 		${MINGW64_DIR}/include
@@ -540,7 +546,7 @@ elseif(APPLE)
         # For backwards compatibility
         find_library(Lib_crypto crypto HINTS ${BREW_PATH}/openssl@${OPENSSL_VER_SHORT}/${OPENSSL_VER_FULL}/lib)
     endif()
-endif (WIN32)
+endif()
 
 
 ########## LINK LIBRARIES ##########
@@ -608,7 +614,7 @@ elseif(APPLE)
 #		${Lib_cpp}
 	# TODO: FFMPEG
 	)
-endif(APPLE)
+endif()
 
 # add lib dependencies
 target_link_libraries(GlistEngine PUBLIC ${LINK_LIBS})
