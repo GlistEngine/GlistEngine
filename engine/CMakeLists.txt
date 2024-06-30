@@ -114,7 +114,7 @@ foreach(pluginname ${PLUGINS})
 	endif()
 
 	if(EMSCRIPTEN)
-		if(${pluginname} STREQUAL "gipWeb")
+		if(${pluginname} STREQUAL "gipWebGL")
 			set(WEB_PLUGIN_PRESENT 1)
 		endif()
 	endif()
@@ -321,7 +321,6 @@ target_compile_options(
 
 
 if(EMSCRIPTEN)
-
 	add_link_options(
 			-sUSE_WEBGL2=1
 			-sUSE_GLFW=3
@@ -334,8 +333,8 @@ if(EMSCRIPTEN)
 			# Memory growth is pretty slow, you might want to prefer fixed amount of memory
 			-sALLOW_MEMORY_GROWTH
 			#-sINITIAL_MEMORY=2684354560
-
 	)
+
 	if(CMAKE_BUILD_TYPE STREQUAL "Debug")
 		add_link_options(
 				## debug stuff
@@ -451,10 +450,10 @@ endforeach()
 
 ########## FIND LIBRARIES ##########
 if(EMSCRIPTEN)
-	if(NOT DEFINED WEB_PLUGIN_PRESENT)
+	if(NOT DEFINED WEBGL_PLUGIN_PRESENT)
 		message(FATAL_ERROR
-			"gipWeb was not found in the active plugins list while trying to create a web app.\n\n"
-			"This might be caused by not passing gipWeb to the GlistApp's used plugins list.\n"
+			"gipWebGL was not found in the active plugins list while trying to create a web app.\n\n"
+			"This might be caused by not passing gipWebGL to the GlistApp's used plugins list.\n"
 			"You may also not have the gipIOS plugin installed in the correct\n"
 			"folder and not with the correct name. Check if you have installed the plugin\n"
 			"under ~/dev/glist/glistplugins/"
@@ -555,7 +554,7 @@ set(LINK_LIBS
 )
 
 if(EMSCRIPTEN)
-	# These are added by gipWeb plugin
+	# These are added by gipWebGL plugin
 	# Do not remove this block
 elseif(ANDROID)
 	# These are added by gipAndroid plugin
