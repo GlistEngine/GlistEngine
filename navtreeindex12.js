@@ -1,5 +1,7 @@
 var NAVTREEINDEX12 =
 {
+"gShadowsMidtonesHighlights_8h_source.html":[1,0,120],
+"gSharpen_8h_source.html":[1,0,121],
 "gSkinnedMesh_8h_source.html":[1,0,122],
 "gSkybox_8h_source.html":[1,0,123],
 "gSoftFocus_8h_source.html":[1,0,124],

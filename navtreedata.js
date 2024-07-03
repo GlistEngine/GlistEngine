@@ -55,7 +55,7 @@ var NAVTREEINDEX =
 "classgNode.html#a41a65cf61c60c82b19ce140364f98a26",
 "classgRenderer.html#ae0fa143cfdfe2582d2be4a5d3c062a16",
 "classgThread.html#ac956060e5aec43518e48ba52dc182ae3",
-"gSkinnedMesh_8h_source.html"
+"gShadowsMidtonesHighlights_8h_source.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
