@@ -30,6 +30,10 @@ public:
 	gVbo();
 	virtual ~gVbo();
 
+	gVbo(const gVbo&);
+	gVbo& operator=(const gVbo& other);
+	// todo maybe implement move constructor and move assignment operator
+
 	void setVertexData(gVertex* vertices, int coordNum, int total);
 	void setIndexData(gIndex* indices, int total);
 	void clear();
@@ -49,7 +53,7 @@ public:
 //	void setMesh(const gMesh* mesh, int usage);
 	void setVertexData(const glm::vec3* vertices, int total, int usage = GL_STATIC_DRAW);
 	void setVertexData(const glm::vec2* vertices, int total, int usage = GL_STATIC_DRAW);
-	void setVertexData(const float* vert0x, int coordNum, int total, int usage, int stride = 0);
+	void setVertexData(const float* vertexData, int coordNum, int total, int usage, int stride = 0);
 	void setColorData(const gColor* colors, int total, int usage);
 	void setColorData(const float* color0r, int total, int usage, int stride = 0);
 	void setTexCoordData(const glm::vec2* texCoords, int total, int usage);
@@ -69,23 +73,17 @@ private:
     GLuint vao;
     GLuint vbo, ebo;
     bool isenabled;
-    int sli;
-
-    void setupVbo();
 
     bool isvertexdataallocated;
     const float* vertexarrayptr;
     int vertexdatacoordnum, totalvertexnum;
+    int vertexusage, vertexstride;
     gVertex* verticesptr;
 
     bool isindexdataallocated;
     gIndex* indexarrayptr;
     int totalindexnum;
 
-    gLight* scenelight;
-    gShader* colorshader;
-
-    bool isAMD;
 };
 
 #endif /* GRAPHICS_GVBO_H_ */
