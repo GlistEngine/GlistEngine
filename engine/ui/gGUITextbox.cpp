@@ -1447,6 +1447,8 @@ void gGUITextbox::mouseReleased(int x, int y, int button) {
 	if(x >= left && x < right && y >= top + hdiff && y < top + totalh + hdiff && button == 0) {
 		return;
 	}
+	selectionmode = false;
+	editmode = false;
 	isdragging = false;
 }
 
