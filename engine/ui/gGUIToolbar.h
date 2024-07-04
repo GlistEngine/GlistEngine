@@ -48,8 +48,10 @@ public:
 	void addImage(gGUIBitmap* image);
 	void addDivider(gGUIDivider* divider, float margin);
 	void addSpace();
-	void setToolbarForegroundColor(gColor color);
-	void setToolbarBottomLineColor(gColor color);
+	void setToolbarForegroundColor(gColor* color);
+	void setToolbarBottomLineColor(gColor* color);
+	gColor** getToolbarForegroundColorAddress();
+	gColor** getToolbarBottomLineColorAddress();
 
 	void draw();
 
@@ -59,7 +61,10 @@ private:
 	bool isSpaceAdded;
 	std::deque<gGUIControl*> controlObjects;
 	std::deque<float> sizerPrs;
-	gColor toolbarforegroundcolor, toolbarbottomlinecolor;
+	//gColor* toolbarforegroundcolor;
+	//gColor* toolbarbottomlinecolor;
+	gColor** toolbarforegroundcoloraddress;
+	gColor** toolbarbottomlinecoloraddress;
 
 	void resizeSizer();
 };
