@@ -46,6 +46,7 @@ void gGUITable::update() {
 	screenwidth = getScreenWidth();
 	screenheight = getScreenHeight();
 	maxcolumncount = screenwidth / (filew + cornerspace);
+	if(maxcolumncount == 0) return;
 
 		for (int i = 0; i < imagelist.size(); i++) {
 			imagew.push_back(imagelist[i]->getWidth());
@@ -73,6 +74,7 @@ void gGUITable::update() {
 }
 
 void gGUITable::draw() {
+	if(maxcolumncount == 0) return;
 	gColor oldcolor = renderer->getColor();
 	renderer->setColor(backgroundcolor);
 	gDrawRectangle(0, 0, screenwidth, screenheight, true);
@@ -116,7 +118,7 @@ void gGUITable::draw() {
 	}
 }
 
-void gGUITable::addItem(gImage* image, std::string title) {
+void gGUITable::addItem(gTexture* image, std::string title) {
 	imagelist.push_back(image);
 	imagetextlist.push_back(title);
 }

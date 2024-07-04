@@ -25,7 +25,7 @@ public:
 	void mouseMoved(int x, int y );
 	void mousePressed(int x, int y, int button);
 	void set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIObject* parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h);
-	void addItem(gImage* image, std::string title = "New File");
+	void addItem(gTexture* image, std::string title = "New File");
 	void setFontColor(gColor color);
 	void setTableColor(gColor color);
 	void setSelectedTable();
@@ -40,7 +40,7 @@ private:
 	void generateFile();
 	bool isfilepressed;
 	static const int FILE_X = 0, FILE_Y = 1, FILE_W = 2, FILE_H = 3;
-	std::deque<gImage*> imagelist;
+	std::deque<gTexture*> imagelist;
 	std::deque<std::string> imagetextlist;
 	std::deque<int> imageparameterlist;
 	int x, y, filew, fileh;
