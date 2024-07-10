@@ -198,9 +198,17 @@ unsigned int gTexture::loadData(unsigned char* textureData, int width, int heigh
 	//	setupRenderData();
 	return id;
 }
-
+/*/
+	param@ *textureData, *masktexture, *data, *dataddr
+	To bitmap object/class, selection case from multiple images object must not pre-clean for recursive call for function setData().
+	setData() was used for multiple call for bitmap multiple images load case.
+	Pre-clean for param@ *textureData, *masktexture, *data, *dataddr causes bug for 2nd image load function.
+	For not causing future bugs pre-clean in load() function has not been changed.
+	Intern Mert Ay
+	*/
 void gTexture::setData(unsigned char* textureData, bool isMutable, bool isStbImage, bool clean) {
-	if(clean) cleanupData();
+	if(!clean)
+		cleanupData();
 
 	ismutable = isMutable;
 	isstbimage = isStbImage;
@@ -248,7 +256,7 @@ void gTexture::setData(unsigned char* textureData, bool isMutable, bool isStbIma
 }
 
 void gTexture::setDataHDR(float* textureData, bool isMutable, bool isStbImage, bool clean) {
-	if(clean)cleanupData();
+	if(!clean)cleanupData();
 
 	ismutable = isMutable;
 	isstbimage = isStbImage;

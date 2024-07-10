@@ -31,7 +31,6 @@ gImage::~gImage() {
 }
 
 unsigned int gImage::load(const std::string& fullPath) {
-	cleanupData();
 
 	fullpath = fullPath;
 	directory = getDirName(fullpath);
