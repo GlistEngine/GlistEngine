@@ -156,10 +156,10 @@ unsigned int gTexture::load(const std::string& fullPath) {
 
 	if (ishdr) {
 		stbi_set_flip_vertically_on_load(true);
-		datahdr = stbi_loadf(fullpath.c_str(), &width, &height, &componentnum, 0);
+		float* datahdr = stbi_loadf(fullpath.c_str(), &width, &height, &componentnum, 0);
 		setDataHDR(datahdr, false, true);
 	} else {
-		data = stbi_load(fullpath.c_str(), &width, &height, &componentnum, 0);
+		unsigned char* data = stbi_load(fullpath.c_str(), &width, &height, &componentnum, 0);
 		setData(data, false, true);
 	}
 
@@ -200,7 +200,9 @@ unsigned int gTexture::loadData(unsigned char* textureData, int width, int heigh
 }
 
 void gTexture::setData(unsigned char* textureData, bool isMutable, bool isStbImage, bool clean) {
-	if(clean) cleanupData();
+	if(clean) {
+		cleanupData();
+	}
 
 	ismutable = isMutable;
 	isstbimage = isStbImage;
@@ -248,7 +250,9 @@ void gTexture::setData(unsigned char* textureData, bool isMutable, bool isStbIma
 }
 
 void gTexture::setDataHDR(float* textureData, bool isMutable, bool isStbImage, bool clean) {
-	if(clean)cleanupData();
+	if(clean) {
+		cleanupData();
+	}
 
 	ismutable = isMutable;
 	isstbimage = isStbImage;
