@@ -45,8 +45,8 @@ unsigned int gSkybox::load(std::vector<std::string>& fullPaths) {
 	skymapslot = GL_TEXTURE0;
 	skymapint = 0;
 
-#if defined(ANDROID)
-    G_CHECK_GL(glEnable(GL_TEXTURE_CUBE_MAP)); // OpenGL ES does not support GL_TEXTURE_CUBE_MAP_SEAMLESS
+#if !defined(GLIST_OPENGLES)
+	glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
 #endif
 
 	G_CHECK_GL(glActiveTexture(skymapslot));
@@ -54,8 +54,11 @@ unsigned int gSkybox::load(std::vector<std::string>& fullPaths) {
 	G_CHECK_GL(glBindTexture(GL_TEXTURE_CUBE_MAP, id));
 
 	for (unsigned int i = 0; i < fullPaths.size(); i++) {
-        unsigned char *data = stbi_load(fullPaths[i].c_str(), &width, &height, &nrChannels, 0);
-        if (data) {
+		unsigned char *data = stbi_load(fullPaths[i].c_str(), &width, &height, &nrChannels, 0);
+#ifdef EMSCRIPTEN
+		gFlipImageDataVertically(data, width, height, nrChannels);
+#endif
+		if (data) {
             G_CHECK_GL(glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data));
             stbi_image_free(data);
         } else {
@@ -85,9 +88,7 @@ void gSkybox::loadSkybox(gImage* images) {
 	skymapslot = GL_TEXTURE0;
 	skymapint = 0;
 
-#if defined(GLIST_MOBILE)
-	glEnable(GL_TEXTURE_CUBE_MAP); // OpenGL ES does not support GL_TEXTURE_CUBE_MAP_SEAMLESS
-#else
+#if !defined(GLIST_OPENGLES)
 	glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
 #endif
 
@@ -121,9 +122,7 @@ void gSkybox::loadDataSkybox(std::string *data, int width, int height) {
 	skymapslot = GL_TEXTURE0;
 	skymapint = 0;
 
-#if defined(GLIST_MOBILE)
-	glEnable(GL_TEXTURE_CUBE_MAP); // OpenGL ES does not support GL_TEXTURE_CUBE_MAP_SEAMLESS
-#else
+#if !defined(GLIST_OPENGLES)
 	glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
 #endif
 
@@ -165,9 +164,7 @@ unsigned int gSkybox::loadEquirectangular(const std::string& fullPath) {
 //	glGenTextures(1, &id);
 //	glBindTexture(GL_TEXTURE_CUBE_MAP, id);
 
-#if defined(GLIST_MOBILE)
-	glEnable(GL_TEXTURE_CUBE_MAP); // OpenGL ES does not support GL_TEXTURE_CUBE_MAP_SEAMLESS
-#else
+#if !defined(GLIST_OPENGLES)
 	glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
 #endif
 
@@ -390,7 +387,7 @@ void gSkybox::draw() {
 	glActiveTexture(skymapslot);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, id);
     vbo.bind();
-    glDrawElements(GL_TRIANGLES, vbo.getIndicesNum(), GL_UNSIGNED_INT, 0);
+	G_CHECK_GL(glDrawElements(GL_TRIANGLES, vbo.getIndicesNum(), G_INDEX_SIZE, nullptr));
     vbo.unbind();
 	glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 }
@@ -556,7 +553,7 @@ void gSkybox::renderCube() {
         // link vertex attributes
         glBindVertexArray(cubeVAO);
         glEnableVertexAttribArray(0);
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), nullptr);
         glEnableVertexAttribArray(1);
         glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
         glEnableVertexAttribArray(2);

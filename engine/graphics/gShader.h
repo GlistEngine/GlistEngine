@@ -26,6 +26,7 @@ public:
 	void loadShader(const std::string& vertexFileName, const std::string& fragmentFileName, const std::string& geometryFileName = "");
 
 	void loadProgram(const std::string& vertexShaderStr, const std::string& fragmentShaderStr, const std::string& geometryShaderStr = "");
+	void loadProgram(const char* vertexShaderStr, const char* fragmentShaderStr, const char* geometryShaderStr = 0);
 
 	template<typename T>
 	void attachUbo(const std::string& uboName, const gUbo<T>* ubo) {
@@ -73,7 +74,7 @@ public:
 	GLint getUniformLocation(const std::string& name);
 
 private:
-	void checkCompileErrors(GLuint shader, const std::string& type);
+	void checkCompileErrors(GLuint shader, const std::string& type, const std::string& path);
 
 	std::unordered_map<std::string, GLint> uniformlocations;
 	std::unordered_map<std::string, GLuint> ubos;

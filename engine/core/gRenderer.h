@@ -18,15 +18,20 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 #endif
+#if defined(EMSCRIPTEN)
+#include <GLES3/gl3.h>
+#include <GLES3/gl2ext.h> // well, okay?
+#include <GLES3/gl3platform.h>
+#endif
+#if defined(ANDROID)
+#include <GLES3/gl3.h>
+#include <GLES3/gl3ext.h>
+#include <GLES3/gl3platform.h>
+#endif
 #if TARGET_OS_OSX
 #include <GL/glew.h>
 #include <OpenGL/gl.h>
 #include <OpenGL/glu.h>
-#endif
-#ifdef ANDROID
-#include <GLES3/gl3.h>
-#include <GLES3/gl3ext.h>
-#include <GLES3/gl3platform.h>
 #endif
 #if TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
 #	include <OpenGLES/ES3/gl.h>
@@ -334,12 +339,12 @@ private:
 	bool isssaoenabled;
 	float ssaobias;
 
+	gShader* shadowmapshader;
 	gShader* colorshader;
 	gShader* textureshader;
 	gShader* fontshader;
 	gShader* imageshader;
 	gShader* skyboxshader;
-	gShader* shadowmapshader;
 	gShader* pbrshader;
 	gShader* equirectangularshader;
 	gShader* irradianceshader;

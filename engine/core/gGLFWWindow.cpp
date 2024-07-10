@@ -86,11 +86,13 @@ void gGLFWWindow::initialize(int width, int height, int windowMode, bool isResiz
 	this->scalex = (float) width / (float) windowWidth;
 	this->scaley = (float) height / (float) windowHeight;
 
+#ifndef EMSCRIPTEN
 	GLFWimage images[1];
 	std::string iconpath = gGetImagesDir() + "gameicon/icon.png";
 	images[0].pixels = stbi_load(iconpath.c_str(), &images[0].width, &images[0].height, 0, 4); //rgba channels
 	glfwSetWindowIcon(window, 1, images);
 	stbi_image_free(images[0].pixels);
+#endif
 
 	cursor[0] = glfwCreateStandardCursor(0x00036001);
 	cursor[1] = glfwCreateStandardCursor(0x00036002);
@@ -219,9 +221,13 @@ bool gGLFWWindow::isJoystickPresent(int joystickId) {
 }
 
 bool gGLFWWindow::isGamepadButtonPressed(int joystickId, int buttonId) {
+#ifndef EMSCRIPTEN // todo
 	GLFWgamepadstate gpstate;
 	glfwGetGamepadState(joystickId, &gpstate);
 	return gpstate.buttons[buttonId];
+#else
+	return false;
+#endif
 }
 
 const float* gGLFWWindow::getJoystickAxes(int joystickId, int* axisCountPtr) {
