@@ -201,8 +201,12 @@ void gGUIDialogue::resetTitleBar() {
 		titlebarsizer.removeControl(0, 3);
 	}
 
-	titlebarsizer.setControl(0, 4, &exitbutton);
-	exitbutton.setSize(titlebar.height, titlebar.height);
+	if (titletype != TITLETYPE_NO_BUTTONS) {
+		titlebarsizer.setControl(0, 4, &exitbutton);
+		exitbutton.setSize(titlebar.height, titlebar.height);
+	} else {
+		titlebarsizer.removeControl(0, 4);
+	}
 }
 
 void gGUIDialogue::resetButtonsBar() {
@@ -210,9 +214,15 @@ void gGUIDialogue::resetButtonsBar() {
 	if(buttonsbar.height == 0) buttonsbar.height = buttonsbarh;
 	buttonsbar.set(root, this, this, 0, 0, left, top + height, buttonsbar.width, buttonsbar.height);
 
-	if(dialoguetype == DIALOGUETYPE_OK) buttonsbarsizer.setSize(1, 2);
-	if(dialoguetype == DIALOGUETYPE_YESNOCANCEL) buttonsbarsizer.setSize(1, 4);
-	if(dialoguetype == DIALOGUETYPE_OKCANCEL || dialoguetype == DIALOGUETYPE_YESNO) buttonsbarsizer.setSize(1, 3);
+	if(dialoguetype == DIALOGUETYPE_OK) {
+		buttonsbarsizer.setSize(1, 2);
+	} else if(dialoguetype == DIALOGUETYPE_YESNOCANCEL) {
+		buttonsbarsizer.setSize(1, 4);
+	} else if(dialoguetype == DIALOGUETYPE_OKCANCEL || dialoguetype == DIALOGUETYPE_YESNO) {
+		buttonsbarsizer.setSize(1, 3);
+	} else {
+		buttonsbarsizer.setSize(0, 0);
+	}
 
 	if(dialoguetype == DIALOGUETYPE_OK){
 		float bbbutp = ((float)buttonsbarbuttonw + 10) / (float)buttonsbar.width;
@@ -497,7 +507,7 @@ std::string gGUIDialogue::getMessageText() {
 	return defmessagetext.getText();
 }
 
-void gGUIDialogue::setIconType(int iconId) {
+void gGUIDialogue::setIconType(IconType iconId) {
 	if(iconId == ICONTYPE_NONE) {
 		isiconenabled = false;
 	}
@@ -507,16 +517,15 @@ void gGUIDialogue::setIconType(int iconId) {
 	}
 }
 
-void gGUIDialogue::setDialogueType(int typeId) {
+void gGUIDialogue::setDialogueType(DialogueType typeId) {
 	dialoguetype = typeId;
 	resetButtonsBar();
 }
 
-void gGUIDialogue::setTitleType(int typeId) {
+void gGUIDialogue::setTitleType(TitleType typeId) {
 	titletype = typeId;
 	resetTitleBar();
 }
-
 
 int gGUIDialogue::getOKButtonId() {
 	return buttonsbarokbutton.getId();
