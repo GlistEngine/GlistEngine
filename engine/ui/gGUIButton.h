@@ -13,6 +13,8 @@
 
 class gGUIButton: public gGUIControl {
 public:
+	// void fn(bool isPressed)
+	using ClickCallback = std::function<void(bool)>;
 
 	gGUIButton();
 	virtual ~gGUIButton();
@@ -58,6 +60,7 @@ public:
 	void setButtonh(int buttonh);
 	void setButtonw(int buttonw);
 
+	void setClickCallback(ClickCallback fn);
 protected:
 	bool ispressed;
 	bool ishover;
@@ -71,6 +74,7 @@ protected:
 	gColor fcolor, pressedfcolor, disabledfcolor;
 	gColor hcolor;
 	bool fillbackground;
+	ClickCallback callback;
 
 	void resetTitlePosition();
 
