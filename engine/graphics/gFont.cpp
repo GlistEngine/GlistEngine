@@ -23,6 +23,8 @@ gFont::gFont() {
 	iskerning = false;
 	fontface = nullptr;
 	ftlib = nullptr;
+	isReversed = false;
+	reversetext = "";
 }
 
 gFont::~gFont() {
@@ -107,6 +109,54 @@ void gFont::drawText(const std::string& text, float x, float y) {
 	  }
 }
 
+void gFont::drawText(const std::string& text, float x, float y, int punto) {
+    // Initialize variables.
+	index1 = 0;
+    posx1 = x;
+    posy1 = y;
+    cid1 = 0;
+
+    // Convert text to wide string.
+    text1 = s2ws(text);
+    len1 = text1.length();
+
+    // Calculate font size and scaled line height.
+    fontSizeValue = static_cast<float>(punto) / 10.0f; // When converting punto to float, the font size is determined.
+    scaledLineHeight = lineheight * fontSizeValue; // The scaled row height is calculated.
+
+    // Process each character in the text.
+    while (index1 < len1) {
+        c1 = text1[index1];
+        cold1 = (index1 > 0) ? text1[index1 - 1] : -1; // Checks the previous character.
+
+        if (c1 == '\n') {
+        	// Handle new line.
+            posy1 += scaledLineHeight; // Increases the y position relative to the scaledLineHeight.
+            posx1 = x; // Reset x pos back to zero.
+        }
+        else {
+        	// Get character id and load character if necessary.
+            cid1 = getCharID(c1);
+			if (cpset[cid1].character == unloadedchar) {
+				loadChar(cid1);
+			}
+
+			// Calculate scaled values for character properties by multiplying by fontSizeValue.
+			scaledAdvance = cpset[cid1].advance * fontSizeValue;
+			scaledLeftMargin = cpset[cid1].leftmargin * fontSizeValue;
+			scaledDyTop = cpset[cid1].dytop * fontSizeValue;
+			scaledWidth = textures[cid1]->getWidth() * fontSizeValue;
+			scaledHeight = textures[cid1]->getHeight() * fontSizeValue;
+
+			// Draw the character with scaled position and size accordance with the fontSizeValue.
+			posx1 += getKerning(cid1, cold1); // Add kerning value to x pos.
+			textures[cid1]->draw(posx1 + scaledLeftMargin, posy1 + scaledDyTop, scaledWidth, scaledHeight); // Draw character.
+			posx1 += scaledAdvance * letterspacing * (c1 == ' ' ? spacesize : 1); // Updates position based on letter width and letter spacing.
+        }
+	index1++;
+    }
+}
+
 void gFont::drawTextVerticallyFlipped(const std::string& text, float x, float y) {
 	index1 = 0;
 	posx1 = x;
@@ -139,12 +189,69 @@ void gFont::drawTextVerticallyFlipped(const std::string& text, float x, float y)
 	}
 }
 
+void gFont::drawTextVerticallyFlipped(const std::string& text, float x, float y, int punto) {
+	// Initialize variables.
+	index1 = 0;
+	posx1 = x;
+	posy1 = y;
+	cid1 = 0;
+
+	// Convert text to wide string.
+	text1 = s2ws(text);
+	len1 = text1.length();
+
+	// Calculate font size and scaled line height.
+	fontSizeValue = static_cast<float>(punto) / 10.0f; // When converting punto to float, the font size is determined.
+	scaledLineHeight = lineheight * fontSizeValue; // The scaled row height is calculated.
+
+	// Process each character in the text.
+	while (index1 < len1) {
+		c1 = text1[index1];
+		cold1 = (index1 > 0) ? text1[index1 - 1] : -1; // Checks the previous character.
+
+		if (c1 == '\n') {
+			// Handle new line.
+			posy1 -= scaledLineHeight; // Decreases the y position relative to the scaledLineHeight.
+			posx1 = x; // Reset x pos back to zero.
+		}
+		else {
+			// Get character id and load character if necessary.
+			cid1 = getCharID(c1);
+			if (cpset[cid1].character == unloadedchar) {
+				loadChar(cid1);
+			}
+
+			// Calculate scaled values for character properties by multiplying by fontSizeValue.
+			gTexture* texture = textures[cid1];
+			scaledAdvance = cpset[cid1].advance * fontSizeValue;
+			scaledLeftMargin = cpset[cid1].leftmargin * fontSizeValue;
+			scaledDyTop = cpset[cid1].dytop * fontSizeValue;
+			scaledWidth = texture->getWidth() * fontSizeValue;
+			scaledHeight = -texture->getWidth() * fontSizeValue;
+
+
+			// Draw the character with scaled position and size accordance with the fontSizeValue.
+			posx1 += getKerning(cid1, cold1); // Add kerning value to x pos.
+			textures[cid1]->draw(posx1 + scaledLeftMargin, posy1 - scaledDyTop, scaledWidth, scaledHeight); // Draw character.
+			posx1 += scaledAdvance * letterspacing * (c1 == ' ' ? spacesize : 1); // Updates position based on letter width and letter spacing.
+		}
+	index1++;
+	}
+}
+
 void gFont::drawTextHorizontallyFlipped(const std::string& text, float x, float y) {
 	index1 = 0;
 	posx1 = x;
 	posy1 = y;
 
-	text1 = s2ws(text);
+	// Reverse text.
+	if(!isReversed) {
+		for(int i = text.length() - 1; i >= 0; i--) {
+			reversetext += text[i];
+		}
+		isReversed = true;
+	}
+	text1 = s2ws(reversetext);
 	len1 = text1.length();
 
 	while (index1 < len1) {
@@ -162,13 +269,77 @@ void gFont::drawTextHorizontallyFlipped(const std::string& text, float x, float 
 			if (cpset[cid1].character == unloadedchar) {
 				loadChar(cid1);
 			}
-			posx1 -= getKerning(cid1, cold1);
-			gTexture* texture = textures[cid1];
-			texture->draw(posx1 + cpset[cid1].leftmargin, posy1 + cpset[cid1].dytop, -texture->getWidth(), texture->getHeight());
-			posx1 -= cpset[cid1].advance * letterspacing * (c1 == ' ' ? spacesize : 1);
+				posx1 += getKerning(cid1, cold1);
+				textures[cid1]->draw(posx1 + cpset[cid1].leftmargin, posy1 + cpset[cid1].dytop);
+				posx1 += cpset[cid1].advance * letterspacing * (c1 == ' ' ? spacesize : 1);
 		}
 		index1++;
 	}
+
+	// Reset values.
+	isReversed = false;
+	reversetext = "";
+}
+
+void gFont::drawTextHorizontallyFlipped(const std::string& text, float x, float y, int punto) {
+	// Initialize variables.
+	index1 = 0;
+	posx1 = x;
+	posy1 = y;
+	cid1 = 0;
+	lineheight = 0;
+
+	// Reverse text.
+	if(!isReversed) {
+		for(int i = text.length() - 1; i >= 0; i--) {
+			reversetext += text[i];
+		}
+		isReversed = true;
+	}
+
+	// Convert reversetext to wide string.
+	text1 = s2ws(reversetext);
+	len1 = text1.length();
+
+	// Calculate font size and scaled line height.
+	fontSizeValue = static_cast<float>(punto) / 10.0f; // When converting punto to float, the font size is determined.
+	scaledLineHeight = lineheight * fontSizeValue; // The scaled row height is calculated.
+
+	// Process each character in the text.
+	while (index1 < len1) {
+		c1 = text1[index1];
+		cold1 = (index1 > 0) ? text1[index1 - 1] : -1; // Checks the previous character.
+
+		if (c1 == '\n') {
+			// Handle new line.
+			posy1 += scaledLineHeight; // Increases the y position relative to the scaledLineHeight.
+			posx1 = x; // Reset x pos back to zero.
+		}
+		else {
+			// Get character id and load character if necessary.
+			cid1 = getCharID(c1);
+			if (cpset[cid1].character == unloadedchar) {
+				loadChar(cid1);
+			}
+
+			// Calculate scaled values for character properties by multiplying by fontSizeValue.
+			scaledAdvance = cpset[cid1].advance * fontSizeValue;
+			scaledLeftMargin = cpset[cid1].leftmargin * fontSizeValue;
+			scaledDyTop = cpset[cid1].dytop * fontSizeValue;
+			scaledWidth = textures[cid1]->getWidth() * fontSizeValue;
+			scaledHeight = textures[cid1]->getHeight() * fontSizeValue;
+
+			// Draw the character with scaled position and size accordance with the fontSizeValue.
+			posx1 += getKerning(cid1, cold1); // Add kerning value to x pos.
+			textures[cid1]->draw(posx1 + scaledLeftMargin, posy1 + scaledDyTop, scaledWidth, scaledHeight); // Draw character.
+			posx1 += scaledAdvance * letterspacing * (c1 == ' ' ? spacesize : 1); // Updates position based on letter width and letter spacing.
+		}
+	index1++;
+	}
+
+	// Reset values.
+	isReversed = false;
+	reversetext = "";
 }
 
 float gFont::getStringWidth(const std::string& text) {

@@ -40,6 +40,7 @@
 
 class gFont: public gNode {
 public:
+
 	gFont();
 	virtual ~gFont();
 
@@ -92,13 +93,31 @@ public:
 	 */
 	void drawText(const std::string& text, float x, float y);
 
+	/**
+	 * Draws and scales the text to the given screen coordinates
+	 *
+	 * @param std::string text - The text to be printed.
+	 * @param float x - x coordinate of the region you want to draw
+,	 * @param float y - y coordinate of the region you want to draw
+	 */
+	void drawText(const std::string& text, float x, float y, int punto);
 
 	/**
 	 * @brief Draws the given text vertically flipped at the specified position.
 	 *
-	 * @see drawText
+	 * @param std::string text - The text to be printed.
+	 * @param float x - x coordinate of the region you want to draw
+	 * @param float y - y coordinate of the region you want to draw
+,	 * @param int punto the font size (in points) to be used for the text.
 	 */
 	void drawTextVerticallyFlipped(const std::string& text, float x, float y);
+
+	/**
+	 * @brief Draws and scales the given text flipped vertically at the specified position.
+	 *
+	 * @see drawText
+	 */
+	void drawTextVerticallyFlipped(const std::string& text, float x, float y, int punto);
 
 	/**
 	 * @brief Draws the given text horizontally flipped at the specified location.
@@ -106,6 +125,13 @@ public:
 	 * @see drawText
 	 */
 	void drawTextHorizontallyFlipped(const std::string& text, float x, float y);
+
+	/**
+	 * @brief Draws and scales the given text horizontally flipped at the specified location.
+	 *
+	 * @see drawText
+	 */
+	void drawTextHorizontallyFlipped(const std::string& text, float x, float y, int punto);
 
 	/**
 	 * Calculates text's width
@@ -217,11 +243,15 @@ private:
 
 	  GLint index1, posx1, posy1, index2, posx2, index3, posy3;
 	  std::wstring text1, text2, text3;
+	  std::string reversetext;
+	  bool isReversed;
 	  int len1, c1, cid1, cold1, len2, cid2, cold2, cy2, len3, cid3, cy3, y3;
 	  int tempint, tempcharno;
 	  int lci, lci2, lci3, lci4, lcj, lck;
 	  int lcdataw, lcdatah, lcdatanum;
 	  int lclongside, lclongest, lcpixelsw, lcpixelsh, lcapsize;
+	  float scaledAdvance, scaledLeftMargin, scaledDyTop, scaledWidth, scaledHeight;
+	  float fontSizeValue, scaledLineHeight;
 	  FT_Error lcerr;
 	  GLint lcfheight, lcbwidth, lctop, lclextent;
 	  GLfloat lcstretch, lccorr;
