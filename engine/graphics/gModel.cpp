@@ -732,7 +732,7 @@ float gModel::getAnimationPosition() const {
 
 void gModel::setAnimationFramerate(float animationFramerate) {
 	animationframerate = animationFramerate;
-#ifdef WIN32
+#if defined(WIN32) || defined(TARGET_OS_OSX)
 	setAnimationFrameNum(getAnimationDuration() * animationframerate / scene->mAnimations[0]->mTicksPerSecond);
 #else
 	setAnimationFrameNum(getAnimationDuration() * animationframerate);
