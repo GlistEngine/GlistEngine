@@ -42,11 +42,11 @@ gGUIButton::~gGUIButton() {
 void gGUIButton::set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIObject* parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h) {
 	gGUIControl::set(root, topParentGUIObject, parentGUIObject, parentSlotLineNo, parentSlotColumnNo, x, y, w, h);
 
-	//If isHorizontalFit true, it transfers the width of the current parent to buttonw. If false, it assigns the default width value.
-	buttonw = isHorizontalFit ? width : buttonw;
+	//If ishorizontalfit true, it transfers the width of the current parent to buttonw. If false, it assigns the default width value.
+	buttonw = ishorizontalfit ? width : buttonw;
 
-	//If isVerticalFit true, it transfers the height of the current parent to buttonh. If false, it assigns the default height value.
-	buttonh = isVerticalFit ? height : buttonh;
+	//If isverticalfit true, it transfers the height of the current parent to buttonh. If false, it assigns the default height value.
+	buttonh = isverticalfit ? height : buttonh;
 }
 
 void gGUIButton::setTitle(std::string title) {
@@ -173,18 +173,18 @@ void gGUIButton::writeText() {
 
 bool gGUIButton::calculateCenter() {
 	// The width and height of the text are scaled based on text size.
-	scaledTextWidth = tw * 1.0f;
-	scaledTextHeight = th * 1.0f;
+	scaledtextwidth = tw * 1.0f;
+	scaledtextheight = th * 1.0f;
 
 	// Check if scaling is necessary.
-	if (scaledTextWidth > buttonw || scaledTextHeight > buttonh) {
+	if (scaledtextwidth > buttonw || scaledtextheight > buttonh) {
 		// Calculate the scale factor to make the text fit the button size.
-		scalefactor = std::min(buttonw / scaledTextWidth, buttonh / scaledTextHeight);
+		scalefactor = std::min(buttonw / scaledtextwidth, buttonh / scaledtextheight);
 
 		// Calculate the position where the text is aligned within the button with scaling applied.
 		punto = static_cast<int>(DEFAULT_FONT_SIZE * scalefactor);
-		centerx = left + (buttonw - scaledTextWidth * scalefactor) / 2;
-		centery = top + ispressed + (buttonh - scaledTextHeight * scalefactor) / 2;
+		centerx = left + (buttonw - scaledtextwidth * scalefactor) / 2;
+		centery = top + ispressed + (buttonh - scaledtextheight * scalefactor) / 2;
 
 		return true;
 	}
@@ -200,18 +200,18 @@ bool gGUIButton::calculateCenter() {
 
 bool gGUIButton::calculateCenterLeft() {
     // The width and height of the text are scaled based on text size.
-    scaledTextWidth = tw * 1.0f;
-    scaledTextHeight = th * 1.0f;
+	scaledtextwidth = tw * 1.0f;
+    scaledtextheight = th * 1.0f;
 
     // Check if scaling is necessary.
-    if (scaledTextWidth > buttonw || scaledTextHeight > buttonh) {
+    if (scaledtextwidth > buttonw || scaledtextheight > buttonh) {
         // Calculate the scale factor to make the text fit the button size.
-        scalefactor = std::min(buttonw / scaledTextWidth, buttonh / scaledTextHeight);
+        scalefactor = std::min(buttonw / scaledtextwidth, buttonh / scaledtextheight);
 
         // Calculate the position where the text is aligned within the button with scaling applied.
         punto = static_cast<int>(DEFAULT_FONT_SIZE * scalefactor);
         centerx = left;
-        centery = top + ispressed + (buttonh - scaledTextHeight * scalefactor) / 2;
+        centery = top + ispressed + (buttonh - scaledtextheight * scalefactor) / 2;
 
         return true;
     }
@@ -227,18 +227,18 @@ bool gGUIButton::calculateCenterLeft() {
 
 bool gGUIButton::calculateCenterRight() {
     // The width and height of the text are scaled based on text size.
-    scaledTextWidth = tw * 1.0f;
-    scaledTextHeight = th * 1.0f;
+	scaledtextwidth = tw * 1.0f;
+    scaledtextheight = th * 1.0f;
 
     // Check if scaling is necessary.
-    if (scaledTextWidth > buttonw || scaledTextHeight > buttonh) {
+    if (scaledtextwidth > buttonw || scaledtextheight > buttonh) {
         // Calculate the scale factor to make the text fit the button size.
-        scalefactor = std::min(buttonw / scaledTextWidth, buttonh / scaledTextHeight);
+        scalefactor = std::min(buttonw / scaledtextwidth, buttonh / scaledtextheight);
 
         // Calculate the position where the text is aligned within the button with scaling applied.
         punto = static_cast<int>(DEFAULT_FONT_SIZE * scalefactor);
-        centerx = left + buttonw - scaledTextWidth * scalefactor;
-        centery = top + ispressed + (buttonh - scaledTextHeight * scalefactor) / 2;
+        centerx = left + buttonw - scaledtextwidth * scalefactor;
+        centery = top + ispressed + (buttonh - scaledtextheight * scalefactor) / 2;
 
         return true;
     }
@@ -379,8 +379,8 @@ void gGUIButton::setButtonw(int buttonw) {
 }
 
 void gGUIButton::setFitInArea(bool isHorizontalFit, bool isVerticalFit) {
-	this->isHorizontalFit = isHorizontalFit;
-	this->isVerticalFit = isVerticalFit;
+	this->ishorizontalfit = isHorizontalFit;
+	this->isverticalfit = isVerticalFit;
 }
 
 void gGUIButton::setTextType(int texttype) {

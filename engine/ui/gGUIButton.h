@@ -26,19 +26,8 @@ public:
 
 	void set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIObject* parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h);
 
-	/**
-	 * @brief Changing text title.
-	 *
-	 * @param title text inside the button
-	 */
 	void setTitle(std::string title);
 
-	/**
-	 * @brief Changing box size using width and height
-	 *
-	 * @param width width of button
-	 * @param height height of button
-	 */
 	void setSize(int width, int height);
 
 	/**
@@ -69,96 +58,58 @@ public:
 	 */
 	void setDisabled(bool isDisabled);
 
-	/**
-	 * @brief Changes the visibility of the button's text
-	 *
-	 * @param isVisible if true, the button text is visible, if false, it is not visible
-	 */
 	void setTextVisibility(bool isVisible);
 
 	/**
 	 * @brief Changing text type
+	 *
+	 * This function sets the orientation of the text to default, vertically flipped, or horizontally flipped.
+	 *
+	 * Possible values for `texttype` parameter:
+	 * TEXTTYPE_DEFAULT
+	 * TEXTTYPE_VERTICALLY_FLIPPED
+	 * TEXTTYPE_HORIZONTALLY_FLIPPED
 	 *
 	 * @param texttype value of type of text
 	 */
 	void setTextType(int texttype);
 
 	/**
-	 * @brief Changing text side
+	 * @brief Sets the alignment of the text
+	 *
+	 * This function sets the alignment of the text to either left, center, or right
+	 *
+	 * Possible values for `textside` parameter:
+	 * TEXTSIDE_LEFT
+	 * TEXTSIDE_CENTER
+	 * TEXTSIDE_RIGHT
 	 *
 	 * @param textside The value of the side where the text is located
 	 */
 	void setTextSide(int textside);
 
-	/**
-	 * @brief Checks if the button is currently pressed
-	 *
-	 * @return ispressed true if the button is pressed, false otherwise
-	 */
+	void setButtonw(int buttonw);
+
+	void setButtonh(int buttonh);
+
 	bool isPressed();
 
-	/**
-	 * @brief Checks if the button is in toggle mode
-	 *
-	 * @return istoggle true if the button is in toggle mode, false otherwise
-	 */
 	bool isToggle();
 
-	/**
-	 * @brief Checks if the button is disabled
-	 *
-	 * @return isdisabled true if the button is disabled, false otherwise
-	 */
 	bool isDisabled();
 
-	/**
-	 * @brief Checks if the text on the button is visible
-	 *
-	 * @return istextvisible true if the text on the button is visible, false otherwise
-	 */
 	bool isTextVisible();
 
-
-	/**
-	 * @brief Sets the button's background color
-	 *
-	 * @param color new background color
-	 */
 	void setButtonColor(gColor color);
 
-	/**
-	 * @brief Sets the pressed button background color
-	 *
-	 * @param color new pressed background color
-	 */
 	void setPressedButtonColor(gColor color);
 
-	/**
-	 * @brief Sets the disabled button background color
-	 *
-	 * @param color new disabled background color
-	 */
 	void setDisabledButtonColor(gColor color);
 
-	/**
-	 * @brief Sets the button's font color
-	 *
-	 * @param color new font color
-	 */
 	void setButtonFontColor(gColor color);
 
-	/**
-	 * @brief Sets the pressed button font color
-	 *
-	 * @param color new pressed font color
-	 */
 	void setPressedButtonFontColor(gColor color);
 
-	/**
-	 * @brief Sets the disabled button font color
-	 *
-	 * @param color new disabled font color
-	 */
 	void setDisabledButtonFontColor(gColor color);
 
 	/**
@@ -227,41 +178,11 @@ public:
 	 */
 	gColor* getDisabledButtonFontColor();
 
-	/**
-	 * @brief Enables or disables the filling of the background
-	 *
-	 * @param isEnabled If true, the container's background will be filled; if false, the background will not be filled
-	 */
 	void enableBackgroundFill(bool isEnabled);
 
-	/**
- 	 * @brief Gives the width of the button
- 	 *
-	 * @return buttonw button width
-	 */
 	int getButtonWidth();
 
-	/**
- 	 * @brief Gives the height of the button
- 	 *
-	 * @return buttonh button height
-	 */
 	int getButtonHeight();
-
-	/**
-	 * @brief Changing the width of the button using buttonh
-	 *
-	 * @param buttonw button width
-	 */
-	void setButtonw(int buttonw);
-
-	/**
-	 * @brief Changing the height of the button using buttonh
-	 *
-	 * @param buttonh button height
-	 */
-	void setButtonh(int buttonh);
-
 
 	/**
 	 * @brief Draws the body of the button
@@ -271,10 +192,6 @@ public:
 	 */
 	void drawBody();
 
-	/*
-	 * @brief Called once per frame
-	 *
-	 */
 	virtual void update();
 
 	/*
@@ -285,49 +202,16 @@ public:
 	 */
 	virtual void draw();
 
-	/**
-	 * @brief Handles mouse press events for a button
-	 *
-	 * @param x The x-coordinate of the mouse press
-	 * @param y The y-coordinate of the mouse press
-	 * @param button The button ID of the mouse press
-	 */
 	virtual void mousePressed(int x, int y, int button);
 
-	/**
-	 * @brief Handles mouse release events for a button.
-	 *
-	 * @param x The x-coordinate of the mouse release.
-	 * @param y The y-coordinate of the mouse release.
-	 * @param button The button ID of the mouse release.
-	 */
 	virtual void mouseReleased(int x, int y, int button);
 
-	/**
-	 * @brief Handles mouse move events for the button to detect hovering.
-	 *
-	 * @param x The x-coordinate of the mouse move.
-	 * @param y The y-coordinate of the mouse move.
-	 */
 	virtual void mouseMoved(int x, int y);
 
-	/**
-	 * @brief Handles mouse drag events for the button.
-	 *
-	 * @param x The x-coordinate of the mouse drag.
-	 * @param y The y-coordinate of the mouse drag.
-	 * @param button The button ID of the mouse drag.
-	 */
 	virtual void mouseDragged(int x, int y, int button);
 
-	/**
-	 * @brief Handles mouse exit events for the button to reset hover state.
-	 */
 	virtual void mouseExited();
 
-	/*
-	 * @brief Handles mouse enter events for the button to set hover state
-	 */
 	virtual void mouseEntered();
 
 protected:
@@ -339,8 +223,8 @@ protected:
 	int punto;
 	int texttype, textside;
 	float centerx, centery;
-	float scaledTextWidth, scaledTextHeight, scalefactor;
-	bool isHorizontalFit, isVerticalFit;
+	float scaledtextwidth, scaledtextheight, scalefactor;
+	bool ishorizontalfit, isverticalfit;
 	bool textsizecontrol;
 	bool istextvisible;
 	bool istoggle;
