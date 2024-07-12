@@ -14,7 +14,6 @@
 #include "gBaseGUIObject.h"
 #include "gColor.h"
 #include "gGUIScrollable.h"
-#include "gFile.h"
 
 class gGUITable : public gGUIScrollable{
 public:
@@ -27,7 +26,6 @@ public:
 	void mousePressed(int x, int y, int button);
 	void set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIObject* parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h);
 	void addItem(gTexture* image, std::string title = "New File");
-	void addFolderItems(const std::string& fullfolderpath);
 	void setFontColor(gColor color);
 	void setTableColor(gColor color);
 	void setSelectedTable();
@@ -43,7 +41,6 @@ private:
 	bool isfilepressed;
 	static const int FILE_X = 0, FILE_Y = 1, FILE_W = 2, FILE_H = 3;
 	std::deque<gTexture*> imagelist;
-	std::vector<gImage*> dirimages; //keeping these separate to delete upon deconstruction since they are created inside this class
 	std::deque<std::string> imagetextlist;
 	std::deque<int> imageparameterlist;
 	int x, y, filew, fileh;
