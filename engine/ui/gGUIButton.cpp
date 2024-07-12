@@ -229,3 +229,7 @@ void gGUIButton::setButtonh(int buttonh) {
 void gGUIButton::setButtonw(int buttonw) {
 	this->buttonw = buttonw;
 }
+
+bool& gGUIButton::isPressedRef() {
+		return ispressed;
+}
