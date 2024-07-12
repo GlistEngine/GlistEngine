@@ -60,10 +60,6 @@ private:
 	std::deque<gGUIControl*> controlObjects;
 	std::deque<float> sizerPrs;
 	gColor toolbarforegroundcolor, toolbarbottomlinecolor;
-	gColor* toolbarforegroundcolorholder;
-	gColor* toolbarbottomlinecolorholder;
-	gColor** toolbarforegroundcoloaradress;
-	gColor** toolbarbottomlinecoloradress;
 
 	void resizeSizer();
 };

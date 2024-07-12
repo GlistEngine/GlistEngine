@@ -28,10 +28,6 @@ public:
 private:
 	int iconid;
 	int iw, ih, ix, iy;
-	gColor** bcoloraddress;
-	gColor** pressedbcoloraddress;
-	gColor** fcoloraddress;
-	gColor** pressedfcoloraddress;
 };
 
 #endif /* UI_GGUITOOLBARBUTTON_H_ */

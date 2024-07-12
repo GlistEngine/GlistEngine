@@ -19,15 +19,13 @@ gGUIToolbarButton::gGUIToolbarButton() {
 	setToggle(false);
 	setDisabled(false);
 	setTextVisibility(false);
+
 	bcolor = *foregroundcolor;
-	bcoloraddress = &foregroundcolor;
 	pressedbcolor = *pressedbuttoncolor;
-	pressedbcoloraddress = &pressedbuttoncolor;
-//	disabledbuttoncolor = &disabledbcolor;
 	fcolor = *fontcolor;
-	fcoloraddress = &fontcolor;
 	pressedfcolor = *pressedbuttonfontcolor;
-	pressedfcoloraddress = &pressedbuttonfontcolor;
+
+//	disabledbuttoncolor = &disabledbcolor;
 //	disabledbuttonfontcolor = &disabledfcolor;
 	iw = buttonw * 2 / 4;
 	ih = buttonh * 2 / 4;
@@ -62,11 +60,11 @@ void gGUIToolbarButton::draw() {
 	gColor* oldcolor = renderer->getColor();
 	if(fillbackground) {
 		if(isdisabled) {
-			renderer->setColor(disabledbcolor);
+			renderer->setColor(&disabledbcolor);
 		} else if(ispressed) {
-			renderer->setColor(*pressedbcoloraddress);
+			renderer->setColor(&pressedbcolor);
 		} else {
-			renderer->setColor(*bcoloraddress);
+			renderer->setColor(&bcolor);
 		}
 	//	renderer->setColor(gColor(0.1f, 0.45f, 0.87f));
 		gDrawRectangle(left, top + ispressed, buttonw, buttonh - 2, true);
@@ -81,11 +79,11 @@ void gGUIToolbarButton::draw() {
 
 	if(istextvisible) {
 		if(isdisabled) {
-			renderer->setColor(disabledfcolor);
+			renderer->setColor(&disabledfcolor);
 		} else if(ispressed) {
-			renderer->setColor(*pressedfcoloraddress);
+			renderer->setColor(&pressedfcolor);
 		} else {
-			renderer->setColor(*fcoloraddress);
+			renderer->setColor(&fcolor);
 		}
 		font->drawText(title, left + tx - 1, top + buttonh - ty + ispressed - 2);
 	}
