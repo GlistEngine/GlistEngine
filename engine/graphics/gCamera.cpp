@@ -47,7 +47,6 @@ void gCamera::begin() {
 	renderer->setProjectionMatrix(glm::perspective(fovY, aspect, nearclip, farclip));
 	renderer->setViewMatrix(glm::inverse(locallookmatrix));
 	renderer->setCameraPosition(position);
-	renderer->drawGrid();
 	renderer->setCamera(this);
 
 	const float halfVSide = farclip * tanf(fovY * 0.5f);
@@ -74,11 +73,11 @@ void gCamera::setFov(float f) {
 }
 
 void gCamera::setNearClip(float nearClip) {
-	nearclip = nearClip;
+	nearclip = glm::clamp(nearClip, 0.001f, 0.999f);
 }
 
 void gCamera::setFarClip(float farClip) {
-	farclip = farClip;
+	farclip = glm::clamp(farClip, 1.0f, 10000.0f);
 }
 
 void gCamera::move(float dx, float dy, float dz) {

@@ -131,6 +131,7 @@ set(SRC_FILES
 	${ENGINE_DIR}/core/gRenderObject.cpp
 	${ENGINE_DIR}/core/gGUIActionManager.cpp
 	${ENGINE_DIR}/graphics/gTexture.cpp
+	${ENGINE_DIR}/graphics/gGrid.cpp
 	${ENGINE_DIR}/graphics/gImage.cpp
 	${ENGINE_DIR}/graphics/gSkybox.cpp
 	${ENGINE_DIR}/graphics/gNode.cpp

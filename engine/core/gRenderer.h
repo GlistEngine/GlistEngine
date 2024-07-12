@@ -92,6 +92,7 @@ void gDrawTube(float x, float y, float z, int outerradius,int innerradious, int 
 void gDrawTubeOblique(float x, float y, float z, int outerradius,int innerradious, int h, glm::vec2 shiftdistance, glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f), int segmentnum = 32, bool isFilled = true);
 void gDrawTubeTrapezodial(float x, float y, float z, int topouterradius,int topinnerradious, int buttomouterradious, int buttominnerradious, int h, glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f), int segmentnum = 32, bool isFilled = true);
 void gDrawTubeObliqueTrapezodial(float x, float y, float z, int topouterradius,int topinnerradious, int buttomouterradious, int buttominnerradious, int h, glm::vec2 shiftdistance, glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f), int segmentnum = 32, bool isFilled = true);
+void gDrawGrid();
 
 template<typename T>
 class gUbo;
@@ -120,35 +121,6 @@ public:
 	int getUnitWidth();
 	int getUnitHeight();
 	static int getScreenScaling();
-
-	//grid
-	void drawGrid();
-	void drawGridYZ();
-	void drawGridXY();
-	void drawGridXZ();
-	void enableGrid();
-	void disableGrid();
-	void setGridEnableAxis(bool xy, bool yz, bool xz);
-	void setGridEnableXY(bool xy), setGridEnableYZ(bool yz), setGridEnableXZ(bool xz);
-	void setGridMaxLength(float length);
-	float getGridMaxLength();
-	void setGridLineInterval(float intervalvalue);
-	float getGridLineInterval();
-	void setGridColorofAxisXZ(int r, int g, int b, int a);
-	void setGridColorofAxisYZ(int r, int g, int b, int a);
-	void setGridColorofAxisXY(int r, int g, int b, int a);
-	void setGridColorofAxisXZ(gColor* color);
-	void setGridColorofAxisYZ(gColor* color);
-	void setGridColorofAxisXY(gColor* color);
-	void setGridColorofAxisWireFrameXZ(int r, int g, int b, int a);
-	void setGridColorofAxisWireFrameYZ(int r, int g, int b, int a);
-	void setGridColorofAxisWireFrameXY(int r, int g, int b, int a);
-	void setGridColorofAxisWireFrameXZ(gColor* color);
-	void setGridColorofAxisWireFrameYZ(gColor* color);
-	void setGridColorofAxisWireFrameXY(gColor* color);
-	bool isGridEnabled(), isGridXYEnabled(), isGridYZEnabled(), isGridXZEnabled();
-
-
 
 	static void setCurrentResolution(int resolution);
 	static void setCurrentResolution(int screenWidth, int screenHeight);
@@ -244,6 +216,7 @@ public:
 	gShader* getPrefilterShader();
 	gShader* getBrdfShader();
 	gShader* getFboShader();
+	gShader* getGridShader();
 
 	void setProjectionMatrix(glm::mat4 projectionMatrix);
 	void setProjectionMatrix2d(glm::mat4 projectionMatrix2d);
@@ -301,12 +274,6 @@ private:
 	static int unitwidth, unitheight;
 	static int screenscaling;
 	static int currentresolution, unitresolution;
-	//grid
-	int gridmaxvalue;
-	float gridlineinterval;
-	bool isgridenable, isgridxzenable, isgridxyenable, isgridyzenable;
-	gColor gridxzcolor, gridxzmargincolor, gridxycolor,gridxymargincolor, gridyzcolor, gridyzmargincolor;//default
-	//grid - END
 	gColor* rendercolor;
 
 	bool isfogenabled;
@@ -346,6 +313,7 @@ private:
 	gShader* prefiltershader;
 	gShader* brdfshader;
 	gShader* fboshader;
+	gShader* gridshader;
 
 	glm::mat4 projectionmatrix;
 	glm::mat4 projectionmatrixold;
@@ -379,6 +347,8 @@ private:
 	const std::string getShaderSrcBrdfFragment();
 	const std::string getShaderSrcFboVertex();
 	const std::string getShaderSrcFboFragment();
+	const std::string getShaderSrcGridVertex();
+	const std::string getShaderSrcGridFragment();
 };
 
 #endif /* CORE_GRENDERER_H_ */
