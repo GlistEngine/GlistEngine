@@ -357,28 +357,28 @@ private:
 
 	void init();
 
-	const std::string getShaderSrcColorVertex();
-	const std::string getShaderSrcColorFragment();
-	const std::string getShaderSrcTextureVertex();
-	const std::string getShaderSrcTextureFragment();
-	const std::string getShaderSrcImageVertex();
-	const std::string getShaderSrcImageFragment();
-	const std::string getShaderSrcFontVertex();
-	const std::string getShaderSrcFontFragment();
-	const std::string getShaderSrcSkyboxVertex();
-	const std::string getShaderSrcSkyboxFragment();
-	const std::string getShaderSrcShadowmapVertex();
-	const std::string getShaderSrcShadowmapFragment();
-	const std::string getShaderSrcPbrVertex();
-	const std::string getShaderSrcPbrFragment();
-	const std::string getShaderSrcCubemapVertex();
-	const std::string getShaderSrcEquirectangularFragment();
-	const std::string getShaderSrcIrradianceFragment();
-	const std::string getShaderSrcPrefilterFragment();
-	const std::string getShaderSrcBrdfVertex();
-	const std::string getShaderSrcBrdfFragment();
-	const std::string getShaderSrcFboVertex();
-	const std::string getShaderSrcFboFragment();
+	static const std::string& getShaderSrcColorVertex();
+	static const std::string& getShaderSrcColorFragment();
+	static const std::string& getShaderSrcTextureVertex();
+	static const std::string& getShaderSrcTextureFragment();
+	static const std::string& getShaderSrcImageVertex();
+	static const std::string& getShaderSrcImageFragment();
+	static const std::string& getShaderSrcFontVertex();
+	static const std::string& getShaderSrcFontFragment();
+	static const std::string& getShaderSrcSkyboxVertex();
+	static const std::string& getShaderSrcSkyboxFragment();
+	static const std::string& getShaderSrcShadowmapVertex();
+	static const std::string& getShaderSrcShadowmapFragment();
+	static const std::string& getShaderSrcPbrVertex();
+	static const std::string& getShaderSrcPbrFragment();
+	static const std::string& getShaderSrcCubemapVertex();
+	static const std::string& getShaderSrcEquirectangularFragment();
+	static const std::string& getShaderSrcIrradianceFragment();
+	static const std::string& getShaderSrcPrefilterFragment();
+	static const std::string& getShaderSrcBrdfVertex();
+	static const std::string& getShaderSrcBrdfFragment();
+	static const std::string& getShaderSrcFboVertex();
+	static const std::string& getShaderSrcFboFragment();
 };
 
 #endif /* CORE_GRENDERER_H_ */
