@@ -214,7 +214,6 @@ set(SRC_FILES
 	${ENGINE_DIR}/ui/gGUIForm.cpp
 	${ENGINE_DIR}/ui/gGUIResources.cpp
 	${ENGINE_DIR}/ui/gGUIDate.cpp
-	${ENGINE_DIR}/ui/base/tinyfiledialogs.c
 	${ENGINE_DIR}/base/gBaseGUIObject.cpp
 	${ENGINE_DIR}/core/gGUIManager.cpp
 	${ENGINE_DIR}/core/gAppObject.cpp
@@ -251,6 +250,12 @@ set(SRC_FILES
 	${ENGINE_DIR}/graphics/posteffects/kerneleffects/gEdgeDetection.cpp
 )
 
+# Engine lib sources
+list(APPEND SRC_FILES
+		${LIBS_DIR}/tinyfiledialogs/src/tinyfiledialogs.c
+		${LIBS_DIR}/sqlite/src/sqlite3.c
+)
+
 if(WIN32)
 	list(APPEND SRC_FILES
 		${ENGINE_DIR}/utils/gWindows.cpp
@@ -259,7 +264,6 @@ endif()
 
 if(NOT (ANDROID OR IOS))
 	list(APPEND SRC_FILES
-		${LIBS_DIR}/sqlite/src/sqlite3.c
 		${ENGINE_DIR}/core/backward.cpp
 		${ENGINE_DIR}/core/gGLFWWindow.cpp
 	)
@@ -300,6 +304,7 @@ set(INC_DIRS
 	${LIBS_DIR}/utf8/include
 	${LIBS_DIR}/ghc/include
 	${LIBS_DIR}/sqlite/include
+	${LIBS_DIR}/tinyfiledialogs/include
 )
 
 set(ENGINE_INCLUDES
