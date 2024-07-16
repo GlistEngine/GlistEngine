@@ -48,14 +48,16 @@ void gGUIScrollable::setDimensions(int newWidth, int newHeight) {
 	if (enablehorizontalscroll) {
 		boxh -= barsize;
 	}
-	totalw = boxw;
-	totalh = boxh;
+
+//	totalw = boxw;
+//	totalh = boxh + barsize;
 
 	titlex = left + font->getStringWidth("i");
 	titley = top + font->getStringHeight("AE");
 
 	boxfbo->allocate(renderer->getWidth(), renderer->getHeight());
 }
+
 
 void gGUIScrollable::updateScrollbar() {
 	float deltat = appmanager->getElapsedTime();
