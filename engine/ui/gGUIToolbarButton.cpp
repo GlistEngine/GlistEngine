@@ -15,15 +15,17 @@
 gGUIToolbarButton::gGUIToolbarButton() {
 	iconid = gGUIResources::ICON_NONE;
 	setSize(32, 32);
-	setTitle("");
+	//setTitle("");
 	setToggle(false);
 	setDisabled(false);
 	setTextVisibility(false);
+
 	bcolor = *foregroundcolor;
 	pressedbcolor = *pressedbuttoncolor;
-//	disabledbuttoncolor = &disabledbcolor;
 	fcolor = *fontcolor;
 	pressedfcolor = *pressedbuttonfontcolor;
+
+//	disabledbuttoncolor = &disabledbcolor;
 //	disabledbuttonfontcolor = &disabledfcolor;
 	iw = buttonw * 2 / 4;
 	ih = buttonh * 2 / 4;
@@ -58,11 +60,11 @@ void gGUIToolbarButton::draw() {
 	gColor* oldcolor = renderer->getColor();
 	if(fillbackground) {
 		if(isdisabled) {
-			renderer->setColor(disabledbcolor);
+			renderer->setColor(&disabledbcolor);
 		} else if(ispressed) {
-			renderer->setColor(pressedbcolor);
+			renderer->setColor(&pressedbcolor);
 		} else {
-			renderer->setColor(bcolor);
+			renderer->setColor(&bcolor);
 		}
 	//	renderer->setColor(gColor(0.1f, 0.45f, 0.87f));
 		gDrawRectangle(left, top + ispressed, buttonw, buttonh - 2, true);
@@ -77,11 +79,11 @@ void gGUIToolbarButton::draw() {
 
 	if(istextvisible) {
 		if(isdisabled) {
-			renderer->setColor(disabledfcolor);
+			renderer->setColor(&disabledfcolor);
 		} else if(ispressed) {
-			renderer->setColor(pressedfcolor);
+			renderer->setColor(&pressedfcolor);
 		} else {
-			renderer->setColor(fcolor);
+			renderer->setColor(&fcolor);
 		}
 		font->drawText(title, left + tx - 1, top + buttonh - ty + ispressed - 2);
 	}
@@ -96,4 +98,3 @@ void gGUIToolbarButton::mouseReleased(int x, int y, int button) {
 	gLogi("ToolbarButton") << "mouseReleased";
 }
 */
-
