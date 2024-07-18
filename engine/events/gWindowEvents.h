@@ -15,7 +15,7 @@ class gKeyEvent : public gEvent {
 public:
 	int getKeyCode() const { return keycode; }
 
-	G_EVENT_CLASS_CATEGORY(EventCategoryKeyboard | EventCategoryInput)
+	G_EVENT_CLASS_CATEGORY(EVENTCATEGORY_KEYBOARD | EVENTCATEGORY_INPUT)
 protected:
 	gKeyEvent(const int keycode)
 		: keycode(keycode) {}
@@ -30,8 +30,8 @@ public:
 
 	unsigned int getCharacter() const { return keycode; }
 
-	G_EVENT_CLASS_TYPE(EventTypeCharTyped)
-	G_EVENT_CLASS_CATEGORY(EventCategoryKeyboard | EventCategoryInput)
+	G_EVENT_CLASS_TYPE(gCharTypedEvent)
+	G_EVENT_CLASS_CATEGORY(EVENTCATEGORY_INPUT | EVENTCATEGORY_KEYBOARD)
 private:
 	unsigned int keycode;
 };
@@ -44,7 +44,7 @@ public:
 
 	bool isRepeat() const { return isrepeat; }
 
-	G_EVENT_CLASS_TYPE(EventTypeKeyPressed)
+	G_EVENT_CLASS_TYPE(gKeyPressedEvent)
 private:
 	bool isrepeat;
 };
@@ -54,7 +54,7 @@ public:
 	gKeyReleasedEvent(const int keycode)
 		: gKeyEvent(keycode) {}
 
-	G_EVENT_CLASS_TYPE(EventTypeKeyReleased)
+	G_EVENT_CLASS_TYPE(gKeyReleasedEvent)
 };
 
 
@@ -67,8 +67,8 @@ public:
 	int getX() const { return mousex; }
 	int getY() const { return mousey; }
 
-	G_EVENT_CLASS_TYPE(EventTypeMouseMoved)
-	G_EVENT_CLASS_CATEGORY(EventCategoryMouse | EventCategoryInput)
+	G_EVENT_CLASS_TYPE(gMouseMovedEvent)
+	G_EVENT_CLASS_CATEGORY(EVENTCATEGORY_MOUSE | EVENTCATEGORY_INPUT)
 private:
 	int mousex, mousey;
 };
@@ -83,8 +83,8 @@ public:
 	int getOffsetY() const { return offsety; }
 
 
-	G_EVENT_CLASS_TYPE(EventTypeMouseScrolled)
-	G_EVENT_CLASS_CATEGORY(EventCategoryMouse | EventCategoryInput)
+	G_EVENT_CLASS_TYPE(gMouseScrolledEvent)
+	G_EVENT_CLASS_CATEGORY(EVENTCATEGORY_MOUSE | EVENTCATEGORY_INPUT)
 private:
 	int offsetx, offsety;
 };
@@ -95,7 +95,7 @@ public:
 	int getX() const { return x; }
 	int getY() const { return y; }
 
-	G_EVENT_CLASS_CATEGORY(EventCategoryMouse | EventCategoryInput | EventCategoryMouseButton)
+	G_EVENT_CLASS_CATEGORY(EVENTCATEGORY_MOUSE | EVENTCATEGORY_INPUT | EVENTCATEGORY_MOUSE_BUTTON)
 protected:
 	gMouseButtonEvent(const int button, const int x, const int y)
 		: button(button), x(x), y(y) {}
@@ -109,7 +109,7 @@ public:
 	gMouseButtonPressedEvent(const int button, const int x, const int y)
 		: gMouseButtonEvent(button, x, y) {}
 
-	G_EVENT_CLASS_TYPE(EventTypeMouseButtonPressed)
+	G_EVENT_CLASS_TYPE(gMouseButtonPressedEvent)
 };
 
 class gMouseButtonReleasedEvent : public gMouseButtonEvent {
@@ -117,7 +117,7 @@ public:
 	gMouseButtonReleasedEvent(const int button, const int x, const int y)
 		: gMouseButtonEvent(button, x, y) {}
 
-	G_EVENT_CLASS_TYPE(EventTypeMouseButtonReleased)
+	G_EVENT_CLASS_TYPE(gMouseButtonReleasedEvent)
 };
 
 class gWindowResizeEvent : public gEvent {
@@ -128,8 +128,8 @@ public:
 	int getWidth() const { return width; }
 	int getHeight() const { return height; }
 
-	G_EVENT_CLASS_TYPE(EventTypeWindowResize)
-	G_EVENT_CLASS_CATEGORY(EventCategoryApp)
+	G_EVENT_CLASS_TYPE(gWindowResizeEvent)
+	G_EVENT_CLASS_CATEGORY(EVENTCATEGORY_APP)
 private:
 	int width, height;
 };
@@ -138,32 +138,32 @@ class gWindowFocusEvent : public gEvent {
 public:
 	gWindowFocusEvent() {}
 
-	G_EVENT_CLASS_TYPE(EventTypeWindowFocus)
-	G_EVENT_CLASS_CATEGORY(EventCategoryApp)
+	G_EVENT_CLASS_TYPE(gWindowFocusEvent)
+	G_EVENT_CLASS_CATEGORY(EVENTCATEGORY_APP)
 };
 
 class gWindowLoseFocusEvent : public gEvent {
 public:
 	gWindowLoseFocusEvent() {}
 
-	G_EVENT_CLASS_TYPE(EventTypeWindowLoseFocus)
-	G_EVENT_CLASS_CATEGORY(EventCategoryApp)
+	G_EVENT_CLASS_TYPE(gWindowLoseFocusEvent)
+	G_EVENT_CLASS_CATEGORY(EVENTCATEGORY_APP)
 };
 
 class gWindowMouseEnterEvent : public gEvent {
 public:
 	gWindowMouseEnterEvent() {}
 
-	G_EVENT_CLASS_TYPE(EventTypeWindowMouseEnter)
-	G_EVENT_CLASS_CATEGORY(EventCategoryApp)
+	G_EVENT_CLASS_TYPE(gWindowMouseEnterEvent)
+	G_EVENT_CLASS_CATEGORY(EVENTCATEGORY_APP)
 };
 
 class gWindowMouseExitEvent : public gEvent {
 public:
 	gWindowMouseExitEvent() {}
 
-	G_EVENT_CLASS_TYPE(EventTypeWindowMouseExit)
-	G_EVENT_CLASS_CATEGORY(EventCategoryApp)
+	G_EVENT_CLASS_TYPE(gWindowMouseExitEvent)
+	G_EVENT_CLASS_CATEGORY(EVENTCATEGORY_APP)
 };
 
 class gJoystickConnectEvent : public gEvent {
@@ -174,13 +174,12 @@ public:
 	int getJoystickId() const { return joystickid; }
 	bool isGamepad() const { return isgamepad; }
 
-	G_EVENT_CLASS_TYPE(EventTypeJoystickConnect)
-	G_EVENT_CLASS_CATEGORY(EventCategoryInput | EventCategoryJoystick)
+	G_EVENT_CLASS_TYPE(gJoystickConnectEvent)
+	G_EVENT_CLASS_CATEGORY(EVENTCATEGORY_INPUT | EVENTCATEGORY_JOYSTICK)
 private:
 	int joystickid;
 	bool isgamepad;
 };
-
 
 class gJoystickDisconnectEvent : public gEvent {
 public:
@@ -189,21 +188,11 @@ public:
 
 	int getJoystickId() const { return joystickid; }
 
-	G_EVENT_CLASS_TYPE(EventTypeJoystickDisconnect)
-	G_EVENT_CLASS_CATEGORY(EventCategoryInput | EventCategoryJoystick)
+	G_EVENT_CLASS_TYPE(gJoystickDisconnectEvent)
+	G_EVENT_CLASS_CATEGORY(EVENTCATEGORY_INPUT | EVENTCATEGORY_JOYSTICK)
 private:
 	int joystickid;
 };
-
-class gReallocateRenderDataEvent : public gEvent {
-public:
-    gReallocateRenderDataEvent() {}
-
-    G_EVENT_CLASS_TYPE(EventTypeReallocateRenderData)
-    G_EVENT_CLASS_CATEGORY(EventCategoryRenderer | EventCategoryApp)
-private:
-};
-
 
 #if defined(GLIST_MOBILE)
 enum InputType {
@@ -243,8 +232,8 @@ public:
 	int getActionIndex() const { return actionindex; }
 	ActionType getAction() const { return action; }
 
-	G_EVENT_CLASS_TYPE(EventTypeTouch)
-	G_EVENT_CLASS_CATEGORY(EventCategoryInput | EventCategoryTouchscreen)
+	G_EVENT_CLASS_TYPE(gTouchEvent)
+	G_EVENT_CLASS_CATEGORY(EVENTCATEGORY_INPUT | EVENTCATEGORY_TOUCHSCREEN)
 private:
 	int inputcount;
 	TouchInput* inputs;
@@ -256,8 +245,8 @@ class gAppPauseEvent : public gEvent {
 public:
 	gAppPauseEvent() {}
 
-	G_EVENT_CLASS_TYPE(EventTypeAppPause)
-	G_EVENT_CLASS_CATEGORY(EventCategoryApp)
+	G_EVENT_CLASS_TYPE(gAppPauseEvent)
+	G_EVENT_CLASS_CATEGORY(EVENTCATEGORY_APP)
 private:
 };
 
@@ -265,8 +254,8 @@ class gAppResumeEvent : public gEvent {
 public:
 	gAppResumeEvent() {}
 
-	G_EVENT_CLASS_TYPE(EventTypeAppResume)
-	G_EVENT_CLASS_CATEGORY(EventCategoryApp)
+	G_EVENT_CLASS_TYPE(gAppResumeEvent)
+	G_EVENT_CLASS_CATEGORY(EVENTCATEGORY_APP)
 private:
 };
 
@@ -284,8 +273,8 @@ public:
 
 	DeviceOrientation getOrientation() const { return orientation; }
 
-	G_EVENT_CLASS_TYPE(EventTypeDeviceOrientationChanged)
-	G_EVENT_CLASS_CATEGORY(EventCategoryApp)
+	G_EVENT_CLASS_TYPE(gDeviceOrientationChangedEvent)
+	G_EVENT_CLASS_CATEGORY(EVENTCATEGORY_APP)
 private:
 	DeviceOrientation orientation;
 };
