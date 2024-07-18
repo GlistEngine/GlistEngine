@@ -19,7 +19,6 @@ var hierarchy =
       ] ],
       [ "gMouseMovedEvent", "classgMouseMovedEvent.html", null ],
       [ "gMouseScrolledEvent", "classgMouseScrolledEvent.html", null ],
-      [ "gReallocateRenderDataEvent", "classgReallocateRenderDataEvent.html", null ],
       [ "gWindowFocusEvent", "classgWindowFocusEvent.html", null ],
       [ "gWindowLoseFocusEvent", "classgWindowLoseFocusEvent.html", null ],
       [ "gWindowMouseEnterEvent", "classgWindowMouseEnterEvent.html", null ],

@@ -140,9 +140,8 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>stop</b> ()</td></tr>
 <tr class="separator:ae56c43c2ce70d2cfa4b6ccd9e3d1482a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8b56c4097f3cfc5282c89cf08a81a96a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgAppManager.html#a8b56c4097f3cfc5282c89cf08a81a96a">isWindowFocused</a> ()</td></tr>
 <tr class="separator:a8b56c4097f3cfc5282c89cf08a81a96a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5c0b566b9f67a83db6a355348cf16e91"><td class="memItemLeft" align="right" valign="top"><a id="a5c0b566b9f67a83db6a355348cf16e91"></a>
-EventHandlerFn&#160;</td><td class="memItemRight" valign="bottom"><b>getEventHandler</b> ()</td></tr>
-<tr class="separator:a5c0b566b9f67a83db6a355348cf16e91"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1b194d1d7f4f1cc97c67473a5e8b1373"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgAppManager.html#a1b194d1d7f4f1cc97c67473a5e8b1373">callEvent</a> (<a class="el" href="classgEvent.html">gEvent</a> &amp;event)</td></tr>
+<tr class="separator:a1b194d1d7f4f1cc97c67473a5e8b1373"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a99e67e9e3014b3ce72d3516ad5176266"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgBaseCanvas.html">gBaseCanvas</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgAppManager.html#a99e67e9e3014b3ce72d3516ad5176266">getCurrentCanvas</a> ()</td></tr>
 <tr class="separator:a99e67e9e3014b3ce72d3516ad5176266"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa3264476347b548da39873479f20c38d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgAppManager.html#aa3264476347b548da39873479f20c38d">setTargetFramerate</a> (int framerate)</td></tr>
@@ -310,6 +309,32 @@ static int&#160;</td><td class="memItemRight" valign="bottom"><b>releaseresoluti
 <tr class="separator:a9a7e5f300e8e38ad6f0beb85ad840c52 inherit pro_static_attribs_classgObject"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="a1b194d1d7f4f1cc97c67473a5e8b1373"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1b194d1d7f4f1cc97c67473a5e8b1373">&#9670;&nbsp;</a></span>callEvent()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool gAppManager::callEvent </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classgEvent.html">gEvent</a> &amp;&#160;</td>
+          <td class="paramname"><em>event</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Publishes the event to canvas, app and gui manager. Returns if true the event was handled by any of them.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">event</td><td>Event to publish </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>isHandled </dd></dl>
+
+</div>
+</div>
 <a id="a80439670ef5ad9a58d8feb7a3010b2af"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a80439670ef5ad9a58d8feb7a3010b2af">&#9670;&nbsp;</a></span>getAppName()</h2>
 

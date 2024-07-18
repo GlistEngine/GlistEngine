@@ -130,7 +130,6 @@ var annotated_dup =
     [ "gPlane", "classgPlane.html", "classgPlane" ],
     [ "gPostProcessManager", "classgPostProcessManager.html", "classgPostProcessManager" ],
     [ "gRay", "classgRay.html", "classgRay" ],
-    [ "gReallocateRenderDataEvent", "classgReallocateRenderDataEvent.html", "classgReallocateRenderDataEvent" ],
     [ "gRect", "classgRect.html", "classgRect" ],
     [ "gRectangle", "classgRectangle.html", "classgRectangle" ],
     [ "gRenderer", "classgRenderer.html", "classgRenderer" ],

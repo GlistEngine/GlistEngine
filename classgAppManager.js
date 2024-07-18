@@ -2,6 +2,7 @@ var classgAppManager =
 [
     [ "gAppManager", "classgAppManager.html#ae902977d2cd2e032850a0dbcd555a6a1", null ],
     [ "~gAppManager", "classgAppManager.html#a4cc20b21f0caee8139e792aad8a3d8c4", null ],
+    [ "callEvent", "classgAppManager.html#a1b194d1d7f4f1cc97c67473a5e8b1373", null ],
     [ "disableVsync", "classgAppManager.html#afed9d41c6aa9268605f208aa06207aef", null ],
     [ "enableVsync", "classgAppManager.html#a542ffc28b86ef4acd5921b16a5a37255", null ],
     [ "getAppName", "classgAppManager.html#a80439670ef5ad9a58d8feb7a3010b2af", null ],
@@ -11,7 +12,6 @@ var classgAppManager =
     [ "getCurrentGUIFrame", "classgAppManager.html#a62cbdf5e79c8b435779973b6a2bdeefe", null ],
     [ "getDeviceOrientation", "classgAppManager.html#ac42052084d5109e7b9a68502edd1da91", null ],
     [ "getElapsedTime", "classgAppManager.html#a83e9f84a1f4a1d3a956ab42e0e6895f8", null ],
-    [ "getEventHandler", "classgAppManager.html#a5c0b566b9f67a83db6a355348cf16e91", null ],
     [ "getFramerate", "classgAppManager.html#af843225c657fb34e0953739d5d422687", null ],
     [ "getGUIManager", "classgAppManager.html#a60f6d224c86250da14fdff0ccc544b82", null ],
     [ "getJoystickAxes", "classgAppManager.html#aac334b418084a3f72dec4b930b5c0bd4", null ],

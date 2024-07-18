@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['callevent_622',['callEvent',['../classgAppManager.html#a1b194d1d7f4f1cc97c67473a5e8b1373',1,'gAppManager']]],
   ['centerx_623',['centerX',['../classgRect.html#a617fcefe871f51c2dab5d6b30edf20bc',1,'gRect']]],
   ['centery_624',['centerY',['../classgRect.html#a8bfe98f02346f80daf9b000808edd539',1,'gRect']]],
   ['changeanimation_625',['changeAnimation',['../classgSpriteAnimator.html#ade9987541be5ffd75384220ff312d3cb',1,'gSpriteAnimator']]],
