@@ -244,14 +244,14 @@ private:
 	  GLint index1, posx1, posy1, index2, posx2, index3, posy3;
 	  std::wstring text1, text2, text3;
 	  std::string reversetext;
-	  bool isReversed;
+	  bool isreversed;
 	  int len1, c1, cid1, cold1, len2, cid2, cold2, cy2, len3, cid3, cy3, y3;
 	  int tempint, tempcharno;
 	  int lci, lci2, lci3, lci4, lcj, lck;
 	  int lcdataw, lcdatah, lcdatanum;
 	  int lclongside, lclongest, lcpixelsw, lcpixelsh, lcapsize;
-	  float scaledAdvance, scaledLeftMargin, scaledDyTop, scaledWidth, scaledHeight;
-	  float fontSizeValue, scaledLineHeight;
+	  float scaledadvance, scaledleftmargin, scaleddytop, scaledwidth, scaledheight;
+	  float fontsizevalue, scaledlineheight;
 	  FT_Error lcerr;
 	  GLint lcfheight, lcbwidth, lctop, lclextent;
 	  GLfloat lcstretch, lccorr;
