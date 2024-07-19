@@ -12,8 +12,8 @@ gGUIToolbar::gGUIToolbar() {
 	spaceLocation = 0;
 	isSpaceAdded = false;
 	toolbartype = TOOLBAR_HORIZONTAL;
-	toolbarforegroundcolor = foregroundcolor;
-	toolbarbottomlinecolor = backgroundcolor;
+	toolbarforegroundcolor = *foregroundcolor;
+	toolbarbottomlinecolor = *backgroundcolor;
 }
 
 gGUIToolbar::~gGUIToolbar() {
@@ -28,11 +28,12 @@ int gGUIToolbar::getToolbarType() {
 }
 
 void gGUIToolbar::draw() {
+	// The foregroundcolor and backgroundcolor assignments have been made.
 //	gLogi("gGUIToolbar") << "draw";
 //	gLogi("gGUIToolbar") << "l:" << left << ", t:" << top << ", w:" << width << ", h:" << height;
 	gColor* oldcolor = renderer->getColor();
 	if(toolbartype == TOOLBAR_HORIZONTAL) {
-		renderer->setColor(toolbarforegroundcolor);
+		renderer->setColor(&toolbarforegroundcolor);
 		gDrawRectangle(left, top, width, height, true);
 		renderer->setColor(&toolbarbottomlinecolor);
 		gDrawLine(left, bottom, right, bottom);

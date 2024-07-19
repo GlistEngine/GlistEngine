@@ -10,41 +10,17 @@
 
 #include <functional>
 
-// todo documentation
-enum EventType {
-	EventTypeCharTyped,
-	EventTypeKeyPressed,
-	EventTypeKeyReleased,
-	EventTypeMouseMoved,
-	EventTypeMouseScrolled,
-	EventTypeMouseButtonPressed,
-	EventTypeMouseButtonReleased,
-	EventTypeWindowResize,
-	EventTypeWindowFocus,
-	EventTypeWindowLoseFocus,
-	EventTypeWindowMouseEnter,
-	EventTypeWindowMouseExit,
-	EventTypeJoystickConnect,
-	EventTypeJoystickDisconnect,
-	EventTypeReallocateRenderData,
-#if defined(ANDROID) || TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
-	EventTypeAppPause,
-	EventTypeAppResume,
-	EventTypeTouch,
-	EventTypeDeviceOrientationChanged
-#endif
-};
-
 #define BIT(x) (1 << x)
 enum EventCategory {
-	EventCategoryApp = BIT(0),
-	EventCategoryInput = BIT(1),
-	EventCategoryKeyboard = BIT(2),
-	EventCategoryMouse = BIT(3),
-	EventCategoryMouseButton = BIT(4),
-	EventCategoryJoystick = BIT(5),
-	EventCategoryTouchscreen = BIT(6),
-	EventCategoryRenderer = BIT(7),
+	EVENTCATEGORY_APP = BIT(0),
+	EVENTCATEGORY_INPUT = BIT(1),
+	EVENTCATEGORY_KEYBOARD = BIT(2),
+	EVENTCATEGORY_MOUSE = BIT(3),
+	EVENTCATEGORY_MOUSE_BUTTON = BIT(4),
+	EVENTCATEGORY_JOYSTICK = BIT(5),
+	EVENTCATEGORY_TOUCHSCREEN = BIT(6),
+	EVENTCATEGORY_RENDERER = BIT(7),
+	EVENTCATEGORY_CUSTOM = BIT(8),
 };
 #undef BIT
 
@@ -60,7 +36,7 @@ class gEvent {
 	bool ishandled = false;
 
 	virtual const char* getEventName() const = 0;
-	virtual EventType getEventType() const = 0;
+	virtual size_t getEventType() const = 0;
 	virtual int getCategoryFlags() const = 0;
 
 	bool isInCategory(EventCategory category) {
@@ -108,8 +84,8 @@ class gEventDispatcher {
 };
 
 #define G_EVENT_CLASS_TYPE(type)                                                \
-  static EventType getStaticType() { return EventType::type; }                \
-  virtual EventType getEventType() const override { return getStaticType(); } \
+  static size_t getStaticType() { return typeid(type).hash_code(); }                \
+  virtual size_t getEventType() const override { return getStaticType(); } \
   virtual const char* getEventName() const override { return #type; }
 
 #define G_EVENT_CLASS_CATEGORY(category) \

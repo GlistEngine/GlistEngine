@@ -206,7 +206,13 @@ public:
 	 */
 	bool isWindowFocused();
 
-	EventHandlerFn getEventHandler() { return eventhandler; }
+	/**
+	 * Publishes the event to canvas, app and gui manager. Returns if true the event was handled by any of them.
+	 *
+	 * @param event Event to publish
+	 * @return isHandled
+	 */
+	bool callEvent(gEvent& event);
 
 	/**
 	 * Returns a pointer of the current canvas
@@ -410,6 +416,8 @@ private:
 
     void updateTime();
     void executeQueue();
+
+	EventHandlerFn getEventHandler() { return eventhandler; }
 
     static void preciseSleep(double seconds);
 };

@@ -271,6 +271,11 @@ bool gAppManager::isWindowFocused() {
 	return iswindowfocused;
 }
 
+bool gAppManager::callEvent(gEvent& event) {
+	eventhandler(event);
+	return event.ishandled;
+}
+
 void gAppManager::setWindowSize(int width, int height) {
 	window->setWindowSize(width, height);
 }
