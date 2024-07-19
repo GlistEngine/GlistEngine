@@ -142,7 +142,7 @@ void gShader::loadProgram(const std::string& shaderSource) {
 	preprocessedFragmentSourceStr = preprocessedFragmentSource.c_str();
 
 #if defined(WIN32) || defined(LINUX)
-	const std::string preprocessedGeometrySource = preprocessShader(geometrySource, generateDefines(ShaderType::GEOMETRY));
+	const std::string preprocessedGeometrySource = preprocessShader(shaderSource, generateDefines(ShaderType::GEOMETRY));
 	preprocessedGeometrySourceStr = preprocessedGeometrySource.c_str();
 	if (preprocessedGeometrySource.empty()) {
 		preprocessedGeometrySourceStr = nullptr;
@@ -176,7 +176,7 @@ void gShader::loadProgramInternal(const char* vertexSource, const char* fragment
 #if defined(WIN32) || defined(LINUX)
 	if(geometrySource != nullptr) {
 		geometry = glCreateShader(GL_GEOMETRY_SHADER);
-		glShaderSource(geometry, 1, &preprocessedGeometrySourceStr, nullptr);
+		glShaderSource(geometry, 1, &geometrySource, nullptr);
 		glCompileShader(geometry);
 		checkCompileErrors(geometry, "GEOMETRY");
 	}
@@ -286,17 +286,17 @@ std::string gShader::preprocessShader(const std::string& shaderCode, std::unorde
 std::unordered_map<std::string, std::string> gShader::generateDefines(ShaderType type) {
 	std::unordered_map<std::string, std::string> map;
 	if (type == ShaderType::VERTEX) {
-		map.insert(std::pair("VERTEX", ""));
+		map.insert(std::pair<std::string, std::string>("VERTEX", ""));
 	} else if (type == ShaderType::FRAGMENT) {
-		map.insert(std::pair("FRAGMENT", ""));
+		map.insert(std::pair<std::string, std::string>("FRAGMENT", ""));
 	} else if (type == ShaderType::GEOMETRY) {
-		map.insert(std::pair("GEOMETRY", ""));
+		map.insert(std::pair<std::string, std::string>("GEOMETRY", ""));
 	}
 #if defined(GLIST_MOBILE)
 	map.insert(std::pair("GLES", ""));
 #endif
 	int max_lights = GLIST_MAX_LIGHTS;
-	map.insert(std::pair("GLIST_MAX_LIGHTS", gToStr(max_lights)));
+	map.insert(std::pair<std::string, std::string>("GLIST_MAX_LIGHTS", gToStr(max_lights)));
 	return map;
 }
 
