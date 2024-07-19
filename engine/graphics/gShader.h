@@ -19,13 +19,18 @@ class gUbo;
 class gShader : public gObject {
 public:
 	gShader();
-	gShader(const std::string& vertexPath, const std::string& fragmentPath, const std::string& geometryPath = nullptr);
+	gShader(const std::string& shaderFullPath);
+	gShader(const std::string& vertexFullPath, const std::string& fragmentFullPath, const std::string& geometryFullPath = "");
 	~gShader();
 
+	void load(const std::string& shaderFullPath);
 	void load(const std::string& vertexFullPath, const std::string& fragmentFullPath, const std::string& geometryFullPath = "");
+
+	void loadShader(const std::string& shaderFilename);
 	void loadShader(const std::string& vertexFileName, const std::string& fragmentFileName, const std::string& geometryFileName = "");
 
-	void loadProgram(const std::string& vertexShaderStr, const std::string& fragmentShaderStr, const std::string& geometryShaderStr = "");
+	void loadProgram(const std::string& vertexSource, const std::string& fragmentSource, const std::string& geometrySource = "");
+	void loadProgram(const std::string& shaderSource);
 
 	template<typename T>
 	void attachUbo(const std::string& uboName, const gUbo<T>* ubo) {
@@ -73,7 +78,17 @@ public:
 	GLint getUniformLocation(const std::string& name);
 
 private:
+	enum class ShaderType {
+		VERTEX,
+		FRAGMENT,
+		GEOMETRY
+	};
+
+	void loadProgramInternal(const char* vertexSource, const char* fragmentSource, const char* geometrySource);
+
 	void checkCompileErrors(GLuint shader, const std::string& type);
+	std::string preprocessShader(const std::string& shaderCode, std::unordered_map<std::string, std::string> defines);
+	std::unordered_map<std::string, std::string> generateDefines(ShaderType type);
 
 	std::unordered_map<std::string, GLint> uniformlocations;
 	std::unordered_map<std::string, GLuint> ubos;

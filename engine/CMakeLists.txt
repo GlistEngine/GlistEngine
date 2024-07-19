@@ -50,7 +50,6 @@ set(CMAKE_USE_PTHREADS_INIT 1)
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 set(ENABLE_BOOST_WORKAROUND ON)
 
-
 if(NOT DEFINED ENGINE_DIR)
     set(ENGINE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 endif()
@@ -81,8 +80,9 @@ if(NOT WIN32)
 endif(NOT WIN32)
 endif()
 
-#configure_file( ${ENGINE_DIR}/gConfig.h.in ${CMAKE_BINARY_DIR}/generated/gConfig.h )
+set(GENERATED_HEADERS_DIR "${CMAKE_BINARY_DIR}/generated")
 
+#configure_file( ${ENGINE_DIR}/gConfig.h.in ${CMAKE_BINARY_DIR}/generated/gConfig.h )
 
 ########## READ PLUGIN CMAKELISTS ##########
 if(NOT DEFINED PLUGINS)
@@ -265,6 +265,32 @@ if(NOT (ANDROID OR IOS))
 	)
 endif()
 
+set(SHADERS_DIR "${ENGINE_DIR}/graphics/shaders" CACHE STRING "Engine shaders directory")
+set(GENERATED_SHADERS_DIR "${GENERATED_HEADERS_DIR}/graphics/shaders" CACHE STRING "Generated shaders directory")
+file(MAKE_DIRECTORY ${GENERATED_SHADERS_DIR})
+file(GLOB_RECURSE SHADER_FILES "${SHADERS_DIR}/*.glsl")
+
+add_executable(ShaderToHeader ${ENGINE_DIR}/tools/ShaderToHeader.cpp)
+
+# Add a dependency to ensure the header file is generated before other targets
+foreach(SHADER_FILE ${SHADER_FILES})
+	get_filename_component(SHADER_FILE_NAME ${SHADER_FILE} NAME_WE)
+	set(GENERATED_HEADER_FILE "${GENERATED_SHADERS_DIR}/${SHADER_FILE_NAME}.h")
+
+	add_custom_command(PRE_BUILD
+			OUTPUT ${GENERATED_HEADER_FILE}
+			COMMAND $<TARGET_FILE:ShaderToHeader> ${SHADER_FILE} ${GENERATED_HEADER_FILE}
+			DEPENDS ${SHADER_FILE}
+			COMMENT "Generating header file for ${SHADER_FILE} at ${GENERATED_HEADER_FILE}"
+	)
+	list(APPEND SRC_FILES ${GENERATED_HEADER_FILE})
+endforeach()
+
+add_custom_target(
+		generate_shader_header
+		DEPENDS ${SHADER_FILES} ${GENERATED_HEADERS_DIR}
+)
+
 if(ANDROID OR IOS)
 	# We have androidMain function that is
 	# defined inside the GlistEngine but implemented by the
@@ -316,7 +342,7 @@ set(ENGINE_INCLUDES
     ${ENGINE_DIR}/core
     ${ENGINE_DIR}/events
     ${PLUGIN_INCLUDES}
-#	${CMAKE_BINARY_DIR}/generated
+	${GENERATED_HEADERS_DIR}
 )
 
 list(APPEND INC_DIRS ${ENGINE_INCLUDES})
