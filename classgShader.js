@@ -1,12 +1,16 @@
 var classgShader =
 [
     [ "gShader", "classgShader.html#a65e45f7547ab77613417cd735c36e1c8", null ],
-    [ "gShader", "classgShader.html#a0e7b3bf647a9cc5b10144a97ad53c437", null ],
+    [ "gShader", "classgShader.html#a3d976bcd19157e437aa678f05ae6add6", null ],
+    [ "gShader", "classgShader.html#a3ec5d3effd09a4d6fb565d5fdb34d734", null ],
     [ "~gShader", "classgShader.html#aca29cff5650c2e994cd21d20ffef9654", null ],
     [ "attachUbo", "classgShader.html#a5b122e472ab28a85f290aa77f71bd284", null ],
     [ "getUniformLocation", "classgShader.html#a51447aa979809de598ff15f89a798e33", null ],
+    [ "load", "classgShader.html#a33830fb2adfa939bc8563170c8f59db0", null ],
     [ "load", "classgShader.html#ae0d1457caa2cfb412d43ef055136288f", null ],
-    [ "loadProgram", "classgShader.html#a2865be1b6cc816443b54365075f9fe21", null ],
+    [ "loadProgram", "classgShader.html#aaee185c5340fa7254aff0e2803606887", null ],
+    [ "loadProgram", "classgShader.html#a607f8b9b8aaf4acb5c015c567e871baa", null ],
+    [ "loadShader", "classgShader.html#abf8496f4f7fba1c1298170ea15c6bb2f", null ],
     [ "loadShader", "classgShader.html#a532d37218603f8fb84e8f42e3330693c", null ],
     [ "setBool", "classgShader.html#a6607545467180169b4a04477611305aa", null ],
     [ "setFloat", "classgShader.html#aae6d255ceea2c6b9040eefe575538756", null ],

@@ -111,18 +111,30 @@ Collaboration diagram for gShader:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a0e7b3bf647a9cc5b10144a97ad53c437"><td class="memItemLeft" align="right" valign="top"><a id="a0e7b3bf647a9cc5b10144a97ad53c437"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>gShader</b> (const std::string &amp;vertexPath, const std::string &amp;fragmentPath, const std::string &amp;geometryPath=nullptr)</td></tr>
-<tr class="separator:a0e7b3bf647a9cc5b10144a97ad53c437"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3d976bcd19157e437aa678f05ae6add6"><td class="memItemLeft" align="right" valign="top"><a id="a3d976bcd19157e437aa678f05ae6add6"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>gShader</b> (const std::string &amp;shaderFullPath)</td></tr>
+<tr class="separator:a3d976bcd19157e437aa678f05ae6add6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3ec5d3effd09a4d6fb565d5fdb34d734"><td class="memItemLeft" align="right" valign="top"><a id="a3ec5d3effd09a4d6fb565d5fdb34d734"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>gShader</b> (const std::string &amp;vertexFullPath, const std::string &amp;fragmentFullPath, const std::string &amp;geometryFullPath=&quot;&quot;)</td></tr>
+<tr class="separator:a3ec5d3effd09a4d6fb565d5fdb34d734"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a33830fb2adfa939bc8563170c8f59db0"><td class="memItemLeft" align="right" valign="top"><a id="a33830fb2adfa939bc8563170c8f59db0"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>load</b> (const std::string &amp;shaderFullPath)</td></tr>
+<tr class="separator:a33830fb2adfa939bc8563170c8f59db0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae0d1457caa2cfb412d43ef055136288f"><td class="memItemLeft" align="right" valign="top"><a id="ae0d1457caa2cfb412d43ef055136288f"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>load</b> (const std::string &amp;vertexFullPath, const std::string &amp;fragmentFullPath, const std::string &amp;geometryFullPath=&quot;&quot;)</td></tr>
 <tr class="separator:ae0d1457caa2cfb412d43ef055136288f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abf8496f4f7fba1c1298170ea15c6bb2f"><td class="memItemLeft" align="right" valign="top"><a id="abf8496f4f7fba1c1298170ea15c6bb2f"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>loadShader</b> (const std::string &amp;shaderFilename)</td></tr>
+<tr class="separator:abf8496f4f7fba1c1298170ea15c6bb2f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a532d37218603f8fb84e8f42e3330693c"><td class="memItemLeft" align="right" valign="top"><a id="a532d37218603f8fb84e8f42e3330693c"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>loadShader</b> (const std::string &amp;vertexFileName, const std::string &amp;fragmentFileName, const std::string &amp;geometryFileName=&quot;&quot;)</td></tr>
 <tr class="separator:a532d37218603f8fb84e8f42e3330693c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2865be1b6cc816443b54365075f9fe21"><td class="memItemLeft" align="right" valign="top"><a id="a2865be1b6cc816443b54365075f9fe21"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>loadProgram</b> (const std::string &amp;vertexShaderStr, const std::string &amp;fragmentShaderStr, const std::string &amp;geometryShaderStr=&quot;&quot;)</td></tr>
-<tr class="separator:a2865be1b6cc816443b54365075f9fe21"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a607f8b9b8aaf4acb5c015c567e871baa"><td class="memItemLeft" align="right" valign="top"><a id="a607f8b9b8aaf4acb5c015c567e871baa"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>loadProgram</b> (const std::string &amp;vertexSource, const std::string &amp;fragmentSource, const std::string &amp;geometrySource=&quot;&quot;)</td></tr>
+<tr class="separator:a607f8b9b8aaf4acb5c015c567e871baa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaee185c5340fa7254aff0e2803606887"><td class="memItemLeft" align="right" valign="top"><a id="aaee185c5340fa7254aff0e2803606887"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>loadProgram</b> (const std::string &amp;shaderSource)</td></tr>
+<tr class="separator:aaee185c5340fa7254aff0e2803606887"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5b122e472ab28a85f290aa77f71bd284"><td class="memTemplParams" colspan="2"><a id="a5b122e472ab28a85f290aa77f71bd284"></a>
 template&lt;typename T &gt; </td></tr>
 <tr class="memitem:a5b122e472ab28a85f290aa77f71bd284"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>attachUbo</b> (const std::string &amp;uboName, const <a class="el" href="classgUbo.html">gUbo</a>&lt; T &gt; *ubo)</td></tr>
