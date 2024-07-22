@@ -10,11 +10,11 @@
 #include "gBaseCanvas.h"
 
 
-gGUIButton::gGUIButton() {
+gGUIButton::gGUIButton(int texttype, int textside) {
 	ispressed = false;
 	ishover = false;
-	buttonw = 96;
-	buttonh = 32;
+	buttonh = 50; // default value
+	buttonw = 120; // default value
 	istoggle = false;
 	title = "Button";
 	istextvisible = true;
@@ -31,10 +31,30 @@ gGUIButton::gGUIButton() {
 	pressedfcolor = *pressedbuttonfontcolor;
 	disabledfcolor = *disabledbuttonfontcolor;
 	fillbackground = true;
+	this->textside = textside;
+	this->texttype = texttype;
+	scalefactor = 1.0f;
+	punto = 20;
+	newpunto = 0;
+	fontpath = "FreeSans.ttf"; // default font
+
+	buttonfont = new gFont();
+	buttonfont->loadFont(fontpath, punto);
+
 	resetTitlePosition();
 }
 
 gGUIButton::~gGUIButton() {
+}
+
+void gGUIButton::set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIObject* parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h) {
+	gGUIControl::set(root, topParentGUIObject, parentGUIObject, parentSlotLineNo, parentSlotColumnNo, x, y, w, h);
+
+	//If ishorizontalfit true, it transfers the width of the current parent to buttonw. If false, it assigns the default width value.
+	buttonw = ishorizontalfit ? width : buttonw;
+
+	//If isverticalfit true, it transfers the height of the current parent to buttonh. If false, it assigns the default height value.
+	buttonh = isverticalfit ? height : buttonh;
 }
 
 void gGUIButton::setTitle(std::string title) {
@@ -64,7 +84,6 @@ bool gGUIButton::isDisabled() {
 	return isdisabled;
 }
 
-
 bool gGUIButton::isToggle() {
 	return istoggle;
 }
@@ -82,28 +101,148 @@ void gGUIButton::update() {
 }
 
 void gGUIButton::draw() {
-//	gLogi("gGUIButton") << "draw, w:" << width;
+
+	// Get the current color and save the old color
 	gColor* oldcolor = renderer->getColor();
+
+	// Draw button body
+	drawBody();
+
+	// Draw button text
+	writeText();
+
+	// Restore the color to the old color
+	renderer->setColor(oldcolor);
+}
+
+void gGUIButton::drawBody() {
+	// If fillbackground is true, it fills the background with the given color.
 	if(fillbackground) {
+		// If it is button disabled, the disabled button color assigned.
 		if(isdisabled) renderer->setColor(&disabledbcolor);
 		else {
 			if(ispressed) renderer->setColor(&pressedbcolor);
 			else if(ishover) renderer->setColor(&hcolor);
 			else renderer->setColor(&bcolor);
 		}
-	//	renderer->setColor(gColor(0.1f, 0.45f, 0.87f));
+
+		// Calls the gDrawRectangle function to draw a rectangle.
 		gDrawRectangle(left, top + ispressed, buttonw, buttonh, true);
 	}
+}
 
+void gGUIButton::writeText() {
+
+
+	buttonfont->loadFont(fontpath, punto);
+
+ // Check istextvisible, if true, draw the text, if false, do not draw the text.
 	if(istextvisible) {
+		// Check if the button is disabled, if true, assign the disabledcolor to the renderer, if false, assign the set color to the renderer.
 		if(isdisabled) renderer->setColor(&disabledfcolor);
 		else {
+			// Check whether the button is clicked and assign the color accordingly.
 			if(ispressed) renderer->setColor(&pressedfcolor);
 			else renderer->setColor(&fcolor);
 		}
-		font->drawText(title, left + tx - 1, top + buttonh - ty + ispressed - 2);
+
+		// Adjusts the location of the text to the desired side.
+		switch(textside) {
+			case TEXTSIDE_LEFT:
+				calculateCenterLeft();
+				break;
+			case TEXTSIDE_CENTER:
+				calculateCenter();
+				break;
+			case TEXTSIDE_RIGHT:
+				calculateCenterRight();
+				break;
+			default:
+				calculateCenter();
+				break;
+		}
+
+		// Sets the text type and draws the text.
+		switch(texttype) {
+			case TEXTTYPE_DEFAULT:
+				buttonfont->drawText(title, centerx, centery);
+				break;
+			case TEXTTYPE_VERTICALLY_FLIPPED:
+				buttonfont->drawTextVerticallyFlipped(title, centerx, centery);
+				break;
+			case TEXTTYPE_HORIZONTALLY_FLIPPED:
+				buttonfont->drawTextHorizontallyFlipped(title, centerx, centery);
+				break;
+			default:
+				buttonfont->drawText(title, centerx, centery);
+				break;
+		}
 	}
-	renderer->setColor(oldcolor);
+}
+
+int gGUIButton::getNearestPunto(float value) {
+	// Calculate the nearest value within the desired font size range
+	float roundedvalue = std::round(value / PUNTO_STEP) * PUNTO_STEP;
+
+	// Check if the font size is within the specified range
+	if (roundedvalue < PUNTO_MIN) return static_cast<int>(PUNTO_MIN);
+	if (roundedvalue > PUNTO_MAX) return static_cast<int>(PUNTO_MAX);
+	return static_cast<int>(roundedvalue);
+}
+
+void gGUIButton::scaletext() {
+	// Calculate the initial text dimensions
+	scaledtextwidth = tw * 1.0f;
+	scaledtextheight = th * 1.0f;
+
+	// Calculate the scaling factors
+	widthfactor = buttonw / scaledtextwidth;
+	heightfactor = buttonh / scaledtextheight;
+
+	// Determine the most suitable scaling factor to ensure the text fits within the buttons boundaries
+	scalefactor = std::min(widthfactor, heightfactor);
+
+	// Calculate the scaled font size
+	scaledpunto = DEFAULT_FONT_SIZE * scalefactor;
+
+	// Find the nearest font size value
+	punto = getNearestPunto(scaledpunto);
+
+	// Calculate the updated text width
+	scaledtextwidth = (tw * scalefactor) / 1.75;
+
+	// Calculate scaled text height
+	scaledtextheight = th * scalefactor - scaledpunto;
+}
+
+void gGUIButton::calculateCenter() {
+	scaletext();
+
+	// Position the text in the center of the button
+    centerx = left + (buttonw - scaledtextwidth) / 2.0f;
+
+    // Calculate the appropriate average for text height
+    centery = top + (buttonh + scaledtextheight) / 2.0f;
+}
+
+void gGUIButton::calculateCenterLeft() {
+	scaletext();
+
+	// Position the text to the left of the button
+    centerx = left + (buttonw - scaledtextwidth) / 8.0f;
+
+    // Calculate the appropriate average for text height
+    centery = top + (buttonh + scaledtextheight) / 2.0f;
+}
+
+void gGUIButton::calculateCenterRight() {
+	scaletext();
+
+	// Position the text to the right of the button
+    centerx = left + 3 * (buttonw - scaledtextwidth) / 4.0f;
+
+    // Calculate the appropriate average for text height
+    centery = top + (buttonh + scaledtextheight) / 2.0f;
 }
 
 void gGUIButton::mousePressed(int x, int y, int button) {
@@ -156,8 +295,10 @@ void gGUIButton::mouseExited() {
 }
 
 void gGUIButton::resetTitlePosition() {
-	tx = (buttonw - font->getStringWidth(title)) / 2 - 1;
-	ty = (buttonh - font->getStringHeight("a")) / 2;
+	tx = (buttonw - buttonfont->getStringWidth(title)) / 2 - 1;
+	ty = (buttonh - buttonfont->getStringHeight("a")) / 2;
+	tw = buttonfont->getStringWidth(title);
+	th = buttonfont->getStringHeight(title);
 }
 
 void gGUIButton::setButtonColor(gColor color) {
@@ -228,4 +369,21 @@ void gGUIButton::setButtonh(int buttonh) {
 
 void gGUIButton::setButtonw(int buttonw) {
 	this->buttonw = buttonw;
+}
+
+void gGUIButton::setFitInArea(bool isHorizontalFit, bool isVerticalFit) {
+	this->ishorizontalfit = isHorizontalFit;
+	this->isverticalfit = isVerticalFit;
+}
+
+void gGUIButton::setTextType(int texttype) {
+	this->texttype = texttype;
+}
+
+void gGUIButton::setTextSide(int textside) {
+	this->textside = textside;
+}
+
+void gGUIButton::setFont(std::string fontpath) {
+	this->fontpath = fontpath;
 }
