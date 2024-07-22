@@ -124,8 +124,9 @@ void gGrid::drawStart() {
 }
 
 void gGrid::drawVbo() {
-	if(isgridxyenabled || isgridyzenabled || isgridxzenabled){
+	if(isgridxzenabled){ //use "isgridxyenabled || isgridyzenabled ||" once they are implemented above
 		vbo.bind();
+//		gLogi("drawing")<<"";
 		G_CHECK_GL(glDrawArrays(GL_TRIANGLES, 0, vbo.getVerticesNum()));
 		vbo.unbind();
 	}

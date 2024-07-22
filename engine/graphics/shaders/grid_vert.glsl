@@ -1,5 +1,11 @@
+#if GLES
+#version 300 es
+precision highp float;
+#else
 #version 330 core
+#endif
 
+layout (location = 0) in vec2 aPos;
 out vec3 nearpoint;
 out vec3 farpoint;
 out mat4 fragview;
@@ -9,7 +15,7 @@ uniform mat4 view;
 uniform mat4 projection;
 
 // grid positions are in xy clipped space
-vec3 gridplane[6] = vec3[6] (
+vec3 gridplane[6] = vec3[] (
     vec3( 1,  1, 0),
     vec3(-1, -1, 0), 
     vec3(-1,  1, 0),

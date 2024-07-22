@@ -165,7 +165,6 @@ public:
 	float getGridLineInterval();
 
 	gGrid* getGrid() const;
-	void setGrid(gGrid* grid);
 
 	void setColor(int r, int g, int b, int a = 255);
 	void setColor(float r, float g, float b, float a = 1.0f);

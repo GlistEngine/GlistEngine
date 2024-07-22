@@ -1263,7 +1263,3 @@ bool gRenderer::isGridXZEnabled() {
 gGrid* gRenderer::getGrid() const {
 	return grid;
 }
-
-void gRenderer::setGrid(gGrid* grid) {
-	this->grid = grid;
-}

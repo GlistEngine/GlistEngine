@@ -1,4 +1,9 @@
+#if GLES
+#version 300 es
+precision highp float;
+#else
 #version 330 core
+#endif
 
 in vec3 nearpoint;
 in vec3 farpoint;
@@ -12,7 +17,7 @@ in mat4 fragprojection;
 out vec4 outColor;
 
 // draw grid lines
-// TODO enable / disable axis color
+// todo enable / disable axis color
 vec4 grid(vec3 fragpos, float linespacing, bool drawaxis) {
     vec2 coord = fragpos.xz * linespacing; // setting the distance between the lines
     
