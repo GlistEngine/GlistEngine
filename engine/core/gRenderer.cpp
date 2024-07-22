@@ -374,7 +374,9 @@ void gRenderer::init() {
 
 	gridshader = new gShader();
 	gridshader->loadProgram(getShaderSrcGridVertex(), getShaderSrcGridFragment());
-	grid = new gGrid();
+	originalgrid = new gGrid();
+	grid = originalgrid;
+	isdevelopergrid = false;
 }
 
 gRenderer::~gRenderer() {
@@ -393,7 +395,7 @@ gRenderer::~gRenderer() {
 	delete rendercolor;
 	delete lightsubo;
 	delete gridshader;
-	delete grid;
+	if(!isdevelopergrid) delete originalgrid;
 }
 
 gShader* gRenderer::getColorShader() {
@@ -1262,4 +1264,13 @@ bool gRenderer::isGridXZEnabled() {
 
 gGrid* gRenderer::getGrid() const {
 	return grid;
+}
+
+// if its the dev's grid let them manage its lifetime and disable the renderer's instance
+void gRenderer::setGrid(gGrid* newgrid) {
+	if(!isdevelopergrid){
+		delete originalgrid;
+		isdevelopergrid = true;
+	}
+	grid = newgrid;
 }

@@ -165,6 +165,7 @@ public:
 	float getGridLineInterval();
 
 	gGrid* getGrid() const;
+	void setGrid(gGrid* newgrid);
 
 	void setColor(int r, int g, int b, int a = 255);
 	void setColor(float r, float g, float b, float a = 1.0f);
@@ -359,6 +360,8 @@ private:
 	gCamera* camera;
 
 	gGrid* grid;
+	gGrid* originalgrid;
+	bool isdevelopergrid;
 
 	void init();
 
