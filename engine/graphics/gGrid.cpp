@@ -32,16 +32,16 @@ gGrid::gGrid() {
 	isgridxyenabled = true;
 	isgridyzenabled = true;
 	isgridxzenabled = true;
-	isaxisxyenabled = true;
-	isaxisyzenabled = true;
-	isaxisxzenabled = true;
+	isaxisxenabled = true;
+	isaxisyenabled = true;
+	isaxiszenabled = true;
 	iswireframexyenabled = true;
 	iswireframeyzenabled = true;
 	iswireframexzenabled = true;
 
-	coloraxisxy.set(  0,200,  0,175); //0, 200, 0, 175
-	coloraxisyz.set(100,100,200,175); //100, 100, 200, 175
-	coloraxisxz.set(200,  0,  0,175);
+	coloraxisx.set(  0,200,  0,175); //0, 200, 0, 175
+	coloraxisy.set(100,100,200,175); //100, 100, 200, 175
+	coloraxisz.set(200,  0,  0,175);
 	colorwireframexy.set(150, 30, 30,100); //150, 30, 30, 100
 	colorwireframeyz.set(150, 30, 30,100);
 	colorwireframexz.set( 30,150, 30,100);
@@ -61,52 +61,74 @@ void gGrid::drawStart() {
 	//grid options not implemented in the shader yet
 	//main settings
 	//	near and far clip setting
-	if(isautoclipenabled){
+	if(isautoclipenabled && renderer->getCamera() != nullptr){
 		camera = renderer->getCamera();
 		nearclip = camera->getNearClip();
 		farclip = camera->getFarClip();
 	}
 	// spacing setting
+	// shader->setFloat("scale",something) not implemented yet
 
-	//xy grid settings
+	//xy grid
 	if(isgridxyenabled)
 	{
-		if(!isaxisxyenabled){
+		vbo.bind();
+		gridshader = renderer->getGridShader();
+		gridshader->use();
+
+		if(!isaxisxenabled){
+		}
+		if(!isaxisyenabled){
 		}
 		if(!iswireframexyenabled){
 		}
+
+		vbo.unbind();
 	}
-	//yz grid settings
+	//yz grid
 	if(isgridyzenabled)
 	{
-		if(!isaxisyzenabled){
+		vbo.bind();
+		gridshader = renderer->getGridShader();
+		gridshader->use();
+
+		if(!isaxisyenabled){
+		}
+		if(!isaxiszenabled){
 		}
 		if(!iswireframeyzenabled){
 		}
+
+		vbo.unbind();
 	}
-	//xz grid settings
+	//xz grid
 	if(isgridxzenabled)
 	{
-		if(!isaxisxzenabled){
+		vbo.bind();
+		gridshader = renderer->getGridShader();
+		gridshader->use();
+
+		if(!isaxisxenabled){
+		}
+		if(!isaxiszenabled){
 		}
 		if(!iswireframexzenabled){
 		}
-	}
 
-	vbo.bind();
-	gridshader = renderer->getGridShader();
-	gridshader->use();
-	gridshader->setMat4("view",renderer->getViewMatrix());
-	gridshader->setMat4("projection",renderer->getProjectionMatrix());
-	gridshader->setFloat("near",nearclip);
-	gridshader->setFloat("far",farclip);
-	vbo.unbind();
+		gridshader->setMat4("view",renderer->getViewMatrix());
+		gridshader->setMat4("projection",renderer->getProjectionMatrix());
+		gridshader->setFloat("near",nearclip);
+		gridshader->setFloat("far",farclip);
+		vbo.unbind();
+	}
 }
 
 void gGrid::drawVbo() {
-    vbo.bind();
-	G_CHECK_GL(glDrawArrays(GL_TRIANGLES, 0, vbo.getVerticesNum()));
-    vbo.unbind();
+	if(isgridxyenabled || isgridyzenabled || isgridxzenabled){
+		vbo.bind();
+		G_CHECK_GL(glDrawArrays(GL_TRIANGLES, 0, vbo.getVerticesNum()));
+		vbo.unbind();
+	}
 }
 
 void gGrid::drawEnd() {
@@ -125,32 +147,44 @@ void gGrid::draw() {
 }
 
 void gGrid::drawYZ() {
-	bool oldgridstates[3];
+	bool oldgridstates[3], oldenablestate;
 	oldgridstates[XY] = isgridxyenabled;
 	oldgridstates[YZ] = isgridyzenabled;
 	oldgridstates[XZ] = isgridxzenabled;
+	oldenablestate = isenabled;
+	enable();
 	setEnableGrid(false, true, false);
 	draw();
+	disable();
+	isenabled =	oldenablestate;
 	setEnableGrid(oldgridstates[XY], oldgridstates[YZ], oldgridstates[XZ]);
 }
 
 void gGrid::drawXY() {
-	bool oldgridstates[3];
+	bool oldgridstates[3], oldenablestate;
 	oldgridstates[XY] = isgridxyenabled;
 	oldgridstates[YZ] = isgridyzenabled;
 	oldgridstates[XZ] = isgridxzenabled;
+	oldenablestate = isenabled;
+	enable();
 	setEnableGrid(true, false, false);
 	draw();
+	disable();
+	isenabled =	oldenablestate;
 	setEnableGrid(oldgridstates[XY], oldgridstates[YZ], oldgridstates[XZ]);
 }
 
 void gGrid::drawXZ() {
-	bool oldgridstates[3];
+	bool oldgridstates[3], oldenablestate;
 	oldgridstates[XY] = isgridxyenabled;
 	oldgridstates[YZ] = isgridyzenabled;
 	oldgridstates[XZ] = isgridxzenabled;
+	oldenablestate = isenabled;
+	enable();
 	setEnableGrid(false, false, true);
 	draw();
+	disable();
+	isenabled =	oldenablestate;
 	setEnableGrid(oldgridstates[XY], oldgridstates[YZ], oldgridstates[XZ]);
 }
 
@@ -191,130 +225,109 @@ bool gGrid::isXZEnabled() const {
 	return isgridxzenabled;
 }
 
-void gGrid::drawAxisYZ() {
-	bool oldgridstates[3], oldaxisstate, oldwireframestate;
-	oldgridstates[XY] = isgridxyenabled;
-	oldgridstates[YZ] = isgridyzenabled;
-	oldgridstates[XZ] = isgridxzenabled;
-	setEnableGrid(false, true, false);
-	oldaxisstate = isaxisyzenabled;
+void gGrid::drawAxisY() {
+	bool oldaxisstate, oldwireframestate;
+	oldaxisstate = isaxisyenabled;
 	oldwireframestate = iswireframeyzenabled;
-	setEnableAxisYZ(true);
+	setEnableAxisY(true);
 	setEnableWireFrameYZ(false);
-	draw();
+	drawYZ();
 	setEnableWireFrameYZ(oldwireframestate);
-	setEnableAxisYZ(oldaxisstate);
-	setEnableGrid(oldgridstates[XY], oldgridstates[YZ], oldgridstates[XZ]);
+	setEnableAxisY(oldaxisstate);
 }
 
-void gGrid::drawAxisXY() {
-	bool oldgridstates[3], oldaxisstate, oldwireframestate;
-	oldgridstates[XY] = isgridxyenabled;
-	oldgridstates[YZ] = isgridyzenabled;
-	oldgridstates[XZ] = isgridxzenabled;
-	setEnableGrid(true, false, false);
-	oldaxisstate = isaxisxyenabled;
+void gGrid::drawAxisX() {
+	bool oldaxisstate, oldwireframestate;
+	oldaxisstate = isaxisxenabled;
 	oldwireframestate = iswireframexyenabled;
-	setEnableAxisXY(true);
+	setEnableAxisX(true);
 	setEnableWireFrameXY(false);
-	draw();
+	drawXY();
 	setEnableWireFrameXY(oldwireframestate);
-	setEnableAxisXY(oldaxisstate);
-	setEnableGrid(oldgridstates[XY], oldgridstates[YZ], oldgridstates[XZ]);
+	setEnableAxisX(oldaxisstate);
 }
 
-void gGrid::drawAxisXZ() {
-	bool oldgridstates[3], oldaxisstate, oldwireframestate;
-	oldgridstates[XY] = isgridxyenabled;
-	oldgridstates[YZ] = isgridyzenabled;
-	oldgridstates[XZ] = isgridxzenabled;
-	setEnableGrid(false, false, true);
-	oldaxisstate = isaxisxzenabled;
+void gGrid::drawAxisZ() {
+	bool oldaxisstate, oldwireframestate;
+	oldaxisstate = isaxiszenabled;
 	oldwireframestate = iswireframexzenabled;
-	setEnableAxisXZ(true);
+	setEnableAxisZ(true);
 	setEnableWireFrameXZ(false);
-	draw();
+	drawXZ();
 	setEnableWireFrameXZ(oldwireframestate);
-	setEnableAxisXZ(oldaxisstate);
-	setEnableGrid(oldgridstates[XY], oldgridstates[YZ], oldgridstates[XZ]);
+	setEnableAxisZ(oldaxisstate);
 }
 
-void gGrid::setEnableAxis(bool xy, bool yz, bool xz) {
-	isaxisxyenabled = xy;
-	isaxisyzenabled = yz;
-	isaxisxzenabled = xz;
+void gGrid::setEnableAxis(bool x, bool y, bool z) {
+	isaxisxenabled = x;
+	isaxisyenabled = y;
+	isaxiszenabled = z;
 }
 
-void gGrid::setEnableAxisYZ(bool yz) {
-	isaxisyzenabled = yz;
+void gGrid::setEnableAxisY(bool y) {
+	isaxisyenabled = y;
 }
 
-void gGrid::setEnableAxisXY(bool xy) {
-	isaxisxyenabled = xy;
+void gGrid::setEnableAxisX(bool x) {
+	isaxisxenabled = x;
 }
 
-void gGrid::setEnableAxisXZ(bool xz) {
-	isaxisxzenabled = xz;
+void gGrid::setEnableAxisZ(bool z) {
+	isaxiszenabled = z;
 }
 
-bool gGrid::isAxisYZEnabled() const {
-	return isaxisyzenabled;
+bool gGrid::isAxisYEnabled() const {
+	return isaxisyenabled;
 }
 
-bool gGrid::isAxisXYEnabled() const {
-	return isaxisxyenabled;
+bool gGrid::isAxisXEnabled() const {
+	return isaxisxenabled;
 }
 
-bool gGrid::isAxisXZEnabled() const {
-	return isaxisxzenabled;
+bool gGrid::isAxisZEnabled() const {
+	return isaxiszenabled;
 }
 
 void gGrid::drawWireFrameYZ() {
-	bool oldgridstates[3], oldaxisstate, oldwireframestate;
-	oldgridstates[XY] = isgridxyenabled;
-	oldgridstates[YZ] = isgridyzenabled;
-	oldgridstates[XZ] = isgridxzenabled;
-	setEnableGrid(false, true, false);
-	oldaxisstate = isaxisyzenabled;
+	bool oldaxisstates[2], oldwireframestate;
+	oldaxisstates[0] = isaxisyenabled;
+	oldaxisstates[1] = isaxiszenabled;
 	oldwireframestate = iswireframeyzenabled;
-	setEnableAxisYZ(false);
+	setEnableAxisY(false);
+	setEnableAxisZ(false);
 	setEnableWireFrameYZ(true);
-	draw();
+	drawYZ();
 	setEnableWireFrameYZ(oldwireframestate);
-	setEnableAxisYZ(oldaxisstate);
-	setEnableGrid(oldgridstates[XY], oldgridstates[YZ], oldgridstates[XZ]);
+	setEnableAxisY(oldaxisstates[0]);
+	setEnableAxisZ(oldaxisstates[1]);
 }
 
 void gGrid::drawWireFrameXY() {
-	bool oldgridstates[3], oldaxisstate, oldwireframestate;
-	oldgridstates[XY] = isgridxyenabled;
-	oldgridstates[YZ] = isgridyzenabled;
-	oldgridstates[XZ] = isgridxzenabled;
-	setEnableGrid(true, false, false);
-	oldaxisstate = isaxisxyenabled;
+	bool oldaxisstates[2], oldwireframestate;
+	oldaxisstates[0] = isaxisxenabled;
+	oldaxisstates[1] = isaxisyenabled;
 	oldwireframestate = iswireframexyenabled;
-	setEnableAxisXY(false);
+	setEnableAxisX(false);
+	setEnableAxisY(false);
 	setEnableWireFrameXY(true);
-	draw();
+	drawXY();
 	setEnableWireFrameXY(oldwireframestate);
-	setEnableAxisXY(oldaxisstate);
-	setEnableGrid(oldgridstates[XY], oldgridstates[YZ], oldgridstates[XZ]);
+	setEnableAxisX(oldaxisstates[0]);
+	setEnableAxisY(oldaxisstates[1]);
 }
 
 void gGrid::drawWireFrameXZ() {
-	bool oldgridstates[3], oldaxisstate, oldwireframestate;
-	oldgridstates[XY] = isgridxyenabled;
-	oldgridstates[YZ] = isgridyzenabled;
-	oldgridstates[XZ] = isgridxzenabled;
-	setEnableGrid(false, false, true);
-	oldaxisstate = isaxisxzenabled;
+	bool oldaxisstates[2], oldwireframestate;
+	oldaxisstates[0] = isaxisxenabled;
+	oldaxisstates[1] = isaxiszenabled;
 	oldwireframestate = iswireframexzenabled;
-	setEnableAxisXZ(false);
+	setEnableAxisX(false);
+	setEnableAxisZ(false);
 	setEnableWireFrameXZ(true);
-	draw();
+	drawXZ();
 	setEnableWireFrameXZ(oldwireframestate);
-	setEnableAxisXZ(oldaxisstate);
-	setEnableGrid(oldgridstates[XY], oldgridstates[YZ], oldgridstates[XZ]);
+	setEnableAxisX(oldaxisstates[0]);
+	setEnableAxisZ(oldaxisstates[1]);
 }
 
 void gGrid::setEnableWireFrame(bool xy, bool yz, bool xz) {
@@ -347,49 +360,49 @@ bool gGrid::isWireFrameXZEnabled() const {
 	return iswireframexzenabled;
 }
 
-void gGrid::setColorAxisYZ(int r, int g, int b, int a) {
+void gGrid::setColorAxisY(int r, int g, int b, int a) {
 	if(r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255 || a < 0 || a > 255)return;
-	coloraxisyz.r = r;
-	coloraxisyz.g = g;
-	coloraxisyz.b = b;
-	coloraxisyz.a = a;
+	coloraxisy.r = r;
+	coloraxisy.g = g;
+	coloraxisy.b = b;
+	coloraxisy.a = a;
 }
-void gGrid::setColorAxisYZ(gColor *color) {
+void gGrid::setColorAxisY(gColor *color) {
 	if(color->r < 0 || color->r > 255 || color->g < 0 || color->g > 255 || color->b < 0 || color->b > 255 || color->a < 0 || color->a > 255)return;
-	coloraxisyz.r = color->r;
-	coloraxisyz.g = color->g;
-	coloraxisyz.b = color->b;
-	coloraxisyz.a = color->a;
+	coloraxisy.r = color->r;
+	coloraxisy.g = color->g;
+	coloraxisy.b = color->b;
+	coloraxisy.a = color->a;
 }
 
-void gGrid::setColorAxisXY(int r, int g, int b, int a) {
+void gGrid::setColorAxisX(int r, int g, int b, int a) {
 	if(r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255 || a < 0 || a > 255)return;
-	coloraxisxy.r = r;
-	coloraxisxy.g = g;
-	coloraxisxy.b = b;
-	coloraxisxy.a = a;
+	coloraxisx.r = r;
+	coloraxisx.g = g;
+	coloraxisx.b = b;
+	coloraxisx.a = a;
 }
-void gGrid::setColorAxisXY(gColor *color) {
+void gGrid::setColorAxisX(gColor *color) {
 	if(color->r < 0 || color->r > 255 || color->g < 0 || color->g > 255 || color->b < 0 || color->b > 255 || color->a < 0 || color->a > 255)return;
-	coloraxisxy.r = color->r;
-	coloraxisxy.g = color->g;
-	coloraxisxy.b = color->b;
-	coloraxisxy.a = color->a;
+	coloraxisx.r = color->r;
+	coloraxisx.g = color->g;
+	coloraxisx.b = color->b;
+	coloraxisx.a = color->a;
 }
 
-void gGrid::setColorAxisXZ(int r, int g, int b, int a) {
+void gGrid::setColorAxisZ(int r, int g, int b, int a) {
 	if(r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255 || a < 0 || a > 255)return;
-	coloraxisxz.r = r;
-	coloraxisxz.g = g;
-	coloraxisxz.b = b;
-	coloraxisxz.a = a;
+	coloraxisz.r = r;
+	coloraxisz.g = g;
+	coloraxisz.b = b;
+	coloraxisz.a = a;
 }
-void gGrid::setColorAxisXZ(gColor *color) {
+void gGrid::setColorAxisZ(gColor *color) {
 	if(color->r < 0 || color->r > 255 || color->g < 0 || color->g > 255 || color->b < 0 || color->b > 255 || color->a < 0 || color->a > 255)return;
-	coloraxisxz.r = color->r;
-	coloraxisxz.g = color->g;
-	coloraxisxz.b = color->b;
-	coloraxisxz.a = color->a;
+	coloraxisz.r = color->r;
+	coloraxisz.g = color->g;
+	coloraxisz.b = color->b;
+	coloraxisz.a = color->a;
 }
 
 void gGrid::setColorWireFrameYZ(int r, int g, int b, int a) {
@@ -450,12 +463,20 @@ bool gGrid::isAutoClipEnabled() const {
 	return isautoclipenabled;
 }
 
-void gGrid::setNearClip(float near) {
-	nearclip = near;
+void gGrid::setNearClip(float nearClip) {
+	nearclip = glm::clamp(nearClip, 0.001f, 0.999f);
 }
 
-void gGrid::setFarClip(float far) {
-	farclip = far;
+void gGrid::setFarClip(float farClip) {
+	farclip = glm::clamp(farClip, 1.0f, 10000.0f);
+}
+
+float gGrid::getNearClip() const {
+	return nearclip;
+}
+
+float gGrid::getFarClip() const {
+	return farclip;
 }
 
 void gGrid::setLineSpacing(float spacing) {
@@ -465,4 +486,3 @@ void gGrid::setLineSpacing(float spacing) {
 float gGrid::getLineSpacing() {
 	return spacing;
 }
-

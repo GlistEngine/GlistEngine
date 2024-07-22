@@ -38,17 +38,17 @@ public:
 	bool isXYEnabled() const;
 	bool isXZEnabled() const;
 
-	void drawAxisYZ();
-	void drawAxisXY();
-	void drawAxisXZ();
+	void drawAxisX();
+	void drawAxisY();
+	void drawAxisZ();
 
-	void setEnableAxis(bool xy, bool yz, bool xz);
-	void setEnableAxisYZ(bool yz);
-	void setEnableAxisXY(bool xy);
-	void setEnableAxisXZ(bool xz);
-	bool isAxisYZEnabled() const;
-	bool isAxisXYEnabled() const;
-	bool isAxisXZEnabled() const;
+	void setEnableAxis(bool x, bool y, bool z);
+	void setEnableAxisX(bool x);
+	void setEnableAxisY(bool y);
+	void setEnableAxisZ(bool z);
+	bool isAxisXEnabled() const;
+	bool isAxisYEnabled() const;
+	bool isAxisZEnabled() const;
 
 	void drawWireFrameYZ();
 	void drawWireFrameXY();
@@ -62,12 +62,12 @@ public:
 	bool isWireFrameXYEnabled() const;
 	bool isWireFrameXZEnabled() const;
 
-	void setColorAxisYZ(int r, int g, int b, int a);
-	void setColorAxisXY(int r, int g, int b, int a);
-	void setColorAxisXZ(int r, int g, int b, int a);
-	void setColorAxisYZ(gColor* color);
-	void setColorAxisXY(gColor* color);
-	void setColorAxisXZ(gColor* color);
+	void setColorAxisX(int r, int g, int b, int a);
+	void setColorAxisY(int r, int g, int b, int a);
+	void setColorAxisZ(int r, int g, int b, int a);
+	void setColorAxisX(gColor* color);
+	void setColorAxisY(gColor* color);
+	void setColorAxisZ(gColor* color);
 
 	void setColorWireFrameYZ(int r, int g, int b, int a);
 	void setColorWireFrameXY(int r, int g, int b, int a);
@@ -82,6 +82,9 @@ public:
 
 	void setNearClip(float near);
 	void setFarClip(float far);
+
+	float getNearClip() const;
+	float getFarClip() const;
 
 	void setLineSpacing(float spacing);
 	float getLineSpacing();
@@ -105,16 +108,16 @@ private:
 	bool isgridxyenabled;
 	bool isgridyzenabled;
 	bool isgridxzenabled;
-	bool isaxisxyenabled;
-	bool isaxisyzenabled;
-	bool isaxisxzenabled;
+	bool isaxisxenabled;
+	bool isaxisyenabled;
+	bool isaxiszenabled;
 	bool iswireframexyenabled;
 	bool iswireframeyzenabled;
 	bool iswireframexzenabled;
 
-	gColor coloraxisxy;
-	gColor coloraxisyz;
-	gColor coloraxisxz;
+	gColor coloraxisx;
+	gColor coloraxisy;
+	gColor coloraxisz;
 	gColor colorwireframexy;
 	gColor colorwireframeyz;
 	gColor colorwireframexz;

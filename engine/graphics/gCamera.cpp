@@ -48,6 +48,7 @@ void gCamera::begin() {
 	renderer->setViewMatrix(glm::inverse(locallookmatrix));
 	renderer->setCameraPosition(position);
 	renderer->setCamera(this);
+	if(renderer->isGridEnabled()) renderer->drawGrid();
 
 	const float halfVSide = farclip * tanf(fovY * 0.5f);
 	const float halfHSide = halfVSide * aspect;

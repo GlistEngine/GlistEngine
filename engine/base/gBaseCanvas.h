@@ -90,6 +90,28 @@ protected:
 	void enableAlphaTest();
 	void disableAlphaTest();
 
+	void enableGrid();
+	void disableGrid();
+	void setGridEnableAxis(bool xy, bool yz, bool xz);
+	void setGridEnableXY(bool xy), setGridEnableYZ(bool yz), setGridEnableXZ(bool xz);
+	void setGridMaxLength(float length);
+	float getGridMaxLength();
+	void setGridLineInterval(float intervalvalue);
+	float getGridLineInterval();
+	void setGridColorofAxisXZ(int r, int g, int b, int a);
+	void setGridColorofAxisYZ(int r, int g, int b, int a);
+	void setGridColorofAxisXY(int r, int g, int b, int a);
+	void setGridColorofAxisXZ(gColor* color);
+	void setGridColorofAxisYZ(gColor* color);
+	void setGridColorofAxisXY(gColor* color);
+	void setGridColorofAxisWireFrameXZ(int r, int g, int b, int a);
+	void setGridColorofAxisWireFrameYZ(int r, int g, int b, int a);
+	void setGridColorofAxisWireFrameXY(int r, int g, int b, int a);
+	void setGridColorofAxisWireFrameXZ(gColor* color);
+	void setGridColorofAxisWireFrameYZ(gColor* color);
+	void setGridColorofAxisWireFrameXY(gColor* color);
+	bool isGridEnabled(), isGridXYEnabled(), isGridYZEnabled(), isGridXZEnabled();
+
 	bool isJoystickConnected(int joystickId);
 	bool isGamepadButtonPressed(int joystickId, int buttonId);
 };

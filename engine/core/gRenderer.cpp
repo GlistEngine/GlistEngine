@@ -277,13 +277,6 @@ void gDrawTubeObliqueTrapezodial(float x, float y, float z, int topouterradius,
 	tubemesh.clear();
 }
 
-void gDrawGrid(){
-	static gGrid grid;
-	grid.enable();
-	grid.draw();
-	grid.clear();
-}
-
 gRenderer::gRenderer() {
 }
 
@@ -301,6 +294,7 @@ void gRenderer::init() {
 	viewmatrix = glm::mat4(1.0f);
 	viewmatrixold = viewmatrix;
 	cameraposition = glm::vec3(0.0f);
+	camera = nullptr;
 
 	// This changes pack and unpack alignments
 	// Fixes alignment issues with 3 channel images
@@ -380,6 +374,7 @@ void gRenderer::init() {
 
 	gridshader = new gShader();
 	gridshader->loadProgram(getShaderSrcGridVertex(), getShaderSrcGridFragment());
+	grid = new gGrid();
 }
 
 gRenderer::~gRenderer() {
@@ -398,6 +393,7 @@ gRenderer::~gRenderer() {
 	delete rendercolor;
 	delete lightsubo;
 	delete gridshader;
+	delete grid;
 }
 
 gShader* gRenderer::getColorShader() {
@@ -447,6 +443,7 @@ gShader* gRenderer::getBrdfShader() {
 gShader* gRenderer::getFboShader() {
 	return fboshader;
 }
+
 gShader* gRenderer::getGridShader() {
 	return gridshader;
 }
@@ -486,7 +483,6 @@ const glm::mat4& gRenderer::getViewMatrix() const {
 const glm::vec3& gRenderer::getCameraPosition() const {
 	return cameraposition;
 }
-
 
 const gCamera* gRenderer::getCamera() const {
 	return camera;
@@ -2432,6 +2428,159 @@ void gRenderer::setSSAOBias(float value) {
 
 float gRenderer::getSSAOBias() {
 	return ssaobias;
+}
+
+//grid
+void gRenderer::drawGrid() {
+	if(grid != nullptr) grid->draw();
+}
+
+void gRenderer::drawGridYZ() {
+	if(grid != nullptr) grid->drawYZ();
+}
+
+void gRenderer::drawGridXY() {
+	if(grid != nullptr) grid->drawXY();
+}
+
+void gRenderer::drawGridXZ() {
+	if(grid != nullptr) grid->drawXZ();
+}
+
+void gRenderer::enableGrid() {
+	if(grid != nullptr) grid->enable();
+}
+
+void gRenderer::disableGrid() {
+	if(grid != nullptr) grid->disable();
+}
+
+bool gRenderer::isGridEnabled() {
+	if(grid != nullptr)  return grid->isEnabled();
+	return false;
+}
+
+void gRenderer::setGridEnableAxis(bool xy, bool yz, bool xz) {
+	if(grid != nullptr) {
+		grid->setEnableAxisX(xy);
+		grid->setEnableAxisY(xy);
+
+		grid->setEnableAxisY(yz);
+		grid->setEnableAxisZ(yz);
+
+		grid->setEnableAxisX(xz);
+		grid->setEnableAxisZ(xz);
+	}
+}
+
+void gRenderer::setGridMaxLength(float length) {
+	if(grid != nullptr) grid->setFarClip(length);
+}
+
+float gRenderer::getGridMaxLength() {
+	if(grid != nullptr) return grid->getFarClip();
+}
+
+void gRenderer::setGridLineInterval(float intervalvalue) {
+	if(grid != nullptr) return;
+}
+
+float gRenderer::getGridLineInterval() {
+	if(grid != nullptr) return grid->getLineSpacing();
+	return 1.0f;
+}
+
+void gRenderer::setGridColorofAxisXZ(int r, int g, int b, int a) {
+	if(grid != nullptr) {
+		grid->setColorAxisX(r,g,b,a);
+		grid->setColorAxisZ(r,g,b,a);
+	}
+}
+
+void gRenderer::setGridColorofAxisYZ(int r, int g, int b, int a) {
+	if(grid != nullptr) {
+		grid->setColorAxisY(r,g,b,a);
+		grid->setColorAxisZ(r,g,b,a);
+	}
+}
+
+void gRenderer::setGridColorofAxisXY(int r, int g, int b, int a) {
+	if(grid != nullptr) {
+		grid->setColorAxisX(r,g,b,a);
+		grid->setColorAxisY(r,g,b,a);
+	}
+}
+
+void gRenderer::setGridColorofAxisXZ(gColor *color) {
+	if(grid != nullptr) {
+		grid->setColorAxisX(color);
+		grid->setColorAxisZ(color);
+	}
+}
+
+void gRenderer::setGridColorofAxisYZ(gColor *color) {
+	if(grid != nullptr) {
+		grid->setColorAxisY(color);
+		grid->setColorAxisZ(color);
+	}
+}
+
+void gRenderer::setGridColorofAxisXY(gColor *color) {
+	if(grid != nullptr) {
+		grid->setColorAxisX(color);
+		grid->setColorAxisY(color);
+	}
+}
+
+void gRenderer::setGridColorofAxisWireFrameXZ(int r, int g, int b, int a) {
+	if(grid != nullptr) grid->setColorWireFrameXZ(r, g, b, a);
+}
+
+void gRenderer::setGridColorofAxisWireFrameXY(int r, int g, int b, int a) {
+	if(grid != nullptr) grid->setColorWireFrameXY(r, g, b, a);
+}
+
+void gRenderer::setGridColorofAxisWireFrameYZ(int r, int g, int b, int a) {
+	if(grid != nullptr) grid->setColorWireFrameYZ(r, g, b, a);
+}
+
+void gRenderer::setGridColorofAxisWireFrameXZ(gColor *color) {
+	if(grid != nullptr) grid->setColorWireFrameXZ(color);
+}
+
+void gRenderer::setGridColorofAxisWireFrameYZ(gColor *color) {
+	if(grid != nullptr) grid->setColorWireFrameYZ(color);
+}
+
+void gRenderer::setGridColorofAxisWireFrameXY(gColor *color) {
+	if(grid != nullptr) grid->setColorWireFrameXY(color);
+}
+
+void gRenderer::setGridEnableXY(bool xy) {
+	if(grid != nullptr) grid->setEnableXY(xy);
+}
+
+void gRenderer::setGridEnableYZ(bool yz) {
+	if(grid != nullptr) grid->setEnableYZ(yz);
+}
+
+void gRenderer::setGridEnableXZ(bool xz) {
+	if(grid != nullptr) grid->setEnableXZ(xz);
+}
+
+bool gRenderer::isGridXYEnabled() {
+	if(grid != nullptr) return grid->isXYEnabled();
+	return false;
+}
+
+bool gRenderer::isGridYZEnabled() {
+	if(grid != nullptr) return grid->isYZEnabled();
+	return false;
+}
+
+bool gRenderer::isGridXZEnabled() {
+	if(grid != nullptr) return grid->isXZEnabled();
+	return false;
 }
 
 #undef STRINGIFY
