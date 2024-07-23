@@ -1272,5 +1272,8 @@ void gRenderer::setGrid(gGrid* newgrid) {
 		delete originalgrid;
 		isdevelopergrid = true;
 	}
+	grid->disable();
 	grid = newgrid;
+	grid->enable();
+
 }
