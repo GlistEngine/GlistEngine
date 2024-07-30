@@ -9,6 +9,7 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
+#include <array>
 #include "gShader.h"
 #include "gRenderer.h"
 
@@ -274,7 +275,9 @@ std::string gShader::preprocessShader(const std::string& shaderCode, std::unorde
 			std::array<std::string, 2> split = splitString(text);
 			defines[split[0]] = split[1];
 		} else {
-			for (auto& [from, to] : defines) {
+			for (auto& entry : defines) {
+				auto& from = entry.first;
+				auto& to = entry.second;
 				line = gReplaceAll(line, from, to);
 			}
 			buffer << line << '\n';
