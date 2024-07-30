@@ -1163,8 +1163,12 @@ void gRenderer::updateLights() {
 		lightingposition = scenelights[lastindex]->getPosition();
 	}
 	if (ischanged) {
-		lightsubo->update(0, offsetof(gSceneLights, lights[data->lightnum]) + sizeof(gSceneLightData));
-	} else if (previouslightnum != data->lightnum) {
+		lightsubo->update(0, offsetof(gSceneLights, lights) + (sizeof(gSceneLightData) * data->lightnum) + sizeof(gSceneLightData));
+		isglobalambientcolorchanged = false; // we updated this
+		return;  // here we already updated lightnum, enabledlights and globalambientcolor, no need to go further and do it twice.
+	}
+
+	if (previouslightnum != data->lightnum) {
 		lightsubo->update(0, sizeof(gSceneLights::lightnum));
 	}
 	if (isenabledchanged) {
