@@ -356,7 +356,7 @@ std::vector<std::string> gSplitString(const std::string& textToSplit, const std:
 	return tokens;
 }
 
-std::string gReplaceAll(std::string& source, const std::string& from, const std::string& to) {
+std::string gReplaceAll(const std::string& source, const std::string& from, const std::string& to) {
     std::string newstring;
     newstring.reserve(source.length());
     int fl = from.length();
