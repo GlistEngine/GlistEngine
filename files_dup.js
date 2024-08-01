@@ -44,6 +44,7 @@ var files_dup =
     [ "gGLFWWindow.h", "gGLFWWindow_8h_source.html", null ],
     [ "gGrain.h", "gGrain_8h_source.html", null ],
     [ "gGrayscale.h", "gGrayscale_8h_source.html", null ],
+    [ "gGrid.h", "gGrid_8h_source.html", null ],
     [ "gGUIActionManager.h", "gGUIActionManager_8h_source.html", null ],
     [ "gGUIBitmap.h", "gGUIBitmap_8h_source.html", null ],
     [ "gGUIButton.h", "gGUIButton_8h_source.html", null ],
