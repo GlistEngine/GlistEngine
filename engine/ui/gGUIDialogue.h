@@ -34,19 +34,21 @@ class gGUIDialogue: public gGUIForm {
 public:
 	static const int EVENT_NONE = 0, EVENT_MINIMIZE = 1, EVENT_MAXIMIZE = 2, EVENT_RESTORE = 3, EVENT_EXIT = 4;
 	static const int RESIZE_NONE = 0, RESIZE_LEFT = 1, RESIZE_RIGHT = 2, RESIZE_TOP = 3, RESIZE_BOTTOM = 4;
-	enum {
+	enum DialogueType {
 		DIALOGUETYPE_OK,
 		DIALOGUETYPE_YESNOCANCEL,
 		DIALOGUETYPE_OKCANCEL,
-		DIALOGUETYPE_YESNO
+		DIALOGUETYPE_YESNO,
+		DIALOGUETYPE_NO_BUTTONS
 	};
-	enum {
+	enum TitleType {
 		TITLETYPE_EXITMINMAX,
 		TITLETYPE_EXITMAX,
 		TITLETYPE_EXITMIN,
-		TITLETYPE_EXIT
+		TITLETYPE_EXIT,
+		TITLETYPE_NO_BUTTONS
 	};
-	enum {
+	enum IconType {
 		ICONTYPE_NONE,
 		ICONTYPE_ERROR,
 		ICONTYPE_INFO,
@@ -86,9 +88,9 @@ public:
 
 	void setMessageText(std::string messageText);
 	std::string getMessageText();
-	void setIconType(int iconId);
-	void setDialogueType(int typeId);
-	void setTitleType(int typeId);
+	void setIconType(IconType iconId);
+	void setDialogueType(DialogueType typeId);
+	void setTitleType(TitleType typeId);
 
 	int getCursor(int x, int y);
 	void keyPressed(int key);
@@ -108,6 +110,22 @@ public:
 	gGUIButton* getCancelButton();
 	gGUIButton* getYesButton();
 	gGUIButton* getNoButton();
+
+	void setCallbackOK(gGUIButton::ClickCallback fn) {
+		buttonsbarokbutton.setClickCallback(fn);
+	}
+
+	void setCallbackCancel(gGUIButton::ClickCallback fn) {
+		buttonsbarcancelbutton.setClickCallback(fn);
+	}
+
+	void setCallbackYes(gGUIButton::ClickCallback fn) {
+		buttonsbaryesbutton.setClickCallback(fn);
+	}
+
+	void setCallbackNo(gGUIButton::ClickCallback fn) {
+		buttonsbarnobutton.setClickCallback(fn);
+	}
 
 private:
 	bool isdialogueshown;
