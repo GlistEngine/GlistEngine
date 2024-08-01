@@ -29,6 +29,9 @@ public:
 	void setFov(float f);
 	void setNearClip(float nearClip);
     void setFarClip(float farClip);
+    float getNearClip() const {return nearclip;} // needed for grid
+    float getFarClip() const {return farclip;} // needed for grid
+    float getFov() const {return fov;}
 
 	void move(float dx, float dy, float dz);
 	void move(const glm::vec3 dv);
