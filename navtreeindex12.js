@@ -1,5 +1,6 @@
 var NAVTREEINDEX12 =
 {
+"gGUIControl_8h_source.html":[1,0,55],
 "gGUIDate_8h_source.html":[1,0,56],
 "gGUIDialogue_8h_source.html":[1,0,57],
 "gGUIDivider_8h_source.html":[1,0,58],

@@ -31,6 +31,7 @@ var classgFile =
     [ "isOpen", "classgFile.html#ae80ada36638daaeeae86c35dd547afe1", null ],
     [ "load", "classgFile.html#adba2c006943d02a2a0dcbb66cc967290", null ],
     [ "loadFile", "classgFile.html#a52b73ee9d4934012344616d2805292d7", null ],
+    [ "write", "classgFile.html#a5cab282d2823f5da3ee826c4eb2aaed9", null ],
     [ "write", "classgFile.html#a09cd0e8b06925e4b8c4881bc2352ecc3", null ],
     [ "write", "classgFile.html#a0e044a78038df3762ae2d7649ff1575a", null ]
 ];
