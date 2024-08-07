@@ -416,7 +416,8 @@ void gAppManager::tick() {
         gBasePlugin::usedplugins[i]->update();
     }
 
-    gBaseCanvas* canvas = canvasmanager->getCurrentCanvas();
+    gBaseCanvas* canvas = nullptr;
+    if(canvasmanager) canvas = canvasmanager->getCurrentCanvas();
     if(canvas) {
         canvas->update();
     }
