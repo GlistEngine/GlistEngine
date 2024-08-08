@@ -68,7 +68,7 @@ gAppManager::gAppManager(const std::string& appName, gBaseApp *baseApp, int widt
                                                                  windowmode(windowMode), unitwidth(unitWidth), unitheight(unitHeight), screenscaling(screenScaling),
                                                                  isresizable(isResizable), loopmode(loopMode) {
     appmanager = this;
-	if(windowMode != G_WINDOWMODE_NONE) {
+	if(windowMode != G_WINDOWMODE_NONE && windowMode != G_WINDOWMODE_GUIAPP && windowMode != G_WINDOWMODE_FULLSCREENGUIAPP) {
 		canvasmanager = new gCanvasManager();
 	} else {
 		canvasmanager = nullptr;
@@ -184,6 +184,7 @@ void gAppManager::initialize() {
 		// Create managers if not created
 		if(!guimanager) {
 			guimanager = new gGUIManager(app, width, height);
+			guimanager->getCurrentFrame()->getRenderer()->updateLights();
 		}
 	}
     initialized = true;
