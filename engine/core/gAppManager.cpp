@@ -184,6 +184,7 @@ void gAppManager::initialize() {
 		// Create managers if not created
 		if(!guimanager) {
 			guimanager = new gGUIManager(app, width, height);
+			guimanager->getCurrentFrame()->getRenderer()->updateLights();
 		}
 	}
     initialized = true;
