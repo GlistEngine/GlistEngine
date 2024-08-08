@@ -60,11 +60,11 @@ void gGUIToolbarButton::draw() {
 	gColor* oldcolor = renderer->getColor();
 	if(fillbackground) {
 		if(isdisabled) {
-			renderer->setColor(&disabledbcolor);
+			renderer->setColor(toolbarbuttoncolor1);
 		} else if(ispressed) {
 			renderer->setColor(&pressedbcolor);
 		} else {
-			renderer->setColor(&bcolor);
+			renderer->setColor(toolbarbuttoncolor1);
 		}
 	//	renderer->setColor(gColor(0.1f, 0.45f, 0.87f));
 		gDrawRectangle(left, top + ispressed, buttonw, buttonh - 2, true);

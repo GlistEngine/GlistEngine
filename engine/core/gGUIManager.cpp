@@ -262,6 +262,8 @@ void gGUIManager::resetTheme(int guiTheme) {
 	gBaseGUIObject::setButtonFontColor(&themebuttonfontcolor[guitheme]);
 	gBaseGUIObject::setPressedButtonFontColor(&themepressedbuttonfontcolor[guitheme]);
 	gBaseGUIObject::setDisabledButtonFontColor(&themedisabledbuttonfontcolor[guitheme]);
+	gBaseGUIObject::setToolBarButtonColor(&themetoolbarbuttoncolor[guitheme]);
+	gBaseGUIObject::setToolBarBottomLineColor(&themetoolbarbottomlinecolor[guitheme]);
 }
 
 void gGUIManager::loadThemes() {
@@ -334,5 +336,16 @@ void gGUIManager::loadThemes() {
 	themedisabledbuttonfontcolor[GUITHEME_DARK] = gColor(160.0f / 255.0f, 160.0f / 255.0f, 160.0f / 255.0f);
 	themedisabledbuttonfontcolor[GUITHEME_LIGHTBLUE] = gColor(5.0f / 255.0f, 5.0f / 255.0f, 5.0f / 255.0f);
 	themedisabledbuttonfontcolor[GUITHEME_DARKBLUE] = gColor(28.0f / 255.0f, 40.0f / 255.0f, 53.0f / 255.0f);
+
+	themetoolbarbuttoncolor[GUITHEME_LIGHT] = gColor(232.0f / 255.0f, 232.0f / 255.0f, 232.0f / 255.0f);
+	themetoolbarbuttoncolor[GUITHEME_DARK] = gColor(80.0f / 255.0f, 80.0f / 255.0f, 80.0f / 255.0f);
+	themetoolbarbuttoncolor[GUITHEME_LIGHTBLUE] = gColor(220.0f / 255.0f, 255.0f / 255.0f, 255.0f / 255.0f);
+	themetoolbarbuttoncolor[GUITHEME_DARKBLUE] = gColor(84.0f / 255.0f, 120.0f / 255.0f, 159.0f / 255.0f);
+
+	themetoolbarbottomlinecolor[GUITHEME_LIGHT] = gColor(84.0f / 255.0f, 120.0f / 255.0f, 159.0f / 255.0f);
+	themetoolbarbottomlinecolor[GUITHEME_DARK] = gColor(84.0f / 255.0f, 120.0f / 255.0f, 159.0f / 255.0f);
+	themetoolbarbottomlinecolor[GUITHEME_LIGHTBLUE] = gColor(84.0f / 255.0f, 120.0f / 255.0f, 159.0f / 255.0f);
+	themetoolbarbottomlinecolor[GUITHEME_DARKBLUE] = gColor(84.0f / 255.0f, 120.0f / 255.0f, 159.0f / 255.0f);
+
 
 }
