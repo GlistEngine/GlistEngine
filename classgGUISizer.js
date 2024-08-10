@@ -35,7 +35,7 @@ var classgGUISizer =
     [ "setControl", "classgGUISizer.html#a8245b1f5ae3970668709e2b579123603", null ],
     [ "setLineProportions", "classgGUISizer.html#a81a4769ca9b69780a7feec9139591b3e", null ],
     [ "setSize", "classgGUISizer.html#ae0b1a1c77bf9411470937562c5c59344", null ],
-    [ "setSlotPadding", "classgGUISizer.html#afbdf57f77a43e4138af324c1c892f743", null ],
+    [ "setSlotPadding", "classgGUISizer.html#a1f75f00bbeb8e60dfe6eb8ca1401c9d5", null ],
     [ "update", "classgGUISizer.html#a5f077ff3efbf401fa7dae9fab0fbbe09", null ],
     [ "windowResized", "classgGUISizer.html#a8f99b2a44be6584f58c85d0118992806", null ]
 ];
