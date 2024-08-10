@@ -179,8 +179,9 @@ void gGUISizer::setColumnProportions(float* proportions) {
 	}
 }
 
-void gGUISizer::setSlotPadding(int padding) {
+void gGUISizer::setSlotPadding(int padding, int height) {
 	slotpadding = padding;
+	slotheightpadding = height;
 }
 
 void gGUISizer::setControl(int line, int column, gGUIControl* control) {
@@ -267,9 +268,9 @@ void gGUISizer::reloadControl(gGUIControl& control) {
 
 void gGUISizer::reloadControl(gGUIControl& control, int line, int column) {
 	int x = left + (width * columntprs[column]) + slotpadding;
-	int y = top + (height * linetprs[line]);
+	int y = top + (height * linetprs[line]) + slotheightpadding;
 	int w = width * (columntprs[column + 1] - columntprs[column]) - slotpadding * 2;
-	int h = height * (linetprs[line + 1] - linetprs[line]);
+	int h = height * (linetprs[line + 1] - linetprs[line]) - slotheightpadding;
 	if (alignvertically) {
 		int contentheight = control.calculateContentHeight();
 		if (contentheight > 0) {
