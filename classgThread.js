@@ -8,6 +8,7 @@ var classgThread =
     [ "isDone", "classgThread.html#a3a65f950f01a4f51e0686c2e91b15766", null ],
     [ "isRunning", "classgThread.html#ac956060e5aec43518e48ba52dc182ae3", null ],
     [ "lock", "classgThread.html#aa87ecbc628c14386373e0f5deb8eab8c", null ],
+    [ "sleep", "classgThread.html#aea18b29b95e51d44eca999f90bbfbf8b", null ],
     [ "sleep", "classgThread.html#ac2839f49e6d381ab31f60c5ef8a29805", null ],
     [ "start", "classgThread.html#a23afe6dec6da07a14bd4fe4d7d529fcf", null ],
     [ "stop", "classgThread.html#a8193c562cfc6d5b1ca4f9e3bcec590fb", null ],
