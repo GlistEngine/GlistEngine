@@ -45,6 +45,7 @@ public:
 
 	void wait();
 	void sleep(std::chrono::duration<double, std::milli> milliseconds);
+	void sleep(double milliseconds);
     void yield();
 
     virtual void threadFunction();
@@ -57,6 +58,8 @@ protected:
 
 private:
     std::thread thread;
+    std::chrono::high_resolution_clock::time_point starttime;
+    std::chrono::duration<double, std::milli> timediff;
 
     void run();
 };
