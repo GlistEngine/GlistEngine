@@ -2,7 +2,7 @@
  * gAppManager.cpp
  *
  *  Created on: May 6, 2020
- *      Author: noyan
+ *      Author: Noyan Culum
  */
 
 #include "gAppManager.h"
@@ -13,6 +13,7 @@
 #include "gGUIFrame.h"
 
 #include <thread>
+#include "gGUIAppThread.h"
 
 // Platform specific window implementation
 #if defined(WIN32) || defined(LINUX) || TARGET_OS_OSX
@@ -132,13 +133,25 @@ gAppManager::gAppManager(const std::string& appName, gBaseApp *baseApp, int widt
 		window = nullptr;
 		setTargetFramerate(INT_MAX);
 	}
+
+	isguiapp = false;
+	if(windowMode == G_WINDOWMODE_GUIAPP || windowMode == G_WINDOWMODE_FULLSCREENGUIAPP) isguiapp = true;
+	if(isguiapp) guiappthread = new gGUIAppThread(baseApp);
 }
 
 gAppManager::~gAppManager() {
+	if(guiappthread) {
+		guiappthread->stop();
+//		delete guiappthread;
+	}
     delete canvasmanager;
     delete guimanager;
     delete window;
     gRenderObject::destroyRenderer();
+}
+
+gGUIAppThread* gAppManager::getGUIAppThread() {
+	return guiappthread;
 }
 
 void gAppManager::setup() {
@@ -152,6 +165,7 @@ void gAppManager::setup() {
 void gAppManager::runApp() {
 	initialize();
 	setup();
+	if(isguiapp) guiappthread->start();
 	loop();
 	stop();
 }
@@ -409,7 +423,7 @@ void gAppManager::tick() {
     // todo joystick
     if(canvasmanager) canvasmanager->update();
     if(guimanager) guimanager->update();
-    app->update();
+    if(!isguiapp) app->update();
     for(int i = 0; i < gBaseComponent::usedcomponents.size(); i++) {
         gBaseComponent::usedcomponents[i]->update();
     }
@@ -418,20 +432,24 @@ void gAppManager::tick() {
     }
 
     gBaseCanvas* canvas = nullptr;
-    if(canvasmanager) canvas = canvasmanager->getCurrentCanvas();
-    if(canvas) {
-        canvas->update();
+    if(!isguiapp) {
+		if(canvasmanager) canvas = canvasmanager->getCurrentCanvas();
+		if(canvas) {
+			canvas->update();
+		}
     }
 
     if(isrendering) {
-        if(canvas) {
-            canvas->clearBackground();
-            for (int i = 0; i < renderpassnum; i++) {
-                renderpassno = i;
-                canvas->getRenderer()->updateLights();
-                canvas->draw();
-            }
-        }
+    	if(!isguiapp) {
+			if(canvas) {
+				canvas->clearBackground();
+				for (int i = 0; i < renderpassnum; i++) {
+					renderpassno = i;
+					canvas->getRenderer()->updateLights();
+					canvas->draw();
+				}
+			}
+    	}
 
 		if(guimanager) guimanager->draw();
         totaldraws++;

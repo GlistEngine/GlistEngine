@@ -45,6 +45,7 @@
 #include "gWindowEvents.h"
 #include "gFont.h"
 #include "gObject.h"
+class gGUIAppThread;
 
 #include <chrono>
 #include <iostream>
@@ -303,6 +304,8 @@ public:
 	 */
 	void setCurrentGUIFrame(gGUIFrame* guiFrame);
 
+	gGUIAppThread* getGUIAppThread();
+
     void setCursor(int cursorId);
     void setCursorMode(int cursorMode);
 
@@ -420,6 +423,9 @@ private:
 	EventHandlerFn getEventHandler() { return eventhandler; }
 
     static void preciseSleep(double seconds);
+
+    gGUIAppThread* guiappthread;
+    bool isguiapp;
 };
 
 #endif //GAPPMANAGER_H
