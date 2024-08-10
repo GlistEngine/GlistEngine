@@ -48,6 +48,7 @@ var annotated_dup =
     [ "gGrayscale", "classgGrayscale.html", "classgGrayscale" ],
     [ "gGrid", "classgGrid.html", "classgGrid" ],
     [ "gGUIActionManager", "classgGUIActionManager.html", "classgGUIActionManager" ],
+    [ "gGUIAppThread", "classgGUIAppThread.html", "classgGUIAppThread" ],
     [ "gGUIBitmap", "classgGUIBitmap.html", "classgGUIBitmap" ],
     [ "gGUIButton", "classgGUIButton.html", "classgGUIButton" ],
     [ "gGUICandleStickChart", "classgGUICandleStickChart.html", "classgGUICandleStickChart" ],

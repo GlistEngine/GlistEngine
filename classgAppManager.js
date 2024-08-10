@@ -13,6 +13,7 @@ var classgAppManager =
     [ "getDeviceOrientation", "classgAppManager.html#ac42052084d5109e7b9a68502edd1da91", null ],
     [ "getElapsedTime", "classgAppManager.html#a83e9f84a1f4a1d3a956ab42e0e6895f8", null ],
     [ "getFramerate", "classgAppManager.html#af843225c657fb34e0953739d5d422687", null ],
+    [ "getGUIAppThread", "classgAppManager.html#a697c33bed5a9f739d861a91d807d74a2", null ],
     [ "getGUIManager", "classgAppManager.html#a60f6d224c86250da14fdff0ccc544b82", null ],
     [ "getJoystickAxes", "classgAppManager.html#aac334b418084a3f72dec4b930b5c0bd4", null ],
     [ "getJoystickAxesCount", "classgAppManager.html#aa0142932132c5cb07214671460c8181f", null ],

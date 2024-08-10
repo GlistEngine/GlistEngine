@@ -186,7 +186,8 @@ var hierarchy =
       [ "gSpriteAnimation", "classgSpriteAnimation.html", null ],
       [ "gSpriteAnimator", "classgSpriteAnimator.html", null ],
       [ "gThread", "classgThread.html", [
-        [ "gAssetLoader", "classgAssetLoader.html", null ]
+        [ "gAssetLoader", "classgAssetLoader.html", null ],
+        [ "gGUIAppThread", "classgGUIAppThread.html", null ]
       ] ],
       [ "gUbo< T >", "classgUbo.html", null ],
       [ "gWindows", "classgWindows.html", null ]
