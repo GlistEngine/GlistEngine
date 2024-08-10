@@ -19,7 +19,7 @@ gGUIPane::gGUIPane() {
 	titlefont.loadFont("FreeSansBold.ttf", titlefontsize);
 	titlecolor = gColor(128, 128, 128);
 	topbarh = titlefontsize * 4 + font->getSize();
-	panesizer.setSlotPadding(titlefontsize * 2);
+	panesizer.setSlotPadding(titlefontsize * 2, 0);
 	navbuttonsenabled = true;
 	previouspane = nullptr;
 	nextpane = nullptr;

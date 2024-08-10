@@ -209,7 +209,7 @@ void gGUIForm::setSizer(gGUISizer* guiSizer) {
 	guisizer->bottom = bottom - statush;
 	guisizer->width = guisizer->right - guisizer->left;
 	guisizer->height = guisizer->bottom - guisizer->top;
-	guisizer->setSlotPadding(0);
+	guisizer->setSlotPadding(0, 0);
 }
 
 void gGUIForm::updateSizer() {
