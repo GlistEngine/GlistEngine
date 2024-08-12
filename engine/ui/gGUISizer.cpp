@@ -20,6 +20,7 @@ gGUISizer::gGUISizer() {
 	resizeline = 0;
 	fillbackground = false;
 	slotpadding = 2;
+	slotheightpadding = 0;
 	alignvertically = false;
 	lineprs = nullptr;
 	columnprs = nullptr;
