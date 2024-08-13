@@ -10,7 +10,7 @@
 
 #include "gRenderObject.h"
 #include "gBaseApp.h"
-#include <deque>
+#include <list>
 
 /**
  * This class should be extended whenever you are developing a new plugin for
@@ -206,7 +206,7 @@ public:
 	 * All the plugins that extends this class should add themselves into this
 	 * deque container in their constructor, as this is not a plugin-specific variable.
 	 */
-	static std::deque<gBasePlugin*> usedplugins;
+	static std::list<gBasePlugin*> usedplugins;
 
 private:
 };
