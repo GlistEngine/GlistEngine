@@ -86,7 +86,7 @@ $(document).ready(function(){initNavTree('gHttpFile_8h_source.html',''); initRes
 <div class="title">gHttpFile.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*</span></div>
+<a href="gHttpFile_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment"> * gHttpFile.h</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment"> *</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment"> *  Created on: 10 Tem 2021</span></div>
@@ -101,27 +101,27 @@ $(document).ready(function(){initNavTree('gHttpFile_8h_source.html',''); initRes
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="preprocessor">#include &lt;iostream&gt;</span></div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="preprocessor">#include &lt;string&gt;</span></div>
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160; </div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="preprocessor">#include &quot;gFile.h&quot;</span></div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="preprocessor">#include &quot;gObject.h&quot;</span></div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="gFile_8h.html">gFile.h</a>&quot;</span></div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="gObject_8h.html">gObject.h</a>&quot;</span></div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160; </div>
 <div class="line"><a name="l00019"></a><span class="lineno"><a class="line" href="classgHttpFile.html">   19</a></span>&#160;<span class="keyword">class </span><a class="code" href="classgHttpFile.html">gHttpFile</a> : <span class="keyword">public</span> <a class="code" href="classgObject.html">gObject</a> {</div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="keyword">public</span>:</div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160; </div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    <a class="code" href="classgHttpFile.html">gHttpFile</a>();</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    <span class="keyword">virtual</span> ~<a class="code" href="classgHttpFile.html">gHttpFile</a>();</div>
+<div class="line"><a name="l00022"></a><span class="lineno"><a class="line" href="classgHttpFile.html#ad383056ff7ba0f3245a6bf65a68078bd">   22</a></span>&#160;    <a class="code" href="classgHttpFile.html#ad383056ff7ba0f3245a6bf65a68078bd">gHttpFile</a>();</div>
+<div class="line"><a name="l00023"></a><span class="lineno"><a class="line" href="classgHttpFile.html#a59cb714710094557cd7eb82893ae884c">   23</a></span>&#160;    <span class="keyword">virtual</span> <a class="code" href="classgHttpFile.html#a59cb714710094557cd7eb82893ae884c">~gHttpFile</a>();</div>
 <div class="line"><a name="l00024"></a><span class="lineno"><a class="line" href="structgHttpFile_1_1ProgressData.html">   24</a></span>&#160;    <span class="keyword">struct </span><a class="code" href="structgHttpFile_1_1ProgressData.html">ProgressData</a> {</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;        <span class="keywordtype">double</span> progresslength;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;        <span class="keywordtype">double</span> filelength;</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    } prog;</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    <span class="keyword">static</span> <span class="keywordtype">int</span> progressCallback(<a class="code" href="structgHttpFile_1_1ProgressData.html">ProgressData</a> *p, <span class="keywordtype">double</span> totaltodownload, <span class="keywordtype">double</span> downloaded, <span class="keywordtype">double</span> totaltoupload, <span class="keywordtype">double</span> uploaded);</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    <span class="keyword">static</span> <span class="keywordtype">size_t</span> writeCallBack(<span class="keywordtype">char</span> *contents, <span class="keywordtype">size_t</span> size, <span class="keywordtype">size_t</span> nmemb, <span class="keywordtype">void</span> *userp);</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    <span class="keywordtype">void</span> load(std::string url);</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    std::string getUrl();</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    <span class="keywordtype">void</span> save(std::string filepath, <span class="keywordtype">bool</span> isBinary = <span class="keyword">false</span>);</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    std::string getHtml();</div>
+<div class="line"><a name="l00025"></a><span class="lineno"><a class="line" href="structgHttpFile_1_1ProgressData.html#a437d4db25e3c8db350206cb7de706e3f">   25</a></span>&#160;        <span class="keywordtype">double</span> <a class="code" href="structgHttpFile_1_1ProgressData.html#a437d4db25e3c8db350206cb7de706e3f">progresslength</a>;</div>
+<div class="line"><a name="l00026"></a><span class="lineno"><a class="line" href="structgHttpFile_1_1ProgressData.html#a7d3ae2b5d14fb694f338f136d344524c">   26</a></span>&#160;        <span class="keywordtype">double</span> <a class="code" href="structgHttpFile_1_1ProgressData.html#a7d3ae2b5d14fb694f338f136d344524c">filelength</a>;</div>
+<div class="line"><a name="l00027"></a><span class="lineno"><a class="line" href="classgHttpFile.html#ac469b5fd7ec4178d9fcfab78a41e697c">   27</a></span>&#160;    } <a class="code" href="classgHttpFile.html#ac469b5fd7ec4178d9fcfab78a41e697c">prog</a>;</div>
+<div class="line"><a name="l00028"></a><span class="lineno"><a class="line" href="classgHttpFile.html#a0b59115c36ef1ed7e97d726b3a7e50b5">   28</a></span>&#160;    <span class="keyword">static</span> <span class="keywordtype">int</span> <a class="code" href="classgHttpFile.html#a0b59115c36ef1ed7e97d726b3a7e50b5">progressCallback</a>(<a class="code" href="structgHttpFile_1_1ProgressData.html">ProgressData</a> *p, <span class="keywordtype">double</span> totaltodownload, <span class="keywordtype">double</span> downloaded, <span class="keywordtype">double</span> totaltoupload, <span class="keywordtype">double</span> uploaded);</div>
+<div class="line"><a name="l00029"></a><span class="lineno"><a class="line" href="classgHttpFile.html#a39110f9df4ed37b2b9121bd693f6a6f3">   29</a></span>&#160;    <span class="keyword">static</span> <span class="keywordtype">size_t</span> <a class="code" href="classgHttpFile.html#a39110f9df4ed37b2b9121bd693f6a6f3">writeCallBack</a>(<span class="keywordtype">char</span> *contents, <span class="keywordtype">size_t</span> size, <span class="keywordtype">size_t</span> nmemb, <span class="keywordtype">void</span> *userp);</div>
+<div class="line"><a name="l00030"></a><span class="lineno"><a class="line" href="classgHttpFile.html#ad3e895706fe1b490c497c27d70b76112">   30</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classgHttpFile.html#ad3e895706fe1b490c497c27d70b76112">load</a>(std::string url);</div>
+<div class="line"><a name="l00031"></a><span class="lineno"><a class="line" href="classgHttpFile.html#a9acb9ef2bebd0ec67c99c37ea718a696">   31</a></span>&#160;    std::string <a class="code" href="classgHttpFile.html#a9acb9ef2bebd0ec67c99c37ea718a696">getUrl</a>();</div>
+<div class="line"><a name="l00032"></a><span class="lineno"><a class="line" href="classgHttpFile.html#a1a545d5cd7a0c1eecd0741fd871ed341">   32</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classgHttpFile.html#a1a545d5cd7a0c1eecd0741fd871ed341">save</a>(std::string filepath, <span class="keywordtype">bool</span> isBinary = <span class="keyword">false</span>);</div>
+<div class="line"><a name="l00033"></a><span class="lineno"><a class="line" href="classgHttpFile.html#afb86c79f2878dae8799e1f28222ec0c9">   33</a></span>&#160;    std::string <a class="code" href="classgHttpFile.html#afb86c79f2878dae8799e1f28222ec0c9">getHtml</a>();</div>
 <div class="line"><a name="l00039"></a><span class="lineno"><a class="line" href="classgHttpFile.html#a5d043f971d6b9e41e843caff502d29bb">   39</a></span>&#160;    <span class="keywordtype">int</span> <a class="code" href="classgHttpFile.html#a5d043f971d6b9e41e843caff502d29bb">getStatusCode</a>();</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <span class="keywordtype">double</span> getProgressLength();</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="keywordtype">double</span> getFileLength();</div>
+<div class="line"><a name="l00040"></a><span class="lineno"><a class="line" href="classgHttpFile.html#a39e3d507cbbb346dcada1d5484461a47">   40</a></span>&#160;    <span class="keywordtype">double</span> <a class="code" href="classgHttpFile.html#a39e3d507cbbb346dcada1d5484461a47">getProgressLength</a>();</div>
+<div class="line"><a name="l00041"></a><span class="lineno"><a class="line" href="classgHttpFile.html#a0414ba7b25fc3d1f6fa6ce8490b6578f">   41</a></span>&#160;    <span class="keywordtype">double</span> <a class="code" href="classgHttpFile.html#a0414ba7b25fc3d1f6fa6ce8490b6578f">getFileLength</a>();</div>
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; </div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="keyword">private</span>:</div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    std::string filepath;</div>
@@ -136,15 +136,30 @@ $(document).ready(function(){initNavTree('gHttpFile_8h_source.html',''); initRes
 <div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* UTILS_GHTTPFILE_H_ */</span><span class="preprocessor"></span></div>
 <div class="ttc" id="aclassgFile_html"><div class="ttname"><a href="classgFile.html">gFile</a></div><div class="ttdef"><b>Definition:</b> gFile.h:33</div></div>
 <div class="ttc" id="aclassgHttpFile_html"><div class="ttname"><a href="classgHttpFile.html">gHttpFile</a></div><div class="ttdef"><b>Definition:</b> gHttpFile.h:19</div></div>
+<div class="ttc" id="aclassgHttpFile_html_a0414ba7b25fc3d1f6fa6ce8490b6578f"><div class="ttname"><a href="classgHttpFile.html#a0414ba7b25fc3d1f6fa6ce8490b6578f">gHttpFile::getFileLength</a></div><div class="ttdeci">double getFileLength()</div></div>
+<div class="ttc" id="aclassgHttpFile_html_a0b59115c36ef1ed7e97d726b3a7e50b5"><div class="ttname"><a href="classgHttpFile.html#a0b59115c36ef1ed7e97d726b3a7e50b5">gHttpFile::progressCallback</a></div><div class="ttdeci">static int progressCallback(ProgressData *p, double totaltodownload, double downloaded, double totaltoupload, double uploaded)</div></div>
+<div class="ttc" id="aclassgHttpFile_html_a1a545d5cd7a0c1eecd0741fd871ed341"><div class="ttname"><a href="classgHttpFile.html#a1a545d5cd7a0c1eecd0741fd871ed341">gHttpFile::save</a></div><div class="ttdeci">void save(std::string filepath, bool isBinary=false)</div></div>
+<div class="ttc" id="aclassgHttpFile_html_a39110f9df4ed37b2b9121bd693f6a6f3"><div class="ttname"><a href="classgHttpFile.html#a39110f9df4ed37b2b9121bd693f6a6f3">gHttpFile::writeCallBack</a></div><div class="ttdeci">static size_t writeCallBack(char *contents, size_t size, size_t nmemb, void *userp)</div></div>
+<div class="ttc" id="aclassgHttpFile_html_a39e3d507cbbb346dcada1d5484461a47"><div class="ttname"><a href="classgHttpFile.html#a39e3d507cbbb346dcada1d5484461a47">gHttpFile::getProgressLength</a></div><div class="ttdeci">double getProgressLength()</div></div>
+<div class="ttc" id="aclassgHttpFile_html_a59cb714710094557cd7eb82893ae884c"><div class="ttname"><a href="classgHttpFile.html#a59cb714710094557cd7eb82893ae884c">gHttpFile::~gHttpFile</a></div><div class="ttdeci">virtual ~gHttpFile()</div></div>
 <div class="ttc" id="aclassgHttpFile_html_a5d043f971d6b9e41e843caff502d29bb"><div class="ttname"><a href="classgHttpFile.html#a5d043f971d6b9e41e843caff502d29bb">gHttpFile::getStatusCode</a></div><div class="ttdeci">int getStatusCode()</div></div>
+<div class="ttc" id="aclassgHttpFile_html_a9acb9ef2bebd0ec67c99c37ea718a696"><div class="ttname"><a href="classgHttpFile.html#a9acb9ef2bebd0ec67c99c37ea718a696">gHttpFile::getUrl</a></div><div class="ttdeci">std::string getUrl()</div></div>
+<div class="ttc" id="aclassgHttpFile_html_ac469b5fd7ec4178d9fcfab78a41e697c"><div class="ttname"><a href="classgHttpFile.html#ac469b5fd7ec4178d9fcfab78a41e697c">gHttpFile::prog</a></div><div class="ttdeci">struct gHttpFile::ProgressData prog</div></div>
+<div class="ttc" id="aclassgHttpFile_html_ad383056ff7ba0f3245a6bf65a68078bd"><div class="ttname"><a href="classgHttpFile.html#ad383056ff7ba0f3245a6bf65a68078bd">gHttpFile::gHttpFile</a></div><div class="ttdeci">gHttpFile()</div></div>
+<div class="ttc" id="aclassgHttpFile_html_ad3e895706fe1b490c497c27d70b76112"><div class="ttname"><a href="classgHttpFile.html#ad3e895706fe1b490c497c27d70b76112">gHttpFile::load</a></div><div class="ttdeci">void load(std::string url)</div></div>
+<div class="ttc" id="aclassgHttpFile_html_afb86c79f2878dae8799e1f28222ec0c9"><div class="ttname"><a href="classgHttpFile.html#afb86c79f2878dae8799e1f28222ec0c9">gHttpFile::getHtml</a></div><div class="ttdeci">std::string getHtml()</div></div>
 <div class="ttc" id="aclassgObject_html"><div class="ttname"><a href="classgObject.html">gObject</a></div><div class="ttdef"><b>Definition:</b> gObject.h:33</div></div>
+<div class="ttc" id="agFile_8h_html"><div class="ttname"><a href="gFile_8h.html">gFile.h</a></div></div>
+<div class="ttc" id="agObject_8h_html"><div class="ttname"><a href="gObject_8h.html">gObject.h</a></div></div>
 <div class="ttc" id="astructgHttpFile_1_1ProgressData_html"><div class="ttname"><a href="structgHttpFile_1_1ProgressData.html">gHttpFile::ProgressData</a></div><div class="ttdef"><b>Definition:</b> gHttpFile.h:24</div></div>
+<div class="ttc" id="astructgHttpFile_1_1ProgressData_html_a437d4db25e3c8db350206cb7de706e3f"><div class="ttname"><a href="structgHttpFile_1_1ProgressData.html#a437d4db25e3c8db350206cb7de706e3f">gHttpFile::ProgressData::progresslength</a></div><div class="ttdeci">double progresslength</div><div class="ttdef"><b>Definition:</b> gHttpFile.h:25</div></div>
+<div class="ttc" id="astructgHttpFile_1_1ProgressData_html_a7d3ae2b5d14fb694f338f136d344524c"><div class="ttname"><a href="structgHttpFile_1_1ProgressData.html#a7d3ae2b5d14fb694f338f136d344524c">gHttpFile::ProgressData::filelength</a></div><div class="ttdeci">double filelength</div><div class="ttdef"><b>Definition:</b> gHttpFile.h:26</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_996f45160da62e1a3d7f6046fad68f51.html">engine</a></li><li class="navelem"><a class="el" href="dir_961895bef81e67620a5b47a62fb3cb48.html">utils</a></li><li class="navelem"><b>gHttpFile.h</b></li>
+    <li class="navelem"><a class="el" href="dir_996f45160da62e1a3d7f6046fad68f51.html">engine</a></li><li class="navelem"><a class="el" href="dir_961895bef81e67620a5b47a62fb3cb48.html">utils</a></li><li class="navelem"><a class="el" href="gHttpFile_8h.html">gHttpFile.h</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>

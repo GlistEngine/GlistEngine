@@ -86,7 +86,7 @@ $(document).ready(function(){initNavTree('gHighContrast_8h_source.html',''); ini
 <div class="title">gHighContrast.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*</span></div>
+<a href="gHighContrast_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment"> * gHighContrast.h</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment"> *</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment"> *  Created on: 17 Tem 2023</span></div>
@@ -96,29 +96,35 @@ $(document).ready(function(){initNavTree('gHighContrast_8h_source.html',''); ini
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#ifndef GRAPHICS_POSTEFFECTS_GHIGHCONTRAST_H_</span></div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#define GRAPHICS_POSTEFFECTS_GHIGHCONTRAST_H_</span></div>
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160; </div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#include &quot;gBasePostProcess.h&quot;</span></div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="gBasePostProcess_8h.html">gBasePostProcess.h</a>&quot;</span></div>
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160; </div>
 <div class="line"><a name="l00013"></a><span class="lineno"><a class="line" href="classgHighContrast.html">   13</a></span>&#160;<span class="keyword">class </span><a class="code" href="classgHighContrast.html">gHighContrast</a>: <span class="keyword">public</span> <a class="code" href="classgBasePostProcess.html">gBasePostProcess</a> {</div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    <a class="code" href="classgHighContrast.html">gHighContrast</a>(<span class="keywordtype">float</span> intensity = 5.0f, <span class="keywordtype">float</span> midpoint = 0.5f, <span class="keywordtype">float</span> threshold = 0.7f);</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;    <span class="keyword">virtual</span> ~<a class="code" href="classgHighContrast.html">gHighContrast</a>();</div>
+<div class="line"><a name="l00015"></a><span class="lineno"><a class="line" href="classgHighContrast.html#a2fac55600b0932fc151687acc155dbc4">   15</a></span>&#160;    <a class="code" href="classgHighContrast.html#a2fac55600b0932fc151687acc155dbc4">gHighContrast</a>(<span class="keywordtype">float</span> intensity = 5.0f, <span class="keywordtype">float</span> midpoint = 0.5f, <span class="keywordtype">float</span> threshold = 0.7f);</div>
+<div class="line"><a name="l00016"></a><span class="lineno"><a class="line" href="classgHighContrast.html#a339223b6491414387f438e985c736a2c">   16</a></span>&#160;    <span class="keyword">virtual</span> <a class="code" href="classgHighContrast.html#a339223b6491414387f438e985c736a2c">~gHighContrast</a>();</div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160; </div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    <span class="keywordtype">void</span> use();</div>
+<div class="line"><a name="l00018"></a><span class="lineno"><a class="line" href="classgHighContrast.html#ac8a939fca32a975a439ebb49ed15589d">   18</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classgHighContrast.html#ac8a939fca32a975a439ebb49ed15589d">use</a>();</div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160; </div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="keyword">protected</span>:</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    <span class="keyword">const</span> std::string getVertSrc();</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    <span class="keyword">const</span> std::string getFragSrc();</div>
+<div class="line"><a name="l00021"></a><span class="lineno"><a class="line" href="classgHighContrast.html#ae1d704462afb51b47515ba0f8a412634">   21</a></span>&#160;    <span class="keyword">const</span> std::string <a class="code" href="classgHighContrast.html#ae1d704462afb51b47515ba0f8a412634">getVertSrc</a>();</div>
+<div class="line"><a name="l00022"></a><span class="lineno"><a class="line" href="classgHighContrast.html#a77a8b0a4ce27ff7af4cfc31c54d68f6a">   22</a></span>&#160;    <span class="keyword">const</span> std::string <a class="code" href="classgHighContrast.html#a77a8b0a4ce27ff7af4cfc31c54d68f6a">getFragSrc</a>();</div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;};</div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160; </div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* GRAPHICS_POSTEFFECTS_GHIGHCONTRAST_H_ */</span><span class="preprocessor"></span></div>
 <div class="ttc" id="aclassgBasePostProcess_html"><div class="ttname"><a href="classgBasePostProcess.html">gBasePostProcess</a></div><div class="ttdef"><b>Definition:</b> gBasePostProcess.h:15</div></div>
 <div class="ttc" id="aclassgHighContrast_html"><div class="ttname"><a href="classgHighContrast.html">gHighContrast</a></div><div class="ttdef"><b>Definition:</b> gHighContrast.h:13</div></div>
+<div class="ttc" id="aclassgHighContrast_html_a2fac55600b0932fc151687acc155dbc4"><div class="ttname"><a href="classgHighContrast.html#a2fac55600b0932fc151687acc155dbc4">gHighContrast::gHighContrast</a></div><div class="ttdeci">gHighContrast(float intensity=5.0f, float midpoint=0.5f, float threshold=0.7f)</div></div>
+<div class="ttc" id="aclassgHighContrast_html_a339223b6491414387f438e985c736a2c"><div class="ttname"><a href="classgHighContrast.html#a339223b6491414387f438e985c736a2c">gHighContrast::~gHighContrast</a></div><div class="ttdeci">virtual ~gHighContrast()</div></div>
+<div class="ttc" id="aclassgHighContrast_html_a77a8b0a4ce27ff7af4cfc31c54d68f6a"><div class="ttname"><a href="classgHighContrast.html#a77a8b0a4ce27ff7af4cfc31c54d68f6a">gHighContrast::getFragSrc</a></div><div class="ttdeci">const std::string getFragSrc()</div></div>
+<div class="ttc" id="aclassgHighContrast_html_ac8a939fca32a975a439ebb49ed15589d"><div class="ttname"><a href="classgHighContrast.html#ac8a939fca32a975a439ebb49ed15589d">gHighContrast::use</a></div><div class="ttdeci">void use()</div></div>
+<div class="ttc" id="aclassgHighContrast_html_ae1d704462afb51b47515ba0f8a412634"><div class="ttname"><a href="classgHighContrast.html#ae1d704462afb51b47515ba0f8a412634">gHighContrast::getVertSrc</a></div><div class="ttdeci">const std::string getVertSrc()</div></div>
+<div class="ttc" id="agBasePostProcess_8h_html"><div class="ttname"><a href="gBasePostProcess_8h.html">gBasePostProcess.h</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_996f45160da62e1a3d7f6046fad68f51.html">engine</a></li><li class="navelem"><a class="el" href="dir_8aa109d331f3e3b3014e32565285b6b8.html">graphics</a></li><li class="navelem"><a class="el" href="dir_abe4b6e0164058ef65dcfe639e678528.html">posteffects</a></li><li class="navelem"><b>gHighContrast.h</b></li>
+    <li class="navelem"><a class="el" href="dir_996f45160da62e1a3d7f6046fad68f51.html">engine</a></li><li class="navelem"><a class="el" href="dir_8aa109d331f3e3b3014e32565285b6b8.html">graphics</a></li><li class="navelem"><a class="el" href="dir_abe4b6e0164058ef65dcfe639e678528.html">posteffects</a></li><li class="navelem"><a class="el" href="gHighContrast_8h.html">gHighContrast.h</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>

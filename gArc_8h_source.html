@@ -86,7 +86,7 @@ $(document).ready(function(){initNavTree('gArc_8h_source.html',''); initResizabl
 <div class="title">gArc.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*</span></div>
+<a href="gArc_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment"> * gArc.h</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment"> *</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment"> *  Created on: 27 Jul 2022</span></div>
@@ -96,30 +96,35 @@ $(document).ready(function(){initNavTree('gArc_8h_source.html',''); initResizabl
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#ifndef GRAPHICS_PRIMITIVES_gArc_H_</span></div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#define GRAPHICS_PRIMITIVES_gArc_H_</span></div>
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160; </div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#include &quot;gMesh.h&quot;</span></div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="gMesh_8h.html">gMesh.h</a>&quot;</span></div>
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160; </div>
 <div class="line"><a name="l00013"></a><span class="lineno"><a class="line" href="classgArc.html">   13</a></span>&#160;<span class="keyword">class </span><a class="code" href="classgArc.html">gArc</a>: <span class="keyword">public</span> <a class="code" href="classgMesh.html">gMesh</a> {</div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    <a class="code" href="classgArc.html">gArc</a>();</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;    <span class="keyword">virtual</span> ~<a class="code" href="classgArc.html">gArc</a>();</div>
+<div class="line"><a name="l00015"></a><span class="lineno"><a class="line" href="classgArc.html#a32ed967c87654e6b47707cffa2bebbd4">   15</a></span>&#160;    <a class="code" href="classgArc.html#a32ed967c87654e6b47707cffa2bebbd4">gArc</a>();</div>
+<div class="line"><a name="l00016"></a><span class="lineno"><a class="line" href="classgArc.html#a8f83c810a00ded90aecf41313c3b48b9">   16</a></span>&#160;    <span class="keyword">virtual</span> <a class="code" href="classgArc.html#a8f83c810a00ded90aecf41313c3b48b9">~gArc</a>();</div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160; </div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    <span class="keywordtype">void</span> draw(<span class="keywordtype">float</span> xCenter, <span class="keywordtype">float</span> yCenter, <span class="keywordtype">float</span> radius, <span class="keywordtype">bool</span> isFilled, <span class="keywordtype">int</span> numberOfSides = 60, <span class="keywordtype">float</span> degree = 360.0f, <span class="keywordtype">float</span> rotate = 360.0f);</div>
+<div class="line"><a name="l00018"></a><span class="lineno"><a class="line" href="classgArc.html#ae1eaeeef7c6a38a6e37f3bc311a10e4d">   18</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classgArc.html#ae1eaeeef7c6a38a6e37f3bc311a10e4d">draw</a>(<span class="keywordtype">float</span> xCenter, <span class="keywordtype">float</span> yCenter, <span class="keywordtype">float</span> radius, <span class="keywordtype">bool</span> isFilled, <span class="keywordtype">int</span> numberOfSides = 60, <span class="keywordtype">float</span> degree = 360.0f, <span class="keywordtype">float</span> <a class="code" href="classgNode.html#ae798e26ca9b5f2e9498c913cc7f0d9db">rotate</a> = 360.0f);</div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160; </div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    <span class="keywordtype">void</span> setArcPoints(<span class="keywordtype">float</span> xCenter, <span class="keywordtype">float</span> yCenter, <span class="keywordtype">float</span> radius, <span class="keywordtype">bool</span> isFilled, <span class="keywordtype">int</span> numberOfSides = 60, <span class="keywordtype">float</span> degree = 360.0f, <span class="keywordtype">float</span> rotate = 360.0f);</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    <span class="keywordtype">void</span> setArcPoints(<span class="keywordtype">float</span> xCenter, <span class="keywordtype">float</span> yCenter, <span class="keywordtype">float</span> radius, <span class="keywordtype">bool</span> isFilled, <span class="keywordtype">int</span> numberOfSides = 60, <span class="keywordtype">float</span> degree = 360.0f, <span class="keywordtype">float</span> <a class="code" href="classgNode.html#ae798e26ca9b5f2e9498c913cc7f0d9db">rotate</a> = 360.0f);</div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    std::vector&lt;gVertex&gt; vertices;</div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    std::vector&lt;gIndex&gt; indices;</div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;};</div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160; </div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* GRAPHICS_PRIMITIVES_gArc_H_ */</span><span class="preprocessor"></span></div>
 <div class="ttc" id="aclassgArc_html"><div class="ttname"><a href="classgArc.html">gArc</a></div><div class="ttdef"><b>Definition:</b> gArc.h:13</div></div>
+<div class="ttc" id="aclassgArc_html_a32ed967c87654e6b47707cffa2bebbd4"><div class="ttname"><a href="classgArc.html#a32ed967c87654e6b47707cffa2bebbd4">gArc::gArc</a></div><div class="ttdeci">gArc()</div></div>
+<div class="ttc" id="aclassgArc_html_a8f83c810a00ded90aecf41313c3b48b9"><div class="ttname"><a href="classgArc.html#a8f83c810a00ded90aecf41313c3b48b9">gArc::~gArc</a></div><div class="ttdeci">virtual ~gArc()</div></div>
+<div class="ttc" id="aclassgArc_html_ae1eaeeef7c6a38a6e37f3bc311a10e4d"><div class="ttname"><a href="classgArc.html#ae1eaeeef7c6a38a6e37f3bc311a10e4d">gArc::draw</a></div><div class="ttdeci">void draw(float xCenter, float yCenter, float radius, bool isFilled, int numberOfSides=60, float degree=360.0f, float rotate=360.0f)</div></div>
 <div class="ttc" id="aclassgMesh_html"><div class="ttname"><a href="classgMesh.html">gMesh</a></div><div class="ttdef"><b>Definition:</b> gMesh.h:25</div></div>
+<div class="ttc" id="aclassgNode_html_ae798e26ca9b5f2e9498c913cc7f0d9db"><div class="ttname"><a href="classgNode.html#ae798e26ca9b5f2e9498c913cc7f0d9db">gNode::rotate</a></div><div class="ttdeci">void rotate(const glm::quat &amp;q)</div></div>
+<div class="ttc" id="agMesh_8h_html"><div class="ttname"><a href="gMesh_8h.html">gMesh.h</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_996f45160da62e1a3d7f6046fad68f51.html">engine</a></li><li class="navelem"><a class="el" href="dir_8aa109d331f3e3b3014e32565285b6b8.html">graphics</a></li><li class="navelem"><a class="el" href="dir_95f98002015846fd36af7f4632d0a4f4.html">primitives</a></li><li class="navelem"><b>gArc.h</b></li>
+    <li class="navelem"><a class="el" href="dir_996f45160da62e1a3d7f6046fad68f51.html">engine</a></li><li class="navelem"><a class="el" href="dir_8aa109d331f3e3b3014e32565285b6b8.html">graphics</a></li><li class="navelem"><a class="el" href="dir_95f98002015846fd36af7f4632d0a4f4.html">primitives</a></li><li class="navelem"><a class="el" href="gArc_8h.html">gArc.h</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>

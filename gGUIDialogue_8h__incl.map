@@ -1,0 +1,52 @@
+<map id="gGUIDialogue.h" name="gGUIDialogue.h">
+<area shape="rect" id="node1" title=" " alt="" coords="1057,5,1181,32"/>
+<area shape="rect" id="node2" href="$gGUIForm_8h.html" title=" " alt="" coords="888,229,987,256"/>
+<area shape="rect" id="node41" href="$gGUIContainer_8h.html" title=" " alt="" coords="920,80,1048,107"/>
+<area shape="rect" id="node46" href="$gGUIImageButton_8h.html" title=" " alt="" coords="1190,80,1341,107"/>
+<area shape="rect" id="node49" href="$gGUIBitmap_8h.html" title=" " alt="" coords="1365,80,1478,107"/>
+<area shape="rect" id="node50" href="$gGUIText_8h.html" title=" " alt="" coords="1072,80,1165,107"/>
+<area shape="rect" id="node3" href="$gBaseGUIObject_8h.html" title=" " alt="" coords="878,304,1018,331"/>
+<area shape="rect" id="node4" href="$gRenderObject_8h.html" title=" " alt="" coords="892,677,1023,704"/>
+<area shape="rect" id="node27" href="$gFont_8h.html" title=" " alt="" coords="1109,379,1179,405"/>
+<area shape="rect" id="node39" href="$gGUIActionManager_8h.html" title=" " alt="" coords="253,752,416,779"/>
+<area shape="rect" id="node40" href="$gGUIResources_8h.html" title=" " alt="" coords="191,379,324,405"/>
+<area shape="rect" id="node5" href="$gRenderer_8h.html" title=" " alt="" coords="643,752,743,779"/>
+<area shape="rect" id="node6" href="$gObject_8h.html" title=" " alt="" coords="201,827,285,853"/>
+<area shape="rect" id="node17" href="$gConstants_8h.html" title=" " alt="" coords="684,976,791,1003"/>
+<area shape="rect" id="node18" href="$gColor_8h.html" title=" " alt="" coords="815,976,889,1003"/>
+<area shape="rect" id="node23" title=" " alt="" coords="396,827,500,853"/>
+<area shape="rect" id="node24" title=" " alt="" coords="826,827,1043,853"/>
+<area shape="rect" id="node25" title=" " alt="" coords="525,827,699,853"/>
+<area shape="rect" id="node26" title=" " alt="" coords="309,827,371,853"/>
+<area shape="rect" id="node7" href="$gUtils_8h.html" title=" " alt="" coords="465,901,537,928"/>
+<area shape="rect" id="node21" title=" " alt="" coords="179,901,256,928"/>
+<area shape="rect" id="node22" title=" " alt="" coords="281,901,407,928"/>
+<area shape="rect" id="node8" title=" " alt="" coords="1003,976,1061,1003"/>
+<area shape="rect" id="node9" title=" " alt="" coords="101,976,176,1003"/>
+<area shape="rect" id="node10" title=" " alt="" coords="201,976,277,1003"/>
+<area shape="rect" id="node11" title=" " alt="" coords="301,976,381,1003"/>
+<area shape="rect" id="node12" title=" " alt="" coords="405,976,480,1003"/>
+<area shape="rect" id="node13" title=" " alt="" coords="505,976,565,1003"/>
+<area shape="rect" id="node14" title=" " alt="" coords="589,976,659,1003"/>
+<area shape="rect" id="node15" title=" " alt="" coords="5,976,77,1003"/>
+<area shape="rect" id="node16" title=" " alt="" coords="1283,976,1346,1003"/>
+<area shape="rect" id="node19" title=" " alt="" coords="729,1051,839,1077"/>
+<area shape="rect" id="node20" title=" " alt="" coords="863,1051,974,1077"/>
+<area shape="rect" id="node28" href="$gNode_8h.html" title=" " alt="" coords="967,528,1043,555"/>
+<area shape="rect" id="node29" title=" " alt="" coords="1119,453,1169,480"/>
+<area shape="rect" id="node30" title=" " alt="" coords="1194,453,1345,480"/>
+<area shape="rect" id="node31" href="$gTexture_8h.html" title=" " alt="" coords="1187,603,1277,629"/>
+<area shape="rect" id="node33" href="$gMesh_8h.html" title=" " alt="" coords="1017,453,1095,480"/>
+<area shape="rect" id="node32" href="$gRect_8h.html" title=" " alt="" coords="1197,677,1267,704"/>
+<area shape="rect" id="node34" href="$gMaterial_8h.html" title=" " alt="" coords="1119,528,1215,555"/>
+<area shape="rect" id="node35" href="$gVbo_8h.html" title=" " alt="" coords="1045,603,1112,629"/>
+<area shape="rect" id="node36" href="$gBoundingBox_8h.html" title=" " alt="" coords="632,528,760,555"/>
+<area shape="rect" id="node37" title=" " alt="" coords="733,603,819,629"/>
+<area shape="rect" id="node38" href="$gRay_8h.html" title=" " alt="" coords="593,603,658,629"/>
+<area shape="rect" id="node42" href="$gGUIScrollable_8h.html" title=" " alt="" coords="876,155,1007,181"/>
+<area shape="rect" id="node45" href="$gGUISizer_8h.html" title=" " alt="" coords="1031,155,1129,181"/>
+<area shape="rect" id="node43" href="$gGUIControl_8h.html" title=" " alt="" coords="1067,229,1181,256"/>
+<area shape="rect" id="node44" href="$gFbo_8h.html" title=" " alt="" coords="825,528,892,555"/>
+<area shape="rect" id="node47" href="$gGUIButton_8h.html" title=" " alt="" coords="1204,155,1313,181"/>
+<area shape="rect" id="node48" href="$gImage_8h.html" title=" " alt="" coords="1388,155,1471,181"/>
+</map>

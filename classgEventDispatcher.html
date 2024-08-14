@@ -94,20 +94,18 @@ $(document).ready(function(){initNavTree('classgEventDispatcher.html',''); initR
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a14fa8c4532e18bbf12f4307c8d624a5c"><td class="memItemLeft" align="right" valign="top"><a id="a14fa8c4532e18bbf12f4307c8d624a5c"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>gEventDispatcher</b> (<a class="el" href="classgEvent.html">gEvent</a> &amp;event)</td></tr>
+<tr class="memitem:a14fa8c4532e18bbf12f4307c8d624a5c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgEventDispatcher.html#a14fa8c4532e18bbf12f4307c8d624a5c">gEventDispatcher</a> (<a class="el" href="classgEvent.html">gEvent</a> &amp;event)</td></tr>
 <tr class="separator:a14fa8c4532e18bbf12f4307c8d624a5c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a278d72976cdc2c7b1f6cebc9a6e5a708"><td class="memTemplParams" colspan="2"><a id="a278d72976cdc2c7b1f6cebc9a6e5a708"></a>
-template&lt;typename T , typename F &gt; </td></tr>
-<tr class="memitem:a278d72976cdc2c7b1f6cebc9a6e5a708"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>dispatch</b> (const F &amp;func)</td></tr>
+<tr class="memitem:a278d72976cdc2c7b1f6cebc9a6e5a708"><td class="memTemplParams" colspan="2">template&lt;typename T , typename F &gt; </td></tr>
+<tr class="memitem:a278d72976cdc2c7b1f6cebc9a6e5a708"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classgEventDispatcher.html#a278d72976cdc2c7b1f6cebc9a6e5a708">dispatch</a> (const F &amp;func)</td></tr>
 <tr class="separator:a278d72976cdc2c7b1f6cebc9a6e5a708"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Example usage:</p>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> gCanvas::onEvent(<a class="code" href="classgEvent.html">gEvent</a>&amp; event) {</div>
 <div class="line">   <a class="code" href="classgEventDispatcher.html">gEventDispatcher</a> dispatcher(event);</div>
-<div class="line">   dispatcher.dispatch&lt;gSomethingEvent&gt;(G_BIND_FUNCTION(onSomethingEvent)); <span class="comment">// to bind functions inside the current class</span></div>
-<div class="line">   dispatcher.dispatch&lt;gSomethingEvent&gt;(G_BIND_GLOBAL_FUNCTION(onSomethingEvent)); <span class="comment">// to bind global functions without a class</span></div>
+<div class="line">   dispatcher.dispatch&lt;gSomethingEvent&gt;(<a class="code" href="gEvent_8h.html#a13e3984d09cc4c5a43b45f5cc1e1df04">G_BIND_FUNCTION</a>(onSomethingEvent)); <span class="comment">// to bind functions inside the current class</span></div>
+<div class="line">   dispatcher.dispatch&lt;gSomethingEvent&gt;(<a class="code" href="gEvent_8h.html#a191f70bbab8a83130414f49b20449ea5">G_BIND_GLOBAL_FUNCTION</a>(onSomethingEvent)); <span class="comment">// to bind global functions without a class</span></div>
 <div class="line">}</div>
 <div class="line"> </div>
 <div class="line"><span class="keywordtype">bool</span> gCanvas::onSomethingEvent(gSomethingEvent&amp; event) {</div>
@@ -118,7 +116,65 @@ template&lt;typename T , typename F &gt; </td></tr>
 <div class="ttc" id="aclassgEventDispatcher_html"><div class="ttname"><a href="classgEventDispatcher.html">gEventDispatcher</a></div><div class="ttdef"><b>Definition:</b> gEvent.h:66</div></div>
 <div class="ttc" id="aclassgEvent_html"><div class="ttname"><a href="classgEvent.html">gEvent</a></div><div class="ttdef"><b>Definition:</b> gEvent.h:32</div></div>
 <div class="ttc" id="aclassgLogi_html"><div class="ttname"><a href="classgLogi.html">gLogi</a></div><div class="ttdef"><b>Definition:</b> gUtils.h:219</div></div>
-</div><!-- fragment --> </div><hr/>The documentation for this class was generated from the following file:<ul>
+<div class="ttc" id="agEvent_8h_html_a13e3984d09cc4c5a43b45f5cc1e1df04"><div class="ttname"><a href="gEvent_8h.html#a13e3984d09cc4c5a43b45f5cc1e1df04">G_BIND_FUNCTION</a></div><div class="ttdeci">#define G_BIND_FUNCTION(fn)</div><div class="ttdef"><b>Definition:</b> gEvent.h:97</div></div>
+<div class="ttc" id="agEvent_8h_html_a191f70bbab8a83130414f49b20449ea5"><div class="ttname"><a href="gEvent_8h.html#a191f70bbab8a83130414f49b20449ea5">G_BIND_GLOBAL_FUNCTION</a></div><div class="ttdeci">#define G_BIND_GLOBAL_FUNCTION(fn)</div><div class="ttdef"><b>Definition:</b> gEvent.h:98</div></div>
+</div><!-- fragment --> </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a14fa8c4532e18bbf12f4307c8d624a5c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a14fa8c4532e18bbf12f4307c8d624a5c">&#9670;&nbsp;</a></span>gEventDispatcher()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">gEventDispatcher::gEventDispatcher </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classgEvent.html">gEvent</a> &amp;&#160;</td>
+          <td class="paramname"><em>event</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a278d72976cdc2c7b1f6cebc9a6e5a708"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a278d72976cdc2c7b1f6cebc9a6e5a708">&#9670;&nbsp;</a></span>dispatch()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T , typename F &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool gEventDispatcher::dispatch </td>
+          <td>(</td>
+          <td class="paramtype">const F &amp;&#160;</td>
+          <td class="paramname"><em>func</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<hr/>The documentation for this class was generated from the following file:<ul>
 <li><a class="el" href="gEvent_8h_source.html">gEvent.h</a></li>
 </ul>
 </div><!-- contents -->

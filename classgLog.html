@@ -93,6 +93,8 @@ $(document).ready(function(){initNavTree('classgLog.html',''); initResizable(); 
 <div class="title">gLog Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p><code>#include &lt;<a class="el" href="gUtils_8h_source.html">gUtils.h</a>&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for gLog:</div>
 <div class="dyncontent">
@@ -108,59 +110,369 @@ Inheritance diagram for gLog:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:ab2a7397c1a6d05702ce4f8aefaabb3bc"><td class="memItemLeft" align="right" valign="top"><a id="ab2a7397c1a6d05702ce4f8aefaabb3bc"></a>enum &#160;</td><td class="memItemRight" valign="bottom">{ <b>LOGLEVEL_INFO</b>
-, <b>LOGLEVEL_DEBUG</b>
-, <b>LOGLEVEL_WARNING</b>
-, <b>LOGLEVEL_ERROR</b>
+<tr class="memitem:ab2a7397c1a6d05702ce4f8aefaabb3bc"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom">{ <a class="el" href="classgLog.html#ab2a7397c1a6d05702ce4f8aefaabb3bcaf860e6876f2eace422987c55349ffa15">LOGLEVEL_INFO</a>
+, <a class="el" href="classgLog.html#ab2a7397c1a6d05702ce4f8aefaabb3bca27fb8a5c75ebbf59dbb92b763ba3926a">LOGLEVEL_DEBUG</a>
+, <a class="el" href="classgLog.html#ab2a7397c1a6d05702ce4f8aefaabb3bca4975a21d54ff6404704fe8e29c3a0108">LOGLEVEL_WARNING</a>
+, <a class="el" href="classgLog.html#ab2a7397c1a6d05702ce4f8aefaabb3bca923366514f9a943c17a6acaacf601e55">LOGLEVEL_ERROR</a>
  }</td></tr>
 <tr class="separator:ab2a7397c1a6d05702ce4f8aefaabb3bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a150b1e7e081d3bab521bc9e5d7d7e23b"><td class="memItemLeft" align="right" valign="top"><a id="a150b1e7e081d3bab521bc9e5d7d7e23b"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>gLog</b> (const std::string &amp;tag)</td></tr>
+<tr class="memitem:a138b84e798b0f1eae0a6b942990a5383"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgLog.html#a138b84e798b0f1eae0a6b942990a5383">gLog</a> ()</td></tr>
+<tr class="separator:a138b84e798b0f1eae0a6b942990a5383"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a150b1e7e081d3bab521bc9e5d7d7e23b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgLog.html#a150b1e7e081d3bab521bc9e5d7d7e23b">gLog</a> (const std::string &amp;tag)</td></tr>
 <tr class="separator:a150b1e7e081d3bab521bc9e5d7d7e23b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af520ae8e66e90ba0d1c3ad3f1dc8e335"><td class="memItemLeft" align="right" valign="top"><a id="af520ae8e66e90ba0d1c3ad3f1dc8e335"></a>
-<a class="el" href="classgLog.html">gLog</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator&lt;&lt;</b> (std::ostream &amp;(*func)(std::ostream &amp;))</td></tr>
+<tr class="memitem:ad30f5d428c7d1a1c948e4cbd78d242cc"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgLog.html#ad30f5d428c7d1a1c948e4cbd78d242cc">~gLog</a> ()</td></tr>
+<tr class="separator:ad30f5d428c7d1a1c948e4cbd78d242cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af520ae8e66e90ba0d1c3ad3f1dc8e335"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgLog.html">gLog</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgLog.html#af520ae8e66e90ba0d1c3ad3f1dc8e335">operator&lt;&lt;</a> (std::ostream &amp;(*func)(std::ostream &amp;))</td></tr>
 <tr class="separator:af520ae8e66e90ba0d1c3ad3f1dc8e335"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a29a78ea0379309fda4aa44af3629a12b"><td class="memTemplParams" colspan="2"><a id="a29a78ea0379309fda4aa44af3629a12b"></a>
-template&lt;typename T &gt; </td></tr>
-<tr class="memitem:a29a78ea0379309fda4aa44af3629a12b"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classgLog.html">gLog</a> &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator&lt;&lt;</b> (const T &amp;value)</td></tr>
+<tr class="memitem:a29a78ea0379309fda4aa44af3629a12b"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:a29a78ea0379309fda4aa44af3629a12b"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classgLog.html">gLog</a> &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classgLog.html#a29a78ea0379309fda4aa44af3629a12b">operator&lt;&lt;</a> (const T &amp;value)</td></tr>
 <tr class="separator:a29a78ea0379309fda4aa44af3629a12b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:a2fa86481b1c8eb565a6c8c8c14a41fed"><td class="memItemLeft" align="right" valign="top"><a id="a2fa86481b1c8eb565a6c8c8c14a41fed"></a>
-static void&#160;</td><td class="memItemRight" valign="bottom"><b>setLoggingEnabled</b> (bool isLoggingEnabled)</td></tr>
+<tr class="memitem:a2fa86481b1c8eb565a6c8c8c14a41fed"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgLog.html#a2fa86481b1c8eb565a6c8c8c14a41fed">setLoggingEnabled</a> (bool <a class="el" href="classgLog.html#ad3614131d0050c4d65e5b946c9e51201">isLoggingEnabled</a>)</td></tr>
 <tr class="separator:a2fa86481b1c8eb565a6c8c8c14a41fed"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad3614131d0050c4d65e5b946c9e51201"><td class="memItemLeft" align="right" valign="top"><a id="ad3614131d0050c4d65e5b946c9e51201"></a>
-static bool&#160;</td><td class="memItemRight" valign="bottom"><b>isLoggingEnabled</b> ()</td></tr>
+<tr class="memitem:ad3614131d0050c4d65e5b946c9e51201"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgLog.html#ad3614131d0050c4d65e5b946c9e51201">isLoggingEnabled</a> ()</td></tr>
 <tr class="separator:ad3614131d0050c4d65e5b946c9e51201"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a82ba8c6ee567882882be35d45540e79e"><td class="memItemLeft" align="right" valign="top"><a id="a82ba8c6ee567882882be35d45540e79e"></a>
-static std::string&#160;</td><td class="memItemRight" valign="bottom"><b>getLogLevelName</b> (int logLevel)</td></tr>
+<tr class="memitem:a82ba8c6ee567882882be35d45540e79e"><td class="memItemLeft" align="right" valign="top">static std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgLog.html#a82ba8c6ee567882882be35d45540e79e">getLogLevelName</a> (int logLevel)</td></tr>
 <tr class="separator:a82ba8c6ee567882882be35d45540e79e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
-<tr class="memitem:aed619c6cb97f6d695d7503a4c61b82b5"><td class="memItemLeft" align="right" valign="top"><a id="aed619c6cb97f6d695d7503a4c61b82b5"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>loglevel</b></td></tr>
+<tr class="memitem:aed619c6cb97f6d695d7503a4c61b82b5"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgLog.html#aed619c6cb97f6d695d7503a4c61b82b5">loglevel</a></td></tr>
 <tr class="separator:aed619c6cb97f6d695d7503a4c61b82b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af4b0856d02e15424b34b822c6fc0586d"><td class="memItemLeft" align="right" valign="top"><a id="af4b0856d02e15424b34b822c6fc0586d"></a>
-std::stringstream&#160;</td><td class="memItemRight" valign="bottom"><b>logmessage</b></td></tr>
+<tr class="memitem:af4b0856d02e15424b34b822c6fc0586d"><td class="memItemLeft" align="right" valign="top">std::stringstream&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgLog.html#af4b0856d02e15424b34b822c6fc0586d">logmessage</a></td></tr>
 <tr class="separator:af4b0856d02e15424b34b822c6fc0586d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3b3ee053e6d2b7f74fe0939f68125e99"><td class="memItemLeft" align="right" valign="top"><a id="a3b3ee053e6d2b7f74fe0939f68125e99"></a>
-std::string&#160;</td><td class="memItemRight" valign="bottom"><b>logtag</b></td></tr>
+<tr class="memitem:a3b3ee053e6d2b7f74fe0939f68125e99"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgLog.html#a3b3ee053e6d2b7f74fe0939f68125e99">logtag</a></td></tr>
 <tr class="separator:a3b3ee053e6d2b7f74fe0939f68125e99"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-static-attribs"></a>
 Static Protected Attributes</h2></td></tr>
-<tr class="memitem:a265452b0cdb70b0f8cc581912aaf801d"><td class="memItemLeft" align="right" valign="top"><a id="a265452b0cdb70b0f8cc581912aaf801d"></a>
-static bool&#160;</td><td class="memItemRight" valign="bottom"><b>isloggingenabled</b></td></tr>
+<tr class="memitem:a265452b0cdb70b0f8cc581912aaf801d"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgLog.html#a265452b0cdb70b0f8cc581912aaf801d">isloggingenabled</a></td></tr>
 <tr class="separator:a265452b0cdb70b0f8cc581912aaf801d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa9bfe4373ae6e8e204bc02ee6a134371"><td class="memItemLeft" align="right" valign="top"><a id="aa9bfe4373ae6e8e204bc02ee6a134371"></a>
-static std::string&#160;</td><td class="memItemRight" valign="bottom"><b>loglevelname</b> []</td></tr>
+<tr class="memitem:aa9bfe4373ae6e8e204bc02ee6a134371"><td class="memItemLeft" align="right" valign="top">static std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgLog.html#aa9bfe4373ae6e8e204bc02ee6a134371">loglevelname</a> []</td></tr>
 <tr class="separator:aa9bfe4373ae6e8e204bc02ee6a134371"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Member Enumeration Documentation</h2>
+<a id="ab2a7397c1a6d05702ce4f8aefaabb3bc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab2a7397c1a6d05702ce4f8aefaabb3bc">&#9670;&nbsp;</a></span>anonymous enum</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">anonymous enum</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="ab2a7397c1a6d05702ce4f8aefaabb3bcaf860e6876f2eace422987c55349ffa15"></a>LOGLEVEL_INFO&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="ab2a7397c1a6d05702ce4f8aefaabb3bca27fb8a5c75ebbf59dbb92b763ba3926a"></a>LOGLEVEL_DEBUG&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="ab2a7397c1a6d05702ce4f8aefaabb3bca4975a21d54ff6404704fe8e29c3a0108"></a>LOGLEVEL_WARNING&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="ab2a7397c1a6d05702ce4f8aefaabb3bca923366514f9a943c17a6acaacf601e55"></a>LOGLEVEL_ERROR&#160;</td><td class="fielddoc"></td></tr>
+</table>
+
+</div>
+</div>
+<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a138b84e798b0f1eae0a6b942990a5383"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a138b84e798b0f1eae0a6b942990a5383">&#9670;&nbsp;</a></span>gLog() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">gLog::gLog </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a150b1e7e081d3bab521bc9e5d7d7e23b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a150b1e7e081d3bab521bc9e5d7d7e23b">&#9670;&nbsp;</a></span>gLog() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">gLog::gLog </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>tag</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad30f5d428c7d1a1c948e4cbd78d242cc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad30f5d428c7d1a1c948e4cbd78d242cc">&#9670;&nbsp;</a></span>~gLog()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">gLog::~gLog </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a82ba8c6ee567882882be35d45540e79e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a82ba8c6ee567882882be35d45540e79e">&#9670;&nbsp;</a></span>getLogLevelName()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static std::string gLog::getLogLevelName </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>logLevel</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad3614131d0050c4d65e5b946c9e51201"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad3614131d0050c4d65e5b946c9e51201">&#9670;&nbsp;</a></span>isLoggingEnabled()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static bool gLog::isLoggingEnabled </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a29a78ea0379309fda4aa44af3629a12b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a29a78ea0379309fda4aa44af3629a12b">&#9670;&nbsp;</a></span>operator&lt;&lt;() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classgLog.html">gLog</a>&amp; gLog::operator&lt;&lt; </td>
+          <td>(</td>
+          <td class="paramtype">const T &amp;&#160;</td>
+          <td class="paramname"><em>value</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="af520ae8e66e90ba0d1c3ad3f1dc8e335"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af520ae8e66e90ba0d1c3ad3f1dc8e335">&#9670;&nbsp;</a></span>operator&lt;&lt;() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classgLog.html">gLog</a>&amp; gLog::operator&lt;&lt; </td>
+          <td>(</td>
+          <td class="paramtype">std::ostream &amp;(*)(std::ostream &amp;)&#160;</td>
+          <td class="paramname"><em>func</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a2fa86481b1c8eb565a6c8c8c14a41fed"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2fa86481b1c8eb565a6c8c8c14a41fed">&#9670;&nbsp;</a></span>setLoggingEnabled()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void gLog::setLoggingEnabled </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>isLoggingEnabled</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="a265452b0cdb70b0f8cc581912aaf801d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a265452b0cdb70b0f8cc581912aaf801d">&#9670;&nbsp;</a></span>isloggingenabled</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool gLog::isloggingenabled</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aed619c6cb97f6d695d7503a4c61b82b5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aed619c6cb97f6d695d7503a4c61b82b5">&#9670;&nbsp;</a></span>loglevel</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int gLog::loglevel</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aa9bfe4373ae6e8e204bc02ee6a134371"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa9bfe4373ae6e8e204bc02ee6a134371">&#9670;&nbsp;</a></span>loglevelname</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string gLog::loglevelname[]</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="af4b0856d02e15424b34b822c6fc0586d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af4b0856d02e15424b34b822c6fc0586d">&#9670;&nbsp;</a></span>logmessage</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::stringstream gLog::logmessage</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a3b3ee053e6d2b7f74fe0939f68125e99"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3b3ee053e6d2b7f74fe0939f68125e99">&#9670;&nbsp;</a></span>logtag</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string gLog::logtag</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li><a class="el" href="gUtils_8h_source.html">gUtils.h</a></li>
 </ul>

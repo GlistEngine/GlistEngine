@@ -1,0 +1,14 @@
+<map id="gBaseWindow.h" name="gBaseWindow.h">
+<area shape="rect" id="node1" title=" " alt="" coords="392,5,517,32"/>
+<area shape="rect" id="node2" href="$gAppManager_8h.html" title=" " alt="" coords="319,80,441,107"/>
+<area shape="rect" id="node12" href="$gGLFWWindow_8h.html" title=" " alt="" coords="465,80,596,107"/>
+<area shape="rect" id="node3" href="$gBaseApp_8h.html" title=" " alt="" coords="331,155,429,181"/>
+<area shape="rect" id="node4" href="$gBaseCanvas_8h.html" title=" " alt="" coords="220,229,343,256"/>
+<area shape="rect" id="node7" href="$gGUIDropdownList_8h.html" title=" " alt="" coords="339,304,493,331"/>
+<area shape="rect" id="node10" href="$gBasePlugin_8h.html" title=" " alt="" coords="417,229,532,256"/>
+<area shape="rect" id="node11" href="$gGUIAppThread_8h.html" title=" " alt="" coords="556,229,692,256"/>
+<area shape="rect" id="node5" href="$gCanvasManager_8h.html" title=" " alt="" coords="5,304,152,331"/>
+<area shape="rect" id="node6" href="$gGUIColorPicker_8h.html" title=" " alt="" coords="176,304,315,331"/>
+<area shape="rect" id="node8" href="$gGUIToolbar_8h.html" title=" " alt="" coords="360,379,472,405"/>
+<area shape="rect" id="node9" href="$gGUINavigation_8h.html" title=" " alt="" coords="347,453,485,480"/>
+</map>

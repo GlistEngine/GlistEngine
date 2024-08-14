@@ -1,0 +1,9 @@
+<map id="gGUIText.h" name="gGUIText.h">
+<area shape="rect" id="node1" title=" " alt="" coords="169,5,262,32"/>
+<area shape="rect" id="node2" href="$gGUIDialogue_8h.html" title=" " alt="" coords="5,80,129,107"/>
+<area shape="rect" id="node5" href="$gGUITimebox_8h.html" title=" " alt="" coords="154,80,277,107"/>
+<area shape="rect" id="node6" href="$gGUIToolbar_8h.html" title=" " alt="" coords="301,80,413,107"/>
+<area shape="rect" id="node3" href="$gGUIManager_8h.html" title=" " alt="" coords="6,155,129,181"/>
+<area shape="rect" id="node4" href="$gGUIGrid_8h.html" title=" " alt="" coords="21,229,114,256"/>
+<area shape="rect" id="node7" href="$gGUINavigation_8h.html" title=" " alt="" coords="288,155,425,181"/>
+</map>

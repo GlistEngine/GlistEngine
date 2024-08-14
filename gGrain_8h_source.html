@@ -86,7 +86,7 @@ $(document).ready(function(){initNavTree('gGrain_8h_source.html',''); initResiza
 <div class="title">gGrain.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*</span></div>
+<a href="gGrain_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment"> * gGrain.h</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment"> *</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment"> *  Created on: 11 Tem 2023</span></div>
@@ -96,29 +96,35 @@ $(document).ready(function(){initNavTree('gGrain_8h_source.html',''); initResiza
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#ifndef GRAPHICS_POSTEFFECTS_GGRAIN_H_</span></div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#define GRAPHICS_POSTEFFECTS_GGRAIN_H_</span></div>
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160; </div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#include &quot;gBasePostProcess.h&quot;</span></div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="gBasePostProcess_8h.html">gBasePostProcess.h</a>&quot;</span></div>
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160; </div>
 <div class="line"><a name="l00013"></a><span class="lineno"><a class="line" href="classgGrain.html">   13</a></span>&#160;<span class="keyword">class </span><a class="code" href="classgGrain.html">gGrain</a>: <span class="keyword">public</span> <a class="code" href="classgBasePostProcess.html">gBasePostProcess</a> {</div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    <a class="code" href="classgGrain.html">gGrain</a>(<span class="keywordtype">float</span> intensity = 0.35f);</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;    <span class="keyword">virtual</span> ~<a class="code" href="classgGrain.html">gGrain</a>();</div>
+<div class="line"><a name="l00015"></a><span class="lineno"><a class="line" href="classgGrain.html#a1fbf5997aeb4c0b6deb1d224758dc28f">   15</a></span>&#160;    <a class="code" href="classgGrain.html#a1fbf5997aeb4c0b6deb1d224758dc28f">gGrain</a>(<span class="keywordtype">float</span> intensity = 0.35f);</div>
+<div class="line"><a name="l00016"></a><span class="lineno"><a class="line" href="classgGrain.html#a7491e4b9bbfca293ad8d1cc9c85090d9">   16</a></span>&#160;    <span class="keyword">virtual</span> <a class="code" href="classgGrain.html#a7491e4b9bbfca293ad8d1cc9c85090d9">~gGrain</a>();</div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160; </div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    <span class="keywordtype">void</span> use();</div>
+<div class="line"><a name="l00018"></a><span class="lineno"><a class="line" href="classgGrain.html#a9efea6842c7f2910aa9656e1ca28650e">   18</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classgGrain.html#a9efea6842c7f2910aa9656e1ca28650e">use</a>();</div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160; </div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="keyword">protected</span>:</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    <span class="keyword">const</span> std::string getVertSrc();</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    <span class="keyword">const</span> std::string getFragSrc();</div>
+<div class="line"><a name="l00021"></a><span class="lineno"><a class="line" href="classgGrain.html#a67ed9a7cc4015f7fb5bff4b9c67b9da1">   21</a></span>&#160;    <span class="keyword">const</span> std::string <a class="code" href="classgGrain.html#a67ed9a7cc4015f7fb5bff4b9c67b9da1">getVertSrc</a>();</div>
+<div class="line"><a name="l00022"></a><span class="lineno"><a class="line" href="classgGrain.html#a60925fd47fe28c264594aeb456ab4e3c">   22</a></span>&#160;    <span class="keyword">const</span> std::string <a class="code" href="classgGrain.html#a60925fd47fe28c264594aeb456ab4e3c">getFragSrc</a>();</div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;};</div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160; </div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* GRAPHICS_POSTEFFECTS_GGRAIN_H_ */</span><span class="preprocessor"></span></div>
 <div class="ttc" id="aclassgBasePostProcess_html"><div class="ttname"><a href="classgBasePostProcess.html">gBasePostProcess</a></div><div class="ttdef"><b>Definition:</b> gBasePostProcess.h:15</div></div>
 <div class="ttc" id="aclassgGrain_html"><div class="ttname"><a href="classgGrain.html">gGrain</a></div><div class="ttdef"><b>Definition:</b> gGrain.h:13</div></div>
+<div class="ttc" id="aclassgGrain_html_a1fbf5997aeb4c0b6deb1d224758dc28f"><div class="ttname"><a href="classgGrain.html#a1fbf5997aeb4c0b6deb1d224758dc28f">gGrain::gGrain</a></div><div class="ttdeci">gGrain(float intensity=0.35f)</div></div>
+<div class="ttc" id="aclassgGrain_html_a60925fd47fe28c264594aeb456ab4e3c"><div class="ttname"><a href="classgGrain.html#a60925fd47fe28c264594aeb456ab4e3c">gGrain::getFragSrc</a></div><div class="ttdeci">const std::string getFragSrc()</div></div>
+<div class="ttc" id="aclassgGrain_html_a67ed9a7cc4015f7fb5bff4b9c67b9da1"><div class="ttname"><a href="classgGrain.html#a67ed9a7cc4015f7fb5bff4b9c67b9da1">gGrain::getVertSrc</a></div><div class="ttdeci">const std::string getVertSrc()</div></div>
+<div class="ttc" id="aclassgGrain_html_a7491e4b9bbfca293ad8d1cc9c85090d9"><div class="ttname"><a href="classgGrain.html#a7491e4b9bbfca293ad8d1cc9c85090d9">gGrain::~gGrain</a></div><div class="ttdeci">virtual ~gGrain()</div></div>
+<div class="ttc" id="aclassgGrain_html_a9efea6842c7f2910aa9656e1ca28650e"><div class="ttname"><a href="classgGrain.html#a9efea6842c7f2910aa9656e1ca28650e">gGrain::use</a></div><div class="ttdeci">void use()</div></div>
+<div class="ttc" id="agBasePostProcess_8h_html"><div class="ttname"><a href="gBasePostProcess_8h.html">gBasePostProcess.h</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_996f45160da62e1a3d7f6046fad68f51.html">engine</a></li><li class="navelem"><a class="el" href="dir_8aa109d331f3e3b3014e32565285b6b8.html">graphics</a></li><li class="navelem"><a class="el" href="dir_abe4b6e0164058ef65dcfe639e678528.html">posteffects</a></li><li class="navelem"><b>gGrain.h</b></li>
+    <li class="navelem"><a class="el" href="dir_996f45160da62e1a3d7f6046fad68f51.html">engine</a></li><li class="navelem"><a class="el" href="dir_8aa109d331f3e3b3014e32565285b6b8.html">graphics</a></li><li class="navelem"><a class="el" href="dir_abe4b6e0164058ef65dcfe639e678528.html">posteffects</a></li><li class="navelem"><a class="el" href="gGrain_8h.html">gGrain.h</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>

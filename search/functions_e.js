@@ -1,5 +1,8 @@
 var searchData=
 [
-  ['update_892',['update',['../classgSpriteAnimation.html#ab03b5e581b78eae59e58f97011acb8e6',1,'gSpriteAnimation::update()'],['../classgSpriteAnimator.html#ab97e962585ee0ba53d1fadd9198ed45f',1,'gSpriteAnimator::update()'],['../classgBasePlugin.html#a2f669835bae6eb8e1308d442f615da2f',1,'gBasePlugin::update()'],['../classgBaseWindow.html#a7ce6fc79d7fdadd40181156614b83b7e',1,'gBaseWindow::update()'],['../classgGLFWWindow.html#a2480f711c72c0e4f963e70a704bc971f',1,'gGLFWWindow::update()']]],
-  ['usedata_893',['useData',['../classgImage.html#a6ea46b2345a4e44d0ae14104d9310838',1,'gImage']]]
+  ['onevent_3917',['onEvent',['../classgBaseCanvas.html#a11604b1c043f581e96dfa2a16a022f34',1,'gBaseCanvas']]],
+  ['onguievent_3918',['onGuiEvent',['../classgBaseCanvas.html#a286c57483068857371425641c263de30',1,'gBaseCanvas']]],
+  ['onguievent_3919',['onGUIEvent',['../classgBaseGUIObject.html#aba419d856535f412a57bbc9ebc804be5',1,'gBaseGUIObject::onGUIEvent()'],['../classgGUIActionManager.html#a02f8c7124338dd0d829bd8505f192e77',1,'gGUIActionManager::onGUIEvent()'],['../classgGUIDropdownList.html#a082a6467bd914443f5ee4bc667a082d6',1,'gGUIDropdownList::onGUIEvent()'],['../classgGUIPane.html#add5fa63c9ca89cadf47d107e4579af03',1,'gGUIPane::onGUIEvent()']]],
+  ['operator_3c_3c_3920',['operator&lt;&lt;',['../classgLog.html#af520ae8e66e90ba0d1c3ad3f1dc8e335',1,'gLog::operator&lt;&lt;(std::ostream &amp;(*func)(std::ostream &amp;))'],['../classgLog.html#a29a78ea0379309fda4aa44af3629a12b',1,'gLog::operator&lt;&lt;(const T &amp;value)']]],
+  ['operator_3d_3921',['operator=',['../classgVbo.html#a627c8c37dc19f9beecd58781d84a526b',1,'gVbo']]]
 ];

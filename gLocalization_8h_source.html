@@ -86,22 +86,22 @@ $(document).ready(function(){initNavTree('gLocalization_8h_source.html',''); ini
 <div class="title">gLocalization.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*</span></div>
+<a href="gLocalization_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment"> * gLocalization.h</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment"> *</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment"> *  Created on: 6 Tem 2021</span></div>
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment"> *      Author: Admin</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &lt;locale&gt;</span></div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#include &quot;gDatabase.h&quot;</span></div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="gDatabase_8h.html">gDatabase.h</a>&quot;</span></div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160; </div>
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#ifndef UTILS_GLOCALIZATION_H_</span></div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#define UTILS_GLOCALIZATION_H_</span></div>
+<div class="line"><a name="l00011"></a><span class="lineno"><a class="line" href="gLocalization_8h.html#ad5ac0fd75b01d8397d6dbd7defae1dc7">   11</a></span>&#160;<span class="preprocessor">#define UTILS_GLOCALIZATION_H_</span></div>
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160; </div>
 <div class="line"><a name="l00013"></a><span class="lineno"><a class="line" href="classgLocalization.html">   13</a></span>&#160;<span class="keyword">class </span><a class="code" href="classgLocalization.html">gLocalization</a> {</div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    <a class="code" href="classgLocalization.html">gLocalization</a>();</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;    <span class="keyword">virtual</span> ~<a class="code" href="classgLocalization.html">gLocalization</a>();</div>
+<div class="line"><a name="l00015"></a><span class="lineno"><a class="line" href="classgLocalization.html#a5088b935def800aeeb325387bc37b546">   15</a></span>&#160;    <a class="code" href="classgLocalization.html#a5088b935def800aeeb325387bc37b546">gLocalization</a>();</div>
+<div class="line"><a name="l00016"></a><span class="lineno"><a class="line" href="classgLocalization.html#a5bce0e57a537959d8e8bf6d68f3ec489">   16</a></span>&#160;    <span class="keyword">virtual</span> <a class="code" href="classgLocalization.html#a5bce0e57a537959d8e8bf6d68f3ec489">~gLocalization</a>();</div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160; </div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160; </div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    <span class="comment">/*</span></div>
@@ -110,13 +110,13 @@ $(document).ready(function(){initNavTree('gLocalization_8h_source.html',''); ini
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">     * @database Sends database name as string for load and make ready to use for language translates</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment">     * @tableName Sends table name as string for set and make ready to use for other functions and language translates</span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">     */</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    <span class="keywordtype">void</span> loadDatabase(std::string database, std::string tableName = <span class="stringliteral">&quot;WORDS&quot;</span>);</div>
+<div class="line"><a name="l00025"></a><span class="lineno"><a class="line" href="classgLocalization.html#a59cecc7247cb10b88dabc6b6db1cffa7">   25</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classgLocalization.html#a59cecc7247cb10b88dabc6b6db1cffa7">loadDatabase</a>(std::string database, std::string tableName = <span class="stringliteral">&quot;WORDS&quot;</span>);</div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    <span class="comment">/*</span></div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">     * Metod for translating words to current language it will return string</span></div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">     * @ word Sending string for translate</span></div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">     */</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    std::string localizeWord(std::string word);</div>
+<div class="line"><a name="l00031"></a><span class="lineno"><a class="line" href="classgLocalization.html#a701763c62dbd47fab5cec7e13cfd3947">   31</a></span>&#160;    std::string <a class="code" href="classgLocalization.html#a701763c62dbd47fab5cec7e13cfd3947">localizeWord</a>(std::string word);</div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160; </div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160; </div>
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="comment">/*</span></div>
@@ -126,26 +126,26 @@ $(document).ready(function(){initNavTree('gLocalization_8h_source.html',''); ini
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="comment">     *</span></div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="comment">     * @param languageId variable for setting language</span></div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="comment">     */</span></div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="keywordtype">void</span> setCurrentLanguage(<span class="keywordtype">int</span> languageId);</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    std::string getTableInfo();</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    std::string getColumnData(std::string columnname);</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    std::vector&lt;std::string&gt; getColumnList();</div>
+<div class="line"><a name="l00041"></a><span class="lineno"><a class="line" href="classgLocalization.html#ad0ef972562b4682ab67cb216c1347573">   41</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classgLocalization.html#ad0ef972562b4682ab67cb216c1347573">setCurrentLanguage</a>(<span class="keywordtype">int</span> languageId);</div>
+<div class="line"><a name="l00042"></a><span class="lineno"><a class="line" href="classgLocalization.html#ac3f976de15ea70f5505488a3d42dfe1e">   42</a></span>&#160;    std::string <a class="code" href="classgLocalization.html#ac3f976de15ea70f5505488a3d42dfe1e">getTableInfo</a>();</div>
+<div class="line"><a name="l00043"></a><span class="lineno"><a class="line" href="classgLocalization.html#a8fd55fb0195c97a5631e14de4532b8be">   43</a></span>&#160;    std::string <a class="code" href="classgLocalization.html#a8fd55fb0195c97a5631e14de4532b8be">getColumnData</a>(std::string columnname);</div>
+<div class="line"><a name="l00044"></a><span class="lineno"><a class="line" href="classgLocalization.html#a9c578af3cd819dd62aa8d17574e98d21">   44</a></span>&#160;    std::vector&lt;std::string&gt; <a class="code" href="classgLocalization.html#a9c578af3cd819dd62aa8d17574e98d21">getColumnList</a>();</div>
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; </div>
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <span class="comment">/*</span></div>
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="comment">     * Gives which language used</span></div>
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="comment">     *</span></div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="comment">     * @return language as string</span></div>
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="comment">     */</span></div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    std::string getCurrentLanguage();</div>
+<div class="line"><a name="l00051"></a><span class="lineno"><a class="line" href="classgLocalization.html#a791bfb5319ad36f0dcc8fdab19f1c632">   51</a></span>&#160;    std::string <a class="code" href="classgLocalization.html#a791bfb5319ad36f0dcc8fdab19f1c632">getCurrentLanguage</a>();</div>
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160; </div>
 <div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <span class="comment">/*</span></div>
 <div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="comment">     * Gives which language id is set</span></div>
 <div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="comment">     *</span></div>
 <div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="comment">     * @return return languageId as int</span></div>
 <div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="comment">     */</span></div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    <span class="keywordtype">int</span> getLangId();</div>
+<div class="line"><a name="l00058"></a><span class="lineno"><a class="line" href="classgLocalization.html#ae9dd66ba774aaa131f8afdbcc912555e">   58</a></span>&#160;    <span class="keywordtype">int</span> <a class="code" href="classgLocalization.html#ae9dd66ba774aaa131f8afdbcc912555e">getLangId</a>();</div>
 <div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160; </div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <span class="keywordtype">int</span> sayi;</div>
+<div class="line"><a name="l00060"></a><span class="lineno"><a class="line" href="classgLocalization.html#a8365b5f6ce054cfe28ccadd8bf2749a5">   60</a></span>&#160;    <span class="keywordtype">int</span> <a class="code" href="classgLocalization.html#a8365b5f6ce054cfe28ccadd8bf2749a5">sayi</a>;</div>
 <div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="keyword">private</span>:</div>
 <div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    <span class="comment">//Add column names of database to columnList vector</span></div>
 <div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <span class="keywordtype">void</span> columnLister(std::string tableinfo);</div>
@@ -168,12 +168,24 @@ $(document).ready(function(){initNavTree('gLocalization_8h_source.html',''); ini
 <div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* UTILS_GLOCALIZATION_H_ */</span><span class="preprocessor"></span></div>
 <div class="ttc" id="aclassgDatabase_html"><div class="ttname"><a href="classgDatabase.html">gDatabase</a></div><div class="ttdef"><b>Definition:</b> gDatabase.h:25</div></div>
 <div class="ttc" id="aclassgLocalization_html"><div class="ttname"><a href="classgLocalization.html">gLocalization</a></div><div class="ttdef"><b>Definition:</b> gLocalization.h:13</div></div>
+<div class="ttc" id="aclassgLocalization_html_a5088b935def800aeeb325387bc37b546"><div class="ttname"><a href="classgLocalization.html#a5088b935def800aeeb325387bc37b546">gLocalization::gLocalization</a></div><div class="ttdeci">gLocalization()</div></div>
+<div class="ttc" id="aclassgLocalization_html_a59cecc7247cb10b88dabc6b6db1cffa7"><div class="ttname"><a href="classgLocalization.html#a59cecc7247cb10b88dabc6b6db1cffa7">gLocalization::loadDatabase</a></div><div class="ttdeci">void loadDatabase(std::string database, std::string tableName=&quot;WORDS&quot;)</div></div>
+<div class="ttc" id="aclassgLocalization_html_a5bce0e57a537959d8e8bf6d68f3ec489"><div class="ttname"><a href="classgLocalization.html#a5bce0e57a537959d8e8bf6d68f3ec489">gLocalization::~gLocalization</a></div><div class="ttdeci">virtual ~gLocalization()</div></div>
+<div class="ttc" id="aclassgLocalization_html_a701763c62dbd47fab5cec7e13cfd3947"><div class="ttname"><a href="classgLocalization.html#a701763c62dbd47fab5cec7e13cfd3947">gLocalization::localizeWord</a></div><div class="ttdeci">std::string localizeWord(std::string word)</div></div>
+<div class="ttc" id="aclassgLocalization_html_a791bfb5319ad36f0dcc8fdab19f1c632"><div class="ttname"><a href="classgLocalization.html#a791bfb5319ad36f0dcc8fdab19f1c632">gLocalization::getCurrentLanguage</a></div><div class="ttdeci">std::string getCurrentLanguage()</div></div>
+<div class="ttc" id="aclassgLocalization_html_a8365b5f6ce054cfe28ccadd8bf2749a5"><div class="ttname"><a href="classgLocalization.html#a8365b5f6ce054cfe28ccadd8bf2749a5">gLocalization::sayi</a></div><div class="ttdeci">int sayi</div><div class="ttdef"><b>Definition:</b> gLocalization.h:60</div></div>
+<div class="ttc" id="aclassgLocalization_html_a8fd55fb0195c97a5631e14de4532b8be"><div class="ttname"><a href="classgLocalization.html#a8fd55fb0195c97a5631e14de4532b8be">gLocalization::getColumnData</a></div><div class="ttdeci">std::string getColumnData(std::string columnname)</div></div>
+<div class="ttc" id="aclassgLocalization_html_a9c578af3cd819dd62aa8d17574e98d21"><div class="ttname"><a href="classgLocalization.html#a9c578af3cd819dd62aa8d17574e98d21">gLocalization::getColumnList</a></div><div class="ttdeci">std::vector&lt; std::string &gt; getColumnList()</div></div>
+<div class="ttc" id="aclassgLocalization_html_ac3f976de15ea70f5505488a3d42dfe1e"><div class="ttname"><a href="classgLocalization.html#ac3f976de15ea70f5505488a3d42dfe1e">gLocalization::getTableInfo</a></div><div class="ttdeci">std::string getTableInfo()</div></div>
+<div class="ttc" id="aclassgLocalization_html_ad0ef972562b4682ab67cb216c1347573"><div class="ttname"><a href="classgLocalization.html#ad0ef972562b4682ab67cb216c1347573">gLocalization::setCurrentLanguage</a></div><div class="ttdeci">void setCurrentLanguage(int languageId)</div></div>
+<div class="ttc" id="aclassgLocalization_html_ae9dd66ba774aaa131f8afdbcc912555e"><div class="ttname"><a href="classgLocalization.html#ae9dd66ba774aaa131f8afdbcc912555e">gLocalization::getLangId</a></div><div class="ttdeci">int getLangId()</div></div>
+<div class="ttc" id="agDatabase_8h_html"><div class="ttname"><a href="gDatabase_8h.html">gDatabase.h</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_996f45160da62e1a3d7f6046fad68f51.html">engine</a></li><li class="navelem"><a class="el" href="dir_961895bef81e67620a5b47a62fb3cb48.html">utils</a></li><li class="navelem"><b>gLocalization.h</b></li>
+    <li class="navelem"><a class="el" href="dir_996f45160da62e1a3d7f6046fad68f51.html">engine</a></li><li class="navelem"><a class="el" href="dir_961895bef81e67620a5b47a62fb3cb48.html">utils</a></li><li class="navelem"><a class="el" href="gLocalization_8h.html">gLocalization.h</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>

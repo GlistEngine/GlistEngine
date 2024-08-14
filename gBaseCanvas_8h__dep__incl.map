@@ -1,0 +1,11 @@
+<map id="gBaseCanvas.h" name="gBaseCanvas.h">
+<area shape="rect" id="node1" title=" " alt="" coords="279,5,401,32"/>
+<area shape="rect" id="node2" href="$gBaseApp_8h.html" title=" " alt="" coords="204,80,303,107"/>
+<area shape="rect" id="node5" href="$gGUIDropdownList_8h.html" title=" " alt="" coords="304,155,459,181"/>
+<area shape="rect" id="node8" href="$gCanvasManager_8h.html" title=" " alt="" coords="377,80,524,107"/>
+<area shape="rect" id="node9" href="$gGUIColorPicker_8h.html" title=" " alt="" coords="548,80,687,107"/>
+<area shape="rect" id="node3" href="$gBasePlugin_8h.html" title=" " alt="" coords="5,155,120,181"/>
+<area shape="rect" id="node4" href="$gGUIAppThread_8h.html" title=" " alt="" coords="144,155,280,181"/>
+<area shape="rect" id="node6" href="$gGUIToolbar_8h.html" title=" " alt="" coords="325,229,437,256"/>
+<area shape="rect" id="node7" href="$gGUINavigation_8h.html" title=" " alt="" coords="313,304,450,331"/>
+</map>

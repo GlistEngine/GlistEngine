@@ -86,7 +86,7 @@ $(document).ready(function(){initNavTree('gGUIStatusBar_8h_source.html',''); ini
 <div class="title">gGUIStatusBar.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*</span></div>
+<a href="gGUIStatusBar_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment"> * gGUIStatusBar.h</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment"> *</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment"> *  Created on: 27 Jul 2022</span></div>
@@ -96,24 +96,24 @@ $(document).ready(function(){initNavTree('gGUIStatusBar_8h_source.html',''); ini
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#ifndef UI_GGUISTATUSBAR_H_</span></div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#define UI_GGUISTATUSBAR_H_</span></div>
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160; </div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#include &quot;gGUIContainer.h&quot;</span></div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor">#include &quot;gFont.h&quot;</span></div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="gGUIContainer_8h.html">gGUIContainer.h</a>&quot;</span></div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="gFont_8h.html">gFont.h</a>&quot;</span></div>
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160; </div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160; </div>
 <div class="line"><a name="l00015"></a><span class="lineno"><a class="line" href="classgGUIStatusBar.html">   15</a></span>&#160;<span class="keyword">class </span><a class="code" href="classgGUIStatusBar.html">gGUIStatusBar</a>: <span class="keyword">public</span> <a class="code" href="classgGUIContainer.html">gGUIContainer</a> {</div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    <a class="code" href="classgGUIStatusBar.html">gGUIStatusBar</a>();</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    <span class="keyword">virtual</span> ~<a class="code" href="classgGUIStatusBar.html">gGUIStatusBar</a>();</div>
+<div class="line"><a name="l00017"></a><span class="lineno"><a class="line" href="classgGUIStatusBar.html#ad9b21e01e98e85675bd0b575623eaafa">   17</a></span>&#160;    <a class="code" href="classgGUIStatusBar.html#ad9b21e01e98e85675bd0b575623eaafa">gGUIStatusBar</a>();</div>
+<div class="line"><a name="l00018"></a><span class="lineno"><a class="line" href="classgGUIStatusBar.html#abf8295cb4ced1620f04a03552af7eb3b">   18</a></span>&#160;    <span class="keyword">virtual</span> <a class="code" href="classgGUIStatusBar.html#abf8295cb4ced1620f04a03552af7eb3b">~gGUIStatusBar</a>();</div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160; </div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    <span class="keywordtype">void</span> setText(<span class="keywordtype">int</span> index, std::string text);</div>
+<div class="line"><a name="l00020"></a><span class="lineno"><a class="line" href="classgGUIStatusBar.html#a1433c252518613ca57336e8b86404851">   20</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classgGUIStatusBar.html#a1433c252518613ca57336e8b86404851">setText</a>(<span class="keywordtype">int</span> index, std::string text);</div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160; </div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    <span class="keywordtype">void</span> draw();</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    <span class="keywordtype">void</span> windowResized(<span class="keywordtype">int</span> w, <span class="keywordtype">int</span> h);</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    <span class="keywordtype">void</span> mousePressed(<span class="keywordtype">int</span> x, <span class="keywordtype">int</span> y, <span class="keywordtype">int</span> button);</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    <span class="keywordtype">void</span> mouseDragged(<span class="keywordtype">int</span> x, <span class="keywordtype">int</span> y, <span class="keywordtype">int</span> button);</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    <span class="keywordtype">void</span> mouseReleased(<span class="keywordtype">int</span> x, <span class="keywordtype">int</span> y, <span class="keywordtype">int</span> button);</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    <span class="keywordtype">void</span> keyPressed(<span class="keywordtype">int</span> key);</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    <span class="keywordtype">void</span> keyReleased(<span class="keywordtype">int</span> key);</div>
+<div class="line"><a name="l00022"></a><span class="lineno"><a class="line" href="classgGUIStatusBar.html#a0882a4d9554408dbca86726a18e86861">   22</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classgGUIStatusBar.html#a0882a4d9554408dbca86726a18e86861">draw</a>();</div>
+<div class="line"><a name="l00023"></a><span class="lineno"><a class="line" href="classgGUIStatusBar.html#a7d7dd42ac5407dae297d772dd92bb396">   23</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classgGUIStatusBar.html#a7d7dd42ac5407dae297d772dd92bb396">windowResized</a>(<span class="keywordtype">int</span> w, <span class="keywordtype">int</span> h);</div>
+<div class="line"><a name="l00024"></a><span class="lineno"><a class="line" href="classgGUIStatusBar.html#aaeb0df12c6cd21979377ecec172dfbb2">   24</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classgGUIStatusBar.html#aaeb0df12c6cd21979377ecec172dfbb2">mousePressed</a>(<span class="keywordtype">int</span> x, <span class="keywordtype">int</span> y, <span class="keywordtype">int</span> button);</div>
+<div class="line"><a name="l00025"></a><span class="lineno"><a class="line" href="classgGUIStatusBar.html#a6f30979f30fc7aeb01e2e5577ae97dab">   25</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classgGUIStatusBar.html#a6f30979f30fc7aeb01e2e5577ae97dab">mouseDragged</a>(<span class="keywordtype">int</span> x, <span class="keywordtype">int</span> y, <span class="keywordtype">int</span> button);</div>
+<div class="line"><a name="l00026"></a><span class="lineno"><a class="line" href="classgGUIStatusBar.html#acc53400f70d6218790db99be8843d4d9">   26</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classgGUIStatusBar.html#acc53400f70d6218790db99be8843d4d9">mouseReleased</a>(<span class="keywordtype">int</span> x, <span class="keywordtype">int</span> y, <span class="keywordtype">int</span> button);</div>
+<div class="line"><a name="l00027"></a><span class="lineno"><a class="line" href="classgGUIStatusBar.html#a37c5b55db8abee8a18d484bd93d3f0e7">   27</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classgGUIStatusBar.html#a37c5b55db8abee8a18d484bd93d3f0e7">keyPressed</a>(<span class="keywordtype">int</span> key);</div>
+<div class="line"><a name="l00028"></a><span class="lineno"><a class="line" href="classgGUIStatusBar.html#acb0b1fceb4587297d110c2873704010b">   28</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classgGUIStatusBar.html#acb0b1fceb4587297d110c2873704010b">keyReleased</a>(<span class="keywordtype">int</span> key);</div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="keyword">private</span>:</div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    <span class="comment">//statusbar</span></div>
@@ -136,12 +136,24 @@ $(document).ready(function(){initNavTree('gGUIStatusBar_8h_source.html',''); ini
 <div class="ttc" id="aclassgGUIContainer_html"><div class="ttname"><a href="classgGUIContainer.html">gGUIContainer</a></div><div class="ttdef"><b>Definition:</b> gGUIContainer.h:15</div></div>
 <div class="ttc" id="aclassgGUISizer_html"><div class="ttname"><a href="classgGUISizer.html">gGUISizer</a></div><div class="ttdef"><b>Definition:</b> gGUISizer.h:14</div></div>
 <div class="ttc" id="aclassgGUIStatusBar_html"><div class="ttname"><a href="classgGUIStatusBar.html">gGUIStatusBar</a></div><div class="ttdef"><b>Definition:</b> gGUIStatusBar.h:15</div></div>
+<div class="ttc" id="aclassgGUIStatusBar_html_a0882a4d9554408dbca86726a18e86861"><div class="ttname"><a href="classgGUIStatusBar.html#a0882a4d9554408dbca86726a18e86861">gGUIStatusBar::draw</a></div><div class="ttdeci">void draw()</div></div>
+<div class="ttc" id="aclassgGUIStatusBar_html_a1433c252518613ca57336e8b86404851"><div class="ttname"><a href="classgGUIStatusBar.html#a1433c252518613ca57336e8b86404851">gGUIStatusBar::setText</a></div><div class="ttdeci">void setText(int index, std::string text)</div></div>
+<div class="ttc" id="aclassgGUIStatusBar_html_a37c5b55db8abee8a18d484bd93d3f0e7"><div class="ttname"><a href="classgGUIStatusBar.html#a37c5b55db8abee8a18d484bd93d3f0e7">gGUIStatusBar::keyPressed</a></div><div class="ttdeci">void keyPressed(int key)</div></div>
+<div class="ttc" id="aclassgGUIStatusBar_html_a6f30979f30fc7aeb01e2e5577ae97dab"><div class="ttname"><a href="classgGUIStatusBar.html#a6f30979f30fc7aeb01e2e5577ae97dab">gGUIStatusBar::mouseDragged</a></div><div class="ttdeci">void mouseDragged(int x, int y, int button)</div></div>
+<div class="ttc" id="aclassgGUIStatusBar_html_a7d7dd42ac5407dae297d772dd92bb396"><div class="ttname"><a href="classgGUIStatusBar.html#a7d7dd42ac5407dae297d772dd92bb396">gGUIStatusBar::windowResized</a></div><div class="ttdeci">void windowResized(int w, int h)</div></div>
+<div class="ttc" id="aclassgGUIStatusBar_html_aaeb0df12c6cd21979377ecec172dfbb2"><div class="ttname"><a href="classgGUIStatusBar.html#aaeb0df12c6cd21979377ecec172dfbb2">gGUIStatusBar::mousePressed</a></div><div class="ttdeci">void mousePressed(int x, int y, int button)</div></div>
+<div class="ttc" id="aclassgGUIStatusBar_html_abf8295cb4ced1620f04a03552af7eb3b"><div class="ttname"><a href="classgGUIStatusBar.html#abf8295cb4ced1620f04a03552af7eb3b">gGUIStatusBar::~gGUIStatusBar</a></div><div class="ttdeci">virtual ~gGUIStatusBar()</div></div>
+<div class="ttc" id="aclassgGUIStatusBar_html_acb0b1fceb4587297d110c2873704010b"><div class="ttname"><a href="classgGUIStatusBar.html#acb0b1fceb4587297d110c2873704010b">gGUIStatusBar::keyReleased</a></div><div class="ttdeci">void keyReleased(int key)</div></div>
+<div class="ttc" id="aclassgGUIStatusBar_html_acc53400f70d6218790db99be8843d4d9"><div class="ttname"><a href="classgGUIStatusBar.html#acc53400f70d6218790db99be8843d4d9">gGUIStatusBar::mouseReleased</a></div><div class="ttdeci">void mouseReleased(int x, int y, int button)</div></div>
+<div class="ttc" id="aclassgGUIStatusBar_html_ad9b21e01e98e85675bd0b575623eaafa"><div class="ttname"><a href="classgGUIStatusBar.html#ad9b21e01e98e85675bd0b575623eaafa">gGUIStatusBar::gGUIStatusBar</a></div><div class="ttdeci">gGUIStatusBar()</div></div>
+<div class="ttc" id="agFont_8h_html"><div class="ttname"><a href="gFont_8h.html">gFont.h</a></div></div>
+<div class="ttc" id="agGUIContainer_8h_html"><div class="ttname"><a href="gGUIContainer_8h.html">gGUIContainer.h</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_996f45160da62e1a3d7f6046fad68f51.html">engine</a></li><li class="navelem"><a class="el" href="dir_ae5170f952997566e512365547790ab2.html">ui</a></li><li class="navelem"><b>gGUIStatusBar.h</b></li>
+    <li class="navelem"><a class="el" href="dir_996f45160da62e1a3d7f6046fad68f51.html">engine</a></li><li class="navelem"><a class="el" href="dir_ae5170f952997566e512365547790ab2.html">ui</a></li><li class="navelem"><a class="el" href="gGUIStatusBar_8h.html">gGUIStatusBar.h</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>

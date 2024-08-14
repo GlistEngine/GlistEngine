@@ -86,7 +86,7 @@ $(document).ready(function(){initNavTree('gDatabase_8h_source.html',''); initRes
 <div class="title">gDatabase.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*</span></div>
+<a href="gDatabase_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment"> * Copyright (C) 2016 Nitra Games Ltd.</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment"> *</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment"> * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span></div>
@@ -107,26 +107,26 @@ $(document).ready(function(){initNavTree('gDatabase_8h_source.html',''); initRes
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160; </div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="preprocessor">#include &lt;queue&gt;</span></div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor">#include &quot;sqlite3.h&quot;</span></div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">#include &quot;gObject.h&quot;</span></div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="gObject_8h.html">gObject.h</a>&quot;</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160; </div>
 <div class="line"><a name="l00025"></a><span class="lineno"><a class="line" href="classgDatabase.html">   25</a></span>&#160;<span class="keyword">class </span><a class="code" href="classgDatabase.html">gDatabase</a>: <span class="keyword">public</span> <a class="code" href="classgObject.html">gObject</a> {</div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    <a class="code" href="classgDatabase.html">gDatabase</a>();</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    <span class="keyword">virtual</span> ~<a class="code" href="classgDatabase.html">gDatabase</a>();</div>
+<div class="line"><a name="l00027"></a><span class="lineno"><a class="line" href="classgDatabase.html#acb4f23d544a6c33f902fa48b699899cc">   27</a></span>&#160;    <a class="code" href="classgDatabase.html#acb4f23d544a6c33f902fa48b699899cc">gDatabase</a>();</div>
+<div class="line"><a name="l00028"></a><span class="lineno"><a class="line" href="classgDatabase.html#ab72d4d346f1eab742930a90ffd8d12dd">   28</a></span>&#160;    <span class="keyword">virtual</span> <a class="code" href="classgDatabase.html#ab72d4d346f1eab742930a90ffd8d12dd">~gDatabase</a>();</div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    <span class="keywordtype">bool</span> load(std::string fullPath);</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    <span class="keywordtype">bool</span> loadDatabase(std::string databasePath);</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    <span class="keywordtype">void</span> close();</div>
+<div class="line"><a name="l00030"></a><span class="lineno"><a class="line" href="classgDatabase.html#a13c3213a26d55ee9fd8047c45a49ac4c">   30</a></span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classgDatabase.html#a13c3213a26d55ee9fd8047c45a49ac4c">load</a>(std::string fullPath);</div>
+<div class="line"><a name="l00031"></a><span class="lineno"><a class="line" href="classgDatabase.html#a3c6bc4225fe720cc91ac46bd58dd85ef">   31</a></span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classgDatabase.html#a3c6bc4225fe720cc91ac46bd58dd85ef">loadDatabase</a>(std::string databasePath);</div>
+<div class="line"><a name="l00032"></a><span class="lineno"><a class="line" href="classgDatabase.html#acf36a173a1dda1ca2b70ee6d3ae9aa8a">   32</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classgDatabase.html#acf36a173a1dda1ca2b70ee6d3ae9aa8a">close</a>();</div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160; </div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    std::string getPath();</div>
+<div class="line"><a name="l00034"></a><span class="lineno"><a class="line" href="classgDatabase.html#aa7f6cfa2e05c2be85bb041c0ddbd2244">   34</a></span>&#160;    std::string <a class="code" href="classgDatabase.html#aa7f6cfa2e05c2be85bb041c0ddbd2244">getPath</a>();</div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160; </div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <span class="keywordtype">void</span> execute(std::string statement, std::string <span class="keywordtype">id</span> = <span class="stringliteral">&quot;0&quot;</span>);</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <span class="keyword">static</span> <span class="keywordtype">int</span> callback(<span class="keywordtype">void</span> *statementId, <span class="keywordtype">int</span> argc, <span class="keywordtype">char</span> **argv, <span class="keywordtype">char</span> **azColName);</div>
+<div class="line"><a name="l00036"></a><span class="lineno"><a class="line" href="classgDatabase.html#a72cacdfbced6b5b75661a7d5ffec3b18">   36</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classgDatabase.html#a72cacdfbced6b5b75661a7d5ffec3b18">execute</a>(std::string statement, std::string <span class="keywordtype">id</span> = <span class="stringliteral">&quot;0&quot;</span>);</div>
+<div class="line"><a name="l00037"></a><span class="lineno"><a class="line" href="classgDatabase.html#a4b2facca29ba3e910eaf068b857dd347">   37</a></span>&#160;    <span class="keyword">static</span> <span class="keywordtype">int</span> <a class="code" href="classgDatabase.html#a4b2facca29ba3e910eaf068b857dd347">callback</a>(<span class="keywordtype">void</span> *statementId, <span class="keywordtype">int</span> argc, <span class="keywordtype">char</span> **argv, <span class="keywordtype">char</span> **azColName);</div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160; </div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    std::string getSelectData();</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <span class="keywordtype">bool</span> hasSelectData();</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="keywordtype">int</span> getSelectDataNum();</div>
+<div class="line"><a name="l00039"></a><span class="lineno"><a class="line" href="classgDatabase.html#a6c29d5cd7c3a3267d004df33bbb39959">   39</a></span>&#160;    std::string <a class="code" href="classgDatabase.html#a6c29d5cd7c3a3267d004df33bbb39959">getSelectData</a>();</div>
+<div class="line"><a name="l00040"></a><span class="lineno"><a class="line" href="classgDatabase.html#a795d21f38bf77f0a7f06af1cea79edba">   40</a></span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classgDatabase.html#a795d21f38bf77f0a7f06af1cea79edba">hasSelectData</a>();</div>
+<div class="line"><a name="l00041"></a><span class="lineno"><a class="line" href="classgDatabase.html#a744b60a91b70460544e6c747e12b0a66">   41</a></span>&#160;    <span class="keywordtype">int</span> <a class="code" href="classgDatabase.html#a744b60a91b70460544e6c747e12b0a66">getSelectDataNum</a>();</div>
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; </div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <span class="comment">/*</span></div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="comment">     * Recieves all table infos from a database</span></div>
@@ -135,10 +135,10 @@ $(document).ready(function(){initNavTree('gDatabase_8h_source.html',''); initRes
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="comment">     *</span></div>
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="comment">     * @return since you sending pointer as input, it will modify and alter variables with results so you can directly use same variable.</span></div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="comment">     */</span></div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <span class="keywordtype">void</span> getTableInfo(<span class="keywordtype">char</span>*** sqlResult, <span class="keywordtype">int</span>* rowNum, <span class="keywordtype">int</span>* colNum);</div>
+<div class="line"><a name="l00050"></a><span class="lineno"><a class="line" href="classgDatabase.html#a437340323074abc70443a23d13957623">   50</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classgDatabase.html#a437340323074abc70443a23d13957623">getTableInfo</a>(<span class="keywordtype">char</span>*** sqlResult, <span class="keywordtype">int</span>* rowNum, <span class="keywordtype">int</span>* colNum);</div>
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160; </div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <span class="keywordtype">void</span> setDelimiter(std::string delimiter);</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    std::string getDelimiter();</div>
+<div class="line"><a name="l00052"></a><span class="lineno"><a class="line" href="classgDatabase.html#ac5c3ef991f96d9f8de3a1d840d9ead5a">   52</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classgDatabase.html#ac5c3ef991f96d9f8de3a1d840d9ead5a">setDelimiter</a>(std::string delimiter);</div>
+<div class="line"><a name="l00053"></a><span class="lineno"><a class="line" href="classgDatabase.html#a4f9b72175781a0d787b635417197c5b6">   53</a></span>&#160;    std::string <a class="code" href="classgDatabase.html#a4f9b72175781a0d787b635417197c5b6">getDelimiter</a>();</div>
 <div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160; </div>
 <div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="comment">/*</span></div>
 <div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="comment">     * Receives table names from database</span></div>
@@ -154,7 +154,7 @@ $(document).ready(function(){initNavTree('gDatabase_8h_source.html',''); initRes
 <div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="comment">     *</span></div>
 <div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="comment">     * @return resultstring return back column type of columnName</span></div>
 <div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="comment">     */</span></div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    std::vector&lt;std::string&gt; getTableNames();</div>
+<div class="line"><a name="l00069"></a><span class="lineno"><a class="line" href="classgDatabase.html#a9cbf31ad89ef13a5d56cc8bc08b27de1">   69</a></span>&#160;    std::vector&lt;std::string&gt; <a class="code" href="classgDatabase.html#a9cbf31ad89ef13a5d56cc8bc08b27de1">getTableNames</a>();</div>
 <div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160; </div>
 <div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    <span class="comment">/* Gives all column names from table info</span></div>
 <div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="comment">     *</span></div>
@@ -164,7 +164,7 @@ $(document).ready(function(){initNavTree('gDatabase_8h_source.html',''); initRes
 <div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;<span class="comment">     *</span></div>
 <div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;<span class="comment">     * @return sending back colunm name list as string vector</span></div>
 <div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;<span class="comment">     */</span></div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    std::vector&lt;std::string&gt; getColumnNames(std::string tableName);</div>
+<div class="line"><a name="l00079"></a><span class="lineno"><a class="line" href="classgDatabase.html#a8017b7927b70a4dc69f49aa55eb4a622">   79</a></span>&#160;    std::vector&lt;std::string&gt; <a class="code" href="classgDatabase.html#a8017b7927b70a4dc69f49aa55eb4a622">getColumnNames</a>(std::string tableName);</div>
 <div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160; </div>
 <div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    <span class="comment">/*</span></div>
 <div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;<span class="comment">     * Receives columnType from given colunmName and tableName</span></div>
@@ -176,7 +176,7 @@ $(document).ready(function(){initNavTree('gDatabase_8h_source.html',''); initRes
 <div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;<span class="comment">     *</span></div>
 <div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;<span class="comment">     * @return resultstring return back column type of columnName</span></div>
 <div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;<span class="comment">     */</span></div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    std::string getColumnType(std::string tableName, std::string columnName);</div>
+<div class="line"><a name="l00091"></a><span class="lineno"><a class="line" href="classgDatabase.html#a1d88c71249905be36daa265a277d2a04">   91</a></span>&#160;    std::string <a class="code" href="classgDatabase.html#a1d88c71249905be36daa265a277d2a04">getColumnType</a>(std::string tableName, std::string columnName);</div>
 <div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;<span class="keyword">private</span>:</div>
 <div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    sqlite3* db;</div>
 <div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    std::string fullpath;</div>
@@ -196,13 +196,31 @@ $(document).ready(function(){initNavTree('gDatabase_8h_source.html',''); initRes
 <div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160; </div>
 <div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* UTILS_GDATABASE_H_ */</span><span class="preprocessor"></span></div>
 <div class="ttc" id="aclassgDatabase_html"><div class="ttname"><a href="classgDatabase.html">gDatabase</a></div><div class="ttdef"><b>Definition:</b> gDatabase.h:25</div></div>
+<div class="ttc" id="aclassgDatabase_html_a13c3213a26d55ee9fd8047c45a49ac4c"><div class="ttname"><a href="classgDatabase.html#a13c3213a26d55ee9fd8047c45a49ac4c">gDatabase::load</a></div><div class="ttdeci">bool load(std::string fullPath)</div></div>
+<div class="ttc" id="aclassgDatabase_html_a1d88c71249905be36daa265a277d2a04"><div class="ttname"><a href="classgDatabase.html#a1d88c71249905be36daa265a277d2a04">gDatabase::getColumnType</a></div><div class="ttdeci">std::string getColumnType(std::string tableName, std::string columnName)</div></div>
+<div class="ttc" id="aclassgDatabase_html_a3c6bc4225fe720cc91ac46bd58dd85ef"><div class="ttname"><a href="classgDatabase.html#a3c6bc4225fe720cc91ac46bd58dd85ef">gDatabase::loadDatabase</a></div><div class="ttdeci">bool loadDatabase(std::string databasePath)</div></div>
+<div class="ttc" id="aclassgDatabase_html_a437340323074abc70443a23d13957623"><div class="ttname"><a href="classgDatabase.html#a437340323074abc70443a23d13957623">gDatabase::getTableInfo</a></div><div class="ttdeci">void getTableInfo(char ***sqlResult, int *rowNum, int *colNum)</div></div>
+<div class="ttc" id="aclassgDatabase_html_a4b2facca29ba3e910eaf068b857dd347"><div class="ttname"><a href="classgDatabase.html#a4b2facca29ba3e910eaf068b857dd347">gDatabase::callback</a></div><div class="ttdeci">static int callback(void *statementId, int argc, char **argv, char **azColName)</div></div>
+<div class="ttc" id="aclassgDatabase_html_a4f9b72175781a0d787b635417197c5b6"><div class="ttname"><a href="classgDatabase.html#a4f9b72175781a0d787b635417197c5b6">gDatabase::getDelimiter</a></div><div class="ttdeci">std::string getDelimiter()</div></div>
+<div class="ttc" id="aclassgDatabase_html_a6c29d5cd7c3a3267d004df33bbb39959"><div class="ttname"><a href="classgDatabase.html#a6c29d5cd7c3a3267d004df33bbb39959">gDatabase::getSelectData</a></div><div class="ttdeci">std::string getSelectData()</div></div>
+<div class="ttc" id="aclassgDatabase_html_a72cacdfbced6b5b75661a7d5ffec3b18"><div class="ttname"><a href="classgDatabase.html#a72cacdfbced6b5b75661a7d5ffec3b18">gDatabase::execute</a></div><div class="ttdeci">void execute(std::string statement, std::string id=&quot;0&quot;)</div></div>
+<div class="ttc" id="aclassgDatabase_html_a744b60a91b70460544e6c747e12b0a66"><div class="ttname"><a href="classgDatabase.html#a744b60a91b70460544e6c747e12b0a66">gDatabase::getSelectDataNum</a></div><div class="ttdeci">int getSelectDataNum()</div></div>
+<div class="ttc" id="aclassgDatabase_html_a795d21f38bf77f0a7f06af1cea79edba"><div class="ttname"><a href="classgDatabase.html#a795d21f38bf77f0a7f06af1cea79edba">gDatabase::hasSelectData</a></div><div class="ttdeci">bool hasSelectData()</div></div>
+<div class="ttc" id="aclassgDatabase_html_a8017b7927b70a4dc69f49aa55eb4a622"><div class="ttname"><a href="classgDatabase.html#a8017b7927b70a4dc69f49aa55eb4a622">gDatabase::getColumnNames</a></div><div class="ttdeci">std::vector&lt; std::string &gt; getColumnNames(std::string tableName)</div></div>
+<div class="ttc" id="aclassgDatabase_html_a9cbf31ad89ef13a5d56cc8bc08b27de1"><div class="ttname"><a href="classgDatabase.html#a9cbf31ad89ef13a5d56cc8bc08b27de1">gDatabase::getTableNames</a></div><div class="ttdeci">std::vector&lt; std::string &gt; getTableNames()</div></div>
+<div class="ttc" id="aclassgDatabase_html_aa7f6cfa2e05c2be85bb041c0ddbd2244"><div class="ttname"><a href="classgDatabase.html#aa7f6cfa2e05c2be85bb041c0ddbd2244">gDatabase::getPath</a></div><div class="ttdeci">std::string getPath()</div></div>
+<div class="ttc" id="aclassgDatabase_html_ab72d4d346f1eab742930a90ffd8d12dd"><div class="ttname"><a href="classgDatabase.html#ab72d4d346f1eab742930a90ffd8d12dd">gDatabase::~gDatabase</a></div><div class="ttdeci">virtual ~gDatabase()</div></div>
+<div class="ttc" id="aclassgDatabase_html_ac5c3ef991f96d9f8de3a1d840d9ead5a"><div class="ttname"><a href="classgDatabase.html#ac5c3ef991f96d9f8de3a1d840d9ead5a">gDatabase::setDelimiter</a></div><div class="ttdeci">void setDelimiter(std::string delimiter)</div></div>
+<div class="ttc" id="aclassgDatabase_html_acb4f23d544a6c33f902fa48b699899cc"><div class="ttname"><a href="classgDatabase.html#acb4f23d544a6c33f902fa48b699899cc">gDatabase::gDatabase</a></div><div class="ttdeci">gDatabase()</div></div>
+<div class="ttc" id="aclassgDatabase_html_acf36a173a1dda1ca2b70ee6d3ae9aa8a"><div class="ttname"><a href="classgDatabase.html#acf36a173a1dda1ca2b70ee6d3ae9aa8a">gDatabase::close</a></div><div class="ttdeci">void close()</div></div>
 <div class="ttc" id="aclassgObject_html"><div class="ttname"><a href="classgObject.html">gObject</a></div><div class="ttdef"><b>Definition:</b> gObject.h:33</div></div>
+<div class="ttc" id="agObject_8h_html"><div class="ttname"><a href="gObject_8h.html">gObject.h</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_996f45160da62e1a3d7f6046fad68f51.html">engine</a></li><li class="navelem"><a class="el" href="dir_961895bef81e67620a5b47a62fb3cb48.html">utils</a></li><li class="navelem"><b>gDatabase.h</b></li>
+    <li class="navelem"><a class="el" href="dir_996f45160da62e1a3d7f6046fad68f51.html">engine</a></li><li class="navelem"><a class="el" href="dir_961895bef81e67620a5b47a62fb3cb48.html">utils</a></li><li class="navelem"><a class="el" href="gDatabase_8h.html">gDatabase.h</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>

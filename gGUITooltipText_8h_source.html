@@ -86,7 +86,7 @@ $(document).ready(function(){initNavTree('gGUITooltipText_8h_source.html',''); i
 <div class="title">gGUITooltipText.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*</span></div>
+<a href="gGUITooltipText_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment"> * gGUITooltipText.h</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment"> *</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment"> *  Created on: 03 Jan 2024</span></div>
@@ -96,10 +96,10 @@ $(document).ready(function(){initNavTree('gGUITooltipText_8h_source.html',''); i
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#ifndef SRC_GGUITOOLTIPTEXT_H_</span></div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#define SRC_GGUITOOLTIPTEXT_H_</span></div>
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160; </div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#include &quot;gGUISizer.h&quot;</span></div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor">#include &quot;gFont.h&quot;</span></div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="preprocessor">#include &quot;gGUIControl.h&quot;</span></div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="preprocessor">#include &quot;gColor.h&quot;</span></div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="gGUISizer_8h.html">gGUISizer.h</a>&quot;</span></div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="gFont_8h.html">gFont.h</a>&quot;</span></div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="gGUIControl_8h.html">gGUIControl.h</a>&quot;</span></div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="gColor_8h.html">gColor.h</a>&quot;</span></div>
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160; </div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160; </div>
 <div class="line"><a name="l00017"></a><span class="lineno"><a class="line" href="classgGUITooltipText.html">   17</a></span>&#160;<span class="keyword">class </span><a class="code" href="classgGUITooltipText.html">gGUITooltipText</a>: <span class="keyword">public</span> <a class="code" href="classgGUIControl.html">gGUIControl</a> {</div>
@@ -112,23 +112,23 @@ $(document).ready(function(){initNavTree('gGUITooltipText_8h_source.html',''); i
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">     *  Second: void tooltipActivate(gGUISizer* sizer, int guiobject, int lineNo, int columnNo, std::string text);</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">     * below method should be called with the necessary parameters</span></div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment">     */</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    <a class="code" href="classgGUITooltipText.html">gGUITooltipText</a>();</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    <span class="keyword">virtual</span> ~<a class="code" href="classgGUITooltipText.html">gGUITooltipText</a>();</div>
+<div class="line"><a name="l00027"></a><span class="lineno"><a class="line" href="classgGUITooltipText.html#a3b1635e775a727fba981909f2958d4cb">   27</a></span>&#160;    <a class="code" href="classgGUITooltipText.html#a3b1635e775a727fba981909f2958d4cb">gGUITooltipText</a>();</div>
+<div class="line"><a name="l00028"></a><span class="lineno"><a class="line" href="classgGUITooltipText.html#ae6ca1bc970f98460b2af85a6ab00520d">   28</a></span>&#160;    <span class="keyword">virtual</span> <a class="code" href="classgGUITooltipText.html#ae6ca1bc970f98460b2af85a6ab00520d">~gGUITooltipText</a>();</div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    <span class="keyword">enum</span> objects {</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;        Button,</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;        Textbox,</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;        Numberbox,</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;        Panel</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    };</div>
+<div class="line"><a name="l00030"></a><span class="lineno"><a class="line" href="classgGUITooltipText.html#a2cedadc240d53936d63f66ecb36e771a">   30</a></span>&#160;    <span class="keyword">enum</span> <a class="code" href="classgGUITooltipText.html#a2cedadc240d53936d63f66ecb36e771a">objects</a> {</div>
+<div class="line"><a name="l00031"></a><span class="lineno"><a class="line" href="classgGUITooltipText.html#a2cedadc240d53936d63f66ecb36e771aa8356ee9046e114c45964cbd6242673ed">   31</a></span>&#160;        <a class="code" href="classgGUITooltipText.html#a2cedadc240d53936d63f66ecb36e771aa8356ee9046e114c45964cbd6242673ed">Button</a>,</div>
+<div class="line"><a name="l00032"></a><span class="lineno"><a class="line" href="classgGUITooltipText.html#a2cedadc240d53936d63f66ecb36e771aabd11adafc3ec8c461723416a72a98acf">   32</a></span>&#160;        <a class="code" href="classgGUITooltipText.html#a2cedadc240d53936d63f66ecb36e771aabd11adafc3ec8c461723416a72a98acf">Textbox</a>,</div>
+<div class="line"><a name="l00033"></a><span class="lineno"><a class="line" href="classgGUITooltipText.html#a2cedadc240d53936d63f66ecb36e771aa56250df15e94f7a1379a7c3058b6ce5c">   33</a></span>&#160;        <a class="code" href="classgGUITooltipText.html#a2cedadc240d53936d63f66ecb36e771aa56250df15e94f7a1379a7c3058b6ce5c">Numberbox</a>,</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;        <a class="code" href="classgGUITooltipText.html#a2cedadc240d53936d63f66ecb36e771aa12e6fe81a387860ec10ec0bffc9c98db">Panel</a></div>
+<div class="line"><a name="l00035"></a><span class="lineno"><a class="line" href="classgGUITooltipText.html#a2cedadc240d53936d63f66ecb36e771aa12e6fe81a387860ec10ec0bffc9c98db">   35</a></span>&#160;    };</div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160; </div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <span class="comment">/*</span></div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="comment">     * The set method works for setting the tooltip text which the user desires</span></div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="comment">     * The get method works for getting the tooltip text which the user defined</span></div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="comment">     * @param text, Text the user set it</span></div>
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="comment">     */</span></div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <span class="keywordtype">void</span> setText(std::string text);</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    std::string getText();</div>
+<div class="line"><a name="l00042"></a><span class="lineno"><a class="line" href="classgGUITooltipText.html#a793f5f75765af22a89db373ebe02ce04">   42</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classgGUITooltipText.html#a793f5f75765af22a89db373ebe02ce04">setText</a>(std::string text);</div>
+<div class="line"><a name="l00043"></a><span class="lineno"><a class="line" href="classgGUITooltipText.html#a282acabffa43599ae4c2fd003cde1701">   43</a></span>&#160;    std::string <a class="code" href="classgGUITooltipText.html#a282acabffa43599ae4c2fd003cde1701">getText</a>();</div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160; </div>
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="comment">/*</span></div>
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="comment">     *  activate method works for the activation of the tooltip text massage by the parameters of user</span></div>
@@ -143,17 +143,17 @@ $(document).ready(function(){initNavTree('gGUITooltipText_8h_source.html',''); i
 <div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="comment">     *  @param lineNo which is the column number refers the desired guiobject</span></div>
 <div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="comment">     *  @param text Text the user set it</span></div>
 <div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="comment">     */</span></div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    <span class="keywordtype">void</span> activate(<a class="code" href="classgGUISizer.html">gGUISizer</a>* sizer, objects guiobject, <span class="keywordtype">int</span> lineNo, <span class="keywordtype">int</span> columnNo, std::string text);</div>
+<div class="line"><a name="l00058"></a><span class="lineno"><a class="line" href="classgGUITooltipText.html#a93fb6f0e96abd7db0024f2e3f8a62d05">   58</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classgGUITooltipText.html#a93fb6f0e96abd7db0024f2e3f8a62d05">activate</a>(<a class="code" href="classgGUISizer.html">gGUISizer</a>* sizer, <a class="code" href="classgGUITooltipText.html#a2cedadc240d53936d63f66ecb36e771a">objects</a> guiobject, <span class="keywordtype">int</span> lineNo, <span class="keywordtype">int</span> columnNo, std::string text);</div>
 <div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160; </div>
 <div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <span class="comment">/*</span></div>
 <div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="comment">     * setTitleLength method manage the length of the massage to draw</span></div>
 <div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="comment">     * @param text Text the user set it</span></div>
 <div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="comment">     */</span></div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    <span class="keywordtype">void</span> setTitleLength(std::string text);</div>
+<div class="line"><a name="l00064"></a><span class="lineno"><a class="line" href="classgGUITooltipText.html#a9aa755846588106a21982c9c25e82ace">   64</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classgGUITooltipText.html#a9aa755846588106a21982c9c25e82ace">setTitleLength</a>(std::string text);</div>
 <div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160; </div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    <span class="keywordtype">void</span> update();</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    <span class="keywordtype">void</span> draw();</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    <span class="keywordtype">void</span> mouseMoved(<span class="keywordtype">int</span> x, <span class="keywordtype">int</span> y);</div>
+<div class="line"><a name="l00066"></a><span class="lineno"><a class="line" href="classgGUITooltipText.html#aef3cf9ebb724d179c6b12719c074ab94">   66</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classgGUITooltipText.html#aef3cf9ebb724d179c6b12719c074ab94">update</a>();</div>
+<div class="line"><a name="l00067"></a><span class="lineno"><a class="line" href="classgGUITooltipText.html#aba143258b5a676d3123d8cc6e661e0d3">   67</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classgGUITooltipText.html#aba143258b5a676d3123d8cc6e661e0d3">draw</a>();</div>
+<div class="line"><a name="l00068"></a><span class="lineno"><a class="line" href="classgGUITooltipText.html#aa5b537e838207f68f241e765c49d45c4">   68</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classgGUITooltipText.html#aa5b537e838207f68f241e765c49d45c4">mouseMoved</a>(<span class="keywordtype">int</span> x, <span class="keywordtype">int</span> y);</div>
 <div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160; </div>
 <div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<span class="keyword">private</span>:</div>
 <div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    <a class="code" href="classgColor.html">gColor</a> color;</div>
@@ -170,12 +170,30 @@ $(document).ready(function(){initNavTree('gGUITooltipText_8h_source.html',''); i
 <div class="ttc" id="aclassgGUIControl_html"><div class="ttname"><a href="classgGUIControl.html">gGUIControl</a></div><div class="ttdef"><b>Definition:</b> gGUIControl.h:29</div></div>
 <div class="ttc" id="aclassgGUISizer_html"><div class="ttname"><a href="classgGUISizer.html">gGUISizer</a></div><div class="ttdef"><b>Definition:</b> gGUISizer.h:14</div></div>
 <div class="ttc" id="aclassgGUITooltipText_html"><div class="ttname"><a href="classgGUITooltipText.html">gGUITooltipText</a></div><div class="ttdef"><b>Definition:</b> gGUITooltipText.h:17</div></div>
+<div class="ttc" id="aclassgGUITooltipText_html_a282acabffa43599ae4c2fd003cde1701"><div class="ttname"><a href="classgGUITooltipText.html#a282acabffa43599ae4c2fd003cde1701">gGUITooltipText::getText</a></div><div class="ttdeci">std::string getText()</div></div>
+<div class="ttc" id="aclassgGUITooltipText_html_a2cedadc240d53936d63f66ecb36e771a"><div class="ttname"><a href="classgGUITooltipText.html#a2cedadc240d53936d63f66ecb36e771a">gGUITooltipText::objects</a></div><div class="ttdeci">objects</div><div class="ttdef"><b>Definition:</b> gGUITooltipText.h:30</div></div>
+<div class="ttc" id="aclassgGUITooltipText_html_a2cedadc240d53936d63f66ecb36e771aa12e6fe81a387860ec10ec0bffc9c98db"><div class="ttname"><a href="classgGUITooltipText.html#a2cedadc240d53936d63f66ecb36e771aa12e6fe81a387860ec10ec0bffc9c98db">gGUITooltipText::Panel</a></div><div class="ttdeci">@ Panel</div><div class="ttdef"><b>Definition:</b> gGUITooltipText.h:34</div></div>
+<div class="ttc" id="aclassgGUITooltipText_html_a2cedadc240d53936d63f66ecb36e771aa56250df15e94f7a1379a7c3058b6ce5c"><div class="ttname"><a href="classgGUITooltipText.html#a2cedadc240d53936d63f66ecb36e771aa56250df15e94f7a1379a7c3058b6ce5c">gGUITooltipText::Numberbox</a></div><div class="ttdeci">@ Numberbox</div><div class="ttdef"><b>Definition:</b> gGUITooltipText.h:33</div></div>
+<div class="ttc" id="aclassgGUITooltipText_html_a2cedadc240d53936d63f66ecb36e771aa8356ee9046e114c45964cbd6242673ed"><div class="ttname"><a href="classgGUITooltipText.html#a2cedadc240d53936d63f66ecb36e771aa8356ee9046e114c45964cbd6242673ed">gGUITooltipText::Button</a></div><div class="ttdeci">@ Button</div><div class="ttdef"><b>Definition:</b> gGUITooltipText.h:31</div></div>
+<div class="ttc" id="aclassgGUITooltipText_html_a2cedadc240d53936d63f66ecb36e771aabd11adafc3ec8c461723416a72a98acf"><div class="ttname"><a href="classgGUITooltipText.html#a2cedadc240d53936d63f66ecb36e771aabd11adafc3ec8c461723416a72a98acf">gGUITooltipText::Textbox</a></div><div class="ttdeci">@ Textbox</div><div class="ttdef"><b>Definition:</b> gGUITooltipText.h:32</div></div>
+<div class="ttc" id="aclassgGUITooltipText_html_a3b1635e775a727fba981909f2958d4cb"><div class="ttname"><a href="classgGUITooltipText.html#a3b1635e775a727fba981909f2958d4cb">gGUITooltipText::gGUITooltipText</a></div><div class="ttdeci">gGUITooltipText()</div></div>
+<div class="ttc" id="aclassgGUITooltipText_html_a793f5f75765af22a89db373ebe02ce04"><div class="ttname"><a href="classgGUITooltipText.html#a793f5f75765af22a89db373ebe02ce04">gGUITooltipText::setText</a></div><div class="ttdeci">void setText(std::string text)</div></div>
+<div class="ttc" id="aclassgGUITooltipText_html_a93fb6f0e96abd7db0024f2e3f8a62d05"><div class="ttname"><a href="classgGUITooltipText.html#a93fb6f0e96abd7db0024f2e3f8a62d05">gGUITooltipText::activate</a></div><div class="ttdeci">void activate(gGUISizer *sizer, objects guiobject, int lineNo, int columnNo, std::string text)</div></div>
+<div class="ttc" id="aclassgGUITooltipText_html_a9aa755846588106a21982c9c25e82ace"><div class="ttname"><a href="classgGUITooltipText.html#a9aa755846588106a21982c9c25e82ace">gGUITooltipText::setTitleLength</a></div><div class="ttdeci">void setTitleLength(std::string text)</div></div>
+<div class="ttc" id="aclassgGUITooltipText_html_aa5b537e838207f68f241e765c49d45c4"><div class="ttname"><a href="classgGUITooltipText.html#aa5b537e838207f68f241e765c49d45c4">gGUITooltipText::mouseMoved</a></div><div class="ttdeci">void mouseMoved(int x, int y)</div></div>
+<div class="ttc" id="aclassgGUITooltipText_html_aba143258b5a676d3123d8cc6e661e0d3"><div class="ttname"><a href="classgGUITooltipText.html#aba143258b5a676d3123d8cc6e661e0d3">gGUITooltipText::draw</a></div><div class="ttdeci">void draw()</div></div>
+<div class="ttc" id="aclassgGUITooltipText_html_ae6ca1bc970f98460b2af85a6ab00520d"><div class="ttname"><a href="classgGUITooltipText.html#ae6ca1bc970f98460b2af85a6ab00520d">gGUITooltipText::~gGUITooltipText</a></div><div class="ttdeci">virtual ~gGUITooltipText()</div></div>
+<div class="ttc" id="aclassgGUITooltipText_html_aef3cf9ebb724d179c6b12719c074ab94"><div class="ttname"><a href="classgGUITooltipText.html#aef3cf9ebb724d179c6b12719c074ab94">gGUITooltipText::update</a></div><div class="ttdeci">void update()</div></div>
+<div class="ttc" id="agColor_8h_html"><div class="ttname"><a href="gColor_8h.html">gColor.h</a></div></div>
+<div class="ttc" id="agFont_8h_html"><div class="ttname"><a href="gFont_8h.html">gFont.h</a></div></div>
+<div class="ttc" id="agGUIControl_8h_html"><div class="ttname"><a href="gGUIControl_8h.html">gGUIControl.h</a></div></div>
+<div class="ttc" id="agGUISizer_8h_html"><div class="ttname"><a href="gGUISizer_8h.html">gGUISizer.h</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_996f45160da62e1a3d7f6046fad68f51.html">engine</a></li><li class="navelem"><a class="el" href="dir_ae5170f952997566e512365547790ab2.html">ui</a></li><li class="navelem"><b>gGUITooltipText.h</b></li>
+    <li class="navelem"><a class="el" href="dir_996f45160da62e1a3d7f6046fad68f51.html">engine</a></li><li class="navelem"><a class="el" href="dir_ae5170f952997566e512365547790ab2.html">ui</a></li><li class="navelem"><a class="el" href="gGUITooltipText_8h.html">gGUITooltipText.h</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
