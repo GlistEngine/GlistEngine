@@ -9,10 +9,10 @@
 #define BASE_GBASECOMPONENT_H_
 
 #include "gAppObject.h"
-#include <deque>
+#include <list>
 
 
-class gBaseComponent: public gAppObject {
+class gBaseComponent : public gAppObject {
 public:
 	gBaseComponent();
 	virtual ~gBaseComponent();
@@ -20,7 +20,7 @@ public:
 	virtual void setup();
 	virtual void update();
 
-	static std::deque<gBaseComponent*> usedcomponents;
+	static std::list<gBaseComponent*> usedcomponents;
 };
 
 #endif /* BASE_GBASECOMPONENT_H_ */

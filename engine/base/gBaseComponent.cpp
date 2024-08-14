@@ -7,7 +7,7 @@
 
 #include "gBaseComponent.h"
 
-std::deque<gBaseComponent*> gBaseComponent::usedcomponents;
+std::list<gBaseComponent*> gBaseComponent::usedcomponents;
 
 
 gBaseComponent::gBaseComponent() {
@@ -15,6 +15,10 @@ gBaseComponent::gBaseComponent() {
 }
 
 gBaseComponent::~gBaseComponent() {
+	// This has O(n) complexity.
+	usedcomponents.remove_if([this](gBaseComponent* ptr) {
+		return ptr == this;
+	});
 }
 
 void gBaseComponent::setup() {

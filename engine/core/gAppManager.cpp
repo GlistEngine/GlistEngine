@@ -413,9 +413,9 @@ void gAppManager::tick() {
     totalupdates++;
     if(!usewindow) {
         app->update();
-        for(int i = 0; i < gBaseComponent::usedcomponents.size(); i++) {
-            gBaseComponent::usedcomponents[i]->update();
-        }
+    	for (gBaseComponent*& component : gBaseComponent::usedcomponents) {
+    		component->update();
+    	}
 		executeQueue();
         return;
     }
@@ -424,12 +424,12 @@ void gAppManager::tick() {
     if(canvasmanager) canvasmanager->update();
     if(guimanager) guimanager->update();
     if(!isguiapp) app->update();
-    for(int i = 0; i < gBaseComponent::usedcomponents.size(); i++) {
-        gBaseComponent::usedcomponents[i]->update();
-    }
-    for(int i = 0; i < gBasePlugin::usedplugins.size(); i++) {
-        gBasePlugin::usedplugins[i]->update();
-    }
+	for (gBaseComponent*& component : gBaseComponent::usedcomponents) {
+		component->update();
+	}
+	for (gBasePlugin*& component : gBasePlugin::usedplugins) {
+		component->update();
+	}
 
     gBaseCanvas* canvas = nullptr;
     if(!isguiapp) {
