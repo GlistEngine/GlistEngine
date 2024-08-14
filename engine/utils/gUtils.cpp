@@ -6,6 +6,7 @@
  */
 
 #include "gUtils.h"
+#include "gImage.h"
 #include <sys/time.h>
 #include <limits>
 #include <chrono>
@@ -765,6 +766,30 @@ gColor gShowColorChooser(
 bool gCheckCollision(int xLeft1, int yUp1, int xRight1, int yBottom1,
 		int xLeft2, int yUp2, int xRight2, int yBottom2) {
 	return xLeft1 < xRight2 && xRight1 > xLeft2 && yBottom1 > yUp2 && yUp1 < yBottom2;
+}
+
+bool gCheckPixelPerfectCollision(gImage* image1, int x1, int y1, gImage* image2, int x2, int y2) {
+	unsigned char* data1 = image1->getImageData();
+	unsigned char* data2 = image2->getImageData();
+	int componentnum1 = image1->getComponentNum();
+	int componentnum2 = image2->getComponentNum();
+	if(gCheckCollision(x1, y1, (x1 + image1->getWidth()), (y1 + image1->getHeight()), x2, y2, (x2 + image2->getWidth()), (y2 + image2->getHeight()))) {
+		int overlapleft = std::max(x1, x2);
+		int overlaptop = std::max(y1, y2);
+		int overlapright = std::min(x1 + image1->getWidth(), x2 + image2->getWidth());
+		int overlapbottom = std::min(y1 + image1->getHeight(), y2 + image2->getHeight());
+
+		for(int i = overlapleft; i < overlapright; i++) {
+			for(int j = overlaptop; j < overlapbottom; j++) {
+				int pixel1 = ((j - y1) * image1->getWidth() + (i - x1)) * componentnum1;
+				int pixel2 = ((j - y2) * image2->getWidth() + (i - x2)) * componentnum2;
+				if(data1[pixel1 + 3] != 0 && data2[pixel2 + 3] != 0) {
+					return true;
+				}
+			}
+		}
+	}
+	return false;
 }
 
 

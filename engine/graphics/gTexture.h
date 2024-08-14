@@ -114,6 +114,9 @@ public:
 	void save(std::string fullpath);
 	void saveTexture(std::string fileName);
 
+	unsigned char* getData();
+
+
 protected:
 	std::string fullpath, directory;
 	unsigned int id, internalformat, format;
@@ -125,7 +128,7 @@ protected:
 	bool isstbimage;
 	int wraps, wrapt, filtermin, filtermag;
 
-	unsigned char* getData();
+
 	bool isMutable();
 
 	std::string getDirName(const std::string& fname);

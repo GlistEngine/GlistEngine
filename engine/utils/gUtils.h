@@ -80,6 +80,7 @@
 	#define PI       3.14159265358979323846
 #endif
 
+class gImage;
 int gDefaultWidth();
 int gDefaultHeight();
 int gDefaultUnitWidth();
@@ -337,6 +338,8 @@ gColor gShowColorChooser(
 
 bool gCheckCollision(int xLeft1, int yUp1, int xRight1, int yBottom1,
 		int xLeft2, int yUp2, int xRight2, int yBottom2);
+
+bool gCheckPixelPerfectCollision(gImage* image1, int x1, int y1, gImage* image2, int x2, int y2);
 
 class gUtils {
 public:
