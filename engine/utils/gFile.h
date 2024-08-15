@@ -59,6 +59,7 @@ public:
 
 	void write(const std::string& content);
 	void write(std::vector<char> newBytes);
+	void write(const char* bytes, size_t length);
 
 	std::vector<char> getBytes();
 	std::string getText();

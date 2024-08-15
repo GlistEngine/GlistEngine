@@ -27,7 +27,7 @@ public:
 	int getColumnNum();
 	void setLineProportions(float* proportions);
 	void setColumnProportions(float* proportions);
-	void setSlotPadding(int padding);
+	void setSlotPadding(int padding, int height = 0);
 
 	void setControl(int lineNo, int columnNo, gGUIControl* guiControl);
 	void removeControl(int lineNo, int columnNo);
@@ -81,6 +81,7 @@ private:
 	int resizex, resizey;
 	bool fillbackground;
 	int slotpadding;
+	int slotheightpadding;
 	bool alignvertically;
 
 private:

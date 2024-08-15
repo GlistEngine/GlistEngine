@@ -99,6 +99,7 @@ class gLight;
 class gImage;
 class gShader;
 class gCamera;
+class gGrid;
 
 class gRenderer: public gObject {
 public:
@@ -121,6 +122,16 @@ public:
 	int getUnitHeight();
 	static int getScreenScaling();
 
+	static void setCurrentResolution(int resolution);
+	static void setCurrentResolution(int screenWidth, int screenHeight);
+	static void setUnitResolution(int resolution);
+	static void setUnitResolution(int screenWidth, int screenHeight);
+	static int getResolution(int screenWidth, int screenHeight);
+	int getCurrentResolution();
+	int getUnitResolution();
+	static int scaleX(int x);
+	static int scaleY(int y);
+
 	//grid
 	void drawGrid();
 	void drawGridYZ();
@@ -129,11 +140,9 @@ public:
 	void enableGrid();
 	void disableGrid();
 	void setGridEnableAxis(bool xy, bool yz, bool xz);
-	void setGridEnableXY(bool xy), setGridEnableYZ(bool yz), setGridEnableXZ(bool xz);
-	void setGridMaxLength(float length);
-	float getGridMaxLength();
-	void setGridLineInterval(float intervalvalue);
-	float getGridLineInterval();
+	void setGridEnableXY(bool xy);
+	void setGridEnableYZ(bool yz);
+	void setGridEnableXZ(bool xz);
 	void setGridColorofAxisXZ(int r, int g, int b, int a);
 	void setGridColorofAxisYZ(int r, int g, int b, int a);
 	void setGridColorofAxisXY(int r, int g, int b, int a);
@@ -146,19 +155,17 @@ public:
 	void setGridColorofAxisWireFrameXZ(gColor* color);
 	void setGridColorofAxisWireFrameYZ(gColor* color);
 	void setGridColorofAxisWireFrameXY(gColor* color);
-	bool isGridEnabled(), isGridXYEnabled(), isGridYZEnabled(), isGridXZEnabled();
+	bool isGridEnabled();
+	bool isGridXYEnabled();
+	bool isGridYZEnabled();
+	bool isGridXZEnabled();
+	void setGridMaxLength(float length);
+	float getGridMaxLength();
+	void setGridLineInterval(float intervalvalue);
+	float getGridLineInterval();
 
-
-
-	static void setCurrentResolution(int resolution);
-	static void setCurrentResolution(int screenWidth, int screenHeight);
-	static void setUnitResolution(int resolution);
-	static void setUnitResolution(int screenWidth, int screenHeight);
-	static int getResolution(int screenWidth, int screenHeight);
-	int getCurrentResolution();
-	int getUnitResolution();
-	static int scaleX(int x);
-	static int scaleY(int y);
+	gGrid* getGrid() const;
+	void setGrid(gGrid* newgrid);
 
 	void setColor(int r, int g, int b, int a = 255);
 	void setColor(float r, float g, float b, float a = 1.0f);
@@ -244,6 +251,7 @@ public:
 	gShader* getPrefilterShader();
 	gShader* getBrdfShader();
 	gShader* getFboShader();
+	gShader* getGridShader();
 
 	void setProjectionMatrix(glm::mat4 projectionMatrix);
 	void setProjectionMatrix2d(glm::mat4 projectionMatrix2d);
@@ -301,12 +309,7 @@ private:
 	static int unitwidth, unitheight;
 	static int screenscaling;
 	static int currentresolution, unitresolution;
-	//grid
-	int gridmaxvalue;
-	float gridlineinterval;
-	bool isgridenable, isgridxzenable, isgridxyenable, isgridyzenable;
-	gColor gridxzcolor, gridxzmargincolor, gridxycolor,gridxymargincolor, gridyzcolor, gridyzmargincolor;//default
-	//grid - END
+
 	gColor* rendercolor;
 
 	bool isfogenabled;
@@ -346,6 +349,7 @@ private:
 	gShader* prefiltershader;
 	gShader* brdfshader;
 	gShader* fboshader;
+	gShader* gridshader;
 
 	glm::mat4 projectionmatrix;
 	glm::mat4 projectionmatrixold;
@@ -355,8 +359,15 @@ private:
 	glm::vec3 cameraposition;
 	gCamera* camera;
 
+	gGrid* grid;
+	gGrid* originalgrid;
+	bool isdevelopergrid;
+
 	void init();
 
+
+	static const std::string& getShaderSrcGridVertex();
+	static const std::string& getShaderSrcGridFragment();
 	static const std::string& getShaderSrcColorVertex();
 	static const std::string& getShaderSrcColorFragment();
 	static const std::string& getShaderSrcTextureVertex();

@@ -23,6 +23,7 @@
 #include "gUbo.h"
 #include "gShader.h"
 #include "gCamera.h"
+#include "gGrid.h"
 
 //screenShot Related includes
 #include "stb/stb_image_write.h"
@@ -84,342 +85,6 @@ int gGetCullingDirection() {
 	GLint i;
 	glGetIntegerv(GL_FRONT_FACE, &i);
 	return i;
-}
-
-/*
- * enable to show grid
- */
-void gRenderer::enableGrid() {
-	isgridenable = true;
-}
-/*
- * set which Grid axis will be showned by set xy, xz, yz
- * xy => xy axis
- * xz => xz axis
- * yz => yz axis
- */
-void gRenderer::setGridEnableAxis(bool xy, bool yz, bool xz) {
-	isgridxzenable = xz;
-	isgridxyenable = xy;
-	isgridyzenable = yz;
-}
-
-/*
- * set Grid XY axis enable or not with xy boolean
- */
-void gRenderer::setGridEnableXY(bool xy) {
-	isgridxyenable = xy;
-}
-
-/*
- * set Grid XZ axis enable or not with xy boolean
- */
-void gRenderer::setGridEnableXZ(bool xz) {
-	isgridxzenable = xz;
-}
-
-/*
- * set Grid YZ axis enable or not with yz boolean
- */
-void gRenderer::setGridEnableYZ(bool yz) {
-	isgridyzenable = yz;
-}
-
-/*
- * set max coordinate to reach for grid. Example: 50 mean (-25 to 25) as coordinate axis
- * @param gridmaxvalue => set max distance for grid.
- */
-void gRenderer::setGridMaxLength(float length) {
-	gridmaxvalue = length;
-}
-
-/*
- * return max length of grid as float
- */
-float gRenderer::getGridMaxLength() {
-	return gridmaxvalue;
-}
-
-/*
- * set distance between grid lines.
- * @param gridmaxvalue => set max distance for grid.
- */
-void gRenderer::setGridLineInterval(float intervalvalue) {
-	gridlineinterval = intervalvalue;
-}
-
-/*
- * return distance between grid lines as float
- */
-float gRenderer::getGridLineInterval() {
-	return gridlineinterval;
-}
-
-/*
- * disable grid
- */
-void gRenderer::disableGrid() {
-	isgridenable = false;
-}
-
-//return if Grid Draw or not
-bool gRenderer::isGridEnabled() {
-	return isgridenable;
-}
-
-//return if GridXY axis
-bool gRenderer::isGridXYEnabled() {
-	return isgridxyenable;
-}
-
-//return if GridXZ axis
-bool gRenderer::isGridXZEnabled() {
-	return isgridxzenable;
-}
-
-//return if GridYZ axis
-bool gRenderer::isGridYZEnabled() {
-	return isgridyzenable;
-}
-/*
- * draw grid lines if each axis valuables are enable(true)
- * @param isgridenable for showing grid lines
- * @param isgridxzenable, isgridxyenable, isgridyzenable for which axis of grid lines will be draw
- */
-void gRenderer::drawGrid() {
-	if(!isgridenable) return;
-	enableDepthTest();
-	if(isgridxzenable)drawGridXZ();
-	if(isgridxyenable)drawGridXY();
-	if(isgridyzenable)drawGridYZ();
-	disableDepthTest();
-}
-
-/*
- * drawing Grid XZ axis
- * @row - which coordinate for line to draw
- * @gridmaxvalue => how many lines will draw (can count as max grid lenght)
- * @gridlineinterval => distance between lines
- */
-void gRenderer::drawGridXZ() {
-	//color saved temp
-	gColor oldcolor;
-	oldcolor.set(rendercolor->r, rendercolor->g, rendercolor->b, rendercolor->a);
-	//grid
-	for (float row = cameraposition.z + gridmaxvalue / 2; row > cameraposition.z - gridmaxvalue / 2; row -= gridlineinterval) {
-		//row(z)
-		//line color
-		if(((int)row % 10) == 0)rendercolor->set(gridxzcolor.r, gridxzcolor.g, gridxzcolor.b, gridxzcolor.a);else rendercolor->set(gridxzmargincolor.r, gridxzmargincolor.g, gridxzmargincolor.b, gridxzmargincolor.a);
-		gDrawLine(cameraposition.x - gridmaxvalue / 2, 0.0f, row, cameraposition.x + gridmaxvalue / 2, 0.0f, row);
-	}
-	//grid
-	for (float column = cameraposition.x - gridmaxvalue / 2; column <= cameraposition.x + gridmaxvalue / 2; column += gridlineinterval) {
-		//row(z)
-		//line color
-		if(((int)column % 10) == 0)rendercolor->set(gridxzcolor.r, gridxzcolor.g, gridxzcolor.b, gridxzcolor.a);else rendercolor->set(gridxzmargincolor.r, gridxzmargincolor.g, gridxzmargincolor.b, gridxzmargincolor.a);
-		gDrawLine(column, 0.0f, cameraposition.z - gridmaxvalue / 2, column, 0.0f, cameraposition.z + gridmaxvalue / 2);
-	}
-	//line color reset
-	rendercolor->set(oldcolor.r, oldcolor.g, oldcolor.b, oldcolor.a);
-}
-
-void gRenderer::drawGridYZ() {
-	//color saved temp
-	gColor oldcolor;
-	oldcolor.set(rendercolor->r, rendercolor->g, rendercolor->b, rendercolor->a);
-	//grid
-	for (float row = cameraposition.z + gridmaxvalue / 2; row > cameraposition.z - gridmaxvalue / 2; row -= gridlineinterval) {
-		//row(z)
-		//line color
-		if(((int)row % 10) == 0)rendercolor->set(gridyzcolor.r, gridyzcolor.g, gridyzcolor.b, gridyzcolor.a);else rendercolor->set(gridyzmargincolor.r, gridyzmargincolor.g, gridyzmargincolor.b, gridyzmargincolor.a);
-		gDrawLine(0.0f, cameraposition.y - gridmaxvalue / 2, row, 0.0f, cameraposition.y + gridmaxvalue / 2, row);
-	}
-	//grid
-	for (float column = cameraposition.y - gridmaxvalue / 2; column <= cameraposition.y + gridmaxvalue / 2; column += gridlineinterval) {
-		//row(z)
-		//line color
-		if(((int)column % 10) == 0)rendercolor->set(gridyzcolor.r, gridyzcolor.g, gridyzcolor.b, gridyzcolor.a);else rendercolor->set(gridyzmargincolor.r, gridyzmargincolor.g, gridyzmargincolor.b, gridyzmargincolor.a);
-		gDrawLine(0.0f, column, cameraposition.z - gridmaxvalue / 2, 0.0f, column, cameraposition.z + gridmaxvalue / 2);
-	}
-	//line color reset
-	rendercolor->set(oldcolor.r, oldcolor.g, oldcolor.b, oldcolor.a);
-}
-/*
- * drawing Grid XY axis
- * @row - which coordinate for line to draw
- * @gridmaxvalue => how many lines will draw (can count as max grid lenght)
- * @gridlineinterval => distance between lines
- */
-void gRenderer::drawGridXY() {
-	//color saved temp
-	gColor oldcolor;
-	oldcolor.set(rendercolor->r, rendercolor->g, rendercolor->b, rendercolor->a);
-	if(!isgridenable) return;
-	//grid
-	for (float row = cameraposition.x - gridmaxvalue / 2; row <= cameraposition.x + gridmaxvalue / 2; row += gridlineinterval) {
-		//row(z)
-		//line color
-		if(((int)row % 10) == 0)rendercolor->set(gridxycolor.r, gridxycolor.g, gridxycolor.b, gridxycolor.a);else rendercolor->set(gridxymargincolor.r, gridxymargincolor.g, gridxymargincolor.b, gridxymargincolor.a);
-		gDrawLine(row, cameraposition.y - gridmaxvalue / 2, 0.0f, row, cameraposition.y + gridmaxvalue / 2, 0.0f);
-	}
-	//grid
-	for (float column = cameraposition.y - gridmaxvalue / 2; column <= cameraposition.y + gridmaxvalue / 2; column += gridlineinterval) {
-		//row(z)
-		//line color
-		if(((int)column % 10) == 0)rendercolor->set(gridxycolor.r, gridxycolor.g, gridxycolor.b, gridxycolor.a);else rendercolor->set(gridxymargincolor.r, gridxymargincolor.g, gridxymargincolor.b, gridxymargincolor.a);
-		gDrawLine(cameraposition.x - gridmaxvalue / 2, column, 0.0f, cameraposition.x + gridmaxvalue / 2, column, 0.0f);
-	}
-	//line color reset
-	rendercolor->set(oldcolor.r, oldcolor.g, oldcolor.b, oldcolor.a);
-}
-
-
-/*
- * set color for XZ axis of grid r:red, g:green, b:blue, a:transparency(0 => full transparancy)
- */
-void gRenderer::setGridColorofAxisXZ(int r, int g, int b, int a) {
-	if(r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255 || a < 0 || a > 255)return;
-	gridxzcolor.r = r;
-	gridxzcolor.g = g;
-	gridxzcolor.b = b;
-	gridxzcolor.a = a;
-}
-
-/*
- * set color for XZ axis of grid with gColor a:transparency(0 => full transparancy)
- * @param color => send direct color with gColor function
- */
-void gRenderer::setGridColorofAxisXZ(gColor* color) {
-	if(color->r < 0 || color->r > 255 || color->g < 0 || color->g > 255 || color->b < 0 || color->b > 255 || color->a < 0 || color->a > 255)return;
-	gridxzcolor.r = color->r;
-	gridxzcolor.g = color->g;
-	gridxzcolor.b = color->b;
-	gridxzcolor.a = color->a;
-	//color->r = 100;
-	//rendercolor->set(color);
-}
-
-/*
- * set color for margin of XZ axis of grid r:red, g:green, b:blue, a:transparency(0 => full transparancy)
- */
-void gRenderer::setGridColorofAxisWireFrameXZ(int r, int g, int b, int a) {
-	if(r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255 || a < 0 || a > 255)return;
-	gridxzmargincolor.r = r;
-	gridxzmargincolor.g = g;
-	gridxzmargincolor.b = b;
-	gridxzmargincolor.a = a;
-}
-
-/*
- * set color for margin of XZ axis of grid with gColor a:transparency(0 => full transparancy)
- * @param color => send direct color with gColor function
- */
-void gRenderer::setGridColorofAxisWireFrameXZ(gColor* color) {
-	if(color->r < 0 || color->r > 255 || color->g < 0 || color->g > 255 || color->b < 0 || color->b > 255 || color->a < 0 || color->a > 255)return;
-	gridxzmargincolor.r = color->r;
-	gridxzmargincolor.g = color->g;
-	gridxzmargincolor.b = color->b;
-	gridxzmargincolor.a = color->a;
-	//rendercolor->set(color);
-}
-
-
-/*
- * set color for XY axis of grid r:red, g:green, b:blue, a:transparency(0 => full transparancy)
- */
-void gRenderer::setGridColorofAxisXY(int r, int g, int b, int a) {
-	if(r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255 || a < 0 || a > 255)return;
-	gridxycolor.r = r;
-	gridxycolor.g = g;
-	gridxycolor.b = b;
-	gridxycolor.a = a;
-}
-
-/*
- * set color for XY axis of grid with gColor a:transparency(0 => full transparancy)
- * @param color => send direct color with gColor function
- */
-void gRenderer::setGridColorofAxisXY(gColor* color) {
-	if(color->r < 0 || color->r > 255 || color->g < 0 || color->g > 255 || color->b < 0 || color->b > 255 || color->a < 0 || color->a > 255)return;
-	gridxycolor.r = color->r;
-	gridxycolor.g = color->g;
-	gridxycolor.b = color->b;
-	gridxycolor.a = color->a;
-	//color->r = 100;
-	//rendercolor->set(color);
-}
-
-/*
- * set color for margin of XY axis of grid r:red, g:green, b:blue, a:transparency(0 => full transparancy)
- */
-void gRenderer::setGridColorofAxisWireFrameXY(int r, int g, int b, int a) {
-	if(r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255 || a < 0 || a > 255)return;
-	gridxymargincolor.r = r;
-	gridxymargincolor.g = g;
-	gridxymargincolor.b = b;
-	gridxymargincolor.a = a;
-}
-
-/*
- * set color for margin of XY axis of grid with gColor a:transparency(0 => full transparancy)
- * @param color => send direct color with gColor function
- */
-void gRenderer::setGridColorofAxisWireFrameXY(gColor* color) {
-	if(color->r < 0 || color->r > 255 || color->g < 0 || color->g > 255 || color->b < 0 || color->b > 255 || color->a < 0 || color->a > 255)return;
-	gridxymargincolor.r = color->r;
-	gridxymargincolor.g = color->g;
-	gridxymargincolor.b = color->b;
-	gridxymargincolor.a = color->a;
-	//rendercolor->set(color);
-}
-
-/*
- * set color for YZ axis of grid r:red, g:green, b:blue, a:transparency(0 => full transparancy)
- */
-void gRenderer::setGridColorofAxisYZ(int r, int g, int b, int a) {
-	if(r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255 || a < 0 || a > 255)return;
-	gridyzcolor.r = r;
-	gridyzcolor.g = g;
-	gridyzcolor.b = b;
-	gridyzcolor.a = a;
-}
-
-/*
- * set color for YZ axis of grid with gColor a:transparency(0 => full transparancy)
- * @param color => send direct color with gColor function
- */
-void gRenderer::setGridColorofAxisYZ(gColor* color) {
-	if(color->r < 0 || color->r > 255 || color->g < 0 || color->g > 255 || color->b < 0 || color->b > 255 || color->a < 0 || color->a > 255)return;
-	gridyzcolor.r = color->r;
-	gridyzcolor.g = color->g;
-	gridyzcolor.b = color->b;
-	gridyzcolor.a = color->a;
-	//color->r = 100;
-	//rendercolor->set(color);
-}
-
-/*
- * set color for margin of YZ axis of grid r:red, g:green, b:blue, a:transparency(0 => full transparancy)
- */
-void gRenderer::setGridColorofAxisWireFrameYZ(int r, int g, int b, int a) {
-	if(r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255 || a < 0 || a > 255)return;
-	gridyzmargincolor.r = r;
-	gridyzmargincolor.g = g;
-	gridyzmargincolor.b = b;
-	gridyzmargincolor.a = a;
-}
-
-/*
- * set color for margin of YZ axis of grid with gColor a:transparency(0 => full transparancy)
- * @param color => send direct color with gColor function
- */
-void gRenderer::setGridColorofAxisWireFrameYZ(gColor* color) {
-	if(color->r < 0 || color->r > 255 || color->g < 0 || color->g > 255 || color->b < 0 || color->b > 255 || color->a < 0 || color->a > 255)return;
-	gridyzmargincolor.r = color->r;
-	gridyzmargincolor.g = color->g;
-	gridyzmargincolor.b = color->b;
-	gridyzmargincolor.a = color->a;
-	//rendercolor->set(color);
 }
 
 void gDrawLine(float x1, float y1, float x2, float y2, float thickness) {
@@ -629,6 +294,7 @@ void gRenderer::init() {
 	viewmatrix = glm::mat4(1.0f);
 	viewmatrixold = viewmatrix;
 	cameraposition = glm::vec3(0.0f);
+	camera = nullptr;
 
 	// This changes pack and unpack alignments
 	// Fixes alignment issues with 3 channel images
@@ -705,23 +371,12 @@ void gRenderer::init() {
 
 	isalphablendingenabled = false;
 	isalphatestenabled = false;
-	//grid
-	gridlineinterval = 1.0f;
-	gridmaxvalue = 50;
-	isgridenable = false;
-	isgridxzenable = true;
-	isgridxyenable = true;
-	isgridyzenable = false;
-	//bayrak2
-	//xz init
-	gridxzcolor.set(200, 0, 0, 175);
-	gridxzmargincolor.set(30, 150, 30, 100); //0, 200, 0, 175
-	//xy init
-	gridxycolor.set(0, 200, 0, 175);
-	gridxymargincolor.set(150, 30, 30, 100);//150, 30, 30, 100
-	//yz init 100, 100, 200, 175
-	gridyzcolor.set(100, 100, 200, 175);
-	gridyzmargincolor.set(150, 30, 30, 100);//100, 100, 200, 175
+
+	gridshader = new gShader();
+	gridshader->loadProgram(getShaderSrcGridVertex(), getShaderSrcGridFragment());
+	originalgrid = new gGrid();
+	grid = originalgrid;
+	isdevelopergrid = false;
 }
 
 gRenderer::~gRenderer() {
@@ -739,6 +394,8 @@ gRenderer::~gRenderer() {
 	delete fboshader;
 	delete rendercolor;
 	delete lightsubo;
+	delete gridshader;
+	if(!isdevelopergrid) delete originalgrid;
 }
 
 gShader* gRenderer::getColorShader() {
@@ -787,6 +444,10 @@ gShader* gRenderer::getBrdfShader() {
 
 gShader* gRenderer::getFboShader() {
 	return fboshader;
+}
+
+gShader* gRenderer::getGridShader() {
+	return gridshader;
 }
 
 void gRenderer::setProjectionMatrix(glm::mat4 projectionMatrix) {
@@ -941,9 +602,6 @@ int gRenderer::scaleX(int x) {
 int gRenderer::scaleY(int y) {
 	return (y * unitheight) / height;
 }
-
-
-
 
 void gRenderer::setColor(int r, int g, int b, int a) {
 	rendercolor->set((float)r / 255, (float)g / 255, (float)b / 255, (float)a / 255);
@@ -1163,8 +821,12 @@ void gRenderer::updateLights() {
 		lightingposition = scenelights[lastindex]->getPosition();
 	}
 	if (ischanged) {
-		lightsubo->update(0, offsetof(gSceneLights, lights[data->lightnum]) + sizeof(gSceneLightData));
-	} else if (previouslightnum != data->lightnum) {
+		lightsubo->update(0, offsetof(gSceneLights, lights) + (sizeof(gSceneLightData) * data->lightnum) + sizeof(gSceneLightData));
+		isglobalambientcolorchanged = false; // we updated this
+		return;  // here we already updated lightnum, enabledlights and globalambientcolor, no need to go further and do it twice.
+	}
+
+	if (previouslightnum != data->lightnum) {
 		lightsubo->update(0, sizeof(gSceneLights::lightnum));
 	}
 	if (isenabledchanged) {
@@ -1240,6 +902,8 @@ bool gRenderer::isAlphaTestEnabled() {
 	return isalphatestenabled;
 }
 
+#include "graphics/shaders/grid_vert.h"
+#include "graphics/shaders/grid_frag.h"
 #include "graphics/shaders/color_vert.h"
 #include "graphics/shaders/color_frag.h"
 #include "graphics/shaders/texture_vert.h"
@@ -1262,6 +926,17 @@ bool gRenderer::isAlphaTestEnabled() {
 #include "graphics/shaders/brdf_frag.h"
 #include "graphics/shaders/fbo_vert.h"
 #include "graphics/shaders/fbo_frag.h"
+
+
+const std::string& gRenderer::getShaderSrcGridVertex() {
+	static std::string str{shader_grid_vert.data(), shader_grid_vert.size()};
+	return str;
+}
+
+const std::string& gRenderer::getShaderSrcGridFragment() {
+	static std::string str{shader_grid_frag.data(), shader_grid_frag.size()};
+	return str;
+}
 
 const std::string& gRenderer::getShaderSrcColorVertex() {
 	static std::string str{shader_color_vert.data(), shader_color_vert.size()};
@@ -1435,4 +1110,174 @@ void gRenderer::setSSAOBias(float value) {
 
 float gRenderer::getSSAOBias() {
 	return ssaobias;
+}
+
+//grid
+void gRenderer::drawGrid() {
+	if(grid != nullptr) grid->draw();
+}
+
+void gRenderer::drawGridYZ() {
+	if(grid != nullptr) grid->drawYZ();
+}
+
+void gRenderer::drawGridXY() {
+	if(grid != nullptr) grid->drawXY();
+}
+
+void gRenderer::drawGridXZ() {
+	if(grid != nullptr) grid->drawXZ();
+}
+
+void gRenderer::enableGrid() {
+	if(grid != nullptr) grid->enable();
+}
+
+void gRenderer::disableGrid() {
+	if(grid != nullptr) grid->disable();
+}
+
+bool gRenderer::isGridEnabled() {
+	if(grid != nullptr)  return grid->isEnabled();
+	return false;
+}
+
+void gRenderer::setGridEnableAxis(bool xy, bool yz, bool xz) {
+	if(grid != nullptr) {
+		grid->setEnableAxisX(xy);
+		grid->setEnableAxisY(xy);
+
+		grid->setEnableAxisY(yz);
+		grid->setEnableAxisZ(yz);
+
+		grid->setEnableAxisX(xz);
+		grid->setEnableAxisZ(xz);
+	}
+}
+
+void gRenderer::setGridMaxLength(float length) {
+	if(grid != nullptr) grid->setFarClip(length);
+}
+
+float gRenderer::getGridMaxLength() {
+	if(grid != nullptr) return grid->getFarClip();
+	return 1000.0f;
+}
+
+void gRenderer::setGridLineInterval(float intervalvalue) {
+	if(grid != nullptr) return;
+}
+
+float gRenderer::getGridLineInterval() {
+	if(grid != nullptr) return grid->getLineSpacing();
+	return 1.0f;
+}
+
+void gRenderer::setGridColorofAxisXZ(int r, int g, int b, int a) {
+	if(grid != nullptr) {
+		grid->setColorAxisX(r,g,b,a);
+		grid->setColorAxisZ(r,g,b,a);
+	}
+}
+
+void gRenderer::setGridColorofAxisYZ(int r, int g, int b, int a) {
+	if(grid != nullptr) {
+		grid->setColorAxisY(r,g,b,a);
+		grid->setColorAxisZ(r,g,b,a);
+	}
+}
+
+void gRenderer::setGridColorofAxisXY(int r, int g, int b, int a) {
+	if(grid != nullptr) {
+		grid->setColorAxisX(r,g,b,a);
+		grid->setColorAxisY(r,g,b,a);
+	}
+}
+
+void gRenderer::setGridColorofAxisXZ(gColor *color) {
+	if(grid != nullptr) {
+		grid->setColorAxisX(color);
+		grid->setColorAxisZ(color);
+	}
+}
+
+void gRenderer::setGridColorofAxisYZ(gColor *color) {
+	if(grid != nullptr) {
+		grid->setColorAxisY(color);
+		grid->setColorAxisZ(color);
+	}
+}
+
+void gRenderer::setGridColorofAxisXY(gColor *color) {
+	if(grid != nullptr) {
+		grid->setColorAxisX(color);
+		grid->setColorAxisY(color);
+	}
+}
+
+void gRenderer::setGridColorofAxisWireFrameXZ(int r, int g, int b, int a) {
+	if(grid != nullptr) grid->setColorWireFrameXZ(r, g, b, a);
+}
+
+void gRenderer::setGridColorofAxisWireFrameXY(int r, int g, int b, int a) {
+	if(grid != nullptr) grid->setColorWireFrameXY(r, g, b, a);
+}
+
+void gRenderer::setGridColorofAxisWireFrameYZ(int r, int g, int b, int a) {
+	if(grid != nullptr) grid->setColorWireFrameYZ(r, g, b, a);
+}
+
+void gRenderer::setGridColorofAxisWireFrameXZ(gColor *color) {
+	if(grid != nullptr) grid->setColorWireFrameXZ(color);
+}
+
+void gRenderer::setGridColorofAxisWireFrameYZ(gColor *color) {
+	if(grid != nullptr) grid->setColorWireFrameYZ(color);
+}
+
+void gRenderer::setGridColorofAxisWireFrameXY(gColor *color) {
+	if(grid != nullptr) grid->setColorWireFrameXY(color);
+}
+
+void gRenderer::setGridEnableXY(bool xy) {
+	if(grid != nullptr) grid->setEnableXY(xy);
+}
+
+void gRenderer::setGridEnableYZ(bool yz) {
+	if(grid != nullptr) grid->setEnableYZ(yz);
+}
+
+void gRenderer::setGridEnableXZ(bool xz) {
+	if(grid != nullptr) grid->setEnableXZ(xz);
+}
+
+bool gRenderer::isGridXYEnabled() {
+	if(grid != nullptr) return grid->isXYEnabled();
+	return false;
+}
+
+bool gRenderer::isGridYZEnabled() {
+	if(grid != nullptr) return grid->isYZEnabled();
+	return false;
+}
+
+bool gRenderer::isGridXZEnabled() {
+	if(grid != nullptr) return grid->isXZEnabled();
+	return false;
+}
+
+gGrid* gRenderer::getGrid() const {
+	return grid;
+}
+
+// if its the dev's grid let them manage its lifetime and disable the renderer's instance
+void gRenderer::setGrid(gGrid* newgrid) {
+	if(!isdevelopergrid){
+		delete originalgrid;
+		isdevelopergrid = true;
+	}
+	grid->disable();
+	grid = newgrid;
+	grid->enable();
+
 }

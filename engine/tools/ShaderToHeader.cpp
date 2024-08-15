@@ -8,6 +8,8 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <cstdint>
+#include <algorithm>
 
 // This is an utility app for converting shader files to header files as an array.
 // Similar to xxd, but it's compiled alongside the engine so it work on all platforms.

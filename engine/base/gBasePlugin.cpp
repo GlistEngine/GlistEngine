@@ -7,7 +7,7 @@
 
 #include "gBasePlugin.h"
 
-std::deque<gBasePlugin*> gBasePlugin::usedplugins;
+std::list<gBasePlugin*> gBasePlugin::usedplugins;
 
 
 gBasePlugin::gBasePlugin() {
@@ -15,6 +15,10 @@ gBasePlugin::gBasePlugin() {
 }
 
 gBasePlugin::~gBasePlugin() {
+	// This has O(n) complexity.
+	usedplugins.remove_if([this](gBasePlugin* ptr) {
+		return ptr == this;
+	});
 }
 
 void gBasePlugin::setup() {

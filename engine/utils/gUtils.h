@@ -125,7 +125,7 @@ std::locale gGetLocale(const std::string & locale);
 std::string gToLower(const std::string& src, const std::string & locale = "");
 std::string gToUpper(const std::string& src, const std::string & locale = "");
 std::vector<std::string> gSplitString(const std::string& textToSplit, const std::string& delimiter);
-std::string gReplaceAll(std::string& source, const std::string& from, const std::string& to);
+std::string gReplaceAll(const std::string& source, const std::string& from, const std::string& to);
 bool gIsValidFilename(std::string fileName);
 
 template <class T>
@@ -250,36 +250,29 @@ T gClamp(T t, T min, T max) {
  * Shows operating system's open file dialog
  *
  * EXAMPLE USAGE
- * GameCanvas.h:
- * bool showopenfiledialog;
+ * ```cpp
+ * // GameCanvas.h:
  * static const int patternnum = 2;
  * std::string filterpatterns[patternnum];
- * std::string openfilename;
  * std::string filepath;
  *
- * GameCanvas.cpp:
+ * // GameCanvas.cpp:
  * void GameCanvas::setup() {
- *     showopenfiledialog = false;
  *     filterpatterns[0] = "*.csv";
  *     filterpatterns[1] = "*.txt";
- *     openfilename = "";
  *     filepath = "";
  * }
  *
- * void GameCanvas::update() {
- *     if(showopenfiledialog) {
- *         openfilename = gShowOpenFileDialog("Open File", gGetFilesDir(), patternnum, filterpatterns, "Data files", false);
- *         if(openfilename != "") filepath = openfilename;
- *         openfilename = "";
- *         showopenfiledialog = false;
- *     }
- *     gLogi("GameCanvas") << "filepath:" << filepath;
- * }
- *
  * void GameCanvas::mouseReleased(int x, int y, int button) {
- *     showopenfiledialog = true;
+ *     std::string openfilename = gShowOpenFileDialog("Open File", gGetFilesDir(), patternnum, filterpatterns, "Data files", false);
+ *     if(!openfilename.empty()) {
+ *         filepath = openfilename;
+ *		   gLogi("GameCanvas") << "filepath:" << filepath;
+ *     } else {
+ *		   gLogi("GameCanvas") << "No file selected!";
+ *     }
  * }
- *
+ * ```
  *
  * @param dialogTitle Dialog's title
  * @param defaultPathAndFile Default path to show
@@ -287,54 +280,122 @@ T gClamp(T t, T min, T max) {
  * @param filterPatterns A string array of the file patterns to browse
  * @param filterDescription Description of the filter such as 'Image files'
  * @param isMultipleSelectionAllowed Is multiple selection allowed. Default value is false.
- * @return Choosen file's full path
+ * @return Chosen file's full path
  */
 std::string gShowOpenFileDialog(
-	std::string dialogTitle,
-	std::string defaultPathAndFile,
+	const std::string& dialogTitle,
+	const std::string& defaultPathAndFile,
     int filterNum,
-	std::string* filterPatterns,
-	std::string filterDescription,
+	const std::string* filterPatterns,
+	const std::string& filterDescription,
     bool isMultipleSelectionAllowed = false);
 
+/**
+ * Shows the operating system's open file dialog
+ *
+ * EXAMPLE USAGE
+ * ```cpp
+ * std::string filepath = gShowOpenFileDialog(
+ *     "Open File",
+ *     gGetFilesDir(),
+ *     {"*.csv", "*.txt"},
+ *     "Data files",
+ *     false
+ * );
+ * if(!filepath.empty()) {
+ *     gLogi("FileDialog") << "Selected file: " << filepath;
+ * }
+ * ```
+ *
+ * @param dialogTitle Dialog's title.
+ * @param defaultPathAndFile Default path and file to display in the dialog.
+ * @param filterPatterns An initializer list of file patterns to filter (e.g., {"*.txt", "*.csv"}).
+ * @param filterDescription Description of the file filter (e.g., "Text files").
+ * @param isMultipleSelectionAllowed If true, allows multiple file selection. Default is false.
+ * @return The full path of the selected file as a string. Returns an empty string if no file is selected.
+ */
+std::string gShowOpenFileDialog(
+	const std::string& dialogTitle,
+	const std::string& defaultPathAndFile,
+	std::initializer_list<const char*> filterPatterns,
+	const std::string& filterDescription,
+	bool isMultipleSelectionAllowed = false);
+
+std::string gShowOpenFileDialog(
+	const std::string& dialogTitle,
+	const std::string& defaultPathAndFile,
+	int filterNum,
+	const char** filterPatterns,
+	const std::string& filterDescription,
+	bool isMultipleSelectionAllowed = false);
+
 std::string gShowSaveFileDialog(
-	std::string dialogTitle,
-	std::string defaultPathAndFile,
+	const std::string& dialogTitle,
+	const std::string& defaultPathAndFile,
     int filterNum,
-	std::string* filterPatterns,
-	std::string filterDescription);
+	const std::string* filterPatterns,
+	const std::string& filterDescription);
+
+
+std::string gShowSaveFileDialog(
+	const std::string& dialogTitle,
+	const std::string& defaultPathAndFile,
+	std::initializer_list<const char*> filterPatterns,
+	const std::string& filterDescription);
+
+std::string gShowSaveFileDialog(
+	const std::string& dialogTitle,
+	const std::string& defaultPathAndFile,
+	int filterNum,
+	const char** filterPatterns,
+	const std::string& filterDescription);
 
 std::string gShowSelectFolderDialog(
-	std::string dialogTitle,
-	std::string defaultPath);
-
+	const std::string& dialogTitle,
+	const std::string& defaultPath);
 
 
 /**
  * Shows operating system's message dialog box
  *
- * @param aTitle Dialog's title
- * @param aMessage Dialog's message text. May contain \n and \t
- * @param aDialogType Dialog's type. Possible values are "ok", "okcancel", "yesno", "yesnocancel"
- * @param aIconType Dialog's type. Possible values are "info", "warning", "error", "question"
+ * @param title Dialog's title
+ * @param message Dialog's message text. May contain \n and \t or be empty
+ * @param dialogue Dialog's type. Possible values are "ok", "okcancel", "yesno", "yesnocancel"
+ * @param iconType Dialog's type. Possible values are "info", "warning", "error", "question"
  * @return clicked button
  */
 int gShowMessageBox(
-	std::string aTitle , /* NULL or "" */
-	std::string aMessage , /* NULL or ""  may contain \n and \t */
-	std::string aDialogType , /* "ok" "okcancel" "yesno" "yesnocancel" */
-	std::string aIconType , /* "info" "warning" "error" "question" */
-	int aDefaultButton) /* 0 for cancel/no , 1 for ok/yes , 2 for no in yesnocancel */;
+	const std::string& title,
+	const std::string& message,
+	const std::string& dialogue,
+	const std::string& iconType,
+	int defaultButton);
 
+/**
+ * Shows operating system's input dialog box
+ *
+ * @param title Dialog's title. Can be empty.
+ * @param message Dialog's message text. May contain \n and \t or be empty.
+ * @param defaultInput Default input text. If empty, it will display a password box.
+ * @return User input as a string.
+ */
 std::string gShowInputBox(
-		std::string aTitle , /* NULL or "" */
-		std::string aMessage , /* NULL or ""  may contain \n and \t */
-		std::string aDefaultInput) /* "" , if NULL it's a passwordBox */;
+		const std::string& title,
+		const std::string& message,
+		const std::string& defaultInput);
 
+/**
+ * Shows operating system's color chooser dialog box
+ *
+ * @param title Dialog's title. Can be empty.
+ * @param defaultHex Default color in hexadecimal format (e.g., "#FF0000"). Can be empty.
+ * @param defaultRGB Default color in RGB format as an array of three unsigned char values (e.g., {0, 255, 255}).
+ * @return Selected color as a gColor object.
+ */
 gColor gShowColorChooser(
-	std::string aTitle , /* "" */
-	std::string aDefaultHexRGB , /* NULL or "#FF0000" */
-	unsigned char const aDefaultRGB[3]) /* { 0 , 255 , 255 } */;
+	const std::string& title,
+	const std::string& defaultHex,
+	unsigned char const defaultRGB[3]);
 
 bool gCheckCollision(int xLeft1, int yUp1, int xRight1, int yBottom1,
 		int xLeft2, int yUp2, int xRight2, int yBottom2);

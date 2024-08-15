@@ -41,8 +41,8 @@ gFont* gGUIManager::getFont(int fontNo, int fontType) {
 
 void gGUIManager::setCurrentFrame(gGUIFrame* currentFrame) {
 	setCurrentFrame(currentFrame,
-                    appmanager->getCurrentCanvas()->getScreenWidth(),
-                    appmanager->getCurrentCanvas()->getScreenHeight());
+			currentFrame->getScreenWidth(),
+			currentFrame->getScreenHeight());
 }
 
 void gGUIManager::setCurrentFrame(gGUIFrame* currentFrame, int width, int height) {

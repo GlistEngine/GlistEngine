@@ -79,7 +79,15 @@ void gThread::yield() {
 }
 
 void gThread::sleep(std::chrono::duration<double, std::milli> milliseconds) {
-	std::this_thread::sleep_for(milliseconds);
+	starttime = std::chrono::high_resolution_clock::now();
+	while(true) {
+		timediff = std::chrono::high_resolution_clock::now() - starttime;
+		if(timediff >= milliseconds) break;
+	}
+}
+
+void gThread::sleep(double milliseconds) {
+	sleep(std::chrono::duration<double, std::milli>{milliseconds});
 }
 
 void gThread::run() {

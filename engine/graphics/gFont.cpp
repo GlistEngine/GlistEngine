@@ -147,27 +147,54 @@ void gFont::drawTextHorizontallyFlipped(const std::string& text, float x, float 
 	text1 = s2ws(text);
 	len1 = text1.length();
 
+	// Calculate the total width
+	int totalwidth = 0;
+	for (int i = 0; i < len1; ++i) {
+	    wchar_t c = text1[i];
+	    int cid = getCharID(c);
+	    if (cpset[cid].character == unloadedchar) {
+	        loadChar(cid);
+	    }
+	    totalwidth += cpset[cid].advance * letterspacing * (c == ' ' ? spacesize : 1);
+	}
+
+	if (len1 > 0) {
+	    wchar_t lastchar = text1[len1 - 1];
+	    int lastcid = getCharID(lastchar);
+	    totalwidth += cpset[lastcid].advance * letterspacing * (lastchar == ' ' ? spacesize : 1);
+	}
+
+	// Set the starting position based on the total text width
+	posx1 = x + totalwidth;
+
 	while (index1 < len1) {
-		c1 = text1[index1];
-		if (index1 > 0) {
-			cold1 = text1[index1 - 1];
-		} else {
-			cold1 = -1;
-		}
-		if (c1 == '\n') {
-			posy1 += lineheight;
-			posx1 = x;//reset X Pos back to zero
-		} else {
-			cid1 = getCharID(c1);
-			if (cpset[cid1].character == unloadedchar) {
-				loadChar(cid1);
-			}
-			posx1 -= getKerning(cid1, cold1);
-			gTexture* texture = textures[cid1];
-			texture->draw(posx1 + cpset[cid1].leftmargin, posy1 + cpset[cid1].dytop, -texture->getWidth(), texture->getHeight());
-			posx1 -= cpset[cid1].advance * letterspacing * (c1 == ' ' ? spacesize : 1);
-		}
-		index1++;
+	    c1 = text1[index1];
+	    if (index1 > 0) {
+	        cold1 = text1[index1 - 1];
+	    } else {
+	        cold1 = -1;
+	    }
+	    if (c1 == '\n') {
+	        posy1 += lineheight;
+	        posx1 = x + totalwidth; // reset X Pos back to initial adjusted value
+	    } else {
+	        cid1 = getCharID(c1);
+	        if (cpset[cid1].character == unloadedchar) {
+	            loadChar(cid1);
+	        }
+
+	        int kerning = getKerning(cid1, cold1);
+	        posx1 -= kerning;
+
+	        gTexture* texture = textures[cid1];
+	        int drawx = posx1 - cpset[cid1].leftmargin - texture->getWidth();
+
+	        texture->draw(drawx, posy1 + cpset[cid1].dytop, -texture->getWidth(), texture->getHeight());
+
+	        int advance = cpset[cid1].advance * letterspacing * (c1 == ' ' ? spacesize : 1);
+	        posx1 -= advance;
+	    }
+	    index1++;
 	}
 }
 

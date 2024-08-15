@@ -357,7 +357,7 @@ std::vector<std::string> gSplitString(const std::string& textToSplit, const std:
 	return tokens;
 }
 
-std::string gReplaceAll(std::string& source, const std::string& from, const std::string& to) {
+std::string gReplaceAll(const std::string& source, const std::string& from, const std::string& to) {
     std::string newstring;
     newstring.reserve(source.length());
     int fl = from.length();
@@ -673,90 +673,146 @@ bool gIsLoggingEnabled() {
 }
 
 std::string gShowOpenFileDialog(
-		std::string dialogTitle,
-		std::string defaultPathAndFile,
+		const std::string& dialogTitle,
+		const std::string& defaultPathAndFile,
 	    int filterNum,
-		std::string* filterPatterns,
-		std::string filterDescription,
+		const std::string* filterPatterns,
+		const std::string& filterDescription,
 	    bool isMultipleSelectionAllowed) {
-	std::string resstr = "";
-	const char* carray[filterNum];
-	for(int i = 0; i < filterNum; i++) carray[i] = filterPatterns[i].c_str();
+	const char* filter[filterNum];
+	for(int i = 0; i < filterNum; i++) {
+		filter[i] = filterPatterns[i].c_str();
+	}
+	return gShowOpenFileDialog(dialogTitle, defaultPathAndFile, filterNum, filter, filterDescription, isMultipleSelectionAllowed);
+}
+
+std::string gShowOpenFileDialog(
+		const std::string& dialogTitle,
+		const std::string& defaultPathAndFile,
+		int filterNum,
+		const char** filterPatterns,
+		const std::string& filterDescription,
+		bool isMultipleSelectionAllowed) {
 	const char* res = tinyfd_openFileDialog(
 			dialogTitle.c_str(),
 			defaultPathAndFile.c_str(),
 			filterNum,
-			carray,
+			filterPatterns,
 			filterDescription.c_str(),
 			isMultipleSelectionAllowed);
-	if(res) resstr = std::string(res);
-	return resstr;
+	if(res) {
+		return {res};
+	}
+	return "";
+}
+
+std::string gShowOpenFileDialog(
+	const std::string& dialogTitle,
+	const std::string& defaultPathAndFile,
+	std::initializer_list<const char*> filterPatterns,
+	const std::string& filterDescription,
+	bool isMultipleSelectionAllowed) {
+	const char* filters[filterPatterns.size()];
+	size_t i = 0;
+	for(auto&& it = filterPatterns.begin(); it < filterPatterns.end(); it++, i++) {
+		filters[i] = *it;
+	}
+	return gShowOpenFileDialog(dialogTitle, defaultPathAndFile, filterPatterns.size(), filters, filterDescription, isMultipleSelectionAllowed);
+}
+
+
+std::string gShowSaveFileDialog(
+	const std::string& dialogTitle,
+	const std::string& defaultPathAndFile,
+    int filterNum,
+	const std::string* filterPatterns,
+	const std::string& filterDescription) {
+	const char* filters[filterNum];
+	for(int i = 0; i < filterNum; i++) {
+		filters[i] = filterPatterns[i].c_str();
+	}
+	return gShowSaveFileDialog(dialogTitle, defaultPathAndFile, filterNum, filters, filterDescription);
 }
 
 std::string gShowSaveFileDialog(
-	std::string dialogTitle,
-	std::string defaultPathAndFile,
-    int filterNum,
-	std::string* filterPatterns,
-	std::string filterDescription) {
-	std::string resstr = "";
-	const char* carray[filterNum];
-	for(int i = 0; i < filterNum; i++) carray[i] = filterPatterns[i].c_str();
+	const std::string& dialogTitle,
+	const std::string& defaultPathAndFile,
+	std::initializer_list<const char*> filterPatterns,
+	const std::string& filterDescription) {
+	const char* filters[filterPatterns.size()];
+	size_t i = 0;
+	for(auto&& it = filterPatterns.begin(); it < filterPatterns.end(); it++, i++) {
+		filters[i] = *it;
+	}
+	return gShowSaveFileDialog(dialogTitle, defaultPathAndFile, filterPatterns.size(), filters, filterDescription);
+}
+
+
+std::string gShowSaveFileDialog(
+	const std::string& dialogTitle,
+	const std::string& defaultPathAndFile,
+	int filterNum,
+	const char** filterPatterns,
+	const std::string& filterDescription) {
 	const char* res = tinyfd_saveFileDialog(
 			dialogTitle.c_str(),
 			defaultPathAndFile.c_str(),
 			filterNum,
-			carray,
+			filterPatterns,
 			filterDescription.c_str());
-	if(res) resstr = std::string(res);
-	return resstr;
+	if(res) {
+		return {res};
+	}
+	return "";
 }
 
 std::string gShowSelectFolderDialog(
-	std::string dialogTitle,
-	std::string defaultPath) {
-	std::string resstr = "";
+	const std::string& dialogTitle,
+	const std::string& defaultPath) {
 	const char* res = tinyfd_selectFolderDialog(
 			dialogTitle.c_str(),
 			defaultPath.c_str());
-	if(res) resstr = std::string(res);
-	return resstr;
+	if(res) {
+		return {res};
+	}
+	return "";
 }
 
 int gShowMessageBox(
-		std::string aTitle , /* NULL or "" */
-		std::string aMessage , /* NULL or ""  may contain \n and \t */
-		std::string aDialogType , /* "ok" "okcancel" "yesno" "yesnocancel" */
-		std::string aIconType , /* "info" "warning" "error" "question" */
-		int aDefaultButton ) {
+		const std::string& title,
+		const std::string& message,
+		const std::string& dialogueType,
+		const std::string& iconType,
+		int defaultButton) {
 	return tinyfd_messageBox(
-			aTitle.c_str(),
-			aMessage.c_str(),
-			aDialogType.c_str(),
-			aIconType.c_str(),
-			aDefaultButton);
+			title.c_str(),
+			message.c_str(),
+			dialogueType.c_str(),
+			iconType.c_str(),
+			defaultButton);
 }
 
 std::string gShowInputBox(
-		std::string aTitle , /* NULL or "" */
-		std::string aMessage , /* NULL or ""  may contain \n and \t */
-		std::string aDefaultInput) /* "" , if NULL it's a passwordBox */ {
-	std::string resstr = "";
+		const std::string& title,
+		const std::string& message,
+		const std::string& defaultInput) {
 	const char* res = tinyfd_inputBox(
-			aTitle.c_str(),
-			aMessage.c_str(),
-			aDefaultInput.c_str());
-	if(res) resstr = std::string(res);
-	return resstr;
+			title.c_str(),
+			message.c_str(),
+			defaultInput.c_str());
+	if(res) {
+		return {res};
+	}
+	return "";
 }
 
 gColor gShowColorChooser(
-	std::string aTitle , /* "" */
-	std::string aDefaultHexRGB , /* NULL or "#FF0000" */
-	unsigned char const aDefaultRGB[3]) /* { 0 , 255 , 255 } */ {
+	const std::string& title,
+	const std::string& defaultHex,
+	unsigned char const defaultRGB[3]) {
 	gColor selectedcolor(0, 0, 0, 255);
 	unsigned char result[3];
-	char const * res = tinyfd_colorChooser(aTitle.c_str(), aDefaultHexRGB.c_str(), aDefaultRGB, result);
+	char const* res = tinyfd_colorChooser(title.c_str(), defaultHex.c_str(), defaultRGB, result);
 	if(res) {
 		selectedcolor.set(result[0] / 255, result[1] / 255, result[2] / 255);
 	}

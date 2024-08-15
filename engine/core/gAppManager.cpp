@@ -2,7 +2,7 @@
  * gAppManager.cpp
  *
  *  Created on: May 6, 2020
- *      Author: noyan
+ *      Author: Noyan Culum
  */
 
 #include "gAppManager.h"
@@ -13,6 +13,7 @@
 #include "gGUIFrame.h"
 
 #include <thread>
+#include "gGUIAppThread.h"
 
 // Platform specific window implementation
 #if defined(WIN32) || defined(LINUX) || TARGET_OS_OSX
@@ -132,13 +133,25 @@ gAppManager::gAppManager(const std::string& appName, gBaseApp *baseApp, int widt
 		window = nullptr;
 		setTargetFramerate(INT_MAX);
 	}
+
+	isguiapp = false;
+	if(windowMode == G_WINDOWMODE_GUIAPP || windowMode == G_WINDOWMODE_FULLSCREENGUIAPP) isguiapp = true;
+	if(isguiapp) guiappthread = new gGUIAppThread(baseApp);
 }
 
 gAppManager::~gAppManager() {
+	if(guiappthread) {
+		guiappthread->stop();
+//		delete guiappthread;
+	}
     delete canvasmanager;
     delete guimanager;
     delete window;
     gRenderObject::destroyRenderer();
+}
+
+gGUIAppThread* gAppManager::getGUIAppThread() {
+	return guiappthread;
 }
 
 void gAppManager::setup() {
@@ -152,6 +165,7 @@ void gAppManager::setup() {
 void gAppManager::runApp() {
 	initialize();
 	setup();
+	if(isguiapp) guiappthread->start();
 	loop();
 	stop();
 }
@@ -184,6 +198,7 @@ void gAppManager::initialize() {
 		// Create managers if not created
 		if(!guimanager) {
 			guimanager = new gGUIManager(app, width, height);
+			guimanager->getCurrentFrame()->getRenderer()->updateLights();
 		}
 	}
     initialized = true;
@@ -398,9 +413,9 @@ void gAppManager::tick() {
     totalupdates++;
     if(!usewindow) {
         app->update();
-        for(int i = 0; i < gBaseComponent::usedcomponents.size(); i++) {
-            gBaseComponent::usedcomponents[i]->update();
-        }
+    	for (gBaseComponent*& component : gBaseComponent::usedcomponents) {
+    		component->update();
+    	}
 		executeQueue();
         return;
     }
@@ -408,28 +423,33 @@ void gAppManager::tick() {
     // todo joystick
     if(canvasmanager) canvasmanager->update();
     if(guimanager) guimanager->update();
-    app->update();
-    for(int i = 0; i < gBaseComponent::usedcomponents.size(); i++) {
-        gBaseComponent::usedcomponents[i]->update();
-    }
-    for(int i = 0; i < gBasePlugin::usedplugins.size(); i++) {
-        gBasePlugin::usedplugins[i]->update();
-    }
+    if(!isguiapp) app->update();
+	for (gBaseComponent*& component : gBaseComponent::usedcomponents) {
+		component->update();
+	}
+	for (gBasePlugin*& component : gBasePlugin::usedplugins) {
+		component->update();
+	}
 
-    gBaseCanvas* canvas = canvasmanager->getCurrentCanvas();
-    if(canvas) {
-        canvas->update();
+    gBaseCanvas* canvas = nullptr;
+    if(!isguiapp) {
+		if(canvasmanager) canvas = canvasmanager->getCurrentCanvas();
+		if(canvas) {
+			canvas->update();
+		}
     }
 
     if(isrendering) {
-        if(canvas) {
-            canvas->clearBackground();
-            for (int i = 0; i < renderpassnum; i++) {
-                renderpassno = i;
-                canvas->getRenderer()->updateLights();
-                canvas->draw();
-            }
-        }
+    	if(!isguiapp) {
+			if(canvas) {
+				canvas->clearBackground();
+				for (int i = 0; i < renderpassnum; i++) {
+					renderpassno = i;
+					canvas->getRenderer()->updateLights();
+					canvas->draw();
+				}
+			}
+    	}
 
 		if(guimanager) guimanager->draw();
         totaldraws++;
@@ -525,31 +545,31 @@ bool gAppManager::onWindowResizedEvent(gWindowResizeEvent& event) {
 }
 
 bool gAppManager::onCharTypedEvent(gCharTypedEvent& event) {
-	if (!canvasmanager || !getCurrentCanvas()) return true;
+//	if (!canvasmanager || !getCurrentCanvas()) return true;
     if(guimanager->isframeset) guimanager->charPressed(event.getCharacter());
     for (gBasePlugin*& plugin : gBasePlugin::usedplugins) plugin->charPressed(event.getCharacter());
-    getCurrentCanvas()->charPressed(event.getCharacter());
+    if(canvasmanager && getCurrentCanvas()) getCurrentCanvas()->charPressed(event.getCharacter());
     return false;
 }
 
 bool gAppManager::onKeyPressedEvent(gKeyPressedEvent& event) {
-    if (!canvasmanager || !getCurrentCanvas()) return true;
+//    if (!canvasmanager || !getCurrentCanvas()) return true;
     if(guimanager->isframeset) guimanager->keyPressed(event.getKeyCode());
     for (gBasePlugin*& plugin : gBasePlugin::usedplugins) plugin->keyPressed(event.getKeyCode());
-    getCurrentCanvas()->keyPressed(event.getKeyCode());
+    if(canvasmanager && getCurrentCanvas()) getCurrentCanvas()->keyPressed(event.getKeyCode());
     return false;
 }
 
 bool gAppManager::onKeyReleasedEvent(gKeyReleasedEvent& event) {
-    if (!canvasmanager || !getCurrentCanvas()) return true;
+//    if (!canvasmanager || !getCurrentCanvas()) return true;
     if(guimanager->isframeset) guimanager->keyReleased(event.getKeyCode());
     for (gBasePlugin*& plugin : gBasePlugin::usedplugins) plugin->keyReleased(event.getKeyCode());
-    canvasmanager->getCurrentCanvas()->keyReleased(event.getKeyCode());
+    if(canvasmanager && getCurrentCanvas()) canvasmanager->getCurrentCanvas()->keyReleased(event.getKeyCode());
     return false;
 }
 
 bool gAppManager::onMouseMovedEvent(gMouseMovedEvent& event) {
-    if (!canvasmanager || !getCurrentCanvas()) return true;
+//    if (!canvasmanager || !getCurrentCanvas()) return true;
     int xpos = event.getX();
     int ypos = event.getY();
     if (gRenderer::getScreenScaling() > G_SCREENSCALING_NONE) {
@@ -559,17 +579,17 @@ bool gAppManager::onMouseMovedEvent(gMouseMovedEvent& event) {
     if (mousebuttonstate) {
         if(guimanager->isframeset) guimanager->mouseDragged(xpos, ypos, mousebuttonstate);
         for(gBasePlugin*& plugin : gBasePlugin::usedplugins) plugin->mouseDragged(xpos, ypos, mousebuttonstate);
-        canvasmanager->getCurrentCanvas()->mouseDragged(xpos, ypos, mousebuttonstate);
+        if(canvasmanager && getCurrentCanvas()) canvasmanager->getCurrentCanvas()->mouseDragged(xpos, ypos, mousebuttonstate);
     } else {
         if(guimanager->isframeset) guimanager->mouseMoved(xpos, ypos);
         for(gBasePlugin*& plugin : gBasePlugin::usedplugins) plugin->mouseMoved(xpos, ypos);
-        canvasmanager->getCurrentCanvas()->mouseMoved(xpos, ypos);
+        if(canvasmanager && getCurrentCanvas()) canvasmanager->getCurrentCanvas()->mouseMoved(xpos, ypos);
     }
     return false;
 }
 
 bool gAppManager::onMouseButtonPressedEvent(gMouseButtonPressedEvent& event) {
-    if (!canvasmanager || !getCurrentCanvas()) return true;
+//    if (!canvasmanager || !getCurrentCanvas()) return true;
     mousebuttonpressed[event.getMouseButton()] = true;
     mousebuttonstate |= pow(2, event.getMouseButton() + 1);
     int xpos = event.getX();
@@ -580,12 +600,12 @@ bool gAppManager::onMouseButtonPressedEvent(gMouseButtonPressedEvent& event) {
     }
     if(guimanager->isframeset) guimanager->mousePressed(xpos, ypos, event.getMouseButton());
     for(gBasePlugin*& plugin : gBasePlugin::usedplugins) plugin->mousePressed(xpos, ypos, event.getMouseButton());
-    canvasmanager->getCurrentCanvas()->mousePressed(xpos, ypos, event.getMouseButton());
+    if(canvasmanager && getCurrentCanvas()) canvasmanager->getCurrentCanvas()->mousePressed(xpos, ypos, event.getMouseButton());
     return false;
 }
 
 bool gAppManager::onMouseButtonReleasedEvent(gMouseButtonReleasedEvent& event) {
-    if (!canvasmanager || !getCurrentCanvas()) return true;
+//    if (!canvasmanager || !getCurrentCanvas()) return true;
     mousebuttonpressed[event.getMouseButton()] = false;
     mousebuttonstate &= ~pow(2, event.getMouseButton() + 1);
     int xpos = event.getX();
@@ -596,31 +616,31 @@ bool gAppManager::onMouseButtonReleasedEvent(gMouseButtonReleasedEvent& event) {
     }
     if(guimanager->isframeset) guimanager->mouseReleased(xpos, ypos, event.getMouseButton());
     for(gBasePlugin*& plugin : gBasePlugin::usedplugins) plugin->mouseReleased(xpos, ypos, event.getMouseButton());
-    canvasmanager->getCurrentCanvas()->mouseReleased(xpos, ypos, event.getMouseButton());
+    if(canvasmanager && getCurrentCanvas()) canvasmanager->getCurrentCanvas()->mouseReleased(xpos, ypos, event.getMouseButton());
     return false;
 }
 
 bool gAppManager::onWindowMouseEnterEvent(gWindowMouseEnterEvent& event) {
-    if(!canvasmanager || !getCurrentCanvas()) return true;
+//    if(!canvasmanager || !getCurrentCanvas()) return true;
     ismouseentered = true;
     for(gBasePlugin*& plugin : gBasePlugin::usedplugins) plugin->mouseEntered();
-    canvasmanager->getCurrentCanvas()->mouseEntered();
+    if(canvasmanager && getCurrentCanvas()) canvasmanager->getCurrentCanvas()->mouseEntered();
     return false;
 }
 
 bool gAppManager::onWindowMouseExitEvent(gWindowMouseExitEvent& event) {
-    if(!canvasmanager || !getCurrentCanvas()) return true;
+//    if(!canvasmanager || !getCurrentCanvas()) return true;
     ismouseentered = false;
     for(gBasePlugin*& plugin : gBasePlugin::usedplugins) plugin->mouseExited();
-    canvasmanager->getCurrentCanvas()->mouseExited();
+    if(canvasmanager && getCurrentCanvas()) canvasmanager->getCurrentCanvas()->mouseExited();
     return false;
 }
 
 bool gAppManager::onMouseScrolledEvent(gMouseScrolledEvent& event) {
-    if (!canvasmanager || !getCurrentCanvas()) return true;
+//    if (!canvasmanager || !getCurrentCanvas()) return true;
     if(guimanager->isframeset) guimanager->mouseScrolled(event.getOffsetX(), event.getOffsetY());
     for (gBasePlugin*& plugin : gBasePlugin::usedplugins) plugin->mouseScrolled(event.getOffsetX(), event.getOffsetY());
-    canvasmanager->getCurrentCanvas()->mouseScrolled(event.getOffsetX(), event.getOffsetY());
+    if(canvasmanager && getCurrentCanvas()) canvasmanager->getCurrentCanvas()->mouseScrolled(event.getOffsetX(), event.getOffsetY());
     return false;
 }
 
