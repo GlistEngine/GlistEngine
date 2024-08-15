@@ -10,6 +10,7 @@ var gUtils_8h =
     [ "PI", "gUtils_8h.html#a598a3330b3c21701223ee0ca14316eca", null ],
     [ "UTILS_GUTILS_H_", "gUtils_8h.html#a66751624177fa192c8a9e258c83b1390", null ],
     [ "gCheckCollision", "gUtils_8h.html#a06742a9ddc4705eb972bec8c015aecae", null ],
+    [ "gCheckPixelPerfectCollision", "gUtils_8h.html#aa008cc42702c48f7badb432d2da5747c", null ],
     [ "gClamp", "gUtils_8h.html#abdda3cd414cd2b487309c57bffbcf36a", null ],
     [ "gCodepointToStr", "gUtils_8h.html#a62db010a0399eea661a927e55151a5ef", null ],
     [ "gDecodeBase64", "gUtils_8h.html#a9d16a741e037d39bc076a52e95737486", null ],

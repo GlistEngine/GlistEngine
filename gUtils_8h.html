@@ -335,6 +335,8 @@ Functions</h2></td></tr>
 <tr class="separator:a9274f5c28de6fec64d28d18723ac1990"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a06742a9ddc4705eb972bec8c015aecae"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="gUtils_8h.html#a06742a9ddc4705eb972bec8c015aecae">gCheckCollision</a> (int xLeft1, int yUp1, int xRight1, int yBottom1, int xLeft2, int yUp2, int xRight2, int yBottom2)</td></tr>
 <tr class="separator:a06742a9ddc4705eb972bec8c015aecae"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa008cc42702c48f7badb432d2da5747c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="gUtils_8h.html#aa008cc42702c48f7badb432d2da5747c">gCheckPixelPerfectCollision</a> (<a class="el" href="classgImage.html">gImage</a> *image1, int x1, int y1, <a class="el" href="classgImage.html">gImage</a> *image2, int x2, int y2)</td></tr>
+<tr class="separator:aa008cc42702c48f7badb432d2da5747c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Macro Definition Documentation</h2>
 <a id="a598a3330b3c21701223ee0ca14316eca"></a>
@@ -419,6 +421,58 @@ Functions</h2></td></tr>
           <td></td>
           <td class="paramtype">int&#160;</td>
           <td class="paramname"><em>yBottom2</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aa008cc42702c48f7badb432d2da5747c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa008cc42702c48f7badb432d2da5747c">&#9670;&nbsp;</a></span>gCheckPixelPerfectCollision()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool gCheckPixelPerfectCollision </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classgImage.html">gImage</a> *&#160;</td>
+          <td class="paramname"><em>image1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>x1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>y1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classgImage.html">gImage</a> *&#160;</td>
+          <td class="paramname"><em>image2</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>x2</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>y2</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -1334,7 +1388,7 @@ template&lt;typename T &gt; </div>
 <div class="line">       <a class="code" href="classgLogi.html">gLogi</a>(<span class="stringliteral">&quot;GameCanvas&quot;</span>) &lt;&lt; <span class="stringliteral">&quot;No file selected!&quot;</span>;</div>
 <div class="line">    }</div>
 <div class="line">}</div>
-<div class="ttc" id="aclassgLogi_html"><div class="ttname"><a href="classgLogi.html">gLogi</a></div><div class="ttdef"><b>Definition:</b> gUtils.h:219</div></div>
+<div class="ttc" id="aclassgLogi_html"><div class="ttname"><a href="classgLogi.html">gLogi</a></div><div class="ttdef"><b>Definition:</b> gUtils.h:220</div></div>
 <div class="ttc" id="agUtils_8h_html_a1c6191ed62fc5cc55395ff240db81a94"><div class="ttname"><a href="gUtils_8h.html#a1c6191ed62fc5cc55395ff240db81a94">gShowOpenFileDialog</a></div><div class="ttdeci">std::string gShowOpenFileDialog(const std::string &amp;dialogTitle, const std::string &amp;defaultPathAndFile, int filterNum, const std::string *filterPatterns, const std::string &amp;filterDescription, bool isMultipleSelectionAllowed=false)</div></div>
 </div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
