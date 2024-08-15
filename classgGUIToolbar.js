@@ -15,7 +15,7 @@ var classgGUIToolbar =
     [ "addToolbarButton", "classgGUIToolbar.html#a135fe6ff3c08fe9960757315bfa5a779", null ],
     [ "draw", "classgGUIToolbar.html#a271462072ab724d8c685e7bc185bb7da", null ],
     [ "getToolbarType", "classgGUIToolbar.html#a584aa582d42fd4462f024d529a76fd85", null ],
-    [ "setToolbarBottomLineColor", "classgGUIToolbar.html#a911badca5af4763966f89e8805ef1c59", null ],
-    [ "setToolbarForegroundColor", "classgGUIToolbar.html#ab7f23bdca34df4d581f8fae3498fef7c", null ],
+    [ "setToolbarBottomLineColor", "classgGUIToolbar.html#a9b3950e83f66ddb0703a5fb5d984d348", null ],
+    [ "setToolbarForegroundColor", "classgGUIToolbar.html#a79d099e126effa5fa8e3ed1a932ba5a1", null ],
     [ "setToolbarType", "classgGUIToolbar.html#a07ddfd0c3035c98c9f84d9a6a7b76967", null ]
 ];
