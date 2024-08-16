@@ -20,6 +20,7 @@
 #include "gGUIBitmap.h"
 #include "gGUIDivider.h"
 #include "gGUIFrame.h"
+
 #include <deque>
 #include <typeinfo>
 
@@ -50,7 +51,7 @@ public:
 	void addSpace();
 	void setToolbarForegroundColor(gColor* color);
 	void setToolbarBottomLineColor(gColor* color);
-
+	void setIsTransparent(bool istranparent);
 
 	void draw();
 
@@ -58,6 +59,7 @@ private:
 	int toolbartype;
 	int spaceLocation;
 	bool isSpaceAdded;
+	bool istransparent;
 	std::deque<gGUIControl*> controlObjects;
 	std::deque<float> sizerPrs;
 	gColor* tbforegroundcolor, tbbottomlinecolor;
