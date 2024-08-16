@@ -617,13 +617,16 @@ std::string gTexture::getFileName(const std::string& fname) {
 
 void gTexture::save(std::string fullpath) {
 	unsigned char* pixels = new unsigned char[width * height * componentnum];
-	bind();
 
-	glGetTexImage(GL_TEXTURE_2D,
-	    0,
-	    format,
-	    GL_UNSIGNED_BYTE,
-	    pixels);
+	GLuint fbo;
+	glGenFramebuffers(1, &fbo);
+	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, id, 0);
+
+	glReadPixels(0, 0, width, height, format, GL_UNSIGNED_BYTE, pixels);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glDeleteFramebuffers(1, &fbo);
 
 	// flip back vertically if fbo or hdr
 	if (isfbo || ishdr) {

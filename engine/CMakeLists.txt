@@ -275,7 +275,11 @@ set(GENERATED_SHADERS_DIR "${GENERATED_HEADERS_DIR}/graphics/shaders" CACHE STRI
 file(MAKE_DIRECTORY ${GENERATED_SHADERS_DIR})
 file(GLOB_RECURSE SHADER_FILES "${SHADERS_DIR}/*.glsl")
 
-add_executable(GlistShaderToHeader ${ENGINE_DIR}/tools/ShaderToHeader.cpp)
+# If user or another plugin haven't defined a custom executable for the tool
+if(NOT DEFINED SHADERTOHEADER_EXEC_PATH)
+	add_executable(GlistShaderToHeader ${ENGINE_DIR}/tools/ShaderToHeader.cpp)
+	set(SHADERTOHEADER_EXEC_PATH $<TARGET_FILE:GlistShaderToHeader>)
+endif()
 
 # Add a dependency to ensure the header file is generated before other targets
 foreach(SHADER_FILE ${SHADER_FILES})
@@ -284,7 +288,7 @@ foreach(SHADER_FILE ${SHADER_FILES})
 
 	add_custom_command(PRE_BUILD
 			OUTPUT ${GENERATED_HEADER_FILE}
-			COMMAND $<TARGET_FILE:GlistShaderToHeader> ${SHADER_FILE} ${GENERATED_HEADER_FILE}
+			COMMAND ${SHADERTOHEADER_EXEC_PATH} ${SHADER_FILE} ${GENERATED_HEADER_FILE}
 			DEPENDS ${SHADER_FILE}
 			COMMENT "Generating header file for ${SHADER_FILE} at ${GENERATED_HEADER_FILE}"
 	)

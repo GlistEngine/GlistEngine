@@ -252,6 +252,7 @@ std::string gShader::preprocessShader(const std::string& shaderCode, std::unorde
 	std::stringstream shader_stream(shaderCode);
 	std::vector<std::string> lines;
 	while (std::getline(shader_stream, line)) {
+        gStringReplace(line, "\r", "");
 		if (startsWith(line, "#if")) {
 			std::string condition = line.substr(4);
 			is_match = defines.find(condition) != defines.end();
@@ -296,7 +297,7 @@ std::unordered_map<std::string, std::string> gShader::generateDefines(ShaderType
 		map.insert(std::pair<std::string, std::string>("GEOMETRY", ""));
 	}
 #if defined(GLIST_MOBILE)
-	map.insert(std::pair("GLES", ""));
+	map.insert(std::pair<std::string, std::string>("GLES", ""));
 #endif
 	int max_lights = GLIST_MAX_LIGHTS;
 	map.insert(std::pair<std::string, std::string>("GLIST_MAX_LIGHTS", gToStr(max_lights)));
