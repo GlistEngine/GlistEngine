@@ -1,4 +1,4 @@
-#if defined(GLIST_MOBILE)
+#if GLES
 #version 300 es
 precision highp float;
 #else

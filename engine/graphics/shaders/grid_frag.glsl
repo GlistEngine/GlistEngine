@@ -30,12 +30,12 @@ vec4 grid(vec3 fragpos, float linespacing, bool drawaxis) {
     vec4 color = vec4(0.2, 0.2, 0.2, 1.0 - min(line, 1.0));
     
     // x axis color
-    float minz = min(derivative.y, 1);
+    float minz = min(derivative.y, 1.0);
     if(fragpos.z > -0.1 * minz && fragpos.z < 0.1 * minz)
         color.x = 1.0;
     
     // z axis color
-    float minx = min(derivative.x, 1);
+    float minx = min(derivative.x, 1.0);
     if(fragpos.x > -0.1 * minx && fragpos.x < 0.1 * minx)
         color.z = 1.0;
     
@@ -64,9 +64,9 @@ void main() {
     gl_FragDepth = computeDepth(fragpos);
 
     float lineardepth = computeLinearDepth(fragpos);
-    float fading = max(0, (0.5 - lineardepth));
+    float fading = max(0.0, (0.5 - lineardepth));
 
 	// finally we draw the 2d grid
-    outColor = (grid(fragpos, 10, true) + grid(fragpos, 1, true)) * float(t > 0);  // t must be bigger than 0 for a valid intersection point else just make it transparent since it doesnt intersect
+    outColor = (grid(fragpos, 10.0, true) + grid(fragpos, 1.0, true)) * float(t > 0.0);  // t must be bigger than 0 for a valid intersection point else just make it transparent since it doesnt intersect
     outColor.a *= fading;
 }
