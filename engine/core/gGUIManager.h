@@ -105,9 +105,6 @@ private:
 	gColor themenavigationbackgroundcolor[themenum];
 	gColor themefontcolor[themenum];
 	gColor themenavigationfontcolor[themenum];
-	gColor themetoolbarbuttoncolor[themenum];
-	gColor themetoolbarbottomlinecolor[themenum];
-
 	gFont themefonts[fontnum][fonttypenum];
 	void loadThemes();
 	void resetTheme(int guiTheme);
