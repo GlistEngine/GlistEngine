@@ -24,9 +24,6 @@ gColor* gBaseGUIObject::disabledbuttoncolor;
 gColor* gBaseGUIObject::buttonfontcolor;
 gColor* gBaseGUIObject::pressedbuttonfontcolor;
 gColor* gBaseGUIObject::disabledbuttonfontcolor;
-gColor* gBaseGUIObject::toolbarbuttoncolor1;
-gColor* gBaseGUIObject::toolbarbottomlinecolor1;
-
 int gBaseGUIObject::focusid;
 int gBaseGUIObject::previousfocusid;
 gGUIActionManager gBaseGUIObject::actionmanager;
@@ -304,18 +301,4 @@ void gBaseGUIObject::setCursorOn(bool isOn) {
 
 }
 
-void gBaseGUIObject::setToolBarButtonColor(gColor* toolbarbuttoncolor) {
-		toolbarbuttoncolor1 = toolbarbuttoncolor;
-}
 
-gColor* gBaseGUIObject::getToolBarButtonColor() {
-	return toolbarbuttoncolor1;
-}
-
-void gBaseGUIObject::setToolBarBottomLineColor(gColor* toolbarbottomlinecolor) {
-	toolbarbottomlinecolor1 = toolbarbottomlinecolor;
-}
-
-gColor* gBaseGUIObject::getToolBarBottomLineColor() {
-	return toolbarbottomlinecolor1;
-}
