@@ -16,6 +16,7 @@ gGUIText::gGUIText() {
     width = 0;
     linenum = 0;
     isdisabled = false;
+    verticaloffset = 0;
 	setTextAlignment(TEXTALIGNMENT_LEFT);
 	setTextVerticalAlignment(TEXTVERTICALALIGNMENT_CENTER);
 	textcolor = fontcolor;
