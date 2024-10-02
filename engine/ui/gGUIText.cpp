@@ -16,7 +16,6 @@ gGUIText::gGUIText() {
     width = 0;
     linenum = 0;
     isdisabled = false;
-    verticaloffset = 0;
 	setTextAlignment(TEXTALIGNMENT_LEFT);
 	setTextVerticalAlignment(TEXTVERTICALALIGNMENT_CENTER);
 	textcolor = fontcolor;
@@ -164,6 +163,7 @@ void gGUIText::resetAlignment() {
 			linefirstx[i] -= margin;
 		}
 	}
+    verticaloffset = 0;
 	if (textverticalalignment == TEXTVERTICALALIGNMENT_BOTTOM) {
 		int totalheight = 0;
 		for (int i = 0; i < linenum; i++) {
