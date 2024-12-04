@@ -102,6 +102,7 @@ public:
 	static bool remove(const std::string& fullPath);
 	static bool removeAll(const std::string& fullPath);
 	static void rename(const std::string& fromFullPath, const std::string& toFullPath);
+	static std::vector<std::string> getDirectoryContent(const std::string& fullPath);
 
 private:
 	fs::path path;
