@@ -40,6 +40,14 @@ gGUIForm::gGUIForm() {
 	statusbar = nullptr;
 	guisizer = nullptr;
 	treelist = nullptr;
+	isprogressshown = false;
+	cpcolor = gColor(1.0f, 1.0f, 1.0f);
+	cprdeg = 0.0f;
+	cpw = 256;
+	cph = 256;
+	cpx = 0;
+	cpy = 0;
+	cpspeed = 1.0f;
 }
 
 gGUIForm::~gGUIForm() {
@@ -366,3 +374,23 @@ void gGUIForm::windowResized(int w, int h) {
 void gGUIForm::setTooltipText(gGUITooltipText *tooltiptext) {
 	this->vectooltiptext.push_back(tooltiptext);
 }
+
+void gGUIForm::showProgressBar(int style, gColor col, float speed) {
+	cpw = 256;
+	cph = 256;
+	cpx = (width - cpw) / 2;
+	cpy = (height - cph) / 2;
+	cprdeg = 0.0f;
+	cpcolor = col;
+	cpspeed = speed;
+	isprogressshown = true;
+}
+
+void gGUIForm::hideProgressBar() {
+	isprogressshown = false;
+}
+
+bool gGUIForm::isProgressShown() {
+	return isprogressshown;
+}
+

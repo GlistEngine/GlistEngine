@@ -22,6 +22,7 @@ gGUIFrame::gGUIFrame() {
 	contextmenu = nullptr;
 	treelist = nullptr;
 	for(int i = 0; i < vectooltiptext.size(); i++) { vectooltiptext[i] = nullptr;}
+	isprogressshown = false;
 }
 
 gGUIFrame::gGUIFrame(gBaseApp* root) {
@@ -30,6 +31,7 @@ gGUIFrame::gGUIFrame(gBaseApp* root) {
 	statusbar = nullptr;
 	contextmenu = nullptr;
 	treelist = nullptr;
+	isprogressshown = false;
 	setParentSlotNo(0, 0);
 	left = 0;
 	top = 0;
@@ -58,4 +60,12 @@ void gGUIFrame::draw() {
 	if(contextmenu) contextmenu->draw();
 	if(treelist) treelist->draw();
 	for(int i = 0; i < vectooltiptext.size(); i++) vectooltiptext[i]->draw();
+	if(isprogressshown) {
+		cprdeg += 2.0f * cpspeed;
+		if(cprdeg >= 360.0f) cprdeg -= 360.0f;
+		gColor* oldcolor = renderer->getColor();
+		renderer->setColor(&cpcolor);
+		res.getIconImage(gGUIResources::ICONBIG_LOADING, true)->draw(cpx, cpy, cpw, cph, cprdeg);
+		renderer->setColor(oldcolor);
+	}
 }
