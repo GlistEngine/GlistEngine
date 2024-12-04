@@ -274,4 +274,10 @@ void gFile::rename(const std::string& fromFullPath, const std::string& toFullPat
 	fs::rename(fromFullPath, toFullPath);
 }
 
+std::vector<std::string> gFile::getDirectoryContent(const std::string& fullPath) {
+	std::vector<std::string> content;
+	for (const auto & entry : fs::directory_iterator(fullPath))
+	        content.push_back(entry.path().stem().string());
+	return content;
+}
 
