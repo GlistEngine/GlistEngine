@@ -190,24 +190,25 @@ $(document).ready(function(){initNavTree('gFile_8h_source.html',''); initResizab
 <div class="line"><a name="l00102"></a><span class="lineno"><a class="line" href="classgFile.html#a6856d33e214eccc4a8de172912e48c4f">  102</a></span>&#160;    <span class="keyword">static</span> <span class="keywordtype">bool</span> <a class="code" href="classgFile.html#a6856d33e214eccc4a8de172912e48c4f">remove</a>(<span class="keyword">const</span> std::string&amp; fullPath);</div>
 <div class="line"><a name="l00103"></a><span class="lineno"><a class="line" href="classgFile.html#a467e4dd631de7407e8c88e4e0b6b86bf">  103</a></span>&#160;    <span class="keyword">static</span> <span class="keywordtype">bool</span> <a class="code" href="classgFile.html#a467e4dd631de7407e8c88e4e0b6b86bf">removeAll</a>(<span class="keyword">const</span> std::string&amp; fullPath);</div>
 <div class="line"><a name="l00104"></a><span class="lineno"><a class="line" href="classgFile.html#a19362b52b3dfec38943e3138ca679f8a">  104</a></span>&#160;    <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="classgFile.html#a19362b52b3dfec38943e3138ca679f8a">rename</a>(<span class="keyword">const</span> std::string&amp; fromFullPath, <span class="keyword">const</span> std::string&amp; toFullPath);</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160; </div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    fs::path path;</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    <span class="keywordtype">int</span> mode;</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;    <span class="keywordtype">bool</span> binary;</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160; </div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;    std::vector&lt;char&gt; bytes;</div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;    <span class="keywordtype">int</span> size;</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160; </div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    <a class="code" href="namespacefs.html#abd38bed113ec30fc0cf304e41ee3ff12">fs::fstream</a> stream;</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;    <span class="keywordtype">bool</span> open();</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;    <span class="keywordtype">bool</span> openStream(<span class="keywordtype">int</span> fileMode, <span class="keywordtype">bool</span> isBinary);</div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;    <span class="keywordtype">void</span> readFile();</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160; </div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;    <span class="keyword">static</span> fs::copy_options copyOptions[4];</div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;};</div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160; </div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* UTILS_GFILE_H_ */</span><span class="preprocessor"></span></div>
+<div class="line"><a name="l00105"></a><span class="lineno"><a class="line" href="classgFile.html#a3fd67a89af93110d062ce5df831bbe56">  105</a></span>&#160;    <span class="keyword">static</span> std::vector&lt;std::string&gt; <a class="code" href="classgFile.html#a3fd67a89af93110d062ce5df831bbe56">getDirectoryContent</a>(<span class="keyword">const</span> std::string&amp; fullPath);</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160; </div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    fs::path path;</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;    <span class="keywordtype">int</span> mode;</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;    <span class="keywordtype">bool</span> binary;</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160; </div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;    std::vector&lt;char&gt; bytes;</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;    <span class="keywordtype">int</span> size;</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160; </div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;    <a class="code" href="namespacefs.html#abd38bed113ec30fc0cf304e41ee3ff12">fs::fstream</a> stream;</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;    <span class="keywordtype">bool</span> open();</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;    <span class="keywordtype">bool</span> openStream(<span class="keywordtype">int</span> fileMode, <span class="keywordtype">bool</span> isBinary);</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;    <span class="keywordtype">void</span> readFile();</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160; </div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;    <span class="keyword">static</span> fs::copy_options copyOptions[4];</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;};</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160; </div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* UTILS_GFILE_H_ */</span><span class="preprocessor"></span></div>
 <div class="ttc" id="aclassgFile_html"><div class="ttname"><a href="classgFile.html">gFile</a></div><div class="ttdef"><b>Definition:</b> gFile.h:33</div></div>
 <div class="ttc" id="aclassgFile_html_a09cd0e8b06925e4b8c4881bc2352ecc3"><div class="ttname"><a href="classgFile.html#a09cd0e8b06925e4b8c4881bc2352ecc3">gFile::write</a></div><div class="ttdeci">void write(const std::string &amp;content)</div></div>
 <div class="ttc" id="aclassgFile_html_a0b5800fbd41941b1eea8f5c5ccff0500"><div class="ttname"><a href="classgFile.html#a0b5800fbd41941b1eea8f5c5ccff0500">gFile::isDirectory</a></div><div class="ttdeci">bool isDirectory()</div></div>
@@ -224,6 +225,7 @@ $(document).ready(function(){initNavTree('gFile_8h_source.html',''); initResizab
 <div class="ttc" id="aclassgFile_html_a3819f303037060ce0d25aa23a135d94face4eb0016b5dc8c5d58cd4ca4199b04e"><div class="ttname"><a href="classgFile.html#a3819f303037060ce0d25aa23a135d94face4eb0016b5dc8c5d58cd4ca4199b04e">gFile::FILEMODE_WRITEONLY</a></div><div class="ttdeci">@ FILEMODE_WRITEONLY</div><div class="ttdef"><b>Definition:</b> gFile.h:37</div></div>
 <div class="ttc" id="aclassgFile_html_a3819f303037060ce0d25aa23a135d94fafa99039afb4a11bef6e5af2d6d913a14"><div class="ttname"><a href="classgFile.html#a3819f303037060ce0d25aa23a135d94fafa99039afb4a11bef6e5af2d6d913a14">gFile::FILEMODE_READONLY</a></div><div class="ttdeci">@ FILEMODE_READONLY</div><div class="ttdef"><b>Definition:</b> gFile.h:36</div></div>
 <div class="ttc" id="aclassgFile_html_a3d8b1ec57d8daa1ec6927a1e93e400ba"><div class="ttname"><a href="classgFile.html#a3d8b1ec57d8daa1ec6927a1e93e400ba">gFile::getPath</a></div><div class="ttdeci">fs::path getPath()</div></div>
+<div class="ttc" id="aclassgFile_html_a3fd67a89af93110d062ce5df831bbe56"><div class="ttname"><a href="classgFile.html#a3fd67a89af93110d062ce5df831bbe56">gFile::getDirectoryContent</a></div><div class="ttdeci">static std::vector&lt; std::string &gt; getDirectoryContent(const std::string &amp;fullPath)</div></div>
 <div class="ttc" id="aclassgFile_html_a3ff24544d20bec6436109f2f9afd8892"><div class="ttname"><a href="classgFile.html#a3ff24544d20bec6436109f2f9afd8892">gFile::isLink</a></div><div class="ttdeci">static bool isLink(const std::string &amp;fullPath)</div></div>
 <div class="ttc" id="aclassgFile_html_a41e53dd6fbac2ceb2891f7e61a3d117b"><div class="ttname"><a href="classgFile.html#a41e53dd6fbac2ceb2891f7e61a3d117b">gFile::isSymlink</a></div><div class="ttdeci">static bool isSymlink(const std::string &amp;fullPath)</div></div>
 <div class="ttc" id="aclassgFile_html_a4299311553afc40191493bcee0f20e59"><div class="ttname"><a href="classgFile.html#a4299311553afc40191493bcee0f20e59">gFile::getMode</a></div><div class="ttdeci">int getMode()</div></div>
