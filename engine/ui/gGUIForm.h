@@ -17,6 +17,7 @@ class gGUIStatusBar;
 class gGUITreelist;
 class gGUITooltipText;
 
+
 class gGUIForm: public gBaseGUIObject {
 public:
 	gGUIForm();
@@ -70,6 +71,10 @@ public:
 
 	void setTooltipText(gGUITooltipText* tooltiptext);
 
+	void showProgressBar(int style = 0, gColor col = gColor(1.0f, 1.0f, 1.0f), float speed = 1.0f);
+	void hideProgressBar();
+	bool isProgressShown();
+
 protected:
 	static const int maxtoolbarnum = 9;
 	gGUISizer* guisizer;
@@ -89,6 +94,11 @@ protected:
 	gGUITreelist* treelist;
 	int treelistw, treelisth;
 	std::vector<gGUITooltipText*> vectooltiptext;
+	bool isprogressshown;
+	float cprdeg;
+	int cpx, cpy, cpw, cph;
+	gColor cpcolor;
+	float cpspeed;
 };
 
 #endif /* UI_GGUIFORM_H_ */
