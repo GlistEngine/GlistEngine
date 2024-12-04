@@ -121,7 +121,8 @@ public:
 	enum {
 		ICONBIG_ERROR,
 		ICONBIG_INFO,
-		ICONBIG_WARNING
+		ICONBIG_WARNING,
+		ICONBIG_LOADING
 	};
 
 	gGUIResources();
@@ -202,6 +203,7 @@ private:
 	std::string getBase64IconBigError256();
 	std::string getBase64IconBigInfo256();
 	std::string getBase64IconBigWarning256();
+	std::string getBase64IconBigLoading256();
 };
 
 #endif /* UI_GGUIRESOURCES_H_ */
