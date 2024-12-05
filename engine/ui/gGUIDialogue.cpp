@@ -108,7 +108,7 @@ void gGUIDialogue::initTitleBar() {
 	titlebar.setSizer(&titlebarsizer);
 	titlebarsizer.setSize(1, 5);
 
-	titlebarbitmap.loadImage("gameicon/icon.png", false);
+	titlebarbitmap.loadImage("appicon/icon.png", false);
 	titlebarbitmap.width = titlebarbitmapw;
 	titlebarbitmap.height = titlebarbitmapw;
 
