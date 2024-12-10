@@ -1,5 +1,6 @@
 var NAVTREEINDEX13 =
 {
+"gGUITooltipText_8h.html":[2,0,93],
 "gGUITooltipText_8h_source.html":[2,0,93],
 "gGUITreelist_8h.html":[2,0,94],
 "gGUITreelist_8h_source.html":[2,0,94],
@@ -248,6 +249,5 @@ var NAVTREEINDEX13 =
 "gSpriteAnimation_8h.html#a471cd59ec98ce6fb46815fb393ab9137":[2,0,128,2],
 "gSpriteAnimation_8h.html#a58d83608a200d7714a4062bc9f0ef551":[2,0,128,11],
 "gSpriteAnimation_8h.html#a609a10bfd873e6a8493940b02ea2b303":[2,0,128,12],
-"gSpriteAnimation_8h.html#a7434c41651986cef79919b09b16084a4":[2,0,128,9],
-"gSpriteAnimation_8h.html#ab4cac82ff2cb971678636fb220240875":[2,0,128,5]
+"gSpriteAnimation_8h.html#a7434c41651986cef79919b09b16084a4":[2,0,128,9]
 };

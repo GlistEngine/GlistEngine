@@ -1,5 +1,6 @@
 var NAVTREEINDEX12 =
 {
+"functions_vars_r.html":[1,3,2,15],
 "functions_vars_s.html":[1,3,2,16],
 "functions_vars_t.html":[1,3,2,17],
 "functions_vars_u.html":[1,3,2,18],
@@ -248,6 +249,5 @@ var NAVTREEINDEX12 =
 "gGUIToolbarButton_8h.html":[2,0,92],
 "gGUIToolbarButton_8h_source.html":[2,0,92],
 "gGUIToolbar_8h.html":[2,0,91],
-"gGUIToolbar_8h_source.html":[2,0,91],
-"gGUITooltipText_8h.html":[2,0,93]
+"gGUIToolbar_8h_source.html":[2,0,91]
 };

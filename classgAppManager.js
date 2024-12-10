@@ -5,6 +5,7 @@ var classgAppManager =
     [ "callEvent", "classgAppManager.html#a1b194d1d7f4f1cc97c67473a5e8b1373", null ],
     [ "disableVsync", "classgAppManager.html#afed9d41c6aa9268605f208aa06207aef", null ],
     [ "enableVsync", "classgAppManager.html#a542ffc28b86ef4acd5921b16a5a37255", null ],
+    [ "getANSILocale", "classgAppManager.html#a1ca0a6274eb7c5e236e54e9baa3b601a", null ],
     [ "getAppName", "classgAppManager.html#a80439670ef5ad9a58d8feb7a3010b2af", null ],
     [ "getCanvasManager", "classgAppManager.html#a80f3f2527a951f5630c46b35ddaf762f", null ],
     [ "getClipboardString", "classgAppManager.html#aa666bda53256eb0af66d8c112260ceb4", null ],

@@ -1,5 +1,6 @@
 var NAVTREEINDEX3 =
 {
+"classgGUIButton.html#a5b22d95d81faa128345bf23ebb225a35":[1,0,50,2],
 "classgGUIButton.html#a5c32055379a2da31ed069fb2893f50af":[1,0,50,19],
 "classgGUIButton.html#a62df27082e3f5760d82f3129b7db4225":[1,0,50,34],
 "classgGUIButton.html#a7131231122c36e7b0bd47d4f36ef520e":[1,0,50,7],
@@ -248,6 +249,5 @@ var NAVTREEINDEX3 =
 "classgGUIForm.html#a1703b02ba09012cf7109175397cfd6f9":[1,0,64,50],
 "classgGUIForm.html#a177497d29d1c9a6a21cb6cff82116d49":[1,0,64,64],
 "classgGUIForm.html#a1d1b26df6b6c8e8b800ab8b66bd9a6c2":[1,0,64,54],
-"classgGUIForm.html#a25d8a62c350d32b97a431c5bd5b561f7":[1,0,64,3],
-"classgGUIForm.html#a28957cfb3ff480fd3b8192caccce3ff5":[1,0,64,2]
+"classgGUIForm.html#a25d8a62c350d32b97a431c5bd5b561f7":[1,0,64,3]
 };

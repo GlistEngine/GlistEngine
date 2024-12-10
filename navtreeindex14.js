@@ -1,5 +1,6 @@
 var NAVTREEINDEX14 =
 {
+"gSpriteAnimation_8h.html#ab4cac82ff2cb971678636fb220240875":[2,0,128,5],
 "gSpriteAnimation_8h.html#acab0e9e07a5b5b16aa9c7b2f70de400a":[2,0,128,4],
 "gSpriteAnimation_8h.html#af3a5f41be3fc211fbeeca534c470ef14":[2,0,128,8],
 "gSpriteAnimation_8h.html#afb5d92f8eea5ce60018b57906357ea3b":[2,0,128,6],
@@ -91,8 +92,8 @@ var NAVTREEINDEX14 =
 "gWindowEvents_8h_source.html":[2,0,140],
 "gWindows_8h.html":[2,0,141],
 "gWindows_8h_source.html":[2,0,141],
-"globals.html":[2,1,0],
 "globals.html":[2,1,0,0],
+"globals.html":[2,1,0],
 "globals_b.html":[2,1,0,1],
 "globals_c.html":[2,1,0,2],
 "globals_defs.html":[2,1,6],
