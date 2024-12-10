@@ -38,7 +38,9 @@ public:
 	int addText(std::string text, float x, float y, int fontFace, int fontType, gColor color = gColor(0.0f, 0.0f, 0.0f));
 	int addSizer(float x, float y, float w, float h, gGUISizer* newSizer);
 
+	std::vector<float> getShape(int shapeNo);
 	void setText(int shapeNo, std::string text, float x, float y, int fontFace, int fontType, gColor color = gColor(0.0f, 0.0f, 0.0f));
+	void setImage(int shapeNo, float x, float y, float w, float h, gImage* image);
 
 	void clear();
 
