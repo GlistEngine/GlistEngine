@@ -279,6 +279,10 @@ int gGUISurface::addText(std::string text, float x, float y, int fontFace, int f
 	return shapes.size() - 1;
 }
 
+std::vector<float> gGUISurface::getShape(int shapeNo) {
+	return shapes[shapeNo];
+}
+
 void gGUISurface::setText(int shapeNo, std::string text, float x, float y, int fontFace, int fontType, gColor color) {
 	shapes[shapeNo][1] = x;
 	shapes[shapeNo][2] = y;
@@ -289,6 +293,15 @@ void gGUISurface::setText(int shapeNo, std::string text, float x, float y, int f
 	shapes[shapeNo][7] = color.g;
 	shapes[shapeNo][8] = color.b;
 	shapes[shapeNo][9] = color.a;
+	resetColorAndBorder();
+}
+
+void gGUISurface::setImage(int shapeNo, float x, float y, float w, float h, gImage* image) {
+	shapes[shapeNo][1] = x;
+	shapes[shapeNo][2] = y;
+	shapes[shapeNo][3] = w;
+	shapes[shapeNo][4] = h;
+	images[shapes[shapeNo][5]] = image;
 	resetColorAndBorder();
 }
 
