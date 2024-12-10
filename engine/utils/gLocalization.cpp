@@ -21,7 +21,7 @@ gLocalization::~gLocalization() {
 void gLocalization::loadDatabase(std::string database, std::string tableName) {
 	//Database will open for reading
 	tablename = tableName;
-	currentlanguage = 1;
+	currentlanguage = 0;
 	starttowrite = false;
 	localizedb.loadDatabase(database);
 	selectquery = "SELECT sql FROM sqlite_master WHERE tbl_name = \'" + tablename + "\' AND type = \'table\'";
@@ -84,7 +84,7 @@ void gLocalization::setCurrentLanguage(int languageId) {
 
 
 std::string gLocalization::getCurrentLanguage() {
-	return columnlist[currentlanguage];
+	return columnlist[currentlanguage + 1];
 }
 
 
@@ -104,9 +104,9 @@ std::string gLocalization::getColumnData(std::string columnname) {
 
 
 std::string gLocalization::localizeWord(std:: string word) {
-	selectquery = "SELECT " + columnlist[currentlanguage] + " from WORDS where Key = \'" + word + "\'";
+	selectquery = "SELECT " + columnlist[currentlanguage + 1] + " FROM " + tablename + " WHERE Key = \'" + word + "\'";
 	localizedb.execute(selectquery);
-	localizedword = localizedb.getSelectData();
+	localizedword = gSplitString(localizedb.getSelectData(), "|")[1];
 	return localizedword;
 }
 
