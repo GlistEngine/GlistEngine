@@ -322,6 +322,8 @@ public:
     int getMaxJoystickNum() { return maxjoysticknum; }
     int getMaxJoystickButtonNum() { return maxjoystickbuttonnum; }
 
+    std::string getANSILocale();
+
 #ifdef ANDROID
 	DeviceOrientation getDeviceOrientation() { return deviceorientation; }
 	void setDeviceOrientation(DeviceOrientation orientation);
@@ -362,6 +364,7 @@ private:
     bool initialized;
     bool initializedbefore;
     bool iswindowfocused;
+    std::string ansilocale;
 
     bool ismouseentered;
     bool mousebuttonpressed[maxmousebuttonnum];

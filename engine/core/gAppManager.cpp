@@ -68,6 +68,7 @@ gAppManager::gAppManager(const std::string& appName, gBaseApp *baseApp, int widt
                          bool isResizable, int loopMode) : appname(appName), app(baseApp), width(width), height(height),
                                                                  windowmode(windowMode), unitwidth(unitWidth), unitheight(unitHeight), screenscaling(screenScaling),
                                                                  isresizable(isResizable), loopmode(loopMode) {
+	ansilocale = setlocale(LC_ALL, ".ACP");
     appmanager = this;
 	if(windowMode != G_WINDOWMODE_NONE) {
 		canvasmanager = new gCanvasManager();
@@ -396,6 +397,10 @@ bool gAppManager::isGamepadButtonPressed(int joystickId, int buttonId) {
         return false;
     }
     return window->isGamepadButtonPressed(joystickId, buttonId);
+}
+
+std::string gAppManager::getANSILocale() {
+	return ansilocale;
 }
 
 #ifdef ANDROID
