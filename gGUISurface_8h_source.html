@@ -126,40 +126,42 @@ $(document).ready(function(){initNavTree('gGUISurface_8h_source.html',''); initR
 <div class="line"><a name="l00038"></a><span class="lineno"><a class="line" href="classgGUISurface.html#a81144e860db60a61e7c80a15a015fcba">   38</a></span>&#160;    <span class="keywordtype">int</span> <a class="code" href="classgGUISurface.html#a81144e860db60a61e7c80a15a015fcba">addText</a>(std::string text, <span class="keywordtype">float</span> x, <span class="keywordtype">float</span> y, <span class="keywordtype">int</span> fontFace, <span class="keywordtype">int</span> fontType, <a class="code" href="classgColor.html">gColor</a> color = <a class="code" href="classgColor.html">gColor</a>(0.0f, 0.0f, 0.0f));</div>
 <div class="line"><a name="l00039"></a><span class="lineno"><a class="line" href="classgGUISurface.html#a3cf4063f8cf9229ead46e4349e7f3313">   39</a></span>&#160;    <span class="keywordtype">int</span> <a class="code" href="classgGUISurface.html#a3cf4063f8cf9229ead46e4349e7f3313">addSizer</a>(<span class="keywordtype">float</span> x, <span class="keywordtype">float</span> y, <span class="keywordtype">float</span> w, <span class="keywordtype">float</span> h, <a class="code" href="classgGUISizer.html">gGUISizer</a>* newSizer);</div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160; </div>
-<div class="line"><a name="l00041"></a><span class="lineno"><a class="line" href="classgGUISurface.html#a5487944cca07f3495a24bd25eef09432">   41</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classgGUISurface.html#a5487944cca07f3495a24bd25eef09432">setText</a>(<span class="keywordtype">int</span> shapeNo, std::string text, <span class="keywordtype">float</span> x, <span class="keywordtype">float</span> y, <span class="keywordtype">int</span> fontFace, <span class="keywordtype">int</span> fontType, <a class="code" href="classgColor.html">gColor</a> color = <a class="code" href="classgColor.html">gColor</a>(0.0f, 0.0f, 0.0f));</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; </div>
-<div class="line"><a name="l00043"></a><span class="lineno"><a class="line" href="classgGUISurface.html#a949b0572a6b3b5f1dcf04b1ba18d1b8e">   43</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classgGUISurface.html#a949b0572a6b3b5f1dcf04b1ba18d1b8e">clear</a>();</div>
+<div class="line"><a name="l00041"></a><span class="lineno"><a class="line" href="classgGUISurface.html#a9f0a3156fb8d772480f4383895ddefab">   41</a></span>&#160;    std::vector&lt;float&gt; <a class="code" href="classgGUISurface.html#a9f0a3156fb8d772480f4383895ddefab">getShape</a>(<span class="keywordtype">int</span> shapeNo);</div>
+<div class="line"><a name="l00042"></a><span class="lineno"><a class="line" href="classgGUISurface.html#a5487944cca07f3495a24bd25eef09432">   42</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classgGUISurface.html#a5487944cca07f3495a24bd25eef09432">setText</a>(<span class="keywordtype">int</span> shapeNo, std::string text, <span class="keywordtype">float</span> x, <span class="keywordtype">float</span> y, <span class="keywordtype">int</span> fontFace, <span class="keywordtype">int</span> fontType, <a class="code" href="classgColor.html">gColor</a> color = <a class="code" href="classgColor.html">gColor</a>(0.0f, 0.0f, 0.0f));</div>
+<div class="line"><a name="l00043"></a><span class="lineno"><a class="line" href="classgGUISurface.html#ab4163521aa5b8701db85bd9de2f715c2">   43</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classgGUISurface.html#ab4163521aa5b8701db85bd9de2f715c2">setImage</a>(<span class="keywordtype">int</span> shapeNo, <span class="keywordtype">float</span> x, <span class="keywordtype">float</span> y, <span class="keywordtype">float</span> w, <span class="keywordtype">float</span> h, <a class="code" href="classgImage.html">gImage</a>* image);</div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160; </div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="comment">//void drawImage(float x, float y, float w, float h, std::string fullPath);</span></div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <span class="comment">//  void drawBox(float x, float y, float z, float w = 1.0f, float h = 1.0f, float d = 1.0f, bool isFilled = true);</span></div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="comment">//  void drawBox(glm::mat4 transformationMatrix, bool isFilled = true);</span></div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="comment">//  void drawSphere(float xPos, float yPos, float zPos, int xSegmentNum = 64, int ySegmentNum = 64, float scale = 1.0f, bool isFilled = true);</span></div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160; </div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <span class="keywordtype">void</span> drawBackground();</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <span class="keywordtype">void</span> resetColorAndBorder();</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <span class="keywordtype">void</span> drawShapes();</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160; </div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="keywordtype">void</span> mousePressed(<span class="keywordtype">int</span> x, <span class="keywordtype">int</span> y, <span class="keywordtype">int</span> button);</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <span class="keywordtype">void</span> mouseReleased(<span class="keywordtype">int</span> x, <span class="keywordtype">int</span> y, <span class="keywordtype">int</span> button);</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160; </div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    std::vector&lt;std::vector&lt;float&gt;&gt; shapes;</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    std::deque&lt;gImage*&gt; images;</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    std::deque&lt;std::string&gt; texts;</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    std::deque&lt;gGUISizer*&gt; sizers;</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160; </div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <span class="keywordtype">int</span> imageNum, textnum, sizernum;</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    <span class="keywordtype">int</span> maxHeight;</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <span class="comment">//color</span></div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    <span class="keywordtype">float</span> r, g, b, a;</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    <span class="comment">//frame of rectangle</span></div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    <span class="keywordtype">float</span> thickness, borderposition;</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    <span class="comment">//boolean isFilled: initialize this as false</span></div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <span class="keywordtype">bool</span> isFilled, mousepressedonlist;</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160; </div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;};</div>
+<div class="line"><a name="l00045"></a><span class="lineno"><a class="line" href="classgGUISurface.html#a949b0572a6b3b5f1dcf04b1ba18d1b8e">   45</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classgGUISurface.html#a949b0572a6b3b5f1dcf04b1ba18d1b8e">clear</a>();</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160; </div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <span class="comment">//void drawImage(float x, float y, float w, float h, std::string fullPath);</span></div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <span class="comment">//  void drawBox(float x, float y, float z, float w = 1.0f, float h = 1.0f, float d = 1.0f, bool isFilled = true);</span></div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="comment">//  void drawBox(glm::mat4 transformationMatrix, bool isFilled = true);</span></div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="comment">//  void drawSphere(float xPos, float yPos, float zPos, int xSegmentNum = 64, int ySegmentNum = 64, float scale = 1.0f, bool isFilled = true);</span></div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160; </div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <span class="keywordtype">void</span> drawBackground();</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <span class="keywordtype">void</span> resetColorAndBorder();</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="keywordtype">void</span> drawShapes();</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160; </div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <span class="keywordtype">void</span> mousePressed(<span class="keywordtype">int</span> x, <span class="keywordtype">int</span> y, <span class="keywordtype">int</span> button);</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    <span class="keywordtype">void</span> mouseReleased(<span class="keywordtype">int</span> x, <span class="keywordtype">int</span> y, <span class="keywordtype">int</span> button);</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160; </div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    std::vector&lt;std::vector&lt;float&gt;&gt; shapes;</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    std::deque&lt;gImage*&gt; images;</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    std::deque&lt;std::string&gt; texts;</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    std::deque&lt;gGUISizer*&gt; sizers;</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160; </div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <span class="keywordtype">int</span> imageNum, textnum, sizernum;</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    <span class="keywordtype">int</span> maxHeight;</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    <span class="comment">//color</span></div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    <span class="keywordtype">float</span> r, g, b, a;</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    <span class="comment">//frame of rectangle</span></div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <span class="keywordtype">float</span> thickness, borderposition;</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    <span class="comment">//boolean isFilled: initialize this as false</span></div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <span class="keywordtype">bool</span> isFilled, mousepressedonlist;</div>
 <div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160; </div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* UI_GGUISURFACE_H_ */</span><span class="preprocessor"></span></div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;};</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160; </div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* UI_GGUISURFACE_H_ */</span><span class="preprocessor"></span></div>
 <div class="ttc" id="aclassgBaseApp_html"><div class="ttname"><a href="classgBaseApp.html">gBaseApp</a></div><div class="ttdef"><b>Definition:</b> gBaseApp.h:16</div></div>
 <div class="ttc" id="aclassgBaseGUIObject_html"><div class="ttname"><a href="classgBaseGUIObject.html">gBaseGUIObject</a></div><div class="ttdef"><b>Definition:</b> gBaseGUIObject.h:18</div></div>
 <div class="ttc" id="aclassgBaseGUIObject_html_a1b904144beed0a06f3d1943a56b7edd6"><div class="ttname"><a href="classgBaseGUIObject.html#a1b904144beed0a06f3d1943a56b7edd6">gBaseGUIObject::root</a></div><div class="ttdeci">gBaseApp * root</div><div class="ttdef"><b>Definition:</b> gBaseGUIObject.h:149</div></div>
@@ -178,7 +180,9 @@ $(document).ready(function(){initNavTree('gGUISurface_8h_source.html',''); initR
 <div class="ttc" id="aclassgGUISurface_html_a8f846961f4e1db7cb94a69a34d06cb2f"><div class="ttname"><a href="classgGUISurface.html#a8f846961f4e1db7cb94a69a34d06cb2f">gGUISurface::addLine</a></div><div class="ttdeci">int addLine(float x, float y, float x2, float y2, gColor color=gColor(0.0f, 0.0f, 0.0f))</div></div>
 <div class="ttc" id="aclassgGUISurface_html_a949b0572a6b3b5f1dcf04b1ba18d1b8e"><div class="ttname"><a href="classgGUISurface.html#a949b0572a6b3b5f1dcf04b1ba18d1b8e">gGUISurface::clear</a></div><div class="ttdeci">void clear()</div></div>
 <div class="ttc" id="aclassgGUISurface_html_a9b19db8c581e72b15b306ab2f36dd64e"><div class="ttname"><a href="classgGUISurface.html#a9b19db8c581e72b15b306ab2f36dd64e">gGUISurface::set</a></div><div class="ttdeci">void set(gBaseApp *root, gBaseGUIObject *topParentGUIObject, gBaseGUIObject *parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h)</div></div>
+<div class="ttc" id="aclassgGUISurface_html_a9f0a3156fb8d772480f4383895ddefab"><div class="ttname"><a href="classgGUISurface.html#a9f0a3156fb8d772480f4383895ddefab">gGUISurface::getShape</a></div><div class="ttdeci">std::vector&lt; float &gt; getShape(int shapeNo)</div></div>
 <div class="ttc" id="aclassgGUISurface_html_ab13797bf6a705e8bda26ffd9477332e3"><div class="ttname"><a href="classgGUISurface.html#ab13797bf6a705e8bda26ffd9477332e3">gGUISurface::addCircle</a></div><div class="ttdeci">int addCircle(float xCenter, float yCenter, float radius, bool isFilled, float numberOfSides=64.0f, gColor color=gColor(0.0f, 0.0f, 0.0f))</div></div>
+<div class="ttc" id="aclassgGUISurface_html_ab4163521aa5b8701db85bd9de2f715c2"><div class="ttname"><a href="classgGUISurface.html#ab4163521aa5b8701db85bd9de2f715c2">gGUISurface::setImage</a></div><div class="ttdeci">void setImage(int shapeNo, float x, float y, float w, float h, gImage *image)</div></div>
 <div class="ttc" id="aclassgGUISurface_html_ac0197947239412cd9a8ec624934797d5"><div class="ttname"><a href="classgGUISurface.html#ac0197947239412cd9a8ec624934797d5">gGUISurface::setBorder</a></div><div class="ttdeci">void setBorder(float thickness, float borderposition)</div></div>
 <div class="ttc" id="aclassgGUISurface_html_ae45c357d39f9283a06547db744394dee"><div class="ttname"><a href="classgGUISurface.html#ae45c357d39f9283a06547db744394dee">gGUISurface::addArrow</a></div><div class="ttdeci">int addArrow(float x1, float y1, float length, float angle, float tipLength, float tipAngle, gColor color=gColor(0.0f, 0.0f, 0.0f))</div></div>
 <div class="ttc" id="aclassgGUISurface_html_aec3b7357c47baba40b76de5d44f963e7"><div class="ttname"><a href="classgGUISurface.html#aec3b7357c47baba40b76de5d44f963e7">gGUISurface::drawContent</a></div><div class="ttdeci">void drawContent()</div></div>

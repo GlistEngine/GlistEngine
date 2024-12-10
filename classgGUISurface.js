@@ -12,7 +12,9 @@ var classgGUISurface =
     [ "addTriangle", "classgGUISurface.html#a66fdd3f85ca01f0ea30ef6dadf2310fd", null ],
     [ "clear", "classgGUISurface.html#a949b0572a6b3b5f1dcf04b1ba18d1b8e", null ],
     [ "drawContent", "classgGUISurface.html#aec3b7357c47baba40b76de5d44f963e7", null ],
+    [ "getShape", "classgGUISurface.html#a9f0a3156fb8d772480f4383895ddefab", null ],
     [ "set", "classgGUISurface.html#a9b19db8c581e72b15b306ab2f36dd64e", null ],
     [ "setBorder", "classgGUISurface.html#ac0197947239412cd9a8ec624934797d5", null ],
+    [ "setImage", "classgGUISurface.html#ab4163521aa5b8701db85bd9de2f715c2", null ],
     [ "setText", "classgGUISurface.html#a5487944cca07f3495a24bd25eef09432", null ]
 ];

@@ -169,7 +169,7 @@ var NAVTREEINDEX6 =
 "classgGUISurface.html":[1,0,88],
 "classgGUISurface.html#a3b23eed21e420ed3853bbc2d82dc1255":[1,0,88,4],
 "classgGUISurface.html#a3cf4063f8cf9229ead46e4349e7f3313":[1,0,88,7],
-"classgGUISurface.html#a5487944cca07f3495a24bd25eef09432":[1,0,88,14],
+"classgGUISurface.html#a5487944cca07f3495a24bd25eef09432":[1,0,88,16],
 "classgGUISurface.html#a6661e88da90ac573cfb686c9706c2aeb":[1,0,88,0],
 "classgGUISurface.html#a66fdd3f85ca01f0ea30ef6dadf2310fd":[1,0,88,9],
 "classgGUISurface.html#a6e8de5a1e79c59fee789598b9c31f463":[1,0,88,1],
@@ -177,9 +177,11 @@ var NAVTREEINDEX6 =
 "classgGUISurface.html#a81144e860db60a61e7c80a15a015fcba":[1,0,88,8],
 "classgGUISurface.html#a8f846961f4e1db7cb94a69a34d06cb2f":[1,0,88,5],
 "classgGUISurface.html#a949b0572a6b3b5f1dcf04b1ba18d1b8e":[1,0,88,10],
-"classgGUISurface.html#a9b19db8c581e72b15b306ab2f36dd64e":[1,0,88,12],
+"classgGUISurface.html#a9b19db8c581e72b15b306ab2f36dd64e":[1,0,88,13],
+"classgGUISurface.html#a9f0a3156fb8d772480f4383895ddefab":[1,0,88,12],
 "classgGUISurface.html#ab13797bf6a705e8bda26ffd9477332e3":[1,0,88,3],
-"classgGUISurface.html#ac0197947239412cd9a8ec624934797d5":[1,0,88,13],
+"classgGUISurface.html#ab4163521aa5b8701db85bd9de2f715c2":[1,0,88,15],
+"classgGUISurface.html#ac0197947239412cd9a8ec624934797d5":[1,0,88,14],
 "classgGUISurface.html#ae45c357d39f9283a06547db744394dee":[1,0,88,2],
 "classgGUISurface.html#aec3b7357c47baba40b76de5d44f963e7":[1,0,88,11],
 "classgGUISwitchButton.html":[1,0,89],
@@ -247,7 +249,5 @@ var NAVTREEINDEX6 =
 "classgGUITextbox.html#a97ad956c305f08731c110cf37ccf31b3":[1,0,92,34],
 "classgGUITextbox.html#aa55684fd12dba93a5a9a91858a5592d5":[1,0,92,6],
 "classgGUITextbox.html#aa689bb1a1633dd1c03bf5a2cb0e8f652":[1,0,92,28],
-"classgGUITextbox.html#aad01da0f271652f166914794c0ca68ad":[1,0,92,12],
-"classgGUITextbox.html#aaf63a9747057101d493deaa78ddfe00b":[1,0,92,1],
-"classgGUITextbox.html#ab0581a36f4dab26d7bc11fb02f3dc841":[1,0,92,40]
+"classgGUITextbox.html#aad01da0f271652f166914794c0ca68ad":[1,0,92,12]
 };

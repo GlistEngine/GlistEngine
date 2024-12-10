@@ -1,5 +1,7 @@
 var NAVTREEINDEX14 =
 {
+"gSpriteAnimation_8h.html#a609a10bfd873e6a8493940b02ea2b303":[2,0,128,12],
+"gSpriteAnimation_8h.html#a7434c41651986cef79919b09b16084a4":[2,0,128,9],
 "gSpriteAnimation_8h.html#ab4cac82ff2cb971678636fb220240875":[2,0,128,5],
 "gSpriteAnimation_8h.html#acab0e9e07a5b5b16aa9c7b2f70de400a":[2,0,128,4],
 "gSpriteAnimation_8h.html#af3a5f41be3fc211fbeeca534c470ef14":[2,0,128,8],
