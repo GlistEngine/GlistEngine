@@ -68,7 +68,10 @@ gAppManager::gAppManager(const std::string& appName, gBaseApp *baseApp, int widt
                          bool isResizable, int loopMode) : appname(appName), app(baseApp), width(width), height(height),
                                                                  windowmode(windowMode), unitwidth(unitWidth), unitheight(unitHeight), screenscaling(screenScaling),
                                                                  isresizable(isResizable), loopmode(loopMode) {
+	ansilocale = "";
+#if defined(WIN32)
 	ansilocale = setlocale(LC_ALL, ".ACP");
+#endif
     appmanager = this;
 	if(windowMode != G_WINDOWMODE_NONE) {
 		canvasmanager = new gCanvasManager();
