@@ -111,6 +111,7 @@ void gGUIListbox::clear() {
 	icons.clear();
 	verticalscroll = 0;
 	updateTotalHeight();
+	selectedno = 0;
 }
 
 
@@ -126,7 +127,7 @@ void gGUIListbox::mouseReleased(int x, int y, int button) {
 	if(mousepressedonlist) mousepressedonlist = false;
 	if(x >= left && x < left + boxw && y >= top + titleheight && y < top + titleheight + boxh) {
 		int newselectedno = (y - top - titleheight + verticalscroll) / lineh;
-		if(newselectedno < data.size() + 1) selectedno = newselectedno;
+		if(newselectedno < data.size()) selectedno = newselectedno;
 		isfocused = true;
 		root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_LISTBOXSELECTED, gToStr(selectedno));
 	}
