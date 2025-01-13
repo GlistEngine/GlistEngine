@@ -99,8 +99,8 @@ void gGUIText::resetText() {
 
     // Process each line and apply alignment rules
     for (const std::string& singleline : lines) {
-        std::vector<std::string> splitlines = gSplitString(singleline, "\n");
-//        std::vector<std::string> splitlines = splitString(singleline, font, width);
+//        std::vector<std::string> splitlines = gSplitString(singleline, "\n");
+        std::vector<std::string> splitlines = splitString(singleline, font, width);
         for (const std::string& splitline : splitlines) {
             lineswithrules.push_back(splitline);
         }
