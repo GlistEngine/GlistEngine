@@ -155,9 +155,21 @@ void gFile::readFile() {
 	stream.clear();   //  Since ignore will have set eof.
 	stream.seekg(0, std::ios::beg);
 
-	bytes.clear();
-	bytes.resize(size);
-	stream.read(bytes.data(), size);
+//	bytes.clear();
+//	bytes.resize(size);
+//	stream.read(bytes.data(), size);
+
+	std::string filestr;
+	filestr.resize(size);
+	stream.read(&filestr[0], size);
+	size_t start_pos = 0;
+	std::string from = "\r";
+	std::string to = "";
+	while((start_pos = filestr.find(from, start_pos)) != std::string::npos) {
+		filestr.replace(start_pos, from.length(), to);
+		start_pos += to.length(); // In case 'to' contains 'from', like replacing 'x' with 'yx'
+	}
+	bytes = std::vector<char>(filestr.begin(), filestr.end());
 }
 
 
