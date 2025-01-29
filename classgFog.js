@@ -3,7 +3,7 @@ var classgFog =
     [ "gFog", "classgFog.html#a7ba7b0f83a0cfd20089d9d901fad7601", null ],
     [ "disable", "classgFog.html#adfe7fb04a43a516a1197ac623f472218", null ],
     [ "enable", "classgFog.html#a48f5d184b7abce623452fc1e198b94d4", null ],
-    [ "getColor", "classgFog.html#aecaae111a9040a60526742047392b674", null ],
+    [ "getColor", "classgFog.html#a9a6d75a49424ce341a007180969728ed", null ],
     [ "getDensity", "classgFog.html#a0af4c3fbabc8d776b74d7cd42740ee0b", null ],
     [ "getGradient", "classgFog.html#ae5925c972cb254cee67c64c2dfa66ddd", null ],
     [ "getLinearEnd", "classgFog.html#a705fed96bdf370b6dba9832e2f1bfa90", null ],

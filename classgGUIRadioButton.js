@@ -9,7 +9,7 @@ var classgGUIRadioButton =
     [ "getHorizontalDistance", "classgGUIRadioButton.html#a5fe2e02d57a6841de4e900327b613900", null ],
     [ "getRadioTitle", "classgGUIRadioButton.html#a2402941ac63655413842317f98539d2d", null ],
     [ "getSelectedButton", "classgGUIRadioButton.html#ab68a9401bb54cd92f9a34d832ab8bc17", null ],
-    [ "getSelectedButtonColor", "classgGUIRadioButton.html#a9ecc2f40ab83b26e10cd3d4f07dc1243", null ],
+    [ "getSelectedButtonColor", "classgGUIRadioButton.html#a060aa65b7e7bb10fc951fdefb6730b71", null ],
     [ "getTitle", "classgGUIRadioButton.html#a977f83c1c7702786fe925323cd0f08fc", null ],
     [ "getVerticalDistance", "classgGUIRadioButton.html#a67adb46621f69c0a8555ac23a6ad62df", null ],
     [ "isDisabled", "classgGUIRadioButton.html#af7ef4cab5af8263bfeca9ed991528de8", null ],

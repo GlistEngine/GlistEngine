@@ -8,7 +8,7 @@ var classgGUISizer =
     [ "enableBorders", "classgGUISizer.html#a7ab6b5531f15e0beb45e39e2d429cced", null ],
     [ "enableResizing", "classgGUISizer.html#a5c73258d352ba35ca29fafd1b0451b7e", null ],
     [ "getColumnNum", "classgGUISizer.html#a9d7ee6b06e2727b212887a85fd9dcbd5", null ],
-    [ "getControl", "classgGUISizer.html#a5aac1991f76f680b97a7fe3df27e3827", null ],
+    [ "getControl", "classgGUISizer.html#a22ae19bf2367c771f2eaa871e24dd195", null ],
     [ "getCursor", "classgGUISizer.html#adbe9d32b764d5d2a4eab2280ef15f606", null ],
     [ "getLineNum", "classgGUISizer.html#abebe735e8fc4552755fb289298e65f3a", null ],
     [ "getSizerType", "classgGUISizer.html#a5ddfcb7edd257628249563dc28809e7e", null ],

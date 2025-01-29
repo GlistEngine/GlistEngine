@@ -1,10 +1,18 @@
 <map id="gGUIFrame.h" name="gGUIFrame.h">
-<area shape="rect" id="node1" title=" " alt="" coords="379,5,485,32"/>
-<area shape="rect" id="node2" href="$gGUIManager_8h.html" title=" " alt="" coords="5,80,128,107"/>
-<area shape="rect" id="node4" href="$gGUICandleStickChart_8h.html" title=" " alt="" coords="152,80,331,107"/>
-<area shape="rect" id="node5" href="$gGUIDropdownList_8h.html" title=" " alt="" coords="355,80,509,107"/>
-<area shape="rect" id="node6" href="$gGUIToolbar_8h.html" title=" " alt="" coords="433,155,545,181"/>
-<area shape="rect" id="node8" href="$gGUILineGraph_8h.html" title=" " alt="" coords="585,80,717,107"/>
-<area shape="rect" id="node3" href="$gGUIGrid_8h.html" title=" " alt="" coords="20,155,113,181"/>
-<area shape="rect" id="node7" href="$gGUINavigation_8h.html" title=" " alt="" coords="421,229,558,256"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="347,5,453,31"/>
+<area shape="rect" id="Node000002" href="$gGUICandleStickChart_8h.html" title=" " alt="" coords="5,79,184,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="338,36,145,81,144,76,337,31"/>
+<area shape="rect" id="Node000003" href="$gGUIDropdownList_8h.html" title=" " alt="" coords="208,79,363,104"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="372,40,305,81,303,76,369,35"/>
+<area shape="rect" id="Node000004" href="$gGUIToolbar_8h.html" title=" " alt="" coords="287,152,399,177"/>
+<area shape="poly" id="edge8_Node000001_Node000004" title=" " alt="" coords="396,45,377,105,352,153,347,151,372,103,391,44"/>
+<area shape="rect" id="Node000006" href="$gGUILineGraph_8h.html" title=" " alt="" coords="438,79,570,104"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="430,36,488,76,485,81,427,41"/>
+<area shape="rect" id="Node000007" href="$gGUIManager_8h.html" title=" " alt="" coords="595,79,717,104"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="455,32,615,76,614,81,453,37"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="305,113,335,150,331,154,301,116"/>
+<area shape="rect" id="Node000005" href="$gGUINavigation_8h.html" title=" " alt="" coords="274,225,411,251"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="345,191,345,225,340,225,340,191"/>
+<area shape="rect" id="Node000008" href="$gGUIGrid_8h.html" title=" " alt="" coords="609,152,703,177"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="659,118,659,152,653,152,653,118"/>
 </map>

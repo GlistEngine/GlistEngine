@@ -1,7 +1,13 @@
 <map id="gLight" name="gLight">
-<area shape="rect" id="node1" title=" " alt="" coords="33,323,96,349"/>
-<area shape="rect" id="node2" href="$classgNode.html" title=" " alt="" coords="33,247,97,273"/>
-<area shape="rect" id="node3" href="$classgRenderObject.html" title=" " alt="" coords="5,171,124,197"/>
-<area shape="rect" id="node4" href="$classgObject.html" title=" " alt="" coords="23,5,95,32"/>
-<area shape="rect" id="node5" href="$classgRenderer.html" title=" " alt="" coords="81,81,171,108"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="33,317,96,343"/>
+<area shape="rect" id="Node000002" href="$classgNode.html" title=" " alt="" coords="33,243,97,268"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="67,282,67,317,62,317,62,282"/>
+<area shape="poly" id="edge6_Node000002_Node000002" title=" " alt="" coords="112,247,123,255,115,263,97,265,97,260,113,258,118,255,109,251"/>
+<area shape="rect" id="Node000003" href="$classgRenderObject.html" title=" " alt="" coords="5,168,124,193"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="67,208,67,242,62,242,62,208"/>
+<area shape="rect" id="Node000004" href="$classgObject.html" title=" " alt="" coords="23,5,95,31"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="63,44,67,168,62,168,58,45"/>
+<area shape="rect" id="Node000005" href="$classgRenderer.html" title=" " alt="" coords="81,80,171,105"/>
+<area shape="poly" id="edge5_Node000005_Node000004" title=" " alt="" coords="81,39,117,78,113,81,77,43"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="112,118,75,169,71,166,107,115"/>
 </map>

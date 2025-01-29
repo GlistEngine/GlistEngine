@@ -1,6 +1,9 @@
 <map id="gColorChannelMixer" name="gColorChannelMixer">
-<area shape="rect" id="node1" title=" " alt="" coords="5,229,159,256"/>
-<area shape="rect" id="node2" href="$classgBasePostProcess.html" title=" " alt="" coords="12,155,152,181"/>
-<area shape="rect" id="node3" href="$classgRenderObject.html" title=" " alt="" coords="23,80,141,107"/>
-<area shape="rect" id="node4" href="$classgObject.html" title=" " alt="" coords="46,5,118,32"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,225,159,251"/>
+<area shape="rect" id="Node000002" href="$classgBasePostProcess.html" title=" " alt="" coords="12,152,152,177"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="85,191,85,225,79,225,79,191"/>
+<area shape="rect" id="Node000003" href="$classgRenderObject.html" title=" " alt="" coords="23,79,141,104"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="85,118,85,152,79,152,79,118"/>
+<area shape="rect" id="Node000004" href="$classgObject.html" title=" " alt="" coords="46,5,118,31"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="85,44,85,79,79,79,79,44"/>
 </map>

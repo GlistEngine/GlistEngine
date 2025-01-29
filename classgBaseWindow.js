@@ -9,7 +9,7 @@ var classgBaseWindow =
     [ "getClipboardString", "classgBaseWindow.html#ada4122a53e6a63cd032c0e96ece772cd", null ],
     [ "getHeight", "classgBaseWindow.html#a9d71d3bba9233a0aef11cb7f322bf175", null ],
     [ "getShouldClose", "classgBaseWindow.html#ae05b932ac4d6e6c9499911af09fcdfd4", null ],
-    [ "getTitle", "classgBaseWindow.html#a0196c2e13e4facd95d6d52b76402f099", null ],
+    [ "getTitle", "classgBaseWindow.html#adb6f90d7bcceaf98bf03cc0dd44213cd", null ],
     [ "getWidth", "classgBaseWindow.html#a1a18778e3537b13d1962bb9f39cd8340", null ],
     [ "initialize", "classgBaseWindow.html#ad9b39abff15d1ceb60428971f8c78748", null ],
     [ "isRendering", "classgBaseWindow.html#ae2126f9457a55ad769121413acc7a7f1", null ],

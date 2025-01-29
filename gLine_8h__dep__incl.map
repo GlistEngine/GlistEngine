@@ -1,5 +1,7 @@
 <map id="gLine.h" name="gLine.h">
-<area shape="rect" id="node1" title=" " alt="" coords="149,5,219,32"/>
-<area shape="rect" id="node2" href="$gGUICandleStickChart_8h.html" title=" " alt="" coords="5,80,184,107"/>
-<area shape="rect" id="node3" href="$gGUILineGraph_8h.html" title=" " alt="" coords="209,80,341,107"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="149,5,219,31"/>
+<area shape="rect" id="Node000002" href="$gGUICandleStickChart_8h.html" title=" " alt="" coords="5,79,184,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="161,41,111,81,108,76,157,37"/>
+<area shape="rect" id="Node000003" href="$gGUILineGraph_8h.html" title=" " alt="" coords="209,79,341,104"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="211,37,261,76,258,81,208,41"/>
 </map>

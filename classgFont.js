@@ -7,7 +7,7 @@ var classgFont =
     [ "drawTextVerticallyFlipped", "classgFont.html#a82fee83cf0e7d88e24b1f3689c5c0070", null ],
     [ "getDpi", "classgFont.html#a8aff4ae7c2656f33b527718ee76c8e0a", null ],
     [ "getLineHeight", "classgFont.html#aad38c9c3c52d0c4097a312014a5843b4", null ],
-    [ "getPath", "classgFont.html#a910a68c5f39d3ff2bba8cd963f06a059", null ],
+    [ "getPath", "classgFont.html#aba41d309c206eced9af81109f40571de", null ],
     [ "getSize", "classgFont.html#a590ce35bafd0c0c0065a9204e1a91b62", null ],
     [ "getStringHeight", "classgFont.html#aae027bba23783b011117e36e7510c374", null ],
     [ "getStringWidth", "classgFont.html#a4662bf7fec0a4a2b4b08bef6d553d5c5", null ],

@@ -1,5 +1,7 @@
 <map id="gGUINumberBox.h" name="gGUINumberBox.h">
-<area shape="rect" id="node1" title=" " alt="" coords="5,5,148,32"/>
-<area shape="rect" id="node2" href="$gGUIToolbar_8h.html" title=" " alt="" coords="21,80,133,107"/>
-<area shape="rect" id="node3" href="$gGUINavigation_8h.html" title=" " alt="" coords="8,155,145,181"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,148,31"/>
+<area shape="rect" id="Node000002" href="$gGUIToolbar_8h.html" title=" " alt="" coords="21,79,133,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="79,44,79,79,74,79,74,44"/>
+<area shape="rect" id="Node000003" href="$gGUINavigation_8h.html" title=" " alt="" coords="8,152,145,177"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="79,118,79,152,74,152,74,118"/>
 </map>

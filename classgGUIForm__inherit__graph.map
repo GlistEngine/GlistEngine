@@ -1,8 +1,13 @@
 <map id="gGUIForm" name="gGUIForm">
-<area shape="rect" id="node1" title=" " alt="" coords="82,229,169,256"/>
-<area shape="rect" id="node5" href="$classgGUIDialogue.html" title=" " alt="" coords="5,304,117,331"/>
-<area shape="rect" id="node6" href="$classgGUIFrame.html" title=" " alt="" coords="142,304,237,331"/>
-<area shape="rect" id="node2" href="$classgBaseGUIObject.html" title=" " alt="" coords="61,155,189,181"/>
-<area shape="rect" id="node3" href="$classgRenderObject.html" title=" " alt="" coords="66,80,185,107"/>
-<area shape="rect" id="node4" href="$classgObject.html" title=" " alt="" coords="89,5,161,32"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="82,225,169,251"/>
+<area shape="rect" id="Node000005" href="$classgGUIDialogue.html" title=" " alt="" coords="5,299,117,324"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="108,263,74,300,70,297,104,259"/>
+<area shape="rect" id="Node000006" href="$classgGUIFrame.html" title=" " alt="" coords="142,299,237,324"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="147,259,181,297,177,300,143,263"/>
+<area shape="rect" id="Node000002" href="$classgBaseGUIObject.html" title=" " alt="" coords="61,152,189,177"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="128,191,128,225,123,225,123,191"/>
+<area shape="rect" id="Node000003" href="$classgRenderObject.html" title=" " alt="" coords="66,79,185,104"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="128,118,128,152,123,152,123,118"/>
+<area shape="rect" id="Node000004" href="$classgObject.html" title=" " alt="" coords="89,5,161,31"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="128,44,128,79,123,79,123,44"/>
 </map>

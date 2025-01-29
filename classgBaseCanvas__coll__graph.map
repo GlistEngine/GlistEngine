@@ -1,8 +1,15 @@
 <map id="gBaseCanvas" name="gBaseCanvas">
-<area shape="rect" id="node1" title=" " alt="" coords="72,260,183,287"/>
-<area shape="rect" id="node2" href="$classgRenderObject.html" title=" " alt="" coords="5,171,124,197"/>
-<area shape="rect" id="node3" href="$classgObject.html" title=" " alt="" coords="38,5,110,32"/>
-<area shape="rect" id="node4" href="$classgRenderer.html" title=" " alt="" coords="29,81,119,108"/>
-<area shape="rect" id="node6" href="$classgAppObject.html" title=" " alt="" coords="143,81,240,108"/>
-<area shape="rect" id="node5" href="$classgBaseApp.html" title=" " alt="" coords="148,171,235,197"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="72,256,183,281"/>
+<area shape="rect" id="Node000002" href="$classgRenderObject.html" title=" " alt="" coords="5,168,124,193"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="83,203,121,254,116,257,79,206"/>
+<area shape="rect" id="Node000003" href="$classgObject.html" title=" " alt="" coords="38,5,110,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="49,41,32,59,19,81,17,105,25,128,39,149,54,166,50,170,35,153,20,131,12,105,14,79,28,56,46,38"/>
+<area shape="rect" id="Node000004" href="$classgRenderer.html" title=" " alt="" coords="29,80,119,105"/>
+<area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="77,45,77,80,71,80,71,45"/>
+<area shape="rect" id="Node000006" href="$classgAppObject.html" title=" " alt="" coords="143,80,240,105"/>
+<area shape="poly" id="edge7_Node000006_Node000003" title=" " alt="" coords="106,36,174,78,171,82,103,40"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="74,120,69,168,63,167,69,119"/>
+<area shape="rect" id="Node000005" href="$classgBaseApp.html" title=" " alt="" coords="148,168,235,193"/>
+<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="177,206,138,257,134,254,172,203"/>
+<area shape="poly" id="edge6_Node000005_Node000006" title=" " alt="" coords="194,119,194,167,189,167,189,119"/>
 </map>

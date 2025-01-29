@@ -1,4 +1,6 @@
 <map id="gGUIGrid::Cell" name="gGUIGrid::Cell">
-<area shape="rect" id="node1" title=" " alt="" coords="5,229,120,256"/>
-<area shape="rect" id="node2" href="$classgColor.html" title=" " alt="" coords="31,73,95,99"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,229,120,255"/>
+<area shape="rect" id="Node000002" href="$classgColor.html" title=" " alt="" coords="31,73,95,99"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="65,112,65,229,60,229,60,112"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="87,64,99,62,110,65,118,73,121,86,117,101,105,109,89,109,74,101,76,96,90,103,103,104,112,98,116,86,114,76,108,70,99,68,87,69"/>
 </map>

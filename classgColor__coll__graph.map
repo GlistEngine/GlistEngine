@@ -1,3 +1,4 @@
 <map id="gColor" name="gColor">
-<area shape="rect" id="node1" title=" " alt="" coords="5,73,69,99"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,73,69,99"/>
+<area shape="poly" id="edge1_Node000001_Node000001" title=" " alt="" coords="84,80,96,86,87,92,70,93,69,88,86,87,91,86,82,85"/>
 </map>

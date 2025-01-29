@@ -2,7 +2,7 @@ var classgGUILineGraph =
 [
     [ "gGUILineGraph", "classgGUILineGraph.html#a42822c79f8e7c4b21b20ac521a79f1bf", null ],
     [ "~gGUILineGraph", "classgGUILineGraph.html#a2ac847f8d37872e30047cf75f1a17959", null ],
-    [ "addData", "classgGUILineGraph.html#ae73e143cb48dc69118e400aa18608ce7", null ],
+    [ "addData", "classgGUILineGraph.html#a22b9721365a054014ecd71d01da5e414", null ],
     [ "addLine", "classgGUILineGraph.html#a9915d1923721446eaee7f5eb4d8bc143", null ],
     [ "addPointToLine", "classgGUILineGraph.html#a6df73078a6e895a36e015514a7f2ba8c", null ],
     [ "clear", "classgGUILineGraph.html#a9ac7690c53900da59937637d907cae9d", null ],

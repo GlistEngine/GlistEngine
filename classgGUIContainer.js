@@ -5,7 +5,7 @@ var classgGUIContainer =
     [ "charPressed", "classgGUIContainer.html#adb70c8cf38e94936bcf06490ecb817dd", null ],
     [ "draw", "classgGUIContainer.html#aa75fd8ac5fe52f2315bd6f045b4ff6be", null ],
     [ "getCursor", "classgGUIContainer.html#af56d8eab09a8c0ab6afd7336b6fbb31a", null ],
-    [ "getSizer", "classgGUIContainer.html#a4d440728817e90058ae7e58cf6af6be9", null ],
+    [ "getSizer", "classgGUIContainer.html#ab56d5677161fc782270031a0221f4d0d", null ],
     [ "keyPressed", "classgGUIContainer.html#acd8ffefa9aa808a902dae44b0c43f68f", null ],
     [ "keyReleased", "classgGUIContainer.html#a9807aae31b59a058558d41e001e7bf34", null ],
     [ "mouseDragged", "classgGUIContainer.html#a8085e00a95b282029c5b9e33fae94cf2", null ],

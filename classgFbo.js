@@ -15,7 +15,7 @@ var classgFbo =
     [ "drawSub", "classgFbo.html#a69b2d8a27004d7112c7a04dd301ef877", null ],
     [ "getHeight", "classgFbo.html#a08c9bc7a7842d682bc3fe1e824ff48de", null ],
     [ "getId", "classgFbo.html#a5d2a93fe72cb3490ac8c775f3a40f5cb", null ],
-    [ "getTexture", "classgFbo.html#ac8cef92b9e6c62ff3d2c71343c846c46", null ],
+    [ "getTexture", "classgFbo.html#ad9a092a9df3d1c0d36c3c6536e231b9a", null ],
     [ "getTextureId", "classgFbo.html#af0b08e51390c2643be34a945503e1417", null ],
     [ "getWidth", "classgFbo.html#a8f4aae540bf797d24a18b8c034ef2f9e", null ],
     [ "unbind", "classgFbo.html#ab7178658d133d837e284f859b372f9b6", null ]

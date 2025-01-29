@@ -4,7 +4,7 @@ var classgUbo =
     [ "~gUbo", "classgUbo.html#a4f8b97ead7ca01c4253e78bff29e7bae", null ],
     [ "bind", "classgUbo.html#a0176aec6f1240b6d48e1f8ee2f54f454", null ],
     [ "getBindingPoint", "classgUbo.html#a8fc09e1798ebf56e1f635a60a5c739d7", null ],
-    [ "getData", "classgUbo.html#a3d36c0cb35cf2f1a82a115aa59cc872a", null ],
+    [ "getData", "classgUbo.html#ad895c4d2b58c987009865e9e6c79592e", null ],
     [ "getId", "classgUbo.html#a1254603c70e85475ca2b198b73e5b59e", null ],
     [ "getSize", "classgUbo.html#a13ce78c1e53644bf3c5f5b34bb3d360a", null ],
     [ "setData", "classgUbo.html#a49662596f204103a4f93f4c1a7246584", null ],

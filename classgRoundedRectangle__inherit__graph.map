@@ -1,7 +1,11 @@
 <map id="gRoundedRectangle" name="gRoundedRectangle">
-<area shape="rect" id="node1" title=" " alt="" coords="5,304,157,331"/>
-<area shape="rect" id="node2" href="$classgMesh.html" title=" " alt="" coords="49,229,114,256"/>
-<area shape="rect" id="node3" href="$classgNode.html" title=" " alt="" coords="49,155,113,181"/>
-<area shape="rect" id="node4" href="$classgRenderObject.html" title=" " alt="" coords="22,80,141,107"/>
-<area shape="rect" id="node5" href="$classgObject.html" title=" " alt="" coords="45,5,117,32"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,299,157,324"/>
+<area shape="rect" id="Node000002" href="$classgMesh.html" title=" " alt="" coords="49,225,114,251"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="84,264,84,299,79,299,79,264"/>
+<area shape="rect" id="Node000003" href="$classgNode.html" title=" " alt="" coords="49,152,113,177"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="84,191,84,225,79,225,79,191"/>
+<area shape="rect" id="Node000004" href="$classgRenderObject.html" title=" " alt="" coords="22,79,141,104"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="84,118,84,152,79,152,79,118"/>
+<area shape="rect" id="Node000005" href="$classgObject.html" title=" " alt="" coords="45,5,117,31"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="84,44,84,79,79,79,79,44"/>
 </map>

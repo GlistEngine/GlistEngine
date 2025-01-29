@@ -1,6 +1,9 @@
 <map id="gKernelEffect.h" name="gKernelEffect.h">
-<area shape="rect" id="node1" title=" " alt="" coords="105,5,225,32"/>
-<area shape="rect" id="node2" href="$gBlur_8h.html" title=" " alt="" coords="5,80,72,107"/>
-<area shape="rect" id="node3" href="$gEdgeDetection_8h.html" title=" " alt="" coords="97,80,234,107"/>
-<area shape="rect" id="node4" href="$gSharpen_8h.html" title=" " alt="" coords="258,80,353,107"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="105,5,225,31"/>
+<area shape="rect" id="Node000002" href="$gBlur_8h.html" title=" " alt="" coords="5,79,72,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="134,40,61,81,58,76,132,35"/>
+<area shape="rect" id="Node000003" href="$gEdgeDetection_8h.html" title=" " alt="" coords="97,79,234,104"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="168,44,168,79,163,79,163,44"/>
+<area shape="rect" id="Node000004" href="$gSharpen_8h.html" title=" " alt="" coords="258,79,353,104"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="201,34,284,76,281,81,199,39"/>
 </map>

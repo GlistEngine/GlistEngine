@@ -5,7 +5,7 @@ var classgBaseApp =
     [ "~gBaseApp", "classgBaseApp.html#a1be1eeaf53e4d0489777a87101385e73", null ],
     [ "disableVsync", "classgBaseApp.html#a95e9226297c0fd17e60b587d57326dba", null ],
     [ "enableVsync", "classgBaseApp.html#adaabb27ffdd88a0834dff34316edaa8b", null ],
-    [ "getCurrentCanvas", "classgBaseApp.html#ac13646af6b81338523c07e8d2c0085af", null ],
+    [ "getCurrentCanvas", "classgBaseApp.html#a6cea528b14040c804ff4cf74093bfa37", null ],
     [ "getElapsedTime", "classgBaseApp.html#a356c7343afc8143fc204c5de9ce6a744", null ],
     [ "getFramerate", "classgBaseApp.html#a72a246f800a68b1086874f32d920a696", null ],
     [ "getTargetFramerate", "classgBaseApp.html#a714e6b5691fd7a9c7a7169a4d193641a", null ],

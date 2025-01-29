@@ -1,4 +1,5 @@
 <map id="gKeyEvent" name="gKeyEvent">
-<area shape="rect" id="node1" title=" " alt="" coords="5,80,96,107"/>
-<area shape="rect" id="node2" href="$classgEvent.html" title=" " alt="" coords="17,5,84,32"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,79,96,104"/>
+<area shape="rect" id="Node000002" href="$classgEvent.html" title=" " alt="" coords="17,5,84,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="53,44,53,79,48,79,48,44"/>
 </map>

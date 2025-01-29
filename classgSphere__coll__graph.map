@@ -1,9 +1,18 @@
 <map id="gSphere" name="gSphere">
-<area shape="rect" id="node1" title=" " alt="" coords="76,412,151,439"/>
-<area shape="rect" id="node2" href="$classgMesh.html" title=" " alt="" coords="81,336,146,363"/>
-<area shape="rect" id="node3" href="$classgNode.html" title=" " alt="" coords="5,247,69,273"/>
-<area shape="rect" id="node4" href="$classgRenderObject.html" title=" " alt="" coords="54,171,173,197"/>
-<area shape="rect" id="node7" href="$classgVbo.html" title=" " alt="" coords="165,247,219,273"/>
-<area shape="rect" id="node5" href="$classgObject.html" title=" " alt="" coords="72,5,144,32"/>
-<area shape="rect" id="node6" href="$classgRenderer.html" title=" " alt="" coords="130,81,219,108"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="76,405,151,431"/>
+<area shape="rect" id="Node000002" href="$classgMesh.html" title=" " alt="" coords="81,331,146,356"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="116,370,116,405,111,405,111,370"/>
+<area shape="rect" id="Node000003" href="$classgNode.html" title=" " alt="" coords="5,243,69,268"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="59,277,105,328,101,332,55,280"/>
+<area shape="poly" id="edge7_Node000003_Node000003" title=" " alt="" coords="85,247,96,255,87,263,70,265,69,260,85,258,91,255,82,251"/>
+<area shape="rect" id="Node000004" href="$classgRenderObject.html" title=" " alt="" coords="54,168,173,193"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="93,205,52,244,48,240,89,201"/>
+<area shape="rect" id="Node000007" href="$classgVbo.html" title=" " alt="" coords="165,243,219,268"/>
+<area shape="poly" id="edge9_Node000007_Node000004" title=" " alt="" coords="138,201,181,240,177,244,134,205"/>
+<area shape="rect" id="Node000005" href="$classgObject.html" title=" " alt="" coords="72,5,144,31"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="112,44,116,168,110,168,106,45"/>
+<area shape="rect" id="Node000006" href="$classgRenderer.html" title=" " alt="" coords="130,80,219,105"/>
+<area shape="poly" id="edge6_Node000006_Node000005" title=" " alt="" coords="130,39,166,78,162,81,126,43"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="160,118,124,169,120,166,156,115"/>
+<area shape="poly" id="edge8_Node000002_Node000007" title=" " alt="" coords="174,280,126,332,122,328,170,276"/>
 </map>

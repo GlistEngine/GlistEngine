@@ -12,7 +12,7 @@ var classgGUIProgressBar =
     [ "getBorderThickness", "classgGUIProgressBar.html#a7b61aeec8f3a5ba3c432a4622e1535ea", null ],
     [ "getMaxValue", "classgGUIProgressBar.html#a0114a3ae023cd63b5f37fea44b9f31a6", null ],
     [ "getMinValue", "classgGUIProgressBar.html#a1dd8b772791f33a447d44cf0eb5f2b59", null ],
-    [ "getProgressBarColor", "classgGUIProgressBar.html#a871ecee34d01cc2b9716b3ca8b9ebe03", null ],
+    [ "getProgressBarColor", "classgGUIProgressBar.html#a02ea5a879e552f4418ce8d8dc71c87ff", null ],
     [ "getProgressBarHeight", "classgGUIProgressBar.html#a4adbed65b21d419b824ee08ec0cad231", null ],
     [ "getProgressBarWidth", "classgGUIProgressBar.html#a3565254b06b3ea75ec5b7ce3144a4cf1", null ],
     [ "getSpinThickness", "classgGUIProgressBar.html#adef14b7cd8df0b93b781b4217af19f01", null ],

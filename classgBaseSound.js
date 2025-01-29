@@ -5,7 +5,7 @@ var classgBaseSound =
     [ "close", "classgBaseSound.html#adbc7f3f54e50ef156afd2fd798a51ce6", null ],
     [ "getDuration", "classgBaseSound.html#a0c758d07934f7aeaac8ba6f69faeca64", null ],
     [ "getLoopType", "classgBaseSound.html#a3ca594f33094a5a2a1d069c9d984a83c", null ],
-    [ "getPath", "classgBaseSound.html#a61cb04d1d8fc9c55868eee7b7415b7ce", null ],
+    [ "getPath", "classgBaseSound.html#abbc4f42ea6c9a32e82ac5aed5f71b813", null ],
     [ "getPosition", "classgBaseSound.html#a7f2a2a5b1ad0380c715ef6f588e8b7d4", null ],
     [ "getVolume", "classgBaseSound.html#a017f0a1ba03f96445bc262ee45f6db66", null ],
     [ "isLoaded", "classgBaseSound.html#adc41bfbf42f7bc7e01409800a8576ba0", null ],

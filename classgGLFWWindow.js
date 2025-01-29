@@ -4,7 +4,7 @@ var classgGLFWWindow =
     [ "~gGLFWWindow", "classgGLFWWindow.html#af3eda09f349630d25b7748ffef91deeb", null ],
     [ "close", "classgGLFWWindow.html#acd4fb915673ad68f52190337c25967d8", null ],
     [ "getClipboardString", "classgGLFWWindow.html#af5c79950f648cf21d0c9077292a731a7", null ],
-    [ "getJoystickAxes", "classgGLFWWindow.html#ae3878f9312f88027481d923f990f1dea", null ],
+    [ "getJoystickAxes", "classgGLFWWindow.html#ad3d9239a9278fe14fdc9bebf370491a6", null ],
     [ "getShouldClose", "classgGLFWWindow.html#a08b6f75645fdb36da4731759e2a8e604", null ],
     [ "initialize", "classgGLFWWindow.html#a379c147808dfeeefa7a4f4862803b819", null ],
     [ "isGamepadButtonPressed", "classgGLFWWindow.html#a15dc67d582f90b88049e03f21a3e657a", null ],

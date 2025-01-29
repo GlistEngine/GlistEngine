@@ -7,7 +7,7 @@ var classgRay =
     [ "draw", "classgRay.html#aaf10c6e8ef7c3ecd6a139c57a4113303", null ],
     [ "getDirection", "classgRay.html#a1767574280be76ef42c0ac84421cd1ad", null ],
     [ "getLength", "classgRay.html#a0aafa36f6bb3af5f5bc448cd6c75501b", null ],
-    [ "getOrigin", "classgRay.html#a6548dc81662f0be8d9ffb65b495570ec", null ],
+    [ "getOrigin", "classgRay.html#a4e43a0d84aa66b78f210a51a634991a7", null ],
     [ "intersects", "classgRay.html#aa8f9c8ab950c9446d4647f66d8e4d7a2", null ],
     [ "link", "classgRay.html#ade97b32289465b1dd975b4e99b0c1cac", null ],
     [ "setDirection", "classgRay.html#a094eca866594799d8b6a4c93d6e87db2", null ],

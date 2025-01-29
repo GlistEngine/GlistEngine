@@ -20,6 +20,6 @@ var gSpriteAnimation_8h =
       [ "TRUE", "gSpriteAnimation_8h.html#a05ace1778679794e816adbd5d83eb7bcaa82764c3079aea4e60c80e45befbb839", null ],
       [ "MAX_TRIGGER_CONDITIONS", "gSpriteAnimation_8h.html#a05ace1778679794e816adbd5d83eb7bca8615d1dec37d65a6c10dc4f58a15780e", null ]
     ] ],
-    [ "createSpriteAnim", "gSpriteAnimation_8h.html#a58d83608a200d7714a4062bc9f0ef551", null ],
-    [ "createTrigger", "gSpriteAnimation_8h.html#a609a10bfd873e6a8493940b02ea2b303", null ]
+    [ "createSpriteAnim", "gSpriteAnimation_8h.html#af499d201367dfb12f9468d2f36010501", null ],
+    [ "createTrigger", "gSpriteAnimation_8h.html#a7d37a36cc9efe4cec9b5c2fb6d2bd8d0", null ]
 ];

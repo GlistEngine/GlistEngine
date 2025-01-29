@@ -1,9 +1,15 @@
 <map id="gGUIDropdownList" name="gGUIDropdownList">
-<area shape="rect" id="node1" title=" " alt="" coords="5,453,148,480"/>
-<area shape="rect" id="node2" href="$classgGUIContainer.html" title=" " alt="" coords="18,379,135,405"/>
-<area shape="rect" id="node3" href="$classgGUIScrollable.html" title=" " alt="" coords="17,304,136,331"/>
-<area shape="rect" id="node4" href="$classgGUIControl.html" title=" " alt="" coords="26,229,127,256"/>
-<area shape="rect" id="node5" href="$classgBaseGUIObject.html" title=" " alt="" coords="13,155,141,181"/>
-<area shape="rect" id="node6" href="$classgRenderObject.html" title=" " alt="" coords="17,80,136,107"/>
-<area shape="rect" id="node7" href="$classgObject.html" title=" " alt="" coords="41,5,113,32"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,445,148,471"/>
+<area shape="rect" id="Node000002" href="$classgGUIContainer.html" title=" " alt="" coords="18,372,135,397"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="79,411,79,445,74,445,74,411"/>
+<area shape="rect" id="Node000003" href="$classgGUIScrollable.html" title=" " alt="" coords="17,299,136,324"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="79,338,79,372,74,372,74,338"/>
+<area shape="rect" id="Node000004" href="$classgGUIControl.html" title=" " alt="" coords="26,225,127,251"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="79,264,79,299,74,299,74,264"/>
+<area shape="rect" id="Node000005" href="$classgBaseGUIObject.html" title=" " alt="" coords="13,152,141,177"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="79,191,79,225,74,225,74,191"/>
+<area shape="rect" id="Node000006" href="$classgRenderObject.html" title=" " alt="" coords="17,79,136,104"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="79,118,79,152,74,152,74,118"/>
+<area shape="rect" id="Node000007" href="$classgObject.html" title=" " alt="" coords="41,5,113,31"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="79,44,79,79,74,79,74,44"/>
 </map>

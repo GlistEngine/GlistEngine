@@ -9,7 +9,7 @@ var classgGUIForm =
     [ "getCursor", "classgGUIForm.html#acb177c373f194368da0afc5af9901ccc", null ],
     [ "getFocusId", "classgGUIForm.html#a4831b59c132974d506354bf8b7d5b2ab", null ],
     [ "getPreviousFocusId", "classgGUIForm.html#abe53f820306770c79c11e1edc865c89b", null ],
-    [ "getSizer", "classgGUIForm.html#a53ddf40c4429dad0ceecb37b3fc7e30c", null ],
+    [ "getSizer", "classgGUIForm.html#a41df8b5accf44ec54ecdc2ed16a4dfb6", null ],
     [ "getToolbarHeight", "classgGUIForm.html#aa1e9dd8ca6ad0a9d4532a087ac7f30cd", null ],
     [ "getVerticalToolbarWidth", "classgGUIForm.html#a8de2fca75252796be57e621dec2eafef", null ],
     [ "hide", "classgGUIForm.html#a8c1cedd62b1d87200530bc56044ddfdf", null ],

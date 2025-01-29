@@ -1,16 +1,39 @@
 <map id="gGUICheckbox" name="gGUICheckbox">
-<area shape="rect" id="node1" title=" " alt="" coords="686,1091,805,1117"/>
-<area shape="rect" id="node2" href="$classgGUIButton.html" title=" " alt="" coords="639,1015,737,1041"/>
-<area shape="rect" id="node3" href="$classgGUIControl.html" title=" " alt="" coords="387,937,488,964"/>
-<area shape="rect" id="node4" href="$classgBaseGUIObject.html" title=" " alt="" coords="243,757,371,784"/>
-<area shape="rect" id="node5" href="$classgRenderObject.html" title=" " alt="" coords="33,183,151,209"/>
-<area shape="rect" id="node13" href="$classgNode.html" title=" " alt="" coords="5,284,69,311"/>
-<area shape="rect" id="node6" href="$classgObject.html" title=" " alt="" coords="215,5,287,32"/>
-<area shape="rect" id="node7" href="$classgRenderer.html" title=" " alt="" coords="89,81,178,108"/>
-<area shape="rect" id="node9" href="$classgAppObject.html" title=" " alt="" coords="202,81,299,108"/>
-<area shape="rect" id="node10" href="$classgGUIActionManager.html" title=" " alt="" coords="261,132,413,159"/>
-<area shape="rect" id="node11" href="$classgGUIResources.html" title=" " alt="" coords="382,233,503,260"/>
-<area shape="rect" id="node8" href="$classgBaseApp.html" title=" " alt="" coords="198,335,285,361"/>
-<area shape="rect" id="node12" href="$classgFont.html" title=" " alt="" coords="63,453,121,479"/>
-<area shape="rect" id="node14" href="$classgColor.html" title=" " alt="" coords="656,453,720,479"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="679,1080,798,1105"/>
+<area shape="rect" id="Node000002" href="$classgGUIButton.html" title=" " alt="" coords="633,1005,730,1031"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="701,1040,731,1078,727,1081,697,1043"/>
+<area shape="rect" id="Node000003" href="$classgGUIControl.html" title=" " alt="" coords="489,929,591,954"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="575,958,661,1003,658,1008,573,963"/>
+<area shape="rect" id="Node000004" href="$classgBaseGUIObject.html" title=" " alt="" coords="315,749,443,774"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="400,783,532,927,528,930,396,786"/>
+<area shape="poly" id="edge21_Node000004_Node000004" title=" " alt="" coords="419,743,453,745,465,751,469,761,463,773,448,779,427,780,406,777,407,771,428,775,447,774,459,769,464,761,461,754,451,750,419,749"/>
+<area shape="rect" id="Node000005" href="$classgRenderObject.html" title=" " alt="" coords="47,179,166,204"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="124,215,140,243,155,277,164,320,169,376,175,508,180,574,188,635,201,685,211,705,222,721,236,730,259,738,315,750,314,755,257,743,234,735,218,725,206,708,196,687,183,636,174,575,170,508,164,377,159,321,149,278,136,246,120,217"/>
+<area shape="rect" id="Node000012" href="$classgNode.html" title=" " alt="" coords="5,277,69,303"/>
+<area shape="poly" id="edge16_Node000012_Node000005" title=" " alt="" coords="93,217,48,279,43,276,88,213"/>
+<area shape="rect" id="Node000006" href="$classgObject.html" title=" " alt="" coords="236,5,308,31"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="223,30,170,48,145,63,123,82,110,105,105,132,107,178,102,178,100,131,105,103,119,78,142,58,168,43,222,25"/>
+<area shape="rect" id="Node000007" href="$classgRenderer.html" title=" " alt="" coords="134,80,223,105"/>
+<area shape="poly" id="edge7_Node000007_Node000006" title=" " alt="" coords="248,41,196,82,192,77,245,37"/>
+<area shape="rect" id="Node000008" href="$classgGUIActionManager.html" title=" " alt="" coords="196,129,348,155"/>
+<area shape="poly" id="edge9_Node000008_Node000006" title=" " alt="" coords="275,44,275,129,269,129,269,44"/>
+<area shape="rect" id="Node000009" href="$classgGUIResources.html" title=" " alt="" coords="310,228,431,253"/>
+<area shape="poly" id="edge11_Node000009_Node000006" title=" " alt="" coords="294,40,324,79,352,128,367,183,373,228,367,228,362,184,347,130,320,82,290,43"/>
+<area shape="rect" id="Node000014" href="$classgAppObject.html" title=" " alt="" coords="406,80,503,105"/>
+<area shape="poly" id="edge20_Node000014_Node000006" title=" " alt="" coords="322,30,388,52,437,77,434,82,386,57,320,35"/>
+<area shape="poly" id="edge6_Node000005_Node000007" title=" " alt="" coords="143,115,126,131,115,155,110,179,105,178,110,154,122,128,139,111"/>
+<area shape="poly" id="edge8_Node000004_Node000008" title=" " alt="" coords="261,168,248,201,241,240,241,458,246,504,257,549,274,593,294,634,337,702,371,747,366,750,333,706,289,636,269,595,252,551,240,505,236,458,236,239,243,200,256,166"/>
+<area shape="poly" id="edge10_Node000004_Node000009" title=" " alt="" coords="374,268,381,748,376,748,368,268"/>
+<area shape="rect" id="Node000010" href="$classgColor.html" title=" " alt="" coords="649,444,713,469"/>
+<area shape="poly" id="edge23_Node000001_Node000010" title=" " alt="" coords="699,479,728,528,761,596,789,676,797,718,800,760,800,1020,796,1039,786,1056,758,1082,755,1078,781,1053,791,1037,795,1019,795,760,792,719,783,677,756,598,723,531,695,482"/>
+<area shape="poly" id="edge22_Node000002_Node000010" title=" " alt="" coords="684,483,684,1005,679,1005,679,483"/>
+<area shape="poly" id="edge12_Node000004_Node000010" title=" " alt="" coords="637,472,599,485,559,504,520,530,487,563,476,584,471,603,473,642,475,681,469,702,457,724,440,740,420,751,417,746,437,736,453,721,464,700,469,681,468,642,466,603,471,582,483,560,516,526,556,500,597,480,635,467"/>
+<area shape="poly" id="edge13_Node000010_Node000010" title=" " alt="" coords="704,434,717,432,728,435,737,443,740,457,735,473,723,481,707,480,692,472,694,467,709,475,722,475,731,469,735,457,732,446,726,440,717,437,705,440"/>
+<area shape="rect" id="Node000011" href="$classgFont.html" title=" " alt="" coords="63,444,121,469"/>
+<area shape="poly" id="edge14_Node000004_Node000011" title=" " alt="" coords="89,483,83,534,82,598,87,631,96,664,110,694,130,721,142,729,159,736,207,747,315,756,314,762,206,752,158,741,139,734,126,725,105,697,91,666,82,633,77,598,77,533,84,483"/>
+<area shape="poly" id="edge15_Node000011_Node000012" title=" " alt="" coords="48,315,91,443,86,444,43,317"/>
+<area shape="poly" id="edge17_Node000012_Node000012" title=" " alt="" coords="84,280,92,283,96,290,87,299,70,302,69,296,85,295,91,290,89,287,82,285"/>
+<area shape="rect" id="Node000013" href="$classgBaseApp.html" title=" " alt="" coords="411,327,498,352"/>
+<area shape="poly" id="edge18_Node000004_Node000013" title=" " alt="" coords="456,366,442,519,426,621,400,724,388,750,383,748,395,722,420,620,437,518,451,365"/>
+<area shape="poly" id="edge19_Node000013_Node000014" title=" " alt="" coords="457,119,457,326,452,326,452,119"/>
 </map>

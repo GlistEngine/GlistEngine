@@ -42,7 +42,7 @@ var NAVTREE =
         [ "Variables", "functions_vars.html", "functions_vars" ],
         [ "Enumerations", "functions_enum.html", null ],
         [ "Enumerator", "functions_eval.html", null ],
-        [ "Related Functions", "functions_rela.html", null ]
+        [ "Related Symbols", "functions_rela.html", null ]
       ] ]
     ] ],
     [ "Files", "files.html", [
@@ -65,18 +65,18 @@ var NAVTREEINDEX =
 "annotated.html",
 "classgBaseGUIObject.html#afd44f1d6003f9e05c297761bec484620",
 "classgColor.html#af5f4eb9ab4ef0f713bb30a3565a35b15",
-"classgGUIButton.html#a5b22d95d81faa128345bf23ebb225a35",
+"classgGUIButton.html#a5c32055379a2da31ed069fb2893f50af",
 "classgGUIForm.html#a28957cfb3ff480fd3b8192caccce3ff5",
-"classgGUILineGraph.html#ade386621d3080394dc924e35459ef328",
+"classgGUILineGraph.html#abde5e1118ac3f48b431634b8c62910f3",
 "classgGUIRadarChart.html#aadd80655761fd20d8ef0eaf93df39fcd",
 "classgGUITextbox.html#aaf63a9747057101d493deaa78ddfe00b",
-"classgLight.html#a1b9b082dc0ab975e109454b24470c705",
-"classgModel.html#abdb6cad33be7d2de7ae00a526fe7a8a4",
-"classgRenderer.html#a4a53a6a0c103c6d0b5f87dffaca6687e",
-"classgTexture.html#a1d1d3ad7667bf945b3c4dfe2054b374c",
-"functions_vars_o.html",
-"gGUIToolbar_8h.html",
-"gSpriteAnimation_8h.html#a609a10bfd873e6a8493940b02ea2b303"
+"classgLight.html#a13a0d365362d18506ca5d3e9ff3c98ce",
+"classgModel.html#ab9aac3bd4d83708a8d52344ad6f3d7a1",
+"classgRenderer.html#a4863fd0fa1b49a8c2aa20b8cf0dc1e1c",
+"classgTexture.html#a1f566477436a8f84cd16a2acb080cff5",
+"functions_v.html",
+"gGUIStatusBar_8h_source.html",
+"gSphere_8h_source.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

@@ -1,7 +1,11 @@
 <map id="gSkybox.h" name="gSkybox.h">
-<area shape="rect" id="node1" title=" " alt="" coords="150,5,239,32"/>
-<area shape="rect" id="node2" href="$gCamera_8h.html" title=" " alt="" coords="148,80,241,107"/>
-<area shape="rect" id="node3" href="$gGLFWWindow_8h.html" title=" " alt="" coords="5,155,136,181"/>
-<area shape="rect" id="node4" href="$gGrid_8h.html" title=" " alt="" coords="160,155,229,181"/>
-<area shape="rect" id="node5" href="$gShadowMap_8h.html" title=" " alt="" coords="254,155,375,181"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="150,5,239,31"/>
+<area shape="rect" id="Node000002" href="$gCamera_8h.html" title=" " alt="" coords="148,79,241,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="197,44,197,79,192,79,192,44"/>
+<area shape="rect" id="Node000003" href="$gGLFWWindow_8h.html" title=" " alt="" coords="5,152,136,177"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="164,113,92,154,90,149,162,108"/>
+<area shape="rect" id="Node000004" href="$gGrid_8h.html" title=" " alt="" coords="160,152,229,177"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="197,118,197,152,192,152,192,118"/>
+<area shape="rect" id="Node000005" href="$gShadowMap_8h.html" title=" " alt="" coords="254,152,375,177"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="227,109,296,149,294,154,225,113"/>
 </map>

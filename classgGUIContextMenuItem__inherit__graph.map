@@ -1,8 +1,13 @@
 <map id="gGUIContextMenuItem" name="gGUIContextMenuItem">
-<area shape="rect" id="node1" title=" " alt="" coords="5,304,176,331"/>
-<area shape="rect" id="node6" href="$classgGUIContextMenu.html" title=" " alt="" coords="20,379,161,405"/>
-<area shape="rect" id="node2" href="$classgGUIControl.html" title=" " alt="" coords="40,229,141,256"/>
-<area shape="rect" id="node3" href="$classgBaseGUIObject.html" title=" " alt="" coords="27,155,155,181"/>
-<area shape="rect" id="node4" href="$classgRenderObject.html" title=" " alt="" coords="31,80,150,107"/>
-<area shape="rect" id="node5" href="$classgObject.html" title=" " alt="" coords="55,5,127,32"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,299,176,324"/>
+<area shape="rect" id="Node000006" href="$classgGUIContextMenu.html" title=" " alt="" coords="20,372,161,397"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="93,338,93,372,88,372,88,338"/>
+<area shape="rect" id="Node000002" href="$classgGUIControl.html" title=" " alt="" coords="40,225,141,251"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="93,264,93,299,88,299,88,264"/>
+<area shape="rect" id="Node000003" href="$classgBaseGUIObject.html" title=" " alt="" coords="27,152,155,177"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="93,191,93,225,88,225,88,191"/>
+<area shape="rect" id="Node000004" href="$classgRenderObject.html" title=" " alt="" coords="31,79,150,104"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="93,118,93,152,88,152,88,118"/>
+<area shape="rect" id="Node000005" href="$classgObject.html" title=" " alt="" coords="55,5,127,31"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="93,44,93,79,88,79,88,44"/>
 </map>
