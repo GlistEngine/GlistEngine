@@ -7,6 +7,7 @@
 
 #include "gUtils.h"
 #include "gImage.h"
+#include "gHttpFile.h"
 #include <sys/time.h>
 #include <limits>
 #include <chrono>
@@ -514,6 +515,12 @@ std::string gDecodeBase64(const std::string& encodedString) {
 
 bool gIsBase64(char c) {
 	return (isalnum(c) || (c == '+') || (c == '/'));
+}
+
+bool gIsOnline() {
+	gHttpFile hf;
+	hf.load("www.google.com");
+	return (hf.getHtml() != "");
 }
 
 

@@ -98,9 +98,22 @@ float gRandomf();
 
 uint64_t gGetSystemTimeMillis();
 unsigned int gGetUnixTime();
+
+/*
+ * Returns YYYY
+ */
 int gGetYear();
+
+/*
+ * Returns M, starting from 1
+ */
 int gGetMonth();
+
+/*
+ * Returns D, starting from 1
+ */
 int gGetDay();
+
 int gGetWeekday();
 int gGetHours();
 int gGetMinutes();
@@ -167,6 +180,8 @@ std::string gEncodeBase64(unsigned char* data, int len);
 std::string gDecodeBase64(const std::string& encoded_string);
 
 bool gIsBase64(char c);
+
+bool gIsOnline();
 
 class gUTF8Iterator{
 public:
