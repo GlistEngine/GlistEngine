@@ -50,14 +50,14 @@ void gFile::write(const std::string& content) {
 
 void gFile::write(std::vector<char> newBytes) {
 	stream.clear();
-	for(size_t i = 0; i < newBytes.size(); i++) stream << newBytes[i];
+	stream.write(newBytes.data(), newBytes.size());
 
 	if(mode == FILEMODE_READWRITE || mode == FILEMODE_APPEND) readFile();
 }
 
 void gFile::write(const char* bytes, size_t length) {
 	stream.clear();
-	for(size_t i = 0; i < length; i++) stream << bytes[i];
+	stream.write(bytes, length);
 
 	if(mode == FILEMODE_READWRITE || mode == FILEMODE_APPEND) readFile();
 }
