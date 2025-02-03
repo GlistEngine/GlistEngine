@@ -201,8 +201,12 @@ void gGUIDialogue::resetTitleBar() {
 		titlebarsizer.removeControl(0, 3);
 	}
 
-	titlebarsizer.setControl(0, 4, &exitbutton);
-	exitbutton.setSize(titlebar.height, titlebar.height);
+	if(titletype != TITLETYPE_NONE) {
+		titlebarsizer.setControl(0, 4, &exitbutton);
+		exitbutton.setSize(titlebar.height, titlebar.height);
+	} else {
+		titlebarsizer.removeControl(0, 4);
+	}
 }
 
 void gGUIDialogue::resetButtonsBar() {
