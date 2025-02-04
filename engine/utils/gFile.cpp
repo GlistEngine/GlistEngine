@@ -50,14 +50,14 @@ void gFile::write(const std::string& content) {
 
 void gFile::write(std::vector<char> newBytes) {
 	stream.clear();
-	for(size_t i = 0; i < newBytes.size(); i++) stream << newBytes[i];
+	stream.write(newBytes.data(), newBytes.size());
 
 	if(mode == FILEMODE_READWRITE || mode == FILEMODE_APPEND) readFile();
 }
 
 void gFile::write(const char* bytes, size_t length) {
 	stream.clear();
-	for(size_t i = 0; i < length; i++) stream << bytes[i];
+	stream.write(bytes, length);
 
 	if(mode == FILEMODE_READWRITE || mode == FILEMODE_APPEND) readFile();
 }
@@ -149,27 +149,27 @@ bool gFile::isOpen() {
 }
 
 void gFile::readFile() {
-	stream.seekg(0, std::ios::beg);
-	stream.ignore( std::numeric_limits<std::streamsize>::max() );
-	size = stream.gcount();
-	stream.clear();   //  Since ignore will have set eof.
-	stream.seekg(0, std::ios::beg);
+	// Seek to the end to find the size of the file.
+	stream.seekg(0, std::ios::end);
+	size = stream.tellg();
+	stream.seekg(0, std::ios::beg);  // Go back to the beginning of the file.
 
-//	bytes.clear();
-//	bytes.resize(size);
-//	stream.read(bytes.data(), size);
-
+	// Reserve the size of the string to prevent reallocations.
 	std::string filestr;
 	filestr.resize(size);
+
+	// Read the entire file into the string.
 	stream.read(&filestr[0], size);
-	size_t start_pos = 0;
-	std::string from = "\r";
-	std::string to = "";
-	while((start_pos = filestr.find(from, start_pos)) != std::string::npos) {
-		filestr.replace(start_pos, from.length(), to);
-		start_pos += to.length(); // In case 'to' contains 'from', like replacing 'x' with 'yx'
-	}
+
+	// Remove all carriage return characters
+	filestr.erase(std::remove(filestr.begin(), filestr.end(), '\r'), filestr.end());
+
+	// Move the modified string into a vector<char>
 	bytes = std::vector<char>(filestr.begin(), filestr.end());
+	size = bytes.size();
+
+	// Clear any flags and rewind if needed to read again later.
+	stream.clear();
 }
 
 
