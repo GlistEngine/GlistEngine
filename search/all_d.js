@@ -17,7 +17,7 @@ var searchData=
   ['maxcolumnnum_14',['maxcolumnnum',['../classgGUIGrid.html#ac585fea11c01b8325e38167e47d8d345',1,'gGUIGrid']]],
   ['maxrownum_15',['maxrownum',['../classgGUIGrid.html#abeea03f884bf1a6736cdb9f2d29353ad',1,'gGUIGrid']]],
   ['maxtoolbarnum_16',['maxtoolbarnum',['../classgGUIForm.html#a56543b568ebac328df716f4e00d18809',1,'gGUIForm']]],
-  ['maxx_17',['maxx',['../classgGUIGraph.html#a92e205688610f484d99ff2f8ad1ac414',1,'gGUIGraph::maxx'],['../classgBoundingBox.html#a8f082ab10642164ed58b32406936b50b',1,'gBoundingBox::maxX() const']]],
+  ['maxx_17',['maxx',['../classgBoundingBox.html#a8f082ab10642164ed58b32406936b50b',1,'gBoundingBox::maxX()'],['../classgGUIGraph.html#a92e205688610f484d99ff2f8ad1ac414',1,'gGUIGraph::maxx']]],
   ['maxy_18',['maxy',['../classgBoundingBox.html#ac83306df2895c605213168111917474b',1,'gBoundingBox::maxY()'],['../classgGUIGraph.html#ac691e84ee63e055cf33af61a29d2c4ac',1,'gGUIGraph::maxy']]],
   ['maxz_19',['maxZ',['../classgBoundingBox.html#a3f47cb815a6e9ed52f312dd93bc1bd79',1,'gBoundingBox']]],
   ['menubar_20',['menubar',['../classgGUIForm.html#a1d1b26df6b6c8e8b800ab8b66bd9a6c2',1,'gGUIForm']]],
