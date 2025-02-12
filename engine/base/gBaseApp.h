@@ -61,6 +61,9 @@ public:
 
 	static gAppManager* getAppManager() { return appmanager; }
 	static void setAppManager(gAppManager* appManager) { appmanager = appManager; }
+
+	static gGUIManager* getGUIManager() { return appmanager->getGUIManager(); }
+
 protected:
 	int argc;
 	char **argv;
