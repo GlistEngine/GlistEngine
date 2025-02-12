@@ -88,6 +88,7 @@ public:
 	void setMessageText(std::string messageText);
 	std::string getMessageText();
 	void setIconType(int iconId);
+	int getIconType();
 	void setDialogueType(int typeId);
 	void setTitleType(int typeId);
 
@@ -156,6 +157,7 @@ private:
 	int dragposx, dragposy, sizeposx, sizeposy;
 
 	int resizeposition;
+	int icontypeid;
 };
 
 #endif /* UI_GGUIDIALOGUE_H_ */

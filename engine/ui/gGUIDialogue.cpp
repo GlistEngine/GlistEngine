@@ -28,6 +28,7 @@ gGUIDialogue::gGUIDialogue() {
 	isdragenabled = true; isresizeenabled = true;
 	ismaximized = false; isdragged = false;
 	isiconenabled = false;
+	icontypeid = ICONTYPE_NONE;
 
 	dragposx = 0; dragposy = 0; sizeposx = 0; sizeposy = 0;
 
@@ -504,11 +505,17 @@ std::string gGUIDialogue::getMessageText() {
 void gGUIDialogue::setIconType(int iconId) {
 	if(iconId == ICONTYPE_NONE) {
 		isiconenabled = false;
+		icontypeid = ICONTYPE_NONE;
 	}
 	else{
 		isiconenabled = true;
 		defdialogueicon.setPressedButtonImageFromIcon(iconId - 1, true);
+		icontypeid = iconId;
 	}
+}
+
+int gGUIDialogue::getIconType() {
+	return icontypeid;
 }
 
 void gGUIDialogue::setDialogueType(int typeId) {
