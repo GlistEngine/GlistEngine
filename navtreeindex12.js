@@ -1,5 +1,6 @@
 var NAVTREEINDEX12 =
 {
+"functions_u.html":[1,3,0,19],
 "functions_v.html":[1,3,0,20],
 "functions_vars.html":[1,3,2,0],
 "functions_vars.html":[1,3,2],
@@ -248,6 +249,5 @@ var NAVTREEINDEX12 =
 "gGUISizer_8h.html":[2,0,0,7,35],
 "gGUISizer_8h_source.html":[2,0,0,7,35],
 "gGUISlider_8h.html":[2,0,0,7,36],
-"gGUISlider_8h_source.html":[2,0,0,7,36],
-"gGUIStatusBar_8h.html":[2,0,0,7,37]
+"gGUISlider_8h_source.html":[2,0,0,7,36]
 };

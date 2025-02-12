@@ -11,6 +11,7 @@ var classgGUIDialogue =
     [ "getCancelButton", "classgGUIDialogue.html#aca8996f6f0db803b84c7916f4cc506fe", null ],
     [ "getCancelButtonId", "classgGUIDialogue.html#a21c3fa35d355ad581c4109e83b5231d2", null ],
     [ "getCursor", "classgGUIDialogue.html#a49a26c7ca361705eff53baa51bb60bc9", null ],
+    [ "getIconType", "classgGUIDialogue.html#a0f595e96ff439b440619b7ee3eaddb52", null ],
     [ "getMessageBar", "classgGUIDialogue.html#a18c39744b8224ec72491bf92c0fb6a44", null ],
     [ "getMessageText", "classgGUIDialogue.html#ad073fd797a250814116fda17c2167256", null ],
     [ "getNoButton", "classgGUIDialogue.html#ae1993bc3bf8b99199db929747672a22e", null ],
