@@ -197,6 +197,7 @@ uint64_t gGetTotalRamSize() {
 //Available RAM Size
 #ifdef WIN32
 #include <windows.h>
+#include <shellapi.h>
 
 uint64_t gGetAvailableRamSize() {
     MEMORYSTATUSEX memStatus;
@@ -204,6 +205,11 @@ uint64_t gGetAvailableRamSize() {
     GlobalMemoryStatusEx(&memStatus);
     return memStatus.ullAvailPhys;
 }
+
+void gOpenUrl(std::string url) {
+	ShellExecute(0, 0, url.c_str(), 0, 0, 1);
+}
+
 #elif LINUX
 #include <sys/sysinfo.h>
 
