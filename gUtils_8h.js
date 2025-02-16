@@ -41,6 +41,7 @@ var gUtils_8h =
     [ "gIsLoggingEnabled", "gUtils_8h.html#a63ae0cf52b65e167bd882245df7de3bf", null ],
     [ "gIsOnline", "gUtils_8h.html#a086fd5c170a621ab16f4318cbe2f6bdc", null ],
     [ "gIsValidFilename", "gUtils_8h.html#a2ed85cbfd8460de76162b9456b281ec4", null ],
+    [ "gOpenUrlInDefaultBrowser", "gUtils_8h.html#a9bd6ca1070093f3ae4968a5c0e730a5b", null ],
     [ "gRadToDeg", "gUtils_8h.html#aa15cce4ae90efc10418c2f3eeb989fc1", null ],
     [ "gRandom", "gUtils_8h.html#abe1614a0462f0cbc0732cd4d09601094", null ],
     [ "gRandomf", "gUtils_8h.html#a3fb6d7b105fcd4527ade3200222c54a9", null ],
