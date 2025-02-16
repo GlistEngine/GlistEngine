@@ -120,7 +120,7 @@ int gGetMinutes();
 int gGetSeconds();
 
 #if defined(WIN32)
-void gOpenUrl(std::string url);
+void gOpenUrlInDefaultBrowser(std::string url);
 #endif
 
 #if  defined(WIN32) || defined(LINUX) || defined(APPLE)    //Available Ram Size
