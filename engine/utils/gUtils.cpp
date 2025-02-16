@@ -206,7 +206,7 @@ uint64_t gGetAvailableRamSize() {
     return memStatus.ullAvailPhys;
 }
 
-void gOpenUrl(std::string url) {
+void gOpenUrlInDefaultBrowser(std::string url) {
 	ShellExecute(0, 0, url.c_str(), 0, 0, 1);
 }
 
