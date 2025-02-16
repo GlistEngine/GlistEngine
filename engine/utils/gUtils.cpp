@@ -23,6 +23,11 @@
 #if defined(ANDROID)
 #include <android/log.h>
 #endif
+#if defined(WIN32)
+#include <windows.h>
+#include <shellapi.h>
+#endif
+
 
 bool gLog::isloggingenabled = true;
 std::string gLog::loglevelname[] = {"INFO", "DEBUG", "WARNING", "ERROR"};
@@ -157,7 +162,6 @@ int gGetSeconds() {
 
 //total RAM size
 #ifdef WIN32
-#include <windows.h>
 #include <psapi.h>
 
 uint64_t gGetTotalRamSize() {
@@ -196,18 +200,12 @@ uint64_t gGetTotalRamSize() {
 
 //Available RAM Size
 #ifdef WIN32
-#include <windows.h>
-#include <shellapi.h>
 
 uint64_t gGetAvailableRamSize() {
     MEMORYSTATUSEX memStatus;
     memStatus.dwLength = sizeof(MEMORYSTATUSEX);
     GlobalMemoryStatusEx(&memStatus);
     return memStatus.ullAvailPhys;
-}
-
-void gOpenUrlInDefaultBrowser(std::string url) {
-	ShellExecute(0, 0, url.c_str(), 0, 0, 1);
 }
 
 #elif LINUX
@@ -252,7 +250,6 @@ uint64_t gGetAvailableRAMSize() {
 
 //RAM size used by GlistEngine currently
 #ifdef WIN32
-#include <windows.h>
 #include <psapi.h>
 uint64_t gGetRamSizeUsedbyGE() {
     PROCESS_MEMORY_COUNTERS_EX pmc;
@@ -307,6 +304,14 @@ uint64_t gGetRAMSizeUsedbyGE() {
     return residentMemory;
 }
 #endif
+
+
+void gOpenUrlInDefaultBrowser(std::string url) {
+#if defined(WIN32)
+	ShellExecute(0, 0, url.c_str(), 0, 0, 1);
+#endif
+	return;
+}
 
 
 std::string gGetTimestampString() {

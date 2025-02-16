@@ -119,9 +119,6 @@ int gGetHours();
 int gGetMinutes();
 int gGetSeconds();
 
-#if defined(WIN32)
-void gOpenUrlInDefaultBrowser(std::string url);
-#endif
 
 #if  defined(WIN32) || defined(LINUX) || defined(APPLE)    //Available Ram Size
 uint64_t gGetAvailableRamSize();
@@ -186,6 +183,7 @@ std::string gDecodeBase64(const std::string& encoded_string);
 bool gIsBase64(char c);
 
 bool gIsOnline();
+void gOpenUrlInDefaultBrowser(std::string url);
 
 class gUTF8Iterator{
 public:
