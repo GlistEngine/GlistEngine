@@ -1,5 +1,7 @@
 var NAVTREEINDEX14 =
 {
+"gSoftFocus_8h.html":[2,0,0,4,1,14],
+"gSoftFocus_8h_source.html":[2,0,0,4,1,14],
 "gSphere_8h.html":[2,0,0,4,2,10],
 "gSphere_8h_source.html":[2,0,0,4,2,10],
 "gSpriteAnimation_8h.html":[2,0,0,0,0],

@@ -1,5 +1,7 @@
 var NAVTREEINDEX13 =
 {
+"gGUISlider_8h.html":[2,0,0,7,36],
+"gGUISlider_8h_source.html":[2,0,0,7,36],
 "gGUIStatusBar_8h.html":[2,0,0,7,37],
 "gGUIStatusBar_8h_source.html":[2,0,0,7,37],
 "gGUISurface_8h.html":[2,0,0,7,38],
@@ -247,7 +249,5 @@ var NAVTREEINDEX13 =
 "gSkinnedMesh_8h.html":[2,0,0,4,20],
 "gSkinnedMesh_8h_source.html":[2,0,0,4,20],
 "gSkybox_8h.html":[2,0,0,4,21],
-"gSkybox_8h_source.html":[2,0,0,4,21],
-"gSoftFocus_8h.html":[2,0,0,4,1,14],
-"gSoftFocus_8h_source.html":[2,0,0,4,1,14]
+"gSkybox_8h_source.html":[2,0,0,4,21]
 };
