@@ -523,9 +523,17 @@ void gGUIDialogue::setDialogueType(int typeId) {
 	resetButtonsBar();
 }
 
+int gGUIDialogue::getDialogueType() {
+	return dialoguetype;
+}
+
 void gGUIDialogue::setTitleType(int typeId) {
 	titletype = typeId;
 	resetTitleBar();
+}
+
+int gGUIDialogue::getTitleType() {
+	return titletype;
 }
 
 
