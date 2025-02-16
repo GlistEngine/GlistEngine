@@ -90,7 +90,9 @@ public:
 	void setIconType(int iconId);
 	int getIconType();
 	void setDialogueType(int typeId);
+	int getDialogueType();
 	void setTitleType(int typeId);
+	int getTitleType();
 
 	int getCursor(int x, int y);
 	void keyPressed(int key);
