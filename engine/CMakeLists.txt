@@ -115,7 +115,7 @@ foreach(pluginname ${PLUGINS})
 
 	if(EMSCRIPTEN)
 		if(${pluginname} STREQUAL "gipWebGL")
-			set(WEB_PLUGIN_PRESENT 1)
+			set(WEBGL_PLUGIN_PRESENT 1)
 		endif()
 	endif()
 
