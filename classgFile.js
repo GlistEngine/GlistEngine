@@ -17,6 +17,7 @@ var classgFile =
     [ "close", "classgFile.html#aa3f7a3d79412d1192ecd1210d5b39a14", null ],
     [ "exists", "classgFile.html#a6bfc213160f93df37904c12b8a52fab7", null ],
     [ "getBytes", "classgFile.html#abc418b83b72625051a990a4e9ae43027", null ],
+    [ "getBytesConst", "classgFile.html#a7c3d24c03e53dec2c7b5ab60c6547405", null ],
     [ "getDirectory", "classgFile.html#ae634889c4747c8484a0c4294f9b38a30", null ],
     [ "getFilename", "classgFile.html#a8f5d8bb309e14113ecc1b76ffdaca486", null ],
     [ "getMode", "classgFile.html#a4299311553afc40191493bcee0f20e59", null ],
