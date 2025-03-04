@@ -62,6 +62,11 @@ public:
 	void write(const char* bytes, size_t length);
 
 	std::vector<char> getBytes();
+
+	const std::vector<char>& getBytesConst() {
+		return bytes;
+	}
+
 	std::string getText();
 	int getSize();
 
