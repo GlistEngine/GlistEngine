@@ -154,19 +154,24 @@ void gFile::readFile() {
 	size = stream.tellg();
 	stream.seekg(0, std::ios::beg);  // Go back to the beginning of the file.
 
-	// Reserve the size of the string to prevent reallocations.
-	std::string filestr;
-	filestr.resize(size);
+	if (binary) {
+		bytes = std::vector<char>(size);
+		stream.read(bytes.data(), size);
+	} else { // Replace carriage return characters in text files
+		// Reserve the size of the string to prevent reallocations.
+		std::string filestr;
+		filestr.resize(size);
 
-	// Read the entire file into the string.
-	stream.read(&filestr[0], size);
+		// Read the entire file into the string.
+		stream.read(&filestr[0], size);
 
-	// Remove all carriage return characters
-	filestr.erase(std::remove(filestr.begin(), filestr.end(), '\r'), filestr.end());
+		// Remove all carriage return characters
+		filestr.erase(std::remove(filestr.begin(), filestr.end(), '\r'), filestr.end());
 
-	// Move the modified string into a vector<char>
-	bytes = std::vector<char>(filestr.begin(), filestr.end());
-	size = bytes.size();
+		// Move the modified string into a vector<char>
+		bytes = std::vector<char>(filestr.begin(), filestr.end());
+		size = bytes.size();
+	}
 
 	// Clear any flags and rewind if needed to read again later.
 	stream.clear();
