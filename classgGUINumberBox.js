@@ -16,6 +16,7 @@ var classgGUINumberBox =
     [ "mouseReleased", "classgGUINumberBox.html#a567547a2157e49e17639bb7603ec7587", null ],
     [ "set", "classgGUINumberBox.html#a413e1aad965263c290ddf38c947a4474", null ],
     [ "set", "classgGUINumberBox.html#a3739a74c16dda11709be4f9916fe15f5", null ],
+    [ "setDisabled", "classgGUINumberBox.html#ab9de5ad77436121ae6951d04b187118b", null ],
     [ "setFloat", "classgGUINumberBox.html#a96bfc1151bf76657c98218f82883ae94", null ],
     [ "setFloatIncrement", "classgGUINumberBox.html#a78810b92e8cae8f2e906244e2fbf38a4", null ],
     [ "setInteger", "classgGUINumberBox.html#ac2a51d0052964c78de102a3753b1c9c7", null ],
