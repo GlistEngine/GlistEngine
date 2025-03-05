@@ -13,6 +13,9 @@ gGUINumberBox::gGUINumberBox() {
 	b1isdisabled = false;
 	b2ispressed = false;
 	b2isdisabled = false;
+	isdisabled = false; //added
+	disabledbcolor = *disabledbuttoncolor; //added
+	disabledfcolor = *disabledbuttonfontcolor; //added
 	isinteger = true;
 	lineno = 4;
 	columno = 3;
@@ -198,6 +201,7 @@ float gGUINumberBox::getFloatIncrement() {
 void gGUINumberBox::mousePressed(int x, int y, int button) {
 	gGUIContainer::mousePressed(x, y, button);
 	textbox.mousePressed(x, y, button);
+	if(isdisabled) return; //added
 	if(x >= incboxposx && x < incboxposx + smalboxwidth && y >= incboxposy && y < incboxposy + smalboxheight) {
 		if(b1isdisabled) return;
 		b1ispressed = true;
@@ -213,6 +217,7 @@ void gGUINumberBox::mousePressed(int x, int y, int button) {
 void gGUINumberBox::mouseReleased(int x, int y, int button) {
 	gGUIContainer::mouseReleased(x, y, button);
 	textbox.mouseReleased(x, y, button);
+	if(isdisabled) return; //added
 	if(x >= incboxposx && x < incboxposx + smalboxwidth && y >= incboxposy && y < incboxposy + smalboxheight) {
 		if(b1isdisabled) return;
 		b1ispressed = false;
@@ -288,27 +293,49 @@ void gGUINumberBox::draw() {
 	gColor oldcolor = renderer->getColor();
 	gColor buttonColor = gColor(0.1f, 0.45f, 0.87f, 1.0f);
 	gColor pressedButtonColor = gColor(0.08f, 0.36f, 0.71f, 1.0f);
-
-	if(b1ispressed) renderer->setColor(pressedButtonColor);
-	else renderer->setColor(buttonColor);
-	gDrawRectangle(incboxposx, incboxposy + b1ispressed, smalboxwidth, smalboxheight, true);
+	if(isdisabled) { //added
+		renderer->setColor(&disabledbcolor); //added
+		gDrawRectangle(incboxposx, incboxposy + b1ispressed, smalboxwidth, smalboxheight, true);
+	}
+	else {
+		if(b1ispressed) renderer->setColor(pressedButtonColor);
+		else renderer->setColor(buttonColor);
+		gDrawRectangle(incboxposx, incboxposy + b1ispressed, smalboxwidth, smalboxheight, true);
+	}
 
 	if(b1ispressed) renderer->setColor(middlegroundcolor);
 	else renderer->setColor(textbackgroundcolor);
 	gDrawTriangle(inctriucorpx, inctriucorpy, inctrilcorpx, inctrilcorpy, inctrircorpx, inctrircorpy, true);
 
-	if(b2ispressed) renderer->setColor(pressedButtonColor);
-	else renderer->setColor(buttonColor);
-	gDrawRectangle(decboxposx, decboxposy + b2ispressed, smalboxwidth, smalboxheight, true);
+	if(isdisabled) { //added
+		renderer->setColor(&disabledbcolor); //added
+		gDrawRectangle(decboxposx, decboxposy + b2ispressed, smalboxwidth, smalboxheight, true);
+	}
+	else {
+		if(b2ispressed) renderer->setColor(pressedButtonColor);
+		else renderer->setColor(buttonColor);
+		gDrawRectangle(decboxposx, decboxposy + b2ispressed, smalboxwidth, smalboxheight, true);
+	}
 
 	if(b2ispressed) renderer->setColor(middlegroundcolor);
 	else renderer->setColor(textbackgroundcolor);
 	gDrawTriangle(dectriucorpx, dectriucorpy, dectrilcorpx, dectrilcorpy, dectrircorpx, dectrircorpy, true);
 
 	if(istitleshown) {
+		if(isdisabled) renderer->setColor(&disabledfcolor); //added
 		renderer->setColor(fontcolor);
 		font->drawText(title, left, top + font->getSize());
 	}
 	renderer->setColor(oldcolor);
 	if(guisizer) guisizer->draw();
 }
+
+void gGUINumberBox::setDisabled(bool isDisabled) { //added
+	isdisabled = isDisabled;
+	if(isdisabled) {
+		textbox.setDisabled(true);
+	} else {
+		textbox.setDisabled(false);
+	}
+}
+

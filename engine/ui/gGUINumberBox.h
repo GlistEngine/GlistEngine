@@ -11,6 +11,7 @@
 #include "gGUIContainer.h"
 #include "gGUITextbox.h"
 #include <limits>
+#include "gColor.h" //added
 
 class gGUINumberBox: public gGUIContainer {
 public:
@@ -55,6 +56,7 @@ public:
 
 	friend class gGUIToolbar;
 
+	void setDisabled(bool isDisabled); //added
 private:
 	int boxwidth, boxheight, numboxwidth, numboxheight, smalboxwidth, smalboxheight;
 
@@ -84,6 +86,8 @@ private:
 	int increment;
 	float incrementf;
 
+	bool isdisabled; //added
+	gColor disabledbcolor, disabledfcolor; //added
 };
 #endif /* UI_GGUINUMBERBOX_H_ */
 
