@@ -199,9 +199,9 @@ float gGUINumberBox::getFloatIncrement() {
 }
 
 void gGUINumberBox::mousePressed(int x, int y, int button) {
+	if(isdisabled) return; //added
 	gGUIContainer::mousePressed(x, y, button);
 	textbox.mousePressed(x, y, button);
-	if(isdisabled) return; //added
 	if(x >= incboxposx && x < incboxposx + smalboxwidth && y >= incboxposy && y < incboxposy + smalboxheight) {
 		if(b1isdisabled) return;
 		b1ispressed = true;
@@ -215,9 +215,9 @@ void gGUINumberBox::mousePressed(int x, int y, int button) {
 }
 
 void gGUINumberBox::mouseReleased(int x, int y, int button) {
+	if(isdisabled) return; //added
 	gGUIContainer::mouseReleased(x, y, button);
 	textbox.mouseReleased(x, y, button);
-	if(isdisabled) return; //added
 	if(x >= incboxposx && x < incboxposx + smalboxwidth && y >= incboxposy && y < incboxposy + smalboxheight) {
 		if(b1isdisabled) return;
 		b1ispressed = false;
@@ -295,13 +295,12 @@ void gGUINumberBox::draw() {
 	gColor pressedButtonColor = gColor(0.08f, 0.36f, 0.71f, 1.0f);
 	if(isdisabled) { //added
 		renderer->setColor(&disabledbcolor); //added
-		gDrawRectangle(incboxposx, incboxposy + b1ispressed, smalboxwidth, smalboxheight, true);
 	}
 	else {
 		if(b1ispressed) renderer->setColor(pressedButtonColor);
 		else renderer->setColor(buttonColor);
-		gDrawRectangle(incboxposx, incboxposy + b1ispressed, smalboxwidth, smalboxheight, true);
 	}
+	gDrawRectangle(incboxposx, incboxposy + b1ispressed, smalboxwidth, smalboxheight, true);
 
 	if(b1ispressed) renderer->setColor(middlegroundcolor);
 	else renderer->setColor(textbackgroundcolor);
@@ -309,13 +308,12 @@ void gGUINumberBox::draw() {
 
 	if(isdisabled) { //added
 		renderer->setColor(&disabledbcolor); //added
-		gDrawRectangle(decboxposx, decboxposy + b2ispressed, smalboxwidth, smalboxheight, true);
 	}
 	else {
 		if(b2ispressed) renderer->setColor(pressedButtonColor);
 		else renderer->setColor(buttonColor);
-		gDrawRectangle(decboxposx, decboxposy + b2ispressed, smalboxwidth, smalboxheight, true);
 	}
+	gDrawRectangle(decboxposx, decboxposy + b2ispressed, smalboxwidth, smalboxheight, true);
 
 	if(b2ispressed) renderer->setColor(middlegroundcolor);
 	else renderer->setColor(textbackgroundcolor);
@@ -332,10 +330,5 @@ void gGUINumberBox::draw() {
 
 void gGUINumberBox::setDisabled(bool isDisabled) { //added
 	isdisabled = isDisabled;
-	if(isdisabled) {
-		textbox.setDisabled(true);
-	} else {
-		textbox.setDisabled(false);
-	}
+	textbox.setDisabled(isdisabled);
 }
-
