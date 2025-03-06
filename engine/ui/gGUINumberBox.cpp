@@ -13,9 +13,9 @@ gGUINumberBox::gGUINumberBox() {
 	b1isdisabled = false;
 	b2ispressed = false;
 	b2isdisabled = false;
-	isdisabled = false; //added
-	disabledbcolor = *disabledbuttoncolor; //added
-	disabledfcolor = *disabledbuttonfontcolor; //added
+	isdisabled = false;
+	disabledbcolor = *disabledbuttoncolor;
+	disabledfcolor = *disabledbuttonfontcolor;
 	isinteger = true;
 	lineno = 4;
 	columno = 3;
@@ -199,7 +199,7 @@ float gGUINumberBox::getFloatIncrement() {
 }
 
 void gGUINumberBox::mousePressed(int x, int y, int button) {
-	if(isdisabled) return; //added
+	if(isdisabled) return;
 	gGUIContainer::mousePressed(x, y, button);
 	textbox.mousePressed(x, y, button);
 	if(x >= incboxposx && x < incboxposx + smalboxwidth && y >= incboxposy && y < incboxposy + smalboxheight) {
@@ -215,7 +215,7 @@ void gGUINumberBox::mousePressed(int x, int y, int button) {
 }
 
 void gGUINumberBox::mouseReleased(int x, int y, int button) {
-	if(isdisabled) return; //added
+	if(isdisabled) return;
 	gGUIContainer::mouseReleased(x, y, button);
 	textbox.mouseReleased(x, y, button);
 	if(x >= incboxposx && x < incboxposx + smalboxwidth && y >= incboxposy && y < incboxposy + smalboxheight) {
@@ -293,8 +293,8 @@ void gGUINumberBox::draw() {
 	gColor oldcolor = renderer->getColor();
 	gColor buttonColor = gColor(0.1f, 0.45f, 0.87f, 1.0f);
 	gColor pressedButtonColor = gColor(0.08f, 0.36f, 0.71f, 1.0f);
-	if(isdisabled) { //added
-		renderer->setColor(&disabledbcolor); //added
+	if(isdisabled) {
+		renderer->setColor(&disabledbcolor);
 	}
 	else {
 		if(b1ispressed) renderer->setColor(pressedButtonColor);
@@ -306,8 +306,8 @@ void gGUINumberBox::draw() {
 	else renderer->setColor(textbackgroundcolor);
 	gDrawTriangle(inctriucorpx, inctriucorpy, inctrilcorpx, inctrilcorpy, inctrircorpx, inctrircorpy, true);
 
-	if(isdisabled) { //added
-		renderer->setColor(&disabledbcolor); //added
+	if(isdisabled) {
+		renderer->setColor(&disabledbcolor);
 	}
 	else {
 		if(b2ispressed) renderer->setColor(pressedButtonColor);
@@ -320,7 +320,7 @@ void gGUINumberBox::draw() {
 	gDrawTriangle(dectriucorpx, dectriucorpy, dectrilcorpx, dectrilcorpy, dectrircorpx, dectrircorpy, true);
 
 	if(istitleshown) {
-		if(isdisabled) renderer->setColor(&disabledfcolor); //added
+		if(isdisabled) renderer->setColor(&disabledfcolor);
 		renderer->setColor(fontcolor);
 		font->drawText(title, left, top + font->getSize());
 	}
@@ -328,7 +328,7 @@ void gGUINumberBox::draw() {
 	if(guisizer) guisizer->draw();
 }
 
-void gGUINumberBox::setDisabled(bool isDisabled) { //added
+void gGUINumberBox::setDisabled(bool isDisabled) {
 	isdisabled = isDisabled;
 	textbox.setDisabled(isdisabled);
 }
