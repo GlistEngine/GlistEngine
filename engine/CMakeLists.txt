@@ -10,7 +10,6 @@ endif()
 # Configure compiler and linker as you need
 set(GLIST_CXX_FLAGS_COMMON
     -stdlib=libc++
-    -d2ReducedOptimizeHugeFunctions
     -Wuninitialized
     -Wmultichar
     -ffunction-sections
