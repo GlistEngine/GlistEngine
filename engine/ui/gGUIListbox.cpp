@@ -24,6 +24,7 @@ gGUIListbox::gGUIListbox() {
 	isicon = false;
 	updateTotalHeight();
 	setVisibleLineNumber(5);
+	isdisabled = false;
 }
 
 gGUIListbox::~gGUIListbox() {
@@ -47,7 +48,7 @@ void gGUIListbox::drawContent() {
 
 	int linenum = data.size();
 	if(selectedno >= flno && selectedno <= flno + linenum) {
-		if(isfocused) {
+		if(isfocused && !isdisabled) {
 			renderer->setColor(chosencolor);
 		} else {
 			renderer->setColor(middlegroundcolor);
@@ -116,6 +117,7 @@ void gGUIListbox::clear() {
 
 
 void gGUIListbox::mousePressed(int x, int y, int button) {
+	if(isdisabled) return;
 	gGUIScrollable::mousePressed(x, y, button);
 	if(x >= left && x < left + boxw && y >= top + titleheight && y < top + titleheight + boxh) {
 		mousepressedonlist = true;
@@ -123,6 +125,7 @@ void gGUIListbox::mousePressed(int x, int y, int button) {
 }
 
 void gGUIListbox::mouseReleased(int x, int y, int button) {
+	if(isdisabled) return;
 	gGUIScrollable::mouseReleased(x, y, button);
 	if(mousepressedonlist) mousepressedonlist = false;
 	if(x >= left && x < left + boxw && y >= top + titleheight && y < top + titleheight + boxh) {
@@ -254,4 +257,12 @@ void gGUIListbox::updateTotalHeight() {
 	if(totalh < minboxh) {
 		totalh = minboxh;
 	}
+}
+
+void gGUIListbox::setDisabled(bool isDisabled) {
+	isdisabled = isDisabled;
+}
+
+bool gGUIListbox::isDisabled() {
+	return isdisabled;
 }
