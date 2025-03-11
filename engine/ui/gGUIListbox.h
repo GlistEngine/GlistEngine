@@ -247,6 +247,9 @@ public:
 
 	int getTotalHeight();
 
+	void setDisabled(bool isDisabled);
+	bool isDisabled();
+
 private:
 	int listboxh;
 	int lineh;
@@ -259,6 +262,7 @@ private:
 	bool mousepressedonlist;
 	bool isicon;
 	gColor chosencolor, iconcolor;
+	bool isdisabled;
 
 private:
 	void updateTotalHeight();
