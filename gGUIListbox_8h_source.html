@@ -348,25 +348,29 @@ $(document).ready(function(){initNavTree('gGUIListbox_8h_source.html',''); initR
 <div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span> </div>
 <div class="line"><a id="l00248" name="l00248"></a><span class="lineno"><a class="line" href="classgGUIListbox.html#a139cb19587628e7e0a9f9523d40503bf">  248</a></span>    <span class="keywordtype">int</span> <a class="code hl_function" href="classgGUIListbox.html#a139cb19587628e7e0a9f9523d40503bf">getTotalHeight</a>();</div>
 <div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span> </div>
-<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>    <span class="keywordtype">int</span> listboxh;</div>
-<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>    <span class="keywordtype">int</span> lineh;</div>
-<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span>    <span class="keywordtype">int</span> visibilelinenum, minboxh;</div>
-<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>    std::vector&lt;std::string&gt; data;</div>
-<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span>    std::deque&lt;gTexture*&gt; icons;</div>
-<div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span>    <span class="keywordtype">float</span> textoffset;</div>
-<div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span>    <span class="keywordtype">int</span> firstlineno, flno, fldy;</div>
-<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span>    <span class="keywordtype">int</span> selectedno;</div>
-<div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span>    <span class="keywordtype">bool</span> mousepressedonlist;</div>
-<div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span>    <span class="keywordtype">bool</span> isicon;</div>
-<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span>    <a class="code hl_class" href="classgColor.html">gColor</a> chosencolor, iconcolor;</div>
-<div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span> </div>
-<div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span>    <span class="keywordtype">void</span> updateTotalHeight();</div>
-<div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span>};</div>
-</div>
+<div class="line"><a id="l00250" name="l00250"></a><span class="lineno"><a class="line" href="classgGUIListbox.html#a181c90de6920d392a6d8e2602af215ca">  250</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classgGUIListbox.html#a181c90de6920d392a6d8e2602af215ca">setDisabled</a>(<span class="keywordtype">bool</span> <a class="code hl_function" href="classgGUIListbox.html#a7b238644e352ccd87ef78d3d58d01d93">isDisabled</a>);</div>
+<div class="line"><a id="l00251" name="l00251"></a><span class="lineno"><a class="line" href="classgGUIListbox.html#a7b238644e352ccd87ef78d3d58d01d93">  251</a></span>    <span class="keywordtype">bool</span> <a class="code hl_function" href="classgGUIListbox.html#a7b238644e352ccd87ef78d3d58d01d93">isDisabled</a>();</div>
+<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span> </div>
+<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>    <span class="keywordtype">int</span> listboxh;</div>
+<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span>    <span class="keywordtype">int</span> lineh;</div>
+<div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span>    <span class="keywordtype">int</span> visibilelinenum, minboxh;</div>
+<div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span>    std::vector&lt;std::string&gt; data;</div>
+<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span>    std::deque&lt;gTexture*&gt; icons;</div>
+<div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span>    <span class="keywordtype">float</span> textoffset;</div>
+<div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span>    <span class="keywordtype">int</span> firstlineno, flno, fldy;</div>
+<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span>    <span class="keywordtype">int</span> selectedno;</div>
+<div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span>    <span class="keywordtype">bool</span> mousepressedonlist;</div>
+<div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span>    <span class="keywordtype">bool</span> isicon;</div>
+<div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span>    <a class="code hl_class" href="classgColor.html">gColor</a> chosencolor, iconcolor;</div>
+<div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span>    <span class="keywordtype">bool</span> isdisabled;</div>
 <div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span> </div>
-<div class="line"><a id="l00267" name="l00267"></a><span class="lineno">  267</span><span class="preprocessor">#endif </span><span class="comment">/* UI_GGUILISTBOX_H_ */</span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00267" name="l00267"></a><span class="lineno">  267</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00268" name="l00268"></a><span class="lineno">  268</span>    <span class="keywordtype">void</span> updateTotalHeight();</div>
+<div class="line"><a id="l00269" name="l00269"></a><span class="lineno">  269</span>};</div>
+</div>
+<div class="line"><a id="l00270" name="l00270"></a><span class="lineno">  270</span> </div>
+<div class="line"><a id="l00271" name="l00271"></a><span class="lineno">  271</span><span class="preprocessor">#endif </span><span class="comment">/* UI_GGUILISTBOX_H_ */</span><span class="preprocessor"></span></div>
 <div class="ttc" id="aclassgBaseApp_html"><div class="ttname"><a href="classgBaseApp.html">gBaseApp</a></div><div class="ttdef"><b>Definition</b> gBaseApp.h:16</div></div>
 <div class="ttc" id="aclassgBaseGUIObject_html"><div class="ttname"><a href="classgBaseGUIObject.html">gBaseGUIObject</a></div><div class="ttdef"><b>Definition</b> gBaseGUIObject.h:18</div></div>
 <div class="ttc" id="aclassgBaseGUIObject_html_a1b904144beed0a06f3d1943a56b7edd6"><div class="ttname"><a href="classgBaseGUIObject.html#a1b904144beed0a06f3d1943a56b7edd6">gBaseGUIObject::root</a></div><div class="ttdeci">gBaseApp * root</div><div class="ttdef"><b>Definition</b> gBaseGUIObject.h:149</div></div>
@@ -375,6 +379,7 @@ $(document).ready(function(){initNavTree('gGUIListbox_8h_source.html',''); initR
 <div class="ttc" id="aclassgGUIListbox_html"><div class="ttname"><a href="classgGUIListbox.html">gGUIListbox</a></div><div class="ttdef"><b>Definition</b> gGUIListbox.h:66</div></div>
 <div class="ttc" id="aclassgGUIListbox_html_a00d105f65f5254cb87fbb24503f28569"><div class="ttname"><a href="classgGUIListbox.html#a00d105f65f5254cb87fbb24503f28569">gGUIListbox::setIconType</a></div><div class="ttdeci">void setIconType(bool isicon)</div></div>
 <div class="ttc" id="aclassgGUIListbox_html_a139cb19587628e7e0a9f9523d40503bf"><div class="ttname"><a href="classgGUIListbox.html#a139cb19587628e7e0a9f9523d40503bf">gGUIListbox::getTotalHeight</a></div><div class="ttdeci">int getTotalHeight()</div></div>
+<div class="ttc" id="aclassgGUIListbox_html_a181c90de6920d392a6d8e2602af215ca"><div class="ttname"><a href="classgGUIListbox.html#a181c90de6920d392a6d8e2602af215ca">gGUIListbox::setDisabled</a></div><div class="ttdeci">void setDisabled(bool isDisabled)</div></div>
 <div class="ttc" id="aclassgGUIListbox_html_a26445163ec8d05f342ea1dfbe74b7fd1"><div class="ttname"><a href="classgGUIListbox.html#a26445163ec8d05f342ea1dfbe74b7fd1">gGUIListbox::getSelected</a></div><div class="ttdeci">int getSelected()</div></div>
 <div class="ttc" id="aclassgGUIListbox_html_a2e4cf0b5ee0a68f51d57cbbb27bfe7cc"><div class="ttname"><a href="classgGUIListbox.html#a2e4cf0b5ee0a68f51d57cbbb27bfe7cc">gGUIListbox::getIconType</a></div><div class="ttdeci">bool getIconType()</div></div>
 <div class="ttc" id="aclassgGUIListbox_html_a2ecd6fb791cc8bf8acfa387231215736"><div class="ttname"><a href="classgGUIListbox.html#a2ecd6fb791cc8bf8acfa387231215736">gGUIListbox::insertData</a></div><div class="ttdeci">void insertData(int lineNo, std::string lineData)</div></div>
@@ -393,6 +398,7 @@ $(document).ready(function(){initNavTree('gGUIListbox_8h_source.html',''); initR
 <div class="ttc" id="aclassgGUIListbox_html_a6cbb7f4e8504bdcf72510dfb67dc6bf2"><div class="ttname"><a href="classgGUIListbox.html#a6cbb7f4e8504bdcf72510dfb67dc6bf2">gGUIListbox::setIcon</a></div><div class="ttdeci">void setIcon(gImage *icon, std::string title)</div></div>
 <div class="ttc" id="aclassgGUIListbox_html_a70baa4b4730230a05bec9d8beb8c9478"><div class="ttname"><a href="classgGUIListbox.html#a70baa4b4730230a05bec9d8beb8c9478">gGUIListbox::~gGUIListbox</a></div><div class="ttdeci">virtual ~gGUIListbox()</div></div>
 <div class="ttc" id="aclassgGUIListbox_html_a720a8bfcfe15afa074eac57baffc9d1d"><div class="ttname"><a href="classgGUIListbox.html#a720a8bfcfe15afa074eac57baffc9d1d">gGUIListbox::set</a></div><div class="ttdeci">void set(gBaseApp *root, gBaseGUIObject *topParentGUIObject, gBaseGUIObject *parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h)</div></div>
+<div class="ttc" id="aclassgGUIListbox_html_a7b238644e352ccd87ef78d3d58d01d93"><div class="ttname"><a href="classgGUIListbox.html#a7b238644e352ccd87ef78d3d58d01d93">gGUIListbox::isDisabled</a></div><div class="ttdeci">bool isDisabled()</div></div>
 <div class="ttc" id="aclassgGUIListbox_html_a874debae00b76010913ba6bc1afc50bf"><div class="ttname"><a href="classgGUIListbox.html#a874debae00b76010913ba6bc1afc50bf">gGUIListbox::clear</a></div><div class="ttdeci">void clear()</div></div>
 <div class="ttc" id="aclassgGUIListbox_html_a8af425434a393a4b45d3533edde8feea"><div class="ttname"><a href="classgGUIListbox.html#a8af425434a393a4b45d3533edde8feea">gGUIListbox::drawContent</a></div><div class="ttdeci">void drawContent()</div></div>
 <div class="ttc" id="aclassgGUIListbox_html_a96831658bb12b1bf9bb57920e5091281"><div class="ttname"><a href="classgGUIListbox.html#a96831658bb12b1bf9bb57920e5091281">gGUIListbox::setData</a></div><div class="ttdeci">void setData(int lineNo, std::string lineData)</div></div>
