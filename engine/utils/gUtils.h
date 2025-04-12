@@ -69,10 +69,26 @@
     // POSIX
 #endif
 
-#if defined(ANDROID) || TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
-#   ifndef GLIST_MOBILE
-#       define GLIST_MOBILE
-#   endif
+#if ANDROID || TARGET_OS_IPHONE || TARGET_OS_SIMULATOR || EMSCRIPTEN
+#ifndef GLIST_OPENGLES
+#define GLIST_OPENGLES 1
+#endif
+#endif
+
+#if EMSCRIPTEN
+#ifndef GLIST_WEB
+#define GLIST_WEB 1
+#endif
+#endif
+#if TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
+#ifndef GLIST_IOS
+#define GLIST_IOS 1
+#endif
+#endif
+#if ANDROID
+#ifndef GLIST_ANDROID
+#define GLIST_ANDROID 1
+#endif
 #endif
 
 
@@ -131,6 +147,11 @@ uint64_t gGetRamSizeUsedbyGE();
 #if  defined(WIN32) || defined(LINUX) || defined(APPLE)    //Total Ram Size
 uint64_t gGetTotalRamSize();
 #endif
+
+/*
+ * Rotates The Pixel Data upside down. Hence rotates flips the image upside down
+ */
+void gFlipImageDataVertically(unsigned char* pixelData, int width, int height, int numChannels);
 
 std::string gGetTimestampString();
 std::string gGetTimestampString(const std::string& format);

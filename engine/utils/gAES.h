@@ -8,6 +8,7 @@
 #ifndef UTILS_GAES_H_
 #define UTILS_GAES_H_
 
+#ifndef EMSCRIPTEN
 #include <openssl/conf.h>
 #include <openssl/evp.h>
 #include <openssl/err.h>
@@ -32,4 +33,6 @@ private:
     void handleErrors(void);
     void clean();
 };
+#endif
+
 #endif /* UTILS_GAES_H_ */

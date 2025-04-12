@@ -5,6 +5,8 @@
  *      Author: Acer
  */
 
+#if !defined(EMSCRIPTEN)
+
 #include "gFmodSound.h"
 
 gFmodSound::gFmodSound() {
@@ -112,5 +114,4 @@ void gFmodSound::setVolume(float volume) {
 		FMOD_Channel_SetVolume(channel, volume);
 	}
 }
-
-
+#endif
