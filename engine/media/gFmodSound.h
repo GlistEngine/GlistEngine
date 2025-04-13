@@ -2,7 +2,7 @@
  * gFmodSound.h
  *
  *  Created on: 18 Kas 2020
- *      Author: Acer
+ *      Author: Noyan Culum
  */
 
 #ifndef MEDIA_GFMODSOUND_H_
@@ -13,106 +13,130 @@
 #include "fmod_common.h"
 
 /**
- * gFmodSound, contains functions for sound playing using Fmod library.
+ * @class gFmodSound
+ * @brief A sound player class using the FMOD audio engine.
  *
- * Uses gBaseSound as Parent
+ * Inherits from gBaseSound and provides basic functionality for loading,
+ * playing, pausing, stopping, and managing sound properties such as volume,
+ * loop type, and playback position.
  */
-
-class gFmodSound: public gBaseSound {
+class gFmodSound : public gBaseSound {
 public:
-	gFmodSound();
-	~gFmodSound();
+    gFmodSound();
+    ~gFmodSound();
 
-	/**
-	 * Sets the sound data by loading the sound file from the provided path.
-	 *
-	 * @param soundPath the local project path for the sound file.
-	 *
-	 * @return returns generated id of the sound file.
-	 */
-	int loadSound(const std::string& soundPath);
+    /**
+     * @brief Loads the sound file from the given full filesystem path.
+     *
+     * @param fullPath The full absolute path to the sound file.
+     * @return int 1 if successful, 0 otherwise.
+     */
+    int load(const std::string& fullPath) override;
 
-	/**
-	 * Sets the sound data by loading the sound file from the provided path.
-	 *
-	 * @param fullPath the local computer path for the sound file.
-	 *
-	 * @return returns generated id of the sound file.
-	 */
-	int load(const std::string& fullPath);
+    /**
+     * @brief Loads the sound file from the given project-relative path.
+     *
+     * @param soundPath Project-relative path to the sound file.
+     * @return int 1 if successful, 0 otherwise.
+     */
+    int loadSound(const std::string& soundPath) override;
 
-	/**
-	 * Plays the sound file.
-	 */
-	void play();
+    /**
+     * @brief Starts or resumes sound playback.
+     */
+    void play() override;
 
-	/**
-	 * Pauses the sound file that is currently playing also resumes it.
-	 *
-	 * @param isPaused checks and returns bool variable whether the sound is stopped or not.
-	 */
-	void setPaused(bool isPaused);
+    /**
+     * @brief Pauses or resumes playback.
+     *
+     * @param isPaused True to pause, false to resume.
+     */
+    void setPaused(bool isPaused) override;
 
-	/**
-	 * Stops the currently playing sound file.
-	 */
-	void stop();
+    /**
+     * @brief Stops playback and resets the position to the beginning.
+     */
+    void stop() override;
 
-	/**
-	 * Closes the currently playing sound file.
-	 */
-	void close();
+    /**
+     * @brief Frees FMOD resources related to this sound.
+     */
+    void close() override;
 
-	/**
-	 * Returns bool variable whether the sound file is playing or not.
-	 */
-	bool isPlaying();
+    bool isPlaying() override;
 
-	/**
-	 * The loop type.
-	 *
-	 * @param loopType parameter for the loop type.
-	 */
-	void setLoopType(int loopType);
+    bool isPaused() override;
 
-	/**
-	 * Returns the duration of the sound file.
-	 *
-	 * @return The duration.
-	 */
-	int getDuration() const;
+    bool isLoaded() override {
+        return isloaded;
+    }
 
-	/**
-	 * The position in time for the playing sound file.
-	 *
-	 * @param position Parameter for position.
-	 */
-	void setPosition(int position);
+    LoopType getLoopType() override;
 
-	/**
-	 * Returns the position in time for the playing sound file.
-	 * Please note that, one may change the position after the sound starts playing.
-	 *
-	 * @return the position in time.
-	 */
-	int getPosition();
+    /**
+     * @brief Sets the loop type for the sound.
+     *
+     * @param loopType The loop type to use.
+     */
+    void setLoopType(LoopType loopType) override;
 
-	/**
-	 * Sets the volume for the playing sound file.
-	 * Please note that, one may change the volume after the sound starts playing
-	 *
-	 * @param volume Parameter for volume..
-	 */
-	void setVolume(float volume);
+    /**
+     * @brief Returns the duration of the sound in milliseconds.
+     *
+     * @return Duration in ms.
+     */
+    int getDuration() override;
+
+    /**
+     * @brief Sets the current playback position in milliseconds.
+     *
+     * @param position The new position in ms.
+     */
+    void setPosition(int position) override;
+
+    /**
+     * @brief Gets the current playback position in milliseconds.
+     *
+     * @return Position in ms.
+     */
+    int getPosition() override;
+
+    /**
+     * @brief Gets the current volume level.
+     *
+     * @return Volume between 0.0 and 1.0.
+     */
+    float getVolume() override;
+
+    /**
+     * @brief Sets the volume level.
+     *
+     * @param volume Volume between 0.0 (mute) and 1.0 (max).
+     */
+    void setVolume(float volume) override;
+
+    /**
+     * @brief Gets the path to the currently loaded file.
+     *
+     * @return File path as a string reference.
+     */
+    const std::string& getPath() override;
 
 private:
-	FMOD_SYSTEM *system;
-	FMOD_SOUND *sound1;
-    FMOD_CHANNEL *channel = 0;
+    bool isplaying, isloaded;
+    unsigned int position;
+    unsigned int duration;
+    bool ispaused;
+    float volume;
+    LoopType looptype;
+    std::string filepath;
+
+    FMOD_SYSTEM* system = nullptr;
+	FMOD_SOUND* sound1 = nullptr;
+    FMOD_CHANNEL* channel = nullptr;
     FMOD_RESULT result;
     unsigned int version;
-    void *extradriverdata = 0;
-    int ip;
+    void* extradriverdata = nullptr;
 };
 
 
