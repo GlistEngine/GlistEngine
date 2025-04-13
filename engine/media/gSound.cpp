@@ -126,8 +126,8 @@ int gSound::getPosition() {
 
 void gSound::setLoopType(LoopType loopType) {
     this->looptype = loopType;
-    if(isloaded) {
-        ma_sound_set_looping(&sound, loopType != LOOPTYPE_NONE);
+    if(isloaded && loopType != LOOPTYPE_DEFAULT) {
+        ma_sound_set_looping(&sound, loopType == LOOPTYPE_NORMAL);
     }
 }
 
