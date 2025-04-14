@@ -1,6 +1,4 @@
 var searchData=
 [
-  ['tabposition_0',['TabPosition',['../classgGUINotebook.html#ad07430b2272895bd64cdfd33a1c2cf3b',1,'gGUINotebook']]],
-  ['triggercondition_1',['TriggerCondition',['../gSpriteAnimation_8h.html#a05ace1778679794e816adbd5d83eb7bc',1,'gSpriteAnimation.h']]],
-  ['type_2',['TYPE',['../classgGUIProgressBar.html#a3df3b3f959627ebe32bddbbd4d43fa68',1,'gGUIProgressBar']]]
+  ['objects_0',['objects',['../classgGUITooltipText.html#a2cedadc240d53936d63f66ecb36e771a',1,'gGUITooltipText']]]
 ];

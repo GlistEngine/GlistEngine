@@ -145,6 +145,7 @@ var annotated_dup =
     [ "gSkinnedMesh", "classgSkinnedMesh.html", "classgSkinnedMesh" ],
     [ "gSkybox", "classgSkybox.html", "classgSkybox" ],
     [ "gSoftFocus", "classgSoftFocus.html", "classgSoftFocus" ],
+    [ "gSound", "classgSound.html", "classgSound" ],
     [ "gSphere", "classgSphere.html", "classgSphere" ],
     [ "gSpriteAnimation", "classgSpriteAnimation.html", "classgSpriteAnimation" ],
     [ "gSpriteAnimator", "classgSpriteAnimator.html", "classgSpriteAnimator" ],

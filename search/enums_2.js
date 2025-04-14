@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['mode_0',['Mode',['../classgFile.html#a3819f303037060ce0d25aa23a135d94f',1,'gFile']]]
+  ['looptype_0',['LoopType',['../classgBaseSound.html#a9a2c864371ad1dc1af545577445f05ac',1,'gBaseSound']]]
 ];

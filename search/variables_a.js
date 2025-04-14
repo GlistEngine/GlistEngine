@@ -23,8 +23,5 @@ var searchData=
   ['loglevel_5fwarning_20',['LOGLEVEL_WARNING',['../classgObject.html#a2cb5d026aa2757c9163808631602c9c2',1,'gObject']]],
   ['loglevelname_21',['loglevelname',['../classgLog.html#aa9bfe4373ae6e8e204bc02ee6a134371',1,'gLog']]],
   ['logmessage_22',['logmessage',['../classgLog.html#af4b0856d02e15424b34b822c6fc0586d',1,'gLog']]],
-  ['logtag_23',['logtag',['../classgLog.html#a3b3ee053e6d2b7f74fe0939f68125e99',1,'gLog']]],
-  ['looptype_5fdefault_24',['LOOPTYPE_DEFAULT',['../classgBaseSound.html#a448944bccca9bc2bd4a49651c1c0544c',1,'gBaseSound']]],
-  ['looptype_5fnone_25',['LOOPTYPE_NONE',['../classgBaseSound.html#a21a5d6317a1d3f5997ed922262c2001c',1,'gBaseSound']]],
-  ['looptype_5fnormal_26',['LOOPTYPE_NORMAL',['../classgBaseSound.html#a46b50b4ef9c52eaf020090706da2e269',1,'gBaseSound']]]
+  ['logtag_23',['logtag',['../classgLog.html#a3b3ee053e6d2b7f74fe0939f68125e99',1,'gLog']]]
 ];

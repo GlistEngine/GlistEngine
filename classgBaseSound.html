@@ -91,11 +91,10 @@ $(document).ready(function(){initNavTree('classgBaseSound.html',''); initResizab
 
 <div class="header">
   <div class="summary">
+<a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pub-static-attribs">Static Public Attributes</a> &#124;
-<a href="#pro-attribs">Protected Attributes</a> &#124;
 <a href="classgBaseSound-members.html">List of all members</a>  </div>
-  <div class="headertitle"><div class="title">gBaseSound Class Reference</div></div>
+  <div class="headertitle"><div class="title">gBaseSound Class Reference<span class="mlabels"><span class="mlabel">abstract</span></span></div></div>
 </div><!--header-->
 <div class="contents">
 
@@ -105,11 +104,13 @@ Inheritance diagram for gBaseSound:</div>
 <div class="dyncontent">
 <div class="center"><img src="classgBaseSound__inherit__graph.png" border="0" usemap="#agBaseSound_inherit__map" alt="Inheritance graph"/></div>
 <map name="agBaseSound_inherit__map" id="agBaseSound_inherit__map">
-<area shape="rect" title=" " alt="" coords="7,79,110,104"/>
-<area shape="rect" href="classgFmodSound.html" title=" " alt="" coords="5,152,112,177"/>
-<area shape="poly" title=" " alt="" coords="61,118,61,152,56,152,56,118"/>
-<area shape="rect" href="classgObject.html" title=" " alt="" coords="23,5,95,31"/>
-<area shape="poly" title=" " alt="" coords="61,44,61,79,56,79,56,44"/>
+<area shape="rect" title=" " alt="" coords="63,79,166,104"/>
+<area shape="rect" href="classgFmodSound.html" title="A sound player class using the FMOD audio engine." alt="" coords="5,152,112,177"/>
+<area shape="poly" title=" " alt="" coords="99,117,70,154,66,150,95,113"/>
+<area shape="rect" href="classgSound.html" title="A sound class using miniaudio with ma_engine and ma_sound." alt="" coords="137,152,207,177"/>
+<area shape="poly" title=" " alt="" coords="135,113,165,150,161,154,130,116"/>
+<area shape="rect" href="classgObject.html" title=" " alt="" coords="79,5,151,31"/>
+<area shape="poly" title=" " alt="" coords="117,44,117,79,112,79,112,44"/>
 </map>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <div class="dynheader">
@@ -123,46 +124,50 @@ Collaboration diagram for gBaseSound:</div>
 </map>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:a9a2c864371ad1dc1af545577445f05ac" id="r_a9a2c864371ad1dc1af545577445f05ac"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBaseSound.html#a9a2c864371ad1dc1af545577445f05ac">LoopType</a> : int { <a class="el" href="classgBaseSound.html#a9a2c864371ad1dc1af545577445f05acab8ca9027855d5e9d8c8350ff6f468ba0">LOOPTYPE_DEFAULT</a> = 0
+, <a class="el" href="classgBaseSound.html#a9a2c864371ad1dc1af545577445f05acab15ab13b292335f3f7082444e2c554e1">LOOPTYPE_NONE</a> = 1
+, <a class="el" href="classgBaseSound.html#a9a2c864371ad1dc1af545577445f05aca11c46067c9272c024bf84d7230b8336b">LOOPTYPE_NORMAL</a> = 2
+ }</td></tr>
+<tr class="separator:a9a2c864371ad1dc1af545577445f05ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ae8a4f08c22bdfa52b6230c81fe98fa03" id="r_ae8a4f08c22bdfa52b6230c81fe98fa03"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBaseSound.html#ae8a4f08c22bdfa52b6230c81fe98fa03">gBaseSound</a> ()</td></tr>
-<tr class="separator:ae8a4f08c22bdfa52b6230c81fe98fa03"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7ebd1a426d279b896c7351708ae61e41" id="r_a7ebd1a426d279b896c7351708ae61e41"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBaseSound.html#a7ebd1a426d279b896c7351708ae61e41">~gBaseSound</a> ()</td></tr>
-<tr class="separator:a7ebd1a426d279b896c7351708ae61e41"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abf9c9341b4f2f92fdfd9948a1f38516b" id="r_abf9c9341b4f2f92fdfd9948a1f38516b"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBaseSound.html#abf9c9341b4f2f92fdfd9948a1f38516b">load</a> (const std::string &amp;fullPath)</td></tr>
-<tr class="separator:abf9c9341b4f2f92fdfd9948a1f38516b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa22de53853b25869a418875b330e0381" id="r_aa22de53853b25869a418875b330e0381"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBaseSound.html#aa22de53853b25869a418875b330e0381">loadSound</a> (const std::string &amp;soundPath)</td></tr>
-<tr class="separator:aa22de53853b25869a418875b330e0381"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a414091aaacfedf80aebbb1b5c548d627" id="r_a414091aaacfedf80aebbb1b5c548d627"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBaseSound.html#a414091aaacfedf80aebbb1b5c548d627">play</a> ()</td></tr>
-<tr class="separator:a414091aaacfedf80aebbb1b5c548d627"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adc41bfbf42f7bc7e01409800a8576ba0" id="r_adc41bfbf42f7bc7e01409800a8576ba0"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBaseSound.html#adc41bfbf42f7bc7e01409800a8576ba0">isLoaded</a> ()</td></tr>
-<tr class="separator:adc41bfbf42f7bc7e01409800a8576ba0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae3f549829494dc7892f56275e677a79a" id="r_ae3f549829494dc7892f56275e677a79a"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBaseSound.html#ae3f549829494dc7892f56275e677a79a">isPlaying</a> ()</td></tr>
-<tr class="separator:ae3f549829494dc7892f56275e677a79a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afb92b8dc4e042b28adfb6656c2a3ab5e" id="r_afb92b8dc4e042b28adfb6656c2a3ab5e"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBaseSound.html#afb92b8dc4e042b28adfb6656c2a3ab5e">setPaused</a> (bool <a class="el" href="classgBaseSound.html#a026087a0455de886d94d819b4410e174">isPaused</a>)</td></tr>
-<tr class="separator:afb92b8dc4e042b28adfb6656c2a3ab5e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a026087a0455de886d94d819b4410e174" id="r_a026087a0455de886d94d819b4410e174"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBaseSound.html#a026087a0455de886d94d819b4410e174">isPaused</a> ()</td></tr>
-<tr class="separator:a026087a0455de886d94d819b4410e174"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a66d20d31718d29acdfd00143b9b9ddad" id="r_a66d20d31718d29acdfd00143b9b9ddad"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBaseSound.html#a66d20d31718d29acdfd00143b9b9ddad">stop</a> ()</td></tr>
-<tr class="separator:a66d20d31718d29acdfd00143b9b9ddad"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adbc7f3f54e50ef156afd2fd798a51ce6" id="r_adbc7f3f54e50ef156afd2fd798a51ce6"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBaseSound.html#adbc7f3f54e50ef156afd2fd798a51ce6">close</a> ()</td></tr>
-<tr class="separator:adbc7f3f54e50ef156afd2fd798a51ce6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0c758d07934f7aeaac8ba6f69faeca64" id="r_a0c758d07934f7aeaac8ba6f69faeca64"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBaseSound.html#a0c758d07934f7aeaac8ba6f69faeca64">getDuration</a> ()</td></tr>
-<tr class="separator:a0c758d07934f7aeaac8ba6f69faeca64"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4f8200cc9273b0298d882213fb0ce6a1" id="r_a4f8200cc9273b0298d882213fb0ce6a1"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBaseSound.html#a4f8200cc9273b0298d882213fb0ce6a1">setPosition</a> (int <a class="el" href="classgBaseSound.html#a6326635a0190a0436f655bb81968dab4">position</a>)</td></tr>
-<tr class="separator:a4f8200cc9273b0298d882213fb0ce6a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7f2a2a5b1ad0380c715ef6f588e8b7d4" id="r_a7f2a2a5b1ad0380c715ef6f588e8b7d4"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBaseSound.html#a7f2a2a5b1ad0380c715ef6f588e8b7d4">getPosition</a> ()</td></tr>
-<tr class="separator:a7f2a2a5b1ad0380c715ef6f588e8b7d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a673186016fe721248cf61cc474ae2b3f" id="r_a673186016fe721248cf61cc474ae2b3f"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBaseSound.html#a673186016fe721248cf61cc474ae2b3f">setLoopType</a> (int loopType)</td></tr>
-<tr class="separator:a673186016fe721248cf61cc474ae2b3f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3ca594f33094a5a2a1d069c9d984a83c" id="r_a3ca594f33094a5a2a1d069c9d984a83c"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBaseSound.html#a3ca594f33094a5a2a1d069c9d984a83c">getLoopType</a> ()</td></tr>
-<tr class="separator:a3ca594f33094a5a2a1d069c9d984a83c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acebe3e3e2c9100bbe9ee86ff4f1eae80" id="r_acebe3e3e2c9100bbe9ee86ff4f1eae80"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBaseSound.html#acebe3e3e2c9100bbe9ee86ff4f1eae80">setVolume</a> (float <a class="el" href="classgBaseSound.html#a9d86d120f9168018e808a4e5491547b2">volume</a>)</td></tr>
-<tr class="separator:acebe3e3e2c9100bbe9ee86ff4f1eae80"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a017f0a1ba03f96445bc262ee45f6db66" id="r_a017f0a1ba03f96445bc262ee45f6db66"><td class="memItemLeft" align="right" valign="top">virtual float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBaseSound.html#a017f0a1ba03f96445bc262ee45f6db66">getVolume</a> ()</td></tr>
-<tr class="separator:a017f0a1ba03f96445bc262ee45f6db66"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abbc4f42ea6c9a32e82ac5aed5f71b813" id="r_abbc4f42ea6c9a32e82ac5aed5f71b813"><td class="memItemLeft" align="right" valign="top">const std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBaseSound.html#abbc4f42ea6c9a32e82ac5aed5f71b813">getPath</a> ()</td></tr>
-<tr class="separator:abbc4f42ea6c9a32e82ac5aed5f71b813"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa302b3a95d86d7e84de9a884c30d8de3" id="r_aa302b3a95d86d7e84de9a884c30d8de3"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBaseSound.html#aa302b3a95d86d7e84de9a884c30d8de3">load</a> (const std::string &amp;fullPath)=0</td></tr>
+<tr class="separator:aa302b3a95d86d7e84de9a884c30d8de3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aab12812c11f2df2011b8817d8f940f73" id="r_aab12812c11f2df2011b8817d8f940f73"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBaseSound.html#aab12812c11f2df2011b8817d8f940f73">loadSound</a> (const std::string &amp;soundPath)=0</td></tr>
+<tr class="separator:aab12812c11f2df2011b8817d8f940f73"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1fee2f7af3c52b2ab253f70f60b52ea7" id="r_a1fee2f7af3c52b2ab253f70f60b52ea7"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBaseSound.html#a1fee2f7af3c52b2ab253f70f60b52ea7">play</a> ()=0</td></tr>
+<tr class="separator:a1fee2f7af3c52b2ab253f70f60b52ea7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab76dda07b60998b0bd9691ecfaa633b9" id="r_ab76dda07b60998b0bd9691ecfaa633b9"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBaseSound.html#ab76dda07b60998b0bd9691ecfaa633b9">isLoaded</a> ()=0</td></tr>
+<tr class="separator:ab76dda07b60998b0bd9691ecfaa633b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a99a89eadf9471de2e197b7f3f387d8e0" id="r_a99a89eadf9471de2e197b7f3f387d8e0"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBaseSound.html#a99a89eadf9471de2e197b7f3f387d8e0">isPlaying</a> ()=0</td></tr>
+<tr class="separator:a99a89eadf9471de2e197b7f3f387d8e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a86139c83cc182f52d0b742fa9f4a1700" id="r_a86139c83cc182f52d0b742fa9f4a1700"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBaseSound.html#a86139c83cc182f52d0b742fa9f4a1700">setPaused</a> (bool <a class="el" href="classgBaseSound.html#a516b9bbda93ead6ee414c79c1a3c14ce">isPaused</a>)=0</td></tr>
+<tr class="separator:a86139c83cc182f52d0b742fa9f4a1700"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a516b9bbda93ead6ee414c79c1a3c14ce" id="r_a516b9bbda93ead6ee414c79c1a3c14ce"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBaseSound.html#a516b9bbda93ead6ee414c79c1a3c14ce">isPaused</a> ()=0</td></tr>
+<tr class="separator:a516b9bbda93ead6ee414c79c1a3c14ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7e0d6604acec774a109a1c23149839e9" id="r_a7e0d6604acec774a109a1c23149839e9"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBaseSound.html#a7e0d6604acec774a109a1c23149839e9">stop</a> ()=0</td></tr>
+<tr class="separator:a7e0d6604acec774a109a1c23149839e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7434759912967a569eae23234bd9ff93" id="r_a7434759912967a569eae23234bd9ff93"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBaseSound.html#a7434759912967a569eae23234bd9ff93">close</a> ()=0</td></tr>
+<tr class="separator:a7434759912967a569eae23234bd9ff93"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9d9fc9a35f86bed3746512fbdf815a07" id="r_a9d9fc9a35f86bed3746512fbdf815a07"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBaseSound.html#a9d9fc9a35f86bed3746512fbdf815a07">getDuration</a> ()=0</td></tr>
+<tr class="separator:a9d9fc9a35f86bed3746512fbdf815a07"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0d077108700f33c31311c3911e877029" id="r_a0d077108700f33c31311c3911e877029"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBaseSound.html#a0d077108700f33c31311c3911e877029">setPosition</a> (int position)=0</td></tr>
+<tr class="separator:a0d077108700f33c31311c3911e877029"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac826a6ada1c7258de142ca7f050669a6" id="r_ac826a6ada1c7258de142ca7f050669a6"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBaseSound.html#ac826a6ada1c7258de142ca7f050669a6">getPosition</a> ()=0</td></tr>
+<tr class="separator:ac826a6ada1c7258de142ca7f050669a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abd832bad0290851da1ab95047eea79f5" id="r_abd832bad0290851da1ab95047eea79f5"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBaseSound.html#abd832bad0290851da1ab95047eea79f5">setLoopType</a> (<a class="el" href="classgBaseSound.html#a9a2c864371ad1dc1af545577445f05ac">LoopType</a> loopType)=0</td></tr>
+<tr class="separator:abd832bad0290851da1ab95047eea79f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0b9b48f5850f0b55794d0705fdf11f33" id="r_a0b9b48f5850f0b55794d0705fdf11f33"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classgBaseSound.html#a9a2c864371ad1dc1af545577445f05ac">LoopType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBaseSound.html#a0b9b48f5850f0b55794d0705fdf11f33">getLoopType</a> ()=0</td></tr>
+<tr class="separator:a0b9b48f5850f0b55794d0705fdf11f33"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af6fd6fe237896cd0351924c0ceb9d967" id="r_af6fd6fe237896cd0351924c0ceb9d967"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBaseSound.html#af6fd6fe237896cd0351924c0ceb9d967">setVolume</a> (float volume)=0</td></tr>
+<tr class="separator:af6fd6fe237896cd0351924c0ceb9d967"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adef12a56ef59d1d7933940e55745f360" id="r_adef12a56ef59d1d7933940e55745f360"><td class="memItemLeft" align="right" valign="top">virtual float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBaseSound.html#adef12a56ef59d1d7933940e55745f360">getVolume</a> ()=0</td></tr>
+<tr class="separator:adef12a56ef59d1d7933940e55745f360"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a990e69fd2bd18904fe6330cfb0728544" id="r_a990e69fd2bd18904fe6330cfb0728544"><td class="memItemLeft" align="right" valign="top">virtual const std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBaseSound.html#a990e69fd2bd18904fe6330cfb0728544">getPath</a> ()=0</td></tr>
+<tr class="separator:a990e69fd2bd18904fe6330cfb0728544"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classgObject"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classgObject')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classgObject.html">gObject</a></td></tr>
 <tr class="memitem:ac490c71f0474846ca6800028c97d02d9 inherit pub_methods_classgObject" id="r_ac490c71f0474846ca6800028c97d02d9"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgObject.html#ac490c71f0474846ca6800028c97d02d9">gObject</a> ()</td></tr>
 <tr class="separator:ac490c71f0474846ca6800028c97d02d9 inherit pub_methods_classgObject"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -182,41 +187,6 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:abfb3e727e239860e92e52be62b13f87a inherit pub_methods_classgObject"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa1eb5154520926fd6228394b47c3a752 inherit pub_methods_classgObject" id="r_aa1eb5154520926fd6228394b47c3a752"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgObject.html#aa1eb5154520926fd6228394b47c3a752">loge</a> (std::string tag, std::string message)</td></tr>
 <tr class="separator:aa1eb5154520926fd6228394b47c3a752 inherit pub_methods_classgObject"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
-Static Public Attributes</h2></td></tr>
-<tr class="memitem:a448944bccca9bc2bd4a49651c1c0544c" id="r_a448944bccca9bc2bd4a49651c1c0544c"><td class="memItemLeft" align="right" valign="top">static const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBaseSound.html#a448944bccca9bc2bd4a49651c1c0544c">LOOPTYPE_DEFAULT</a> = 0</td></tr>
-<tr class="separator:a448944bccca9bc2bd4a49651c1c0544c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a21a5d6317a1d3f5997ed922262c2001c" id="r_a21a5d6317a1d3f5997ed922262c2001c"><td class="memItemLeft" align="right" valign="top">static const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBaseSound.html#a21a5d6317a1d3f5997ed922262c2001c">LOOPTYPE_NONE</a> = 1</td></tr>
-<tr class="separator:a21a5d6317a1d3f5997ed922262c2001c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a46b50b4ef9c52eaf020090706da2e269" id="r_a46b50b4ef9c52eaf020090706da2e269"><td class="memItemLeft" align="right" valign="top">static const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBaseSound.html#a46b50b4ef9c52eaf020090706da2e269">LOOPTYPE_NORMAL</a> = 2</td></tr>
-<tr class="separator:a46b50b4ef9c52eaf020090706da2e269"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="inherit_header pub_static_attribs_classgObject"><td colspan="2" onclick="javascript:toggleInherit('pub_static_attribs_classgObject')"><img src="closed.png" alt="-"/>&#160;Static Public Attributes inherited from <a class="el" href="classgObject.html">gObject</a></td></tr>
-<tr class="memitem:a8e9ef5cc3f67258b31ed663f39d43feb inherit pub_static_attribs_classgObject" id="r_a8e9ef5cc3f67258b31ed663f39d43feb"><td class="memItemLeft" align="right" valign="top">static const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgObject.html#a8e9ef5cc3f67258b31ed663f39d43feb">LOGLEVEL_SILENT</a></td></tr>
-<tr class="separator:a8e9ef5cc3f67258b31ed663f39d43feb inherit pub_static_attribs_classgObject"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0b18378c4aefc8b8db6bc60ba9088dc1 inherit pub_static_attribs_classgObject" id="r_a0b18378c4aefc8b8db6bc60ba9088dc1"><td class="memItemLeft" align="right" valign="top">static const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgObject.html#a0b18378c4aefc8b8db6bc60ba9088dc1">LOGLEVEL_DEBUG</a></td></tr>
-<tr class="separator:a0b18378c4aefc8b8db6bc60ba9088dc1 inherit pub_static_attribs_classgObject"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3f306a20aabb87b2f87c4fb3d6de60f0 inherit pub_static_attribs_classgObject" id="r_a3f306a20aabb87b2f87c4fb3d6de60f0"><td class="memItemLeft" align="right" valign="top">static const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgObject.html#a3f306a20aabb87b2f87c4fb3d6de60f0">LOGLEVEL_INFO</a></td></tr>
-<tr class="separator:a3f306a20aabb87b2f87c4fb3d6de60f0 inherit pub_static_attribs_classgObject"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2cb5d026aa2757c9163808631602c9c2 inherit pub_static_attribs_classgObject" id="r_a2cb5d026aa2757c9163808631602c9c2"><td class="memItemLeft" align="right" valign="top">static const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgObject.html#a2cb5d026aa2757c9163808631602c9c2">LOGLEVEL_WARNING</a></td></tr>
-<tr class="separator:a2cb5d026aa2757c9163808631602c9c2 inherit pub_static_attribs_classgObject"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2e7e512031a455faf43eb905a1e1b67e inherit pub_static_attribs_classgObject" id="r_a2e7e512031a455faf43eb905a1e1b67e"><td class="memItemLeft" align="right" valign="top">static const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgObject.html#a2e7e512031a455faf43eb905a1e1b67e">LOGLEVEL_ERROR</a></td></tr>
-<tr class="separator:a2e7e512031a455faf43eb905a1e1b67e inherit pub_static_attribs_classgObject"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-attribs" name="pro-attribs"></a>
-Protected Attributes</h2></td></tr>
-<tr class="memitem:a978e51307a3886f328cccae20a40fce7" id="r_a978e51307a3886f328cccae20a40fce7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBaseSound.html#a978e51307a3886f328cccae20a40fce7">isplaying</a></td></tr>
-<tr class="separator:a978e51307a3886f328cccae20a40fce7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4eeedba32dc944e21ba6601f877e34a0" id="r_a4eeedba32dc944e21ba6601f877e34a0"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBaseSound.html#a4eeedba32dc944e21ba6601f877e34a0">isloaded</a></td></tr>
-<tr class="separator:a4eeedba32dc944e21ba6601f877e34a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6326635a0190a0436f655bb81968dab4" id="r_a6326635a0190a0436f655bb81968dab4"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBaseSound.html#a6326635a0190a0436f655bb81968dab4">position</a></td></tr>
-<tr class="separator:a6326635a0190a0436f655bb81968dab4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5002d71b6631ddc155b136145cb98181" id="r_a5002d71b6631ddc155b136145cb98181"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBaseSound.html#a5002d71b6631ddc155b136145cb98181">duration</a></td></tr>
-<tr class="separator:a5002d71b6631ddc155b136145cb98181"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abed1d7be69307aea8048bf6073fc0d8f" id="r_abed1d7be69307aea8048bf6073fc0d8f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBaseSound.html#abed1d7be69307aea8048bf6073fc0d8f">ispaused</a></td></tr>
-<tr class="separator:abed1d7be69307aea8048bf6073fc0d8f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9d86d120f9168018e808a4e5491547b2" id="r_a9d86d120f9168018e808a4e5491547b2"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBaseSound.html#a9d86d120f9168018e808a4e5491547b2">volume</a></td></tr>
-<tr class="separator:a9d86d120f9168018e808a4e5491547b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="inherited" name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
@@ -247,6 +217,17 @@ Additional Inherited Members</h2></td></tr>
 <tr class="separator:a21e2d529156c586503c87a3460551cb7 inherit pub_static_methods_classgObject"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaebd7b33318f1c3936706759972f9ba2 inherit pub_static_methods_classgObject" id="r_aaebd7b33318f1c3936706759972f9ba2"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgObject.html#aaebd7b33318f1c3936706759972f9ba2">setCurrentResolution</a> (int scalingNo, int currentResolutionNo)</td></tr>
 <tr class="separator:aaebd7b33318f1c3936706759972f9ba2 inherit pub_static_methods_classgObject"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_static_attribs_classgObject"><td colspan="2" onclick="javascript:toggleInherit('pub_static_attribs_classgObject')"><img src="closed.png" alt="-"/>&#160;Static Public Attributes inherited from <a class="el" href="classgObject.html">gObject</a></td></tr>
+<tr class="memitem:a8e9ef5cc3f67258b31ed663f39d43feb inherit pub_static_attribs_classgObject" id="r_a8e9ef5cc3f67258b31ed663f39d43feb"><td class="memItemLeft" align="right" valign="top">static const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgObject.html#a8e9ef5cc3f67258b31ed663f39d43feb">LOGLEVEL_SILENT</a></td></tr>
+<tr class="separator:a8e9ef5cc3f67258b31ed663f39d43feb inherit pub_static_attribs_classgObject"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0b18378c4aefc8b8db6bc60ba9088dc1 inherit pub_static_attribs_classgObject" id="r_a0b18378c4aefc8b8db6bc60ba9088dc1"><td class="memItemLeft" align="right" valign="top">static const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgObject.html#a0b18378c4aefc8b8db6bc60ba9088dc1">LOGLEVEL_DEBUG</a></td></tr>
+<tr class="separator:a0b18378c4aefc8b8db6bc60ba9088dc1 inherit pub_static_attribs_classgObject"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3f306a20aabb87b2f87c4fb3d6de60f0 inherit pub_static_attribs_classgObject" id="r_a3f306a20aabb87b2f87c4fb3d6de60f0"><td class="memItemLeft" align="right" valign="top">static const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgObject.html#a3f306a20aabb87b2f87c4fb3d6de60f0">LOGLEVEL_INFO</a></td></tr>
+<tr class="separator:a3f306a20aabb87b2f87c4fb3d6de60f0 inherit pub_static_attribs_classgObject"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2cb5d026aa2757c9163808631602c9c2 inherit pub_static_attribs_classgObject" id="r_a2cb5d026aa2757c9163808631602c9c2"><td class="memItemLeft" align="right" valign="top">static const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgObject.html#a2cb5d026aa2757c9163808631602c9c2">LOGLEVEL_WARNING</a></td></tr>
+<tr class="separator:a2cb5d026aa2757c9163808631602c9c2 inherit pub_static_attribs_classgObject"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2e7e512031a455faf43eb905a1e1b67e inherit pub_static_attribs_classgObject" id="r_a2e7e512031a455faf43eb905a1e1b67e"><td class="memItemLeft" align="right" valign="top">static const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgObject.html#a2e7e512031a455faf43eb905a1e1b67e">LOGLEVEL_ERROR</a></td></tr>
+<tr class="separator:a2e7e512031a455faf43eb905a1e1b67e inherit pub_static_attribs_classgObject"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_static_attribs_classgObject"><td colspan="2" onclick="javascript:toggleInherit('pro_static_attribs_classgObject')"><img src="closed.png" alt="-"/>&#160;Static Protected Attributes inherited from <a class="el" href="classgObject.html">gObject</a></td></tr>
 <tr class="memitem:ad65017496d33d18901dd59bd79a993b6 inherit pro_static_attribs_classgObject" id="r_ad65017496d33d18901dd59bd79a993b6"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgObject.html#ad65017496d33d18901dd59bd79a993b6">renderpassnum</a></td></tr>
 <tr class="separator:ad65017496d33d18901dd59bd79a993b6 inherit pro_static_attribs_classgObject"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -257,52 +238,29 @@ Additional Inherited Members</h2></td></tr>
 <tr class="memitem:a9a7e5f300e8e38ad6f0beb85ad840c52 inherit pro_static_attribs_classgObject" id="r_a9a7e5f300e8e38ad6f0beb85ad840c52"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgObject.html#a9a7e5f300e8e38ad6f0beb85ad840c52">releaseresolution</a></td></tr>
 <tr class="separator:a9a7e5f300e8e38ad6f0beb85ad840c52 inherit pro_static_attribs_classgObject"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="ae8a4f08c22bdfa52b6230c81fe98fa03" name="ae8a4f08c22bdfa52b6230c81fe98fa03"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae8a4f08c22bdfa52b6230c81fe98fa03">&#9670;&#160;</a></span>gBaseSound()</h2>
+<h2 class="groupheader">Member Enumeration Documentation</h2>
+<a id="a9a2c864371ad1dc1af545577445f05ac" name="a9a2c864371ad1dc1af545577445f05ac"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9a2c864371ad1dc1af545577445f05ac">&#9670;&#160;</a></span>LoopType</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">gBaseSound::gBaseSound </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
+          <td class="memname">enum <a class="el" href="classgBaseSound.html#a9a2c864371ad1dc1af545577445f05ac">gBaseSound::LoopType</a> : int</td>
         </tr>
       </table>
 </div><div class="memdoc">
-
-</div>
-</div>
-<a id="a7ebd1a426d279b896c7351708ae61e41" name="a7ebd1a426d279b896c7351708ae61e41"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7ebd1a426d279b896c7351708ae61e41">&#9670;&#160;</a></span>~gBaseSound()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual gBaseSound::~gBaseSound </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
-  </tr>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a9a2c864371ad1dc1af545577445f05acab8ca9027855d5e9d8c8350ff6f468ba0" name="a9a2c864371ad1dc1af545577445f05acab8ca9027855d5e9d8c8350ff6f468ba0"></a>LOOPTYPE_DEFAULT&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a9a2c864371ad1dc1af545577445f05acab15ab13b292335f3f7082444e2c554e1" name="a9a2c864371ad1dc1af545577445f05acab15ab13b292335f3f7082444e2c554e1"></a>LOOPTYPE_NONE&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a9a2c864371ad1dc1af545577445f05aca11c46067c9272c024bf84d7230b8336b" name="a9a2c864371ad1dc1af545577445f05aca11c46067c9272c024bf84d7230b8336b"></a>LOOPTYPE_NORMAL&#160;</td><td class="fielddoc"></td></tr>
 </table>
-</div><div class="memdoc">
 
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="adbc7f3f54e50ef156afd2fd798a51ce6" name="adbc7f3f54e50ef156afd2fd798a51ce6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#adbc7f3f54e50ef156afd2fd798a51ce6">&#9670;&#160;</a></span>close()</h2>
+<a id="a7434759912967a569eae23234bd9ff93" name="a7434759912967a569eae23234bd9ff93"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7434759912967a569eae23234bd9ff93">&#9670;&#160;</a></span>close()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -319,17 +277,17 @@ Additional Inherited Members</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
-<p>Reimplemented in <a class="el" href="classgFmodSound.html#a070c5eed26dd01669c6ed9eca134d9d8">gFmodSound</a>.</p>
+<p>Implemented in <a class="el" href="classgFmodSound.html#a1957357d0ad389e334c0e64120b57a93">gFmodSound</a>, and <a class="el" href="classgSound.html#ac5222797596a89843bf5a272b68d89d1">gSound</a>.</p>
 
 </div>
 </div>
-<a id="a0c758d07934f7aeaac8ba6f69faeca64" name="a0c758d07934f7aeaac8ba6f69faeca64"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0c758d07934f7aeaac8ba6f69faeca64">&#9670;&#160;</a></span>getDuration()</h2>
+<a id="a9d9fc9a35f86bed3746512fbdf815a07" name="a9d9fc9a35f86bed3746512fbdf815a07"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9d9fc9a35f86bed3746512fbdf815a07">&#9670;&#160;</a></span>getDuration()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -346,15 +304,17 @@ Additional Inherited Members</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
+<p>Implemented in <a class="el" href="classgFmodSound.html#a5c21fb5412a7b06981117c3709301c4e">gFmodSound</a>, and <a class="el" href="classgSound.html#a98ac99fc5cbf53a388719e612fb96aca">gSound</a>.</p>
+
 </div>
 </div>
-<a id="a3ca594f33094a5a2a1d069c9d984a83c" name="a3ca594f33094a5a2a1d069c9d984a83c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3ca594f33094a5a2a1d069c9d984a83c">&#9670;&#160;</a></span>getLoopType()</h2>
+<a id="a0b9b48f5850f0b55794d0705fdf11f33" name="a0b9b48f5850f0b55794d0705fdf11f33"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0b9b48f5850f0b55794d0705fdf11f33">&#9670;&#160;</a></span>getLoopType()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -363,7 +323,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual int gBaseSound::getLoopType </td>
+          <td class="memname">virtual <a class="el" href="classgBaseSound.html#a9a2c864371ad1dc1af545577445f05ac">LoopType</a> gBaseSound::getLoopType </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -371,32 +331,44 @@ Additional Inherited Members</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
+<p>Implemented in <a class="el" href="classgFmodSound.html#a050a2d09ad337c7ccae9c32bf2081d61">gFmodSound</a>, and <a class="el" href="classgSound.html#a44ed1699e6769f03fcd58f9400e40b77">gSound</a>.</p>
+
 </div>
 </div>
-<a id="abbc4f42ea6c9a32e82ac5aed5f71b813" name="abbc4f42ea6c9a32e82ac5aed5f71b813"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abbc4f42ea6c9a32e82ac5aed5f71b813">&#9670;&#160;</a></span>getPath()</h2>
+<a id="a990e69fd2bd18904fe6330cfb0728544" name="a990e69fd2bd18904fe6330cfb0728544"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a990e69fd2bd18904fe6330cfb0728544">&#9670;&#160;</a></span>getPath()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">const std::string &amp; gBaseSound::getPath </td>
+          <td class="memname">virtual const std::string &amp; gBaseSound::getPath </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
+
+<p>Implemented in <a class="el" href="classgFmodSound.html#a335b14b9addbce2bcd5465152e16c9b9">gFmodSound</a>, and <a class="el" href="classgSound.html#a9db98e50016ea763ce9919d97dbe4a5d">gSound</a>.</p>
 
 </div>
 </div>
-<a id="a7f2a2a5b1ad0380c715ef6f588e8b7d4" name="a7f2a2a5b1ad0380c715ef6f588e8b7d4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7f2a2a5b1ad0380c715ef6f588e8b7d4">&#9670;&#160;</a></span>getPosition()</h2>
+<a id="ac826a6ada1c7258de142ca7f050669a6" name="ac826a6ada1c7258de142ca7f050669a6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac826a6ada1c7258de142ca7f050669a6">&#9670;&#160;</a></span>getPosition()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -413,17 +385,17 @@ Additional Inherited Members</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
-<p>Reimplemented in <a class="el" href="classgFmodSound.html#a8ee81f7c8ca9ffe519be2fe351dc1b79">gFmodSound</a>.</p>
+<p>Implemented in <a class="el" href="classgFmodSound.html#a83113da82b5ff4ef27249f6d66a143c6">gFmodSound</a>, and <a class="el" href="classgSound.html#abb1e459adee5083b99eafffab7f013b6">gSound</a>.</p>
 
 </div>
 </div>
-<a id="a017f0a1ba03f96445bc262ee45f6db66" name="a017f0a1ba03f96445bc262ee45f6db66"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a017f0a1ba03f96445bc262ee45f6db66">&#9670;&#160;</a></span>getVolume()</h2>
+<a id="adef12a56ef59d1d7933940e55745f360" name="adef12a56ef59d1d7933940e55745f360"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adef12a56ef59d1d7933940e55745f360">&#9670;&#160;</a></span>getVolume()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -440,15 +412,17 @@ Additional Inherited Members</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
+<p>Implemented in <a class="el" href="classgFmodSound.html#a3ccddc9296088d8caa78eb7e0fea8d0e">gFmodSound</a>, and <a class="el" href="classgSound.html#a389041e63cc132d795efc91c4639f162">gSound</a>.</p>
+
 </div>
 </div>
-<a id="adc41bfbf42f7bc7e01409800a8576ba0" name="adc41bfbf42f7bc7e01409800a8576ba0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#adc41bfbf42f7bc7e01409800a8576ba0">&#9670;&#160;</a></span>isLoaded()</h2>
+<a id="ab76dda07b60998b0bd9691ecfaa633b9" name="ab76dda07b60998b0bd9691ecfaa633b9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab76dda07b60998b0bd9691ecfaa633b9">&#9670;&#160;</a></span>isLoaded()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -465,15 +439,17 @@ Additional Inherited Members</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
+<p>Implemented in <a class="el" href="classgFmodSound.html#a907ad0747a2ee5840b8ffb10e14b185e">gFmodSound</a>, and <a class="el" href="classgSound.html#a1285069ce08a26372bb7df7de69bc117">gSound</a>.</p>
+
 </div>
 </div>
-<a id="a026087a0455de886d94d819b4410e174" name="a026087a0455de886d94d819b4410e174"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a026087a0455de886d94d819b4410e174">&#9670;&#160;</a></span>isPaused()</h2>
+<a id="a516b9bbda93ead6ee414c79c1a3c14ce" name="a516b9bbda93ead6ee414c79c1a3c14ce"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a516b9bbda93ead6ee414c79c1a3c14ce">&#9670;&#160;</a></span>isPaused()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -490,15 +466,17 @@ Additional Inherited Members</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
+<p>Implemented in <a class="el" href="classgFmodSound.html#a5f25834f4125e7e7824feb00e0333c39">gFmodSound</a>, and <a class="el" href="classgSound.html#a90a7465d22b2ae478ec7cac49295029c">gSound</a>.</p>
+
 </div>
 </div>
-<a id="ae3f549829494dc7892f56275e677a79a" name="ae3f549829494dc7892f56275e677a79a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae3f549829494dc7892f56275e677a79a">&#9670;&#160;</a></span>isPlaying()</h2>
+<a id="a99a89eadf9471de2e197b7f3f387d8e0" name="a99a89eadf9471de2e197b7f3f387d8e0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a99a89eadf9471de2e197b7f3f387d8e0">&#9670;&#160;</a></span>isPlaying()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -515,17 +493,17 @@ Additional Inherited Members</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
-<p>Reimplemented in <a class="el" href="classgFmodSound.html#a18173f7219f8f1268f0e844288287d19">gFmodSound</a>.</p>
+<p>Implemented in <a class="el" href="classgFmodSound.html#a12af630342317d6a8d4c88197bc4414d">gFmodSound</a>, and <a class="el" href="classgSound.html#a9b00b3c1dbe7a7cdc65da457d9f84c9a">gSound</a>.</p>
 
 </div>
 </div>
-<a id="abf9c9341b4f2f92fdfd9948a1f38516b" name="abf9c9341b4f2f92fdfd9948a1f38516b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abf9c9341b4f2f92fdfd9948a1f38516b">&#9670;&#160;</a></span>load()</h2>
+<a id="aa302b3a95d86d7e84de9a884c30d8de3" name="aa302b3a95d86d7e84de9a884c30d8de3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa302b3a95d86d7e84de9a884c30d8de3">&#9670;&#160;</a></span>load()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -543,17 +521,17 @@ Additional Inherited Members</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
-<p>Reimplemented in <a class="el" href="classgFmodSound.html#a2c77996a3d7ee25f48ed4e557eacfe1f">gFmodSound</a>.</p>
+<p>Implemented in <a class="el" href="classgFmodSound.html#af825b0c1ef3d141d2149e2454573dfba">gFmodSound</a>, and <a class="el" href="classgSound.html#aad5ed82a32bae92781f0649f885a29ec">gSound</a>.</p>
 
 </div>
 </div>
-<a id="aa22de53853b25869a418875b330e0381" name="aa22de53853b25869a418875b330e0381"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa22de53853b25869a418875b330e0381">&#9670;&#160;</a></span>loadSound()</h2>
+<a id="aab12812c11f2df2011b8817d8f940f73" name="aab12812c11f2df2011b8817d8f940f73"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aab12812c11f2df2011b8817d8f940f73">&#9670;&#160;</a></span>loadSound()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -571,17 +549,17 @@ Additional Inherited Members</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
-<p>Reimplemented in <a class="el" href="classgFmodSound.html#aa9210589df8c236110e0783839536a44">gFmodSound</a>.</p>
+<p>Implemented in <a class="el" href="classgFmodSound.html#a17ff677e0d0aac058bbd2e9119823222">gFmodSound</a>, and <a class="el" href="classgSound.html#abdc3044559324b276b6d4ebc5e1f2cc4">gSound</a>.</p>
 
 </div>
 </div>
-<a id="a414091aaacfedf80aebbb1b5c548d627" name="a414091aaacfedf80aebbb1b5c548d627"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a414091aaacfedf80aebbb1b5c548d627">&#9670;&#160;</a></span>play()</h2>
+<a id="a1fee2f7af3c52b2ab253f70f60b52ea7" name="a1fee2f7af3c52b2ab253f70f60b52ea7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1fee2f7af3c52b2ab253f70f60b52ea7">&#9670;&#160;</a></span>play()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -598,17 +576,17 @@ Additional Inherited Members</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
-<p>Reimplemented in <a class="el" href="classgFmodSound.html#ab20100e61684d05549e043688c8da88f">gFmodSound</a>.</p>
+<p>Implemented in <a class="el" href="classgFmodSound.html#a4aac4d30e5aece3c9ffeee047d63f0e0">gFmodSound</a>, and <a class="el" href="classgSound.html#a36775d5bbabef5bc3703bd7ca025a7fc">gSound</a>.</p>
 
 </div>
 </div>
-<a id="a673186016fe721248cf61cc474ae2b3f" name="a673186016fe721248cf61cc474ae2b3f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a673186016fe721248cf61cc474ae2b3f">&#9670;&#160;</a></span>setLoopType()</h2>
+<a id="abd832bad0290851da1ab95047eea79f5" name="abd832bad0290851da1ab95047eea79f5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abd832bad0290851da1ab95047eea79f5">&#9670;&#160;</a></span>setLoopType()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -619,24 +597,24 @@ Additional Inherited Members</h2></td></tr>
         <tr>
           <td class="memname">virtual void gBaseSound::setLoopType </td>
           <td>(</td>
-          <td class="paramtype">int&#160;</td>
+          <td class="paramtype"><a class="el" href="classgBaseSound.html#a9a2c864371ad1dc1af545577445f05ac">LoopType</a>&#160;</td>
           <td class="paramname"><em>loopType</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
-<p>Reimplemented in <a class="el" href="classgFmodSound.html#a30cba1edc80de8f9d63c21f0d4727c50">gFmodSound</a>.</p>
+<p>Implemented in <a class="el" href="classgFmodSound.html#a7b6ab357d524d423e0d39bef91210834">gFmodSound</a>, and <a class="el" href="classgSound.html#aba593e8c7971d5ff927efe593ddec4b7">gSound</a>.</p>
 
 </div>
 </div>
-<a id="afb92b8dc4e042b28adfb6656c2a3ab5e" name="afb92b8dc4e042b28adfb6656c2a3ab5e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afb92b8dc4e042b28adfb6656c2a3ab5e">&#9670;&#160;</a></span>setPaused()</h2>
+<a id="a86139c83cc182f52d0b742fa9f4a1700" name="a86139c83cc182f52d0b742fa9f4a1700"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a86139c83cc182f52d0b742fa9f4a1700">&#9670;&#160;</a></span>setPaused()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -654,17 +632,17 @@ Additional Inherited Members</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
-<p>Reimplemented in <a class="el" href="classgFmodSound.html#abd209ac7398e7a15fed659250691a649">gFmodSound</a>.</p>
+<p>Implemented in <a class="el" href="classgFmodSound.html#ace327327d59a689f60b3b8c6aa6bfb14">gFmodSound</a>, and <a class="el" href="classgSound.html#a391593d4b6fa42d6af984c67acd385e2">gSound</a>.</p>
 
 </div>
 </div>
-<a id="a4f8200cc9273b0298d882213fb0ce6a1" name="a4f8200cc9273b0298d882213fb0ce6a1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4f8200cc9273b0298d882213fb0ce6a1">&#9670;&#160;</a></span>setPosition()</h2>
+<a id="a0d077108700f33c31311c3911e877029" name="a0d077108700f33c31311c3911e877029"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0d077108700f33c31311c3911e877029">&#9670;&#160;</a></span>setPosition()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -682,17 +660,17 @@ Additional Inherited Members</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
-<p>Reimplemented in <a class="el" href="classgFmodSound.html#adb5c1304cb25ef6a79e583a510824e4f">gFmodSound</a>.</p>
+<p>Implemented in <a class="el" href="classgFmodSound.html#a170faef6a67eed0d53116448ce406e0e">gFmodSound</a>, and <a class="el" href="classgSound.html#a610471dd4d5460d8d5f3f10c4a6b3b89">gSound</a>.</p>
 
 </div>
 </div>
-<a id="acebe3e3e2c9100bbe9ee86ff4f1eae80" name="acebe3e3e2c9100bbe9ee86ff4f1eae80"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acebe3e3e2c9100bbe9ee86ff4f1eae80">&#9670;&#160;</a></span>setVolume()</h2>
+<a id="af6fd6fe237896cd0351924c0ceb9d967" name="af6fd6fe237896cd0351924c0ceb9d967"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af6fd6fe237896cd0351924c0ceb9d967">&#9670;&#160;</a></span>setVolume()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -710,17 +688,17 @@ Additional Inherited Members</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
-<p>Reimplemented in <a class="el" href="classgFmodSound.html#a863e9f07d1c2e13fae32db8db72b8891">gFmodSound</a>.</p>
+<p>Implemented in <a class="el" href="classgFmodSound.html#a24ae58a1120ca9da8d993c05ea936161">gFmodSound</a>, and <a class="el" href="classgSound.html#ac4566508f00b900248c643dc17f87928">gSound</a>.</p>
 
 </div>
 </div>
-<a id="a66d20d31718d29acdfd00143b9b9ddad" name="a66d20d31718d29acdfd00143b9b9ddad"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a66d20d31718d29acdfd00143b9b9ddad">&#9670;&#160;</a></span>stop()</h2>
+<a id="a7e0d6604acec774a109a1c23149839e9" name="a7e0d6604acec774a109a1c23149839e9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7e0d6604acec774a109a1c23149839e9">&#9670;&#160;</a></span>stop()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -737,211 +715,12 @@ Additional Inherited Members</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
-<p>Reimplemented in <a class="el" href="classgFmodSound.html#a81af098c8c20b80037985b8a7bb2e127">gFmodSound</a>.</p>
-
-</div>
-</div>
-<h2 class="groupheader">Member Data Documentation</h2>
-<a id="a5002d71b6631ddc155b136145cb98181" name="a5002d71b6631ddc155b136145cb98181"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5002d71b6631ddc155b136145cb98181">&#9670;&#160;</a></span>duration</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">unsigned int gBaseSound::duration</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a4eeedba32dc944e21ba6601f877e34a0" name="a4eeedba32dc944e21ba6601f877e34a0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4eeedba32dc944e21ba6601f877e34a0">&#9670;&#160;</a></span>isloaded</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool gBaseSound::isloaded</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="abed1d7be69307aea8048bf6073fc0d8f" name="abed1d7be69307aea8048bf6073fc0d8f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abed1d7be69307aea8048bf6073fc0d8f">&#9670;&#160;</a></span>ispaused</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool gBaseSound::ispaused</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a978e51307a3886f328cccae20a40fce7" name="a978e51307a3886f328cccae20a40fce7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a978e51307a3886f328cccae20a40fce7">&#9670;&#160;</a></span>isplaying</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool gBaseSound::isplaying</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a448944bccca9bc2bd4a49651c1c0544c" name="a448944bccca9bc2bd4a49651c1c0544c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a448944bccca9bc2bd4a49651c1c0544c">&#9670;&#160;</a></span>LOOPTYPE_DEFAULT</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const int gBaseSound::LOOPTYPE_DEFAULT = 0</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a21a5d6317a1d3f5997ed922262c2001c" name="a21a5d6317a1d3f5997ed922262c2001c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a21a5d6317a1d3f5997ed922262c2001c">&#9670;&#160;</a></span>LOOPTYPE_NONE</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const int gBaseSound::LOOPTYPE_NONE = 1</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a46b50b4ef9c52eaf020090706da2e269" name="a46b50b4ef9c52eaf020090706da2e269"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a46b50b4ef9c52eaf020090706da2e269">&#9670;&#160;</a></span>LOOPTYPE_NORMAL</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const int gBaseSound::LOOPTYPE_NORMAL = 2</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a6326635a0190a0436f655bb81968dab4" name="a6326635a0190a0436f655bb81968dab4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6326635a0190a0436f655bb81968dab4">&#9670;&#160;</a></span>position</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">unsigned int gBaseSound::position</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a9d86d120f9168018e808a4e5491547b2" name="a9d86d120f9168018e808a4e5491547b2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9d86d120f9168018e808a4e5491547b2">&#9670;&#160;</a></span>volume</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">float gBaseSound::volume</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
+<p>Implemented in <a class="el" href="classgFmodSound.html#ade3e9a707dddb18977d2db88f30f4add">gFmodSound</a>, and <a class="el" href="classgSound.html#a9c8c3d88cfdcc97b5e64969607330e84">gSound</a>.</p>
 
 </div>
 </div>
