@@ -2,12 +2,21 @@
  * gFmodSound.cpp
  *
  *  Created on: 18 Kas 2020
- *      Author: Acer
+ *      Author: Noyan Culum
  */
 
 #include "gFmodSound.h"
 
 gFmodSound::gFmodSound() {
+    filepath = "";
+    looptype = LOOPTYPE_DEFAULT;
+    isloaded = false;
+    isplaying = false;
+    ispaused = false;
+    position = 0;
+    duration = false;
+    volume = 0.5f;
+
 	result = FMOD_OK;
 	system = nullptr;
 	sound1 = nullptr;
@@ -64,7 +73,7 @@ void gFmodSound::play() {
 }
 
 void gFmodSound::setPaused(bool isPaused) {
-	gBaseSound::setPaused(isPaused);
+    this->ispaused = isPaused;
 	result = FMOD_Channel_SetPaused(channel, isPaused);
 }
 
@@ -82,17 +91,14 @@ void gFmodSound::close() {
 }
 
 bool gFmodSound::isPlaying() {
-	FMOD_Channel_IsPlaying(channel, &ip);
-	isplaying = ip;
+    FMOD_BOOL temp;
+	FMOD_Channel_IsPlaying(channel, &temp);
+	isplaying = temp;
 	return isplaying;
 }
 
-int gFmodSound::getDuration() const {
-	return duration;
-}
-
 void gFmodSound::setPosition(int position) {
-	gBaseSound::setPosition(position);
+    this->position = position;
 	FMOD_Channel_SetPosition(channel, position, FMOD_TIMEUNIT_MS);
 }
 
@@ -101,16 +107,35 @@ int gFmodSound::getPosition() {
 	return position;
 }
 
-void gFmodSound::setLoopType(int loopType) {
-	gBaseSound::setLoopType(loopType);
+void gFmodSound::setLoopType(LoopType loopType) {
+    this->looptype = loopType;
 	FMOD_Sound_SetMode(sound1, loopType);
 }
 
 void gFmodSound::setVolume(float volume) {
-	gBaseSound::setVolume(volume);
+    this->volume = volume;
 	if(isPlaying()) {
 		FMOD_Channel_SetVolume(channel, volume);
 	}
 }
 
+int gFmodSound::getDuration() {
+    return duration;
+}
+
+bool gFmodSound::isPaused() {
+    return ispaused;
+}
+
+gFmodSound::LoopType gFmodSound::getLoopType() {
+    return looptype;
+}
+
+float gFmodSound::getVolume() {
+    return volume;
+}
+
+const std::string& gFmodSound::getPath() {
+    return filepath;
+}
 

@@ -224,8 +224,8 @@ set(SRC_FILES
 	${ENGINE_DIR}/core/gAppObject.cpp
 	${ENGINE_DIR}/base/gBaseComponent.cpp
 	${ENGINE_DIR}/base/gBasePlugin.cpp
-	${ENGINE_DIR}/media/gBaseSound.cpp
 	${ENGINE_DIR}/media/gFmodSound.cpp
+	${ENGINE_DIR}/media/gSound.cpp
 	${ENGINE_DIR}/base/gBaseApp.cpp
 	${ENGINE_DIR}/base/gBaseCanvas.cpp
 	${ENGINE_DIR}/core/gBaseWindow.cpp
@@ -333,6 +333,7 @@ set(INC_DIRS
 	${LIBS_DIR}/fmod/include
 	${LIBS_DIR}/utf8/include
 	${LIBS_DIR}/ghc/include
+	${LIBS_DIR}/miniaudio/include
 )
 
 set(ENGINE_INCLUDES
