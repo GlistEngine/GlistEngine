@@ -224,7 +224,6 @@ set(SRC_FILES
 	${ENGINE_DIR}/core/gAppObject.cpp
 	${ENGINE_DIR}/base/gBaseComponent.cpp
 	${ENGINE_DIR}/base/gBasePlugin.cpp
-	${ENGINE_DIR}/media/gFmodSound.cpp
 	${ENGINE_DIR}/media/gSound.cpp
 	${ENGINE_DIR}/base/gBaseApp.cpp
 	${ENGINE_DIR}/base/gBaseCanvas.cpp
@@ -330,7 +329,6 @@ target_compile_options(
 ########## INCLUDE DIRECTORIES ##########
 set(INC_DIRS
 	${LIBS_DIR}/stb/include
-	${LIBS_DIR}/fmod/include
 	${LIBS_DIR}/utf8/include
 	${LIBS_DIR}/ghc/include
 	${LIBS_DIR}/miniaudio/include
@@ -363,7 +361,6 @@ if(WIN32)
 		${MINGW64_DIR}/include/freetype2
 		${MINGW64_DIR}/include/sqlite
 		${MINGW64_DIR}/include/curl
-		${MINGW64_DIR}/include/fmod
 		${MINGW64_DIR}/include/utf8
 		${MINGW64_DIR}/include/harfbuzz
 	)
@@ -471,14 +468,6 @@ elseif(LINUX)
 	set_target_properties(glfw PROPERTIES IMPORTED_LOCATION
 			${MINGW64_DIR}/lib/libglfw.so)
 
-	add_library(fmod SHARED IMPORTED)
-	set_target_properties(fmod PROPERTIES IMPORTED_LOCATION
-			${MINGW64_DIR}/lib/libfmod.so)
-	
-	add_library(fmodL SHARED IMPORTED)
-	set_target_properties(fmodL PROPERTIES IMPORTED_LOCATION
-			${MINGW64_DIR}/lib/libfmodL.so)
-
 	add_library(assimp SHARED IMPORTED)
 	set_target_properties(assimp PROPERTIES IMPORTED_LOCATION
 			${MINGW64_DIR}/lib/libassimp.so)
@@ -500,9 +489,6 @@ elseif(APPLE)
     pkg_check_modules(glfw     REQUIRED IMPORTED_TARGET glfw3)
     pkg_check_modules(assimp   REQUIRED IMPORTED_TARGET assimp)
     pkg_check_modules(glew     REQUIRED IMPORTED_TARGET glew)
-    
-    find_library(Lib_fmodL fmodL HINTS ${MINGW64_DIR}/lib)
-    find_library(Lib_fmod fmod HINTS ${MINGW64_DIR}/lib)
 
     find_library(Lib_GL GL HINTS /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries)
 
@@ -523,8 +509,6 @@ set(LINK_LIBS
 
 if(WIN32)
 	list(APPEND LINK_LIBS
-		fmodL
-		fmod
 		assimp
 		freetype
 		curl
@@ -551,8 +535,6 @@ elseif(IOS)
     # Do not remove the if, otherwise MacOS libraries will be linked/included.
 elseif(LINUX)
 	list(APPEND LINK_LIBS
-		fmodL
-		fmod
 		assimp
 		freetype
 		libpng
@@ -566,8 +548,6 @@ elseif(LINUX)
 	)
 elseif(APPLE)
 	list(APPEND LINK_LIBS
-		${Lib_fmodL}
-		${Lib_fmod}
 		PkgConfig::assimp
 		PkgConfig::freetype
 		PkgConfig::curl
