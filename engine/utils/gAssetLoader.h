@@ -23,7 +23,7 @@
 #include "gImage.h"
 #include "gModel.h"
 #include "gFont.h"
-#include "gFmodSound.h"
+#include "gSound.h"
 
 
 class gAssetLoader: public gThread {
@@ -100,7 +100,7 @@ private:
 			assetsignal = signal;
 		}
 
-		assetToLoad(gFmodSound& sound, std::string filename, short signal) {
+		assetToLoad(gSound& sound, std::string filename, short signal) {
 			this->sound = &sound;
 			this->filename = filename;
 			this->name = filename;
@@ -112,7 +112,7 @@ private:
 		gTexture* texture;
 		gModel* model;
 		gFont* font;
-		gFmodSound* sound;
+		gSound* sound;
 
 		std::string filename;
 		std::string name;
