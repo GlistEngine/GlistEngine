@@ -8,12 +8,11 @@
 #include "gFmodSound.h"
 
 gFmodSound::gFmodSound() {
-	// TODO Auto-generated constructor stub
-	std::cout << "gFmodSound is deprecated. Use gSound instead.\n";
+	gLoge("gFmodSound") << "gFmodSound is deprecated. Use gSound instead.\n";
 }
 
 gFmodSound::~gFmodSound() {
-	// TODO Auto-generated destructor stub
+
 }
 
 void gFmodSound::play() {
