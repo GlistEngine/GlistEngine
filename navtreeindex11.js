@@ -1,6 +1,5 @@
 var NAVTREEINDEX11 =
 {
-"classgSpriteAnimation.html#a59504f31ccf9d34be42cfa3de20fcf1a":[1,0,147,7],
 "classgSpriteAnimation.html#a881cb855d95e3bae36843f0369bda1ba":[1,0,147,5],
 "classgSpriteAnimation.html#a8ee3903d20f4805edaabf923756058c1":[1,0,147,6],
 "classgSpriteAnimation.html#a9bbea8f5debd0b6fdfcedbb73b449ace":[1,0,147,0],
@@ -249,5 +248,6 @@ var NAVTREEINDEX11 =
 "functions_func_g.html":[1,3,1,6],
 "functions_func_h.html":[1,3,1,7],
 "functions_func_i.html":[1,3,1,8],
-"functions_func_j.html":[1,3,1,9]
+"functions_func_j.html":[1,3,1,9],
+"functions_func_k.html":[1,3,1,10]
 };

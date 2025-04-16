@@ -44,8 +44,9 @@ var hierarchy =
         [ "gBaseComponent", "classgBaseComponent.html", null ]
       ] ],
       [ "gBaseSound", "classgBaseSound.html", [
-        [ "gFmodSound", "classgFmodSound.html", null ],
-        [ "gSound", "classgSound.html", null ]
+        [ "gSound", "classgSound.html", [
+          [ "gFmodSound", "classgFmodSound.html", null ]
+        ] ]
       ] ],
       [ "gBaseWindow", "classgBaseWindow.html", [
         [ "gGLFWWindow", "classgGLFWWindow.html", null ]

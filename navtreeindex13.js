@@ -1,6 +1,5 @@
 var NAVTREEINDEX13 =
 {
-"gGUIMenubar_8h_source.html":[2,0,0,7,23],
 "gGUINavigation_8h.html":[2,0,0,7,24],
 "gGUINavigation_8h_source.html":[2,0,0,7,24],
 "gGUINotebook_8h.html":[2,0,0,7,25],
@@ -249,5 +248,6 @@ var NAVTREEINDEX13 =
 "gRenderer_8h.html#aaecdfc28f9f7634af644e1c024b75ff4":[2,0,0,2,10,36],
 "gRenderer_8h.html#abd75661fe7969e19439052a5f69ba5d1":[2,0,0,2,10,5],
 "gRenderer_8h.html#ac06ebc94fef4874810adc536dab8b43d":[2,0,0,2,10,26],
-"gRenderer_8h.html#ac641b1e9588cc19395834416d916eb86":[2,0,0,2,10,14]
+"gRenderer_8h.html#ac641b1e9588cc19395834416d916eb86":[2,0,0,2,10,14],
+"gRenderer_8h.html#ad9c969b4791dd7390a95eecf331d35bf":[2,0,0,2,10,32]
 };

@@ -1,7 +1,9 @@
 <map id="gSound" name="gSound">
-<area shape="rect" id="Node000001" title="A sound class using miniaudio with ma_engine and ma_sound." alt="" coords="21,152,92,177"/>
-<area shape="rect" id="Node000002" href="$classgBaseSound.html" title=" " alt="" coords="5,79,108,104"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="59,118,59,152,54,152,54,118"/>
-<area shape="rect" id="Node000003" href="$classgObject.html" title=" " alt="" coords="21,5,93,31"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="59,44,59,79,54,79,54,44"/>
+<area shape="rect" id="Node000001" title="A sound class using miniaudio with ma_engine and ma_sound." alt="" coords="23,152,94,177"/>
+<area shape="rect" id="Node000004" href="$classgFmodSound.html" title=" " alt="" coords="5,225,112,251"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="61,191,61,225,56,225,56,191"/>
+<area shape="rect" id="Node000002" href="$classgBaseSound.html" title=" " alt="" coords="7,79,110,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="61,118,61,152,56,152,56,118"/>
+<area shape="rect" id="Node000003" href="$classgObject.html" title=" " alt="" coords="23,5,95,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="61,44,61,79,56,79,56,44"/>
 </map>

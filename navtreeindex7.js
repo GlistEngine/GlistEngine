@@ -1,6 +1,5 @@
 var NAVTREEINDEX7 =
 {
-"classgGUITextbox.html#a78c9ee71bf2fc0b6080ca03e060aad19":[1,0,92,35],
 "classgGUITextbox.html#a822efb685d4f4998a8dce1b8f19f922a":[1,0,92,19],
 "classgGUITextbox.html#a83aa097d46a86437cfd86b7e0aea2892":[1,0,92,37],
 "classgGUITextbox.html#a97a23ef97545e0b88b1ccf1340ab622b":[1,0,92,23],
@@ -249,5 +248,6 @@ var NAVTREEINDEX7 =
 "classgKeyEvent.html#aa7d784da08b34dd4459f6201b6025844":[1,0,105,2],
 "classgKeyPressedEvent.html":[1,0,106],
 "classgKeyPressedEvent.html#a3210a66374d491610c31055943cafd7e":[1,0,106,1],
-"classgKeyPressedEvent.html#a9f552bf0b15096ab5d37edd5fabd47ec":[1,0,106,0]
+"classgKeyPressedEvent.html#a9f552bf0b15096ab5d37edd5fabd47ec":[1,0,106,0],
+"classgKeyReleasedEvent.html":[1,0,107]
 };
