@@ -84,6 +84,7 @@ gAppManager::gAppManager(const std::string& appName, gBaseApp *baseApp, int widt
     iscanvasset = false;
     isrunning = false;
     setupcomplete = false;
+    guiappthread = nullptr;
 #ifdef ANDROID
 	isrendering = false;
 #else
