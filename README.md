@@ -1,174 +1,266 @@
 # GLIST ENGINE
 
-Glist Engine is a cross platform OpenGL game engine written in C++.
+Glist Engine is a cross-platform OpenGL game engine written in C++.
+Supports OpenGL 3.3 & OpenGL ES 3.0 on Windows, macOS, Linux, Android & iOS (WebGL coming soon).
 
-The engine supports OpenGL 3.3 and OpenGL ES 3.0. It can be used to develop Windows, macOS, Linux, Android and iOS games and applications. WebGL platform coming soon.
+**Repositories**  
+- **GlistApp** – starter template for your new project  
+- **GlistEngine** – core engine, plugins & samples (this repo)  
+- **GlistZbin** – prebuilt libs, headers & preconfigured IDE  
 
-Glist Engine consists of 3 repositories:
-- Glist App
-- Glist Engine (this repo) and
-- Glist Zbin
 
-Glist Engine repo contains the core engine, plugins, samples to use in the development. Glist Zbin contains libs, includes and a preconfigured ide. Glist App is the repo to clone when starting each new game project.
-
-More information about GlistEngine can be found at [https://www.glistengine.com](https://www.glistengine.com)
-
+More information:  
+- Website: https://www.glistengine.com  
+- Docs: https://glistengine.github.io/GlistEngine/  
 
 ## Installation
 
 ### I. Installation For Students
 
-Glist Engine has one-click installers for Windows, Linux and Mac. You can download the installers from the below links:
-
-- Windows Installer - [https://www.glistengine.com/download](https://www.glistengine.com/download)
-- Linux installer (coming soon)
-- Mac installer [https://github.com/GlistEngine/InstallScripts/raw/main/scripts/macos/install-glist.sh](https://github.com/GlistEngine/InstallScripts/raw/main/scripts/macos/install-glist.sh)
-
+Glist Engine has one-click installer for Windows, you can download it from [https://www.glistengine.com/download](https://www.glistengine.com/download)
+Please keep in mind that this installer might not always have the latest version of the engine. For students, this is usually enough.
 
 ### II. Installation For Developers
 
-#### 1- Fork our 2 repos into your Github account:
+We suggest using the installation scripts instead of manually installing the engine, here are the links for automated install scripts.
+These scripts might not always work, if you have issues installing please feel free to create an issue via https://github.com/GlistEngine/GlistEngine/issues.
 
-- GlistEngine/GlistEngine repo
-- GlistEngine/GlistApp repo
+- Windows Install Script
+    - Open up a powershell terminal and run this command to install GlistEngine:
+    ```bash
+    irm "https://raw.githubusercontent.com/GlistEngine/InstallScripts/main/scripts/windows/install-glist.ps1" | iex
+    ```
+- Mac Install Script (Universal)
+    - Open up a terminal and run this command to install GlistEngine:
+    ```bash
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/GlistEngine/InstallScripts/main/scripts/macos/install-glist.sh)"
+    ```
+- Linux Install Script
+    - Open up a terminal and run this command to install GlistEngine:
+    ```bash
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/GlistEngine/InstallScripts/main/scripts/linux/install-glist.sh)"
+    ```
 
-#### 2- You need to install some programs into your computer in order to clone and run GlistEngine.
+If you want to install manually instead, you can follow the steps for your platform.
 
-<ins>On Windows:</ins>
-- We provide all libraries except GIT. You should first download and install GIT from https://git-scm.com/download/win
+<details>
+<summary>Windows Setup</summary>
 
-<ins>On macOS:</ins>
-- Please note that the installation is tested on a clean Monterey. If you have an older OS version, consider upgrading your Mac
+**1. Install Git**  
+Visit:  
+```text
+https://git-scm.com/download/win
+````
 
-- First of all, you should install Xcode because OpenGL library comes with Xcode. Download Xcode via App Store
+**2. Create folders**
 
-- Open Terminal and install homebrew
-> /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+```powershell
+mkdir C:\dev\glist\myglistapps
+mkdir C:\dev\glist\zbin
+```
 
-- Install libraries via home-brew and make necessary configurations
-> brew install llvm gcc@11 cmake glew glfw glm freetype assimp curl openssl pkg-config
+**3. Go to zbin**
 
-> export PATH=$PATH:~/usr/local/bin/cmake
+```powershell
+cd C:\dev\glist\zbin
+```
 
-> sudo spctl --master-disable
+**4. Download zbin**
+Visit:
 
-<ins>On Linux:</ins>
-- Install necessary libraries on Ubuntu and other Debian based Linux
-> sudo apt-get install git cmake clang-14 libstdc++-12-dev libglew-dev curl libcurl4-openssl-dev libssl-dev build-essential
+```text
+https://github.com/GlistEngine/glistzbin-win64/releases/latest
+```
 
-- Install necessary libraries rpm based system Linux
-> sudo dnf install glm-devel glfw glfw-devel glew-devel freetype-devel freetype assimp assimp-devel curl curl-devel openssl-devel
+Extract into `C:\dev\glist\zbin`
 
-#### 3- Open file explorer and create necessary folders:
+**5. Back up one level**
 
-<ins>On Windows:</ins>
-- C:\dev\glist\myglistapps
-- C:\dev\glist\zbin
+```powershell
+cd C:\dev\glist
+```
 
-<ins>On macOS:</ins>
-- ~/dev/glist/myglistapps
-- ~/dev/glist/zbin
+**6. Clone GlistEngine**
 
-<ins>On Linux:</ins>
-- ~/dev/glist/myglistapps
-- ~/dev/glist/zbin
+```bash
+git clone https://github.com/yourgithubusername/glistengine.git
+```
 
+**7. Clone GlistApp**
 
-#### 4- Open command line(cmd.exe or bash) and go to the zbin folder by the command
+```powershell
+cd C:\dev\glist\myglistapps
+git clone https://github.com/yourgithubusername/glistapp.git
+```
 
-<ins>On Windows:</ins>
-> cd C:\dev\glist\zbin
+</details>
 
-<ins>On macOS:</ins>
-> cd ~/dev/glist/zbin
+<details>
+<summary>macOS Setup</summary>
 
-<ins>On Linux:</ins>
-> cd ~/dev/glist/zbin
+**1. Install Xcode**
 
+You can install Xcode via App Store, after the installation complete, open it and accept the end user agreement. You might need accept this agreement after some macOS updates. 
 
-#### 5- First of all, you need to download the zbin repo. Download the zbin repo by visiting one of these pages and extract the zip:
+**2. Install Homebrew**
 
-<ins>On Windows:</ins>
->  https://github.com/GlistEngine/glistzbin-win64/releases/latest
+```bash
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+```
 
-<ins>On MacOS Arm64 (M1, M2):</ins>
->  https://github.com/GlistEngine/glistzbin-macos/releases/latest
+**3. Install libs & config**
 
-<ins>On MacOS X86_64:</ins>
->  https://github.com/GlistEngine/glistzbin-macos-x86_64/releases/latest
+```bash
+brew install llvm gcc@11 cmake glew glfw glm freetype assimp curl openssl pkg-config
+export PATH=$PATH:~/usr/local/bin/cmake
+sudo spctl --master-disable
+```
 
-<ins>On Linux:</ins>
->  https://github.com/GlistEngine/glistzbin-linux/releases/latest
+**4. Create folders**
 
+```bash
+mkdir -p ~/dev/glist/{myglistapps,zbin}
+```
 
-#### 6- Go one folder up
+**5. Go to zbin**
 
-<ins>On Windows:</ins>
-> cd C:\dev\glist
+```bash
+cd ~/dev/glist/zbin
+```
 
-<ins>On macOS:</ins>
-> cd ~/dev/glist
+**6. Download zbin**
 
-<ins>On Linux:</ins>
-> cd ~/dev/glist
+* Apple Silicon:
 
+  ```text
+  https://github.com/GlistEngine/glistzbin-macos/releases/latest
+  ```
+* Intel:
 
-#### 7- Clone the GlistEngine repo
+  ```text
+  https://github.com/GlistEngine/glistzbin-macos-x86_64/releases/latest
+  ```
 
-> git clone https://github.com/yourgithubusername/glistengine.git
+Extract into `~/dev/glist/zbin`
 
+**7. Back up one level**
 
-#### 8- Go to myglistapps folder
+```bash
+cd ~/dev/glist
+```
 
-<ins>On Windows:</ins>
-> cd C:\dev\glist\myglistapps
+**8. Clone GlistEngine**
 
-<ins>On macOS:</ins>
-> cd ~/dev/glist/myglistapps
+```bash
+git clone https://github.com/yourgithubusername/glistengine.git
+```
 
-<ins>On Linux:</ins>
-> cd ~/dev/glist/myglistapps
+**9. Clone GlistApp**
 
+```bash
+cd ~/dev/glist/myglistapps
+git clone https://github.com/yourgithubusername/glistapp.git
+```
 
-#### 9- Clone the GlistApp repo
+</details>
 
-> git clone https://github.com/yourgithubusername/glistapp.git
+<details>
+<summary>Linux Setup</summary>
 
+**1. Install prerequisites**
 
-#### 10- Run the GlistEngine
+* Debian/Ubuntu:
 
-Start the engine.
+  ```bash
+  sudo apt-get install git cmake clang-14 libstdc++-12-dev libglew-dev \
+    curl libcurl4-openssl-dev libssl-dev build-essential
+  ```
+* Fedora/RPM:
 
-<ins>On Windows:</ins>
-- Open file explorer, go to C:\dev\glist\zbin\glistzbin-win64 and double click GlistEngine
+  ```bash
+  sudo dnf install glm-devel glfw glfw-devel glew-devel freetype-devel \
+    assimp assimp-devel curl curl-devel openssl-devel
+  ```
 
-<ins>On macOS M1:</ins>
-- Never start the engine with clicking Eclipse icon on Launchpad! Instead, you should open the Terminal and enter this command:
-> open ~/dev/glist/zbin/glistzbin-macos/eclipse/eclipsecpp-2022-09/Eclipse.app 
-- (If you get an error message "app is damaged and can’t be opened. You should move it to the Trash.", enter this command on Terminal:
-> xattr -cr ~/dev/glist/zbin/glistzbin-macos/eclipse/eclipsecpp-2022-09/Eclipse.app
-- and restart your computer.
+**2. Create folders**
 
-<ins>On macOS X86_64:</ins>
-- Never start the engine with clicking Eclipse icon on Launchpad! Instead, you should open the Terminal and enter this command:
-> open ~/dev/glist/zbin/glistzbin-macos-x86_64/eclipse/eclipsecpp-2020-09/Eclipse.app 
-- (If you get an error message "app is damaged and can’t be opened. You should move it to the Trash.", enter this command on Terminal:
-> xattr -cr ~/dev/glist/zbin/glistzbin-macos-x86_64/eclipse/eclipsecpp-2020-09/Eclipse.app
-- and restart your computer.
+```bash
+mkdir -p ~/dev/glist/{myglistapps,zbin}
+```
 
-<ins>On Linux:</ins>
-- Open file explorer, go to ~/dev/glist/zbin/glistzbin-linux and double click GlistEngine
+**3. Go to zbin**
 
+```bash
+cd ~/dev/glist/zbin
+```
 
-#### 11- First screen
+**4. Download zbin**
+
+```text
+https://github.com/GlistEngine/glistzbin-linux/releases/latest
+```
+
+Extract into `~/dev/glist/zbin`
+
+**5. Back up one level**
+
+```bash
+cd ~/dev/glist
+```
+
+**6. Clone GlistEngine**
+
+```bash
+git clone https://github.com/yourgithubusername/glistengine.git
+```
+
+**7. Clone GlistApp**
+
+```bash
+cd ~/dev/glist/myglistapps
+git clone https://github.com/yourgithubusername/glistapp.git
+```
+
+</details>
+
+## Getting Started
+After installation, you are very close to start developing your first application using GlistEngine.
+
+<details>
+<summary>On Windows</summary>
+
+If you used the installation script, you can use the shortcut created on your desktop to start GlistEngine Eclipse. 
+
+If not, open your file explorer, go to `C:\dev\glist\zbin\glistzbin-win64` and double click **GlistEngine** to start the GlistEngine Eclipse.
+
+</details>
+
+<details>
+<summary>On macOS</summary>
+
+You can start GlistEngine Eclipse from Launchpad or Applications via Finder.
+If you see "app is damaged...", open Applications via Finder and find GlistEngine Eclipse, then while holding option, right click to it. Then while still holding option, click Open.
+
+</details>
+
+<details>
+<summary>On Linux</summary>
+
+If you used the installation script, you can use the shortcut created on your desktop to start GlistEngine Eclipse. 
+
+If not, open your file explorer, go to `~/dev/glist/zbin/glistzbin-linux` and double click **GlistEngine** to start the GlistEngine Eclipse.
+
+</details>
+
+### First screen
 You will see GlistApp and GlistEngine on the left column. And GameCanvas src/h files will be opened in the code editor. These are the source code of GlistApp.
 
 
-#### 12- Launch the GlistApp
+### Launch the GlistApp
 On the toolbar of the IDE, there is a dropdown button just next to Run button. Dropdown this list. Click "GlistApp Release" on the list. The GlistApp and the engine will be built and run for the first time.
 
 
-#### 13- Start coding
+### Start coding
 After closing the running window, you can start coding your new gorgeous game on GameCanvas.
 
 
@@ -188,21 +280,25 @@ Then the "Unresolved Inclusion" errors should be gone.
 
 ## Contributing
 
-We are a warm community. We encourage the game developers to contribute into the engine by sending commits, opening bug reports and issues.
+We're a welcoming community. You can follow the steps below to send a PR. Please keep in mind that you cannot create pull requests using the MSI installer for Windows, see below for more information.
 
-If you want to send PR, please open the staging view via 
+1. **Make your changes** in the workspace.  
+4. **Commit locally & push:**  
+   - Right-click your project -> **Team -> Commit...**  
+   - Select the files you changed, write a clear commit message. Try to keep the first line short, you can explain as much as you want after the first line.  
+   - Check **"Push changes to upstream"** at the bottom and click **Commit and Push**.  
+5. **Open the PR on GitHub:**  
+   - After the push completes, go to your fork on GitHub.  
+   - Click **Compare & pull request**, choose our main repo as the base, fill in the description, and submit. Make sure to explain what's the purpose of your pull request, even if your commit explains it.
 
-> Window->Show View->Other..->Git->Git Staging.
-
-On the Staged Changes list, remove unnecessary files by selecting them and clicking the - (Remove selected files from the index) button on up-right corner of the list. Add your commit message and send the commit to your fork repo. Then login Github and send PR to our repos.
+That's it, your changes will be reviewed and if approved, will be merged. You might get a feedback and be required to make some changes before your PR is merged, make sure to check your PR for feedbacks. To update your PR, simply commit to your branch and those changes will be included. Thanks for contributing!  
 
 ***If you installed GlistEngine using the installer***
 
-One can contribute to the code when working on the cloned versions of the repos. If you installed GlistEngine by the installer (student installation above) and want to contribute the repo, you can do the following configuration:
+If you installed GlistEngine with the Windows MSI Installer (student installation above) and want to contribute the repo, you can do the following configuration:
 
-1- Right click on the GlistApp and GlistEngine on the left column and select Delete from the drop down menu. (Unselect delete project content on disk)
-
-2- Right click on an empty area of the left column. Select Import...->Git->Projects From Git->Next->Existing Local Repository. Import first GlistEngine, then import GlistApp.
+1. Right click on the GlistApp and GlistEngine on the left column and select Delete from the drop down menu. (Unselect delete project content on disk)
+2. Right click on an empty area of the left column. Select Import...->Git->Projects From Git->Next->Existing Local Repository. Import first GlistEngine, then import GlistApp.
 
 
 ## Licence
@@ -212,4 +308,4 @@ This project is under heavy development and has a Apache License 2.0.
 
 ## Version
 
-GlistEngine has a semantic versioning system. The current version is 0.1.2
+GlistEngine has a [semantic versioning system](https://semver.org/). The current version is 0.1.2
