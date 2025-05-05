@@ -308,4 +308,4 @@ This project is under heavy development and has a Apache License 2.0.
 
 ## Version
 
-GlistEngine has a [semantic versioning system](https://semver.org/). The current version is 0.1.2
+GlistEngine follows the [semantic versioning system](https://semver.org/). The current version is 0.1.2
