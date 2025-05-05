@@ -47,12 +47,11 @@ If you want to install manually instead, you can follow the steps for your platf
 <summary>Windows Setup</summary>
 
 **1. Install Git**  
-Visit:  
-```text
-https://git-scm.com/download/win
-````
+Download the standalone installer from https://git-scm.com/download/win, then install it.
 
 **2. Create folders**
+
+Open up a command terminal, then run the following commands.
 
 ```powershell
 mkdir C:\dev\glist\myglistapps
@@ -66,13 +65,7 @@ cd C:\dev\glist\zbin
 ```
 
 **4. Download zbin**
-Visit:
-
-```text
-https://github.com/GlistEngine/glistzbin-win64/releases/latest
-```
-
-Extract into `C:\dev\glist\zbin`
+Download the .zip file from https://github.com/GlistEngine/glistzbin-win64/releases/latest, and then extract it into `C:\dev\glist\zbin`
 
 **5. Back up one level**
 
@@ -103,6 +96,8 @@ git clone https://github.com/yourgithubusername/glistapp.git
 You can install Xcode via App Store, after the installation complete, open it and accept the end user agreement. You might need accept this agreement after some macOS updates. 
 
 **2. Install Homebrew**
+
+Homebrew is a package-manager that helps you manage packages/libraries, GlistEngine uses brew for some of it's dependencies. Run the following command in a terminal to install it.
 
 ```bash
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
@@ -266,7 +261,7 @@ After closing the running window, you can start coding your new gorgeous game on
 
 ## Troubleshooting
 
-1- Unresolved Inclusions
+### Unresolved Inclusions
 
 If you see "Unresolved Inclusion" errors on the editor, that means the ide lost the pre-determined include path entries.
 
@@ -280,20 +275,20 @@ Then the "Unresolved Inclusion" errors should be gone.
 
 ## Contributing
 
-We're a welcoming community. You can follow the steps below to send a PR. Please keep in mind that you cannot create pull requests using the MSI installer for Windows, see below for more information.
+We're a welcoming community. You can follow the steps below to send a PR. Please keep in mind that you cannot create pull requests if you installed the engine using the MSI installer for Windows, see [below](#if-you-installed-glistengine-using-the-installer) for more information.
 
 1. **Make your changes** in the workspace.  
 4. **Commit locally & push:**  
-   - Right-click your project -> **Team -> Commit...**  
-   - Select the files you changed, write a clear commit message. Try to keep the first line short, you can explain as much as you want after the first line.  
-   - Check **"Push changes to upstream"** at the bottom and click **Commit and Push**.  
+   - Go to the Git Staging window, if it's not open, you can open it from **Window -> Show View -> Other** and select Git Staging  
+   - Here, stage the files you changed, write a clear commit message. Try to keep the first line short, you can explain as much as you want after the first line.  
+   - Click **Commit and Push**.  
 5. **Open the PR on GitHub:**  
    - After the push completes, go to your fork on GitHub.  
    - Click **Compare & pull request**, choose our main repo as the base, fill in the description, and submit. Make sure to explain what's the purpose of your pull request, even if your commit explains it.
 
 That's it, your changes will be reviewed and if approved, will be merged. You might get a feedback and be required to make some changes before your PR is merged, make sure to check your PR for feedbacks. To update your PR, simply commit to your branch and those changes will be included. Thanks for contributing!  
 
-***If you installed GlistEngine using the installer***
+### If you installed GlistEngine using the installer
 
 If you installed GlistEngine with the Windows MSI Installer (student installation above) and want to contribute the repo, you can do the following configuration:
 
