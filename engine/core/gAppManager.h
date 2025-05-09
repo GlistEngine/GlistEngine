@@ -334,7 +334,7 @@ public:
 #endif // TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
 
 private:
-    static const int maxjoysticknum = 4;
+    static const int maxjoysticknum = 16;
     static const int maxjoystickbuttonnum = 15;
     static const int maxmousebuttonnum = 3;
 
