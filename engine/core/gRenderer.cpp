@@ -611,7 +611,7 @@ void gRenderer::setColor(float r, float g, float b, float a) {
 	rendercolor->set(r, g, b, a);
 }
 
-void gRenderer::setColor(gColor color) {
+void gRenderer::setColor(const gColor& color) {
 	rendercolor->set(color.r, color.g, color.b, color.a);
 }
 
