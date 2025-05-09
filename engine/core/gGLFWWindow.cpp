@@ -127,6 +127,12 @@ void gGLFWWindow::initialize(int width, int height, int windowMode, bool isResiz
 	glfwSetScrollCallback(window, gGLFWWindow::mouse_scroll_callback);
 	glfwSetWindowFocusCallback(window, gGLFWWindow::window_focus_callback);
 	glfwSetJoystickCallback(gGLFWWindow::joystick_callback);
+
+    for (int jid = GLFW_JOYSTICK_1; jid <= GLFW_JOYSTICK_LAST; ++jid) {
+        if (glfwJoystickPresent(jid)) {
+            gGLFWWindow::joystick_callback(jid, GLFW_CONNECTED);
+        }
+    }
 }
 
 bool gGLFWWindow::getShouldClose() {
