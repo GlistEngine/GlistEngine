@@ -13,7 +13,7 @@ gModelAnimator::~gModelAnimator() {
 
 }
 
-void gModelAnimator::addAnimation(int id, int startframe, int endframe, AnimationMode mode, bool isDefault) {
+void gModelAnimator::addAnimation(int id, int startframe, int endframe, Mode mode, bool isDefault) {
     animations.emplace(id,AnimationData{
             .id = id,
             .mode = mode,
@@ -27,17 +27,17 @@ void gModelAnimator::addAnimation(int id, int startframe, int endframe, Animatio
     maxframenum = std::max(maxframenum, endframe + 1);
 }
 
-void gModelAnimator::addSwitch(AnimationSwitch switchMode, int srcAnimation, int dstAnimation) {
-    animations[srcAnimation].switches.emplace(
-            switchMode,
-            SwitchData{
+void gModelAnimator::addTransition(TriggerType triggerType, int srcAnimation, int dstAnimation) {
+    animations[srcAnimation].transitions.emplace(
+            triggerType,
+            TransitionData{
                     .targetanimation = dstAnimation
             }
     );
 }
 
 void gModelAnimator::bake() {
-    if (animations.empty()) {
+    if (animations.empty() || model == nullptr) {
         return;
     }
     currentanimation = nextanimation = defaultanimation;
@@ -57,15 +57,18 @@ void gModelAnimator::prepareAnimation(int animationId) {
 }
 
 void gModelAnimator::update() {
-    if (animations.empty()) {
+    if (animations.empty() || !model || speed <= 0.0f) {
         return;
     }
-    double deltatime = appmanager->getElapsedTime();
-    nextframetime += 65.0f / speed * deltatime;
-    std::cout << nextframetime << ", " << deltatime << std::endl;
-    if (nextframetime < 1.0f) {
+
+    float frameDuration = 1.0f / (60.0f * speed);
+    float delta = appmanager->getElapsedTime(); // time since last frame
+    nextframetime += delta;
+    int frameAdvance = static_cast<int>(nextframetime / frameDuration);
+    if (frameAdvance <= 0) {
         return;
     }
+    nextframetime -= frameAdvance * frameDuration;
     if (nextanimation != currentanimation) {
         currentanimation = nextanimation;
         prepareAnimation(currentanimation);
@@ -75,25 +78,30 @@ void gModelAnimator::update() {
         return;
     }
     AnimationData& data = it->second;
-    int currentframe = model->getAnimationFrameNo();
-    if (currentframe >= data.endframe) {
+    int newframe = model->getAnimationFrameNo() + frameAdvance;
+    if (newframe >= data.endframe) {
         switch (data.mode) {
-            case ANIMATIONMODE_HOLD_ON_LAST_FRAME:
-                return;
-            case ANIMATIONMODE_ONCE: {
-                auto it = data.switches.find(ANIMATIONSWITCH_AFTER_COMPLETION);
-                if (it != data.switches.end()) {
+            case MODE_HOLD_ON_LAST_FRAME:
+                model->setAnimationFrameNo(data.endframe);
+                break;
+            case MODE_ONCE: {
+                auto it = data.transitions.find(TRIGGERTYPE_AFTER_COMPLETION);
+                if (it != data.transitions.end()) {
                     nextanimation = it->second.targetanimation;
                 }
-                return;
+                model->setAnimationFrameNo(data.endframe);
+                break;
             }
-            case ANIMATIONMODE_REPEAT:
-                model->setAnimationFrameNo(data.startframe);
-                return;
+            case MODE_REPEAT:
+                int length = data.endframe - data.startframe + 1;
+                if (length <= 0) {
+                    length = 1;
+                }
+                newframe = data.startframe + ((newframe - data.startframe) % length);
+                model->setAnimationFrameNo(newframe);
+                break;
         }
-    } else if (currentframe < data.startframe) {
-        model->setAnimationFrameNo(data.startframe);
+    } else {
+        model->setAnimationFrameNo(newframe);
     }
-    model->nextAnimationFrame();
-    nextframetime = 0.0f;
 }
