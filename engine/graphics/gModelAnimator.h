@@ -52,7 +52,7 @@ public:
      * @param mode Animation playback mode.
      * @param isDefault Whether this animation is the default on bake.
      */
-    void addAnimation(int id, int startframe, int endframe, Mode mode, bool isDefault = false);
+    void addAnimation(int id, int startframe, int endframe, float speed, Mode mode, bool isDefault = false);
 
     /**
      * @brief Adds a transition to another animation.
@@ -91,6 +91,7 @@ private:
     struct AnimationData {
         int id;
         Mode mode;
+        float speed;
         int startframe;
         int endframe;
         std::unordered_map<TriggerType, TransitionData> transitions;

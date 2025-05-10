@@ -13,10 +13,11 @@ gModelAnimator::~gModelAnimator() {
 
 }
 
-void gModelAnimator::addAnimation(int id, int startframe, int endframe, Mode mode, bool isDefault) {
+void gModelAnimator::addAnimation(int id, int startframe, int endframe, float speed, Mode mode, bool isDefault) {
     animations.emplace(id,AnimationData{
             .id = id,
             .mode = mode,
+            .speed = speed,
             .startframe = startframe,
             .endframe = endframe,
     });
@@ -60,8 +61,18 @@ void gModelAnimator::update() {
     if (animations.empty() || !model || speed <= 0.0f) {
         return;
     }
+    if (nextanimation != currentanimation) {
+        currentanimation = nextanimation;
+        prepareAnimation(currentanimation);
+    }
 
-    float frameDuration = 1.0f / (60.0f * speed);
+    auto it = animations.find(currentanimation);
+    if (it == animations.end()) {
+        return;
+    }
+    AnimationData& data = it->second;
+    float animationspeed = data.speed;
+    float frameDuration = 1.0f / (60.0f * speed * animationspeed);
     float delta = appmanager->getElapsedTime(); // time since last frame
     nextframetime += delta;
     int frameAdvance = static_cast<int>(nextframetime / frameDuration);
@@ -69,15 +80,6 @@ void gModelAnimator::update() {
         return;
     }
     nextframetime -= frameAdvance * frameDuration;
-    if (nextanimation != currentanimation) {
-        currentanimation = nextanimation;
-        prepareAnimation(currentanimation);
-    }
-    auto it = animations.find(currentanimation);
-    if (it == animations.end()) {
-        return;
-    }
-    AnimationData& data = it->second;
     int newframe = model->getAnimationFrameNo() + frameAdvance;
     if (newframe >= data.endframe) {
         switch (data.mode) {
