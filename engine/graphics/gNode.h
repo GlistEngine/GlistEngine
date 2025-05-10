@@ -34,63 +34,63 @@ public:
 	void setScale(float sx, float sy, float sz);
 	void setScale(float s);
 
-	/*
+	/**
 	 * Movement right-left along x axis
 	 *
 	 * @param distance movement amount in gl units
 	 */
 	void truck(float distance);
 
-	/*
+	/**
 	 * Movement up-down along y axis
 	 *
 	 * @param distance movement amount in gl units
 	 */
 	void boom(float distance);
 
-	/*
+	/**
 	 * Movement forward-backward along z axis
 	 *
 	 * @param distance movement amount in gl units
 	 */
 	void dolly(float distance);
 
-	/*
+	/**
 	 * Rotation around local x axis in radians
 	 *
 	 * @param angle in radians
 	 */
 	void tilt(float radians);
 
-	/*
+	/**
 	 * Rotation around local x axis in degrees
 	 *
 	 * @param angle in degrees
 	 */
 	void tiltDeg(float degrees);
 
-	/*
+	/**
 	 * Rotation around local y axis in radians
 	 *
 	 * @param angle in radians
 	 */
 	void pan(float radians);
 
-	/*
+	/**
 	 * Rotation around local y axis in degrees
 	 *
 	 * @param angle in degrees
 	 */
 	void panDeg(float degrees);
 
-	/*
+	/**
 	 * Rotation around local z axis in radians
 	 *
 	 * @param angle in radians
 	 */
 	void roll(float radians);
 
-	/*
+	/**
 	 * Rotation around local z axis in degrees
 	 *
 	 * @param angle in degrees
