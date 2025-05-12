@@ -38,4 +38,18 @@ public:
 	float r, g, b, a;
 };
 
+class gColorHSL {
+public:
+    float h, s, l; // Hue [0–360], Saturation [0–1], Lightness [0–1]
+
+    gColorHSL() : h(0), s(0), l(0) {}
+    gColorHSL(float h, float s, float l) : h(h), s(s), l(l) {}
+
+    static gColorHSL from(const gColor& rgb);
+
+    gColor toRGB() const;
+};
+
+
+
 #endif /* ENGINE_GRAPHICS_GCOLOR_H_ */
