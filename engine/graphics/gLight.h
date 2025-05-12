@@ -394,6 +394,13 @@ public:
 	 * @return spot angle between maximum angle
 	 */
 	float getSpotCutOffSpread() const;
+
+	void setOrientation(const glm::quat& o);
+	void setOrientation(const glm::vec3& angles);
+
+	void rotateAround(float radians, const glm::vec3& axis, const glm::vec3& point);
+	void rotateAroundDeg(float degrees, const glm::vec3& axis, const glm::vec3& point);
+
 protected:
 
 	void processTransformationMatrix() override;
