@@ -100,6 +100,18 @@ gBoundingBox gBoundingBox::merge(const gBoundingBox& other) const {
 	);
 }
 
+gBoundingBox gBoundingBox::offset(const glm::vec3& other) const {
+	return gBoundingBox(
+			minf[0] + other.x,
+			minf[1] + other.y,
+			minf[2] + other.z,
+			maxf[0] + other.x,
+			maxf[1] + other.y,
+			maxf[2] + other.z
+	);
+}
+
+
 bool gBoundingBox::intersects(gRay& ray) const {
 	float dist = distance(ray);
 	return dist == std::numeric_limits<float>::min() ? false : true && dist <= glm::length(ray.getDirection());
