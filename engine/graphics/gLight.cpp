@@ -86,6 +86,11 @@ void gLight::setAmbientColor(gColor* color) {
 	ischanged = true;
 }
 
+void gLight::setAmbientColor(const gColor& color) {
+	ambientcolor.set(color.r, color.g, color.b, color.a);
+	ischanged = true;
+}
+
 gColor* gLight::getAmbientColor() {
 	return &ambientcolor;
 }
@@ -133,6 +138,11 @@ void gLight::setDiffuseColor(gColor* color) {
 	ischanged = true;
 }
 
+void gLight::setDiffuseColor(const gColor &color) {
+    diffusecolor.set(color.r, color.g, color.b, color.a);
+    ischanged = true;
+}
+
 gColor* gLight::getDiffuseColor() {
 	return &diffusecolor;
 }
@@ -144,6 +154,11 @@ void gLight::setSpecularColor(int r, int g, int b, int a) {
 
 void gLight::setSpecularColor(gColor* color) {
 	specularcolor.set(color->r, color->g, color->b, color->a);
+	ischanged = true;
+}
+
+void gLight::setSpecularColor(const gColor& color) {
+	specularcolor.set(color.r, color.g, color.b, color.a);
 	ischanged = true;
 }
 

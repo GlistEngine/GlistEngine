@@ -121,6 +121,13 @@ public:
 	 */
 	void setAmbientColor(gColor* color);
 
+    /**
+     * Ambient color changing with gColor object.
+     *
+     * @param color gColor object to use changing color
+     */
+	void setAmbientColor(const gColor& color);
+
 	/**
 	 * Gives ambient color RGBA component.
 	 * This function can be use two type. Using directly giving memory address.
@@ -176,6 +183,13 @@ public:
 	 * @param color gColor object to use changing color
 	 */
 	void setDiffuseColor(gColor* color);
+
+/**
+	 * Diffuse color changing with gColor object.
+	 *
+	 * @param color gColor object to use changing color
+	 */
+	void setDiffuseColor(const gColor& color);
 
 	/**
 	 * Gives diffuse color RGBA value.
@@ -233,6 +247,13 @@ public:
 	 * @param color gColor object to use changing color
 	 */
 	void setSpecularColor(gColor* color);
+
+    /**
+     * Specular color changing with gColor object.
+     *
+     * @param color gColor object to use changing color
+     */
+	void setSpecularColor(const gColor& color);
 
 	/**
 	 * Gives specular color RGBA value.
