@@ -64,6 +64,12 @@ void gLight::rotate(float angle, float ax, float ay, float az) {
 	ischanged = true;
 }
 
+void gLight::rotateDeg(float angle, float ax, float ay, float az) {
+	gNode::rotateDeg(angle, ax, ay, az);
+	directioneuler = glm::vec3(0, 0, -1) * orientation;
+	ischanged = true;
+}
+
 const glm::vec3& gLight::getDirection() const {
 //	glm::vec3 euler = glm::vec3(0, 0, -1) * orientation;
 //	logi("Euler x:" + str(euler.x), ", y: " + str(euler.y) + ", z:" + str(euler.z));
