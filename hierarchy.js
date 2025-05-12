@@ -5,6 +5,7 @@ var hierarchy =
     [ "gGUITreelist::Element", "structgGUITreelist_1_1Element.html", null ],
     [ "gAnimationTrigger", "classgAnimationTrigger.html", null ],
     [ "gColor", "classgColor.html", null ],
+    [ "gColorHSL", "classgColorHSL.html", null ],
     [ "gEvent", "classgEvent.html", [
       [ "gCharTypedEvent", "classgCharTypedEvent.html", null ],
       [ "gJoystickConnectEvent", "classgJoystickConnectEvent.html", null ],

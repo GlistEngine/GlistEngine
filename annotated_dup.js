@@ -28,6 +28,7 @@ var annotated_dup =
     [ "gColorAdjustments", "classgColorAdjustments.html", "classgColorAdjustments" ],
     [ "gColorChannelMixer", "classgColorChannelMixer.html", "classgColorChannelMixer" ],
     [ "gColorCurves", "classgColorCurves.html", "classgColorCurves" ],
+    [ "gColorHSL", "classgColorHSL.html", "classgColorHSL" ],
     [ "gCone", "classgCone.html", "classgCone" ],
     [ "gCross", "classgCross.html", "classgCross" ],
     [ "gCylinder", "classgCylinder.html", "classgCylinder" ],
