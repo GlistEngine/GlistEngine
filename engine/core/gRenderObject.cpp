@@ -55,13 +55,13 @@ int gRenderObject::getScreenHeight() {
 
 void gRenderObject::pushMatrix() {
 #if defined(WIN32) || defined(LINUX)
-	glPushMatrix();
+	G_CHECK_GL(glPushMatrix());
 #endif
 }
 
 void gRenderObject::popMatrix() {
 #if defined(WIN32) || defined(LINUX)
-	glPopMatrix();
+	G_CHECK_GL(glPopMatrix());
 #endif
 }
 
