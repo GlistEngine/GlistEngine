@@ -65,3 +65,6 @@ git clone https://github.com/yourgithubusername/glistengine.git
 cd ~/dev/glist/myglistapps
 git clone https://github.com/yourgithubusername/glistapp.git
 ```
+
+
+See [GETTING-STARTED.md](./GETTING-STARTED.md) for platform-specific launch instructions to get started developing.
