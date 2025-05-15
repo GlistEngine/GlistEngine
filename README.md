@@ -11,7 +11,7 @@ Supports OpenGL 3.3 & OpenGL ES 3.0 on Windows, macOS, Linux, Android & iOS (Web
 
 More information:  
 - Website: https://www.glistengine.com  
-- Docs: https://glistengine.github.io/GlistEngine/  
+- Docs: https://glistengine.github.io/GlistEngine/ (Automatically generated from sources)
 
 ## Installation
 
