@@ -88,7 +88,7 @@ If you installed GlistEngine with the Windows MSI Installer (student installatio
 
 ## Licence
 
-This project is under heavy development and has a Apache License 2.0.
+Licensed under the Apache License 2.0.
 
 
 ## Version
