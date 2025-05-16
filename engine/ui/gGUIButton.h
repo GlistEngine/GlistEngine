@@ -24,6 +24,7 @@ public:
 	void setTextVisibility(bool isVisible);
 
 	bool isPressed();
+	bool& isPressedRef();
 	bool isToggle();
 	bool isDisabled();
 	bool isTextVisible();
