@@ -14,9 +14,9 @@ Homebrew is a package-manager that helps you manage packages/libraries, GlistEng
 
 **3. Install libs & config**
 
+
 ```bash
-brew install llvm gcc@11 cmake glew glfw glm freetype assimp curl openssl pkg-config
-export PATH=$PATH:~/usr/local/bin/cmake
+brew install git openssl@1.1 libomp llvm cmake glew glfw glm freetype assimp curl git wget pkg-config
 sudo spctl --master-disable
 ```
 

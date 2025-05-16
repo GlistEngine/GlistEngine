@@ -22,7 +22,7 @@ Please keep in mind that this installer might not always have the latest version
 
 ### II. Installation For Developers
 
-We suggest using the installation scripts instead of manually installing the engine, here are the links for automated install scripts.
+We suggest using the installation scripts instead of manually installing the engine, here are the links for automated installation scripts.
 These scripts might not always work, if you have issues installing please feel free to create an issue via https://github.com/GlistEngine/GlistEngine/issues.
 
 - Windows Install Script
