@@ -55,7 +55,6 @@ See [GETTING-STARTED.md](./GETTING-STARTED.md) for platform-specific launch inst
 
 If you see "Unresolved Inclusion" errors on the editor, that means the ide lost the pre-determined include path entries.
 
-- Open Project->Properties->C/C++ General->Preprocessor Include Paths->Providers. Go to the bottom of the list. Select CMAKE_EXPORT_COMPILE_COMMANDS Compiler and Parser selections. Click Apply and close button.
 - Click Project->Clean Project to clean previous build
 - Click hammer button to rebuild the project.
 - Click Project->C/C++ Index->Rebuild to invoke indexer.
