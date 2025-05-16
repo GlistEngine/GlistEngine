@@ -67,11 +67,11 @@ Then the "Unresolved Inclusion" errors should be gone.
 We're a welcoming community. You can follow the steps below to send a PR. Please keep in mind that you cannot create pull requests if you installed the engine using the MSI installer for Windows, see [below](#if-you-installed-glistengine-using-the-installer) for more information.
 
 1. **Make your changes** in the workspace.  
-4. **Commit locally & push:**  
+2. **Commit locally & push:**  
    - Go to the Git Staging window, if it's not open, you can open it from **Window -> Show View -> Other** and select Git Staging  
    - Here, stage the files you changed, write a clear commit message. Try to keep the first line short, you can explain as much as you want after the first line.  
    - Click **Commit and Push**.  
-5. **Open the PR on GitHub:**  
+3. **Open the PR on GitHub:**  
    - After the push completes, go to your fork on GitHub.  
    - Click **Compare & pull request**, choose our main repo as the base, fill in the description, and submit. Make sure to explain what's the purpose of your pull request, even if your commit explains it.
 
