@@ -2,120 +2,117 @@
 /*
  * gFmodSound.h
  *
- *  Created on: 18 Kas 2020
- *      Author: Acer
+ *  Created on: 16 Nis 2025
+ *      Author: Admin
  */
 
 #ifndef MEDIA_GFMODSOUND_H_
 #define MEDIA_GFMODSOUND_H_
 
-#include "gBaseSound.h"
-#include "fmod.h"
-#include "fmod_common.h"
+#include "gSound.h"
 
-/**
- * gFmodSound, contains functions for sound playing using Fmod library.
- *
- * Uses gBaseSound as Parent
- */
-
-class gFmodSound: public gBaseSound {
+class gFmodSound : public gSound{
 public:
 	gFmodSound();
-	~gFmodSound();
+	virtual ~gFmodSound();
 
-	/**
-	 * Sets the sound data by loading the sound file from the provided path.
-	 *
-	 * @param soundPath the local project path for the sound file.
-	 *
-	 * @return returns generated id of the sound file.
-	 */
-	int loadSound(const std::string& soundPath);
+    /**
+     * @brief Loads a sound file from the full file system path.
+     *
+     * @param fullPath Full absolute path to the audio file.
+     * @return int 1 if successful, 0 otherwise.
+     */
+    int load(const std::string& fullPath);
 
-	/**
-	 * Sets the sound data by loading the sound file from the provided path.
-	 *
-	 * @param fullPath the local computer path for the sound file.
-	 *
-	 * @return returns generated id of the sound file.
-	 */
-	int load(const std::string& fullPath);
+    /**
+     * @brief Loads the sound file from the given project-relative path.
+     *
+     * @param soundPath Project-relative path to the sound file.
+     * @return int 1 if successful, 0 otherwise.
+     */
+    int loadSound(const std::string& soundPath);
 
-	/**
-	 * Plays the sound file.
-	 */
-	void play();
+    /**
+     * @brief Starts sound playback and resets the position to the beginning.
+     */
+    void play();
 
-	/**
-	 * Pauses the sound file that is currently playing also resumes it.
-	 *
-	 * @param isPaused checks and returns bool variable whether the sound is stopped or not.
-	 */
-	void setPaused(bool isPaused);
+    bool isLoaded();
 
-	/**
-	 * Stops the currently playing sound file.
-	 */
-	void stop();
+    bool isPlaying();
 
-	/**
-	 * Closes the currently playing sound file.
-	 */
-	void close();
+    bool isPaused();
 
-	/**
-	 * Returns bool variable whether the sound file is playing or not.
-	 */
-	bool isPlaying();
+    /**
+     * @brief Pauses or resumes the playback.
+     *
+     * @param isPaused True to pause, false to resume.
+     */
+    void setPaused(bool isPaused);
 
-	/**
-	 * The loop type.
-	 *
-	 * @param loopType parameter for the loop type.
-	 */
-	void setLoopType(int loopType);
+    /**
+     * @brief Stops playback and resets position to the beginning.
+     */
+    void stop();
 
-	/**
-	 * Returns the duration of the sound file.
-	 *
-	 * @return The duration.
-	 */
-	int getDuration() const;
+    /**
+     * @brief Unloads and frees the sound resource.
+     */
+    void close();
 
-	/**
-	 * The position in time for the playing sound file.
-	 *
-	 * @param position Parameter for position.
-	 */
-	void setPosition(int position);
+    /**
+     * @brief Returns the total duration of the sound in milliseconds.
+     *
+     * @return Duration in ms.
+     */
+    int getDuration();
 
-	/**
-	 * Returns the position in time for the playing sound file.
-	 * Please note that, one may change the position after the sound starts playing.
-	 *
-	 * @return the position in time.
-	 */
-	int getPosition();
+    /**
+     * @brief Returns the current playback position in milliseconds.
+     *
+     * @return Position in ms.
+     */
+    int getPosition();
 
-	/**
-	 * Sets the volume for the playing sound file.
-	 * Please note that, one may change the volume after the sound starts playing
-	 *
-	 * @param volume Parameter for volume..
-	 */
-	void setVolume(float volume);
+    /**
+     * @brief Sets the current playback position in milliseconds.
+     *
+     * @param position New position in ms.
+     */
+    void setPosition(int position);
+
+    /**
+     * @brief Sets the loop type for playback.
+     *
+     * @param loopType Looping behavior.
+     */
+    void setLoopType(LoopType loopType);
+
+    /**
+     * @brief Gets the current volume level.
+     *
+     * @return Volume between 0.0 (mute) and 1.0 (max).
+     */
+    float getVolume();
+
+    /**
+     * @brief Sets the volume level.
+     *
+     * @param volume Volume between 0.0 (mute) and 1.0 (max).
+     */
+    void setVolume(float volume);
+
+    /**
+     * @brief Gets the path to the currently loaded file.
+     *
+     * @return File path as a string reference.
+     */
+    const std::string& getPath();
+
 
 private:
-	FMOD_SYSTEM *system;
-	FMOD_SOUND *sound1;
-    FMOD_CHANNEL *channel = 0;
-    FMOD_RESULT result;
-    unsigned int version;
-    void *extradriverdata = 0;
-    int ip;
+	gSound sound;
 };
-
 
 #endif /* MEDIA_GFMODSOUND_H_ */
 #endif

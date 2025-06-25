@@ -69,26 +69,29 @@ public:
 	int getType() const;
 
 	/**
-	 * Rotates light objects around the given vector
+	 * Rotates light objects around the given vector.
 	 *
-	 * The vector should be a unit vector eg.((1, 1, 1) or (1, 1, 0)...).
-	 * Because the function multiplies the x, y, z values by the angle.
-	 * For instance if we write "rotate(30, 0, 0, 3)", the object returns 90
-	 * degrees around the z axis. All these x, y, z axis are relative to the
-	 * object's pivot point.
+	 * The vector (ax, ay, az) should be a unit vector (e.g., (1, 0, 0), (0, 1, 1), etc.)
+	 * because the function multiplies this vector by the rotation amount in radians.
+	 * For example, rotate(PI / 2, 0, 0, 1) rotates the object 90 degrees around the Z axis.
+	 * All rotations are relative to the object's pivot point.
 	 *
-	 * @param angle the amount of rotation
-	 *
-	 * @param ax is the x value of the vector whose origin is the object's
-	 * pivot point and rotate the object around.
-	 *
-	 * @param ay is the y value of the vector whose origin is the object's
-	 * pivot point and rotate the object around.
-     *
-	 * @param az is the z value of the vector whose origin is the object's
-	 * pivot point and rotate the object around.
+	 * @param radians the amount of rotation in radians
+	 * @param ax the x component of the rotation axis (unit vector)
+	 * @param ay the y component of the rotation axis (unit vector)
+	 * @param az the z component of the rotation axis (unit vector)
 	 */
-	void rotate(float angle, float ax, float ay, float az);
+	void rotate(float radians, float ax, float ay, float az);
+
+	/**
+	 * Same as rotate(), but the angle is specified in degrees.
+	 *
+	 * @param degrees the amount of rotation in degrees
+	 * @param ax the x component of the rotation axis (unit vector)
+	 * @param ay the y component of the rotation axis (unit vector)
+	 * @param az the z component of the rotation axis (unit vector)
+	 */
+	void rotateDeg(float degrees, float ax, float ay, float az);
 
 	/**
 	 * Gives light direction x, y, z coordinate.
@@ -117,6 +120,13 @@ public:
 	 * @param color gColor object to use changing color
 	 */
 	void setAmbientColor(gColor* color);
+
+    /**
+     * Ambient color changing with gColor object.
+     *
+     * @param color gColor object to use changing color
+     */
+	void setAmbientColor(const gColor& color);
 
 	/**
 	 * Gives ambient color RGBA component.
@@ -174,6 +184,13 @@ public:
 	 */
 	void setDiffuseColor(gColor* color);
 
+/**
+	 * Diffuse color changing with gColor object.
+	 *
+	 * @param color gColor object to use changing color
+	 */
+	void setDiffuseColor(const gColor& color);
+
 	/**
 	 * Gives diffuse color RGBA value.
 	 *
@@ -230,6 +247,13 @@ public:
 	 * @param color gColor object to use changing color
 	 */
 	void setSpecularColor(gColor* color);
+
+    /**
+     * Specular color changing with gColor object.
+     *
+     * @param color gColor object to use changing color
+     */
+	void setSpecularColor(const gColor& color);
 
 	/**
 	 * Gives specular color RGBA value.

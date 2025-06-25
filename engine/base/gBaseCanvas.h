@@ -10,6 +10,7 @@
 
 #include "gBaseApp.h"
 #include "gRenderObject.h"
+#include "gKeyCode.h"
 
 
 class gBaseCanvas : public gRenderObject {

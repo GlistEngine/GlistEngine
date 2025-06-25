@@ -211,7 +211,6 @@ glm::vec3 gNode::getScalarDirectionZ() const {
 	return glm::vec3(localtransformationmatrix[2]);
 }
 
-
 void gNode::pushMatrix() const {
 #if defined(WIN32) || defined(LINUX)
 	glPushMatrix();

@@ -350,7 +350,7 @@ void gModel::processNode(aiNode *node, const aiScene *scene) {
 		// the node object only contains indices to index the actual objects in the scene.
 		// the scene contains all the data, node is just to keep stuff organized (like relations between nodes).
 		aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-		gLogi("gModel") << "Loading mesh:" << mesh->mName.C_Str() << ", tm:" << node->mTransformation[0];
+		gLogi("gModel") << "Loading mesh:" << mesh->mName.C_Str() << ", vertexnum:" << mesh->mNumVertices << ", tm:" << node->mTransformation[0];
 		gSkinnedMesh* modelmesh = processMesh(mesh, scene, node->mTransformation);
 //		if (isanimated) updateBones(&modelmesh, mesh, scene);
 //		modelmesh.setParent(this);

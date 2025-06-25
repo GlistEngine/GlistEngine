@@ -13,6 +13,7 @@
 #include <signal.h>
 #include "gObject.h"
 #include "gEvent.h"
+#include "gKeyCode.h"
 
 class gAppManager;
 

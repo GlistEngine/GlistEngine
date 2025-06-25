@@ -95,6 +95,7 @@ gAppManager::gAppManager(const std::string& appName, gBaseApp *baseApp, int widt
     iscanvasset = false;
     isrunning = false;
     setupcomplete = false;
+    guiappthread = nullptr;
 #ifdef ANDROID
 	isrendering = false;
 #else
@@ -718,10 +719,8 @@ bool gAppManager::onWindowLoseFocusEvent(gWindowLoseFocusEvent& event) {
 bool gAppManager::onJoystickConnectEvent(gJoystickConnectEvent& event) {
     if(event.getJoystickId() >= maxjoysticknum) return true;
 
-    if(event.isGamepad()) {
-        joystickconnected[event.getJoystickId()] = true;
-        isjoystickenabled = true;
-    }
+    joystickconnected[event.getJoystickId()] = true;
+    isjoystickenabled = true;
     if (!canvasmanager || !getCurrentCanvas()) return true;
     canvasmanager->getCurrentCanvas()->joystickConnected(event.getJoystickId(), event.isGamepad(), true);
     return false;
