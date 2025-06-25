@@ -1,4 +1,3 @@
-#if !defined(EMSCRIPTEN)
 /*
  * gFmodSound.h
  *
@@ -11,7 +10,7 @@
 
 #include "gSound.h"
 
-class gFmodSound : public gSound{
+class gFmodSound : public gSound {
 public:
 	gFmodSound();
 	virtual ~gFmodSound();
@@ -115,4 +114,3 @@ private:
 };
 
 #endif /* MEDIA_GFMODSOUND_H_ */
-#endif

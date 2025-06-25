@@ -241,24 +241,6 @@ private:
 	ActionType action;
 };
 
-class gAppPauseEvent : public gEvent {
-public:
-	gAppPauseEvent() {}
-
-	G_EVENT_CLASS_TYPE(gAppPauseEvent)
-	G_EVENT_CLASS_CATEGORY(EVENTCATEGORY_APP)
-private:
-};
-
-class gAppResumeEvent : public gEvent {
-public:
-	gAppResumeEvent() {}
-
-	G_EVENT_CLASS_TYPE(gAppResumeEvent)
-	G_EVENT_CLASS_CATEGORY(EVENTCATEGORY_APP)
-private:
-};
-
 enum DeviceOrientation {
 	DEVICEORIENTATION_UNSPECIFIED = -1,
 	DEVICEORIENTATION_LANDSCAPE = 0,
@@ -277,6 +259,28 @@ public:
 	G_EVENT_CLASS_CATEGORY(EVENTCATEGORY_APP)
 private:
 	DeviceOrientation orientation;
+};
+
+#endif
+
+#ifdef GLIST_WEB
+
+class gAppPauseEvent : public gEvent {
+public:
+    gAppPauseEvent() {}
+
+    G_EVENT_CLASS_TYPE(gAppPauseEvent)
+    G_EVENT_CLASS_CATEGORY(EVENTCATEGORY_APP)
+private:
+};
+
+class gAppResumeEvent : public gEvent {
+public:
+    gAppResumeEvent() {}
+
+    G_EVENT_CLASS_TYPE(gAppResumeEvent)
+    G_EVENT_CLASS_CATEGORY(EVENTCATEGORY_APP)
+private:
 };
 
 #endif

@@ -548,9 +548,13 @@ bool gIsBase64(char c) {
 }
 
 bool gIsOnline() {
-	gHttpFile hf;
-	hf.load("www.google.com");
-	return (hf.getHtml() != "");
+#ifdef GLIST_WEB
+    return true;
+#else
+    gHttpFile hf;
+    hf.load("www.google.com");
+    return (hf.getHtml() != "");
+#endif
 }
 
 

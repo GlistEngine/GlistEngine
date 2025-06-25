@@ -165,13 +165,13 @@ void gShader::loadProgramInternal(const char* vertexSource, const char* fragment
 	G_CHECK_GL2(vertex, glCreateShader(GL_VERTEX_SHADER));
 	glShaderSource(vertex, 1, &vertexSource, nullptr);
 	glCompileShader(vertex);
-	checkCompileErrors(vertex, "VERTEX");
+	checkCompileErrors(vertex, "VERTEX", vertexSource);
 
 	// fragment Shader
 	G_CHECK_GL2(fragment, glCreateShader(GL_FRAGMENT_SHADER));
 	glShaderSource(fragment, 1, &fragmentSource, nullptr);
 	glCompileShader(fragment);
-	checkCompileErrors(fragment, "FRAGMENT");
+	checkCompileErrors(fragment, "FRAGMENT", fragmentSource);
 
 	// if geometry shader is given, compile geometry shader
 #if defined(WIN32) || defined(LINUX)
@@ -192,7 +192,7 @@ void gShader::loadProgramInternal(const char* vertexSource, const char* fragment
 	if(geometrySource != nullptr) glAttachShader(id, geometry);
 #endif
 	glLinkProgram(id);
-	checkCompileErrors(id, "PROGRAM");
+	checkCompileErrors(id, "PROGRAM", "");
 	// delete the shaders as they're linked into our program now and no longer necessery
 	glDeleteShader(vertex);
 	glDeleteShader(fragment);
@@ -200,7 +200,7 @@ void gShader::loadProgramInternal(const char* vertexSource, const char* fragment
 	if(geometrySource != nullptr) glDeleteShader(geometry);
 #endif
 }
-void gShader::checkCompileErrors(GLuint shader, const std::string& type, const std::string& shaderCode) {
+void gShader::checkCompileErrors(GLuint shader, const std::string& type, const char* shaderCode) {
     GLint success;
     GLchar infoLog[1024];
     if(type != "PROGRAM") {
@@ -297,7 +297,7 @@ std::unordered_map<std::string, std::string> gShader::generateDefines(ShaderType
 	} else if (type == ShaderType::GEOMETRY) {
 		map.insert(std::pair<std::string, std::string>("GEOMETRY", ""));
 	}
-#if defined(GLIST_MOBILE)
+#if defined(GLIST_MOBILE) || defined(GLIST_WEB)
 	map.insert(std::pair<std::string, std::string>("GLES", ""));
 #endif
 	int max_lights = GLIST_MAX_LIGHTS;
