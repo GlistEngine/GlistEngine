@@ -5,6 +5,9 @@
  *      Author: Admin
  */
 
+// Emscripten does not support fmod but since this class does not use fmod anymore,
+// it is not a problem!
+
 #include "gFmodSound.h"
 
 gFmodSound::gFmodSound() {

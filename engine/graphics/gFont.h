@@ -20,7 +20,12 @@
 #include "gNode.h"
 #include <map>
 #include <vector>
+#ifdef EMSCRIPTEN
+#include "ft2build.h"
+#include FT_FREETYPE_H
+#else
 #include "freetype2/ft2build.h"
+#endif
 #ifdef ANDROID
 #include "freetype2/freetype/freetype.h"
 #include <android/asset_manager.h>

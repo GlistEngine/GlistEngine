@@ -57,7 +57,7 @@ void gSkinnedMesh::drawVboFrame() {
     // draw mesh
     vboframe[0][frameno].bind();
     if (vboframe[0][frameno].isIndexDataAllocated()) {
-        glDrawElements(GL_TRIANGLES, vboframe[0][frameno].getIndicesNum(), GL_UNSIGNED_INT, 0);
+        glDrawElements(GL_TRIANGLES, vboframe[0][frameno].getIndicesNum(), G_INDEX_SIZE, 0);
     } else {
     	glDrawArrays(GL_TRIANGLES, 0, vboframe[0][frameno].getVerticesNum());
     }
