@@ -181,26 +181,27 @@ private:
 
 		Box rotate(TabPosition pos, int boxw, int boxh) const {
 			switch (pos) {
-			case TabPosition::TOP: {
-				return *this;
+				case TabPosition::TOP: {
+					return *this;
+				}
+				case TabPosition::LEFT: {
+					Box box = *this;
+					box.flipXY();
+					return box;
+				}
+				case TabPosition::RIGHT: {
+					Box box = *this;
+					box.flipXY();
+					box.x = boxw - box.w;
+					return box;
+				}
+				case TabPosition::BOTTOM: {
+					Box box = *this;
+					box.y = boxh - box.h;
+					return box;
+				}
 			}
-			case TabPosition::LEFT: {
-				Box box = *this;
-				box.flipXY();
-				return box;
-			}
-			case TabPosition::RIGHT: {
-				Box box = *this;
-				box.flipXY();
-				box.x = boxw - box.w;
-				return box;
-			}
-			case TabPosition::BOTTOM: {
-				Box box = *this;
-				box.y = boxh - box.h;
-				return box;
-			}
-			}
+			return *this;
 		}
 
 		void render() const {
