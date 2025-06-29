@@ -201,6 +201,7 @@ private:
 				return box;
 			}
 			}
+			return *this;
 		}
 
 		void render() const {

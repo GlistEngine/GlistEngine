@@ -7,6 +7,7 @@
 
 #include "gColor.h"
 #include <algorithm>
+#include <cmath>
 
 const gColor gColor::RED 	 	(1.0f,	0.0f,	0.0f,	1.0f);
 const gColor gColor::GREEN 		(0.0f,	1.0f, 	0.0f,	1.0f);
