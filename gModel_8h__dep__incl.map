@@ -1,5 +1,7 @@
 <map id="gModel.h" name="gModel.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="25,5,107,31"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="102,5,185,31"/>
 <area shape="rect" id="Node000002" href="$gAssetLoader_8h.html" title=" " alt="" coords="5,79,127,104"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="69,44,69,79,63,79,63,44"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="123,42,80,80,77,76,119,38"/>
+<area shape="rect" id="Node000003" href="$gModelAnimator_8h.html" title=" " alt="" coords="151,79,293,104"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="168,38,211,76,207,80,164,42"/>
 </map>

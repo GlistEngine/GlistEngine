@@ -121,6 +121,7 @@ var annotated_dup =
     [ "gMatrix4", "classgMatrix4.html", "classgMatrix4" ],
     [ "gMesh", "classgMesh.html", "classgMesh" ],
     [ "gModel", "classgModel.html", "classgModel" ],
+    [ "gModelAnimator", "classgModelAnimator.html", "classgModelAnimator" ],
     [ "gMorphingMesh", "classgMorphingMesh.html", "classgMorphingMesh" ],
     [ "gMouseButtonEvent", "classgMouseButtonEvent.html", "classgMouseButtonEvent" ],
     [ "gMouseButtonPressedEvent", "classgMouseButtonPressedEvent.html", "classgMouseButtonPressedEvent" ],

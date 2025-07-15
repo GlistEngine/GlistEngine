@@ -2,7 +2,7 @@ var searchData=
 [
   ['activate_0',['activate',['../classgGUITooltipText.html#a93fb6f0e96abd7db0024f2e3f8a62d05',1,'gGUITooltipText::activate()'],['../classgShadowMap.html#a636fbd547bf9f211e2d7345c4c50d34a',1,'gShadowMap::activate()']]],
   ['addaction_1',['addAction',['../classgGUIActionManager.html#a46d651a8c9d5b4a4fec7ae53aa2f1cbe',1,'gGUIActionManager']]],
-  ['addanimation_2',['addAnimation',['../classgSpriteAnimator.html#a96ea8bb79d132596b58df25c26730f50',1,'gSpriteAnimator']]],
+  ['addanimation_2',['addanimation',['../classgSpriteAnimator.html#a96ea8bb79d132596b58df25c26730f50',1,'gSpriteAnimator::addAnimation()'],['../classgModelAnimator.html#a16991c74e0bf081c723af84f2c95095f',1,'gModelAnimator::addAnimation()']]],
   ['addarrow_3',['addArrow',['../classgGUISurface.html#ae45c357d39f9283a06547db744394dee',1,'gGUISurface']]],
   ['addcheckbox_4',['addCheckbox',['../classgGUIToolbar.html#a5f9746e2e20435b326e0e3e3c02bd108',1,'gGUIToolbar']]],
   ['addchild_5',['addchild',['../classgGUIMenuItem.html#a00d31f8f3af217446cf001697b58fcbf',1,'gGUIMenuItem::addChild(std::string text, bool addSeperator=false)'],['../classgGUIMenuItem.html#a05d7d64e0289bf6faa8f0550f0757bfa',1,'gGUIMenuItem::addChild(gGUIMenuItem childItem)']]],
@@ -39,13 +39,14 @@ var searchData=
   ['addtoolbar_36',['addToolBar',['../classgGUIForm.html#a25d8a62c350d32b97a431c5bd5b561f7',1,'gGUIForm']]],
   ['addtoolbarbutton_37',['addToolbarButton',['../classgGUIToolbar.html#a135fe6ff3c08fe9960757315bfa5a779',1,'gGUIToolbar']]],
   ['addtopmargin_38',['addTopMargin',['../classgGUITextbox.html#af621f2789dedabf5371bdcd3408d5d50',1,'gGUITextbox']]],
-  ['addtreelist_39',['addTreelist',['../classgGUIForm.html#a8e25814749842b3377cf23248af47551',1,'gGUIForm']]],
-  ['addtriangle_40',['addTriangle',['../classgGUISurface.html#a66fdd3f85ca01f0ea30ef6dadf2310fd',1,'gGUISurface']]],
-  ['addvariable_41',['addvariable',['../classgGUIPieGraph.html#aa40ddfb733cf7d6bcdaeb89a5c0e2030',1,'gGUIPieGraph::addVariable(std::string variableLabel, float variableValue)'],['../classgGUIPieGraph.html#a02bf69e7c540fad8451a8123fb338fa7',1,'gGUIPieGraph::addVariable(std::string variableLabel, float variableValue, gColor variableColor)']]],
-  ['advance_42',['advance',['../classgParticle.html#a221a756724875182b04b888fc8088048',1,'gParticle']]],
-  ['allocate_43',['allocate',['../classgFbo.html#abbd88527340b5ebf75e4083dbe20ee2e',1,'gFbo::allocate()'],['../classgShadowMap.html#a1bba969e8e5d9877813a05e16c683682',1,'gShadowMap::allocate()']]],
-  ['animate_44',['animate',['../classgModel.html#a44bab0b13642624bf90ac98ac94011ef',1,'gModel']]],
-  ['asvec3_45',['asVec3',['../classgColor.html#a8351dae1ddefcd63d4df5e90b3761c04',1,'gColor']]],
-  ['asvec4_46',['asVec4',['../classgColor.html#af6e1edfa6e9197f0e9191b77f546893f',1,'gColor']]],
-  ['attachubo_47',['attachUbo',['../classgShader.html#a5b122e472ab28a85f290aa77f71bd284',1,'gShader']]]
+  ['addtransition_39',['addTransition',['../classgModelAnimator.html#ae013a26b837a4900895af8bd69f11f97',1,'gModelAnimator']]],
+  ['addtreelist_40',['addTreelist',['../classgGUIForm.html#a8e25814749842b3377cf23248af47551',1,'gGUIForm']]],
+  ['addtriangle_41',['addTriangle',['../classgGUISurface.html#a66fdd3f85ca01f0ea30ef6dadf2310fd',1,'gGUISurface']]],
+  ['addvariable_42',['addvariable',['../classgGUIPieGraph.html#aa40ddfb733cf7d6bcdaeb89a5c0e2030',1,'gGUIPieGraph::addVariable(std::string variableLabel, float variableValue)'],['../classgGUIPieGraph.html#a02bf69e7c540fad8451a8123fb338fa7',1,'gGUIPieGraph::addVariable(std::string variableLabel, float variableValue, gColor variableColor)']]],
+  ['advance_43',['advance',['../classgParticle.html#a221a756724875182b04b888fc8088048',1,'gParticle']]],
+  ['allocate_44',['allocate',['../classgFbo.html#abbd88527340b5ebf75e4083dbe20ee2e',1,'gFbo::allocate()'],['../classgShadowMap.html#a1bba969e8e5d9877813a05e16c683682',1,'gShadowMap::allocate()']]],
+  ['animate_45',['animate',['../classgModel.html#a44bab0b13642624bf90ac98ac94011ef',1,'gModel']]],
+  ['asvec3_46',['asVec3',['../classgColor.html#a8351dae1ddefcd63d4df5e90b3761c04',1,'gColor']]],
+  ['asvec4_47',['asVec4',['../classgColor.html#af6e1edfa6e9197f0e9191b77f546893f',1,'gColor']]],
+  ['attachubo_48',['attachUbo',['../classgShader.html#a5b122e472ab28a85f290aa77f71bd284',1,'gShader']]]
 ];

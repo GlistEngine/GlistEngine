@@ -14,6 +14,7 @@ var dir_8aa109d331f3e3b3014e32565285b6b8 =
     [ "gMaterial.h", "gMaterial_8h.html", "gMaterial_8h" ],
     [ "gMesh.h", "gMesh_8h.html", "gMesh_8h" ],
     [ "gModel.h", "gModel_8h.html", "gModel_8h" ],
+    [ "gModelAnimator.h", "gModelAnimator_8h.html", "gModelAnimator_8h" ],
     [ "gMorphingMesh.h", "gMorphingMesh_8h.html", "gMorphingMesh_8h" ],
     [ "gNode.h", "gNode_8h.html", "gNode_8h" ],
     [ "gRay.h", "gRay_8h.html", "gRay_8h" ],

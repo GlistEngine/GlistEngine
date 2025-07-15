@@ -36,6 +36,7 @@ var hierarchy =
       [ "gLogw", "classgLogw.html", null ]
     ] ],
     [ "gMatrix4", "classgMatrix4.html", null ],
+    [ "gModelAnimator", "classgModelAnimator.html", null ],
     [ "gObject", "classgObject.html", [
       [ "gUbo< gSceneLights >", "classgUbo.html", null ],
       [ "gAES", "classgAES.html", null ],
