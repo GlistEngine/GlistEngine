@@ -59,6 +59,8 @@ public:
 
 	gBoundingBox merge(const gBoundingBox& other) const;
 
+	gBoundingBox offset(const glm::vec3& offset) const;
+
 	bool intersects(gRay& ray) const;
 	float distance(gRay& ray) const;
 	bool intersects(gRay* ray) const;

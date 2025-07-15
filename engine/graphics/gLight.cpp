@@ -241,6 +241,30 @@ float gLight::getSpotCutOffSpread() const {
 	return spotcutoff.y;
 }
 
+void gLight::setOrientation(const glm::quat& o) {
+	gNode::setOrientation(o);
+	directioneuler = glm::vec3(0, 0, -1) * orientation;
+	ischanged = true;
+}
+
+void gLight::setOrientation(const glm::vec3& angles) {
+	gNode::setOrientation(angles);
+	directioneuler = glm::vec3(0, 0, -1) * orientation;
+	ischanged = true;
+}
+
+void gLight::rotateAround(float radians, const glm::vec3& axis, const glm::vec3& point) {
+	gNode::rotateAround(radians, axis, point);
+	directioneuler = glm::vec3(0, 0, -1) * orientation;
+	ischanged = true;
+}
+
+void gLight::rotateAroundDeg(float degrees, const glm::vec3& axis, const glm::vec3& point) {
+	gNode::rotateAroundDeg(degrees, axis, point);
+	directioneuler = glm::vec3(0, 0, -1) * orientation;
+	ischanged = true;
+}
+
 void gLight::processTransformationMatrix() {
 	gNode::processTransformationMatrix();
 	ischanged = true;

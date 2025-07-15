@@ -150,6 +150,12 @@ void gCamera::rotateAround(float radians, const glm::vec3& axis, const glm::vec3
 	processLookMatrix();
 }
 
+void gCamera::rotateAroundDeg(float degrees, const glm::vec3& axis, const glm::vec3& point) {
+	gNode::rotateAroundDeg(degrees, axis, point);
+	lookposition = glm::angleAxis(gDegToRad(degrees), axis) * (lookposition - point) + point;
+	processLookMatrix();
+}
+
 void gCamera::setOrientation(const glm::quat& o) {
 	gNode::setOrientation(o);
 	lookorientation = o;
