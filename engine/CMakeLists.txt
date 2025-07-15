@@ -146,6 +146,7 @@ set(SRC_FILES
 	${ENGINE_DIR}/graphics/gMesh.cpp
 	${ENGINE_DIR}/graphics/gSkinnedMesh.cpp
 	${ENGINE_DIR}/graphics/gModel.cpp
+	${ENGINE_DIR}/graphics/gModelAnimator.cpp
 	${ENGINE_DIR}/graphics/gMorphingMesh.cpp
 	${ENGINE_DIR}/utils/gLocalization.cpp
 	${ENGINE_DIR}/utils/gDatabase.cpp
