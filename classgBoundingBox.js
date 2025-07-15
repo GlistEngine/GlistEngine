@@ -31,6 +31,7 @@ var classgBoundingBox =
     [ "minX", "classgBoundingBox.html#a0dcbeaa4992a9a3f470ed29eb802c5b5", null ],
     [ "minY", "classgBoundingBox.html#a822da8fa655ec6b9e5ae902975273ebc", null ],
     [ "minZ", "classgBoundingBox.html#a78ed39e1e81816122e9cfbb8dc239de2", null ],
+    [ "offset", "classgBoundingBox.html#aa37e943c84010bbea3bbcfb8e1acbddd", null ],
     [ "set", "classgBoundingBox.html#a0797ed3a4d1e3b82b511c432e1f31cf6", null ],
     [ "set", "classgBoundingBox.html#a3a47394b3e29aa61012b48f93ba5f1a4", null ],
     [ "setTransformationMatrix", "classgBoundingBox.html#a4dbcaf92ab73f1eeaf5335cd29763cda", null ]

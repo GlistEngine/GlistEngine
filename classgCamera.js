@@ -25,6 +25,7 @@ var classgCamera =
     [ "rotate", "classgCamera.html#a3c646ce24c8688490b184c8bec21323d", null ],
     [ "rotate", "classgCamera.html#acc5b90b6eca584c3445b231dc4496f36", null ],
     [ "rotateAround", "classgCamera.html#a8ed40cf36d5122d1ab560f55ee3a6a5f", null ],
+    [ "rotateAroundDeg", "classgCamera.html#abf0558924674f4d6fb3a42bd3a38f73f", null ],
     [ "rotateDeg", "classgCamera.html#a770071684ffb647d3b8d3d365d1f6cee", null ],
     [ "rotateLook", "classgCamera.html#a18d347327701a5d811c374df2b2011ea", null ],
     [ "scale", "classgCamera.html#ab7108058d0d0ff684f8d0d8200b800a9", null ],

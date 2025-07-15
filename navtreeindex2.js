@@ -1,5 +1,7 @@
 var NAVTREEINDEX2 =
 {
+"classgColorAdjustments.html":[1,0,25],
+"classgColorAdjustments.html#a3d3cc590f20f05b62b916b310452902e":[1,0,25,2],
 "classgColorAdjustments.html#a4b3f815df430303dbeb0a4bf90a25479":[1,0,25,1],
 "classgColorAdjustments.html#a7058f701a06a2ae69b12dafe73d6cd96":[1,0,25,4],
 "classgColorAdjustments.html#a8dc8917fedbf2626ee4a9a3520292a29":[1,0,25,3],
@@ -247,7 +249,5 @@ var NAVTREEINDEX2 =
 "classgGUIButton.html#a293ca865b13a575901426cea3f663370":[1,0,51,39],
 "classgGUIButton.html#a2a302f838a8c1c4f2910303aa8a9d57e":[1,0,51,35],
 "classgGUIButton.html#a2c8b34a5193500849e567b8b9cdb4bfb":[1,0,51,11],
-"classgGUIButton.html#a33047b09c04784d816a562b6e64c3d9c":[1,0,51,20],
-"classgGUIButton.html#a33c134f73e5732de78f195a38e2fb44d":[1,0,51,50],
-"classgGUIButton.html#a366714acb9fd5a279ce0c5ed8f89f8fa":[1,0,51,29]
+"classgGUIButton.html#a33047b09c04784d816a562b6e64c3d9c":[1,0,51,20]
 };

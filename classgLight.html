@@ -234,6 +234,14 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ac5b36d3655999435aa27b853f9b0cc2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3d730e54ea5052c59e7cecc7613525c2" id="r_a3d730e54ea5052c59e7cecc7613525c2"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgLight.html#a3d730e54ea5052c59e7cecc7613525c2">getSpotCutOffSpread</a> () const</td></tr>
 <tr class="separator:a3d730e54ea5052c59e7cecc7613525c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad7b4b360ca618acfd67001952b1dd208" id="r_ad7b4b360ca618acfd67001952b1dd208"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgLight.html#ad7b4b360ca618acfd67001952b1dd208">setOrientation</a> (const glm::quat &amp;o)</td></tr>
+<tr class="separator:ad7b4b360ca618acfd67001952b1dd208"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a09c7e46a96c98b75e7baf43d2862f77d" id="r_a09c7e46a96c98b75e7baf43d2862f77d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgLight.html#a09c7e46a96c98b75e7baf43d2862f77d">setOrientation</a> (const glm::vec3 &amp;angles)</td></tr>
+<tr class="separator:a09c7e46a96c98b75e7baf43d2862f77d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1cd1d8fef9fa6b7d9182ff91081feda7" id="r_a1cd1d8fef9fa6b7d9182ff91081feda7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgLight.html#a1cd1d8fef9fa6b7d9182ff91081feda7">rotateAround</a> (float radians, const glm::vec3 &amp;axis, const glm::vec3 &amp;point)</td></tr>
+<tr class="separator:a1cd1d8fef9fa6b7d9182ff91081feda7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0a86db7ff153d2c1d97cf51b5c5f0ab6" id="r_a0a86db7ff153d2c1d97cf51b5c5f0ab6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgLight.html#a0a86db7ff153d2c1d97cf51b5c5f0ab6">rotateAroundDeg</a> (float degrees, const glm::vec3 &amp;axis, const glm::vec3 &amp;point)</td></tr>
+<tr class="separator:a0a86db7ff153d2c1d97cf51b5c5f0ab6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classgNode"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classgNode')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classgNode.html">gNode</a></td></tr>
 <tr class="memitem:a5b2ef8de03ec7bc85983f64b5877c0e1 inherit pub_methods_classgNode" id="r_a5b2ef8de03ec7bc85983f64b5877c0e1"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgNode.html#a5b2ef8de03ec7bc85983f64b5877c0e1">gNode</a> ()</td></tr>
 <tr class="separator:a5b2ef8de03ec7bc85983f64b5877c0e1 inherit pub_methods_classgNode"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1140,6 +1148,74 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a id="a1cd1d8fef9fa6b7d9182ff91081feda7" name="a1cd1d8fef9fa6b7d9182ff91081feda7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1cd1d8fef9fa6b7d9182ff91081feda7">&#9670;&#160;</a></span>rotateAround()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gLight::rotateAround </td>
+          <td>(</td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>radians</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const glm::vec3 &amp;&#160;</td>
+          <td class="paramname"><em>axis</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const glm::vec3 &amp;&#160;</td>
+          <td class="paramname"><em>point</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a0a86db7ff153d2c1d97cf51b5c5f0ab6" name="a0a86db7ff153d2c1d97cf51b5c5f0ab6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0a86db7ff153d2c1d97cf51b5c5f0ab6">&#9670;&#160;</a></span>rotateAroundDeg()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gLight::rotateAroundDeg </td>
+          <td>(</td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>degrees</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const glm::vec3 &amp;&#160;</td>
+          <td class="paramname"><em>axis</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const glm::vec3 &amp;&#160;</td>
+          <td class="paramname"><em>point</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a930ea2c7e307185dce5883534e021361" name="a930ea2c7e307185dce5883534e021361"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a930ea2c7e307185dce5883534e021361">&#9670;&#160;</a></span>rotateDeg()</h2>
 
@@ -1473,6 +1549,42 @@ Additional Inherited Members</h2></td></tr>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a id="ad7b4b360ca618acfd67001952b1dd208" name="ad7b4b360ca618acfd67001952b1dd208"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad7b4b360ca618acfd67001952b1dd208">&#9670;&#160;</a></span>setOrientation() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gLight::setOrientation </td>
+          <td>(</td>
+          <td class="paramtype">const glm::quat &amp;&#160;</td>
+          <td class="paramname"><em>o</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a09c7e46a96c98b75e7baf43d2862f77d" name="a09c7e46a96c98b75e7baf43d2862f77d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a09c7e46a96c98b75e7baf43d2862f77d">&#9670;&#160;</a></span>setOrientation() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gLight::setOrientation </td>
+          <td>(</td>
+          <td class="paramtype">const glm::vec3 &amp;&#160;</td>
+          <td class="paramname"><em>angles</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
 
 </div>
 </div>
