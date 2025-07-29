@@ -10,7 +10,7 @@
 
 #include "gSound.h"
 
-class gFmodSound : public gSound{
+class gFmodSound : public gSound {
 public:
 	gFmodSound();
 	virtual ~gFmodSound();

@@ -50,6 +50,9 @@ unsigned int gImage::load(const std::string& fullPath) {
 		setDataHDR(datahdr, true, true);
 	} else {
 		unsigned char* data = stbi_load(fullpath.c_str(), &width, &height, &componentnum, 0);
+#ifdef EMSCRIPTEN
+		gFlipImageDataVertically(data, width, height, componentnum);
+#endif
 		setData(data, true, true);
 	}
 
@@ -66,7 +69,7 @@ unsigned int gImage::loadImageFromURL(const std::string& imageUrl) {
 }
 
 unsigned int gImage::loadImageFromURL(const std::string& imageUrl, bool cutUrlParameters) {
-#if(ANDROID)
+#if defined(EMSCRIPTEN)
 	return 0; // todo
 #else
 	imageurl = imageUrl;
@@ -103,6 +106,9 @@ void gImage::loadData(const std::string& fullPath) {
 		isstbimage = true;
 	} else {
 		data = stbi_load(fullpath.c_str(), &width, &height, &componentnum, 0);
+#ifdef EMSCRIPTEN
+		gFlipImageDataVertically(data, width, height, componentnum);
+#endif
 		isstbimage = true;
 	}
 }
@@ -185,7 +191,7 @@ std::string gImage::getImageUrl() {
 }
 
 std::string gImage::generateDownloadedImagePath(std::string imageType) {
-#if(ANDROID)
+#if defined(ANDROID) || defined(EMSCRIPTEN)
 	return ""; // todo
 #else
 	std::string imagepath = "";
