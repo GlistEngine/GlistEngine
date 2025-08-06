@@ -452,7 +452,19 @@ int gFont::getKerning(int c, int previousC) {
     }
 }
 
+#ifdef WIN32
+#include <windows.h>
+#endif
+
 std::wstring gFont::s2ws(const std::string& s) {
+#ifdef WIN32
+	int size_needed = MultiByteToWideChar(CP_UTF8, 0, s.c_str(), -1, nullptr, 0);
+	std::wstring wstr(size_needed, 0);
+	MultiByteToWideChar(CP_UTF8, 0, s.c_str(), -1, &wstr[0], size_needed);
+	wstr.pop_back(); // remove null terminator
+	return wstr;
+#else
     std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
     return converter.from_bytes(s);
+#endif
 }
