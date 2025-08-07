@@ -131,7 +131,7 @@ void gFbo::bind() {
 
 void gFbo::unbind() {
 	glBindFramebuffer(GL_FRAMEBUFFER, gFbo::defaultfbo);
-	glViewport(0, 0, renderer->getWidth(), renderer->getHeight());
+	glViewport(0, 0, renderer->getScreenWidth(), renderer->getScreenHeight());
 }
 
 void gFbo::draw(int x, int y) {
