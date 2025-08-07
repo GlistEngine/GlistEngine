@@ -43,6 +43,8 @@ public:
 	void enableNextButton(bool isEnabled);
 
 	gGUIButton getNextButton();
+	void setNextButtonName(std::string name);
+	void setPreviousButtonName(std::string name);
 
 private:
 	gGUINavigation* navigation;
