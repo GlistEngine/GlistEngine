@@ -144,27 +144,29 @@ $(document).ready(function(){initNavTree('gGUIPane_8h_source.html',''); initResi
 <div class="line"><a id="l00043" name="l00043"></a><span class="lineno"><a class="line" href="classgGUIPane.html#ad57ae038d5c585d9dd896e279a9ac36b">   43</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classgGUIPane.html#ad57ae038d5c585d9dd896e279a9ac36b">enableNextButton</a>(<span class="keywordtype">bool</span> <a class="code hl_function" href="classgBaseGUIObject.html#aa5f7d18ec35e48c8c5cc08be79aa66eb">isEnabled</a>);</div>
 <div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span> </div>
 <div class="line"><a id="l00045" name="l00045"></a><span class="lineno"><a class="line" href="classgGUIPane.html#afb14bf71d1434cc09b9b419698e1bbc1">   45</a></span>    <a class="code hl_class" href="classgGUIButton.html">gGUIButton</a> <a class="code hl_function" href="classgGUIPane.html#afb14bf71d1434cc09b9b419698e1bbc1">getNextButton</a>();</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span> </div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    <a class="code hl_class" href="classgGUINavigation.html">gGUINavigation</a>* navigation;</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    <span class="keywordtype">int</span> navorder;</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    <a class="code hl_class" href="classgGUISizer.html">gGUISizer</a> panesizer;</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    <a class="code hl_class" href="classgFont.html">gFont</a> titlefont;</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    <a class="code hl_class" href="classgColor.html">gColor</a> titlecolor;</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    <span class="keywordtype">int</span> titlefontsize;</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    std::string subtitle;</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    <span class="keywordtype">bool</span> issubtitleset;</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    <span class="keywordtype">bool</span> navbuttonsenabled;</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    <a class="code hl_class" href="classgGUISizer.html">gGUISizer</a> buttonsizer;</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    <a class="code hl_class" href="classgGUIPane.html">gGUIPane</a> *previouspane, *nextpane;</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    <a class="code hl_class" href="classgGUIButton.html">gGUIButton</a> previousbutton, nextbutton;</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    <span class="keywordtype">bool</span> previousbuttonenabled, nextbuttonenabled;</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    <span class="keywordtype">int</span> titlex, titley;</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    <span class="keywordtype">int</span> subtitlex, subtitley;</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>};</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno"><a class="line" href="classgGUIPane.html#a58883c100dceaaa5f2e93639d6b02f08">   46</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classgGUIPane.html#a58883c100dceaaa5f2e93639d6b02f08">setNextButtonName</a>(std::string name);</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno"><a class="line" href="classgGUIPane.html#a15178777d36353d60a6abec53071d56e">   47</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classgGUIPane.html#a15178777d36353d60a6abec53071d56e">setPreviousButtonName</a>(std::string name);</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    <a class="code hl_class" href="classgGUINavigation.html">gGUINavigation</a>* navigation;</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    <span class="keywordtype">int</span> navorder;</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    <a class="code hl_class" href="classgGUISizer.html">gGUISizer</a> panesizer;</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    <a class="code hl_class" href="classgFont.html">gFont</a> titlefont;</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    <a class="code hl_class" href="classgColor.html">gColor</a> titlecolor;</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    <span class="keywordtype">int</span> titlefontsize;</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    std::string subtitle;</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    <span class="keywordtype">bool</span> issubtitleset;</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    <span class="keywordtype">bool</span> navbuttonsenabled;</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    <a class="code hl_class" href="classgGUISizer.html">gGUISizer</a> buttonsizer;</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    <a class="code hl_class" href="classgGUIPane.html">gGUIPane</a> *previouspane, *nextpane;</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    <a class="code hl_class" href="classgGUIButton.html">gGUIButton</a> previousbutton, nextbutton;</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    <span class="keywordtype">bool</span> previousbuttonenabled, nextbuttonenabled;</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    <span class="keywordtype">int</span> titlex, titley;</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    <span class="keywordtype">int</span> subtitlex, subtitley;</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>};</div>
 </div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span> </div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span><span class="preprocessor">#endif </span><span class="comment">/* UI_GGUIPANE_H_ */</span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span> </div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span><span class="preprocessor">#endif </span><span class="comment">/* UI_GGUIPANE_H_ */</span><span class="preprocessor"></span></div>
 <div class="ttc" id="aclassgBaseApp_html"><div class="ttname"><a href="classgBaseApp.html">gBaseApp</a></div><div class="ttdef"><b>Definition</b> gBaseApp.h:16</div></div>
 <div class="ttc" id="aclassgBaseGUIObject_html"><div class="ttname"><a href="classgBaseGUIObject.html">gBaseGUIObject</a></div><div class="ttdef"><b>Definition</b> gBaseGUIObject.h:18</div></div>
 <div class="ttc" id="aclassgBaseGUIObject_html_a1b904144beed0a06f3d1943a56b7edd6"><div class="ttname"><a href="classgBaseGUIObject.html#a1b904144beed0a06f3d1943a56b7edd6">gBaseGUIObject::root</a></div><div class="ttdeci">gBaseApp * root</div><div class="ttdef"><b>Definition</b> gBaseGUIObject.h:149</div></div>
@@ -179,10 +181,12 @@ $(document).ready(function(){initNavTree('gGUIPane_8h_source.html',''); initResi
 <div class="ttc" id="aclassgGUIPane_html_a05a506000d63580744c8aabb90566712"><div class="ttname"><a href="classgGUIPane.html#a05a506000d63580744c8aabb90566712">gGUIPane::show</a></div><div class="ttdeci">void show()</div></div>
 <div class="ttc" id="aclassgGUIPane_html_a0c0a4fc24fc22c6bf925f8b793294bde"><div class="ttname"><a href="classgGUIPane.html#a0c0a4fc24fc22c6bf925f8b793294bde">gGUIPane::setNavigationOrder</a></div><div class="ttdeci">void setNavigationOrder(int orderNo)</div></div>
 <div class="ttc" id="aclassgGUIPane_html_a1493b0453ff753764a4fb0a52b44a143"><div class="ttname"><a href="classgGUIPane.html#a1493b0453ff753764a4fb0a52b44a143">gGUIPane::getNavigationOrder</a></div><div class="ttdeci">int getNavigationOrder()</div></div>
+<div class="ttc" id="aclassgGUIPane_html_a15178777d36353d60a6abec53071d56e"><div class="ttname"><a href="classgGUIPane.html#a15178777d36353d60a6abec53071d56e">gGUIPane::setPreviousButtonName</a></div><div class="ttdeci">void setPreviousButtonName(std::string name)</div></div>
 <div class="ttc" id="aclassgGUIPane_html_a28cda5bc799f006d3d6b5736b711417d"><div class="ttname"><a href="classgGUIPane.html#a28cda5bc799f006d3d6b5736b711417d">gGUIPane::~gGUIPane</a></div><div class="ttdeci">virtual ~gGUIPane()</div></div>
 <div class="ttc" id="aclassgGUIPane_html_a396fbeaf1dc7bdcb734808d581df9055"><div class="ttname"><a href="classgGUIPane.html#a396fbeaf1dc7bdcb734808d581df9055">gGUIPane::gGUIPane</a></div><div class="ttdeci">gGUIPane()</div></div>
 <div class="ttc" id="aclassgGUIPane_html_a45fd32beed237bec8d64165785b57555"><div class="ttname"><a href="classgGUIPane.html#a45fd32beed237bec8d64165785b57555">gGUIPane::set</a></div><div class="ttdeci">virtual void set(gBaseApp *root, gBaseGUIObject *topParentGUIObject, gBaseGUIObject *parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h)</div></div>
 <div class="ttc" id="aclassgGUIPane_html_a537a567f89e0705f9515c88af35e893a"><div class="ttname"><a href="classgGUIPane.html#a537a567f89e0705f9515c88af35e893a">gGUIPane::draw</a></div><div class="ttdeci">virtual void draw()</div></div>
+<div class="ttc" id="aclassgGUIPane_html_a58883c100dceaaa5f2e93639d6b02f08"><div class="ttname"><a href="classgGUIPane.html#a58883c100dceaaa5f2e93639d6b02f08">gGUIPane::setNextButtonName</a></div><div class="ttdeci">void setNextButtonName(std::string name)</div></div>
 <div class="ttc" id="aclassgGUIPane_html_a595090c2e08de7bdc072f9261e2b005b"><div class="ttname"><a href="classgGUIPane.html#a595090c2e08de7bdc072f9261e2b005b">gGUIPane::mouseMoved</a></div><div class="ttdeci">virtual void mouseMoved(int x, int y)</div></div>
 <div class="ttc" id="aclassgGUIPane_html_a694630e8db5a87ed741982d332a62591"><div class="ttname"><a href="classgGUIPane.html#a694630e8db5a87ed741982d332a62591">gGUIPane::mousePressed</a></div><div class="ttdeci">virtual void mousePressed(int x, int y, int button)</div></div>
 <div class="ttc" id="aclassgGUIPane_html_a70de7cd554aa5749d1c0fffd55d54774"><div class="ttname"><a href="classgGUIPane.html#a70de7cd554aa5749d1c0fffd55d54774">gGUIPane::setPreviousPane</a></div><div class="ttdeci">void setPreviousPane(gGUIPane *previousPane)</div></div>

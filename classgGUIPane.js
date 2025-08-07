@@ -14,7 +14,9 @@ var classgGUIPane =
     [ "set", "classgGUIPane.html#a45fd32beed237bec8d64165785b57555", null ],
     [ "setNavigation", "classgGUIPane.html#acebd527cc463b0b94ec1cfcebaacfd45", null ],
     [ "setNavigationOrder", "classgGUIPane.html#a0c0a4fc24fc22c6bf925f8b793294bde", null ],
+    [ "setNextButtonName", "classgGUIPane.html#a58883c100dceaaa5f2e93639d6b02f08", null ],
     [ "setNextPane", "classgGUIPane.html#a7eb9b21a8bf147f811ede85b3708ac53", null ],
+    [ "setPreviousButtonName", "classgGUIPane.html#a15178777d36353d60a6abec53071d56e", null ],
     [ "setPreviousPane", "classgGUIPane.html#a70de7cd554aa5749d1c0fffd55d54774", null ],
     [ "setSubTitle", "classgGUIPane.html#a0213ec6607c36428b664c4ad252994ae", null ],
     [ "show", "classgGUIPane.html#a05a506000d63580744c8aabb90566712", null ]

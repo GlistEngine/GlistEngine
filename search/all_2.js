@@ -27,7 +27,7 @@ var searchData=
   ['bottomright_24',['bottomright',['../classgParticle.html#a20888219bd93830a26d90dc3a6ab0d5e',1,'gParticle']]],
   ['boxh_25',['boxh',['../classgGUIScrollable.html#a2cb0843d9dc9f0afecfad31d034cd8c1',1,'gGUIScrollable']]],
   ['boxw_26',['boxw',['../classgGUIScrollable.html#ab1e5927510b754517e6369b90b0a43a5',1,'gGUIScrollable']]],
-  ['button_27',['button',['../classgMouseButtonEvent.html#a02938f73b12be3ccac32303b2bd7b3df',1,'gMouseButtonEvent::button'],['../classgGUITooltipText.html#a2cedadc240d53936d63f66ecb36e771aa8356ee9046e114c45964cbd6242673ed',1,'gGUITooltipText::Button']]],
+  ['button_27',['button',['../classgGUITooltipText.html#a2cedadc240d53936d63f66ecb36e771aa8356ee9046e114c45964cbd6242673ed',1,'gGUITooltipText::Button'],['../classgMouseButtonEvent.html#a02938f73b12be3ccac32303b2bd7b3df',1,'gMouseButtonEvent::button']]],
   ['buttoncolor_28',['buttoncolor',['../classgBaseGUIObject.html#acf6b734a3ce8ea39acca5bbb94e8ed88',1,'gBaseGUIObject']]],
   ['buttonfontcolor_29',['buttonfontcolor',['../classgBaseGUIObject.html#a4506d26dd9f09fbffdc9f7b64dfe3c25',1,'gBaseGUIObject']]],
   ['buttonh_30',['buttonh',['../classgGUIButton.html#a02020467bb2b2d6126a93782a9112c7e',1,'gGUIButton::buttonh'],['../classgGUICheckbox.html#ace3294ff1c101ef3353b78f92bec1073',1,'gGUICheckbox::buttonh']]],
