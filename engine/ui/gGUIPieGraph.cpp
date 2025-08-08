@@ -51,7 +51,16 @@ void gGUIPieGraph::draw() {
 	int i = 0;
 	for(i = 0; i < variablevalues.size(); i++){
 //	for(; i < variablevalues.size() - othersindex.size() - othersindex.empty(); i++){
-		degree = degree + valuesdegree.at(i);
+		degree += valuesdegree.size() > i ? valuesdegree[i] : 0;
+		if (variablecolors.size() > i)
+		renderer->setColor(variablecolors[i]);
+
+		if (cursordegree > rotationdegree && cursordegree < degree)
+		arrangeOnCursor(i);
+
+		if (valuessides.size() > i && valuesdegree.size() > i)
+		gDrawArc(widthhalf + left, heighthalf + top, radius - radiusreduction, isFilled, valuessides[i], valuesdegree[i], rotationdegree);
+
 		renderer->setColor(variablecolors.at(i));
 		if(cursordegree > rotationdegree && cursordegree < degree) arrangeOnCursor(i);
 		gDrawArc(widthhalf + left, heighthalf + top, radius - radiusreduction, isFilled, valuessides[i], valuesdegree[i], rotationdegree);
@@ -63,6 +72,7 @@ void gGUIPieGraph::draw() {
 		renderer->setColor(255, 255, 255);
 		font->drawText(labelstr[i], labelx[i], labely[i]);
 	}
+
 /*
 	if(!othersindex.empty()) {
 		renderer->setColor(otherscolor);
@@ -83,6 +93,46 @@ void gGUIPieGraph::draw() {
 */
 
 	showInfoOnCursor();
+
+	float cx = widthhalf + left;
+	float cy = heighthalf + top;
+	float dotRadius = radius * 0.75f;
+	float maxOffset = radius * 0.2f;
+
+	std::vector<float> midAngles(variablevalues.size());
+	float currentAngle = rotationforothers;
+	for (int i = 0; i < variablevalues.size(); i++) {
+		midAngles[i] = currentAngle + valuesdegree[i] / 2.0f;
+		currentAngle += valuesdegree[i];
+	}
+
+	int globalCount = 0;
+	for (int i = 0; i < (int)predictedOutputs.size(); i++) {
+		int predictedClass = predictedOutputs[i];
+		if (predictedClass < 0 || predictedClass >= (int)midAngles.size()) {
+			gLogi("gGUIPieGraph") << "Warning: predictedClass (" << predictedClass << ") exceeds the size of midAngles.";
+			continue;
+		}
+
+		int count = globalCount++;
+
+		float radiusOffset = (count / (float)predictedOutputs.size()) * maxOffset;
+		float angleOffsetDeg = count * 10.0f;
+
+		float angleDeg = midAngles[predictedClass] + angleOffsetDeg;
+		float angleRad = angleDeg * M_PI / 180.0f;
+
+		float px = cx + cos(angleRad) * (dotRadius + radiusOffset);
+		float py = cy + sin(angleRad) * (dotRadius + radiusOffset);
+
+		renderer->setColor(outlinecolor);
+		gDrawCircle(px, py, 4.0f, true, 20);
+
+		renderer->setColor(outlinecolor);
+		std::string label = std::to_string(count + 1) + ".";
+		font->drawText(label, px + 6, py - 6);
+	}
+
 	renderer->setColor(oldcolor);
 }
 
@@ -107,6 +157,27 @@ void gGUIPieGraph::mouseMoved(int x, int y) {
 void gGUIPieGraph::setRadius(float radius) {
 	this->radius = radius;
 	calculateLabelPositions();
+}
+
+void gGUIPieGraph::setPredictedOutputs (const std::vector<int>& outs) {
+	predictedOutputs.clear();
+	predictedOutputs = outs;
+	std::map<int, int> classCount;
+	for(int val: predictedOutputs) {
+		 classCount[val]++;
+	}
+
+	for(int i = 0; i < variablelabels.size(); i++) {
+		std::string label = variablelabels[i];
+		int classID = i;
+
+		if(classCount.find(classID) != classCount.end()) {
+			int count = classCount[classID];
+			variablelabels[i] = label + ": " + std::to_string(count);
+		}else {
+			variablelabels[i] = label + ": 0";
+		}
+	}
 }
 
 float gGUIPieGraph::getRadius() {
