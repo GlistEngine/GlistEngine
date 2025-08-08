@@ -131,44 +131,45 @@ $(document).ready(function(){initNavTree('gGUIPieGraph_8h_source.html',''); init
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno"><a class="line" href="classgGUIPieGraph.html#a80711f41f6b8277658c21f9770780a2c">   30</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classgGUIPieGraph.html#a80711f41f6b8277658c21f9770780a2c">setShowInfoOnCursor</a>(<span class="keywordtype">bool</span> isShown);</div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno"><a class="line" href="classgGUIPieGraph.html#a0de646625c1cddce92b4081aa0130e8a">   31</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classgGUIPieGraph.html#a0de646625c1cddce92b4081aa0130e8a">setInfoTextSize</a>(<span class="keywordtype">int</span> size);</div>
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno"><a class="line" href="classgGUIPieGraph.html#af3f6024d1909fdb6087421faa88792d0">   32</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classgGUIPieGraph.html#af3f6024d1909fdb6087421faa88792d0">setAdditionalLabelY</a>(<span class="keywordtype">float</span> diff);</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span> </div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno"><a class="line" href="classgGUIPieGraph.html#a08633acdbf8cc3dd18f297d87043e181">   34</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classgGUIPieGraph.html#a08633acdbf8cc3dd18f297d87043e181">clear</a>();</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span> </div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    <span class="keywordtype">float</span> getTotalValue(std::vector&lt;float&gt; vector);</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    <span class="keywordtype">void</span> mouseMoved(<span class="keywordtype">int</span> x, <span class="keywordtype">int</span> y);</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    <span class="keywordtype">void</span> arrangeOnCursor(<span class="keywordtype">int</span> index);</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    <span class="keywordtype">void</span> showInfoOnCursor();</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    <span class="keywordtype">void</span> loadFont();</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    <span class="keywordtype">void</span> arrangePieGraph();</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    <span class="keywordtype">void</span> calculateLabelPositions();</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span> </div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    std::vector&lt;std::string&gt; variablelabels;</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    std::vector&lt;float&gt; variablevalues;</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    std::vector&lt;gColor&gt; variablecolors;</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    std::vector&lt;float&gt; valuesdegree;</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    std::vector&lt;float&gt; valuespercentage;</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    std::vector&lt;int&gt; valuessides;</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    std::vector&lt;int&gt; othersindex;</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    std::vector&lt;std::string&gt; labelstr;</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    std::vector&lt;int&gt; labelx, labely;</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span> </div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    std::vector&lt;std::string&gt; valuefortext;</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    std::vector&lt;std::string&gt; percentagefortext;</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span> </div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    <span class="keywordtype">float</span> radius, cursordegree, radiusreduction, oncursorcolorreduction, rotationforothers;</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    <span class="keywordtype">bool</span> isFilled, isshown;</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    <span class="keywordtype">int</span> numberofsidesratio, sideofothers, cursorx, cursory, infotextshift, showinfoindex, fontsize;</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    <a class="code hl_class" href="classgColor.html">gColor</a> color;</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    <a class="code hl_class" href="classgColor.html">gColor</a> outlinecolor, otherscolor, infotextcolor;</div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    <a class="code hl_class" href="classgFont.html">gFont</a> fontforinfotext;</div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>    <span class="keywordtype">float</span> additionallabely;</div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    <span class="keywordtype">int</span> widthhalf, heighthalf;</div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>};</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno"><a class="line" href="classgGUIPieGraph.html#a1acdcb9b1bc4ec51c151081c03d69cf9">   33</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classgGUIPieGraph.html#a1acdcb9b1bc4ec51c151081c03d69cf9">setPredictedOutputs</a>(<span class="keyword">const</span> std::vector&lt;int&gt;&amp; outs);</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span> </div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno"><a class="line" href="classgGUIPieGraph.html#a08633acdbf8cc3dd18f297d87043e181">   35</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classgGUIPieGraph.html#a08633acdbf8cc3dd18f297d87043e181">clear</a>();</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span> </div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    <span class="keywordtype">float</span> getTotalValue(std::vector&lt;float&gt; vector);</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    <span class="keywordtype">void</span> mouseMoved(<span class="keywordtype">int</span> x, <span class="keywordtype">int</span> y);</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    <span class="keywordtype">void</span> arrangeOnCursor(<span class="keywordtype">int</span> index);</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    <span class="keywordtype">void</span> showInfoOnCursor();</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    <span class="keywordtype">void</span> loadFont();</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    <span class="keywordtype">void</span> arrangePieGraph();</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    <span class="keywordtype">void</span> calculateLabelPositions();</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span> </div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    std::vector&lt;std::string&gt; variablelabels;</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    std::vector&lt;float&gt; variablevalues;</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    std::vector&lt;gColor&gt; variablecolors;</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span> </div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    std::vector&lt;float&gt; valuesdegree;</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    std::vector&lt;float&gt; valuespercentage;</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    std::vector&lt;int&gt; valuessides;</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    std::vector&lt;int&gt; othersindex;</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    std::vector&lt;std::string&gt; labelstr;</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    std::vector&lt;int&gt; labelx, labely;</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    std::vector&lt;int&gt; predictedOutputs;</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    std::vector&lt;std::string&gt; valuefortext;</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    std::vector&lt;std::string&gt; percentagefortext;</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span> </div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    <span class="keywordtype">float</span> radius, cursordegree, radiusreduction, oncursorcolorreduction, rotationforothers;</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    <span class="keywordtype">bool</span> isFilled, isshown;</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    <span class="keywordtype">int</span> numberofsidesratio, sideofothers, cursorx, cursory, infotextshift, showinfoindex, fontsize;</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    <a class="code hl_class" href="classgColor.html">gColor</a> color;</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    <a class="code hl_class" href="classgColor.html">gColor</a> outlinecolor, otherscolor, infotextcolor;</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>    <a class="code hl_class" href="classgFont.html">gFont</a> fontforinfotext;</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    <span class="keywordtype">float</span> additionallabely;</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    <span class="keywordtype">int</span> widthhalf, heighthalf;</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>};</div>
 </div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span> </div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span><span class="preprocessor">#endif </span><span class="comment">/* UI_gGUIPieGraph_H_ */</span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span> </div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span><span class="preprocessor">#endif </span><span class="comment">/* UI_gGUIPieGraph_H_ */</span><span class="preprocessor"></span></div>
 <div class="ttc" id="aclassgBaseApp_html"><div class="ttname"><a href="classgBaseApp.html">gBaseApp</a></div><div class="ttdef"><b>Definition</b> gBaseApp.h:16</div></div>
 <div class="ttc" id="aclassgBaseGUIObject_html"><div class="ttname"><a href="classgBaseGUIObject.html">gBaseGUIObject</a></div><div class="ttdef"><b>Definition</b> gBaseGUIObject.h:18</div></div>
 <div class="ttc" id="aclassgBaseGUIObject_html_a1b904144beed0a06f3d1943a56b7edd6"><div class="ttname"><a href="classgBaseGUIObject.html#a1b904144beed0a06f3d1943a56b7edd6">gBaseGUIObject::root</a></div><div class="ttdeci">gBaseApp * root</div><div class="ttdef"><b>Definition</b> gBaseGUIObject.h:149</div></div>
@@ -180,6 +181,7 @@ $(document).ready(function(){initNavTree('gGUIPieGraph_8h_source.html',''); init
 <div class="ttc" id="aclassgGUIPieGraph_html_a08633acdbf8cc3dd18f297d87043e181"><div class="ttname"><a href="classgGUIPieGraph.html#a08633acdbf8cc3dd18f297d87043e181">gGUIPieGraph::clear</a></div><div class="ttdeci">void clear()</div></div>
 <div class="ttc" id="aclassgGUIPieGraph_html_a0de646625c1cddce92b4081aa0130e8a"><div class="ttname"><a href="classgGUIPieGraph.html#a0de646625c1cddce92b4081aa0130e8a">gGUIPieGraph::setInfoTextSize</a></div><div class="ttdeci">void setInfoTextSize(int size)</div></div>
 <div class="ttc" id="aclassgGUIPieGraph_html_a135cc07abe0452ebc823d6d2361bca3b"><div class="ttname"><a href="classgGUIPieGraph.html#a135cc07abe0452ebc823d6d2361bca3b">gGUIPieGraph::setInfoTextColor</a></div><div class="ttdeci">void setInfoTextColor(gColor color)</div></div>
+<div class="ttc" id="aclassgGUIPieGraph_html_a1acdcb9b1bc4ec51c151081c03d69cf9"><div class="ttname"><a href="classgGUIPieGraph.html#a1acdcb9b1bc4ec51c151081c03d69cf9">gGUIPieGraph::setPredictedOutputs</a></div><div class="ttdeci">void setPredictedOutputs(const std::vector&lt; int &gt; &amp;outs)</div></div>
 <div class="ttc" id="aclassgGUIPieGraph_html_a6e5943e4549bdafdda4d44fa96356491"><div class="ttname"><a href="classgGUIPieGraph.html#a6e5943e4549bdafdda4d44fa96356491">gGUIPieGraph::getRadius</a></div><div class="ttdeci">float getRadius()</div></div>
 <div class="ttc" id="aclassgGUIPieGraph_html_a80711f41f6b8277658c21f9770780a2c"><div class="ttname"><a href="classgGUIPieGraph.html#a80711f41f6b8277658c21f9770780a2c">gGUIPieGraph::setShowInfoOnCursor</a></div><div class="ttdeci">void setShowInfoOnCursor(bool isShown)</div></div>
 <div class="ttc" id="aclassgGUIPieGraph_html_a9ff14e0dca38e9dbfaad35ec45108f40"><div class="ttname"><a href="classgGUIPieGraph.html#a9ff14e0dca38e9dbfaad35ec45108f40">gGUIPieGraph::set</a></div><div class="ttdeci">void set(gBaseApp *root, gBaseGUIObject *topParentGUIObject, gBaseGUIObject *parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h)</div></div>
