@@ -30,6 +30,7 @@ public:
 	void setShowInfoOnCursor(bool isShown);
 	void setInfoTextSize(int size);
 	void setAdditionalLabelY(float diff);
+	void setPredictedOutputs(const std::vector<int>& outs);
 
 	void clear();
 
@@ -52,7 +53,7 @@ private:
 	std::vector<int> othersindex;
 	std::vector<std::string> labelstr;
 	std::vector<int> labelx, labely;
-
+	std::vector<int> predictedOutputs;
 	std::vector<std::string> valuefortext;
 	std::vector<std::string> percentagefortext;
 
