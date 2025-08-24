@@ -122,17 +122,15 @@ gTexture::gTexture(int w, int h, int format, bool isFbo) {
 	else if (format == GL_RGBA) componentnum = 4;
     data = nullptr;
 	datahdr = nullptr;
-	glGenTextures(1, &id);
+	id = renderer->createTextures();
 	istextureallocated = true;
 	bind();
-    G_CHECK_GL(glTexImage2D(GL_TEXTURE_2D, 0, internalformat, width, height, 0, format, valuetype, nullptr));
+
+	renderer->texImage2D(GL_TEXTURE_2D, internalformat, width, height, format, valuetype, nullptr);
 
 	// TODO: BEFORE SHADOWMAP GL_REPEAT
-	G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE));
-	G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE));
-
-	G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, texturefilter[filtermin]));
-	G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, texturefilter[filtermag]));
+	renderer->setWrappingAndFiltering(GL_TEXTURE_2D, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE,
+	                                      texturefilter[filtermin], texturefilter[filtermag]);
 	setupRenderData();
 }
 
@@ -150,7 +148,7 @@ unsigned int gTexture::load(const std::string& fullPath) {
 	if (gToLower(fullpath.substr(fullpath.length() - 3, 3)) == "hdr") ishdr = true;
 
 	if (!istextureallocated) {
-		glGenTextures(1, &id);
+		id = renderer->createTextures();
 		istextureallocated = true;
 	}
 
@@ -189,7 +187,7 @@ unsigned int gTexture::loadData(unsigned char* textureData, int width, int heigh
 	this->componentnum = componentNum;
 
 	if (!istextureallocated) {
-		glGenTextures(1, &id);
+		id = renderer->createTextures();
 		istextureallocated = true;
 	}
 
@@ -215,26 +213,15 @@ void gTexture::setData(unsigned char* textureData, bool isMutable, bool isStbIma
 
 	if (data) {
 		bind();
-		G_CHECK_GL(glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data));
-		G_CHECK_GL(glGenerateMipmap(GL_TEXTURE_2D));
-
-		G_CHECK_GL(glTexImage2D(GL_TEXTURE_2D, 0, format, getWidth(), getHeight(), 0, format, GL_UNSIGNED_BYTE, data));
-
-		G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT));
-		G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT));
-		G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, texturefilter[filtermin]));
-		G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, texturefilter[filtermag]));
+		renderer->texImage2D(GL_TEXTURE_2D, format, width, height, format, GL_UNSIGNED_BYTE, data);
+		renderer->generateMipMap();
+		renderer->texImage2D(GL_TEXTURE_2D, format, getWidth(), getHeight(), format, GL_UNSIGNED_BYTE, data);
+		renderer->setWrappingAndFiltering(GL_TEXTURE_2D, GL_REPEAT, GL_REPEAT,
+		                                     texturefilter[filtermin], texturefilter[filtermag]);
 
 		if (format == GL_RG) {
 			GLint swizzleMask[] = {GL_RED, GL_RED, GL_RED, GL_GREEN};
-#if defined(GLIST_MOBILE)
-			G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_R, swizzleMask[0]));
-			G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_G, swizzleMask[1]));
-			G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_B, swizzleMask[2]));
-			G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_A, swizzleMask[3]));
-#else
-			G_CHECK_GL(glTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_RGBA, swizzleMask));
-#endif
+			renderer->setSwizzleMask(swizzleMask);
 		}
 
 		if (isstbimage && !ismutable) {
@@ -260,13 +247,9 @@ void gTexture::setDataHDR(float* textureData, bool isMutable, bool isStbImage, b
 	datahdr = textureData;
 	if (datahdr) {
 		bind();
-		G_CHECK_GL(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB32F, width, height, 0, GL_RGB, GL_FLOAT, datahdr)); // note how we specify the texture's data value to be float
-
-		G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE));
-		G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE));
-		G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, texturefilter[filtermin]));
-		G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, texturefilter[filtermag]));
-
+		renderer->texImage2D(GL_TEXTURE_2D, GL_RGB32F, width, height, GL_RGB, GL_FLOAT, datahdr); // note how we specify the texture's data value to be float
+		renderer->setWrappingAndFiltering(GL_TEXTURE_2D, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE,
+		                                     texturefilter[filtermin], texturefilter[filtermag]);
 		if (isstbimage && !ismutable) {
 			stbi_image_free(datahdr);
 			datahdr = nullptr;
@@ -292,16 +275,15 @@ bool gTexture::isMutable() {
 }
 
 void gTexture::bind() const {
-	G_CHECK_GL(glBindTexture(GL_TEXTURE_2D, id));
+	renderer->bindTexture(id);
 }
 
 void gTexture::bind(int textureSlotNo) const {
-	G_CHECK_GL(glActiveTexture(GL_TEXTURE0 + textureSlotNo));
-	G_CHECK_GL(glBindTexture(GL_TEXTURE_2D, id));
+	renderer->bindTexture(id, textureSlotNo);
 }
 
 void gTexture::unbind() const {
-	G_CHECK_GL(glBindTexture(GL_TEXTURE_2D, 0));
+	renderer->unbindTexture();
 }
 
 unsigned int gTexture::getId() const {
@@ -332,8 +314,7 @@ void gTexture::setWrapping(int wrapS, int wrapT) {
 	wraps = wrapS;
 	wrapt = wrapT;
 	bind();
-	G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, texturewrap[wraps]));
-	G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, texturewrap[wrapt]));
+	renderer->setWrapping(GL_TEXTURE_2D, texturewrap[wraps], texturewrap[wrapt]);
 	unbind();
 }
 
@@ -341,8 +322,7 @@ void gTexture::setFiltering(int minFilter, int magFilter) {
 	filtermin = minFilter;
 	filtermag = magFilter;
 	bind();
-	G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, texturefilter[filtermin]));
-	G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, texturefilter[filtermag]));
+	renderer->setFiltering(GL_TEXTURE_2D, texturefilter[filtermin], texturefilter[filtermag]);
 	unbind();
 }
 
@@ -501,26 +481,25 @@ void gTexture::endDraw() {
 		renderer->getImageShader()->setVec2("subScale", subscale);
 	}
 
-	G_CHECK_GL(glActiveTexture(GL_TEXTURE0));
+	renderer->resetTexture();
 
 	bind();
 	renderer->getImageShader()->setBool("isAlphaMasking", ismaskloaded);
 	if(ismaskloaded) {
 		renderer->getImageShader()->setInt("maskimage", 1);
-		G_CHECK_GL(glActiveTexture(GL_TEXTURE0 + 1)); // GL_TEXTURE1
+		renderer->activateTexture(1); // GL_TEXTURE1
 		masktexture->bind(1);
 	}
 	if ((format == GL_RGBA || format == GL_RG || ismaskloaded) && !renderer->isAlphaBlendingEnabled()) {
-		G_CHECK_GL(glEnable(GL_BLEND));
-		G_CHECK_GL(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
+		renderer->enableAlphaBlending();
 	}
 
-	G_CHECK_GL(glBindVertexArray(quadVAO));
-	G_CHECK_GL(glDrawArrays(GL_TRIANGLES, 0, 6));
-	G_CHECK_GL(glBindVertexArray(0));
+	renderer->bindVAO(quadVAO);
+	renderer->drawFullscreenQuad();
+	renderer->unbindVAO();
 
 	if (((format == GL_RGBA || format == GL_RG || format == GL_RGB) && !renderer->isAlphaBlendingEnabled()) || ismaskloaded) {
-		G_CHECK_GL(glDisable(GL_BLEND));
+		renderer->disableAlphaBlending();
 	}
 	unbind();
 }
@@ -531,12 +510,12 @@ void gTexture::setupRenderData() {
 
 void gTexture::cleanupAll() {
 	if(isloaded) {
-		G_CHECK_GL(glDeleteBuffers(1, &quadVBO));
-		G_CHECK_GL(glDeleteVertexArrays(1, &quadVAO));
+		renderer->deleteBuffer(&quadVBO);
+		renderer->deleteVAO(&quadVAO);
 		isloaded = false;
 	}
 	if(istextureallocated) {
-		G_CHECK_GL(glDeleteTextures(1, &id));
+		renderer->deleteTexture(&id);
 		istextureallocated = false;
 	}
 	cleanupData();
@@ -563,11 +542,10 @@ void gTexture::cleanupData() {
 
 void gTexture::setupRenderData(int sx, int sy, int sw, int sh) {
 	if(!isloaded) {
-		G_CHECK_GL(glGenVertexArrays(1, &quadVAO));
-		G_CHECK_GL(glGenBuffers(1, &quadVBO));
+		quadVAO = renderer->createVAO();
+		quadVBO = renderer->genBuffers();
 		isloaded = true;
 	}
-	G_CHECK_GL(glBindBuffer(GL_ARRAY_BUFFER, quadVBO));
 	if (isfbo || ishdr) {
 		float vertices[] = {
 				// pos      // tex
@@ -579,7 +557,7 @@ void gTexture::setupRenderData(int sx, int sy, int sw, int sh) {
 				1.0f, 1.0f, (float)(sx + sw) / width, (float)(sy) / height,
 				1.0f, 0.0f, (float)(sx + sw) / width, (float)(sy + sh) / height
 		};
-		G_CHECK_GL(glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW));
+		renderer->setVertexBufferData(quadVBO, sizeof(vertices), vertices, GL_STATIC_DRAW);
 	} else {
 		float vertices[] = {
 				// pos      // tex
@@ -591,14 +569,15 @@ void gTexture::setupRenderData(int sx, int sy, int sw, int sh) {
 				1.0f, 1.0f, (float)(sx + sw) / width, (float)(sy + sh) / height,
 				1.0f, 0.0f, (float)(sx + sw) / width, (float)sy / height
 		};
-		G_CHECK_GL(glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW));
+		renderer->setVertexBufferData(quadVBO, sizeof(vertices), vertices, GL_STATIC_DRAW);
 	}
 
-	G_CHECK_GL(glBindVertexArray(quadVAO));
-	G_CHECK_GL(glEnableVertexAttribArray(0));
-	G_CHECK_GL(glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0));
-	G_CHECK_GL(glBindBuffer(GL_ARRAY_BUFFER, 0));
-	G_CHECK_GL(glBindVertexArray(0));
+	renderer->bindVAO(quadVAO);
+	renderer->enableVertexAttrib(0);
+	renderer->setVertexAttribPointer(0, 4, GL_FLOAT, false, 4 * sizeof(float), (void*)0);
+
+	renderer->unbindBuffer(GL_ARRAY_BUFFER);
+	renderer->unbindVAO();
 }
 
 std::string gTexture::getDirName(const std::string& fname) {
@@ -618,15 +597,7 @@ std::string gTexture::getFileName(const std::string& fname) {
 void gTexture::save(std::string fullpath) {
 	unsigned char* pixels = new unsigned char[width * height * componentnum];
 
-	GLuint fbo;
-	glGenFramebuffers(1, &fbo);
-	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, id, 0);
-
-	glReadPixels(0, 0, width, height, format, GL_UNSIGNED_BYTE, pixels);
-
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	glDeleteFramebuffers(1, &fbo);
+	renderer->readTexturePixels(pixels, id, width, height, format);
 
 	// flip back vertically if fbo or hdr
 	if (isfbo || ishdr) {

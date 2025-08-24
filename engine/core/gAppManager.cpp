@@ -259,7 +259,7 @@ void gAppManager::loop() {
     }
     //gLogi("gAppManager") << "stopping loop";
     app->stop();
-    gRenderObject::destroyRenderer();
+    //gRenderObject::destroyRenderer(); // Moved to destructor
     if(usewindow) {
         window->close();
     }
