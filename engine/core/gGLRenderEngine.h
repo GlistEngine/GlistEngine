@@ -7,6 +7,7 @@
 #ifndef CORE_GGLENGINERENDERER_H
 #define CORE_GGLENGINERENDERER_H
 #include "gRenderer.h"
+#include "gUbo.h"
 
 class gGLRenderEngine : public gRenderer {
 public:
@@ -103,8 +104,7 @@ public:
 	void resetShader(GLuint id, bool loaded) const;
 	GLint getUniformLocation(GLuint id, const std::string& name);
 
-	template<typename T>
-	void attachUbo(GLuint id, const gUbo<T>* ubo, const std::string& uboName) {
+	void attachUbo(GLuint id, const gUbo<float>* ubo, const std::string& uboName) {
 		unsigned int blockIndex;
 		G_CHECK_GL2(blockIndex, glGetUniformBlockIndex(id, uboName.c_str()));
 		G_CHECK_GL(glUniformBlockBinding(id, blockIndex, ubo->getBindingPoint()));

@@ -69,6 +69,7 @@ public:
 	 */
 	void disable();
 private:
+
 	static const int fbocount;
 	std::vector<gBasePostProcess*> effects;
 

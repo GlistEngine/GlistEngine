@@ -83,6 +83,8 @@ void gDrawTubeOblique(float x, float y, float z, int outerradius,int innerradiou
 void gDrawTubeTrapezodial(float x, float y, float z, int topouterradius,int topinnerradious, int buttomouterradious, int buttominnerradious, int h, glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f), int segmentnum = 32, bool isFilled = true);
 void gDrawTubeObliqueTrapezodial(float x, float y, float z, int topouterradius,int topinnerradious, int buttomouterradious, int buttominnerradious, int h, glm::vec2 shiftdistance, glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f), int segmentnum = 32, bool isFilled = true);
 
+class gVbo;
+
 template<typename T>
 class gUbo;
 class gLight;
@@ -335,8 +337,7 @@ public:
 	virtual void resetShader(GLuint id, bool loaded) const = 0;
 	virtual GLint getUniformLocation(GLuint id, const std::string& name) = 0;
 
-	template<typename T>
-	virtual void attachUbo(GLuint id, const gUbo<T>* ubo, const std::string& uboName) = 0;
+	virtual void attachUbo(GLuint id, const gUbo<float>* ubo, const std::string& uboName) = 0;
 
 	/* ------------ gPostProcessManager ------------- */
 	virtual void clearScreen(bool color = true, bool depth = true) = 0;
@@ -370,13 +371,13 @@ public:
 	virtual void generateMipMap() = 0;
 
 	/* ---------------- gSkybox ---------------- */
-	virtual void bindSkyTexture(GLuint texId);
-	virtual void bindSkyTexture(GLuint texId, int textureSlot);
-	virtual void unbindSkyTexture();
-	virtual void unbindSkyTexture(int textureSlotNo);
-	virtual void generateSkyMipMap();
-	virtual void enableDepthTestEqual();
-	virtual void createQuad(GLuint& inQuadVAO, GLuint& inQuadVBO);
+	virtual void bindSkyTexture(GLuint texId) = 0;
+	virtual void bindSkyTexture(GLuint texId, int textureSlot) = 0;
+	virtual void unbindSkyTexture() = 0;
+	virtual void unbindSkyTexture(int textureSlotNo) = 0;
+	virtual void generateSkyMipMap() = 0;
+	virtual void enableDepthTestEqual() = 0;
+	virtual void createQuad(GLuint& inQuadVAO, GLuint& inQuadVBO) = 0;
 
 protected:
 	friend class gRenderObject; // this is where renderer->init() is called from
