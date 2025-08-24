@@ -681,3 +681,16 @@ void gGLRenderEngine::createQuad(GLuint& inQuadVAO, GLuint& inQuadVBO) {
 	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
 }
+
+void gGLRenderEngine::pushMatrix() {
+	G_CHECK_GL(glPushMatrix());
+}
+
+void gGLRenderEngine::popMatrix() {
+	G_CHECK_GL(glPopMatrix());
+}
+
+void gGLRenderEngine::updatePackUnpackAlignment(int i) {
+	glPixelStorei(GL_UNPACK_ALIGNMENT, i);
+	glPixelStorei(GL_PACK_ALIGNMENT, i);
+}

@@ -166,6 +166,12 @@ public:
 	void generateSkyMipMap();
 	void enableDepthTestEqual();
 	void createQuad(GLuint& inQuadVAO, GLuint& inQuadVBO);
+
+	/* ---------------- gRenderObject ---------------- */
+	void pushMatrix();
+	void popMatrix();
+private:
+	void updatePackUnpackAlignment(int i);
 };
 
 #endif

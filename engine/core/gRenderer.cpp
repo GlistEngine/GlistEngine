@@ -256,8 +256,8 @@ void gRenderer::init() {
 
 	// This changes pack and unpack alignments
 	// Fixes alignment issues with 3 channel images
-	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-	glPixelStorei(GL_PACK_ALIGNMENT, 1);
+	gRenderObject::getRenderer()->updatePackUnpackAlignment(1);
+
 
 	globalambientcolor.set(255, 255, 255, 255);
 	isglobalambientcolorchanged = true;

@@ -388,6 +388,9 @@ public:
 	virtual void enableDepthTestEqual() = 0;
 	virtual void createQuad(GLuint& inQuadVAO, GLuint& inQuadVBO) = 0;
 
+	/* ---------------- gRenderObject ---------------- */
+	virtual void pushMatrix() = 0;
+	virtual void popMatrix() = 0;
 protected:
 	friend class gRenderObject; // this is where renderer->init() is called from
 
@@ -474,6 +477,8 @@ protected:
 	gGrid* grid;
 	gGrid* originalgrid;
 	bool isdevelopergrid;
+
+	virtual void updatePackUnpackAlignment(int i) = 0;
 
 	void init();
 
