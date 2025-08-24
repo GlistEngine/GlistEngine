@@ -18,8 +18,8 @@ public:
 	void clearColor(int r, int g, int b, int a = 255);
 	void clearColor(gColor color);
 
-	gImage takeScreenshot(int x, int y, int width, int height);
-	gImage takeScreenshot();
+	void takeScreenshot(gImage& img, int x, int y, int width, int height);
+	void takeScreenshot(gImage& img);
 
 	void enableDepthTest();
 	void enableDepthTest(int depthTestType);
@@ -37,7 +37,7 @@ public:
 
 	/* -------------- gUbo ------------- */
 	GLuint genBuffers();
-	void deleteBuffer(GLuint* buffer);
+	void deleteBuffer(GLuint& buffer);
 
 	void bindBuffer(GLenum target, GLuint buffer);
 	void unbindBuffer(GLenum target);
@@ -48,7 +48,7 @@ public:
 
 	/* -------------- gVbo --------------- */
 	GLuint createVAO();
-	void deleteVAO(GLuint* vao);
+	void deleteVAO(GLuint& vao);
 
 	void bindVAO(GLuint vao);
 	void unbindVAO();
@@ -65,12 +65,12 @@ public:
 
 	/* -------------- gFbo --------------- */
 	GLuint createFramebuffer();
-	void deleteFramebuffer(GLuint* fbo);
+	void deleteFramebuffer(GLuint& fbo);
 	void bindFramebuffer(GLuint fbo);
 	void checkFramebufferStatus();
 
 	GLuint createRenderbuffer();
-	void deleteRenderbuffer(GLuint* rbo);
+	void deleteRenderbuffer(GLuint& rbo);
 	void bindRenderbuffer(GLuint rbo);
 	void setRenderbufferStorage(GLenum format, int width, int height);
 
@@ -81,7 +81,7 @@ public:
 	void setReadBufferNone();
 
 	void createFullscreenQuad(GLuint& vao, GLuint& vbo);
-	void deleteFullscreenQuad(GLuint* vao, GLuint* vbo);
+	void deleteFullscreenQuad(GLuint& vao, GLuint* vbo);
 
 	/* -------------- gShader --------------- */
 	// This function loads shaders without preproccesing them. Geometry source can be nullptr.
@@ -143,7 +143,7 @@ public:
 	void unbindTexture();
 	void activateTexture(int textureSlotNo = 0);
 	void resetTexture();
-	void deleteTexture(GLuint* texId);
+	void deleteTexture(GLuint& texId);
 
 	void texImage2D(GLenum target, GLint internalFormat, int width, int height, GLint format, GLint type, void* data);
 	void setWrapping(GLenum target, GLint wrapS, GLint wrapT);

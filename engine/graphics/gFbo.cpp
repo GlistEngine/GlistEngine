@@ -28,18 +28,18 @@ gFbo::gFbo() {
 
 gFbo::~gFbo() {
 	delete texture;
-	renderer->deleteRenderbuffer(&rbo);
-	renderer->deleteFramebuffer(&framebuffer);
-	renderer->deleteVAO(&gFbo::quadVAO);
-	renderer->deleteBuffer(&gFbo::quadVBO);
+	renderer->deleteRenderbuffer(rbo);
+	renderer->deleteFramebuffer(framebuffer);
+	renderer->deleteVAO(gFbo::quadVAO);
+	renderer->deleteBuffer(gFbo::quadVBO);
 }
 
 void gFbo::allocate(int width, int height, bool isDepthMap) {
 	// check if is not allocated
 	if(isallocated) {
 		delete texture;
-		renderer->deleteRenderbuffer(&rbo);
-		renderer->deleteFramebuffer(&framebuffer);
+		renderer->deleteRenderbuffer(rbo);
+		renderer->deleteFramebuffer(framebuffer);
 
 		texture = nullptr;
 		isallocated = false;

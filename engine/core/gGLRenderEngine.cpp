@@ -167,28 +167,24 @@ void flipVertically(unsigned char* pixelData, int width, int height, int numChan
 	delete[] temprow;
 }
 
-gImage gGLRenderEngine::takeScreenshot(int x, int y, int width, int height) {
+void gGLRenderEngine::takeScreenshot(gImage& img, int x, int y, int width, int height) {
 	unsigned char* pixeldata = new unsigned char[width * height * 4];
 	glReadPixels(x, getHeight() - y - height, width, height, GL_RGBA, GL_UNSIGNED_BYTE, pixeldata);
 	flipVertically(pixeldata, width, height, 4);
-	gImage screenshot;
-	screenshot.setImageData(pixeldata, width, height, 4);
+	img.setImageData(pixeldata, width, height, 4);
 	//std::string imagePath = "output.png";   USE IT TO SAVE THE IMAGE
 	// screenShot->saveImage(imagePath);  USE IT TO SAVE THE IMAGE
-	return screenshot;
 }
 
-gImage gGLRenderEngine::takeScreenshot() {
+void gGLRenderEngine::takeScreenshot(gImage& img) {
 	int height = gBaseApp::getAppManager()->getWindow()->getHeight();
 	int width = gBaseApp::getAppManager()->getWindow()->getWidth();
 	unsigned char* pixeldata = new unsigned char[width * height * 4];
 	glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, pixeldata);
 	flipVertically(pixeldata, width, height, 4);
-	gImage screenshot;
-	screenshot.setImageData(pixeldata, width, height, 4);
+	img.setImageData(pixeldata, width, height, 4);
 	//std::string imagePath = "output.png";   USE IT TO SAVE THE IMAGE
 	// screenShot->saveImage(imagePath);  USE IT TO SAVE THE IMAGE
-	return screenshot;
 }
 
 
@@ -198,12 +194,9 @@ GLuint gGLRenderEngine::genBuffers() {
 	return buffer;
 }
 
-void gGLRenderEngine::deleteBuffer(GLuint* buffer) {
-	if(buffer != 0) {
-		glDeleteBuffers(1, buffer);
-	}
+void gGLRenderEngine::deleteBuffer(GLuint& buffer) {
+	glDeleteBuffers(1, &buffer);
 }
-
 
 void gGLRenderEngine::bindBuffer(GLenum target, GLuint buffer) {
 	G_CHECK_GL(glBindBuffer(target, buffer));
@@ -236,9 +229,9 @@ GLuint gGLRenderEngine::createVAO() {
 	return vao;
 }
 
-void gGLRenderEngine::deleteVAO(GLuint* vao) {
+void gGLRenderEngine::deleteVAO(GLuint& vao) {
 	if(vao != 0) {
-		glDeleteVertexArrays(1, vao);
+		glDeleteVertexArrays(1, &vao);
 	}
 }
 
@@ -293,9 +286,9 @@ GLuint gGLRenderEngine::createFramebuffer() {
 	return fbo;
 }
 
-void gGLRenderEngine::deleteFramebuffer(GLuint* fbo) {
+void gGLRenderEngine::deleteFramebuffer(GLuint& fbo) {
 	if(fbo != 0) {
-		glDeleteFramebuffers(1, fbo);
+		glDeleteFramebuffers(1, &fbo);
 	}
 }
 
@@ -318,9 +311,9 @@ GLuint gGLRenderEngine::createRenderbuffer() {
 	return rbo;
 }
 
-void gGLRenderEngine::deleteRenderbuffer(GLuint* rbo) {
+void gGLRenderEngine::deleteRenderbuffer(GLuint& rbo) {
 	if(rbo != 0) {
-		glDeleteRenderbuffers(1, rbo);
+		glDeleteRenderbuffers(1, &rbo);
 	}
 }
 
@@ -382,9 +375,9 @@ void gGLRenderEngine::createFullscreenQuad(GLuint& vao, GLuint& vbo) {
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
 }
 
-void gGLRenderEngine::deleteFullscreenQuad(GLuint* vao, GLuint* vbo) {
+void gGLRenderEngine::deleteFullscreenQuad(GLuint& vao, GLuint* vbo) {
 	if(vao != 0)
-		glDeleteVertexArrays(1, vao);
+		glDeleteVertexArrays(1, &vao);
 	if(vbo != 0)
 		glDeleteBuffers(1, vbo);
 }
@@ -573,8 +566,8 @@ void gGLRenderEngine::resetTexture() {
 	G_CHECK_GL(glActiveTexture(GL_TEXTURE0));
 }
 
-void gGLRenderEngine::deleteTexture(GLuint* texId) {
-	G_CHECK_GL(glDeleteTextures(1, texId));
+void gGLRenderEngine::deleteTexture(GLuint& texId) {
+	G_CHECK_GL(glDeleteTextures(1, &texId));
 }
 
 void gGLRenderEngine::texImage2D(GLenum target, GLint internalFormat, int width, int height, GLint format,

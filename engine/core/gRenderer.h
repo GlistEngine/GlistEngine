@@ -272,16 +272,16 @@ public:
 	/*
 	 * Takes Screen Shot of the current Rendered Screen and returns it as an gImage class
 	 */
-	virtual gImage takeScreenshot() = 0;
+	virtual void takeScreenshot(gImage& img) = 0;
 
 	/*
 	 * Takes Screen Shot of the part of current Rendered Screen and returns it as an gImage class
 	 */
-	virtual gImage takeScreenshot(int x, int y, int width, int height) = 0;
+	virtual void takeScreenshot(gImage& img, int x, int y, int width, int height) = 0;
 
 	/* -------------- gUbo ------------- */
 	virtual GLuint genBuffers() = 0;
-	virtual void deleteBuffer(GLuint* buffer) = 0;
+	virtual void deleteBuffer(GLuint& buffer) = 0;
 
 	virtual void bindBuffer(GLenum target, GLuint buffer) = 0;
 	virtual void unbindBuffer(GLenum target) = 0;
@@ -292,7 +292,7 @@ public:
 
 	/* -------------- gVbo --------------- */
 	virtual GLuint createVAO() = 0;
-	virtual void deleteVAO(GLuint* vao) = 0;
+	virtual void deleteVAO(GLuint& vao) = 0;
 
 	virtual void bindVAO(GLuint vao) = 0;
 	virtual void unbindVAO() = 0;
@@ -309,12 +309,12 @@ public:
 
 	/* -------------- gFbo --------------- */
 	virtual GLuint createFramebuffer() = 0;
-	virtual void deleteFramebuffer(GLuint* fbo) = 0;
+	virtual void deleteFramebuffer(GLuint& fbo) = 0;
 	virtual void bindFramebuffer(GLuint fbo) = 0;
 	virtual void checkFramebufferStatus() = 0;
 
 	virtual GLuint createRenderbuffer() = 0;
-	virtual void deleteRenderbuffer(GLuint* rbo) = 0;
+	virtual void deleteRenderbuffer(GLuint& rbo) = 0;
 	virtual void bindRenderbuffer(GLuint rbo) = 0;
 	virtual void setRenderbufferStorage(GLenum format, int width, int height) = 0;
 
@@ -325,7 +325,7 @@ public:
 	virtual void setReadBufferNone() = 0;
 
 	virtual void createFullscreenQuad(GLuint& vao, GLuint& vbo) = 0;
-	virtual void deleteFullscreenQuad(GLuint* vao, GLuint* vbo) = 0;
+	virtual void deleteFullscreenQuad(GLuint& vao, GLuint* vbo) = 0;
 
 	/* -------------- gShader --------------- */
 	// This function loads shaders without preproccesing them. Geometry source can be nullptr.
@@ -364,7 +364,7 @@ public:
 	virtual void unbindTexture() = 0;
 	virtual void activateTexture(int textureSlotNo = 0) = 0;
 	virtual void resetTexture() = 0;
-	virtual void deleteTexture(GLuint* texId) = 0;
+	virtual void deleteTexture(GLuint& texId) = 0;
 
 	virtual void texImage2D(GLenum target, GLint internalFormat, int width, int height, GLint format, GLint type, void* data) = 0;
 	virtual void setWrapping(GLenum target, GLint wrapS, GLint wrapT) = 0;

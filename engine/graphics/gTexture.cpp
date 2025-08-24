@@ -510,12 +510,12 @@ void gTexture::setupRenderData() {
 
 void gTexture::cleanupAll() {
 	if(isloaded) {
-		renderer->deleteBuffer(&quadVBO);
-		renderer->deleteVAO(&quadVAO);
+		renderer->deleteBuffer(quadVBO);
+		renderer->deleteVAO(quadVAO);
 		isloaded = false;
 	}
 	if(istextureallocated) {
-		renderer->deleteTexture(&id);
+		glDeleteTextures(1, &id);
 		istextureallocated = false;
 	}
 	cleanupData();
