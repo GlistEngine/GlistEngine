@@ -48,45 +48,6 @@ int gRenderer::screenscaling;
 int gRenderer::currentresolution;
 int gRenderer::unitresolution;
 
-void gCheckGLErrorAndPrint(const std::string& prefix, const std::string& func, int line) {
-	GLenum error = glGetError();
-	if (error != GL_NO_ERROR) {
-		gLogi("gRenderer") << prefix << "OpenGL ERROR at " << func << ", line " << line << ", error: " << gToHex(error, 4);
-	}
-}
-
-void gEnableCulling() {
-	glEnable(GL_CULL_FACE);
-}
-
-void gDisableCulling() {
-	glDisable(GL_CULL_FACE);
-}
-
-bool gIsCullingEnabled() {
-	return glIsEnabled(GL_CULL_FACE);
-}
-
-void gCullFace(int cullingFace) {
-	glCullFace(cullingFace);
-}
-
-int gGetCullFace() {
-	GLint i;
-	glGetIntegerv(GL_CULL_FACE_MODE, &i);
-	return i;
-}
-
-void gSetCullingDirection(int cullingDirection) {
-	glFrontFace(cullingDirection);
-}
-
-int gGetCullingDirection() {
-	GLint i;
-	glGetIntegerv(GL_FRONT_FACE, &i);
-	return i;
-}
-
 void gDrawLine(float x1, float y1, float x2, float y2, float thickness) {
 	gLine linemesh;
 	linemesh.setThickness(thickness);
@@ -623,22 +584,6 @@ gColor* gRenderer::getColor() {
 	return rendercolor;
 }
 
-void gRenderer::clear() {
-	G_CHECK_GL(glClearColor(0.0f, 0.0f, 0.0f, 1.0f));
-	G_CHECK_GL(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
-}
-
-void gRenderer::clearColor(int r, int g, int b, int a) {
-//    glBindFramebuffer(GL_FRAMEBUFFER, gFbo::defaultfbo);
-	G_CHECK_GL(glClearColor((float)r / 255, (float)g / 255, (float)b / 255, (float)a / 255));
-	G_CHECK_GL(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
-}
-
-void gRenderer::clearColor(gColor color) {
-	G_CHECK_GL(glClearColor(color.r, color.g, color.b, color.a));
-	G_CHECK_GL(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
-}
-
 void gRenderer::enableFog() {
 	isfogenabled = true;
 }
@@ -839,69 +784,6 @@ void gRenderer::updateLights() {
 	}
 }
 
-void gRenderer::enableDepthTest() {
-	enableDepthTest(DEPTHTESTTYPE_LESS);
-}
-
-void gRenderer::enableDepthTest(int depthTestType) {
-	G_CHECK_GL(glEnable(GL_DEPTH_TEST));
-	G_CHECK_GL(glDepthFunc(depthtesttypeid[depthTestType]));
-	isdepthtestenabled = true;
-	depthtesttype = depthTestType;
-}
-
-void gRenderer::setDepthTestFunc(int depthTestType) {
-	G_CHECK_GL(glDepthFunc(depthtesttypeid[depthTestType]));
-	depthtesttype = depthTestType;
-}
-
-void gRenderer::disableDepthTest() {
-	G_CHECK_GL(glDisable(GL_DEPTH_TEST));
-	isdepthtestenabled = false;
-}
-
-bool gRenderer::isDepthTestEnabled() {
-	return isdepthtestenabled;
-}
-
-int gRenderer::getDepthTestType() {
-	return depthtesttype;
-}
-
-void gRenderer::enableAlphaBlending() {
-    G_CHECK_GL(glEnable(GL_BLEND));
-    G_CHECK_GL(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
-    isalphablendingenabled = true;
-}
-
-void gRenderer::disableAlphaBlending() {
-	G_CHECK_GL(glDisable(GL_BLEND));
-    isalphablendingenabled = false;
-}
-
-bool gRenderer::isAlphaBlendingEnabled() {
-	return isalphablendingenabled;
-}
-
-void gRenderer::enableAlphaTest() {
-#if defined(WIN32) || defined(LINUX)
-	glEnable(GL_ALPHA_TEST);
-    glAlphaFunc(GL_GREATER, 0.1);
-    isalphatestenabled = true;
-#endif
-}
-
-void gRenderer::disableAlphaTest() {
-#if defined(WIN32) || defined(LINUX)
-    glDisable(GL_ALPHA_TEST);
-    isalphatestenabled = false;
-#endif
-}
-
-bool gRenderer::isAlphaTestEnabled() {
-	return isalphatestenabled;
-}
-
 #include "graphics/shaders/grid_vert.h"
 #include "graphics/shaders/grid_frag.h"
 #include "graphics/shaders/color_vert.h"
@@ -1046,50 +928,6 @@ const std::string& gRenderer::getShaderSrcFboVertex() {
 const std::string& gRenderer::getShaderSrcFboFragment() {
 	static std::string str{shader_fbo_frag.data(), shader_fbo_frag.size()};
 	return str;
-}
-
-/*
- * Rotates The Pixel Data upside down. Hence rotates flips the image upside down
- */
-void flipVertically(unsigned char* pixelData, int width, int height, int numChannels) {
-    int rowsize = width * numChannels;
-    unsigned char* temprow = new unsigned char[rowsize];
-
-    for (int row = 0; row < height / 2; ++row) {
-        // Calculate the corresponding row from the bottom
-        int bottomrow = height - row - 1;
-
-        // Swap the rows
-        memcpy(temprow, pixelData + row * rowsize, rowsize);
-        memcpy(pixelData + row * rowsize, pixelData + bottomrow * rowsize, rowsize);
-        memcpy(pixelData + bottomrow * rowsize, temprow, rowsize);
-    }
-
-    delete[] temprow;
-}
-
-gImage gRenderer::takeScreenshot(int x, int y, int width, int height) {
-	unsigned char* pixeldata = new unsigned char[width * height * 4];
-	glReadPixels(x, getHeight() - y - height, width, height, GL_RGBA, GL_UNSIGNED_BYTE, pixeldata);
-	flipVertically(pixeldata, width, height, 4);
-	gImage screenshot;
-	screenshot.setImageData(pixeldata, width, height, 4);
-	//std::string imagePath = "output.png";   USE IT TO SAVE THE IMAGE
-	// screenShot->saveImage(imagePath);  USE IT TO SAVE THE IMAGE
-	return screenshot;
-}
-
-gImage gRenderer::takeScreenshot() {
-	int height = gBaseApp::getAppManager()->getWindow()->getHeight();
-	int width = gBaseApp::getAppManager()->getWindow()->getWidth();
-	unsigned char* pixeldata = new unsigned char[width * height * 4];
-	glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, pixeldata);
-	flipVertically(pixeldata, width, height, 4);
-	gImage screenshot;
-	screenshot.setImageData(pixeldata, width, height, 4);
-	//std::string imagePath = "output.png";   USE IT TO SAVE THE IMAGE
-	// screenShot->saveImage(imagePath);  USE IT TO SAVE THE IMAGE
-	return screenshot;
 }
 
 bool gRenderer::isSSAOEnabled() {

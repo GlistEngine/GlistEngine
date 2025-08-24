@@ -8,6 +8,8 @@
 #include "gRenderObject.h"
 #include <iostream>
 
+#include "gGLRenderEngine.h"
+
 
 gRenderer* gRenderObject::renderer = nullptr;
 
@@ -86,7 +88,7 @@ gRenderer* gRenderObject::getRenderer() {
 
 void gRenderObject::createRenderer() {
 	destroyRenderer(); // Delete the previous renderer if exists. If renderer is null, this will have no effect.
-	renderer = new gRenderer();
+	renderer = new gGLRenderEngine();
 	renderer->init();
 }
 
