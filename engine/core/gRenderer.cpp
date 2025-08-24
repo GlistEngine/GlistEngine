@@ -238,9 +238,6 @@ void gDrawTubeObliqueTrapezodial(float x, float y, float z, int topouterradius,
 	tubemesh.clear();
 }
 
-gRenderer::gRenderer() {
-}
-
 void gRenderer::init() {
 	width = gDefaultWidth();
 	height = gDefaultHeight();
@@ -338,25 +335,6 @@ void gRenderer::init() {
 	originalgrid = new gGrid();
 	grid = originalgrid;
 	isdevelopergrid = false;
-}
-
-gRenderer::~gRenderer() {
-	delete colorshader;
-	delete textureshader;
-	delete imageshader;
-	delete fontshader;
-	delete skyboxshader;
-	delete shadowmapshader;
-	delete pbrshader;
-	delete equirectangularshader;
-	delete irradianceshader;
-	delete prefiltershader;
-	delete brdfshader;
-	delete fboshader;
-	delete rendercolor;
-	delete lightsubo;
-	delete gridshader;
-	if(!isdevelopergrid) delete originalgrid;
 }
 
 gShader* gRenderer::getColorShader() {

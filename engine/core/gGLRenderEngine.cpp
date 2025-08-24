@@ -7,7 +7,66 @@
 //screenShot Related includes
 #include "stb/stb_image_write.h"
 #include "gBaseApp.h"
+#include "gGrid.h"
 #include "gImage.h"
+#include "gShader.h"
+
+void gCheckGLErrorAndPrint(const std::string& prefix, const std::string& func, int line) {
+	GLenum error = glGetError();
+	if (error != GL_NO_ERROR) {
+		gLogi("gGLRenderEngine") << prefix << "OpenGL ERROR at " << func << ", line " << line << ", error: " << gToHex(error, 4);
+	}
+}
+void gEnableCulling() {
+	glEnable(GL_CULL_FACE);
+}
+
+void gDisableCulling() {
+	glDisable(GL_CULL_FACE);
+}
+
+bool gIsCullingEnabled() {
+	return glIsEnabled(GL_CULL_FACE);
+}
+
+void gCullFace(int cullingFace) {
+	glCullFace(cullingFace);
+}
+
+int gGetCullFace() {
+	GLint i;
+	glGetIntegerv(GL_CULL_FACE_MODE, &i);
+	return i;
+}
+
+void gSetCullingDirection(int cullingDirection) {
+	glFrontFace(cullingDirection);
+}
+
+int gGetCullingDirection() {
+	GLint i;
+	glGetIntegerv(GL_FRONT_FACE, &i);
+	return i;
+}
+
+gGLRenderEngine::~gGLRenderEngine() {
+	delete colorshader;
+	delete textureshader;
+	delete imageshader;
+	delete fontshader;
+	delete skyboxshader;
+	delete shadowmapshader;
+	delete pbrshader;
+	delete equirectangularshader;
+	delete irradianceshader;
+	delete prefiltershader;
+	delete brdfshader;
+	delete fboshader;
+	delete rendercolor;
+	delete lightsubo;
+	delete gridshader;
+	if(!isdevelopergrid) delete originalgrid;
+}
 
 void gGLRenderEngine::clear() {
 	G_CHECK_GL(glClearColor(0.0f, 0.0f, 0.0f, 1.0f));

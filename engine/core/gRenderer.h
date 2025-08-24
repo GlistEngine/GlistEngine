@@ -58,6 +58,16 @@
 #define G_CHECK_GL2(value, fn) value = fn
 #endif
 
+void gCheckGLErrorAndPrint(const std::string& prefix, const std::string& func, int line);
+
+void gEnableCulling();
+void gDisableCulling();
+bool gIsCullingEnabled();
+void gCullFace(int cullingFace);
+int gGetCullFace();
+void gSetCullingDirection(int cullingDirection);
+int gGetCullingDirection();
+
 void gDrawLine(float x1, float y1, float x2, float y2, float thickness = 1.0f);
 void gDrawLine(float x1, float y1, float z1, float x2, float y2, float z2, float thickness = 1.0f);
 void gDrawTriangle(float px, float py, float qx, float qy, float rx, float ry, bool is_filled = true);
@@ -99,8 +109,8 @@ public:
 	static const int DEPTHTESTTYPE_LESS, DEPTHTESTTYPE_ALWAYS;
 	static const int FOGMODE_LINEAR, FOGMODE_EXP;
 
-	gRenderer();
-	virtual ~gRenderer();
+	gRenderer() = default;
+	virtual ~gRenderer() = default;
 
 	static void setScreenSize(int screenWidth, int screenHeight);
 	static void setUnitScreenSize(int unitWidth, int unitHeight);

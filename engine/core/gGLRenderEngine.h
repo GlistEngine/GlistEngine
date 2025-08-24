@@ -12,7 +12,7 @@
 class gGLRenderEngine : public gRenderer {
 public:
 	gGLRenderEngine() = default;
-	~gGLRenderEngine() = default;
+	~gGLRenderEngine();
 
 	void clear();
 	void clearColor(int r, int g, int b, int a = 255);

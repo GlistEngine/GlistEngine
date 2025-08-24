@@ -12,7 +12,7 @@
 #include <array>
 #include "gShader.h"
 #include "gRenderer.h"
-
+#include "gRenderObject.h"
 
 gShader::gShader() {
 	id = 0;
@@ -20,9 +20,7 @@ gShader::gShader() {
 }
 
 gShader::~gShader() {
-    if(loaded) {
-        glDeleteShader(id);
-    }
+	gRenderObject::getRenderer()->resetShader(id, loaded);
 }
 
 gShader::gShader(const std::string& vertexFullPath, const std::string& fragmentFullPath, const std::string& geometryFullPath) {
@@ -38,9 +36,7 @@ void gShader::loadShader(const std::string& shaderFileName) {
 }
 
 void gShader::load(const std::string& vertexFullPath, const std::string& fragmentFullPath, const std::string& geometryFullPath) {
-    if(loaded) {
-        glDeleteShader(id);
-    }
+	gRenderObject::getRenderer()->resetShader(id, loaded);
     // 1. retrieve the vertex/fragment source code from filePath
     std::string vertexCode;
     std::string fragmentCode;
@@ -82,9 +78,7 @@ void gShader::load(const std::string& vertexFullPath, const std::string& fragmen
 }
 
 void gShader::load(const std::string& shaderFullPath) {
-	if(loaded) {
-		glDeleteShader(id);
-	}
+	gRenderObject::getRenderer()->resetShader(id, loaded);
 	// 1. retrieve the vertex/fragment source code from filePath
 	std::string shaderCode;
 	std::ifstream vShaderFile;
@@ -126,8 +120,8 @@ void gShader::loadProgram(const std::string& vertexSource, const std::string& fr
 	}
 #endif
 
-	// call the internal load function
-	loadProgramInternal(preprocessedVertexSourceStr, preprocessedFragmentSourceStr, preprocessedGeometrySourceStr);
+	id = gRenderObject::getRenderer()->loadProgram(preprocessedVertexSourceStr, preprocessedFragmentSourceStr, preprocessedGeometrySourceStr);
+	loaded = true;
 }
 
 void gShader::loadProgram(const std::string& shaderSource) {
@@ -150,76 +144,8 @@ void gShader::loadProgram(const std::string& shaderSource) {
 	}
 #endif
 
-	// call the internal load function
-	loadProgramInternal(preprocessedVertexSourceStr, preprocessedFragmentSourceStr, preprocessedGeometrySourceStr);
-}
-
-// This function loads shaders without preproccesing them. Geometry source can be nullptr.
-void gShader::loadProgramInternal(const char* vertexSource, const char* fragmentSource, const char* geometrySource) {
-	unsigned int vertex = GL_NONE;
-	unsigned int fragment = GL_NONE;
-#if defined(WIN32) || defined(LINUX)
-	unsigned int geometry = GL_NONE;
-#endif
-	// vertex shader
-	G_CHECK_GL2(vertex, glCreateShader(GL_VERTEX_SHADER));
-	glShaderSource(vertex, 1, &vertexSource, nullptr);
-	glCompileShader(vertex);
-	checkCompileErrors(vertex, "VERTEX");
-
-	// fragment Shader
-	G_CHECK_GL2(fragment, glCreateShader(GL_FRAGMENT_SHADER));
-	glShaderSource(fragment, 1, &fragmentSource, nullptr);
-	glCompileShader(fragment);
-	checkCompileErrors(fragment, "FRAGMENT");
-
-	// if geometry shader is given, compile geometry shader
-#if defined(WIN32) || defined(LINUX)
-	if(geometrySource != nullptr) {
-		geometry = glCreateShader(GL_GEOMETRY_SHADER);
-		glShaderSource(geometry, 1, &geometrySource, nullptr);
-		glCompileShader(geometry);
-		checkCompileErrors(geometry, "GEOMETRY");
-	}
-#endif
-
-	// shader Program
-	id = glCreateProgram();
+	id = gRenderObject::getRenderer()->loadProgram(preprocessedVertexSourceStr, preprocessedFragmentSourceStr, preprocessedGeometrySourceStr);
 	loaded = true;
-	glAttachShader(id, vertex);
-	glAttachShader(id, fragment);
-#if defined(WIN32) || defined(LINUX)
-	if(geometrySource != nullptr) glAttachShader(id, geometry);
-#endif
-	glLinkProgram(id);
-	checkCompileErrors(id, "PROGRAM");
-	// delete the shaders as they're linked into our program now and no longer necessery
-	glDeleteShader(vertex);
-	glDeleteShader(fragment);
-#if defined(WIN32) || defined(LINUX)
-	if(geometrySource != nullptr) glDeleteShader(geometry);
-#endif
-}
-
-void gShader::checkCompileErrors(GLuint shader, const std::string& type) {
-    GLint success;
-    GLchar infoLog[1024];
-    if(type != "PROGRAM") {
-        G_CHECK_GL(glGetShaderiv(shader, GL_COMPILE_STATUS, &success));
-        if(!success) {
-            glGetShaderInfoLog(shader, 1024, nullptr, infoLog);
-            gLoge("gShader") << "ERROR::SHADER_COMPILATION_ERROR of type: " << type << "\n" << infoLog << "\n -- --------------------------------------------------- -- " << std::endl;
-        }
-    } else {
-        glGetProgramiv(shader, GL_LINK_STATUS, &success);
-        if(!success) {
-            glGetProgramInfoLog(shader, 1024, nullptr, infoLog);
-            gLoge("gShader") << "ERROR::PROGRAM_LINKING_ERROR of type: " << type << "\n" << infoLog << "\n -- --------------------------------------------------- -- " << std::endl;
-        }
-    }
-#ifdef DEBUG
-    assert(success);
-#endif
 }
 
 // Helper function to check if a string starts with a given prefix
@@ -310,7 +236,7 @@ void gShader::use() const {
 #ifdef DEBUG
     assert(loaded);
 #endif
-    G_CHECK_GL(glUseProgram(id));
+	gRenderObject::getRenderer()->useShader(id);
 }
 
 // utility uniform functions
@@ -319,7 +245,7 @@ void gShader::setBool(const std::string &name, bool value) {
 #ifdef DEBUG
     assert(loaded);
 #endif
-    G_CHECK_GL(glUniform1i(getUniformLocation(name), (int)value));
+	gRenderObject::getRenderer()->setBool(id, name, value);
 }
 
 // ------------------------------------------------------------------------
@@ -327,7 +253,7 @@ void gShader::setInt(const std::string &name, int value) {
 #ifdef DEBUG
     assert(loaded);
 #endif
-    G_CHECK_GL(glUniform1i(getUniformLocation(name), value));
+	gRenderObject::getRenderer()->setInt(id, name, value);
 }
 
 // ------------------------------------------------------------------------
@@ -335,7 +261,7 @@ void gShader::setFloat(const std::string &name, float value) {
 #ifdef DEBUG
     assert(loaded);
 #endif
-    G_CHECK_GL(glUniform1f(getUniformLocation(name), value));
+	gRenderObject::getRenderer()->setFloat(id, name, value);
 }
 
 // ------------------------------------------------------------------------
@@ -343,14 +269,14 @@ void gShader::setVec2(const std::string &name, const glm::vec2 &value) {
 #ifdef DEBUG
     assert(loaded);
 #endif
-    G_CHECK_GL(glUniform2fv(getUniformLocation(name), 1, &value[0]));
+	gRenderObject::getRenderer()->setVec2(id, name, value);
 }
 
 void gShader::setVec2(const std::string &name, float x, float y) {
 #ifdef DEBUG
     assert(loaded);
 #endif
-    G_CHECK_GL(glUniform2f(getUniformLocation(name), x, y));
+	gRenderObject::getRenderer()->setVec2(id, name, x, y);
 }
 
 // ------------------------------------------------------------------------
@@ -358,14 +284,14 @@ void gShader::setVec3(const std::string &name, const glm::vec3 &value) {
 #ifdef DEBUG
     assert(loaded);
 #endif
-    G_CHECK_GL(glUniform3fv(getUniformLocation(name), 1, &value[0]));
+	gRenderObject::getRenderer()->setVec3(id, name, value);
 }
 
 void gShader::setVec3(const std::string &name, float x, float y, float z) {
 #ifdef DEBUG
     assert(loaded);
 #endif
-    G_CHECK_GL(glUniform3f(getUniformLocation(name), x, y, z));
+	gRenderObject::getRenderer()->setVec3(id, name, x, y, z);
 }
 
 // ------------------------------------------------------------------------
@@ -373,14 +299,14 @@ void gShader::setVec4(const std::string &name, const glm::vec4 &value) {
 #ifdef DEBUG
     assert(loaded);
 #endif
-    G_CHECK_GL(glUniform4fv(getUniformLocation(name), 1, &value[0]));
+	gRenderObject::getRenderer()->setVec4(id, name, value);
 }
 
 void gShader::setVec4(const std::string &name, float x, float y, float z, float w) {
 #ifdef DEBUG
     assert(loaded);
 #endif
-    G_CHECK_GL(glUniform4f(getUniformLocation(name), x, y, z, w));
+	gRenderObject::getRenderer()->setVec4(id, name, x, y, z, w);
 }
 
 // ------------------------------------------------------------------------
@@ -388,7 +314,7 @@ void gShader::setMat2(const std::string &name, const glm::mat2 &mat) {
 #ifdef DEBUG
     assert(loaded);
 #endif
-    G_CHECK_GL(glUniformMatrix2fv(getUniformLocation(name), 1, GL_FALSE, &mat[0][0]));
+	gRenderObject::getRenderer()->setMat2(id, name, mat);
 }
 
 // ------------------------------------------------------------------------
@@ -396,7 +322,7 @@ void gShader::setMat3(const std::string &name, const glm::mat3 &mat) {
 #ifdef DEBUG
     assert(loaded);
 #endif
-    G_CHECK_GL(glUniformMatrix3fv(getUniformLocation(name), 1, GL_FALSE, &mat[0][0]));
+	gRenderObject::getRenderer()->setMat3(id, name, mat);
 }
 
 // ------------------------------------------------------------------------
@@ -404,19 +330,5 @@ void gShader::setMat4(const std::string &name, const glm::mat4 &mat) {
 #ifdef DEBUG
     assert(loaded);
 #endif
-    G_CHECK_GL(glUniformMatrix4fv(getUniformLocation(name), 1, GL_FALSE, &mat[0][0]));
+	gRenderObject::getRenderer()->setMat4(id, name, mat);
 }
-
-GLint gShader::getUniformLocation(const std::string& name) {
-	// Check if the location is already in the map
-	auto it = uniformlocations.find(name);
-	if (it != uniformlocations.end()) {
-		return it->second;
-	}
-
-	// If not, get the location and store it in the map
-	GLint location = glGetUniformLocation(id, name.c_str());
-	uniformlocations[name] = location;
-	return location;
-}
-
