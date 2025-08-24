@@ -195,7 +195,9 @@ GLuint gGLRenderEngine::genBuffers() {
 }
 
 void gGLRenderEngine::deleteBuffer(GLuint& buffer) {
-	glDeleteBuffers(1, &buffer);
+	if (buffer != 0) {
+		glDeleteBuffers(1, &buffer);
+	}
 }
 
 void gGLRenderEngine::bindBuffer(GLenum target, GLuint buffer) {
@@ -567,7 +569,9 @@ void gGLRenderEngine::resetTexture() {
 }
 
 void gGLRenderEngine::deleteTexture(GLuint& texId) {
-	G_CHECK_GL(glDeleteTextures(1, &texId));
+	if (texId != 0) {
+		G_CHECK_GL(glDeleteTextures(1, &texId));
+	}
 }
 
 void gGLRenderEngine::texImage2D(GLenum target, GLint internalFormat, int width, int height, GLint format,

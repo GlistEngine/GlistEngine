@@ -155,15 +155,15 @@ void gVbo::setIndexData(gIndex* indices, int total) {
 
 void gVbo::clear() {
 	if(isvertexdataallocated) {
-		glDeleteBuffers(1, &vbo);
+		renderer->deleteBuffer(vbo);
 		isvertexdataallocated = false;
 	}
 	if(isindexdataallocated) {
-		glDeleteBuffers(1, &ebo);
+		renderer->deleteBuffer(ebo);
 		isvertexdataallocated = false;
     }
 	if (vao != GL_NONE) {
-		glDeleteVertexArrays(1, &vao);
+		renderer->deleteVAO(vao);
 		vao = GL_NONE;
 	}
 }
