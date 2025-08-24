@@ -21,44 +21,25 @@ gFbo::gFbo() {
 	isallocated = false;
 
 	if(!isvaoset) {
-	    float quadVertices[] = { // vertex attributes for a quad that fills the entire screen in Normalized Device Coordinates.
-	        // positions   // texCoords
-	        -1.0f,  1.0f,  0.0f, 1.0f,
-	        -1.0f, -1.0f,  0.0f, 0.0f,
-	         1.0f, -1.0f,  1.0f, 0.0f,
-
-	        -1.0f,  1.0f,  0.0f, 1.0f,
-	         1.0f, -1.0f,  1.0f, 0.0f,
-	         1.0f,  1.0f,  1.0f, 1.0f
-	    };
-
-	    glGenVertexArrays(1, &gFbo::quadVAO);
-	    glGenBuffers(1, &gFbo::quadVBO);
-	    glBindVertexArray(gFbo::quadVAO);
-	    glBindBuffer(GL_ARRAY_BUFFER, gFbo::quadVBO);
-	    glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
-	    glEnableVertexAttribArray(0);
-	    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
-	    glEnableVertexAttribArray(1);
-	    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
+		renderer->createFullscreenQuad(gFbo::quadVAO, gFbo::quadVBO);
 	    gFbo::isvaoset = true;
 	}
 }
 
 gFbo::~gFbo() {
 	delete texture;
-	glDeleteRenderbuffers(1, &rbo);
-	glDeleteFramebuffers(1, &framebuffer);
-	glDeleteVertexArrays(1, &gFbo::quadVAO);
-	glDeleteBuffers(1, &gFbo::quadVBO);
+	renderer->deleteRenderbuffer(&rbo);
+	renderer->deleteFramebuffer(&framebuffer);
+	renderer->deleteVAO(&gFbo::quadVAO);
+	renderer->deleteBuffer(&gFbo::quadVBO);
 }
 
 void gFbo::allocate(int width, int height, bool isDepthMap) {
 	// check if is not allocated
 	if(isallocated) {
 		delete texture;
-		G_CHECK_GL(glDeleteRenderbuffers(1, &rbo));
-		G_CHECK_GL(glDeleteFramebuffers(1, &framebuffer));
+		renderer->deleteRenderbuffer(&rbo);
+		renderer->deleteFramebuffer(&framebuffer);
 
 		texture = nullptr;
 		isallocated = false;
@@ -68,39 +49,30 @@ void gFbo::allocate(int width, int height, bool isDepthMap) {
 	this->height = height;
 	isdepthmap = isDepthMap;
 
-	G_CHECK_GL(glGenFramebuffers(1, &framebuffer));
-	G_CHECK_GL(glBindFramebuffer(GL_FRAMEBUFFER, framebuffer));
+	framebuffer = renderer->createFramebuffer();
+	renderer->bindFramebuffer(framebuffer);
 
 	if(!isDepthMap) {
 		// create a color attachment texture
 		texture = new gTexture(width, height, GL_RGBA, true);
 		texture->bind();
-		G_CHECK_GL(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture->getId(), 0));
+		renderer->attachTextureToFramebuffer(GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture->getId());
 
 		// create a renderbuffer object for depth and stencil attachment (we won't be sampling these)
-		G_CHECK_GL(glGenRenderbuffers(1, &rbo));
-		G_CHECK_GL(glBindRenderbuffer(GL_RENDERBUFFER, rbo));
-		G_CHECK_GL(glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height)); // use a single renderbuffer object for both a depth AND stencil buffer.
-		G_CHECK_GL(glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo)); // now actually attach it
+		rbo = renderer->createRenderbuffer();
+		renderer->bindRenderbuffer(rbo);
+		renderer->setRenderbufferStorage(GL_DEPTH24_STENCIL8, width, height); // use a single renderbuffer object for both a depth AND stencil buffer.
+		renderer->attachRenderbufferToFramebuffer(GL_DEPTH_STENCIL_ATTACHMENT, rbo); // now actually attach it
 	} else {
 		// create a depth attachment texture
 		texture = new gTexture(width, height, GL_DEPTH_COMPONENT, true);
 		texture->bind();
-		G_CHECK_GL(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, texture->getId(), 0));
-#if defined(GLIST_MOBILE)
-		G_CHECK_GL(glDrawBuffers(0, GL_NONE));
-#else
-		G_CHECK_GL(glDrawBuffer(GL_NONE));
-#endif
-		G_CHECK_GL(glReadBuffer(GL_NONE));
+		renderer->attachTextureToFramebuffer(GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, texture->getId());
+		renderer->setDrawBufferNone();
+		renderer->setReadBufferNone();
 	}
-
-	// check if fbo complete
-	GLuint status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
-	if (status != GL_FRAMEBUFFER_COMPLETE) {
-		gLogi("gFbo") << "Framebuffer is not complete! status:" << gToHex(status, 4);
-	}
-	glBindFramebuffer(GL_FRAMEBUFFER, gFbo::defaultfbo);
+	renderer->checkFramebufferStatus();
+	renderer->bindDefaultFramebuffer();
 	isallocated = true;
 }
 
@@ -125,13 +97,13 @@ unsigned int gFbo::getTextureId() {
 }
 
 void gFbo::bind() {
-	glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+	renderer->bindFramebuffer(framebuffer);
 	glViewport(0, 0, width, height);
 }
 
 void gFbo::unbind() {
-	glBindFramebuffer(GL_FRAMEBUFFER, gFbo::defaultfbo);
-	glViewport(0, 0, renderer->getScreenWidth(), renderer->getScreenHeight());
+	renderer->bindDefaultFramebuffer();
+	glViewport(0, 0, renderer->getWidth(), renderer->getHeight());
 }
 
 void gFbo::draw(int x, int y) {
