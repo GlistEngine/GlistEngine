@@ -166,6 +166,8 @@ public:
 	void generateSkyMipMap();
 	void enableDepthTestEqual();
 	void createQuad(GLuint& inQuadVAO, GLuint& inQuadVBO);
+	void enableCubeMapSeemless();
+	void checkEnableCubeMap4Android();
 
 	/* ---------------- gRenderObject ---------------- */
 	void pushMatrix();

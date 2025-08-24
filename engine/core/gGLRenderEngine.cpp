@@ -682,6 +682,20 @@ void gGLRenderEngine::createQuad(GLuint& inQuadVAO, GLuint& inQuadVBO) {
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
 }
 
+void gGLRenderEngine::enableCubeMapSeemless() {
+#if defined(GLIST_MOBILE)
+	glEnable(GL_TEXTURE_CUBE_MAP); // OpenGL ES does not support GL_TEXTURE_CUBE_MAP_SEAMLESS
+#else
+	glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
+#endif
+}
+
+void gGLRenderEngine::checkEnableCubeMap4Android() {
+#if defined(ANDROID)
+	G_CHECK_GL(glEnable(GL_TEXTURE_CUBE_MAP)); // OpenGL ES does not support GL_TEXTURE_CUBE_MAP_SEAMLESS
+#endif
+}
+
 void gGLRenderEngine::pushMatrix() {
 	G_CHECK_GL(glPushMatrix());
 }

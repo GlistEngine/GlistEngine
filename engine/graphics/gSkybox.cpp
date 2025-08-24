@@ -45,9 +45,7 @@ unsigned int gSkybox::load(std::vector<std::string>& fullPaths) {
 	skymapslot = GL_TEXTURE0;
 	skymapint = 0;
 
-#if defined(ANDROID)
-    G_CHECK_GL(glEnable(GL_TEXTURE_CUBE_MAP)); // OpenGL ES does not support GL_TEXTURE_CUBE_MAP_SEAMLESS
-#endif
+	renderer->checkEnableCubeMap4Android();
 
 	id = renderer->createTextures();
 	renderer->bindSkyTexture(id, skymapslot);
@@ -77,11 +75,7 @@ void gSkybox::loadSkybox(gImage* images) {
 	skymapslot = GL_TEXTURE0;
 	skymapint = 0;
 
-#if defined(GLIST_MOBILE)
-	glEnable(GL_TEXTURE_CUBE_MAP); // OpenGL ES does not support GL_TEXTURE_CUBE_MAP_SEAMLESS
-#else
-	glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
-#endif
+	renderer->enableCubeMapSeemless();
 
 	id = renderer->createTextures();
 	renderer->bindSkyTexture(id, skymapslot);
@@ -106,11 +100,7 @@ void gSkybox::loadDataSkybox(std::string *data, int width, int height) {
 	skymapslot = GL_TEXTURE0;
 	skymapint = 0;
 
-#if defined(GLIST_MOBILE)
-	glEnable(GL_TEXTURE_CUBE_MAP); // OpenGL ES does not support GL_TEXTURE_CUBE_MAP_SEAMLESS
-#else
-	glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
-#endif
+	renderer->enableCubeMapSeemless();
 
 	id = renderer->createTextures();
 	renderer->bindSkyTexture(id, skymapslot);
@@ -143,11 +133,7 @@ unsigned int gSkybox::loadEquirectangular(const std::string& fullPath) {
 //	glGenTextures(1, &id);
 //	glBindTexture(GL_TEXTURE_CUBE_MAP, id);
 
-#if defined(GLIST_MOBILE)
-	glEnable(GL_TEXTURE_CUBE_MAP); // OpenGL ES does not support GL_TEXTURE_CUBE_MAP_SEAMLESS
-#else
-	glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
-#endif
+	renderer->enableCubeMapSeemless();
 
 	equirectangularToCubemapShader = renderer->getEquirectangularShader();
 

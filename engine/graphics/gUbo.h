@@ -24,7 +24,7 @@ public:
 
 	~gUbo() {
 		if (id != GL_NONE) {
-			G_CHECK_GL(glDeleteBuffers(1, &id));
+			gRenderObject::getRenderer()->deleteBuffer(id);
 		}
 		delete data;
 	}

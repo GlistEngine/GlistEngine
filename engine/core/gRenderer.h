@@ -387,6 +387,8 @@ public:
 	virtual void generateSkyMipMap() = 0;
 	virtual void enableDepthTestEqual() = 0;
 	virtual void createQuad(GLuint& inQuadVAO, GLuint& inQuadVBO) = 0;
+	virtual void enableCubeMapSeemless() = 0;
+	virtual void checkEnableCubeMap4Android() = 0;
 
 	/* ---------------- gRenderObject ---------------- */
 	virtual void pushMatrix() = 0;

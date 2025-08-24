@@ -515,7 +515,7 @@ void gTexture::cleanupAll() {
 		isloaded = false;
 	}
 	if(istextureallocated) {
-		glDeleteTextures(1, &id);
+		renderer->deleteTexture(id);
 		istextureallocated = false;
 	}
 	cleanupData();
