@@ -54,15 +54,15 @@ void gSkinnedMesh::draw() {
 }
 
 void gSkinnedMesh::drawVboFrame() {
-    // draw mesh
-    vboframe[0][frameno].bind();
-    if (vboframe[0][frameno].isIndexDataAllocated()) {
-        glDrawElements(GL_TRIANGLES, vboframe[0][frameno].getIndicesNum(), GL_UNSIGNED_INT, 0);
-    } else {
-    	glDrawArrays(GL_TRIANGLES, 0, vboframe[0][frameno].getVerticesNum());
-    }
-    vboframe[0][frameno].unbind();
-    framenoold = frameno;
+	// draw mesh
+	vboframe[0][frameno].bind();
+	if (vboframe[0][frameno].isIndexDataAllocated()) {
+		renderer->drawElements(GL_TRIANGLES, vboframe[0][frameno].getIndicesNum());
+	} else {
+		renderer->drawArrays(GL_TRIANGLES, vboframe[0][frameno].getVerticesNum());
+	}
+	vboframe[0][frameno].unbind();
+	framenoold = frameno;
 }
 
 void gSkinnedMesh::resizeAnimation(int verticesNum) {
