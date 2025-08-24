@@ -103,6 +103,7 @@ class gShader;
 class gCamera;
 class gGrid;
 
+
 class gRenderer: public gObject {
 public:
 	static const int SCREENSCALING_NONE, SCREENSCALING_MIPMAP, SCREENSCALING_AUTO;
@@ -347,8 +348,6 @@ public:
 	virtual void resetShader(GLuint id, bool loaded) const = 0;
 	virtual GLint getUniformLocation(GLuint id, const std::string& name) = 0;
 
-	virtual void attachUbo(GLuint id, const gUbo<float>* ubo, const std::string& uboName) = 0;
-
 	/* ------------ gPostProcessManager ------------- */
 	virtual void clearScreen(bool color = true, bool depth = true) = 0;
 	virtual void bindQuadVAO() = 0;
@@ -503,6 +502,10 @@ protected:
 	static const std::string& getShaderSrcBrdfFragment();
 	static const std::string& getShaderSrcFboVertex();
 	static const std::string& getShaderSrcFboFragment();
+
+public:
+	virtual void attachUbo(GLuint id, const gUbo<gSceneLights>* ubo, const std::string& uboName) = 0;
+
 };
 
 #endif /* CORE_GRENDERER_H_ */

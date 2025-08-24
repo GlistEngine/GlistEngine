@@ -104,7 +104,7 @@ public:
 	void resetShader(GLuint id, bool loaded) const;
 	GLint getUniformLocation(GLuint id, const std::string& name);
 
-	void attachUbo(GLuint id, const gUbo<float>* ubo, const std::string& uboName) {
+	void attachUbo(GLuint id, const gUbo<gSceneLights>* ubo, const std::string& uboName) {
 		unsigned int blockIndex;
 		G_CHECK_GL2(blockIndex, glGetUniformBlockIndex(id, uboName.c_str()));
 		G_CHECK_GL(glUniformBlockBinding(id, blockIndex, ubo->getBindingPoint()));

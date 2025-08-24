@@ -37,7 +37,7 @@ public:
 	void attachUbo(const std::string& uboName, const gUbo<T>* ubo) {
 		ubos[uboName] = ubo->getBindingPoint();
 		use();
-		gRenderObject::getRenderer()->attachUbo(uboName, ubo);
+		gRenderObject::getRenderer()->attachUbo(id, ubo, uboName);
 	}
 
 	bool loaded;
