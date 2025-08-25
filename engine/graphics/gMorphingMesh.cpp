@@ -251,9 +251,9 @@ void gMorphingMesh::draw() {
 void gMorphingMesh::drawVboFrames() {
 	vboframes[currenttargetmeshid][currentframeid].bind();
 	if (vboframes[currenttargetmeshid][currentframeid].isIndexDataAllocated()) {
-		glDrawElements(GL_TRIANGLES, vboframes[currenttargetmeshid][currentframeid].getIndicesNum(), GL_UNSIGNED_INT, 0);
+		renderer->drawElements(GL_TRIANGLES, vboframes[currenttargetmeshid][currentframeid].getIndicesNum());
 	} else {
-		glDrawArrays(GL_TRIANGLES, 0, vboframes[currenttargetmeshid][currentframeid].getVerticesNum());
+		renderer->drawArrays(GL_TRIANGLES, vboframes[currenttargetmeshid][currentframeid].getVerticesNum());
 	}
 	vboframes[currenttargetmeshid][currentframeid].unbind();
 }

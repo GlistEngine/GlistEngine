@@ -40,7 +40,7 @@ unsigned int gImage::load(const std::string& fullPath) {
 	if (gToLower(fullpath.substr(fullpath.length() - 3, 3)) == "hdr") ishdr = true;
 
 	if (!istextureallocated) {
-		glGenTextures(1, &id);
+		id = renderer->createTextures();
 		istextureallocated = true;
 	}
 
@@ -113,7 +113,7 @@ void gImage::loadImageData(const std::string& imagePath) {
 
 unsigned int gImage::useData() {
 	if (!istextureallocated) {
-		glGenTextures(1, &id);
+		id = renderer->createTextures();
 		istextureallocated = true;
 	}
 
