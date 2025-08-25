@@ -33,12 +33,10 @@ void gPostProcessManager::addEffect(gBasePostProcess *effect) {
 
 void gPostProcessManager::enable() {
 	fbos[0].bind(); // this is where we will draw our affected objects.
-	gRenderObject::getRenderer()->clearScreen(true, true);
+	renderer->clearScreen(true, true);
 }
 
 void gPostProcessManager::disable() {
-	gRenderer* renderer = gRenderObject::getRenderer();
-
 	renderer->disableDepthTest();
 	fbotoread = 0;
 	fbotowrite = 1;

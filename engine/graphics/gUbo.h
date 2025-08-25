@@ -9,12 +9,11 @@
 #include "gRenderObject.h"
 
 template<typename T>
-class gUbo : public gObject {
+class gUbo : public gRenderObject {
 public:
 	template<typename ...Args>
 	gUbo(Args&&... args, int bindingpoint, int usage = GL_DYNAMIC_DRAW) : id(GL_NONE), size(sizeof(T)), bindingpoint(bindingpoint) {
 		data = new T(std::forward<Args>(args)...);
-		gRenderer* renderer = gRenderObject::getRenderer();
 		id = renderer->genBuffers();
 		renderer->setBufferData(id, nullptr, size, usage);
 		// define the range of the buffer that links to a uniform binding point
@@ -24,17 +23,17 @@ public:
 
 	~gUbo() {
 		if (id != GL_NONE) {
-			gRenderObject::getRenderer()->deleteBuffer(id);
+			renderer->deleteBuffer(id);
 		}
 		delete data;
 	}
 
 	void bind() const {
-		gRenderObject::getRenderer()->bindBuffer(GL_UNIFORM_BUFFER, id);
+		renderer->bindBuffer(GL_UNIFORM_BUFFER, id);
 	}
 
 	void unbind() const {
-		gRenderObject::getRenderer()->unbindBuffer(GL_UNIFORM_BUFFER);
+		renderer->unbindBuffer(GL_UNIFORM_BUFFER);
 	}
 
 	void update() {
@@ -43,7 +42,7 @@ public:
 
 	void update(int offset, int length) {
 		void* ptr = static_cast<void*>(reinterpret_cast<char*>(data) + offset);
-		gRenderObject::getRenderer()->bufSubData(id, offset, length, ptr);
+		renderer->bufSubData(id, offset, length, ptr);
 	}
 
 	T* getData() {

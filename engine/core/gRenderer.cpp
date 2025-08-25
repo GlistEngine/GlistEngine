@@ -258,7 +258,6 @@ void gRenderer::init() {
 	// Fixes alignment issues with 3 channel images
 	gRenderObject::getRenderer()->updatePackUnpackAlignment(1);
 
-
 	globalambientcolor.set(255, 255, 255, 255);
 	isglobalambientcolorchanged = true;
 	islightingenabled = true;

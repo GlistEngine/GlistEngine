@@ -8,7 +8,6 @@
 #ifndef ENGINE_GRAPHICS_GSHADER_H_
 #define ENGINE_GRAPHICS_GSHADER_H_
 
-#include "gObject.h"
 #include "gRenderer.h"
 #include <string>
 #include <unordered_map>
@@ -17,7 +16,7 @@
 template<typename T>
 class gUbo;
 
-class gShader : public gObject {
+class gShader : public gRenderObject {
 public:
 	gShader();
 	gShader(const std::string& shaderFullPath);
@@ -37,7 +36,7 @@ public:
 	void attachUbo(const std::string& uboName, const gUbo<T>* ubo) {
 		ubos[uboName] = ubo->getBindingPoint();
 		use();
-		gRenderObject::getRenderer()->attachUbo(id, ubo, uboName);
+		renderer->attachUbo(id, ubo, uboName);
 	}
 
 	bool loaded;

@@ -219,7 +219,7 @@ void gAppManager::loop() {
 #ifdef DEBUG
     if(usewindow) {
 		assert(window);
-//        assert(gRenderObject::getRenderer());
+//        assert(renderer);
     }
 #endif
     //gLogi("gAppManager") << "starting loop";
@@ -541,8 +541,8 @@ bool gAppManager::onWindowResizedEvent(gWindowResizeEvent& event) {
 
 		// Orientation changed, we should swap height and width
 		if(swapdimensions) {
-			int unitwidth = gRenderObject::getRenderer()->getUnitWidth();
-			int unitheight = gRenderObject::getRenderer()->getUnitHeight();
+			int unitwidth = renderer->getUnitWidth();
+			int unitheight = renderer->getUnitHeight();
 			// Swap width and height values
 			gRenderer::setUnitScreenSize(unitheight, unitwidth);
 		}

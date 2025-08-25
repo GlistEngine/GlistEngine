@@ -20,7 +20,7 @@ gShader::gShader() {
 }
 
 gShader::~gShader() {
-	gRenderObject::getRenderer()->resetShader(id, loaded);
+	renderer->resetShader(id, loaded);
 }
 
 gShader::gShader(const std::string& vertexFullPath, const std::string& fragmentFullPath, const std::string& geometryFullPath) {
@@ -36,7 +36,7 @@ void gShader::loadShader(const std::string& shaderFileName) {
 }
 
 void gShader::load(const std::string& vertexFullPath, const std::string& fragmentFullPath, const std::string& geometryFullPath) {
-	gRenderObject::getRenderer()->resetShader(id, loaded);
+	renderer->resetShader(id, loaded);
     // 1. retrieve the vertex/fragment source code from filePath
     std::string vertexCode;
     std::string fragmentCode;
@@ -78,7 +78,7 @@ void gShader::load(const std::string& vertexFullPath, const std::string& fragmen
 }
 
 void gShader::load(const std::string& shaderFullPath) {
-	gRenderObject::getRenderer()->resetShader(id, loaded);
+	renderer->resetShader(id, loaded);
 	// 1. retrieve the vertex/fragment source code from filePath
 	std::string shaderCode;
 	std::ifstream vShaderFile;
@@ -120,7 +120,7 @@ void gShader::loadProgram(const std::string& vertexSource, const std::string& fr
 	}
 #endif
 
-	id = gRenderObject::getRenderer()->loadProgram(preprocessedVertexSourceStr, preprocessedFragmentSourceStr, preprocessedGeometrySourceStr);
+	id = renderer->loadProgram(preprocessedVertexSourceStr, preprocessedFragmentSourceStr, preprocessedGeometrySourceStr);
 	loaded = true;
 }
 
@@ -144,7 +144,7 @@ void gShader::loadProgram(const std::string& shaderSource) {
 	}
 #endif
 
-	id = gRenderObject::getRenderer()->loadProgram(preprocessedVertexSourceStr, preprocessedFragmentSourceStr, preprocessedGeometrySourceStr);
+	id = renderer->loadProgram(preprocessedVertexSourceStr, preprocessedFragmentSourceStr, preprocessedGeometrySourceStr);
 	loaded = true;
 }
 
@@ -236,7 +236,7 @@ void gShader::use() const {
 #ifdef DEBUG
     assert(loaded);
 #endif
-	gRenderObject::getRenderer()->useShader(id);
+	renderer->useShader(id);
 }
 
 // utility uniform functions
@@ -246,7 +246,7 @@ void gShader::setBool(const std::string &name, bool value) {
     assert(loaded);
 #endif
 	GLuint uniformloc = getUniformLocation(name);
-	gRenderObject::getRenderer()->setBool(uniformloc, value);
+	renderer->setBool(uniformloc, value);
 }
 
 // ------------------------------------------------------------------------
@@ -255,7 +255,7 @@ void gShader::setInt(const std::string &name, int value) {
     assert(loaded);
 #endif
 	GLuint uniformloc = getUniformLocation(name);
-	gRenderObject::getRenderer()->setInt(uniformloc, value);
+	renderer->setInt(uniformloc, value);
 }
 
 // ------------------------------------------------------------------------
@@ -264,7 +264,7 @@ void gShader::setFloat(const std::string &name, float value) {
     assert(loaded);
 #endif
 	GLuint uniformloc = getUniformLocation(name);
-	gRenderObject::getRenderer()->setFloat(uniformloc, value);
+	renderer->setFloat(uniformloc, value);
 }
 
 // ------------------------------------------------------------------------
@@ -273,7 +273,7 @@ void gShader::setVec2(const std::string &name, const glm::vec2 &value) {
     assert(loaded);
 #endif
 	GLuint uniformloc = getUniformLocation(name);
-	gRenderObject::getRenderer()->setVec2(uniformloc, value);
+	renderer->setVec2(uniformloc, value);
 }
 
 void gShader::setVec2(const std::string &name, float x, float y) {
@@ -281,7 +281,7 @@ void gShader::setVec2(const std::string &name, float x, float y) {
     assert(loaded);
 #endif
 	GLuint uniformloc = getUniformLocation(name);
-	gRenderObject::getRenderer()->setVec2(uniformloc, x, y);
+	renderer->setVec2(uniformloc, x, y);
 }
 
 // ------------------------------------------------------------------------
@@ -290,7 +290,7 @@ void gShader::setVec3(const std::string &name, const glm::vec3 &value) {
     assert(loaded);
 #endif
 	GLuint uniformloc = getUniformLocation(name);
-	gRenderObject::getRenderer()->setVec3(uniformloc, value);
+	renderer->setVec3(uniformloc, value);
 }
 
 void gShader::setVec3(const std::string &name, float x, float y, float z) {
@@ -298,7 +298,7 @@ void gShader::setVec3(const std::string &name, float x, float y, float z) {
     assert(loaded);
 #endif
 	GLuint uniformloc = getUniformLocation(name);
-	gRenderObject::getRenderer()->setVec3(uniformloc, x, y, z);
+	renderer->setVec3(uniformloc, x, y, z);
 }
 
 // ------------------------------------------------------------------------
@@ -307,7 +307,7 @@ void gShader::setVec4(const std::string &name, const glm::vec4 &value) {
     assert(loaded);
 #endif
 	GLuint uniformloc = getUniformLocation(name);
-	gRenderObject::getRenderer()->setVec4(uniformloc, value);
+	renderer->setVec4(uniformloc, value);
 }
 
 void gShader::setVec4(const std::string &name, float x, float y, float z, float w) {
@@ -315,7 +315,7 @@ void gShader::setVec4(const std::string &name, float x, float y, float z, float 
     assert(loaded);
 #endif
 	GLuint uniformloc = getUniformLocation(name);
-	gRenderObject::getRenderer()->setVec4(uniformloc, x, y, z, w);
+	renderer->setVec4(uniformloc, x, y, z, w);
 }
 
 // ------------------------------------------------------------------------
@@ -324,7 +324,7 @@ void gShader::setMat2(const std::string &name, const glm::mat2 &mat) {
     assert(loaded);
 #endif
 	GLuint uniformloc = getUniformLocation(name);
-	gRenderObject::getRenderer()->setMat2(uniformloc, mat);
+	renderer->setMat2(uniformloc, mat);
 }
 
 // ------------------------------------------------------------------------
@@ -333,7 +333,7 @@ void gShader::setMat3(const std::string &name, const glm::mat3 &mat) {
     assert(loaded);
 #endif
 	GLuint uniformloc = getUniformLocation(name);
-	gRenderObject::getRenderer()->setMat3(uniformloc, mat);
+	renderer->setMat3(uniformloc, mat);
 }
 
 // ------------------------------------------------------------------------
@@ -342,7 +342,7 @@ void gShader::setMat4(const std::string &name, const glm::mat4 &mat) {
     assert(loaded);
 #endif
 	GLuint uniformloc = getUniformLocation(name);
-	gRenderObject::getRenderer()->setMat4(uniformloc, mat);
+	renderer->setMat4(uniformloc, mat);
 }
 
 GLint gShader::getUniformLocation(const std::string& name) {
@@ -353,7 +353,7 @@ GLint gShader::getUniformLocation(const std::string& name) {
 	}
 
 	// If not, retrieve it and store it in the map
-	GLuint location = gRenderObject::getRenderer()->getUniformLocation(id, name.c_str());
+	GLuint location = renderer->getUniformLocation(id, name.c_str());
 	uniformlocations[name] = location;
 	return location;
 }
