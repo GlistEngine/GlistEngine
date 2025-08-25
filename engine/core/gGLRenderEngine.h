@@ -87,22 +87,22 @@ public:
 	// This function loads shaders without preproccesing them. Geometry source can be nullptr.
 	GLuint loadProgram(const char* vertexSource, const char* fragmentSource, const char* geometrySource);
 	void checkCompileErrors(GLuint shader, const std::string& type);
-	void setBool(GLuint id, const std::string& name, bool value);
-	void setInt(GLuint id, const std::string& name, int value);
-	void setFloat(GLuint id, const std::string& name, float value);
-	void setVec2(GLuint id, const std::string& name, const glm::vec2& value);
-	void setVec2(GLuint id, const std::string& name, float x, float y);
-	void setVec3(GLuint id, const std::string& name, const glm::vec3& value);
-	void setVec3(GLuint id, const std::string& name, float x, float y, float z);
-	void setVec4(GLuint id, const std::string& name, const glm::vec4& value);
-	void setVec4(GLuint id, const std::string& name, float x, float y, float z, float w);
-	void setMat2(GLuint id, const std::string& name, const glm::mat2& mat);
-	void setMat3(GLuint id, const std::string& name, const glm::mat3& mat);
-	void setMat4(GLuint id, const std::string& name, const glm::mat4& mat);
+	void setBool(GLuint uniformloc, bool value);
+	void setInt(GLuint uniformloc, int value);
+	void setFloat(GLuint uniformloc, float value);
+	void setVec2(GLuint uniformloc, const glm::vec2& value);
+	void setVec2(GLuint uniformloc, float x, float y);
+	void setVec3(GLuint uniformloc, const glm::vec3& value);
+	void setVec3(GLuint uniformloc, float x, float y, float z);
+	void setVec4(GLuint uniformloc, const glm::vec4& value);
+	void setVec4(GLuint uniformloc, float x, float y, float z, float w);
+	void setMat2(GLuint uniformloc, const glm::mat2& mat);
+	void setMat3(GLuint uniformloc, const glm::mat3& mat);
+	void setMat4(GLuint uniformloc, const glm::mat4& mat);
+	GLuint getUniformLocation(GLuint id, const std::string& name);
 
 	void useShader(GLuint id) const;
 	void resetShader(GLuint id, bool loaded) const;
-	GLint getUniformLocation(GLuint id, const std::string& name);
 
 	void attachUbo(GLuint id, const gUbo<gSceneLights>* ubo, const std::string& uboName) {
 		unsigned int blockIndex;

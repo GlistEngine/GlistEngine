@@ -259,7 +259,6 @@ void gAppManager::loop() {
     }
     //gLogi("gAppManager") << "stopping loop";
     app->stop();
-    //gRenderObject::destroyRenderer(); // Moved to destructor
     if(usewindow) {
         window->close();
     }
@@ -698,7 +697,6 @@ void gAppManager::iosLoop()
     if(!(isrunning && (!usewindow || !window->getShouldClose())))
     {
         app->stop();
-        gRenderObject::destroyRenderer();
         if(usewindow) {
             window->close();
         }

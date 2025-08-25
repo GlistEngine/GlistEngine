@@ -18,34 +18,35 @@ void gCheckGLErrorAndPrint(const std::string& prefix, const std::string& func, i
 	}
 }
 void gEnableCulling() {
-	glEnable(GL_CULL_FACE);
+	G_CHECK_GL(glEnable(GL_CULL_FACE));
 }
 
 void gDisableCulling() {
-	glDisable(GL_CULL_FACE);
+	G_CHECK_GL(glDisable(GL_CULL_FACE));
 }
 
 bool gIsCullingEnabled() {
-	return glIsEnabled(GL_CULL_FACE);
+	G_CHECK_GL2(GLboolean res, glIsEnabled(GL_CULL_FACE));
+	return res == GL_TRUE;
 }
 
 void gCullFace(int cullingFace) {
-	glCullFace(cullingFace);
+	G_CHECK_GL(glCullFace(cullingFace));
 }
 
 int gGetCullFace() {
 	GLint i;
-	glGetIntegerv(GL_CULL_FACE_MODE, &i);
+	G_CHECK_GL(glGetIntegerv(GL_CULL_FACE_MODE, &i));
 	return i;
 }
 
 void gSetCullingDirection(int cullingDirection) {
-	glFrontFace(cullingDirection);
+	G_CHECK_GL(glFrontFace(cullingDirection));
 }
 
 int gGetCullingDirection() {
 	GLint i;
-	glGetIntegerv(GL_FRONT_FACE, &i);
+	G_CHECK_GL(glGetIntegerv(GL_FRONT_FACE, &i));
 	return i;
 }
 
@@ -65,7 +66,8 @@ gGLRenderEngine::~gGLRenderEngine() {
 	delete rendercolor;
 	delete lightsubo;
 	delete gridshader;
-	if(!isdevelopergrid) delete originalgrid;
+	if(!isdevelopergrid)
+		delete originalgrid;
 }
 
 void gGLRenderEngine::clear() {
@@ -85,7 +87,7 @@ void gGLRenderEngine::clearColor(gColor color) {
 }
 
 void gGLRenderEngine::enableDepthTest() {
-	enableDepthTest(DEPTHTESTTYPE_LESS);
+	G_CHECK_GL(enableDepthTest(DEPTHTESTTYPE_LESS));
 }
 
 void gGLRenderEngine::enableDepthTest(int depthTestType) {
@@ -130,15 +132,15 @@ bool gGLRenderEngine::isAlphaBlendingEnabled() {
 
 void gGLRenderEngine::enableAlphaTest() {
 #if defined(WIN32) || defined(LINUX)
-	glEnable(GL_ALPHA_TEST);
-	glAlphaFunc(GL_GREATER, 0.1);
+	G_CHECK_GL(glEnable(GL_ALPHA_TEST));
+	G_CHECK_GL(glAlphaFunc(GL_GREATER, 0.1));
 	isalphatestenabled = true;
 #endif
 }
 
 void gGLRenderEngine::disableAlphaTest() {
 #if defined(WIN32) || defined(LINUX)
-	glDisable(GL_ALPHA_TEST);
+	G_CHECK_GL(glDisable(GL_ALPHA_TEST));
 	isalphatestenabled = false;
 #endif
 }
@@ -169,7 +171,7 @@ void flipVertically(unsigned char* pixelData, int width, int height, int numChan
 
 void gGLRenderEngine::takeScreenshot(gImage& img, int x, int y, int width, int height) {
 	unsigned char* pixeldata = new unsigned char[width * height * 4];
-	glReadPixels(x, getHeight() - y - height, width, height, GL_RGBA, GL_UNSIGNED_BYTE, pixeldata);
+	G_CHECK_GL(glReadPixels(x, getHeight() - y - height, width, height, GL_RGBA, GL_UNSIGNED_BYTE, pixeldata));
 	flipVertically(pixeldata, width, height, 4);
 	img.setImageData(pixeldata, width, height, 4);
 	//std::string imagePath = "output.png";   USE IT TO SAVE THE IMAGE
@@ -180,7 +182,7 @@ void gGLRenderEngine::takeScreenshot(gImage& img) {
 	int height = gBaseApp::getAppManager()->getWindow()->getHeight();
 	int width = gBaseApp::getAppManager()->getWindow()->getWidth();
 	unsigned char* pixeldata = new unsigned char[width * height * 4];
-	glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, pixeldata);
+	G_CHECK_GL(glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, pixeldata));
 	flipVertically(pixeldata, width, height, 4);
 	img.setImageData(pixeldata, width, height, 4);
 	//std::string imagePath = "output.png";   USE IT TO SAVE THE IMAGE
@@ -190,13 +192,13 @@ void gGLRenderEngine::takeScreenshot(gImage& img) {
 
 GLuint gGLRenderEngine::genBuffers() {
 	GLuint buffer;
-	glGenBuffers(1, &buffer);
+	G_CHECK_GL(glGenBuffers(1, &buffer));
 	return buffer;
 }
 
 void gGLRenderEngine::deleteBuffer(GLuint& buffer) {
 	if (buffer != 0) {
-		glDeleteBuffers(1, &buffer);
+		G_CHECK_GL(glDeleteBuffers(1, &buffer));
 	}
 }
 
@@ -227,18 +229,17 @@ void gGLRenderEngine::setBufferRange(int index, GLuint buffer, int offset, int s
 // ----- VAO -----l
 GLuint gGLRenderEngine::createVAO() {
 	GLuint vao;
-	glGenVertexArrays(1, &vao);
+	G_CHECK_GL(glGenVertexArrays(1, &vao));
 	return vao;
 }
 
 void gGLRenderEngine::deleteVAO(GLuint& vao) {
 	if(vao != 0) {
-		glDeleteVertexArrays(1, &vao);
+		G_CHECK_GL(glDeleteVertexArrays(1, &vao));
 	}
 }
 
 void gGLRenderEngine::bindVAO(GLuint vao) {
-	assert(vao != 0);
 	G_CHECK_GL(glBindVertexArray(vao));
 }
 
@@ -247,15 +248,13 @@ void gGLRenderEngine::unbindVAO() {
 }
 
 void gGLRenderEngine::setVertexBufferData(GLuint vbo, size_t size, const void* data, int usage) {
-	assert(vbo != 0);
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBufferData(GL_ARRAY_BUFFER, size, data, usage);
+	G_CHECK_GL(glBindBuffer(GL_ARRAY_BUFFER, vbo));
+	G_CHECK_GL(glBufferData(GL_ARRAY_BUFFER, size, data, usage));
 }
 
 void gGLRenderEngine::setIndexBufferData(GLuint ebo, size_t size, const void* data, int usage) {
-	assert(ebo != 0);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, data, usage);
+	G_CHECK_GL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo));
+	G_CHECK_GL(glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, data, usage));
 }
 
 // ----- Draw -----
@@ -269,28 +268,28 @@ void gGLRenderEngine::drawElements(int drawMode, int count) {
 
 // ----- vertex attributes -----
 void gGLRenderEngine::enableVertexAttrib(int index) {
-	glEnableVertexAttribArray(index);
+	G_CHECK_GL(glEnableVertexAttribArray(index));
 }
 
 void gGLRenderEngine::disableVertexAttrib(int index) {
-	glDisableVertexAttribArray(index);
+	G_CHECK_GL(glDisableVertexAttribArray(index));
 }
 
 void gGLRenderEngine::setVertexAttribPointer(int index, int size, int type, bool normalized, int stride,
                                              const void* pointer) {
-	glVertexAttribPointer(index, size, type, normalized ? GL_TRUE : GL_FALSE, stride, pointer);
+	G_CHECK_GL(glVertexAttribPointer(index, size, type, normalized ? GL_TRUE : GL_FALSE, stride, pointer));
 }
 
 // ----- Framebuffer -----
 GLuint gGLRenderEngine::createFramebuffer() {
 	GLuint fbo;
-	glGenFramebuffers(1, &fbo);
+	G_CHECK_GL(glGenFramebuffers(1, &fbo));
 	return fbo;
 }
 
 void gGLRenderEngine::deleteFramebuffer(GLuint& fbo) {
 	if(fbo != 0) {
-		glDeleteFramebuffers(1, &fbo);
+		G_CHECK_GL(glDeleteFramebuffers(1, &fbo));
 	}
 }
 
@@ -300,7 +299,7 @@ void gGLRenderEngine::bindFramebuffer(GLuint fbo) {
 
 void gGLRenderEngine::checkFramebufferStatus() {
 	// check if fbo complete
-	GLuint status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+	G_CHECK_GL2(GLuint status, glCheckFramebufferStatus(GL_FRAMEBUFFER));
 	if(status != GL_FRAMEBUFFER_COMPLETE) {
 		gLogi("gFbo") << "Framebuffer is not complete! status:" << gToHex(status, 4);
 	}
@@ -315,17 +314,17 @@ GLuint gGLRenderEngine::createRenderbuffer() {
 
 void gGLRenderEngine::deleteRenderbuffer(GLuint& rbo) {
 	if(rbo != 0) {
-		glDeleteRenderbuffers(1, &rbo);
+		G_CHECK_GL(glDeleteRenderbuffers(1, &rbo));
 	}
 }
 
 void gGLRenderEngine::bindRenderbuffer(GLuint rbo) {
 	assert(rbo != 0);
-	glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+	G_CHECK_GL(glBindRenderbuffer(GL_RENDERBUFFER, rbo));
 }
 
 void gGLRenderEngine::setRenderbufferStorage(GLenum format, int width, int height) {
-	glRenderbufferStorage(GL_RENDERBUFFER, format, width, height);
+	G_CHECK_GL(glRenderbufferStorage(GL_RENDERBUFFER, format, width, height));
 }
 
 // ----- Attachments -----
@@ -363,25 +362,25 @@ void gGLRenderEngine::createFullscreenQuad(GLuint& vao, GLuint& vbo) {
 		1.0f, 1.0f, 1.0f, 1.0f
 	};
 
-	glGenVertexArrays(1, &vao);
-	glGenBuffers(1, &vbo);
+	G_CHECK_GL(glGenVertexArrays(1, &vao));
+	G_CHECK_GL(glGenBuffers(1, &vbo));
 
-	glBindVertexArray(vao);
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
+	G_CHECK_GL(glBindVertexArray(vao));
+	G_CHECK_GL(glBindBuffer(GL_ARRAY_BUFFER, vbo));
+	G_CHECK_GL(glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW));
 
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
+	G_CHECK_GL(glEnableVertexAttribArray(0));
+	G_CHECK_GL(glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0));
 
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
+	G_CHECK_GL(glEnableVertexAttribArray(1));
+	G_CHECK_GL(glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float))));
 }
 
 void gGLRenderEngine::deleteFullscreenQuad(GLuint& vao, GLuint* vbo) {
 	if(vao != 0)
-		glDeleteVertexArrays(1, &vao);
+		G_CHECK_GL(glDeleteVertexArrays(1, &vao));
 	if(vbo != 0)
-		glDeleteBuffers(1, vbo);
+		G_CHECK_GL(glDeleteBuffers(1, vbo));
 }
 
 GLuint gGLRenderEngine::loadProgram(const char* vertexSource, const char* fragmentSource, const char* geometrySource) {
@@ -392,44 +391,43 @@ GLuint gGLRenderEngine::loadProgram(const char* vertexSource, const char* fragme
 #endif
 	// vertex shader
 	G_CHECK_GL2(vertex, glCreateShader(GL_VERTEX_SHADER));
-	glShaderSource(vertex, 1, &vertexSource, nullptr);
-	glCompileShader(vertex);
+	G_CHECK_GL(glShaderSource(vertex, 1, &vertexSource, nullptr));
+	G_CHECK_GL(glCompileShader(vertex));
 	checkCompileErrors(vertex, "VERTEX");
 
 	// fragment Shader
 	G_CHECK_GL2(fragment, glCreateShader(GL_FRAGMENT_SHADER));
-	glShaderSource(fragment, 1, &fragmentSource, nullptr);
-	glCompileShader(fragment);
+	G_CHECK_GL(glShaderSource(fragment, 1, &fragmentSource, nullptr));
+	G_CHECK_GL(glCompileShader(fragment));
 	checkCompileErrors(fragment, "FRAGMENT");
 
 	// if geometry shader is given, compile geometry shader
 #if defined(WIN32) || defined(LINUX)
 	if(geometrySource != nullptr) {
 		geometry = glCreateShader(GL_GEOMETRY_SHADER);
-		glShaderSource(geometry, 1, &geometrySource, nullptr);
-		glCompileShader(geometry);
+		G_CHECK_GL(glShaderSource(geometry, 1, &geometrySource, nullptr));
+		G_CHECK_GL(glCompileShader(geometry));
 		checkCompileErrors(geometry, "GEOMETRY");
 	}
 #endif
 
 	// shader Program
-	GLuint id = glCreateProgram();
-	glAttachShader(id, vertex);
-	glAttachShader(id, fragment);
+	G_CHECK_GL2(GLuint id, glCreateProgram());
+	G_CHECK_GL(glAttachShader(id, vertex));
+	G_CHECK_GL(glAttachShader(id, fragment));
 #if defined(WIN32) || defined(LINUX)
 	if(geometrySource != nullptr)
-		glAttachShader(id, geometry);
+		G_CHECK_GL(glAttachShader(id, geometry));
 #endif
-	glLinkProgram(id);
+	G_CHECK_GL(glLinkProgram(id));
 	checkCompileErrors(id, "PROGRAM");
 	// delete the shaders as they're linked into our program now and no longer necessery
-	glDeleteShader(vertex);
-	glDeleteShader(fragment);
+	G_CHECK_GL(glDeleteShader(vertex));
+	G_CHECK_GL(glDeleteShader(fragment));
 #if defined(WIN32) || defined(LINUX)
 	if(geometrySource != nullptr)
-		glDeleteShader(geometry);
+		G_CHECK_GL(glDeleteShader(geometry));
 #endif
-
 	return id;
 }
 
@@ -439,14 +437,14 @@ void gGLRenderEngine::checkCompileErrors(GLuint shader, const std::string& type)
 	if(type != "PROGRAM") {
 		G_CHECK_GL(glGetShaderiv(shader, GL_COMPILE_STATUS, &success));
 		if(!success) {
-			glGetShaderInfoLog(shader, 1024, nullptr, infoLog);
+			G_CHECK_GL(glGetShaderInfoLog(shader, 1024, nullptr, infoLog));
 			gLoge("gShader") << "ERROR::SHADER_COMPILATION_ERROR of type: " << type << "\n" << infoLog <<
 					"\n -- --------------------------------------------------- -- " << std::endl;
 		}
 	} else {
-		glGetProgramiv(shader, GL_LINK_STATUS, &success);
+		G_CHECK_GL(glGetProgramiv(shader, GL_LINK_STATUS, &success));
 		if(!success) {
-			glGetProgramInfoLog(shader, 1024, nullptr, infoLog);
+			G_CHECK_GL(glGetProgramInfoLog(shader, 1024, nullptr, infoLog));
 			gLoge("gShader") << "ERROR::PROGRAM_LINKING_ERROR of type: " << type << "\n" << infoLog <<
 					"\n -- --------------------------------------------------- -- " << std::endl;
 		}
@@ -456,52 +454,57 @@ void gGLRenderEngine::checkCompileErrors(GLuint shader, const std::string& type)
 #endif
 }
 
-void gGLRenderEngine::setBool(GLuint id, const std::string& name, bool value) {
-	G_CHECK_GL(glUniform1i(getUniformLocation(id, name), (int)value));
+void gGLRenderEngine::setBool(GLuint uniformloc, bool value) {
+	G_CHECK_GL(glUniform1i(uniformloc, (int)value));
 }
 
-void gGLRenderEngine::setInt(GLuint id, const std::string& name, int value) {
-	G_CHECK_GL(glUniform1i(getUniformLocation(id, name), value));
+void gGLRenderEngine::setInt(GLuint uniformloc, int value) {
+	G_CHECK_GL(glUniform1i(uniformloc, value));
 }
 
-void gGLRenderEngine::setFloat(GLuint id, const std::string& name, float value) {
-	G_CHECK_GL(glUniform1f(getUniformLocation(id, name), value));
+void gGLRenderEngine::setFloat(GLuint uniformloc, float value) {
+	G_CHECK_GL(glUniform1f(uniformloc, value));
 }
 
-void gGLRenderEngine::setVec2(GLuint id, const std::string& name, const glm::vec2& value) {
-	G_CHECK_GL(glUniform2fv(getUniformLocation(id, name), 1, &value[0]));
+void gGLRenderEngine::setVec2(GLuint uniformloc, const glm::vec2& value) {
+	G_CHECK_GL(glUniform2fv(uniformloc, 1, &value[0]));
 }
 
-void gGLRenderEngine::setVec2(GLuint id, const std::string& name, float x, float y) {
-	G_CHECK_GL(glUniform2f(getUniformLocation(id, name), x, y));
+void gGLRenderEngine::setVec2(GLuint uniformloc, float x, float y) {
+	G_CHECK_GL(glUniform2f(uniformloc, x, y));
 }
 
-void gGLRenderEngine::setVec3(GLuint id, const std::string& name, const glm::vec3& value) {
-	G_CHECK_GL(glUniform3fv(getUniformLocation(id, name), 1, &value[0]));
+void gGLRenderEngine::setVec3(GLuint uniformloc, const glm::vec3& value) {
+	G_CHECK_GL(glUniform3fv(uniformloc, 1, &value[0]));
 }
 
-void gGLRenderEngine::setVec3(GLuint id, const std::string& name, float x, float y, float z) {
-	G_CHECK_GL(glUniform3f(getUniformLocation(id, name), x, y, z));
+void gGLRenderEngine::setVec3(GLuint uniformloc, float x, float y, float z) {
+	G_CHECK_GL(glUniform3f(uniformloc, x, y, z));
 }
 
-void gGLRenderEngine::setVec4(GLuint id, const std::string& name, const glm::vec4& value) {
-	G_CHECK_GL(glUniform4fv(getUniformLocation(id, name), 1, &value[0]));
+void gGLRenderEngine::setVec4(GLuint uniformloc, const glm::vec4& value) {
+	G_CHECK_GL(glUniform4fv(uniformloc, 1, &value[0]));
 }
 
-void gGLRenderEngine::setVec4(GLuint id, const std::string& name, float x, float y, float z, float w) {
-	G_CHECK_GL(glUniform4f(getUniformLocation(id, name), x, y, z, w));
+void gGLRenderEngine::setVec4(GLuint uniformloc, float x, float y, float z, float w) {
+	G_CHECK_GL(glUniform4f(uniformloc, x, y, z, w));
 }
 
-void gGLRenderEngine::setMat2(GLuint id, const std::string& name, const glm::mat2& mat) {
-	G_CHECK_GL(glUniformMatrix2fv(getUniformLocation(id, name), 1, GL_FALSE, &mat[0][0]));
+void gGLRenderEngine::setMat2(GLuint uniformloc, const glm::mat2& mat) {
+	G_CHECK_GL(glUniformMatrix2fv(uniformloc, 1, GL_FALSE, &mat[0][0]));
 }
 
-void gGLRenderEngine::setMat3(GLuint id, const std::string& name, const glm::mat3& mat) {
-	G_CHECK_GL(glUniformMatrix3fv(getUniformLocation(id, name), 1, GL_FALSE, &mat[0][0]));
+void gGLRenderEngine::setMat3(GLuint uniformloc, const glm::mat3& mat) {
+	G_CHECK_GL(glUniformMatrix3fv(uniformloc, 1, GL_FALSE, &mat[0][0]));
 }
 
-void gGLRenderEngine::setMat4(GLuint id, const std::string& name, const glm::mat4& mat) {
-	G_CHECK_GL(glUniformMatrix4fv(getUniformLocation(id, name), 1, GL_FALSE, &mat[0][0]));
+void gGLRenderEngine::setMat4(GLuint uniformloc, const glm::mat4& mat) {
+	G_CHECK_GL(glUniformMatrix4fv(uniformloc, 1, GL_FALSE, &mat[0][0]));
+}
+
+GLuint gGLRenderEngine::getUniformLocation(GLuint id, const std::string& name) {
+	G_CHECK_GL2(GLuint location, glGetUniformLocation(id, name.c_str()));
+	return location;
 }
 
 void gGLRenderEngine::useShader(GLuint id) const {
@@ -510,12 +513,8 @@ void gGLRenderEngine::useShader(GLuint id) const {
 
 void gGLRenderEngine::resetShader(GLuint id, bool loaded) const {
 	if(loaded) {
-		glDeleteShader(id);
+		G_CHECK_GL(glDeleteShader(id));
 	}
-}
-
-GLint gGLRenderEngine::getUniformLocation(GLuint id, const std::string& name) {
-	return glGetUniformLocation(id, name.c_str());
 }
 
 void gGLRenderEngine::clearScreen(bool color, bool depth) {
@@ -530,11 +529,11 @@ void gGLRenderEngine::bindQuadVAO() {
 }
 
 void gGLRenderEngine::drawFullscreenQuad() {
-	glDrawArrays(GL_TRIANGLES, 0, 6);
+	G_CHECK_GL(glDrawArrays(GL_TRIANGLES, 0, 6));
 }
 
 void gGLRenderEngine::bindDefaultFramebuffer() {
-	glBindFramebuffer(GL_FRAMEBUFFER, gFbo::defaultfbo);
+	G_CHECK_GL(glBindFramebuffer(GL_FRAMEBUFFER, gFbo::defaultfbo));
 }
 
 void gGLRenderEngine::drawVbo(const gVbo& vbo) {
@@ -626,14 +625,14 @@ void gGLRenderEngine::setSwizzleMask(GLint swizzleMask[4]) {
 void gGLRenderEngine::readTexturePixels(unsigned char* inPixels, GLuint textureId, int width, int height,
                                         GLenum format) {
 	GLuint fbo;
-	glGenFramebuffers(1, &fbo);
-	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textureId, 0);
+	G_CHECK_GL(glGenFramebuffers(1, &fbo));
+	G_CHECK_GL(glBindFramebuffer(GL_FRAMEBUFFER, fbo));
+	G_CHECK_GL(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textureId, 0));
 
-	glReadPixels(0, 0, width, height, format, GL_UNSIGNED_BYTE, inPixels);
+	G_CHECK_GL(glReadPixels(0, 0, width, height, format, GL_UNSIGNED_BYTE, inPixels));
 
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	glDeleteFramebuffers(1, &fbo);
+	G_CHECK_GL(glBindFramebuffer(GL_FRAMEBUFFER, 0));
+	G_CHECK_GL(glDeleteFramebuffers(1, &fbo));
 }
 
 void gGLRenderEngine::generateMipMap() {
@@ -650,7 +649,7 @@ void gGLRenderEngine::bindSkyTexture(GLuint texId, int textureSlot) {
 }
 
 void gGLRenderEngine::unbindSkyTexture() {
-	glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+	G_CHECK_GL(glBindTexture(GL_TEXTURE_CUBE_MAP, 0));
 }
 
 void gGLRenderEngine::unbindSkyTexture(int textureSlotNo) {
@@ -675,22 +674,22 @@ void gGLRenderEngine::createQuad(GLuint& inQuadVAO, GLuint& inQuadVBO) {
 		1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
 	};
 	// setup plane VAO
-	glGenVertexArrays(1, &inQuadVAO);
-	glGenBuffers(1, &inQuadVBO);
-	glBindVertexArray(inQuadVAO);
-	glBindBuffer(GL_ARRAY_BUFFER, inQuadVBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+	G_CHECK_GL(glGenVertexArrays(1, &inQuadVAO));
+	G_CHECK_GL(glGenBuffers(1, &inQuadVBO));
+	G_CHECK_GL(glBindVertexArray(inQuadVAO));
+	G_CHECK_GL(glBindBuffer(GL_ARRAY_BUFFER, inQuadVBO));
+	G_CHECK_GL(glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW));
+	G_CHECK_GL(glEnableVertexAttribArray(0));
+	G_CHECK_GL(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0));
+	G_CHECK_GL(glEnableVertexAttribArray(1));
+	G_CHECK_GL(glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float))));
 }
 
 void gGLRenderEngine::enableCubeMapSeemless() {
 #if defined(GLIST_MOBILE)
-	glEnable(GL_TEXTURE_CUBE_MAP); // OpenGL ES does not support GL_TEXTURE_CUBE_MAP_SEAMLESS
+	G_CHECK_GL(glEnable(GL_TEXTURE_CUBE_MAP); // OpenGL ES does not support GL_TEXTURE_CUBE_MAP_SEAMLES)S
 #else
-	glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
+	G_CHECK_GL(glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS));
 #endif
 }
 
@@ -709,6 +708,6 @@ void gGLRenderEngine::popMatrix() {
 }
 
 void gGLRenderEngine::updatePackUnpackAlignment(int i) {
-	glPixelStorei(GL_UNPACK_ALIGNMENT, i);
-	glPixelStorei(GL_PACK_ALIGNMENT, i);
+	G_CHECK_GL(glPixelStorei(GL_UNPACK_ALIGNMENT, i));
+	G_CHECK_GL(glPixelStorei(GL_PACK_ALIGNMENT, i));
 }

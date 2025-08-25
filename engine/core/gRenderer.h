@@ -331,22 +331,22 @@ public:
 	// This function loads shaders without preproccesing them. Geometry source can be nullptr.
 	virtual GLuint loadProgram(const char* vertexSource, const char* fragmentSource, const char* geometrySource) = 0;
 	virtual void checkCompileErrors(GLuint shader, const std::string& type) = 0;
-	virtual void setBool(GLuint id, const std::string& name, bool value) = 0;
-	virtual void setInt(GLuint id, const std::string& name, int value) = 0;
-	virtual void setFloat(GLuint id, const std::string& name, float value) = 0;
-	virtual void setVec2(GLuint id, const std::string& name, const glm::vec2& value) = 0;
-	virtual void setVec2(GLuint id, const std::string& name, float x, float y) = 0;
-	virtual void setVec3(GLuint id, const std::string& name, const glm::vec3& value) = 0;
-	virtual void setVec3(GLuint id, const std::string& name, float x, float y, float z) = 0;
-	virtual void setVec4(GLuint id, const std::string& name, const glm::vec4& value) = 0;
-	virtual void setVec4(GLuint id, const std::string& name, float x, float y, float z, float w) = 0;
-	virtual void setMat2(GLuint id, const std::string& name, const glm::mat2& mat) = 0;
-	virtual void setMat3(GLuint id, const std::string& name, const glm::mat3& mat) = 0;
-	virtual void setMat4(GLuint id, const std::string& name, const glm::mat4& mat) = 0;
+	virtual void setBool(GLuint uniformloc, bool value) = 0;
+	virtual void setInt(GLuint uniformloc, int value) = 0;
+	virtual void setFloat(GLuint uniformloc, float value) = 0;
+	virtual void setVec2(GLuint uniformloc, const glm::vec2& value) = 0;
+	virtual void setVec2(GLuint uniformloc, float x, float y) = 0;
+	virtual void setVec3(GLuint uniformloc, const glm::vec3& value) = 0;
+	virtual void setVec3(GLuint uniformloc, float x, float y, float z) = 0;
+	virtual void setVec4(GLuint uniformloc, const glm::vec4& value) = 0;
+	virtual void setVec4(GLuint uniformloc, float x, float y, float z, float w) = 0;
+	virtual void setMat2(GLuint uniformloc, const glm::mat2& mat) = 0;
+	virtual void setMat3(GLuint uniformloc, const glm::mat3& mat) = 0;
+	virtual void setMat4(GLuint uniformloc, const glm::mat4& mat) = 0;
+	virtual GLuint getUniformLocation(GLuint id, const std::string& name) = 0;
 
 	virtual void useShader(GLuint id) const = 0;
 	virtual void resetShader(GLuint id, bool loaded) const = 0;
-	virtual GLint getUniformLocation(GLuint id, const std::string& name) = 0;
 
 	/* ------------ gPostProcessManager ------------- */
 	virtual void clearScreen(bool color = true, bool depth = true) = 0;

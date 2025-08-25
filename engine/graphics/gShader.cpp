@@ -245,7 +245,8 @@ void gShader::setBool(const std::string &name, bool value) {
 #ifdef DEBUG
     assert(loaded);
 #endif
-	gRenderObject::getRenderer()->setBool(id, name, value);
+	GLuint uniformloc = getUniformLocation(name);
+	gRenderObject::getRenderer()->setBool(uniformloc, value);
 }
 
 // ------------------------------------------------------------------------
@@ -253,7 +254,8 @@ void gShader::setInt(const std::string &name, int value) {
 #ifdef DEBUG
     assert(loaded);
 #endif
-	gRenderObject::getRenderer()->setInt(id, name, value);
+	GLuint uniformloc = getUniformLocation(name);
+	gRenderObject::getRenderer()->setInt(uniformloc, value);
 }
 
 // ------------------------------------------------------------------------
@@ -261,7 +263,8 @@ void gShader::setFloat(const std::string &name, float value) {
 #ifdef DEBUG
     assert(loaded);
 #endif
-	gRenderObject::getRenderer()->setFloat(id, name, value);
+	GLuint uniformloc = getUniformLocation(name);
+	gRenderObject::getRenderer()->setFloat(uniformloc, value);
 }
 
 // ------------------------------------------------------------------------
@@ -269,14 +272,16 @@ void gShader::setVec2(const std::string &name, const glm::vec2 &value) {
 #ifdef DEBUG
     assert(loaded);
 #endif
-	gRenderObject::getRenderer()->setVec2(id, name, value);
+	GLuint uniformloc = getUniformLocation(name);
+	gRenderObject::getRenderer()->setVec2(uniformloc, value);
 }
 
 void gShader::setVec2(const std::string &name, float x, float y) {
 #ifdef DEBUG
     assert(loaded);
 #endif
-	gRenderObject::getRenderer()->setVec2(id, name, x, y);
+	GLuint uniformloc = getUniformLocation(name);
+	gRenderObject::getRenderer()->setVec2(uniformloc, x, y);
 }
 
 // ------------------------------------------------------------------------
@@ -284,14 +289,16 @@ void gShader::setVec3(const std::string &name, const glm::vec3 &value) {
 #ifdef DEBUG
     assert(loaded);
 #endif
-	gRenderObject::getRenderer()->setVec3(id, name, value);
+	GLuint uniformloc = getUniformLocation(name);
+	gRenderObject::getRenderer()->setVec3(uniformloc, value);
 }
 
 void gShader::setVec3(const std::string &name, float x, float y, float z) {
 #ifdef DEBUG
     assert(loaded);
 #endif
-	gRenderObject::getRenderer()->setVec3(id, name, x, y, z);
+	GLuint uniformloc = getUniformLocation(name);
+	gRenderObject::getRenderer()->setVec3(uniformloc, x, y, z);
 }
 
 // ------------------------------------------------------------------------
@@ -299,14 +306,16 @@ void gShader::setVec4(const std::string &name, const glm::vec4 &value) {
 #ifdef DEBUG
     assert(loaded);
 #endif
-	gRenderObject::getRenderer()->setVec4(id, name, value);
+	GLuint uniformloc = getUniformLocation(name);
+	gRenderObject::getRenderer()->setVec4(uniformloc, value);
 }
 
 void gShader::setVec4(const std::string &name, float x, float y, float z, float w) {
 #ifdef DEBUG
     assert(loaded);
 #endif
-	gRenderObject::getRenderer()->setVec4(id, name, x, y, z, w);
+	GLuint uniformloc = getUniformLocation(name);
+	gRenderObject::getRenderer()->setVec4(uniformloc, x, y, z, w);
 }
 
 // ------------------------------------------------------------------------
@@ -314,7 +323,8 @@ void gShader::setMat2(const std::string &name, const glm::mat2 &mat) {
 #ifdef DEBUG
     assert(loaded);
 #endif
-	gRenderObject::getRenderer()->setMat2(id, name, mat);
+	GLuint uniformloc = getUniformLocation(name);
+	gRenderObject::getRenderer()->setMat2(uniformloc, mat);
 }
 
 // ------------------------------------------------------------------------
@@ -322,7 +332,8 @@ void gShader::setMat3(const std::string &name, const glm::mat3 &mat) {
 #ifdef DEBUG
     assert(loaded);
 #endif
-	gRenderObject::getRenderer()->setMat3(id, name, mat);
+	GLuint uniformloc = getUniformLocation(name);
+	gRenderObject::getRenderer()->setMat3(uniformloc, mat);
 }
 
 // ------------------------------------------------------------------------
@@ -330,5 +341,19 @@ void gShader::setMat4(const std::string &name, const glm::mat4 &mat) {
 #ifdef DEBUG
     assert(loaded);
 #endif
-	gRenderObject::getRenderer()->setMat4(id, name, mat);
+	GLuint uniformloc = getUniformLocation(name);
+	gRenderObject::getRenderer()->setMat4(uniformloc, mat);
+}
+
+GLint gShader::getUniformLocation(const std::string& name) {
+	// Check if the location is already in the map
+	auto it = uniformlocations.find(name);
+	if (it != uniformlocations.end()) {
+		return it->second;
+	}
+
+	// If not, retrieve it and store it in the map
+	GLuint location = gRenderObject::getRenderer()->getUniformLocation(id, name.c_str());
+	uniformlocations[name] = location;
+	return location;
 }
