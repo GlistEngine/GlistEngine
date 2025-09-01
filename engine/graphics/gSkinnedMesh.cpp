@@ -7,6 +7,8 @@
 
 #include "gSkinnedMesh.h"
 
+#include "gTracy.h"
+
 gSkinnedMesh::gSkinnedMesh() {
 	isvertexanimated = false;
 	isvertexanimationstoredonvram = false;
@@ -19,6 +21,7 @@ gSkinnedMesh::~gSkinnedMesh() {
 }
 
 void gSkinnedMesh::draw() {
+	G_PROFILE_ZONE_SCOPED_N("gSkinnedMesh::draw()");
 	if (this->getTargetMeshCount() > 0) {
 		if (frameno != framenoold) {
 			for(int i = 0; i < vbo.getVerticesNum(); i++) {
@@ -27,8 +30,9 @@ void gSkinnedMesh::draw() {
 			}
 			setBaseMesh(static_cast<gMesh*>(this));
 			interpolate(false);
+		} else {
+			interpolate();
 		}
-		else interpolate();
 		gMesh::draw();
 	}
 	else if (!isvertexanimationstoredonvram) {

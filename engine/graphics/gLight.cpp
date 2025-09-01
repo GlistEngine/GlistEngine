@@ -7,6 +7,8 @@
 
 #include "gLight.h"
 
+#include "gTracy.h"
+
 
 gLight::gLight(int lightType) {
 	type = lightType;
@@ -28,11 +30,13 @@ gLight::~gLight() {
 }
 
 void gLight::enable() {
+	G_PROFILE_ZONE_SCOPED_N("gLight::enable()");
 	isenabled = true;
 	renderer->updateLights();
 }
 
 void gLight::disable() {
+	G_PROFILE_ZONE_SCOPED_N("gLight::disable()");
 	isenabled = false;
 	renderer->updateLights();
 }

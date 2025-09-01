@@ -7,6 +7,7 @@
 
 #include "gShadowMap.h"
 #include "gShader.h"
+#include "gTracy.h"
 
 gShadowMap::gShadowMap() {
 	isallocated = false;
@@ -92,6 +93,7 @@ bool gShadowMap::isActivated() const {
 }
 
 void gShadowMap::enable() {
+	G_PROFILE_ZONE_SCOPED_N("gShadowMap::enable()");
 	if (!isallocated || !isactivated) return;
 
 	isenabled = true;
@@ -122,6 +124,7 @@ void gShadowMap::enable() {
 }
 
 void gShadowMap::disable() {
+	G_PROFILE_ZONE_SCOPED_N("gShadowMap::disable()");
 	if (!isallocated || !isactivated || renderpassno > 0) return;
 
 	isenabled = false;
