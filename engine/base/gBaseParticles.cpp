@@ -193,6 +193,7 @@ gParticle::gParticle() {
 //Draws the particle to the screen
 void gParticle::draw() {
 	//Set color
+	gColor oldcolor = renderer->getColor();
 	renderer->setColor(currentcolor.r, currentcolor.g, currentcolor.b, currentcolor.a);
 
 	//Dont display particle on first frame of it's life
@@ -203,6 +204,7 @@ void gParticle::draw() {
 	//draw the square
 	pengine->gp.setPosition(topleft.x, topleft.y, topleft.z);
 	pengine->gp.draw();
+	renderer->setColor(oldcolor);
 }
 
 
