@@ -38,10 +38,11 @@ gGUIColumnChart::~gGUIColumnChart() {
 
 void gGUIColumnChart::draw() {
 	drawLinesAndNumbers();
+	int chartyorigin = top + charty - (chartaspect * 10);
 	gColor oldcolor = renderer->getColor();
 	renderer->setColor(middlegroundcolor);
 	gDrawLine(left + chartx , top + charty, left + chartx , top + charty - charth); //vertical line
-	gDrawLine(left+ chartx , top + charty, left + chartx + chartw, top + charty); //horizontal
+	gDrawLine(left+ chartx , chartyorigin, left + chartx + chartw, chartyorigin); //horizontal
 	drawColumns();
 	drawMultiColumns();
 	renderer->setColor(oldcolor);
@@ -66,6 +67,24 @@ void gGUIColumnChart::setChartProp(int chartx, int charty, int chartw, int chart
 	this->columnsmargin = columnsmargin;
 }
 
+void gGUIColumnChart::setChartProp(int chartX, int chartY, int chartW, int chartH, int columnsW, int columnsMargin, int minNumRangeX, int maxNumRangeX, int minNumRangeY, int maxNumRangeY) {
+	this->chartx = chartX;
+	this->charty = chartY;
+	this->chartw = chartW;
+	this->charth = chartH;
+	this->columnx = chartX;
+	this->columny = chartY;
+	this->multicolumnx = chartX + 20;
+	this->multicolumny = chartY;
+	this->numberrange = maxNumRangeY - minNumRangeY;
+	this->columnsw = columnsW;
+	this->columnsmargin = columnsMargin;
+	this->minnumrangex = minNumRangeX;
+	this->maxnumrangex = maxNumRangeX;
+	this->minnumrangey = minNumRangeY;
+	this->maxnumrangey = maxNumRangeY;
+}
+
 void gGUIColumnChart::addColumn(int columnh, gColor color) {
 	std::vector<int> colors;
 	colors.push_back(color.r);
@@ -81,10 +100,12 @@ void gGUIColumnChart::addColumn(int columnh, gColor color) {
 }
 
 void gGUIColumnChart::drawColumns() {
+	int minnumberrangeaspect = charth / numberrange;
+	int chartyorigin = top + charty - (abs(minnumrangey) * minnumberrangeaspect);
 	for(int i = 0 ; i < indexcolumn; i++) {
 		gColor oldcolor = renderer->getColor();
 		renderer->setColor(singlecolumscolor[i][0], singlecolumscolor[i][1], singlecolumscolor[i][2]);
-		gDrawRectangle(left + columnxe[i], top + columny - columnhe[i], columnsw, columnhe[i], true);
+		gDrawRectangle(left + columnxe[i], chartyorigin - columnhe[i], columnsw, columnhe[i], true);
 		renderer->setColor(oldcolor);
 	}
 }
@@ -152,8 +173,8 @@ void gGUIColumnChart::drawLinesAndNumbers() {
 	numbersinchart = "";
 	numberrangey = 0;
 	chartliney = 0;
-	chartaspect = charth / 10;
-	numberrangeaspect = numberrange / 10;
+	chartaspect = charth / 20;
+	numberrangeaspect = numberrange / 20;
 	if(gridlineison) { for(int i = 0; i < (charth / chartaspect) - 1; i++) {
 			chartliney += chartaspect;
 			gColor oldcolor = renderer->getColor();
@@ -164,7 +185,7 @@ void gGUIColumnChart::drawLinesAndNumbers() {
 		}
 	}
 	chartliney = 0;
-	if(numbersison)	{ for(int i = 0; i < (charth / chartaspect) - 1; i++) {
+	if(numbersison)	{ for(int i = 1; i < (charth / chartaspect); i++) {
 			chartliney += chartaspect;
 			numberrangey += numberrangeaspect;
 			numbersinchart = gToStr(numberrangey);
@@ -182,4 +203,15 @@ void gGUIColumnChart::setVisibility(bool gridlineison, bool numbersison, bool te
 	this->gridlineison = gridlineison;
 	this->numbersison = numbersison;
 	this->textison = textison;
+}
+
+void gGUIColumnChart::clear() {
+	columnhe.clear();
+	columnxe.clear();
+	multicolumnh.clear();
+	multicolumnxe.clear();
+	singlecolumscolor.clear();
+	multicolumscolor.clear();
+	textvector.clear();
+	multicolumnspaddingvector.clear();
 }

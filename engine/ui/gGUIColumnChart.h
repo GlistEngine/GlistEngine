@@ -46,9 +46,11 @@ public:
 	void draw();
 	void mouseMoved(int x, int y);
 	void setChartProp(int chartx, int charty, int chartw, int charth, int columnsw, int columnsmargin, int chartnumberrange); //number range : 0 - chartnumberrange
+	void setChartProp(int chartX, int chartY, int chartW, int chartH, int columnsW, int columnsMargin, int minNumRangeX, int maxNumRangeX, int minNumRangeY, int maxNumRangeY); //overloaded
 	void addColumn(int columnh, gColor color);
 	void addMultiColumn(int columnum = 1, int columnh = 0, int columnh2 = 0, int columnh3 = 0, int columnh4 = 0, gColor color = {100, 100, 100}, gColor color2 = {100, 100, 100}, gColor color3 = {100, 100, 100}, gColor color4 = {100, 100, 100}, std::string title = "", int multicolumnspadding = 0);
 	void setVisibility(bool gridlineison = 1, bool numbersison = 1, bool textison = 1);
+	void clear();
 private:
 	int chartw, charth;
 	int chartx, charty;
@@ -67,6 +69,8 @@ private:
 	int colorindex;
 	int columnnumber;
 	int columnsmargin;
+	int minnumrangex, maxnumrangex;
+	int minnumrangey, maxnumrangey;
 	int multicolumnspadding;
 	bool gridlineison, numbersison, textison;
 	std::string numbersinchart;
