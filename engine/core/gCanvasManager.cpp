@@ -7,6 +7,8 @@
 
 #include "gCanvasManager.h"
 
+#include "gTracy.h"
+
 gCanvasManager::gCanvasManager() {
 	currentCanvas = nullptr;
 	tempCanvas = nullptr;
@@ -18,6 +20,7 @@ gCanvasManager::~gCanvasManager() {
 }
 
 void gCanvasManager::update() {
+	G_PROFILE_ZONE_SCOPED_N("gCanvasManager::update");
 	switch(displaychangement) {
 		case DISPLAY_CHANGE_NONE:
 			break;

@@ -138,6 +138,11 @@ void gVbo::setVertexData(const float* vertexData, int coordNum, int total, int u
 }
 
 void gVbo::setIndexData(gIndex* indices, int total) {
+	if (indices == nullptr) {
+		glDeleteBuffers(1, &ebo);
+		isindexdataallocated = false;
+		return;
+	}
 	if (vao == GL_NONE) {
 		glGenVertexArrays(1, &vao);
 	}

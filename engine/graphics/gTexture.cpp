@@ -15,6 +15,7 @@
 
 #include "gPlane.h"
 #include "gShader.h"
+#include "gTracy.h"
 
 const int gTexture::TEXTURETYPE_DIFFUSE = 0;
 const int gTexture::TEXTURETYPE_SPECULAR = 1;
@@ -292,15 +293,18 @@ bool gTexture::isMutable() {
 }
 
 void gTexture::bind() const {
+	G_PROFILE_ZONE_SCOPED_N("gTexture::bind()");
 	G_CHECK_GL(glBindTexture(GL_TEXTURE_2D, id));
 }
 
 void gTexture::bind(int textureSlotNo) const {
+	G_PROFILE_ZONE_SCOPED_N("gTexture::bind(int)");
 	G_CHECK_GL(glActiveTexture(GL_TEXTURE0 + textureSlotNo));
 	G_CHECK_GL(glBindTexture(GL_TEXTURE_2D, id));
 }
 
 void gTexture::unbind() const {
+	G_PROFILE_ZONE_SCOPED_N("gTexture::unbind()");
 	G_CHECK_GL(glBindTexture(GL_TEXTURE_2D, 0));
 }
 
@@ -483,12 +487,14 @@ void gTexture::drawSub(glm::vec2 pos, glm::vec2 size, glm::vec2 subPos, glm::vec
 }
 
 void gTexture::beginDraw() {
+	G_PROFILE_ZONE_SCOPED_N("gTexture::beginDraw()");
 	renderer->getImageShader()->use();
 	imagematrix = glm::mat4(1.0f);
 	renderer->setProjectionMatrix2d(glm::ortho(0.0f, (float)renderer->getWidth(), (float)renderer->getHeight(), 0.0f, -1.0f, 1.0f));
 }
 
 void gTexture::endDraw() {
+	G_PROFILE_ZONE_SCOPED_N("gTexture::endDraw()");
 	renderer->getImageShader()->setMat4("projection", renderer->getProjectionMatrix2d());
 	renderer->getImageShader()->setMat4("model", imagematrix);
 	renderer->getImageShader()->setVec4("spriteColor", glm::vec4(renderer->getColor()->r, renderer->getColor()->g, renderer->getColor()->b, renderer->getColor()->a));
@@ -530,6 +536,7 @@ void gTexture::setupRenderData() {
 }
 
 void gTexture::cleanupAll() {
+	G_PROFILE_ZONE_SCOPED_N("gTexture::cleanupAll()");
 	if(isloaded) {
 		G_CHECK_GL(glDeleteBuffers(1, &quadVBO));
 		G_CHECK_GL(glDeleteVertexArrays(1, &quadVAO));
@@ -545,6 +552,7 @@ void gTexture::cleanupAll() {
 }
 
 void gTexture::cleanupData() {
+	G_PROFILE_ZONE_SCOPED_N("gTexture::cleanupData()");
 	if(isstbimage) {
 		if (datahdr) {
 			stbi_image_free(datahdr);
@@ -562,6 +570,7 @@ void gTexture::cleanupData() {
 }
 
 void gTexture::setupRenderData(int sx, int sy, int sw, int sh) {
+	G_PROFILE_ZONE_SCOPED_N("gTexture::setupRenderData()");
 	if(!isloaded) {
 		G_CHECK_GL(glGenVertexArrays(1, &quadVAO));
 		G_CHECK_GL(glGenBuffers(1, &quadVBO));
@@ -616,6 +625,7 @@ std::string gTexture::getFileName(const std::string& fname) {
 }
 
 void gTexture::save(std::string fullpath) {
+	G_PROFILE_ZONE_SCOPED_N("gTexture::save()");
 	unsigned char* pixels = new unsigned char[width * height * componentnum];
 
 	GLuint fbo;

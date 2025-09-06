@@ -6,6 +6,7 @@
  */
 
 #include "gCamera.h"
+#include "gTracy.h"
 
 //gCamera::gCamera() {
 //}
@@ -41,6 +42,7 @@ gCamera::~gCamera() {
 }
 
 void gCamera::begin() {
+	G_PROFILE_ZONE_SCOPED_N("gCamera::begin()");
 	renderer->backupMatrices();
 	float aspect = (float)renderer->getWidth() / (float)renderer->getHeight();
 	float fovY = glm::radians(fov);
@@ -65,6 +67,7 @@ void gCamera::begin() {
 }
 
 void gCamera::end() {
+	G_PROFILE_ZONE_SCOPED_N("gCamera::end()");
 	renderer->restoreMatrices();
 	renderer->setCamera(nullptr);
 }

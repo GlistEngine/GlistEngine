@@ -9,6 +9,7 @@
 #include "gShader.h"
 #include "gTexture.h"
 #include "gFbo.h"
+#include "gTracy.h"
 
 glm::mat4 captureProjection = glm::perspective(glm::radians(90.0f), 1.0f, 0.1f, 10.0f);
 glm::mat4 captureViews[] = {
@@ -377,6 +378,7 @@ void gSkybox::bindPbrMaps() {
 }
 
 void gSkybox::draw() {
+	G_PROFILE_ZONE_SCOPED_N("gSkybox::draw()");
 	skyboxshader = renderer->getSkyboxShader();
 	G_CHECK_GL(glDepthFunc(GL_LEQUAL));  // change depth function so depth test passes when values are equal to depth buffer's content
 	skyboxshader->use();
@@ -502,6 +504,7 @@ void gSkybox::setupRenderData() {
 
 
 void gSkybox::renderCube() {
+	G_PROFILE_ZONE_SCOPED_N("gSkybox::renderCube()");
     // initialize (if necessary)
     if (cubeVAO == 0) {
         float vertices[] = {
@@ -571,6 +574,7 @@ void gSkybox::renderCube() {
 }
 
 void gSkybox::renderQuad() {
+	G_PROFILE_ZONE_SCOPED_N("gSkybox::renderQuad()");
     if (quadVAO == 0) {
         float quadVertices[] = {
             // positions        // texture Coords

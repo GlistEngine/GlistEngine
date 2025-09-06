@@ -29,6 +29,7 @@
 #include "stb/stb_image_write.h"
 #include "gBaseApp.h"
 #include "gImage.h"
+#include "gTracy.h"
 
 const int gRenderer::SCREENSCALING_NONE = 0;
 const int gRenderer::SCREENSCALING_MIPMAP = 1;
@@ -777,6 +778,7 @@ void gRenderer::removeAllSceneLights() {
 }
 
 void gRenderer::updateLights() {
+	G_PROFILE_ZONE_SCOPED_N("gRenderer::updateLights()");
 	gSceneLights* data = lightsubo->getData();
 	int previouslightnum = data->lightnum;
 	data->lightnum = std::min((int) scenelights.size(), GLIST_MAX_LIGHTS);
@@ -869,12 +871,14 @@ int gRenderer::getDepthTestType() {
 }
 
 void gRenderer::enableAlphaBlending() {
+	G_PROFILE_ZONE_SCOPED_N("gRenderer::enableAlphaBlending()");
     G_CHECK_GL(glEnable(GL_BLEND));
     G_CHECK_GL(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
     isalphablendingenabled = true;
 }
 
 void gRenderer::disableAlphaBlending() {
+	G_PROFILE_ZONE_SCOPED_N("gRenderer::disableAlphaBlending()");
 	G_CHECK_GL(glDisable(GL_BLEND));
     isalphablendingenabled = false;
 }
@@ -884,6 +888,7 @@ bool gRenderer::isAlphaBlendingEnabled() {
 }
 
 void gRenderer::enableAlphaTest() {
+	G_PROFILE_ZONE_SCOPED_N("gRenderer::enableAlphaTest()");
 #if defined(WIN32) || defined(LINUX)
 	glEnable(GL_ALPHA_TEST);
     glAlphaFunc(GL_GREATER, 0.1);
@@ -892,6 +897,7 @@ void gRenderer::enableAlphaTest() {
 }
 
 void gRenderer::disableAlphaTest() {
+	G_PROFILE_ZONE_SCOPED_N("gRenderer::disableAlphaTest()");
 #if defined(WIN32) || defined(LINUX)
     glDisable(GL_ALPHA_TEST);
     isalphatestenabled = false;
