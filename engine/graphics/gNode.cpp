@@ -213,13 +213,13 @@ glm::vec3 gNode::getScalarDirectionZ() const {
 
 void gNode::pushMatrix() const {
 #if defined(WIN32) || defined(LINUX)
-	glPushMatrix();
+	renderer->pushMatrix();
 #endif
 }
 
 void gNode::popMatrix() const {
 #if defined(WIN32) || defined(LINUX)
-	glPushMatrix();
+	renderer->popMatrix();
 #endif
 }
 

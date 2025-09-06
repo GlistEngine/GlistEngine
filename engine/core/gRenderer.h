@@ -93,6 +93,8 @@ void gDrawTubeOblique(float x, float y, float z, int outerradius,int innerradiou
 void gDrawTubeTrapezodial(float x, float y, float z, int topouterradius,int topinnerradious, int buttomouterradious, int buttominnerradious, int h, glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f), int segmentnum = 32, bool isFilled = true);
 void gDrawTubeObliqueTrapezodial(float x, float y, float z, int topouterradius,int topinnerradious, int buttomouterradious, int buttominnerradious, int h, glm::vec2 shiftdistance, glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f), int segmentnum = 32, bool isFilled = true);
 
+class gVbo;
+
 template<typename T>
 class gUbo;
 class gLight;
@@ -101,14 +103,15 @@ class gShader;
 class gCamera;
 class gGrid;
 
+
 class gRenderer: public gObject {
 public:
 	static const int SCREENSCALING_NONE, SCREENSCALING_MIPMAP, SCREENSCALING_AUTO;
 	static const int DEPTHTESTTYPE_LESS, DEPTHTESTTYPE_ALWAYS;
 	static const int FOGMODE_LINEAR, FOGMODE_EXP;
 
-	gRenderer();
-	virtual ~gRenderer();
+	gRenderer() = default;
+	virtual ~gRenderer() = default;
 
 	static void setScreenSize(int screenWidth, int screenHeight);
 	static void setUnitScreenSize(int unitWidth, int unitHeight);
@@ -173,9 +176,9 @@ public:
 	void setColor(gColor* color);
 	gColor* getColor();
 
-	void clear();
-	void clearColor(int r, int g, int b, int a = 255);
-	void clearColor(gColor color);
+	virtual void clear() = 0;
+	virtual void clearColor(int r, int g, int b, int a = 255) = 0;
+	virtual void clearColor(gColor color) = 0;
 
 	void enableLighting();
 	void disableLighting();
@@ -219,19 +222,19 @@ public:
 	void removeAllSceneLights();
 	void updateLights();
 
-	void enableDepthTest();
-	void enableDepthTest(int depthTestType);
-	void setDepthTestFunc(int depthTestType);
-	void disableDepthTest();
-	bool isDepthTestEnabled();
-	int getDepthTestType();
+	virtual void enableDepthTest() = 0;
+	virtual void enableDepthTest(int depthTestType) = 0;
+	virtual void setDepthTestFunc(int depthTestType) = 0;
+	virtual void disableDepthTest() = 0;
+	virtual bool isDepthTestEnabled() = 0;
+	virtual int getDepthTestType() = 0;
 
-	void enableAlphaBlending();
-	void disableAlphaBlending();
-	bool isAlphaBlendingEnabled();
-	void enableAlphaTest();
-	void disableAlphaTest();
-	bool isAlphaTestEnabled();
+	virtual void enableAlphaBlending() = 0;
+	virtual void disableAlphaBlending() = 0;
+	virtual bool isAlphaBlendingEnabled() = 0;
+	virtual void enableAlphaTest() = 0;
+	virtual void disableAlphaTest() = 0;
+	virtual bool isAlphaTestEnabled() = 0;
 
 	bool isSSAOEnabled();
 	void enableSSAO();
@@ -269,14 +272,128 @@ public:
 	/*
 	 * Takes Screen Shot of the current Rendered Screen and returns it as an gImage class
 	 */
-	gImage takeScreenshot();
+	virtual void takeScreenshot(gImage& img) = 0;
 
 	/*
 	 * Takes Screen Shot of the part of current Rendered Screen and returns it as an gImage class
 	 */
-	gImage takeScreenshot(int x, int y, int width, int height);
+	virtual void takeScreenshot(gImage& img, int x, int y, int width, int height) = 0;
 
-private:
+	/* -------------- gUbo ------------- */
+	virtual GLuint genBuffers() = 0;
+	virtual void deleteBuffer(GLuint& buffer) = 0;
+
+	virtual void bindBuffer(GLenum target, GLuint buffer) = 0;
+	virtual void unbindBuffer(GLenum target) = 0;
+
+	virtual void bufSubData(GLuint buffer, int offset, int size, const void* data) = 0;
+	virtual void setBufferData(GLuint buffer, const void* data, size_t size, int usage) = 0;
+	virtual void setBufferRange(int index, GLuint buffer, int offset, int size) = 0;
+
+	/* -------------- gVbo --------------- */
+	virtual GLuint createVAO() = 0;
+	virtual void deleteVAO(GLuint& vao) = 0;
+
+	virtual void bindVAO(GLuint vao) = 0;
+	virtual void unbindVAO() = 0;
+
+	virtual void setVertexBufferData(GLuint vbo, size_t size, const void* data, int usage) = 0;
+	virtual void setIndexBufferData(GLuint ebo, size_t size, const void* data, int usage) = 0;
+
+	virtual void drawArrays(int drawMode, int count) = 0;
+	virtual void drawElements(int drawMode, int count) = 0;
+
+	virtual void enableVertexAttrib(int index) = 0;
+	virtual void disableVertexAttrib(int index) = 0;
+	virtual void setVertexAttribPointer(int index, int size, int type, bool normalized, int stride, const void* pointer) = 0;
+
+	/* -------------- gFbo --------------- */
+	virtual GLuint createFramebuffer() = 0;
+	virtual void deleteFramebuffer(GLuint& fbo) = 0;
+	virtual void bindFramebuffer(GLuint fbo) = 0;
+	virtual void checkFramebufferStatus() = 0;
+
+	virtual GLuint createRenderbuffer() = 0;
+	virtual void deleteRenderbuffer(GLuint& rbo) = 0;
+	virtual void bindRenderbuffer(GLuint rbo) = 0;
+	virtual void setRenderbufferStorage(GLenum format, int width, int height) = 0;
+
+	virtual void attachTextureToFramebuffer(GLenum attachment, GLenum textarget, GLuint texId, GLuint level = 0) = 0;
+	virtual void attachRenderbufferToFramebuffer(GLenum attachment, GLuint rbo) = 0;
+
+	virtual void setDrawBufferNone() = 0;
+	virtual void setReadBufferNone() = 0;
+
+	virtual void createFullscreenQuad(GLuint& vao, GLuint& vbo) = 0;
+	virtual void deleteFullscreenQuad(GLuint& vao, GLuint* vbo) = 0;
+
+	/* -------------- gShader --------------- */
+	// This function loads shaders without preproccesing them. Geometry source can be nullptr.
+	virtual GLuint loadProgram(const char* vertexSource, const char* fragmentSource, const char* geometrySource) = 0;
+	virtual void checkCompileErrors(GLuint shader, const std::string& type) = 0;
+	virtual void setBool(GLuint uniformloc, bool value) = 0;
+	virtual void setInt(GLuint uniformloc, int value) = 0;
+	virtual void setFloat(GLuint uniformloc, float value) = 0;
+	virtual void setVec2(GLuint uniformloc, const glm::vec2& value) = 0;
+	virtual void setVec2(GLuint uniformloc, float x, float y) = 0;
+	virtual void setVec3(GLuint uniformloc, const glm::vec3& value) = 0;
+	virtual void setVec3(GLuint uniformloc, float x, float y, float z) = 0;
+	virtual void setVec4(GLuint uniformloc, const glm::vec4& value) = 0;
+	virtual void setVec4(GLuint uniformloc, float x, float y, float z, float w) = 0;
+	virtual void setMat2(GLuint uniformloc, const glm::mat2& mat) = 0;
+	virtual void setMat3(GLuint uniformloc, const glm::mat3& mat) = 0;
+	virtual void setMat4(GLuint uniformloc, const glm::mat4& mat) = 0;
+	virtual GLuint getUniformLocation(GLuint id, const std::string& name) = 0;
+
+	virtual void useShader(GLuint id) const = 0;
+	virtual void resetShader(GLuint id, bool loaded) const = 0;
+
+	/* ------------ gPostProcessManager ------------- */
+	virtual void clearScreen(bool color = true, bool depth = true) = 0;
+	virtual void bindQuadVAO() = 0;
+	virtual void drawFullscreenQuad() = 0;
+	virtual void bindDefaultFramebuffer() = 0;
+
+	/* -------------- gGrid --------------- */
+	virtual void drawVbo(const gVbo& vbo) = 0;
+
+	/* ---------------- gTexture ---------------- */
+	virtual GLuint createTextures() = 0;
+	virtual void bindTexture(GLuint texId) = 0;
+	virtual void bindTexture(GLuint texId, int textureSlotNo) = 0;
+	virtual void unbindTexture() = 0;
+	virtual void activateTexture(int textureSlotNo = 0) = 0;
+	virtual void resetTexture() = 0;
+	virtual void deleteTexture(GLuint& texId) = 0;
+
+	virtual void texImage2D(GLenum target, GLint internalFormat, int width, int height, GLint format, GLint type, void* data) = 0;
+	virtual void setWrapping(GLenum target, GLint wrapS, GLint wrapT) = 0;
+	virtual void setWrapping(GLenum target, GLint wrapS, GLint wrapT, GLint wrapR) = 0;
+
+	virtual void setFiltering(GLenum target, GLint minFilter, GLint magFilter) = 0;
+	virtual void setWrappingAndFiltering(GLenum target, GLint wrapS, GLint wrapT, GLint minFilter, GLint magFilter) = 0;
+	virtual void setWrappingAndFiltering(GLenum target, GLint wrapS, GLint wrapT, GLint wrapR, GLint minFilter, GLint magFilter) = 0;
+	virtual void setSwizzleMask(GLint swizzleMask[4]) = 0;
+
+	virtual void readTexturePixels(unsigned char* inPixels, GLuint textureId, int width, int height, GLenum format) = 0;
+
+	virtual void generateMipMap() = 0;
+
+	/* ---------------- gSkybox ---------------- */
+	virtual void bindSkyTexture(GLuint texId) = 0;
+	virtual void bindSkyTexture(GLuint texId, int textureSlot) = 0;
+	virtual void unbindSkyTexture() = 0;
+	virtual void unbindSkyTexture(int textureSlotNo) = 0;
+	virtual void generateSkyMipMap() = 0;
+	virtual void enableDepthTestEqual() = 0;
+	virtual void createQuad(GLuint& inQuadVAO, GLuint& inQuadVBO) = 0;
+	virtual void enableCubeMapSeemless() = 0;
+	virtual void checkEnableCubeMap4Android() = 0;
+
+	/* ---------------- gRenderObject ---------------- */
+	virtual void pushMatrix() = 0;
+	virtual void popMatrix() = 0;
+protected:
 	friend class gRenderObject; // this is where renderer->init() is called from
 
 	// this is an object that is sent to the gpu
@@ -363,6 +480,8 @@ private:
 	gGrid* originalgrid;
 	bool isdevelopergrid;
 
+	virtual void updatePackUnpackAlignment(int i) = 0;
+
 	void init();
 
 
@@ -390,6 +509,10 @@ private:
 	static const std::string& getShaderSrcBrdfFragment();
 	static const std::string& getShaderSrcFboVertex();
 	static const std::string& getShaderSrcFboFragment();
+
+public:
+	virtual void attachUbo(GLuint id, const gUbo<gSceneLights>* ubo, const std::string& uboName) = 0;
+
 };
 
 #endif /* CORE_GRENDERER_H_ */
