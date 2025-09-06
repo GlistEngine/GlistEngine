@@ -187,7 +187,7 @@ void gGUIColumnChart::drawLinesAndNumbers() {
 	chartliney = 0;
 	if(numbersison)	{ for(int i = 1; i < (charth / chartaspect); i++) {
 			chartliney += chartaspect;
-			numberrangey += numberrangeaspect;
+			numberrangey = minnumrangey + i * numberrangeaspect;
 			numbersinchart = gToStr(numberrangey);
 			gColor oldcolor = renderer->getColor();
 			renderer->setColor(middlegroundcolor);
