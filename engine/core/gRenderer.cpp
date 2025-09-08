@@ -50,6 +50,7 @@ int gRenderer::currentresolution;
 int gRenderer::unitresolution;
 
 void gDrawLine(float x1, float y1, float x2, float y2, float thickness) {
+	G_PROFILE_ZONE_SCOPED_N("gDrawLine()");
 	gLine linemesh;
 	linemesh.setThickness(thickness);
 	linemesh.draw(x1, y1, x2, y2);
@@ -57,6 +58,7 @@ void gDrawLine(float x1, float y1, float x2, float y2, float thickness) {
 }
 
 void gDrawLine(float x1, float y1, float z1, float x2, float y2, float z2, float thickness) {
+	G_PROFILE_ZONE_SCOPED_N("gDrawLine()");
 	gLine linemesh;
 	linemesh.setThickness(thickness);
 	linemesh.draw(x1, y1, z1, x2, y2, z2);
@@ -64,30 +66,35 @@ void gDrawLine(float x1, float y1, float z1, float x2, float y2, float z2, float
 }
 
 void gDrawTriangle(float px, float py, float qx, float qy, float rx, float ry, bool is_filled) {
+	G_PROFILE_ZONE_SCOPED_N("gDrawTriangle()");
 	gTriangle trianglemesh;
 	trianglemesh.draw(px, py, qx, qy, rx, ry, is_filled);
 	trianglemesh.clear();
 }
 
 void gDrawCircle(float xCenter, float yCenter, float radius, bool isFilled, float numberOfSides) {
+	G_PROFILE_ZONE_SCOPED_N("gDrawCircle()");
 	gCircle circlemesh;
 	circlemesh.draw(xCenter, yCenter, radius, isFilled, numberOfSides);
 	circlemesh.clear();
 }
 
 void gDrawCross(float x, float y, float width, float height, float thickness, bool isFilled) {
+	G_PROFILE_ZONE_SCOPED_N("gDrawCross()");
 	gCross crossmesh;
 	crossmesh.draw(x, y, width, height, thickness, isFilled);
 	crossmesh.clear();
 }
 
 void gDrawArc(float xCenter, float yCenter, float radius, bool isFilled, int numberOfSides, float degree, float rotate) {
+	G_PROFILE_ZONE_SCOPED_N("gDrawArc()");
 	gArc arcmesh;
 	arcmesh.draw(xCenter, yCenter, radius, isFilled, numberOfSides, degree, rotate);
 	arcmesh.clear();
 }
 
 void gDrawArrow(float x1, float y1, float length, float angle, float tipLength, float tipAngle) {
+	G_PROFILE_ZONE_SCOPED_N("gDrawArrow()");
 	static gLine linemesh, linemesh2, linemesh3;
 	float x2, y2;
 	x2 = x1 + std::cos(gDegToRad(angle)) * length;
@@ -101,17 +108,20 @@ void gDrawArrow(float x1, float y1, float length, float angle, float tipLength, 
 }
 
 void gDrawRectangle(float x, float y, float w, float h, bool isFilled) {
-	gRectangle rectanglemesh;
+	G_PROFILE_ZONE_SCOPED_N("gDrawRectangle()");
+	static gRectangle rectanglemesh;
  	rectanglemesh.draw(x, y, w, h, isFilled);
 }
 
 void gDrawRoundedRectangle(float x, float y, float w, float h, int radius, bool isFilled) {
+	G_PROFILE_ZONE_SCOPED_N("gDrawRoundedRectangle()");
 	gRoundedRectangle roundedrectanglemesh;
 	roundedrectanglemesh.draw(x, y, w, h, radius, isFilled);
 	roundedrectanglemesh.clear();
 }
 
 void gDrawBox(float x, float y, float z, float w, float h, float d, bool isFilled) {
+	G_PROFILE_ZONE_SCOPED_N("gDrawBox()");
 	gBox boxmesh;
 	if(!isFilled) boxmesh.setDrawMode(gMesh::DRAWMODE_LINELOOP);
 	boxmesh.setPosition(x, y, z);
@@ -121,6 +131,7 @@ void gDrawBox(float x, float y, float z, float w, float h, float d, bool isFille
 }
 
 void gDrawBox(glm::mat4 transformationMatrix, bool isFilled) {
+	G_PROFILE_ZONE_SCOPED_N("gDrawBox()");
 	gBox boxmesh;
 	if(!isFilled) boxmesh.setDrawMode(gMesh::DRAWMODE_LINELOOP);
 	boxmesh.setTransformationMatrix(transformationMatrix);
@@ -129,6 +140,7 @@ void gDrawBox(glm::mat4 transformationMatrix, bool isFilled) {
 }
 
 void gDrawSphere(float xPos, float yPos, float zPos, glm::vec3 scale, int xSegmentNum, int ySegmentNum, bool isFilled) {
+	G_PROFILE_ZONE_SCOPED_N("gDrawSphere()");
 	gSphere spheremesh(xSegmentNum, ySegmentNum, isFilled);
 	spheremesh.setPosition(xPos, yPos, zPos);
 	spheremesh.scale(scale.x, scale.y, scale.z);
@@ -137,6 +149,7 @@ void gDrawSphere(float xPos, float yPos, float zPos, glm::vec3 scale, int xSegme
 }
 
 void gDrawCylinder(float x, float y, float z, int r, int h, glm::vec3 scale, int segmentnum, bool isFilled) {
+	G_PROFILE_ZONE_SCOPED_N("gDrawCylinder()");
 	gCylinder cylindermesh(r, r, h, glm::vec2(0.0f, 0.0f), segmentnum, isFilled);
 	cylindermesh.setPosition(x, y, z);
 	cylindermesh.scale(scale.x, scale.y, scale.z);
@@ -145,6 +158,7 @@ void gDrawCylinder(float x, float y, float z, int r, int h, glm::vec3 scale, int
 }
 
 void gDrawCylinderOblique(float x, float y, float z, int r, int h, glm::vec2 shiftdistance, glm::vec3 scale, int segmentnum, bool isFilled) {
+	G_PROFILE_ZONE_SCOPED_N("gDrawCylinderOblique()");
 	gCylinder cylindermesh(r, r, h, shiftdistance, segmentnum, isFilled);
 	cylindermesh.setPosition(x, y, z);
 	cylindermesh.scale(scale.x, scale.y, scale.z);
@@ -153,6 +167,7 @@ void gDrawCylinderOblique(float x, float y, float z, int r, int h, glm::vec2 shi
 }
 
 void gDrawCylinderTrapezodial(float x, float y, float z, int r1, int r2, int h, glm::vec3 scale, int segmentnum, bool isFilled) {
+	G_PROFILE_ZONE_SCOPED_N("gDrawCylinderTrapezodial()");
 	gCylinder cylindermesh(r1, r2, h, glm::vec2(0.0f, 0.0f), segmentnum, isFilled);
 	cylindermesh.setPosition(x, y, z);
 	cylindermesh.scale(scale.x, scale.y, scale.z);
@@ -161,6 +176,7 @@ void gDrawCylinderTrapezodial(float x, float y, float z, int r1, int r2, int h, 
 }
 
 void gDrawCylinderObliqueTrapezodial(float x, float y, float z, int r1, int r2, int h, glm::vec2 shiftdistance, glm::vec3 scale, int segmentnum, bool isFilled) {
+	G_PROFILE_ZONE_SCOPED_N("gDrawCylinderObliqueTrapezodial()");
 	gCylinder cylindermesh(r1, r2, h, shiftdistance, segmentnum, isFilled);
 	cylindermesh.setPosition(x, y, z);
 	cylindermesh.scale(scale.x, scale.y, scale.z);
@@ -169,6 +185,7 @@ void gDrawCylinderObliqueTrapezodial(float x, float y, float z, int r1, int r2, 
 }
 
 void gDrawCone(float x, float y, float z, int r, int h, glm::vec3 scale, int segmentnum, bool isFilled) {
+	G_PROFILE_ZONE_SCOPED_N("gDrawCone()");
 	gCone conemesh(r, h, glm::vec2(0.0f, 0.0f), segmentnum, isFilled);
 	conemesh.setPosition(x, y, z);
 	conemesh.scale(scale.x, scale.y, scale.z);
@@ -177,6 +194,7 @@ void gDrawCone(float x, float y, float z, int r, int h, glm::vec3 scale, int seg
 }
 
 void gDrawConeOblique(float x, float y, float z, int r, int h, glm::vec2 shiftdistance, glm::vec3 scale, int segmentnum, bool isFilled) {
+	G_PROFILE_ZONE_SCOPED_N("gDrawConeOblique()");
 	gCone conemesh(r, h, shiftdistance, segmentnum, isFilled);
 	conemesh.setPosition(x, y, z);
 	conemesh.scale(scale.x, scale.y, scale.z);
@@ -185,6 +203,7 @@ void gDrawConeOblique(float x, float y, float z, int r, int h, glm::vec2 shiftdi
 }
 
 void gDrawPyramid(float x, float y, float z, int r, int h, glm::vec3 scale, int numberofsides, bool isFilled) {
+	G_PROFILE_ZONE_SCOPED_N("gDrawPyramid()");
 	gCone conemesh(r, h, glm::vec2(0.0f, 0.0f), numberofsides, isFilled);
 	conemesh.setPosition(x, y, z);
 	conemesh.scale(scale.x, scale.y, scale.z);
@@ -193,6 +212,7 @@ void gDrawPyramid(float x, float y, float z, int r, int h, glm::vec3 scale, int 
 }
 
 void gDrawPyramidOblique(float x, float y, float z, int r, int h, glm::vec2 shiftdistance, glm::vec3 scale, int numberofsides, bool isFilled) {
+	G_PROFILE_ZONE_SCOPED_N("gDrawPyramidOblique()");
 	gCone conemesh(r, h, shiftdistance, numberofsides, isFilled);
 	conemesh.setPosition(x, y, z);
 	conemesh.scale(scale.x, scale.y, scale.z);
@@ -201,6 +221,7 @@ void gDrawPyramidOblique(float x, float y, float z, int r, int h, glm::vec2 shif
 }
 
 void gDrawTube(float x, float y, float z, int outerradius, int innerradious, int h, glm::vec3 scale, int segmentnum, bool isFilled) {
+	G_PROFILE_ZONE_SCOPED_N("gDrawTube()");
 	gTube tubemesh(outerradius,innerradious ,outerradius,innerradious, h, glm::vec2(0.0f, 0.0f), segmentnum, isFilled);
 	tubemesh.setPosition(x, y, z);
 	tubemesh.scale(scale.x, scale.y, scale.z);
@@ -211,6 +232,7 @@ void gDrawTube(float x, float y, float z, int outerradius, int innerradious, int
 void gDrawTubeOblique(float x, float y, float z, int outerradius,
 		int innerradious, int h, glm::vec2 shiftdistance, glm::vec3 scale,
 		int segmentnum, bool isFilled) {
+	G_PROFILE_ZONE_SCOPED_N("gDrawTubeOblique()");
 	gTube tubemesh(outerradius,innerradious ,outerradius,innerradious, h, shiftdistance, segmentnum, isFilled);
 	tubemesh.setPosition(x, y, z);
 	tubemesh.scale(scale.x, scale.y, scale.z);
@@ -221,6 +243,7 @@ void gDrawTubeOblique(float x, float y, float z, int outerradius,
 void gDrawTubeTrapezodial(float x, float y, float z, int topouterradius,
 		int topinnerradious, int buttomouterradious, int buttominnerradious,
 		int h, glm::vec3 scale, int segmentnum, bool isFilled) {
+	G_PROFILE_ZONE_SCOPED_N("gDrawTubeTrapezodial()");
 	gTube tubemesh(topouterradius,topinnerradious , buttomouterradious,buttominnerradious, h, glm::vec2(0.0f, 0.0f), segmentnum, isFilled);
 	tubemesh.setPosition(x, y, z);
 	tubemesh.scale(scale.x, scale.y, scale.z);
@@ -232,6 +255,7 @@ void gDrawTubeObliqueTrapezodial(float x, float y, float z, int topouterradius,
 		int topinnerradious, int buttomouterradious, int buttominnerradious,
 		int h, glm::vec2 shiftdistance, glm::vec3 scale, int segmentnum,
 		bool isFilled) {
+	G_PROFILE_ZONE_SCOPED_N("gDrawTubeObliqueTrapezodial()");
 	gTube tubemesh(topouterradius,topinnerradious , buttomouterradious,buttominnerradious, h, shiftdistance, segmentnum, isFilled);
 	tubemesh.setPosition(x, y, z);
 	tubemesh.scale(scale.x, scale.y, scale.z);
@@ -240,6 +264,7 @@ void gDrawTubeObliqueTrapezodial(float x, float y, float z, int topouterradius,
 }
 
 void gRenderer::init() {
+	G_PROFILE_ZONE_SCOPED_N("gRenderer::init()");
 	width = gDefaultWidth();
 	height = gDefaultHeight();
 	unitwidth = gDefaultUnitWidth();
@@ -257,7 +282,7 @@ void gRenderer::init() {
 
 	// This changes pack and unpack alignments
 	// Fixes alignment issues with 3 channel images
-	gRenderObject::getRenderer()->updatePackUnpackAlignment(1);
+	updatePackUnpackAlignment(1);
 
 	globalambientcolor.set(255, 255, 255, 255);
 	isglobalambientcolorchanged = true;

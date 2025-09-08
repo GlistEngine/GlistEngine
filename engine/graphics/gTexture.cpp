@@ -405,6 +405,7 @@ void gTexture::draw(glm::vec2 position, glm::vec2 size, float rotate) {
 }
 
 void gTexture::draw(glm::vec2 position, glm::vec2 size, glm::vec2 pivot, float rotate) {
+	G_PROFILE_ZONE_SCOPED_N("gTexture::draw()");
 	issubpart = false;
 	beginDraw();
 	imagematrix = glm::translate(imagematrix, glm::vec3(position, 0.0f));  // first translate (transformations are: scale happens first, then rotation, and then final translation happens; reversed order)
