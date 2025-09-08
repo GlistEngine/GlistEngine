@@ -45,6 +45,7 @@ public:
 	gGUIButton getNextButton();
 	void setNextButtonName(std::string name);
 	void setPreviousButtonName(std::string name);
+	void removePrevNextButtons();
 
 private:
 	gGUINavigation* navigation;

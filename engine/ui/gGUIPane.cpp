@@ -163,3 +163,8 @@ void gGUIPane::setPreviousButtonName(std::string name){
 	previousbutton.setTitle(name);
 }
 
+void gGUIPane::removePrevNextButtons() {
+	navbuttonsenabled = false;
+    buttonsizer.removeControl(0, 1);
+    buttonsizer.removeControl(0, 2);
+}
