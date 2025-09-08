@@ -11,6 +11,7 @@ var classgGUIPane =
     [ "mousePressed", "classgGUIPane.html#a694630e8db5a87ed741982d332a62591", null ],
     [ "mouseReleased", "classgGUIPane.html#aa7f5291a7aa1bfe6d86aa8b0ee740652", null ],
     [ "onGUIEvent", "classgGUIPane.html#add5fa63c9ca89cadf47d107e4579af03", null ],
+    [ "removePrevNextButtons", "classgGUIPane.html#ad8a8ed77c8778c3201668f5a547c3eea", null ],
     [ "set", "classgGUIPane.html#a45fd32beed237bec8d64165785b57555", null ],
     [ "setNavigation", "classgGUIPane.html#acebd527cc463b0b94ec1cfcebaacfd45", null ],
     [ "setNavigationOrder", "classgGUIPane.html#a0c0a4fc24fc22c6bf925f8b793294bde", null ],

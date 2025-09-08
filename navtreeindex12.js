@@ -1,5 +1,6 @@
 var NAVTREEINDEX12 =
 {
+"classgWindows.html#a7367ee868f779e088558d991671a7f46":[1,0,168,1],
 "classgWindows.html#adf4efe42e4244ac5b71cb4cd728960ec":[1,0,168,0],
 "dir_0ff14c16176a475e770bf3bfd349a648.html":[2,0,0,6],
 "dir_1f739eb951a415097a64a8d5c18967fb.html":[2,0,0,4,0],
@@ -248,6 +249,5 @@ var NAVTREEINDEX12 =
 "gGUIDropdownList_8h.html":[2,0,0,7,14],
 "gGUIDropdownList_8h_source.html":[2,0,0,7,14],
 "gGUIEvents_8h.html":[2,0,0,7,15],
-"gGUIEvents_8h.html#a03d9851d3fa27453d6988bbe7f2ebe96":[2,0,0,7,15,14],
-"gGUIEvents_8h.html#a0c91c1986fd175db09888790027d8ac2":[2,0,0,7,15,2]
+"gGUIEvents_8h.html#a03d9851d3fa27453d6988bbe7f2ebe96":[2,0,0,7,15,14]
 };
