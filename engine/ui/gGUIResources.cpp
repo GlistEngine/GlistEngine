@@ -11,7 +11,7 @@
 #include "gTexture.h"
 
 const int gGUIResources::ICON_NONE = -1;
-const int gGUIResources::iconnum = 45;
+const int gGUIResources::iconnum = 46;
 const int gGUIResources::bigiconnum = 5;
 
 
@@ -87,6 +87,7 @@ void gGUIResources::initialize() {
 	icon[ICON_MAXIMIZEWHITE]->setData((unsigned char*) gDecodeBase64(getBase64IconMaximizeWhite16()).c_str(), false, false);
 	icon[ICON_RESTOREWHITE]->setData((unsigned char*) gDecodeBase64(getBase64IconRestoreWhite16()).c_str(), false, false);
 	icon[ICON_EXITWHITE]->setData((unsigned char*) gDecodeBase64(getBase64IconExitWhite16()).c_str(), false, false);
+	icon[ICON_STORE]->setData((unsigned char*) gDecodeBase64(getBase64IconStore16()).c_str(), false, false);
 	icon[COLORPICKER]->setData((unsigned char*) gDecodeBase64(getBase64ColorPicker()).c_str(), false, false);
 
 	bigicon[ICONBIG_ERROR]->setData((unsigned char*) gDecodeBase64(getBase64IconBigError256()).c_str(), false, false);
@@ -234,6 +235,10 @@ std::string gGUIResources::getBase64IconFav16() {
 
 std::string gGUIResources::getBase64IconInfo16() {
 	return "AAAAAAAAAAAAAAAAAAAAACVMpCAmTaWPJk6nzzpgtf84X7T/J1GrzyhSrI8oU64gAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJUujECVMpI9DZ7j/bo7U/2qM2f9bgdX/VHzS/1R70f9JcMj/NF+6/ylWsY8pV7IQAAAAAAAAAAAAAAAAJUujECVMpM9hgsv/bI/b/z1r0f80ZtD/QXDT/0Fw1P80aNL/N2rS/0Bt0v84ZMf/Klm1zypathAAAAAAAAAAACVMpI9hgsv/Y4jZ/zRl0P80ZtD/NGbR//L2/P/y9vz/NWrT/zZr1P82bNT/OG3V/zNmyv8rXLmPAAAAACVMpCBEZ7j/bY/b/zRl0P80ZtD/NGfR/zRo0v/y9vz/8/b8/zdu1f83b9b/OHDX/zhx2P84cdj/MGTE/yxfvSAmTaWPb47V/z1r0f80ZtD/NGfR/zRo0v81a9P/Nm3V/zdv1v82cNf/NnHY/zdy2f83c9r/OHTa/zZv0/8tYcCPJk6nz2uN2f80ZdD/NGbR/zRo0v80adP/////////////////K2rX/y5u2f8wcdr/MXLb/zJy2/85ctr/LmTDzzthtf9cgtX/NGbQ/zJm0f8oYND/IlzP/yRh0v///////////zFx2/80dt3/N3re/zh83/84fOD/RX/f/zZszP85YLX/Vn3T/y5iz/8dVsz/HljO/yNf0f8oZdT///////////82ed7/On/h/z6D4/8/heX/QIbl/1GN5P86ctD/J1Grz1F50P8aUcr/HFXM/yBbz/8lYtP/K2rX////////////PIDi/0GH5f9Fjej/R5Dq/0iR6v9inen/MWzNzyhSrI8+Z8T/HVTK/x1Xzf8iXtD/J2XU/y5t2P///////////0CH5f9Gj+n/TJbt/0+b7/9Vn/D/ZZ/n/zJv0Y8oU64gL1u4/y9ey/8eWM7/I1/R/yln1f8vcNr///////////9EjOj/S5bt/1Kf8f9XpvX/e7v1/0yJ3/8zcdQgAAAAAClWsY8vXML/J1vO/yRg0v8qaNb//////////////////////06Z7/9WpfT/fMH6/26t7/80ddmPAAAAAAAAAAApV7IQKlm1zypbxv8mYNL/KmjW/zBx2v83et//PoTk/0aP6f9TnO//ebn0/2yr7v81eNzPNXfbEAAAAAAAAAAAAAAAACpathArXLiPKl/C/ytm0f82cNr/Qnze/0+K4/9fmuj/Yp3m/0uI3v80ddmPNXfbEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACxfvSAtYb+PLmTDzzVrzP85cc//MWzNzzJv0Y8zcdQgAAAAAAAAAAAAAAAAAAAAAA==";
+}
+
+std::string gGUIResources::getBase64IconStore16() {
+	return "YZ9402OYfv9leI7VZniPOQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGGeeNNhn3jRZniQVWZ4jt4AAP8BAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABle439YZp76WKfecVfnXibXpx1d12cdVVfm3gzXKJzCwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAZoGL8oOrmf+Yx6P/jL6Z/32zjvlvqITzZKB69l6cdv5innnsZKB6zmCed6ZenHZ/Xpt3XAAAAAAAAAAAAAAAAGWDiNN9oJb/uuC9/7rgvf+64L3/uuC9/7rgvf+33rv/qtWx/5/LqP+Twp7/fLKN+GCed+0AAAAAAAAAAAAAAABihIajbo2Q+7rgvf+Mvpn/uuC9/4y+mf+64L3/jL6Z/7rgvf+Mvpn/uuC9/53Lpv9joHnSAAAAAAAAAAAAAAAAZISHZmeAjPy64L3/Xpx2/7rgvf9enHb/uuC9/16cdv+64L3/Xpx2/7rgvf+QwZ3/YZ54rAAAAAAAAAAAAAAAAGmDjB1leY//t927/16cdv+64L3/Xpx2/7rgvf9enHb/uuC9/16cdv+64L3/hLiS+V2bdoUAAAAAAAAAAAAAAAAAAAAAZXuN/aHHrv+Mvpn/uuC9/4y+mf+64L3/jL6Z/7rgvf+Mvpn/uuC9/3Wth/Ffm3VmAAAAAAAAAAAAAAAAAAAAAGWAi+6Lrp//uuC9/7rgvf+64L3/uuC9/7rgvf+64L3/uuC9/7Lat/9joHn3Xpt2NgAAAAAAAAAAAAAAAAAAAABkg4nKZIqF+2Whe/FloXvxZaF78WWhe/FloXvxZaF78WWhe/Fhn3j1ZKF6kAAAAAAAAAAAAAAAAAAAAAAAAAAAZnmOa2Z4jrYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGN5kC5leI7xaHeMMQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAaHyQvmd6kP5pe5H/ZnmP/2Z5j/9meY//ZnmP/2h7kf9nepD8a32RigAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGd6kPicrcH/Z3qQ9wAAAAAAAAAAAAAAAAAAAABnepD4nK3B/2d6kPcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABrfZGKZ3qQ+Gp+k4kAAAAAAAAAAAAAAAAAAAAAa32Rimd6kPhqfpOJAAAAAA==";
 }
 
 std::string gGUIResources::getBase64IconHelp16() {

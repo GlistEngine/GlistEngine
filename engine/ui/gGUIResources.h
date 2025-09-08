@@ -115,6 +115,7 @@ public:
 		ICON_MAXIMIZEWHITE,
 		ICON_RESTOREWHITE,
 		ICON_EXITWHITE,
+		ICON_STORE,
 		COLORPICKER
 	};
 	//bigicon
@@ -184,6 +185,7 @@ private:
 	std::string getBase64IconClock16();
 	std::string getBase64IconDown16();
 	std::string getBase64IconUp16();
+	std::string getBase64IconStore16();
 
 	std::string getBase64IconMinimizeBlack16();
 	std::string getBase64IconMaximizeBlack16();
