@@ -29,7 +29,8 @@ var classgMesh =
     [ "setName", "classgMesh.html#a20851f6e043f52d217b5818fa013477f", null ],
     [ "setTexture", "classgMesh.html#a11459a102a3d384efe86846c1cac7c50", null ],
     [ "setTextures", "classgMesh.html#a7f528f3a3949ff82121b887875b51715", null ],
-    [ "setVertices", "classgMesh.html#ac1e2feebf17ea7c1e3b48034cd2b64b6", null ],
+    [ "setVertices", "classgMesh.html#a69f162ed2d9559645a70701b9f88de58", null ],
+    [ "setVertices", "classgMesh.html#a6504f61505769922dc513005ba13ade9", null ],
     [ "isprojection2d", "classgMesh.html#a4eea22146d02379680c8e00fff26ee58", null ],
     [ "vbo", "classgMesh.html#a7f30ae2e84cdd30cfdef4d2c4e740f37", null ],
     [ "vertices", "classgMesh.html#ae77a2d05f93d1ff0be38ec2456499009", null ]
