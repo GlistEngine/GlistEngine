@@ -45,6 +45,7 @@ var annotated_dup =
     [ "gFog", "classgFog.html", "classgFog" ],
     [ "gFont", "classgFont.html", "classgFont" ],
     [ "gGLFWWindow", "classgGLFWWindow.html", "classgGLFWWindow" ],
+    [ "gGLRenderEngine", "classgGLRenderEngine.html", "classgGLRenderEngine" ],
     [ "gGrain", "classgGrain.html", "classgGrain" ],
     [ "gGrayscale", "classgGrayscale.html", "classgGrayscale" ],
     [ "gGrid", "classgGrid.html", "classgGrid" ],

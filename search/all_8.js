@@ -3,7 +3,7 @@ var searchData=
   ['h_0',['h',['../classgColorHSL.html#a5d8efa4aec72436044b8b893b0fce406',1,'gColorHSL']]],
   ['hasselectdata_1',['hasSelectData',['../classgDatabase.html#a795d21f38bf77f0a7f06af1cea79edba',1,'gDatabase']]],
   ['hcolor_2',['hcolor',['../classgGUIButton.html#aaa8188936b173abb486cf8beb8fc7719',1,'gGUIButton']]],
-  ['height_3',['height',['../classgBaseGUIObject.html#aa6e164509e25553c3a222f76982829c4',1,'gBaseGUIObject::height'],['../classgTexture.html#a6f4a7e8cabbc84efd1eb7582e47d1ea1',1,'gTexture::height']]],
+  ['height_3',['height',['../classgBaseGUIObject.html#aa6e164509e25553c3a222f76982829c4',1,'gBaseGUIObject::height'],['../classgRenderer.html#a10ba9eb49755cea48500ab0046baf6e4',1,'gRenderer::height'],['../classgTexture.html#a6f4a7e8cabbc84efd1eb7582e47d1ea1',1,'gTexture::height']]],
   ['hide_4',['hide',['../classgGUIDialogue.html#aa6480ead59091483d7a498f5e9f54d10',1,'gGUIDialogue::hide()'],['../classgGUIForm.html#a8c1cedd62b1d87200530bc56044ddfdf',1,'gGUIForm::hide()']]],
   ['hidedialogue_5',['hideDialogue',['../classgGUIManager.html#ac99d1cdee174f2df0b2fcc374de6063e',1,'gGUIManager']]],
   ['hidenotify_6',['hideNotify',['../classgBaseCanvas.html#ab8ad7cff194b3ea7c6788175b2a7ec40',1,'gBaseCanvas']]],

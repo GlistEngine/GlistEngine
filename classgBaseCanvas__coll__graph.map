@@ -1,15 +1,33 @@
 <map id="gBaseCanvas" name="gBaseCanvas">
-<area shape="rect" id="Node000001" title=" " alt="" coords="72,256,183,281"/>
-<area shape="rect" id="Node000002" href="$classgRenderObject.html" title=" " alt="" coords="5,168,124,193"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="83,203,121,254,116,257,79,206"/>
-<area shape="rect" id="Node000003" href="$classgObject.html" title=" " alt="" coords="38,5,110,31"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="49,41,32,59,19,81,17,105,25,128,39,149,54,166,50,170,35,153,20,131,12,105,14,79,28,56,46,38"/>
-<area shape="rect" id="Node000004" href="$classgRenderer.html" title=" " alt="" coords="29,80,119,105"/>
-<area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="77,45,77,80,71,80,71,45"/>
-<area shape="rect" id="Node000006" href="$classgAppObject.html" title=" " alt="" coords="143,80,240,105"/>
-<area shape="poly" id="edge7_Node000006_Node000003" title=" " alt="" coords="106,36,174,78,171,82,103,40"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="74,120,69,168,63,167,69,119"/>
-<area shape="rect" id="Node000005" href="$classgBaseApp.html" title=" " alt="" coords="148,168,235,193"/>
-<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="177,206,138,257,134,254,172,203"/>
-<area shape="poly" id="edge6_Node000005_Node000006" title=" " alt="" coords="194,119,194,167,189,167,189,119"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="703,321,814,347"/>
+<area shape="rect" id="Node000002" href="$classgRenderObject.html" title=" " alt="" coords="350,80,469,105"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="483,98,542,108,607,128,671,158,700,178,726,202,745,232,756,265,762,321,756,321,751,266,740,234,722,206,697,183,668,163,605,133,541,114,482,103"/>
+<area shape="rect" id="Node000006" href="$classgUbo.html" title=" " alt="" coords="477,204,723,229"/>
+<area shape="poly" id="edge8_Node000006_Node000002" title=" " alt="" coords="440,110,583,202,581,206,437,115"/>
+<area shape="rect" id="Node000007" href="$classgShader.html" title=" " alt="" coords="5,204,80,229"/>
+<area shape="poly" id="edge10_Node000007_Node000002" title=" " alt="" coords="341,111,261,131,176,157,115,182,66,206,63,201,113,177,174,152,260,126,340,106"/>
+<area shape="rect" id="Node000009" href="$classgNode.html" title=" " alt="" coords="187,155,251,180"/>
+<area shape="poly" id="edge13_Node000009_Node000002" title=" " alt="" coords="368,113,250,157,248,152,366,108"/>
+<area shape="rect" id="Node000010" href="$classgGrid.html" title=" " alt="" coords="313,204,370,229"/>
+<area shape="poly" id="edge16_Node000010_Node000002" title=" " alt="" coords="399,119,350,205,345,203,394,116"/>
+<area shape="rect" id="Node000003" href="$classgObject.html" title=" " alt="" coords="745,5,817,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="733,31,469,83,468,77,732,26"/>
+<area shape="rect" id="Node000004" href="$classgRenderer.html" title=" " alt="" coords="402,521,491,547"/>
+<area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="827,35,857,58,867,73,871,91,871,335,868,365,859,392,845,416,826,437,779,471,721,496,659,514,596,525,492,535,491,529,596,520,658,509,719,491,776,467,823,433,840,413,854,390,862,364,865,335,865,92,862,75,853,61,824,39"/>
+<area shape="rect" id="Node000012" href="$classgAppObject.html" title=" " alt="" coords="733,80,830,105"/>
+<area shape="poly" id="edge19_Node000012_Node000003" title=" " alt="" coords="784,45,784,80,779,80,779,45"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="448,507,452,458,453,394,446,323,438,288,426,255,415,243,403,230,401,217,403,204,406,105,411,106,408,204,406,217,408,228,418,240,430,252,443,286,451,322,459,394,458,459,453,508"/>
+<area shape="rect" id="Node000005" href="$classgColor.html" title=" " alt="" coords="905,321,969,347"/>
+<area shape="poly" id="edge5_Node000004_Node000005" title=" " alt="" coords="940,360,938,393,930,431,914,468,888,499,866,508,827,515,718,526,492,535,491,529,717,520,827,510,865,503,885,495,910,466,925,429,932,392,935,360"/>
+<area shape="poly" id="edge6_Node000005_Node000005" title=" " alt="" coords="960,312,973,309,984,312,993,321,996,334,991,350,979,358,963,357,948,349,950,345,965,352,978,353,987,347,991,334,988,323,982,317,973,315,961,317"/>
+<area shape="poly" id="edge7_Node000004_Node000006" title=" " alt="" coords="591,243,468,499,455,522,451,520,463,496,586,241"/>
+<area shape="poly" id="edge9_Node000004_Node000007" title=" " alt="" coords="38,243,30,279,26,324,30,371,37,393,48,413,66,437,85,454,105,465,126,472,174,482,233,495,322,515,402,526,402,531,322,520,231,500,173,487,124,477,102,470,82,458,62,441,43,416,32,395,25,372,21,324,25,278,33,242"/>
+<area shape="rect" id="Node000008" href="$classgCamera.html" title=" " alt="" coords="205,321,286,347"/>
+<area shape="poly" id="edge11_Node000004_Node000008" title=" " alt="" coords="242,360,239,391,239,428,246,464,254,481,264,495,286,508,321,517,402,527,401,533,320,522,284,513,261,499,249,484,241,466,233,428,233,391,237,360"/>
+<area shape="poly" id="edge12_Node000008_Node000009" title=" " alt="" coords="225,194,246,321,241,321,220,194"/>
+<area shape="poly" id="edge14_Node000009_Node000009" title=" " alt="" coords="266,159,277,167,269,175,251,177,251,172,267,170,272,167,263,163"/>
+<area shape="poly" id="edge15_Node000004_Node000010" title=" " alt="" coords="341,243,339,321,344,368,356,414,372,446,394,476,435,519,432,523,390,479,368,449,351,416,338,369,333,322,336,243"/>
+<area shape="rect" id="Node000011" href="$classgBaseApp.html" title=" " alt="" coords="743,155,830,180"/>
+<area shape="poly" id="edge17_Node000001_Node000011" title=" " alt="" coords="785,194,763,321,758,321,780,194"/>
+<area shape="poly" id="edge18_Node000011_Node000012" title=" " alt="" coords="786,119,788,154,783,155,781,119"/>
 </map>

@@ -10,6 +10,7 @@ var searchData=
   ['orange_7',['ORANGE',['../classgColor.html#a231080fe6acb938a524c1f6bd8ce3d34',1,'gColor']]],
   ['orderno_8',['orderno',['../structgGUITreelist_1_1Element.html#a21759f075f353a53636cd8284809b00e',1,'gGUITreelist::Element']]],
   ['orientation_9',['orientation',['../classgNode.html#a0d3a820f6eab89ba1533c6085e178681',1,'gNode']]],
-  ['overflowcontent_10',['overflowcontent',['../structgGUIGrid_1_1Cell.html#a6a6f3a8c1cbd138a9de68cfbae382f18',1,'gGUIGrid::Cell']]],
-  ['overwrite_5fexisting_11',['OVERWRITE_EXISTING',['../classgFile.html#ae0409e2a1e11645fb3301ded923fe7cba0c6de1f6458bcaa579ac30cb9ba38c5a',1,'gFile']]]
+  ['originalgrid_10',['originalgrid',['../classgRenderer.html#a9164aad8460cd5c795b5ae08472462d4',1,'gRenderer']]],
+  ['overflowcontent_11',['overflowcontent',['../structgGUIGrid_1_1Cell.html#a6a6f3a8c1cbd138a9de68cfbae382f18',1,'gGUIGrid::Cell']]],
+  ['overwrite_5fexisting_12',['OVERWRITE_EXISTING',['../classgFile.html#ae0409e2a1e11645fb3301ded923fe7cba0c6de1f6458bcaa579ac30cb9ba38c5a',1,'gFile']]]
 ];

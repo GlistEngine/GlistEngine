@@ -106,114 +106,119 @@ $(document).ready(function(){initNavTree('gUbo_8h_source.html',''); initResizabl
 <div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span> </div>
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &quot;<a class="code" href="gObject_8h.html">gObject.h</a>&quot;</span></div>
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &quot;<a class="code" href="gRenderer_8h.html">gRenderer.h</a>&quot;</span></div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span> </div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div>
-<div class="foldopen" id="foldopen00011" data-start="{" data-end="};">
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno"><a class="line" href="classgUbo.html">   11</a></span><span class="keyword">class </span><a class="code hl_class" href="classgUbo.html">gUbo</a> : <span class="keyword">public</span> <a class="code hl_class" href="classgObject.html">gObject</a> {</div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span>    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> ...Args&gt;</div>
-<div class="foldopen" id="foldopen00014" data-start="{" data-end="}">
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno"><a class="line" href="classgUbo.html#a7b769efc794164e1238aadd36b5bf750">   14</a></span>    <a class="code hl_function" href="classgUbo.html#a7b769efc794164e1238aadd36b5bf750">gUbo</a>(Args&amp;&amp;... args, <span class="keywordtype">int</span> bindingpoint, <span class="keywordtype">int</span> usage = GL_DYNAMIC_DRAW) : id(GL_NONE), size(sizeof(T)), bindingpoint(bindingpoint) {</div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>        data = <span class="keyword">new</span> T(std::forward&lt;Args&gt;(args)...);</div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>        <a class="code hl_define" href="gRenderer_8h.html#a126ea59d9a44ee184840f29d22efbee2">G_CHECK_GL</a>(glGenBuffers(1, &amp;<span class="keywordtype">id</span>));</div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>        <a class="code hl_function" href="classgUbo.html#a0176aec6f1240b6d48e1f8ee2f54f454">bind</a>();</div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>        <a class="code hl_define" href="gRenderer_8h.html#a126ea59d9a44ee184840f29d22efbee2">G_CHECK_GL</a>(glBufferData(GL_UNIFORM_BUFFER, size, <span class="keyword">nullptr</span>, usage));</div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>        <a class="code hl_function" href="classgUbo.html#a95ba7274681d8183e1680203de099759">unbind</a>();</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>        <span class="comment">// define the range of the buffer that links to a uniform binding point</span></div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>        <a class="code hl_define" href="gRenderer_8h.html#a126ea59d9a44ee184840f29d22efbee2">G_CHECK_GL</a>(glBindBufferRange(GL_UNIFORM_BUFFER, bindingpoint, <span class="keywordtype">id</span>, 0, size));</div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>        <a class="code hl_function" href="classgUbo.html#acbbb230893efe0ac30a401efecfa5e2f">update</a>();</div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>    }</div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &quot;<a class="code" href="gRenderObject_8h.html">gRenderObject.h</a>&quot;</span></div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span> </div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="foldopen" id="foldopen00012" data-start="{" data-end="};">
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno"><a class="line" href="classgUbo.html">   12</a></span><span class="keyword">class </span><a class="code hl_class" href="classgUbo.html">gUbo</a> : <span class="keyword">public</span> <a class="code hl_class" href="classgRenderObject.html">gRenderObject</a> {</div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> ...Args&gt;</div>
+<div class="foldopen" id="foldopen00015" data-start="{" data-end="}">
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno"><a class="line" href="classgUbo.html#a7b769efc794164e1238aadd36b5bf750">   15</a></span>    <a class="code hl_function" href="classgUbo.html#a7b769efc794164e1238aadd36b5bf750">gUbo</a>(Args&amp;&amp;... args, <span class="keywordtype">int</span> bindingpoint, <span class="keywordtype">int</span> usage = GL_DYNAMIC_DRAW) : id(GL_NONE), size(sizeof(T)), bindingpoint(bindingpoint) {</div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>        data = <span class="keyword">new</span> T(std::forward&lt;Args&gt;(args)...);</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>        <span class="keywordtype">id</span> = <a class="code hl_variable" href="classgRenderObject.html#a33bb9342f1ac27b19efcde25724571f5">renderer</a>-&gt;<a class="code hl_function" href="classgRenderer.html#adb94f7f6b70c0e8ca2bb6579e5ee5c6a">genBuffers</a>();</div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>        <a class="code hl_variable" href="classgRenderObject.html#a33bb9342f1ac27b19efcde25724571f5">renderer</a>-&gt;<a class="code hl_function" href="classgRenderer.html#a14096a56fe4428d658ae8c9719509706">setBufferData</a>(<span class="keywordtype">id</span>, <span class="keyword">nullptr</span>, size, usage);</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>        <span class="comment">// define the range of the buffer that links to a uniform binding point</span></div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>        <a class="code hl_variable" href="classgRenderObject.html#a33bb9342f1ac27b19efcde25724571f5">renderer</a>-&gt;<a class="code hl_function" href="classgRenderer.html#ae51e3011165d6d30e9ed5949696114a5">setBufferRange</a>(bindingpoint, <span class="keywordtype">id</span>, 0, size);</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>        <a class="code hl_function" href="classgUbo.html#acbbb230893efe0ac30a401efecfa5e2f">update</a>();</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>    }</div>
 </div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span> </div>
-<div class="foldopen" id="foldopen00025" data-start="{" data-end="}">
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno"><a class="line" href="classgUbo.html#a4f8b97ead7ca01c4253e78bff29e7bae">   25</a></span>    <a class="code hl_function" href="classgUbo.html#a4f8b97ead7ca01c4253e78bff29e7bae">~gUbo</a>() {</div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>        <span class="keywordflow">if</span> (<span class="keywordtype">id</span> != GL_NONE) {</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>            <a class="code hl_define" href="gRenderer_8h.html#a126ea59d9a44ee184840f29d22efbee2">G_CHECK_GL</a>(glDeleteBuffers(1, &amp;<span class="keywordtype">id</span>));</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>        }</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>        <span class="keyword">delete</span> data;</div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>    }</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
+<div class="foldopen" id="foldopen00024" data-start="{" data-end="}">
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno"><a class="line" href="classgUbo.html#a4f8b97ead7ca01c4253e78bff29e7bae">   24</a></span>    <a class="code hl_function" href="classgUbo.html#a4f8b97ead7ca01c4253e78bff29e7bae">~gUbo</a>() {</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>        <span class="keywordflow">if</span> (<span class="keywordtype">id</span> != GL_NONE) {</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>            <a class="code hl_variable" href="classgRenderObject.html#a33bb9342f1ac27b19efcde25724571f5">renderer</a>-&gt;<a class="code hl_function" href="classgRenderer.html#a2c598e4bdeca1610503c0ac62131f3ce">deleteBuffer</a>(<span class="keywordtype">id</span>);</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>        }</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>        <span class="keyword">delete</span> data;</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>    }</div>
 </div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
-<div class="foldopen" id="foldopen00032" data-start="{" data-end="}">
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno"><a class="line" href="classgUbo.html#a0176aec6f1240b6d48e1f8ee2f54f454">   32</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classgUbo.html#a0176aec6f1240b6d48e1f8ee2f54f454">bind</a>()<span class="keyword"> const </span>{</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>        <a class="code hl_define" href="gRenderer_8h.html#a126ea59d9a44ee184840f29d22efbee2">G_CHECK_GL</a>(glBindBuffer(GL_UNIFORM_BUFFER, <span class="keywordtype">id</span>));</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    }</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span> </div>
+<div class="foldopen" id="foldopen00031" data-start="{" data-end="}">
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno"><a class="line" href="classgUbo.html#a0176aec6f1240b6d48e1f8ee2f54f454">   31</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classgUbo.html#a0176aec6f1240b6d48e1f8ee2f54f454">bind</a>()<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>        <a class="code hl_variable" href="classgRenderObject.html#a33bb9342f1ac27b19efcde25724571f5">renderer</a>-&gt;<a class="code hl_function" href="classgRenderer.html#a4d76a253fd99a6ec724dfa54d266e90e">bindBuffer</a>(GL_UNIFORM_BUFFER, <span class="keywordtype">id</span>);</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>    }</div>
 </div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span> </div>
-<div class="foldopen" id="foldopen00036" data-start="{" data-end="}">
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno"><a class="line" href="classgUbo.html#a95ba7274681d8183e1680203de099759">   36</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classgUbo.html#a95ba7274681d8183e1680203de099759">unbind</a>()<span class="keyword"> const </span>{</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>        <a class="code hl_define" href="gRenderer_8h.html#a126ea59d9a44ee184840f29d22efbee2">G_CHECK_GL</a>(glBindBuffer(GL_UNIFORM_BUFFER, 0));</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    }</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span> </div>
+<div class="foldopen" id="foldopen00035" data-start="{" data-end="}">
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno"><a class="line" href="classgUbo.html#a95ba7274681d8183e1680203de099759">   35</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classgUbo.html#a95ba7274681d8183e1680203de099759">unbind</a>()<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>        <a class="code hl_variable" href="classgRenderObject.html#a33bb9342f1ac27b19efcde25724571f5">renderer</a>-&gt;<a class="code hl_function" href="classgRenderer.html#a89ce32071b97dc83b0b3c74e4f4387ea">unbindBuffer</a>(GL_UNIFORM_BUFFER);</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    }</div>
 </div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span> </div>
-<div class="foldopen" id="foldopen00040" data-start="{" data-end="}">
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno"><a class="line" href="classgUbo.html#acbbb230893efe0ac30a401efecfa5e2f">   40</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classgUbo.html#acbbb230893efe0ac30a401efecfa5e2f">update</a>() {</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>        <a class="code hl_function" href="classgUbo.html#acbbb230893efe0ac30a401efecfa5e2f">update</a>(0, size);</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    }</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span> </div>
+<div class="foldopen" id="foldopen00039" data-start="{" data-end="}">
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno"><a class="line" href="classgUbo.html#acbbb230893efe0ac30a401efecfa5e2f">   39</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classgUbo.html#acbbb230893efe0ac30a401efecfa5e2f">update</a>() {</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>        <a class="code hl_function" href="classgUbo.html#acbbb230893efe0ac30a401efecfa5e2f">update</a>(0, size);</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    }</div>
 </div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span> </div>
-<div class="foldopen" id="foldopen00044" data-start="{" data-end="}">
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno"><a class="line" href="classgUbo.html#a20d3c5124ee5980a261c1472e1e56952">   44</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classgUbo.html#a20d3c5124ee5980a261c1472e1e56952">update</a>(<span class="keywordtype">int</span> offset, <span class="keywordtype">int</span> length) {</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>        <span class="keywordtype">void</span>* ptr = <span class="keyword">static_cast&lt;</span><span class="keywordtype">void</span>*<span class="keyword">&gt;</span>(<span class="keyword">reinterpret_cast&lt;</span><span class="keywordtype">char</span>*<span class="keyword">&gt;</span>(data) + offset);</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>        <a class="code hl_function" href="classgUbo.html#a0176aec6f1240b6d48e1f8ee2f54f454">bind</a>();</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>        <a class="code hl_define" href="gRenderer_8h.html#a126ea59d9a44ee184840f29d22efbee2">G_CHECK_GL</a>(glBufferSubData(GL_UNIFORM_BUFFER, offset, length, ptr));</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>        <a class="code hl_function" href="classgUbo.html#a95ba7274681d8183e1680203de099759">unbind</a>();</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    }</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span> </div>
+<div class="foldopen" id="foldopen00043" data-start="{" data-end="}">
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno"><a class="line" href="classgUbo.html#a20d3c5124ee5980a261c1472e1e56952">   43</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classgUbo.html#a20d3c5124ee5980a261c1472e1e56952">update</a>(<span class="keywordtype">int</span> offset, <span class="keywordtype">int</span> length) {</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>        <span class="keywordtype">void</span>* ptr = <span class="keyword">static_cast&lt;</span><span class="keywordtype">void</span>*<span class="keyword">&gt;</span>(<span class="keyword">reinterpret_cast&lt;</span><span class="keywordtype">char</span>*<span class="keyword">&gt;</span>(data) + offset);</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>        <a class="code hl_variable" href="classgRenderObject.html#a33bb9342f1ac27b19efcde25724571f5">renderer</a>-&gt;<a class="code hl_function" href="classgRenderer.html#aa43f44f95f983d41cda633145f34bb68">bufSubData</a>(<span class="keywordtype">id</span>, offset, length, ptr);</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    }</div>
 </div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span> </div>
-<div class="foldopen" id="foldopen00051" data-start="{" data-end="}">
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno"><a class="line" href="classgUbo.html#ad895c4d2b58c987009865e9e6c79592e">   51</a></span>    T* <a class="code hl_function" href="classgUbo.html#ad895c4d2b58c987009865e9e6c79592e">getData</a>() {</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>        <span class="keywordflow">return</span> data;</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    }</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span> </div>
+<div class="foldopen" id="foldopen00048" data-start="{" data-end="}">
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno"><a class="line" href="classgUbo.html#ad895c4d2b58c987009865e9e6c79592e">   48</a></span>    T* <a class="code hl_function" href="classgUbo.html#ad895c4d2b58c987009865e9e6c79592e">getData</a>() {</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>        <span class="keywordflow">return</span> data;</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    }</div>
 </div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span> </div>
-<div class="foldopen" id="foldopen00055" data-start="{" data-end="}">
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno"><a class="line" href="classgUbo.html#a49662596f204103a4f93f4c1a7246584">   55</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classgUbo.html#a49662596f204103a4f93f4c1a7246584">setData</a>(T* newObject) {</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>        data = newObject;</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>        <a class="code hl_function" href="classgUbo.html#acbbb230893efe0ac30a401efecfa5e2f">update</a>();</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    }</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span> </div>
+<div class="foldopen" id="foldopen00052" data-start="{" data-end="}">
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno"><a class="line" href="classgUbo.html#a49662596f204103a4f93f4c1a7246584">   52</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classgUbo.html#a49662596f204103a4f93f4c1a7246584">setData</a>(T* newObject) {</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>        data = newObject;</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>        <a class="code hl_function" href="classgUbo.html#acbbb230893efe0ac30a401efecfa5e2f">update</a>();</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    }</div>
 </div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span> </div>
-<div class="foldopen" id="foldopen00060" data-start="{" data-end="}">
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno"><a class="line" href="classgUbo.html#a1254603c70e85475ca2b198b73e5b59e">   60</a></span>    GLuint <a class="code hl_function" href="classgUbo.html#a1254603c70e85475ca2b198b73e5b59e">getId</a>()<span class="keyword"> const </span>{</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>        <span class="keywordflow">return</span> id;</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    }</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span> </div>
+<div class="foldopen" id="foldopen00057" data-start="{" data-end="}">
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno"><a class="line" href="classgUbo.html#a1254603c70e85475ca2b198b73e5b59e">   57</a></span>    GLuint <a class="code hl_function" href="classgUbo.html#a1254603c70e85475ca2b198b73e5b59e">getId</a>()<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>        <span class="keywordflow">return</span> id;</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    }</div>
 </div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span> </div>
-<div class="foldopen" id="foldopen00064" data-start="{" data-end="}">
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno"><a class="line" href="classgUbo.html#a8fc09e1798ebf56e1f635a60a5c739d7">   64</a></span>    <span class="keywordtype">int</span> <a class="code hl_function" href="classgUbo.html#a8fc09e1798ebf56e1f635a60a5c739d7">getBindingPoint</a>()<span class="keyword"> const </span>{</div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>        <span class="keywordflow">return</span> bindingpoint;</div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    }</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span> </div>
+<div class="foldopen" id="foldopen00061" data-start="{" data-end="}">
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno"><a class="line" href="classgUbo.html#a8fc09e1798ebf56e1f635a60a5c739d7">   61</a></span>    <span class="keywordtype">int</span> <a class="code hl_function" href="classgUbo.html#a8fc09e1798ebf56e1f635a60a5c739d7">getBindingPoint</a>()<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>        <span class="keywordflow">return</span> bindingpoint;</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    }</div>
 </div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span> </div>
-<div class="foldopen" id="foldopen00068" data-start="{" data-end="}">
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno"><a class="line" href="classgUbo.html#a13ce78c1e53644bf3c5f5b34bb3d360a">   68</a></span>    <span class="keywordtype">int</span> <a class="code hl_function" href="classgUbo.html#a13ce78c1e53644bf3c5f5b34bb3d360a">getSize</a>()<span class="keyword"> const </span>{</div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>        <span class="keywordflow">return</span> size;</div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    }</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span> </div>
+<div class="foldopen" id="foldopen00065" data-start="{" data-end="}">
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno"><a class="line" href="classgUbo.html#a13ce78c1e53644bf3c5f5b34bb3d360a">   65</a></span>    <span class="keywordtype">int</span> <a class="code hl_function" href="classgUbo.html#a13ce78c1e53644bf3c5f5b34bb3d360a">getSize</a>()<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>        <span class="keywordflow">return</span> size;</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    }</div>
 </div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    GLuint id;</div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>    <span class="keywordtype">int</span> size;</div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    T* data;</div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>    <span class="keywordtype">int</span> bindingpoint;</div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>};</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>    GLuint id;</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    <span class="keywordtype">int</span> size;</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>    T* data;</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    <span class="keywordtype">int</span> bindingpoint;</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>};</div>
 </div>
-<div class="ttc" id="aclassgObject_html"><div class="ttname"><a href="classgObject.html">gObject</a></div><div class="ttdef"><b>Definition</b> gObject.h:33</div></div>
-<div class="ttc" id="aclassgUbo_html"><div class="ttname"><a href="classgUbo.html">gUbo</a></div><div class="ttdef"><b>Definition</b> gUbo.h:11</div></div>
-<div class="ttc" id="aclassgUbo_html_a0176aec6f1240b6d48e1f8ee2f54f454"><div class="ttname"><a href="classgUbo.html#a0176aec6f1240b6d48e1f8ee2f54f454">gUbo::bind</a></div><div class="ttdeci">void bind() const</div><div class="ttdef"><b>Definition</b> gUbo.h:32</div></div>
-<div class="ttc" id="aclassgUbo_html_a1254603c70e85475ca2b198b73e5b59e"><div class="ttname"><a href="classgUbo.html#a1254603c70e85475ca2b198b73e5b59e">gUbo::getId</a></div><div class="ttdeci">GLuint getId() const</div><div class="ttdef"><b>Definition</b> gUbo.h:60</div></div>
-<div class="ttc" id="aclassgUbo_html_a13ce78c1e53644bf3c5f5b34bb3d360a"><div class="ttname"><a href="classgUbo.html#a13ce78c1e53644bf3c5f5b34bb3d360a">gUbo::getSize</a></div><div class="ttdeci">int getSize() const</div><div class="ttdef"><b>Definition</b> gUbo.h:68</div></div>
-<div class="ttc" id="aclassgUbo_html_a20d3c5124ee5980a261c1472e1e56952"><div class="ttname"><a href="classgUbo.html#a20d3c5124ee5980a261c1472e1e56952">gUbo::update</a></div><div class="ttdeci">void update(int offset, int length)</div><div class="ttdef"><b>Definition</b> gUbo.h:44</div></div>
-<div class="ttc" id="aclassgUbo_html_a49662596f204103a4f93f4c1a7246584"><div class="ttname"><a href="classgUbo.html#a49662596f204103a4f93f4c1a7246584">gUbo::setData</a></div><div class="ttdeci">void setData(T *newObject)</div><div class="ttdef"><b>Definition</b> gUbo.h:55</div></div>
-<div class="ttc" id="aclassgUbo_html_a4f8b97ead7ca01c4253e78bff29e7bae"><div class="ttname"><a href="classgUbo.html#a4f8b97ead7ca01c4253e78bff29e7bae">gUbo::~gUbo</a></div><div class="ttdeci">~gUbo()</div><div class="ttdef"><b>Definition</b> gUbo.h:25</div></div>
-<div class="ttc" id="aclassgUbo_html_a7b769efc794164e1238aadd36b5bf750"><div class="ttname"><a href="classgUbo.html#a7b769efc794164e1238aadd36b5bf750">gUbo::gUbo</a></div><div class="ttdeci">gUbo(Args &amp;&amp;... args, int bindingpoint, int usage=GL_DYNAMIC_DRAW)</div><div class="ttdef"><b>Definition</b> gUbo.h:14</div></div>
-<div class="ttc" id="aclassgUbo_html_a8fc09e1798ebf56e1f635a60a5c739d7"><div class="ttname"><a href="classgUbo.html#a8fc09e1798ebf56e1f635a60a5c739d7">gUbo::getBindingPoint</a></div><div class="ttdeci">int getBindingPoint() const</div><div class="ttdef"><b>Definition</b> gUbo.h:64</div></div>
-<div class="ttc" id="aclassgUbo_html_a95ba7274681d8183e1680203de099759"><div class="ttname"><a href="classgUbo.html#a95ba7274681d8183e1680203de099759">gUbo::unbind</a></div><div class="ttdeci">void unbind() const</div><div class="ttdef"><b>Definition</b> gUbo.h:36</div></div>
-<div class="ttc" id="aclassgUbo_html_acbbb230893efe0ac30a401efecfa5e2f"><div class="ttname"><a href="classgUbo.html#acbbb230893efe0ac30a401efecfa5e2f">gUbo::update</a></div><div class="ttdeci">void update()</div><div class="ttdef"><b>Definition</b> gUbo.h:40</div></div>
-<div class="ttc" id="aclassgUbo_html_ad895c4d2b58c987009865e9e6c79592e"><div class="ttname"><a href="classgUbo.html#ad895c4d2b58c987009865e9e6c79592e">gUbo::getData</a></div><div class="ttdeci">T * getData()</div><div class="ttdef"><b>Definition</b> gUbo.h:51</div></div>
+<div class="ttc" id="aclassgRenderObject_html"><div class="ttname"><a href="classgRenderObject.html">gRenderObject</a></div><div class="ttdef"><b>Definition</b> gRenderObject.h:23</div></div>
+<div class="ttc" id="aclassgRenderObject_html_a33bb9342f1ac27b19efcde25724571f5"><div class="ttname"><a href="classgRenderObject.html#a33bb9342f1ac27b19efcde25724571f5">gRenderObject::renderer</a></div><div class="ttdeci">static gRenderer * renderer</div><div class="ttdef"><b>Definition</b> gRenderObject.h:46</div></div>
+<div class="ttc" id="aclassgRenderer_html_a14096a56fe4428d658ae8c9719509706"><div class="ttname"><a href="classgRenderer.html#a14096a56fe4428d658ae8c9719509706">gRenderer::setBufferData</a></div><div class="ttdeci">virtual void setBufferData(GLuint buffer, const void *data, size_t size, int usage)=0</div></div>
+<div class="ttc" id="aclassgRenderer_html_a2c598e4bdeca1610503c0ac62131f3ce"><div class="ttname"><a href="classgRenderer.html#a2c598e4bdeca1610503c0ac62131f3ce">gRenderer::deleteBuffer</a></div><div class="ttdeci">virtual void deleteBuffer(GLuint &amp;buffer)=0</div></div>
+<div class="ttc" id="aclassgRenderer_html_a4d76a253fd99a6ec724dfa54d266e90e"><div class="ttname"><a href="classgRenderer.html#a4d76a253fd99a6ec724dfa54d266e90e">gRenderer::bindBuffer</a></div><div class="ttdeci">virtual void bindBuffer(GLenum target, GLuint buffer)=0</div></div>
+<div class="ttc" id="aclassgRenderer_html_a89ce32071b97dc83b0b3c74e4f4387ea"><div class="ttname"><a href="classgRenderer.html#a89ce32071b97dc83b0b3c74e4f4387ea">gRenderer::unbindBuffer</a></div><div class="ttdeci">virtual void unbindBuffer(GLenum target)=0</div></div>
+<div class="ttc" id="aclassgRenderer_html_aa43f44f95f983d41cda633145f34bb68"><div class="ttname"><a href="classgRenderer.html#aa43f44f95f983d41cda633145f34bb68">gRenderer::bufSubData</a></div><div class="ttdeci">virtual void bufSubData(GLuint buffer, int offset, int size, const void *data)=0</div></div>
+<div class="ttc" id="aclassgRenderer_html_adb94f7f6b70c0e8ca2bb6579e5ee5c6a"><div class="ttname"><a href="classgRenderer.html#adb94f7f6b70c0e8ca2bb6579e5ee5c6a">gRenderer::genBuffers</a></div><div class="ttdeci">virtual GLuint genBuffers()=0</div></div>
+<div class="ttc" id="aclassgRenderer_html_ae51e3011165d6d30e9ed5949696114a5"><div class="ttname"><a href="classgRenderer.html#ae51e3011165d6d30e9ed5949696114a5">gRenderer::setBufferRange</a></div><div class="ttdeci">virtual void setBufferRange(int index, GLuint buffer, int offset, int size)=0</div></div>
+<div class="ttc" id="aclassgUbo_html"><div class="ttname"><a href="classgUbo.html">gUbo</a></div><div class="ttdef"><b>Definition</b> gUbo.h:12</div></div>
+<div class="ttc" id="aclassgUbo_html_a0176aec6f1240b6d48e1f8ee2f54f454"><div class="ttname"><a href="classgUbo.html#a0176aec6f1240b6d48e1f8ee2f54f454">gUbo::bind</a></div><div class="ttdeci">void bind() const</div><div class="ttdef"><b>Definition</b> gUbo.h:31</div></div>
+<div class="ttc" id="aclassgUbo_html_a1254603c70e85475ca2b198b73e5b59e"><div class="ttname"><a href="classgUbo.html#a1254603c70e85475ca2b198b73e5b59e">gUbo::getId</a></div><div class="ttdeci">GLuint getId() const</div><div class="ttdef"><b>Definition</b> gUbo.h:57</div></div>
+<div class="ttc" id="aclassgUbo_html_a13ce78c1e53644bf3c5f5b34bb3d360a"><div class="ttname"><a href="classgUbo.html#a13ce78c1e53644bf3c5f5b34bb3d360a">gUbo::getSize</a></div><div class="ttdeci">int getSize() const</div><div class="ttdef"><b>Definition</b> gUbo.h:65</div></div>
+<div class="ttc" id="aclassgUbo_html_a20d3c5124ee5980a261c1472e1e56952"><div class="ttname"><a href="classgUbo.html#a20d3c5124ee5980a261c1472e1e56952">gUbo::update</a></div><div class="ttdeci">void update(int offset, int length)</div><div class="ttdef"><b>Definition</b> gUbo.h:43</div></div>
+<div class="ttc" id="aclassgUbo_html_a49662596f204103a4f93f4c1a7246584"><div class="ttname"><a href="classgUbo.html#a49662596f204103a4f93f4c1a7246584">gUbo::setData</a></div><div class="ttdeci">void setData(T *newObject)</div><div class="ttdef"><b>Definition</b> gUbo.h:52</div></div>
+<div class="ttc" id="aclassgUbo_html_a4f8b97ead7ca01c4253e78bff29e7bae"><div class="ttname"><a href="classgUbo.html#a4f8b97ead7ca01c4253e78bff29e7bae">gUbo::~gUbo</a></div><div class="ttdeci">~gUbo()</div><div class="ttdef"><b>Definition</b> gUbo.h:24</div></div>
+<div class="ttc" id="aclassgUbo_html_a7b769efc794164e1238aadd36b5bf750"><div class="ttname"><a href="classgUbo.html#a7b769efc794164e1238aadd36b5bf750">gUbo::gUbo</a></div><div class="ttdeci">gUbo(Args &amp;&amp;... args, int bindingpoint, int usage=GL_DYNAMIC_DRAW)</div><div class="ttdef"><b>Definition</b> gUbo.h:15</div></div>
+<div class="ttc" id="aclassgUbo_html_a8fc09e1798ebf56e1f635a60a5c739d7"><div class="ttname"><a href="classgUbo.html#a8fc09e1798ebf56e1f635a60a5c739d7">gUbo::getBindingPoint</a></div><div class="ttdeci">int getBindingPoint() const</div><div class="ttdef"><b>Definition</b> gUbo.h:61</div></div>
+<div class="ttc" id="aclassgUbo_html_a95ba7274681d8183e1680203de099759"><div class="ttname"><a href="classgUbo.html#a95ba7274681d8183e1680203de099759">gUbo::unbind</a></div><div class="ttdeci">void unbind() const</div><div class="ttdef"><b>Definition</b> gUbo.h:35</div></div>
+<div class="ttc" id="aclassgUbo_html_acbbb230893efe0ac30a401efecfa5e2f"><div class="ttname"><a href="classgUbo.html#acbbb230893efe0ac30a401efecfa5e2f">gUbo::update</a></div><div class="ttdeci">void update()</div><div class="ttdef"><b>Definition</b> gUbo.h:39</div></div>
+<div class="ttc" id="aclassgUbo_html_ad895c4d2b58c987009865e9e6c79592e"><div class="ttname"><a href="classgUbo.html#ad895c4d2b58c987009865e9e6c79592e">gUbo::getData</a></div><div class="ttdeci">T * getData()</div><div class="ttdef"><b>Definition</b> gUbo.h:48</div></div>
 <div class="ttc" id="agObject_8h_html"><div class="ttname"><a href="gObject_8h.html">gObject.h</a></div></div>
+<div class="ttc" id="agRenderObject_8h_html"><div class="ttname"><a href="gRenderObject_8h.html">gRenderObject.h</a></div></div>
 <div class="ttc" id="agRenderer_8h_html"><div class="ttname"><a href="gRenderer_8h.html">gRenderer.h</a></div></div>
-<div class="ttc" id="agRenderer_8h_html_a126ea59d9a44ee184840f29d22efbee2"><div class="ttname"><a href="gRenderer_8h.html#a126ea59d9a44ee184840f29d22efbee2">G_CHECK_GL</a></div><div class="ttdeci">#define G_CHECK_GL(fn)</div><div class="ttdef"><b>Definition</b> gRenderer.h:57</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

@@ -38,7 +38,6 @@ var hierarchy =
     [ "gMatrix4", "classgMatrix4.html", null ],
     [ "gModelAnimator", "classgModelAnimator.html", null ],
     [ "gObject", "classgObject.html", [
-      [ "gUbo< gSceneLights >", "classgUbo.html", null ],
       [ "gAES", "classgAES.html", null ],
       [ "gAppManager", "classgAppManager.html", null ],
       [ "gAppObject", "classgAppObject.html", [
@@ -59,8 +58,8 @@ var hierarchy =
       [ "gGUIActionManager", "classgGUIActionManager.html", null ],
       [ "gGUIResources", "classgGUIResources.html", null ],
       [ "gHttpFile", "classgHttpFile.html", null ],
-      [ "gPostProcessManager", "classgPostProcessManager.html", null ],
       [ "gRenderObject", "classgRenderObject.html", [
+        [ "gUbo< gRenderer::gSceneLights >", "classgUbo.html", null ],
         [ "gBaseCanvas", "classgBaseCanvas.html", null ],
         [ "gBaseGUIObject", "classgBaseGUIObject.html", [
           [ "gGUIControl", "classgGUIControl.html", [
@@ -178,25 +177,30 @@ var hierarchy =
           [ "gSkybox", "classgSkybox.html", null ]
         ] ],
         [ "gParticle", "classgParticle.html", null ],
+        [ "gPostProcessManager", "classgPostProcessManager.html", null ],
         [ "gRay", "classgRay.html", null ],
+        [ "gShader", "classgShader.html", null ],
         [ "gShadowMap", "classgShadowMap.html", null ],
         [ "gTexture", "classgTexture.html", [
           [ "gImage", "classgImage.html", null ]
         ] ],
+        [ "gUbo< T >", "classgUbo.html", null ],
         [ "gVbo", "classgVbo.html", null ]
       ] ],
-      [ "gRenderer", "classgRenderer.html", null ],
-      [ "gShader", "classgShader.html", null ],
+      [ "gRenderer", "classgRenderer.html", [
+        [ "gGLRenderEngine", "classgGLRenderEngine.html", null ]
+      ] ],
       [ "gSpriteAnimation", "classgSpriteAnimation.html", null ],
       [ "gSpriteAnimator", "classgSpriteAnimator.html", null ],
       [ "gThread", "classgThread.html", [
         [ "gAssetLoader", "classgAssetLoader.html", null ],
         [ "gGUIAppThread", "classgGUIAppThread.html", null ]
       ] ],
-      [ "gUbo< T >", "classgUbo.html", null ],
       [ "gWindows", "classgWindows.html", null ]
     ] ],
     [ "gRect", "classgRect.html", null ],
+    [ "gRenderer::gSceneLightData", "structgRenderer_1_1gSceneLightData.html", null ],
+    [ "gRenderer::gSceneLights", "structgRenderer_1_1gSceneLights.html", null ],
     [ "gUTF8Iterator", "classgUTF8Iterator.html", null ],
     [ "gUtils", "classgUtils.html", null ],
     [ "gVertex", "structgVertex.html", null ],
