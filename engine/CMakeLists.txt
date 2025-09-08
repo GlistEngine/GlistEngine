@@ -44,6 +44,9 @@ if(WIN32)
 	set(SYS_NAME "win64")
 endif(WIN32)
 
+if(NOT DEFINED BUILD_TYPE)
+    set(BUILD_TYPE SHARED)
+endif()
 
 set(CMAKE_THREAD_LIBS_INIT "-lpthread")
 set(CMAKE_HAVE_THREADS_LIBRARY 1)
@@ -309,7 +312,7 @@ if(ANDROID OR IOS)
 		${SRC_FILES}
 	)
 else()
-	add_library(GlistEngine SHARED
+	add_library(GlistEngine ${BUILD_TYPE}
 		${SRC_FILES}
 	)
 endif()
