@@ -30,12 +30,11 @@ public:
 	gVbo();
 	virtual ~gVbo();
 
-	gVbo(const gVbo&);
-	gVbo& operator=(const gVbo& other);
-	// todo maybe implement move constructor and move assignment operator
+	gVbo(const gVbo&) = delete;
+	gVbo& operator=(const gVbo& other) = delete;
 
-	void setVertexData(gVertex* vertices, int coordNum, int total);
-	void setIndexData(gIndex* indices, int total);
+	void setVertexData(const gVertex* vertices, int coordNum, int total);
+	void setIndexData(const gIndex* indices, int total);
 	void clear();
 
 	void bind() const;
@@ -53,7 +52,7 @@ public:
 //	void setMesh(const gMesh* mesh, int usage);
 	void setVertexData(const glm::vec3* vertices, int total, int usage = GL_STATIC_DRAW);
 	void setVertexData(const glm::vec2* vertices, int total, int usage = GL_STATIC_DRAW);
-	void setVertexData(const float* vertexData, int coordNum, int total, int usage, int stride = 0);
+	void setVertexData(const float* verticesptr, int coordNum, int total, int usage, int stride = 0);
 	void setColorData(const gColor* colors, int total, int usage);
 	void setColorData(const float* color0r, int total, int usage, int stride = 0);
 	void setTexCoordData(const glm::vec2* texCoords, int total, int usage);
@@ -63,8 +62,6 @@ public:
 	void setIndexData(const int* indices, int total, int usage);
 
 	int getVAOid() const;
-	gVertex* getVertices() const;
-	gIndex* getIndices() const;
 	int getVerticesNum() const;
 	int getIndicesNum() const;
 
@@ -75,13 +72,10 @@ private:
     bool isenabled;
 
     bool isvertexdataallocated;
-    const float* vertexarrayptr;
     int vertexdatacoordnum, totalvertexnum;
     int vertexusage, vertexstride;
-    gVertex* verticesptr;
 
     bool isindexdataallocated;
-    gIndex* indexarrayptr;
     int totalindexnum;
 
 };

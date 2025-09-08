@@ -355,7 +355,7 @@ void gGLRenderEngine::setReadBufferNone() {
 
 // ----- Fullscreen Quad -----
 void gGLRenderEngine::createFullscreenQuad(GLuint& vao, GLuint& vbo) {
-	float quadVertices[] = {
+	static const float QUAD_VERTICES[] = {
 		// positions   // texCoords
 		-1.0f, 1.0f, 0.0f, 1.0f,
 		-1.0f, -1.0f, 0.0f, 0.0f,
@@ -371,7 +371,7 @@ void gGLRenderEngine::createFullscreenQuad(GLuint& vao, GLuint& vbo) {
 
 	G_CHECK_GL(glBindVertexArray(vao));
 	G_CHECK_GL(glBindBuffer(GL_ARRAY_BUFFER, vbo));
-	G_CHECK_GL(glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW));
+	G_CHECK_GL(glBufferData(GL_ARRAY_BUFFER, sizeof(QUAD_VERTICES), &QUAD_VERTICES, GL_STATIC_DRAW));
 
 	G_CHECK_GL(glEnableVertexAttribArray(0));
 	G_CHECK_GL(glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0));

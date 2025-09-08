@@ -19,7 +19,7 @@ gMorphingMesh::gMorphingMesh() {
 gMorphingMesh::~gMorphingMesh() {
 }
 
-void gMorphingMesh::addTargetPositions(std::vector<gVertex> &targetVertices) {
+void gMorphingMesh::addTargetPositions(const std::vector<gVertex>& targetVertices) {
 	targetpositions.push_back(std::vector<glm::vec3>(targetVertices.size()));
 	currenttargetmeshid = targetpositions.size() - 1;
 	for (int i = 0; i < targetpositions[currenttargetmeshid].size(); i++) {
@@ -27,7 +27,7 @@ void gMorphingMesh::addTargetPositions(std::vector<gVertex> &targetVertices) {
 	}
 }
 
-void gMorphingMesh::addTargetNormals(std::vector<gVertex> &targetVertices) {
+void gMorphingMesh::addTargetNormals(const std::vector<gVertex>& targetVertices) {
 	targetnormals.push_back(std::vector<glm::vec3>(targetVertices.size()));
 	currenttargetmeshid = targetnormals.size() - 1;
 	for (int i = 0; i < targetnormals[currenttargetmeshid].size(); i++) {
@@ -39,9 +39,9 @@ int gMorphingMesh::addTargetMesh(gMesh *targetMesh) {
 	addTargetPositions(targetMesh->getVertices());
 	addTargetNormals(targetMesh->getVertices());
 	framecounts.push_back(1);
-	vboframes.push_back(std::vector<gVbo>());
-	framepositions.push_back(std::vector<std::vector<glm::vec3>>());
-	framenormals.push_back(std::vector<std::vector<glm::vec3>>());
+	vboframes.emplace_back();
+	framepositions.emplace_back();
+	framenormals.emplace_back();
 	currentframeid = 0;
 	return targetpositions.size() - 1;
 }
@@ -124,8 +124,11 @@ void gMorphingMesh::interpolate(bool forceInterpolation) {
 				framevertices[j].normal = basevertices[j].normal + ((targetnormals[currenttargetmeshid][j] - basevertices[j].position) * ((float)(i + 1) / (float)framecounts[currenttargetmeshid]));
 			}
 			//Setting the datas of frame's vbo as the datas filled above.
-			vboframes[currenttargetmeshid][i].setVertexData(framevertices.data(), sizeof(gVertex), framevertices.size());
-			vboframes[currenttargetmeshid][i].setIndexData(basemesh->getIndices().data(), basemesh->getIndicesNum());
+			if (!vboframes[currenttargetmeshid][i]) {
+				vboframes[currenttargetmeshid][i] = std::make_unique<gVbo>();
+			}
+			vboframes[currenttargetmeshid][i]->setVertexData(framevertices.data(), sizeof(gVertex), framevertices.size());
+			vboframes[currenttargetmeshid][i]->setIndexData(basemesh->getIndices().data(), basemesh->getIndicesNum());
 		}
 	}
 }
@@ -250,11 +253,12 @@ void gMorphingMesh::draw() {
 }
 
 void gMorphingMesh::drawVboFrames() {
-	vboframes[currenttargetmeshid][currentframeid].bind();
-	if (vboframes[currenttargetmeshid][currentframeid].isIndexDataAllocated()) {
-		renderer->drawElements(GL_TRIANGLES, vboframes[currenttargetmeshid][currentframeid].getIndicesNum());
+	gVbo& vbo = *vboframes[currenttargetmeshid][currentframeid];
+	vbo.bind();
+	if (vbo.isIndexDataAllocated()) {
+		renderer->drawElements(GL_TRIANGLES, vbo.getIndicesNum());
 	} else {
-		renderer->drawArrays(GL_TRIANGLES, vboframes[currenttargetmeshid][currentframeid].getVerticesNum());
+		renderer->drawArrays(GL_TRIANGLES, vbo.getVerticesNum());
 	}
-	vboframes[currenttargetmeshid][currentframeid].unbind();
+	vbo.unbind();
 }

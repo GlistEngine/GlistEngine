@@ -14,7 +14,7 @@ gSkinnedMesh::gSkinnedMesh() {
 	isvertexanimationstoredonvram = false;
 	frameno = 0;
 	framenoold = 0;
-	this->setBaseMesh(static_cast<gMesh*>(this));
+	this->setBaseMesh(this);
 }
 
 gSkinnedMesh::~gSkinnedMesh() {
@@ -22,13 +22,13 @@ gSkinnedMesh::~gSkinnedMesh() {
 
 void gSkinnedMesh::draw() {
 	G_PROFILE_ZONE_SCOPED_N("gSkinnedMesh::draw()");
-	if (this->getTargetMeshCount() > 0) {
+	if (getTargetMeshCount() > 0) {
 		if (frameno != framenoold) {
-			for(int i = 0; i < vbo.getVerticesNum(); i++) {
+			for(int i = 0; i < vbo->getVerticesNum(); i++) {
 				vertices[i].position = animatedPosData[0][frameno][i];
 				vertices[i].normal = animatedNormData[0][frameno][i];
 			}
-			setBaseMesh(static_cast<gMesh*>(this));
+			setBaseMesh(this);
 			interpolate(false);
 		} else {
 			interpolate();
@@ -38,11 +38,11 @@ void gSkinnedMesh::draw() {
 	else if (!isvertexanimationstoredonvram) {
 		if (isvertexanimated && frameno != framenoold) {
 			// TODO Below lines of vertex animation stored on CPU needs to be optimized
-			for(int i = 0; i < vbo.getVerticesNum(); i++) {
+			for(int i = 0; i < vbo->getVerticesNum(); i++) {
 				vertices[i].position = animatedPosData[0][frameno][i];
 				vertices[i].normal = animatedNormData[0][frameno][i];
 			}
-			vbo.setVertexData(&vertices[0], sizeof(gVertex), vbo.getVerticesNum());
+			vbo->setVertexData(&vertices[0], sizeof(gVertex), vbo->getVerticesNum());
 //			vbo.setVertexData(&animatedPosData[0][frameno][0].x, 3, vbo.getVerticesNum(), GL_STREAM_DRAW);
 //			vbo.setNormalData(&animatedNormData[0][frameno][0].x, 3,  vbo.getVerticesNum(), GL_STREAM_DRAW);
 			framenoold = frameno;
@@ -59,31 +59,35 @@ void gSkinnedMesh::draw() {
 
 void gSkinnedMesh::drawVboFrame() {
 	// draw mesh
-	vboframe[0][frameno].bind();
-	if (vboframe[0][frameno].isIndexDataAllocated()) {
-		renderer->drawElements(GL_TRIANGLES, vboframe[0][frameno].getIndicesNum());
+	gVbo& vbo = *vboframe[0][frameno];
+	vbo.bind();
+	if (vbo.isIndexDataAllocated()) {
+		renderer->drawElements(GL_TRIANGLES, vbo.getIndicesNum());
 	} else {
-		renderer->drawArrays(GL_TRIANGLES, vboframe[0][frameno].getVerticesNum());
+		renderer->drawArrays(GL_TRIANGLES, vbo.getVerticesNum());
 	}
-	vboframe[0][frameno].unbind();
+	vbo.unbind();
 	framenoold = frameno;
 }
 
 void gSkinnedMesh::resizeAnimation(int verticesNum) {
+	G_PROFILE_ZONE_SCOPED_N("gModel::resizeAnimation()");
+	G_PROFILE_ZONE_VALUE(verticesNum);
 	animatedPos.resize(verticesNum);
 	animatedNorm.resize(verticesNum);
 }
 
 void gSkinnedMesh::resetAnimation() {
+	G_PROFILE_ZONE_SCOPED_N("gModel::resetAnimation()");
 	animatedPos.assign(animatedPos.size(), glm::vec3(0.0f));
 	animatedNorm.assign(animatedNorm.size(), glm::vec3(0.0f));
 }
 
-void gSkinnedMesh::setVertexPos(int vertexNo, glm::vec3 newWeight) {
+void gSkinnedMesh::setVertexPos(int vertexNo, const glm::vec3& newWeight) {
 	animatedPos[vertexNo] = newWeight;
 }
 
-void gSkinnedMesh::setVertexNorm(int vertexNo, glm::vec3 newWeight) {
+void gSkinnedMesh::setVertexNorm(int vertexNo, const glm::vec3& newWeight) {
 	animatedNorm[vertexNo] = newWeight;
 }
 
@@ -101,13 +105,25 @@ void gSkinnedMesh::clearAnimation() {
 }
 
 void gSkinnedMesh::resizeVertexAnimationData(int animationNum, int frameNum, int verticesNum, bool isOnVram) {
-	animatedPosData = std::vector< std::vector< std::vector< glm::vec3 > > >(animationNum, std::vector< std::vector< glm::vec3 > >(frameNum, std::vector< glm::vec3 >(verticesNum)));
-	animatedNormData = std::vector< std::vector< std::vector< glm::vec3 > > >(animationNum, std::vector< std::vector< glm::vec3 > >(frameNum, std::vector< glm::vec3 >(verticesNum)));
-    if (isOnVram) {
-		vboframe = std::vector<std::vector<gVbo>>(animationNum, std::vector<gVbo>(frameNum));
+	animatedPosData.resize(animationNum);
+	animatedNormData.resize(animationNum);
+
+	for (int i = 0; i < animationNum; ++i) {
+		animatedPosData[i].resize(frameNum);
+		animatedNormData[i].resize(frameNum);
+
+		for (int j = 0; j < frameNum; ++j) {
+			animatedPosData[i][j].resize(verticesNum);
+			animatedNormData[i][j].resize(verticesNum);
+		}
 	}
-//	animatedPosData[animationNo][frameNo].resize(verticesNum);
-//	animatedNormData[animationNo][frameNo].resize(verticesNum);
+
+	if (isOnVram) {
+		vboframe.resize(animationNum);
+		for (auto& animVbos : vboframe) {
+			animVbos.resize(frameNum);
+		}
+	}
 }
 
 void gSkinnedMesh::resetVertexAnimationData(int animationNo, int frameNo) {
@@ -115,11 +131,11 @@ void gSkinnedMesh::resetVertexAnimationData(int animationNo, int frameNo) {
 	animatedNormData[animationNo][frameNo].assign(animatedNormData[animationNo][frameNo].size(), glm::vec3(0.0f));
 }
 
-void gSkinnedMesh::setVertexPosData(int animationNo, int frameNo, int vertexNo, glm::vec3 newWeight) {
+void gSkinnedMesh::setVertexPosData(int animationNo, int frameNo, int vertexNo, const glm::vec3& newWeight) {
 	animatedPosData[animationNo][frameNo][vertexNo] = newWeight;
 }
 
-void gSkinnedMesh::setVertexNormData(int animationNo, int frameNo, int vertexNo, glm::vec3 newWeight) {
+void gSkinnedMesh::setVertexNormData(int animationNo, int frameNo, int vertexNo, const glm::vec3& newWeight) {
 	animatedNormData[animationNo][frameNo][vertexNo] = newWeight;
 }
 
@@ -131,11 +147,14 @@ const glm::vec3& gSkinnedMesh::getVertexNormData(int animationNo, int frameNo, i
 	return animatedNormData[animationNo][frameNo][vertexNo];
 }
 
-void gSkinnedMesh::setVerticesData(int animationNo, int frameNo, std::vector<gVertex> vertices, std::vector<gIndex> indices) {
+void gSkinnedMesh::setVerticesData(int animationNo, int frameNo, const std::vector<gVertex>& vertices, const std::vector<gIndex>& indices) {
 //	this->vertices = vertices;
 //	this->indices = indices;
-	vboframe[animationNo][frameNo].setVertexData(&vertices[0], sizeof(gVertex), vertices.size());
-	if (indices.size() != 0) vboframe[animationNo][frameNo].setIndexData(&indices[0], indices.size());
+	gVbo& vbo = *vboframe[animationNo][frameNo];
+	vbo.setVertexData(&vertices[0], sizeof(gVertex), vertices.size());
+	if (indices.size() != 0) {
+		vbo.setIndexData(&indices[0], indices.size());
+	}
 }
 
 void gSkinnedMesh::setVertexAnimated(bool isVertexAnimated) {
@@ -155,3 +174,11 @@ int gSkinnedMesh::getFrameNo() const {
 	return frameno;
 }
 
+
+const std::vector<glm::vec3>& gSkinnedMesh::getAnimatedPos() const {
+	return animatedPos;
+}
+
+const std::vector<glm::vec3>& gSkinnedMesh::getAnimatedNorm() const {
+	return animatedNorm;
+}

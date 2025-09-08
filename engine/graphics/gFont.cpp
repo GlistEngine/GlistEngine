@@ -6,6 +6,8 @@
  */
 
 #include "gFont.h"
+#include "gTracy.h"
+
 #include <iostream>
 #include <locale>
 #include <codecvt>
@@ -42,6 +44,7 @@ gFont::~gFont() {
 }
 
 bool gFont::load(const std::string& fullPath, int size, bool isAntialiased, int dpi) {
+	G_PROFILE_ZONE_SCOPED_N("gFont::load()");
 	fullpath = fullPath;
 	isantialiased = isAntialiased;
 	fontsize = size;
@@ -82,6 +85,7 @@ bool gFont::loadFont(const std::string& fontPath, int size, bool isAntialiased, 
 }
 
 void gFont::drawText(const std::string& text, float x, float y) {
+	G_PROFILE_ZONE_SCOPED_N("gFont::drawText()");
 	  index1 = 0;
 	  posx1 = x;
 	  posy1 = y;
@@ -108,6 +112,7 @@ void gFont::drawText(const std::string& text, float x, float y) {
 }
 
 void gFont::drawTextVerticallyFlipped(const std::string& text, float x, float y) {
+	G_PROFILE_ZONE_SCOPED_N("gFont::drawTextVerticallyFlipped()");
 	index1 = 0;
 	posx1 = x;
 	posy1 = y;
@@ -140,6 +145,7 @@ void gFont::drawTextVerticallyFlipped(const std::string& text, float x, float y)
 }
 
 void gFont::drawTextHorizontallyFlipped(const std::string& text, float x, float y) {
+	G_PROFILE_ZONE_SCOPED_N("gFont::drawTextHorizontallyFlipped()");
 	index1 = 0;
 	posx1 = x;
 	posy1 = y;
@@ -199,6 +205,7 @@ void gFont::drawTextHorizontallyFlipped(const std::string& text, float x, float 
 }
 
 float gFont::getStringWidth(const std::string& text) {
+	G_PROFILE_ZONE_SCOPED_N("gFont::getStringWidth()");
 	  index2 = 0;
 	  posx2 = 0;
 
@@ -220,6 +227,7 @@ float gFont::getStringWidth(const std::string& text) {
 }
 
 float gFont::getStringHeight(const std::string& text) {
+	G_PROFILE_ZONE_SCOPED_N("gFont::getStringHeight()");
 	  index3 = 0;
 	  posy3 = 0;
 
@@ -263,6 +271,8 @@ int gFont::getDpi() {
 }
 
 void gFont::resizeVectors(int num) {
+	G_PROFILE_ZONE_SCOPED_N("gFont::resizeVectors()");
+	G_PROFILE_ZONE_VALUE(num);
 	if (num <= 0) return;
 
 	characternumlimit = num;
@@ -285,6 +295,7 @@ void gFont::resizeVectors(int num) {
 }
 
 int gFont::getCharID(const int& c) {
+	G_PROFILE_ZONE_SCOPED_N("gFont::getCharID()");
 	tempint = (int)c;
 	tempcharno = 0;
 	//search the �d of a character
@@ -309,6 +320,7 @@ int gFont::getCharID(const int& c) {
 
 
 void gFont::loadChar(const int& charID) {
+	G_PROFILE_ZONE_SCOPED_N("gFont::loadChar()");
 	  lci = charID;
 
 	  lcerr = FT_Load_Glyph(fontface, FT_Get_Char_Index(fontface, loadedcharacters[lci]), isantialiased ?  FT_LOAD_FORCE_AUTOHINT : FT_LOAD_DEFAULT);
@@ -413,6 +425,7 @@ void gFont::loadChar(const int& charID) {
 
 
 bool gFont::insertData(unsigned char* srcData, int srcWidth, int srcHeight, int componentNum, unsigned char* dstData, int dstWidth, int dstHeight, int dstComponentNum, size_t dstFirstX, size_t dstFirstY) const {
+	G_PROFILE_ZONE_SCOPED_N("gFont::insertData()");
 	size_t pdrows = (dstFirstX + srcWidth <= dstWidth ? srcWidth : dstWidth - dstFirstX) * componentNum;
 	size_t pdcolumns = dstFirstY + srcHeight <= dstHeight ? srcHeight : dstHeight - dstFirstY;
 	unsigned char* pddstpix = dstData + ((dstFirstX + dstFirstY * dstWidth) * dstComponentNum);
@@ -430,6 +443,7 @@ bool gFont::insertData(unsigned char* srcData, int srcWidth, int srcHeight, int 
 }
 
 int gFont::getKerning(int c, int previousC) {
+	G_PROFILE_ZONE_SCOPED_N("gFont::getKerning()");
     if(fontface && iskerning) {
         // Convert the characters to indices
         FT_UInt index1 = FT_Get_Char_Index(fontface, previousC);
@@ -447,9 +461,8 @@ int gFont::getKerning(int c, int previousC) {
 //        FT_Vector kerning;
 //        FT_Get_Kerning(fontface, FT_Get_Char_Index(fontface, previousC), FT_Get_Char_Index(fontface, c), FT_KERNING_DEFAULT, &kerning);
 //        return kerning.x >> 6;
-    }else{
-        return 0;
     }
+	return 0;
 }
 
 #ifdef WIN32
@@ -457,6 +470,7 @@ int gFont::getKerning(int c, int previousC) {
 #endif
 
 std::wstring gFont::s2ws(const std::string& s) {
+	G_PROFILE_ZONE_SCOPED_N("gFont::s2ws()");
 #ifdef WIN32
 	int size_needed = MultiByteToWideChar(CP_UTF8, 0, s.c_str(), -1, nullptr, 0);
 	std::wstring wstr(size_needed, 0);

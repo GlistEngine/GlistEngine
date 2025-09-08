@@ -28,12 +28,13 @@ public:
 	DRAWMODE_TRIANGLES = GL_TRIANGLES, DRAWMODE_TRIANGLESTRIP = GL_TRIANGLE_STRIP, DRAWMODE_TRIANGLEFAN = GL_TRIANGLE_FAN;
 
 	gMesh();
-	gMesh(std::vector<gVertex> vertices, std::vector<gIndex> indices, std::vector<gTexture*> textures);
+	gMesh(const std::vector<gVertex>& vertices, const std::vector<gIndex>& indices, const std::vector<gTexture*>& textures);
+	gMesh(const gMesh&);
 	virtual ~gMesh();
 
-	void setVertices(std::vector<gVertex>& vertices, std::vector<gIndex>& indices);
-	void setVertices(std::vector<gVertex>& vertices);
-	void setTextures(std::vector<gTexture*> textures);
+	void setVertices(const std::vector<gVertex>& vertices, const std::vector<gIndex>& indices);
+	void setVertices(const std::vector<gVertex>& vertices);
+	void setTextures(const std::vector<gTexture*>& textures);
 	void setTexture(gTexture* texture);
 	void addTexture(gTexture* tex);
 	gTexture* getTexture(int textureNo);
@@ -43,7 +44,7 @@ public:
 	int getVerticesNum() const;
 	int getIndicesNum() const;
 	const gBoundingBox& getBoundingBox();
-	gVbo* getVbo();
+	gVbo& getVbo();
 	void clear();
 
 	void setName(std::string name);
@@ -69,7 +70,7 @@ protected:
     void drawStart();
     void drawVbo();
     void drawEnd();
-	gVbo vbo;
+	std::unique_ptr<gVbo> vbo;
 	std::vector<gVertex> vertices;
     bool isprojection2d;
 
@@ -79,8 +80,6 @@ private:
 	std::vector<gTexture*> textures;
 	int drawmode;
     gMaterial material;
-    int sli;
-    unsigned int ti;
 
     unsigned int diffuseNr, specularNr, normalNr, heightNr;
     std::string texnumber;
