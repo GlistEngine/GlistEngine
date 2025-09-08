@@ -1,5 +1,5 @@
 /*
- * gPostProcessManager.cpp
+* gPostProcessManager.cpp
  *
  *  Created on: 29 Kas 2021
  *      Author: kayra
@@ -10,10 +10,10 @@
 const int gPostProcessManager::fbocount = 2;
 
 gPostProcessManager::gPostProcessManager() {
-    fbos = nullptr;
-    fbotoread = 0;
-    fbotowrite = 0;
-    lastwrittenfbo = 0;
+	fbos = nullptr;
+	fbotoread = 0;
+	fbotowrite = 0;
+	lastwrittenfbo = 0;
 }
 
 gPostProcessManager::~gPostProcessManager() {
@@ -33,21 +33,21 @@ void gPostProcessManager::addEffect(gBasePostProcess *effect) {
 
 void gPostProcessManager::enable() {
 	fbos[0].bind(); // this is where we will draw our affected objects.
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	renderer->clearScreen(true, true);
 }
 
 void gPostProcessManager::disable() {
-	glDisable(GL_DEPTH_TEST);
+	renderer->disableDepthTest();
 	fbotoread = 0;
 	fbotowrite = 1;
 
 	for(int i = 0; i < effects.size(); i++) {
 		fbos[fbotowrite].bind();
-		glClear(GL_COLOR_BUFFER_BIT);
+		renderer->clearScreen(true, false);
 		effects[i]->use();
-		glBindVertexArray(gFbo::getQuadVao());
+		renderer->bindQuadVAO();
 		fbos[fbotoread].getTexture().bind();
-		glDrawArrays(GL_TRIANGLES, 0, 6);
+		renderer->drawFullscreenQuad();
 
 		lastwrittenfbo = fbotowrite;
 		int temp = fbotoread;
@@ -55,11 +55,11 @@ void gPostProcessManager::disable() {
 		fbotowrite = temp;
 	}
 
-	glBindFramebuffer(GL_FRAMEBUFFER, gFbo::defaultfbo);
-	glClear(GL_COLOR_BUFFER_BIT);
+	renderer->bindDefaultFramebuffer();
+	renderer->clearScreen(true, false);
 
-	gRenderObject::getRenderer()->getFboShader()->use();
-	glBindVertexArray(gFbo::getQuadVao());
+	renderer->getFboShader()->use();
+	renderer->bindQuadVAO();
 	fbos[lastwrittenfbo].getTexture().bind();
-	glDrawArrays(GL_TRIANGLES, 0, 6);
+	renderer->drawFullscreenQuad();
 }

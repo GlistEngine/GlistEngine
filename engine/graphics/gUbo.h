@@ -6,35 +6,34 @@
 
 #include "gObject.h"
 #include "gRenderer.h"
+#include "gRenderObject.h"
 
 template<typename T>
-class gUbo : public gObject {
+class gUbo : public gRenderObject {
 public:
 	template<typename ...Args>
 	gUbo(Args&&... args, int bindingpoint, int usage = GL_DYNAMIC_DRAW) : id(GL_NONE), size(sizeof(T)), bindingpoint(bindingpoint) {
 		data = new T(std::forward<Args>(args)...);
-		G_CHECK_GL(glGenBuffers(1, &id));
-		bind();
-		G_CHECK_GL(glBufferData(GL_UNIFORM_BUFFER, size, nullptr, usage));
-		unbind();
+		id = renderer->genBuffers();
+		renderer->setBufferData(id, nullptr, size, usage);
 		// define the range of the buffer that links to a uniform binding point
-		G_CHECK_GL(glBindBufferRange(GL_UNIFORM_BUFFER, bindingpoint, id, 0, size));
+		renderer->setBufferRange(bindingpoint, id, 0, size);
 		update();
 	}
 
 	~gUbo() {
 		if (id != GL_NONE) {
-			G_CHECK_GL(glDeleteBuffers(1, &id));
+			renderer->deleteBuffer(id);
 		}
 		delete data;
 	}
 
 	void bind() const {
-		G_CHECK_GL(glBindBuffer(GL_UNIFORM_BUFFER, id));
+		renderer->bindBuffer(GL_UNIFORM_BUFFER, id);
 	}
 
 	void unbind() const {
-		G_CHECK_GL(glBindBuffer(GL_UNIFORM_BUFFER, 0));
+		renderer->unbindBuffer(GL_UNIFORM_BUFFER);
 	}
 
 	void update() {
@@ -43,9 +42,7 @@ public:
 
 	void update(int offset, int length) {
 		void* ptr = static_cast<void*>(reinterpret_cast<char*>(data) + offset);
-		bind();
-		G_CHECK_GL(glBufferSubData(GL_UNIFORM_BUFFER, offset, length, ptr));
-		unbind();
+		renderer->bufSubData(id, offset, length, ptr);
 	}
 
 	T* getData() {

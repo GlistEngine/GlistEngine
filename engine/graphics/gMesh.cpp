@@ -218,7 +218,7 @@ void gMesh::drawStart() {
 //		if(material.isDiffuseMapEnabled()) gLogi("gModel") << "diffuse texture name:" << material.getDiffuseMap()->getFilename();
 	    if (material.isDiffuseMapEnabled()) {
 			colorshader->setInt("material.diffusemap", 0); // Diffuse texture unit
-			G_CHECK_GL(glActiveTexture(GL_TEXTURE0));
+	    	renderer->activateTexture(0);
 		    material.bindDiffuseMap();
 	    }
 
@@ -226,7 +226,7 @@ void gMesh::drawStart() {
 	    colorshader->setInt("material.useSpecularMap", material.isDiffuseMapEnabled() && material.isSpecularMapEnabled());
 	    if (material.isDiffuseMapEnabled() && material.isSpecularMapEnabled()) {
 			colorshader->setInt("material.specularmap", 1); // Specular texture unit
-		    G_CHECK_GL(glActiveTexture(GL_TEXTURE1));
+	    	renderer->activateTexture(1);
 		    material.bindSpecularMap();
 	    }
 
@@ -234,7 +234,7 @@ void gMesh::drawStart() {
 	    colorshader->setInt("aUseNormalMap", material.isDiffuseMapEnabled() && material.isNormalMapEnabled());
 	    if (material.isDiffuseMapEnabled() && material.isNormalMapEnabled()) {
 			colorshader->setInt("material.normalmap", 2); // Normal texture unit
-		    G_CHECK_GL(glActiveTexture(GL_TEXTURE2));
+	    	renderer->activateTexture(2);
 		    material.bindNormalMap();
 	    }
 
@@ -288,7 +288,7 @@ void gMesh::drawStart() {
 	    normalNr   = 1;
 	    heightNr   = 1;
 	    for(ti = 0; ti < textures.size(); ti++) {
-	        G_CHECK_GL(glActiveTexture(GL_TEXTURE0 + ti)); // active proper texture unit before binding
+	    	renderer->activateTexture(ti); // active proper texture unit before binding
 
 	        // retrieve texture number (the N in diffuse_textureN)
 	        texnumber = "";
@@ -320,9 +320,9 @@ void gMesh::drawVbo() {
     // draw mesh
     vbo.bind();
     if (vbo.isIndexDataAllocated()) {
-		G_CHECK_GL(glDrawElements(drawmode, vbo.getIndicesNum(), G_INDEX_SIZE, nullptr));
+    	renderer->drawElements(drawmode, vbo.getIndicesNum());
     } else {
-		G_CHECK_GL(glDrawArrays(drawmode, 0, vbo.getVerticesNum()));
+    	renderer->drawElements(drawmode, vbo.getVerticesNum());
     }
     vbo.unbind();
 //    vbo.clear();
@@ -330,7 +330,7 @@ void gMesh::drawVbo() {
 
 void gMesh::drawEnd() {
 	// set everything back to defaults.
-	G_CHECK_GL(glActiveTexture(GL_TEXTURE0));
+	renderer->activateTexture(0);
 }
 
 int gMesh::getVerticesNum() const {

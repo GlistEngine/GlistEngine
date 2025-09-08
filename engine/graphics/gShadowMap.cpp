@@ -103,7 +103,7 @@ void gShadowMap::enable() {
 		renderer->getShadowmapShader()->setMat4("lightMatrix", lightmatrix);
 		depthfbo.bind();
 	//	glViewport(0, 0, width, height);
-		glClear(GL_DEPTH_BUFFER_BIT);
+		renderer->clearScreen(false, true);
 	} else {
 		glViewport(0, 0, renderer->getScreenWidth(), renderer->getScreenHeight());
 		renderer->getColorShader()->use();
@@ -115,8 +115,7 @@ void gShadowMap::enable() {
 		renderer->getColorShader()->setVec3("viewPos", camera->getPosition());
 //		renderer->getColorShader()->setVec3("viewPos", glm::vec3(0, 1, 0));
 
-		glActiveTexture(GL_TEXTURE0 + shadowmaptextureslot);
-		glBindTexture(GL_TEXTURE_2D, depthfbo.getTextureId());
+		renderer->bindTexture(depthfbo.getTextureId(), shadowmaptextureslot);
 		renderpassno = 1;
 	}
 }
