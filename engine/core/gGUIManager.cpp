@@ -9,6 +9,7 @@
 #include "gBaseApp.h"
 #include "gBaseCanvas.h"
 #include "gAppManager.h"
+#include "gTracy.h"
 
 
 gGUIManager::gGUIManager(gBaseApp* root, int width, int height) {
@@ -187,6 +188,7 @@ void gGUIManager::windowResized(int w, int h) {
 }
 
 void gGUIManager::update() {
+	G_PROFILE_ZONE_SCOPED_N("gGUIManager::update");
 	if(!isframeset) return;
 
 	currentframe->update();
@@ -236,6 +238,7 @@ void gGUIManager::update() {
 }
 
 void gGUIManager::draw() {
+	G_PROFILE_ZONE_SCOPED_N("gGUIManager::draw()");
 	if(!isframeset) return;
 
 	currentframe->draw();

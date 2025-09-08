@@ -48,6 +48,8 @@ if(NOT DEFINED BUILD_TYPE)
     set(BUILD_TYPE SHARED)
 endif()
 
+option(ENABLE_TRACY "Enables the tracy profiler." OFF)
+
 set(CMAKE_THREAD_LIBS_INIT "-lpthread")
 set(CMAKE_HAVE_THREADS_LIBRARY 1)
 set(CMAKE_USE_WIN32_THREADS_INIT 0)
@@ -83,6 +85,40 @@ endif(WIN32)
 if(NOT WIN32)
 	set(MINGW64_DIR ${SYSZBIN_DIR}/mingw64)
 endif(NOT WIN32)
+endif()
+
+if(ENABLE_TRACY)
+#if(CMAKE_BUILD_TYPE MATCHES "Debug|RelWithDebInfo")
+	message(STATUS "Tracy profiling enabled for ${CMAKE_BUILD_TYPE} build")
+	include(FetchContent)
+	FetchContent_Declare(
+	    tracy
+	    GIT_REPOSITORY https://github.com/wolfpld/tracy.git
+	    GIT_TAG v0.12.2  # or whatever version you want
+	    GIT_SHALLOW TRUE
+	    GIT_PROGRESS TRUE
+	)
+	FetchContent_MakeAvailable(tracy)
+	FetchContent_GetProperties(tracy)
+	if(tracy_POPULATED)
+		message(STATUS "Tracy successfully downloaded and configured")
+		set(TRACY_ENABLE ON CACHE BOOL "Tracy profiling enabled" FORCE)
+		# Optional: Verify Tracy target exists
+		if(TARGET Tracy::TracyClient)
+			message(STATUS "Tracy::TracyClient target available")
+			set(LIB_TRACY Tracy::TracyClient)
+		elseif(TARGET tracy)
+			message(STATUS "tracy target available")
+			set(LIB_TRACY tracy)
+		else()
+			message(WARNING "Tracy downloaded but no target found")
+			set(TRACY_ENABLE OFF CACHE BOOL "Tracy target not found" FORCE)
+		endif()
+	else()
+		message(WARNING "Failed to download/configure Tracy - profiling disabled")
+		set(TRACY_ENABLE OFF CACHE BOOL "Tracy download failed" FORCE)
+	endif()
+
 endif()
 
 set(GENERATED_HEADERS_DIR "${CMAKE_BINARY_DIR}/generated")
@@ -260,6 +296,12 @@ set(SRC_FILES
 	${ENGINE_DIR}/graphics/posteffects/kerneleffects/gEdgeDetection.cpp
 )
 
+if(DEFINED TRACY_ENABLE)
+	list(PREPEND SRC_FILES
+			${ENGINE_DIR}/utils/gTracy.cpp
+	)
+endif()
+
 if(WIN32)
 	list(APPEND SRC_FILES
 		${ENGINE_DIR}/utils/gWindows.cpp
@@ -359,6 +401,13 @@ set(ENGINE_INCLUDES
 )
 
 list(APPEND INC_DIRS ${ENGINE_INCLUDES})
+
+if(DEFINED TRACY_ENABLE)
+	target_compile_definitions(GlistEngine PUBLIC TRACY_ENABLE)
+	list(APPEND INC_DIRS
+			${LIBS_DIR}/tracy/public
+	)
+endif()
 
 if(WIN32)
 	list(APPEND INC_DIRS
@@ -533,6 +582,13 @@ if(WIN32)
 #		avdevice-58
 #		avcodec-58
 	)
+	if(DEFINED TRACY_ENABLE)
+		list(APPEND LINK_LIBS
+				ws2_32      # Windows Sockets API
+				wsock32     # Additional socket functions
+				${LIB_TRACY}
+		)
+	endif()
 elseif(ANDROID)
     # These are added by gipAndroid plugin
     # Do not remove the if, otherwise linux libraries will be linked/included.

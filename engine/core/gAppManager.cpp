@@ -14,6 +14,7 @@
 
 #include <thread>
 #include "gGUIAppThread.h"
+#include "gTracy.h"
 
 // Platform specific window implementation
 #if defined(WIN32) || defined(LINUX) || TARGET_OS_OSX
@@ -308,6 +309,9 @@ void gAppManager::setWindowSizeLimits(int minWidth, int minHeight, int maxWidth,
 }
 
 void gAppManager::setScreenSize(int width, int height) {
+	G_PROFILE_ZONE_SCOPED_N("gAppManager::setScreenSize()");
+	G_PROFILE_ZONE_VALUE(width);
+	G_PROFILE_ZONE_VALUE(height);
     gRenderObject::setScreenSize(width, height);
     if(iscanvasset && canvasmanager->getCurrentCanvas()) canvasmanager->getCurrentCanvas()->windowResized(width, height);
     if(iscanvasset && guimanager->isframeset) guimanager->windowResized(width, height);
@@ -419,7 +423,9 @@ void gAppManager::setDeviceOrientation(DeviceOrientation orientation) {
 
 void gAppManager::tick() {
     totalupdates++;
+	G_PROFILE_FRAME_MARK();
     if(!usewindow) {
+		G_PROFILE_ZONE_SCOPED_N("gAppManager::tick(): Non Window Update");
         app->update();
     	for (gBaseComponent*& component : gBaseComponent::usedcomponents) {
     		component->update();
@@ -431,18 +437,28 @@ void gAppManager::tick() {
     // todo joystick
     if(canvasmanager) canvasmanager->update();
     if(guimanager) guimanager->update();
-    if(!isguiapp) app->update();
-	for (gBaseComponent*& component : gBaseComponent::usedcomponents) {
-		component->update();
-	}
-	for (gBasePlugin*& component : gBasePlugin::usedplugins) {
-		component->update();
-	}
+    if(!isguiapp) {
+		G_PROFILE_ZONE_SCOPED_N("gAppManager::tick(): App Update");
+    	app->update();
+    }
+    {
+		G_PROFILE_ZONE_SCOPED_N("gAppManager::tick(): Components Update");
+    	for (gBaseComponent*& component : gBaseComponent::usedcomponents) {
+    		component->update();
+    	}
+    }
+    {
+		G_PROFILE_ZONE_SCOPED_N("gAppManager::tick(): Plugins Update");
+    	for (gBasePlugin*& component : gBasePlugin::usedplugins) {
+    		component->update();
+    	}
+    }
 
     gBaseCanvas* canvas = nullptr;
     if(!isguiapp) {
 		if(canvasmanager) canvas = canvasmanager->getCurrentCanvas();
 		if(canvas) {
+			G_PROFILE_ZONE_SCOPED_N("gAppManager::tick(): Canvas Update");
 			canvas->update();
 		}
     }
@@ -452,6 +468,8 @@ void gAppManager::tick() {
 			if(canvas) {
 				canvas->clearBackground();
 				for (int i = 0; i < renderpassnum; i++) {
+					G_PROFILE_ZONE_SCOPED_N("gGUIManager::tick(): Render Pass");
+					G_PROFILE_ZONE_VALUE(i);
 					renderpassno = i;
 					canvas->getRenderer()->updateLights();
 					canvas->draw();
@@ -459,7 +477,9 @@ void gAppManager::tick() {
 			}
     	}
 
-		if(guimanager) guimanager->draw();
+		if(guimanager) {
+			guimanager->draw();
+		}
         totaldraws++;
     }
 	if(usewindow) {
@@ -858,13 +878,12 @@ void gAppManager::updateTime() {
 }
 
 void gAppManager::submitToMainThread(std::function<void()> fn) {
-    // todo use scoped_lock when switched to c++17
     std::unique_lock<std::mutex> lock(mainthreadqueuemutex);
     mainthreadqueue.emplace_back(fn);
 }
 
 void gAppManager::executeQueue() {
-    // todo use scoped_lock when switched to c++17
+	G_PROFILE_ZONE_SCOPED_N("gAppManager::executeQueue()");
     std::unique_lock<std::mutex> lock(mainthreadqueuemutex);
     for (auto& func : mainthreadqueue) {
         func();
@@ -873,6 +892,7 @@ void gAppManager::executeQueue() {
 }
 
 void gAppManager::preciseSleep(double seconds) {
+	G_PROFILE_ZONE_SCOPED_N("gAppManager::preciseSleep()");
     double estimate = 5e-3;
     double mean = 5e-3;
     double m2 = 0;

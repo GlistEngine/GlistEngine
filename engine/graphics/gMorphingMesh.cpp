@@ -6,6 +6,7 @@
  */
 
 #include "gMorphingMesh.h"
+#include "gTracy.h"
 
 gMorphingMesh::gMorphingMesh() {
 	oldtargetmeshid = currenttargetmeshid = -1;
@@ -47,7 +48,7 @@ int gMorphingMesh::addTargetMesh(gMesh *targetMesh) {
 
 void gMorphingMesh::setBaseMesh(gMesh *baseMesh) {
 	if (baseMesh == nullptr) {
-		gLoge("gMorphingMesh::setBaseMesh::The given basemesh pointer's value is nullptr. Cannot set the base mesh.");
+		gLoge("gMorphingMesh::setBaseMesh") << "The given basemesh pointer's value is nullptr. Cannot set the base mesh.";
 		return;
 	}
 	this->basemesh = baseMesh;
@@ -60,7 +61,7 @@ void gMorphingMesh::setBaseMesh(gMesh *baseMesh) {
 void gMorphingMesh::setCurrentTargetMeshId(int targetMeshId) {
 	//Exception check
 	if (targetMeshId < 0 || targetMeshId >= targetpositions.size()) {
-		gLoge("gMorphingMesh::setCurrentTargetMeshId::Cannot assign the given current target mesh id.");
+		gLoge("gMorphingMesh::setCurrentTargetMeshId::") << "Cannot assign the given current target mesh id.";
 		return;
 	}
 	//Actual statement
@@ -68,11 +69,13 @@ void gMorphingMesh::setCurrentTargetMeshId(int targetMeshId) {
 }
 
 void gMorphingMesh::interpolate(bool forceInterpolation) {
+	G_PROFILE_ZONE_SCOPED_N("gMorphingMesh::interpolate");
+	G_PROFILE_ZONE_VALUE(forceInterpolation);
 	//Checking if the current frame is as the old frame for optimization. However only if the datas are not animated and not stored on vram.
-	if ((!ismorphinganimated && !ismorphinganimationstoredonvram) && (!forceInterpolation || (oldframeid == currentframeid && oldtargetmeshid == currenttargetmeshid))) return;
+	if (!ismorphinganimated && !ismorphinganimationstoredonvram && (!forceInterpolation || (oldframeid == currentframeid && oldtargetmeshid == currenttargetmeshid))) return;
 	//Exception check
 	if (currenttargetmeshid < 0 || basemesh == nullptr) {
-		gLoge("gMorphingMesh::interpolate::Cannot interpolate the morphing mesh since either there aren't any target mesh added for morphig mesh or there aren't any base mesh setted.");
+		gLoge("gMorphingMesh::interpolate") << "Cannot interpolate the morphing mesh since either there aren't any target mesh added for morphig mesh or there aren't any base mesh setted.";
 		return;
 	}
 	//Setting vertices of the frame/frames depending on the options.
@@ -91,8 +94,7 @@ void gMorphingMesh::interpolate(bool forceInterpolation) {
 			//Setting the olds as currents. Since they are going to be checked in other interpolation to avoid unnecessary frame calculations.
 			oldframeid = currentframeid;
 			oldtargetmeshid = currenttargetmeshid;
-		}
-		else {
+		} else {
 			//Clearing the old frames' datas and resizing them according to new ones.
 			framepositions[currenttargetmeshid].clear();
 			framepositions[currenttargetmeshid].resize(framecounts[currenttargetmeshid]);
@@ -109,8 +111,7 @@ void gMorphingMesh::interpolate(bool forceInterpolation) {
 				}
 			}
 		}
-	}
-	else {
+	} else {
 		//Clearing the old frames' datas and resizing them according to new ones.
 		vboframes[currenttargetmeshid].clear();
 		vboframes[currenttargetmeshid].resize(framecounts[currenttargetmeshid]);
@@ -132,7 +133,7 @@ void gMorphingMesh::interpolate(bool forceInterpolation) {
 void gMorphingMesh::setCurrentFrameId(int frameId) {
 	//Exception check
 	if (frameId < 0 || frameId >= framecounts[currenttargetmeshid]) {
-		gLoge("gMorphingMesh::Cannot change the current frame with the desired value since it is beyond the bounds([0, framescount]).");
+		gLoge("gMorphingMesh") << "Cannot change the current frame with the desired value since it is beyond the bounds([0, framescount]).";
 		return;
 	}
 	//Actual statement
@@ -145,7 +146,7 @@ void gMorphingMesh::nextFrameId() {
 
 void gMorphingMesh::setSpeed(int speed) {
 	if (speed < 0) {
-		gLoge("gMorphingMesh::setSpeed::Cannot assign speed since it is a negative value.");
+		gLoge("gMorphingMesh::setSpeed") << "Cannot assign speed since it is a negative value.";
 		return;
 	}
 	this->speed = speed;
@@ -153,7 +154,7 @@ void gMorphingMesh::setSpeed(int speed) {
 
 void gMorphingMesh::setFrameCount(int targetMeshId, int frameCount) {
 	if (targetMeshId < 0 || targetMeshId >= targetpositions.size()) {
-		gLoge("gMorphingMesh::setFrameCount::Cannot assign the frame count because the desired target mesh is out of beyonds.");
+		gLoge("gMorphingMesh::setFrameCount") << "Cannot assign the frame count because the desired target mesh is out of beyonds.";
 		return;
 	}
 	framecounts[targetMeshId] = frameCount;
@@ -161,14 +162,14 @@ void gMorphingMesh::setFrameCount(int targetMeshId, int frameCount) {
 
 void gMorphingMesh::setTargetPosition(int targetId, int positionId, glm::vec3 newPosition) {
 	if (targetId < 0 || targetId >= targetpositions.size() || positionId < 0 || positionId >= targetpositions[targetId].size()) {
-		gLoge("gMorphingMesh::setTargetPosition::Couldn't set the position as the desired position since either targetid is beyond bounds or positionid is beyond bounds.");
+		gLoge("gMorphingMesh::setTargetPosition") << "Couldn't set the position as the desired position since either targetid is beyond bounds or positionid is beyond bounds.";
 	}
 	targetpositions[targetId][positionId] = newPosition;
 }
 
 void gMorphingMesh::setTargetNormal(int targetId, int normalId, glm::vec3 newNormal) {
 	if (targetId < 0 || targetId >= targetnormals.size() || normalId < 0 || normalId >= targetnormals[targetId].size()) {
-		gLoge("gMorphingMesh::setTargetnormal::Couldn't set the normal as the desired normal since either targetid is beyond bounds or normalid is beyond bounds.");
+		gLoge("gMorphingMesh::setTargetNormal") << "Couldn't set the normal as the desired normal since either targetid is beyond bounds or normalid is beyond bounds.";
 	}
 	targetnormals[targetId][normalId] = newNormal;
 }
@@ -184,7 +185,7 @@ int gMorphingMesh::getCurrentFrameId() const {
 int gMorphingMesh::getFrameCount(int targetMeshId) const {
 	//Exception check
 	if (targetMeshId < 0 || targetMeshId >= framecounts.size()) {
-		gLoge("gMorphingMesh::getFrameCount::Cannot return the frame count because your desired target mesh's id isn't found in target meshs' vector.");
+		gLoge("gMorphingMesh::getFrameCount") << "Cannot return the frame count because your desired target mesh's id isn't found in target meshs' vector.";
 		return -1;
 	}
 	//Actual statement
@@ -225,6 +226,7 @@ void gMorphingMesh::setMorphingAnimationStoredOnVram(bool isMorphingAnimationSto
 }
 
 void gMorphingMesh::draw() {
+	G_PROFILE_ZONE_SCOPED_N("gMorphingMesh::draw()");
 	if (!ismorphinganimationstoredonvram) {
 		if (ismorphinganimated && (currentframeid != oldframeid || currenttargetmeshid != oldtargetmeshid)) {
 			//Setting the vertices' datas as the stored datas.
@@ -238,8 +240,7 @@ void gMorphingMesh::draw() {
 			oldframeid = currentframeid;
 		}
 		gMesh::draw();
-	}
-	else {
+	} else {
 		if (!isenabled) return;
 
 		drawStart();
