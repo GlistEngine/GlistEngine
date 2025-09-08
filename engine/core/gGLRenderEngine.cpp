@@ -401,23 +401,24 @@ GLuint gGLRenderEngine::loadProgram(const char* vertexSource, const char* fragme
 	G_CHECK_GL(glCompileShader(fragment));
 	checkCompileErrors(fragment, "FRAGMENT");
 
-	// if geometry shader is given, compile geometry shader
-#if defined(WIN32) || defined(LINUX)
-	if(geometrySource != nullptr) {
-		geometry = glCreateShader(GL_GEOMETRY_SHADER);
-		G_CHECK_GL(glShaderSource(geometry, 1, &geometrySource, nullptr));
-		G_CHECK_GL(glCompileShader(geometry));
-		checkCompileErrors(geometry, "GEOMETRY");
-	}
-#endif
-
+	GLuint id;
 	// shader Program
-	G_CHECK_GL2(GLuint id, glCreateProgram());
+	G_CHECK_GL2(id, glCreateProgram());
 	G_CHECK_GL(glAttachShader(id, vertex));
 	G_CHECK_GL(glAttachShader(id, fragment));
+
 #if defined(WIN32) || defined(LINUX)
-	if(geometrySource != nullptr)
-		G_CHECK_GL(glAttachShader(id, geometry));
+	if (geometrySource != nullptr) {
+		G_CHECK_GL2(geometry, glCreateShader(GL_GEOMETRY_SHADER));
+		if (geometry != 0) {
+			G_CHECK_GL(glShaderSource(geometry, 1, &geometrySource, nullptr));
+			G_CHECK_GL(glCompileShader(geometry));
+			checkCompileErrors(geometry, "GEOMETRY");
+			G_CHECK_GL(glAttachShader(id, geometry));
+		} else {
+			gLoge("Geometry Shader") << "Failed to create geometry shader: not supported by this context";
+		}
+	}
 #endif
 	G_CHECK_GL(glLinkProgram(id));
 	checkCompileErrors(id, "PROGRAM");
