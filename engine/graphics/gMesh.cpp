@@ -16,6 +16,7 @@
 
 #include "gLight.h"
 #include "gShader.h"
+#include "gTracy.h"
 
 gMesh::gMesh() {
 	name = "";
@@ -66,16 +67,37 @@ const std::string& gMesh::getName() const {
 	return name;
 }
 
-void gMesh::setVertices(std::vector<gVertex> vertices, std::vector<gIndex> indices) {
+void gMesh::setVertices(std::vector<gVertex>& vertices, std::vector<gIndex>& indices) {
+	bool resetinitialboundingbox = this->vertices.size() != vertices.size() || this->indices.size() != indices.size();
 	this->vertices = vertices;
 	this->indices = indices;
 	vbo.setVertexData(vertices.data(), sizeof(gVertex), vertices.size());
 	if (!indices.empty()) {
 		vbo.setIndexData(indices.data(), indices.size());
+	} else {
+		vbo.setIndexData(nullptr, 0);
 	}
-	recalculateBoundingBox();
-	initialboundingbox = boundingbox;
+	if (resetinitialboundingbox) {
+		recalculateBoundingBox();
+		initialboundingbox = boundingbox;
+	} else {
+		needsboundingboxrecalculation = true;
+	}
 //	initialboundingbox.setTransformationMatrix(localtransformationmatrix);
+}
+
+void gMesh::setVertices(std::vector<gVertex>& vertices) {
+	bool resetinitialboundingbox = this->vertices.size() != vertices.size() || this->indices.size() != 0;
+	this->vertices = vertices;
+	this->indices.clear();
+	vbo.setVertexData(vertices.data(), sizeof(gVertex), vertices.size());
+	vbo.setIndexData(nullptr, 0);
+	if (resetinitialboundingbox) {
+		recalculateBoundingBox();
+		initialboundingbox = boundingbox;
+	} else {
+		needsboundingboxrecalculation = true;
+	}
 }
 
 std::vector<gVertex>& gMesh::getVertices() {
@@ -162,6 +184,7 @@ gMaterial* gMesh::getMaterial() {
 
 
 void gMesh::draw() {
+	G_PROFILE_ZONE_SCOPED_N("gMesh::draw()");
 	if (!isenabled) return;
 
 	drawStart();
@@ -170,6 +193,7 @@ void gMesh::draw() {
 }
 
 void gMesh::processTransformationMatrix() {
+	G_PROFILE_ZONE_SCOPED_N("gMesh::processTransformationMatrix()");
 	if (needsboundingboxrecalculation) {
 		gNode::processTransformationMatrix();
 		return;
@@ -192,6 +216,7 @@ void gMesh::processTransformationMatrix() {
 }
 
 void gMesh::drawStart() {
+	G_PROFILE_ZONE_SCOPED_N("gMesh::drawStart()");
 	if (isshadowmappingenabled && renderpassno == 0) {
 		renderer->getShadowmapShader()->use();
 		renderer->getShadowmapShader()->setMat4("model", localtransformationmatrix);
@@ -317,6 +342,7 @@ void gMesh::drawStart() {
 }
 
 void gMesh::drawVbo() {
+	G_PROFILE_ZONE_SCOPED_N("gMesh::drawVbo()");
     // draw mesh
     vbo.bind();
     if (vbo.isIndexDataAllocated()) {
@@ -329,6 +355,7 @@ void gMesh::drawVbo() {
 }
 
 void gMesh::drawEnd() {
+	G_PROFILE_ZONE_SCOPED_N("gMesh::drawEnd()");
 	// set everything back to defaults.
 	renderer->activateTexture(0);
 }
@@ -346,6 +373,7 @@ gVbo* gMesh::getVbo() {
 }
 
 const gBoundingBox& gMesh::getBoundingBox() {
+	G_PROFILE_ZONE_SCOPED_N("gMesh::getBoundingBox()");
 	if (needsboundingboxrecalculation) {
 		recalculateBoundingBox();
 	}
@@ -353,6 +381,7 @@ const gBoundingBox& gMesh::getBoundingBox() {
 }
 
 void gMesh::recalculateBoundingBox() {
+	G_PROFILE_ZONE_SCOPED_N("gMesh::recalculateBoundingBox()");
 	// Ensure the vertex list is not empty
 	if (vertices.empty()) {
 		// Handle empty vertices case appropriately

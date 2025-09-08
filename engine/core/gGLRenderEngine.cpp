@@ -10,6 +10,7 @@
 #include "gGrid.h"
 #include "gImage.h"
 #include "gShader.h"
+#include "gTracy.h"
 
 void gCheckGLErrorAndPrint(const std::string& prefix, const std::string& func, int line) {
 	GLenum error = glGetError();
@@ -153,6 +154,7 @@ bool gGLRenderEngine::isAlphaTestEnabled() {
  * Rotates The Pixel Data upside down. Hence rotates flips the image upside down
  */
 void flipVertically(unsigned char* pixelData, int width, int height, int numChannels) {
+	G_PROFILE_ZONE_SCOPED_N("flipVertically()");
 	int rowsize = width * numChannels;
 	unsigned char* temprow = new unsigned char[rowsize];
 
@@ -170,6 +172,7 @@ void flipVertically(unsigned char* pixelData, int width, int height, int numChan
 }
 
 void gGLRenderEngine::takeScreenshot(gImage& img, int x, int y, int width, int height) {
+	G_PROFILE_ZONE_SCOPED_N("gGLRenderEngine::takeScreenshot()");
 	unsigned char* pixeldata = new unsigned char[width * height * 4];
 	G_CHECK_GL(glReadPixels(x, getHeight() - y - height, width, height, GL_RGBA, GL_UNSIGNED_BYTE, pixeldata));
 	flipVertically(pixeldata, width, height, 4);
@@ -179,6 +182,7 @@ void gGLRenderEngine::takeScreenshot(gImage& img, int x, int y, int width, int h
 }
 
 void gGLRenderEngine::takeScreenshot(gImage& img) {
+	G_PROFILE_ZONE_SCOPED_N("gGLRenderEngine::takeScreenshot()");
 	int height = gBaseApp::getAppManager()->getWindow()->getHeight();
 	int width = gBaseApp::getAppManager()->getWindow()->getWidth();
 	unsigned char* pixeldata = new unsigned char[width * height * 4];

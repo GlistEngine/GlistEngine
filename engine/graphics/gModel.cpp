@@ -12,8 +12,8 @@
 #elif defined(__ARM_NEON)
 #include <arm_neon.h>
 #endif
-
 #include "gCamera.h"
+#include "gTracy.h"
 
 
 gModel::gModel() {
@@ -304,6 +304,7 @@ void gModel::setTransformationMatrix(const glm::mat4& transformationMatrix) {
 }
 
 void gModel::draw() {
+	G_PROFILE_ZONE_SCOPED_N("gModel::draw()");
 	for(int i = 0; i < meshes.size(); i++) {
 		if (isenablefrustumculling && renderer->getCamera() &&
 			!renderer->getCamera()->isInFrustum(meshes[i]->getBoundingBox())) {
@@ -546,6 +547,7 @@ int gModel::getAnimationNum() const {
  * Set animation position to given position. Position should be a normalized value;
  */
 void gModel::animate(float animationPosition) {
+	G_PROFILE_ZONE_SCOPED_N("gModel::animate()");
 	if(!isanimated) return;
 
 	animationpositionold = animationposition;
@@ -567,6 +569,7 @@ void gModel::animate(float animationPosition) {
 }
 
 void gModel::updateAnimationNodes() {
+	G_PROFILE_ZONE_SCOPED_N("gModel::updateAnimationNodes()");
 	int numOfAnimations = scene->mNumAnimations;
 	if (numOfAnimations == 0) return;
 
@@ -656,6 +659,7 @@ void gModel::updateAnimationNodes() {
 }
 
 void gModel::updateBones(gSkinnedMesh* gmesh, aiMesh* aimesh) {
+	G_PROFILE_ZONE_SCOPED_N("gModel::updateBones()");
 	gmesh->resizeAnimation(aimesh->mNumVertices);
 
 	std::vector<aiMatrix4x4> boneMatrices(aimesh->mNumBones);
@@ -710,6 +714,7 @@ void gModel::updateBones(gSkinnedMesh* gmesh, aiMesh* aimesh) {
 }
 
 void gModel::updateVbo(gSkinnedMesh* gmesh) {
+	G_PROFILE_ZONE_SCOPED_N("gModel::updateVbo()");
 	std::vector<gVertex>& vertexarray = gmesh->getVertices();
 	std::vector<gIndex>& indexarray = gmesh->getIndices();
 	for (int i = 0; i < gmesh->getVbo()->getVerticesNum(); i++) {
@@ -731,6 +736,7 @@ float gModel::getAnimationPosition() const {
 }
 
 void gModel::setAnimationFramerate(float animationFramerate) {
+	G_PROFILE_ZONE_SCOPED_N("gModel::setAnimationFramerate()");
 	animationframerate = animationFramerate;
 #if defined(WIN32) || defined(TARGET_OS_OSX)
 	setAnimationFrameNum(getAnimationDuration() * animationframerate / scene->mAnimations[0]->mTicksPerSecond);
@@ -744,6 +750,7 @@ float gModel::getAnimationFramerate() const {
 }
 
 void gModel::setAnimationFrameNum(int animationKeyNum) {
+	G_PROFILE_ZONE_SCOPED_N("gModel::setAnimationFrameNum()");
 	if (animationKeyNum == animationframenum) return;
 	animationframenum = animationKeyNum;
 	generateAnimationKeys();
@@ -828,6 +835,8 @@ void gModel::generateAnimationKeys() {
 }
 
 void gModel::makeVertexAnimated(bool storeOnVram) {
+	G_PROFILE_ZONE_SCOPED_N("gModel::makeVertexAnimated()");
+	G_PROFILE_ZONE_VALUE(storeOnVram);
 	if (!isvertexanimated) {
 		isvertexanimationstoredonvram = storeOnVram;
 		prepareVertexAnimationData();
@@ -842,6 +851,7 @@ void gModel::makeVertexAnimated(bool storeOnVram) {
 }
 
 void gModel::prepareVertexAnimationData() {
+	G_PROFILE_ZONE_SCOPED_N("gModel::prepareVertexAnimationData()");
     int mnum = meshes.size();
     int anum = scene->mNumAnimations;
     int fnum = getAnimationFrameNum();
@@ -968,6 +978,7 @@ gBoundingBox& gModel::getInitialBoundingBox() {
 }
 
 void gModel::recalculateBoundingBox() {
+	G_PROFILE_ZONE_SCOPED_N("gModel::recalculateBoundingBox()");
 	// Ensure the mesh list is not empty
 	if (meshes.empty()) {
 		// Handle empty meshes case appropriately

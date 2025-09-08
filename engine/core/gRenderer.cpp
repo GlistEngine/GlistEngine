@@ -29,6 +29,7 @@
 #include "stb/stb_image_write.h"
 #include "gBaseApp.h"
 #include "gImage.h"
+#include "gTracy.h"
 
 const int gRenderer::SCREENSCALING_NONE = 0;
 const int gRenderer::SCREENSCALING_MIPMAP = 1;
@@ -699,6 +700,7 @@ void gRenderer::removeAllSceneLights() {
 }
 
 void gRenderer::updateLights() {
+	G_PROFILE_ZONE_SCOPED_N("gRenderer::updateLights()");
 	gSceneLights* data = lightsubo->getData();
 	int previouslightnum = data->lightnum;
 	data->lightnum = std::min((int) scenelights.size(), GLIST_MAX_LIGHTS);

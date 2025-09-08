@@ -31,7 +31,8 @@ public:
 	gMesh(std::vector<gVertex> vertices, std::vector<gIndex> indices, std::vector<gTexture*> textures);
 	virtual ~gMesh();
 
-	void setVertices(std::vector<gVertex> vertices, std::vector<gIndex> indices = std::vector<gIndex>());
+	void setVertices(std::vector<gVertex>& vertices, std::vector<gIndex>& indices);
+	void setVertices(std::vector<gVertex>& vertices);
 	void setTextures(std::vector<gTexture*> textures);
 	void setTexture(gTexture* texture);
 	void addTexture(gTexture* tex);
