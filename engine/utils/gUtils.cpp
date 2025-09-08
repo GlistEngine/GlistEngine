@@ -26,6 +26,7 @@
 #if defined(WIN32)
 #include <windows.h>
 #include <shellapi.h>
+#include <iomanip>
 #endif
 
 
@@ -103,6 +104,7 @@ float gRandomf() {
 }
 
 uint64_t gGetSystemTimeMillis() {
+#if !defined(WIN32)
 	struct timespec tnow;
 	clock_gettime(CLOCK_MONOTONIC, &tnow);
 	time_t tseconds = tnow.tv_sec;
@@ -112,6 +114,12 @@ uint64_t gGetSystemTimeMillis() {
 	auto nanoseconds = std::chrono::nanoseconds(tnanoseconds);
 	return (std::chrono::duration_cast<std::chrono::milliseconds>(seconds) +
 			std::chrono::duration_cast<std::chrono::milliseconds>(nanoseconds)).count();
+#else
+    auto now = std::chrono::system_clock::now();
+    auto duration = now.time_since_epoch();
+    auto milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(duration).count();
+    return milliseconds;
+#endif
 }
 
 unsigned int gGetUnixTime() {
