@@ -4,6 +4,8 @@ var classgSkinnedMesh =
     [ "~gSkinnedMesh", "classgSkinnedMesh.html#ac1d76e724f5cc1ce95e04696c566a2f2", null ],
     [ "clearAnimation", "classgSkinnedMesh.html#a7a3b2f69f0d3741e07b49744f9d852a4", null ],
     [ "draw", "classgSkinnedMesh.html#a1fd1ccc13c2608f6e415112906eb0bd4", null ],
+    [ "getAnimatedNorm", "classgSkinnedMesh.html#a800c8ad603dd54510dab8790940b9382", null ],
+    [ "getAnimatedPos", "classgSkinnedMesh.html#ab9494769a25720f2becda3c109d5e9fe", null ],
     [ "getFrameNo", "classgSkinnedMesh.html#aaded407b664f537edefe4ebfeef4f4da", null ],
     [ "getVertexNorm", "classgSkinnedMesh.html#a1f3f5abed0458ce3e644677a12b84a4b", null ],
     [ "getVertexNormData", "classgSkinnedMesh.html#aaa0080bcc84d5a1eddb3ec0751463cf5", null ],
@@ -16,9 +18,9 @@ var classgSkinnedMesh =
     [ "setFrameNo", "classgSkinnedMesh.html#a1035865e2f3c5930499d6dae4abefa82", null ],
     [ "setVertexAnimated", "classgSkinnedMesh.html#ae4d0348a74fa4982a28371adf0797ca3", null ],
     [ "setVertexAnimationStoredOnVram", "classgSkinnedMesh.html#ad7bc161e72a7ec26693e36d7dfdbe771", null ],
-    [ "setVertexNorm", "classgSkinnedMesh.html#a311ef4d91c7d88f75584e35c8cbbc0f8", null ],
-    [ "setVertexNormData", "classgSkinnedMesh.html#a7eaeab4560445b3d9346a3b1532e2986", null ],
-    [ "setVertexPos", "classgSkinnedMesh.html#a9180b25260ade056e1335029714cdd92", null ],
-    [ "setVertexPosData", "classgSkinnedMesh.html#aa0441d7feb98a6d44b0cd066413765af", null ],
-    [ "setVerticesData", "classgSkinnedMesh.html#acc29e47c7d8955e6d293b3295289f270", null ]
+    [ "setVertexNorm", "classgSkinnedMesh.html#aa8662da07b8eff89fb711d9d07882f24", null ],
+    [ "setVertexNormData", "classgSkinnedMesh.html#a69073f580fb21912856dcfa52b90e152", null ],
+    [ "setVertexPos", "classgSkinnedMesh.html#a7aa318e97b3d1cc2a57c5bc2c81b7cdf", null ],
+    [ "setVertexPosData", "classgSkinnedMesh.html#ac345c0228130cd51929872b486bd164d", null ],
+    [ "setVerticesData", "classgSkinnedMesh.html#abe7c86b96e2d7282c52e7f5022e361cb", null ]
 ];

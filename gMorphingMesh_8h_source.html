@@ -271,7 +271,7 @@ $(document).ready(function(){initNavTree('gMorphingMesh_8h_source.html',''); ini
 <div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>    <span class="comment">//The animated frames&#39; data.</span></div>
 <div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>    std::vector&lt;std::vector&lt;std::vector&lt;glm::vec3&gt;&gt;&gt; framepositions, framenormals;</div>
 <div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>    <span class="comment">//The frames data on vram.</span></div>
-<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>    std::vector&lt;std::vector&lt;gVbo&gt;&gt; vboframes;</div>
+<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>    std::vector&lt;std::vector&lt;std::unique_ptr&lt;gVbo&gt;&gt;&gt; vboframes;</div>
 <div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>    <span class="comment">//The current target mesh(that is going to be end point of interpolation)&#39;s index on the targetpositions vector.</span></div>
 <div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>    <span class="comment">//The current frame id indicates how much should the interpolation progress.</span></div>
 <div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>    <span class="comment">//The speed is used in function nextFrame which adjusts the frame automatically as a jump indicator.</span></div>
@@ -289,13 +289,13 @@ $(document).ready(function(){initNavTree('gMorphingMesh_8h_source.html',''); ini
 <div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span><span class="comment">     * @brief extracts the positions from the given vertices to the targetpositions vector.</span></div>
 <div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span><span class="comment">     * @param targetvertices is the vertex vector of target.</span></div>
 <div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span><span class="comment">     */</span></div>
-<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>    <span class="keywordtype">void</span> addTargetPositions(std::vector&lt;gVertex&gt;&amp; targetvertices);</div>
+<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>    <span class="keywordtype">void</span> addTargetPositions(<span class="keyword">const</span> std::vector&lt;gVertex&gt;&amp; targetvertices);</div>
 <div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span> </div>
 <div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>    <span class="comment">/*</span></div>
 <div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span><span class="comment">     * @brief extracts the normals from the given vertices to the targetnormals vector.</span></div>
 <div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span><span class="comment">     * @param targetvertices is the vertex vector of target.</span></div>
 <div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span><span class="comment">     */</span></div>
-<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>    <span class="keywordtype">void</span> addTargetNormals(std::vector&lt;gVertex&gt;&amp; targetvertices);</div>
+<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>    <span class="keywordtype">void</span> addTargetNormals(<span class="keyword">const</span> std::vector&lt;gVertex&gt;&amp; targetvertices);</div>
 <div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>};</div>
 </div>
 <div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span> </div>
