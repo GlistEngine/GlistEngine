@@ -200,6 +200,8 @@ private:
 				box.y = boxh - box.h;
 				return box;
 			}
+			default:
+				return *this;
 			}
 		}
 
