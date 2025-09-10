@@ -169,6 +169,7 @@ set(SRC_FILES
 	${ENGINE_DIR}/core/gGUIAppThread.cpp
 	${ENGINE_DIR}/utils/gThread.cpp
 	${ENGINE_DIR}/utils/gUtils.cpp
+	${ENGINE_DIR}/utils/gUUID.cpp
 	${ENGINE_DIR}/utils/gFile.cpp
 	${ENGINE_DIR}/utils/gHttpFile.cpp
 	${ENGINE_DIR}/graphics/gShader.cpp

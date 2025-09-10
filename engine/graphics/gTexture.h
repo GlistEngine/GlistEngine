@@ -16,10 +16,31 @@
 
 class gTexture : public gRenderObject {
 public:
-	static const int TEXTURETYPE_DIFFUSE, TEXTURETYPE_SPECULAR, TEXTURETYPE_NORMAL, TEXTURETYPE_HEIGHT;
-	static const int TEXTURETYPE_PBR_ALBEDO, TEXTURETYPE_PBR_ROUGHNESS, TEXTURETYPE_PBR_METALNESS, TEXTURETYPE_PBR_NORMAL, TEXTURETYPE_PBR_AO;
-	static const int TEXTUREWRAP_REPEAT, TEXTUREWRAP_CLAMP, TEXTUREWRAP_CLAMPTOEDGE, TEXTUREWRAP_NEAREST;
-	static const int TEXTUREMINMAGFILTER_LINEAR, TEXTUREMINMAGFILTER_MIPMAPLINEAR, TEXTUREMINMAGFILTER_NEAREST, TEXTUREMINMAGFILTER_CLAMP;
+	enum TextureType : int {
+		TEXTURETYPE_DIFFUSE = 0,
+		TEXTURETYPE_SPECULAR = 1,
+		TEXTURETYPE_NORMAL = 2,
+		TEXTURETYPE_HEIGHT = 3,
+		TEXTURETYPE_PBR_ALBEDO = 4,
+		TEXTURETYPE_PBR_ROUGHNESS = 5,
+		TEXTURETYPE_PBR_METALNESS = 6,
+		TEXTURETYPE_PBR_NORMAL = 7,
+		TEXTURETYPE_PBR_AO = 8
+	};
+
+	enum TextureWrap : int {
+		TEXTUREWRAP_REPEAT = 0,
+		TEXTUREWRAP_CLAMP = 1,
+		TEXTUREWRAP_CLAMPTOEDGE = 2,
+		TEXTUREWRAP_NEAREST = 3
+	};
+
+	enum TextureMagFilter : int {
+		TEXTUREMINMAGFILTER_LINEAR = 0,
+		TEXTUREMINMAGFILTER_MIPMAPLINEAR = 1,
+		TEXTUREMINMAGFILTER_NEAREST = 2,
+		TEXTUREMINMAGFILTER_CLAMP = 3
+	};
 
 	gTexture();
 	gTexture(int w, int h, int format = GL_RGBA, bool isFbo = false);
@@ -69,8 +90,8 @@ public:
 	bool isHDR() const;
 	unsigned int getInternalFormat() const;
 	unsigned int getFormat() const;
-	void setType(int textureType);
-	int getType() const;
+	void setType(TextureType textureType);
+	TextureType getType() const;
 	void setWrapping(int wrapS, int wrapT);
 	void setFiltering(int minFilter, int magFilter);
 	int getWrapS() const;
@@ -78,7 +99,6 @@ public:
 	int getFilterMin() const;
 	int getFilterMag() const;
 	const std::string& getTypeName() const;
-	const std::string& getTypeName(int textureType) const;
 	const std::string& getFilename() const;
 	const std::string& getDir() const;
 	const std::string& getFullPath() const;
@@ -116,11 +136,12 @@ public:
 
 	unsigned char* getData();
 
+	static const std::string& getTypeName(TextureType textureType);
 
 protected:
 	std::string fullpath, directory;
 	unsigned int id, internalformat, format;
-	int type;
+	TextureType type;
 	std::string path;
 	int width, height, componentnum;
 	unsigned char* data;
@@ -143,7 +164,6 @@ protected:
 	bool istextureallocated;
 
 private:
-	std::string texturetype[4];
 
 	unsigned int quadVAO, quadVBO;
 	glm::mat4 imagematrix;

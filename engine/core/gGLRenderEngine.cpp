@@ -18,6 +18,7 @@ void gCheckGLErrorAndPrint(const std::string& prefix, const std::string& func, i
 		gLogi("gGLRenderEngine") << prefix << "OpenGL ERROR at " << func << ", line " << line << ", error: " << gToHex(error, 4);
 	}
 }
+
 void gEnableCulling() {
 	G_CHECK_GL(glEnable(GL_CULL_FACE));
 }
@@ -52,23 +53,7 @@ int gGetCullingDirection() {
 }
 
 gGLRenderEngine::~gGLRenderEngine() {
-	delete colorshader;
-	delete textureshader;
-	delete imageshader;
-	delete fontshader;
-	delete skyboxshader;
-	delete shadowmapshader;
-	delete pbrshader;
-	delete equirectangularshader;
-	delete irradianceshader;
-	delete prefiltershader;
-	delete brdfshader;
-	delete fboshader;
-	delete rendercolor;
-	delete lightsubo;
-	delete gridshader;
-	if(!isdevelopergrid)
-		delete originalgrid;
+	delete originalgrid;
 }
 
 void gGLRenderEngine::clear() {
@@ -381,10 +366,12 @@ void gGLRenderEngine::createFullscreenQuad(GLuint& vao, GLuint& vbo) {
 }
 
 void gGLRenderEngine::deleteFullscreenQuad(GLuint& vao, GLuint* vbo) {
-	if(vao != 0)
+	if(vao != GL_NONE) {
 		G_CHECK_GL(glDeleteVertexArrays(1, &vao));
-	if(vbo != 0)
+	}
+	if(vbo != GL_NONE) {
 		G_CHECK_GL(glDeleteBuffers(1, vbo));
+	}
 }
 
 GLuint gGLRenderEngine::loadProgram(const char* vertexSource, const char* fragmentSource, const char* geometrySource) {
@@ -465,6 +452,10 @@ void gGLRenderEngine::setBool(GLuint uniformloc, bool value) {
 
 void gGLRenderEngine::setInt(GLuint uniformloc, int value) {
 	G_CHECK_GL(glUniform1i(uniformloc, value));
+}
+
+void gGLRenderEngine::setUnsignedInt(GLuint uniformloc, unsigned int value) {
+	G_CHECK_GL(glUniform1ui(uniformloc, value));
 }
 
 void gGLRenderEngine::setFloat(GLuint uniformloc, float value) {
@@ -710,6 +701,36 @@ void gGLRenderEngine::pushMatrix() {
 
 void gGLRenderEngine::popMatrix() {
 	G_CHECK_GL(glPopMatrix());
+}
+
+void GLAPIENTRY openglErrorCallback(GLenum source, GLenum type, GLuint id,
+								   GLenum severity, GLsizei length,
+								   const GLchar* message, const void* userParam) {
+	if (severity == GL_DEBUG_SEVERITY_NOTIFICATION) {
+		return;
+	}
+
+	gLoge("gGLRenderEngine") << "Received OpenGL Debug Message: "<<
+			"src: " << source << "\n"
+			"type: " << type << "\n"
+			"id: " << id << "\n"
+			"severity: " << severity << "\n"
+			"message: " << message;
+	// We flush here because it might not show on the console immediately, having this function being spammed will slow down the game but for purpose of debugging, it is required.
+	std::cerr << std::flush;
+}
+
+void gGLRenderEngine::init() {
+#if defined(DEBUG) || defined(ENGINE_OPENGL_CHECKS)
+	// On newer versions of OpenGL, debug callbacks are available; we enable them only for debug builds because it might have a performance impact.
+	// You can place a debug point and go back to the original source of the message from the stack trace, because it is sync.
+	if (GLEW_VERSION_4_3 || GLEW_ARB_debug_output) {
+		glEnable(GL_DEBUG_OUTPUT);
+		glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+		glDebugMessageCallback(openglErrorCallback, nullptr);
+	}
+#endif
+	gRenderer::init();
 }
 
 void gGLRenderEngine::updatePackUnpackAlignment(int i) {

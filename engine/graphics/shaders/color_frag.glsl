@@ -42,7 +42,6 @@ struct Fog {
     float gradient;
 
     int mode;
-    bool enabled;
 };
 
 uniform Material material;
@@ -53,13 +52,19 @@ layout(std140) uniform Lights {
     Light lights[GLIST_MAX_LIGHTS];
 };
 
-uniform vec4 renderColor;
-uniform vec3 viewPos;
+int ENABLE_SSAO_FLAG = 1 << 0;
+int ENABLE_FOG_FLAG = 1 << 1;
+
+layout(std140) uniform Scene {
+    vec4 renderColor;
+    vec3 viewPos;
+    mat4 viewMatrix;
+    uniform float ssaoBias;
+    int flags;
+    Fog fog;
+};
+
 uniform mat4 projection;
-uniform mat4 view;
-uniform bool ssao_enabled;
-uniform float ssao_bias;
-uniform Fog fog;
 
 in vec3 Normal;
 in vec3 FragPos;
@@ -218,7 +223,7 @@ vec4 getSSAO() {
     const int kernelSize = 16;
     const float radius = 0.1;
 
-    vec4 fragPos = view * vec4(FragPos, 1.0);
+    vec4 fragPos = viewMatrix * vec4(FragPos, 1.0);
     vec4 clipPos = projection * fragPos;
     float ndcDepth = clipPos.z / clipPos.w;
     float depth = ((ndcDepth + 1.0) / 2.0);
@@ -235,14 +240,14 @@ vec4 getSSAO() {
         vec3 randomVec = vec3(fract(sin(dot(co.xy, vec2(12.9898, 78.233))) * 43758.5453), fract(sin(dot(co2.xy, vec2(12.9898, 78.233))) * 43758.5453), 0.0);
         vec3 sampleVec = tangentFragPos + randomVec * radius;
 
-        vec4 offset = projection * view * vec4(sampleVec, 1.0);
+        vec4 offset = projection * viewMatrix * vec4(sampleVec, 1.0);
         offset.xy /= offset.w;
         offset.xy = offset.xy * 0.5 + 0.5;
 
         float sampleDepth = depthMap.r;
-        vec3 samplePos = (view * vec4(sampleVec * sampleDepth, 1.0)).xyz;
+        vec3 samplePos = (viewMatrix * vec4(sampleVec * sampleDepth, 1.0)).xyz;
 
-        float occlusion = clamp(dot(Normal, normalize(samplePos - FragPos)) - ssao_bias, 0.0, 1.0);
+        float occlusion = clamp(dot(Normal, normalize(samplePos - FragPos)) - ssaoBias, 0.0, 1.0);
         ambient += (1.0 - occlusion);
     }
     ambient /= float(kernelSize);
@@ -312,12 +317,12 @@ void main() {
 
     FragColor = result * renderColor;
 
-    if(fog.enabled) {
+    if((flags & ENABLE_FOG_FLAG) > 0) {
         float distance = abs(EyePosition.z / EyePosition.w);
         FragColor = mix(vec4(fog.color, 1.0), FragColor, getFogVisibility(fog, distance));
     }
 
-    if(ssao_enabled){
+    if((flags & ENABLE_SSAO_FLAG) > 0) {
         FragColor *= getSSAO();
     }
 }

@@ -36,7 +36,7 @@ public:
 	void attachUbo(const std::string& uboName, const gUbo<T>* ubo) {
 		ubos[uboName] = ubo->getBindingPoint();
 		use();
-		renderer->attachUbo(id, ubo, uboName);
+		renderer->attachUbo(id, ubo->getBindingPoint(), uboName);
 	}
 
 	bool loaded;
@@ -45,6 +45,7 @@ public:
     void use() const;
     void setBool(const std::string &name, bool value);
     void setInt(const std::string &name, int value);
+    void setUnsignedInt(const std::string &name, unsigned int value);
     void setFloat(const std::string &name, float value);
     void setVec2(const std::string &name, const glm::vec2 &value);
     void setVec2(const std::string &name, float x, float y);

@@ -12,102 +12,103 @@
 class gGLRenderEngine : public gRenderer {
 public:
 	gGLRenderEngine() = default;
-	~gGLRenderEngine();
+	~gGLRenderEngine() override;
 
-	void clear();
-	void clearColor(int r, int g, int b, int a = 255);
-	void clearColor(gColor color);
+	void clear() override;
+	void clearColor(int r, int g, int b, int a = 255) override;
+	void clearColor(gColor color) override;
 
-	void takeScreenshot(gImage& img, int x, int y, int width, int height);
-	void takeScreenshot(gImage& img);
+	void takeScreenshot(gImage& img, int x, int y, int width, int height) override;
+	void takeScreenshot(gImage& img) override;
 
-	void enableDepthTest();
-	void enableDepthTest(int depthTestType);
-	void setDepthTestFunc(int depthTestType);
-	void disableDepthTest();
-	bool isDepthTestEnabled();
-	int getDepthTestType();
+	void enableDepthTest() override;
+	void enableDepthTest(int depthTestType) override;
+	void setDepthTestFunc(int depthTestType) override;
+	void disableDepthTest() override;
+	bool isDepthTestEnabled() override;
+	int getDepthTestType() override;
 
-	void enableAlphaBlending();
-	void disableAlphaBlending();
-	bool isAlphaBlendingEnabled();
-	void enableAlphaTest();
-	void disableAlphaTest();
-	bool isAlphaTestEnabled();
+	void enableAlphaBlending() override;
+	void disableAlphaBlending() override;
+	bool isAlphaBlendingEnabled() override;
+	void enableAlphaTest() override;
+	void disableAlphaTest() override;
+	bool isAlphaTestEnabled() override;
 
 	/* -------------- gUbo ------------- */
-	GLuint genBuffers();
-	void deleteBuffer(GLuint& buffer);
+	GLuint genBuffers() override;
+	void deleteBuffer(GLuint& buffer) override;
 
-	void bindBuffer(GLenum target, GLuint buffer);
-	void unbindBuffer(GLenum target);
+	void bindBuffer(GLenum target, GLuint buffer) override;
+	void unbindBuffer(GLenum target) override;
 
-	void bufSubData(GLuint buffer, int offset, int size, const void* data);
-	void setBufferData(GLuint buffer, const void* data, size_t size, int usage);
-	void setBufferRange(int index, GLuint buffer, int offset, int size);
+	void bufSubData(GLuint buffer, int offset, int size, const void* data) override;
+	void setBufferData(GLuint buffer, const void* data, size_t size, int usage) override;
+	void setBufferRange(int index, GLuint buffer, int offset, int size) override;
 
 	/* -------------- gVbo --------------- */
-	GLuint createVAO();
-	void deleteVAO(GLuint& vao);
+	GLuint createVAO() override;
+	void deleteVAO(GLuint& vao) override;
 
-	void bindVAO(GLuint vao);
-	void unbindVAO();
+	void bindVAO(GLuint vao) override;
+	void unbindVAO() override;
 
-	void setVertexBufferData(GLuint vbo, size_t size, const void* data, int usage);
-	void setIndexBufferData(GLuint ebo, size_t size, const void* data, int usage);
+	void setVertexBufferData(GLuint vbo, size_t size, const void* data, int usage) override;
+	void setIndexBufferData(GLuint ebo, size_t size, const void* data, int usage) override;
 
-	void drawArrays(int drawMode, int count);
-	void drawElements(int drawMode, int count);
+	void drawArrays(int drawMode, int count) override;
+	void drawElements(int drawMode, int count) override;
 
-	void enableVertexAttrib(int index);
-	void disableVertexAttrib(int index);
-	void setVertexAttribPointer(int index, int size, int type, bool normalized, int stride, const void* pointer);
+	void enableVertexAttrib(int index) override;
+	void disableVertexAttrib(int index) override;
+	void setVertexAttribPointer(int index, int size, int type, bool normalized, int stride, const void* pointer) override;
 
 	/* -------------- gFbo --------------- */
-	GLuint createFramebuffer();
-	void deleteFramebuffer(GLuint& fbo);
-	void bindFramebuffer(GLuint fbo);
-	void checkFramebufferStatus();
+	GLuint createFramebuffer() override;
+	void deleteFramebuffer(GLuint& fbo) override;
+	void bindFramebuffer(GLuint fbo) override;
+	void checkFramebufferStatus() override;
 
-	GLuint createRenderbuffer();
-	void deleteRenderbuffer(GLuint& rbo);
-	void bindRenderbuffer(GLuint rbo);
-	void setRenderbufferStorage(GLenum format, int width, int height);
+	GLuint createRenderbuffer() override;
+	void deleteRenderbuffer(GLuint& rbo) override;
+	void bindRenderbuffer(GLuint rbo) override;
+	void setRenderbufferStorage(GLenum format, int width, int height) override;
 
-	void attachTextureToFramebuffer(GLenum attachment, GLenum textarget, GLuint texId, GLuint level = 0);
-	void attachRenderbufferToFramebuffer(GLenum attachment, GLuint rbo);
+	void attachTextureToFramebuffer(GLenum attachment, GLenum textarget, GLuint texId, GLuint level = 0) override;
+	void attachRenderbufferToFramebuffer(GLenum attachment, GLuint rbo) override;
 
-	void setDrawBufferNone();
-	void setReadBufferNone();
+	void setDrawBufferNone() override;
+	void setReadBufferNone() override;
 
-	void createFullscreenQuad(GLuint& vao, GLuint& vbo);
-	void deleteFullscreenQuad(GLuint& vao, GLuint* vbo);
+	void createFullscreenQuad(GLuint& vao, GLuint& vbo) override;
+	void deleteFullscreenQuad(GLuint& vao, GLuint* vbo) override;
 
 	/* -------------- gShader --------------- */
 	// This function loads shaders without preproccesing them. Geometry source can be nullptr.
-	GLuint loadProgram(const char* vertexSource, const char* fragmentSource, const char* geometrySource);
-	void checkCompileErrors(GLuint shader, const std::string& type);
-	void setBool(GLuint uniformloc, bool value);
-	void setInt(GLuint uniformloc, int value);
-	void setFloat(GLuint uniformloc, float value);
-	void setVec2(GLuint uniformloc, const glm::vec2& value);
-	void setVec2(GLuint uniformloc, float x, float y);
-	void setVec3(GLuint uniformloc, const glm::vec3& value);
-	void setVec3(GLuint uniformloc, float x, float y, float z);
-	void setVec4(GLuint uniformloc, const glm::vec4& value);
-	void setVec4(GLuint uniformloc, float x, float y, float z, float w);
-	void setMat2(GLuint uniformloc, const glm::mat2& mat);
-	void setMat3(GLuint uniformloc, const glm::mat3& mat);
-	void setMat4(GLuint uniformloc, const glm::mat4& mat);
-	GLuint getUniformLocation(GLuint id, const std::string& name);
+	GLuint loadProgram(const char* vertexSource, const char* fragmentSource, const char* geometrySource) override;
+	void checkCompileErrors(GLuint shader, const std::string& type) override;
+	void setBool(GLuint uniformloc, bool value) override;
+	void setInt(GLuint uniformloc, int value) override;
+	void setUnsignedInt(GLuint uniformloc, unsigned int value) override;
+	void setFloat(GLuint uniformloc, float value) override;
+	void setVec2(GLuint uniformloc, const glm::vec2& value) override;
+	void setVec2(GLuint uniformloc, float x, float y) override;
+	void setVec3(GLuint uniformloc, const glm::vec3& value) override;
+	void setVec3(GLuint uniformloc, float x, float y, float z) override;
+	void setVec4(GLuint uniformloc, const glm::vec4& value) override;
+	void setVec4(GLuint uniformloc, float x, float y, float z, float w) override;
+	void setMat2(GLuint uniformloc, const glm::mat2& mat) override;
+	void setMat3(GLuint uniformloc, const glm::mat3& mat) override;
+	void setMat4(GLuint uniformloc, const glm::mat4& mat) override;
+	GLuint getUniformLocation(GLuint id, const std::string& name) override;
 
-	void useShader(GLuint id) const;
-	void resetShader(GLuint id, bool loaded) const;
+	void useShader(GLuint id) const override;
+	void resetShader(GLuint id, bool loaded) const override;
 
-	void attachUbo(GLuint id, const gUbo<gSceneLights>* ubo, const std::string& uboName) {
+	void attachUbo(GLuint id, int bindingpoint, const std::string& uboName) override {
 		unsigned int blockIndex;
 		G_CHECK_GL2(blockIndex, glGetUniformBlockIndex(id, uboName.c_str()));
-		G_CHECK_GL(glUniformBlockBinding(id, blockIndex, ubo->getBindingPoint()));
+		G_CHECK_GL(glUniformBlockBinding(id, blockIndex, bindingpoint));
 		/*if (blockIndex != GL_INVALID_INDEX) {
 			GLint blockSize;
 			G_CHECK_GL(glGetActiveUniformBlockiv(id, blockIndex, GL_UNIFORM_BLOCK_DATA_SIZE, &blockSize));
@@ -128,52 +129,55 @@ public:
 	}
 
 	/* ------------ gPostProcessManager ------------- */
-	void clearScreen(bool color = true, bool depth = true);
-	void bindQuadVAO();
-	void drawFullscreenQuad();
-	void bindDefaultFramebuffer();
+	void clearScreen(bool color = true, bool depth = true) override;
+	void bindQuadVAO() override;
+	void drawFullscreenQuad() override;
+	void bindDefaultFramebuffer() override;
 
 	/* -------------- gGrid --------------- */
-	void drawVbo(const gVbo& vbo);
+	void drawVbo(const gVbo& vbo) override;
 
 	/* ---------------- gTexture ---------------- */
-	GLuint createTextures();
-	void bindTexture(GLuint texId);
-	void bindTexture(GLuint texId, int textureSlotNo);
-	void unbindTexture();
-	void activateTexture(int textureSlotNo = 0);
-	void resetTexture();
-	void deleteTexture(GLuint& texId);
+	GLuint createTextures() override;
+	void bindTexture(GLuint texId) override;
+	void bindTexture(GLuint texId, int textureSlotNo) override;
+	void unbindTexture() override;
+	void activateTexture(int textureSlotNo = 0) override;
+	void resetTexture() override;
+	void deleteTexture(GLuint& texId) override;
 
-	void texImage2D(GLenum target, GLint internalFormat, int width, int height, GLint format, GLint type, void* data);
-	void setWrapping(GLenum target, GLint wrapS, GLint wrapT);
-	void setWrapping(GLenum target, GLint wrapS, GLint wrapT, GLint wrapR);
+	void texImage2D(GLenum target, GLint internalFormat, int width, int height, GLint format, GLint type, void* data) override;
+	void setWrapping(GLenum target, GLint wrapS, GLint wrapT) override;
+	void setWrapping(GLenum target, GLint wrapS, GLint wrapT, GLint wrapR) override;
 
-	void setFiltering(GLenum target, GLint minFilter, GLint magFilter);
-	void setWrappingAndFiltering(GLenum target, GLint wrapS, GLint wrapT, GLint minFilter, GLint magFilter);
-	void setWrappingAndFiltering(GLenum target, GLint wrapS, GLint wrapT, GLint wrapR, GLint minFilter, GLint magFilter);
-	void setSwizzleMask(GLint swizzleMask[4]);
+	void setFiltering(GLenum target, GLint minFilter, GLint magFilter) override;
+	void setWrappingAndFiltering(GLenum target, GLint wrapS, GLint wrapT, GLint minFilter, GLint magFilter) override;
+	void setWrappingAndFiltering(GLenum target, GLint wrapS, GLint wrapT, GLint wrapR, GLint minFilter, GLint magFilter) override;
+	void setSwizzleMask(GLint swizzleMask[4]) override;
 
-	void readTexturePixels(unsigned char* inPixels, GLuint textureId, int width, int height, GLenum format);
+	void readTexturePixels(unsigned char* inPixels, GLuint textureId, int width, int height, GLenum format) override;
 
-	void generateMipMap();
+	void generateMipMap() override;
 
 	/* ---------------- gSkybox ---------------- */
-	void bindSkyTexture(GLuint texId);
-	void bindSkyTexture(GLuint texId, int textureSlot);
-	void unbindSkyTexture();
-	void unbindSkyTexture(int textureSlotNo);
-	void generateSkyMipMap();
-	void enableDepthTestEqual();
-	void createQuad(GLuint& inQuadVAO, GLuint& inQuadVBO);
-	void enableCubeMapSeemless();
-	void checkEnableCubeMap4Android();
+	void bindSkyTexture(GLuint texId) override;
+	void bindSkyTexture(GLuint texId, int textureSlot) override;
+	void unbindSkyTexture() override;
+	void unbindSkyTexture(int textureSlotNo) override;
+	void generateSkyMipMap() override;
+	void enableDepthTestEqual() override;
+	void createQuad(GLuint& inQuadVAO, GLuint& inQuadVBO) override;
+	void enableCubeMapSeemless() override;
+	void checkEnableCubeMap4Android() override;
 
 	/* ---------------- gRenderObject ---------------- */
-	void pushMatrix();
-	void popMatrix();
+	void pushMatrix() override;
+	void popMatrix() override;
+
+protected:
+	void init() override;
 private:
-	void updatePackUnpackAlignment(int i);
+	void updatePackUnpackAlignment(int i) override;
 };
 
 #endif

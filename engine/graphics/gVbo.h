@@ -40,9 +40,6 @@ public:
 	void bind() const;
 	void unbind() const;
 
-	void draw();
-	void draw(int drawMode);
-
 	void enable();
 	void disable();
 	bool isEnabled() const;

@@ -10,6 +10,7 @@
 
 #define GLM_FORCE_DEFAULT_ALIGNED_GENTYPES
 #include <glm/glm.hpp>
+#include <glm/gtc/matrix_inverse.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
@@ -134,7 +135,7 @@ private:
 	void loadMorphingTargetModelFile(const std::string& fullPath);
 	void processNode(aiNode *node, const aiScene *scene);
 	gSkinnedMesh* processMesh(aiMesh *mesh, const aiScene *scene, aiMatrix4x4 matrix);
-	void loadMaterialTextures(gSkinnedMesh* mesh, aiMaterial *mat, aiTextureType type, int textureType);
+	void loadMaterialTextures(gSkinnedMesh* mesh, aiMaterial *mat, aiTextureType type, gTexture::TextureType textureType);
 	void processMorphingNode(aiNode *node, const aiScene *scene);
 	gMesh* processMorphingMesh(aiMesh *mesh, const aiScene *scene, aiMatrix4x4 matrix);
 	//The below line's third parameter is to perform the animation on the target mesh by taking the aiTargetMesh as a reference. Haven't tested yet.

@@ -23,15 +23,6 @@ gMesh::gMesh() {
 	name = "";
 	drawmode = DRAWMODE_TRIANGLES;
 	isprojection2d = false;
-    diffuseNr  = 1;
-    specularNr = 1;
-    normalNr   = 1;
-    heightNr   = 1;
-    textype = 0;
-    scenelight = nullptr;
-    colorshader = nullptr;
-    textureshader = nullptr;
-    pbrshader = nullptr;
 	needsboundingboxrecalculation = false;
 	this->vertices = std::make_shared<std::vector<gVertex>>();
 	this->indices = std::make_shared<std::vector<gIndex>>();
@@ -44,11 +35,6 @@ gMesh::gMesh(std::shared_ptr<std::vector<gVertex>> vertices,
 	name = "";
 	drawmode = DRAWMODE_TRIANGLES;
 	isprojection2d = false;
-    diffuseNr  = 1;
-    specularNr = 1;
-    normalNr   = 1;
-    heightNr   = 1;
-    textype = 0;
 
     setVertices(vertices, indices);
     setTextures(textures);
@@ -59,11 +45,6 @@ gMesh::gMesh(const gMesh& other) {
 	name = other.name;
 	drawmode = DRAWMODE_TRIANGLES;
 	isprojection2d = false;
-	diffuseNr  = 1;
-	specularNr = 1;
-	normalNr   = 1;
-	heightNr   = 1;
-	textype = 0;
 	setVertices(other.vertices, other.indices);
 	setTextures(other.textures);
 }
@@ -75,7 +56,7 @@ void gMesh::clear() {
 	vbo->clear();
 }
 
-void gMesh::setName(std::string name) {
+void gMesh::setName(const std::string& name) {
 	this->name = name;
 }
 
@@ -137,62 +118,65 @@ std::shared_ptr<std::vector<gIndex>> gMesh::getIndicesPtr() {
 }
 
 void gMesh::setTextures(const std::vector<gTexture*>& textures) {
-//	this->textures = textures;
-    for(int i = 0; i < textures.size(); i++) {
-        textype = textures[i]->getType();
-        if(textype == gTexture::TEXTURETYPE_DIFFUSE) {
-        	material.setDiffuseMap(textures[i]);
-        } else if(textype == gTexture::TEXTURETYPE_SPECULAR) {
-        	material.setSpecularMap(textures[i]);
-        } else if(textype == gTexture::TEXTURETYPE_NORMAL) {
-        	material.setNormalMap(textures[i]);
-        } else if(textype == gTexture::TEXTURETYPE_HEIGHT) {
-        	material.setHeightMap(textures[i]);
-        } else if (textype == gTexture::TEXTURETYPE_PBR_ALBEDO) {
-        	material.setAlbedoMap(textures[i]);
-        } else if (textype == gTexture::TEXTURETYPE_PBR_ROUGHNESS) {
-        	material.setRoughnessMap(textures[i]);
-        } else if (textype == gTexture::TEXTURETYPE_PBR_METALNESS) {
-        	material.setMetalnessMap(textures[i]);
-        } else if (textype == gTexture::TEXTURETYPE_PBR_NORMAL) {
-        	material.setPbrNormalMap(textures[i]);
-        } else if (textype == gTexture::TEXTURETYPE_PBR_AO) {
-        	material.setAOMap(textures[i]);
-        }
+	texturenames.clear();
+	texturecounters.clear();
+	this->textures.clear();
+    for(loopindex = 0; loopindex < textures.size(); loopindex++) {
+    	setTexture(textures[loopindex]);
     }
+}
+
+void gMesh::setTextures(const std::unordered_map<gTexture::TextureType, gTexture*>& textures) {
+//	this->textures = textures;
+	texturenames.clear();
+	texturecounters.clear();
+	this->textures.clear();
+	for (auto pair : textures) {
+		setTexture(pair.second);
+	}
 }
 
 void gMesh::setTexture(gTexture* texture) {
-    textype = texture->getType();
-    if(textype == gTexture::TEXTURETYPE_DIFFUSE) {
-    	material.setDiffuseMap(texture);
-    } else if(textype == gTexture::TEXTURETYPE_SPECULAR) {
-    	material.setSpecularMap(texture);
-    } else if(textype == gTexture::TEXTURETYPE_NORMAL) {
-    	material.setNormalMap(texture);
-    } else if(textype == gTexture::TEXTURETYPE_HEIGHT) {
-    	material.setHeightMap(texture);
-    } else if (textype == gTexture::TEXTURETYPE_PBR_ALBEDO) {
-    	material.setAlbedoMap(texture);
-    } else if (textype == gTexture::TEXTURETYPE_PBR_ROUGHNESS) {
-    	material.setRoughnessMap(texture);
-    } else if (textype == gTexture::TEXTURETYPE_PBR_METALNESS) {
-    	material.setMetalnessMap(texture);
-    } else if (textype == gTexture::TEXTURETYPE_PBR_NORMAL) {
-    	material.setPbrNormalMap(texture);
-    } else if (textype == gTexture::TEXTURETYPE_PBR_AO) {
-    	material.setAOMap(texture);
-    }
+	bool hasold = textures.find(texture->getType()) != textures.end();
+	switch (texture->getType()) {
+	case gTexture::TEXTURETYPE_DIFFUSE:
+		material.setDiffuseMap(texture);
+		break;
+	case gTexture::TEXTURETYPE_SPECULAR:
+		material.setSpecularMap(texture);
+		break;
+	case gTexture::TEXTURETYPE_NORMAL:
+		material.setNormalMap(texture);
+		break;
+	case gTexture::TEXTURETYPE_HEIGHT:
+		material.setHeightMap(texture);
+		break;
+	case gTexture::TEXTURETYPE_PBR_ALBEDO:
+		material.setAlbedoMap(texture);
+		break;
+	case gTexture::TEXTURETYPE_PBR_ROUGHNESS:
+		material.setRoughnessMap(texture);
+		break;
+	case gTexture::TEXTURETYPE_PBR_METALNESS:
+		material.setMetalnessMap(texture);
+		break;
+	case gTexture::TEXTURETYPE_PBR_NORMAL:
+		material.setPbrNormalMap(texture);
+		break;
+	case gTexture::TEXTURETYPE_PBR_AO:
+		material.setAOMap(texture);
+		break;
+	}
+	if (!hasold) {
+		int count = ++texturecounters[texture->getType()];
+		texturenames[texture->getType()] = texture->getTypeName() + gToStr(count);
+	}
+	textures[texture->getType()] = texture;
 }
 
-void gMesh::addTexture(gTexture* tex) {
-	textures.push_back(tex);
+gTexture* gMesh::getTexture(gTexture::TextureType textureType) {
+	return textures[textureType];
 }
-
-gTexture* gMesh::getTexture(int textureNo) {
-	return textures[textureNo];
-}
-
 
 void gMesh::setDrawMode(int drawMode) {
 	drawmode = drawMode;
@@ -210,7 +194,6 @@ gMaterial* gMesh::getMaterial() {
 	return &material;
 }
 
-
 void gMesh::draw() {
 	G_PROFILE_ZONE_SCOPED_N("gMesh::draw()");
 	if (!isenabled) return;
@@ -227,9 +210,9 @@ void gMesh::processTransformationMatrix() {
 		return;
 	}
 
-	bool positionchanged = (position != prevposition);
-	bool orientationchanged = (orientation != prevorientation);
-	bool scalechanged = (scalevec != prevscalevec);
+	bool positionchanged = position != prevposition;
+	bool orientationchanged = orientation != prevorientation;
+	bool scalechanged = scalevec != prevscalevec;
 	// Recalculate bounding box only if orientation or scale has changed
 	if (orientationchanged || scalechanged) {
 		// todo maybe impelement a way to rotate and scale the bb without fully recalculating?
@@ -251,121 +234,65 @@ void gMesh::drawStart() {
 		return;
 	}
 
-    if (textures.empty() && !material.isPBR()) {
-    	colorshader = renderer->getColorShader();
-		colorshader->use();
-
-	    // Set scene properties
-	    colorshader->setVec3("viewPos", renderer->getCameraPosition());
-	    colorshader->setVec4("renderColor", renderer->getColor()->r, renderer->getColor()->g, renderer->getColor()->b, renderer->getColor()->a);
+    if (!material.isPBR()) {
+    	gShader& colorshader = *renderer->getColorShader();
+		colorshader.use();
 
 	    // Set material colors
-	    colorshader->setVec4("material.ambient", material.getAmbientColor()->r, material.getAmbientColor()->g, material.getAmbientColor()->b, material.getAmbientColor()->a);
-	    colorshader->setVec4("material.diffuse", material.getDiffuseColor()->r, material.getDiffuseColor()->g, material.getDiffuseColor()->b, material.getDiffuseColor()->a);
-	    colorshader->setVec4("material.specular", material.getSpecularColor()->r, material.getSpecularColor()->g, material.getSpecularColor()->b, material.getSpecularColor()->a);
-	    colorshader->setFloat("material.shininess", material.getShininess());
+	    colorshader.setVec4("material.ambient", material.getAmbientColor()->r, material.getAmbientColor()->g, material.getAmbientColor()->b, material.getAmbientColor()->a);
+	    colorshader.setVec4("material.diffuse", material.getDiffuseColor()->r, material.getDiffuseColor()->g, material.getDiffuseColor()->b, material.getDiffuseColor()->a);
+	    colorshader.setVec4("material.specular", material.getSpecularColor()->r, material.getSpecularColor()->g, material.getSpecularColor()->b, material.getSpecularColor()->a);
+	    colorshader.setFloat("material.shininess", material.getShininess());
 
 	    // Bind diffuse textures
-	    colorshader->setInt("material.useDiffuseMap", material.isDiffuseMapEnabled());
+	    colorshader.setInt("material.useDiffuseMap", material.isDiffuseMapEnabled());
 //		if(material.isDiffuseMapEnabled()) gLogi("gModel") << "mesh name:" << name;
 //		if(material.isDiffuseMapEnabled()) gLogi("gModel") << "diffuse texture name:" << material.getDiffuseMap()->getFilename();
 	    if (material.isDiffuseMapEnabled()) {
-			colorshader->setInt("material.diffusemap", 0); // Diffuse texture unit
+			colorshader.setInt("material.diffusemap", 0); // Diffuse texture unit
 	    	renderer->activateTexture(0);
 		    material.bindDiffuseMap();
 	    }
 
 	    // Bind specular textures
-	    colorshader->setInt("material.useSpecularMap", material.isDiffuseMapEnabled() && material.isSpecularMapEnabled());
+	    colorshader.setInt("material.useSpecularMap", material.isDiffuseMapEnabled() && material.isSpecularMapEnabled());
 	    if (material.isDiffuseMapEnabled() && material.isSpecularMapEnabled()) {
-			colorshader->setInt("material.specularmap", 1); // Specular texture unit
+			colorshader.setInt("material.specularmap", 1); // Specular texture unit
 	    	renderer->activateTexture(1);
 		    material.bindSpecularMap();
 	    }
 
 	    // Bind normal textures
-	    colorshader->setInt("aUseNormalMap", material.isDiffuseMapEnabled() && material.isNormalMapEnabled());
+	    colorshader.setInt("aUseNormalMap", material.isDiffuseMapEnabled() && material.isNormalMapEnabled());
 	    if (material.isDiffuseMapEnabled() && material.isNormalMapEnabled()) {
-			colorshader->setInt("material.normalmap", 2); // Normal texture unit
+			colorshader.setInt("material.normalmap", 2); // Normal texture unit
 	    	renderer->activateTexture(2);
 		    material.bindNormalMap();
 	    }
 
-		// todo use uniform buffer objects for fog too
-		if(renderer->isFogEnabled()) {
-			colorshader->setBool("fog.enabled", true);
-			colorshader->setVec3("fog.color", renderer->getFogColor().r, renderer->getFogColor().g, renderer->getFogColor().b);
-			colorshader->setInt("fog.mode", renderer->getFogMode());
-			colorshader->setFloat("fog.density", renderer->getFogDensity());
-			colorshader->setFloat("fog.gradient", renderer->getFogGradient());
-			colorshader->setFloat("fog.linearStart", renderer->getFogLinearStart());
-			colorshader->setFloat("fog.linearEnd", renderer->getFogLinearEnd());
-		} else {
-			colorshader->setBool("fog.enabled", false);
-		}
-
-		if(renderer->isSSAOEnabled()) {
-			colorshader->setBool("ssao_enabled", true);
-			colorshader->setFloat("ssao_bias", renderer->getSSAOBias());
-		} else {
-			colorshader->setBool("ssao_enabled", false);
-		}
-
 	    // Set matrices
-	    if(isprojection2d)colorshader->setMat4("projection", renderer->getProjectionMatrix2d());
-	    else colorshader->setMat4("projection", renderer->getProjectionMatrix());
-		colorshader->setMat4("view", renderer->getViewMatrix());
-		colorshader->setMat4("model", localtransformationmatrix);
-    } else if (textures.empty() && material.isPBR()) {
-    	pbrshader = renderer->getPbrShader();
-    	pbrshader->use();
-    	pbrshader->setMat4("projection", renderer->getProjectionMatrix());
-	    pbrshader->setMat4("view", renderer->getViewMatrix());
-    	pbrshader->setMat4("model", localtransformationmatrix);
-    	pbrshader->setInt("albedoMap", 3);
-    	pbrshader->setInt("normalMap", 4);
-    	pbrshader->setInt("metallicMap", 5);
-    	pbrshader->setInt("roughnessMap", 6);
-    	pbrshader->setInt("aoMap", 7);
+	    if(isprojection2d) {
+		    colorshader.setMat4("projection", renderer->getProjectionMatrix2d());
+	    } else {
+		    colorshader.setMat4("projection", renderer->getProjectionMatrix());
+	    }
+		colorshader.setMat4("model", localtransformationmatrix);
+    } else { // isPBR
+    	gShader& pbrshader = *renderer->getPbrShader();
+    	pbrshader.use();
+    	pbrshader.setMat4("projection", renderer->getProjectionMatrix());
+	    pbrshader.setMat4("view", renderer->getViewMatrix());
+    	pbrshader.setMat4("model", localtransformationmatrix);
+    	pbrshader.setInt("albedoMap", 3);
+    	pbrshader.setInt("normalMap", 4);
+    	pbrshader.setInt("metallicMap", 5);
+    	pbrshader.setInt("roughnessMap", 6);
+    	pbrshader.setInt("aoMap", 7);
     	material.bindAlbedoMap();
     	material.bindPbrNormalMap();
     	material.bindMetalnessMap();
     	material.bindRoughnessMap();
     	material.bindAOMap();
-	} else {
-		textureshader = renderer->getTextureShader();
-        textureshader->use();
-		// bind appropriate textures
-	    diffuseNr  = 1;
-	    specularNr = 1;
-	    normalNr   = 1;
-	    heightNr   = 1;
-	    for(int i = 0; i < textures.size(); i++) {
-	    	renderer->activateTexture(i); // active proper texture unit before binding
-
-	        // retrieve texture number (the N in diffuse_textureN)
-	        texnumber = "";
-	        textype = textures[i]->getType();
-	        if(textype == gTexture::TEXTURETYPE_DIFFUSE)
-	            texnumber = gToStr(diffuseNr++);
-	        else if(textype == gTexture::TEXTURETYPE_SPECULAR)
-	            texnumber = gToStr(specularNr++); // transfer unsigned int to stream
-	        else if(textype == gTexture::TEXTURETYPE_NORMAL)
-	            texnumber = gToStr(normalNr++); // transfer unsigned int to stream
-	        else if(textype == gTexture::TEXTURETYPE_HEIGHT)
-	            texnumber = gToStr(heightNr++); // transfer unsigned int to stream
-
-	        // Set the sampler to the correct texture unit
-	        textureshader->setInt(gToStr(textype) + texnumber, i);
-
-	        // Bind the texture
-	        textures[i]->bind();
-	    }
-
-	    if (isprojection2d) textureshader->setMat4("projection", renderer->getProjectionMatrix2d());
-	    else textureshader->setMat4("projection", renderer->getProjectionMatrix());
-	    textureshader->setMat4("view", renderer->getViewMatrix());
-	    textureshader->setMat4("model", localtransformationmatrix);
 	}
 }
 
@@ -384,8 +311,6 @@ void gMesh::drawVbo() {
 
 void gMesh::drawEnd() {
 	G_PROFILE_ZONE_SCOPED_N("gMesh::drawEnd()");
-	// set everything back to defaults.
-	renderer->activateTexture(0);
 }
 
 int gMesh::getVerticesNum() const {
@@ -411,7 +336,9 @@ const gBoundingBox& gMesh::getBoundingBox() {
 void gMesh::recalculateBoundingBox() {
 	G_PROFILE_ZONE_SCOPED_N("gMesh::recalculateBoundingBox()");
 	// Ensure the vertex list is not empty
-	if (vertices->empty()) {
+	const std::vector<gVertex>& verts = *vertices;
+	const std::vector<gIndex>& inds = *indices;
+	if (verts.empty()) {
 		// Handle empty vertices case appropriately
 		boundingbox = {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
 		needsboundingboxrecalculation = false;
@@ -419,7 +346,7 @@ void gMesh::recalculateBoundingBox() {
 	}
 
 	// Calculate the local bounding box
-	glm::vec4 pos1 = localtransformationmatrix * glm::vec4((*vertices)[0].position, 1.0f);
+	glm::vec4 pos1 = localtransformationmatrix * glm::vec4(verts[0].position, 1.0f);
 
 	float minx = pos1.x, miny = pos1.y, minz = pos1.z;
 	float maxx = pos1.x, maxy = pos1.y, maxz = pos1.z;
@@ -429,7 +356,7 @@ void gMesh::recalculateBoundingBox() {
 	__m128 maxvals = _mm_set_ps(maxz, maxy, maxx, 0);
 
 	for (size_t i = 1; i < vertices->size(); ++i) {
-		glm::vec4 pos = localtransformationmatrix * glm::vec4((*vertices)[i].position, 1.0f);
+		glm::vec4 pos = localtransformationmatrix * glm::vec4(verts[i].position, 1.0f);
 		__m128 current = _mm_set_ps(pos.z, pos.y, pos.x, 0);
 
 		minvals = _mm_min_ps(minvals, current);
@@ -450,8 +377,8 @@ void gMesh::recalculateBoundingBox() {
 	float32x4_t minvals = {minz, miny, minx, 0};
 	float32x4_t maxvals = {maxz, maxy, maxx, 0};
 
-	for (size_t i = 1; i < vertices->size(); ++i) {
-		glm::vec4 pos = localtransformationmatrix * glm::vec4(vertices[i].position, 1.0f);
+	for (size_t i = 1; i < verts.size(); ++i) {
+		glm::vec4 pos = localtransformationmatrix * glm::vec4(verts[i].position, 1.0f);
 		float32x4_t current = {pos.z, pos.y, pos.x, 0};
 
 		minvals = vminq_f32(minvals, current);
@@ -468,8 +395,8 @@ void gMesh::recalculateBoundingBox() {
 	maxy = maxarray[1];
 	maxz = maxarray[0];
 #else
-	for (size_t i = 1; i < vertices->size(); ++i) {
-		glm::vec4 pos = localtransformationmatrix * glm::vec4(vertices[i].position, 1.0f);
+	for (size_t i = 1; i < verts.size(); ++i) {
+		glm::vec4 pos = localtransformationmatrix * glm::vec4(verts[i].position, 1.0f);
 
 		minx = std::min(pos.x, minx);
 		miny = std::min(pos.y, miny);
@@ -497,14 +424,16 @@ float gMesh::distanceTriangles(gRay* ray) {
 	glm::vec2 baryposition(0);
 	float mindistance = std::numeric_limits<float>::max();
 	float distance = 0.0f;
-	for (int i = 0; i < indices->size(); i += 3) {
+	const std::vector<gVertex>& verts = *vertices;
+	const std::vector<gIndex>& inds = *indices;
+	for (loopindex = 0; loopindex < indices.size(); loopindex += 3) {
 		//iterate through all faces of the mesh since each face has 3 vertices
-		glm::vec3 a = (*vertices)[(*indices)[i]].position;
-		glm::vec3 b = (*vertices)[(*indices)[i + 1]].position;
-		glm::vec3 c = (*vertices)[(*indices)[i + 2]].position;
+		const glm::vec3& a = verts[inds[loopindex]].position;
+		const glm::vec3& b = verts[inds[loopindex + 1]].position;
+		const glm::vec3& c = verts[inds[loopindex + 2]].position;
 		if(glm::intersectRayTriangle(ray->getOrigin(), ray->getDirection(), a, b, c, baryposition, distance)) {
-			if(distance > 0) {
-				if(distance < mindistance) mindistance = distance;
+			if(distance > 0 && distance < mindistance) {
+				mindistance = distance;
 			}
 		}
 	}

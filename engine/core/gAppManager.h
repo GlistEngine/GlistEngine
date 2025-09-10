@@ -375,6 +375,7 @@ private:
     AppClockDuration targettimestep;
     uint64_t totaltime;
 
+    int framerate;
     int totalupdates;
     int totaldraws;
     int targetframerate;

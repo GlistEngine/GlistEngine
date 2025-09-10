@@ -27,9 +27,9 @@
 class gMorphingMesh : public gMesh {
 public:
 	gMorphingMesh();
-	virtual ~gMorphingMesh();
+	~gMorphingMesh() override;
 
-	void draw();
+	void draw() override;
 
 	void drawVboFrames();
 

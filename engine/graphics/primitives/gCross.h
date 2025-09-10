@@ -13,7 +13,7 @@
 class gCross: public gMesh {
 public:
 	gCross();
-	virtual ~gCross();
+	~gCross() override;
 
 	void draw(float x, float y, float width, float height, float thickness, bool isFilled);
 

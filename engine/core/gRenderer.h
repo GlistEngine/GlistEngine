@@ -36,6 +36,7 @@
 #define GLM_ENABLE_EXPERIMENTAL
 #define GLM_FORCE_DEFAULT_ALIGNED_GENTYPES
 #include <glm/glm.hpp>
+#include <glm/gtc/matrix_inverse.hpp>
 #include <glm/gtc/matrix_transform.hpp> // glm::translate, glm::rotate, glm::scale, glm::perspective
 #include <glm/gtx/quaternion.hpp>
 
@@ -102,16 +103,69 @@ class gImage;
 class gShader;
 class gCamera;
 class gGrid;
+class gLine;
+class gTriangle;
+class gCircle;
+class gCross;
+class gArc;
+class gRectangle;
+class gRoundedRectangle;
+class gBox;
 
-
-class gRenderer: public gObject {
+class gRenderer : public gObject {
 public:
 	static const int SCREENSCALING_NONE, SCREENSCALING_MIPMAP, SCREENSCALING_AUTO;
 	static const int DEPTHTESTTYPE_LESS, DEPTHTESTTYPE_ALWAYS;
 	static const int FOGMODE_LINEAR, FOGMODE_EXP;
+	struct alignas(16) gSceneLightData {
+		alignas(4) int type;
+		alignas(16) glm::vec3 position;
+		alignas(16) glm::vec3 direction;
+		alignas(16) glm::vec4 ambient;
+		alignas(16) glm::vec4 diffuse;
+		alignas(16) glm::vec4 specular;
+
+		alignas(4) float constant;
+		alignas(4) float linear;
+		alignas(4) float quadratic;
+
+		alignas(4) float spotcutoffangle;
+		alignas(4) float spotoutercutoffangle;
+	};
+
+	struct alignas(16) gSceneLights {
+		alignas(4) int lightnum = 0;
+		// bitwise enabled lights, 1 means enabled, 0 means disabled, 32-bit integer
+		// supports only 32 max lights, make sure to change this if max lights is changed to be something above 32
+		alignas(4) int enabledlights;
+		alignas(16) glm::vec4 globalambientcolor;
+		gSceneLightData lights[GLIST_MAX_LIGHTS];
+	};
+
+	enum SceneDataFlags {
+		ENABLE_SSAO = 0b0001,
+		ENABLE_FOG = 0b0010
+	};
+
+	struct alignas(16) gSceneFogData {
+		alignas(16) glm::vec3 color;
+		alignas(4) float linearStart;
+		alignas(4) float linearEnd;
+		alignas(4) float density;
+		alignas(4) float gradient;
+		alignas(4) int mode;
+	};
+	struct alignas(16) gSceneData {
+		alignas(16) gColor rendercolor;
+		alignas(16) glm::vec3 viewpos;
+		alignas(16) glm::mat4 viewmatrix;
+		alignas(4) float ssaobias;
+		alignas(4) unsigned int flags;
+		gSceneFogData fog;
+	};
 
 	gRenderer() = default;
-	virtual ~gRenderer() = default;
+	virtual ~gRenderer();
 
 	static void setScreenSize(int screenWidth, int screenHeight);
 	static void setUnitScreenSize(int unitWidth, int unitHeight);
@@ -222,6 +276,8 @@ public:
 	void removeAllSceneLights();
 	void updateLights();
 
+	void updateScene();
+
 	virtual void enableDepthTest() = 0;
 	virtual void enableDepthTest(int depthTestType) = 0;
 	virtual void setDepthTestFunc(int depthTestType) = 0;
@@ -290,6 +346,8 @@ public:
 	virtual void setBufferData(GLuint buffer, const void* data, size_t size, int usage) = 0;
 	virtual void setBufferRange(int index, GLuint buffer, int offset, int size) = 0;
 
+	virtual void attachUbo(GLuint id, int bindingpoint, const std::string& uboName) = 0;
+
 	/* -------------- gVbo --------------- */
 	virtual GLuint createVAO() = 0;
 	virtual void deleteVAO(GLuint& vao) = 0;
@@ -333,6 +391,7 @@ public:
 	virtual void checkCompileErrors(GLuint shader, const std::string& type) = 0;
 	virtual void setBool(GLuint uniformloc, bool value) = 0;
 	virtual void setInt(GLuint uniformloc, int value) = 0;
+	virtual void setUnsignedInt(GLuint uniformloc, unsigned int value) = 0;
 	virtual void setFloat(GLuint uniformloc, float value) = 0;
 	virtual void setVec2(GLuint uniformloc, const glm::vec2& value) = 0;
 	virtual void setVec2(GLuint uniformloc, float x, float y) = 0;
@@ -393,34 +452,35 @@ public:
 	/* ---------------- gRenderObject ---------------- */
 	virtual void pushMatrix() = 0;
 	virtual void popMatrix() = 0;
+
+	/* ---------------- Utilities ---------------- */
+	void drawLine(float x1, float y1, float x2, float y2, float thickness = 1.0f);
+	void drawLine(float x1, float y1, float z1, float x2, float y2, float z2, float thickness = 1.0f);
+	void drawTriangle(float px, float py, float qx, float qy, float rx, float ry, bool is_filled = true);
+	void drawCircle(float xCenter, float yCenter, float radius, bool isFilled = false, float numberOfSides = 64.0f);
+	void drawCross(float x, float y, float width, float height, float thickness, bool isFilled);
+	void drawArc(float xCenter, float yCenter, float radius, bool isFilled = true, int numberOfSides = 60, float degree = 360.0f, float rotate = 360.0f);
+	void drawArrow(float x1, float y1, float length, float angle, float tipLength, float tipAngle);
+	void drawRectangle(float x, float y, float w, float h, bool isFilled = false);
+	void drawRoundedRectangle(float x, float y, float w, float h, int radius, bool isFilled);
+	void drawBox(float x, float y, float z, float w = 1.0f, float h = 1.0f, float d = 1.0f, bool isFilled = true);
+	void drawBox(glm::mat4 transformationMatrix, bool isFilled = true);
+	void drawSphere(float xPos, float yPos, float zPos, glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f), int xSegmentNum = 64, int ySegmentNum = 32, bool isFilled = true);
+	void drawCylinder(float x, float y, float z, int r, int h, glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f), int segmentnum = 32, bool isFilled = true);
+	void drawCylinderOblique(float x, float y, float z, int r, int h, glm::vec2 shiftdistance, glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f), int segmentnum = 32, bool isFilled = true);
+	void drawCylinderTrapezodial(float x, float y, float z, int r1, int r2, int h, glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f), int segmentnum = 32, bool isFilled = true);
+	void drawCylinderObliqueTrapezodial(float x, float y, float z, int r1, int r2, int h, glm::vec2 shiftdistance, glm::vec3 scale = glm::vec3(1.0, 1.0, 1.0), int segmentnum = 32, bool isFilled = true);
+	void drawCone(float x, float y, float z, int r, int h, glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f), int segmentnum = 32, bool isFilled = true);
+	void drawConeOblique(float x, float y, float z, int r, int h, glm::vec2 shiftdistance, glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f), int segmentnum = 32, bool isFilled = true);
+	void drawPyramid(float x, float y, float z, int r, int h, glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f), int numberofsides = 4, bool isFilled = true);
+	void drawPyramidOblique(float x, float y, float z, int r, int h, glm::vec2 shiftdistance, glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f), int numberofsides = 4, bool isFilled = true);
+	void drawTube(float x, float y, float z, int outerradius,int innerradious, int h, glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f), int segmentnum = 32, bool isFilled = true);
+	void drawTubeOblique(float x, float y, float z, int outerradius,int innerradious, int h, glm::vec2 shiftdistance, glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f), int segmentnum = 32, bool isFilled = true);
+	void drawTubeTrapezodial(float x, float y, float z, int topouterradius,int topinnerradious, int buttomouterradious, int buttominnerradious, int h, glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f), int segmentnum = 32, bool isFilled = true);
+	void drawTubeObliqueTrapezodial(float x, float y, float z, int topouterradius,int topinnerradious, int buttomouterradious, int buttominnerradious, int h, glm::vec2 shiftdistance, glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f), int segmentnum = 32, bool isFilled = true);
+
 protected:
 	friend class gRenderObject; // this is where renderer->init() is called from
-
-	// this is an object that is sent to the gpu
-	struct alignas(16) gSceneLightData {
-		alignas(4) int type;
-		alignas(16) glm::vec3 position;
-		alignas(16) glm::vec3 direction;
-		alignas(16) glm::vec4 ambient;
-		alignas(16) glm::vec4 diffuse;
-		alignas(16) glm::vec4 specular;
-
-		alignas(4) float constant;
-		alignas(4) float linear;
-		alignas(4) float quadratic;
-
-		alignas(4) float spotcutoffangle;
-		alignas(4) float spotoutercutoffangle;
-	};
-
-	struct alignas(16) gSceneLights {
-		alignas(4) int lightnum = 0;
-		// bitwise enabled lights, 1 means enabled, 0 means disabled, 32-bit integer
-		// supports only 32 max lights, make sure to change this if max lights is changed to be something above 32
-		alignas(4) int enabledlights;
-		alignas(16) glm::vec4 globalambientcolor;
-		gSceneLightData lights[GLIST_MAX_LIGHTS];
-	};
 
 	static int width, height;
 	static int unitwidth, unitheight;
@@ -440,6 +500,7 @@ protected:
 
 	std::deque<gLight*> scenelights;
 	gUbo<gSceneLights>* lightsubo;
+	gUbo<gSceneData>* sceneubo;
 	bool islightingenabled;
 	glm::vec3 lightingposition;
 	gColor lightingcolor;
@@ -478,12 +539,20 @@ protected:
 
 	gGrid* grid;
 	gGrid* originalgrid;
-	bool isdevelopergrid;
 
+	// std::unique_ptr is automatically deletes the underlying object when this gRenderer object is deleted
+	std::unique_ptr<gLine> linemesh, linemesh2, linemesh3;
+	std::unique_ptr<gTriangle> trianglemesh;
+	std::unique_ptr<gCircle> circlemesh;
+	std::unique_ptr<gCross> crossmesh;
+	std::unique_ptr<gArc> arcmesh;
+	std::unique_ptr<gRectangle> rectanglemesh;
+	std::unique_ptr<gRoundedRectangle> roundedrectanglemesh;
+	std::unique_ptr<gBox> boxmesh;
+
+	virtual void init();
+	virtual void cleanup();
 	virtual void updatePackUnpackAlignment(int i) = 0;
-
-	void init();
-
 
 	static const std::string& getShaderSrcGridVertex();
 	static const std::string& getShaderSrcGridFragment();
@@ -509,9 +578,6 @@ protected:
 	static const std::string& getShaderSrcBrdfFragment();
 	static const std::string& getShaderSrcFboVertex();
 	static const std::string& getShaderSrcFboFragment();
-
-public:
-	virtual void attachUbo(GLuint id, const gUbo<gSceneLights>* ubo, const std::string& uboName) = 0;
 
 };
 

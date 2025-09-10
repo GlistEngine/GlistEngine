@@ -14,11 +14,11 @@ class gRectangle: public gMesh {
 public:
 	gRectangle();
 	gRectangle(float x, float y, float w, float h, bool isFilled);
-	virtual ~gRectangle();
+	~gRectangle() override;
 
 	void setPoints(float x, float y, float w, float h, bool isFilled);
 
-	void draw();
+	void draw() override;
 	void draw(float x, float y, float w, float h, bool isFilled);
 
 private:

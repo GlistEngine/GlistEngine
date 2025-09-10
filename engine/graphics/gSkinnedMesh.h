@@ -12,12 +12,12 @@
 
 #include "gMorphingMesh.h"
 
-class gSkinnedMesh: public gMorphingMesh {
+class gSkinnedMesh : public gMorphingMesh {
 public:
 	gSkinnedMesh();
-	virtual ~gSkinnedMesh();
+	~gSkinnedMesh() override;
 
-	void draw();
+	void draw() override;
 
 	void resizeAnimation(int verticesNum);
 	void resetAnimation();

@@ -5,11 +5,25 @@
  *      Author: noyan
  */
 
-#include "gRenderObject.h"
-#include <iostream>
-
+#include "gCross.h"
+#include "gArc.h"
+#include "gLight.h"
+#include "gLine.h"
+#include "gCircle.h"
+#include "gRectangle.h"
+#include "gBox.h"
+#include "gSphere.h"
+#include "gTriangle.h"
+#include "gRoundedRectangle.h"
+#include "gCylinder.h"
+#include "gCone.h"
+#include "gTube.h"
+#include "gUbo.h"
+#include "gShader.h"
+#include "gCamera.h"
+#include "gGrid.h"
+#include "gRenderer.h"
 #include "gGLRenderEngine.h"
-
 
 gRenderer* gRenderObject::renderer = nullptr;
 
@@ -93,6 +107,8 @@ void gRenderObject::createRenderer() {
 }
 
 void gRenderObject::destroyRenderer() {
+	if(!renderer) return;
+	renderer->cleanup();
 	delete renderer;
 	renderer = nullptr;
 }
