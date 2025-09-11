@@ -54,8 +54,8 @@ void gMorphingMesh::setBaseMesh(gMesh *baseMesh) {
 	this->basemesh = baseMesh;
 	this->setDrawMode(baseMesh->getDrawMode());
 	this->setMaterial(baseMesh->getMaterial());
-	basevertices = baseMesh->getVertices();
-	this->setVertices(basevertices, baseMesh->getIndices());
+	basevertices = baseMesh->getVerticesPtr();
+	this->setVertices(basevertices, baseMesh->getIndicesPtr());
 }
 
 void gMorphingMesh::setCurrentTargetMeshId(int targetMeshId) {
@@ -85,7 +85,7 @@ void gMorphingMesh::interpolate(bool forceInterpolation) {
 			framevertices.reserve(targetpositions[currenttargetmeshid].size());
 			//Filling the framevertices corresponding to the current frame.
 			for (int i = 0; i < targetpositions[currenttargetmeshid].size(); i++) {
-				framevertices.push_back(basevertices[i]);
+				framevertices.push_back((*basevertices)[i]);
 				framevertices[i].position += ((targetpositions[currenttargetmeshid][i] - framevertices[i].position) * ((float)(currentframeid + 1) / (float)framecounts[currenttargetmeshid]));
 				framevertices[i].normal += ((targetnormals[currenttargetmeshid][i] - framevertices[i].normal) * ((float)(currentframeid + 1) / (float)framecounts[currenttargetmeshid]));
 			}
@@ -106,8 +106,8 @@ void gMorphingMesh::interpolate(bool forceInterpolation) {
 				framenormals[currenttargetmeshid][i].resize(basemesh->getVerticesNum());
 				//Filling the positions with their corresponding frame's interolation factor.
 				for (int j = 0; j < targetpositions[currenttargetmeshid].size(); j++) {
-					framepositions[currenttargetmeshid][i][j] = basevertices[j].position + ((targetpositions[currenttargetmeshid][j] - basevertices[j].position) * ((float)(i + 1) / (float)framecounts[currenttargetmeshid]));
-					framenormals[currenttargetmeshid][i][j] = basevertices[j].normal + ((targetnormals[currenttargetmeshid][j] - basevertices[j].position) * ((float)(i + 1) / (float)framecounts[currenttargetmeshid]));
+					framepositions[currenttargetmeshid][i][j] = (*basevertices)[j].position + ((targetpositions[currenttargetmeshid][j] - (*basevertices)[j].position) * ((float)(i + 1) / (float)framecounts[currenttargetmeshid]));
+					framenormals[currenttargetmeshid][i][j] = (*basevertices)[j].normal + ((targetnormals[currenttargetmeshid][j] - (*basevertices)[j].position) * ((float)(i + 1) / (float)framecounts[currenttargetmeshid]));
 				}
 			}
 		}
@@ -119,9 +119,9 @@ void gMorphingMesh::interpolate(bool forceInterpolation) {
 			std::vector<gVertex> framevertices(targetpositions[currenttargetmeshid].size());
 			//Filling the framevertices vector with the corresponding frame's interpolation factor.
 			for (int j = 0; j < targetpositions[currenttargetmeshid].size(); j++) {
-				framevertices[j] = basevertices[j];
-				framevertices[j].position = basevertices[j].position + ((targetpositions[currenttargetmeshid][j] - basevertices[j].position) * ((float)(i + 1) / (float)framecounts[currenttargetmeshid]));
-				framevertices[j].normal = basevertices[j].normal + ((targetnormals[currenttargetmeshid][j] - basevertices[j].position) * ((float)(i + 1) / (float)framecounts[currenttargetmeshid]));
+				framevertices[j] = (*basevertices)[j];
+				framevertices[j].position = (*basevertices)[j].position + ((targetpositions[currenttargetmeshid][j] - (*basevertices)[j].position) * ((float)(i + 1) / (float)framecounts[currenttargetmeshid]));
+				framevertices[j].normal = (*basevertices)[j].normal + ((targetnormals[currenttargetmeshid][j] - (*basevertices)[j].position) * ((float)(i + 1) / (float)framecounts[currenttargetmeshid]));
 			}
 			//Setting the datas of frame's vbo as the datas filled above.
 			if (!vboframes[currenttargetmeshid][i]) {
@@ -234,10 +234,10 @@ void gMorphingMesh::draw() {
 		if (ismorphinganimated && (currentframeid != oldframeid || currenttargetmeshid != oldtargetmeshid)) {
 			//Setting the vertidxdataptr->vertices' datas as the stored datas.
 			for (int i = 0; i < framepositions[currenttargetmeshid][currentframeid].size(); i++) {
-				vertices.get()[i].position = framepositions[currenttargetmeshid][currentframeid][i];
-				vertices.get()[i].normal = framenormals[currenttargetmeshid][currentframeid][i];
+				(*vertices)[i].position = framepositions[currenttargetmeshid][currentframeid][i];
+				(*vertices)[i].normal = framenormals[currenttargetmeshid][currentframeid][i];
 			}
-			this->setVertices(vertices, this->getIndices());
+			this->setVertices(vertices, this->getIndicesPtr());
 			//Settin olds as currents to avoid unnecessary frame data changes.
 			oldtargetmeshid = currenttargetmeshid;
 			oldframeid = currentframeid;

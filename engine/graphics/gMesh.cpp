@@ -83,13 +83,22 @@ const std::string& gMesh::getName() const {
 	return name;
 }
 
+
+void gMesh::setVertices(const std::vector<gVertex>& vertices, const std::vector<gIndex>& indices) {
+	this->setVertices(std::make_shared<std::vector<gVertex>>(vertices), std::make_shared<std::vector<gIndex>>(indices));
+}
+
+void gMesh::setVertices(const std::vector<gVertex>& vertices) {
+	this->setVertices(std::make_shared<std::vector<gVertex>>(vertices));
+}
+
 void gMesh::setVertices(std::shared_ptr<std::vector<gVertex>> vertices, std::shared_ptr<std::vector<gIndex>> indices) {
 	G_PROFILE_ZONE_SCOPED_N("gModel::setVertices()");
 	bool resetinitialboundingbox = this->vertices->size() != vertices->size() || this->indices->size() != indices->size();
 	this->vertices = vertices;
 	this->indices = indices;
-	vbo.setVertexData(vertices->data(), sizeof(gVertex), vertices->size());
-	vbo.setIndexData(indices->data(), indices->size());
+	vbo->setVertexData(vertices->data(), sizeof(gVertex), vertices->size());
+	vbo->setIndexData(indices->data(), indices->size());
 	if (resetinitialboundingbox) {
 		recalculateBoundingBox();
 		initialboundingbox = boundingbox;
@@ -102,7 +111,7 @@ void gMesh::setVertices(std::shared_ptr<std::vector<gVertex>> vertices) {
 	G_PROFILE_ZONE_SCOPED_N("gModel::setVertices()");
 	bool resetinitialboundingbox = this->vertices->size() != vertices->size();
 	this->vertices = vertices;
-	vbo.setVertexData(vertices->data(), sizeof(gVertex), vertices->size());
+	vbo->setVertexData(vertices->data(), sizeof(gVertex), vertices->size());
 	if (resetinitialboundingbox) {
 		recalculateBoundingBox();
 		initialboundingbox = boundingbox;
@@ -119,11 +128,11 @@ std::vector<gIndex>& gMesh::getIndices() {
 	return *indices;
 }
 
-std::shared_ptr<std::vector<gVertex>> gMesh::getVertices() {
+std::shared_ptr<std::vector<gVertex>> gMesh::getVerticesPtr() {
 	return vertices;
 }
 
-std::shared_ptr<std::vector<gIndex>> gMesh::getIndices() {
+std::shared_ptr<std::vector<gIndex>> gMesh::getIndicesPtr() {
 	return indices;
 }
 

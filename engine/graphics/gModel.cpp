@@ -43,7 +43,7 @@ void gModel::disassemble() {
 		glm::mat4 worldTransform = getTransformationMatrix();
 
 		// 2. Transform all vertices into world space
-		std::shared_ptr<std::vector<gVertex>> verticesptr = mesh->getVertices();
+		std::shared_ptr<std::vector<gVertex>> verticesptr = mesh->getVerticesPtr();
 		std::vector<gVertex>& vertices = *verticesptr;
 		glm::vec3 centroid(0.0f);
 
@@ -62,7 +62,7 @@ void gModel::disassemble() {
 		}
 
 		// 5. Store updated vertices back
-		mesh->setVertices(verticesptr, mesh->getIndices());
+		mesh->setVertices(verticesptr, mesh->getIndicesPtr());
 
 		// 6. Reset mesh transform: now its local origin is at centroid
 		mesh->setPosition(centroid);

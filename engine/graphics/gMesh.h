@@ -46,8 +46,8 @@ public:
 
 	std::vector<gVertex>& getVertices();
 	std::vector<gIndex>& getIndices();
-	std::shared_ptr<std::vector<gVertex>> getVertices();
-	std::shared_ptr<std::vector<gIndex>> getIndices();
+	std::shared_ptr<std::vector<gVertex>> getVerticesPtr();
+	std::shared_ptr<std::vector<gIndex>> getIndicesPtr();
 	int getVerticesNum() const;
 	int getIndicesNum() const;
 	const gBoundingBox& getBoundingBox();

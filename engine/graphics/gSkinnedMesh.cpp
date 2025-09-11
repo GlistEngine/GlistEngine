@@ -25,8 +25,8 @@ void gSkinnedMesh::draw() {
 	if (getTargetMeshCount() > 0) {
 		if (frameno != framenoold) {
 			for(int i = 0; i < vbo->getVerticesNum(); i++) {
-				vertices.get()[i].position = animatedPosData[0][frameno][i];
-				vertices.get()[i].normal = animatedNormData[0][frameno][i];
+				(*vertices)[i].position = animatedPosData[0][frameno][i];
+				(*vertices)[i].normal = animatedNormData[0][frameno][i];
 			}
 			setBaseMesh(this);
 			interpolate(false);
@@ -39,10 +39,10 @@ void gSkinnedMesh::draw() {
 		if (isvertexanimated && frameno != framenoold) {
 			// TODO Below lines of vertex animation stored on CPU needs to be optimized
 			for(int i = 0; i < vbo->getVerticesNum(); i++) {
-				vertices.get()[i].position = animatedPosData[0][frameno][i];
-				vertices.get()[i].normal = animatedNormData[0][frameno][i];
+				(*vertices)[i].position = animatedPosData[0][frameno][i];
+				(*vertices)[i].normal = animatedNormData[0][frameno][i];
 			}
-			vbo->setVertexData(&vertices.get()[0], sizeof(gVertex), vbo->getVerticesNum());
+			vbo->setVertexData(&(*vertices)[0], sizeof(gVertex), vbo->getVerticesNum());
 //			vbo.setVertexData(&animatedPosData[0][frameno][0].x, 3, vbo.getVerticesNum(), GL_STREAM_DRAW);
 //			vbo.setNormalData(&animatedNormData[0][frameno][0].x, 3,  vbo.getVerticesNum(), GL_STREAM_DRAW);
 			framenoold = frameno;
@@ -151,9 +151,9 @@ void gSkinnedMesh::setVerticesData(int animationNo, int frameNo, const std::vect
 //	this->vertices = vertices;
 //	this->indices = indices;
 	gVbo& vbo = *vboframe[animationNo][frameNo];
-	vbo.setVertexData(&vertices.get()[0], sizeof(gVertex), vertices->size());
-	if (indices->size() != 0) {
-		vbo.setIndexData(&indices.get()[0], indices->size());
+	vbo.setVertexData(&vertices[0], sizeof(gVertex), vertices.size());
+	if (indices.size() != 0) {
+		vbo.setIndexData(&indices[0], indices.size());
 	}
 }
 
