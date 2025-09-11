@@ -9,7 +9,6 @@ endif()
 
 # Configure compiler and linker as you need
 set(GLIST_CXX_FLAGS_COMMON
-    -stdlib=libc++
     -Wuninitialized
     -Wmultichar
     -ffunction-sections
@@ -19,6 +18,12 @@ set(GLIST_CXX_FLAGS_COMMON
     -fpermissive
     -fPIC
 )
+
+# Only add libc++ if using Clang
+if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+	list(INSERT GLIST_CXX_FLAGS_COMMON 0 -stdlib=libc++)
+endif()
+
 list(APPEND GLIST_CXX_FLAGS_DEBUG -DDEBUG -O0 -g)
 list(APPEND GLIST_CXX_FLAGS_RELEASE -DEIGEN_NO_CUDA -DNDEBUG -O2)
 if(NOT APPLE)
