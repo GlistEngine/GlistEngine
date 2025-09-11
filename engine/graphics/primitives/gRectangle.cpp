@@ -68,7 +68,9 @@ void gRectangle::setRectanglePoints(float x, float y, float w, float h, bool isF
 		indicessb.push_back(0);
 		setDrawMode(gMesh::DRAWMODE_LINESTRIP);
 	}
-	setVertices(verticessb, indicessb);
+	auto vertices = std::make_shared<std::vector<gVertex>>(verticessb);
+	auto indices = std::make_shared<std::vector<gIndex>>(indicessb);
+	setVertices(vertices, indices);
 }
 
 gRectangle::~gRectangle() {

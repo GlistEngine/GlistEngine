@@ -44,7 +44,9 @@ void gTriangle::setPoints(float px, float py, float qx, float qy, float rx, floa
 	indices.push_back(2);
 	indices.push_back(0);
 
-	this->setVertices(this->vertices, this->indices);
+	auto verticesptr = std::make_shared<std::vector<gVertex>>(this->vertices);
+	auto indicesptr = std::make_shared<std::vector<gIndex>>(this->indices);
+	this->setVertices(verticesptr, indicesptr);
 
 	if (!is_filled) {
 		this->setDrawMode(gMesh::DRAWMODE_LINESTRIP);

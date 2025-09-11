@@ -39,7 +39,9 @@ gCylinder::gCylinder(int r1, int r2, int h, glm::vec2 shiftdistance, int segment
 		indicesb.push_back(i);
 	}
 
-	setVertices(verticesb, indicesb);
+	auto verticesptr = std::make_shared<std::vector<gVertex>>(verticesb);
+	auto indicesptr = std::make_shared<std::vector<gIndex>>(indicesb);
+	setVertices(verticesptr, indicesptr);
 	if(!isFilled) setDrawMode(gMesh::DRAWMODE_LINELOOP);
 	else setDrawMode(gMesh::DRAWMODE_TRIANGLEFAN);
 }

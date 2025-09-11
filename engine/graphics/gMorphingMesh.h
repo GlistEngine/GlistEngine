@@ -166,7 +166,7 @@ private:
 	//The loaded target meshes' positions which are the end points of interpolation.
 	std::vector<std::vector<glm::vec3>> targetpositions, targetnormals;
 	//The base mesh's vertices' spare.
-	std::vector<gVertex> basevertices;
+	std::shared_ptr<std::vector<gVertex>> basevertices;
 	//The animated frames' data.
 	std::vector<std::vector<std::vector<glm::vec3>>> framepositions, framenormals;
 	//The frames data on vram.

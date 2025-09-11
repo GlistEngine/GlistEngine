@@ -78,7 +78,9 @@ gTube::gTube(int topOuterRadius, int topInnerRadius, int bottomOuterRadius, int 
     }
 
     // Set the vertices and indices for the gMesh
-    setVertices(vertices, indices);
+    auto verticesptr = std::make_shared<std::vector<gVertex>>(vertices);
+    auto indicesptr = std::make_shared<std::vector<gIndex>>(indices);
+    setVertices(verticesptr, indicesptr);
 
     // Set the draw mode based on whether the tube is filled or not
     if (!isFilled)

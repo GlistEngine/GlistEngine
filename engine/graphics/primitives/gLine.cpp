@@ -100,5 +100,7 @@ void gLine::setLinePoints(float x1, float y1, float z1, float x2, float y2, floa
 		setDrawMode(gMesh::DRAWMODE_LINES);
 	}
 
-	setVertices(verticessb, indicessb);
+	auto vertices = std::make_shared<std::vector<gVertex>>(verticessb);
+	auto indices = std::make_shared<std::vector<gIndex>>(indicessb);
+	setVertices(vertices, indices);
 }

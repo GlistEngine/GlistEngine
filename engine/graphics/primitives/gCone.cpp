@@ -35,7 +35,9 @@ gCone::gCone(int r, int h, glm::vec2 shiftdistance, int segmentnum, bool isFille
 		indicesb.push_back(i);
 	}
 
-	setVertices(verticesb, indicesb);
+	auto verticesptr = std::make_shared<std::vector<gVertex>>(verticesb);
+	auto indicesptr = std::make_shared<std::vector<gIndex>>(indicesb);
+	setVertices(verticesptr, indicesptr);
 	if(!isFilled) setDrawMode(gMesh::DRAWMODE_LINELOOP);
 	else setDrawMode(gMesh::DRAWMODE_TRIANGLEFAN);
 }

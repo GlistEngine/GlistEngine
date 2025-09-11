@@ -55,7 +55,9 @@ void gArc::setArcPoints(float xCenter, float yCenter, float radius, bool isFille
 		vertex.position.z = 0.0f;
 		this->vertices.push_back(vertex);
 	}
-	this->setVertices(this->vertices, this->indices);
+	auto verticesptr = std::make_shared<std::vector<gVertex>>(this->vertices);
+	auto indicesptr = std::make_shared<std::vector<gIndex>>(this->indices);
+	setVertices(verticesptr, indicesptr);
 	if(isFilled == false)
 		setDrawMode(gMesh::DRAWMODE_LINESTRIP);
 	else

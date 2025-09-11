@@ -52,7 +52,9 @@ gPlane::gPlane() {
 		indicessb.push_back(2);
 		indicessb.push_back(3);
 
-		setVertices(verticessb, indicessb);
+	auto verticesptr = std::make_shared<std::vector<gVertex>>(verticessb);
+	auto indicesptr = std::make_shared<std::vector<gIndex>>(indicessb);
+	setVertices(verticesptr, indicesptr);
 }
 
 gPlane::~gPlane() {

@@ -72,7 +72,9 @@ gSphere::gSphere(int xSegmentNum, int ySegmentNum, bool isFilled) {
 		verticesb.push_back(v);
 	}
 
-	setVertices(verticesb, indicesb);
+	auto verticesptr = std::make_shared<std::vector<gVertex>>(verticesb);
+	auto indicesptr = std::make_shared<std::vector<gIndex>>(indicesb);
+	setVertices(verticesptr, indicesptr);
 	if(!isFilled) setDrawMode(gMesh::DRAWMODE_LINESTRIP);
 	else setDrawMode(gMesh::DRAWMODE_TRIANGLESTRIP);
 }

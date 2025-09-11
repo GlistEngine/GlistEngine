@@ -86,7 +86,9 @@ void gCross::drawNonFilled(float x, float y, float width, float height, float th
 	vertex.position.x = x;
 	vertex.position.y = y;
 	vertices.push_back(vertex);
-	setVertices(vertices, indices);
+	auto verticesptr = std::make_shared<std::vector<gVertex>>(vertices);
+	auto indicesptr = std::make_shared<std::vector<gIndex>>(indices);
+	setVertices(verticesptr, indicesptr);
 }
 
 void gCross::drawFilled(float x, float y, float width, float height, float thickness) {
@@ -143,5 +145,7 @@ void gCross::drawFilled(float x, float y, float width, float height, float thick
 	vertex.position.x = x - thickness + width;
 	vertex.position.y = y + thickness;
 	vertices.push_back(vertex);
-	setVertices(vertices, indices);
+	auto verticesptr = std::make_shared<std::vector<gVertex>>(vertices);
+	auto indicesptr = std::make_shared<std::vector<gIndex>>(indices);
+	setVertices(verticesptr, indicesptr);
 }
