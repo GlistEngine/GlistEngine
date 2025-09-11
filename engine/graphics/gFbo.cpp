@@ -7,6 +7,8 @@
 
 #include "gFbo.h"
 
+#include "gTracy.h"
+
 bool gFbo::isvaoset = false;
 unsigned int gFbo::quadVAO = 0;
 unsigned int gFbo::quadVBO = 0;
@@ -27,6 +29,7 @@ gFbo::gFbo() {
 }
 
 gFbo::~gFbo() {
+	G_PROFILE_ZONE_SCOPED_N("gFbo::~gFbo()");
 	delete texture;
 	renderer->deleteRenderbuffer(rbo);
 	renderer->deleteFramebuffer(framebuffer);
@@ -35,6 +38,10 @@ gFbo::~gFbo() {
 }
 
 void gFbo::allocate(int width, int height, bool isDepthMap) {
+	G_PROFILE_ZONE_SCOPED_N("gFbo::allocate()");
+	G_PROFILE_ZONE_VALUE(width);
+	G_PROFILE_ZONE_VALUE(height);
+	G_PROFILE_ZONE_VALUE(isDepthMap);
 	// check if is not allocated
 	if(isallocated) {
 		delete texture;
@@ -97,11 +104,13 @@ unsigned int gFbo::getTextureId() {
 }
 
 void gFbo::bind() {
+	G_PROFILE_ZONE_SCOPED_N("gFbo::bind()");
 	renderer->bindFramebuffer(framebuffer);
 	glViewport(0, 0, width, height);
 }
 
 void gFbo::unbind() {
+	G_PROFILE_ZONE_SCOPED_N("gFbo::unbind()");
 	renderer->bindDefaultFramebuffer();
 	glViewport(0, 0, renderer->getWidth(), renderer->getHeight());
 }

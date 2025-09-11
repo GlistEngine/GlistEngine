@@ -170,7 +170,7 @@ private:
 	//The animated frames' data.
 	std::vector<std::vector<std::vector<glm::vec3>>> framepositions, framenormals;
 	//The frames data on vram.
-	std::vector<std::vector<gVbo>> vboframes;
+	std::vector<std::vector<std::unique_ptr<gVbo>>> vboframes;
 	//The current target mesh(that is going to be end point of interpolation)'s index on the targetpositions vector.
 	//The current frame id indicates how much should the interpolation progress.
 	//The speed is used in function nextFrame which adjusts the frame automatically as a jump indicator.
@@ -188,13 +188,13 @@ private:
 	 * @brief extracts the positions from the given vertices to the targetpositions vector.
 	 * @param targetvertices is the vertex vector of target.
 	 */
-	void addTargetPositions(std::vector<gVertex>& targetvertices);
+	void addTargetPositions(const std::vector<gVertex>& targetvertices);
 
 	/*
 	 * @brief extracts the normals from the given vertices to the targetnormals vector.
 	 * @param targetvertices is the vertex vector of target.
 	 */
-	void addTargetNormals(std::vector<gVertex>& targetvertices);
+	void addTargetNormals(const std::vector<gVertex>& targetvertices);
 };
 
 #endif /* GRAPHICS_GMORPHINGMESH_H_ */

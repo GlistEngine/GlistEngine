@@ -7,6 +7,7 @@
 
 #include "gGLFWWindow.h"
 #include "gAppManager.h"
+#include "gTracy.h"
 
 const int gGLFWWindow::CURSORMODE_NORMAL = GLFW_CURSOR_NORMAL;
 const int gGLFWWindow::CURSORMODE_HIDDEN = GLFW_CURSOR_HIDDEN;
@@ -140,6 +141,7 @@ bool gGLFWWindow::getShouldClose() {
 }
 
 void gGLFWWindow::update() {
+	G_PROFILE_ZONE_SCOPED_N("gGLFWWindow::update()");
 	// End window drawing
 	G_CHECK_GL(glfwSwapBuffers(window));
 	G_CHECK_GL(glfwPollEvents());

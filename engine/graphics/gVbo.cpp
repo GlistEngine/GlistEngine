@@ -8,6 +8,7 @@
 #include "gVbo.h"
 #include "gLight.h"
 #include "gShader.h"
+#include "gTracy.h"
 
 gVbo::gVbo() {
 	vao = renderer->createVAO();
@@ -15,12 +16,9 @@ gVbo::gVbo() {
 	ebo = 0;
 	isenabled = true;
 	isvertexdataallocated = false;
-	verticesptr = nullptr;
-	vertexarrayptr = nullptr;
 	vertexdatacoordnum = 0;
 	totalvertexnum = 0;
 	isindexdataallocated = false;
-	indexarrayptr = nullptr;
 	totalindexnum = 0;
 }
 
@@ -28,60 +26,8 @@ gVbo::~gVbo() {
 	clear();
 }
 
-gVbo::gVbo(const gVbo& other) {
-	vao = renderer->createVAO();
-	vbo = 0;
-	ebo = 0;
-	isenabled = true;
-	isvertexdataallocated = false;
-	verticesptr = nullptr;
-	vertexarrayptr = nullptr;
-	vertexdatacoordnum = 0;
-	totalvertexnum = 0;
-	isindexdataallocated = false;
-	indexarrayptr = nullptr;
-	totalindexnum = 0;
-
-	isenabled = other.isenabled;
-	if (other.verticesptr) {
-		setVertexData(other.verticesptr, other.vertexdatacoordnum, other.totalvertexnum);
-	} else if (other.vertexarrayptr) {
-		setVertexData(other.vertexarrayptr, other.vertexdatacoordnum, other.totalvertexnum, other.vertexusage, other.vertexstride);
-	}
-	if (other.indexarrayptr) {
-		setIndexData(other.indexarrayptr, other.totalindexnum);
-	}
-}
-
-gVbo& gVbo::operator=(const gVbo& other) {
-	if (this == &other) {
-		return *this;
-	}
-	// clear current
-	clear();
-	verticesptr = nullptr;
-	vertexarrayptr = nullptr;
-	vertexdatacoordnum = 0;
-	totalvertexnum = 0;
-	isindexdataallocated = false;
-	indexarrayptr = nullptr;
-	totalindexnum = 0;
-	// generate vao
-	vao = renderer->createVAO();
-	// copy from the other gVbo
-	isenabled = other.isenabled;
-	if (other.verticesptr) {
-		setVertexData(other.verticesptr, other.vertexdatacoordnum, other.totalvertexnum);
-	} else if (other.vertexarrayptr) {
-		setVertexData(other.vertexarrayptr, other.vertexdatacoordnum, other.totalvertexnum, other.vertexusage, other.vertexstride);
-	}
-	if (other.indexarrayptr) {
-		setIndexData(other.indexarrayptr, other.totalindexnum);
-	}
-	return *this;
-}
-
-void gVbo::setVertexData(gVertex* vertices, int coordNum, int total) {
+void gVbo::setVertexData(const gVertex* vertices, int coordNum, int total) {
+	G_PROFILE_ZONE_SCOPED_N("gVbo::setVertexData()");
 	if (vao == GL_NONE) {
 		vao = renderer->createVAO();
 	}
@@ -90,13 +36,11 @@ void gVbo::setVertexData(gVertex* vertices, int coordNum, int total) {
 		vbo = renderer->genBuffers();
 		isvertexdataallocated = true;
 	}
-	verticesptr = &vertices[0];
-	vertexarrayptr = &vertices[0].position.x;
 	vertexdatacoordnum = coordNum;
 	totalvertexnum = total;
 
 	renderer->bindBuffer(GL_ARRAY_BUFFER, vbo);
-	renderer->setVertexBufferData(vbo, totalvertexnum * sizeof(gVertex), vertexarrayptr, GL_STATIC_DRAW);
+	renderer->setVertexBufferData(vbo, totalvertexnum * sizeof(gVertex), vertices, GL_STATIC_DRAW);
 	renderer->enableVertexAttrib(0);
 	renderer->setVertexAttribPointer(0, 3, GL_FLOAT, false, sizeof(gVertex), (void*)0);
     // vertex normals
@@ -114,42 +58,45 @@ void gVbo::setVertexData(gVertex* vertices, int coordNum, int total) {
 	unbind();
 }
 
-void gVbo::setVertexData(const float* vertexData, int coordNum, int total, int usage, int stride) {
+void gVbo::setVertexData(const float* verticesptr, int coordNum, int total, int usage, int stride) {
 	if (vao == GL_NONE) {
 		vao = renderer->createVAO();
 	}
 	bind();
 	if (!isvertexdataallocated) {
 		vbo = renderer->genBuffers();
-      isvertexdataallocated = true;
+		isvertexdataallocated = true;
     }
-	vertexarrayptr = vertexData;
 	vertexdatacoordnum = coordNum;
 	totalvertexnum = total;
 	vertexusage = usage;
 	vertexstride = stride;
 
 
-	GLsizeiptr size = (stride == 0) ? vertexdatacoordnum * sizeof(float) : stride;
-	renderer->setVertexBufferData(vbo, totalvertexnum * size, vertexarrayptr, usage);
+	GLsizeiptr size = stride == 0 ? vertexdatacoordnum * sizeof(float) : stride;
+	renderer->setVertexBufferData(vbo, totalvertexnum * size, verticesptr, usage);
 	renderer->enableVertexAttrib(0);
 	renderer->setVertexAttribPointer(0, vertexdatacoordnum, GL_FLOAT, GL_FALSE, vertexdatacoordnum * sizeof(float), nullptr);
 	unbind();
 }
 
-void gVbo::setIndexData(gIndex* indices, int total) {
+void gVbo::setIndexData(const gIndex* indices, int total) {
+	if (indices == nullptr) {
+		glDeleteBuffers(1, &ebo);
+		isindexdataallocated = false;
+		return;
+	}
 	if (vao == GL_NONE) {
 		vao = renderer->createVAO();
 	}
 	bind();
 	if (!isindexdataallocated) {
 		ebo = renderer->genBuffers();
-      isindexdataallocated = true;
+		isindexdataallocated = true;
     }
-	indexarrayptr = indices;
 	totalindexnum = total;
 
-	renderer->setIndexBufferData(ebo, totalindexnum * sizeof(gIndex), indexarrayptr, GL_STATIC_DRAW);
+	renderer->setIndexBufferData(ebo, totalindexnum * sizeof(gIndex), indices, GL_STATIC_DRAW);
 	unbind();
 }
 
@@ -166,14 +113,6 @@ void gVbo::clear() {
 		renderer->deleteVAO(vao);
 		vao = GL_NONE;
 	}
-}
-
-gVertex* gVbo::getVertices() const {
-	return verticesptr;
-}
-
-gIndex* gVbo::getIndices() const {
-	return indexarrayptr;
 }
 
 void gVbo::bind() const {
