@@ -38,6 +38,45 @@ gModel::~gModel() {
 	}
 }
 
+void gModel::disassemble() {
+	for (auto& mesh : meshes) {
+		// 1. Get the world transform of this mesh
+		glm::mat4 worldTransform = getTransformationMatrix();
+
+		// 2. Transform all vertices into world space
+		std::shared_ptr<std::vector<gVertex>> verticesptr = mesh->getVertices();
+		std::vector<gVertex>& vertices = *verticesptr;
+		glm::vec3 centroid(0.0f);
+
+		for (auto& v : vertices) {
+			glm::vec4 wp = worldTransform * glm::vec4(v.position, 1.0f);
+			v.position = glm::vec3(wp);
+			centroid += v.position;
+		}
+
+		// 3. Compute the centroid
+		centroid /= (float)vertices.size();
+
+		// 4. Rebase vertices so centroid is origin in mesh-local space
+		for (auto& v : vertices) {
+			v.position -= centroid;
+		}
+
+		// 5. Store updated vertices back
+		mesh->setVertices(verticesptr, mesh->getIndices());
+
+		// 6. Reset mesh transform: now its local origin is at centroid
+		mesh->setPosition(centroid);
+
+		// 7. Clear mesh scale/rotation if you want them baked into vertex positions
+		mesh->setScale(1.0f);
+		//mesh->setRotation(0, 0, 0);
+	}
+
+	setScale(1.0f);
+	//setOrientation(glm::vec3(0, 0, 0));
+}
+
 void gModel::load(const std::string& fullPath) {
 	loadModelFile(fullPath);
 }
@@ -173,11 +212,6 @@ void gModel::loadMorphingTargetModelFile(const std::string& fullPath) {
     processMorphingNode(morphingtargetscenes[targetid]->mRootNode, morphingtargetscenes[targetid]);
 }
 
-void gModel::move(float dx, float dy, float dz) {
-	gNode::move(dx, dy, dz);
-	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i]->move(dx, dy, dz);
-}
-
 void gModel::move(const glm::vec3& dv) {
 	gNode::move(dv);
 	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i]->move(dv);
@@ -193,19 +227,9 @@ void gModel::rotate(float radians, float ax, float ay, float az) {
 	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i]->rotate(radians, ax, ay, az);
 }
 
-void gModel::rotateDeg(float degrees, float ax, float ay, float az) {
-	gNode::rotateDeg(degrees, ax, ay, az);
-	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i]->rotateDeg(degrees, ax, ay, az);
-}
-
 void gModel::rotateAround(float radians, const glm::vec3& axis, const glm::vec3& point) {
 	gNode::rotateAround(radians, axis, point);
 	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i]->rotateAround(radians, axis, point);
-}
-
-void gModel::rotateAroundDeg(float degrees, const glm::vec3& axis, const glm::vec3& point) {
-	gNode::rotateAroundDeg(degrees, axis, point);
-	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i]->rotateAroundDeg(degrees, axis, point);
 }
 
 void gModel::scale(float sx, float sy, float sz) {
@@ -218,14 +242,10 @@ void gModel::scale(float s) {
 	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i]->scale(s);
 }
 
-void gModel::setPosition(float px, float py, float pz) {
-	gNode::setPosition(px, py, pz);
-	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i]->setPosition(px, py, pz);
-}
-
 void gModel::setPosition(const glm::vec3& p) {
+	//glm::vec3 offset = p - gNode::getPosition();
 	gNode::setPosition(p);
-	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i]->setPosition(p);
+	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i]->setPosition(p); //meshes[i]->move(offset);
 }
 
 void gModel::setOrientation(const glm::quat& o) {
@@ -240,17 +260,10 @@ void gModel::setOrientation(const glm::vec3& angles) {
 
 void gModel::setScale(const glm::vec3& s) {
 	gNode::setScale(s);
-	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i]->setScale(s);
-}
-
-void gModel::setScale(float sx, float sy, float sz) {
-	gNode::setScale(sx, sy, sz);
-	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i]->setScale(sx, sy, sz);
-}
-
-void gModel::setScale(float s) {
-	gNode::setScale(s);
-	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i]->setScale(s);
+	for(unsigned int i = 0; i < meshes.size(); i++) {
+		meshes[i]->setScale(s);
+		//meshes[i]->setPosition(meshes[i]->getPosition() * s);
+	}
 }
 
 void gModel::dolly(float distance) {
@@ -270,32 +283,26 @@ void gModel::boom(float distance) {
 
 void gModel::tilt(float radians) {
 	gNode::tilt(radians);
-	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i]->tilt(radians);
-}
-
-void gModel::tiltDeg(float degrees) {
-	gNode::tiltDeg(degrees);
-	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i]->tiltDeg(degrees);
+	for(unsigned int i = 0; i < meshes.size(); i++) {
+		//meshes[i]->rotateAround(radians, glm::vec3(1, 0, 0), position);
+		meshes[i]->tilt(radians);
+	}
 }
 
 void gModel::pan(float radians) {
 	gNode::pan(radians);
-	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i]->pan(radians);
-}
-
-void gModel::panDeg(float degrees) {
-	gNode::panDeg(degrees);
-	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i]->panDeg(degrees);
+	for(unsigned int i = 0; i < meshes.size(); i++) {
+		//meshes[i]->rotateAround(radians, glm::vec3(0, 1, 0), position);
+		meshes[i]->pan(radians);
+	}
 }
 
 void gModel::roll(float radians) {
 	gNode::roll(radians);
-	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i]->roll(radians);
-}
-
-void gModel::rollDeg(float degrees) {
-	gNode::rollDeg(degrees);
-	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i]->rollDeg(degrees);
+	for(unsigned int i = 0; i < meshes.size(); i++) {
+		//meshes[i]->rotateAround(radians, glm::vec3(0, 0, 1), position);
+		meshes[i]->roll(radians);
+	}
 }
 
 void gModel::setTransformationMatrix(const glm::mat4& transformationMatrix) {
@@ -366,63 +373,65 @@ void gModel::processNode(aiNode *node, const aiScene *scene) {
 	for(unsigned int i = 0; i < node->mNumChildren; i++) {
 		processNode(node->mChildren[i], scene);
 	}
-
 }
 
 gSkinnedMesh* gModel::processMesh(aiMesh *mesh, const aiScene *scene, aiMatrix4x4 matrix) {
-    // data to fill
-    std::vector<gVertex> vertices;
-    std::vector<gIndex> indices;
-    glm::mat4 mat = convertMatrix(matrix);
+	if(mesh2svimap.find(mesh) == mesh2svimap.end()) {
+		auto verticesptr = std::make_shared<std::vector<gVertex>>();
+		auto indicesptr = std::make_shared<std::vector<gIndex>>();
+		mesh2svimap[mesh] = {verticesptr, indicesptr};
+		std::vector<gVertex>& vertices = *mesh2svimap[mesh].vertices;
+	    std::vector<gIndex>& indices = *mesh2svimap[mesh].indices;
+		// walk through each of the mesh's vertices
+	    for(unsigned int i = 0; i < mesh->mNumVertices; i++) {
+	        gVertex vertex;
+	        glm::vec3 vector; // we declare a placeholder vector since assimp uses its own vector class that doesn't directly convert to glm's vec3 class so we transfer the data to this placeholder glm::vec3 first.
+	        // positions
+	        vector.x = mesh->mVertices[i].x;
+	        vector.y = mesh->mVertices[i].y;
+	        vector.z = mesh->mVertices[i].z;
+	        vertex.position = vector;
+	        // normals
+	        vector.x = mesh->mNormals[i].x;
+	        vector.y = mesh->mNormals[i].y;
+	        vector.z = mesh->mNormals[i].z;
+	        vertex.normal = vector;
 
-    // walk through each of the mesh's vertices
-    for(unsigned int i = 0; i < mesh->mNumVertices; i++) {
-        gVertex vertex;
-        glm::vec3 vector; // we declare a placeholder vector since assimp uses its own vector class that doesn't directly convert to glm's vec3 class so we transfer the data to this placeholder glm::vec3 first.
-        // positions
-        vector.x = mesh->mVertices[i].x;
-        vector.y = mesh->mVertices[i].y;
-        vector.z = mesh->mVertices[i].z;
-        vertex.position = vector;
-        // normals
-        vector.x = mesh->mNormals[i].x;
-        vector.y = mesh->mNormals[i].y;
-        vector.z = mesh->mNormals[i].z;
-        vertex.normal = vector;
+	        // texture coordinates
+	        if(mesh->mTextureCoords[0]) {
+	            glm::vec2 vec;
+	            // a vertex can contain up to 8 different texture coordinates. We thus make the assumption that we won't
+	            // use models where a vertex can have multiple texture coordinates so we always take the first set (0).
+	            vec.x = mesh->mTextureCoords[0][i].x;
+	            vec.y = mesh->mTextureCoords[0][i].y;
+	            vertex.texcoords = vec;
+	        } else vertex.texcoords = glm::vec2(0.0f, 0.0f);
 
-        // texture coordinates
-        if(mesh->mTextureCoords[0]) {
-            glm::vec2 vec;
-            // a vertex can contain up to 8 different texture coordinates. We thus make the assumption that we won't
-            // use models where a vertex can have multiple texture coordinates so we always take the first set (0).
-            vec.x = mesh->mTextureCoords[0][i].x;
-            vec.y = mesh->mTextureCoords[0][i].y;
-            vertex.texcoords = vec;
-        } else vertex.texcoords = glm::vec2(0.0f, 0.0f);
+	        // tangent
+	        vector.x = mesh->mTangents[i].x;
+	        vector.y = mesh->mTangents[i].y;
+	        vector.z = mesh->mTangents[i].z;
+	        vertex.tangent = vector;
 
-        // tangent
-        vector.x = mesh->mTangents[i].x;
-        vector.y = mesh->mTangents[i].y;
-        vector.z = mesh->mTangents[i].z;
-        vertex.tangent = vector;
+	        // bitangent
+	        vector.x = mesh->mBitangents[i].x;
+	        vector.y = mesh->mBitangents[i].y;
+	        vector.z = mesh->mBitangents[i].z;
+	        vertex.bitangent = vector;
+	        vertices.push_back(vertex);
+	    }
 
-        // bitangent
-        vector.x = mesh->mBitangents[i].x;
-        vector.y = mesh->mBitangents[i].y;
-        vector.z = mesh->mBitangents[i].z;
-        vertex.bitangent = vector;
-        vertices.push_back(vertex);
-    }
+	    // now walk through each of the mesh's faces (a face is a mesh its triangle) and retrieve the corresponding vertex indices.
+	    for(unsigned int i = 0; i < mesh->mNumFaces; i++) {
+	        aiFace face = mesh->mFaces[i];
 
-    // now walk through each of the mesh's faces (a face is a mesh its triangle) and retrieve the corresponding vertex indices.
-    for(unsigned int i = 0; i < mesh->mNumFaces; i++) {
-        aiFace face = mesh->mFaces[i];
-
-        // retrieve all indices of the face and store them in the indices vector
-        for(unsigned int j = 0; j < face.mNumIndices; j++)
-            indices.push_back(face.mIndices[j]);
-    }
-
+	        // retrieve all indices of the face and store them in the indices vector
+	        for(unsigned int j = 0; j < face.mNumIndices; j++)
+	            indices.push_back(face.mIndices[j]);
+	    }
+	}
+    //glm::mat4 mat = convertMatrix(matrix);
+	
     // process materials
     aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
     // we assume a convention for sampler names in the shaders. Each diffuse texture should be named
@@ -435,10 +444,10 @@ gSkinnedMesh* gModel::processMesh(aiMesh *mesh, const aiScene *scene, aiMatrix4x
     // return a mesh object created from the extracted mesh data
     gSkinnedMesh* gmesh = new gSkinnedMesh();
     gmesh->setName(mesh->mName.C_Str());
-    gmesh->setVertices(vertices, indices);
+	SharedVertexIndex& svi = mesh2svimap[mesh];
+	gmesh->setVertices(svi.vertices, svi.indices);
 //    gmesh.setTransformationMatrix(convertMatrix(matrix));
-
-    loadMaterialTextures(gmesh, material, aiTextureType_DIFFUSE, gTexture::TEXTURETYPE_DIFFUSE);
+	loadMaterialTextures(gmesh, material, aiTextureType_DIFFUSE, gTexture::TEXTURETYPE_DIFFUSE);
     loadMaterialTextures(gmesh, material, aiTextureType_SPECULAR, gTexture::TEXTURETYPE_SPECULAR);
     loadMaterialTextures(gmesh, material, aiTextureType_NORMALS, gTexture::TEXTURETYPE_NORMAL);
     loadMaterialTextures(gmesh, material, aiTextureType_HEIGHT, gTexture::TEXTURETYPE_HEIGHT);
@@ -447,7 +456,6 @@ gSkinnedMesh* gModel::processMesh(aiMesh *mesh, const aiScene *scene, aiMatrix4x
     loadMaterialTextures(gmesh, material, aiTextureType_METALNESS, gTexture::TEXTURETYPE_PBR_METALNESS);
     loadMaterialTextures(gmesh, material, aiTextureType_NORMAL_CAMERA, gTexture::TEXTURETYPE_PBR_NORMAL);
     loadMaterialTextures(gmesh, material, aiTextureType_AMBIENT_OCCLUSION, gTexture::TEXTURETYPE_PBR_AO);
-
     return gmesh;
 }
 
@@ -507,7 +515,7 @@ void gModel::processMorphingNode(aiNode *node, const aiScene *scene) {
 }
 
 gMesh* gModel::processMorphingMesh(aiMesh *mesh, const aiScene *scene, aiMatrix4x4 matrix) {
-	std::vector<gVertex> vertices;
+	auto vertices = std::make_shared<std::vector<gVertex>>();
 	glm::mat4 mat = convertMatrix(matrix);
 
 	// walk through each of the mesh's vertices
@@ -524,7 +532,7 @@ gMesh* gModel::processMorphingMesh(aiMesh *mesh, const aiScene *scene, aiMatrix4
 		vector.y = mesh->mNormals[i].y;
 		vector.z = mesh->mNormals[i].z;
 		vertex.normal = vector;
-		vertices.push_back(vertex);
+		vertices->push_back(vertex);
 	}
 
 	gMesh* gmesh = new gMesh();
@@ -710,11 +718,11 @@ void gModel::updateBones(gSkinnedMesh* gmesh, aiMesh* aimesh) {
 }
 
 void gModel::updateVbo(gSkinnedMesh* gmesh) {
-	std::vector<gVertex>& vertexarray = gmesh->getVertices();
-	std::vector<gIndex>& indexarray = gmesh->getIndices();
+	auto vertexarray = gmesh->getVertices();
+	auto indexarray = gmesh->getIndices();
 	for (int i = 0; i < gmesh->getVbo()->getVerticesNum(); i++) {
-		vertexarray[i].position = gmesh->getVertexPos(i);
-		vertexarray[i].normal = gmesh->getVertexNorm(i);
+		(*vertexarray)[i].position = gmesh->getVertexPos(i);
+		(*vertexarray)[i].normal = gmesh->getVertexNorm(i);
 	}
 	gmesh->setVertices(vertexarray, indexarray);
 }
@@ -915,8 +923,8 @@ void gModel::prepareVertexAnimationData() {
                 }
 
                 if (isvertexanimationstoredonvram) {
-                	std::vector<gVertex> vertexarray = meshes[i]->getVertices();
-                	std::vector<gIndex> indexarray = meshes[i]->getIndices();
+                	std::vector<gVertex> vertexarray = *meshes[i]->getVertices();
+                	std::vector<gIndex> indexarray = *meshes[i]->getIndices();
                 	for (int l=0; l<meshes[i]->getVbo()->getVerticesNum(); l++) {
                 		vertexarray[l].position = meshes[i]->getVertexPosData(j, k, l);
                 		vertexarray[l].normal = meshes[i]->getVertexNormData(j, k, l);

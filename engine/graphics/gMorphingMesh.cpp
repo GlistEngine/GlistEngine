@@ -35,8 +35,8 @@ void gMorphingMesh::addTargetNormals(std::vector<gVertex> &targetVertices) {
 }
 
 int gMorphingMesh::addTargetMesh(gMesh *targetMesh) {
-	addTargetPositions(targetMesh->getVertices());
-	addTargetNormals(targetMesh->getVertices());
+	addTargetPositions(*targetMesh->getVertices());
+	addTargetNormals(*targetMesh->getVertices());
 	framecounts.push_back(1);
 	vboframes.push_back(std::vector<gVbo>());
 	framepositions.push_back(std::vector<std::vector<glm::vec3>>());
@@ -75,18 +75,18 @@ void gMorphingMesh::interpolate(bool forceInterpolation) {
 		gLoge("gMorphingMesh::interpolate::Cannot interpolate the morphing mesh since either there aren't any target mesh added for morphig mesh or there aren't any base mesh setted.");
 		return;
 	}
-	//Setting vertices of the frame/frames depending on the options.
+	//Setting vertidxdataptr->vertices of the frame/frames depending on the options.
 	if (!ismorphinganimationstoredonvram) {
 		if (!ismorphinganimated) {
-			std::vector<gVertex> framevertices;
-			framevertices.reserve(targetpositions[currenttargetmeshid].size());
+			auto framevertices = std::make_shared<std::vector<gVertex>>();
+			framevertices->reserve(targetpositions[currenttargetmeshid].size());
 			//Filling the framevertices corresponding to the current frame.
 			for (int i = 0; i < targetpositions[currenttargetmeshid].size(); i++) {
-				framevertices.push_back(basevertices[i]);
-				framevertices[i].position += ((targetpositions[currenttargetmeshid][i] - framevertices[i].position) * ((float)(currentframeid + 1) / (float)framecounts[currenttargetmeshid]));
-				framevertices[i].normal += ((targetnormals[currenttargetmeshid][i] - framevertices[i].normal) * ((float)(currentframeid + 1) / (float)framecounts[currenttargetmeshid]));
+				framevertices->push_back((*basevertices)[i]);
+				(*framevertices)[i].position += ((targetpositions[currenttargetmeshid][i] - (*framevertices)[i].position) * ((float)(currentframeid + 1) / (float)framecounts[currenttargetmeshid]));
+				(*framevertices)[i].normal += ((targetnormals[currenttargetmeshid][i] - (*framevertices)[i].normal) * ((float)(currentframeid + 1) / (float)framecounts[currenttargetmeshid]));
 			}
-			//Setting the vertices with framevertices.
+			//Setting the vertidxdataptr->vertices with framevertices.
 			this->setVertices(framevertices, basemesh->getIndices());
 			//Setting the olds as currents. Since they are going to be checked in other interpolation to avoid unnecessary frame calculations.
 			oldframeid = currentframeid;
@@ -104,8 +104,8 @@ void gMorphingMesh::interpolate(bool forceInterpolation) {
 				framenormals[currenttargetmeshid][i].resize(basemesh->getVerticesNum());
 				//Filling the positions with their corresponding frame's interolation factor.
 				for (int j = 0; j < targetpositions[currenttargetmeshid].size(); j++) {
-					framepositions[currenttargetmeshid][i][j] = basevertices[j].position + ((targetpositions[currenttargetmeshid][j] - basevertices[j].position) * ((float)(i + 1) / (float)framecounts[currenttargetmeshid]));
-					framenormals[currenttargetmeshid][i][j] = basevertices[j].normal + ((targetnormals[currenttargetmeshid][j] - basevertices[j].position) * ((float)(i + 1) / (float)framecounts[currenttargetmeshid]));
+					framepositions[currenttargetmeshid][i][j] = (*basevertices)[j].position + ((targetpositions[currenttargetmeshid][j] - (*basevertices)[j].position) * ((float)(i + 1) / (float)framecounts[currenttargetmeshid]));
+					framenormals[currenttargetmeshid][i][j] = (*basevertices)[j].normal + ((targetnormals[currenttargetmeshid][j] - (*basevertices)[j].position) * ((float)(i + 1) / (float)framecounts[currenttargetmeshid]));
 				}
 			}
 		}
@@ -118,13 +118,13 @@ void gMorphingMesh::interpolate(bool forceInterpolation) {
 			std::vector<gVertex> framevertices(targetpositions[currenttargetmeshid].size());
 			//Filling the framevertices vector with the corresponding frame's interpolation factor.
 			for (int j = 0; j < targetpositions[currenttargetmeshid].size(); j++) {
-				framevertices[j] = basevertices[j];
-				framevertices[j].position = basevertices[j].position + ((targetpositions[currenttargetmeshid][j] - basevertices[j].position) * ((float)(i + 1) / (float)framecounts[currenttargetmeshid]));
-				framevertices[j].normal = basevertices[j].normal + ((targetnormals[currenttargetmeshid][j] - basevertices[j].position) * ((float)(i + 1) / (float)framecounts[currenttargetmeshid]));
+				framevertices[j] = (*basevertices)[j];
+				framevertices[j].position = (*basevertices)[j].position + ((targetpositions[currenttargetmeshid][j] - (*basevertices)[j].position) * ((float)(i + 1) / (float)framecounts[currenttargetmeshid]));
+				framevertices[j].normal = (*basevertices)[j].normal + ((targetnormals[currenttargetmeshid][j] - (*basevertices)[j].position) * ((float)(i + 1) / (float)framecounts[currenttargetmeshid]));
 			}
 			//Setting the datas of frame's vbo as the datas filled above.
 			vboframes[currenttargetmeshid][i].setVertexData(framevertices.data(), sizeof(gVertex), framevertices.size());
-			vboframes[currenttargetmeshid][i].setIndexData(basemesh->getIndices().data(), basemesh->getIndicesNum());
+			vboframes[currenttargetmeshid][i].setIndexData(basemesh->getIndices()->data(), basemesh->getIndicesNum());
 		}
 	}
 }
@@ -227,10 +227,10 @@ void gMorphingMesh::setMorphingAnimationStoredOnVram(bool isMorphingAnimationSto
 void gMorphingMesh::draw() {
 	if (!ismorphinganimationstoredonvram) {
 		if (ismorphinganimated && (currentframeid != oldframeid || currenttargetmeshid != oldtargetmeshid)) {
-			//Setting the vertices' datas as the stored datas.
+			//Setting the vertidxdataptr->vertices' datas as the stored datas.
 			for (int i = 0; i < framepositions[currenttargetmeshid][currentframeid].size(); i++) {
-				vertices[i].position = framepositions[currenttargetmeshid][currentframeid][i];
-				vertices[i].normal = framenormals[currenttargetmeshid][currentframeid][i];
+				(*vertices)[i].position = framepositions[currenttargetmeshid][currentframeid][i];
+				(*vertices)[i].normal = framenormals[currenttargetmeshid][currentframeid][i];
 			}
 			this->setVertices(vertices, this->getIndices());
 			//Settin olds as currents to avoid unnecessary frame data changes.

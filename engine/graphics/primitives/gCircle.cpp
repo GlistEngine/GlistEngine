@@ -48,8 +48,8 @@ void gCircle::setCirclePoints(float xCenter, float yCenter, float radius, bool i
 		vertex.position.z = 0.0f;
 		verticessb.push_back(vertex);
 	}
-
-	setVertices(verticessb);
+	auto verticesptr = std::make_shared<std::vector<gVertex>>(verticessb);
+	setVertices(verticesptr);
 	if(isFilled == false) setDrawMode(gMesh::DRAWMODE_LINESTRIP);
 	else setDrawMode(gMesh::DRAWMODE_TRIANGLEFAN);
 }

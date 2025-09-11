@@ -33,9 +33,13 @@ gMesh::gMesh() {
     textureshader = nullptr;
     pbrshader = nullptr;
 	needsboundingboxrecalculation = false;
+	this->vertices = std::make_shared<std::vector<gVertex>>();
+	this->indices = std::make_shared<std::vector<gIndex>>();
 }
 
-gMesh::gMesh(std::vector<gVertex> vertices, std::vector<gIndex> indices, std::vector<gTexture*> textures) {
+gMesh::gMesh(std::shared_ptr<std::vector<gVertex>> vertices,
+			std::shared_ptr<std::vector<gIndex>> indices,
+			std::vector<gTexture*> textures) {
 	name = "";
 	sli = 0;
 	ti = 0;
@@ -66,23 +70,29 @@ const std::string& gMesh::getName() const {
 	return name;
 }
 
-void gMesh::setVertices(std::vector<gVertex> vertices, std::vector<gIndex> indices) {
+void gMesh::setVertices(std::shared_ptr<std::vector<gVertex>> vertices) {
+	this->vertices = vertices;
+	vbo.setVertexData(vertices->data(), sizeof(gVertex), vertices->size());
+	recalculateBoundingBox();
+	initialboundingbox = boundingbox;
+	//	initialboundingbox.setTransformationMatrix(localtransformationmatrix);
+}
+
+void gMesh::setVertices(std::shared_ptr<std::vector<gVertex>> vertices, std::shared_ptr<std::vector<gIndex>> indices) {
 	this->vertices = vertices;
 	this->indices = indices;
-	vbo.setVertexData(vertices.data(), sizeof(gVertex), vertices.size());
-	if (!indices.empty()) {
-		vbo.setIndexData(indices.data(), indices.size());
-	}
+	vbo.setVertexData(vertices->data(), sizeof(gVertex), vertices->size());
+	vbo.setIndexData(indices->data(), indices->size());
 	recalculateBoundingBox();
 	initialboundingbox = boundingbox;
 //	initialboundingbox.setTransformationMatrix(localtransformationmatrix);
 }
 
-std::vector<gVertex>& gMesh::getVertices() {
+std::shared_ptr<std::vector<gVertex>> gMesh::getVertices() {
 	return vertices;
 }
 
-std::vector<gIndex>& gMesh::getIndices() {
+std::shared_ptr<std::vector<gIndex>> gMesh::getIndices() {
 	return indices;
 }
 
@@ -354,7 +364,7 @@ const gBoundingBox& gMesh::getBoundingBox() {
 
 void gMesh::recalculateBoundingBox() {
 	// Ensure the vertex list is not empty
-	if (vertices.empty()) {
+	if (vertices->empty()) {
 		// Handle empty vertices case appropriately
 		boundingbox = {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
 		needsboundingboxrecalculation = false;
@@ -362,7 +372,7 @@ void gMesh::recalculateBoundingBox() {
 	}
 
 	// Calculate the local bounding box
-	glm::vec4 pos1 = localtransformationmatrix * glm::vec4(vertices[0].position, 1.0f);
+	glm::vec4 pos1 = localtransformationmatrix * glm::vec4((*vertices)[0].position, 1.0f);
 
 	float minx = pos1.x, miny = pos1.y, minz = pos1.z;
 	float maxx = pos1.x, maxy = pos1.y, maxz = pos1.z;
@@ -371,8 +381,8 @@ void gMesh::recalculateBoundingBox() {
 	__m128 minvals = _mm_set_ps(minz, miny, minx, 0);
 	__m128 maxvals = _mm_set_ps(maxz, maxy, maxx, 0);
 
-	for (size_t i = 1; i < vertices.size(); ++i) {
-		glm::vec4 pos = localtransformationmatrix * glm::vec4(vertices[i].position, 1.0f);
+	for (size_t i = 1; i < vertices->size(); ++i) {
+		glm::vec4 pos = localtransformationmatrix * glm::vec4((*vertices)[i].position, 1.0f);
 		__m128 current = _mm_set_ps(pos.z, pos.y, pos.x, 0);
 
 		minvals = _mm_min_ps(minvals, current);
@@ -440,11 +450,11 @@ float gMesh::distanceTriangles(gRay* ray) {
 	glm::vec2 baryposition(0);
 	float mindistance = std::numeric_limits<float>::max();
 	float distance = 0.0f;
-	for (int i = 0; i < indices.size(); i += 3) {
+	for (int i = 0; i < indices->size(); i += 3) {
 		//iterate through all faces of the mesh since each face has 3 vertices
-		glm::vec3 a = vertices[indices[i]].position;
-		glm::vec3 b = vertices[indices[i + 1]].position;
-		glm::vec3 c = vertices[indices[i + 2]].position;
+		glm::vec3 a = (*vertices)[(*indices)[i]].position;
+		glm::vec3 b = (*vertices)[(*indices)[i + 1]].position;
+		glm::vec3 c = (*vertices)[(*indices)[i + 2]].position;
 		if(glm::intersectRayTriangle(ray->getOrigin(), ray->getDirection(), a, b, c, baryposition, distance)) {
 			if(distance > 0) {
 				if(distance < mindistance) mindistance = distance;

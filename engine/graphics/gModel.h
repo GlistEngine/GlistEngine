@@ -39,6 +39,8 @@ public:
 	gModel();
 	virtual ~gModel();
 
+	void disassemble();
+
 	void loadModel(const std::string& modelPath);
 	void loadModelWithOriginalVertices(const std::string& modelPath);
 	void loadMorphingTargetModel(const std::string& modelPath);
@@ -54,32 +56,32 @@ public:
 	const std::string getMeshName(int meshNo) const;
 	const gBoundingBox& getBoundingBox();
 
-	void move(float dx, float dy, float dz);
+	void move(float dx, float dy, float dz) { move(glm::vec3(dx, dy, dz)); }
 	void move(const glm::vec3& dv);
 	void rotate(const glm::quat& q);
 	void rotate(float radians, float ax, float ay, float az); //first change
-	void rotateDeg(float degrees, float ax, float ay, float az);
+	void rotateDeg(float degrees, float ax, float ay, float az) { rotate(glm::radians(degrees), ax, ay, az); } //first change
 	void rotateAround(float radians, const glm::vec3& axis, const glm::vec3& point);
-	void rotateAroundDeg(float degrees, const glm::vec3& axis, const glm::vec3& point);
+	void rotateAroundDeg(float degrees, const glm::vec3& axis, const glm::vec3& point) { rotateAround(glm::radians(degrees), axis, point); }
 	void scale(float sx, float sy, float sz);
 	void scale(float s);
 	void dolly(float distance);
 	void truck(float distance);
 	void boom(float distance);
 	void tilt(float radians);
-	void tiltDeg(float degrees);
+	void tiltDeg(float degrees) { tilt(glm::radians(degrees)); }
 	void pan(float radians);
-	void panDeg(float degrees);
+	void panDeg(float degrees) { pan(glm::radians(degrees)); }
 	void roll(float radians);
-	void rollDeg(float degrees);
+	void rollDeg(float degrees) { roll(glm::radians(degrees)); }
 
-	void setPosition(float px, float py, float pz);
+	void setPosition(float px, float py, float pz) { setPosition(glm::vec3(px, py, pz)); }
 	void setPosition(const glm::vec3& p);
 	void setOrientation(const glm::quat& o);
 	void setOrientation(const glm::vec3& angles);
 	void setScale(const glm::vec3& s);
-	void setScale(float sx, float sy, float sz);
-	void setScale(float s);
+	void setScale(float sx, float sy, float sz) { setScale(glm::vec3(sx, sy, sz)); }
+	void setScale(float s) { setScale(glm::vec3(s, s, s)); }
 
 	void setTransformationMatrix(const glm::mat4& transformationMatrix);
 
@@ -119,6 +121,12 @@ protected:
 	void processTransformationMatrix() override;
 
 private:
+	struct SharedVertexIndex {
+		std::shared_ptr<std::vector<gVertex>> vertices;
+		std::shared_ptr<std::vector<gIndex>> indices;
+	};
+	std::unordered_map<aiMesh*, SharedVertexIndex> mesh2svimap;
+
 	const aiScene* scene;
 	std::vector<const aiScene*> morphingtargetscenes;
 	void loadModelFile(const std::string& fullPath);
