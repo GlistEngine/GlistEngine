@@ -7,6 +7,14 @@ if(NOT DEFINED GLIST_CXX_STANDARD_REQUIRED)
 	set(GLIST_CXX_STANDARD_REQUIRED True)
 endif()
 
+# Fix behavior of CMAKE_CXX_STANDARD when targeting macOS.
+if (POLICY CMP0025)
+	cmake_policy(SET CMP0025 NEW)
+endif()
+
+set(CMAKE_CXX_STANDARD ${GLIST_CXX_STANDARD})
+set(CMAKE_CXX_STANDARD_REQUIRED ${GLIST_CXX_STANDARD_REQUIRED})
+
 # Configure compiler and linker as you need
 set(GLIST_CXX_FLAGS_COMMON
     -Wuninitialized
