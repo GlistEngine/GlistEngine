@@ -29,6 +29,7 @@
 #include "stb/stb_image_write.h"
 #include "gBaseApp.h"
 #include "gImage.h"
+#include "gTracy.h"
 
 const int gRenderer::SCREENSCALING_NONE = 0;
 const int gRenderer::SCREENSCALING_MIPMAP = 1;
@@ -48,46 +49,8 @@ int gRenderer::screenscaling;
 int gRenderer::currentresolution;
 int gRenderer::unitresolution;
 
-void gCheckGLErrorAndPrint(const std::string& prefix, const std::string& func, int line) {
-	GLenum error = glGetError();
-	if (error != GL_NO_ERROR) {
-		gLogi("gRenderer") << prefix << "OpenGL ERROR at " << func << ", line " << line << ", error: " << gToHex(error, 4);
-	}
-}
-
-void gEnableCulling() {
-	glEnable(GL_CULL_FACE);
-}
-
-void gDisableCulling() {
-	glDisable(GL_CULL_FACE);
-}
-
-bool gIsCullingEnabled() {
-	return glIsEnabled(GL_CULL_FACE);
-}
-
-void gCullFace(int cullingFace) {
-	glCullFace(cullingFace);
-}
-
-int gGetCullFace() {
-	GLint i;
-	glGetIntegerv(GL_CULL_FACE_MODE, &i);
-	return i;
-}
-
-void gSetCullingDirection(int cullingDirection) {
-	glFrontFace(cullingDirection);
-}
-
-int gGetCullingDirection() {
-	GLint i;
-	glGetIntegerv(GL_FRONT_FACE, &i);
-	return i;
-}
-
 void gDrawLine(float x1, float y1, float x2, float y2, float thickness) {
+	G_PROFILE_ZONE_SCOPED_N("gDrawLine()");
 	gLine linemesh;
 	linemesh.setThickness(thickness);
 	linemesh.draw(x1, y1, x2, y2);
@@ -95,6 +58,7 @@ void gDrawLine(float x1, float y1, float x2, float y2, float thickness) {
 }
 
 void gDrawLine(float x1, float y1, float z1, float x2, float y2, float z2, float thickness) {
+	G_PROFILE_ZONE_SCOPED_N("gDrawLine()");
 	gLine linemesh;
 	linemesh.setThickness(thickness);
 	linemesh.draw(x1, y1, z1, x2, y2, z2);
@@ -102,30 +66,35 @@ void gDrawLine(float x1, float y1, float z1, float x2, float y2, float z2, float
 }
 
 void gDrawTriangle(float px, float py, float qx, float qy, float rx, float ry, bool is_filled) {
+	G_PROFILE_ZONE_SCOPED_N("gDrawTriangle()");
 	gTriangle trianglemesh;
 	trianglemesh.draw(px, py, qx, qy, rx, ry, is_filled);
 	trianglemesh.clear();
 }
 
 void gDrawCircle(float xCenter, float yCenter, float radius, bool isFilled, float numberOfSides) {
+	G_PROFILE_ZONE_SCOPED_N("gDrawCircle()");
 	gCircle circlemesh;
 	circlemesh.draw(xCenter, yCenter, radius, isFilled, numberOfSides);
 	circlemesh.clear();
 }
 
 void gDrawCross(float x, float y, float width, float height, float thickness, bool isFilled) {
+	G_PROFILE_ZONE_SCOPED_N("gDrawCross()");
 	gCross crossmesh;
 	crossmesh.draw(x, y, width, height, thickness, isFilled);
 	crossmesh.clear();
 }
 
 void gDrawArc(float xCenter, float yCenter, float radius, bool isFilled, int numberOfSides, float degree, float rotate) {
+	G_PROFILE_ZONE_SCOPED_N("gDrawArc()");
 	gArc arcmesh;
 	arcmesh.draw(xCenter, yCenter, radius, isFilled, numberOfSides, degree, rotate);
 	arcmesh.clear();
 }
 
 void gDrawArrow(float x1, float y1, float length, float angle, float tipLength, float tipAngle) {
+	G_PROFILE_ZONE_SCOPED_N("gDrawArrow()");
 	static gLine linemesh, linemesh2, linemesh3;
 	float x2, y2;
 	x2 = x1 + std::cos(gDegToRad(angle)) * length;
@@ -139,17 +108,20 @@ void gDrawArrow(float x1, float y1, float length, float angle, float tipLength, 
 }
 
 void gDrawRectangle(float x, float y, float w, float h, bool isFilled) {
+	G_PROFILE_ZONE_SCOPED_N("gDrawRectangle()");
 	static gRectangle rectanglemesh;
  	rectanglemesh.draw(x, y, w, h, isFilled);
 }
 
 void gDrawRoundedRectangle(float x, float y, float w, float h, int radius, bool isFilled) {
+	G_PROFILE_ZONE_SCOPED_N("gDrawRoundedRectangle()");
 	gRoundedRectangle roundedrectanglemesh;
 	roundedrectanglemesh.draw(x, y, w, h, radius, isFilled);
 	roundedrectanglemesh.clear();
 }
 
 void gDrawBox(float x, float y, float z, float w, float h, float d, bool isFilled) {
+	G_PROFILE_ZONE_SCOPED_N("gDrawBox()");
 	gBox boxmesh;
 	if(!isFilled) boxmesh.setDrawMode(gMesh::DRAWMODE_LINELOOP);
 	boxmesh.setPosition(x, y, z);
@@ -159,6 +131,7 @@ void gDrawBox(float x, float y, float z, float w, float h, float d, bool isFille
 }
 
 void gDrawBox(glm::mat4 transformationMatrix, bool isFilled) {
+	G_PROFILE_ZONE_SCOPED_N("gDrawBox()");
 	gBox boxmesh;
 	if(!isFilled) boxmesh.setDrawMode(gMesh::DRAWMODE_LINELOOP);
 	boxmesh.setTransformationMatrix(transformationMatrix);
@@ -167,6 +140,7 @@ void gDrawBox(glm::mat4 transformationMatrix, bool isFilled) {
 }
 
 void gDrawSphere(float xPos, float yPos, float zPos, glm::vec3 scale, int xSegmentNum, int ySegmentNum, bool isFilled) {
+	G_PROFILE_ZONE_SCOPED_N("gDrawSphere()");
 	gSphere spheremesh(xSegmentNum, ySegmentNum, isFilled);
 	spheremesh.setPosition(xPos, yPos, zPos);
 	spheremesh.scale(scale.x, scale.y, scale.z);
@@ -175,6 +149,7 @@ void gDrawSphere(float xPos, float yPos, float zPos, glm::vec3 scale, int xSegme
 }
 
 void gDrawCylinder(float x, float y, float z, int r, int h, glm::vec3 scale, int segmentnum, bool isFilled) {
+	G_PROFILE_ZONE_SCOPED_N("gDrawCylinder()");
 	gCylinder cylindermesh(r, r, h, glm::vec2(0.0f, 0.0f), segmentnum, isFilled);
 	cylindermesh.setPosition(x, y, z);
 	cylindermesh.scale(scale.x, scale.y, scale.z);
@@ -183,6 +158,7 @@ void gDrawCylinder(float x, float y, float z, int r, int h, glm::vec3 scale, int
 }
 
 void gDrawCylinderOblique(float x, float y, float z, int r, int h, glm::vec2 shiftdistance, glm::vec3 scale, int segmentnum, bool isFilled) {
+	G_PROFILE_ZONE_SCOPED_N("gDrawCylinderOblique()");
 	gCylinder cylindermesh(r, r, h, shiftdistance, segmentnum, isFilled);
 	cylindermesh.setPosition(x, y, z);
 	cylindermesh.scale(scale.x, scale.y, scale.z);
@@ -191,6 +167,7 @@ void gDrawCylinderOblique(float x, float y, float z, int r, int h, glm::vec2 shi
 }
 
 void gDrawCylinderTrapezodial(float x, float y, float z, int r1, int r2, int h, glm::vec3 scale, int segmentnum, bool isFilled) {
+	G_PROFILE_ZONE_SCOPED_N("gDrawCylinderTrapezodial()");
 	gCylinder cylindermesh(r1, r2, h, glm::vec2(0.0f, 0.0f), segmentnum, isFilled);
 	cylindermesh.setPosition(x, y, z);
 	cylindermesh.scale(scale.x, scale.y, scale.z);
@@ -199,6 +176,7 @@ void gDrawCylinderTrapezodial(float x, float y, float z, int r1, int r2, int h, 
 }
 
 void gDrawCylinderObliqueTrapezodial(float x, float y, float z, int r1, int r2, int h, glm::vec2 shiftdistance, glm::vec3 scale, int segmentnum, bool isFilled) {
+	G_PROFILE_ZONE_SCOPED_N("gDrawCylinderObliqueTrapezodial()");
 	gCylinder cylindermesh(r1, r2, h, shiftdistance, segmentnum, isFilled);
 	cylindermesh.setPosition(x, y, z);
 	cylindermesh.scale(scale.x, scale.y, scale.z);
@@ -207,6 +185,7 @@ void gDrawCylinderObliqueTrapezodial(float x, float y, float z, int r1, int r2, 
 }
 
 void gDrawCone(float x, float y, float z, int r, int h, glm::vec3 scale, int segmentnum, bool isFilled) {
+	G_PROFILE_ZONE_SCOPED_N("gDrawCone()");
 	gCone conemesh(r, h, glm::vec2(0.0f, 0.0f), segmentnum, isFilled);
 	conemesh.setPosition(x, y, z);
 	conemesh.scale(scale.x, scale.y, scale.z);
@@ -215,6 +194,7 @@ void gDrawCone(float x, float y, float z, int r, int h, glm::vec3 scale, int seg
 }
 
 void gDrawConeOblique(float x, float y, float z, int r, int h, glm::vec2 shiftdistance, glm::vec3 scale, int segmentnum, bool isFilled) {
+	G_PROFILE_ZONE_SCOPED_N("gDrawConeOblique()");
 	gCone conemesh(r, h, shiftdistance, segmentnum, isFilled);
 	conemesh.setPosition(x, y, z);
 	conemesh.scale(scale.x, scale.y, scale.z);
@@ -223,6 +203,7 @@ void gDrawConeOblique(float x, float y, float z, int r, int h, glm::vec2 shiftdi
 }
 
 void gDrawPyramid(float x, float y, float z, int r, int h, glm::vec3 scale, int numberofsides, bool isFilled) {
+	G_PROFILE_ZONE_SCOPED_N("gDrawPyramid()");
 	gCone conemesh(r, h, glm::vec2(0.0f, 0.0f), numberofsides, isFilled);
 	conemesh.setPosition(x, y, z);
 	conemesh.scale(scale.x, scale.y, scale.z);
@@ -231,6 +212,7 @@ void gDrawPyramid(float x, float y, float z, int r, int h, glm::vec3 scale, int 
 }
 
 void gDrawPyramidOblique(float x, float y, float z, int r, int h, glm::vec2 shiftdistance, glm::vec3 scale, int numberofsides, bool isFilled) {
+	G_PROFILE_ZONE_SCOPED_N("gDrawPyramidOblique()");
 	gCone conemesh(r, h, shiftdistance, numberofsides, isFilled);
 	conemesh.setPosition(x, y, z);
 	conemesh.scale(scale.x, scale.y, scale.z);
@@ -239,6 +221,7 @@ void gDrawPyramidOblique(float x, float y, float z, int r, int h, glm::vec2 shif
 }
 
 void gDrawTube(float x, float y, float z, int outerradius, int innerradious, int h, glm::vec3 scale, int segmentnum, bool isFilled) {
+	G_PROFILE_ZONE_SCOPED_N("gDrawTube()");
 	gTube tubemesh(outerradius,innerradious ,outerradius,innerradious, h, glm::vec2(0.0f, 0.0f), segmentnum, isFilled);
 	tubemesh.setPosition(x, y, z);
 	tubemesh.scale(scale.x, scale.y, scale.z);
@@ -249,6 +232,7 @@ void gDrawTube(float x, float y, float z, int outerradius, int innerradious, int
 void gDrawTubeOblique(float x, float y, float z, int outerradius,
 		int innerradious, int h, glm::vec2 shiftdistance, glm::vec3 scale,
 		int segmentnum, bool isFilled) {
+	G_PROFILE_ZONE_SCOPED_N("gDrawTubeOblique()");
 	gTube tubemesh(outerradius,innerradious ,outerradius,innerradious, h, shiftdistance, segmentnum, isFilled);
 	tubemesh.setPosition(x, y, z);
 	tubemesh.scale(scale.x, scale.y, scale.z);
@@ -259,6 +243,7 @@ void gDrawTubeOblique(float x, float y, float z, int outerradius,
 void gDrawTubeTrapezodial(float x, float y, float z, int topouterradius,
 		int topinnerradious, int buttomouterradious, int buttominnerradious,
 		int h, glm::vec3 scale, int segmentnum, bool isFilled) {
+	G_PROFILE_ZONE_SCOPED_N("gDrawTubeTrapezodial()");
 	gTube tubemesh(topouterradius,topinnerradious , buttomouterradious,buttominnerradious, h, glm::vec2(0.0f, 0.0f), segmentnum, isFilled);
 	tubemesh.setPosition(x, y, z);
 	tubemesh.scale(scale.x, scale.y, scale.z);
@@ -270,6 +255,7 @@ void gDrawTubeObliqueTrapezodial(float x, float y, float z, int topouterradius,
 		int topinnerradious, int buttomouterradious, int buttominnerradious,
 		int h, glm::vec2 shiftdistance, glm::vec3 scale, int segmentnum,
 		bool isFilled) {
+	G_PROFILE_ZONE_SCOPED_N("gDrawTubeObliqueTrapezodial()");
 	gTube tubemesh(topouterradius,topinnerradious , buttomouterradious,buttominnerradious, h, shiftdistance, segmentnum, isFilled);
 	tubemesh.setPosition(x, y, z);
 	tubemesh.scale(scale.x, scale.y, scale.z);
@@ -277,10 +263,8 @@ void gDrawTubeObliqueTrapezodial(float x, float y, float z, int topouterradius,
 	tubemesh.clear();
 }
 
-gRenderer::gRenderer() {
-}
-
 void gRenderer::init() {
+	G_PROFILE_ZONE_SCOPED_N("gRenderer::init()");
 	width = gDefaultWidth();
 	height = gDefaultHeight();
 	unitwidth = gDefaultUnitWidth();
@@ -298,8 +282,7 @@ void gRenderer::init() {
 
 	// This changes pack and unpack alignments
 	// Fixes alignment issues with 3 channel images
-	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-	glPixelStorei(GL_PACK_ALIGNMENT, 1);
+	updatePackUnpackAlignment(1);
 
 	globalambientcolor.set(255, 255, 255, 255);
 	isglobalambientcolorchanged = true;
@@ -377,25 +360,6 @@ void gRenderer::init() {
 	originalgrid = new gGrid();
 	grid = originalgrid;
 	isdevelopergrid = false;
-}
-
-gRenderer::~gRenderer() {
-	delete colorshader;
-	delete textureshader;
-	delete imageshader;
-	delete fontshader;
-	delete skyboxshader;
-	delete shadowmapshader;
-	delete pbrshader;
-	delete equirectangularshader;
-	delete irradianceshader;
-	delete prefiltershader;
-	delete brdfshader;
-	delete fboshader;
-	delete rendercolor;
-	delete lightsubo;
-	delete gridshader;
-	if(!isdevelopergrid) delete originalgrid;
 }
 
 gShader* gRenderer::getColorShader() {
@@ -623,22 +587,6 @@ gColor* gRenderer::getColor() {
 	return rendercolor;
 }
 
-void gRenderer::clear() {
-	G_CHECK_GL(glClearColor(0.0f, 0.0f, 0.0f, 1.0f));
-	G_CHECK_GL(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
-}
-
-void gRenderer::clearColor(int r, int g, int b, int a) {
-//    glBindFramebuffer(GL_FRAMEBUFFER, gFbo::defaultfbo);
-	G_CHECK_GL(glClearColor((float)r / 255, (float)g / 255, (float)b / 255, (float)a / 255));
-	G_CHECK_GL(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
-}
-
-void gRenderer::clearColor(gColor color) {
-	G_CHECK_GL(glClearColor(color.r, color.g, color.b, color.a));
-	G_CHECK_GL(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
-}
-
 void gRenderer::enableFog() {
 	isfogenabled = true;
 }
@@ -777,6 +725,7 @@ void gRenderer::removeAllSceneLights() {
 }
 
 void gRenderer::updateLights() {
+	G_PROFILE_ZONE_SCOPED_N("gRenderer::updateLights()");
 	gSceneLights* data = lightsubo->getData();
 	int previouslightnum = data->lightnum;
 	data->lightnum = std::min((int) scenelights.size(), GLIST_MAX_LIGHTS);
@@ -837,69 +786,6 @@ void gRenderer::updateLights() {
 		lightsubo->update(offsetof(gSceneLights, globalambientcolor), sizeof(glm::vec4));
 		isglobalambientcolorchanged = false;
 	}
-}
-
-void gRenderer::enableDepthTest() {
-	enableDepthTest(DEPTHTESTTYPE_LESS);
-}
-
-void gRenderer::enableDepthTest(int depthTestType) {
-	G_CHECK_GL(glEnable(GL_DEPTH_TEST));
-	G_CHECK_GL(glDepthFunc(depthtesttypeid[depthTestType]));
-	isdepthtestenabled = true;
-	depthtesttype = depthTestType;
-}
-
-void gRenderer::setDepthTestFunc(int depthTestType) {
-	G_CHECK_GL(glDepthFunc(depthtesttypeid[depthTestType]));
-	depthtesttype = depthTestType;
-}
-
-void gRenderer::disableDepthTest() {
-	G_CHECK_GL(glDisable(GL_DEPTH_TEST));
-	isdepthtestenabled = false;
-}
-
-bool gRenderer::isDepthTestEnabled() {
-	return isdepthtestenabled;
-}
-
-int gRenderer::getDepthTestType() {
-	return depthtesttype;
-}
-
-void gRenderer::enableAlphaBlending() {
-    G_CHECK_GL(glEnable(GL_BLEND));
-    G_CHECK_GL(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
-    isalphablendingenabled = true;
-}
-
-void gRenderer::disableAlphaBlending() {
-	G_CHECK_GL(glDisable(GL_BLEND));
-    isalphablendingenabled = false;
-}
-
-bool gRenderer::isAlphaBlendingEnabled() {
-	return isalphablendingenabled;
-}
-
-void gRenderer::enableAlphaTest() {
-#if defined(WIN32) || defined(LINUX)
-	glEnable(GL_ALPHA_TEST);
-    glAlphaFunc(GL_GREATER, 0.1);
-    isalphatestenabled = true;
-#endif
-}
-
-void gRenderer::disableAlphaTest() {
-#if defined(WIN32) || defined(LINUX)
-    glDisable(GL_ALPHA_TEST);
-    isalphatestenabled = false;
-#endif
-}
-
-bool gRenderer::isAlphaTestEnabled() {
-	return isalphatestenabled;
 }
 
 #include "graphics/shaders/grid_vert.h"
@@ -1046,50 +932,6 @@ const std::string& gRenderer::getShaderSrcFboVertex() {
 const std::string& gRenderer::getShaderSrcFboFragment() {
 	static std::string str{shader_fbo_frag.data(), shader_fbo_frag.size()};
 	return str;
-}
-
-/*
- * Rotates The Pixel Data upside down. Hence rotates flips the image upside down
- */
-void flipVertically(unsigned char* pixelData, int width, int height, int numChannels) {
-    int rowsize = width * numChannels;
-    unsigned char* temprow = new unsigned char[rowsize];
-
-    for (int row = 0; row < height / 2; ++row) {
-        // Calculate the corresponding row from the bottom
-        int bottomrow = height - row - 1;
-
-        // Swap the rows
-        memcpy(temprow, pixelData + row * rowsize, rowsize);
-        memcpy(pixelData + row * rowsize, pixelData + bottomrow * rowsize, rowsize);
-        memcpy(pixelData + bottomrow * rowsize, temprow, rowsize);
-    }
-
-    delete[] temprow;
-}
-
-gImage gRenderer::takeScreenshot(int x, int y, int width, int height) {
-	unsigned char* pixeldata = new unsigned char[width * height * 4];
-	glReadPixels(x, getHeight() - y - height, width, height, GL_RGBA, GL_UNSIGNED_BYTE, pixeldata);
-	flipVertically(pixeldata, width, height, 4);
-	gImage screenshot;
-	screenshot.setImageData(pixeldata, width, height, 4);
-	//std::string imagePath = "output.png";   USE IT TO SAVE THE IMAGE
-	// screenShot->saveImage(imagePath);  USE IT TO SAVE THE IMAGE
-	return screenshot;
-}
-
-gImage gRenderer::takeScreenshot() {
-	int height = gBaseApp::getAppManager()->getWindow()->getHeight();
-	int width = gBaseApp::getAppManager()->getWindow()->getWidth();
-	unsigned char* pixeldata = new unsigned char[width * height * 4];
-	glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, pixeldata);
-	flipVertically(pixeldata, width, height, 4);
-	gImage screenshot;
-	screenshot.setImageData(pixeldata, width, height, 4);
-	//std::string imagePath = "output.png";   USE IT TO SAVE THE IMAGE
-	// screenShot->saveImage(imagePath);  USE IT TO SAVE THE IMAGE
-	return screenshot;
 }
 
 bool gRenderer::isSSAOEnabled() {

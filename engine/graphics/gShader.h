@@ -8,15 +8,15 @@
 #ifndef ENGINE_GRAPHICS_GSHADER_H_
 #define ENGINE_GRAPHICS_GSHADER_H_
 
-#include "gObject.h"
 #include "gRenderer.h"
 #include <string>
 #include <unordered_map>
+#include "gRenderObject.h"
 
 template<typename T>
 class gUbo;
 
-class gShader : public gObject {
+class gShader : public gRenderObject {
 public:
 	gShader();
 	gShader(const std::string& shaderFullPath);
@@ -36,26 +36,7 @@ public:
 	void attachUbo(const std::string& uboName, const gUbo<T>* ubo) {
 		ubos[uboName] = ubo->getBindingPoint();
 		use();
-		unsigned int blockIndex;
-		G_CHECK_GL2(blockIndex, glGetUniformBlockIndex(id, uboName.c_str()));
-		G_CHECK_GL(glUniformBlockBinding(id, blockIndex, ubo->getBindingPoint()));
-		/*if (blockIndex != GL_INVALID_INDEX) {
-			GLint blockSize;
-			G_CHECK_GL(glGetActiveUniformBlockiv(id, blockIndex, GL_UNIFORM_BLOCK_DATA_SIZE, &blockSize));
-
-			GLint blockAlignment;
-			G_CHECK_GL(glGetIntegerv(GL_UNIFORM_BUFFER_OFFSET_ALIGNMENT, &blockAlignment));
-
-			std::cout << "Uniform block alignment: " << blockAlignment << " bytes" << std::endl;
-
-			// Now 'blockSize' contains the size of the uniform block in bytes
-			std::cout << "Uniform block size: " << blockSize << " bytes" << std::endl;
-			if (ubo->getSize() != blockSize) {
-				std::cout << "Error: Uniform block size mismatch. actual size: " << ubo->getSize() << ", block size: " << blockSize << std::endl;
-			}
-		} else {
-			std::cerr << "Error: Unable to find uniform block index." << std::endl;
-		}*/
+		renderer->attachUbo(id, ubo, uboName);
 	}
 
 	bool loaded;

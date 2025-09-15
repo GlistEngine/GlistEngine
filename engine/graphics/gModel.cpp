@@ -12,9 +12,8 @@
 #elif defined(__ARM_NEON)
 #include <arm_neon.h>
 #endif
-
 #include "gCamera.h"
-
+#include "gTracy.h"
 
 gModel::gModel() {
 	scene = nullptr;
@@ -304,6 +303,7 @@ void gModel::setTransformationMatrix(const glm::mat4& transformationMatrix) {
 }
 
 void gModel::draw() {
+	G_PROFILE_ZONE_SCOPED_N("gModel::draw()");
 	for(int i = 0; i < meshes.size(); i++) {
 		if (isenablefrustumculling && renderer->getCamera() &&
 			!renderer->getCamera()->isInFrustum(meshes[i]->getBoundingBox())) {
@@ -546,6 +546,7 @@ int gModel::getAnimationNum() const {
  * Set animation position to given position. Position should be a normalized value;
  */
 void gModel::animate(float animationPosition) {
+	G_PROFILE_ZONE_SCOPED_N("gModel::animate()");
 	if(!isanimated) return;
 
 	animationpositionold = animationposition;
@@ -567,6 +568,7 @@ void gModel::animate(float animationPosition) {
 }
 
 void gModel::updateAnimationNodes() {
+	G_PROFILE_ZONE_SCOPED_N("gModel::updateAnimationNodes()");
 	int numOfAnimations = scene->mNumAnimations;
 	if (numOfAnimations == 0) return;
 
@@ -656,67 +658,78 @@ void gModel::updateAnimationNodes() {
 }
 
 void gModel::updateBones(gSkinnedMesh* gmesh, aiMesh* aimesh) {
-	gmesh->resizeAnimation(aimesh->mNumVertices);
+    G_PROFILE_ZONE_SCOPED_N("gModel::updateBones()");
+    gmesh->resizeAnimation(aimesh->mNumVertices);
 
-	std::vector<aiMatrix4x4> boneMatrices(aimesh->mNumBones);
-	for(unsigned int a = 0; a < aimesh->mNumBones; a++) {
-		const aiBone* bone = aimesh->mBones[a];
+    std::vector<aiMatrix4x4> boneMatrices;
+    boneMatrices.reserve(aimesh->mNumBones);
 
-		// find the corresponding node by again looking recursively through the node hierarchy for the same name
-		aiNode* node = findNodeFast(bone->mName.C_Str());
+    for(unsigned int a = 0; a < aimesh->mNumBones; a++) {
+       const aiBone* bone = aimesh->mBones[a];
+       aiNode* node = findNodeFast(bone->mName.C_Str());
 
-		// start with the mesh-to-bone matrix
-		boneMatrices[a] = bone->mOffsetMatrix;
-		// and now append all node transformations down the parent chain until we're back at mesh coordinates again
-		aiNode* tempNode = node;
-		while(tempNode != nullptr) {
-			// check your matrix multiplication order here!!!
-			boneMatrices[a] = tempNode->mTransformation * boneMatrices[a];
-			// boneMatrices[a] = boneMatrices[a] * tempNode->mTransformation;
-			tempNode = tempNode->mParent;
-		}
-	}
+       // Start with the mesh-to-bone matrix
+       aiMatrix4x4 boneMatrix = bone->mOffsetMatrix;
 
-	gmesh->resetAnimation();
-	//Below line is to reset all the data belong to the target mesh. Haven't tested yet.
-	//if (aiTargetMesh != nullptr) gmesh->resetTargetData(gmesh->getCurrentTargetMeshId());
+       // Traverse parent chain once and accumulate transformations
+       for(aiNode* tempNode = node; tempNode != nullptr; tempNode = tempNode->mParent) {
+          boneMatrix = tempNode->mTransformation * boneMatrix;
+       }
 
-	// loop through all vertex weights of all bones
-	for(unsigned int a = 0; a < aimesh->mNumBones; ++a) {
-		const aiBone* bone = aimesh->mBones[a];
-		const aiMatrix4x4& posTrafo = boneMatrices[a];
+       boneMatrices.emplace_back(boneMatrix);
+    }
 
-		for(unsigned int b = 0; b < bone->mNumWeights; ++b) {
-			const aiVertexWeight& weight = bone->mWeights[b];
-			size_t vertexId = weight.mVertexId;
-			const aiVector3D& srcPos = aimesh->mVertices[vertexId];
+    gmesh->resetAnimation();
 
-			glm::vec3 oldweightpos = gmesh->getVertexPos(vertexId);
-			aiVector3D aiaddweight = weight.mWeight * (posTrafo * srcPos);
-			glm::vec3 vPos{oldweightpos.x + aiaddweight.x, oldweightpos.y + aiaddweight.y, oldweightpos.z + aiaddweight.z};
-			gmesh->setVertexPos(vertexId, vPos);
+    // Cache hasNormals check
+    const bool hasNormals = aimesh->HasNormals();
 
-			if(aimesh->HasNormals()) {
-				// 3x3 matrix, contains the bone matrix without the translation, only with rotation and possibly scaling
-				const aiVector3D& srcNorm = aimesh->mNormals[vertexId];
+    // Loop through all vertex weights of all bones
+    for(unsigned int a = 0; a < aimesh->mNumBones; ++a) {
+       const aiBone* bone = aimesh->mBones[a];
+       const aiMatrix4x4& posTrafo = boneMatrices[a];
 
-				glm::vec3 oldweightnorm = gmesh->getVertexNorm(vertexId);
-				aiVector3D aiaddweight = weight.mWeight * (posTrafo * srcNorm);
-				glm::vec3 vNorm{oldweightnorm.x + aiaddweight.x, oldweightnorm.y + aiaddweight.y, oldweightnorm.z + aiaddweight.z};
-				gmesh->setVertexNorm(vertexId, vNorm);
-			}
-		}
-	}
+       for(unsigned int b = 0; b < bone->mNumWeights; ++b) {
+          const aiVertexWeight& weight = bone->mWeights[b];
+          const size_t vertexId = weight.mVertexId;
+          const float weightValue = weight.mWeight;
+
+          // Transform position
+          const aiVector3D transformedPos = posTrafo * aimesh->mVertices[vertexId];
+          const glm::vec3 oldPos = gmesh->getVertexPos(vertexId);
+          gmesh->setVertexPos(vertexId, {
+              oldPos.x + weightValue * transformedPos.x,
+              oldPos.y + weightValue * transformedPos.y,
+              oldPos.z + weightValue * transformedPos.z
+          });
+
+          // Transform normals if available
+          if(hasNormals) {
+             const aiVector3D transformedNorm = posTrafo * aimesh->mNormals[vertexId];
+             const glm::vec3 oldNorm = gmesh->getVertexNorm(vertexId);
+             gmesh->setVertexNorm(vertexId, {
+                 oldNorm.x + weightValue * transformedNorm.x,
+                 oldNorm.y + weightValue * transformedNorm.y,
+                 oldNorm.z + weightValue * transformedNorm.z
+             });
+          }
+       }
+    }
 }
 
 void gModel::updateVbo(gSkinnedMesh* gmesh) {
+	G_PROFILE_ZONE_SCOPED_N("gModel::updateVbo()");
+
 	std::vector<gVertex>& vertexarray = gmesh->getVertices();
-	std::vector<gIndex>& indexarray = gmesh->getIndices();
-	for (int i = 0; i < gmesh->getVbo()->getVerticesNum(); i++) {
-		vertexarray[i].position = gmesh->getVertexPos(i);
-		vertexarray[i].normal = gmesh->getVertexNorm(i);
+	const std::vector<glm::vec3>& animatedpos = gmesh->getAnimatedPos();
+	const std::vector<glm::vec3>& animatednorm = gmesh->getAnimatedNorm();
+	const int verticesnum = gmesh->getVerticesNum();
+
+	for (int i = 0; i < verticesnum; i++) {
+		vertexarray[i].position = animatedpos[i];
+		vertexarray[i].normal = animatednorm[i];
 	}
-	gmesh->setVertices(vertexarray, indexarray);
+	gmesh->setVertices(vertexarray);
 }
 
 /**
@@ -731,6 +744,7 @@ float gModel::getAnimationPosition() const {
 }
 
 void gModel::setAnimationFramerate(float animationFramerate) {
+	G_PROFILE_ZONE_SCOPED_N("gModel::setAnimationFramerate()");
 	animationframerate = animationFramerate;
 #if defined(WIN32) || defined(TARGET_OS_OSX)
 	setAnimationFrameNum(getAnimationDuration() * animationframerate / scene->mAnimations[0]->mTicksPerSecond);
@@ -744,6 +758,7 @@ float gModel::getAnimationFramerate() const {
 }
 
 void gModel::setAnimationFrameNum(int animationKeyNum) {
+	G_PROFILE_ZONE_SCOPED_N("gModel::setAnimationFrameNum()");
 	if (animationKeyNum == animationframenum) return;
 	animationframenum = animationKeyNum;
 	generateAnimationKeys();
@@ -828,6 +843,8 @@ void gModel::generateAnimationKeys() {
 }
 
 void gModel::makeVertexAnimated(bool storeOnVram) {
+	G_PROFILE_ZONE_SCOPED_N("gModel::makeVertexAnimated()");
+	G_PROFILE_ZONE_VALUE(storeOnVram);
 	if (!isvertexanimated) {
 		isvertexanimationstoredonvram = storeOnVram;
 		prepareVertexAnimationData();
@@ -842,6 +859,7 @@ void gModel::makeVertexAnimated(bool storeOnVram) {
 }
 
 void gModel::prepareVertexAnimationData() {
+	G_PROFILE_ZONE_SCOPED_N("gModel::prepareVertexAnimationData()");
     int mnum = meshes.size();
     int anum = scene->mNumAnimations;
     int fnum = getAnimationFrameNum();
@@ -917,7 +935,7 @@ void gModel::prepareVertexAnimationData() {
                 if (isvertexanimationstoredonvram) {
                 	std::vector<gVertex> vertexarray = meshes[i]->getVertices();
                 	std::vector<gIndex> indexarray = meshes[i]->getIndices();
-                	for (int l=0; l<meshes[i]->getVbo()->getVerticesNum(); l++) {
+                	for (int l=0; l<meshes[i]->getVerticesNum(); l++) {
                 		vertexarray[l].position = meshes[i]->getVertexPosData(j, k, l);
                 		vertexarray[l].normal = meshes[i]->getVertexNormData(j, k, l);
                 	}
@@ -968,6 +986,7 @@ gBoundingBox& gModel::getInitialBoundingBox() {
 }
 
 void gModel::recalculateBoundingBox() {
+	G_PROFILE_ZONE_SCOPED_N("gModel::recalculateBoundingBox()");
 	// Ensure the mesh list is not empty
 	if (meshes.empty()) {
 		// Handle empty meshes case appropriately

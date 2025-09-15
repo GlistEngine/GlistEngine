@@ -8,6 +8,8 @@
 #include "gRenderObject.h"
 #include <iostream>
 
+#include "gGLRenderEngine.h"
+
 
 gRenderer* gRenderObject::renderer = nullptr;
 
@@ -55,13 +57,13 @@ int gRenderObject::getScreenHeight() {
 
 void gRenderObject::pushMatrix() {
 #if defined(WIN32) || defined(LINUX)
-	G_CHECK_GL(glPushMatrix());
+	renderer->pushMatrix();
 #endif
 }
 
 void gRenderObject::popMatrix() {
 #if defined(WIN32) || defined(LINUX)
-	G_CHECK_GL(glPopMatrix());
+	renderer->popMatrix();
 #endif
 }
 
@@ -86,7 +88,7 @@ gRenderer* gRenderObject::getRenderer() {
 
 void gRenderObject::createRenderer() {
 	destroyRenderer(); // Delete the previous renderer if exists. If renderer is null, this will have no effect.
-	renderer = new gRenderer();
+	renderer = new gGLRenderEngine();
 	renderer->init();
 }
 

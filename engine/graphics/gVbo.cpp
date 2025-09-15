@@ -8,19 +8,17 @@
 #include "gVbo.h"
 #include "gLight.h"
 #include "gShader.h"
+#include "gTracy.h"
 
 gVbo::gVbo() {
-	glGenVertexArrays(1, &vao);
+	vao = renderer->createVAO();
 	vbo = 0;
 	ebo = 0;
 	isenabled = true;
 	isvertexdataallocated = false;
-	verticesptr = nullptr;
-	vertexarrayptr = nullptr;
 	vertexdatacoordnum = 0;
 	totalvertexnum = 0;
 	isindexdataallocated = false;
-	indexarrayptr = nullptr;
 	totalindexnum = 0;
 }
 
@@ -28,164 +26,104 @@ gVbo::~gVbo() {
 	clear();
 }
 
-gVbo::gVbo(const gVbo& other) {
-	glGenVertexArrays(1, &vao);
-	vbo = 0;
-	ebo = 0;
-	isenabled = true;
-	isvertexdataallocated = false;
-	verticesptr = nullptr;
-	vertexarrayptr = nullptr;
-	vertexdatacoordnum = 0;
-	totalvertexnum = 0;
-	isindexdataallocated = false;
-	indexarrayptr = nullptr;
-	totalindexnum = 0;
-
-	isenabled = other.isenabled;
-	if (other.verticesptr) {
-		setVertexData(other.verticesptr, other.vertexdatacoordnum, other.totalvertexnum);
-	} else if (other.vertexarrayptr) {
-		setVertexData(other.vertexarrayptr, other.vertexdatacoordnum, other.totalvertexnum, other.vertexusage, other.vertexstride);
-	}
-	if (other.indexarrayptr) {
-		setIndexData(other.indexarrayptr, other.totalindexnum);
-	}
-}
-
-gVbo& gVbo::operator=(const gVbo& other) {
-	if (this == &other) {
-		return *this;
-	}
-	// clear current
-	clear();
-	verticesptr = nullptr;
-	vertexarrayptr = nullptr;
-	vertexdatacoordnum = 0;
-	totalvertexnum = 0;
-	isindexdataallocated = false;
-	indexarrayptr = nullptr;
-	totalindexnum = 0;
-	// generate vao
-	glGenVertexArrays(1, &vao);
-	// copy from the other gVbo
-	isenabled = other.isenabled;
-	if (other.verticesptr) {
-		setVertexData(other.verticesptr, other.vertexdatacoordnum, other.totalvertexnum);
-	} else if (other.vertexarrayptr) {
-		setVertexData(other.vertexarrayptr, other.vertexdatacoordnum, other.totalvertexnum, other.vertexusage, other.vertexstride);
-	}
-	if (other.indexarrayptr) {
-		setIndexData(other.indexarrayptr, other.totalindexnum);
-	}
-	return *this;
-}
-
-void gVbo::setVertexData(gVertex* vertices, int coordNum, int total) {
+void gVbo::setVertexData(const gVertex* vertices, int coordNum, int total) {
+	G_PROFILE_ZONE_SCOPED_N("gVbo::setVertexData()");
 	if (vao == GL_NONE) {
-		glGenVertexArrays(1, &vao);
+		vao = renderer->createVAO();
 	}
 	bind();
 	if (!isvertexdataallocated) {
-		glGenBuffers(1, &vbo);
+		vbo = renderer->genBuffers();
 		isvertexdataallocated = true;
 	}
-	verticesptr = &vertices[0];
-	vertexarrayptr = &vertices[0].position.x;
 	vertexdatacoordnum = coordNum;
 	totalvertexnum = total;
 
-    glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    glBufferData(GL_ARRAY_BUFFER, totalvertexnum * sizeof(gVertex), vertexarrayptr, GL_STATIC_DRAW);
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(gVertex), (void*)0);
+	renderer->bindBuffer(GL_ARRAY_BUFFER, vbo);
+	renderer->setVertexBufferData(vbo, totalvertexnum * sizeof(gVertex), vertices, GL_STATIC_DRAW);
+	renderer->enableVertexAttrib(0);
+	renderer->setVertexAttribPointer(0, 3, GL_FLOAT, false, sizeof(gVertex), (void*)0);
     // vertex normals
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(gVertex), (void*)offsetof(gVertex, normal));
+	renderer->enableVertexAttrib(1);
+	renderer->setVertexAttribPointer(1, 3, GL_FLOAT, false, sizeof(gVertex), (void*)offsetof(gVertex, normal));
     // vertex texture coords
-    glEnableVertexAttribArray(2);
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(gVertex), (void*)offsetof(gVertex, texcoords));
+	renderer->enableVertexAttrib(2);
+	renderer->setVertexAttribPointer(2, 2, GL_FLOAT, false, sizeof(gVertex), (void*)offsetof(gVertex, texcoords));
     // vertex tangent
-    glEnableVertexAttribArray(3);
-    glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(gVertex), (void*)offsetof(gVertex, tangent));
+	renderer->enableVertexAttrib(3);
+	renderer->setVertexAttribPointer(3, 3, GL_FLOAT, false, sizeof(gVertex), (void*)offsetof(gVertex, tangent));
     // vertex bitangent
-    glEnableVertexAttribArray(4);
-    glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(gVertex), (void*)offsetof(gVertex, bitangent));
+	renderer->enableVertexAttrib(4);
+	renderer->setVertexAttribPointer(4, 3, GL_FLOAT, false, sizeof(gVertex), (void*)offsetof(gVertex, bitangent));
 	unbind();
 }
 
-void gVbo::setVertexData(const float* vertexData, int coordNum, int total, int usage, int stride) {
+void gVbo::setVertexData(const float* verticesptr, int coordNum, int total, int usage, int stride) {
 	if (vao == GL_NONE) {
-		glGenVertexArrays(1, &vao);
+		vao = renderer->createVAO();
 	}
 	bind();
 	if (!isvertexdataallocated) {
-      glGenBuffers(1, &vbo);
-      isvertexdataallocated = true;
+		vbo = renderer->genBuffers();
+		isvertexdataallocated = true;
     }
-	vertexarrayptr = vertexData;
 	vertexdatacoordnum = coordNum;
 	totalvertexnum = total;
 	vertexusage = usage;
 	vertexstride = stride;
 
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	GLsizeiptr size = (stride == 0) ? vertexdatacoordnum * sizeof(float) : stride;
-	glBufferData(GL_ARRAY_BUFFER, totalvertexnum * size, vertexarrayptr, usage);
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, vertexdatacoordnum, GL_FLOAT, GL_FALSE, vertexdatacoordnum * sizeof(float),nullptr);
+
+	GLsizeiptr size = stride == 0 ? vertexdatacoordnum * sizeof(float) : stride;
+	renderer->setVertexBufferData(vbo, totalvertexnum * size, verticesptr, usage);
+	renderer->enableVertexAttrib(0);
+	renderer->setVertexAttribPointer(0, vertexdatacoordnum, GL_FLOAT, GL_FALSE, vertexdatacoordnum * sizeof(float), nullptr);
 	unbind();
 }
 
-void gVbo::setIndexData(gIndex* indices, int total) {
+void gVbo::setIndexData(const gIndex* indices, int total) {
+	if (indices == nullptr) {
+		glDeleteBuffers(1, &ebo);
+		isindexdataallocated = false;
+		return;
+	}
 	if (vao == GL_NONE) {
-		glGenVertexArrays(1, &vao);
+		vao = renderer->createVAO();
 	}
 	bind();
 	if (!isindexdataallocated) {
-      glGenBuffers(1, &ebo);
-      isindexdataallocated = true;
+		ebo = renderer->genBuffers();
+		isindexdataallocated = true;
     }
-	indexarrayptr = indices;
 	totalindexnum = total;
 
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, totalindexnum * sizeof(gIndex), indexarrayptr, GL_STATIC_DRAW);
+	renderer->setIndexBufferData(ebo, totalindexnum * sizeof(gIndex), indices, GL_STATIC_DRAW);
 	unbind();
 }
 
 void gVbo::clear() {
 	if(isvertexdataallocated) {
-	  glDeleteBuffers(1, &vbo);
-	  isvertexdataallocated = false;
+		renderer->deleteBuffer(vbo);
+		isvertexdataallocated = false;
 	}
 	if(isindexdataallocated) {
-      glDeleteBuffers(1, &ebo);
-      isvertexdataallocated = false;
+		renderer->deleteBuffer(ebo);
+		isvertexdataallocated = false;
     }
 	if (vao != GL_NONE) {
-	  glDeleteVertexArrays(1, &vao);
-	  vao = GL_NONE;
+		renderer->deleteVAO(vao);
+		vao = GL_NONE;
 	}
-}
-
-gVertex* gVbo::getVertices() const {
-	return verticesptr;
-}
-
-gIndex* gVbo::getIndices() const {
-	return indexarrayptr;
 }
 
 void gVbo::bind() const {
 #ifdef DEBUG
 	assert(vao != GL_NONE);
 #endif
-	G_CHECK_GL(glBindVertexArray(vao));
+	renderer->bindVAO(vao);
 }
 
 void gVbo::unbind() const {
-	G_CHECK_GL(glBindVertexArray(0));
+	renderer->unbindVAO();
 }
 
 void gVbo::draw() {
@@ -215,9 +153,9 @@ void gVbo::draw(int drawMode) {
 
     bind();
 	if (isindexdataallocated) {
-	    glDrawElements(drawMode, totalindexnum, GL_UNSIGNED_INT, 0);
+		renderer->drawElements(drawMode, totalindexnum);
 	} else {
-		glDrawArrays(drawMode, 0, totalvertexnum);
+		renderer->drawArrays(drawMode, totalvertexnum);
 	}
     unbind();
 }

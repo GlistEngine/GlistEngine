@@ -16,11 +16,11 @@
 
 #include "gLight.h"
 #include "gShader.h"
+#include "gTracy.h"
 
 gMesh::gMesh() {
+	vbo = std::make_unique<gVbo>();
 	name = "";
-	sli = 0;
-	ti = 0;
 	drawmode = DRAWMODE_TRIANGLES;
 	isprojection2d = false;
     diffuseNr  = 1;
@@ -35,10 +35,9 @@ gMesh::gMesh() {
 	needsboundingboxrecalculation = false;
 }
 
-gMesh::gMesh(std::vector<gVertex> vertices, std::vector<gIndex> indices, std::vector<gTexture*> textures) {
+gMesh::gMesh(const std::vector<gVertex>& vertices, const std::vector<gIndex>& indices, const std::vector<gTexture*>& textures) {
+	vbo = std::make_unique<gVbo>();
 	name = "";
-	sli = 0;
-	ti = 0;
 	drawmode = DRAWMODE_TRIANGLES;
 	isprojection2d = false;
     diffuseNr  = 1;
@@ -51,11 +50,25 @@ gMesh::gMesh(std::vector<gVertex> vertices, std::vector<gIndex> indices, std::ve
     setTextures(textures);
 }
 
+gMesh::gMesh(const gMesh& other) {
+	vbo = std::make_unique<gVbo>();
+	name = other.name;
+	drawmode = DRAWMODE_TRIANGLES;
+	isprojection2d = false;
+	diffuseNr  = 1;
+	specularNr = 1;
+	normalNr   = 1;
+	heightNr   = 1;
+	textype = 0;
+	setVertices(other.vertices, other.indices);
+	setTextures(other.textures);
+}
+
 gMesh::~gMesh() {
 }
 
 void gMesh::clear() {
-	vbo.clear();
+	vbo->clear();
 }
 
 void gMesh::setName(std::string name) {
@@ -66,16 +79,36 @@ const std::string& gMesh::getName() const {
 	return name;
 }
 
-void gMesh::setVertices(std::vector<gVertex> vertices, std::vector<gIndex> indices) {
+void gMesh::setVertices(const std::vector<gVertex>& vertices, const std::vector<gIndex>& indices) {
+	bool resetinitialboundingbox = this->vertices.size() != vertices.size() || this->indices.size() != indices.size();
 	this->vertices = vertices;
 	this->indices = indices;
-	vbo.setVertexData(vertices.data(), sizeof(gVertex), vertices.size());
+	vbo->setVertexData(vertices.data(), sizeof(gVertex), vertices.size());
 	if (!indices.empty()) {
-		vbo.setIndexData(indices.data(), indices.size());
+		vbo->setIndexData(indices.data(), indices.size());
+	} else {
+		vbo->setIndexData(nullptr, 0);
 	}
-	recalculateBoundingBox();
-	initialboundingbox = boundingbox;
+	if (resetinitialboundingbox) {
+		recalculateBoundingBox();
+		initialboundingbox = boundingbox;
+	} else {
+		needsboundingboxrecalculation = true;
+	}
 //	initialboundingbox.setTransformationMatrix(localtransformationmatrix);
+}
+
+void gMesh::setVertices(const std::vector<gVertex>& vertices) {
+	G_PROFILE_ZONE_SCOPED_N("gModel::setVertices()");
+	bool resetinitialboundingbox = this->vertices.size() != vertices.size();
+	this->vertices = vertices;
+	vbo->setVertexData(vertices.data(), sizeof(gVertex), vertices.size());
+	if (resetinitialboundingbox) {
+		recalculateBoundingBox();
+		initialboundingbox = boundingbox;
+	} else {
+		needsboundingboxrecalculation = true;
+	}
 }
 
 std::vector<gVertex>& gMesh::getVertices() {
@@ -86,28 +119,28 @@ std::vector<gIndex>& gMesh::getIndices() {
 	return indices;
 }
 
-void gMesh::setTextures(std::vector<gTexture*> textures) {
+void gMesh::setTextures(const std::vector<gTexture*>& textures) {
 //	this->textures = textures;
-    for(ti = 0; ti < textures.size(); ti++) {
-        textype = textures[ti]->getType();
+    for(int i = 0; i < textures.size(); i++) {
+        textype = textures[i]->getType();
         if(textype == gTexture::TEXTURETYPE_DIFFUSE) {
-        	material.setDiffuseMap(textures[ti]);
+        	material.setDiffuseMap(textures[i]);
         } else if(textype == gTexture::TEXTURETYPE_SPECULAR) {
-        	material.setSpecularMap(textures[ti]);
+        	material.setSpecularMap(textures[i]);
         } else if(textype == gTexture::TEXTURETYPE_NORMAL) {
-        	material.setNormalMap(textures[ti]);
+        	material.setNormalMap(textures[i]);
         } else if(textype == gTexture::TEXTURETYPE_HEIGHT) {
-        	material.setHeightMap(textures[ti]);
+        	material.setHeightMap(textures[i]);
         } else if (textype == gTexture::TEXTURETYPE_PBR_ALBEDO) {
-        	material.setAlbedoMap(textures[ti]);
+        	material.setAlbedoMap(textures[i]);
         } else if (textype == gTexture::TEXTURETYPE_PBR_ROUGHNESS) {
-        	material.setRoughnessMap(textures[ti]);
+        	material.setRoughnessMap(textures[i]);
         } else if (textype == gTexture::TEXTURETYPE_PBR_METALNESS) {
-        	material.setMetalnessMap(textures[ti]);
+        	material.setMetalnessMap(textures[i]);
         } else if (textype == gTexture::TEXTURETYPE_PBR_NORMAL) {
-        	material.setPbrNormalMap(textures[ti]);
+        	material.setPbrNormalMap(textures[i]);
         } else if (textype == gTexture::TEXTURETYPE_PBR_AO) {
-        	material.setAOMap(textures[ti]);
+        	material.setAOMap(textures[i]);
         }
     }
 }
@@ -162,6 +195,7 @@ gMaterial* gMesh::getMaterial() {
 
 
 void gMesh::draw() {
+	G_PROFILE_ZONE_SCOPED_N("gMesh::draw()");
 	if (!isenabled) return;
 
 	drawStart();
@@ -170,6 +204,7 @@ void gMesh::draw() {
 }
 
 void gMesh::processTransformationMatrix() {
+	G_PROFILE_ZONE_SCOPED_N("gMesh::processTransformationMatrix()");
 	if (needsboundingboxrecalculation) {
 		gNode::processTransformationMatrix();
 		return;
@@ -192,6 +227,7 @@ void gMesh::processTransformationMatrix() {
 }
 
 void gMesh::drawStart() {
+	G_PROFILE_ZONE_SCOPED_N("gMesh::drawStart()");
 	if (isshadowmappingenabled && renderpassno == 0) {
 		renderer->getShadowmapShader()->use();
 		renderer->getShadowmapShader()->setMat4("model", localtransformationmatrix);
@@ -218,7 +254,7 @@ void gMesh::drawStart() {
 //		if(material.isDiffuseMapEnabled()) gLogi("gModel") << "diffuse texture name:" << material.getDiffuseMap()->getFilename();
 	    if (material.isDiffuseMapEnabled()) {
 			colorshader->setInt("material.diffusemap", 0); // Diffuse texture unit
-			G_CHECK_GL(glActiveTexture(GL_TEXTURE0));
+	    	renderer->activateTexture(0);
 		    material.bindDiffuseMap();
 	    }
 
@@ -226,7 +262,7 @@ void gMesh::drawStart() {
 	    colorshader->setInt("material.useSpecularMap", material.isDiffuseMapEnabled() && material.isSpecularMapEnabled());
 	    if (material.isDiffuseMapEnabled() && material.isSpecularMapEnabled()) {
 			colorshader->setInt("material.specularmap", 1); // Specular texture unit
-		    G_CHECK_GL(glActiveTexture(GL_TEXTURE1));
+	    	renderer->activateTexture(1);
 		    material.bindSpecularMap();
 	    }
 
@@ -234,7 +270,7 @@ void gMesh::drawStart() {
 	    colorshader->setInt("aUseNormalMap", material.isDiffuseMapEnabled() && material.isNormalMapEnabled());
 	    if (material.isDiffuseMapEnabled() && material.isNormalMapEnabled()) {
 			colorshader->setInt("material.normalmap", 2); // Normal texture unit
-		    G_CHECK_GL(glActiveTexture(GL_TEXTURE2));
+	    	renderer->activateTexture(2);
 		    material.bindNormalMap();
 	    }
 
@@ -287,12 +323,12 @@ void gMesh::drawStart() {
 	    specularNr = 1;
 	    normalNr   = 1;
 	    heightNr   = 1;
-	    for(ti = 0; ti < textures.size(); ti++) {
-	        G_CHECK_GL(glActiveTexture(GL_TEXTURE0 + ti)); // active proper texture unit before binding
+	    for(int i = 0; i < textures.size(); i++) {
+	    	renderer->activateTexture(i); // active proper texture unit before binding
 
 	        // retrieve texture number (the N in diffuse_textureN)
 	        texnumber = "";
-	        textype = textures[ti]->getType();
+	        textype = textures[i]->getType();
 	        if(textype == gTexture::TEXTURETYPE_DIFFUSE)
 	            texnumber = gToStr(diffuseNr++);
 	        else if(textype == gTexture::TEXTURETYPE_SPECULAR)
@@ -303,10 +339,10 @@ void gMesh::drawStart() {
 	            texnumber = gToStr(heightNr++); // transfer unsigned int to stream
 
 	        // Set the sampler to the correct texture unit
-	        textureshader->setInt(gToStr(textype) + texnumber, ti);
+	        textureshader->setInt(gToStr(textype) + texnumber, i);
 
 	        // Bind the texture
-	        textures[ti]->bind();
+	        textures[i]->bind();
 	    }
 
 	    if (isprojection2d) textureshader->setMat4("projection", renderer->getProjectionMatrix2d());
@@ -317,35 +353,38 @@ void gMesh::drawStart() {
 }
 
 void gMesh::drawVbo() {
+	G_PROFILE_ZONE_SCOPED_N("gMesh::drawVbo()");
     // draw mesh
-    vbo.bind();
-    if (vbo.isIndexDataAllocated()) {
-		G_CHECK_GL(glDrawElements(drawmode, vbo.getIndicesNum(), G_INDEX_SIZE, nullptr));
+    vbo->bind();
+    if (vbo->isIndexDataAllocated()) {
+    	renderer->drawElements(drawmode, vbo->getIndicesNum());
     } else {
-		G_CHECK_GL(glDrawArrays(drawmode, 0, vbo.getVerticesNum()));
+    	renderer->drawElements(drawmode, vbo->getVerticesNum());
     }
-    vbo.unbind();
+    vbo->unbind();
 //    vbo.clear();
 }
 
 void gMesh::drawEnd() {
+	G_PROFILE_ZONE_SCOPED_N("gMesh::drawEnd()");
 	// set everything back to defaults.
-	G_CHECK_GL(glActiveTexture(GL_TEXTURE0));
+	renderer->activateTexture(0);
 }
 
 int gMesh::getVerticesNum() const {
-	return vbo.getVerticesNum();
+	return vertices.size();
 }
 
 int gMesh::getIndicesNum() const {
-	return vbo.getIndicesNum();
+	return indices.size();
 }
 
-gVbo* gMesh::getVbo() {
-	return &vbo;
+gVbo& gMesh::getVbo() {
+	return *vbo;
 }
 
 const gBoundingBox& gMesh::getBoundingBox() {
+	G_PROFILE_ZONE_SCOPED_N("gMesh::getBoundingBox()");
 	if (needsboundingboxrecalculation) {
 		recalculateBoundingBox();
 	}
@@ -353,6 +392,7 @@ const gBoundingBox& gMesh::getBoundingBox() {
 }
 
 void gMesh::recalculateBoundingBox() {
+	G_PROFILE_ZONE_SCOPED_N("gMesh::recalculateBoundingBox()");
 	// Ensure the vertex list is not empty
 	if (vertices.empty()) {
 		// Handle empty vertices case appropriately
