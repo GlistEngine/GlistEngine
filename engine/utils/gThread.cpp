@@ -14,7 +14,9 @@ gThread::gThread() {
 }
 
 gThread::~gThread() {
-
+	// We ask to stop and wait for it to complete.
+	stop();
+	wait();
 }
 
 std::thread::id gThread::getId() const {
@@ -71,11 +73,18 @@ void gThread::unlock() {
 }
 
 void gThread::wait() {
-	stop();
+	if(!thread.joinable()) {
+		return;
+	}
+	thread.join();
 }
 
 void gThread::yield() {
 	std::this_thread::yield();
+}
+
+void gThread::detach() {
+	thread.detach();
 }
 
 void gThread::sleep(std::chrono::duration<double, std::milli> milliseconds) {
@@ -91,16 +100,10 @@ void gThread::sleep(double milliseconds) {
 }
 
 void gThread::run() {
-	try{
+	try {
 		threadFunction();
 	} catch(const std::exception& exc) {
 		gLoge("gThread") << exc.what();
-	}
-
-	try{
-		thread.detach();
-	} catch(...) {
-
 	}
 
 	isrunning = false;

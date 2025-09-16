@@ -47,6 +47,7 @@ public:
 	void sleep(std::chrono::duration<double, std::milli> milliseconds);
 	void sleep(double milliseconds);
     void yield();
+    void detach();
 
     virtual void threadFunction();
 
