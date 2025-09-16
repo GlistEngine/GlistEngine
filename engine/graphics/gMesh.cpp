@@ -359,7 +359,7 @@ void gMesh::drawVbo() {
     if (vbo->isIndexDataAllocated()) {
     	renderer->drawElements(drawmode, vbo->getIndicesNum());
     } else {
-    	renderer->drawElements(drawmode, vbo->getVerticesNum());
+    	renderer->drawArrays(drawmode, vbo->getVerticesNum());
     }
     vbo->unbind();
 //    vbo.clear();
