@@ -538,6 +538,16 @@ int gRenderer::scaleY(int y) {
 	return (y * unitheight) / height;
 }
 
+int gRenderer::unscaleX(int x) {
+	float scale = width / (float)unitwidth;
+	return x * scale;
+}
+
+int gRenderer::unscaleY(int y) {
+	float scale = height / (float)unitheight;
+	return y * scale;
+}
+
 void gRenderer::setColor(int r, int g, int b, int a) {
 	rendercolor->set((float)r / 255, (float)g / 255, (float)b / 255, (float)a / 255);
 	updateScene();

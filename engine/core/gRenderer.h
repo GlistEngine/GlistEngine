@@ -188,6 +188,8 @@ public:
 	int getUnitResolution();
 	static int scaleX(int x);
 	static int scaleY(int y);
+	static int unscaleX(int x);
+	static int unscaleY(int y);
 
 	//grid
 	void drawGrid();
