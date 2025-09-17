@@ -112,7 +112,7 @@ void gFbo::bind() {
 void gFbo::unbind() {
 	G_PROFILE_ZONE_SCOPED_N("gFbo::unbind()");
 	renderer->bindDefaultFramebuffer();
-	glViewport(0, 0, renderer->getWidth(), renderer->getHeight());
+	glViewport(0, 0, renderer->getScreenWidth(), renderer->getScreenHeight());
 }
 
 void gFbo::draw(int x, int y) {
