@@ -269,6 +269,10 @@ void gGLRenderEngine::setVertexAttribPointer(int index, int size, int type, bool
 	G_CHECK_GL(glVertexAttribPointer(index, size, type, normalized ? GL_TRUE : GL_FALSE, stride, pointer));
 }
 
+void gGLRenderEngine::setViewport(int x, int y, int width, int height) {
+	G_CHECK_GL(glViewport(x, y, width, height));
+}
+
 // ----- Framebuffer -----
 GLuint gGLRenderEngine::createFramebuffer() {
 	GLuint fbo;

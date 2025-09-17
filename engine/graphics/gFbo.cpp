@@ -106,13 +106,13 @@ unsigned int gFbo::getTextureId() {
 void gFbo::bind() {
 	G_PROFILE_ZONE_SCOPED_N("gFbo::bind()");
 	renderer->bindFramebuffer(framebuffer);
-	glViewport(0, 0, width, height);
+	renderer->setViewport(0, 0, width, height);
 }
 
 void gFbo::unbind() {
 	G_PROFILE_ZONE_SCOPED_N("gFbo::unbind()");
 	renderer->bindDefaultFramebuffer();
-	glViewport(0, 0, renderer->getScreenWidth(), renderer->getScreenHeight());
+	renderer->setViewport(0, 0, renderer->getScreenWidth(), renderer->getScreenHeight());
 }
 
 void gFbo::draw(int x, int y) {

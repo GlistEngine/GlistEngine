@@ -62,6 +62,7 @@ public:
 	void enableVertexAttrib(int index) override;
 	void disableVertexAttrib(int index) override;
 	void setVertexAttribPointer(int index, int size, int type, bool normalized, int stride, const void* pointer) override;
+	void setViewport(int x, int y, int width, int height) override;
 
 	/* -------------- gFbo --------------- */
 	GLuint createFramebuffer() override;

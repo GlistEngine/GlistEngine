@@ -367,6 +367,8 @@ public:
 	virtual void disableVertexAttrib(int index) = 0;
 	virtual void setVertexAttribPointer(int index, int size, int type, bool normalized, int stride, const void* pointer) = 0;
 
+	virtual void setViewport(int x, int y, int width, int height) = 0;
+
 	/* -------------- gFbo --------------- */
 	virtual GLuint createFramebuffer() = 0;
 	virtual void deleteFramebuffer(GLuint& fbo) = 0;
