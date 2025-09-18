@@ -15,8 +15,6 @@
 #include "gColor.h"
 
 
-
-
 class gGUITooltipText: public gGUIControl {
 public:
 
@@ -71,7 +69,6 @@ public:
 	void update();
 	void draw();
 	void mouseMoved(int x, int y);
-	int marginentry = 0;
 
 private:
 	gColor color;
@@ -80,6 +77,7 @@ private:
 	int sizerx, sizery, sizerw, sizerh;
 	int cursorx, cursory;
 	int objecth, marginx, marginy;
+	int marginentry = 0;
 	int buttonx, buttony;
 	float texth, textw, tx;
 };

@@ -15,7 +15,6 @@ void gGUITooltipText::setMargin(int x, int y){
 	marginentry =1;
 }
 
-
 gGUITooltipText::gGUITooltipText() {
 	text = "";
 	textlist.push_back("");
@@ -26,8 +25,6 @@ gGUITooltipText::gGUITooltipText() {
 		marginy=50;
 	}
 }
-
-
 
 gGUITooltipText::~gGUITooltipText() {
 }
@@ -44,10 +41,8 @@ std::string gGUITooltipText::getText() {
 void gGUITooltipText::update() {
 }
 
-
-
 void gGUITooltipText::draw() {
-	if(cursorx >= sizerx  && cursorx <= sizerw && cursory >= sizery && cursory <= sizerh) {
+	if(cursorx >= sizerx && cursorx <= sizerw && cursory >= sizery && cursory <= sizerh) {
 		gColor oldcolor = *renderer->getColor();
 		color.set(0.85f, 0.85f, 0.0f);
 		renderer->setColor(&color);
