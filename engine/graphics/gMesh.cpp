@@ -426,7 +426,7 @@ float gMesh::distanceTriangles(gRay* ray) {
 	float distance = 0.0f;
 	const std::vector<gVertex>& verts = *vertices;
 	const std::vector<gIndex>& inds = *indices;
-	for (loopindex = 0; loopindex < indices.size(); loopindex += 3) {
+	for (loopindex = 0; loopindex < inds.size(); loopindex += 3) {
 		//iterate through all faces of the mesh since each face has 3 vertices
 		const glm::vec3& a = verts[inds[loopindex]].position;
 		const glm::vec3& b = verts[inds[loopindex + 1]].position;

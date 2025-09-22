@@ -22,7 +22,7 @@ gSkinnedMesh::~gSkinnedMesh() {
 
 void gSkinnedMesh::draw() {
 	G_PROFILE_ZONE_SCOPED_N("gSkinnedMesh::draw()");
-	const std::vector<gVertex>& verts = *vertices;
+	std::vector<gVertex>& verts = *vertices;
 	if (getTargetMeshCount() > 0) {
 		if (frameno != framenoold) {
 			for(int i = 0; i < vbo->getVerticesNum(); i++) {
