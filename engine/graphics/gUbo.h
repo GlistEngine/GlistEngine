@@ -41,7 +41,7 @@ public:
 	}
 
 	void update(int offset, int length) {
-		void* ptr = static_cast<void*>(reinterpret_cast<char*>(data) + offset);
+		void* ptr = reinterpret_cast<char*>(data) + offset;
 		renderer->bufSubData(id, offset, length, ptr);
 	}
 

@@ -259,6 +259,15 @@ void gShader::setInt(const std::string &name, int value) {
 }
 
 // ------------------------------------------------------------------------
+void gShader::setUnsignedInt(const std::string &name, unsigned int value) {
+#ifdef DEBUG
+    assert(loaded);
+#endif
+	GLuint uniformloc = getUniformLocation(name);
+	renderer->setUnsignedInt(uniformloc, value);
+}
+
+// ------------------------------------------------------------------------
 void gShader::setFloat(const std::string &name, float value) {
 #ifdef DEBUG
     assert(loaded);

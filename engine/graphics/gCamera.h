@@ -71,7 +71,7 @@ public:
 
 	bool isInFrustum(const gBoundingBox& box) const;
 
-private:
+protected:
     float fov, nearclip, farclip;
 
 	struct Plane {

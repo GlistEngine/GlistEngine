@@ -64,12 +64,14 @@ void gCamera::begin() {
 	frustum.leftFace = Plane{ position, glm::cross(up, frontMultFar + right * halfHSide) };
 	frustum.topFace = Plane{ position, glm::cross(right, frontMultFar - up * halfVSide) };
 	frustum.bottomFace = Plane{ position, glm::cross(frontMultFar + up * halfVSide, right) };
+	renderer->updateScene();
 }
 
 void gCamera::end() {
 	G_PROFILE_ZONE_SCOPED_N("gCamera::end()");
 	renderer->restoreMatrices();
 	renderer->setCamera(nullptr);
+	renderer->updateScene();
 }
 
 void gCamera::setFov(float f) {

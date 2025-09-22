@@ -30,7 +30,7 @@
 class gBox : public gMesh {
 public:
 	gBox();
-	virtual ~gBox();
+	~gBox() override;
 };
 
 #endif /* ENGINE_GRAPHICS_PRIMITIVES_GCUBE_H_ */

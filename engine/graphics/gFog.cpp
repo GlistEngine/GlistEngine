@@ -20,8 +20,10 @@ gFog::gFog() {
 }
 
 void gFog::enable() {
-	renderer->enableFog();
-	if(renderer->getFogNo() == fogno) return;
+	if(renderer->getFogNo() == fogno) {
+		renderer->enableFog();
+		return;
+	}
 
 	renderer->setFogNo(fogno);
 	renderer->setFogColor(&color);
@@ -30,6 +32,7 @@ void gFog::enable() {
 	renderer->setFogGradient(gradient);
 	renderer->setFogLinearStart(linearstart);
 	renderer->setFogLinearEnd(linearend);
+	renderer->enableFog();
 }
 
 void gFog::disable() {

@@ -55,8 +55,8 @@ void gDatabase::execute(std::string statement, std::string id) {
 	int rc = sqlite3_exec(db, statement.c_str(), gDatabase::callback, (void*)id.c_str(), &zErrMsg);
 
 	if(rc != SQLITE_OK){
-		gLoge("gDatabase") << "SQL error:" << zErrMsg;
-	  sqlite3_free(zErrMsg);
+		gLoge("gDatabase") << "SQL error:" << zErrMsg << ", statement: " << statement;
+		sqlite3_free(zErrMsg);
 	}
 }
 
@@ -77,7 +77,6 @@ std::string gDatabase::getSelectData() {
 }
 
 void gDatabase::getTableInfo(char*** sqlResult, int* rowNum, int* colNum) {
-	char* zErr = 0;
 	zsql = "SELECT * FROM sqlite_master WHERE type = 'table'";
 	execute(zsql);
 	gLogi("gDatabase") << "getTableInfo 2";

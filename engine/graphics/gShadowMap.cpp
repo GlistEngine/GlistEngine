@@ -111,11 +111,7 @@ void gShadowMap::enable() {
 		renderer->getColorShader()->use();
 		renderer->getColorShader()->setInt("aUseShadowMap", 1);
 		renderer->getColorShader()->setVec3("lightPos", lightposition);
-		renderer->getColorShader()->setVec3("shadowLightPos", lightposition);
-		renderer->getColorShader()->setMat4("lightMatrix", lightmatrix);
 		renderer->getColorShader()->setInt("shadowMap", shadowmaptextureslot);
-		renderer->getColorShader()->setVec3("viewPos", camera->getPosition());
-//		renderer->getColorShader()->setVec3("viewPos", glm::vec3(0, 1, 0));
 
 		renderer->bindTexture(depthfbo.getTextureId(), shadowmaptextureslot);
 		renderpassno = 1;

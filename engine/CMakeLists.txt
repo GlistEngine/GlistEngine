@@ -7,6 +7,14 @@ if(NOT DEFINED GLIST_CXX_STANDARD_REQUIRED)
 	set(GLIST_CXX_STANDARD_REQUIRED True)
 endif()
 
+# Fix behavior of CMAKE_CXX_STANDARD when targeting macOS.
+if (POLICY CMP0025)
+	cmake_policy(SET CMP0025 NEW)
+endif()
+
+set(CMAKE_CXX_STANDARD ${GLIST_CXX_STANDARD})
+set(CMAKE_CXX_STANDARD_REQUIRED ${GLIST_CXX_STANDARD_REQUIRED})
+
 # Configure compiler and linker as you need
 set(GLIST_CXX_FLAGS_COMMON
     -Wuninitialized
@@ -26,9 +34,12 @@ endif()
 
 list(APPEND GLIST_CXX_FLAGS_DEBUG -DDEBUG -O0 -g)
 list(APPEND GLIST_CXX_FLAGS_RELEASE -DEIGEN_NO_CUDA -DNDEBUG -O2)
-if(NOT APPLE)
+if(APPLE)
+	set(GLIST_SHARED_LINKER_FLAGS "-pthread -L${BREW_PATH}/llvm/lib -Wl,-rpath,${BREW_PATH}/llvm/lib -L${BREW_PATH}/llvm/lib/c++ -Wl,-rpath,${BREW_PATH}/llvm/lib/c++")
+else()
 	set(GLIST_SHARED_LINKER_FLAGS "-v -pthread -Wl,--gc-sections")
 endif()
+
 if(WIN32)
 	set(GLIST_SHARED_LINKER_FLAGS "${GLIST_SHARED_LINKER_FLAGS} -mwindows")
 endif()
@@ -169,6 +180,7 @@ set(SRC_FILES
 	${ENGINE_DIR}/core/gGUIAppThread.cpp
 	${ENGINE_DIR}/utils/gThread.cpp
 	${ENGINE_DIR}/utils/gUtils.cpp
+	${ENGINE_DIR}/utils/gUUID.cpp
 	${ENGINE_DIR}/utils/gFile.cpp
 	${ENGINE_DIR}/utils/gHttpFile.cpp
 	${ENGINE_DIR}/graphics/gShader.cpp
@@ -365,7 +377,7 @@ else()
 endif()
 
 if(APPLE)
-    target_link_options(GlistEngine PRIVATE ${GLIST_SHARED_LINKER_FLAGS} -pthread)
+    target_link_options(GlistEngine PRIVATE ${GLIST_SHARED_LINKER_FLAGS})
 else()
 	set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} ${GLIST_SHARED_LINKER_FLAGS}")
 endif()

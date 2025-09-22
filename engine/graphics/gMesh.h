@@ -21,6 +21,7 @@
 #include "gMaterial.h"
 #include "gVbo.h"
 #include "gBoundingBox.h"
+#include "gUbo.h"
 
 class gMesh : public gNode {
 public:
@@ -33,16 +34,16 @@ public:
 			std::shared_ptr<std::vector<gIndex>> indices,
 			std::vector<gTexture*> textures);
 	gMesh(const gMesh&);
-	virtual ~gMesh();
+	~gMesh() override;
 
 	void setVertices(const std::vector<gVertex>& vertices, const std::vector<gIndex>& indices);
 	void setVertices(const std::vector<gVertex>& vertices);
 	void setVertices(std::shared_ptr<std::vector<gVertex>> vertices);
 	void setVertices(std::shared_ptr<std::vector<gVertex>> vertices, std::shared_ptr<std::vector<gIndex>> indices);
 	void setTextures(const std::vector<gTexture*>& textures);
+	void setTextures(const std::unordered_map<gTexture::TextureType, gTexture*>& textures);
 	void setTexture(gTexture* texture);
-	void addTexture(gTexture* tex);
-	gTexture* getTexture(int textureNo);
+	gTexture* getTexture(gTexture::TextureType type);
 
 	std::vector<gVertex>& getVertices();
 	std::vector<gIndex>& getIndices();
@@ -54,7 +55,7 @@ public:
 	gVbo& getVbo();
 	void clear();
 
-	void setName(std::string name);
+	void setName(const std::string& name);
 	const std::string& getName() const;
 
 	void setDrawMode(int drawMode);
@@ -63,7 +64,7 @@ public:
 	void setMaterial(gMaterial* material);
 	gMaterial* getMaterial();
 
-	void draw();
+	virtual void draw();
 
     const gBoundingBox& getInitialBoundingBox() const;
     bool intersectsTriangles(gRay* ray);
@@ -82,24 +83,38 @@ protected:
     bool isprojection2d;
 
 private:
-    std::string name;
+	enum MaterialFlags {
+		USE_DIFFUSE_MAP = 0b0001,
+		USE_SPECULAR_MAP = 0b0010,
+		USE_NORMAL_MAP = 0b0100,
+	};
+
 	std::shared_ptr<std::vector<gIndex>> indices;
-	std::vector<gTexture*> textures;
+
+    std::string name;
+	std::unordered_map<gTexture::TextureType, gTexture*> textures;
+	std::unordered_map<gTexture::TextureType, std::string> texturenames;
+	std::unordered_map<gTexture::TextureType, int> texturecounters = {
+		{gTexture::TEXTURETYPE_DIFFUSE, 0},
+		{gTexture::TEXTURETYPE_SPECULAR, 0},
+		{gTexture::TEXTURETYPE_NORMAL, 0},
+		{gTexture::TEXTURETYPE_HEIGHT, 0},
+		{gTexture::TEXTURETYPE_PBR_ALBEDO, 0},
+		{gTexture::TEXTURETYPE_PBR_ROUGHNESS, 0},
+		{gTexture::TEXTURETYPE_PBR_METALNESS, 0},
+		{gTexture::TEXTURETYPE_PBR_NORMAL, 0},
+		{gTexture::TEXTURETYPE_PBR_AO, 0}
+	};
 	int drawmode;
     gMaterial material;
-
-    unsigned int diffuseNr, specularNr, normalNr, heightNr;
-    std::string texnumber;
-    int textype;
-
-    gLight* scenelight;
-    gShader* colorshader;
-    gShader* textureshader;
-    gShader *pbrshader;
 
     gBoundingBox initialboundingbox;
     gBoundingBox boundingbox;
 	bool needsboundingboxrecalculation;
+
+	// Temporary variables
+	int loopindex = 0;
+
 };
 
 #endif /* ENGINE_GRAPHICS_GMESH_H_ */

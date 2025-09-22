@@ -446,7 +446,7 @@ gSkinnedMesh* gModel::processMesh(aiMesh *mesh, const aiScene *scene, aiMatrix4x
     return gmesh;
 }
 
-void gModel::loadMaterialTextures(gSkinnedMesh* mesh, aiMaterial *mat, aiTextureType type, int textureType) {
+void gModel::loadMaterialTextures(gSkinnedMesh* mesh, aiMaterial *mat, aiTextureType type, gTexture::TextureType textureType) {
 	aiString str;
     for(unsigned int i = 0; i < mat->GetTextureCount(type); i++) {
 		size_t texno;

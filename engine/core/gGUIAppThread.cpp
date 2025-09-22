@@ -18,10 +18,10 @@ gGUIAppThread::~gGUIAppThread() {
 }
 
 void gGUIAppThread::threadFunction() {
-	gCanvasManager* canvasmanager = root->getAppManager()->getCanvasManager();
+	gCanvasManager* canvasmanager = appmanager->getCanvasManager();
     gBaseCanvas* canvas = nullptr;
 
-    while(true) {
+    while(isrunning) {
 		root->update();
 
 	    if(canvasmanager) canvas = canvasmanager->getCurrentCanvas();

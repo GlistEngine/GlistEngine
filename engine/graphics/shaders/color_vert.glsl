@@ -11,13 +11,31 @@ layout (location = 2) in vec2 aTexCoords;
 layout (location = 3) in vec3 aTangent;
 layout (location = 4) in vec3 aBitangent;
 layout (location = 5) in int aUseNormalMap;
+
+struct Fog {
+    vec3 color;
+    float linearStart;
+    float linearEnd;
+    float density;
+    float gradient;
+
+    int mode;
+};
+
+layout(std140) uniform Scene {
+    vec4 renderColor;
+    vec3 viewPos;
+    mat4 viewMatrix;
+    uniform float ssaoBias;
+    int flags;
+    Fog fog;
+};
+
 uniform int aUseShadowMap;
 
 uniform mat4 model;
-uniform mat4 view;
 uniform mat4 projection;
 uniform vec3 lightPos;
-uniform vec3 viewPos;
 uniform mat4 lightMatrix;
 
 flat out int mUseNormalMap;
@@ -53,7 +71,7 @@ void main() {
         TangentFragPos  = TBN * FragPos;
     }
 
-    mat4 modelViewMatrix = view * model;
+    mat4 modelViewMatrix = viewMatrix * model;
     mat4 projectedMatrix = projection * modelViewMatrix;
     vec4 aPosVec4 = vec4(aPos, 1.0);
     gl_Position = projectedMatrix * aPosVec4;

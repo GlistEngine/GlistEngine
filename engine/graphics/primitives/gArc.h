@@ -13,7 +13,7 @@
 class gArc: public gMesh {
 public:
 	gArc();
-	virtual ~gArc();
+	~gArc() override;
 
 	void draw(float xCenter, float yCenter, float radius, bool isFilled, int numberOfSides = 60, float degree = 360.0f, float rotate = 360.0f);
 

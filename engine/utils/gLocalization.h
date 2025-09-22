@@ -4,77 +4,63 @@
  *  Created on: 6 Tem 2021
  *      Author: Admin
  */
-#include <locale>
-#include "gDatabase.h"
 
 #ifndef UTILS_GLOCALIZATION_H_
 #define UTILS_GLOCALIZATION_H_
 
+#include <vector>
+#include <string>
+#include "gDatabase.h"
+
+/**
+ * Database-driven localization system for multi-language text translation.
+ * Expects database table with "Key" column and language columns.
+ */
 class gLocalization {
 public:
 	gLocalization();
 	virtual ~gLocalization();
 
+	/**
+     * Load localization database and parse available language columns
+     * @param database Database file path
+     * @param tableName Table containing translations (default: "WORDS")
+     */
+	void loadDatabase(const std::string& database, const std::string& tableName = "WORDS");
 
-	/*
-	 * Load database for localization translate
-	 *
-	 * @database Sends database name as string for load and make ready to use for language translates
-	 * @tableName Sends table name as string for set and make ready to use for other functions and language translates
-	 */
-	void loadDatabase(std::string database, std::string tableName = "WORDS");
+	/**
+     * Translate word using current language setting
+     * @param word Key to look up in database
+     * @return Translated text, or original word if not found
+     */
+	std::string localizeWord(const std::string& word);
 
-	/*
-	 * Metod for translating words to current language it will return string
-	 * @ word Sending string for translate
-	 */
-	std::string localizeWord(std::string word);
-
-
-	/*
-	 * Allows setting current languages
-	 *
-	 * @languageId Sending id for setting which language will be use for translate
-	 *
-	 * @param languageId variable for setting language
-	 */
+	/**
+     * Set active language by column index (0-based, excluding "Key" column)
+     * @param languageId Language index (bounds-checked)
+     */
 	void setCurrentLanguage(int languageId);
+
+	/** @return Current language column name, empty if invalid */
+	std::string getCurrentLanguage() const;
+
+	/** @return Available language columns (excluding "Key") */
+	const std::vector<std::string>& getAvailableLanguages() const;
+
+	int getLangId() const;
+
 	std::string getTableInfo();
-	std::string getColumnData(std::string columnname);
-	std::vector<std::string> getColumnList();
-
-	/*
-	 * Gives which language used
-	 *
-	 * @return language as string
-	 */
-	std::string getCurrentLanguage();
-
-	/*
-	 * Gives which language id is set
-	 *
-	 * @return return languageId as int
-	 */
-	int getLangId();
-
-	int sayi;
+	std::string getColumnData(const std::string& columnname);
+	const std::vector<std::string>& getColumnList() const;
 private:
-	//Add column names of database to columnList vector
-	void columnLister(std::string tableinfo);
+	void parseColumnNames(const std::string& tableinfo);
+	bool isValidLanguageId(int languageId) const;
+
 	std::vector<std::string> columnlist;
-	//Variable which will contain a database
+	std::vector<std::string> availablelanguages;
 	gDatabase localizedb;
-	//variables for translatint words
 	int currentlanguage;
-	std::string selectquery;
-	std::string localizedword;
-	std::string backupstring;
-	bool starttowrite;
-	//string for result data
-	std::string resultstring;
 	std::string tablename;
-
-
 };
 
 #endif /* UTILS_GLOCALIZATION_H_ */

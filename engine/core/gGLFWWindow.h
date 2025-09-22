@@ -76,6 +76,8 @@ public:
 	const float* getJoystickAxes(int joystickId, int* axisCountPtr) override;
 
   private:
+	static void glfwErrorCallback(int error, const char* description);
+
 	GLFWwindow* window;
 	static GLFWwindow* currentwindow;
 	GLFWcursor** cursor;
@@ -109,6 +111,7 @@ public:
 	 * Invoking by GLFW if scroll changed.
 	 */
 	static void mouse_scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
+
 };
 
 #endif /* ENGINE_CORE_GGLFWWINDOW_H_ */

@@ -126,40 +126,6 @@ void gVbo::unbind() const {
 	renderer->unbindVAO();
 }
 
-void gVbo::draw() {
-	draw(GL_TRIANGLES);
-}
-
-/**
- * drawMode: GL_TRIANGLES
- */
-void gVbo::draw(int drawMode) {
-	if (!isenabled) return;
-	if(!isvertexdataallocated) {
-		logw("Vertex data is not allocated!");
-		return;
-	}
-
-	gShader* colorshader = renderer->getColorShader();
-	colorshader->use();
-
-    // Set scene properties
-    colorshader->setVec4("renderColor", renderer->getColor()->r, renderer->getColor()->g, renderer->getColor()->b, renderer->getColor()->a);
-
-    // Set matrices
-    colorshader->setMat4("projection", glm::mat4(1.0f));
-	colorshader->setMat4("view", glm::mat4(1.0f));
-	colorshader->setMat4("model", glm::mat4(1.0f));
-
-    bind();
-	if (isindexdataallocated) {
-		renderer->drawElements(drawMode, totalindexnum);
-	} else {
-		renderer->drawArrays(drawMode, totalvertexnum);
-	}
-    unbind();
-}
-
 void gVbo::enable() {
 	isenabled = true;
 }

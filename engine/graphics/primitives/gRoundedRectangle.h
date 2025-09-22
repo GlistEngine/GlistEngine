@@ -9,13 +9,14 @@
 #define GRAPHICS_PRIMITIVES_GROUNDEDRECTANGLE_H_
 
 #include "gMesh.h"
+
 class gRoundedRectangle : public gMesh {
 public:
 	gRoundedRectangle();
 	gRoundedRectangle(int x, int y, int w, int h, int radius, bool isFilled);
-	virtual ~gRoundedRectangle();
+	~gRoundedRectangle() override;
 
-	void draw();
+	void draw() override;
 	void draw(int x, int y, int w, int h, int radius, bool isFilled);
 	void setRoundedRectanglePoints(int x, int y, int w, int h, int radius, bool isFilled);
 private:

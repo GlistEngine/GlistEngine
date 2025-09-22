@@ -12,7 +12,7 @@
 #include "gBaseApp.h"
 
 
-class gGUIAppThread: public gThread {
+class gGUIAppThread : public gThread {
 public:
 	gGUIAppThread(gBaseApp* root);
 	virtual ~gGUIAppThread();

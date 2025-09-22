@@ -13,7 +13,7 @@
 class gTube : public gMesh {
 public:
 	gTube(int topOuterRadius, int topInnerRadius, int bottomOuterRadius, int bottomInnerRadius, int h, glm::vec2 shiftdistance, int segmentnum, bool isFilled);
-    virtual ~gTube();
+	~gTube() override;
 };
 
 #endif /* GRAPHICS_PRIMITIVES_GTUBE_H_ */

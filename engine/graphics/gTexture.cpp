@@ -17,26 +17,6 @@
 #include "gShader.h"
 #include "gTracy.h"
 
-const int gTexture::TEXTURETYPE_DIFFUSE = 0;
-const int gTexture::TEXTURETYPE_SPECULAR = 1;
-const int gTexture::TEXTURETYPE_NORMAL = 2;
-const int gTexture::TEXTURETYPE_HEIGHT = 3;
-const int gTexture::TEXTURETYPE_PBR_ALBEDO = 4;
-const int gTexture::TEXTURETYPE_PBR_ROUGHNESS = 5;
-const int gTexture::TEXTURETYPE_PBR_METALNESS = 6;
-const int gTexture::TEXTURETYPE_PBR_NORMAL = 7;
-const int gTexture::TEXTURETYPE_PBR_AO = 8;
-
-const int gTexture::TEXTUREWRAP_REPEAT = 0;
-const int gTexture::TEXTUREWRAP_CLAMP = 1;
-const int gTexture::TEXTUREWRAP_CLAMPTOEDGE = 2;
-const int gTexture::TEXTUREWRAP_NEAREST = 3;
-
-const int gTexture::TEXTUREMINMAGFILTER_LINEAR = 0;
-const int gTexture::TEXTUREMINMAGFILTER_MIPMAPLINEAR = 1;
-const int gTexture::TEXTUREMINMAGFILTER_NEAREST = 2;
-const int gTexture::TEXTUREMINMAGFILTER_CLAMP = 3;
-
 #if defined(GLIST_MOBILE)
 // todo alternatives?
 static const int texturewrap[4] = {GL_REPEAT, GL_NEAREST, GL_NEAREST, GL_NEAREST};
@@ -54,10 +34,6 @@ gTexture::gTexture() {
 	wrapt = TEXTUREWRAP_REPEAT;
 	filtermin = TEXTUREMINMAGFILTER_MIPMAPLINEAR;
 	filtermag = TEXTUREMINMAGFILTER_LINEAR;
-	texturetype[0] = "texture_diffuse";
-	texturetype[1] = "texture_specular";
-	texturetype[2] = "texture_normal";
-	texturetype[3] = "texture_height";
 	type = TEXTURETYPE_DIFFUSE;
 	path = "";
 	width = 0;
@@ -100,10 +76,6 @@ gTexture::gTexture(int w, int h, int format, bool isFbo) {
 	wrapt = TEXTUREWRAP_REPEAT;
 	filtermin = TEXTUREMINMAGFILTER_LINEAR;
 	filtermag = TEXTUREMINMAGFILTER_LINEAR;
-	texturetype[0] = "texture_diffuse";
-	texturetype[1] = "texture_specular";
-	texturetype[2] = "texture_normal";
-	texturetype[3] = "texture_height";
 	type = TEXTURETYPE_DIFFUSE;
 	path = "";
 	width = w;
@@ -306,11 +278,11 @@ unsigned int gTexture::getFormat() const {
 	return format;
 }
 
-void gTexture::setType(int textureType) {
+void gTexture::setType(TextureType textureType) {
 	type = textureType;
 }
 
-int gTexture::getType() const {
+gTexture::TextureType gTexture::getType() const {
 	return type;
 }
 
@@ -348,11 +320,7 @@ int gTexture::getFilterMag() const {
 
 
 const std::string& gTexture::getTypeName() const {
-	return texturetype[type];
-}
-
-const std::string& gTexture::getTypeName(int textureType) const {
-	return texturetype[textureType];
+	return getTypeName(type);
 }
 
 const std::string& gTexture::getFilename() const {
@@ -634,3 +602,35 @@ void gTexture::saveTexture(std::string fileName) {
 	save(gGetTexturesDir() + fileName);
 }
 
+const std::string& gTexture::getTypeName(TextureType textureType) {
+	static const std::string diffuse = "texture_diffuse";
+	static const std::string specular = "texture_specular";
+	static const std::string normal = "texture_normal";
+	static const std::string height = "texture_height";
+	static const std::string albedo = "texture_albedo";
+	static const std::string roughness = "texture_roughness";
+	static const std::string metalness = "texture_metalness";
+	static const std::string ao = "texture_ao";
+	static const std::string unknown = "texture_unknown";
+	switch (textureType) {
+	case TEXTURETYPE_DIFFUSE:
+		return diffuse;
+	case TEXTURETYPE_SPECULAR:
+		return specular;
+	case TEXTURETYPE_NORMAL:
+	case TEXTURETYPE_PBR_NORMAL:  // Both return the same string
+		return normal;
+	case TEXTURETYPE_HEIGHT:
+		return height;
+	case TEXTURETYPE_PBR_ALBEDO:
+		return albedo;
+	case TEXTURETYPE_PBR_ROUGHNESS:
+		return roughness;
+	case TEXTURETYPE_PBR_METALNESS:
+		return metalness;
+	case TEXTURETYPE_PBR_AO:
+		return ao;
+	default:
+		return unknown;
+	}
+}

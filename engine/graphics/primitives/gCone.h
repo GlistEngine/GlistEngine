@@ -13,7 +13,7 @@
 class gCone: public gMesh {
 public:
 	gCone(int r, int h, glm::vec2 shiftdistance, int segmentnum = 32, bool isFilled = true);
-	virtual ~gCone();
+	~gCone() override;
 };
 
 

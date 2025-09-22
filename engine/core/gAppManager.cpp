@@ -98,6 +98,7 @@ gAppManager::gAppManager(const std::string& appName, gBaseApp *baseApp, int widt
         mousebuttonpressed[i] = false;
     }
     targetframerate = 60;
+	framerate = targetframerate;
     updateTime();
     starttime = AppClock::now();
     endtime = starttime;
@@ -147,8 +148,9 @@ gAppManager::gAppManager(const std::string& appName, gBaseApp *baseApp, int widt
 
 gAppManager::~gAppManager() {
 	if(guiappthread) {
-		guiappthread->stop();
-//		delete guiappthread;
+		// This will ask to stop and wait for it to complete
+		// Then it will delete all the resources it holds
+		delete guiappthread;
 	}
     delete canvasmanager;
     delete guimanager;
@@ -242,10 +244,12 @@ void gAppManager::loop() {
         deltatime = endtime - starttime;
         totaltime += deltatime.count();
         starttime = endtime;
+		totalupdates++;
 
         tick();
 
         if(totaltime >= 1'000'000'000) {
+        	framerate = totalupdates;
             totaltime = 0;
             totalupdates = 0;
             totaldraws = 0;
@@ -336,7 +340,7 @@ int gAppManager::getTargetFramerate() {
 }
 
 int gAppManager::getFramerate() {
-    return (uint32_t)(1'000'000'000 / deltatime.count());
+    return framerate;
 }
 
 void gAppManager::enableVsync() {
@@ -422,7 +426,6 @@ void gAppManager::setDeviceOrientation(DeviceOrientation orientation) {
 #endif
 
 void gAppManager::tick() {
-    totalupdates++;
 	G_PROFILE_FRAME_MARK();
     if(!usewindow) {
 		G_PROFILE_ZONE_SCOPED_N("gAppManager::tick(): Non Window Update");
@@ -471,7 +474,7 @@ void gAppManager::tick() {
 					G_PROFILE_ZONE_SCOPED_N("gGUIManager::tick(): Render Pass");
 					G_PROFILE_ZONE_VALUE(i);
 					renderpassno = i;
-					canvas->getRenderer()->updateLights();
+					gBaseCanvas::getRenderer()->updateScene();
 					canvas->draw();
 				}
 			}

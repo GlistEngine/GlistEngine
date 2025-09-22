@@ -13,7 +13,7 @@
 class gTriangle: public gMesh {
 public:
 	gTriangle();
-	virtual ~gTriangle();
+	~gTriangle() override;
 
 	void draw(float px, float py, float qx, float qy, float rx, float ry, bool is_filled);
 
