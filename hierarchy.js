@@ -3,6 +3,7 @@ var hierarchy =
     [ "gGUIActionManager::Action", "structgGUIActionManager_1_1Action.html", null ],
     [ "gGUIGrid::Cell", "structgGUIGrid_1_1Cell.html", null ],
     [ "gGUITreelist::Element", "structgGUITreelist_1_1Element.html", null ],
+    [ "gCamera::Frustum", "structgCamera_1_1Frustum.html", null ],
     [ "gAnimationTrigger", "classgAnimationTrigger.html", null ],
     [ "gColor", "classgColor.html", null ],
     [ "gColorHSL", "classgColorHSL.html", null ],
@@ -60,6 +61,7 @@ var hierarchy =
       [ "gHttpFile", "classgHttpFile.html", null ],
       [ "gRenderObject", "classgRenderObject.html", [
         [ "gUbo< gRenderer::gSceneLights >", "classgUbo.html", null ],
+        [ "gUbo< gRenderer::gSceneData >", "classgUbo.html", null ],
         [ "gBaseCanvas", "classgBaseCanvas.html", null ],
         [ "gBaseGUIObject", "classgBaseGUIObject.html", [
           [ "gGUIControl", "classgGUIControl.html", [
@@ -199,10 +201,14 @@ var hierarchy =
       [ "gWindows", "classgWindows.html", null ]
     ] ],
     [ "gRect", "classgRect.html", null ],
+    [ "gRenderer::gSceneData", "structgRenderer_1_1gSceneData.html", null ],
+    [ "gRenderer::gSceneFogData", "structgRenderer_1_1gSceneFogData.html", null ],
     [ "gRenderer::gSceneLightData", "structgRenderer_1_1gSceneLightData.html", null ],
     [ "gRenderer::gSceneLights", "structgRenderer_1_1gSceneLights.html", null ],
     [ "gUTF8Iterator", "classgUTF8Iterator.html", null ],
     [ "gUtils", "classgUtils.html", null ],
+    [ "gUUID", "classgUUID.html", null ],
     [ "gVertex", "structgVertex.html", null ],
+    [ "gCamera::Plane", "structgCamera_1_1Plane.html", null ],
     [ "gHttpFile::ProgressData", "structgHttpFile_1_1ProgressData.html", null ]
 ];

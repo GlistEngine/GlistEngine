@@ -1,5 +1,28 @@
 var classgTexture =
 [
+    [ "TextureMagFilter", "classgTexture.html#a431db677977b3bc1e867659cc596a77d", [
+      [ "TEXTUREMINMAGFILTER_LINEAR", "classgTexture.html#a431db677977b3bc1e867659cc596a77da37beb9631b63580c319a0a143b584600", null ],
+      [ "TEXTUREMINMAGFILTER_MIPMAPLINEAR", "classgTexture.html#a431db677977b3bc1e867659cc596a77daf7ca5e38200b0dcbb87cafb830d5d597", null ],
+      [ "TEXTUREMINMAGFILTER_NEAREST", "classgTexture.html#a431db677977b3bc1e867659cc596a77da96e94a5b1b41ce340bbd87d8f73bfb33", null ],
+      [ "TEXTUREMINMAGFILTER_CLAMP", "classgTexture.html#a431db677977b3bc1e867659cc596a77da0c54390236d88d94f2c5c40073bf0c90", null ]
+    ] ],
+    [ "TextureType", "classgTexture.html#acca450f20de3e35a8dcef0a641dd2191", [
+      [ "TEXTURETYPE_DIFFUSE", "classgTexture.html#acca450f20de3e35a8dcef0a641dd2191a6a5f251019a0ec073236dd0631dba685", null ],
+      [ "TEXTURETYPE_SPECULAR", "classgTexture.html#acca450f20de3e35a8dcef0a641dd2191aed33a01f115a1eb07c8829c1aab1c479", null ],
+      [ "TEXTURETYPE_NORMAL", "classgTexture.html#acca450f20de3e35a8dcef0a641dd2191a294ef99669db984606335010ae0e952b", null ],
+      [ "TEXTURETYPE_HEIGHT", "classgTexture.html#acca450f20de3e35a8dcef0a641dd2191a1e474e394fde70beb73a80242822c3fa", null ],
+      [ "TEXTURETYPE_PBR_ALBEDO", "classgTexture.html#acca450f20de3e35a8dcef0a641dd2191a49f9222e55d8fda17ed042d9a7a5ab2c", null ],
+      [ "TEXTURETYPE_PBR_ROUGHNESS", "classgTexture.html#acca450f20de3e35a8dcef0a641dd2191a9043ffed4502e6d6b235484ec9fe9fe8", null ],
+      [ "TEXTURETYPE_PBR_METALNESS", "classgTexture.html#acca450f20de3e35a8dcef0a641dd2191a562c2f55bb3c3fbf591b2c85ed41eec0", null ],
+      [ "TEXTURETYPE_PBR_NORMAL", "classgTexture.html#acca450f20de3e35a8dcef0a641dd2191ac31dfaceb1638e543dd17c3477e04913", null ],
+      [ "TEXTURETYPE_PBR_AO", "classgTexture.html#acca450f20de3e35a8dcef0a641dd2191a160052a9764ad0a5a19acc5f75b413a9", null ]
+    ] ],
+    [ "TextureWrap", "classgTexture.html#a8d173f0d769a407a7d13c9908c9b4158", [
+      [ "TEXTUREWRAP_REPEAT", "classgTexture.html#a8d173f0d769a407a7d13c9908c9b4158ac147f8195cb02ab736b473a499625826", null ],
+      [ "TEXTUREWRAP_CLAMP", "classgTexture.html#a8d173f0d769a407a7d13c9908c9b4158a1bf41e6bf344d2933a14e559eadb7f17", null ],
+      [ "TEXTUREWRAP_CLAMPTOEDGE", "classgTexture.html#a8d173f0d769a407a7d13c9908c9b4158a2688125df8e102b97b450e51451e47d0", null ],
+      [ "TEXTUREWRAP_NEAREST", "classgTexture.html#a8d173f0d769a407a7d13c9908c9b4158a715ff35f73e60270b042c06f769412a2", null ]
+    ] ],
     [ "gTexture", "classgTexture.html#a3844bb0734a066a134250e06eefd8963", null ],
     [ "gTexture", "classgTexture.html#a8ecee7e8a43c9a03e53a6f3b774496c1", null ],
     [ "~gTexture", "classgTexture.html#a9c6608b1cd9a28579e84eafb278dadfe", null ],
@@ -36,9 +59,8 @@ var classgTexture =
     [ "getHeight", "classgTexture.html#a3f300b3f167a54bb78c0033aef9ba78a", null ],
     [ "getId", "classgTexture.html#ac1b0b56e0520ed3566ac8e4970d40dd4", null ],
     [ "getInternalFormat", "classgTexture.html#aa42d4f8239e2dcb38735be7593543b3d", null ],
-    [ "getType", "classgTexture.html#a80580098161b4276b9fc0e0737d060ca", null ],
+    [ "getType", "classgTexture.html#a615662deadc4573104fc2647f8595f56", null ],
     [ "getTypeName", "classgTexture.html#a8671e84186d552146fb22a2c46367ccf", null ],
-    [ "getTypeName", "classgTexture.html#a8135c416b88663e14b370dd23755eb97", null ],
     [ "getWidth", "classgTexture.html#a1f76e643fca3cf54e872f025e5f4d97f", null ],
     [ "getWrapS", "classgTexture.html#a5a11b1b5b34ef9b758ae1258f0f26bdc", null ],
     [ "getWrapT", "classgTexture.html#af9c63bd7a234f39363e62c1bdf513e81", null ],
@@ -54,7 +76,7 @@ var classgTexture =
     [ "setData", "classgTexture.html#a019e646955bb14ae419a19c93244aef7", null ],
     [ "setDataHDR", "classgTexture.html#a0212416373ed7392ce4444ee243be9cf", null ],
     [ "setFiltering", "classgTexture.html#a22aa7609fb65e6c3b7ccab6739e4e319", null ],
-    [ "setType", "classgTexture.html#aafc3c50cbe3ccdd485303675ec2432a9", null ],
+    [ "setType", "classgTexture.html#a4b935ae56851d43d8b08ccf14570a6b2", null ],
     [ "setupRenderData", "classgTexture.html#ae9581a25115b2be9c2e7915753c6980c", null ],
     [ "setWrapping", "classgTexture.html#a270075df951b50e8cce14d42a3bdad9a", null ],
     [ "unbind", "classgTexture.html#a98b90f0b945caea1e8e5c0e7989e904d", null ],
@@ -76,7 +98,7 @@ var classgTexture =
     [ "istextureallocated", "classgTexture.html#aab9d161137770ed0e1d7d1279171b724", null ],
     [ "masktexture", "classgTexture.html#ae81df34037306447d5168660adeeec1a", null ],
     [ "path", "classgTexture.html#a66a48b7fa256f82ca21a1c9ad8c78112", null ],
-    [ "type", "classgTexture.html#a102744b52be00f2ce066381bde463848", null ],
+    [ "type", "classgTexture.html#a251ba0e0645ebca7c2a061e90d083bbf", null ],
     [ "width", "classgTexture.html#a627c39d3af9a984bbfc3a716a6f29031", null ],
     [ "wraps", "classgTexture.html#a1d1d3ad7667bf945b3c4dfe2054b374c", null ],
     [ "wrapt", "classgTexture.html#a0990b4ec04030396c64dacec85e9cfbf", null ]

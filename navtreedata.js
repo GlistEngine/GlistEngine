@@ -40,6 +40,7 @@ var NAVTREE =
         [ "All", "functions.html", "functions_dup" ],
         [ "Functions", "functions_func.html", "functions_func" ],
         [ "Variables", "functions_vars.html", "functions_vars" ],
+        [ "Typedefs", "functions_type.html", null ],
         [ "Enumerations", "functions_enum.html", null ],
         [ "Enumerator", "functions_eval.html", null ],
         [ "Related Symbols", "functions_rela.html", null ]
@@ -64,21 +65,22 @@ var NAVTREEINDEX =
 [
 "annotated.html",
 "classgBaseGUIObject.html#afd44f1d6003f9e05c297761bec484620",
-"classgColorAdjustments.html",
-"classgGLRenderEngine.html#a5b7584a2d525add8ae8b5b1d5e937c4a",
-"classgGUIContextMenuItem.html#a5f361c0e50740b066eba4837c2b05bc8",
-"classgGUIGrid.html#a304611a32424bb78109acd937f56868d",
-"classgGUINotebook.html#a5ce4637f129724dd6ec2c3590d20a18b",
-"classgGUISlider.html#a282e76f48dbec7aaf476e778fec174a5",
-"classgGrid.html#a0d9e89378466323addfcb8778bc21e13",
-"classgMaterial.html#a6f3f1c2d8bd9b76bd5b5ab8bbd948938",
-"classgNode.html#a5b2ef8de03ec7bc85983f64b5877c0e1",
-"classgRenderer.html#a85e464ddd3fab891998f91fda6409fe8",
-"classgSoftFocus.html#a55655b936d0b1998da9cce9d9d43fab4",
-"dir_95f98002015846fd36af7f4632d0a4f4.html",
-"gGUIEvents_8h.html#a3d58a234661518d2a3fa9b978b08b616",
-"gMesh_8h_source.html",
-"namespacemembers_type.html"
+"classgCircle.html#a19dd21ebadb0016122d7f04fb244edd0",
+"classgGLRenderEngine.html#a23bd7e2140444e2aa65bfb3ac9510731",
+"classgGUIContainer.html#a8085e00a95b282029c5b9e33fae94cf2",
+"classgGUIGraph.html#ad65e1be89da9a52ba35556b1a7e82e46",
+"classgGUINavigation.html#a86f016977c3cfd8bcc834eb054ac93bc",
+"classgGUISizer.html#a8ca1c78d0efcfcf2c20c218806d22fd3",
+"classgGUITreelist.html#ad8cac0c7cfdeaff8c00b732642c1bd4e",
+"classgMaterial.html#a232742a6b0d11f3e901a174522ab3eed",
+"classgNode.html#a07c294943f1e4d369195271e54ebbe5b",
+"classgRenderer.html#a6237d68f0db92c4fdc6b445cef730b88",
+"classgShadowMap.html#a5cbafc7fdb2196cec54fa4ec56e11e01",
+"classgUTF8Iterator.html",
+"gColor_8h.html#a83fc1af92e29717b4513d121b0c72c7d",
+"gKeyCode_8h.html#a3d5e248bc04978c74c7ada0879ef1f2e",
+"gUUID_8h.html",
+"tinyfiledialogs_8h.html#ab96061de83b195bf847e44d164d6056e"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

@@ -205,8 +205,8 @@ $(document).ready(function(){initNavTree('gGUILineGraph_8h_source.html',''); ini
 <div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>    <span class="keywordtype">bool</span> pointsenabled;</div>
 <div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>    <span class="keywordtype">bool</span> needsupdate = <span class="keyword">false</span>;</div>
 <div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span> </div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>    uint64_t hash(uint32_t a, uint32_t b) {</div>
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>        <span class="keywordflow">return</span> ((uint64_t)a &lt;&lt; 32) | b;</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>    uint64_t hash(uint32_t <a class="code hl_variable" href="gColor_8h.html#a4aec1a5be9d9a4a394a2e49e9744286e">a</a>, uint32_t <a class="code hl_variable" href="gColor_8h.html#a83fc1af92e29717b4513d121b0c72c7d">b</a>) {</div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>        <span class="keywordflow">return</span> ((uint64_t)<a class="code hl_variable" href="gColor_8h.html#a4aec1a5be9d9a4a394a2e49e9744286e">a</a> &lt;&lt; 32) | <a class="code hl_variable" href="gColor_8h.html#a83fc1af92e29717b4513d121b0c72c7d">b</a>;</div>
 <div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>    }</div>
 <div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>};</div>
 </div>
@@ -216,7 +216,7 @@ $(document).ready(function(){initNavTree('gGUILineGraph_8h_source.html',''); ini
 <div class="ttc" id="aclassgBaseApp_html"><div class="ttname"><a href="classgBaseApp.html">gBaseApp</a></div><div class="ttdef"><b>Definition</b> gBaseApp.h:16</div></div>
 <div class="ttc" id="aclassgBaseGUIObject_html"><div class="ttname"><a href="classgBaseGUIObject.html">gBaseGUIObject</a></div><div class="ttdef"><b>Definition</b> gBaseGUIObject.h:18</div></div>
 <div class="ttc" id="aclassgBaseGUIObject_html_a1b904144beed0a06f3d1943a56b7edd6"><div class="ttname"><a href="classgBaseGUIObject.html#a1b904144beed0a06f3d1943a56b7edd6">gBaseGUIObject::root</a></div><div class="ttdeci">gBaseApp * root</div><div class="ttdef"><b>Definition</b> gBaseGUIObject.h:149</div></div>
-<div class="ttc" id="aclassgColor_html"><div class="ttname"><a href="classgColor.html">gColor</a></div><div class="ttdef"><b>Definition</b> gColor.h:16</div></div>
+<div class="ttc" id="aclassgColor_html"><div class="ttname"><a href="classgColor.html">gColor</a></div><div class="ttdef"><b>Definition</b> gColor.h:18</div></div>
 <div class="ttc" id="aclassgGUIGraph_html"><div class="ttname"><a href="classgGUIGraph.html">gGUIGraph</a></div><div class="ttdef"><b>Definition</b> gGUIGraph.h:49</div></div>
 <div class="ttc" id="aclassgGUILineGraph_html"><div class="ttname"><a href="classgGUILineGraph.html">gGUILineGraph</a></div><div class="ttdef"><b>Definition</b> gGUILineGraph.h:58</div></div>
 <div class="ttc" id="aclassgGUILineGraph_html_a043a0483dae7b22f29e8604a7113d6fb"><div class="ttname"><a href="classgGUILineGraph.html#a043a0483dae7b22f29e8604a7113d6fb">gGUILineGraph::setMaxY</a></div><div class="ttdeci">void setMaxY(int maxY) override</div></div>
@@ -242,6 +242,8 @@ $(document).ready(function(){initNavTree('gGUILineGraph_8h_source.html',''); ini
 <div class="ttc" id="aclassgGUILineGraph_html_ae8a421bb6450a9be2b4bd897a5146346"><div class="ttname"><a href="classgGUILineGraph.html#ae8a421bb6450a9be2b4bd897a5146346">gGUILineGraph::setPointValues</a></div><div class="ttdeci">void setPointValues(int lineIndex, float oldX, float oldY, float newX, float newY)</div></div>
 <div class="ttc" id="aclassgGUILineGraph_html_af956aa11c1f040a418cdd87d850d4513"><div class="ttname"><a href="classgGUILineGraph.html#af956aa11c1f040a418cdd87d850d4513">gGUILineGraph::getPointXValue</a></div><div class="ttdeci">float getPointXValue(int lineIndex, int pointIndex)</div></div>
 <div class="ttc" id="agCircle_8h_html"><div class="ttname"><a href="gCircle_8h.html">gCircle.h</a></div></div>
+<div class="ttc" id="agColor_8h_html_a4aec1a5be9d9a4a394a2e49e9744286e"><div class="ttname"><a href="gColor_8h.html#a4aec1a5be9d9a4a394a2e49e9744286e">a</a></div><div class="ttdeci">float a</div><div class="ttdef"><b>Definition</b> gColor.h:22</div></div>
+<div class="ttc" id="agColor_8h_html_a83fc1af92e29717b4513d121b0c72c7d"><div class="ttname"><a href="gColor_8h.html#a83fc1af92e29717b4513d121b0c72c7d">b</a></div><div class="ttdeci">float b</div><div class="ttdef"><b>Definition</b> gColor.h:22</div></div>
 <div class="ttc" id="agGUIButton_8h_html"><div class="ttname"><a href="gGUIButton_8h.html">gGUIButton.h</a></div></div>
 <div class="ttc" id="agGUIFrame_8h_html"><div class="ttname"><a href="gGUIFrame_8h.html">gGUIFrame.h</a></div></div>
 <div class="ttc" id="agGUIGraph_8h_html"><div class="ttname"><a href="gGUIGraph_8h.html">gGUIGraph.h</a></div></div>

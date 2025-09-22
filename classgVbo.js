@@ -6,8 +6,6 @@ var classgVbo =
     [ "bind", "classgVbo.html#a9a28b985fbfd74f9f4ddab092d704311", null ],
     [ "clear", "classgVbo.html#abe47346a4ca7a3e4251fffcc2c0b0a07", null ],
     [ "disable", "classgVbo.html#a7c447bcb75c3e22dc4ed7c91b47ec687", null ],
-    [ "draw", "classgVbo.html#a8fc3cb0d217eaa73379e0903694fe3f0", null ],
-    [ "draw", "classgVbo.html#a8595d420400ac4132c480824bd7e7367", null ],
     [ "enable", "classgVbo.html#a1bb233b9c688829990d3a0df99ea620f", null ],
     [ "getIndicesNum", "classgVbo.html#a12ab0cc3c251af48657dffb417007f67", null ],
     [ "getVAOid", "classgVbo.html#a68f0c0a1c702f4298cead88988401bb8", null ],

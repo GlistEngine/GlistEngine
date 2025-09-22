@@ -1,0 +1,8 @@
+<map id="gRenderer::gSceneData" name="gRenderer::gSceneData">
+<area shape="rect" id="Node000001" title=" " alt="" coords="81,229,255,255"/>
+<area shape="rect" id="Node000002" href="$classgColor.html" title=" " alt="" coords="5,73,69,99"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="58,108,160,227,156,231,54,111"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="61,64,73,62,85,65,93,73,96,86,91,101,79,109,64,109,48,101,51,96,65,103,78,104,87,98,91,86,88,76,82,70,73,68,62,69"/>
+<area shape="rect" id="Node000003" href="$structgRenderer_1_1gSceneFogData.html" title=" " alt="" coords="199,73,398,99"/>
+<area shape="poly" id="edge3_Node000001_Node000003" title=" " alt="" coords="289,112,262,158,223,207,191,231,188,227,219,203,258,155,285,110"/>
+</map>

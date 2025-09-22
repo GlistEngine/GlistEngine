@@ -18,6 +18,7 @@ var classgShader =
     [ "setMat2", "classgShader.html#a03bf018f430d6d5a902f586dbbddda47", null ],
     [ "setMat3", "classgShader.html#ab3566ee0f4f7682b47c79a58faeff265", null ],
     [ "setMat4", "classgShader.html#ade42c9dcced4a205546fc5a5f1705d76", null ],
+    [ "setUnsignedInt", "classgShader.html#a4d6593c7f99d4be68a3debfef21c6b4d", null ],
     [ "setVec2", "classgShader.html#ab7fc3d3fcccda07308f3574307a9d92c", null ],
     [ "setVec2", "classgShader.html#a48e908a98229f501d880a7b0cca53066", null ],
     [ "setVec3", "classgShader.html#a3e5d7edcaf854501b16f5d0c4e251178", null ],

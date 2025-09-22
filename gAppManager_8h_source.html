@@ -298,64 +298,65 @@ $(document).ready(function(){initNavTree('gAppManager_8h_source.html',''); initR
 <div class="line"><a id="l00375" name="l00375"></a><span class="lineno">  375</span>    AppClockDuration targettimestep;</div>
 <div class="line"><a id="l00376" name="l00376"></a><span class="lineno">  376</span>    uint64_t totaltime;</div>
 <div class="line"><a id="l00377" name="l00377"></a><span class="lineno">  377</span> </div>
-<div class="line"><a id="l00378" name="l00378"></a><span class="lineno">  378</span>    <span class="keywordtype">int</span> totalupdates;</div>
-<div class="line"><a id="l00379" name="l00379"></a><span class="lineno">  379</span>    <span class="keywordtype">int</span> totaldraws;</div>
-<div class="line"><a id="l00380" name="l00380"></a><span class="lineno">  380</span>    <span class="keywordtype">int</span> targetframerate;</div>
-<div class="line"><a id="l00381" name="l00381"></a><span class="lineno">  381</span>    <span class="keywordtype">bool</span> iscanvasset;</div>
-<div class="line"><a id="l00382" name="l00382"></a><span class="lineno">  382</span> </div>
-<div class="line"><a id="l00383" name="l00383"></a><span class="lineno">  383</span>    <span class="keywordtype">bool</span> isjoystickenabled;</div>
-<div class="line"><a id="l00384" name="l00384"></a><span class="lineno">  384</span>    <span class="keywordtype">bool</span> joystickconnected[maxjoysticknum];</div>
-<div class="line"><a id="l00385" name="l00385"></a><span class="lineno">  385</span>    <span class="keywordtype">bool</span> joystickbuttonstate[maxjoysticknum][maxjoystickbuttonnum];</div>
-<div class="line"><a id="l00386" name="l00386"></a><span class="lineno">  386</span>    <span class="keywordtype">int</span> joystickaxecount;</div>
-<div class="line"><a id="l00387" name="l00387"></a><span class="lineno">  387</span> </div>
-<div class="line"><a id="l00388" name="l00388"></a><span class="lineno">  388</span><span class="preprocessor">#if defined(GLIST_MOBILE)</span></div>
-<div class="line"><a id="l00389" name="l00389"></a><span class="lineno">  389</span>    DeviceOrientation deviceorientation;</div>
-<div class="line"><a id="l00390" name="l00390"></a><span class="lineno">  390</span>    DeviceOrientation olddeviceorientation;</div>
-<div class="line"><a id="l00391" name="l00391"></a><span class="lineno">  391</span>    <span class="keywordtype">bool</span> delayedresize;</div>
-<div class="line"><a id="l00392" name="l00392"></a><span class="lineno">  392</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00393" name="l00393"></a><span class="lineno">  393</span> </div>
-<div class="line"><a id="l00394" name="l00394"></a><span class="lineno">  394</span>    std::vector&lt;std::function&lt;void()&gt;&gt; mainthreadqueue;</div>
-<div class="line"><a id="l00395" name="l00395"></a><span class="lineno">  395</span>    std::mutex mainthreadqueuemutex;</div>
-<div class="line"><a id="l00396" name="l00396"></a><span class="lineno">  396</span> </div>
-<div class="line"><a id="l00397" name="l00397"></a><span class="lineno">  397</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00398" name="l00398"></a><span class="lineno">  398</span> </div>
-<div class="line"><a id="l00399" name="l00399"></a><span class="lineno">  399</span>    <span class="keywordtype">void</span> tick();</div>
-<div class="line"><a id="l00400" name="l00400"></a><span class="lineno">  400</span>    <span class="keywordtype">void</span> onEvent(<a class="code hl_class" href="classgEvent.html">gEvent</a>&amp; event);</div>
-<div class="line"><a id="l00401" name="l00401"></a><span class="lineno">  401</span> </div>
-<div class="line"><a id="l00402" name="l00402"></a><span class="lineno">  402</span>    <span class="keywordtype">bool</span> onWindowResizedEvent(<a class="code hl_class" href="classgWindowResizeEvent.html">gWindowResizeEvent</a>&amp;);</div>
-<div class="line"><a id="l00403" name="l00403"></a><span class="lineno">  403</span>    <span class="keywordtype">bool</span> onCharTypedEvent(<a class="code hl_class" href="classgCharTypedEvent.html">gCharTypedEvent</a>&amp;);</div>
-<div class="line"><a id="l00404" name="l00404"></a><span class="lineno">  404</span>    <span class="keywordtype">bool</span> onKeyPressedEvent(<a class="code hl_class" href="classgKeyPressedEvent.html">gKeyPressedEvent</a>&amp;);</div>
-<div class="line"><a id="l00405" name="l00405"></a><span class="lineno">  405</span>    <span class="keywordtype">bool</span> onKeyReleasedEvent(<a class="code hl_class" href="classgKeyReleasedEvent.html">gKeyReleasedEvent</a>&amp;);</div>
-<div class="line"><a id="l00406" name="l00406"></a><span class="lineno">  406</span>    <span class="keywordtype">bool</span> onMouseMovedEvent(<a class="code hl_class" href="classgMouseMovedEvent.html">gMouseMovedEvent</a>&amp;);</div>
-<div class="line"><a id="l00407" name="l00407"></a><span class="lineno">  407</span>    <span class="keywordtype">bool</span> onMouseButtonPressedEvent(<a class="code hl_class" href="classgMouseButtonPressedEvent.html">gMouseButtonPressedEvent</a>&amp;);</div>
-<div class="line"><a id="l00408" name="l00408"></a><span class="lineno">  408</span>    <span class="keywordtype">bool</span> onMouseButtonReleasedEvent(<a class="code hl_class" href="classgMouseButtonReleasedEvent.html">gMouseButtonReleasedEvent</a>&amp;);</div>
-<div class="line"><a id="l00409" name="l00409"></a><span class="lineno">  409</span>    <span class="keywordtype">bool</span> onWindowMouseEnterEvent(<a class="code hl_class" href="classgWindowMouseEnterEvent.html">gWindowMouseEnterEvent</a>&amp;);</div>
-<div class="line"><a id="l00410" name="l00410"></a><span class="lineno">  410</span>    <span class="keywordtype">bool</span> onWindowMouseExitEvent(<a class="code hl_class" href="classgWindowMouseExitEvent.html">gWindowMouseExitEvent</a>&amp;);</div>
-<div class="line"><a id="l00411" name="l00411"></a><span class="lineno">  411</span>    <span class="keywordtype">bool</span> onMouseScrolledEvent(<a class="code hl_class" href="classgMouseScrolledEvent.html">gMouseScrolledEvent</a>&amp;);</div>
-<div class="line"><a id="l00412" name="l00412"></a><span class="lineno">  412</span>    <span class="keywordtype">bool</span> onWindowFocusEvent(<a class="code hl_class" href="classgWindowFocusEvent.html">gWindowFocusEvent</a>&amp;);</div>
-<div class="line"><a id="l00413" name="l00413"></a><span class="lineno">  413</span>    <span class="keywordtype">bool</span> onWindowLoseFocusEvent(<a class="code hl_class" href="classgWindowLoseFocusEvent.html">gWindowLoseFocusEvent</a>&amp;);</div>
-<div class="line"><a id="l00414" name="l00414"></a><span class="lineno">  414</span>    <span class="keywordtype">bool</span> onJoystickConnectEvent(<a class="code hl_class" href="classgJoystickConnectEvent.html">gJoystickConnectEvent</a>&amp;);</div>
-<div class="line"><a id="l00415" name="l00415"></a><span class="lineno">  415</span>    <span class="keywordtype">bool</span> onJoystickDisconnectEvent(<a class="code hl_class" href="classgJoystickDisconnectEvent.html">gJoystickDisconnectEvent</a>&amp;);</div>
-<div class="line"><a id="l00416" name="l00416"></a><span class="lineno">  416</span><span class="preprocessor">#if defined(GLIST_MOBILE)</span></div>
-<div class="line"><a id="l00417" name="l00417"></a><span class="lineno">  417</span>    <span class="keywordtype">bool</span> onAppPauseEvent(gAppPauseEvent&amp;);</div>
-<div class="line"><a id="l00418" name="l00418"></a><span class="lineno">  418</span>    <span class="keywordtype">bool</span> onAppResumeEvent(gAppResumeEvent&amp;);</div>
-<div class="line"><a id="l00419" name="l00419"></a><span class="lineno">  419</span>    <span class="keywordtype">bool</span> onDeviceOrientationChangedEvent(gDeviceOrientationChangedEvent&amp;);</div>
-<div class="line"><a id="l00420" name="l00420"></a><span class="lineno">  420</span>    <span class="keywordtype">bool</span> onTouchEvent(gTouchEvent&amp;);</div>
-<div class="line"><a id="l00421" name="l00421"></a><span class="lineno">  421</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00422" name="l00422"></a><span class="lineno">  422</span> </div>
-<div class="line"><a id="l00423" name="l00423"></a><span class="lineno">  423</span>    <span class="keywordtype">void</span> updateTime();</div>
-<div class="line"><a id="l00424" name="l00424"></a><span class="lineno">  424</span>    <span class="keywordtype">void</span> executeQueue();</div>
-<div class="line"><a id="l00425" name="l00425"></a><span class="lineno">  425</span> </div>
-<div class="line"><a id="l00426" name="l00426"></a><span class="lineno">  426</span>    <a class="code hl_typedef" href="gEvent_8h.html#a93e13b3bb73a426d9cc0ec83fcd121a8">EventHandlerFn</a> getEventHandler() { <span class="keywordflow">return</span> eventhandler; }</div>
-<div class="line"><a id="l00427" name="l00427"></a><span class="lineno">  427</span> </div>
-<div class="line"><a id="l00428" name="l00428"></a><span class="lineno">  428</span>    <span class="keyword">static</span> <span class="keywordtype">void</span> preciseSleep(<span class="keywordtype">double</span> seconds);</div>
-<div class="line"><a id="l00429" name="l00429"></a><span class="lineno">  429</span> </div>
-<div class="line"><a id="l00430" name="l00430"></a><span class="lineno">  430</span>    <a class="code hl_class" href="classgGUIAppThread.html">gGUIAppThread</a>* guiappthread;</div>
-<div class="line"><a id="l00431" name="l00431"></a><span class="lineno">  431</span>    <span class="keywordtype">bool</span> isguiapp;</div>
-<div class="line"><a id="l00432" name="l00432"></a><span class="lineno">  432</span>};</div>
+<div class="line"><a id="l00378" name="l00378"></a><span class="lineno">  378</span>    <span class="keywordtype">int</span> framerate;</div>
+<div class="line"><a id="l00379" name="l00379"></a><span class="lineno">  379</span>    <span class="keywordtype">int</span> totalupdates;</div>
+<div class="line"><a id="l00380" name="l00380"></a><span class="lineno">  380</span>    <span class="keywordtype">int</span> totaldraws;</div>
+<div class="line"><a id="l00381" name="l00381"></a><span class="lineno">  381</span>    <span class="keywordtype">int</span> targetframerate;</div>
+<div class="line"><a id="l00382" name="l00382"></a><span class="lineno">  382</span>    <span class="keywordtype">bool</span> iscanvasset;</div>
+<div class="line"><a id="l00383" name="l00383"></a><span class="lineno">  383</span> </div>
+<div class="line"><a id="l00384" name="l00384"></a><span class="lineno">  384</span>    <span class="keywordtype">bool</span> isjoystickenabled;</div>
+<div class="line"><a id="l00385" name="l00385"></a><span class="lineno">  385</span>    <span class="keywordtype">bool</span> joystickconnected[maxjoysticknum];</div>
+<div class="line"><a id="l00386" name="l00386"></a><span class="lineno">  386</span>    <span class="keywordtype">bool</span> joystickbuttonstate[maxjoysticknum][maxjoystickbuttonnum];</div>
+<div class="line"><a id="l00387" name="l00387"></a><span class="lineno">  387</span>    <span class="keywordtype">int</span> joystickaxecount;</div>
+<div class="line"><a id="l00388" name="l00388"></a><span class="lineno">  388</span> </div>
+<div class="line"><a id="l00389" name="l00389"></a><span class="lineno">  389</span><span class="preprocessor">#if defined(GLIST_MOBILE)</span></div>
+<div class="line"><a id="l00390" name="l00390"></a><span class="lineno">  390</span>    DeviceOrientation deviceorientation;</div>
+<div class="line"><a id="l00391" name="l00391"></a><span class="lineno">  391</span>    DeviceOrientation olddeviceorientation;</div>
+<div class="line"><a id="l00392" name="l00392"></a><span class="lineno">  392</span>    <span class="keywordtype">bool</span> delayedresize;</div>
+<div class="line"><a id="l00393" name="l00393"></a><span class="lineno">  393</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00394" name="l00394"></a><span class="lineno">  394</span> </div>
+<div class="line"><a id="l00395" name="l00395"></a><span class="lineno">  395</span>    std::vector&lt;std::function&lt;void()&gt;&gt; mainthreadqueue;</div>
+<div class="line"><a id="l00396" name="l00396"></a><span class="lineno">  396</span>    std::mutex mainthreadqueuemutex;</div>
+<div class="line"><a id="l00397" name="l00397"></a><span class="lineno">  397</span> </div>
+<div class="line"><a id="l00398" name="l00398"></a><span class="lineno">  398</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00399" name="l00399"></a><span class="lineno">  399</span> </div>
+<div class="line"><a id="l00400" name="l00400"></a><span class="lineno">  400</span>    <span class="keywordtype">void</span> tick();</div>
+<div class="line"><a id="l00401" name="l00401"></a><span class="lineno">  401</span>    <span class="keywordtype">void</span> onEvent(<a class="code hl_class" href="classgEvent.html">gEvent</a>&amp; event);</div>
+<div class="line"><a id="l00402" name="l00402"></a><span class="lineno">  402</span> </div>
+<div class="line"><a id="l00403" name="l00403"></a><span class="lineno">  403</span>    <span class="keywordtype">bool</span> onWindowResizedEvent(<a class="code hl_class" href="classgWindowResizeEvent.html">gWindowResizeEvent</a>&amp;);</div>
+<div class="line"><a id="l00404" name="l00404"></a><span class="lineno">  404</span>    <span class="keywordtype">bool</span> onCharTypedEvent(<a class="code hl_class" href="classgCharTypedEvent.html">gCharTypedEvent</a>&amp;);</div>
+<div class="line"><a id="l00405" name="l00405"></a><span class="lineno">  405</span>    <span class="keywordtype">bool</span> onKeyPressedEvent(<a class="code hl_class" href="classgKeyPressedEvent.html">gKeyPressedEvent</a>&amp;);</div>
+<div class="line"><a id="l00406" name="l00406"></a><span class="lineno">  406</span>    <span class="keywordtype">bool</span> onKeyReleasedEvent(<a class="code hl_class" href="classgKeyReleasedEvent.html">gKeyReleasedEvent</a>&amp;);</div>
+<div class="line"><a id="l00407" name="l00407"></a><span class="lineno">  407</span>    <span class="keywordtype">bool</span> onMouseMovedEvent(<a class="code hl_class" href="classgMouseMovedEvent.html">gMouseMovedEvent</a>&amp;);</div>
+<div class="line"><a id="l00408" name="l00408"></a><span class="lineno">  408</span>    <span class="keywordtype">bool</span> onMouseButtonPressedEvent(<a class="code hl_class" href="classgMouseButtonPressedEvent.html">gMouseButtonPressedEvent</a>&amp;);</div>
+<div class="line"><a id="l00409" name="l00409"></a><span class="lineno">  409</span>    <span class="keywordtype">bool</span> onMouseButtonReleasedEvent(<a class="code hl_class" href="classgMouseButtonReleasedEvent.html">gMouseButtonReleasedEvent</a>&amp;);</div>
+<div class="line"><a id="l00410" name="l00410"></a><span class="lineno">  410</span>    <span class="keywordtype">bool</span> onWindowMouseEnterEvent(<a class="code hl_class" href="classgWindowMouseEnterEvent.html">gWindowMouseEnterEvent</a>&amp;);</div>
+<div class="line"><a id="l00411" name="l00411"></a><span class="lineno">  411</span>    <span class="keywordtype">bool</span> onWindowMouseExitEvent(<a class="code hl_class" href="classgWindowMouseExitEvent.html">gWindowMouseExitEvent</a>&amp;);</div>
+<div class="line"><a id="l00412" name="l00412"></a><span class="lineno">  412</span>    <span class="keywordtype">bool</span> onMouseScrolledEvent(<a class="code hl_class" href="classgMouseScrolledEvent.html">gMouseScrolledEvent</a>&amp;);</div>
+<div class="line"><a id="l00413" name="l00413"></a><span class="lineno">  413</span>    <span class="keywordtype">bool</span> onWindowFocusEvent(<a class="code hl_class" href="classgWindowFocusEvent.html">gWindowFocusEvent</a>&amp;);</div>
+<div class="line"><a id="l00414" name="l00414"></a><span class="lineno">  414</span>    <span class="keywordtype">bool</span> onWindowLoseFocusEvent(<a class="code hl_class" href="classgWindowLoseFocusEvent.html">gWindowLoseFocusEvent</a>&amp;);</div>
+<div class="line"><a id="l00415" name="l00415"></a><span class="lineno">  415</span>    <span class="keywordtype">bool</span> onJoystickConnectEvent(<a class="code hl_class" href="classgJoystickConnectEvent.html">gJoystickConnectEvent</a>&amp;);</div>
+<div class="line"><a id="l00416" name="l00416"></a><span class="lineno">  416</span>    <span class="keywordtype">bool</span> onJoystickDisconnectEvent(<a class="code hl_class" href="classgJoystickDisconnectEvent.html">gJoystickDisconnectEvent</a>&amp;);</div>
+<div class="line"><a id="l00417" name="l00417"></a><span class="lineno">  417</span><span class="preprocessor">#if defined(GLIST_MOBILE)</span></div>
+<div class="line"><a id="l00418" name="l00418"></a><span class="lineno">  418</span>    <span class="keywordtype">bool</span> onAppPauseEvent(gAppPauseEvent&amp;);</div>
+<div class="line"><a id="l00419" name="l00419"></a><span class="lineno">  419</span>    <span class="keywordtype">bool</span> onAppResumeEvent(gAppResumeEvent&amp;);</div>
+<div class="line"><a id="l00420" name="l00420"></a><span class="lineno">  420</span>    <span class="keywordtype">bool</span> onDeviceOrientationChangedEvent(gDeviceOrientationChangedEvent&amp;);</div>
+<div class="line"><a id="l00421" name="l00421"></a><span class="lineno">  421</span>    <span class="keywordtype">bool</span> onTouchEvent(gTouchEvent&amp;);</div>
+<div class="line"><a id="l00422" name="l00422"></a><span class="lineno">  422</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00423" name="l00423"></a><span class="lineno">  423</span> </div>
+<div class="line"><a id="l00424" name="l00424"></a><span class="lineno">  424</span>    <span class="keywordtype">void</span> updateTime();</div>
+<div class="line"><a id="l00425" name="l00425"></a><span class="lineno">  425</span>    <span class="keywordtype">void</span> executeQueue();</div>
+<div class="line"><a id="l00426" name="l00426"></a><span class="lineno">  426</span> </div>
+<div class="line"><a id="l00427" name="l00427"></a><span class="lineno">  427</span>    <a class="code hl_typedef" href="gEvent_8h.html#a93e13b3bb73a426d9cc0ec83fcd121a8">EventHandlerFn</a> getEventHandler() { <span class="keywordflow">return</span> eventhandler; }</div>
+<div class="line"><a id="l00428" name="l00428"></a><span class="lineno">  428</span> </div>
+<div class="line"><a id="l00429" name="l00429"></a><span class="lineno">  429</span>    <span class="keyword">static</span> <span class="keywordtype">void</span> preciseSleep(<span class="keywordtype">double</span> seconds);</div>
+<div class="line"><a id="l00430" name="l00430"></a><span class="lineno">  430</span> </div>
+<div class="line"><a id="l00431" name="l00431"></a><span class="lineno">  431</span>    <a class="code hl_class" href="classgGUIAppThread.html">gGUIAppThread</a>* guiappthread;</div>
+<div class="line"><a id="l00432" name="l00432"></a><span class="lineno">  432</span>    <span class="keywordtype">bool</span> isguiapp;</div>
+<div class="line"><a id="l00433" name="l00433"></a><span class="lineno">  433</span>};</div>
 </div>
-<div class="line"><a id="l00433" name="l00433"></a><span class="lineno">  433</span> </div>
-<div class="line"><a id="l00434" name="l00434"></a><span class="lineno">  434</span><span class="preprocessor">#endif </span><span class="comment">//GAPPMANAGER_H</span></div>
+<div class="line"><a id="l00434" name="l00434"></a><span class="lineno">  434</span> </div>
+<div class="line"><a id="l00435" name="l00435"></a><span class="lineno">  435</span><span class="preprocessor">#endif </span><span class="comment">//GAPPMANAGER_H</span></div>
 <div class="ttc" id="aclassgAppManager_html"><div class="ttname"><a href="classgAppManager.html">gAppManager</a></div><div class="ttdef"><b>Definition</b> gAppManager.h:153</div></div>
 <div class="ttc" id="aclassgAppManager_html_a0b28ed6ce8802a3d0400bf12d8b3b637"><div class="ttname"><a href="classgAppManager.html#a0b28ed6ce8802a3d0400bf12d8b3b637">gAppManager::getGUIManager</a></div><div class="ttdeci">gGUIManager * getGUIManager()</div></div>
 <div class="ttc" id="aclassgAppManager_html_a0d3825b594e898d98e26cd5599f7925f"><div class="ttname"><a href="classgAppManager.html#a0d3825b594e898d98e26cd5599f7925f">gAppManager::runApp</a></div><div class="ttdeci">void runApp()</div></div>

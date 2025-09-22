@@ -92,6 +92,7 @@ $(document).ready(function(){initNavTree('classgRenderer.html',''); initResizabl
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
+<a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="#pub-static-attribs">Static Public Attributes</a> &#124;
@@ -123,46 +124,67 @@ Collaboration diagram for gRenderer:</div>
 <div class="dyncontent">
 <div class="center"><img src="classgRenderer__coll__graph.png" border="0" usemap="#agRenderer_coll__map" alt="Collaboration graph"/></div>
 <map name="agRenderer_coll__map" id="agRenderer_coll__map">
-<area shape="rect" title=" " alt="" coords="315,273,404,299"/>
-<area shape="rect" href="classgRenderObject.html" title=" " alt="" coords="233,429,352,455"/>
-<area shape="poly" title=" " alt="" coords="335,310,324,324,312,352,303,381,296,430,291,429,298,380,307,350,320,321,331,306"/>
-<area shape="rect" href="classgObject.html" title=" " alt="" coords="186,73,258,99"/>
-<area shape="poly" title=" " alt="" coords="240,109,354,272,349,275,236,112"/>
-<area shape="poly" title=" " alt="" coords="230,111,293,429,288,430,224,112"/>
-<area shape="rect" href="classgColor.html" title=" " alt="" coords="327,73,391,99"/>
-<area shape="poly" title=" " alt="" coords="362,113,362,273,357,273,357,113"/>
-<area shape="poly" title=" " alt="" coords="380,62,393,58,406,61,415,70,418,86,413,104,400,113,384,112,368,101,371,97,386,107,399,108,409,101,413,86,410,73,403,66,393,64,381,67"/>
-<area shape="rect" href="classgUbo.html" title=" " alt="" coords="5,585,252,611"/>
-<area shape="poly" title=" " alt="" coords="121,572,116,528,116,472,126,413,137,385,153,360,188,328,231,307,274,294,314,288,315,293,276,300,232,312,191,333,157,363,142,387,131,415,121,473,121,528,126,571"/>
-<area shape="poly" title=" " alt="" coords="274,467,216,525,145,587,141,583,212,521,270,463"/>
-<area shape="rect" href="classgShader.html" title=" " alt="" coords="435,585,510,611"/>
-<area shape="poly" title=" " alt="" coords="300,467,317,515,331,539,349,559,382,571,436,585,435,590,380,576,346,564,326,542,312,517,295,469"/>
-<area shape="rect" href="classgNode.html" title=" " alt="" coords="277,585,341,611"/>
-<area shape="poly" title=" " alt="" coords="298,468,310,585,305,585,293,469"/>
-<area shape="rect" href="classgGrid.html" title=" " alt="" coords="551,585,608,611"/>
-<area shape="poly" title=" " alt="" coords="312,464,339,493,373,520,419,545,468,564,551,588,550,593,466,570,417,550,370,525,335,497,308,467"/>
-<area shape="poly" title=" " alt="" coords="451,576,433,552,417,524,401,469,397,423,394,378,380,324,366,300,371,298,384,322,400,377,402,423,406,468,422,522,437,549,455,573"/>
-<area shape="rect" href="classgCamera.html" title=" " alt="" coords="475,660,556,685"/>
-<area shape="poly" title=" " alt="" coords="554,652,587,633,619,609,671,550,690,520,702,490,708,460,705,428,695,396,675,363,658,348,631,336,558,315,475,301,404,293,404,288,476,296,559,310,633,331,660,344,679,360,699,394,711,427,713,460,707,492,695,523,676,553,622,613,590,637,557,656"/>
-<area shape="poly" title=" " alt="" coords="355,613,483,657,482,662,353,618"/>
-<area shape="poly" title=" " alt="" coords="356,590,367,598,359,606,341,608,341,602,357,601,362,598,353,594"/>
-<area shape="poly" title=" " alt="" coords="583,571,591,528,595,473,588,415,578,388,564,363,548,346,530,332,488,311,444,298,404,292,405,287,445,293,490,306,533,327,552,342,568,360,583,385,593,414,600,473,597,529,589,572"/>
+<area shape="rect" title=" " alt="" coords="341,179,431,204"/>
+<area shape="rect" href="classgRenderObject.html" title=" " alt="" coords="553,116,671,141"/>
+<area shape="poly" title=" " alt="" coords="426,170,454,159,552,136,553,141,455,165,427,175"/>
+<area shape="rect" href="classgObject.html" title=" " alt="" coords="50,5,122,31"/>
+<area shape="poly" title=" " alt="" coords="136,28,168,40,230,74,288,112,371,177,368,181,285,116,227,78,166,44,134,33"/>
+<area shape="poly" title=" " alt="" coords="136,26,553,114,552,119,135,31"/>
+<area shape="rect" href="classgColor.html" title=" " alt="" coords="54,240,118,265"/>
+<area shape="poly" title=" " alt="" coords="131,241,341,198,342,203,132,246"/>
+<area shape="poly" title=" " alt="" coords="53,225,63,217,86,213,105,216,117,222,120,232,114,241,110,238,115,231,113,225,104,221,86,219,65,222,57,229"/>
+<area shape="rect" href="classgUbo.html" title=" " alt="" coords="735,45,981,71"/>
+<area shape="poly" title=" " alt="" coords="721,61,657,67,588,79,520,99,456,128,423,154,399,180,395,176,420,150,453,124,518,94,587,74,656,62,721,55"/>
+<area shape="poly" title=" " alt="" coords="664,109,734,87,805,68,806,73,735,93,665,114"/>
+<area shape="rect" href="classgUbo.html" title=" " alt="" coords="739,191,977,216"/>
+<area shape="poly" title=" " alt="" coords="657,144,736,177,780,188,779,193,734,182,655,149"/>
+<area shape="rect" href="classgShader.html" title=" " alt="" coords="821,240,895,265"/>
+<area shape="poly" title=" " alt="" coords="666,145,687,159,703,177,711,195,720,211,736,226,756,237,778,243,821,250,820,255,777,249,754,242,733,231,716,214,707,197,699,180,684,163,663,150"/>
+<area shape="rect" href="classgNode.html" title=" " alt="" coords="826,141,890,167"/>
+<area shape="poly" title=" " alt="" coords="685,132,711,134,826,147,826,153,710,139,685,137"/>
+<area shape="rect" href="classgGrid.html" title=" " alt="" coords="829,289,887,315"/>
+<area shape="poly" title=" " alt="" coords="670,146,687,159,699,174,706,190,711,221,717,249,724,263,736,276,758,289,782,296,829,301,829,306,781,302,756,294,733,280,719,266,712,251,706,222,701,192,695,177,683,163,667,150"/>
+<area shape="poly" title=" " alt="" coords="724,203,431,195,431,190,725,197"/>
+<area shape="poly" title=" " alt="" coords="807,256,771,264,736,280,726,290,720,300,713,323,707,347,699,357,687,367,648,385,613,390,578,383,538,367,510,352,485,332,442,286,411,240,391,205,396,203,415,237,446,283,488,328,513,347,540,362,579,378,613,384,646,380,684,362,695,354,702,344,708,322,715,298,722,287,733,276,769,259,806,251"/>
+<area shape="rect" href="classgCamera.html" title=" " alt="" coords="1357,264,1439,289"/>
+<area shape="poly" title=" " alt="" coords="1391,303,1367,366,1348,403,1324,441,1296,476,1264,505,1226,524,1184,531,611,531,581,529,556,523,535,514,517,500,486,464,452,417,422,359,402,298,391,243,386,205,391,204,396,242,407,297,427,357,457,414,490,461,521,496,538,509,558,518,582,524,611,526,1183,526,1224,519,1261,500,1292,472,1320,438,1343,401,1362,364,1386,301"/>
+<area shape="poly" title=" " alt="" coords="904,155,1060,171,1157,185,1254,203,1295,213,1335,229,1383,261,1380,266,1332,234,1294,218,1253,209,1156,190,1059,176,904,160"/>
+<area shape="poly" title=" " alt="" coords="829,127,838,118,858,115,875,117,885,123,888,133,883,143,878,140,883,132,881,127,873,122,858,120,840,123,833,130"/>
+<area shape="rect" href="classgSkybox.html" title=" " alt="" coords="1143,217,1221,243"/>
+<area shape="poly" title=" " alt="" coords="904,159,982,177,1006,185,1144,219,1143,224,1005,190,981,182,903,165"/>
+<area shape="rect" href="structgCamera_1_1Frustum.html" title=" " alt="" coords="1111,333,1253,359"/>
+<area shape="poly" title=" " alt="" coords="1234,327,1357,287,1358,292,1236,332"/>
+<area shape="rect" href="structgCamera_1_1Plane.html" title=" " alt="" coords="795,339,921,364"/>
+<area shape="poly" title=" " alt="" coords="934,347,1110,345,1110,350,934,353"/>
+<area shape="poly" title=" " alt="" coords="1235,239,1358,265,1357,271,1234,244"/>
+<area shape="poly" title=" " alt="" coords="816,305,775,311,755,319,736,329,726,340,719,351,714,376,707,401,699,413,687,423,648,440,614,444,579,437,538,423,509,411,489,398,453,356,428,315,409,273,388,205,393,203,414,271,432,313,457,352,492,394,512,407,540,418,580,432,614,439,647,435,684,418,695,409,702,399,708,375,714,349,721,337,733,325,752,314,774,306,815,299"/>
 </map>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgRenderer_1_1gSceneData.html">gSceneData</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgRenderer_1_1gSceneFogData.html">gSceneFogData</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgRenderer_1_1gSceneLightData.html">gSceneLightData</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgRenderer_1_1gSceneLights.html">gSceneLights</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:adba1900f960be6d02c5d143026ec8454" id="r_adba1900f960be6d02c5d143026ec8454"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#adba1900f960be6d02c5d143026ec8454">SceneDataFlags</a> { <a class="el" href="classgRenderer.html#adba1900f960be6d02c5d143026ec8454a89f383e880b00465b46fab2f4ec5bef0">ENABLE_SSAO</a> = 0b0001
+, <a class="el" href="classgRenderer.html#adba1900f960be6d02c5d143026ec8454a631d8073096dd6fe38e97d17d2672c1c">ENABLE_FOG</a> = 0b0010
+ }</td></tr>
+<tr class="separator:adba1900f960be6d02c5d143026ec8454"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a6551c9bca5231a4575f3afa7aa379eca" id="r_a6551c9bca5231a4575f3afa7aa379eca"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a6551c9bca5231a4575f3afa7aa379eca">gRenderer</a> ()=default</td></tr>
 <tr class="separator:a6551c9bca5231a4575f3afa7aa379eca"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8368e4ad5b9540b3a2f0eb2d85283e0e" id="r_a8368e4ad5b9540b3a2f0eb2d85283e0e"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a8368e4ad5b9540b3a2f0eb2d85283e0e">~gRenderer</a> ()=default</td></tr>
-<tr class="separator:a8368e4ad5b9540b3a2f0eb2d85283e0e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4a53a6a0c103c6d0b5f87dffaca6687e" id="r_a4a53a6a0c103c6d0b5f87dffaca6687e"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a4a53a6a0c103c6d0b5f87dffaca6687e">~gRenderer</a> ()</td></tr>
+<tr class="separator:a4a53a6a0c103c6d0b5f87dffaca6687e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aff8c158d2b8171d117457d1591001dcc" id="r_aff8c158d2b8171d117457d1591001dcc"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#aff8c158d2b8171d117457d1591001dcc">getWidth</a> ()</td></tr>
 <tr class="separator:aff8c158d2b8171d117457d1591001dcc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a56f5a6c106f82e5bf56b3038473e507b" id="r_a56f5a6c106f82e5bf56b3038473e507b"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a56f5a6c106f82e5bf56b3038473e507b">getHeight</a> ()</td></tr>
@@ -199,11 +221,11 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a4c6a8d6a278786160b1a0c66955895ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a92acabe891e865116d8d3307132d244a" id="r_a92acabe891e865116d8d3307132d244a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a92acabe891e865116d8d3307132d244a">setGridEnableXZ</a> (bool xz)</td></tr>
 <tr class="separator:a92acabe891e865116d8d3307132d244a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a044d17fbef0eee3c119660a32a1b0b98" id="r_a044d17fbef0eee3c119660a32a1b0b98"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a044d17fbef0eee3c119660a32a1b0b98">setGridColorofAxisXZ</a> (int r, int g, int b, int a)</td></tr>
+<tr class="memitem:a044d17fbef0eee3c119660a32a1b0b98" id="r_a044d17fbef0eee3c119660a32a1b0b98"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a044d17fbef0eee3c119660a32a1b0b98">setGridColorofAxisXZ</a> (int <a class="el" href="gColor_8h.html#a4788d82c901b9367dd5c0daff8a7616b">r</a>, int <a class="el" href="gColor_8h.html#a8cf17d727651616de6f2b79ef32170cd">g</a>, int <a class="el" href="gColor_8h.html#a83fc1af92e29717b4513d121b0c72c7d">b</a>, int <a class="el" href="gColor_8h.html#a4aec1a5be9d9a4a394a2e49e9744286e">a</a>)</td></tr>
 <tr class="separator:a044d17fbef0eee3c119660a32a1b0b98"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1fba06bb310657e47878ebba75537f17" id="r_a1fba06bb310657e47878ebba75537f17"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a1fba06bb310657e47878ebba75537f17">setGridColorofAxisYZ</a> (int r, int g, int b, int a)</td></tr>
+<tr class="memitem:a1fba06bb310657e47878ebba75537f17" id="r_a1fba06bb310657e47878ebba75537f17"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a1fba06bb310657e47878ebba75537f17">setGridColorofAxisYZ</a> (int <a class="el" href="gColor_8h.html#a4788d82c901b9367dd5c0daff8a7616b">r</a>, int <a class="el" href="gColor_8h.html#a8cf17d727651616de6f2b79ef32170cd">g</a>, int <a class="el" href="gColor_8h.html#a83fc1af92e29717b4513d121b0c72c7d">b</a>, int <a class="el" href="gColor_8h.html#a4aec1a5be9d9a4a394a2e49e9744286e">a</a>)</td></tr>
 <tr class="separator:a1fba06bb310657e47878ebba75537f17"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa8c113b038b98edc64fb8c2d2b69eeab" id="r_aa8c113b038b98edc64fb8c2d2b69eeab"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#aa8c113b038b98edc64fb8c2d2b69eeab">setGridColorofAxisXY</a> (int r, int g, int b, int a)</td></tr>
+<tr class="memitem:aa8c113b038b98edc64fb8c2d2b69eeab" id="r_aa8c113b038b98edc64fb8c2d2b69eeab"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#aa8c113b038b98edc64fb8c2d2b69eeab">setGridColorofAxisXY</a> (int <a class="el" href="gColor_8h.html#a4788d82c901b9367dd5c0daff8a7616b">r</a>, int <a class="el" href="gColor_8h.html#a8cf17d727651616de6f2b79ef32170cd">g</a>, int <a class="el" href="gColor_8h.html#a83fc1af92e29717b4513d121b0c72c7d">b</a>, int <a class="el" href="gColor_8h.html#a4aec1a5be9d9a4a394a2e49e9744286e">a</a>)</td></tr>
 <tr class="separator:aa8c113b038b98edc64fb8c2d2b69eeab"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a718d650a1b32d25e1179df1671a8e3f1" id="r_a718d650a1b32d25e1179df1671a8e3f1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a718d650a1b32d25e1179df1671a8e3f1">setGridColorofAxisXZ</a> (<a class="el" href="classgColor.html">gColor</a> *color)</td></tr>
 <tr class="separator:a718d650a1b32d25e1179df1671a8e3f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -211,11 +233,11 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a37e51b3703816592930d2c081b5fec03"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a23e9e2aa7257e7a7ce32a0209d718d6d" id="r_a23e9e2aa7257e7a7ce32a0209d718d6d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a23e9e2aa7257e7a7ce32a0209d718d6d">setGridColorofAxisXY</a> (<a class="el" href="classgColor.html">gColor</a> *color)</td></tr>
 <tr class="separator:a23e9e2aa7257e7a7ce32a0209d718d6d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a79ee9ab7d44fd5b9d76f68787dfc3180" id="r_a79ee9ab7d44fd5b9d76f68787dfc3180"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a79ee9ab7d44fd5b9d76f68787dfc3180">setGridColorofAxisWireFrameXZ</a> (int r, int g, int b, int a)</td></tr>
+<tr class="memitem:a79ee9ab7d44fd5b9d76f68787dfc3180" id="r_a79ee9ab7d44fd5b9d76f68787dfc3180"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a79ee9ab7d44fd5b9d76f68787dfc3180">setGridColorofAxisWireFrameXZ</a> (int <a class="el" href="gColor_8h.html#a4788d82c901b9367dd5c0daff8a7616b">r</a>, int <a class="el" href="gColor_8h.html#a8cf17d727651616de6f2b79ef32170cd">g</a>, int <a class="el" href="gColor_8h.html#a83fc1af92e29717b4513d121b0c72c7d">b</a>, int <a class="el" href="gColor_8h.html#a4aec1a5be9d9a4a394a2e49e9744286e">a</a>)</td></tr>
 <tr class="separator:a79ee9ab7d44fd5b9d76f68787dfc3180"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a84540732aa2d8cd56d28f3594b545aeb" id="r_a84540732aa2d8cd56d28f3594b545aeb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a84540732aa2d8cd56d28f3594b545aeb">setGridColorofAxisWireFrameYZ</a> (int r, int g, int b, int a)</td></tr>
+<tr class="memitem:a84540732aa2d8cd56d28f3594b545aeb" id="r_a84540732aa2d8cd56d28f3594b545aeb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a84540732aa2d8cd56d28f3594b545aeb">setGridColorofAxisWireFrameYZ</a> (int <a class="el" href="gColor_8h.html#a4788d82c901b9367dd5c0daff8a7616b">r</a>, int <a class="el" href="gColor_8h.html#a8cf17d727651616de6f2b79ef32170cd">g</a>, int <a class="el" href="gColor_8h.html#a83fc1af92e29717b4513d121b0c72c7d">b</a>, int <a class="el" href="gColor_8h.html#a4aec1a5be9d9a4a394a2e49e9744286e">a</a>)</td></tr>
 <tr class="separator:a84540732aa2d8cd56d28f3594b545aeb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a32ca19f605b71e3f3af5783071c4e1f2" id="r_a32ca19f605b71e3f3af5783071c4e1f2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a32ca19f605b71e3f3af5783071c4e1f2">setGridColorofAxisWireFrameXY</a> (int r, int g, int b, int a)</td></tr>
+<tr class="memitem:a32ca19f605b71e3f3af5783071c4e1f2" id="r_a32ca19f605b71e3f3af5783071c4e1f2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a32ca19f605b71e3f3af5783071c4e1f2">setGridColorofAxisWireFrameXY</a> (int <a class="el" href="gColor_8h.html#a4788d82c901b9367dd5c0daff8a7616b">r</a>, int <a class="el" href="gColor_8h.html#a8cf17d727651616de6f2b79ef32170cd">g</a>, int <a class="el" href="gColor_8h.html#a83fc1af92e29717b4513d121b0c72c7d">b</a>, int <a class="el" href="gColor_8h.html#a4aec1a5be9d9a4a394a2e49e9744286e">a</a>)</td></tr>
 <tr class="separator:a32ca19f605b71e3f3af5783071c4e1f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a66daa6dabd0b5bf07f3e44423d2d8657" id="r_a66daa6dabd0b5bf07f3e44423d2d8657"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a66daa6dabd0b5bf07f3e44423d2d8657">setGridColorofAxisWireFrameXZ</a> (<a class="el" href="classgColor.html">gColor</a> *color)</td></tr>
 <tr class="separator:a66daa6dabd0b5bf07f3e44423d2d8657"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -243,9 +265,9 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ab0d643faa814df406611a6e4eca516c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5ce0c58a41f90ef7b0ec9b8482e48190" id="r_a5ce0c58a41f90ef7b0ec9b8482e48190"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a5ce0c58a41f90ef7b0ec9b8482e48190">setGrid</a> (<a class="el" href="classgGrid.html">gGrid</a> *newgrid)</td></tr>
 <tr class="separator:a5ce0c58a41f90ef7b0ec9b8482e48190"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac20f3594719e068a7745605df41808a2" id="r_ac20f3594719e068a7745605df41808a2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#ac20f3594719e068a7745605df41808a2">setColor</a> (int r, int g, int b, int a=255)</td></tr>
+<tr class="memitem:ac20f3594719e068a7745605df41808a2" id="r_ac20f3594719e068a7745605df41808a2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#ac20f3594719e068a7745605df41808a2">setColor</a> (int <a class="el" href="gColor_8h.html#a4788d82c901b9367dd5c0daff8a7616b">r</a>, int <a class="el" href="gColor_8h.html#a8cf17d727651616de6f2b79ef32170cd">g</a>, int <a class="el" href="gColor_8h.html#a83fc1af92e29717b4513d121b0c72c7d">b</a>, int <a class="el" href="gColor_8h.html#a4aec1a5be9d9a4a394a2e49e9744286e">a</a>=255)</td></tr>
 <tr class="separator:ac20f3594719e068a7745605df41808a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afea5a6a497b21fd7a483523a9d931af0" id="r_afea5a6a497b21fd7a483523a9d931af0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#afea5a6a497b21fd7a483523a9d931af0">setColor</a> (float r, float g, float b, float a=1.0f)</td></tr>
+<tr class="memitem:afea5a6a497b21fd7a483523a9d931af0" id="r_afea5a6a497b21fd7a483523a9d931af0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#afea5a6a497b21fd7a483523a9d931af0">setColor</a> (float <a class="el" href="gColor_8h.html#a4788d82c901b9367dd5c0daff8a7616b">r</a>, float <a class="el" href="gColor_8h.html#a8cf17d727651616de6f2b79ef32170cd">g</a>, float <a class="el" href="gColor_8h.html#a83fc1af92e29717b4513d121b0c72c7d">b</a>, float <a class="el" href="gColor_8h.html#a4aec1a5be9d9a4a394a2e49e9744286e">a</a>=1.0f)</td></tr>
 <tr class="separator:afea5a6a497b21fd7a483523a9d931af0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9ba56123840a7efb82e9bccb8205b2b3" id="r_a9ba56123840a7efb82e9bccb8205b2b3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a9ba56123840a7efb82e9bccb8205b2b3">setColor</a> (const <a class="el" href="classgColor.html">gColor</a> &amp;color)</td></tr>
 <tr class="separator:a9ba56123840a7efb82e9bccb8205b2b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -255,7 +277,7 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ae902a59b6bf68c7debfe2573a8c541ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a143b0f6ffa8b00675cdceb8fdbcfce4d" id="r_a143b0f6ffa8b00675cdceb8fdbcfce4d"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a143b0f6ffa8b00675cdceb8fdbcfce4d">clear</a> ()=0</td></tr>
 <tr class="separator:a143b0f6ffa8b00675cdceb8fdbcfce4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a789b1047f3a01e2a1debea7198fe8406" id="r_a789b1047f3a01e2a1debea7198fe8406"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a789b1047f3a01e2a1debea7198fe8406">clearColor</a> (int r, int g, int b, int a=255)=0</td></tr>
+<tr class="memitem:a789b1047f3a01e2a1debea7198fe8406" id="r_a789b1047f3a01e2a1debea7198fe8406"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a789b1047f3a01e2a1debea7198fe8406">clearColor</a> (int <a class="el" href="gColor_8h.html#a4788d82c901b9367dd5c0daff8a7616b">r</a>, int <a class="el" href="gColor_8h.html#a8cf17d727651616de6f2b79ef32170cd">g</a>, int <a class="el" href="gColor_8h.html#a83fc1af92e29717b4513d121b0c72c7d">b</a>, int <a class="el" href="gColor_8h.html#a4aec1a5be9d9a4a394a2e49e9744286e">a</a>=255)=0</td></tr>
 <tr class="separator:a789b1047f3a01e2a1debea7198fe8406"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acdbb779061651e0123811b64b7cde7bb" id="r_acdbb779061651e0123811b64b7cde7bb"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#acdbb779061651e0123811b64b7cde7bb">clearColor</a> (<a class="el" href="classgColor.html">gColor</a> color)=0</td></tr>
 <tr class="separator:acdbb779061651e0123811b64b7cde7bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -265,7 +287,7 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a10c74613ba2e8df7efa47c4612c3fa59"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1309d96a287e8cf5c6b976877b9b42fa" id="r_a1309d96a287e8cf5c6b976877b9b42fa"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a1309d96a287e8cf5c6b976877b9b42fa">isLightingEnabled</a> ()</td></tr>
 <tr class="separator:a1309d96a287e8cf5c6b976877b9b42fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a30790ba729909b3fabeea48e40f04ec2" id="r_a30790ba729909b3fabeea48e40f04ec2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a30790ba729909b3fabeea48e40f04ec2">setLightingColor</a> (int r, int g, int b, int a=255)</td></tr>
+<tr class="memitem:a30790ba729909b3fabeea48e40f04ec2" id="r_a30790ba729909b3fabeea48e40f04ec2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a30790ba729909b3fabeea48e40f04ec2">setLightingColor</a> (int <a class="el" href="gColor_8h.html#a4788d82c901b9367dd5c0daff8a7616b">r</a>, int <a class="el" href="gColor_8h.html#a8cf17d727651616de6f2b79ef32170cd">g</a>, int <a class="el" href="gColor_8h.html#a83fc1af92e29717b4513d121b0c72c7d">b</a>, int <a class="el" href="gColor_8h.html#a4aec1a5be9d9a4a394a2e49e9744286e">a</a>=255)</td></tr>
 <tr class="separator:a30790ba729909b3fabeea48e40f04ec2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1d324babfd74077dda727c9a0aff770a" id="r_a1d324babfd74077dda727c9a0aff770a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a1d324babfd74077dda727c9a0aff770a">setLightingColor</a> (<a class="el" href="classgColor.html">gColor</a> *color)</td></tr>
 <tr class="separator:a1d324babfd74077dda727c9a0aff770a"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -275,7 +297,7 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ab2849a4b9a2e08f94b5302ff1ec02398"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7396ffc6cad092e15955fc744478fe77" id="r_a7396ffc6cad092e15955fc744478fe77"><td class="memItemLeft" align="right" valign="top">glm::vec3&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a7396ffc6cad092e15955fc744478fe77">getLightingPosition</a> ()</td></tr>
 <tr class="separator:a7396ffc6cad092e15955fc744478fe77"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7787d59ddff2ff4943829372c30001b6" id="r_a7787d59ddff2ff4943829372c30001b6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a7787d59ddff2ff4943829372c30001b6">setGlobalAmbientColor</a> (int r, int g, int b, int a=255)</td></tr>
+<tr class="memitem:a7787d59ddff2ff4943829372c30001b6" id="r_a7787d59ddff2ff4943829372c30001b6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a7787d59ddff2ff4943829372c30001b6">setGlobalAmbientColor</a> (int <a class="el" href="gColor_8h.html#a4788d82c901b9367dd5c0daff8a7616b">r</a>, int <a class="el" href="gColor_8h.html#a8cf17d727651616de6f2b79ef32170cd">g</a>, int <a class="el" href="gColor_8h.html#a83fc1af92e29717b4513d121b0c72c7d">b</a>, int <a class="el" href="gColor_8h.html#a4aec1a5be9d9a4a394a2e49e9744286e">a</a>=255)</td></tr>
 <tr class="separator:a7787d59ddff2ff4943829372c30001b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a387882b9b425c6fee81bd6262b91ecbd" id="r_a387882b9b425c6fee81bd6262b91ecbd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a387882b9b425c6fee81bd6262b91ecbd">setGlobalAmbientColor</a> (<a class="el" href="classgColor.html">gColor</a> color)</td></tr>
 <tr class="separator:a387882b9b425c6fee81bd6262b91ecbd"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -287,7 +309,7 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:af8e3521cf825ba3dda83bda2d5326531"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a52a1c719d85477fbcab05392e8bd3994" id="r_a52a1c719d85477fbcab05392e8bd3994"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a52a1c719d85477fbcab05392e8bd3994">setFogNo</a> (int no)</td></tr>
 <tr class="separator:a52a1c719d85477fbcab05392e8bd3994"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a85f7b78ee29a422406adc57310fa9bc9" id="r_a85f7b78ee29a422406adc57310fa9bc9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a85f7b78ee29a422406adc57310fa9bc9">setFogColor</a> (float r, float g, float b)</td></tr>
+<tr class="memitem:a85f7b78ee29a422406adc57310fa9bc9" id="r_a85f7b78ee29a422406adc57310fa9bc9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a85f7b78ee29a422406adc57310fa9bc9">setFogColor</a> (float <a class="el" href="gColor_8h.html#a4788d82c901b9367dd5c0daff8a7616b">r</a>, float <a class="el" href="gColor_8h.html#a8cf17d727651616de6f2b79ef32170cd">g</a>, float <a class="el" href="gColor_8h.html#a83fc1af92e29717b4513d121b0c72c7d">b</a>)</td></tr>
 <tr class="separator:a85f7b78ee29a422406adc57310fa9bc9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab2efab9124d8796f6792e2e3349df29f" id="r_ab2efab9124d8796f6792e2e3349df29f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#ab2efab9124d8796f6792e2e3349df29f">setFogColor</a> (const <a class="el" href="classgColor.html">gColor</a> &amp;color)</td></tr>
 <tr class="separator:ab2efab9124d8796f6792e2e3349df29f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -329,6 +351,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:abcce0b37dc08774eb073ebc6bc4fa10c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af52cd93978e1bbe6f89f1d3a6d74f3c6" id="r_af52cd93978e1bbe6f89f1d3a6d74f3c6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#af52cd93978e1bbe6f89f1d3a6d74f3c6">updateLights</a> ()</td></tr>
 <tr class="separator:af52cd93978e1bbe6f89f1d3a6d74f3c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3324e5981d632c55cfb192aeac453a5a" id="r_a3324e5981d632c55cfb192aeac453a5a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a3324e5981d632c55cfb192aeac453a5a">updateScene</a> ()</td></tr>
+<tr class="separator:a3324e5981d632c55cfb192aeac453a5a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a739dc806dcafdaf2adec88f6ad2f887a" id="r_a739dc806dcafdaf2adec88f6ad2f887a"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a739dc806dcafdaf2adec88f6ad2f887a">enableDepthTest</a> ()=0</td></tr>
 <tr class="separator:a739dc806dcafdaf2adec88f6ad2f887a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8212d9fc6fc90aedc1c49abece04ee5d" id="r_a8212d9fc6fc90aedc1c49abece04ee5d"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a8212d9fc6fc90aedc1c49abece04ee5d">enableDepthTest</a> (int depthTestType)=0</td></tr>
@@ -431,6 +455,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a14096a56fe4428d658ae8c9719509706"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae51e3011165d6d30e9ed5949696114a5" id="r_ae51e3011165d6d30e9ed5949696114a5"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#ae51e3011165d6d30e9ed5949696114a5">setBufferRange</a> (int index, GLuint buffer, int offset, int size)=0</td></tr>
 <tr class="separator:ae51e3011165d6d30e9ed5949696114a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa532e0d6b745e39a42807b354a909ceb" id="r_aa532e0d6b745e39a42807b354a909ceb"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#aa532e0d6b745e39a42807b354a909ceb">attachUbo</a> (GLuint id, int bindingpoint, const std::string &amp;uboName)=0</td></tr>
+<tr class="separator:aa532e0d6b745e39a42807b354a909ceb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a19b2fe2a37c992c71532bec50c962f23" id="r_a19b2fe2a37c992c71532bec50c962f23"><td class="memItemLeft" align="right" valign="top">virtual GLuint&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a19b2fe2a37c992c71532bec50c962f23">createVAO</a> ()=0</td></tr>
 <tr class="separator:a19b2fe2a37c992c71532bec50c962f23"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac89ad75225f935f0123205f5dbe46cfc" id="r_ac89ad75225f935f0123205f5dbe46cfc"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#ac89ad75225f935f0123205f5dbe46cfc">deleteVAO</a> (GLuint &amp;vao)=0</td></tr>
@@ -453,6 +479,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a3b609694dc71752e7bf69ed5e9446a85"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af8ad4e62c1b11cce375ae38e2b7fa548" id="r_af8ad4e62c1b11cce375ae38e2b7fa548"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#af8ad4e62c1b11cce375ae38e2b7fa548">setVertexAttribPointer</a> (int index, int size, int type, bool normalized, int stride, const void *pointer)=0</td></tr>
 <tr class="separator:af8ad4e62c1b11cce375ae38e2b7fa548"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a400b8bf33110bb06fb3cf9cafe0aa7cb" id="r_a400b8bf33110bb06fb3cf9cafe0aa7cb"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a400b8bf33110bb06fb3cf9cafe0aa7cb">setViewport</a> (int x, int y, int <a class="el" href="classgRenderer.html#a521e019ad5133df5702d399bf051adda">width</a>, int <a class="el" href="classgRenderer.html#a10ba9eb49755cea48500ab0046baf6e4">height</a>)=0</td></tr>
+<tr class="separator:a400b8bf33110bb06fb3cf9cafe0aa7cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a50b7fdd46f1d82be09f63fb70bc27410" id="r_a50b7fdd46f1d82be09f63fb70bc27410"><td class="memItemLeft" align="right" valign="top">virtual GLuint&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a50b7fdd46f1d82be09f63fb70bc27410">createFramebuffer</a> ()=0</td></tr>
 <tr class="separator:a50b7fdd46f1d82be09f63fb70bc27410"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9c97ef6554bb2a74d971b6a6322512d8" id="r_a9c97ef6554bb2a74d971b6a6322512d8"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a9c97ef6554bb2a74d971b6a6322512d8">deleteFramebuffer</a> (GLuint &amp;fbo)=0</td></tr>
@@ -489,6 +517,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a41d736b14d48d5def8fc48d38d8ad7b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6cba165b26ccde2ce2ce1aee741f99c1" id="r_a6cba165b26ccde2ce2ce1aee741f99c1"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a6cba165b26ccde2ce2ce1aee741f99c1">setInt</a> (GLuint uniformloc, int value)=0</td></tr>
 <tr class="separator:a6cba165b26ccde2ce2ce1aee741f99c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac4776cd8f5b60875f7a7cae85c40f88e" id="r_ac4776cd8f5b60875f7a7cae85c40f88e"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#ac4776cd8f5b60875f7a7cae85c40f88e">setUnsignedInt</a> (GLuint uniformloc, unsigned int value)=0</td></tr>
+<tr class="separator:ac4776cd8f5b60875f7a7cae85c40f88e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8d238821cf213008dca859a3509fa9de" id="r_a8d238821cf213008dca859a3509fa9de"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a8d238821cf213008dca859a3509fa9de">setFloat</a> (GLuint uniformloc, float value)=0</td></tr>
 <tr class="separator:a8d238821cf213008dca859a3509fa9de"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a603df3f7916faff7f1f5111f5120f27b" id="r_a603df3f7916faff7f1f5111f5120f27b"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a603df3f7916faff7f1f5111f5120f27b">setVec2</a> (GLuint uniformloc, const glm::vec2 &amp;value)=0</td></tr>
@@ -579,8 +609,54 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a6693710cf4e8697216f1443432b4ca78"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a48d8fabc173ce59e31b73d671f4e3630" id="r_a48d8fabc173ce59e31b73d671f4e3630"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a48d8fabc173ce59e31b73d671f4e3630">popMatrix</a> ()=0</td></tr>
 <tr class="separator:a48d8fabc173ce59e31b73d671f4e3630"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aed353e3e4bb5ec4b66618c1e66912e8c" id="r_aed353e3e4bb5ec4b66618c1e66912e8c"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#aed353e3e4bb5ec4b66618c1e66912e8c">attachUbo</a> (GLuint id, const <a class="el" href="classgUbo.html">gUbo</a>&lt; <a class="el" href="structgRenderer_1_1gSceneLights.html">gSceneLights</a> &gt; *ubo, const std::string &amp;uboName)=0</td></tr>
-<tr class="separator:aed353e3e4bb5ec4b66618c1e66912e8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a84949deaf64fdb9fce1381d18a2210f1" id="r_a84949deaf64fdb9fce1381d18a2210f1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a84949deaf64fdb9fce1381d18a2210f1">drawLine</a> (float x1, float y1, float x2, float y2, float thickness=1.0f)</td></tr>
+<tr class="separator:a84949deaf64fdb9fce1381d18a2210f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae6a99d730dd14c230c02fc8555f8bd4c" id="r_ae6a99d730dd14c230c02fc8555f8bd4c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#ae6a99d730dd14c230c02fc8555f8bd4c">drawLine</a> (float x1, float y1, float z1, float x2, float y2, float z2, float thickness=1.0f)</td></tr>
+<tr class="separator:ae6a99d730dd14c230c02fc8555f8bd4c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a78e3167ca69e9ee2e7b5fb799e840178" id="r_a78e3167ca69e9ee2e7b5fb799e840178"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a78e3167ca69e9ee2e7b5fb799e840178">drawTriangle</a> (float px, float py, float qx, float qy, float rx, float ry, bool is_filled=true)</td></tr>
+<tr class="separator:a78e3167ca69e9ee2e7b5fb799e840178"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6eedeade093370a1b77a59a74e98cdd2" id="r_a6eedeade093370a1b77a59a74e98cdd2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a6eedeade093370a1b77a59a74e98cdd2">drawCircle</a> (float xCenter, float yCenter, float radius, bool isFilled=false, float numberOfSides=64.0f)</td></tr>
+<tr class="separator:a6eedeade093370a1b77a59a74e98cdd2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0ee9bd011a3792646a4435359807304c" id="r_a0ee9bd011a3792646a4435359807304c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a0ee9bd011a3792646a4435359807304c">drawCross</a> (float x, float y, float <a class="el" href="classgRenderer.html#a521e019ad5133df5702d399bf051adda">width</a>, float <a class="el" href="classgRenderer.html#a10ba9eb49755cea48500ab0046baf6e4">height</a>, float thickness, bool isFilled)</td></tr>
+<tr class="separator:a0ee9bd011a3792646a4435359807304c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a722db033152911878132401c45518583" id="r_a722db033152911878132401c45518583"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a722db033152911878132401c45518583">drawArc</a> (float xCenter, float yCenter, float radius, bool isFilled=true, int numberOfSides=60, float degree=360.0f, float rotate=360.0f)</td></tr>
+<tr class="separator:a722db033152911878132401c45518583"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a579195e6264b11279711039a9bfcb872" id="r_a579195e6264b11279711039a9bfcb872"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a579195e6264b11279711039a9bfcb872">drawArrow</a> (float x1, float y1, float length, float angle, float tipLength, float tipAngle)</td></tr>
+<tr class="separator:a579195e6264b11279711039a9bfcb872"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad2624240fca840e6396031e7e8125b8c" id="r_ad2624240fca840e6396031e7e8125b8c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#ad2624240fca840e6396031e7e8125b8c">drawRectangle</a> (float x, float y, float w, float h, bool isFilled=false)</td></tr>
+<tr class="separator:ad2624240fca840e6396031e7e8125b8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a249cbc3570e968ac0ac227f0f7bf6bb1" id="r_a249cbc3570e968ac0ac227f0f7bf6bb1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a249cbc3570e968ac0ac227f0f7bf6bb1">drawRoundedRectangle</a> (float x, float y, float w, float h, int radius, bool isFilled)</td></tr>
+<tr class="separator:a249cbc3570e968ac0ac227f0f7bf6bb1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a37e20d873bfea09ac2f66e98ee562794" id="r_a37e20d873bfea09ac2f66e98ee562794"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a37e20d873bfea09ac2f66e98ee562794">drawBox</a> (float x, float y, float z, float w=1.0f, float h=1.0f, float d=1.0f, bool isFilled=true)</td></tr>
+<tr class="separator:a37e20d873bfea09ac2f66e98ee562794"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a70a3eec87619bd2c46bb369901e09cf3" id="r_a70a3eec87619bd2c46bb369901e09cf3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a70a3eec87619bd2c46bb369901e09cf3">drawBox</a> (glm::mat4 transformationMatrix, bool isFilled=true)</td></tr>
+<tr class="separator:a70a3eec87619bd2c46bb369901e09cf3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac87b18cdea5749740d6c7c6a8ed0da5a" id="r_ac87b18cdea5749740d6c7c6a8ed0da5a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#ac87b18cdea5749740d6c7c6a8ed0da5a">drawSphere</a> (float xPos, float yPos, float zPos, glm::vec3 scale=glm::vec3(1.0f, 1.0f, 1.0f), int xSegmentNum=64, int ySegmentNum=32, bool isFilled=true)</td></tr>
+<tr class="separator:ac87b18cdea5749740d6c7c6a8ed0da5a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ade84ea177a9d4f3d6756d374e6cd8bfb" id="r_ade84ea177a9d4f3d6756d374e6cd8bfb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#ade84ea177a9d4f3d6756d374e6cd8bfb">drawCylinder</a> (float x, float y, float z, int <a class="el" href="gColor_8h.html#a4788d82c901b9367dd5c0daff8a7616b">r</a>, int h, glm::vec3 scale=glm::vec3(1.0f, 1.0f, 1.0f), int segmentnum=32, bool isFilled=true)</td></tr>
+<tr class="separator:ade84ea177a9d4f3d6756d374e6cd8bfb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac5bdb4df6d68cbbb32f4a9bccc997085" id="r_ac5bdb4df6d68cbbb32f4a9bccc997085"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#ac5bdb4df6d68cbbb32f4a9bccc997085">drawCylinderOblique</a> (float x, float y, float z, int <a class="el" href="gColor_8h.html#a4788d82c901b9367dd5c0daff8a7616b">r</a>, int h, glm::vec2 shiftdistance, glm::vec3 scale=glm::vec3(1.0f, 1.0f, 1.0f), int segmentnum=32, bool isFilled=true)</td></tr>
+<tr class="separator:ac5bdb4df6d68cbbb32f4a9bccc997085"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac15b96b565b8af5bc08cf3c26ec74b51" id="r_ac15b96b565b8af5bc08cf3c26ec74b51"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#ac15b96b565b8af5bc08cf3c26ec74b51">drawCylinderTrapezodial</a> (float x, float y, float z, int r1, int r2, int h, glm::vec3 scale=glm::vec3(1.0f, 1.0f, 1.0f), int segmentnum=32, bool isFilled=true)</td></tr>
+<tr class="separator:ac15b96b565b8af5bc08cf3c26ec74b51"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab1a429adf14469434c5cc1726cecd049" id="r_ab1a429adf14469434c5cc1726cecd049"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#ab1a429adf14469434c5cc1726cecd049">drawCylinderObliqueTrapezodial</a> (float x, float y, float z, int r1, int r2, int h, glm::vec2 shiftdistance, glm::vec3 scale=glm::vec3(1.0, 1.0, 1.0), int segmentnum=32, bool isFilled=true)</td></tr>
+<tr class="separator:ab1a429adf14469434c5cc1726cecd049"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab207c65ba66b88dbd4f7aec56aa12945" id="r_ab207c65ba66b88dbd4f7aec56aa12945"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#ab207c65ba66b88dbd4f7aec56aa12945">drawCone</a> (float x, float y, float z, int <a class="el" href="gColor_8h.html#a4788d82c901b9367dd5c0daff8a7616b">r</a>, int h, glm::vec3 scale=glm::vec3(1.0f, 1.0f, 1.0f), int segmentnum=32, bool isFilled=true)</td></tr>
+<tr class="separator:ab207c65ba66b88dbd4f7aec56aa12945"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af575c9e1db7665fd671294485c9c66e9" id="r_af575c9e1db7665fd671294485c9c66e9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#af575c9e1db7665fd671294485c9c66e9">drawConeOblique</a> (float x, float y, float z, int <a class="el" href="gColor_8h.html#a4788d82c901b9367dd5c0daff8a7616b">r</a>, int h, glm::vec2 shiftdistance, glm::vec3 scale=glm::vec3(1.0f, 1.0f, 1.0f), int segmentnum=32, bool isFilled=true)</td></tr>
+<tr class="separator:af575c9e1db7665fd671294485c9c66e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a00180e1235eaf6d031480500285fcc13" id="r_a00180e1235eaf6d031480500285fcc13"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a00180e1235eaf6d031480500285fcc13">drawPyramid</a> (float x, float y, float z, int <a class="el" href="gColor_8h.html#a4788d82c901b9367dd5c0daff8a7616b">r</a>, int h, glm::vec3 scale=glm::vec3(1.0f, 1.0f, 1.0f), int numberofsides=4, bool isFilled=true)</td></tr>
+<tr class="separator:a00180e1235eaf6d031480500285fcc13"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7ed87e0fccd7fc3c177f29d98c1458a8" id="r_a7ed87e0fccd7fc3c177f29d98c1458a8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a7ed87e0fccd7fc3c177f29d98c1458a8">drawPyramidOblique</a> (float x, float y, float z, int <a class="el" href="gColor_8h.html#a4788d82c901b9367dd5c0daff8a7616b">r</a>, int h, glm::vec2 shiftdistance, glm::vec3 scale=glm::vec3(1.0f, 1.0f, 1.0f), int numberofsides=4, bool isFilled=true)</td></tr>
+<tr class="separator:a7ed87e0fccd7fc3c177f29d98c1458a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aae683d09f7492496e87db96fb94df4d2" id="r_aae683d09f7492496e87db96fb94df4d2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#aae683d09f7492496e87db96fb94df4d2">drawTube</a> (float x, float y, float z, int outerradius, int innerradious, int h, glm::vec3 scale=glm::vec3(1.0f, 1.0f, 1.0f), int segmentnum=32, bool isFilled=true)</td></tr>
+<tr class="separator:aae683d09f7492496e87db96fb94df4d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeee44a9a56717cfb3a5496e213321061" id="r_aeee44a9a56717cfb3a5496e213321061"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#aeee44a9a56717cfb3a5496e213321061">drawTubeOblique</a> (float x, float y, float z, int outerradius, int innerradious, int h, glm::vec2 shiftdistance, glm::vec3 scale=glm::vec3(1.0f, 1.0f, 1.0f), int segmentnum=32, bool isFilled=true)</td></tr>
+<tr class="separator:aeee44a9a56717cfb3a5496e213321061"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afe18e9643e638980fe2440be1c9fdadf" id="r_afe18e9643e638980fe2440be1c9fdadf"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#afe18e9643e638980fe2440be1c9fdadf">drawTubeTrapezodial</a> (float x, float y, float z, int topouterradius, int topinnerradious, int buttomouterradious, int buttominnerradious, int h, glm::vec3 scale=glm::vec3(1.0f, 1.0f, 1.0f), int segmentnum=32, bool isFilled=true)</td></tr>
+<tr class="separator:afe18e9643e638980fe2440be1c9fdadf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a69be63781a9254ea18c6e854ddeea9fb" id="r_a69be63781a9254ea18c6e854ddeea9fb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a69be63781a9254ea18c6e854ddeea9fb">drawTubeObliqueTrapezodial</a> (float x, float y, float z, int topouterradius, int topinnerradious, int buttomouterradious, int buttominnerradious, int h, glm::vec2 shiftdistance, glm::vec3 scale=glm::vec3(1.0f, 1.0f, 1.0f), int segmentnum=32, bool isFilled=true)</td></tr>
+<tr class="separator:a69be63781a9254ea18c6e854ddeea9fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classgObject"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classgObject')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classgObject.html">gObject</a></td></tr>
 <tr class="memitem:ac490c71f0474846ca6800028c97d02d9 inherit pub_methods_classgObject" id="r_ac490c71f0474846ca6800028c97d02d9"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgObject.html#ac490c71f0474846ca6800028c97d02d9">gObject</a> ()</td></tr>
 <tr class="separator:ac490c71f0474846ca6800028c97d02d9 inherit pub_methods_classgObject"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -625,6 +701,10 @@ Static Public Member Functions</h2></td></tr>
 <tr class="separator:ad8b6ec310cdd8aebcdd080b1962124b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab65e88dede530a33d7269bcff4a46d43" id="r_ab65e88dede530a33d7269bcff4a46d43"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#ab65e88dede530a33d7269bcff4a46d43">scaleY</a> (int y)</td></tr>
 <tr class="separator:ab65e88dede530a33d7269bcff4a46d43"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5cc06a8bde29b2f1dc31da351c55f5b7" id="r_a5cc06a8bde29b2f1dc31da351c55f5b7"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a5cc06a8bde29b2f1dc31da351c55f5b7">unscaleX</a> (int x)</td></tr>
+<tr class="separator:a5cc06a8bde29b2f1dc31da351c55f5b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a128539021b5cb5063f4116bd52dab576" id="r_a128539021b5cb5063f4116bd52dab576"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a128539021b5cb5063f4116bd52dab576">unscaleY</a> (int y)</td></tr>
+<tr class="separator:a128539021b5cb5063f4116bd52dab576"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_static_methods_classgObject"><td colspan="2" onclick="javascript:toggleInherit('pub_static_methods_classgObject')"><img src="closed.png" alt="-"/>&#160;Static Public Member Functions inherited from <a class="el" href="classgObject.html">gObject</a></td></tr>
 <tr class="memitem:a241585065215d0640b48a1d628713067 inherit pub_static_methods_classgObject" id="r_a241585065215d0640b48a1d628713067"><td class="memItemLeft" align="right" valign="top">static std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgObject.html#a241585065215d0640b48a1d628713067">gGetAppDir</a> ()</td></tr>
 <tr class="separator:a241585065215d0640b48a1d628713067 inherit pub_static_methods_classgObject"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -683,10 +763,12 @@ Static Public Attributes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-methods" name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
+<tr class="memitem:aaaf4e5f2de99c7b1e58e726ee50026c7" id="r_aaaf4e5f2de99c7b1e58e726ee50026c7"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#aaaf4e5f2de99c7b1e58e726ee50026c7">init</a> ()</td></tr>
+<tr class="separator:aaaf4e5f2de99c7b1e58e726ee50026c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a93db9d7438e4df4a6da3529e1c4d1230" id="r_a93db9d7438e4df4a6da3529e1c4d1230"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a93db9d7438e4df4a6da3529e1c4d1230">cleanup</a> ()</td></tr>
+<tr class="separator:a93db9d7438e4df4a6da3529e1c4d1230"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac76e277b9f44da9325994ae8972b30c0" id="r_ac76e277b9f44da9325994ae8972b30c0"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#ac76e277b9f44da9325994ae8972b30c0">updatePackUnpackAlignment</a> (int i)=0</td></tr>
 <tr class="separator:ac76e277b9f44da9325994ae8972b30c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:add306bb626dc075640afb71455abf304" id="r_add306bb626dc075640afb71455abf304"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#add306bb626dc075640afb71455abf304">init</a> ()</td></tr>
-<tr class="separator:add306bb626dc075640afb71455abf304"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-static-methods" name="pro-static-methods"></a>
 Static Protected Member Functions</h2></td></tr>
@@ -763,6 +845,8 @@ Protected Attributes</h2></td></tr>
 <tr class="separator:aad0a82299e8c4f80db8da78571971599"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a29edd635a7d965bb1bca94c3fb67e299" id="r_a29edd635a7d965bb1bca94c3fb67e299"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgUbo.html">gUbo</a>&lt; <a class="el" href="structgRenderer_1_1gSceneLights.html">gSceneLights</a> &gt; *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a29edd635a7d965bb1bca94c3fb67e299">lightsubo</a></td></tr>
 <tr class="separator:a29edd635a7d965bb1bca94c3fb67e299"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a85ee2f7350adee1a9992bbc66f2abd5d" id="r_a85ee2f7350adee1a9992bbc66f2abd5d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgUbo.html">gUbo</a>&lt; <a class="el" href="structgRenderer_1_1gSceneData.html">gSceneData</a> &gt; *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a85ee2f7350adee1a9992bbc66f2abd5d">sceneubo</a></td></tr>
+<tr class="separator:a85ee2f7350adee1a9992bbc66f2abd5d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0221132641799bf8a50584dc546b566a" id="r_a0221132641799bf8a50584dc546b566a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a0221132641799bf8a50584dc546b566a">islightingenabled</a></td></tr>
 <tr class="separator:a0221132641799bf8a50584dc546b566a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2ecb0563417b4ae77b182ebba2eaf043" id="r_a2ecb0563417b4ae77b182ebba2eaf043"><td class="memItemLeft" align="right" valign="top">glm::vec3&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a2ecb0563417b4ae77b182ebba2eaf043">lightingposition</a></td></tr>
@@ -831,8 +915,26 @@ Protected Attributes</h2></td></tr>
 <tr class="separator:ac2535cba0653314d7173d936ef116f9f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9164aad8460cd5c795b5ae08472462d4" id="r_a9164aad8460cd5c795b5ae08472462d4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgGrid.html">gGrid</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a9164aad8460cd5c795b5ae08472462d4">originalgrid</a></td></tr>
 <tr class="separator:a9164aad8460cd5c795b5ae08472462d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a34aa736f2f2b065251285d38065e05a7" id="r_a34aa736f2f2b065251285d38065e05a7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a34aa736f2f2b065251285d38065e05a7">isdevelopergrid</a></td></tr>
-<tr class="separator:a34aa736f2f2b065251285d38065e05a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa76b4ec7137e873d6bf5833ac81ac1d7" id="r_aa76b4ec7137e873d6bf5833ac81ac1d7"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="classgLine.html">gLine</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#aa76b4ec7137e873d6bf5833ac81ac1d7">linemesh</a></td></tr>
+<tr class="separator:aa76b4ec7137e873d6bf5833ac81ac1d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afa8a6de1e1a1d2029c864987919e23a3" id="r_afa8a6de1e1a1d2029c864987919e23a3"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="classgLine.html">gLine</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#afa8a6de1e1a1d2029c864987919e23a3">linemesh2</a></td></tr>
+<tr class="separator:afa8a6de1e1a1d2029c864987919e23a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa5641bd30cd395014a19f3e502419540" id="r_aa5641bd30cd395014a19f3e502419540"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="classgLine.html">gLine</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#aa5641bd30cd395014a19f3e502419540">linemesh3</a></td></tr>
+<tr class="separator:aa5641bd30cd395014a19f3e502419540"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac3e40fd84a337bb98c16b577d0763421" id="r_ac3e40fd84a337bb98c16b577d0763421"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="classgTriangle.html">gTriangle</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#ac3e40fd84a337bb98c16b577d0763421">trianglemesh</a></td></tr>
+<tr class="separator:ac3e40fd84a337bb98c16b577d0763421"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9878223725485effa68b931942a6c685" id="r_a9878223725485effa68b931942a6c685"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="classgCircle.html">gCircle</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a9878223725485effa68b931942a6c685">circlemesh</a></td></tr>
+<tr class="separator:a9878223725485effa68b931942a6c685"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae00f2cce560854586ee5f2ae4a23d9fc" id="r_ae00f2cce560854586ee5f2ae4a23d9fc"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="classgCross.html">gCross</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#ae00f2cce560854586ee5f2ae4a23d9fc">crossmesh</a></td></tr>
+<tr class="separator:ae00f2cce560854586ee5f2ae4a23d9fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad71f7e9c015076342aef669d2fa409e0" id="r_ad71f7e9c015076342aef669d2fa409e0"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="classgArc.html">gArc</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#ad71f7e9c015076342aef669d2fa409e0">arcmesh</a></td></tr>
+<tr class="separator:ad71f7e9c015076342aef669d2fa409e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab55a81fa5248a09769e1269dd2231d7d" id="r_ab55a81fa5248a09769e1269dd2231d7d"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="classgRectangle.html">gRectangle</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#ab55a81fa5248a09769e1269dd2231d7d">rectanglemesh</a></td></tr>
+<tr class="separator:ab55a81fa5248a09769e1269dd2231d7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6237d68f0db92c4fdc6b445cef730b88" id="r_a6237d68f0db92c4fdc6b445cef730b88"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="classgRoundedRectangle.html">gRoundedRectangle</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a6237d68f0db92c4fdc6b445cef730b88">roundedrectanglemesh</a></td></tr>
+<tr class="separator:a6237d68f0db92c4fdc6b445cef730b88"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad5e67e7b65655bf1de951c53bf169ed5" id="r_ad5e67e7b65655bf1de951c53bf169ed5"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="classgBox.html">gBox</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#ad5e67e7b65655bf1de951c53bf169ed5">boxmesh</a></td></tr>
+<tr class="separator:ad5e67e7b65655bf1de951c53bf169ed5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-static-attribs" name="pro-static-attribs"></a>
 Static Protected Attributes</h2></td></tr>
@@ -865,6 +967,25 @@ Friends</h2></td></tr>
 <tr class="memitem:a9acbb4fb4810b70c2b1467d45a86215e" id="r_a9acbb4fb4810b70c2b1467d45a86215e"><td class="memItemLeft" align="right" valign="top">class&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a9acbb4fb4810b70c2b1467d45a86215e">gRenderObject</a></td></tr>
 <tr class="separator:a9acbb4fb4810b70c2b1467d45a86215e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Member Enumeration Documentation</h2>
+<a id="adba1900f960be6d02c5d143026ec8454" name="adba1900f960be6d02c5d143026ec8454"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adba1900f960be6d02c5d143026ec8454">&#9670;&#160;</a></span>SceneDataFlags</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="classgRenderer.html#adba1900f960be6d02c5d143026ec8454">gRenderer::SceneDataFlags</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="adba1900f960be6d02c5d143026ec8454a89f383e880b00465b46fab2f4ec5bef0" name="adba1900f960be6d02c5d143026ec8454a89f383e880b00465b46fab2f4ec5bef0"></a>ENABLE_SSAO&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="adba1900f960be6d02c5d143026ec8454a631d8073096dd6fe38e97d17d2672c1c" name="adba1900f960be6d02c5d143026ec8454a631d8073096dd6fe38e97d17d2672c1c"></a>ENABLE_FOG&#160;</td><td class="fielddoc"></td></tr>
+</table>
+
+</div>
+</div>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a6551c9bca5231a4575f3afa7aa379eca" name="a6551c9bca5231a4575f3afa7aa379eca"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a6551c9bca5231a4575f3afa7aa379eca">&#9670;&#160;</a></span>gRenderer()</h2>
@@ -891,8 +1012,8 @@ Friends</h2></td></tr>
 
 </div>
 </div>
-<a id="a8368e4ad5b9540b3a2f0eb2d85283e0e" name="a8368e4ad5b9540b3a2f0eb2d85283e0e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8368e4ad5b9540b3a2f0eb2d85283e0e">&#9670;&#160;</a></span>~gRenderer()</h2>
+<a id="a4a53a6a0c103c6d0b5f87dffaca6687e" name="a4a53a6a0c103c6d0b5f87dffaca6687e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4a53a6a0c103c6d0b5f87dffaca6687e">&#9670;&#160;</a></span>~gRenderer()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -909,7 +1030,7 @@ Friends</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span><span class="mlabel">default</span></span>  </td>
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -941,7 +1062,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a09fb7316a50bac9b35d5852100440e6b">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#ae21f4c97f9003d60f8f5455aab6265d7">gGLRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -997,7 +1118,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#af9d5f10754bdd337b30f58d15a178af7">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a5d4f370a691d4d36c74bcfd94dde90a2">gGLRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -1047,12 +1168,12 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#aefd62d7eec819a7f7b1cc76553faa62c">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#af94cc2eeccdd5526057874a70f031b06">gGLRenderEngine</a>.</p>
 
 </div>
 </div>
-<a id="aed353e3e4bb5ec4b66618c1e66912e8c" name="aed353e3e4bb5ec4b66618c1e66912e8c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aed353e3e4bb5ec4b66618c1e66912e8c">&#9670;&#160;</a></span>attachUbo()</h2>
+<a id="aa532e0d6b745e39a42807b354a909ceb" name="aa532e0d6b745e39a42807b354a909ceb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa532e0d6b745e39a42807b354a909ceb">&#9670;&#160;</a></span>attachUbo()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1069,8 +1190,8 @@ Friends</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="classgUbo.html">gUbo</a>&lt; <a class="el" href="structgRenderer_1_1gSceneLights.html">gSceneLights</a> &gt; *&#160;</td>
-          <td class="paramname"><em>ubo</em>, </td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>bindingpoint</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -1091,7 +1212,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a3c25a7cf85e5ca02ff848847eef4921b">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a7d26aa068cc3c1a15f09659a73bca7c4">gGLRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -1146,7 +1267,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#af7fd80b197e3e4c251517753030472e1">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a5b388953381c310d37e493f775e7ec77">gGLRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -1173,7 +1294,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a62f8e541a5c16ae8eae05364322ee97a">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#acbecdabd47b6dc7757e854e548f69124">gGLRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -1201,7 +1322,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a6dac9836ec807d97af64d70a204b9980">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a9f80cc1d613793e632122fa95dea6b17">gGLRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -1228,7 +1349,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#abd75ac28fd284f8ac1e0f58b6f436c43">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a487192f06d9af3f23d0a79dce774a567">gGLRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -1256,7 +1377,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a0e0d39b95f3d19b404d0b0feb5cc57c3">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a2463db86bd5266d7ad7e1c7ebc17d6c4">gGLRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -1284,7 +1405,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#ad304592ff53ab982a2f0755b2128dd3d">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#aa7404e81c5f1b6a1dfbec0d30e27f359">gGLRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -1322,7 +1443,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#aa727c54beb7b6cf8b25d5c4fc9e2edaa">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#ac9340bc544b5c01c4d3005a3bf5aeff2">gGLRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -1350,7 +1471,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a6a0f97a1b292fe0edc4974f5456209b6">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a7cf69740ff1d8df48ab9083ed997fd2f">gGLRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -1388,7 +1509,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a1d4af65bb24a7a11a55600c1b18215b9">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#aa40b6682d9e4be3579cd095e6e011519">gGLRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -1416,7 +1537,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a764f6ca074e1e33bf9cc4e1ed7ac86e5">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a23bd7e2140444e2aa65bfb3ac9510731">gGLRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -1466,7 +1587,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a81295deec038e2420c7fffae5d92b04a">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a9491ba05c16ae9d0869802304d50916b">gGLRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -1504,7 +1625,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a0029120a115af9c39a2488d55b8a3789">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a86569fa5141ddc38f206158bf9846d0a">gGLRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -1531,7 +1652,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#aa6a1a04b2cf581bb643606c5f1932648">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a7d0f09f1c9cd9392d99374752d6e931c">gGLRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -1558,7 +1679,32 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a6559bb7c5c879077719c6fc377d5abde">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#afe9c308ca87af133f8bd963a7d2f67ba">gGLRenderEngine</a>.</p>
+
+</div>
+</div>
+<a id="a93db9d7438e4df4a6da3529e1c4d1230" name="a93db9d7438e4df4a6da3529e1c4d1230"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a93db9d7438e4df4a6da3529e1c4d1230">&#9670;&#160;</a></span>cleanup()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void gRenderer::cleanup </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -1585,7 +1731,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a04182f3c642c4fe870db2fa1384ba1ec">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a225719752e88f54e4233b3eaea37243a">gGLRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -1613,7 +1759,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#ad607bf6a53e5016e6505d54bd0373538">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#aca7be87b9b3d79c44db894cfc3335405">gGLRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -1663,7 +1809,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a512f810510d01303f3f047d63e0bbbb7">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a8c537326473600deb7d95e5e5ddd0456">gGLRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -1701,7 +1847,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a024691d957e87e99474c799792cd2909">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#af71396afe9d816ff6bc9d55528e1514c">gGLRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -1728,7 +1874,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#aa48347568a82cd4ef808098225dd257a">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a09a8d2d6228c07f3580d0b6292452551">gGLRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -1766,7 +1912,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a05c0f08cf02f1ee1d3f2d765b54f537d">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a4c6d0a26065c3beeb04860c888d88996">gGLRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -1804,7 +1950,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#af6ef4d04a1efe483896efd0cf87e1114">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#ace95240b67ca2b36d3fd1aefe0fcb595">gGLRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -1831,7 +1977,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a57d916ce475397c643c6979d9f278855">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a4a25af24bb23223a30ee2608d818a5df">gGLRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -1858,7 +2004,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a9d1da3282d82b1363fd8c0fd51a16350">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#aa6c105c28bee64315899eda382b3772a">gGLRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -1885,7 +2031,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a5bf9ac49825c4a1cc6d0fe2120706a14">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a66116598d33cbd7d77850390efcf6531">gGLRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -1913,7 +2059,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a10322db313d68de3bdfe41d650a2fc07">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a58053d26fbec937e7b3e67089a827d9d">gGLRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -1941,7 +2087,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a3f2c31611d8d2c1dd47ea0db3d7f66ca">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#afabe048f7005289cdd0d72096a6cef04">gGLRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -1979,7 +2125,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a330bede792ef622acb03eb38fcf8302a">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a6b82f83930e104d1d524216f130a5956">gGLRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -2007,7 +2153,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a27793c666bcbdeaef335195cb27c2251">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#aae32180c73a1388ff5cf390c5cba73f6">gGLRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -2035,7 +2181,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a0d34fbcdbc8b550a2c238d1863d2c273">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a9c529b52a2edaad6c8360321a2664682">gGLRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -2063,7 +2209,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a08056d37e5bbbff780d65ab4ce9e08fb">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#aa785169e84053acf64c17f8334fdaeac">gGLRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -2090,7 +2236,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#aeb07ae905e235bcc3a1a449776fae4f2">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#ac1667989aa6e3ba77574cf2e7f7d7bd2">gGLRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -2117,7 +2263,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#ad850f5ae44e0e71167038534a5d9a8ee">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a7e6b4b238e293ee4992c3609e3657499">gGLRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -2144,7 +2290,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#acd08a1ad220437141c827ba179fa90e2">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a3a6ecc5e4e05aef4e4f5504c88a9d97f">gGLRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -2240,7 +2386,65 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a9eafdbdedcb42498238f83a108e2eb8d">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a0046a3f3f48364bdccc0c3a963514a29">gGLRenderEngine</a>.</p>
+
+</div>
+</div>
+<a id="a722db033152911878132401c45518583" name="a722db033152911878132401c45518583"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a722db033152911878132401c45518583">&#9670;&#160;</a></span>drawArc()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gRenderer::drawArc </td>
+          <td>(</td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>xCenter</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>yCenter</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>radius</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>isFilled</em> = <code>true</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>numberOfSides</em> = <code>60</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>degree</em> = <code>360.0f</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>rotate</em> = <code>360.0f</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -2278,7 +2482,657 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#ad020f89240a57c91400ec55fbc9b5222">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#aedd4526fea2fadffd20c25c2865fd9b3">gGLRenderEngine</a>.</p>
+
+</div>
+</div>
+<a id="a579195e6264b11279711039a9bfcb872" name="a579195e6264b11279711039a9bfcb872"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a579195e6264b11279711039a9bfcb872">&#9670;&#160;</a></span>drawArrow()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gRenderer::drawArrow </td>
+          <td>(</td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>x1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>y1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>length</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>angle</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>tipLength</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>tipAngle</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a37e20d873bfea09ac2f66e98ee562794" name="a37e20d873bfea09ac2f66e98ee562794"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a37e20d873bfea09ac2f66e98ee562794">&#9670;&#160;</a></span>drawBox() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gRenderer::drawBox </td>
+          <td>(</td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>y</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>z</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>w</em> = <code>1.0f</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>h</em> = <code>1.0f</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>d</em> = <code>1.0f</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>isFilled</em> = <code>true</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a70a3eec87619bd2c46bb369901e09cf3" name="a70a3eec87619bd2c46bb369901e09cf3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a70a3eec87619bd2c46bb369901e09cf3">&#9670;&#160;</a></span>drawBox() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gRenderer::drawBox </td>
+          <td>(</td>
+          <td class="paramtype">glm::mat4&#160;</td>
+          <td class="paramname"><em>transformationMatrix</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>isFilled</em> = <code>true</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a6eedeade093370a1b77a59a74e98cdd2" name="a6eedeade093370a1b77a59a74e98cdd2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6eedeade093370a1b77a59a74e98cdd2">&#9670;&#160;</a></span>drawCircle()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gRenderer::drawCircle </td>
+          <td>(</td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>xCenter</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>yCenter</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>radius</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>isFilled</em> = <code>false</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>numberOfSides</em> = <code>64.0f</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ab207c65ba66b88dbd4f7aec56aa12945" name="ab207c65ba66b88dbd4f7aec56aa12945"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab207c65ba66b88dbd4f7aec56aa12945">&#9670;&#160;</a></span>drawCone()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gRenderer::drawCone </td>
+          <td>(</td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>y</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>z</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>r</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>h</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">glm::vec3&#160;</td>
+          <td class="paramname"><em>scale</em> = <code>glm::vec3(1.0f,&#160;1.0f,&#160;1.0f)</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>segmentnum</em> = <code>32</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>isFilled</em> = <code>true</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="af575c9e1db7665fd671294485c9c66e9" name="af575c9e1db7665fd671294485c9c66e9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af575c9e1db7665fd671294485c9c66e9">&#9670;&#160;</a></span>drawConeOblique()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gRenderer::drawConeOblique </td>
+          <td>(</td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>y</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>z</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>r</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>h</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">glm::vec2&#160;</td>
+          <td class="paramname"><em>shiftdistance</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">glm::vec3&#160;</td>
+          <td class="paramname"><em>scale</em> = <code>glm::vec3(1.0f,&#160;1.0f,&#160;1.0f)</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>segmentnum</em> = <code>32</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>isFilled</em> = <code>true</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a0ee9bd011a3792646a4435359807304c" name="a0ee9bd011a3792646a4435359807304c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0ee9bd011a3792646a4435359807304c">&#9670;&#160;</a></span>drawCross()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gRenderer::drawCross </td>
+          <td>(</td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>y</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>width</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>height</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>thickness</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>isFilled</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ade84ea177a9d4f3d6756d374e6cd8bfb" name="ade84ea177a9d4f3d6756d374e6cd8bfb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ade84ea177a9d4f3d6756d374e6cd8bfb">&#9670;&#160;</a></span>drawCylinder()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gRenderer::drawCylinder </td>
+          <td>(</td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>y</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>z</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>r</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>h</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">glm::vec3&#160;</td>
+          <td class="paramname"><em>scale</em> = <code>glm::vec3(1.0f,&#160;1.0f,&#160;1.0f)</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>segmentnum</em> = <code>32</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>isFilled</em> = <code>true</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ac5bdb4df6d68cbbb32f4a9bccc997085" name="ac5bdb4df6d68cbbb32f4a9bccc997085"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac5bdb4df6d68cbbb32f4a9bccc997085">&#9670;&#160;</a></span>drawCylinderOblique()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gRenderer::drawCylinderOblique </td>
+          <td>(</td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>y</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>z</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>r</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>h</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">glm::vec2&#160;</td>
+          <td class="paramname"><em>shiftdistance</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">glm::vec3&#160;</td>
+          <td class="paramname"><em>scale</em> = <code>glm::vec3(1.0f,&#160;1.0f,&#160;1.0f)</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>segmentnum</em> = <code>32</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>isFilled</em> = <code>true</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ab1a429adf14469434c5cc1726cecd049" name="ab1a429adf14469434c5cc1726cecd049"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab1a429adf14469434c5cc1726cecd049">&#9670;&#160;</a></span>drawCylinderObliqueTrapezodial()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gRenderer::drawCylinderObliqueTrapezodial </td>
+          <td>(</td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>y</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>z</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>r1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>r2</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>h</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">glm::vec2&#160;</td>
+          <td class="paramname"><em>shiftdistance</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">glm::vec3&#160;</td>
+          <td class="paramname"><em>scale</em> = <code>glm::vec3(1.0,&#160;1.0,&#160;1.0)</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>segmentnum</em> = <code>32</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>isFilled</em> = <code>true</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ac15b96b565b8af5bc08cf3c26ec74b51" name="ac15b96b565b8af5bc08cf3c26ec74b51"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac15b96b565b8af5bc08cf3c26ec74b51">&#9670;&#160;</a></span>drawCylinderTrapezodial()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gRenderer::drawCylinderTrapezodial </td>
+          <td>(</td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>y</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>z</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>r1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>r2</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>h</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">glm::vec3&#160;</td>
+          <td class="paramname"><em>scale</em> = <code>glm::vec3(1.0f,&#160;1.0f,&#160;1.0f)</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>segmentnum</em> = <code>32</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>isFilled</em> = <code>true</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -2316,7 +3170,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#aa0b230dc31dcd07c48f511a4fe3e6bd2">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#abf4b2f7697779086f6670d2c2c969943">gGLRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -2343,7 +3197,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a105fae5088a69329478537a52b3f224c">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#abb3c3e3be1df0dd8abc434b9360c00d1">gGLRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -2415,6 +3269,774 @@ Friends</h2></td></tr>
 
 </div>
 </div>
+<a id="a84949deaf64fdb9fce1381d18a2210f1" name="a84949deaf64fdb9fce1381d18a2210f1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a84949deaf64fdb9fce1381d18a2210f1">&#9670;&#160;</a></span>drawLine() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gRenderer::drawLine </td>
+          <td>(</td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>x1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>y1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>x2</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>y2</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>thickness</em> = <code>1.0f</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae6a99d730dd14c230c02fc8555f8bd4c" name="ae6a99d730dd14c230c02fc8555f8bd4c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae6a99d730dd14c230c02fc8555f8bd4c">&#9670;&#160;</a></span>drawLine() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gRenderer::drawLine </td>
+          <td>(</td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>x1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>y1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>z1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>x2</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>y2</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>z2</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>thickness</em> = <code>1.0f</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a00180e1235eaf6d031480500285fcc13" name="a00180e1235eaf6d031480500285fcc13"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a00180e1235eaf6d031480500285fcc13">&#9670;&#160;</a></span>drawPyramid()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gRenderer::drawPyramid </td>
+          <td>(</td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>y</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>z</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>r</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>h</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">glm::vec3&#160;</td>
+          <td class="paramname"><em>scale</em> = <code>glm::vec3(1.0f,&#160;1.0f,&#160;1.0f)</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>numberofsides</em> = <code>4</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>isFilled</em> = <code>true</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a7ed87e0fccd7fc3c177f29d98c1458a8" name="a7ed87e0fccd7fc3c177f29d98c1458a8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7ed87e0fccd7fc3c177f29d98c1458a8">&#9670;&#160;</a></span>drawPyramidOblique()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gRenderer::drawPyramidOblique </td>
+          <td>(</td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>y</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>z</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>r</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>h</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">glm::vec2&#160;</td>
+          <td class="paramname"><em>shiftdistance</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">glm::vec3&#160;</td>
+          <td class="paramname"><em>scale</em> = <code>glm::vec3(1.0f,&#160;1.0f,&#160;1.0f)</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>numberofsides</em> = <code>4</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>isFilled</em> = <code>true</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad2624240fca840e6396031e7e8125b8c" name="ad2624240fca840e6396031e7e8125b8c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad2624240fca840e6396031e7e8125b8c">&#9670;&#160;</a></span>drawRectangle()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gRenderer::drawRectangle </td>
+          <td>(</td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>y</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>w</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>h</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>isFilled</em> = <code>false</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a249cbc3570e968ac0ac227f0f7bf6bb1" name="a249cbc3570e968ac0ac227f0f7bf6bb1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a249cbc3570e968ac0ac227f0f7bf6bb1">&#9670;&#160;</a></span>drawRoundedRectangle()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gRenderer::drawRoundedRectangle </td>
+          <td>(</td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>y</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>w</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>h</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>radius</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>isFilled</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ac87b18cdea5749740d6c7c6a8ed0da5a" name="ac87b18cdea5749740d6c7c6a8ed0da5a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac87b18cdea5749740d6c7c6a8ed0da5a">&#9670;&#160;</a></span>drawSphere()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gRenderer::drawSphere </td>
+          <td>(</td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>xPos</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>yPos</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>zPos</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">glm::vec3&#160;</td>
+          <td class="paramname"><em>scale</em> = <code>glm::vec3(1.0f,&#160;1.0f,&#160;1.0f)</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>xSegmentNum</em> = <code>64</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>ySegmentNum</em> = <code>32</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>isFilled</em> = <code>true</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a78e3167ca69e9ee2e7b5fb799e840178" name="a78e3167ca69e9ee2e7b5fb799e840178"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a78e3167ca69e9ee2e7b5fb799e840178">&#9670;&#160;</a></span>drawTriangle()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gRenderer::drawTriangle </td>
+          <td>(</td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>px</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>py</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>qx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>qy</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>rx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>ry</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>is_filled</em> = <code>true</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aae683d09f7492496e87db96fb94df4d2" name="aae683d09f7492496e87db96fb94df4d2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aae683d09f7492496e87db96fb94df4d2">&#9670;&#160;</a></span>drawTube()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gRenderer::drawTube </td>
+          <td>(</td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>y</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>z</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>outerradius</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>innerradious</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>h</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">glm::vec3&#160;</td>
+          <td class="paramname"><em>scale</em> = <code>glm::vec3(1.0f,&#160;1.0f,&#160;1.0f)</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>segmentnum</em> = <code>32</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>isFilled</em> = <code>true</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aeee44a9a56717cfb3a5496e213321061" name="aeee44a9a56717cfb3a5496e213321061"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aeee44a9a56717cfb3a5496e213321061">&#9670;&#160;</a></span>drawTubeOblique()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gRenderer::drawTubeOblique </td>
+          <td>(</td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>y</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>z</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>outerradius</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>innerradious</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>h</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">glm::vec2&#160;</td>
+          <td class="paramname"><em>shiftdistance</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">glm::vec3&#160;</td>
+          <td class="paramname"><em>scale</em> = <code>glm::vec3(1.0f,&#160;1.0f,&#160;1.0f)</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>segmentnum</em> = <code>32</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>isFilled</em> = <code>true</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a69be63781a9254ea18c6e854ddeea9fb" name="a69be63781a9254ea18c6e854ddeea9fb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a69be63781a9254ea18c6e854ddeea9fb">&#9670;&#160;</a></span>drawTubeObliqueTrapezodial()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gRenderer::drawTubeObliqueTrapezodial </td>
+          <td>(</td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>y</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>z</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>topouterradius</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>topinnerradious</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>buttomouterradious</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>buttominnerradious</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>h</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">glm::vec2&#160;</td>
+          <td class="paramname"><em>shiftdistance</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">glm::vec3&#160;</td>
+          <td class="paramname"><em>scale</em> = <code>glm::vec3(1.0f,&#160;1.0f,&#160;1.0f)</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>segmentnum</em> = <code>32</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>isFilled</em> = <code>true</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="afe18e9643e638980fe2440be1c9fdadf" name="afe18e9643e638980fe2440be1c9fdadf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afe18e9643e638980fe2440be1c9fdadf">&#9670;&#160;</a></span>drawTubeTrapezodial()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gRenderer::drawTubeTrapezodial </td>
+          <td>(</td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>y</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>z</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>topouterradius</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>topinnerradious</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>buttomouterradious</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>buttominnerradious</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>h</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">glm::vec3&#160;</td>
+          <td class="paramname"><em>scale</em> = <code>glm::vec3(1.0f,&#160;1.0f,&#160;1.0f)</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>segmentnum</em> = <code>32</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>isFilled</em> = <code>true</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="af20ab5017a69ae95ca38fbf62a07734d" name="af20ab5017a69ae95ca38fbf62a07734d"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#af20ab5017a69ae95ca38fbf62a07734d">&#9670;&#160;</a></span>drawVbo()</h2>
 
@@ -2439,7 +4061,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#acf4d0a9421ca3049aa8e6e19f439f685">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a85b9c31776005fa45e765e9786a3da9e">gGLRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -2466,7 +4088,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a1e9d966a8e7d42550c88f92b2bbe00e3">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a9ccb8cc65ad9987bf8a9b8b59138e9d4">gGLRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -2493,7 +4115,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a8985a8aabda1fd00815f2478e935883d">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a02fcd64e0c7ed12e60487ecce722a3ea">gGLRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -2520,7 +4142,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a52adab912b07252deedb02cff361c700">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a9b6c3fce125909b57baf81d09771c5a0">gGLRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -2547,7 +4169,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a3680482b4f2b7bbfeef8f18852419da4">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a43d5f3947a4a0b720fbbeef0ba2d8675">gGLRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -2575,7 +4197,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#ae00c98c16b140c60b25b61e43b23c5da">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a4e1bdef1bbbddb1c6e6339f46716825a">gGLRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -2602,7 +4224,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a6e19f9ceccf3a3309ee4735ead192c50">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#aa1da3379e318b7cc250a8283ace8b013">gGLRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -2698,7 +4320,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#af8970a05c2ca152009dbd61e15826842">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#aefd9cf89e5aac433be3bcf38fcdaf0ee">gGLRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -2725,7 +4347,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a9cdad703484b965af0d7bb70bbd92c6e">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a0b9c22ee9d775bd6bb73c10780c14eae">gGLRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -2752,7 +4374,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#acabe6a9d65d80073f085adf650406453">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#aaead2f90686beecb5ef389f41bbe5639">gGLRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -2779,7 +4401,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a6fa896d1fcbacfa9a17a6a623bf5b56d">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#adfbd91d475b8fd997adcb0d15c1ed494">gGLRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -2908,7 +4530,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a9c560fcc37c4ace0d361a99be4eaf9c3">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a69a38ab258ba2474f27f7c0fb6226137">gGLRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -4152,7 +5774,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#ac688b124c3ac48a2fdfacd55d714d9a2">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a1a8990336cca89991e2eed09db68c1ca">gGLRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -4241,8 +5863,8 @@ Friends</h2></td></tr>
 
 </div>
 </div>
-<a id="add306bb626dc075640afb71455abf304" name="add306bb626dc075640afb71455abf304"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#add306bb626dc075640afb71455abf304">&#9670;&#160;</a></span>init()</h2>
+<a id="aaaf4e5f2de99c7b1e58e726ee50026c7" name="aaaf4e5f2de99c7b1e58e726ee50026c7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaaf4e5f2de99c7b1e58e726ee50026c7">&#9670;&#160;</a></span>init()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -4251,7 +5873,7 @@ Friends</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void gRenderer::init </td>
+          <td class="memname">virtual void gRenderer::init </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -4259,10 +5881,12 @@ Friends</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+<span class="mlabels"><span class="mlabel">protected</span><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Reimplemented in <a class="el" href="classgGLRenderEngine.html#a040f57e46d1147c1edb1775f654a5f4b">gGLRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -4289,7 +5913,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a3d903d29e06acad4d751bfd614284104">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a057689a6f54680c829193dd40ddd2c9d">gGLRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -4316,7 +5940,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a09e0d010837335d9de7d741c147f2df2">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#afdb2793b45ab85f9d8e4bde4b36d4639">gGLRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -4343,7 +5967,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#ab54e1b3c810a6ea7a1f0d7bd74909837">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a90147825c27a3a0568b5549ec29673d4">gGLRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -4506,7 +6130,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a046ac5f805b9b42d591c15c398f28654">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#aea74f69fe711385593a59b9013e98638">gGLRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -4533,7 +6157,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a0402b49b728178b6dfb02455ad0d5936">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a83a7910d25536d5fbd8be57ae5bd6a41">gGLRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -4560,7 +6184,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#abc1b7d4cf50d2d4289f5fd4c1faf8acc">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a275687045fca9cb5f021c108d8b2881c">gGLRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -4616,7 +6240,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#aad75d38c055a6bd1a5acc7c3a9dc64a8">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#ac8144d231f0e97cbc7e230db52008168">gGLRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -4689,7 +6313,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#ae34456ea465a7fe2f3d84571ef195377">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a5db5b9ff301b6f512a4745b2baaa8907">gGLRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -4716,7 +6340,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a55a818e8a58c55a95130d9c18e046ab6">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a0091bdb865f49b7ad3fed5a442a00d9a">gGLRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -4823,7 +6447,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#acca8e2e146e24355ca71d95dbad67624">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#ae22e6676eb1ef96747240958cc36b6b7">gGLRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -4873,7 +6497,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a22cb60bd466fac86bd332307aa3571fc">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#ae9cb6bb79ad2106c7c18b28e9ac9fb84">gGLRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -4923,7 +6547,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a13d1ed7442e7b1057e46ccd4da552ad1">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a2d56e32354e44bcdc087f769292d3334">gGLRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -5165,7 +6789,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a30b10671345202cccf15d831d5a1aced">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a7cab35cbc27d5c66b729e4d6e62e62c3">gGLRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -5192,7 +6816,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#ad9fdce96f6bece14812149ee271738b7">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a5730d690d9b331e253466b3805bd3829">gGLRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -5236,7 +6860,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a5b7584a2d525add8ae8b5b1d5e937c4a">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a276643e71f152a5ec4c86a8ebfdfe8d4">gGLRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -5274,7 +6898,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#aa4eef32c2005297aaf9164bff968c903">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a8e979c830357e4b6983363323dfed989">gGLRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -6040,7 +7664,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a560476d63a71fd93f6c68a187c9ccd58">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a632737d884af4e99c4f365ffe9f299fc">gGLRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -6078,7 +7702,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a75d2fe053cc742f13392f052da05b4d3">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a6a1295108249789bdd037c892c8110a8">gGLRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -6200,7 +7824,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#ac73ca52518fe5590707c3d0f0fdfa232">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a1db0d8e44317d466dc35de073da2f3c0">gGLRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -6238,7 +7862,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a5d87cc79a5b0047d6985d314a16f9813">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#ad4b424bb83b5448223eb2d1b0fae1e05">gGLRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -6276,7 +7900,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#ad4850c3cd0848f3093251ae91dbf7d35">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#acfe40a75915903ba17009bae209d5f6d">gGLRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -6339,7 +7963,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a56d1d83b1e079a78b96d218dba524602">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a1b4e7aac996c8ebc249244cb574c3545">gGLRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -6383,7 +8007,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a27668c3b8b12fdf76583f1c2e1bb96ac">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a7ceadbfbdfb27b950d00ba63263556b0">gGLRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -6491,7 +8115,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a05e5ed7db3043596296416a3f84d1588">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a484ce72f2b03c11c4f45361c59a9a1d8">gGLRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -6593,6 +8217,44 @@ Friends</h2></td></tr>
 
 </div>
 </div>
+<a id="ac4776cd8f5b60875f7a7cae85c40f88e" name="ac4776cd8f5b60875f7a7cae85c40f88e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac4776cd8f5b60875f7a7cae85c40f88e">&#9670;&#160;</a></span>setUnsignedInt()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void gRenderer::setUnsignedInt </td>
+          <td>(</td>
+          <td class="paramtype">GLuint&#160;</td>
+          <td class="paramname"><em>uniformloc</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramname"><em>value</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a5eb439506e697085da6aa62269f8dc99">gGLRenderEngine</a>.</p>
+
+</div>
+</div>
 <a id="a603df3f7916faff7f1f5111f5120f27b" name="a603df3f7916faff7f1f5111f5120f27b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a603df3f7916faff7f1f5111f5120f27b">&#9670;&#160;</a></span>setVec2() <span class="overload">[1/2]</span></h2>
 
@@ -6627,7 +8289,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#abbbfae012f24178671fcd6fe28fb0c3f">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a93d494df4f6981c095bb114b3f542f6a">gGLRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -6671,7 +8333,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a300108d4d31af68a25450ef68d798098">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a1fd499515c3e2e2145a3df6af604645d">gGLRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -6709,7 +8371,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a771eeea12f657c1904be36496a3528bf">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#af65126df1c635ee49315ec6b44cfa4a6">gGLRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -6759,7 +8421,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#afc7cb80cded10ca8612aed5187f00519">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a375869457f75cdeb0bbeeaff8c9b0fe7">gGLRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -6797,7 +8459,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a38b42e69e915295a9a59408eaff0dc32">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a5ede2e60f12a16139600185ea9f3aced">gGLRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -6853,7 +8515,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#aeacbd546e2701c944d3c483635db6ece">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a7c469b0105ea847d72e60d6f92f53240">gGLRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -6915,7 +8577,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#ac83fe8da7098247421d86ea4b50eaa07">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#af6ac6b6bc530b48d77333d8b255fd025">gGLRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -6965,7 +8627,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#ae8ae1d0c082575ab0618b4fa5e405b0b">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#aa2f611fe8f6b906748b2197aba16cc91">gGLRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -6984,6 +8646,56 @@ Friends</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+</div>
+</div>
+<a id="a400b8bf33110bb06fb3cf9cafe0aa7cb" name="a400b8bf33110bb06fb3cf9cafe0aa7cb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a400b8bf33110bb06fb3cf9cafe0aa7cb">&#9670;&#160;</a></span>setViewport()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void gRenderer::setViewport </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>y</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>width</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>height</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a12a541852cc628e6b1d3661edbec6d3f">gGLRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -7027,7 +8739,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#acf86e6c1ed67936611229315ce81e6a9">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#ad938e11eb33c09aa73d1b77a675c8dea">gGLRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -7077,7 +8789,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a678f43e2be6af98171ea8f13e67ae3af">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#af76de2a542df796dcce2f8043afc634c">gGLRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -7133,7 +8845,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a690241745917b478e42006bd32c40b3b">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a7eca67ea71c8ed9a10d7eba6cbe6ce10">gGLRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -7195,7 +8907,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a84277c22872d67fd52e70d1bed528cb0">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a7636759f151e97ba6faef99f17463f0f">gGLRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -7223,7 +8935,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a4dff918706427db6cd9e37c3bea1b4a6">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#af5616b2e1c3044b7a346473dc32e9976">gGLRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -7279,7 +8991,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a9ab0581ebd3d52c4a59ce1c41fc541d6">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a16bb827ae4c3bdfcffc0cfd5234920fd">gGLRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -7347,7 +9059,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a794d632de73ab8351235d2f2aa7a83fb">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#af169d69a4986b7a5a69dce8c8944e53c">gGLRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -7375,7 +9087,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#af276b560621ecdf78a760b49514e0e42">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a1db328a7e2599c7499ba1e0df5f2bcf2">gGLRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -7402,7 +9114,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#ae94a4e89cf20f04343d202b9e51a2b34">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#ac477b80744a80f9293a8c042906e821b">gGLRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -7430,7 +9142,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#acd4d1989e396893e08ba6e32e0d09aa7">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a7a51e1a58b1d20aa839ceb81f43f9008">gGLRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -7457,7 +9169,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#abb8e204ff7432e17948ddc6072a8c462">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a25c1867abf5e8faf982e68a8fa0297ea">gGLRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -7484,7 +9196,59 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#ab30d6625663204332c6e3cc66bcd0c2f">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a586c03db02a0d2a32ddf924ea1e952e0">gGLRenderEngine</a>.</p>
+
+</div>
+</div>
+<a id="a5cc06a8bde29b2f1dc31da351c55f5b7" name="a5cc06a8bde29b2f1dc31da351c55f5b7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5cc06a8bde29b2f1dc31da351c55f5b7">&#9670;&#160;</a></span>unscaleX()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static int gRenderer::unscaleX </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>x</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a128539021b5cb5063f4116bd52dab576" name="a128539021b5cb5063f4116bd52dab576"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a128539021b5cb5063f4116bd52dab576">&#9670;&#160;</a></span>unscaleY()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static int gRenderer::unscaleY </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>y</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -7531,6 +9295,23 @@ Friends</h2></td></tr>
 
 </div>
 </div>
+<a id="a3324e5981d632c55cfb192aeac453a5a" name="a3324e5981d632c55cfb192aeac453a5a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3324e5981d632c55cfb192aeac453a5a">&#9670;&#160;</a></span>updateScene()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gRenderer::updateScene </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="adbf9bacb21ed3896783981469a82e34c" name="adbf9bacb21ed3896783981469a82e34c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#adbf9bacb21ed3896783981469a82e34c">&#9670;&#160;</a></span>useShader()</h2>
 
@@ -7555,7 +9336,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#afbbe97091a3ae902225270e46dc9d798">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#ab716da0cf37519b80c973bb0aa2e553e">gGLRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -7583,6 +9364,50 @@ Friends</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
+<a id="ad71f7e9c015076342aef669d2fa409e0" name="ad71f7e9c015076342aef669d2fa409e0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad71f7e9c015076342aef669d2fa409e0">&#9670;&#160;</a></span>arcmesh</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::unique_ptr&lt;<a class="el" href="classgArc.html">gArc</a>&gt; gRenderer::arcmesh</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad5e67e7b65655bf1de951c53bf169ed5" name="ad5e67e7b65655bf1de951c53bf169ed5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad5e67e7b65655bf1de951c53bf169ed5">&#9670;&#160;</a></span>boxmesh</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::unique_ptr&lt;<a class="el" href="classgBox.html">gBox</a>&gt; gRenderer::boxmesh</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a13aa791c6c60d07bbb33f96a963b7b37" name="a13aa791c6c60d07bbb33f96a963b7b37"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a13aa791c6c60d07bbb33f96a963b7b37">&#9670;&#160;</a></span>brdfshader</h2>
 
@@ -7649,6 +9474,28 @@ Friends</h2></td></tr>
 
 </div>
 </div>
+<a id="a9878223725485effa68b931942a6c685" name="a9878223725485effa68b931942a6c685"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9878223725485effa68b931942a6c685">&#9670;&#160;</a></span>circlemesh</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::unique_ptr&lt;<a class="el" href="classgCircle.html">gCircle</a>&gt; gRenderer::circlemesh</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a095f6a2a2df090837fafd50664c87f89" name="a095f6a2a2df090837fafd50664c87f89"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a095f6a2a2df090837fafd50664c87f89">&#9670;&#160;</a></span>colorshader</h2>
 
@@ -7660,6 +9507,28 @@ Friends</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="classgShader.html">gShader</a>* gRenderer::colorshader</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae00f2cce560854586ee5f2ae4a23d9fc" name="ae00f2cce560854586ee5f2ae4a23d9fc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae00f2cce560854586ee5f2ae4a23d9fc">&#9670;&#160;</a></span>crossmesh</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::unique_ptr&lt;<a class="el" href="classgCross.html">gCross</a>&gt; gRenderer::crossmesh</td>
         </tr>
       </table>
   </td>
@@ -8243,28 +10112,6 @@ Friends</h2></td></tr>
 
 </div>
 </div>
-<a id="a34aa736f2f2b065251285d38065e05a7" name="a34aa736f2f2b065251285d38065e05a7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a34aa736f2f2b065251285d38065e05a7">&#9670;&#160;</a></span>isdevelopergrid</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool gRenderer::isdevelopergrid</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <a id="ad57528669488f2d772b5b09ca23bf2d2" name="ad57528669488f2d772b5b09ca23bf2d2"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ad57528669488f2d772b5b09ca23bf2d2">&#9670;&#160;</a></span>isfogenabled</h2>
 
@@ -8419,6 +10266,72 @@ Friends</h2></td></tr>
 
 </div>
 </div>
+<a id="aa76b4ec7137e873d6bf5833ac81ac1d7" name="aa76b4ec7137e873d6bf5833ac81ac1d7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa76b4ec7137e873d6bf5833ac81ac1d7">&#9670;&#160;</a></span>linemesh</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::unique_ptr&lt;<a class="el" href="classgLine.html">gLine</a>&gt; gRenderer::linemesh</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="afa8a6de1e1a1d2029c864987919e23a3" name="afa8a6de1e1a1d2029c864987919e23a3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afa8a6de1e1a1d2029c864987919e23a3">&#9670;&#160;</a></span>linemesh2</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::unique_ptr&lt;<a class="el" href="classgLine.html">gLine</a>&gt; gRenderer::linemesh2</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aa5641bd30cd395014a19f3e502419540" name="aa5641bd30cd395014a19f3e502419540"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa5641bd30cd395014a19f3e502419540">&#9670;&#160;</a></span>linemesh3</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::unique_ptr&lt;<a class="el" href="classgLine.html">gLine</a>&gt; gRenderer::linemesh3</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a9164aad8460cd5c795b5ae08472462d4" name="a9164aad8460cd5c795b5ae08472462d4"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a9164aad8460cd5c795b5ae08472462d4">&#9670;&#160;</a></span>originalgrid</h2>
 
@@ -8551,6 +10464,28 @@ Friends</h2></td></tr>
 
 </div>
 </div>
+<a id="ab55a81fa5248a09769e1269dd2231d7d" name="ab55a81fa5248a09769e1269dd2231d7d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab55a81fa5248a09769e1269dd2231d7d">&#9670;&#160;</a></span>rectanglemesh</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::unique_ptr&lt;<a class="el" href="classgRectangle.html">gRectangle</a>&gt; gRenderer::rectanglemesh</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="ad06641dad9bc5f25c696b942c0f039eb" name="ad06641dad9bc5f25c696b942c0f039eb"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ad06641dad9bc5f25c696b942c0f039eb">&#9670;&#160;</a></span>rendercolor</h2>
 
@@ -8573,6 +10508,28 @@ Friends</h2></td></tr>
 
 </div>
 </div>
+<a id="a6237d68f0db92c4fdc6b445cef730b88" name="a6237d68f0db92c4fdc6b445cef730b88"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6237d68f0db92c4fdc6b445cef730b88">&#9670;&#160;</a></span>roundedrectanglemesh</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::unique_ptr&lt;<a class="el" href="classgRoundedRectangle.html">gRoundedRectangle</a>&gt; gRenderer::roundedrectanglemesh</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="aad0a82299e8c4f80db8da78571971599" name="aad0a82299e8c4f80db8da78571971599"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aad0a82299e8c4f80db8da78571971599">&#9670;&#160;</a></span>scenelights</h2>
 
@@ -8584,6 +10541,28 @@ Friends</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname">std::deque&lt;<a class="el" href="classgLight.html">gLight</a>*&gt; gRenderer::scenelights</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a85ee2f7350adee1a9992bbc66f2abd5d" name="a85ee2f7350adee1a9992bbc66f2abd5d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a85ee2f7350adee1a9992bbc66f2abd5d">&#9670;&#160;</a></span>sceneubo</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classgUbo.html">gUbo</a>&lt;<a class="el" href="structgRenderer_1_1gSceneData.html">gSceneData</a>&gt;* gRenderer::sceneubo</td>
         </tr>
       </table>
   </td>
@@ -8760,6 +10739,28 @@ Friends</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="classgShader.html">gShader</a>* gRenderer::textureshader</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ac3e40fd84a337bb98c16b577d0763421" name="ac3e40fd84a337bb98c16b577d0763421"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac3e40fd84a337bb98c16b577d0763421">&#9670;&#160;</a></span>trianglemesh</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::unique_ptr&lt;<a class="el" href="classgTriangle.html">gTriangle</a>&gt; gRenderer::trianglemesh</td>
         </tr>
       </table>
   </td>

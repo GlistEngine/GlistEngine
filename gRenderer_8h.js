@@ -3,6 +3,8 @@ var gRenderer_8h =
     [ "gRenderer", "classgRenderer.html", "classgRenderer" ],
     [ "gRenderer::gSceneLightData", "structgRenderer_1_1gSceneLightData.html", "structgRenderer_1_1gSceneLightData" ],
     [ "gRenderer::gSceneLights", "structgRenderer_1_1gSceneLights.html", "structgRenderer_1_1gSceneLights" ],
+    [ "gRenderer::gSceneFogData", "structgRenderer_1_1gSceneFogData.html", "structgRenderer_1_1gSceneFogData" ],
+    [ "gRenderer::gSceneData", "structgRenderer_1_1gSceneData.html", "structgRenderer_1_1gSceneData" ],
     [ "CORE_GRENDERER_H_", "gRenderer_8h.html#a57a0aeff1c9f906ecf062a54a772e3ad", null ],
     [ "G_CHECK_GL", "gRenderer_8h.html#a126ea59d9a44ee184840f29d22efbee2", null ],
     [ "G_CHECK_GL2", "gRenderer_8h.html#a3497aa9ac80070baab6a2665d7a8de63", null ],

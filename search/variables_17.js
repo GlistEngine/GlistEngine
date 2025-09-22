@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['y_0',['y',['../classgMouseButtonEvent.html#a8f1ad6332b284ac7de0e5fbb10c1b0a2',1,'gMouseButtonEvent']]],
-  ['yellow_1',['YELLOW',['../classgColor.html#a08c6aefe6624cfb78dc6d14f4e6f71ad',1,'gColor']]],
-  ['yz_2',['YZ',['../classgGrid.html#a91c4ce74529375afe0eef70dc4cf001a',1,'gGrid']]]
+  ['x_0',['x',['../classgMouseButtonEvent.html#a681d539c2a80973cacde0cc9633eeefb',1,'gMouseButtonEvent']]],
+  ['xy_1',['XY',['../classgGrid.html#af62f22601bc1c02b5d16e62ff4960e09',1,'gGrid']]],
+  ['xz_2',['XZ',['../classgGrid.html#a54f753f76f481d5e951e12503b54bbbf',1,'gGrid']]]
 ];

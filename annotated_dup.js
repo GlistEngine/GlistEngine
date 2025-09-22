@@ -160,6 +160,7 @@ var annotated_dup =
     [ "gUbo", "classgUbo.html", "classgUbo" ],
     [ "gUTF8Iterator", "classgUTF8Iterator.html", "classgUTF8Iterator" ],
     [ "gUtils", "classgUtils.html", "classgUtils" ],
+    [ "gUUID", "classgUUID.html", "classgUUID" ],
     [ "gVbo", "classgVbo.html", "classgVbo" ],
     [ "gVertex", "structgVertex.html", "structgVertex" ],
     [ "gVignette", "classgVignette.html", "classgVignette" ],

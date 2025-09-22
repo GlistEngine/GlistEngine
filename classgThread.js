@@ -2,6 +2,7 @@ var classgThread =
 [
     [ "gThread", "classgThread.html#ac090670cfeaf598e9e318a6b456f206d", null ],
     [ "~gThread", "classgThread.html#a1a600a4d205b6c9a92bf19f3beb0545a", null ],
+    [ "detach", "classgThread.html#ac0685c0c8244276adc768b2cde752125", null ],
     [ "getId", "classgThread.html#a1d889e2d86ccef196bde983fd27678fd", null ],
     [ "getThread", "classgThread.html#a77487f4dda26a9fcb3ca6084c4bc3065", null ],
     [ "isCurrent", "classgThread.html#a68cf59f95f63845b6efe644b39d58c54", null ],
