@@ -9,6 +9,7 @@
 #define SRC_GGUITOOLTIPTEXT_H_
 
 #include "gGUISizer.h"
+#include "gGUIButton.h"
 #include "gFont.h"
 #include "gGUIControl.h"
 #include "gColor.h"
@@ -63,6 +64,8 @@ public:
 	 */
 	void setTitleLength(std::string text);
 
+	void setMargin(int x, int y);
+
 	void update();
 	void draw();
 	void mouseMoved(int x, int y);
@@ -73,7 +76,9 @@ private:
 	std::deque<std::string> textlist;
 	int sizerx, sizery, sizerw, sizerh;
 	int cursorx, cursory;
-	int objecth, margin;
+	int objecth, marginx, marginy;
+	int marginentry = 0;
+	int buttonx, buttony;
 	float texth, textw, tx;
 };
 
