@@ -186,13 +186,14 @@ var NAVTREEINDEX7 =
 "classgGUITooltipText.html#a2cedadc240d53936d63f66ecb36e771aa8356ee9046e114c45964cbd6242673ed":[1,0,98,0,0],
 "classgGUITooltipText.html#a2cedadc240d53936d63f66ecb36e771aabd11adafc3ec8c461723416a72a98acf":[1,0,98,0,1],
 "classgGUITooltipText.html#a3b1635e775a727fba981909f2958d4cb":[1,0,98,1],
-"classgGUITooltipText.html#a793f5f75765af22a89db373ebe02ce04":[1,0,98,7],
+"classgGUITooltipText.html#a793f5f75765af22a89db373ebe02ce04":[1,0,98,8],
+"classgGUITooltipText.html#a868be5ad2866e0285da99c4498abcf4b":[1,0,98,7],
 "classgGUITooltipText.html#a93fb6f0e96abd7db0024f2e3f8a62d05":[1,0,98,3],
-"classgGUITooltipText.html#a9aa755846588106a21982c9c25e82ace":[1,0,98,8],
+"classgGUITooltipText.html#a9aa755846588106a21982c9c25e82ace":[1,0,98,9],
 "classgGUITooltipText.html#aa5b537e838207f68f241e765c49d45c4":[1,0,98,6],
 "classgGUITooltipText.html#aba143258b5a676d3123d8cc6e661e0d3":[1,0,98,4],
 "classgGUITooltipText.html#ae6ca1bc970f98460b2af85a6ab00520d":[1,0,98,2],
-"classgGUITooltipText.html#aef3cf9ebb724d179c6b12719c074ab94":[1,0,98,9],
+"classgGUITooltipText.html#aef3cf9ebb724d179c6b12719c074ab94":[1,0,98,10],
 "classgGUITreelist.html":[1,0,99],
 "classgGUITreelist.html#a01030404d21b24cb9b4a15586424f75a":[1,0,99,33],
 "classgGUITreelist.html#a031456a1ca2f52187dfe77e0862fa8f4":[1,0,99,8],
@@ -248,6 +249,5 @@ var NAVTREEINDEX7 =
 "classgGrid.html#a06d596d5ad964bae726138a0e94f5607":[1,0,48,50],
 "classgGrid.html#a071f53525754dce1c841baeae0954e69":[1,0,48,54],
 "classgGrid.html#a0917b0c4021fb95e1fbf40d4dac0278e":[1,0,48,36],
-"classgGrid.html#a0d62c88b57d78a816b4987682bcc5808":[1,0,48,31],
-"classgGrid.html#a0d9e89378466323addfcb8778bc21e13":[1,0,48,28]
+"classgGrid.html#a0d62c88b57d78a816b4987682bcc5808":[1,0,48,31]
 };

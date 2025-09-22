@@ -12,6 +12,7 @@ var classgGUITooltipText =
     [ "draw", "classgGUITooltipText.html#aba143258b5a676d3123d8cc6e661e0d3", null ],
     [ "getText", "classgGUITooltipText.html#a282acabffa43599ae4c2fd003cde1701", null ],
     [ "mouseMoved", "classgGUITooltipText.html#aa5b537e838207f68f241e765c49d45c4", null ],
+    [ "setMargin", "classgGUITooltipText.html#a868be5ad2866e0285da99c4498abcf4b", null ],
     [ "setText", "classgGUITooltipText.html#a793f5f75765af22a89db373ebe02ce04", null ],
     [ "setTitleLength", "classgGUITooltipText.html#a9aa755846588106a21982c9c25e82ace", null ],
     [ "update", "classgGUITooltipText.html#aef3cf9ebb724d179c6b12719c074ab94", null ]
