@@ -109,7 +109,7 @@ void gShadowMap::enable() {
 	} else {
 		glViewport(0, 0, renderer->getScreenWidth(), renderer->getScreenHeight());
 		renderer->getColorShader()->use();
-		renderer->getColorShader()->setInt("useShadowMap", 1);
+		renderer->getColorShader()->setInt("aUseShadowMap", 1);
 		renderer->getColorShader()->setVec3("lightPos", lightposition);
 		renderer->getColorShader()->setInt("shadowMap", shadowmaptextureslot);
 
