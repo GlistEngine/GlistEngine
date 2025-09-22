@@ -267,7 +267,7 @@ $(document).ready(function(){initNavTree('gMorphingMesh_8h_source.html',''); ini
 <div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>    <span class="comment">//The loaded target meshes&#39; positions which are the end points of interpolation.</span></div>
 <div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>    std::vector&lt;std::vector&lt;glm::vec3&gt;&gt; targetpositions, targetnormals;</div>
 <div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>    <span class="comment">//The base mesh&#39;s vertices&#39; spare.</span></div>
-<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>    std::vector&lt;gVertex&gt; basevertices;</div>
+<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>    std::shared_ptr&lt;std::vector&lt;gVertex&gt;&gt; basevertices;</div>
 <div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>    <span class="comment">//The animated frames&#39; data.</span></div>
 <div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>    std::vector&lt;std::vector&lt;std::vector&lt;glm::vec3&gt;&gt;&gt; framepositions, framenormals;</div>
 <div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>    <span class="comment">//The frames data on vram.</span></div>

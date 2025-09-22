@@ -4,6 +4,7 @@ var classgModel =
     [ "~gModel", "classgModel.html#a9c7a6e369eca3d95e54c091373a1092b", null ],
     [ "animate", "classgModel.html#a44bab0b13642624bf90ac98ac94011ef", null ],
     [ "boom", "classgModel.html#a165470e3fa7342c02d5d993e1d731f1f", null ],
+    [ "disassemble", "classgModel.html#a60448b22929e63902575ca754ced1c93", null ],
     [ "dolly", "classgModel.html#a973f8b81665b9f53944e10d1e520237f", null ],
     [ "draw", "classgModel.html#a1ce4cc6d7620235438eea69dc68f9e29", null ],
     [ "getAnimationDuration", "classgModel.html#a779afc6df5dfeb8df5d8deb02fa7a92a", null ],

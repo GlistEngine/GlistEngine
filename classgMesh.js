@@ -2,6 +2,7 @@ var classgMesh =
 [
     [ "gMesh", "classgMesh.html#a335926633647d02c78df1c94f23e9214", null ],
     [ "gMesh", "classgMesh.html#aeac2e920f6b1cd7e51bf475ef5de7a7f", null ],
+    [ "gMesh", "classgMesh.html#aa6e7fa54bb5b05ee52f32d5eb36c35fd", null ],
     [ "gMesh", "classgMesh.html#aba6bc070ceb878eabace02c7e6869d0a", null ],
     [ "~gMesh", "classgMesh.html#a5470048aee2c963229402c4e9199e759", null ],
     [ "addTexture", "classgMesh.html#adc658c993cffb96bf2bd13938451703d", null ],
@@ -15,6 +16,7 @@ var classgMesh =
     [ "getDrawMode", "classgMesh.html#a793d2b7855545e2f8f16e73512bc6461", null ],
     [ "getIndices", "classgMesh.html#ab2fc1063207dd04ce98df436008bcebd", null ],
     [ "getIndicesNum", "classgMesh.html#a6502b918df5354a3ae9b8722558e5511", null ],
+    [ "getIndicesPtr", "classgMesh.html#a0aa0eebf4280c6718a6cae6b1dcc8444", null ],
     [ "getInitialBoundingBox", "classgMesh.html#acc096599635c874fc0f48e0b8245bd1b", null ],
     [ "getMaterial", "classgMesh.html#a34907be2abad9abddcd13f114f604f57", null ],
     [ "getName", "classgMesh.html#a74af7057b49c8b42883635b62ff89301", null ],
@@ -22,6 +24,7 @@ var classgMesh =
     [ "getVbo", "classgMesh.html#a47f80cd82051f1caed37628412df3299", null ],
     [ "getVertices", "classgMesh.html#a4dec11c5e864f66c38d5ce9ce48a0908", null ],
     [ "getVerticesNum", "classgMesh.html#a54d31533719ff60d4d1e5c3f24589e05", null ],
+    [ "getVerticesPtr", "classgMesh.html#aeae8f3d8291c9cdc3c2b21abbb25845a", null ],
     [ "intersectsTriangles", "classgMesh.html#ab5f986d12bde286ff18ac8f5d530b423", null ],
     [ "processTransformationMatrix", "classgMesh.html#abb9b58b1d1ea74d5fd735cc18b2c6244", null ],
     [ "recalculateBoundingBox", "classgMesh.html#a0dfa7f6ab07b6c4b65870c237b7e93a5", null ],
@@ -32,7 +35,9 @@ var classgMesh =
     [ "setTextures", "classgMesh.html#aa544ae3b925841d04418c4028ad06c50", null ],
     [ "setVertices", "classgMesh.html#a8e7fcb3cae34ce3a69cbbe6c6f8ba757", null ],
     [ "setVertices", "classgMesh.html#aabdd3160673e88db73da212077c5cbf3", null ],
+    [ "setVertices", "classgMesh.html#ab9104de5a5b90ae084bf017ce6ea2e80", null ],
+    [ "setVertices", "classgMesh.html#ab603c4809cae3f4a7d9df8b92ef2f67e", null ],
     [ "isprojection2d", "classgMesh.html#a4eea22146d02379680c8e00fff26ee58", null ],
     [ "vbo", "classgMesh.html#ac00e01236f4660d7b8191ca6506fa85f", null ],
-    [ "vertices", "classgMesh.html#ae77a2d05f93d1ff0be38ec2456499009", null ]
+    [ "vertices", "classgMesh.html#ac02acb6091c09ff326d4155566248e8b", null ]
 ];
