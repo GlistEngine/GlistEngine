@@ -731,10 +731,12 @@ void gAppManager::iosLoop()
     deltatime = endtime - starttime;
     totaltime += deltatime.count();
     starttime = endtime;
+	totalupdates++;
 
     tick();
 
     if(totaltime >= 1'000'000'000) {
+    	framerate = totalupdates;
         totaltime = 0;
         totalupdates = 0;
         totaldraws = 0;
