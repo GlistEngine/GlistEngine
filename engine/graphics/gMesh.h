@@ -29,11 +29,16 @@ public:
 
 	gMesh();
 	gMesh(const std::vector<gVertex>& vertices, const std::vector<gIndex>& indices, const std::vector<gTexture*>& textures);
+	gMesh(std::shared_ptr<std::vector<gVertex>> vertices,
+			std::shared_ptr<std::vector<gIndex>> indices,
+			std::vector<gTexture*> textures);
 	gMesh(const gMesh&);
 	virtual ~gMesh();
 
 	void setVertices(const std::vector<gVertex>& vertices, const std::vector<gIndex>& indices);
 	void setVertices(const std::vector<gVertex>& vertices);
+	void setVertices(std::shared_ptr<std::vector<gVertex>> vertices);
+	void setVertices(std::shared_ptr<std::vector<gVertex>> vertices, std::shared_ptr<std::vector<gIndex>> indices);
 	void setTextures(const std::vector<gTexture*>& textures);
 	void setTexture(gTexture* texture);
 	void addTexture(gTexture* tex);
@@ -41,6 +46,8 @@ public:
 
 	std::vector<gVertex>& getVertices();
 	std::vector<gIndex>& getIndices();
+	std::shared_ptr<std::vector<gVertex>> getVerticesPtr();
+	std::shared_ptr<std::vector<gIndex>> getIndicesPtr();
 	int getVerticesNum() const;
 	int getIndicesNum() const;
 	const gBoundingBox& getBoundingBox();
@@ -71,12 +78,12 @@ protected:
     void drawVbo();
     void drawEnd();
 	std::unique_ptr<gVbo> vbo;
-	std::vector<gVertex> vertices;
+	std::shared_ptr<std::vector<gVertex> >vertices;
     bool isprojection2d;
 
 private:
     std::string name;
-	std::vector<gIndex> indices;
+	std::shared_ptr<std::vector<gIndex>> indices;
 	std::vector<gTexture*> textures;
 	int drawmode;
     gMaterial material;

@@ -108,7 +108,9 @@ gBox::gBox() {
 		indicesb.push_back(indexdata[i]);
 	}
 
-	setVertices(verticesb, indicesb);
+	auto verticesptr = std::make_shared<std::vector<gVertex>>(verticesb);
+	auto indicesptr = std::make_shared<std::vector<gIndex>>(indicesb);
+	setVertices(verticesptr, indicesptr);
 }
 
 gBox::~gBox() {

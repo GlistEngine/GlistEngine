@@ -79,7 +79,8 @@ void gRoundedRectangle::setRoundedRectanglePoints(int x, int y, int w, int h, in
 	startPoint.position.y = y + h - radius;
 	startPoint.position.z = 0.0f;
 	vertices.push_back(startPoint);
-	setVertices(vertices);
+	auto verticesptr = std::make_shared<std::vector<gVertex>>(vertices);
+	setVertices(verticesptr);
 	if (isFilled == false)
 	    setDrawMode(gMesh::DRAWMODE_LINESTRIP);
 	else
