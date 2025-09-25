@@ -66,7 +66,7 @@ unsigned int gImage::loadImageFromURL(const std::string& imageUrl) {
 }
 
 unsigned int gImage::loadImageFromURL(const std::string& imageUrl, bool cutUrlParameters) {
-#if(ANDROID)
+#if defined(EMSCRIPTEN)
 	return 0; // todo
 #else
 	imageurl = imageUrl;
@@ -185,7 +185,7 @@ std::string gImage::getImageUrl() {
 }
 
 std::string gImage::generateDownloadedImagePath(std::string imageType) {
-#if(ANDROID)
+#if defined(ANDROID) || defined(EMSCRIPTEN)
 	return ""; // todo
 #else
 	std::string imagepath = "";

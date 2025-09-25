@@ -331,7 +331,7 @@ void gGLRenderEngine::attachRenderbufferToFramebuffer(GLenum attachment, GLuint 
 
 // ----- Draw/Read buffers -----
 void gGLRenderEngine::setDrawBufferNone() {
-#if defined(GLIST_MOBILE)
+#if defined(GLIST_OPENGLES)
 	G_CHECK_GL(glDrawBuffers(0, GL_NONE));
 #else
 	G_CHECK_GL(glDrawBuffer(GL_NONE));
@@ -612,7 +612,7 @@ void gGLRenderEngine::setWrappingAndFiltering(GLenum target, GLint wrapS, GLint 
 }
 
 void gGLRenderEngine::setSwizzleMask(GLint swizzleMask[4]) {
-#if defined(GLIST_MOBILE)
+#if defined(GLIST_OPENGLES)
 	G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_R, swizzleMask[0]));
 	G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_G, swizzleMask[1]));
 	G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_B, swizzleMask[2]));
@@ -685,28 +685,27 @@ void gGLRenderEngine::createQuad(GLuint& inQuadVAO, GLuint& inQuadVBO) {
 	G_CHECK_GL(glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float))));
 }
 
-void gGLRenderEngine::enableCubeMapSeemless() {
-#if defined(GLIST_MOBILE)
-	G_CHECK_GL(glEnable(GL_TEXTURE_CUBE_MAP); // OpenGL ES does not support GL_TEXTURE_CUBE_MAP_SEAMLES)S
+void gGLRenderEngine::enableCubeMap() {
+#if defined(GLIST_OPENGLES)
+	G_CHECK_GL(glEnable(GL_TEXTURE_CUBE_MAP)); // OpenGL ES does not support GL_TEXTURE_CUBE_MAP_SEAMLESS
 #else
 	G_CHECK_GL(glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS));
 #endif
 }
 
-void gGLRenderEngine::checkEnableCubeMap4Android() {
-#if defined(ANDROID)
-	G_CHECK_GL(glEnable(GL_TEXTURE_CUBE_MAP)); // OpenGL ES does not support GL_TEXTURE_CUBE_MAP_SEAMLESS
+void gGLRenderEngine::pushMatrix() {
+#ifndef GLIST_OPENGLES
+	G_CHECK_GL(glPushMatrix());
 #endif
 }
 
-void gGLRenderEngine::pushMatrix() {
-	G_CHECK_GL(glPushMatrix());
-}
-
 void gGLRenderEngine::popMatrix() {
+#ifndef GLIST_OPENGLES
 	G_CHECK_GL(glPopMatrix());
+#endif
 }
 
+#if defined(DEBUG) || defined(ENGINE_OPENGL_CHECKS)
 void GLAPIENTRY openglErrorCallback(GLenum source, GLenum type, GLuint id,
 								   GLenum severity, GLsizei length,
 								   const GLchar* message, const void* userParam) {
@@ -723,6 +722,7 @@ void GLAPIENTRY openglErrorCallback(GLenum source, GLenum type, GLuint id,
 	// We flush here because it might not show on the console immediately, having this function being spammed will slow down the game but for purpose of debugging, it is required.
 	std::cerr << std::flush;
 }
+#endif
 
 void gGLRenderEngine::init() {
 #if defined(DEBUG) || defined(ENGINE_OPENGL_CHECKS)

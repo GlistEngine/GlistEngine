@@ -8,7 +8,6 @@
 #ifndef ENGINE_GRAPHICS_GCOLOR_H_
 #define ENGINE_GRAPHICS_GCOLOR_H_
 
-
 #include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
 #include <cmath>

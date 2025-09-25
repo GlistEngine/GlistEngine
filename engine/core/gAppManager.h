@@ -161,6 +161,9 @@ public:
     void initialize();
 	void setup();
     void loop();
+#ifdef EMSCRIPTEN
+	void emscriptenLoop();
+#endif
     void stop();
 
 	/**
@@ -386,7 +389,7 @@ private:
     bool joystickbuttonstate[maxjoysticknum][maxjoystickbuttonnum];
     int joystickaxecount;
 
-#if defined(GLIST_MOBILE)
+#if GLIST_ANDROID || GLIST_IOS
     DeviceOrientation deviceorientation;
     DeviceOrientation olddeviceorientation;
     bool delayedresize;
@@ -414,9 +417,11 @@ private:
     bool onWindowLoseFocusEvent(gWindowLoseFocusEvent&);
     bool onJoystickConnectEvent(gJoystickConnectEvent&);
     bool onJoystickDisconnectEvent(gJoystickDisconnectEvent&);
-#if defined(GLIST_MOBILE)
-    bool onAppPauseEvent(gAppPauseEvent&);
+#if GLIST_ANDROID || GLIST_IOS || GLIST_WEB
+	bool onAppPauseEvent(gAppPauseEvent&);
     bool onAppResumeEvent(gAppResumeEvent&);
+#endif
+#if GLIST_ANDROID || GLIST_IOS
     bool onDeviceOrientationChangedEvent(gDeviceOrientationChangedEvent&);
     bool onTouchEvent(gTouchEvent&);
 #endif

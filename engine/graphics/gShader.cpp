@@ -222,7 +222,7 @@ std::unordered_map<std::string, std::string> gShader::generateDefines(ShaderType
 	} else if (type == ShaderType::GEOMETRY) {
 		map.insert(std::pair<std::string, std::string>("GEOMETRY", ""));
 	}
-#if defined(GLIST_MOBILE)
+#if defined(GLIST_OPENGLES)
 	map.insert(std::pair<std::string, std::string>("GLES", ""));
 #endif
 	int max_lights = GLIST_MAX_LIGHTS;

@@ -7,6 +7,8 @@
 
 #include "gAES.h"
 
+#ifndef EMSCRIPTEN
+
 gAES::gAES() {
 	unsigned char empty[] = { 0 };
 	initkey = empty;
@@ -103,3 +105,4 @@ void gAES::handleErrors(void) {
 	abort();
 }
 
+#endif

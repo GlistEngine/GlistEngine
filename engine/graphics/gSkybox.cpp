@@ -46,7 +46,7 @@ unsigned int gSkybox::load(std::vector<std::string>& fullPaths) {
 	skymapslot = GL_TEXTURE0;
 	skymapint = 0;
 
-	renderer->checkEnableCubeMap4Android();
+	renderer->enableCubeMap();
 
 	id = renderer->createTextures();
 	renderer->bindSkyTexture(id, skymapslot);
@@ -76,7 +76,7 @@ void gSkybox::loadSkybox(gImage* images) {
 	skymapslot = GL_TEXTURE0;
 	skymapint = 0;
 
-	renderer->enableCubeMapSeemless();
+	renderer->enableCubeMap();
 
 	id = renderer->createTextures();
 	renderer->bindSkyTexture(id, skymapslot);
@@ -101,7 +101,7 @@ void gSkybox::loadDataSkybox(std::string *data, int width, int height) {
 	skymapslot = GL_TEXTURE0;
 	skymapint = 0;
 
-	renderer->enableCubeMapSeemless();
+	renderer->enableCubeMap();
 
 	id = renderer->createTextures();
 	renderer->bindSkyTexture(id, skymapslot);
@@ -134,7 +134,7 @@ unsigned int gSkybox::loadEquirectangular(const std::string& fullPath) {
 //	glGenTextures(1, &id);
 //	glBindTexture(GL_TEXTURE_CUBE_MAP, id);
 
-	renderer->enableCubeMapSeemless();
+	renderer->enableCubeMap();
 
 	equirectangularToCubemapShader = renderer->getEquirectangularShader();
 
