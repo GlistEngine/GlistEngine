@@ -10,7 +10,7 @@
 
 #include "gSound.h"
 
-// gFmodSound inherits from gSound. ıt is a drop-in replacement for gFmodSound.
+// gFmodSound inherits from gSound. it is a drop-in replacement for gFmodSound.
 // Only here for backwards compatability, you can consider this is an alias type.
 class gFmodSound : public gSound {
 public:
