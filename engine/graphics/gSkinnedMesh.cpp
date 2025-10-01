@@ -123,6 +123,9 @@ void gSkinnedMesh::resizeVertexAnimationData(int animationNum, int frameNum, int
 		vboframe.resize(animationNum);
 		for (auto& animVbos : vboframe) {
 			animVbos.resize(frameNum);
+			for (size_t i = 0; i < animVbos.size(); i++) {
+				animVbos[i] = std::make_unique<gVbo>();
+			}
 		}
 	}
 }

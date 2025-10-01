@@ -75,7 +75,7 @@ void gMesh::setVertices(const std::vector<gVertex>& vertices) {
 
 void gMesh::setVertices(std::shared_ptr<std::vector<gVertex>> vertices, std::shared_ptr<std::vector<gIndex>> indices) {
 	G_PROFILE_ZONE_SCOPED_N("gModel::setVertices()");
-	bool resetinitialboundingbox = this->vertices->size() != vertices->size() || this->indices->size() != indices->size();
+	bool resetinitialboundingbox = (!this->vertices || this->vertices->size() != vertices->size()) || (!this->indices || this->indices->size() != indices->size());
 	this->vertices = vertices;
 	this->indices = indices;
 	vbo->setVertexData(vertices->data(), sizeof(gVertex), vertices->size());
@@ -90,7 +90,7 @@ void gMesh::setVertices(std::shared_ptr<std::vector<gVertex>> vertices, std::sha
 
 void gMesh::setVertices(std::shared_ptr<std::vector<gVertex>> vertices) {
 	G_PROFILE_ZONE_SCOPED_N("gModel::setVertices()");
-	bool resetinitialboundingbox = this->vertices->size() != vertices->size();
+	bool resetinitialboundingbox = !this->vertices || this->vertices->size() != vertices->size();
 	this->vertices = vertices;
 	vbo->setVertexData(vertices->data(), sizeof(gVertex), vertices->size());
 	if (resetinitialboundingbox) {
