@@ -4,6 +4,7 @@ var classgAppManager =
     [ "~gAppManager", "classgAppManager.html#a4cc20b21f0caee8139e792aad8a3d8c4", null ],
     [ "callEvent", "classgAppManager.html#a1b194d1d7f4f1cc97c67473a5e8b1373", null ],
     [ "disableVsync", "classgAppManager.html#afed9d41c6aa9268605f208aa06207aef", null ],
+    [ "emscriptenLoop", "classgAppManager.html#adbd84272ec7c2ebcebf120825a0ad8c2", null ],
     [ "enableVsync", "classgAppManager.html#a542ffc28b86ef4acd5921b16a5a37255", null ],
     [ "getANSILocale", "classgAppManager.html#a1ca0a6274eb7c5e236e54e9baa3b601a", null ],
     [ "getAppName", "classgAppManager.html#a80439670ef5ad9a58d8feb7a3010b2af", null ],

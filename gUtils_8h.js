@@ -25,6 +25,7 @@ var gUtils_8h =
     [ "gDisableLogging", "gUtils_8h.html#ad2161baa188e15f33441b176830db027", null ],
     [ "gEnableLogging", "gUtils_8h.html#a9d05ef43c3bede60bf28cd44e8b5a5b5", null ],
     [ "gEncodeBase64", "gUtils_8h.html#ad69032ffae2da4a7748563f1a1cd42c8", null ],
+    [ "gFlipImageDataVertically", "gUtils_8h.html#a33712aa7f449750b3f0db7406c8526b4", null ],
     [ "gGetDay", "gUtils_8h.html#aeaca45855ab7131fc82243d8a590aa85", null ],
     [ "gGetHours", "gUtils_8h.html#a3b454c86389d1a25a69d0be868ffdcf4", null ],
     [ "gGetLocale", "gUtils_8h.html#ab610043e9ff49ddd15be745b10707532", null ],

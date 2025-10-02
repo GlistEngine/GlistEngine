@@ -108,34 +108,37 @@ $(document).ready(function(){initNavTree('gAES_8h_source.html',''); initResizabl
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#ifndef UTILS_GAES_H_</span></div>
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#define UTILS_GAES_H_</span></div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span> </div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &lt;openssl/conf.h&gt;</span></div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &lt;openssl/evp.h&gt;</span></div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &lt;openssl/err.h&gt;</span></div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#include &lt;openssl/md5.h&gt;</span></div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#include &quot;<a class="code" href="gObject_8h.html">gObject.h</a>&quot;</span></div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span> </div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#ifndef EMSCRIPTEN</span></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &lt;openssl/conf.h&gt;</span></div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &lt;openssl/evp.h&gt;</span></div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#include &lt;openssl/err.h&gt;</span></div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#include &lt;openssl/md5.h&gt;</span></div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="preprocessor">#include &quot;<a class="code" href="gObject_8h.html">gObject.h</a>&quot;</span></div>
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span> </div>
-<div class="foldopen" id="foldopen00018" data-start="{" data-end="};">
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno"><a class="line" href="classgAES.html">   18</a></span><span class="keyword">class </span><a class="code hl_class" href="classgAES.html">gAES</a> : <span class="keyword">public</span> <a class="code hl_class" href="classgObject.html">gObject</a> {</div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno"><a class="line" href="classgAES.html#aabbfae6363fa61ffe391dbe8cc30c72c">   20</a></span>    <a class="code hl_function" href="classgAES.html#aabbfae6363fa61ffe391dbe8cc30c72c">gAES</a>();</div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno"><a class="line" href="classgAES.html#a2237940d8be80aa9b76ed40bff975a16">   21</a></span>    <span class="keyword">virtual</span> <a class="code hl_function" href="classgAES.html#a2237940d8be80aa9b76ed40bff975a16">~gAES</a>();</div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span> </div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno"><a class="line" href="classgAES.html#aea4c82db3991ce9bf0fad425154615df">   23</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classgAES.html#aea4c82db3991ce9bf0fad425154615df">initialize</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">char</span>* initKey, <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span>* initVector);</div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span> </div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno"><a class="line" href="classgAES.html#a72c2d2e9a04bec87a59f64fee5bb7ce3">   25</a></span>    std::string <a class="code hl_function" href="classgAES.html#a72c2d2e9a04bec87a59f64fee5bb7ce3">encrypt</a>(std::string plainText); <span class="comment">//AES-256</span></div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno"><a class="line" href="classgAES.html#a6d2f50f6b154c562c5e8b2d639d3d3f9">   26</a></span>    std::string <a class="code hl_function" href="classgAES.html#a6d2f50f6b154c562c5e8b2d639d3d3f9">decrypt</a>(std::string cipherText); <span class="comment">//AES-256</span></div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno"><a class="line" href="classgAES.html#af723df28d0cb797c6e9c4b63e733ceb1">   28</a></span>    <span class="keyword">static</span> std::string <a class="code hl_function" href="classgAES.html#af723df28d0cb797c6e9c4b63e733ceb1">encodeMD5</a>(std::string plainText); <span class="comment">//MD5</span></div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>    <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> *initkey, *initvector;</div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>    <span class="keywordtype">void</span> handleErrors(<span class="keywordtype">void</span>);</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>    <span class="keywordtype">void</span> clean();</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>};</div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span> </div>
+<div class="foldopen" id="foldopen00019" data-start="{" data-end="};">
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno"><a class="line" href="classgAES.html">   19</a></span><span class="keyword">class </span><a class="code hl_class" href="classgAES.html">gAES</a> : <span class="keyword">public</span> <a class="code hl_class" href="classgObject.html">gObject</a> {</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno"><a class="line" href="classgAES.html#aabbfae6363fa61ffe391dbe8cc30c72c">   21</a></span>    <a class="code hl_function" href="classgAES.html#aabbfae6363fa61ffe391dbe8cc30c72c">gAES</a>();</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno"><a class="line" href="classgAES.html#a2237940d8be80aa9b76ed40bff975a16">   22</a></span>    <span class="keyword">virtual</span> <a class="code hl_function" href="classgAES.html#a2237940d8be80aa9b76ed40bff975a16">~gAES</a>();</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno"><a class="line" href="classgAES.html#aea4c82db3991ce9bf0fad425154615df">   24</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classgAES.html#aea4c82db3991ce9bf0fad425154615df">initialize</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">char</span>* initKey, <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span>* initVector);</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno"><a class="line" href="classgAES.html#a72c2d2e9a04bec87a59f64fee5bb7ce3">   26</a></span>    std::string <a class="code hl_function" href="classgAES.html#a72c2d2e9a04bec87a59f64fee5bb7ce3">encrypt</a>(std::string plainText); <span class="comment">//AES-256</span></div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno"><a class="line" href="classgAES.html#a6d2f50f6b154c562c5e8b2d639d3d3f9">   27</a></span>    std::string <a class="code hl_function" href="classgAES.html#a6d2f50f6b154c562c5e8b2d639d3d3f9">decrypt</a>(std::string cipherText); <span class="comment">//AES-256</span></div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span> </div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno"><a class="line" href="classgAES.html#af723df28d0cb797c6e9c4b63e733ceb1">   29</a></span>    <span class="keyword">static</span> std::string <a class="code hl_function" href="classgAES.html#af723df28d0cb797c6e9c4b63e733ceb1">encodeMD5</a>(std::string plainText); <span class="comment">//MD5</span></div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span> </div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>    <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> *initkey, *initvector;</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>    <span class="keywordtype">void</span> handleErrors(<span class="keywordtype">void</span>);</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    <span class="keywordtype">void</span> clean();</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>};</div>
 </div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span><span class="preprocessor">#endif </span><span class="comment">/* UTILS_GAES_H_ */</span><span class="preprocessor"></span></div>
-<div class="ttc" id="aclassgAES_html"><div class="ttname"><a href="classgAES.html">gAES</a></div><div class="ttdef"><b>Definition</b> gAES.h:18</div></div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span> </div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="preprocessor">#endif </span><span class="comment">/* UTILS_GAES_H_ */</span><span class="preprocessor"></span></div>
+<div class="ttc" id="aclassgAES_html"><div class="ttname"><a href="classgAES.html">gAES</a></div><div class="ttdef"><b>Definition</b> gAES.h:19</div></div>
 <div class="ttc" id="aclassgAES_html_a2237940d8be80aa9b76ed40bff975a16"><div class="ttname"><a href="classgAES.html#a2237940d8be80aa9b76ed40bff975a16">gAES::~gAES</a></div><div class="ttdeci">virtual ~gAES()</div></div>
 <div class="ttc" id="aclassgAES_html_a6d2f50f6b154c562c5e8b2d639d3d3f9"><div class="ttname"><a href="classgAES.html#a6d2f50f6b154c562c5e8b2d639d3d3f9">gAES::decrypt</a></div><div class="ttdeci">std::string decrypt(std::string cipherText)</div></div>
 <div class="ttc" id="aclassgAES_html_a72c2d2e9a04bec87a59f64fee5bb7ce3"><div class="ttname"><a href="classgAES.html#a72c2d2e9a04bec87a59f64fee5bb7ce3">gAES::encrypt</a></div><div class="ttdeci">std::string encrypt(std::string plainText)</div></div>

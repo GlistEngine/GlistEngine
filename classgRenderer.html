@@ -601,10 +601,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a1292461ab1905064496584a5925138d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8e7cb58db87e06ee1bb34339a63c60b7" id="r_a8e7cb58db87e06ee1bb34339a63c60b7"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a8e7cb58db87e06ee1bb34339a63c60b7">createQuad</a> (GLuint &amp;inQuadVAO, GLuint &amp;inQuadVBO)=0</td></tr>
 <tr class="separator:a8e7cb58db87e06ee1bb34339a63c60b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a21ed2da8131ad521f6ebb062307b7291" id="r_a21ed2da8131ad521f6ebb062307b7291"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a21ed2da8131ad521f6ebb062307b7291">enableCubeMapSeemless</a> ()=0</td></tr>
-<tr class="separator:a21ed2da8131ad521f6ebb062307b7291"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4c6092f77c49478553b4ae8aca852ccb" id="r_a4c6092f77c49478553b4ae8aca852ccb"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a4c6092f77c49478553b4ae8aca852ccb">checkEnableCubeMap4Android</a> ()=0</td></tr>
-<tr class="separator:a4c6092f77c49478553b4ae8aca852ccb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a33f8f20362b379379eea5f9b134f80b7" id="r_a33f8f20362b379379eea5f9b134f80b7"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a33f8f20362b379379eea5f9b134f80b7">enableCubeMap</a> ()=0</td></tr>
+<tr class="separator:a33f8f20362b379379eea5f9b134f80b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6693710cf4e8697216f1443432b4ca78" id="r_a6693710cf4e8697216f1443432b4ca78"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a6693710cf4e8697216f1443432b4ca78">pushMatrix</a> ()=0</td></tr>
 <tr class="separator:a6693710cf4e8697216f1443432b4ca78"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a48d8fabc173ce59e31b73d671f4e3630" id="r_a48d8fabc173ce59e31b73d671f4e3630"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a48d8fabc173ce59e31b73d671f4e3630">popMatrix</a> ()=0</td></tr>
@@ -1626,33 +1624,6 @@ Friends</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Implemented in <a class="el" href="classgGLRenderEngine.html#a86569fa5141ddc38f206158bf9846d0a">gGLRenderEngine</a>.</p>
-
-</div>
-</div>
-<a id="a4c6092f77c49478553b4ae8aca852ccb" name="a4c6092f77c49478553b4ae8aca852ccb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4c6092f77c49478553b4ae8aca852ccb">&#9670;&#160;</a></span>checkEnableCubeMap4Android()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual void gRenderer::checkEnableCubeMap4Android </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a7d0f09f1c9cd9392d99374752d6e931c">gGLRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -4119,8 +4090,8 @@ Friends</h2></td></tr>
 
 </div>
 </div>
-<a id="a21ed2da8131ad521f6ebb062307b7291" name="a21ed2da8131ad521f6ebb062307b7291"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a21ed2da8131ad521f6ebb062307b7291">&#9670;&#160;</a></span>enableCubeMapSeemless()</h2>
+<a id="a33f8f20362b379379eea5f9b134f80b7" name="a33f8f20362b379379eea5f9b134f80b7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a33f8f20362b379379eea5f9b134f80b7">&#9670;&#160;</a></span>enableCubeMap()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -4129,7 +4100,7 @@ Friends</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual void gRenderer::enableCubeMapSeemless </td>
+          <td class="memname">virtual void gRenderer::enableCubeMap </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -4142,7 +4113,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a9b6c3fce125909b57baf81d09771c5a0">gGLRenderEngine</a>.</p>
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#ac7fb3583a4ec7d6233d2ae0a8a098bf2">gGLRenderEngine</a>.</p>
 
 </div>
 </div>

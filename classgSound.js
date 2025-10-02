@@ -1,7 +1,7 @@
 var classgSound =
 [
     [ "gSound", "classgSound.html#a988b45f1e4d482fd80e8f9747c5224d9", null ],
-    [ "~gSound", "classgSound.html#a60f589a6d39c6ac75a8d3861a9bcebab", null ],
+    [ "~gSound", "classgSound.html#a179cb97182a67f0ade83890075722c60", null ],
     [ "close", "classgSound.html#ac5222797596a89843bf5a272b68d89d1", null ],
     [ "getDuration", "classgSound.html#a98ac99fc5cbf53a388719e612fb96aca", null ],
     [ "getLoopType", "classgSound.html#a44ed1699e6769f03fcd58f9400e40b77", null ],
