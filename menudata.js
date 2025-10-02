@@ -168,8 +168,8 @@ var menudata={children:[
 {text:"c",url:"globals_defs_c.html#index_c"},
 {text:"e",url:"globals_defs_e.html#index_e"},
 {text:"g",url:"globals_defs_g.html#index_g"},
+{text:"l",url:"globals_defs_l.html#index_l"},
 {text:"m",url:"globals_defs_m.html#index_m"},
 {text:"p",url:"globals_defs_p.html#index_p"},
-{text:"s",url:"globals_defs_s.html#index_s"},
 {text:"t",url:"globals_defs_t.html#index_t"},
 {text:"u",url:"globals_defs_u.html#index_u"}]}]}]}]}

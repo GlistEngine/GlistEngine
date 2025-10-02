@@ -102,81 +102,150 @@ $(document).ready(function(){initNavTree('tinyfiledialogs_8c.html',''); initResi
 <code>#include &lt;string.h&gt;</code><br />
 <code>#include &lt;ctype.h&gt;</code><br />
 <code>#include &lt;sys/stat.h&gt;</code><br />
-<code>#include &quot;<a class="el" href="tinyfiledialogs_8h_source.html">tinyfiledialogs.h</a>&quot;</code><br />
 <code>#include &lt;limits.h&gt;</code><br />
 <code>#include &lt;unistd.h&gt;</code><br />
 <code>#include &lt;dirent.h&gt;</code><br />
 <code>#include &lt;termios.h&gt;</code><br />
 <code>#include &lt;sys/utsname.h&gt;</code><br />
+<code>#include &lt;signal.h&gt;</code><br />
+<code>#include &quot;<a class="el" href="tinyfiledialogs_8h_source.html">tinyfiledialogs.h</a>&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for tinyfiledialogs.c:</div>
 <div class="dyncontent">
 <div class="center"><img src="tinyfiledialogs_8c__incl.png" border="0" usemap="#atinyfiledialogs_8c" alt=""/></div>
 <map name="atinyfiledialogs_8c" id="atinyfiledialogs_8c">
-<area shape="rect" title=" " alt="" coords="492,5,617,31"/>
+<area shape="rect" title=" " alt="" coords="512,5,637,31"/>
 <area shape="rect" title=" " alt="" coords="5,79,72,104"/>
-<area shape="poly" title=" " alt="" coords="492,27,313,47,86,81,85,76,313,42,492,22"/>
+<area shape="poly" title=" " alt="" coords="512,27,325,46,208,62,86,81,85,76,207,56,325,41,512,22"/>
 <area shape="rect" title=" " alt="" coords="97,79,167,104"/>
-<area shape="poly" title=" " alt="" coords="492,30,353,51,181,81,180,76,353,45,491,25"/>
+<area shape="poly" title=" " alt="" coords="512,30,365,50,181,81,180,76,364,45,512,24"/>
 <area shape="rect" title=" " alt="" coords="191,79,262,104"/>
-<area shape="poly" title=" " alt="" coords="499,33,276,81,275,76,497,28"/>
+<area shape="poly" title=" " alt="" coords="513,33,276,81,275,76,512,28"/>
 <area shape="rect" title=" " alt="" coords="286,79,357,104"/>
-<area shape="poly" title=" " alt="" coords="518,33,370,78,369,73,516,28"/>
+<area shape="poly" title=" " alt="" coords="535,33,371,79,370,74,533,28"/>
 <area shape="rect" title=" " alt="" coords="381,79,467,104"/>
-<area shape="poly" title=" " alt="" coords="535,33,458,74,456,70,532,28"/>
-<area shape="rect" href="tinyfiledialogs_8h.html" title=" " alt="" coords="491,79,618,104"/>
-<area shape="poly" title=" " alt="" coords="557,31,557,65,552,65,552,31"/>
-<area shape="rect" title=" " alt="" coords="642,79,713,104"/>
-<area shape="poly" title=" " alt="" coords="576,28,647,69,644,74,573,33"/>
-<area shape="rect" title=" " alt="" coords="737,79,812,104"/>
-<area shape="poly" title=" " alt="" coords="591,28,727,72,726,77,589,33"/>
-<area shape="rect" title=" " alt="" coords="836,79,908,104"/>
-<area shape="poly" title=" " alt="" coords="608,28,823,76,822,81,607,33"/>
-<area shape="rect" title=" " alt="" coords="933,79,1017,104"/>
-<area shape="poly" title=" " alt="" coords="618,26,920,76,919,81,617,31"/>
-<area shape="rect" title=" " alt="" coords="1041,79,1159,104"/>
-<area shape="poly" title=" " alt="" coords="618,24,1028,76,1027,81,617,29"/>
+<area shape="poly" title=" " alt="" coords="552,33,462,75,460,70,549,28"/>
+<area shape="rect" title=" " alt="" coords="491,79,562,104"/>
+<area shape="poly" title=" " alt="" coords="569,33,544,69,540,66,565,30"/>
+<area shape="rect" title=" " alt="" coords="587,79,661,104"/>
+<area shape="poly" title=" " alt="" coords="585,29,610,66,606,69,581,33"/>
+<area shape="rect" title=" " alt="" coords="685,79,757,104"/>
+<area shape="poly" title=" " alt="" coords="599,28,686,70,684,75,597,33"/>
+<area shape="rect" title=" " alt="" coords="782,79,866,104"/>
+<area shape="poly" title=" " alt="" coords="615,28,771,72,770,77,614,33"/>
+<area shape="rect" title=" " alt="" coords="891,79,1008,104"/>
+<area shape="poly" title=" " alt="" coords="635,28,878,74,877,79,634,33"/>
+<area shape="rect" title=" " alt="" coords="1033,79,1106,104"/>
+<area shape="poly" title=" " alt="" coords="638,23,806,43,1019,76,1018,81,805,49,637,28"/>
+<area shape="rect" href="tinyfiledialogs_8h.html" title=" " alt="" coords="1130,79,1257,104"/>
+<area shape="poly" title=" " alt="" coords="638,23,846,44,1117,76,1116,81,846,49,637,28"/>
 </map>
 </div>
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
 Macros</h2></td></tr>
-<tr class="memitem:a69eb17477fd6f6af2c9ca2d5f4c7df3c" id="r_a69eb17477fd6f6af2c9ca2d5f4c7df3c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tinyfiledialogs_8c.html#a69eb17477fd6f6af2c9ca2d5f4c7df3c">SLASH</a>&#160;&#160;&#160;&quot;/&quot;</td></tr>
-<tr class="separator:a69eb17477fd6f6af2c9ca2d5f4c7df3c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a460e8b223e71d9e54e6e6d288a865156" id="r_a460e8b223e71d9e54e6e6d288a865156"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tinyfiledialogs_8c.html#a460e8b223e71d9e54e6e6d288a865156">TINYFD_SLASH</a>&#160;&#160;&#160;&quot;/&quot;</td></tr>
+<tr class="separator:a460e8b223e71d9e54e6e6d288a865156"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a03da67b2aa763d88422ba0f6aaa6d29b" id="r_a03da67b2aa763d88422ba0f6aaa6d29b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tinyfiledialogs_8c.html#a03da67b2aa763d88422ba0f6aaa6d29b">MAX_PATH_OR_CMD</a>&#160;&#160;&#160;1024 /* _MAX_PATH or MAX_PATH */</td></tr>
 <tr class="separator:a03da67b2aa763d88422ba0f6aaa6d29b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0612543f1a6828a8b0008da041c06f6a" id="r_a0612543f1a6828a8b0008da041c06f6a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tinyfiledialogs_8c.html#a0612543f1a6828a8b0008da041c06f6a">MAX_MULTIPLE_FILES</a>&#160;&#160;&#160;32</td></tr>
+<tr class="memitem:a0612543f1a6828a8b0008da041c06f6a" id="r_a0612543f1a6828a8b0008da041c06f6a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tinyfiledialogs_8c.html#a0612543f1a6828a8b0008da041c06f6a">MAX_MULTIPLE_FILES</a>&#160;&#160;&#160;1024</td></tr>
 <tr class="separator:a0612543f1a6828a8b0008da041c06f6a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a790242f2501dc16dd67d87533154258c" id="r_a790242f2501dc16dd67d87533154258c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tinyfiledialogs_8c.html#a790242f2501dc16dd67d87533154258c">LOW_MULTIPLE_FILES</a>&#160;&#160;&#160;32</td></tr>
+<tr class="separator:a790242f2501dc16dd67d87533154258c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a5feb942018768e1856c35f4def7b3f76" id="r_a5feb942018768e1856c35f4def7b3f76"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tinyfiledialogs_8c.html#a5feb942018768e1856c35f4def7b3f76">isDialogVersionBetter09b</a> ()</td></tr>
-<tr class="separator:a5feb942018768e1856c35f4def7b3f76"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae02051d7645e0674b53cea5b134e0c8e" id="r_ae02051d7645e0674b53cea5b134e0c8e"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tinyfiledialogs_8c.html#ae02051d7645e0674b53cea5b134e0c8e">tinyfd_messageBox</a> (char const *const aTitle, char const *const aMessage, char const *const aDialogType, char const *const aIconType, int const aDefaultButton)</td></tr>
-<tr class="separator:ae02051d7645e0674b53cea5b134e0c8e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5afa8a97f6ddd7e52b2588b7da762c96" id="r_a5afa8a97f6ddd7e52b2588b7da762c96"><td class="memItemLeft" align="right" valign="top">char const *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tinyfiledialogs_8c.html#a5afa8a97f6ddd7e52b2588b7da762c96">tinyfd_inputBox</a> (char const *const aTitle, char const *const aMessage, char const *const aDefaultInput)</td></tr>
-<tr class="separator:a5afa8a97f6ddd7e52b2588b7da762c96"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a11f713198099f1b3314e22a9016bf8e1" id="r_a11f713198099f1b3314e22a9016bf8e1"><td class="memItemLeft" align="right" valign="top">char const *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tinyfiledialogs_8c.html#a11f713198099f1b3314e22a9016bf8e1">tinyfd_saveFileDialog</a> (char const *const aTitle, char const *const aDefaultPathAndFile, int const aNumOfFilterPatterns, char const *const *const aFilterPatterns, char const *const aSingleFilterDescription)</td></tr>
-<tr class="separator:a11f713198099f1b3314e22a9016bf8e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9487db42bbeb2d7f00d44675d8b75685" id="r_a9487db42bbeb2d7f00d44675d8b75685"><td class="memItemLeft" align="right" valign="top">char const *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tinyfiledialogs_8c.html#a9487db42bbeb2d7f00d44675d8b75685">tinyfd_openFileDialog</a> (char const *const aTitle, char const *const aDefaultPathAndFile, int const aNumOfFilterPatterns, char const *const *const aFilterPatterns, char const *const aSingleFilterDescription, int const aAllowMultipleSelects)</td></tr>
-<tr class="separator:a9487db42bbeb2d7f00d44675d8b75685"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a00e569a09b0e129db7284d41ea14b003" id="r_a00e569a09b0e129db7284d41ea14b003"><td class="memItemLeft" align="right" valign="top">char const *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tinyfiledialogs_8c.html#a00e569a09b0e129db7284d41ea14b003">tinyfd_selectFolderDialog</a> (char const *const aTitle, char const *const aDefaultPath)</td></tr>
-<tr class="separator:a00e569a09b0e129db7284d41ea14b003"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3e8ae41e1c98e639f9d01bfc98d23faa" id="r_a3e8ae41e1c98e639f9d01bfc98d23faa"><td class="memItemLeft" align="right" valign="top">char const *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tinyfiledialogs_8c.html#a3e8ae41e1c98e639f9d01bfc98d23faa">tinyfd_colorChooser</a> (char const *const aTitle, char const *const aDefaultHexRGB, unsigned char const aDefaultRGB[3], unsigned char aoResultRGB[3])</td></tr>
-<tr class="separator:a3e8ae41e1c98e639f9d01bfc98d23faa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae8130bc9aae21548447848c2fca1f822" id="r_ae8130bc9aae21548447848c2fca1f822"><td class="memItemLeft" align="right" valign="top">char const *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tinyfiledialogs_8c.html#ae8130bc9aae21548447848c2fca1f822">tinyfd_arrayDialog</a> (char const *const aTitle, int const aNumOfColumns, char const *const *const aColumns, int const aNumOfRows, char const *const *const aCells)</td></tr>
-<tr class="separator:ae8130bc9aae21548447848c2fca1f822"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a803e4bfce6989645d3678292083340c0" id="r_a803e4bfce6989645d3678292083340c0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tinyfiledialogs_8c.html#a803e4bfce6989645d3678292083340c0">tfd_replaceSubStr</a> (char const *aSource, char const *aOldSubStr, char const *aNewSubStr, char *aoDestination)</td></tr>
+<tr class="separator:a803e4bfce6989645d3678292083340c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a789b9cfa9fb2cf888db0246f9c2dca9a" id="r_a789b9cfa9fb2cf888db0246f9c2dca9a"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tinyfiledialogs_8c.html#a789b9cfa9fb2cf888db0246f9c2dca9a">tfd_quoteDetected</a> (char const *aString)</td></tr>
+<tr class="separator:a789b9cfa9fb2cf888db0246f9c2dca9a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac1d6b68adfaeed31d60ec4c1f7b694d4" id="r_ac1d6b68adfaeed31d60ec4c1f7b694d4"><td class="memItemLeft" align="right" valign="top">char const *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tinyfiledialogs_8c.html#ac1d6b68adfaeed31d60ec4c1f7b694d4">tinyfd_getGlobalChar</a> (char const *aCharVariableName)</td></tr>
+<tr class="separator:ac1d6b68adfaeed31d60ec4c1f7b694d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2369e180c58a73d4861bb0130cd82dab" id="r_a2369e180c58a73d4861bb0130cd82dab"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tinyfiledialogs_8c.html#a2369e180c58a73d4861bb0130cd82dab">tinyfd_getGlobalInt</a> (char const *aIntVariableName)</td></tr>
+<tr class="separator:a2369e180c58a73d4861bb0130cd82dab"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1e4d4275e2731ee2c0939ffd711446cd" id="r_a1e4d4275e2731ee2c0939ffd711446cd"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tinyfiledialogs_8c.html#a1e4d4275e2731ee2c0939ffd711446cd">tinyfd_setGlobalInt</a> (char const *aIntVariableName, int aValue)</td></tr>
+<tr class="separator:a1e4d4275e2731ee2c0939ffd711446cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6a75d29f7cc1a6606e1b709fb2d13756" id="r_a6a75d29f7cc1a6606e1b709fb2d13756"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tinyfiledialogs_8c.html#a6a75d29f7cc1a6606e1b709fb2d13756">tfd_isDarwin</a> (void)</td></tr>
+<tr class="separator:a6a75d29f7cc1a6606e1b709fb2d13756"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a47f8aa977cd899f2e44c677491cb1a5d" id="r_a47f8aa977cd899f2e44c677491cb1a5d"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tinyfiledialogs_8c.html#a47f8aa977cd899f2e44c677491cb1a5d">isDialogVersionBetter09b</a> (void)</td></tr>
+<tr class="separator:a47f8aa977cd899f2e44c677491cb1a5d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a207f7a0539c4f1488d49a4f05a0cdb73" id="r_a207f7a0539c4f1488d49a4f05a0cdb73"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tinyfiledialogs_8c.html#a207f7a0539c4f1488d49a4f05a0cdb73">tfd_qarmaPresent</a> (void)</td></tr>
+<tr class="separator:a207f7a0539c4f1488d49a4f05a0cdb73"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae11ed1c0d8ae0c30f5453048d1cdf7d0" id="r_ae11ed1c0d8ae0c30f5453048d1cdf7d0"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tinyfiledialogs_8c.html#ae11ed1c0d8ae0c30f5453048d1cdf7d0">tfd_matedialogPresent</a> (void)</td></tr>
+<tr class="separator:ae11ed1c0d8ae0c30f5453048d1cdf7d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0f7ff3f21aee78c73276da8eba075edd" id="r_a0f7ff3f21aee78c73276da8eba075edd"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tinyfiledialogs_8c.html#a0f7ff3f21aee78c73276da8eba075edd">tfd_shellementaryPresent</a> (void)</td></tr>
+<tr class="separator:a0f7ff3f21aee78c73276da8eba075edd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a15fdc38cfcc89302704d4554221c85f7" id="r_a15fdc38cfcc89302704d4554221c85f7"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tinyfiledialogs_8c.html#a15fdc38cfcc89302704d4554221c85f7">tfd_xpropPresent</a> (void)</td></tr>
+<tr class="separator:a15fdc38cfcc89302704d4554221c85f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1ae8f7bd22b5c7d457771295e9a04cc5" id="r_a1ae8f7bd22b5c7d457771295e9a04cc5"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tinyfiledialogs_8c.html#a1ae8f7bd22b5c7d457771295e9a04cc5">tfd_zenityPresent</a> (void)</td></tr>
+<tr class="separator:a1ae8f7bd22b5c7d457771295e9a04cc5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5702c782c083fb90757b8bb6a95de325" id="r_a5702c782c083fb90757b8bb6a95de325"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tinyfiledialogs_8c.html#a5702c782c083fb90757b8bb6a95de325">tfd_yadPresent</a> (void)</td></tr>
+<tr class="separator:a5702c782c083fb90757b8bb6a95de325"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aca140f9622c8b2ac27a1a7b93d426cf6" id="r_aca140f9622c8b2ac27a1a7b93d426cf6"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tinyfiledialogs_8c.html#aca140f9622c8b2ac27a1a7b93d426cf6">tfd_zenity3Present</a> (void)</td></tr>
+<tr class="separator:aca140f9622c8b2ac27a1a7b93d426cf6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a77c4dde5df84387f5e8764f33bf04ba3" id="r_a77c4dde5df84387f5e8764f33bf04ba3"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tinyfiledialogs_8c.html#a77c4dde5df84387f5e8764f33bf04ba3">tfd_kdialogPresent</a> (void)</td></tr>
+<tr class="separator:a77c4dde5df84387f5e8764f33bf04ba3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0c19cd62f9b9ff0f7def8971d2bc3f9d" id="r_a0c19cd62f9b9ff0f7def8971d2bc3f9d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tinyfiledialogs_8c.html#a0c19cd62f9b9ff0f7def8971d2bc3f9d">tinyfd_beep</a> (void)</td></tr>
+<tr class="separator:a0c19cd62f9b9ff0f7def8971d2bc3f9d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac5082e6c1f4693110f1703664b3fa9fc" id="r_ac5082e6c1f4693110f1703664b3fa9fc"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tinyfiledialogs_8c.html#ac5082e6c1f4693110f1703664b3fa9fc">tinyfd_messageBox</a> (char const *aTitle, char const *aMessage, char const *aDialogType, char const *aIconType, int aDefaultButton)</td></tr>
+<tr class="separator:ac5082e6c1f4693110f1703664b3fa9fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad91628b8a0640682241aa189f03a30ba" id="r_ad91628b8a0640682241aa189f03a30ba"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tinyfiledialogs_8c.html#ad91628b8a0640682241aa189f03a30ba">tinyfd_notifyPopup</a> (char const *aTitle, char const *aMessage, char const *aIconType)</td></tr>
+<tr class="separator:ad91628b8a0640682241aa189f03a30ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa2db23282c31c40c4c12b4847b92659b" id="r_aa2db23282c31c40c4c12b4847b92659b"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tinyfiledialogs_8c.html#aa2db23282c31c40c4c12b4847b92659b">tinyfd_inputBox</a> (char const *aTitle, char const *aMessage, char const *aDefaultInput)</td></tr>
+<tr class="separator:aa2db23282c31c40c4c12b4847b92659b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afab9123f9e3163d969caecc912c0dd05" id="r_afab9123f9e3163d969caecc912c0dd05"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tinyfiledialogs_8c.html#afab9123f9e3163d969caecc912c0dd05">tinyfd_saveFileDialog</a> (char const *aTitle, char const *aDefaultPathAndOrFile, int aNumOfFilterPatterns, char const *const *aFilterPatterns, char const *aSingleFilterDescription)</td></tr>
+<tr class="separator:afab9123f9e3163d969caecc912c0dd05"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae71462365057acd0bd3ab1e8a6879008" id="r_ae71462365057acd0bd3ab1e8a6879008"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tinyfiledialogs_8c.html#ae71462365057acd0bd3ab1e8a6879008">tinyfd_openFileDialog</a> (char const *aTitle, char const *aDefaultPathAndOrFile, int aNumOfFilterPatterns, char const *const *aFilterPatterns, char const *aSingleFilterDescription, int aAllowMultipleSelects)</td></tr>
+<tr class="separator:ae71462365057acd0bd3ab1e8a6879008"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a26568df53ae8a94f7ffbf5a267c9a6ae" id="r_a26568df53ae8a94f7ffbf5a267c9a6ae"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tinyfiledialogs_8c.html#a26568df53ae8a94f7ffbf5a267c9a6ae">tinyfd_selectFolderDialog</a> (char const *aTitle, char const *aDefaultPath)</td></tr>
+<tr class="separator:a26568df53ae8a94f7ffbf5a267c9a6ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa695aeb3e9421913447afe95e6521e7f" id="r_aa695aeb3e9421913447afe95e6521e7f"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tinyfiledialogs_8c.html#aa695aeb3e9421913447afe95e6521e7f">tinyfd_colorChooser</a> (char const *aTitle, char const *aDefaultHexRGB, unsigned char const aDefaultRGB[3], unsigned char aoResultRGB[3])</td></tr>
+<tr class="separator:aa695aeb3e9421913447afe95e6521e7f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa1a9656338b38479c1d5e2a1dde4ed9b" id="r_aa1a9656338b38479c1d5e2a1dde4ed9b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tinyfiledialogs_8c.html#aa1a9656338b38479c1d5e2a1dde4ed9b">tfd_messageBox</a> (char const *aTitle, char const *aMessage, char const *aDialogType, char const *aIconType, int *aiDefaultButton)</td></tr>
+<tr class="separator:aa1a9656338b38479c1d5e2a1dde4ed9b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aedce7bb7c648a3de1b5ae958748acea0" id="r_aedce7bb7c648a3de1b5ae958748acea0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tinyfiledialogs_8c.html#aedce7bb7c648a3de1b5ae958748acea0">tfd_inputBox</a> (char const *aTitle, char const *aMessage, char **aiDefaultInput)</td></tr>
+<tr class="separator:aedce7bb7c648a3de1b5ae958748acea0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeeb17ea3ee23d36a7ab82d35592dfe67" id="r_aeeb17ea3ee23d36a7ab82d35592dfe67"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tinyfiledialogs_8c.html#aeeb17ea3ee23d36a7ab82d35592dfe67">tfd_saveFileDialog</a> (char const *aTitle, char **aiDefaultPathAndFile, int const *aNumOfFilterPatterns, char const *const *aFilterPatterns, char const *aSingleFilterDescription)</td></tr>
+<tr class="separator:aeeb17ea3ee23d36a7ab82d35592dfe67"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3fce7991af06249434ec2e2c3e6ce6cc" id="r_a3fce7991af06249434ec2e2c3e6ce6cc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tinyfiledialogs_8c.html#a3fce7991af06249434ec2e2c3e6ce6cc">tfd_openFileDialog</a> (char const *aTitle, char **aiDefaultPathAndFile, int const *aNumOfFilterPatterns, char const *const *aFilterPatterns, char const *aSingleFilterDescription, int const *aAllowMultipleSelects)</td></tr>
+<tr class="separator:a3fce7991af06249434ec2e2c3e6ce6cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4b0b3b0324df8080770064489cf73c14" id="r_a4b0b3b0324df8080770064489cf73c14"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tinyfiledialogs_8c.html#a4b0b3b0324df8080770064489cf73c14">tfd_selectFolderDialog</a> (char const *aTitle, char **aiDefaultPath)</td></tr>
+<tr class="separator:a4b0b3b0324df8080770064489cf73c14"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aedbcb03a5bb836db2a28ac787b00633f" id="r_aedbcb03a5bb836db2a28ac787b00633f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tinyfiledialogs_8c.html#aedbcb03a5bb836db2a28ac787b00633f">tfd_colorChooser</a> (char const *aTitle, char **aiDefaultHexRGB)</td></tr>
+<tr class="separator:aedbcb03a5bb836db2a28ac787b00633f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:ab96061de83b195bf847e44d164d6056e" id="r_ab96061de83b195bf847e44d164d6056e"><td class="memItemLeft" align="right" valign="top">char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tinyfiledialogs_8c.html#ab96061de83b195bf847e44d164d6056e">tinyfd_version</a> [8] = &quot;2.9.3&quot;</td></tr>
+<tr class="memitem:ab96061de83b195bf847e44d164d6056e" id="r_ab96061de83b195bf847e44d164d6056e"><td class="memItemLeft" align="right" valign="top">char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tinyfiledialogs_8c.html#ab96061de83b195bf847e44d164d6056e">tinyfd_version</a> [8] = &quot;3.20.1&quot;</td></tr>
 <tr class="separator:ab96061de83b195bf847e44d164d6056e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeedca8836f3872ca50ebfe723423b25d" id="r_aeedca8836f3872ca50ebfe723423b25d"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tinyfiledialogs_8c.html#aeedca8836f3872ca50ebfe723423b25d">tinyfd_verbose</a> = 0</td></tr>
+<tr class="separator:aeedca8836f3872ca50ebfe723423b25d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa3441498bf910ce05abb03d769782074" id="r_aa3441498bf910ce05abb03d769782074"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tinyfiledialogs_8c.html#aa3441498bf910ce05abb03d769782074">tinyfd_silent</a> = 1</td></tr>
+<tr class="separator:aa3441498bf910ce05abb03d769782074"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0b7e8db3c74f9830ad9ddcf5b0dee82f" id="r_a0b7e8db3c74f9830ad9ddcf5b0dee82f"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tinyfiledialogs_8c.html#a0b7e8db3c74f9830ad9ddcf5b0dee82f">tinyfd_allowCursesDialogs</a> = 0</td></tr>
+<tr class="separator:a0b7e8db3c74f9830ad9ddcf5b0dee82f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a570a95a1dce391ed29f7fc5861ecee69" id="r_a570a95a1dce391ed29f7fc5861ecee69"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tinyfiledialogs_8c.html#a570a95a1dce391ed29f7fc5861ecee69">tinyfd_forceConsole</a> = 0</td></tr>
 <tr class="separator:a570a95a1dce391ed29f7fc5861ecee69"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9b9a6af8ea75754b98c73455da469833" id="r_a9b9a6af8ea75754b98c73455da469833"><td class="memItemLeft" align="right" valign="top">char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tinyfiledialogs_8c.html#a9b9a6af8ea75754b98c73455da469833">tinyfd_response</a> [1024]</td></tr>
 <tr class="separator:a9b9a6af8ea75754b98c73455da469833"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4e0c55962cd5119defe2e4ab70440d27" id="r_a4e0c55962cd5119defe2e4ab70440d27"><td class="memItemLeft" align="right" valign="top">char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tinyfiledialogs_8c.html#a4e0c55962cd5119defe2e4ab70440d27">tinyfd_needs</a> []</td></tr>
+<tr class="separator:a4e0c55962cd5119defe2e4ab70440d27"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Macro Definition Documentation</h2>
+<a id="a790242f2501dc16dd67d87533154258c" name="a790242f2501dc16dd67d87533154258c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a790242f2501dc16dd67d87533154258c">&#9670;&#160;</a></span>LOW_MULTIPLE_FILES</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define LOW_MULTIPLE_FILES&#160;&#160;&#160;32</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a0612543f1a6828a8b0008da041c06f6a" name="a0612543f1a6828a8b0008da041c06f6a"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a0612543f1a6828a8b0008da041c06f6a">&#9670;&#160;</a></span>MAX_MULTIPLE_FILES</h2>
 
@@ -184,7 +253,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define MAX_MULTIPLE_FILES&#160;&#160;&#160;32</td>
+          <td class="memname">#define MAX_MULTIPLE_FILES&#160;&#160;&#160;1024</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -205,14 +274,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a69eb17477fd6f6af2c9ca2d5f4c7df3c" name="a69eb17477fd6f6af2c9ca2d5f4c7df3c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a69eb17477fd6f6af2c9ca2d5f4c7df3c">&#9670;&#160;</a></span>SLASH</h2>
+<a id="a460e8b223e71d9e54e6e6d288a865156" name="a460e8b223e71d9e54e6e6d288a865156"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a460e8b223e71d9e54e6e6d288a865156">&#9670;&#160;</a></span>TINYFD_SLASH</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define SLASH&#160;&#160;&#160;&quot;/&quot;</td>
+          <td class="memname">#define TINYFD_SLASH&#160;&#160;&#160;&quot;/&quot;</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -220,8 +289,8 @@ Variables</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="a5feb942018768e1856c35f4def7b3f76" name="a5feb942018768e1856c35f4def7b3f76"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5feb942018768e1856c35f4def7b3f76">&#9670;&#160;</a></span>isDialogVersionBetter09b()</h2>
+<a id="a47f8aa977cd899f2e44c677491cb1a5d" name="a47f8aa977cd899f2e44c677491cb1a5d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a47f8aa977cd899f2e44c677491cb1a5d">&#9670;&#160;</a></span>isDialogVersionBetter09b()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -229,6 +298,7 @@ Variables</h2></td></tr>
         <tr>
           <td class="memname">int isDialogVersionBetter09b </td>
           <td>(</td>
+          <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
@@ -237,41 +307,23 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="ae8130bc9aae21548447848c2fca1f822" name="ae8130bc9aae21548447848c2fca1f822"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae8130bc9aae21548447848c2fca1f822">&#9670;&#160;</a></span>tinyfd_arrayDialog()</h2>
+<a id="aedbcb03a5bb836db2a28ac787b00633f" name="aedbcb03a5bb836db2a28ac787b00633f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aedbcb03a5bb836db2a28ac787b00633f">&#9670;&#160;</a></span>tfd_colorChooser()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">char const  * tinyfd_arrayDialog </td>
+          <td class="memname">void tfd_colorChooser </td>
           <td>(</td>
-          <td class="paramtype">char const *const&#160;</td>
+          <td class="paramtype">char const *&#160;</td>
           <td class="paramname"><em>aTitle</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int const&#160;</td>
-          <td class="paramname"><em>aNumOfColumns</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">char const *const *const&#160;</td>
-          <td class="paramname"><em>aColumns</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int const&#160;</td>
-          <td class="paramname"><em>aNumOfRows</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">char const *const *const&#160;</td>
-          <td class="paramname"><em>aCells</em>&#160;</td>
+          <td class="paramtype">char **&#160;</td>
+          <td class="paramname"><em>aiDefaultHexRGB</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -283,22 +335,466 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a3e8ae41e1c98e639f9d01bfc98d23faa" name="a3e8ae41e1c98e639f9d01bfc98d23faa"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3e8ae41e1c98e639f9d01bfc98d23faa">&#9670;&#160;</a></span>tinyfd_colorChooser()</h2>
+<a id="aedce7bb7c648a3de1b5ae958748acea0" name="aedce7bb7c648a3de1b5ae958748acea0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aedce7bb7c648a3de1b5ae958748acea0">&#9670;&#160;</a></span>tfd_inputBox()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">char const  * tinyfd_colorChooser </td>
+          <td class="memname">void tfd_inputBox </td>
           <td>(</td>
-          <td class="paramtype">char const *const&#160;</td>
+          <td class="paramtype">char const *&#160;</td>
           <td class="paramname"><em>aTitle</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">char const *const&#160;</td>
+          <td class="paramtype">char const *&#160;</td>
+          <td class="paramname"><em>aMessage</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char **&#160;</td>
+          <td class="paramname"><em>aiDefaultInput</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a6a75d29f7cc1a6606e1b709fb2d13756" name="a6a75d29f7cc1a6606e1b709fb2d13756"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6a75d29f7cc1a6606e1b709fb2d13756">&#9670;&#160;</a></span>tfd_isDarwin()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int tfd_isDarwin </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a77c4dde5df84387f5e8764f33bf04ba3" name="a77c4dde5df84387f5e8764f33bf04ba3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a77c4dde5df84387f5e8764f33bf04ba3">&#9670;&#160;</a></span>tfd_kdialogPresent()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int tfd_kdialogPresent </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae11ed1c0d8ae0c30f5453048d1cdf7d0" name="ae11ed1c0d8ae0c30f5453048d1cdf7d0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae11ed1c0d8ae0c30f5453048d1cdf7d0">&#9670;&#160;</a></span>tfd_matedialogPresent()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int tfd_matedialogPresent </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aa1a9656338b38479c1d5e2a1dde4ed9b" name="aa1a9656338b38479c1d5e2a1dde4ed9b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa1a9656338b38479c1d5e2a1dde4ed9b">&#9670;&#160;</a></span>tfd_messageBox()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void tfd_messageBox </td>
+          <td>(</td>
+          <td class="paramtype">char const *&#160;</td>
+          <td class="paramname"><em>aTitle</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char const *&#160;</td>
+          <td class="paramname"><em>aMessage</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char const *&#160;</td>
+          <td class="paramname"><em>aDialogType</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char const *&#160;</td>
+          <td class="paramname"><em>aIconType</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int *&#160;</td>
+          <td class="paramname"><em>aiDefaultButton</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a3fce7991af06249434ec2e2c3e6ce6cc" name="a3fce7991af06249434ec2e2c3e6ce6cc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3fce7991af06249434ec2e2c3e6ce6cc">&#9670;&#160;</a></span>tfd_openFileDialog()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void tfd_openFileDialog </td>
+          <td>(</td>
+          <td class="paramtype">char const *&#160;</td>
+          <td class="paramname"><em>aTitle</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char **&#160;</td>
+          <td class="paramname"><em>aiDefaultPathAndFile</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int const *&#160;</td>
+          <td class="paramname"><em>aNumOfFilterPatterns</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char const *const *&#160;</td>
+          <td class="paramname"><em>aFilterPatterns</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char const *&#160;</td>
+          <td class="paramname"><em>aSingleFilterDescription</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int const *&#160;</td>
+          <td class="paramname"><em>aAllowMultipleSelects</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a207f7a0539c4f1488d49a4f05a0cdb73" name="a207f7a0539c4f1488d49a4f05a0cdb73"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a207f7a0539c4f1488d49a4f05a0cdb73">&#9670;&#160;</a></span>tfd_qarmaPresent()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int tfd_qarmaPresent </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a789b9cfa9fb2cf888db0246f9c2dca9a" name="a789b9cfa9fb2cf888db0246f9c2dca9a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a789b9cfa9fb2cf888db0246f9c2dca9a">&#9670;&#160;</a></span>tfd_quoteDetected()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int tfd_quoteDetected </td>
+          <td>(</td>
+          <td class="paramtype">char const *&#160;</td>
+          <td class="paramname"><em>aString</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a803e4bfce6989645d3678292083340c0" name="a803e4bfce6989645d3678292083340c0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a803e4bfce6989645d3678292083340c0">&#9670;&#160;</a></span>tfd_replaceSubStr()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void tfd_replaceSubStr </td>
+          <td>(</td>
+          <td class="paramtype">char const *&#160;</td>
+          <td class="paramname"><em>aSource</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char const *&#160;</td>
+          <td class="paramname"><em>aOldSubStr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char const *&#160;</td>
+          <td class="paramname"><em>aNewSubStr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>aoDestination</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aeeb17ea3ee23d36a7ab82d35592dfe67" name="aeeb17ea3ee23d36a7ab82d35592dfe67"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aeeb17ea3ee23d36a7ab82d35592dfe67">&#9670;&#160;</a></span>tfd_saveFileDialog()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void tfd_saveFileDialog </td>
+          <td>(</td>
+          <td class="paramtype">char const *&#160;</td>
+          <td class="paramname"><em>aTitle</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char **&#160;</td>
+          <td class="paramname"><em>aiDefaultPathAndFile</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int const *&#160;</td>
+          <td class="paramname"><em>aNumOfFilterPatterns</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char const *const *&#160;</td>
+          <td class="paramname"><em>aFilterPatterns</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char const *&#160;</td>
+          <td class="paramname"><em>aSingleFilterDescription</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a4b0b3b0324df8080770064489cf73c14" name="a4b0b3b0324df8080770064489cf73c14"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4b0b3b0324df8080770064489cf73c14">&#9670;&#160;</a></span>tfd_selectFolderDialog()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void tfd_selectFolderDialog </td>
+          <td>(</td>
+          <td class="paramtype">char const *&#160;</td>
+          <td class="paramname"><em>aTitle</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char **&#160;</td>
+          <td class="paramname"><em>aiDefaultPath</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a0f7ff3f21aee78c73276da8eba075edd" name="a0f7ff3f21aee78c73276da8eba075edd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0f7ff3f21aee78c73276da8eba075edd">&#9670;&#160;</a></span>tfd_shellementaryPresent()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int tfd_shellementaryPresent </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a15fdc38cfcc89302704d4554221c85f7" name="a15fdc38cfcc89302704d4554221c85f7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a15fdc38cfcc89302704d4554221c85f7">&#9670;&#160;</a></span>tfd_xpropPresent()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int tfd_xpropPresent </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a5702c782c083fb90757b8bb6a95de325" name="a5702c782c083fb90757b8bb6a95de325"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5702c782c083fb90757b8bb6a95de325">&#9670;&#160;</a></span>tfd_yadPresent()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int tfd_yadPresent </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aca140f9622c8b2ac27a1a7b93d426cf6" name="aca140f9622c8b2ac27a1a7b93d426cf6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aca140f9622c8b2ac27a1a7b93d426cf6">&#9670;&#160;</a></span>tfd_zenity3Present()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int tfd_zenity3Present </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a1ae8f7bd22b5c7d457771295e9a04cc5" name="a1ae8f7bd22b5c7d457771295e9a04cc5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1ae8f7bd22b5c7d457771295e9a04cc5">&#9670;&#160;</a></span>tfd_zenityPresent()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int tfd_zenityPresent </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a0c19cd62f9b9ff0f7def8971d2bc3f9d" name="a0c19cd62f9b9ff0f7def8971d2bc3f9d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0c19cd62f9b9ff0f7def8971d2bc3f9d">&#9670;&#160;</a></span>tinyfd_beep()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void tinyfd_beep </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aa695aeb3e9421913447afe95e6521e7f" name="aa695aeb3e9421913447afe95e6521e7f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa695aeb3e9421913447afe95e6521e7f">&#9670;&#160;</a></span>tinyfd_colorChooser()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">char * tinyfd_colorChooser </td>
+          <td>(</td>
+          <td class="paramtype">char const *&#160;</td>
+          <td class="paramname"><em>aTitle</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char const *&#160;</td>
           <td class="paramname"><em>aDefaultHexRGB</em>, </td>
         </tr>
         <tr>
@@ -323,28 +819,64 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a5afa8a97f6ddd7e52b2588b7da762c96" name="a5afa8a97f6ddd7e52b2588b7da762c96"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5afa8a97f6ddd7e52b2588b7da762c96">&#9670;&#160;</a></span>tinyfd_inputBox()</h2>
+<a id="ac1d6b68adfaeed31d60ec4c1f7b694d4" name="ac1d6b68adfaeed31d60ec4c1f7b694d4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac1d6b68adfaeed31d60ec4c1f7b694d4">&#9670;&#160;</a></span>tinyfd_getGlobalChar()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">char const  * tinyfd_inputBox </td>
+          <td class="memname">char const  * tinyfd_getGlobalChar </td>
           <td>(</td>
-          <td class="paramtype">char const *const&#160;</td>
+          <td class="paramtype">char const *&#160;</td>
+          <td class="paramname"><em>aCharVariableName</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a2369e180c58a73d4861bb0130cd82dab" name="a2369e180c58a73d4861bb0130cd82dab"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2369e180c58a73d4861bb0130cd82dab">&#9670;&#160;</a></span>tinyfd_getGlobalInt()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int tinyfd_getGlobalInt </td>
+          <td>(</td>
+          <td class="paramtype">char const *&#160;</td>
+          <td class="paramname"><em>aIntVariableName</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aa2db23282c31c40c4c12b4847b92659b" name="aa2db23282c31c40c4c12b4847b92659b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa2db23282c31c40c4c12b4847b92659b">&#9670;&#160;</a></span>tinyfd_inputBox()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">char * tinyfd_inputBox </td>
+          <td>(</td>
+          <td class="paramtype">char const *&#160;</td>
           <td class="paramname"><em>aTitle</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">char const *const&#160;</td>
+          <td class="paramtype">char const *&#160;</td>
           <td class="paramname"><em>aMessage</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">char const *const&#160;</td>
+          <td class="paramtype">char const *&#160;</td>
           <td class="paramname"><em>aDefaultInput</em>&#160;</td>
         </tr>
         <tr>
@@ -357,8 +889,8 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="ae02051d7645e0674b53cea5b134e0c8e" name="ae02051d7645e0674b53cea5b134e0c8e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae02051d7645e0674b53cea5b134e0c8e">&#9670;&#160;</a></span>tinyfd_messageBox()</h2>
+<a id="ac5082e6c1f4693110f1703664b3fa9fc" name="ac5082e6c1f4693110f1703664b3fa9fc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac5082e6c1f4693110f1703664b3fa9fc">&#9670;&#160;</a></span>tinyfd_messageBox()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -366,31 +898,31 @@ Variables</h2></td></tr>
         <tr>
           <td class="memname">int tinyfd_messageBox </td>
           <td>(</td>
-          <td class="paramtype">char const *const&#160;</td>
+          <td class="paramtype">char const *&#160;</td>
           <td class="paramname"><em>aTitle</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">char const *const&#160;</td>
+          <td class="paramtype">char const *&#160;</td>
           <td class="paramname"><em>aMessage</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">char const *const&#160;</td>
+          <td class="paramtype">char const *&#160;</td>
           <td class="paramname"><em>aDialogType</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">char const *const&#160;</td>
+          <td class="paramtype">char const *&#160;</td>
           <td class="paramname"><em>aIconType</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int const&#160;</td>
+          <td class="paramtype">int&#160;</td>
           <td class="paramname"><em>aDefaultButton</em>&#160;</td>
         </tr>
         <tr>
@@ -403,46 +935,80 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a9487db42bbeb2d7f00d44675d8b75685" name="a9487db42bbeb2d7f00d44675d8b75685"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9487db42bbeb2d7f00d44675d8b75685">&#9670;&#160;</a></span>tinyfd_openFileDialog()</h2>
+<a id="ad91628b8a0640682241aa189f03a30ba" name="ad91628b8a0640682241aa189f03a30ba"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad91628b8a0640682241aa189f03a30ba">&#9670;&#160;</a></span>tinyfd_notifyPopup()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">char const  * tinyfd_openFileDialog </td>
+          <td class="memname">int tinyfd_notifyPopup </td>
           <td>(</td>
-          <td class="paramtype">char const *const&#160;</td>
+          <td class="paramtype">char const *&#160;</td>
           <td class="paramname"><em>aTitle</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">char const *const&#160;</td>
-          <td class="paramname"><em>aDefaultPathAndFile</em>, </td>
+          <td class="paramtype">char const *&#160;</td>
+          <td class="paramname"><em>aMessage</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int const&#160;</td>
+          <td class="paramtype">char const *&#160;</td>
+          <td class="paramname"><em>aIconType</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae71462365057acd0bd3ab1e8a6879008" name="ae71462365057acd0bd3ab1e8a6879008"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae71462365057acd0bd3ab1e8a6879008">&#9670;&#160;</a></span>tinyfd_openFileDialog()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">char * tinyfd_openFileDialog </td>
+          <td>(</td>
+          <td class="paramtype">char const *&#160;</td>
+          <td class="paramname"><em>aTitle</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char const *&#160;</td>
+          <td class="paramname"><em>aDefaultPathAndOrFile</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
           <td class="paramname"><em>aNumOfFilterPatterns</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">char const *const *const&#160;</td>
+          <td class="paramtype">char const *const *&#160;</td>
           <td class="paramname"><em>aFilterPatterns</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">char const *const&#160;</td>
+          <td class="paramtype">char const *&#160;</td>
           <td class="paramname"><em>aSingleFilterDescription</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int const&#160;</td>
+          <td class="paramtype">int&#160;</td>
           <td class="paramname"><em>aAllowMultipleSelects</em>&#160;</td>
         </tr>
         <tr>
@@ -455,40 +1021,40 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a11f713198099f1b3314e22a9016bf8e1" name="a11f713198099f1b3314e22a9016bf8e1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a11f713198099f1b3314e22a9016bf8e1">&#9670;&#160;</a></span>tinyfd_saveFileDialog()</h2>
+<a id="afab9123f9e3163d969caecc912c0dd05" name="afab9123f9e3163d969caecc912c0dd05"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afab9123f9e3163d969caecc912c0dd05">&#9670;&#160;</a></span>tinyfd_saveFileDialog()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">char const  * tinyfd_saveFileDialog </td>
+          <td class="memname">char * tinyfd_saveFileDialog </td>
           <td>(</td>
-          <td class="paramtype">char const *const&#160;</td>
+          <td class="paramtype">char const *&#160;</td>
           <td class="paramname"><em>aTitle</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">char const *const&#160;</td>
-          <td class="paramname"><em>aDefaultPathAndFile</em>, </td>
+          <td class="paramtype">char const *&#160;</td>
+          <td class="paramname"><em>aDefaultPathAndOrFile</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int const&#160;</td>
+          <td class="paramtype">int&#160;</td>
           <td class="paramname"><em>aNumOfFilterPatterns</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">char const *const *const&#160;</td>
+          <td class="paramtype">char const *const *&#160;</td>
           <td class="paramname"><em>aFilterPatterns</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">char const *const&#160;</td>
+          <td class="paramtype">char const *&#160;</td>
           <td class="paramname"><em>aSingleFilterDescription</em>&#160;</td>
         </tr>
         <tr>
@@ -501,22 +1067,22 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a00e569a09b0e129db7284d41ea14b003" name="a00e569a09b0e129db7284d41ea14b003"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a00e569a09b0e129db7284d41ea14b003">&#9670;&#160;</a></span>tinyfd_selectFolderDialog()</h2>
+<a id="a26568df53ae8a94f7ffbf5a267c9a6ae" name="a26568df53ae8a94f7ffbf5a267c9a6ae"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a26568df53ae8a94f7ffbf5a267c9a6ae">&#9670;&#160;</a></span>tinyfd_selectFolderDialog()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">char const  * tinyfd_selectFolderDialog </td>
+          <td class="memname">char * tinyfd_selectFolderDialog </td>
           <td>(</td>
-          <td class="paramtype">char const *const&#160;</td>
+          <td class="paramtype">char const *&#160;</td>
           <td class="paramname"><em>aTitle</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">char const *const&#160;</td>
+          <td class="paramtype">char const *&#160;</td>
           <td class="paramname"><em>aDefaultPath</em>&#160;</td>
         </tr>
         <tr>
@@ -529,7 +1095,50 @@ Variables</h2></td></tr>
 
 </div>
 </div>
+<a id="a1e4d4275e2731ee2c0939ffd711446cd" name="a1e4d4275e2731ee2c0939ffd711446cd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1e4d4275e2731ee2c0939ffd711446cd">&#9670;&#160;</a></span>tinyfd_setGlobalInt()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int tinyfd_setGlobalInt </td>
+          <td>(</td>
+          <td class="paramtype">char const *&#160;</td>
+          <td class="paramname"><em>aIntVariableName</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>aValue</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <h2 class="groupheader">Variable Documentation</h2>
+<a id="a0b7e8db3c74f9830ad9ddcf5b0dee82f" name="a0b7e8db3c74f9830ad9ddcf5b0dee82f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0b7e8db3c74f9830ad9ddcf5b0dee82f">&#9670;&#160;</a></span>tinyfd_allowCursesDialogs</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int tinyfd_allowCursesDialogs = 0</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Curses dialogs are difficult to use and counter-intuitive. On windows they are only ascii and still uses the unix backslash ! </p>
+
+</div>
+</div>
 <a id="a570a95a1dce391ed29f7fc5861ecee69" name="a570a95a1dce391ed29f7fc5861ecee69"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a570a95a1dce391ed29f7fc5861ecee69">&#9670;&#160;</a></span>tinyfd_forceConsole</h2>
 
@@ -542,6 +1151,34 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+</div>
+</div>
+<a id="a4e0c55962cd5119defe2e4ab70440d27" name="a4e0c55962cd5119defe2e4ab70440d27"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4e0c55962cd5119defe2e4ab70440d27">&#9670;&#160;</a></span>tinyfd_needs</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">char tinyfd_needs[]</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">= <span class="stringliteral">&quot;\</span></div>
+<div class="line"><span class="stringliteral"> ___________\n\</span></div>
+<div class="line"><span class="stringliteral">/           \\ \n\</span></div>
+<div class="line"><span class="stringliteral">| tiny file |\n\</span></div>
+<div class="line"><span class="stringliteral">|  dialogs  |\n\</span></div>
+<div class="line"><span class="stringliteral">\\_____  ____/\n\</span></div>
+<div class="line"><span class="stringliteral">      \\|\</span></div>
+<div class="line"><span class="stringliteral">\ntiny file dialogs on UNIX needs:\</span></div>
+<div class="line"><span class="stringliteral">\n   applescript or kdialog or yad or Xdialog\</span></div>
+<div class="line"><span class="stringliteral">\nor zenity (or matedialog or shellementary or qarma)\</span></div>
+<div class="line"><span class="stringliteral">\nor python (2 or 3) + tkinter + python-dbus (optional)\</span></div>
+<div class="line"><span class="stringliteral">\nor dialog (opens console if needed) ** Disabled by default **\</span></div>
+<div class="line"><span class="stringliteral">\nor xterm + bash (opens console for basic input)\</span></div>
+<div class="line"><span class="stringliteral">\nor existing console for basic input.&quot;</span></div>
+</div><!-- fragment -->
 </div>
 </div>
 <a id="a9b9a6af8ea75754b98c73455da469833" name="a9b9a6af8ea75754b98c73455da469833"></a>
@@ -558,6 +1195,34 @@ Variables</h2></td></tr>
 
 </div>
 </div>
+<a id="aa3441498bf910ce05abb03d769782074" name="aa3441498bf910ce05abb03d769782074"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa3441498bf910ce05abb03d769782074">&#9670;&#160;</a></span>tinyfd_silent</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int tinyfd_silent = 1</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aeedca8836f3872ca50ebfe723423b25d" name="aeedca8836f3872ca50ebfe723423b25d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aeedca8836f3872ca50ebfe723423b25d">&#9670;&#160;</a></span>tinyfd_verbose</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int tinyfd_verbose = 0</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="ab96061de83b195bf847e44d164d6056e" name="ab96061de83b195bf847e44d164d6056e"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ab96061de83b195bf847e44d164d6056e">&#9670;&#160;</a></span>tinyfd_version</h2>
 
@@ -565,7 +1230,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">char tinyfd_version[8] = &quot;2.9.3&quot;</td>
+          <td class="memname">char tinyfd_version[8] = &quot;3.20.1&quot;</td>
         </tr>
       </table>
 </div><div class="memdoc">

@@ -10,7 +10,7 @@ var indexSectionsWithContent =
   7: "celmost",
   8: "bcdefgilmnoprst",
   9: "go",
-  10: "bcegmpstu"
+  10: "bceglmptu"
 };
 
 var indexSectionNames =

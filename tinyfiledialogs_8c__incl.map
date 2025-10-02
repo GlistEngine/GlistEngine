@@ -1,25 +1,27 @@
 <map id="tinyfiledialogs.c" name="tinyfiledialogs.c">
-<area shape="rect" id="Node000001" title=" " alt="" coords="492,5,617,31"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="512,5,637,31"/>
 <area shape="rect" id="Node000002" title=" " alt="" coords="5,79,72,104"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="492,27,313,47,86,81,85,76,313,42,492,22"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="512,27,325,46,208,62,86,81,85,76,207,56,325,41,512,22"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="97,79,167,104"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="492,30,353,51,181,81,180,76,353,45,491,25"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="512,30,365,50,181,81,180,76,364,45,512,24"/>
 <area shape="rect" id="Node000004" title=" " alt="" coords="191,79,262,104"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="499,33,276,81,275,76,497,28"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="513,33,276,81,275,76,512,28"/>
 <area shape="rect" id="Node000005" title=" " alt="" coords="286,79,357,104"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="518,33,370,78,369,73,516,28"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="535,33,371,79,370,74,533,28"/>
 <area shape="rect" id="Node000006" title=" " alt="" coords="381,79,467,104"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="535,33,458,74,456,70,532,28"/>
-<area shape="rect" id="Node000007" href="$tinyfiledialogs_8h.html" title=" " alt="" coords="491,79,618,104"/>
-<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="557,31,557,65,552,65,552,31"/>
-<area shape="rect" id="Node000008" title=" " alt="" coords="642,79,713,104"/>
-<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="576,28,647,69,644,74,573,33"/>
-<area shape="rect" id="Node000009" title=" " alt="" coords="737,79,812,104"/>
-<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="591,28,727,72,726,77,589,33"/>
-<area shape="rect" id="Node000010" title=" " alt="" coords="836,79,908,104"/>
-<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="608,28,823,76,822,81,607,33"/>
-<area shape="rect" id="Node000011" title=" " alt="" coords="933,79,1017,104"/>
-<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="618,26,920,76,919,81,617,31"/>
-<area shape="rect" id="Node000012" title=" " alt="" coords="1041,79,1159,104"/>
-<area shape="poly" id="edge11_Node000001_Node000012" title=" " alt="" coords="618,24,1028,76,1027,81,617,29"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="552,33,462,75,460,70,549,28"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="491,79,562,104"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="569,33,544,69,540,66,565,30"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="587,79,661,104"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="585,29,610,66,606,69,581,33"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="685,79,757,104"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="599,28,686,70,684,75,597,33"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="782,79,866,104"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="615,28,771,72,770,77,614,33"/>
+<area shape="rect" id="Node000011" title=" " alt="" coords="891,79,1008,104"/>
+<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="635,28,878,74,877,79,634,33"/>
+<area shape="rect" id="Node000012" title=" " alt="" coords="1033,79,1106,104"/>
+<area shape="poly" id="edge11_Node000001_Node000012" title=" " alt="" coords="638,23,806,43,1019,76,1018,81,805,49,637,28"/>
+<area shape="rect" id="Node000013" href="$tinyfiledialogs_8h.html" title=" " alt="" coords="1130,79,1257,104"/>
+<area shape="poly" id="edge12_Node000001_Node000013" title=" " alt="" coords="638,23,846,44,1117,76,1116,81,846,49,637,28"/>
 </map>
