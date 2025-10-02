@@ -1,4 +1,4 @@
-# GLISTENGINE
+# GlistEngine
 
 GlistEngine is a cross-platform OpenGL game engine written in C++.
 Supported Platforms: Windows, macOS, Linux, Android, iOS and WebGL
