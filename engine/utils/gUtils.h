@@ -253,6 +253,9 @@ protected:
 	std::stringstream logmessage;
 	std::string logtag;
 	static std::string loglevelname[];
+
+private:
+	std::string logmsg;
 };
 
 class gLogi : public gLog {

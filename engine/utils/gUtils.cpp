@@ -662,17 +662,23 @@ gLog::gLog(const std::string& tag) {
 gLog::~gLog() {
 	if(!isloggingenabled) return;
 
+	logmsg = logmessage.str();
+
 #if ANDROID
 	if(loglevel == LOGLEVEL_ERROR) {
-		__android_log_print(ANDROID_LOG_ERROR, logtag.c_str(), "%s", logmessage.str().c_str());
+		__android_log_print(ANDROID_LOG_ERROR, logtag.c_str(), "%s", logmsg.c_str());
 	} else {
-		__android_log_print(ANDROID_LOG_INFO, logtag.c_str(), "%s", logmessage.str().c_str());
+		__android_log_print(ANDROID_LOG_INFO, logtag.c_str(), "%s", logmsg.c_str());
 	}
 #else
 	if(loglevel == LOGLEVEL_ERROR) {
-		std::cerr << "[" << loglevelname[loglevel] << "] " << logtag << ": " << logmessage.str() << std::endl;
+		std::cerr << "[" << loglevelname[loglevel] << "] " << logtag;
+		if(logmsg != "") std::cerr << ": " << logmsg;
+		std::cerr << std::endl;
 	} else {
-		std::cout << "[" << loglevelname[loglevel] << "] " << logtag << ": " << logmessage.str() << std::endl;
+		std::cout << "[" << loglevelname[loglevel] << "] " << logtag;
+		if(logmsg != "") std::cout << ": " << logmsg;
+		std::cout << std::endl;
 	}
 #endif
 }
