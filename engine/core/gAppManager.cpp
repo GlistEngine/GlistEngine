@@ -28,6 +28,11 @@
 #   include "gIOSCanvas.h"
 #   include "gIOSApp.h"
 #   include "gIOSMain.h"
+#elif defined(EMSCRIPTEN)
+#include "gGLFWWindow.h"
+#include "gWebCanvas.h"
+#include "gWebApp.h"
+#include "emscripten.h"
 #endif
 
 void gStartEngine(gBaseApp* baseApp, const std::string& appName, int windowMode, int width, int height, bool isResizable) {
@@ -48,11 +53,11 @@ void gStartEngine(gBaseApp* baseApp, const std::string& appName, int windowMode,
 }
 
 void gStartEngine(gBaseApp* baseApp, const std::string& appName, int loopMode) {
-#if !(defined(GLIST_MOBILE))
+#if !(defined(GLIST_OPENGLES))
 	gAppManager manager(appName, baseApp, 0, 0, G_WINDOWMODE_NONE, 0, 0, G_SCREENSCALING_NONE, false, loopMode);
 	manager.runApp();
 #else
-	throw std::runtime_error("windowless android applications are not supported yet!");
+	throw std::runtime_error("windowless applications are not supported yet for this platform!");
 #endif
 }
 
@@ -63,6 +68,12 @@ int pow(int x, int p) {
 }
 
 gAppManager* appmanager = nullptr;
+
+#ifdef EMSCRIPTEN
+void emscriptenTick() {
+	appmanager->emscriptenLoop();
+}
+#endif
 
 gAppManager::gAppManager(const std::string& appName, gBaseApp *baseApp, int width, int height,
                          int windowMode, int unitWidth, int unitHeight, int screenScaling,
@@ -237,7 +248,10 @@ void gAppManager::loop() {
 	}
 #endif
 
-#if !(TARGET_OS_IPHONE || TARGET_OS_SIMULATOR)
+#ifdef EMSCRIPTEN
+	emscripten_set_main_loop(emscriptenTick, 0, true);
+#endif
+#if !(TARGET_OS_IPHONE || TARGET_OS_SIMULATOR || EMSCRIPTEN)
     while (isrunning && (!usewindow || !window->getShouldClose())) {
         // Delta time calculations
         endtime = AppClock::now();
@@ -270,6 +284,43 @@ void gAppManager::loop() {
     initialized = false;
 #endif // !(TARGET_OS_IPHONE || TARGET_OS_SIMULATOR)
 }
+
+#ifdef EMSCRIPTEN
+void gAppManager::emscriptenLoop() {
+	if (!isrunning || (usewindow && window->getShouldClose())) {
+		emscripten_cancel_main_loop();
+
+		app->stop();
+		gRenderObject::destroyRenderer();
+		if(usewindow) {
+			window->close();
+		}
+		initialized = false;
+		return;
+	}
+
+	// Delta time calculations
+	endtime = AppClock::now();
+	deltatime = endtime - starttime;
+	totaltime += deltatime.count();
+	starttime = endtime;
+
+	tick();
+
+	if(totaltime >= 1'000'000'000) {
+		totaltime = 0;
+		totalupdates = 0;
+		totaldraws = 0;
+	}
+
+	if(!usewindow || !window->vsync) {
+		double sleepTime = (targettimestep - (AppClock::now() - starttime)).count() / 1'000'000'000.0;
+		if(sleepTime > 0) {
+			preciseSleep(sleepTime);
+		}
+	}
+}
+#endif
 
 void gAppManager::stop() {
     isrunning = false;
@@ -523,9 +574,11 @@ void gAppManager::onEvent(gEvent& event) {
     dispatcher.dispatch<gWindowLoseFocusEvent>(G_BIND_FUNCTION(onWindowLoseFocusEvent));
     dispatcher.dispatch<gJoystickConnectEvent>(G_BIND_FUNCTION(onJoystickConnectEvent));
     dispatcher.dispatch<gJoystickDisconnectEvent>(G_BIND_FUNCTION(onJoystickDisconnectEvent));
-#if defined(GLIST_MOBILE)
+#if GLIST_ANDROID || GLIST_IOS || GLIST_WEB
     dispatcher.dispatch<gAppPauseEvent>(G_BIND_FUNCTION(onAppPauseEvent));
     dispatcher.dispatch<gAppResumeEvent>(G_BIND_FUNCTION(onAppResumeEvent));
+#endif
+#if GLIST_ANDROID || GLIST_IOS
     dispatcher.dispatch<gDeviceOrientationChangedEvent>(G_BIND_FUNCTION(onDeviceOrientationChangedEvent));
     dispatcher.dispatch<gTouchEvent>(G_BIND_FUNCTION(onTouchEvent));
 #endif
@@ -713,8 +766,7 @@ bool gAppManager::onJoystickDisconnectEvent(gJoystickDisconnectEvent& event) {
     return false;
 }
 
-#if TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
-
+#if GLIST_IOS
 void gAppManager::iosLoop()
 {
     if(!(isrunning && (!usewindow || !window->getShouldClose())))
@@ -750,35 +802,38 @@ void gAppManager::iosLoop()
     }
     //gLogi("gAppManager") << "stopping loop";
 }
+#endif // GLIST_IOS
 
-#endif // TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
-
-#if defined(GLIST_MOBILE)
-
+#if GLIST_WEB || GLIST_ANDROID || GLIST_IOS
 bool gAppManager::onAppPauseEvent(gAppPauseEvent& event) {
     submitToMainThread([this]() {
 		if(!isrendering) {
 			return;
 		}
         isrendering = false;
+		// todo use callback functions that are registered from the target (app and/or canvas) instead of static casting
 		if (
-#if defined(ANDROID)
-            auto* mobileapp = dynamic_cast<gAndroidApp*>(app)
-#elif TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
-			auto* mobileapp = static_cast<gIOSApp*>(app)
+#if GLIST_ANDROID
+            auto* target = dynamic_cast<gAndroidApp*>(app)
+#elif GLIST_IOS
+			auto* target = static_cast<gIOSApp*>(app)
+#elif GLIST_WEB
+			auto* target = static_cast<gWebApp*>(app)
 #endif
         ) {
-            mobileapp->pause();
+			target->pause();
 		}
 		if(canvasmanager && getCurrentCanvas()) {
 			if (
-#if defined(ANDROID)
-                auto* mobilecanvas = dynamic_cast<gAndroidCanvas*>(getCurrentCanvas())
-#elif TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
-                auto* mobilecanvas = static_cast<gIOSCanvas*>(getCurrentCanvas())
+#if GLIST_ANDROID
+                auto* target = dynamic_cast<gAndroidCanvas*>(getCurrentCanvas())
+#elif GLIST_IOS
+                auto* target = static_cast<gIOSCanvas*>(getCurrentCanvas())
+#elif GLIST_WEB
+				auto* target = static_cast<gWebCanvas*>(getCurrentCanvas())
 #endif
             ) {
-				mobilecanvas->pause();
+				target->pause();
 			}
 		}
 	});
@@ -792,40 +847,48 @@ bool gAppManager::onAppResumeEvent(gAppResumeEvent& event) {
 		}
         isrendering = true;
 		if (
-#if defined(ANDROID)
-            auto* mobileapp = dynamic_cast<gAndroidApp*>(app)
-#elif TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
-            auto* mobileapp = static_cast<gIOSApp*>(app)
+#if GLIST_ANDROID
+            auto* target = dynamic_cast<gAndroidApp*>(app)
+#elif GLIST_IOS
+            auto* target = static_cast<gIOSApp*>(app)
+#elif GLIST_WEB
+			auto* target = static_cast<gWebApp*>(app)
 #endif
         ) {
-            mobileapp->resume();
+			target->resume();
 		}
 		if(canvasmanager && getCurrentCanvas()) {
 			if (
-#if defined(ANDROID)
-                auto* mobilecanvas = dynamic_cast<gAndroidCanvas*>(getCurrentCanvas())
-#elif TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
-                auto* mobilecanvas = static_cast<gIOSCanvas*>(getCurrentCanvas())
+#if GLIST_ANDROID
+                auto* target = dynamic_cast<gAndroidCanvas*>(getCurrentCanvas())
+#elif GLIST_IOS
+                auto* target = static_cast<gIOSCanvas*>(getCurrentCanvas())
+#elif GLIST_WEB
+				auto* target = static_cast<gWebCanvas*>(getCurrentCanvas())
 #endif
             ) {
-				mobilecanvas->resume();
+				target->resume();
 			}
 		}
 	});
     return false;
 }
+#endif
 
+#if GLIST_ANDROID || GLIST_IOS
 bool gAppManager::onDeviceOrientationChangedEvent(gDeviceOrientationChangedEvent& event) {
-    deviceorientation = event.getOrientation();
+	deviceorientation = event.getOrientation();
     if(canvasmanager && getCurrentCanvas()) {
 		if (
-#if defined(ANDROID)
-            auto* mobilecanvas = dynamic_cast<gAndroidCanvas*>(getCurrentCanvas())
-#elif TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
-            auto* mobilecanvas = static_cast<gIOSCanvas*>(getCurrentCanvas())
+#if GLIST_ANDROID
+            auto* target = dynamic_cast<gAndroidCanvas*>(getCurrentCanvas())
+#elif GLIST_IOS
+            auto* target = static_cast<gIOSCanvas*>(getCurrentCanvas())
+#elif GLIST_WEB
+			auto* target = static_cast<gWebCanvas*>(getCurrentCanvas())
 #endif
         ) {
-			mobilecanvas->deviceOrientationChanged(event.getOrientation());
+			target->deviceOrientationChanged(event.getOrientation());
 		}
     }
     return false;
@@ -834,10 +897,12 @@ bool gAppManager::onDeviceOrientationChangedEvent(gDeviceOrientationChangedEvent
 bool gAppManager::onTouchEvent(gTouchEvent& event) {
 	if(canvasmanager && getCurrentCanvas()) {
 		if (
-#if defined(ANDROID)
-            auto* mobilecanvas = dynamic_cast<gAndroidCanvas*>(getCurrentCanvas())
-#elif TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
-            auto* mobilecanvas = static_cast<gIOSCanvas*>(getCurrentCanvas())
+#if GLIST_ANDROID
+            auto* target = dynamic_cast<gAndroidCanvas*>(getCurrentCanvas())
+#elif GLIST_IOS
+            auto* target = static_cast<gIOSCanvas*>(getCurrentCanvas())
+#elif GLIST_WEB
+			auto* target = static_cast<gWebCanvas*>(getCurrentCanvas())
 #endif
         ) {
 			if (event.getAction() == ACTIONTYPE_POINTER_DOWN || (event.getInputCount() == 1 && event.getAction() == ACTIONTYPE_DOWN)) {
@@ -849,7 +914,7 @@ bool gAppManager::onTouchEvent(gTouchEvent& event) {
 					x = gRenderer::scaleX(x);
 					y = gRenderer::scaleY(y);
 				}
-				mobilecanvas->touchPressed(x, y, input.fingerid);
+				target->touchPressed(x, y, input.fingerid);
 			} else if (event.getAction() == ACTIONTYPE_POINTER_UP || (event.getInputCount() == 1 && event.getAction() == ACTIONTYPE_UP)) {
 				int inputindex = event.getActionIndex();
 				TouchInput& input = event.getInputs()[inputindex];
@@ -859,7 +924,7 @@ bool gAppManager::onTouchEvent(gTouchEvent& event) {
 					x = gRenderer::scaleX(x);
 					y = gRenderer::scaleY(y);
 				}
-				mobilecanvas->touchReleased(x, y, input.fingerid);
+				target->touchReleased(x, y, input.fingerid);
 			} else if (event.getAction() == ACTIONTYPE_MOVE) {
 				int inputindex = event.getActionIndex();
 				TouchInput& input = event.getInputs()[inputindex];
@@ -869,14 +934,14 @@ bool gAppManager::onTouchEvent(gTouchEvent& event) {
 					x = gRenderer::scaleX(x);
 					y = gRenderer::scaleY(y);
 				}
-				mobilecanvas->touchMoved(x, y, input.fingerid);
+				target->touchMoved(x, y, input.fingerid);
 			}
 		}
 	}
 	return false;
 }
 
-#endif // defined(GLIST_MOBILE)
+#endif
 
 void gAppManager::updateTime() {
 	targettimestep = AppClockDuration(1'000'000'000 / (targetframerate + 1));

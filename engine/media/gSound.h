@@ -24,7 +24,7 @@ ma_engine* gGetSoundEngine();
 class gSound : public gBaseSound {
 public:
     gSound();
-    ~gSound();
+    virtual ~gSound();
 
     /**
      * @brief Loads a sound file from the full file system path.

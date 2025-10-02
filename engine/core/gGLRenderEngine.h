@@ -168,8 +168,7 @@ public:
 	void generateSkyMipMap() override;
 	void enableDepthTestEqual() override;
 	void createQuad(GLuint& inQuadVAO, GLuint& inQuadVBO) override;
-	void enableCubeMapSeemless() override;
-	void checkEnableCubeMap4Android() override;
+	void enableCubeMap() override;
 
 	/* ---------------- gRenderObject ---------------- */
 	void pushMatrix() override;

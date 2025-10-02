@@ -114,6 +114,7 @@ void gGLFWWindow::initialize(int width, int height, int windowMode, bool isResiz
 	this->scalex = (float) width / (float) windowWidth;
 	this->scaley = (float) height / (float) windowHeight;
 
+#ifndef EMSCRIPTEN
 	// Load and set window icon
 	GLFWimage images[1];
 	std::string iconpath = gGetImagesDir() + "appicon/icon.png";
@@ -124,6 +125,7 @@ void gGLFWWindow::initialize(int width, int height, int windowMode, bool isResiz
 	} else {
 		gLogw("gGLFWWindow") << "Failed to load window icon from " << iconpath << std::endl;
 	}
+#endif
 
 	// Create cursors
 	cursor[0] = glfwCreateStandardCursor(0x00036001);
@@ -287,10 +289,12 @@ bool gGLFWWindow::isJoystickPresent(int joystickId) {
 }
 
 bool gGLFWWindow::isGamepadButtonPressed(int joystickId, int buttonId) {
+#ifndef EMSCRIPTEN // todo
 	GLFWgamepadstate gpstate;
 	if (glfwGetGamepadState(joystickId, &gpstate) == GLFW_TRUE) {
 		return gpstate.buttons[buttonId];
 	}
+#endif
 	return false;
 }
 
