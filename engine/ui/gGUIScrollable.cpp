@@ -237,6 +237,10 @@ void gGUIScrollable::mouseScrolled(int x, int y) {
 	}
 }
 
+int gGUIScrollable::getVerticalScroll(){
+	return verticalscroll;
+}
+
 void gGUIScrollable::windowResized(int w, int h) {
 	delete boxfbo;
 	boxfbo = new gFbo();
