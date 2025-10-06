@@ -70,17 +70,17 @@ var NAVTREEINDEX =
 "classgGUIContextMenuItem.html#a087f35db73a08b58f8341f17a1d01474",
 "classgGUIGrid.html#a16373a5e32abc2935e84037fcdad21ec",
 "classgGUINotebook.html#a44ec97529d007da2132f8f08d78b4590",
-"classgGUISlider.html",
-"classgGrid.html",
-"classgMaterial.html#a557142dff2227044407b1c9f5889abbc",
-"classgNode.html#a41a65cf61c60c82b19ce140364f98a26",
-"classgRenderer.html#a6eedeade093370a1b77a59a74e98cdd2",
-"classgShadowsMidtonesHighlights.html#a7a32877c587f280d70d740c119fc3f5e",
-"classgUbo.html",
-"gConstants_8h.html#a8cbaec1227de07f900c36c7d71be2d16",
-"gKeyCode_8h.html#a75c40928c7c5039000d0f5b9733beaab",
-"gUtils_8h.html#a3032c90c64b493e8d519ce8f8dbb974d",
-"tinyfiledialogs_8c.html#afab9123f9e3163d969caecc912c0dd05"
+"classgGUISizer.html#af87bf099f420a8316e4c1d263274d523",
+"classgGrayscale.html#ab8bd28550b38a702d0952cf5735d1361",
+"classgMaterial.html#a4dc8c7053c84b3b1bbd74a772fe195c9",
+"classgNode.html#a3d29c0543433f4e00e16a476560c3f5c",
+"classgRenderer.html#a6e0d8e9c2831b7e7f877ae598ca9dee3",
+"classgShadowsMidtonesHighlights.html#a1a707ac67a34bd1d2d551e59ad1b369b",
+"classgUUID.html#aff61124c42aff80e3872bb27f77b84bc",
+"gConstants_8h.html#a79242871d313625285266bf9b9cf3202",
+"gKeyCode_8h.html#a7449aa9e958892be458bf291e99d495f",
+"gUtils_8h.html#a2ed85cbfd8460de76162b9456b281ec4",
+"tinyfiledialogs_8c.html#aeedca8836f3872ca50ebfe723423b25d"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

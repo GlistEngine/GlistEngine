@@ -8,6 +8,7 @@ var classgGUIScrollable =
     [ "enableScrollbars", "classgGUIScrollable.html#a6a5698aaf73204b817e93440d50fc72d", null ],
     [ "getFbo", "classgGUIScrollable.html#abcd5f2c2bddbdafcac0c97927514d756", null ],
     [ "getTitleTop", "classgGUIScrollable.html#a1871b76ea2ca231f53aac2074d45dab2", null ],
+    [ "getVerticalScroll", "classgGUIScrollable.html#a9e4fc58ff6d1bec2ac106b0d4b158b75", null ],
     [ "isPointInsideHorizontalScrollbar", "classgGUIScrollable.html#a96e3fa713e71536495f6060753ccf6d6", null ],
     [ "isPointInsideVerticalScrollbar", "classgGUIScrollable.html#a2d1e0470f493951029f33b63143f2c1f", null ],
     [ "mouseDragged", "classgGUIScrollable.html#a8620d5536e48ddb7234aa278059fef0b", null ],
