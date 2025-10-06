@@ -124,6 +124,8 @@ public:
 	 */
 	virtual void mouseScrolled(int x, int y);
 
+	int getVerticalScroll();
+
 
 	gFbo* getFbo();
 
