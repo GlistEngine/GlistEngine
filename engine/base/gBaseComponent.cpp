@@ -29,3 +29,6 @@ void gBaseComponent::update() {
 
 }
 
+void gBaseComponent::onEvent(gEvent& event) {
+
+}

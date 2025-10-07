@@ -8,12 +8,12 @@
 #ifndef ENGINE_BASE_GBASEWINDOW_H_
 #define ENGINE_BASE_GBASEWINDOW_H_
 
-#include <iostream>
-#include <unistd.h>
-#include <signal.h>
-#include "gObject.h"
 #include "gEvent.h"
-#include "gKeyCode.h"
+#include "gObject.h"
+#include "gWindowEvents.h"
+#include <iostream>
+#include <signal.h>
+#include <unistd.h>
 
 class gAppManager;
 
@@ -64,7 +64,8 @@ public:
 	void disableVsync();
 
 	virtual void setCursor(int cursorNo);
-	virtual void setCursorMode(int cursorMode);
+	virtual void setCursorMode(gCursorMode cursorMode);
+	gCursorMode getCursorMode();
 	virtual void setCursorPos(int x, int y);
 
 	virtual void setIcon(std::string pngFullpath);
@@ -154,6 +155,7 @@ protected:
 
 	int width, height;
 	int scalex, scaley;
+	gCursorMode cursormode;
 	int windowmode;
 	std::string title;
 	bool isfocused;

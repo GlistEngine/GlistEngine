@@ -69,3 +69,8 @@ void gBasePlugin::mouseExited() {
 
 }
 
+void gBasePlugin::onEvent(gEvent& event) {
+
+}
+
+

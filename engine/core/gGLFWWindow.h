@@ -22,13 +22,11 @@
 
 class gGLFWWindow : public gBaseWindow {
 public:
-	static const int CURSORMODE_NORMAL, CURSORMODE_HIDDEN, CURSORMODE_DISABLED;
-
 	gGLFWWindow();
-	~gGLFWWindow();
+	~gGLFWWindow() override;
 
 	/**
-	 * Assigns the entered values ​​before the game window opens.
+	 * Assigns the entered values before the game window opens.
 	 *
 	 * @param width Sets what the width of the window should be.
 	 * @param height Sets what the height of the window should be.
@@ -56,7 +54,7 @@ public:
 	void setVsync(bool vsync) override;
 
 	void setCursor(int cursorNo) override;
-	void setCursorMode(int cursorMode) override;
+	void setCursorMode(gCursorMode cursorMode) override;
 	void setCursorPos(int x, int y) override;
 
 	void setClipboardString(std::string text) override;
@@ -75,42 +73,16 @@ public:
 	bool isGamepadButtonPressed(int joystickId, int buttonId) override;
 	const float* getJoystickAxes(int joystickId, int* axisCountPtr) override;
 
+	float getScaleX() const {
+		return scalex;
+	}
+	float getScaleY() const {
+		return scaley;
+	}
   private:
-	static void glfwErrorCallback(int error, const char* description);
-
 	GLFWwindow* window;
-	static GLFWwindow* currentwindow;
 	GLFWcursor** cursor;
 	float scalex, scaley;
-
-	/**
-	 * Invoking by GLFW if the window size changed.
-	 */
-	static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
-	static void character_callback(GLFWwindow* window, unsigned int keycode);
-	static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
-	static void window_focus_callback(GLFWwindow* window, int focused);
-	static void joystick_callback(int jid, int event);
-
-	/**
-	 * Invoking by GLFW if mouse position changed.
-	 */
-	static void mouse_pos_callback(GLFWwindow* window, double xpos, double ypos);
-
-	/**
-	 * Invoking by GLFW if mouse button pressed with mouse position.
-	 */
-	static void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
-
-	/**
-	 * Invoking by GLFW if mouse entered window.
-	 */
-	static void mouse_enter_callback(GLFWwindow* window, int entered);
-
-	/**
-	 * Invoking by GLFW if scroll changed.
-	 */
-	static void mouse_scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 
 };
 

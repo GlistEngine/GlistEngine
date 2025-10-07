@@ -9,8 +9,8 @@
 #define BASE_GBASECOMPONENT_H_
 
 #include "gAppObject.h"
+#include "gEvent.h"
 #include <list>
-
 
 class gBaseComponent : public gAppObject {
 public:
@@ -19,6 +19,7 @@ public:
 
 	virtual void setup();
 	virtual void update();
+	virtual void onEvent(gEvent& event);
 
 	static std::list<gBaseComponent*> usedcomponents;
 };

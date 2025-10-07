@@ -310,7 +310,8 @@ public:
 	gGUIAppThread* getGUIAppThread();
 
     void setCursor(int cursorId);
-    void setCursorMode(int cursorMode);
+    void setCursorMode(gCursorMode cursorMode);
+	gCursorMode getCursorMode();
 
     void setWindowIcon(std::string pngFullpath);
     void setWindowIcon(unsigned char* imageData, int w, int h);

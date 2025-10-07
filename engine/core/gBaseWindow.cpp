@@ -111,7 +111,7 @@ void gBaseWindow::setCursor(int cursorNo) {
 
 }
 
-void gBaseWindow::setCursorMode(int cursorMode) {
+void gBaseWindow::setCursorMode(gCursorMode cursorMode) {
 
 }
 
@@ -144,6 +144,10 @@ void gBaseWindow::setSize(int width, int height) {
 
 void gBaseWindow::setWindowSize(int width, int height) {
 
+}
+
+gCursorMode gBaseWindow::getCursorMode() {
+	return cursormode;
 }
 
 int gBaseWindow::getWidth() {
