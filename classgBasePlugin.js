@@ -12,6 +12,7 @@ var classgBasePlugin =
     [ "mousePressed", "classgBasePlugin.html#a4b639ede6b82228702f8b2e4c20b2742", null ],
     [ "mouseReleased", "classgBasePlugin.html#af93cdc8d92c74d491fbe6c03c8023805", null ],
     [ "mouseScrolled", "classgBasePlugin.html#af0db2788369286578442131329806717", null ],
+    [ "onEvent", "classgBasePlugin.html#a1408389baffe26a3a9d266fc2dccdbd4", null ],
     [ "setup", "classgBasePlugin.html#aba69997a29bb312b97b68bf5fd31a459", null ],
     [ "update", "classgBasePlugin.html#a2f669835bae6eb8e1308d442f615da2f", null ]
 ];

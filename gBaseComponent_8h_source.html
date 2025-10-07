@@ -109,8 +109,8 @@ $(document).ready(function(){initNavTree('gBaseComponent_8h_source.html',''); in
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#define BASE_GBASECOMPONENT_H_</span></div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span> </div>
 <div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &quot;<a class="code" href="gAppObject_8h.html">gAppObject.h</a>&quot;</span></div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &lt;list&gt;</span></div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span> </div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &quot;<a class="code" href="gEvent_8h.html">gEvent.h</a>&quot;</span></div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &lt;list&gt;</span></div>
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span> </div>
 <div class="foldopen" id="foldopen00015" data-start="{" data-end="};">
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno"><a class="line" href="classgBaseComponent.html">   15</a></span><span class="keyword">class </span><a class="code hl_class" href="classgBaseComponent.html">gBaseComponent</a> : <span class="keyword">public</span> <a class="code hl_class" href="classgAppObject.html">gAppObject</a> {</div>
@@ -120,20 +120,24 @@ $(document).ready(function(){initNavTree('gBaseComponent_8h_source.html',''); in
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span> </div>
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno"><a class="line" href="classgBaseComponent.html#a94cf92163ddecb8234d8e4e6f7fcf3f5">   20</a></span>    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classgBaseComponent.html#a94cf92163ddecb8234d8e4e6f7fcf3f5">setup</a>();</div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno"><a class="line" href="classgBaseComponent.html#a59180ea3d5155fe76d97af42b84ff1e1">   21</a></span>    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classgBaseComponent.html#a59180ea3d5155fe76d97af42b84ff1e1">update</a>();</div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span> </div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno"><a class="line" href="classgBaseComponent.html#a4d183714cb339a51599f46ae80d17dc9">   23</a></span>    <span class="keyword">static</span> std::list&lt;gBaseComponent*&gt; <a class="code hl_variable" href="classgBaseComponent.html#a4d183714cb339a51599f46ae80d17dc9">usedcomponents</a>;</div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>};</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno"><a class="line" href="classgBaseComponent.html#aceab75238908a3dac07829b923db8313">   22</a></span>    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classgBaseComponent.html#aceab75238908a3dac07829b923db8313">onEvent</a>(<a class="code hl_class" href="classgEvent.html">gEvent</a>&amp; event);</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno"><a class="line" href="classgBaseComponent.html#a4d183714cb339a51599f46ae80d17dc9">   24</a></span>    <span class="keyword">static</span> std::list&lt;gBaseComponent*&gt; <a class="code hl_variable" href="classgBaseComponent.html#a4d183714cb339a51599f46ae80d17dc9">usedcomponents</a>;</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>};</div>
 </div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="preprocessor">#endif </span><span class="comment">/* BASE_GBASECOMPONENT_H_ */</span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span> </div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="preprocessor">#endif </span><span class="comment">/* BASE_GBASECOMPONENT_H_ */</span><span class="preprocessor"></span></div>
 <div class="ttc" id="aclassgAppObject_html"><div class="ttname"><a href="classgAppObject.html">gAppObject</a></div><div class="ttdef"><b>Definition</b> gAppObject.h:14</div></div>
 <div class="ttc" id="aclassgBaseComponent_html"><div class="ttname"><a href="classgBaseComponent.html">gBaseComponent</a></div><div class="ttdef"><b>Definition</b> gBaseComponent.h:15</div></div>
 <div class="ttc" id="aclassgBaseComponent_html_a2176e1159964953437c5481ec6a57c40"><div class="ttname"><a href="classgBaseComponent.html#a2176e1159964953437c5481ec6a57c40">gBaseComponent::~gBaseComponent</a></div><div class="ttdeci">virtual ~gBaseComponent()</div></div>
-<div class="ttc" id="aclassgBaseComponent_html_a4d183714cb339a51599f46ae80d17dc9"><div class="ttname"><a href="classgBaseComponent.html#a4d183714cb339a51599f46ae80d17dc9">gBaseComponent::usedcomponents</a></div><div class="ttdeci">static std::list&lt; gBaseComponent * &gt; usedcomponents</div><div class="ttdef"><b>Definition</b> gBaseComponent.h:23</div></div>
+<div class="ttc" id="aclassgBaseComponent_html_a4d183714cb339a51599f46ae80d17dc9"><div class="ttname"><a href="classgBaseComponent.html#a4d183714cb339a51599f46ae80d17dc9">gBaseComponent::usedcomponents</a></div><div class="ttdeci">static std::list&lt; gBaseComponent * &gt; usedcomponents</div><div class="ttdef"><b>Definition</b> gBaseComponent.h:24</div></div>
 <div class="ttc" id="aclassgBaseComponent_html_a55df71f3e6f2bd072325d2dd5da1988c"><div class="ttname"><a href="classgBaseComponent.html#a55df71f3e6f2bd072325d2dd5da1988c">gBaseComponent::gBaseComponent</a></div><div class="ttdeci">gBaseComponent()</div></div>
 <div class="ttc" id="aclassgBaseComponent_html_a59180ea3d5155fe76d97af42b84ff1e1"><div class="ttname"><a href="classgBaseComponent.html#a59180ea3d5155fe76d97af42b84ff1e1">gBaseComponent::update</a></div><div class="ttdeci">virtual void update()</div></div>
 <div class="ttc" id="aclassgBaseComponent_html_a94cf92163ddecb8234d8e4e6f7fcf3f5"><div class="ttname"><a href="classgBaseComponent.html#a94cf92163ddecb8234d8e4e6f7fcf3f5">gBaseComponent::setup</a></div><div class="ttdeci">virtual void setup()</div></div>
+<div class="ttc" id="aclassgBaseComponent_html_aceab75238908a3dac07829b923db8313"><div class="ttname"><a href="classgBaseComponent.html#aceab75238908a3dac07829b923db8313">gBaseComponent::onEvent</a></div><div class="ttdeci">virtual void onEvent(gEvent &amp;event)</div></div>
+<div class="ttc" id="aclassgEvent_html"><div class="ttname"><a href="classgEvent.html">gEvent</a></div><div class="ttdef"><b>Definition</b> gEvent.h:32</div></div>
 <div class="ttc" id="agAppObject_8h_html"><div class="ttname"><a href="gAppObject_8h.html">gAppObject.h</a></div></div>
+<div class="ttc" id="agEvent_8h_html"><div class="ttname"><a href="gEvent_8h.html">gEvent.h</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

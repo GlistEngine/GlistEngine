@@ -23,7 +23,7 @@ var searchData=
   ['contextmenuh_20',['contextmenuh',['../classgGUIContextMenuItem.html#ab3614b07e037eb3c9cfc8e19b4853533',1,'gGUIContextMenuItem::contextmenuh'],['../classgGUIForm.html#a7766ed10d8e46e7a0543f60f7e23a8f6',1,'gGUIForm::contextmenuh']]],
   ['contextmenuw_21',['contextmenuw',['../classgGUIForm.html#ab6ad07514b7be157531f5b107eaaf72f',1,'gGUIForm']]],
   ['contextmenux_22',['contextmenux',['../classgGUIContextMenuItem.html#a3ecab62f62658ba93efdbcc82e77fcb8',1,'gGUIContextMenuItem::contextmenux'],['../classgGUIForm.html#a0152116b48fe34e9390560cc4a3e27c5',1,'gGUIForm::contextmenux']]],
-  ['contextmenuy_23',['contextmenuy',['../classgGUIForm.html#ae577d28d9f33e27b9763623b80a7c24c',1,'gGUIForm::contextmenuy'],['../classgGUIContextMenuItem.html#a658327f8b9320542ec5797ae0ef5048c',1,'gGUIContextMenuItem::contextmenuy']]],
+  ['contextmenuy_23',['contextmenuy',['../classgGUIContextMenuItem.html#a658327f8b9320542ec5797ae0ef5048c',1,'gGUIContextMenuItem::contextmenuy'],['../classgGUIForm.html#ae577d28d9f33e27b9763623b80a7c24c',1,'gGUIForm::contextmenuy']]],
   ['cpcolor_24',['cpcolor',['../classgGUIForm.html#a33631cdf62d267e227d13776dc322e0b',1,'gGUIForm']]],
   ['cph_25',['cph',['../classgGUIForm.html#aff8f0ae991c306068b7578755ede13df',1,'gGUIForm']]],
   ['cprdeg_26',['cprdeg',['../classgGUIForm.html#a0d9eaa936b7a7abc4c293a58a94763d5',1,'gGUIForm']]],
@@ -34,14 +34,11 @@ var searchData=
   ['crossmesh_31',['crossmesh',['../classgRenderer.html#ae00f2cce560854586ee5f2ae4a23d9fc',1,'gRenderer']]],
   ['currentcolor_32',['currentcolor',['../classgParticle.html#adbe9ca678d5065334574cad5c5b525d5',1,'gParticle']]],
   ['currentresolution_33',['currentresolution',['../classgRenderer.html#a45a83824c0d04f55c3cfad79bce2c86c',1,'gRenderer']]],
-  ['cursor_5farrow_34',['cursor_arrow',['../classgBaseGUIObject.html#aee3d94a9493721ffde88cc22cc617fca',1,'gBaseGUIObject::CURSOR_ARROW'],['../classgBaseWindow.html#aec6a02110e5d521870bf7810729445f9',1,'gBaseWindow::CURSOR_ARROW']]],
+  ['cursor_5farrow_34',['cursor_arrow',['../classgBaseWindow.html#aec6a02110e5d521870bf7810729445f9',1,'gBaseWindow::CURSOR_ARROW'],['../classgBaseGUIObject.html#aee3d94a9493721ffde88cc22cc617fca',1,'gBaseGUIObject::CURSOR_ARROW']]],
   ['cursor_5fcrosshair_35',['cursor_crosshair',['../classgBaseGUIObject.html#a366591ee9a3819b0f396fe1cee35e275',1,'gBaseGUIObject::CURSOR_CROSSHAIR'],['../classgBaseWindow.html#ae515e02714bb30b9bd2c810aa2cd3edb',1,'gBaseWindow::CURSOR_CROSSHAIR']]],
   ['cursor_5fhand_36',['cursor_hand',['../classgBaseGUIObject.html#a97cf6039f271b5445c6d7680384c72b2',1,'gBaseGUIObject::CURSOR_HAND'],['../classgBaseWindow.html#add17afca19120d63943412a4c517f1a7',1,'gBaseWindow::CURSOR_HAND']]],
   ['cursor_5fhresize_37',['cursor_hresize',['../classgBaseGUIObject.html#a876275a0e6968adfbf8f792600f117b9',1,'gBaseGUIObject::CURSOR_HRESIZE'],['../classgBaseWindow.html#a45720a2aa26c97cbab85a449c264cbbb',1,'gBaseWindow::CURSOR_HRESIZE']]],
   ['cursor_5fibeam_38',['cursor_ibeam',['../classgBaseGUIObject.html#a0056d1379186158c5c785226b106aa2b',1,'gBaseGUIObject::CURSOR_IBEAM'],['../classgBaseWindow.html#ac8e4670755ae80097948a975bdc9b4e4',1,'gBaseWindow::CURSOR_IBEAM']]],
   ['cursor_5fvresize_39',['cursor_vresize',['../classgBaseGUIObject.html#aaaac84f3b52c29f0c83b96b1c495a0db',1,'gBaseGUIObject::CURSOR_VRESIZE'],['../classgBaseWindow.html#a3d6c40f84458d82763555bdb8021dfd2',1,'gBaseWindow::CURSOR_VRESIZE']]],
-  ['cursormode_5fdisabled_40',['CURSORMODE_DISABLED',['../classgGLFWWindow.html#abedf768663b987a98c56593540444828',1,'gGLFWWindow']]],
-  ['cursormode_5fhidden_41',['CURSORMODE_HIDDEN',['../classgGLFWWindow.html#ad80651abd198997f39194b221a56303a',1,'gGLFWWindow']]],
-  ['cursormode_5fnormal_42',['CURSORMODE_NORMAL',['../classgGLFWWindow.html#aa45bf80c6f653527c334e765ba4937b0',1,'gGLFWWindow']]],
-  ['cyan_43',['CYAN',['../classgColor.html#a5b541cb9125866b387591231ea5d167f',1,'gColor']]]
+  ['cyan_40',['CYAN',['../classgColor.html#a5b541cb9125866b387591231ea5d167f',1,'gColor']]]
 ];

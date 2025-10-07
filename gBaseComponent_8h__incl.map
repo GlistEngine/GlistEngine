@@ -1,9 +1,11 @@
 <map id="gBaseComponent.h" name="gBaseComponent.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="780,5,929,31"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="849,5,999,31"/>
 <area shape="rect" id="Node000002" href="$gAppObject_8h.html" title=" " alt="" coords="751,79,860,104"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="849,33,823,69,819,66,844,29"/>
-<area shape="rect" id="Node000025" title=" " alt="" coords="884,79,927,104"/>
-<area shape="poly" id="edge24_Node000001_Node000025" title=" " alt="" coords="865,29,891,66,887,69,861,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="906,33,838,74,835,69,904,28"/>
+<area shape="rect" id="Node000025" href="$gEvent_8h.html" title=" " alt="" coords="885,79,963,104"/>
+<area shape="poly" id="edge24_Node000001_Node000025" title=" " alt="" coords="927,31,927,65,921,65,921,31"/>
+<area shape="rect" id="Node000027" title=" " alt="" coords="988,79,1031,104"/>
+<area shape="poly" id="edge26_Node000001_Node000027" title=" " alt="" coords="939,29,987,68,983,72,936,33"/>
 <area shape="rect" id="Node000003" href="$gObject_8h.html" title=" " alt="" coords="763,152,847,177"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="808,104,808,138,803,138,803,104"/>
 <area shape="rect" id="Node000004" href="$gUtils_8h.html" title=" " alt="" coords="671,225,743,251"/>
@@ -39,7 +41,7 @@
 <area shape="rect" id="Node000017" href="$tinyfiledialogs_8h.html" title=" " alt="" coords="1243,299,1370,324"/>
 <area shape="poly" id="edge16_Node000004_Node000017" title=" " alt="" coords="743,246,755,248,886,266,990,275,1095,282,1230,296,1229,301,1095,288,989,281,885,272,754,253,742,251"/>
 <area shape="rect" id="Node000018" href="$gColor_8h.html" title=" " alt="" coords="1395,299,1469,324"/>
-<area shape="poly" id="edge17_Node000004_Node000018" title=" " alt="" coords="743,246,755,248,849,261,929,268,1066,273,1205,277,1286,284,1381,296,1381,301,1285,289,1204,283,1066,278,928,273,848,266,754,253,742,251"/>
+<area shape="poly" id="edge17_Node000004_Node000018" title=" " alt="" coords="743,246,755,248,850,261,930,268,1068,273,1206,277,1287,284,1382,296,1382,296,1381,301,1381,301,1286,289,1206,282,1068,278,930,273,849,266,754,253,742,251"/>
 <area shape="rect" id="Node000022" title=" " alt="" coords="1493,299,1560,324"/>
 <area shape="poly" id="edge21_Node000004_Node000022" title=" " alt="" coords="743,246,755,248,864,262,956,269,1115,271,1276,275,1370,282,1480,296,1479,301,1369,287,1275,280,1115,277,956,274,863,267,754,253,742,251"/>
 <area shape="rect" id="Node000019" title=" " alt="" coords="1242,372,1353,397"/>
@@ -48,4 +50,6 @@
 <area shape="poly" id="edge19_Node000018_Node000020" title=" " alt="" coords="1435,324,1435,358,1429,358,1429,324"/>
 <area shape="rect" id="Node000021" title=" " alt="" coords="1511,372,1574,397"/>
 <area shape="poly" id="edge20_Node000018_Node000021" title=" " alt="" coords="1451,322,1514,362,1511,367,1448,326"/>
+<area shape="rect" id="Node000026" title=" " alt="" coords="881,152,967,177"/>
+<area shape="poly" id="edge25_Node000025_Node000026" title=" " alt="" coords="927,104,927,138,921,138,921,104"/>
 </map>

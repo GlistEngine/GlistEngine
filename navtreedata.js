@@ -64,23 +64,23 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "annotated.html",
-"classgBaseGUIObject.html#af97da35cbe06cc7f15a741775edb7917",
-"classgCircle.html",
-"classgGLRenderEngine.html#a586c03db02a0d2a32ddf924ea1e952e0",
-"classgGUIContextMenuItem.html#a087f35db73a08b58f8341f17a1d01474",
-"classgGUIGrid.html#a16373a5e32abc2935e84037fcdad21ec",
-"classgGUINotebook.html#a44ec97529d007da2132f8f08d78b4590",
-"classgGUISizer.html#af87bf099f420a8316e4c1d263274d523",
-"classgGrayscale.html#ab8bd28550b38a702d0952cf5735d1361",
-"classgMaterial.html#a4dc8c7053c84b3b1bbd74a772fe195c9",
-"classgNode.html#a3d29c0543433f4e00e16a476560c3f5c",
-"classgRenderer.html#a6e0d8e9c2831b7e7f877ae598ca9dee3",
-"classgShadowsMidtonesHighlights.html#a1a707ac67a34bd1d2d551e59ad1b369b",
-"classgUUID.html#aff61124c42aff80e3872bb27f77b84bc",
-"gConstants_8h.html#a79242871d313625285266bf9b9cf3202",
-"gKeyCode_8h.html#a7449aa9e958892be458bf291e99d495f",
-"gUtils_8h.html#a2ed85cbfd8460de76162b9456b281ec4",
-"tinyfiledialogs_8c.html#aeedca8836f3872ca50ebfe723423b25d"
+"classgBaseGUIObject.html#aed67c5e826a9bf7ff061d90c904f0369",
+"classgChromaticAberration.html#a27e20200767ff9c3f366f873a4dfa01b",
+"classgGLRenderEngine.html#a487192f06d9af3f23d0a79dce774a567",
+"classgGUIContainer.html#af56d8eab09a8c0ab6afd7336b6fbb31a",
+"classgGUIGrid.html#a0749ba1b4012959982b6dbde22d73122",
+"classgGUINotebook.html#a0060259961b270fbf4ee7184eb341ffd",
+"classgGUISizer.html#ae250bf20980c736fb361a9db4dc0af9b",
+"classgGrain.html#a9efea6842c7f2910aa9656e1ca28650e",
+"classgMaterial.html#a3c635a17b3a29bd48f7b5736ba7c8a70",
+"classgNode.html#a1b05034284ccbf2446c1dd82dfaef004",
+"classgRenderer.html#a670f5d6601e20c15b92585ea33748906",
+"classgShadowMap.html#ada1b4cac29cbb41b495fc1b9e2e2c204",
+"classgUUID.html#a558d04655c01413aa035c2098f278a9e",
+"gCone_8h_source.html",
+"gKeyCode_8h.html#a5e0d53aed7aeeff9b2fee5af3575d155",
+"gUtils_8h.html#a109a1a53077b79b8738180562b0ca46f",
+"tinyfiledialogs_8c.html#aa3441498bf910ce05abb03d769782074"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
