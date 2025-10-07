@@ -9,12 +9,146 @@
 #include "gAppManager.h"
 #include "gTracy.h"
 
-const int gGLFWWindow::CURSORMODE_NORMAL = GLFW_CURSOR_NORMAL;
-const int gGLFWWindow::CURSORMODE_HIDDEN = GLFW_CURSOR_HIDDEN;
-const int gGLFWWindow::CURSORMODE_DISABLED = GLFW_CURSOR_DISABLED;
+// Static functions
 
-GLFWwindow* gGLFWWindow::currentwindow = nullptr;
+static GLFWwindow* currentwindow = nullptr;
 
+static void onFramebufferResize(GLFWwindow* window, int width, int height) {
+    glViewport(0, 0, width, height);
+	auto handle = static_cast<gGLFWWindow*>(glfwGetWindowUserPointer(window));
+	if (handle) {
+		handle->setSize(width, height);
+	}
+}
+
+static void onCharInput(GLFWwindow* window, unsigned int keycode) {
+	auto handle = static_cast<gGLFWWindow*>(glfwGetWindowUserPointer(window));
+	if (handle) {
+		gCharTypedEvent event{keycode};
+		handle->callEvent(event);
+	}
+}
+
+static void onKey(GLFWwindow* window, int key, int scancode, int action, int mods) {
+	if (action != GLFW_RELEASE && action != GLFW_PRESS) return;
+	auto handle = static_cast<gGLFWWindow*>(glfwGetWindowUserPointer(window));
+	if (!handle) return;
+
+	switch(action) {
+	case GLFW_RELEASE:{
+		gKeyReleasedEvent event{key};
+		handle->callEvent(event);
+		break;
+	}
+	case GLFW_PRESS:{
+		gKeyPressedEvent event{key};
+		handle->callEvent(event);
+		break;
+	}
+	}
+}
+
+static void onWindowFocus(GLFWwindow* window, int focused) {
+	auto handle = static_cast<gGLFWWindow*>(glfwGetWindowUserPointer(window));
+	if (!handle) return;
+
+	if(focused) {
+		gWindowFocusEvent event{};
+		handle->callEvent(event);
+	} else {
+		gWindowLoseFocusEvent event{};
+		handle->callEvent(event);
+	}
+}
+
+static void onJoystick(int jid, int action) {
+	if (!currentwindow) {
+		return;
+	}
+	auto handle = static_cast<gGLFWWindow*>(glfwGetWindowUserPointer(currentwindow));
+	if (!handle) {
+		return;
+	}
+
+	switch(action) {
+	case GLFW_CONNECTED: {
+		gJoystickConnectEvent event{jid, glfwJoystickIsGamepad(jid) == GLFW_TRUE};
+		handle->callEvent(event);
+		break;
+	}
+	case GLFW_DISCONNECTED: {
+		gJoystickDisconnectEvent event{jid};
+		handle->callEvent(event);
+		break;
+	}
+	}
+}
+
+static void onMouseMove(GLFWwindow* window, double xpos, double ypos) {
+	auto handle = static_cast<gGLFWWindow*>(glfwGetWindowUserPointer(window));
+	if (handle) {
+		float x = xpos * handle->getScaleX();
+		float y = ypos * handle->getScaleY();
+		if (x > handle->getWidth() || y > handle->getHeight() || x < 0 || y < 0) {
+			return;
+		}
+		gMouseMovedEvent event {
+			x, y,
+			handle->getCursorMode()
+		};
+		handle->callEvent(event);
+		if (handle->getCursorMode() == CURSORMODE_RELATIVE) {
+			glfwSetCursorPos(window, handle->getWidth() / 2.0f,
+							 handle->getHeight() / 2.0f);
+		}
+	}
+}
+
+static void onMouseButton(GLFWwindow* window, int button, int action, int mods) {
+	double xpos, ypos;
+	glfwGetCursorPos(window, &xpos, &ypos);
+	auto handle = static_cast<gGLFWWindow*>(glfwGetWindowUserPointer(window));
+	if (!handle) return;
+
+	switch(action) {
+	case GLFW_RELEASE:{
+		gMouseButtonReleasedEvent event{button, static_cast<int>(xpos * handle->getScaleX()), static_cast<int>(ypos * handle->getScaleY())};
+		handle->callEvent(event);
+		break;
+	}
+	case GLFW_PRESS:{
+		gMouseButtonPressedEvent event{button, static_cast<int>(xpos * handle->getScaleX()), static_cast<int>(ypos * handle->getScaleY())};
+		handle->callEvent(event);
+		break;
+	}
+	}
+}
+
+static void onMouseEnter(GLFWwindow* window, int entered) {
+	auto handle = static_cast<gGLFWWindow*>(glfwGetWindowUserPointer(window));
+	if (!handle) return;
+
+	if(entered) {
+		gWindowMouseEnterEvent event{};
+		handle->callEvent(event);
+	} else {
+		gWindowMouseExitEvent event{};
+		handle->callEvent(event);
+	}
+}
+
+static void onMouseScroll(GLFWwindow* window, double xoffset, double yoffset) {
+	auto handle = static_cast<gGLFWWindow*>(glfwGetWindowUserPointer(window));
+	if (!handle) return;
+	gMouseScrolledEvent event{static_cast<int>(xoffset), static_cast<int>(yoffset)};
+	handle->callEvent(event);
+}
+
+static void glfwErrorCallback(int error, const char* description) {
+	gLoge("gGLFWWindow") << "GLFW Error: " << error << ": " << description;
+}
+
+// Class stuff
 
 gGLFWWindow::gGLFWWindow() {
 	window = nullptr;
@@ -26,17 +160,13 @@ gGLFWWindow::gGLFWWindow() {
 gGLFWWindow::~gGLFWWindow() {
 }
 
-void gGLFWWindow::glfwErrorCallback(int error, const char* description) {
-	gLoge("gGLFWWindow") << "GLFW Error: " << error << ": " << description;
-}
-
 void gGLFWWindow::initialize(int width, int height, int windowMode, bool isResizable) {
 	gBaseWindow::initialize(width, height, windowMode, isResizable);
 
 	// Set error callback before glfwInit() if supported
 #ifdef GLFW_VERSION_MAJOR
 	#if (GLFW_VERSION_MAJOR > 3) || (GLFW_VERSION_MAJOR == 3 && GLFW_VERSION_MINOR >= 0)
-		glfwSetErrorCallback(gGLFWWindow::glfwErrorCallback);
+		glfwSetErrorCallback(glfwErrorCallback);
 	#endif
 #else
 	// Fallback: try to set it anyway if version macros aren't available
@@ -87,7 +217,7 @@ void gGLFWWindow::initialize(int width, int height, int windowMode, bool isResiz
     window = glfwCreateWindow(width, height, title.c_str(),
 			(windowMode == G_WINDOWMODE_GAME?glfwGetPrimaryMonitor():NULL), NULL);
 
-	if(window == NULL) {
+	if(window == nullptr) {
 		gLoge("gGLFWWindow") << "Failed to create GLFW window" << std::endl;
 	    glfwTerminate();
 	    return;
@@ -160,21 +290,22 @@ void gGLFWWindow::initialize(int width, int height, int windowMode, bool isResiz
 	glViewport(0, 0, width, height);
 
 	// Notify OpenGL if the window size changed
-	glfwSetFramebufferSizeCallback(window, gGLFWWindow::framebuffer_size_callback);
-	glfwSetCharCallback(window, gGLFWWindow::character_callback);
-	glfwSetKeyCallback(window, gGLFWWindow::key_callback);
-	glfwSetCursorPosCallback(window, gGLFWWindow::mouse_pos_callback);
-	glfwSetMouseButtonCallback(window, gGLFWWindow::mouse_button_callback);
-	glfwSetCursorEnterCallback(window, gGLFWWindow::mouse_enter_callback);
-	glfwSetScrollCallback(window, gGLFWWindow::mouse_scroll_callback);
-	glfwSetWindowFocusCallback(window, gGLFWWindow::window_focus_callback);
-	glfwSetJoystickCallback(gGLFWWindow::joystick_callback);
+	glfwSetFramebufferSizeCallback(window, onFramebufferResize);
+	glfwSetCharCallback(window, onCharInput);
+	glfwSetKeyCallback(window, onKey);
+	glfwSetCursorPosCallback(window, onMouseMove);
+	glfwSetMouseButtonCallback(window, onMouseButton);
+	glfwSetCursorEnterCallback(window, onMouseEnter);
+	glfwSetScrollCallback(window, onMouseScroll);
+	glfwSetWindowFocusCallback(window, onWindowFocus);
+	glfwSetJoystickCallback(onJoystick);
 
     for (int jid = GLFW_JOYSTICK_1; jid <= GLFW_JOYSTICK_LAST; ++jid) {
         if (glfwJoystickPresent(jid)) {
-            gGLFWWindow::joystick_callback(jid, GLFW_CONNECTED);
+            onJoystick(jid, GLFW_CONNECTED);
         }
     }
+	setCursorMode(CURSORMODE_NORMAL);
 }
 
 bool gGLFWWindow::getShouldClose() {
@@ -215,8 +346,28 @@ void gGLFWWindow::setCursor(int cursorNo) {
 	}
 }
 
-void gGLFWWindow::setCursorMode(int cursorMode) {
-	glfwSetInputMode(window, GLFW_CURSOR, cursorMode);
+void gGLFWWindow::setCursorMode(gCursorMode cursorMode) {
+	cursormode = cursorMode;
+	switch (cursorMode) {
+	case CURSORMODE_NORMAL: {
+		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+		break;
+	}
+	case CURSORMODE_HIDDEN: {
+		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+		break;
+	}
+	case CURSORMODE_DISABLED: {
+		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+		break;
+	}
+	case CURSORMODE_RELATIVE: {
+		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+		glfwSetCursorPos(window, width / 2.0f,
+						 height / 2.0f);
+		break;
+	}
+	}
 }
 
 void gGLFWWindow::setCursorPos(int x, int y) {
@@ -235,7 +386,7 @@ std::string gGLFWWindow::getClipboardString() {
 void gGLFWWindow::setWindowSize(int width, int height) {
 	if(window != nullptr) {
 		glfwSetWindowSize(window, width, height);
-		framebuffer_size_callback(window, width, height);
+		onFramebufferResize(window, width, height);
 	}
 }
 
@@ -300,119 +451,4 @@ bool gGLFWWindow::isGamepadButtonPressed(int joystickId, int buttonId) {
 
 const float* gGLFWWindow::getJoystickAxes(int joystickId, int* axisCountPtr) {
 	return glfwGetJoystickAxes(joystickId, axisCountPtr);
-}
-
-void gGLFWWindow::framebuffer_size_callback(GLFWwindow* window, int width, int height) {
-    glViewport(0, 0, width, height);
-	auto handle = static_cast<gGLFWWindow*>(glfwGetWindowUserPointer(window));
-	if (handle) {
-		handle->setSize(width, height);
-	}
-}
-
-void gGLFWWindow::character_callback(GLFWwindow* window, unsigned int keycode) {
-	auto handle = static_cast<gGLFWWindow*>(glfwGetWindowUserPointer(window));
-	if (handle) {
-		gCharTypedEvent event{keycode};
-		handle->callEvent(event);
-	}
-}
-
-void gGLFWWindow::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
-	if (action != GLFW_RELEASE && action != GLFW_PRESS) return;
-	auto handle = static_cast<gGLFWWindow*>(glfwGetWindowUserPointer(window));
-	if (!handle) return;
-
-	switch(action) {
-	case GLFW_RELEASE:{
-		gKeyReleasedEvent event{key};
-		handle->callEvent(event);
-		break;
-	}
-	case GLFW_PRESS:{
-		gKeyPressedEvent event{key};
-		handle->callEvent(event);
-		break;
-	}
-	}
-}
-
-void gGLFWWindow::window_focus_callback(GLFWwindow* window, int focused) {
-	auto handle = static_cast<gGLFWWindow*>(glfwGetWindowUserPointer(window));
-	if (!handle) return;
-
-	if(focused) {
-		gWindowFocusEvent event{};
-		handle->callEvent(event);
-	} else {
-		gWindowLoseFocusEvent event{};
-		handle->callEvent(event);
-	}
-}
-
-void gGLFWWindow::joystick_callback(int jid, int action) {
-	if (!currentwindow) return;
-	auto handle = static_cast<gGLFWWindow*>(glfwGetWindowUserPointer(currentwindow));
-	if (!handle) return;
-
-	switch(action) {
-	case GLFW_CONNECTED: {
-		gJoystickConnectEvent event{jid, glfwJoystickIsGamepad(jid) == GLFW_TRUE};
-		handle->callEvent(event);
-		break;
-	}
-	case GLFW_DISCONNECTED: {
-		gJoystickDisconnectEvent event{jid};
-		handle->callEvent(event);
-		break;
-	}
-	}
-}
-
-void gGLFWWindow::mouse_pos_callback(GLFWwindow* window, double xpos, double ypos) {
-	auto handle = static_cast<gGLFWWindow*>(glfwGetWindowUserPointer(window));
-	if (handle) {
-		gMouseMovedEvent event{static_cast<int>(xpos * handle->scalex), static_cast<int>(ypos * handle->scaley)};
-		handle->callEvent(event);
-	}
-}
-
-void gGLFWWindow::mouse_button_callback(GLFWwindow* window, int button, int action, int mods) {
-	double xpos, ypos;
-	glfwGetCursorPos(window, &xpos, &ypos);
-	auto handle = static_cast<gGLFWWindow*>(glfwGetWindowUserPointer(window));
-	if (!handle) return;
-
-	switch(action) {
-	case GLFW_RELEASE:{
-		gMouseButtonReleasedEvent event{button, static_cast<int>(xpos * handle->scalex), static_cast<int>(ypos * handle->scaley)};
-		handle->callEvent(event);
-		break;
-	}
-	case GLFW_PRESS:{
-		gMouseButtonPressedEvent event{button, static_cast<int>(xpos * handle->scalex), static_cast<int>(ypos * handle->scaley)};
-		handle->callEvent(event);
-		break;
-	}
-	}
-}
-
-void gGLFWWindow::mouse_enter_callback(GLFWwindow* window, int entered) {
-	auto handle = static_cast<gGLFWWindow*>(glfwGetWindowUserPointer(window));
-	if (!handle) return;
-
-	if(entered) {
-		gWindowMouseEnterEvent event{};
-		handle->callEvent(event);
-	} else {
-		gWindowMouseExitEvent event{};
-		handle->callEvent(event);
-	}
-}
-
-void gGLFWWindow::mouse_scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
-	auto handle = static_cast<gGLFWWindow*>(glfwGetWindowUserPointer(window));
-	if (!handle) return;
-	gMouseScrolledEvent event{static_cast<int>(xoffset), static_cast<int>(yoffset)};
-	handle->callEvent(event);
 }

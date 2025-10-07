@@ -25,12 +25,12 @@ enum EventCategory {
 #undef BIT
 
 /*
- * Events are more future proof, in case anything new is added to an event
+ * Events are more future-proof, in case anything new is added to an event
  * developers doesn't have to update their function parameters.
  */
 
 class gEvent {
-  public:
+public:
 	virtual ~gEvent() = default;
 
 	bool ishandled = false;
@@ -62,9 +62,9 @@ typedef std::function<void(gEvent&)> EventHandlerFn;
  *    return false;
  * }
  * \endcode
- */
+*/
 class gEventDispatcher {
-  public:
+public:
 	gEventDispatcher(gEvent& event)
 		: event(event) {
 	}
@@ -79,7 +79,7 @@ class gEventDispatcher {
 		return false;
 	}
 
-  private:
+private:
 	gEvent& event;
 };
 

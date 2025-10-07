@@ -422,8 +422,12 @@ void gAppManager::setCursor(int cursorId) {
     window->setCursor(cursorId);
 }
 
-void gAppManager::setCursorMode(int cursorMode) {
+void gAppManager::setCursorMode(gCursorMode cursorMode) {
     window->setCursorMode(cursorMode);
+}
+
+gCursorMode gAppManager::getCursorMode() {
+	return window->getCursorMode();
 }
 
 void gAppManager::setWindowIcon(std::string pngFullpath) {
@@ -555,7 +559,6 @@ void gAppManager::tick() {
 	executeQueue();
 }
 
-
 void gAppManager::onEvent(gEvent& event) {
     if(event.ishandled) return;
 
@@ -583,7 +586,12 @@ void gAppManager::onEvent(gEvent& event) {
     dispatcher.dispatch<gTouchEvent>(G_BIND_FUNCTION(onTouchEvent));
 #endif
     if(canvasmanager && getCurrentCanvas()) getCurrentCanvas()->onEvent(event);
-    // todo pass event to app and plugins
+	for (gBaseComponent*& component : gBaseComponent::usedcomponents) {
+		component->onEvent(event);
+	}
+	for (gBasePlugin*& component : gBasePlugin::usedplugins) {
+		component->onEvent(event);
+	}
 }
 
 bool gAppManager::onWindowResizedEvent(gWindowResizeEvent& event) {

@@ -202,6 +202,8 @@ public:
 	 */
 	virtual void mouseExited();
 
+	virtual void onEvent(gEvent& event);
+
 	/**
 	 * All the plugins that extends this class should add themselves into this
 	 * deque container in their constructor, as this is not a plugin-specific variable.

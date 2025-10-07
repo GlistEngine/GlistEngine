@@ -11,6 +11,13 @@
 #include "gEvent.h"
 #include "gUtils.h"
 
+enum gCursorMode : uint8_t {
+	CURSORMODE_NORMAL,
+	CURSORMODE_HIDDEN,
+	CURSORMODE_DISABLED,
+	CURSORMODE_RELATIVE
+};
+
 class gKeyEvent : public gEvent {
 public:
 	int getKeyCode() const { return keycode; }
@@ -60,17 +67,20 @@ public:
 
 class gMouseMovedEvent : public gEvent {
 public:
-	gMouseMovedEvent(const int x, const int y)
+	gMouseMovedEvent(float x, float y, gCursorMode cursormode)
 		: mousex(x),
-		  mousey(y) {}
+		  mousey(y),
+		  cursormode(cursormode) {}
 
-	int getX() const { return mousex; }
-	int getY() const { return mousey; }
+	float getX() const { return mousex; }
+	float getY() const { return mousey; }
+	gCursorMode getCursorMode() const { return cursormode; }
 
 	G_EVENT_CLASS_TYPE(gMouseMovedEvent)
 	G_EVENT_CLASS_CATEGORY(EVENTCATEGORY_MOUSE | EVENTCATEGORY_INPUT)
 private:
-	int mousex, mousey;
+	float mousex, mousey;
+	gCursorMode cursormode;
 };
 
 class gMouseScrolledEvent : public gEvent {
@@ -267,19 +277,19 @@ private:
 
 class gAppPauseEvent : public gEvent {
 public:
-    gAppPauseEvent() {}
+	gAppPauseEvent() {}
 
-    G_EVENT_CLASS_TYPE(gAppPauseEvent)
-    G_EVENT_CLASS_CATEGORY(EVENTCATEGORY_APP)
+	G_EVENT_CLASS_TYPE(gAppPauseEvent)
+	G_EVENT_CLASS_CATEGORY(EVENTCATEGORY_APP)
 private:
 };
 
 class gAppResumeEvent : public gEvent {
 public:
-    gAppResumeEvent() {}
+	gAppResumeEvent() {}
 
-    G_EVENT_CLASS_TYPE(gAppResumeEvent)
-    G_EVENT_CLASS_CATEGORY(EVENTCATEGORY_APP)
+	G_EVENT_CLASS_TYPE(gAppResumeEvent)
+	G_EVENT_CLASS_CATEGORY(EVENTCATEGORY_APP)
 private:
 };
 

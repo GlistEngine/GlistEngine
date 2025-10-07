@@ -1,4 +1,4 @@
-cmake_minimum_required (VERSION 3.10.2)
+cmake_minimum_required (VERSION 3.13)
 
 if(NOT DEFINED GLIST_CXX_STANDARD)
 	set(GLIST_CXX_STANDARD 14)
@@ -34,14 +34,18 @@ endif()
 
 list(APPEND GLIST_CXX_FLAGS_DEBUG -DDEBUG -O0 -g)
 list(APPEND GLIST_CXX_FLAGS_RELEASE -DEIGEN_NO_CUDA -DNDEBUG -O2)
+if(NOT DEFINED GLIST_SHARED_LINKER_FLAGS)
+	set(GLIST_SHARED_LINKER_FLAGS )
+endif()
+
 if(APPLE)
-	set(GLIST_SHARED_LINKER_FLAGS "-pthread -L${BREW_PATH}/llvm/lib -Wl,-rpath,${BREW_PATH}/llvm/lib -L${BREW_PATH}/llvm/lib/c++ -Wl,-rpath,${BREW_PATH}/llvm/lib/c++")
+	list(APPEND GLIST_SHARED_LINKER_FLAGS -pthread -L${BREW_PATH}/llvm/lib -Wl,-rpath,${BREW_PATH}/llvm/lib -L${BREW_PATH}/llvm/lib/c++ -Wl,-rpath,${BREW_PATH}/llvm/lib/c++)
 else()
-	set(GLIST_SHARED_LINKER_FLAGS "-v -pthread -Wl,--gc-sections")
+	list(APPEND GLIST_SHARED_LINKER_FLAGS -v -pthread -Wl,--gc-sections)
 endif()
 
 if(WIN32)
-	set(GLIST_SHARED_LINKER_FLAGS "${GLIST_SHARED_LINKER_FLAGS} -mwindows")
+	list(APPEND GLIST_SHARED_LINKER_FLAGS -mwindows)
 endif()
 
 ##################################################
@@ -392,11 +396,7 @@ else()
 	)
 endif()
 
-if(APPLE)
-    target_link_options(GlistEngine PRIVATE ${GLIST_SHARED_LINKER_FLAGS})
-else()
-	set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} ${GLIST_SHARED_LINKER_FLAGS}")
-endif()
+target_link_options(GlistEngine PRIVATE ${GLIST_SHARED_LINKER_FLAGS})
 
 list(APPEND GLIST_CXX_FLAGS_DEBUG ${GLIST_CXX_FLAGS_COMMON} ${GLIST_CXX_FLAGS_DEBUG})
 list(APPEND GLIST_CXX_FLAGS_RELEASE ${GLIST_CXX_FLAGS_COMMON} ${GLIST_CXX_FLAGS_RELEASE})
