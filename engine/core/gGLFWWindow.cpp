@@ -92,14 +92,19 @@ static void onMouseMove(GLFWwindow* window, double xpos, double ypos) {
 		if (x > handle->getWidth() || y > handle->getHeight() || x < 0 || y < 0) {
 			return;
 		}
-		gMouseMovedEvent event {
+		if (handle->getCursorMode() == CURSORMODE_RELATIVE) {
+			// y is intentionally divided to width instead of height to get the same aspect ratio
+			x = (handle->getWidth() / 2.0f - x) / handle->getWidth();
+			y = (handle->getHeight() / 2.0f - y) / handle->getWidth();
+		}
+		gMouseMovedEvent event{
 			x, y,
 			handle->getCursorMode()
 		};
 		handle->callEvent(event);
 		if (handle->getCursorMode() == CURSORMODE_RELATIVE) {
-			glfwSetCursorPos(window, handle->getWidth() / 2.0f,
-							 handle->getHeight() / 2.0f);
+			handle->setCursorPos(handle->getWidth() / 2.0f,
+				handle->getHeight() / 2.0f);
 		}
 	}
 }
@@ -317,7 +322,6 @@ void gGLFWWindow::update() {
 	// End window drawing
 	G_CHECK_GL(glfwSwapBuffers(window));
 	G_CHECK_GL(glfwPollEvents());
-//    std::cout << "width:" << width << ", height:" << height << std::endl;
 }
 
 void gGLFWWindow::close() {
@@ -363,8 +367,7 @@ void gGLFWWindow::setCursorMode(gCursorMode cursorMode) {
 	}
 	case CURSORMODE_RELATIVE: {
 		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-		glfwSetCursorPos(window, width / 2.0f,
-						 height / 2.0f);
+		setCursorPos(width / 2.0f, height / 2.0f);
 		break;
 	}
 	}
