@@ -22,6 +22,11 @@
 
 class gGLFWWindow : public gBaseWindow {
 public:
+	static constexpr gCursorMode CURSORMODE_NORMAL = gCursorMode::CURSORMODE_NORMAL;
+	static constexpr gCursorMode CURSORMODE_HIDDEN = gCursorMode::CURSORMODE_HIDDEN;
+	static constexpr gCursorMode CURSORMODE_DISABLED = gCursorMode::CURSORMODE_DISABLED;
+	static constexpr gCursorMode CURSORMODE_RELATIVE = gCursorMode::CURSORMODE_RELATIVE;
+
 	gGLFWWindow();
 	~gGLFWWindow() override;
 

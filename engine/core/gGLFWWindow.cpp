@@ -371,6 +371,11 @@ void gGLFWWindow::setCursorMode(gCursorMode cursorMode) {
 		break;
 	}
 	}
+
+	if (glfwRawMouseMotionSupported()) {
+		// Raw input is only enabled when relative mouse is set
+		glfwSetInputMode(window, GLFW_RAW_MOUSE_MOTION, cursormode == CURSORMODE_RELATIVE);
+	}
 }
 
 void gGLFWWindow::setCursorPos(int x, int y) {

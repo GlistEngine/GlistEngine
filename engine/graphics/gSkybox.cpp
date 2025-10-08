@@ -35,14 +35,16 @@ gSkybox::gSkybox() {
 
 gSkybox::~gSkybox() {}
 
-unsigned int gSkybox::loadTextures(std::vector<std::string>& texturePaths) {
-	for (int i = 0; i < texturePaths.size(); i++) {
-		texturePaths[i] = gGetTexturesDir() + texturePaths[i];
+unsigned int gSkybox::loadTextures(const std::vector<std::string>& paths) {
+	std::vector<std::string> fullpaths;
+	fullpaths.resize(6);
+	for (int i = 0; i < paths.size(); i++) {
+		fullpaths[i] = gGetTexturesDir() + paths[i];
 	}
-	return load(texturePaths);
+	return load(fullpaths);
 }
 
-unsigned int gSkybox::load(std::vector<std::string>& fullPaths) {
+unsigned int gSkybox::load(const std::vector<std::string>& fullPaths) {
 	skymapslot = GL_TEXTURE0;
 	skymapint = 0;
 
@@ -57,7 +59,7 @@ unsigned int gSkybox::load(std::vector<std::string>& fullPaths) {
         	renderer->texImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, GL_RGB, width, height, GL_RGB, GL_UNSIGNED_BYTE, data);
             stbi_image_free(data);
         } else {
-            std::cout << "Cubemap tex failed to load at path: " << fullPaths[i] << std::endl;
+        	gLoge("gSkyBox") << "Cubemap tex failed to load at path: " << fullPaths[i];
             stbi_image_free(data);
         }
     }
@@ -86,6 +88,33 @@ void gSkybox::loadSkybox(gImage* images) {
 			images[i].getWidth(), images[i].getHeight(), GL_RGB,
 			GL_UNSIGNED_BYTE, images[i].getImageData());
     }
+
+	renderer->setWrappingAndFiltering(GL_TEXTURE_CUBE_MAP, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, GL_LINEAR, GL_LINEAR);
+
+	renderer->getSkyboxShader()->use();
+	renderer->getSkyboxShader()->setInt("skymap", skymapint);
+
+	if(ispbr) generatePbrMaps();
+
+	renderer->unbindSkyTexture(0);
+}
+
+void gSkybox::loadFromData(std::array<int, 6> widths, std::array<int, 6> heights, std::array<void*, 6> rawdata, std::array<bool, 6> ishdr) {
+	skymapslot = GL_TEXTURE0;
+	skymapint = 0;
+
+	renderer->enableCubeMap();
+
+	id = renderer->createTextures();
+	renderer->bindSkyTexture(id, skymapslot);
+
+	for (unsigned int i = 0; i < 6; i++) {
+		if (ishdr[i]) {
+			renderer->texImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, GL_RGB, widths[i], heights[i], GL_RGB, GL_FLOAT, rawdata[i]);
+		} else {
+			renderer->texImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, GL_RGB, widths[i], heights[i], GL_RGB, GL_UNSIGNED_BYTE, rawdata[i]);
+		}
+	}
 
 	renderer->setWrappingAndFiltering(GL_TEXTURE_CUBE_MAP, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, GL_LINEAR, GL_LINEAR);
 

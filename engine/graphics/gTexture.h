@@ -80,8 +80,6 @@ public:
 	*/
 	unsigned int loadMaskTexture(const std::string& maskTexturePath);
 
-	unsigned int loadData(unsigned char* textureData, int width, int height, int componentNum, bool isMutable = false, bool isStbImage = false);
-
 	void bind() const;
 	void bind(int textureSlotNo) const;
 	void unbind() const;
@@ -124,7 +122,8 @@ public:
 	void drawSub(const gRect& src, const gRect& dst, int pivotx, int pivoty, float rotate = 0.f);
 	void drawSub(const gRect& src, const gRect& dst, glm::vec2 pivot, float rotate = 0.f);
 
-	void setData(unsigned char* textureData, bool isMutable = false, bool isStbImage = false, bool clean = true);
+	unsigned int setData(unsigned char* textureData, int width, int height, int componentNum, bool isMutable = false, bool isStbImage = false);
+	unsigned int setDataHDR(float* textureData, int width, int height, int componentNum, bool isMutable = false, bool isStbImage = false);
 
 	void setupRenderData();
 
@@ -149,7 +148,8 @@ protected:
 	bool isstbimage;
 	int wraps, wrapt, filtermin, filtermag;
 
-
+	void setDataInternal(unsigned char* textureData, bool isMutable = false, bool isStbImage = false, bool clean = true);
+	void setDataInternalHDR(float* textureData, bool isMutable = false, bool  isStbImage = false, bool clean = true);
 	bool isMutable();
 
 	std::string getDirName(const std::string& fname);
@@ -157,8 +157,6 @@ protected:
 
 	bool ishdr;
 	float* datahdr;
-	void setDataHDR(float* textureData, bool isMutable = false, bool  isStbImage = false, bool clean = true);
-	float* getDataHDR();
 	bool ismaskloaded;
 	gTexture* masktexture;
 	bool istextureallocated;
