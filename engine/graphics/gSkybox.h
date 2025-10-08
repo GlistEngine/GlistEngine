@@ -34,20 +34,18 @@ public:
 	 * Loads skybox textures from the assets/textures folder. 6 textures needed for the 6 sided skybox. Due to OpenGL instructions,
 	 * the textures should be in this order: right, left, top, bottom, front, back.
 	 */
-	unsigned int loadTextures(std::vector<std::string>& texturePaths);
+	unsigned int loadTextures(const std::vector<std::string>& texturePaths);
 
 	/**
 	 * Loads skybox textures from the given full paths. 6 textures needed for the 6 sided skybox. Due to OpenGL instructions,
 	 * the textures should be in this order: right, left, top, bottom, front, back.
 	 */
-	unsigned int load(std::vector<std::string>& fullPaths);
-
-	void loadSkybox(gImage* images);
-
-	void loadDataSkybox(std::string *data, int width, int height);
+	unsigned int load(const std::vector<std::string>& fullPaths);
 
 	unsigned int loadEquirectangular(const std::string& fullPath);
 	unsigned int loadTextureEquirectangular(const std::string& texturePath);
+
+	void loadFromData(std::array<int, 6> widths, std::array<int, 6> heights, std::array<void*, 6> rawdata, std::array<bool, 6> ishdr);
 
 	/**
 	 * Draws the skybox back the scene. Drawing the skybox after drawing all scene objects and disabling lights would give the most
@@ -58,6 +56,8 @@ public:
 	void generatePbrMaps();
 	void bindPbrMaps();
 
+	void loadSkybox(gImage* images);
+	void loadDataSkybox(std::string* data, int width, int height);
 private:
 	unsigned int id;
 	int width, height, nrChannels;
