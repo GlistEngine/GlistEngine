@@ -113,21 +113,15 @@ unsigned int gTexture::load(const std::string& fullPath) {
 	fullpath = fullPath;
 	directory = getDirName(fullpath);
 	path = getFileName(fullpath);
-	ishdr = false;
-	if (gToLower(fullpath.substr(fullpath.length() - 3, 3)) == "hdr") ishdr = true;
-
-	if (!istextureallocated) {
-		id = renderer->createTextures();
-		istextureallocated = true;
-	}
+	ishdr = stbi_is_hdr(fullpath.c_str());
 
 	if (ishdr) {
 		stbi_set_flip_vertically_on_load(true);
 		float* datahdr = stbi_loadf(fullpath.c_str(), &width, &height, &componentnum, 0);
-		setDataHDR(datahdr, false, true);
+		setDataHDR(datahdr, width, height, componentnum, false, true);
 	} else {
 		unsigned char* data = stbi_load(fullpath.c_str(), &width, &height, &componentnum, 0);
-		setData(data, false, true);
+		setData(data, width, height, componentnum, false, true);
 	}
 
 	//	setupRenderData();
@@ -150,7 +144,7 @@ unsigned int gTexture::loadMaskTexture(const std::string& maskTexturePath) {
 	return masktexture->load(gGetTexturesDir() + maskTexturePath);
 }
 
-unsigned int gTexture::loadData(unsigned char* textureData, int width, int height, int componentNum, bool isMutable, bool isStbImage) {
+unsigned int gTexture::setData(unsigned char* textureData, int width, int height, int componentNum, bool isMutable, bool isStbImage) {
 	this->width = width;
 	this->height = height;
 	this->componentnum = componentNum;
@@ -160,13 +154,29 @@ unsigned int gTexture::loadData(unsigned char* textureData, int width, int heigh
 		istextureallocated = true;
 	}
 
-	setData(textureData, isMutable, isStbImage);
+	setDataInternal(textureData, isMutable, isStbImage);
 
 	//	setupRenderData();
 	return id;
 }
 
-void gTexture::setData(unsigned char* textureData, bool isMutable, bool isStbImage, bool clean) {
+unsigned int gTexture::setDataHDR(float* textureData, int width, int height, int componentNum, bool isMutable, bool isStbImage) {
+	this->width = width;
+	this->height = height;
+	this->componentnum = componentNum;
+
+	if (!istextureallocated) {
+		id = renderer->createTextures();
+		istextureallocated = true;
+	}
+
+	setDataInternalHDR(textureData, isMutable, isStbImage);
+
+	//	setupRenderData();
+	return id;
+}
+
+void gTexture::setDataInternal(unsigned char* textureData, bool isMutable, bool isStbImage, bool clean) {
 	if(clean) {
 		cleanupData();
 	}
@@ -205,7 +215,7 @@ void gTexture::setData(unsigned char* textureData, bool isMutable, bool isStbIma
 	setupRenderData();
 }
 
-void gTexture::setDataHDR(float* textureData, bool isMutable, bool isStbImage, bool clean) {
+void gTexture::setDataInternalHDR(float* textureData, bool isMutable, bool isStbImage, bool clean) {
 	if(clean) {
 		cleanupData();
 	}
@@ -234,10 +244,6 @@ void gTexture::setDataHDR(float* textureData, bool isMutable, bool isStbImage, b
 
 unsigned char* gTexture::getData() {
 	return data;
-}
-
-float* gTexture::getDataHDR() {
-	return datahdr;
 }
 
 bool gTexture::isMutable() {

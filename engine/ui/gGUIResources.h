@@ -134,7 +134,7 @@ public:
 
 	int getIconWidth();
 	int getIconHeight();
-	int getIconFormat();
+	int getIconComponentsNum();
 
 	int getIconNum();
 	gTexture* getIconImage(int iconId, bool isIconBig = false);
@@ -144,7 +144,7 @@ private:
 	static const int bigiconnum;
 
 	bool isinitialized;
-	int iconw, iconh, bigiconw, bigiconh, iconformat;
+	int iconw, iconh, bigiconw, bigiconh, iconcomponents;
 	// The array we keep pictures
 	gTexture** icon;
 	gTexture** bigicon;
