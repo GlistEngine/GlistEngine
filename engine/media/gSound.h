@@ -11,6 +11,7 @@
 #include "gBaseSound.h"
 #include "miniaudio.h"
 
+
 ma_engine* gGetSoundEngine();
 
 /**
@@ -46,6 +47,12 @@ public:
      * @brief Starts sound playback and resets the position to the beginning.
      */
     void play() override;
+
+    void startRecording(std::string filename);
+
+    void stopRecording ();
+
+    bool isRecording();
 
     bool isLoaded() override;
 
@@ -131,6 +138,11 @@ private:
     std::string filepath; // Path to the loaded audio file.
     int duration = 0; // Duration of the sound in milliseconds.
     int lastposition = 0; // Last known position, only used for pause/resume logic.
+
+    ma_device captureDevice;
+    ma_encoder encoder;
+    bool recording = false;
+    std::string recordFilename;
 };
 
 

@@ -5,7 +5,7 @@
  *      Author: Metehan Gezer
  */
 #include "gSound.h"
-
+//
 #define MINIAUDIO_IMPLEMENTATION
 #include "miniaudio.h"
 
@@ -31,8 +31,8 @@ int gSound::load(const std::string& fullPath) {
     close(); // in case previously loaded
 
     if(ma_sound_init_from_file(gGetSoundEngine(), fullPath.c_str(),
-                                MA_SOUND_FLAG_DECODE | MA_SOUND_FLAG_ASYNC,
-                                nullptr, nullptr, &sound) != MA_SUCCESS) {
+    		MA_SOUND_FLAG_DECODE | MA_SOUND_FLAG_ASYNC,
+			nullptr, nullptr, &sound) != MA_SUCCESS) {
         return 0;
     }
 
@@ -72,6 +72,68 @@ void gSound::play() {
     isplaying = true;
     ispaused = false;
 }
+#include "gSound.h"
+#include <iostream>
+
+void gSound::startRecording(std::string filename) {
+    if (recording) return;
+
+    recordFilename = filename;
+
+    ma_encoder_config encoderConfig = ma_encoder_config_init(
+        ma_encoding_format_wav,
+        ma_format_f32,
+        1,
+        44100
+		);
+
+    if (ma_encoder_init_file(filename.c_str(), &encoderConfig, &encoder) != MA_SUCCESS) {
+        std::cerr << "Encoder baþlatýlamadý!" << std::endl;
+        return;
+    }
+
+    ma_device_config deviceConfig = ma_device_config_init(ma_device_type_capture);
+    deviceConfig.capture.format   = encoder.config.format;
+    deviceConfig.capture.channels = encoder.config.channels;
+    deviceConfig.sampleRate       = encoder.config.sampleRate;
+    deviceConfig.dataCallback     = [](ma_device* pDevice, void* pOutput, const void* pInput, ma_uint32 frameCount) {
+        gSound* self = (gSound*)pDevice->pUserData;
+        ma_encoder_write_pcm_frames(&self->encoder, pInput, frameCount, nullptr);
+    };
+    deviceConfig.pUserData = this;
+
+    if (ma_device_init(nullptr, &deviceConfig, &captureDevice) != MA_SUCCESS) {
+        std::cerr << "Record device is couldnt start!" << std::endl;
+        ma_encoder_uninit(&encoder);
+        return;
+    }
+
+    if (ma_device_start(&captureDevice) != MA_SUCCESS) {
+        std::cerr << "Record is couldnt start" << std::endl;
+        ma_device_uninit(&captureDevice);
+        ma_encoder_uninit(&encoder);
+        return;
+    }
+
+    recording = true;
+    std::cout << "Record is Started: " << filename << std::endl;
+}
+
+void gSound::stopRecording() {
+    if (!recording) return;
+
+    ma_device_stop(&captureDevice);
+    ma_device_uninit(&captureDevice);
+    ma_encoder_uninit(&encoder);
+
+    recording = false;
+    std::cout << "Record is Stopped: " << recordFilename << std::endl;
+}
+
+bool gSound::isRecording() {
+    return recording;
+}
+
 
 void gSound::setPaused(bool paused) {
     if(!isloaded) {
