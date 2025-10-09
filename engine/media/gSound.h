@@ -27,6 +27,8 @@ public:
     gSound();
     virtual ~gSound();
 
+    enum {RECORDQUALITY_LOW, RECORDQUALITY_MIDDLE, RECORDQUALITY_HIGH, RECORDQUALITY_PRO};
+
     /**
      * @brief Loads a sound file from the full file system path.
      *
@@ -48,11 +50,18 @@ public:
      */
     void play() override;
 
-    void startRecording(std::string filename);
+    void startRecording(const std::string& filename, int quality = RECORDQUALITY_MIDDLE);
+
+    void startRecordingSound(const std::string& filename, int quality = RECORDQUALITY_MIDDLE);
 
     void stopRecording ();
 
     bool isRecording();
+
+    bool pauseRecording();
+
+    bool isRecordingPaused();
+
 
     bool isLoaded() override;
 
@@ -142,7 +151,7 @@ private:
     ma_device captureDevice;
     ma_encoder encoder;
     bool recording = false;
-    std::string recordFilename;
+    bool isrecordpaused = false;
 };
 
 
