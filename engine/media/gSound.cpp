@@ -133,22 +133,22 @@ void gSound::startRecording(const std::string& filename, int quality) {
 
     deviceConfig.pUserData = this;
 
-    if (ma_device_init(NULL, &deviceConfig, &captureDevice) != MA_SUCCESS) {
-        gLoge("Mic") << "Failed to initialize capture device!";
+    if (ma_device_init(NULL, &deviceConfig, &capturedevice) != MA_SUCCESS) {
+        gLoge("gSound") << "Failed to initialize capture device!";
         ma_encoder_uninit(&encoder);
         return;
     }
 
-    if (ma_device_start(&captureDevice) != MA_SUCCESS) {
-        gLoge("Mic") << "Failed to start device!";
-        ma_device_uninit(&captureDevice);
+    if (ma_device_start(&capturedevice) != MA_SUCCESS) {
+        gLoge("gSound") << "Failed to start device!";
+        ma_device_uninit(&capturedevice);
         ma_encoder_uninit(&encoder);
         return;
     }
 
     recording = true;
     isrecordpaused = false;
-    gLogi("Mic") << "Recording started: " << filename
+    gLogi("gSound") << "Recording started: " << filename
                  << " (Bit depth: "
                  << (quality == RECORDQUALITY_LOW ? "8"
                      : quality == RECORDQUALITY_MIDDLE ? "16"
@@ -167,12 +167,12 @@ void gSound::stopRecording() {
 
     isrecordpaused = false;
 
-    ma_device_stop(&captureDevice);
-    ma_device_uninit(&captureDevice);
+    ma_device_stop(&capturedevice);
+    ma_device_uninit(&capturedevice);
     ma_encoder_uninit(&encoder);
 
     recording = false;
-    gLogi("Mic") << "Record is stopped: " << filepath;
+    gLogi("gSound") << "Record is stopped: " << filepath;
 }
 
 bool gSound::isRecording() {
@@ -207,15 +207,14 @@ bool gSound::setRecordingPaused(bool pauseRecording) {
 
     if (pauseRecording && !isrecordpaused) {
         // Pause
-        ma_device_stop(&captureDevice);
+        ma_device_stop(&capturedevice);
         isrecordpaused = true;
-        gLogi("Mic") << "Recording is paused.";
-    }
-    else if (!pauseRecording && isrecordpaused) {
+        gLogi("gSound") << "Recording is paused.";
+    }else if (!pauseRecording && isrecordpaused) {
         // Resume
-        ma_device_start(&captureDevice);
+        ma_device_start(&capturedevice);
         isrecordpaused = false;
-        gLogi("Mic") << "Recording is resumed.";
+        gLogi("gSound") << "Recording is resumed.";
     }
 
     return isrecordpaused;

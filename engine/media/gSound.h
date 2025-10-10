@@ -127,7 +127,7 @@ public:
 
     void startRecording(const std::string& filename, int quality = RECORDQUALITY_MIDDLE);
     void startRecordingSound(const std::string& filename, int quality = RECORDQUALITY_MIDDLE);
-    void stopRecording ();
+    void stopRecording();
 
     bool isRecording();
     bool setRecordingPaused(bool pauseRecording);
@@ -144,7 +144,7 @@ private:
     int duration = 0; // Duration of the sound in milliseconds.
     int lastposition = 0; // Last known position, only used for pause/resume logic.
 
-    ma_device captureDevice;
+    ma_device capturedevice;
     ma_encoder encoder;
     bool recording = false;
     bool isrecordpaused = false;
