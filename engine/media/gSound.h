@@ -51,19 +51,6 @@ public:
      */
     void play() override;
 
-    void startRecording(const std::string& filename, int quality = RECORDQUALITY_MIDDLE);
-
-    void startRecordingSound(const std::string& filename, int quality = RECORDQUALITY_MIDDLE);
-
-    void stopRecording ();
-
-    bool isRecording();
-
-    bool setRecordingPaused(bool pauseRecording);
-
-    bool isRecordingPaused();
-
-
     bool isLoaded() override;
 
     bool isPlaying() override;
@@ -137,6 +124,14 @@ public:
      * @return File path as a string reference.
      */
     const std::string& getPath() override;
+
+    void startRecording(const std::string& filename, int quality = RECORDQUALITY_MIDDLE);
+    void startRecordingSound(const std::string& filename, int quality = RECORDQUALITY_MIDDLE);
+    void stopRecording ();
+
+    bool isRecording();
+    bool setRecordingPaused(bool pauseRecording);
+    bool isRecordingPaused();
 
 private:
     ma_sound sound;
