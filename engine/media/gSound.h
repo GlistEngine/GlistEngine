@@ -24,10 +24,11 @@ ma_engine* gGetSoundEngine();
  */
 class gSound : public gBaseSound {
 public:
+
+    enum {RECORDQUALITY_LOW, RECORDQUALITY_MIDDLE, RECORDQUALITY_HIGH, RECORDQUALITY_ULTRA};
+
     gSound();
     virtual ~gSound();
-
-    enum {RECORDQUALITY_LOW, RECORDQUALITY_MIDDLE, RECORDQUALITY_HIGH, RECORDQUALITY_PRO};
 
     /**
      * @brief Loads a sound file from the full file system path.
@@ -58,7 +59,7 @@ public:
 
     bool isRecording();
 
-    bool pauseRecording();
+    bool setRecordingPaused(bool pauseRecording);
 
     bool isRecordingPaused();
 

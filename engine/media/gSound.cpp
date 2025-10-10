@@ -100,7 +100,7 @@ void gSound::startRecording(const std::string& filename, int quality) {
             deviceConfig.sampleRate       = 48000;
             break;
 
-        case RECORDQUALITY_PRO:
+        case RECORDQUALITY_ULTRA:
             deviceConfig.capture.format   = ma_format_f32;  // 32-bit float
             deviceConfig.capture.channels = 2;
             deviceConfig.sampleRate       = 96000;
@@ -166,6 +166,8 @@ void gSound::startRecordingSound(const std::string& filename, int quality) {
 void gSound::stopRecording() {
     if (!recording) return;
 
+    isrecordpaused = false;
+
     ma_device_stop(&captureDevice);
     ma_device_uninit(&captureDevice);
     ma_encoder_uninit(&encoder);
@@ -201,14 +203,17 @@ void gSound::stop() {
     ma_sound_seek_to_pcm_frame(&sound, 0);
     isplaying = false;
 }
-bool gSound::pauseRecording() {
+bool gSound::setRecordingPaused(bool pauseRecording) {
     if (!recording) return false;
 
-    if (!isrecordpaused) {
+    if (pauseRecording && !isrecordpaused) {
+        // Pause
         ma_device_stop(&captureDevice);
         isrecordpaused = true;
         gLogi("Mic") << "Recording is paused.";
-    } else {
+    }
+    else if (!pauseRecording && isrecordpaused) {
+        // Resume
         ma_device_start(&captureDevice);
         isrecordpaused = false;
         gLogi("Mic") << "Recording is resumed.";
@@ -216,6 +221,7 @@ bool gSound::pauseRecording() {
 
     return isrecordpaused;
 }
+
 
 bool gSound::isRecordingPaused() {
     return isrecordpaused;
