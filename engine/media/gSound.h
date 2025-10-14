@@ -25,8 +25,6 @@ ma_engine* gGetSoundEngine();
 class gSound : public gBaseSound {
 public:
 
-    enum {RECORDQUALITY_LOW, RECORDQUALITY_MIDDLE, RECORDQUALITY_HIGH, RECORDQUALITY_ULTRA};
-
     gSound();
     virtual ~gSound();
 
@@ -125,14 +123,6 @@ public:
      */
     const std::string& getPath() override;
 
-    void startRecording(const std::string& filename, int quality = RECORDQUALITY_MIDDLE);
-    void startRecordingSound(const std::string& filename, int quality = RECORDQUALITY_MIDDLE);
-    void stopRecording();
-
-    bool isRecording();
-    bool setRecordingPaused(bool pauseRecording);
-    bool isRecordingPaused();
-
 private:
     ma_sound sound;
     bool isloaded = false;
@@ -143,12 +133,6 @@ private:
     std::string filepath; // Path to the loaded audio file.
     int duration = 0; // Duration of the sound in milliseconds.
     int lastposition = 0; // Last known position, only used for pause/resume logic.
-
-    ma_device capturedevice;
-    ma_encoder encoder;
-    bool recording = false;
-    bool isrecordpaused = false;
 };
-
 
 #endif //GLISTENGINE_GSOUND_H
