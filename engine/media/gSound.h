@@ -11,6 +11,7 @@
 #include "gBaseSound.h"
 #include "miniaudio.h"
 
+
 ma_engine* gGetSoundEngine();
 
 /**
@@ -23,6 +24,7 @@ ma_engine* gGetSoundEngine();
  */
 class gSound : public gBaseSound {
 public:
+
     gSound();
     virtual ~gSound();
 
@@ -132,6 +134,5 @@ private:
     int duration = 0; // Duration of the sound in milliseconds.
     int lastposition = 0; // Last known position, only used for pause/resume logic.
 };
-
 
 #endif //GLISTENGINE_GSOUND_H

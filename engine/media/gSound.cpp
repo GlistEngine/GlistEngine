@@ -31,8 +31,8 @@ int gSound::load(const std::string& fullPath) {
     close(); // in case previously loaded
 
     if(ma_sound_init_from_file(gGetSoundEngine(), fullPath.c_str(),
-                                MA_SOUND_FLAG_DECODE | MA_SOUND_FLAG_ASYNC,
-                                nullptr, nullptr, &sound) != MA_SUCCESS) {
+    		MA_SOUND_FLAG_DECODE | MA_SOUND_FLAG_ASYNC,
+			nullptr, nullptr, &sound) != MA_SUCCESS) {
         return 0;
     }
 
@@ -73,6 +73,13 @@ void gSound::play() {
     ispaused = false;
 }
 
+void gSound::stop() {
+    if(!isloaded) return;
+    ma_sound_stop(&sound);
+    ma_sound_seek_to_pcm_frame(&sound, 0);
+    isplaying = false;
+}
+
 void gSound::setPaused(bool paused) {
     if(!isloaded) {
         gLogw("gSound") << "Tried to pause a sound that was not loaded!";
@@ -87,13 +94,6 @@ void gSound::setPaused(bool paused) {
         setPosition(lastposition); // resume from stored time
         ispaused = false;
     }
-}
-
-void gSound::stop() {
-    if(!isloaded) return;
-    ma_sound_stop(&sound);
-    ma_sound_seek_to_pcm_frame(&sound, 0);
-    isplaying = false;
 }
 
 void gSound::close() {
