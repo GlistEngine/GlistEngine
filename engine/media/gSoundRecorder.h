@@ -30,13 +30,13 @@ public:
     /**
      * @brief Starts recording and saves microphone input to a file.
      *
-     * @param filename Path of the output file.
+     * @param filepath Full path of the output file.
      * @param quality Recording quality preset.
      */
-    void startRecording(const std::string& filename, int quality = RECORDQUALITY_MIDDLE);
+    void startRecording(const std::string& filepath, int quality = RECORDQUALITY_MIDDLE);
 
     /**
-     * @brief Starts recording using a project-relative path.
+     * @brief Starts recording and saves into project's assets/sounds folder.
      *
      * @param filename Relative path of the output file.
      * @param quality Recording quality preset.
