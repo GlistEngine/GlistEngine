@@ -303,6 +303,7 @@ set(SRC_FILES
 	${ENGINE_DIR}/base/gBaseComponent.cpp
 	${ENGINE_DIR}/base/gBasePlugin.cpp
 	${ENGINE_DIR}/media/gSound.cpp
+	${ENGINE_DIR}/media/gSoundRecorder.cpp
 	${ENGINE_DIR}/base/gBaseApp.cpp
 	${ENGINE_DIR}/base/gBaseCanvas.cpp
 	${ENGINE_DIR}/core/gBaseWindow.cpp

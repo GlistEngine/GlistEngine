@@ -1,19 +1,19 @@
 /*
- * gRecorder.cpp
+ * gSoundRecorder.cpp
  *
- *  Created on: October 13, 2025
+ *  Created on: October 14, 2025
  *      Author: Engin Kutlu
  */
-#include "gRecorder.h"
+#include "gSoundRecorder.h"
 #include "miniaudio.h"
 
-gRecorder::gRecorder() = default;
+gSoundRecorder::gSoundRecorder() = default;
 
-gRecorder::~gRecorder() {
+gSoundRecorder::~gSoundRecorder() {
     stopRecording();
 }
 
-void gRecorder::startRecording(const std::string& filename, int quality) {
+void gSoundRecorder::startRecording(const std::string& filename, int quality) {
     if (recording) return;
 
     filepath = filename;
@@ -65,7 +65,7 @@ void gRecorder::startRecording(const std::string& filename, int quality) {
     }
 
     deviceConfig.dataCallback = [](ma_device* pDevice, void* pOutput, const void* pInput, ma_uint32 frameCount) {
-        gRecorder* self = (gRecorder*)pDevice->pUserData;
+    	gSoundRecorder* self = (gSoundRecorder*)pDevice->pUserData;
         if (self && self->recording && !self->isrecordpaused) {
             ma_encoder_write_pcm_frames(&self->encoder, (const void*)pInput, frameCount, NULL);
         }
@@ -75,13 +75,13 @@ void gRecorder::startRecording(const std::string& filename, int quality) {
     deviceConfig.pUserData = this;
 
     if (ma_device_init(NULL, &deviceConfig, &capturedevice) != MA_SUCCESS) {
-        gLoge("gRecorder") << "Failed to initialize capture device!";
+        gLoge("gSoundRecorder") << "Failed to initialize capture device!";
         ma_encoder_uninit(&encoder);
         return;
     }
 
     if (ma_device_start(&capturedevice) != MA_SUCCESS) {
-        gLoge("gRecorder") << "Failed to start device!";
+        gLoge("gSoundRecorder") << "Failed to start device!";
         ma_device_uninit(&capturedevice);
         ma_encoder_uninit(&encoder);
         return;
@@ -89,7 +89,7 @@ void gRecorder::startRecording(const std::string& filename, int quality) {
 
     recording = true;
     isrecordpaused = false;
-    gLogi("gRecorder") << "Recording started: " << filename
+    gLogi("gSoundRecorder") << "Recording started: " << filename
                  << " (Bit depth: "
                  << (quality == RECORDQUALITY_LOW ? "8"
                      : quality == RECORDQUALITY_MIDDLE ? "16"
@@ -97,12 +97,12 @@ void gRecorder::startRecording(const std::string& filename, int quality) {
                  << " bits, Sample rate: " << deviceConfig.sampleRate << ")";
 }
 
-void gRecorder::startRecordingSound(const std::string& filename, int quality) {
+void gSoundRecorder::startRecordingSound(const std::string& filename, int quality) {
     // automatically saves under assets/sounds
-    startRecording(CheckPoint::gGetSoundsDir() + filename, gRecorder::RECORDQUALITY_MIDDLE);
+    startRecording(gGetSoundsDir() + filename, gSoundRecorder::RECORDQUALITY_MIDDLE);
 }
 
-void gRecorder::stopRecording() {
+void gSoundRecorder::stopRecording() {
     if (!recording) return;
 
     isrecordpaused = false;
@@ -112,31 +112,31 @@ void gRecorder::stopRecording() {
     ma_encoder_uninit(&encoder);
 
     recording = false;
-    gLogi("gRecorder") << "Record is stopped: " << filepath;
+    gLogi("gSoundRecorder") << "Record is stopped: " << filepath;
 }
 
-bool gRecorder::isRecording() {
+bool gSoundRecorder::isRecording() {
     return recording;
 }
 
-bool gRecorder::setRecordingPaused(bool recordingPaused) {
+bool gSoundRecorder::setRecordingPaused(bool recordingPaused) {
     if (!recording) return false;
 
     if (recordingPaused && !isrecordpaused) {
         // Pause
         ma_device_stop(&capturedevice);
         isrecordpaused = true;
-        gLogi("gRecorder") << "Recording is paused.";
+        gLogi("gSoundRecorder") << "Recording is paused.";
     } else if (!recordingPaused && isrecordpaused) {
         // Resume
         ma_device_start(&capturedevice);
         isrecordpaused = false;
-        gLogi("gRecorder") << "Recording is resumed.";
+        gLogi("gSoundRecorder") << "Recording is resumed.";
     }
 
     return isrecordpaused;
 }
 
-bool gRecorder::isRecordingPaused() {
+bool gSoundRecorder::isRecordingPaused() {
     return isrecordpaused;
 }
