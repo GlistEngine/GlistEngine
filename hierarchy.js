@@ -192,6 +192,7 @@ var hierarchy =
       [ "gRenderer", "classgRenderer.html", [
         [ "gGLRenderEngine", "classgGLRenderEngine.html", null ]
       ] ],
+      [ "gSoundRecorder", "classgSoundRecorder.html", null ],
       [ "gSpriteAnimation", "classgSpriteAnimation.html", null ],
       [ "gSpriteAnimator", "classgSpriteAnimator.html", null ],
       [ "gThread", "classgThread.html", [

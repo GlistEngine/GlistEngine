@@ -40,7 +40,7 @@ var searchData=
   ['close_37',['close',['../classgFile.html#aa3f7a3d79412d1192ecd1210d5b39a14',1,'gFile::close()'],['../classgDatabase.html#acf36a173a1dda1ca2b70ee6d3ae9aa8a',1,'gDatabase::close()'],['../classgSound.html#ac5222797596a89843bf5a272b68d89d1',1,'gSound::close()'],['../classgGLFWWindow.html#acd4fb915673ad68f52190337c25967d8',1,'gGLFWWindow::close()'],['../classgBaseSound.html#a7434759912967a569eae23234bd9ff93',1,'gBaseSound::close()'],['../classgBaseWindow.html#a4f01bf13a831462ad7c13cc8e542b45b',1,'gBaseWindow::close()']]],
   ['closetab_38',['closeTab',['../classgGUINotebook.html#a45ce1655e58cf3b09121fdb2f19e3513',1,'gGUINotebook']]],
   ['color_39',['color',['../structgRenderer_1_1gSceneFogData.html#a6e3e7ba8c2a35dd85b44c3dbbef51d16',1,'gRenderer::gSceneFogData']]],
-  ['colorpicker_40',['COLORPICKER',['../classgGUIResources.html#ac0a693250f95787257f87aa3b091b5b4a3e67271667bc2e9c7300af88bb4547f2',1,'gGUIResources']]],
+  ['colorpicker_40',['COLORPICKER',['../classgGUIResources.html#a18fc829d0daa0dee46466833a8596586a3e67271667bc2e9c7300af88bb4547f2',1,'gGUIResources']]],
   ['colorshader_41',['colorshader',['../classgRenderer.html#a095f6a2a2df090837fafd50664c87f89',1,'gRenderer']]],
   ['componentnum_42',['componentnum',['../classgTexture.html#a108f41e875457d45c9d93983546ca955',1,'gTexture']]],
   ['conditionvariable_43',['conditionvariable',['../classgThread.html#ad647ecf3b4c701098d585e724edb38b8',1,'gThread']]],
