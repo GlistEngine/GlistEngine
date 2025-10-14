@@ -7,7 +7,7 @@
 #include "gSoundRecorder.h"
 #include "miniaudio.h"
 
-gSoundRecorder::gSoundRecorder() = default;
+gSoundRecorder::gSoundRecorder() {}
 
 gSoundRecorder::~gSoundRecorder() {
     stopRecording();
