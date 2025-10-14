@@ -34,11 +34,15 @@ var searchData=
   ['crossmesh_31',['crossmesh',['../classgRenderer.html#ae00f2cce560854586ee5f2ae4a23d9fc',1,'gRenderer']]],
   ['currentcolor_32',['currentcolor',['../classgParticle.html#adbe9ca678d5065334574cad5c5b525d5',1,'gParticle']]],
   ['currentresolution_33',['currentresolution',['../classgRenderer.html#a45a83824c0d04f55c3cfad79bce2c86c',1,'gRenderer']]],
-  ['cursor_5farrow_34',['cursor_arrow',['../classgBaseWindow.html#aec6a02110e5d521870bf7810729445f9',1,'gBaseWindow::CURSOR_ARROW'],['../classgBaseGUIObject.html#aee3d94a9493721ffde88cc22cc617fca',1,'gBaseGUIObject::CURSOR_ARROW']]],
+  ['cursor_5farrow_34',['cursor_arrow',['../classgBaseGUIObject.html#aee3d94a9493721ffde88cc22cc617fca',1,'gBaseGUIObject::CURSOR_ARROW'],['../classgBaseWindow.html#aec6a02110e5d521870bf7810729445f9',1,'gBaseWindow::CURSOR_ARROW']]],
   ['cursor_5fcrosshair_35',['cursor_crosshair',['../classgBaseGUIObject.html#a366591ee9a3819b0f396fe1cee35e275',1,'gBaseGUIObject::CURSOR_CROSSHAIR'],['../classgBaseWindow.html#ae515e02714bb30b9bd2c810aa2cd3edb',1,'gBaseWindow::CURSOR_CROSSHAIR']]],
   ['cursor_5fhand_36',['cursor_hand',['../classgBaseGUIObject.html#a97cf6039f271b5445c6d7680384c72b2',1,'gBaseGUIObject::CURSOR_HAND'],['../classgBaseWindow.html#add17afca19120d63943412a4c517f1a7',1,'gBaseWindow::CURSOR_HAND']]],
   ['cursor_5fhresize_37',['cursor_hresize',['../classgBaseGUIObject.html#a876275a0e6968adfbf8f792600f117b9',1,'gBaseGUIObject::CURSOR_HRESIZE'],['../classgBaseWindow.html#a45720a2aa26c97cbab85a449c264cbbb',1,'gBaseWindow::CURSOR_HRESIZE']]],
   ['cursor_5fibeam_38',['cursor_ibeam',['../classgBaseGUIObject.html#a0056d1379186158c5c785226b106aa2b',1,'gBaseGUIObject::CURSOR_IBEAM'],['../classgBaseWindow.html#ac8e4670755ae80097948a975bdc9b4e4',1,'gBaseWindow::CURSOR_IBEAM']]],
   ['cursor_5fvresize_39',['cursor_vresize',['../classgBaseGUIObject.html#aaaac84f3b52c29f0c83b96b1c495a0db',1,'gBaseGUIObject::CURSOR_VRESIZE'],['../classgBaseWindow.html#a3d6c40f84458d82763555bdb8021dfd2',1,'gBaseWindow::CURSOR_VRESIZE']]],
-  ['cyan_40',['CYAN',['../classgColor.html#a5b541cb9125866b387591231ea5d167f',1,'gColor']]]
+  ['cursormode_5fdisabled_40',['CURSORMODE_DISABLED',['../classgGLFWWindow.html#a94f3215a84b5b0a0ad14a02c9ad7cbb2',1,'gGLFWWindow']]],
+  ['cursormode_5fhidden_41',['CURSORMODE_HIDDEN',['../classgGLFWWindow.html#a4c52331fdf52a5dfcab5689f6951193e',1,'gGLFWWindow']]],
+  ['cursormode_5fnormal_42',['CURSORMODE_NORMAL',['../classgGLFWWindow.html#a8a8ecb654ae9086cde08ff41c674fea5',1,'gGLFWWindow']]],
+  ['cursormode_5frelative_43',['CURSORMODE_RELATIVE',['../classgGLFWWindow.html#a4a4ac8fd6b69fa565f84ad80e74acba4',1,'gGLFWWindow']]],
+  ['cyan_44',['CYAN',['../classgColor.html#a5b541cb9125866b387591231ea5d167f',1,'gColor']]]
 ];

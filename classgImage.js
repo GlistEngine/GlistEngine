@@ -20,5 +20,6 @@ var classgImage =
     [ "setImageData", "classgImage.html#a1f89f293d4f170651a967145a829d2b6", null ],
     [ "setImageData", "classgImage.html#a2c3514200bc2232d9442c790d1a071ea", null ],
     [ "setImageDataHDR", "classgImage.html#ae522aed63ca8d31d8766f1fe5ab61d04", null ],
+    [ "setImageDataHDR", "classgImage.html#a351ac9f56f5e405cb488d73554fed47f", null ],
     [ "useData", "classgImage.html#a6ea46b2345a4e44d0ae14104d9310838", null ]
 ];

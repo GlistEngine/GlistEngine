@@ -190,6 +190,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:aef3848c61642384585424b9c7ab49939"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae522aed63ca8d31d8766f1fe5ab61d04" id="r_ae522aed63ca8d31d8766f1fe5ab61d04"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgImage.html#ae522aed63ca8d31d8766f1fe5ab61d04">setImageDataHDR</a> (float *imageData)</td></tr>
 <tr class="separator:ae522aed63ca8d31d8766f1fe5ab61d04"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a351ac9f56f5e405cb488d73554fed47f" id="r_a351ac9f56f5e405cb488d73554fed47f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgImage.html#a351ac9f56f5e405cb488d73554fed47f">setImageDataHDR</a> (float *imageData, int <a class="el" href="classgTexture.html#a627c39d3af9a984bbfc3a716a6f29031">width</a>, int <a class="el" href="classgTexture.html#a6f4a7e8cabbc84efd1eb7582e47d1ea1">height</a>, int componentNum, bool <a class="el" href="classgTexture.html#a06f9f3d4b732f584bbcb1c01e8de4c1f">isMutable</a>=false, bool isStbImage=false)</td></tr>
+<tr class="separator:a351ac9f56f5e405cb488d73554fed47f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a29a5a4d7c03ad18de1ae182e4768cbbb" id="r_a29a5a4d7c03ad18de1ae182e4768cbbb"><td class="memItemLeft" align="right" valign="top">float *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgImage.html#a29a5a4d7c03ad18de1ae182e4768cbbb">getImageDataHDR</a> ()</td></tr>
 <tr class="separator:a29a5a4d7c03ad18de1ae182e4768cbbb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a25cd5df20e2d778e906767859c95f96f" id="r_a25cd5df20e2d778e906767859c95f96f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgImage.html#a25cd5df20e2d778e906767859c95f96f">clearData</a> ()</td></tr>
@@ -217,8 +219,6 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:aafb9fc45890f8546b311cdd98c9dcb69 inherit pub_methods_classgTexture"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a80e9f20fca3a996c92bcbf8d16cf5389 inherit pub_methods_classgTexture" id="r_a80e9f20fca3a996c92bcbf8d16cf5389"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgTexture.html#a80e9f20fca3a996c92bcbf8d16cf5389">loadMaskTexture</a> (const std::string &amp;maskTexturePath)</td></tr>
 <tr class="separator:a80e9f20fca3a996c92bcbf8d16cf5389 inherit pub_methods_classgTexture"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2c40fcb4aaf459b7f628b483181c06e7 inherit pub_methods_classgTexture" id="r_a2c40fcb4aaf459b7f628b483181c06e7"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgTexture.html#a2c40fcb4aaf459b7f628b483181c06e7">loadData</a> (unsigned char *textureData, int <a class="el" href="classgTexture.html#a627c39d3af9a984bbfc3a716a6f29031">width</a>, int <a class="el" href="classgTexture.html#a6f4a7e8cabbc84efd1eb7582e47d1ea1">height</a>, int componentNum, bool <a class="el" href="classgTexture.html#a06f9f3d4b732f584bbcb1c01e8de4c1f">isMutable</a>=false, bool isStbImage=false)</td></tr>
-<tr class="separator:a2c40fcb4aaf459b7f628b483181c06e7 inherit pub_methods_classgTexture"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a819525baeaf079004ae85a94e598f1a2 inherit pub_methods_classgTexture" id="r_a819525baeaf079004ae85a94e598f1a2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgTexture.html#a819525baeaf079004ae85a94e598f1a2">bind</a> () const</td></tr>
 <tr class="separator:a819525baeaf079004ae85a94e598f1a2 inherit pub_methods_classgTexture"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad83aaa2bb1212e336577d225cd46c0ca inherit pub_methods_classgTexture" id="r_ad83aaa2bb1212e336577d225cd46c0ca"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgTexture.html#ad83aaa2bb1212e336577d225cd46c0ca">bind</a> (int textureSlotNo) const</td></tr>
@@ -293,8 +293,10 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a5df0a8abb590b8bd9d1dd261357e1db6 inherit pub_methods_classgTexture"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afacad5facf5edb4adbd376973f3d41a3 inherit pub_methods_classgTexture" id="r_afacad5facf5edb4adbd376973f3d41a3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgTexture.html#afacad5facf5edb4adbd376973f3d41a3">drawSub</a> (const <a class="el" href="classgRect.html">gRect</a> &amp;src, const <a class="el" href="classgRect.html">gRect</a> &amp;dst, glm::vec2 pivot, float rotate=0.f)</td></tr>
 <tr class="separator:afacad5facf5edb4adbd376973f3d41a3 inherit pub_methods_classgTexture"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a019e646955bb14ae419a19c93244aef7 inherit pub_methods_classgTexture" id="r_a019e646955bb14ae419a19c93244aef7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgTexture.html#a019e646955bb14ae419a19c93244aef7">setData</a> (unsigned char *textureData, bool <a class="el" href="classgTexture.html#a06f9f3d4b732f584bbcb1c01e8de4c1f">isMutable</a>=false, bool isStbImage=false, bool clean=true)</td></tr>
-<tr class="separator:a019e646955bb14ae419a19c93244aef7 inherit pub_methods_classgTexture"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3a9671b95162b8871d503633faf94a03 inherit pub_methods_classgTexture" id="r_a3a9671b95162b8871d503633faf94a03"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgTexture.html#a3a9671b95162b8871d503633faf94a03">setData</a> (unsigned char *textureData, int <a class="el" href="classgTexture.html#a627c39d3af9a984bbfc3a716a6f29031">width</a>, int <a class="el" href="classgTexture.html#a6f4a7e8cabbc84efd1eb7582e47d1ea1">height</a>, int componentNum, bool <a class="el" href="classgTexture.html#a06f9f3d4b732f584bbcb1c01e8de4c1f">isMutable</a>=false, bool isStbImage=false)</td></tr>
+<tr class="separator:a3a9671b95162b8871d503633faf94a03 inherit pub_methods_classgTexture"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9cfced9c133b1e335a87cdc118e622c7 inherit pub_methods_classgTexture" id="r_a9cfced9c133b1e335a87cdc118e622c7"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgTexture.html#a9cfced9c133b1e335a87cdc118e622c7">setDataHDR</a> (float *textureData, int <a class="el" href="classgTexture.html#a627c39d3af9a984bbfc3a716a6f29031">width</a>, int <a class="el" href="classgTexture.html#a6f4a7e8cabbc84efd1eb7582e47d1ea1">height</a>, int componentNum, bool <a class="el" href="classgTexture.html#a06f9f3d4b732f584bbcb1c01e8de4c1f">isMutable</a>=false, bool isStbImage=false)</td></tr>
+<tr class="separator:a9cfced9c133b1e335a87cdc118e622c7 inherit pub_methods_classgTexture"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae9581a25115b2be9c2e7915753c6980c inherit pub_methods_classgTexture" id="r_ae9581a25115b2be9c2e7915753c6980c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgTexture.html#ae9581a25115b2be9c2e7915753c6980c">setupRenderData</a> ()</td></tr>
 <tr class="separator:ae9581a25115b2be9c2e7915753c6980c inherit pub_methods_classgTexture"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a89ec99d57b0581e725e01971ac605044 inherit pub_methods_classgTexture" id="r_a89ec99d57b0581e725e01971ac605044"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgTexture.html#a89ec99d57b0581e725e01971ac605044">cleanupData</a> ()</td></tr>
@@ -434,16 +436,16 @@ Additional Inherited Members</h2></td></tr>
 <tr class="memitem:a2e7e512031a455faf43eb905a1e1b67e inherit pub_static_attribs_classgObject" id="r_a2e7e512031a455faf43eb905a1e1b67e"><td class="memItemLeft" align="right" valign="top">static const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgObject.html#a2e7e512031a455faf43eb905a1e1b67e">LOGLEVEL_ERROR</a></td></tr>
 <tr class="separator:a2e7e512031a455faf43eb905a1e1b67e inherit pub_static_attribs_classgObject"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_methods_classgTexture"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_classgTexture')"><img src="closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="classgTexture.html">gTexture</a></td></tr>
+<tr class="memitem:aa431445181e5a08193f56b8d0442cb1d inherit pro_methods_classgTexture" id="r_aa431445181e5a08193f56b8d0442cb1d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgTexture.html#aa431445181e5a08193f56b8d0442cb1d">setDataInternal</a> (unsigned char *textureData, bool <a class="el" href="classgTexture.html#a06f9f3d4b732f584bbcb1c01e8de4c1f">isMutable</a>=false, bool isStbImage=false, bool clean=true)</td></tr>
+<tr class="separator:aa431445181e5a08193f56b8d0442cb1d inherit pro_methods_classgTexture"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a100ac074bc5266c5032d3a70bbfe3015 inherit pro_methods_classgTexture" id="r_a100ac074bc5266c5032d3a70bbfe3015"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgTexture.html#a100ac074bc5266c5032d3a70bbfe3015">setDataInternalHDR</a> (float *textureData, bool <a class="el" href="classgTexture.html#a06f9f3d4b732f584bbcb1c01e8de4c1f">isMutable</a>=false, bool isStbImage=false, bool clean=true)</td></tr>
+<tr class="separator:a100ac074bc5266c5032d3a70bbfe3015 inherit pro_methods_classgTexture"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a06f9f3d4b732f584bbcb1c01e8de4c1f inherit pro_methods_classgTexture" id="r_a06f9f3d4b732f584bbcb1c01e8de4c1f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgTexture.html#a06f9f3d4b732f584bbcb1c01e8de4c1f">isMutable</a> ()</td></tr>
 <tr class="separator:a06f9f3d4b732f584bbcb1c01e8de4c1f inherit pro_methods_classgTexture"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab93370d4c1c29ef590498ac685c9d587 inherit pro_methods_classgTexture" id="r_ab93370d4c1c29ef590498ac685c9d587"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgTexture.html#ab93370d4c1c29ef590498ac685c9d587">getDirName</a> (const std::string &amp;fname)</td></tr>
 <tr class="separator:ab93370d4c1c29ef590498ac685c9d587 inherit pro_methods_classgTexture"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad2e53e2c567e7fecb48bd43424542bfb inherit pro_methods_classgTexture" id="r_ad2e53e2c567e7fecb48bd43424542bfb"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgTexture.html#ad2e53e2c567e7fecb48bd43424542bfb">getFileName</a> (const std::string &amp;fname)</td></tr>
 <tr class="separator:ad2e53e2c567e7fecb48bd43424542bfb inherit pro_methods_classgTexture"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0212416373ed7392ce4444ee243be9cf inherit pro_methods_classgTexture" id="r_a0212416373ed7392ce4444ee243be9cf"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgTexture.html#a0212416373ed7392ce4444ee243be9cf">setDataHDR</a> (float *textureData, bool <a class="el" href="classgTexture.html#a06f9f3d4b732f584bbcb1c01e8de4c1f">isMutable</a>=false, bool isStbImage=false, bool clean=true)</td></tr>
-<tr class="separator:a0212416373ed7392ce4444ee243be9cf inherit pro_methods_classgTexture"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abed68d9c8bd2950a69416dffec67fb3d inherit pro_methods_classgTexture" id="r_abed68d9c8bd2950a69416dffec67fb3d"><td class="memItemLeft" align="right" valign="top">float *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgTexture.html#abed68d9c8bd2950a69416dffec67fb3d">getDataHDR</a> ()</td></tr>
-<tr class="separator:abed68d9c8bd2950a69416dffec67fb3d inherit pro_methods_classgTexture"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_attribs_classgTexture"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_classgTexture')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="classgTexture.html">gTexture</a></td></tr>
 <tr class="memitem:ac19361c82e17295edd24f1ae4c953218 inherit pro_attribs_classgTexture" id="r_ac19361c82e17295edd24f1ae4c953218"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgTexture.html#ac19361c82e17295edd24f1ae4c953218">fullpath</a></td></tr>
 <tr class="separator:ac19361c82e17295edd24f1ae4c953218 inherit pro_attribs_classgTexture"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1043,7 +1045,7 @@ Additional Inherited Members</h2></td></tr>
 </div>
 </div>
 <a id="ae522aed63ca8d31d8766f1fe5ab61d04" name="ae522aed63ca8d31d8766f1fe5ab61d04"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae522aed63ca8d31d8766f1fe5ab61d04">&#9670;&#160;</a></span>setImageDataHDR()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ae522aed63ca8d31d8766f1fe5ab61d04">&#9670;&#160;</a></span>setImageDataHDR() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1059,6 +1061,58 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 <p>Alters an image's data in float format.</p>
 <p>Data of a given image can be altered by the usage of this function. It's in float format. </p>
+
+</div>
+</div>
+<a id="a351ac9f56f5e405cb488d73554fed47f" name="a351ac9f56f5e405cb488d73554fed47f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a351ac9f56f5e405cb488d73554fed47f">&#9670;&#160;</a></span>setImageDataHDR() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gImage::setImageDataHDR </td>
+          <td>(</td>
+          <td class="paramtype">float *&#160;</td>
+          <td class="paramname"><em>imageData</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>width</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>height</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>componentNum</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>isMutable</em> = <code>false</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>isStbImage</em> = <code>false</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
 
 </div>
 </div>

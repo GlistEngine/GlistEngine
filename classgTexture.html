@@ -207,8 +207,6 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:aafb9fc45890f8546b311cdd98c9dcb69"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a80e9f20fca3a996c92bcbf8d16cf5389" id="r_a80e9f20fca3a996c92bcbf8d16cf5389"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgTexture.html#a80e9f20fca3a996c92bcbf8d16cf5389">loadMaskTexture</a> (const std::string &amp;maskTexturePath)</td></tr>
 <tr class="separator:a80e9f20fca3a996c92bcbf8d16cf5389"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2c40fcb4aaf459b7f628b483181c06e7" id="r_a2c40fcb4aaf459b7f628b483181c06e7"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgTexture.html#a2c40fcb4aaf459b7f628b483181c06e7">loadData</a> (unsigned char *textureData, int <a class="el" href="classgTexture.html#a627c39d3af9a984bbfc3a716a6f29031">width</a>, int <a class="el" href="classgTexture.html#a6f4a7e8cabbc84efd1eb7582e47d1ea1">height</a>, int componentNum, bool <a class="el" href="classgTexture.html#a06f9f3d4b732f584bbcb1c01e8de4c1f">isMutable</a>=false, bool isStbImage=false)</td></tr>
-<tr class="separator:a2c40fcb4aaf459b7f628b483181c06e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a819525baeaf079004ae85a94e598f1a2" id="r_a819525baeaf079004ae85a94e598f1a2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgTexture.html#a819525baeaf079004ae85a94e598f1a2">bind</a> () const</td></tr>
 <tr class="separator:a819525baeaf079004ae85a94e598f1a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad83aaa2bb1212e336577d225cd46c0ca" id="r_ad83aaa2bb1212e336577d225cd46c0ca"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgTexture.html#ad83aaa2bb1212e336577d225cd46c0ca">bind</a> (int textureSlotNo) const</td></tr>
@@ -283,8 +281,10 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a5df0a8abb590b8bd9d1dd261357e1db6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afacad5facf5edb4adbd376973f3d41a3" id="r_afacad5facf5edb4adbd376973f3d41a3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgTexture.html#afacad5facf5edb4adbd376973f3d41a3">drawSub</a> (const <a class="el" href="classgRect.html">gRect</a> &amp;src, const <a class="el" href="classgRect.html">gRect</a> &amp;dst, glm::vec2 pivot, float rotate=0.f)</td></tr>
 <tr class="separator:afacad5facf5edb4adbd376973f3d41a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a019e646955bb14ae419a19c93244aef7" id="r_a019e646955bb14ae419a19c93244aef7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgTexture.html#a019e646955bb14ae419a19c93244aef7">setData</a> (unsigned char *textureData, bool <a class="el" href="classgTexture.html#a06f9f3d4b732f584bbcb1c01e8de4c1f">isMutable</a>=false, bool isStbImage=false, bool clean=true)</td></tr>
-<tr class="separator:a019e646955bb14ae419a19c93244aef7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3a9671b95162b8871d503633faf94a03" id="r_a3a9671b95162b8871d503633faf94a03"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgTexture.html#a3a9671b95162b8871d503633faf94a03">setData</a> (unsigned char *textureData, int <a class="el" href="classgTexture.html#a627c39d3af9a984bbfc3a716a6f29031">width</a>, int <a class="el" href="classgTexture.html#a6f4a7e8cabbc84efd1eb7582e47d1ea1">height</a>, int componentNum, bool <a class="el" href="classgTexture.html#a06f9f3d4b732f584bbcb1c01e8de4c1f">isMutable</a>=false, bool isStbImage=false)</td></tr>
+<tr class="separator:a3a9671b95162b8871d503633faf94a03"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9cfced9c133b1e335a87cdc118e622c7" id="r_a9cfced9c133b1e335a87cdc118e622c7"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgTexture.html#a9cfced9c133b1e335a87cdc118e622c7">setDataHDR</a> (float *textureData, int <a class="el" href="classgTexture.html#a627c39d3af9a984bbfc3a716a6f29031">width</a>, int <a class="el" href="classgTexture.html#a6f4a7e8cabbc84efd1eb7582e47d1ea1">height</a>, int componentNum, bool <a class="el" href="classgTexture.html#a06f9f3d4b732f584bbcb1c01e8de4c1f">isMutable</a>=false, bool isStbImage=false)</td></tr>
+<tr class="separator:a9cfced9c133b1e335a87cdc118e622c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae9581a25115b2be9c2e7915753c6980c" id="r_ae9581a25115b2be9c2e7915753c6980c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgTexture.html#ae9581a25115b2be9c2e7915753c6980c">setupRenderData</a> ()</td></tr>
 <tr class="separator:ae9581a25115b2be9c2e7915753c6980c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a89ec99d57b0581e725e01971ac605044" id="r_a89ec99d57b0581e725e01971ac605044"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgTexture.html#a89ec99d57b0581e725e01971ac605044">cleanupData</a> ()</td></tr>
@@ -381,16 +381,16 @@ Static Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-methods" name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
+<tr class="memitem:aa431445181e5a08193f56b8d0442cb1d" id="r_aa431445181e5a08193f56b8d0442cb1d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgTexture.html#aa431445181e5a08193f56b8d0442cb1d">setDataInternal</a> (unsigned char *textureData, bool <a class="el" href="classgTexture.html#a06f9f3d4b732f584bbcb1c01e8de4c1f">isMutable</a>=false, bool isStbImage=false, bool clean=true)</td></tr>
+<tr class="separator:aa431445181e5a08193f56b8d0442cb1d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a100ac074bc5266c5032d3a70bbfe3015" id="r_a100ac074bc5266c5032d3a70bbfe3015"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgTexture.html#a100ac074bc5266c5032d3a70bbfe3015">setDataInternalHDR</a> (float *textureData, bool <a class="el" href="classgTexture.html#a06f9f3d4b732f584bbcb1c01e8de4c1f">isMutable</a>=false, bool isStbImage=false, bool clean=true)</td></tr>
+<tr class="separator:a100ac074bc5266c5032d3a70bbfe3015"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a06f9f3d4b732f584bbcb1c01e8de4c1f" id="r_a06f9f3d4b732f584bbcb1c01e8de4c1f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgTexture.html#a06f9f3d4b732f584bbcb1c01e8de4c1f">isMutable</a> ()</td></tr>
 <tr class="separator:a06f9f3d4b732f584bbcb1c01e8de4c1f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab93370d4c1c29ef590498ac685c9d587" id="r_ab93370d4c1c29ef590498ac685c9d587"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgTexture.html#ab93370d4c1c29ef590498ac685c9d587">getDirName</a> (const std::string &amp;fname)</td></tr>
 <tr class="separator:ab93370d4c1c29ef590498ac685c9d587"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad2e53e2c567e7fecb48bd43424542bfb" id="r_ad2e53e2c567e7fecb48bd43424542bfb"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgTexture.html#ad2e53e2c567e7fecb48bd43424542bfb">getFileName</a> (const std::string &amp;fname)</td></tr>
 <tr class="separator:ad2e53e2c567e7fecb48bd43424542bfb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0212416373ed7392ce4444ee243be9cf" id="r_a0212416373ed7392ce4444ee243be9cf"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgTexture.html#a0212416373ed7392ce4444ee243be9cf">setDataHDR</a> (float *textureData, bool <a class="el" href="classgTexture.html#a06f9f3d4b732f584bbcb1c01e8de4c1f">isMutable</a>=false, bool isStbImage=false, bool clean=true)</td></tr>
-<tr class="separator:a0212416373ed7392ce4444ee243be9cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abed68d9c8bd2950a69416dffec67fb3d" id="r_abed68d9c8bd2950a69416dffec67fb3d"><td class="memItemLeft" align="right" valign="top">float *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgTexture.html#abed68d9c8bd2950a69416dffec67fb3d">getDataHDR</a> ()</td></tr>
-<tr class="separator:abed68d9c8bd2950a69416dffec67fb3d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-attribs" name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
@@ -1452,31 +1452,6 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="abed68d9c8bd2950a69416dffec67fb3d" name="abed68d9c8bd2950a69416dffec67fb3d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abed68d9c8bd2950a69416dffec67fb3d">&#9670;&#160;</a></span>getDataHDR()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">float * gTexture::getDataHDR </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <a id="aa99f5896d88f62ca9ecef165d354510e" name="aa99f5896d88f62ca9ecef165d354510e"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aa99f5896d88f62ca9ecef165d354510e">&#9670;&#160;</a></span>getDir()</h2>
 
@@ -1863,58 +1838,6 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="a2c40fcb4aaf459b7f628b483181c06e7" name="a2c40fcb4aaf459b7f628b483181c06e7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2c40fcb4aaf459b7f628b483181c06e7">&#9670;&#160;</a></span>loadData()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">unsigned int gTexture::loadData </td>
-          <td>(</td>
-          <td class="paramtype">unsigned char *&#160;</td>
-          <td class="paramname"><em>textureData</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>width</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>height</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>componentNum</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>isMutable</em> = <code>false</code>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>isStbImage</em> = <code>false</code>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <a id="aafb9fc45890f8546b311cdd98c9dcb69" name="aafb9fc45890f8546b311cdd98c9dcb69"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aafb9fc45890f8546b311cdd98c9dcb69">&#9670;&#160;</a></span>loadMask()</h2>
 
@@ -2026,14 +1949,121 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="a019e646955bb14ae419a19c93244aef7" name="a019e646955bb14ae419a19c93244aef7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a019e646955bb14ae419a19c93244aef7">&#9670;&#160;</a></span>setData()</h2>
+<a id="a3a9671b95162b8871d503633faf94a03" name="a3a9671b95162b8871d503633faf94a03"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3a9671b95162b8871d503633faf94a03">&#9670;&#160;</a></span>setData()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void gTexture::setData </td>
+          <td class="memname">unsigned int gTexture::setData </td>
+          <td>(</td>
+          <td class="paramtype">unsigned char *&#160;</td>
+          <td class="paramname"><em>textureData</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>width</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>height</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>componentNum</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>isMutable</em> = <code>false</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>isStbImage</em> = <code>false</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a9cfced9c133b1e335a87cdc118e622c7" name="a9cfced9c133b1e335a87cdc118e622c7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9cfced9c133b1e335a87cdc118e622c7">&#9670;&#160;</a></span>setDataHDR()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">unsigned int gTexture::setDataHDR </td>
+          <td>(</td>
+          <td class="paramtype">float *&#160;</td>
+          <td class="paramname"><em>textureData</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>width</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>height</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>componentNum</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>isMutable</em> = <code>false</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>isStbImage</em> = <code>false</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aa431445181e5a08193f56b8d0442cb1d" name="aa431445181e5a08193f56b8d0442cb1d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa431445181e5a08193f56b8d0442cb1d">&#9670;&#160;</a></span>setDataInternal()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gTexture::setDataInternal </td>
           <td>(</td>
           <td class="paramtype">unsigned char *&#160;</td>
           <td class="paramname"><em>textureData</em>, </td>
@@ -2062,12 +2092,17 @@ Additional Inherited Members</h2></td></tr>
           <td></td><td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="a0212416373ed7392ce4444ee243be9cf" name="a0212416373ed7392ce4444ee243be9cf"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0212416373ed7392ce4444ee243be9cf">&#9670;&#160;</a></span>setDataHDR()</h2>
+<a id="a100ac074bc5266c5032d3a70bbfe3015" name="a100ac074bc5266c5032d3a70bbfe3015"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a100ac074bc5266c5032d3a70bbfe3015">&#9670;&#160;</a></span>setDataInternalHDR()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2076,7 +2111,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void gTexture::setDataHDR </td>
+          <td class="memname">void gTexture::setDataInternalHDR </td>
           <td>(</td>
           <td class="paramtype">float *&#160;</td>
           <td class="paramname"><em>textureData</em>, </td>

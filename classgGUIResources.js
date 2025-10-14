@@ -2,7 +2,7 @@ var classgGUIResources =
 [
     [ "gGUIResources", "classgGUIResources.html#a829e994695f9f6f6d902148186b758d4", null ],
     [ "~gGUIResources", "classgGUIResources.html#aab49146ca3c71815be3196414c58765f", null ],
-    [ "getIconFormat", "classgGUIResources.html#ac92577af57218fb3d1b0c5e75c8cef96", null ],
+    [ "getIconComponentsNum", "classgGUIResources.html#ab63b9b78b1954fb021845f7aa2e052ce", null ],
     [ "getIconHeight", "classgGUIResources.html#a53d8951a45d0942bc9fa52f9ac9f75c7", null ],
     [ "getIconImage", "classgGUIResources.html#a0488cd85365e4634aa806aee0c3b7928", null ],
     [ "getIconNum", "classgGUIResources.html#ae7e4c40ecb65f55b67ee0cbdb9287500", null ],
