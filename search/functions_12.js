@@ -418,7 +418,7 @@ var searchData=
   ['showtitle_415',['showtitle',['../classgGUINumberBox.html#a0de230ac0cb8e7d51470a609c096f5db',1,'gGUINumberBox::showTitle()'],['../classgGUIPanel.html#a748e6cfc77a111bc30b2b6f6062776dc',1,'gGUIPanel::showTitle()'],['../classgGUIRadioButton.html#a630946f808c4bb54048ad485af4e1d2c',1,'gGUIRadioButton::showTitle()']]],
   ['sleep_416',['sleep',['../classgThread.html#ac2839f49e6d381ab31f60c5ef8a29805',1,'gThread::sleep(std::chrono::duration&lt; double, std::milli &gt; milliseconds)'],['../classgThread.html#aea18b29b95e51d44eca999f90bbfbf8b',1,'gThread::sleep(double milliseconds)']]],
   ['start_417',['start',['../classgBaseApp.html#a22880d1d8315d3af019a5680c8c2fe03',1,'gBaseApp::start()'],['../classgThread.html#a23afe6dec6da07a14bd4fe4d7d529fcf',1,'gThread::start()']]],
-  ['startrecording_418',['startRecording',['../classgSoundRecorder.html#aaea412d4bb96537e44870b157a87508c',1,'gSoundRecorder']]],
+  ['startrecording_418',['startRecording',['../classgSoundRecorder.html#a58ae73aeb62369ffaaff0e54c983d97d',1,'gSoundRecorder']]],
   ['startrecordingsound_419',['startRecordingSound',['../classgSoundRecorder.html#ac7886047f5e64c67eeed9e7662b06fe1',1,'gSoundRecorder']]],
   ['stop_420',['stop',['../classgBaseApp.html#ac7d462bbea10e2ea05d2a8cdd36c2bff',1,'gBaseApp::stop()'],['../classgAppManager.html#a1b0aa3043c4b905a2735e811e36a71f3',1,'gAppManager::stop()'],['../classgBaseSound.html#a7e0d6604acec774a109a1c23149839e9',1,'gBaseSound::stop()'],['../classgSound.html#a9c8c3d88cfdcc97b5e64969607330e84',1,'gSound::stop()'],['../classgThread.html#a8193c562cfc6d5b1ca4f9e3bcec590fb',1,'gThread::stop()']]],
   ['stoprecording_421',['stopRecording',['../classgSoundRecorder.html#a77fa7d7d30b460b3613069b22ed276af',1,'gSoundRecorder']]],

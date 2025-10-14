@@ -456,7 +456,7 @@ var searchData=
   ['spotoutercutoffangle_453',['spotoutercutoffangle',['../structgRenderer_1_1gSceneLightData.html#a33134a037b7b3fc818f85fb96cc761df',1,'gRenderer::gSceneLightData']]],
   ['ssaobias_454',['ssaobias',['../classgRenderer.html#a2d0357f16524edb9127bb10e4944275b',1,'gRenderer::ssaobias'],['../structgRenderer_1_1gSceneData.html#a7207bb3bd94d95b0f93d333a2b340991',1,'gRenderer::gSceneData::ssaobias']]],
   ['start_455',['start',['../classgBaseApp.html#a22880d1d8315d3af019a5680c8c2fe03',1,'gBaseApp::start()'],['../classgThread.html#a23afe6dec6da07a14bd4fe4d7d529fcf',1,'gThread::start()']]],
-  ['startrecording_456',['startRecording',['../classgSoundRecorder.html#aaea412d4bb96537e44870b157a87508c',1,'gSoundRecorder']]],
+  ['startrecording_456',['startRecording',['../classgSoundRecorder.html#a58ae73aeb62369ffaaff0e54c983d97d',1,'gSoundRecorder']]],
   ['startrecordingsound_457',['startRecordingSound',['../classgSoundRecorder.html#ac7886047f5e64c67eeed9e7662b06fe1',1,'gSoundRecorder']]],
   ['statusbar_458',['statusbar',['../classgGUIForm.html#a5207fc3a9149e9b5d3bd74201c33e3f8',1,'gGUIForm']]],
   ['statush_459',['statush',['../classgGUIForm.html#a354630fc731565f65822d883f4e4f8b5',1,'gGUIForm']]],

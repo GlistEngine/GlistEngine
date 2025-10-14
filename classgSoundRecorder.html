@@ -138,11 +138,11 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ab3530a84249897ea65ab064aba7fbc01"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1ea069cd62f76d7b27d4999c7745fd1d" id="r_a1ea069cd62f76d7b27d4999c7745fd1d"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgSoundRecorder.html#a1ea069cd62f76d7b27d4999c7745fd1d">~gSoundRecorder</a> ()</td></tr>
 <tr class="separator:a1ea069cd62f76d7b27d4999c7745fd1d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaea412d4bb96537e44870b157a87508c" id="r_aaea412d4bb96537e44870b157a87508c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgSoundRecorder.html#aaea412d4bb96537e44870b157a87508c">startRecording</a> (const std::string &amp;filename, int quality=<a class="el" href="classgSoundRecorder.html#a70cdd94141e190f20d6e354cf71bd283a0dd41fc9e58cfb4a3a25b4befd541d16">RECORDQUALITY_MIDDLE</a>)</td></tr>
-<tr class="memdesc:aaea412d4bb96537e44870b157a87508c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Starts recording and saves microphone input to a file.  <br /></td></tr>
-<tr class="separator:aaea412d4bb96537e44870b157a87508c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a58ae73aeb62369ffaaff0e54c983d97d" id="r_a58ae73aeb62369ffaaff0e54c983d97d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgSoundRecorder.html#a58ae73aeb62369ffaaff0e54c983d97d">startRecording</a> (const std::string &amp;filepath, int quality=<a class="el" href="classgSoundRecorder.html#a70cdd94141e190f20d6e354cf71bd283a0dd41fc9e58cfb4a3a25b4befd541d16">RECORDQUALITY_MIDDLE</a>)</td></tr>
+<tr class="memdesc:a58ae73aeb62369ffaaff0e54c983d97d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Starts recording and saves microphone input to a file.  <br /></td></tr>
+<tr class="separator:a58ae73aeb62369ffaaff0e54c983d97d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac7886047f5e64c67eeed9e7662b06fe1" id="r_ac7886047f5e64c67eeed9e7662b06fe1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgSoundRecorder.html#ac7886047f5e64c67eeed9e7662b06fe1">startRecordingSound</a> (const std::string &amp;filename, int quality=<a class="el" href="classgSoundRecorder.html#a70cdd94141e190f20d6e354cf71bd283a0dd41fc9e58cfb4a3a25b4befd541d16">RECORDQUALITY_MIDDLE</a>)</td></tr>
-<tr class="memdesc:ac7886047f5e64c67eeed9e7662b06fe1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Starts recording using a project-relative path.  <br /></td></tr>
+<tr class="memdesc:ac7886047f5e64c67eeed9e7662b06fe1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Starts recording and saves into project's assets/sounds folder.  <br /></td></tr>
 <tr class="separator:ac7886047f5e64c67eeed9e7662b06fe1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a77fa7d7d30b460b3613069b22ed276af" id="r_a77fa7d7d30b460b3613069b22ed276af"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgSoundRecorder.html#a77fa7d7d30b460b3613069b22ed276af">stopRecording</a> ()</td></tr>
 <tr class="memdesc:a77fa7d7d30b460b3613069b22ed276af"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stops recording and finalizes the output file.  <br /></td></tr>
@@ -361,8 +361,8 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="aaea412d4bb96537e44870b157a87508c" name="aaea412d4bb96537e44870b157a87508c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aaea412d4bb96537e44870b157a87508c">&#9670;&#160;</a></span>startRecording()</h2>
+<a id="a58ae73aeb62369ffaaff0e54c983d97d" name="a58ae73aeb62369ffaaff0e54c983d97d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a58ae73aeb62369ffaaff0e54c983d97d">&#9670;&#160;</a></span>startRecording()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -371,7 +371,7 @@ Additional Inherited Members</h2></td></tr>
           <td class="memname">void gSoundRecorder::startRecording </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;&#160;</td>
-          <td class="paramname"><em>filename</em>, </td>
+          <td class="paramname"><em>filepath</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -390,7 +390,7 @@ Additional Inherited Members</h2></td></tr>
 <p>Starts recording and saves microphone input to a file. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">filename</td><td>Path of the output file. </td></tr>
+    <tr><td class="paramname">filepath</td><td>Full path of the output file. </td></tr>
     <tr><td class="paramname">quality</td><td>Recording quality preset. </td></tr>
   </table>
   </dd>
@@ -424,7 +424,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Starts recording using a project-relative path. </p>
+<p>Starts recording and saves into project's assets/sounds folder. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">filename</td><td>Relative path of the output file. </td></tr>
