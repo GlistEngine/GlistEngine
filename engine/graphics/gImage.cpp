@@ -36,8 +36,7 @@ unsigned int gImage::load(const std::string& fullPath) {
 	fullpath = fullPath;
 	directory = getDirName(fullpath);
 	path = getFileName(fullpath);
-	ishdr = false;
-	if (gToLower(fullpath.substr(fullpath.length() - 3, 3)) == "hdr") ishdr = true;
+	ishdr = stbi_is_hdr(fullpath.c_str());
 
 	if (!istextureallocated) {
 		id = renderer->createTextures();
@@ -47,10 +46,10 @@ unsigned int gImage::load(const std::string& fullPath) {
 	if (ishdr) {
 		stbi_set_flip_vertically_on_load(true);
 		float* datahdr = stbi_loadf(fullpath.c_str(), &width, &height, &componentnum, 0);
-		setDataHDR(datahdr, true, true);
+		setDataInternalHDR(datahdr, true, true);
 	} else {
 		unsigned char* data = stbi_load(fullpath.c_str(), &width, &height, &componentnum, 0);
-		setData(data, true, true);
+		setDataInternal(data, true, true);
 	}
 
 	//	setupRenderData();
@@ -94,8 +93,7 @@ void gImage::loadData(const std::string& fullPath) {
 	fullpath = fullPath;
 	directory = getDirName(fullpath);
 	path = getFileName(fullpath);
-	ishdr = false;
-	if (gToLower(fullpath.substr(fullpath.length() - 3, 3)) == "hdr") ishdr = true;
+	ishdr = stbi_is_hdr(fullpath.c_str());
 
 	if (ishdr) {
 		stbi_set_flip_vertically_on_load(true);
@@ -118,9 +116,9 @@ unsigned int gImage::useData() {
 	}
 
 	if (ishdr) {
-		setDataHDR(datahdr, ismutable, isstbimage, false);
+		setDataInternalHDR(datahdr, ismutable, isstbimage, false);
 	} else {
-		setData(data, ismutable, isstbimage, false);
+		setDataInternal(data, ismutable, isstbimage, false);
 	}
 
 	//	setupRenderData();
@@ -128,11 +126,11 @@ unsigned int gImage::useData() {
 }
 
 void gImage::setImageData(unsigned char* imageData) {
-	setData(imageData, true, false);
+	setDataInternal(imageData, true, false);
 }
 
 void gImage::setImageData(unsigned char* imageData, int width, int height, int componentNum, bool isMutable, bool isStbImage) {
-  gTexture::loadData(imageData, width, height, componentNum, isMutable, isStbImage);
+	gTexture::setData(imageData, width, height, componentNum, isMutable, isStbImage);
 }
 
 unsigned char* gImage::getImageData() {
@@ -140,11 +138,15 @@ unsigned char* gImage::getImageData() {
 }
 
 void gImage::setImageDataHDR(float* imageData) {
-	setDataHDR(imageData, true, false);
+	setDataInternalHDR(imageData, true, false);
+}
+
+void gImage::setImageDataHDR(float* imageData, int width, int height, int componentNum, bool isMutable, bool isStbImage) {
+	setDataHDR(imageData, width, height, componentNum, isMutable, isStbImage);
 }
 
 float* gImage::getImageDataHDR() {
-	return getDataHDR();
+	return datahdr;
 }
 
 void gImage::clearData() {
