@@ -13,10 +13,10 @@ gSoundRecorder::~gSoundRecorder() {
     stopRecording();
 }
 
-void gSoundRecorder::startRecording(const std::string& filename, int quality) {
+void gSoundRecorder::startRecording(const std::string& filepath, int quality) {
     if (recording) return;
 
-    filepath = filename;
+    this->filepath = filepath;
 
     ma_device_config deviceConfig = ma_device_config_init(ma_device_type_capture);
 
@@ -59,7 +59,7 @@ void gSoundRecorder::startRecording(const std::string& filename, int quality) {
                                deviceConfig.capture.channels,
                                deviceConfig.sampleRate);
 
-    if (ma_encoder_init_file(filename.c_str(), &encoderConfig, &encoder) != MA_SUCCESS) {
+    if (ma_encoder_init_file(filepath.c_str(), &encoderConfig, &encoder) != MA_SUCCESS) {
         gLoge("Mic") << "Failed to initialize encoder!";
         return;
     }
@@ -89,7 +89,7 @@ void gSoundRecorder::startRecording(const std::string& filename, int quality) {
 
     recording = true;
     isrecordpaused = false;
-    gLogi("gSoundRecorder") << "Recording started: " << filename
+    gLogi("gSoundRecorder") << "Recording started: " << filepath
                  << " (Bit depth: "
                  << (quality == RECORDQUALITY_LOW ? "8"
                      : quality == RECORDQUALITY_MIDDLE ? "16"
