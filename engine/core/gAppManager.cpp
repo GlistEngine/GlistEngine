@@ -625,8 +625,8 @@ bool gAppManager::onWindowResizedEvent(gWindowResizeEvent& event) {
 
 		// Orientation changed, we should swap height and width
 		if(swapdimensions) {
-			int unitwidth = renderer->getUnitWidth();
-			int unitheight = renderer->getUnitHeight();
+			int unitwidth = gBaseCanvas::getRenderer()->getUnitWidth();
+			int unitheight = gBaseCanvas::getRenderer()->getUnitHeight();
 			// Swap width and height values
 			gRenderer::setUnitScreenSize(unitheight, unitwidth);
 		}
