@@ -35,10 +35,8 @@ enum TriggerCondition {
 class gAnimationTrigger {
 public:
 	template<typename First, typename Second>
-	constexpr gAnimationTrigger(First* first, Second* second, TriggerCondition cond)
-	{
-		switch(cond)
-		{
+	constexpr gAnimationTrigger(First* first, Second* second, TriggerCondition cond) {
+		switch(cond) {
 		case TriggerCondition::LESS:
 			triggerfunc = [first, second]() -> bool { return *first < *second; };
 			break;
@@ -59,6 +57,8 @@ public:
 			break;
 		case TriggerCondition::TRUE:
 			triggerfunc = [first]() -> bool { return *first == true; };
+			break;
+		case TriggerCondition::MAX_TRIGGER_CONDITIONS:
 			break;
 		}
 	}
