@@ -81,6 +81,8 @@ std::string gAES::decrypt(std::string cipherText) {
 	return str.substr(0, plaintext_len);
 }
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 std::string gAES::encodeMD5(std::string plainText) {
 	unsigned char digest[MD5_DIGEST_LENGTH];
 	MD5((unsigned char*)plainText.c_str(), (int)plainText.length(), digest);
@@ -92,6 +94,7 @@ std::string gAES::encodeMD5(std::string plainText) {
 	std::string hashText(reinterpret_cast<char*>(mdString));
 	return hashText;
 }
+#pragma clang diagnostic pop
 
 void gAES::clean() {
 	/* Clean up */

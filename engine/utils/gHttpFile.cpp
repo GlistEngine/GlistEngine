@@ -62,7 +62,7 @@ void gHttpFile::loadHtml() {
 	curl = curl_easy_init();
 	if(curl) {
         // gHttpFile only allows http requests!
-        curl_easy_setopt(curl, CURLOPT_REDIR_PROTOCOLS, CURLPROTO_HTTP | CURLPROTO_HTTPS);
+        curl_easy_setopt(curl, CURLOPT_REDIR_PROTOCOLS_STR, CURLPROTO_HTTP | CURLPROTO_HTTPS);
         curl_easy_setopt(curl, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_WHATEVER);
 
         curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
@@ -75,7 +75,7 @@ void gHttpFile::loadHtml() {
 		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, &gHttpFile::writeCallBack);
 		curl_easy_setopt(curl, CURLOPT_WRITEDATA, &html);
 		curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 0L);
-		curl_easy_setopt(curl, CURLOPT_PROGRESSFUNCTION, &gHttpFile::progressCallback);
+		curl_easy_setopt(curl, CURLOPT_XFERINFOFUNCTION, &gHttpFile::progressCallback);
 		curl_easy_setopt(curl, CURLOPT_PROGRESSDATA, &prog);
 
 #ifdef SKIP_PEER_VERIFICATION
