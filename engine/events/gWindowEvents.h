@@ -273,7 +273,7 @@ private:
 
 #endif
 
-#ifdef GLIST_WEB
+#if defined(GLIST_WEB) || defined(GLIST_ANDROID)
 
 class gAppPauseEvent : public gEvent {
 public:

@@ -17,6 +17,7 @@
 #ifndef GRAPHICS_GSKYBOX_H_
 #define GRAPHICS_GSKYBOX_H_
 
+#include <array>
 #include <string>
 #include "gNode.h"
 #include "gVbo.h"
