@@ -150,7 +150,7 @@ void gStartEngine(gBaseApp* baseApp, const std::string& appName, int loopMode);
 
 extern gAppManager* appmanager;
 
-class gAppManager : public gRenderObject {
+class gAppManager : public gObject {
 public:
     gAppManager(const std::string& appName, gBaseApp *baseApp, int width, int height, int windowMode, int unitWidth, int unitHeight, int screenScaling, bool isResizable, int loopMode);
     ~gAppManager();
