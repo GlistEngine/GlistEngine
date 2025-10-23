@@ -252,7 +252,7 @@ void gGLRenderEngine::drawArrays(int drawMode, int count) {
 }
 
 void gGLRenderEngine::drawElements(int drawMode, int count) {
-	G_CHECK_GL(glDrawElements(drawMode, count, GL_UNSIGNED_INT, 0));
+	G_CHECK_GL(glDrawElements(drawMode, count, G_INDEX_SIZE, 0));
 }
 
 // ----- vertex attributes -----

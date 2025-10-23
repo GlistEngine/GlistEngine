@@ -443,6 +443,8 @@ bool gCheckCollision(int xLeft1, int yUp1, int xRight1, int yBottom1,
 
 bool gCheckPixelPerfectCollision(gImage* image1, int x1, int y1, gImage* image2, int x2, int y2);
 
+std::string gFixPath(const std::string& path);
+
 class gUtils {
 public:
 	gUtils();
