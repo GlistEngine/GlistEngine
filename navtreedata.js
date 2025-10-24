@@ -80,7 +80,7 @@ var NAVTREEINDEX =
 "gColor_8h.html#a82507c65068908913caeafe58c8d5ff1",
 "gKeyCode_8h.html#a3cd53e9d81386daca8f8e1ec1ef750f9",
 "gTriangle_8h_source.html",
-"tinyfiledialogs_8c.html#a47f8aa977cd899f2e44c677491cb1a5d"
+"tinyfiledialogs_8c.html#a460e8b223e71d9e54e6e6d288a865156"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
