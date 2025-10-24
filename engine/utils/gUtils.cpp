@@ -903,6 +903,13 @@ bool gCheckPixelPerfectCollision(gImage* image1, int x1, int y1, gImage* image2,
 	return false;
 }
 
+std::string gFixPath(const std::string& path) {
+#ifdef WIN32
+    return gReplaceAll(path, "/", "\\");
+#else
+    return gReplaceAll(path, "\\", "/");
+#endif
+}
 
 gUtils::gUtils() {
 

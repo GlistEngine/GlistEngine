@@ -447,16 +447,16 @@ gSkinnedMesh* gModel::processMesh(aiMesh *mesh, const aiScene *scene, aiMatrix4x
 }
 
 void gModel::loadMaterialTextures(gSkinnedMesh* mesh, aiMaterial *mat, aiTextureType type, gTexture::TextureType textureType) {
-	aiString str;
+    aiString str;
     for(unsigned int i = 0; i < mat->GetTextureCount(type); i++) {
-		size_t texno;
+        size_t texno;
         mat->GetTexture(type, i, &str);
         // check if texture was loaded before and if so, continue to next iteration: skip loading a new texture
         bool skip = false;
         for(size_t j = 0; j < textures_loaded.size(); j++) {
-        	std::string aip = str.C_Str();
-        	int aipspos = aip.find_last_of('/');
-        	aip = aip.substr(aipspos + 1, aip.length() - aipspos - 1);
+            std::string aip = str.C_Str();
+            int aipspos = aip.find_last_of('/');
+            aip = aip.substr(aipspos + 1, aip.length() - aipspos - 1);
             if(aip == textures_loaded[j]->getFilename()) {
                 skip = true; // a texture with the same filepath has already been loaded, continue to next one. (optimization)
                 texno = j;
@@ -466,8 +466,8 @@ void gModel::loadMaterialTextures(gSkinnedMesh* mesh, aiMaterial *mat, aiTexture
 
         if(!skip) {   // if texture hasn't been loaded already, load it
             gTexture* texture = new gTexture();
-            std::string tpath = this->directory + "/" + str.C_Str();
-            texture->load(tpath);
+            std::string texturepath = gFixPath(this->directory + "/" + str.C_Str());
+            texture->load(texturepath);
             texture->setType(textureType);
             textures_loaded.push_back(texture);  // store it as texture loaded for entire model, to ensure we won't unnecesery load duplicate textures.
             texno = textures_loaded.size() - 1;
