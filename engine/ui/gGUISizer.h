@@ -91,6 +91,8 @@ private:
 	void reloadControl(gGUIControl& control, int line, int column);
 
 	int indexOf(int line, int column) const;
+
+	void checkSpaces();
 };
 
 #endif /* UI_GGUISIZER_H_ */

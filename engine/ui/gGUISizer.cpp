@@ -49,6 +49,10 @@ void gGUISizer::set(int x, int y, int w, int h) {
 	top = y;
 	right = x + w;
 	bottom = y + h;
+	oldwidth = width;
+	if(oldwidth == 0) oldwidth = w;
+	oldheight = height;
+	if(oldheight == 0) oldheight = h;
 	width = w;
 	height = h;
 //	gLogi("Sizer") << "id:" << id  << ", l:" << left << ", t:" << top << ", w:" << w << ", h:" << h;
@@ -250,7 +254,98 @@ int gGUISizer::detectSizerType() {
 	return SIZERTYPE_GRID;
 }
 
+void gGUISizer::checkSpaces() {
+	std::vector<int> spacelineno;
+	std::vector<float> spacelineprs;
+	float totalspacelineprs = 0.0f;
+	std::vector<int> spacecolumnno;
+	std::vector<float> spacecolumnprs;
+	float totalspacecolumnprs = 0.0f;
+	for (int line = 0; line < linenum; line++) {
+		for (int column = 0; column < columnnum; column++) {
+			gGUIControl* control = getControl(line, column);
+			if (control != nullptr && control->countAsSpace()) {
+
+				// Line check
+				if(linenum > 1) {
+					bool linefound = false;
+					if(!spacelineno.empty()) {
+						for(int spi = 0; spi < spacelineno.size(); spi++) {
+							if(spacelineno[spi] == line) {
+								linefound = true;
+								break;
+							}
+						}
+					}
+					if(!linefound) {
+						spacelineno.push_back(line);
+						spacelineprs.push_back(lineprs[line]);
+						totalspacelineprs += lineprs[line];
+					}
+				}
+
+				// Column check
+				if(columnnum > 1) {
+					bool columnfound = false;
+					if(!spacecolumnno.empty()) {
+						for(int spi = 0; spi < spacecolumnno.size(); spi++) {
+							if(spacecolumnno[spi] == column) {
+								columnfound = true;
+								break;
+							}
+						}
+					}
+					if(!columnfound) {
+						spacecolumnno.push_back(column);
+						spacecolumnprs.push_back(columnprs[column]);
+						totalspacecolumnprs += columnprs[column];
+					}
+				}
+			}
+		}
+	}
+
+	if(!spacelineno.empty()) {
+		int hspacenum = spacelineno.size();
+		float hdiffratio = (float)height / (float)oldheight;
+		float newtotalnospaceprs = (1.0f - totalspacelineprs) / hdiffratio;
+		float newspaceprs = (1.0f - newtotalnospaceprs) / hspacenum;
+
+		for (int li = 0; li < linenum; li++) {
+			for (int si = 0; si < hspacenum; si++) {
+				if(li == spacelineno[si]) {
+					lineprs[li] = newspaceprs;
+				} else {
+					lineprs[li] /= hdiffratio;
+				}
+			}
+		}
+
+		setLineProportions(lineprs);
+	}
+
+	if(!spacecolumnno.empty()) {
+		int wspacenum = spacecolumnno.size();
+		float wdiffratio = (float)width / (float)oldwidth;
+		float newtotalnospaceprs = (1.0f - totalspacecolumnprs) / wdiffratio;
+		float newspaceprs = (1.0f - newtotalnospaceprs) / wspacenum;
+
+		for (int li = 0; li < columnnum; li++) {
+			for (int si = 0; si < wspacenum; si++) {
+				if(li == spacecolumnno[si]) {
+					columnprs[li] = newspaceprs;
+				} else {
+					columnprs[li] /= wdiffratio;
+				}
+			}
+		}
+
+		setColumnProportions(columnprs);
+	}
+}
+
 void gGUISizer::reloadControls() {
+	if(oldwidth != width || oldheight != height) checkSpaces();
 	for (int line = 0; line < linenum; line++) {
 		for (int column = 0; column < columnnum; column++) {
 			gGUIControl* control = getControl(line, column);

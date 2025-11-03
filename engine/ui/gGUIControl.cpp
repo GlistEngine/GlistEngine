@@ -9,6 +9,9 @@
 
 
 gGUIControl::gGUIControl() {
+	countasspace = false;
+	oldwidth = 0;
+	oldheight = 0;
 }
 
 gGUIControl::~gGUIControl() {
@@ -24,6 +27,10 @@ void gGUIControl::set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseG
 	top = y;
 	right = x + w;
 	bottom = y + h;
+	oldwidth = width;
+	if(oldwidth == 0) oldwidth = w;
+	oldheight = height;
+	if(oldheight == 0) oldheight = h;
 	width = w;
 	height = h;
 }
@@ -38,4 +45,8 @@ void gGUIControl::update() {
 
 void gGUIControl::draw() {
 //	gLogi("gGUIControl") << "draw";
+}
+
+bool gGUIControl::countAsSpace() {
+	return countasspace;
 }
