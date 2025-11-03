@@ -284,6 +284,7 @@ set(SRC_FILES
 	${ENGINE_DIR}/ui/gGUIColorbox.cpp
 	${ENGINE_DIR}/ui/gGUIButton.cpp
 	${ENGINE_DIR}/ui/gGUISizer.cpp
+	${ENGINE_DIR}/ui/gGUISizerSpace.cpp
 	${ENGINE_DIR}/ui/gGUINavigation.cpp
 	${ENGINE_DIR}/ui/gGUIToolbar.cpp
 	${ENGINE_DIR}/ui/gGUIMenubar.cpp
