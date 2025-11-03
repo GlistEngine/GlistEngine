@@ -36,6 +36,7 @@ var dir_ae5170f952997566e512365547790ab2 =
     [ "gGUIResources.h", "gGUIResources_8h.html", "gGUIResources_8h" ],
     [ "gGUIScrollable.h", "gGUIScrollable_8h.html", "gGUIScrollable_8h" ],
     [ "gGUISizer.h", "gGUISizer_8h.html", "gGUISizer_8h" ],
+    [ "gGUISizerSpace.h", "gGUISizerSpace_8h.html", "gGUISizerSpace_8h" ],
     [ "gGUISlider.h", "gGUISlider_8h.html", "gGUISlider_8h" ],
     [ "gGUIStatusBar.h", "gGUIStatusBar_8h.html", "gGUIStatusBar_8h" ],
     [ "gGUISurface.h", "gGUISurface_8h.html", "gGUISurface_8h" ],

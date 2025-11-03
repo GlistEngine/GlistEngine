@@ -88,6 +88,7 @@ var annotated_dup =
     [ "gGUIResources", "classgGUIResources.html", "classgGUIResources" ],
     [ "gGUIScrollable", "classgGUIScrollable.html", "classgGUIScrollable" ],
     [ "gGUISizer", "classgGUISizer.html", "classgGUISizer" ],
+    [ "gGUISizerSpace", "classgGUISizerSpace.html", "classgGUISizerSpace" ],
     [ "gGUISlider", "classgGUISlider.html", "classgGUISlider" ],
     [ "gGUIStatusBar", "classgGUIStatusBar.html", "classgGUIStatusBar" ],
     [ "gGUISurface", "classgGUISurface.html", "classgGUISurface" ],
