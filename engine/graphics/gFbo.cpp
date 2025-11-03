@@ -1,8 +1,8 @@
 /*
  * gFbo.cpp
  *
- *  Created on: 23 �ub 2021
- *      Author: Acer
+ *  Created on: 23 Feb 2021
+ *      Author: Noyan Culum
  */
 
 #include "gFbo.h"
@@ -78,7 +78,9 @@ void gFbo::allocate(int width, int height, bool isDepthMap) {
 		renderer->setDrawBufferNone();
 		renderer->setReadBufferNone();
 	}
+#if defined(DEBUG) || defined(ENGINE_OPENGL_CHECKS)
 	renderer->checkFramebufferStatus();
+#endif
 	renderer->bindDefaultFramebuffer();
 	isallocated = true;
 }
