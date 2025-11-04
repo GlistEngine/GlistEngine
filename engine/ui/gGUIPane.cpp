@@ -28,10 +28,12 @@ gGUIPane::gGUIPane() {
 	nextbutton.setTitle("Next");
 	nextbutton.setDisabled(true);
 	buttonsizer.setSize(1, 3);
-	float columnprs[3] = {0.65f, 0.15f, 0.2f};
+	float columnprs[4] = {0.65f, 0.14f, 0.14f, 0.07};
 	buttonsizer.setColumnProportions(columnprs);
+	buttonsizer.setControl(0, 0, &buttonsizerspace1);
 	buttonsizer.setControl(0, 1, &previousbutton);
 	buttonsizer.setControl(0, 2, &nextbutton);
+	buttonsizer.setControl(0, 3, &buttonsizerspace2);
 	previousbuttonenabled = true;
 	nextbuttonenabled = true;
 	issubtitleset = false;
@@ -123,8 +125,7 @@ void gGUIPane::draw() {
 	if(guisizer) guisizer->draw();
 
 	if(navbuttonsenabled) {
-		previousbutton.draw();
-		nextbutton.draw();
+		buttonsizer.draw();
 	}
 }
 
