@@ -9,6 +9,9 @@
 #define ENGINE_BASE_GNODE_H_
 
 #include "gRenderObject.h"
+#include <deque>
+#include <unordered_map>
+#include <memory>
 
 
 class gNode : public gRenderObject {
@@ -127,6 +130,9 @@ public:
 	void setParent(gNode* parent);
 	gNode* getParent() const;
 	void removeParent();
+	void addChild(gNode* child);
+	void removeChild(gNode* child);
+	void removeChild(int gObjectId);
 
 	void setEnabled(bool isEnabled);
 	bool isEnabled() const;
@@ -136,6 +142,7 @@ public:
 
 protected:
 	gNode* parent;
+	std::deque<gNode*> children;
 	glm::mat4 localtransformationmatrix;
 
 	bool isenabled;
