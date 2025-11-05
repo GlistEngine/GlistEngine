@@ -10,8 +10,6 @@
 
 #include "gRenderObject.h"
 #include <deque>
-#include <unordered_map>
-#include <memory>
 
 
 class gNode : public gRenderObject {
