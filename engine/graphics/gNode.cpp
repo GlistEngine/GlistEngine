@@ -7,7 +7,6 @@
 
 #include "gNode.h"
 #include <algorithm>
-#include <memory>
 
 int gNode::lastid = -1;
 
