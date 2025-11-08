@@ -741,12 +741,17 @@ float gModel::getAnimationPosition() const {
 void gModel::setAnimationFramerate(float animationFramerate) {
 	G_PROFILE_ZONE_SCOPED_N("gModel::setAnimationFramerate()");
 	animationframerate = animationFramerate;
-#if defined(WIN32) || defined(TARGET_OS_OSX)
-	setAnimationFrameNum(getAnimationDuration() * animationframerate / scene->mAnimations[0]->mTicksPerSecond);
-#else
-	setAnimationFrameNum(getAnimationDuration() * animationframerate);
-#endif
+
+	float ticksPerSecond = (scene->mAnimations[0]->mTicksPerSecond != 0)
+								   ? scene->mAnimations[0]->mTicksPerSecond
+								   : 25.0f;
+
+	float durationTicks = getAnimationDuration(); // returns mDuration
+	float durationSeconds = durationTicks / ticksPerSecond;
+
+	setAnimationFrameNum(static_cast<int>(durationSeconds * animationframerate));
 }
+
 
 float gModel::getAnimationFramerate() const {
 	return animationframerate;
