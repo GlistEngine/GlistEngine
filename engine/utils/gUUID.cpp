@@ -54,7 +54,7 @@ gUUID gUUID::generateV4() {
   return u;
 }
 
-gUUID gUUID::fromString(std::string_view s, bool* ok) noexcept {
+gUUID gUUID::fromString(std::string s, bool* ok) noexcept {
   // accepted forms: 8-4-4-4-12 with lowercase/uppercase hex
   gUUID out;
   if (s.size() != 36 || s[8] != '-' || s[13] != '-' || s[18] != '-' ||

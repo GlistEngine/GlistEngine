@@ -36,7 +36,7 @@ public:
 	bool ishandled = false;
 
 	virtual const char* getEventName() const = 0;
-	virtual size_t getEventType() const = 0;
+	virtual std::size_t getEventType() const = 0;
 	virtual int getCategoryFlags() const = 0;
 
 	bool isInCategory(EventCategory category) {
