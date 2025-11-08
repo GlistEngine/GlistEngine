@@ -468,7 +468,9 @@ void gTexture::endDraw() {
 		renderer->activateTexture(1); // GL_TEXTURE1
 		masktexture->bind(1);
 	}
-	if ((format == GL_RGBA || format == GL_RG || ismaskloaded) && !renderer->isAlphaBlendingEnabled()) {
+	bool alphablending = renderer->isAlphaBlendingEnabled();
+	bool needsalphablending = format == GL_RGBA || format == GL_RG || ismaskloaded;
+	if (needsalphablending && !alphablending) {
 		renderer->enableAlphaBlending();
 	}
 
@@ -476,7 +478,7 @@ void gTexture::endDraw() {
 	renderer->drawFullscreenQuad();
 	renderer->unbindVAO();
 
-	if (((format == GL_RGBA || format == GL_RG || format == GL_RGB) && !renderer->isAlphaBlendingEnabled()) || ismaskloaded) {
+	if (needsalphablending && !alphablending) {
 		renderer->disableAlphaBlending();
 	}
 	unbind();

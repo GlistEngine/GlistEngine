@@ -12,6 +12,7 @@
 #include "gFont.h"
 #include "gColor.h"
 #include "gGUIButton.h"
+#include "gGUISizerSpace.h"
 
 class gGUINavigation;
 
@@ -59,6 +60,7 @@ private:
 	bool navbuttonsenabled;
 	gGUISizer buttonsizer;
 	gGUIPane *previouspane, *nextpane;
+	gGUISizerSpace buttonsizerspace1, buttonsizerspace2;
 	gGUIButton previousbutton, nextbutton;
 	bool previousbuttonenabled, nextbuttonenabled;
 	int titlex, titley;

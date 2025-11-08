@@ -42,7 +42,12 @@ public:
 	virtual int calculateContentHeight() {
 		return height;
 	}
+
+	virtual bool countAsSpace();
+
 protected:
+	bool countasspace;
+	int oldwidth, oldheight;
 };
 
 #endif /* UI_GGUICONTROL_H_ */
