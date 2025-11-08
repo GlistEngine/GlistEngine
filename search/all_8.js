@@ -413,7 +413,7 @@ var searchData=
   ['getelapsedtime_410',['getelapsedtime',['../classgBaseApp.html#a356c7343afc8143fc204c5de9ce6a744',1,'gBaseApp::getElapsedTime()'],['../classgAppManager.html#a83e9f84a1f4a1d3a956ab42e0e6895f8',1,'gAppManager::getElapsedTime()']]],
   ['getequirectangularshader_411',['getEquirectangularShader',['../classgRenderer.html#a4a028904dd3d50aac9f924a69c53278d',1,'gRenderer']]],
   ['geteventname_412',['getEventName',['../classgEvent.html#ad0f69a0783ffa0a374075fdc422a5972',1,'gEvent']]],
-  ['geteventtype_413',['getEventType',['../classgEvent.html#aff74adf5453ea6a6c4462cc908edfbaf',1,'gEvent']]],
+  ['geteventtype_413',['getEventType',['../classgEvent.html#a8126c12429cb4ab1e00f4cc0914aa41e',1,'gEvent']]],
   ['getfarclip_414',['getfarclip',['../classgCamera.html#ac3fcdb6e62bad0f950876cc4034abe36',1,'gCamera::getFarClip()'],['../classgGrid.html#a4bf490140b8c404c6a8dc12f565901e5',1,'gGrid::getFarClip()']]],
   ['getfbo_415',['getFbo',['../classgGUIScrollable.html#abcd5f2c2bddbdafcac0c97927514d756',1,'gGUIScrollable']]],
   ['getfboshader_416',['getFboShader',['../classgRenderer.html#aca5af8d23b92b70b5c9fbd1b497d11e9',1,'gRenderer']]],
