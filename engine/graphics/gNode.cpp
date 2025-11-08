@@ -6,6 +6,7 @@
  */
 
 #include "gNode.h"
+#include <algorithm>
 
 int gNode::lastid = -1;
 
@@ -42,6 +43,49 @@ void gNode::removeParent() {
 	if (this->parent) {
 		this->parent = nullptr;
 //		delete this->parent;
+	}
+}
+
+void gNode::addChild(gNode* child) {
+	if (child == nullptr) return;
+
+	if (child->parent != nullptr && child->parent != this) {
+		auto& oldParentChildren = child->parent->children;
+		oldParentChildren.erase(
+			std::remove(oldParentChildren.begin(), oldParentChildren.end(), child),
+			oldParentChildren.end()
+		);
+	}
+
+	child->parent = this;
+	children.push_back(child);
+}
+
+void gNode::removeChild(gNode* child) {
+	if (child == nullptr) return;
+
+	children.erase(
+		std::remove(children.begin(), children.end(), child),
+		children.end()
+	);
+
+	if (child->parent == this) {
+		child->parent = nullptr;
+	}
+}
+
+void gNode::removeChild(int gObjectId) {
+	for (auto it = children.begin(); it != children.end(); ++it) {
+		if ((*it)->getId() == gObjectId) {
+			gNode* child = *it;
+
+			if (child->parent == this) {
+				child->parent = nullptr;
+			}
+
+			children.erase(it);
+			return;
+		}
 	}
 }
 
