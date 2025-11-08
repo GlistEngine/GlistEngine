@@ -74,13 +74,13 @@ var NAVTREEINDEX =
 "classgGUITreelist.html#af2bb8467cc4055942ab351858c061bd7",
 "classgMaterial.html#a2661355c616f375b436cdceaa6ad13cf",
 "classgNode.html#a092f481dae264bb851f975307ff552c8",
-"classgRenderer.html#a649fc6cfb8110c32b26253bc8abc42f8",
-"classgShadowMap.html#a6e7472e8b8f12d95a3a640e4607ea31c",
-"classgTiltShift.html#afcac93a0477133bb63010e9c5696f2c6",
-"gColor_8h.html#a1d7b68121d24a2c75c92e0d5fc1f6ab2",
-"gKeyCode_8h.html#a28e62d3bdff2a1f2967448dee9022c77",
-"gTracy_8h.html#a2e778cbacbdb51a62c108031ce062ecb",
-"tinyfiledialogs_8c.html#a0c19cd62f9b9ff0f7def8971d2bc3f9d"
+"classgRenderer.html#a61bb12c6c0de66996369698344d261ac",
+"classgShadowMap.html#a533c54b7ec5f15d9997a92e25b9b7da8",
+"classgTiltShift.html#a2999bef9515844b3e8eb55c62c37350f",
+"gColorCurves_8h.html",
+"gKeyCode_8h.html#a2545e8dfd97641b817d75ddd417166f4",
+"gTiltShift_8h_source.html",
+"tinyfiledialogs_8c.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

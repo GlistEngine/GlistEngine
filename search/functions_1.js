@@ -6,7 +6,7 @@ var searchData=
   ['addanimation_3',['addanimation',['../classgSpriteAnimator.html#a96ea8bb79d132596b58df25c26730f50',1,'gSpriteAnimator::addAnimation()'],['../classgModelAnimator.html#a16991c74e0bf081c723af84f2c95095f',1,'gModelAnimator::addAnimation()']]],
   ['addarrow_4',['addArrow',['../classgGUISurface.html#ae45c357d39f9283a06547db744394dee',1,'gGUISurface']]],
   ['addcheckbox_5',['addCheckbox',['../classgGUIToolbar.html#a5f9746e2e20435b326e0e3e3c02bd108',1,'gGUIToolbar']]],
-  ['addchild_6',['addchild',['../classgGUIMenuItem.html#a00d31f8f3af217446cf001697b58fcbf',1,'gGUIMenuItem::addChild(std::string text, bool addSeperator=false)'],['../classgGUIMenuItem.html#a05d7d64e0289bf6faa8f0550f0757bfa',1,'gGUIMenuItem::addChild(gGUIMenuItem childItem)']]],
+  ['addchild_6',['addchild',['../classgNode.html#a5d398d6872284a6d27edad2f049ff578',1,'gNode::addChild()'],['../classgGUIMenuItem.html#a00d31f8f3af217446cf001697b58fcbf',1,'gGUIMenuItem::addChild(std::string text, bool addSeperator=false)'],['../classgGUIMenuItem.html#a05d7d64e0289bf6faa8f0550f0757bfa',1,'gGUIMenuItem::addChild(gGUIMenuItem childItem)']]],
   ['addcircle_7',['addCircle',['../classgGUISurface.html#ab13797bf6a705e8bda26ffd9477332e3',1,'gGUISurface']]],
   ['addcolumn_8',['addColumn',['../classgGUIColumnChart.html#a6d356eca5a83107d2727328842ba2372',1,'gGUIColumnChart']]],
   ['addcomplementaryslashifneeded_9',['addComplementarySlashIfNeeded',['../classgFile.html#a708b4c6763e8840a149dda35ba96d78b',1,'gFile']]],

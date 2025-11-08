@@ -1,5 +1,9 @@
 var NAVTREEINDEX13 =
 {
+"classgTiltShift.html#a2999bef9515844b3e8eb55c62c37350f":[1,0,156,3],
+"classgTiltShift.html#a41d9df1b1a0ef977795ac9f87faf59ec":[1,0,156,1],
+"classgTiltShift.html#ab6365cf7103fa37b52108997715a7e82":[1,0,156,0],
+"classgTiltShift.html#ac682ce8b46e1978da6b5c6e050b903f8":[1,0,156,4],
 "classgTiltShift.html#afcac93a0477133bb63010e9c5696f2c6":[1,0,156,2],
 "classgTriangle.html":[1,0,157],
 "classgTriangle.html#a0fd7c2118a8cf8828d0d3008b04e57da":[1,0,157,0],
@@ -245,9 +249,5 @@ var NAVTREEINDEX13 =
 "gColorAdjustments_8h.html":[2,0,0,4,1,3],
 "gColorAdjustments_8h_source.html":[2,0,0,4,1,3],
 "gColorChannelMixer_8h.html":[2,0,0,4,1,4],
-"gColorChannelMixer_8h_source.html":[2,0,0,4,1,4],
-"gColorCurves_8h.html":[2,0,0,4,1,5],
-"gColorCurves_8h_source.html":[2,0,0,4,1,5],
-"gColor_8h.html":[2,0,0,6,0],
-"gColor_8h.html#a0d369e28460bf4117da42e67bf4273b1":[2,0,0,6,0,13]
+"gColorChannelMixer_8h_source.html":[2,0,0,4,1,4]
 };

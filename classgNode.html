@@ -282,6 +282,12 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a6953e04a69278a296311c9955a080887"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a47b3c02a129b0fcbdd488583f97a1033" id="r_a47b3c02a129b0fcbdd488583f97a1033"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgNode.html#a47b3c02a129b0fcbdd488583f97a1033">removeParent</a> ()</td></tr>
 <tr class="separator:a47b3c02a129b0fcbdd488583f97a1033"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5d398d6872284a6d27edad2f049ff578" id="r_a5d398d6872284a6d27edad2f049ff578"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgNode.html#a5d398d6872284a6d27edad2f049ff578">addChild</a> (<a class="el" href="classgNode.html">gNode</a> *child)</td></tr>
+<tr class="separator:a5d398d6872284a6d27edad2f049ff578"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1849c55d8639dc819071145130603486" id="r_a1849c55d8639dc819071145130603486"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgNode.html#a1849c55d8639dc819071145130603486">removeChild</a> (<a class="el" href="classgNode.html">gNode</a> *child)</td></tr>
+<tr class="separator:a1849c55d8639dc819071145130603486"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2acf5d6ccd1351f412ec1aa277c2f1b9" id="r_a2acf5d6ccd1351f412ec1aa277c2f1b9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgNode.html#a2acf5d6ccd1351f412ec1aa277c2f1b9">removeChild</a> (int gObjectId)</td></tr>
+<tr class="separator:a2acf5d6ccd1351f412ec1aa277c2f1b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a092f481dae264bb851f975307ff552c8" id="r_a092f481dae264bb851f975307ff552c8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgNode.html#a092f481dae264bb851f975307ff552c8">setEnabled</a> (bool <a class="el" href="classgNode.html#a86d261c0f8a7dd4861abde0bd5c1192e">isEnabled</a>)</td></tr>
 <tr class="separator:a092f481dae264bb851f975307ff552c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a86d261c0f8a7dd4861abde0bd5c1192e" id="r_a86d261c0f8a7dd4861abde0bd5c1192e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgNode.html#a86d261c0f8a7dd4861abde0bd5c1192e">isEnabled</a> () const</td></tr>
@@ -330,6 +336,8 @@ Protected Member Functions</h2></td></tr>
 Protected Attributes</h2></td></tr>
 <tr class="memitem:a1b05034284ccbf2446c1dd82dfaef004" id="r_a1b05034284ccbf2446c1dd82dfaef004"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgNode.html">gNode</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgNode.html#a1b05034284ccbf2446c1dd82dfaef004">parent</a></td></tr>
 <tr class="separator:a1b05034284ccbf2446c1dd82dfaef004"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a494bc9c1ef724dd4ba6a6e0cf6f1529e" id="r_a494bc9c1ef724dd4ba6a6e0cf6f1529e"><td class="memItemLeft" align="right" valign="top">std::deque&lt; <a class="el" href="classgNode.html">gNode</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgNode.html#a494bc9c1ef724dd4ba6a6e0cf6f1529e">children</a></td></tr>
+<tr class="separator:a494bc9c1ef724dd4ba6a6e0cf6f1529e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a82f2d87665cdf6c0871408edd880905c" id="r_a82f2d87665cdf6c0871408edd880905c"><td class="memItemLeft" align="right" valign="top">glm::mat4&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgNode.html#a82f2d87665cdf6c0871408edd880905c">localtransformationmatrix</a></td></tr>
 <tr class="separator:a82f2d87665cdf6c0871408edd880905c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6ade01c6af2b73ec82498f6c17dfa2bc" id="r_a6ade01c6af2b73ec82498f6c17dfa2bc"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgNode.html#a6ade01c6af2b73ec82498f6c17dfa2bc">isenabled</a></td></tr>
@@ -465,6 +473,24 @@ Additional Inherited Members</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="a5d398d6872284a6d27edad2f049ff578" name="a5d398d6872284a6d27edad2f049ff578"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5d398d6872284a6d27edad2f049ff578">&#9670;&#160;</a></span>addChild()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gNode::addChild </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classgNode.html">gNode</a> *&#160;</td>
+          <td class="paramname"><em>child</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="aeb966c8d571f6d817c1c9298ddfc997d" name="aeb966c8d571f6d817c1c9298ddfc997d"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aeb966c8d571f6d817c1c9298ddfc997d">&#9670;&#160;</a></span>boom()</h2>
 
@@ -896,6 +922,42 @@ Additional Inherited Members</h2></td></tr>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a1849c55d8639dc819071145130603486" name="a1849c55d8639dc819071145130603486"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1849c55d8639dc819071145130603486">&#9670;&#160;</a></span>removeChild() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gNode::removeChild </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classgNode.html">gNode</a> *&#160;</td>
+          <td class="paramname"><em>child</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a2acf5d6ccd1351f412ec1aa277c2f1b9" name="a2acf5d6ccd1351f412ec1aa277c2f1b9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2acf5d6ccd1351f412ec1aa277c2f1b9">&#9670;&#160;</a></span>removeChild() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gNode::removeChild </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>gObjectId</em></td><td>)</td>
+          <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1475,6 +1537,28 @@ Additional Inherited Members</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
+<a id="a494bc9c1ef724dd4ba6a6e0cf6f1529e" name="a494bc9c1ef724dd4ba6a6e0cf6f1529e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a494bc9c1ef724dd4ba6a6e0cf6f1529e">&#9670;&#160;</a></span>children</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::deque&lt;<a class="el" href="classgNode.html">gNode</a>*&gt; gNode::children</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a6ade01c6af2b73ec82498f6c17dfa2bc" name="a6ade01c6af2b73ec82498f6c17dfa2bc"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a6ade01c6af2b73ec82498f6c17dfa2bc">&#9670;&#160;</a></span>isenabled</h2>
 
