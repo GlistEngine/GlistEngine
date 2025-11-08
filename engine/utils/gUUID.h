@@ -7,7 +7,7 @@
 
 #include <array>
 #include <cstdint>
-#include <string_view>
+#include <string>
 
 class gUUID {
 public:
@@ -18,7 +18,7 @@ public:
 
 	static gUUID generateV4();
 
-	static gUUID fromString(std::string_view s, bool* ok = nullptr) noexcept;
+	static gUUID fromString(std::string s, bool* ok = nullptr) noexcept;
 
 	std::string toString() const;
 

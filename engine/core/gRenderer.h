@@ -48,6 +48,7 @@
 #include "gColor.h"
 #include "gConstants.h"
 #include <deque>
+#include <memory>
 
 #ifndef GLIST_MAX_LIGHTS
 // amount of maximum lights, this is used to allocate memory for the light uniform buffer
