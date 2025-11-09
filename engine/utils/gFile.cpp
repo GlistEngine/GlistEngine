@@ -11,6 +11,10 @@ fs::copy_options gFile::copyOptions[4] = {fs::copy_options::none, fs::copy_optio
 
 gFile::gFile() : mode(FILEMODE_READONLY), binary(true), size(0) {}
 
+gFile::gFile(const std::string& fullPath, int fileMode, bool isBinary) {
+	load(fullPath, fileMode, isBinary);
+}
+
 gFile::~gFile() {}
 
 bool gFile::load(const std::string& fullPath, int fileMode, bool isBinary) {
