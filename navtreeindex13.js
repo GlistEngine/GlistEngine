@@ -1,5 +1,6 @@
 var NAVTREEINDEX13 =
 {
+"classgTiltShift.html":[1,0,156],
 "classgTiltShift.html#a2999bef9515844b3e8eb55c62c37350f":[1,0,156,3],
 "classgTiltShift.html#a41d9df1b1a0ef977795ac9f87faf59ec":[1,0,156,1],
 "classgTiltShift.html#ab6365cf7103fa37b52108997715a7e82":[1,0,156,0],
@@ -248,6 +249,5 @@ var NAVTREEINDEX13 =
 "gCircle_8h_source.html":[2,0,0,4,2,2],
 "gColorAdjustments_8h.html":[2,0,0,4,1,3],
 "gColorAdjustments_8h_source.html":[2,0,0,4,1,3],
-"gColorChannelMixer_8h.html":[2,0,0,4,1,4],
-"gColorChannelMixer_8h_source.html":[2,0,0,4,1,4]
+"gColorChannelMixer_8h.html":[2,0,0,4,1,4]
 };

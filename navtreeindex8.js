@@ -1,5 +1,6 @@
 var NAVTREEINDEX8 =
 {
+"classgGUITreelist.html#ae58495ae3858b3befa033d21a21809dc":[1,0,100,2],
 "classgGUITreelist.html#af2bb8467cc4055942ab351858c061bd7":[1,0,100,16],
 "classgGUITreelist.html#af73f914329a3efed6140fb9872dabb66":[1,0,100,34],
 "classgGrain.html":[1,0,46],
@@ -248,6 +249,5 @@ var NAVTREEINDEX8 =
 "classgMaterial.html#a1b08b2ce52319c5cb81f715dd80dbd63":[1,0,119,1],
 "classgMaterial.html#a1ca1d5e4528146e42743803d5e598f1c":[1,0,119,9],
 "classgMaterial.html#a1ffd59b9f3c4bb09140496126cdb5b5e":[1,0,119,37],
-"classgMaterial.html#a232742a6b0d11f3e901a174522ab3eed":[1,0,119,68],
-"classgMaterial.html#a258d64bebb3443d9e88d766c3becb280":[1,0,119,21]
+"classgMaterial.html#a232742a6b0d11f3e901a174522ab3eed":[1,0,119,68]
 };

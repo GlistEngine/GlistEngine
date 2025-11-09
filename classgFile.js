@@ -13,6 +13,7 @@ var classgFile =
       [ "FILEMODE_APPEND", "classgFile.html#a3819f303037060ce0d25aa23a135d94fa43b132378680d836921b594b4cd4fa13", null ]
     ] ],
     [ "gFile", "classgFile.html#acfe819503ff1927aace7d2b58112b8c9", null ],
+    [ "gFile", "classgFile.html#a5a9e9ebc0f7c86bbb0172465c2962375", null ],
     [ "~gFile", "classgFile.html#a93788d9d3542bab2657c156c079ae762", null ],
     [ "close", "classgFile.html#aa3f7a3d79412d1192ecd1210d5b39a14", null ],
     [ "exists", "classgFile.html#a6bfc213160f93df37904c12b8a52fab7", null ],
