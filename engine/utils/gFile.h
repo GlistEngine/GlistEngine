@@ -47,6 +47,7 @@ public:
 	};
 
 	gFile();
+	gFile(const std::string& fullPath, int fileMode = FILEMODE_READONLY, bool isBinary = true);
 	virtual ~gFile();
 
 	bool load(const std::string& fullPath, int fileMode = FILEMODE_READONLY, bool isBinary = true);
