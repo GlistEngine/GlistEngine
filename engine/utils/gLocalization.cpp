@@ -2,7 +2,7 @@
  * gLocalization.cpp
  *
  *  Created on: 6 Tem 2021
- *      Author: Admin
+ *      Author: Nazim Gultekin
  */
 
 #include "gLocalization.h"
