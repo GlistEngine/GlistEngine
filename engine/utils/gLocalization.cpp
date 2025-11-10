@@ -1,7 +1,7 @@
 /*
  * gLocalization.cpp
  *
- *  Created on: 6 Tem 2021
+ *  Created on: 6 Jul 2021
  *      Author: Nazim Gultekin
  */
 
@@ -94,7 +94,7 @@ const std::vector<std::string>& gLocalization::getColumnList() const {
 
 void gLocalization::setCurrentLanguage(int languageId) {
     if (isValidLanguageId(languageId)) {
-    	gLogw("gLocalization") << "Changed current language to " << getCurrentLanguage() << " (id: " << languageId << ")" ;
+//    	gLogw("gLocalization") << "Changed current language to " << getCurrentLanguage() << " (id: " << languageId << ")" ;
         currentlanguage = languageId;
     } else {
     	std::string languages;
@@ -103,7 +103,7 @@ void gLocalization::setCurrentLanguage(int languageId) {
     		languages += ", ";
     	}
     	languages.erase(languages.length() - 2);
-        gLogw("gLocalization") << "Invalid language id: " << languageId << ", available languages: " << languages << " (c: " << availablelanguages.size() << ")";
+//        gLogw("gLocalization") << "Invalid language id: " << languageId << ", available languages: " << languages << " (c: " << availablelanguages.size() << ")";
     }
 }
 
@@ -145,7 +145,7 @@ std::string gLocalization::getColumnData(const std::string& columnname) {
 
 std::string gLocalization::localizeWord(const std::string& word) {
     if (!isValidLanguageId(currentlanguage)) {
-        gLogw("gLocalization") << "Invalid language id: " << currentlanguage;
+//        gLogw("gLocalization") << "Invalid language id: " << currentlanguage;
         return word; // Return original word as fallback
     }
 
@@ -165,6 +165,6 @@ std::string gLocalization::localizeWord(const std::string& word) {
         return result;
     }
 
-	gLogw("gLocalization") << "Could not find word: " << word;
+//	gLogw("gLocalization") << "Could not find word: " << word;
     return word; // Return original word if translation not found
 }
