@@ -85,6 +85,40 @@ gGUIFrame* gGUIManager::getCurrentFrame() {
 	return currentframe;
 }
 
+void gGUIManager::registerFrameForResizing(gGUIFrame* frame) {
+	bool isalreadyregistered = false;
+	if(!registeredframesforresizing.empty()) {
+		int rfs = registeredframesforresizing.size();
+		for(int i = 0; i < rfs; i++) {
+			if(registeredframesforresizing[i] == frame) {
+				isalreadyregistered = true;
+				break;
+			}
+		}
+	}
+	if(!isalreadyregistered) registeredframesforresizing.push_back(frame);
+}
+
+void gGUIManager::unregisterFrameForResizing(gGUIFrame* frame) {
+	if(registeredframesforresizing.empty()) return;
+	int rfs = registeredframesforresizing.size();
+	for(int i = 0; i < rfs; i++) {
+		if(registeredframesforresizing[i] == frame) {
+			registeredframesforresizing.erase(registeredframesforresizing.begin() + i);
+			break;
+		}
+	}
+}
+
+bool gGUIManager::isRegisteredFrameForResizing(gGUIFrame* frame) {
+	if(registeredframesforresizing.empty()) return false;
+	int rfs = registeredframesforresizing.size();
+	for(int i = 0; i < rfs; i++) {
+		if(registeredframesforresizing[i] == frame) return true;
+	}
+	return false;
+}
+
 bool gGUIManager::showDialogue(gGUIDialogue* dialogue) {
 	dialoguesshown.push_back(dialogue);
 	return true;
@@ -182,6 +216,16 @@ void gGUIManager::mouseExited() {
 }
 
 void gGUIManager::windowResized(int w, int h) {
+	if(!registeredframesforresizing.empty()) {
+		int rfs = registeredframesforresizing.size();
+		for(int i = 0; i < rfs; i++) {
+			if(registeredframesforresizing[i] == nullptr) continue;
+			if(registeredframesforresizing[i] == currentframe) continue;
+			registeredframesforresizing[i]->width = w;
+			registeredframesforresizing[i]->height = h;
+			registeredframesforresizing[i]->windowResized(w, h);
+		}
+	}
 	currentframe->width = w;
 	currentframe->height = h;
 	currentframe->windowResized(w, h);
