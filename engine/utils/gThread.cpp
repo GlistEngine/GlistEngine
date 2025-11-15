@@ -41,7 +41,7 @@ std::thread& gThread::getThread() {
 
 void gThread::start() {
 	if(isrunning){
-		gLogw("gThread") << "Thread is already running!";
+//		gLogw("gThread") << "Thread is already running!";
 		return;
 	}
 
