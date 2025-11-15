@@ -44,6 +44,7 @@ public:
 	}
 
 	virtual bool countAsSpace();
+	void setCountAsSpace(bool isSpace);
 
 protected:
 	bool countasspace;
