@@ -1,5 +1,8 @@
 var NAVTREEINDEX7 =
 {
+"classgGUISizer.html#a8f99b2a44be6584f58c85d0118992806":[1,0,87,37],
+"classgGUISizer.html#a9d7ee6b06e2727b212887a85fd9dcbd5":[1,0,87,7],
+"classgGUISizer.html#ab0611d336533695f6f50f15f336f7854":[1,0,87,23],
 "classgGUISizer.html#aba019a3d55c01a5a41b42b72ddd1af19":[1,0,87,16],
 "classgGUISizer.html#abebe735e8fc4552755fb289298e65f3a":[1,0,87,10],
 "classgGUISizer.html#ac5572b5b863fcf831bf0cc91ff8495a4":[1,0,87,30],
@@ -246,8 +249,5 @@ var NAVTREEINDEX7 =
 "classgGUITreelist.html#ab8334ce9dc492d3cd39b21ab62cd4f81":[1,0,100,3],
 "classgGUITreelist.html#abd7b3dccb60401f71c1770179cdc15e0":[1,0,100,20],
 "classgGUITreelist.html#ac1836e13444e28633f735168813a4915":[1,0,100,12],
-"classgGUITreelist.html#ac36e39ba0cd9663c159e7cde0310a1d3":[1,0,100,25],
-"classgGUITreelist.html#ac4269f0675dfb2d834c4bd4e421bcc61":[1,0,100,10],
-"classgGUITreelist.html#accfee681bb2f2cafe503e7273bbdcc79":[1,0,100,1],
-"classgGUITreelist.html#ad8cac0c7cfdeaff8c00b732642c1bd4e":[1,0,100,15]
+"classgGUITreelist.html#ac36e39ba0cd9663c159e7cde0310a1d3":[1,0,100,25]
 };

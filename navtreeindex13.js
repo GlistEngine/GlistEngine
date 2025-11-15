@@ -1,5 +1,8 @@
 var NAVTREEINDEX13 =
 {
+"classgThread.html#ac956060e5aec43518e48ba52dc182ae3":[1,0,155,7],
+"classgThread.html#ad1c5e9f02e8b8f5b376c2ac9b37dab73":[1,0,155,14],
+"classgThread.html#ad647ecf3b4c701098d585e724edb38b8":[1,0,155,18],
 "classgThread.html#aea18b29b95e51d44eca999f90bbfbf8b":[1,0,155,9],
 "classgTiltShift.html":[1,0,156],
 "classgTiltShift.html#a2999bef9515844b3e8eb55c62c37350f":[1,0,156,3],
@@ -246,8 +249,5 @@ var NAVTREEINDEX13 =
 "gCanvasManager_8h_source.html":[2,0,0,2,3],
 "gChromaticAberration_8h.html":[2,0,0,4,1,2],
 "gChromaticAberration_8h_source.html":[2,0,0,4,1,2],
-"gCircle_8h.html":[2,0,0,4,2,2],
-"gCircle_8h_source.html":[2,0,0,4,2,2],
-"gColorAdjustments_8h.html":[2,0,0,4,1,3],
-"gColorAdjustments_8h_source.html":[2,0,0,4,1,3]
+"gCircle_8h.html":[2,0,0,4,2,2]
 };

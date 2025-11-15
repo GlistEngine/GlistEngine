@@ -175,41 +175,46 @@ $(document).ready(function(){initNavTree('gGUIManager_8h_source.html',''); initR
 <div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span> </div>
 <div class="line"><a id="l00085" name="l00085"></a><span class="lineno"><a class="line" href="classgGUIManager.html#a3e38953ec23834fd26a08be9768a8e24">   85</a></span>    <span class="keywordtype">bool</span> <a class="code hl_variable" href="classgGUIManager.html#a3e38953ec23834fd26a08be9768a8e24">isframeset</a>;</div>
 <div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span> </div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>    <a class="code hl_class" href="classgBaseApp.html">gBaseApp</a>* root;</div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>    <a class="code hl_class" href="classgGUIFrame.html">gGUIFrame</a>* currentframe;</div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>    <a class="code hl_class" href="classgGUIFrame.html">gGUIFrame</a> emptyframe;</div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>    <a class="code hl_class" href="classgGUISizer.html">gGUISizer</a> emptysizer;</div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>    <span class="keywordtype">int</span> guitheme;</div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span> </div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>    <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">int</span> themenum = 4;</div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>    <a class="code hl_class" href="classgColor.html">gColor</a> themebackgroundcolor[themenum];</div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>    <a class="code hl_class" href="classgColor.html">gColor</a> thememiddlegroundcolor[themenum];</div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>    <a class="code hl_class" href="classgColor.html">gColor</a> themeforegroundcolor[themenum];</div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>    <a class="code hl_class" href="classgColor.html">gColor</a> themebuttoncolor[themenum];</div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>    <a class="code hl_class" href="classgColor.html">gColor</a> themepressedbuttoncolor[themenum];</div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>    <a class="code hl_class" href="classgColor.html">gColor</a> themedisabledbuttoncolor[themenum];</div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>    <a class="code hl_class" href="classgColor.html">gColor</a> themebuttonfontcolor[themenum];</div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>    <a class="code hl_class" href="classgColor.html">gColor</a> themepressedbuttonfontcolor[themenum];</div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>    <a class="code hl_class" href="classgColor.html">gColor</a> themedisabledbuttonfontcolor[themenum];</div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>    <a class="code hl_class" href="classgColor.html">gColor</a> themetextbackgroundcolor[themenum];</div>
-<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>    <a class="code hl_class" href="classgColor.html">gColor</a> themenavigationbackgroundcolor[themenum];</div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>    <a class="code hl_class" href="classgColor.html">gColor</a> themefontcolor[themenum];</div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>    <a class="code hl_class" href="classgColor.html">gColor</a> themenavigationfontcolor[themenum];</div>
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>    <a class="code hl_class" href="classgFont.html">gFont</a> themefonts[<a class="code hl_variable" href="classgGUIManager.html#a083ad40f8b73eed2c121f47e5eceef4d">fontnum</a>][<a class="code hl_variable" href="classgGUIManager.html#a2fb857c4171fe02594684dacf96a8f32">fonttypenum</a>];</div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>    <span class="keywordtype">void</span> loadThemes();</div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>    <span class="keywordtype">void</span> resetTheme(<span class="keywordtype">int</span> guiTheme);</div>
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span> </div>
-<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>    <a class="code hl_class" href="classgGUISizer.html">gGUISizer</a> defdialoguesizer;</div>
-<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span> </div>
-<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>    std::deque&lt;gGUIDialogue*&gt; dialogues;</div>
-<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>    std::deque&lt;gGUIDialogue*&gt; dialoguesshown;</div>
-<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>    <a class="code hl_class" href="classgGUIDialogue.html">gGUIDialogue</a>* selecteddialogue;</div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno"><a class="line" href="classgGUIManager.html#aaae80e1de5d05a698dbec33e342d935b">   87</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classgGUIManager.html#aaae80e1de5d05a698dbec33e342d935b">registerFrameForResizing</a>(<a class="code hl_class" href="classgGUIFrame.html">gGUIFrame</a>* frame);</div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno"><a class="line" href="classgGUIManager.html#a7b3c33f069cf019f5805327694751374">   88</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classgGUIManager.html#a7b3c33f069cf019f5805327694751374">unregisterFrameForResizing</a>(<a class="code hl_class" href="classgGUIFrame.html">gGUIFrame</a>* frame);</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno"><a class="line" href="classgGUIManager.html#a3d070fc3858e41b37a70b0699ed66a81">   89</a></span>    <span class="keywordtype">bool</span> <a class="code hl_function" href="classgGUIManager.html#a3d070fc3858e41b37a70b0699ed66a81">isRegisteredFrameForResizing</a>(<a class="code hl_class" href="classgGUIFrame.html">gGUIFrame</a>* frame);</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span> </div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>    <a class="code hl_class" href="classgBaseApp.html">gBaseApp</a>* root;</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>    <a class="code hl_class" href="classgGUIFrame.html">gGUIFrame</a>* currentframe;</div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>    <a class="code hl_class" href="classgGUIFrame.html">gGUIFrame</a> emptyframe;</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>    <a class="code hl_class" href="classgGUISizer.html">gGUISizer</a> emptysizer;</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>    <span class="keywordtype">int</span> guitheme;</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span> </div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>    <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">int</span> themenum = 4;</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>    <a class="code hl_class" href="classgColor.html">gColor</a> themebackgroundcolor[themenum];</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>    <a class="code hl_class" href="classgColor.html">gColor</a> thememiddlegroundcolor[themenum];</div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>    <a class="code hl_class" href="classgColor.html">gColor</a> themeforegroundcolor[themenum];</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>    <a class="code hl_class" href="classgColor.html">gColor</a> themebuttoncolor[themenum];</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>    <a class="code hl_class" href="classgColor.html">gColor</a> themepressedbuttoncolor[themenum];</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>    <a class="code hl_class" href="classgColor.html">gColor</a> themedisabledbuttoncolor[themenum];</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>    <a class="code hl_class" href="classgColor.html">gColor</a> themebuttonfontcolor[themenum];</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>    <a class="code hl_class" href="classgColor.html">gColor</a> themepressedbuttonfontcolor[themenum];</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>    <a class="code hl_class" href="classgColor.html">gColor</a> themedisabledbuttonfontcolor[themenum];</div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>    <a class="code hl_class" href="classgColor.html">gColor</a> themetextbackgroundcolor[themenum];</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>    <a class="code hl_class" href="classgColor.html">gColor</a> themenavigationbackgroundcolor[themenum];</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>    <a class="code hl_class" href="classgColor.html">gColor</a> themefontcolor[themenum];</div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>    <a class="code hl_class" href="classgColor.html">gColor</a> themenavigationfontcolor[themenum];</div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>    <a class="code hl_class" href="classgFont.html">gFont</a> themefonts[<a class="code hl_variable" href="classgGUIManager.html#a083ad40f8b73eed2c121f47e5eceef4d">fontnum</a>][<a class="code hl_variable" href="classgGUIManager.html#a2fb857c4171fe02594684dacf96a8f32">fonttypenum</a>];</div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>    <span class="keywordtype">void</span> loadThemes();</div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>    <span class="keywordtype">void</span> resetTheme(<span class="keywordtype">int</span> guiTheme);</div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span> </div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>    <a class="code hl_class" href="classgGUISizer.html">gGUISizer</a> defdialoguesizer;</div>
 <div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span> </div>
-<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>};</div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>    std::deque&lt;gGUIDialogue*&gt; dialogues;</div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>    std::deque&lt;gGUIDialogue*&gt; dialoguesshown;</div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>    <a class="code hl_class" href="classgGUIDialogue.html">gGUIDialogue</a>* selecteddialogue;</div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span> </div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>    std::deque&lt;gGUIFrame*&gt; registeredframesforresizing;</div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>};</div>
 </div>
-<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span> </div>
-<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span><span class="preprocessor">#endif </span><span class="comment">/* CORE_GGUIMANAGER_H_ */</span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span> </div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span><span class="preprocessor">#endif </span><span class="comment">/* CORE_GGUIMANAGER_H_ */</span><span class="preprocessor"></span></div>
 <div class="ttc" id="aclassgBaseApp_html"><div class="ttname"><a href="classgBaseApp.html">gBaseApp</a></div><div class="ttdef"><b>Definition</b> gBaseApp.h:16</div></div>
 <div class="ttc" id="aclassgColor_html"><div class="ttname"><a href="classgColor.html">gColor</a></div><div class="ttdef"><b>Definition</b> gColor.h:17</div></div>
 <div class="ttc" id="aclassgFont_html"><div class="ttname"><a href="classgFont.html">gFont</a></div><div class="ttdef"><b>Definition</b> gFont.h:46</div></div>
@@ -228,12 +233,14 @@ $(document).ready(function(){initNavTree('gGUIManager_8h_source.html',''); initR
 <div class="ttc" id="aclassgGUIManager_html_a2fb943464c7215625cc4fc471097d27a"><div class="ttname"><a href="classgGUIManager.html#a2fb943464c7215625cc4fc471097d27a">gGUIManager::GUITHEME_LIGHT</a></div><div class="ttdeci">static const int GUITHEME_LIGHT</div><div class="ttdef"><b>Definition</b> gGUIManager.h:39</div></div>
 <div class="ttc" id="aclassgGUIManager_html_a333685db5c99906fa6037faa2715d0ea"><div class="ttname"><a href="classgGUIManager.html#a333685db5c99906fa6037faa2715d0ea">gGUIManager::mouseEntered</a></div><div class="ttdeci">void mouseEntered()</div></div>
 <div class="ttc" id="aclassgGUIManager_html_a3a3ef3458cfc90c06399b94bde8a6b9a"><div class="ttname"><a href="classgGUIManager.html#a3a3ef3458cfc90c06399b94bde8a6b9a">gGUIManager::mouseMoved</a></div><div class="ttdeci">void mouseMoved(int x, int y)</div></div>
+<div class="ttc" id="aclassgGUIManager_html_a3d070fc3858e41b37a70b0699ed66a81"><div class="ttname"><a href="classgGUIManager.html#a3d070fc3858e41b37a70b0699ed66a81">gGUIManager::isRegisteredFrameForResizing</a></div><div class="ttdeci">bool isRegisteredFrameForResizing(gGUIFrame *frame)</div></div>
 <div class="ttc" id="aclassgGUIManager_html_a3e32785261a3723ab570a9366a34804c"><div class="ttname"><a href="classgGUIManager.html#a3e32785261a3723ab570a9366a34804c">gGUIManager::keyReleased</a></div><div class="ttdeci">void keyReleased(int key)</div></div>
 <div class="ttc" id="aclassgGUIManager_html_a3e38953ec23834fd26a08be9768a8e24"><div class="ttname"><a href="classgGUIManager.html#a3e38953ec23834fd26a08be9768a8e24">gGUIManager::isframeset</a></div><div class="ttdeci">bool isframeset</div><div class="ttdef"><b>Definition</b> gGUIManager.h:85</div></div>
 <div class="ttc" id="aclassgGUIManager_html_a3f67103a5848f7c748bf0b6ec69b3226"><div class="ttname"><a href="classgGUIManager.html#a3f67103a5848f7c748bf0b6ec69b3226">gGUIManager::draw</a></div><div class="ttdeci">void draw()</div></div>
 <div class="ttc" id="aclassgGUIManager_html_a59fba52d9b72309d0327d6379b6164c7"><div class="ttname"><a href="classgGUIManager.html#a59fba52d9b72309d0327d6379b6164c7">gGUIManager::windowResized</a></div><div class="ttdeci">void windowResized(int w, int h)</div></div>
 <div class="ttc" id="aclassgGUIManager_html_a604bf1ce2d1e6e84eee2741d7a3b31ba"><div class="ttname"><a href="classgGUIManager.html#a604bf1ce2d1e6e84eee2741d7a3b31ba">gGUIManager::mouseDragged</a></div><div class="ttdeci">void mouseDragged(int x, int y, int button)</div></div>
 <div class="ttc" id="aclassgGUIManager_html_a6fb9678be7db5dc07006e24b4b855764"><div class="ttname"><a href="classgGUIManager.html#a6fb9678be7db5dc07006e24b4b855764">gGUIManager::gGUIManager</a></div><div class="ttdeci">gGUIManager(gBaseApp *root, int width, int height)</div></div>
+<div class="ttc" id="aclassgGUIManager_html_a7b3c33f069cf019f5805327694751374"><div class="ttname"><a href="classgGUIManager.html#a7b3c33f069cf019f5805327694751374">gGUIManager::unregisterFrameForResizing</a></div><div class="ttdeci">void unregisterFrameForResizing(gGUIFrame *frame)</div></div>
 <div class="ttc" id="aclassgGUIManager_html_a80141e811ca078f26dbc037effb63534"><div class="ttname"><a href="classgGUIManager.html#a80141e811ca078f26dbc037effb63534">gGUIManager::GUITHEME_DARKBLUE</a></div><div class="ttdeci">static const int GUITHEME_DARKBLUE</div><div class="ttdef"><b>Definition</b> gGUIManager.h:39</div></div>
 <div class="ttc" id="aclassgGUIManager_html_a853f662f9e0db6ef9178b496a0d1b303"><div class="ttname"><a href="classgGUIManager.html#a853f662f9e0db6ef9178b496a0d1b303">gGUIManager::update</a></div><div class="ttdeci">void update()</div></div>
 <div class="ttc" id="aclassgGUIManager_html_a8a20fb1a7b6ca25363384e5abca48351"><div class="ttname"><a href="classgGUIManager.html#a8a20fb1a7b6ca25363384e5abca48351">gGUIManager::~gGUIManager</a></div><div class="ttdeci">virtual ~gGUIManager()</div></div>
@@ -242,6 +249,7 @@ $(document).ready(function(){initNavTree('gGUIManager_8h_source.html',''); initR
 <div class="ttc" id="aclassgGUIManager_html_a969a47d6a47338fc5a6dd2e48a5eeb1a"><div class="ttname"><a href="classgGUIManager.html#a969a47d6a47338fc5a6dd2e48a5eeb1a">gGUIManager::getTheme</a></div><div class="ttdeci">int getTheme()</div></div>
 <div class="ttc" id="aclassgGUIManager_html_aa12c1b52909bf16128fcf8885f7a019c"><div class="ttname"><a href="classgGUIManager.html#aa12c1b52909bf16128fcf8885f7a019c">gGUIManager::mousePressed</a></div><div class="ttdeci">void mousePressed(int x, int y, int button)</div></div>
 <div class="ttc" id="aclassgGUIManager_html_aa5405ddaeb1ecc2e8d8abe8f48862d5a"><div class="ttname"><a href="classgGUIManager.html#aa5405ddaeb1ecc2e8d8abe8f48862d5a">gGUIManager::setCurrentFrame</a></div><div class="ttdeci">void setCurrentFrame(gGUIFrame *currentFrame, int width, int height)</div></div>
+<div class="ttc" id="aclassgGUIManager_html_aaae80e1de5d05a698dbec33e342d935b"><div class="ttname"><a href="classgGUIManager.html#aaae80e1de5d05a698dbec33e342d935b">gGUIManager::registerFrameForResizing</a></div><div class="ttdeci">void registerFrameForResizing(gGUIFrame *frame)</div></div>
 <div class="ttc" id="aclassgGUIManager_html_aae7e2b2d00a5066e31c8e2b52b831d29"><div class="ttname"><a href="classgGUIManager.html#aae7e2b2d00a5066e31c8e2b52b831d29">gGUIManager::setTheme</a></div><div class="ttdeci">void setTheme(int guiTheme)</div></div>
 <div class="ttc" id="aclassgGUIManager_html_aafee1530e562cae39d380220d7e8d43a"><div class="ttname"><a href="classgGUIManager.html#aafee1530e562cae39d380220d7e8d43a">gGUIManager::charPressed</a></div><div class="ttdeci">void charPressed(unsigned int key)</div></div>
 <div class="ttc" id="aclassgGUIManager_html_ab3a630c0ee5efc18f16a72c66011c2a5"><div class="ttname"><a href="classgGUIManager.html#ab3a630c0ee5efc18f16a72c66011c2a5">gGUIManager::showDialogue</a></div><div class="ttdeci">bool showDialogue(gGUIDialogue *dialogue)</div></div>
