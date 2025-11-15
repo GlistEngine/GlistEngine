@@ -84,6 +84,10 @@ public:
 
 	bool isframeset;
 
+	void registerFrameForResizing(gGUIFrame* frame);
+	void unregisterFrameForResizing(gGUIFrame* frame);
+	bool isRegisteredFrameForResizing(gGUIFrame* frame);
+
 private:
 	gBaseApp* root;
 	gGUIFrame* currentframe;
@@ -115,6 +119,7 @@ private:
 	std::deque<gGUIDialogue*> dialoguesshown;
 	gGUIDialogue* selecteddialogue;
 
+	std::deque<gGUIFrame*> registeredframesforresizing;
 };
 
 #endif /* CORE_GGUIMANAGER_H_ */
