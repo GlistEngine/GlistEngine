@@ -7,6 +7,7 @@ var classgGUIControl =
     [ "draw", "classgGUIControl.html#a7f4c3f671998ce868ade7e8863f7c7c9", null ],
     [ "getCursor", "classgGUIControl.html#ad11ec986591d28b695c3b8ec254bc3be", null ],
     [ "set", "classgGUIControl.html#a3a510050c06d17a46efd0d9a5037573b", null ],
+    [ "setCountAsSpace", "classgGUIControl.html#a29d7e585e8216f6fd303219732af4c78", null ],
     [ "update", "classgGUIControl.html#a339c1bf7dc31a69d5b11e5f5532685e8", null ],
     [ "countasspace", "classgGUIControl.html#a1adecb735c5036fafde5878a7532e894", null ],
     [ "oldheight", "classgGUIControl.html#a77eb0568cfd0e7aaaf2f22429a2420e8", null ],
