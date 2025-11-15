@@ -50,3 +50,7 @@ void gGUIControl::draw() {
 bool gGUIControl::countAsSpace() {
 	return countasspace;
 }
+
+void gGUIControl::setCountAsSpace(bool isSpace) {
+	countasspace = isSpace;
+}
