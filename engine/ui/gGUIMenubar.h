@@ -30,7 +30,7 @@
  * Author: Medine, Yasin 2022-on                                             *
  ****************************************************************************/
 /*
- * gGUIPicturebox.h
+ * gGUIMenubar.h
  *
  *  Created on: 29 Aug 2022
  *      Author: Medine, Yasin
