@@ -48,6 +48,9 @@ gGUIForm::gGUIForm() {
 	cpx = 0;
 	cpy = 0;
 	cpspeed = 1.0f;
+	temporaryemptysizer = new gGUISizer();
+	setSizer(temporaryemptysizer);
+	temporaryemptysizer->setSize(1, 1);
 }
 
 gGUIForm::~gGUIForm() {

@@ -12,6 +12,8 @@ gGUIContainer::gGUIContainer() {
 	iscontainer = true;
 	topbarh = 0;
 	guisizer = nullptr;
+	temporaryemptysizer.setSize(1, 1);
+	setSizer(&temporaryemptysizer);
 }
 
 gGUIContainer::~gGUIContainer() {

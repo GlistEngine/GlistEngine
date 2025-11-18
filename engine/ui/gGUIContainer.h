@@ -41,7 +41,7 @@ public:
 
 
 protected:
-	gGUISizer* guisizer;
+	gGUISizer* guisizer, temporaryemptysizer;
 	int topbarh;
 };
 

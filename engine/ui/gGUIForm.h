@@ -77,7 +77,7 @@ public:
 
 protected:
 	static const int maxtoolbarnum = 9;
-	gGUISizer* guisizer;
+	gGUISizer* guisizer, *temporaryemptysizer;
 	bool isshown;
 	gGUIMenubar* menubar;
 	gGUIToolbar *toolbars[maxtoolbarnum];
