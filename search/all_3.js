@@ -39,7 +39,7 @@ var searchData=
   ['boxw_36',['boxw',['../classgGUIScrollable.html#ab1e5927510b754517e6369b90b0a43a5',1,'gGUIScrollable']]],
   ['brdfshader_37',['brdfshader',['../classgRenderer.html#a13aa791c6c60d07bbb33f96a963b7b37',1,'gRenderer']]],
   ['bufsubdata_38',['bufsubdata',['../classgGLRenderEngine.html#a9491ba05c16ae9d0869802304d50916b',1,'gGLRenderEngine::bufSubData()'],['../classgRenderer.html#aa43f44f95f983d41cda633145f34bb68',1,'gRenderer::bufSubData()']]],
-  ['button_39',['button',['../classgMouseButtonEvent.html#a02938f73b12be3ccac32303b2bd7b3df',1,'gMouseButtonEvent::button'],['../classgGUITooltipText.html#a2cedadc240d53936d63f66ecb36e771aa8356ee9046e114c45964cbd6242673ed',1,'gGUITooltipText::Button']]],
+  ['button_39',['button',['../classgGUITooltipText.html#a2cedadc240d53936d63f66ecb36e771aa8356ee9046e114c45964cbd6242673ed',1,'gGUITooltipText::Button'],['../classgMouseButtonEvent.html#a02938f73b12be3ccac32303b2bd7b3df',1,'gMouseButtonEvent::button']]],
   ['buttoncolor_40',['buttoncolor',['../classgBaseGUIObject.html#acf6b734a3ce8ea39acca5bbb94e8ed88',1,'gBaseGUIObject']]],
   ['buttonfontcolor_41',['buttonfontcolor',['../classgBaseGUIObject.html#a4506d26dd9f09fbffdc9f7b64dfe3c25',1,'gBaseGUIObject']]],
   ['buttonh_42',['buttonh',['../classgGUIButton.html#a02020467bb2b2d6126a93782a9112c7e',1,'gGUIButton::buttonh'],['../classgGUICheckbox.html#ace3294ff1c101ef3353b78f92bec1073',1,'gGUICheckbox::buttonh']]],

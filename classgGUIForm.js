@@ -60,6 +60,7 @@ var classgGUIForm =
     [ "statusbar", "classgGUIForm.html#a5207fc3a9149e9b5d3bd74201c33e3f8", null ],
     [ "statush", "classgGUIForm.html#a354630fc731565f65822d883f4e4f8b5", null ],
     [ "statusw", "classgGUIForm.html#afd54ccfe2eea32982471f3334cd8ff05", null ],
+    [ "temporaryemptysizer", "classgGUIForm.html#ae32ace9fbc0a66b0d6475780628293b5", null ],
     [ "toolbarh", "classgGUIForm.html#a0a15649897b263f013116fbd14a451ec", null ],
     [ "toolbarnum", "classgGUIForm.html#a337e0a0996cc0a6eb9975217c6a44444", null ],
     [ "toolbars", "classgGUIForm.html#a0a83b21e561ae4d011edae928ee3c553", null ],

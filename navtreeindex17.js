@@ -1,5 +1,7 @@
 var NAVTREEINDEX17 =
 {
+"structgRenderer_1_1gSceneLights.html#afe9ec239bcfdc6df6dee2ec63209ae62":[1,0,138,3,2],
+"structgVertex.html":[1,0,164],
 "structgVertex.html#a1307c4e7fc374612cd8e583ce90e8115":[1,0,164,2],
 "structgVertex.html#a40ef96826fed631764f3e57455aaea06":[1,0,164,0],
 "structgVertex.html#a8cdcce468b4c82eba1a8e4f82eb4e4a2":[1,0,164,3],

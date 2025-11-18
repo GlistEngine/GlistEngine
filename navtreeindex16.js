@@ -1,5 +1,7 @@
 var NAVTREEINDEX16 =
 {
+"gSpriteAnimator_8h_source.html":[2,0,0,0,1],
+"gTexture_8h.html":[2,0,0,4,23],
 "gTexture_8h.html#a8e75a38096ba21b53a7c6331edc4cd6f":[2,0,0,4,23,1],
 "gTexture_8h_source.html":[2,0,0,4,23],
 "gThread_8h.html":[2,0,0,8,7],
@@ -247,7 +249,5 @@ var NAVTREEINDEX16 =
 "structgRenderer_1_1gSceneLights.html":[1,0,138,3],
 "structgRenderer_1_1gSceneLights.html#a77f19e641d9d5a063dde338bd1c07bae":[1,0,138,3,0],
 "structgRenderer_1_1gSceneLights.html#a8c9ae0323cefbd7c5b04505e3e3f8215":[1,0,138,3,3],
-"structgRenderer_1_1gSceneLights.html#ae5569c939be0c2c1b1db5a5b104c95a0":[1,0,138,3,1],
-"structgRenderer_1_1gSceneLights.html#afe9ec239bcfdc6df6dee2ec63209ae62":[1,0,138,3,2],
-"structgVertex.html":[1,0,164]
+"structgRenderer_1_1gSceneLights.html#ae5569c939be0c2c1b1db5a5b104c95a0":[1,0,138,3,1]
 };
