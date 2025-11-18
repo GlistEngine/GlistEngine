@@ -54,6 +54,7 @@ gGUIForm::gGUIForm() {
 }
 
 gGUIForm::~gGUIForm() {
+	if(temporaryemptysizer != nullptr) delete temporaryemptysizer;
 }
 
 void gGUIForm::setMenuBar(gGUIMenubar* menuBar) {
