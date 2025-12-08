@@ -39,7 +39,7 @@ if(NOT DEFINED GLIST_SHARED_LINKER_FLAGS)
 endif()
 
 if(APPLE)
-	list(APPEND GLIST_SHARED_LINKER_FLAGS -pthread -L${BREW_PATH}/llvm/lib -Wl,-rpath,${BREW_PATH}/llvm/lib -L${BREW_PATH}/llvm/lib/c++ -Wl,-rpath,${BREW_PATH}/llvm/lib/c++)
+	list(APPEND GLIST_SHARED_LINKER_FLAGS -pthread)
 else()
 	list(APPEND GLIST_SHARED_LINKER_FLAGS -v -pthread -Wl,--gc-sections)
 endif()
@@ -141,7 +141,6 @@ if(ENABLE_TRACY)
 		message(WARNING "Failed to download/configure Tracy - profiling disabled")
 		set(TRACY_ENABLE OFF CACHE BOOL "Tracy download failed" FORCE)
 	endif()
-
 endif()
 
 set(GENERATED_HEADERS_DIR "${CMAKE_BINARY_DIR}/generated")
@@ -529,19 +528,6 @@ elseif(APPLE)
 				${BREW_PATH}/openssl@${OPENSSL_VER_SHORT}/${OPENSSL_VER_FULL}/include
 		)
 	endif()
-
-  	if(${DEVICEARCHITECTURE} STREQUAL "arm64")
-		if(${ENGINE_USE_SYMLINKS})
-			list(APPEND INC_DIRS
-					${BREW_PATH}/llvm/include/c++/v1
-			)
-		else()
-			# For backwards compatibility
-			list(APPEND INC_DIRS
-					${BREW_PATH}/llvm/${LLVM_VER}/include/c++/v1
-			)
-		endif()
-  	endif()
 endif(WIN32)
 
 
