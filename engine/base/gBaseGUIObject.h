@@ -18,6 +18,7 @@ class gBaseApp;
 class gBaseGUIObject : public gRenderObject {
 public:
 	static gGUIActionManager actionmanager;
+	static gGUIResources res;
 
 	static const int GUIEVENT_FOCUSED = -1, GUIEVENT_UNFOCUSED = -2;
 
@@ -128,7 +129,6 @@ public:
 	bool isresizable;
 
 protected:
-	static gGUIResources res;
 	static gColor* backgroundcolor;
 	static gColor* middlegroundcolor;
 	static gColor* foregroundcolor;
