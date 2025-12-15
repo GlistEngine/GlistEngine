@@ -44,6 +44,10 @@ public:
 
 	gTexture();
 	gTexture(int w, int h, int format = GL_RGBA, bool isFbo = false);
+	gTexture(const gTexture& other);
+	gTexture(gTexture&& other) noexcept;
+	gTexture& operator=(const gTexture& other);
+	gTexture& operator=(gTexture&& other) noexcept;
 	virtual ~gTexture();
 
 	virtual unsigned int load(const std::string& fullPath);
@@ -151,6 +155,9 @@ protected:
 	void setDataInternal(unsigned char* textureData, bool isMutable = false, bool isStbImage = false, bool clean = true);
 	void setDataInternalHDR(float* textureData, bool isMutable = false, bool  isStbImage = false, bool clean = true);
 	bool isMutable();
+
+	void swap(gTexture& other) noexcept;
+	void copyFrom(const gTexture& other) noexcept;
 
 	std::string getDirName(const std::string& fname);
 	std::string getFileName(const std::string& fname);

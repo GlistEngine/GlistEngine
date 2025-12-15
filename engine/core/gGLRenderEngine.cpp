@@ -635,6 +635,19 @@ void gGLRenderEngine::readTexturePixels(unsigned char* inPixels, GLuint textureI
 	G_CHECK_GL(glDeleteFramebuffers(1, &fbo));
 }
 
+void gGLRenderEngine::readTexturePixelsHDR(float* inPixels, GLuint textureId, int width, int height,
+                                           GLenum format) {
+	GLuint fbo;
+	G_CHECK_GL(glGenFramebuffers(1, &fbo));
+	G_CHECK_GL(glBindFramebuffer(GL_FRAMEBUFFER, fbo));
+	G_CHECK_GL(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textureId, 0));
+
+	G_CHECK_GL(glReadPixels(0, 0, width, height, format, GL_FLOAT, inPixels));
+
+	G_CHECK_GL(glBindFramebuffer(GL_FRAMEBUFFER, 0));
+	G_CHECK_GL(glDeleteFramebuffers(1, &fbo));
+}
+
 void gGLRenderEngine::generateMipMap() {
 	G_CHECK_GL(glGenerateMipmap(GL_TEXTURE_2D));
 }

@@ -157,6 +157,7 @@ public:
 	void setSwizzleMask(GLint swizzleMask[4]) override;
 
 	void readTexturePixels(unsigned char* inPixels, GLuint textureId, int width, int height, GLenum format) override;
+	void readTexturePixelsHDR(float* inPixels, GLuint textureId, int width, int height, GLenum format) override;
 
 	void generateMipMap() override;
 

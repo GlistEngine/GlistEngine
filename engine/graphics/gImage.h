@@ -35,6 +35,10 @@ class gImage : public gTexture {
 public:
 	gImage();
 	gImage(int w, int h, int format = GL_RGBA);
+	gImage(const gImage& other);
+	gImage(gImage&& other) noexcept;
+	gImage& operator=(const gImage& other);
+	gImage& operator=(gImage&& other) noexcept;
 	virtual ~gImage();
 
 	/**
@@ -197,6 +201,10 @@ public:
 	std::string getImageUrl();
 	static std::string generateDownloadedImagePath(std::string imageType = "png");
 	unsigned int loadMaskImage(const std::string& maskImagePath);
+
+protected:
+	void copyFrom(const gImage& other) noexcept;
+	void swap(gImage& other) noexcept;
 
 private:
 	bool loadedfromurl;
