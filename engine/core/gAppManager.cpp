@@ -152,11 +152,10 @@ gAppManager::gAppManager(const std::string& appName, gBaseApp *baseApp, int widt
 }
 
 gAppManager::~gAppManager() {
-	if(guiappthread) {
-		// This will ask to stop and wait for it to complete
-		// Then it will delete all the resources it holds
-		delete guiappthread;
-	}
+	gBaseGUIObject::cleanupResources();
+	// This will ask to stop and wait for it to complete
+	// Then it will delete all the resources it holds
+	delete guiappthread;
     delete canvasmanager;
     delete guimanager;
     delete window;
@@ -204,6 +203,7 @@ void gAppManager::initialize() {
 		}
 		// Create renderer
 		gRenderObject::createRenderer();
+		gBaseGUIObject::initializeResources();
 		// Update renderer dimensions
 		renderer->setScreenSize(width, height);
 		renderer->setUnitScreenSize(unitwidth, unitheight);

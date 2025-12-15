@@ -207,7 +207,6 @@ int gGUIForm::getVerticalToolbarWidth() {
 }
 
 void gGUIForm::setSizer(gGUISizer* guiSizer) {
-	res.initialize();
 	guisizer = guiSizer;
 	guisizer->setTopParent(this);
 	guisizer->setParent(this);
