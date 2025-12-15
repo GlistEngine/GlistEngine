@@ -6,6 +6,7 @@
  */
 
 #include "gImage.h"
+#include <utility>
 #ifndef STB_IMAGE_WRITE_IMPLEMENTATION
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #endif
@@ -27,7 +28,46 @@ gImage::gImage() : gTexture() {
 gImage::gImage(int w, int h, int format) : gTexture(w, h, format, false) {
 }
 
+gImage::gImage(const gImage& other) : gTexture() {
+#ifdef DEBUG
+	gLogw("gImage") << "Copy constructor is called, this usually means lower performance! Consider modifying your code.";
+#endif
+	gTexture::copyFrom(other);
+	copyFrom(other);
+}
+
+gImage::gImage(gImage&& other) noexcept : gImage() {
+	swap(other);
+}
+
+gImage& gImage::operator=(const gImage& other) {
+	if (this != &other) {
+#ifdef DEBUG
+		gLogw("gImage") << "Copy operator is called, this usually means lower performance! Consider modifying your code.";
+#endif
+		gTexture::operator=(other);
+		copyFrom(other);
+	}
+	return *this;
+}
+
+gImage& gImage::operator=(gImage&& other) noexcept {
+	swap(other);
+	return *this;
+}
+
 gImage::~gImage() {
+}
+
+void gImage::copyFrom(const gImage& other) noexcept {
+	loadedfromurl = other.loadedfromurl;
+	imageurl = other.imageurl;
+}
+
+void gImage::swap(gImage& other) noexcept {
+	gTexture::swap(other);
+	std::swap(loadedfromurl, other.loadedfromurl);
+	std::swap(imageurl, other.imageurl);
 }
 
 unsigned int gImage::load(const std::string& fullPath) {

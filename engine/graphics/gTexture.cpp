@@ -6,6 +6,8 @@
  */
 
 #include "gTexture.h"
+#include <algorithm>
+#include <utility>
 #ifndef STB_IMAGE_IMPLEMENTATION
 #define STB_IMAGE_IMPLEMENTATION
 #endif
@@ -103,8 +105,158 @@ gTexture::gTexture(int w, int h, int format, bool isFbo) {
 	setupRenderData();
 }
 
+gTexture::gTexture(const gTexture& other) : gTexture() {
+#ifdef DEBUG
+	gLogw("gTexture") << "Copy constructor is called, this usually means lower performance! Consider modifying your code.";
+#endif
+	copyFrom(other);
+}
+
+gTexture::gTexture(gTexture&& other) noexcept : gTexture() {
+	swap(other);
+}
+
+gTexture& gTexture::operator=(const gTexture& other) {
+	if (this != &other) {
+#ifdef DEBUG
+		gLogw("gTexture") << "Copy operator is called, this usually means lower performance! Consider modifying your code.";
+#endif
+		cleanupAll();
+		// Reinitialize to default state
+		id = GL_NONE;
+		internalformat = GL_RGBA;
+		format = GL_RGBA;
+		wraps = TEXTUREWRAP_REPEAT;
+		wrapt = TEXTUREWRAP_REPEAT;
+		filtermin = TEXTUREMINMAGFILTER_MIPMAPLINEAR;
+		filtermag = TEXTUREMINMAGFILTER_LINEAR;
+		type = TEXTURETYPE_DIFFUSE;
+		path = "";
+		width = 0;
+		height = 0;
+		ismutable = false;
+		isstbimage = false;
+		isfbo = false;
+		ishdr = false;
+		ismaskloaded = false;
+		isloaded = false;
+		masktexture = nullptr;
+		componentnum = 0;
+		istextureallocated = false;
+		data = nullptr;
+		datahdr = nullptr;
+		setupRenderData();
+
+		// Now copy from other
+		copyFrom(other);
+	}
+	return *this;
+}
+
+gTexture& gTexture::operator=(gTexture&& other) noexcept {
+	swap(other);
+	return *this;
+}
+
 gTexture::~gTexture() {
 	cleanupAll();
+}
+
+void gTexture::copyFrom(const gTexture& other) noexcept {
+	// Copy basic properties
+	internalformat = other.internalformat;
+	format = other.format;
+	wraps = other.wraps;
+	wrapt = other.wrapt;
+	filtermin = other.filtermin;
+	filtermag = other.filtermag;
+	type = other.type;
+	path = other.path;
+	fullpath = other.fullpath;
+	directory = other.directory;
+	width = other.width;
+	height = other.height;
+	componentnum = other.componentnum;
+	isfbo = other.isfbo;
+	ishdr = other.ishdr;
+	issubpart = other.issubpart;
+	subpos = other.subpos;
+	subscale = other.subscale;
+
+	// Deep copy texture data
+	if (other.width > 0 && other.height > 0 && other.componentnum > 0) {
+		int datasize = other.width * other.height * other.componentnum;
+
+		// Source has RAM data (regular unsigned char)
+		if (other.data) {
+			data = new unsigned char[datasize];
+			std::copy(other.data, other.data + datasize, data);
+			ismutable = true;
+			setDataInternal(data, true, false);
+		}
+		// Source has HDR data (float)
+		else if (other.datahdr) {
+			datahdr = new float[datasize];
+			std::copy(other.datahdr, other.datahdr + datasize, datahdr);
+			ismutable = true;
+			setDataInternalHDR(datahdr, true, false);
+		}
+		// Source only has VRAM data - read from GPU
+		else if (other.istextureallocated && other.id != GL_NONE) {
+			if (other.ishdr) {
+				// Read HDR texture data from GPU
+				datahdr = new float[datasize];
+				renderer->readTexturePixelsHDR(datahdr, other.id, other.width, other.height, GL_RGB);
+				ismutable = true;
+				setDataInternalHDR(datahdr, true, false);
+			} else {
+				// Read regular texture data from GPU
+				data = new unsigned char[datasize];
+				renderer->readTexturePixels(data, other.id, other.width, other.height, other.format);
+				ismutable = true;
+				setDataInternal(data, true, false);
+			}
+		}
+	}
+
+	// Deep copy mask texture if present
+	if (other.masktexture) {
+		masktexture = new gTexture(*other.masktexture);
+		ismaskloaded = true;
+	}
+}
+
+void gTexture::swap(gTexture& other) noexcept {
+	std::swap(id, other.id);
+	std::swap(internalformat, other.internalformat);
+	std::swap(format, other.format);
+	std::swap(wraps, other.wraps);
+	std::swap(wrapt, other.wrapt);
+	std::swap(filtermin, other.filtermin);
+	std::swap(filtermag, other.filtermag);
+	std::swap(type, other.type);
+	std::swap(path, other.path);
+	std::swap(fullpath, other.fullpath);
+	std::swap(directory, other.directory);
+	std::swap(width, other.width);
+	std::swap(height, other.height);
+	std::swap(componentnum, other.componentnum);
+	std::swap(data, other.data);
+	std::swap(datahdr, other.datahdr);
+	std::swap(ismutable, other.ismutable);
+	std::swap(isstbimage, other.isstbimage);
+	std::swap(isfbo, other.isfbo);
+	std::swap(ishdr, other.ishdr);
+	std::swap(ismaskloaded, other.ismaskloaded);
+	std::swap(masktexture, other.masktexture);
+	std::swap(istextureallocated, other.istextureallocated);
+	std::swap(quadVAO, other.quadVAO);
+	std::swap(quadVBO, other.quadVBO);
+	std::swap(imagematrix, other.imagematrix);
+	std::swap(isloaded, other.isloaded);
+	std::swap(issubpart, other.issubpart);
+	std::swap(subpos, other.subpos);
+	std::swap(subscale, other.subscale);
 }
 
 unsigned int gTexture::load(const std::string& fullPath) {

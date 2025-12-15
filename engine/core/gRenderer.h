@@ -445,6 +445,7 @@ public:
 	virtual void setSwizzleMask(GLint swizzleMask[4]) = 0;
 
 	virtual void readTexturePixels(unsigned char* inPixels, GLuint textureId, int width, int height, GLenum format) = 0;
+	virtual void readTexturePixelsHDR(float* inPixels, GLuint textureId, int width, int height, GLenum format) = 0;
 
 	virtual void generateMipMap() = 0;
 
