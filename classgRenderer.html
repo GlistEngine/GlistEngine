@@ -585,6 +585,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a7b5bf23bea30970e81e0d32388dcbd2c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aee171149590086f1f8594804ac3af566" id="r_aee171149590086f1f8594804ac3af566"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#aee171149590086f1f8594804ac3af566">readTexturePixels</a> (unsigned char *inPixels, GLuint textureId, int <a class="el" href="classgRenderer.html#a521e019ad5133df5702d399bf051adda">width</a>, int <a class="el" href="classgRenderer.html#a10ba9eb49755cea48500ab0046baf6e4">height</a>, GLenum format)=0</td></tr>
 <tr class="separator:aee171149590086f1f8594804ac3af566"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a81efcd42acb925f493e05a4edd3aa315" id="r_a81efcd42acb925f493e05a4edd3aa315"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a81efcd42acb925f493e05a4edd3aa315">readTexturePixelsHDR</a> (float *inPixels, GLuint textureId, int <a class="el" href="classgRenderer.html#a521e019ad5133df5702d399bf051adda">width</a>, int <a class="el" href="classgRenderer.html#a10ba9eb49755cea48500ab0046baf6e4">height</a>, GLenum format)=0</td></tr>
+<tr class="separator:a81efcd42acb925f493e05a4edd3aa315"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3f5076e956d456b57820926d38c5f165" id="r_a3f5076e956d456b57820926d38c5f165"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a3f5076e956d456b57820926d38c5f165">generateMipMap</a> ()=0</td></tr>
 <tr class="separator:a3f5076e956d456b57820926d38c5f165"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa43560fe9c38003f6a9210cce6713c7c" id="r_aa43560fe9c38003f6a9210cce6713c7c"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#aa43560fe9c38003f6a9210cce6713c7c">bindSkyTexture</a> (GLuint texId)=0</td></tr>
@@ -6212,6 +6214,62 @@ Friends</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Implemented in <a class="el" href="classgGLRenderEngine.html#ac8144d231f0e97cbc7e230db52008168">gGLRenderEngine</a>.</p>
+
+</div>
+</div>
+<a id="a81efcd42acb925f493e05a4edd3aa315" name="a81efcd42acb925f493e05a4edd3aa315"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a81efcd42acb925f493e05a4edd3aa315">&#9670;&#160;</a></span>readTexturePixelsHDR()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void gRenderer::readTexturePixelsHDR </td>
+          <td>(</td>
+          <td class="paramtype">float *&#160;</td>
+          <td class="paramname"><em>inPixels</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">GLuint&#160;</td>
+          <td class="paramname"><em>textureId</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>width</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>height</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">GLenum&#160;</td>
+          <td class="paramname"><em>format</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#ad75f8febed9e8783886661a920082acd">gGLRenderEngine</a>.</p>
 
 </div>
 </div>

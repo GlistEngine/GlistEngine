@@ -160,6 +160,7 @@ var classgRenderer =
     [ "popMatrix", "classgRenderer.html#a48d8fabc173ce59e31b73d671f4e3630", null ],
     [ "pushMatrix", "classgRenderer.html#a6693710cf4e8697216f1443432b4ca78", null ],
     [ "readTexturePixels", "classgRenderer.html#aee171149590086f1f8594804ac3af566", null ],
+    [ "readTexturePixelsHDR", "classgRenderer.html#a81efcd42acb925f493e05a4edd3aa315", null ],
     [ "removeAllSceneLights", "classgRenderer.html#abcce0b37dc08774eb073ebc6bc4fa10c", null ],
     [ "removeSceneLight", "classgRenderer.html#a85ea5e805da1e3463ea4f4b26ade5987", null ],
     [ "resetShader", "classgRenderer.html#a5b5245c298f347c18c5ac2349fb4a250", null ],

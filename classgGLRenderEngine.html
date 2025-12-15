@@ -339,6 +339,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a484ce72f2b03c11c4f45361c59a9a1d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac8144d231f0e97cbc7e230db52008168" id="r_ac8144d231f0e97cbc7e230db52008168"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgGLRenderEngine.html#ac8144d231f0e97cbc7e230db52008168">readTexturePixels</a> (unsigned char *inPixels, GLuint textureId, int <a class="el" href="classgRenderer.html#a521e019ad5133df5702d399bf051adda">width</a>, int <a class="el" href="classgRenderer.html#a10ba9eb49755cea48500ab0046baf6e4">height</a>, GLenum format) override</td></tr>
 <tr class="separator:ac8144d231f0e97cbc7e230db52008168"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad75f8febed9e8783886661a920082acd" id="r_ad75f8febed9e8783886661a920082acd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgGLRenderEngine.html#ad75f8febed9e8783886661a920082acd">readTexturePixelsHDR</a> (float *inPixels, GLuint textureId, int <a class="el" href="classgRenderer.html#a521e019ad5133df5702d399bf051adda">width</a>, int <a class="el" href="classgRenderer.html#a10ba9eb49755cea48500ab0046baf6e4">height</a>, GLenum format) override</td></tr>
+<tr class="separator:ad75f8febed9e8783886661a920082acd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaead2f90686beecb5ef389f41bbe5639" id="r_aaead2f90686beecb5ef389f41bbe5639"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgGLRenderEngine.html#aaead2f90686beecb5ef389f41bbe5639">generateMipMap</a> () override</td></tr>
 <tr class="separator:aaead2f90686beecb5ef389f41bbe5639"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa7404e81c5f1b6a1dfbec0d30e27f359" id="r_aa7404e81c5f1b6a1dfbec0d30e27f359"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgGLRenderEngine.html#aa7404e81c5f1b6a1dfbec0d30e27f359">bindSkyTexture</a> (GLuint texId) override</td></tr>
@@ -2914,6 +2916,62 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Implements <a class="el" href="classgRenderer.html#aee171149590086f1f8594804ac3af566">gRenderer</a>.</p>
+
+</div>
+</div>
+<a id="ad75f8febed9e8783886661a920082acd" name="ad75f8febed9e8783886661a920082acd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad75f8febed9e8783886661a920082acd">&#9670;&#160;</a></span>readTexturePixelsHDR()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gGLRenderEngine::readTexturePixelsHDR </td>
+          <td>(</td>
+          <td class="paramtype">float *&#160;</td>
+          <td class="paramname"><em>inPixels</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">GLuint&#160;</td>
+          <td class="paramname"><em>textureId</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>width</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>height</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">GLenum&#160;</td>
+          <td class="paramname"><em>format</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implements <a class="el" href="classgRenderer.html#a81efcd42acb925f493e05a4edd3aa315">gRenderer</a>.</p>
 
 </div>
 </div>

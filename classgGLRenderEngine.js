@@ -63,6 +63,7 @@ var classgGLRenderEngine =
     [ "popMatrix", "classgGLRenderEngine.html#a83a7910d25536d5fbd8be57ae5bd6a41", null ],
     [ "pushMatrix", "classgGLRenderEngine.html#a275687045fca9cb5f021c108d8b2881c", null ],
     [ "readTexturePixels", "classgGLRenderEngine.html#ac8144d231f0e97cbc7e230db52008168", null ],
+    [ "readTexturePixelsHDR", "classgGLRenderEngine.html#ad75f8febed9e8783886661a920082acd", null ],
     [ "resetShader", "classgGLRenderEngine.html#a5db5b9ff301b6f512a4745b2baaa8907", null ],
     [ "resetTexture", "classgGLRenderEngine.html#a0091bdb865f49b7ad3fed5a442a00d9a", null ],
     [ "setBool", "classgGLRenderEngine.html#ae22e6676eb1ef96747240958cc36b6b7", null ],
