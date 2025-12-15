@@ -17,10 +17,7 @@ class gBaseApp;
 
 class gBaseGUIObject : public gRenderObject {
 public:
-	static gGUIActionManager actionmanager;
-
 	static const int GUIEVENT_FOCUSED = -1, GUIEVENT_UNFOCUSED = -2;
-
 	static const int CURSOR_ARROW = 0, CURSOR_IBEAM = 1, CURSOR_CROSSHAIR = 2, CURSOR_HAND = 3, CURSOR_HRESIZE = 4, CURSOR_VRESIZE = 5;
 
 	enum {
@@ -128,7 +125,6 @@ public:
 	bool isresizable;
 
 protected:
-	static gGUIResources res;
 	static gColor* backgroundcolor;
 	static gColor* middlegroundcolor;
 	static gColor* foregroundcolor;
@@ -143,6 +139,8 @@ protected:
 	static gColor* buttonfontcolor;
 	static gColor* pressedbuttonfontcolor;
 	static gColor* disabledbuttonfontcolor;
+	static gGUIActionManager actionmanager;
+	static gGUIResources res;
 
 	std::string title;
 
@@ -154,6 +152,10 @@ protected:
 	int parentslotlineno, parentslotcolumnno;
 
 private:
+	friend class gAppManager;
+	static void cleanupResources();
+	static void initializeResources();
+
 	static int lastid;
 };
 
