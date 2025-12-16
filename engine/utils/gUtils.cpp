@@ -396,6 +396,23 @@ std::vector<std::string> gSplitString(const std::string& textToSplit, const std:
 	return tokens;
 }
 
+std::deque<std::string> gSplitStringToDeque(const std::string& textToSplit, const std::string& delimiter) {
+	std::deque<std::string> tokens;
+	int tl = textToSplit.length();
+	int dl = delimiter.length();
+	size_t prev = 0, pos = 0;
+	do {
+		pos = textToSplit.find(delimiter, prev);
+		if (pos == std::string::npos) pos = tl;
+		std::string token = textToSplit.substr(prev, pos - prev);
+		if (!token.empty()) tokens.push_back(token);
+		else tokens.push_back("");
+		prev = pos + dl;
+		if(prev == tl) tokens.push_back("");
+	} while (pos < tl && prev < tl);
+	return tokens;
+}
+
 std::string gReplaceAll(const std::string& source, const std::string& from, const std::string& to) {
     std::string newstring;
     newstring.reserve(source.length());
@@ -619,6 +636,22 @@ std::locale gGetLocale(const std::string & locale) {
 #endif
 
 	return loc;
+}
+
+bool gIsInt(const std::string& str) {
+	return !str.empty() && str.find_first_not_of("0123456789") == std::string::npos;
+}
+
+bool gIsFloat(const std::string& str) {
+	return !str.empty() && str.find_first_not_of("0123456789.") == std::string::npos && str.find(".") != std::string::npos;
+}
+
+bool gIsNumber(const std::string& str) {
+	return gIsInt(str) || gIsFloat(str);
+}
+
+bool gIsString(const std::string& str) {
+	return str.empty() || str.find_first_not_of("0123456789.") != std::string::npos;
 }
 
 int gToInt(const std::string& intString) {
