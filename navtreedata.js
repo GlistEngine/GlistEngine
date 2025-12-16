@@ -80,7 +80,7 @@ var NAVTREEINDEX =
 "gBloom_8h_source.html",
 "gKeyCode_8h.html#a03c6c04be8e517c9d09a65f1a28cb92f",
 "gSpriteAnimation_8h.html#a05ace1778679794e816adbd5d83eb7bcaa82764c3079aea4e60c80e45befbb839",
-"structgRenderer_1_1gSceneLightData.html#a33134a037b7b3fc818f85fb96cc761df"
+"structgRenderer_1_1gSceneFogData.html#a6e3e7ba8c2a35dd85b44c3dbbef51d16"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
