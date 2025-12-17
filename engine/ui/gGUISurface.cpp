@@ -96,8 +96,8 @@ void gGUISurface::drawShapes() {
 }
 
 void gGUISurface::drawBackground() {
-	renderer->setColor(gColor(1.0f, 1.0f, 1.0f, 1.0f));//white
-//	renderer->setColor(backgroundcolor);
+	//renderer->setColor(gColor(1.0f, 1.0f, 1.0f, 1.0f));//white
+	renderer->setColor(backgroundcolor);
 	gDrawRectangle(0, 0, right, bottom, true);
 	totalh = maxHeight;
 }
