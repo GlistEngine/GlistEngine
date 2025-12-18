@@ -214,7 +214,17 @@ void gAppManager::initialize() {
 		gBaseCanvas::setScreenSize(width, height);
 		gBaseCanvas::setUnitScreenSize(unitwidth, unitheight);
 		gBaseCanvas::setScreenScaling(screenscaling);
-		// Create managers if not created
+
+		if (screenscaling == G_SCREENSCALING_AUTO_ONCE) {
+		    gBaseCanvas::setUnitScreenSize(width, height);
+		    gBaseCanvas::setScreenScaling(G_SCREENSCALING_NONE);
+
+		    screenscaling = G_SCREENSCALING_NONE;
+		    unitwidth  = width;
+		    unitheight = height;
+		}
+
+		// Create managers if not create
 		if(!guimanager) {
 			guimanager = new gGUIManager(app, width, height);
 			guimanager->getCurrentFrame()->getRenderer()->updateLights();
