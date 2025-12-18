@@ -224,7 +224,7 @@ void gAppManager::initialize() {
 		    unitheight = height;
 		}
 
-		// Create managers if not create
+		// Create managers if not created
 		if(!guimanager) {
 			guimanager = new gGUIManager(app, width, height);
 			guimanager->getCurrentFrame()->getRenderer()->updateLights();
