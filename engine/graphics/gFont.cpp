@@ -3,10 +3,14 @@
  *
  *  Created on: May 17, 2020
  *      Author: noyan
+ *
+ *  Edited on: Dec 17, 2025
+ *  	Author: Engin Kutlu
  */
 
 #include "gFont.h"
 #include "gTracy.h"
+#include "gUtils.h"
 
 #include <iostream>
 #include <locale>
@@ -463,6 +467,55 @@ int gFont::getKerning(int c, int previousC) {
 //        return kerning.x >> 6;
     }
 	return 0;
+}
+
+std::vector<std::string> gFont::wrapSentenceByWidth(const std::string& text, float maxWidth, gFont& font) {
+    std::vector<std::string> lines;
+    std::vector<std::string> words;
+    std::vector<float> widths;
+
+    size_t start = 0;
+    size_t end;
+
+    while ((end = text.find(' ', start)) != std::string::npos) {
+        std::string word = text.substr(start, end - start);
+        words.push_back(word);
+        widths.push_back(font.getStringWidth(word));
+        start = end + 1;
+    }
+
+    std::string lastword = text.substr(start);
+    if (!lastword.empty()) {
+        words.push_back(lastword);
+        widths.push_back(font.getStringWidth(lastword));
+    }
+
+    float spacewidth = font.getStringWidth(" ");
+    float currentwidth = 0.0f;
+    std::string currentline;
+
+    for (size_t i = 0; i < words.size(); i++) {
+        float newwidth = currentline.empty()
+            ? widths[i]
+            : currentwidth + spacewidth + widths[i];
+
+        if (newwidth <= maxWidth) {
+            if (!currentline.empty())
+                currentline += " ";
+            currentline += words[i];
+            currentwidth = newwidth;
+        } else {
+            if (!currentline.empty())
+                lines.push_back(currentline);
+            currentline = words[i];
+            currentwidth = widths[i];
+        }
+    }
+
+    if (!currentline.empty())
+        lines.push_back(currentline);
+
+    return lines;
 }
 
 #ifdef WIN32

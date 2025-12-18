@@ -179,6 +179,8 @@ public:
 	 */
 	int getDpi();
 
+	std::vector<std::string> wrapSentenceByWidth(const std::string& text, float maxWidth, gFont& font);
+
 private:
 	  bool isloaded;
 	  std::string fullpath;
