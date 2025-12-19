@@ -38,12 +38,12 @@
 #endif
 
 
-#include "gTexture.h"
 #include "gMesh.h"
+#include "gTexture.h"
+#include <unordered_map>
 
 
-
-class gFont: public gNode {
+class gFont : public gNode {
 public:
 	gFont();
 	virtual ~gFont();
@@ -140,7 +140,7 @@ public:
 	 *
 	 * @return Line height
 	 */
-	float getLineHeight();
+	float getLineHeight() const;
 
 	/**
 	 * Returns the path of the loaded font.
@@ -154,21 +154,21 @@ public:
 	 *
 	 * @returns Font size
 	 */
-	int getSize();
+	int getSize() const;
 
 	/**
 	 * Returns if the font is loaded or not
 	 *
 	 * @returns The font is loaded or not
 	 */
-	bool isLoaded();
+	bool isLoaded() const;
 
 	/**
 	 * Returns if the antialiasing is enabled
 	 *
 	 * @returns The antialiasing
 	 */
-	bool isAntialised();
+	bool isAntialised() const;
 
 	/**
 	 * Returns the dpi of the font
@@ -177,63 +177,45 @@ public:
 	 *
 	 * @returns The dpi value
 	 */
-	int getDpi();
+	int getDpi() const;
 
 private:
-	  bool isloaded;
-	  std::string fullpath;
-	  bool isantialiased;
-	  int dpi;
-	  int fontsize;
-	  int characternumlimit;
-	  int border;
-	  bool iskerning;
+	bool isloaded = false;
+	std::string fullpath;
+	bool isantialiased = false;
+	int dpi = 0;
+	float fontsize = 0.0f;
+	int characternumlimit = 0;
+	int border = 3;
+	bool iskerning = false;
 
+	FT_Library ftlib = nullptr;
+	FT_Face fontface = nullptr;
 
-	  FT_Library ftlib;
-	  FT_Face fontface;
+	float lineheight = 0.0f;
+	float letterspacing = 1.0f;
+	float spacesize = 1.0f;
+	float scale = 1.0f;
 
-	  float lineheight;
-	  float letterspacing;
-	  float	spacesize;
+	void loadChar(int charCode);
 
-	  int getCharID(const int& c);
-	  void loadChar(const int& charID);
+	struct CharProperties {
+		float height = 0.0f, width = 0.0f;
+		float topmargin = 0.0f, leftmargin = 0.0f;
+		float advance = 0.0f;
+		float texturewidth = 0.0f, textureheight = 0.0f;
+		float dxleft = 0.0f, dxright = 0.0f, dytop = 0.0f, dybottom = 0.0f;
+	};
 
-	  typedef struct {
-	    int character;
-	    int height, width;
-	    int topmargin,leftmargin;
-	    int advance;
-	    float texturewidth,textureheight;
-	    float dxleft, dxright, dytop, dybottom;
-	  } charProperties;
+	std::unordered_map<int, CharProperties> charproperties;
+	std::unordered_map<int, gTexture*> chartextures;
 
-	  std::vector<charProperties> cpset;
-	  std::vector<gTexture*> textures;
-	  std::vector<int> loadedcharacters;
-	  static const int unloadedchar = 0;
-
-
-	  int getKerning(int c, int prevC);
-	  void resizeVectors(int num);
-	  bool insertData(unsigned char* srcData, int srcWidth, int srcHeight, int componentNum, unsigned char* dstData, int dstWidth, int dstHeight, int dstComponentNum, size_t dstFirstX, size_t dstFirstY) const;
-	  std::wstring s2ws(const std::string& s);
-
-	  GLint index1, posx1, posy1, index2, posx2, index3, posy3;
-	  std::wstring text1, text2, text3;
-	  int len1, c1, cid1, cold1, len2, cid2, cold2, cy2, len3, cid3, cy3, y3;
-	  int tempint, tempcharno;
-	  int lci, lci2, lci3, lci4, lcj, lck;
-	  int lcdataw, lcdatah, lcdatanum;
-	  int lclongside, lclongest, lcpixelsw, lcpixelsh, lcapsize;
-	  FT_Error lcerr;
-	  GLint lcfheight, lcbwidth, lctop, lclextent;
-	  GLfloat lcstretch, lccorr;
-	  unsigned char* bitmappixels;
-	  unsigned char* lcsrc;
-	  unsigned char* lcbptr;
-	  unsigned char lcb;
+	float getKerning(int c, int prevC) const;
+	void resizeVectors(int num);
+	bool insertData(const unsigned char* srcData, int srcWidth, int srcHeight, int componentNum,
+					unsigned char* dstData, int dstWidth, int dstHeight, int dstComponentNum,
+					size_t dstFirstX, size_t dstFirstY) const;
+	std::wstring s2ws(const std::string& s) const;
 };
 
 #endif /* ENGINE_GRAPHICS_GFONT_H_ */

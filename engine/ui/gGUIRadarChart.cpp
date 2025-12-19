@@ -20,10 +20,10 @@ gGUIRadarChart::gGUIRadarChart() :
 gGUIRadarChart::~gGUIRadarChart() {}
 
 void gGUIRadarChart::draw() {
-    gColor *old_color = this->renderer->getColor();
+    gColor *old_color = renderer->getColor();
     this->drawBase();
     this->drawChart();
-    this->renderer->setColor(old_color);
+    renderer->setColor(old_color);
 }
 
 void gGUIRadarChart::update() {
@@ -115,11 +115,11 @@ void gGUIRadarChart::calcVertices() {
 }
 
 void gGUIRadarChart::drawBase() {
-    gColor *old_color = this->renderer->getColor();
+    gColor *old_color = renderer->getColor();
     std::size_t n = this->vertices.size();
 
     for (std::size_t i = 0; i < n; i++) {
-        this->renderer->setColor(this->buttoncolor);
+        renderer->setColor(this->buttoncolor);
         gDrawLine(
             this->center.position.x,
             this->center.position.y,
@@ -163,7 +163,7 @@ void gGUIRadarChart::drawBase() {
             }
         }
 
-        this->renderer->setColor(this->fontcolor);
+        renderer->setColor(this->fontcolor);
         if ((i > 0 && i < n / 2) || (n % 2 != 0 && i == n / 2)) {
             float text_width = this->font->getStringWidth(this->labels[i]);
 
@@ -188,13 +188,13 @@ void gGUIRadarChart::drawBase() {
             );
         }
     }
-    this->renderer->setColor(old_color);
+    renderer->setColor(old_color);
 }
 
 void gGUIRadarChart::drawChart() {
     for (const gDataset &dataset : this->datasets) {
-        gColor *old_color = this->renderer->getColor();
-        this->renderer->setColor(dataset.color);
+        gColor *old_color = renderer->getColor();
+        renderer->setColor(dataset.color);
 
         std::vector<float> vertices(this->vertices.size() * 2);
         float circumradius = std::sqrt(
@@ -224,6 +224,6 @@ void gGUIRadarChart::drawChart() {
                 }
             }
         }
-        this->renderer->setColor(old_color);
+        renderer->setColor(old_color);
     }
 }

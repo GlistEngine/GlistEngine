@@ -27,7 +27,7 @@ void gGUINavigation::set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBa
 }
 
 void gGUINavigation::update() {
-	height = root->getAppManager()->getCurrentCanvas()->getScreenHeight();
+	height = renderer->getHeight();
 	maintoolbarsizer.set( 0, height - 40, width, 32);
 }
 

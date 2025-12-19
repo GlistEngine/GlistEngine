@@ -11,11 +11,11 @@
 
 gGUIStatusBar::gGUIStatusBar() {
 	selectedtext = -1;
-	width = getScreenWidth() + 1;
+	width = renderer->getWidth() + 1;
 	height = 30;
 	top = 0;
-	left = getScreenHeight() - height;
-	//top = getScreenHeight() - statusbarh;
+	left = renderer->getHeight() - height;
+	//top = renderer->getHeight() - statusbarh;
 	setSizer(&statussizer);
 	//text font
 	 	textx[0] = 15;
@@ -67,9 +67,9 @@ void gGUIStatusBar::windowResized(int w, int h) {
 void gGUIStatusBar::updateStatusBarCoordinate(int w, int h) {
 	 //update necessary coordinate update x and h not needed
 	// statusbary = h - height;
-	 //statusbarw = getScreenWidth();
+	 //statusbarw = renderer->getWidth();
 	 //statusbarx = 0;
-	 //statusbary = getScreenHeight() - statusbarh;
+	 //statusbary = renderer->getHeight() - statusbarh;
 }
 
 void gGUIStatusBar::updateTextCoordinate(int w, int h) {
