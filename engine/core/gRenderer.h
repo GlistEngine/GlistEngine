@@ -492,9 +492,11 @@ public:
 
 protected:
 	friend class gRenderObject; // this is where renderer->init() is called from
+	friend class gAppManager;
 
 	static int width, height;
 	static int unitwidth, unitheight;
+	static float scalemultiplier;
 	static int screenscaling;
 	static int currentresolution, unitresolution;
 
@@ -565,6 +567,8 @@ protected:
 	virtual void cleanup();
 	virtual void updatePackUnpackAlignment(int i) = 0;
 
+	void updateScaleMultiplier();
+
 	static const std::string& getShaderSrcGridVertex();
 	static const std::string& getShaderSrcGridFragment();
 	static const std::string& getShaderSrcColorVertex();
@@ -589,6 +593,7 @@ protected:
 	static const std::string& getShaderSrcBrdfFragment();
 	static const std::string& getShaderSrcFboVertex();
 	static const std::string& getShaderSrcFboFragment();
+
 
 };
 

@@ -46,6 +46,7 @@ int gRenderer::height;
 int gRenderer::unitwidth;
 int gRenderer::unitheight;
 int gRenderer::screenscaling;
+float gRenderer::scalemultiplier;
 int gRenderer::currentresolution;
 int gRenderer::unitresolution;
 
@@ -452,13 +453,25 @@ void gRenderer::setScreenScaling(int screenScaling) {
 	gObject::setCurrentResolution(screenscaling, currentresolution);
 }
 
+void gRenderer::updateScaleMultiplier() {
+	if (screenscaling >= G_SCREENSCALING_AUTO) {
+		scalemultiplier = width / (float)unitwidth;
+	} else {
+		scalemultiplier = 1;
+	}
+}
+
 int gRenderer::getWidth() {
-	if (screenscaling >= G_SCREENSCALING_AUTO) return unitwidth;
+	if (screenscaling >= G_SCREENSCALING_AUTO) {
+		return unitwidth;
+	}
 	return width;
 }
 
 int gRenderer::getHeight() {
-	if (screenscaling >= G_SCREENSCALING_AUTO) return unitheight;
+	if (screenscaling >= G_SCREENSCALING_AUTO) {
+		return unitheight;
+	}
 	return height;
 }
 
@@ -514,7 +527,7 @@ int gRenderer::getResolution(int screenWidth, int screenHeight) {
 	int res = 0;
 	for(int i = 0; i < 8; i++) {
 		if (screenWidth >= resolutions[i][0] * 0.9f && screenHeight >= resolutions[i][1] * 0.9f) {
-			res =i;
+			res = i;
 			break;
 		}
 	}
@@ -531,25 +544,23 @@ int gRenderer::getUnitResolution() {
 }
 
 float gRenderer::getScaleMultiplier() {
-	return width / (float)unitwidth;
+	return scalemultiplier;
 }
 
 int gRenderer::scaleX(int x) {
-	return (x * unitwidth) / width;
+	return x / scalemultiplier;
 }
 
 int gRenderer::scaleY(int y) {
-	return (y * unitheight) / height;
+	return y / scalemultiplier;
 }
 
 int gRenderer::unscaleX(int x) {
-	float scale = width / (float)unitwidth;
-	return x * scale;
+	return x * scalemultiplier;
 }
 
 int gRenderer::unscaleY(int y) {
-	float scale = height / (float)unitheight;
-	return y * scale;
+	return y * scalemultiplier;
 }
 
 void gRenderer::setColor(int r, int g, int b, int a) {
