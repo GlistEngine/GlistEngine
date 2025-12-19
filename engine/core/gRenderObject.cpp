@@ -25,8 +25,6 @@
 #include "gRenderer.h"
 #include "gGLRenderEngine.h"
 
-gRenderer* gRenderObject::renderer = nullptr;
-
 bool gRenderObject::isshadowmappingenabled = false;
 
 
@@ -95,6 +93,8 @@ bool gRenderObject::isShadowMappingEnabled() {
 #endif
 	return isshadowmappingenabled;
 }
+
+gRenderer* renderer = nullptr;
 
 gRenderer* gRenderObject::getRenderer() {
 	return renderer;

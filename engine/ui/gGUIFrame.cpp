@@ -35,10 +35,10 @@ gGUIFrame::gGUIFrame(gBaseApp* root) {
 	setParentSlotNo(0, 0);
 	left = 0;
 	top = 0;
-	right = root->getAppManager()->getCurrentCanvas()->getScreenWidth();
-	bottom = root->getAppManager()->getCurrentCanvas()->getScreenHeight();
-	width = root->getAppManager()->getCurrentCanvas()->getScreenWidth();
-	height = root->getAppManager()->getCurrentCanvas()->getScreenHeight();
+	right = renderer->getWidth();
+	bottom = renderer->getHeight();
+	width = renderer->getWidth();
+	height = renderer->getHeight();
 	setRootApp(root);
 }
 

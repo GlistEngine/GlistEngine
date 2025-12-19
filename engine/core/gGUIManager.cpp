@@ -42,8 +42,8 @@ gFont* gGUIManager::getFont(int fontNo, int fontType) {
 
 void gGUIManager::setCurrentFrame(gGUIFrame* currentFrame) {
 	setCurrentFrame(currentFrame,
-			currentFrame->getScreenWidth(),
-			currentFrame->getScreenHeight());
+					renderer->getWidth(),
+					renderer->getHeight());
 }
 
 void gGUIManager::setCurrentFrame(gGUIFrame* currentFrame, int width, int height) {
@@ -61,10 +61,10 @@ void gGUIManager::setCurrentFrame(gGUIFrame* currentFrame, int width, int height
 
 void gGUIManager::setupDialogue(gGUIDialogue* dialogue) {
 	dialogue->setParentSlotNo(0, 0);
-	dialogue->width = appmanager->getCurrentCanvas()->getScreenWidth() * 0.39f;
-	dialogue->height = appmanager->getCurrentCanvas()->getScreenHeight() * 0.21f;
-	dialogue->left = (appmanager->getCurrentCanvas()->getScreenWidth() - dialogue->width) / 2;
-	dialogue->top = (appmanager->getCurrentCanvas()->getScreenHeight() - dialogue->height) / 2;
+	dialogue->width = renderer->getWidth() * 0.39f;
+	dialogue->height = renderer->getHeight() * 0.21f;
+	dialogue->left = (renderer->getWidth() - dialogue->width) / 2;
+	dialogue->top = (renderer->getHeight() - dialogue->height) / 2;
 	dialogue->right = dialogue->left + dialogue->width;
 	dialogue->bottom = dialogue->top + dialogue->height;
 	dialogue->setRootApp(root);
@@ -253,8 +253,8 @@ void gGUIManager::update() {
 		if (selecteddialogue->getButtonEvent() == gGUIDialogue::EVENT_MAXIMIZE) {
 			int titlebarheight = selecteddialogue->getTitleBar()->height;
 			int buttonsbarheight = selecteddialogue->getButtonsBar()->height;
-			int twidth = appmanager->getCurrentCanvas()->getScreenWidth();
-			int theight = appmanager->getCurrentCanvas()->getScreenHeight() - titlebarheight - buttonsbarheight;
+			int twidth = renderer->getWidth();
+			int theight = renderer->getHeight() - titlebarheight - buttonsbarheight;
 			int tleft = 0;
 			int ttop = titlebarheight;
 			selecteddialogue->transformDialogue(tleft, ttop, twidth, theight);
@@ -266,10 +266,10 @@ void gGUIManager::update() {
 			selecteddialogue->setButtonEvent(gGUIDialogue::EVENT_NONE);
 		}
 		if (selecteddialogue->getButtonEvent() == gGUIDialogue::EVENT_RESTORE) {
-			int twidth = appmanager->getCurrentCanvas()->getScreenWidth() / 1 * 0.39f;
-			int theight = appmanager->getCurrentCanvas()->getScreenHeight() / 1 * 0.21f;
-			int tleft = (appmanager->getCurrentCanvas()->getScreenWidth() - twidth) / 2;
-			int ttop = (appmanager->getCurrentCanvas()->getScreenHeight() - theight) / 2;
+			int twidth = renderer->getWidth() / 1 * 0.39f;
+			int theight = renderer->getHeight() / 1 * 0.21f;
+			int tleft = (renderer->getWidth() - twidth) / 2;
+			int ttop = (renderer->getHeight() - theight) / 2;
 			selecteddialogue->transformDialogue(tleft, ttop, twidth, theight);
 
 			selecteddialogue->setIsMaximized(false);

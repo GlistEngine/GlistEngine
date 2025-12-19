@@ -8,36 +8,23 @@
 #include "gFont.h"
 #include "gTracy.h"
 
+#include <codecvt>
 #include <iostream>
 #include <locale>
-#include <codecvt>
 #ifdef ANDROID
 #include "gAndroidUtil.h"
 #endif
 
 
-gFont::gFont() {
-	isloaded = false;
-	fullpath = "";
-	isantialiased = false;
-	fontsize = 0;
-	dpi = 0;
-	iskerning = false;
-	fontface = nullptr;
-	ftlib = nullptr;
-}
+gFont::gFont() = default;
 
 gFont::~gFont() {
-	if(fontface != nullptr) {
-		for (const auto& item : textures) {
-			delete item;
+	if (fontface) {
+		for (std::pair<const int, gTexture*> pair : chartextures) {
+			delete pair.second;
 		}
-		textures.clear();
-		cpset.clear();
-		loadedcharacters.clear();
-		bitmappixels = nullptr;
-		lcsrc = nullptr;
-		lcbptr = nullptr;
+		chartextures.clear();
+		charproperties.clear();
 		FT_Done_Face(fontface);
 		FT_Done_FreeType(ftlib);
 	}
@@ -58,14 +45,17 @@ bool gFont::load(const std::string& fullPath, int size, bool isAntialiased, int 
 	}
 	err = FT_New_Face(ftlib, fullPath.c_str(), 0, &fontface);
 	if (err) {
-		std::string errorstr = "freetype error";
-		if (err == 1) errorstr = "wrong file name";
-		gLoge("gFont") << "Freetype error: " << errorstr.c_str();
+		const char* errorstr = (err == 1) ? "wrong file name" : "freetype error";
+		gLoge("gFont") << "Freetype error: " << errorstr;
 		return false;
 	}
 
-
-	FT_Set_Char_Size(fontface, fontsize << 6, fontsize << 6, dpi, dpi);
+	scale = renderer->getScaleMultiplier();
+	FT_Set_Char_Size(fontface,
+					 static_cast<int>(fontsize * scale) << 6,
+					 static_cast<int>(fontsize * scale) << 6,
+					 dpi,
+					 dpi);
 	lineheight = fontsize * 1.43f;
 	letterspacing = 1;
 	spacesize = 1;
@@ -86,167 +76,150 @@ bool gFont::loadFont(const std::string& fontPath, int size, bool isAntialiased, 
 
 void gFont::drawText(const std::string& text, float x, float y) {
 	G_PROFILE_ZONE_SCOPED_N("gFont::drawText()");
-	  index1 = 0;
-	  posx1 = x;
-	  posy1 = y;
+	float posx = x;
+	float posy = y;
 
-	  text1 = s2ws(text);
-	  len1 = text1.length();
+	std::wstring wtext = s2ws(text);
+	size_t len = wtext.length();
 
-	  while (index1 < len1) {
-	      c1 = text1[index1];
-	      if(index1 > 0) cold1 = text1[index1 - 1];
-	      else cold1 = -1;
-	      if (c1 == '\n') {
-	          posy1 += lineheight;
-	          posx1 = x; //reset X Pos back to zero
-	      } else {
-	          cid1 = getCharID(c1);
-	          if (cpset[cid1].character == unloadedchar) loadChar(cid1);
-	          posx1 += getKerning(cid1, cold1);
-	          textures[cid1]->draw(posx1 + cpset[cid1].leftmargin, posy1 + cpset[cid1].dytop);
-	          posx1 += cpset[cid1].advance * letterspacing * (c1 == ' ' ? spacesize : 1);
-	      }
-	    index1++;
-	  }
+	int previous = -1;
+	for (size_t i = 0; i < len; ++i) {
+		int c = wtext[i];
+
+		if (c == '\n') {
+			posy += lineheight;
+			posx = x;
+		} else {
+			if (charproperties.find(c) == charproperties.end()) {
+				loadChar(c);
+			}
+			posx += getKerning(c, previous);
+			chartextures[c]->draw(glm::vec2(posx + charproperties[c].leftmargin, posy + charproperties[c].dytop),
+								  glm::vec2(charproperties[c].texturewidth, charproperties[c].textureheight));
+			posx += charproperties[c].advance * letterspacing * (c == ' ' ? spacesize : 1.0f);
+		}
+		previous = c;
+	}
 }
 
 void gFont::drawTextVerticallyFlipped(const std::string& text, float x, float y) {
 	G_PROFILE_ZONE_SCOPED_N("gFont::drawTextVerticallyFlipped()");
-	index1 = 0;
-	posx1 = x;
-	posy1 = y;
+	float posx = x;
+	float posy = y;
 
-	text1 = s2ws(text);
-	len1 = text1.length();
+	std::wstring wtext = s2ws(text);
+	size_t len = wtext.length();
 
-	while (index1 < len1) {
-		c1 = text1[index1];
-		if(index1 > 0) {
-			cold1 = text1[index1 - 1];
+	int previous = -1;
+	for (size_t i = 0; i < len; ++i) {
+		int c = wtext[i];
+
+		if (c == '\n') {
+			posy -= lineheight;
+			posx = x;
 		} else {
-			cold1 = -1;
-		}
-		if (c1 == '\n') {
-			posy1 -= lineheight;
-			posx1 = x; //reset X Pos back to zero
-		} else {
-			cid1 = getCharID(c1);
-			if (cpset[cid1].character == unloadedchar) {
-				loadChar(cid1);
+			if (charproperties.find(c) == charproperties.end()) {
+				loadChar(c);
 			}
-			posx1 += getKerning(cid1, cold1);
-			gTexture* texture = textures[cid1];
-			texture->draw(posx1 + cpset[cid1].leftmargin, posy1 - cpset[cid1].dytop, texture->getWidth(), -texture->getHeight());
-			posx1 += cpset[cid1].advance * letterspacing * (c1 == ' ' ? spacesize : 1);
+			posx += getKerning(c, previous);
+			chartextures[c]->draw(glm::vec2(posx + charproperties[c].leftmargin, posy - charproperties[c].dytop),
+								  glm::vec2(charproperties[c].texturewidth, -charproperties[c].textureheight));
+			posx += charproperties[c].advance * letterspacing * (c == ' ' ? spacesize : 1.0f);
 		}
-		index1++;
+		previous = c;
 	}
 }
 
 void gFont::drawTextHorizontallyFlipped(const std::string& text, float x, float y) {
 	G_PROFILE_ZONE_SCOPED_N("gFont::drawTextHorizontallyFlipped()");
-	index1 = 0;
-	posx1 = x;
-	posy1 = y;
+	float posy = y;
 
-	text1 = s2ws(text);
-	len1 = text1.length();
+	std::wstring wtext = s2ws(text);
+	size_t len = wtext.length();
 
 	// Calculate the total width
-	int totalwidth = 0;
-	for (int i = 0; i < len1; ++i) {
-	    wchar_t c = text1[i];
-	    int cid = getCharID(c);
-	    if (cpset[cid].character == unloadedchar) {
-	        loadChar(cid);
-	    }
-	    totalwidth += cpset[cid].advance * letterspacing * (c == ' ' ? spacesize : 1);
+	float totalwidth = 0.0f;
+	for (size_t i = 0; i < len; ++i) {
+		int c = wtext[i];
+		if (charproperties.find(c) == charproperties.end()) {
+			loadChar(c);
+		}
+		totalwidth += charproperties[c].advance * letterspacing * (c == ' ' ? spacesize : 1.0f);
 	}
 
-	if (len1 > 0) {
-	    wchar_t lastchar = text1[len1 - 1];
-	    int lastcid = getCharID(lastchar);
-	    totalwidth += cpset[lastcid].advance * letterspacing * (lastchar == ' ' ? spacesize : 1);
+	if (len > 0) {
+		int lastchar = wtext[len - 1];
+		totalwidth += charproperties[lastchar].advance * letterspacing * (lastchar == ' ' ? spacesize : 1.0f);
 	}
 
 	// Set the starting position based on the total text width
-	posx1 = x + totalwidth;
+	float posx = x + totalwidth;
 
-	while (index1 < len1) {
-	    c1 = text1[index1];
-	    if (index1 > 0) {
-	        cold1 = text1[index1 - 1];
-	    } else {
-	        cold1 = -1;
-	    }
-	    if (c1 == '\n') {
-	        posy1 += lineheight;
-	        posx1 = x + totalwidth; // reset X Pos back to initial adjusted value
-	    } else {
-	        cid1 = getCharID(c1);
-	        if (cpset[cid1].character == unloadedchar) {
-	            loadChar(cid1);
-	        }
+	int prevChar = -1;
+	for (int i = 0; i < len; ++i) {
+		int c = wtext[i];
 
-	        int kerning = getKerning(cid1, cold1);
-	        posx1 -= kerning;
+		if (c == '\n') {
+			posy += lineheight;
+			posx = x + totalwidth;
+		} else {
+			if (charproperties.find(c) == charproperties.end()) {
+				loadChar(c);
+			}
 
-	        gTexture* texture = textures[cid1];
-	        int drawx = posx1 - cpset[cid1].leftmargin - texture->getWidth();
+			float kerning = getKerning(c, prevChar);
+			posx -= kerning;
 
-	        texture->draw(drawx, posy1 + cpset[cid1].dytop, -texture->getWidth(), texture->getHeight());
-
-	        int advance = cpset[cid1].advance * letterspacing * (c1 == ' ' ? spacesize : 1);
-	        posx1 -= advance;
-	    }
-	    index1++;
+			float drawx = posx - charproperties[c].leftmargin - charproperties[c].texturewidth;
+			chartextures[c]->draw(glm::vec2(drawx, posy + charproperties[c].dytop),
+								  glm::vec2(-charproperties[c].texturewidth, charproperties[c].textureheight));
+			posx -= charproperties[c].advance * letterspacing * (c == ' ' ? spacesize : 1.0f);
+		}
+		prevChar = c;
 	}
 }
 
 float gFont::getStringWidth(const std::string& text) {
 	G_PROFILE_ZONE_SCOPED_N("gFont::getStringWidth()");
-	  index2 = 0;
-	  posx2 = 0;
+	float width = 0.0f;
 
-	  text2 = s2ws(text);
-	  len2 = text2.length();
+	std::wstring wtext = s2ws(text);
+	size_t len = wtext.length();
 
-	  while (index2 < len2) {
-	      cid2 = text2[index2];
-	      if(index2 > 0) cold2 = text2[index2 - 1];
-	      else cold2 = -1;
-	      cy2 = getCharID(cid2);
-	      if (cpset[cy2].character == unloadedchar) loadChar(cy2);
-	      posx2 += getKerning(cid2, cold2);
-	      posx2 += cpset[cy2].advance * letterspacing * (cid2 == ' ' ? spacesize : 1);
-	      index2++;
-	  }
+	int previous = -1;
+	for (size_t i = 0; i < len; ++i) {
+		int c = wtext[i];
+		if (charproperties.find(c) == charproperties.end()) {
+			loadChar(c);
+		}
+		width += getKerning(c, previous);
+		width += charproperties[c].advance * letterspacing * (c == ' ' ? spacesize : 1.0f);
+		previous = c;
+	}
 
-	  return posx2;
+	return width;
 }
 
 float gFont::getStringHeight(const std::string& text) {
 	G_PROFILE_ZONE_SCOPED_N("gFont::getStringHeight()");
-	  index3 = 0;
-	  posy3 = 0;
+	std::wstring wtext = s2ws(text);
+	size_t len = wtext.length();
 
-	  text3 = s2ws(text);
-	  len3 = text3.length();
-
-	  while (index3 < len3) {
-	      cid3 = text3[index3];
-	      y3 = 0;
-	      cy3 = getCharID(cid3);
-	      if (cpset[cy3].character == unloadedchar) loadChar(cy3);
-	      y3 = -cpset[cy3].dytop;
-	      if (y3 > posy3) posy3 = y3;
-	      index3++;
-	  }
-	  return posy3;
+	float maxheight = 0.0f;
+	for (size_t i = 0; i < len; ++i) {
+		int c = wtext[i];
+		if (charproperties.find(c) == charproperties.end()) {
+			loadChar(c);
+		}
+		float charHeight = -charproperties[c].dytop;
+		if (charHeight > maxheight) {
+			maxheight = charHeight;
+		}
+	}
+	return maxheight;
 }
 
-float gFont::getLineHeight() {
+float gFont::getLineHeight() const {
 	return lineheight;
 }
 
@@ -254,222 +227,193 @@ const std::string& gFont::getPath() const {
 	return fullpath;
 }
 
-int gFont::getSize() {
-	return fontsize;
+int gFont::getSize() const {
+	return static_cast<int>(fontsize);
 }
 
-bool gFont::isLoaded() {
+bool gFont::isLoaded() const {
 	return isloaded;
 }
 
-bool gFont::isAntialised() {
+bool gFont::isAntialised() const {
 	return isantialiased;
 }
 
-int gFont::getDpi() {
+int gFont::getDpi() const {
 	return dpi;
 }
 
 void gFont::resizeVectors(int num) {
 	G_PROFILE_ZONE_SCOPED_N("gFont::resizeVectors()");
 	G_PROFILE_ZONE_VALUE(num);
-	if (num <= 0) return;
+	if (num <= 0) {
+		return;
+	}
 
 	characternumlimit = num;
 
-	std::vector<charProperties>().swap(cpset);
-	std::vector<int>().swap(loadedcharacters);
-
-	// initialize character info and textures
-	cpset.resize(characternumlimit);
-	for (int i=0; i<characternumlimit; ++i) cpset[i].character = unloadedchar;
-
-	for (const auto& item : textures) {
-		delete item;
+	charproperties.clear();
+	for (std::pair<const int, gTexture*> pair : chartextures) {
+		delete pair.second;
 	}
-	textures.clear();
-	textures.resize(characternumlimit);
+	chartextures.clear();
 
 	// load ' ' character for display space char
-	loadChar(getCharID(' '));
+	loadChar(' ');
 }
 
-int gFont::getCharID(const int& c) {
-	G_PROFILE_ZONE_SCOPED_N("gFont::getCharID()");
-	tempint = (int)c;
-	tempcharno = 0;
-	//search the �d of a character
-	auto it = std::find(loadedcharacters.begin(), loadedcharacters.end(), tempint);
-
-	if(it != loadedcharacters.end()){
-		//if finded calculate position
-		tempcharno = std::distance(loadedcharacters.begin(), it);
-	}else {
-		//if not
-		if(loadedcharacters.size() >= loadedcharacters.max_size()){
-			//if reached the max size, resize deque
-			loadedcharacters.resize(loadedcharacters.size() + 1000);
-		}
-		//add new char to deque
-		loadedcharacters.push_back(tempint);
-		tempcharno = loadedcharacters.size() - 1; //return last index
+void gFont::loadChar(int charCode) {
+	G_PROFILE_ZONE_SCOPED_N("gFont::loadChar()");
+	FT_Int32 loadflags = isantialiased ? FT_LOAD_TARGET_NORMAL : FT_LOAD_MONOCHROME;
+	if (scale > 1) {
+		loadflags |= FT_LOAD_NO_HINTING;
+	}
+	FT_Error error = FT_Load_Glyph(fontface, FT_Get_Char_Index(fontface, charCode), loadflags);
+	if (error) {
+		gLoge("gFont") << "Error FT_Load_Glyph";
+		return;
 	}
 
-	return tempcharno;
+	FT_GlyphSlot glyph = fontface->glyph;
+	FT_Render_Glyph(glyph, isantialiased ? FT_RENDER_MODE_NORMAL : FT_RENDER_MODE_MONO);
+
+	FT_Bitmap& bitmap = glyph->bitmap;
+
+	int dataw = bitmap.width;
+	int datah = bitmap.rows;
+
+	std::vector<unsigned char> data(datah * dataw * 4);
+	int datanum = dataw * datah;
+
+	// Initialize with white color and transparent alpha
+	for (int i = 0; i < datanum; ++i) {
+		int idx = i * 4;
+		data[idx] = 255;
+		data[idx + 1] = 255;
+		data[idx + 2] = 255;
+		data[idx + 3] = 0;
+	}
+
+	if (isantialiased) {
+		for (int i = 0; i < datanum; ++i) {
+			data[i * 4 + 3] = bitmap.buffer[i];
+		}
+	} else {
+		unsigned char* src = bitmap.buffer;
+		for (int i = 0; i < bitmap.rows; ++i) {
+			unsigned char lcb = 0;
+			unsigned char* bptr = src;
+			for (int j = 0; j < bitmap.width; ++j) {
+				data[(j + i * dataw) * 4] = 255;
+				if (j % 8 == 0) {
+					lcb = *bptr++;
+				}
+				data[(j + i * dataw) * 4 + 3] = (lcb & 0x80) ? 255 : 0;
+				lcb <<= 1;
+			}
+			src += bitmap.pitch;
+		}
+	}
+
+	int longside = border * 2 + std::max(dataw, datah);
+
+	// Find next power of 2
+	int longest = 1;
+	while (longside > longest) {
+		longest <<= 1;
+	}
+	int pixelsw = longest;
+	int pixelsh = longest;
+
+	std::vector<unsigned char> pixels(pixelsw * pixelsh * 4);
+	for (int i = 0; i < pixelsw * pixelsh; ++i) {
+		int idx = i * 4;
+		pixels[idx] = 255;
+		pixels[idx + 1] = 255;
+		pixels[idx + 2] = 255;
+		pixels[idx + 3] = 0;
+	}
+
+	insertData(data.data(), dataw, datah, 4, pixels.data(), pixelsw, pixelsh, 4, border, border);
+
+	chartextures[charCode] = new gTexture(pixelsw, pixelsh, GL_RGBA, false);
+
+	chartextures[charCode]->setFiltering(
+			isantialiased ? gTexture::TEXTUREMINMAGFILTER_LINEAR : gTexture::TEXTUREMINMAGFILTER_NEAREST,
+			isantialiased ? gTexture::TEXTUREMINMAGFILTER_LINEAR : gTexture::TEXTUREMINMAGFILTER_NEAREST);
+
+	chartextures[charCode]->setData(pixels.data(), pixelsw, pixelsh, 4, false, false);
+
+	// Prepare properties
+	CharProperties& props = charproperties[charCode];
+
+	// Simply divide all metrics by scale - no rounding
+	props.height = static_cast<float>(glyph->bitmap_top) / scale;
+	props.width = static_cast<float>(glyph->bitmap.width) / scale;
+	props.topmargin = static_cast<float>(glyph->bitmap.rows) / scale;
+	props.leftmargin = static_cast<float>(glyph->bitmap_left) / scale;
+
+	float lctop = props.topmargin - props.height;
+	float lccorr = ((fontsize - props.height) + lctop) - fontsize;
+
+	props.dxleft = props.leftmargin;
+	props.dytop = -lctop + lccorr;
+	props.dxright = props.leftmargin + props.width;
+	props.dybottom = props.height + lccorr;
+
+	props.texturewidth = static_cast<float>(chartextures[charCode]->getWidth()) / scale;
+	props.textureheight = static_cast<float>(chartextures[charCode]->getHeight()) / scale;
+	// Divide by 64 first (26.6 fixed point), then by scale to preserve precision
+	props.advance = (glyph->advance.x / 64.0f) / scale;
 }
 
-
-void gFont::loadChar(const int& charID) {
-	G_PROFILE_ZONE_SCOPED_N("gFont::loadChar()");
-	  lci = charID;
-
-	  lcerr = FT_Load_Glyph(fontface, FT_Get_Char_Index(fontface, loadedcharacters[lci]), isantialiased ?  FT_LOAD_FORCE_AUTOHINT : FT_LOAD_DEFAULT);
-	  if(lcerr) gLoge("gFont") << "Error FT_Load_Glyph";
-
-	  if (isantialiased == true) FT_Render_Glyph(fontface->glyph, FT_RENDER_MODE_NORMAL);
-	  else FT_Render_Glyph(fontface->glyph, FT_RENDER_MODE_MONO);
-
-	  FT_Bitmap& lcbitmap = fontface->glyph->bitmap;
-
-	  cpset[lci].character = loadedcharacters[lci];
-	  cpset[lci].height = fontface->glyph->bitmap_top;
-	  cpset[lci].width = fontface->glyph->bitmap.width;
-	  cpset[lci].advance = fontface->glyph->advance.x >> 6;
-	  cpset[lci].topmargin = fontface->glyph->bitmap.rows;
-	  cpset[lci].leftmargin = fontface->glyph->bitmap_left;
-
-	  lcdataw = cpset[lci].width;
-	  lcdatah = lcbitmap.rows;
-
-	  cpset[lci].texturewidth = lcdataw;
-	  cpset[lci].textureheight = lcdatah;
-
-	  lcfheight = cpset[lci].height;
-	  lcbwidth = cpset[lci].width;
-	  lctop = cpset[lci].topmargin - cpset[lci].height;
-	  lclextent	= cpset[lci].leftmargin;
-
-	  lcstretch = 0;
-	  lccorr = (float)(((fontsize - lcfheight) + lctop) - fontsize);
-
-	  cpset[lci].dxleft = (float) lclextent;
-	  cpset[lci].dytop = -lctop + lccorr;
-	  cpset[lci].dxright = lclextent + lcbwidth + lcstretch;
-	  cpset[lci].dybottom = lcfheight + lccorr + lcstretch;
-
-	  unsigned char lcdata[lcdatah * lcdataw * 4];
-	  lcdatanum = lcdataw * lcdatah;
-	  for (lci2 = 0; lci2 < lcdatanum; lci2++) {
-		  lcdata[lci2 * 4] = 255;
-		  lcdata[lci2 * 4 + 1] = 255;
-		  lcdata[lci2 * 4 + 2] = 255;
-		  lcdata[lci2 * 4 + 3] = 0;
-	  }
-
-	  if (isantialiased) {
-		  bitmappixels = lcbitmap.buffer;
-		  for (lci3 = 0; lci3 < lcdatanum; lci3++) {
-			  lcdata[lci3 * 4 + 3] = bitmappixels[lci3];
-		  }
-	  } else {
-	    lcsrc = lcbitmap.buffer;
-	    for(lcj = 0; lcj < lcbitmap.rows; ++lcj) {
-	      lcb = 0;
-	      lcbptr = lcsrc;
-	      for(lck = 0; lck < lcbitmap.width; ++lck) {
-			lcdata[(lck + lcj * lcdataw) * 4] = 255;
-	        if (lck % 8 == 0) lcb = (*(lcbptr++));
-	        lcdata[(lck + lcj * lcdataw) * 4 + 3] = lcb & 0x80 ? 255 : 0;
-	        lcb <<= 1;
-	      }
-	      lcsrc += lcbitmap.pitch;
-	    }
-	  }
-
-	  lclongside = border * 2;
-	  if(cpset[lci].texturewidth > cpset[lci].textureheight) {
-		  lclongside += cpset[lci].texturewidth;
-	  } else {
-		  lclongside += cpset[lci].textureheight;
-	  }
-
-	  lclongest = 1;
-	  while (lclongside > lclongest) {
-	    lclongest <<= 1;
-	  }
-	  lcpixelsw = lclongest;
-	  lcpixelsh = lcpixelsw;
-
-	  unsigned char* lcpixels = new unsigned char[lcpixelsw * lcpixelsh * 4];
-	  lcapsize = lcpixelsw * lcpixelsh;
-	  for (lci4 = 0; lci4 < lcapsize; lci4++) {
-		  lcpixels[lci4 * 4] = 255;
-		  lcpixels[lci4 * 4 + 1] = 255;
-		  lcpixels[lci4 * 4 + 2] = 255;
-		  lcpixels[lci4 * 4 + 3] = 0;
-	  }
-
-	  insertData(lcdata, lcdataw, lcdatah, 4, lcpixels, lcpixelsw, lcpixelsh, 4, border, border);
-
-	  textures[lci] = new gTexture(lcpixelsw, lcpixelsh, GL_RGBA, false);
-
-	  if (isantialiased) {
-	    textures[lci]->setFiltering(gTexture::TEXTUREMINMAGFILTER_LINEAR, gTexture::TEXTUREMINMAGFILTER_LINEAR);
-	  } else {
-		  textures[lci]->setFiltering(gTexture::TEXTUREMINMAGFILTER_NEAREST, gTexture::TEXTUREMINMAGFILTER_NEAREST);
-	  }
-
-	  textures[lci]->setData(lcpixels, lcpixelsw, lcpixelsh, 4, false, false);
-	  delete[] lcpixels;
-}
-
-
-bool gFont::insertData(unsigned char* srcData, int srcWidth, int srcHeight, int componentNum, unsigned char* dstData, int dstWidth, int dstHeight, int dstComponentNum, size_t dstFirstX, size_t dstFirstY) const {
+bool gFont::insertData(const unsigned char* srcData, int srcWidth, int srcHeight, int componentNum,
+					   unsigned char* dstData, int dstWidth, int dstHeight, int dstComponentNum,
+					   size_t dstFirstX, size_t dstFirstY) const {
 	G_PROFILE_ZONE_SCOPED_N("gFont::insertData()");
-	size_t pdrows = (dstFirstX + srcWidth <= dstWidth ? srcWidth : dstWidth - dstFirstX) * componentNum;
-	size_t pdcolumns = dstFirstY + srcHeight <= dstHeight ? srcHeight : dstHeight - dstFirstY;
-	unsigned char* pddstpix = dstData + ((dstFirstX + dstFirstY * dstWidth) * dstComponentNum);
-	unsigned char* pdsrcpix = srcData;
-	size_t lcsrcstride = srcWidth * componentNum;
-	size_t lcdststride = dstWidth * dstComponentNum;
 
-	for(size_t y = 0; y < pdcolumns; y++) {
-		memcpy(pddstpix, pdsrcpix, pdrows);
-		pddstpix += lcdststride;
-		pdsrcpix += lcsrcstride;
+	size_t copywidth = std::min(static_cast<size_t>(srcWidth), static_cast<size_t>(dstWidth) - dstFirstX) * componentNum;
+	size_t copyheight = std::min(static_cast<size_t>(srcHeight), static_cast<size_t>(dstHeight) - dstFirstY);
+
+	unsigned char* dstpixel = dstData + ((dstFirstX + dstFirstY * dstWidth) * dstComponentNum);
+	unsigned char* srcpixel = const_cast<unsigned char*>(srcData);
+	size_t srcstride = srcWidth * componentNum;
+	size_t dststride = dstWidth * dstComponentNum;
+
+	for (size_t y = 0; y < copyheight; ++y) {
+		std::memcpy(dstpixel, srcpixel, copywidth);
+		dstpixel += dststride;
+		srcpixel += srcstride;
 	}
 
 	return true;
 }
 
-int gFont::getKerning(int c, int previousC) {
+float gFont::getKerning(int c, int previousC) const {
 	G_PROFILE_ZONE_SCOPED_N("gFont::getKerning()");
-    if(fontface && iskerning) {
-        // Convert the characters to indices
-        FT_UInt index1 = FT_Get_Char_Index(fontface, previousC);
-        FT_UInt index2 = FT_Get_Char_Index(fontface, c);
+	if (!fontface || !iskerning || previousC == -1) {
+		return 0.0f;
+	}
 
-        // Get the kerning vector
-        FT_Vector kerning;
-        FT_Get_Kerning(fontface, index1, index2, FT_KERNING_DEFAULT, &kerning);
+	FT_UInt index1 = FT_Get_Char_Index(fontface, previousC);
+	FT_UInt index2 = FT_Get_Char_Index(fontface, c);
 
-        // X advance is already in pixels for bitmap fonts
-        if (!FT_IS_SCALABLE(fontface))
-            return kerning.x;
+	FT_Vector kerning;
+	FT_Get_Kerning(fontface, index1, index2, FT_KERNING_DEFAULT, &kerning);
 
-        return kerning.x >> 6;
-//        FT_Vector kerning;
-//        FT_Get_Kerning(fontface, FT_Get_Char_Index(fontface, previousC), FT_Get_Char_Index(fontface, c), FT_KERNING_DEFAULT, &kerning);
-//        return kerning.x >> 6;
-    }
-	return 0;
+	// X advance is already in pixels for bitmap fonts
+	if (!FT_IS_SCALABLE(fontface)) {
+		return kerning.x / scale;
+	}
+
+	return (kerning.x / scale) / 64.0f;
 }
 
 #ifdef WIN32
 #include <windows.h>
 #endif
 
-std::wstring gFont::s2ws(const std::string& s) {
+std::wstring gFont::s2ws(const std::string& s) const {
 	G_PROFILE_ZONE_SCOPED_N("gFont::s2ws()");
 #ifdef WIN32
 	int size_needed = MultiByteToWideChar(CP_UTF8, 0, s.c_str(), -1, nullptr, 0);
@@ -478,7 +422,7 @@ std::wstring gFont::s2ws(const std::string& s) {
 	wstr.pop_back(); // remove null terminator
 	return wstr;
 #else
-    std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
-    return converter.from_bytes(s);
+	std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+	return converter.from_bytes(s);
 #endif
 }

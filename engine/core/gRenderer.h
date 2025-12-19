@@ -192,6 +192,7 @@ public:
 	static int getResolution(int screenWidth, int screenHeight);
 	int getCurrentResolution();
 	int getUnitResolution();
+	static float getScaleMultiplier();
 	static int scaleX(int x);
 	static int scaleY(int y);
 	static int unscaleX(int x);

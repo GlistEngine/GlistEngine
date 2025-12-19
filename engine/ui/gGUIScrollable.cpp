@@ -55,7 +55,7 @@ void gGUIScrollable::setDimensions(int newWidth, int newHeight) {
 	titlex = left + font->getStringWidth("i");
 	titley = top + font->getStringHeight("AE");
 
-	boxfbo->allocate(renderer->getWidth(), renderer->getHeight());
+	boxfbo->allocate(renderer->getScreenWidth(), renderer->getScreenHeight());
 }
 
 
@@ -134,7 +134,10 @@ void gGUIScrollable::draw() {
 	drawScrollbars();
 	boxfbo->unbind();
 	renderer->setColor(255, 255, 255);
-	boxfbo->drawSub(left, top + titleheight, width, height, 0, renderer->getHeight() - height, width, height);
+	boxfbo->drawSub(left,top + titleheight,
+					width, height,
+					0, renderer->unscaleY(renderer->getHeight() - height),
+					renderer->unscaleX(width), renderer->unscaleY(height));
 	renderer->setColor(foregroundcolor);
 	gDrawRectangle(left, top + titleheight, width, height, false);
 	if(isalpha) {

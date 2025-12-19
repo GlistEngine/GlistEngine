@@ -102,7 +102,7 @@ void gGUIContextMenuItem::addItem(std::string text,  gImage* menuIcon, bool sepe
 void gGUIContextMenuItem::drawMenuItem() {
 	if(contextmenushown) {
 //		context menu on the right
-		if((contextmenux + contextmenudefaultw) >= getScreenWidth()) {
+		if((contextmenux + contextmenudefaultw) >= renderer->getWidth()) {
 			contextmenux -= contextmenudefaultw;
 			renderer->setColor(backgroundcolor);
 //			menu shadow
@@ -113,7 +113,7 @@ void gGUIContextMenuItem::drawMenuItem() {
 //			menu background
 			gDrawRectangle(items[0].left, items[0].top, contextmenudefaultw, items.size() * contextmenulineh, true);
 //		context menu at the bottom
-		} else if((contextmenuy + contextmenuh) >= getScreenHeight()) {
+		} else if((contextmenuy + contextmenuh) >= renderer->getHeight()) {
 			contextmenuy -= contextmenuh;
 			renderer->setColor(backgroundcolor);
 //			menu shadow
@@ -159,13 +159,13 @@ void gGUIContextMenuItem::drawMenuItem() {
 //				Set sub menu positions first, this one will be just next to main menu
 				items[i].set(root, topparent, this, 0, 0, contextmenux + contextmenudefaultw - 4, contextmenuy + (i * contextmenulineh), contextmenudefaultw, contextmenulineh);
 //				Then check if it's at the bottom right corner
-				if(contextmenuy + (contextmenulineh * items.size()) >= getScreenHeight() && items[i].left + contextmenudefaultw >= getScreenWidth())
+				if(contextmenuy + (contextmenulineh * items.size()) >= renderer->getHeight() && items[i].left + contextmenudefaultw >= renderer->getWidth())
 					items[i].set(root, topparent, this, 0, 0, items[i].left - (2 * contextmenudefaultw) + 4, contextmenuy + (i * contextmenulineh) - (contextmenulineh * (items.size() - 1)), contextmenudefaultw, contextmenulineh);
 //				Check if it's on the right
-				else if(items[i].left + contextmenudefaultw >= getScreenWidth())
+				else if(items[i].left + contextmenudefaultw >= renderer->getWidth())
 					items[i].set(root, topparent, this, 0, 0, items[i].left - (2 * contextmenudefaultw) + 4, contextmenuy + (i * contextmenulineh), contextmenudefaultw, contextmenulineh);
 //				Check if it's at the bottom
-				else if(contextmenuy + (contextmenulineh * items.size()) >= getScreenHeight())
+				else if(contextmenuy + (contextmenulineh * items.size()) >= renderer->getHeight())
 					items[i].set(root, topparent, this, 0, 0, contextmenux + contextmenudefaultw - 4, contextmenuy + (i * contextmenulineh) - (contextmenulineh * (items.size() - 1)), contextmenudefaultw, contextmenulineh);
 //				If it doesn't extend beyond the screen set it to the first position again.
 				else

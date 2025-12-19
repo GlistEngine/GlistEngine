@@ -41,7 +41,6 @@ void gStartEngine(gBaseApp* baseApp, const std::string& appName, int windowMode,
 
 void gStartEngine(gBaseApp* baseApp, const std::string& appName, int windowMode, int unitWidth, int unitHeight, int screenScaling, int width, int height, bool isResizable) {
     if(windowMode == G_WINDOWMODE_NONE) windowMode = G_WINDOWMODE_APP;
-    if(windowMode == G_WINDOWMODE_FULLSCREENGUIAPP || windowMode == G_WINDOWMODE_GUIAPP) screenScaling = G_SCREENSCALING_NONE;
 #if TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
     ios_main(baseApp, appName.c_str(), windowMode, unitWidth, unitHeight, screenScaling, width, height, isResizable);
 #elif defined(ANDROID)
@@ -216,7 +215,7 @@ void gAppManager::initialize() {
 		gBaseCanvas::setScreenScaling(screenscaling);
 		// Create managers if not created
 		if(!guimanager) {
-			guimanager = new gGUIManager(app, width, height);
+			guimanager = new gGUIManager(app, renderer->getWidth(), renderer->getHeight());
 			guimanager->getCurrentFrame()->getRenderer()->updateLights();
 		}
 	}

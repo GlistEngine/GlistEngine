@@ -20,6 +20,8 @@ using gIndex = unsigned int;
 #define G_INDEX_SIZE GL_UNSIGNED_INT
 #endif
 
+extern gRenderer* renderer;
+
 class gRenderObject : public gObject {
 public:
 	gRenderObject();
@@ -43,7 +45,6 @@ public:
 	static void createRenderer();
 protected:
 	friend class gRenderer;
-	static gRenderer* renderer;
 	static bool isshadowmappingenabled;
 };
 

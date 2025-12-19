@@ -530,6 +530,10 @@ int gRenderer::getUnitResolution() {
 	return unitresolution;
 }
 
+float gRenderer::getScaleMultiplier() {
+	return width / (float)unitwidth;
+}
+
 int gRenderer::scaleX(int x) {
 	return (x * unitwidth) / width;
 }

@@ -23,8 +23,8 @@ gGUITable::gGUITable() {
 	isselected = false;
 	ismoved = false;
 	screenwidth = 0;
-	screenheight = getScreenWidth();
-	movedfileno = getScreenHeight();
+	screenheight = renderer->getHeight();
+	movedfileno = renderer->getHeight();
 	selectedfileno = -1;
 	mousepressedonlist = false;
 }
@@ -43,8 +43,8 @@ void gGUITable::set(gBaseApp *root, gBaseGUIObject *topParentGUIObject,
 }
 
 void gGUITable::update() {
-	screenwidth = getScreenWidth();
-	screenheight = getScreenHeight();
+	screenwidth = renderer->getWidth();
+	screenheight = renderer->getHeight();
 	maxcolumncount = screenwidth / (filew + cornerspace);
 
 		for (int i = 0; i < imagelist.size(); i++) {
