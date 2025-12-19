@@ -469,7 +469,7 @@ int gFont::getKerning(int c, int previousC) {
 	return 0;
 }
 
-std::vector<std::string> gFont::wrapSentenceByWidth(const std::string& text, float maxWidth, gFont& font) {
+std::vector<std::string> gFont::wrapSentenceByWidth(const std::string& text, float maxWidth) {
     std::vector<std::string> lines;
     std::vector<std::string> words;
     std::vector<float> widths;
@@ -480,17 +480,17 @@ std::vector<std::string> gFont::wrapSentenceByWidth(const std::string& text, flo
     while ((end = text.find(' ', start)) != std::string::npos) {
         std::string word = text.substr(start, end - start);
         words.push_back(word);
-        widths.push_back(font.getStringWidth(word));
+        widths.push_back(getStringWidth(word));
         start = end + 1;
     }
 
     std::string lastword = text.substr(start);
     if (!lastword.empty()) {
         words.push_back(lastword);
-        widths.push_back(font.getStringWidth(lastword));
+        widths.push_back(getStringWidth(lastword));
     }
 
-    float spacewidth = font.getStringWidth(" ");
+    float spacewidth = getStringWidth(" ");
     float currentwidth = 0.0f;
     std::string currentline;
 
@@ -517,7 +517,6 @@ std::vector<std::string> gFont::wrapSentenceByWidth(const std::string& text, flo
 
     return lines;
 }
-
 #ifdef WIN32
 #include <windows.h>
 #endif
