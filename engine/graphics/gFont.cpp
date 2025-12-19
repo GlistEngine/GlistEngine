@@ -54,8 +54,8 @@ bool gFont::load(const std::string& fullPath, int size, bool isAntialiased, int 
 	FT_Set_Char_Size(fontface,
 					 static_cast<int>(fontsize * scale) << 6,
 					 static_cast<int>(fontsize * scale) << 6,
-					 dpi,
-					 dpi);
+					 dpi * scale,
+					 dpi * scale);
 	lineheight = fontsize * 1.43f;
 	letterspacing = 1;
 	spacesize = 1;
