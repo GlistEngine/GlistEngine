@@ -116,10 +116,10 @@ $(document).ready(function(){initNavTree('gUbo_8h_source.html',''); initResizabl
 <div class="foldopen" id="foldopen00015" data-start="{" data-end="}">
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno"><a class="line" href="classgUbo.html#a7b769efc794164e1238aadd36b5bf750">   15</a></span>    <a class="code hl_function" href="classgUbo.html#a7b769efc794164e1238aadd36b5bf750">gUbo</a>(Args&amp;&amp;... args, <span class="keywordtype">int</span> bindingpoint, <span class="keywordtype">int</span> usage = GL_DYNAMIC_DRAW) : id(GL_NONE), size(sizeof(T)), bindingpoint(bindingpoint) {</div>
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>        data = <span class="keyword">new</span> T(std::forward&lt;Args&gt;(args)...);</div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>        <span class="keywordtype">id</span> = <a class="code hl_variable" href="classgRenderObject.html#a33bb9342f1ac27b19efcde25724571f5">renderer</a>-&gt;<a class="code hl_function" href="classgRenderer.html#adb94f7f6b70c0e8ca2bb6579e5ee5c6a">genBuffers</a>();</div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>        <a class="code hl_variable" href="classgRenderObject.html#a33bb9342f1ac27b19efcde25724571f5">renderer</a>-&gt;<a class="code hl_function" href="classgRenderer.html#a14096a56fe4428d658ae8c9719509706">setBufferData</a>(<span class="keywordtype">id</span>, <span class="keyword">nullptr</span>, size, usage);</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>        <span class="keywordtype">id</span> = <a class="code hl_variable" href="gRenderObject_8h.html#ad83e2dea69b83a5dc4d768c4dd4f2a0e">renderer</a>-&gt;<a class="code hl_function" href="classgRenderer.html#adb94f7f6b70c0e8ca2bb6579e5ee5c6a">genBuffers</a>();</div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>        <a class="code hl_variable" href="gRenderObject_8h.html#ad83e2dea69b83a5dc4d768c4dd4f2a0e">renderer</a>-&gt;<a class="code hl_function" href="classgRenderer.html#a14096a56fe4428d658ae8c9719509706">setBufferData</a>(<span class="keywordtype">id</span>, <span class="keyword">nullptr</span>, size, usage);</div>
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>        <span class="comment">// define the range of the buffer that links to a uniform binding point</span></div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>        <a class="code hl_variable" href="classgRenderObject.html#a33bb9342f1ac27b19efcde25724571f5">renderer</a>-&gt;<a class="code hl_function" href="classgRenderer.html#ae51e3011165d6d30e9ed5949696114a5">setBufferRange</a>(bindingpoint, <span class="keywordtype">id</span>, 0, size);</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>        <a class="code hl_variable" href="gRenderObject_8h.html#ad83e2dea69b83a5dc4d768c4dd4f2a0e">renderer</a>-&gt;<a class="code hl_function" href="classgRenderer.html#ae51e3011165d6d30e9ed5949696114a5">setBufferRange</a>(bindingpoint, <span class="keywordtype">id</span>, 0, size);</div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>        <a class="code hl_function" href="classgUbo.html#acbbb230893efe0ac30a401efecfa5e2f">update</a>();</div>
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>    }</div>
 </div>
@@ -127,7 +127,7 @@ $(document).ready(function(){initNavTree('gUbo_8h_source.html',''); initResizabl
 <div class="foldopen" id="foldopen00024" data-start="{" data-end="}">
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno"><a class="line" href="classgUbo.html#a4f8b97ead7ca01c4253e78bff29e7bae">   24</a></span>    <a class="code hl_function" href="classgUbo.html#a4f8b97ead7ca01c4253e78bff29e7bae">~gUbo</a>() {</div>
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>        <span class="keywordflow">if</span> (<span class="keywordtype">id</span> != GL_NONE) {</div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>            <a class="code hl_variable" href="classgRenderObject.html#a33bb9342f1ac27b19efcde25724571f5">renderer</a>-&gt;<a class="code hl_function" href="classgRenderer.html#a2c598e4bdeca1610503c0ac62131f3ce">deleteBuffer</a>(<span class="keywordtype">id</span>);</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>            <a class="code hl_variable" href="gRenderObject_8h.html#ad83e2dea69b83a5dc4d768c4dd4f2a0e">renderer</a>-&gt;<a class="code hl_function" href="classgRenderer.html#a2c598e4bdeca1610503c0ac62131f3ce">deleteBuffer</a>(<span class="keywordtype">id</span>);</div>
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>        }</div>
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>        <span class="keyword">delete</span> data;</div>
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>    }</div>
@@ -135,13 +135,13 @@ $(document).ready(function(){initNavTree('gUbo_8h_source.html',''); initResizabl
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span> </div>
 <div class="foldopen" id="foldopen00031" data-start="{" data-end="}">
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno"><a class="line" href="classgUbo.html#a0176aec6f1240b6d48e1f8ee2f54f454">   31</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classgUbo.html#a0176aec6f1240b6d48e1f8ee2f54f454">bind</a>()<span class="keyword"> const </span>{</div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>        <a class="code hl_variable" href="classgRenderObject.html#a33bb9342f1ac27b19efcde25724571f5">renderer</a>-&gt;<a class="code hl_function" href="classgRenderer.html#a4d76a253fd99a6ec724dfa54d266e90e">bindBuffer</a>(GL_UNIFORM_BUFFER, <span class="keywordtype">id</span>);</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>        <a class="code hl_variable" href="gRenderObject_8h.html#ad83e2dea69b83a5dc4d768c4dd4f2a0e">renderer</a>-&gt;<a class="code hl_function" href="classgRenderer.html#a4d76a253fd99a6ec724dfa54d266e90e">bindBuffer</a>(GL_UNIFORM_BUFFER, <span class="keywordtype">id</span>);</div>
 <div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>    }</div>
 </div>
 <div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span> </div>
 <div class="foldopen" id="foldopen00035" data-start="{" data-end="}">
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno"><a class="line" href="classgUbo.html#a95ba7274681d8183e1680203de099759">   35</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classgUbo.html#a95ba7274681d8183e1680203de099759">unbind</a>()<span class="keyword"> const </span>{</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>        <a class="code hl_variable" href="classgRenderObject.html#a33bb9342f1ac27b19efcde25724571f5">renderer</a>-&gt;<a class="code hl_function" href="classgRenderer.html#a89ce32071b97dc83b0b3c74e4f4387ea">unbindBuffer</a>(GL_UNIFORM_BUFFER);</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>        <a class="code hl_variable" href="gRenderObject_8h.html#ad83e2dea69b83a5dc4d768c4dd4f2a0e">renderer</a>-&gt;<a class="code hl_function" href="classgRenderer.html#a89ce32071b97dc83b0b3c74e4f4387ea">unbindBuffer</a>(GL_UNIFORM_BUFFER);</div>
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    }</div>
 </div>
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span> </div>
@@ -154,7 +154,7 @@ $(document).ready(function(){initNavTree('gUbo_8h_source.html',''); initResizabl
 <div class="foldopen" id="foldopen00043" data-start="{" data-end="}">
 <div class="line"><a id="l00043" name="l00043"></a><span class="lineno"><a class="line" href="classgUbo.html#a20d3c5124ee5980a261c1472e1e56952">   43</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classgUbo.html#a20d3c5124ee5980a261c1472e1e56952">update</a>(<span class="keywordtype">int</span> offset, <span class="keywordtype">int</span> length) {</div>
 <div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>        <span class="keywordtype">void</span>* ptr = <span class="keyword">reinterpret_cast&lt;</span><span class="keywordtype">char</span>*<span class="keyword">&gt;</span>(data) + offset;</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>        <a class="code hl_variable" href="classgRenderObject.html#a33bb9342f1ac27b19efcde25724571f5">renderer</a>-&gt;<a class="code hl_function" href="classgRenderer.html#aa43f44f95f983d41cda633145f34bb68">bufSubData</a>(<span class="keywordtype">id</span>, offset, length, ptr);</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>        <a class="code hl_variable" href="gRenderObject_8h.html#ad83e2dea69b83a5dc4d768c4dd4f2a0e">renderer</a>-&gt;<a class="code hl_function" href="classgRenderer.html#aa43f44f95f983d41cda633145f34bb68">bufSubData</a>(<span class="keywordtype">id</span>, offset, length, ptr);</div>
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    }</div>
 </div>
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span> </div>
@@ -195,8 +195,7 @@ $(document).ready(function(){initNavTree('gUbo_8h_source.html',''); initResizabl
 <div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    <span class="keywordtype">int</span> bindingpoint;</div>
 <div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>};</div>
 </div>
-<div class="ttc" id="aclassgRenderObject_html"><div class="ttname"><a href="classgRenderObject.html">gRenderObject</a></div><div class="ttdef"><b>Definition</b> gRenderObject.h:23</div></div>
-<div class="ttc" id="aclassgRenderObject_html_a33bb9342f1ac27b19efcde25724571f5"><div class="ttname"><a href="classgRenderObject.html#a33bb9342f1ac27b19efcde25724571f5">gRenderObject::renderer</a></div><div class="ttdeci">static gRenderer * renderer</div><div class="ttdef"><b>Definition</b> gRenderObject.h:46</div></div>
+<div class="ttc" id="aclassgRenderObject_html"><div class="ttname"><a href="classgRenderObject.html">gRenderObject</a></div><div class="ttdef"><b>Definition</b> gRenderObject.h:25</div></div>
 <div class="ttc" id="aclassgRenderer_html_a14096a56fe4428d658ae8c9719509706"><div class="ttname"><a href="classgRenderer.html#a14096a56fe4428d658ae8c9719509706">gRenderer::setBufferData</a></div><div class="ttdeci">virtual void setBufferData(GLuint buffer, const void *data, size_t size, int usage)=0</div></div>
 <div class="ttc" id="aclassgRenderer_html_a2c598e4bdeca1610503c0ac62131f3ce"><div class="ttname"><a href="classgRenderer.html#a2c598e4bdeca1610503c0ac62131f3ce">gRenderer::deleteBuffer</a></div><div class="ttdeci">virtual void deleteBuffer(GLuint &amp;buffer)=0</div></div>
 <div class="ttc" id="aclassgRenderer_html_a4d76a253fd99a6ec724dfa54d266e90e"><div class="ttname"><a href="classgRenderer.html#a4d76a253fd99a6ec724dfa54d266e90e">gRenderer::bindBuffer</a></div><div class="ttdeci">virtual void bindBuffer(GLenum target, GLuint buffer)=0</div></div>
@@ -218,6 +217,7 @@ $(document).ready(function(){initNavTree('gUbo_8h_source.html',''); initResizabl
 <div class="ttc" id="aclassgUbo_html_ad895c4d2b58c987009865e9e6c79592e"><div class="ttname"><a href="classgUbo.html#ad895c4d2b58c987009865e9e6c79592e">gUbo::getData</a></div><div class="ttdeci">T * getData()</div><div class="ttdef"><b>Definition</b> gUbo.h:48</div></div>
 <div class="ttc" id="agObject_8h_html"><div class="ttname"><a href="gObject_8h.html">gObject.h</a></div></div>
 <div class="ttc" id="agRenderObject_8h_html"><div class="ttname"><a href="gRenderObject_8h.html">gRenderObject.h</a></div></div>
+<div class="ttc" id="agRenderObject_8h_html_ad83e2dea69b83a5dc4d768c4dd4f2a0e"><div class="ttname"><a href="gRenderObject_8h.html#ad83e2dea69b83a5dc4d768c4dd4f2a0e">renderer</a></div><div class="ttdeci">gRenderer * renderer</div></div>
 <div class="ttc" id="agRenderer_8h_html"><div class="ttname"><a href="gRenderer_8h.html">gRenderer.h</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

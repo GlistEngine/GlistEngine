@@ -119,435 +119,436 @@ $(document).ready(function(){initNavTree('gUtils_8h_source.html',''); initResiza
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="preprocessor">#include &lt;stdlib.h&gt;</span></div>
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#include &lt;wchar.h&gt;</span></div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="preprocessor">#include &lt;vector&gt;</span></div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#include &quot;<a class="code" href="gConstants_8h.html">gConstants.h</a>&quot;</span></div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="preprocessor">#include &quot;<a class="code" href="gKeyCode_8h.html">gKeyCode.h</a>&quot;</span></div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &quot;<a class="code" href="gGUIEvents_8h.html">gGUIEvents.h</a>&quot;</span></div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#include &quot;<a class="code" href="tinyfiledialogs_8h.html">tinyfiledialogs.h</a>&quot;</span></div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="preprocessor">#include &quot;<a class="code" href="gColor_8h.html">gColor.h</a>&quot;</span></div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="preprocessor">#include &lt;cstdint&gt;</span></div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="preprocessor">#include &lt;deque&gt;</span></div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="comment">/*</span></div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="comment">#ifndef LINUX</span></div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="comment">    #define LINUX __linux__</span></div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="comment">#endif</span></div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><span class="comment">*/</span></div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span><span class="preprocessor">#ifdef _WIN64</span></div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>   <span class="comment">//define something for Windows (64-bit)</span></div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span><span class="preprocessor">    #ifndef WIN64</span></div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="preprocessor">        #define WIN64 _WIN32</span></div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span><span class="preprocessor">    #endif</span></div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span><span class="preprocessor">#elif _WIN32</span></div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>   <span class="comment">//define something for Windows (32-bit)</span></div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span><span class="preprocessor">    #ifndef WIN32</span></div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span><span class="preprocessor">        #define WIN32 _WIN32</span></div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span><span class="preprocessor">    #endif</span></div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span><span class="preprocessor">#elif __APPLE__</span></div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span><span class="preprocessor">    #include &quot;TargetConditionals.h&quot;</span></div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span><span class="preprocessor">    #if TARGET_IPHONE_SIMULATOR</span></div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>        <span class="comment">// define something for simulator</span></div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span><span class="preprocessor">    #elif TARGET_OS_IPHONE</span></div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>        <span class="comment">// define something for iphone</span></div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span><span class="preprocessor">    #else</span></div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span><span class="preprocessor">        #ifndef TARGET_OS_OSX</span></div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span><span class="preprocessor">            #define TARGET_OS_OSX 1</span></div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span><span class="preprocessor">        #endif</span></div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span><span class="preprocessor">        #ifndef APPLE</span></div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span><span class="preprocessor">            #define APPLE __APPLE__</span></div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span><span class="preprocessor">        #endif</span></div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>        <span class="comment">// define something for OSX</span></div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span><span class="preprocessor">    #endif</span></div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span><span class="preprocessor">#elif __ANDROID__</span></div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    <span class="comment">// Android</span></div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span><span class="preprocessor">#elif __linux</span></div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    <span class="comment">// Linux</span></div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span><span class="preprocessor">    #ifndef LINUX</span></div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span><span class="preprocessor">        #define LINUX __linux__</span></div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span><span class="preprocessor">    #endif</span></div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span><span class="preprocessor">#elif __unix </span><span class="comment">// all unices not caught above</span></div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    <span class="comment">// Unix</span></div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span><span class="preprocessor">#elif __posix</span></div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    <span class="comment">// POSIX</span></div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span> </div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span><span class="preprocessor">#if ANDROID || TARGET_OS_IPHONE || TARGET_OS_SIMULATOR || EMSCRIPTEN</span></div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span><span class="preprocessor">#ifndef GLIST_OPENGLES</span></div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span><span class="preprocessor">#define GLIST_OPENGLES 1</span></div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#include &lt;memory&gt;</span></div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="preprocessor">#include &quot;<a class="code" href="gConstants_8h.html">gConstants.h</a>&quot;</span></div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &quot;<a class="code" href="gKeyCode_8h.html">gKeyCode.h</a>&quot;</span></div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#include &quot;<a class="code" href="gGUIEvents_8h.html">gGUIEvents.h</a>&quot;</span></div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="preprocessor">#include &quot;<a class="code" href="tinyfiledialogs_8h.html">tinyfiledialogs.h</a>&quot;</span></div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="preprocessor">#include &quot;<a class="code" href="gColor_8h.html">gColor.h</a>&quot;</span></div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="preprocessor">#include &lt;cstdint&gt;</span></div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="preprocessor">#include &lt;deque&gt;</span></div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span> </div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="comment">/*</span></div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="comment">#ifndef LINUX</span></div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="comment">    #define LINUX __linux__</span></div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><span class="comment">#endif</span></div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span><span class="comment">*/</span></div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span><span class="preprocessor">#ifdef _WIN64</span></div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>   <span class="comment">//define something for Windows (64-bit)</span></div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="preprocessor">    #ifndef WIN64</span></div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span><span class="preprocessor">        #define WIN64 _WIN32</span></div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span><span class="preprocessor">    #endif</span></div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span><span class="preprocessor">#elif _WIN32</span></div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>   <span class="comment">//define something for Windows (32-bit)</span></div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span><span class="preprocessor">    #ifndef WIN32</span></div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span><span class="preprocessor">        #define WIN32 _WIN32</span></div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span><span class="preprocessor">    #endif</span></div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span><span class="preprocessor">#elif __APPLE__</span></div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span><span class="preprocessor">    #include &quot;TargetConditionals.h&quot;</span></div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span><span class="preprocessor">    #if TARGET_IPHONE_SIMULATOR</span></div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>        <span class="comment">// define something for simulator</span></div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span><span class="preprocessor">    #elif TARGET_OS_IPHONE</span></div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>        <span class="comment">// define something for iphone</span></div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span><span class="preprocessor">    #else</span></div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span><span class="preprocessor">        #ifndef TARGET_OS_OSX</span></div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span><span class="preprocessor">            #define TARGET_OS_OSX 1</span></div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span><span class="preprocessor">        #endif</span></div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span><span class="preprocessor">        #ifndef APPLE</span></div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span><span class="preprocessor">            #define APPLE __APPLE__</span></div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span><span class="preprocessor">        #endif</span></div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>        <span class="comment">// define something for OSX</span></div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span><span class="preprocessor">    #endif</span></div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span><span class="preprocessor">#elif __ANDROID__</span></div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    <span class="comment">// Android</span></div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span><span class="preprocessor">#elif __linux</span></div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    <span class="comment">// Linux</span></div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span><span class="preprocessor">    #ifndef LINUX</span></div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span><span class="preprocessor">        #define LINUX __linux__</span></div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span><span class="preprocessor">    #endif</span></div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span><span class="preprocessor">#elif __unix </span><span class="comment">// all unices not caught above</span></div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>    <span class="comment">// Unix</span></div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span><span class="preprocessor">#elif __posix</span></div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>    <span class="comment">// POSIX</span></div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span> </div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span><span class="preprocessor">#if ANDROID || TARGET_OS_IPHONE || TARGET_OS_SIMULATOR || EMSCRIPTEN</span></div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span><span class="preprocessor">#ifndef GLIST_OPENGLES</span></div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span><span class="preprocessor">#define GLIST_OPENGLES 1</span></div>
 <div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span> </div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span><span class="preprocessor">#if EMSCRIPTEN</span></div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span><span class="preprocessor">#ifndef GLIST_WEB</span></div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span><span class="preprocessor">#define GLIST_WEB 1</span></div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span> </div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span><span class="preprocessor">#if EMSCRIPTEN</span></div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span><span class="preprocessor">#ifndef GLIST_WEB</span></div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span><span class="preprocessor">#define GLIST_WEB 1</span></div>
 <div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span><span class="preprocessor">#if TARGET_OS_IPHONE || TARGET_OS_SIMULATOR</span></div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span><span class="preprocessor">#ifndef GLIST_IOS</span></div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span><span class="preprocessor">#define GLIST_IOS 1</span></div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span><span class="preprocessor">#if TARGET_OS_IPHONE || TARGET_OS_SIMULATOR</span></div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span><span class="preprocessor">#ifndef GLIST_IOS</span></div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span><span class="preprocessor">#define GLIST_IOS 1</span></div>
 <div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span><span class="preprocessor">#if ANDROID</span></div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span><span class="preprocessor">#ifndef GLIST_ANDROID</span></div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span><span class="preprocessor">#define GLIST_ANDROID 1</span></div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span><span class="preprocessor">#if ANDROID</span></div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span><span class="preprocessor">#ifndef GLIST_ANDROID</span></div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span><span class="preprocessor">#define GLIST_ANDROID 1</span></div>
 <div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span> </div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span><span class="preprocessor">#endif</span></div>
 <div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span> </div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span><span class="preprocessor">#ifndef PI</span></div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno"><a class="line" href="gUtils_8h.html#a598a3330b3c21701223ee0ca14316eca">   97</a></span><span class="preprocessor">    #define PI       3.14159265358979323846</span></div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span> </div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span><span class="keyword">class </span><a class="code hl_class" href="classgImage.html">gImage</a>;</div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno"><a class="line" href="gUtils_8h.html#af2e14cb61be4a0c76af6dbdc567a9023">  101</a></span><span class="keywordtype">int</span> <a class="code hl_function" href="gUtils_8h.html#af2e14cb61be4a0c76af6dbdc567a9023">gDefaultWidth</a>();</div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno"><a class="line" href="gUtils_8h.html#aa959dcfcae23e33f44dfdd253d05e421">  102</a></span><span class="keywordtype">int</span> <a class="code hl_function" href="gUtils_8h.html#aa959dcfcae23e33f44dfdd253d05e421">gDefaultHeight</a>();</div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno"><a class="line" href="gUtils_8h.html#a295489476f2f5d0fe7d0ae65e7eb856c">  103</a></span><span class="keywordtype">int</span> <a class="code hl_function" href="gUtils_8h.html#a295489476f2f5d0fe7d0ae65e7eb856c">gDefaultUnitWidth</a>();</div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno"><a class="line" href="gUtils_8h.html#aaca86f7121fd90b39eded67af6285b4b">  104</a></span><span class="keywordtype">int</span> <a class="code hl_function" href="gUtils_8h.html#aaca86f7121fd90b39eded67af6285b4b">gDefaultUnitHeight</a>();</div>
-<div class="line"><a id="l00105" name="l00105"></a><span class="lineno"><a class="line" href="gUtils_8h.html#abf6e82125e0f3a430ab6a088a97821ff">  105</a></span><span class="keywordtype">int</span> <a class="code hl_function" href="gUtils_8h.html#abf6e82125e0f3a430ab6a088a97821ff">gDefaultMonitorWidth</a>();</div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno"><a class="line" href="gUtils_8h.html#a109a1a53077b79b8738180562b0ca46f">  106</a></span><span class="keywordtype">int</span> <a class="code hl_function" href="gUtils_8h.html#a109a1a53077b79b8738180562b0ca46f">gDefaultMonitorHeight</a>();</div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno"><a class="line" href="gUtils_8h.html#ae6513f2591dc2716494570e4d98802b9">  107</a></span><span class="keywordtype">int</span> <a class="code hl_function" href="gUtils_8h.html#ae6513f2591dc2716494570e4d98802b9">gDefaultScreenScaling</a>();</div>
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span> </div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno"><a class="line" href="gUtils_8h.html#aa15cce4ae90efc10418c2f3eeb989fc1">  109</a></span><span class="keywordtype">float</span> <a class="code hl_function" href="gUtils_8h.html#aa15cce4ae90efc10418c2f3eeb989fc1">gRadToDeg</a>(<span class="keywordtype">float</span> radians);</div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno"><a class="line" href="gUtils_8h.html#af0abe3d6efdea731ce4c2b22ae166fe2">  110</a></span><span class="keywordtype">float</span> <a class="code hl_function" href="gUtils_8h.html#af0abe3d6efdea731ce4c2b22ae166fe2">gDegToRad</a>(<span class="keywordtype">float</span> degrees);</div>
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span> </div>
-<div class="line"><a id="l00112" name="l00112"></a><span class="lineno"><a class="line" href="gUtils_8h.html#aea9355233c86690f6f7b0d0d7dcbfbba">  112</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="gUtils_8h.html#aea9355233c86690f6f7b0d0d7dcbfbba">gSeedRandom</a>();</div>
-<div class="line"><a id="l00113" name="l00113"></a><span class="lineno"><a class="line" href="gUtils_8h.html#abe1614a0462f0cbc0732cd4d09601094">  113</a></span><span class="keywordtype">float</span> <a class="code hl_function" href="gUtils_8h.html#abe1614a0462f0cbc0732cd4d09601094">gRandom</a>(<span class="keywordtype">float</span> max);</div>
-<div class="line"><a id="l00114" name="l00114"></a><span class="lineno"><a class="line" href="gUtils_8h.html#a3fb6d7b105fcd4527ade3200222c54a9">  114</a></span><span class="keywordtype">float</span> <a class="code hl_function" href="gUtils_8h.html#a3fb6d7b105fcd4527ade3200222c54a9">gRandomf</a>();</div>
-<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span> </div>
-<div class="line"><a id="l00116" name="l00116"></a><span class="lineno"><a class="line" href="gUtils_8h.html#a41d01761c35dc88d145c0e3c0df0b877">  116</a></span>uint64_t <a class="code hl_function" href="gUtils_8h.html#a41d01761c35dc88d145c0e3c0df0b877">gGetSystemTimeMillis</a>();</div>
-<div class="line"><a id="l00117" name="l00117"></a><span class="lineno"><a class="line" href="gUtils_8h.html#abbd858e3d4ede37fa9e51b2ea633002a">  117</a></span><span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> <a class="code hl_function" href="gUtils_8h.html#abbd858e3d4ede37fa9e51b2ea633002a">gGetUnixTime</a>();</div>
-<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span> </div>
-<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span><span class="comment">/*</span></div>
-<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span><span class="comment"> * Returns YYYY</span></div>
-<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span><span class="comment"> */</span></div>
-<div class="line"><a id="l00122" name="l00122"></a><span class="lineno"><a class="line" href="gUtils_8h.html#a0b55b97d787d295f875c194b5fdd46b5">  122</a></span><span class="keywordtype">int</span> <a class="code hl_function" href="gUtils_8h.html#a0b55b97d787d295f875c194b5fdd46b5">gGetYear</a>();</div>
-<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span> </div>
-<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span><span class="comment">/*</span></div>
-<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span><span class="comment"> * Returns M, starting from 1</span></div>
-<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span><span class="comment"> */</span></div>
-<div class="line"><a id="l00127" name="l00127"></a><span class="lineno"><a class="line" href="gUtils_8h.html#a500b11a913b4910cfdfbcfff13d96520">  127</a></span><span class="keywordtype">int</span> <a class="code hl_function" href="gUtils_8h.html#a500b11a913b4910cfdfbcfff13d96520">gGetMonth</a>();</div>
-<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span> </div>
-<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span><span class="comment">/*</span></div>
-<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span><span class="comment"> * Returns D, starting from 1</span></div>
-<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span><span class="comment"> */</span></div>
-<div class="line"><a id="l00132" name="l00132"></a><span class="lineno"><a class="line" href="gUtils_8h.html#aeaca45855ab7131fc82243d8a590aa85">  132</a></span><span class="keywordtype">int</span> <a class="code hl_function" href="gUtils_8h.html#aeaca45855ab7131fc82243d8a590aa85">gGetDay</a>();</div>
-<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span> </div>
-<div class="line"><a id="l00134" name="l00134"></a><span class="lineno"><a class="line" href="gUtils_8h.html#aa67da6df66a048b61b24f40714a79cde">  134</a></span><span class="keywordtype">int</span> <a class="code hl_function" href="gUtils_8h.html#aa67da6df66a048b61b24f40714a79cde">gGetWeekday</a>();</div>
-<div class="line"><a id="l00135" name="l00135"></a><span class="lineno"><a class="line" href="gUtils_8h.html#a3b454c86389d1a25a69d0be868ffdcf4">  135</a></span><span class="keywordtype">int</span> <a class="code hl_function" href="gUtils_8h.html#a3b454c86389d1a25a69d0be868ffdcf4">gGetHours</a>();</div>
-<div class="line"><a id="l00136" name="l00136"></a><span class="lineno"><a class="line" href="gUtils_8h.html#a09d1b05d97043b81a52f2aca321e20c7">  136</a></span><span class="keywordtype">int</span> <a class="code hl_function" href="gUtils_8h.html#a09d1b05d97043b81a52f2aca321e20c7">gGetMinutes</a>();</div>
-<div class="line"><a id="l00137" name="l00137"></a><span class="lineno"><a class="line" href="gUtils_8h.html#a954551590fa8819f366c7d4d436bd7a2">  137</a></span><span class="keywordtype">int</span> <a class="code hl_function" href="gUtils_8h.html#a954551590fa8819f366c7d4d436bd7a2">gGetSeconds</a>();</div>
-<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span> </div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span> </div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span><span class="preprocessor">#ifndef PI</span></div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno"><a class="line" href="gUtils_8h.html#a598a3330b3c21701223ee0ca14316eca">   98</a></span><span class="preprocessor">    #define PI       3.14159265358979323846</span></div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span> </div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span><span class="keyword">class </span><a class="code hl_class" href="classgImage.html">gImage</a>;</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno"><a class="line" href="gUtils_8h.html#af2e14cb61be4a0c76af6dbdc567a9023">  102</a></span><span class="keywordtype">int</span> <a class="code hl_function" href="gUtils_8h.html#af2e14cb61be4a0c76af6dbdc567a9023">gDefaultWidth</a>();</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno"><a class="line" href="gUtils_8h.html#aa959dcfcae23e33f44dfdd253d05e421">  103</a></span><span class="keywordtype">int</span> <a class="code hl_function" href="gUtils_8h.html#aa959dcfcae23e33f44dfdd253d05e421">gDefaultHeight</a>();</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno"><a class="line" href="gUtils_8h.html#a295489476f2f5d0fe7d0ae65e7eb856c">  104</a></span><span class="keywordtype">int</span> <a class="code hl_function" href="gUtils_8h.html#a295489476f2f5d0fe7d0ae65e7eb856c">gDefaultUnitWidth</a>();</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno"><a class="line" href="gUtils_8h.html#aaca86f7121fd90b39eded67af6285b4b">  105</a></span><span class="keywordtype">int</span> <a class="code hl_function" href="gUtils_8h.html#aaca86f7121fd90b39eded67af6285b4b">gDefaultUnitHeight</a>();</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno"><a class="line" href="gUtils_8h.html#abf6e82125e0f3a430ab6a088a97821ff">  106</a></span><span class="keywordtype">int</span> <a class="code hl_function" href="gUtils_8h.html#abf6e82125e0f3a430ab6a088a97821ff">gDefaultMonitorWidth</a>();</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno"><a class="line" href="gUtils_8h.html#a109a1a53077b79b8738180562b0ca46f">  107</a></span><span class="keywordtype">int</span> <a class="code hl_function" href="gUtils_8h.html#a109a1a53077b79b8738180562b0ca46f">gDefaultMonitorHeight</a>();</div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno"><a class="line" href="gUtils_8h.html#ae6513f2591dc2716494570e4d98802b9">  108</a></span><span class="keywordtype">int</span> <a class="code hl_function" href="gUtils_8h.html#ae6513f2591dc2716494570e4d98802b9">gDefaultScreenScaling</a>();</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span> </div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno"><a class="line" href="gUtils_8h.html#aa15cce4ae90efc10418c2f3eeb989fc1">  110</a></span><span class="keywordtype">float</span> <a class="code hl_function" href="gUtils_8h.html#aa15cce4ae90efc10418c2f3eeb989fc1">gRadToDeg</a>(<span class="keywordtype">float</span> radians);</div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno"><a class="line" href="gUtils_8h.html#af0abe3d6efdea731ce4c2b22ae166fe2">  111</a></span><span class="keywordtype">float</span> <a class="code hl_function" href="gUtils_8h.html#af0abe3d6efdea731ce4c2b22ae166fe2">gDegToRad</a>(<span class="keywordtype">float</span> degrees);</div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span> </div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno"><a class="line" href="gUtils_8h.html#aea9355233c86690f6f7b0d0d7dcbfbba">  113</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="gUtils_8h.html#aea9355233c86690f6f7b0d0d7dcbfbba">gSeedRandom</a>();</div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno"><a class="line" href="gUtils_8h.html#abe1614a0462f0cbc0732cd4d09601094">  114</a></span><span class="keywordtype">float</span> <a class="code hl_function" href="gUtils_8h.html#abe1614a0462f0cbc0732cd4d09601094">gRandom</a>(<span class="keywordtype">float</span> max);</div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno"><a class="line" href="gUtils_8h.html#a3fb6d7b105fcd4527ade3200222c54a9">  115</a></span><span class="keywordtype">float</span> <a class="code hl_function" href="gUtils_8h.html#a3fb6d7b105fcd4527ade3200222c54a9">gRandomf</a>();</div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span> </div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno"><a class="line" href="gUtils_8h.html#a41d01761c35dc88d145c0e3c0df0b877">  117</a></span>uint64_t <a class="code hl_function" href="gUtils_8h.html#a41d01761c35dc88d145c0e3c0df0b877">gGetSystemTimeMillis</a>();</div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno"><a class="line" href="gUtils_8h.html#abbd858e3d4ede37fa9e51b2ea633002a">  118</a></span><span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> <a class="code hl_function" href="gUtils_8h.html#abbd858e3d4ede37fa9e51b2ea633002a">gGetUnixTime</a>();</div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span> </div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span><span class="comment">/*</span></div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span><span class="comment"> * Returns YYYY</span></div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span><span class="comment"> */</span></div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno"><a class="line" href="gUtils_8h.html#a0b55b97d787d295f875c194b5fdd46b5">  123</a></span><span class="keywordtype">int</span> <a class="code hl_function" href="gUtils_8h.html#a0b55b97d787d295f875c194b5fdd46b5">gGetYear</a>();</div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span> </div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span><span class="comment">/*</span></div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span><span class="comment"> * Returns M, starting from 1</span></div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span><span class="comment"> */</span></div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno"><a class="line" href="gUtils_8h.html#a500b11a913b4910cfdfbcfff13d96520">  128</a></span><span class="keywordtype">int</span> <a class="code hl_function" href="gUtils_8h.html#a500b11a913b4910cfdfbcfff13d96520">gGetMonth</a>();</div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span> </div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span><span class="comment">/*</span></div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span><span class="comment"> * Returns D, starting from 1</span></div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span><span class="comment"> */</span></div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno"><a class="line" href="gUtils_8h.html#aeaca45855ab7131fc82243d8a590aa85">  133</a></span><span class="keywordtype">int</span> <a class="code hl_function" href="gUtils_8h.html#aeaca45855ab7131fc82243d8a590aa85">gGetDay</a>();</div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span> </div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno"><a class="line" href="gUtils_8h.html#aa67da6df66a048b61b24f40714a79cde">  135</a></span><span class="keywordtype">int</span> <a class="code hl_function" href="gUtils_8h.html#aa67da6df66a048b61b24f40714a79cde">gGetWeekday</a>();</div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno"><a class="line" href="gUtils_8h.html#a3b454c86389d1a25a69d0be868ffdcf4">  136</a></span><span class="keywordtype">int</span> <a class="code hl_function" href="gUtils_8h.html#a3b454c86389d1a25a69d0be868ffdcf4">gGetHours</a>();</div>
+<div class="line"><a id="l00137" name="l00137"></a><span class="lineno"><a class="line" href="gUtils_8h.html#a09d1b05d97043b81a52f2aca321e20c7">  137</a></span><span class="keywordtype">int</span> <a class="code hl_function" href="gUtils_8h.html#a09d1b05d97043b81a52f2aca321e20c7">gGetMinutes</a>();</div>
+<div class="line"><a id="l00138" name="l00138"></a><span class="lineno"><a class="line" href="gUtils_8h.html#a954551590fa8819f366c7d4d436bd7a2">  138</a></span><span class="keywordtype">int</span> <a class="code hl_function" href="gUtils_8h.html#a954551590fa8819f366c7d4d436bd7a2">gGetSeconds</a>();</div>
 <div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span> </div>
-<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span><span class="preprocessor">#if  defined(WIN32) || defined(LINUX) || defined(APPLE)    </span><span class="comment">//Available Ram Size</span></div>
-<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>uint64_t gGetAvailableRamSize();</div>
-<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span> </div>
-<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span><span class="preprocessor">#if  defined(WIN32) || defined(LINUX) || defined(APPLE)     </span><span class="comment">//Current Ram Size Used by Glist Engine</span></div>
-<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>uint64_t gGetRamSizeUsedbyGE();</div>
-<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span> </div>
-<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span><span class="preprocessor">#if  defined(WIN32) || defined(LINUX) || defined(APPLE)    </span><span class="comment">//Total Ram Size</span></div>
-<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>uint64_t gGetTotalRamSize();</div>
-<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span> </div>
-<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span><span class="comment">/*</span></div>
-<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span><span class="comment"> * Rotates The Pixel Data upside down. Hence rotates flips the image upside down</span></div>
-<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span><span class="comment"> */</span></div>
-<div class="line"><a id="l00155" name="l00155"></a><span class="lineno"><a class="line" href="gUtils_8h.html#a33712aa7f449750b3f0db7406c8526b4">  155</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="gUtils_8h.html#a33712aa7f449750b3f0db7406c8526b4">gFlipImageDataVertically</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">char</span>* pixelData, <span class="keywordtype">int</span> <a class="code hl_variable" href="classgTexture.html#a627c39d3af9a984bbfc3a716a6f29031">width</a>, <span class="keywordtype">int</span> <a class="code hl_variable" href="classgTexture.html#a6f4a7e8cabbc84efd1eb7582e47d1ea1">height</a>, <span class="keywordtype">int</span> numChannels);</div>
-<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span> </div>
-<div class="line"><a id="l00157" name="l00157"></a><span class="lineno"><a class="line" href="gUtils_8h.html#af152d32ffeb880314b9a77aa5de0f96b">  157</a></span>std::string <a class="code hl_function" href="gUtils_8h.html#af152d32ffeb880314b9a77aa5de0f96b">gGetTimestampString</a>();</div>
-<div class="line"><a id="l00158" name="l00158"></a><span class="lineno"><a class="line" href="gUtils_8h.html#a2500a4466fbedde280387b72350ed15d">  158</a></span>std::string <a class="code hl_function" href="gUtils_8h.html#af152d32ffeb880314b9a77aa5de0f96b">gGetTimestampString</a>(<span class="keyword">const</span> std::string&amp; <a class="code hl_variable" href="classgTexture.html#a4c3b75ccc0dabb6c9ea8948d52609169">format</a>);</div>
-<div class="line"><a id="l00159" name="l00159"></a><span class="lineno"><a class="line" href="gUtils_8h.html#af4679076f1cada4ce4b5022171ca1050">  159</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="gUtils_8h.html#af4679076f1cada4ce4b5022171ca1050">gStringReplace</a>(std::string&amp; input, <span class="keyword">const</span> std::string&amp; searchStr, <span class="keyword">const</span> std::string&amp; replaceStr);</div>
-<div class="line"><a id="l00160" name="l00160"></a><span class="lineno"><a class="line" href="gUtils_8h.html#ab610043e9ff49ddd15be745b10707532">  160</a></span>std::locale <a class="code hl_function" href="gUtils_8h.html#ab610043e9ff49ddd15be745b10707532">gGetLocale</a>(<span class="keyword">const</span> std::string &amp; locale);</div>
-<div class="line"><a id="l00161" name="l00161"></a><span class="lineno"><a class="line" href="gUtils_8h.html#a1c37f4816632133f0e9d5b96738b5f20">  161</a></span>std::string <a class="code hl_function" href="gUtils_8h.html#a1c37f4816632133f0e9d5b96738b5f20">gToLower</a>(<span class="keyword">const</span> std::string&amp; src, <span class="keyword">const</span> std::string &amp; locale = <span class="stringliteral">&quot;&quot;</span>);</div>
-<div class="line"><a id="l00162" name="l00162"></a><span class="lineno"><a class="line" href="gUtils_8h.html#a958f5ba91c5903cf27f302c958302f3c">  162</a></span>std::string <a class="code hl_function" href="gUtils_8h.html#a958f5ba91c5903cf27f302c958302f3c">gToUpper</a>(<span class="keyword">const</span> std::string&amp; src, <span class="keyword">const</span> std::string &amp; locale = <span class="stringliteral">&quot;&quot;</span>);</div>
-<div class="line"><a id="l00163" name="l00163"></a><span class="lineno"><a class="line" href="gUtils_8h.html#a76c0b43c1a31af2e99554163b788d321">  163</a></span>std::vector&lt;std::string&gt; <a class="code hl_function" href="gUtils_8h.html#a76c0b43c1a31af2e99554163b788d321">gSplitString</a>(<span class="keyword">const</span> std::string&amp; textToSplit, <span class="keyword">const</span> std::string&amp; delimiter);</div>
-<div class="line"><a id="l00164" name="l00164"></a><span class="lineno"><a class="line" href="gUtils_8h.html#aed9621ab2aab7745c939d975e3c320b2">  164</a></span>std::deque&lt;std::string&gt; <a class="code hl_function" href="gUtils_8h.html#aed9621ab2aab7745c939d975e3c320b2">gSplitStringToDeque</a>(<span class="keyword">const</span> std::string&amp; textToSplit, <span class="keyword">const</span> std::string&amp; delimiter);</div>
-<div class="line"><a id="l00165" name="l00165"></a><span class="lineno"><a class="line" href="gUtils_8h.html#a808b4eebc0b92845b7c47eb042f97df9">  165</a></span>std::string <a class="code hl_function" href="gUtils_8h.html#a808b4eebc0b92845b7c47eb042f97df9">gReplaceAll</a>(<span class="keyword">const</span> std::string&amp; source, <span class="keyword">const</span> std::string&amp; from, <span class="keyword">const</span> std::string&amp; to);</div>
-<div class="line"><a id="l00166" name="l00166"></a><span class="lineno"><a class="line" href="gUtils_8h.html#a2ed85cbfd8460de76162b9456b281ec4">  166</a></span><span class="keywordtype">bool</span> <a class="code hl_function" href="gUtils_8h.html#a2ed85cbfd8460de76162b9456b281ec4">gIsValidFilename</a>(std::string fileName);</div>
-<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span> </div>
-<div class="line"><a id="l00168" name="l00168"></a><span class="lineno"><a class="line" href="gUtils_8h.html#af8b249f1e5a2645c743db23785c95c2a">  168</a></span><span class="keywordtype">bool</span> <a class="code hl_function" href="gUtils_8h.html#af8b249f1e5a2645c743db23785c95c2a">gIsInt</a>(<span class="keyword">const</span> std::string&amp; str);</div>
-<div class="line"><a id="l00169" name="l00169"></a><span class="lineno"><a class="line" href="gUtils_8h.html#aebd1c53c1078f8a2aa439bab7b4d6907">  169</a></span><span class="keywordtype">bool</span> <a class="code hl_function" href="gUtils_8h.html#aebd1c53c1078f8a2aa439bab7b4d6907">gIsFloat</a>(<span class="keyword">const</span> std::string&amp; str);</div>
-<div class="line"><a id="l00170" name="l00170"></a><span class="lineno"><a class="line" href="gUtils_8h.html#abd00a345b47e08160d6b0c98e1fe82b4">  170</a></span><span class="keywordtype">bool</span> <a class="code hl_function" href="gUtils_8h.html#abd00a345b47e08160d6b0c98e1fe82b4">gIsNumber</a>(<span class="keyword">const</span> std::string&amp; str);</div>
-<div class="line"><a id="l00171" name="l00171"></a><span class="lineno"><a class="line" href="gUtils_8h.html#a2fe6c3daa3637fac1ee19a7cdd0ad996">  171</a></span><span class="keywordtype">bool</span> <a class="code hl_function" href="gUtils_8h.html#a2fe6c3daa3637fac1ee19a7cdd0ad996">gIsString</a>(<span class="keyword">const</span> std::string&amp; str);</div>
-<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span> </div>
-<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> T&gt;</div>
-<div class="foldopen" id="foldopen00174" data-start="{" data-end="}">
-<div class="line"><a id="l00174" name="l00174"></a><span class="lineno"><a class="line" href="gUtils_8h.html#a0063aab1036834a005618e48e277fdba">  174</a></span>std::string <a class="code hl_function" href="gUtils_8h.html#a0063aab1036834a005618e48e277fdba">gToStr</a>(<span class="keyword">const</span> T&amp; numValue) {</div>
-<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>    std::ostringstream out;</div>
-<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>    out &lt;&lt; numValue;</div>
-<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>    <span class="keywordflow">return</span> out.str();</div>
-<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>}</div>
+<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span> </div>
+<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span><span class="preprocessor">#if  defined(WIN32) || defined(LINUX) || defined(APPLE)    </span><span class="comment">//Available Ram Size</span></div>
+<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>uint64_t gGetAvailableRamSize();</div>
+<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span> </div>
+<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span><span class="preprocessor">#if  defined(WIN32) || defined(LINUX) || defined(APPLE)     </span><span class="comment">//Current Ram Size Used by Glist Engine</span></div>
+<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>uint64_t gGetRamSizeUsedbyGE();</div>
+<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span> </div>
+<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span><span class="preprocessor">#if  defined(WIN32) || defined(LINUX) || defined(APPLE)    </span><span class="comment">//Total Ram Size</span></div>
+<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>uint64_t gGetTotalRamSize();</div>
+<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span> </div>
+<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span><span class="comment">/*</span></div>
+<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span><span class="comment"> * Rotates The Pixel Data upside down. Hence rotates flips the image upside down</span></div>
+<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span><span class="comment"> */</span></div>
+<div class="line"><a id="l00156" name="l00156"></a><span class="lineno"><a class="line" href="gUtils_8h.html#a33712aa7f449750b3f0db7406c8526b4">  156</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="gUtils_8h.html#a33712aa7f449750b3f0db7406c8526b4">gFlipImageDataVertically</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">char</span>* pixelData, <span class="keywordtype">int</span> <a class="code hl_variable" href="classgTexture.html#a627c39d3af9a984bbfc3a716a6f29031">width</a>, <span class="keywordtype">int</span> <a class="code hl_variable" href="classgTexture.html#a6f4a7e8cabbc84efd1eb7582e47d1ea1">height</a>, <span class="keywordtype">int</span> numChannels);</div>
+<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span> </div>
+<div class="line"><a id="l00158" name="l00158"></a><span class="lineno"><a class="line" href="gUtils_8h.html#af152d32ffeb880314b9a77aa5de0f96b">  158</a></span>std::string <a class="code hl_function" href="gUtils_8h.html#af152d32ffeb880314b9a77aa5de0f96b">gGetTimestampString</a>();</div>
+<div class="line"><a id="l00159" name="l00159"></a><span class="lineno"><a class="line" href="gUtils_8h.html#a2500a4466fbedde280387b72350ed15d">  159</a></span>std::string <a class="code hl_function" href="gUtils_8h.html#af152d32ffeb880314b9a77aa5de0f96b">gGetTimestampString</a>(<span class="keyword">const</span> std::string&amp; <a class="code hl_variable" href="classgTexture.html#a4c3b75ccc0dabb6c9ea8948d52609169">format</a>);</div>
+<div class="line"><a id="l00160" name="l00160"></a><span class="lineno"><a class="line" href="gUtils_8h.html#af4679076f1cada4ce4b5022171ca1050">  160</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="gUtils_8h.html#af4679076f1cada4ce4b5022171ca1050">gStringReplace</a>(std::string&amp; input, <span class="keyword">const</span> std::string&amp; searchStr, <span class="keyword">const</span> std::string&amp; replaceStr);</div>
+<div class="line"><a id="l00161" name="l00161"></a><span class="lineno"><a class="line" href="gUtils_8h.html#ab610043e9ff49ddd15be745b10707532">  161</a></span>std::locale <a class="code hl_function" href="gUtils_8h.html#ab610043e9ff49ddd15be745b10707532">gGetLocale</a>(<span class="keyword">const</span> std::string &amp; locale);</div>
+<div class="line"><a id="l00162" name="l00162"></a><span class="lineno"><a class="line" href="gUtils_8h.html#a1c37f4816632133f0e9d5b96738b5f20">  162</a></span>std::string <a class="code hl_function" href="gUtils_8h.html#a1c37f4816632133f0e9d5b96738b5f20">gToLower</a>(<span class="keyword">const</span> std::string&amp; src, <span class="keyword">const</span> std::string &amp; locale = <span class="stringliteral">&quot;&quot;</span>);</div>
+<div class="line"><a id="l00163" name="l00163"></a><span class="lineno"><a class="line" href="gUtils_8h.html#a958f5ba91c5903cf27f302c958302f3c">  163</a></span>std::string <a class="code hl_function" href="gUtils_8h.html#a958f5ba91c5903cf27f302c958302f3c">gToUpper</a>(<span class="keyword">const</span> std::string&amp; src, <span class="keyword">const</span> std::string &amp; locale = <span class="stringliteral">&quot;&quot;</span>);</div>
+<div class="line"><a id="l00164" name="l00164"></a><span class="lineno"><a class="line" href="gUtils_8h.html#a76c0b43c1a31af2e99554163b788d321">  164</a></span>std::vector&lt;std::string&gt; <a class="code hl_function" href="gUtils_8h.html#a76c0b43c1a31af2e99554163b788d321">gSplitString</a>(<span class="keyword">const</span> std::string&amp; textToSplit, <span class="keyword">const</span> std::string&amp; delimiter);</div>
+<div class="line"><a id="l00165" name="l00165"></a><span class="lineno"><a class="line" href="gUtils_8h.html#aed9621ab2aab7745c939d975e3c320b2">  165</a></span>std::deque&lt;std::string&gt; <a class="code hl_function" href="gUtils_8h.html#aed9621ab2aab7745c939d975e3c320b2">gSplitStringToDeque</a>(<span class="keyword">const</span> std::string&amp; textToSplit, <span class="keyword">const</span> std::string&amp; delimiter);</div>
+<div class="line"><a id="l00166" name="l00166"></a><span class="lineno"><a class="line" href="gUtils_8h.html#a808b4eebc0b92845b7c47eb042f97df9">  166</a></span>std::string <a class="code hl_function" href="gUtils_8h.html#a808b4eebc0b92845b7c47eb042f97df9">gReplaceAll</a>(<span class="keyword">const</span> std::string&amp; source, <span class="keyword">const</span> std::string&amp; from, <span class="keyword">const</span> std::string&amp; to);</div>
+<div class="line"><a id="l00167" name="l00167"></a><span class="lineno"><a class="line" href="gUtils_8h.html#a2ed85cbfd8460de76162b9456b281ec4">  167</a></span><span class="keywordtype">bool</span> <a class="code hl_function" href="gUtils_8h.html#a2ed85cbfd8460de76162b9456b281ec4">gIsValidFilename</a>(std::string fileName);</div>
+<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span> </div>
+<div class="line"><a id="l00169" name="l00169"></a><span class="lineno"><a class="line" href="gUtils_8h.html#af8b249f1e5a2645c743db23785c95c2a">  169</a></span><span class="keywordtype">bool</span> <a class="code hl_function" href="gUtils_8h.html#af8b249f1e5a2645c743db23785c95c2a">gIsInt</a>(<span class="keyword">const</span> std::string&amp; str);</div>
+<div class="line"><a id="l00170" name="l00170"></a><span class="lineno"><a class="line" href="gUtils_8h.html#aebd1c53c1078f8a2aa439bab7b4d6907">  170</a></span><span class="keywordtype">bool</span> <a class="code hl_function" href="gUtils_8h.html#aebd1c53c1078f8a2aa439bab7b4d6907">gIsFloat</a>(<span class="keyword">const</span> std::string&amp; str);</div>
+<div class="line"><a id="l00171" name="l00171"></a><span class="lineno"><a class="line" href="gUtils_8h.html#abd00a345b47e08160d6b0c98e1fe82b4">  171</a></span><span class="keywordtype">bool</span> <a class="code hl_function" href="gUtils_8h.html#abd00a345b47e08160d6b0c98e1fe82b4">gIsNumber</a>(<span class="keyword">const</span> std::string&amp; str);</div>
+<div class="line"><a id="l00172" name="l00172"></a><span class="lineno"><a class="line" href="gUtils_8h.html#a2fe6c3daa3637fac1ee19a7cdd0ad996">  172</a></span><span class="keywordtype">bool</span> <a class="code hl_function" href="gUtils_8h.html#a2fe6c3daa3637fac1ee19a7cdd0ad996">gIsString</a>(<span class="keyword">const</span> std::string&amp; str);</div>
+<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span> </div>
+<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> T&gt;</div>
+<div class="foldopen" id="foldopen00175" data-start="{" data-end="}">
+<div class="line"><a id="l00175" name="l00175"></a><span class="lineno"><a class="line" href="gUtils_8h.html#a0063aab1036834a005618e48e277fdba">  175</a></span>std::string <a class="code hl_function" href="gUtils_8h.html#a0063aab1036834a005618e48e277fdba">gToStr</a>(<span class="keyword">const</span> T&amp; numValue) {</div>
+<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>    std::ostringstream out;</div>
+<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>    out &lt;&lt; numValue;</div>
+<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>    <span class="keywordflow">return</span> out.str();</div>
+<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>}</div>
 </div>
-<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span> </div>
-<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> T&gt;</div>
-<div class="foldopen" id="foldopen00181" data-start="{" data-end="}">
-<div class="line"><a id="l00181" name="l00181"></a><span class="lineno"><a class="line" href="gUtils_8h.html#a3032c90c64b493e8d519ce8f8dbb974d">  181</a></span>std::string <a class="code hl_function" href="gUtils_8h.html#a3032c90c64b493e8d519ce8f8dbb974d">gToHex</a>(<span class="keyword">const</span> T&amp; numValue, <span class="keywordtype">int</span> <a class="code hl_variable" href="classgTexture.html#a627c39d3af9a984bbfc3a716a6f29031">width</a> = <span class="keyword">sizeof</span>(T)*2) {</div>
-<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>    std::ostringstream stream;</div>
-<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>    stream &lt;&lt; <span class="stringliteral">&quot;0x&quot;</span></div>
-<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>           &lt;&lt; std::setfill (<span class="charliteral">&#39;0&#39;</span>) &lt;&lt; std::setw(<a class="code hl_variable" href="classgTexture.html#a627c39d3af9a984bbfc3a716a6f29031">width</a>)</div>
-<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>           &lt;&lt; std::hex &lt;&lt; numValue;</div>
-<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>    <span class="keywordflow">return</span> stream.str();</div>
-<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>}</div>
+<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span> </div>
+<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> T&gt;</div>
+<div class="foldopen" id="foldopen00182" data-start="{" data-end="}">
+<div class="line"><a id="l00182" name="l00182"></a><span class="lineno"><a class="line" href="gUtils_8h.html#a3032c90c64b493e8d519ce8f8dbb974d">  182</a></span>std::string <a class="code hl_function" href="gUtils_8h.html#a3032c90c64b493e8d519ce8f8dbb974d">gToHex</a>(<span class="keyword">const</span> T&amp; numValue, <span class="keywordtype">int</span> <a class="code hl_variable" href="classgTexture.html#a627c39d3af9a984bbfc3a716a6f29031">width</a> = <span class="keyword">sizeof</span>(T)*2) {</div>
+<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>    std::ostringstream stream;</div>
+<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>    stream &lt;&lt; <span class="stringliteral">&quot;0x&quot;</span></div>
+<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>           &lt;&lt; std::setfill (<span class="charliteral">&#39;0&#39;</span>) &lt;&lt; std::setw(<a class="code hl_variable" href="classgTexture.html#a627c39d3af9a984bbfc3a716a6f29031">width</a>)</div>
+<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>           &lt;&lt; std::hex &lt;&lt; numValue;</div>
+<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>    <span class="keywordflow">return</span> stream.str();</div>
+<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>}</div>
 </div>
-<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span> </div>
-<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> T&gt;</div>
-<div class="foldopen" id="foldopen00190" data-start="{" data-end="}">
-<div class="line"><a id="l00190" name="l00190"></a><span class="lineno"><a class="line" href="gUtils_8h.html#a24d13730fff5ab23768c46b598932f7e">  190</a></span>std::string <a class="code hl_function" href="gUtils_8h.html#a0063aab1036834a005618e48e277fdba">gToStr</a>(<span class="keyword">const</span> T&amp; value, <span class="keywordtype">int</span> <a class="code hl_variable" href="classgTexture.html#a627c39d3af9a984bbfc3a716a6f29031">width</a>, <span class="keywordtype">char</span> fill) {</div>
-<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>    std::ostringstream out;</div>
-<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>    out &lt;&lt; std::fixed &lt;&lt; std::setfill(fill) &lt;&lt; std::setw(<a class="code hl_variable" href="classgTexture.html#a627c39d3af9a984bbfc3a716a6f29031">width</a>) &lt;&lt; value;</div>
-<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>    <span class="keywordflow">return</span> out.str();</div>
-<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>}</div>
+<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span> </div>
+<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> T&gt;</div>
+<div class="foldopen" id="foldopen00191" data-start="{" data-end="}">
+<div class="line"><a id="l00191" name="l00191"></a><span class="lineno"><a class="line" href="gUtils_8h.html#a24d13730fff5ab23768c46b598932f7e">  191</a></span>std::string <a class="code hl_function" href="gUtils_8h.html#a0063aab1036834a005618e48e277fdba">gToStr</a>(<span class="keyword">const</span> T&amp; value, <span class="keywordtype">int</span> <a class="code hl_variable" href="classgTexture.html#a627c39d3af9a984bbfc3a716a6f29031">width</a>, <span class="keywordtype">char</span> fill) {</div>
+<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>    std::ostringstream out;</div>
+<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>    out &lt;&lt; std::fixed &lt;&lt; std::setfill(fill) &lt;&lt; std::setw(<a class="code hl_variable" href="classgTexture.html#a627c39d3af9a984bbfc3a716a6f29031">width</a>) &lt;&lt; value;</div>
+<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>    <span class="keywordflow">return</span> out.str();</div>
+<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>}</div>
 </div>
-<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span> </div>
-<div class="line"><a id="l00196" name="l00196"></a><span class="lineno"><a class="line" href="gUtils_8h.html#a49165ceb9878eb49b60a771fc7f149ea">  196</a></span><span class="keywordtype">int</span> <a class="code hl_function" href="gUtils_8h.html#a49165ceb9878eb49b60a771fc7f149ea">gToInt</a>(<span class="keyword">const</span> std::string&amp; intString);</div>
-<div class="line"><a id="l00197" name="l00197"></a><span class="lineno"><a class="line" href="gUtils_8h.html#ac324a5269afd31384c9dfaf0344855dd">  197</a></span><span class="keywordtype">float</span> <a class="code hl_function" href="gUtils_8h.html#ac324a5269afd31384c9dfaf0344855dd">gToFloat</a>(<span class="keyword">const</span> std::string&amp; floatString);</div>
-<div class="line"><a id="l00198" name="l00198"></a><span class="lineno"><a class="line" href="gUtils_8h.html#a72932749b9297e10a0c450fbd9b25ad5">  198</a></span><span class="keywordtype">double</span> <a class="code hl_function" href="gUtils_8h.html#a72932749b9297e10a0c450fbd9b25ad5">gToDouble</a>(<span class="keyword">const</span> std::string&amp; doubleString);</div>
-<div class="line"><a id="l00199" name="l00199"></a><span class="lineno"><a class="line" href="gUtils_8h.html#a992cf347e382719f2fd66c160a3d771b">  199</a></span>std::string <a class="code hl_function" href="gUtils_8h.html#a992cf347e382719f2fd66c160a3d771b">gWStrToStr</a>(<span class="keyword">const</span> std::wstring&amp; s);</div>
-<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span> </div>
-<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
-<div class="foldopen" id="foldopen00202" data-start="{" data-end="}">
-<div class="line"><a id="l00202" name="l00202"></a><span class="lineno"><a class="line" href="gUtils_8h.html#aad58983c758929c9009b6d2b2fe0ddc5">  202</a></span><span class="keywordtype">int</span> <a class="code hl_function" href="gUtils_8h.html#aad58983c758929c9009b6d2b2fe0ddc5">gSign</a>(T val) {</div>
-<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>    <span class="keywordflow">return</span> (T(0) &lt; val) - (val &lt; T(0));</div>
-<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>}</div>
+<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span> </div>
+<div class="line"><a id="l00197" name="l00197"></a><span class="lineno"><a class="line" href="gUtils_8h.html#a49165ceb9878eb49b60a771fc7f149ea">  197</a></span><span class="keywordtype">int</span> <a class="code hl_function" href="gUtils_8h.html#a49165ceb9878eb49b60a771fc7f149ea">gToInt</a>(<span class="keyword">const</span> std::string&amp; intString);</div>
+<div class="line"><a id="l00198" name="l00198"></a><span class="lineno"><a class="line" href="gUtils_8h.html#ac324a5269afd31384c9dfaf0344855dd">  198</a></span><span class="keywordtype">float</span> <a class="code hl_function" href="gUtils_8h.html#ac324a5269afd31384c9dfaf0344855dd">gToFloat</a>(<span class="keyword">const</span> std::string&amp; floatString);</div>
+<div class="line"><a id="l00199" name="l00199"></a><span class="lineno"><a class="line" href="gUtils_8h.html#a72932749b9297e10a0c450fbd9b25ad5">  199</a></span><span class="keywordtype">double</span> <a class="code hl_function" href="gUtils_8h.html#a72932749b9297e10a0c450fbd9b25ad5">gToDouble</a>(<span class="keyword">const</span> std::string&amp; doubleString);</div>
+<div class="line"><a id="l00200" name="l00200"></a><span class="lineno"><a class="line" href="gUtils_8h.html#a992cf347e382719f2fd66c160a3d771b">  200</a></span>std::string <a class="code hl_function" href="gUtils_8h.html#a992cf347e382719f2fd66c160a3d771b">gWStrToStr</a>(<span class="keyword">const</span> std::wstring&amp; s);</div>
+<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span> </div>
+<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="foldopen" id="foldopen00203" data-start="{" data-end="}">
+<div class="line"><a id="l00203" name="l00203"></a><span class="lineno"><a class="line" href="gUtils_8h.html#aad58983c758929c9009b6d2b2fe0ddc5">  203</a></span><span class="keywordtype">int</span> <a class="code hl_function" href="gUtils_8h.html#aad58983c758929c9009b6d2b2fe0ddc5">gSign</a>(T val) {</div>
+<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>    <span class="keywordflow">return</span> (T(0) &lt; val) - (val &lt; T(0));</div>
+<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>}</div>
 </div>
-<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span> </div>
-<div class="line"><a id="l00206" name="l00206"></a><span class="lineno"><a class="line" href="gUtils_8h.html#a62db010a0399eea661a927e55151a5ef">  206</a></span>std::string <a class="code hl_function" href="gUtils_8h.html#a62db010a0399eea661a927e55151a5ef">gCodepointToStr</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> codepoint);</div>
-<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span> </div>
-<div class="line"><a id="l00208" name="l00208"></a><span class="lineno"><a class="line" href="gUtils_8h.html#ad69032ffae2da4a7748563f1a1cd42c8">  208</a></span>std::string <a class="code hl_function" href="gUtils_8h.html#ad69032ffae2da4a7748563f1a1cd42c8">gEncodeBase64</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">char</span>* <a class="code hl_variable" href="classgTexture.html#a972957955931625e55e78e0485348670">data</a>, <span class="keywordtype">int</span> len);</div>
-<div class="line"><a id="l00209" name="l00209"></a><span class="lineno"><a class="line" href="gUtils_8h.html#a9d16a741e037d39bc076a52e95737486">  209</a></span>std::string <a class="code hl_function" href="gUtils_8h.html#a9d16a741e037d39bc076a52e95737486">gDecodeBase64</a>(<span class="keyword">const</span> std::string&amp; encoded_string);</div>
-<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span> </div>
-<div class="line"><a id="l00211" name="l00211"></a><span class="lineno"><a class="line" href="gUtils_8h.html#a427f316c3ba73480480cdc40b2a05e36">  211</a></span><span class="keywordtype">bool</span> <a class="code hl_function" href="gUtils_8h.html#a427f316c3ba73480480cdc40b2a05e36">gIsBase64</a>(<span class="keywordtype">char</span> c);</div>
-<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span> </div>
-<div class="line"><a id="l00213" name="l00213"></a><span class="lineno"><a class="line" href="gUtils_8h.html#a086fd5c170a621ab16f4318cbe2f6bdc">  213</a></span><span class="keywordtype">bool</span> <a class="code hl_function" href="gUtils_8h.html#a086fd5c170a621ab16f4318cbe2f6bdc">gIsOnline</a>();</div>
-<div class="line"><a id="l00214" name="l00214"></a><span class="lineno"><a class="line" href="gUtils_8h.html#a9bd6ca1070093f3ae4968a5c0e730a5b">  214</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="gUtils_8h.html#a9bd6ca1070093f3ae4968a5c0e730a5b">gOpenUrlInDefaultBrowser</a>(std::string url);</div>
-<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span> </div>
-<div class="foldopen" id="foldopen00216" data-start="{" data-end="};">
-<div class="line"><a id="l00216" name="l00216"></a><span class="lineno"><a class="line" href="classgUTF8Iterator.html">  216</a></span><span class="keyword">class </span><a class="code hl_class" href="classgUTF8Iterator.html">gUTF8Iterator</a>{</div>
-<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00218" name="l00218"></a><span class="lineno"><a class="line" href="classgUTF8Iterator.html#a5cb75019900cdf6aaf1083f29aa6f211">  218</a></span>    <a class="code hl_function" href="classgUTF8Iterator.html#a5cb75019900cdf6aaf1083f29aa6f211">gUTF8Iterator</a>(<span class="keyword">const</span> std::string &amp; str);</div>
-<div class="line"><a id="l00219" name="l00219"></a><span class="lineno"><a class="line" href="classgUTF8Iterator.html#a57af6a18782430e79a0c4c6fb8cec5f3">  219</a></span>    utf8::iterator&lt;std::string::const_iterator&gt; <a class="code hl_function" href="classgUTF8Iterator.html#a57af6a18782430e79a0c4c6fb8cec5f3">begin</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00220" name="l00220"></a><span class="lineno"><a class="line" href="classgUTF8Iterator.html#ab5110aa7ec5d216c4988c7b40008ec76">  220</a></span>    utf8::iterator&lt;std::string::const_iterator&gt; <a class="code hl_function" href="classgUTF8Iterator.html#ab5110aa7ec5d216c4988c7b40008ec76">end</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00221" name="l00221"></a><span class="lineno"><a class="line" href="classgUTF8Iterator.html#a6d9c227086a99de5ee16a9348dbffdf3">  221</a></span>    utf8::iterator&lt;std::string::const_reverse_iterator&gt; <a class="code hl_function" href="classgUTF8Iterator.html#a6d9c227086a99de5ee16a9348dbffdf3">rbegin</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00222" name="l00222"></a><span class="lineno"><a class="line" href="classgUTF8Iterator.html#acc46ce3e3fc8bb3fffb4d32bde605eea">  222</a></span>    utf8::iterator&lt;std::string::const_reverse_iterator&gt; <a class="code hl_function" href="classgUTF8Iterator.html#acc46ce3e3fc8bb3fffb4d32bde605eea">rend</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span> </div>
-<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>    std::string src_valid;</div>
-<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>};</div>
+<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span> </div>
+<div class="line"><a id="l00207" name="l00207"></a><span class="lineno"><a class="line" href="gUtils_8h.html#a62db010a0399eea661a927e55151a5ef">  207</a></span>std::string <a class="code hl_function" href="gUtils_8h.html#a62db010a0399eea661a927e55151a5ef">gCodepointToStr</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> codepoint);</div>
+<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span> </div>
+<div class="line"><a id="l00209" name="l00209"></a><span class="lineno"><a class="line" href="gUtils_8h.html#ad69032ffae2da4a7748563f1a1cd42c8">  209</a></span>std::string <a class="code hl_function" href="gUtils_8h.html#ad69032ffae2da4a7748563f1a1cd42c8">gEncodeBase64</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">char</span>* <a class="code hl_variable" href="classgTexture.html#a972957955931625e55e78e0485348670">data</a>, <span class="keywordtype">int</span> len);</div>
+<div class="line"><a id="l00210" name="l00210"></a><span class="lineno"><a class="line" href="gUtils_8h.html#a9d16a741e037d39bc076a52e95737486">  210</a></span>std::string <a class="code hl_function" href="gUtils_8h.html#a9d16a741e037d39bc076a52e95737486">gDecodeBase64</a>(<span class="keyword">const</span> std::string&amp; encoded_string);</div>
+<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span> </div>
+<div class="line"><a id="l00212" name="l00212"></a><span class="lineno"><a class="line" href="gUtils_8h.html#a427f316c3ba73480480cdc40b2a05e36">  212</a></span><span class="keywordtype">bool</span> <a class="code hl_function" href="gUtils_8h.html#a427f316c3ba73480480cdc40b2a05e36">gIsBase64</a>(<span class="keywordtype">char</span> c);</div>
+<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span> </div>
+<div class="line"><a id="l00214" name="l00214"></a><span class="lineno"><a class="line" href="gUtils_8h.html#a086fd5c170a621ab16f4318cbe2f6bdc">  214</a></span><span class="keywordtype">bool</span> <a class="code hl_function" href="gUtils_8h.html#a086fd5c170a621ab16f4318cbe2f6bdc">gIsOnline</a>();</div>
+<div class="line"><a id="l00215" name="l00215"></a><span class="lineno"><a class="line" href="gUtils_8h.html#a9bd6ca1070093f3ae4968a5c0e730a5b">  215</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="gUtils_8h.html#a9bd6ca1070093f3ae4968a5c0e730a5b">gOpenUrlInDefaultBrowser</a>(std::string url);</div>
+<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span> </div>
+<div class="foldopen" id="foldopen00217" data-start="{" data-end="};">
+<div class="line"><a id="l00217" name="l00217"></a><span class="lineno"><a class="line" href="classgUTF8Iterator.html">  217</a></span><span class="keyword">class </span><a class="code hl_class" href="classgUTF8Iterator.html">gUTF8Iterator</a>{</div>
+<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00219" name="l00219"></a><span class="lineno"><a class="line" href="classgUTF8Iterator.html#a5cb75019900cdf6aaf1083f29aa6f211">  219</a></span>    <a class="code hl_function" href="classgUTF8Iterator.html#a5cb75019900cdf6aaf1083f29aa6f211">gUTF8Iterator</a>(<span class="keyword">const</span> std::string &amp; str);</div>
+<div class="line"><a id="l00220" name="l00220"></a><span class="lineno"><a class="line" href="classgUTF8Iterator.html#a57af6a18782430e79a0c4c6fb8cec5f3">  220</a></span>    utf8::iterator&lt;std::string::const_iterator&gt; <a class="code hl_function" href="classgUTF8Iterator.html#a57af6a18782430e79a0c4c6fb8cec5f3">begin</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00221" name="l00221"></a><span class="lineno"><a class="line" href="classgUTF8Iterator.html#ab5110aa7ec5d216c4988c7b40008ec76">  221</a></span>    utf8::iterator&lt;std::string::const_iterator&gt; <a class="code hl_function" href="classgUTF8Iterator.html#ab5110aa7ec5d216c4988c7b40008ec76">end</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00222" name="l00222"></a><span class="lineno"><a class="line" href="classgUTF8Iterator.html#a6d9c227086a99de5ee16a9348dbffdf3">  222</a></span>    utf8::iterator&lt;std::string::const_reverse_iterator&gt; <a class="code hl_function" href="classgUTF8Iterator.html#a6d9c227086a99de5ee16a9348dbffdf3">rbegin</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00223" name="l00223"></a><span class="lineno"><a class="line" href="classgUTF8Iterator.html#acc46ce3e3fc8bb3fffb4d32bde605eea">  223</a></span>    utf8::iterator&lt;std::string::const_reverse_iterator&gt; <a class="code hl_function" href="classgUTF8Iterator.html#acc46ce3e3fc8bb3fffb4d32bde605eea">rend</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span> </div>
+<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>    std::string src_valid;</div>
+<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>};</div>
 </div>
-<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span> </div>
-<div class="foldopen" id="foldopen00228" data-start="{" data-end="};">
-<div class="line"><a id="l00228" name="l00228"></a><span class="lineno"><a class="line" href="classgLog.html">  228</a></span><span class="keyword">class </span><a class="code hl_class" href="classgLog.html">gLog</a> {</div>
-<div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span>    <span class="keyword">enum</span> {</div>
-<div class="line"><a id="l00231" name="l00231"></a><span class="lineno"><a class="line" href="classgLog.html#ad7f9a77f24962d1cc92132314beb1cc6af860e6876f2eace422987c55349ffa15">  231</a></span>        <a class="code hl_enumvalue" href="classgLog.html#ad7f9a77f24962d1cc92132314beb1cc6af860e6876f2eace422987c55349ffa15">LOGLEVEL_INFO</a>,</div>
-<div class="line"><a id="l00232" name="l00232"></a><span class="lineno"><a class="line" href="classgLog.html#ad7f9a77f24962d1cc92132314beb1cc6a27fb8a5c75ebbf59dbb92b763ba3926a">  232</a></span>        <a class="code hl_enumvalue" href="classgLog.html#ad7f9a77f24962d1cc92132314beb1cc6a27fb8a5c75ebbf59dbb92b763ba3926a">LOGLEVEL_DEBUG</a>,</div>
-<div class="line"><a id="l00233" name="l00233"></a><span class="lineno"><a class="line" href="classgLog.html#ad7f9a77f24962d1cc92132314beb1cc6a4975a21d54ff6404704fe8e29c3a0108">  233</a></span>        <a class="code hl_enumvalue" href="classgLog.html#ad7f9a77f24962d1cc92132314beb1cc6a4975a21d54ff6404704fe8e29c3a0108">LOGLEVEL_WARNING</a>,</div>
-<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span>        <a class="code hl_enumvalue" href="classgLog.html#ad7f9a77f24962d1cc92132314beb1cc6a923366514f9a943c17a6acaacf601e55">LOGLEVEL_ERROR</a></div>
-<div class="line"><a id="l00235" name="l00235"></a><span class="lineno"><a class="line" href="classgLog.html#ad7f9a77f24962d1cc92132314beb1cc6a923366514f9a943c17a6acaacf601e55">  235</a></span>    };</div>
-<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span> </div>
-<div class="line"><a id="l00237" name="l00237"></a><span class="lineno"><a class="line" href="classgLog.html#a138b84e798b0f1eae0a6b942990a5383">  237</a></span>    <a class="code hl_function" href="classgLog.html#a138b84e798b0f1eae0a6b942990a5383">gLog</a>();</div>
-<div class="line"><a id="l00238" name="l00238"></a><span class="lineno"><a class="line" href="classgLog.html#a150b1e7e081d3bab521bc9e5d7d7e23b">  238</a></span>    <a class="code hl_function" href="classgLog.html#a150b1e7e081d3bab521bc9e5d7d7e23b">gLog</a>(<span class="keyword">const</span> std::string&amp; tag);</div>
-<div class="line"><a id="l00239" name="l00239"></a><span class="lineno"><a class="line" href="classgLog.html#ad30f5d428c7d1a1c948e4cbd78d242cc">  239</a></span>    <a class="code hl_function" href="classgLog.html#ad30f5d428c7d1a1c948e4cbd78d242cc">~gLog</a>();</div>
-<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span> </div>
-<div class="foldopen" id="foldopen00241" data-start="{" data-end="}">
-<div class="line"><a id="l00241" name="l00241"></a><span class="lineno"><a class="line" href="classgLog.html#a912049df8e4ec07bc35d8f35cc45e107">  241</a></span>    <a class="code hl_class" href="classgLog.html">gLog</a>&amp; <a class="code hl_function" href="classgLog.html#a912049df8e4ec07bc35d8f35cc45e107">operator&lt;&lt;</a>(std::ostream&amp; (*func)(std::ostream&amp;)){</div>
-<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>        func(<a class="code hl_variable" href="classgLog.html#af4b0856d02e15424b34b822c6fc0586d">logmessage</a>);</div>
-<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>        <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
-<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span>    }</div>
+<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span> </div>
+<div class="foldopen" id="foldopen00229" data-start="{" data-end="};">
+<div class="line"><a id="l00229" name="l00229"></a><span class="lineno"><a class="line" href="classgLog.html">  229</a></span><span class="keyword">class </span><a class="code hl_class" href="classgLog.html">gLog</a> {</div>
+<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span>    <span class="keyword">enum</span> {</div>
+<div class="line"><a id="l00232" name="l00232"></a><span class="lineno"><a class="line" href="classgLog.html#ad7f9a77f24962d1cc92132314beb1cc6af860e6876f2eace422987c55349ffa15">  232</a></span>        <a class="code hl_enumvalue" href="classgLog.html#ad7f9a77f24962d1cc92132314beb1cc6af860e6876f2eace422987c55349ffa15">LOGLEVEL_INFO</a>,</div>
+<div class="line"><a id="l00233" name="l00233"></a><span class="lineno"><a class="line" href="classgLog.html#ad7f9a77f24962d1cc92132314beb1cc6a27fb8a5c75ebbf59dbb92b763ba3926a">  233</a></span>        <a class="code hl_enumvalue" href="classgLog.html#ad7f9a77f24962d1cc92132314beb1cc6a27fb8a5c75ebbf59dbb92b763ba3926a">LOGLEVEL_DEBUG</a>,</div>
+<div class="line"><a id="l00234" name="l00234"></a><span class="lineno"><a class="line" href="classgLog.html#ad7f9a77f24962d1cc92132314beb1cc6a4975a21d54ff6404704fe8e29c3a0108">  234</a></span>        <a class="code hl_enumvalue" href="classgLog.html#ad7f9a77f24962d1cc92132314beb1cc6a4975a21d54ff6404704fe8e29c3a0108">LOGLEVEL_WARNING</a>,</div>
+<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>        <a class="code hl_enumvalue" href="classgLog.html#ad7f9a77f24962d1cc92132314beb1cc6a923366514f9a943c17a6acaacf601e55">LOGLEVEL_ERROR</a></div>
+<div class="line"><a id="l00236" name="l00236"></a><span class="lineno"><a class="line" href="classgLog.html#ad7f9a77f24962d1cc92132314beb1cc6a923366514f9a943c17a6acaacf601e55">  236</a></span>    };</div>
+<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span> </div>
+<div class="line"><a id="l00238" name="l00238"></a><span class="lineno"><a class="line" href="classgLog.html#a138b84e798b0f1eae0a6b942990a5383">  238</a></span>    <a class="code hl_function" href="classgLog.html#a138b84e798b0f1eae0a6b942990a5383">gLog</a>();</div>
+<div class="line"><a id="l00239" name="l00239"></a><span class="lineno"><a class="line" href="classgLog.html#a150b1e7e081d3bab521bc9e5d7d7e23b">  239</a></span>    <a class="code hl_function" href="classgLog.html#a150b1e7e081d3bab521bc9e5d7d7e23b">gLog</a>(<span class="keyword">const</span> std::string&amp; tag);</div>
+<div class="line"><a id="l00240" name="l00240"></a><span class="lineno"><a class="line" href="classgLog.html#ad30f5d428c7d1a1c948e4cbd78d242cc">  240</a></span>    <a class="code hl_function" href="classgLog.html#ad30f5d428c7d1a1c948e4cbd78d242cc">~gLog</a>();</div>
+<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span> </div>
+<div class="foldopen" id="foldopen00242" data-start="{" data-end="}">
+<div class="line"><a id="l00242" name="l00242"></a><span class="lineno"><a class="line" href="classgLog.html#a912049df8e4ec07bc35d8f35cc45e107">  242</a></span>    <a class="code hl_class" href="classgLog.html">gLog</a>&amp; <a class="code hl_function" href="classgLog.html#a912049df8e4ec07bc35d8f35cc45e107">operator&lt;&lt;</a>(std::ostream&amp; (*func)(std::ostream&amp;)){</div>
+<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>        func(<a class="code hl_variable" href="classgLog.html#af4b0856d02e15424b34b822c6fc0586d">logmessage</a>);</div>
+<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span>        <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
+<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>    }</div>
 </div>
-<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span> </div>
-<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
-<div class="foldopen" id="foldopen00247" data-start="{" data-end="}">
-<div class="line"><a id="l00247" name="l00247"></a><span class="lineno"><a class="line" href="classgLog.html#a40e7b43cf2b398b9c41c4493db87d130">  247</a></span>    <a class="code hl_class" href="classgLog.html">gLog</a>&amp; <a class="code hl_function" href="classgLog.html#a40e7b43cf2b398b9c41c4493db87d130">operator&lt;&lt;</a>(<span class="keyword">const</span> T&amp; value) {</div>
-<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span>        <a class="code hl_variable" href="classgLog.html#af4b0856d02e15424b34b822c6fc0586d">logmessage</a> &lt;&lt; value;</div>
-<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>        <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
-<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>    }</div>
+<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span> </div>
+<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="foldopen" id="foldopen00248" data-start="{" data-end="}">
+<div class="line"><a id="l00248" name="l00248"></a><span class="lineno"><a class="line" href="classgLog.html#a40e7b43cf2b398b9c41c4493db87d130">  248</a></span>    <a class="code hl_class" href="classgLog.html">gLog</a>&amp; <a class="code hl_function" href="classgLog.html#a40e7b43cf2b398b9c41c4493db87d130">operator&lt;&lt;</a>(<span class="keyword">const</span> T&amp; value) {</div>
+<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>        <a class="code hl_variable" href="classgLog.html#af4b0856d02e15424b34b822c6fc0586d">logmessage</a> &lt;&lt; value;</div>
+<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>        <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
+<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>    }</div>
 </div>
-<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span> </div>
-<div class="line"><a id="l00252" name="l00252"></a><span class="lineno"><a class="line" href="classgLog.html#a2fa86481b1c8eb565a6c8c8c14a41fed">  252</a></span>    <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classgLog.html#a2fa86481b1c8eb565a6c8c8c14a41fed">setLoggingEnabled</a>(<span class="keywordtype">bool</span> <a class="code hl_function" href="classgLog.html#ad3614131d0050c4d65e5b946c9e51201">isLoggingEnabled</a>);</div>
-<div class="line"><a id="l00253" name="l00253"></a><span class="lineno"><a class="line" href="classgLog.html#ad3614131d0050c4d65e5b946c9e51201">  253</a></span>    <span class="keyword">static</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="classgLog.html#ad3614131d0050c4d65e5b946c9e51201">isLoggingEnabled</a>();</div>
-<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span> </div>
-<div class="line"><a id="l00255" name="l00255"></a><span class="lineno"><a class="line" href="classgLog.html#a82ba8c6ee567882882be35d45540e79e">  255</a></span>    <span class="keyword">static</span> std::string <a class="code hl_function" href="classgLog.html#a82ba8c6ee567882882be35d45540e79e">getLogLevelName</a>(<span class="keywordtype">int</span> logLevel);</div>
-<div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span> </div>
-<div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span><span class="keyword">protected</span>:</div>
-<div class="line"><a id="l00258" name="l00258"></a><span class="lineno"><a class="line" href="classgLog.html#a265452b0cdb70b0f8cc581912aaf801d">  258</a></span>    <span class="keyword">static</span> <span class="keywordtype">bool</span> <a class="code hl_variable" href="classgLog.html#a265452b0cdb70b0f8cc581912aaf801d">isloggingenabled</a>;</div>
-<div class="line"><a id="l00259" name="l00259"></a><span class="lineno"><a class="line" href="classgLog.html#aed619c6cb97f6d695d7503a4c61b82b5">  259</a></span>    <span class="keywordtype">int</span> <a class="code hl_variable" href="classgLog.html#aed619c6cb97f6d695d7503a4c61b82b5">loglevel</a>;</div>
-<div class="line"><a id="l00260" name="l00260"></a><span class="lineno"><a class="line" href="classgLog.html#af4b0856d02e15424b34b822c6fc0586d">  260</a></span>    std::stringstream <a class="code hl_variable" href="classgLog.html#af4b0856d02e15424b34b822c6fc0586d">logmessage</a>;</div>
-<div class="line"><a id="l00261" name="l00261"></a><span class="lineno"><a class="line" href="classgLog.html#a3b3ee053e6d2b7f74fe0939f68125e99">  261</a></span>    std::string <a class="code hl_variable" href="classgLog.html#a3b3ee053e6d2b7f74fe0939f68125e99">logtag</a>;</div>
-<div class="line"><a id="l00262" name="l00262"></a><span class="lineno"><a class="line" href="classgLog.html#aa9bfe4373ae6e8e204bc02ee6a134371">  262</a></span>    <span class="keyword">static</span> std::string <a class="code hl_variable" href="classgLog.html#aa9bfe4373ae6e8e204bc02ee6a134371">loglevelname</a>[];</div>
-<div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span> </div>
-<div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span>    std::string logmsg;</div>
-<div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span>};</div>
+<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span> </div>
+<div class="line"><a id="l00253" name="l00253"></a><span class="lineno"><a class="line" href="classgLog.html#a2fa86481b1c8eb565a6c8c8c14a41fed">  253</a></span>    <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classgLog.html#a2fa86481b1c8eb565a6c8c8c14a41fed">setLoggingEnabled</a>(<span class="keywordtype">bool</span> <a class="code hl_function" href="classgLog.html#ad3614131d0050c4d65e5b946c9e51201">isLoggingEnabled</a>);</div>
+<div class="line"><a id="l00254" name="l00254"></a><span class="lineno"><a class="line" href="classgLog.html#ad3614131d0050c4d65e5b946c9e51201">  254</a></span>    <span class="keyword">static</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="classgLog.html#ad3614131d0050c4d65e5b946c9e51201">isLoggingEnabled</a>();</div>
+<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span> </div>
+<div class="line"><a id="l00256" name="l00256"></a><span class="lineno"><a class="line" href="classgLog.html#a82ba8c6ee567882882be35d45540e79e">  256</a></span>    <span class="keyword">static</span> std::string <a class="code hl_function" href="classgLog.html#a82ba8c6ee567882882be35d45540e79e">getLogLevelName</a>(<span class="keywordtype">int</span> logLevel);</div>
+<div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span> </div>
+<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span><span class="keyword">protected</span>:</div>
+<div class="line"><a id="l00259" name="l00259"></a><span class="lineno"><a class="line" href="classgLog.html#a265452b0cdb70b0f8cc581912aaf801d">  259</a></span>    <span class="keyword">static</span> <span class="keywordtype">bool</span> <a class="code hl_variable" href="classgLog.html#a265452b0cdb70b0f8cc581912aaf801d">isloggingenabled</a>;</div>
+<div class="line"><a id="l00260" name="l00260"></a><span class="lineno"><a class="line" href="classgLog.html#aed619c6cb97f6d695d7503a4c61b82b5">  260</a></span>    <span class="keywordtype">int</span> <a class="code hl_variable" href="classgLog.html#aed619c6cb97f6d695d7503a4c61b82b5">loglevel</a>;</div>
+<div class="line"><a id="l00261" name="l00261"></a><span class="lineno"><a class="line" href="classgLog.html#af4b0856d02e15424b34b822c6fc0586d">  261</a></span>    std::stringstream <a class="code hl_variable" href="classgLog.html#af4b0856d02e15424b34b822c6fc0586d">logmessage</a>;</div>
+<div class="line"><a id="l00262" name="l00262"></a><span class="lineno"><a class="line" href="classgLog.html#a3b3ee053e6d2b7f74fe0939f68125e99">  262</a></span>    std::string <a class="code hl_variable" href="classgLog.html#a3b3ee053e6d2b7f74fe0939f68125e99">logtag</a>;</div>
+<div class="line"><a id="l00263" name="l00263"></a><span class="lineno"><a class="line" href="classgLog.html#aa9bfe4373ae6e8e204bc02ee6a134371">  263</a></span>    <span class="keyword">static</span> std::string <a class="code hl_variable" href="classgLog.html#aa9bfe4373ae6e8e204bc02ee6a134371">loglevelname</a>[];</div>
+<div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span> </div>
+<div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span>    std::string logmsg;</div>
+<div class="line"><a id="l00267" name="l00267"></a><span class="lineno">  267</span>};</div>
 </div>
-<div class="line"><a id="l00267" name="l00267"></a><span class="lineno">  267</span> </div>
-<div class="foldopen" id="foldopen00268" data-start="{" data-end="};">
-<div class="line"><a id="l00268" name="l00268"></a><span class="lineno"><a class="line" href="classgLogi.html">  268</a></span><span class="keyword">class </span><a class="code hl_class" href="classgLogi.html">gLogi</a> : <span class="keyword">public</span> <a class="code hl_class" href="classgLog.html">gLog</a> {</div>
-<div class="line"><a id="l00269" name="l00269"></a><span class="lineno">  269</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00270" name="l00270"></a><span class="lineno"><a class="line" href="classgLogi.html#a1042694655013f985f4fb244b040f09c">  270</a></span>    <a class="code hl_function" href="classgLogi.html#a1042694655013f985f4fb244b040f09c">gLogi</a>(<span class="keyword">const</span> std::string&amp; tag = <span class="stringliteral">&quot;&quot;</span>);</div>
-<div class="line"><a id="l00271" name="l00271"></a><span class="lineno">  271</span>};</div>
+<div class="line"><a id="l00268" name="l00268"></a><span class="lineno">  268</span> </div>
+<div class="foldopen" id="foldopen00269" data-start="{" data-end="};">
+<div class="line"><a id="l00269" name="l00269"></a><span class="lineno"><a class="line" href="classgLogi.html">  269</a></span><span class="keyword">class </span><a class="code hl_class" href="classgLogi.html">gLogi</a> : <span class="keyword">public</span> <a class="code hl_class" href="classgLog.html">gLog</a> {</div>
+<div class="line"><a id="l00270" name="l00270"></a><span class="lineno">  270</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00271" name="l00271"></a><span class="lineno"><a class="line" href="classgLogi.html#a1042694655013f985f4fb244b040f09c">  271</a></span>    <a class="code hl_function" href="classgLogi.html#a1042694655013f985f4fb244b040f09c">gLogi</a>(<span class="keyword">const</span> std::string&amp; tag = <span class="stringliteral">&quot;&quot;</span>);</div>
+<div class="line"><a id="l00272" name="l00272"></a><span class="lineno">  272</span>};</div>
 </div>
-<div class="line"><a id="l00272" name="l00272"></a><span class="lineno">  272</span> </div>
-<div class="foldopen" id="foldopen00273" data-start="{" data-end="};">
-<div class="line"><a id="l00273" name="l00273"></a><span class="lineno"><a class="line" href="classgLogd.html">  273</a></span><span class="keyword">class </span><a class="code hl_class" href="classgLogd.html">gLogd</a> : <span class="keyword">public</span> <a class="code hl_class" href="classgLog.html">gLog</a> {</div>
-<div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00275" name="l00275"></a><span class="lineno"><a class="line" href="classgLogd.html#a1bf8275bb598ca5d29e9677b93733d85">  275</a></span>    <a class="code hl_function" href="classgLogd.html#a1bf8275bb598ca5d29e9677b93733d85">gLogd</a>(<span class="keyword">const</span> std::string&amp; tag = <span class="stringliteral">&quot;&quot;</span>);</div>
-<div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span>};</div>
+<div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span> </div>
+<div class="foldopen" id="foldopen00274" data-start="{" data-end="};">
+<div class="line"><a id="l00274" name="l00274"></a><span class="lineno"><a class="line" href="classgLogd.html">  274</a></span><span class="keyword">class </span><a class="code hl_class" href="classgLogd.html">gLogd</a> : <span class="keyword">public</span> <a class="code hl_class" href="classgLog.html">gLog</a> {</div>
+<div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00276" name="l00276"></a><span class="lineno"><a class="line" href="classgLogd.html#a1bf8275bb598ca5d29e9677b93733d85">  276</a></span>    <a class="code hl_function" href="classgLogd.html#a1bf8275bb598ca5d29e9677b93733d85">gLogd</a>(<span class="keyword">const</span> std::string&amp; tag = <span class="stringliteral">&quot;&quot;</span>);</div>
+<div class="line"><a id="l00277" name="l00277"></a><span class="lineno">  277</span>};</div>
 </div>
-<div class="line"><a id="l00277" name="l00277"></a><span class="lineno">  277</span> </div>
-<div class="foldopen" id="foldopen00278" data-start="{" data-end="};">
-<div class="line"><a id="l00278" name="l00278"></a><span class="lineno"><a class="line" href="classgLogw.html">  278</a></span><span class="keyword">class </span><a class="code hl_class" href="classgLogw.html">gLogw</a> : <span class="keyword">public</span> <a class="code hl_class" href="classgLog.html">gLog</a> {</div>
-<div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00280" name="l00280"></a><span class="lineno"><a class="line" href="classgLogw.html#a850d235f464f8cb4d4b6015c516a0826">  280</a></span>    <a class="code hl_function" href="classgLogw.html#a850d235f464f8cb4d4b6015c516a0826">gLogw</a>(<span class="keyword">const</span> std::string&amp; tag = <span class="stringliteral">&quot;&quot;</span>);</div>
-<div class="line"><a id="l00281" name="l00281"></a><span class="lineno">  281</span>};</div>
+<div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span> </div>
+<div class="foldopen" id="foldopen00279" data-start="{" data-end="};">
+<div class="line"><a id="l00279" name="l00279"></a><span class="lineno"><a class="line" href="classgLogw.html">  279</a></span><span class="keyword">class </span><a class="code hl_class" href="classgLogw.html">gLogw</a> : <span class="keyword">public</span> <a class="code hl_class" href="classgLog.html">gLog</a> {</div>
+<div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00281" name="l00281"></a><span class="lineno"><a class="line" href="classgLogw.html#a850d235f464f8cb4d4b6015c516a0826">  281</a></span>    <a class="code hl_function" href="classgLogw.html#a850d235f464f8cb4d4b6015c516a0826">gLogw</a>(<span class="keyword">const</span> std::string&amp; tag = <span class="stringliteral">&quot;&quot;</span>);</div>
+<div class="line"><a id="l00282" name="l00282"></a><span class="lineno">  282</span>};</div>
 </div>
-<div class="line"><a id="l00282" name="l00282"></a><span class="lineno">  282</span> </div>
-<div class="foldopen" id="foldopen00283" data-start="{" data-end="};">
-<div class="line"><a id="l00283" name="l00283"></a><span class="lineno"><a class="line" href="classgLoge.html">  283</a></span><span class="keyword">class </span><a class="code hl_class" href="classgLoge.html">gLoge</a> : <span class="keyword">public</span> <a class="code hl_class" href="classgLog.html">gLog</a> {</div>
-<div class="line"><a id="l00284" name="l00284"></a><span class="lineno">  284</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00285" name="l00285"></a><span class="lineno"><a class="line" href="classgLoge.html#aa009eb2690e276871860620b95d5fa14">  285</a></span>    <a class="code hl_function" href="classgLoge.html#aa009eb2690e276871860620b95d5fa14">gLoge</a>(<span class="keyword">const</span> std::string&amp; tag = <span class="stringliteral">&quot;&quot;</span>);</div>
-<div class="line"><a id="l00286" name="l00286"></a><span class="lineno">  286</span>};</div>
+<div class="line"><a id="l00283" name="l00283"></a><span class="lineno">  283</span> </div>
+<div class="foldopen" id="foldopen00284" data-start="{" data-end="};">
+<div class="line"><a id="l00284" name="l00284"></a><span class="lineno"><a class="line" href="classgLoge.html">  284</a></span><span class="keyword">class </span><a class="code hl_class" href="classgLoge.html">gLoge</a> : <span class="keyword">public</span> <a class="code hl_class" href="classgLog.html">gLog</a> {</div>
+<div class="line"><a id="l00285" name="l00285"></a><span class="lineno">  285</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00286" name="l00286"></a><span class="lineno"><a class="line" href="classgLoge.html#aa009eb2690e276871860620b95d5fa14">  286</a></span>    <a class="code hl_function" href="classgLoge.html#aa009eb2690e276871860620b95d5fa14">gLoge</a>(<span class="keyword">const</span> std::string&amp; tag = <span class="stringliteral">&quot;&quot;</span>);</div>
+<div class="line"><a id="l00287" name="l00287"></a><span class="lineno">  287</span>};</div>
 </div>
-<div class="line"><a id="l00287" name="l00287"></a><span class="lineno">  287</span> </div>
-<div class="line"><a id="l00288" name="l00288"></a><span class="lineno"><a class="line" href="gUtils_8h.html#a9d05ef43c3bede60bf28cd44e8b5a5b5">  288</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="gUtils_8h.html#a9d05ef43c3bede60bf28cd44e8b5a5b5">gEnableLogging</a>();</div>
-<div class="line"><a id="l00289" name="l00289"></a><span class="lineno"><a class="line" href="gUtils_8h.html#ad2161baa188e15f33441b176830db027">  289</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="gUtils_8h.html#ad2161baa188e15f33441b176830db027">gDisableLogging</a>();</div>
-<div class="line"><a id="l00290" name="l00290"></a><span class="lineno"><a class="line" href="gUtils_8h.html#a63ae0cf52b65e167bd882245df7de3bf">  290</a></span><span class="keywordtype">bool</span> <a class="code hl_function" href="gUtils_8h.html#a63ae0cf52b65e167bd882245df7de3bf">gIsLoggingEnabled</a>();</div>
-<div class="line"><a id="l00291" name="l00291"></a><span class="lineno">  291</span> </div>
-<div class="line"><a id="l00292" name="l00292"></a><span class="lineno">  292</span><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div>
-<div class="foldopen" id="foldopen00293" data-start="{" data-end="}">
-<div class="line"><a id="l00293" name="l00293"></a><span class="lineno"><a class="line" href="gUtils_8h.html#abdda3cd414cd2b487309c57bffbcf36a">  293</a></span>T <a class="code hl_function" href="gUtils_8h.html#abdda3cd414cd2b487309c57bffbcf36a">gClamp</a>(T t, T min, T max) {</div>
-<div class="line"><a id="l00294" name="l00294"></a><span class="lineno">  294</span>    <span class="keywordflow">return</span> t &gt; max ? max : t &lt; min ? min : t;</div>
-<div class="line"><a id="l00295" name="l00295"></a><span class="lineno">  295</span>}</div>
+<div class="line"><a id="l00288" name="l00288"></a><span class="lineno">  288</span> </div>
+<div class="line"><a id="l00289" name="l00289"></a><span class="lineno"><a class="line" href="gUtils_8h.html#a9d05ef43c3bede60bf28cd44e8b5a5b5">  289</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="gUtils_8h.html#a9d05ef43c3bede60bf28cd44e8b5a5b5">gEnableLogging</a>();</div>
+<div class="line"><a id="l00290" name="l00290"></a><span class="lineno"><a class="line" href="gUtils_8h.html#ad2161baa188e15f33441b176830db027">  290</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="gUtils_8h.html#ad2161baa188e15f33441b176830db027">gDisableLogging</a>();</div>
+<div class="line"><a id="l00291" name="l00291"></a><span class="lineno"><a class="line" href="gUtils_8h.html#a63ae0cf52b65e167bd882245df7de3bf">  291</a></span><span class="keywordtype">bool</span> <a class="code hl_function" href="gUtils_8h.html#a63ae0cf52b65e167bd882245df7de3bf">gIsLoggingEnabled</a>();</div>
+<div class="line"><a id="l00292" name="l00292"></a><span class="lineno">  292</span> </div>
+<div class="line"><a id="l00293" name="l00293"></a><span class="lineno">  293</span><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="foldopen" id="foldopen00294" data-start="{" data-end="}">
+<div class="line"><a id="l00294" name="l00294"></a><span class="lineno"><a class="line" href="gUtils_8h.html#abdda3cd414cd2b487309c57bffbcf36a">  294</a></span>T <a class="code hl_function" href="gUtils_8h.html#abdda3cd414cd2b487309c57bffbcf36a">gClamp</a>(T t, T min, T max) {</div>
+<div class="line"><a id="l00295" name="l00295"></a><span class="lineno">  295</span>    <span class="keywordflow">return</span> t &gt; max ? max : t &lt; min ? min : t;</div>
+<div class="line"><a id="l00296" name="l00296"></a><span class="lineno">  296</span>}</div>
 </div>
-<div class="line"><a id="l00296" name="l00296"></a><span class="lineno">  296</span> </div>
-<div class="line"><a id="l00333" name="l00333"></a><span class="lineno"><a class="line" href="gUtils_8h.html#a1c6191ed62fc5cc55395ff240db81a94">  333</a></span>std::string <a class="code hl_function" href="gUtils_8h.html#a1c6191ed62fc5cc55395ff240db81a94">gShowOpenFileDialog</a>(</div>
-<div class="line"><a id="l00334" name="l00334"></a><span class="lineno">  334</span>    <span class="keyword">const</span> std::string&amp; dialogTitle,</div>
-<div class="line"><a id="l00335" name="l00335"></a><span class="lineno">  335</span>    <span class="keyword">const</span> std::string&amp; defaultPathAndFile,</div>
-<div class="line"><a id="l00336" name="l00336"></a><span class="lineno">  336</span>    <span class="keywordtype">int</span> filterNum,</div>
-<div class="line"><a id="l00337" name="l00337"></a><span class="lineno">  337</span>    <span class="keyword">const</span> std::string* filterPatterns,</div>
-<div class="line"><a id="l00338" name="l00338"></a><span class="lineno">  338</span>    <span class="keyword">const</span> std::string&amp; filterDescription,</div>
-<div class="line"><a id="l00339" name="l00339"></a><span class="lineno">  339</span>    <span class="keywordtype">bool</span> isMultipleSelectionAllowed = <span class="keyword">false</span>);</div>
-<div class="line"><a id="l00340" name="l00340"></a><span class="lineno">  340</span> </div>
-<div class="line"><a id="l00365" name="l00365"></a><span class="lineno"><a class="line" href="gUtils_8h.html#a5f86b03f48f8915865d6712edc3c907d">  365</a></span>std::string <a class="code hl_function" href="gUtils_8h.html#a1c6191ed62fc5cc55395ff240db81a94">gShowOpenFileDialog</a>(</div>
-<div class="line"><a id="l00366" name="l00366"></a><span class="lineno">  366</span>    <span class="keyword">const</span> std::string&amp; dialogTitle,</div>
-<div class="line"><a id="l00367" name="l00367"></a><span class="lineno">  367</span>    <span class="keyword">const</span> std::string&amp; defaultPathAndFile,</div>
-<div class="line"><a id="l00368" name="l00368"></a><span class="lineno">  368</span>    std::initializer_list&lt;const char*&gt; filterPatterns,</div>
-<div class="line"><a id="l00369" name="l00369"></a><span class="lineno">  369</span>    <span class="keyword">const</span> std::string&amp; filterDescription,</div>
-<div class="line"><a id="l00370" name="l00370"></a><span class="lineno">  370</span>    <span class="keywordtype">bool</span> isMultipleSelectionAllowed = <span class="keyword">false</span>);</div>
-<div class="line"><a id="l00371" name="l00371"></a><span class="lineno">  371</span> </div>
-<div class="line"><a id="l00372" name="l00372"></a><span class="lineno"><a class="line" href="gUtils_8h.html#ab20bf5d362287e1882de3c6cc09bc365">  372</a></span>std::string <a class="code hl_function" href="gUtils_8h.html#a1c6191ed62fc5cc55395ff240db81a94">gShowOpenFileDialog</a>(</div>
-<div class="line"><a id="l00373" name="l00373"></a><span class="lineno">  373</span>    <span class="keyword">const</span> std::string&amp; dialogTitle,</div>
-<div class="line"><a id="l00374" name="l00374"></a><span class="lineno">  374</span>    <span class="keyword">const</span> std::string&amp; defaultPathAndFile,</div>
-<div class="line"><a id="l00375" name="l00375"></a><span class="lineno">  375</span>    <span class="keywordtype">int</span> filterNum,</div>
-<div class="line"><a id="l00376" name="l00376"></a><span class="lineno">  376</span>    <span class="keyword">const</span> <span class="keywordtype">char</span>** filterPatterns,</div>
-<div class="line"><a id="l00377" name="l00377"></a><span class="lineno">  377</span>    <span class="keyword">const</span> std::string&amp; filterDescription,</div>
-<div class="line"><a id="l00378" name="l00378"></a><span class="lineno">  378</span>    <span class="keywordtype">bool</span> isMultipleSelectionAllowed = <span class="keyword">false</span>);</div>
-<div class="line"><a id="l00379" name="l00379"></a><span class="lineno">  379</span> </div>
-<div class="line"><a id="l00380" name="l00380"></a><span class="lineno"><a class="line" href="gUtils_8h.html#adefdf209d09b50f0f30397bb98d0d563">  380</a></span>std::string <a class="code hl_function" href="gUtils_8h.html#adefdf209d09b50f0f30397bb98d0d563">gShowSaveFileDialog</a>(</div>
-<div class="line"><a id="l00381" name="l00381"></a><span class="lineno">  381</span>    <span class="keyword">const</span> std::string&amp; dialogTitle,</div>
-<div class="line"><a id="l00382" name="l00382"></a><span class="lineno">  382</span>    <span class="keyword">const</span> std::string&amp; defaultPathAndFile,</div>
-<div class="line"><a id="l00383" name="l00383"></a><span class="lineno">  383</span>    <span class="keywordtype">int</span> filterNum,</div>
-<div class="line"><a id="l00384" name="l00384"></a><span class="lineno">  384</span>    <span class="keyword">const</span> std::string* filterPatterns,</div>
-<div class="line"><a id="l00385" name="l00385"></a><span class="lineno">  385</span>    <span class="keyword">const</span> std::string&amp; filterDescription);</div>
-<div class="line"><a id="l00386" name="l00386"></a><span class="lineno">  386</span> </div>
+<div class="line"><a id="l00297" name="l00297"></a><span class="lineno">  297</span> </div>
+<div class="line"><a id="l00334" name="l00334"></a><span class="lineno"><a class="line" href="gUtils_8h.html#a1c6191ed62fc5cc55395ff240db81a94">  334</a></span>std::string <a class="code hl_function" href="gUtils_8h.html#a1c6191ed62fc5cc55395ff240db81a94">gShowOpenFileDialog</a>(</div>
+<div class="line"><a id="l00335" name="l00335"></a><span class="lineno">  335</span>    <span class="keyword">const</span> std::string&amp; dialogTitle,</div>
+<div class="line"><a id="l00336" name="l00336"></a><span class="lineno">  336</span>    <span class="keyword">const</span> std::string&amp; defaultPathAndFile,</div>
+<div class="line"><a id="l00337" name="l00337"></a><span class="lineno">  337</span>    <span class="keywordtype">int</span> filterNum,</div>
+<div class="line"><a id="l00338" name="l00338"></a><span class="lineno">  338</span>    <span class="keyword">const</span> std::string* filterPatterns,</div>
+<div class="line"><a id="l00339" name="l00339"></a><span class="lineno">  339</span>    <span class="keyword">const</span> std::string&amp; filterDescription,</div>
+<div class="line"><a id="l00340" name="l00340"></a><span class="lineno">  340</span>    <span class="keywordtype">bool</span> isMultipleSelectionAllowed = <span class="keyword">false</span>);</div>
+<div class="line"><a id="l00341" name="l00341"></a><span class="lineno">  341</span> </div>
+<div class="line"><a id="l00366" name="l00366"></a><span class="lineno"><a class="line" href="gUtils_8h.html#a5f86b03f48f8915865d6712edc3c907d">  366</a></span>std::string <a class="code hl_function" href="gUtils_8h.html#a1c6191ed62fc5cc55395ff240db81a94">gShowOpenFileDialog</a>(</div>
+<div class="line"><a id="l00367" name="l00367"></a><span class="lineno">  367</span>    <span class="keyword">const</span> std::string&amp; dialogTitle,</div>
+<div class="line"><a id="l00368" name="l00368"></a><span class="lineno">  368</span>    <span class="keyword">const</span> std::string&amp; defaultPathAndFile,</div>
+<div class="line"><a id="l00369" name="l00369"></a><span class="lineno">  369</span>    std::initializer_list&lt;const char*&gt; filterPatterns,</div>
+<div class="line"><a id="l00370" name="l00370"></a><span class="lineno">  370</span>    <span class="keyword">const</span> std::string&amp; filterDescription,</div>
+<div class="line"><a id="l00371" name="l00371"></a><span class="lineno">  371</span>    <span class="keywordtype">bool</span> isMultipleSelectionAllowed = <span class="keyword">false</span>);</div>
+<div class="line"><a id="l00372" name="l00372"></a><span class="lineno">  372</span> </div>
+<div class="line"><a id="l00373" name="l00373"></a><span class="lineno"><a class="line" href="gUtils_8h.html#ab20bf5d362287e1882de3c6cc09bc365">  373</a></span>std::string <a class="code hl_function" href="gUtils_8h.html#a1c6191ed62fc5cc55395ff240db81a94">gShowOpenFileDialog</a>(</div>
+<div class="line"><a id="l00374" name="l00374"></a><span class="lineno">  374</span>    <span class="keyword">const</span> std::string&amp; dialogTitle,</div>
+<div class="line"><a id="l00375" name="l00375"></a><span class="lineno">  375</span>    <span class="keyword">const</span> std::string&amp; defaultPathAndFile,</div>
+<div class="line"><a id="l00376" name="l00376"></a><span class="lineno">  376</span>    <span class="keywordtype">int</span> filterNum,</div>
+<div class="line"><a id="l00377" name="l00377"></a><span class="lineno">  377</span>    <span class="keyword">const</span> <span class="keywordtype">char</span>** filterPatterns,</div>
+<div class="line"><a id="l00378" name="l00378"></a><span class="lineno">  378</span>    <span class="keyword">const</span> std::string&amp; filterDescription,</div>
+<div class="line"><a id="l00379" name="l00379"></a><span class="lineno">  379</span>    <span class="keywordtype">bool</span> isMultipleSelectionAllowed = <span class="keyword">false</span>);</div>
+<div class="line"><a id="l00380" name="l00380"></a><span class="lineno">  380</span> </div>
+<div class="line"><a id="l00381" name="l00381"></a><span class="lineno"><a class="line" href="gUtils_8h.html#adefdf209d09b50f0f30397bb98d0d563">  381</a></span>std::string <a class="code hl_function" href="gUtils_8h.html#adefdf209d09b50f0f30397bb98d0d563">gShowSaveFileDialog</a>(</div>
+<div class="line"><a id="l00382" name="l00382"></a><span class="lineno">  382</span>    <span class="keyword">const</span> std::string&amp; dialogTitle,</div>
+<div class="line"><a id="l00383" name="l00383"></a><span class="lineno">  383</span>    <span class="keyword">const</span> std::string&amp; defaultPathAndFile,</div>
+<div class="line"><a id="l00384" name="l00384"></a><span class="lineno">  384</span>    <span class="keywordtype">int</span> filterNum,</div>
+<div class="line"><a id="l00385" name="l00385"></a><span class="lineno">  385</span>    <span class="keyword">const</span> std::string* filterPatterns,</div>
+<div class="line"><a id="l00386" name="l00386"></a><span class="lineno">  386</span>    <span class="keyword">const</span> std::string&amp; filterDescription);</div>
 <div class="line"><a id="l00387" name="l00387"></a><span class="lineno">  387</span> </div>
-<div class="line"><a id="l00388" name="l00388"></a><span class="lineno"><a class="line" href="gUtils_8h.html#a9ffe74c3705877080965ae1d4ca9b7ea">  388</a></span>std::string <a class="code hl_function" href="gUtils_8h.html#adefdf209d09b50f0f30397bb98d0d563">gShowSaveFileDialog</a>(</div>
-<div class="line"><a id="l00389" name="l00389"></a><span class="lineno">  389</span>    <span class="keyword">const</span> std::string&amp; dialogTitle,</div>
-<div class="line"><a id="l00390" name="l00390"></a><span class="lineno">  390</span>    <span class="keyword">const</span> std::string&amp; defaultPathAndFile,</div>
-<div class="line"><a id="l00391" name="l00391"></a><span class="lineno">  391</span>    std::initializer_list&lt;const char*&gt; filterPatterns,</div>
-<div class="line"><a id="l00392" name="l00392"></a><span class="lineno">  392</span>    <span class="keyword">const</span> std::string&amp; filterDescription);</div>
-<div class="line"><a id="l00393" name="l00393"></a><span class="lineno">  393</span> </div>
-<div class="line"><a id="l00394" name="l00394"></a><span class="lineno"><a class="line" href="gUtils_8h.html#abf310bfb56fd14bb74129e57b5bac009">  394</a></span>std::string <a class="code hl_function" href="gUtils_8h.html#adefdf209d09b50f0f30397bb98d0d563">gShowSaveFileDialog</a>(</div>
-<div class="line"><a id="l00395" name="l00395"></a><span class="lineno">  395</span>    <span class="keyword">const</span> std::string&amp; dialogTitle,</div>
-<div class="line"><a id="l00396" name="l00396"></a><span class="lineno">  396</span>    <span class="keyword">const</span> std::string&amp; defaultPathAndFile,</div>
-<div class="line"><a id="l00397" name="l00397"></a><span class="lineno">  397</span>    <span class="keywordtype">int</span> filterNum,</div>
-<div class="line"><a id="l00398" name="l00398"></a><span class="lineno">  398</span>    <span class="keyword">const</span> <span class="keywordtype">char</span>** filterPatterns,</div>
-<div class="line"><a id="l00399" name="l00399"></a><span class="lineno">  399</span>    <span class="keyword">const</span> std::string&amp; filterDescription);</div>
-<div class="line"><a id="l00400" name="l00400"></a><span class="lineno">  400</span> </div>
-<div class="line"><a id="l00401" name="l00401"></a><span class="lineno"><a class="line" href="gUtils_8h.html#a3a9265170003b111798107ecc55d179e">  401</a></span>std::string <a class="code hl_function" href="gUtils_8h.html#a3a9265170003b111798107ecc55d179e">gShowSelectFolderDialog</a>(</div>
-<div class="line"><a id="l00402" name="l00402"></a><span class="lineno">  402</span>    <span class="keyword">const</span> std::string&amp; dialogTitle,</div>
-<div class="line"><a id="l00403" name="l00403"></a><span class="lineno">  403</span>    <span class="keyword">const</span> std::string&amp; defaultPath);</div>
-<div class="line"><a id="l00404" name="l00404"></a><span class="lineno">  404</span> </div>
+<div class="line"><a id="l00388" name="l00388"></a><span class="lineno">  388</span> </div>
+<div class="line"><a id="l00389" name="l00389"></a><span class="lineno"><a class="line" href="gUtils_8h.html#a9ffe74c3705877080965ae1d4ca9b7ea">  389</a></span>std::string <a class="code hl_function" href="gUtils_8h.html#adefdf209d09b50f0f30397bb98d0d563">gShowSaveFileDialog</a>(</div>
+<div class="line"><a id="l00390" name="l00390"></a><span class="lineno">  390</span>    <span class="keyword">const</span> std::string&amp; dialogTitle,</div>
+<div class="line"><a id="l00391" name="l00391"></a><span class="lineno">  391</span>    <span class="keyword">const</span> std::string&amp; defaultPathAndFile,</div>
+<div class="line"><a id="l00392" name="l00392"></a><span class="lineno">  392</span>    std::initializer_list&lt;const char*&gt; filterPatterns,</div>
+<div class="line"><a id="l00393" name="l00393"></a><span class="lineno">  393</span>    <span class="keyword">const</span> std::string&amp; filterDescription);</div>
+<div class="line"><a id="l00394" name="l00394"></a><span class="lineno">  394</span> </div>
+<div class="line"><a id="l00395" name="l00395"></a><span class="lineno"><a class="line" href="gUtils_8h.html#abf310bfb56fd14bb74129e57b5bac009">  395</a></span>std::string <a class="code hl_function" href="gUtils_8h.html#adefdf209d09b50f0f30397bb98d0d563">gShowSaveFileDialog</a>(</div>
+<div class="line"><a id="l00396" name="l00396"></a><span class="lineno">  396</span>    <span class="keyword">const</span> std::string&amp; dialogTitle,</div>
+<div class="line"><a id="l00397" name="l00397"></a><span class="lineno">  397</span>    <span class="keyword">const</span> std::string&amp; defaultPathAndFile,</div>
+<div class="line"><a id="l00398" name="l00398"></a><span class="lineno">  398</span>    <span class="keywordtype">int</span> filterNum,</div>
+<div class="line"><a id="l00399" name="l00399"></a><span class="lineno">  399</span>    <span class="keyword">const</span> <span class="keywordtype">char</span>** filterPatterns,</div>
+<div class="line"><a id="l00400" name="l00400"></a><span class="lineno">  400</span>    <span class="keyword">const</span> std::string&amp; filterDescription);</div>
+<div class="line"><a id="l00401" name="l00401"></a><span class="lineno">  401</span> </div>
+<div class="line"><a id="l00402" name="l00402"></a><span class="lineno"><a class="line" href="gUtils_8h.html#a3a9265170003b111798107ecc55d179e">  402</a></span>std::string <a class="code hl_function" href="gUtils_8h.html#a3a9265170003b111798107ecc55d179e">gShowSelectFolderDialog</a>(</div>
+<div class="line"><a id="l00403" name="l00403"></a><span class="lineno">  403</span>    <span class="keyword">const</span> std::string&amp; dialogTitle,</div>
+<div class="line"><a id="l00404" name="l00404"></a><span class="lineno">  404</span>    <span class="keyword">const</span> std::string&amp; defaultPath);</div>
 <div class="line"><a id="l00405" name="l00405"></a><span class="lineno">  405</span> </div>
-<div class="line"><a id="l00415" name="l00415"></a><span class="lineno"><a class="line" href="gUtils_8h.html#a204cf8fd83ecdf726d8d33c779e1255e">  415</a></span><span class="keywordtype">int</span> <a class="code hl_function" href="gUtils_8h.html#a204cf8fd83ecdf726d8d33c779e1255e">gShowMessageBox</a>(</div>
-<div class="line"><a id="l00416" name="l00416"></a><span class="lineno">  416</span>    <span class="keyword">const</span> std::string&amp; title,</div>
-<div class="line"><a id="l00417" name="l00417"></a><span class="lineno">  417</span>    <span class="keyword">const</span> std::string&amp; message,</div>
-<div class="line"><a id="l00418" name="l00418"></a><span class="lineno">  418</span>    <span class="keyword">const</span> std::string&amp; dialogue,</div>
-<div class="line"><a id="l00419" name="l00419"></a><span class="lineno">  419</span>    <span class="keyword">const</span> std::string&amp; iconType,</div>
-<div class="line"><a id="l00420" name="l00420"></a><span class="lineno">  420</span>    <span class="keywordtype">int</span> defaultButton);</div>
-<div class="line"><a id="l00421" name="l00421"></a><span class="lineno">  421</span> </div>
-<div class="line"><a id="l00430" name="l00430"></a><span class="lineno"><a class="line" href="gUtils_8h.html#a970bfe9ca6d511c5fca1dea910fa9f15">  430</a></span>std::string <a class="code hl_function" href="gUtils_8h.html#a970bfe9ca6d511c5fca1dea910fa9f15">gShowInputBox</a>(</div>
-<div class="line"><a id="l00431" name="l00431"></a><span class="lineno">  431</span>        <span class="keyword">const</span> std::string&amp; title,</div>
-<div class="line"><a id="l00432" name="l00432"></a><span class="lineno">  432</span>        <span class="keyword">const</span> std::string&amp; message,</div>
-<div class="line"><a id="l00433" name="l00433"></a><span class="lineno">  433</span>        <span class="keyword">const</span> std::string&amp; defaultInput);</div>
-<div class="line"><a id="l00434" name="l00434"></a><span class="lineno">  434</span> </div>
-<div class="line"><a id="l00443" name="l00443"></a><span class="lineno"><a class="line" href="gUtils_8h.html#a9274f5c28de6fec64d28d18723ac1990">  443</a></span><a class="code hl_class" href="classgColor.html">gColor</a> <a class="code hl_function" href="gUtils_8h.html#a9274f5c28de6fec64d28d18723ac1990">gShowColorChooser</a>(</div>
-<div class="line"><a id="l00444" name="l00444"></a><span class="lineno">  444</span>    <span class="keyword">const</span> std::string&amp; title,</div>
-<div class="line"><a id="l00445" name="l00445"></a><span class="lineno">  445</span>    <span class="keyword">const</span> std::string&amp; defaultHex,</div>
-<div class="line"><a id="l00446" name="l00446"></a><span class="lineno">  446</span>    <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> <span class="keyword">const</span> defaultRGB[3]);</div>
-<div class="line"><a id="l00447" name="l00447"></a><span class="lineno">  447</span> </div>
-<div class="line"><a id="l00448" name="l00448"></a><span class="lineno"><a class="line" href="gUtils_8h.html#a06742a9ddc4705eb972bec8c015aecae">  448</a></span><span class="keywordtype">bool</span> <a class="code hl_function" href="gUtils_8h.html#a06742a9ddc4705eb972bec8c015aecae">gCheckCollision</a>(<span class="keywordtype">int</span> xLeft1, <span class="keywordtype">int</span> yUp1, <span class="keywordtype">int</span> xRight1, <span class="keywordtype">int</span> yBottom1,</div>
-<div class="line"><a id="l00449" name="l00449"></a><span class="lineno">  449</span>        <span class="keywordtype">int</span> xLeft2, <span class="keywordtype">int</span> yUp2, <span class="keywordtype">int</span> xRight2, <span class="keywordtype">int</span> yBottom2);</div>
-<div class="line"><a id="l00450" name="l00450"></a><span class="lineno">  450</span> </div>
-<div class="line"><a id="l00451" name="l00451"></a><span class="lineno"><a class="line" href="gUtils_8h.html#aa008cc42702c48f7badb432d2da5747c">  451</a></span><span class="keywordtype">bool</span> <a class="code hl_function" href="gUtils_8h.html#aa008cc42702c48f7badb432d2da5747c">gCheckPixelPerfectCollision</a>(<a class="code hl_class" href="classgImage.html">gImage</a>* image1, <span class="keywordtype">int</span> x1, <span class="keywordtype">int</span> y1, <a class="code hl_class" href="classgImage.html">gImage</a>* image2, <span class="keywordtype">int</span> x2, <span class="keywordtype">int</span> y2);</div>
-<div class="line"><a id="l00452" name="l00452"></a><span class="lineno">  452</span> </div>
-<div class="line"><a id="l00453" name="l00453"></a><span class="lineno"><a class="line" href="gUtils_8h.html#aa580814b66be372cda701233803429f8">  453</a></span>std::string <a class="code hl_function" href="gUtils_8h.html#aa580814b66be372cda701233803429f8">gFixPath</a>(<span class="keyword">const</span> std::string&amp; path);</div>
-<div class="line"><a id="l00454" name="l00454"></a><span class="lineno">  454</span> </div>
-<div class="foldopen" id="foldopen00455" data-start="{" data-end="};">
-<div class="line"><a id="l00455" name="l00455"></a><span class="lineno"><a class="line" href="classgUtils.html">  455</a></span><span class="keyword">class </span><a class="code hl_class" href="classgUtils.html">gUtils</a> {</div>
-<div class="line"><a id="l00456" name="l00456"></a><span class="lineno">  456</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00457" name="l00457"></a><span class="lineno"><a class="line" href="classgUtils.html#ad668a560bd6d97f21a54af7a2ea84f2b">  457</a></span>    <a class="code hl_function" href="classgUtils.html#ad668a560bd6d97f21a54af7a2ea84f2b">gUtils</a>();</div>
-<div class="line"><a id="l00458" name="l00458"></a><span class="lineno"><a class="line" href="classgUtils.html#a1193c3cb4817f7e39b7378ec40563caf">  458</a></span>    <span class="keyword">virtual</span> <a class="code hl_function" href="classgUtils.html#a1193c3cb4817f7e39b7378ec40563caf">~gUtils</a>();</div>
-<div class="line"><a id="l00459" name="l00459"></a><span class="lineno">  459</span>};</div>
+<div class="line"><a id="l00406" name="l00406"></a><span class="lineno">  406</span> </div>
+<div class="line"><a id="l00416" name="l00416"></a><span class="lineno"><a class="line" href="gUtils_8h.html#a204cf8fd83ecdf726d8d33c779e1255e">  416</a></span><span class="keywordtype">int</span> <a class="code hl_function" href="gUtils_8h.html#a204cf8fd83ecdf726d8d33c779e1255e">gShowMessageBox</a>(</div>
+<div class="line"><a id="l00417" name="l00417"></a><span class="lineno">  417</span>    <span class="keyword">const</span> std::string&amp; title,</div>
+<div class="line"><a id="l00418" name="l00418"></a><span class="lineno">  418</span>    <span class="keyword">const</span> std::string&amp; message,</div>
+<div class="line"><a id="l00419" name="l00419"></a><span class="lineno">  419</span>    <span class="keyword">const</span> std::string&amp; dialogue,</div>
+<div class="line"><a id="l00420" name="l00420"></a><span class="lineno">  420</span>    <span class="keyword">const</span> std::string&amp; iconType,</div>
+<div class="line"><a id="l00421" name="l00421"></a><span class="lineno">  421</span>    <span class="keywordtype">int</span> defaultButton);</div>
+<div class="line"><a id="l00422" name="l00422"></a><span class="lineno">  422</span> </div>
+<div class="line"><a id="l00431" name="l00431"></a><span class="lineno"><a class="line" href="gUtils_8h.html#a970bfe9ca6d511c5fca1dea910fa9f15">  431</a></span>std::string <a class="code hl_function" href="gUtils_8h.html#a970bfe9ca6d511c5fca1dea910fa9f15">gShowInputBox</a>(</div>
+<div class="line"><a id="l00432" name="l00432"></a><span class="lineno">  432</span>        <span class="keyword">const</span> std::string&amp; title,</div>
+<div class="line"><a id="l00433" name="l00433"></a><span class="lineno">  433</span>        <span class="keyword">const</span> std::string&amp; message,</div>
+<div class="line"><a id="l00434" name="l00434"></a><span class="lineno">  434</span>        <span class="keyword">const</span> std::string&amp; defaultInput);</div>
+<div class="line"><a id="l00435" name="l00435"></a><span class="lineno">  435</span> </div>
+<div class="line"><a id="l00444" name="l00444"></a><span class="lineno"><a class="line" href="gUtils_8h.html#a9274f5c28de6fec64d28d18723ac1990">  444</a></span><a class="code hl_class" href="classgColor.html">gColor</a> <a class="code hl_function" href="gUtils_8h.html#a9274f5c28de6fec64d28d18723ac1990">gShowColorChooser</a>(</div>
+<div class="line"><a id="l00445" name="l00445"></a><span class="lineno">  445</span>    <span class="keyword">const</span> std::string&amp; title,</div>
+<div class="line"><a id="l00446" name="l00446"></a><span class="lineno">  446</span>    <span class="keyword">const</span> std::string&amp; defaultHex,</div>
+<div class="line"><a id="l00447" name="l00447"></a><span class="lineno">  447</span>    <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> <span class="keyword">const</span> defaultRGB[3]);</div>
+<div class="line"><a id="l00448" name="l00448"></a><span class="lineno">  448</span> </div>
+<div class="line"><a id="l00449" name="l00449"></a><span class="lineno"><a class="line" href="gUtils_8h.html#a06742a9ddc4705eb972bec8c015aecae">  449</a></span><span class="keywordtype">bool</span> <a class="code hl_function" href="gUtils_8h.html#a06742a9ddc4705eb972bec8c015aecae">gCheckCollision</a>(<span class="keywordtype">int</span> xLeft1, <span class="keywordtype">int</span> yUp1, <span class="keywordtype">int</span> xRight1, <span class="keywordtype">int</span> yBottom1,</div>
+<div class="line"><a id="l00450" name="l00450"></a><span class="lineno">  450</span>        <span class="keywordtype">int</span> xLeft2, <span class="keywordtype">int</span> yUp2, <span class="keywordtype">int</span> xRight2, <span class="keywordtype">int</span> yBottom2);</div>
+<div class="line"><a id="l00451" name="l00451"></a><span class="lineno">  451</span> </div>
+<div class="line"><a id="l00452" name="l00452"></a><span class="lineno"><a class="line" href="gUtils_8h.html#aa008cc42702c48f7badb432d2da5747c">  452</a></span><span class="keywordtype">bool</span> <a class="code hl_function" href="gUtils_8h.html#aa008cc42702c48f7badb432d2da5747c">gCheckPixelPerfectCollision</a>(<a class="code hl_class" href="classgImage.html">gImage</a>* image1, <span class="keywordtype">int</span> x1, <span class="keywordtype">int</span> y1, <a class="code hl_class" href="classgImage.html">gImage</a>* image2, <span class="keywordtype">int</span> x2, <span class="keywordtype">int</span> y2);</div>
+<div class="line"><a id="l00453" name="l00453"></a><span class="lineno">  453</span> </div>
+<div class="line"><a id="l00454" name="l00454"></a><span class="lineno"><a class="line" href="gUtils_8h.html#aa580814b66be372cda701233803429f8">  454</a></span>std::string <a class="code hl_function" href="gUtils_8h.html#aa580814b66be372cda701233803429f8">gFixPath</a>(<span class="keyword">const</span> std::string&amp; path);</div>
+<div class="line"><a id="l00455" name="l00455"></a><span class="lineno">  455</span> </div>
+<div class="foldopen" id="foldopen00456" data-start="{" data-end="};">
+<div class="line"><a id="l00456" name="l00456"></a><span class="lineno"><a class="line" href="classgUtils.html">  456</a></span><span class="keyword">class </span><a class="code hl_class" href="classgUtils.html">gUtils</a> {</div>
+<div class="line"><a id="l00457" name="l00457"></a><span class="lineno">  457</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00458" name="l00458"></a><span class="lineno"><a class="line" href="classgUtils.html#ad668a560bd6d97f21a54af7a2ea84f2b">  458</a></span>    <a class="code hl_function" href="classgUtils.html#ad668a560bd6d97f21a54af7a2ea84f2b">gUtils</a>();</div>
+<div class="line"><a id="l00459" name="l00459"></a><span class="lineno"><a class="line" href="classgUtils.html#a1193c3cb4817f7e39b7378ec40563caf">  459</a></span>    <span class="keyword">virtual</span> <a class="code hl_function" href="classgUtils.html#a1193c3cb4817f7e39b7378ec40563caf">~gUtils</a>();</div>
+<div class="line"><a id="l00460" name="l00460"></a><span class="lineno">  460</span>};</div>
 </div>
-<div class="line"><a id="l00460" name="l00460"></a><span class="lineno">  460</span> </div>
-<div class="line"><a id="l00461" name="l00461"></a><span class="lineno">  461</span><span class="preprocessor">#endif </span><span class="comment">/* UTILS_GUTILS_H_ */</span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00461" name="l00461"></a><span class="lineno">  461</span> </div>
+<div class="line"><a id="l00462" name="l00462"></a><span class="lineno">  462</span><span class="preprocessor">#endif </span><span class="comment">/* UTILS_GUTILS_H_ */</span><span class="preprocessor"></span></div>
 <div class="ttc" id="aclassgColor_html"><div class="ttname"><a href="classgColor.html">gColor</a></div><div class="ttdef"><b>Definition</b> gColor.h:17</div></div>
 <div class="ttc" id="aclassgImage_html"><div class="ttname"><a href="classgImage.html">gImage</a></div><div class="ttdef"><b>Definition</b> gImage.h:34</div></div>
-<div class="ttc" id="aclassgLog_html"><div class="ttname"><a href="classgLog.html">gLog</a></div><div class="ttdef"><b>Definition</b> gUtils.h:228</div></div>
+<div class="ttc" id="aclassgLog_html"><div class="ttname"><a href="classgLog.html">gLog</a></div><div class="ttdef"><b>Definition</b> gUtils.h:229</div></div>
 <div class="ttc" id="aclassgLog_html_a138b84e798b0f1eae0a6b942990a5383"><div class="ttname"><a href="classgLog.html#a138b84e798b0f1eae0a6b942990a5383">gLog::gLog</a></div><div class="ttdeci">gLog()</div></div>
 <div class="ttc" id="aclassgLog_html_a150b1e7e081d3bab521bc9e5d7d7e23b"><div class="ttname"><a href="classgLog.html#a150b1e7e081d3bab521bc9e5d7d7e23b">gLog::gLog</a></div><div class="ttdeci">gLog(const std::string &amp;tag)</div></div>
-<div class="ttc" id="aclassgLog_html_a265452b0cdb70b0f8cc581912aaf801d"><div class="ttname"><a href="classgLog.html#a265452b0cdb70b0f8cc581912aaf801d">gLog::isloggingenabled</a></div><div class="ttdeci">static bool isloggingenabled</div><div class="ttdef"><b>Definition</b> gUtils.h:258</div></div>
+<div class="ttc" id="aclassgLog_html_a265452b0cdb70b0f8cc581912aaf801d"><div class="ttname"><a href="classgLog.html#a265452b0cdb70b0f8cc581912aaf801d">gLog::isloggingenabled</a></div><div class="ttdeci">static bool isloggingenabled</div><div class="ttdef"><b>Definition</b> gUtils.h:259</div></div>
 <div class="ttc" id="aclassgLog_html_a2fa86481b1c8eb565a6c8c8c14a41fed"><div class="ttname"><a href="classgLog.html#a2fa86481b1c8eb565a6c8c8c14a41fed">gLog::setLoggingEnabled</a></div><div class="ttdeci">static void setLoggingEnabled(bool isLoggingEnabled)</div></div>
-<div class="ttc" id="aclassgLog_html_a3b3ee053e6d2b7f74fe0939f68125e99"><div class="ttname"><a href="classgLog.html#a3b3ee053e6d2b7f74fe0939f68125e99">gLog::logtag</a></div><div class="ttdeci">std::string logtag</div><div class="ttdef"><b>Definition</b> gUtils.h:261</div></div>
-<div class="ttc" id="aclassgLog_html_a40e7b43cf2b398b9c41c4493db87d130"><div class="ttname"><a href="classgLog.html#a40e7b43cf2b398b9c41c4493db87d130">gLog::operator&lt;&lt;</a></div><div class="ttdeci">gLog &amp; operator&lt;&lt;(const T &amp;value)</div><div class="ttdef"><b>Definition</b> gUtils.h:247</div></div>
+<div class="ttc" id="aclassgLog_html_a3b3ee053e6d2b7f74fe0939f68125e99"><div class="ttname"><a href="classgLog.html#a3b3ee053e6d2b7f74fe0939f68125e99">gLog::logtag</a></div><div class="ttdeci">std::string logtag</div><div class="ttdef"><b>Definition</b> gUtils.h:262</div></div>
+<div class="ttc" id="aclassgLog_html_a40e7b43cf2b398b9c41c4493db87d130"><div class="ttname"><a href="classgLog.html#a40e7b43cf2b398b9c41c4493db87d130">gLog::operator&lt;&lt;</a></div><div class="ttdeci">gLog &amp; operator&lt;&lt;(const T &amp;value)</div><div class="ttdef"><b>Definition</b> gUtils.h:248</div></div>
 <div class="ttc" id="aclassgLog_html_a82ba8c6ee567882882be35d45540e79e"><div class="ttname"><a href="classgLog.html#a82ba8c6ee567882882be35d45540e79e">gLog::getLogLevelName</a></div><div class="ttdeci">static std::string getLogLevelName(int logLevel)</div></div>
-<div class="ttc" id="aclassgLog_html_a912049df8e4ec07bc35d8f35cc45e107"><div class="ttname"><a href="classgLog.html#a912049df8e4ec07bc35d8f35cc45e107">gLog::operator&lt;&lt;</a></div><div class="ttdeci">gLog &amp; operator&lt;&lt;(std::ostream &amp;(*func)(std::ostream &amp;))</div><div class="ttdef"><b>Definition</b> gUtils.h:241</div></div>
-<div class="ttc" id="aclassgLog_html_aa9bfe4373ae6e8e204bc02ee6a134371"><div class="ttname"><a href="classgLog.html#aa9bfe4373ae6e8e204bc02ee6a134371">gLog::loglevelname</a></div><div class="ttdeci">static std::string loglevelname[]</div><div class="ttdef"><b>Definition</b> gUtils.h:262</div></div>
+<div class="ttc" id="aclassgLog_html_a912049df8e4ec07bc35d8f35cc45e107"><div class="ttname"><a href="classgLog.html#a912049df8e4ec07bc35d8f35cc45e107">gLog::operator&lt;&lt;</a></div><div class="ttdeci">gLog &amp; operator&lt;&lt;(std::ostream &amp;(*func)(std::ostream &amp;))</div><div class="ttdef"><b>Definition</b> gUtils.h:242</div></div>
+<div class="ttc" id="aclassgLog_html_aa9bfe4373ae6e8e204bc02ee6a134371"><div class="ttname"><a href="classgLog.html#aa9bfe4373ae6e8e204bc02ee6a134371">gLog::loglevelname</a></div><div class="ttdeci">static std::string loglevelname[]</div><div class="ttdef"><b>Definition</b> gUtils.h:263</div></div>
 <div class="ttc" id="aclassgLog_html_ad30f5d428c7d1a1c948e4cbd78d242cc"><div class="ttname"><a href="classgLog.html#ad30f5d428c7d1a1c948e4cbd78d242cc">gLog::~gLog</a></div><div class="ttdeci">~gLog()</div></div>
 <div class="ttc" id="aclassgLog_html_ad3614131d0050c4d65e5b946c9e51201"><div class="ttname"><a href="classgLog.html#ad3614131d0050c4d65e5b946c9e51201">gLog::isLoggingEnabled</a></div><div class="ttdeci">static bool isLoggingEnabled()</div></div>
-<div class="ttc" id="aclassgLog_html_ad7f9a77f24962d1cc92132314beb1cc6a27fb8a5c75ebbf59dbb92b763ba3926a"><div class="ttname"><a href="classgLog.html#ad7f9a77f24962d1cc92132314beb1cc6a27fb8a5c75ebbf59dbb92b763ba3926a">gLog::LOGLEVEL_DEBUG</a></div><div class="ttdeci">@ LOGLEVEL_DEBUG</div><div class="ttdef"><b>Definition</b> gUtils.h:232</div></div>
-<div class="ttc" id="aclassgLog_html_ad7f9a77f24962d1cc92132314beb1cc6a4975a21d54ff6404704fe8e29c3a0108"><div class="ttname"><a href="classgLog.html#ad7f9a77f24962d1cc92132314beb1cc6a4975a21d54ff6404704fe8e29c3a0108">gLog::LOGLEVEL_WARNING</a></div><div class="ttdeci">@ LOGLEVEL_WARNING</div><div class="ttdef"><b>Definition</b> gUtils.h:233</div></div>
-<div class="ttc" id="aclassgLog_html_ad7f9a77f24962d1cc92132314beb1cc6a923366514f9a943c17a6acaacf601e55"><div class="ttname"><a href="classgLog.html#ad7f9a77f24962d1cc92132314beb1cc6a923366514f9a943c17a6acaacf601e55">gLog::LOGLEVEL_ERROR</a></div><div class="ttdeci">@ LOGLEVEL_ERROR</div><div class="ttdef"><b>Definition</b> gUtils.h:234</div></div>
-<div class="ttc" id="aclassgLog_html_ad7f9a77f24962d1cc92132314beb1cc6af860e6876f2eace422987c55349ffa15"><div class="ttname"><a href="classgLog.html#ad7f9a77f24962d1cc92132314beb1cc6af860e6876f2eace422987c55349ffa15">gLog::LOGLEVEL_INFO</a></div><div class="ttdeci">@ LOGLEVEL_INFO</div><div class="ttdef"><b>Definition</b> gUtils.h:231</div></div>
-<div class="ttc" id="aclassgLog_html_aed619c6cb97f6d695d7503a4c61b82b5"><div class="ttname"><a href="classgLog.html#aed619c6cb97f6d695d7503a4c61b82b5">gLog::loglevel</a></div><div class="ttdeci">int loglevel</div><div class="ttdef"><b>Definition</b> gUtils.h:259</div></div>
-<div class="ttc" id="aclassgLog_html_af4b0856d02e15424b34b822c6fc0586d"><div class="ttname"><a href="classgLog.html#af4b0856d02e15424b34b822c6fc0586d">gLog::logmessage</a></div><div class="ttdeci">std::stringstream logmessage</div><div class="ttdef"><b>Definition</b> gUtils.h:260</div></div>
-<div class="ttc" id="aclassgLogd_html"><div class="ttname"><a href="classgLogd.html">gLogd</a></div><div class="ttdef"><b>Definition</b> gUtils.h:273</div></div>
+<div class="ttc" id="aclassgLog_html_ad7f9a77f24962d1cc92132314beb1cc6a27fb8a5c75ebbf59dbb92b763ba3926a"><div class="ttname"><a href="classgLog.html#ad7f9a77f24962d1cc92132314beb1cc6a27fb8a5c75ebbf59dbb92b763ba3926a">gLog::LOGLEVEL_DEBUG</a></div><div class="ttdeci">@ LOGLEVEL_DEBUG</div><div class="ttdef"><b>Definition</b> gUtils.h:233</div></div>
+<div class="ttc" id="aclassgLog_html_ad7f9a77f24962d1cc92132314beb1cc6a4975a21d54ff6404704fe8e29c3a0108"><div class="ttname"><a href="classgLog.html#ad7f9a77f24962d1cc92132314beb1cc6a4975a21d54ff6404704fe8e29c3a0108">gLog::LOGLEVEL_WARNING</a></div><div class="ttdeci">@ LOGLEVEL_WARNING</div><div class="ttdef"><b>Definition</b> gUtils.h:234</div></div>
+<div class="ttc" id="aclassgLog_html_ad7f9a77f24962d1cc92132314beb1cc6a923366514f9a943c17a6acaacf601e55"><div class="ttname"><a href="classgLog.html#ad7f9a77f24962d1cc92132314beb1cc6a923366514f9a943c17a6acaacf601e55">gLog::LOGLEVEL_ERROR</a></div><div class="ttdeci">@ LOGLEVEL_ERROR</div><div class="ttdef"><b>Definition</b> gUtils.h:235</div></div>
+<div class="ttc" id="aclassgLog_html_ad7f9a77f24962d1cc92132314beb1cc6af860e6876f2eace422987c55349ffa15"><div class="ttname"><a href="classgLog.html#ad7f9a77f24962d1cc92132314beb1cc6af860e6876f2eace422987c55349ffa15">gLog::LOGLEVEL_INFO</a></div><div class="ttdeci">@ LOGLEVEL_INFO</div><div class="ttdef"><b>Definition</b> gUtils.h:232</div></div>
+<div class="ttc" id="aclassgLog_html_aed619c6cb97f6d695d7503a4c61b82b5"><div class="ttname"><a href="classgLog.html#aed619c6cb97f6d695d7503a4c61b82b5">gLog::loglevel</a></div><div class="ttdeci">int loglevel</div><div class="ttdef"><b>Definition</b> gUtils.h:260</div></div>
+<div class="ttc" id="aclassgLog_html_af4b0856d02e15424b34b822c6fc0586d"><div class="ttname"><a href="classgLog.html#af4b0856d02e15424b34b822c6fc0586d">gLog::logmessage</a></div><div class="ttdeci">std::stringstream logmessage</div><div class="ttdef"><b>Definition</b> gUtils.h:261</div></div>
+<div class="ttc" id="aclassgLogd_html"><div class="ttname"><a href="classgLogd.html">gLogd</a></div><div class="ttdef"><b>Definition</b> gUtils.h:274</div></div>
 <div class="ttc" id="aclassgLogd_html_a1bf8275bb598ca5d29e9677b93733d85"><div class="ttname"><a href="classgLogd.html#a1bf8275bb598ca5d29e9677b93733d85">gLogd::gLogd</a></div><div class="ttdeci">gLogd(const std::string &amp;tag=&quot;&quot;)</div></div>
-<div class="ttc" id="aclassgLoge_html"><div class="ttname"><a href="classgLoge.html">gLoge</a></div><div class="ttdef"><b>Definition</b> gUtils.h:283</div></div>
+<div class="ttc" id="aclassgLoge_html"><div class="ttname"><a href="classgLoge.html">gLoge</a></div><div class="ttdef"><b>Definition</b> gUtils.h:284</div></div>
 <div class="ttc" id="aclassgLoge_html_aa009eb2690e276871860620b95d5fa14"><div class="ttname"><a href="classgLoge.html#aa009eb2690e276871860620b95d5fa14">gLoge::gLoge</a></div><div class="ttdeci">gLoge(const std::string &amp;tag=&quot;&quot;)</div></div>
-<div class="ttc" id="aclassgLogi_html"><div class="ttname"><a href="classgLogi.html">gLogi</a></div><div class="ttdef"><b>Definition</b> gUtils.h:268</div></div>
+<div class="ttc" id="aclassgLogi_html"><div class="ttname"><a href="classgLogi.html">gLogi</a></div><div class="ttdef"><b>Definition</b> gUtils.h:269</div></div>
 <div class="ttc" id="aclassgLogi_html_a1042694655013f985f4fb244b040f09c"><div class="ttname"><a href="classgLogi.html#a1042694655013f985f4fb244b040f09c">gLogi::gLogi</a></div><div class="ttdeci">gLogi(const std::string &amp;tag=&quot;&quot;)</div></div>
-<div class="ttc" id="aclassgLogw_html"><div class="ttname"><a href="classgLogw.html">gLogw</a></div><div class="ttdef"><b>Definition</b> gUtils.h:278</div></div>
+<div class="ttc" id="aclassgLogw_html"><div class="ttname"><a href="classgLogw.html">gLogw</a></div><div class="ttdef"><b>Definition</b> gUtils.h:279</div></div>
 <div class="ttc" id="aclassgLogw_html_a850d235f464f8cb4d4b6015c516a0826"><div class="ttname"><a href="classgLogw.html#a850d235f464f8cb4d4b6015c516a0826">gLogw::gLogw</a></div><div class="ttdeci">gLogw(const std::string &amp;tag=&quot;&quot;)</div></div>
 <div class="ttc" id="aclassgTexture_html_a4c3b75ccc0dabb6c9ea8948d52609169"><div class="ttname"><a href="classgTexture.html#a4c3b75ccc0dabb6c9ea8948d52609169">gTexture::format</a></div><div class="ttdeci">unsigned int format</div><div class="ttdef"><b>Definition</b> gTexture.h:146</div></div>
 <div class="ttc" id="aclassgTexture_html_a627c39d3af9a984bbfc3a716a6f29031"><div class="ttname"><a href="classgTexture.html#a627c39d3af9a984bbfc3a716a6f29031">gTexture::width</a></div><div class="ttdeci">int width</div><div class="ttdef"><b>Definition</b> gTexture.h:149</div></div>
 <div class="ttc" id="aclassgTexture_html_a6f4a7e8cabbc84efd1eb7582e47d1ea1"><div class="ttname"><a href="classgTexture.html#a6f4a7e8cabbc84efd1eb7582e47d1ea1">gTexture::height</a></div><div class="ttdeci">int height</div><div class="ttdef"><b>Definition</b> gTexture.h:149</div></div>
 <div class="ttc" id="aclassgTexture_html_a972957955931625e55e78e0485348670"><div class="ttname"><a href="classgTexture.html#a972957955931625e55e78e0485348670">gTexture::data</a></div><div class="ttdeci">unsigned char * data</div><div class="ttdef"><b>Definition</b> gTexture.h:150</div></div>
-<div class="ttc" id="aclassgUTF8Iterator_html"><div class="ttname"><a href="classgUTF8Iterator.html">gUTF8Iterator</a></div><div class="ttdef"><b>Definition</b> gUtils.h:216</div></div>
+<div class="ttc" id="aclassgUTF8Iterator_html"><div class="ttname"><a href="classgUTF8Iterator.html">gUTF8Iterator</a></div><div class="ttdef"><b>Definition</b> gUtils.h:217</div></div>
 <div class="ttc" id="aclassgUTF8Iterator_html_a57af6a18782430e79a0c4c6fb8cec5f3"><div class="ttname"><a href="classgUTF8Iterator.html#a57af6a18782430e79a0c4c6fb8cec5f3">gUTF8Iterator::begin</a></div><div class="ttdeci">utf8::iterator&lt; std::string::const_iterator &gt; begin() const</div></div>
 <div class="ttc" id="aclassgUTF8Iterator_html_a5cb75019900cdf6aaf1083f29aa6f211"><div class="ttname"><a href="classgUTF8Iterator.html#a5cb75019900cdf6aaf1083f29aa6f211">gUTF8Iterator::gUTF8Iterator</a></div><div class="ttdeci">gUTF8Iterator(const std::string &amp;str)</div></div>
 <div class="ttc" id="aclassgUTF8Iterator_html_a6d9c227086a99de5ee16a9348dbffdf3"><div class="ttname"><a href="classgUTF8Iterator.html#a6d9c227086a99de5ee16a9348dbffdf3">gUTF8Iterator::rbegin</a></div><div class="ttdeci">utf8::iterator&lt; std::string::const_reverse_iterator &gt; rbegin() const</div></div>
 <div class="ttc" id="aclassgUTF8Iterator_html_ab5110aa7ec5d216c4988c7b40008ec76"><div class="ttname"><a href="classgUTF8Iterator.html#ab5110aa7ec5d216c4988c7b40008ec76">gUTF8Iterator::end</a></div><div class="ttdeci">utf8::iterator&lt; std::string::const_iterator &gt; end() const</div></div>
 <div class="ttc" id="aclassgUTF8Iterator_html_acc46ce3e3fc8bb3fffb4d32bde605eea"><div class="ttname"><a href="classgUTF8Iterator.html#acc46ce3e3fc8bb3fffb4d32bde605eea">gUTF8Iterator::rend</a></div><div class="ttdeci">utf8::iterator&lt; std::string::const_reverse_iterator &gt; rend() const</div></div>
-<div class="ttc" id="aclassgUtils_html"><div class="ttname"><a href="classgUtils.html">gUtils</a></div><div class="ttdef"><b>Definition</b> gUtils.h:455</div></div>
+<div class="ttc" id="aclassgUtils_html"><div class="ttname"><a href="classgUtils.html">gUtils</a></div><div class="ttdef"><b>Definition</b> gUtils.h:456</div></div>
 <div class="ttc" id="aclassgUtils_html_a1193c3cb4817f7e39b7378ec40563caf"><div class="ttname"><a href="classgUtils.html#a1193c3cb4817f7e39b7378ec40563caf">gUtils::~gUtils</a></div><div class="ttdeci">virtual ~gUtils()</div></div>
 <div class="ttc" id="aclassgUtils_html_ad668a560bd6d97f21a54af7a2ea84f2b"><div class="ttname"><a href="classgUtils.html#ad668a560bd6d97f21a54af7a2ea84f2b">gUtils::gUtils</a></div><div class="ttdeci">gUtils()</div></div>
 <div class="ttc" id="agColor_8h_html"><div class="ttname"><a href="gColor_8h.html">gColor.h</a></div></div>
 <div class="ttc" id="agConstants_8h_html"><div class="ttname"><a href="gConstants_8h.html">gConstants.h</a></div></div>
 <div class="ttc" id="agGUIEvents_8h_html"><div class="ttname"><a href="gGUIEvents_8h.html">gGUIEvents.h</a></div></div>
 <div class="ttc" id="agKeyCode_8h_html"><div class="ttname"><a href="gKeyCode_8h.html">gKeyCode.h</a></div></div>
-<div class="ttc" id="agUtils_8h_html_a0063aab1036834a005618e48e277fdba"><div class="ttname"><a href="gUtils_8h.html#a0063aab1036834a005618e48e277fdba">gToStr</a></div><div class="ttdeci">std::string gToStr(const T &amp;numValue)</div><div class="ttdef"><b>Definition</b> gUtils.h:174</div></div>
+<div class="ttc" id="agUtils_8h_html_a0063aab1036834a005618e48e277fdba"><div class="ttname"><a href="gUtils_8h.html#a0063aab1036834a005618e48e277fdba">gToStr</a></div><div class="ttdeci">std::string gToStr(const T &amp;numValue)</div><div class="ttdef"><b>Definition</b> gUtils.h:175</div></div>
 <div class="ttc" id="agUtils_8h_html_a06742a9ddc4705eb972bec8c015aecae"><div class="ttname"><a href="gUtils_8h.html#a06742a9ddc4705eb972bec8c015aecae">gCheckCollision</a></div><div class="ttdeci">bool gCheckCollision(int xLeft1, int yUp1, int xRight1, int yBottom1, int xLeft2, int yUp2, int xRight2, int yBottom2)</div></div>
 <div class="ttc" id="agUtils_8h_html_a086fd5c170a621ab16f4318cbe2f6bdc"><div class="ttname"><a href="gUtils_8h.html#a086fd5c170a621ab16f4318cbe2f6bdc">gIsOnline</a></div><div class="ttdeci">bool gIsOnline()</div></div>
 <div class="ttc" id="agUtils_8h_html_a09d1b05d97043b81a52f2aca321e20c7"><div class="ttname"><a href="gUtils_8h.html#a09d1b05d97043b81a52f2aca321e20c7">gGetMinutes</a></div><div class="ttdeci">int gGetMinutes()</div></div>
@@ -559,7 +560,7 @@ $(document).ready(function(){initNavTree('gUtils_8h_source.html',''); initResiza
 <div class="ttc" id="agUtils_8h_html_a295489476f2f5d0fe7d0ae65e7eb856c"><div class="ttname"><a href="gUtils_8h.html#a295489476f2f5d0fe7d0ae65e7eb856c">gDefaultUnitWidth</a></div><div class="ttdeci">int gDefaultUnitWidth()</div></div>
 <div class="ttc" id="agUtils_8h_html_a2ed85cbfd8460de76162b9456b281ec4"><div class="ttname"><a href="gUtils_8h.html#a2ed85cbfd8460de76162b9456b281ec4">gIsValidFilename</a></div><div class="ttdeci">bool gIsValidFilename(std::string fileName)</div></div>
 <div class="ttc" id="agUtils_8h_html_a2fe6c3daa3637fac1ee19a7cdd0ad996"><div class="ttname"><a href="gUtils_8h.html#a2fe6c3daa3637fac1ee19a7cdd0ad996">gIsString</a></div><div class="ttdeci">bool gIsString(const std::string &amp;str)</div></div>
-<div class="ttc" id="agUtils_8h_html_a3032c90c64b493e8d519ce8f8dbb974d"><div class="ttname"><a href="gUtils_8h.html#a3032c90c64b493e8d519ce8f8dbb974d">gToHex</a></div><div class="ttdeci">std::string gToHex(const T &amp;numValue, int width=sizeof(T) *2)</div><div class="ttdef"><b>Definition</b> gUtils.h:181</div></div>
+<div class="ttc" id="agUtils_8h_html_a3032c90c64b493e8d519ce8f8dbb974d"><div class="ttname"><a href="gUtils_8h.html#a3032c90c64b493e8d519ce8f8dbb974d">gToHex</a></div><div class="ttdeci">std::string gToHex(const T &amp;numValue, int width=sizeof(T) *2)</div><div class="ttdef"><b>Definition</b> gUtils.h:182</div></div>
 <div class="ttc" id="agUtils_8h_html_a33712aa7f449750b3f0db7406c8526b4"><div class="ttname"><a href="gUtils_8h.html#a33712aa7f449750b3f0db7406c8526b4">gFlipImageDataVertically</a></div><div class="ttdeci">void gFlipImageDataVertically(unsigned char *pixelData, int width, int height, int numChannels)</div></div>
 <div class="ttc" id="agUtils_8h_html_a3a9265170003b111798107ecc55d179e"><div class="ttname"><a href="gUtils_8h.html#a3a9265170003b111798107ecc55d179e">gShowSelectFolderDialog</a></div><div class="ttdeci">std::string gShowSelectFolderDialog(const std::string &amp;dialogTitle, const std::string &amp;defaultPath)</div></div>
 <div class="ttc" id="agUtils_8h_html_a3b454c86389d1a25a69d0be868ffdcf4"><div class="ttname"><a href="gUtils_8h.html#a3b454c86389d1a25a69d0be868ffdcf4">gGetHours</a></div><div class="ttdeci">int gGetHours()</div></div>
@@ -587,11 +588,11 @@ $(document).ready(function(){initNavTree('gUtils_8h_source.html',''); initResiza
 <div class="ttc" id="agUtils_8h_html_aa67da6df66a048b61b24f40714a79cde"><div class="ttname"><a href="gUtils_8h.html#aa67da6df66a048b61b24f40714a79cde">gGetWeekday</a></div><div class="ttdeci">int gGetWeekday()</div></div>
 <div class="ttc" id="agUtils_8h_html_aa959dcfcae23e33f44dfdd253d05e421"><div class="ttname"><a href="gUtils_8h.html#aa959dcfcae23e33f44dfdd253d05e421">gDefaultHeight</a></div><div class="ttdeci">int gDefaultHeight()</div></div>
 <div class="ttc" id="agUtils_8h_html_aaca86f7121fd90b39eded67af6285b4b"><div class="ttname"><a href="gUtils_8h.html#aaca86f7121fd90b39eded67af6285b4b">gDefaultUnitHeight</a></div><div class="ttdeci">int gDefaultUnitHeight()</div></div>
-<div class="ttc" id="agUtils_8h_html_aad58983c758929c9009b6d2b2fe0ddc5"><div class="ttname"><a href="gUtils_8h.html#aad58983c758929c9009b6d2b2fe0ddc5">gSign</a></div><div class="ttdeci">int gSign(T val)</div><div class="ttdef"><b>Definition</b> gUtils.h:202</div></div>
+<div class="ttc" id="agUtils_8h_html_aad58983c758929c9009b6d2b2fe0ddc5"><div class="ttname"><a href="gUtils_8h.html#aad58983c758929c9009b6d2b2fe0ddc5">gSign</a></div><div class="ttdeci">int gSign(T val)</div><div class="ttdef"><b>Definition</b> gUtils.h:203</div></div>
 <div class="ttc" id="agUtils_8h_html_ab610043e9ff49ddd15be745b10707532"><div class="ttname"><a href="gUtils_8h.html#ab610043e9ff49ddd15be745b10707532">gGetLocale</a></div><div class="ttdeci">std::locale gGetLocale(const std::string &amp;locale)</div></div>
 <div class="ttc" id="agUtils_8h_html_abbd858e3d4ede37fa9e51b2ea633002a"><div class="ttname"><a href="gUtils_8h.html#abbd858e3d4ede37fa9e51b2ea633002a">gGetUnixTime</a></div><div class="ttdeci">unsigned int gGetUnixTime()</div></div>
 <div class="ttc" id="agUtils_8h_html_abd00a345b47e08160d6b0c98e1fe82b4"><div class="ttname"><a href="gUtils_8h.html#abd00a345b47e08160d6b0c98e1fe82b4">gIsNumber</a></div><div class="ttdeci">bool gIsNumber(const std::string &amp;str)</div></div>
-<div class="ttc" id="agUtils_8h_html_abdda3cd414cd2b487309c57bffbcf36a"><div class="ttname"><a href="gUtils_8h.html#abdda3cd414cd2b487309c57bffbcf36a">gClamp</a></div><div class="ttdeci">T gClamp(T t, T min, T max)</div><div class="ttdef"><b>Definition</b> gUtils.h:293</div></div>
+<div class="ttc" id="agUtils_8h_html_abdda3cd414cd2b487309c57bffbcf36a"><div class="ttname"><a href="gUtils_8h.html#abdda3cd414cd2b487309c57bffbcf36a">gClamp</a></div><div class="ttdeci">T gClamp(T t, T min, T max)</div><div class="ttdef"><b>Definition</b> gUtils.h:294</div></div>
 <div class="ttc" id="agUtils_8h_html_abe1614a0462f0cbc0732cd4d09601094"><div class="ttname"><a href="gUtils_8h.html#abe1614a0462f0cbc0732cd4d09601094">gRandom</a></div><div class="ttdeci">float gRandom(float max)</div></div>
 <div class="ttc" id="agUtils_8h_html_abf6e82125e0f3a430ab6a088a97821ff"><div class="ttname"><a href="gUtils_8h.html#abf6e82125e0f3a430ab6a088a97821ff">gDefaultMonitorWidth</a></div><div class="ttdeci">int gDefaultMonitorWidth()</div></div>
 <div class="ttc" id="agUtils_8h_html_ac324a5269afd31384c9dfaf0344855dd"><div class="ttname"><a href="gUtils_8h.html#ac324a5269afd31384c9dfaf0344855dd">gToFloat</a></div><div class="ttdeci">float gToFloat(const std::string &amp;floatString)</div></div>

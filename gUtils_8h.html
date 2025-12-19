@@ -106,6 +106,7 @@ $(document).ready(function(){initNavTree('gUtils_8h.html',''); initResizable(); 
 <code>#include &lt;stdlib.h&gt;</code><br />
 <code>#include &lt;wchar.h&gt;</code><br />
 <code>#include &lt;vector&gt;</code><br />
+<code>#include &lt;memory&gt;</code><br />
 <code>#include &quot;<a class="el" href="gConstants_8h_source.html">gConstants.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="gKeyCode_8h_source.html">gKeyCode.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="gGUIEvents_8h_source.html">gGUIEvents.h</a>&quot;</code><br />
@@ -118,45 +119,47 @@ Include dependency graph for gUtils.h:</div>
 <div class="dyncontent">
 <div class="center"><img src="gUtils_8h__incl.png" border="0" usemap="#agUtils_8h" alt=""/></div>
 <map name="agUtils_8h" id="agUtils_8h">
-<area shape="rect" title=" " alt="" coords="716,5,788,31"/>
+<area shape="rect" title=" " alt="" coords="763,5,835,31"/>
 <area shape="rect" title=" " alt="" coords="5,79,64,104"/>
-<area shape="poly" title=" " alt="" coords="716,23,453,37,269,54,78,81,77,76,269,49,453,31,716,18"/>
+<area shape="poly" title=" " alt="" coords="763,23,650,26,482,35,284,53,78,81,77,76,283,48,482,30,649,21,763,17"/>
 <area shape="rect" title=" " alt="" coords="88,79,163,104"/>
-<area shape="poly" title=" " alt="" coords="716,24,492,42,338,59,177,81,176,76,337,53,492,37,716,19"/>
+<area shape="poly" title=" " alt="" coords="763,24,521,41,352,58,177,81,176,76,352,52,520,35,762,18"/>
 <area shape="rect" title=" " alt="" coords="187,79,263,104"/>
-<area shape="poly" title=" " alt="" coords="716,25,532,45,277,81,276,76,532,40,716,20"/>
+<area shape="poly" title=" " alt="" coords="763,25,560,44,422,60,277,81,277,76,421,55,560,38,762,19"/>
 <area shape="rect" title=" " alt="" coords="288,79,368,104"/>
-<area shape="poly" title=" " alt="" coords="716,27,574,48,382,81,381,76,573,43,716,22"/>
+<area shape="poly" title=" " alt="" coords="762,26,601,47,382,81,381,76,601,42,762,21"/>
 <area shape="rect" title=" " alt="" coords="392,79,467,104"/>
-<area shape="poly" title=" " alt="" coords="716,30,481,81,479,76,715,24"/>
+<area shape="poly" title=" " alt="" coords="763,28,481,81,480,76,762,23"/>
 <area shape="rect" title=" " alt="" coords="491,79,551,104"/>
-<area shape="poly" title=" " alt="" coords="717,33,565,79,564,74,715,28"/>
+<area shape="poly" title=" " alt="" coords="763,31,565,81,564,76,762,26"/>
 <area shape="rect" title=" " alt="" coords="575,79,646,104"/>
-<area shape="poly" title=" " alt="" coords="730,33,647,75,645,70,728,28"/>
+<area shape="poly" title=" " alt="" coords="769,33,655,76,653,71,768,28"/>
 <area shape="rect" title=" " alt="" coords="671,79,743,104"/>
-<area shape="poly" title=" " alt="" coords="747,32,724,69,719,66,742,30"/>
+<area shape="poly" title=" " alt="" coords="786,33,734,72,731,68,782,29"/>
 <area shape="rect" title=" " alt="" coords="767,79,830,104"/>
-<area shape="poly" title=" " alt="" coords="762,30,786,66,781,69,757,32"/>
-<area shape="rect" href="gConstants_8h.html" title=" " alt="" coords="855,79,961,104"/>
-<area shape="poly" title=" " alt="" coords="778,28,871,70,869,75,776,33"/>
-<area shape="rect" href="gKeyCode_8h.html" title=" " alt="" coords="985,79,1084,104"/>
-<area shape="poly" title=" " alt="" coords="789,26,977,73,975,78,788,31"/>
-<area shape="rect" href="gGUIEvents_8h.html" title=" " alt="" coords="1109,79,1219,104"/>
-<area shape="poly" title=" " alt="" coords="789,23,1095,75,1094,81,788,28"/>
-<area shape="rect" href="tinyfiledialogs_8h.html" title=" " alt="" coords="1243,79,1370,104"/>
-<area shape="poly" title=" " alt="" coords="788,21,1230,76,1229,81,788,26"/>
-<area shape="rect" href="gColor_8h.html" title=" " alt="" coords="1395,79,1469,104"/>
-<area shape="poly" title=" " alt="" coords="788,18,1033,35,1204,52,1382,76,1381,81,1203,58,1033,41,788,24"/>
-<area shape="rect" title=" " alt="" coords="1493,79,1560,104"/>
-<area shape="poly" title=" " alt="" coords="788,18,1072,31,1272,49,1480,76,1479,81,1271,54,1071,37,788,23"/>
-<area shape="rect" title=" " alt="" coords="1585,79,1647,104"/>
-<area shape="poly" title=" " alt="" coords="788,17,915,20,1106,29,1334,46,1571,76,1571,82,1334,52,1106,34,915,25,788,22"/>
-<area shape="rect" title=" " alt="" coords="1242,152,1353,177"/>
-<area shape="poly" title=" " alt="" coords="1412,106,1333,148,1330,143,1409,102"/>
-<area shape="rect" title=" " alt="" coords="1377,152,1487,177"/>
-<area shape="poly" title=" " alt="" coords="1435,104,1435,138,1429,138,1429,104"/>
-<area shape="rect" title=" " alt="" coords="1511,152,1574,177"/>
-<area shape="poly" title=" " alt="" coords="1451,102,1514,142,1511,147,1448,106"/>
+<area shape="poly" title=" " alt="" coords="801,31,801,65,796,65,796,31"/>
+<area shape="rect" title=" " alt="" coords="855,79,932,104"/>
+<area shape="poly" title=" " alt="" coords="815,29,868,68,865,72,812,33"/>
+<area shape="rect" href="gConstants_8h.html" title=" " alt="" coords="956,79,1063,104"/>
+<area shape="poly" title=" " alt="" coords="833,28,963,72,962,77,832,33"/>
+<area shape="rect" href="gKeyCode_8h.html" title=" " alt="" coords="1087,79,1185,104"/>
+<area shape="poly" title=" " alt="" coords="835,24,1074,74,1073,79,834,30"/>
+<area shape="rect" href="gGUIEvents_8h.html" title=" " alt="" coords="1210,79,1321,104"/>
+<area shape="poly" title=" " alt="" coords="835,22,1197,76,1196,81,835,27"/>
+<area shape="rect" href="tinyfiledialogs_8h.html" title=" " alt="" coords="1345,79,1471,104"/>
+<area shape="poly" title=" " alt="" coords="835,20,1042,42,1331,76,1331,81,1041,47,835,26"/>
+<area shape="rect" href="gColor_8h.html" title=" " alt="" coords="1496,79,1571,104"/>
+<area shape="poly" title=" " alt="" coords="835,18,1101,34,1288,51,1483,76,1482,81,1288,56,1101,39,835,23"/>
+<area shape="rect" title=" " alt="" coords="1595,79,1661,104"/>
+<area shape="poly" title=" " alt="" coords="835,17,957,21,1139,30,1356,48,1581,76,1581,81,1355,53,1139,35,956,26,835,23"/>
+<area shape="rect" title=" " alt="" coords="1686,79,1749,104"/>
+<area shape="poly" title=" " alt="" coords="835,17,969,19,1174,27,1418,45,1546,59,1673,76,1672,82,1546,64,1418,50,1173,32,969,24,835,22"/>
+<area shape="rect" title=" " alt="" coords="1343,152,1454,177"/>
+<area shape="poly" title=" " alt="" coords="1513,106,1434,148,1432,143,1510,102"/>
+<area shape="rect" title=" " alt="" coords="1478,152,1589,177"/>
+<area shape="poly" title=" " alt="" coords="1536,104,1536,138,1531,138,1531,104"/>
+<area shape="rect" title=" " alt="" coords="1613,152,1675,177"/>
+<area shape="poly" title=" " alt="" coords="1553,102,1616,142,1613,147,1550,106"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
@@ -1675,7 +1678,7 @@ template&lt;typename T &gt; </div>
 <div class="line">       <a class="code hl_class" href="classgLogi.html">gLogi</a>(<span class="stringliteral">&quot;GameCanvas&quot;</span>) &lt;&lt; <span class="stringliteral">&quot;No file selected!&quot;</span>;</div>
 <div class="line">    }</div>
 <div class="line">}</div>
-<div class="ttc" id="aclassgLogi_html"><div class="ttname"><a href="classgLogi.html">gLogi</a></div><div class="ttdef"><b>Definition</b> gUtils.h:268</div></div>
+<div class="ttc" id="aclassgLogi_html"><div class="ttname"><a href="classgLogi.html">gLogi</a></div><div class="ttdef"><b>Definition</b> gUtils.h:269</div></div>
 <div class="ttc" id="agUtils_8h_html_a1c6191ed62fc5cc55395ff240db81a94"><div class="ttname"><a href="gUtils_8h.html#a1c6191ed62fc5cc55395ff240db81a94">gShowOpenFileDialog</a></div><div class="ttdeci">std::string gShowOpenFileDialog(const std::string &amp;dialogTitle, const std::string &amp;defaultPathAndFile, int filterNum, const std::string *filterPatterns, const std::string &amp;filterDescription, bool isMultipleSelectionAllowed=false)</div></div>
 </div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">

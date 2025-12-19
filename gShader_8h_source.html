@@ -138,7 +138,7 @@ $(document).ready(function(){initNavTree('gShader_8h_source.html',''); initResiz
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno"><a class="line" href="classgShader.html#a5b122e472ab28a85f290aa77f71bd284">   36</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classgShader.html#a5b122e472ab28a85f290aa77f71bd284">attachUbo</a>(<span class="keyword">const</span> std::string&amp; uboName, <span class="keyword">const</span> <a class="code hl_class" href="classgUbo.html">gUbo&lt;T&gt;</a>* ubo) {</div>
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>        ubos[uboName] = ubo-&gt;<a class="code hl_function" href="classgUbo.html#a8fc09e1798ebf56e1f635a60a5c739d7">getBindingPoint</a>();</div>
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>        <a class="code hl_function" href="classgShader.html#aa3050c9078b889e733153b60675b92bb">use</a>();</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>        <a class="code hl_variable" href="classgRenderObject.html#a33bb9342f1ac27b19efcde25724571f5">renderer</a>-&gt;<a class="code hl_function" href="classgRenderer.html#aa532e0d6b745e39a42807b354a909ceb">attachUbo</a>(<span class="keywordtype">id</span>, ubo-&gt;<a class="code hl_function" href="classgUbo.html#a8fc09e1798ebf56e1f635a60a5c739d7">getBindingPoint</a>(), uboName);</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>        <a class="code hl_variable" href="gRenderObject_8h.html#ad83e2dea69b83a5dc4d768c4dd4f2a0e">renderer</a>-&gt;<a class="code hl_function" href="classgRenderer.html#aa532e0d6b745e39a42807b354a909ceb">attachUbo</a>(<span class="keywordtype">id</span>, ubo-&gt;<a class="code hl_function" href="classgUbo.html#a8fc09e1798ebf56e1f635a60a5c739d7">getBindingPoint</a>(), uboName);</div>
 <div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    }</div>
 </div>
 <div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span> </div>
@@ -181,8 +181,7 @@ $(document).ready(function(){initNavTree('gShader_8h_source.html',''); initResiz
 </div>
 <div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span> </div>
 <div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span><span class="preprocessor">#endif </span><span class="comment">/* ENGINE_GRAPHICS_GSHADER_H_ */</span><span class="preprocessor"></span></div>
-<div class="ttc" id="aclassgRenderObject_html"><div class="ttname"><a href="classgRenderObject.html">gRenderObject</a></div><div class="ttdef"><b>Definition</b> gRenderObject.h:23</div></div>
-<div class="ttc" id="aclassgRenderObject_html_a33bb9342f1ac27b19efcde25724571f5"><div class="ttname"><a href="classgRenderObject.html#a33bb9342f1ac27b19efcde25724571f5">gRenderObject::renderer</a></div><div class="ttdeci">static gRenderer * renderer</div><div class="ttdef"><b>Definition</b> gRenderObject.h:46</div></div>
+<div class="ttc" id="aclassgRenderObject_html"><div class="ttname"><a href="classgRenderObject.html">gRenderObject</a></div><div class="ttdef"><b>Definition</b> gRenderObject.h:25</div></div>
 <div class="ttc" id="aclassgRenderer_html_aa532e0d6b745e39a42807b354a909ceb"><div class="ttname"><a href="classgRenderer.html#aa532e0d6b745e39a42807b354a909ceb">gRenderer::attachUbo</a></div><div class="ttdeci">virtual void attachUbo(GLuint id, int bindingpoint, const std::string &amp;uboName)=0</div></div>
 <div class="ttc" id="aclassgShader_html"><div class="ttname"><a href="classgShader.html">gShader</a></div><div class="ttdef"><b>Definition</b> gShader.h:19</div></div>
 <div class="ttc" id="aclassgShader_html_a03bf018f430d6d5a902f586dbbddda47"><div class="ttname"><a href="classgShader.html#a03bf018f430d6d5a902f586dbbddda47">gShader::setMat2</a></div><div class="ttdeci">void setMat2(const std::string &amp;name, const glm::mat2 &amp;mat)</div></div>
@@ -216,6 +215,7 @@ $(document).ready(function(){initNavTree('gShader_8h_source.html',''); initResiz
 <div class="ttc" id="aclassgUbo_html"><div class="ttname"><a href="classgUbo.html">gUbo</a></div><div class="ttdef"><b>Definition</b> gUbo.h:12</div></div>
 <div class="ttc" id="aclassgUbo_html_a8fc09e1798ebf56e1f635a60a5c739d7"><div class="ttname"><a href="classgUbo.html#a8fc09e1798ebf56e1f635a60a5c739d7">gUbo::getBindingPoint</a></div><div class="ttdeci">int getBindingPoint() const</div><div class="ttdef"><b>Definition</b> gUbo.h:61</div></div>
 <div class="ttc" id="agRenderObject_8h_html"><div class="ttname"><a href="gRenderObject_8h.html">gRenderObject.h</a></div></div>
+<div class="ttc" id="agRenderObject_8h_html_ad83e2dea69b83a5dc4d768c4dd4f2a0e"><div class="ttname"><a href="gRenderObject_8h.html#ad83e2dea69b83a5dc4d768c4dd4f2a0e">renderer</a></div><div class="ttdeci">gRenderer * renderer</div></div>
 <div class="ttc" id="agRenderer_8h_html"><div class="ttname"><a href="gRenderer_8h.html">gRenderer.h</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
