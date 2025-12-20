@@ -19,10 +19,11 @@
 
 // No scaling, the given resolution will be used as is
 #define G_SCREENSCALING_NONE 0
+#define G_SCREENSCALING_MIPMAP 1
 // Screen will be scaled dynamically, providing the same unit resolution but on different resolutions.
-#define G_SCREENSCALING_AUTO 1
+#define G_SCREENSCALING_AUTO 2
 // Screen will be scaled dynamically, but unlike AUTO it makes sure the initial scale is kept and unit resolution is updated automatically.
-#define G_SCREENSCALING_AUTO_ONCE 2
+#define G_SCREENSCALING_AUTO_ONCE 3
 
 #define G_LOOPMODE_NORMAL 1
 #define G_LOOPMODE_NONE 0
