@@ -1,5 +1,6 @@
 var NAVTREEINDEX17 =
 {
+"structgRenderer_1_1gSceneFogData.html#a430bc52be9ae45e5c6161086fbdedd63":[1,0,138,1,5],
 "structgRenderer_1_1gSceneFogData.html#a52fbca828c7a89b94457ba5f0c8cb461":[1,0,138,1,4],
 "structgRenderer_1_1gSceneFogData.html#a555b19f83c6c0e00463b12da0f4d2cea":[1,0,138,1,1],
 "structgRenderer_1_1gSceneFogData.html#a6e3e7ba8c2a35dd85b44c3dbbef51d16":[1,0,138,1,0],

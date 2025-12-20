@@ -1,5 +1,6 @@
 var NAVTREEINDEX16 =
 {
+"gSpriteAnimation_8h.html#a05ace1778679794e816adbd5d83eb7bca8615d1dec37d65a6c10dc4f58a15780e":[2,0,0,0,0,10,7],
 "gSpriteAnimation_8h.html#a05ace1778679794e816adbd5d83eb7bca95c736070f99b99eb80d1eac1f4ca60f":[2,0,0,0,0,10,0],
 "gSpriteAnimation_8h.html#a05ace1778679794e816adbd5d83eb7bcaa1e095cc966dbecf6a0d8aad75348d1a":[2,0,0,0,0,10,5],
 "gSpriteAnimation_8h.html#a05ace1778679794e816adbd5d83eb7bcaa82764c3079aea4e60c80e45befbb839":[2,0,0,0,0,10,6],
@@ -248,6 +249,5 @@ var NAVTREEINDEX16 =
 "structgRenderer_1_1gSceneData.html#a89f96a2a3d34fdc9e05c1f4b0720204e":[1,0,138,0,4],
 "structgRenderer_1_1gSceneData.html#aa301bd9a32069c1189021b592d8c2b1d":[1,0,138,0,5],
 "structgRenderer_1_1gSceneData.html#aad361730c6a440e3b644bf0bb45c264c":[1,0,138,0,2],
-"structgRenderer_1_1gSceneFogData.html":[1,0,138,1],
-"structgRenderer_1_1gSceneFogData.html#a430bc52be9ae45e5c6161086fbdedd63":[1,0,138,1,5]
+"structgRenderer_1_1gSceneFogData.html":[1,0,138,1]
 };
