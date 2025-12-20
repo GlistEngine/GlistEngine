@@ -144,6 +144,23 @@ private:
 	int width, height;
 };
 
+class gWindowScaleChangedEvent : public gEvent {
+public:
+	gWindowScaleChangedEvent(int width, int height, float scalex, float scaley)
+		: width(width), height(height), scalex(scalex), scaley(scaley) {}
+
+	int getWidth() const { return width; }
+	int getHeight() const { return height; }
+	float getScaleX() const { return scalex; }
+	float getScaleY() const { return scaley; }
+
+	G_EVENT_CLASS_TYPE(gWindowScaleChangedEvent)
+	G_EVENT_CLASS_CATEGORY(EVENTCATEGORY_APP)
+private:
+	int width, height;
+	float scalex, scaley;
+};
+
 class gWindowFocusEvent : public gEvent {
 public:
 	gWindowFocusEvent() {}

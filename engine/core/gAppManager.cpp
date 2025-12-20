@@ -573,6 +573,7 @@ void gAppManager::onEvent(gEvent& event) {
 
     gEventDispatcher dispatcher(event);
     dispatcher.dispatch<gWindowResizeEvent>(G_BIND_FUNCTION(onWindowResizedEvent));
+    dispatcher.dispatch<gWindowScaleChangedEvent>(G_BIND_FUNCTION(onWindowScaleChangedEvent));
     dispatcher.dispatch<gCharTypedEvent>(G_BIND_FUNCTION(onCharTypedEvent));
     dispatcher.dispatch<gKeyPressedEvent>(G_BIND_FUNCTION(onKeyPressedEvent));
     dispatcher.dispatch<gKeyReleasedEvent>(G_BIND_FUNCTION(onKeyReleasedEvent));
@@ -643,6 +644,19 @@ bool gAppManager::onWindowResizedEvent(gWindowResizeEvent& event) {
     olddeviceorientation = deviceorientation;
 #endif
     return false;
+}
+
+bool gAppManager::onWindowScaleChangedEvent(gWindowScaleChangedEvent& event) {
+	if(!canvasmanager || !initialized || (!getCurrentCanvas() && !canvasmanager->getTempCanvas())) {
+		return true;
+	}
+	renderer->width = event.getWidth();
+	renderer->height = event.getHeight();
+	if(screenscaling == G_SCREENSCALING_AUTO_ONCE) {
+		renderer->unitwidth = renderer->width / event.getScaleX();
+		renderer->unitheight = renderer->height / event.getScaleY();
+	}
+	return false;
 }
 
 bool gAppManager::onCharTypedEvent(gCharTypedEvent& event) {

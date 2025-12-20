@@ -8,6 +8,9 @@
 #include "gGLFWWindow.h"
 #include "gAppManager.h"
 #include "gTracy.h"
+#ifdef WIN32
+#include <ShellScalingApi.h>
+#endif
 
 // Static functions
 
@@ -58,6 +61,13 @@ static void onWindowFocus(GLFWwindow* window, int focused) {
 	} else {
 		gWindowLoseFocusEvent event{};
 		handle->callEvent(event);
+	}
+}
+
+static void onScaleChange(GLFWwindow* window, float xscale, float yscale) {
+	auto handle = static_cast<gGLFWWindow*>(glfwGetWindowUserPointer(window));
+	if (handle) {
+		handle->setScale(xscale, yscale);
 	}
 }
 
@@ -166,6 +176,9 @@ gGLFWWindow::~gGLFWWindow() {
 }
 
 void gGLFWWindow::initialize(int width, int height, int windowMode, bool isResizable) {
+#ifdef WIN32
+	HRESULT hr = SetProcessDpiAwareness(PROCESS_PER_MONITOR_DPI_AWARE);
+#endif
 	gBaseWindow::initialize(width, height, windowMode, isResizable);
 
 	// Set error callback before glfwInit() if supported
@@ -218,6 +231,7 @@ void gGLFWWindow::initialize(int width, int height, int windowMode, bool isResiz
     } else {
     	glfwWindowHint(GLFW_RESIZABLE, isResizable);
     }
+	glfwWindowHint(GLFW_SCALE_TO_MONITOR, GLFW_TRUE);
 
     window = glfwCreateWindow(width, height, title.c_str(),
 			(windowMode == G_WINDOWMODE_GAME?glfwGetPrimaryMonitor():NULL), NULL);
@@ -303,6 +317,7 @@ void gGLFWWindow::initialize(int width, int height, int windowMode, bool isResiz
 	glfwSetCursorEnterCallback(window, onMouseEnter);
 	glfwSetScrollCallback(window, onMouseScroll);
 	glfwSetWindowFocusCallback(window, onWindowFocus);
+	glfwSetWindowContentScaleCallback(window, onScaleChange);
 	glfwSetJoystickCallback(onJoystick);
 
     for (int jid = GLFW_JOYSTICK_1; jid <= GLFW_JOYSTICK_LAST; ++jid) {
@@ -460,3 +475,16 @@ bool gGLFWWindow::isGamepadButtonPressed(int joystickId, int buttonId) {
 const float* gGLFWWindow::getJoystickAxes(int joystickId, int* axisCountPtr) {
 	return glfwGetJoystickAxes(joystickId, axisCountPtr);
 }
+
+void gGLFWWindow::setScale(float x, float y) {
+	scalex = x;
+	scaley = y;
+	// Update framebuffer size since scale changed
+	int width, height;
+	glfwGetFramebufferSize(window, &width, &height);
+	glViewport(0, 0, width, height);
+	gWindowScaleChangedEvent event{width, height, x, y};
+	callEvent(event);
+	setSize(width, height);
+}
+

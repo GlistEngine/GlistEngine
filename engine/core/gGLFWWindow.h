@@ -84,6 +84,9 @@ public:
 	float getScaleY() const {
 		return scaley;
 	}
+
+	void setScale(float x, float y);
+
   private:
 	GLFWwindow* window;
 	GLFWcursor** cursor;
