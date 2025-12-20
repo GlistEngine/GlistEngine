@@ -36,7 +36,7 @@
 #endif
 
 void gStartEngine(gBaseApp* baseApp, const std::string& appName, int windowMode, int width, int height, bool isResizable) {
-    gStartEngine(baseApp, appName, windowMode, width, height, G_SCREENSCALING_AUTO, width, height, isResizable);
+    gStartEngine(baseApp, appName, windowMode, width, height, G_SCREENSCALING_AUTO_ONCE, width, height, isResizable);
 }
 
 void gStartEngine(gBaseApp* baseApp, const std::string& appName, int windowMode, int unitWidth, int unitHeight, int screenScaling, int width, int height, bool isResizable) {
