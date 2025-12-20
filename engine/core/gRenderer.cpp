@@ -453,12 +453,16 @@ void gRenderer::setScreenScaling(int screenScaling) {
 }
 
 int gRenderer::getWidth() {
-	if (screenscaling >= G_SCREENSCALING_AUTO) return unitwidth;
+	if (screenscaling >= G_SCREENSCALING_AUTO) {
+		return unitwidth;
+	}
 	return width;
 }
 
 int gRenderer::getHeight() {
-	if (screenscaling >= G_SCREENSCALING_AUTO) return unitheight;
+	if (screenscaling >= G_SCREENSCALING_AUTO) {
+		return unitheight;
+	}
 	return height;
 }
 
@@ -514,7 +518,7 @@ int gRenderer::getResolution(int screenWidth, int screenHeight) {
 	int res = 0;
 	for(int i = 0; i < 8; i++) {
 		if (screenWidth >= resolutions[i][0] * 0.9f && screenHeight >= resolutions[i][1] * 0.9f) {
-			res =i;
+			res = i;
 			break;
 		}
 	}

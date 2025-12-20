@@ -51,15 +51,16 @@ bool gFont::load(const std::string& fullPath, int size, bool isAntialiased, int 
 	}
 
 	scale = renderer->getScaleMultiplier();
+	int scaledsize = static_cast<int>(std::round(fontsize * scale));
 	FT_Set_Char_Size(fontface,
-					 static_cast<int>(fontsize * scale) << 6,
-					 static_cast<int>(fontsize * scale) << 6,
+					 scaledsize << 6,
+					 scaledsize << 6,
 					 dpi,
 					 dpi);
 	lineheight = fontsize * 1.43f;
 	letterspacing = 1;
 	spacesize = 1;
-	border = 3;
+	border = 4;
 	characternumlimit = 1000;
 
 	iskerning = FT_HAS_KERNING(fontface);
@@ -94,7 +95,9 @@ void gFont::drawText(const std::string& text, float x, float y) {
 				loadChar(c);
 			}
 			posx += getKerning(c, previous);
-			chartextures[c]->draw(glm::vec2(posx + charproperties[c].leftmargin, posy + charproperties[c].dytop),
+			float drawx = roundIfRequired(posx + charproperties[c].leftmargin);
+			float drawy = roundIfRequired(posy + charproperties[c].dytop);
+			chartextures[c]->draw(glm::vec2(drawx, drawy),
 								  glm::vec2(charproperties[c].texturewidth, charproperties[c].textureheight));
 			posx += charproperties[c].advance * letterspacing * (c == ' ' ? spacesize : 1.0f);
 		}
@@ -122,7 +125,9 @@ void gFont::drawTextVerticallyFlipped(const std::string& text, float x, float y)
 				loadChar(c);
 			}
 			posx += getKerning(c, previous);
-			chartextures[c]->draw(glm::vec2(posx + charproperties[c].leftmargin, posy - charproperties[c].dytop),
+			float drawx = roundIfRequired(posx + charproperties[c].leftmargin);
+			float drawy = roundIfRequired(posy - charproperties[c].dytop);
+			chartextures[c]->draw(glm::vec2(drawx, drawy),
 								  glm::vec2(charproperties[c].texturewidth, -charproperties[c].textureheight));
 			posx += charproperties[c].advance * letterspacing * (c == ' ' ? spacesize : 1.0f);
 		}
@@ -169,9 +174,9 @@ void gFont::drawTextHorizontallyFlipped(const std::string& text, float x, float 
 
 			float kerning = getKerning(c, prevChar);
 			posx -= kerning;
-
-			float drawx = posx - charproperties[c].leftmargin - charproperties[c].texturewidth;
-			chartextures[c]->draw(glm::vec2(drawx, posy + charproperties[c].dytop),
+			float drawx = roundIfRequired(posx - charproperties[c].leftmargin - charproperties[c].texturewidth);
+			float drawy = roundIfRequired(posy + charproperties[c].dytop);
+			chartextures[c]->draw(glm::vec2(drawx, drawy),
 								  glm::vec2(-charproperties[c].texturewidth, charproperties[c].textureheight));
 			posx -= charproperties[c].advance * letterspacing * (c == ' ' ? spacesize : 1.0f);
 		}
@@ -265,9 +270,6 @@ void gFont::resizeVectors(int num) {
 void gFont::loadChar(int charCode) {
 	G_PROFILE_ZONE_SCOPED_N("gFont::loadChar()");
 	FT_Int32 loadflags = isantialiased ? FT_LOAD_TARGET_NORMAL : FT_LOAD_MONOCHROME;
-	if (scale > 1) {
-		loadflags |= FT_LOAD_NO_HINTING;
-	}
 	FT_Error error = FT_Load_Glyph(fontface, FT_Get_Char_Index(fontface, charCode), loadflags);
 	if (error) {
 		gLoge("gFont") << "Error FT_Load_Glyph";
@@ -425,4 +427,11 @@ std::wstring gFont::s2ws(const std::string& s) const {
 	std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
 	return converter.from_bytes(s);
 #endif
+}
+
+float gFont::roundIfRequired(float val) {
+	if (scale > 1) {
+		return std::round(val * scale) / scale;
+	}
+	return val;
 }

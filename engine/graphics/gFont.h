@@ -216,6 +216,7 @@ private:
 					unsigned char* dstData, int dstWidth, int dstHeight, int dstComponentNum,
 					size_t dstFirstX, size_t dstFirstY) const;
 	std::wstring s2ws(const std::string& s) const;
+	float roundIfRequired(float val);
 };
 
 #endif /* ENGINE_GRAPHICS_GFONT_H_ */

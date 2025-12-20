@@ -210,9 +210,10 @@ void gAppManager::initialize() {
 		// Create renderer
 		gRenderObject::createRenderer();
 		// Update renderer dimensions
-		gBaseCanvas::setScreenSize(width, height);
-		gBaseCanvas::setUnitScreenSize(unitwidth, unitheight);
-		gBaseCanvas::setScreenScaling(screenscaling);
+		renderer->setScreenSize(width, height);
+		renderer->setUnitScreenSize(unitwidth, unitheight);
+		renderer->setScreenScaling(screenscaling);
+
 		// Create managers if not created
 		if(!guimanager) {
 			guimanager = new gGUIManager(app, renderer->getWidth(), renderer->getHeight());
@@ -366,9 +367,18 @@ void gAppManager::setScreenSize(int width, int height) {
 	G_PROFILE_ZONE_SCOPED_N("gAppManager::setScreenSize()");
 	G_PROFILE_ZONE_VALUE(width);
 	G_PROFILE_ZONE_VALUE(height);
-    gRenderObject::setScreenSize(width, height);
-    if(iscanvasset && canvasmanager->getCurrentCanvas()) canvasmanager->getCurrentCanvas()->windowResized(width, height);
-    if(iscanvasset && guimanager->isframeset) guimanager->windowResized(width, height);
+	if(screenscaling == G_SCREENSCALING_AUTO_ONCE) {
+		// We don't want to update the unitresolution, that's why its setting directly. gAppManager needs to be a friend of gRenderer to do this.
+		renderer->unitwidth = renderer->scaleX(width);
+		renderer->unitheight = renderer->scaleY(height);
+	}
+	renderer->setScreenSize(width, height);
+    if(iscanvasset && canvasmanager->getCurrentCanvas()) {
+	    canvasmanager->getCurrentCanvas()->windowResized(width, height);
+    }
+    if(iscanvasset && guimanager->isframeset) {
+	    guimanager->windowResized(width, height);
+    }
 }
 
 void gAppManager::setCurrentCanvas(gBaseCanvas* canvas) {
@@ -663,11 +673,11 @@ bool gAppManager::onMouseMovedEvent(gMouseMovedEvent& event) {
 //    if (!canvasmanager || !getCurrentCanvas()) return true;
     int xpos = event.getX();
     int ypos = event.getY();
-    if (gRenderer::getScreenScaling() > G_SCREENSCALING_NONE) {
+    if(renderer->getScreenScaling() >= G_SCREENSCALING_AUTO) {
         xpos = gRenderer::scaleX(event.getX());
         ypos = gRenderer::scaleY(event.getY());
     }
-    if (mousebuttonstate) {
+    if(mousebuttonstate) {
         if(guimanager->isframeset) guimanager->mouseDragged(xpos, ypos, mousebuttonstate);
         for(gBasePlugin*& plugin : gBasePlugin::usedplugins) plugin->mouseDragged(xpos, ypos, mousebuttonstate);
         if(canvasmanager && getCurrentCanvas()) canvasmanager->getCurrentCanvas()->mouseDragged(xpos, ypos, mousebuttonstate);
@@ -685,7 +695,7 @@ bool gAppManager::onMouseButtonPressedEvent(gMouseButtonPressedEvent& event) {
     mousebuttonstate |= pow(2, event.getMouseButton() + 1);
     int xpos = event.getX();
     int ypos = event.getY();
-    if (gRenderer::getScreenScaling() > G_SCREENSCALING_NONE) {
+    if(gRenderer::getScreenScaling() >= G_SCREENSCALING_AUTO) {
         xpos = gRenderer::scaleX(event.getX());
         ypos = gRenderer::scaleY(event.getY());
     }
@@ -701,7 +711,7 @@ bool gAppManager::onMouseButtonReleasedEvent(gMouseButtonReleasedEvent& event) {
     mousebuttonstate &= ~pow(2, event.getMouseButton() + 1);
     int xpos = event.getX();
     int ypos = event.getY();
-    if(gRenderer::getScreenScaling() > G_SCREENSCALING_NONE) {
+    if(gRenderer::getScreenScaling() > G_SCREENSCALING_AUTO) {
         xpos = gRenderer::scaleX(event.getX());
         ypos = gRenderer::scaleY(event.getY());
     }

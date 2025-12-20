@@ -492,6 +492,7 @@ public:
 
 protected:
 	friend class gRenderObject; // this is where renderer->init() is called from
+	friend class gAppManager;
 
 	static int width, height;
 	static int unitwidth, unitheight;
@@ -589,6 +590,7 @@ protected:
 	static const std::string& getShaderSrcBrdfFragment();
 	static const std::string& getShaderSrcFboVertex();
 	static const std::string& getShaderSrcFboFragment();
+
 
 };
 
