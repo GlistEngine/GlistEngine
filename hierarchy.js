@@ -25,7 +25,8 @@ var hierarchy =
       [ "gWindowLoseFocusEvent", "classgWindowLoseFocusEvent.html", null ],
       [ "gWindowMouseEnterEvent", "classgWindowMouseEnterEvent.html", null ],
       [ "gWindowMouseExitEvent", "classgWindowMouseExitEvent.html", null ],
-      [ "gWindowResizeEvent", "classgWindowResizeEvent.html", null ]
+      [ "gWindowResizeEvent", "classgWindowResizeEvent.html", null ],
+      [ "gWindowScaleChangedEvent", "classgWindowScaleChangedEvent.html", null ]
     ] ],
     [ "gEventDispatcher", "classgEventDispatcher.html", null ],
     [ "gGUIManager", "classgGUIManager.html", null ],

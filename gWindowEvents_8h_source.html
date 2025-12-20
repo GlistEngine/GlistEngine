@@ -287,184 +287,205 @@ $(document).ready(function(){initNavTree('gWindowEvents_8h_source.html',''); ini
 </div>
 <div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span> </div>
 <div class="foldopen" id="foldopen00147" data-start="{" data-end="};">
-<div class="line"><a id="l00147" name="l00147"></a><span class="lineno"><a class="line" href="classgWindowFocusEvent.html">  147</a></span><span class="keyword">class </span><a class="code hl_class" href="classgWindowFocusEvent.html">gWindowFocusEvent</a> : <span class="keyword">public</span> <a class="code hl_class" href="classgEvent.html">gEvent</a> {</div>
+<div class="line"><a id="l00147" name="l00147"></a><span class="lineno"><a class="line" href="classgWindowScaleChangedEvent.html">  147</a></span><span class="keyword">class </span><a class="code hl_class" href="classgWindowScaleChangedEvent.html">gWindowScaleChangedEvent</a> : <span class="keyword">public</span> <a class="code hl_class" href="classgEvent.html">gEvent</a> {</div>
 <div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00149" name="l00149"></a><span class="lineno"><a class="line" href="classgWindowFocusEvent.html#add3846b785969c0cf7bd49a61e057fa7">  149</a></span>    <a class="code hl_function" href="classgWindowFocusEvent.html#add3846b785969c0cf7bd49a61e057fa7">gWindowFocusEvent</a>() {}</div>
-<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span> </div>
-<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>    <a class="code hl_define" href="gEvent_8h.html#aeb5da1b4180e1a24e8a40b5d63ae6772">G_EVENT_CLASS_TYPE</a>(<a class="code hl_class" href="classgWindowFocusEvent.html">gWindowFocusEvent</a>)</div>
-<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>    <a class="code hl_define" href="gEvent_8h.html#a33b0815dbba4f06a2dbc269e1014d70c">G_EVENT_CLASS_CATEGORY</a>(<a class="code hl_enumvalue" href="gEvent_8h.html#aa8b0556527d429476e3f3d6cfab1a21faa1ff59267ca574411d3c0825dced1cdf">EVENTCATEGORY_APP</a>)</div>
-<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>};</div>
+<div class="foldopen" id="foldopen00149" data-start="{" data-end="}">
+<div class="line"><a id="l00149" name="l00149"></a><span class="lineno"><a class="line" href="classgWindowScaleChangedEvent.html#a67e5805faec25bba0dcbeefb4928dec5">  149</a></span>    <a class="code hl_function" href="classgWindowScaleChangedEvent.html#a67e5805faec25bba0dcbeefb4928dec5">gWindowScaleChangedEvent</a>(<span class="keywordtype">int</span> width, <span class="keywordtype">int</span> height, <span class="keywordtype">float</span> scalex, <span class="keywordtype">float</span> scaley)</div>
+<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>        : width(width), height(height), scalex(scalex), scaley(scaley) {}</div>
 </div>
-<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span> </div>
-<div class="foldopen" id="foldopen00155" data-start="{" data-end="};">
-<div class="line"><a id="l00155" name="l00155"></a><span class="lineno"><a class="line" href="classgWindowLoseFocusEvent.html">  155</a></span><span class="keyword">class </span><a class="code hl_class" href="classgWindowLoseFocusEvent.html">gWindowLoseFocusEvent</a> : <span class="keyword">public</span> <a class="code hl_class" href="classgEvent.html">gEvent</a> {</div>
-<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00157" name="l00157"></a><span class="lineno"><a class="line" href="classgWindowLoseFocusEvent.html#a7f702e57d8bf70f89350b1c0ccc7977f">  157</a></span>    <a class="code hl_function" href="classgWindowLoseFocusEvent.html#a7f702e57d8bf70f89350b1c0ccc7977f">gWindowLoseFocusEvent</a>() {}</div>
-<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span> </div>
-<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>    <a class="code hl_define" href="gEvent_8h.html#aeb5da1b4180e1a24e8a40b5d63ae6772">G_EVENT_CLASS_TYPE</a>(<a class="code hl_class" href="classgWindowLoseFocusEvent.html">gWindowLoseFocusEvent</a>)</div>
-<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>    <a class="code hl_define" href="gEvent_8h.html#a33b0815dbba4f06a2dbc269e1014d70c">G_EVENT_CLASS_CATEGORY</a>(<a class="code hl_enumvalue" href="gEvent_8h.html#aa8b0556527d429476e3f3d6cfab1a21faa1ff59267ca574411d3c0825dced1cdf">EVENTCATEGORY_APP</a>)</div>
-<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>};</div>
+<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span> </div>
+<div class="line"><a id="l00152" name="l00152"></a><span class="lineno"><a class="line" href="classgWindowScaleChangedEvent.html#aa0a78aa06b936ddd4db376e3d7f9797e">  152</a></span>    <span class="keywordtype">int</span> <a class="code hl_function" href="classgWindowScaleChangedEvent.html#aa0a78aa06b936ddd4db376e3d7f9797e">getWidth</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> width; }</div>
+<div class="line"><a id="l00153" name="l00153"></a><span class="lineno"><a class="line" href="classgWindowScaleChangedEvent.html#a098ab53b6d75f027952764fc7271ef1a">  153</a></span>    <span class="keywordtype">int</span> <a class="code hl_function" href="classgWindowScaleChangedEvent.html#a098ab53b6d75f027952764fc7271ef1a">getHeight</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> height; }</div>
+<div class="line"><a id="l00154" name="l00154"></a><span class="lineno"><a class="line" href="classgWindowScaleChangedEvent.html#aaea1539855ddcd14d945f32e754106fd">  154</a></span>    <span class="keywordtype">float</span> <a class="code hl_function" href="classgWindowScaleChangedEvent.html#aaea1539855ddcd14d945f32e754106fd">getScaleX</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> scalex; }</div>
+<div class="line"><a id="l00155" name="l00155"></a><span class="lineno"><a class="line" href="classgWindowScaleChangedEvent.html#a96740ffd86f4545a6197548a4befc41a">  155</a></span>    <span class="keywordtype">float</span> <a class="code hl_function" href="classgWindowScaleChangedEvent.html#a96740ffd86f4545a6197548a4befc41a">getScaleY</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> scaley; }</div>
+<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span> </div>
+<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>    <a class="code hl_define" href="gEvent_8h.html#aeb5da1b4180e1a24e8a40b5d63ae6772">G_EVENT_CLASS_TYPE</a>(<a class="code hl_class" href="classgWindowScaleChangedEvent.html">gWindowScaleChangedEvent</a>)</div>
+<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>    <a class="code hl_define" href="gEvent_8h.html#a33b0815dbba4f06a2dbc269e1014d70c">G_EVENT_CLASS_CATEGORY</a>(<a class="code hl_enumvalue" href="gEvent_8h.html#aa8b0556527d429476e3f3d6cfab1a21faa1ff59267ca574411d3c0825dced1cdf">EVENTCATEGORY_APP</a>)</div>
+<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>    <span class="keywordtype">int</span> width, height;</div>
+<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>    <span class="keywordtype">float</span> scalex, scaley;</div>
+<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>};</div>
 </div>
-<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span> </div>
-<div class="foldopen" id="foldopen00163" data-start="{" data-end="};">
-<div class="line"><a id="l00163" name="l00163"></a><span class="lineno"><a class="line" href="classgWindowMouseEnterEvent.html">  163</a></span><span class="keyword">class </span><a class="code hl_class" href="classgWindowMouseEnterEvent.html">gWindowMouseEnterEvent</a> : <span class="keyword">public</span> <a class="code hl_class" href="classgEvent.html">gEvent</a> {</div>
-<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00165" name="l00165"></a><span class="lineno"><a class="line" href="classgWindowMouseEnterEvent.html#ad100f2352f44ee63642ba2d5e3c0dba4">  165</a></span>    <a class="code hl_function" href="classgWindowMouseEnterEvent.html#ad100f2352f44ee63642ba2d5e3c0dba4">gWindowMouseEnterEvent</a>() {}</div>
-<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span> </div>
-<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>    <a class="code hl_define" href="gEvent_8h.html#aeb5da1b4180e1a24e8a40b5d63ae6772">G_EVENT_CLASS_TYPE</a>(<a class="code hl_class" href="classgWindowMouseEnterEvent.html">gWindowMouseEnterEvent</a>)</div>
-<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>    <a class="code hl_define" href="gEvent_8h.html#a33b0815dbba4f06a2dbc269e1014d70c">G_EVENT_CLASS_CATEGORY</a>(<a class="code hl_enumvalue" href="gEvent_8h.html#aa8b0556527d429476e3f3d6cfab1a21faa1ff59267ca574411d3c0825dced1cdf">EVENTCATEGORY_APP</a>)</div>
-<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>};</div>
+<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span> </div>
+<div class="foldopen" id="foldopen00164" data-start="{" data-end="};">
+<div class="line"><a id="l00164" name="l00164"></a><span class="lineno"><a class="line" href="classgWindowFocusEvent.html">  164</a></span><span class="keyword">class </span><a class="code hl_class" href="classgWindowFocusEvent.html">gWindowFocusEvent</a> : <span class="keyword">public</span> <a class="code hl_class" href="classgEvent.html">gEvent</a> {</div>
+<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00166" name="l00166"></a><span class="lineno"><a class="line" href="classgWindowFocusEvent.html#add3846b785969c0cf7bd49a61e057fa7">  166</a></span>    <a class="code hl_function" href="classgWindowFocusEvent.html#add3846b785969c0cf7bd49a61e057fa7">gWindowFocusEvent</a>() {}</div>
+<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span> </div>
+<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>    <a class="code hl_define" href="gEvent_8h.html#aeb5da1b4180e1a24e8a40b5d63ae6772">G_EVENT_CLASS_TYPE</a>(<a class="code hl_class" href="classgWindowFocusEvent.html">gWindowFocusEvent</a>)</div>
+<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>    <a class="code hl_define" href="gEvent_8h.html#a33b0815dbba4f06a2dbc269e1014d70c">G_EVENT_CLASS_CATEGORY</a>(<a class="code hl_enumvalue" href="gEvent_8h.html#aa8b0556527d429476e3f3d6cfab1a21faa1ff59267ca574411d3c0825dced1cdf">EVENTCATEGORY_APP</a>)</div>
+<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>};</div>
 </div>
-<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span> </div>
-<div class="foldopen" id="foldopen00171" data-start="{" data-end="};">
-<div class="line"><a id="l00171" name="l00171"></a><span class="lineno"><a class="line" href="classgWindowMouseExitEvent.html">  171</a></span><span class="keyword">class </span><a class="code hl_class" href="classgWindowMouseExitEvent.html">gWindowMouseExitEvent</a> : <span class="keyword">public</span> <a class="code hl_class" href="classgEvent.html">gEvent</a> {</div>
-<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00173" name="l00173"></a><span class="lineno"><a class="line" href="classgWindowMouseExitEvent.html#a2643381a147dd2770d498da624e45424">  173</a></span>    <a class="code hl_function" href="classgWindowMouseExitEvent.html#a2643381a147dd2770d498da624e45424">gWindowMouseExitEvent</a>() {}</div>
-<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span> </div>
-<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>    <a class="code hl_define" href="gEvent_8h.html#aeb5da1b4180e1a24e8a40b5d63ae6772">G_EVENT_CLASS_TYPE</a>(<a class="code hl_class" href="classgWindowMouseExitEvent.html">gWindowMouseExitEvent</a>)</div>
-<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>    <a class="code hl_define" href="gEvent_8h.html#a33b0815dbba4f06a2dbc269e1014d70c">G_EVENT_CLASS_CATEGORY</a>(<a class="code hl_enumvalue" href="gEvent_8h.html#aa8b0556527d429476e3f3d6cfab1a21faa1ff59267ca574411d3c0825dced1cdf">EVENTCATEGORY_APP</a>)</div>
-<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>};</div>
+<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span> </div>
+<div class="foldopen" id="foldopen00172" data-start="{" data-end="};">
+<div class="line"><a id="l00172" name="l00172"></a><span class="lineno"><a class="line" href="classgWindowLoseFocusEvent.html">  172</a></span><span class="keyword">class </span><a class="code hl_class" href="classgWindowLoseFocusEvent.html">gWindowLoseFocusEvent</a> : <span class="keyword">public</span> <a class="code hl_class" href="classgEvent.html">gEvent</a> {</div>
+<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00174" name="l00174"></a><span class="lineno"><a class="line" href="classgWindowLoseFocusEvent.html#a7f702e57d8bf70f89350b1c0ccc7977f">  174</a></span>    <a class="code hl_function" href="classgWindowLoseFocusEvent.html#a7f702e57d8bf70f89350b1c0ccc7977f">gWindowLoseFocusEvent</a>() {}</div>
+<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span> </div>
+<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>    <a class="code hl_define" href="gEvent_8h.html#aeb5da1b4180e1a24e8a40b5d63ae6772">G_EVENT_CLASS_TYPE</a>(<a class="code hl_class" href="classgWindowLoseFocusEvent.html">gWindowLoseFocusEvent</a>)</div>
+<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>    <a class="code hl_define" href="gEvent_8h.html#a33b0815dbba4f06a2dbc269e1014d70c">G_EVENT_CLASS_CATEGORY</a>(<a class="code hl_enumvalue" href="gEvent_8h.html#aa8b0556527d429476e3f3d6cfab1a21faa1ff59267ca574411d3c0825dced1cdf">EVENTCATEGORY_APP</a>)</div>
+<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>};</div>
 </div>
-<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span> </div>
-<div class="foldopen" id="foldopen00179" data-start="{" data-end="};">
-<div class="line"><a id="l00179" name="l00179"></a><span class="lineno"><a class="line" href="classgJoystickConnectEvent.html">  179</a></span><span class="keyword">class </span><a class="code hl_class" href="classgJoystickConnectEvent.html">gJoystickConnectEvent</a> : <span class="keyword">public</span> <a class="code hl_class" href="classgEvent.html">gEvent</a> {</div>
-<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span><span class="keyword">public</span>:</div>
-<div class="foldopen" id="foldopen00181" data-start="{" data-end="}">
-<div class="line"><a id="l00181" name="l00181"></a><span class="lineno"><a class="line" href="classgJoystickConnectEvent.html#aff65c19ed83656186a5bb592cb9dcc84">  181</a></span>    <a class="code hl_function" href="classgJoystickConnectEvent.html#aff65c19ed83656186a5bb592cb9dcc84">gJoystickConnectEvent</a>(<span class="keywordtype">int</span> joystickId, <span class="keywordtype">bool</span> isgamepad)</div>
-<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>        : joystickid(joystickId), isgamepad(isgamepad) {}</div>
-</div>
+<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span> </div>
+<div class="foldopen" id="foldopen00180" data-start="{" data-end="};">
+<div class="line"><a id="l00180" name="l00180"></a><span class="lineno"><a class="line" href="classgWindowMouseEnterEvent.html">  180</a></span><span class="keyword">class </span><a class="code hl_class" href="classgWindowMouseEnterEvent.html">gWindowMouseEnterEvent</a> : <span class="keyword">public</span> <a class="code hl_class" href="classgEvent.html">gEvent</a> {</div>
+<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00182" name="l00182"></a><span class="lineno"><a class="line" href="classgWindowMouseEnterEvent.html#ad100f2352f44ee63642ba2d5e3c0dba4">  182</a></span>    <a class="code hl_function" href="classgWindowMouseEnterEvent.html#ad100f2352f44ee63642ba2d5e3c0dba4">gWindowMouseEnterEvent</a>() {}</div>
 <div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span> </div>
-<div class="line"><a id="l00184" name="l00184"></a><span class="lineno"><a class="line" href="classgJoystickConnectEvent.html#af4e7100feffdd911e59c15259b09a00f">  184</a></span>    <span class="keywordtype">int</span> <a class="code hl_function" href="classgJoystickConnectEvent.html#af4e7100feffdd911e59c15259b09a00f">getJoystickId</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> joystickid; }</div>
-<div class="line"><a id="l00185" name="l00185"></a><span class="lineno"><a class="line" href="classgJoystickConnectEvent.html#a45850d7839135c15b2f197219d97e830">  185</a></span>    <span class="keywordtype">bool</span> <a class="code hl_function" href="classgJoystickConnectEvent.html#a45850d7839135c15b2f197219d97e830">isGamepad</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> isgamepad; }</div>
-<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span> </div>
-<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>    <a class="code hl_define" href="gEvent_8h.html#aeb5da1b4180e1a24e8a40b5d63ae6772">G_EVENT_CLASS_TYPE</a>(<a class="code hl_class" href="classgJoystickConnectEvent.html">gJoystickConnectEvent</a>)</div>
-<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>    <a class="code hl_define" href="gEvent_8h.html#a33b0815dbba4f06a2dbc269e1014d70c">G_EVENT_CLASS_CATEGORY</a>(<a class="code hl_enumvalue" href="gEvent_8h.html#aa8b0556527d429476e3f3d6cfab1a21faf10ef725671e5ef24acc467c3e3de809">EVENTCATEGORY_INPUT</a> | <a class="code hl_enumvalue" href="gEvent_8h.html#aa8b0556527d429476e3f3d6cfab1a21fa33ecb779f6c94b8e913d2218efdcd249">EVENTCATEGORY_JOYSTICK</a>)</div>
-<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>    <span class="keywordtype">int</span> joystickid;</div>
-<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>    <span class="keywordtype">bool</span> isgamepad;</div>
-<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>};</div>
+<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>    <a class="code hl_define" href="gEvent_8h.html#aeb5da1b4180e1a24e8a40b5d63ae6772">G_EVENT_CLASS_TYPE</a>(<a class="code hl_class" href="classgWindowMouseEnterEvent.html">gWindowMouseEnterEvent</a>)</div>
+<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>    <a class="code hl_define" href="gEvent_8h.html#a33b0815dbba4f06a2dbc269e1014d70c">G_EVENT_CLASS_CATEGORY</a>(<a class="code hl_enumvalue" href="gEvent_8h.html#aa8b0556527d429476e3f3d6cfab1a21faa1ff59267ca574411d3c0825dced1cdf">EVENTCATEGORY_APP</a>)</div>
+<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>};</div>
 </div>
-<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span> </div>
-<div class="foldopen" id="foldopen00194" data-start="{" data-end="};">
-<div class="line"><a id="l00194" name="l00194"></a><span class="lineno"><a class="line" href="classgJoystickDisconnectEvent.html">  194</a></span><span class="keyword">class </span><a class="code hl_class" href="classgJoystickDisconnectEvent.html">gJoystickDisconnectEvent</a> : <span class="keyword">public</span> <a class="code hl_class" href="classgEvent.html">gEvent</a> {</div>
-<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span><span class="keyword">public</span>:</div>
-<div class="foldopen" id="foldopen00196" data-start="{" data-end="}">
-<div class="line"><a id="l00196" name="l00196"></a><span class="lineno"><a class="line" href="classgJoystickDisconnectEvent.html#aeeb81a07d969e9fb69f0ff4546d2267e">  196</a></span>    <a class="code hl_function" href="classgJoystickDisconnectEvent.html#aeeb81a07d969e9fb69f0ff4546d2267e">gJoystickDisconnectEvent</a>(<span class="keywordtype">int</span> joystickId)</div>
-<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>        : joystickid(joystickId) {}</div>
+<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span> </div>
+<div class="foldopen" id="foldopen00188" data-start="{" data-end="};">
+<div class="line"><a id="l00188" name="l00188"></a><span class="lineno"><a class="line" href="classgWindowMouseExitEvent.html">  188</a></span><span class="keyword">class </span><a class="code hl_class" href="classgWindowMouseExitEvent.html">gWindowMouseExitEvent</a> : <span class="keyword">public</span> <a class="code hl_class" href="classgEvent.html">gEvent</a> {</div>
+<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00190" name="l00190"></a><span class="lineno"><a class="line" href="classgWindowMouseExitEvent.html#a2643381a147dd2770d498da624e45424">  190</a></span>    <a class="code hl_function" href="classgWindowMouseExitEvent.html#a2643381a147dd2770d498da624e45424">gWindowMouseExitEvent</a>() {}</div>
+<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span> </div>
+<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>    <a class="code hl_define" href="gEvent_8h.html#aeb5da1b4180e1a24e8a40b5d63ae6772">G_EVENT_CLASS_TYPE</a>(<a class="code hl_class" href="classgWindowMouseExitEvent.html">gWindowMouseExitEvent</a>)</div>
+<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>    <a class="code hl_define" href="gEvent_8h.html#a33b0815dbba4f06a2dbc269e1014d70c">G_EVENT_CLASS_CATEGORY</a>(<a class="code hl_enumvalue" href="gEvent_8h.html#aa8b0556527d429476e3f3d6cfab1a21faa1ff59267ca574411d3c0825dced1cdf">EVENTCATEGORY_APP</a>)</div>
+<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>};</div>
 </div>
-<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span> </div>
-<div class="line"><a id="l00199" name="l00199"></a><span class="lineno"><a class="line" href="classgJoystickDisconnectEvent.html#a53d9e5e04f4690866df9438193020f5a">  199</a></span>    <span class="keywordtype">int</span> <a class="code hl_function" href="classgJoystickDisconnectEvent.html#a53d9e5e04f4690866df9438193020f5a">getJoystickId</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> joystickid; }</div>
+<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span> </div>
+<div class="foldopen" id="foldopen00196" data-start="{" data-end="};">
+<div class="line"><a id="l00196" name="l00196"></a><span class="lineno"><a class="line" href="classgJoystickConnectEvent.html">  196</a></span><span class="keyword">class </span><a class="code hl_class" href="classgJoystickConnectEvent.html">gJoystickConnectEvent</a> : <span class="keyword">public</span> <a class="code hl_class" href="classgEvent.html">gEvent</a> {</div>
+<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span><span class="keyword">public</span>:</div>
+<div class="foldopen" id="foldopen00198" data-start="{" data-end="}">
+<div class="line"><a id="l00198" name="l00198"></a><span class="lineno"><a class="line" href="classgJoystickConnectEvent.html#aff65c19ed83656186a5bb592cb9dcc84">  198</a></span>    <a class="code hl_function" href="classgJoystickConnectEvent.html#aff65c19ed83656186a5bb592cb9dcc84">gJoystickConnectEvent</a>(<span class="keywordtype">int</span> joystickId, <span class="keywordtype">bool</span> isgamepad)</div>
+<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>        : joystickid(joystickId), isgamepad(isgamepad) {}</div>
+</div>
 <div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span> </div>
-<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>    <a class="code hl_define" href="gEvent_8h.html#aeb5da1b4180e1a24e8a40b5d63ae6772">G_EVENT_CLASS_TYPE</a>(<a class="code hl_class" href="classgJoystickDisconnectEvent.html">gJoystickDisconnectEvent</a>)</div>
-<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>    <a class="code hl_define" href="gEvent_8h.html#a33b0815dbba4f06a2dbc269e1014d70c">G_EVENT_CLASS_CATEGORY</a>(<a class="code hl_enumvalue" href="gEvent_8h.html#aa8b0556527d429476e3f3d6cfab1a21faf10ef725671e5ef24acc467c3e3de809">EVENTCATEGORY_INPUT</a> | <a class="code hl_enumvalue" href="gEvent_8h.html#aa8b0556527d429476e3f3d6cfab1a21fa33ecb779f6c94b8e913d2218efdcd249">EVENTCATEGORY_JOYSTICK</a>)</div>
-<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>    <span class="keywordtype">int</span> joystickid;</div>
-<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>};</div>
+<div class="line"><a id="l00201" name="l00201"></a><span class="lineno"><a class="line" href="classgJoystickConnectEvent.html#af4e7100feffdd911e59c15259b09a00f">  201</a></span>    <span class="keywordtype">int</span> <a class="code hl_function" href="classgJoystickConnectEvent.html#af4e7100feffdd911e59c15259b09a00f">getJoystickId</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> joystickid; }</div>
+<div class="line"><a id="l00202" name="l00202"></a><span class="lineno"><a class="line" href="classgJoystickConnectEvent.html#a45850d7839135c15b2f197219d97e830">  202</a></span>    <span class="keywordtype">bool</span> <a class="code hl_function" href="classgJoystickConnectEvent.html#a45850d7839135c15b2f197219d97e830">isGamepad</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> isgamepad; }</div>
+<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span> </div>
+<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>    <a class="code hl_define" href="gEvent_8h.html#aeb5da1b4180e1a24e8a40b5d63ae6772">G_EVENT_CLASS_TYPE</a>(<a class="code hl_class" href="classgJoystickConnectEvent.html">gJoystickConnectEvent</a>)</div>
+<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>    <a class="code hl_define" href="gEvent_8h.html#a33b0815dbba4f06a2dbc269e1014d70c">G_EVENT_CLASS_CATEGORY</a>(<a class="code hl_enumvalue" href="gEvent_8h.html#aa8b0556527d429476e3f3d6cfab1a21faf10ef725671e5ef24acc467c3e3de809">EVENTCATEGORY_INPUT</a> | <a class="code hl_enumvalue" href="gEvent_8h.html#aa8b0556527d429476e3f3d6cfab1a21fa33ecb779f6c94b8e913d2218efdcd249">EVENTCATEGORY_JOYSTICK</a>)</div>
+<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>    <span class="keywordtype">int</span> joystickid;</div>
+<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>    <span class="keywordtype">bool</span> isgamepad;</div>
+<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>};</div>
 </div>
-<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span> </div>
-<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span><span class="preprocessor">#if GLIST_ANDROID || GLIST_IOS</span></div>
-<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span><span class="keyword">enum</span> InputType {</div>
-<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>    INPUTTYPE_UNKNOWN = 0,</div>
-<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>    INPUTTYPE_FINGER = 1,</div>
-<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>    INPUTTYPE_STYLUS = 2,</div>
-<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>    INPUTTYPE_MOUSE = 3</div>
-<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>};</div>
-<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span> </div>
-<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span><span class="keyword">enum</span> ActionType {</div>
-<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span>    ACTIONTYPE_DOWN = 0,</div>
-<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>    ACTIONTYPE_UP = 1,</div>
-<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>    ACTIONTYPE_MOVE = 2,</div>
-<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span>    ACTIONTYPE_CANCEL = 3,</div>
-<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>    ACTIONTYPE_OUTSIDE = 4,</div>
-<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span>    ACTIONTYPE_POINTER_DOWN = 5,</div>
-<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>    ACTIONTYPE_POINTER_UP = 6,</div>
-<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span>    ACTIONTYPE_HOVER_MOVE = 7,</div>
-<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>    ACTIONTYPE_SCROLL = 8,</div>
-<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>    ACTIONTYPE_HOVER_ENTER = 9,</div>
-<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>    ACTIONTYPE_HOVER_EXIT = 10</div>
-<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>};</div>
-<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span> </div>
-<div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span><span class="keyword">struct </span>TouchInput {</div>
-<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span>    InputType type;</div>
-<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span>    <span class="keywordtype">int</span> fingerid;</div>
-<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span>    <span class="keywordtype">int</span> pointerindex;</div>
-<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>    <span class="keywordtype">int</span> x, y;</div>
-<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span>};</div>
-<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span> </div>
-<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span><span class="keyword">class </span>gTouchEvent : <span class="keyword">public</span> <a class="code hl_class" href="classgEvent.html">gEvent</a> {</div>
-<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>    gTouchEvent(<span class="keywordtype">int</span> inputCount, TouchInput* inputs, <span class="keywordtype">int</span> actionIndex, ActionType action) : inputs(inputs), inputcount(inputCount), action(action), actionindex(actionIndex) {}</div>
-<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span> </div>
-<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>    <span class="keywordtype">int</span> getInputCount()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> inputcount; }</div>
-<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span>    TouchInput* getInputs()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> inputs; }</div>
-<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>    <span class="keywordtype">int</span> getActionIndex()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> actionindex; }</div>
-<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>    ActionType getAction()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> action; }</div>
-<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span> </div>
-<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>    <a class="code hl_define" href="gEvent_8h.html#aeb5da1b4180e1a24e8a40b5d63ae6772">G_EVENT_CLASS_TYPE</a>(gTouchEvent)</div>
-<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>    <a class="code hl_define" href="gEvent_8h.html#a33b0815dbba4f06a2dbc269e1014d70c">G_EVENT_CLASS_CATEGORY</a>(<a class="code hl_enumvalue" href="gEvent_8h.html#aa8b0556527d429476e3f3d6cfab1a21faf10ef725671e5ef24acc467c3e3de809">EVENTCATEGORY_INPUT</a> | <a class="code hl_enumvalue" href="gEvent_8h.html#aa8b0556527d429476e3f3d6cfab1a21fa8b9c7de5872d669a6af9222723d917dc">EVENTCATEGORY_TOUCHSCREEN</a>)</div>
-<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span>    <span class="keywordtype">int</span> inputcount;</div>
-<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>    TouchInput* inputs;</div>
-<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>    <span class="keywordtype">int</span> actionindex;</div>
-<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>    ActionType action;</div>
-<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>};</div>
-<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span> </div>
-<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span><span class="keyword">enum</span> DeviceOrientation {</div>
-<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span>    DEVICEORIENTATION_UNSPECIFIED = -1,</div>
-<div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span>    DEVICEORIENTATION_LANDSCAPE = 0,</div>
-<div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span>    DEVICEORIENTATION_PORTRAIT = 1,</div>
-<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span>    DEVICEORIENTATION_REVERSE_LANDSCAPE = 8,</div>
-<div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span>    DEVICEORIENTATION_REVERSE_PORTRAIT = 9</div>
-<div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span>};</div>
+<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span> </div>
+<div class="foldopen" id="foldopen00211" data-start="{" data-end="};">
+<div class="line"><a id="l00211" name="l00211"></a><span class="lineno"><a class="line" href="classgJoystickDisconnectEvent.html">  211</a></span><span class="keyword">class </span><a class="code hl_class" href="classgJoystickDisconnectEvent.html">gJoystickDisconnectEvent</a> : <span class="keyword">public</span> <a class="code hl_class" href="classgEvent.html">gEvent</a> {</div>
+<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span><span class="keyword">public</span>:</div>
+<div class="foldopen" id="foldopen00213" data-start="{" data-end="}">
+<div class="line"><a id="l00213" name="l00213"></a><span class="lineno"><a class="line" href="classgJoystickDisconnectEvent.html#aeeb81a07d969e9fb69f0ff4546d2267e">  213</a></span>    <a class="code hl_function" href="classgJoystickDisconnectEvent.html#aeeb81a07d969e9fb69f0ff4546d2267e">gJoystickDisconnectEvent</a>(<span class="keywordtype">int</span> joystickId)</div>
+<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>        : joystickid(joystickId) {}</div>
+</div>
+<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span> </div>
+<div class="line"><a id="l00216" name="l00216"></a><span class="lineno"><a class="line" href="classgJoystickDisconnectEvent.html#a53d9e5e04f4690866df9438193020f5a">  216</a></span>    <span class="keywordtype">int</span> <a class="code hl_function" href="classgJoystickDisconnectEvent.html#a53d9e5e04f4690866df9438193020f5a">getJoystickId</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> joystickid; }</div>
+<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span> </div>
+<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>    <a class="code hl_define" href="gEvent_8h.html#aeb5da1b4180e1a24e8a40b5d63ae6772">G_EVENT_CLASS_TYPE</a>(<a class="code hl_class" href="classgJoystickDisconnectEvent.html">gJoystickDisconnectEvent</a>)</div>
+<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span>    <a class="code hl_define" href="gEvent_8h.html#a33b0815dbba4f06a2dbc269e1014d70c">G_EVENT_CLASS_CATEGORY</a>(<a class="code hl_enumvalue" href="gEvent_8h.html#aa8b0556527d429476e3f3d6cfab1a21faf10ef725671e5ef24acc467c3e3de809">EVENTCATEGORY_INPUT</a> | <a class="code hl_enumvalue" href="gEvent_8h.html#aa8b0556527d429476e3f3d6cfab1a21fa33ecb779f6c94b8e913d2218efdcd249">EVENTCATEGORY_JOYSTICK</a>)</div>
+<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span>    <span class="keywordtype">int</span> joystickid;</div>
+<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>};</div>
+</div>
+<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span> </div>
+<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span><span class="preprocessor">#if GLIST_ANDROID || GLIST_IOS</span></div>
+<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span><span class="keyword">enum</span> InputType {</div>
+<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>    INPUTTYPE_UNKNOWN = 0,</div>
+<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>    INPUTTYPE_FINGER = 1,</div>
+<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>    INPUTTYPE_STYLUS = 2,</div>
+<div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span>    INPUTTYPE_MOUSE = 3</div>
+<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span>};</div>
+<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span> </div>
+<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span><span class="keyword">enum</span> ActionType {</div>
+<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>    ACTIONTYPE_DOWN = 0,</div>
+<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span>    ACTIONTYPE_UP = 1,</div>
+<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>    ACTIONTYPE_MOVE = 2,</div>
+<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>    ACTIONTYPE_CANCEL = 3,</div>
+<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>    ACTIONTYPE_OUTSIDE = 4,</div>
+<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>    ACTIONTYPE_POINTER_DOWN = 5,</div>
+<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>    ACTIONTYPE_POINTER_UP = 6,</div>
+<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>    ACTIONTYPE_HOVER_MOVE = 7,</div>
+<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span>    ACTIONTYPE_SCROLL = 8,</div>
+<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>    ACTIONTYPE_HOVER_ENTER = 9,</div>
+<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>    ACTIONTYPE_HOVER_EXIT = 10</div>
+<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span>};</div>
+<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span> </div>
+<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span><span class="keyword">struct </span>TouchInput {</div>
+<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span>    InputType type;</div>
+<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span>    <span class="keywordtype">int</span> fingerid;</div>
+<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>    <span class="keywordtype">int</span> pointerindex;</div>
+<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>    <span class="keywordtype">int</span> x, y;</div>
+<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>};</div>
+<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span> </div>
+<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span><span class="keyword">class </span>gTouchEvent : <span class="keyword">public</span> <a class="code hl_class" href="classgEvent.html">gEvent</a> {</div>
+<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span>    gTouchEvent(<span class="keywordtype">int</span> inputCount, TouchInput* inputs, <span class="keywordtype">int</span> actionIndex, ActionType action) : inputs(inputs), inputcount(inputCount), action(action), actionindex(actionIndex) {}</div>
+<div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span> </div>
+<div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span>    <span class="keywordtype">int</span> getInputCount()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> inputcount; }</div>
+<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span>    TouchInput* getInputs()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> inputs; }</div>
+<div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span>    <span class="keywordtype">int</span> getActionIndex()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> actionindex; }</div>
+<div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span>    ActionType getAction()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> action; }</div>
 <div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span> </div>
-<div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span><span class="keyword">class </span>gDeviceOrientationChangedEvent : <span class="keyword">public</span> <a class="code hl_class" href="classgEvent.html">gEvent</a> {</div>
-<div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span>    gDeviceOrientationChangedEvent(DeviceOrientation orientation) : orientation(orientation) {}</div>
-<div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span> </div>
-<div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span>    DeviceOrientation getOrientation()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> orientation; }</div>
-<div class="line"><a id="l00267" name="l00267"></a><span class="lineno">  267</span> </div>
-<div class="line"><a id="l00268" name="l00268"></a><span class="lineno">  268</span>    <a class="code hl_define" href="gEvent_8h.html#aeb5da1b4180e1a24e8a40b5d63ae6772">G_EVENT_CLASS_TYPE</a>(gDeviceOrientationChangedEvent)</div>
-<div class="line"><a id="l00269" name="l00269"></a><span class="lineno">  269</span>    <a class="code hl_define" href="gEvent_8h.html#a33b0815dbba4f06a2dbc269e1014d70c">G_EVENT_CLASS_CATEGORY</a>(<a class="code hl_enumvalue" href="gEvent_8h.html#aa8b0556527d429476e3f3d6cfab1a21faa1ff59267ca574411d3c0825dced1cdf">EVENTCATEGORY_APP</a>)</div>
-<div class="line"><a id="l00270" name="l00270"></a><span class="lineno">  270</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00271" name="l00271"></a><span class="lineno">  271</span>    DeviceOrientation orientation;</div>
-<div class="line"><a id="l00272" name="l00272"></a><span class="lineno">  272</span>};</div>
-<div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span> </div>
-<div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span> </div>
-<div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span><span class="preprocessor">#if defined(GLIST_WEB) || defined(GLIST_ANDROID)</span></div>
-<div class="line"><a id="l00277" name="l00277"></a><span class="lineno">  277</span> </div>
-<div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span><span class="keyword">class </span>gAppPauseEvent : <span class="keyword">public</span> <a class="code hl_class" href="classgEvent.html">gEvent</a> {</div>
-<div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span>    gAppPauseEvent() {}</div>
-<div class="line"><a id="l00281" name="l00281"></a><span class="lineno">  281</span> </div>
-<div class="line"><a id="l00282" name="l00282"></a><span class="lineno">  282</span>    <a class="code hl_define" href="gEvent_8h.html#aeb5da1b4180e1a24e8a40b5d63ae6772">G_EVENT_CLASS_TYPE</a>(gAppPauseEvent)</div>
-<div class="line"><a id="l00283" name="l00283"></a><span class="lineno">  283</span>    <a class="code hl_define" href="gEvent_8h.html#a33b0815dbba4f06a2dbc269e1014d70c">G_EVENT_CLASS_CATEGORY</a>(<a class="code hl_enumvalue" href="gEvent_8h.html#aa8b0556527d429476e3f3d6cfab1a21faa1ff59267ca574411d3c0825dced1cdf">EVENTCATEGORY_APP</a>)</div>
-<div class="line"><a id="l00284" name="l00284"></a><span class="lineno">  284</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00285" name="l00285"></a><span class="lineno">  285</span>};</div>
-<div class="line"><a id="l00286" name="l00286"></a><span class="lineno">  286</span> </div>
-<div class="line"><a id="l00287" name="l00287"></a><span class="lineno">  287</span><span class="keyword">class </span>gAppResumeEvent : <span class="keyword">public</span> <a class="code hl_class" href="classgEvent.html">gEvent</a> {</div>
-<div class="line"><a id="l00288" name="l00288"></a><span class="lineno">  288</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00289" name="l00289"></a><span class="lineno">  289</span>    gAppResumeEvent() {}</div>
+<div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span>    <a class="code hl_define" href="gEvent_8h.html#aeb5da1b4180e1a24e8a40b5d63ae6772">G_EVENT_CLASS_TYPE</a>(gTouchEvent)</div>
+<div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span>    <a class="code hl_define" href="gEvent_8h.html#a33b0815dbba4f06a2dbc269e1014d70c">G_EVENT_CLASS_CATEGORY</a>(<a class="code hl_enumvalue" href="gEvent_8h.html#aa8b0556527d429476e3f3d6cfab1a21faf10ef725671e5ef24acc467c3e3de809">EVENTCATEGORY_INPUT</a> | <a class="code hl_enumvalue" href="gEvent_8h.html#aa8b0556527d429476e3f3d6cfab1a21fa8b9c7de5872d669a6af9222723d917dc">EVENTCATEGORY_TOUCHSCREEN</a>)</div>
+<div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span>    <span class="keywordtype">int</span> inputcount;</div>
+<div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span>    TouchInput* inputs;</div>
+<div class="line"><a id="l00267" name="l00267"></a><span class="lineno">  267</span>    <span class="keywordtype">int</span> actionindex;</div>
+<div class="line"><a id="l00268" name="l00268"></a><span class="lineno">  268</span>    ActionType action;</div>
+<div class="line"><a id="l00269" name="l00269"></a><span class="lineno">  269</span>};</div>
+<div class="line"><a id="l00270" name="l00270"></a><span class="lineno">  270</span> </div>
+<div class="line"><a id="l00271" name="l00271"></a><span class="lineno">  271</span><span class="keyword">enum</span> DeviceOrientation {</div>
+<div class="line"><a id="l00272" name="l00272"></a><span class="lineno">  272</span>    DEVICEORIENTATION_UNSPECIFIED = -1,</div>
+<div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span>    DEVICEORIENTATION_LANDSCAPE = 0,</div>
+<div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span>    DEVICEORIENTATION_PORTRAIT = 1,</div>
+<div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span>    DEVICEORIENTATION_REVERSE_LANDSCAPE = 8,</div>
+<div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span>    DEVICEORIENTATION_REVERSE_PORTRAIT = 9</div>
+<div class="line"><a id="l00277" name="l00277"></a><span class="lineno">  277</span>};</div>
+<div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span> </div>
+<div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span><span class="keyword">class </span>gDeviceOrientationChangedEvent : <span class="keyword">public</span> <a class="code hl_class" href="classgEvent.html">gEvent</a> {</div>
+<div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00281" name="l00281"></a><span class="lineno">  281</span>    gDeviceOrientationChangedEvent(DeviceOrientation orientation) : orientation(orientation) {}</div>
+<div class="line"><a id="l00282" name="l00282"></a><span class="lineno">  282</span> </div>
+<div class="line"><a id="l00283" name="l00283"></a><span class="lineno">  283</span>    DeviceOrientation getOrientation()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> orientation; }</div>
+<div class="line"><a id="l00284" name="l00284"></a><span class="lineno">  284</span> </div>
+<div class="line"><a id="l00285" name="l00285"></a><span class="lineno">  285</span>    <a class="code hl_define" href="gEvent_8h.html#aeb5da1b4180e1a24e8a40b5d63ae6772">G_EVENT_CLASS_TYPE</a>(gDeviceOrientationChangedEvent)</div>
+<div class="line"><a id="l00286" name="l00286"></a><span class="lineno">  286</span>    <a class="code hl_define" href="gEvent_8h.html#a33b0815dbba4f06a2dbc269e1014d70c">G_EVENT_CLASS_CATEGORY</a>(<a class="code hl_enumvalue" href="gEvent_8h.html#aa8b0556527d429476e3f3d6cfab1a21faa1ff59267ca574411d3c0825dced1cdf">EVENTCATEGORY_APP</a>)</div>
+<div class="line"><a id="l00287" name="l00287"></a><span class="lineno">  287</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00288" name="l00288"></a><span class="lineno">  288</span>    DeviceOrientation orientation;</div>
+<div class="line"><a id="l00289" name="l00289"></a><span class="lineno">  289</span>};</div>
 <div class="line"><a id="l00290" name="l00290"></a><span class="lineno">  290</span> </div>
-<div class="line"><a id="l00291" name="l00291"></a><span class="lineno">  291</span>    <a class="code hl_define" href="gEvent_8h.html#aeb5da1b4180e1a24e8a40b5d63ae6772">G_EVENT_CLASS_TYPE</a>(gAppResumeEvent)</div>
-<div class="line"><a id="l00292" name="l00292"></a><span class="lineno">  292</span>    <a class="code hl_define" href="gEvent_8h.html#a33b0815dbba4f06a2dbc269e1014d70c">G_EVENT_CLASS_CATEGORY</a>(<a class="code hl_enumvalue" href="gEvent_8h.html#aa8b0556527d429476e3f3d6cfab1a21faa1ff59267ca574411d3c0825dced1cdf">EVENTCATEGORY_APP</a>)</div>
-<div class="line"><a id="l00293" name="l00293"></a><span class="lineno">  293</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00294" name="l00294"></a><span class="lineno">  294</span>};</div>
-<div class="line"><a id="l00295" name="l00295"></a><span class="lineno">  295</span> </div>
-<div class="line"><a id="l00296" name="l00296"></a><span class="lineno">  296</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00297" name="l00297"></a><span class="lineno">  297</span> </div>
-<div class="line"><a id="l00298" name="l00298"></a><span class="lineno">  298</span><span class="preprocessor">#endif </span><span class="comment">/* GWINDOWEVENTS_H_ */</span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00291" name="l00291"></a><span class="lineno">  291</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00292" name="l00292"></a><span class="lineno">  292</span> </div>
+<div class="line"><a id="l00293" name="l00293"></a><span class="lineno">  293</span><span class="preprocessor">#if defined(GLIST_WEB) || defined(GLIST_ANDROID)</span></div>
+<div class="line"><a id="l00294" name="l00294"></a><span class="lineno">  294</span> </div>
+<div class="line"><a id="l00295" name="l00295"></a><span class="lineno">  295</span><span class="keyword">class </span>gAppPauseEvent : <span class="keyword">public</span> <a class="code hl_class" href="classgEvent.html">gEvent</a> {</div>
+<div class="line"><a id="l00296" name="l00296"></a><span class="lineno">  296</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00297" name="l00297"></a><span class="lineno">  297</span>    gAppPauseEvent() {}</div>
+<div class="line"><a id="l00298" name="l00298"></a><span class="lineno">  298</span> </div>
+<div class="line"><a id="l00299" name="l00299"></a><span class="lineno">  299</span>    <a class="code hl_define" href="gEvent_8h.html#aeb5da1b4180e1a24e8a40b5d63ae6772">G_EVENT_CLASS_TYPE</a>(gAppPauseEvent)</div>
+<div class="line"><a id="l00300" name="l00300"></a><span class="lineno">  300</span>    <a class="code hl_define" href="gEvent_8h.html#a33b0815dbba4f06a2dbc269e1014d70c">G_EVENT_CLASS_CATEGORY</a>(<a class="code hl_enumvalue" href="gEvent_8h.html#aa8b0556527d429476e3f3d6cfab1a21faa1ff59267ca574411d3c0825dced1cdf">EVENTCATEGORY_APP</a>)</div>
+<div class="line"><a id="l00301" name="l00301"></a><span class="lineno">  301</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00302" name="l00302"></a><span class="lineno">  302</span>};</div>
+<div class="line"><a id="l00303" name="l00303"></a><span class="lineno">  303</span> </div>
+<div class="line"><a id="l00304" name="l00304"></a><span class="lineno">  304</span><span class="keyword">class </span>gAppResumeEvent : <span class="keyword">public</span> <a class="code hl_class" href="classgEvent.html">gEvent</a> {</div>
+<div class="line"><a id="l00305" name="l00305"></a><span class="lineno">  305</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00306" name="l00306"></a><span class="lineno">  306</span>    gAppResumeEvent() {}</div>
+<div class="line"><a id="l00307" name="l00307"></a><span class="lineno">  307</span> </div>
+<div class="line"><a id="l00308" name="l00308"></a><span class="lineno">  308</span>    <a class="code hl_define" href="gEvent_8h.html#aeb5da1b4180e1a24e8a40b5d63ae6772">G_EVENT_CLASS_TYPE</a>(gAppResumeEvent)</div>
+<div class="line"><a id="l00309" name="l00309"></a><span class="lineno">  309</span>    <a class="code hl_define" href="gEvent_8h.html#a33b0815dbba4f06a2dbc269e1014d70c">G_EVENT_CLASS_CATEGORY</a>(<a class="code hl_enumvalue" href="gEvent_8h.html#aa8b0556527d429476e3f3d6cfab1a21faa1ff59267ca574411d3c0825dced1cdf">EVENTCATEGORY_APP</a>)</div>
+<div class="line"><a id="l00310" name="l00310"></a><span class="lineno">  310</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00311" name="l00311"></a><span class="lineno">  311</span>};</div>
+<div class="line"><a id="l00312" name="l00312"></a><span class="lineno">  312</span> </div>
+<div class="line"><a id="l00313" name="l00313"></a><span class="lineno">  313</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00314" name="l00314"></a><span class="lineno">  314</span> </div>
+<div class="line"><a id="l00315" name="l00315"></a><span class="lineno">  315</span><span class="preprocessor">#endif </span><span class="comment">/* GWINDOWEVENTS_H_ */</span><span class="preprocessor"></span></div>
 <div class="ttc" id="aclassgCharTypedEvent_html"><div class="ttname"><a href="classgCharTypedEvent.html">gCharTypedEvent</a></div><div class="ttdef"><b>Definition</b> gWindowEvents.h:33</div></div>
 <div class="ttc" id="aclassgCharTypedEvent_html_a1cfee97b45fe327ae904c7c278faec91"><div class="ttname"><a href="classgCharTypedEvent.html#a1cfee97b45fe327ae904c7c278faec91">gCharTypedEvent::getCharacter</a></div><div class="ttdeci">unsigned int getCharacter() const</div><div class="ttdef"><b>Definition</b> gWindowEvents.h:38</div></div>
 <div class="ttc" id="aclassgCharTypedEvent_html_a26672978c6b05bf1313f7dc66e81c826"><div class="ttname"><a href="classgCharTypedEvent.html#a26672978c6b05bf1313f7dc66e81c826">gCharTypedEvent::gCharTypedEvent</a></div><div class="ttdeci">gCharTypedEvent(const unsigned int keycode)</div><div class="ttdef"><b>Definition</b> gWindowEvents.h:35</div></div>
 <div class="ttc" id="aclassgEvent_html"><div class="ttname"><a href="classgEvent.html">gEvent</a></div><div class="ttdef"><b>Definition</b> gEvent.h:32</div></div>
-<div class="ttc" id="aclassgJoystickConnectEvent_html"><div class="ttname"><a href="classgJoystickConnectEvent.html">gJoystickConnectEvent</a></div><div class="ttdef"><b>Definition</b> gWindowEvents.h:179</div></div>
-<div class="ttc" id="aclassgJoystickConnectEvent_html_a45850d7839135c15b2f197219d97e830"><div class="ttname"><a href="classgJoystickConnectEvent.html#a45850d7839135c15b2f197219d97e830">gJoystickConnectEvent::isGamepad</a></div><div class="ttdeci">bool isGamepad() const</div><div class="ttdef"><b>Definition</b> gWindowEvents.h:185</div></div>
-<div class="ttc" id="aclassgJoystickConnectEvent_html_af4e7100feffdd911e59c15259b09a00f"><div class="ttname"><a href="classgJoystickConnectEvent.html#af4e7100feffdd911e59c15259b09a00f">gJoystickConnectEvent::getJoystickId</a></div><div class="ttdeci">int getJoystickId() const</div><div class="ttdef"><b>Definition</b> gWindowEvents.h:184</div></div>
-<div class="ttc" id="aclassgJoystickConnectEvent_html_aff65c19ed83656186a5bb592cb9dcc84"><div class="ttname"><a href="classgJoystickConnectEvent.html#aff65c19ed83656186a5bb592cb9dcc84">gJoystickConnectEvent::gJoystickConnectEvent</a></div><div class="ttdeci">gJoystickConnectEvent(int joystickId, bool isgamepad)</div><div class="ttdef"><b>Definition</b> gWindowEvents.h:181</div></div>
-<div class="ttc" id="aclassgJoystickDisconnectEvent_html"><div class="ttname"><a href="classgJoystickDisconnectEvent.html">gJoystickDisconnectEvent</a></div><div class="ttdef"><b>Definition</b> gWindowEvents.h:194</div></div>
-<div class="ttc" id="aclassgJoystickDisconnectEvent_html_a53d9e5e04f4690866df9438193020f5a"><div class="ttname"><a href="classgJoystickDisconnectEvent.html#a53d9e5e04f4690866df9438193020f5a">gJoystickDisconnectEvent::getJoystickId</a></div><div class="ttdeci">int getJoystickId() const</div><div class="ttdef"><b>Definition</b> gWindowEvents.h:199</div></div>
-<div class="ttc" id="aclassgJoystickDisconnectEvent_html_aeeb81a07d969e9fb69f0ff4546d2267e"><div class="ttname"><a href="classgJoystickDisconnectEvent.html#aeeb81a07d969e9fb69f0ff4546d2267e">gJoystickDisconnectEvent::gJoystickDisconnectEvent</a></div><div class="ttdeci">gJoystickDisconnectEvent(int joystickId)</div><div class="ttdef"><b>Definition</b> gWindowEvents.h:196</div></div>
+<div class="ttc" id="aclassgJoystickConnectEvent_html"><div class="ttname"><a href="classgJoystickConnectEvent.html">gJoystickConnectEvent</a></div><div class="ttdef"><b>Definition</b> gWindowEvents.h:196</div></div>
+<div class="ttc" id="aclassgJoystickConnectEvent_html_a45850d7839135c15b2f197219d97e830"><div class="ttname"><a href="classgJoystickConnectEvent.html#a45850d7839135c15b2f197219d97e830">gJoystickConnectEvent::isGamepad</a></div><div class="ttdeci">bool isGamepad() const</div><div class="ttdef"><b>Definition</b> gWindowEvents.h:202</div></div>
+<div class="ttc" id="aclassgJoystickConnectEvent_html_af4e7100feffdd911e59c15259b09a00f"><div class="ttname"><a href="classgJoystickConnectEvent.html#af4e7100feffdd911e59c15259b09a00f">gJoystickConnectEvent::getJoystickId</a></div><div class="ttdeci">int getJoystickId() const</div><div class="ttdef"><b>Definition</b> gWindowEvents.h:201</div></div>
+<div class="ttc" id="aclassgJoystickConnectEvent_html_aff65c19ed83656186a5bb592cb9dcc84"><div class="ttname"><a href="classgJoystickConnectEvent.html#aff65c19ed83656186a5bb592cb9dcc84">gJoystickConnectEvent::gJoystickConnectEvent</a></div><div class="ttdeci">gJoystickConnectEvent(int joystickId, bool isgamepad)</div><div class="ttdef"><b>Definition</b> gWindowEvents.h:198</div></div>
+<div class="ttc" id="aclassgJoystickDisconnectEvent_html"><div class="ttname"><a href="classgJoystickDisconnectEvent.html">gJoystickDisconnectEvent</a></div><div class="ttdef"><b>Definition</b> gWindowEvents.h:211</div></div>
+<div class="ttc" id="aclassgJoystickDisconnectEvent_html_a53d9e5e04f4690866df9438193020f5a"><div class="ttname"><a href="classgJoystickDisconnectEvent.html#a53d9e5e04f4690866df9438193020f5a">gJoystickDisconnectEvent::getJoystickId</a></div><div class="ttdeci">int getJoystickId() const</div><div class="ttdef"><b>Definition</b> gWindowEvents.h:216</div></div>
+<div class="ttc" id="aclassgJoystickDisconnectEvent_html_aeeb81a07d969e9fb69f0ff4546d2267e"><div class="ttname"><a href="classgJoystickDisconnectEvent.html#aeeb81a07d969e9fb69f0ff4546d2267e">gJoystickDisconnectEvent::gJoystickDisconnectEvent</a></div><div class="ttdeci">gJoystickDisconnectEvent(int joystickId)</div><div class="ttdef"><b>Definition</b> gWindowEvents.h:213</div></div>
 <div class="ttc" id="aclassgKeyEvent_html"><div class="ttname"><a href="classgKeyEvent.html">gKeyEvent</a></div><div class="ttdef"><b>Definition</b> gWindowEvents.h:21</div></div>
 <div class="ttc" id="aclassgKeyEvent_html_a33a1515d90fa49519e0f42de235ed243"><div class="ttname"><a href="classgKeyEvent.html#a33a1515d90fa49519e0f42de235ed243">gKeyEvent::gKeyEvent</a></div><div class="ttdeci">gKeyEvent(const int keycode)</div><div class="ttdef"><b>Definition</b> gWindowEvents.h:27</div></div>
 <div class="ttc" id="aclassgKeyEvent_html_a400063abb184f7e6948679e028d13b4a"><div class="ttname"><a href="classgKeyEvent.html#a400063abb184f7e6948679e028d13b4a">gKeyEvent::getKeyCode</a></div><div class="ttdeci">int getKeyCode() const</div><div class="ttdef"><b>Definition</b> gWindowEvents.h:23</div></div>
@@ -495,18 +516,24 @@ $(document).ready(function(){initNavTree('gWindowEvents_8h_source.html',''); ini
 <div class="ttc" id="aclassgMouseScrolledEvent_html_a9729ebcdb6b785ee393fd207e9e7e980"><div class="ttname"><a href="classgMouseScrolledEvent.html#a9729ebcdb6b785ee393fd207e9e7e980">gMouseScrolledEvent::getOffsetY</a></div><div class="ttdeci">int getOffsetY() const</div><div class="ttdef"><b>Definition</b> gWindowEvents.h:93</div></div>
 <div class="ttc" id="aclassgMouseScrolledEvent_html_acd5f9c2bdb997c29406c8449d7d2ba9d"><div class="ttname"><a href="classgMouseScrolledEvent.html#acd5f9c2bdb997c29406c8449d7d2ba9d">gMouseScrolledEvent::gMouseScrolledEvent</a></div><div class="ttdeci">gMouseScrolledEvent(const int offsetx, const int offsety)</div><div class="ttdef"><b>Definition</b> gWindowEvents.h:88</div></div>
 <div class="ttc" id="aclassgMouseScrolledEvent_html_af630d4077282bdfdfbddde57241118ab"><div class="ttname"><a href="classgMouseScrolledEvent.html#af630d4077282bdfdfbddde57241118ab">gMouseScrolledEvent::getOffsetX</a></div><div class="ttdeci">int getOffsetX() const</div><div class="ttdef"><b>Definition</b> gWindowEvents.h:92</div></div>
-<div class="ttc" id="aclassgWindowFocusEvent_html"><div class="ttname"><a href="classgWindowFocusEvent.html">gWindowFocusEvent</a></div><div class="ttdef"><b>Definition</b> gWindowEvents.h:147</div></div>
-<div class="ttc" id="aclassgWindowFocusEvent_html_add3846b785969c0cf7bd49a61e057fa7"><div class="ttname"><a href="classgWindowFocusEvent.html#add3846b785969c0cf7bd49a61e057fa7">gWindowFocusEvent::gWindowFocusEvent</a></div><div class="ttdeci">gWindowFocusEvent()</div><div class="ttdef"><b>Definition</b> gWindowEvents.h:149</div></div>
-<div class="ttc" id="aclassgWindowLoseFocusEvent_html"><div class="ttname"><a href="classgWindowLoseFocusEvent.html">gWindowLoseFocusEvent</a></div><div class="ttdef"><b>Definition</b> gWindowEvents.h:155</div></div>
-<div class="ttc" id="aclassgWindowLoseFocusEvent_html_a7f702e57d8bf70f89350b1c0ccc7977f"><div class="ttname"><a href="classgWindowLoseFocusEvent.html#a7f702e57d8bf70f89350b1c0ccc7977f">gWindowLoseFocusEvent::gWindowLoseFocusEvent</a></div><div class="ttdeci">gWindowLoseFocusEvent()</div><div class="ttdef"><b>Definition</b> gWindowEvents.h:157</div></div>
-<div class="ttc" id="aclassgWindowMouseEnterEvent_html"><div class="ttname"><a href="classgWindowMouseEnterEvent.html">gWindowMouseEnterEvent</a></div><div class="ttdef"><b>Definition</b> gWindowEvents.h:163</div></div>
-<div class="ttc" id="aclassgWindowMouseEnterEvent_html_ad100f2352f44ee63642ba2d5e3c0dba4"><div class="ttname"><a href="classgWindowMouseEnterEvent.html#ad100f2352f44ee63642ba2d5e3c0dba4">gWindowMouseEnterEvent::gWindowMouseEnterEvent</a></div><div class="ttdeci">gWindowMouseEnterEvent()</div><div class="ttdef"><b>Definition</b> gWindowEvents.h:165</div></div>
-<div class="ttc" id="aclassgWindowMouseExitEvent_html"><div class="ttname"><a href="classgWindowMouseExitEvent.html">gWindowMouseExitEvent</a></div><div class="ttdef"><b>Definition</b> gWindowEvents.h:171</div></div>
-<div class="ttc" id="aclassgWindowMouseExitEvent_html_a2643381a147dd2770d498da624e45424"><div class="ttname"><a href="classgWindowMouseExitEvent.html#a2643381a147dd2770d498da624e45424">gWindowMouseExitEvent::gWindowMouseExitEvent</a></div><div class="ttdeci">gWindowMouseExitEvent()</div><div class="ttdef"><b>Definition</b> gWindowEvents.h:173</div></div>
+<div class="ttc" id="aclassgWindowFocusEvent_html"><div class="ttname"><a href="classgWindowFocusEvent.html">gWindowFocusEvent</a></div><div class="ttdef"><b>Definition</b> gWindowEvents.h:164</div></div>
+<div class="ttc" id="aclassgWindowFocusEvent_html_add3846b785969c0cf7bd49a61e057fa7"><div class="ttname"><a href="classgWindowFocusEvent.html#add3846b785969c0cf7bd49a61e057fa7">gWindowFocusEvent::gWindowFocusEvent</a></div><div class="ttdeci">gWindowFocusEvent()</div><div class="ttdef"><b>Definition</b> gWindowEvents.h:166</div></div>
+<div class="ttc" id="aclassgWindowLoseFocusEvent_html"><div class="ttname"><a href="classgWindowLoseFocusEvent.html">gWindowLoseFocusEvent</a></div><div class="ttdef"><b>Definition</b> gWindowEvents.h:172</div></div>
+<div class="ttc" id="aclassgWindowLoseFocusEvent_html_a7f702e57d8bf70f89350b1c0ccc7977f"><div class="ttname"><a href="classgWindowLoseFocusEvent.html#a7f702e57d8bf70f89350b1c0ccc7977f">gWindowLoseFocusEvent::gWindowLoseFocusEvent</a></div><div class="ttdeci">gWindowLoseFocusEvent()</div><div class="ttdef"><b>Definition</b> gWindowEvents.h:174</div></div>
+<div class="ttc" id="aclassgWindowMouseEnterEvent_html"><div class="ttname"><a href="classgWindowMouseEnterEvent.html">gWindowMouseEnterEvent</a></div><div class="ttdef"><b>Definition</b> gWindowEvents.h:180</div></div>
+<div class="ttc" id="aclassgWindowMouseEnterEvent_html_ad100f2352f44ee63642ba2d5e3c0dba4"><div class="ttname"><a href="classgWindowMouseEnterEvent.html#ad100f2352f44ee63642ba2d5e3c0dba4">gWindowMouseEnterEvent::gWindowMouseEnterEvent</a></div><div class="ttdeci">gWindowMouseEnterEvent()</div><div class="ttdef"><b>Definition</b> gWindowEvents.h:182</div></div>
+<div class="ttc" id="aclassgWindowMouseExitEvent_html"><div class="ttname"><a href="classgWindowMouseExitEvent.html">gWindowMouseExitEvent</a></div><div class="ttdef"><b>Definition</b> gWindowEvents.h:188</div></div>
+<div class="ttc" id="aclassgWindowMouseExitEvent_html_a2643381a147dd2770d498da624e45424"><div class="ttname"><a href="classgWindowMouseExitEvent.html#a2643381a147dd2770d498da624e45424">gWindowMouseExitEvent::gWindowMouseExitEvent</a></div><div class="ttdeci">gWindowMouseExitEvent()</div><div class="ttdef"><b>Definition</b> gWindowEvents.h:190</div></div>
 <div class="ttc" id="aclassgWindowResizeEvent_html"><div class="ttname"><a href="classgWindowResizeEvent.html">gWindowResizeEvent</a></div><div class="ttdef"><b>Definition</b> gWindowEvents.h:133</div></div>
 <div class="ttc" id="aclassgWindowResizeEvent_html_a091f4f44f61e2e178d6ce2952641d129"><div class="ttname"><a href="classgWindowResizeEvent.html#a091f4f44f61e2e178d6ce2952641d129">gWindowResizeEvent::getHeight</a></div><div class="ttdeci">int getHeight() const</div><div class="ttdef"><b>Definition</b> gWindowEvents.h:139</div></div>
 <div class="ttc" id="aclassgWindowResizeEvent_html_a12037a9797b82a2efcd950a2e740f344"><div class="ttname"><a href="classgWindowResizeEvent.html#a12037a9797b82a2efcd950a2e740f344">gWindowResizeEvent::getWidth</a></div><div class="ttdeci">int getWidth() const</div><div class="ttdef"><b>Definition</b> gWindowEvents.h:138</div></div>
 <div class="ttc" id="aclassgWindowResizeEvent_html_a303c8759dad7cdd6f914b71c1821c6d2"><div class="ttname"><a href="classgWindowResizeEvent.html#a303c8759dad7cdd6f914b71c1821c6d2">gWindowResizeEvent::gWindowResizeEvent</a></div><div class="ttdeci">gWindowResizeEvent(int width, int height)</div><div class="ttdef"><b>Definition</b> gWindowEvents.h:135</div></div>
+<div class="ttc" id="aclassgWindowScaleChangedEvent_html"><div class="ttname"><a href="classgWindowScaleChangedEvent.html">gWindowScaleChangedEvent</a></div><div class="ttdef"><b>Definition</b> gWindowEvents.h:147</div></div>
+<div class="ttc" id="aclassgWindowScaleChangedEvent_html_a098ab53b6d75f027952764fc7271ef1a"><div class="ttname"><a href="classgWindowScaleChangedEvent.html#a098ab53b6d75f027952764fc7271ef1a">gWindowScaleChangedEvent::getHeight</a></div><div class="ttdeci">int getHeight() const</div><div class="ttdef"><b>Definition</b> gWindowEvents.h:153</div></div>
+<div class="ttc" id="aclassgWindowScaleChangedEvent_html_a67e5805faec25bba0dcbeefb4928dec5"><div class="ttname"><a href="classgWindowScaleChangedEvent.html#a67e5805faec25bba0dcbeefb4928dec5">gWindowScaleChangedEvent::gWindowScaleChangedEvent</a></div><div class="ttdeci">gWindowScaleChangedEvent(int width, int height, float scalex, float scaley)</div><div class="ttdef"><b>Definition</b> gWindowEvents.h:149</div></div>
+<div class="ttc" id="aclassgWindowScaleChangedEvent_html_a96740ffd86f4545a6197548a4befc41a"><div class="ttname"><a href="classgWindowScaleChangedEvent.html#a96740ffd86f4545a6197548a4befc41a">gWindowScaleChangedEvent::getScaleY</a></div><div class="ttdeci">float getScaleY() const</div><div class="ttdef"><b>Definition</b> gWindowEvents.h:155</div></div>
+<div class="ttc" id="aclassgWindowScaleChangedEvent_html_aa0a78aa06b936ddd4db376e3d7f9797e"><div class="ttname"><a href="classgWindowScaleChangedEvent.html#aa0a78aa06b936ddd4db376e3d7f9797e">gWindowScaleChangedEvent::getWidth</a></div><div class="ttdeci">int getWidth() const</div><div class="ttdef"><b>Definition</b> gWindowEvents.h:152</div></div>
+<div class="ttc" id="aclassgWindowScaleChangedEvent_html_aaea1539855ddcd14d945f32e754106fd"><div class="ttname"><a href="classgWindowScaleChangedEvent.html#aaea1539855ddcd14d945f32e754106fd">gWindowScaleChangedEvent::getScaleX</a></div><div class="ttdeci">float getScaleX() const</div><div class="ttdef"><b>Definition</b> gWindowEvents.h:154</div></div>
 <div class="ttc" id="agEvent_8h_html"><div class="ttname"><a href="gEvent_8h.html">gEvent.h</a></div></div>
 <div class="ttc" id="agEvent_8h_html_a33b0815dbba4f06a2dbc269e1014d70c"><div class="ttname"><a href="gEvent_8h.html#a33b0815dbba4f06a2dbc269e1014d70c">G_EVENT_CLASS_CATEGORY</a></div><div class="ttdeci">#define G_EVENT_CLASS_CATEGORY(category)</div><div class="ttdef"><b>Definition</b> gEvent.h:91</div></div>
 <div class="ttc" id="agEvent_8h_html_aa8b0556527d429476e3f3d6cfab1a21fa22db64322e7f052b9f679e07ef70b91b"><div class="ttname"><a href="gEvent_8h.html#aa8b0556527d429476e3f3d6cfab1a21fa22db64322e7f052b9f679e07ef70b91b">EVENTCATEGORY_KEYBOARD</a></div><div class="ttdeci">@ EVENTCATEGORY_KEYBOARD</div><div class="ttdef"><b>Definition</b> gEvent.h:17</div></div>

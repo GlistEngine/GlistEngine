@@ -1,5 +1,6 @@
 var NAVTREEINDEX13 =
 {
+"classgThread.html#a0e0fec7f66f036b1507fffa3f8a5674c":[1,0,155,20],
 "classgThread.html#a1a600a4d205b6c9a92bf19f3beb0545a":[1,0,155,1],
 "classgThread.html#a1cfcc1d02860f3a375db6721cf3beb3f":[1,0,155,15],
 "classgThread.html#a1d889e2d86ccef196bde983fd27678fd":[1,0,155,3],
@@ -119,6 +120,12 @@ var NAVTREEINDEX13 =
 "classgWindowResizeEvent.html#a091f4f44f61e2e178d6ce2952641d129":[1,0,171,1],
 "classgWindowResizeEvent.html#a12037a9797b82a2efcd950a2e740f344":[1,0,171,2],
 "classgWindowResizeEvent.html#a303c8759dad7cdd6f914b71c1821c6d2":[1,0,171,0],
+"classgWindowScaleChangedEvent.html":[1,0,173],
+"classgWindowScaleChangedEvent.html#a098ab53b6d75f027952764fc7271ef1a":[1,0,173,1],
+"classgWindowScaleChangedEvent.html#a67e5805faec25bba0dcbeefb4928dec5":[1,0,173,0],
+"classgWindowScaleChangedEvent.html#a96740ffd86f4545a6197548a4befc41a":[1,0,173,3],
+"classgWindowScaleChangedEvent.html#aa0a78aa06b936ddd4db376e3d7f9797e":[1,0,173,4],
+"classgWindowScaleChangedEvent.html#aaea1539855ddcd14d945f32e754106fd":[1,0,173,2],
 "classgWindows.html":[1,0,172],
 "classgWindows.html#a7367ee868f779e088558d991671a7f46":[1,0,172,1],
 "classgWindows.html#adf4efe42e4244ac5b71cb4cd728960ec":[1,0,172,0],
@@ -147,8 +154,8 @@ var NAVTREEINDEX13 =
 "functions_enum.html":[1,3,4],
 "functions_eval.html":[1,3,5],
 "functions_f.html":[1,3,0,5],
-"functions_func.html":[1,3,1,0],
 "functions_func.html":[1,3,1],
+"functions_func.html":[1,3,1,0],
 "functions_func_b.html":[1,3,1,1],
 "functions_func_c.html":[1,3,1,2],
 "functions_func_d.html":[1,3,1,3],
@@ -189,8 +196,8 @@ var NAVTREEINDEX13 =
 "functions_type.html":[1,3,3],
 "functions_u.html":[1,3,0,20],
 "functions_v.html":[1,3,0,21],
-"functions_vars.html":[1,3,2],
 "functions_vars.html":[1,3,2,0],
+"functions_vars.html":[1,3,2],
 "functions_vars_b.html":[1,3,2,1],
 "functions_vars_c.html":[1,3,2,2],
 "functions_vars_d.html":[1,3,2,3],
@@ -242,12 +249,5 @@ var NAVTREEINDEX13 =
 "gBaseGUIObject_8h_source.html":[2,0,0,1,3],
 "gBaseParticles_8h.html":[2,0,0,1,4],
 "gBaseParticles_8h_source.html":[2,0,0,1,4],
-"gBasePlugin_8h.html":[2,0,0,1,5],
-"gBasePlugin_8h_source.html":[2,0,0,1,5],
-"gBasePostProcess_8h.html":[2,0,0,1,6],
-"gBasePostProcess_8h_source.html":[2,0,0,1,6],
-"gBaseSound_8h.html":[2,0,0,5,0],
-"gBaseSound_8h_source.html":[2,0,0,5,0],
-"gBaseWindow_8h.html":[2,0,0,2,2],
-"gBaseWindow_8h_source.html":[2,0,0,2,2]
+"gBasePlugin_8h.html":[2,0,0,1,5]
 };

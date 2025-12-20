@@ -1,5 +1,12 @@
 var NAVTREEINDEX16 =
 {
+"gSphere_8h.html":[2,0,0,4,2,10],
+"gSphere_8h_source.html":[2,0,0,4,2,10],
+"gSpriteAnimation_8h.html":[2,0,0,0,0],
+"gSpriteAnimation_8h.html#a05ace1778679794e816adbd5d83eb7bc":[2,0,0,0,0,10],
+"gSpriteAnimation_8h.html#a05ace1778679794e816adbd5d83eb7bca25b5ca2f56d99ba6ffcb5316adac34c1":[2,0,0,0,0,10,1],
+"gSpriteAnimation_8h.html#a05ace1778679794e816adbd5d83eb7bca4495f63771aa2060042a31363e16d4f9":[2,0,0,0,0,10,3],
+"gSpriteAnimation_8h.html#a05ace1778679794e816adbd5d83eb7bca59a84258a4cb9025b567ee5139455029":[2,0,0,0,0,10,4],
 "gSpriteAnimation_8h.html#a05ace1778679794e816adbd5d83eb7bca8615d1dec37d65a6c10dc4f58a15780e":[2,0,0,0,0,10,7],
 "gSpriteAnimation_8h.html#a05ace1778679794e816adbd5d83eb7bca95c736070f99b99eb80d1eac1f4ca60f":[2,0,0,0,0,10,0],
 "gSpriteAnimation_8h.html#a05ace1778679794e816adbd5d83eb7bcaa1e095cc966dbecf6a0d8aad75348d1a":[2,0,0,0,0,10,5],
@@ -122,11 +129,11 @@ var NAVTREEINDEX16 =
 "gWhiteBalance_8h.html":[2,0,0,4,1,17],
 "gWhiteBalance_8h_source.html":[2,0,0,4,1,17],
 "gWindowEvents_8h.html":[2,0,0,3,1],
-"gWindowEvents_8h.html#a42de6dd908ace1ea857f6ad43c704d17":[2,0,0,3,1,16],
-"gWindowEvents_8h.html#a42de6dd908ace1ea857f6ad43c704d17a6dca2281a88bed656b7799b9a300b882":[2,0,0,3,1,16,0],
-"gWindowEvents_8h.html#a42de6dd908ace1ea857f6ad43c704d17a88693b018115fe78ec46b023275c4072":[2,0,0,3,1,16,1],
-"gWindowEvents_8h.html#a42de6dd908ace1ea857f6ad43c704d17a9be076053408c805b739290d85760804":[2,0,0,3,1,16,2],
-"gWindowEvents_8h.html#a42de6dd908ace1ea857f6ad43c704d17aa8d91aefbd866e14c85333b6715681d0":[2,0,0,3,1,16,3],
+"gWindowEvents_8h.html#a42de6dd908ace1ea857f6ad43c704d17":[2,0,0,3,1,17],
+"gWindowEvents_8h.html#a42de6dd908ace1ea857f6ad43c704d17a6dca2281a88bed656b7799b9a300b882":[2,0,0,3,1,17,0],
+"gWindowEvents_8h.html#a42de6dd908ace1ea857f6ad43c704d17a88693b018115fe78ec46b023275c4072":[2,0,0,3,1,17,1],
+"gWindowEvents_8h.html#a42de6dd908ace1ea857f6ad43c704d17a9be076053408c805b739290d85760804":[2,0,0,3,1,17,2],
+"gWindowEvents_8h.html#a42de6dd908ace1ea857f6ad43c704d17aa8d91aefbd866e14c85333b6715681d0":[2,0,0,3,1,17,3],
 "gWindowEvents_8h_source.html":[2,0,0,3,1],
 "gWindows_8h.html":[2,0,0,8,11],
 "gWindows_8h_source.html":[2,0,0,8,11],
@@ -242,12 +249,5 @@ var NAVTREEINDEX16 =
 "structgHttpFile_1_1ProgressData.html":[1,0,102,0],
 "structgHttpFile_1_1ProgressData.html#a437d4db25e3c8db350206cb7de706e3f":[1,0,102,0,1],
 "structgHttpFile_1_1ProgressData.html#a7d3ae2b5d14fb694f338f136d344524c":[1,0,102,0,0],
-"structgRenderer_1_1gSceneData.html":[1,0,138,0],
-"structgRenderer_1_1gSceneData.html#a09b83f2ce02728412c123b8173084c3d":[1,0,138,0,1],
-"structgRenderer_1_1gSceneData.html#a521328c0feca9f21460fe8b3b3350e3e":[1,0,138,0,0],
-"structgRenderer_1_1gSceneData.html#a7207bb3bd94d95b0f93d333a2b340991":[1,0,138,0,3],
-"structgRenderer_1_1gSceneData.html#a89f96a2a3d34fdc9e05c1f4b0720204e":[1,0,138,0,4],
-"structgRenderer_1_1gSceneData.html#aa301bd9a32069c1189021b592d8c2b1d":[1,0,138,0,5],
-"structgRenderer_1_1gSceneData.html#aad361730c6a440e3b644bf0bb45c264c":[1,0,138,0,2],
-"structgRenderer_1_1gSceneFogData.html":[1,0,138,1]
+"structgRenderer_1_1gSceneData.html":[1,0,138,0]
 };

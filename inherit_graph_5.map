@@ -1,35 +1,37 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" href="$classgEvent.html" title=" " alt="" coords="5,277,72,303"/>
-<area shape="rect" id="Node000001" href="$classgCharTypedEvent.html" title=" " alt="" coords="151,5,285,31"/>
-<area shape="poly" id="edge1_Node000000_Node000001" title=" " alt="" coords="38,263,42,215,55,155,79,93,96,65,118,40,133,30,149,23,151,27,135,34,122,44,101,68,83,96,60,157,48,216,43,263"/>
-<area shape="rect" id="Node000002" href="$classgJoystickConnectEvent.html" title=" " alt="" coords="133,55,303,80"/>
-<area shape="poly" id="edge2_Node000000_Node000002" title=" " alt="" coords="40,263,48,225,62,178,85,130,100,108,118,89,136,78,139,82,122,93,104,112,89,133,67,180,53,226,46,264"/>
-<area shape="rect" id="Node000003" href="$classgJoystickDisconnectEvent.html" title=" " alt="" coords="123,104,313,129"/>
-<area shape="poly" id="edge3_Node000000_Node000003" title=" " alt="" coords="44,263,70,200,91,167,118,139,138,127,141,132,122,143,95,170,74,203,49,265"/>
-<area shape="rect" id="Node000004" href="$classgKeyEvent.html" title=" " alt="" coords="173,153,263,179"/>
-<area shape="poly" id="edge4_Node000000_Node000004" title=" " alt="" coords="51,263,79,224,97,204,119,188,145,175,172,168,173,173,146,180,121,192,101,208,83,228,56,266"/>
-<area shape="rect" id="Node000007" href="$classgMouseButtonEvent.html" title=" " alt="" coords="141,203,295,228"/>
-<area shape="poly" id="edge7_Node000000_Node000007" title=" " alt="" coords="67,267,119,237,152,226,154,231,121,242,69,272"/>
-<area shape="rect" id="Node000010" href="$classgMouseMovedEvent.html" title=" " alt="" coords="141,252,295,277"/>
-<area shape="poly" id="edge10_Node000000_Node000010" title=" " alt="" coords="85,281,140,273,141,278,86,286"/>
-<area shape="rect" id="Node000011" href="$classgMouseScrolledEvent.html" title=" " alt="" coords="137,301,299,327"/>
-<area shape="poly" id="edge11_Node000000_Node000011" title=" " alt="" coords="86,294,137,300,136,306,86,299"/>
-<area shape="rect" id="Node000012" href="$classgWindowFocusEvent.html" title=" " alt="" coords="140,351,296,376"/>
-<area shape="poly" id="edge12_Node000000_Node000012" title=" " alt="" coords="71,308,121,336,158,348,156,353,119,340,68,313"/>
-<area shape="rect" id="Node000013" href="$classgWindowLoseFocusEvent.html" title=" " alt="" coords="125,400,311,425"/>
-<area shape="poly" id="edge13_Node000000_Node000013" title=" " alt="" coords="56,313,84,351,101,369,121,385,147,397,145,402,119,390,98,373,79,354,52,316"/>
-<area shape="rect" id="Node000014" href="$classgWindowMouseEnterEvent.html" title=" " alt="" coords="120,449,316,475"/>
-<area shape="poly" id="edge14_Node000000_Node000014" title=" " alt="" coords="50,315,75,376,95,408,122,435,143,447,141,451,118,439,91,411,70,378,45,317"/>
-<area shape="rect" id="Node000015" href="$classgWindowMouseExitEvent.html" title=" " alt="" coords="125,499,311,524"/>
-<area shape="poly" id="edge15_Node000000_Node000015" title=" " alt="" coords="46,316,53,354,67,399,90,445,104,466,122,484,141,496,138,501,118,488,100,469,85,448,62,401,48,355,41,317"/>
-<area shape="rect" id="Node000016" href="$classgWindowResizeEvent.html" title=" " alt="" coords="137,548,299,573"/>
-<area shape="poly" id="edge16_Node000000_Node000016" title=" " alt="" coords="43,316,48,364,60,423,84,483,101,511,122,535,138,546,135,550,118,539,96,514,79,486,55,424,43,364,38,317"/>
-<area shape="rect" id="Node000005" href="$classgKeyPressedEvent.html" title=" " alt="" coords="399,104,542,129"/>
-<area shape="poly" id="edge5_Node000004_Node000005" title=" " alt="" coords="276,152,404,127,406,132,277,157"/>
-<area shape="rect" id="Node000006" href="$classgKeyReleasedEvent.html" title=" " alt="" coords="395,153,546,179"/>
-<area shape="poly" id="edge6_Node000004_Node000006" title=" " alt="" coords="277,163,395,163,395,169,277,169"/>
-<area shape="rect" id="Node000008" href="$classgMouseButtonPressedEvent.html" title=" " alt="" coords="369,203,573,228"/>
-<area shape="poly" id="edge8_Node000007_Node000008" title=" " alt="" coords="309,213,368,213,368,218,309,218"/>
-<area shape="rect" id="Node000009" href="$classgMouseButtonReleasedEvent.html" title=" " alt="" coords="364,252,577,277"/>
-<area shape="poly" id="edge9_Node000007_Node000009" title=" " alt="" coords="298,228,405,249,404,255,297,233"/>
+<area shape="rect" id="Node000000" href="$classgEvent.html" title=" " alt="" coords="5,301,72,327"/>
+<area shape="rect" id="Node000001" href="$classgCharTypedEvent.html" title=" " alt="" coords="158,5,293,31"/>
+<area shape="poly" id="edge1_Node000000_Node000001" title=" " alt="" coords="37,287,40,235,51,169,61,134,75,100,94,68,118,40,136,28,157,20,159,25,139,32,122,44,99,71,80,102,66,135,56,170,45,236,42,288"/>
+<area shape="rect" id="Node000002" href="$classgJoystickConnectEvent.html" title=" " alt="" coords="140,55,311,80"/>
+<area shape="poly" id="edge2_Node000000_Node000002" title=" " alt="" coords="39,287,45,244,58,190,81,136,98,111,118,89,138,77,141,81,122,93,102,114,86,138,63,192,50,245,44,288"/>
+<area shape="rect" id="Node000003" href="$classgJoystickDisconnectEvent.html" title=" " alt="" coords="130,104,321,129"/>
+<area shape="poly" id="edge3_Node000000_Node000003" title=" " alt="" coords="42,287,51,253,65,213,88,173,118,139,137,127,140,132,122,143,92,176,70,215,56,255,47,288"/>
+<area shape="rect" id="Node000004" href="$classgKeyEvent.html" title=" " alt="" coords="180,153,271,179"/>
+<area shape="poly" id="edge4_Node000000_Node000004" title=" " alt="" coords="47,287,74,236,94,210,119,188,148,173,179,166,181,171,150,178,121,192,98,214,78,239,52,290"/>
+<area shape="rect" id="Node000007" href="$classgMouseButtonEvent.html" title=" " alt="" coords="149,203,302,228"/>
+<area shape="poly" id="edge7_Node000000_Node000007" title=" " alt="" coords="57,289,84,261,119,237,147,225,149,230,121,242,88,266,61,293"/>
+<area shape="rect" id="Node000010" href="$classgMouseMovedEvent.html" title=" " alt="" coords="148,252,303,277"/>
+<area shape="poly" id="edge10_Node000000_Node000010" title=" " alt="" coords="84,297,119,286,164,275,166,280,121,291,86,302"/>
+<area shape="rect" id="Node000011" href="$classgMouseScrolledEvent.html" title=" " alt="" coords="144,301,307,327"/>
+<area shape="poly" id="edge11_Node000000_Node000011" title=" " alt="" coords="85,311,144,311,144,317,85,317"/>
+<area shape="rect" id="Node000012" href="$classgWindowFocusEvent.html" title=" " alt="" coords="147,351,303,376"/>
+<area shape="poly" id="edge12_Node000000_Node000012" title=" " alt="" coords="86,325,121,335,170,348,169,353,119,341,84,331"/>
+<area shape="rect" id="Node000013" href="$classgWindowLoseFocusEvent.html" title=" " alt="" coords="132,400,319,425"/>
+<area shape="poly" id="edge13_Node000000_Node000013" title=" " alt="" coords="61,335,88,362,121,385,152,397,150,402,119,390,85,366,58,339"/>
+<area shape="rect" id="Node000014" href="$classgWindowMouseEnterEvent.html" title=" " alt="" coords="127,449,323,475"/>
+<area shape="poly" id="edge14_Node000000_Node000014" title=" " alt="" coords="52,338,79,388,98,413,122,434,145,447,143,452,118,439,94,417,74,391,47,341"/>
+<area shape="rect" id="Node000015" href="$classgWindowMouseExitEvent.html" title=" " alt="" coords="132,499,319,524"/>
+<area shape="poly" id="edge15_Node000000_Node000015" title=" " alt="" coords="47,340,56,373,71,412,92,451,122,484,143,496,140,501,118,488,88,454,66,415,51,375,42,341"/>
+<area shape="rect" id="Node000016" href="$classgWindowResizeEvent.html" title=" " alt="" coords="144,548,307,573"/>
+<area shape="poly" id="edge16_Node000000_Node000016" title=" " alt="" coords="44,340,50,383,63,435,86,488,102,512,122,533,145,548,142,552,118,537,98,516,82,491,58,437,45,384,39,341"/>
+<area shape="rect" id="Node000017" href="$classgWindowScaleChangedEvent.html" title=" " alt="" coords="120,597,331,623"/>
+<area shape="poly" id="edge17_Node000000_Node000017" title=" " alt="" coords="42,340,45,392,56,458,66,493,80,526,99,557,122,584,137,595,134,599,118,588,94,560,75,528,61,494,51,459,40,393,37,341"/>
+<area shape="rect" id="Node000005" href="$classgKeyPressedEvent.html" title=" " alt="" coords="414,104,557,129"/>
+<area shape="poly" id="edge5_Node000004_Node000005" title=" " alt="" coords="284,152,417,127,418,132,285,158"/>
+<area shape="rect" id="Node000006" href="$classgKeyReleasedEvent.html" title=" " alt="" coords="410,153,561,179"/>
+<area shape="poly" id="edge6_Node000004_Node000006" title=" " alt="" coords="284,163,410,163,410,169,284,169"/>
+<area shape="rect" id="Node000008" href="$classgMouseButtonPressedEvent.html" title=" " alt="" coords="383,203,587,228"/>
+<area shape="poly" id="edge8_Node000007_Node000008" title=" " alt="" coords="315,213,383,213,383,218,315,218"/>
+<area shape="rect" id="Node000009" href="$classgMouseButtonReleasedEvent.html" title=" " alt="" coords="379,252,592,277"/>
+<area shape="poly" id="edge9_Node000007_Node000009" title=" " alt="" coords="307,228,418,249,417,255,306,233"/>
 </map>

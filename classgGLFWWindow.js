@@ -17,6 +17,7 @@ var classgGLFWWindow =
     [ "setCursorPos", "classgGLFWWindow.html#a45a407047573e2385e5b2f9b89c1c9b6", null ],
     [ "setIcon", "classgGLFWWindow.html#a217f7bd65526fd0243e848cb8604e82f", null ],
     [ "setIcon", "classgGLFWWindow.html#a13696596213ac7c22ff5d0a6e7b3b62b", null ],
+    [ "setScale", "classgGLFWWindow.html#ae8b87852d067118a3320da72228b0e63", null ],
     [ "setTitle", "classgGLFWWindow.html#a5796a0f73e65428f97cfeff5ca737d52", null ],
     [ "setVsync", "classgGLFWWindow.html#ac77ae081eb18e471d7a5533443253fcf", null ],
     [ "setWindowResizable", "classgGLFWWindow.html#a88b0793816aa79f3667ac13d6432800e", null ],

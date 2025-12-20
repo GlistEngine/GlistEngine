@@ -60,7 +60,7 @@ var searchData=
   ['copysymlink_57',['copySymlink',['../classgFile.html#a5700729c2c301588316420f4b18c7ae4',1,'gFile']]],
   ['core_5fgglenginerenderer_5fh_58',['CORE_GGLENGINERENDERER_H',['../gGLRenderEngine_8h.html#aae7ca8c744137846d037257ebc2925a4',1,'gGLRenderEngine.h']]],
   ['core_5fgrenderer_5fh_5f_59',['CORE_GRENDERER_H_',['../gRenderer_8h.html#a57a0aeff1c9f906ecf062a54a772e3ad',1,'gRenderer.h']]],
-  ['countasspace_60',['countasspace',['../classgGUIControl.html#a1adecb735c5036fafde5878a7532e894',1,'gGUIControl::countasspace'],['../classgGUIControl.html#a0a6329f7c6e37e952083eb5da30a0f44',1,'gGUIControl::countAsSpace()']]],
+  ['countasspace_60',['countasspace',['../classgGUIControl.html#a0a6329f7c6e37e952083eb5da30a0f44',1,'gGUIControl::countAsSpace()'],['../classgGUIControl.html#a1adecb735c5036fafde5878a7532e894',1,'gGUIControl::countasspace']]],
   ['countcolors_61',['countColors',['../classgGUIColorPicker.html#abdfa71e02c09a987eafefbfa73ac7073',1,'gGUIColorPicker']]],
   ['cpcolor_62',['cpcolor',['../classgGUIForm.html#a33631cdf62d267e227d13776dc322e0b',1,'gGUIForm']]],
   ['cph_63',['cph',['../classgGUIForm.html#aff8f0ae991c306068b7578755ede13df',1,'gGUIForm']]],

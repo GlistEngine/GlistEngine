@@ -178,5 +178,6 @@ var searchData=
   ['gwindowmouseenterevent_175',['gWindowMouseEnterEvent',['../classgWindowMouseEnterEvent.html',1,'']]],
   ['gwindowmouseexitevent_176',['gWindowMouseExitEvent',['../classgWindowMouseExitEvent.html',1,'']]],
   ['gwindowresizeevent_177',['gWindowResizeEvent',['../classgWindowResizeEvent.html',1,'']]],
-  ['gwindows_178',['gWindows',['../classgWindows.html',1,'']]]
+  ['gwindows_178',['gWindows',['../classgWindows.html',1,'']]],
+  ['gwindowscalechangedevent_179',['gWindowScaleChangedEvent',['../classgWindowScaleChangedEvent.html',1,'']]]
 ];

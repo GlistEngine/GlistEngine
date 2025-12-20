@@ -10,6 +10,7 @@ var gWindowEvents_8h =
     [ "gMouseButtonPressedEvent", "classgMouseButtonPressedEvent.html", "classgMouseButtonPressedEvent" ],
     [ "gMouseButtonReleasedEvent", "classgMouseButtonReleasedEvent.html", "classgMouseButtonReleasedEvent" ],
     [ "gWindowResizeEvent", "classgWindowResizeEvent.html", "classgWindowResizeEvent" ],
+    [ "gWindowScaleChangedEvent", "classgWindowScaleChangedEvent.html", "classgWindowScaleChangedEvent" ],
     [ "gWindowFocusEvent", "classgWindowFocusEvent.html", "classgWindowFocusEvent" ],
     [ "gWindowLoseFocusEvent", "classgWindowLoseFocusEvent.html", "classgWindowLoseFocusEvent" ],
     [ "gWindowMouseEnterEvent", "classgWindowMouseEnterEvent.html", "classgWindowMouseEnterEvent" ],

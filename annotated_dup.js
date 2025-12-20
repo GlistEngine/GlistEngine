@@ -172,5 +172,6 @@ var annotated_dup =
     [ "gWindowMouseEnterEvent", "classgWindowMouseEnterEvent.html", "classgWindowMouseEnterEvent" ],
     [ "gWindowMouseExitEvent", "classgWindowMouseExitEvent.html", "classgWindowMouseExitEvent" ],
     [ "gWindowResizeEvent", "classgWindowResizeEvent.html", "classgWindowResizeEvent" ],
-    [ "gWindows", "classgWindows.html", "classgWindows" ]
+    [ "gWindows", "classgWindows.html", "classgWindows" ],
+    [ "gWindowScaleChangedEvent", "classgWindowScaleChangedEvent.html", "classgWindowScaleChangedEvent" ]
 ];

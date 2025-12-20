@@ -1,5 +1,12 @@
 var NAVTREEINDEX15 =
 {
+"gImage_8h.html":[2,0,0,4,9],
+"gImage_8h_source.html":[2,0,0,4,9],
+"gInversion_8h.html":[2,0,0,4,1,10],
+"gInversion_8h_source.html":[2,0,0,4,1,10],
+"gKernelEffect_8h.html":[2,0,0,4,1,11],
+"gKernelEffect_8h_source.html":[2,0,0,4,1,11],
+"gKeyCode_8h.html":[2,0,0,8,5],
 "gKeyCode_8h.html#a01187b052c04f1a36435887342685fe2":[2,0,0,8,5,94],
 "gKeyCode_8h.html#a03a020a9f496a8d6f6f1a2ab0a9ba5d5":[2,0,0,8,5,88],
 "gKeyCode_8h.html#a03c6c04be8e517c9d09a65f1a28cb92f":[2,0,0,8,5,129],
@@ -242,12 +249,5 @@ var NAVTREEINDEX15 =
 "gSoundRecorder_8h_source.html":[2,0,0,5,3],
 "gSound_8h.html":[2,0,0,5,2],
 "gSound_8h.html#a318c891c59ae63a3f57c7703c0cd8d7a":[2,0,0,5,2,1],
-"gSound_8h_source.html":[2,0,0,5,2],
-"gSphere_8h.html":[2,0,0,4,2,10],
-"gSphere_8h_source.html":[2,0,0,4,2,10],
-"gSpriteAnimation_8h.html":[2,0,0,0,0],
-"gSpriteAnimation_8h.html#a05ace1778679794e816adbd5d83eb7bc":[2,0,0,0,0,10],
-"gSpriteAnimation_8h.html#a05ace1778679794e816adbd5d83eb7bca25b5ca2f56d99ba6ffcb5316adac34c1":[2,0,0,0,0,10,1],
-"gSpriteAnimation_8h.html#a05ace1778679794e816adbd5d83eb7bca4495f63771aa2060042a31363e16d4f9":[2,0,0,0,0,10,3],
-"gSpriteAnimation_8h.html#a05ace1778679794e816adbd5d83eb7bca59a84258a4cb9025b567ee5139455029":[2,0,0,0,0,10,4]
+"gSound_8h_source.html":[2,0,0,5,2]
 };
