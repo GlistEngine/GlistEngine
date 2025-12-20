@@ -213,7 +213,6 @@ void gAppManager::initialize() {
 		renderer->setScreenSize(width, height);
 		renderer->setUnitScreenSize(unitwidth, unitheight);
 		renderer->setScreenScaling(screenscaling);
-		renderer->updateScaleMultiplier();
 
 		// Create managers if not created
 		if(!guimanager) {
@@ -368,14 +367,12 @@ void gAppManager::setScreenSize(int width, int height) {
 	G_PROFILE_ZONE_SCOPED_N("gAppManager::setScreenSize()");
 	G_PROFILE_ZONE_VALUE(width);
 	G_PROFILE_ZONE_VALUE(height);
-	renderer->setScreenSize(width, height);
 	if(screenscaling == G_SCREENSCALING_AUTO_ONCE) {
 		// We don't want to update the unitresolution, that's why its setting directly. gAppManager needs to be a friend of gRenderer to do this.
 		renderer->unitwidth = renderer->scaleX(width);
 		renderer->unitheight = renderer->scaleY(height);
-	} else if(screenscaling == G_SCREENSCALING_AUTO) {
-		renderer->updateScaleMultiplier();
 	}
+	renderer->setScreenSize(width, height);
     if(iscanvasset && canvasmanager->getCurrentCanvas()) {
 	    canvasmanager->getCurrentCanvas()->windowResized(width, height);
     }
