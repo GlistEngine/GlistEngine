@@ -661,6 +661,7 @@ elseif(WIN32)
 		opengl32
 		glew32
 		dbghelp
+		Shcore
 #		msvcr100
 #		psapi
 #		swscale-5

@@ -285,7 +285,6 @@ public:
      * Sets screen size by given width and height. GlistEngine scales the process.
      *
      * @param width new width value of screen.
-     *
      * @param height new height value of screen.
      */
 	void setScreenSize(int width, int height);
@@ -405,6 +404,7 @@ private:
     void onEvent(gEvent& event);
 
     bool onWindowResizedEvent(gWindowResizeEvent&);
+    bool onWindowScaleChangedEvent(gWindowScaleChangedEvent&);
     bool onCharTypedEvent(gCharTypedEvent&);
     bool onKeyPressedEvent(gKeyPressedEvent&);
     bool onKeyReleasedEvent(gKeyReleasedEvent&);
