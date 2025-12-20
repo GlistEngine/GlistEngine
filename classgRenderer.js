@@ -249,6 +249,7 @@ var classgRenderer =
     [ "updatePackUnpackAlignment", "classgRenderer.html#ac76e277b9f44da9325994ae8972b30c0", null ],
     [ "updateScene", "classgRenderer.html#a3324e5981d632c55cfb192aeac453a5a", null ],
     [ "useShader", "classgRenderer.html#adbf9bacb21ed3896783981469a82e34c", null ],
+    [ "gAppManager", "classgRenderer.html#ab9dde2a792049fe98a8f04b4a56a1821", null ],
     [ "gRenderObject", "classgRenderer.html#a9acbb4fb4810b70c2b1467d45a86215e", null ],
     [ "arcmesh", "classgRenderer.html#ad71f7e9c015076342aef669d2fa409e0", null ],
     [ "boxmesh", "classgRenderer.html#ad5e67e7b65655bf1de951c53bf169ed5", null ],

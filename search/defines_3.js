@@ -174,7 +174,7 @@ var searchData=
   ['g_5fprofile_5fzone_5fscoped_5fn_171',['G_PROFILE_ZONE_SCOPED_N',['../gTracy_8h.html#afd507b97d12835d7c1904ed5935e285e',1,'gTracy.h']]],
   ['g_5fprofile_5fzone_5fvalue_172',['G_PROFILE_ZONE_VALUE',['../gTracy_8h.html#aa00baf2a31afb98b6fa47e430a2c7bfe',1,'gTracy.h']]],
   ['g_5fscreenscaling_5fauto_173',['G_SCREENSCALING_AUTO',['../gConstants_8h.html#a1c4d3327a33fbd7c510dc144a3b5df1d',1,'gConstants.h']]],
-  ['g_5fscreenscaling_5fmipmap_174',['G_SCREENSCALING_MIPMAP',['../gConstants_8h.html#a2fb16cde9ca406b07d3e47a0e4952ab7',1,'gConstants.h']]],
+  ['g_5fscreenscaling_5fauto_5fonce_174',['G_SCREENSCALING_AUTO_ONCE',['../gConstants_8h.html#ac63cdf66ab606f2ac192f6eb2292879e',1,'gConstants.h']]],
   ['g_5fscreenscaling_5fnone_175',['G_SCREENSCALING_NONE',['../gConstants_8h.html#a8ff6759df585bbbd1044f07924dd3b9f',1,'gConstants.h']]],
   ['g_5fwindowmode_5fapp_176',['G_WINDOWMODE_APP',['../gConstants_8h.html#a3907836f8dc23e3ca7609d92c6e01479',1,'gConstants.h']]],
   ['g_5fwindowmode_5ffullscreen_177',['G_WINDOWMODE_FULLSCREEN',['../gConstants_8h.html#af3c27aa6922551bf104a7eeab82f946c',1,'gConstants.h']]],

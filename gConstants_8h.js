@@ -3,7 +3,7 @@ var gConstants_8h =
     [ "G_LOOPMODE_NONE", "gConstants_8h.html#a94298e838adf701252739660d4ae45bf", null ],
     [ "G_LOOPMODE_NORMAL", "gConstants_8h.html#a8cbaec1227de07f900c36c7d71be2d16", null ],
     [ "G_SCREENSCALING_AUTO", "gConstants_8h.html#a1c4d3327a33fbd7c510dc144a3b5df1d", null ],
-    [ "G_SCREENSCALING_MIPMAP", "gConstants_8h.html#a2fb16cde9ca406b07d3e47a0e4952ab7", null ],
+    [ "G_SCREENSCALING_AUTO_ONCE", "gConstants_8h.html#ac63cdf66ab606f2ac192f6eb2292879e", null ],
     [ "G_SCREENSCALING_NONE", "gConstants_8h.html#a8ff6759df585bbbd1044f07924dd3b9f", null ],
     [ "G_WINDOWMODE_APP", "gConstants_8h.html#a3907836f8dc23e3ca7609d92c6e01479", null ],
     [ "G_WINDOWMODE_FULLSCREEN", "gConstants_8h.html#af3c27aa6922551bf104a7eeab82f946c", null ],
