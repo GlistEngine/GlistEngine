@@ -64,7 +64,7 @@ std::string gObject::gGetFilesDir() {
 }
 
 std::string gObject::gGetImagesDir() {
-	if (releasescaling == 1) return gGetAssetsDir() + "mipmaps/" + resolutiondirs[releaseresolution];
+	if (releasescaling == G_SCREENSCALING_MIPMAP) return gGetAssetsDir() + "mipmaps/" + resolutiondirs[releaseresolution];
 	return gGetAssetsDir() + "images/";
 }
 
