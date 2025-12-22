@@ -33,18 +33,18 @@ gGUIScrollable::~gGUIScrollable() {
 void gGUIScrollable::enableScrollbars(bool isVerticalEnabled, bool isHorizontalEnabled) {
 	enableverticalscroll = isVerticalEnabled;
 	enablehorizontalscroll = isHorizontalEnabled;
-	setDimensions(width, height);
+	setDimensions(renderer->getWidth(), renderer->getHeight());
 }
 
 void gGUIScrollable::setDimensions(int newWidth, int newHeight) {
 	height = newHeight;
 	width = newWidth;
 
-	boxw = newWidth;
+	boxw = width;
 	if (enableverticalscroll) {
 		boxw -= barsize;
 	}
-	boxh = newHeight;
+	boxh = height;
 	if (enablehorizontalscroll) {
 		boxh -= barsize;
 	}
