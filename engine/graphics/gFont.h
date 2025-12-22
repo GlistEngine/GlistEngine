@@ -178,6 +178,16 @@ public:
 	 * @returns The dpi value
 	 */
 	int getDpi() const;
+	/*
+	 * Wraps text into multiple lines based on font width.
+	 *
+	 * @param text The input text to be wrapped
+	 * @param maxWidth The maximum visual width of a line
+	 *
+	 * @return A list of lines that fit within the given width
+	 */
+	std::vector<std::string> wrapSentenceByWidth(const std::string& text, float maxWidth);
+
 
 private:
 	bool isloaded = false;
