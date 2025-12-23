@@ -17,6 +17,7 @@ var classgGUIScrollable =
     [ "mouseReleased", "classgGUIScrollable.html#a69ebff580e247f644c168e764fe876bb", null ],
     [ "mouseScrolled", "classgGUIScrollable.html#ac69a502a9f10e38ac93a3ac6548a4f62", null ],
     [ "setDimensions", "classgGUIScrollable.html#a7bff89f6fed1ca4863870d856a3f0c4e", null ],
+    [ "setToolbarSpace", "classgGUIScrollable.html#ac7cfd7b39d3ccb949cb4523c1c98d25d", null ],
     [ "updateScrollbar", "classgGUIScrollable.html#a87800ef0653a28e35a4807a7c8aa3a51", null ],
     [ "windowResized", "classgGUIScrollable.html#a8a2ceb00b3a8f2584762824790fb60f2", null ],
     [ "barsize", "classgGUIScrollable.html#a217a9cc2c8041d091b399a64ec4a5c93", null ],

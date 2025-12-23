@@ -31,7 +31,7 @@ var searchData=
   ['black_28',['BLACK',['../classgColor.html#a7d5273496529fc9222ed0b2217fc27cc',1,'gColor']]],
   ['blue_29',['BLUE',['../classgColor.html#a193561358bd66ff07cab4c515760d33d',1,'gColor']]],
   ['boom_30',['boom',['../classgCamera.html#a93ce55925ca244aa839fe57f547b74c8',1,'gCamera::boom()'],['../classgModel.html#a165470e3fa7342c02d5d993e1d731f1f',1,'gModel::boom()'],['../classgNode.html#aeb966c8d571f6d817c1c9298ddfc997d',1,'gNode::boom()']]],
-  ['bottom_31',['bottom',['../classgBaseGUIObject.html#a66b98c8ab58c8006c32b6477229287a5',1,'gBaseGUIObject::bottom'],['../classgGUINotebook.html#ad07430b2272895bd64cdfd33a1c2cf3ba1fabf63de5c96c78e2a40805bcdeb73b',1,'gGUINotebook::BOTTOM'],['../classgRect.html#a7b0faaef44bfaac7589553e828f2200d',1,'gRect::bottom()']]],
+  ['bottom_31',['bottom',['../classgRect.html#a7b0faaef44bfaac7589553e828f2200d',1,'gRect::bottom()'],['../classgBaseGUIObject.html#a66b98c8ab58c8006c32b6477229287a5',1,'gBaseGUIObject::bottom'],['../classgGUINotebook.html#ad07430b2272895bd64cdfd33a1c2cf3ba1fabf63de5c96c78e2a40805bcdeb73b',1,'gGUINotebook::BOTTOM']]],
   ['bottomface_32',['bottomFace',['../structgCamera_1_1Frustum.html#aed75e631deb7a54b04de05d0d3b46a59',1,'gCamera::Frustum']]],
   ['bottomright_33',['bottomright',['../classgParticle.html#a20888219bd93830a26d90dc3a6ab0d5e',1,'gParticle']]],
   ['boxh_34',['boxh',['../classgGUIScrollable.html#a2cb0843d9dc9f0afecfad31d034cd8c1',1,'gGUIScrollable']]],
