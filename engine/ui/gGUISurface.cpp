@@ -42,7 +42,7 @@ void gGUISurface::set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseG
 	totalh = h;
 	gGUIScrollable::set(root, topParentGUIObject, parentGUIObject, parentSlotLineNo, parentSlotColumnNo, x, y, w, h);
 	gGUIScrollable::setDimensions(width, height);
-	gGUIScrollable::enableScrollbars(true, false);
+//	gGUIScrollable::enableScrollbars(true, false);
 }
 
 void gGUISurface::drawContent() {
@@ -96,8 +96,8 @@ void gGUISurface::drawShapes() {
 }
 
 void gGUISurface::drawBackground() {
-	//renderer->setColor(gColor(1.0f, 1.0f, 1.0f, 1.0f));//white
-	renderer->setColor(backgroundcolor);
+	renderer->setColor(gColor(1.0f, 1.0f, 1.0f, 1.0f));//white
+	//renderer->setColor(backgroundcolor);
 	gDrawRectangle(0, 0, right, bottom, true);
 	totalh = maxHeight;
 }

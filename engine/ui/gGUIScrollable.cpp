@@ -24,6 +24,8 @@ gGUIScrollable::gGUIScrollable() {
 	titleheight = font->getSize() * 1.8f;
 	boxfbo = new gFbo();
 	setTitleOn(false);
+	toolbarw = 0;
+	toolbarh = 0;
 }
 
 gGUIScrollable::~gGUIScrollable() {
@@ -44,10 +46,13 @@ void gGUIScrollable::setDimensions(int newWidth, int newHeight) {
 	if (enableverticalscroll) {
 		boxw -= barsize;
 	}
+	boxw -= toolbarw;
+
 	boxh = height;
 	if (enablehorizontalscroll) {
 		boxh -= barsize;
 	}
+	boxh -= toolbarh;
 
 //	totalw = boxw;
 //	totalh = boxh + barsize;
@@ -134,7 +139,7 @@ void gGUIScrollable::draw() {
 	drawScrollbars();
 	boxfbo->unbind();
 	renderer->setColor(255, 255, 255);
-	boxfbo->drawSub(left,top + titleheight,
+	boxfbo->drawSub(left, top + titleheight,
 					width, height,
 					0, renderer->unscaleY(renderer->getHeight() - height),
 					renderer->unscaleX(width), renderer->unscaleY(height));
@@ -159,7 +164,7 @@ void gGUIScrollable::drawScrollbars() {
 	gColor* oldcolor = renderer->getColor();
 	if(enableverticalscroll) {
 		renderer->setColor(&barbackgroundcolor);
-		gDrawRectangle(boxw, 0, barsize, boxh, true);
+		gDrawRectangle(boxw, toolbarh, barsize, boxh, true);
 
 		renderer->setColor(&barforegroundcolor);
 		gDrawRectangle(boxw, verticalscrollbarpos, barsize, scrollbarverticalsize, true);
@@ -167,14 +172,14 @@ void gGUIScrollable::drawScrollbars() {
 
 	if(enablehorizontalscroll) {
 		renderer->setColor(&barbackgroundcolor);
-		gDrawRectangle(0, boxh, boxw, barsize, true);
+		gDrawRectangle(toolbarw, boxh, boxw, barsize, true);
 
 		renderer->setColor(&barforegroundcolor);
-		gDrawRectangle(horizontalscrollbarpos, boxh, scrollbarhorizontalsize, barsize, true);
+		gDrawRectangle(toolbarw + horizontalscrollbarpos, boxh, scrollbarhorizontalsize, barsize, true);
 	}
 
 	renderer->setColor(foregroundcolor);
-	gDrawRectangle(boxw, boxh, barsize, barsize, true);
+	gDrawRectangle(boxw + toolbarw, boxh + toolbarh, barsize, barsize, true);
 
 	// reset color back to before
 	renderer->setColor(oldcolor);
@@ -257,6 +262,11 @@ gFbo* gGUIScrollable::getFbo() {
 
 int gGUIScrollable::getTitleTop() {
 	return titleheight;
+}
+
+void gGUIScrollable::setToolbarSpace(int toolbarW, int toolbarH) {
+	toolbarw = toolbarW;
+	toolbarh = toolbarH;
 }
 
 bool gGUIScrollable::isPointInsideVerticalScrollbar(int x, int y, bool checkFullSize) {
