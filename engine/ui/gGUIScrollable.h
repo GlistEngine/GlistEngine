@@ -131,6 +131,8 @@ public:
 
 	int getTitleTop();
 
+	void setToolbarSpace(int toolbarW, int toolbarH);
+
 protected:
 	bool isPointInsideVerticalScrollbar(int x, int y, bool checkFullSize = false);
 	bool isPointInsideHorizontalScrollbar(int x, int y, bool checkFullSize = false);
@@ -169,6 +171,7 @@ private:
 
 	bool enableverticalscroll, enablehorizontalscroll;
 	gColor barbackgroundcolor, barforegroundcolor;
+	int toolbarw, toolbarh;
 };
 
 #endif /* UI_GGUISCROLLABLE_H_ */
