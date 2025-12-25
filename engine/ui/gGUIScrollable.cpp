@@ -35,7 +35,7 @@ gGUIScrollable::~gGUIScrollable() {
 void gGUIScrollable::enableScrollbars(bool isVerticalEnabled, bool isHorizontalEnabled) {
 	enableverticalscroll = isVerticalEnabled;
 	enablehorizontalscroll = isHorizontalEnabled;
-	setDimensions(renderer->getWidth(), renderer->getHeight());
+	setDimensions(width, height);
 }
 
 void gGUIScrollable::setDimensions(int newWidth, int newHeight) {
