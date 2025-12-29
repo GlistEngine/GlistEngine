@@ -48,45 +48,38 @@ public:
 	virtual ~gGUIBitmap();
 	void draw();
 
-/**
- * Loads the specific picture file
- * @param imagePath specifies the pictures file location
- * @param isPropotional if the value of parameter is given true the picture
- *  will stretch in picturebox.
- */
+	/**
+	 * Loads the specific picture file
+	 * @param imagePath specifies the pictures file location
+	 * @param isPropotional if the value of parameter is given true the picture
+	 *  will stretch in picturebox.
+	 */
 	void loadImage(const std::string& imagePath, bool isProportional = true);
 	void load(const std::string& fullPath, bool isProportional = true);
 
-/**
- * Sets the specific picture file
- * @param setImage adds the preloaded image using the variable name
- * @param isPropotional if the value of parameter is given true the picture
- *  will stretch in picturebox.
- */
+	/**
+	 * Sets the specific picture file
+	 * @param setImage adds the preloaded image using the variable name
+	 * @param isPropotional if the value of parameter is given true the picture
+	 *  will stretch in picturebox.
+	 */
 	void setImage(gImage setImage, bool isProportional = false);
 
-/**
- * Sets the loaded picture's size
- * @param x changes the position of the image on the x-axis up to the added
- * pixel value.
- * @param y changes the position of the image on the y-axis up to the added
- * pixel value.
- * @param scalex changes the size of the image on the x- axis by proportioning
- *  it to the given float value.
- * @param scaley changes the size of the image on the y- axis by proportioning
- * it to the given float value.
- */
+	/**
+	 * Sets the loaded picture's size
+	 * @param x changes the position of the image on the x-axis up to the added
+	 * pixel value.
+	 * @param y changes the position of the image on the y-axis up to the added
+	 * pixel value.
+	 * @param scalex changes the size of the image on the x- axis by proportioning
+	 *  it to the given float value.
+	 * @param scaley changes the size of the image on the y- axis by proportioning
+	 * it to the given float value.
+	 */
 	void setImageSize(int x, int y, float scalex, float scaley);
 
-/**
- * Specifies the path of the image
- */
 	std::string getImagePath();
 
-/**
- * @param getImageWidth specifies the width of the image
- * @param getImageHeight specifies the height of the image
- */
 	int getImageWidth();
 	int getImageHeight();
 

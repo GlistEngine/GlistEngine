@@ -25,28 +25,23 @@ gGUIBitmap::~gGUIBitmap() {
 
 void gGUIBitmap::draw() {
 	if(!stretch) {
-
-			imagew = image.getWidth();
-			imageh = image.getHeight();
-			if(imageh > height) {
-				proportion = imagew / imageh;
-				imageh = height;
-				imagew = proportion * imageh;
-			}
-			if(imagew > width) {
-				proportion = imageh / imagew;
-				imagew = width;
-				imageh = proportion * imagew;
-			}
-		}
-		else {
-			imagew = width;
+		imagew = image.getWidth();
+		imageh = image.getHeight();
+		if(imageh > height) {
+			proportion = imagew / imageh;
 			imageh = height;
+			imagew = proportion * imageh;
 		}
+		if(imagew > width) {
+			proportion = imageh / imagew;
+			imagew = width;
+			imageh = proportion * imagew;
+		}
+	} else {
+		imagew = width;
+		imageh = height;
+	}
 	image.draw(left + setsizex, top + setsizey, imagew * setsizew, imageh * setsizeh);
-
-
-
 }
 
 void gGUIBitmap::setImageSize(int x, int y, float scalex, float scaley) {
@@ -54,14 +49,12 @@ void gGUIBitmap::setImageSize(int x, int y, float scalex, float scaley) {
 	setsizey = y;
 	setsizew = scalex;
 	setsizeh = scaley;
-
 }
 
 void gGUIBitmap::loadImage(const std::string& imagePath , bool isProportional) {
 	imagepath = imagePath;
 	image.loadImage(imagepath);
 	stretch = isProportional;
-
 }
 
 void gGUIBitmap::load(const std::string &fullPath, bool isProportional) {
@@ -71,16 +64,15 @@ void gGUIBitmap::load(const std::string &fullPath, bool isProportional) {
 }
 
 void gGUIBitmap::setImage(gImage setImage, bool isProportional) {
-	image=setImage;
+	image = setImage;
 	stretch = isProportional;
-
 }
 
 int gGUIBitmap::getImageWidth() {
-	return imagew ;
+	return imagew;
 }
 int gGUIBitmap::getImageHeight() {
-	return imageh ;
+	return imageh;
 }
 
 std::string gGUIBitmap::getImagePath() {
