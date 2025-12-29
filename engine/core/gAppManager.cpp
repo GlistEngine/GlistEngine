@@ -374,10 +374,10 @@ void gAppManager::setScreenSize(int width, int height) {
 	}
 	renderer->setScreenSize(width, height);
     if(iscanvasset && canvasmanager->getCurrentCanvas()) {
-	    canvasmanager->getCurrentCanvas()->windowResized(width, height);
+	    canvasmanager->getCurrentCanvas()->windowResized(renderer->getWidth(), renderer->getHeight());
     }
     if(iscanvasset && guimanager->isframeset) {
-	    guimanager->windowResized(width, height);
+	    guimanager->windowResized(renderer->getWidth(), renderer->getHeight());
     }
 }
 
