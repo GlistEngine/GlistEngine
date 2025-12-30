@@ -152,14 +152,18 @@ public:
 	void callEvent(gEvent& event);
 
 protected:
+	void setRendering(bool rendering);
 
 	int width, height;
+	bool isrendering;
 	int scalex, scaley;
 	gCursorMode cursormode;
 	int windowmode;
 	std::string title;
 	bool isfocused;
 	EventHandlerFn eventhandler;
+
+
 	static void sighandler(int signum);
 	static std::string signalname[32];
 };

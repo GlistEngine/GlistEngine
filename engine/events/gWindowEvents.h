@@ -290,8 +290,6 @@ private:
 
 #endif
 
-#if defined(GLIST_WEB) || defined(GLIST_ANDROID)
-
 class gAppPauseEvent : public gEvent {
 public:
 	gAppPauseEvent() {}
@@ -309,7 +307,5 @@ public:
 	G_EVENT_CLASS_CATEGORY(EVENTCATEGORY_APP)
 private:
 };
-
-#endif
 
 #endif /* GWINDOWEVENTS_H_ */

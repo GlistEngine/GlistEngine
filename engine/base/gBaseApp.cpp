@@ -40,6 +40,14 @@ void gBaseApp::stop() {
 
 }
 
+void gBaseApp::pause() {
+
+}
+
+void gBaseApp::resume() {
+
+}
+
 void gBaseApp::setCurrentCanvas(gBaseCanvas* currentCanvas) {
 	appmanager->setCurrentCanvas(currentCanvas);
 }

@@ -33,6 +33,18 @@ public:
 	 */
 	virtual void stop();
 
+	/**
+	 * Called when window is invisible.
+	 * Application will stop rendering after this but will
+	 * still receive updates.
+	 */
+	virtual void pause();
+	/**
+	 * Called when window is visible again.
+	 * Application will continue rendering.
+	 */
+	virtual void resume();
+
 	void setCurrentCanvas(gBaseCanvas* currentCanvas);
 	gBaseCanvas* getCurrentCanvas();
 
