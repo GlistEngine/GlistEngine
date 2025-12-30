@@ -34,13 +34,13 @@ public:
 	virtual void stop();
 
 	/**
-	 * Called when current activity is invisible.
+	 * Called when window is invisible.
 	 * Application will stop rendering after this but will
 	 * still receive updates.
 	 */
 	virtual void pause();
 	/**
-	 * Called when current activity is visible again.
+	 * Called when window is visible again.
 	 * Application will continue rendering.
 	 */
 	virtual void resume();
