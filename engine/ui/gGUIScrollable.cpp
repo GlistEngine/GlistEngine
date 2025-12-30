@@ -60,7 +60,9 @@ void gGUIScrollable::setDimensions(int newWidth, int newHeight) {
 	titlex = left + font->getStringWidth("i");
 	titley = top + font->getStringHeight("AE");
 
-	boxfbo->allocate(renderer->getScreenWidth(), renderer->getScreenHeight());
+	if (renderer->getScreenWidth() != boxfbo->getWidth() || renderer->getScreenHeight() != boxfbo->getHeight()) {
+		boxfbo->allocate(renderer->getScreenWidth(), renderer->getScreenHeight());
+	}
 }
 
 
@@ -250,8 +252,6 @@ int gGUIScrollable::getVerticalScroll(){
 }
 
 void gGUIScrollable::windowResized(int w, int h) {
-	delete boxfbo;
-	boxfbo = new gFbo();
 	setDimensions(width, height);
 	gGUIControl::windowResized(w, h);
 }
