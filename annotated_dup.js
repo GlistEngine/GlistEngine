@@ -4,6 +4,8 @@ var annotated_dup =
     [ "gAnimationTrigger", "classgAnimationTrigger.html", "classgAnimationTrigger" ],
     [ "gAppManager", "classgAppManager.html", "classgAppManager" ],
     [ "gAppObject", "classgAppObject.html", "classgAppObject" ],
+    [ "gAppPauseEvent", "classgAppPauseEvent.html", "classgAppPauseEvent" ],
+    [ "gAppResumeEvent", "classgAppResumeEvent.html", "classgAppResumeEvent" ],
     [ "gArc", "classgArc.html", "classgArc" ],
     [ "gAssetLoader", "classgAssetLoader.html", "classgAssetLoader" ],
     [ "gBaseApp", "classgBaseApp.html", "classgBaseApp" ],

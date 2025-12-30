@@ -8,6 +8,8 @@ var hierarchy =
     [ "gColor", "classgColor.html", null ],
     [ "gColorHSL", "classgColorHSL.html", null ],
     [ "gEvent", "classgEvent.html", [
+      [ "gAppPauseEvent", "classgAppPauseEvent.html", null ],
+      [ "gAppResumeEvent", "classgAppResumeEvent.html", null ],
       [ "gCharTypedEvent", "classgCharTypedEvent.html", null ],
       [ "gJoystickConnectEvent", "classgJoystickConnectEvent.html", null ],
       [ "gJoystickDisconnectEvent", "classgJoystickDisconnectEvent.html", null ],

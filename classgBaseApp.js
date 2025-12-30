@@ -9,6 +9,8 @@ var classgBaseApp =
     [ "getElapsedTime", "classgBaseApp.html#a356c7343afc8143fc204c5de9ce6a744", null ],
     [ "getFramerate", "classgBaseApp.html#a72a246f800a68b1086874f32d920a696", null ],
     [ "getTargetFramerate", "classgBaseApp.html#a714e6b5691fd7a9c7a7169a4d193641a", null ],
+    [ "pause", "classgBaseApp.html#acd76e640cca529f7c73fb73182674937", null ],
+    [ "resume", "classgBaseApp.html#a3af50b15ab0b615a1eb53eb599072915", null ],
     [ "setCurrentCanvas", "classgBaseApp.html#ab22226fc88bad234d1b28582085cf70c", null ],
     [ "setTargetFramerate", "classgBaseApp.html#abe90f86359a41f6808e46b1ff9e61ed2", null ],
     [ "setup", "classgBaseApp.html#aca6c3202a549a5d14b10a6ce41410b0e", null ],
