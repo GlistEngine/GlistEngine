@@ -59,7 +59,7 @@ gBaseWindow::gBaseWindow() {
 	windowmode = G_WINDOWMODE_NONE;
 	title = "GlistApp";
 	isfocused = false;
-	isrendering = true;
+	isrendering = false;
 
 	signal(SIGSEGV, sighandler);
 }
@@ -70,6 +70,7 @@ gBaseWindow::~gBaseWindow() {
 void gBaseWindow::initialize(int width, int height, int windowMode, bool isResizable) {
 	setSize(width, height);
 	windowmode = windowMode;
+	isrendering = true;
 }
 
 bool gBaseWindow::getShouldClose() {
@@ -138,14 +139,10 @@ std::string gBaseWindow::getClipboardString() {
 
 void gBaseWindow::setSize(int width, int height) {
 	if(width == 0 || height == 0) {
-		isrendering = false;
-		gLogi("gBaseWindow") << "Window is minimized";
+		setRendering(false);
 		return;
 	}
-	if(!isrendering) {
-		gLogi("gBaseWindow") << "Window is maximized";
-	}
-	isrendering = true;
+	setRendering(true);
 	this->width = width;
 	this->height = height;
 	gWindowResizeEvent event{width, height};
@@ -200,6 +197,19 @@ void gBaseWindow::callEvent(gEvent& event) {
 	if(eventhandler) eventhandler(event);
 }
 
+void gBaseWindow::setRendering(bool rendering) {
+	if (isrendering == rendering) {
+		return;
+	}
+	isrendering = rendering;
+	if (!isrendering) {
+		gAppPauseEvent event{};
+		callEvent(event);
+	} else {
+		gAppResumeEvent event{};
+		callEvent(event);
+	}
+}
 void gBaseWindow::sighandler(int signum) {
 //	std::cerr << "Process " << getpid() << " got signal " << signum << " " << signalname[signum] << std::endl;
 //	signal(signum, SIG_DFL);

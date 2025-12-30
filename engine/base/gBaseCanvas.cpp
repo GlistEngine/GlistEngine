@@ -101,6 +101,14 @@ void gBaseCanvas::onGuiEvent(int guiObjectId, int eventType, std::string value1,
 
 }
 
+void gBaseCanvas::pause() {
+
+}
+
+void gBaseCanvas::resume() {
+
+}
+
 void gBaseCanvas::onEvent(gEvent& event) {
 
 }

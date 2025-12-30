@@ -96,11 +96,6 @@ gAppManager::gAppManager(const std::string& appName, gBaseApp *baseApp, int widt
     isrunning = false;
     setupcomplete = false;
     guiappthread = nullptr;
-#ifdef ANDROID
-	isrendering = false;
-#else
-	isrendering = true;
-#endif
     // Mouse
     ismouseentered = false;
     mousebuttonstate = 0;
@@ -530,7 +525,7 @@ void gAppManager::tick() {
 		}
     }
 
-    if(isrendering) {
+    if(window->isRendering()) {
     	if(!isguiapp) {
 			if(canvas) {
 				canvas->clearBackground();
@@ -552,21 +547,6 @@ void gAppManager::tick() {
 	if(usewindow) {
 		window->update();
 	}
-    if(!window->isRendering() && isrendering) {
-        isrendering = false; // If window has lost the context, we should stop rendering.
-#ifdef ANDROID
-		if (auto* androidapp = dynamic_cast<gAndroidApp*>(app)) {
-			androidapp->pause();
-		}
-		if (canvasmanager && getCurrentCanvas()) {
-			if (auto* androidcanvas = dynamic_cast<gAndroidCanvas*>(getCurrentCanvas())) {
-				androidcanvas->pause();
-			}
-		}
-#endif
-    } else if (window->isRendering() && !isrendering) {
-	    isrendering = true; // Window has recovered context
-    }
 	executeQueue();
 }
 
@@ -589,10 +569,8 @@ void gAppManager::onEvent(gEvent& event) {
     dispatcher.dispatch<gWindowLoseFocusEvent>(G_BIND_FUNCTION(onWindowLoseFocusEvent));
     dispatcher.dispatch<gJoystickConnectEvent>(G_BIND_FUNCTION(onJoystickConnectEvent));
     dispatcher.dispatch<gJoystickDisconnectEvent>(G_BIND_FUNCTION(onJoystickDisconnectEvent));
-#if GLIST_ANDROID || GLIST_IOS || GLIST_WEB
     dispatcher.dispatch<gAppPauseEvent>(G_BIND_FUNCTION(onAppPauseEvent));
     dispatcher.dispatch<gAppResumeEvent>(G_BIND_FUNCTION(onAppResumeEvent));
-#endif
 #if GLIST_ANDROID || GLIST_IOS
     dispatcher.dispatch<gDeviceOrientationChangedEvent>(G_BIND_FUNCTION(onDeviceOrientationChangedEvent));
     dispatcher.dispatch<gTouchEvent>(G_BIND_FUNCTION(onTouchEvent));
@@ -837,37 +815,13 @@ void gAppManager::iosLoop()
 }
 #endif // GLIST_IOS
 
-#if GLIST_WEB || GLIST_ANDROID || GLIST_IOS
 bool gAppManager::onAppPauseEvent(gAppPauseEvent& event) {
     submitToMainThread([this]() {
-		if(!isrendering) {
-			return;
-		}
-        isrendering = false;
-		// todo use callback functions that are registered from the target (app and/or canvas) instead of static casting
-		if (
-#if GLIST_ANDROID
-            auto* target = dynamic_cast<gAndroidApp*>(app)
-#elif GLIST_IOS
-			auto* target = static_cast<gIOSApp*>(app)
-#elif GLIST_WEB
-			auto* target = static_cast<gWebApp*>(app)
-#endif
-        ) {
-			target->pause();
+		if (app) {
+			app->pause();
 		}
 		if(canvasmanager && getCurrentCanvas()) {
-			if (
-#if GLIST_ANDROID
-                auto* target = dynamic_cast<gAndroidCanvas*>(getCurrentCanvas())
-#elif GLIST_IOS
-                auto* target = static_cast<gIOSCanvas*>(getCurrentCanvas())
-#elif GLIST_WEB
-				auto* target = static_cast<gWebCanvas*>(getCurrentCanvas())
-#endif
-            ) {
-				target->pause();
-			}
+			getCurrentCanvas()->pause();
 		}
 	});
     return false;
@@ -875,38 +829,15 @@ bool gAppManager::onAppPauseEvent(gAppPauseEvent& event) {
 
 bool gAppManager::onAppResumeEvent(gAppResumeEvent& event) {
     submitToMainThread([this]() {
-		if(isrendering) {
-			return;
-		}
-        isrendering = true;
-		if (
-#if GLIST_ANDROID
-            auto* target = dynamic_cast<gAndroidApp*>(app)
-#elif GLIST_IOS
-            auto* target = static_cast<gIOSApp*>(app)
-#elif GLIST_WEB
-			auto* target = static_cast<gWebApp*>(app)
-#endif
-        ) {
-			target->resume();
+		if (app) {
+			app->resume();
 		}
 		if(canvasmanager && getCurrentCanvas()) {
-			if (
-#if GLIST_ANDROID
-                auto* target = dynamic_cast<gAndroidCanvas*>(getCurrentCanvas())
-#elif GLIST_IOS
-                auto* target = static_cast<gIOSCanvas*>(getCurrentCanvas())
-#elif GLIST_WEB
-				auto* target = static_cast<gWebCanvas*>(getCurrentCanvas())
-#endif
-            ) {
-				target->resume();
-			}
+			getCurrentCanvas()->resume();
 		}
 	});
     return false;
 }
-#endif
 
 #if GLIST_ANDROID || GLIST_IOS
 bool gAppManager::onDeviceOrientationChangedEvent(gDeviceOrientationChangedEvent& event) {

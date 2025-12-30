@@ -352,8 +352,7 @@ private:
     gBaseWindow* window;
 	bool usewindow;
     bool isrunning;
-    bool isrendering;
-	bool setupcomplete;
+    bool setupcomplete;
     std::string appname;
     gBaseApp* app;
     int width;
@@ -418,10 +417,8 @@ private:
     bool onWindowLoseFocusEvent(gWindowLoseFocusEvent&);
     bool onJoystickConnectEvent(gJoystickConnectEvent&);
     bool onJoystickDisconnectEvent(gJoystickDisconnectEvent&);
-#if GLIST_ANDROID || GLIST_IOS || GLIST_WEB
 	bool onAppPauseEvent(gAppPauseEvent&);
     bool onAppResumeEvent(gAppResumeEvent&);
-#endif
 #if GLIST_ANDROID || GLIST_IOS
     bool onDeviceOrientationChangedEvent(gDeviceOrientationChangedEvent&);
     bool onTouchEvent(gTouchEvent&);
