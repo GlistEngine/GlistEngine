@@ -564,6 +564,8 @@ void gAppManager::tick() {
 			}
 		}
 #endif
+    } else if (window->isRendering() && !isrendering) {
+	    isrendering = true; // Window has recovered context
     }
 	executeQueue();
 }

@@ -59,6 +59,7 @@ gBaseWindow::gBaseWindow() {
 	windowmode = G_WINDOWMODE_NONE;
 	title = "GlistApp";
 	isfocused = false;
+	isrendering = true;
 
 	signal(SIGSEGV, sighandler);
 }
@@ -76,7 +77,7 @@ bool gBaseWindow::getShouldClose() {
 }
 
 bool gBaseWindow::isRendering() {
-	return true;
+	return isrendering;
 }
 
 void gBaseWindow::update() {
@@ -136,6 +137,15 @@ std::string gBaseWindow::getClipboardString() {
 }
 
 void gBaseWindow::setSize(int width, int height) {
+	if(width == 0 || height == 0) {
+		isrendering = false;
+		gLogi("gBaseWindow") << "Window is minimized";
+		return;
+	}
+	if(!isrendering) {
+		gLogi("gBaseWindow") << "Window is maximized";
+	}
+	isrendering = true;
 	this->width = width;
 	this->height = height;
 	gWindowResizeEvent event{width, height};

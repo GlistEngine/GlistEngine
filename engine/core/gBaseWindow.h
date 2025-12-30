@@ -154,6 +154,7 @@ public:
 protected:
 
 	int width, height;
+	bool isrendering;
 	int scalex, scaley;
 	gCursorMode cursormode;
 	int windowmode;
