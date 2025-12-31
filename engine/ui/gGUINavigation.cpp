@@ -117,6 +117,7 @@ gGUIPane* gGUINavigation::getSelectedPane() {
 
 void gGUINavigation::showPane(gGUIPane* paneToShow) {
 	((gGUISizer*)parent)->setControl(0, 1, paneToShow);
+	root->getCurrentCanvas()->onGuiEvent(paneToShow->getId(), G_GUIEVENT_PANEACTIVE);
 }
 
 void gGUINavigation::mousePressed(int x, int y, int button) {
@@ -133,7 +134,7 @@ void gGUINavigation::mouseReleased(int x, int y, int button) {
 		if(!paneenabled[i]) continue;
 		if(x >= panelinepad && x < width - panelinepad && y >= panetoph + i * panelineh - font->getSize() && y < panetoph + i * panelineh + font->getSize() / 2) {
 			selectedpane = i;
-			((gGUISizer*)parent)->setControl(0, 1, panes[selectedpane]);
+			showPane(panes[selectedpane]);
 			break;
 		}
 	}
