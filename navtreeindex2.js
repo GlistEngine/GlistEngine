@@ -201,6 +201,7 @@ var NAVTREEINDEX2 =
 "classgFont.html#a452fde9a822efbc22500338df92cdceb":[1,0,45,11],
 "classgFont.html#a4662bf7fec0a4a2b4b08bef6d553d5c5":[1,0,45,10],
 "classgFont.html#a6d3ee7c7cadd22d2e6f1536ae6fb1a97":[1,0,45,13],
+"classgFont.html#a7a06037f9e93f95dbbf85850c091e206":[1,0,45,15],
 "classgFont.html#a801adde301959cfc26c2a85c424a3b9e":[1,0,45,8],
 "classgFont.html#a82fee83cf0e7d88e24b1f3689c5c0070":[1,0,45,4],
 "classgFont.html#aae027bba23783b011117e36e7510c374":[1,0,45,9],
@@ -248,6 +249,5 @@ var NAVTREEINDEX2 =
 "classgGLRenderEngine.html#a1b4e7aac996c8ebc249244cb574c3545":[1,0,47,78],
 "classgGLRenderEngine.html#a1db0d8e44317d466dc35de073da2f3c0":[1,0,47,75],
 "classgGLRenderEngine.html#a1db328a7e2599c7499ba1e0df5f2bcf2":[1,0,47,98],
-"classgGLRenderEngine.html#a1fd499515c3e2e2145a3df6af604645d":[1,0,47,83],
-"classgGLRenderEngine.html#a225719752e88f54e4233b3eaea37243a":[1,0,47,19]
+"classgGLRenderEngine.html#a1fd499515c3e2e2145a3df6af604645d":[1,0,47,83]
 };

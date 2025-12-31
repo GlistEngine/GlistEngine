@@ -176,49 +176,59 @@ $(document).ready(function(){initNavTree('gFont_8h_source.html',''); initResizab
 <div class="line"><a id="l00171" name="l00171"></a><span class="lineno"><a class="line" href="classgFont.html#a452fde9a822efbc22500338df92cdceb">  171</a></span>    <span class="keywordtype">bool</span> <a class="code hl_function" href="classgFont.html#a452fde9a822efbc22500338df92cdceb">isAntialised</a>() <span class="keyword">const</span>;</div>
 <div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span> </div>
 <div class="line"><a id="l00180" name="l00180"></a><span class="lineno"><a class="line" href="classgFont.html#ab2956c6808062159685f2c5dc36a692e">  180</a></span>    <span class="keywordtype">int</span> <a class="code hl_function" href="classgFont.html#ab2956c6808062159685f2c5dc36a692e">getDpi</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span> </div>
-<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>    <span class="keywordtype">bool</span> isloaded = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>    std::string fullpath;</div>
-<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>    <span class="keywordtype">bool</span> isantialiased = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>    <span class="keywordtype">int</span> dpi = 0;</div>
-<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>    <span class="keywordtype">float</span> fontsize = 0.0f;</div>
-<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>    <span class="keywordtype">int</span> characternumlimit = 0;</div>
-<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>    <span class="keywordtype">int</span> border = 3;</div>
-<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>    <span class="keywordtype">bool</span> iskerning = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>    <span class="comment">/*</span></div>
+<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span><span class="comment">     * Wraps text into multiple lines based on font width.</span></div>
+<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span><span class="comment">     *</span></div>
+<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span><span class="comment">     * @param text The input text to be wrapped</span></div>
+<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span><span class="comment">     * @param maxWidth The maximum visual width of a line</span></div>
+<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span><span class="comment">     *</span></div>
+<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span><span class="comment">     * @return A list of lines that fit within the given width</span></div>
+<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span><span class="comment">     */</span></div>
+<div class="line"><a id="l00189" name="l00189"></a><span class="lineno"><a class="line" href="classgFont.html#a7a06037f9e93f95dbbf85850c091e206">  189</a></span>    std::vector&lt;std::string&gt; <a class="code hl_function" href="classgFont.html#a7a06037f9e93f95dbbf85850c091e206">wrapSentenceByWidth</a>(<span class="keyword">const</span> std::string&amp; text, <span class="keywordtype">float</span> maxWidth);</div>
+<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span> </div>
 <div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span> </div>
-<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>    FT_Library ftlib = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>    FT_Face fontface = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span> </div>
-<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>    <span class="keywordtype">float</span> lineheight = 0.0f;</div>
-<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>    <span class="keywordtype">float</span> letterspacing = 1.0f;</div>
-<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>    <span class="keywordtype">float</span> spacesize = 1.0f;</div>
-<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>    <span class="keywordtype">float</span> scale = 1.0f;</div>
-<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span> </div>
-<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>    <span class="keywordtype">void</span> loadChar(<span class="keywordtype">int</span> charCode);</div>
+<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>    <span class="keywordtype">bool</span> isloaded = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>    std::string fullpath;</div>
+<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>    <span class="keywordtype">bool</span> isantialiased = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>    <span class="keywordtype">int</span> dpi = 0;</div>
+<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>    <span class="keywordtype">float</span> fontsize = 0.0f;</div>
+<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>    <span class="keywordtype">int</span> characternumlimit = 0;</div>
+<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>    <span class="keywordtype">int</span> border = 3;</div>
+<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>    <span class="keywordtype">bool</span> iskerning = <span class="keyword">false</span>;</div>
 <div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span> </div>
-<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>    <span class="keyword">struct </span>CharProperties {</div>
-<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>        <span class="keywordtype">float</span> height = 0.0f, width = 0.0f;</div>
-<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>        <span class="keywordtype">float</span> topmargin = 0.0f, leftmargin = 0.0f;</div>
-<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>        <span class="keywordtype">float</span> advance = 0.0f;</div>
-<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>        <span class="keywordtype">float</span> texturewidth = 0.0f, textureheight = 0.0f;</div>
-<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>        <span class="keywordtype">float</span> dxleft = 0.0f, dxright = 0.0f, dytop = 0.0f, dybottom = 0.0f;</div>
-<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>    };</div>
+<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>    FT_Library ftlib = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>    FT_Face fontface = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span> </div>
+<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>    <span class="keywordtype">float</span> lineheight = 0.0f;</div>
+<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>    <span class="keywordtype">float</span> letterspacing = 1.0f;</div>
+<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>    <span class="keywordtype">float</span> spacesize = 1.0f;</div>
+<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>    <span class="keywordtype">float</span> scale = 1.0f;</div>
 <div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span> </div>
-<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>    std::unordered_map&lt;int, CharProperties&gt; charproperties;</div>
-<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>    std::unordered_map&lt;int, gTexture*&gt; chartextures;</div>
-<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span> </div>
-<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>    <span class="keywordtype">float</span> getKerning(<span class="keywordtype">int</span> c, <span class="keywordtype">int</span> prevC) <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>    <span class="keywordtype">void</span> resizeVectors(<span class="keywordtype">int</span> num);</div>
-<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>    <span class="keywordtype">bool</span> insertData(<span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span>* srcData, <span class="keywordtype">int</span> srcWidth, <span class="keywordtype">int</span> srcHeight, <span class="keywordtype">int</span> componentNum,</div>
-<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span>                    <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span>* dstData, <span class="keywordtype">int</span> dstWidth, <span class="keywordtype">int</span> dstHeight, <span class="keywordtype">int</span> dstComponentNum,</div>
-<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>                    <span class="keywordtype">size_t</span> dstFirstX, <span class="keywordtype">size_t</span> dstFirstY) <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>    std::wstring s2ws(<span class="keyword">const</span> std::string&amp; s) <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span>    <span class="keywordtype">float</span> roundIfRequired(<span class="keywordtype">float</span> val);</div>
-<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>};</div>
+<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>    <span class="keywordtype">void</span> loadChar(<span class="keywordtype">int</span> charCode);</div>
+<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span> </div>
+<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>    <span class="keyword">struct </span>CharProperties {</div>
+<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>        <span class="keywordtype">float</span> height = 0.0f, width = 0.0f;</div>
+<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>        <span class="keywordtype">float</span> topmargin = 0.0f, leftmargin = 0.0f;</div>
+<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>        <span class="keywordtype">float</span> advance = 0.0f;</div>
+<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span>        <span class="keywordtype">float</span> texturewidth = 0.0f, textureheight = 0.0f;</div>
+<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>        <span class="keywordtype">float</span> dxleft = 0.0f, dxright = 0.0f, dytop = 0.0f, dybottom = 0.0f;</div>
+<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>    };</div>
+<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span> </div>
+<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>    std::unordered_map&lt;int, CharProperties&gt; charproperties;</div>
+<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span>    std::unordered_map&lt;int, gTexture*&gt; chartextures;</div>
+<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span> </div>
+<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span>    <span class="keywordtype">float</span> getKerning(<span class="keywordtype">int</span> c, <span class="keywordtype">int</span> prevC) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>    <span class="keywordtype">void</span> resizeVectors(<span class="keywordtype">int</span> num);</div>
+<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>    <span class="keywordtype">bool</span> insertData(<span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span>* srcData, <span class="keywordtype">int</span> srcWidth, <span class="keywordtype">int</span> srcHeight, <span class="keywordtype">int</span> componentNum,</div>
+<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>                    <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span>* dstData, <span class="keywordtype">int</span> dstWidth, <span class="keywordtype">int</span> dstHeight, <span class="keywordtype">int</span> dstComponentNum,</div>
+<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>                    <span class="keywordtype">size_t</span> dstFirstX, <span class="keywordtype">size_t</span> dstFirstY) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>    std::wstring s2ws(<span class="keyword">const</span> std::string&amp; s) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span>    <span class="keywordtype">float</span> roundIfRequired(<span class="keywordtype">float</span> val);</div>
+<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span>};</div>
 </div>
-<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span> </div>
-<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span><span class="preprocessor">#endif </span><span class="comment">/* ENGINE_GRAPHICS_GFONT_H_ */</span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span> </div>
+<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span><span class="preprocessor">#endif </span><span class="comment">/* ENGINE_GRAPHICS_GFONT_H_ */</span><span class="preprocessor"></span></div>
 <div class="ttc" id="aclassgFont_html"><div class="ttname"><a href="classgFont.html">gFont</a></div><div class="ttdef"><b>Definition</b> gFont.h:46</div></div>
 <div class="ttc" id="aclassgFont_html_a3735214e7a048f574a5bf5b5ac7db2d1"><div class="ttname"><a href="classgFont.html#a3735214e7a048f574a5bf5b5ac7db2d1">gFont::loadFont</a></div><div class="ttdeci">bool loadFont(const std::string &amp;fontPath, int size, bool isAntialiased=true, int dpi=96)</div></div>
 <div class="ttc" id="aclassgFont_html_a3c871e4333d5112844bb10cc27539578"><div class="ttname"><a href="classgFont.html#a3c871e4333d5112844bb10cc27539578">gFont::~gFont</a></div><div class="ttdeci">virtual ~gFont()</div></div>
@@ -227,6 +237,7 @@ $(document).ready(function(){initNavTree('gFont_8h_source.html',''); initResizab
 <div class="ttc" id="aclassgFont_html_a452fde9a822efbc22500338df92cdceb"><div class="ttname"><a href="classgFont.html#a452fde9a822efbc22500338df92cdceb">gFont::isAntialised</a></div><div class="ttdeci">bool isAntialised() const</div></div>
 <div class="ttc" id="aclassgFont_html_a4662bf7fec0a4a2b4b08bef6d553d5c5"><div class="ttname"><a href="classgFont.html#a4662bf7fec0a4a2b4b08bef6d553d5c5">gFont::getStringWidth</a></div><div class="ttdeci">float getStringWidth(const std::string &amp;text)</div></div>
 <div class="ttc" id="aclassgFont_html_a6d3ee7c7cadd22d2e6f1536ae6fb1a97"><div class="ttname"><a href="classgFont.html#a6d3ee7c7cadd22d2e6f1536ae6fb1a97">gFont::load</a></div><div class="ttdeci">bool load(const std::string &amp;fullPath, int size, bool isAntialiased=true, int dpi=96)</div></div>
+<div class="ttc" id="aclassgFont_html_a7a06037f9e93f95dbbf85850c091e206"><div class="ttname"><a href="classgFont.html#a7a06037f9e93f95dbbf85850c091e206">gFont::wrapSentenceByWidth</a></div><div class="ttdeci">std::vector&lt; std::string &gt; wrapSentenceByWidth(const std::string &amp;text, float maxWidth)</div></div>
 <div class="ttc" id="aclassgFont_html_a801adde301959cfc26c2a85c424a3b9e"><div class="ttname"><a href="classgFont.html#a801adde301959cfc26c2a85c424a3b9e">gFont::getSize</a></div><div class="ttdeci">int getSize() const</div></div>
 <div class="ttc" id="aclassgFont_html_a82fee83cf0e7d88e24b1f3689c5c0070"><div class="ttname"><a href="classgFont.html#a82fee83cf0e7d88e24b1f3689c5c0070">gFont::drawTextVerticallyFlipped</a></div><div class="ttdeci">void drawTextVerticallyFlipped(const std::string &amp;text, float x, float y)</div><div class="ttdoc">Draws the given text vertically flipped at the specified position.</div></div>
 <div class="ttc" id="aclassgFont_html_aae027bba23783b011117e36e7510c374"><div class="ttname"><a href="classgFont.html#aae027bba23783b011117e36e7510c374">gFont::getStringHeight</a></div><div class="ttdeci">float getStringHeight(const std::string &amp;text)</div></div>

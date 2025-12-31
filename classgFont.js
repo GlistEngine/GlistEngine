@@ -14,5 +14,6 @@ var classgFont =
     [ "isAntialised", "classgFont.html#a452fde9a822efbc22500338df92cdceb", null ],
     [ "isLoaded", "classgFont.html#a441196d2161ae3918e05baf04ff4cae5", null ],
     [ "load", "classgFont.html#a6d3ee7c7cadd22d2e6f1536ae6fb1a97", null ],
-    [ "loadFont", "classgFont.html#a3735214e7a048f574a5bf5b5ac7db2d1", null ]
+    [ "loadFont", "classgFont.html#a3735214e7a048f574a5bf5b5ac7db2d1", null ],
+    [ "wrapSentenceByWidth", "classgFont.html#a7a06037f9e93f95dbbf85850c091e206", null ]
 ];
