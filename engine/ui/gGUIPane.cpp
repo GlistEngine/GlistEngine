@@ -148,7 +148,7 @@ void gGUIPane::onGUIEvent(int guiObjectId, int eventType, int sourceEventType, s
 	gGUIContainer::onGUIEvent(guiObjectId, eventType, sourceEventType, value1, value2);
 	if(eventType == G_GUIEVENT_PANEACTIVE) {
 		if(navigation != nullptr) navigation->setSelectedPaneNo(navorder);
-		 ((gGUISizer*)parent)->setControl(0, 1, this);
+		navigation->showPane(this);
 	}
 }
 
