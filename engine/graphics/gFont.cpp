@@ -439,7 +439,7 @@ float gFont::roundIfRequired(float val) {
 /*
  * Writing By: Engin Kutlu
  * */
-std::vector<std::string> gFont::wrapSentenceByWidth(const std::string& text, float maxWidth) {
+std::vector<std::string> gFont::wrapSentenceByWidth(const std::string& text, float maxWidth, TextAlign align) {
     std::vector<std::string> lines;
     std::vector<std::string> words;
     std::vector<float> widths;
@@ -449,8 +449,10 @@ std::vector<std::string> gFont::wrapSentenceByWidth(const std::string& text, flo
 
     while ((end = text.find(' ', start)) != std::string::npos) {
         std::string word = text.substr(start, end - start);
-        words.push_back(word);
-        widths.push_back(getStringWidth(word));
+        if (!word.empty()) {
+            words.push_back(word);
+            widths.push_back(getStringWidth(word));
+        }
         start = end + 1;
     }
 
@@ -484,6 +486,66 @@ std::vector<std::string> gFont::wrapSentenceByWidth(const std::string& text, flo
 
     if (!currentline.empty())
         lines.push_back(currentline);
+
+    for (size_t li = 0; li < lines.size(); li++) {
+        std::string& line = lines[li];
+
+        if (align == TextAlign::JUSTIFY) {
+            if (li == lines.size() - 1)
+                continue;
+
+            std::vector<std::string> parts;
+            size_t pos = 0, found;
+
+            while ((found = line.find(' ', pos)) != std::string::npos) {
+                parts.push_back(line.substr(pos, found - pos));
+                pos = found + 1;
+            }
+            parts.push_back(line.substr(pos));
+
+            if (parts.size() <= 1)
+                continue;
+
+            float wordswidth = 0.0f;
+            for (const auto& y : parts)
+                wordswidth += getStringWidth(y);
+
+            float extraspace = maxWidth - wordswidth;
+            if (extraspace <= 0.0f)
+                continue;
+
+            int gapcount = static_cast<int>(parts.size()) - 1;
+            int totalspaces = static_cast<int>(extraspace / spacewidth);
+
+            int basespaces = totalspaces / gapcount;
+            int remainder = totalspaces % gapcount;
+
+            std::string justified;
+            for (int i = 0; i < parts.size(); i++) {
+                justified += parts[i];
+                if (i < gapcount) {
+                	int spaces = basespaces + (i >= gapcount - remainder ? 1 : 0);
+                    justified += std::string(spaces, ' ');
+                }
+            }
+
+            line = justified;
+        } else if (align == TextAlign::RIGHT || align == TextAlign::CENTER) {
+            float linewidth = getStringWidth(line);
+            float extraspace = maxWidth - linewidth;
+            if (extraspace <= 0.0f)
+                continue;
+
+            int spacecount = static_cast<int>(extraspace / spacewidth);
+
+            if (align == TextAlign::RIGHT) {
+                line = std::string(spacecount, ' ') + line;
+            } else if (align == TextAlign::CENTER) {
+                int leftspaces = spacecount / 2;
+                line = std::string(leftspaces, ' ') + line;
+            }
+        }
+    }
 
     return lines;
 }
