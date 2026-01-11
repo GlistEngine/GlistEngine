@@ -94,3 +94,5 @@ Licensed under the Apache License 2.0.
 ## Version
 
 GlistEngine follows the [semantic versioning system](https://semver.org/). The current version is 0.1.2
+
+The GlistEngine is used in projects such as [TASO 3D Football Game](https://www.nitragames.com/game/taso-3d-football/) and [DATUXA AI for Data Analysis](https://www.datuxa.com/)
