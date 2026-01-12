@@ -120,6 +120,13 @@ void gModel::loadModelFile(const std::string& fullPath) {
 
     // process ASSIMP's root node recursively
     processNode(scene->mRootNode, scene);
+
+	// Identify which meshes use node animations (no bones)
+	meshHasNodeAnimation.resize(meshes.size(), false);
+	for(unsigned int i = 0; i < scene->mNumMeshes; i++) {
+		meshHasNodeAnimation[i] = (scene->mMeshes[i]->mNumBones == 0);
+	}
+
 	recalculateBoundingBox();
     initialboundingbox = boundingbox;
     if (isanimated) setAnimationFramerate(animationframerate);
@@ -218,12 +225,22 @@ void gModel::move(const glm::vec3& dv) {
 
 void gModel::rotate(const glm::quat& q) {
 	gNode::rotate(q);
-	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i]->rotate(q);
+	for(unsigned int i = 0; i < meshes.size(); i++) {
+		if(!meshHasNodeAnimation.empty() && i < meshHasNodeAnimation.size() && meshHasNodeAnimation[i]) {
+			continue;
+		}
+		meshes[i]->rotate(q);
+	}
 }
 
 void gModel::rotate(float radians, float ax, float ay, float az) {
 	gNode::rotate(radians, ax, ay, az);
-	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i]->rotate(radians, ax, ay, az);
+	for(unsigned int i = 0; i < meshes.size(); i++) {
+		if(!meshHasNodeAnimation.empty() && i < meshHasNodeAnimation.size() && meshHasNodeAnimation[i]) {
+			continue;
+		}
+		meshes[i]->rotate(radians, ax, ay, az);
+	}
 }
 
 void gModel::rotateAround(float radians, const glm::vec3& axis, const glm::vec3& point) {
@@ -278,22 +295,42 @@ void gModel::boom(float distance) {
 
 void gModel::tilt(float radians) {
 	gNode::tilt(radians);
-	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i]->tilt(radians);
+	for(unsigned int i = 0; i < meshes.size(); i++) {
+		if(!meshHasNodeAnimation.empty() && i < meshHasNodeAnimation.size() && meshHasNodeAnimation[i]) {
+			continue;
+		}
+		meshes[i]->tilt(radians);
+	}
 }
 
 void gModel::pan(float radians) {
 	gNode::pan(radians);
-	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i]->pan(radians);
+	for(unsigned int i = 0; i < meshes.size(); i++) {
+		if(!meshHasNodeAnimation.empty() && i < meshHasNodeAnimation.size() && meshHasNodeAnimation[i]) {
+			continue;
+		}
+		meshes[i]->pan(radians);
+	}
 }
 
 void gModel::roll(float radians) {
 	gNode::roll(radians);
-	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i]->roll(radians);
+	for(unsigned int i = 0; i < meshes.size(); i++) {
+		if(!meshHasNodeAnimation.empty() && i < meshHasNodeAnimation.size() && meshHasNodeAnimation[i]) {
+			continue;
+		}
+		meshes[i]->roll(radians);
+	}
 }
 
 void gModel::setTransformationMatrix(const glm::mat4& transformationMatrix) {
 	gNode::setTransformationMatrix(transformationMatrix);
-	for(unsigned int i = 0; i < meshes.size(); i++) meshes[i]->setTransformationMatrix(transformationMatrix);
+	for(unsigned int i = 0; i < meshes.size(); i++) {
+		if(!meshHasNodeAnimation.empty() && i < meshHasNodeAnimation.size() && meshHasNodeAnimation[i]) {
+			continue;
+		}
+		meshes[i]->setTransformationMatrix(transformationMatrix);
+	}
 }
 
 void gModel::draw() {
@@ -428,12 +465,11 @@ gSkinnedMesh* gModel::processMesh(aiMesh *mesh, const aiScene *scene, aiMatrix4x
     // specular: texture_specularN
     // normal: texture_normalN
 
-    // return a mesh object created from the extracted mesh data
     gSkinnedMesh* gmesh = new gSkinnedMesh();
     gmesh->setName(mesh->mName.C_Str());
 	SharedVertexIndex& svi = mesh2svimap[mesh];
 	gmesh->setVertices(svi.vertices, svi.indices);
-//    gmesh.setTransformationMatrix(convertMatrix(matrix));
+	gmesh->setTransformationMatrix(convertMatrix(matrix));
 	loadMaterialTextures(gmesh, material, aiTextureType_DIFFUSE, gTexture::TEXTURETYPE_DIFFUSE);
     loadMaterialTextures(gmesh, material, aiTextureType_SPECULAR, gTexture::TEXTURETYPE_SPECULAR);
     loadMaterialTextures(gmesh, material, aiTextureType_NORMALS, gTexture::TEXTURETYPE_NORMAL);
@@ -551,11 +587,23 @@ void gModel::animate(float animationPosition) {
 	//(!isvertexanimationstoredonvram || (meshes.size() != 0 && std::find_if(meshes.begin(), meshes.end(), [] (const gSkinnedMesh& mesh) {return mesh.getTargetMeshCount() > 0;}) != meshes.end()))
 	if(!isvertexanimationstoredonvram && animationposition != animationpositionold) {
 		updateAnimationNodes();
-		for (int i=0; i<meshes.size(); i++) {
+		for (int i = 0; i < meshes.size(); i++) {
 			//The if which is commented is a check to prevent unnecessary operation on a non-morphing mesh which is stored on vram. That if commented because it hasn't tested yet.
 //			if (isvertexanimationstoredonvram && meshes[i]->getTargetMeshCount() == 0) return;
 			//Below comment line is the third parameter of updateBones which is to perform animating operation on the target mesh of a mesh by taking the scene mesh as a reference if the animated mesh has a target mesh. Haven't tested yet.
 			// (meshes[i]->getTargetMeshCount() > 0) ? (morphingtargetscenes[meshes[i]->getCurrentTargetMeshId()]->mMeshes[i]) : (nullptr)
+			if(scene->mMeshes[i]->mNumBones <= 0) {
+				aiNode* meshNode = findNodeFast(scene->mMeshes[i]->mName.C_Str());
+				if(meshNode) {
+					aiMatrix4x4 nodeTransform = aiMatrix4x4();
+					for(aiNode* tempNode = meshNode; tempNode != nullptr; tempNode = tempNode->mParent) {
+						nodeTransform = tempNode->mTransformation * nodeTransform;
+					}
+					glm::mat4 finalTransform = localtransformationmatrix * convertMatrix(nodeTransform);
+					meshes[i]->setTransformationMatrix(finalTransform);
+				}
+				continue;
+			}
 			updateBones(meshes[i], scene->mMeshes[i]);
 			updateVbo(meshes[i]);
 		}
@@ -655,6 +703,10 @@ void gModel::updateAnimationNodes() {
 void gModel::updateBones(gSkinnedMesh* gmesh, aiMesh* aimesh) {
     G_PROFILE_ZONE_SCOPED_N("gModel::updateBones()");
     gmesh->resizeAnimation(aimesh->mNumVertices);
+
+    if (aimesh->mNumBones == 0) {
+        return;
+    }
 
     std::vector<aiMatrix4x4> boneMatrices;
     boneMatrices.reserve(aimesh->mNumBones);

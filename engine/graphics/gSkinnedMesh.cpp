@@ -13,7 +13,7 @@ gSkinnedMesh::gSkinnedMesh() {
 	isvertexanimated = false;
 	isvertexanimationstoredonvram = false;
 	frameno = 0;
-	framenoold = 0;
+	framenoold = -1;  // Set to -1 to force initial frame update
 	this->setBaseMesh(this);
 }
 
@@ -24,7 +24,7 @@ void gSkinnedMesh::draw() {
 	G_PROFILE_ZONE_SCOPED_N("gSkinnedMesh::draw()");
 	std::vector<gVertex>& verts = *vertices;
 	if (getTargetMeshCount() > 0) {
-		if (frameno != framenoold) {
+		if (frameno != framenoold || framenoold == -1) {
 			for(int i = 0; i < vbo->getVerticesNum(); i++) {
 				verts[i].position = animatedPosData[0][frameno][i];
 				verts[i].normal = animatedNormData[0][frameno][i];
@@ -37,15 +37,12 @@ void gSkinnedMesh::draw() {
 		gMesh::draw();
 	}
 	else if (!isvertexanimationstoredonvram) {
-		if (isvertexanimated && frameno != framenoold) {
-			// TODO Below lines of vertex animation stored on CPU needs to be optimized
+		if (isvertexanimated && (frameno != framenoold || framenoold == -1)) {
 			for(int i = 0; i < vbo->getVerticesNum(); i++) {
 				verts[i].position = animatedPosData[0][frameno][i];
 				verts[i].normal = animatedNormData[0][frameno][i];
 			}
 			vbo->setVertexData(&verts[0], sizeof(gVertex), vbo->getVerticesNum());
-//			vbo.setVertexData(&animatedPosData[0][frameno][0].x, 3, vbo.getVerticesNum(), GL_STREAM_DRAW);
-//			vbo.setNormalData(&animatedNormData[0][frameno][0].x, 3,  vbo.getVerticesNum(), GL_STREAM_DRAW);
 			framenoold = frameno;
 		}
 		gMesh::draw();
@@ -170,8 +167,10 @@ void gSkinnedMesh::setVertexAnimationStoredOnVram(bool isOnVram) {
 }
 
 void gSkinnedMesh::setFrameNo(int frameNo) {
-	framenoold = frameno;
-	frameno = frameNo;
+	if (frameno != frameNo) {
+		framenoold = frameno;
+		frameno = frameNo;
+	}
 }
 
 int gSkinnedMesh::getFrameNo() const {
