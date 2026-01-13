@@ -107,6 +107,7 @@ private:
     int nextanimation;
     float nextframetime = 0;
     float speed = 1.0f;
+    float currentanimationposition = 0.0f;
 
 private:
     void prepareAnimation(int animationId);

@@ -167,6 +167,9 @@ private:
 	// this is used to find the nodes fast because assimp code is slow, it might consume little more memory
 	std::unordered_map<std::string, aiNode*> nodemap;
 
+	// Track which meshes use node animations (have no bones) to handle transforms differently
+	std::vector<bool> meshHasNodeAnimation;
+
     glm::mat4 convertMatrix(const aiMatrix4x4 &aiMat);
     gBoundingBox initialboundingbox;
     gBoundingBox boundingbox;

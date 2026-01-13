@@ -4,6 +4,7 @@
 
 #include "gModelAnimator.h"
 #include "gAppManager.h"
+#include <cmath>
 
 gModelAnimator::gModelAnimator() {
 
@@ -54,7 +55,8 @@ void gModelAnimator::prepareAnimation(int animationId) {
     auto it = animations.find(animationId);
     if (it == animations.end()) return;
     AnimationData& data = it->second;
-    model->setAnimationFrameNo(data.startframe);
+    currentanimationposition = 0.0f;
+    model->animate(0.0f);
 }
 
 void gModelAnimator::update() {
@@ -64,6 +66,7 @@ void gModelAnimator::update() {
     if (nextanimation != currentanimation) {
         currentanimation = nextanimation;
         prepareAnimation(currentanimation);
+        currentanimationposition = 0.0f;
     }
 
     auto it = animations.find(currentanimation);
@@ -72,38 +75,33 @@ void gModelAnimator::update() {
     }
     AnimationData& data = it->second;
     float animationspeed = data.speed;
-    float frameDuration = 1.0f / (60.0f * speed * animationspeed);
-    float delta = appmanager->getElapsedTime(); // time since last frame
-    nextframetime += delta;
-    int frameAdvance = static_cast<int>(nextframetime / frameDuration);
-    if (frameAdvance <= 0) {
-        return;
-    }
-    nextframetime -= frameAdvance * frameDuration;
-    int newframe = model->getAnimationFrameNo() + frameAdvance;
-    if (newframe >= data.endframe) {
+    float delta = appmanager->getElapsedTime();
+
+    int totalFrames = data.endframe - data.startframe + 1;
+    if (totalFrames <= 0) totalFrames = 1;
+    float animationDuration = totalFrames / (60.0f * speed * animationspeed);
+
+    float positionAdvance = delta / animationDuration;
+    currentanimationposition += positionAdvance;
+
+    if (currentanimationposition >= 1.0f) {
         switch (data.mode) {
             case MODE_HOLD_ON_LAST_FRAME:
-                model->setAnimationFrameNo(data.endframe);
+                currentanimationposition = 1.0f;
                 break;
             case MODE_ONCE: {
+                currentanimationposition = 1.0f;
                 auto it = data.transitions.find(TRIGGERTYPE_AFTER_COMPLETION);
                 if (it != data.transitions.end()) {
                     nextanimation = it->second.targetanimation;
                 }
-                model->setAnimationFrameNo(data.endframe);
                 break;
             }
             case MODE_REPEAT:
-                int length = data.endframe - data.startframe + 1;
-                if (length <= 0) {
-                    length = 1;
-                }
-                newframe = data.startframe + ((newframe - data.startframe) % length);
-                model->setAnimationFrameNo(newframe);
+                currentanimationposition = std::fmod(currentanimationposition, 1.0f);
                 break;
         }
-    } else {
-        model->setAnimationFrameNo(newframe);
     }
+
+    model->animate(currentanimationposition);
 }
