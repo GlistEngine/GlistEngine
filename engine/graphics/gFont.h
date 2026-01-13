@@ -188,7 +188,7 @@ public:
 	 *
 	 * @return A list of lines that fit within the given width
 	 */
-	std::vector<std::string> wrapSentenceByWidth(const std::string& text, float maxWidth, TextAlign align);
+	std::vector<std::string> wrapSentenceByWidth(const std::string& text, float maxWidth, TextAlign align = TextAlign::LEFT);
 
 
 private:
