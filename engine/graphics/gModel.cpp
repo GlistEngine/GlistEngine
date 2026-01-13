@@ -121,12 +121,6 @@ void gModel::loadModelFile(const std::string& fullPath) {
     // process ASSIMP's root node recursively
     processNode(scene->mRootNode, scene);
 
-	// Identify which meshes use node animations (no bones)
-	meshHasNodeAnimation.resize(meshes.size(), false);
-	for(unsigned int i = 0; i < scene->mNumMeshes; i++) {
-		meshHasNodeAnimation[i] = (scene->mMeshes[i]->mNumBones == 0);
-	}
-
 	recalculateBoundingBox();
     initialboundingbox = boundingbox;
     if (isanimated) setAnimationFramerate(animationframerate);
@@ -226,9 +220,6 @@ void gModel::move(const glm::vec3& dv) {
 void gModel::rotate(const glm::quat& q) {
 	gNode::rotate(q);
 	for(unsigned int i = 0; i < meshes.size(); i++) {
-		if(!meshHasNodeAnimation.empty() && i < meshHasNodeAnimation.size() && meshHasNodeAnimation[i]) {
-			continue;
-		}
 		meshes[i]->rotate(q);
 	}
 }
@@ -236,9 +227,6 @@ void gModel::rotate(const glm::quat& q) {
 void gModel::rotate(float radians, float ax, float ay, float az) {
 	gNode::rotate(radians, ax, ay, az);
 	for(unsigned int i = 0; i < meshes.size(); i++) {
-		if(!meshHasNodeAnimation.empty() && i < meshHasNodeAnimation.size() && meshHasNodeAnimation[i]) {
-			continue;
-		}
 		meshes[i]->rotate(radians, ax, ay, az);
 	}
 }
@@ -296,9 +284,6 @@ void gModel::boom(float distance) {
 void gModel::tilt(float radians) {
 	gNode::tilt(radians);
 	for(unsigned int i = 0; i < meshes.size(); i++) {
-		if(!meshHasNodeAnimation.empty() && i < meshHasNodeAnimation.size() && meshHasNodeAnimation[i]) {
-			continue;
-		}
 		meshes[i]->tilt(radians);
 	}
 }
@@ -306,9 +291,6 @@ void gModel::tilt(float radians) {
 void gModel::pan(float radians) {
 	gNode::pan(radians);
 	for(unsigned int i = 0; i < meshes.size(); i++) {
-		if(!meshHasNodeAnimation.empty() && i < meshHasNodeAnimation.size() && meshHasNodeAnimation[i]) {
-			continue;
-		}
 		meshes[i]->pan(radians);
 	}
 }
@@ -316,9 +298,6 @@ void gModel::pan(float radians) {
 void gModel::roll(float radians) {
 	gNode::roll(radians);
 	for(unsigned int i = 0; i < meshes.size(); i++) {
-		if(!meshHasNodeAnimation.empty() && i < meshHasNodeAnimation.size() && meshHasNodeAnimation[i]) {
-			continue;
-		}
 		meshes[i]->roll(radians);
 	}
 }
@@ -326,9 +305,6 @@ void gModel::roll(float radians) {
 void gModel::setTransformationMatrix(const glm::mat4& transformationMatrix) {
 	gNode::setTransformationMatrix(transformationMatrix);
 	for(unsigned int i = 0; i < meshes.size(); i++) {
-		if(!meshHasNodeAnimation.empty() && i < meshHasNodeAnimation.size() && meshHasNodeAnimation[i]) {
-			continue;
-		}
 		meshes[i]->setTransformationMatrix(transformationMatrix);
 	}
 }
@@ -371,35 +347,33 @@ gSkinnedMesh* gModel::getMeshPtr(int meshNo) {
 	return meshes[meshNo];
 }
 
-const std::string gModel::getMeshName(int meshNo) const {
+std::string gModel::getMeshName(int meshNo) const {
 	return scene->mMeshes[meshNo]->mName.C_Str();
 }
 
-void gModel::processNode(aiNode *node, const aiScene *scene) {
+void gModel::processNode(aiNode* node, const aiScene* scene) {
 	// process each mesh located at the current node
 	for(unsigned int i = 0; i < node->mNumMeshes; i++) {
+		unsigned int meshIndex = node->mMeshes[i];
 		// the node object only contains indices to index the actual objects in the scene.
 		// the scene contains all the data, node is just to keep stuff organized (like relations between nodes).
-		aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
+		aiMesh* mesh = scene->mMeshes[meshIndex];
 		gLogi("gModel") << "Loading mesh:" << mesh->mName.C_Str() << ", vertexnum:" << mesh->mNumVertices << ", tm:" << node->mTransformation[0];
 		gSkinnedMesh* modelmesh = processMesh(mesh, scene, node->mTransformation);
-//		if (isanimated) updateBones(&modelmesh, mesh, scene);
-//		modelmesh.setParent(this);
 		meshes.push_back(modelmesh);
-//		gLogi("setting");
+		meshindices.push_back(meshIndex);
 		meshes[meshes.size() - 1]->setBaseMesh(meshes[meshes.size() - 1]);
-//		gLogi("setted");
 	}
 	// we cache nodes because FindNodes is costly to run
 	// hashing is faster
 	nodemap[node->mName.C_Str()] = node;
-	// after we've processed all of the meshes (if any) we then recursively process each of the children nodes
+	// after we've processed all the meshes (if any) we then recursively process each of the children nodes
 	for(unsigned int i = 0; i < node->mNumChildren; i++) {
 		processNode(node->mChildren[i], scene);
 	}
 }
 
-gSkinnedMesh* gModel::processMesh(aiMesh *mesh, const aiScene *scene, aiMatrix4x4 matrix) {
+gSkinnedMesh* gModel::processMesh(const aiMesh* mesh, const aiScene* scene, aiMatrix4x4 matrix) {
 	if(mesh2svimap.find(mesh) == mesh2svimap.end()) {
 		auto verticesptr = std::make_shared<std::vector<gVertex>>();
 		auto indicesptr = std::make_shared<std::vector<gIndex>>();
@@ -409,39 +383,42 @@ gSkinnedMesh* gModel::processMesh(aiMesh *mesh, const aiScene *scene, aiMatrix4x
 		// walk through each of the mesh's vertices
 	    for(unsigned int i = 0; i < mesh->mNumVertices; i++) {
 	        gVertex vertex;
-	        glm::vec3 vector; // we declare a placeholder vector since assimp uses its own vector class that doesn't directly convert to glm's vec3 class so we transfer the data to this placeholder glm::vec3 first.
-	        // positions
-	        vector.x = mesh->mVertices[i].x;
-	        vector.y = mesh->mVertices[i].y;
-	        vector.z = mesh->mVertices[i].z;
-	        vertex.position = vector;
-	        // normals
-	        vector.x = mesh->mNormals[i].x;
-	        vector.y = mesh->mNormals[i].y;
-	        vector.z = mesh->mNormals[i].z;
-	        vertex.normal = vector;
+			// positions
+			vertex.position = {
+					mesh->mVertices[i].x,
+					mesh->mVertices[i].y,
+					mesh->mVertices[i].z
+			};
+			// normals
+			vertex.normal = {
+					mesh->mNormals[i].x,
+					mesh->mNormals[i].y,
+					mesh->mNormals[i].z
+			};
 
-	        // texture coordinates
-	        if(mesh->mTextureCoords[0]) {
-	            glm::vec2 vec;
-	            // a vertex can contain up to 8 different texture coordinates. We thus make the assumption that we won't
-	            // use models where a vertex can have multiple texture coordinates so we always take the first set (0).
-	            vec.x = mesh->mTextureCoords[0][i].x;
-	            vec.y = mesh->mTextureCoords[0][i].y;
-	            vertex.texcoords = vec;
-	        } else vertex.texcoords = glm::vec2(0.0f, 0.0f);
+			// texture coordinates
+			if(mesh->mTextureCoords[0]) {
+				// a vertex can contain up to 8 different texture coordinates. We thus make the assumption that we won't
+				// use models where a vertex can have multiple texture coordinates so we always take the first set (0).
+				vertex.texcoords = {
+						mesh->mTextureCoords[0][i].x,
+						mesh->mTextureCoords[0][i].y
+				};
+			} else {
+				vertex.texcoords = glm::vec2(0.0f, 0.0f);
+			}
 
-	        // tangent
-	        vector.x = mesh->mTangents[i].x;
-	        vector.y = mesh->mTangents[i].y;
-	        vector.z = mesh->mTangents[i].z;
-	        vertex.tangent = vector;
+			// tangent
+			vertex.tangent = {
+					mesh->mTangents[i].x,
+					mesh->mTangents[i].y,
+					mesh->mTangents[i].z};
 
-	        // bitangent
-	        vector.x = mesh->mBitangents[i].x;
-	        vector.y = mesh->mBitangents[i].y;
-	        vector.z = mesh->mBitangents[i].z;
-	        vertex.bitangent = vector;
+			// bitangent
+			vertex.bitangent = {
+					mesh->mBitangents[i].x,
+					mesh->mBitangents[i].y,
+					mesh->mBitangents[i].z};
 	        vertices.push_back(vertex);
 	    }
 
@@ -450,8 +427,9 @@ gSkinnedMesh* gModel::processMesh(aiMesh *mesh, const aiScene *scene, aiMatrix4x
 	        aiFace face = mesh->mFaces[i];
 
 	        // retrieve all indices of the face and store them in the indices vector
-	        for(unsigned int j = 0; j < face.mNumIndices; j++)
-	            indices.push_back(face.mIndices[j]);
+	        for(unsigned int j = 0; j < face.mNumIndices; j++) {
+		        indices.push_back(face.mIndices[j]);
+	        }
 	    }
 	}
     //glm::mat4 mat = convertMatrix(matrix);
@@ -469,7 +447,7 @@ gSkinnedMesh* gModel::processMesh(aiMesh *mesh, const aiScene *scene, aiMatrix4x
     gmesh->setName(mesh->mName.C_Str());
 	SharedVertexIndex& svi = mesh2svimap[mesh];
 	gmesh->setVertices(svi.vertices, svi.indices);
-	gmesh->setTransformationMatrix(convertMatrix(matrix));
+	//gmesh->setTransformationMatrix(convertMatrix(matrix));
 	loadMaterialTextures(gmesh, material, aiTextureType_DIFFUSE, gTexture::TEXTURETYPE_DIFFUSE);
     loadMaterialTextures(gmesh, material, aiTextureType_SPECULAR, gTexture::TEXTURETYPE_SPECULAR);
     loadMaterialTextures(gmesh, material, aiTextureType_NORMALS, gTexture::TEXTURETYPE_NORMAL);
@@ -513,7 +491,7 @@ void gModel::loadMaterialTextures(gSkinnedMesh* mesh, aiMaterial *mat, aiTexture
     }
 }
 
-void gModel::processMorphingNode(aiNode *node, const aiScene *scene) {
+void gModel::processMorphingNode(const aiNode* node, const aiScene* scene) {
 	// process each mesh located at the current node
 	for(unsigned int i = 0; i < node->mNumMeshes; i++) {
 		// the node object only contains indices to index the actual objects in the scene.
@@ -537,24 +515,22 @@ void gModel::processMorphingNode(aiNode *node, const aiScene *scene) {
 	}
 }
 
-gMesh* gModel::processMorphingMesh(aiMesh *mesh, const aiScene *scene, aiMatrix4x4 matrix) {
+gMesh* gModel::processMorphingMesh(const aiMesh* mesh, const aiScene* scene, aiMatrix4x4 matrix) {
 	auto vertices = std::make_shared<std::vector<gVertex>>();
-	glm::mat4 mat = convertMatrix(matrix);
 
 	// walk through each of the mesh's vertices
 	for(unsigned int i = 0; i < mesh->mNumVertices; i++) {
 		gVertex vertex;
-		glm::vec3 vector; // we declare a placeholder vector since assimp uses its own vector class that doesn't directly convert to glm's vec3 class so we transfer the data to this placeholder glm::vec3 first.
-		// positions
-		vector.x = mesh->mVertices[i].x;
-		vector.y = mesh->mVertices[i].y;
-		vector.z = mesh->mVertices[i].z;
-		vertex.position = vector;
-		// normals
-		vector.x = mesh->mNormals[i].x;
-		vector.y = mesh->mNormals[i].y;
-		vector.z = mesh->mNormals[i].z;
-		vertex.normal = vector;
+		// position
+		vertex.position = {
+			mesh->mVertices[i].x, mesh->mVertices[i].y, mesh->mVertices[i].z
+		};
+		// normal
+		vertex.normal = {
+			mesh->mNormals[i].x,
+			mesh->mNormals[i].y,
+			mesh->mNormals[i].z
+		};
 		vertices->push_back(vertex);
 	}
 
@@ -583,28 +559,10 @@ void gModel::animate(float animationPosition) {
 	animationpositionold = animationposition;
 	animationposition = animationPosition;
 
-	//The comment below this line is replaced with the !isvertexanimationstoredonvram check in the if staement, to perform the necessary operations if the mesh is animated morphing mesh.
-	//(!isvertexanimationstoredonvram || (meshes.size() != 0 && std::find_if(meshes.begin(), meshes.end(), [] (const gSkinnedMesh& mesh) {return mesh.getTargetMeshCount() > 0;}) != meshes.end()))
 	if(!isvertexanimationstoredonvram && animationposition != animationpositionold) {
 		updateAnimationNodes();
 		for (int i = 0; i < meshes.size(); i++) {
-			//The if which is commented is a check to prevent unnecessary operation on a non-morphing mesh which is stored on vram. That if commented because it hasn't tested yet.
-//			if (isvertexanimationstoredonvram && meshes[i]->getTargetMeshCount() == 0) return;
-			//Below comment line is the third parameter of updateBones which is to perform animating operation on the target mesh of a mesh by taking the scene mesh as a reference if the animated mesh has a target mesh. Haven't tested yet.
-			// (meshes[i]->getTargetMeshCount() > 0) ? (morphingtargetscenes[meshes[i]->getCurrentTargetMeshId()]->mMeshes[i]) : (nullptr)
-			if(scene->mMeshes[i]->mNumBones <= 0) {
-				aiNode* meshNode = findNodeFast(scene->mMeshes[i]->mName.C_Str());
-				if(meshNode) {
-					aiMatrix4x4 nodeTransform = aiMatrix4x4();
-					for(aiNode* tempNode = meshNode; tempNode != nullptr; tempNode = tempNode->mParent) {
-						nodeTransform = tempNode->mTransformation * nodeTransform;
-					}
-					glm::mat4 finalTransform = localtransformationmatrix * convertMatrix(nodeTransform);
-					meshes[i]->setTransformationMatrix(finalTransform);
-				}
-				continue;
-			}
-			updateBones(meshes[i], scene->mMeshes[i]);
+			updateBones(meshes[i], scene->mMeshes[meshindices[i]]);
 			updateVbo(meshes[i]);
 		}
 	}
@@ -700,11 +658,38 @@ void gModel::updateAnimationNodes() {
 	}
 }
 
-void gModel::updateBones(gSkinnedMesh* gmesh, aiMesh* aimesh) {
+void gModel::updateBones(gSkinnedMesh* gmesh, const aiMesh* aimesh) {
     G_PROFILE_ZONE_SCOPED_N("gModel::updateBones()");
     gmesh->resizeAnimation(aimesh->mNumVertices);
 
-    if (aimesh->mNumBones == 0) {
+    // Get mesh node's world transform for node animations
+    aiNode* meshNode = findNodeFast(aimesh->mName.C_Str());
+	aiMatrix4x4 meshTransform(
+			1, 0, 0, 0,
+			0, 1, 0, 0,
+			0, 0, 1, 0,
+			0, 0, 0, 1);
+
+    if(meshNode) {
+        for(aiNode* tempNode = meshNode; tempNode != nullptr; tempNode = tempNode->mParent) {
+            meshTransform = tempNode->mTransformation * meshTransform;
+        }
+    }
+
+    const bool hasnormals = aimesh->HasNormals();
+
+    if(aimesh->mNumBones == 0) {
+        // No bones, apply node animation directly to vertices
+        gmesh->resetAnimation();
+        for(unsigned int i = 0; i < aimesh->mNumVertices; ++i) {
+            const aiVector3D transformedPos = meshTransform * aimesh->mVertices[i];
+            gmesh->setVertexPos(i, {transformedPos.x, transformedPos.y, transformedPos.z});
+
+            if(hasnormals) {
+                const aiVector3D transformedNorm = meshTransform * aimesh->mNormals[i];
+                gmesh->setVertexNorm(i, {transformedNorm.x, transformedNorm.y, transformedNorm.z});
+            }
+        }
         return;
     }
 
@@ -715,10 +700,8 @@ void gModel::updateBones(gSkinnedMesh* gmesh, aiMesh* aimesh) {
        const aiBone* bone = aimesh->mBones[a];
        aiNode* node = findNodeFast(bone->mName.C_Str());
 
-       // Start with the mesh-to-bone matrix
        aiMatrix4x4 boneMatrix = bone->mOffsetMatrix;
 
-       // Traverse parent chain once and accumulate transformations
        for(aiNode* tempNode = node; tempNode != nullptr; tempNode = tempNode->mParent) {
           boneMatrix = tempNode->mTransformation * boneMatrix;
        }
@@ -727,9 +710,6 @@ void gModel::updateBones(gSkinnedMesh* gmesh, aiMesh* aimesh) {
     }
 
     gmesh->resetAnimation();
-
-    // Cache hasNormals check
-    const bool hasNormals = aimesh->HasNormals();
 
     // Loop through all vertex weights of all bones
     for(unsigned int a = 0; a < aimesh->mNumBones; ++a) {
@@ -751,7 +731,7 @@ void gModel::updateBones(gSkinnedMesh* gmesh, aiMesh* aimesh) {
           });
 
           // Transform normals if available
-          if(hasNormals) {
+          if(hasnormals) {
              const aiVector3D transformedNorm = posTrafo * aimesh->mNormals[vertexId];
              const glm::vec3 oldNorm = gmesh->getVertexNorm(vertexId);
              gmesh->setVertexNorm(vertexId, {
@@ -917,92 +897,92 @@ void gModel::prepareVertexAnimationData() {
     int fnum = getAnimationFrameNum();
 
     // update mesh position for the animation
-    for(unsigned int i=0; i<meshes.size(); ++i) {
-    	meshes[i]->resizeVertexAnimationData(anum, fnum, scene->mMeshes[i]->mNumVertices, isvertexanimationstoredonvram);
+	for(unsigned int i = 0; i < meshes.size(); ++i) {
+		const aiMesh* mesh = scene->mMeshes[meshindices[i]];// Use correct index
+		meshes[i]->resizeVertexAnimationData(anum, fnum, mesh->mNumVertices, isvertexanimationstoredonvram);
 
-        // current mesh we are introspecting
-        const aiMesh* mesh = scene->mMeshes[i];
-        for (unsigned int j=0; j<scene->mNumAnimations; j++) {
-            for (unsigned int k=0; k<fnum; k++) {
-//            	meshes[i]->resizeVertexAnimation(j, k, mesh->mNumVertices);
-            	setAnimationFrameNo(k);
-                updateAnimationNodes();
-                //The below line's third parameter is given as a nullptr since the meshes aren't morphing. Haven't tested yet.
-                //updateBones(&meshes[i], scene->mMeshes[i], nullptr);
-                updateBones(meshes[i], scene->mMeshes[i]);
+		// current mesh we are introspecting
+		for(unsigned int j = 0; j < scene->mNumAnimations; j++) {
+			for(unsigned int k = 0; k < fnum; k++) {
+				//            	meshes[i]->resizeVertexAnimation(j, k, mesh->mNumVertices);
+				setAnimationFrameNo(k);
+				updateAnimationNodes();
+				//The below line's third parameter is given as a nullptr since the meshes aren't morphing. Haven't tested yet.
+				//updateBones(&meshes[i], scene->mMeshes[i], nullptr);
+				updateBones(meshes[i], mesh);
 
-                // calculate bone matrices
-                std::vector<aiMatrix4x4> boneMatrices(mesh->mNumBones);
-                for(unsigned int a=0; a<mesh->mNumBones; ++a) {
-                    const aiBone* bone = mesh->mBones[a];
+				// calculate bone matrices
+				std::vector<aiMatrix4x4> boneMatrices(mesh->mNumBones);
+				for(unsigned int a = 0; a < mesh->mNumBones; ++a) {
+					const aiBone* bone = mesh->mBones[a];
 
-                    // find the corresponding node by again looking recursively through the node hierarchy for the same name
-                    aiNode* node = scene->mRootNode->FindNode(bone->mName);
+					// find the corresponding node by again looking recursively through the node hierarchy for the same name
+					aiNode* node = scene->mRootNode->FindNode(bone->mName);
 
-                    // start with the mesh-to-bone matrix
-                    boneMatrices[a] = bone->mOffsetMatrix;
-                    // and now append all node transformations down the parent chain until we're back at mesh coordinates again
-                    const aiNode* tempNode = node;
-                    while(tempNode) {
-                        // check your matrix multiplication order here!!!
-                        boneMatrices[a] = tempNode->mTransformation * boneMatrices[a];
-                        // boneMatrices[a] = boneMatrices[a] * tempNode->mTransformation;
-                        tempNode = tempNode->mParent;
-                    }
-                }
+					// start with the mesh-to-bone matrix
+					boneMatrices[a] = bone->mOffsetMatrix;
+					// and now append all node transformations down the parent chain until we're back at mesh coordinates again
+					const aiNode* tempNode = node;
+					while (tempNode) {
+						// check your matrix multiplication order here!!!
+						boneMatrices[a] = tempNode->mTransformation * boneMatrices[a];
+						// boneMatrices[a] = boneMatrices[a] * tempNode->mTransformation;
+						tempNode = tempNode->mParent;
+					}
+				}
 
-                meshes[i]->resetVertexAnimationData(j, k);
+				meshes[i]->resetVertexAnimationData(j, k);
 
-                // loop through all vertex weights of all bones
-                for(unsigned int a=0; a<mesh->mNumBones; ++a) {
-                    const aiBone* bone = mesh->mBones[a];
-                    const aiMatrix4x4& posTrafo = boneMatrices[a];
+				// loop through all vertex weights of all bones
+				for (unsigned int a = 0; a < mesh->mNumBones; ++a) {
+					const aiBone* bone = mesh->mBones[a];
+					const aiMatrix4x4& posTrafo = boneMatrices[a];
 
-                    for(unsigned int b=0; b<bone->mNumWeights; ++b) {
-                        const aiVertexWeight& weight = bone->mWeights[b];
-                        size_t vertexId = weight.mVertexId;
-                        const aiVector3D& srcPos = mesh->mVertices[vertexId];
+					for (unsigned int b = 0; b < bone->mNumWeights; ++b) {
+						const aiVertexWeight& weight = bone->mWeights[b];
+						size_t vertexId = weight.mVertexId;
+						const aiVector3D& srcPos = mesh->mVertices[vertexId];
 
-            			glm::vec3 oldweightpos = meshes[i]->getVertexPosData(j, k, vertexId);
-            			aiVector3D aiaddweight = weight.mWeight * (posTrafo * srcPos);
-            			glm::vec3 vPos(oldweightpos.x + aiaddweight.x, oldweightpos.y + aiaddweight.y, oldweightpos.z + aiaddweight.z);
-            			meshes[i]->setVertexPosData(j, k, vertexId, vPos);
-                    }
-                    if(mesh->HasNormals()){
-                        // 3x3 matrix, contains the bone matrix without the translation, only with rotation and possibly scaling
-                        aiMatrix3x3 normTrafo = aiMatrix3x3( posTrafo);
-                        for(unsigned int b=0; b<bone->mNumWeights; ++b) {
-                            const aiVertexWeight& weight = bone->mWeights[b];
-                            size_t vertexId = weight.mVertexId;
+						glm::vec3 oldweightpos = meshes[i]->getVertexPosData(j, k, vertexId);
+						aiVector3D aiaddweight = weight.mWeight * (posTrafo * srcPos);
+						glm::vec3 vPos(oldweightpos.x + aiaddweight.x, oldweightpos.y + aiaddweight.y, oldweightpos.z + aiaddweight.z);
+						meshes[i]->setVertexPosData(j, k, vertexId, vPos);
+					}
+					if (mesh->HasNormals()) {
+						// 3x3 matrix, contains the bone matrix without the translation, only with rotation and possibly scaling
+						aiMatrix3x3 normTrafo = aiMatrix3x3(posTrafo);
+						for (unsigned int b = 0; b < bone->mNumWeights; ++b) {
+							const aiVertexWeight& weight = bone->mWeights[b];
+							size_t vertexId = weight.mVertexId;
 
-                            const aiVector3D& srcNorm = mesh->mNormals[vertexId];
+							const aiVector3D& srcNorm = mesh->mNormals[vertexId];
 
-            				glm::vec3 oldweightnorm = meshes[i]->getVertexNormData(j, k, vertexId);
-            				aiVector3D aiaddweight = weight.mWeight * (posTrafo * srcNorm);
-            				meshes[i]->setVertexNormData(j, k, vertexId, glm::vec3(oldweightnorm.x + aiaddweight.x, oldweightnorm.y + aiaddweight.y, oldweightnorm.z + aiaddweight.z));
-                        }
-                    }
-                }
+							glm::vec3 oldweightnorm = meshes[i]->getVertexNormData(j, k, vertexId);
+							aiVector3D aiaddweight = weight.mWeight * (posTrafo * srcNorm);
+							meshes[i]->setVertexNormData(j, k, vertexId, glm::vec3(oldweightnorm.x + aiaddweight.x, oldweightnorm.y + aiaddweight.y, oldweightnorm.z + aiaddweight.z));
+						}
+					}
+				}
 
-                if (isvertexanimationstoredonvram) {
-                	std::vector<gVertex> vertexarray = meshes[i]->getVertices();
-                	std::vector<gIndex> indexarray = meshes[i]->getIndices();
-                	for (int l=0; l<meshes[i]->getVerticesNum(); l++) {
-                		vertexarray[l].position = meshes[i]->getVertexPosData(j, k, l);
-                		vertexarray[l].normal = meshes[i]->getVertexNormData(j, k, l);
-                	}
-                	// TODO Set vertices into vboframes!!!
-                	meshes[i]->setVerticesData(j, k, vertexarray, indexarray);
-//                	meshes[i]->animatedPosData[j][k].clear();
-//                	meshes[i]->animatedNormData[j][k].clear();
-//                	meshes[i]->getVbo()->clear(); // clear vbo
-                }
-            }
-        }
-        if (isvertexanimationstoredonvram) {
-        	meshes[i]->clearAnimation();
-        }
-    }
+				if (isvertexanimationstoredonvram) {
+					std::vector<gVertex> vertexarray = meshes[i]->getVertices();
+					std::vector<gIndex> indexarray = meshes[i]->getIndices();
+					for (int l = 0; l < meshes[i]->getVerticesNum(); l++) {
+						vertexarray[l].position = meshes[i]->getVertexPosData(j, k, l);
+						vertexarray[l].normal = meshes[i]->getVertexNormData(j, k, l);
+					}
+					// TODO Set vertices into vboframes!!!
+					meshes[i]->setVerticesData(j, k, vertexarray, indexarray);
+					//                	meshes[i]->animatedPosData[j][k].clear();
+					//                	meshes[i]->animatedNormData[j][k].clear();
+					//                	meshes[i]->getVbo()->clear(); // clear vbo
+				}
+			}
+		}
+		if (isvertexanimationstoredonvram) {
+			meshes[i]->clearAnimation();
+		}
+	}
     if (!isvertexanimationstoredonvram) {
         setAnimationFrameNo(0);
     }
