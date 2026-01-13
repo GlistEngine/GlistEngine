@@ -1286,7 +1286,7 @@ void gRenderer::drawBox(float x, float y, float z, float w, float h, float d, bo
 		boxmesh->setDrawMode(gMesh::DRAWMODE_TRIANGLES);
 	}
 	boxmesh->setPosition(x, y, z);
-	boxmesh->scale(w, h, d);
+	boxmesh->setScale(w, h, d);
 	boxmesh->draw();
 }
 
@@ -1305,7 +1305,7 @@ void gRenderer::drawSphere(float xPos, float yPos, float zPos, glm::vec3 scale, 
 	G_PROFILE_ZONE_SCOPED_N("gRenderer::drawSphere()");
 	gSphere spheremesh(xSegmentNum, ySegmentNum, isFilled);
 	spheremesh.setPosition(xPos, yPos, zPos);
-	spheremesh.scale(scale.x, scale.y, scale.z);
+	spheremesh.setScale(scale.x, scale.y, scale.z);
 	spheremesh.draw();
 }
 
@@ -1313,7 +1313,7 @@ void gRenderer::drawCylinder(float x, float y, float z, int r, int h, glm::vec3 
 	G_PROFILE_ZONE_SCOPED_N("gRenderer::drawCylinder()");
 	gCylinder cylindermesh(r, r, h, glm::vec2(0.0f, 0.0f), segmentnum, isFilled);
 	cylindermesh.setPosition(x, y, z);
-	cylindermesh.scale(scale.x, scale.y, scale.z);
+	cylindermesh.setScale(scale.x, scale.y, scale.z);
 	cylindermesh.draw();
 }
 
@@ -1321,7 +1321,7 @@ void gRenderer::drawCylinderOblique(float x, float y, float z, int r, int h, glm
 	G_PROFILE_ZONE_SCOPED_N("gRenderer::drawCylinderOblique()");
 	gCylinder cylindermesh(r, r, h, shiftdistance, segmentnum, isFilled);
 	cylindermesh.setPosition(x, y, z);
-	cylindermesh.scale(scale.x, scale.y, scale.z);
+	cylindermesh.setScale(scale.x, scale.y, scale.z);
 	cylindermesh.draw();
 }
 
@@ -1329,7 +1329,7 @@ void gRenderer::drawCylinderTrapezodial(float x, float y, float z, int r1, int r
 	G_PROFILE_ZONE_SCOPED_N("gRenderer::drawCylinderTrapezodial()");
 	gCylinder cylindermesh(r1, r2, h, glm::vec2(0.0f, 0.0f), segmentnum, isFilled);
 	cylindermesh.setPosition(x, y, z);
-	cylindermesh.scale(scale.x, scale.y, scale.z);
+	cylindermesh.setScale(scale.x, scale.y, scale.z);
 	cylindermesh.draw();
 }
 
@@ -1337,7 +1337,7 @@ void gRenderer::drawCylinderObliqueTrapezodial(float x, float y, float z, int r1
 	G_PROFILE_ZONE_SCOPED_N("gRenderer::drawCylinderObliqueTrapezodial()");
 	gCylinder cylindermesh(r1, r2, h, shiftdistance, segmentnum, isFilled);
 	cylindermesh.setPosition(x, y, z);
-	cylindermesh.scale(scale.x, scale.y, scale.z);
+	cylindermesh.setScale(scale.x, scale.y, scale.z);
 	cylindermesh.draw();
 }
 
@@ -1345,7 +1345,7 @@ void gRenderer::drawCone(float x, float y, float z, int r, int h, glm::vec3 scal
 	G_PROFILE_ZONE_SCOPED_N("gRenderer::drawCone()");
 	gCone conemesh(r, h, glm::vec2(0.0f, 0.0f), segmentnum, isFilled);
 	conemesh.setPosition(x, y, z);
-	conemesh.scale(scale.x, scale.y, scale.z);
+	conemesh.setScale(scale.x, scale.y, scale.z);
 	conemesh.draw();
 }
 
@@ -1353,7 +1353,7 @@ void gRenderer::drawConeOblique(float x, float y, float z, int r, int h, glm::ve
 	G_PROFILE_ZONE_SCOPED_N("gRenderer::drawConeOblique()");
 	gCone conemesh(r, h, shiftdistance, segmentnum, isFilled);
 	conemesh.setPosition(x, y, z);
-	conemesh.scale(scale.x, scale.y, scale.z);
+	conemesh.setScale(scale.x, scale.y, scale.z);
 	conemesh.draw();
 }
 
@@ -1361,7 +1361,7 @@ void gRenderer::drawPyramid(float x, float y, float z, int r, int h, glm::vec3 s
 	G_PROFILE_ZONE_SCOPED_N("gRenderer::drawPyramid()");
 	gCone conemesh(r, h, glm::vec2(0.0f, 0.0f), numberofsides, isFilled);
 	conemesh.setPosition(x, y, z);
-	conemesh.scale(scale.x, scale.y, scale.z);
+	conemesh.setScale(scale.x, scale.y, scale.z);
 	conemesh.draw();
 }
 
@@ -1369,7 +1369,7 @@ void gRenderer::drawPyramidOblique(float x, float y, float z, int r, int h, glm:
 	G_PROFILE_ZONE_SCOPED_N("gRenderer::drawPyramidOblique()");
 	gCone conemesh(r, h, shiftdistance, numberofsides, isFilled);
 	conemesh.setPosition(x, y, z);
-	conemesh.scale(scale.x, scale.y, scale.z);
+	conemesh.setScale(scale.x, scale.y, scale.z);
 	conemesh.draw();
 }
 
@@ -1377,7 +1377,7 @@ void gRenderer::drawTube(float x, float y, float z, int outerradius, int innerra
 	G_PROFILE_ZONE_SCOPED_N("gRenderer::drawTube()");
 	gTube tubemesh(outerradius,innerradious ,outerradius,innerradious, h, glm::vec2(0.0f, 0.0f), segmentnum, isFilled);
 	tubemesh.setPosition(x, y, z);
-	tubemesh.scale(scale.x, scale.y, scale.z);
+	tubemesh.setScale(scale.x, scale.y, scale.z);
 	tubemesh.draw();
 }
 
@@ -1387,7 +1387,7 @@ void gRenderer::drawTubeOblique(float x, float y, float z, int outerradius,
 	G_PROFILE_ZONE_SCOPED_N("gRenderer::drawTubeOblique()");
 	gTube tubemesh(outerradius,innerradious ,outerradius,innerradious, h, shiftdistance, segmentnum, isFilled);
 	tubemesh.setPosition(x, y, z);
-	tubemesh.scale(scale.x, scale.y, scale.z);
+	tubemesh.setScale(scale.x, scale.y, scale.z);
 	tubemesh.draw();
 }
 
@@ -1397,7 +1397,7 @@ void gRenderer::drawTubeTrapezodial(float x, float y, float z, int topouterradiu
 	G_PROFILE_ZONE_SCOPED_N("gRenderer::drawTubeTrapezodial()");
 	gTube tubemesh(topouterradius,topinnerradious , buttomouterradious,buttominnerradious, h, glm::vec2(0.0f, 0.0f), segmentnum, isFilled);
 	tubemesh.setPosition(x, y, z);
-	tubemesh.scale(scale.x, scale.y, scale.z);
+	tubemesh.setScale(scale.x, scale.y, scale.z);
 	tubemesh.draw();
 }
 
@@ -1408,6 +1408,6 @@ void gRenderer::drawTubeObliqueTrapezodial(float x, float y, float z, int topout
 	G_PROFILE_ZONE_SCOPED_N("gRenderer::drawTubeObliqueTrapezodial()");
 	gTube tubemesh(topouterradius,topinnerradious , buttomouterradious,buttominnerradious, h, shiftdistance, segmentnum, isFilled);
 	tubemesh.setPosition(x, y, z);
-	tubemesh.scale(scale.x, scale.y, scale.z);
+	tubemesh.setScale(scale.x, scale.y, scale.z);
 	tubemesh.draw();
 }
