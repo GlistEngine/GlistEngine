@@ -45,6 +45,8 @@
 
 class gFont : public gNode {
 public:
+	enum class TextAlign {LEFT, CENTER, RIGHT, JUSTIFY};
+
 	gFont();
 	virtual ~gFont();
 
@@ -186,7 +188,7 @@ public:
 	 *
 	 * @return A list of lines that fit within the given width
 	 */
-	std::vector<std::string> wrapSentenceByWidth(const std::string& text, float maxWidth);
+	std::vector<std::string> wrapSentenceByWidth(const std::string& text, float maxWidth, TextAlign align = TextAlign::LEFT);
 
 
 private:
