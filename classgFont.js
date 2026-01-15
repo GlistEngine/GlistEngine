@@ -1,5 +1,11 @@
 var classgFont =
 [
+    [ "TextAlign", "classgFont.html#a6e81faaa533f247131d7c7c0cb555529", [
+      [ "LEFT", "classgFont.html#a6e81faaa533f247131d7c7c0cb555529a684d325a7303f52e64011467ff5c5758", null ],
+      [ "CENTER", "classgFont.html#a6e81faaa533f247131d7c7c0cb555529ac397289ee45877be0cd49811fe245b4e", null ],
+      [ "RIGHT", "classgFont.html#a6e81faaa533f247131d7c7c0cb555529a21507b40c80068eda19865706fdc2403", null ],
+      [ "JUSTIFY", "classgFont.html#a6e81faaa533f247131d7c7c0cb555529a1a8c137fb3ff9dc6fa1a59e8743fc1e9", null ]
+    ] ],
     [ "gFont", "classgFont.html#ac47bcd67e802ea5b562e026cb5ee0b23", null ],
     [ "~gFont", "classgFont.html#a3c871e4333d5112844bb10cc27539578", null ],
     [ "drawText", "classgFont.html#af12e725c755b22443a139c3e6a4353aa", null ],
@@ -15,5 +21,5 @@ var classgFont =
     [ "isLoaded", "classgFont.html#a441196d2161ae3918e05baf04ff4cae5", null ],
     [ "load", "classgFont.html#a6d3ee7c7cadd22d2e6f1536ae6fb1a97", null ],
     [ "loadFont", "classgFont.html#a3735214e7a048f574a5bf5b5ac7db2d1", null ],
-    [ "wrapSentenceByWidth", "classgFont.html#a7a06037f9e93f95dbbf85850c091e206", null ]
+    [ "wrapSentenceByWidth", "classgFont.html#a5e94e6bd50585adad6f294030f58d47e", null ]
 ];

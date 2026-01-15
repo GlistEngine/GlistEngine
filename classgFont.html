@@ -92,6 +92,7 @@ $(document).ready(function(){initNavTree('classgFont.html',''); initResizable();
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
+<a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="classgFont-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">gFont Class Reference</div></div>
@@ -129,6 +130,15 @@ Collaboration diagram for gFont:</div>
 </map>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:a6e81faaa533f247131d7c7c0cb555529" id="r_a6e81faaa533f247131d7c7c0cb555529"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgFont.html#a6e81faaa533f247131d7c7c0cb555529">TextAlign</a> { <a class="el" href="classgFont.html#a6e81faaa533f247131d7c7c0cb555529a684d325a7303f52e64011467ff5c5758">LEFT</a>
+, <a class="el" href="classgFont.html#a6e81faaa533f247131d7c7c0cb555529ac397289ee45877be0cd49811fe245b4e">CENTER</a>
+, <a class="el" href="classgFont.html#a6e81faaa533f247131d7c7c0cb555529a21507b40c80068eda19865706fdc2403">RIGHT</a>
+, <a class="el" href="classgFont.html#a6e81faaa533f247131d7c7c0cb555529a1a8c137fb3ff9dc6fa1a59e8743fc1e9">JUSTIFY</a>
+ }</td></tr>
+<tr class="separator:a6e81faaa533f247131d7c7c0cb555529"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:ac47bcd67e802ea5b562e026cb5ee0b23" id="r_ac47bcd67e802ea5b562e026cb5ee0b23"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgFont.html#ac47bcd67e802ea5b562e026cb5ee0b23">gFont</a> ()</td></tr>
@@ -163,8 +173,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a452fde9a822efbc22500338df92cdceb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab2956c6808062159685f2c5dc36a692e" id="r_ab2956c6808062159685f2c5dc36a692e"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgFont.html#ab2956c6808062159685f2c5dc36a692e">getDpi</a> () const</td></tr>
 <tr class="separator:ab2956c6808062159685f2c5dc36a692e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7a06037f9e93f95dbbf85850c091e206" id="r_a7a06037f9e93f95dbbf85850c091e206"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgFont.html#a7a06037f9e93f95dbbf85850c091e206">wrapSentenceByWidth</a> (const std::string &amp;text, float maxWidth)</td></tr>
-<tr class="separator:a7a06037f9e93f95dbbf85850c091e206"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5e94e6bd50585adad6f294030f58d47e" id="r_a5e94e6bd50585adad6f294030f58d47e"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgFont.html#a5e94e6bd50585adad6f294030f58d47e">wrapSentenceByWidth</a> (const std::string &amp;text, float maxWidth, <a class="el" href="classgFont.html#a6e81faaa533f247131d7c7c0cb555529">TextAlign</a> align=<a class="el" href="classgFont.html#a6e81faaa533f247131d7c7c0cb555529a684d325a7303f52e64011467ff5c5758">TextAlign::LEFT</a>)</td></tr>
+<tr class="separator:a5e94e6bd50585adad6f294030f58d47e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classgNode"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classgNode')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classgNode.html">gNode</a></td></tr>
 <tr class="memitem:a5b2ef8de03ec7bc85983f64b5877c0e1 inherit pub_methods_classgNode" id="r_a5b2ef8de03ec7bc85983f64b5877c0e1"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgNode.html#a5b2ef8de03ec7bc85983f64b5877c0e1">gNode</a> ()</td></tr>
 <tr class="separator:a5b2ef8de03ec7bc85983f64b5877c0e1 inherit pub_methods_classgNode"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -391,6 +401,35 @@ Additional Inherited Members</h2></td></tr>
 <tr class="memitem:a9a7e5f300e8e38ad6f0beb85ad840c52 inherit pro_static_attribs_classgObject" id="r_a9a7e5f300e8e38ad6f0beb85ad840c52"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgObject.html#a9a7e5f300e8e38ad6f0beb85ad840c52">releaseresolution</a></td></tr>
 <tr class="separator:a9a7e5f300e8e38ad6f0beb85ad840c52 inherit pro_static_attribs_classgObject"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Member Enumeration Documentation</h2>
+<a id="a6e81faaa533f247131d7c7c0cb555529" name="a6e81faaa533f247131d7c7c0cb555529"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6e81faaa533f247131d7c7c0cb555529">&#9670;&#160;</a></span>TextAlign</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum class <a class="el" href="classgFont.html#a6e81faaa533f247131d7c7c0cb555529">gFont::TextAlign</a></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">strong</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a6e81faaa533f247131d7c7c0cb555529a684d325a7303f52e64011467ff5c5758" name="a6e81faaa533f247131d7c7c0cb555529a684d325a7303f52e64011467ff5c5758"></a>LEFT&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a6e81faaa533f247131d7c7c0cb555529ac397289ee45877be0cd49811fe245b4e" name="a6e81faaa533f247131d7c7c0cb555529ac397289ee45877be0cd49811fe245b4e"></a>CENTER&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a6e81faaa533f247131d7c7c0cb555529a21507b40c80068eda19865706fdc2403" name="a6e81faaa533f247131d7c7c0cb555529a21507b40c80068eda19865706fdc2403"></a>RIGHT&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a6e81faaa533f247131d7c7c0cb555529a1a8c137fb3ff9dc6fa1a59e8743fc1e9" name="a6e81faaa533f247131d7c7c0cb555529a1a8c137fb3ff9dc6fa1a59e8743fc1e9"></a>JUSTIFY&#160;</td><td class="fielddoc"></td></tr>
+</table>
+
+</div>
+</div>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="ac47bcd67e802ea5b562e026cb5ee0b23" name="ac47bcd67e802ea5b562e026cb5ee0b23"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ac47bcd67e802ea5b562e026cb5ee0b23">&#9670;&#160;</a></span>gFont()</h2>
@@ -829,8 +868,8 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="a7a06037f9e93f95dbbf85850c091e206" name="a7a06037f9e93f95dbbf85850c091e206"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7a06037f9e93f95dbbf85850c091e206">&#9670;&#160;</a></span>wrapSentenceByWidth()</h2>
+<a id="a5e94e6bd50585adad6f294030f58d47e" name="a5e94e6bd50585adad6f294030f58d47e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5e94e6bd50585adad6f294030f58d47e">&#9670;&#160;</a></span>wrapSentenceByWidth()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -845,7 +884,13 @@ Additional Inherited Members</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>maxWidth</em>&#160;</td>
+          <td class="paramname"><em>maxWidth</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classgFont.html#a6e81faaa533f247131d7c7c0cb555529">TextAlign</a>&#160;</td>
+          <td class="paramname"><em>align</em> = <code><a class="el" href="classgFont.html#a6e81faaa533f247131d7c7c0cb555529a684d325a7303f52e64011467ff5c5758">TextAlign::LEFT</a></code>&#160;</td>
         </tr>
         <tr>
           <td></td>
