@@ -53,7 +53,7 @@ private:
 	std::vector<int> othersindex;
 	std::vector<std::string> labelstr;
 	std::vector<int> labelx, labely;
-	std::vector<int> predictedOutputs;
+	std::vector<int> predictedoutputs;
 	std::vector<std::string> valuefortext;
 	std::vector<std::string> percentagefortext;
 
