@@ -28,6 +28,7 @@ var gUtils_8h =
     [ "gFixPath", "gUtils_8h.html#aa580814b66be372cda701233803429f8", null ],
     [ "gFlipImageDataVertically", "gUtils_8h.html#a33712aa7f449750b3f0db7406c8526b4", null ],
     [ "gGetDay", "gUtils_8h.html#aeaca45855ab7131fc82243d8a590aa85", null ],
+    [ "gGetFirstLineOfTextFile", "gUtils_8h.html#a6e599a6825f1158ce4a2718d7c61ca22", null ],
     [ "gGetHours", "gUtils_8h.html#a3b454c86389d1a25a69d0be868ffdcf4", null ],
     [ "gGetLocale", "gUtils_8h.html#ab610043e9ff49ddd15be745b10707532", null ],
     [ "gGetMinutes", "gUtils_8h.html#a09d1b05d97043b81a52f2aca321e20c7", null ],
