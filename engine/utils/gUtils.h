@@ -166,6 +166,8 @@ std::deque<std::string> gSplitStringToDeque(const std::string& textToSplit, cons
 std::string gReplaceAll(const std::string& source, const std::string& from, const std::string& to);
 bool gIsValidFilename(std::string fileName);
 
+std::string gGetFirstLineOfTextFile(std::string fullFilepath);
+
 bool gIsInt(const std::string& str);
 bool gIsFloat(const std::string& str);
 bool gIsNumber(const std::string& str);

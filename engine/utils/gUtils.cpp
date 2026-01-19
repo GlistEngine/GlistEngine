@@ -442,6 +442,15 @@ bool gIsValidFilename(std::string fileName) {
 	return valid;
 }
 
+std::string gGetFirstLineOfTextFile(std::string fullFilepath) {
+	std::string firstline;
+	fs::ifstream infile(fullFilepath.c_str());
+	if (infile.good()) {
+		getline(infile, firstline);
+	}
+	return firstline;
+}
+
 std::string gToLower(const std::string& src, const std::string & locale) {
 	std::string dst;
 	std::locale loc = gGetLocale(locale);
