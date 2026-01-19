@@ -96,34 +96,34 @@ void gGUIPieGraph::draw() {
 
 	float cx = widthhalf + left;
 	float cy = heighthalf + top;
-	float dotRadius = radius * 0.75f;
-	float maxOffset = radius * 0.2f;
+	float dotradius = radius * 0.75f;
+	float maxoffset = radius * 0.2f;
 
-	std::vector<float> midAngles(variablevalues.size());
+	std::vector<float> midangles(variablevalues.size());
 	float currentAngle = rotationforothers;
 	for (int i = 0; i < variablevalues.size(); i++) {
-		midAngles[i] = currentAngle + valuesdegree[i] / 2.0f;
+		midangles[i] = currentAngle + valuesdegree[i] / 2.0f;
 		currentAngle += valuesdegree[i];
 	}
 
-	int globalCount = 0;
-	for (int i = 0; i < (int)predictedOutputs.size(); i++) {
-		int predictedClass = predictedOutputs[i];
-		if (predictedClass < 0 || predictedClass >= (int)midAngles.size()) {
-			gLogi("gGUIPieGraph") << "Warning: predictedClass (" << predictedClass << ") exceeds the size of midAngles.";
+	int globalcount = 0;
+	for (int i = 0; i < (int)predictedoutputs.size(); i++) {
+		int predictedclass = predictedoutputs[i];
+		if (predictedclass < 0 || predictedclass >= (int)midangles.size()) {
+			gLogi("gGUIPieGraph") << "Warning: predictedClass (" << predictedclass << ") exceeds the size of midAngles.";
 			continue;
 		}
 
-		int count = globalCount++;
+		int count = globalcount++;
 
-		float radiusOffset = (count / (float)predictedOutputs.size()) * maxOffset;
-		float angleOffsetDeg = count * 10.0f;
+		float radiusoffset = (count / (float)predictedoutputs.size()) * maxoffset;
+		float angleoffsetdeg = count * 10.0f;
 
-		float angleDeg = midAngles[predictedClass] + angleOffsetDeg;
+		float angleDeg = midangles[predictedclass] + angleoffsetdeg;
 		float angleRad = angleDeg * M_PI / 180.0f;
 
-		float px = cx + cos(angleRad) * (dotRadius + radiusOffset);
-		float py = cy + sin(angleRad) * (dotRadius + radiusOffset);
+		float px = cx + cos(angleRad) * (dotradius + radiusoffset);
+		float py = cy + sin(angleRad) * (dotradius + radiusoffset);
 
 		renderer->setColor(outlinecolor);
 		gDrawCircle(px, py, 4.0f, true, 20);
@@ -160,10 +160,10 @@ void gGUIPieGraph::setRadius(float radius) {
 }
 
 void gGUIPieGraph::setPredictedOutputs (const std::vector<int>& outs) {
-	predictedOutputs.clear();
-	predictedOutputs = outs;
+	predictedoutputs.clear();
+	predictedoutputs = outs;
 	std::map<int, int> classCount;
-	for(int val: predictedOutputs) {
+	for(int val: predictedoutputs) {
 		 classCount[val]++;
 	}
 
@@ -315,16 +315,17 @@ void gGUIPieGraph::showInfoOnCursor() {
 		std::string text = "";
 		std::string infotext = "";
 		int maxwidth;
-		if(showinfoindex == -1)
+		if(showinfoindex == -1) {
 			for(int i = 0; i < othersindex.size(); i++) {
 				text = variablelabels.at(othersindex.at(i)) + ": " + valuefortext.at(othersindex.at(i)) + " (%" + percentagefortext.at(othersindex.at(i)) + ")\n";
 				infotext += text;
-				if(maxwidth < fontforinfotext.getStringWidth(text))
+				if(maxwidth < fontforinfotext.getStringWidth(text)) {
 					maxwidth = fontforinfotext.getStringWidth(text);
+				} else {
+					infotext = variablelabels.at(showinfoindex) + ": " + valuefortext.at(showinfoindex) + " (%" + percentagefortext.at(showinfoindex) + ")";
+					maxwidth = fontforinfotext.getStringWidth(infotext);
+				}
 			}
-		else {
-			infotext = variablelabels.at(showinfoindex) + ": " + valuefortext.at(showinfoindex) + " (%" + percentagefortext.at(showinfoindex) + ")";
-			maxwidth = fontforinfotext.getStringWidth(infotext);
 		}
 		if(cursorx + infotextshift + maxwidth <= left + width)
 			fontforinfotext.drawText(infotext, cursorx + infotextshift, cursory + infotextshift);
