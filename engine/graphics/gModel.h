@@ -54,7 +54,7 @@ public:
 	int getMeshNo(const std::string& meshName) const;
 	gSkinnedMesh& getMesh(int meshNo);
 	gSkinnedMesh* getMeshPtr(int meshNo);
-	const std::string getMeshName(int meshNo) const;
+	std::string getMeshName(int meshNo) const;
 	const gBoundingBox& getBoundingBox();
 
 	void move(float dx, float dy, float dz) { move(glm::vec3(dx, dy, dz)); }
@@ -126,21 +126,21 @@ private:
 		std::shared_ptr<std::vector<gVertex>> vertices;
 		std::shared_ptr<std::vector<gIndex>> indices;
 	};
-	std::unordered_map<aiMesh*, SharedVertexIndex> mesh2svimap;
+	std::unordered_map<const aiMesh*, SharedVertexIndex> mesh2svimap;
 
 	const aiScene* scene;
 	std::vector<const aiScene*> morphingtargetscenes;
 	void loadModelFile(const std::string& fullPath);
 	void loadModelFileWithOriginalVertices(const std::string& fullPath);
 	void loadMorphingTargetModelFile(const std::string& fullPath);
-	void processNode(aiNode *node, const aiScene *scene);
-	gSkinnedMesh* processMesh(aiMesh *mesh, const aiScene *scene, aiMatrix4x4 matrix);
-	void loadMaterialTextures(gSkinnedMesh* mesh, aiMaterial *mat, aiTextureType type, gTexture::TextureType textureType);
-	void processMorphingNode(aiNode *node, const aiScene *scene);
-	gMesh* processMorphingMesh(aiMesh *mesh, const aiScene *scene, aiMatrix4x4 matrix);
+	void processNode(aiNode* node, const aiScene* scene);
+	gSkinnedMesh* processMesh(const aiMesh* mesh, const aiScene* scene, aiMatrix4x4 matrix);
+	void loadMaterialTextures(gSkinnedMesh* mesh, aiMaterial* mat, aiTextureType type, gTexture::TextureType textureType);
+	void processMorphingNode(const aiNode* node, const aiScene* scene);
+	gMesh* processMorphingMesh(const aiMesh* mesh, const aiScene* scene, aiMatrix4x4 matrix);
 	//The below line's third parameter is to perform the animation on the target mesh by taking the aiTargetMesh as a reference. Haven't tested yet.
 	//void updateBones(gSkinnedMesh* gmesh, aiMesh* aimesh, aiMesh* aiTargetMesh);
-	void updateBones(gSkinnedMesh* gmesh, aiMesh* aimesh);
+	void updateBones(gSkinnedMesh* gmesh, const aiMesh* aimesh);
 	void updateVbo(gSkinnedMesh* gmesh);
 	void updateAnimationNodes();
 	void generateAnimationKeys();
@@ -166,9 +166,7 @@ private:
 
 	// this is used to find the nodes fast because assimp code is slow, it might consume little more memory
 	std::unordered_map<std::string, aiNode*> nodemap;
-
-	// Track which meshes use node animations (have no bones) to handle transforms differently
-	std::vector<bool> meshHasNodeAnimation;
+	std::vector<unsigned int> meshindices;
 
     glm::mat4 convertMatrix(const aiMatrix4x4 &aiMat);
     gBoundingBox initialboundingbox;

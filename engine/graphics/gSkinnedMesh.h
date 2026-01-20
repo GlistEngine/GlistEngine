@@ -21,8 +21,8 @@ public:
 
 	void resizeAnimation(int verticesNum);
 	void resetAnimation();
-	void setVertexPos(int vertexNo, const glm::vec3& newWeight);
-	void setVertexNorm(int vertexNo, const glm::vec3& newWeight);
+	void setVertexPos(int vertexNo, const glm::vec3& pos);
+	void setVertexNorm(int vertexNo, const glm::vec3& norm);
 	const glm::vec3& getVertexPos(int vertexNo) const;
 	const glm::vec3& getVertexNorm(int vertexNo) const;
 	void clearAnimation();
