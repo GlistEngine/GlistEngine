@@ -18,7 +18,7 @@ var classgModel =
     [ "getFullpath", "classgModel.html#aca7ad27e75e272d6e5653b749b01901e", null ],
     [ "getInitialBoundingBox", "classgModel.html#a24371fa2aaedb1c6545d9d4f269f0b94", null ],
     [ "getMesh", "classgModel.html#a0d4eaae103caf91aebc8fb6b17789142", null ],
-    [ "getMeshName", "classgModel.html#a32abca4e44183e7d84b4d81e774583bc", null ],
+    [ "getMeshName", "classgModel.html#aea5d1955ca7a410afa1b83f37a81b839", null ],
     [ "getMeshNo", "classgModel.html#a75abcbb228de2a92ab39ebbf764a8805", null ],
     [ "getMeshNum", "classgModel.html#a80189770da5bfe07724807cebb7e5693", null ],
     [ "getMeshPtr", "classgModel.html#a7169fbb5521173d4a64b39b538397354", null ],

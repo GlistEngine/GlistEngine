@@ -18,9 +18,9 @@ var classgSkinnedMesh =
     [ "setFrameNo", "classgSkinnedMesh.html#a1035865e2f3c5930499d6dae4abefa82", null ],
     [ "setVertexAnimated", "classgSkinnedMesh.html#ae4d0348a74fa4982a28371adf0797ca3", null ],
     [ "setVertexAnimationStoredOnVram", "classgSkinnedMesh.html#ad7bc161e72a7ec26693e36d7dfdbe771", null ],
-    [ "setVertexNorm", "classgSkinnedMesh.html#aa8662da07b8eff89fb711d9d07882f24", null ],
+    [ "setVertexNorm", "classgSkinnedMesh.html#ab8379ac7a16849066223d9d5774476dc", null ],
     [ "setVertexNormData", "classgSkinnedMesh.html#a69073f580fb21912856dcfa52b90e152", null ],
-    [ "setVertexPos", "classgSkinnedMesh.html#a7aa318e97b3d1cc2a57c5bc2c81b7cdf", null ],
+    [ "setVertexPos", "classgSkinnedMesh.html#a4b069f43f8b205a56043f915a366d406", null ],
     [ "setVertexPosData", "classgSkinnedMesh.html#ac345c0228130cd51929872b486bd164d", null ],
     [ "setVerticesData", "classgSkinnedMesh.html#abe7c86b96e2d7282c52e7f5022e361cb", null ]
 ];
