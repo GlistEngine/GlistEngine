@@ -22,7 +22,7 @@ gGUIPieGraph::gGUIPieGraph() {
 	sideofothers = 2;
 	infotextshift = 10;
 	fontsize = 9;
-	outlinecolor = color.WHITE;
+	outlinecolor = color.BLACK;
 	otherscolor = color.GRAY;
 	infotextcolor = color.BLACK;
 	loadFont();
@@ -127,13 +127,15 @@ void gGUIPieGraph::draw() {
 
 		renderer->setColor(outlinecolor);
 		gDrawCircle(px, py, 4.0f, true, 20);
-
 		renderer->setColor(outlinecolor);
-		std::string label = std::to_string(count + 1) + ".";
-		font->drawText(label, px + 6, py - 6);
+		if (predictedOutputs[i] == 1){
+			std::string label = "Has cancer";
+			font->drawText(label, px + 6, py - 6);
+		} else if (predictedOutputs[i] == 0){
+			std::string label = "No cancer";
+			font->drawText(label, px + 6, py - 6);
+		}
 	}
-
-	renderer->setColor(oldcolor);
 }
 
 void gGUIPieGraph::mouseMoved(int x, int y) {
