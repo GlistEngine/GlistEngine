@@ -76,6 +76,7 @@ in vec3 TangentLightPos;
 in vec3 TangentViewPos;
 in vec3 TangentFragPos;
 in vec4 EyePosition;
+in vec3 incolor;
 
 flat in int mUseShadowMap;
 uniform sampler2D shadowMap;
@@ -316,7 +317,7 @@ void main() {
         result = globalambientcolor * materialAmbient;
     }
 
-    FragColor = result * renderColor;
+    FragColor = result * renderColor * vec4(incolor, 1.0);
 
     if((flags & ENABLE_FOG_FLAG) > 0) {
         float distance = abs(EyePosition.z / EyePosition.w);
