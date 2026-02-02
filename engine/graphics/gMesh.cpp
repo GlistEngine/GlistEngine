@@ -443,7 +443,7 @@ float gMesh::distanceTriangles(gRay* ray) {
 }
 
 /*
- * Writing By: Engin Kutlu
+ * Vertex color feature implemented by: Engin Kutlu
  * */
 void gMesh::setAllVertexColor(const glm::vec3& color) {
     if (!vertices) return;
@@ -454,9 +454,6 @@ void gMesh::setAllVertexColor(const glm::vec3& color) {
     vbo->setVertexData(verts.data(), sizeof(gVertex), static_cast<int>(verts.size()));
 }
 
-/*
- * Writing By: Engin Kutlu
- * */
 void gMesh::fillMissingVertexColors(const glm::vec3& defColor) {
     if (!vertices) return;
     auto& verts = *vertices;
@@ -472,9 +469,6 @@ void gMesh::fillMissingVertexColors(const glm::vec3& defColor) {
     }
 }
 
-/*
- * Writing By: Engin Kutlu
- * */
 void gMesh::applyVertexGradient() {
     if (!vertices || vertices->empty()) return;
 

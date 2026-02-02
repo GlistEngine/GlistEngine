@@ -96,6 +96,12 @@ public:
 	 */
 	void fillMissingVertexColors(const glm::vec3& defColor = glm::vec3(1.0f));
 
+	/*
+	 * Assigns each vertex a unique color based on its index in the mesh.
+	 * This creates a deterministic, multi-color effect across the mesh.
+	 * The colors do not depend on vertex positions but on their order.
+	 * After updating, the GPU vertex buffer is refreshed immediately.
+	 */
 	void applyVertexGradient();
 
 protected:
