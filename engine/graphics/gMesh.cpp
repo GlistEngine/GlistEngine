@@ -77,7 +77,7 @@ void gMesh::setVertices(std::shared_ptr<std::vector<gVertex>> vertices, std::sha
 	G_PROFILE_ZONE_SCOPED_N("gModel::setVertices()");
 	bool resetinitialboundingbox = (!this->vertices || this->vertices->size() != vertices->size()) || (!this->indices || this->indices->size() != indices->size());
 	this->vertices = vertices;
-	fillMissingVertexColors(glm::vec3(1.0f, 0.0f, 0.0f));
+	fillMissingVertexColors(glm::vec3(1.0f, 1.0f, 1.0f));
 	vbo->setVertexData(vertices->data(), sizeof(gVertex), vertices->size());
 	this->indices = indices;
 	vbo->setIndexData(indices->data(), indices->size());
@@ -93,7 +93,7 @@ void gMesh::setVertices(std::shared_ptr<std::vector<gVertex>> vertices) {
 	G_PROFILE_ZONE_SCOPED_N("gModel::setVertices()");
 	bool resetinitialboundingbox = !this->vertices || this->vertices->size() != vertices->size();
 	this->vertices = vertices;
-	fillMissingVertexColors(glm::vec3(1.0f, 0.0f, 0.0f));
+	fillMissingVertexColors(glm::vec3(1.0f, 1.0f, 1.0f));
 	vbo->setVertexData(vertices->data(), sizeof(gVertex), vertices->size());
 	if (resetinitialboundingbox) {
 		recalculateBoundingBox();
@@ -472,3 +472,24 @@ void gMesh::fillMissingVertexColors(const glm::vec3& defColor) {
     }
 }
 
+/*
+ * Writing By: Engin Kutlu
+ * */
+void gMesh::applyVertexGradient() {
+    if (!vertices || vertices->empty()) return;
+
+    auto& verts = *vertices;
+
+    for (size_t i = 0; i < verts.size(); ++i) {
+        float r = ((i * 97) % 255) / 255.0f;
+        float g = ((i * 57) % 255) / 255.0f;
+        float b = ((i * 23) % 255) / 255.0f;
+        verts[i].color = glm::vec3(r, g, b);
+    }
+
+    vbo->setVertexData(
+        verts.data(),
+        sizeof(gVertex),
+        static_cast<int>(verts.size())
+    );
+}

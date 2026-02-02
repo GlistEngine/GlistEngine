@@ -96,6 +96,8 @@ public:
 	 */
 	void fillMissingVertexColors(const glm::vec3& defColor = glm::vec3(1.0f));
 
+	void applyVertexGradient();
+
 protected:
 	void processTransformationMatrix() override;
 
