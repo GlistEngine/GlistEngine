@@ -73,6 +73,37 @@ public:
 
 	void recalculateBoundingBox();
 
+	/*
+	 * Sets the color of all vertices in this mesh to the given value.
+	 * This operation overwrites any existing per-vertex colors and
+	 * immediately updates the GPU vertex buffer.
+	 *
+	 * Typical use cases include debugging, object highlighting,
+	 * or applying a uniform color override.
+	 *
+	 * @param color The color to apply to every vertex in the mesh
+	 */
+	void setAllVertexColor(const glm::vec3& color);
+
+	/*
+	 * Assigns a default color to vertices that do not have an explicit color set.
+	 * Only vertices whose color is (0, 0, 0) are modified.
+	 *
+	 * If at least one vertex is updated, the GPU vertex buffer is refreshed.
+	 * Existing non-zero vertex colors are preserved.
+	 *
+	 * @param defColor The default color to assign to uninitialized vertices
+	 */
+	void fillMissingVertexColors(const glm::vec3& defColor = glm::vec3(1.0f));
+
+	/*
+	 * Assigns each vertex a unique color based on its index in the mesh.
+	 * This creates a deterministic, multi-color effect across the mesh.
+	 * The colors do not depend on vertex positions but on their order.
+	 * After updating, the GPU vertex buffer is refreshed immediately.
+	 */
+	void applyVertexGradient();
+
 protected:
 	void processTransformationMatrix() override;
 

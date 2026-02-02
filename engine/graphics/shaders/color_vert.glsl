@@ -12,6 +12,7 @@ layout (location = 2) in vec2 aTexCoords;
 layout (location = 3) in vec3 aTangent;
 layout (location = 4) in vec3 aBitangent;
 layout (location = 5) in int aUseNormalMap;
+layout (location = 6) in vec3 color;
 
 struct Fog {
     vec3 color;
@@ -50,6 +51,7 @@ out vec3 TangentLightPos;
 out vec3 TangentViewPos;
 out vec3 TangentFragPos;
 out vec4 EyePosition;
+out vec3 incolor;
 
 void main() {
     mUseShadowMap = aUseShadowMap;
@@ -77,5 +79,6 @@ void main() {
     vec4 aPosVec4 = vec4(aPos, 1.0);
     gl_Position = projectedMatrix * aPosVec4;
     EyePosition = modelViewMatrix * aPosVec4;
+    incolor = color;
 }
 

@@ -22,6 +22,8 @@ struct gVertex {
     glm::vec3 tangent{0};
     // bitangent
     glm::vec3 bitangent{0};
+    // color
+    glm::vec3 color{0};
 };
 
 
