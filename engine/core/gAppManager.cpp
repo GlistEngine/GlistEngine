@@ -6,6 +6,7 @@
  */
 
 #include "gAppManager.h"
+#include "gInputManager.h"
 #include "gBaseComponent.h"
 #include "gBasePlugin.h"
 #include "gBaseApp.h"
@@ -84,6 +85,7 @@ gAppManager::gAppManager(const std::string& appName, gBaseApp *baseApp, int widt
 	ansilocale = setlocale(LC_ALL, ".ACP");
 #endif
     appmanager = this;
+	inputmanager = new gInputManager();
 	if(windowMode != G_WINDOWMODE_NONE) {
 		canvasmanager = new gCanvasManager();
 	} else {
@@ -160,6 +162,8 @@ gAppManager::~gAppManager() {
     delete canvasmanager;
     delete guimanager;
     delete window;
+    delete inputmanager;
+    inputmanager = nullptr;
     gRenderObject::destroyRenderer();
 }
 
@@ -496,7 +500,6 @@ void gAppManager::tick() {
         return;
     }
 
-    // todo joystick
     if(canvasmanager) canvasmanager->update();
     if(guimanager) guimanager->update();
     if(!isguiapp) {
@@ -538,15 +541,11 @@ void gAppManager::tick() {
 				}
 			}
     	}
-
-		if(guimanager) {
-			guimanager->draw();
-		}
+		if(guimanager) guimanager->draw();
         totaldraws++;
     }
-	if(usewindow) {
-		window->update();
-	}
+	if(inputmanager) inputmanager->update();
+	if(usewindow) window->update();
 	executeQueue();
 }
 

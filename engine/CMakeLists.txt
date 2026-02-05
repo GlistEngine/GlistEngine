@@ -218,6 +218,7 @@ set(SRC_FILES
 	${ENGINE_DIR}/graphics/gLight.cpp
 	${ENGINE_DIR}/graphics/gShadowMap.cpp
 	${ENGINE_DIR}/graphics/gCamera.cpp
+	${ENGINE_DIR}/graphics/gCameraController.cpp
 	${ENGINE_DIR}/graphics/gFont.cpp
 	${ENGINE_DIR}/graphics/gMaterial.cpp
 	${ENGINE_DIR}/graphics/gMesh.cpp
@@ -303,6 +304,9 @@ set(SRC_FILES
 	${ENGINE_DIR}/core/gAppObject.cpp
 	${ENGINE_DIR}/base/gBaseComponent.cpp
 	${ENGINE_DIR}/base/gBasePlugin.cpp
+	${ENGINE_DIR}/core/gInputManager.cpp
+	${ENGINE_DIR}/core/gInputPlayer.cpp
+	${ENGINE_DIR}/events/gEventHook.cpp
 	${ENGINE_DIR}/media/gSound.cpp
 	${ENGINE_DIR}/media/gSoundRecorder.cpp
 	${ENGINE_DIR}/base/gBaseApp.cpp
@@ -312,6 +316,7 @@ set(SRC_FILES
 	${ENGINE_DIR}/core/gAppManager.cpp
 	${ENGINE_DIR}/core/gPostProcessManager.cpp
 	${ENGINE_DIR}/base/gBasePostProcess.cpp
+	${ENGINE_DIR}/events/gEventHook.cpp
 	${ENGINE_DIR}/graphics/posteffects/gInversion.cpp
 	${ENGINE_DIR}/graphics/posteffects/gGrayscale.cpp
 	${ENGINE_DIR}/graphics/posteffects/gSepiatone.cpp
