@@ -31,6 +31,7 @@ public:
 	void setInfoTextSize(int size);
 	void setAdditionalLabelY(float diff);
 	void setPredictedOutputs(const std::vector<int>& outs);
+	void setPredictedOutputName(int id, const std::string& label);
 
 	void clear();
 
@@ -65,6 +66,7 @@ private:
 	gFont fontforinfotext;
 	float additionallabely;
 	int widthhalf, heighthalf;
+	bool setPredictedOutputNameRequested;
 };
 
 #endif /* UI_gGUIPieGraph_H_ */
