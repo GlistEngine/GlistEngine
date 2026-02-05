@@ -128,15 +128,17 @@ void gGUIPieGraph::draw() {
 		renderer->setColor(outlinecolor);
 		gDrawCircle(px, py, 4.0f, true, 20);
 		renderer->setColor(outlinecolor);
-		if (predictedOutputs[i] == 1){
-			std::string label = "Has cancer";
-			font->drawText(label, px + 6, py - 6);
-		} else if (predictedOutputs[i] == 0){
-			std::string label = "No cancer";
+
+		if (setPredictedOutputNameRequested == true) {
+			font->drawText(variablelabels[predictedOutputs[i]], px + 6, py - 6);
+		} else {
+			std::string label = std::to_string(count + 1) + ".";
 			font->drawText(label, px + 6, py - 6);
 		}
 	}
 }
+
+
 
 void gGUIPieGraph::mouseMoved(int x, int y) {
 	cursorx = x;
@@ -180,6 +182,13 @@ void gGUIPieGraph::setPredictedOutputs (const std::vector<int>& outs) {
 			variablelabels[i] = label + ": 0";
 		}
 	}
+}
+
+void gGUIPieGraph::setPredictedOutputName(int id, const std::string& label) {
+		if (id < variablelabels.size()) {
+			variablelabels[id] = label;
+			setPredictedOutputNameRequested = true;
+		}
 }
 
 float gGUIPieGraph::getRadius() {
