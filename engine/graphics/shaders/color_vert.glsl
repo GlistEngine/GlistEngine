@@ -11,8 +11,21 @@ layout (location = 1) in vec3 aNormal;
 layout (location = 2) in vec2 aTexCoords;
 layout (location = 3) in vec3 aTangent;
 layout (location = 4) in vec3 aBitangent;
-layout (location = 5) in int aUseNormalMap;
-layout (location = 6) in vec3 color;
+layout (location = 5) in vec3 color;
+
+struct Material {
+    vec4 ambient;
+    vec4 diffuse;
+    vec4 specular;
+    float shininess;
+    sampler2D diffusemap;
+    sampler2D specularmap;
+    sampler2D normalMap;
+    int useDiffuseMap;
+    int useSpecularMap;
+    int useNormalMap;
+};
+uniform Material material;
 
 struct Fog {
     vec3 color;
@@ -40,9 +53,6 @@ uniform mat4 projection;
 uniform vec3 lightPos;
 uniform mat4 lightMatrix;
 
-flat out int mUseNormalMap;
-flat out int mUseShadowMap;
-
 out vec3 Normal;
 out vec3 FragPos;
 out vec2 TexCoords;
@@ -52,6 +62,8 @@ out vec3 TangentViewPos;
 out vec3 TangentFragPos;
 out vec4 EyePosition;
 out vec3 incolor;
+out mat3 TBN;
+flat out int mUseShadowMap;
 
 void main() {
     mUseShadowMap = aUseShadowMap;
@@ -59,19 +71,16 @@ void main() {
     Normal = mat3(transpose(inverse(model))) * aNormal;
     TexCoords = aTexCoords;
     FragPosLightSpace = lightMatrix * vec4(FragPos, 1.0);
-    mUseNormalMap = aUseNormalMap;
 
-    if (aUseNormalMap > 0) {
+    if (material.useNormalMap > 0) {
         mat3 normalMatrix = transpose(inverse(mat3(model)));
         vec3 T = normalize(normalMatrix * aTangent);
         vec3 N = normalize(normalMatrix * aNormal);
         T = normalize(T - dot(T, N) * N);
         vec3 B = cross(N, T);
-
-        mat3 TBN = transpose(mat3(T, B, N));
-        TangentLightPos = TBN * lightPos;
-        TangentViewPos  = TBN * viewPos;
-        TangentFragPos  = TBN * FragPos;
+        TBN = transpose(mat3(T, B, N));
+        TangentViewPos = TBN * viewPos;
+        TangentFragPos = TBN * FragPos;
     }
 
     mat4 modelViewMatrix = viewMatrix * model;

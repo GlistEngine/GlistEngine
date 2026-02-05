@@ -265,9 +265,9 @@ void gMesh::drawStart() {
 	    }
 
 	    // Bind normal textures
-	    colorshader.setInt("aUseNormalMap", material.isDiffuseMapEnabled() && material.isNormalMapEnabled());
+	    colorshader.setInt("material.useNormalMap", material.isDiffuseMapEnabled() && material.isNormalMapEnabled());
 	    if (material.isDiffuseMapEnabled() && material.isNormalMapEnabled()) {
-			colorshader.setInt("material.normalmap", 2); // Normal texture unit
+			colorshader.setInt("material.normalMap", 2); // Normal texture unit
 	    	renderer->activateTexture(2);
 		    material.bindNormalMap();
 	    }

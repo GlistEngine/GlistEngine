@@ -56,8 +56,8 @@ void gVbo::setVertexData(const gVertex* vertices, int coordNum, int total) {
 	renderer->enableVertexAttrib(4);
 	renderer->setVertexAttribPointer(4, 3, GL_FLOAT, false, sizeof(gVertex), (void*)offsetof(gVertex, bitangent));
 	// vertex color
-	renderer->enableVertexAttrib(6);
-	renderer->setVertexAttribPointer(6, 3, GL_FLOAT, false, sizeof(gVertex), (void*)offsetof(gVertex, color));
+	renderer->enableVertexAttrib(5);
+	renderer->setVertexAttribPointer(5, 3, GL_FLOAT, false, sizeof(gVertex), (void*)offsetof(gVertex, color));
 	unbind();
 }
 

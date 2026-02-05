@@ -16,6 +16,7 @@ struct Material {
     sampler2D normalMap;
     int useDiffuseMap;
     int useSpecularMap;
+    int useNormalMap;
 };
 
 struct Light {
@@ -67,20 +68,21 @@ layout(std140) uniform Scene {
 
 uniform mat4 projection;
 
+uniform sampler2D shadowMap;
+uniform vec3 shadowLightPos;
+
 in vec3 Normal;
 in vec3 FragPos;
 in vec2 TexCoords;
 in vec4 FragPosLightSpace;
-flat in int mUseNormalMap;
 in vec3 TangentLightPos;
 in vec3 TangentViewPos;
 in vec3 TangentFragPos;
 in vec4 EyePosition;
 in vec3 incolor;
+in mat3 TBN;
 
 flat in int mUseShadowMap;
-uniform sampler2D shadowMap;
-uniform vec3 shadowLightPos;
 
 out vec4 FragColor;
 
@@ -114,7 +116,7 @@ vec4 calcDirLight(Light light, vec3 normal, vec3 viewDir, float shadowing, vec4 
     vec3 lightDir = normalize(-light.direction);
     float diff;
     float spec;
-    if (mUseNormalMap > 0) {
+    if (material.useNormalMap > 0) {
         diff = max(dot(lightDir, normal), 0.0);
         vec3 halfwayDir = normalize(lightDir + viewDir);
         spec = pow(max(dot(normal, halfwayDir), 0.0), material.shininess);
@@ -136,20 +138,18 @@ vec4 calcDirLight(Light light, vec3 normal, vec3 viewDir, float shadowing, vec4 
 vec4 calcPointLight(Light light, vec3 normal, vec3 viewDir, float shadowing, vec4 materialAmbient, vec4 materialDiffuse, vec4 materialSpecular){
     vec3 lightDir;
     float distance;
-    if (mUseNormalMap > 0) {
-        lightDir = normalize(TangentLightPos - TangentFragPos);
-        distance = length(TangentLightPos - TangentFragPos);
-    } else {
-        lightDir = normalize(light.position - FragPos);
-        distance = length(light.position - FragPos);
-    }
     float diff;
     float spec;
-    if (mUseNormalMap > 0) {
-        diff = max(dot(lightDir, normal), 0.0);
+    if (material.useNormalMap > 0) {
+        vec3 tangentLightPos = TBN * light.position;
+        lightDir = normalize(tangentLightPos - TangentFragPos);
+        distance = length(tangentLightPos - TangentFragPos);
+        diff = max(dot(normal, lightDir), 0.0);
         vec3 halfwayDir = normalize(lightDir + viewDir);
         spec = pow(max(dot(normal, halfwayDir), 0.0), material.shininess);
     } else {
+        lightDir = normalize(light.position - FragPos);
+        distance = length(light.position - FragPos);
         diff = max(dot(normal, lightDir), 0.0);
         vec3 reflectDir = reflect(-lightDir, normal);
         spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
@@ -171,20 +171,18 @@ vec4 calcPointLight(Light light, vec3 normal, vec3 viewDir, float shadowing, vec
 vec4 calcSpotLight(Light light, vec3 normal, vec3 viewDir, float shadowing, vec4 materialAmbient, vec4 materialDiffuse, vec4 materialSpecular){
     vec3 lightDir;
     float distance;
-    if (mUseNormalMap > 0) {
-        lightDir = normalize(TangentLightPos - TangentFragPos);
-        distance = length(TangentLightPos - TangentFragPos);
-    } else {
-        lightDir = normalize(light.position - FragPos);
-        distance = length(light.position - FragPos);
-    }
     float diff;
     float spec;
-    if (mUseNormalMap > 0) {
+    if (material.useNormalMap > 0) {
+        vec3 tangentLightPos = TBN * light.position;
+        lightDir = normalize(tangentLightPos - TangentFragPos);
+        distance = length(tangentLightPos - TangentFragPos);
         diff = max(dot(lightDir, normal), 0.0);
         vec3 halfwayDir = normalize(lightDir + viewDir);
         spec = pow(max(dot(normal, halfwayDir), 0.0), material.shininess);
     } else {
+        lightDir = normalize(light.position - FragPos);
+        distance = length(light.position - FragPos);
         diff = max(dot(normal, lightDir), 0.0);
         vec3 reflectDir = reflect(-lightDir, normal);
         spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
@@ -257,17 +255,16 @@ vec4 getSSAO() {
     return vec4(ambient, 1.0);
 }
 
-
 void main() {
     vec4 result = vec4(0.0);
     vec3 norm;
-    if (mUseNormalMap > 0) {
+    if (material.useNormalMap > 0) {
         norm = normalize(texture(material.normalMap, TexCoords).rgb * 2.0 - 1.0);  // this normal is in tangent space
     } else {
         norm = normalize(Normal);
     }
     vec3 viewDir;
-    if (mUseNormalMap > 0) {
+    if (material.useNormalMap > 0) {
         viewDir = normalize(TangentViewPos - TangentFragPos);
     } else {
         viewDir = normalize(viewPos - FragPos);
