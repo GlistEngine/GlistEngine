@@ -18,6 +18,7 @@
 #define ENGINE_GRAPHICS_GFONT_H_
 
 #include "gNode.h"
+#include "gEventHook.h"
 #include <map>
 #include <vector>
 #ifdef EMSCRIPTEN
@@ -43,7 +44,7 @@
 #include <unordered_map>
 
 
-class gFont : public gNode {
+class gFont : public gNode, public gEventHook {
 public:
 	enum class TextAlign {LEFT, CENTER, RIGHT, JUSTIFY};
 
@@ -190,8 +191,11 @@ public:
 	 */
 	std::vector<std::string> wrapSentenceByWidth(const std::string& text, float maxWidth, TextAlign align = TextAlign::LEFT);
 
+	void onEvent(gEvent& event) override;
 
 private:
+	void reloadFont();
+
 	bool isloaded = false;
 	std::string fullpath;
 	bool isantialiased = false;

@@ -6,6 +6,7 @@
  */
 
 #include "gFont.h"
+#include "gWindowEvents.h"
 #include "gTracy.h"
 
 #include <codecvt>
@@ -73,6 +74,43 @@ bool gFont::load(const std::string& fullPath, int size, bool isAntialiased, int 
 
 bool gFont::loadFont(const std::string& fontPath, int size, bool isAntialiased, int dpi) {
 	return load(gGetFontsDir() + fontPath, size, isAntialiased, dpi);
+}
+
+void gFont::onEvent(gEvent& event) {
+	gEventDispatcher dispatcher(event);
+	dispatcher.dispatch<gWindowScaleChangedEvent>([this](gWindowScaleChangedEvent& e) -> bool {
+		reloadFont();
+		return false;
+	});
+}
+
+void gFont::reloadFont() {
+	if (!isloaded || !fontface) {
+		return;
+	}
+
+	float newscale = renderer->getScaleMultiplier();
+	if (newscale == scale) {
+		return;
+	}
+
+	scale = newscale;
+	int scaledsize = static_cast<int>(std::round(fontsize * scale));
+	FT_Set_Char_Size(fontface,
+					 scaledsize << 6,
+					 scaledsize << 6,
+					 dpi,
+					 dpi);
+
+	// Clear all cached glyphs
+	for (std::pair<const int, gTexture*> pair : chartextures) {
+		delete pair.second;
+	}
+	chartextures.clear();
+	charproperties.clear();
+
+	// Reload space character
+	loadChar(' ');
 }
 
 void gFont::drawText(const std::string& text, float x, float y) {
