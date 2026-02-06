@@ -9,6 +9,7 @@
 #include "gInputManager.h"
 #include "gBaseComponent.h"
 #include "gBasePlugin.h"
+#include "gEventHook.h"
 #include "gBaseApp.h"
 #include "gCanvasManager.h"
 #include "gGUIFrame.h"
@@ -580,6 +581,9 @@ void gAppManager::onEvent(gEvent& event) {
 	}
 	for (gBasePlugin*& component : gBasePlugin::usedplugins) {
 		component->onEvent(event);
+	}
+	for (gEventHook*& hook : gEventHook::hooks) {
+		hook->onEvent(event);
 	}
 }
 
