@@ -26,11 +26,18 @@
 
 #include "gMesh.h"
 
-
 class gPlane : public gMesh {
 public:
 	gPlane();
 	virtual ~gPlane();
+
+    void setTextureScale(float tileX, float tileY);
+    void setTextureScale(float tile);
+
+private:
+    void initializePlane();
+    void updateTextureCoordinates();
+    float tilex, tiley;
 };
 
 #endif /* ENGINE_GRAPHICS_PRIMITIVES_GPLANE_H_ */
