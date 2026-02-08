@@ -17,11 +17,12 @@ public:
 	gFbo();
 	virtual ~gFbo();
 
-	void allocate(int width, int height, bool isDepthMap = false);
+	void allocate(int width, int height, bool isDepthMap = false, bool useDepthTexture = false);
     unsigned int getId();
 	int getWidth();
 	int getHeight();
 	unsigned int getTextureId();
+	unsigned int getDepthTextureId();
     gTexture& getTexture();
 
 	void bind();
@@ -45,8 +46,10 @@ private:
     unsigned int framebuffer;
     unsigned int rbo;
     gTexture* texture;
+    gTexture* depthtexture;
     int width, height;
     bool isdepthmap;
+    bool usedepthtexture;
     bool isallocated;
 
     static bool isvaoset;

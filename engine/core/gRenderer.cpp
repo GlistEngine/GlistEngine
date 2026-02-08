@@ -6,6 +6,9 @@
  */
 
 #include "gRenderer.h"
+#include "gFbo.h"
+
+#include <cstdlib>
 
 #include "gCross.h"
 #include "gArc.h"
@@ -230,6 +233,7 @@ void gRenderer::init() {
 
 	pbrshader = new gShader();
 	pbrshader->loadProgram(getShaderSrcPbrVertex(), getShaderSrcPbrFragment());
+	pbrshader->attachUbo("Lights", lightsubo);
 
 	equirectangularshader = new gShader();
 	equirectangularshader->loadProgram(getShaderSrcCubemapVertex(), getShaderSrcEquirectangularFragment());
@@ -266,6 +270,23 @@ void gRenderer::init() {
 	isalphablendingenabled = false;
 	isalphatestenabled = false;
 
+	isssaoenabled = false;
+	ssaobias = 0.025f;
+	ssaoradius = 0.5f;
+	ssaostrength = 1.0f;
+	isssaoallocated = false;
+	isssaorendering = false;
+	isssaodebug = false;
+	ssaofbo = nullptr;
+	ssaoresultfbo = nullptr;
+	ssaoshader = nullptr;
+	ssaoblurshader = nullptr;
+	ssaonoisetexture = 0;
+	ssaorealdefaultfbo = 0;
+	isgammacorrectionenabled = false;
+	ishdrenabled = false;
+	issoftshadowsenabled = false;
+
 	gridshader = new gShader();
 	gridshader->loadProgram(getShaderSrcGridVertex(), getShaderSrcGridFragment());
 	originalgrid = new gGrid();
@@ -281,6 +302,9 @@ void gRenderer::init() {
 	rectanglemesh = std::make_unique<gRectangle>();
 	roundedrectanglemesh = std::make_unique<gRoundedRectangle>();
 	boxmesh = std::make_unique<gBox>();
+
+	enableSSAO();
+	enableSoftShadows();
 }
 
 void gRenderer::cleanup() {
@@ -295,6 +319,8 @@ void gRenderer::cleanup() {
 	rectanglemesh = nullptr;
 	roundedrectanglemesh = nullptr;
 	boxmesh = nullptr;
+
+	cleanupSSAOResources();
 
 	delete colorshader;
 	delete textureshader;
@@ -806,12 +832,6 @@ void gRenderer::updateScene() {
 		ischanged = true;
 	}
 
-	// Check SSAO changes
-	if (data->ssaobias != ssaobias) {
-		data->ssaobias = ssaobias;
-		ischanged = true;
-	}
-
 	// Update flags
 	int previousflags = data->flags;
 	data->flags = 0;
@@ -822,6 +842,18 @@ void gRenderer::updateScene() {
 
 	if (isfogenabled) {
 		data->flags |= ENABLE_FOG;
+	}
+
+	if (isgammacorrectionenabled) {
+		data->flags |= ENABLE_GAMMA;
+	}
+
+	if (ishdrenabled) {
+		data->flags |= ENABLE_HDR;
+	}
+
+	if (issoftshadowsenabled) {
+		data->flags |= ENABLE_SOFT_SHADOWS;
 	}
 
 	bool flagschanged = previousflags != data->flags;
@@ -873,6 +905,9 @@ void gRenderer::updateScene() {
 #include "graphics/shaders/brdf_frag.h"
 #include "graphics/shaders/fbo_vert.h"
 #include "graphics/shaders/fbo_frag.h"
+#include "graphics/shaders/ssao_vert.h"
+#include "graphics/shaders/ssao_frag.h"
+#include "graphics/shaders/ssao_blur_frag.h"
 
 const std::string& gRenderer::getShaderSrcGridVertex() {
 	static std::string str{shader_grid_vert.data(), shader_grid_vert.size()};
@@ -994,16 +1029,36 @@ const std::string& gRenderer::getShaderSrcFboFragment() {
 	return str;
 }
 
+const std::string& gRenderer::getShaderSrcSSAOVertex() {
+	static std::string str{shader_ssao_vert.data(), shader_ssao_vert.size()};
+	return str;
+}
+
+const std::string& gRenderer::getShaderSrcSSAOFragment() {
+	static std::string str{shader_ssao_frag.data(), shader_ssao_frag.size()};
+	return str;
+}
+
+const std::string& gRenderer::getShaderSrcSSAOBlurFragment() {
+	static std::string str{shader_ssao_blur_frag.data(), shader_ssao_blur_frag.size()};
+	return str;
+}
+
 bool gRenderer::isSSAOEnabled() {
 	return isssaoenabled;
 }
 
 void gRenderer::enableSSAO() {
 	isssaoenabled = true;
+	if (!isssaoallocated) {
+		initSSAOResources();
+	}
+	updateScene();
 }
 
 void gRenderer::disableSSAO() {
 	isssaoenabled = false;
+	updateScene();
 }
 
 void gRenderer::setSSAOBias(float value) {
@@ -1012,6 +1067,238 @@ void gRenderer::setSSAOBias(float value) {
 
 float gRenderer::getSSAOBias() {
 	return ssaobias;
+}
+
+void gRenderer::setSSAORadius(float value) {
+	ssaoradius = value;
+}
+
+float gRenderer::getSSAORadius() {
+	return ssaoradius;
+}
+
+void gRenderer::setSSAOStrength(float value) {
+	ssaostrength = value;
+}
+
+float gRenderer::getSSAOStrength() {
+	return ssaostrength;
+}
+
+void gRenderer::setSSAODebug(bool enabled) {
+	isssaodebug = enabled;
+}
+
+bool gRenderer::isSSAODebug() {
+	return isssaodebug;
+}
+
+bool gRenderer::isSSAOAllocated() {
+	return isssaoallocated;
+}
+
+void gRenderer::initSSAOResources() {
+	if (isssaoallocated) return;
+
+	// Allocate FBO with color + depth texture
+	ssaofbo = new gFbo();
+	ssaofbo->allocate(getScreenWidth(), getScreenHeight(), false, true);
+
+	// Load SSAO shader
+	ssaoshader = new gShader();
+	ssaoshader->loadProgram(getShaderSrcSSAOVertex(), getShaderSrcSSAOFragment());
+
+	// Generate hemisphere kernel samples
+	ssaokernel.clear();
+	srand(0); // deterministic seed
+	for (int i = 0; i < 32; i++) {
+		glm::vec3 sample(
+			((float)rand() / RAND_MAX) * 2.0f - 1.0f,
+			((float)rand() / RAND_MAX) * 2.0f - 1.0f,
+			((float)rand() / RAND_MAX) // z in [0, 1] (hemisphere)
+		);
+		sample = glm::normalize(sample);
+		sample *= ((float)rand() / RAND_MAX);
+		// Scale samples so more are closer to the origin (accelerating interpolation)
+		float scale = (float)i / 32.0f;
+		scale = 0.1f + scale * scale * (1.0f - 0.1f); // lerp(0.1, 1.0, scale*scale)
+		sample *= scale;
+		ssaokernel.push_back(sample);
+	}
+
+	// Generate 4x4 noise texture (random tangent-space vectors)
+	std::vector<glm::vec3> ssaoNoise;
+	for (int i = 0; i < 16; i++) {
+		glm::vec3 noise(
+			((float)rand() / RAND_MAX) * 2.0f - 1.0f,
+			((float)rand() / RAND_MAX) * 2.0f - 1.0f,
+			0.0f
+		);
+		ssaoNoise.push_back(glm::normalize(noise));
+	}
+
+	// Convert noise to [0,1] range for texture storage
+	std::vector<float> noiseData;
+	for (int i = 0; i < 16; i++) {
+		noiseData.push_back(ssaoNoise[i].x * 0.5f + 0.5f);
+		noiseData.push_back(ssaoNoise[i].y * 0.5f + 0.5f);
+		noiseData.push_back(ssaoNoise[i].z * 0.5f + 0.5f);
+	}
+
+	ssaonoisetexture = createTextures();
+	bindTexture(ssaonoisetexture);
+	texImage2D(GL_TEXTURE_2D, GL_RGB16F, 4, 4, GL_RGB, GL_FLOAT, noiseData.data());
+	setWrapping(GL_TEXTURE_2D, GL_REPEAT, GL_REPEAT);
+	setFiltering(GL_TEXTURE_2D, GL_NEAREST, GL_NEAREST);
+
+	// Allocate result FBO for SSAO AO output (blur reads from this)
+	ssaoresultfbo = new gFbo();
+	ssaoresultfbo->allocate(getScreenWidth(), getScreenHeight());
+
+	// Load SSAO blur+composite shader
+	ssaoblurshader = new gShader();
+	ssaoblurshader->loadProgram(getShaderSrcSSAOVertex(), getShaderSrcSSAOBlurFragment());
+
+	// Set static uniforms on SSAO shader
+	ssaoshader->use();
+	ssaoshader->setInt("colorTexture", 0);
+	ssaoshader->setInt("depthTexture", 1);
+	ssaoshader->setInt("noiseTexture", 2);
+	for (int i = 0; i < 32; i++) {
+		ssaoshader->setVec3("samples[" + gToStr(i) + "]", ssaokernel[i]);
+	}
+
+	// Set static uniforms on blur shader
+	ssaoblurshader->use();
+	ssaoblurshader->setInt("colorTexture", 0);
+	ssaoblurshader->setInt("aoTexture", 1);
+	ssaoblurshader->setInt("depthTexture", 2);
+
+	isssaoallocated = true;
+}
+
+void gRenderer::cleanupSSAOResources() {
+	if (!isssaoallocated) return;
+
+	delete ssaofbo;
+	ssaofbo = nullptr;
+
+	delete ssaoresultfbo;
+	ssaoresultfbo = nullptr;
+
+	delete ssaoshader;
+	ssaoshader = nullptr;
+
+	delete ssaoblurshader;
+	ssaoblurshader = nullptr;
+
+	if (ssaonoisetexture) {
+		deleteTexture(ssaonoisetexture);
+		ssaonoisetexture = 0;
+	}
+
+	ssaokernel.clear();
+	isssaoallocated = false;
+}
+
+void gRenderer::beginSSAO() {
+	// Re-allocate FBOs if screen size changed
+	if (ssaofbo->getWidth() != getScreenWidth() || ssaofbo->getHeight() != getScreenHeight()) {
+		ssaofbo->allocate(getScreenWidth(), getScreenHeight(), false, true);
+		ssaoresultfbo->allocate(getScreenWidth(), getScreenHeight());
+	}
+
+	ssaorealdefaultfbo = gFbo::defaultfbo;
+	gFbo::defaultfbo = ssaofbo->getId();
+	ssaofbo->bind();
+	clearScreen(true, true);
+	isssaorendering = true;
+}
+
+void gRenderer::endSSAO() {
+	if (!isssaorendering) return;
+	isssaorendering = false;
+
+	bool wasdepthtestenabled = isdepthtestenabled;
+	disableDepthTest();
+
+	// Pass 1: Compute raw AO → ssaoresultfbo
+	ssaoresultfbo->bind();
+	clearScreen(true, false);
+
+	ssaoshader->use();
+	ssaoshader->setMat4("projection", projectionmatrix);
+	ssaoshader->setMat4("invProjection", glm::inverse(projectionmatrix));
+	ssaoshader->setVec2("screenSize", glm::vec2(getScreenWidth(), getScreenHeight()));
+	ssaoshader->setFloat("ssaoRadius", ssaoradius);
+	ssaoshader->setFloat("ssaoBias", ssaobias);
+	ssaoshader->setFloat("nearClip", camera ? camera->getNearClip() : 0.01f);
+	ssaoshader->setFloat("farClip", camera ? camera->getFarClip() : 1000.0f);
+
+	bindTexture(ssaofbo->getTextureId(), 0);
+	bindTexture(ssaofbo->getDepthTextureId(), 1);
+	bindTexture(ssaonoisetexture, 2);
+
+	bindQuadVAO();
+	drawFullscreenQuad();
+
+	// Pass 2: Blur AO + composite with scene color → screen
+	gFbo::defaultfbo = ssaorealdefaultfbo;
+	bindDefaultFramebuffer();
+	setViewport(0, 0, getScreenWidth(), getScreenHeight());
+	clearScreen(true, false);
+
+	ssaoblurshader->use();
+	ssaoblurshader->setVec2("screenSize", glm::vec2(getScreenWidth(), getScreenHeight()));
+	ssaoblurshader->setFloat("ssaoStrength", ssaostrength);
+	ssaoblurshader->setInt("debugMode", isssaodebug ? 1 : 0);
+	ssaoblurshader->setFloat("nearClip", camera ? camera->getNearClip() : 0.01f);
+	ssaoblurshader->setFloat("farClip", camera ? camera->getFarClip() : 1000.0f);
+
+	bindTexture(ssaofbo->getTextureId(), 0);        // scene color
+	bindTexture(ssaoresultfbo->getTextureId(), 1);   // raw AO
+	bindTexture(ssaofbo->getDepthTextureId(), 2);    // depth (for bilateral blur)
+
+	bindQuadVAO();
+	drawFullscreenQuad();
+
+	if (wasdepthtestenabled) enableDepthTest();
+}
+
+bool gRenderer::isGammaCorrectionEnabled() {
+	return isgammacorrectionenabled;
+}
+
+void gRenderer::enableGammaCorrection() {
+	isgammacorrectionenabled = true;
+}
+
+void gRenderer::disableGammaCorrection() {
+	isgammacorrectionenabled = false;
+}
+
+bool gRenderer::isHDREnabled() {
+	return ishdrenabled;
+}
+
+void gRenderer::enableHDR() {
+	ishdrenabled = true;
+}
+
+void gRenderer::disableHDR() {
+	ishdrenabled = false;
+}
+
+bool gRenderer::isSoftShadowsEnabled() {
+	return issoftshadowsenabled;
+}
+
+void gRenderer::enableSoftShadows() {
+	issoftshadowsenabled = true;
+}
+
+void gRenderer::disableSoftShadows() {
+	issoftshadowsenabled = false;
 }
 
 //grid

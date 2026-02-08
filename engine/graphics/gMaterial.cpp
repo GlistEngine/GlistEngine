@@ -275,6 +275,10 @@ void gMaterial::unbindAlbedoMap() const {
 	albedomap->unbind();
 }
 
+bool gMaterial::isAlbedoMapEnabled() const {
+	return albedomapenabled;
+}
+
 void gMaterial::loadRoughnessMap(const std::string& texturePath) {
 	if(roughnessmapenabled && roughnessmapown) delete roughnessmap;
 	roughnessmap = new gTexture();
@@ -301,7 +305,7 @@ gTexture* gMaterial::getRoughnessMap() {
 }
 
 void gMaterial::bindRoughnessMap(int slotNo) const {
-	roughnessmap->bind(slotNo);
+	if(roughnessmapenabled) roughnessmap->bind(slotNo);
 }
 
 void gMaterial::unbindRoughnessMap() const {
@@ -342,7 +346,7 @@ gTexture* gMaterial::getMetalnessMap() {
 }
 
 void gMaterial::bindMetalnessMap(int slotNo) {
-	metalnessmap->bind(slotNo);
+	if(metalnessmapenabled) metalnessmap->bind(slotNo);
 }
 
 void gMaterial::unbindMetalnessMap() const {
@@ -377,7 +381,7 @@ gTexture* gMaterial::getPbrNormalMap() {
 }
 
 void gMaterial::bindPbrNormalMap(int slotNo) const {
-	pbrnormalmap->bind(slotNo);
+	if(pbrnormalmapenabled) pbrnormalmap->bind(slotNo);
 }
 
 void gMaterial::unbindPbrNormalMap() const {
@@ -412,7 +416,7 @@ gTexture* gMaterial::getAOMap()  {
 }
 
 void gMaterial::bindAOMap(int slotNo) const {
-	aomap->bind(slotNo);
+	if(aomapenabled) aomap->bind(slotNo);
 }
 
 void gMaterial::unbindAOMap() const {

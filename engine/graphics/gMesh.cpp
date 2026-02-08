@@ -285,12 +285,24 @@ void gMesh::drawStart() {
     	pbrshader.setMat4("projection", renderer->getProjectionMatrix());
 	    pbrshader.setMat4("view", renderer->getViewMatrix());
     	pbrshader.setMat4("model", localtransformationmatrix);
+    	pbrshader.setVec3("camPos", renderer->getCameraPosition());
     	pbrshader.setInt("albedoMap", 3);
     	pbrshader.setInt("normalMap", 4);
     	pbrshader.setInt("metallicMap", 5);
     	pbrshader.setInt("roughnessMap", 6);
     	pbrshader.setInt("aoMap", 7);
-    	material.bindAlbedoMap();
+    	bool hasAlbedo = material.isAlbedoMapEnabled();
+    	bool hasDiffuseFallback = !hasAlbedo && material.isDiffuseMapEnabled();
+    	pbrshader.setInt("hasAlbedoMap", (hasAlbedo || hasDiffuseFallback) ? 1 : 0);
+    	pbrshader.setInt("hasNormalMap", material.isPbrNormalMapEnabled() ? 1 : 0);
+    	pbrshader.setInt("hasMetallicMap", material.isMetalnessMapEnabled() ? 1 : 0);
+    	pbrshader.setInt("hasRoughnessMap", material.isRoughnessMapEnabled() ? 1 : 0);
+    	pbrshader.setInt("hasAOMap", material.isAOMapEnabled() ? 1 : 0);
+    	if (hasAlbedo) {
+    		material.bindAlbedoMap();
+    	} else if (hasDiffuseFallback) {
+    		material.getDiffuseMap()->bind(3);
+    	}
     	material.bindPbrNormalMap();
     	material.bindMetalnessMap();
     	material.bindRoughnessMap();

@@ -41,7 +41,6 @@ layout(std140) uniform Scene {
     vec4 renderColor;
     vec3 viewPos;
     mat4 viewMatrix;
-    uniform float ssaoBias;
     int flags;
     Fog fog;
 };

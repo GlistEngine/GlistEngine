@@ -49,6 +49,7 @@
 #include "gConstants.h"
 #include <deque>
 #include <memory>
+#include <vector>
 
 #ifndef GLIST_MAX_LIGHTS
 // amount of maximum lights, this is used to allocate memory for the light uniform buffer
@@ -101,6 +102,7 @@ void gDrawTubeTrapezodial(float x, float y, float z, int topouterradius,int topi
 void gDrawTubeObliqueTrapezodial(float x, float y, float z, int topouterradius,int topinnerradious, int buttomouterradious, int buttominnerradious, int h, glm::vec2 shiftdistance, glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f), int segmentnum = 32, bool isFilled = true);
 
 class gVbo;
+class gFbo;
 
 template<typename T>
 class gUbo;
@@ -150,7 +152,10 @@ public:
 
 	enum SceneDataFlags {
 		ENABLE_SSAO = 0b0001,
-		ENABLE_FOG = 0b0010
+		ENABLE_FOG = 0b0010,
+		ENABLE_GAMMA = 0b0100,
+		ENABLE_HDR = 0b1000,
+		ENABLE_SOFT_SHADOWS = 0b10000
 	};
 
 	struct alignas(16) gSceneFogData {
@@ -165,7 +170,6 @@ public:
 		alignas(16) gColor rendercolor;
 		alignas(16) glm::vec3 viewpos;
 		alignas(16) glm::mat4 viewmatrix;
-		alignas(4) float ssaobias;
 		alignas(4) unsigned int flags;
 		gSceneFogData fog;
 	};
@@ -306,6 +310,27 @@ public:
 	void disableSSAO();
 	void setSSAOBias(float value);
 	float getSSAOBias();
+	void setSSAORadius(float value);
+	float getSSAORadius();
+	void setSSAOStrength(float value);
+	float getSSAOStrength();
+	void setSSAODebug(bool enabled);
+	bool isSSAODebug();
+	bool isSSAOAllocated();
+	void beginSSAO();
+	void endSSAO();
+
+	bool isGammaCorrectionEnabled();
+	void enableGammaCorrection();
+	void disableGammaCorrection();
+
+	bool isHDREnabled();
+	void enableHDR();
+	void disableHDR();
+
+	bool isSoftShadowsEnabled();
+	void enableSoftShadows();
+	void disableSoftShadows();
 
 	gShader* getColorShader();
 	gShader* getTextureShader();
@@ -526,6 +551,23 @@ protected:
 
 	bool isssaoenabled;
 	float ssaobias;
+	float ssaoradius;
+	float ssaostrength;
+	bool isssaoallocated;
+	bool isssaodebug;
+	gFbo* ssaofbo;
+	gFbo* ssaoresultfbo;
+	gShader* ssaoshader;
+	gShader* ssaoblurshader;
+	unsigned int ssaonoisetexture;
+	std::vector<glm::vec3> ssaokernel;
+	int ssaorealdefaultfbo;
+	bool isssaorendering;
+	void initSSAOResources();
+	void cleanupSSAOResources();
+	bool isgammacorrectionenabled;
+	bool ishdrenabled;
+	bool issoftshadowsenabled;
 
 	gShader* colorshader;
 	gShader* textureshader;
@@ -590,6 +632,9 @@ protected:
 	static const std::string& getShaderSrcBrdfFragment();
 	static const std::string& getShaderSrcFboVertex();
 	static const std::string& getShaderSrcFboFragment();
+	static const std::string& getShaderSrcSSAOVertex();
+	static const std::string& getShaderSrcSSAOFragment();
+	static const std::string& getShaderSrcSSAOBlurFragment();
 
 
 };

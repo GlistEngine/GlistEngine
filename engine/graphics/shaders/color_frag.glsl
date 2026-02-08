@@ -56,12 +56,14 @@ layout(std140) uniform Lights {
 
 int ENABLE_SSAO_FLAG = 1 << 0;
 int ENABLE_FOG_FLAG = 1 << 1;
+int ENABLE_GAMMA_FLAG = 1 << 2;
+int ENABLE_HDR_FLAG = 1 << 3;
+int ENABLE_SOFT_SHADOWS_FLAG = 1 << 4;
 
 layout(std140) uniform Scene {
     vec4 renderColor;
     vec3 viewPos;
     mat4 viewMatrix;
-    uniform float ssaoBias;
     int flags;
     Fog fog;
 };
@@ -86,7 +88,7 @@ flat in int mUseShadowMap;
 
 out vec4 FragColor;
 
-float calculateShadow(vec4 fragPosLightSpace) {
+float calculateShadow(vec4 fragPosLightSpace, bool softShadows) {
     vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
     projCoords = projCoords * 0.5 + 0.5;
     float closestDepth = texture(shadowMap, projCoords.xy).r;
@@ -95,14 +97,28 @@ float calculateShadow(vec4 fragPosLightSpace) {
     vec3 lightDir = normalize(shadowLightPos - FragPos);
     float bias = max(0.05 * (1.0 - dot(normal, lightDir)), 0.005);
     float shadow = 0.0;
-    vec2 texelSize = vec2(0.5, 0.5) / vec2(textureSize(shadowMap, 0));
-    for(int x = -1; x <= 1; ++x) {
-        for(int y = -1; y <= 1; ++y) {
-            float pcfDepth = texture(shadowMap, projCoords.xy + vec2(x, y) * texelSize).r;
-            shadow += currentDepth - bias > pcfDepth  ? 1.0 : 0.0;
+    vec2 texelSize = vec2(1.0, 1.0) / vec2(textureSize(shadowMap, 0));
+
+    if (softShadows) {
+        // 5x5 PCF for softer shadows
+        for(int x = -2; x <= 2; ++x) {
+            for(int y = -2; y <= 2; ++y) {
+                float pcfDepth = texture(shadowMap, projCoords.xy + vec2(x, y) * texelSize).r;
+                shadow += currentDepth - bias > pcfDepth ? 1.0 : 0.0;
+            }
         }
+        shadow /= 25.0;
+    } else {
+        // Standard 3x3 PCF
+        for(int x = -1; x <= 1; ++x) {
+            for(int y = -1; y <= 1; ++y) {
+                float pcfDepth = texture(shadowMap, projCoords.xy + vec2(x, y) * texelSize).r;
+                shadow += currentDepth - bias > pcfDepth ? 1.0 : 0.0;
+            }
+        }
+        shadow /= 9.0;
     }
-    shadow /= 9.0;
+
     if(projCoords.z > 1.0) shadow = 0.0;
     return shadow;
 }
@@ -219,42 +235,6 @@ float getFogVisibility(Fog fog, float distance) {
     return visibility;
 }
 
-vec4 getSSAO() {
-    const int kernelSize = 16;
-    const float radius = 0.1;
-
-    vec4 fragPos = viewMatrix * vec4(FragPos, 1.0);
-    vec4 clipPos = projection * fragPos;
-    float ndcDepth = clipPos.z / clipPos.w;
-    float depth = ((ndcDepth + 1.0) / 2.0);
-    vec4 depthMap = vec4(depth, depth, depth, 1.0);
-
-    vec3 tangentNormal = normalize(Normal * 2.0 - 1.0);
-    vec3 tangentFragPos = FragPos;
-
-    vec3 ambient = vec3(0.0);
-
-    for (int i = 0; i < kernelSize; ++i){
-        vec2 co = vec2(float(i), 0.0);
-        vec2 co2 = vec2(float(i), 1.0);
-        vec3 randomVec = vec3(fract(sin(dot(co.xy, vec2(12.9898, 78.233))) * 43758.5453), fract(sin(dot(co2.xy, vec2(12.9898, 78.233))) * 43758.5453), 0.0);
-        vec3 sampleVec = tangentFragPos + randomVec * radius;
-
-        vec4 offset = projection * viewMatrix * vec4(sampleVec, 1.0);
-        offset.xy /= offset.w;
-        offset.xy = offset.xy * 0.5 + 0.5;
-
-        float sampleDepth = depthMap.r;
-        vec3 samplePos = (viewMatrix * vec4(sampleVec * sampleDepth, 1.0)).xyz;
-
-        float occlusion = clamp(dot(Normal, normalize(samplePos - FragPos)) - ssaoBias, 0.0, 1.0);
-        ambient += (1.0 - occlusion);
-    }
-    ambient /= float(kernelSize);
-    ambient = mix(vec3(1.0), ambient, 0.5);
-    return vec4(ambient, 1.0);
-}
-
 void main() {
     vec4 result = vec4(0.0);
     vec3 norm;
@@ -290,7 +270,8 @@ void main() {
     }
     float shadowing;
     if (mUseShadowMap > 0) {
-        shadowing = 1.0 - calculateShadow(FragPosLightSpace);
+        bool softShadows = (flags & ENABLE_SOFT_SHADOWS_FLAG) > 0;
+        shadowing = 1.0 - calculateShadow(FragPosLightSpace, softShadows);
     }
     bool haslight = false;
     for (int i = 0; i < lightnum; i++) {
@@ -321,7 +302,16 @@ void main() {
         FragColor = mix(vec4(fog.color, 1.0), FragColor, getFogVisibility(fog, distance));
     }
 
-    if((flags & ENABLE_SSAO_FLAG) > 0) {
-        FragColor *= getSSAO();
+    // HDR tone mapping (Reinhard)
+    if((flags & ENABLE_HDR_FLAG) > 0) {
+        vec3 hdrColor = FragColor.rgb;
+        vec3 mapped = hdrColor / (hdrColor + vec3(1.0));
+        FragColor = vec4(mapped, FragColor.a);
+    }
+
+    // Gamma correction
+    if((flags & ENABLE_GAMMA_FLAG) > 0) {
+        float gamma = 2.2;
+        FragColor.rgb = pow(FragColor.rgb, vec3(1.0 / gamma));
     }
 }

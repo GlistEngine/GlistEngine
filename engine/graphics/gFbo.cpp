@@ -18,26 +18,30 @@ gFbo::gFbo() {
 	width = 0;
 	height = 0;
 	framebuffer = 0;
+	rbo = 0;
 	isdepthmap = false;
+	usedepthtexture = false;
 	texture = nullptr;
+	depthtexture = nullptr;
 	isallocated = false;
 
 	if(!isvaoset) {
-		renderer->createFullscreenQuad(gFbo::quadVAO, gFbo::quadVBO);
-	    gFbo::isvaoset = true;
+		renderer->createFullscreenQuad(quadVAO, quadVBO);
+	    isvaoset = true;
 	}
 }
 
 gFbo::~gFbo() {
 	G_PROFILE_ZONE_SCOPED_N("gFbo::~gFbo()");
 	delete texture;
-	renderer->deleteRenderbuffer(rbo);
+	delete depthtexture;
+	if (!usedepthtexture) renderer->deleteRenderbuffer(rbo);
 	renderer->deleteFramebuffer(framebuffer);
-	renderer->deleteVAO(gFbo::quadVAO);
-	renderer->deleteBuffer(gFbo::quadVBO);
+	renderer->deleteVAO(quadVAO);
+	renderer->deleteBuffer(quadVBO);
 }
 
-void gFbo::allocate(int width, int height, bool isDepthMap) {
+void gFbo::allocate(int width, int height, bool isDepthMap, bool useDepthTexture) {
 	G_PROFILE_ZONE_SCOPED_N("gFbo::allocate()");
 	G_PROFILE_ZONE_VALUE(width);
 	G_PROFILE_ZONE_VALUE(height);
@@ -45,16 +49,19 @@ void gFbo::allocate(int width, int height, bool isDepthMap) {
 	// check if is not allocated
 	if(isallocated) {
 		delete texture;
-		renderer->deleteRenderbuffer(rbo);
+		delete depthtexture;
+		if (!usedepthtexture) renderer->deleteRenderbuffer(rbo);
 		renderer->deleteFramebuffer(framebuffer);
 
 		texture = nullptr;
+		depthtexture = nullptr;
 		isallocated = false;
 	}
 
 	this->width = width;
 	this->height = height;
 	isdepthmap = isDepthMap;
+	usedepthtexture = useDepthTexture;
 
 	framebuffer = renderer->createFramebuffer();
 	renderer->bindFramebuffer(framebuffer);
@@ -65,11 +72,18 @@ void gFbo::allocate(int width, int height, bool isDepthMap) {
 		texture->bind();
 		renderer->attachTextureToFramebuffer(GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture->getId());
 
-		// create a renderbuffer object for depth and stencil attachment (we won't be sampling these)
-		rbo = renderer->createRenderbuffer();
-		renderer->bindRenderbuffer(rbo);
-		renderer->setRenderbufferStorage(GL_DEPTH24_STENCIL8, width, height); // use a single renderbuffer object for both a depth AND stencil buffer.
-		renderer->attachRenderbufferToFramebuffer(GL_DEPTH_STENCIL_ATTACHMENT, rbo); // now actually attach it
+		if(useDepthTexture) {
+			// create a sampleable depth texture attachment
+			depthtexture = new gTexture(width, height, GL_DEPTH_COMPONENT, true);
+			depthtexture->bind();
+			renderer->attachTextureToFramebuffer(GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthtexture->getId());
+		} else {
+			// create a renderbuffer object for depth and stencil attachment (we won't be sampling these)
+			rbo = renderer->createRenderbuffer();
+			renderer->bindRenderbuffer(rbo);
+			renderer->setRenderbufferStorage(GL_DEPTH24_STENCIL8, width, height); // use a single renderbuffer object for both a depth AND stencil buffer.
+			renderer->attachRenderbufferToFramebuffer(GL_DEPTH_STENCIL_ATTACHMENT, rbo); // now actually attach it
+		}
 	} else {
 		// create a depth attachment texture
 		texture = new gTexture(width, height, GL_DEPTH_COMPONENT, true);
@@ -103,6 +117,13 @@ unsigned int gFbo::getTextureId() {
 	assert(texture);
 #endif
 	return texture->getId();
+}
+
+unsigned int gFbo::getDepthTextureId() {
+#ifdef DEBUG
+	assert(depthtexture);
+#endif
+	return depthtexture->getId();
 }
 
 void gFbo::bind() {
