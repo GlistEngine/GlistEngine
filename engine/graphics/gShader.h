@@ -74,6 +74,16 @@ private:
 
 	std::unordered_map<std::string, GLint> uniformlocations;
 	std::unordered_map<std::string, GLuint> ubos;
+
+	std::unordered_map<GLint, int> cachedints;
+	std::unordered_map<GLint, float> cachedfloats;
+	std::unordered_map<GLint, glm::vec2> cachedvec2s;
+	std::unordered_map<GLint, glm::vec3> cachedvec3s;
+	std::unordered_map<GLint, glm::vec4> cachedvec4s;
+	std::unordered_map<GLint, glm::mat2> cachedmat2s;
+	std::unordered_map<GLint, glm::mat3> cachedmat3s;
+	std::unordered_map<GLint, glm::mat4> cachedmat4s;
+	void clearUniformCaches();
 };
 
 #endif /* ENGINE_GRAPHICS_GSHADER_H_ */

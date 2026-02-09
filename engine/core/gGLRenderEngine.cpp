@@ -508,11 +508,14 @@ GLuint gGLRenderEngine::getUniformLocation(GLuint id, const std::string& name) {
 }
 
 void gGLRenderEngine::useShader(GLuint id) const {
+	if (currentprogram == id) return;
+	currentprogram = id;
 	G_CHECK_GL(glUseProgram(id));
 }
 
 void gGLRenderEngine::resetShader(GLuint id, bool loaded) const {
 	if(loaded) {
+		if (currentprogram == id) currentprogram = 0;
 		G_CHECK_GL(glDeleteShader(id));
 	}
 }
