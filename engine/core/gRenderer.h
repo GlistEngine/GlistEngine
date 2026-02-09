@@ -188,6 +188,7 @@ public:
 	int getUnitWidth();
 	int getUnitHeight();
 	static int getScreenScaling();
+	unsigned int getFullscreenQuadVAO() const;
 
 	static void setCurrentResolution(int resolution);
 	static void setCurrentResolution(int screenWidth, int screenHeight);
@@ -593,6 +594,9 @@ protected:
 
 	gGrid* grid;
 	gGrid* originalgrid;
+
+	unsigned int fullscreenquadvao;
+	unsigned int fullscreenquadvbo;
 
 	// std::unique_ptr is automatically deletes the underlying object when this gRenderer object is deleted
 	std::unique_ptr<gLine> linemesh, linemesh2, linemesh3;

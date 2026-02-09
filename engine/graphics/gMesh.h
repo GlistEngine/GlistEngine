@@ -144,9 +144,6 @@ private:
     gBoundingBox boundingbox;
 	bool needsboundingboxrecalculation;
 
-	// Temporary variables
-	int loopindex = 0;
-
 };
 
 #endif /* ENGINE_GRAPHICS_GMESH_H_ */

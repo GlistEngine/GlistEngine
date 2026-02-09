@@ -525,7 +525,7 @@ void gGLRenderEngine::clearScreen(bool color, bool depth) {
 }
 
 void gGLRenderEngine::bindQuadVAO() {
-	G_CHECK_GL(glBindVertexArray(gFbo::getQuadVao()));
+	G_CHECK_GL(glBindVertexArray(fullscreenquadvao));
 }
 
 void gGLRenderEngine::drawFullscreenQuad() {

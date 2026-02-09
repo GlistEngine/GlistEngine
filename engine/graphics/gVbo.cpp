@@ -85,7 +85,7 @@ void gVbo::setVertexData(const float* verticesptr, int coordNum, int total, int 
 
 void gVbo::setIndexData(const gIndex* indices, int total) {
 	if (indices == nullptr) {
-		glDeleteBuffers(1, &ebo);
+		renderer->deleteBuffer(ebo);
 		isindexdataallocated = false;
 		return;
 	}
@@ -110,7 +110,7 @@ void gVbo::clear() {
 	}
 	if(isindexdataallocated) {
 		renderer->deleteBuffer(ebo);
-		isvertexdataallocated = false;
+		isindexdataallocated = false;
     }
 	if (vao != GL_NONE) {
 		renderer->deleteVAO(vao);
@@ -158,7 +158,7 @@ void gVbo::setColorData(const gColor* colors, int total, int usage) {
 }
 
 void gVbo::setColorData(const float* color0r, int total, int usage, int stride) {
-
+	gLogw("gVbo") << "setColorData(float*) is not implemented";
 }
 
 void gVbo::setTexCoordData(const glm::vec2* texCoords, int total, int usage) {
@@ -166,7 +166,7 @@ void gVbo::setTexCoordData(const glm::vec2* texCoords, int total, int usage) {
 }
 
 void gVbo::setTexCoordData(const float* texCoord0x, int total, int usage, int stride) {
-
+	gLogw("gVbo") << "setTexCoordData(float*) is not implemented";
 }
 
 void gVbo::setNormalData(const glm::vec3* normals, int total, int usage) {
@@ -174,11 +174,11 @@ void gVbo::setNormalData(const glm::vec3* normals, int total, int usage) {
 }
 
 void gVbo::setNormalData(const float* normal0x, int total, int usage, int stride) {
-
+	gLogw("gVbo") << "setNormalData(float*) is not implemented";
 }
 
 void gVbo::setIndexData(const int* indices, int total, int usage) {
-
+	gLogw("gVbo") << "setIndexData(int*) is not implemented";
 }
 
 int gVbo::getVAOid() const {

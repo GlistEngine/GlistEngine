@@ -9,9 +9,6 @@
 
 #include "gTracy.h"
 
-bool gFbo::isvaoset = false;
-unsigned int gFbo::quadVAO = 0;
-unsigned int gFbo::quadVBO = 0;
 int gFbo::defaultfbo = 0;
 
 gFbo::gFbo() {
@@ -25,10 +22,6 @@ gFbo::gFbo() {
 	depthtexture = nullptr;
 	isallocated = false;
 
-	if(!isvaoset) {
-		renderer->createFullscreenQuad(quadVAO, quadVBO);
-	    isvaoset = true;
-	}
 }
 
 gFbo::~gFbo() {
@@ -37,8 +30,6 @@ gFbo::~gFbo() {
 	delete depthtexture;
 	if (!usedepthtexture) renderer->deleteRenderbuffer(rbo);
 	renderer->deleteFramebuffer(framebuffer);
-	renderer->deleteVAO(quadVAO);
-	renderer->deleteBuffer(quadVBO);
 }
 
 void gFbo::allocate(int width, int height, bool isDepthMap, bool useDepthTexture) {
@@ -190,6 +181,3 @@ gTexture& gFbo::getTexture() {
 	return *texture;
 }
 
-unsigned int gFbo::getQuadVao() {
-	return gFbo::quadVAO;
-}

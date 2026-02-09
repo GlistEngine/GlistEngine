@@ -292,6 +292,10 @@ void gRenderer::init() {
 	originalgrid = new gGrid();
 	grid = originalgrid;
 
+	fullscreenquadvao = 0;
+	fullscreenquadvbo = 0;
+	createFullscreenQuad(fullscreenquadvao, fullscreenquadvbo);
+
 	linemesh = std::make_unique<gLine>();
 	linemesh2 = std::make_unique<gLine>();
 	linemesh3 = std::make_unique<gLine>();
@@ -357,6 +361,14 @@ void gRenderer::cleanup() {
 	rendercolor = nullptr;
 	lightsubo = nullptr;
 	sceneubo = nullptr;
+
+	deleteFullscreenQuad(fullscreenquadvao, &fullscreenquadvbo);
+	fullscreenquadvao = 0;
+	fullscreenquadvbo = 0;
+}
+
+unsigned int gRenderer::getFullscreenQuadVAO() const {
+	return fullscreenquadvao;
 }
 
 gShader* gRenderer::getColorShader() {

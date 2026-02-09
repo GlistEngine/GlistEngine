@@ -123,8 +123,8 @@ void gMesh::setTextures(const std::vector<gTexture*>& textures) {
 	texturenames.clear();
 	texturecounters.clear();
 	this->textures.clear();
-    for(loopindex = 0; loopindex < textures.size(); loopindex++) {
-    	setTexture(textures[loopindex]);
+    for(size_t i = 0; i < textures.size(); i++) {
+    	setTexture(textures[i]);
     }
 }
 
@@ -440,11 +440,11 @@ float gMesh::distanceTriangles(gRay* ray) {
 	float distance = 0.0f;
 	const std::vector<gVertex>& verts = *vertices;
 	const std::vector<gIndex>& inds = *indices;
-	for (loopindex = 0; loopindex < inds.size(); loopindex += 3) {
+	for (size_t i = 0; i < inds.size(); i += 3) {
 		//iterate through all faces of the mesh since each face has 3 vertices
-		const glm::vec3& a = verts[inds[loopindex]].position;
-		const glm::vec3& b = verts[inds[loopindex + 1]].position;
-		const glm::vec3& c = verts[inds[loopindex + 2]].position;
+		const glm::vec3& a = verts[inds[i]].position;
+		const glm::vec3& b = verts[inds[i + 1]].position;
+		const glm::vec3& c = verts[inds[i + 2]].position;
 		if(glm::intersectRayTriangle(ray->getOrigin(), ray->getDirection(), a, b, c, baryposition, distance)) {
 			if(distance > 0 && distance < mindistance) {
 				mindistance = distance;
