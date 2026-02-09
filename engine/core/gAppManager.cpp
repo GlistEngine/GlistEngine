@@ -404,7 +404,7 @@ int gAppManager::getFramerate() {
 }
 
 void gAppManager::enableVsync() {
-    window->setVsync(false);
+    window->setVsync(true);
 }
 
 void gAppManager::disableVsync() {
