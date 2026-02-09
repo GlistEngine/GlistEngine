@@ -18,12 +18,12 @@ public:
 	virtual ~gFbo();
 
 	void allocate(int width, int height, bool isDepthMap = false, bool useDepthTexture = false);
-    unsigned int getId();
-	int getWidth();
-	int getHeight();
-	unsigned int getTextureId();
-	unsigned int getDepthTextureId();
-    gTexture& getTexture();
+	unsigned int getId() const;
+	int getWidth() const;
+	int getHeight() const;
+	unsigned int getTextureId() const;
+	unsigned int getDepthTextureId() const;
+	gTexture& getTexture();
 
 	void bind();
 	void unbind();

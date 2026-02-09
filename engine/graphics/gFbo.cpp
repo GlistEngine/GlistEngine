@@ -90,19 +90,19 @@ void gFbo::allocate(int width, int height, bool isDepthMap, bool useDepthTexture
 	isallocated = true;
 }
 
-unsigned int gFbo::getId() {
+unsigned int gFbo::getId() const {
 	return framebuffer;
 }
 
-int gFbo::getWidth() {
+int gFbo::getWidth() const {
 	return width;
 }
 
-int gFbo::getHeight() {
+int gFbo::getHeight() const {
 	return height;
 }
 
-unsigned int gFbo::getTextureId() {
+unsigned int gFbo::getTextureId() const {
 #ifdef DEBUG
 	// have you called fbo.allocate(...) ?
 	assert(texture);
@@ -110,7 +110,7 @@ unsigned int gFbo::getTextureId() {
 	return texture->getId();
 }
 
-unsigned int gFbo::getDepthTextureId() {
+unsigned int gFbo::getDepthTextureId() const {
 #ifdef DEBUG
 	assert(depthtexture);
 #endif

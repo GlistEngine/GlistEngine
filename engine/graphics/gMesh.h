@@ -115,12 +115,6 @@ protected:
     bool isprojection2d;
 
 private:
-	enum MaterialFlags {
-		USE_DIFFUSE_MAP = 0b0001,
-		USE_SPECULAR_MAP = 0b0010,
-		USE_NORMAL_MAP = 0b0100,
-	};
-
 	std::shared_ptr<std::vector<gIndex>> indices;
 
     std::string name;
