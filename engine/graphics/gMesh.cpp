@@ -140,35 +140,7 @@ void gMesh::setTextures(const std::unordered_map<gTexture::TextureType, gTexture
 
 void gMesh::setTexture(gTexture* texture) {
 	bool hasold = textures.find(texture->getType()) != textures.end();
-	switch (texture->getType()) {
-	case gTexture::TEXTURETYPE_DIFFUSE:
-		material.setDiffuseMap(texture);
-		break;
-	case gTexture::TEXTURETYPE_SPECULAR:
-		material.setSpecularMap(texture);
-		break;
-	case gTexture::TEXTURETYPE_NORMAL:
-		material.setNormalMap(texture);
-		break;
-	case gTexture::TEXTURETYPE_HEIGHT:
-		material.setHeightMap(texture);
-		break;
-	case gTexture::TEXTURETYPE_PBR_ALBEDO:
-		material.setAlbedoMap(texture);
-		break;
-	case gTexture::TEXTURETYPE_PBR_ROUGHNESS:
-		material.setRoughnessMap(texture);
-		break;
-	case gTexture::TEXTURETYPE_PBR_METALNESS:
-		material.setMetalnessMap(texture);
-		break;
-	case gTexture::TEXTURETYPE_PBR_NORMAL:
-		material.setPbrNormalMap(texture);
-		break;
-	case gTexture::TEXTURETYPE_PBR_AO:
-		material.setAOMap(texture);
-		break;
-	}
+	material.setMap(texture->getType(), texture);
 	if (!hasold) {
 		int count = ++texturecounters[texture->getType()];
 		texturenames[texture->getType()] = texture->getTypeName() + gToStr(count);
@@ -247,29 +219,30 @@ void gMesh::drawStart() {
 	    colorshader.setFloat("material.shininess", material.getShininess());
 
 	    // Bind diffuse textures
-	    colorshader.setInt("material.useDiffuseMap", material.isDiffuseMapEnabled());
-//		if(material.isDiffuseMapEnabled()) gLogi("gModel") << "mesh name:" << name;
-//		if(material.isDiffuseMapEnabled()) gLogi("gModel") << "diffuse texture name:" << material.getDiffuseMap()->getFilename();
-	    if (material.isDiffuseMapEnabled()) {
-			colorshader.setInt("material.diffusemap", 0); // Diffuse texture unit
+	    bool hasDiffuse = material.isMapEnabled(gTexture::TEXTURETYPE_DIFFUSE);
+	    colorshader.setInt("material.useDiffuseMap", hasDiffuse);
+	    if (hasDiffuse) {
+			colorshader.setInt("material.diffusemap", 0);
 	    	renderer->activateTexture(0);
-		    material.bindDiffuseMap();
+		    material.bindMap(gTexture::TEXTURETYPE_DIFFUSE);
 	    }
 
 	    // Bind specular textures
-	    colorshader.setInt("material.useSpecularMap", material.isDiffuseMapEnabled() && material.isSpecularMapEnabled());
-	    if (material.isDiffuseMapEnabled() && material.isSpecularMapEnabled()) {
-			colorshader.setInt("material.specularmap", 1); // Specular texture unit
+	    bool hasSpecular = hasDiffuse && material.isMapEnabled(gTexture::TEXTURETYPE_SPECULAR);
+	    colorshader.setInt("material.useSpecularMap", hasSpecular);
+	    if (hasSpecular) {
+			colorshader.setInt("material.specularmap", 1);
 	    	renderer->activateTexture(1);
-		    material.bindSpecularMap();
+		    material.bindMap(gTexture::TEXTURETYPE_SPECULAR);
 	    }
 
 	    // Bind normal textures
-	    colorshader.setInt("material.useNormalMap", material.isDiffuseMapEnabled() && material.isNormalMapEnabled());
-	    if (material.isDiffuseMapEnabled() && material.isNormalMapEnabled()) {
-			colorshader.setInt("material.normalMap", 2); // Normal texture unit
+	    bool hasNormal = hasDiffuse && material.isMapEnabled(gTexture::TEXTURETYPE_NORMAL);
+	    colorshader.setInt("material.useNormalMap", hasNormal);
+	    if (hasNormal) {
+			colorshader.setInt("material.normalMap", 2);
 	    	renderer->activateTexture(2);
-		    material.bindNormalMap();
+		    material.bindMap(gTexture::TEXTURETYPE_NORMAL);
 	    }
 
 	    // Set matrices
@@ -291,22 +264,22 @@ void gMesh::drawStart() {
     	pbrshader.setInt("metallicMap", 5);
     	pbrshader.setInt("roughnessMap", 6);
     	pbrshader.setInt("aoMap", 7);
-    	bool hasAlbedo = material.isAlbedoMapEnabled();
-    	bool hasDiffuseFallback = !hasAlbedo && material.isDiffuseMapEnabled();
+    	bool hasAlbedo = material.isMapEnabled(gTexture::TEXTURETYPE_PBR_ALBEDO);
+    	bool hasDiffuseFallback = !hasAlbedo && material.isMapEnabled(gTexture::TEXTURETYPE_DIFFUSE);
     	pbrshader.setInt("hasAlbedoMap", (hasAlbedo || hasDiffuseFallback) ? 1 : 0);
-    	pbrshader.setInt("hasNormalMap", material.isPbrNormalMapEnabled() ? 1 : 0);
-    	pbrshader.setInt("hasMetallicMap", material.isMetalnessMapEnabled() ? 1 : 0);
-    	pbrshader.setInt("hasRoughnessMap", material.isRoughnessMapEnabled() ? 1 : 0);
-    	pbrshader.setInt("hasAOMap", material.isAOMapEnabled() ? 1 : 0);
+    	pbrshader.setInt("hasNormalMap", material.isMapEnabled(gTexture::TEXTURETYPE_PBR_NORMAL) ? 1 : 0);
+    	pbrshader.setInt("hasMetallicMap", material.isMapEnabled(gTexture::TEXTURETYPE_PBR_METALNESS) ? 1 : 0);
+    	pbrshader.setInt("hasRoughnessMap", material.isMapEnabled(gTexture::TEXTURETYPE_PBR_ROUGHNESS) ? 1 : 0);
+    	pbrshader.setInt("hasAOMap", material.isMapEnabled(gTexture::TEXTURETYPE_PBR_AO) ? 1 : 0);
     	if (hasAlbedo) {
-    		material.bindAlbedoMap();
+    		material.bindMap(gTexture::TEXTURETYPE_PBR_ALBEDO, 3);
     	} else if (hasDiffuseFallback) {
-    		material.getDiffuseMap()->bind(3);
+    		material.getMap(gTexture::TEXTURETYPE_DIFFUSE)->bind(3);
     	}
-    	material.bindPbrNormalMap();
-    	material.bindMetalnessMap();
-    	material.bindRoughnessMap();
-    	material.bindAOMap();
+    	material.bindMap(gTexture::TEXTURETYPE_PBR_NORMAL, 4);
+    	material.bindMap(gTexture::TEXTURETYPE_PBR_METALNESS, 5);
+    	material.bindMap(gTexture::TEXTURETYPE_PBR_ROUGHNESS, 6);
+    	material.bindMap(gTexture::TEXTURETYPE_PBR_AO, 7);
 	}
 }
 
