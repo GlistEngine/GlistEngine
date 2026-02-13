@@ -12,6 +12,7 @@ var classgGUIPieGraph =
     [ "setInfoTextColor", "classgGUIPieGraph.html#a135cc07abe0452ebc823d6d2361bca3b", null ],
     [ "setInfoTextSize", "classgGUIPieGraph.html#a0de646625c1cddce92b4081aa0130e8a", null ],
     [ "setOutLineColor", "classgGUIPieGraph.html#aaa4ab0abe91706052dd58d8fba9d5303", null ],
+    [ "setPredictedOutputName", "classgGUIPieGraph.html#a6434ad04e47476de19666f4ab602833b", null ],
     [ "setPredictedOutputs", "classgGUIPieGraph.html#a1acdcb9b1bc4ec51c151081c03d69cf9", null ],
     [ "setRadius", "classgGUIPieGraph.html#aab59e0fcedfc8dce9ca7d18631a4390b", null ],
     [ "setShowInfoOnCursor", "classgGUIPieGraph.html#a80711f41f6b8277658c21f9770780a2c", null ]
