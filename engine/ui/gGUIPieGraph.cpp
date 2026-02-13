@@ -22,7 +22,7 @@ gGUIPieGraph::gGUIPieGraph() {
 	sideofothers = 2;
 	infotextshift = 10;
 	fontsize = 9;
-	outlinecolor = color.WHITE;
+	outlinecolor = color.BLACK;
 	otherscolor = color.GRAY;
 	infotextcolor = color.BLACK;
 	loadFont();
@@ -127,14 +127,18 @@ void gGUIPieGraph::draw() {
 
 		renderer->setColor(outlinecolor);
 		gDrawCircle(px, py, 4.0f, true, 20);
-
 		renderer->setColor(outlinecolor);
-		std::string label = std::to_string(count + 1) + ".";
-		font->drawText(label, px + 6, py - 6);
-	}
 
-	renderer->setColor(oldcolor);
+		if (setPredictedOutputNameRequested == true) {
+			font->drawText(variablelabels[predictedOutputs[i]], px + 6, py - 6);
+		} else {
+			std::string label = std::to_string(count + 1) + ".";
+			font->drawText(label, px + 6, py - 6);
+		}
+	}
 }
+
+
 
 void gGUIPieGraph::mouseMoved(int x, int y) {
 	cursorx = x;
@@ -178,6 +182,13 @@ void gGUIPieGraph::setPredictedOutputs (const std::vector<int>& outs) {
 			variablelabels[i] = label + ": 0";
 		}
 	}
+}
+
+void gGUIPieGraph::setPredictedOutputName(int id, const std::string& label) {
+		if (id < variablelabels.size()) {
+			variablelabels[id] = label;
+			setPredictedOutputNameRequested = true;
+		}
 }
 
 float gGUIPieGraph::getRadius() {
