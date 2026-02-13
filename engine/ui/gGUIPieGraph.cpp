@@ -130,7 +130,7 @@ void gGUIPieGraph::draw() {
 		renderer->setColor(outlinecolor);
 
 		if (setPredictedOutputNameRequested == true) {
-			font->drawText(variablelabels[predictedOutputs[i]], px + 6, py - 6);
+			font->drawText(variablelabels[predictedoutputs[i]], px + 6, py - 6);
 		} else {
 			std::string label = std::to_string(count + 1) + ".";
 			font->drawText(label, px + 6, py - 6);
