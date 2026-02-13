@@ -21,5 +21,6 @@ var classgFont =
     [ "isLoaded", "classgFont.html#a441196d2161ae3918e05baf04ff4cae5", null ],
     [ "load", "classgFont.html#a6d3ee7c7cadd22d2e6f1536ae6fb1a97", null ],
     [ "loadFont", "classgFont.html#a3735214e7a048f574a5bf5b5ac7db2d1", null ],
+    [ "onEvent", "classgFont.html#a26023e75e4d9cabdfd6124f4b9e6eecd", null ],
     [ "wrapSentenceByWidth", "classgFont.html#a5e94e6bd50585adad6f294030f58d47e", null ]
 ];

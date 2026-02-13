@@ -9,6 +9,8 @@ var dir_a0e47c104ecd6c0b6dccb5f33d071508 =
     [ "gGUIActionManager.h", "gGUIActionManager_8h.html", "gGUIActionManager_8h" ],
     [ "gGUIAppThread.h", "gGUIAppThread_8h.html", "gGUIAppThread_8h" ],
     [ "gGUIManager.h", "gGUIManager_8h.html", "gGUIManager_8h" ],
+    [ "gInputManager.h", "gInputManager_8h.html", "gInputManager_8h" ],
+    [ "gInputPlayer.h", "gInputPlayer_8h.html", "gInputPlayer_8h" ],
     [ "gObject.h", "gObject_8h.html", "gObject_8h" ],
     [ "gPostProcessManager.h", "gPostProcessManager_8h.html", "gPostProcessManager_8h" ],
     [ "gRenderer.h", "gRenderer_8h.html", "gRenderer_8h" ],

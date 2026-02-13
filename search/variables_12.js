@@ -27,9 +27,18 @@ var searchData=
   ['specular_24',['specular',['../structgRenderer_1_1gSceneLightData.html#a7b4fb63d9e039936022413f0e72a3201',1,'gRenderer::gSceneLightData']]],
   ['spotcutoffangle_25',['spotcutoffangle',['../structgRenderer_1_1gSceneLightData.html#a665ad65fd67620f1447bc82ceee28a32',1,'gRenderer::gSceneLightData']]],
   ['spotoutercutoffangle_26',['spotoutercutoffangle',['../structgRenderer_1_1gSceneLightData.html#a33134a037b7b3fc818f85fb96cc761df',1,'gRenderer::gSceneLightData']]],
-  ['ssaobias_27',['ssaobias',['../structgRenderer_1_1gSceneData.html#a7207bb3bd94d95b0f93d333a2b340991',1,'gRenderer::gSceneData::ssaobias'],['../classgRenderer.html#a2d0357f16524edb9127bb10e4944275b',1,'gRenderer::ssaobias']]],
-  ['statusbar_28',['statusbar',['../classgGUIForm.html#a5207fc3a9149e9b5d3bd74201c33e3f8',1,'gGUIForm']]],
-  ['statush_29',['statush',['../classgGUIForm.html#a354630fc731565f65822d883f4e4f8b5',1,'gGUIForm']]],
-  ['statusw_30',['statusw',['../classgGUIForm.html#afd54ccfe2eea32982471f3334cd8ff05',1,'gGUIForm']]],
-  ['sub_31',['sub',['../structgGUITreelist_1_1Element.html#ac088cd0fb12b222a83e0cbe2f280533b',1,'gGUITreelist::Element']]]
+  ['ssaobias_27',['ssaobias',['../classgRenderer.html#a2d0357f16524edb9127bb10e4944275b',1,'gRenderer']]],
+  ['ssaoblurshader_28',['ssaoblurshader',['../classgRenderer.html#aecc99f8f9ccc310bdb0d40a1c8d249e1',1,'gRenderer']]],
+  ['ssaofbo_29',['ssaofbo',['../classgRenderer.html#a0d727fed45556950c59f81417d5ffc99',1,'gRenderer']]],
+  ['ssaokernel_30',['ssaokernel',['../classgRenderer.html#a90f648a7213d22e80eb91cd96662f892',1,'gRenderer']]],
+  ['ssaonoisetexture_31',['ssaonoisetexture',['../classgRenderer.html#ac7efab9e9ce416855d1bb24ecbd42154',1,'gRenderer']]],
+  ['ssaoradius_32',['ssaoradius',['../classgRenderer.html#ab214856baf92df95cfb56ff58641eab6',1,'gRenderer']]],
+  ['ssaorealdefaultfbo_33',['ssaorealdefaultfbo',['../classgRenderer.html#a71dacb6330406aefdf101de854ceb987',1,'gRenderer']]],
+  ['ssaoresultfbo_34',['ssaoresultfbo',['../classgRenderer.html#a402b065d495ac04ae7cf76bc8dbe93e3',1,'gRenderer']]],
+  ['ssaoshader_35',['ssaoshader',['../classgRenderer.html#a417f3a0a82b2913b927abd56ae436f23',1,'gRenderer']]],
+  ['ssaostrength_36',['ssaostrength',['../classgRenderer.html#aee4348e619e8c8a721dca26b988804ef',1,'gRenderer']]],
+  ['statusbar_37',['statusbar',['../classgGUIForm.html#a5207fc3a9149e9b5d3bd74201c33e3f8',1,'gGUIForm']]],
+  ['statush_38',['statush',['../classgGUIForm.html#a354630fc731565f65822d883f4e4f8b5',1,'gGUIForm']]],
+  ['statusw_39',['statusw',['../classgGUIForm.html#afd54ccfe2eea32982471f3334cd8ff05',1,'gGUIForm']]],
+  ['sub_40',['sub',['../structgGUITreelist_1_1Element.html#ac088cd0fb12b222a83e0cbe2f280533b',1,'gGUITreelist::Element']]]
 ];

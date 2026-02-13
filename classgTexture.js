@@ -15,7 +15,8 @@ var classgTexture =
       [ "TEXTURETYPE_PBR_ROUGHNESS", "classgTexture.html#acca450f20de3e35a8dcef0a641dd2191a9043ffed4502e6d6b235484ec9fe9fe8", null ],
       [ "TEXTURETYPE_PBR_METALNESS", "classgTexture.html#acca450f20de3e35a8dcef0a641dd2191a562c2f55bb3c3fbf591b2c85ed41eec0", null ],
       [ "TEXTURETYPE_PBR_NORMAL", "classgTexture.html#acca450f20de3e35a8dcef0a641dd2191ac31dfaceb1638e543dd17c3477e04913", null ],
-      [ "TEXTURETYPE_PBR_AO", "classgTexture.html#acca450f20de3e35a8dcef0a641dd2191a160052a9764ad0a5a19acc5f75b413a9", null ]
+      [ "TEXTURETYPE_PBR_AO", "classgTexture.html#acca450f20de3e35a8dcef0a641dd2191a160052a9764ad0a5a19acc5f75b413a9", null ],
+      [ "TEXTURETYPE_COUNT", "classgTexture.html#acca450f20de3e35a8dcef0a641dd2191a1cce73d2f04a13e4d10beefff61b1932", null ]
     ] ],
     [ "TextureWrap", "classgTexture.html#a8d173f0d769a407a7d13c9908c9b4158", [
       [ "TEXTUREWRAP_REPEAT", "classgTexture.html#a8d173f0d769a407a7d13c9908c9b4158ac147f8195cb02ab736b473a499625826", null ],

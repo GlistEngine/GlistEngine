@@ -246,8 +246,8 @@ var NAVTREEINDEX1 =
 "classgCamera.html#af2ce9c948ed6e486add8470bf5bd4af5":[1,0,21,63],
 "classgCamera.html#af99c9cc4d1dddae5f0390356595ecec0":[1,0,21,22],
 "classgCamera.html#afaf5535cddab6f80170eede20f6c89b4":[1,0,21,3],
-"classgCanvasManager.html":[1,0,22],
-"classgCanvasManager.html#a0baa4032e3a2214795275e4a381c53c4":[1,0,22,3],
-"classgCanvasManager.html#a1ef2ce6ed8d37e338c3714473c8950de":[1,0,22,1],
-"classgCanvasManager.html#a34c415db555bf70e65b2e1a09d9c17b4":[1,0,22,4]
+"classgCameraController.html":[1,0,22],
+"classgCameraController.html#a015e41b9bda372e6f8c20d45b3631749":[1,0,22,11],
+"classgCameraController.html#a4ab6bb6ff6fe7a76e03dcec65f9f6150":[1,0,22,12],
+"classgCameraController.html#a579ffe541faeb1f233a96146ed2ffe4d":[1,0,22,6]
 };

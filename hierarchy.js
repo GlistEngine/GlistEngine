@@ -1,9 +1,12 @@
 var hierarchy =
 [
     [ "gGUIActionManager::Action", "structgGUIActionManager_1_1Action.html", null ],
+    [ "gInputPlayer::AxisBinding", "structgInputPlayer_1_1AxisBinding.html", null ],
     [ "gGUIGrid::Cell", "structgGUIGrid_1_1Cell.html", null ],
     [ "gGUITreelist::Element", "structgGUITreelist_1_1Element.html", null ],
     [ "gCamera::Frustum", "structgCamera_1_1Frustum.html", null ],
+    [ "gInputPlayer::GamepadAxisBinding", "structgInputPlayer_1_1GamepadAxisBinding.html", null ],
+    [ "gInputPlayer::GamepadButtonAxisBinding", "structgInputPlayer_1_1GamepadButtonAxisBinding.html", null ],
     [ "gAnimationTrigger", "classgAnimationTrigger.html", null ],
     [ "gColor", "classgColor.html", null ],
     [ "gColorHSL", "classgColorHSL.html", null ],
@@ -31,7 +34,12 @@ var hierarchy =
       [ "gWindowScaleChangedEvent", "classgWindowScaleChangedEvent.html", null ]
     ] ],
     [ "gEventDispatcher", "classgEventDispatcher.html", null ],
+    [ "gEventHook", "classgEventHook.html", [
+      [ "gFont", "classgFont.html", null ],
+      [ "gInputManager", "classgInputManager.html", null ]
+    ] ],
     [ "gGUIManager", "classgGUIManager.html", null ],
+    [ "gInputPlayer", "classgInputPlayer.html", null ],
     [ "gLocalization", "classgLocalization.html", null ],
     [ "gLog", "classgLog.html", [
       [ "gLogd", "classgLogd.html", null ],
@@ -153,6 +161,7 @@ var hierarchy =
           [ "gWhiteBalance", "classgWhiteBalance.html", null ]
         ] ],
         [ "gBoundingBox", "classgBoundingBox.html", null ],
+        [ "gCameraController", "classgCameraController.html", null ],
         [ "gFbo", "classgFbo.html", null ],
         [ "gFog", "classgFog.html", null ],
         [ "gGrid", "classgGrid.html", null ],

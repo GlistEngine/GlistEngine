@@ -5,6 +5,7 @@ var dir_8aa109d331f3e3b3014e32565285b6b8 =
     [ "primitives", "dir_95f98002015846fd36af7f4632d0a4f4.html", "dir_95f98002015846fd36af7f4632d0a4f4" ],
     [ "gBoundingBox.h", "gBoundingBox_8h.html", "gBoundingBox_8h" ],
     [ "gCamera.h", "gCamera_8h.html", "gCamera_8h" ],
+    [ "gCameraController.h", "gCameraController_8h.html", "gCameraController_8h" ],
     [ "gFbo.h", "gFbo_8h.html", "gFbo_8h" ],
     [ "gFog.h", "gFog_8h.html", "gFog_8h" ],
     [ "gFont.h", "gFont_8h.html", "gFont_8h" ],

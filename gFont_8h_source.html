@@ -118,120 +118,127 @@ $(document).ready(function(){initNavTree('gFont_8h_source.html',''); initResizab
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="preprocessor">#define ENGINE_GRAPHICS_GFONT_H_</span></div>
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span> </div>
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#include &quot;<a class="code" href="gNode_8h.html">gNode.h</a>&quot;</span></div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="preprocessor">#include &lt;map&gt;</span></div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#include &lt;vector&gt;</span></div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="preprocessor">#ifdef EMSCRIPTEN</span></div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &quot;ft2build.h&quot;</span></div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#include FT_FREETYPE_H</span></div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="preprocessor">#else</span></div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="preprocessor">#include &quot;freetype2/ft2build.h&quot;</span></div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="preprocessor">#ifdef ANDROID</span></div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="preprocessor">#include &quot;freetype2/freetype/freetype.h&quot;</span></div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="preprocessor">#include &lt;android/asset_manager.h&gt;</span></div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="preprocessor">#if TARGET_OS_IPHONE || TARGET_OS_SIMULATOR</span></div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><span class="preprocessor">#include &quot;freetype2/freetype/freetype.h&quot;</span></div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span><span class="preprocessor">#if defined(WIN32) || defined(LINUX) || TARGET_OS_OSX</span></div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span><span class="preprocessor">#include FT_FREETYPE_H</span></div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span> </div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="preprocessor">#include &quot;<a class="code" href="gEventHook_8h.html">gEventHook.h</a>&quot;</span></div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#include &lt;map&gt;</span></div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="preprocessor">#include &lt;vector&gt;</span></div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#ifdef EMSCRIPTEN</span></div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#include &quot;ft2build.h&quot;</span></div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="preprocessor">#include FT_FREETYPE_H</span></div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="preprocessor">#else</span></div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="preprocessor">#include &quot;freetype2/ft2build.h&quot;</span></div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="preprocessor">#ifdef ANDROID</span></div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="preprocessor">#include &quot;freetype2/freetype/freetype.h&quot;</span></div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="preprocessor">#include &lt;android/asset_manager.h&gt;</span></div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><span class="preprocessor">#if TARGET_OS_IPHONE || TARGET_OS_SIMULATOR</span></div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span><span class="preprocessor">#include &quot;freetype2/freetype/freetype.h&quot;</span></div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span><span class="preprocessor">#if defined(WIN32) || defined(LINUX) || TARGET_OS_OSX</span></div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="preprocessor">#include FT_FREETYPE_H</span></div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span><span class="preprocessor">#endif</span></div>
 <div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span> </div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span><span class="preprocessor">#include &quot;<a class="code" href="gMesh_8h.html">gMesh.h</a>&quot;</span></div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span><span class="preprocessor">#include &quot;<a class="code" href="gTexture_8h.html">gTexture.h</a>&quot;</span></div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span><span class="preprocessor">#include &lt;unordered_map&gt;</span></div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span> </div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span> </div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span><span class="preprocessor">#include &quot;<a class="code" href="gMesh_8h.html">gMesh.h</a>&quot;</span></div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span><span class="preprocessor">#include &quot;<a class="code" href="gTexture_8h.html">gTexture.h</a>&quot;</span></div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span><span class="preprocessor">#include &lt;unordered_map&gt;</span></div>
 <div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span> </div>
-<div class="foldopen" id="foldopen00046" data-start="{" data-end="};">
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno"><a class="line" href="classgFont.html">   46</a></span><span class="keyword">class </span><a class="code hl_class" href="classgFont.html">gFont</a> : <span class="keyword">public</span> <a class="code hl_class" href="classgNode.html">gNode</a> {</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno"><a class="line" href="classgFont.html#a6e81faaa533f247131d7c7c0cb555529">   48</a></span>    <span class="keyword">enum class</span> <a class="code hl_enumeration" href="classgFont.html#a6e81faaa533f247131d7c7c0cb555529">TextAlign</a> {<a class="code hl_enumvalue" href="classgFont.html#a6e81faaa533f247131d7c7c0cb555529a684d325a7303f52e64011467ff5c5758">LEFT</a>, <a class="code hl_enumvalue" href="classgFont.html#a6e81faaa533f247131d7c7c0cb555529ac397289ee45877be0cd49811fe245b4e">CENTER</a>, <a class="code hl_enumvalue" href="classgFont.html#a6e81faaa533f247131d7c7c0cb555529a21507b40c80068eda19865706fdc2403">RIGHT</a>, <a class="code hl_enumvalue" href="classgFont.html#a6e81faaa533f247131d7c7c0cb555529a1a8c137fb3ff9dc6fa1a59e8743fc1e9">JUSTIFY</a>};</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span> </div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno"><a class="line" href="classgFont.html#ac47bcd67e802ea5b562e026cb5ee0b23">   50</a></span>    <a class="code hl_function" href="classgFont.html#ac47bcd67e802ea5b562e026cb5ee0b23">gFont</a>();</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno"><a class="line" href="classgFont.html#a3c871e4333d5112844bb10cc27539578">   51</a></span>    <span class="keyword">virtual</span> <a class="code hl_function" href="classgFont.html#a3c871e4333d5112844bb10cc27539578">~gFont</a>();</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span> </div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno"><a class="line" href="classgFont.html#a6d3ee7c7cadd22d2e6f1536ae6fb1a97">   71</a></span>    <span class="keywordtype">bool</span> <a class="code hl_function" href="classgFont.html#a6d3ee7c7cadd22d2e6f1536ae6fb1a97">load</a>(<span class="keyword">const</span> std::string&amp; fullPath, <span class="keywordtype">int</span> size, <span class="keywordtype">bool</span> isAntialiased = <span class="keyword">true</span>, <span class="keywordtype">int</span> dpi = 96);</div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span> </div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno"><a class="line" href="classgFont.html#a3735214e7a048f574a5bf5b5ac7db2d1">   91</a></span>    <span class="keywordtype">bool</span> <a class="code hl_function" href="classgFont.html#a3735214e7a048f574a5bf5b5ac7db2d1">loadFont</a>(<span class="keyword">const</span> std::string&amp; fontPath, <span class="keywordtype">int</span> size, <span class="keywordtype">bool</span> isAntialiased = <span class="keyword">true</span>, <span class="keywordtype">int</span> dpi = 96);</div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span> </div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno"><a class="line" href="classgFont.html#af12e725c755b22443a139c3e6a4353aa">  100</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classgFont.html#af12e725c755b22443a139c3e6a4353aa">drawText</a>(<span class="keyword">const</span> std::string&amp; text, <span class="keywordtype">float</span> x, <span class="keywordtype">float</span> y);</div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span> </div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span> </div>
+<div class="foldopen" id="foldopen00047" data-start="{" data-end="};">
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno"><a class="line" href="classgFont.html">   47</a></span><span class="keyword">class </span><a class="code hl_class" href="classgFont.html">gFont</a> : <span class="keyword">public</span> <a class="code hl_class" href="classgNode.html">gNode</a>, <span class="keyword">public</span> <a class="code hl_class" href="classgEventHook.html">gEventHook</a> {</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno"><a class="line" href="classgFont.html#a6e81faaa533f247131d7c7c0cb555529">   49</a></span>    <span class="keyword">enum class</span> <a class="code hl_enumeration" href="classgFont.html#a6e81faaa533f247131d7c7c0cb555529">TextAlign</a> {<a class="code hl_enumvalue" href="classgFont.html#a6e81faaa533f247131d7c7c0cb555529a684d325a7303f52e64011467ff5c5758">LEFT</a>, <a class="code hl_enumvalue" href="classgFont.html#a6e81faaa533f247131d7c7c0cb555529ac397289ee45877be0cd49811fe245b4e">CENTER</a>, <a class="code hl_enumvalue" href="classgFont.html#a6e81faaa533f247131d7c7c0cb555529a21507b40c80068eda19865706fdc2403">RIGHT</a>, <a class="code hl_enumvalue" href="classgFont.html#a6e81faaa533f247131d7c7c0cb555529a1a8c137fb3ff9dc6fa1a59e8743fc1e9">JUSTIFY</a>};</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span> </div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno"><a class="line" href="classgFont.html#ac47bcd67e802ea5b562e026cb5ee0b23">   51</a></span>    <a class="code hl_function" href="classgFont.html#ac47bcd67e802ea5b562e026cb5ee0b23">gFont</a>();</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno"><a class="line" href="classgFont.html#a3c871e4333d5112844bb10cc27539578">   52</a></span>    <span class="keyword">virtual</span> <a class="code hl_function" href="classgFont.html#a3c871e4333d5112844bb10cc27539578">~gFont</a>();</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> </div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno"><a class="line" href="classgFont.html#a6d3ee7c7cadd22d2e6f1536ae6fb1a97">   72</a></span>    <span class="keywordtype">bool</span> <a class="code hl_function" href="classgFont.html#a6d3ee7c7cadd22d2e6f1536ae6fb1a97">load</a>(<span class="keyword">const</span> std::string&amp; fullPath, <span class="keywordtype">int</span> size, <span class="keywordtype">bool</span> isAntialiased = <span class="keyword">true</span>, <span class="keywordtype">int</span> dpi = 96);</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span> </div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno"><a class="line" href="classgFont.html#a3735214e7a048f574a5bf5b5ac7db2d1">   92</a></span>    <span class="keywordtype">bool</span> <a class="code hl_function" href="classgFont.html#a3735214e7a048f574a5bf5b5ac7db2d1">loadFont</a>(<span class="keyword">const</span> std::string&amp; fontPath, <span class="keywordtype">int</span> size, <span class="keywordtype">bool</span> isAntialiased = <span class="keyword">true</span>, <span class="keywordtype">int</span> dpi = 96);</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span> </div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno"><a class="line" href="classgFont.html#af12e725c755b22443a139c3e6a4353aa">  101</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classgFont.html#af12e725c755b22443a139c3e6a4353aa">drawText</a>(<span class="keyword">const</span> std::string&amp; text, <span class="keywordtype">float</span> x, <span class="keywordtype">float</span> y);</div>
 <div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span> </div>
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno"><a class="line" href="classgFont.html#a82fee83cf0e7d88e24b1f3689c5c0070">  108</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classgFont.html#a82fee83cf0e7d88e24b1f3689c5c0070">drawTextVerticallyFlipped</a>(<span class="keyword">const</span> std::string&amp; text, <span class="keywordtype">float</span> x, <span class="keywordtype">float</span> y);</div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span> </div>
-<div class="line"><a id="l00115" name="l00115"></a><span class="lineno"><a class="line" href="classgFont.html#af5385aa7cc1b384269332b3d5ed67af6">  115</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classgFont.html#af5385aa7cc1b384269332b3d5ed67af6">drawTextHorizontallyFlipped</a>(<span class="keyword">const</span> std::string&amp; text, <span class="keywordtype">float</span> x, <span class="keywordtype">float</span> y);</div>
-<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span> </div>
-<div class="line"><a id="l00126" name="l00126"></a><span class="lineno"><a class="line" href="classgFont.html#a4662bf7fec0a4a2b4b08bef6d553d5c5">  126</a></span>    <span class="keywordtype">float</span> <a class="code hl_function" href="classgFont.html#a4662bf7fec0a4a2b4b08bef6d553d5c5">getStringWidth</a>(<span class="keyword">const</span> std::string&amp; text);</div>
-<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span> </div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span> </div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno"><a class="line" href="classgFont.html#a82fee83cf0e7d88e24b1f3689c5c0070">  109</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classgFont.html#a82fee83cf0e7d88e24b1f3689c5c0070">drawTextVerticallyFlipped</a>(<span class="keyword">const</span> std::string&amp; text, <span class="keywordtype">float</span> x, <span class="keywordtype">float</span> y);</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span> </div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno"><a class="line" href="classgFont.html#af5385aa7cc1b384269332b3d5ed67af6">  116</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classgFont.html#af5385aa7cc1b384269332b3d5ed67af6">drawTextHorizontallyFlipped</a>(<span class="keyword">const</span> std::string&amp; text, <span class="keywordtype">float</span> x, <span class="keywordtype">float</span> y);</div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span> </div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno"><a class="line" href="classgFont.html#a4662bf7fec0a4a2b4b08bef6d553d5c5">  127</a></span>    <span class="keywordtype">float</span> <a class="code hl_function" href="classgFont.html#a4662bf7fec0a4a2b4b08bef6d553d5c5">getStringWidth</a>(<span class="keyword">const</span> std::string&amp; text);</div>
 <div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span> </div>
-<div class="line"><a id="l00138" name="l00138"></a><span class="lineno"><a class="line" href="classgFont.html#aae027bba23783b011117e36e7510c374">  138</a></span>    <span class="keywordtype">float</span> <a class="code hl_function" href="classgFont.html#aae027bba23783b011117e36e7510c374">getStringHeight</a>(<span class="keyword">const</span> std::string&amp; text);</div>
-<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span> </div>
-<div class="line"><a id="l00145" name="l00145"></a><span class="lineno"><a class="line" href="classgFont.html#a3ef263d01ea05e673377f8e3d8795c77">  145</a></span>    <span class="keywordtype">float</span> <a class="code hl_function" href="classgFont.html#a3ef263d01ea05e673377f8e3d8795c77">getLineHeight</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span> </div>
-<div class="line"><a id="l00152" name="l00152"></a><span class="lineno"><a class="line" href="classgFont.html#aba41d309c206eced9af81109f40571de">  152</a></span>    <span class="keyword">const</span> std::string&amp; <a class="code hl_function" href="classgFont.html#aba41d309c206eced9af81109f40571de">getPath</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span> </div>
-<div class="line"><a id="l00159" name="l00159"></a><span class="lineno"><a class="line" href="classgFont.html#a801adde301959cfc26c2a85c424a3b9e">  159</a></span>    <span class="keywordtype">int</span> <a class="code hl_function" href="classgFont.html#a801adde301959cfc26c2a85c424a3b9e">getSize</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span> </div>
-<div class="line"><a id="l00166" name="l00166"></a><span class="lineno"><a class="line" href="classgFont.html#a441196d2161ae3918e05baf04ff4cae5">  166</a></span>    <span class="keywordtype">bool</span> <a class="code hl_function" href="classgFont.html#a441196d2161ae3918e05baf04ff4cae5">isLoaded</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span> </div>
-<div class="line"><a id="l00173" name="l00173"></a><span class="lineno"><a class="line" href="classgFont.html#a452fde9a822efbc22500338df92cdceb">  173</a></span>    <span class="keywordtype">bool</span> <a class="code hl_function" href="classgFont.html#a452fde9a822efbc22500338df92cdceb">isAntialised</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span> </div>
-<div class="line"><a id="l00182" name="l00182"></a><span class="lineno"><a class="line" href="classgFont.html#ab2956c6808062159685f2c5dc36a692e">  182</a></span>    <span class="keywordtype">int</span> <a class="code hl_function" href="classgFont.html#ab2956c6808062159685f2c5dc36a692e">getDpi</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>    <span class="comment">/*</span></div>
-<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span><span class="comment">     * Wraps text into multiple lines based on font width.</span></div>
-<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span><span class="comment">     *</span></div>
-<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span><span class="comment">     * @param text The input text to be wrapped</span></div>
-<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span><span class="comment">     * @param maxWidth The maximum visual width of a line</span></div>
-<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span><span class="comment">     *</span></div>
-<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span><span class="comment">     * @return A list of lines that fit within the given width</span></div>
-<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span><span class="comment">     */</span></div>
-<div class="line"><a id="l00191" name="l00191"></a><span class="lineno"><a class="line" href="classgFont.html#a5e94e6bd50585adad6f294030f58d47e">  191</a></span>    std::vector&lt;std::string&gt; <a class="code hl_function" href="classgFont.html#a5e94e6bd50585adad6f294030f58d47e">wrapSentenceByWidth</a>(<span class="keyword">const</span> std::string&amp; text, <span class="keywordtype">float</span> maxWidth, <a class="code hl_enumeration" href="classgFont.html#a6e81faaa533f247131d7c7c0cb555529">TextAlign</a> align = <a class="code hl_enumvalue" href="classgFont.html#a6e81faaa533f247131d7c7c0cb555529a684d325a7303f52e64011467ff5c5758">TextAlign::LEFT</a>);</div>
-<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span> </div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span> </div>
+<div class="line"><a id="l00139" name="l00139"></a><span class="lineno"><a class="line" href="classgFont.html#aae027bba23783b011117e36e7510c374">  139</a></span>    <span class="keywordtype">float</span> <a class="code hl_function" href="classgFont.html#aae027bba23783b011117e36e7510c374">getStringHeight</a>(<span class="keyword">const</span> std::string&amp; text);</div>
+<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span> </div>
+<div class="line"><a id="l00146" name="l00146"></a><span class="lineno"><a class="line" href="classgFont.html#a3ef263d01ea05e673377f8e3d8795c77">  146</a></span>    <span class="keywordtype">float</span> <a class="code hl_function" href="classgFont.html#a3ef263d01ea05e673377f8e3d8795c77">getLineHeight</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span> </div>
+<div class="line"><a id="l00153" name="l00153"></a><span class="lineno"><a class="line" href="classgFont.html#aba41d309c206eced9af81109f40571de">  153</a></span>    <span class="keyword">const</span> std::string&amp; <a class="code hl_function" href="classgFont.html#aba41d309c206eced9af81109f40571de">getPath</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span> </div>
+<div class="line"><a id="l00160" name="l00160"></a><span class="lineno"><a class="line" href="classgFont.html#a801adde301959cfc26c2a85c424a3b9e">  160</a></span>    <span class="keywordtype">int</span> <a class="code hl_function" href="classgFont.html#a801adde301959cfc26c2a85c424a3b9e">getSize</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span> </div>
+<div class="line"><a id="l00167" name="l00167"></a><span class="lineno"><a class="line" href="classgFont.html#a441196d2161ae3918e05baf04ff4cae5">  167</a></span>    <span class="keywordtype">bool</span> <a class="code hl_function" href="classgFont.html#a441196d2161ae3918e05baf04ff4cae5">isLoaded</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span> </div>
+<div class="line"><a id="l00174" name="l00174"></a><span class="lineno"><a class="line" href="classgFont.html#a452fde9a822efbc22500338df92cdceb">  174</a></span>    <span class="keywordtype">bool</span> <a class="code hl_function" href="classgFont.html#a452fde9a822efbc22500338df92cdceb">isAntialised</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span> </div>
+<div class="line"><a id="l00183" name="l00183"></a><span class="lineno"><a class="line" href="classgFont.html#ab2956c6808062159685f2c5dc36a692e">  183</a></span>    <span class="keywordtype">int</span> <a class="code hl_function" href="classgFont.html#ab2956c6808062159685f2c5dc36a692e">getDpi</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>    <span class="comment">/*</span></div>
+<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span><span class="comment">     * Wraps text into multiple lines based on font width.</span></div>
+<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span><span class="comment">     *</span></div>
+<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span><span class="comment">     * @param text The input text to be wrapped</span></div>
+<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span><span class="comment">     * @param maxWidth The maximum visual width of a line</span></div>
+<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span><span class="comment">     *</span></div>
+<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span><span class="comment">     * @return A list of lines that fit within the given width</span></div>
+<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span><span class="comment">     */</span></div>
+<div class="line"><a id="l00192" name="l00192"></a><span class="lineno"><a class="line" href="classgFont.html#a5e94e6bd50585adad6f294030f58d47e">  192</a></span>    std::vector&lt;std::string&gt; <a class="code hl_function" href="classgFont.html#a5e94e6bd50585adad6f294030f58d47e">wrapSentenceByWidth</a>(<span class="keyword">const</span> std::string&amp; text, <span class="keywordtype">float</span> maxWidth, <a class="code hl_enumeration" href="classgFont.html#a6e81faaa533f247131d7c7c0cb555529">TextAlign</a> align = <a class="code hl_enumvalue" href="classgFont.html#a6e81faaa533f247131d7c7c0cb555529a684d325a7303f52e64011467ff5c5758">TextAlign::LEFT</a>);</div>
 <div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span> </div>
-<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>    <span class="keywordtype">bool</span> isloaded = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>    std::string fullpath;</div>
-<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>    <span class="keywordtype">bool</span> isantialiased = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>    <span class="keywordtype">int</span> dpi = 0;</div>
-<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>    <span class="keywordtype">float</span> fontsize = 0.0f;</div>
-<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>    <span class="keywordtype">int</span> characternumlimit = 0;</div>
-<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>    <span class="keywordtype">int</span> border = 3;</div>
-<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>    <span class="keywordtype">bool</span> iskerning = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span> </div>
-<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>    FT_Library ftlib = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>    FT_Face fontface = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span> </div>
-<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>    <span class="keywordtype">float</span> lineheight = 0.0f;</div>
-<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>    <span class="keywordtype">float</span> letterspacing = 1.0f;</div>
-<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>    <span class="keywordtype">float</span> spacesize = 1.0f;</div>
-<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>    <span class="keywordtype">float</span> scale = 1.0f;</div>
-<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span> </div>
-<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>    <span class="keywordtype">void</span> loadChar(<span class="keywordtype">int</span> charCode);</div>
-<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span> </div>
-<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>    <span class="keyword">struct </span>CharProperties {</div>
-<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>        <span class="keywordtype">float</span> height = 0.0f, width = 0.0f;</div>
-<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span>        <span class="keywordtype">float</span> topmargin = 0.0f, leftmargin = 0.0f;</div>
-<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>        <span class="keywordtype">float</span> advance = 0.0f;</div>
-<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>        <span class="keywordtype">float</span> texturewidth = 0.0f, textureheight = 0.0f;</div>
-<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span>        <span class="keywordtype">float</span> dxleft = 0.0f, dxright = 0.0f, dytop = 0.0f, dybottom = 0.0f;</div>
-<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>    };</div>
-<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span> </div>
-<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>    std::unordered_map&lt;int, CharProperties&gt; charproperties;</div>
-<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span>    std::unordered_map&lt;int, gTexture*&gt; chartextures;</div>
-<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span> </div>
-<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>    <span class="keywordtype">float</span> getKerning(<span class="keywordtype">int</span> c, <span class="keywordtype">int</span> prevC) <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>    <span class="keywordtype">void</span> resizeVectors(<span class="keywordtype">int</span> num);</div>
-<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>    <span class="keywordtype">bool</span> insertData(<span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span>* srcData, <span class="keywordtype">int</span> srcWidth, <span class="keywordtype">int</span> srcHeight, <span class="keywordtype">int</span> componentNum,</div>
-<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>                    <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span>* dstData, <span class="keywordtype">int</span> dstWidth, <span class="keywordtype">int</span> dstHeight, <span class="keywordtype">int</span> dstComponentNum,</div>
-<div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span>                    <span class="keywordtype">size_t</span> dstFirstX, <span class="keywordtype">size_t</span> dstFirstY) <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span>    std::wstring s2ws(<span class="keyword">const</span> std::string&amp; s) <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span>    <span class="keywordtype">float</span> roundIfRequired(<span class="keywordtype">float</span> val);</div>
-<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span>};</div>
+<div class="line"><a id="l00194" name="l00194"></a><span class="lineno"><a class="line" href="classgFont.html#a26023e75e4d9cabdfd6124f4b9e6eecd">  194</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classgFont.html#a26023e75e4d9cabdfd6124f4b9e6eecd">onEvent</a>(<a class="code hl_class" href="classgEvent.html">gEvent</a>&amp; event) <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span> </div>
+<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>    <span class="keywordtype">void</span> reloadFont();</div>
+<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span> </div>
+<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>    <span class="keywordtype">bool</span> isloaded = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>    std::string fullpath;</div>
+<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>    <span class="keywordtype">bool</span> isantialiased = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>    <span class="keywordtype">int</span> dpi = 0;</div>
+<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>    <span class="keywordtype">float</span> fontsize = 0.0f;</div>
+<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>    <span class="keywordtype">int</span> characternumlimit = 0;</div>
+<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>    <span class="keywordtype">int</span> border = 3;</div>
+<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>    <span class="keywordtype">bool</span> iskerning = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span> </div>
+<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>    FT_Library ftlib = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>    FT_Face fontface = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span> </div>
+<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>    <span class="keywordtype">float</span> lineheight = 0.0f;</div>
+<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>    <span class="keywordtype">float</span> letterspacing = 1.0f;</div>
+<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>    <span class="keywordtype">float</span> spacesize = 1.0f;</div>
+<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>    <span class="keywordtype">float</span> scale = 1.0f;</div>
+<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span> </div>
+<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span>    <span class="keywordtype">void</span> loadChar(<span class="keywordtype">int</span> charCode);</div>
+<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span> </div>
+<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>    <span class="keyword">struct </span>CharProperties {</div>
+<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span>        <span class="keywordtype">float</span> height = 0.0f, width = 0.0f;</div>
+<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>        <span class="keywordtype">float</span> topmargin = 0.0f, leftmargin = 0.0f;</div>
+<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span>        <span class="keywordtype">float</span> advance = 0.0f;</div>
+<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>        <span class="keywordtype">float</span> texturewidth = 0.0f, textureheight = 0.0f;</div>
+<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span>        <span class="keywordtype">float</span> dxleft = 0.0f, dxright = 0.0f, dytop = 0.0f, dybottom = 0.0f;</div>
+<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>    };</div>
+<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span> </div>
+<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>    std::unordered_map&lt;int, CharProperties&gt; charproperties;</div>
+<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>    std::unordered_map&lt;int, gTexture*&gt; chartextures;</div>
+<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span> </div>
+<div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span>    <span class="keywordtype">float</span> getKerning(<span class="keywordtype">int</span> c, <span class="keywordtype">int</span> prevC) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span>    <span class="keywordtype">void</span> resizeVectors(<span class="keywordtype">int</span> num);</div>
+<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span>    <span class="keywordtype">bool</span> insertData(<span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span>* srcData, <span class="keywordtype">int</span> srcWidth, <span class="keywordtype">int</span> srcHeight, <span class="keywordtype">int</span> componentNum,</div>
+<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span>                    <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span>* dstData, <span class="keywordtype">int</span> dstWidth, <span class="keywordtype">int</span> dstHeight, <span class="keywordtype">int</span> dstComponentNum,</div>
+<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>                    <span class="keywordtype">size_t</span> dstFirstX, <span class="keywordtype">size_t</span> dstFirstY) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span>    std::wstring s2ws(<span class="keyword">const</span> std::string&amp; s) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>    <span class="keywordtype">float</span> roundIfRequired(<span class="keywordtype">float</span> val);</div>
+<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>};</div>
 </div>
-<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span> </div>
-<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span><span class="preprocessor">#endif </span><span class="comment">/* ENGINE_GRAPHICS_GFONT_H_ */</span><span class="preprocessor"></span></div>
-<div class="ttc" id="aclassgFont_html"><div class="ttname"><a href="classgFont.html">gFont</a></div><div class="ttdef"><b>Definition</b> gFont.h:46</div></div>
+<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span> </div>
+<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span><span class="preprocessor">#endif </span><span class="comment">/* ENGINE_GRAPHICS_GFONT_H_ */</span><span class="preprocessor"></span></div>
+<div class="ttc" id="aclassgEventHook_html"><div class="ttname"><a href="classgEventHook.html">gEventHook</a></div><div class="ttdef"><b>Definition</b> gEventHook.h:14</div></div>
+<div class="ttc" id="aclassgEvent_html"><div class="ttname"><a href="classgEvent.html">gEvent</a></div><div class="ttdef"><b>Definition</b> gEvent.h:32</div></div>
+<div class="ttc" id="aclassgFont_html"><div class="ttname"><a href="classgFont.html">gFont</a></div><div class="ttdef"><b>Definition</b> gFont.h:47</div></div>
+<div class="ttc" id="aclassgFont_html_a26023e75e4d9cabdfd6124f4b9e6eecd"><div class="ttname"><a href="classgFont.html#a26023e75e4d9cabdfd6124f4b9e6eecd">gFont::onEvent</a></div><div class="ttdeci">void onEvent(gEvent &amp;event) override</div></div>
 <div class="ttc" id="aclassgFont_html_a3735214e7a048f574a5bf5b5ac7db2d1"><div class="ttname"><a href="classgFont.html#a3735214e7a048f574a5bf5b5ac7db2d1">gFont::loadFont</a></div><div class="ttdeci">bool loadFont(const std::string &amp;fontPath, int size, bool isAntialiased=true, int dpi=96)</div></div>
 <div class="ttc" id="aclassgFont_html_a3c871e4333d5112844bb10cc27539578"><div class="ttname"><a href="classgFont.html#a3c871e4333d5112844bb10cc27539578">gFont::~gFont</a></div><div class="ttdeci">virtual ~gFont()</div></div>
 <div class="ttc" id="aclassgFont_html_a3ef263d01ea05e673377f8e3d8795c77"><div class="ttname"><a href="classgFont.html#a3ef263d01ea05e673377f8e3d8795c77">gFont::getLineHeight</a></div><div class="ttdeci">float getLineHeight() const</div></div>
@@ -240,7 +247,7 @@ $(document).ready(function(){initNavTree('gFont_8h_source.html',''); initResizab
 <div class="ttc" id="aclassgFont_html_a4662bf7fec0a4a2b4b08bef6d553d5c5"><div class="ttname"><a href="classgFont.html#a4662bf7fec0a4a2b4b08bef6d553d5c5">gFont::getStringWidth</a></div><div class="ttdeci">float getStringWidth(const std::string &amp;text)</div></div>
 <div class="ttc" id="aclassgFont_html_a5e94e6bd50585adad6f294030f58d47e"><div class="ttname"><a href="classgFont.html#a5e94e6bd50585adad6f294030f58d47e">gFont::wrapSentenceByWidth</a></div><div class="ttdeci">std::vector&lt; std::string &gt; wrapSentenceByWidth(const std::string &amp;text, float maxWidth, TextAlign align=TextAlign::LEFT)</div></div>
 <div class="ttc" id="aclassgFont_html_a6d3ee7c7cadd22d2e6f1536ae6fb1a97"><div class="ttname"><a href="classgFont.html#a6d3ee7c7cadd22d2e6f1536ae6fb1a97">gFont::load</a></div><div class="ttdeci">bool load(const std::string &amp;fullPath, int size, bool isAntialiased=true, int dpi=96)</div></div>
-<div class="ttc" id="aclassgFont_html_a6e81faaa533f247131d7c7c0cb555529"><div class="ttname"><a href="classgFont.html#a6e81faaa533f247131d7c7c0cb555529">gFont::TextAlign</a></div><div class="ttdeci">TextAlign</div><div class="ttdef"><b>Definition</b> gFont.h:48</div></div>
+<div class="ttc" id="aclassgFont_html_a6e81faaa533f247131d7c7c0cb555529"><div class="ttname"><a href="classgFont.html#a6e81faaa533f247131d7c7c0cb555529">gFont::TextAlign</a></div><div class="ttdeci">TextAlign</div><div class="ttdef"><b>Definition</b> gFont.h:49</div></div>
 <div class="ttc" id="aclassgFont_html_a6e81faaa533f247131d7c7c0cb555529a1a8c137fb3ff9dc6fa1a59e8743fc1e9"><div class="ttname"><a href="classgFont.html#a6e81faaa533f247131d7c7c0cb555529a1a8c137fb3ff9dc6fa1a59e8743fc1e9">gFont::TextAlign::JUSTIFY</a></div><div class="ttdeci">@ JUSTIFY</div></div>
 <div class="ttc" id="aclassgFont_html_a6e81faaa533f247131d7c7c0cb555529a21507b40c80068eda19865706fdc2403"><div class="ttname"><a href="classgFont.html#a6e81faaa533f247131d7c7c0cb555529a21507b40c80068eda19865706fdc2403">gFont::TextAlign::RIGHT</a></div><div class="ttdeci">@ RIGHT</div></div>
 <div class="ttc" id="aclassgFont_html_a6e81faaa533f247131d7c7c0cb555529a684d325a7303f52e64011467ff5c5758"><div class="ttname"><a href="classgFont.html#a6e81faaa533f247131d7c7c0cb555529a684d325a7303f52e64011467ff5c5758">gFont::TextAlign::LEFT</a></div><div class="ttdeci">@ LEFT</div></div>
@@ -254,6 +261,7 @@ $(document).ready(function(){initNavTree('gFont_8h_source.html',''); initResizab
 <div class="ttc" id="aclassgFont_html_af12e725c755b22443a139c3e6a4353aa"><div class="ttname"><a href="classgFont.html#af12e725c755b22443a139c3e6a4353aa">gFont::drawText</a></div><div class="ttdeci">void drawText(const std::string &amp;text, float x, float y)</div></div>
 <div class="ttc" id="aclassgFont_html_af5385aa7cc1b384269332b3d5ed67af6"><div class="ttname"><a href="classgFont.html#af5385aa7cc1b384269332b3d5ed67af6">gFont::drawTextHorizontallyFlipped</a></div><div class="ttdeci">void drawTextHorizontallyFlipped(const std::string &amp;text, float x, float y)</div><div class="ttdoc">Draws the given text horizontally flipped at the specified location.</div></div>
 <div class="ttc" id="aclassgNode_html"><div class="ttname"><a href="classgNode.html">gNode</a></div><div class="ttdef"><b>Definition</b> gNode.h:15</div></div>
+<div class="ttc" id="agEventHook_8h_html"><div class="ttname"><a href="gEventHook_8h.html">gEventHook.h</a></div></div>
 <div class="ttc" id="agMesh_8h_html"><div class="ttname"><a href="gMesh_8h.html">gMesh.h</a></div></div>
 <div class="ttc" id="agNode_8h_html"><div class="ttname"><a href="gNode_8h.html">gNode.h</a></div></div>
 <div class="ttc" id="agTexture_8h_html"><div class="ttname"><a href="gTexture_8h.html">gTexture.h</a></div></div>

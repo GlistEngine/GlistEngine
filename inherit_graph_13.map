@@ -1,11 +1,3 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" href="$classgLog.html" title=" " alt="" coords="5,80,59,105"/>
-<area shape="rect" id="Node000001" href="$classgLogd.html" title=" " alt="" coords="108,5,169,31"/>
-<area shape="poly" id="edge20_Node000000_Node000001" title=" " alt="" coords="61,69,118,29,121,33,64,74"/>
-<area shape="rect" id="Node000002" href="$classgLoge.html" title=" " alt="" coords="108,55,169,80"/>
-<area shape="poly" id="edge21_Node000000_Node000002" title=" " alt="" coords="72,81,107,72,109,77,73,86"/>
-<area shape="rect" id="Node000003" href="$classgLogi.html" title=" " alt="" coords="110,104,167,129"/>
-<area shape="poly" id="edge22_Node000000_Node000003" title=" " alt="" coords="73,99,110,108,109,113,71,104"/>
-<area shape="rect" id="Node000004" href="$classgLogw.html" title=" " alt="" coords="107,153,171,179"/>
-<area shape="poly" id="edge23_Node000000_Node000004" title=" " alt="" coords="64,111,121,151,118,155,61,115"/>
+<area shape="rect" id="Node000000" href="$classgInputPlayer.html" title=" " alt="" coords="5,5,109,31"/>
 </map>

@@ -1,9 +1,11 @@
 <map id="gCamera.h" name="gCamera.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="148,5,241,31"/>
-<area shape="rect" id="Node000002" href="$gGLFWWindow_8h.html" title=" " alt="" coords="5,79,136,104"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="164,40,92,81,90,76,162,35"/>
-<area shape="rect" id="Node000003" href="$gGrid_8h.html" title=" " alt="" coords="160,79,229,104"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="197,44,197,79,192,79,192,44"/>
-<area shape="rect" id="Node000004" href="$gShadowMap_8h.html" title=" " alt="" coords="254,79,375,104"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="227,35,296,76,294,81,225,40"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="266,5,359,31"/>
+<area shape="rect" id="Node000002" href="$gCameraController_8h.html" title=" " alt="" coords="5,79,161,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="263,37,121,81,120,76,262,32"/>
+<area shape="rect" id="Node000003" href="$gGLFWWindow_8h.html" title=" " alt="" coords="186,79,317,104"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="296,43,263,80,259,77,292,40"/>
+<area shape="rect" id="Node000004" href="$gGrid_8h.html" title=" " alt="" coords="341,79,410,104"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="334,39,367,77,363,80,330,43"/>
+<area shape="rect" id="Node000005" href="$gShadowMap_8h.html" title=" " alt="" coords="435,79,556,104"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="356,33,466,76,464,81,354,38"/>
 </map>
