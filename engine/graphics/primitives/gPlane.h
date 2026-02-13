@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 Nitra Games Ltd.
+* Copyright (C) 2016 Nitra Games Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,11 +26,18 @@
 
 #include "gMesh.h"
 
-
 class gPlane : public gMesh {
 public:
 	gPlane();
 	virtual ~gPlane();
+
+	void setTextureTiling(float tilingX, float tilingY);
+	void setTextureTiling(float tiling);
+
+private:
+	void initializePlane();
+	void updateTextureCoordinates();
+	float tilingx, tilingy;
 };
 
 #endif /* ENGINE_GRAPHICS_PRIMITIVES_GPLANE_H_ */

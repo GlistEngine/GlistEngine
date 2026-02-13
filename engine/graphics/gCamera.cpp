@@ -43,6 +43,7 @@ gCamera::~gCamera() {
 
 void gCamera::begin() {
 	G_PROFILE_ZONE_SCOPED_N("gCamera::begin()");
+	if (renderer->isSSAOEnabled() && renderer->isSSAOAllocated()) renderer->beginSSAO();
 	renderer->backupMatrices();
 	float aspect = (float)renderer->getWidth() / (float)renderer->getHeight();
 	float fovY = glm::radians(fov);
@@ -69,6 +70,7 @@ void gCamera::begin() {
 
 void gCamera::end() {
 	G_PROFILE_ZONE_SCOPED_N("gCamera::end()");
+	if (renderer->isSSAOEnabled()) renderer->endSSAO();
 	renderer->restoreMatrices();
 	renderer->setCamera(nullptr);
 	renderer->updateScene();

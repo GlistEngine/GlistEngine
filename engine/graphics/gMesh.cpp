@@ -123,8 +123,8 @@ void gMesh::setTextures(const std::vector<gTexture*>& textures) {
 	texturenames.clear();
 	texturecounters.clear();
 	this->textures.clear();
-    for(loopindex = 0; loopindex < textures.size(); loopindex++) {
-    	setTexture(textures[loopindex]);
+    for(size_t i = 0; i < textures.size(); i++) {
+    	setTexture(textures[i]);
     }
 }
 
@@ -140,35 +140,7 @@ void gMesh::setTextures(const std::unordered_map<gTexture::TextureType, gTexture
 
 void gMesh::setTexture(gTexture* texture) {
 	bool hasold = textures.find(texture->getType()) != textures.end();
-	switch (texture->getType()) {
-	case gTexture::TEXTURETYPE_DIFFUSE:
-		material.setDiffuseMap(texture);
-		break;
-	case gTexture::TEXTURETYPE_SPECULAR:
-		material.setSpecularMap(texture);
-		break;
-	case gTexture::TEXTURETYPE_NORMAL:
-		material.setNormalMap(texture);
-		break;
-	case gTexture::TEXTURETYPE_HEIGHT:
-		material.setHeightMap(texture);
-		break;
-	case gTexture::TEXTURETYPE_PBR_ALBEDO:
-		material.setAlbedoMap(texture);
-		break;
-	case gTexture::TEXTURETYPE_PBR_ROUGHNESS:
-		material.setRoughnessMap(texture);
-		break;
-	case gTexture::TEXTURETYPE_PBR_METALNESS:
-		material.setMetalnessMap(texture);
-		break;
-	case gTexture::TEXTURETYPE_PBR_NORMAL:
-		material.setPbrNormalMap(texture);
-		break;
-	case gTexture::TEXTURETYPE_PBR_AO:
-		material.setAOMap(texture);
-		break;
-	}
+	material.setMap(texture->getType(), texture);
 	if (!hasold) {
 		int count = ++texturecounters[texture->getType()];
 		texturenames[texture->getType()] = texture->getTypeName() + gToStr(count);
@@ -247,29 +219,30 @@ void gMesh::drawStart() {
 	    colorshader.setFloat("material.shininess", material.getShininess());
 
 	    // Bind diffuse textures
-	    colorshader.setInt("material.useDiffuseMap", material.isDiffuseMapEnabled());
-//		if(material.isDiffuseMapEnabled()) gLogi("gModel") << "mesh name:" << name;
-//		if(material.isDiffuseMapEnabled()) gLogi("gModel") << "diffuse texture name:" << material.getDiffuseMap()->getFilename();
-	    if (material.isDiffuseMapEnabled()) {
-			colorshader.setInt("material.diffusemap", 0); // Diffuse texture unit
+	    bool hasDiffuse = material.isMapEnabled(gTexture::TEXTURETYPE_DIFFUSE);
+	    colorshader.setInt("material.useDiffuseMap", hasDiffuse);
+	    if (hasDiffuse) {
+			colorshader.setInt("material.diffusemap", 0);
 	    	renderer->activateTexture(0);
-		    material.bindDiffuseMap();
+		    material.bindMap(gTexture::TEXTURETYPE_DIFFUSE);
 	    }
 
 	    // Bind specular textures
-	    colorshader.setInt("material.useSpecularMap", material.isDiffuseMapEnabled() && material.isSpecularMapEnabled());
-	    if (material.isDiffuseMapEnabled() && material.isSpecularMapEnabled()) {
-			colorshader.setInt("material.specularmap", 1); // Specular texture unit
+	    bool hasSpecular = hasDiffuse && material.isMapEnabled(gTexture::TEXTURETYPE_SPECULAR);
+	    colorshader.setInt("material.useSpecularMap", hasSpecular);
+	    if (hasSpecular) {
+			colorshader.setInt("material.specularmap", 1);
 	    	renderer->activateTexture(1);
-		    material.bindSpecularMap();
+		    material.bindMap(gTexture::TEXTURETYPE_SPECULAR);
 	    }
 
 	    // Bind normal textures
-	    colorshader.setInt("aUseNormalMap", material.isDiffuseMapEnabled() && material.isNormalMapEnabled());
-	    if (material.isDiffuseMapEnabled() && material.isNormalMapEnabled()) {
-			colorshader.setInt("material.normalmap", 2); // Normal texture unit
+	    bool hasNormal = hasDiffuse && material.isMapEnabled(gTexture::TEXTURETYPE_NORMAL);
+	    colorshader.setInt("material.useNormalMap", hasNormal);
+	    if (hasNormal) {
+			colorshader.setInt("material.normalMap", 2);
 	    	renderer->activateTexture(2);
-		    material.bindNormalMap();
+		    material.bindMap(gTexture::TEXTURETYPE_NORMAL);
 	    }
 
 	    // Set matrices
@@ -285,16 +258,28 @@ void gMesh::drawStart() {
     	pbrshader.setMat4("projection", renderer->getProjectionMatrix());
 	    pbrshader.setMat4("view", renderer->getViewMatrix());
     	pbrshader.setMat4("model", localtransformationmatrix);
+    	pbrshader.setVec3("camPos", renderer->getCameraPosition());
     	pbrshader.setInt("albedoMap", 3);
     	pbrshader.setInt("normalMap", 4);
     	pbrshader.setInt("metallicMap", 5);
     	pbrshader.setInt("roughnessMap", 6);
     	pbrshader.setInt("aoMap", 7);
-    	material.bindAlbedoMap();
-    	material.bindPbrNormalMap();
-    	material.bindMetalnessMap();
-    	material.bindRoughnessMap();
-    	material.bindAOMap();
+    	bool hasAlbedo = material.isMapEnabled(gTexture::TEXTURETYPE_PBR_ALBEDO);
+    	bool hasDiffuseFallback = !hasAlbedo && material.isMapEnabled(gTexture::TEXTURETYPE_DIFFUSE);
+    	pbrshader.setInt("hasAlbedoMap", (hasAlbedo || hasDiffuseFallback) ? 1 : 0);
+    	pbrshader.setInt("hasNormalMap", material.isMapEnabled(gTexture::TEXTURETYPE_PBR_NORMAL) ? 1 : 0);
+    	pbrshader.setInt("hasMetallicMap", material.isMapEnabled(gTexture::TEXTURETYPE_PBR_METALNESS) ? 1 : 0);
+    	pbrshader.setInt("hasRoughnessMap", material.isMapEnabled(gTexture::TEXTURETYPE_PBR_ROUGHNESS) ? 1 : 0);
+    	pbrshader.setInt("hasAOMap", material.isMapEnabled(gTexture::TEXTURETYPE_PBR_AO) ? 1 : 0);
+    	if (hasAlbedo) {
+    		material.bindMap(gTexture::TEXTURETYPE_PBR_ALBEDO, 3);
+    	} else if (hasDiffuseFallback) {
+    		material.getMap(gTexture::TEXTURETYPE_DIFFUSE)->bind(3);
+    	}
+    	material.bindMap(gTexture::TEXTURETYPE_PBR_NORMAL, 4);
+    	material.bindMap(gTexture::TEXTURETYPE_PBR_METALNESS, 5);
+    	material.bindMap(gTexture::TEXTURETYPE_PBR_ROUGHNESS, 6);
+    	material.bindMap(gTexture::TEXTURETYPE_PBR_AO, 7);
 	}
 }
 
@@ -428,11 +413,11 @@ float gMesh::distanceTriangles(gRay* ray) {
 	float distance = 0.0f;
 	const std::vector<gVertex>& verts = *vertices;
 	const std::vector<gIndex>& inds = *indices;
-	for (loopindex = 0; loopindex < inds.size(); loopindex += 3) {
+	for (size_t i = 0; i < inds.size(); i += 3) {
 		//iterate through all faces of the mesh since each face has 3 vertices
-		const glm::vec3& a = verts[inds[loopindex]].position;
-		const glm::vec3& b = verts[inds[loopindex + 1]].position;
-		const glm::vec3& c = verts[inds[loopindex + 2]].position;
+		const glm::vec3& a = verts[inds[i]].position;
+		const glm::vec3& b = verts[inds[i + 1]].position;
+		const glm::vec3& c = verts[inds[i + 2]].position;
 		if(glm::intersectRayTriangle(ray->getOrigin(), ray->getDirection(), a, b, c, baryposition, distance)) {
 			if(distance > 0 && distance < mindistance) {
 				mindistance = distance;

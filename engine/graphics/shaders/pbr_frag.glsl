@@ -16,11 +16,6 @@ uniform sampler2D metallicMap;
 uniform sampler2D roughnessMap;
 uniform sampler2D aoMap;
 
-// IBL
-uniform samplerCube irradianceMap;
-uniform samplerCube prefilterMap;
-uniform sampler2D brdfLUT;
-
 struct Light {
 	int type; //0-ambient, 1-directional, 2-point, 3-spot
     vec3 position;
@@ -39,11 +34,19 @@ struct Light {
 };
 layout(std140) uniform Lights {
 	int lightnum;
-	Light lights[GLIST_MAX_LIGHTS];
 	int enabledlights;
+	vec4 globalambientcolor;
+	Light lights[GLIST_MAX_LIGHTS];
 };
 
 uniform vec3 camPos;
+
+// Texture availability flags
+uniform int hasAlbedoMap;
+uniform int hasNormalMap;
+uniform int hasMetallicMap;
+uniform int hasRoughnessMap;
+uniform int hasAOMap;
 
 const float PI = 3.14159265359;
 // ----------------------------------------------------------------------------
@@ -108,23 +111,17 @@ vec3 fresnelSchlick(float cosTheta, vec3 F0)
     return F0 + (1.0 - F0) * pow(max(1.0 - cosTheta, 0.0), 5.0);
 }
 // ----------------------------------------------------------------------------
-vec3 fresnelSchlickRoughness(float cosTheta, vec3 F0, float roughness)
-{
-    return F0 + (max(vec3(1.0 - roughness), F0) - F0) * pow(max(1.0 - cosTheta, 0.0), 5.0);
-}
-// ----------------------------------------------------------------------------
 void main()
 {
-    // material properties
-    vec3 albedo = pow(texture(albedoMap, TexCoords).rgb, vec3(2.2));
-    float metallic = texture(metallicMap, TexCoords).r;
-    float roughness = texture(roughnessMap, TexCoords).r;
-    float ao = texture(aoMap, TexCoords).r;
+    // material properties - use defaults when maps aren't available
+    vec3 albedo = hasAlbedoMap > 0 ? pow(texture(albedoMap, TexCoords).rgb, vec3(2.2)) : vec3(0.5);
+    float metallic = hasMetallicMap > 0 ? texture(metallicMap, TexCoords).r : 0.0;
+    float roughness = hasRoughnessMap > 0 ? texture(roughnessMap, TexCoords).r : 0.5;
+    float ao = hasAOMap > 0 ? texture(aoMap, TexCoords).r : 1.0;
 
     // input lighting data
-    vec3 N = getNormalFromMap();
+    vec3 N = hasNormalMap > 0 ? getNormalFromMap() : normalize(Normal);
     vec3 V = normalize(camPos - WorldPos);
-    vec3 R = reflect(-V, N);
 
     // calculate reflectance at normal incidence; if dia-electric (like plastic) use F0
     // of 0.04 and if it's a metal, use the albedo color as F0 (metallic workflow)
@@ -133,13 +130,44 @@ void main()
 
     // reflectance equation
     vec3 Lo = vec3(0.0);
+    vec3 ambientSum = vec3(0.0);
     for(int i = 0; i < lightnum; ++i) {
-        // calculate per-light radiance
-        vec3 L = normalize(lights[i].position - WorldPos);
+        // Check if light is enabled
+        if ((enabledlights & (1 << i)) == 0) continue;
+
+        int lightType = lights[i].type;
+
+        // Ambient light - just accumulate ambient color
+        if (lightType == 0) {
+            ambientSum += lights[i].ambient.rgb;
+            continue;
+        }
+
+        // Calculate light direction and radiance based on type
+        vec3 L;
+        vec3 radiance;
+
+        if (lightType == 1) {
+            // Directional light - no attenuation
+            L = normalize(-lights[i].direction);
+            radiance = lights[i].diffuse.rgb * PI;
+        } else {
+            // Point light (2) and Spot light (3)
+            L = normalize(lights[i].position - WorldPos);
+            float distance = length(lights[i].position - WorldPos);
+            float attenuation = 1.0 / (lights[i].constant + lights[i].linear * distance + lights[i].quadratic * (distance * distance));
+            radiance = lights[i].diffuse.rgb * PI * attenuation;
+
+            // Spot light cone
+            if (lightType == 3) {
+                float theta = dot(L, normalize(-lights[i].direction));
+                float epsilon = lights[i].cutOff - lights[i].outerCutOff;
+                float intensity = clamp((theta - lights[i].outerCutOff) / epsilon, 0.0, 1.0);
+                radiance *= intensity;
+            }
+        }
+
         vec3 H = normalize(V + L);
-        float distance = length(lights[i].position - WorldPos);
-        float attenuation = 1.0 / (distance * distance);
-        vec3 radiance = lights[i].diffuse.xyz * attenuation;
 
         // Cook-Torrance BRDF
         float NDF = DistributionGGX(N, H, roughness);
@@ -147,44 +175,25 @@ void main()
         vec3 F    = fresnelSchlick(max(dot(H, V), 0.0), F0);
 
         vec3 nominator    = NDF * G * F;
-        float denominator = 4.0 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0) + 0.001; // 0.001 to prevent divide by zero.
+        float denominator = 4.0 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0) + 0.001;
         vec3 specular = nominator / denominator;
 
-         // kS is equal to Fresnel
         vec3 kS = F;
-        // for energy conservation, the diffuse and specular light can't
-        // be above 1.0 (unless the surface emits light); to preserve this
-        // relationship the diffuse component (kD) should equal 1.0 - kS.
         vec3 kD = vec3(1.0) - kS;
-        // multiply kD by the inverse metalness such that only non-metals
-        // have diffuse lighting, or a linear blend if partly metal (pure metals
-        // have no diffuse light).
         kD *= 1.0 - metallic;
 
-        // scale light by NdotL
         float NdotL = max(dot(N, L), 0.0);
 
-        // add to outgoing radiance Lo
-        Lo += (kD * albedo / PI + specular) * radiance * NdotL; // note that we already multiplied the BRDF by the Fresnel (kS) so we won't multiply by kS again
+        Lo += (kD * albedo / PI + specular) * radiance * NdotL;
     }
 
-    // ambient lighting (we now use IBL as the ambient term)
-    vec3 F = fresnelSchlickRoughness(max(dot(N, V), 0.0), F0, roughness);
-
-    vec3 kS = F;
-    vec3 kD = 1.0 - kS;
-    kD *= 1.0 - metallic;
-
-    vec3 irradiance = texture(irradianceMap, N).rgb;
-    vec3 diffuse      = irradiance * albedo;
-
-    // sample both the pre-filter map and the BRDF lut and combine them together as per the Split-Sum approximation to get the IBL specular part.
-    const float MAX_REFLECTION_LOD = 4.0;
-    vec3 prefilteredColor = textureLod(prefilterMap, R,  roughness * MAX_REFLECTION_LOD).rgb;
-    vec2 brdf  = texture(brdfLUT, vec2(max(dot(N, V), 0.0), roughness)).rg;
-    vec3 specular = prefilteredColor * (F * brdf.x + brdf.y);
-
-    vec3 ambient = (kD * diffuse + specular) * ao;
+    // Ambient lighting from accumulated ambient lights
+    // Only use globalambientcolor when no lights are active (matches color_frag behavior)
+    vec3 ambientLight = ambientSum;
+    if (dot(ambientLight, ambientLight) < 0.001 && lightnum == 0) {
+        ambientLight = globalambientcolor.rgb;
+    }
+    vec3 ambient = ambientLight * albedo * ao;
 
     vec3 color = ambient + Lo;
 
@@ -193,5 +202,5 @@ void main()
     // gamma correct
     color = pow(color, vec3(1.0/2.2));
 
-    FragColor = vec4(color , 1.0);
+    FragColor = vec4(color, 1.0);
 }

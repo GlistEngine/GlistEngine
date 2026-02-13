@@ -57,6 +57,7 @@ class gBaseCanvas;
 class gBaseApp;
 class gAppManager;
 class gGUIFrame;
+class gInputManager;
 
 /**
  * Sets the app settings for the engine according to given name, mode of window,

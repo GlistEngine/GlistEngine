@@ -966,7 +966,7 @@ void gModel::prepareVertexAnimationData() {
 
 				if (isvertexanimationstoredonvram) {
 					std::vector<gVertex> vertexarray = meshes[i]->getVertices();
-					std::vector<gIndex> indexarray = meshes[i]->getIndices();
+					const std::vector<gIndex>& indexarray = meshes[i]->getIndices();
 					for (int l = 0; l < meshes[i]->getVerticesNum(); l++) {
 						vertexarray[l].position = meshes[i]->getVertexPosData(j, k, l);
 						vertexarray[l].normal = meshes[i]->getVertexNormData(j, k, l);

@@ -17,12 +17,13 @@ public:
 	gFbo();
 	virtual ~gFbo();
 
-	void allocate(int width, int height, bool isDepthMap = false);
-    unsigned int getId();
-	int getWidth();
-	int getHeight();
-	unsigned int getTextureId();
-    gTexture& getTexture();
+	void allocate(int width, int height, bool isDepthMap = false, bool useDepthTexture = false);
+	unsigned int getId() const;
+	int getWidth() const;
+	int getHeight() const;
+	unsigned int getTextureId() const;
+	unsigned int getDepthTextureId() const;
+	gTexture& getTexture();
 
 	void bind();
 	void unbind();
@@ -38,19 +39,18 @@ public:
     void drawSub(glm::vec2 pos, glm::vec2 size, glm::vec2 subpos, glm::vec2 subsize, float rotate = 0.0f);
     void drawSub(const gRect& src, const gRect& dst, float rotate = 0.f);
 
-	static unsigned int getQuadVao();
-public:
     static int defaultfbo;
+
 private:
     unsigned int framebuffer;
     unsigned int rbo;
     gTexture* texture;
+    gTexture* depthtexture;
     int width, height;
     bool isdepthmap;
+    bool usedepthtexture;
     bool isallocated;
 
-    static bool isvaoset;
-	static unsigned int quadVAO, quadVBO;
 };
 
 #endif /* GRAPHICS_GFBO_H_ */
