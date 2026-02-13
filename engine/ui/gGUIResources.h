@@ -129,6 +129,7 @@ public:
 	gGUIResources();
 	virtual ~gGUIResources();
 
+	void cleanup();
 	void initialize();
 	bool isInitialized();
 
