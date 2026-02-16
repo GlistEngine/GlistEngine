@@ -34,6 +34,7 @@ var classgBaseGUIObject =
     [ "setTopParent", "classgBaseGUIObject.html#ad8a76f59d9975c919cf8d34a2a0eddc6", null ],
     [ "update", "classgBaseGUIObject.html#a01ef521027e779eb570e4fee272d9c7a", null ],
     [ "windowResized", "classgBaseGUIObject.html#ad559d13a4d7557dcbec65b42102f698e", null ],
+    [ "gAppManager", "classgBaseGUIObject.html#ab9dde2a792049fe98a8f04b4a56a1821", null ],
     [ "bottom", "classgBaseGUIObject.html#a66b98c8ab58c8006c32b6477229287a5", null ],
     [ "height", "classgBaseGUIObject.html#aa6e164509e25553c3a222f76982829c4", null ],
     [ "id", "classgBaseGUIObject.html#ad906f7ad3dc14a9c27f5fe26c779051e", null ],

@@ -64,24 +64,24 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "annotated.html",
-"classgBaseGUIObject.html#ad906f7ad3dc14a9c27f5fe26c779051e",
-"classgCameraController.html#a5834fab43527fc9996044725994da758",
-"classgGLFWWindow.html#a7a5ad603510df5bea81eb9098ef11718",
-"classgGUIColorbox.html#a170a5c642c0348936f133f2d8cdbbde0",
-"classgGUIGraph.html#a25916930ae984ab93e71cf71a1768820",
-"classgGUIMenuItem.html#a2b01d88f005bb22c9e93c0e0c502a463",
-"classgGUIScrollable.html#a77b4beafa79ff7aca67fa85c6337d6eb",
-"classgGUITooltipText.html#a2cedadc240d53936d63f66ecb36e771aa12e6fe81a387860ec10ec0bffc9c98db",
-"classgLight.html#a133e85732ddb01f35d21fc51fc743443",
-"classgModel.html#a5df483650227163cac0301db1bd46b72",
-"classgRect.html#acf2eacd09dc19c2bf1c4263f116daa95",
-"classgRenderer.html#ab64745d519dd1d073ee1dc150e16318a",
-"classgSound.html#abdc3044559324b276b6d4ebc5e1f2cc4",
-"classgWhiteBalance.html#a8165820b0db38a930dcb26f3eac888d2",
-"gFile_8h_source.html",
-"gKeyCode_8h.html#ab680cf295b3458eee1c73831cd1ad0b2",
-"gUtils_8h.html#aa67da6df66a048b61b24f40714a79cde",
-"tinyfiledialogs_8h.html#aa2db23282c31c40c4c12b4847b92659b"
+"classgBaseGUIObject.html#ad8a76f59d9975c919cf8d34a2a0eddc6",
+"classgCameraController.html#a579ffe541faeb1f233a96146ed2ffe4d",
+"classgGLFWWindow.html#a5796a0f73e65428f97cfeff5ca737d52",
+"classgGUIColorbox.html",
+"classgGUIGraph.html#a231a625ebb7bafd1efd2bd0c301a355e",
+"classgGUIMenuItem.html#a2524883ec447de4dbca439e45016535a",
+"classgGUIScrollable.html#a6a5698aaf73204b817e93440d50fc72d",
+"classgGUITooltipText.html#a282acabffa43599ae4c2fd003cde1701",
+"classgLight.html#a12e84ee3fcf915e1eb6d037a3dbbdb9d",
+"classgModel.html#a554b98f02c61949dc0cfa11bddff4ac4",
+"classgRect.html#ab9474c63fee1840f3d7055be8d7ad155",
+"classgRenderer.html#ab62a176c82e0a8060c31af50b2396325",
+"classgSound.html#aba593e8c7971d5ff927efe593ddec4b7",
+"classgWhiteBalance.html#a4a4c798c7f480eca23aff77a79721857",
+"gFile_8h.html#abd38bed113ec30fc0cf304e41ee3ff12",
+"gKeyCode_8h.html#ab58f35e083da90fcf049ad9843a12d6c",
+"gUtils_8h.html#aa15cce4ae90efc10418c2f3eeb989fc1",
+"tinyfiledialogs_8h.html#a570a95a1dce391ed29f7fc5861ecee69"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

@@ -1,5 +1,6 @@
 var NAVTREEINDEX4 =
 {
+"classgGUIColorbox.html":[1,0,59],
 "classgGUIColorbox.html#a170a5c642c0348936f133f2d8cdbbde0":[1,0,59,8],
 "classgGUIColorbox.html#a1a162962a89447b2414a23279eeb5d35":[1,0,59,7],
 "classgGUIColorbox.html#a44fcd1e1b34f1c1531885753f181a7fc":[1,0,59,5],
@@ -248,6 +249,5 @@ var NAVTREEINDEX4 =
 "classgGUIGraph.html#a028f9e558a75d13d9729fa0f6f0c5d07":[1,0,72,30],
 "classgGUIGraph.html#a029c150e6b53f4702fcc806a9f7f8d3e":[1,0,72,19],
 "classgGUIGraph.html#a060d8ccc53d1010e9ad55047bb152166":[1,0,72,40],
-"classgGUIGraph.html#a116c26dcd78ac3d445c6bdff32ae914d":[1,0,72,39],
-"classgGUIGraph.html#a231a625ebb7bafd1efd2bd0c301a355e":[1,0,72,48]
+"classgGUIGraph.html#a116c26dcd78ac3d445c6bdff32ae914d":[1,0,72,39]
 };

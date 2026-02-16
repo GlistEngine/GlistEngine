@@ -1,5 +1,6 @@
 var NAVTREEINDEX2 =
 {
+"classgCameraController.html#a579ffe541faeb1f233a96146ed2ffe4d":[1,0,22,6],
 "classgCameraController.html#a5834fab43527fc9996044725994da758":[1,0,22,2],
 "classgCameraController.html#a589be242a1575d318900c06cc7a05865":[1,0,22,5],
 "classgCameraController.html#a5d45da0f4c45a5c9654f428cc8381b8b":[1,0,22,16],
@@ -248,6 +249,5 @@ var NAVTREEINDEX2 =
 "classgGLFWWindow.html#a2480f711c72c0e4f963e70a704bc971f":[1,0,48,23],
 "classgGLFWWindow.html#a379c147808dfeeefa7a4f4862803b819":[1,0,48,8],
 "classgGLFWWindow.html#a3d44cb80525f64095977fcd9194fb021":[1,0,48,22],
-"classgGLFWWindow.html#a45a407047573e2385e5b2f9b89c1c9b6":[1,0,48,14],
-"classgGLFWWindow.html#a5796a0f73e65428f97cfeff5ca737d52":[1,0,48,18]
+"classgGLFWWindow.html#a45a407047573e2385e5b2f9b89c1c9b6":[1,0,48,14]
 };

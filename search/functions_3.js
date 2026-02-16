@@ -13,7 +13,7 @@ var searchData=
   ['checkframebufferstatus_10',['checkframebufferstatus',['../classgGLRenderEngine.html#afe9c308ca87af133f8bd963a7d2f67ba',1,'gGLRenderEngine::checkFramebufferStatus()'],['../classgRenderer.html#ae80e6011a01d01fb216e3911249e3dcb',1,'gRenderer::checkFramebufferStatus()']]],
   ['checkpixelperfectcollision_11',['checkPixelPerfectCollision',['../classgImage.html#a74b5a03977d819f44e140c0b6501f16e',1,'gImage']]],
   ['cleantext_12',['cleanText',['../classgGUITextbox.html#aa55684fd12dba93a5a9a91858a5592d5',1,'gGUITextbox']]],
-  ['cleanup_13',['cleanup',['../classgRenderer.html#a93db9d7438e4df4a6da3529e1c4d1230',1,'gRenderer']]],
+  ['cleanup_13',['cleanup',['../classgRenderer.html#a93db9d7438e4df4a6da3529e1c4d1230',1,'gRenderer::cleanup()'],['../classgGUIResources.html#a12e03e9410ed1aac225101164e82a337',1,'gGUIResources::cleanup()']]],
   ['cleanupall_14',['cleanupAll',['../classgTexture.html#aff936e28510cbf946e8a5fd95a007ca3',1,'gTexture']]],
   ['cleanupdata_15',['cleanupData',['../classgTexture.html#a89ec99d57b0581e725e01971ac605044',1,'gTexture']]],
   ['cleanupssaoresources_16',['cleanupSSAOResources',['../classgRenderer.html#a70d90192bda5c806e99719e4bb951b82',1,'gRenderer']]],
