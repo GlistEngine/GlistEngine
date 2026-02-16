@@ -298,7 +298,12 @@ void gBaseGUIObject::onGUIEvent(int guiObjectId, int eventType, int sourceEventT
 
 void gBaseGUIObject::setCursorOn(bool isOn) {
 	iscursoron = isOn;
-
 }
 
+void gBaseGUIObject::cleanupResources() {
+	res.cleanup();
+}
 
+void gBaseGUIObject::initializeResources() {
+	res.initialize();
+}
