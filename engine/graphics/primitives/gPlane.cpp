@@ -19,7 +19,7 @@ gPlane::~gPlane() {
 void gPlane::setTextureTiling(float tilingX, float tilingY) {
 	tilingx = tilingX;
 	tilingy = tilingY;
-	updateTextureCoordinates();
+	initializePlane();
 }
 
 void gPlane::setTextureTiling(float tiling) {
@@ -65,8 +65,4 @@ void gPlane::initializePlane() {
 
 	setVertices(std::make_shared<std::vector<gVertex>>(std::move(vertices)),
 				std::make_shared<std::vector<gIndex>>(std::move(indices)));
-}
-
-void gPlane::updateTextureCoordinates() {
-	initializePlane();
 }
