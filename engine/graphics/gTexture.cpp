@@ -11,11 +11,18 @@
 #ifndef STB_IMAGE_IMPLEMENTATION
 #define STB_IMAGE_IMPLEMENTATION
 #endif
+
+#ifdef _WIN32
+#define STBI_WINDOWS_UTF8
+#endif
+
 #include "stb/stb_image.h"
 #include "stb/stb_image_write.h"
 
 #include "gShader.h"
 #include "gTracy.h"
+
+#include "gFile.h"
 
 #if defined(GLIST_OPENGLES)
 // todo alternatives?
@@ -260,24 +267,50 @@ void gTexture::swap(gTexture& other) noexcept {
 }
 
 unsigned int gTexture::load(const std::string& fullPath) {
-	cleanupData();
+    cleanupData();
 
-	fullpath = fullPath;
-	directory = getDirName(fullpath);
-	path = getFileName(fullpath);
-	ishdr = stbi_is_hdr(fullpath.c_str());
+    this->fullpath = fullPath;
+    directory = getDirName(this->fullpath);
+    path = getFileName(this->fullpath);
 
-	if (ishdr) {
-		stbi_set_flip_vertically_on_load(true);
-		float* datahdr = stbi_loadf(fullpath.c_str(), &width, &height, &componentnum, 0);
-		setDataHDR(datahdr, width, height, componentnum, false, true);
-	} else {
-		unsigned char* data = stbi_load(fullpath.c_str(), &width, &height, &componentnum, 0);
-		setData(data, width, height, componentnum, false, true);
-	}
+    // Dosyayý gFile ile oku (path unicode-safe olmalý)
+    gFile f;
+    if(!f.load(this->fullpath, gFile::FILEMODE_READONLY, true)) {
+        gLoge("gTexture") << "Texture failed to open (gFile) at path: " << this->fullpath;
+        return id;
+    }
 
-	//	setupRenderData();
-	return id;
+    auto bytes = f.getBytes();
+    if(bytes.empty()) {
+        gLoge("gTexture") << "Texture file is empty at path: " << this->fullpath;
+        return id;
+    }
+
+    const stbi_uc* mem = reinterpret_cast<const stbi_uc*>(bytes.data());
+    int len = (int)bytes.size();
+
+    ishdr = stbi_is_hdr_from_memory(mem, len);
+
+    if (ishdr) {
+        stbi_set_flip_vertically_on_load(true);
+        float* img = stbi_loadf_from_memory(mem, len, &width, &height, &componentnum, 0);
+        if(!img) {
+            gLoge("gTexture") << "stbi_loadf_from_memory failed for: " << this->fullpath
+                              << " reason: " << (stbi_failure_reason() ? stbi_failure_reason() : "unknown");
+            return id;
+        }
+        setDataHDR(img, width, height, componentnum, false, true);
+    } else {
+        unsigned char* img = stbi_load_from_memory(mem, len, &width, &height, &componentnum, 0);
+        if(!img) {
+            gLoge("gTexture") << "stbi_load_from_memory failed for: " << this->fullpath
+                              << " reason: " << (stbi_failure_reason() ? stbi_failure_reason() : "unknown");
+            return id;
+        }
+        setData(img, width, height, componentnum, false, true);
+    }
+
+    return id;
 }
 
 unsigned int gTexture::loadTexture(const std::string& texturePath) {
@@ -361,7 +394,9 @@ void gTexture::setDataInternal(unsigned char* textureData, bool isMutable, bool 
 		}
 		unbind();
 	} else {
-		gLoge("gTexture") << "Texture failed to load at path: " << fullpath;
+		gLoge("gTexture") << "Texture failed to load at path: " << fullpath
+				<< " reason: " << (stbi_failure_reason() ? stbi_failure_reason() : "unknown");
+		return;
 	}
 
 	setupRenderData();
@@ -388,7 +423,9 @@ void gTexture::setDataInternalHDR(float* textureData, bool isMutable, bool isStb
 		}
 		unbind();
 	} else {
-		gLoge("gTexture") << "Failed to load HDR image at path: " << fullpath;
+		gLoge("gTexture") << "Texture failed to load at path: " << fullpath
+						<< " reason: " << (stbi_failure_reason() ? stbi_failure_reason() : "unknown");
+		return;
 	}
 
 	setupRenderData();

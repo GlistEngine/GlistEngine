@@ -71,30 +71,57 @@ void gImage::swap(gImage& other) noexcept {
 }
 
 unsigned int gImage::load(const std::string& fullPath) {
-	cleanupData();
+    cleanupData();
 
-	fullpath = fullPath;
-	directory = getDirName(fullpath);
-	path = getFileName(fullpath);
-	ishdr = stbi_is_hdr(fullpath.c_str());
+    fullpath = fullPath;
+    directory = getDirName(fullpath);
+    path = getFileName(fullpath);
 
-	if (!istextureallocated) {
-		id = renderer->createTextures();
-		istextureallocated = true;
-	}
+    // --- Unicode-safe load: read file with gFile, decode with stb from memory ---
+    gFile f;
+    if(!f.load(fullpath, gFile::FILEMODE_READONLY, true)) {
+        gLoge("gImage") << "Image failed to open (gFile) at path: " << fullpath;
+        return id;
+    }
 
-	if (ishdr) {
-		stbi_set_flip_vertically_on_load(true);
-		float* datahdr = stbi_loadf(fullpath.c_str(), &width, &height, &componentnum, 0);
-		setDataInternalHDR(datahdr, true, true);
-	} else {
-		unsigned char* data = stbi_load(fullpath.c_str(), &width, &height, &componentnum, 0);
-		setDataInternal(data, true, true);
-	}
+    auto bytes = f.getBytes();
+    if(bytes.empty()) {
+        gLoge("gImage") << "Image file is empty at path: " << fullpath;
+        return id;
+    }
 
-	//	setupRenderData();
-	return id;
+    const stbi_uc* mem = reinterpret_cast<const stbi_uc*>(bytes.data());
+    int len = (int)bytes.size();
+
+    ishdr = stbi_is_hdr_from_memory(mem, len);
+
+    if (!istextureallocated) {
+        id = renderer->createTextures();
+        istextureallocated = true;
+    }
+
+    if (ishdr) {
+        stbi_set_flip_vertically_on_load(true);
+        float* img = stbi_loadf_from_memory(mem, len, &width, &height, &componentnum, 0);
+        if(!img) {
+            gLoge("gImage") << "stbi_loadf_from_memory failed for: " << fullpath
+                            << " reason: " << (stbi_failure_reason() ? stbi_failure_reason() : "unknown");
+            return id;
+        }
+        setDataInternalHDR(img, true, true);
+    } else {
+        unsigned char* img = stbi_load_from_memory(mem, len, &width, &height, &componentnum, 0);
+        if(!img) {
+            gLoge("gImage") << "stbi_load_from_memory failed for: " << fullpath
+                            << " reason: " << (stbi_failure_reason() ? stbi_failure_reason() : "unknown");
+            return id;
+        }
+        setDataInternal(img, true, true);
+    }
+
+    return id;
 }
+
 
 unsigned int gImage::loadImage(const std::string& imagePath) {
 	return load(gGetImagesDir() + imagePath);

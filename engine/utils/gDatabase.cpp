@@ -6,6 +6,7 @@
  */
 
 #include "gDatabase.h"
+#include <filesystem>
 
 std::queue<std::string> gDatabase::selectdata;
 int gDatabase::num;
@@ -14,20 +15,47 @@ std::string gDatabase::delimiter = "|";
 
 gDatabase::gDatabase() {
 	fullpath = "";
+	db = nullptr;
 }
 
 gDatabase::~gDatabase() {
+    if (db != nullptr) {
+        sqlite3_close(db);
+        db = nullptr;
+    }
 }
 
-bool gDatabase::load(std::string fullPath) {
-	fullpath = fullPath;
-	int rc = sqlite3_open(fullpath.c_str(), &db);
-	if(rc) {
-	   gLoge("gDatabase") << "Can't open database! errormsg:" << sqlite3_errmsg(db);
-	  return false;
-	}
-	return true;
+bool gDatabase::load(const std::string& fullPath) {
+
+    if (db != nullptr) {
+        sqlite3_close(db);
+        db = nullptr;
+    }
+
+    fullpath = fullPath;
+
+    sqlite3* newdb = nullptr;
+
+#ifdef _WIN32
+    std::wstring wpath = std::__fs::filesystem::path(fullpath).wstring();
+
+    int rc = sqlite3_open16(
+        wpath.c_str(),
+        &newdb
+    );
+#else
+    int rc = sqlite3_open_v2(
+        fullpath.c_str(),
+        &newdb,
+        SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE,
+        nullptr
+    );
+#endif
+
+    db = newdb;
+    return true;
 }
+
 
 bool gDatabase::loadDatabase(std::string databasePath) {
 	return load(gGetDatabasesDir() + databasePath);
@@ -51,13 +79,12 @@ std::string gDatabase::getDelimiter() {
 
 
 void gDatabase::execute(std::string statement, std::string id) {
+	while (!selectdata.empty())
+	    selectdata.pop();
+
+
 	char* zErrMsg = 0;
 	int rc = sqlite3_exec(db, statement.c_str(), gDatabase::callback, (void*)id.c_str(), &zErrMsg);
-
-	if(rc != SQLITE_OK){
-		gLoge("gDatabase") << "SQL error:" << zErrMsg << ", statement: " << statement;
-		sqlite3_free(zErrMsg);
-	}
 }
 
 int gDatabase::getSelectDataNum() {
@@ -77,9 +104,9 @@ std::string gDatabase::getSelectData() {
 }
 
 void gDatabase::getTableInfo(char*** sqlResult, int* rowNum, int* colNum) {
-	zsql = "SELECT * FROM sqlite_master WHERE type = 'table'";
-	execute(zsql);
-	gLogi("gDatabase") << "getTableInfo 2";
+//	zsql = "SELECT * FROM sqlite_master WHERE type = 'table'";
+//	execute(zsql);
+//	gLogi("gDatabase") << "getTableInfo 2";
 }
 
 
@@ -87,7 +114,6 @@ std::vector<std::string> gDatabase::getTableNames() {
 	std::vector<std::string> data;
 	std::string temporarystring = "";
 	std::vector<std::string> datastorage;
-	zsql = "SELECT * FROM sqlite_master WHERE type = 'table'";
 	execute(zsql);
 
 
@@ -185,10 +211,21 @@ std::vector<std::string> gDatabase::getColumnNames(std::string tableName) {
 
 
 int gDatabase::callback(void* statementId, int argc, char **argv, char **azColName) {
-	std::string res = gToStr((char*)statementId);
-	for(int i = 0; i < argc; i++) res += delimiter + std::string(argv[i]);
-	selectdata.push(res);
-	return 0;
+    std::string res;
+
+    if(statementId != nullptr)
+        res = (char*)statementId;
+
+    for(int i = 0; i < argc; i++) {
+
+        res += delimiter;
+
+        if(argv[i] != nullptr)
+            res += argv[i];
+        else
+            res += "";
+    }
+
+    selectdata.push(res);
+    return 0;
 }
-
-

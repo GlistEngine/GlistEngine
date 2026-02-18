@@ -21,6 +21,7 @@
 #include <ios>
 #include <iostream>
 #include "ghc/filesystem.hpp"
+
 namespace fs {
 using namespace ghc::filesystem;
 using ifstream = ghc::filesystem::ifstream;
@@ -109,6 +110,7 @@ public:
 	static bool removeAll(const std::string& fullPath);
 	static void rename(const std::string& fromFullPath, const std::string& toFullPath);
 	static std::vector<std::string> getDirectoryContent(const std::string& fullPath);
+	static std::string normalizePathUtf8(const std::string& p);
 
 private:
 	fs::path path;
