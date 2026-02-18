@@ -13,7 +13,7 @@ var classgDatabase =
     [ "getTableInfo", "classgDatabase.html#a437340323074abc70443a23d13957623", null ],
     [ "getTableNames", "classgDatabase.html#a1412f54eae4e9d12949389478f73c352", null ],
     [ "hasSelectData", "classgDatabase.html#a795d21f38bf77f0a7f06af1cea79edba", null ],
-    [ "load", "classgDatabase.html#a13c3213a26d55ee9fd8047c45a49ac4c", null ],
+    [ "load", "classgDatabase.html#a3f787f3db7e674a4a591f53354a34f11", null ],
     [ "loadDatabase", "classgDatabase.html#a3c6bc4225fe720cc91ac46bd58dd85ef", null ],
     [ "setDelimiter", "classgDatabase.html#ac5c3ef991f96d9f8de3a1d840d9ead5a", null ]
 ];

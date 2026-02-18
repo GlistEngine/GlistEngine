@@ -12,5 +12,6 @@ var searchData=
   ['nodenum_9',['nodenum',['../classgGUITreelist.html#aa06ef480d91d46303e6354134f5d5729',1,'gGUITreelist']]],
   ['none_10',['NONE',['../classgFile.html#ae0409e2a1e11645fb3301ded923fe7cba3d05a626a7fa58f15a303dd336d863e1',1,'gFile']]],
   ['normal_11',['normal',['../structgCamera_1_1Plane.html#abd51c32507e71def3c0026401f83071c',1,'gCamera::Plane::normal'],['../structgVertex.html#a9ab67e1c2077cb5921f8df6772ddffd4',1,'gVertex::normal']]],
-  ['numberbox_12',['Numberbox',['../classgGUITooltipText.html#a2cedadc240d53936d63f66ecb36e771aa56250df15e94f7a1379a7c3058b6ce5c',1,'gGUITooltipText']]]
+  ['normalizepathutf8_12',['normalizePathUtf8',['../classgFile.html#ab6b96834494c3e0ad180665f8105609d',1,'gFile']]],
+  ['numberbox_13',['Numberbox',['../classgGUITooltipText.html#a2cedadc240d53936d63f66ecb36e771aa56250df15e94f7a1379a7c3058b6ce5c',1,'gGUITooltipText']]]
 ];
