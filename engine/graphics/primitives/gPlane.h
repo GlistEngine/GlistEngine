@@ -36,7 +36,6 @@ public:
 
 private:
 	void initializePlane();
-	void updateTextureCoordinates();
 	float tilingx, tilingy;
 };
 
