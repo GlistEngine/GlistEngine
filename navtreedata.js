@@ -80,8 +80,8 @@ var NAVTREEINDEX =
 "classgWhiteBalance.html#a4a4c798c7f480eca23aff77a79721857",
 "gFile_8h.html#abd38bed113ec30fc0cf304e41ee3ff12",
 "gKeyCode_8h.html#ab58f35e083da90fcf049ad9843a12d6c",
-"gUtils_8h.html#aa15cce4ae90efc10418c2f3eeb989fc1",
-"tinyfiledialogs_8h.html#a570a95a1dce391ed29f7fc5861ecee69"
+"gUtils_8h.html#aa008cc42702c48f7badb432d2da5747c",
+"tinyfiledialogs_8h.html#a4e0c55962cd5119defe2e4ab70440d27"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
