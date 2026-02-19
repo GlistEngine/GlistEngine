@@ -451,6 +451,19 @@ std::string gGetFirstLineOfTextFile(std::string fullFilepath) {
 	return firstline;
 }
 
+std::string gGetFirstLineOfText(const std::string& text) {
+	std::string firstline = "";
+
+	size_t pos = text.find_first_of('\n');
+	if(pos != std::string::npos) firstline = text.substr(0, pos);
+	else firstline = text;
+
+	size_t pos2 = firstline.find_first_of('\r');
+	if(pos2 != std::string::npos) firstline = firstline.substr(0, pos2);
+
+	return firstline;
+}
+
 std::string gToLower(const std::string& src, const std::string & locale) {
 	std::string dst;
 	std::locale loc = gGetLocale(locale);
