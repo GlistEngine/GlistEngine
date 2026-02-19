@@ -25,8 +25,10 @@ public:
      * Load localization database and parse available language columns
      * @param database Database file path
      * @param tableName Table containing translations (default: "WORDS")
+     *
+     * @return Is the database loaded or not
      */
-	void loadDatabase(const std::string& database, const std::string& tableName = "WORDS");
+	bool loadDatabase(const std::string& database, const std::string& tableName = "WORDS");
 
 	/**
      * Translate word using current language setting
