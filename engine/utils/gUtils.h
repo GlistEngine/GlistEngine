@@ -167,6 +167,7 @@ std::string gReplaceAll(const std::string& source, const std::string& from, cons
 bool gIsValidFilename(std::string fileName);
 
 std::string gGetFirstLineOfTextFile(std::string fullFilepath);
+std::string gGetFirstLineOfText(const std::string& text);
 
 bool gIsInt(const std::string& str);
 bool gIsFloat(const std::string& str);

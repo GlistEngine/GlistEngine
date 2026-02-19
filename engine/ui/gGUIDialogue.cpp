@@ -215,6 +215,7 @@ void gGUIDialogue::resetButtonsBar() {
 	if(buttonsbar.height == 0) buttonsbar.height = buttonsbarh;
 	buttonsbar.set(root, this, this, 0, 0, left, top + height, buttonsbar.width, buttonsbar.height);
 
+	if(dialoguetype == DIALOGUETYPE_NONE) buttonsbarsizer.setSize(1, 1);
 	if(dialoguetype == DIALOGUETYPE_OK) buttonsbarsizer.setSize(1, 2);
 	if(dialoguetype == DIALOGUETYPE_YESNOCANCEL) buttonsbarsizer.setSize(1, 4);
 	if(dialoguetype == DIALOGUETYPE_OKCANCEL || dialoguetype == DIALOGUETYPE_YESNO) buttonsbarsizer.setSize(1, 3);
