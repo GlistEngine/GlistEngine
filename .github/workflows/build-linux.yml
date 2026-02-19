@@ -41,7 +41,7 @@ jobs:
         run: |
           sudo apt-get install -y jq
           
-          RESPONSE=$(curl -s https://api.github.com/repos/GlistEngine/glistzbin-linux/releases/latest)
+          RESPONSE=$(curl -s -H "Authorization: token ${{ github.token }}" https://api.github.com/repos/GlistEngine/glistzbin-linux/releases/latest)
           TAG=$(echo "$RESPONSE" | jq -r '.tag_name')
           URL=$(echo "$RESPONSE" | jq -r '.assets[0].browser_download_url')
           
@@ -51,9 +51,9 @@ jobs:
           echo "tag=$TAG" >> $GITHUB_OUTPUT
           echo "url=$URL" >> $GITHUB_OUTPUT
 
-      - name: Cache glistzbin-linux
+      - name: Restore glistzbin-linux cache
         id: cache-zbin
-        uses: actions/cache@v4
+        uses: actions/cache/restore@v4
         with:
           path: /home/runner/dev/glist/zbin/glistzbin-linux
           key: glistzbin-linux-${{ steps.zbin-info.outputs.tag }}
@@ -81,3 +81,10 @@ jobs:
 
       - name: Build
         run: cmake --build ~/dev/glist/myglistapps/GlistApp/cmake-build --parallel $(nproc)
+
+      - name: Save glistzbin-linux cache
+        if: github.ref == 'refs/heads/main' && steps.cache-zbin.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: /home/runner/dev/glist/zbin/glistzbin-linux
+          key: glistzbin-linux-${{ steps.zbin-info.outputs.tag }}

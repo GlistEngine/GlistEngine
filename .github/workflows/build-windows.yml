@@ -26,7 +26,7 @@ jobs:
         id: zbin-info
         shell: pwsh
         run: |
-          $release = Invoke-RestMethod -Uri "https://api.github.com/repos/GlistEngine/glistzbin-win64/releases/latest"
+          $release = Invoke-RestMethod -Uri "https://api.github.com/repos/GlistEngine/glistzbin-win64/releases/latest" -Headers @{ Authorization = "token ${{ github.token }}" }
           $tag = $release.tag_name
           $url = $release.assets[0].browser_download_url
           
@@ -36,9 +36,9 @@ jobs:
           "tag=$tag" >> $env:GITHUB_OUTPUT
           "url=$url" >> $env:GITHUB_OUTPUT
 
-      - name: Cache glistzbin-win64
+      - name: Restore glistzbin-win64 cache
         id: cache-zbin
-        uses: actions/cache@v4
+        uses: actions/cache/restore@v4
         with:
           path: C:\dev\glist\zbin\glistzbin-win64
           key: glistzbin-win64-${{ steps.zbin-info.outputs.tag }}
@@ -81,3 +81,10 @@ jobs:
       - name: Build
         shell: pwsh
         run: cmake --build C:\dev\glist\myglistapps\GlistApp\cmake-build --parallel $env:NUMBER_OF_PROCESSORS
+
+      - name: Save glistzbin-win64 cache
+        if: github.ref == 'refs/heads/main' && steps.cache-zbin.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: C:\dev\glist\zbin\glistzbin-win64
+          key: glistzbin-win64-${{ steps.zbin-info.outputs.tag }}

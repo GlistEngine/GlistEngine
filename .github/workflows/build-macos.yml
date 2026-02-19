@@ -39,7 +39,7 @@ jobs:
         run: |
           brew install jq
           
-          RESPONSE=$(curl -s https://api.github.com/repos/GlistEngine/glistzbin-macos/releases/latest)
+          RESPONSE=$(curl -s -H "Authorization: token ${{ github.token }}" https://api.github.com/repos/GlistEngine/glistzbin-macos/releases/latest)
           TAG=$(echo "$RESPONSE" | jq -r '.tag_name')
           URL=$(echo "$RESPONSE" | jq -r '.assets[0].browser_download_url')
           
@@ -49,9 +49,9 @@ jobs:
           echo "tag=$TAG" >> $GITHUB_OUTPUT
           echo "url=$URL" >> $GITHUB_OUTPUT
 
-      - name: Cache glistzbin-macos
+      - name: Restore glistzbin-macos cache
         id: cache-zbin
-        uses: actions/cache@v4
+        uses: actions/cache/restore@v4
         with:
           path: /Users/runner/dev/glist/zbin/glistzbin-macos
           key: glistzbin-macos-${{ steps.zbin-info.outputs.tag }}
@@ -74,3 +74,10 @@ jobs:
 
       - name: Build
         run: cmake --build ~/dev/glist/myglistapps/GlistApp/cmake-build --parallel $(sysctl -n hw.ncpu)
+
+      - name: Save glistzbin-macos cache
+        if: github.ref == 'refs/heads/main' && steps.cache-zbin.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: /Users/runner/dev/glist/zbin/glistzbin-macos
+          key: glistzbin-macos-${{ steps.zbin-info.outputs.tag }}
