@@ -1,0 +1,80 @@
+name: Build Linux
+
+on:
+  pull_request:
+
+jobs:
+  build-linux:
+    name: Linux
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Checkout GlistEngine
+        uses: actions/checkout@v4
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            cmake \
+            clang-14 \
+            libc++-14-dev \
+            libc++abi-14-dev \
+            libglew-dev \
+            libgl1-mesa-dev \
+            libcurl4-openssl-dev \
+            libssl-dev \
+            build-essential \
+            pkg-config \
+            unzip
+
+      - name: Set up directory structure
+        run: |
+          mkdir -p ~/dev/glist/{myglistapps,zbin}
+          ln -s "$GITHUB_WORKSPACE" ~/dev/glist/GlistEngine
+
+      - name: Get zbin release info
+        id: zbin-info
+        run: |
+          sudo apt-get install -y jq
+          
+          RESPONSE=$(curl -s https://api.github.com/repos/GlistEngine/glistzbin-linux/releases/latest)
+          TAG=$(echo "$RESPONSE" | jq -r '.tag_name')
+          URL=$(echo "$RESPONSE" | jq -r '.assets[0].browser_download_url')
+          
+          echo "TAG: $TAG"
+          echo "URL: $URL"
+          
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
+          echo "url=$URL" >> $GITHUB_OUTPUT
+
+      - name: Cache glistzbin-linux
+        id: cache-zbin
+        uses: actions/cache@v4
+        with:
+          path: /home/runner/dev/glist/zbin/glistzbin-linux
+          key: glistzbin-linux-${{ steps.zbin-info.outputs.tag }}
+
+      - name: Download and extract glistzbin-linux
+        if: steps.cache-zbin.outputs.cache-hit != 'true'
+        run: |
+          curl -L "${{ steps.zbin-info.outputs.url }}" -o /tmp/glistzbin-linux.zip
+          unzip /tmp/glistzbin-linux.zip -d ~/dev/glist/zbin/
+
+      - name: Clone GlistApp
+        run: git clone https://github.com/GlistEngine/GlistApp.git ~/dev/glist/myglistapps/GlistApp
+
+      - name: Configure CMake
+        run: |
+          cmake \
+          -S ~/dev/glist/myglistapps/GlistApp \
+          -B ~/dev/glist/myglistapps/GlistApp/cmake-build \
+          -DCMAKE_BUILD_TYPE=Debug \
+          -DCMAKE_C_COMPILER=clang-14 \
+          -DCMAKE_CXX_COMPILER=clang++-14 \
+          -DCMAKE_CXX_FLAGS="-stdlib=libc++" \
+          -DCMAKE_EXE_LINKER_FLAGS="-stdlib=libc++" \
+          -DCMAKE_SHARED_LINKER_FLAGS="-stdlib=libc++"
+
+      - name: Build
+        run: cmake --build ~/dev/glist/myglistapps/GlistApp/cmake-build --parallel $(nproc)
