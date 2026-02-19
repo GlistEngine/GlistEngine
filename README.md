@@ -14,6 +14,14 @@ More information:
 - Website: https://www.glistengine.com  
 - Docs: https://glistengine.github.io/GlistEngine/ (Automatically generated from sources)
 
+## Build Status
+
+| Platform | Status |
+|----------|--------|
+| Windows  | ![Windows](https://github.com/GlistEngine/GlistEngine/actions/workflows/build-windows.yml/badge.svg) |
+| macOS    | ![macOS](https://github.com/GlistEngine/GlistEngine/actions/workflows/build-macos.yml/badge.svg) |
+| Linux    | ![Linux](https://github.com/GlistEngine/GlistEngine/actions/workflows/build-linux.yml/badge.svg) |
+
 ## Installation
 
 ### I. Installation For Students

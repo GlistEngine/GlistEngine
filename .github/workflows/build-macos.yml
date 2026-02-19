@@ -1,0 +1,73 @@
+name: Build macOS
+
+on:
+  pull_request:
+
+jobs:
+  build-macos:
+    name: macOS
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout GlistEngine
+        uses: actions/checkout@v4
+
+      - name: Install Homebrew dependencies
+        run: |
+          brew install \
+            llvm \
+            cmake \
+            glew \
+            glfw \
+            glm \
+            freetype \
+            assimp \
+            curl \
+            pkg-config \
+            openssl@3
+
+      - name: Set up directory structure
+        run: |
+          mkdir -p ~/dev/glist/{myglistapps,zbin}
+          ln -s "$GITHUB_WORKSPACE" ~/dev/glist/GlistEngine
+
+      - name: Get zbin release info
+        id: zbin-info
+        run: |
+          brew install jq
+          
+          RESPONSE=$(curl -s https://api.github.com/repos/GlistEngine/glistzbin-macos/releases/latest)
+          TAG=$(echo "$RESPONSE" | jq -r '.tag_name')
+          URL=$(echo "$RESPONSE" | jq -r '.assets[0].browser_download_url')
+          
+          echo "TAG: $TAG"
+          echo "URL: $URL"
+          
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
+          echo "url=$URL" >> $GITHUB_OUTPUT
+
+      - name: Cache glistzbin-macos
+        id: cache-zbin
+        uses: actions/cache@v4
+        with:
+          path: /Users/runner/dev/glist/zbin/glistzbin-macos
+          key: glistzbin-macos-${{ steps.zbin-info.outputs.tag }}
+
+      - name: Download and extract glistzbin-macos
+        if: steps.cache-zbin.outputs.cache-hit != 'true'
+        run: |
+          curl -L "${{ steps.zbin-info.outputs.url }}" -o /tmp/glistzbin-macos.zip
+          unzip /tmp/glistzbin-macos.zip -d ~/dev/glist/zbin/
+
+      - name: Clone GlistApp
+        run: git clone https://github.com/GlistEngine/GlistApp.git ~/dev/glist/myglistapps/GlistApp
+
+      - name: Configure CMake
+        run: |
+          cmake \
+            -S ~/dev/glist/myglistapps/GlistApp \
+            -B ~/dev/glist/myglistapps/GlistApp/cmake-build \
+            -DCMAKE_BUILD_TYPE=Debug
+
+      - name: Build
+        run: cmake --build ~/dev/glist/myglistapps/GlistApp/cmake-build --parallel $(sysctl -n hw.ncpu)
