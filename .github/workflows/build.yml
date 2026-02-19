@@ -1,0 +1,236 @@
+name: Build
+
+on:
+  pull_request:
+
+jobs:
+  build-windows:
+    name: Windows
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout GlistEngine
+        uses: actions/checkout@v4
+
+      - name: Set up directory structure
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path "C:\dev\glist\myglistapps"
+          New-Item -ItemType Directory -Force -Path "C:\dev\glist\zbin"
+          New-Item -ItemType Junction -Path "C:\dev\glist\GlistEngine" -Target $env:GITHUB_WORKSPACE
+
+      - name: Get glistzbin-win64 release info
+        id: zbin-info
+        shell: pwsh
+        run: |
+          $release = Invoke-RestMethod -Uri "https://api.github.com/repos/GlistEngine/glistzbin-win64/releases/latest"
+          $tag = $release.tag_name
+          $url = $release.assets[0].browser_download_url
+          
+          echo "TAG: $tag"
+          echo "URL: $url"
+          
+          "tag=$tag" >> $env:GITHUB_OUTPUT
+          "url=$url" >> $env:GITHUB_OUTPUT
+
+      - name: Cache glistzbin-win64
+        id: cache-zbin
+        uses: actions/cache@v4
+        with:
+          path: C:\dev\glist\zbin\glistzbin-win64
+          key: glistzbin-win64-${{ steps.zbin-info.outputs.tag }}
+
+      - name: Download and extract glistzbin-win64
+        if: steps.cache-zbin.outputs.cache-hit != 'true'
+        shell: pwsh
+        run: |
+          Invoke-WebRequest -Uri "${{ steps.zbin-info.outputs.url }}" -OutFile "C:\dev\glist\zbin\glistzbin-win64.zip"
+          Expand-Archive -Path "C:\dev\glist\zbin\glistzbin-win64.zip" -DestinationPath "C:\dev\glist\zbin\"
+          # Rename versioned folder to the expected name if needed
+          $extracted = Get-ChildItem -Path "C:\dev\glist\zbin" -Directory |
+            Where-Object { $_.Name -like "glistzbin-win64*" } |
+            Select-Object -First 1
+          if ($extracted.FullName -ne "C:\dev\glist\zbin\glistzbin-win64") {
+            Rename-Item -Path $extracted.FullName -NewName "glistzbin-win64"
+          }
+
+      - name: Add clang64 to PATH
+        shell: pwsh
+        run: |
+          # clang64/bin must be in PATH so the linker and supporting tools are found.
+          "C:\dev\glist\zbin\glistzbin-win64\clang64\bin" >> $env:GITHUB_PATH
+
+      - name: Clone GlistApp
+        run: git clone https://github.com/GlistEngine/GlistApp.git C:\dev\glist\myglistapps\GlistApp
+
+      - name: Configure CMake
+        shell: pwsh
+        run: |
+          cmake `
+          -S C:\dev\glist\myglistapps\GlistApp `
+          -B C:\dev\glist\myglistapps\GlistApp\cmake-build `
+          -G Ninja `
+          -DCMAKE_BUILD_TYPE=Debug `
+          -DCMAKE_C_COMPILER=C:/dev/glist/zbin/glistzbin-win64/clang64/bin/clang.exe `
+          -DCMAKE_CXX_COMPILER=C:/dev/glist/zbin/glistzbin-win64/clang64/bin/clang++.exe `
+          -DCMAKE_C_COMPILER_TARGET=x86_64-w64-windows-gnu `
+          -DCMAKE_CXX_COMPILER_TARGET=x86_64-w64-windows-gnu `
+          -DCMAKE_SYSROOT=C:/dev/glist/zbin/glistzbin-win64/clang64 `
+          -DCMAKE_EXE_LINKER_FLAGS="--sysroot=C:/dev/glist/zbin/glistzbin-win64/clang64"
+
+      - name: Build
+        shell: pwsh
+        run: cmake --build C:\dev\glist\myglistapps\GlistApp\cmake-build --parallel $env:NUMBER_OF_PROCESSORS
+
+  build-macos:
+    name: macOS
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout GlistEngine
+        uses: actions/checkout@v4
+
+      - name: Install Homebrew dependencies
+        run: |
+          brew install \
+            llvm \
+            cmake \
+            glew \
+            glfw \
+            glm \
+            freetype \
+            assimp \
+            curl \
+            pkg-config \
+            openssl@3
+
+      - name: Set up directory structure
+        run: |
+          mkdir -p ~/dev/glist/{myglistapps,zbin}
+          ln -s "$GITHUB_WORKSPACE" ~/dev/glist/GlistEngine
+
+      - name: Get zbin release info
+        id: zbin-info
+        run: |
+          brew install jq
+          
+          RESPONSE=$(curl -s https://api.github.com/repos/GlistEngine/glistzbin-macos/releases/latest)
+          TAG=$(echo "$RESPONSE" | jq -r '.tag_name')
+          URL=$(echo "$RESPONSE" | jq -r '.assets[0].browser_download_url')
+          
+          echo "TAG: $TAG"
+          echo "URL: $URL"
+          
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
+          echo "url=$URL" >> $GITHUB_OUTPUT
+
+      - name: Cache glistzbin-macos
+        id: cache-zbin
+        uses: actions/cache@v4
+        with:
+          path: /Users/runner/dev/glist/zbin/glistzbin-macos
+          key: glistzbin-macos-${{ steps.zbin-info.outputs.tag }}
+
+      - name: Download and extract glistzbin-macos
+        if: steps.cache-zbin.outputs.cache-hit != 'true'
+        run: |
+          curl -L "${{ steps.zbin-info.outputs.url }}" -o /tmp/glistzbin-macos.zip
+          unzip /tmp/glistzbin-macos.zip -d ~/dev/glist/zbin/
+          # Rename versioned folder to the expected name if needed
+          EXTRACTED=$(find ~/dev/glist/zbin -maxdepth 1 -name 'glistzbin-macos*' -type d | head -1)
+          if [ "$EXTRACTED" != "/home/runner/dev/glist/zbin/glistzbin-macos" ]; then
+            mv "$EXTRACTED" ~/dev/glist/zbin/glistzbin-macos
+          fi
+
+      - name: Clone GlistApp
+        run: git clone https://github.com/GlistEngine/GlistApp.git ~/dev/glist/myglistapps/GlistApp
+
+      - name: Configure CMake
+        run: |
+          cmake \
+            -S ~/dev/glist/myglistapps/GlistApp \
+            -B ~/dev/glist/myglistapps/GlistApp/cmake-build \
+            -DCMAKE_BUILD_TYPE=Debug
+
+      - name: Build
+        run: cmake --build ~/dev/glist/myglistapps/GlistApp/cmake-build --parallel $(sysctl -n hw.ncpu)
+
+  build-linux:
+    name: Linux
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Checkout GlistEngine
+        uses: actions/checkout@v4
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            cmake \
+            clang-14 \
+            libc++-14-dev \
+            libc++abi-14-dev \
+            libglew-dev \
+            libgl1-mesa-dev \
+            libcurl4-openssl-dev \
+            libssl-dev \
+            build-essential \
+            pkg-config \
+            unzip
+
+      - name: Set up directory structure
+        run: |
+          mkdir -p ~/dev/glist/{myglistapps,zbin}
+          ln -s "$GITHUB_WORKSPACE" ~/dev/glist/GlistEngine
+
+      - name: Get zbin release info
+        id: zbin-info
+        run: |
+          sudo apt-get install -y jq
+          
+          RESPONSE=$(curl -s https://api.github.com/repos/GlistEngine/glistzbin-linux/releases/latest)
+          TAG=$(echo "$RESPONSE" | jq -r '.tag_name')
+          URL=$(echo "$RESPONSE" | jq -r '.assets[0].browser_download_url')
+          
+          echo "TAG: $TAG"
+          echo "URL: $URL"
+          
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
+          echo "url=$URL" >> $GITHUB_OUTPUT
+
+      - name: Cache glistzbin-linux
+        id: cache-zbin
+        uses: actions/cache@v4
+        with:
+          path: /home/runner/dev/glist/zbin/glistzbin-linux
+          key: glistzbin-linux-${{ steps.zbin-info.outputs.tag }}
+
+      - name: Download and extract glistzbin-linux
+        if: steps.cache-zbin.outputs.cache-hit != 'true'
+        run: |
+          curl -L "${{ steps.zbin-info.outputs.url }}" -o /tmp/glistzbin-linux.zip
+          unzip /tmp/glistzbin-linux.zip -d ~/dev/glist/zbin/
+          # Rename versioned folder to the expected name if needed
+          EXTRACTED=$(find ~/dev/glist/zbin -maxdepth 1 -name 'glistzbin-linux*' -type d | head -1)
+          if [ "$EXTRACTED" != "/home/runner/dev/glist/zbin/glistzbin-linux" ]; then
+            mv "$EXTRACTED" ~/dev/glist/zbin/glistzbin-linux
+          fi
+
+      - name: Clone GlistApp
+        run: git clone https://github.com/GlistEngine/GlistApp.git ~/dev/glist/myglistapps/GlistApp
+
+      - name: Configure CMake
+        run: |
+          cmake \
+          -S ~/dev/glist/myglistapps/GlistApp \
+          -B ~/dev/glist/myglistapps/GlistApp/cmake-build \
+          -DCMAKE_BUILD_TYPE=Debug \
+          -DCMAKE_C_COMPILER=clang-14 \
+          -DCMAKE_CXX_COMPILER=clang++-14 \
+          -DCMAKE_CXX_FLAGS="-stdlib=libc++" \
+          -DCMAKE_EXE_LINKER_FLAGS="-stdlib=libc++" \
+          -DCMAKE_SHARED_LINKER_FLAGS="-stdlib=libc++"
+
+      - name: Build
+        run: cmake --build ~/dev/glist/myglistapps/GlistApp/cmake-build --parallel $(nproc)
