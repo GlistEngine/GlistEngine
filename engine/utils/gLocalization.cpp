@@ -15,12 +15,13 @@ gLocalization::~gLocalization() {
     localizedb.close();
 }
 
-void gLocalization::loadDatabase(const std::string& database, const std::string& tableName) {
+bool gLocalization::loadDatabase(const std::string& database, const std::string& tableName) {
     tablename = tableName;
     currentlanguage = 0;
     columnlist.clear();
 
-    localizedb.loadDatabase(database);
+    bool res = localizedb.loadDatabase(database);
+    if(!res) return false;
 
     // Get table schema
     std::string selectquery = "SELECT sql FROM sqlite_master WHERE tbl_name = '" + tablename + "' AND type = 'table'";
@@ -28,6 +29,7 @@ void gLocalization::loadDatabase(const std::string& database, const std::string&
     std::string tableinfo = localizedb.getSelectData();
 
     parseColumnNames(tableinfo);
+    return true;
 }
 
 void gLocalization::parseColumnNames(const std::string& tableinfo) {
