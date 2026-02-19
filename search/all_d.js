@@ -34,7 +34,7 @@ var searchData=
   ['loadaomap_31',['loadAOMap',['../classgMaterial.html#a6f3f1c2d8bd9b76bd5b5ab8bbd948938',1,'gMaterial']]],
   ['loadbuttonimages_32',['loadButtonImages',['../classgGUIImageButton.html#a8561fec7ee49f3925d494c28b4d2c656',1,'gGUIImageButton']]],
   ['loaddata_33',['loadData',['../classgImage.html#ae4f7bc3551e6e00b8d24f1a9e13c8d5a',1,'gImage']]],
-  ['loaddatabase_34',['loaddatabase',['../classgDatabase.html#a3c6bc4225fe720cc91ac46bd58dd85ef',1,'gDatabase::loadDatabase()'],['../classgLocalization.html#a059289cf1153f74c4f05101368b1314c',1,'gLocalization::loadDatabase()']]],
+  ['loaddatabase_34',['loaddatabase',['../classgDatabase.html#a3c6bc4225fe720cc91ac46bd58dd85ef',1,'gDatabase::loadDatabase()'],['../classgLocalization.html#a3822e5bbf8641236b4e21ecab0327bac',1,'gLocalization::loadDatabase()']]],
   ['loaddataskybox_35',['loadDataSkybox',['../classgSkybox.html#aefca38c3c4002a1ac9ecbf0270837944',1,'gSkybox']]],
   ['loaddiffusemap_36',['loadDiffuseMap',['../classgMaterial.html#ad0060119caccc4d4e87fc70c13df65f4',1,'gMaterial']]],
   ['loaded_37',['loaded',['../classgShader.html#a6e965f05bd0a76a445850a3f5cf06285',1,'gShader']]],

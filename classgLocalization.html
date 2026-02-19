@@ -105,8 +105,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a5088b935def800aeeb325387bc37b546"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5bce0e57a537959d8e8bf6d68f3ec489" id="r_a5bce0e57a537959d8e8bf6d68f3ec489"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgLocalization.html#a5bce0e57a537959d8e8bf6d68f3ec489">~gLocalization</a> ()</td></tr>
 <tr class="separator:a5bce0e57a537959d8e8bf6d68f3ec489"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a059289cf1153f74c4f05101368b1314c" id="r_a059289cf1153f74c4f05101368b1314c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgLocalization.html#a059289cf1153f74c4f05101368b1314c">loadDatabase</a> (const std::string &amp;database, const std::string &amp;tableName=&quot;WORDS&quot;)</td></tr>
-<tr class="separator:a059289cf1153f74c4f05101368b1314c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3822e5bbf8641236b4e21ecab0327bac" id="r_a3822e5bbf8641236b4e21ecab0327bac"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgLocalization.html#a3822e5bbf8641236b4e21ecab0327bac">loadDatabase</a> (const std::string &amp;database, const std::string &amp;tableName=&quot;WORDS&quot;)</td></tr>
+<tr class="separator:a3822e5bbf8641236b4e21ecab0327bac"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a34f1639bf54d5b7132b9222465767c7f" id="r_a34f1639bf54d5b7132b9222465767c7f"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgLocalization.html#a34f1639bf54d5b7132b9222465767c7f">localizeWord</a> (const std::string &amp;word)</td></tr>
 <tr class="separator:a34f1639bf54d5b7132b9222465767c7f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad0ef972562b4682ab67cb216c1347573" id="r_ad0ef972562b4682ab67cb216c1347573"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgLocalization.html#ad0ef972562b4682ab67cb216c1347573">setCurrentLanguage</a> (int languageId)</td></tr>
@@ -275,14 +275,14 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a059289cf1153f74c4f05101368b1314c" name="a059289cf1153f74c4f05101368b1314c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a059289cf1153f74c4f05101368b1314c">&#9670;&#160;</a></span>loadDatabase()</h2>
+<a id="a3822e5bbf8641236b4e21ecab0327bac" name="a3822e5bbf8641236b4e21ecab0327bac"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3822e5bbf8641236b4e21ecab0327bac">&#9670;&#160;</a></span>loadDatabase()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void gLocalization::loadDatabase </td>
+          <td class="memname">bool gLocalization::loadDatabase </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;&#160;</td>
           <td class="paramname"><em>database</em>, </td>
@@ -303,10 +303,11 @@ Public Member Functions</h2></td></tr>
 <p>Load localization database and parse available language columns </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">database</td><td>Database file path </td></tr>
-    <tr><td class="paramname">tableName</td><td>Table containing translations (default: "WORDS") </td></tr>
+    <tr><td class="paramname">tableName</td><td>Table containing translations (default: "WORDS")</td></tr>
   </table>
   </dd>
 </dl>
+<dl class="section return"><dt>Returns</dt><dd>Is the database loaded or not </dd></dl>
 
 </div>
 </div>

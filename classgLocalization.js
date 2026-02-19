@@ -8,7 +8,7 @@ var classgLocalization =
     [ "getCurrentLanguage", "classgLocalization.html#a11e2656bf58126691352bda6c0a90335", null ],
     [ "getLangId", "classgLocalization.html#a06daa419aa14bee506cd036e9cd81a31", null ],
     [ "getTableInfo", "classgLocalization.html#ac3f976de15ea70f5505488a3d42dfe1e", null ],
-    [ "loadDatabase", "classgLocalization.html#a059289cf1153f74c4f05101368b1314c", null ],
+    [ "loadDatabase", "classgLocalization.html#a3822e5bbf8641236b4e21ecab0327bac", null ],
     [ "localizeWord", "classgLocalization.html#a34f1639bf54d5b7132b9222465767c7f", null ],
     [ "setCurrentLanguage", "classgLocalization.html#ad0ef972562b4682ab67cb216c1347573", null ]
 ];
