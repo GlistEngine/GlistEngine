@@ -111,7 +111,9 @@ void gLocalization::setCurrentLanguage(int languageId) {
 
 bool gLocalization::isValidLanguageId(int languageId) const {
     // Assuming first column is "Key", so language columns start from index 1
-    return languageId >= 0 && (languageId + 1) < static_cast<int>(columnlist.size());
+	bool isvalidlang = languageId >= 0 && (languageId + 1) < static_cast<int>(columnlist.size());
+	if(!isvalidlang) gLoge("gLocalization") << languageId << " is not a valid language id!";
+    return isvalidlang;
 }
 
 std::string gLocalization::getCurrentLanguage() const {
