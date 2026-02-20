@@ -421,6 +421,7 @@ public:
 	Element* getRootElement();
 
 	void setSelectedLineNumber(int lineNo);
+	void setSelectedLineNumberWithoutInvokings(int lineNo);
 	int getSelectedLineNumber();
 
 	int nodenum;

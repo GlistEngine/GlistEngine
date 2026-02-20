@@ -33,26 +33,29 @@ bool gDatabase::load(const std::string& fullPath) {
     }
 
     fullpath = fullPath;
-
-    sqlite3* newdb = nullptr;
+    int rc = SQLITE_OK;
 
 #ifdef _WIN32
     std::wstring wpath = std::__fs::filesystem::path(fullpath).wstring();
 
-    int rc = sqlite3_open16(
+    rc = sqlite3_open16(
         wpath.c_str(),
-        &newdb
+        &db
     );
 #else
-    int rc = sqlite3_open_v2(
+    rc = sqlite3_open_v2(
         fullpath.c_str(),
-        &newdb,
+        &db,
         SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE,
         nullptr
     );
 #endif
 
-    db = newdb;
+    if(rc) {
+    	gLoge("gDatabase") << "Database opening error:" << rc;
+    	return false;
+    }
+
     return true;
 }
 
