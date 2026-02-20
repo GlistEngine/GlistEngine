@@ -1,5 +1,6 @@
 var NAVTREEINDEX14 =
 {
+"classgWhiteBalance.html":[1,0,172],
 "classgWhiteBalance.html#a4a4c798c7f480eca23aff77a79721857":[1,0,172,3],
 "classgWhiteBalance.html#a73d1de622aabfcd9ed83c6d1827df919":[1,0,172,2],
 "classgWhiteBalance.html#a8165820b0db38a930dcb26f3eac888d2":[1,0,172,0],
@@ -248,6 +249,5 @@ var NAVTREEINDEX14 =
 "gEvent_8h_source.html":[2,0,0,3,0],
 "gFbo_8h.html":[2,0,0,4,6],
 "gFbo_8h_source.html":[2,0,0,4,6],
-"gFile_8h.html":[2,0,0,8,3],
-"gFile_8h.html#a6403a5197805cd4be3f1e3db86210ff2":[2,0,0,8,3,3]
+"gFile_8h.html":[2,0,0,8,3]
 };

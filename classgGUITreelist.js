@@ -33,6 +33,7 @@ var classgGUITreelist =
     [ "setIconsColor", "classgGUITreelist.html#a07312490903b56fc8d88fc3cf557a18e", null ],
     [ "setIconType", "classgGUITreelist.html#a8a8d6949009c9d0d6e3410dafc166c0b", null ],
     [ "setSelectedLineNumber", "classgGUITreelist.html#aa777596e51c79eb7374adf1467cd0e2b", null ],
+    [ "setSelectedLineNumberWithoutInvokings", "classgGUITreelist.html#acbe76b3bca61e5352341bbba0465e49e", null ],
     [ "setVisibleLineNumber", "classgGUITreelist.html#a01030404d21b24cb9b4a15586424f75a", null ],
     [ "allorderno", "classgGUITreelist.html#af73f914329a3efed6140fb9872dabb66", null ],
     [ "allsubtitles", "classgGUITreelist.html#a2f76e15f45ce069687b409121a068bdd", null ],
