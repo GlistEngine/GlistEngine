@@ -323,6 +323,10 @@ void gGUITreelist::setSelectedLineNumber(int lineNo) {
 	actionmanager.onGUIEvent(id, G_GUIEVENT_TREELISTSELECTED, gToStr(selectedno));
 }
 
+void gGUITreelist::setSelectedLineNumberWithoutInvokings(int lineNo) {
+	selectedno = lineNo;
+}
+
 int gGUITreelist::getSelectedLineNumber() {
 	return selectedno;
 }
