@@ -2530,7 +2530,7 @@ void gGUIGrid::drawRowLines() {
 	for(int i = 0; i < rownum; i++) {
 		Cell* cell = getCell(i + 1, 0);
 		int currenty = cell->celly - verticalscroll;
-		if(currenty < gridx) {
+		if(currenty < gridy) {
 			continue;
 		}
 		int rowheight = cell->cellh;
