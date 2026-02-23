@@ -31,14 +31,14 @@ var searchData=
   ['titletype_5fexitmin_28',['TITLETYPE_EXITMIN',['../classgGUIDialogue.html#a4b63570a14624b91ed2030b411126724a22e55a41b3a472050c28b2893218d0ac',1,'gGUIDialogue']]],
   ['titletype_5fexitminmax_29',['TITLETYPE_EXITMINMAX',['../classgGUIDialogue.html#a4b63570a14624b91ed2030b411126724a8109ea18fe1a7feae6bc72ac2c4aa1e8',1,'gGUIDialogue']]],
   ['titletype_5fnone_30',['TITLETYPE_NONE',['../classgGUIDialogue.html#a4b63570a14624b91ed2030b411126724ac18087ae9f94f4924ace1c5458e90ec7',1,'gGUIDialogue']]],
-  ['toolbar_5fhorizontal_31',['TOOLBAR_HORIZONTAL',['../classgGUIToolbar.html#a5689bc8a047919379b9397579965b102a359a190475563dff64a9580a8ea8f89b',1,'gGUIToolbar']]],
-  ['toolbar_5fvertical_32',['TOOLBAR_VERTICAL',['../classgGUIToolbar.html#a5689bc8a047919379b9397579965b102a749d2fb2cf89b8fa434342b89b249193',1,'gGUIToolbar']]],
+  ['toolbar_5fhorizontal_31',['TOOLBAR_HORIZONTAL',['../classgGUIToolbar.html#a841f5ad65200d7ddec4e7ab87877065ba359a190475563dff64a9580a8ea8f89b',1,'gGUIToolbar']]],
+  ['toolbar_5fvertical_32',['TOOLBAR_VERTICAL',['../classgGUIToolbar.html#a841f5ad65200d7ddec4e7ab87877065ba749d2fb2cf89b8fa434342b89b249193',1,'gGUIToolbar']]],
   ['top_33',['TOP',['../classgGUINotebook.html#ad07430b2272895bd64cdfd33a1c2cf3ba6705777b712ee811e76fb07162081d63',1,'gGUINotebook']]],
   ['triggertype_5fafter_5fcompletion_34',['TRIGGERTYPE_AFTER_COMPLETION',['../classgModelAnimator.html#af35fe3f0fb5c97098c5aa764c5ca15aeac9c4b072ce01c74c5af3299dc18ee2d6',1,'gModelAnimator']]],
   ['true_35',['TRUE',['../gSpriteAnimation_8h.html#a05ace1778679794e816adbd5d83eb7bcaa82764c3079aea4e60c80e45befbb839',1,'gSpriteAnimation.h']]],
   ['type_5fcircular_36',['TYPE_CIRCULAR',['../classgGUIProgressBar.html#a3df3b3f959627ebe32bddbbd4d43fa68a2e957293ee8f69845023ea2525ca6091',1,'gGUIProgressBar']]],
-  ['type_5fdigit_37',['TYPE_DIGIT',['../structgGUIGrid_1_1Cell.html#ad5d316295e4b2a635cfe24e24c7b0e00aaec09cb3dfb279a624522e7c43f5730e',1,'gGUIGrid::Cell']]],
+  ['type_5fdigit_37',['TYPE_DIGIT',['../structgGUIGrid_1_1Cell.html#af6da2929ba48477298620d5d1389ddfeaaec09cb3dfb279a624522e7c43f5730e',1,'gGUIGrid::Cell']]],
   ['type_5fline_38',['TYPE_LINE',['../classgGUIProgressBar.html#a3df3b3f959627ebe32bddbbd4d43fa68a57dc4c120a31140cd7495d618ad0f935',1,'gGUIProgressBar']]],
   ['type_5fspin_39',['TYPE_SPIN',['../classgGUIProgressBar.html#a3df3b3f959627ebe32bddbbd4d43fa68ab8003d7d6157a8fd217a6c85e17c04cf',1,'gGUIProgressBar']]],
-  ['type_5fstring_40',['TYPE_STRING',['../structgGUIGrid_1_1Cell.html#ad5d316295e4b2a635cfe24e24c7b0e00a6bcbc7d762457ce5bde2f3dc1fa53811',1,'gGUIGrid::Cell']]]
+  ['type_5fstring_40',['TYPE_STRING',['../structgGUIGrid_1_1Cell.html#af6da2929ba48477298620d5d1389ddfea6bcbc7d762457ce5bde2f3dc1fa53811',1,'gGUIGrid::Cell']]]
 ];
