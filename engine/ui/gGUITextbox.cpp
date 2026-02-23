@@ -24,6 +24,7 @@ gGUITextbox::gGUITextbox() {
 	cursorposy = 0;
 	cursorposchar = 0;
 	cursorposutf = 0;
+	cursorpreviousposutf = 0;
 	text = "";
 	cursorshowcounterlimit = 80;
 	cursorshowlimit = 40;
@@ -596,6 +597,7 @@ void gGUITextbox::pressKey() {
 				letterpos = calculateAllLetterPositions();
 				if(!ismultiline && !ispassword) {
 					cursorposx = sepx1;
+					cursorpreviousposutf = cursorposutf;
 					cursorposutf = sepu1;
 					cursorposchar = sepc1;
 					if(firstchar > 0) {
@@ -622,6 +624,7 @@ void gGUITextbox::pressKey() {
 					cursorposx = sepx1;
 				} else if(ismultiline) {
 					cursorposx = sepx1;
+					cursorpreviousposutf = cursorposutf;
 					cursorposutf = sepu1;
 					cursorposchar = sepc1;
 				}
@@ -736,6 +739,7 @@ void gGUITextbox::pressKey() {
 		int cw = textfont->getStringWidth(text.substr(cursorposutf, letterlength[cursorposchar]));
 		if(ispassword) cursorposx += 3 * dotradius;
 		else cursorposx += cw;
+		cursorpreviousposutf = cursorposutf;
 		cursorposutf += letterlength[cursorposchar];
 		cursorposchar++;
 		if(cursorposx >= width - 2 * initx) {
@@ -1860,6 +1864,18 @@ void gGUITextbox::setCursorPosX(int cursorPosX, int length) {
 	cursorposx = cursorPosX;
 	cursorposchar = text.size() - (text.size() - length);
 	cursorposutf = length;
+}
+
+int gGUITextbox::getCursorPosChar() {
+	return cursorposchar;
+}
+
+int gGUITextbox::getCursorPosUTF() {
+	return cursorposutf;
+}
+
+int gGUITextbox::getCursorPreviousPosUTF() {
+	return cursorpreviousposutf;
 }
 
 void gGUITextbox::setDisabled(bool isDisabled) {
