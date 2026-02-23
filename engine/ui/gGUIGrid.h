@@ -113,6 +113,11 @@ public:
 		PROCESS_ALL
 	};
 
+	enum {
+		ENTERDIRECTION_DOWN,
+		ENTERDIRECTION_RIGHT
+	};
+
 	const int maxcolumnnum = 16384;
 	const int maxrownum = 131071;
 
@@ -185,6 +190,8 @@ public:
 	void setCellReadOnly(Cell* cell, bool readonly);
 	void setCellReadOnly(int rowNo, int columnNo, bool readonly);
 	void setCellReadOnly(const std::string& cell, bool readonly);
+	void setRowReadOnly(int rowNo, bool readonly);
+	void setColumnReadOnly(int columnNo, bool readonly);
 
 	void setSelectedFrameColor(gColor* selectedFrameColor);
 	void setSelectedAreaColor(gColor* selectedAreaColor);
@@ -229,6 +236,9 @@ public:
 	void mouseDragged(int x, int y, int button);
 	void mouseScrolled(int x, int y);
 	int getCursor(int x, int y);
+
+	void setEnterDirection(int enterDirection);
+	int getEnterDirection();
 
 	void clear();
 
@@ -340,6 +350,7 @@ private:
 	float gridx, gridy, gridw, gridh;
 	long clicktime, previousclicktime, firstclicktime, clicktimediff;
 	std::string strflag;
+	int enterdirection;
 };
 
 #endif /* UI_GGUIGRID_H_ */

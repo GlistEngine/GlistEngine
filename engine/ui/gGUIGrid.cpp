@@ -22,6 +22,7 @@ gGUIGrid::gGUIGrid() {
 	ctrlvpressed = false;
 	ctrlzpressed = false;
 	ctrlypressed = false;
+	enterdirection = ENTERDIRECTION_DOWN;
 	selectedbox = 0;
 	selectedtitle = 0;
 	rownum = 50;
@@ -793,8 +794,21 @@ void gGUIGrid::setCellReadOnly(int rowNo, int columnNo, bool readonly) {
 	setCellReadOnly(getCell(rowNo, columnNo), readonly);
 
 }
+
 void gGUIGrid::setCellReadOnly(const std::string& cell, bool readonly) {
 	setCellReadOnly(getCell(cell), readonly);
+}
+
+void gGUIGrid::setRowReadOnly(int rowNo, bool readonly) {
+	for(int i = 0; i < columnnum; i++) {
+		setCellReadOnly(getCell(rowNo, i), readonly);
+	}
+}
+
+void gGUIGrid::setColumnReadOnly(int columnNo, bool readonly) {
+	for(int i = 0; i < rownum; i++) {
+		setCellReadOnly(getCell(i, columnNo), readonly);
+	}
 }
 
 void gGUIGrid::setSelectedFrameColor(gColor* selectedFrameColor) {
@@ -3000,17 +3014,32 @@ void gGUIGrid::keyReleased(int key) {
 		textbox.setEditable(false);
 		isrowselected = false;
 		isselected = true;
-		bool godown = (allcells[selectedbox].cellrowno + 1 < rownum);
-		int newrow;
-		int newcolumn;
-		if(!godown) {
-			newrow = 0;
-			if(allcells[selectedbox].cellrowno * columnnum + allcells[selectedbox].cellcolumnno + 1 < rownum * columnnum) newcolumn = allcells[selectedbox].cellcolumnno + 1;
-			else newcolumn = 0;
-		}
-		else {
-			newrow = allcells[selectedbox].cellrowno + 1;
-			newcolumn = allcells[selectedbox].cellcolumnno;
+		bool godown = false;
+		int newrow = allcells[selectedbox].cellrowno;
+		int newcolumn = allcells[selectedbox].cellcolumnno;
+		if(enterdirection == ENTERDIRECTION_DOWN) {
+			godown = (allcells[selectedbox].cellrowno + 1 < rownum);
+			if(!godown) {
+/*
+				newrow = 0;
+				if(allcells[selectedbox].cellrowno * columnnum + allcells[selectedbox].cellcolumnno + 1 < rownum * columnnum) newcolumn = allcells[selectedbox].cellcolumnno + 1;
+				else newcolumn = 0;
+*/
+				newrow = allcells[selectedbox].cellrowno;
+				newcolumn = allcells[selectedbox].cellcolumnno;
+			} else {
+				newrow = allcells[selectedbox].cellrowno + 1;
+				newcolumn = allcells[selectedbox].cellcolumnno;
+			}
+		} else if(enterdirection == ENTERDIRECTION_RIGHT) {
+			godown = (allcells[selectedbox].cellcolumnno + 1 < columnnum);
+			if(!godown) {
+				newrow = allcells[selectedbox].cellrowno;
+				newcolumn = allcells[selectedbox].cellcolumnno;
+			} else {
+				newrow = allcells[selectedbox].cellrowno;
+				newcolumn = allcells[selectedbox].cellcolumnno + 1;
+			}
 		}
 		int index = getCellNo(newrow, newcolumn);
 		if(index == -1) {
@@ -3097,3 +3126,12 @@ int gGUIGrid::getCursor(int x, int y) {
 	}
 	return cursor;
 }
+
+void gGUIGrid::setEnterDirection(int enterDirection) {
+	enterdirection = enterDirection;
+}
+
+int gGUIGrid::getEnterDirection() {
+	return enterdirection;
+}
+
