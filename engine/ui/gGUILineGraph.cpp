@@ -41,13 +41,13 @@ void gGUILineGraph::setMinX(int minX) {
 	needsupdate = true;
 }
 
-void gGUILineGraph::setMaxY(int maxY) {
-	gGUIGraph::setMaxY(maxY - 1);
+void gGUILineGraph::setMaxY(float maxY) {
+	gGUIGraph::setMaxY(maxY);
 	needsupdate = true;
 }
 
 
-void gGUILineGraph::setMinY(int minY) {
+void gGUILineGraph::setMinY(float minY) {
 	gGUIGraph::setMinY(minY);
 	needsupdate = true;
 }
@@ -203,6 +203,27 @@ void gGUILineGraph::drawGraph() {
 }
 
 void gGUILineGraph::updatePoints() {
+
+	float rawMin = smallestvaluey;
+	float rawMax = largestvaluey;
+
+	if(rawMin > rawMax) std::swap(rawMin, rawMax);
+
+	float range = rawMax - rawMin;
+	if(range < 1e-6f) range = 1.0f; // Prevent division by zero when the value range is too small
+
+	float pad = std::max(range * 0.05f, 0.001f);
+
+	float relativeSpan = range / std::max(std::abs(rawMax), 1e-6f);
+
+	if(rawMin >= 0.0f && relativeSpan > 0.20f) {
+	    miny = 0.0f;
+	    maxy = rawMax + pad;
+	} else {
+	    miny = rawMin - pad;
+	    maxy = rawMax + pad;
+	}
+
 	int linecount = graphlines.size();
 	int points = 0;
 	for(int i = 0; i < linecount; i++) {
@@ -322,5 +343,22 @@ float gGUILineGraph::getPointYValue(int lineIndex, int pointIndex) {
 
 void gGUILineGraph::clear() {
 	graphlines.clear();
+
+	cachedlines.clear();
+	cachedcircles.clear();
+	linesmap.clear();
+	circlesmap.clear();
+
+	smallestvaluex = std::numeric_limits<float>::max();
+	largestvaluex  = std::numeric_limits<float>::lowest();
+	smallestvaluey = std::numeric_limits<float>::max();
+	largestvaluey  = std::numeric_limits<float>::lowest();
+
+	minx = 0.0f;
+	maxx = 0.0f;
+	miny = 0.0f;
+	maxy = 0.0f;
+
+	needsupdate = true;
 }
 

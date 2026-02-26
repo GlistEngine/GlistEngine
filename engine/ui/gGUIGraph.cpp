@@ -95,7 +95,7 @@ int gGUIGraph::getMinX() {
 	return minx;
 }
 
-void gGUIGraph::setMaxY(int maxY) {
+void gGUIGraph::setMaxY(float maxY) {
 	maxy = maxY;
 	largestvaluey = maxY;
 	updateLabelsY();
@@ -105,7 +105,7 @@ int gGUIGraph::getMaxY() {
 	return maxy;
 }
 
-void gGUIGraph::setMinY(int minY) {
+void gGUIGraph::setMinY(float minY) {
 	miny = minY;
 	smallestvaluey = minY;
 	updateLabelsY();
@@ -268,21 +268,28 @@ void gGUIGraph::updateLabelsY() {
 			floatlabelsy[i] = miny + i * step;
 		}
 	}
-	else{
-		int step = abs(largestvaluey) / 10;
-		for(int i = 0; i < labelsteps.size(); i++) {
-			if(step < labelsteps[i]) {
-				step = labelsteps[i];
-				break;
-			}
-		}
+	else {
+		 int step = std::abs((int)largestvaluey) / 10;
+		    for(int i = 0; i < labelsteps.size(); i++) {
+		        if(step < labelsteps[i]) {
+		            step = labelsteps[i];
+		            break;
+		        }
+		    }
+		    if(step <= 0) step = 1;
 
-		if(miny < 0) miny = (int(smallestvaluey / step) - 1) * step;
-		maxy = (int(largestvaluey / step) + 1) * step;
-		labelcounty = (maxy - miny) / step + 1;
-		labelsy.clear();
-		for(int i = 0; i < labelcounty; i++) {
-			labelsy.push_back(miny + i * step);
+		    if(smallestvaluey >= 0) {
+		        miny = 0;
+		    } else {
+		        miny = (int(smallestvaluey / step) - 1) * step;
+		    }
+
+		    maxy = (int(largestvaluey / step) + 1) * step;
+
+		    labelcounty = (maxy - miny) / step + 1;
+		    labelsy.clear();
+		    for(int i = 0; i < labelcounty; i++) {
+		        labelsy.push_back(miny + i * step);
 		}
 	}
 }

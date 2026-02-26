@@ -65,8 +65,8 @@ public:
 
 	void setMaxX(int maxX) override;
 	void setMinX(int minX) override;
-	void setMaxY(int maxY) override;
-	void setMinY(int minY) override;
+	void setMaxY(float maxY) override;
+	void setMinY(float minY) override;
 
 	void setLabelCountX(int labelCount) override;
 	void setLabelCountY(int labelCount) override;

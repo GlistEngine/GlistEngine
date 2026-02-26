@@ -57,9 +57,9 @@ public:
 	int getMaxX();
 	virtual void setMinX(int minX);
 	int getMinX();
-	virtual void setMaxY(int maxY);
+	virtual void setMaxY(float maxY);
 	int getMaxY();
-	virtual void setMinY(int minY);
+	virtual void setMinY(float minY);
 	int getMinY();
 
 	void enableGridlinesX(bool isEnabled);
