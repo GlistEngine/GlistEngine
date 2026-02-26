@@ -273,7 +273,7 @@ unsigned int gTexture::load(const std::string& fullPath) {
     directory = getDirName(this->fullpath);
     path = getFileName(this->fullpath);
 
-    // Dosyayý gFile ile oku (path unicode-safe olmalý)
+    // DosyayÃ½ gFile ile oku (path unicode-safe olmalÃ½)
     gFile f;
     if(!f.load(this->fullpath, gFile::FILEMODE_READONLY, true)) {
         gLoge("gTexture") << "Texture failed to open (gFile) at path: " << this->fullpath;
@@ -560,12 +560,10 @@ void gTexture::draw(int x, int y, int w, int h, int pivotx, int pivoty, float ro
 }
 
 void gTexture::draw(int x, int y, int w, int h, int pivotx, int pivoty, float rotate, bool flipHorizontal) {
-	if(flipHorizontal) {
-		draw(x + w, y, -w, h, pivotx, pivoty, rotate);
-	}
-	else {
-		draw(x, y, w, h, pivotx, pivoty, rotate);
-	}
+    int X = x + (w * flipHorizontal);
+    int W = w * (1 - 2 * flipHorizontal);
+
+    draw(X, y, W, h, pivotx, pivoty, rotate);
 }
 
 void gTexture::draw(glm::vec2 position, glm::vec2 size, float rotate) {
