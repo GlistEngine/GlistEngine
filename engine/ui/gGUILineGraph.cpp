@@ -30,13 +30,13 @@ void gGUILineGraph::set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBas
 	needsupdate = true;
 }
 
-void gGUILineGraph::setMaxX(int maxX){
+void gGUILineGraph::setMaxX(float maxX){
 	gGUIGraph::setMaxX(maxX);
 	needsupdate = true;
 }
 
 
-void gGUILineGraph::setMinX(int minX) {
+void gGUILineGraph::setMinX(float minX) {
 	gGUIGraph::setMinX(minX);
 	needsupdate = true;
 }
