@@ -63,8 +63,8 @@ public:
 
 	void set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIObject* parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h) override;
 
-	void setMaxX(int maxX) override;
-	void setMinX(int minX) override;
+	void setMaxX(float maxX) override;
+	void setMinX(float minX) override;
 	void setMaxY(float maxY) override;
 	void setMinY(float minY) override;
 
