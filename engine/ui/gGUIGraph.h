@@ -53,9 +53,9 @@ public:
 
 	virtual void set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIObject* parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h);
 
-	virtual void setMaxX(int maxX);
+	virtual void setMaxX(float maxX);
 	int getMaxX();
-	virtual void setMinX(int minX);
+	virtual void setMinX(float minX);
 	int getMinX();
 	virtual void setMaxY(float maxY);
 	int getMaxY();
