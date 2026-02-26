@@ -75,7 +75,7 @@ void gGUIGraph::set(gBaseApp *root, gBaseGUIObject *topParentGUIObject, gBaseGUI
 	labelwidthy = axisyh / (labelcounty - 1);
 }
 
-void gGUIGraph::setMaxX(int maxX) {
+void gGUIGraph::setMaxX(float maxX) {
 	maxx = maxX;
 	largestvaluex = maxX;
 	updateLabelsX();
@@ -85,7 +85,7 @@ int gGUIGraph::getMaxX() {
 	return maxx;
 }
 
-void gGUIGraph::setMinX(int minX) {
+void gGUIGraph::setMinX(float minX) {
 	minx = minX;
 	smallestvaluex = minX;
 	updateLabelsX();
