@@ -40,6 +40,7 @@ var classgTexture =
     [ "draw", "classgTexture.html#a78a84e031939e2c0bff1f094c4db7b4f", null ],
     [ "draw", "classgTexture.html#a35d14e0d694985e7f105ef99cd1ed7f2", null ],
     [ "draw", "classgTexture.html#a49d588bbbe5ccaa702abc25f76da2d1c", null ],
+    [ "draw", "classgTexture.html#a7febe7e5ffcb55e5fdf266fd40bf9da8", null ],
     [ "drawSub", "classgTexture.html#a2b0bd47bf135c3e2f1220ba1787743e5", null ],
     [ "drawSub", "classgTexture.html#afacad5facf5edb4adbd376973f3d41a3", null ],
     [ "drawSub", "classgTexture.html#a5df0a8abb590b8bd9d1dd261357e1db6", null ],
