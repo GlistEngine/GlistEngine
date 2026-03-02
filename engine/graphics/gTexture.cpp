@@ -273,7 +273,6 @@ unsigned int gTexture::load(const std::string& fullPath) {
     directory = getDirName(this->fullpath);
     path = getFileName(this->fullpath);
 
-    // Dosyayý gFile ile oku (path unicode-safe olmalý)
     gFile f;
     if(!f.load(this->fullpath, gFile::FILEMODE_READONLY, true)) {
         gLoge("gTexture") << "Texture failed to open (gFile) at path: " << this->fullpath;
