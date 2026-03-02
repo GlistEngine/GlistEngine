@@ -41,6 +41,7 @@ public:
 	void setDisabled(bool isDisabled);
 
 	std::string& getSelectedTitle();
+	int getSelectedLineNo();
 
 	int calculateContentHeight() override;
 

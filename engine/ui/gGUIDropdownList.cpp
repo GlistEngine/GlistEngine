@@ -212,6 +212,10 @@ std::string& gGUIDropdownList::getSelectedTitle() {
 	return fTitle;
 }
 
+int gGUIDropdownList::getSelectedLineNo() {
+	return list.getSelectedLineNumber();
+}
+
 void gGUIDropdownList::clearTitle() {
 	textbox.setText("");
 }
