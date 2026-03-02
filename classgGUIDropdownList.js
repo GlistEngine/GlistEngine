@@ -8,6 +8,7 @@ var classgGUIDropdownList =
     [ "clear", "classgGUIDropdownList.html#ad3dcee213b082bd76f1775ce23ef4ace", null ],
     [ "clearTitle", "classgGUIDropdownList.html#a078b2f34726fbe05f5fcc9aed7bf768c", null ],
     [ "draw", "classgGUIDropdownList.html#afd1ce95c8952d9e7f4b6d19f0887c4c5", null ],
+    [ "getSelectedLineNo", "classgGUIDropdownList.html#a1d1caedd11237b3d1f1b406856198af9", null ],
     [ "getSelectedTitle", "classgGUIDropdownList.html#a110dac75aa22af2ad91f315489475432", null ],
     [ "mousePressed", "classgGUIDropdownList.html#aa392353e62225331d2be1f4e85caafee", null ],
     [ "mouseReleased", "classgGUIDropdownList.html#a8ba886c41cc2267684aac5e458ab0956", null ],
