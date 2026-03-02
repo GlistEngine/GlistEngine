@@ -114,6 +114,7 @@ public:
 	void draw(int x, int y, int w, int h);
 	void draw(int x, int y, int w, int h, float rotate);
 	void draw(int x, int y, int w, int h, int pivotx, int pivoty, float rotate);
+	void draw(int x, int y, int w, int h, int pivotx, int pivoty, float rotate, bool flipHorizontal);
 	void draw(glm::vec2 position, glm::vec2 size, float rotate = 0.0f);
 	void draw(glm::vec2 position, glm::vec2 size, glm::vec2 pivot, float rotate = 0.0f);
 
