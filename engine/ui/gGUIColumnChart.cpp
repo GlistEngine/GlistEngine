@@ -214,4 +214,26 @@ void gGUIColumnChart::clear() {
 	multicolumscolor.clear();
 	textvector.clear();
 	multicolumnspaddingvector.clear();
+
+	// Reset counters
+	indexcolumn = 0;
+	indexmulticolumn = 0;
+	colorindex = 0;
+	columnnumber = 0;
+
+	// Reset current values
+	columnh = 0;
+	chartliney = 0;
+	numberrangey = 0;
+	numberrangeaspect = 0;
+	numbersinchart = "";
+
+	// Reset drawing positions based on current chart props
+	columnx = chartx;
+	columny = charty;
+	multicolumnx = chartx + 20;
+	multicolumny = charty;
+
+	// Reset padding state used in multi-column drawing
+	initialmcspadding = 5;
 }
