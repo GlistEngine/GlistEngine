@@ -9,7 +9,6 @@
 #include "gBaseApp.h"
 #include "gBaseCanvas.h"
 
-
 gGUIButton::gGUIButton() {
 	ispressed = false;
 	ishover = false;
@@ -38,8 +37,8 @@ gGUIButton::~gGUIButton() {
 }
 
 void gGUIButton::setTitle(std::string title) {
-	gBaseGUIObject::setTitle(title);
-	resetTitlePosition();
+    gBaseGUIObject::setTitle(title);
+    resetTitlePosition();
 }
 
 void gGUIButton::setSize(int width, int height) {
@@ -96,12 +95,15 @@ void gGUIButton::draw() {
 	}
 
 	if(istextvisible) {
-		if(isdisabled) renderer->setColor(&disabledfcolor);
-		else {
-			if(ispressed) renderer->setColor(&pressedfcolor);
-			else renderer->setColor(&fcolor);
-		}
-		font->drawText(title, left + tx - 1, top + buttonh - ty + ispressed - 2);
+	    if(isdisabled) renderer->setColor(&disabledfcolor);
+	    else {
+	        if(ispressed) renderer->setColor(&pressedfcolor);
+	        else renderer->setColor(&fcolor);
+	    }
+
+	    resetTitlePosition();
+
+	    font->drawText(title, left + tx, top + buttonh - ty + ispressed - 2);
 	}
 	renderer->setColor(oldcolor);
 }
@@ -156,8 +158,17 @@ void gGUIButton::mouseExited() {
 }
 
 void gGUIButton::resetTitlePosition() {
-	tx = (buttonw - font->getStringWidth(title)) / 2 - 1;
+	float xmin = 0.0f, xmax = 0.0f;
+
+	font->getVisualBoundsX(title, xmin, xmax);
+	float visualw = xmax - xmin;
+
+	tx = (int)std::round((buttonw - visualw) * 0.5f - xmin);
 	ty = (buttonh - font->getStringHeight("a")) / 2;
+
+	// clamp
+	if(tx < 4) tx = 4;
+	if(ty < 0) ty = 0;
 }
 
 void gGUIButton::setButtonColor(gColor color) {
