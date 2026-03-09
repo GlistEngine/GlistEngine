@@ -15,7 +15,7 @@ public:
 	gTerrain();
 	virtual ~gTerrain();
 
-	void initializeTerrain(const std::string& heightMapPath, int widthSegments, int depthSegments, float cellSize, float maxHeight);
+	void generateTerrain(const std::string& heightMapPath, int widthSegments, int depthSegments, float cellSize, float maxHeight);
 };
 
 #endif /* GRAPHICS_PRIMITIVES_GTERRAIN_H_ */

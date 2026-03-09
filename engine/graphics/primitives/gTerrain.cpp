@@ -18,7 +18,7 @@ gTerrain::~gTerrain() {
 }
 
 
-void gTerrain::initializeTerrain(const std::string& heightMapPath, int widthSegments, int depthSegments, float cellSize, float maxHeight)
+void gTerrain::generateTerrain(const std::string& heightMapPath, int widthSegments, int depthSegments, float cellSize, float maxHeight)
 {
 
 	gImage img;
