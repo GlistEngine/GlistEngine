@@ -126,6 +126,8 @@ public:
 	void drawSub(const gRect& src, const gRect& dst, int pivotx, int pivoty, float rotate = 0.f);
 	void drawSub(const gRect& src, const gRect& dst, glm::vec2 pivot, float rotate = 0.f);
 
+	void gTexture::drawSub(int x, int y, int w, int h, int sx, int sy, int sw, int sh, int pivotx, int pivoty, float rotate, bool flipHorizontal);
+
 	unsigned int setData(unsigned char* textureData, int width, int height, int componentNum, bool isMutable = false, bool isStbImage = false);
 	unsigned int setDataHDR(float* textureData, int width, int height, int componentNum, bool isMutable = false, bool isStbImage = false);
 
