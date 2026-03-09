@@ -225,6 +225,7 @@ set(SRC_FILES
 	${ENGINE_DIR}/graphics/gModel.cpp
 	${ENGINE_DIR}/graphics/gModelAnimator.cpp
 	${ENGINE_DIR}/graphics/gMorphingMesh.cpp
+	${ENGINE_DIR}/graphics/gTerrain.cpp
 	${ENGINE_DIR}/utils/gLocalization.cpp
 	${ENGINE_DIR}/utils/gDatabase.cpp
 	${ENGINE_DIR}/utils/gAssetLoader.cpp
@@ -242,7 +243,6 @@ set(SRC_FILES
 	${ENGINE_DIR}/graphics/primitives/gCylinder.cpp
 	${ENGINE_DIR}/graphics/primitives/gCone.cpp
 	${ENGINE_DIR}/graphics/primitives/gTube.cpp
-	${ENGINE_DIR}/graphics/primitives/gTerrain.cpp
 	${ENGINE_DIR}/graphics/gVbo.cpp
 	${ENGINE_DIR}/graphics/gFbo.cpp
 	${ENGINE_DIR}/graphics/gUbo.cpp
