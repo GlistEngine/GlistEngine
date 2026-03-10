@@ -17,6 +17,7 @@ var classgFont =
     [ "getSize", "classgFont.html#a801adde301959cfc26c2a85c424a3b9e", null ],
     [ "getStringHeight", "classgFont.html#aae027bba23783b011117e36e7510c374", null ],
     [ "getStringWidth", "classgFont.html#a4662bf7fec0a4a2b4b08bef6d553d5c5", null ],
+    [ "getVisualBoundsX", "classgFont.html#a08c0993a33ed5134a2b0b7d0cfd7427e", null ],
     [ "isAntialised", "classgFont.html#a452fde9a822efbc22500338df92cdceb", null ],
     [ "isLoaded", "classgFont.html#a441196d2161ae3918e05baf04ff4cae5", null ],
     [ "load", "classgFont.html#a6d3ee7c7cadd22d2e6f1536ae6fb1a97", null ],

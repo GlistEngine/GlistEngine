@@ -1,5 +1,6 @@
 var NAVTREEINDEX3 =
 {
+"classgGLFWWindow.html#a45a407047573e2385e5b2f9b89c1c9b6":[1,0,48,14],
 "classgGLFWWindow.html#a5796a0f73e65428f97cfeff5ca737d52":[1,0,48,18],
 "classgGLFWWindow.html#a7a5ad603510df5bea81eb9098ef11718":[1,0,48,21],
 "classgGLFWWindow.html#a862afff8aabd0f751ef27087dca5c345":[1,0,48,1],
@@ -248,6 +249,5 @@ var NAVTREEINDEX3 =
 "classgGUIColorPicker.html#a08de06e3b4989e075ace897b6ce954e4":[1,0,60,1],
 "classgGUIColorPicker.html#a19c187f851cd5e8a476d33b19b7dd9c1":[1,0,60,4],
 "classgGUIColorPicker.html#abdfa71e02c09a987eafefbfa73ac7073":[1,0,60,2],
-"classgGUIColorPicker.html#abec48dad405555f5d07d6862a30897bb":[1,0,60,0],
-"classgGUIColorPicker.html#ac05f5317a391dc97c7b9d0c18944be70":[1,0,60,3]
+"classgGUIColorPicker.html#abec48dad405555f5d07d6862a30897bb":[1,0,60,0]
 };
