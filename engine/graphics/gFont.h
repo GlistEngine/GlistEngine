@@ -193,6 +193,9 @@ public:
 
 	void onEvent(gEvent& event) override;
 
+	void getVisualBoundsX(const std::string& text, float& xmin, float& xmax);
+
+
 private:
 	void reloadFont();
 

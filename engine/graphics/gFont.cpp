@@ -76,6 +76,47 @@ bool gFont::loadFont(const std::string& fontPath, int size, bool isAntialiased, 
 	return load(gGetFontsDir() + fontPath, size, isAntialiased, dpi);
 }
 
+void gFont::getVisualBoundsX(const std::string& text, float& xmin, float& xmax) {
+	float posx = 0.0f;
+
+	std::wstring wtext = s2ws(text);
+	size_t len = wtext.length();
+
+	int previous = -1;
+
+	xmin = std::numeric_limits<float>::max();
+	xmax = std::numeric_limits<float>::lowest();
+
+	const float b = border / scale;
+
+	for(size_t i = 0; i < len; ++i) {
+		int c = wtext[i];
+		if(c == '\n') break;
+
+		if(charproperties.find(c) == charproperties.end()) {
+			loadChar(c);
+		}
+
+		posx += getKerning(c, previous);
+
+		const CharProperties& p = charproperties[c];
+
+		float gx1 = roundIfRequired(posx + p.dxleft  + b);
+		float gx2 = roundIfRequired(posx + p.dxright + b);
+
+		if(gx1 < xmin) xmin = gx1;
+		if(gx2 > xmax) xmax = gx2;
+
+		posx += p.advance * letterspacing * (c == ' ' ? spacesize : 1.0f);
+		previous = c;
+	}
+
+	if(xmin == std::numeric_limits<float>::max()) {
+		xmin = 0.0f;
+		xmax = 0.0f;
+	}
+}
+
 void gFont::onEvent(gEvent& event) {
 	gEventDispatcher dispatcher(event);
 	dispatcher.dispatch<gWindowScaleChangedEvent>([this](gWindowScaleChangedEvent& e) -> bool {
