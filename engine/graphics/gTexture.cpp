@@ -558,11 +558,7 @@ void gTexture::drawSub(int x, int y, int w, int h, int sx, int sy, int sw, int s
 }
 
 void gTexture::drawSub(int x, int y, int w, int h, int sx, int sy, int sw, int sh, int pivotx, int pivoty, float rotate, bool flipHorizontal) {
-	if (flipHorizontal) {
-		drawSub(glm::vec2(x + w, y), glm::vec2(-w, h), glm::vec2(sx, sy), glm::vec2(sw, sh), glm::vec2(pivotx, pivoty), rotate);
-	} else {
-		drawSub(glm::vec2(x, y), glm::vec2(w, h), glm::vec2(sx, sy), glm::vec2(sw, sh), glm::vec2(pivotx, pivoty), rotate);
-	}
+    drawSub(glm::vec2(x + flipHorizontal * w, y), glm::vec2(w * (1 - 2 * flipHorizontal), h), glm::vec2(sx, sy), glm::vec2(sw, sh), glm::vec2(pivotx, pivoty), rotate);
 }
 
 void gTexture::drawSub(const gRect& src, const gRect& dst, float rotate) {
