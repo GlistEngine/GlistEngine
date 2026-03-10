@@ -122,12 +122,13 @@ public:
 	void drawSub(int x, int y, int w, int h, int sx, int sy, int sw, int sh);
 	void drawSub(int x, int y, int w, int h, int sx, int sy, int sw, int sh, float rotate);
 	void drawSub(int x, int y, int w, int h, int sx, int sy, int sw, int sh, int pivotx, int pivoty, float rotate);
+	void drawSub(int x, int y, int w, int h, int sx, int sy, int sw, int sh, int pivotx, int pivoty, float rotate, bool flipHorizontal);
 	void drawSub(glm::vec2 pos, glm::vec2 size, glm::vec2 subpos, glm::vec2 subsize, float rotate = 0.0f);
 	void drawSub(glm::vec2 pos, glm::vec2 size, glm::vec2 subpos, glm::vec2 subsize, glm::vec2 pivot, float rotate = 0.0f);
+	void drawSub(glm::vec2 pos, glm::vec2 size, glm::vec2 subpos, glm::vec2 subsize, glm::vec2 pivot, float rotate, bool flipHorizontal);
 	void drawSub(const gRect& src, const gRect& dst, float rotate = 0.f);
 	void drawSub(const gRect& src, const gRect& dst, int pivotx, int pivoty, float rotate = 0.f);
 	void drawSub(const gRect& src, const gRect& dst, glm::vec2 pivot, float rotate = 0.f);
-	void drawSub(int x, int y, int w, int h, int sx, int sy, int sw, int sh, int pivotx, int pivoty, float rotate, bool flipHorizontal);
 
 	unsigned int setData(unsigned char* textureData, int width, int height, int componentNum, bool isMutable = false, bool isStbImage = false);
 	unsigned int setDataHDR(float* textureData, int width, int height, int componentNum, bool isMutable = false, bool isStbImage = false);

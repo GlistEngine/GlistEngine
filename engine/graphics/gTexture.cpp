@@ -636,6 +636,10 @@ void gTexture::drawSub(glm::vec2 pos, glm::vec2 size, glm::vec2 subPos, glm::vec
 	endDraw();
 }
 
+void gTexture::drawSub(glm::vec2 pos, glm::vec2 size, glm::vec2 subPos, glm::vec2 subSize, glm::vec2 pivot, float rotate, bool flipHorizontal) {
+    drawSub(pos + glm::vec2(flipHorizontal * size.x, 0.0f), glm::vec2(size.x * (1 - 2 * flipHorizontal), size.y), subPos, subSize, pivot, rotate);
+}
+
 void gTexture::beginDraw() {
 	G_PROFILE_ZONE_SCOPED_N("gTexture::beginDraw()");
 	renderer->getImageShader()->use();
