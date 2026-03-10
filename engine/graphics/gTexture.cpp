@@ -557,6 +557,14 @@ void gTexture::drawSub(int x, int y, int w, int h, int sx, int sy, int sw, int s
 	drawSub(glm::vec2(x, y), glm::vec2(w, h), glm::vec2(sx, sy), glm::vec2(sw, sh), glm::vec2(pivotx, pivoty), rotate);
 }
 
+void gTexture::drawSub(int x, int y, int w, int h, int sx, int sy, int sw, int sh, int pivotx, int pivoty, float rotate, bool flipHorizontal) {
+	if (flipHorizontal) {
+		drawSub(glm::vec2(x + w, y), glm::vec2(-w, h), glm::vec2(sx, sy), glm::vec2(sw, sh), glm::vec2(pivotx, pivoty), rotate);
+	} else {
+		drawSub(glm::vec2(x, y), glm::vec2(w, h), glm::vec2(sx, sy), glm::vec2(sw, sh), glm::vec2(pivotx, pivoty), rotate);
+	}
+}
+
 void gTexture::drawSub(const gRect& src, const gRect& dst, float rotate) {
 	drawSub(dst.left(), dst.top(), dst.getWidth(), dst.getHeight(), src.left(), src.top(), src.getWidth(), src.getHeight(), rotate);
 }
@@ -589,6 +597,8 @@ void gTexture::drawSub(glm::vec2 pos, glm::vec2 size, glm::vec2 subPos, glm::vec
 	imagematrix = glm::scale(imagematrix, glm::vec3(size.x, size.y, 1.0f));
 	endDraw();
 }
+
+
 
 void gTexture::beginDraw() {
 	G_PROFILE_ZONE_SCOPED_N("gTexture::beginDraw()");
