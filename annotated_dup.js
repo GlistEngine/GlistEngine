@@ -160,6 +160,7 @@ var annotated_dup =
     [ "gSphere", "classgSphere.html", "classgSphere" ],
     [ "gSpriteAnimation", "classgSpriteAnimation.html", "classgSpriteAnimation" ],
     [ "gSpriteAnimator", "classgSpriteAnimator.html", "classgSpriteAnimator" ],
+    [ "gTerrain", "classgTerrain.html", "classgTerrain" ],
     [ "gTexture", "classgTexture.html", "classgTexture" ],
     [ "gThread", "classgThread.html", "classgThread" ],
     [ "gTiltShift", "classgTiltShift.html", "classgTiltShift" ],
