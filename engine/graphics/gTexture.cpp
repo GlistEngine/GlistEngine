@@ -598,8 +598,6 @@ void gTexture::drawSub(glm::vec2 pos, glm::vec2 size, glm::vec2 subPos, glm::vec
 	endDraw();
 }
 
-
-
 void gTexture::beginDraw() {
 	G_PROFILE_ZONE_SCOPED_N("gTexture::beginDraw()");
 	renderer->getImageShader()->use();
