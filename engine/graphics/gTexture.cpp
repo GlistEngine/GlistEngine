@@ -56,6 +56,7 @@ gTexture::gTexture() {
 	istextureallocated = false;
 	data = nullptr;
 	datahdr = nullptr;
+	maskmode = MASKMODE_BOTH;
 	setupRenderData();
 }
 
@@ -189,6 +190,7 @@ void gTexture::copyFrom(const gTexture& other) noexcept {
 	issubpart = other.issubpart;
 	subpos = other.subpos;
 	subscale = other.subscale;
+	maskmode = other.maskmode;
 
 	// Deep copy texture data
 	if (other.width > 0 && other.height > 0 && other.componentnum > 0) {
@@ -255,6 +257,7 @@ void gTexture::swap(gTexture& other) noexcept {
 	std::swap(isfbo, other.isfbo);
 	std::swap(ishdr, other.ishdr);
 	std::swap(ismaskloaded, other.ismaskloaded);
+	std::swap(maskmode, other.maskmode);
 	std::swap(masktexture, other.masktexture);
 	std::swap(istextureallocated, other.istextureallocated);
 	std::swap(quadVAO, other.quadVAO);
@@ -807,6 +810,14 @@ void gTexture::save(std::string fullpath) {
 
 void gTexture::saveTexture(std::string fileName) {
 	save(gGetTexturesDir() + fileName);
+}
+
+void gTexture::setMaskMode(int maskMode) {
+	this->maskmode = maskMode;
+}
+
+int gTexture::getMaskMode() const {
+	return maskmode;
 }
 
 const std::string& gTexture::getTypeName(TextureType textureType) {
