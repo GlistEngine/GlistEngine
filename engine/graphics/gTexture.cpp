@@ -663,14 +663,21 @@ void gTexture::endDraw() {
 		renderer->getImageShader()->setVec2("subPos", subpos);
 		renderer->getImageShader()->setVec2("subScale", subscale);
 	}
+    if(ismaskloaded) {
+    	renderer->getImageShader()->setInt("maskimage", 1);
+    	renderer->activateTexture(1);
+    	masktexture->bind(1);
+    }
+    renderer->getImageShader()->setInt("maskMode", maskmode);
 
 	renderer->resetTexture();
+	bind();
 
 	bind();
 	renderer->getImageShader()->setBool("isAlphaMasking", ismaskloaded);
 	if(ismaskloaded) {
 		renderer->getImageShader()->setInt("maskimage", 1);
-		renderer->activateTexture(1); // GL_TEXTURE1
+		renderer->activateTexture(1);
 		masktexture->bind(1);
 	}
 	bool alphablending = renderer->isAlphaBlendingEnabled();
