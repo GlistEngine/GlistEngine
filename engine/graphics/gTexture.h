@@ -43,6 +43,14 @@ public:
 		TEXTUREMINMAGFILTER_CLAMP = 3
 	};
 
+	enum MaskMode {
+			MASKMODE_BOTH = 0,
+			MASKMODE_PICTURE = 1,
+			MASKMODE_MASK = 2,
+			MASKMODE__BOTH_FREE_ROTATE = 3
+	};
+
+
 	gTexture();
 	gTexture(int w, int h, int format = GL_RGBA, bool isFbo = false);
 	gTexture(const gTexture& other);
@@ -94,6 +102,11 @@ public:
 	unsigned int getInternalFormat() const;
 	unsigned int getFormat() const;
 	void setType(TextureType textureType);
+	void setMaskMode(int maskMode);
+	void setMaskRotation(float angle);
+	void setObjectRotation(float angle);
+	void setImageRotation(float angle);
+	int getMaskMode() const;
 	TextureType getType() const;
 	void setWrapping(int wrapS, int wrapT);
 	void setFiltering(int minFilter, int magFilter);
@@ -170,7 +183,12 @@ protected:
 	float* datahdr;
 	bool ismaskloaded;
 	gTexture* masktexture;
+	int maskmode;
 	bool istextureallocated;
+	float rotationangle;
+	float imageRotation;
+	float maskRotation;
+	float objectRotation;
 
 private:
 
