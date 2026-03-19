@@ -57,6 +57,9 @@ gTexture::gTexture() {
 	data = nullptr;
 	datahdr = nullptr;
 	maskmode = MASKMODE_BOTH;
+	imageRotation = 0.0f;
+	maskRotation = 0.0f;
+	objectRotation = 0.0f;
 	setupRenderData();
 }
 
@@ -554,7 +557,7 @@ void gTexture::draw(int x, int y, int w, int h) {
 }
 
 void gTexture::draw(int x, int y, int w, int h, float rotate) {
-	draw(glm::vec2(x, y), glm::vec2(w, h), rotate);
+    draw(glm::vec2(x, y), glm::vec2(w, h), rotate);
 }
 
 void gTexture::draw(int x, int y, int w, int h, int pivotx, int pivoty, float rotate) {
@@ -579,7 +582,7 @@ void gTexture::draw(glm::vec2 position, glm::vec2 size, glm::vec2 pivot, float r
 	imagematrix = glm::translate(imagematrix, glm::vec3(position, 0.0f));  // first translate (transformations are: scale happens first, then rotation, and then final translation happens; reversed order)
 
 	imagematrix = glm::translate(imagematrix, glm::vec3(pivot.x, pivot.y, 0.0f));
-	imagematrix = glm::rotate(imagematrix, glm::radians(rotate), glm::vec3(0.0f, 0.0f, 1.0f));
+	imagematrix = glm::rotate(imagematrix, glm::radians(objectRotation), glm::vec3(0.0f, 0.0f, 1.0f));
 	imagematrix = glm::translate(imagematrix, glm::vec3(-pivot.x, -pivot.y, 0.0f));
 
 	imagematrix = glm::scale(imagematrix, glm::vec3(size.x, size.y, 1.0f));
@@ -654,45 +657,37 @@ void gTexture::endDraw() {
 	G_PROFILE_ZONE_SCOPED_N("gTexture::endDraw()");
 	renderer->getImageShader()->setMat4("projection", renderer->getProjectionMatrix2d());
 	renderer->getImageShader()->setMat4("model", imagematrix);
-	renderer->getImageShader()->setVec4("spriteColor", glm::vec4(renderer->getColor()->r, renderer->getColor()->g, renderer->getColor()->b, renderer->getColor()->a));
+
+	glm::vec4 finalRenderColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+	if (renderer->getColor() != nullptr) {
+		finalRenderColor = glm::vec4(
+			renderer->getColor()->r,
+			renderer->getColor()->g,
+			renderer->getColor()->b,
+			renderer->getColor()->a
+		);
+	}
+
+	renderer->getImageShader()->setVec4("spriteColor", finalRenderColor);
 	renderer->getImageShader()->setInt("image", 0);
 	renderer->getImageShader()->setInt("maskimage", 1);
-	renderer->getImageShader()->setBool("isAlphaMasking", ismaskloaded);
-	renderer->getImageShader()->setBool("isSubPart", issubpart);
-	if (issubpart) {
-		renderer->getImageShader()->setVec2("subPos", subpos);
-		renderer->getImageShader()->setVec2("subScale", subscale);
+	renderer->getImageShader()->setInt("maskMode", maskmode);
+
+	renderer->getImageShader()->setFloat("imageRotation", imageRotation);
+	renderer->getImageShader()->setFloat("maskRotation", maskRotation);
+
+	if (ismaskloaded && masktexture != nullptr) {
+		renderer->activateTexture(1);
+		masktexture->bind(1);
 	}
-    if(ismaskloaded) {
-    	renderer->getImageShader()->setInt("maskimage", 1);
-    	renderer->activateTexture(1);
-    	masktexture->bind(1);
-    }
-    renderer->getImageShader()->setInt("maskMode", maskmode);
 
 	renderer->resetTexture();
 	bind();
 
-	bind();
-	renderer->getImageShader()->setBool("isAlphaMasking", ismaskloaded);
-	if(ismaskloaded) {
-		renderer->getImageShader()->setInt("maskimage", 1);
-		renderer->activateTexture(1);
-		masktexture->bind(1);
-	}
-	bool alphablending = renderer->isAlphaBlendingEnabled();
-	bool needsalphablending = format == GL_RGBA || format == GL_RG || ismaskloaded;
-	if (needsalphablending && !alphablending) {
-		renderer->enableAlphaBlending();
-	}
-
+	renderer->enableAlphaBlending();
 	renderer->bindVAO(quadVAO);
 	renderer->drawFullscreenQuad();
 	renderer->unbindVAO();
-
-	if (needsalphablending && !alphablending) {
-		renderer->disableAlphaBlending();
-	}
 	unbind();
 }
 
@@ -821,6 +816,18 @@ void gTexture::saveTexture(std::string fileName) {
 
 void gTexture::setMaskMode(int maskMode) {
 	this->maskmode = maskMode;
+}
+
+void gTexture::setImageRotation(float angle) {
+    this->imageRotation = angle;
+}
+
+void gTexture::setMaskRotation(float angle) {
+    this->maskRotation = angle;
+}
+
+void gTexture::setObjectRotation(float angle) {
+    this->objectRotation = angle;
 }
 
 int gTexture::getMaskMode() const {

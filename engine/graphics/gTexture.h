@@ -46,7 +46,8 @@ public:
 	enum MaskMode {
 			MASKMODE_BOTH = 0,
 			MASKMODE_PICTURE = 1,
-			MASKMODE_MASK = 2
+			MASKMODE_MASK = 2,
+			MASKMODE__BOTH_FREE_ROTATE = 3
 	};
 
 
@@ -102,6 +103,9 @@ public:
 	unsigned int getFormat() const;
 	void setType(TextureType textureType);
 	void setMaskMode(int maskMode);
+	void setMaskRotation(float angle);
+	void setObjectRotation(float angle);
+	void setImageRotation(float angle);
 	int getMaskMode() const;
 	TextureType getType() const;
 	void setWrapping(int wrapS, int wrapT);
@@ -181,6 +185,10 @@ protected:
 	gTexture* masktexture;
 	int maskmode;
 	bool istextureallocated;
+	float rotationangle;
+	float imageRotation;
+	float maskRotation;
+	float objectRotation;
 
 private:
 
