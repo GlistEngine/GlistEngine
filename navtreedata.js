@@ -70,18 +70,18 @@ var NAVTREEINDEX =
 "classgGUIColorPicker.html#ac05f5317a391dc97c7b9d0c18944be70",
 "classgGUIGraph.html#a060d8ccc53d1010e9ad55047bb152166",
 "classgGUIManager.html#ae12f34a94b87470b175cf60172ea0738",
-"classgGUIScrollable.html#a3146c4c68ca94da40177097e38917030",
-"classgGUIToolbar.html#abfa528b675d68e05caf16253ab0a6136",
-"classgKeyPressedEvent.html",
-"classgModel.html#a20f3d7066627e6ffdf09e928b759aec1",
-"classgRect.html#a4770c7afd3975f83c07497252dcbf10e",
-"classgRenderer.html#ab1a429adf14469434c5cc1726cecd049",
-"classgSound.html#a391593d4b6fa42d6af984c67acd385e2",
-"classgVbo.html#a7c447bcb75c3e22dc4ed7c91b47ec687",
-"gEvent_8h.html#aa8b0556527d429476e3f3d6cfab1a21f",
-"gKeyCode_8h.html#a929f2247c504ef4972d885bc9777616f",
-"gUtils_8h.html#a598a3330b3c21701223ee0ca14316eca",
-"tinyfiledialogs_8c.html#aa695aeb3e9421913447afe95e6521e7f"
+"classgGUIScrollable.html#a2d1a692bf052403c116275b273270904",
+"classgGUIToolbar.html#ab7f23bdca34df4d581f8fae3498fef7c",
+"classgKeyEvent.html#a400063abb184f7e6948679e028d13b4a",
+"classgModel.html#a1c9a9d59bed8b954e7c81db65f939028",
+"classgRect.html#a42bf2b485a2abbfc2473ffe29a88d048",
+"classgRenderer.html#ab07dc0e261632b020427642fd4f7eab1",
+"classgSound.html#a36775d5bbabef5bc3703bd7ca025a7fc",
+"classgVbo.html#a68f0c0a1c702f4298cead88988401bb8",
+"gEvent_8h.html#a33b0815dbba4f06a2dbc269e1014d70c",
+"gKeyCode_8h.html#a90cb0df679cb1330b4c9c7348e6b8dad",
+"gUtils_8h.html#a49165ceb9878eb49b60a771fc7f149ea",
+"tinyfiledialogs_8c.html#aa2db23282c31c40c4c12b4847b92659b"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
