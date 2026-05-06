@@ -56,6 +56,7 @@ var annotated_dup =
     [ "gGUIActionManager", "classgGUIActionManager.html", "classgGUIActionManager" ],
     [ "gGUIAppThread", "classgGUIAppThread.html", "classgGUIAppThread" ],
     [ "gGUIBitmap", "classgGUIBitmap.html", "classgGUIBitmap" ],
+    [ "gGUIBoxPlot", "classgGUIBoxPlot.html", "classgGUIBoxPlot" ],
     [ "gGUIButton", "classgGUIButton.html", "classgGUIButton" ],
     [ "gGUICandleStickChart", "classgGUICandleStickChart.html", "classgGUICandleStickChart" ],
     [ "gGUICheckbox", "classgGUICheckbox.html", "classgGUICheckbox" ],

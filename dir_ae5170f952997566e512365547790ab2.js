@@ -2,6 +2,7 @@ var dir_ae5170f952997566e512365547790ab2 =
 [
     [ "base", "dir_823bf3f1e7415dc1ea46c5a7be0be0c8.html", "dir_823bf3f1e7415dc1ea46c5a7be0be0c8" ],
     [ "gGUIBitmap.h", "gGUIBitmap_8h.html", "gGUIBitmap_8h" ],
+    [ "gGUIBoxPlot.h", "gGUIBoxPlot_8h.html", "gGUIBoxPlot_8h" ],
     [ "gGUIButton.h", "gGUIButton_8h.html", "gGUIButton_8h" ],
     [ "gGUICandleStickChart.h", "gGUICandleStickChart_8h.html", "gGUICandleStickChart_8h" ],
     [ "gGUICheckbox.h", "gGUICheckbox_8h.html", "gGUICheckbox_8h" ],
