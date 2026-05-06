@@ -153,6 +153,7 @@ var hierarchy =
             [ "gEdgeDetection", "classgEdgeDetection.html", null ],
             [ "gSharpen", "classgSharpen.html", null ]
           ] ],
+          [ "gScreenSpaceReflections", "classgScreenSpaceReflections.html", null ],
           [ "gSepiatone", "classgSepiatone.html", null ],
           [ "gShadowsMidtonesHighlights", "classgShadowsMidtonesHighlights.html", null ],
           [ "gSoftFocus", "classgSoftFocus.html", null ],
