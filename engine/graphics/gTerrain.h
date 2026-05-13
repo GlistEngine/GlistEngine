@@ -9,6 +9,7 @@
 #define GRAPHICS_PRIMITIVES_GTERRAIN_H_
 
 #include "gMesh.h"
+#include "gModel.h"
 
 class gTerrain: public gMesh {
 public:
@@ -16,6 +17,7 @@ public:
 	virtual ~gTerrain();
 
 	void generateTerrain(const std::string& heightMapPath, int widthSegments, int depthSegments, float cellSize, float maxHeight);
+	bool saveAsObj(const std::string& path);
 };
 
 #endif /* GRAPHICS_PRIMITIVES_GTERRAIN_H_ */
