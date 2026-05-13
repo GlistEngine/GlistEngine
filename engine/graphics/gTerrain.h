@@ -9,7 +9,6 @@
 #define GRAPHICS_PRIMITIVES_GTERRAIN_H_
 
 #include "gMesh.h"
-#include "gModel.h"
 
 class gTerrain: public gMesh {
 public:
