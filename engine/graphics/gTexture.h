@@ -107,6 +107,8 @@ public:
 	void setObjectRotation(float angle);
 	void setImageRotation(float angle);
 	int getMaskMode() const;
+	void setAlphaMasking(bool alphaMasking);
+	bool getAlphaMasking() const;
 	TextureType getType() const;
 	void setWrapping(int wrapS, int wrapT);
 	void setFiltering(int minFilter, int magFilter);
@@ -189,6 +191,7 @@ protected:
 	float imageRotation;
 	float maskRotation;
 	float objectRotation;
+	bool isalphamasking;
 
 private:
 

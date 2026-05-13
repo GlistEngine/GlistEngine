@@ -8,6 +8,7 @@
 #include "gTexture.h"
 #include <algorithm>
 #include <utility>
+#include <cmath>
 #ifndef STB_IMAGE_IMPLEMENTATION
 #define STB_IMAGE_IMPLEMENTATION
 #endif
@@ -54,6 +55,7 @@ gTexture::gTexture() {
 	masktexture = nullptr;
 	componentnum = 0;
 	istextureallocated = false;
+	isalphamasking = false;
 	data = nullptr;
 	datahdr = nullptr;
 	maskmode = MASKMODE_BOTH;
@@ -325,12 +327,14 @@ unsigned int gTexture::loadTexture(const std::string& texturePath) {
 unsigned int gTexture::loadMask(const std::string& fullPath) {
 	masktexture = new gTexture();
 	ismaskloaded = true;
+	isalphamasking = true;
 	return masktexture->load(fullPath);
 }
 
 unsigned int gTexture::loadMaskTexture(const std::string& maskTexturePath) {
 	masktexture = new gTexture();
 	ismaskloaded = true;
+	isalphamasking = true;
 	return masktexture->load(gGetTexturesDir() + maskTexturePath);
 }
 
@@ -674,8 +678,15 @@ void gTexture::endDraw() {
 	renderer->getImageShader()->setInt("maskimage", 1);
 	renderer->getImageShader()->setInt("maskMode", maskmode);
 
-	renderer->getImageShader()->setFloat("imageRotation", imageRotation);
-	renderer->getImageShader()->setFloat("maskRotation", maskRotation);
+	float imageRad = glm::radians(imageRotation);
+	float maskRad = glm::radians(maskRotation);
+
+	renderer->getImageShader()->setFloat("imageCos", std::cos(imageRad));
+	renderer->getImageShader()->setFloat("imageSin", std::sin(imageRad));
+	renderer->getImageShader()->setFloat("maskCos", std::cos(maskRad));
+	renderer->getImageShader()->setFloat("maskSin", std::sin(maskRad));
+
+	renderer->getImageShader()->setInt("isAlphaMasking", isalphamasking && ismaskloaded ? 1 : 0);
 
 	if (ismaskloaded && masktexture != nullptr) {
 		renderer->activateTexture(1);

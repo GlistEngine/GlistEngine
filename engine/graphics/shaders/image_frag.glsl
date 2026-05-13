@@ -4,6 +4,7 @@ precision highp float;
 #else
 #version 330 core
 #endif
+
 in vec2 TexCoords;
 out vec4 color;
 
@@ -11,9 +12,13 @@ uniform sampler2D image;
 uniform sampler2D maskimage;
 
 uniform vec4 spriteColor;
+uniform int isAlphaMasking;
 uniform int maskMode;
-uniform float maskRotation;
-uniform float imageRotation;
+
+uniform float maskCos;
+uniform float maskSin;
+uniform float imageCos;
+uniform float imageSin;
 
 const int MASKMODE_BOTH = 0;
 const int MASKMODE_PICTURE = 1;
@@ -21,24 +26,22 @@ const int MASKMODE_MASK = 2;
 const int MASKMODE_BOTH_FREE_ROTATE = 3;
 
 void main() {
+    if(isAlphaMasking == 0) {
+        color = spriteColor * texture(image, TexCoords);
+        return;
+    }
+
     vec2 pivot = vec2(0.5, 0.5);
     vec2 uv = TexCoords - pivot;
 
-    float maskAngle = radians(maskRotation);
-    float maskC = cos(maskAngle);
-    float maskS = sin(maskAngle);
-    float imageAngle = radians(imageRotation);
-    float imageC = cos(imageAngle);
-    float imageS = sin(imageAngle);
-
     vec2 maskRotated = vec2(
-    uv.x * maskC + uv.y * maskS,
-   -uv.x * maskS + uv.y * maskC
+        uv.x * maskCos + uv.y * maskSin,
+       -uv.x * maskSin + uv.y * maskCos
     ) + pivot;
-    
+
     vec2 imageRotated = vec2(
-    uv.x * imageC + uv.y * imageS,
-   -uv.x * imageS + uv.y * imageC
+        uv.x * imageCos + uv.y * imageSin,
+       -uv.x * imageSin + uv.y * imageCos
     ) + pivot;
 
     vec4 tex;
@@ -57,7 +60,7 @@ void main() {
         msk = texture(maskimage, maskRotated);
     }
     else if(maskMode == MASKMODE_BOTH_FREE_ROTATE) {
-        tex = texture(image, TexCoords);
+        tex = texture(image, imageRotated);
         msk = texture(maskimage, maskRotated);
     }
     else {
