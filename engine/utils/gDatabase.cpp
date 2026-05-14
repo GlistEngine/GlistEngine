@@ -36,7 +36,7 @@ bool gDatabase::load(const std::string& fullPath) {
     int rc = SQLITE_OK;
 
 #ifdef _WIN32
-    std::wstring wpath = std::__fs::filesystem::path(fullpath).wstring();
+    std::wstring wpath = std::filesystem::path(fullpath).wstring();
 
     rc = sqlite3_open16(
         wpath.c_str(),
