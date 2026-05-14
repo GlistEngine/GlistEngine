@@ -7,6 +7,7 @@
 **/_build/
 .idea
 .swp
+C:\dev\glist\GlistEngine\engine\.settings\language.settings.xml
 
 # Created by https://www.toptal.com/developers/gitignore/api/intellij,clion,macos,androidstudio,windows,linux,eclipse
 # Edit at https://www.toptal.com/developers/gitignore?templates=intellij,clion,macos,androidstudio,windows,linux,eclipse
