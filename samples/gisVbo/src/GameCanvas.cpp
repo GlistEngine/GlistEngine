@@ -1,12 +1,11 @@
 /*
  * GameCanvas.cpp
  *
- *  Created on: May 6, 2020
+ *  Created on: 15 May 2026
  *      Author: noyan
  */
 
-
-#include "GameCanvas.h"
+#include <GameCanvas.h>
 #include <glm/glm.hpp>
 
 
@@ -93,4 +92,3 @@ void GameCanvas::showNotify() {
 void GameCanvas::hideNotify() {
 
 }
-

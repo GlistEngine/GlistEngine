@@ -1,13 +1,11 @@
 /*
  * GameCanvas.cpp
  *
- *  Created on: May 6, 2020
+ *  Created on: 15 May 2026
  *      Author: noyan
  */
 
-
-#include "GameCanvas.h"
-
+#include <GameCanvas.h>
 
 GameCanvas::GameCanvas(gApp* root) : gBaseCanvas(root) {
 	this->root = root;

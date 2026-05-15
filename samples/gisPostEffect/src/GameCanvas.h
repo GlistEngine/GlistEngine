@@ -1,13 +1,12 @@
- /*
+/*
  * GameCanvas.h
  *
- *  Created on: May 6, 2020
+ *  Created on: 15 May 2026
  *      Author: noyan
  */
 
 #ifndef GAMECANVAS_H_
 #define GAMECANVAS_H_
-
 #include "gBaseCanvas.h"
 #include "gApp.h"
 #include "gImage.h"
