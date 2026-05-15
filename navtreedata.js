@@ -77,11 +77,11 @@ var NAVTREEINDEX =
 "classgRay.html#aa8f9c8ab950c9446d4647f66d8e4d7a2",
 "classgRenderer.html#aa2ee9d2566f6a31ad5cc019869a7c32c",
 "classgSkinnedMesh.html#a69073f580fb21912856dcfa52b90e152",
-"classgUUID.html#adfe2565717452a1df665874f09e7aecf",
-"gColor_8h.html#af3cf7d13ab7c4860de2fdeb3a40aa0c9",
-"gKeyCode_8h.html#a33980e53e9e586f52d2c18bae9113a3c",
-"gTracy_8h.html#a28fce6f78c5829fca73d4cb15527d09f",
-"structgRenderer_1_1gSceneLightData.html#aff5d90ffd9243175c358929499fc281f"
+"classgTriangle.html#a676b480fd607103636e6975b4f466b24",
+"gColorCurves_8h.html",
+"gKeyCode_8h.html#a1102b3d24cd99739cd314b87b9e314f9",
+"gSpriteAnimation_8h.html#acab0e9e07a5b5b16aa9c7b2f70de400a",
+"structgRenderer_1_1gSceneFogData.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

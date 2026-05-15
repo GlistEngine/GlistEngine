@@ -160,6 +160,12 @@ Public Types</h2></td></tr>
 , <a class="el" href="classgTexture.html#a431db677977b3bc1e867659cc596a77da0c54390236d88d94f2c5c40073bf0c90">TEXTUREMINMAGFILTER_CLAMP</a> = 3
  }</td></tr>
 <tr class="separator:a431db677977b3bc1e867659cc596a77d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a16fdda9b18a477bf257841b57e2d26c6" id="r_a16fdda9b18a477bf257841b57e2d26c6"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgTexture.html#a16fdda9b18a477bf257841b57e2d26c6">MaskMode</a> { <a class="el" href="classgTexture.html#a16fdda9b18a477bf257841b57e2d26c6af6180ba40620950a45e600a4a8d9511b">MASKMODE_BOTH</a> = 0
+, <a class="el" href="classgTexture.html#a16fdda9b18a477bf257841b57e2d26c6ad338417b9cf85aa1500e0f7b267f3e61">MASKMODE_PICTURE</a> = 1
+, <a class="el" href="classgTexture.html#a16fdda9b18a477bf257841b57e2d26c6ab4f7f86b5ce535d06cf5370f8b5baf98">MASKMODE_MASK</a> = 2
+, <a class="el" href="classgTexture.html#a16fdda9b18a477bf257841b57e2d26c6ad5fff73aedc83fe5d904c43fa2bca2b4">MASKMODE_BOTH_FREE_ROTATE</a> = 3
+ }</td></tr>
+<tr class="separator:a16fdda9b18a477bf257841b57e2d26c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -201,6 +207,20 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ac3277ba2b5244216c9ed228244d28655"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4b935ae56851d43d8b08ccf14570a6b2" id="r_a4b935ae56851d43d8b08ccf14570a6b2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgTexture.html#a4b935ae56851d43d8b08ccf14570a6b2">setType</a> (<a class="el" href="classgTexture.html#acca450f20de3e35a8dcef0a641dd2191">TextureType</a> textureType)</td></tr>
 <tr class="separator:a4b935ae56851d43d8b08ccf14570a6b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2dad657c6160891d4137ca91ae480a65" id="r_a2dad657c6160891d4137ca91ae480a65"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgTexture.html#a2dad657c6160891d4137ca91ae480a65">setMaskMode</a> (int maskMode)</td></tr>
+<tr class="separator:a2dad657c6160891d4137ca91ae480a65"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abd4ec4e03f8579e840b370f155594600" id="r_abd4ec4e03f8579e840b370f155594600"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgTexture.html#abd4ec4e03f8579e840b370f155594600">setMaskRotation</a> (float angle)</td></tr>
+<tr class="separator:abd4ec4e03f8579e840b370f155594600"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a97c1622672def0d02eea7080f15ba4e7" id="r_a97c1622672def0d02eea7080f15ba4e7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgTexture.html#a97c1622672def0d02eea7080f15ba4e7">setObjectRotation</a> (float angle)</td></tr>
+<tr class="separator:a97c1622672def0d02eea7080f15ba4e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac717dd14d70ff5085ce88e31831c9366" id="r_ac717dd14d70ff5085ce88e31831c9366"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgTexture.html#ac717dd14d70ff5085ce88e31831c9366">setImageRotation</a> (float angle)</td></tr>
+<tr class="separator:ac717dd14d70ff5085ce88e31831c9366"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac334e1f1c337a2e596686a5da2bb2111" id="r_ac334e1f1c337a2e596686a5da2bb2111"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgTexture.html#ac334e1f1c337a2e596686a5da2bb2111">getMaskMode</a> () const</td></tr>
+<tr class="separator:ac334e1f1c337a2e596686a5da2bb2111"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a85e69385c5c53eb0999bae16b2037f99" id="r_a85e69385c5c53eb0999bae16b2037f99"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgTexture.html#a85e69385c5c53eb0999bae16b2037f99">setAlphaMasking</a> (bool alphaMasking)</td></tr>
+<tr class="separator:a85e69385c5c53eb0999bae16b2037f99"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a54e8feb62e9af33b9e9a1d681f88a5d7" id="r_a54e8feb62e9af33b9e9a1d681f88a5d7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgTexture.html#a54e8feb62e9af33b9e9a1d681f88a5d7">getAlphaMasking</a> () const</td></tr>
+<tr class="separator:a54e8feb62e9af33b9e9a1d681f88a5d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a615662deadc4573104fc2647f8595f56" id="r_a615662deadc4573104fc2647f8595f56"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgTexture.html#acca450f20de3e35a8dcef0a641dd2191">TextureType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgTexture.html#a615662deadc4573104fc2647f8595f56">getType</a> () const</td></tr>
 <tr class="separator:a615662deadc4573104fc2647f8595f56"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a270075df951b50e8cce14d42a3bdad9a" id="r_a270075df951b50e8cce14d42a3bdad9a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgTexture.html#a270075df951b50e8cce14d42a3bdad9a">setWrapping</a> (int wrapS, int wrapT)</td></tr>
@@ -424,8 +444,20 @@ Protected Attributes</h2></td></tr>
 <tr class="separator:ab7c4b21f68d40beacb813edde92ddaee"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae81df34037306447d5168660adeeec1a" id="r_ae81df34037306447d5168660adeeec1a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgTexture.html">gTexture</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgTexture.html#ae81df34037306447d5168660adeeec1a">masktexture</a></td></tr>
 <tr class="separator:ae81df34037306447d5168660adeeec1a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab3cd05a4084bea80ddf93ac2cd72134a" id="r_ab3cd05a4084bea80ddf93ac2cd72134a"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgTexture.html#ab3cd05a4084bea80ddf93ac2cd72134a">maskmode</a></td></tr>
+<tr class="separator:ab3cd05a4084bea80ddf93ac2cd72134a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aab9d161137770ed0e1d7d1279171b724" id="r_aab9d161137770ed0e1d7d1279171b724"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgTexture.html#aab9d161137770ed0e1d7d1279171b724">istextureallocated</a></td></tr>
 <tr class="separator:aab9d161137770ed0e1d7d1279171b724"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a615eb4e731d6ec776ef2516301924e9d" id="r_a615eb4e731d6ec776ef2516301924e9d"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgTexture.html#a615eb4e731d6ec776ef2516301924e9d">rotationangle</a></td></tr>
+<tr class="separator:a615eb4e731d6ec776ef2516301924e9d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a98ca85cd0515fb72516de3d682ac2405" id="r_a98ca85cd0515fb72516de3d682ac2405"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgTexture.html#a98ca85cd0515fb72516de3d682ac2405">imageRotation</a></td></tr>
+<tr class="separator:a98ca85cd0515fb72516de3d682ac2405"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa66baeef08ee488ee864dc15b66cace2" id="r_aa66baeef08ee488ee864dc15b66cace2"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgTexture.html#aa66baeef08ee488ee864dc15b66cace2">maskRotation</a></td></tr>
+<tr class="separator:aa66baeef08ee488ee864dc15b66cace2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0c9ba105190c43467da4e0ec84b311d9" id="r_a0c9ba105190c43467da4e0ec84b311d9"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgTexture.html#a0c9ba105190c43467da4e0ec84b311d9">objectRotation</a></td></tr>
+<tr class="separator:a0c9ba105190c43467da4e0ec84b311d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a91447a28e32d516eaaa8aff0222b0a7b" id="r_a91447a28e32d516eaaa8aff0222b0a7b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgTexture.html#a91447a28e32d516eaaa8aff0222b0a7b">isalphamasking</a></td></tr>
+<tr class="separator:a91447a28e32d516eaaa8aff0222b0a7b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="inherited" name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
@@ -454,6 +486,26 @@ Additional Inherited Members</h2></td></tr>
 <tr class="separator:a9a7e5f300e8e38ad6f0beb85ad840c52 inherit pro_static_attribs_classgObject"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Enumeration Documentation</h2>
+<a id="a16fdda9b18a477bf257841b57e2d26c6" name="a16fdda9b18a477bf257841b57e2d26c6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a16fdda9b18a477bf257841b57e2d26c6">&#9670;&#160;</a></span>MaskMode</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="classgTexture.html#a16fdda9b18a477bf257841b57e2d26c6">gTexture::MaskMode</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a16fdda9b18a477bf257841b57e2d26c6af6180ba40620950a45e600a4a8d9511b" name="a16fdda9b18a477bf257841b57e2d26c6af6180ba40620950a45e600a4a8d9511b"></a>MASKMODE_BOTH&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a16fdda9b18a477bf257841b57e2d26c6ad338417b9cf85aa1500e0f7b267f3e61" name="a16fdda9b18a477bf257841b57e2d26c6ad338417b9cf85aa1500e0f7b267f3e61"></a>MASKMODE_PICTURE&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a16fdda9b18a477bf257841b57e2d26c6ab4f7f86b5ce535d06cf5370f8b5baf98" name="a16fdda9b18a477bf257841b57e2d26c6ab4f7f86b5ce535d06cf5370f8b5baf98"></a>MASKMODE_MASK&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a16fdda9b18a477bf257841b57e2d26c6ad5fff73aedc83fe5d904c43fa2bca2b4" name="a16fdda9b18a477bf257841b57e2d26c6ad5fff73aedc83fe5d904c43fa2bca2b4"></a>MASKMODE_BOTH_FREE_ROTATE&#160;</td><td class="fielddoc"></td></tr>
+</table>
+
+</div>
+</div>
 <a id="a431db677977b3bc1e867659cc596a77d" name="a431db677977b3bc1e867659cc596a77d"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a431db677977b3bc1e867659cc596a77d">&#9670;&#160;</a></span>TextureMagFilter</h2>
 
@@ -1685,6 +1737,23 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a id="a54e8feb62e9af33b9e9a1d681f88a5d7" name="a54e8feb62e9af33b9e9a1d681f88a5d7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a54e8feb62e9af33b9e9a1d681f88a5d7">&#9670;&#160;</a></span>getAlphaMasking()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool gTexture::getAlphaMasking </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="ac4bdafeef7c1c64ede5554471305ccff" name="ac4bdafeef7c1c64ede5554471305ccff"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ac4bdafeef7c1c64ede5554471305ccff">&#9670;&#160;</a></span>getComponentNum()</h2>
 
@@ -1915,6 +1984,23 @@ Additional Inherited Members</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname">unsigned int gTexture::getInternalFormat </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ac334e1f1c337a2e596686a5da2bb2111" name="ac334e1f1c337a2e596686a5da2bb2111"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac334e1f1c337a2e596686a5da2bb2111">&#9670;&#160;</a></span>getMaskMode()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int gTexture::getMaskMode </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -2260,6 +2346,24 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a id="a85e69385c5c53eb0999bae16b2037f99" name="a85e69385c5c53eb0999bae16b2037f99"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a85e69385c5c53eb0999bae16b2037f99">&#9670;&#160;</a></span>setAlphaMasking()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gTexture::setAlphaMasking </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>alphaMasking</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a3a9671b95162b8871d503633faf94a03" name="a3a9671b95162b8871d503633faf94a03"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a3a9671b95162b8871d503633faf94a03">&#9670;&#160;</a></span>setData()</h2>
 
@@ -2482,6 +2586,78 @@ Additional Inherited Members</h2></td></tr>
           <td></td>
           <td>)</td>
           <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ac717dd14d70ff5085ce88e31831c9366" name="ac717dd14d70ff5085ce88e31831c9366"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac717dd14d70ff5085ce88e31831c9366">&#9670;&#160;</a></span>setImageRotation()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gTexture::setImageRotation </td>
+          <td>(</td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>angle</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a2dad657c6160891d4137ca91ae480a65" name="a2dad657c6160891d4137ca91ae480a65"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2dad657c6160891d4137ca91ae480a65">&#9670;&#160;</a></span>setMaskMode()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gTexture::setMaskMode </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>maskMode</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="abd4ec4e03f8579e840b370f155594600" name="abd4ec4e03f8579e840b370f155594600"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abd4ec4e03f8579e840b370f155594600">&#9670;&#160;</a></span>setMaskRotation()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gTexture::setMaskRotation </td>
+          <td>(</td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>angle</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a97c1622672def0d02eea7080f15ba4e7" name="a97c1622672def0d02eea7080f15ba4e7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a97c1622672def0d02eea7080f15ba4e7">&#9670;&#160;</a></span>setObjectRotation()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gTexture::setObjectRotation </td>
+          <td>(</td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>angle</em></td><td>)</td>
+          <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -2815,6 +2991,28 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a id="a98ca85cd0515fb72516de3d682ac2405" name="a98ca85cd0515fb72516de3d682ac2405"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a98ca85cd0515fb72516de3d682ac2405">&#9670;&#160;</a></span>imageRotation</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">float gTexture::imageRotation</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a4e53ce31df95580af1e17d9ef669138b" name="a4e53ce31df95580af1e17d9ef669138b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a4e53ce31df95580af1e17d9ef669138b">&#9670;&#160;</a></span>internalformat</h2>
 
@@ -2826,6 +3024,28 @@ Additional Inherited Members</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname">unsigned int gTexture::internalformat</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a91447a28e32d516eaaa8aff0222b0a7b" name="a91447a28e32d516eaaa8aff0222b0a7b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a91447a28e32d516eaaa8aff0222b0a7b">&#9670;&#160;</a></span>isalphamasking</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool gTexture::isalphamasking</td>
         </tr>
       </table>
   </td>
@@ -2947,6 +3167,50 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a id="ab3cd05a4084bea80ddf93ac2cd72134a" name="ab3cd05a4084bea80ddf93ac2cd72134a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab3cd05a4084bea80ddf93ac2cd72134a">&#9670;&#160;</a></span>maskmode</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int gTexture::maskmode</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aa66baeef08ee488ee864dc15b66cace2" name="aa66baeef08ee488ee864dc15b66cace2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa66baeef08ee488ee864dc15b66cace2">&#9670;&#160;</a></span>maskRotation</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">float gTexture::maskRotation</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="ae81df34037306447d5168660adeeec1a" name="ae81df34037306447d5168660adeeec1a"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ae81df34037306447d5168660adeeec1a">&#9670;&#160;</a></span>masktexture</h2>
 
@@ -2969,6 +3233,28 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a id="a0c9ba105190c43467da4e0ec84b311d9" name="a0c9ba105190c43467da4e0ec84b311d9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0c9ba105190c43467da4e0ec84b311d9">&#9670;&#160;</a></span>objectRotation</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">float gTexture::objectRotation</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a66a48b7fa256f82ca21a1c9ad8c78112" name="a66a48b7fa256f82ca21a1c9ad8c78112"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a66a48b7fa256f82ca21a1c9ad8c78112">&#9670;&#160;</a></span>path</h2>
 
@@ -2980,6 +3266,28 @@ Additional Inherited Members</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname">std::string gTexture::path</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a615eb4e731d6ec776ef2516301924e9d" name="a615eb4e731d6ec776ef2516301924e9d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a615eb4e731d6ec776ef2516301924e9d">&#9670;&#160;</a></span>rotationangle</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">float gTexture::rotationangle</td>
         </tr>
       </table>
   </td>
