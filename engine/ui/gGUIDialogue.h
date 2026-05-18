@@ -58,6 +58,8 @@ public:
 	gGUIDialogue();
 	virtual ~gGUIDialogue();
 
+	void setup();
+
 	void setSizer(gGUISizer* guiSizer);
 
 	void update();

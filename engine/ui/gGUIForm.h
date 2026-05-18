@@ -1,5 +1,5 @@
 /*
- * gGUITopContainer.h
+ * gGUIForm.h
  *
  *  Created on: Aug 20, 2021
  *      Author: noyan
@@ -29,6 +29,8 @@ public:
 		RESIZE_TOOLBAR_HORIZONTAL,
 		RESIZE_TOOLBAR_VERTICAL
 	};
+
+	void setup();
 
 	void setMenuBar(gGUIMenubar* menuBar);
 	void resizeMenuBar();
