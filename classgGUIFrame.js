@@ -4,5 +4,6 @@ var classgGUIFrame =
     [ "gGUIFrame", "classgGUIFrame.html#adc0ed6eb0ae864c4d45fb241177dba7f", null ],
     [ "~gGUIFrame", "classgGUIFrame.html#a80ac39cc5f3c2107c6375999aa7ed992", null ],
     [ "draw", "classgGUIFrame.html#a2eb93a354c2ca9605a2c8eb5d113da01", null ],
+    [ "setup", "classgGUIFrame.html#ae57780c2bd5e05eb0035ba91522836ee", null ],
     [ "update", "classgGUIFrame.html#ab6e1c7302ff2f32bad4a31dd28e09aee", null ]
 ];

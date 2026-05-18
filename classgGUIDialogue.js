@@ -43,6 +43,7 @@ var classgGUIDialogue =
     [ "setSizer", "classgGUIDialogue.html#a97ab13195e29f27f36a41ebc146a0344", null ],
     [ "setTitle", "classgGUIDialogue.html#a06f9dbaade2a20dbb5b1feec728e1f7a", null ],
     [ "setTitleType", "classgGUIDialogue.html#af6bc870904335aea1b18ec4dc3b006f0", null ],
+    [ "setup", "classgGUIDialogue.html#a4665a8cd026a93f96ffce45ca5cef77d", null ],
     [ "show", "classgGUIDialogue.html#aeafbcb75188d451cf78d8e3a0e7a9c50", null ],
     [ "transformDialogue", "classgGUIDialogue.html#afcfce14e304c97de642c82728949527a", null ],
     [ "update", "classgGUIDialogue.html#ac502b48b983ad2085e61f2275cbb3990", null ]

@@ -34,6 +34,7 @@ var classgGUIForm =
     [ "setStatusBar", "classgGUIForm.html#abc392fdc9e64c1e32f8c2d0534090765", null ],
     [ "setToolbarHeight", "classgGUIForm.html#aa3f6e5eae630a57f7cb2927dde283870", null ],
     [ "setTooltipText", "classgGUIForm.html#aab4922ef98ab5d58e25a4248607d5ea8", null ],
+    [ "setup", "classgGUIForm.html#aac30048cc388331c66e7957c18db61ae", null ],
     [ "setVerticalToolbarWidth", "classgGUIForm.html#a90e0d297a902d77f04a2a897c7d0f1c6", null ],
     [ "show", "classgGUIForm.html#af6c3e8f504437f1b0e1596d0a6df802d", null ],
     [ "showProgressBar", "classgGUIForm.html#a544bacfaa2af5c661e5cb9963cdf66c8", null ],

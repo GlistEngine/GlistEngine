@@ -1,5 +1,8 @@
 var NAVTREEINDEX15 =
 {
+"gColorAdjustments_8h_source.html":[2,0,0,4,1,3],
+"gColorChannelMixer_8h.html":[2,0,0,4,1,4],
+"gColorChannelMixer_8h_source.html":[2,0,0,4,1,4],
 "gColorCurves_8h.html":[2,0,0,4,1,5],
 "gColorCurves_8h_source.html":[2,0,0,4,1,5],
 "gColor_8h.html":[2,0,0,6,0],
@@ -246,8 +249,5 @@ var NAVTREEINDEX15 =
 "gKeyCode_8h.html#a0548ac67a435481fb40dccba8b58bb3a":[2,0,0,8,5,110],
 "gKeyCode_8h.html#a0767ce152beb6c55bce541082337ed12":[2,0,0,8,5,52],
 "gKeyCode_8h.html#a089feac6d8f53e10692d36e087a339cd":[2,0,0,8,5,57],
-"gKeyCode_8h.html#a08ccb3d87b2c7e36d4dd9cd6014b2a40":[2,0,0,8,5,7],
-"gKeyCode_8h.html#a0a8675f9a9533cf206b307cff246e48e":[2,0,0,8,5,50],
-"gKeyCode_8h.html#a0b25a4fc8c5512b076c966a14357884d":[2,0,0,8,5,118],
-"gKeyCode_8h.html#a0f27b97e57e1dae211f19ec780dd6f1a":[2,0,0,8,5,55]
+"gKeyCode_8h.html#a08ccb3d87b2c7e36d4dd9cd6014b2a40":[2,0,0,8,5,7]
 };

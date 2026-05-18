@@ -1,5 +1,8 @@
 var NAVTREEINDEX17 =
 {
+"gSpriteAnimation_8h.html#a7434c41651986cef79919b09b16084a4":[2,0,0,0,0,9],
+"gSpriteAnimation_8h.html#a7d37a36cc9efe4cec9b5c2fb6d2bd8d0":[2,0,0,0,0,12],
+"gSpriteAnimation_8h.html#ab4cac82ff2cb971678636fb220240875":[2,0,0,0,0,5],
 "gSpriteAnimation_8h.html#acab0e9e07a5b5b16aa9c7b2f70de400a":[2,0,0,0,0,4],
 "gSpriteAnimation_8h.html#af3a5f41be3fc211fbeeca534c470ef14":[2,0,0,0,0,8],
 "gSpriteAnimation_8h.html#af499d201367dfb12f9468d2f36010501":[2,0,0,0,0,11],
@@ -246,8 +249,5 @@ var NAVTREEINDEX17 =
 "structgInputPlayer_1_1GamepadButtonAxisBinding.html#aa6d24c955849ea1753f35fbe98d681a0":[1,0,110,2,0],
 "structgRenderer_1_1gSceneData.html":[1,0,145,0],
 "structgRenderer_1_1gSceneData.html#a09b83f2ce02728412c123b8173084c3d":[1,0,145,0,1],
-"structgRenderer_1_1gSceneData.html#a521328c0feca9f21460fe8b3b3350e3e":[1,0,145,0,0],
-"structgRenderer_1_1gSceneData.html#a89f96a2a3d34fdc9e05c1f4b0720204e":[1,0,145,0,3],
-"structgRenderer_1_1gSceneData.html#aa301bd9a32069c1189021b592d8c2b1d":[1,0,145,0,4],
-"structgRenderer_1_1gSceneData.html#aad361730c6a440e3b644bf0bb45c264c":[1,0,145,0,2]
+"structgRenderer_1_1gSceneData.html#a521328c0feca9f21460fe8b3b3350e3e":[1,0,145,0,0]
 };

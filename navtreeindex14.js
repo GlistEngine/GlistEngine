@@ -1,5 +1,8 @@
 var NAVTREEINDEX14 =
 {
+"classgTriangle.html":[1,0,166],
+"classgTriangle.html#a0fd7c2118a8cf8828d0d3008b04e57da":[1,0,166,0],
+"classgTriangle.html#a4e38f3c700074fcfa82262588742c21f":[1,0,166,1],
 "classgTriangle.html#a676b480fd607103636e6975b4f466b24":[1,0,166,2],
 "classgTube.html":[1,0,167],
 "classgTube.html#a038c93c8047d949796aae4c92414a605":[1,0,167,1],
@@ -246,8 +249,5 @@ var NAVTREEINDEX14 =
 "gChromaticAberration_8h_source.html":[2,0,0,4,1,2],
 "gCircle_8h.html":[2,0,0,4,2,2],
 "gCircle_8h_source.html":[2,0,0,4,2,2],
-"gColorAdjustments_8h.html":[2,0,0,4,1,3],
-"gColorAdjustments_8h_source.html":[2,0,0,4,1,3],
-"gColorChannelMixer_8h.html":[2,0,0,4,1,4],
-"gColorChannelMixer_8h_source.html":[2,0,0,4,1,4]
+"gColorAdjustments_8h.html":[2,0,0,4,1,3]
 };
