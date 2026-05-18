@@ -1,5 +1,5 @@
 /*
- * gFrame.cpp
+ * gGUIFrame.cpp
  *
  *  Created on: Aug 11, 2021
  *      Author: noyan
@@ -43,6 +43,9 @@ gGUIFrame::gGUIFrame(gBaseApp* root) {
 }
 
 gGUIFrame::~gGUIFrame() {
+}
+
+void gGUIFrame::setup() {
 }
 
 void gGUIFrame::update() {
