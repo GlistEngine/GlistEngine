@@ -57,7 +57,7 @@ gGUIForm::~gGUIForm() {
 	if(temporaryemptysizer != nullptr) delete temporaryemptysizer;
 }
 
-gGUIForm::setup() {
+void gGUIForm::setup() {
 }
 
 

@@ -45,7 +45,7 @@ gGUIFrame::gGUIFrame(gBaseApp* root) {
 gGUIFrame::~gGUIFrame() {
 }
 
-gGUIFrame::setup() {
+void gGUIFrame::setup() {
 }
 
 void gGUIFrame::update() {
