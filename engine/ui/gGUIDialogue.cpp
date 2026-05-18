@@ -46,7 +46,7 @@ gGUIDialogue::~gGUIDialogue() {
 	if(guisizer) delete guisizer;
 }
 
-void setup() {
+void gGUIDialogue::setup() {
 }
 
 void gGUIDialogue::setSizer(gGUISizer* guiSizer) {
