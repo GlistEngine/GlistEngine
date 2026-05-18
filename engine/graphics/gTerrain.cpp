@@ -7,6 +7,7 @@
 
 #include "gTerrain.h"
 #include "gImage.h"
+#include <fstream>
 
 gTerrain::gTerrain() {
 	// TODO Auto-generated constructor stub
@@ -99,4 +100,44 @@ void gTerrain::generateTerrain(const std::string& heightMapPath, int widthSegmen
         std::make_shared<std::vector<gVertex>>(std::move(vertices)),
         std::make_shared<std::vector<gIndex>>(std::move(indices))
     );
+}
+
+bool gTerrain::saveAsObj(const std::string& path) {
+	std::ofstream file(path);
+
+	if (!file.is_open()) {
+		return false;
+	}
+	const std::vector<gVertex>& vertices = getVertices();
+	const std::vector<gIndex>& indices = getIndices();
+	file << "o terrain\n";
+	for (const auto& v : vertices) {
+		file << "v "
+			 << v.position.x << " "
+			 << v.position.y << " "
+			 << v.position.z << "\n";
+	}
+	for (const auto& v : vertices) {
+		file << "vt "
+			 << v.texcoords.x << " "
+			 << v.texcoords.y << "\n";
+	}
+	for (const auto& v : vertices) {
+		file << "vn "
+			 << v.normal.x << " "
+			 << v.normal.y << " "
+			 << v.normal.z << "\n";
+	}
+	for (size_t i = 0; i < indices.size(); i += 3) {
+		int i1 = indices[i] + 1;
+		int i2 = indices[i + 1] + 1;
+		int i3 = indices[i + 2] + 1;
+
+		file << "f "
+			 << i1 << "/" << i1 << "/" << i1 << " "
+			 << i2 << "/" << i2 << "/" << i2 << " "
+			 << i3 << "/" << i3 << "/" << i3 << "\n";
+	}
+	file.close();
+	return true;
 }
