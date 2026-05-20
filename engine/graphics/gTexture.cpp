@@ -878,3 +878,10 @@ const std::string& gTexture::getTypeName(TextureType textureType) {
 		return unknown;
 	}
 }
+void gTexture::setAlphaMasking(bool alphaMasking) {
+	this->isalphamasking = alphaMasking;
+}
+
+bool gTexture::getAlphaMasking() const {
+	return isalphamasking;
+}
