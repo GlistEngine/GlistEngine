@@ -1,5 +1,5 @@
 /*
- * gFrame.h
+ * gGUIFrame.h
  *
  *  Created on: Aug 11, 2021
  *      Author: noyan
@@ -17,6 +17,7 @@ public:
 	gGUIFrame(gBaseApp* root);
 	virtual ~gGUIFrame();
 
+	void setup();
 	void update();
 	void draw();
 

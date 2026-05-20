@@ -1,5 +1,5 @@
 /*
- * gGUITopContainer.cpp
+ * gGUIForm.cpp
  *
  *  Created on: Aug 20, 2021
  *      Author: noyan
@@ -56,6 +56,10 @@ gGUIForm::gGUIForm() {
 gGUIForm::~gGUIForm() {
 	if(temporaryemptysizer != nullptr) delete temporaryemptysizer;
 }
+
+void gGUIForm::setup() {
+}
+
 
 void gGUIForm::setMenuBar(gGUIMenubar* menuBar) {
 	menubar = menuBar;
