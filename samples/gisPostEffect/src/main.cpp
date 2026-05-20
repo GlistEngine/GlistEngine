@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 Nitra Games Ltd.
+ * Copyright (C) 2014 AITIAL Paris
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@
 
 int main(int argc, char **argv) {
 
-	gStartEngine(new gApp(argc, argv), "gisPostEffect", G_WINDOWMODE_APP, 800, 480);
+	gStartEngine(new gApp(argc, argv), "gisPostEffect", G_WINDOWMODE_APP, 1280, 720);
 
 	return 0;
 }

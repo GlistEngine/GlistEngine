@@ -1,0 +1,1 @@
+The developers can put their sqlite databases under assets/databases. gDatabase.loadDatabase(databasePath) function checks this folder to open the file.

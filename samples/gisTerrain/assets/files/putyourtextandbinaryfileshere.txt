@@ -1,0 +1,1 @@
+The developers can put their text and binary files under assets/files. gFile.loadFile(filename) function checks this folder to open the file.

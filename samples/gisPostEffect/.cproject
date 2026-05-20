@@ -19,11 +19,7 @@
 					<folderInfo id="cdt.managedbuild.toolchain.gnu.cross.base.1466761803.1461665362" name="/" resourcePath="">
 						<toolChain id="cmake4eclipse.mbs.toolchain.cmake.1134224378" name="CMake driven" superClass="cmake4eclipse.mbs.toolchain.cmake">
 							<targetPlatform id="cmake4eclipse.mbs.targetPlatform.cmake.19164171" name="Any Platform" superClass="cmake4eclipse.mbs.targetPlatform.cmake"/>
-							<builder buildPath="/GlistApp/build/Release" id="cmake4eclipse.mbs.builder.1573338402" keepEnvironmentInBuildfile="false" name="CMake Builder" superClass="cmake4eclipse.mbs.builder">
-								<outputEntries>
-									<entry excluding="**/CMakeFiles/**" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="outputPath" name="build"/>
-								</outputEntries>
-							</builder>
+							<builder buildPath="/GlistApp/build/Release" id="cmake4eclipse.mbs.builder.1573338402" keepEnvironmentInBuildfile="false" name="CMake Builder" superClass="cmake4eclipse.mbs.builder"/>
 							<tool id="cmake4eclipse.mbs.toolchain.tool.dummy.1691408187" name="CMake" superClass="cmake4eclipse.mbs.toolchain.tool.dummy">
 								<inputType id="cmake4eclipse.mbs.inputType.c.73740170" superClass="cmake4eclipse.mbs.inputType.c"/>
 								<inputType id="cmake4eclipse.mbs.inputType.cpp.563052803" superClass="cmake4eclipse.mbs.inputType.cpp"/>
@@ -32,7 +28,9 @@
 					</folderInfo>
 				</configuration>
 			</storageModule>
-			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
+			<storageModule moduleId="org.eclipse.cdt.core.externalSettings">
+				<externalSettings containerId="GlistEngine;" factoryId="org.eclipse.cdt.core.cfg.export.settings.sipplier"/>
+			</storageModule>
 			<storageModule buildDir="_build/${ConfigName}" dirtyTs="0" moduleId="de.marw.cmake4eclipse.mbs.settings">
 				<options/>
 			</storageModule>
