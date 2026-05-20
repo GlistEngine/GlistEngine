@@ -102,32 +102,48 @@ void gTerrain::generateTerrain(const std::string& heightMapPath, int widthSegmen
     );
 }
 
-bool gTerrain::saveAsObj(const std::string& path) {
+bool gTerrain::saveAsObj(const std::string& path, const std::string& textureName)
+{
 	std::ofstream file(path);
 
 	if (!file.is_open()) {
+		gLoge("gTerrain") << "OBJ file could not be created!";
 		return false;
 	}
+
+	std::string dir = ".";
+	size_t slash = path.find_last_of("/\\");
+	if (slash != std::string::npos) {
+		dir = path.substr(0, slash);
+	}
+
 	const std::vector<gVertex>& vertices = getVertices();
 	const std::vector<gIndex>& indices = getIndices();
+
+	file << "mtllib terrain.mtl\n";
 	file << "o terrain\n";
+	file << "usemtl terrainMaterial\n";
+
 	for (const auto& v : vertices) {
 		file << "v "
 			 << v.position.x << " "
 			 << v.position.y << " "
 			 << v.position.z << "\n";
 	}
+
 	for (const auto& v : vertices) {
 		file << "vt "
 			 << v.texcoords.x << " "
 			 << v.texcoords.y << "\n";
 	}
+
 	for (const auto& v : vertices) {
 		file << "vn "
 			 << v.normal.x << " "
 			 << v.normal.y << " "
 			 << v.normal.z << "\n";
 	}
+
 	for (size_t i = 0; i < indices.size(); i += 3) {
 		int i1 = indices[i] + 1;
 		int i2 = indices[i + 1] + 1;
@@ -138,6 +154,24 @@ bool gTerrain::saveAsObj(const std::string& path) {
 			 << i2 << "/" << i2 << "/" << i2 << " "
 			 << i3 << "/" << i3 << "/" << i3 << "\n";
 	}
+
 	file.close();
+
+	std::ofstream mtl(dir + "/terrain.mtl");
+
+	if (!mtl.is_open()) {
+		gLoge("gTerrain") << "MTL file could not be created!";
+		return false;
+	}
+
+	mtl << "newmtl terrainMaterial\n";
+	mtl << "Ka 1.000 1.000 1.000\n";
+	mtl << "Kd 1.000 1.000 1.000\n";
+	mtl << "Ks 0.000 0.000 0.000\n";
+	mtl << "Ns 32.000\n";
+	mtl << "map_Kd " << textureName << "\n";
+
+	mtl.close();
+
 	return true;
 }

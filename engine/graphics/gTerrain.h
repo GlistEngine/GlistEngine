@@ -16,7 +16,7 @@ public:
 	virtual ~gTerrain();
 
 	void generateTerrain(const std::string& heightMapPath, int widthSegments, int depthSegments, float cellSize, float maxHeight);
-	bool saveAsObj(const std::string& path);
+	bool saveAsObj(const std::string& path, const std::string& textureName);
 };
 
 #endif /* GRAPHICS_PRIMITIVES_GTERRAIN_H_ */
