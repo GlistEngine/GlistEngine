@@ -512,8 +512,16 @@ elseif(LINUX)
 		/usr/local/lib
 	)
 elseif(APPLE)
+	# Resolve the active SDK at configure time so we work with either full
+	# Xcode or just the Command Line Tools (xcrun returns whichever is set
+	# as the active developer dir).
+	execute_process(
+		COMMAND xcrun --show-sdk-path
+		OUTPUT_VARIABLE OSX_SDK_PATH
+		OUTPUT_STRIP_TRAILING_WHITESPACE
+	)
   	list(APPEND INC_DIRS
-  		/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers
+  		${OSX_SDK_PATH}/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers
   		${SYS_INC_PATH}
   		${SYS_INC_PATH}/freetype2
 		${MINGW64_DIR}/include/sqlite
@@ -617,7 +625,7 @@ elseif(APPLE)
     pkg_check_modules(assimp   REQUIRED IMPORTED_TARGET assimp)
     pkg_check_modules(glew     REQUIRED IMPORTED_TARGET glew)
 
-    find_library(Lib_GL GL HINTS /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries)
+    find_library(Lib_GL GL HINTS ${OSX_SDK_PATH}/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries)
 
     if(${ENGINE_USE_SYMLINKS})
         pkg_check_modules(crypto REQUIRED IMPORTED_TARGET libcrypto)
