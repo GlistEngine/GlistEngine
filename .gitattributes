@@ -1,0 +1,4 @@
+# Vendored third-party sqlite amalgamation.
+# Marked so GitHub Linguist excludes it from the repo's language stats
+# and collapses it by default in PR diffs / blame views.
+libs/** linguist-vendored

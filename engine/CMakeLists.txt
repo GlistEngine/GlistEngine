@@ -354,7 +354,7 @@ endif()
 # These are handled from the appropriate plugin.
 if(NOT (ANDROID OR IOS OR EMSCRIPTEN))
 	list(APPEND SRC_FILES
-		${MINGW64_DIR}/lib/sqlite3.c
+		${LIBS_DIR}/sqlite/lib/sqlite3.c
 		${ENGINE_DIR}/core/backward.cpp
 		${ENGINE_DIR}/core/gGLFWWindow.cpp
 	)
@@ -452,6 +452,7 @@ set(INC_DIRS
 	${LIBS_DIR}/utf8/include
 	${LIBS_DIR}/ghc/include
 	${LIBS_DIR}/miniaudio/include
+	${LIBS_DIR}/sqlite/include
 )
 
 set(ENGINE_INCLUDES
@@ -486,7 +487,6 @@ if(WIN32)
 		${MINGW64_DIR}/include/c++/v1
 		${MINGW64_DIR}/include
 		${MINGW64_DIR}/include/freetype2
-		${MINGW64_DIR}/include/sqlite
 		${MINGW64_DIR}/include/curl
 		${MINGW64_DIR}/include/utf8
 		${MINGW64_DIR}/include/harfbuzz
@@ -504,19 +504,25 @@ elseif(LINUX)
 	list(APPEND INC_DIRS
 		${MINGW64_DIR}/include
 		${MINGW64_DIR}/include/freetype2
-		${MINGW64_DIR}/include/sqlite
 		# TODO: FFMPEG
-		
+
 		/usr/include/freetype2
 		/usr/include
 		/usr/local/lib
 	)
 elseif(APPLE)
+	# Resolve the active SDK at configure time so we work with either full
+	# Xcode or just the Command Line Tools (xcrun returns whichever is set
+	# as the active developer dir).
+	execute_process(
+		COMMAND xcrun --show-sdk-path
+		OUTPUT_VARIABLE OSX_SDK_PATH
+		OUTPUT_STRIP_TRAILING_WHITESPACE
+	)
   	list(APPEND INC_DIRS
-  		/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers
+  		${OSX_SDK_PATH}/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers
   		${SYS_INC_PATH}
   		${SYS_INC_PATH}/freetype2
-		${MINGW64_DIR}/include/sqlite
 		# TODO: FFMPEG
   	)
 	if(DEFINED ENGINE_USE_SYMLINKS)
@@ -617,7 +623,7 @@ elseif(APPLE)
     pkg_check_modules(assimp   REQUIRED IMPORTED_TARGET assimp)
     pkg_check_modules(glew     REQUIRED IMPORTED_TARGET glew)
 
-    find_library(Lib_GL GL HINTS /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries)
+    find_library(Lib_GL GL HINTS ${OSX_SDK_PATH}/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries)
 
     if(${ENGINE_USE_SYMLINKS})
         pkg_check_modules(crypto REQUIRED IMPORTED_TARGET libcrypto)

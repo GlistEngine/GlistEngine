@@ -34,16 +34,11 @@ cd ~/dev/glist/zbin
 
 **6. Download zbin**
 
-* Apple Silicon:
+Apple Silicon or Intel:
 
-  ```text
-  https://github.com/GlistEngine/glistzbin-macos/releases/latest
-  ```
-* Intel:
-
-  ```text
-  https://github.com/GlistEngine/glistzbin-macos-x86_64/releases/latest
-  ```
+```text
+https://github.com/GlistEngine/glistzbin-macos/releases/latest
+```
 
 Extract into `~/dev/glist/zbin`
 
