@@ -354,7 +354,7 @@ endif()
 # These are handled from the appropriate plugin.
 if(NOT (ANDROID OR IOS OR EMSCRIPTEN))
 	list(APPEND SRC_FILES
-		${MINGW64_DIR}/lib/sqlite3.c
+		${LIBS_DIR}/sqlite/lib/sqlite3.c
 		${ENGINE_DIR}/core/backward.cpp
 		${ENGINE_DIR}/core/gGLFWWindow.cpp
 	)
@@ -452,6 +452,7 @@ set(INC_DIRS
 	${LIBS_DIR}/utf8/include
 	${LIBS_DIR}/ghc/include
 	${LIBS_DIR}/miniaudio/include
+	${LIBS_DIR}/sqlite/include
 )
 
 set(ENGINE_INCLUDES
@@ -486,7 +487,6 @@ if(WIN32)
 		${MINGW64_DIR}/include/c++/v1
 		${MINGW64_DIR}/include
 		${MINGW64_DIR}/include/freetype2
-		${MINGW64_DIR}/include/sqlite
 		${MINGW64_DIR}/include/curl
 		${MINGW64_DIR}/include/utf8
 		${MINGW64_DIR}/include/harfbuzz
@@ -504,9 +504,8 @@ elseif(LINUX)
 	list(APPEND INC_DIRS
 		${MINGW64_DIR}/include
 		${MINGW64_DIR}/include/freetype2
-		${MINGW64_DIR}/include/sqlite
 		# TODO: FFMPEG
-		
+
 		/usr/include/freetype2
 		/usr/include
 		/usr/local/lib
@@ -524,7 +523,6 @@ elseif(APPLE)
   		${OSX_SDK_PATH}/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers
   		${SYS_INC_PATH}
   		${SYS_INC_PATH}/freetype2
-		${MINGW64_DIR}/include/sqlite
 		# TODO: FFMPEG
   	)
 	if(DEFINED ENGINE_USE_SYMLINKS)
