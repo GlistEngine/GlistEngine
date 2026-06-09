@@ -827,7 +827,16 @@ void gTexture::saveTexture(std::string fileName) {
 }
 
 void gTexture::setMaskMode(int maskMode) {
+	this->setAlphaMasking(maskMode);
+}
+
+void gTexture::setAlphaMasking(int maskMode) {
 	this->maskmode = maskMode;
+	this->isalphamasking = true;
+}
+
+void gTexture::disableAlphaMasking() {
+	this->isalphamasking = false;
 }
 
 void gTexture::setImageRotation(float angle) {
@@ -856,13 +865,14 @@ const std::string& gTexture::getTypeName(TextureType textureType) {
 	static const std::string metalness = "texture_metalness";
 	static const std::string ao = "texture_ao";
 	static const std::string unknown = "texture_unknown";
+
 	switch (textureType) {
 	case TEXTURETYPE_DIFFUSE:
 		return diffuse;
 	case TEXTURETYPE_SPECULAR:
 		return specular;
 	case TEXTURETYPE_NORMAL:
-	case TEXTURETYPE_PBR_NORMAL:  // Both return the same string
+	case TEXTURETYPE_PBR_NORMAL:
 		return normal;
 	case TEXTURETYPE_HEIGHT:
 		return height;
@@ -877,4 +887,8 @@ const std::string& gTexture::getTypeName(TextureType textureType) {
 	default:
 		return unknown;
 	}
+}
+
+bool gTexture::getAlphaMasking() const {
+	return isalphamasking;
 }
