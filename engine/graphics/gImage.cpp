@@ -269,7 +269,6 @@ std::string gImage::generateDownloadedImagePath(std::string imageType) {
 unsigned int gImage::loadMaskImage(const std::string& maskImagePath) {
 	masktexture = new gTexture();
 	ismaskloaded = true;
-	isalphamasking = true;
 	return masktexture->load(gGetImagesDir() + maskImagePath);
 }
 
