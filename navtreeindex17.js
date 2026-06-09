@@ -1,5 +1,6 @@
 var NAVTREEINDEX17 =
 {
+"gTiltShift_8h.html":[2,0,0,4,1,16],
 "gTiltShift_8h_source.html":[2,0,0,4,1,16],
 "gTracy_8h.html":[2,0,0,8,8],
 "gTracy_8h.html#a0d71e5f00cd74b67d2d04bf5393e96f1":[2,0,0,8,8,2],
@@ -248,6 +249,5 @@ var NAVTREEINDEX17 =
 "structgRenderer_1_1gSceneLightData.html#a665ad65fd67620f1447bc82ceee28a32":[1,0,145,2,8],
 "structgRenderer_1_1gSceneLightData.html#a70a6daffbb49dd8e71938c072a2a4849":[1,0,145,2,6],
 "structgRenderer_1_1gSceneLightData.html#a7b4fb63d9e039936022413f0e72a3201":[1,0,145,2,7],
-"structgRenderer_1_1gSceneLightData.html#a810e47fb54610d2357db7f88c0db1497":[1,0,145,2,1],
-"structgRenderer_1_1gSceneLightData.html#a8ce6a13d339bf01998a1ed76e54ce658":[1,0,145,2,5]
+"structgRenderer_1_1gSceneLightData.html#a810e47fb54610d2357db7f88c0db1497":[1,0,145,2,1]
 };
