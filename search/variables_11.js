@@ -24,6 +24,5 @@ var searchData=
   ['right_21',['right',['../classgBaseGUIObject.html#a24c6c54c2278be3ecc039067a3c463b0',1,'gBaseGUIObject']]],
   ['rightface_22',['rightFace',['../structgCamera_1_1Frustum.html#a7ee59026627af36e4d803967216ab0b6',1,'gCamera::Frustum']]],
   ['root_23',['root',['../classgBaseCanvas.html#ad4479a8e080001ee5b4148e2375eb4ea',1,'gBaseCanvas::root'],['../classgBaseGUIObject.html#a1b904144beed0a06f3d1943a56b7edd6',1,'gBaseGUIObject::root']]],
-  ['rotationangle_24',['rotationangle',['../classgTexture.html#a615eb4e731d6ec776ef2516301924e9d',1,'gTexture']]],
-  ['roundedrectanglemesh_25',['roundedrectanglemesh',['../classgRenderer.html#a6237d68f0db92c4fdc6b445cef730b88',1,'gRenderer']]]
+  ['roundedrectanglemesh_24',['roundedrectanglemesh',['../classgRenderer.html#a6237d68f0db92c4fdc6b445cef730b88',1,'gRenderer']]]
 ];
