@@ -10,6 +10,7 @@
 
 #include "gBaseWindow.h"
 // #include <glad/glad.h> //case_win
+#include <vector>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include "gCamera.h"
@@ -61,6 +62,7 @@ public:
 	void setCursor(int cursorNo) override;
 	void setCursorMode(gCursorMode cursorMode) override;
 	void setCursorPos(int x, int y) override;
+	int createCustomCursor(std::string imagePath, int hotspotx = 0, int hotspoty = 0);
 
 	void setClipboardString(std::string text) override;
 	std::string getClipboardString() override;
@@ -89,7 +91,7 @@ public:
 
   private:
 	GLFWwindow* window;
-	GLFWcursor** cursor;
+	std::vector<GLFWcursor*> cursors;
 	float scalex, scaley;
 
 };

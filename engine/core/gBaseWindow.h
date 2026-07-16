@@ -67,6 +67,7 @@ public:
 	virtual void setCursorMode(gCursorMode cursorMode);
 	gCursorMode getCursorMode();
 	virtual void setCursorPos(int x, int y);
+	virtual int createCustomCursor(std::string imagePath, int hotspotx = 0, int hotspoty = 0);
 
 	virtual void setIcon(std::string pngFullpath);
 	virtual void setIcon(unsigned char* imageData, int w, int h);

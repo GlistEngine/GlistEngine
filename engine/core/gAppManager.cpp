@@ -439,6 +439,13 @@ gCursorMode gAppManager::getCursorMode() {
 	return window->getCursorMode();
 }
 
+int gAppManager::createCustomCursor(std::string imagePath, int hotspotx, int hotspoty){
+	if(window){
+		return window->createCustomCursor(imagePath, hotspotx, hotspoty);
+	}
+	return -1;
+}
+
 void gAppManager::setWindowIcon(std::string pngFullpath) {
 	window->setIcon(pngFullpath);
 }

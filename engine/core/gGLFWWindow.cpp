@@ -164,7 +164,6 @@ static void glfwErrorCallback(int error, const char* description) {
 
 gGLFWWindow::gGLFWWindow() {
 	window = nullptr;
-	cursor = new GLFWcursor*[6];
 	scalex = 1.0f;
 	scaley = 1.0f;
 }
@@ -274,15 +273,15 @@ void gGLFWWindow::initialize(int width, int height, int windowMode, bool isResiz
 #endif
 
 	// Create cursors
-	cursor[0] = glfwCreateStandardCursor(0x00036001);
-	cursor[1] = glfwCreateStandardCursor(0x00036002);
-	cursor[2] = glfwCreateStandardCursor(0x00036003);
-	cursor[3] = glfwCreateStandardCursor(0x00036004);
-	cursor[4] = glfwCreateStandardCursor(0x00036005);
-	cursor[5] = glfwCreateStandardCursor(0x00036006);
+	cursors.push_back(glfwCreateStandardCursor(0x00036001));
+	cursors.push_back(glfwCreateStandardCursor(0x00036002));
+	cursors.push_back(glfwCreateStandardCursor(0x00036003));
+	cursors.push_back(glfwCreateStandardCursor(0x00036004));
+	cursors.push_back(glfwCreateStandardCursor(0x00036005));
+	cursors.push_back(glfwCreateStandardCursor(0x00036006));
 
-	if (cursor[0]) {
-		glfwSetCursor(window, cursor[0]);
+	if (cursors.empty() && cursors[0]) {
+		glfwSetCursor(window, cursors[0]);
 	}
 
 	glfwMakeContextCurrent(window);
@@ -338,14 +337,13 @@ void gGLFWWindow::update() {
 
 void gGLFWWindow::close() {
 	// Clean up cursors
-	for (int i = 0; i < 6; i++) {
-		if (cursor[i]) {
-			glfwDestroyCursor(cursor[i]);
-			cursor[i] = nullptr;
+	for (int i = 0; i < cursors.size(); i++) {
+		if (cursors[i]) {
+			glfwDestroyCursor(cursors[i]);
+			cursors[i] = nullptr;
 		}
 	}
-	delete[] cursor;
-	cursor = nullptr;
+	cursors.clear();
 
 	// Deallocate glfw resources
 	glfwTerminate();
@@ -357,8 +355,8 @@ void gGLFWWindow::setVsync(bool vsync) {
 }
 
 void gGLFWWindow::setCursor(int cursorNo) {
-	if (cursorNo >= 0 && cursorNo < 6 && cursor[cursorNo]) {
-		glfwSetCursor(window, cursor[cursorNo]);
+	if (cursorNo >= 0 && cursorNo < cursors.size() && cursors[cursorNo]) {
+		glfwSetCursor(window, cursors[cursorNo]);
 	}
 }
 
@@ -392,6 +390,28 @@ void gGLFWWindow::setCursorMode(gCursorMode cursorMode) {
 
 void gGLFWWindow::setCursorPos(int x, int y) {
 	glfwSetCursorPos(window, x / scalex, y / scaley);
+}
+
+int gGLFWWindow::createCustomCursor(std::string imagePath, int hotspotx, int hotspoty){
+	GLFWimage image;
+	std::string fullPath = gGetImagesDir() + imagePath;
+
+	image.pixels = stbi_load(fullPath.c_str(), &image.width, &image.height, 0, 4);
+	if(!image.pixels) {
+		gLogw("GLFWWindow") << "Failed to load custom cursor image from " << fullPath << std::endl;
+		return -1;
+	}
+
+	GLFWcursor* customCursor = glfwCreateCursor(&image, hotspotx, hotspoty);
+	stbi_image_free(image.pixels);
+
+	if(!customCursor){
+		gLogw("gGLFWWindow") << "Failed to create custom GLFW cursor." << std::endl;
+		return -1;
+	}
+
+	cursors.push_back(customCursor);
+	return cursors.size() -1;
 }
 
 void gGLFWWindow::setClipboardString(std::string text) {

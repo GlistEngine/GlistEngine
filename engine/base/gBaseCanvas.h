@@ -11,6 +11,7 @@
 #include "gBaseApp.h"
 #include "gRenderObject.h"
 #include "gKeyCode.h"
+#include "gWindowEvents.h"
 
 
 class gBaseCanvas : public gRenderObject {
@@ -117,6 +118,10 @@ protected:
 
 	bool isJoystickConnected(int joystickId);
 	bool isGamepadButtonPressed(int joystickId, int buttonId);
+
+	int createCustomCursor(std::string imagePath, int hotspotx, int hotspoty);
+	void setCursor(int cursorId);
+	void setCursorMode(gCursorMode cursorMode);
 };
 
 #endif /* ENGINE_BASE_GBASECANVAS_H_ */

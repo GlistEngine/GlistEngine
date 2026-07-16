@@ -448,4 +448,14 @@ bool gBaseCanvas::isGridYZEnabled() {
 	return renderer->isGridYZEnabled();
 }
 
+int gBaseCanvas::createCustomCursor(std::string imagePath, int hotspotx, int hotspoty) {
+	return appmanager->createCustomCursor(imagePath, hotspotx, hotspoty);
+}
 
+void gBaseCanvas::setCursor(int cursorId) {
+	appmanager->setCursor(cursorId);
+}
+
+void gBaseCanvas::setCursorMode(gCursorMode cursorMode){
+	appmanager->setCursorMode(cursorMode);
+}

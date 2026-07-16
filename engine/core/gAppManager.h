@@ -312,6 +312,7 @@ public:
     void setCursor(int cursorId);
     void setCursorMode(gCursorMode cursorMode);
 	gCursorMode getCursorMode();
+	int createCustomCursor(std::string imagePath, int hotspotx = 0, int hotspoty = 0);
 
     void setWindowIcon(std::string pngFullpath);
     void setWindowIcon(unsigned char* imageData, int w, int h);
