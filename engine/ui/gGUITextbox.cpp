@@ -620,8 +620,10 @@ void gGUITextbox::pressKey() {
 						firstchar -= calculateCharNum(deletedtext);
 						int oldutf = firstutf;
 						for(int i = 0; i < deletedtext.length(); i++) {
+							if(sepc1 + i >= (int)letterlength.size()) break;
 							firstutf -= letterlength[sepc1 + i];
 						}
+						if(firstutf < 0) firstutf = 0;
 						if(firstchar < 0) {
 							firstchar = 0;
 							firstutf = 0;
@@ -656,9 +658,13 @@ void gGUITextbox::pressKey() {
 			}
 			else {
 				cursorposx -= cw;
-					if(firstutf > 0 && !ismultiline) {
+					// firstchar/firstutf can be at the very start or past the last
+					// letter after the erase above; indexing letterlength blindly
+					// aborted under the hardened libc++ bounds checks on iOS.
+					if(firstutf > 0 && firstchar > 0 && !ismultiline) {
 						int icw = textfont->getStringWidth(text.substr(firstutf - 1, letterlength[firstchar - 1]));
-						firstutf -= letterlength[firstchar];
+						firstutf -= letterlength[firstchar < (int)letterlength.size() ? firstchar : firstchar - 1];
+						if(firstutf < 0) firstutf = 0;
 						firstposx = textfont->getStringWidth(text.substr(0, firstutf));
 						firstchar--;
 						cursorposx += icw;
@@ -670,9 +676,12 @@ void gGUITextbox::pressKey() {
 			cursorposchar--;
 			if(cursorposx < 0) {
 				if(!ismultiline && !ispassword) {
-					firstutf -= letterlength[firstchar];
+					if(firstchar >= 0 && firstchar < (int)letterlength.size()) {
+						firstutf -= letterlength[firstchar];
+						if(firstutf < 0) firstutf = 0;
+					}
 					firstposx = textfont->getStringWidth(text.substr(0, firstutf));
-					firstchar--;
+					if(firstchar > 0) firstchar--;
 					cursorposx = 0;
 					lastutf = calculateLastUtf();
 				} else if(ismultiline){
