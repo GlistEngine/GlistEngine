@@ -1096,8 +1096,99 @@ const std::string& gRenderer::getShaderSrcColorVertex() {
 }
 
 const std::string& gRenderer::getShaderSrcColorFragment() {
+#if defined(TARGET_OS_SIMULATOR) && TARGET_OS_SIMULATOR
+	// The iOS simulator executes OpenGL ES on Apple's software renderer, whose
+	// LLVM shader JIT effectively never finishes compiling the full lighting
+	// shader - every draw then falls back to a per-fragment interpreter and the
+	// GUI crawls at a few frames per second. The simulator therefore gets only
+	// the unlit branch of the shader (globalambient * material * renderColor *
+	// vertex color, plus the alpha discard), which compiles instantly. Real
+	// devices and every other platform keep the full shader; lit 3D scenes
+	// simply render unlit on the simulator.
+	static std::string str{
+			"#if GLES\n"
+			"#version 300 es\n"
+			"precision highp float;\n"
+			"precision highp int;\n"
+			"#else\n"
+			"#version 330 core\n"
+			"#endif\n"
+			"\n"
+			"struct Material {\n"
+			"    vec4 ambient;\n"
+			"    vec4 diffuse;\n"
+			"    vec4 specular;\n"
+			"    float shininess;\n"
+			"    sampler2D diffusemap;\n"
+			"    sampler2D specularmap;\n"
+			"    sampler2D normalMap;\n"
+			"    int useDiffuseMap;\n"
+			"    int useSpecularMap;\n"
+			"    int useNormalMap;\n"
+			"};\n"
+			"\n"
+			"struct Light {\n"
+			"    int type;\n"
+			"    vec3 position;\n"
+			"    vec3 direction;\n"
+			"    vec4 ambient;\n"
+			"    vec4 diffuse;\n"
+			"    vec4 specular;\n"
+			"    float constant;\n"
+			"    float linear;\n"
+			"    float quadratic;\n"
+			"    float cutOff;\n"
+			"    float outerCutOff;\n"
+			"};\n"
+			"\n"
+			"struct Fog {\n"
+			"    vec3 color;\n"
+			"    float linearStart;\n"
+			"    float linearEnd;\n"
+			"    float density;\n"
+			"    float gradient;\n"
+			"    int mode;\n"
+			"};\n"
+			"\n"
+			"uniform Material material;\n"
+			"\n"
+			"layout(std140) uniform Lights {\n"
+			"    int lightnum;\n"
+			"    int enabledlights;\n"
+			"    vec4 globalambientcolor;\n"
+			"    Light lights[GLIST_MAX_LIGHTS];\n"
+			"};\n"
+			"\n"
+			"layout(std140) uniform Scene {\n"
+			"    vec4 renderColor;\n"
+			"    vec3 viewPos;\n"
+			"    mat4 viewMatrix;\n"
+			"    int flags;\n"
+			"    Fog fog;\n"
+			"};\n"
+			"\n"
+			"in vec2 TexCoords;\n"
+			"in vec3 incolor;\n"
+			"\n"
+			"out vec4 FragColor;\n"
+			"\n"
+			"void main() {\n"
+			"    vec4 materialAmbient;\n"
+			"    if (material.useDiffuseMap > 0) {\n"
+			"        materialAmbient = texture(material.diffusemap, TexCoords).rgba;\n"
+			"        if (materialAmbient.a < 0.5) {\n"
+			"            discard;\n"
+			"        }\n"
+			"    } else {\n"
+			"        materialAmbient = material.ambient;\n"
+			"    }\n"
+			"    FragColor = globalambientcolor * materialAmbient * renderColor * vec4(incolor, 1.0);\n"
+			"}\n"};
+	return str;
+#else
 	static std::string str{shader_color_frag.data(), shader_color_frag.size()};
 	return str;
+#endif
 }
 
 const std::string& gRenderer::getShaderSrcTextureVertex() {
@@ -1150,14 +1241,65 @@ const std::string& gRenderer::getShaderSrcShadowmapFragment() {
 	return str;
 }
 
+#if defined(TARGET_OS_SIMULATOR) && TARGET_OS_SIMULATOR
+// See getShaderSrcColorFragment for why: these 3D-only shaders are compiled at
+// startup, and on the simulator's software renderer each of them occupies the
+// serial shader-JIT queue for minutes, during which every draw - including the
+// GUI's - runs on the interpreter. A GUI never draws them, and a 3D scene on
+// the simulator merely loses its PBR/IBL shading. The Lights block is kept so
+// the attachUbo("Lights", ...) call made for the PBR shader still finds it.
+static const std::string& getSimulatorStubFragment() {
+	static std::string str{
+			"#if GLES\n"
+			"#version 300 es\n"
+			"precision highp float;\n"
+			"precision highp int;\n"
+			"#else\n"
+			"#version 330 core\n"
+			"#endif\n"
+			"\n"
+			"struct Light {\n"
+			"    int type;\n"
+			"    vec3 position;\n"
+			"    vec3 direction;\n"
+			"    vec4 ambient;\n"
+			"    vec4 diffuse;\n"
+			"    vec4 specular;\n"
+			"    float constant;\n"
+			"    float linear;\n"
+			"    float quadratic;\n"
+			"    float cutOff;\n"
+			"    float outerCutOff;\n"
+			"};\n"
+			"\n"
+			"layout(std140) uniform Lights {\n"
+			"    int lightnum;\n"
+			"    int enabledlights;\n"
+			"    vec4 globalambientcolor;\n"
+			"    Light lights[GLIST_MAX_LIGHTS];\n"
+			"};\n"
+			"\n"
+			"out vec4 FragColor;\n"
+			"\n"
+			"void main() {\n"
+			"    FragColor = clamp(globalambientcolor, vec4(0.0), vec4(1.0));\n"
+			"}\n"};
+	return str;
+}
+#endif
+
 const std::string& gRenderer::getShaderSrcPbrVertex() {
 	static std::string str{shader_pbr_vert.data(), shader_pbr_vert.size()};
 	return str;
 }
 
 const std::string& gRenderer::getShaderSrcPbrFragment() {
+#if defined(TARGET_OS_SIMULATOR) && TARGET_OS_SIMULATOR
+	return getSimulatorStubFragment();
+#else
 	static std::string str{shader_pbr_frag.data(), shader_pbr_frag.size()};
 	return str;
+#endif
 }
 
 const std::string& gRenderer::getShaderSrcCubemapVertex() {
@@ -1171,13 +1313,21 @@ const std::string& gRenderer::getShaderSrcEquirectangularFragment() {
 }
 
 const std::string& gRenderer::getShaderSrcIrradianceFragment() {
+#if defined(TARGET_OS_SIMULATOR) && TARGET_OS_SIMULATOR
+	return getSimulatorStubFragment();
+#else
 	static std::string str{shader_irradiance_frag.data(), shader_irradiance_frag.size()};
 	return str;
+#endif
 }
 
 const std::string& gRenderer::getShaderSrcPrefilterFragment() {
+#if defined(TARGET_OS_SIMULATOR) && TARGET_OS_SIMULATOR
+	return getSimulatorStubFragment();
+#else
 	static std::string str{shader_prefilter_frag.data(), shader_prefilter_frag.size()};
 	return str;
+#endif
 }
 
 const std::string& gRenderer::getShaderSrcBrdfVertex() {
@@ -1186,8 +1336,12 @@ const std::string& gRenderer::getShaderSrcBrdfVertex() {
 }
 
 const std::string& gRenderer::getShaderSrcBrdfFragment() {
+#if defined(TARGET_OS_SIMULATOR) && TARGET_OS_SIMULATOR
+	return getSimulatorStubFragment();
+#else
 	static std::string str{shader_brdf_frag.data(), shader_brdf_frag.size()};
 	return str;
+#endif
 }
 
 const std::string& gRenderer::getShaderSrcFboVertex() {

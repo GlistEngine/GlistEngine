@@ -387,11 +387,12 @@ void gAppManager::loop() {
 #endif
     //gLogi("gAppManager") << "starting loop";
     isrunning = true;
-#ifdef ANDROID
-	// Android drives the app through initialize()/setup()/loop() directly instead
-	// of runApp(), so the GUI app thread must also be started here. Every other
-	// platform reaches this function through runApp(), which has already started
-	// it, so the call is confined here rather than changing their startup path.
+#if defined(ANDROID) || TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
+	// Android and iOS drive the app through initialize()/setup()/loop() directly
+	// instead of runApp(), so the GUI app thread must also be started here. The
+	// desktop platforms reach this function through runApp(), which has already
+	// started it, so the call is confined here rather than changing their
+	// startup path. (On iOS this function runs once, from setup().)
 	if(isguiapp && guiappthread) guiappthread->start();
 #endif
 	starttime = AppClock::now();
@@ -933,7 +934,7 @@ bool gAppManager::onWindowResizedEvent(gWindowResizeEvent& event) {
     if(!canvasmanager || !initialized || (!isguiapp && !getCurrentCanvas() && !canvasmanager->getTempCanvas())) {
         return true;
     }
-#ifdef ANDROID
+#if GLIST_ANDROID || GLIST_IOS
     delayedresize = false;
     bool swapdimensions = false;
     // The scrollable layout derives the whole unit space from the screen and

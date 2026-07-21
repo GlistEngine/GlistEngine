@@ -89,6 +89,13 @@ void gThread::detach() {
 
 void gThread::sleep(std::chrono::duration<double, std::milli> milliseconds) {
 	starttime = std::chrono::high_resolution_clock::now();
+	// Busy-waiting the whole interval pinned a core for every sleeping thread.
+	// The bulk of the wait is a real sleep; only the last stretch is spun, so
+	// the wake-up precision the frame pacing relies on is kept.
+	constexpr std::chrono::duration<double, std::milli> spinwindow{2.0};
+	if(milliseconds > spinwindow) {
+		std::this_thread::sleep_for(milliseconds - spinwindow);
+	}
 	while(true) {
 		timediff = std::chrono::high_resolution_clock::now() - starttime;
 		if(timediff >= milliseconds) break;

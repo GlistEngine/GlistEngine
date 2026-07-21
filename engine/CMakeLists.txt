@@ -360,6 +360,12 @@ if(NOT (ANDROID OR IOS OR EMSCRIPTEN))
 	)
 endif()
 
+if(IOS)
+	# miniaudio's implementation talks to AVFoundation on iOS, so the
+	# translation unit carrying it must be compiled as Objective-C++.
+	set_source_files_properties(${ENGINE_DIR}/media/gSound.cpp PROPERTIES LANGUAGE OBJCXX)
+endif()
+
 set(SHADERS_DIR "${ENGINE_DIR}/graphics/shaders" CACHE STRING "Engine shaders directory")
 set(GENERATED_SHADERS_DIR "${GENERATED_HEADERS_DIR}/graphics/shaders" CACHE STRING "Generated shaders directory")
 file(MAKE_DIRECTORY ${GENERATED_SHADERS_DIR})
