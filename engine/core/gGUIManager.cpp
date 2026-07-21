@@ -158,6 +158,11 @@ void gGUIManager::charPressed(unsigned int key) {
 }
 
 void gGUIManager::mouseMoved(int x, int y) {
+	// Pointer positions arrive relative to the visible band, while the controls
+	// were laid out in the full layout area, so the scroll distance is what
+	// bridges the two. It is 0 whenever the layout fits on screen.
+	x += gRenderer::getScrollX();
+	y += gRenderer::getScrollY();
 	if(!dialoguesshown.empty()) {
 		appmanager->setCursor(dialoguesshown[dialoguesshown.size() - 1]->getCursor(x, y));
 		dialoguesshown[dialoguesshown.size() - 1]->mouseMoved(x, y);
@@ -168,6 +173,8 @@ void gGUIManager::mouseMoved(int x, int y) {
 }
 
 void gGUIManager::mousePressed(int x, int y, int button) {
+	x += gRenderer::getScrollX();
+	y += gRenderer::getScrollY();
 	if(!dialoguesshown.empty()) {
 		dialoguesshown[dialoguesshown.size() - 1]->mousePressed(x, y, button);
 		return;
@@ -176,6 +183,8 @@ void gGUIManager::mousePressed(int x, int y, int button) {
 }
 
 void gGUIManager::mouseDragged(int x, int y, int button) {
+	x += gRenderer::getScrollX();
+	y += gRenderer::getScrollY();
 	if(!dialoguesshown.empty()) {
 		dialoguesshown[dialoguesshown.size() - 1]->mouseDragged(x, y, button);
 		return;
@@ -184,6 +193,8 @@ void gGUIManager::mouseDragged(int x, int y, int button) {
 }
 
 void gGUIManager::mouseReleased(int x, int y, int button) {
+	x += gRenderer::getScrollX();
+	y += gRenderer::getScrollY();
 	if(!dialoguesshown.empty()) {
 		dialoguesshown[dialoguesshown.size() - 1]->mouseReleased(x, y, button);
 		return;

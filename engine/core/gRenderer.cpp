@@ -51,6 +51,17 @@ int gRenderer::unitheight;
 int gRenderer::screenscaling;
 int gRenderer::currentresolution;
 int gRenderer::unitresolution;
+int gRenderer::unitviewportwidth = 0;
+int gRenderer::unitviewportheight = 0;
+int gRenderer::scrollx = 0;
+int gRenderer::scrolly = 0;
+int gRenderer::overscrollx = 0;
+int gRenderer::overscrolly = 0;
+#if GLIST_ANDROID || GLIST_IOS
+bool gRenderer::contentprojectionactive = false;
+int gRenderer::contentprojectionwidth = 0;
+int gRenderer::contentprojectionheight = 0;
+#endif
 
 void gDrawLine(float x1, float y1, float x2, float y2, float thickness) {
 	G_PROFILE_ZONE_SCOPED_N("gDrawLine()");
@@ -477,17 +488,159 @@ void gRenderer::setScreenSize(int screenWidth, int screenHeight) {
 	width = screenWidth;
 	height = screenHeight;
 	setCurrentResolution(getResolution(screenWidth, screenHeight));
+	updateProjectionMatrix2d();
 }
 
 void gRenderer::setUnitScreenSize(int unitWidth, int unitHeight) {
 	unitwidth = unitWidth;
 	unitheight = unitHeight;
 	setUnitResolution(getResolution(unitWidth, unitHeight));
+	// A smaller layout area can leave the scroll position past its new end.
+	scrollx = gClamp(scrollx, 0, getMaxScrollX());
+	scrolly = gClamp(scrolly, 0, getMaxScrollY());
+	updateProjectionMatrix2d();
 }
 
 void gRenderer::setScreenScaling(int screenScaling) {
 	screenscaling = screenScaling;
 	gObject::setCurrentResolution(screenscaling, currentresolution);
+	updateProjectionMatrix2d();
+}
+
+void gRenderer::updateProjectionMatrix2d() {
+	// 2D primitives (gDrawRectangle etc.) read projectionmatrix2d directly, so it
+	// must be rebuilt whenever the screen/unit size or scaling mode changes.
+	// Otherwise it keeps the default 1280x720 ortho from init() until a texture
+	// draw happens to refresh it, which shifts/stretches all primitive drawings.
+	gRenderer* r = gRenderObject::getRenderer();
+	if(!r) return;
+#if GLIST_ANDROID || GLIST_IOS
+	if(contentprojectionactive) {
+		// A control's content buffer maps the control's whole box onto the buffer,
+		// so nothing wider or taller than the on-screen band is clipped away. The
+		// page scroll is left out on purpose - the content is drawn in its own
+		// local space - while the overscroll stays in, which is the control's own
+		// rubber band shifting the band it is drawn through.
+		float contentleft = (float)overscrollx;
+		float contenttop = (float)overscrolly;
+		r->projectionmatrix2d = glm::ortho(contentleft, contentleft + (float)contentprojectionwidth, contenttop + (float)contentprojectionheight, contenttop, -1.0f, 1.0f);
+		return;
+	}
+#endif
+	// The visible band of the layout area is what gets mapped onto the screen.
+	// Scrolling therefore costs nothing at draw time: shifting the band moves
+	// every 2D drawing at once and whatever falls outside is clipped by the
+	// projection itself.
+	float visibleleft = 0.0f;
+	float visiblewidth = (float)r->getWidth();
+	if(isHorizontalScrollingEnabled()) {
+		visibleleft = (float)(scrollx + overscrollx);
+		visiblewidth = (float)unitviewportwidth;
+	}
+	float visibletop = 0.0f;
+	float visibleheight = (float)r->getHeight();
+	if(isVerticalScrollingEnabled()) {
+		visibletop = (float)(scrolly + overscrolly);
+		visibleheight = (float)unitviewportheight;
+	}
+	r->projectionmatrix2d = glm::ortho(visibleleft, visibleleft + visiblewidth, visibletop + visibleheight, visibletop, -1.0f, 1.0f);
+}
+
+#if GLIST_ANDROID || GLIST_IOS
+void gRenderer::setContentProjection(int unitW, int unitH) {
+	contentprojectionactive = true;
+	contentprojectionwidth = unitW < 1 ? 1 : unitW;
+	contentprojectionheight = unitH < 1 ? 1 : unitH;
+	updateProjectionMatrix2d();
+}
+
+void gRenderer::clearContentProjection() {
+	contentprojectionactive = false;
+	updateProjectionMatrix2d();
+}
+#endif
+
+void gRenderer::setOverscroll(int overscrollX, int overscrollY) {
+	if(overscrollx == overscrollX && overscrolly == overscrollY) return;
+	overscrollx = overscrollX;
+	overscrolly = overscrollY;
+	updateProjectionMatrix2d();
+}
+
+int gRenderer::getOverscrollX() {
+	if(!isHorizontalScrollingEnabled()) return 0;
+	return overscrollx;
+}
+
+int gRenderer::getOverscrollY() {
+	if(!isVerticalScrollingEnabled()) return 0;
+	return overscrolly;
+}
+
+bool gRenderer::isHorizontalScrollingEnabled() {
+	return unitviewportwidth > 0 && screenscaling >= G_SCREENSCALING_AUTO;
+}
+
+bool gRenderer::isVerticalScrollingEnabled() {
+	return unitviewportheight > 0 && screenscaling >= G_SCREENSCALING_AUTO;
+}
+
+void gRenderer::setUnitViewportWidth(int unitViewportWidth) {
+	unitviewportwidth = unitViewportWidth;
+	scrollx = gClamp(scrollx, 0, getMaxScrollX());
+	updateProjectionMatrix2d();
+}
+
+int gRenderer::getUnitViewportWidth() {
+	if(!isHorizontalScrollingEnabled()) return unitwidth;
+	return unitviewportwidth;
+}
+
+void gRenderer::setUnitViewportHeight(int unitViewportHeight) {
+	unitviewportheight = unitViewportHeight;
+	scrolly = gClamp(scrolly, 0, getMaxScrollY());
+	updateProjectionMatrix2d();
+}
+
+int gRenderer::getUnitViewportHeight() {
+	if(!isVerticalScrollingEnabled()) return unitheight;
+	return unitviewportheight;
+}
+
+void gRenderer::setScrollX(int scrollX) {
+	int newscrollx = gClamp(scrollX, 0, getMaxScrollX());
+	if(newscrollx == scrollx) return;
+	scrollx = newscrollx;
+	updateProjectionMatrix2d();
+}
+
+int gRenderer::getScrollX() {
+	if(!isHorizontalScrollingEnabled()) return 0;
+	return scrollx;
+}
+
+int gRenderer::getMaxScrollX() {
+	if(!isHorizontalScrollingEnabled()) return 0;
+	if(unitwidth <= unitviewportwidth) return 0;
+	return unitwidth - unitviewportwidth;
+}
+
+void gRenderer::setScrollY(int scrollY) {
+	int newscrolly = gClamp(scrollY, 0, getMaxScrollY());
+	if(newscrolly == scrolly) return;
+	scrolly = newscrolly;
+	updateProjectionMatrix2d();
+}
+
+int gRenderer::getScrollY() {
+	if(!isVerticalScrollingEnabled()) return 0;
+	return scrolly;
+}
+
+int gRenderer::getMaxScrollY() {
+	if(!isVerticalScrollingEnabled()) return 0;
+	if(unitheight <= unitviewportheight) return 0;
+	return unitheight - unitviewportheight;
 }
 
 int gRenderer::getWidth() {
@@ -573,24 +726,30 @@ int gRenderer::getUnitResolution() {
 }
 
 float gRenderer::getScaleMultiplier() {
-	return width / (float)unitwidth;
+	return width / (float)getUnitViewportWidth();
 }
 
 int gRenderer::scaleX(int x) {
-	return (x * unitwidth) / width;
+	// Screen pixels map onto the visible band, not onto the whole layout area,
+	// so the conversion has to use the visible width to stay undistorted when
+	// the layout is wider than the screen.
+	return (x * getUnitViewportWidth()) / width;
 }
 
 int gRenderer::scaleY(int y) {
-	return (y * unitheight) / height;
+	// Screen pixels map onto the visible band, not onto the whole layout area,
+	// so the conversion has to use the visible height to stay undistorted when
+	// the layout is taller than the screen.
+	return (y * getUnitViewportHeight()) / height;
 }
 
 int gRenderer::unscaleX(int x) {
-	float scale = width / (float)unitwidth;
+	float scale = width / (float)getUnitViewportWidth();
 	return x * scale;
 }
 
 int gRenderer::unscaleY(int y) {
-	float scale = height / (float)unitheight;
+	float scale = height / (float)getUnitViewportHeight();
 	return y * scale;
 }
 

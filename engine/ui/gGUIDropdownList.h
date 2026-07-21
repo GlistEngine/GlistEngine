@@ -27,6 +27,9 @@ public:
 	virtual ~gGUIDropdownList();
 	void set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIObject* parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h) override;
 	void draw() override;
+#if GLIST_ANDROID || GLIST_IOS
+	int getNaturalHeight() override;
+#endif
 	void setParentFrame(gGUIForm* form);
 	void setParentForm(gGUIForm* form);
 	void mousePressed(int x, int y, int button) override;

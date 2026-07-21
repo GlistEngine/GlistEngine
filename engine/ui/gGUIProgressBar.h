@@ -63,6 +63,9 @@ public:
 	gGUIProgressBar();
 	virtual ~gGUIProgressBar();
 	void draw();
+#if GLIST_ANDROID || GLIST_IOS
+	int getNaturalHeight() override;
+#endif
 
 	/**
 	 * Sets the shown value of the progress bar. Developers can determine the shown

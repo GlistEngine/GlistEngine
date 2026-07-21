@@ -21,6 +21,9 @@ public:
 	void set(int x, int y, int w, int h);
 
 	void draw();
+#if GLIST_ANDROID || GLIST_IOS
+	int getNaturalHeight() override;
+#endif
 	void update();
 
 	void keyPressed(int key);

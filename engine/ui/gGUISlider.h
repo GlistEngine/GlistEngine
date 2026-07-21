@@ -56,6 +56,9 @@ public:
 
 	void update();
 	void draw();
+#if GLIST_ANDROID || GLIST_IOS
+	int getNaturalHeight() override;
+#endif
 	void mousePressed(int x, int y, int button);
 	void mouseReleased(int x, int y, int button);
 	void mouseDragged(int x, int y, int button);

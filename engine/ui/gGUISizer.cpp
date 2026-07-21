@@ -19,8 +19,22 @@ gGUISizer::gGUISizer() {
 	resizecolumn = 0;
 	resizeline = 0;
 	fillbackground = false;
+#if GLIST_ANDROID || GLIST_IOS
+	// Controls sat flush against each other, which on a touch screen reads as one
+	// block rather than as separate things to hit. Both axes inset a slot by this
+	// much on every side, so the two numbers mean the same thing and a gap between
+	// neighbours is twice one of them - 48 units, which on a 720 unit wide design
+	// is about a fifteenth of the page between one thing and the next, with half
+	// that left as a margin down the edges.
+	slotpadding = 24;
+	slotheightpadding = 24;
+	referenceheight = 0;
+#else
+	// Desktop keeps its old values: the pointer is precise there and the existing
+	// layouts are already drawn around them.
 	slotpadding = 2;
 	slotheightpadding = 0;
+#endif
 	alignvertically = false;
 	lineprs = nullptr;
 	columnprs = nullptr;
@@ -30,6 +44,11 @@ gGUISizer::gGUISizer() {
 }
 
 gGUISizer::~gGUISizer() {
+	// Allocated by setSize() and never released. Every sizer leaked four arrays.
+	delete[] lineprs;
+	delete[] columnprs;
+	delete[] linetprs;
+	delete[] columntprs;
 }
 
 void gGUISizer::set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIObject* parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h) {
@@ -59,12 +78,37 @@ void gGUISizer::set(int x, int y, int w, int h) {
 	reloadControls();
 }
 
+#if GLIST_ANDROID || GLIST_IOS
+int gGUISizer::getRowTop(int lineNo) {
+	if((int)rowtops.size() != linenum) computeRowHeights();
+	// A sizer sized to no rows at all leaves these empty, and the size check above
+	// is satisfied by two zeroes. Reading the vector then walks off the front of
+	// it, so the bounds are checked rather than assumed.
+	if(lineNo < 0 || lineNo >= (int)rowtops.size()) return 0;
+	return rowtops[lineNo];
+}
+
+int gGUISizer::getRowHeight(int lineNo) {
+	if((int)rowheights.size() != linenum) computeRowHeights();
+	if(lineNo < 0 || lineNo >= (int)rowheights.size()) return 0;
+	return rowheights[lineNo];
+}
+#else
+int gGUISizer::getRowTop(int lineNo) {
+	return (int)((float)height * linetprs[lineNo]);
+}
+
+int gGUISizer::getRowHeight(int lineNo) {
+	return (int)((float)height * (linetprs[lineNo + 1] - linetprs[lineNo]));
+}
+#endif
+
 int gGUISizer::getSlotWidth(int lineNo, int columnNo) { //
 	return width * columnprs[columnNo];
 }
 
 int gGUISizer::getSlotHeight(int lineNo, int columnNo) { //
-	return height * lineprs[lineNo];
+	return getRowHeight(lineNo);
 }
 
 int gGUISizer::getSlotX(int lineNo, int columnNo) {
@@ -79,14 +123,7 @@ int gGUISizer::getSlotX(int lineNo, int columnNo) {
 }
 
 int gGUISizer::getSlotY(int lineNo, int columnNo) {
-	int totalheight = top;
-
-	for(int row = 0; row < lineNo; row++) {
-		int rowheight = getSlotHeight(row, columnNo);
-		totalheight += rowheight;
-	}
-
-	return totalheight;
+	return top + getRowTop(lineNo);
 }
 
 int gGUISizer::getSizerType() {
@@ -103,19 +140,19 @@ void gGUISizer::setSize(int lineNum, int columnNum) {
 		guicontrols.push_back({nullptr, false});
 	}
 
-	delete lineprs;
+	delete[] lineprs;
 	lineprs = new float[linenum];
 	for(int i = 0; i < linenum; i++) {
 		lineprs[i] = 1.0f / (float)linenum;
 	}
 
-	delete columnprs;
+	delete[] columnprs;
 	columnprs = new float[columnnum];
 	for(int i = 0; i < columnnum; i++) {
 		columnprs[i] = 1.0f / (float)columnnum;
 	}
 
-	delete linetprs;
+	delete[] linetprs;
 	linetprs = new float[linenum + 1];
 	linetprs[0] = 0.0f;
 	linetprs[linenum] = 1.0f;
@@ -126,7 +163,7 @@ void gGUISizer::setSize(int lineNum, int columnNum) {
 		}
 	}
 
-	delete columntprs;
+	delete[] columntprs;
 	columntprs = new float[columnnum + 1];
 	columntprs[0] = 0.0f;
 	columntprs[columnnum] = 1.0f;
@@ -147,13 +184,18 @@ int gGUISizer::getColumnNum() {
 }
 
 void gGUISizer::setLineProportions(float* proportions) {
-	delete lineprs;
-	lineprs = new float[linenum];
+	// Filled before the old array is released, because the source can be that very
+	// array: a sizer with space lines re-proportions itself by calling
+	// setLineProportions(lineprs) from windowResized(). Releasing first would leave
+	// the loop reading freed memory.
+	float* newlineprs = new float[linenum];
 	for(int i = 0; i < linenum; i++) {
-		lineprs[i] = proportions[i];
+		newlineprs[i] = proportions[i];
 	}
+	delete[] lineprs;
+	lineprs = newlineprs;
 
-	delete linetprs;
+	delete[] linetprs;
 	linetprs = new float[linenum + 1];
 	linetprs[0] = 0.0f;
 	linetprs[linenum] = 1.0f;
@@ -166,13 +208,15 @@ void gGUISizer::setLineProportions(float* proportions) {
 }
 
 void gGUISizer::setColumnProportions(float* proportions) {
-	delete columnprs;
-	columnprs = new float[columnnum];
+	// Same aliasing as setLineProportions above: copy first, release after.
+	float* newcolumnprs = new float[columnnum];
 	for(int i = 0; i < columnnum; i++) {
-		columnprs[i] = proportions[i];
+		newcolumnprs[i] = proportions[i];
 	}
+	delete[] columnprs;
+	columnprs = newcolumnprs;
 
-	delete columntprs;
+	delete[] columntprs;
 	columntprs = new float[columnnum + 1];
 	columntprs[0] = 0.0f;
 	columntprs[columnnum] = 1.0f;
@@ -193,7 +237,13 @@ void gGUISizer::setControl(int line, int column, gGUIControl* control) {
 	Entry& entry = guicontrols[indexOf(line, column)];
 	entry.control = control;
 	entry.isset = true;
+#if GLIST_ANDROID || GLIST_IOS
+	// The new control can change what its row needs, and that moves every row
+	// after it, so the whole sizer is laid out again rather than just this slot.
+	reloadControls();
+#else
 	reloadControl(*control, line, column);
+#endif
 }
 
 void gGUISizer::removeControl(int line, int column) {
@@ -216,7 +266,7 @@ int gGUISizer::getCursor(int x, int y) {
 			}
 		}
 		for(int i = 1; i < linenum; i++) {
-			if(y >= top + (height * linetprs[i]) - 1 && y <= top + (height * linetprs[i]) + 1) {
+			if(y >= top + getRowTop(i) - 1 && y <= top + getRowTop(i) + 1) {
 				return CURSOR_VRESIZE;
 			}
 		}
@@ -225,7 +275,8 @@ int gGUISizer::getCursor(int x, int y) {
 	int column = -1;
 	int line = -1;
 	for(int i = 1; i < linenum + 1; i++) {
-		if(y < top + (height * linetprs[i])) {
+		int rowbottom = i < linenum ? getRowTop(i) : getRowTop(i - 1) + getRowHeight(i - 1);
+		if(y < top + rowbottom) {
 			line = i - 1;
 			break;
 		}
@@ -348,8 +399,129 @@ void gGUISizer::checkSpaces() {
 	}
 }
 
+#if GLIST_ANDROID || GLIST_IOS
+void gGUISizer::setReferenceHeight(int referenceHeight) {
+	if(referenceheight == referenceHeight) return;
+	referenceheight = referenceHeight;
+	reloadControls();
+}
+
+int gGUISizer::getRowNaturalHeight(int lineNo) {
+	int designheight = (int)((float)referenceheight * lineprs[lineNo]);
+	int naturalheight = 0;
+	bool hascontrol = false;
+	for(int column = 0; column < columnnum; column++) {
+		gGUIControl* control = getControl(lineNo, column);
+		if(!control) continue;
+		hascontrol = true;
+		// Anything with a layout of its own is measured against the share of the
+		// reference this row would have had, so the floors keep meaning the same
+		// thing all the way down the tree instead of collapsing one level in.
+		control->setReferenceHeight(designheight);
+		int controlheight = control->getNaturalHeight();
+		if(controlheight > naturalheight) naturalheight = controlheight;
+	}
+	// Both insets, since the row now carries one above its control and one below.
+	if(naturalheight > 0) naturalheight += slotheightpadding * 2;
+	// Every row keeps at least the share the reference gives it, whether or not
+	// anything in it has an opinion. Without this floor a row holding something
+	// that does not measure itself is starved the moment the page grows: the rows
+	// that do measure themselves take the whole of the new height between them and
+	// leave nothing over.
+	if(designheight > naturalheight) naturalheight = designheight;
+	// And a row that holds anything at all is never shorter than the padding it
+	// carries. A page with enough rows can drive the reference share below that,
+	// and the slot would then be handed a negative height.
+	if(hascontrol && naturalheight < slotheightpadding * 2) naturalheight = slotheightpadding * 2;
+	return naturalheight;
+}
+
+int gGUISizer::getNaturalHeight() {
+	int naturalheight = 0;
+	for(int line = 0; line < linenum; line++) naturalheight += getRowNaturalHeight(line);
+	return naturalheight;
+}
+
+void gGUISizer::computeRowHeights() {
+	rowheights.assign(linenum, 0);
+	rowtops.assign(linenum, 0);
+	if(linenum <= 0) return;
+
+	std::vector<int> minimums(linenum, 0);
+	std::vector<bool> ispinned(linenum, false);
+	for(int line = 0; line < linenum; line++) minimums[line] = getRowNaturalHeight(line);
+
+	// A row whose proportional share is too small for its content is pinned to
+	// what it needs; the rest share out what is left, in their own proportions.
+	// Pinning shrinks the pool, which can push another row below its own minimum,
+	// so this repeats until a pass pins nothing new. At most linenum passes, since
+	// every pass that changes anything pins at least one row.
+	int remaining = height;
+	float flexweight = 0.0f;
+	for(int line = 0; line < linenum; line++) flexweight += lineprs[line];
+	bool ispinnednew = true;
+	while(ispinnednew) {
+		ispinnednew = false;
+		for(int line = 0; line < linenum; line++) {
+			if(ispinned[line] || minimums[line] <= 0) continue;
+			float share = flexweight > 0.0f ? (float)remaining * (lineprs[line] / flexweight) : 0.0f;
+			// The tolerance matters: at the design height a row's share and its
+			// floor are the same number arrived at by two different roundings, and
+			// without it they would disagree by a unit and pin the whole page onto
+			// the slower path for no reason.
+			if(share >= (float)minimums[line] - 1.0f) continue;
+			ispinned[line] = true;
+			rowheights[line] = minimums[line];
+			remaining -= minimums[line];
+			flexweight -= lineprs[line];
+			ispinnednew = true;
+		}
+	}
+	// Nothing needed pinning, so the old proportional formula is used verbatim
+	// rather than merely reproduced. That makes the ordinary case - which is
+	// almost every page - not approximately unchanged but bit for bit identical.
+	bool isanyrowpinned = false;
+	for(int line = 0; line < linenum; line++) {
+		if(ispinned[line]) isanyrowpinned = true;
+	}
+	if(!isanyrowpinned) {
+		for(int line = 0; line < linenum; line++) {
+			rowtops[line] = (int)((float)height * linetprs[line]);
+			rowheights[line] = (int)((float)height * (linetprs[line + 1] - linetprs[line]));
+		}
+		return;
+	}
+
+	// Everything asked for more than there is. The rows keep their minimums and
+	// the sizer overflows its box, which is the honest outcome: whoever sized it
+	// was told the real natural height and chose not to give it.
+	if(remaining < 0) remaining = 0;
+	// The flexible rows are measured from a running total rather than one by one,
+	// so that truncating each row does not quietly lose a unit per row - nine rows
+	// were losing nine units of the page that way.
+	float cumulative = 0.0f;
+	int used = 0;
+	for(int line = 0; line < linenum; line++) {
+		if(ispinned[line]) continue;
+		cumulative += lineprs[line];
+		int end = flexweight > 0.0f ? (int)((float)remaining * (cumulative / flexweight)) : 0;
+		rowheights[line] = end - used;
+		used = end;
+	}
+
+	int rowtop = 0;
+	for(int line = 0; line < linenum; line++) {
+		rowtops[line] = rowtop;
+		rowtop += rowheights[line];
+	}
+}
+#endif
+
 void gGUISizer::reloadControls() {
 	if(oldwidth != width || oldheight != height) checkSpaces();
+#if GLIST_ANDROID || GLIST_IOS
+	computeRowHeights();
+#endif
 	for (int line = 0; line < linenum; line++) {
 		for (int column = 0; column < columnnum; column++) {
 			gGUIControl* control = getControl(line, column);
@@ -368,9 +540,25 @@ void gGUISizer::reloadControl(gGUIControl& control) {
 
 void gGUISizer::reloadControl(gGUIControl& control, int line, int column) {
 	int x = left + (width * columntprs[column]) + slotpadding;
-	int y = top + (height * linetprs[line]) + slotheightpadding;
 	int w = width * (columntprs[column + 1] - columntprs[column]) - slotpadding * 2;
-	int h = height * (linetprs[line + 1] - linetprs[line]) - slotheightpadding;
+	// Rows are measured rather than merely divided, so that a row holding
+	// something with a size of its own is not squeezed below it. On desktop the
+	// helpers return the old proportional figures unchanged.
+	int y = top + getRowTop(line) + slotheightpadding;
+#if GLIST_ANDROID || GLIST_IOS
+	// Twice, matching the horizontal padding: a slot is inset by the same amount
+	// top and bottom as it is left and right. Subtracting it once left the control
+	// flush with the bottom of its row, so one number produced a visible gap
+	// sideways and half of one downwards.
+	int h = getRowHeight(line) - slotheightpadding * 2;
+#else
+	int h = getRowHeight(line) - slotheightpadding;
+#endif
+	// A slot narrower or shorter than its own padding would otherwise be handed a
+	// negative size, which controls treat as an enormous unsigned one when they
+	// come to allocate or index against it.
+	if(w < 0) w = 0;
+	if(h < 0) h = 0;
 	if (alignvertically) {
 		int contentheight = control.calculateContentHeight();
 		if (contentheight > 0) {
@@ -435,7 +623,7 @@ void gGUISizer::draw() {
 			if(fillbackground) {
 				gColor oldcolor = *renderer->getColor();
 				renderer->setColor(backgroundcolor);
-				gDrawRectangle(left + (width * columntprs[column]), top + (height * linetprs[line]), width * columnprs[column], height * lineprs[line], true);
+				gDrawRectangle(left + (width * columntprs[column]), top + getRowTop(line), width * columnprs[column], getRowHeight(line), true);
 				renderer->setColor(&oldcolor);
 			}
 
@@ -462,7 +650,7 @@ void gGUISizer::draw() {
 				float lc = foregroundcolor->r - (std::fabs(k - 1) * 0.05f);
 
 				renderer->setColor(gColor(lc, lc, lc));
-				int t = top + (height * linetprs[i]) + k - 1;
+				int t = top + getRowTop(i) + k - 1;
 				gDrawLine(left, t, right, t);
 			}
 		}

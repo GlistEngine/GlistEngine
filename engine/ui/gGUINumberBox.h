@@ -43,6 +43,9 @@ public:
 	void mouseDragged(int x, int y, int button);
 	void update();
 	void draw();
+#if GLIST_ANDROID || GLIST_IOS
+	int getNaturalHeight() override;
+#endif
 	void setMaxValue(int maxValue);
 	void setMinValue(int minValue);
 	void setMaxValue(float maxValuef);

@@ -195,6 +195,17 @@ void gGUISlider::update() {
     }
 }
 
+#if GLIST_ANDROID || GLIST_IOS
+int gGUISlider::getNaturalHeight() {
+	// The bar itself, plus room below for the tick numbers when they are shown.
+	// The current-value label is drawn above the top and falls into the slot's
+	// top padding, so it needs no room of its own here.
+	int naturalheight = sliderh;
+	if(istickvisible) naturalheight += (int)font->getSize() + 4;
+	return naturalheight;
+}
+#endif
+
 void gGUISlider::draw() {
 	gColor oldcolor = renderer->getColor();
 	if(isdisabled) renderer->setColor(&disabledcolor);

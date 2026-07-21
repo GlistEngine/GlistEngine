@@ -55,6 +55,22 @@ void gGUIFrame::update() {
 
 void gGUIFrame::draw() {
 //	gLogi("gGUIFrame") << "draw";
+#if GLIST_ANDROID || GLIST_IOS
+	// A GUI app never clears the screen - the interface is expected to cover it,
+	// and it always did. While the page is stretched past its end it no longer
+	// does: the band shows ground the layout does not reach, and what sits there
+	// is whatever the last frame left, which is the bottom of the page a moment
+	// ago. That is the flicker of a duplicated page edge during the bounce. The
+	// exposed strip is painted over before anything else is drawn.
+	if(gRenderer::getOverscrollX() != 0 || gRenderer::getOverscrollY() != 0) {
+		gColor* oldcolor = renderer->getColor();
+		renderer->setColor(backgroundcolor);
+		gDrawRectangle(gRenderer::getScrollX() + gRenderer::getOverscrollX(),
+				gRenderer::getScrollY() + gRenderer::getOverscrollY(),
+				gRenderer::getUnitViewportWidth(), gRenderer::getUnitViewportHeight(), true);
+		renderer->setColor(oldcolor);
+	}
+#endif
 	if(guisizer) guisizer->draw();
 	if(toolbarnum > 0) for(int i = 0; i < toolbarnum; i++) toolbars[i]->draw();
 	if(verticaltoolbarnum > 0) for(int i = 0; i < verticaltoolbarnum; i++) verticaltoolbars[i]->draw();

@@ -30,6 +30,14 @@ gGUIProgressBar::gGUIProgressBar() {
 gGUIProgressBar::~gGUIProgressBar() {
 }
 
+#if GLIST_ANDROID || GLIST_IOS
+int gGUIProgressBar::getNaturalHeight() {
+	// A line bar is as tall as the bar; a circular or spin one is as tall as its
+	// diameter.
+	return type == TYPE_LINE ? progressbarh : radius * 2;
+}
+#endif
+
 void gGUIProgressBar::draw() {
 	gColor oldcolor = renderer->getColor();
 	renderer->setColor(backgroundcolor);// color of the background of progressbar

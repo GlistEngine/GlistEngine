@@ -20,6 +20,12 @@ gGUISwitchButton::~gGUISwitchButton() {
 
 }
 
+#if GLIST_ANDROID || GLIST_IOS
+int gGUISwitchButton::getNaturalHeight() {
+	return toggleh;
+}
+#endif
+
 void gGUISwitchButton::draw() {
 	gColor oldcolor = renderer->getColor();
 	renderer->setColor(middlegroundcolor);

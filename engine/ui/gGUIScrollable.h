@@ -43,6 +43,8 @@
 #include "gGUIControl.h"
 #include "gFbo.h"
 
+#include <chrono>
+
 /*
  * This class is a child class of gGUIControl. Scrollable class provide scrollable
  * function on objects. When the box object's width and height is smaller than
@@ -126,6 +128,49 @@ public:
 
 	int getVerticalScroll();
 
+#if GLIST_ANDROID || GLIST_IOS
+	/*
+	 * True while a finger is dragging some control's content and that content
+	 * still has somewhere to go.
+	 *
+	 * On a touch screen the scrollbar thumb is too thin to hit, so scrolling has
+	 * to be done by dragging the content itself. That puts the control in
+	 * competition with the page it sits on, which scrolls by the same gesture.
+	 * gAppManager reads this to settle the question: while it is true the finger
+	 * belongs to the control, and the page keeps still.
+	 *
+	 * It goes false as soon as the drag is pinned against the control's own end,
+	 * which is what lets the page take the gesture over from there.
+	 */
+	static bool isContentDragActive();
+
+	/*
+	 * Advances the content fling of whichever control is still coasting after a
+	 * finger let go of it.
+	 *
+	 * Driven from gAppManager rather than from update() or draw(), because
+	 * several subclasses override both without calling the base and would
+	 * silently never coast. Only one control can be flung at a time - it takes a
+	 * finger to start one - so a single call carries all of them.
+	 */
+	static void updateContentFling();
+
+	// Ends any content fling at once, without letting it come to rest.
+	static void cancelContentFling();
+#endif
+
+#if GLIST_ANDROID || GLIST_IOS
+	/*
+	 * Turns the rubber band at the ends of a control's own scroll on or off.
+	 *
+	 * On by default. Worth turning off for a control whose content is not a plain
+	 * list of things - one where the edge is a hard boundary rather than the end
+	 * of a run - since there the stretch reads as the drawing coming loose.
+	 */
+	void enableContentOverscroll(bool isEnabled);
+	bool isContentOverscrollEnabled() const;
+#endif
+
 
 	gFbo* getFbo();
 
@@ -166,7 +211,72 @@ protected:
 	bool isdragginghorizontalscroll = false;
 	int horizontalscrolldragstart = 0;
 	float horizontalscrollclickedtime = 0.0f;
+
+#if GLIST_ANDROID || GLIST_IOS
+	// for dragging the content itself, which is how a finger scrolls
+	bool iscontentdragarmed = false;
+	bool iscontentdragging = false;
+	int contentdragstartx = 0, contentdragstarty = 0;
+	int contentdragstartverticalscroll = 0, contentdragstarthorizontalscroll = 0;
+
+	// Speed of the drag, kept so the content can carry on when the finger lifts.
+	float contentflingvelocityx = 0.0f, contentflingvelocityy = 0.0f;
+	// The coasting position at sub unit precision, so a slow glide is not
+	// rounded away frame after frame.
+	float contentflingpositionx = 0.0f, contentflingpositiony = 0.0f;
+	bool hascontentdragvelocity = false;
+	std::chrono::steady_clock::time_point lastcontentdragtime;
+	int lastcontentdragverticalscroll = 0, lastcontentdraghorizontalscroll = 0;
+
+	// How far the content is drawn past its end, in unit space, either sign. A
+	// drawing offset only - the scroll position stays clamped, which is what keeps
+	// subclasses that read it as a row index safe.
+	float contentoverscrollx = 0.0f, contentoverscrolly = 0.0f;
+	bool iscontentoverscrollenabled = true;
+
+	void trackContentVelocity();
+	void setContentOverscroll(float overscrollX, float overscrollY);
+	// Springs whichever control is stretched back towards its end. Static for the
+	// same reason the fling is: only one control can be stretched at a time.
+	static void updateContentOverscroll();
+
+	/*
+	 * What the finger moves, and how far it may move it.
+	 *
+	 * By default this is the content scroll every scrollable already has. A
+	 * control whose finger scrollable region is something else - gGUINotebook
+	 * drags its tab strip, which is neither the content nor a scrollbar -
+	 * overrides these, and gets the drag, the hand over to the page and the
+	 * fling without repeating any of it.
+	 *
+	 * A maximum of zero means that axis does not scroll, which is also how the
+	 * page is told it may have the gesture.
+	 */
+	virtual int getTouchScrollX() const { return horizontalscroll; }
+	virtual int getTouchScrollY() const { return verticalscroll; }
+	virtual void setTouchScrollX(int value) { horizontalscroll = value; }
+	virtual void setTouchScrollY(int value) { verticalscroll = value; }
+	virtual int getTouchScrollMaxX() const { return totalw > boxw ? totalw - boxw : 0; }
+	virtual int getTouchScrollMaxY() const { return totalh > boxh ? totalh - boxh : 0; }
+
+	// Where a finger has to land for the drag to be about scrolling at all.
+	virtual bool isInsideTouchScrollArea(int x, int y) const {
+		return x >= left && x < left + boxw && y >= top && y < top + height;
+	}
+#endif
 private:
+#if GLIST_ANDROID || GLIST_IOS
+	// The control currently moving its content under a finger, if any. Only one
+	// can hold the gesture, so a single pointer answers isContentDragActive()
+	// without every control having to be asked.
+	static gGUIScrollable* contentdragowner;
+	// The control still coasting after its finger left, if any.
+	static gGUIScrollable* contentflingowner;
+	// The control currently stretched past one of its ends, if any. Separate from
+	// the two above because a rubber band outlives both: it is still springing
+	// back after the finger has gone and the fling has stopped.
+	static gGUIScrollable* contentoverscrollowner;
+#endif
 	gFbo* boxfbo;
 
 	bool enableverticalscroll, enablehorizontalscroll;

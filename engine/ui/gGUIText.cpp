@@ -208,3 +208,10 @@ std::vector<std::string> gGUIText::splitString(const std::string& textToSplit, g
 void gGUIText::setDisabled(bool isDisabled) {
 	isdisabled = isDisabled;
 }
+
+#if GLIST_ANDROID || GLIST_IOS
+int gGUIText::getNaturalHeight() {
+	if(line.empty()) return 0;
+	return (int)line.size() * lineh;
+}
+#endif

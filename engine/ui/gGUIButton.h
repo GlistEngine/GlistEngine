@@ -19,6 +19,12 @@ public:
 
 	void setTitle(std::string title);
 	void setSize(int width, int height);
+
+#if GLIST_ANDROID || GLIST_IOS
+	// A button keeps whatever size it was given: the sizer positions it but never
+	// resizes it. So its own height is exactly what its row has to make room for.
+	int getNaturalHeight() override;
+#endif
 	void setToggle(bool isToggle);
 	void setDisabled(bool isDisabled);
 	void setTextVisibility(bool isVisible);

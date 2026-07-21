@@ -190,6 +190,9 @@ public:
 
 	void update();
 	void draw();
+#if GLIST_ANDROID || GLIST_IOS
+	int getNaturalHeight() override;
+#endif
 
 	void keyPressed(int key);
 	void keyReleased(int key);

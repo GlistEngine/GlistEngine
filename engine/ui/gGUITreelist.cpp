@@ -156,7 +156,11 @@ void gGUITreelist::mouseReleased(int x, int y, int button) {
 	if(mousepressedonlist) mousepressedonlist = false;
 	if(x >= left && x < left + boxw && y >= top + titleheight && y < top + titleheight + boxh) {
 		int newselectedno = (y - top - titleheight + verticalscroll) / lineh;
-		if(newselectedno <= allsubtitles.size() - 1) selectedno = newselectedno;
+		// Compared as a signed count. Against size() - 1 an empty list wraps to the
+		// largest unsigned value, every index passes, and the read below is out of
+		// bounds - and the read happens whether or not the test passed.
+		if(newselectedno >= 0 && newselectedno < (int)allsubtitles.size()) selectedno = newselectedno;
+		if(selectedno < 0 || selectedno >= (int)allsubtitles.size()) return;
 		tmptitle = allsubtitles[selectedno];
 
 		if(topelement.isicon == false) { // Process which using default symbols '>' and '-'

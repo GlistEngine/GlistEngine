@@ -33,7 +33,16 @@ gGUIListbox::~gGUIListbox() {
 
 void gGUIListbox::set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIObject* parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h) {
 	gGUIScrollable::set(root, topParentGUIObject, parentGUIObject, parentSlotLineNo, parentSlotColumnNo, x, y, w, h);
+#if GLIST_ANDROID || GLIST_IOS
+	// The height it was given, not the one it would have picked for itself. Using
+	// its own left the box and the control disagreeing about how tall the list is:
+	// the content was drawn for one size and shown at another, so rows past the
+	// end appeared and the scroll stopped short of them. What it wants is still
+	// said, once, through getNaturalHeight() - and then the layout decides.
+	gGUIScrollable::setDimensions(width, height);
+#else
 	gGUIScrollable::setDimensions(width, listboxh + textoffset);
+#endif
 	updateTotalHeight();
 }
 
@@ -130,7 +139,9 @@ void gGUIListbox::mouseReleased(int x, int y, int button) {
 	if(mousepressedonlist) mousepressedonlist = false;
 	if(x >= left && x < left + boxw && y >= top + titleheight && y < top + titleheight + boxh) {
 		int newselectedno = (y - top - titleheight + verticalscroll) / lineh;
-		if(newselectedno < data.size()) selectedno = newselectedno;
+		// Signed on both sides: a negative index would otherwise convert to a huge
+		// unsigned one and pass the test.
+		if(newselectedno >= 0 && newselectedno < (int)data.size()) selectedno = newselectedno;
 		isfocused = true;
 		root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_LISTBOXSELECTED, gToStr(selectedno));
 	}
@@ -266,3 +277,9 @@ void gGUIListbox::setDisabled(bool isDisabled) {
 bool gGUIListbox::isDisabled() {
 	return isdisabled;
 }
+
+#if GLIST_ANDROID || GLIST_IOS
+int gGUIListbox::getNaturalHeight() {
+	return listboxh;
+}
+#endif

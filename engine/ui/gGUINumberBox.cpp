@@ -56,6 +56,16 @@ gGUINumberBox::gGUINumberBox() {
 	boxsizer.setSize(1, 2);
 	float columnprops[2] = {0.70f, 0.30f};
 	boxsizer.setColumnProportions(columnprops);
+#if GLIST_ANDROID || GLIST_IOS
+	// A sizer defaults to a 24 unit slot padding on mobile, which is the finger
+	// gap wanted between separate controls on a page. This sizer is not a page: it
+	// holds the one textbox the number box is built around, and the inc/dec
+	// buttons are then placed hard against that textbox from its own edges. Left at
+	// 24 the textbox is inset from every side and the buttons drift off it. The
+	// desktop-tight (2, 0) keeps the internal composition the buttons were drawn
+	// for - which is exactly what desktop already uses by default.
+	boxsizer.setSlotPadding(2, 0);
+#endif
 //	boxsizer.setSize(lineno, columno);
 //	float lineprops[] = {0.43f, 0.06f, 0.2f, 0.01f};
 //	float columnprops[] = {0.50f, 0.50f};
@@ -302,6 +312,12 @@ void gGUINumberBox::mouseDragged(int x, int y, int button) {
 void gGUINumberBox::update() {
 	textbox.update();
 }
+
+#if GLIST_ANDROID || GLIST_IOS
+int gGUINumberBox::getNaturalHeight() {
+	return boxheight;
+}
+#endif
 
 void gGUINumberBox::draw() {
 	gColor oldcolor = renderer->getColor();

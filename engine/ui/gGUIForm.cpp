@@ -224,7 +224,15 @@ void gGUIForm::setSizer(gGUISizer* guiSizer) {
 	guisizer->bottom = bottom - statush;
 	guisizer->width = guisizer->right - guisizer->left;
 	guisizer->height = guisizer->bottom - guisizer->top;
+#if GLIST_ANDROID || GLIST_IOS
+	// Deliberately not zeroed here on mobile. A desktop form wants its root sizer
+	// flush with the window, and this line is what does that - but it also wipes
+	// out the sizer's own default padding, which is where the page's spacing comes
+	// from. Only a form does this, so the padding survived inside containers and
+	// nowhere else: a notebook's tab body was spaced and the page around it was not.
+#else
 	guisizer->setSlotPadding(0, 0);
+#endif
 }
 
 void gGUIForm::updateSizer() {

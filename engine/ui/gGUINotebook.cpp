@@ -7,6 +7,7 @@
 
 #include <gGUINotebook.h>
 #include <algorithm>
+#include <cmath>
 
 gGUINotebook::gGUINotebook() {
 	tabposition = TabPosition::TOP;
@@ -235,10 +236,42 @@ void gGUINotebook::drawHeader() {
 	}
 	int scrollmax = totalbarsize - availablespace;
 	scrollmax = std::max(0, scrollmax);
+	tabscrollmax = scrollmax;
 	tabscroll = std::min(tabscroll, scrollmax);
 	tabscroll = std::max(tabscroll, 0);
 
 	renderer->setColor(0, 0, 0);
+	// The strip is rendered into a screen sized buffer starting at its top left
+	// corner, so it must not inherit the scroll offset of the page this notebook
+	// sits on - with the offset left in, scrolling the page walks the strip out
+	// of the buffer and it simply vanishes. The offset is put back before the
+	// buffer is drawn to the screen, since that drawing does belong to the page.
+	int pagescrollx = gRenderer::getScrollX();
+	int pagescrolly = gRenderer::getScrollY();
+	int pageoverscrollx = gRenderer::getOverscrollX();
+	int pageoverscrolly = gRenderer::getOverscrollY();
+	gRenderer::setScrollX(0);
+	gRenderer::setScrollY(0);
+	// The page's rubber band would otherwise stretch the strip along with it,
+	// which is not what is being pulled.
+	gRenderer::setOverscroll(0, 0);
+#if GLIST_ANDROID || GLIST_IOS
+	// The strip spans the whole notebook width, which can be wider than the
+	// on-screen band once the page scrolls sideways. Drawn through the band's
+	// projection its far part would be clipped, and the buffer read at the bottom
+	// of this function would then stretch the clipped edge across the gap -
+	// straight black streaks past the last visible tab. The buffer is sized to the
+	// strip and the strip is drawn through its own box, so all of it is captured
+	// whatever the band is. See gRenderer::setContentProjection().
+	int bufferwidth = renderer->unscaleX(notebookbox.w);
+	int bufferheight = renderer->unscaleY(notebookbox.h);
+	if (bufferwidth < 1) bufferwidth = 1;
+	if (bufferheight < 1) bufferheight = 1;
+	if (fbo.getWidth() != bufferwidth || fbo.getHeight() != bufferheight) {
+		fbo.allocate(bufferwidth, bufferheight);
+	}
+	gRenderer::setContentProjection(notebookbox.w, notebookbox.h);
+#endif
 	fbo.bind();
 	renderer->clearColor(0, 0, 0, 0);
 	drawHeaderBackground();
@@ -247,12 +280,25 @@ void gGUINotebook::drawHeader() {
 	if (showscrollbuttons) {
 		initialstart = scrollbuttonwidth;
 	}
+#if GLIST_ANDROID || GLIST_IOS
+	// The strip is always laid out left to right in the buffer and rotated on the
+	// way out, so its rubber band is always along x here whichever side the tabs
+	// are on. Applied to the tabs alone: the background and the scroll buttons
+	// belong to the box, not to the strip sliding inside it.
+	gRenderer::setOverscroll((int)std::lround(isVerticalTabStrip() ? contentoverscrolly : contentoverscrollx), 0);
+#endif
 	int start = initialstart;
 	for (int i = 0; i < tabs.size(); ++i) {
 		Tab& tab = tabs[i];
 		int relativestartx = start - tabscroll;
 		int tabwidth = tab.tabwidth;
-		if (relativestartx + tabwidth < initialstart || relativestartx > availablespace) {
+		// The strip runs from initialstart to initialstart + availablespace, so its
+		// far edge is the sum of the two. Testing against availablespace alone cut
+		// the strip short by the width of one scroll button: a tab starting inside
+		// that band was dropped instead of being drawn half in view, which left
+		// grey where it should have been and made it appear all at once after the
+		// smallest drag.
+		if (relativestartx + tabwidth < initialstart || relativestartx > initialstart + availablespace) {
 			start += tabwidth + tabgap;
 			tab.tabbox.enabled = false;
 			tab.closebox.enabled = false;
@@ -305,6 +351,9 @@ void gGUINotebook::drawHeader() {
 		tab.tabbox.enabled = true;
 		start += tabwidth + tabgap;
 	}
+#if GLIST_ANDROID || GLIST_IOS
+	gRenderer::setOverscroll(0, 0);
+#endif
 	if (showscrollbuttons) {
 		renderer->setColor(middlegroundcolor);
 		gDrawRectangle(0, -1, scrollbuttonwidth, headerheight + 1, true);
@@ -359,6 +408,12 @@ void gGUINotebook::drawHeader() {
 	}
 
 	fbo.unbind();
+#if GLIST_ANDROID || GLIST_IOS
+	gRenderer::clearContentProjection();
+#endif
+	gRenderer::setScrollX(pagescrollx);
+	gRenderer::setScrollY(pagescrolly);
+	gRenderer::setOverscroll(pageoverscrollx, pageoverscrolly);
 	renderer->setColor(255, 255, 255, 255);
 	float rotate = 0;
 	int shiftx = 0;
@@ -375,7 +430,13 @@ void gGUINotebook::drawHeader() {
 		shifty = height;
 		scaley = -1;
 	}
+#if GLIST_ANDROID || GLIST_IOS
+	// The buffer was drawn through the strip's own box (setContentProjection), so
+	// it holds the whole strip and nothing else - the full buffer is the source.
+	fbo.getTexture().drawSub(left + shiftx, top + shifty, notebookbox.w * scalex, notebookbox.h * scaley, 0, 0, fbo.getWidth(), fbo.getHeight(), 0, 0, rotate);
+#else
 	fbo.getTexture().drawSub(left + shiftx, top + shifty, notebookbox.w * scalex, notebookbox.h * scaley, 0, renderer->getHeight() - notebookbox.h, notebookbox.w, notebookbox.h, 0, 0, rotate);
+#endif
 
 	// visualise hitboxes for debugging
 	renderer->setColor(255, 0, 0);
@@ -433,31 +494,97 @@ void gGUINotebook::updateSizer() {
 	}
 }
 
-void gGUINotebook::mousePressed(int x, int y, int button) {
+#if GLIST_ANDROID || GLIST_IOS
+int gGUINotebook::getNaturalHeight() {
+	int stripheight = tabvisibility ? headerheight : 0;
+	int bodyheight = guisizer ? guisizer->getNaturalHeight() : 0;
+	return stripheight + bodyheight;
+}
+
+void gGUINotebook::setReferenceHeight(int referenceHeight) {
+	if(!guisizer) return;
+	int stripheight = tabvisibility ? headerheight : 0;
+	int bodyheight = referenceHeight - stripheight;
+	if(bodyheight < 0) bodyheight = 0;
+	guisizer->setReferenceHeight(bodyheight);
+}
+#endif
+
+bool gGUINotebook::handleHeaderPress(int x, int y) {
 	if (scrollpreviousbutton.rotate(tabposition, width, height).isPointInside(x, y)) {
 		tabscroll -= 100;
-		return;
+		if (tabscroll < 0) tabscroll = 0;
+		return true;
 	}
 	if (scrollnextbutton.rotate(tabposition, width, height).isPointInside(x, y)) {
 		tabscroll += 100;
-		return;
+		return true;
 	}
 	for (int i = 0; i < tabs.size(); ++i) {
 		Tab& tab = tabs[i];
 		if (tab.closebox.rotate(tabposition, width, height).isPointInside(x, y)) {
 			closeTab(i);
-			break;
+			return true;
 		}
 		if (tab.tabbox.rotate(tabposition, width, height).isPointInside(x, y)) {
 			setActiveTab(i);
-			break;
+			return true;
 		}
 	}
+	return false;
+}
+
+void gGUINotebook::mousePressed(int x, int y, int button) {
+#if GLIST_ANDROID || GLIST_IOS
+	// Arms the tab strip drag, the strip being this control's touch scroll area.
+	gGUIScrollable::mousePressed(x, y, button);
+	if (isInsideTouchScrollArea(x, y)) {
+		// A finger on the strip is either tapping a tab or starting to drag
+		// across it, and which one it is is not known yet. Acting at release
+		// instead is what stops a drag from switching tabs on its way past.
+		return;
+	}
+#else
+	if (handleHeaderPress(x, y)) {
+		return;
+	}
+#endif
+	gGUIContainer::mousePressed(x, y, button);
+}
+
+void gGUINotebook::mouseDragged(int x, int y, int button) {
+#if GLIST_ANDROID || GLIST_IOS
+	if (iscontentdragarmed) {
+		gGUIScrollable::mouseDragged(x, y, button);
+		return;
+	}
+#endif
+	gGUIContainer::mouseDragged(x, y, button);
+}
+
+void gGUINotebook::mouseReleased(int x, int y, int button) {
+#if GLIST_ANDROID || GLIST_IOS
+	bool wasonstrip = iscontentdragarmed;
+	bool wasdragging = iscontentdragging;
+	// Clears the drag and starts the fling if the strip was thrown.
+	gGUIScrollable::mouseReleased(x, y, button);
+	if (wasonstrip) {
+		// A gesture that never became a drag is a tap, and only then does the
+		// tab under it get picked. A withdrawn gesture arrives from a point no
+		// tab occupies, so it lands on nothing either way.
+		if (!wasdragging) handleHeaderPress(x, y);
+		return;
+	}
+#endif
+	gGUIContainer::mouseReleased(x, y, button);
 }
 
 void gGUINotebook::mouseMoved(int x, int y) {
 	lastmousex = x;
 	lastmousey = y;
+	// Controls living inside a tab are reachable only through here: gGUISizer
+	// routes presses and drags by iscursoron, and nothing but mouseMoved sets it.
+	gGUIContainer::mouseMoved(x, y);
 }
 
 void gGUINotebook::mouseScrolled(int x, int y) {

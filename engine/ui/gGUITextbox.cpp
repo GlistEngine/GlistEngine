@@ -337,6 +337,19 @@ bool gGUITextbox::isBackgroundEnabled() {
 	return isbackgroundenabled;
 }
 
+#if GLIST_ANDROID || GLIST_IOS
+int gGUITextbox::getNaturalHeight() {
+	// Room for one line and its caret. The caret is drawn about 5/3 of a line tall
+	// (linebottom - lineheight up to linebottom + lineheight*2/3) and the box is
+	// inset from the top, so a single line height leaves the caret spilling out the
+	// bottom and the field looking too short for it. Two line heights plus the top
+	// and bottom margins hold the caret with room to spare. Measured from the font,
+	// never from height: set() overwrites boxh with the slot height, so reading
+	// that here would feed the layout its own previous answer and ratchet.
+	return lineheight * 2 + linetopmargin * 2;
+}
+#endif
+
 void gGUITextbox::draw() {
 	gColor oldcolor = *renderer->getColor();
 	if(isbackgroundenabled) {
@@ -1455,6 +1468,10 @@ void gGUITextbox::mouseReleased(int x, int y, int button) {
 		return;
 	}
 	selectionmode = false;
+#if GLIST_ANDROID || GLIST_IOS
+	// Leaving the box drops edit focus, so the keyboard comes down with it.
+	if(editmode && appmanager && appmanager->getWindow()) appmanager->getWindow()->hideKeyboard();
+#endif
 	editmode = false;
 	isdragging = false;
 }
@@ -1482,7 +1499,14 @@ void gGUITextbox::mouseDragged(int x, int y, int button) {
 }
 
 std::vector<int> gGUITextbox::clickTextbox(int x, int y) {
-	if(!editmode) cursorshowcounter = 0;
+	if(!editmode) {
+		cursorshowcounter = 0;
+#if GLIST_ANDROID || GLIST_IOS
+		// Gaining edit focus raises the soft keyboard, so what the caret invites can
+		// actually be typed. On the false->true transition only, so it is asked once.
+		if(appmanager && appmanager->getWindow()) appmanager->getWindow()->showKeyboard();
+#endif
+	}
 	editmode = true;
 
 	if(!ismultiline) {
@@ -1886,6 +1910,14 @@ void gGUITextbox::setDisabled(bool isDisabled) {
 }
 
 void gGUITextbox::setEditMode(bool editMode) {
+#if GLIST_ANDROID || GLIST_IOS
+	// Keep the soft keyboard in step when edit focus is set programmatically, on
+	// the transition only.
+	if(editMode != editmode && appmanager && appmanager->getWindow()) {
+		if(editMode) appmanager->getWindow()->showKeyboard();
+		else appmanager->getWindow()->hideKeyboard();
+	}
+#endif
 	editmode = editMode;
 }
 

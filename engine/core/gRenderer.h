@@ -180,6 +180,126 @@ public:
 	static void setScreenSize(int screenWidth, int screenHeight);
 	static void setUnitScreenSize(int unitWidth, int unitHeight);
 	static void setScreenScaling(int screenScaling);
+	static void updateProjectionMatrix2d();
+
+	/**
+	 * Sets how much of the unit space is actually visible on screen
+	 * horizontally. The horizontal counterpart of setUnitViewportHeight(),
+	 * which keeps a layout wider than the screen reachable instead of letting
+	 * it fall off the right edge.
+	 *
+	 * @param unitViewportWidth visible width in unit space, 0 disables
+	 * horizontal scrolling and makes the whole unit width visible as before.
+	 */
+	static void setUnitViewportWidth(int unitViewportWidth);
+
+	/**
+	 * @return the visible width in unit space, which equals the unit width when
+	 * horizontal scrolling is disabled.
+	 */
+	static int getUnitViewportWidth();
+
+	/**
+	 * Scrolls the visible area horizontally within the unit space. The value is
+	 * clamped to the scrollable range, so it is safe to pass unclamped
+	 * positions.
+	 *
+	 * @param scrollX distance in unit space between the left of the layout area
+	 * and the left of the visible area.
+	 */
+	static void setScrollX(int scrollX);
+	static int getScrollX();
+
+	/**
+	 * @return how far the layout area can be scrolled horizontally, 0 when it
+	 * fully fits.
+	 */
+	static int getMaxScrollX();
+
+	/**
+	 * Sets how much of the unit space is actually visible on screen vertically.
+	 *
+	 * The unit size describes the layout area the app draws into. When that area
+	 * is taller than what fits on the physical screen at the current scale, the
+	 * exceeding part is reached by scrolling instead of being squeezed in. This
+	 * is what lets a portrait layout keep its height in landscape.
+	 *
+	 * @param unitViewportHeight visible height in unit space, 0 disables
+	 * scrolling and makes the whole unit space visible as before.
+	 */
+	static void setUnitViewportHeight(int unitViewportHeight);
+
+	/**
+	 * @return the visible height in unit space, which equals the unit height
+	 * when scrolling is disabled.
+	 */
+	static int getUnitViewportHeight();
+
+	/**
+	 * Scrolls the visible area within the unit space. The value is clamped to
+	 * the scrollable range, so it is safe to pass unclamped positions.
+	 *
+	 * @param scrollY distance in unit space between the top of the layout area
+	 * and the top of the visible area.
+	 */
+	static void setScrollY(int scrollY);
+	static int getScrollY();
+
+	/**
+	 * @return how far the layout area can be scrolled, 0 when it fully fits.
+	 */
+	static int getMaxScrollY();
+
+	/**
+	 * Shifts the visible band beyond where the scroll position is allowed to go.
+	 *
+	 * This is what draws the rubber band at the ends of a scroll: the scroll
+	 * position itself stays clamped and nothing that reads it sees anything
+	 * unusual, while the band - and with it every 2D drawing - moves past the
+	 * end. Keeping the two apart matters, because a scroll position outside its
+	 * range is not merely cosmetic elsewhere: controls turn it into row indices.
+	 *
+	 * It is nobody's business but the code producing the effect, and it must be
+	 * put back to zero afterwards.
+	 *
+	 * @param overscrollX,overscrollY distance in unit space, either sign.
+	 */
+	static void setOverscroll(int overscrollX, int overscrollY);
+	static int getOverscrollX();
+	static int getOverscrollY();
+
+	/**
+	 * @return whether a visible width/height is set and the scaling mode maps
+	 * unit space onto the screen, which is what makes scrolling meaningful.
+	 */
+	static bool isHorizontalScrollingEnabled();
+	static bool isVerticalScrollingEnabled();
+
+#if GLIST_ANDROID || GLIST_IOS
+	/**
+	 * Renders subsequent 2D drawing as if a unitW x unitH box were the whole
+	 * visible area, with the page scroll ignored.
+	 *
+	 * Controls that render their content into an offscreen buffer (gGUIScrollable,
+	 * gGUINotebook) draw it in their own local unit space. Under the normal page
+	 * projection that space is clipped to the on-screen band, so a control wider or
+	 * taller than the band loses whatever falls outside it, and reading the buffer
+	 * back at the control's full size then stretches the clipped edge across the
+	 * gap - straight streaks past the last visible part. This maps the control's
+	 * whole box onto the buffer instead, so the buffer holds all of it whatever the
+	 * band is. Content overscroll still applies, which is the control's own rubber
+	 * band. Must be paired with clearContentProjection().
+	 *
+	 * @param unitW,unitH the control's box in unit space.
+	 */
+	static void setContentProjection(int unitW, int unitH);
+
+	/**
+	 * Ends the content projection begun by setContentProjection() and restores the
+	 * page projection.
+	 */
+	static void clearContentProjection();
+#endif
 
 	int getWidth();
 	int getHeight();
@@ -522,6 +642,13 @@ protected:
 
 	static int width, height;
 	static int unitwidth, unitheight;
+	static int unitviewportwidth, unitviewportheight;
+	static int scrollx, scrolly;
+	static int overscrollx, overscrolly;
+#if GLIST_ANDROID || GLIST_IOS
+	static bool contentprojectionactive;
+	static int contentprojectionwidth, contentprojectionheight;
+#endif
 	static int screenscaling;
 	static int currentresolution, unitresolution;
 

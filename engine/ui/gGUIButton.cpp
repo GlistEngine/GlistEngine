@@ -240,3 +240,9 @@ void gGUIButton::setButtonh(int buttonh) {
 void gGUIButton::setButtonw(int buttonw) {
 	this->buttonw = buttonw;
 }
+
+#if GLIST_ANDROID || GLIST_IOS
+int gGUIButton::getNaturalHeight() {
+	return buttonh;
+}
+#endif

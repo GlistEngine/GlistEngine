@@ -75,6 +75,16 @@ public:
 	virtual std::string getClipboardString();
 
 	/**
+	 * Shows or hides the on-screen (soft) keyboard on platforms that have one.
+	 * Text controls (gGUITextbox and, through it, gGUINumberBox / gGUITimebox)
+	 * call these when they gain or lose edit focus. The base does nothing: on
+	 * desktop there is a physical keyboard and no soft one to raise. Android
+	 * overrides them; an iOS window can do the same later.
+	 */
+	virtual void showKeyboard() {}
+	virtual void hideKeyboard() {}
+
+	/**
 	 * Sets game window size.
 	 *
 	 * @param width Size of game screen width.

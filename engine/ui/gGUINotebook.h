@@ -162,7 +162,7 @@ private:
 
 		bool enabled = false;
 
-		bool isPointInside(int tx, int ty) {
+		bool isPointInside(int tx, int ty) const {
 			if (!enabled) {
 				return false;
 			}
@@ -238,8 +238,57 @@ private:
 	void drawHeaderBackground();
 
 	void mousePressed(int x, int y, int button) override;
+	void mouseDragged(int x, int y, int button) override;
+	void mouseReleased(int x, int y, int button) override;
 	void mouseMoved(int x, int y) override;
 	void mouseScrolled(int x, int y) override;
+
+	/*
+	 * Acts on a press or a tap landing on the tab strip: the scroll buttons and
+	 * the tabs themselves, including their close boxes.
+	 *
+	 * @return true if the point hit something and the event was consumed.
+	 */
+	bool handleHeaderPress(int x, int y);
+
+#if GLIST_ANDROID || GLIST_IOS
+	// The tab strip runs down the side rather than across the top, so it is the
+	// vertical axis a finger drags.
+	bool isVerticalTabStrip() const {
+		return tabposition == TabPosition::LEFT || tabposition == TabPosition::RIGHT;
+	}
+
+	/*
+	 * The tab strip is what a finger scrolls on a notebook - the content below is
+	 * a sizer with controls of its own, and the strip's scroll buttons are far too
+	 * small to aim at on glass. Mapping tabscroll onto the axis the strip is laid
+	 * out along hands the drag, the fling and the hand over to the page straight
+	 * to gGUIScrollable. The idle axis reports a maximum of zero, which is what
+	 * lets a drag across the strip scroll the page instead.
+	 */
+	int getTouchScrollX() const override { return isVerticalTabStrip() ? 0 : tabscroll; }
+	int getTouchScrollY() const override { return isVerticalTabStrip() ? tabscroll : 0; }
+	void setTouchScrollX(int value) override { if(!isVerticalTabStrip()) tabscroll = value; }
+	void setTouchScrollY(int value) override { if(isVerticalTabStrip()) tabscroll = value; }
+	int getTouchScrollMaxX() const override { return isVerticalTabStrip() ? 0 : tabscrollmax; }
+	int getTouchScrollMaxY() const override { return isVerticalTabStrip() ? tabscrollmax : 0; }
+
+	bool isInsideTouchScrollArea(int x, int y) const override {
+		return tabvisibility && headerbox.isPointInside(x, y);
+	}
+
+	/*
+	 * The tab strip plus whatever the open tab needs. Without this a notebook says
+	 * nothing about itself and is left with a bare share of the page, which is not
+	 * enough for a header and a body both - the strip ends up occupying most of
+	 * the box and the tab content is crushed under it.
+	 */
+	int getNaturalHeight() override;
+
+	// Passed on to the tab body, less the strip, since that is what the body will
+	// actually be given.
+	void setReferenceHeight(int referenceHeight) override;
+#endif
 
 	void updateSizer();
 
@@ -249,6 +298,10 @@ private:
 private:
 	std::vector<Tab> tabs;
 	int tabscroll;
+	// How far the strip may be scrolled, as worked out by the last drawHeader().
+	// Zero until the notebook has been drawn once, which simply means a finger
+	// cannot drag a strip that has not been laid out yet.
+	int tabscrollmax = 0;
 	int activetab;
 	int headerheight;
 

@@ -77,6 +77,12 @@ public:
 	 */
 	void addData(std::string lineData);
 
+#if GLIST_ANDROID || GLIST_IOS
+	// Room for the number of lines it was asked to show - deliberately not for all
+	// the data, which is the whole point of a list that scrolls.
+	int getNaturalHeight() override;
+#endif
+
 	/*
 	 * Changes the data of the given line no.
 	 *

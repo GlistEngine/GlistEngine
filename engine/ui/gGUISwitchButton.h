@@ -52,6 +52,9 @@ public:
 	virtual ~gGUISwitchButton();
 
 	void draw();
+#if GLIST_ANDROID || GLIST_IOS
+	int getNaturalHeight() override;
+#endif
 	void mousePressed(int x, int y, int button);
 
 	/**

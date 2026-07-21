@@ -38,6 +38,14 @@ gGUIDate::~gGUIDate() {
     // TODO Auto-generated destructor stub
 }
 
+#if GLIST_ANDROID || GLIST_IOS
+int gGUIDate::getNaturalHeight() {
+	// The calendar's own height, set in the constructor and via setSize(); the
+	// sizer's set() only touches the base height, so this stays independent.
+	return h;
+}
+#endif
+
 void gGUIDate::draw() {
     drawCalendar(11, 2022);
 }

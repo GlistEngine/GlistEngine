@@ -291,6 +291,43 @@ public:
 	void setScreenSize(int width, int height);
 
 	/**
+	 * Enables the mobile style layout, in which the drawing scale stays fixed
+	 * across rotations instead of the unit space being stretched to fit.
+	 *
+	 * The width of the layout always spans the screen, while its height keeps
+	 * the value the app was designed for. A landscape screen is shorter than
+	 * that height, so the part that no longer fits is reached by scrolling
+	 * down, the way phone apps behave.
+	 *
+	 * Android and iOS only: it is on by default in the GUI app window modes
+	 * there and this call does nothing on other platforms, where windows are
+	 * resized freely by the user and the older proportional behaviour is kept.
+	 * It also has no effect unless screen scaling is enabled.
+	 *
+	 * Switching it off hands the design unit size back, so the app returns to
+	 * the layout it would have had without the model.
+	 *
+	 * @param enable true to keep the scale fixed and scroll the overflow.
+	 */
+	void enableScrollableLayout(bool enable);
+
+	/*
+	 * Lets the page grow past its design height so that whatever is on it fits.
+	 *
+	 * Off, a page with more rows than it was designed for squashes them all: the
+	 * sizer divides a fixed height and never measures what is in it. On, the page
+	 * gets as tall as its content needs and the extra becomes scrollable - which
+	 * is only meaningful where scrolling exists, so this follows the scrollable
+	 * layout model and is mobile only.
+	 *
+	 * On by default. Turn it off for a page meant to fill exactly one screen
+	 * whatever that costs its contents.
+	 */
+	void enableContentDrivenHeight(bool isEnabled);
+	bool isContentDrivenHeightEnabled() const;
+	bool isScrollableLayoutEnabled() const { return scrollablelayout; }
+
+	/**
 	 * Completely replace the current gBaseCanvas with the specified gBaseCanvas.
 	 *
 	 * @param baseCanvas new gBaseCanvas to replace.
@@ -372,6 +409,106 @@ private:
     bool ismouseentered;
     bool mousebuttonpressed[maxmousebuttonnum];
     int mousebuttonstate;
+
+    static const int wheelscrollstep = 48;
+    // How far a finger has to travel, in unit space, before the gesture counts
+    // as a scroll rather than a tap on the control underneath it.
+    static const int touchscrollthreshold = 12;
+
+    bool scrollablelayout;
+    float layoutscale;
+    int layoutreferencewidth;
+    int layoutreferenceheight;
+    bool istouchpressed;
+    bool istouchscrolling;
+    // Set when a finger joins or leaves, so that the next move re-anchors the
+    // gesture instead of measuring a different finger against a stale origin.
+    bool istouchrebaseneeded;
+    // Set while a scrollable control under the finger is consuming the drag, and
+    // kept set after it lets go, so the hand over to the page can re-anchor.
+    bool istouchownedbycontrol;
+    int touchstartx;
+    int touchstarty;
+    int touchstartscrollx;
+    int touchstartscrolly;
+    // Where the user last asked the page to be. The renderer holds the position
+    // actually in force, which any rebuild of the layout clamps to whatever fits
+    // at that instant; this one is never clamped, so a layout that is briefly
+    // wrong - a rotation, or the surface size arriving late after the app
+    // returns from the background - cannot erase where the user was.
+    int desiredscrollx;
+    int desiredscrolly;
+
+#if GLIST_ANDROID || GLIST_IOS
+    // Set while the page keeps scrolling on its own after the finger has left.
+    bool isflinging;
+    // Unit space per second. Measured from the finger while it drags and then
+    // decayed by updateFling() once it is released.
+    float flingvelocityx;
+    float flingvelocityy;
+    // The scroll position carried at sub unit precision, so that a slow glide
+    // is not rounded away frame after frame.
+    float flingpositionx;
+    float flingpositiony;
+    // False until a drag has produced one measurable interval; without it the
+    // first sample would be timed against an unrelated moment.
+    bool hastouchvelocity;
+    AppClockTimePoint lasttouchmovetime;
+    int lasttouchscrollx;
+    int lasttouchscrolly;
+
+    // Whether the page may grow past its design height to fit what is on it.
+    bool iscontentdrivenheight;
+    // The content height the layout was last built for. -1 means "not measured
+    // yet", which forces the next frame to build rather than compare.
+    int lastcontentheight;
+    // The height the page would have without growing: the taller of the design
+    // height and the visible band. Every measurement is taken against this same
+    // number, so that growing the page can never raise the next answer.
+    int ungrownlayoutheight;
+
+    // How far the page is currently drawn past its end, in unit space, either
+    // sign. Purely a drawing offset: the scroll position stays clamped, so
+    // nothing that reads it ever sees a value outside the range. Kept in floats
+    // because the spring back is a decay and would otherwise round to a halt.
+    float overscrollx;
+    float overscrolly;
+
+    // Counts down while the indicator is on screen; it holds at full opacity
+    // first and fades over the last part of the countdown.
+    float scrollindicatortimer;
+    int scrollindicatorlastscrollx;
+    int scrollindicatorlastscrolly;
+#endif
+
+    float computeLayoutScale(int screenWidth, int screenHeight) const;
+    bool isScrollableLayoutActive() const;
+    void updateScrollableLayout(int screenWidth, int screenHeight);
+    // The one way the page is scrolled in response to input. Keeps the remembered
+    // position in step with the renderer, which nothing else does.
+    void setScrollPosition(int scrollX, int scrollY);
+#if GLIST_ANDROID || GLIST_IOS
+    void handleGUITouch(gTouchEvent& event);
+    void processGUITouch(int touchX, int touchY, ActionType action);
+    void anchorTouchGesture(int touchX, int touchY);
+    void cancelTouchGesture();
+    void resetTouchGesture();
+    void trackTouchVelocity();
+    void updateFling();
+    // Asks the current frame's root sizer how tall its content needs to be.
+    int measureLayoutContentHeight(int referenceHeight);
+    // Rebuilds the layout when that answer has changed since the last frame.
+    void updateLayoutContentHeight();
+    // Writes both the float state here and the rounded offset the renderer draws
+    // with, which is the only place either of them is set.
+    void setOverscroll(float overscrollX, float overscrollY);
+    // Turns a distance asked for past the end into the distance actually given.
+    float resistOverscroll(float distance);
+    void applyDragOverscroll(int targetX, int targetY);
+    void updateOverscroll();
+    void updateScrollIndicator();
+    void drawScrollIndicator();
+#endif
 
     AppClockTimePoint starttime, endtime;
     AppClockDuration deltatime;

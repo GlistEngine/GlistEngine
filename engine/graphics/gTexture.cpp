@@ -644,7 +644,13 @@ void gTexture::beginDraw() {
 	G_PROFILE_ZONE_SCOPED_N("gTexture::beginDraw()");
 	renderer->getImageShader()->use();
 	imagematrix = glm::mat4(1.0f);
-	renderer->setProjectionMatrix2d(glm::ortho(0.0f, (float)renderer->getWidth(), (float)renderer->getHeight(), 0.0f, -1.0f, 1.0f));
+	// Rebuilt through the renderer rather than here, so that textures and 2D
+	// primitives always share one projection. Building a full unit space ortho
+	// locally would ignore the visible band of a scrollable layout: images and
+	// text would be drawn unscrolled and vertically squeezed, and the matrix
+	// would stay overwritten for every primitive drawn after them in the frame.
+	// With scrolling inactive this produces exactly the same matrix as before.
+	renderer->updateProjectionMatrix2d();
 }
 
 void gTexture::endDraw() {

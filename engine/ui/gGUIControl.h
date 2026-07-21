@@ -43,6 +43,34 @@ public:
 		return height;
 	}
 
+	/*
+	 * How tall this control needs to be for its own content, in unit space, or 0
+	 * for "no opinion". A sizer adds these up to find how tall it needs to be,
+	 * and gives a row at least what it asks for.
+	 *
+	 * Deliberately not calculateContentHeight(), whose default returns the height
+	 * the sizer has just handed out. Measuring with that would mean measuring the
+	 * previous answer: the layout could then only ever grow, ratcheting up a
+	 * little every frame. So the rule for any override here is that it may look at
+	 * the content and at nothing else - never at height.
+	 *
+	 * Returning 0 keeps a control out of the calculation entirely, which is why
+	 * that is the default: a control nobody has thought about cannot break a
+	 * layout by guessing.
+	 */
+	virtual int getNaturalHeight() {
+		return 0;
+	}
+
+	/*
+	 * Tells a control how tall its slot would be if nothing needed extra room, so
+	 * that anything nested inside it can measure itself against the same figure
+	 * the page is using. Ignored by controls with nothing nested in them, which is
+	 * most of them.
+	 */
+	virtual void setReferenceHeight(int referenceHeight) {
+	}
+
 	virtual bool countAsSpace();
 	void setCountAsSpace(bool isSpace);
 

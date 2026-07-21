@@ -16,6 +16,9 @@ public:
 	virtual ~gGUIDate();
 	virtual void setup();
 	virtual void draw();
+#if GLIST_ANDROID || GLIST_IOS
+	int getNaturalHeight() override;
+#endif
 
 	void drawCalendar(int month, int year);
 	void setSize(int w, int h);

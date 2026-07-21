@@ -24,6 +24,13 @@ public:
 
     void setText(std::string text);
 
+#if GLIST_ANDROID || GLIST_IOS
+    // As many lines as the text was wrapped into, at the line height in use. The
+    // wrap depends on the width, which the layout settles before it asks about
+    // height, so this is answered against the width already assigned.
+    int getNaturalHeight() override;
+#endif
+
     std::string getText();
 
     void setTextAlignment(int textAligment);

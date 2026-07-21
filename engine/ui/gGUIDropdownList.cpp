@@ -16,6 +16,13 @@ gGUIDropdownList::gGUIDropdownList() {
 	float columnproportions[2] = {0.8f, 0.2f};
 	guisizer->setColumnProportions(columnproportions);
 	guisizer->enableBorders(false);
+#if GLIST_ANDROID || GLIST_IOS
+	// Tight internal packing, not the page's 24 unit finger gap: the textbox and
+	// the arrow button sit side by side as one control. At 24 they are inset from
+	// each other and from the box, and the arrow button - whose release opens the
+	// list - ends up nowhere near where it is drawn. See the note in gGUINumberBox.
+	guisizer->setSlotPadding(2, 0);
+#endif
 	button.setButtonColor(pressedbuttoncolor);
 	button.setSize(buttonw, buttonw);
 	button.setTitle("");
@@ -92,6 +99,14 @@ void gGUIDropdownList::onGUIEvent(int guiObjectId, int eventType, int sourceEven
 	}
 }
 
+#if GLIST_ANDROID || GLIST_IOS
+int gGUIDropdownList::getNaturalHeight() {
+	// The collapsed textbox, not the open list: the drop-down overlays whatever
+	// is beneath it rather than pushing the layout taller when it opens.
+	return textboxh;
+}
+#endif
+
 void gGUIDropdownList::draw() {
 	gGUIContainer::draw();
 
@@ -147,7 +162,16 @@ void gGUIDropdownList::mouseReleased(int x, int y, int button) {
     }
     setSelectedTitle();
     //Clicking on the Textbox opens the Treelist.
+#if GLIST_ANDROID || GLIST_IOS
+    // The original lower bound was textbox.height + buttonw - a size (~48 units),
+    // not a coordinate. Near the top of a desktop form a small y falls under it and
+    // it happens to work, but on a scrolling mobile page the box sits hundreds of
+    // units down, y is never <= 48, and the list never opened. The real bottom of
+    // the collapsed box is textbox.bottom.
+    if (x >= textbox.left && x <= textbox.right && y >= textbox.top + 5 && y <= textbox.bottom) {
+#else
     if (x >= textbox.left && x <= textbox.right && y >= textbox.top + 5 && y <= textbox.height + buttonw) {
+#endif
         buttonpressed = true;
         frame->addTreelist(&list, listx, listy, listw);
         root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_TREELISTOPENEDONDROPDOWNLIST);
