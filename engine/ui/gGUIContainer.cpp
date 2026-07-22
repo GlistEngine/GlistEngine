@@ -9,6 +9,16 @@
 
 #include <algorithm>
 
+namespace {
+
+// GUI coordinates are already normalized by gAppManager on mobile.  Six units
+// was small enough for ordinary finger jitter to turn a tap into a scroll.  A
+// twelve-unit slop keeps taps reliable without making an intentional drag feel
+// delayed.  This applies only to containers which explicitly enable scrolling.
+constexpr int CONTENT_DRAG_SLOP = 12;
+
+}
+
 
 gGUIContainer::gGUIContainer() {
 	iscontainer = true;
@@ -121,7 +131,9 @@ void gGUIContainer::drawContent() {
 
 int gGUIContainer::getCursor(int x, int y) {
 	if(!contentscrollingenabled) return guisizer->getCursor(x, y);
-	return guisizer->getCursor(x - left + horizontalscroll, y - top - topbarh + verticalscroll);
+	// drawContent() has already positioned the child controls in viewport-local
+	// coordinates. Convert screen to viewport coordinates exactly once here.
+	return guisizer->getCursor(x - left, y - top);
 }
 
 void gGUIContainer::keyPressed(int key) {
@@ -141,7 +153,7 @@ void gGUIContainer::mouseMoved(int x, int y) {
 		guisizer->mouseMoved(x, y);
 		return;
 	}
-	guisizer->mouseMoved(x - left + horizontalscroll, y - top - topbarh + verticalscroll);
+	guisizer->mouseMoved(x - left, y - top);
 }
 
 void gGUIContainer::mousePressed(int x, int y, int button) {
@@ -160,7 +172,7 @@ void gGUIContainer::mousePressed(int x, int y, int button) {
 		contentdragstarty = y;
 		contentdragscrollx = horizontalscroll;
 		contentdragscrolly = verticalscroll;
-		guisizer->mousePressed(x - left + horizontalscroll, y - top - topbarh + verticalscroll, button);
+		guisizer->mousePressed(x - left, y - top, button);
 	}
 }
 
@@ -175,13 +187,24 @@ void gGUIContainer::mouseDragged(int x, int y, int button) {
 		const int dy = y - contentdragstarty;
 		const int scrolldx = isHorizontalScrollEnabled() ? dx : 0;
 		const int scrolldy = isVerticalScrollEnabled() ? dy : 0;
-		if(scrolldx * scrolldx + scrolldy * scrolldy > 36) iscontentdragmoved = true;
+		if(!iscontentdragmoved
+				&& scrolldx * scrolldx + scrolldy * scrolldy
+				> CONTENT_DRAG_SLOP * CONTENT_DRAG_SLOP) {
+			iscontentdragmoved = true;
+			// Cancel the child press as soon as this gesture becomes a drag. This
+			// clears its visual/interaction state even if Android later reports the
+			// release outside the viewport.
+			guisizer->mouseReleased(-100000, -100000, button);
+		}
+		// Do not move content during the tap-candidate phase. Apart from matching
+		// native scroll views, this keeps press and release hit coordinates equal.
+		if(!iscontentdragmoved) return;
 		horizontalscroll = isHorizontalScrollEnabled()
 				? gClamp(contentdragscrollx - dx, 0, std::max(0, totalw - boxw)) : 0;
 		verticalscroll = isVerticalScrollEnabled()
 				? gClamp(contentdragscrolly - dy, 0, std::max(0, totalh - boxh)) : 0;
 	} else if(!isdraggingverticalscroll && !isdragginghorizontalscroll) {
-		guisizer->mouseDragged(x - left + horizontalscroll, y - top - topbarh + verticalscroll, button);
+		guisizer->mouseDragged(x - left, y - top, button);
 	}
 }
 
@@ -196,7 +219,7 @@ void gGUIContainer::mouseReleased(int x, int y, int button) {
 		// click when the finger leaves the screen.
 		guisizer->mouseReleased(-100000, -100000, button);
 	} else {
-		guisizer->mouseReleased(x - left + horizontalscroll, y - top - topbarh + verticalscroll, button);
+		guisizer->mouseReleased(x - left, y - top, button);
 	}
 	iscontentdragging = false;
 	iscontentdragmoved = false;
@@ -208,7 +231,7 @@ void gGUIContainer::mouseScrolled(int x, int y) {
 	} else if(hasVerticalOverflow() || hasHorizontalOverflow()) {
 		gGUIScrollable::mouseScrolled(x, y);
 	} else {
-		guisizer->mouseScrolled(x - left + horizontalscroll, y - top - topbarh + verticalscroll);
+		guisizer->mouseScrolled(x, y);
 	}
 }
 

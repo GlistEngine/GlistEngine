@@ -17,6 +17,7 @@ gGUINavigation::gGUINavigation() {
 	selectedpane = 0;
 	toolbarenabled = false;
 	bottombarenabled = false;
+	bottombarpressactive = false;
 	bottombarhorizontalpadding = 16;
 	bottombarmaximumcontentwidth = 720;
 	modernbottombarenabled = false;
@@ -168,6 +169,7 @@ void gGUINavigation::mousePressed(int x, int y, int button) {
 		// Refresh hover first because mobile touch streams may not send a move.
 		toolbarsizer.mouseMoved(x, y);
 		toolbarsizer.mousePressed(x, y, button);
+		bottombarpressactive = true;
 	} else if(toolbarenabled && x >= 0 && y >= height - 40 && x < width && y < height - 8) {
 		toolbar.mousePressed(x, y, button);
 	}
@@ -184,8 +186,12 @@ void gGUINavigation::mouseReleased(int x, int y, int button) {
 		}
 	}
 
-	if(bottombarenabled && x >= left && y >= top && x < right && y < bottom) {
-		toolbarsizer.mouseReleased(x, y, button);
+	if(bottombarenabled && bottombarpressactive) {
+		const bool isinside = x >= left && y >= top && x < right && y < bottom;
+		// A control which received press must always receive release. Passing an
+		// outside coordinate cancels the click while reliably clearing its state.
+		toolbarsizer.mouseReleased(isinside ? x : -100000, isinside ? y : -100000, button);
+		bottombarpressactive = false;
 	} else if(toolbarenabled && x >= 0 && y >= height - 40 && x < width && y < height - 8) {
 		toolbar.mouseReleased(x, y, button);
 	}

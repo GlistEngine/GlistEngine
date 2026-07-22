@@ -65,6 +65,7 @@ private:
 	gGUISizer toolbarsizer;
 	bool toolbarenabled;
 	bool bottombarenabled;
+	bool bottombarpressactive;
 	int bottombarhorizontalpadding;
 	int bottombarmaximumcontentwidth;
 	bool modernbottombarenabled;
