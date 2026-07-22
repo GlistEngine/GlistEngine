@@ -36,6 +36,7 @@ var annotated_dup =
     [ "gCross", "classgCross.html", "classgCross" ],
     [ "gCylinder", "classgCylinder.html", "classgCylinder" ],
     [ "gDatabase", "classgDatabase.html", "classgDatabase" ],
+    [ "gDeviceOrientationChangedEvent", "classgDeviceOrientationChangedEvent.html", "classgDeviceOrientationChangedEvent" ],
     [ "gDynamicGrain", "classgDynamicGrain.html", "classgDynamicGrain" ],
     [ "gEdgeDetection", "classgEdgeDetection.html", "classgEdgeDetection" ],
     [ "gEvent", "classgEvent.html", "classgEvent" ],
@@ -166,8 +167,10 @@ var annotated_dup =
     [ "gTexture", "classgTexture.html", "classgTexture" ],
     [ "gThread", "classgThread.html", "classgThread" ],
     [ "gTiltShift", "classgTiltShift.html", "classgTiltShift" ],
+    [ "gTouchEvent", "classgTouchEvent.html", "classgTouchEvent" ],
     [ "gTriangle", "classgTriangle.html", "classgTriangle" ],
     [ "gTube", "classgTube.html", "classgTube" ],
+    [ "gTweenAnimation", "classgTweenAnimation.html", "classgTweenAnimation" ],
     [ "gUbo", "classgUbo.html", "classgUbo" ],
     [ "gUTF8Iterator", "classgUTF8Iterator.html", "classgUTF8Iterator" ],
     [ "gUtils", "classgUtils.html", "classgUtils" ],
@@ -182,5 +185,6 @@ var annotated_dup =
     [ "gWindowMouseExitEvent", "classgWindowMouseExitEvent.html", "classgWindowMouseExitEvent" ],
     [ "gWindowResizeEvent", "classgWindowResizeEvent.html", "classgWindowResizeEvent" ],
     [ "gWindows", "classgWindows.html", "classgWindows" ],
-    [ "gWindowScaleChangedEvent", "classgWindowScaleChangedEvent.html", "classgWindowScaleChangedEvent" ]
+    [ "gWindowScaleChangedEvent", "classgWindowScaleChangedEvent.html", "classgWindowScaleChangedEvent" ],
+    [ "TouchInput", "structTouchInput.html", "structTouchInput" ]
 ];

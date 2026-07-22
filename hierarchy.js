@@ -14,6 +14,7 @@ var hierarchy =
       [ "gAppPauseEvent", "classgAppPauseEvent.html", null ],
       [ "gAppResumeEvent", "classgAppResumeEvent.html", null ],
       [ "gCharTypedEvent", "classgCharTypedEvent.html", null ],
+      [ "gDeviceOrientationChangedEvent", "classgDeviceOrientationChangedEvent.html", null ],
       [ "gJoystickConnectEvent", "classgJoystickConnectEvent.html", null ],
       [ "gJoystickDisconnectEvent", "classgJoystickDisconnectEvent.html", null ],
       [ "gKeyEvent", "classgKeyEvent.html", [
@@ -26,6 +27,7 @@ var hierarchy =
       ] ],
       [ "gMouseMovedEvent", "classgMouseMovedEvent.html", null ],
       [ "gMouseScrolledEvent", "classgMouseScrolledEvent.html", null ],
+      [ "gTouchEvent", "classgTouchEvent.html", null ],
       [ "gWindowFocusEvent", "classgWindowFocusEvent.html", null ],
       [ "gWindowLoseFocusEvent", "classgWindowLoseFocusEvent.html", null ],
       [ "gWindowMouseEnterEvent", "classgWindowMouseEnterEvent.html", null ],
@@ -222,10 +224,12 @@ var hierarchy =
     [ "gRenderer::gSceneFogData", "structgRenderer_1_1gSceneFogData.html", null ],
     [ "gRenderer::gSceneLightData", "structgRenderer_1_1gSceneLightData.html", null ],
     [ "gRenderer::gSceneLights", "structgRenderer_1_1gSceneLights.html", null ],
+    [ "gTweenAnimation", "classgTweenAnimation.html", null ],
     [ "gUTF8Iterator", "classgUTF8Iterator.html", null ],
     [ "gUtils", "classgUtils.html", null ],
     [ "gUUID", "classgUUID.html", null ],
     [ "gVertex", "structgVertex.html", null ],
     [ "gCamera::Plane", "structgCamera_1_1Plane.html", null ],
-    [ "gHttpFile::ProgressData", "structgHttpFile_1_1ProgressData.html", null ]
+    [ "gHttpFile::ProgressData", "structgHttpFile_1_1ProgressData.html", null ],
+    [ "TouchInput", "structTouchInput.html", null ]
 ];

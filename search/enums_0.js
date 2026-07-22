@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['copyoptions_0',['CopyOptions',['../classgFile.html#ae0409e2a1e11645fb3301ded923fe7cb',1,'gFile']]]
+  ['actiontype_0',['ActionType',['../gWindowEvents_8h.html#a21d5e8f8cdaa838586b31007df0a950b',1,'gWindowEvents.h']]]
 ];

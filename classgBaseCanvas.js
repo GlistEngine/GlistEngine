@@ -8,6 +8,7 @@ var classgBaseCanvas =
     [ "clearBackground", "classgBaseCanvas.html#aa32c8d8d3f908c2be22944cd6cd80f8d", null ],
     [ "clearColor", "classgBaseCanvas.html#a97aa2612b361e843dce67e7de175a7d2", null ],
     [ "clearColor", "classgBaseCanvas.html#a99b9b4b928047e7b3c38e834eebfb821", null ],
+    [ "deviceOrientationChanged", "classgBaseCanvas.html#a54756094bda6f4de9249efeacfd11f0d", null ],
     [ "disableAlphaBlending", "classgBaseCanvas.html#a9737f6cbb7ff3069ff0ac8d313d20b76", null ],
     [ "disableAlphaTest", "classgBaseCanvas.html#aa65dde2a1ebc557a11383263dc25a3e3", null ],
     [ "disableDepthTest", "classgBaseCanvas.html#a4ec4d70e92b74ddccd74464c9295480e", null ],
@@ -86,6 +87,9 @@ var classgBaseCanvas =
     [ "setLightingPosition", "classgBaseCanvas.html#a2f0ad2c5503d3229bc9881cd35b34a8c", null ],
     [ "setup", "classgBaseCanvas.html#a4410ce2e47f88779ea60c760ed666a59", null ],
     [ "showNotify", "classgBaseCanvas.html#a9e66459d771a1d7071e1da53749967a2", null ],
+    [ "touchMoved", "classgBaseCanvas.html#a53b713ab83e6a4146f009b312e4fa9ab", null ],
+    [ "touchPressed", "classgBaseCanvas.html#ae1d117ce7fb918876bb0653700c964f4", null ],
+    [ "touchReleased", "classgBaseCanvas.html#af33eb529564f7d6e588d6db1a92a5d26", null ],
     [ "update", "classgBaseCanvas.html#a9098983eb7fab1894ee8b906d3ee384c", null ],
     [ "windowResized", "classgBaseCanvas.html#a8e799f1555f6fba10472a4d62c71d7e2", null ],
     [ "root", "classgBaseCanvas.html#ad4479a8e080001ee5b4148e2375eb4ea", null ]

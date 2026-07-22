@@ -253,8 +253,8 @@ $(document).ready(function(){initNavTree('gAppManager_8h_source.html',''); initR
 <div class="line"><a id="l00329" name="l00329"></a><span class="lineno"><a class="line" href="classgAppManager.html#a1ca0a6274eb7c5e236e54e9baa3b601a">  329</a></span>    std::string <a class="code hl_function" href="classgAppManager.html#a1ca0a6274eb7c5e236e54e9baa3b601a">getANSILocale</a>();</div>
 <div class="line"><a id="l00330" name="l00330"></a><span class="lineno">  330</span> </div>
 <div class="line"><a id="l00331" name="l00331"></a><span class="lineno">  331</span><span class="preprocessor">#ifdef ANDROID</span></div>
-<div class="line"><a id="l00332" name="l00332"></a><span class="lineno"><a class="line" href="classgAppManager.html#ac42052084d5109e7b9a68502edd1da91">  332</a></span>    DeviceOrientation <a class="code hl_function" href="classgAppManager.html#ac42052084d5109e7b9a68502edd1da91">getDeviceOrientation</a>() { <span class="keywordflow">return</span> deviceorientation; }</div>
-<div class="line"><a id="l00333" name="l00333"></a><span class="lineno"><a class="line" href="classgAppManager.html#ad5216c0dba9e323e76497859c59911b8">  333</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classgAppManager.html#ad5216c0dba9e323e76497859c59911b8">setDeviceOrientation</a>(DeviceOrientation orientation);</div>
+<div class="line"><a id="l00332" name="l00332"></a><span class="lineno"><a class="line" href="classgAppManager.html#ac42052084d5109e7b9a68502edd1da91">  332</a></span>    <a class="code hl_enumeration" href="gWindowEvents_8h.html#a9d99888a5a1ae95a0049445bc4bfd14c">DeviceOrientation</a> <a class="code hl_function" href="classgAppManager.html#ac42052084d5109e7b9a68502edd1da91">getDeviceOrientation</a>() { <span class="keywordflow">return</span> deviceorientation; }</div>
+<div class="line"><a id="l00333" name="l00333"></a><span class="lineno"><a class="line" href="classgAppManager.html#ad5216c0dba9e323e76497859c59911b8">  333</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classgAppManager.html#ad5216c0dba9e323e76497859c59911b8">setDeviceOrientation</a>(<a class="code hl_enumeration" href="gWindowEvents_8h.html#a9d99888a5a1ae95a0049445bc4bfd14c">DeviceOrientation</a> orientation);</div>
 <div class="line"><a id="l00334" name="l00334"></a><span class="lineno">  334</span><span class="preprocessor">#endif</span></div>
 <div class="line"><a id="l00335" name="l00335"></a><span class="lineno">  335</span>    </div>
 <div class="line"><a id="l00336" name="l00336"></a><span class="lineno">  336</span><span class="preprocessor">#if TARGET_OS_IPHONE || TARGET_OS_SIMULATOR</span></div>
@@ -314,8 +314,8 @@ $(document).ready(function(){initNavTree('gAppManager_8h_source.html',''); initR
 <div class="line"><a id="l00390" name="l00390"></a><span class="lineno">  390</span>    <span class="keywordtype">int</span> joystickaxecount;</div>
 <div class="line"><a id="l00391" name="l00391"></a><span class="lineno">  391</span> </div>
 <div class="line"><a id="l00392" name="l00392"></a><span class="lineno">  392</span><span class="preprocessor">#if GLIST_ANDROID || GLIST_IOS</span></div>
-<div class="line"><a id="l00393" name="l00393"></a><span class="lineno">  393</span>    DeviceOrientation deviceorientation;</div>
-<div class="line"><a id="l00394" name="l00394"></a><span class="lineno">  394</span>    DeviceOrientation olddeviceorientation;</div>
+<div class="line"><a id="l00393" name="l00393"></a><span class="lineno">  393</span>    <a class="code hl_enumeration" href="gWindowEvents_8h.html#a9d99888a5a1ae95a0049445bc4bfd14c">DeviceOrientation</a> deviceorientation;</div>
+<div class="line"><a id="l00394" name="l00394"></a><span class="lineno">  394</span>    <a class="code hl_enumeration" href="gWindowEvents_8h.html#a9d99888a5a1ae95a0049445bc4bfd14c">DeviceOrientation</a> olddeviceorientation;</div>
 <div class="line"><a id="l00395" name="l00395"></a><span class="lineno">  395</span>    <span class="keywordtype">bool</span> delayedresize;</div>
 <div class="line"><a id="l00396" name="l00396"></a><span class="lineno">  396</span><span class="preprocessor">#endif</span></div>
 <div class="line"><a id="l00397" name="l00397"></a><span class="lineno">  397</span> </div>
@@ -345,8 +345,8 @@ $(document).ready(function(){initNavTree('gAppManager_8h_source.html',''); initR
 <div class="line"><a id="l00421" name="l00421"></a><span class="lineno">  421</span>    <span class="keywordtype">bool</span> onAppPauseEvent(<a class="code hl_class" href="classgAppPauseEvent.html">gAppPauseEvent</a>&amp;);</div>
 <div class="line"><a id="l00422" name="l00422"></a><span class="lineno">  422</span>    <span class="keywordtype">bool</span> onAppResumeEvent(<a class="code hl_class" href="classgAppResumeEvent.html">gAppResumeEvent</a>&amp;);</div>
 <div class="line"><a id="l00423" name="l00423"></a><span class="lineno">  423</span><span class="preprocessor">#if GLIST_ANDROID || GLIST_IOS</span></div>
-<div class="line"><a id="l00424" name="l00424"></a><span class="lineno">  424</span>    <span class="keywordtype">bool</span> onDeviceOrientationChangedEvent(gDeviceOrientationChangedEvent&amp;);</div>
-<div class="line"><a id="l00425" name="l00425"></a><span class="lineno">  425</span>    <span class="keywordtype">bool</span> onTouchEvent(gTouchEvent&amp;);</div>
+<div class="line"><a id="l00424" name="l00424"></a><span class="lineno">  424</span>    <span class="keywordtype">bool</span> onDeviceOrientationChangedEvent(<a class="code hl_class" href="classgDeviceOrientationChangedEvent.html">gDeviceOrientationChangedEvent</a>&amp;);</div>
+<div class="line"><a id="l00425" name="l00425"></a><span class="lineno">  425</span>    <span class="keywordtype">bool</span> onTouchEvent(<a class="code hl_class" href="classgTouchEvent.html">gTouchEvent</a>&amp;);</div>
 <div class="line"><a id="l00426" name="l00426"></a><span class="lineno">  426</span><span class="preprocessor">#endif</span></div>
 <div class="line"><a id="l00427" name="l00427"></a><span class="lineno">  427</span> </div>
 <div class="line"><a id="l00428" name="l00428"></a><span class="lineno">  428</span>    <span class="keywordtype">void</span> updateTime();</div>
@@ -414,13 +414,14 @@ $(document).ready(function(){initNavTree('gAppManager_8h_source.html',''); initR
 <div class="ttc" id="aclassgAppManager_html_af2db5faa194ca30a7843621971448ef5"><div class="ttname"><a href="classgAppManager.html#af2db5faa194ca30a7843621971448ef5">gAppManager::isGamepadButtonPressed</a></div><div class="ttdeci">bool isGamepadButtonPressed(int joystickId, int buttonId)</div></div>
 <div class="ttc" id="aclassgAppManager_html_af843225c657fb34e0953739d5d422687"><div class="ttname"><a href="classgAppManager.html#af843225c657fb34e0953739d5d422687">gAppManager::getFramerate</a></div><div class="ttdeci">int getFramerate()</div></div>
 <div class="ttc" id="aclassgAppManager_html_afed9d41c6aa9268605f208aa06207aef"><div class="ttname"><a href="classgAppManager.html#afed9d41c6aa9268605f208aa06207aef">gAppManager::disableVsync</a></div><div class="ttdeci">void disableVsync()</div></div>
-<div class="ttc" id="aclassgAppPauseEvent_html"><div class="ttname"><a href="classgAppPauseEvent.html">gAppPauseEvent</a></div><div class="ttdef"><b>Definition</b> gWindowEvents.h:293</div></div>
-<div class="ttc" id="aclassgAppResumeEvent_html"><div class="ttname"><a href="classgAppResumeEvent.html">gAppResumeEvent</a></div><div class="ttdef"><b>Definition</b> gWindowEvents.h:302</div></div>
+<div class="ttc" id="aclassgAppPauseEvent_html"><div class="ttname"><a href="classgAppPauseEvent.html">gAppPauseEvent</a></div><div class="ttdef"><b>Definition</b> gWindowEvents.h:290</div></div>
+<div class="ttc" id="aclassgAppResumeEvent_html"><div class="ttname"><a href="classgAppResumeEvent.html">gAppResumeEvent</a></div><div class="ttdef"><b>Definition</b> gWindowEvents.h:299</div></div>
 <div class="ttc" id="aclassgBaseApp_html"><div class="ttname"><a href="classgBaseApp.html">gBaseApp</a></div><div class="ttdef"><b>Definition</b> gBaseApp.h:16</div></div>
 <div class="ttc" id="aclassgBaseCanvas_html"><div class="ttname"><a href="classgBaseCanvas.html">gBaseCanvas</a></div><div class="ttdef"><b>Definition</b> gBaseCanvas.h:16</div></div>
 <div class="ttc" id="aclassgBaseWindow_html"><div class="ttname"><a href="classgBaseWindow.html">gBaseWindow</a></div><div class="ttdef"><b>Definition</b> gBaseWindow.h:27</div></div>
 <div class="ttc" id="aclassgCanvasManager_html"><div class="ttname"><a href="classgCanvasManager.html">gCanvasManager</a></div><div class="ttdef"><b>Definition</b> gCanvasManager.h:13</div></div>
 <div class="ttc" id="aclassgCharTypedEvent_html"><div class="ttname"><a href="classgCharTypedEvent.html">gCharTypedEvent</a></div><div class="ttdef"><b>Definition</b> gWindowEvents.h:33</div></div>
+<div class="ttc" id="aclassgDeviceOrientationChangedEvent_html"><div class="ttname"><a href="classgDeviceOrientationChangedEvent.html">gDeviceOrientationChangedEvent</a></div><div class="ttdef"><b>Definition</b> gWindowEvents.h:278</div></div>
 <div class="ttc" id="aclassgEvent_html"><div class="ttname"><a href="classgEvent.html">gEvent</a></div><div class="ttdef"><b>Definition</b> gEvent.h:32</div></div>
 <div class="ttc" id="aclassgGUIAppThread_html"><div class="ttname"><a href="classgGUIAppThread.html">gGUIAppThread</a></div><div class="ttdef"><b>Definition</b> gGUIAppThread.h:15</div></div>
 <div class="ttc" id="aclassgGUIFrame_html"><div class="ttname"><a href="classgGUIFrame.html">gGUIFrame</a></div><div class="ttdef"><b>Definition</b> gGUIFrame.h:14</div></div>
@@ -435,6 +436,7 @@ $(document).ready(function(){initNavTree('gAppManager_8h_source.html',''); initR
 <div class="ttc" id="aclassgMouseMovedEvent_html"><div class="ttname"><a href="classgMouseMovedEvent.html">gMouseMovedEvent</a></div><div class="ttdef"><b>Definition</b> gWindowEvents.h:68</div></div>
 <div class="ttc" id="aclassgMouseScrolledEvent_html"><div class="ttname"><a href="classgMouseScrolledEvent.html">gMouseScrolledEvent</a></div><div class="ttdef"><b>Definition</b> gWindowEvents.h:86</div></div>
 <div class="ttc" id="aclassgObject_html"><div class="ttname"><a href="classgObject.html">gObject</a></div><div class="ttdef"><b>Definition</b> gObject.h:33</div></div>
+<div class="ttc" id="aclassgTouchEvent_html"><div class="ttname"><a href="classgTouchEvent.html">gTouchEvent</a></div><div class="ttdef"><b>Definition</b> gWindowEvents.h:252</div></div>
 <div class="ttc" id="aclassgWindowFocusEvent_html"><div class="ttname"><a href="classgWindowFocusEvent.html">gWindowFocusEvent</a></div><div class="ttdef"><b>Definition</b> gWindowEvents.h:164</div></div>
 <div class="ttc" id="aclassgWindowLoseFocusEvent_html"><div class="ttname"><a href="classgWindowLoseFocusEvent.html">gWindowLoseFocusEvent</a></div><div class="ttdef"><b>Definition</b> gWindowEvents.h:172</div></div>
 <div class="ttc" id="aclassgWindowMouseEnterEvent_html"><div class="ttname"><a href="classgWindowMouseEnterEvent.html">gWindowMouseEnterEvent</a></div><div class="ttdef"><b>Definition</b> gWindowEvents.h:180</div></div>
@@ -451,6 +453,7 @@ $(document).ready(function(){initNavTree('gAppManager_8h_source.html',''); initR
 <div class="ttc" id="agObject_8h_html"><div class="ttname"><a href="gObject_8h.html">gObject.h</a></div></div>
 <div class="ttc" id="agWindowEvents_8h_html"><div class="ttname"><a href="gWindowEvents_8h.html">gWindowEvents.h</a></div></div>
 <div class="ttc" id="agWindowEvents_8h_html_a42de6dd908ace1ea857f6ad43c704d17"><div class="ttname"><a href="gWindowEvents_8h.html#a42de6dd908ace1ea857f6ad43c704d17">gCursorMode</a></div><div class="ttdeci">gCursorMode</div><div class="ttdef"><b>Definition</b> gWindowEvents.h:14</div></div>
+<div class="ttc" id="agWindowEvents_8h_html_a9d99888a5a1ae95a0049445bc4bfd14c"><div class="ttname"><a href="gWindowEvents_8h.html#a9d99888a5a1ae95a0049445bc4bfd14c">DeviceOrientation</a></div><div class="ttdeci">DeviceOrientation</div><div class="ttdef"><b>Definition</b> gWindowEvents.h:270</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

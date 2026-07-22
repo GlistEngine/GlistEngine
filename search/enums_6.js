@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['scenedataflags_0',['SceneDataFlags',['../classgRenderer.html#adba1900f960be6d02c5d143026ec8454',1,'gRenderer']]]
+  ['looptype_0',['LoopType',['../classgBaseSound.html#a9a2c864371ad1dc1af545577445f05ac',1,'gBaseSound']]]
 ];

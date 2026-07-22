@@ -1,20 +1,15 @@
 var searchData=
 [
-  ['enable_5ffog_0',['ENABLE_FOG',['../classgRenderer.html#adba1900f960be6d02c5d143026ec8454a631d8073096dd6fe38e97d17d2672c1c',1,'gRenderer']]],
-  ['enable_5fgamma_1',['ENABLE_GAMMA',['../classgRenderer.html#adba1900f960be6d02c5d143026ec8454a4cb2bd9a18aef8d7385779949211bd20',1,'gRenderer']]],
-  ['enable_5fhdr_2',['ENABLE_HDR',['../classgRenderer.html#adba1900f960be6d02c5d143026ec8454aa971ce4e11f3cd21050bb35c86b9a356',1,'gRenderer']]],
-  ['enable_5fsoft_5fshadows_3',['ENABLE_SOFT_SHADOWS',['../classgRenderer.html#adba1900f960be6d02c5d143026ec8454a003fc94b79bce715bdd07f01fe692a3e',1,'gRenderer']]],
-  ['enable_5fssao_4',['ENABLE_SSAO',['../classgRenderer.html#adba1900f960be6d02c5d143026ec8454a89f383e880b00465b46fab2f4ec5bef0',1,'gRenderer']]],
-  ['enterdirection_5fdown_5',['ENTERDIRECTION_DOWN',['../classgGUIGrid.html#af68a6ffe2a72c94c88e865e9beca53aaabd48b0eeec20287b6d2cab451da59b34',1,'gGUIGrid']]],
-  ['enterdirection_5fright_6',['ENTERDIRECTION_RIGHT',['../classgGUIGrid.html#af68a6ffe2a72c94c88e865e9beca53aaa711768aafbcd6b12c46f9ab33b954e51',1,'gGUIGrid']]],
-  ['equal_7',['EQUAL',['../gSpriteAnimation_8h.html#a05ace1778679794e816adbd5d83eb7bca59a84258a4cb9025b567ee5139455029',1,'gSpriteAnimation.h']]],
-  ['eventcategory_5fapp_8',['EVENTCATEGORY_APP',['../gEvent_8h.html#aa8b0556527d429476e3f3d6cfab1a21faa1ff59267ca574411d3c0825dced1cdf',1,'gEvent.h']]],
-  ['eventcategory_5fcustom_9',['EVENTCATEGORY_CUSTOM',['../gEvent_8h.html#aa8b0556527d429476e3f3d6cfab1a21fa2f840ab7f930dd709437fe0d8dd7d782',1,'gEvent.h']]],
-  ['eventcategory_5finput_10',['EVENTCATEGORY_INPUT',['../gEvent_8h.html#aa8b0556527d429476e3f3d6cfab1a21faf10ef725671e5ef24acc467c3e3de809',1,'gEvent.h']]],
-  ['eventcategory_5fjoystick_11',['EVENTCATEGORY_JOYSTICK',['../gEvent_8h.html#aa8b0556527d429476e3f3d6cfab1a21fa33ecb779f6c94b8e913d2218efdcd249',1,'gEvent.h']]],
-  ['eventcategory_5fkeyboard_12',['EVENTCATEGORY_KEYBOARD',['../gEvent_8h.html#aa8b0556527d429476e3f3d6cfab1a21fa22db64322e7f052b9f679e07ef70b91b',1,'gEvent.h']]],
-  ['eventcategory_5fmouse_13',['EVENTCATEGORY_MOUSE',['../gEvent_8h.html#aa8b0556527d429476e3f3d6cfab1a21faaa34b1fbd6d0303a5060b156bb3e8bfd',1,'gEvent.h']]],
-  ['eventcategory_5fmouse_5fbutton_14',['EVENTCATEGORY_MOUSE_BUTTON',['../gEvent_8h.html#aa8b0556527d429476e3f3d6cfab1a21fad93da0156364c728dd08a098848229c5',1,'gEvent.h']]],
-  ['eventcategory_5frenderer_15',['EVENTCATEGORY_RENDERER',['../gEvent_8h.html#aa8b0556527d429476e3f3d6cfab1a21fabfa73692348a44ba6a17f635814a708c',1,'gEvent.h']]],
-  ['eventcategory_5ftouchscreen_16',['EVENTCATEGORY_TOUCHSCREEN',['../gEvent_8h.html#aa8b0556527d429476e3f3d6cfab1a21fa8b9c7de5872d669a6af9222723d917dc',1,'gEvent.h']]]
+  ['deviceorientation_5flandscape_0',['DEVICEORIENTATION_LANDSCAPE',['../gWindowEvents_8h.html#a9d99888a5a1ae95a0049445bc4bfd14ca646912ddcb1444e93d4f22cda351c183',1,'gWindowEvents.h']]],
+  ['deviceorientation_5fportrait_1',['DEVICEORIENTATION_PORTRAIT',['../gWindowEvents_8h.html#a9d99888a5a1ae95a0049445bc4bfd14ca9565d53b69eab40db4ec5d209ced4ac3',1,'gWindowEvents.h']]],
+  ['deviceorientation_5freverse_5flandscape_2',['DEVICEORIENTATION_REVERSE_LANDSCAPE',['../gWindowEvents_8h.html#a9d99888a5a1ae95a0049445bc4bfd14ca02a1bdd634346cc47c3bdcbec3b77f78',1,'gWindowEvents.h']]],
+  ['deviceorientation_5freverse_5fportrait_3',['DEVICEORIENTATION_REVERSE_PORTRAIT',['../gWindowEvents_8h.html#a9d99888a5a1ae95a0049445bc4bfd14ca38bdd023846c52638a9bf526986ff552',1,'gWindowEvents.h']]],
+  ['deviceorientation_5funspecified_4',['DEVICEORIENTATION_UNSPECIFIED',['../gWindowEvents_8h.html#a9d99888a5a1ae95a0049445bc4bfd14ca5309f8bf43f480323f3fd955e72e9317',1,'gWindowEvents.h']]],
+  ['dialoguetype_5fnone_5',['DIALOGUETYPE_NONE',['../classgGUIDialogue.html#a439ea48d303cbf2e1622d3993407b852aab993fa527f09774ef67725a8c6fc5ea',1,'gGUIDialogue']]],
+  ['dialoguetype_5fok_6',['DIALOGUETYPE_OK',['../classgGUIDialogue.html#a439ea48d303cbf2e1622d3993407b852addc399a94d35497fffbef8a55ecc4896',1,'gGUIDialogue']]],
+  ['dialoguetype_5fokcancel_7',['DIALOGUETYPE_OKCANCEL',['../classgGUIDialogue.html#a439ea48d303cbf2e1622d3993407b852a1ac20bac3b101eb4cf14c63f361d7599',1,'gGUIDialogue']]],
+  ['dialoguetype_5fyesno_8',['DIALOGUETYPE_YESNO',['../classgGUIDialogue.html#a439ea48d303cbf2e1622d3993407b852af35b8e7f536c1b9e3f81de492c93b4db',1,'gGUIDialogue']]],
+  ['dialoguetype_5fyesnocancel_9',['DIALOGUETYPE_YESNOCANCEL',['../classgGUIDialogue.html#a439ea48d303cbf2e1622d3993407b852af6d30cbadffeb518c457b7914c784eea',1,'gGUIDialogue']]],
+  ['dir_5fhorizontal_10',['DIR_HORIZONTAL',['../classgGUIDivider.html#a534d6e7fbaecc25955a7f0ac25b5bf42af2708dd466f05cb711e5cf9d576fa184',1,'gGUIDivider']]],
+  ['dir_5fvertical_11',['DIR_VERTICAL',['../classgGUIDivider.html#a534d6e7fbaecc25955a7f0ac25b5bf42aff2babf5e2ea7a3f7fd5154e6a58405c',1,'gGUIDivider']]]
 ];

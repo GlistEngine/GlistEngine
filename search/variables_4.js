@@ -23,5 +23,6 @@ var searchData=
   ['drawmode_5fpoints_20',['DRAWMODE_POINTS',['../classgMesh.html#a238436ffcc7ec7e8e9a7462bd210a6f8',1,'gMesh']]],
   ['drawmode_5ftrianglefan_21',['DRAWMODE_TRIANGLEFAN',['../classgMesh.html#ad94ccdb0460108d3677fbbe47274946f',1,'gMesh']]],
   ['drawmode_5ftriangles_22',['DRAWMODE_TRIANGLES',['../classgMesh.html#a4577a3ca9a71122d70f6ac64ef26fd0a',1,'gMesh']]],
-  ['drawmode_5ftrianglestrip_23',['DRAWMODE_TRIANGLESTRIP',['../classgMesh.html#ab288c9db513a577900284fc432dac2cd',1,'gMesh']]]
+  ['drawmode_5ftrianglestrip_23',['DRAWMODE_TRIANGLESTRIP',['../classgMesh.html#ab288c9db513a577900284fc432dac2cd',1,'gMesh']]],
+  ['duration_24',['duration',['../classgTweenAnimation.html#afd457d5681c27b7ea85e8e039a13fd3a',1,'gTweenAnimation']]]
 ];

@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['overwrite_5fexisting_0',['OVERWRITE_EXISTING',['../classgFile.html#ae0409e2a1e11645fb3301ded923fe7cba0c6de1f6458bcaa579ac30cb9ba38c5a',1,'gFile']]]
+  ['none_0',['NONE',['../classgFile.html#ae0409e2a1e11645fb3301ded923fe7cba3d05a626a7fa58f15a303dd336d863e1',1,'gFile']]],
+  ['numberbox_1',['Numberbox',['../classgGUITooltipText.html#a2cedadc240d53936d63f66ecb36e771aa56250df15e94f7a1379a7c3058b6ce5c',1,'gGUITooltipText']]]
 ];
