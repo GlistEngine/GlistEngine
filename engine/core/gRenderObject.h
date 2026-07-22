@@ -42,7 +42,7 @@ public:
 	static gRenderer* getRenderer();
 
 	static void destroyRenderer();
-	static void createRenderer();
+	static void createRenderer(int renderEngine = G_RENDERER_GL);
 protected:
 	friend class gRenderer;
 	static bool isshadowmappingenabled;

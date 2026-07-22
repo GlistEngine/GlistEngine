@@ -37,18 +37,20 @@
 #include "emscripten.h"
 #endif
 
-void gStartEngine(gBaseApp* baseApp, const std::string& appName, int windowMode, int width, int height, bool isResizable) {
-    gStartEngine(baseApp, appName, windowMode, width, height, G_SCREENSCALING_AUTO_ONCE, width, height, isResizable);
+void gStartEngine(gBaseApp* baseApp, const std::string& appName, int windowMode, int width, int height, bool isResizable, int renderEngine) {
+    gStartEngine(baseApp, appName, windowMode, width, height, G_SCREENSCALING_AUTO_ONCE, width, height, isResizable, renderEngine);
 }
 
-void gStartEngine(gBaseApp* baseApp, const std::string& appName, int windowMode, int unitWidth, int unitHeight, int screenScaling, int width, int height, bool isResizable) {
+void gStartEngine(gBaseApp* baseApp, const std::string& appName, int windowMode, int unitWidth, int unitHeight, int screenScaling, int width, int height, bool isResizable, int renderEngine) {
     if(windowMode == G_WINDOWMODE_NONE) windowMode = G_WINDOWMODE_APP;
 #if TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
     ios_main(baseApp, appName.c_str(), windowMode, unitWidth, unitHeight, screenScaling, width, height, isResizable);
 #elif defined(ANDROID)
-    new gAppManager(appName, baseApp, width, height, windowMode, unitWidth, unitHeight, screenScaling, isResizable, G_LOOPMODE_NORMAL);
+    gAppManager* manager = new gAppManager(appName, baseApp, width, height, windowMode, unitWidth, unitHeight, screenScaling, isResizable, G_LOOPMODE_NORMAL);
+    manager->setRenderEngine(renderEngine);
 #else
     gAppManager manager(appName, baseApp, width, height, windowMode, unitWidth, unitHeight, screenScaling, isResizable, G_LOOPMODE_NORMAL);
+	manager.setRenderEngine(renderEngine);
 	manager.runApp();
 #endif
 }
@@ -207,7 +209,7 @@ void gAppManager::initialize() {
 			unitheight = this->height;
 		}
 		// Create renderer
-		gRenderObject::createRenderer();
+		gRenderObject::createRenderer(renderengine);
 		gBaseGUIObject::initializeResources();
 		// Update renderer dimensions
 		renderer->setScreenSize(width, height);

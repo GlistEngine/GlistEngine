@@ -2,7 +2,7 @@
 // Created by sadettin on 23.08.2025.
 //
 
-#include "gGLRenderEngine.h"
+#include "gVKRenderEngine.h"
 
 //screenShot Related includes
 #include "stb/stb_image_write.h"
@@ -12,142 +12,17 @@
 #include "gShader.h"
 #include "gTracy.h"
 
-void gCheckGLErrorAndPrint(const std::string& prefix, const std::string& func, int line) {
-	GLenum error = glGetError();
-	if (error != GL_NO_ERROR) {
-		gLogi("gGLRenderEngine") << prefix << "OpenGL ERROR at " << func << ", line " << line << ", error: " << gToHex(error, 4);
-	}
-}
-
-void gEnableCulling() {
-	G_CHECK_GL(glEnable(GL_CULL_FACE));
-}
-
-void gDisableCulling() {
-	G_CHECK_GL(glDisable(GL_CULL_FACE));
-}
-
-bool gIsCullingEnabled() {
-	G_CHECK_GL2(GLboolean res, glIsEnabled(GL_CULL_FACE));
-	return res == GL_TRUE;
-}
-
-void gCullFace(int cullingFace) {
-	G_CHECK_GL(glCullFace(cullingFace));
-}
-
-int gGetCullFace() {
-	GLint i;
-	G_CHECK_GL(glGetIntegerv(GL_CULL_FACE_MODE, &i));
-	return i;
-}
-
-void gSetCullingDirection(int cullingDirection) {
-	G_CHECK_GL(glFrontFace(cullingDirection));
-}
-
-int gGetCullingDirection() {
-	GLint i;
-	G_CHECK_GL(glGetIntegerv(GL_FRONT_FACE, &i));
-	return i;
-}
-
-gGLRenderEngine::~gGLRenderEngine() {
+gVKRenderEngine::~gVKRenderEngine() {
 	delete originalgrid;
 }
 
-void gGLRenderEngine::clear() {
-	G_CHECK_GL(glClearColor(0.0f, 0.0f, 0.0f, 1.0f));
-	G_CHECK_GL(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
-}
-
-void gGLRenderEngine::clearColor(int r, int g, int b, int a) {
-	//    glBindFramebuffer(GL_FRAMEBUFFER, gFbo::defaultfbo);
-	G_CHECK_GL(glClearColor((float)r / 255, (float)g / 255, (float)b / 255, (float)a / 255));
-	G_CHECK_GL(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
-}
-
-void gGLRenderEngine::clearColor(gColor color) {
-	G_CHECK_GL(glClearColor(color.r, color.g, color.b, color.a));
-	G_CHECK_GL(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
-}
-
-void gGLRenderEngine::enableDepthTest() {
-	G_CHECK_GL(enableDepthTest(DEPTHTESTTYPE_LESS));
-}
-
-void gGLRenderEngine::enableDepthTest(int depthTestType) {
-	G_CHECK_GL(glEnable(GL_DEPTH_TEST));
-	G_CHECK_GL(glDepthFunc(depthtesttypeid[depthTestType]));
-	isdepthtestenabled = true;
-	depthtesttype = depthTestType;
-}
-
-void gGLRenderEngine::setDepthTestFunc(int depthTestType) {
-	G_CHECK_GL(glDepthFunc(depthtesttypeid[depthTestType]));
-	depthtesttype = depthTestType;
-}
-
-void gGLRenderEngine::disableDepthTest() {
-	G_CHECK_GL(glDisable(GL_DEPTH_TEST));
-	isdepthtestenabled = false;
-}
-
-bool gGLRenderEngine::isDepthTestEnabled() {
-	return isdepthtestenabled;
-}
-
-int gGLRenderEngine::getDepthTestType() {
-	return depthtesttype;
-}
-
-void gGLRenderEngine::enableAlphaBlending() {
-	G_CHECK_GL(glEnable(GL_BLEND));
-	G_CHECK_GL(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
-	isalphablendingenabled = true;
-}
-
-void gGLRenderEngine::disableAlphaBlending() {
-	G_CHECK_GL(glDisable(GL_BLEND));
-	isalphablendingenabled = false;
-}
-
-bool gGLRenderEngine::isAlphaBlendingEnabled() {
-	return isalphablendingenabled;
-}
-
-void gGLRenderEngine::enableAlphaTest() {
-#if defined(WIN32) || defined(LINUX)
-	G_CHECK_GL(glEnable(GL_ALPHA_TEST));
-	G_CHECK_GL(glAlphaFunc(GL_GREATER, 0.1));
-	isalphatestenabled = true;
-#endif
-}
-
-void gGLRenderEngine::disableAlphaTest() {
-#if defined(WIN32) || defined(LINUX)
-	G_CHECK_GL(glDisable(GL_ALPHA_TEST));
-	isalphatestenabled = false;
-#endif
-}
-
-bool gGLRenderEngine::isAlphaTestEnabled() {
-	return isalphatestenabled;
-}
-
-/*
- * Rotates The Pixel Data upside down. Hence rotates flips the image upside down
- */
-void flipVertically(unsigned char* pixelData, int width, int height, int numChannels) {
-	G_PROFILE_ZONE_SCOPED_N("flipVertically()");
+static void flipVertically(unsigned char* pixelData, int width, int height, int numChannels) {
 	int rowsize = width * numChannels;
 	unsigned char* temprow = new unsigned char[rowsize];
 
-	for(int row = 0; row < height / 2; ++row) {
-		// Calculate the corresponding row from the bottom
+	for (int row = 0; row < height / 2; ++row) {
 		int bottomrow = height - row - 1;
 
-		// Swap the rows
 		memcpy(temprow, pixelData + row * rowsize, rowsize);
 		memcpy(pixelData + row * rowsize, pixelData + bottomrow * rowsize, rowsize);
 		memcpy(pixelData + bottomrow * rowsize, temprow, rowsize);
@@ -156,8 +31,87 @@ void flipVertically(unsigned char* pixelData, int width, int height, int numChan
 	delete[] temprow;
 }
 
-void gGLRenderEngine::takeScreenshot(gImage& img, int x, int y, int width, int height) {
-	G_PROFILE_ZONE_SCOPED_N("gGLRenderEngine::takeScreenshot()");
+void gVKRenderEngine::clear() {
+	G_CHECK_GL(glClearColor(0.0f, 0.0f, 0.0f, 1.0f));
+	G_CHECK_GL(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
+}
+
+void gVKRenderEngine::clearColor(int r, int g, int b, int a) {
+	//    glBindFramebuffer(GL_FRAMEBUFFER, gFbo::defaultfbo);
+	G_CHECK_GL(glClearColor((float)r / 255, (float)g / 255, (float)b / 255, (float)a / 255));
+	G_CHECK_GL(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
+}
+
+void gVKRenderEngine::clearColor(gColor color) {
+	G_CHECK_GL(glClearColor(color.r, color.g, color.b, color.a));
+	G_CHECK_GL(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
+}
+
+void gVKRenderEngine::enableDepthTest() {
+	G_CHECK_GL(enableDepthTest(DEPTHTESTTYPE_LESS));
+}
+
+void gVKRenderEngine::enableDepthTest(int depthTestType) {
+	G_CHECK_GL(glEnable(GL_DEPTH_TEST));
+	G_CHECK_GL(glDepthFunc(depthtesttypeid[depthTestType]));
+	isdepthtestenabled = true;
+	depthtesttype = depthTestType;
+}
+
+void gVKRenderEngine::setDepthTestFunc(int depthTestType) {
+	G_CHECK_GL(glDepthFunc(depthtesttypeid[depthTestType]));
+	depthtesttype = depthTestType;
+}
+
+void gVKRenderEngine::disableDepthTest() {
+	G_CHECK_GL(glDisable(GL_DEPTH_TEST));
+	isdepthtestenabled = false;
+}
+
+bool gVKRenderEngine::isDepthTestEnabled() {
+	return isdepthtestenabled;
+}
+
+int gVKRenderEngine::getDepthTestType() {
+	return depthtesttype;
+}
+
+void gVKRenderEngine::enableAlphaBlending() {
+	G_CHECK_GL(glEnable(GL_BLEND));
+	G_CHECK_GL(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
+	isalphablendingenabled = true;
+}
+
+void gVKRenderEngine::disableAlphaBlending() {
+	G_CHECK_GL(glDisable(GL_BLEND));
+	isalphablendingenabled = false;
+}
+
+bool gVKRenderEngine::isAlphaBlendingEnabled() {
+	return isalphablendingenabled;
+}
+
+void gVKRenderEngine::enableAlphaTest() {
+#if defined(WIN32) || defined(LINUX)
+	G_CHECK_GL(glEnable(GL_ALPHA_TEST));
+	G_CHECK_GL(glAlphaFunc(GL_GREATER, 0.1));
+	isalphatestenabled = true;
+#endif
+}
+
+void gVKRenderEngine::disableAlphaTest() {
+#if defined(WIN32) || defined(LINUX)
+	G_CHECK_GL(glDisable(GL_ALPHA_TEST));
+	isalphatestenabled = false;
+#endif
+}
+
+bool gVKRenderEngine::isAlphaTestEnabled() {
+	return isalphatestenabled;
+}
+
+void gVKRenderEngine::takeScreenshot(gImage& img, int x, int y, int width, int height) {
+	G_PROFILE_ZONE_SCOPED_N("gVKRenderEngine::takeScreenshot()");
 	unsigned char* pixeldata = new unsigned char[width * height * 4];
 	G_CHECK_GL(glReadPixels(x, getHeight() - y - height, width, height, GL_RGBA, GL_UNSIGNED_BYTE, pixeldata));
 	flipVertically(pixeldata, width, height, 4);
@@ -166,8 +120,8 @@ void gGLRenderEngine::takeScreenshot(gImage& img, int x, int y, int width, int h
 	// screenShot->saveImage(imagePath);  USE IT TO SAVE THE IMAGE
 }
 
-void gGLRenderEngine::takeScreenshot(gImage& img) {
-	G_PROFILE_ZONE_SCOPED_N("gGLRenderEngine::takeScreenshot()");
+void gVKRenderEngine::takeScreenshot(gImage& img) {
+	G_PROFILE_ZONE_SCOPED_N("gVKRenderEngine::takeScreenshot()");
 	int height = gBaseApp::getAppManager()->getWindow()->getHeight();
 	int width = gBaseApp::getAppManager()->getWindow()->getWidth();
 	unsigned char* pixeldata = new unsigned char[width * height * 4];
@@ -179,118 +133,118 @@ void gGLRenderEngine::takeScreenshot(gImage& img) {
 }
 
 
-GLuint gGLRenderEngine::genBuffers() {
+GLuint gVKRenderEngine::genBuffers() {
 	GLuint buffer;
 	G_CHECK_GL(glGenBuffers(1, &buffer));
 	return buffer;
 }
 
-void gGLRenderEngine::deleteBuffer(GLuint& buffer) {
+void gVKRenderEngine::deleteBuffer(GLuint& buffer) {
 	if (buffer != 0) {
 		G_CHECK_GL(glDeleteBuffers(1, &buffer));
 	}
 }
 
-void gGLRenderEngine::bindBuffer(GLenum target, GLuint buffer) {
+void gVKRenderEngine::bindBuffer(GLenum target, GLuint buffer) {
 	G_CHECK_GL(glBindBuffer(target, buffer));
 }
 
-void gGLRenderEngine::unbindBuffer(GLenum target) {
+void gVKRenderEngine::unbindBuffer(GLenum target) {
 	G_CHECK_GL(glBindBuffer(target, 0));
 }
 
-void gGLRenderEngine::bufSubData(GLuint buffer, int offset, int size, const void* data) {
+void gVKRenderEngine::bufSubData(GLuint buffer, int offset, int size, const void* data) {
 	bindBuffer(GL_UNIFORM_BUFFER, buffer);
 	G_CHECK_GL(glBufferSubData(GL_UNIFORM_BUFFER, offset, size, data));
 	unbindBuffer(GL_UNIFORM_BUFFER);
 }
 
-void gGLRenderEngine::setBufferData(GLuint buffer, const void* data, size_t size, int usage) {
+void gVKRenderEngine::setBufferData(GLuint buffer, const void* data, size_t size, int usage) {
 	bindBuffer(GL_UNIFORM_BUFFER, buffer);
 	G_CHECK_GL(glBufferData(GL_UNIFORM_BUFFER, size, data, usage));
 	unbindBuffer(GL_UNIFORM_BUFFER);
 }
 
-void gGLRenderEngine::setBufferRange(int index, GLuint buffer, int offset, int size) {
+void gVKRenderEngine::setBufferRange(int index, GLuint buffer, int offset, int size) {
 	G_CHECK_GL(glBindBufferRange(GL_UNIFORM_BUFFER, index, buffer, offset, size));
 }
 
 // ----- VAO -----l
-GLuint gGLRenderEngine::createVAO() {
+GLuint gVKRenderEngine::createVAO() {
 	GLuint vao;
 	G_CHECK_GL(glGenVertexArrays(1, &vao));
 	return vao;
 }
 
-void gGLRenderEngine::deleteVAO(GLuint& vao) {
+void gVKRenderEngine::deleteVAO(GLuint& vao) {
 	if(vao != 0) {
 		G_CHECK_GL(glDeleteVertexArrays(1, &vao));
 	}
 }
 
-void gGLRenderEngine::bindVAO(GLuint vao) {
+void gVKRenderEngine::bindVAO(GLuint vao) {
 	G_CHECK_GL(glBindVertexArray(vao));
 }
 
-void gGLRenderEngine::unbindVAO() {
+void gVKRenderEngine::unbindVAO() {
 	G_CHECK_GL(glBindVertexArray(0));
 }
 
-void gGLRenderEngine::setVertexBufferData(GLuint vbo, size_t size, const void* data, int usage) {
+void gVKRenderEngine::setVertexBufferData(GLuint vbo, size_t size, const void* data, int usage) {
 	G_CHECK_GL(glBindBuffer(GL_ARRAY_BUFFER, vbo));
 	G_CHECK_GL(glBufferData(GL_ARRAY_BUFFER, size, data, usage));
 }
 
-void gGLRenderEngine::setIndexBufferData(GLuint ebo, size_t size, const void* data, int usage) {
+void gVKRenderEngine::setIndexBufferData(GLuint ebo, size_t size, const void* data, int usage) {
 	G_CHECK_GL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo));
 	G_CHECK_GL(glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, data, usage));
 }
 
 // ----- Draw -----
-void gGLRenderEngine::drawArrays(int drawMode, int count) {
+void gVKRenderEngine::drawArrays(int drawMode, int count) {
 	G_CHECK_GL(glDrawArrays(drawMode, 0, count));
 }
 
-void gGLRenderEngine::drawElements(int drawMode, int count) {
+void gVKRenderEngine::drawElements(int drawMode, int count) {
 	G_CHECK_GL(glDrawElements(drawMode, count, G_INDEX_SIZE, 0));
 }
 
 // ----- vertex attributes -----
-void gGLRenderEngine::enableVertexAttrib(int index) {
+void gVKRenderEngine::enableVertexAttrib(int index) {
 	G_CHECK_GL(glEnableVertexAttribArray(index));
 }
 
-void gGLRenderEngine::disableVertexAttrib(int index) {
+void gVKRenderEngine::disableVertexAttrib(int index) {
 	G_CHECK_GL(glDisableVertexAttribArray(index));
 }
 
-void gGLRenderEngine::setVertexAttribPointer(int index, int size, int type, bool normalized, int stride,
+void gVKRenderEngine::setVertexAttribPointer(int index, int size, int type, bool normalized, int stride,
                                              const void* pointer) {
 	G_CHECK_GL(glVertexAttribPointer(index, size, type, normalized ? GL_TRUE : GL_FALSE, stride, pointer));
 }
 
-void gGLRenderEngine::setViewport(int x, int y, int width, int height) {
+void gVKRenderEngine::setViewport(int x, int y, int width, int height) {
 	G_CHECK_GL(glViewport(x, y, width, height));
 }
 
 // ----- Framebuffer -----
-GLuint gGLRenderEngine::createFramebuffer() {
+GLuint gVKRenderEngine::createFramebuffer() {
 	GLuint fbo;
 	G_CHECK_GL(glGenFramebuffers(1, &fbo));
 	return fbo;
 }
 
-void gGLRenderEngine::deleteFramebuffer(GLuint& fbo) {
+void gVKRenderEngine::deleteFramebuffer(GLuint& fbo) {
 	if(fbo != 0) {
 		G_CHECK_GL(glDeleteFramebuffers(1, &fbo));
 	}
 }
 
-void gGLRenderEngine::bindFramebuffer(GLuint fbo) {
+void gVKRenderEngine::bindFramebuffer(GLuint fbo) {
 	G_CHECK_GL(glBindFramebuffer(GL_FRAMEBUFFER, fbo));
 }
 
-void gGLRenderEngine::checkFramebufferStatus() {
+void gVKRenderEngine::checkFramebufferStatus() {
 	// check if fbo complete
 	G_CHECK_GL2(GLuint status, glCheckFramebufferStatus(GL_FRAMEBUFFER));
 	if(status != GL_FRAMEBUFFER_COMPLETE) {
@@ -299,38 +253,38 @@ void gGLRenderEngine::checkFramebufferStatus() {
 }
 
 // ----- Renderbuffer -----
-GLuint gGLRenderEngine::createRenderbuffer() {
+GLuint gVKRenderEngine::createRenderbuffer() {
 	GLuint rbo;
 	G_CHECK_GL(glGenRenderbuffers(1, &rbo));
 	return rbo;
 }
 
-void gGLRenderEngine::deleteRenderbuffer(GLuint& rbo) {
+void gVKRenderEngine::deleteRenderbuffer(GLuint& rbo) {
 	if(rbo != 0) {
 		G_CHECK_GL(glDeleteRenderbuffers(1, &rbo));
 	}
 }
 
-void gGLRenderEngine::bindRenderbuffer(GLuint rbo) {
+void gVKRenderEngine::bindRenderbuffer(GLuint rbo) {
 	assert(rbo != 0);
 	G_CHECK_GL(glBindRenderbuffer(GL_RENDERBUFFER, rbo));
 }
 
-void gGLRenderEngine::setRenderbufferStorage(GLenum format, int width, int height) {
+void gVKRenderEngine::setRenderbufferStorage(GLenum format, int width, int height) {
 	G_CHECK_GL(glRenderbufferStorage(GL_RENDERBUFFER, format, width, height));
 }
 
 // ----- Attachments -----
-void gGLRenderEngine::attachTextureToFramebuffer(GLenum attachment, GLenum textarget, GLuint texId, GLuint level) {
+void gVKRenderEngine::attachTextureToFramebuffer(GLenum attachment, GLenum textarget, GLuint texId, GLuint level) {
 	G_CHECK_GL(glFramebufferTexture2D(GL_FRAMEBUFFER, attachment, textarget, texId, level));
 }
 
-void gGLRenderEngine::attachRenderbufferToFramebuffer(GLenum attachment, GLuint rbo) {
+void gVKRenderEngine::attachRenderbufferToFramebuffer(GLenum attachment, GLuint rbo) {
 	G_CHECK_GL(glFramebufferRenderbuffer(GL_FRAMEBUFFER, attachment, GL_RENDERBUFFER, rbo));
 }
 
 // ----- Draw/Read buffers -----
-void gGLRenderEngine::setDrawBufferNone() {
+void gVKRenderEngine::setDrawBufferNone() {
 #if defined(GLIST_OPENGLES)
 	G_CHECK_GL(glDrawBuffers(0, GL_NONE));
 #else
@@ -338,12 +292,12 @@ void gGLRenderEngine::setDrawBufferNone() {
 #endif
 }
 
-void gGLRenderEngine::setReadBufferNone() {
+void gVKRenderEngine::setReadBufferNone() {
 	G_CHECK_GL(glReadBuffer(GL_NONE));
 }
 
 // ----- Fullscreen Quad -----
-void gGLRenderEngine::createFullscreenQuad(GLuint& vao, GLuint& vbo) {
+void gVKRenderEngine::createFullscreenQuad(GLuint& vao, GLuint& vbo) {
 	static const float QUAD_VERTICES[] = {
 		// positions   // texCoords
 		-1.0f, 1.0f, 0.0f, 1.0f,
@@ -369,7 +323,7 @@ void gGLRenderEngine::createFullscreenQuad(GLuint& vao, GLuint& vbo) {
 	G_CHECK_GL(glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float))));
 }
 
-void gGLRenderEngine::deleteFullscreenQuad(GLuint& vao, GLuint* vbo) {
+void gVKRenderEngine::deleteFullscreenQuad(GLuint& vao, GLuint* vbo) {
 	if(vao != GL_NONE) {
 		G_CHECK_GL(glDeleteVertexArrays(1, &vao));
 	}
@@ -378,7 +332,7 @@ void gGLRenderEngine::deleteFullscreenQuad(GLuint& vao, GLuint* vbo) {
 	}
 }
 
-GLuint gGLRenderEngine::loadProgram(const char* vertexSource, const char* fragmentSource, const char* geometrySource) {
+GLuint gVKRenderEngine::loadProgram(const char* vertexSource, const char* fragmentSource, const char* geometrySource) {
 	unsigned int vertex = GL_NONE;
 	unsigned int fragment = GL_NONE;
 #if defined(WIN32) || defined(LINUX)
@@ -427,7 +381,7 @@ GLuint gGLRenderEngine::loadProgram(const char* vertexSource, const char* fragme
 	return id;
 }
 
-void gGLRenderEngine::checkCompileErrors(GLuint shader, const std::string& type) {
+void gVKRenderEngine::checkCompileErrors(GLuint shader, const std::string& type) {
 	GLint success;
 	GLchar infoLog[1024];
 	if(type != "PROGRAM") {
@@ -450,154 +404,154 @@ void gGLRenderEngine::checkCompileErrors(GLuint shader, const std::string& type)
 #endif
 }
 
-void gGLRenderEngine::setBool(GLuint uniformloc, bool value) {
+void gVKRenderEngine::setBool(GLuint uniformloc, bool value) {
 	G_CHECK_GL(glUniform1i(uniformloc, (int)value));
 }
 
-void gGLRenderEngine::setInt(GLuint uniformloc, int value) {
+void gVKRenderEngine::setInt(GLuint uniformloc, int value) {
 	G_CHECK_GL(glUniform1i(uniformloc, value));
 }
 
-void gGLRenderEngine::setUnsignedInt(GLuint uniformloc, unsigned int value) {
+void gVKRenderEngine::setUnsignedInt(GLuint uniformloc, unsigned int value) {
 	G_CHECK_GL(glUniform1ui(uniformloc, value));
 }
 
-void gGLRenderEngine::setFloat(GLuint uniformloc, float value) {
+void gVKRenderEngine::setFloat(GLuint uniformloc, float value) {
 	G_CHECK_GL(glUniform1f(uniformloc, value));
 }
 
-void gGLRenderEngine::setVec2(GLuint uniformloc, const glm::vec2& value) {
+void gVKRenderEngine::setVec2(GLuint uniformloc, const glm::vec2& value) {
 	G_CHECK_GL(glUniform2fv(uniformloc, 1, &value[0]));
 }
 
-void gGLRenderEngine::setVec2(GLuint uniformloc, float x, float y) {
+void gVKRenderEngine::setVec2(GLuint uniformloc, float x, float y) {
 	G_CHECK_GL(glUniform2f(uniformloc, x, y));
 }
 
-void gGLRenderEngine::setVec3(GLuint uniformloc, const glm::vec3& value) {
+void gVKRenderEngine::setVec3(GLuint uniformloc, const glm::vec3& value) {
 	G_CHECK_GL(glUniform3fv(uniformloc, 1, &value[0]));
 }
 
-void gGLRenderEngine::setVec3(GLuint uniformloc, float x, float y, float z) {
+void gVKRenderEngine::setVec3(GLuint uniformloc, float x, float y, float z) {
 	G_CHECK_GL(glUniform3f(uniformloc, x, y, z));
 }
 
-void gGLRenderEngine::setVec4(GLuint uniformloc, const glm::vec4& value) {
+void gVKRenderEngine::setVec4(GLuint uniformloc, const glm::vec4& value) {
 	G_CHECK_GL(glUniform4fv(uniformloc, 1, &value[0]));
 }
 
-void gGLRenderEngine::setVec4(GLuint uniformloc, float x, float y, float z, float w) {
+void gVKRenderEngine::setVec4(GLuint uniformloc, float x, float y, float z, float w) {
 	G_CHECK_GL(glUniform4f(uniformloc, x, y, z, w));
 }
 
-void gGLRenderEngine::setMat2(GLuint uniformloc, const glm::mat2& mat) {
+void gVKRenderEngine::setMat2(GLuint uniformloc, const glm::mat2& mat) {
 	G_CHECK_GL(glUniformMatrix2fv(uniformloc, 1, GL_FALSE, &mat[0][0]));
 }
 
-void gGLRenderEngine::setMat3(GLuint uniformloc, const glm::mat3& mat) {
+void gVKRenderEngine::setMat3(GLuint uniformloc, const glm::mat3& mat) {
 	G_CHECK_GL(glUniformMatrix3fv(uniformloc, 1, GL_FALSE, &mat[0][0]));
 }
 
-void gGLRenderEngine::setMat4(GLuint uniformloc, const glm::mat4& mat) {
+void gVKRenderEngine::setMat4(GLuint uniformloc, const glm::mat4& mat) {
 	G_CHECK_GL(glUniformMatrix4fv(uniformloc, 1, GL_FALSE, &mat[0][0]));
 }
 
-GLuint gGLRenderEngine::getUniformLocation(GLuint id, const std::string& name) {
+GLuint gVKRenderEngine::getUniformLocation(GLuint id, const std::string& name) {
 	G_CHECK_GL2(GLuint location, glGetUniformLocation(id, name.c_str()));
 	return location;
 }
 
-void gGLRenderEngine::useShader(GLuint id) const {
+void gVKRenderEngine::useShader(GLuint id) const {
 	if (currentprogram == id) return;
 	currentprogram = id;
 	G_CHECK_GL(glUseProgram(id));
 }
 
-void gGLRenderEngine::resetShader(GLuint id, bool loaded) const {
+void gVKRenderEngine::resetShader(GLuint id, bool loaded) const {
 	if(loaded) {
 		if (currentprogram == id) currentprogram = 0;
 		G_CHECK_GL(glDeleteShader(id));
 	}
 }
 
-void gGLRenderEngine::clearScreen(bool color, bool depth) {
+void gVKRenderEngine::clearScreen(bool color, bool depth) {
 	GLbitfield mask = 0;
 	if(color) mask |= GL_COLOR_BUFFER_BIT;
 	if(depth) mask |= GL_DEPTH_BUFFER_BIT;
 	glClear(mask);
 }
 
-void gGLRenderEngine::bindQuadVAO() {
+void gVKRenderEngine::bindQuadVAO() {
 	G_CHECK_GL(glBindVertexArray(fullscreenquadvao));
 }
 
-void gGLRenderEngine::drawFullscreenQuad() {
+void gVKRenderEngine::drawFullscreenQuad() {
 	G_CHECK_GL(glDrawArrays(GL_TRIANGLES, 0, 6));
 }
 
-void gGLRenderEngine::bindDefaultFramebuffer() {
+void gVKRenderEngine::bindDefaultFramebuffer() {
 	G_CHECK_GL(glBindFramebuffer(GL_FRAMEBUFFER, gFbo::defaultfbo));
 }
 
-void gGLRenderEngine::drawVbo(const gVbo& vbo) {
+void gVKRenderEngine::drawVbo(const gVbo& vbo) {
 	G_CHECK_GL(glDrawArrays(GL_TRIANGLES, 0, vbo.getVerticesNum()));
 }
 
-GLuint gGLRenderEngine::createTextures() {
+GLuint gVKRenderEngine::createTextures() {
 	GLuint id;
 	G_CHECK_GL(glGenTextures(1, &id));
 	return id;
 }
 
-void gGLRenderEngine::bindTexture(GLuint texId) {
+void gVKRenderEngine::bindTexture(GLuint texId) {
 	G_CHECK_GL(glBindTexture(GL_TEXTURE_2D, texId));
 }
 
-void gGLRenderEngine::bindTexture(GLuint texId, int textureSlotNo) {
+void gVKRenderEngine::bindTexture(GLuint texId, int textureSlotNo) {
 	G_CHECK_GL(glActiveTexture(GL_TEXTURE0 + textureSlotNo));
 	G_CHECK_GL(glBindTexture(GL_TEXTURE_2D, texId));
 }
 
-void gGLRenderEngine::unbindTexture() {
+void gVKRenderEngine::unbindTexture() {
 	G_CHECK_GL(glBindTexture(GL_TEXTURE_2D, 0));
 }
 
-void gGLRenderEngine::activateTexture(int textureSlotNo) {
+void gVKRenderEngine::activateTexture(int textureSlotNo) {
 	G_CHECK_GL(glActiveTexture(GL_TEXTURE0 + textureSlotNo));
 }
 
-void gGLRenderEngine::resetTexture() {
+void gVKRenderEngine::resetTexture() {
 	G_CHECK_GL(glActiveTexture(GL_TEXTURE0));
 }
 
-void gGLRenderEngine::deleteTexture(GLuint& texId) {
+void gVKRenderEngine::deleteTexture(GLuint& texId) {
 	if (texId != 0) {
 		G_CHECK_GL(glDeleteTextures(1, &texId));
 	}
 }
 
-void gGLRenderEngine::texImage2D(GLenum target, GLint internalFormat, int width, int height, GLint format,
+void gVKRenderEngine::texImage2D(GLenum target, GLint internalFormat, int width, int height, GLint format,
                                  GLint type, void* data) {
 	G_CHECK_GL(glTexImage2D(target, 0, internalFormat, width, height, 0, format, type, data));
 }
 
-void gGLRenderEngine::setWrapping(GLenum target, GLint wrapS, GLint wrapT) {
+void gVKRenderEngine::setWrapping(GLenum target, GLint wrapS, GLint wrapT) {
 	G_CHECK_GL(glTexParameteri(target, GL_TEXTURE_WRAP_S, wrapS));
 	G_CHECK_GL(glTexParameteri(target, GL_TEXTURE_WRAP_T, wrapT));
 }
 
-void gGLRenderEngine::setWrapping(GLenum target, GLint wrapS, GLint wrapT, GLint wrapR) {
+void gVKRenderEngine::setWrapping(GLenum target, GLint wrapS, GLint wrapT, GLint wrapR) {
 	G_CHECK_GL(glTexParameteri(target, GL_TEXTURE_WRAP_S, wrapS));
 	G_CHECK_GL(glTexParameteri(target, GL_TEXTURE_WRAP_T, wrapT));
 	G_CHECK_GL(glTexParameteri(target, GL_TEXTURE_WRAP_R, wrapR));
 }
 
-void gGLRenderEngine::setFiltering(GLenum target, GLint minFilter, GLint magFilter) {
+void gVKRenderEngine::setFiltering(GLenum target, GLint minFilter, GLint magFilter) {
 	G_CHECK_GL(glTexParameteri(target, GL_TEXTURE_MIN_FILTER, minFilter));
 	G_CHECK_GL(glTexParameteri(target, GL_TEXTURE_MAG_FILTER, magFilter));
 }
 
-void gGLRenderEngine::setWrappingAndFiltering(GLenum target, GLint wrapS, GLint wrapT, GLint minFilter,
+void gVKRenderEngine::setWrappingAndFiltering(GLenum target, GLint wrapS, GLint wrapT, GLint minFilter,
                                               GLint magFilter) {
 	G_CHECK_GL(glTexParameteri(target, GL_TEXTURE_WRAP_S, wrapS));
 	G_CHECK_GL(glTexParameteri(target, GL_TEXTURE_WRAP_T, wrapT));
@@ -605,7 +559,7 @@ void gGLRenderEngine::setWrappingAndFiltering(GLenum target, GLint wrapS, GLint 
 	G_CHECK_GL(glTexParameteri(target, GL_TEXTURE_MAG_FILTER, magFilter));
 }
 
-void gGLRenderEngine::setWrappingAndFiltering(GLenum target, GLint wrapS, GLint wrapT, GLint wrapR, GLint minFilter,
+void gVKRenderEngine::setWrappingAndFiltering(GLenum target, GLint wrapS, GLint wrapT, GLint wrapR, GLint minFilter,
                                               GLint magFilter) {
 	G_CHECK_GL(glTexParameteri(target, GL_TEXTURE_WRAP_S, wrapS));
 	G_CHECK_GL(glTexParameteri(target, GL_TEXTURE_WRAP_T, wrapT));
@@ -614,7 +568,7 @@ void gGLRenderEngine::setWrappingAndFiltering(GLenum target, GLint wrapS, GLint 
 	G_CHECK_GL(glTexParameteri(target, GL_TEXTURE_MAG_FILTER, magFilter));
 }
 
-void gGLRenderEngine::setSwizzleMask(GLint swizzleMask[4]) {
+void gVKRenderEngine::setSwizzleMask(GLint swizzleMask[4]) {
 #if defined(GLIST_OPENGLES)
 	G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_R, swizzleMask[0]));
 	G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_G, swizzleMask[1]));
@@ -625,7 +579,7 @@ void gGLRenderEngine::setSwizzleMask(GLint swizzleMask[4]) {
 #endif
 }
 
-void gGLRenderEngine::readTexturePixels(unsigned char* inPixels, GLuint textureId, int width, int height,
+void gVKRenderEngine::readTexturePixels(unsigned char* inPixels, GLuint textureId, int width, int height,
                                         GLenum format) {
 	GLuint fbo;
 	G_CHECK_GL(glGenFramebuffers(1, &fbo));
@@ -638,7 +592,7 @@ void gGLRenderEngine::readTexturePixels(unsigned char* inPixels, GLuint textureI
 	G_CHECK_GL(glDeleteFramebuffers(1, &fbo));
 }
 
-void gGLRenderEngine::readTexturePixelsHDR(float* inPixels, GLuint textureId, int width, int height,
+void gVKRenderEngine::readTexturePixelsHDR(float* inPixels, GLuint textureId, int width, int height,
                                            GLenum format) {
 	GLuint fbo;
 	G_CHECK_GL(glGenFramebuffers(1, &fbo));
@@ -651,37 +605,37 @@ void gGLRenderEngine::readTexturePixelsHDR(float* inPixels, GLuint textureId, in
 	G_CHECK_GL(glDeleteFramebuffers(1, &fbo));
 }
 
-void gGLRenderEngine::generateMipMap() {
+void gVKRenderEngine::generateMipMap() {
 	G_CHECK_GL(glGenerateMipmap(GL_TEXTURE_2D));
 }
 
-void gGLRenderEngine::bindSkyTexture(GLuint texId) {
+void gVKRenderEngine::bindSkyTexture(GLuint texId) {
 	G_CHECK_GL(glBindTexture(GL_TEXTURE_CUBE_MAP, texId));
 }
 
-void gGLRenderEngine::bindSkyTexture(GLuint texId, int textureSlot) {
+void gVKRenderEngine::bindSkyTexture(GLuint texId, int textureSlot) {
 	G_CHECK_GL(glActiveTexture(textureSlot));
 	G_CHECK_GL(glBindTexture(GL_TEXTURE_CUBE_MAP, texId));
 }
 
-void gGLRenderEngine::unbindSkyTexture() {
+void gVKRenderEngine::unbindSkyTexture() {
 	G_CHECK_GL(glBindTexture(GL_TEXTURE_CUBE_MAP, 0));
 }
 
-void gGLRenderEngine::unbindSkyTexture(int textureSlotNo) {
+void gVKRenderEngine::unbindSkyTexture(int textureSlotNo) {
 	G_CHECK_GL(glActiveTexture(GL_TEXTURE0 + textureSlotNo));
 	G_CHECK_GL(glBindTexture(GL_TEXTURE_CUBE_MAP, 0));
 }
 
-void gGLRenderEngine::generateSkyMipMap() {
+void gVKRenderEngine::generateSkyMipMap() {
 	G_CHECK_GL(glGenerateMipmap(GL_TEXTURE_CUBE_MAP));
 }
 
-void gGLRenderEngine::enableDepthTestEqual() {
+void gVKRenderEngine::enableDepthTestEqual() {
 	G_CHECK_GL(glDepthFunc(GL_LEQUAL));
 }
 
-void gGLRenderEngine::createQuad(GLuint& inQuadVAO, GLuint& inQuadVBO) {
+void gVKRenderEngine::createQuad(GLuint& inQuadVAO, GLuint& inQuadVBO) {
 	float quadVertices[] = {
 		// positions        // texture Coords
 		-1.0f, 1.0f, 0.0f, 0.0f, 1.0f,
@@ -701,7 +655,7 @@ void gGLRenderEngine::createQuad(GLuint& inQuadVAO, GLuint& inQuadVBO) {
 	G_CHECK_GL(glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float))));
 }
 
-void gGLRenderEngine::enableCubeMap() {
+void gVKRenderEngine::enableCubeMap() {
 #if defined(GLIST_OPENGLES)
 	G_CHECK_GL(glEnable(GL_TEXTURE_CUBE_MAP)); // OpenGL ES does not support GL_TEXTURE_CUBE_MAP_SEAMLESS
 #else
@@ -709,27 +663,29 @@ void gGLRenderEngine::enableCubeMap() {
 #endif
 }
 
-void gGLRenderEngine::pushMatrix() {
+void gVKRenderEngine::pushMatrix() {
 #ifndef GLIST_OPENGLES
 	G_CHECK_GL(glPushMatrix());
 #endif
 }
 
-void gGLRenderEngine::popMatrix() {
+void gVKRenderEngine::popMatrix() {
 #ifndef GLIST_OPENGLES
 	G_CHECK_GL(glPopMatrix());
 #endif
 }
 
 #if !defined(GLIST_OPENGLES) && (defined(DEBUG) || defined(ENGINE_OPENGL_CHECKS))
-void GLAPIENTRY openglErrorCallback(GLenum source, GLenum type, GLuint id,
+// Made static (internal linkage) so it does not collide with the identically-named
+// callback in gGLRenderEngine.cpp when both are compiled in a DEBUG build.
+static void GLAPIENTRY openglErrorCallback(GLenum source, GLenum type, GLuint id,
 								   GLenum severity, GLsizei length,
 								   const GLchar* message, const void* userParam) {
 	if (severity == GL_DEBUG_SEVERITY_NOTIFICATION) {
 		return;
 	}
 
-	gLoge("gGLRenderEngine") << "Received OpenGL Debug Message: "<<
+	gLoge("gVKRenderEngine") << "Received OpenGL Debug Message: "<<
 			"src: " << source << "\n"
 			"type: " << type << "\n"
 			"id: " << id << "\n"
@@ -740,8 +696,8 @@ void GLAPIENTRY openglErrorCallback(GLenum source, GLenum type, GLuint id,
 }
 #endif
 
-void gGLRenderEngine::init() {
-	gLogi("gGLRenderEngine") << "OpenGL render engine active";
+void gVKRenderEngine::init() {
+	gLogi("gVKRenderEngine") << "Vulkan render engine active (currently running GL code)";
 #if !defined(GLIST_OPENGLES) && (defined(DEBUG) || defined(ENGINE_OPENGL_CHECKS))
 	// On newer versions of OpenGL, debug callbacks are available; we enable them only for debug builds because it might have a performance impact.
 	// You can place a debug point and go back to the original source of the message from the stack trace, because it is sync.
@@ -754,7 +710,7 @@ void gGLRenderEngine::init() {
 	gRenderer::init();
 }
 
-void gGLRenderEngine::updatePackUnpackAlignment(int i) {
+void gVKRenderEngine::updatePackUnpackAlignment(int i) {
 	G_CHECK_GL(glPixelStorei(GL_UNPACK_ALIGNMENT, i));
 	G_CHECK_GL(glPixelStorei(GL_PACK_ALIGNMENT, i));
 }

@@ -51,6 +51,7 @@ class gGUIAppThread;
 #include <iostream>
 #include <mutex>
 #include "gGUIManager.h"
+#include "gRenderObject.h"
 
 class gCanvasManager;
 class gBaseCanvas;
@@ -89,7 +90,7 @@ class gInputManager;
  * to prevent distorted images. Please note that some operating systems may scale
  * the framebuffer and create a bigger window than the developer's value.
  */
-void gStartEngine(gBaseApp* baseApp, const std::string& appName, int windowMode, int width, int height, bool isResizable = true);
+void gStartEngine(gBaseApp* baseApp, const std::string& appName, int windowMode, int width, int height, bool isResizable = true, int renderEngine = G_RENDERER_GL);
 
 /**
  * Sets the app settings for engine according to given name, mode of window,
@@ -134,7 +135,7 @@ void gStartEngine(gBaseApp* baseApp, const std::string& appName, int windowMode,
  * to prevent distorted images. Please note that some operating systems may scale
  * the framebuffer and create a bigger window than the developer's value.
  */
-void gStartEngine(gBaseApp* baseApp, const std::string& appName, int windowMode, int unitWidth, int unitHeight, int screenScaling, int width, int height, bool isResizable = true);
+void gStartEngine(gBaseApp* baseApp, const std::string& appName, int windowMode, int unitWidth, int unitHeight, int screenScaling, int width, int height, bool isResizable = true, int renderEngine = G_RENDERER_GL);
 
 /**
  * Creates a windowless console/service app.
@@ -278,6 +279,15 @@ public:
 
 	gBaseWindow* getWindow() const { return window; }
 
+	/**
+	 * Selects which render backend the engine creates. Must be called before the
+	 * renderer is created (i.e. before initialize()). Possible values:
+	 * - G_RENDERER_GL (default)
+	 * - G_RENDERER_VK
+	 */
+	void setRenderEngine(int renderEngine) { renderengine = renderEngine; }
+	int getRenderEngine() const { return renderengine; }
+
 	void setWindowSize(int width, int height);
 	void setWindowResizable(bool isResizable);
 	void setWindowSizeLimits(int minWidth, int minHeight, int maxWidth, int maxHeight);
@@ -364,6 +374,7 @@ private:
     int screenscaling;
     bool isresizable;
     int loopmode;
+    int renderengine = G_RENDERER_GL;
     bool initialized;
     bool initializedbefore;
     bool iswindowfocused;
