@@ -29,6 +29,7 @@ public:
 	int getDepthTestType() override;
 
 	void enableAlphaBlending() override;
+	void enableAdditiveBlending() override;
 	void disableAlphaBlending() override;
 	bool isAlphaBlendingEnabled() override;
 	void enableAlphaTest() override;

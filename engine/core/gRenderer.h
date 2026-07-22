@@ -300,6 +300,7 @@ public:
 	virtual int getDepthTestType() = 0;
 
 	virtual void enableAlphaBlending() = 0;
+	virtual void enableAdditiveBlending() = 0;
 	virtual void disableAlphaBlending() = 0;
 	virtual bool isAlphaBlendingEnabled() = 0;
 	virtual void enableAlphaTest() = 0;

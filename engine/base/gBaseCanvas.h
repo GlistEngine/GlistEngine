@@ -98,6 +98,7 @@ protected:
 	int getDepthTestType();
 
 	void enableAlphaBlending();
+	void enableAdditiveBlending();
 	void disableAlphaBlending();
 	void enableAlphaTest();
 	void disableAlphaTest();

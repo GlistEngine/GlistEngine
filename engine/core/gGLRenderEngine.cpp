@@ -107,6 +107,12 @@ void gGLRenderEngine::enableAlphaBlending() {
 	isalphablendingenabled = true;
 }
 
+void gGLRenderEngine::enableAdditiveBlending() {
+	G_CHECK_GL(glEnable(GL_BLEND));
+	G_CHECK_GL(glBlendFunc(GL_SRC_ALPHA, GL_ONE));
+	isalphablendingenabled = true;
+}
+
 void gGLRenderEngine::disableAlphaBlending() {
 	G_CHECK_GL(glDisable(GL_BLEND));
 	isalphablendingenabled = false;

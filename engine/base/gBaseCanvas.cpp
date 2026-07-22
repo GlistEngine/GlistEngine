@@ -268,6 +268,10 @@ void gBaseCanvas::enableAlphaBlending() {
 	renderer->enableAlphaBlending();
 }
 
+void gBaseCanvas::enableAdditiveBlending() {
+	renderer->enableAdditiveBlending();
+}
+
 void gBaseCanvas::disableAlphaBlending() {
 	renderer->disableAlphaBlending();
 }
