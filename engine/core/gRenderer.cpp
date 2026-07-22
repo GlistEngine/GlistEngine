@@ -484,22 +484,39 @@ void gRenderer::restoreMatrices() {
 void gRenderer::setScreenSize(int screenWidth, int screenHeight) {
 	width = screenWidth;
 	height = screenHeight;
+	if (screenscaling >= G_SCREENSCALING_AUTO) {
+		view2dx = 0;
+		view2dy = 0;
+		view2dw = screenWidth;
+		view2dh = screenHeight;
+	}
 	setCurrentResolution(getResolution(screenWidth, screenHeight));
+	updateProjectionMatrix2d();
 }
 
 void gRenderer::setUnitScreenSize(int unitWidth, int unitHeight) {
 	unitwidth = unitWidth;
 	unitheight = unitHeight;
+	if (screenscaling >= G_SCREENSCALING_AUTO) {
+		view2dx = 0;
+		view2dy = 0;
+		view2dw = unitWidth;
+		view2dh = unitHeight;
+	}
 	setUnitResolution(getResolution(unitWidth, unitHeight));
+	updateProjectionMatrix2d();
 }
 
 void gRenderer::setScreenScaling(int screenScaling) {
 	screenscaling = screenScaling;
 	gObject::setCurrentResolution(screenscaling, currentresolution);
+	updateProjectionMatrix2d();
 }
 
 void gRenderer::updateProjectionMatrix2d() {
-
+	gRenderer* r = gRenderObject::getRenderer();
+	if(!r) return;
+	r->projectionmatrix2d = glm::ortho((float)view2dx, (float)view2dx + (float)view2dw, (float)view2dy + (float)view2dh, (float)view2dy, -1.0f, 1.0f);
 }
 
 

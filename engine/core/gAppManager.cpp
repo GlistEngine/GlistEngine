@@ -226,6 +226,8 @@ void gAppManager::initialize() {
 }
 
 void gAppManager::loop() {
+
+	if(isguiapp && !guiappthread->isrunning) guiappthread->start();
     if(loopmode == G_LOOPMODE_NONE) {
         return;
     }
