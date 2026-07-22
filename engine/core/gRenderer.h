@@ -523,8 +523,6 @@ protected:
 
 	static int width, height;
 	static int unitwidth, unitheight;
-	static int view2dx, view2dy;
-	static int view2dw, view2dh;
 	static int screenscaling;
 	static int currentresolution, unitresolution;
 

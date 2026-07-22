@@ -377,6 +377,11 @@ void gAppManager::setScreenSize(int width, int height) {
 	G_PROFILE_ZONE_SCOPED_N("gAppManager::setScreenSize()");
 	G_PROFILE_ZONE_VALUE(width);
 	G_PROFILE_ZONE_VALUE(height);
+#if defined(ANDROID) || defined(IOS)
+	// Surface recreation can briefly report an empty drawable. Keep the last
+	// valid logical layout until the platform delivers the replacement surface.
+	if(width <= 0 || height <= 0) return;
+#endif
 	if(screenscaling == G_SCREENSCALING_AUTO_ONCE
 #if defined(ANDROID) || defined(IOS)
 			&& !isguiapp
@@ -887,7 +892,8 @@ bool gAppManager::onTouchEvent(gTouchEvent& event) {
 					guimanager->mousePressed(x, y, 0);
 				} else if(action == ACTIONTYPE_MOVE) {
 					guimanager->mouseDragged(x, y, 0);
-				} else if(action == ACTIONTYPE_POINTER_UP || action == ACTIONTYPE_UP) {
+				} else if(action == ACTIONTYPE_POINTER_UP || action == ACTIONTYPE_UP
+						|| action == ACTIONTYPE_CANCEL || action == ACTIONTYPE_OUTSIDE) {
 					guimanager->mouseReleased(x, y, 0);
 				}
 			});

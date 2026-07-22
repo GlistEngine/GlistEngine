@@ -42,7 +42,10 @@ void gGUINavigation::update() {
 	if(bottombarenabled) {
 		layoutBottomBar();
 	} else {
-		maintoolbarsizer.set(0, renderer->getHeight() - 40, width, 32);
+		// Legacy navigation fills the desktop window. Keep this exact behavior
+		// unless the new bottom-bar mode was explicitly enabled.
+		height = renderer->getHeight();
+		maintoolbarsizer.set(0, height - 40, width, 32);
 	}
 }
 
@@ -65,9 +68,12 @@ void gGUINavigation::draw() {
 		gDrawCircle(bottombarsurfaceleft + radius, bottombarsurfacetop + radius, radius, true, 40);
 		gDrawCircle(bottombarsurfaceleft + bottombarsurfacewidth - radius,
 				bottombarsurfacetop + radius, radius, true, 40);
-	} else {
+	} else if(bottombarenabled) {
 		renderer->setColor(navigationbackgroundcolor);
 		gDrawRectangle(left, top, width, height, true);
+	} else {
+		renderer->setColor(navigationbackgroundcolor);
+		gDrawRectangle(0, 0, boxw, boxh + panetoph, true);
 	}
 
 	for(int i = 0; !bottombarenabled && i < panes.size(); i++) {
@@ -162,7 +168,7 @@ void gGUINavigation::mousePressed(int x, int y, int button) {
 		// Refresh hover first because mobile touch streams may not send a move.
 		toolbarsizer.mouseMoved(x, y);
 		toolbarsizer.mousePressed(x, y, button);
-	} else if(toolbarenabled && x >= 0 && y >= renderer->getHeight() - 40 && x < width && y < renderer->getHeight() - 8) {
+	} else if(toolbarenabled && x >= 0 && y >= height - 40 && x < width && y < height - 8) {
 		toolbar.mousePressed(x, y, button);
 	}
 }
@@ -180,7 +186,7 @@ void gGUINavigation::mouseReleased(int x, int y, int button) {
 
 	if(bottombarenabled && x >= left && y >= top && x < right && y < bottom) {
 		toolbarsizer.mouseReleased(x, y, button);
-	} else if(toolbarenabled && x >= 0 && y >= renderer->getHeight() - 40 && x < width && y < renderer->getHeight() - 8) {
+	} else if(toolbarenabled && x >= 0 && y >= height - 40 && x < width && y < height - 8) {
 		toolbar.mouseReleased(x, y, button);
 	}
 }
@@ -188,7 +194,7 @@ void gGUINavigation::mouseReleased(int x, int y, int button) {
 void gGUINavigation::mouseMoved(int x, int y) {
 	if(bottombarenabled && x >= left && y >= top && x < right && y < bottom) {
 		toolbarsizer.mouseMoved(x, y);
-	} else if(toolbarenabled && x >= 0 && y >= renderer->getHeight() - 40 && x < width && y < renderer->getHeight() - 8) {
+	} else if(toolbarenabled && x >= 0 && y >= height - 40 && x < width && y < height - 8) {
 		toolbar.mouseMoved(x, y);
 	}
 }
@@ -196,7 +202,7 @@ void gGUINavigation::mouseMoved(int x, int y) {
 void gGUINavigation::mouseDragged(int x, int y, int button) {
 	if(bottombarenabled && x >= left && y >= top && x < right && y < bottom) {
 		toolbarsizer.mouseDragged(x, y, button);
-	} else if(toolbarenabled && x >= 0 && y >= renderer->getHeight() - 40 && x < width && y < renderer->getHeight() - 8) {
+	} else if(toolbarenabled && x >= 0 && y >= height - 40 && x < width && y < height - 8) {
 		toolbar.mouseDragged(x, y, button);
 	}
 }

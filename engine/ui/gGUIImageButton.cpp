@@ -33,6 +33,7 @@ void gGUIImageButton::draw() {
 	gColor oldcolor = *renderer->getColor();
 	const int drawleft = getButtonDrawLeft();
 	const int drawtop = getButtonDrawTop();
+	const bool moderncontent = contentcentered || iscircularbackground;
 	if(iscircularbackground) {
 		renderer->setColor(&circularbackgroundcolor);
 		gDrawCircle(drawleft + buttonw / 2, drawtop + buttonh / 2,
@@ -57,14 +58,23 @@ void gGUIImageButton::draw() {
             imagew = buttonw;
             imageh = buttonh;
         }
-    const int iconinset = iscircularbackground ? 14 : 8;
-    if(isPressed()) {
-		if (pressediconid != gGUIResources::ICON_NONE) res.getIconImage(pressediconid, isiconbig)->draw(drawleft + iconinset, drawtop + ispressed + iconinset, buttonw - iconinset * 2, buttonh - iconinset * 2);
-		else pressedbuttonimage.draw(drawleft, drawtop + ispressed, buttonw, buttonh);
-    }
-    else {
-		if (iconid != gGUIResources::ICON_NONE) res.getIconImage(iconid, isiconbig)->draw(drawleft + iconinset, drawtop + ispressed + iconinset, buttonw - iconinset * 2, buttonh - iconinset * 2);
-		else buttonimage.draw(drawleft, drawtop + ispressed, buttonw, buttonh);
+    if(moderncontent) {
+		const int iconinset = iscircularbackground ? 14 : 8;
+		if(isPressed()) {
+			if(pressediconid != gGUIResources::ICON_NONE) res.getIconImage(pressediconid, isiconbig)->draw(drawleft + iconinset, drawtop + ispressed + iconinset, buttonw - iconinset * 2, buttonh - iconinset * 2);
+			else pressedbuttonimage.draw(drawleft, drawtop + ispressed, buttonw, buttonh);
+		} else {
+			if(iconid != gGUIResources::ICON_NONE) res.getIconImage(iconid, isiconbig)->draw(drawleft + iconinset, drawtop + ispressed + iconinset, buttonw - iconinset * 2, buttonh - iconinset * 2);
+			else buttonimage.draw(drawleft, drawtop + ispressed, buttonw, buttonh);
+		}
+    } else if(isPressed()) {
+		// Keep the historical image/icon state mapping and dimensions for existing
+		// desktop applications. The corrected mapping is opt-in with modern content.
+		if(iconid != gGUIResources::ICON_NONE) res.getIconImage(iconid, isiconbig)->draw(left + 8, top + ispressed + 8, buttonw - 20, buttonh - 20);
+		else buttonimage.draw(left, top + ispressed, buttonw, buttonh);
+    } else {
+		if(pressediconid != gGUIResources::ICON_NONE) res.getIconImage(pressediconid, isiconbig)->draw(left + 8, top + ispressed + 8, buttonw - 20, buttonh - 20);
+		else pressedbuttonimage.draw(left, top + ispressed, buttonw, buttonh);
     }
     setSize(imagew, imageh);
 }

@@ -29,6 +29,8 @@ public:
 	 * this container's gGUIScrollable base class.
 	 */
 	void setContentSize(int contentWidth, int contentHeight);
+	void enableContentScrolling(bool enabled);
+	bool isContentScrollingEnabled() const;
 
 	int getCursor(int x, int y) override;
 	void keyPressed(int key) override;
@@ -52,6 +54,7 @@ protected:
 	gGUISizer* guisizer, temporaryemptysizer;
 	int topbarh;
 	int contentwidth, contentheight;
+	bool contentscrollingenabled;
 	bool iscontentdragging;
 	bool iscontentdragmoved;
 	int contentdragstartx, contentdragstarty;

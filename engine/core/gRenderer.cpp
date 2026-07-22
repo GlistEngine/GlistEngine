@@ -48,10 +48,6 @@ int gRenderer::width;
 int gRenderer::height;
 int gRenderer::unitwidth;
 int gRenderer::unitheight;
-int gRenderer::view2dw;
-int gRenderer::view2dh;
-int gRenderer::view2dx;
-int gRenderer::view2dy;
 int gRenderer::screenscaling;
 int gRenderer::currentresolution;
 int gRenderer::unitresolution;
@@ -185,11 +181,6 @@ void gRenderer::init() {
 	height = gDefaultHeight();
 	unitwidth = gDefaultUnitWidth();
 	unitheight = gDefaultUnitHeight();
-	view2dx = 0;
-	view2dy = 0;
-	view2dw = unitwidth;
-	view2dh = unitheight;
-
 	// TODO Check matrix maths
 	projectionmatrix = glm::mat4(1.0f);
 	projectionmatrix = glm::perspective(glm::radians(60.0f), (float)width / height, 0.0f, 1000.0f);
@@ -484,12 +475,6 @@ void gRenderer::restoreMatrices() {
 void gRenderer::setScreenSize(int screenWidth, int screenHeight) {
 	width = screenWidth;
 	height = screenHeight;
-	if (screenscaling >= G_SCREENSCALING_AUTO) {
-		view2dx = 0;
-		view2dy = 0;
-		view2dw = screenWidth;
-		view2dh = screenHeight;
-	}
 	setCurrentResolution(getResolution(screenWidth, screenHeight));
 	updateProjectionMatrix2d();
 }
@@ -497,12 +482,6 @@ void gRenderer::setScreenSize(int screenWidth, int screenHeight) {
 void gRenderer::setUnitScreenSize(int unitWidth, int unitHeight) {
 	unitwidth = unitWidth;
 	unitheight = unitHeight;
-	if (screenscaling >= G_SCREENSCALING_AUTO) {
-		view2dx = 0;
-		view2dy = 0;
-		view2dw = unitWidth;
-		view2dh = unitHeight;
-	}
 	setUnitResolution(getResolution(unitWidth, unitHeight));
 	updateProjectionMatrix2d();
 }
@@ -516,7 +495,14 @@ void gRenderer::setScreenScaling(int screenScaling) {
 void gRenderer::updateProjectionMatrix2d() {
 	gRenderer* r = gRenderObject::getRenderer();
 	if(!r) return;
-	r->projectionmatrix2d = glm::ortho((float)view2dx, (float)view2dx + (float)view2dw, (float)view2dy + (float)view2dh, (float)view2dy, -1.0f, 1.0f);
+	// The projection must use the same coordinate space returned by getWidth()
+	// and getHeight(). Deriving it here also makes initialization order safe:
+	// setUnitScreenSize() is called before setScreenScaling() on desktop.
+	const int projectionwidth = screenscaling >= G_SCREENSCALING_AUTO ? unitwidth : width;
+	const int projectionheight = screenscaling >= G_SCREENSCALING_AUTO ? unitheight : height;
+	if(projectionwidth <= 0 || projectionheight <= 0) return;
+	r->projectionmatrix2d = glm::ortho(0.0f, (float)projectionwidth,
+			(float)projectionheight, 0.0f, -1.0f, 1.0f);
 }
 
 

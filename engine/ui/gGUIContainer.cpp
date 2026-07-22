@@ -15,6 +15,7 @@ gGUIContainer::gGUIContainer() {
 	topbarh = 0;
 	contentwidth = 0;
 	contentheight = 0;
+	contentscrollingenabled = false;
 	iscontentdragging = false;
 	iscontentdragmoved = false;
 	guisizer = nullptr;
@@ -26,8 +27,14 @@ gGUIContainer::~gGUIContainer() {
 }
 
 void gGUIContainer::set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIObject* parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h) {
-	totalw = contentwidth > 0 ? contentwidth : w;
-	totalh = contentheight > 0 ? contentheight : h;
+	if(contentscrollingenabled) {
+		totalw = contentwidth > 0 ? contentwidth : w;
+		totalh = contentheight > 0 ? contentheight : h;
+	} else {
+		// Preserve the original container contract. Legacy desktop controls use
+		// absolute sizer coordinates and must not be moved into an FBO-local space.
+		totalh = h;
+	}
 	gGUIScrollable::set(root, topParentGUIObject, parentGUIObject, parentSlotLineNo, parentSlotColumnNo, x, y, w, h);
 	gGUIScrollable::setDimensions(w, h);
 	guisizer->set(root, topParentGUIObject, parentGUIObject, parentSlotLineNo, parentSlotColumnNo, x, y + topbarh, w, h - topbarh);
@@ -40,9 +47,11 @@ void gGUIContainer::set(int x, int y, int w, int h) {
 	bottom = y + h;
 	width = w;
 	height = h;
-	// Parent sizers use this lightweight overload during relayout.  Refresh the
-	// scroll viewport here too, so rotation cannot leave stale scroll bounds.
-	gGUIScrollable::setDimensions(w, h);
+	if(contentscrollingenabled) {
+		// Scroll-enabled mobile containers need their viewport refreshed during
+		// relayout. Legacy containers retain their original lightweight behavior.
+		gGUIScrollable::setDimensions(w, h);
+	}
 	guisizer->set(x, y + topbarh, w, h - topbarh);
 }
 
@@ -66,10 +75,25 @@ gGUISizer* gGUIContainer::getSizer() {
 }
 
 void gGUIContainer::setContentSize(int contentWidth, int contentHeight) {
+	contentscrollingenabled = true;
 	contentwidth = std::max(contentWidth, 1);
 	contentheight = std::max(contentHeight, 1);
 	totalw = contentwidth;
 	totalh = contentheight;
+}
+
+void gGUIContainer::enableContentScrolling(bool enabled) {
+	contentscrollingenabled = enabled;
+	if(!enabled) {
+		horizontalscroll = 0;
+		verticalscroll = 0;
+		iscontentdragging = false;
+		iscontentdragmoved = false;
+	}
+}
+
+bool gGUIContainer::isContentScrollingEnabled() const {
+	return contentscrollingenabled;
 }
 
 void gGUIContainer::update() {
@@ -77,7 +101,11 @@ void gGUIContainer::update() {
 }
 
 void gGUIContainer::draw() {
-	gGUIScrollable::draw();
+	if(contentscrollingenabled) {
+		gGUIScrollable::draw();
+	} else if(guisizer) {
+		guisizer->draw();
+	}
 }
 
 void gGUIContainer::drawContent() {
@@ -86,11 +114,13 @@ void gGUIContainer::drawContent() {
 	// sizer in that local coordinate system and translate only this container's
 	// children by its own scroll offsets.
 	const int layoutwidth = isHorizontalScrollEnabled() ? totalw : boxw;
-	guisizer->set(-horizontalscroll, topbarh - verticalscroll, layoutwidth, totalh - topbarh);
+	guisizer->set(-horizontalscroll, topbarh - verticalscroll,
+			std::max(0, layoutwidth), std::max(0, totalh - topbarh));
 	guisizer->draw();
 }
 
 int gGUIContainer::getCursor(int x, int y) {
+	if(!contentscrollingenabled) return guisizer->getCursor(x, y);
 	return guisizer->getCursor(x - left + horizontalscroll, y - top - topbarh + verticalscroll);
 }
 
@@ -107,16 +137,25 @@ void gGUIContainer::charPressed(unsigned int codepoint) {
 }
 
 void gGUIContainer::mouseMoved(int x, int y) {
+	if(!contentscrollingenabled) {
+		guisizer->mouseMoved(x, y);
+		return;
+	}
 	guisizer->mouseMoved(x - left + horizontalscroll, y - top - topbarh + verticalscroll);
 }
 
 void gGUIContainer::mousePressed(int x, int y, int button) {
+	if(!contentscrollingenabled) {
+		guisizer->mousePressed(x, y, button);
+		return;
+	}
 	gGUIScrollable::mousePressed(x, y, button);
 	const bool onverticalbar = isVerticalScrollEnabled() && isPointInsideVerticalScrollbar(x, y, true);
 	const bool onhorizontalbar = isHorizontalScrollEnabled() && isPointInsideHorizontalScrollbar(x, y, true);
+	iscontentdragging = false;
+	iscontentdragmoved = false;
 	if(!onverticalbar && !onhorizontalbar) {
-		iscontentdragging = true;
-		iscontentdragmoved = false;
+		iscontentdragging = hasVerticalOverflow() || hasHorizontalOverflow();
 		contentdragstartx = x;
 		contentdragstarty = y;
 		contentdragscrollx = horizontalscroll;
@@ -126,6 +165,10 @@ void gGUIContainer::mousePressed(int x, int y, int button) {
 }
 
 void gGUIContainer::mouseDragged(int x, int y, int button) {
+	if(!contentscrollingenabled) {
+		guisizer->mouseDragged(x, y, button);
+		return;
+	}
 	gGUIScrollable::mouseDragged(x, y, button);
 	if(iscontentdragging) {
 		const int dx = x - contentdragstartx;
@@ -143,6 +186,10 @@ void gGUIContainer::mouseDragged(int x, int y, int button) {
 }
 
 void gGUIContainer::mouseReleased(int x, int y, int button) {
+	if(!contentscrollingenabled) {
+		guisizer->mouseReleased(x, y, button);
+		return;
+	}
 	gGUIScrollable::mouseReleased(x, y, button);
 	if(iscontentdragging && iscontentdragmoved) {
 		// A drag started on a button must cancel its press instead of becoming a
@@ -156,11 +203,17 @@ void gGUIContainer::mouseReleased(int x, int y, int button) {
 }
 
 void gGUIContainer::mouseScrolled(int x, int y) {
-	gGUIScrollable::mouseScrolled(x, y);
+	if(!contentscrollingenabled) {
+		guisizer->mouseScrolled(x, y);
+	} else if(hasVerticalOverflow() || hasHorizontalOverflow()) {
+		gGUIScrollable::mouseScrolled(x, y);
+	} else {
+		guisizer->mouseScrolled(x - left + horizontalscroll, y - top - topbarh + verticalscroll);
+	}
 }
 
 void gGUIContainer::windowResized(int w, int h) {
-	gGUIScrollable::setDimensions(width, height);
+	if(contentscrollingenabled) gGUIScrollable::setDimensions(width, height);
 	if(guisizer) guisizer->windowResized(w, h);
 }
 

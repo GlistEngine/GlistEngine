@@ -19,11 +19,14 @@ gGUIScrollable::gGUIScrollable() {
 	scrollamount = 8;
 	enableverticalscroll = false;
 	enablehorizontalscroll = false;
-	// Keep the track visually behind the content and draw the moving thumb with
-	// the contrasting middle-ground color. The old assignment made the thumb
-	// blend into the page and exposed the track as two disconnected pieces.
+	#if defined(ANDROID) || defined(IOS)
 	barbackgroundcolor = backgroundcolor;
 	barforegroundcolor = middlegroundcolor;
+	#else
+	// Keep the established desktop theme for existing applications.
+	barbackgroundcolor = middlegroundcolor;
+	barforegroundcolor = backgroundcolor;
+	#endif
 	titlex = left;
 	titley = top + font->getStringHeight("AE");
 	titleheight = font->getSize() * 1.8f;
@@ -67,8 +70,11 @@ void gGUIScrollable::setDimensions(int newWidth, int newHeight) {
 	titlex = left + font->getStringWidth("i");
 	titley = top + font->getStringHeight("AE");
 
-	if (renderer->getScreenWidth() != boxfbo->getWidth() || renderer->getScreenHeight() != boxfbo->getHeight()) {
-		boxfbo->allocate(renderer->getScreenWidth(), renderer->getScreenHeight());
+	const int screenwidth = renderer->getScreenWidth();
+	const int screenheight = renderer->getScreenHeight();
+	if(screenwidth > 0 && screenheight > 0
+			&& (screenwidth != boxfbo->getWidth() || screenheight != boxfbo->getHeight())) {
+		boxfbo->allocate(screenwidth, screenheight);
 	}
 }
 
@@ -224,13 +230,13 @@ void gGUIScrollable::mousePressed(int x, int y, int button) {
 }
 
 void gGUIScrollable::mouseDragged(int x, int y, int button) {
-	if(isdraggingverticalscroll && totalh > boxh) {
+	if(isdraggingverticalscroll && boxh > 0 && totalh > boxh) {
 		int pos = y - verticalscrolldragstart;
 		int diff = (float)pos / boxh * totalh;
 		verticalscroll = gClamp(verticalscroll + diff, 0, totalh - boxh);
 		verticalscrolldragstart = y;
 	}
-	if(isdragginghorizontalscroll && totalw > boxw) {
+	if(isdragginghorizontalscroll && boxw > 0 && totalw > boxw) {
 		int pos = x - horizontalscrolldragstart;
 		int diff = (float)pos / boxw * totalw;
 		horizontalscroll = gClamp(horizontalscroll + diff, 0, totalw - boxw);
