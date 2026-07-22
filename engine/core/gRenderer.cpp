@@ -48,6 +48,10 @@ int gRenderer::width;
 int gRenderer::height;
 int gRenderer::unitwidth;
 int gRenderer::unitheight;
+int gRenderer::view2dw;
+int gRenderer::view2dh;
+int gRenderer::view2dx;
+int gRenderer::view2dy;
 int gRenderer::screenscaling;
 int gRenderer::currentresolution;
 int gRenderer::unitresolution;
@@ -181,6 +185,10 @@ void gRenderer::init() {
 	height = gDefaultHeight();
 	unitwidth = gDefaultUnitWidth();
 	unitheight = gDefaultUnitHeight();
+	view2dx = 0;
+	view2dy = 0;
+	view2dw = unitwidth;
+	view2dh = unitheight;
 
 	// TODO Check matrix maths
 	projectionmatrix = glm::mat4(1.0f);
@@ -489,6 +497,11 @@ void gRenderer::setScreenScaling(int screenScaling) {
 	screenscaling = screenScaling;
 	gObject::setCurrentResolution(screenscaling, currentresolution);
 }
+
+void gRenderer::updateProjectionMatrix2d() {
+
+}
+
 
 int gRenderer::getWidth() {
 	if (screenscaling >= G_SCREENSCALING_AUTO) {
