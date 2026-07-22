@@ -14,6 +14,7 @@
 #include "gCanvasManager.h"
 #include "gGUIFrame.h"
 
+#include <algorithm>
 #include <thread>
 #include "gGUIAppThread.h"
 #include "gTracy.h"
@@ -376,12 +377,32 @@ void gAppManager::setScreenSize(int width, int height) {
 	G_PROFILE_ZONE_SCOPED_N("gAppManager::setScreenSize()");
 	G_PROFILE_ZONE_VALUE(width);
 	G_PROFILE_ZONE_VALUE(height);
-	if(screenscaling == G_SCREENSCALING_AUTO_ONCE) {
+	if(screenscaling == G_SCREENSCALING_AUTO_ONCE
+#if defined(ANDROID) || defined(IOS)
+			&& !isguiapp
+#endif
+	) {
 		// We don't want to update the unitresolution, that's why its setting directly. gAppManager needs to be a friend of gRenderer to do this.
 		renderer->unitwidth = renderer->scaleX(width);
 		renderer->unitheight = renderer->scaleY(height);
 	}
 	renderer->setScreenSize(width, height);
+#if defined(ANDROID) || defined(IOS)
+	if(isguiapp && screenscaling >= G_SCREENSCALING_AUTO && unitwidth > 0 && unitheight > 0) {
+		// Match the logical GUI aspect to the current mobile surface while
+		// preserving the app's short-edge design unit. This must run after
+		// setScreenSize(), which resets the 2D projection to physical dimensions.
+		const int shortedge = std::min(unitwidth, unitheight);
+		const bool islandscape = width > height;
+		const int logicalwidth = islandscape
+				? (width * shortedge + height / 2) / height
+				: shortedge;
+		const int logicalheight = islandscape
+				? shortedge
+				: (height * shortedge + width / 2) / width;
+		renderer->setUnitScreenSize(logicalwidth, logicalheight);
+	}
+#endif
     if(iscanvasset && canvasmanager->getCurrentCanvas()) {
 	    canvasmanager->getCurrentCanvas()->windowResized(renderer->getWidth(), renderer->getHeight());
     }
@@ -600,41 +621,15 @@ bool gAppManager::onWindowResizedEvent(gWindowResizeEvent& event) {
     if(!canvasmanager || !initialized || (!getCurrentCanvas() && !canvasmanager->getTempCanvas())) {
         return true;
     }
-    setScreenSize(event.getWidth(), event.getHeight());
 #ifdef ANDROID
+    // setScreenSize relayouts GUI frames. Choose the logical dimensions before
+    // that relayout so a rotated scrollable never receives the old viewport.
+    // The EGL surface is authoritative here: Android can deliver an orientation
+    // callback before the new surface size is available.
     delayedresize = false;
-    if(gRenderer::getScreenScaling() >= G_SCREENSCALING_AUTO && olddeviceorientation != deviceorientation) {
-		DeviceOrientation orientation = deviceorientation;
-		DeviceOrientation oldorientation = olddeviceorientation;
-		// Normalize values
-		if(orientation == DEVICEORIENTATION_REVERSE_PORTRAIT) {
-			orientation = DEVICEORIENTATION_PORTRAIT;
-		} else if(orientation == DEVICEORIENTATION_REVERSE_LANDSCAPE) {
-			orientation = DEVICEORIENTATION_LANDSCAPE;
-		}
-		if(oldorientation == DEVICEORIENTATION_REVERSE_PORTRAIT) {
-			oldorientation = DEVICEORIENTATION_PORTRAIT;
-		} else if(oldorientation == DEVICEORIENTATION_REVERSE_LANDSCAPE) {
-			oldorientation = DEVICEORIENTATION_LANDSCAPE;
-		}
-
-		bool swapdimensions = oldorientation != orientation;
-		if((orientation != DEVICEORIENTATION_PORTRAIT && orientation != DEVICEORIENTATION_LANDSCAPE) ||
-			(oldorientation != DEVICEORIENTATION_PORTRAIT && oldorientation != DEVICEORIENTATION_LANDSCAPE)) {
-			// If this orientation is not known, we should not do anything
-			swapdimensions = false;
-		}
-
-		// Orientation changed, we should swap height and width
-		if(swapdimensions) {
-			int unitwidth = gBaseCanvas::getRenderer()->getUnitWidth();
-			int unitheight = gBaseCanvas::getRenderer()->getUnitHeight();
-			// Swap width and height values
-			gRenderer::setUnitScreenSize(unitheight, unitwidth);
-		}
-    }
     olddeviceorientation = deviceorientation;
 #endif
+    setScreenSize(event.getWidth(), event.getHeight());
     return false;
 }
 
@@ -871,6 +866,35 @@ bool gAppManager::onDeviceOrientationChangedEvent(gDeviceOrientationChangedEvent
 }
 
 bool gAppManager::onTouchEvent(gTouchEvent& event) {
+	// A GUI application owns its touch interpretation.  The application manager
+	// only converts the platform event into the existing GUI mouse contract; it
+	// deliberately carries no page-scroll state or gesture policy.
+	if(isguiapp && guimanager && guimanager->isframeset && event.getInputCount() > 0) {
+		const int inputindex = event.getActionIndex();
+		if(inputindex >= 0 && inputindex < event.getInputCount()) {
+			TouchInput& input = event.getInputs()[inputindex];
+			int x = input.x;
+			int y = input.y;
+			if(gRenderer::getScreenScaling() > G_SCREENSCALING_NONE) {
+				x = gRenderer::scaleX(x);
+				y = gRenderer::scaleY(y);
+			}
+			const ActionType action = event.getAction();
+			submitToMainThread([this, x, y, action]() {
+				if(!guimanager || !guimanager->isframeset) return;
+				if(action == ACTIONTYPE_POINTER_DOWN || action == ACTIONTYPE_DOWN) {
+					guimanager->mouseMoved(x, y);
+					guimanager->mousePressed(x, y, 0);
+				} else if(action == ACTIONTYPE_MOVE) {
+					guimanager->mouseDragged(x, y, 0);
+				} else if(action == ACTIONTYPE_POINTER_UP || action == ACTIONTYPE_UP) {
+					guimanager->mouseReleased(x, y, 0);
+				}
+			});
+			return false;
+		}
+	}
+
 	if(canvasmanager && getCurrentCanvas()) {
 		if (
 #if GLIST_ANDROID

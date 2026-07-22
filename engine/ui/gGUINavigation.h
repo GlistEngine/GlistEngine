@@ -47,6 +47,9 @@ public:
 	virtual void mouseExited();
 
 	void enableToolbar();
+	void enableBottomBar();
+	void enableModernBottomBar();
+	void setBottomBarLayout(int horizontalPadding, int maximumContentWidth);
 	gGUISizer* getToolbarSizer();
 
 private:
@@ -61,6 +64,18 @@ private:
 	gGUIToolbar toolbar;
 	gGUISizer toolbarsizer;
 	bool toolbarenabled;
+	bool bottombarenabled;
+	int bottombarhorizontalpadding;
+	int bottombarmaximumcontentwidth;
+	bool modernbottombarenabled;
+	int bottombarsurfaceleft;
+	int bottombarsurfacetop;
+	int bottombarsurfacewidth;
+	int bottombarsurfaceheight;
+	gColor bottombarsurfacecolor;
+	gColor bottombarshadowcolor;
+
+	void layoutBottomBar();
 };
 
 #endif /* UI_GGUINAVIGATION_H_ */

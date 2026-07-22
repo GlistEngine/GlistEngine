@@ -8,6 +8,7 @@
 #include "gGUIButton.h"
 #include "gBaseApp.h"
 #include "gBaseCanvas.h"
+#include <algorithm>
 
 gGUIButton::gGUIButton() {
 	ispressed = false;
@@ -30,6 +31,7 @@ gGUIButton::gGUIButton() {
 	pressedfcolor = *pressedbuttonfontcolor;
 	disabledfcolor = *disabledbuttonfontcolor;
 	fillbackground = true;
+	contentcentered = false;
 	resetTitlePosition();
 }
 
@@ -83,6 +85,8 @@ void gGUIButton::update() {
 void gGUIButton::draw() {
 //	gLogi("gGUIButton") << "draw, w:" << width;
 	gColor* oldcolor = renderer->getColor();
+	const int drawleft = getButtonDrawLeft();
+	const int drawtop = getButtonDrawTop();
 	if(fillbackground) {
 		if(isdisabled) renderer->setColor(&disabledbcolor);
 		else {
@@ -91,7 +95,7 @@ void gGUIButton::draw() {
 			else renderer->setColor(&bcolor);
 		}
 	//	renderer->setColor(gColor(0.1f, 0.45f, 0.87f));
-		gDrawRectangle(left, top + ispressed, buttonw, buttonh, true);
+		gDrawRectangle(drawleft, drawtop + ispressed, buttonw, buttonh, true);
 	}
 
 	if(istextvisible) {
@@ -103,7 +107,7 @@ void gGUIButton::draw() {
 
 	    resetTitlePosition();
 
-	    font->drawText(title, left + tx, top + buttonh - ty + ispressed - 2);
+	    font->drawText(title, drawleft + tx, drawtop + buttonh - ty + ispressed - 2);
 	}
 	renderer->setColor(oldcolor);
 }
@@ -111,7 +115,9 @@ void gGUIButton::draw() {
 void gGUIButton::mousePressed(int x, int y, int button) {
 //	gLogi("Button") << "pressed, id:" << id;
 	if(isdisabled) return;
-	if(x >= left && x < left + buttonw && y >= top && y < top + buttonh) {
+	const int drawleft = getButtonDrawLeft();
+	const int drawtop = getButtonDrawTop();
+	if(x >= drawleft && x < drawleft + buttonw && y >= drawtop && y < drawtop + buttonh) {
 		if(!istoggle) ispressed = true;
 		else {
 			if(!ispressed) {
@@ -126,7 +132,9 @@ void gGUIButton::mousePressed(int x, int y, int button) {
 void gGUIButton::mouseReleased(int x, int y, int button) {
 //	gLogi("Button") << "released, id:" << id;
 	if(isdisabled) return;
-	if(ispressed && x >= left && x < left + buttonw && y >= top && y < top + buttonh) {
+	const int drawleft = getButtonDrawLeft();
+	const int drawtop = getButtonDrawTop();
+	if(ispressed && x >= drawleft && x < drawleft + buttonw && y >= drawtop && y < drawtop + buttonh) {
 		if(!istoggle) ispressed = false;
 		else {
 			if(!ispressednow) ispressed = false;
@@ -140,12 +148,16 @@ void gGUIButton::mouseReleased(int x, int y, int button) {
 }
 
 void gGUIButton::mouseMoved(int x, int y) {
-	if(iscursoron && x >= left && y >= top && x < left + buttonw && y < top + buttonh) ishover = true;
+	const int drawleft = getButtonDrawLeft();
+	const int drawtop = getButtonDrawTop();
+	if(iscursoron && x >= drawleft && y >= drawtop && x < drawleft + buttonw && y < drawtop + buttonh) ishover = true;
 	else ishover = false;
 }
 
 void gGUIButton::mouseDragged(int x, int y, int button) {
-	if(iscursoron && x >= left && y >= top && x < left + buttonw && y < top + buttonh) ishover = true;
+	const int drawleft = getButtonDrawLeft();
+	const int drawtop = getButtonDrawTop();
+	if(iscursoron && x >= drawleft && y >= drawtop && x < drawleft + buttonw && y < drawtop + buttonh) ishover = true;
 	else ishover = false;
 }
 
@@ -223,6 +235,18 @@ gColor* gGUIButton::getDisabledButtonFontColor() {
 
 void gGUIButton::enableBackgroundFill(bool isEnabled) {
 	fillbackground = isEnabled;
+}
+
+void gGUIButton::setContentCentered(bool centered) {
+	contentcentered = centered;
+}
+
+int gGUIButton::getButtonDrawLeft() const {
+	return contentcentered ? left + std::max(0, (width - buttonw) / 2) : left;
+}
+
+int gGUIButton::getButtonDrawTop() const {
+	return contentcentered ? top + std::max(0, (height - buttonh) / 2) : top;
 }
 
 int gGUIButton::getButtonWidth() {

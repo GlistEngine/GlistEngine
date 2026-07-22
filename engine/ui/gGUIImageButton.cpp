@@ -7,6 +7,8 @@
 
 #include "gGUIImageButton.h"
 
+#include <algorithm>
+
 gGUIImageButton::gGUIImageButton() {
 
 	imagew = 0;
@@ -19,6 +21,8 @@ gGUIImageButton::gGUIImageButton() {
 
 	iconid = gGUIResources::ICON_NONE;
 	pressediconid = gGUIResources::ICON_NONE;
+	iscircularbackground = false;
+	circularbackgroundcolor = gColor(0.129f, 0.588f, 0.953f);
 }
 
 gGUIImageButton::~gGUIImageButton() {
@@ -26,6 +30,15 @@ gGUIImageButton::~gGUIImageButton() {
 }
 
 void gGUIImageButton::draw() {
+	gColor oldcolor = *renderer->getColor();
+	const int drawleft = getButtonDrawLeft();
+	const int drawtop = getButtonDrawTop();
+	if(iscircularbackground) {
+		renderer->setColor(&circularbackgroundcolor);
+		gDrawCircle(drawleft + buttonw / 2, drawtop + buttonh / 2,
+				std::max(0, std::min(buttonw, buttonh) / 2 - 3), true, 40);
+		renderer->setColor(&oldcolor);
+	}
     if(!stretch) {
     	 	imagew = pressedbuttonimage.getWidth();
             imageh = pressedbuttonimage.getHeight();
@@ -44,13 +57,14 @@ void gGUIImageButton::draw() {
             imagew = buttonw;
             imageh = buttonh;
         }
+    const int iconinset = iscircularbackground ? 14 : 8;
     if(isPressed()) {
-    	if (iconid != gGUIResources::ICON_NONE) res.getIconImage(iconid, isiconbig)->draw(left + 8, top + ispressed + 8, buttonw - 20, buttonh - 20);
-    	else buttonimage.draw(left, top + ispressed, buttonw, buttonh);
+		if (pressediconid != gGUIResources::ICON_NONE) res.getIconImage(pressediconid, isiconbig)->draw(drawleft + iconinset, drawtop + ispressed + iconinset, buttonw - iconinset * 2, buttonh - iconinset * 2);
+		else pressedbuttonimage.draw(drawleft, drawtop + ispressed, buttonw, buttonh);
     }
     else {
-    	if (pressediconid != gGUIResources::ICON_NONE) res.getIconImage(pressediconid, isiconbig)->draw(left + 8, top + ispressed + 8, buttonw - 20, buttonh - 20);
-    	else pressedbuttonimage.draw(left, top + ispressed, buttonw, buttonh);
+		if (iconid != gGUIResources::ICON_NONE) res.getIconImage(iconid, isiconbig)->draw(drawleft + iconinset, drawtop + ispressed + iconinset, buttonw - iconinset * 2, buttonh - iconinset * 2);
+		else buttonimage.draw(drawleft, drawtop + ispressed, buttonw, buttonh);
     }
     setSize(imagew, imageh);
 }
@@ -97,6 +111,11 @@ void gGUIImageButton::setImageStretched(bool stretchMod) {
    	isiconbig = isIconBig;
    }
    void gGUIImageButton::setPressedButtonImageFromIcon(int pressedIconId, bool isIconBig){
-   	pressediconid = pressedIconId;
-   	isiconbig = isIconBig;
+	   pressediconid = pressedIconId;
+	   isiconbig = isIconBig;
    }
+
+void gGUIImageButton::setCircularBackground(bool enabled, const gColor& color) {
+	iscircularbackground = enabled;
+	circularbackgroundcolor = color;
+}

@@ -129,6 +129,10 @@ public:
  */
     void setPressedButtonImageFromIcon(int pressedIconId, bool isIconBig = false);
 
+    // Draws a filled circular surface behind the image while keeping the
+    // regular rectangular hit area. Useful for mobile floating action buttons.
+    void setCircularBackground(bool enabled, const gColor& color = gColor(0.129f, 0.588f, 0.953f));
+
 
 private:
         float imagew, imageh, proportion;
@@ -140,6 +144,8 @@ private:
 
         int iconid;
         int pressediconid;
+        bool iscircularbackground;
+        gColor circularbackgroundcolor;
 };
 
 #endif /* UI_GGUIIMAGEBUTTONH */

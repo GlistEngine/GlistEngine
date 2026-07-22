@@ -351,6 +351,16 @@ if(WIN32)
 	)
 endif()
 
+# miniaudio includes AVFoundation on iOS, so this translation unit must accept
+# Objective-C declarations. Keep the override platform-local; other targets
+# continue compiling gSound.cpp as ordinary C++.
+if(IOS)
+	set_source_files_properties(${ENGINE_DIR}/media/gSound.cpp PROPERTIES
+		LANGUAGE OBJCXX
+		XCODE_EXPLICIT_FILE_TYPE "sourcecode.cpp.objcpp"
+	)
+endif()
+
 # These are handled from the appropriate plugin.
 if(NOT (ANDROID OR IOS OR EMSCRIPTEN))
 	list(APPEND SRC_FILES

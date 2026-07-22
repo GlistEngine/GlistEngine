@@ -50,6 +50,7 @@ public:
 	void addSpace();
 	void setToolbarForegroundColor(gColor color);
 	void setToolbarBottomLineColor(gColor color);
+	void enableBackgroundFill(bool enabled);
 
 	void draw();
 
@@ -60,6 +61,7 @@ private:
 	std::deque<gGUIControl*> controlObjects;
 	std::deque<float> sizerPrs;
 	gColor toolbarforegroundcolor, toolbarbottomlinecolor;
+	bool backgroundfillenabled;
 
 	void resizeSizer();
 };
