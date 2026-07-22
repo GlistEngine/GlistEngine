@@ -227,7 +227,6 @@ void gAppManager::initialize() {
 
 void gAppManager::loop() {
 
-	if(isguiapp && !guiappthread->isrunning) guiappthread->start();
     if(loopmode == G_LOOPMODE_NONE) {
         return;
     }
@@ -240,6 +239,14 @@ void gAppManager::loop() {
 #endif
     //gLogi("gAppManager") << "starting loop";
     isrunning = true;
+#if defined(ANDROID) || TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
+	// Android and iOS drive the app through initialize()/setup()/loop() directly
+	// instead of runApp(), so the GUI app thread must also be started here. The
+	// desktop platforms reach this function through runApp(), which has already
+	// started it, so the call is confined here rather than changing their
+	// startup path. (On iOS this function runs once, from setup().)
+	if(isguiapp && guiappthread) guiappthread->start();
+#endif
 	starttime = AppClock::now();
 
 #ifdef ANDROID
