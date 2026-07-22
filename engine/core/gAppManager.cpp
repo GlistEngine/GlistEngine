@@ -200,10 +200,10 @@ void gAppManager::initialize() {
 		// Update size
 		width = window->getWidth();
 		height = window->getHeight();
-		if(unitwidth == 0) {
+		if(unitwidth == 0 || isguiapp) {
 			unitwidth = this->width;
 		}
-		if(unitheight == 0) {
+		if(unitheight == 0 || isguiapp) {
 			unitheight = this->height;
 		}
 		// Create renderer
@@ -369,14 +369,18 @@ void gAppManager::setScreenSize(int width, int height) {
 	G_PROFILE_ZONE_VALUE(height);
 	if(screenscaling == G_SCREENSCALING_AUTO_ONCE) {
 		// We don't want to update the unitresolution, that's why its setting directly. gAppManager needs to be a friend of gRenderer to do this.
-		renderer->unitwidth = renderer->scaleX(width);
-		renderer->unitheight = renderer->scaleY(height);
+		if(isguiapp) {
+			renderer->setUnitScreenSize(width, height);
+		} else {
+			renderer->unitwidth = renderer->scaleX(width);
+			renderer->unitheight = renderer->scaleY(height);
+		}
 	}
 	renderer->setScreenSize(width, height);
     if(iscanvasset && canvasmanager->getCurrentCanvas()) {
 	    canvasmanager->getCurrentCanvas()->windowResized(renderer->getWidth(), renderer->getHeight());
     }
-    if(iscanvasset && guimanager->isframeset) {
+    if(guimanager && guimanager->isframeset) {
 	    guimanager->windowResized(renderer->getWidth(), renderer->getHeight());
     }
 }
@@ -588,13 +592,13 @@ void gAppManager::onEvent(gEvent& event) {
 }
 
 bool gAppManager::onWindowResizedEvent(gWindowResizeEvent& event) {
-    if(!canvasmanager || !initialized || (!getCurrentCanvas() && !canvasmanager->getTempCanvas())) {
+    if(!canvasmanager || !initialized || (!isguiapp && !getCurrentCanvas() && !canvasmanager->getTempCanvas())) {
         return true;
     }
     setScreenSize(event.getWidth(), event.getHeight());
 #ifdef ANDROID
     delayedresize = false;
-    if(gRenderer::getScreenScaling() >= G_SCREENSCALING_AUTO && olddeviceorientation != deviceorientation) {
+    if(gRenderer::getScreenScaling() == G_SCREENSCALING_AUTO && olddeviceorientation != deviceorientation) {
 		DeviceOrientation orientation = deviceorientation;
 		DeviceOrientation oldorientation = olddeviceorientation;
 		// Normalize values
@@ -630,14 +634,18 @@ bool gAppManager::onWindowResizedEvent(gWindowResizeEvent& event) {
 }
 
 bool gAppManager::onWindowScaleChangedEvent(gWindowScaleChangedEvent& event) {
-	if(!canvasmanager || !initialized || (!getCurrentCanvas() && !canvasmanager->getTempCanvas())) {
+	if(!canvasmanager || !initialized || (!isguiapp && !getCurrentCanvas() && !canvasmanager->getTempCanvas())) {
 		return true;
 	}
 	renderer->width = event.getWidth();
 	renderer->height = event.getHeight();
 	if(screenscaling == G_SCREENSCALING_AUTO_ONCE) {
-		renderer->unitwidth = renderer->width / event.getScaleX();
-		renderer->unitheight = renderer->height / event.getScaleY();
+		if(isguiapp) {
+			renderer->setUnitScreenSize(renderer->width / event.getScaleX(), renderer->height / event.getScaleY());
+		} else {
+			renderer->unitwidth = renderer->width / event.getScaleX();
+			renderer->unitheight = renderer->height / event.getScaleY();
+		}
 	}
 	return false;
 }
@@ -875,15 +883,16 @@ bool gAppManager::onTouchEvent(gTouchEvent& event) {
 			}
 			target->touchReleased(x, y, input.fingerid);
 		} else if (event.getAction() == ACTIONTYPE_MOVE) {
-			int inputindex = event.getActionIndex();
-			TouchInput& input = event.getInputs()[inputindex];
-			int x = input.x;
-			int y = input.y;
-			if(gRenderer::getScreenScaling() > G_SCREENSCALING_NONE) {
-				x = gRenderer::scaleX(x);
-				y = gRenderer::scaleY(y);
+			for(int i = 0; i < event.getInputCount(); i++) {
+				TouchInput& input = event.getInputs()[i];
+				int x = input.x;
+				int y = input.y;
+				if(gRenderer::getScreenScaling() > G_SCREENSCALING_NONE) {
+					x = gRenderer::scaleX(x);
+					y = gRenderer::scaleY(y);
+				}
+				target->touchMoved(x, y, input.fingerid);
 			}
-			target->touchMoved(x, y, input.fingerid);
 		}
 	}
 	return false;

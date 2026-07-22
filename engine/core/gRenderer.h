@@ -573,7 +573,7 @@ protected:
 	gShader* colorshader;
 	gShader* textureshader;
 	gShader* fontshader;
-	gShader* imageshader;
+	static gShader* imageshader;
 	gShader* skyboxshader;
 	gShader* shadowmapshader;
 	gShader* pbrshader;
@@ -584,9 +584,9 @@ protected:
 	gShader* fboshader;
 	gShader* gridshader;
 
-	glm::mat4 projectionmatrix;
+	static glm::mat4 projectionmatrix;
 	glm::mat4 projectionmatrixold;
-	glm::mat4 projectionmatrix2d;
+	static glm::mat4 projectionmatrix2d;
 	glm::mat4 viewmatrix;
 	glm::mat4 viewmatrixold;
 	glm::vec3 cameraposition;

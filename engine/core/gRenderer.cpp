@@ -51,6 +51,9 @@ int gRenderer::unitheight;
 int gRenderer::screenscaling;
 int gRenderer::currentresolution;
 int gRenderer::unitresolution;
+glm::mat4 gRenderer::projectionmatrix;
+glm::mat4 gRenderer::projectionmatrix2d;
+gShader* gRenderer::imageshader;
 
 void gDrawLine(float x1, float y1, float x2, float y2, float thickness) {
 	G_PROFILE_ZONE_SCOPED_N("gDrawLine()");
@@ -483,6 +486,11 @@ void gRenderer::setUnitScreenSize(int unitWidth, int unitHeight) {
 	unitwidth = unitWidth;
 	unitheight = unitHeight;
 	setUnitResolution(getResolution(unitWidth, unitHeight));
+	projectionmatrix2d = glm::ortho(0.0f, (float)unitwidth, (float)unitheight, 0.0f, -1.0f, 1.0f);
+	if(imageshader) {
+		imageshader->use();
+		imageshader->setMat4("projection", projectionmatrix2d);
+	}
 }
 
 void gRenderer::setScreenScaling(int screenScaling) {
