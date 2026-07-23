@@ -40,6 +40,7 @@ var classgAppManager =
     [ "setCurrentGUIFrame", "classgAppManager.html#adeed85080aa46f267b91a007ccb63684", null ],
     [ "setCursor", "classgAppManager.html#ae7207c6380993e9d9dd30671645460c6", null ],
     [ "setCursorMode", "classgAppManager.html#aa52f84a0d9e4d1d80e68536d919555c2", null ],
+    [ "setCustomCursor", "classgAppManager.html#a7da954e2c3b46d64ce6e006ebcfb1ca5", null ],
     [ "setDeviceOrientation", "classgAppManager.html#ad5216c0dba9e323e76497859c59911b8", null ],
     [ "setRenderEngine", "classgAppManager.html#a40f29137a3e9ad27e3aa7ebf805318a0", null ],
     [ "setScreenSize", "classgAppManager.html#acf7a4fea9ef8c145ff361348fc0cdd9b", null ],

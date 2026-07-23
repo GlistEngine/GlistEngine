@@ -19,6 +19,7 @@ var classgBaseWindow =
     [ "setCursor", "classgBaseWindow.html#a90c1c59b15e4f55d0cdd484d33f30d2e", null ],
     [ "setCursorMode", "classgBaseWindow.html#a517bf3ffec51c109b797959522917528", null ],
     [ "setCursorPos", "classgBaseWindow.html#ad89a25388dba700990c67aac06b25711", null ],
+    [ "setCustomCursor", "classgBaseWindow.html#a61039d8a4ebe1c90e1cd8d24d3dc6f8a", null ],
     [ "setIcon", "classgBaseWindow.html#a40fa3c00c45942ae7d1ab735f1cd8f52", null ],
     [ "setIcon", "classgBaseWindow.html#abd56ee8ce4586868ed9716c2dd68d74f", null ],
     [ "setSize", "classgBaseWindow.html#a4cf9a0bce0544fac4c51c6aedcc05d4b", null ],

@@ -146,6 +146,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ab8b79bcac167043c6803293e275393e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a45a407047573e2385e5b2f9b89c1c9b6" id="r_a45a407047573e2385e5b2f9b89c1c9b6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgGLFWWindow.html#a45a407047573e2385e5b2f9b89c1c9b6">setCursorPos</a> (int x, int y) override</td></tr>
 <tr class="separator:a45a407047573e2385e5b2f9b89c1c9b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab4dc3570321527bfef98e3478c553bd1" id="r_ab4dc3570321527bfef98e3478c553bd1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgGLFWWindow.html#ab4dc3570321527bfef98e3478c553bd1">setCustomCursor</a> (<a class="el" href="classgImage.html">gImage</a> &amp;image, int hotspotX=0, int hotspotY=0)</td></tr>
+<tr class="separator:ab4dc3570321527bfef98e3478c553bd1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adad54bb27d902185a85c02b8ae77079d" id="r_adad54bb27d902185a85c02b8ae77079d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgGLFWWindow.html#adad54bb27d902185a85c02b8ae77079d">setClipboardString</a> (std::string text) override</td></tr>
 <tr class="separator:adad54bb27d902185a85c02b8ae77079d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af5c79950f648cf21d0c9077292a731a7" id="r_af5c79950f648cf21d0c9077292a731a7"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgGLFWWindow.html#af5c79950f648cf21d0c9077292a731a7">getClipboardString</a> () override</td></tr>
@@ -256,6 +258,8 @@ Static Public Attributes</h2></td></tr>
 <tr class="separator:a45720a2aa26c97cbab85a449c264cbbb inherit pub_static_attribs_classgBaseWindow"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3d6c40f84458d82763555bdb8021dfd2 inherit pub_static_attribs_classgBaseWindow" id="r_a3d6c40f84458d82763555bdb8021dfd2"><td class="memItemLeft" align="right" valign="top">static const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBaseWindow.html#a3d6c40f84458d82763555bdb8021dfd2">CURSOR_VRESIZE</a> = 5</td></tr>
 <tr class="separator:a3d6c40f84458d82763555bdb8021dfd2 inherit pub_static_attribs_classgBaseWindow"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4ea3dce8ebd7191c2e3b7cd7c1e92885 inherit pub_static_attribs_classgBaseWindow" id="r_a4ea3dce8ebd7191c2e3b7cd7c1e92885"><td class="memItemLeft" align="right" valign="top">static const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBaseWindow.html#a4ea3dce8ebd7191c2e3b7cd7c1e92885">CURSOR_CUSTOM</a> = 6</td></tr>
+<tr class="separator:a4ea3dce8ebd7191c2e3b7cd7c1e92885 inherit pub_static_attribs_classgBaseWindow"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_static_attribs_classgObject"><td colspan="2" onclick="javascript:toggleInherit('pub_static_attribs_classgObject')"><img src="closed.png" alt="-"/>&#160;Static Public Attributes inherited from <a class="el" href="classgObject.html">gObject</a></td></tr>
 <tr class="memitem:a8e9ef5cc3f67258b31ed663f39d43feb inherit pub_static_attribs_classgObject" id="r_a8e9ef5cc3f67258b31ed663f39d43feb"><td class="memItemLeft" align="right" valign="top">static const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgObject.html#a8e9ef5cc3f67258b31ed663f39d43feb">LOGLEVEL_SILENT</a></td></tr>
 <tr class="separator:a8e9ef5cc3f67258b31ed663f39d43feb inherit pub_static_attribs_classgObject"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -764,6 +768,50 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Reimplemented from <a class="el" href="classgBaseWindow.html#ad89a25388dba700990c67aac06b25711">gBaseWindow</a>.</p>
+
+</div>
+</div>
+<a id="ab4dc3570321527bfef98e3478c553bd1" name="ab4dc3570321527bfef98e3478c553bd1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab4dc3570321527bfef98e3478c553bd1">&#9670;&#160;</a></span>setCustomCursor()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gGLFWWindow::setCustomCursor </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classgImage.html">gImage</a> &amp;&#160;</td>
+          <td class="paramname"><em>image</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>hotspotX</em> = <code>0</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>hotspotY</em> = <code>0</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reimplemented from <a class="el" href="classgBaseWindow.html#a61039d8a4ebe1c90e1cd8d24d3dc6f8a">gBaseWindow</a>.</p>
 
 </div>
 </div>

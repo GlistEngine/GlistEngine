@@ -53,7 +53,7 @@ var searchData=
   ['renderpassnum_50',['renderpassnum',['../classgObject.html#ad65017496d33d18901dd59bd79a993b6',1,'gObject']]],
   ['repeatcount_51',['repeatcount',['../classgTweenAnimation.html#a74c208543bd60c858df85195c1ac2372',1,'gTweenAnimation']]],
   ['res_52',['res',['../classgBaseGUIObject.html#a4fa03ae051ce44fabdbd2bb046ad5550',1,'gBaseGUIObject']]],
-  ['reset_53',['reset',['../classgTweenAnimation.html#a10aa326ddb7b59ae3df087f027adee85',1,'gTweenAnimation::Reset()'],['../classgSpriteAnimation.html#acba6350daaf899657446fc76cbd66ae7',1,'gSpriteAnimation::reset()'],['../classgAssetLoader.html#aad628a955abc50cd9d6ff6d69d0f9ad8',1,'gAssetLoader::reset()']]],
+  ['reset_53',['reset',['../classgAssetLoader.html#aad628a955abc50cd9d6ff6d69d0f9ad8',1,'gAssetLoader::reset()'],['../classgTweenAnimation.html#a10aa326ddb7b59ae3df087f027adee85',1,'gTweenAnimation::Reset()'],['../classgSpriteAnimation.html#acba6350daaf899657446fc76cbd66ae7',1,'gSpriteAnimation::reset()']]],
   ['resetanimation_54',['resetAnimation',['../classgSkinnedMesh.html#a2cc0d14f85d36811f4d8d5a9e80cce05',1,'gSkinnedMesh']]],
   ['resetbuttonsbar_55',['resetButtonsBar',['../classgGUIDialogue.html#a56e1e9a07bb9e3a08133cbe794b04be0',1,'gGUIDialogue']]],
   ['resetlook_56',['resetLook',['../classgCamera.html#a04a3ce88aaa4f8afdd638e7c0a73dae4',1,'gCamera']]],

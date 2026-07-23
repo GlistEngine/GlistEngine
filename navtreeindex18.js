@@ -1,5 +1,8 @@
 var NAVTREEINDEX18 =
 {
+"gUtils_8h.html#a62db010a0399eea661a927e55151a5ef":[2,0,0,8,9,12],
+"gUtils_8h.html#a63ae0cf52b65e167bd882245df7de3bf":[2,0,0,8,9,44],
+"gUtils_8h.html#a66751624177fa192c8a9e258c83b1390":[2,0,0,8,9,8],
 "gUtils_8h.html#a6e599a6825f1158ce4a2718d7c61ca22":[2,0,0,8,9,29],
 "gUtils_8h.html#a72932749b9297e10a0c450fbd9b25ad5":[2,0,0,8,9,69],
 "gUtils_8h.html#a76c0b43c1a31af2e99554163b788d321":[2,0,0,8,9,66],
@@ -246,8 +249,5 @@ var NAVTREEINDEX18 =
 "structgVertex.html":[1,0,176],
 "structgVertex.html#a1307c4e7fc374612cd8e583ce90e8115":[1,0,176,3],
 "structgVertex.html#a2dd7f19388d400f24938593b878b8233":[1,0,176,1],
-"structgVertex.html#a40ef96826fed631764f3e57455aaea06":[1,0,176,0],
-"structgVertex.html#a8cdcce468b4c82eba1a8e4f82eb4e4a2":[1,0,176,4],
-"structgVertex.html#a9ab67e1c2077cb5921f8df6772ddffd4":[1,0,176,2],
-"structgVertex.html#af029e1e0ad82c2057ae426a2af114ced":[1,0,176,5]
+"structgVertex.html#a40ef96826fed631764f3e57455aaea06":[1,0,176,0]
 };

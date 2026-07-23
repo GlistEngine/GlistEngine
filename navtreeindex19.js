@@ -1,5 +1,8 @@
 var NAVTREEINDEX19 =
 {
+"structgVertex.html#a8cdcce468b4c82eba1a8e4f82eb4e4a2":[1,0,176,4],
+"structgVertex.html#a9ab67e1c2077cb5921f8df6772ddffd4":[1,0,176,2],
+"structgVertex.html#af029e1e0ad82c2057ae426a2af114ced":[1,0,176,5],
 "tinyfiledialogs_8c.html":[2,0,0,7,0,0],
 "tinyfiledialogs_8c.html#a03da67b2aa763d88422ba0f6aaa6d29b":[2,0,0,7,0,0,2],
 "tinyfiledialogs_8c.html#a0612543f1a6828a8b0008da041c06f6a":[2,0,0,7,0,0,1],
