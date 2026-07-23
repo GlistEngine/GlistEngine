@@ -2,6 +2,8 @@ var gConstants_8h =
 [
     [ "G_LOOPMODE_NONE", "gConstants_8h.html#a94298e838adf701252739660d4ae45bf", null ],
     [ "G_LOOPMODE_NORMAL", "gConstants_8h.html#a8cbaec1227de07f900c36c7d71be2d16", null ],
+    [ "G_RENDERER_GL", "gConstants_8h.html#a3e3784edebe4255370a83311c7c49bdc", null ],
+    [ "G_RENDERER_VK", "gConstants_8h.html#a17cc4bb8bbe23d012925738494d21e05", null ],
     [ "G_SCREENSCALING_AUTO", "gConstants_8h.html#a1c4d3327a33fbd7c510dc144a3b5df1d", null ],
     [ "G_SCREENSCALING_AUTO_ONCE", "gConstants_8h.html#ac63cdf66ab606f2ac192f6eb2292879e", null ],
     [ "G_SCREENSCALING_MIPMAP", "gConstants_8h.html#a2fb16cde9ca406b07d3e47a0e4952ab7", null ],

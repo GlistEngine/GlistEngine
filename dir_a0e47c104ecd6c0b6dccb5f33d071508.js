@@ -14,5 +14,6 @@ var dir_a0e47c104ecd6c0b6dccb5f33d071508 =
     [ "gObject.h", "gObject_8h.html", "gObject_8h" ],
     [ "gPostProcessManager.h", "gPostProcessManager_8h.html", "gPostProcessManager_8h" ],
     [ "gRenderer.h", "gRenderer_8h.html", "gRenderer_8h" ],
-    [ "gRenderObject.h", "gRenderObject_8h.html", "gRenderObject_8h" ]
+    [ "gRenderObject.h", "gRenderObject_8h.html", "gRenderObject_8h" ],
+    [ "gVKRenderEngine.h", "gVKRenderEngine_8h.html", "gVKRenderEngine_8h" ]
 ];

@@ -1,5 +1,7 @@
 var NAVTREEINDEX13 =
 {
+"classgSharpen.html#ae0947c701142fa54e275c006ea5757cf":[1,0,154,4],
+"classgSkinnedMesh.html":[1,0,155],
 "classgSkinnedMesh.html#a03e64e916595de253f3d147f0d28f6ae":[1,0,155,3],
 "classgSkinnedMesh.html#a1035865e2f3c5930499d6dae4abefa82":[1,0,155,15],
 "classgSkinnedMesh.html#a11c5323ac8a8eea1e1c32ce1216560ce":[1,0,155,9],
@@ -247,7 +249,5 @@ var NAVTREEINDEX13 =
 "classgTouchEvent.html#a7b0f062e7b4fe9ce4b512364ae27692b":[1,0,167,1],
 "classgTouchEvent.html#ab735d82c1a140abff4d4d39c6eea682c":[1,0,167,4],
 "classgTriangle.html":[1,0,168],
-"classgTriangle.html#a0fd7c2118a8cf8828d0d3008b04e57da":[1,0,168,0],
-"classgTriangle.html#a4e38f3c700074fcfa82262588742c21f":[1,0,168,1],
-"classgTriangle.html#a676b480fd607103636e6975b4f466b24":[1,0,168,2]
+"classgTriangle.html#a0fd7c2118a8cf8828d0d3008b04e57da":[1,0,168,0]
 };

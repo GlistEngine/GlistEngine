@@ -208,7 +208,8 @@ var hierarchy =
         [ "gVbo", "classgVbo.html", null ]
       ] ],
       [ "gRenderer", "classgRenderer.html", [
-        [ "gGLRenderEngine", "classgGLRenderEngine.html", null ]
+        [ "gGLRenderEngine", "classgGLRenderEngine.html", null ],
+        [ "gVKRenderEngine", "classgVKRenderEngine.html", null ]
       ] ],
       [ "gSoundRecorder", "classgSoundRecorder.html", null ],
       [ "gSpriteAnimation", "classgSpriteAnimation.html", null ],

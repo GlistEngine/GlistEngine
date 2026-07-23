@@ -2,8 +2,8 @@
 <area shape="rect" id="Node000000" href="$classgEventHook.html" title=" " alt="" coords="398,548,499,573"/>
 <area shape="rect" id="Node000001" href="$classgFont.html" title=" " alt="" coords="698,524,757,549"/>
 <area shape="poly" id="edge22_Node000000_Node000001" title=" " alt="" coords="513,553,698,536,698,542,513,558"/>
-<area shape="rect" id="Node000145" href="$classgInputManager.html" title=" " alt="" coords="667,573,787,599"/>
-<area shape="poly" id="edge23_Node000000_Node000145" title=" " alt="" coords="513,564,667,578,667,583,513,569"/>
+<area shape="rect" id="Node000146" href="$classgInputManager.html" title=" " alt="" coords="667,573,787,599"/>
+<area shape="poly" id="edge23_Node000000_Node000146" title=" " alt="" coords="513,564,667,578,667,583,513,569"/>
 <area shape="rect" id="Node000119" href="$classgObject.html" title=" " alt="" coords="5,2904,77,2929"/>
 <area shape="rect" id="Node000120" href="$classgAES.html" title=" " alt="" coords="174,2533,229,2559"/>
 <area shape="poly" id="edge24_Node000119_Node000120" title=" " alt="" coords="43,2890,53,2816,70,2720,93,2629,107,2593,123,2568,147,2553,173,2545,174,2551,149,2557,127,2572,112,2596,98,2631,75,2721,58,2817,48,2891"/>
@@ -31,16 +31,16 @@
 <area shape="poly" id="edge40_Node000119_Node000024" title=" " alt="" coords="45,2890,195,2065,200,2066,50,2891"/>
 <area shape="rect" id="Node000136" href="$classgRenderer.html" title=" " alt="" coords="157,3076,246,3101"/>
 <area shape="poly" id="edge158_Node000119_Node000136" title=" " alt="" coords="53,2941,80,3002,101,3035,127,3063,158,3078,155,3083,124,3067,96,3038,75,3005,48,2943"/>
-<area shape="rect" id="Node000138" href="$classgSoundRecorder.html" title="A sound recorder class using miniaudio for microphone input capture." alt="" coords="137,3125,265,3151"/>
-<area shape="poly" id="edge160_Node000119_Node000138" title=" " alt="" coords="49,2942,57,2980,72,3026,95,3072,127,3112,144,3123,141,3128,124,3116,90,3075,67,3028,52,2982,44,2943"/>
-<area shape="rect" id="Node000139" href="$classgSpriteAnimation.html" title=" " alt="" coords="134,3175,269,3200"/>
-<area shape="poly" id="edge161_Node000119_Node000139" title=" " alt="" coords="47,2943,52,2989,65,3048,89,3109,106,3137,127,3161,143,3172,140,3177,124,3165,102,3140,85,3111,60,3050,47,2990,41,2943"/>
-<area shape="rect" id="Node000140" href="$classgSpriteAnimator.html" title=" " alt="" coords="137,3224,265,3249"/>
-<area shape="poly" id="edge162_Node000119_Node000140" title=" " alt="" coords="45,2943,48,2998,59,3070,69,3108,84,3145,103,3180,127,3211,142,3222,139,3226,123,3215,98,3183,79,3147,64,3110,54,3071,42,2999,40,2943"/>
-<area shape="rect" id="Node000141" href="$classgThread.html" title=" " alt="" coords="164,3273,239,3299"/>
-<area shape="poly" id="edge163_Node000119_Node000141" title=" " alt="" coords="48,2943,58,3016,75,3111,98,3202,112,3236,127,3260,144,3272,165,3279,163,3284,142,3277,123,3264,107,3239,93,3203,70,3112,53,3017,43,2943"/>
-<area shape="rect" id="Node000144" href="$classgWindows.html" title=" " alt="" coords="157,3323,246,3348"/>
-<area shape="poly" id="edge166_Node000119_Node000144" title=" " alt="" coords="47,2943,56,3026,72,3136,95,3241,110,3282,127,3310,141,3320,158,3327,155,3332,138,3325,123,3313,106,3284,90,3243,66,3137,51,3027,42,2944"/>
+<area shape="rect" id="Node000139" href="$classgSoundRecorder.html" title="A sound recorder class using miniaudio for microphone input capture." alt="" coords="137,3125,265,3151"/>
+<area shape="poly" id="edge161_Node000119_Node000139" title=" " alt="" coords="49,2942,57,2980,72,3026,95,3072,127,3112,144,3123,141,3128,124,3116,90,3075,67,3028,52,2982,44,2943"/>
+<area shape="rect" id="Node000140" href="$classgSpriteAnimation.html" title=" " alt="" coords="134,3175,269,3200"/>
+<area shape="poly" id="edge162_Node000119_Node000140" title=" " alt="" coords="47,2943,52,2989,65,3048,89,3109,106,3137,127,3161,143,3172,140,3177,124,3165,102,3140,85,3111,60,3050,47,2990,41,2943"/>
+<area shape="rect" id="Node000141" href="$classgSpriteAnimator.html" title=" " alt="" coords="137,3224,265,3249"/>
+<area shape="poly" id="edge163_Node000119_Node000141" title=" " alt="" coords="45,2943,48,2998,59,3070,69,3108,84,3145,103,3180,127,3211,142,3222,139,3226,123,3215,98,3183,79,3147,64,3110,54,3071,42,2999,40,2943"/>
+<area shape="rect" id="Node000142" href="$classgThread.html" title=" " alt="" coords="164,3273,239,3299"/>
+<area shape="poly" id="edge164_Node000119_Node000142" title=" " alt="" coords="48,2943,58,3016,75,3111,98,3202,112,3236,127,3260,144,3272,165,3279,163,3284,142,3277,123,3264,107,3239,93,3203,70,3112,53,3017,43,2943"/>
+<area shape="rect" id="Node000145" href="$classgWindows.html" title=" " alt="" coords="157,3323,246,3348"/>
+<area shape="poly" id="edge167_Node000119_Node000145" title=" " alt="" coords="47,2943,56,3026,72,3136,95,3241,110,3282,127,3310,141,3320,158,3327,155,3332,138,3325,123,3313,106,3284,90,3243,66,3137,51,3027,42,2944"/>
 <area shape="rect" id="Node000123" href="$classgBaseApp.html" title=" " alt="" coords="405,2583,492,2608"/>
 <area shape="poly" id="edge27_Node000122_Node000123" title=" " alt="" coords="263,2629,325,2617,404,2601,405,2606,326,2622,264,2635"/>
 <area shape="rect" id="Node000124" href="$classgBaseComponent.html" title=" " alt="" coords="380,2632,517,2657"/>
@@ -284,10 +284,12 @@
 <area shape="poly" id="edge139_Node000013_Node000014" title=" " alt="" coords="1045,361,1126,361,1126,366,1045,366"/>
 <area shape="rect" id="Node000116" href="$classgImage.html" title=" " alt="" coords="692,2435,763,2460"/>
 <area shape="poly" id="edge155_Node000115_Node000116" title=" " alt="" coords="502,2445,692,2445,692,2450,502,2450"/>
-<area shape="rect" id="Node000137" href="$classgGLRenderEngine.html" title=" " alt="" coords="380,3076,517,3101"/>
-<area shape="poly" id="edge159_Node000136_Node000137" title=" " alt="" coords="260,3086,380,3086,380,3091,260,3091"/>
-<area shape="rect" id="Node000142" href="$classgAssetLoader.html" title=" " alt="" coords="393,3249,504,3275"/>
-<area shape="poly" id="edge164_Node000141_Node000142" title=" " alt="" coords="252,3278,393,3265,393,3270,253,3284"/>
-<area shape="rect" id="Node000143" href="$classgGUIAppThread.html" title=" " alt="" coords="387,3299,511,3324"/>
-<area shape="poly" id="edge165_Node000141_Node000143" title=" " alt="" coords="253,3288,387,3302,386,3308,252,3294"/>
+<area shape="rect" id="Node000137" href="$classgGLRenderEngine.html" title=" " alt="" coords="380,3052,517,3077"/>
+<area shape="poly" id="edge159_Node000136_Node000137" title=" " alt="" coords="260,3080,380,3069,380,3074,260,3086"/>
+<area shape="rect" id="Node000138" href="$classgVKRenderEngine.html" title=" " alt="" coords="379,3101,518,3127"/>
+<area shape="poly" id="edge160_Node000136_Node000138" title=" " alt="" coords="260,3092,379,3104,379,3110,260,3097"/>
+<area shape="rect" id="Node000143" href="$classgAssetLoader.html" title=" " alt="" coords="393,3249,504,3275"/>
+<area shape="poly" id="edge165_Node000142_Node000143" title=" " alt="" coords="252,3278,393,3265,393,3270,253,3284"/>
+<area shape="rect" id="Node000144" href="$classgGUIAppThread.html" title=" " alt="" coords="387,3299,511,3324"/>
+<area shape="poly" id="edge166_Node000142_Node000144" title=" " alt="" coords="253,3288,387,3302,386,3308,252,3294"/>
 </map>

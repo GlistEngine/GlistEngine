@@ -1,5 +1,7 @@
 var NAVTREEINDEX3 =
 {
+"classgGLFWWindow.html":[1,0,49],
+"classgGLFWWindow.html#a08b6f75645fdb36da4731759e2a8e604":[1,0,49,7],
 "classgGLFWWindow.html#a13696596213ac7c22ff5d0a6e7b3b62b":[1,0,49,16],
 "classgGLFWWindow.html#a15dc67d582f90b88049e03f21a3e657a":[1,0,49,9],
 "classgGLFWWindow.html#a1dd02adc9e910380e1a0cac1b400b0e5":[1,0,49,0],
@@ -247,7 +249,5 @@ var NAVTREEINDEX3 =
 "classgGUICheckbox.html#a362bd5e575d6ea6cfed4db9a927ace0e":[1,0,60,1],
 "classgGUICheckbox.html#a3acce7838711fc3bee82ea661190ea53":[1,0,60,2],
 "classgGUICheckbox.html#a40e36e55aaf8daab7b87a1829808a795":[1,0,60,22],
-"classgGUICheckbox.html#a42fba4c42c3c8e5856617d62d0dec550":[1,0,60,4],
-"classgGUICheckbox.html#a4a804d12634d82821a47bfaba42420bb":[1,0,60,3],
-"classgGUICheckbox.html#a5783a5587532a4bf5e84813945f8e473":[1,0,60,16]
+"classgGUICheckbox.html#a42fba4c42c3c8e5856617d62d0dec550":[1,0,60,4]
 };

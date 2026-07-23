@@ -207,10 +207,10 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a1b5dbf05d7d1f866dc9cfc6af771d703" id="r_a1b5dbf05d7d1f866dc9cfc6af771d703"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="gAppManager_8h.html#a1b5dbf05d7d1f866dc9cfc6af771d703">gStartEngine</a> (<a class="el" href="classgBaseApp.html">gBaseApp</a> *baseApp, const std::string &amp;appName, int windowMode, int width, int height, bool isResizable=true)</td></tr>
-<tr class="separator:a1b5dbf05d7d1f866dc9cfc6af771d703"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5584ac14832d2ad43dc5a436488a9c4c" id="r_a5584ac14832d2ad43dc5a436488a9c4c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="gAppManager_8h.html#a5584ac14832d2ad43dc5a436488a9c4c">gStartEngine</a> (<a class="el" href="classgBaseApp.html">gBaseApp</a> *baseApp, const std::string &amp;appName, int windowMode, int unitWidth, int unitHeight, int screenScaling, int width, int height, bool isResizable=true)</td></tr>
-<tr class="separator:a5584ac14832d2ad43dc5a436488a9c4c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa6e8115db05895194dac5d42d793d849" id="r_aa6e8115db05895194dac5d42d793d849"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="gAppManager_8h.html#aa6e8115db05895194dac5d42d793d849">gStartEngine</a> (<a class="el" href="classgBaseApp.html">gBaseApp</a> *baseApp, const std::string &amp;appName, int windowMode, int width, int height, bool isResizable=true, int renderEngine=<a class="el" href="gConstants_8h.html#a3e3784edebe4255370a83311c7c49bdc">G_RENDERER_GL</a>)</td></tr>
+<tr class="separator:aa6e8115db05895194dac5d42d793d849"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a94f16762f2f3bb6ec18015f099e4b8f2" id="r_a94f16762f2f3bb6ec18015f099e4b8f2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="gAppManager_8h.html#a94f16762f2f3bb6ec18015f099e4b8f2">gStartEngine</a> (<a class="el" href="classgBaseApp.html">gBaseApp</a> *baseApp, const std::string &amp;appName, int windowMode, int unitWidth, int unitHeight, int screenScaling, int width, int height, bool isResizable=true, int renderEngine=<a class="el" href="gConstants_8h.html#a3e3784edebe4255370a83311c7c49bdc">G_RENDERER_GL</a>)</td></tr>
+<tr class="separator:a94f16762f2f3bb6ec18015f099e4b8f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5a2599d2a330d567fefbfb18d88fef57" id="r_a5a2599d2a330d567fefbfb18d88fef57"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="gAppManager_8h.html#a5a2599d2a330d567fefbfb18d88fef57">gStartEngine</a> (<a class="el" href="classgBaseApp.html">gBaseApp</a> *baseApp, const std::string &amp;appName, int loopMode)</td></tr>
 <tr class="separator:a5a2599d2a330d567fefbfb18d88fef57"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -258,8 +258,8 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a5584ac14832d2ad43dc5a436488a9c4c" name="a5584ac14832d2ad43dc5a436488a9c4c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5584ac14832d2ad43dc5a436488a9c4c">&#9670;&#160;</a></span>gStartEngine() <span class="overload">[2/3]</span></h2>
+<a id="a94f16762f2f3bb6ec18015f099e4b8f2" name="a94f16762f2f3bb6ec18015f099e4b8f2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a94f16762f2f3bb6ec18015f099e4b8f2">&#9670;&#160;</a></span>gStartEngine() <span class="overload">[2/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -316,7 +316,13 @@ Variables</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>isResizable</em> = <code>true</code>&#160;</td>
+          <td class="paramname"><em>isResizable</em> = <code>true</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>renderEngine</em> = <code><a class="el" href="gConstants_8h.html#a3e3784edebe4255370a83311c7c49bdc">G_RENDERER_GL</a></code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -343,8 +349,8 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a1b5dbf05d7d1f866dc9cfc6af771d703" name="a1b5dbf05d7d1f866dc9cfc6af771d703"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1b5dbf05d7d1f866dc9cfc6af771d703">&#9670;&#160;</a></span>gStartEngine() <span class="overload">[3/3]</span></h2>
+<a id="aa6e8115db05895194dac5d42d793d849" name="aa6e8115db05895194dac5d42d793d849"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa6e8115db05895194dac5d42d793d849">&#9670;&#160;</a></span>gStartEngine() <span class="overload">[3/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -383,7 +389,13 @@ Variables</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>isResizable</em> = <code>true</code>&#160;</td>
+          <td class="paramname"><em>isResizable</em> = <code>true</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>renderEngine</em> = <code><a class="el" href="gConstants_8h.html#a3e3784edebe4255370a83311c7c49bdc">G_RENDERER_GL</a></code>&#160;</td>
         </tr>
         <tr>
           <td></td>

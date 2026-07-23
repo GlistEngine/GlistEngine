@@ -146,6 +146,7 @@ var searchData=
   ['_7egutils_143',['~gUtils',['../classgUtils.html#a1193c3cb4817f7e39b7378ec40563caf',1,'gUtils']]],
   ['_7egvbo_144',['~gVbo',['../classgVbo.html#a2c86f7876587b1fc7f994b55280a7813',1,'gVbo']]],
   ['_7egvignette_145',['~gVignette',['../classgVignette.html#a219700a47ff1bf5bfdd720aa9df82d64',1,'gVignette']]],
-  ['_7egwhitebalance_146',['~gWhiteBalance',['../classgWhiteBalance.html#ab6da8400abfcd54fab26288bf5a0113d',1,'gWhiteBalance']]],
-  ['_7egwindows_147',['~gWindows',['../classgWindows.html#a7367ee868f779e088558d991671a7f46',1,'gWindows']]]
+  ['_7egvkrenderengine_146',['~gVKRenderEngine',['../classgVKRenderEngine.html#af7d31364ed89b0e1b6a7779dc24d6c3a',1,'gVKRenderEngine']]],
+  ['_7egwhitebalance_147',['~gWhiteBalance',['../classgWhiteBalance.html#ab6da8400abfcd54fab26288bf5a0113d',1,'gWhiteBalance']]],
+  ['_7egwindows_148',['~gWindows',['../classgWindows.html#a7367ee868f779e088558d991671a7f46',1,'gWindows']]]
 ];
