@@ -148,28 +148,45 @@ $(document).ready(function(){initNavTree('gGUINavigation_8h_source.html',''); in
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno"><a class="line" href="classgGUINavigation.html#a1c38be49aaaf0d342bd16beb03232962">   47</a></span>    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classgGUINavigation.html#a1c38be49aaaf0d342bd16beb03232962">mouseExited</a>();</div>
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
 <div class="line"><a id="l00049" name="l00049"></a><span class="lineno"><a class="line" href="classgGUINavigation.html#afe838937997486c67e7b942e1a3cb888">   49</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classgGUINavigation.html#afe838937997486c67e7b942e1a3cb888">enableToolbar</a>();</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno"><a class="line" href="classgGUINavigation.html#a4f57e2d4ae163034029d9f122804d004">   50</a></span>    <a class="code hl_class" href="classgGUISizer.html">gGUISizer</a>* <a class="code hl_function" href="classgGUINavigation.html#a4f57e2d4ae163034029d9f122804d004">getToolbarSizer</a>();</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span> </div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    std::deque&lt;gGUIPane*&gt; panes;</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    std::deque&lt;bool&gt; paneenabled;</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    <span class="keywordtype">int</span> panetoph;</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    <span class="keywordtype">int</span> panelineh;</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    <span class="keywordtype">int</span> panelinepad;</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    <span class="keywordtype">int</span> selectedpane;</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span> </div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    <a class="code hl_class" href="classgGUISizer.html">gGUISizer</a> maintoolbarsizer;</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    <a class="code hl_class" href="classgGUIToolbar.html">gGUIToolbar</a> toolbar;</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    <a class="code hl_class" href="classgGUISizer.html">gGUISizer</a> toolbarsizer;</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    <span class="keywordtype">bool</span> toolbarenabled;</div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>};</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno"><a class="line" href="classgGUINavigation.html#ac769d55701583708ed3aab5baece2a03">   50</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classgGUINavigation.html#ac769d55701583708ed3aab5baece2a03">enableBottomBar</a>();</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno"><a class="line" href="classgGUINavigation.html#a4fa0b450b0c98c2121f764d52668eeb1">   51</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classgGUINavigation.html#a4fa0b450b0c98c2121f764d52668eeb1">enableModernBottomBar</a>();</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno"><a class="line" href="classgGUINavigation.html#a3d803aa9efb18c5a6072952cb4cd0f3b">   52</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classgGUINavigation.html#a3d803aa9efb18c5a6072952cb4cd0f3b">setBottomBarLayout</a>(<span class="keywordtype">int</span> horizontalPadding, <span class="keywordtype">int</span> maximumContentWidth);</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno"><a class="line" href="classgGUINavigation.html#a4f57e2d4ae163034029d9f122804d004">   53</a></span>    <a class="code hl_class" href="classgGUISizer.html">gGUISizer</a>* <a class="code hl_function" href="classgGUINavigation.html#a4f57e2d4ae163034029d9f122804d004">getToolbarSizer</a>();</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span> </div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    std::deque&lt;gGUIPane*&gt; panes;</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    std::deque&lt;bool&gt; paneenabled;</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    <span class="keywordtype">int</span> panetoph;</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    <span class="keywordtype">int</span> panelineh;</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    <span class="keywordtype">int</span> panelinepad;</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    <span class="keywordtype">int</span> selectedpane;</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span> </div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    <a class="code hl_class" href="classgGUISizer.html">gGUISizer</a> maintoolbarsizer;</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    <a class="code hl_class" href="classgGUIToolbar.html">gGUIToolbar</a> toolbar;</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>    <a class="code hl_class" href="classgGUISizer.html">gGUISizer</a> toolbarsizer;</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    <span class="keywordtype">bool</span> toolbarenabled;</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    <span class="keywordtype">bool</span> bottombarenabled;</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    <span class="keywordtype">bool</span> bottombarpressactive;</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>    <span class="keywordtype">int</span> bottombarhorizontalpadding;</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    <span class="keywordtype">int</span> bottombarmaximumcontentwidth;</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>    <span class="keywordtype">bool</span> modernbottombarenabled;</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    <span class="keywordtype">int</span> bottombarsurfaceleft;</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>    <span class="keywordtype">int</span> bottombarsurfacetop;</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    <span class="keywordtype">int</span> bottombarsurfacewidth;</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>    <span class="keywordtype">int</span> bottombarsurfaceheight;</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>    <a class="code hl_class" href="classgColor.html">gColor</a> bottombarsurfacecolor;</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>    <a class="code hl_class" href="classgColor.html">gColor</a> bottombarshadowcolor;</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span> </div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>    <span class="keywordtype">void</span> layoutBottomBar();</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>};</div>
 </div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span> </div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span><span class="preprocessor">#endif </span><span class="comment">/* UI_GGUINAVIGATION_H_ */</span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span> </div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span><span class="preprocessor">#endif </span><span class="comment">/* UI_GGUINAVIGATION_H_ */</span><span class="preprocessor"></span></div>
 <div class="ttc" id="aclassgBaseApp_html"><div class="ttname"><a href="classgBaseApp.html">gBaseApp</a></div><div class="ttdef"><b>Definition</b> gBaseApp.h:16</div></div>
 <div class="ttc" id="aclassgBaseGUIObject_html"><div class="ttname"><a href="classgBaseGUIObject.html">gBaseGUIObject</a></div><div class="ttdef"><b>Definition</b> gBaseGUIObject.h:18</div></div>
 <div class="ttc" id="aclassgBaseGUIObject_html_a1b904144beed0a06f3d1943a56b7edd6"><div class="ttname"><a href="classgBaseGUIObject.html#a1b904144beed0a06f3d1943a56b7edd6">gBaseGUIObject::root</a></div><div class="ttdeci">gBaseApp * root</div><div class="ttdef"><b>Definition</b> gBaseGUIObject.h:147</div></div>
 <div class="ttc" id="aclassgBaseGUIObject_html_aa5f7d18ec35e48c8c5cc08be79aa66eb"><div class="ttname"><a href="classgBaseGUIObject.html#aa5f7d18ec35e48c8c5cc08be79aa66eb">gBaseGUIObject::isEnabled</a></div><div class="ttdeci">bool isEnabled()</div></div>
+<div class="ttc" id="aclassgColor_html"><div class="ttname"><a href="classgColor.html">gColor</a></div><div class="ttdef"><b>Definition</b> gColor.h:17</div></div>
 <div class="ttc" id="aclassgGUINavigation_html"><div class="ttname"><a href="classgGUINavigation.html">gGUINavigation</a></div><div class="ttdef"><b>Definition</b> gGUINavigation.h:17</div></div>
 <div class="ttc" id="aclassgGUINavigation_html_a02c05f95af6545b64ae93d982e2804b6"><div class="ttname"><a href="classgGUINavigation.html#a02c05f95af6545b64ae93d982e2804b6">gGUINavigation::mouseEntered</a></div><div class="ttdeci">virtual void mouseEntered()</div></div>
 <div class="ttc" id="aclassgGUINavigation_html_a07bb7f409fba7706a64cedb2842f2d51"><div class="ttname"><a href="classgGUINavigation.html#a07bb7f409fba7706a64cedb2842f2d51">gGUINavigation::mouseReleased</a></div><div class="ttdeci">virtual void mouseReleased(int x, int y, int button)</div></div>
@@ -181,7 +198,9 @@ $(document).ready(function(){initNavTree('gGUINavigation_8h_source.html',''); in
 <div class="ttc" id="aclassgGUINavigation_html_a2588544a29d138d9931cec05bd83a904"><div class="ttname"><a href="classgGUINavigation.html#a2588544a29d138d9931cec05bd83a904">gGUINavigation::update</a></div><div class="ttdeci">virtual void update()</div></div>
 <div class="ttc" id="aclassgGUINavigation_html_a328140cd2e6c32bb5e436b73fdc5c7e2"><div class="ttname"><a href="classgGUINavigation.html#a328140cd2e6c32bb5e436b73fdc5c7e2">gGUINavigation::draw</a></div><div class="ttdeci">virtual void draw()</div></div>
 <div class="ttc" id="aclassgGUINavigation_html_a39d74f54653263ab82b661811eb40d74"><div class="ttname"><a href="classgGUINavigation.html#a39d74f54653263ab82b661811eb40d74">gGUINavigation::getSelectedPane</a></div><div class="ttdeci">gGUIPane * getSelectedPane()</div></div>
+<div class="ttc" id="aclassgGUINavigation_html_a3d803aa9efb18c5a6072952cb4cd0f3b"><div class="ttname"><a href="classgGUINavigation.html#a3d803aa9efb18c5a6072952cb4cd0f3b">gGUINavigation::setBottomBarLayout</a></div><div class="ttdeci">void setBottomBarLayout(int horizontalPadding, int maximumContentWidth)</div></div>
 <div class="ttc" id="aclassgGUINavigation_html_a4f57e2d4ae163034029d9f122804d004"><div class="ttname"><a href="classgGUINavigation.html#a4f57e2d4ae163034029d9f122804d004">gGUINavigation::getToolbarSizer</a></div><div class="ttdeci">gGUISizer * getToolbarSizer()</div></div>
+<div class="ttc" id="aclassgGUINavigation_html_a4fa0b450b0c98c2121f764d52668eeb1"><div class="ttname"><a href="classgGUINavigation.html#a4fa0b450b0c98c2121f764d52668eeb1">gGUINavigation::enableModernBottomBar</a></div><div class="ttdeci">void enableModernBottomBar()</div></div>
 <div class="ttc" id="aclassgGUINavigation_html_a528a32bd5c28ff66a652a206a725aa65"><div class="ttname"><a href="classgGUINavigation.html#a528a32bd5c28ff66a652a206a725aa65">gGUINavigation::isPaneEnabled</a></div><div class="ttdeci">bool isPaneEnabled(int paneNo)</div></div>
 <div class="ttc" id="aclassgGUINavigation_html_a5694f3a3a5b49b385bc90cd98bf21b48"><div class="ttname"><a href="classgGUINavigation.html#a5694f3a3a5b49b385bc90cd98bf21b48">gGUINavigation::showPane</a></div><div class="ttdeci">void showPane(gGUIPane *paneToShow)</div></div>
 <div class="ttc" id="aclassgGUINavigation_html_a63b6062783426938116f18be3ff7b9f1"><div class="ttname"><a href="classgGUINavigation.html#a63b6062783426938116f18be3ff7b9f1">gGUINavigation::gGUINavigation</a></div><div class="ttdeci">gGUINavigation()</div></div>
@@ -194,6 +213,7 @@ $(document).ready(function(){initNavTree('gGUINavigation_8h_source.html',''); in
 <div class="ttc" id="aclassgGUINavigation_html_aa026ee1c0fdb149038c4d118b18f3eab"><div class="ttname"><a href="classgGUINavigation.html#aa026ee1c0fdb149038c4d118b18f3eab">gGUINavigation::mouseMoved</a></div><div class="ttdeci">virtual void mouseMoved(int x, int y)</div></div>
 <div class="ttc" id="aclassgGUINavigation_html_aa565ae19b04e6e489aa914f465a659e5"><div class="ttname"><a href="classgGUINavigation.html#aa565ae19b04e6e489aa914f465a659e5">gGUINavigation::setPaneEnabled</a></div><div class="ttdeci">void setPaneEnabled(int paneNo, bool isEnabled)</div></div>
 <div class="ttc" id="aclassgGUINavigation_html_abd2015ba713857b8735842e8cbaf6224"><div class="ttname"><a href="classgGUINavigation.html#abd2015ba713857b8735842e8cbaf6224">gGUINavigation::addPane</a></div><div class="ttdeci">void addPane(gGUIPane *newPane, bool isEnabled=true)</div></div>
+<div class="ttc" id="aclassgGUINavigation_html_ac769d55701583708ed3aab5baece2a03"><div class="ttname"><a href="classgGUINavigation.html#ac769d55701583708ed3aab5baece2a03">gGUINavigation::enableBottomBar</a></div><div class="ttdeci">void enableBottomBar()</div></div>
 <div class="ttc" id="aclassgGUINavigation_html_af89067d8b407dd279f569be5af96f069"><div class="ttname"><a href="classgGUINavigation.html#af89067d8b407dd279f569be5af96f069">gGUINavigation::getPane</a></div><div class="ttdeci">gGUIPane * getPane(int paneNo)</div></div>
 <div class="ttc" id="aclassgGUINavigation_html_afe838937997486c67e7b942e1a3cb888"><div class="ttname"><a href="classgGUINavigation.html#afe838937997486c67e7b942e1a3cb888">gGUINavigation::enableToolbar</a></div><div class="ttdeci">void enableToolbar()</div></div>
 <div class="ttc" id="aclassgGUIPane_html"><div class="ttname"><a href="classgGUIPane.html">gGUIPane</a></div><div class="ttdef"><b>Definition</b> gGUIPane.h:20</div></div>

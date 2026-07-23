@@ -11,6 +11,7 @@ var classgGUIImageButton =
     [ "loadPressedButtonImages", "classgGUIImageButton.html#aa26c0ee1e923e62df0b637ace5cf9cb3", null ],
     [ "setButtonImage", "classgGUIImageButton.html#a4569b15eebe737b8c65a1bf31781cd41", null ],
     [ "setButtonImageFromIcon", "classgGUIImageButton.html#ac665488321e85dc31b3fa470b0aaae9c", null ],
+    [ "setCircularBackground", "classgGUIImageButton.html#a5d4de654e8e8f35d4c7df20a687cc52b", null ],
     [ "setImageStretched", "classgGUIImageButton.html#ae82ba5e15b6c4b051cba4b710910cc3b", null ],
     [ "setPressedButtonImage", "classgGUIImageButton.html#a1eef8d162deb726164082a53f0140a04", null ],
     [ "setPressedButtonImageFromIcon", "classgGUIImageButton.html#a969d6f28c26fc48f6ffc2f9616bbe3d3", null ]

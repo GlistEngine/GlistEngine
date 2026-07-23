@@ -151,22 +151,24 @@ $(document).ready(function(){initNavTree('gGUIToolbar_8h_source.html',''); initR
 <div class="line"><a id="l00050" name="l00050"></a><span class="lineno"><a class="line" href="classgGUIToolbar.html#a07c84ce75691495b469b8e96168df3e8">   50</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classgGUIToolbar.html#a07c84ce75691495b469b8e96168df3e8">addSpace</a>();</div>
 <div class="line"><a id="l00051" name="l00051"></a><span class="lineno"><a class="line" href="classgGUIToolbar.html#ab7f23bdca34df4d581f8fae3498fef7c">   51</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classgGUIToolbar.html#ab7f23bdca34df4d581f8fae3498fef7c">setToolbarForegroundColor</a>(<a class="code hl_class" href="classgColor.html">gColor</a> color);</div>
 <div class="line"><a id="l00052" name="l00052"></a><span class="lineno"><a class="line" href="classgGUIToolbar.html#a911badca5af4763966f89e8805ef1c59">   52</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classgGUIToolbar.html#a911badca5af4763966f89e8805ef1c59">setToolbarBottomLineColor</a>(<a class="code hl_class" href="classgColor.html">gColor</a> color);</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> </div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno"><a class="line" href="classgGUIToolbar.html#a271462072ab724d8c685e7bc185bb7da">   54</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classgGUIToolbar.html#a271462072ab724d8c685e7bc185bb7da">draw</a>();</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span> </div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    <span class="keywordtype">int</span> toolbartype;</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    <span class="keywordtype">int</span> spaceLocation;</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    <span class="keywordtype">bool</span> isSpaceAdded;</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    std::deque&lt;gGUIControl*&gt; controlObjects;</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    std::deque&lt;float&gt; sizerPrs;</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    <a class="code hl_class" href="classgColor.html">gColor</a> toolbarforegroundcolor, toolbarbottomlinecolor;</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span> </div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    <span class="keywordtype">void</span> resizeSizer();</div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>};</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno"><a class="line" href="classgGUIToolbar.html#a82f4c76bf34ab5345f4af872034f227f">   53</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classgGUIToolbar.html#a82f4c76bf34ab5345f4af872034f227f">enableBackgroundFill</a>(<span class="keywordtype">bool</span> enabled);</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span> </div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno"><a class="line" href="classgGUIToolbar.html#a271462072ab724d8c685e7bc185bb7da">   55</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classgGUIToolbar.html#a271462072ab724d8c685e7bc185bb7da">draw</a>();</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span> </div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    <span class="keywordtype">int</span> toolbartype;</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    <span class="keywordtype">int</span> spaceLocation;</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    <span class="keywordtype">bool</span> isSpaceAdded;</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    std::deque&lt;gGUIControl*&gt; controlObjects;</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    std::deque&lt;float&gt; sizerPrs;</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    <a class="code hl_class" href="classgColor.html">gColor</a> toolbarforegroundcolor, toolbarbottomlinecolor;</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    <span class="keywordtype">bool</span> backgroundfillenabled;</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span> </div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    <span class="keywordtype">void</span> resizeSizer();</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>};</div>
 </div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span> </div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span><span class="preprocessor">#endif </span><span class="comment">/* UI_GGUITOOLBAR_H_ */</span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span> </div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span><span class="preprocessor">#endif </span><span class="comment">/* UI_GGUITOOLBAR_H_ */</span><span class="preprocessor"></span></div>
 <div class="ttc" id="aclassgColor_html"><div class="ttname"><a href="classgColor.html">gColor</a></div><div class="ttdef"><b>Definition</b> gColor.h:17</div></div>
 <div class="ttc" id="aclassgGUIBitmap_html"><div class="ttname"><a href="classgGUIBitmap.html">gGUIBitmap</a></div><div class="ttdef"><b>Definition</b> gGUIBitmap.h:45</div></div>
 <div class="ttc" id="aclassgGUICheckbox_html"><div class="ttname"><a href="classgGUICheckbox.html">gGUICheckbox</a></div><div class="ttdef"><b>Definition</b> gGUICheckbox.h:13</div></div>
@@ -193,6 +195,7 @@ $(document).ready(function(){initNavTree('gGUIToolbar_8h_source.html',''); initR
 <div class="ttc" id="aclassgGUIToolbar_html_a5cbab2be859511b4c758a3a22236b06a"><div class="ttname"><a href="classgGUIToolbar.html#a5cbab2be859511b4c758a3a22236b06a">gGUIToolbar::addSlider</a></div><div class="ttdeci">void addSlider(gGUISlider *slider)</div></div>
 <div class="ttc" id="aclassgGUIToolbar_html_a5f9746e2e20435b326e0e3e3c02bd108"><div class="ttname"><a href="classgGUIToolbar.html#a5f9746e2e20435b326e0e3e3c02bd108">gGUIToolbar::addCheckbox</a></div><div class="ttdeci">void addCheckbox(gGUICheckbox *checkbox)</div></div>
 <div class="ttc" id="aclassgGUIToolbar_html_a692b04d02920abaf1e7e03310b85ec76"><div class="ttname"><a href="classgGUIToolbar.html#a692b04d02920abaf1e7e03310b85ec76">gGUIToolbar::gGUIToolbar</a></div><div class="ttdeci">gGUIToolbar()</div></div>
+<div class="ttc" id="aclassgGUIToolbar_html_a82f4c76bf34ab5345f4af872034f227f"><div class="ttname"><a href="classgGUIToolbar.html#a82f4c76bf34ab5345f4af872034f227f">gGUIToolbar::enableBackgroundFill</a></div><div class="ttdeci">void enableBackgroundFill(bool enabled)</div></div>
 <div class="ttc" id="aclassgGUIToolbar_html_a841f5ad65200d7ddec4e7ab87877065ba359a190475563dff64a9580a8ea8f89b"><div class="ttname"><a href="classgGUIToolbar.html#a841f5ad65200d7ddec4e7ab87877065ba359a190475563dff64a9580a8ea8f89b">gGUIToolbar::TOOLBAR_HORIZONTAL</a></div><div class="ttdeci">@ TOOLBAR_HORIZONTAL</div><div class="ttdef"><b>Definition</b> gGUIToolbar.h:33</div></div>
 <div class="ttc" id="aclassgGUIToolbar_html_a841f5ad65200d7ddec4e7ab87877065ba749d2fb2cf89b8fa434342b89b249193"><div class="ttname"><a href="classgGUIToolbar.html#a841f5ad65200d7ddec4e7ab87877065ba749d2fb2cf89b8fa434342b89b249193">gGUIToolbar::TOOLBAR_VERTICAL</a></div><div class="ttdeci">@ TOOLBAR_VERTICAL</div><div class="ttdef"><b>Definition</b> gGUIToolbar.h:34</div></div>
 <div class="ttc" id="aclassgGUIToolbar_html_a911badca5af4763966f89e8805ef1c59"><div class="ttname"><a href="classgGUIToolbar.html#a911badca5af4763966f89e8805ef1c59">gGUIToolbar::setToolbarBottomLineColor</a></div><div class="ttdeci">void setToolbarBottomLineColor(gColor color)</div></div>
