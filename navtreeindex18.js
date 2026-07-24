@@ -1,5 +1,7 @@
 var NAVTREEINDEX18 =
 {
+"gUtils_8h.html#a598a3330b3c21701223ee0ca14316eca":[2,0,0,8,9,7],
+"gUtils_8h.html#a5f86b03f48f8915865d6712edc3c907d":[2,0,0,8,9,60],
 "gUtils_8h.html#a62db010a0399eea661a927e55151a5ef":[2,0,0,8,9,12],
 "gUtils_8h.html#a63ae0cf52b65e167bd882245df7de3bf":[2,0,0,8,9,44],
 "gUtils_8h.html#a66751624177fa192c8a9e258c83b1390":[2,0,0,8,9,8],
@@ -247,7 +249,5 @@ var NAVTREEINDEX18 =
 "structgRenderer_1_1gSceneLights.html#ae5569c939be0c2c1b1db5a5b104c95a0":[1,0,146,3,1],
 "structgRenderer_1_1gSceneLights.html#afe9ec239bcfdc6df6dee2ec63209ae62":[1,0,146,3,2],
 "structgVertex.html":[1,0,176],
-"structgVertex.html#a1307c4e7fc374612cd8e583ce90e8115":[1,0,176,3],
-"structgVertex.html#a2dd7f19388d400f24938593b878b8233":[1,0,176,1],
-"structgVertex.html#a40ef96826fed631764f3e57455aaea06":[1,0,176,0]
+"structgVertex.html#a1307c4e7fc374612cd8e583ce90e8115":[1,0,176,3]
 };

@@ -19,6 +19,7 @@ var classgVKRenderEngine =
     [ "bufSubData", "classgVKRenderEngine.html#a866361bfa2e4c29f5773364046e4e725", null ],
     [ "checkCompileErrors", "classgVKRenderEngine.html#a0c0a44385339e30716c63444277ac530", null ],
     [ "checkFramebufferStatus", "classgVKRenderEngine.html#a5bcd28b64a492c16a8ec4b52135ff334", null ],
+    [ "cleanup", "classgVKRenderEngine.html#a188056a9648fbb89f3cf19a4daba34e2", null ],
     [ "clear", "classgVKRenderEngine.html#a5ba99460a0b09b55de692d217c6ffb8e", null ],
     [ "clearColor", "classgVKRenderEngine.html#a568bf8d79511c126f494dcc892524546", null ],
     [ "clearColor", "classgVKRenderEngine.html#a96a24dc5b9e7ae505e8be9674c89099a", null ],
