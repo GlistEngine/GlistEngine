@@ -90,6 +90,9 @@ public:
 
 	void setScale(float x, float y);
 
+	// The Vulkan backend needs the raw handle to create its surface.
+	GLFWwindow* getGLFWWindow() const { return window; }
+
   private:
 	GLFWwindow* window;
 	GLFWcursor** cursor;

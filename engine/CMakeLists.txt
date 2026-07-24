@@ -656,6 +656,7 @@ elseif(WIN32)
 		glfw3
 		opengl32
 		glew32
+		vulkan-1
 		dbghelp
 		Shcore
 #		msvcr100

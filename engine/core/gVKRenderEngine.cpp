@@ -12,7 +12,27 @@
 #include "gShader.h"
 #include "gTracy.h"
 
+// Vulkan is only wired up on the desktop GLFW platforms. This file is compiled
+// everywhere, but gGLFWWindow.cpp is desktop only, so the guard below mirrors
+// the CMake condition exactly. <vulkan/vulkan.h> must be included before GLFW
+// so that glfwCreateWindowSurface / glfwGetRequiredInstanceExtensions become
+// visible.
+#if defined(__APPLE__)
+#include <TargetConditionals.h>
+#endif
+#if !defined(ANDROID) && !defined(EMSCRIPTEN) && !(defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE)
+	#define GVK_DESKTOP_GLFW 1
+	#define GLFW_INCLUDE_VULKAN
+	#include <vulkan/vulkan.h>
+	#include "gGLFWWindow.h"
+	#include "gAppManager.h"
+	#include <vector>
+	#include <set>
+	#include <cstring>
+#endif
+
 gVKRenderEngine::~gVKRenderEngine() {
+	cleanupVulkan();
 	delete originalgrid;
 }
 
@@ -675,39 +695,345 @@ void gVKRenderEngine::popMatrix() {
 #endif
 }
 
-#if !defined(GLIST_OPENGLES) && (defined(DEBUG) || defined(ENGINE_OPENGL_CHECKS))
-// Made static (internal linkage) so it does not collide with the identically-named
-// callback in gGLRenderEngine.cpp when both are compiled in a DEBUG build.
-static void GLAPIENTRY openglErrorCallback(GLenum source, GLenum type, GLuint id,
-								   GLenum severity, GLsizei length,
-								   const GLchar* message, const void* userParam) {
-	if (severity == GL_DEBUG_SEVERITY_NOTIFICATION) {
-		return;
+#ifdef GVK_DESKTOP_GLFW
+
+// Every Vulkan handle lives here so the header stays Vulkan free. All members
+// start as VK_NULL_HANDLE, which is what makes the "destroy only if non null"
+// teardown correct even when initialisation fails half way through.
+struct gVKContext {
+	VkInstance instance = VK_NULL_HANDLE;
+	VkDebugUtilsMessengerEXT debugmessenger = VK_NULL_HANDLE;
+	VkSurfaceKHR surface = VK_NULL_HANDLE;
+	VkPhysicalDevice physicaldevice = VK_NULL_HANDLE;
+	VkDevice device = VK_NULL_HANDLE;
+	VkQueue graphicsqueue = VK_NULL_HANDLE;
+	VkQueue presentqueue = VK_NULL_HANDLE;
+	uint32_t graphicsfamily = 0;
+	uint32_t presentfamily = 0;
+};
+
+// Validation layers cost performance, so they follow the same DEBUG condition
+// the OpenGL debug output already uses in this engine.
+#if defined(DEBUG) || defined(ENGINE_OPENGL_CHECKS)
+static constexpr bool gvkenablevalidation = true;
+#else
+static constexpr bool gvkenablevalidation = false;
+#endif
+
+static const char* const GVK_VALIDATION_LAYER = "VK_LAYER_KHRONOS_validation";
+
+// Routes validation output into the engine log instead of stderr, so Vulkan
+// problems show up next to every other engine message.
+static VKAPI_ATTR VkBool32 VKAPI_CALL gvkDebugCallback(
+		VkDebugUtilsMessageSeverityFlagBitsEXT severity,
+		VkDebugUtilsMessageTypeFlagsEXT type,
+		const VkDebugUtilsMessengerCallbackDataEXT* data,
+		void* userdata) {
+	if(severity >= VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT) {
+		gLoge("gVKRenderEngine") << "Validation: " << data->pMessage;
+	} else if(severity >= VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT) {
+		gLogw("gVKRenderEngine") << "Validation: " << data->pMessage;
+	}
+	return VK_FALSE;
+}
+
+static bool gvkHasLayer(const char* name) {
+	uint32_t count = 0;
+	if(vkEnumerateInstanceLayerProperties(&count, nullptr) != VK_SUCCESS || count == 0) return false;
+	std::vector<VkLayerProperties> items(count);
+	vkEnumerateInstanceLayerProperties(&count, items.data());
+	for(const auto& item : items) {
+		if(strcmp(item.layerName, name) == 0) return true;
+	}
+	return false;
+}
+
+static bool gvkHasInstanceExtension(const char* name) {
+	uint32_t count = 0;
+	if(vkEnumerateInstanceExtensionProperties(nullptr, &count, nullptr) != VK_SUCCESS || count == 0) return false;
+	std::vector<VkExtensionProperties> items(count);
+	vkEnumerateInstanceExtensionProperties(nullptr, &count, items.data());
+	for(const auto& item : items) {
+		if(strcmp(item.extensionName, name) == 0) return true;
+	}
+	return false;
+}
+
+#endif
+
+
+bool gVKRenderEngine::initVulkan() {
+#ifndef GVK_DESKTOP_GLFW
+	gLoge("gVKRenderEngine") << "Vulkan backend is not supported on this platform.";
+	return false;
+#else
+	vkcontext = new gVKContext();
+	gVKContext* ctx = vkcontext;
+
+#if defined(__APPLE__)
+	// MoltenVK (the macOS driver) and the Homebrew validation layers are not on
+	// the loader's default search path. The trailing 0 means "do not overwrite",
+	// so an explicitly exported value always wins.
+#ifdef GLIST_VK_ICD_FILE
+	setenv("VK_ICD_FILENAMES", GLIST_VK_ICD_FILE, 0);
+#endif
+#ifdef GLIST_VK_LAYER_PATH
+	setenv("VK_LAYER_PATH", GLIST_VK_LAYER_PATH, 0);
+#endif
+#endif
+
+	gGLFWWindow* glfwwindow = dynamic_cast<gGLFWWindow*>(appmanager != nullptr ? appmanager->getWindow() : nullptr);
+	if(glfwwindow == nullptr) {
+		gLoge("gVKRenderEngine") << "Vulkan init: no GLFW window available for surface creation.";
+		cleanupVulkan();
+		return false;
+	}
+	GLFWwindow* handle = glfwwindow->getGLFWWindow();
+	if(handle == nullptr) {
+		gLoge("gVKRenderEngine") << "Vulkan init: the GLFW window handle is null.";
+		cleanupVulkan();
+		return false;
 	}
 
-	gLoge("gVKRenderEngine") << "Received OpenGL Debug Message: "<<
-			"src: " << source << "\n"
-			"type: " << type << "\n"
-			"id: " << id << "\n"
-			"severity: " << severity << "\n"
-			"message: " << message;
-	// We flush here because it might not show on the console immediately, having this function being spammed will slow down the game but for purpose of debugging, it is required.
-	std::cerr << std::flush;
-}
+	/* ---------------- instance ---------------- */
+	// Asking GLFW for the surface extensions keeps this portable instead of
+	// hardcoding VK_KHR_win32_surface / VK_EXT_metal_surface per platform.
+	uint32_t glfwextcount = 0;
+	const char** glfwexts = glfwGetRequiredInstanceExtensions(&glfwextcount);
+	if(glfwexts == nullptr) {
+		gLoge("gVKRenderEngine") << "Vulkan init: GLFW could not report the required instance extensions.";
+		cleanupVulkan();
+		return false;
+	}
+	std::vector<const char*> extensions(glfwexts, glfwexts + glfwextcount);
+
+#if defined(__APPLE__)
+	// MoltenVK is a portability driver: without these the loader does not even
+	// enumerate it and vkCreateInstance fails with VK_ERROR_INCOMPATIBLE_DRIVER.
+	// They are Apple only - requesting them on a conformant driver would fail.
+	extensions.push_back(VK_KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME);
+	extensions.push_back(VK_KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME);
 #endif
+
+	// Only ask for the layer if it is actually installed; requesting a missing
+	// layer makes vkCreateInstance fail outright.
+	std::vector<const char*> layers;
+	bool usevalidation = false;
+	if(gvkenablevalidation) {
+		if(gvkHasLayer(GVK_VALIDATION_LAYER) && gvkHasInstanceExtension(VK_EXT_DEBUG_UTILS_EXTENSION_NAME)) {
+			layers.push_back(GVK_VALIDATION_LAYER);
+			extensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
+			usevalidation = true;
+		} else {
+			gLogi("gVKRenderEngine") << "Validation layer not found, continuing without it. "
+					"Point VK_LAYER_PATH at the folder holding VkLayer_khronos_validation.json to enable it.";
+		}
+	}
+
+	VkApplicationInfo appinfo{};
+	appinfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
+	appinfo.pApplicationName = "GlistApp";
+	appinfo.applicationVersion = VK_MAKE_API_VERSION(0, 1, 0, 0);
+	appinfo.pEngineName = "GlistEngine";
+	appinfo.engineVersion = VK_MAKE_API_VERSION(0, 1, 0, 0);
+	appinfo.apiVersion = VK_API_VERSION_1_2;
+
+	VkInstanceCreateInfo instanceinfo{};
+	instanceinfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
+	instanceinfo.pApplicationInfo = &appinfo;
+#if defined(__APPLE__)
+	instanceinfo.flags = VK_INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR;
+#endif
+	instanceinfo.enabledExtensionCount = static_cast<uint32_t>(extensions.size());
+	instanceinfo.ppEnabledExtensionNames = extensions.data();
+	instanceinfo.enabledLayerCount = static_cast<uint32_t>(layers.size());
+	instanceinfo.ppEnabledLayerNames = layers.empty() ? nullptr : layers.data();
+
+	VkResult result = vkCreateInstance(&instanceinfo, nullptr, &ctx->instance);
+	if(result != VK_SUCCESS) {
+		gLoge("gVKRenderEngine") << "vkCreateInstance failed! VkResult: " << result;
+		cleanupVulkan();
+		return false;
+	}
+
+	/* ---------------- debug messenger ---------------- */
+	if(usevalidation) {
+		VkDebugUtilsMessengerCreateInfoEXT debuginfo{};
+		debuginfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
+		debuginfo.messageSeverity = VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT |
+				VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT;
+		debuginfo.messageType = VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT |
+				VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT |
+				VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT;
+		debuginfo.pfnUserCallback = gvkDebugCallback;
+		// Extension entry points are not exported by the loader, so fetch them.
+		auto createmessenger = (PFN_vkCreateDebugUtilsMessengerEXT)
+				vkGetInstanceProcAddr(ctx->instance, "vkCreateDebugUtilsMessengerEXT");
+		if(createmessenger != nullptr) {
+			createmessenger(ctx->instance, &debuginfo, nullptr, &ctx->debugmessenger);
+		}
+	}
+
+	/* ---------------- surface ---------------- */
+	// GLFW creates it, so the engine never touches Win32/Cocoa/Metal directly.
+	result = glfwCreateWindowSurface(ctx->instance, handle, nullptr, &ctx->surface);
+	if(result != VK_SUCCESS) {
+		gLoge("gVKRenderEngine") << "glfwCreateWindowSurface failed! VkResult: " << result;
+		cleanupVulkan();
+		return false;
+	}
+
+	/* ---------------- physical device ---------------- */
+	uint32_t devicecount = 0;
+	vkEnumeratePhysicalDevices(ctx->instance, &devicecount, nullptr);
+	if(devicecount == 0) {
+		gLoge("gVKRenderEngine") << "No Vulkan capable GPU was found.";
+		cleanupVulkan();
+		return false;
+	}
+	std::vector<VkPhysicalDevice> devices(devicecount);
+	vkEnumeratePhysicalDevices(ctx->instance, &devicecount, devices.data());
+
+	// A GPU is usable only if it can both render and present to our surface, and
+	// in Vulkan those are separate queue family capabilities queried per family.
+	for(const auto& dev : devices) {
+		uint32_t familycount = 0;
+		vkGetPhysicalDeviceQueueFamilyProperties(dev, &familycount, nullptr);
+		if(familycount == 0) continue;
+		std::vector<VkQueueFamilyProperties> families(familycount);
+		vkGetPhysicalDeviceQueueFamilyProperties(dev, &familycount, families.data());
+
+		bool foundgraphics = false, foundpresent = false;
+		uint32_t graphics = 0, present = 0;
+		for(uint32_t i = 0; i < familycount; i++) {
+			if(!foundgraphics && (families[i].queueFlags & VK_QUEUE_GRAPHICS_BIT)) {
+				graphics = i;
+				foundgraphics = true;
+			}
+			VkBool32 presentsupport = VK_FALSE;
+			vkGetPhysicalDeviceSurfaceSupportKHR(dev, i, ctx->surface, &presentsupport);
+			if(!foundpresent && presentsupport == VK_TRUE) {
+				present = i;
+				foundpresent = true;
+			}
+		}
+		if(foundgraphics && foundpresent) {
+			ctx->physicaldevice = dev;
+			ctx->graphicsfamily = graphics;
+			ctx->presentfamily = present;
+			break;
+		}
+	}
+	if(ctx->physicaldevice == VK_NULL_HANDLE) {
+		gLoge("gVKRenderEngine") << "No GPU can both render and present to this surface.";
+		cleanupVulkan();
+		return false;
+	}
+
+	/* ---------------- logical device ---------------- */
+	// A set, because graphics and present are usually the same family and the
+	// same family must not be requested twice.
+	std::set<uint32_t> uniquefamilies = {ctx->graphicsfamily, ctx->presentfamily};
+	std::vector<VkDeviceQueueCreateInfo> queueinfos;
+	float queuepriority = 1.0f;
+	for(uint32_t family : uniquefamilies) {
+		VkDeviceQueueCreateInfo queueinfo{};
+		queueinfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
+		queueinfo.queueFamilyIndex = family;
+		queueinfo.queueCount = 1;
+		queueinfo.pQueuePriorities = &queuepriority;
+		queueinfos.push_back(queueinfo);
+	}
+
+	// Swapchain is requested now because presentation is the next phase and
+	// asking here proves the device supports it.
+	std::vector<const char*> deviceextensions = {VK_KHR_SWAPCHAIN_EXTENSION_NAME};
+	// VK_KHR_portability_subset is mandatory on portability drivers such as
+	// MoltenVK and absent on conformant ones, so it is queried, never assumed.
+	uint32_t devextcount = 0;
+	vkEnumerateDeviceExtensionProperties(ctx->physicaldevice, nullptr, &devextcount, nullptr);
+	if(devextcount > 0) {
+		std::vector<VkExtensionProperties> devexts(devextcount);
+		vkEnumerateDeviceExtensionProperties(ctx->physicaldevice, nullptr, &devextcount, devexts.data());
+		for(const auto& ext : devexts) {
+			if(strcmp(ext.extensionName, "VK_KHR_portability_subset") == 0) {
+				deviceextensions.push_back("VK_KHR_portability_subset");
+				break;
+			}
+		}
+	}
+
+	VkPhysicalDeviceFeatures devicefeatures{};
+	VkDeviceCreateInfo deviceinfo{};
+	deviceinfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
+	deviceinfo.queueCreateInfoCount = static_cast<uint32_t>(queueinfos.size());
+	deviceinfo.pQueueCreateInfos = queueinfos.data();
+	deviceinfo.pEnabledFeatures = &devicefeatures;
+	deviceinfo.enabledExtensionCount = static_cast<uint32_t>(deviceextensions.size());
+	deviceinfo.ppEnabledExtensionNames = deviceextensions.data();
+	deviceinfo.enabledLayerCount = static_cast<uint32_t>(layers.size());
+	deviceinfo.ppEnabledLayerNames = layers.empty() ? nullptr : layers.data();
+
+	result = vkCreateDevice(ctx->physicaldevice, &deviceinfo, nullptr, &ctx->device);
+	if(result != VK_SUCCESS) {
+		gLoge("gVKRenderEngine") << "vkCreateDevice failed! VkResult: " << result;
+		cleanupVulkan();
+		return false;
+	}
+	vkGetDeviceQueue(ctx->device, ctx->graphicsfamily, 0, &ctx->graphicsqueue);
+	vkGetDeviceQueue(ctx->device, ctx->presentfamily, 0, &ctx->presentqueue);
+
+	VkPhysicalDeviceProperties props{};
+	vkGetPhysicalDeviceProperties(ctx->physicaldevice, &props);
+	gLogi("gVKRenderEngine") << "Vulkan Instance successfully created! API Version: "
+			<< VK_API_VERSION_MAJOR(props.apiVersion) << "."
+			<< VK_API_VERSION_MINOR(props.apiVersion) << "."
+			<< VK_API_VERSION_PATCH(props.apiVersion);
+	gLogi("gVKRenderEngine") << "Vulkan device: " << props.deviceName
+			<< " | graphics family: " << ctx->graphicsfamily
+			<< " | present family: " << ctx->presentfamily
+			<< " | validation: " << (usevalidation ? "on" : "off");
+	return true;
+#endif
+}
+
+
+void gVKRenderEngine::cleanupVulkan() {
+#ifdef GVK_DESKTOP_GLFW
+	if(vkcontext == nullptr) return;
+	gVKContext* ctx = vkcontext;
+	// Strict reverse creation order: Vulkan requires children to be destroyed
+	// before their parent, and the surface must die before its instance.
+	if(ctx->device != VK_NULL_HANDLE) vkDestroyDevice(ctx->device, nullptr);
+	if(ctx->surface != VK_NULL_HANDLE) vkDestroySurfaceKHR(ctx->instance, ctx->surface, nullptr);
+	if(ctx->debugmessenger != VK_NULL_HANDLE) {
+		auto destroymessenger = (PFN_vkDestroyDebugUtilsMessengerEXT)
+				vkGetInstanceProcAddr(ctx->instance, "vkDestroyDebugUtilsMessengerEXT");
+		if(destroymessenger != nullptr) destroymessenger(ctx->instance, ctx->debugmessenger, nullptr);
+	}
+	if(ctx->instance != VK_NULL_HANDLE) vkDestroyInstance(ctx->instance, nullptr);
+	delete vkcontext;
+#endif
+	vkcontext = nullptr;
+}
+
 
 void gVKRenderEngine::init() {
-	gLogi("gVKRenderEngine") << "Vulkan render engine active (currently running GL code)";
-#if !defined(GLIST_OPENGLES) && (defined(DEBUG) || defined(ENGINE_OPENGL_CHECKS))
-	// On newer versions of OpenGL, debug callbacks are available; we enable them only for debug builds because it might have a performance impact.
-	// You can place a debug point and go back to the original source of the message from the stack trace, because it is sync.
-	if (GLEW_VERSION_4_3 || GLEW_ARB_debug_output) {
-		glEnable(GL_DEBUG_OUTPUT);
-		glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
-		glDebugMessageCallback(openglErrorCallback, nullptr);
+	// gRenderer::init() is deliberately not called: it compiles shaders and
+	// builds GL objects, and there is no GL context under Vulkan. originalgrid
+	// is assigned only inside that function and is never initialised in a
+	// constructor, so it is nulled here to keep the destructor's delete safe.
+	originalgrid = nullptr;
+	if(!initVulkan()) {
+		gLoge("gVKRenderEngine") << "Vulkan initialization failed; the Vulkan backend is not usable.";
 	}
-#endif
-	gRenderer::init();
+}
+
+
+void gVKRenderEngine::cleanup() {
+	// The GL resources gRenderer::cleanup() would release were never created,
+	// because init() skips gRenderer::init().
+	cleanupVulkan();
 }
 
 void gVKRenderEngine::updatePackUnpackAlignment(int i) {

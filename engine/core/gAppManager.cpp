@@ -178,6 +178,14 @@ void gAppManager::setup() {
     if(setupcomplete) {
         return;
     }
+    // App setup loads images, fonts and shaders through the OpenGL path. It is
+    // skipped while the Vulkan backend has no rendering path, otherwise it would
+    // call GL functions without a context.
+    if(renderengine == G_RENDERER_VK) {
+        gLogi("gAppManager") << "Vulkan backend: skipping app setup until the Vulkan rendering path is implemented.";
+        setupcomplete = true;
+        return;
+    }
     app->setup();
     setupcomplete = true;
 }
@@ -211,14 +219,18 @@ void gAppManager::initialize() {
 		}
 		// Create renderer
 		gRenderObject::createRenderer(renderengine);
-		gBaseGUIObject::initializeResources();
+		// The engine's GUI resources are OpenGL based. Under the Vulkan backend the
+		// window carries no GL context, so they stay uninitialised until the Vulkan
+		// rendering path exists.
+		const bool isvulkanbackend = (renderengine == G_RENDERER_VK);
+		if(!isvulkanbackend) gBaseGUIObject::initializeResources();
 		// Update renderer dimensions
 		renderer->setScreenSize(width, height);
 		renderer->setUnitScreenSize(unitwidth, unitheight);
 		renderer->setScreenScaling(screenscaling);
 
 		// Create managers if not created
-		if(!guimanager) {
+		if(!isvulkanbackend && !guimanager) {
 			guimanager = new gGUIManager(app, renderer->getWidth(), renderer->getHeight());
 			guimanager->getCurrentFrame()->getRenderer()->updateLights();
 		}
@@ -413,7 +425,7 @@ void gAppManager::setScreenSize(int width, int height) {
     if(iscanvasset && canvasmanager->getCurrentCanvas()) {
 	    canvasmanager->getCurrentCanvas()->windowResized(renderer->getWidth(), renderer->getHeight());
     }
-    if(iscanvasset && guimanager->isframeset) {
+    if(iscanvasset && guimanager != nullptr && guimanager->isframeset) {
 	    guimanager->windowResized(renderer->getWidth(), renderer->getHeight());
     }
 }
@@ -542,6 +554,16 @@ void gAppManager::tick() {
         return;
     }
 
+    // The Vulkan backend initialises only: there is no GL context and no Vulkan
+    // frame path yet, so the frame body is skipped. Events are still polled so the
+    // window stays responsive and closable.
+    if(renderengine == G_RENDERER_VK) {
+        if(inputmanager) inputmanager->update();
+        window->update();
+        executeQueue();
+        return;
+    }
+
     if(canvasmanager) canvasmanager->update();
     if(guimanager) guimanager->update();
     if(!isguiapp) {
@@ -659,7 +681,7 @@ bool gAppManager::onWindowScaleChangedEvent(gWindowScaleChangedEvent& event) {
 
 bool gAppManager::onCharTypedEvent(gCharTypedEvent& event) {
 //	if (!canvasmanager || !getCurrentCanvas()) return true;
-    if(guimanager->isframeset) guimanager->charPressed(event.getCharacter());
+    if(guimanager != nullptr && guimanager->isframeset) guimanager->charPressed(event.getCharacter());
     for (gBasePlugin*& plugin : gBasePlugin::usedplugins) plugin->charPressed(event.getCharacter());
     if(canvasmanager && getCurrentCanvas()) getCurrentCanvas()->charPressed(event.getCharacter());
     return false;
@@ -667,7 +689,7 @@ bool gAppManager::onCharTypedEvent(gCharTypedEvent& event) {
 
 bool gAppManager::onKeyPressedEvent(gKeyPressedEvent& event) {
 //    if (!canvasmanager || !getCurrentCanvas()) return true;
-    if(guimanager->isframeset) guimanager->keyPressed(event.getKeyCode());
+    if(guimanager != nullptr && guimanager->isframeset) guimanager->keyPressed(event.getKeyCode());
     for (gBasePlugin*& plugin : gBasePlugin::usedplugins) plugin->keyPressed(event.getKeyCode());
     if(canvasmanager && getCurrentCanvas()) getCurrentCanvas()->keyPressed(event.getKeyCode());
     return false;
@@ -675,7 +697,7 @@ bool gAppManager::onKeyPressedEvent(gKeyPressedEvent& event) {
 
 bool gAppManager::onKeyReleasedEvent(gKeyReleasedEvent& event) {
 //    if (!canvasmanager || !getCurrentCanvas()) return true;
-    if(guimanager->isframeset) guimanager->keyReleased(event.getKeyCode());
+    if(guimanager != nullptr && guimanager->isframeset) guimanager->keyReleased(event.getKeyCode());
     for (gBasePlugin*& plugin : gBasePlugin::usedplugins) plugin->keyReleased(event.getKeyCode());
     if(canvasmanager && getCurrentCanvas()) canvasmanager->getCurrentCanvas()->keyReleased(event.getKeyCode());
     return false;
@@ -690,11 +712,11 @@ bool gAppManager::onMouseMovedEvent(gMouseMovedEvent& event) {
         ypos = gRenderer::scaleY(event.getY());
     }
     if(mousebuttonstate) {
-        if(guimanager->isframeset) guimanager->mouseDragged(xpos, ypos, mousebuttonstate);
+        if(guimanager != nullptr && guimanager->isframeset) guimanager->mouseDragged(xpos, ypos, mousebuttonstate);
         for(gBasePlugin*& plugin : gBasePlugin::usedplugins) plugin->mouseDragged(xpos, ypos, mousebuttonstate);
         if(canvasmanager && getCurrentCanvas()) canvasmanager->getCurrentCanvas()->mouseDragged(xpos, ypos, mousebuttonstate);
     } else {
-        if(guimanager->isframeset) guimanager->mouseMoved(xpos, ypos);
+        if(guimanager != nullptr && guimanager->isframeset) guimanager->mouseMoved(xpos, ypos);
         for(gBasePlugin*& plugin : gBasePlugin::usedplugins) plugin->mouseMoved(xpos, ypos);
         if(canvasmanager && getCurrentCanvas()) canvasmanager->getCurrentCanvas()->mouseMoved(xpos, ypos);
     }
@@ -711,7 +733,7 @@ bool gAppManager::onMouseButtonPressedEvent(gMouseButtonPressedEvent& event) {
         xpos = gRenderer::scaleX(event.getX());
         ypos = gRenderer::scaleY(event.getY());
     }
-    if(guimanager->isframeset) guimanager->mousePressed(xpos, ypos, event.getMouseButton());
+    if(guimanager != nullptr && guimanager->isframeset) guimanager->mousePressed(xpos, ypos, event.getMouseButton());
     for(gBasePlugin*& plugin : gBasePlugin::usedplugins) plugin->mousePressed(xpos, ypos, event.getMouseButton());
     if(canvasmanager && getCurrentCanvas()) canvasmanager->getCurrentCanvas()->mousePressed(xpos, ypos, event.getMouseButton());
     return false;
@@ -727,7 +749,7 @@ bool gAppManager::onMouseButtonReleasedEvent(gMouseButtonReleasedEvent& event) {
         xpos = gRenderer::scaleX(event.getX());
         ypos = gRenderer::scaleY(event.getY());
     }
-    if(guimanager->isframeset) guimanager->mouseReleased(xpos, ypos, event.getMouseButton());
+    if(guimanager != nullptr && guimanager->isframeset) guimanager->mouseReleased(xpos, ypos, event.getMouseButton());
     for(gBasePlugin*& plugin : gBasePlugin::usedplugins) plugin->mouseReleased(xpos, ypos, event.getMouseButton());
     if(canvasmanager && getCurrentCanvas()) canvasmanager->getCurrentCanvas()->mouseReleased(xpos, ypos, event.getMouseButton());
     return false;
@@ -751,7 +773,7 @@ bool gAppManager::onWindowMouseExitEvent(gWindowMouseExitEvent& event) {
 
 bool gAppManager::onMouseScrolledEvent(gMouseScrolledEvent& event) {
 //    if (!canvasmanager || !getCurrentCanvas()) return true;
-    if(guimanager->isframeset) guimanager->mouseScrolled(event.getOffsetX(), event.getOffsetY());
+    if(guimanager != nullptr && guimanager->isframeset) guimanager->mouseScrolled(event.getOffsetX(), event.getOffsetY());
     for (gBasePlugin*& plugin : gBasePlugin::usedplugins) plugin->mouseScrolled(event.getOffsetX(), event.getOffsetY());
     if(canvasmanager && getCurrentCanvas()) canvasmanager->getCurrentCanvas()->mouseScrolled(event.getOffsetX(), event.getOffsetY());
     return false;
