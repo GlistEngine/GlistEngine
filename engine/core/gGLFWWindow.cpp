@@ -203,6 +203,14 @@ void gGLFWWindow::initialize(int width, int height, int windowMode, bool isResiz
 	// The window is created before the renderer, so the backend has to be final
 	// here; otherwise the window and the renderer could disagree.
 	bool usevulkan = (appmanager != nullptr && appmanager->getRenderEngine() == G_RENDERER_VK);
+#if !defined(GLIST_HAS_VULKAN)
+	if(usevulkan) {
+		gLoge("gGLFWWindow") << "Vulkan backend requested but Vulkan development support "
+								"was not available when GlistEngine was built. Falling back to OpenGL." << std::endl;
+		usevulkan = false;
+		appmanager->setRenderEngine(G_RENDERER_GL);
+	}
+#endif
 	if (usevulkan && !glfwVulkanSupported()) {
 		gLoge("gGLFWWindow") << "Vulkan backend requested but not available at runtime "
 								"(is the Vulkan loader installed?). Falling back to OpenGL." << std::endl;
@@ -538,4 +546,3 @@ void gGLFWWindow::setScale(float x, float y) {
 	callEvent(event);
 	setSize(width, height);
 }
-

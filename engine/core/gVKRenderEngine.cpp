@@ -20,7 +20,7 @@
 #if defined(__APPLE__)
 #include <TargetConditionals.h>
 #endif
-#if !defined(ANDROID) && !defined(EMSCRIPTEN) && !(defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE)
+#if defined(GLIST_HAS_VULKAN) && !defined(ANDROID) && !defined(EMSCRIPTEN) && !(defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE)
 	#define GVK_DESKTOP_GLFW 1
 	#define GLFW_INCLUDE_VULKAN
 	#include <vulkan/vulkan.h>

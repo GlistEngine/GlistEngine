@@ -578,6 +578,13 @@ elseif(IOS)
 	# These are added by gipIOS plugin
 	# Do not remove this block
 elseif(WIN32)
+	find_package(Vulkan QUIET)
+	if(Vulkan_FOUND)
+		set(Lib_Vulkan Vulkan::Vulkan)
+		target_compile_definitions(GlistEngine PRIVATE GLIST_HAS_VULKAN)
+	else()
+		message(STATUS "Vulkan development files not found; Vulkan backend disabled")
+	endif()
     link_directories(
             ${MINGW64_DIR}/bin
             ${MINGW64_DIR}/lib
@@ -594,6 +601,14 @@ elseif(LINUX)
 #	    OUTPUT_STRIP_TRAILING_WHITESPACE)
 #	string(STRIP ${CL_TMP_VAR} CL_VAR_1)
 #	add_definitions(${CL_VAR_1})
+
+	find_package(Vulkan QUIET)
+	if(Vulkan_FOUND)
+		set(Lib_Vulkan Vulkan::Vulkan)
+		target_compile_definitions(GlistEngine PRIVATE GLIST_HAS_VULKAN)
+	else()
+		message(STATUS "Vulkan development files not found; Vulkan backend disabled")
+	endif()
 	
 	add_library(glfw SHARED IMPORTED)
 	set_target_properties(glfw PROPERTIES IMPORTED_LOCATION
@@ -611,15 +626,23 @@ elseif(LINUX)
 	set_target_properties(freetype PROPERTIES IMPORTED_LOCATION
 			${MINGW64_DIR}/lib/libfreetype.so)
 elseif(APPLE)
-    set(APPLE_LIBDIR "/opt/homebrew/lib")
     find_package(PkgConfig REQUIRED)
-    set(ENV{PKG_CONFIG_PATH} "${APPLE_LIBDIR}/pkgconfig")
     
     pkg_check_modules(curl     REQUIRED IMPORTED_TARGET libcurl)
     pkg_check_modules(freetype REQUIRED IMPORTED_TARGET freetype2)
     pkg_check_modules(glfw     REQUIRED IMPORTED_TARGET glfw3)
     pkg_check_modules(assimp   REQUIRED IMPORTED_TARGET assimp)
     pkg_check_modules(glew     REQUIRED IMPORTED_TARGET glew)
+    # Vulkan on macOS is provided by MoltenVK via the Homebrew vulkan-loader,
+    # resolved through pkg-config like the rest of the stack. The imported target
+    # carries the header include dirs and links the loader.
+    pkg_check_modules(vulkan QUIET IMPORTED_TARGET vulkan)
+    if(vulkan_FOUND)
+        set(Lib_Vulkan PkgConfig::vulkan)
+        target_compile_definitions(GlistEngine PRIVATE GLIST_HAS_VULKAN)
+    else()
+        message(STATUS "Vulkan development files not found; Vulkan backend disabled")
+    endif()
 
     find_library(Lib_GL GL HINTS ${OSX_SDK_PATH}/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries)
 
@@ -656,7 +679,7 @@ elseif(WIN32)
 		glfw3
 		opengl32
 		glew32
-		vulkan-1
+		${Lib_Vulkan}
 		dbghelp
 		Shcore
 #		msvcr100
@@ -686,6 +709,7 @@ elseif(LINUX)
 		glfw
 		GL
 		GLEW
+		${Lib_Vulkan}
 		dl
 	# TODO: FFMPEG
 	)
@@ -697,6 +721,7 @@ elseif(APPLE)
 		PkgConfig::glfw
 		${Lib_GL}
 		PkgConfig::glew
+		${Lib_Vulkan}
 		${Lib_crypto}
 #		${Lib_cpp}
 	# TODO: FFMPEG
