@@ -199,14 +199,39 @@ void gGLFWWindow::initialize(int width, int height, int windowMode, bool isResiz
 		return;
 	}
 
+	// --- Render backend selection (single, safe decision point) ---
+	// The window is created before the renderer, so the backend has to be final
+	// here; otherwise the window and the renderer could disagree.
+	bool usevulkan = (appmanager != nullptr && appmanager->getRenderEngine() == G_RENDERER_VK);
+#if !defined(GLIST_HAS_VULKAN)
+	if(usevulkan) {
+		gLoge("gGLFWWindow") << "Vulkan backend requested but Vulkan development support "
+								"was not available when GlistEngine was built. Falling back to OpenGL." << std::endl;
+		usevulkan = false;
+		appmanager->setRenderEngine(G_RENDERER_GL);
+	}
+#endif
+	if (usevulkan && !glfwVulkanSupported()) {
+		gLoge("gGLFWWindow") << "Vulkan backend requested but not available at runtime "
+								"(is the Vulkan loader installed?). Falling back to OpenGL." << std::endl;
+		usevulkan = false;
+		if (appmanager != nullptr) appmanager->setRenderEngine(G_RENDERER_GL);
+	}
+
 	// Configure glfw
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	if (usevulkan) {
+		// Vulkan renders to a surface it creates itself, so the window must not
+		// carry an OpenGL context.
+		glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+	} else {
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 #if TARGET_OS_OSX
-	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); //case_mac
+		glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); //case_mac
 #endif
+	}
 
 	// All hints available at https://www.glfw.org/docs/latest/window.html#window_hints
 
@@ -286,14 +311,18 @@ void gGLFWWindow::initialize(int width, int height, int windowMode, bool isResiz
 		glfwSetCursor(window, cursor[0]);
 	}
 
-	glfwMakeContextCurrent(window);
-    glfwSwapInterval(vsync ? 1 : 0);
-	glewExperimental = GL_TRUE;
-	GLenum glewError = glewInit();
-	if (glewError != GLEW_OK) {
-		gLoge("gGLFWWindow") << "Failed to initialize GLEW: " << glewGetErrorString(glewError) << std::endl;
-		glfwTerminate();
-		return;
+	// OpenGL context management and GLEW are meaningless under Vulkan; that
+	// window has no client API at all.
+	if (!usevulkan) {
+		glfwMakeContextCurrent(window);
+		glfwSwapInterval(vsync ? 1 : 0);
+		glewExperimental = GL_TRUE;
+		GLenum glewError = glewInit();
+		if (glewError != GLEW_OK) {
+			gLoge("gGLFWWindow") << "Failed to initialize GLEW: " << glewGetErrorString(glewError) << std::endl;
+			glfwTerminate();
+			return;
+		}
 	}
 
 //	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
@@ -332,8 +361,11 @@ bool gGLFWWindow::getShouldClose() {
 
 void gGLFWWindow::update() {
 	G_PROFILE_ZONE_SCOPED_N("gGLFWWindow::update()");
-	// End window drawing
-	G_CHECK_GL(glfwSwapBuffers(window));
+	// End window drawing. A GLFW_NO_API window (Vulkan) owns no buffers to swap,
+	// and asking GLFW to swap them raises GLFW_NO_WINDOW_CONTEXT.
+	if(appmanager == nullptr || appmanager->getRenderEngine() != G_RENDERER_VK) {
+		G_CHECK_GL(glfwSwapBuffers(window));
+	}
 	G_CHECK_GL(glfwPollEvents());
 }
 
@@ -514,4 +546,3 @@ void gGLFWWindow::setScale(float x, float y) {
 	callEvent(event);
 	setSize(width, height);
 }
-

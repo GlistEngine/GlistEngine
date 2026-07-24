@@ -9,6 +9,11 @@
 #include "gRenderer.h"
 #include "gUbo.h"
 
+// All Vulkan objects live behind this opaque pointer, so <vulkan/vulkan.h> is
+// not pushed into every translation unit that includes this header and the
+// class still compiles on platforms that have no Vulkan headers.
+struct gVKContext;
+
 class gVKRenderEngine : public gRenderer {
 public:
 	gVKRenderEngine() = default;
@@ -177,8 +182,12 @@ public:
 
 protected:
 	void init() override;
+	void cleanup() override;
 private:
 	mutable GLuint currentprogram = 0;
+	bool initVulkan();
+	void cleanupVulkan();
+	gVKContext* vkcontext = nullptr;
 	void updatePackUnpackAlignment(int i) override;
 };
 
