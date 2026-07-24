@@ -578,12 +578,11 @@ elseif(IOS)
 	# These are added by gipIOS plugin
 	# Do not remove this block
 elseif(WIN32)
-	find_package(Vulkan QUIET)
-	if(Vulkan_FOUND)
-		set(Lib_Vulkan Vulkan::Vulkan)
+	if(EXISTS "${MINGW64_DIR}/include/vulkan/vulkan.h")
+		set(Lib_Vulkan vulkan-1)
 		target_compile_definitions(GlistEngine PRIVATE GLIST_HAS_VULKAN)
 	else()
-		message(STATUS "Vulkan development files not found; Vulkan backend disabled")
+		message(STATUS "Vulkan development files not found in zbin; Vulkan backend disabled")
 	endif()
     link_directories(
             ${MINGW64_DIR}/bin
