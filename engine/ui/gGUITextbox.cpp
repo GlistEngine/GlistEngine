@@ -107,6 +107,7 @@ gGUITextbox::gGUITextbox() {
 	colorset = false;
 	isdisabled = false;
 	cursoroffset = 10.0f;
+	textfont = font;
 	setTextAlignment(textalignment, boxw, initx);
 
 	widthexceeded = false;
@@ -126,6 +127,17 @@ void gGUITextbox::set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseG
 	bottomlimit = bottom;
 	textfont = appmanager->getGUIManager()->getFont(gGUIManager::FONT_FREESANS);
 	cursoroffset = textfont->getStringWidth("a") * 0.2f;
+	boxw = w;
+	boxh = h;
+	setTextAlignment(textalignment, boxw, initx);
+	if(!text.empty()) {
+		letterlength.clear();
+		letterpos.clear();
+		letterlength = readString(text);
+		letterpos = calculateAllLetterPositions();
+		lastutf = calculateLastUtf();
+		if(ismultiline) calculateLines();
+	}
 }
 
 void gGUITextbox::setText(const std::string& text) {
@@ -192,6 +204,7 @@ void gGUITextbox::setSize(int width, int height) {
 
 	boxw = this->width;
 	boxh = this->height;
+	setTextAlignment(textalignment, boxw, initx);
 
 	lastutf = calculateLastUtf();
 	calculateLines();
@@ -1945,6 +1958,14 @@ int gGUITextbox::getInitX() {
 
 void gGUITextbox::setTextFont(gFont* textFont) {
 	textfont = textFont;
+	if(!text.empty()) {
+		letterlength.clear();
+		letterpos.clear();
+		letterlength = readString(text);
+		letterpos = calculateAllLetterPositions();
+		lastutf = calculateLastUtf();
+		if(ismultiline) calculateLines();
+	}
 }
 
 void gGUITextbox::setTextAlignment(int textAlignment, float cellW, int initX) {
