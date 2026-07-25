@@ -261,6 +261,12 @@ private:
 	void findCursorPositionPassword();
 	void calculateLineCount();
 	void resetCursorPosition();
+	void syncTextLayout();
+	void clampCaretAndScroll();
+	void scrollCaretIntoView();
+	void deleteSelectedText();
+	int getPreviousWordCharIndex(int charIdx);
+	int getNextWordCharIndex(int charIdx);
 	bool selectionmode;
 	int selectionposchar1, selectionposchar2;
 	int selectionposx1, selectionposx2;

@@ -16,6 +16,11 @@
 #include <cctype>
 
 
+static inline std::string gSafeSubstr(const std::string& s, std::size_t pos, std::size_t n = std::string::npos) {
+	if(pos > s.size()) pos = s.size();
+	return s.substr(pos, n);
+}
+
 gGUITextbox::gGUITextbox() {
 	setlocale(LC_ALL, "en_US.UTF-8");
 	boxw = width;
@@ -103,13 +108,14 @@ gGUITextbox::gGUITextbox() {
 	isdisabled = false;
 	cursoroffset = 10.0f;
 	setTextAlignment(textalignment, boxw, initx);
-	
+
 	widthexceeded = false;
 	widthAdjusmentDelay = 0;
 }
 
 
 gGUITextbox::~gGUITextbox() {
+	editmode = false;
 }
 
 void gGUITextbox::set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIObject* parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h) {
@@ -258,7 +264,17 @@ void gGUITextbox::update() {
 	boxw = width;
 	if(textfont->getStringWidth(text.substr(firstutf, lastutf)) >= width - 2 * initx && boxshrinked && !ismultiline) {
 		if(!ismultiline && !ispassword) {
+			int iteration_count = 0;
 			do {
+				iteration_count++;
+				if(iteration_count > 1000) {
+					gLoge("gGUITextbox") << "update (shrink) - Infinite loop detected! firstchar: " << firstchar;
+					break;
+				}
+				if(firstchar < 0 || firstchar >= (int) letterlength.size()) {
+					gLogw("gGUITextbox") << "update (shrink) - firstchar index out of bounds: " << firstchar;
+					break;
+				}
 				firstutf += letterlength[firstchar];
 				firstposx = textfont->getStringWidth(text.substr(0, firstutf));
 				firstchar++;
@@ -274,8 +290,18 @@ void gGUITextbox::update() {
 		}
 	} else if(boxexpanded && firstchar > 0) {
 		if(!ismultiline && !ispassword) {
+			int iteration_count = 0;
 			do {
-				firstutf -= letterlength[firstchar];
+				iteration_count++;
+				if(iteration_count > 1000) {
+					gLoge("gGUITextbox") << "update (expand) - Infinite loop detected! firstchar: " << firstchar;
+					break;
+				}
+				if(firstchar <= 0 || firstchar > (int) letterlength.size()) {
+					gLogw("gGUITextbox") << "update (expand) - firstchar index out of bounds: " << firstchar;
+					break;
+				}
+				firstutf -= letterlength[firstchar - 1];
 				firstposx = textfont->getStringWidth(text.substr(0, firstutf));
 				firstchar--;
 				cursorposx = textfont->getStringWidth(text.substr(firstutf, cursorposutf - firstutf));
@@ -288,7 +314,7 @@ void gGUITextbox::update() {
 	}
 
 	if(ismultiline && boxshrinked) {
-		for(int i = 0; i < linecount; i++){
+		for(int i = 0; i < (int) lines.size(); i++) {
 			if(textfont->getStringWidth(lines[i]) >= width - 2 * initx) {
 				setText(text);
 				findCursorPosition();
@@ -297,7 +323,7 @@ void gGUITextbox::update() {
 			}
 		}
 	} else if(ismultiline && boxexpanded && widthAdjusmentDelay > 3) {
-		for(int i = 0; i < linecount; i++){
+		for(int i = 0; i < (int) lines.size(); i++) {
 			if(textfont->getStringWidth(lines[i]) < width - 2 * initx) {
 				setText(text);
 				break;
@@ -315,11 +341,11 @@ void gGUITextbox::update() {
 
 	if(lastdrawnline > rowsnum) rowsnumexceeded = true;
 	else rowsnumexceeded = false;
-
 }
 
 void gGUITextbox::calculateLineCount() {
-	for(int i = linecount - 1; i >= 0 ; i--) {
+	if(lines.empty()) return;
+	for(int i = std::min(linecount - 1, (int) lines.size() - 1); i >= 0; i--) {
 		if(lines[i] == "") {
 			if(lastdrawnline == linecount) lastdrawnline--;
 			if(currentline == linecount) currentline--;
@@ -385,8 +411,10 @@ void gGUITextbox::draw() {
 	} else {
 		if(text.size() == 0) currentline = 1;
 		for(int i = 0; i < rowsnum; i++) {
-			if(lines[i] == "") continue;
-			textfont->drawText(lines[i + (lastdrawnline - rowsnum) * rowsnumexceeded], left - textfont->getStringWidth(" ") / 2 - firstx + textalignmentamount - (textfont->getStringWidth(text) * ((float)textalignment / 2)), top + hdiff + (i + 1) * (lineheight + linetopmargin) - firsty);
+			int line_idx = i + (lastdrawnline - rowsnum) * rowsnumexceeded;
+			if(line_idx < 0 || line_idx >= (int) lines.size()) continue;
+			if(lines[line_idx] == "") continue;
+			textfont->drawText(lines[line_idx], left - textfont->getStringWidth(" ") / 2 - firstx + textalignmentamount - (textfont->getStringWidth(text) * ((float) textalignment / 2)), top + hdiff + (i + 1) * (lineheight + linetopmargin) - firsty);
 		}
 	}
 
@@ -546,8 +574,7 @@ void gGUITextbox::handleKeys() {
 	}
 
 	if((selectionmode && (selectionposchar1 != selectionposchar2)) || isdoubleclicked || istripleclicked || ctrlapressed || ctrlvpressed || ctrlzpressed || commandapressed || commandvpressed || commandzpressed) {
-		if((isdoubleclicked || istripleclicked || ctrlcpressed || ctrlvpressed || ctrlxpressed || ctrlapressed || ctrlzpressed
-												|| commandcpressed || commandvpressed || commandxpressed || commandapressed || commandzpressed)) {
+		if((isdoubleclicked || istripleclicked || ctrlcpressed || ctrlvpressed || ctrlxpressed || ctrlapressed || ctrlzpressed || commandcpressed || commandvpressed || commandxpressed || commandapressed || commandzpressed)) {
 			pressKey();
 		}
 		ctrlcpressed = false;
@@ -596,7 +623,11 @@ void gGUITextbox::pressKey() {
 				deletedtext = text.substr(sepu1, sepu2 - sepu1);
 				if(sepu2 < text.length()) newtext += text.substr(sepu2, text.length() - sepu2 + 1);
 				text = newtext;
-				letterlength.erase(letterlength.begin() + sepc1, letterlength.begin() + sepc2);
+				if(sepc1 < 0) sepc1 = 0;
+				if(sepc2 > (int) letterlength.size()) sepc2 = (int) letterlength.size();
+				if(sepc1 < sepc2) {
+					letterlength.erase(letterlength.begin() + sepc1, letterlength.begin() + sepc2);
+				}
 				letterpos = calculateAllLetterPositions();
 				if(!ismultiline && !ispassword) {
 					cursorposx = sepx1;
@@ -640,8 +671,7 @@ void gGUITextbox::pressKey() {
 				if(cursorposchar == text.size() + 1 && (text.size() + 2) * 3 * dotradius > width) {
 					cursorposx += 3 * dotradius;
 				}
-			}
-			else {
+			} else {
 				cursorposx -= cw;
 					if(firstutf > 0 && !ismultiline) {
 						int icw = textfont->getStringWidth(text.substr(firstutf - 1, letterlength[firstchar - 1]));
@@ -652,7 +682,9 @@ void gGUITextbox::pressKey() {
 					}
 			}
 			cursorposutf -= letterlength[cursorposchar - 1];
-			letterlength.erase(letterlength.begin() + cursorposchar - 1);
+			if(cursorposchar - 1 >= 0 && cursorposchar - 1 < (int) letterlength.size()) {
+				letterlength.erase(letterlength.begin() + cursorposchar - 1);
+			}
 			letterpos = calculateAllLetterPositions();
 			cursorposchar--;
 			if(cursorposx < 0) {
@@ -710,7 +742,7 @@ void gGUITextbox::pressKey() {
 				lastutf = calculateLastUtf();
 
 				if(selectionmode) {
-				std::vector<int> clickpos = calculateClickPosition(left + cursorposx, top + 1);
+					std::vector<int> clickpos = calculateClickPosition(left + cursorposx, top + 1);
 					selectionposchar2 = clickpos[0];
 					selectionposx2 = clickpos[1];
 					selectionposutf2 = clickpos[2];
@@ -848,7 +880,11 @@ void gGUITextbox::pressKey() {
 			std::string deletedtext = text.substr(sepu1, sepu2 - sepu1);
 			if(sepu2 < text.length()) newtext += text.substr(sepu2, text.length() - sepu2 + 1);
 			text = newtext;
-			letterlength.erase(letterlength.begin() + sepc1, letterlength.begin() + sepc2);
+			if(sepc1 < 0) sepc1 = 0;
+			if(sepc2 > (int) letterlength.size()) sepc2 = (int) letterlength.size();
+			if(sepc1 < sepc2) {
+				letterlength.erase(letterlength.begin() + sepc1, letterlength.begin() + sepc2);
+			}
 			letterpos = calculateAllLetterPositions();
 			cursorposx = sepx1;
 			cursorposutf = sepu1;
@@ -882,7 +918,9 @@ void gGUITextbox::pressKey() {
 				firstchar--;
 				cursorposx += icw;
 			}
-			letterlength.erase(letterlength.begin() + cursorposchar);
+			if(cursorposchar >= 0 && cursorposchar < (int) letterlength.size()) {
+				letterlength.erase(letterlength.begin() + cursorposchar);
+			}
 			letterpos = calculateAllLetterPositions();
 		}
 		selectionmode = false;
@@ -967,7 +1005,11 @@ void gGUITextbox::pressKey() {
 		if(sepu1 > 0) newtext = text.substr(0, sepu1);
 		if(sepu2 < text.length()) newtext += text.substr(sepu2, text.length() - sepu2 + 1);
 		text = newtext;
-		letterlength.erase(letterlength.begin() + sepc1, letterlength.begin() + sepc2);
+		if(sepc1 < 0) sepc1 = 0;
+		if(sepc2 > (int) letterlength.size()) sepc2 = (int) letterlength.size();
+		if(sepc1 < sepc2) {
+			letterlength.erase(letterlength.begin() + sepc1, letterlength.begin() + sepc2);
+		}
 		letterpos = calculateAllLetterPositions();
 		cursorposx = sepx1;
 		if(ispassword) findCursorPositionPassword();
@@ -1059,7 +1101,11 @@ void gGUITextbox::pressKey() {
 			if(sepu1 > 0) newtext = text.substr(0, sepu1);
 			if(sepu2 < text.length()) newtext += text.substr(sepu2, text.length() - sepu2 + 1);
 			text = newtext;
-			letterlength.erase(letterlength.begin() + sepc1, letterlength.begin() + sepc2);
+			if(sepc1 < 0) sepc1 = 0;
+			if(sepc2 > (int) letterlength.size()) sepc2 = (int) letterlength.size();
+			if(sepc1 < sepc2) {
+				letterlength.erase(letterlength.begin() + sepc1, letterlength.begin() + sepc2);
+			}
 			letterpos = calculateAllLetterPositions();
 			cursorposx = sepx1;
 			if(ispassword) findCursorPositionPassword();
@@ -1103,7 +1149,17 @@ void gGUITextbox::pressKey() {
 		cursorposx = firsttextw + pastedtextw - firstposx;
 		if(cursorposx >= width - 2 * initx) {
 			if(!ismultiline && !ispassword) {
+				int iteration_count = 0;
 				do {
+					iteration_count++;
+					if(iteration_count > 1000) {
+						gLoge("gGUITextbox") << "pressKey - Paste scroll loop infinite! firstchar: " << firstchar;
+						break;
+					}
+					if(firstchar < 0 || firstchar >= (int) letterlength.size()) {
+						gLogw("gGUITextbox") << "pressKey - Paste scroll firstchar out of bounds: " << firstchar;
+						break;
+					}
 					firstutf += letterlength[firstchar];
 					firstposx = font->getStringWidth(text.substr(0, firstutf));
 					firstchar++;
@@ -1157,8 +1213,8 @@ void gGUITextbox::pressKey() {
 	} else if(isdoubleclicked) {
 		bool leftchar = false;
 		bool rightchar = false;
-		if(cursorposchar > 0 && (isLetter(text[cursorposutf - 1]) || isNumber(text[cursorposutf - 1]))) leftchar = true;
-		if(cursorposchar < text.length() && (isLetter(text[cursorposutf]) || isNumber(text[cursorposutf]))) rightchar = true;
+		if(cursorposutf > 0 && cursorposutf <= (int) text.length() && (isLetter(text[cursorposutf - 1]) || isNumber(text[cursorposutf - 1]))) leftchar = true;
+		if(cursorposutf >= 0 && cursorposutf < (int) text.length() && (isLetter(text[cursorposutf]) || isNumber(text[cursorposutf]))) rightchar = true;
 		if(!leftchar && !rightchar) return;
 		selectionmode = true;
 		selectionposchar1 = cursorposchar;
@@ -1172,14 +1228,14 @@ void gGUITextbox::pressKey() {
 			int pdc = posdata[0];
 			int pdx = posdata[1];
 			int pdu = posdata[2];
-			do {
-				int tw = textfont->getStringWidth(text.substr(pdu - letterlength[pdc - 1], letterlength[pdc - 1]));
+
+			while (pdc > 0 && pdc - 1 < (int) letterlength.size() && pdu > 0 && (isLetter(text[pdu - 1]) || isNumber(text[pdu - 1]))) {
+				int char_len = letterlength[pdc - 1];
+				int tw = textfont->getStringWidth(gSafeSubstr(text, pdu - char_len, char_len));
 				pdx -= (tw + 2);
-				std::vector<int> posdata2 = calculateClickPosition(left + pdx + initx, top + 1);
-				pdc = posdata2[0];
-				pdx = posdata2[1];
-				pdu = posdata2[2];
-			} while(pdc > firstchar && (isLetter(text[pdu - 1]) || isNumber(text[pdu - 1])));
+				pdu -= char_len;
+				pdc--;
+			}
 			selectionposchar1 = pdc;
 			selectionposx1 = pdx;
 			selectionposutf1 = pdu;
@@ -1188,12 +1244,15 @@ void gGUITextbox::pressKey() {
 			int pdc = posdata[0];
 			int pdx = posdata[1];
 			int pdu = posdata[2];
-			do {
-				int tw = textfont->getStringWidth(text.substr(pdu - letterlength[pdc - 1], letterlength[pdc - 1]));
+			int line_start_utf = (currentline > 1) ? (lineendchar[currentline - 2] + 1) : 0;
+
+			while (pdc > 0 && pdc - 1 < (int) letterlength.size() && pdu > line_start_utf && (isLetter(text[pdu - 1]) || isNumber(text[pdu - 1]))) {
+				int char_len = letterlength[pdc - 1];
+				int tw = textfont->getStringWidth(gSafeSubstr(text, pdu - char_len, char_len));
 				pdx -= tw;
-				pdu -= letterlength[pdc - 1];
+				pdu -= char_len;
 				pdc--;
-			} while(pdx > 0 && (isLetter(text[pdu - 1]) || isNumber(text[pdu - 1])));
+			}
 			selectionposchar1 = pdc;
 			selectionposx1 = pdx;
 			selectionposutf1 = pdu;
@@ -1203,14 +1262,14 @@ void gGUITextbox::pressKey() {
 			int pdc = posdata[0];
 			int pdx = posdata[1];
 			int pdu = posdata[2];
-			do {
-				int tw = textfont->getStringWidth(text.substr(pdu, letterlength[pdc]));
+
+			while (pdc >= 0 && pdc < (int) letterlength.size() && pdu >= 0 && pdu < (int) text.length() && (isLetter(text[pdu]) || isNumber(text[pdu]))) {
+				int char_len = letterlength[pdc];
+				int tw = textfont->getStringWidth(gSafeSubstr(text, pdu, char_len));
 				pdx += tw + 1;
-				std::vector<int> posdata2 = calculateClickPosition(left + pdx, top + 1);
-				pdc = posdata2[0];
-				pdx = posdata2[1];
-				pdu = posdata2[2];
-			} while(pdc < letterlength.size() && (isLetter(text[pdu]) || isNumber(text[pdu])));
+				pdu += char_len;
+				pdc++;
+			}
 			selectionposchar2 = pdc;
 			selectionposx2 = pdx;
 			selectionposutf2 = pdu;
@@ -1219,15 +1278,15 @@ void gGUITextbox::pressKey() {
 			int pdc = posdata[0];
 			int pdx = posdata[1];
 			int pdu = posdata[2];
-			int linewidth = textfont->getStringWidth(lines[currentline - 1]);
-			do {
-				int tw = textfont->getStringWidth(text.substr(pdu, letterlength[pdc]));
+			int line_end_utf = lineendchar[currentline - 1];
+
+			while (pdc >= 0 && pdc < (int) letterlength.size() && pdu < line_end_utf && (isLetter(text[pdu]) || isNumber(text[pdu]))) {
+				int char_len = letterlength[pdc];
+				int tw = textfont->getStringWidth(gSafeSubstr(text, pdu, char_len));
 				pdx += tw + 1;
-				std::vector<int> posdata2 = calculateCursorPositionMultiline(left + pdx, top + 1);
-				pdc = posdata2[0];
-				pdx = posdata2[1];
-				pdu = posdata2[2];
-			} while(pdx < linewidth &&  (isLetter(text[pdu]) || isNumber(text[pdu])));
+				pdu += char_len;
+				pdc++;
+			}
 			selectionposchar2 = pdc;
 			selectionposx2 = pdx;
 			selectionposutf2 = pdu;
@@ -1291,7 +1350,11 @@ void gGUITextbox::charPressed(unsigned int codepoint) {
 			if(sepu1 > 0) newtext = text.substr(0, sepu1);
 			if(sepu2 < text.length()) newtext += text.substr(sepu2, text.length() - sepu2 + 1);
 			text = newtext;
-			letterlength.erase(letterlength.begin() + sepc1, letterlength.begin() + sepc2);
+			if(sepc1 < 0) sepc1 = 0;
+			if(sepc2 > (int) letterlength.size()) sepc2 = (int) letterlength.size();
+			if(sepc1 < sepc2) {
+				letterlength.erase(letterlength.begin() + sepc1, letterlength.begin() + sepc2);
+			}
 			letterpos = calculateAllLetterPositions();
 			cursorposx = sepx1;
 			cursorposutf = sepu1;
@@ -1315,21 +1378,33 @@ void gGUITextbox::charPressed(unsigned int codepoint) {
 		text = newtext;
 		int diffutf = text.length() - previouslengthutf;
 		if(previouslengthutf == 0 || cursorposchar == letterlength.size()) letterlength.push_back(diffutf);
-		else letterlength.insert(letterlength.begin() + cursorposchar, diffutf);
+		else
+			letterlength.insert(letterlength.begin() + cursorposchar, diffutf);
 		letterpos = calculateAllLetterPositions();
 
 		if(ispassword) cursorposx += 3 * dotradius;
-		else cursorposx += textfont->getStringWidth(addedtext);
+		else
+			cursorposx += textfont->getStringWidth(addedtext);
 		cursorposchar++;
 		cursorposutf += diffutf;
 		lastutf += diffutf;
-		
-		if(cursorposx >= width - 2 * initx  && ismultiline) {
+
+		if(cursorposx >= width - 2 * initx && ismultiline) {
 			widthexceeded = false;
 		}
 		if(cursorposx >= width - 2 * initx || widthexceeded) {
 			if(!ismultiline && !ispassword) {
+				int iteration_count = 0;
 				do {
+					iteration_count++;
+					if(iteration_count > 1000) {
+						gLoge("gGUITextbox") << "charPressed - Scroll loop infinite! firstchar: " << firstchar;
+						break;
+					}
+					if(firstchar < 0 || firstchar >= (int) letterlength.size()) {
+						gLogw("gGUITextbox") << "charPressed - Scroll firstchar out of bounds: " << firstchar;
+						break;
+					}
 					firstutf += letterlength[firstchar];
 					firstposx = textfont->getStringWidth(text.substr(0, firstutf));
 					firstchar++;
@@ -1345,7 +1420,7 @@ void gGUITextbox::charPressed(unsigned int codepoint) {
 				cursorposx = textfont->getStringWidth(text.substr(firstutf, cursorposutf - firstutf));
 			}
 		}
-		
+
 		if(ismultiline) {
 			setText(text);
 			if(text.length() - cursorposutf == lines[currentline - 1].size()) {
@@ -1358,7 +1433,7 @@ void gGUITextbox::charPressed(unsigned int codepoint) {
 
 int gGUITextbox::calculateLastUtf() {
 	int lutf = firstutf;
- 	for(int i = firstchar; i < letterlength.size(); i++) {
+	for(int i = firstchar; i < letterlength.size(); i++) {
 		if(letterpos[i] + textfont->getStringWidth(text.substr(lutf, letterlength[i])) - firstposx < width - 2 * initx) {
 			if(textfont->getStringWidth(text.substr(lutf, letterlength[i])) == 0) break;
 			lutf += letterlength[i];
@@ -1472,7 +1547,10 @@ void gGUITextbox::mouseDragged(int x, int y, int button) {
 			selectionposx2 = pos * 3 * dotradius;
 			isdragging = true;
 		} else {
-			std::vector<int> dragpos = calculateClickPosition(x, y);
+			std::vector<int> dragpos;
+			if(ismultiline) dragpos = calculateClickPositionMultiline(x, y);
+			else
+				dragpos = calculateClickPosition(x, y);
 			selectionposchar2 = dragpos[0];
 			selectionposx2 = dragpos[1];
 			selectionposutf2 = dragpos[2];
@@ -1495,7 +1573,7 @@ std::vector<int> gGUITextbox::calculateClickPosition(int x, int y) {
 	std::vector<int> result;
 	for(int i = 0; i < 3; i++) result.push_back(0);
 	if(letterlength.size() != 0) {
-		float alignmentamount = textalignmentamount - initx - (textfont->getStringWidth(text) * ((float)textalignment / 2));
+		float alignmentamount = textalignmentamount - initx - (textfont->getStringWidth(text) * ((float) textalignment / 2));
 		int clickxdiff = x - left;
 		int poschar = firstchar;
 		int posutf = firstutf;
@@ -1513,7 +1591,7 @@ std::vector<int> gGUITextbox::calculateClickPosition(int x, int y) {
 				break;
 			}
 		}
-		
+
 		result[0] = poschar;
 		result[1] = posx;
 		result[2] = posutf;
@@ -1523,7 +1601,9 @@ std::vector<int> gGUITextbox::calculateClickPosition(int x, int y) {
 
 std::vector<int> gGUITextbox::calculateClickPositionMultiline(int x, int y) {
 	std::vector<int> result;
-	for(int i = 0; i < 3; i++) result.push_back(0);
+	for (int i = 0; i < 3; i++) result.push_back(0);
+	if(lines.empty()) return result;
+
 	int selectedline = 1;
 	for(int i = 0; i < rowsnum; i++) {
 		if(y > top + hdiff + i * (lineheight + linetopmargin) && y < top + hdiff + (i + 1) * (lineheight + linetopmargin)) {
@@ -1534,76 +1614,77 @@ std::vector<int> gGUITextbox::calculateClickPositionMultiline(int x, int y) {
 			selectedline = lastdrawnline;
 		}
 	}
-	if(lines[selectedline - 1] == "") {
-		result[0] = cursorposchar;
-		result[1] = cursorposx;
-		result[2] = cursorposutf;
-		return result;
-	}
+	if(selectedline > (int) lines.size()) selectedline = (int) lines.size();
+	if(selectedline < 1) selectedline = 1;
+
+	int line_start_utf = (selectedline > 1 && selectedline - 2 < (int) lineendchar.size()) ? (lineendchar[selectedline - 2] + 1) : 0;
+	int line_end_utf = (selectedline - 1 < (int) lineendchar.size()) ? lineendchar[selectedline - 1] : (int) text.size();
+	int line_start_char = calculateCharNum(gSafeSubstr(text, 0, line_start_utf));
+	int line_end_char = calculateCharNum(gSafeSubstr(text, 0, line_end_utf));
+
 	currentline = selectedline;
 	if(lastdrawnline < selectedline) lastdrawnline = selectedline;
+
+	int poschar = line_start_char;
+	int posutf = line_start_utf;
+	int posx = 0;
+
 	if(letterlength.size() != 0) {
 		int clickxdiff = x - left;
-		int poschar = firstchar;
-		int posutf = firstutf;
-		int startutf = firstutf;
-		if(currentline > 1) {
-			poschar = lineendchar[currentline - 2] + 1;
-			posutf = poschar;
-			startutf = posutf;
-		}
-		int posx = 0;
-		for(int i = 0; i < letterlength.size(); i++) {
+		for (int i = line_start_char; i < line_end_char && i < (int) letterlength.size(); i++) {
 			poschar += 1;
 			posutf += letterlength[i];
-			posx = textfont->getStringWidth(text.substr(startutf, posutf - startutf));
-			if(poschar == lineendchar[currentline - 1]) break;
+			posx = textfont->getStringWidth(gSafeSubstr(text, line_start_utf, posutf - line_start_utf));
+			if(posutf >= line_end_utf) break;
 			if(posx >= clickxdiff) {
 				poschar -= 1;
 				posutf -= letterlength[i];
-				posx = textfont->getStringWidth(text.substr(startutf, posutf - startutf));
+				posx = textfont->getStringWidth(gSafeSubstr(text, line_start_utf, posutf - line_start_utf));
 				break;
 			}
 		}
-		result[0] = poschar;
-		result[1] = posx;
-		result[2] = posutf;
 	}
+	result[0] = poschar;
+	result[1] = posx;
+	result[2] = posutf;
 	return result;
 }
 
 std::vector<int> gGUITextbox::calculateCursorPositionMultiline(int x, int y) {
 	std::vector<int> result;
-	for(int i = 0; i < 3; i++) result.push_back(0);
-	
+	for (int i = 0; i < 3; i++) result.push_back(0);
+	if(lines.empty()) return result;
+
+	if(currentline > (int) lines.size()) currentline = (int) lines.size();
+	if(currentline < 1) currentline = 1;
+
+	int line_start_utf = (currentline > 1 && currentline - 2 < (int) lineendchar.size()) ? (lineendchar[currentline - 2] + 1) : 0;
+	int line_end_utf = (currentline - 1 < (int) lineendchar.size()) ? lineendchar[currentline - 1] : (int) text.size();
+	int line_start_char = calculateCharNum(gSafeSubstr(text, 0, line_start_utf));
+	int line_end_char = calculateCharNum(gSafeSubstr(text, 0, line_end_utf));
+
+	int poschar = line_start_char;
+	int posutf = line_start_utf;
+	int posx = 0;
+
 	if(letterlength.size() != 0) {
 		int clickxdiff = x - left;
-		int poschar = firstchar;
-		int posutf = firstutf;
-		int startutf = firstutf;
-		if(currentline > 1) {
-			poschar = lineendchar[currentline - 2] + 1;
-			posutf = poschar;
-			startutf = posutf;
-		}
-		int posx = 0;
-		for(int i = 0; i < letterlength.size(); i++) {
+		for (int i = line_start_char; i < line_end_char && i < (int) letterlength.size(); i++) {
 			poschar += 1;
 			posutf += letterlength[i];
-			posx = textfont->getStringWidth(text.substr(startutf, posutf - startutf));
-			if(poschar == lineendchar[currentline - 1]) break;
+			posx = textfont->getStringWidth(gSafeSubstr(text, line_start_utf, posutf - line_start_utf));
+			if(posutf >= line_end_utf) break;
 			if(posx >= clickxdiff) {
 				poschar -= 1;
 				posutf -= letterlength[i];
-				posx = textfont->getStringWidth(text.substr(startutf, posutf - startutf));
+				posx = textfont->getStringWidth(gSafeSubstr(text, line_start_utf, posutf - line_start_utf));
 				break;
 			}
 		}
-		
-		result[0] = poschar;
-		result[1] = posx;
-		result[2] = posutf;
 	}
+	result[0] = poschar;
+	result[1] = posx;
+	result[2] = posutf;
 	return result;
 }
 
@@ -1619,6 +1700,8 @@ void gGUITextbox::calculateLinePositionMultiline(int x, int y) {
 		}
 	}
 	if(selectedline > lastdrawnline && selectedline <= rowsnum) selectedline = lastdrawnline;
+	if(selectedline > (int) lines.size()) selectedline = (int) lines.size();
+	if(selectedline < 1) selectedline = 1;
 	currentline = selectedline;
 }
 
@@ -1662,7 +1745,7 @@ void gGUITextbox::calculateLines() {
 	firstposx = 0;
 
 	if(text.size() == 0 || text == "") {
-		for(int i = 0; i < rowsnum; i++) {
+		for (int i = 0; i < rowsnum; i++) {
 			lines.push_back("");
 			lineendchar.push_back(0);
 		}
@@ -1714,22 +1797,22 @@ void gGUITextbox::startSelection() {
 
 std::vector<short> gGUITextbox::readString(const std::string& str) {
 	std::vector<short> lettersizes;
-    int codepoints = 0;
-    for(int i = 0; i < str.length(); i++) {
-        if((str[i] & 0xC0) != 0x80) {
-        	// not UTF-8 intermediate byte
-        	int lsize = 1;
-        	if(i < str.length() - 1 && (str[i + 1] & 0xC0) == 0x80) lsize = 2;
-        	lettersizes.push_back(lsize);
-            codepoints++;
-        } else {
-        }
-    }
-    return lettersizes;
+	int codepoints = 0;
+	for (int i = 0; i < str.length(); i++) {
+		if((str[i] & 0xC0) != 0x80) {
+			// not UTF-8 intermediate byte
+			int lsize = 1;
+			if(i < str.length() - 1 && (str[i + 1] & 0xC0) == 0x80) lsize = 2;
+			lettersizes.push_back(lsize);
+			codepoints++;
+		} else {
+		}
+	}
+	return lettersizes;
 }
 
 bool gGUITextbox::isLetter(char c) {
-    return std::isalpha(static_cast<unsigned char>(c));
+	return std::isalpha(static_cast<unsigned char>(c));
 }
 
 bool gGUITextbox::isNumber(char c) {
@@ -1738,14 +1821,25 @@ bool gGUITextbox::isNumber(char c) {
 }
 
 void gGUITextbox::findCursorPosition() {
+	if(lines.empty()) return;
+	if(currentline > (int) lines.size()) currentline = (int) lines.size();
+	if(currentline < 1) currentline = 1;
+	if(linecount > (int) lines.size()) linecount = (int) lines.size();
+	if(linecount < 1) linecount = 1;
+
 	int linelastchar = 0;
 	if(currentline == linecount) linelastchar = text.size();
-	else for(int i = 0; i < currentline; i++) linelastchar += lines[i].size() + 1;
-	if(cursorposutf >= linelastchar) {
-		if(cursorposutf == lineendchar[currentline - 1]) {
-			cursorposx = textfont->getStringWidth(lines[currentline - 1]);
+	else {
+		for (int i = 0; i < currentline && i < (int) lines.size(); i++) {
+			linelastchar += lines[i].size() + 1;
 		}
-		else  {
+	}
+	if(cursorposutf >= linelastchar) {
+		if(currentline - 1 < (int) lineendchar.size() && cursorposutf == lineendchar[currentline - 1]) {
+			if(currentline - 1 < (int) lines.size()) {
+				cursorposx = textfont->getStringWidth(lines[currentline - 1]);
+			}
+		} else {
 			if(!(currentline < linecount)) {
 				linecount++;
 			}
@@ -1753,17 +1847,31 @@ void gGUITextbox::findCursorPosition() {
 				lastdrawnline++;
 			}
 			currentline++;
-			cursorposx = textfont->getStringWidth(text.substr(lineendchar[currentline - 2] + 1, cursorposutf - lineendchar[currentline - 2] - 1));
+			if(currentline > (int) lines.size()) currentline = (int) lines.size();
+			int prev_idx = currentline - 2;
+			if(prev_idx >= 0 && prev_idx < (int) lineendchar.size()) {
+				cursorposx = textfont->getStringWidth(gSafeSubstr(text, lineendchar[prev_idx] + 1, cursorposutf - lineendchar[prev_idx] - 1));
+			} else {
+				cursorposx = 0;
+			}
 		}
 	} else if(widthexceeded) {
-		if(text.substr(cursorposutf, 1) != " ") {
+		if(cursorposutf < (int) text.length() && gSafeSubstr(text, cursorposutf, 1) != " ") {
 			if(lastdrawnline < rowsnum || currentline == lastdrawnline) lastdrawnline++;
 			linecount++;
 			currentline++;
 			int i = cursorposutf;
-			while(text.substr(i - 1, 1) != " ") i--;
-			cursorposx = textfont->getStringWidth(text.substr(i, cursorposutf - i));
-		} else linecount++;
+			int iteration_count = 0;
+			while (i > 0 && iteration_count < 1000 && gSafeSubstr(text, i - 1, 1) != " ") {
+				i--;
+				iteration_count++;
+			}
+			if(iteration_count >= 1000 || i <= 0) {
+				gLogw("gGUITextbox") << "findCursorPosition - Space backward search stopped. iteration_count: " << iteration_count << ", i: " << i;
+			}
+			cursorposx = textfont->getStringWidth(gSafeSubstr(text, i, cursorposutf - i));
+		} else
+			linecount++;
 	}
 	widthexceeded = false;
 }
@@ -1894,5 +2002,35 @@ int gGUITextbox::calculateContentHeight() {
 }
 
 void gGUITextbox::resetCursorPosition() {
-	cursorposx = cursoroffset + textfont->getStringWidth(lines[currentline - 1].substr(firstutf, cursorposutf - firstutf));
+	if(ispassword) {
+		cursorposx = cursorposchar * 3 * dotradius;
+		return;
+	}
+	if(ismultiline) {
+		if(lines.empty()) return;
+		int currentLineIdx = currentline - 1;
+		if(currentLineIdx < 0) currentLineIdx = 0;
+		if(currentLineIdx >= lines.size()) currentLineIdx = lines.size() - 1;
+		int lineStartUTF = 0;
+		if(currentLineIdx > 0 && currentLineIdx - 1 < lineendchar.size()) {
+			lineStartUTF = lineendchar[currentLineIdx - 1] + 1;
+		}
+		int cursorOffsetInLine = cursorposutf - lineStartUTF;
+		if(cursorOffsetInLine < 0) cursorOffsetInLine = 0;
+		if(currentLineIdx < lines.size() && cursorOffsetInLine > lines[currentLineIdx].length()) {
+			cursorOffsetInLine = lines[currentLineIdx].length();
+		}
+		if(currentLineIdx < lines.size()) {
+			cursorposx = cursoroffset + textfont->getStringWidth(lines[currentLineIdx].substr(0, cursorOffsetInLine));
+		}
+	} else {
+		int start = firstutf;
+		if(start < 0) start = 0;
+		if(start > text.length()) start = text.length();
+		int count = cursorposutf - start;
+		if(count < 0) count = 0;
+		if(start + count > text.length()) count = text.length() - start;
+		cursorposx = cursoroffset + textfont->getStringWidth(text.substr(start, count));
+	}
 }
+
