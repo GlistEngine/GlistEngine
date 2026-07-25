@@ -164,7 +164,7 @@ static void glfwErrorCallback(int error, const char* description) {
 
 gGLFWWindow::gGLFWWindow() {
 	window = nullptr;
-	cursor = new GLFWcursor*[6];
+	cursor = new GLFWcursor*[7];
 	scalex = 1.0f;
 	scaley = 1.0f;
 }
@@ -199,14 +199,39 @@ void gGLFWWindow::initialize(int width, int height, int windowMode, bool isResiz
 		return;
 	}
 
+	// --- Render backend selection (single, safe decision point) ---
+	// The window is created before the renderer, so the backend has to be final
+	// here; otherwise the window and the renderer could disagree.
+	bool usevulkan = (appmanager != nullptr && appmanager->getRenderEngine() == G_RENDERER_VK);
+#if !defined(GLIST_HAS_VULKAN)
+	if(usevulkan) {
+		gLoge("gGLFWWindow") << "Vulkan backend requested but Vulkan development support "
+								"was not available when GlistEngine was built. Falling back to OpenGL." << std::endl;
+		usevulkan = false;
+		appmanager->setRenderEngine(G_RENDERER_GL);
+	}
+#endif
+	if (usevulkan && !glfwVulkanSupported()) {
+		gLoge("gGLFWWindow") << "Vulkan backend requested but not available at runtime "
+								"(is the Vulkan loader installed?). Falling back to OpenGL." << std::endl;
+		usevulkan = false;
+		if (appmanager != nullptr) appmanager->setRenderEngine(G_RENDERER_GL);
+	}
+
 	// Configure glfw
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	if (usevulkan) {
+		// Vulkan renders to a surface it creates itself, so the window must not
+		// carry an OpenGL context.
+		glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+	} else {
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 #if TARGET_OS_OSX
-	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); //case_mac
+		glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); //case_mac
 #endif
+	}
 
 	// All hints available at https://www.glfw.org/docs/latest/window.html#window_hints
 
@@ -274,25 +299,30 @@ void gGLFWWindow::initialize(int width, int height, int windowMode, bool isResiz
 #endif
 
 	// Create cursors
-	cursor[0] = glfwCreateStandardCursor(0x00036001);
-	cursor[1] = glfwCreateStandardCursor(0x00036002);
-	cursor[2] = glfwCreateStandardCursor(0x00036003);
-	cursor[3] = glfwCreateStandardCursor(0x00036004);
-	cursor[4] = glfwCreateStandardCursor(0x00036005);
-	cursor[5] = glfwCreateStandardCursor(0x00036006);
+	cursor[CURSOR_ARROW] = glfwCreateStandardCursor(0x00036001);
+	cursor[CURSOR_IBEAM] = glfwCreateStandardCursor(0x00036002);
+	cursor[CURSOR_CROSSHAIR] = glfwCreateStandardCursor(0x00036003);
+	cursor[CURSOR_HAND] = glfwCreateStandardCursor(0x00036004);
+	cursor[CURSOR_HRESIZE] = glfwCreateStandardCursor(0x00036005);
+	cursor[CURSOR_VRESIZE] = glfwCreateStandardCursor(0x00036006);
+	cursor[CURSOR_CUSTOM] = nullptr;
 
 	if (cursor[0]) {
 		glfwSetCursor(window, cursor[0]);
 	}
 
-	glfwMakeContextCurrent(window);
-    glfwSwapInterval(vsync ? 1 : 0);
-	glewExperimental = GL_TRUE;
-	GLenum glewError = glewInit();
-	if (glewError != GLEW_OK) {
-		gLoge("gGLFWWindow") << "Failed to initialize GLEW: " << glewGetErrorString(glewError) << std::endl;
-		glfwTerminate();
-		return;
+	// OpenGL context management and GLEW are meaningless under Vulkan; that
+	// window has no client API at all.
+	if (!usevulkan) {
+		glfwMakeContextCurrent(window);
+		glfwSwapInterval(vsync ? 1 : 0);
+		glewExperimental = GL_TRUE;
+		GLenum glewError = glewInit();
+		if (glewError != GLEW_OK) {
+			gLoge("gGLFWWindow") << "Failed to initialize GLEW: " << glewGetErrorString(glewError) << std::endl;
+			glfwTerminate();
+			return;
+		}
 	}
 
 //	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
@@ -331,14 +361,17 @@ bool gGLFWWindow::getShouldClose() {
 
 void gGLFWWindow::update() {
 	G_PROFILE_ZONE_SCOPED_N("gGLFWWindow::update()");
-	// End window drawing
-	G_CHECK_GL(glfwSwapBuffers(window));
+	// End window drawing. A GLFW_NO_API window (Vulkan) owns no buffers to swap,
+	// and asking GLFW to swap them raises GLFW_NO_WINDOW_CONTEXT.
+	if(appmanager == nullptr || appmanager->getRenderEngine() != G_RENDERER_VK) {
+		G_CHECK_GL(glfwSwapBuffers(window));
+	}
 	G_CHECK_GL(glfwPollEvents());
 }
 
 void gGLFWWindow::close() {
 	// Clean up cursors
-	for (int i = 0; i < 6; i++) {
+	for (int i = 0; i < 7; i++) {
 		if (cursor[i]) {
 			glfwDestroyCursor(cursor[i]);
 			cursor[i] = nullptr;
@@ -357,7 +390,7 @@ void gGLFWWindow::setVsync(bool vsync) {
 }
 
 void gGLFWWindow::setCursor(int cursorNo) {
-	if (cursorNo >= 0 && cursorNo < 6 && cursor[cursorNo]) {
+	if (cursorNo >= 0 && cursorNo < 7 && cursor[cursorNo]) {
 		glfwSetCursor(window, cursor[cursorNo]);
 	}
 }
@@ -392,6 +425,35 @@ void gGLFWWindow::setCursorMode(gCursorMode cursorMode) {
 
 void gGLFWWindow::setCursorPos(int x, int y) {
 	glfwSetCursorPos(window, x / scalex, y / scaley);
+}
+
+void gGLFWWindow::setCustomCursor(gImage& image, int hotspotX, int hotspotY){
+	int w = image.getWidth();
+	int h = image.getHeight();
+	unsigned char* pixels = image.getImageData();
+
+	if(!pixels || w <= 0 || h <= 0){
+		gLogw("gGLFWWindow") << "Failed to set custom cursor: invalid gImage" << std::endl;
+		return;
+	}
+
+	GLFWimage img;
+	img.width = w;
+	img.height = h;
+	img.pixels = pixels;
+	GLFWcursor* newcursor = glfwCreateCursor(&img, hotspotX, hotspotY);
+
+	if(!newcursor){
+		gLoge("gGLFWWindow") << "Failed to create custom cursor" << std::endl;
+		return;
+	}
+	
+	if(cursor[CURSOR_CUSTOM]){
+		glfwDestroyCursor(cursor[CURSOR_CUSTOM]);
+	}
+
+	cursor[CURSOR_CUSTOM] = newcursor;
+	setCursor(CURSOR_CUSTOM);
 }
 
 void gGLFWWindow::setClipboardString(std::string text) {
@@ -484,4 +546,3 @@ void gGLFWWindow::setScale(float x, float y) {
 	callEvent(event);
 	setSize(width, height);
 }
-

@@ -14,6 +14,7 @@
 #include "gCanvasManager.h"
 #include "gGUIFrame.h"
 
+#include <algorithm>
 #include <thread>
 #include "gGUIAppThread.h"
 #include "gTracy.h"
@@ -37,18 +38,20 @@
 #include "emscripten.h"
 #endif
 
-void gStartEngine(gBaseApp* baseApp, const std::string& appName, int windowMode, int width, int height, bool isResizable) {
-    gStartEngine(baseApp, appName, windowMode, width, height, G_SCREENSCALING_AUTO_ONCE, width, height, isResizable);
+void gStartEngine(gBaseApp* baseApp, const std::string& appName, int windowMode, int width, int height, bool isResizable, int renderEngine) {
+    gStartEngine(baseApp, appName, windowMode, width, height, G_SCREENSCALING_AUTO_ONCE, width, height, isResizable, renderEngine);
 }
 
-void gStartEngine(gBaseApp* baseApp, const std::string& appName, int windowMode, int unitWidth, int unitHeight, int screenScaling, int width, int height, bool isResizable) {
+void gStartEngine(gBaseApp* baseApp, const std::string& appName, int windowMode, int unitWidth, int unitHeight, int screenScaling, int width, int height, bool isResizable, int renderEngine) {
     if(windowMode == G_WINDOWMODE_NONE) windowMode = G_WINDOWMODE_APP;
 #if TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
     ios_main(baseApp, appName.c_str(), windowMode, unitWidth, unitHeight, screenScaling, width, height, isResizable);
 #elif defined(ANDROID)
-    new gAppManager(appName, baseApp, width, height, windowMode, unitWidth, unitHeight, screenScaling, isResizable, G_LOOPMODE_NORMAL);
+    gAppManager* manager = new gAppManager(appName, baseApp, width, height, windowMode, unitWidth, unitHeight, screenScaling, isResizable, G_LOOPMODE_NORMAL);
+    manager->setRenderEngine(renderEngine);
 #else
     gAppManager manager(appName, baseApp, width, height, windowMode, unitWidth, unitHeight, screenScaling, isResizable, G_LOOPMODE_NORMAL);
+	manager.setRenderEngine(renderEngine);
 	manager.runApp();
 #endif
 }
@@ -175,6 +178,14 @@ void gAppManager::setup() {
     if(setupcomplete) {
         return;
     }
+    // App setup loads images, fonts and shaders through the OpenGL path. It is
+    // skipped while the Vulkan backend has no rendering path, otherwise it would
+    // call GL functions without a context.
+    if(renderengine == G_RENDERER_VK) {
+        gLogi("gAppManager") << "Vulkan backend: skipping app setup until the Vulkan rendering path is implemented.";
+        setupcomplete = true;
+        return;
+    }
     app->setup();
     setupcomplete = true;
 }
@@ -207,15 +218,19 @@ void gAppManager::initialize() {
 			unitheight = this->height;
 		}
 		// Create renderer
-		gRenderObject::createRenderer();
-		gBaseGUIObject::initializeResources();
+		gRenderObject::createRenderer(renderengine);
+		// The engine's GUI resources are OpenGL based. Under the Vulkan backend the
+		// window carries no GL context, so they stay uninitialised until the Vulkan
+		// rendering path exists.
+		const bool isvulkanbackend = (renderengine == G_RENDERER_VK);
+		if(!isvulkanbackend) gBaseGUIObject::initializeResources();
 		// Update renderer dimensions
 		renderer->setScreenSize(width, height);
 		renderer->setUnitScreenSize(unitwidth, unitheight);
 		renderer->setScreenScaling(screenscaling);
 
 		// Create managers if not created
-		if(!guimanager) {
+		if(!isvulkanbackend && !guimanager) {
 			guimanager = new gGUIManager(app, renderer->getWidth(), renderer->getHeight());
 			guimanager->getCurrentFrame()->getRenderer()->updateLights();
 		}
@@ -226,6 +241,7 @@ void gAppManager::initialize() {
 }
 
 void gAppManager::loop() {
+
     if(loopmode == G_LOOPMODE_NONE) {
         return;
     }
@@ -238,6 +254,14 @@ void gAppManager::loop() {
 #endif
     //gLogi("gAppManager") << "starting loop";
     isrunning = true;
+#if defined(ANDROID) || TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
+	// Android and iOS drive the app through initialize()/setup()/loop() directly
+	// instead of runApp(), so the GUI app thread must also be started here. The
+	// desktop platforms reach this function through runApp(), which has already
+	// started it, so the call is confined here rather than changing their
+	// startup path. (On iOS this function runs once, from setup().)
+	if(isguiapp && guiappthread) guiappthread->start();
+#endif
 	starttime = AppClock::now();
 
 #ifdef ANDROID
@@ -367,16 +391,41 @@ void gAppManager::setScreenSize(int width, int height) {
 	G_PROFILE_ZONE_SCOPED_N("gAppManager::setScreenSize()");
 	G_PROFILE_ZONE_VALUE(width);
 	G_PROFILE_ZONE_VALUE(height);
-	if(screenscaling == G_SCREENSCALING_AUTO_ONCE) {
+#if defined(ANDROID) || defined(IOS)
+	// Surface recreation can briefly report an empty drawable. Keep the last
+	// valid logical layout until the platform delivers the replacement surface.
+	if(width <= 0 || height <= 0) return;
+#endif
+	if(screenscaling == G_SCREENSCALING_AUTO_ONCE
+#if defined(ANDROID) || defined(IOS)
+			&& !isguiapp
+#endif
+	) {
 		// We don't want to update the unitresolution, that's why its setting directly. gAppManager needs to be a friend of gRenderer to do this.
 		renderer->unitwidth = renderer->scaleX(width);
 		renderer->unitheight = renderer->scaleY(height);
 	}
 	renderer->setScreenSize(width, height);
+#if defined(ANDROID) || defined(IOS)
+	if(isguiapp && screenscaling >= G_SCREENSCALING_AUTO && unitwidth > 0 && unitheight > 0) {
+		// Match the logical GUI aspect to the current mobile surface while
+		// preserving the app's short-edge design unit. This must run after
+		// setScreenSize(), which resets the 2D projection to physical dimensions.
+		const int shortedge = std::min(unitwidth, unitheight);
+		const bool islandscape = width > height;
+		const int logicalwidth = islandscape
+				? (width * shortedge + height / 2) / height
+				: shortedge;
+		const int logicalheight = islandscape
+				? shortedge
+				: (height * shortedge + width / 2) / width;
+		renderer->setUnitScreenSize(logicalwidth, logicalheight);
+	}
+#endif
     if(iscanvasset && canvasmanager->getCurrentCanvas()) {
 	    canvasmanager->getCurrentCanvas()->windowResized(renderer->getWidth(), renderer->getHeight());
     }
-    if(iscanvasset && guimanager->isframeset) {
+    if(iscanvasset && guimanager != nullptr && guimanager->isframeset) {
 	    guimanager->windowResized(renderer->getWidth(), renderer->getHeight());
     }
 }
@@ -439,6 +488,10 @@ gCursorMode gAppManager::getCursorMode() {
 	return window->getCursorMode();
 }
 
+void gAppManager::setCustomCursor(gImage& image, int hotspotX, int hotspotY){
+	window->setCustomCursor(image, hotspotX, hotspotY);
+}
+
 void gAppManager::setWindowIcon(std::string pngFullpath) {
 	window->setIcon(pngFullpath);
 }
@@ -498,6 +551,16 @@ void gAppManager::tick() {
     		component->update();
     	}
 		executeQueue();
+        return;
+    }
+
+    // The Vulkan backend initialises only: there is no GL context and no Vulkan
+    // frame path yet, so the frame body is skipped. Events are still polled so the
+    // window stays responsive and closable.
+    if(renderengine == G_RENDERER_VK) {
+        if(inputmanager) inputmanager->update();
+        window->update();
+        executeQueue();
         return;
     }
 
@@ -591,41 +654,15 @@ bool gAppManager::onWindowResizedEvent(gWindowResizeEvent& event) {
     if(!canvasmanager || !initialized || (!getCurrentCanvas() && !canvasmanager->getTempCanvas())) {
         return true;
     }
-    setScreenSize(event.getWidth(), event.getHeight());
 #ifdef ANDROID
+    // setScreenSize relayouts GUI frames. Choose the logical dimensions before
+    // that relayout so a rotated scrollable never receives the old viewport.
+    // The EGL surface is authoritative here: Android can deliver an orientation
+    // callback before the new surface size is available.
     delayedresize = false;
-    if(gRenderer::getScreenScaling() >= G_SCREENSCALING_AUTO && olddeviceorientation != deviceorientation) {
-		DeviceOrientation orientation = deviceorientation;
-		DeviceOrientation oldorientation = olddeviceorientation;
-		// Normalize values
-		if(orientation == DEVICEORIENTATION_REVERSE_PORTRAIT) {
-			orientation = DEVICEORIENTATION_PORTRAIT;
-		} else if(orientation == DEVICEORIENTATION_REVERSE_LANDSCAPE) {
-			orientation = DEVICEORIENTATION_LANDSCAPE;
-		}
-		if(oldorientation == DEVICEORIENTATION_REVERSE_PORTRAIT) {
-			oldorientation = DEVICEORIENTATION_PORTRAIT;
-		} else if(oldorientation == DEVICEORIENTATION_REVERSE_LANDSCAPE) {
-			oldorientation = DEVICEORIENTATION_LANDSCAPE;
-		}
-
-		bool swapdimensions = oldorientation != orientation;
-		if((orientation != DEVICEORIENTATION_PORTRAIT && orientation != DEVICEORIENTATION_LANDSCAPE) ||
-			(oldorientation != DEVICEORIENTATION_PORTRAIT && oldorientation != DEVICEORIENTATION_LANDSCAPE)) {
-			// If this orientation is not known, we should not do anything
-			swapdimensions = false;
-		}
-
-		// Orientation changed, we should swap height and width
-		if(swapdimensions) {
-			int unitwidth = gBaseCanvas::getRenderer()->getUnitWidth();
-			int unitheight = gBaseCanvas::getRenderer()->getUnitHeight();
-			// Swap width and height values
-			gRenderer::setUnitScreenSize(unitheight, unitwidth);
-		}
-    }
     olddeviceorientation = deviceorientation;
 #endif
+    setScreenSize(event.getWidth(), event.getHeight());
     return false;
 }
 
@@ -644,7 +681,7 @@ bool gAppManager::onWindowScaleChangedEvent(gWindowScaleChangedEvent& event) {
 
 bool gAppManager::onCharTypedEvent(gCharTypedEvent& event) {
 //	if (!canvasmanager || !getCurrentCanvas()) return true;
-    if(guimanager->isframeset) guimanager->charPressed(event.getCharacter());
+    if(guimanager != nullptr && guimanager->isframeset) guimanager->charPressed(event.getCharacter());
     for (gBasePlugin*& plugin : gBasePlugin::usedplugins) plugin->charPressed(event.getCharacter());
     if(canvasmanager && getCurrentCanvas()) getCurrentCanvas()->charPressed(event.getCharacter());
     return false;
@@ -652,7 +689,7 @@ bool gAppManager::onCharTypedEvent(gCharTypedEvent& event) {
 
 bool gAppManager::onKeyPressedEvent(gKeyPressedEvent& event) {
 //    if (!canvasmanager || !getCurrentCanvas()) return true;
-    if(guimanager->isframeset) guimanager->keyPressed(event.getKeyCode());
+    if(guimanager != nullptr && guimanager->isframeset) guimanager->keyPressed(event.getKeyCode());
     for (gBasePlugin*& plugin : gBasePlugin::usedplugins) plugin->keyPressed(event.getKeyCode());
     if(canvasmanager && getCurrentCanvas()) getCurrentCanvas()->keyPressed(event.getKeyCode());
     return false;
@@ -660,7 +697,7 @@ bool gAppManager::onKeyPressedEvent(gKeyPressedEvent& event) {
 
 bool gAppManager::onKeyReleasedEvent(gKeyReleasedEvent& event) {
 //    if (!canvasmanager || !getCurrentCanvas()) return true;
-    if(guimanager->isframeset) guimanager->keyReleased(event.getKeyCode());
+    if(guimanager != nullptr && guimanager->isframeset) guimanager->keyReleased(event.getKeyCode());
     for (gBasePlugin*& plugin : gBasePlugin::usedplugins) plugin->keyReleased(event.getKeyCode());
     if(canvasmanager && getCurrentCanvas()) canvasmanager->getCurrentCanvas()->keyReleased(event.getKeyCode());
     return false;
@@ -675,11 +712,11 @@ bool gAppManager::onMouseMovedEvent(gMouseMovedEvent& event) {
         ypos = gRenderer::scaleY(event.getY());
     }
     if(mousebuttonstate) {
-        if(guimanager->isframeset) guimanager->mouseDragged(xpos, ypos, mousebuttonstate);
+        if(guimanager != nullptr && guimanager->isframeset) guimanager->mouseDragged(xpos, ypos, mousebuttonstate);
         for(gBasePlugin*& plugin : gBasePlugin::usedplugins) plugin->mouseDragged(xpos, ypos, mousebuttonstate);
         if(canvasmanager && getCurrentCanvas()) canvasmanager->getCurrentCanvas()->mouseDragged(xpos, ypos, mousebuttonstate);
     } else {
-        if(guimanager->isframeset) guimanager->mouseMoved(xpos, ypos);
+        if(guimanager != nullptr && guimanager->isframeset) guimanager->mouseMoved(xpos, ypos);
         for(gBasePlugin*& plugin : gBasePlugin::usedplugins) plugin->mouseMoved(xpos, ypos);
         if(canvasmanager && getCurrentCanvas()) canvasmanager->getCurrentCanvas()->mouseMoved(xpos, ypos);
     }
@@ -696,7 +733,7 @@ bool gAppManager::onMouseButtonPressedEvent(gMouseButtonPressedEvent& event) {
         xpos = gRenderer::scaleX(event.getX());
         ypos = gRenderer::scaleY(event.getY());
     }
-    if(guimanager->isframeset) guimanager->mousePressed(xpos, ypos, event.getMouseButton());
+    if(guimanager != nullptr && guimanager->isframeset) guimanager->mousePressed(xpos, ypos, event.getMouseButton());
     for(gBasePlugin*& plugin : gBasePlugin::usedplugins) plugin->mousePressed(xpos, ypos, event.getMouseButton());
     if(canvasmanager && getCurrentCanvas()) canvasmanager->getCurrentCanvas()->mousePressed(xpos, ypos, event.getMouseButton());
     return false;
@@ -712,7 +749,7 @@ bool gAppManager::onMouseButtonReleasedEvent(gMouseButtonReleasedEvent& event) {
         xpos = gRenderer::scaleX(event.getX());
         ypos = gRenderer::scaleY(event.getY());
     }
-    if(guimanager->isframeset) guimanager->mouseReleased(xpos, ypos, event.getMouseButton());
+    if(guimanager != nullptr && guimanager->isframeset) guimanager->mouseReleased(xpos, ypos, event.getMouseButton());
     for(gBasePlugin*& plugin : gBasePlugin::usedplugins) plugin->mouseReleased(xpos, ypos, event.getMouseButton());
     if(canvasmanager && getCurrentCanvas()) canvasmanager->getCurrentCanvas()->mouseReleased(xpos, ypos, event.getMouseButton());
     return false;
@@ -736,7 +773,7 @@ bool gAppManager::onWindowMouseExitEvent(gWindowMouseExitEvent& event) {
 
 bool gAppManager::onMouseScrolledEvent(gMouseScrolledEvent& event) {
 //    if (!canvasmanager || !getCurrentCanvas()) return true;
-    if(guimanager->isframeset) guimanager->mouseScrolled(event.getOffsetX(), event.getOffsetY());
+    if(guimanager != nullptr && guimanager->isframeset) guimanager->mouseScrolled(event.getOffsetX(), event.getOffsetY());
     for (gBasePlugin*& plugin : gBasePlugin::usedplugins) plugin->mouseScrolled(event.getOffsetX(), event.getOffsetY());
     if(canvasmanager && getCurrentCanvas()) canvasmanager->getCurrentCanvas()->mouseScrolled(event.getOffsetX(), event.getOffsetY());
     return false;
@@ -852,6 +889,36 @@ bool gAppManager::onDeviceOrientationChangedEvent(gDeviceOrientationChangedEvent
 }
 
 bool gAppManager::onTouchEvent(gTouchEvent& event) {
+	// A GUI application owns its touch interpretation.  The application manager
+	// only converts the platform event into the existing GUI mouse contract; it
+	// deliberately carries no page-scroll state or gesture policy.
+	if(isguiapp && guimanager && guimanager->isframeset && event.getInputCount() > 0) {
+		const int inputindex = event.getActionIndex();
+		if(inputindex >= 0 && inputindex < event.getInputCount()) {
+			TouchInput& input = event.getInputs()[inputindex];
+			int x = input.x;
+			int y = input.y;
+			if(gRenderer::getScreenScaling() > G_SCREENSCALING_NONE) {
+				x = gRenderer::scaleX(x);
+				y = gRenderer::scaleY(y);
+			}
+			const ActionType action = event.getAction();
+			submitToMainThread([this, x, y, action]() {
+				if(!guimanager || !guimanager->isframeset) return;
+				if(action == ACTIONTYPE_POINTER_DOWN || action == ACTIONTYPE_DOWN) {
+					guimanager->mouseMoved(x, y);
+					guimanager->mousePressed(x, y, 0);
+				} else if(action == ACTIONTYPE_MOVE) {
+					guimanager->mouseDragged(x, y, 0);
+				} else if(action == ACTIONTYPE_POINTER_UP || action == ACTIONTYPE_UP
+						|| action == ACTIONTYPE_CANCEL || action == ACTIONTYPE_OUTSIDE) {
+					guimanager->mouseReleased(x, y, 0);
+				}
+			});
+			return false;
+		}
+	}
+
 	if(canvasmanager && getCurrentCanvas()) {
 		auto* target = getCurrentCanvas();
 		if (event.getAction() == ACTIONTYPE_POINTER_DOWN || (event.getInputCount() == 1 && event.getAction() == ACTIONTYPE_DOWN)) {

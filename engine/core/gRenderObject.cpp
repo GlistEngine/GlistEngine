@@ -24,9 +24,9 @@
 #include "gGrid.h"
 #include "gRenderer.h"
 #include "gGLRenderEngine.h"
+#include "gVKRenderEngine.h"
 
 bool gRenderObject::isshadowmappingenabled = false;
-
 
 gRenderObject::gRenderObject() {
 	// Renderer should be created by the gAppManager
@@ -100,9 +100,13 @@ gRenderer* gRenderObject::getRenderer() {
 	return renderer;
 }
 
-void gRenderObject::createRenderer() {
+void gRenderObject::createRenderer(int renderEngine) {
 	destroyRenderer(); // Delete the previous renderer if exists. If renderer is null, this will have no effect.
-	renderer = new gGLRenderEngine();
+	if(renderEngine == G_RENDERER_VK) {
+		renderer = new gVKRenderEngine();
+	} else {
+		renderer = new gGLRenderEngine();
+	}
 	renderer->init();
 }
 

@@ -14,6 +14,7 @@ gGUIToolbar::gGUIToolbar() {
 	toolbartype = TOOLBAR_HORIZONTAL;
 	toolbarforegroundcolor = *foregroundcolor;
 	toolbarbottomlinecolor = *backgroundcolor;
+	backgroundfillenabled = true;
 }
 
 gGUIToolbar::~gGUIToolbar() {
@@ -32,13 +33,13 @@ void gGUIToolbar::draw() {
 //	gLogi("gGUIToolbar") << "draw";
 //	gLogi("gGUIToolbar") << "l:" << left << ", t:" << top << ", w:" << width << ", h:" << height;
 	gColor* oldcolor = renderer->getColor();
-	if(toolbartype == TOOLBAR_HORIZONTAL) {
+	if(backgroundfillenabled && toolbartype == TOOLBAR_HORIZONTAL) {
 		renderer->setColor(&toolbarforegroundcolor);
 		gDrawRectangle(left, top, width, height, true);
 		renderer->setColor(&toolbarbottomlinecolor);
 		gDrawLine(left, bottom, right, bottom);
 	//	gDrawRectangle(left, top, width, height, false);
-	} else {
+	} else if(backgroundfillenabled) {
 		renderer->setColor(&toolbarforegroundcolor);
 		gDrawRectangle(left, top, width, height, true);
 		renderer->setColor(&toolbarbottomlinecolor);
@@ -212,4 +213,8 @@ void gGUIToolbar::setToolbarForegroundColor(gColor color) {
 
 void gGUIToolbar::setToolbarBottomLineColor(gColor color) {
 	toolbarbottomlinecolor = color;
+}
+
+void gGUIToolbar::enableBackgroundFill(bool enabled) {
+	backgroundfillenabled = enabled;
 }

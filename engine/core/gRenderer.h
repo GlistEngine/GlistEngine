@@ -180,6 +180,7 @@ public:
 	static void setScreenSize(int screenWidth, int screenHeight);
 	static void setUnitScreenSize(int unitWidth, int unitHeight);
 	static void setScreenScaling(int screenScaling);
+	static void updateProjectionMatrix2d();
 
 	int getWidth();
 	int getHeight();

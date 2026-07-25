@@ -7,6 +7,7 @@
 
 #include "gGUINavigation.h"
 #include "gBaseApp.h"
+#include <algorithm>
 
 
 gGUINavigation::gGUINavigation() {
@@ -15,6 +16,17 @@ gGUINavigation::gGUINavigation() {
 	panelinepad = 20;
 	selectedpane = 0;
 	toolbarenabled = false;
+	bottombarenabled = false;
+	bottombarpressactive = false;
+	bottombarhorizontalpadding = 16;
+	bottombarmaximumcontentwidth = 720;
+	modernbottombarenabled = false;
+	bottombarsurfaceleft = 0;
+	bottombarsurfacetop = 0;
+	bottombarsurfacewidth = 0;
+	bottombarsurfaceheight = 0;
+	bottombarsurfacecolor = gColor(0.98f, 0.985f, 1.0f, 1.0f);
+	bottombarshadowcolor = gColor(0.02f, 0.05f, 0.12f, 0.16f);
 }
 
 gGUINavigation::~gGUINavigation() {
@@ -24,20 +36,48 @@ void gGUINavigation::set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBa
 	totalh = h;
 	gGUIScrollable::set(root, topParentGUIObject, parentGUIObject, parentSlotLineNo, parentSlotColumnNo, x, y, w, h);
 	gGUIScrollable::setDimensions(w, h);
+	if(bottombarenabled) layoutBottomBar();
 }
 
 void gGUINavigation::update() {
-	height = renderer->getHeight();
-	maintoolbarsizer.set( 0, height - 40, width, 32);
+	if(bottombarenabled) {
+		layoutBottomBar();
+	} else {
+		// Legacy navigation fills the desktop window. Keep this exact behavior
+		// unless the new bottom-bar mode was explicitly enabled.
+		height = renderer->getHeight();
+		maintoolbarsizer.set(0, height - 40, width, 32);
+	}
 }
 
 void gGUINavigation::draw() {
-	gColor* oldcolor = renderer->getColor();
+	gColor oldcolor = *renderer->getColor();
 	gGUIScrollable::drawContent();
-	renderer->setColor(navigationbackgroundcolor);
-	gDrawRectangle(0, 0, boxw, boxh + panetoph, true);
+	if(modernbottombarenabled) {
+		renderer->setColor(backgroundcolor);
+		gDrawRectangle(left, top, width, height, true);
+		const int radius = bottombarsurfaceheight / 2;
+		renderer->setColor(&bottombarshadowcolor);
+		gDrawRectangle(bottombarsurfaceleft + radius, bottombarsurfacetop + 3,
+				std::max(0, bottombarsurfacewidth - radius * 2), bottombarsurfaceheight, true);
+		gDrawCircle(bottombarsurfaceleft + radius, bottombarsurfacetop + radius + 3, radius, true, 40);
+		gDrawCircle(bottombarsurfaceleft + bottombarsurfacewidth - radius,
+				bottombarsurfacetop + radius + 3, radius, true, 40);
+		renderer->setColor(&bottombarsurfacecolor);
+		gDrawRectangle(bottombarsurfaceleft + radius, bottombarsurfacetop,
+				std::max(0, bottombarsurfacewidth - radius * 2), bottombarsurfaceheight, true);
+		gDrawCircle(bottombarsurfaceleft + radius, bottombarsurfacetop + radius, radius, true, 40);
+		gDrawCircle(bottombarsurfaceleft + bottombarsurfacewidth - radius,
+				bottombarsurfacetop + radius, radius, true, 40);
+	} else if(bottombarenabled) {
+		renderer->setColor(navigationbackgroundcolor);
+		gDrawRectangle(left, top, width, height, true);
+	} else {
+		renderer->setColor(navigationbackgroundcolor);
+		gDrawRectangle(0, 0, boxw, boxh + panetoph, true);
+	}
 
-	for(int i = 0; i < panes.size(); i++) {
+	for(int i = 0; !bottombarenabled && i < panes.size(); i++) {
 		if(!paneenabled[i]) {
 			renderer->setColor(196, 196, 196);
 			font->drawText(gToStr(i + 1) + ". " + panes[i]->getTitle(), panelinepad, panetoph + i * panelineh);
@@ -55,7 +95,7 @@ void gGUINavigation::draw() {
 		toolbar.draw();
 	}
 
-	renderer->setColor(oldcolor);
+	renderer->setColor(&oldcolor);
 }
 
 void gGUINavigation::addPane(gGUIPane* newPane, bool isEnabled) {
@@ -123,14 +163,21 @@ void gGUINavigation::showPane(gGUIPane* paneToShow) {
 void gGUINavigation::mousePressed(int x, int y, int button) {
 	gGUIScrollable::mousePressed(x, y, button);
 
-	if(toolbarenabled && x >= 0 && y >= height - 40 && x < width && y < height - 40 + 32) {
+	if(bottombarenabled && x >= left && y >= top && x < right && y < bottom) {
+		// Bottom-bar controls are laid out in absolute GUI coordinates. Forward
+		// directly to their sizer so gGUIContainer does not localize them twice.
+		// Refresh hover first because mobile touch streams may not send a move.
+		toolbarsizer.mouseMoved(x, y);
+		toolbarsizer.mousePressed(x, y, button);
+		bottombarpressactive = true;
+	} else if(toolbarenabled && x >= 0 && y >= height - 40 && x < width && y < height - 8) {
 		toolbar.mousePressed(x, y, button);
 	}
 }
 
 void gGUINavigation::mouseReleased(int x, int y, int button) {
 	gGUIScrollable::mouseReleased(x, y, button);
-	for(int i = 0; i < panes.size(); i++) {
+	for(int i = 0; !bottombarenabled && i < panes.size(); i++) {
 		if(!paneenabled[i]) continue;
 		if(x >= panelinepad && x < width - panelinepad && y >= panetoph + i * panelineh - font->getSize() && y < panetoph + i * panelineh + font->getSize() / 2) {
 			selectedpane = i;
@@ -139,19 +186,29 @@ void gGUINavigation::mouseReleased(int x, int y, int button) {
 		}
 	}
 
-	if(toolbarenabled && x >= 0 && y >= height - 40 && x < width && y < height - 40 + 32) {
+	if(bottombarenabled && bottombarpressactive) {
+		const bool isinside = x >= left && y >= top && x < right && y < bottom;
+		// A control which received press must always receive release. Passing an
+		// outside coordinate cancels the click while reliably clearing its state.
+		toolbarsizer.mouseReleased(isinside ? x : -100000, isinside ? y : -100000, button);
+		bottombarpressactive = false;
+	} else if(toolbarenabled && x >= 0 && y >= height - 40 && x < width && y < height - 8) {
 		toolbar.mouseReleased(x, y, button);
 	}
 }
 
 void gGUINavigation::mouseMoved(int x, int y) {
-	if(toolbarenabled && x >= 0 && y >= height - 40 && x < width && y < height - 40 + 32) {
+	if(bottombarenabled && x >= left && y >= top && x < right && y < bottom) {
+		toolbarsizer.mouseMoved(x, y);
+	} else if(toolbarenabled && x >= 0 && y >= height - 40 && x < width && y < height - 8) {
 		toolbar.mouseMoved(x, y);
 	}
 }
 
 void gGUINavigation::mouseDragged(int x, int y, int button) {
-	if(toolbarenabled && x >= 0 && y >= height - 40 && x < width && y < height - 40 + 32) {
+	if(bottombarenabled && x >= left && y >= top && x < right && y < bottom) {
+		toolbarsizer.mouseDragged(x, y, button);
+	} else if(toolbarenabled && x >= 0 && y >= height - 40 && x < width && y < height - 8) {
 		toolbar.mouseDragged(x, y, button);
 	}
 }
@@ -181,7 +238,45 @@ void gGUINavigation::enableToolbar() {
 	toolbarenabled = true;
 }
 
+void gGUINavigation::enableBottomBar() {
+	enableToolbar();
+	bottombarenabled = true;
+	layoutBottomBar();
+}
+
+void gGUINavigation::enableModernBottomBar() {
+	enableBottomBar();
+	modernbottombarenabled = true;
+	toolbar.enableBackgroundFill(false);
+	layoutBottomBar();
+}
+
+void gGUINavigation::setBottomBarLayout(int horizontalPadding, int maximumContentWidth) {
+	bottombarhorizontalpadding = std::max(0, horizontalPadding);
+	bottombarmaximumcontentwidth = std::max(0, maximumContentWidth);
+	if(bottombarenabled) layoutBottomBar();
+}
+
+void gGUINavigation::layoutBottomBar() {
+	const int verticalmargin = modernbottombarenabled ? 6 : 0;
+	const int surfacemargin = modernbottombarenabled ? 12 : 0;
+	bottombarsurfacewidth = std::max(0, width - surfacemargin * 2);
+	if(modernbottombarenabled && bottombarmaximumcontentwidth > 0) {
+		bottombarsurfacewidth = std::min(bottombarsurfacewidth,
+				bottombarmaximumcontentwidth + bottombarhorizontalpadding * 2);
+	}
+	bottombarsurfaceheight = std::max(0, height - verticalmargin * 2);
+	bottombarsurfaceleft = left + (width - bottombarsurfacewidth) / 2;
+	bottombarsurfacetop = top + verticalmargin;
+
+	int contentwidth = std::max(0, bottombarsurfacewidth - bottombarhorizontalpadding * 2);
+	if(bottombarmaximumcontentwidth > 0) {
+		contentwidth = std::min(contentwidth, bottombarmaximumcontentwidth);
+	}
+	const int contentleft = left + (width - contentwidth) / 2;
+	maintoolbarsizer.set(contentleft, bottombarsurfacetop, contentwidth, bottombarsurfaceheight);
+}
+
 gGUISizer* gGUINavigation::getToolbarSizer() {
 	return &toolbarsizer;
 }
-

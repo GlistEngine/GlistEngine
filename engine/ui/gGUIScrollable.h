@@ -134,6 +134,10 @@ public:
 	void setToolbarSpace(int toolbarW, int toolbarH);
 
 protected:
+	bool isVerticalScrollEnabled() const;
+	bool isHorizontalScrollEnabled() const;
+	bool hasVerticalOverflow() const;
+	bool hasHorizontalOverflow() const;
 	bool isPointInsideVerticalScrollbar(int x, int y, bool checkFullSize = false);
 	bool isPointInsideHorizontalScrollbar(int x, int y, bool checkFullSize = false);
 

@@ -17,32 +17,51 @@ public:
 	gGUIContainer();
 	virtual ~gGUIContainer();
 
-	virtual void set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIObject* parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h);
-	virtual void set(int x, int y, int w, int h);
+	void set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIObject* parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h) override;
+	void set(int x, int y, int w, int h);
 
 	void setSizer(gGUISizer* guiSizer);
 	gGUISizer* getSizer();
 
-	virtual int getCursor(int x, int y);
-	virtual void keyPressed(int key);
-	virtual void keyReleased(int key);
-	virtual void charPressed(unsigned int codepoint);
-	virtual void mouseMoved(int x, int y);
-	virtual void mousePressed(int x, int y, int button);
-	virtual void mouseDragged(int x, int y, int button);
-	virtual void mouseReleased(int x, int y, int button);
-	virtual void mouseScrolled(int x, int y);
-	virtual void windowResized(int w, int h);
+	/**
+	 * Sets the extent of the container's content in GUI units.  The visible
+	 * rectangle remains the size assigned by its parent; overflow is handled by
+	 * this container's gGUIScrollable base class.
+	 */
+	void setContentSize(int contentWidth, int contentHeight);
+	void enableContentScrolling(bool enabled);
+	bool isContentScrollingEnabled() const;
 
-	void update();
-	void draw();
+	int getCursor(int x, int y) override;
+	void keyPressed(int key) override;
+	void keyReleased(int key) override;
+	void charPressed(unsigned int codepoint) override;
+	void mouseMoved(int x, int y) override;
+	void mousePressed(int x, int y, int button) override;
+	void mouseDragged(int x, int y, int button) override;
+	void mouseReleased(int x, int y, int button) override;
+	void mouseScrolled(int x, int y) override;
+	void windowResized(int w, int h) override;
 
-	void setCursorOn(bool isOn);
+	void update() override;
+	void draw() override;
+	void drawContent() override;
+
+	void setCursorOn(bool isOn) override;
 
 
 protected:
 	gGUISizer* guisizer, temporaryemptysizer;
 	int topbarh;
+	int contentwidth, contentheight;
+	bool contentscrollingenabled;
+	bool iscontentdragging;
+	bool iscontentdragmoved;
+	int contentdragstartx, contentdragstarty;
+	int contentdragscrollx, contentdragscrolly;
+
+private:
+	static const int CONTENT_DRAG_SLOP;
 };
 
 #endif /* UI_GGUICONTAINER_H_ */

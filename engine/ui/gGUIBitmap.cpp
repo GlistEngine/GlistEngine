@@ -24,24 +24,31 @@ gGUIBitmap::~gGUIBitmap() {
 }
 
 void gGUIBitmap::draw() {
+	gColor* oldcolor = renderer->getColor();
+	gColor white(1.0f, 1.0f, 1.0f, 1.0f);
+	renderer->setColor(&white);
+
+	int cx = 0;
+	int cy = 0;
+
 	if(!stretch) {
-		imagew = image.getWidth();
-		imageh = image.getHeight();
-		if(imageh > height) {
-			proportion = imagew / imageh;
-			imageh = height;
-			imagew = proportion * imageh;
-		}
-		if(imagew > width) {
-			proportion = imageh / imagew;
-			imagew = width;
-			imageh = proportion * imagew;
-		}
+		float scaleW = (float)width / image.getWidth();
+		float scaleH = (float)height / image.getHeight();
+		float minScale = scaleW < scaleH ? scaleW : scaleH;
+
+		imagew = image.getWidth() * minScale;
+		imageh = image.getHeight() * minScale;
+
+		cx = (width - imagew) / 2;
+		cy = (height - imageh) / 2;
 	} else {
 		imagew = width;
 		imageh = height;
 	}
-	image.draw(left + setsizex, top + setsizey, imagew * setsizew, imageh * setsizeh);
+
+	image.draw(left + cx + setsizex, top + cy + setsizey, imagew * setsizew, imageh * setsizeh);
+
+	renderer->setColor(oldcolor);
 }
 
 void gGUIBitmap::setImageSize(int x, int y, float scalex, float scaley) {

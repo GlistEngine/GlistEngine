@@ -181,7 +181,6 @@ void gRenderer::init() {
 	height = gDefaultHeight();
 	unitwidth = gDefaultUnitWidth();
 	unitheight = gDefaultUnitHeight();
-
 	// TODO Check matrix maths
 	projectionmatrix = glm::mat4(1.0f);
 	projectionmatrix = glm::perspective(glm::radians(60.0f), (float)width / height, 0.0f, 1000.0f);
@@ -477,18 +476,35 @@ void gRenderer::setScreenSize(int screenWidth, int screenHeight) {
 	width = screenWidth;
 	height = screenHeight;
 	setCurrentResolution(getResolution(screenWidth, screenHeight));
+	updateProjectionMatrix2d();
 }
 
 void gRenderer::setUnitScreenSize(int unitWidth, int unitHeight) {
 	unitwidth = unitWidth;
 	unitheight = unitHeight;
 	setUnitResolution(getResolution(unitWidth, unitHeight));
+	updateProjectionMatrix2d();
 }
 
 void gRenderer::setScreenScaling(int screenScaling) {
 	screenscaling = screenScaling;
 	gObject::setCurrentResolution(screenscaling, currentresolution);
+	updateProjectionMatrix2d();
 }
+
+void gRenderer::updateProjectionMatrix2d() {
+	gRenderer* r = gRenderObject::getRenderer();
+	if(!r) return;
+	// The projection must use the same coordinate space returned by getWidth()
+	// and getHeight(). Deriving it here also makes initialization order safe:
+	// setUnitScreenSize() is called before setScreenScaling() on desktop.
+	const int projectionwidth = screenscaling >= G_SCREENSCALING_AUTO ? unitwidth : width;
+	const int projectionheight = screenscaling >= G_SCREENSCALING_AUTO ? unitheight : height;
+	if(projectionwidth <= 0 || projectionheight <= 0) return;
+	r->projectionmatrix2d = glm::ortho(0.0f, (float)projectionwidth,
+			(float)projectionheight, 0.0f, -1.0f, 1.0f);
+}
+
 
 int gRenderer::getWidth() {
 	if (screenscaling >= G_SCREENSCALING_AUTO) {

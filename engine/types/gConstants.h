@@ -28,5 +28,9 @@
 #define G_LOOPMODE_NORMAL 1
 #define G_LOOPMODE_NONE 0
 
+// Render backend to use. GL is the default; VK selects the (upcoming) Vulkan backend.
+#define G_RENDERER_GL 0
+#define G_RENDERER_VK 1
+
 
 #endif /* TYPES_GCONSTANTS_H_ */

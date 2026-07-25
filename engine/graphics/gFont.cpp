@@ -9,6 +9,7 @@
 #include "gWindowEvents.h"
 #include "gTracy.h"
 
+#include <cstring>
 #include <codecvt>
 #include <iostream>
 #include <locale>

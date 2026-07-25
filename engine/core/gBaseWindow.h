@@ -16,6 +16,7 @@
 #include <unistd.h>
 
 class gAppManager;
+class gImage;
 
 /**
  * gBaseWindow, looks at events for the game window, sets and gets the properties of the game window.
@@ -28,7 +29,7 @@ class gBaseWindow : public gObject {
 public:
 
 	static const int WINDOWMODE_NONE = -1, WINDOWMODE_GAME = 0, WINDOWMODE_FULLSCREEN = 1, WINDOWMODE_APP = 2, WINDOWMODE_FULLSCREENGUIAPP = 3, WINDOWMODE_GUIAPP = 4;
-	static const int CURSOR_ARROW = 0, CURSOR_IBEAM = 1, CURSOR_CROSSHAIR = 2, CURSOR_HAND = 3, CURSOR_HRESIZE = 4, CURSOR_VRESIZE = 5;
+	static const int CURSOR_ARROW = 0, CURSOR_IBEAM = 1, CURSOR_CROSSHAIR = 2, CURSOR_HAND = 3, CURSOR_HRESIZE = 4, CURSOR_VRESIZE = 5, CURSOR_CUSTOM = 6;
 
 
 	gBaseWindow();
@@ -67,6 +68,8 @@ public:
 	virtual void setCursorMode(gCursorMode cursorMode);
 	gCursorMode getCursorMode();
 	virtual void setCursorPos(int x, int y);
+
+	virtual void setCustomCursor(gImage& image, int hotspotX = 0, int hotspotY = 0);
 
 	virtual void setIcon(std::string pngFullpath);
 	virtual void setIcon(unsigned char* imageData, int w, int h);

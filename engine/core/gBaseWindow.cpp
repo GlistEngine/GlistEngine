@@ -121,6 +121,10 @@ void gBaseWindow::setCursorPos(int x, int y) {
 
 }
 
+void gBaseWindow::setCustomCursor(gImage& image, int hotspotX, int hotspotY){
+
+}
+
 void gBaseWindow::setIcon(std::string pngFullpath) {
 
 }

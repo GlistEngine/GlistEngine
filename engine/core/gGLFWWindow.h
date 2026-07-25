@@ -13,6 +13,7 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include "gCamera.h"
+#include "gImage.h"
 
 /**
  * gGLFWWindow, contain functions for game's window.
@@ -62,6 +63,8 @@ public:
 	void setCursorMode(gCursorMode cursorMode) override;
 	void setCursorPos(int x, int y) override;
 
+	void setCustomCursor(gImage& image, int hotspotX = 0, int hotspotY = 0);
+
 	void setClipboardString(std::string text) override;
 	std::string getClipboardString() override;
 
@@ -86,6 +89,9 @@ public:
 	}
 
 	void setScale(float x, float y);
+
+	// The Vulkan backend needs the raw handle to create its surface.
+	GLFWwindow* getGLFWWindow() const { return window; }
 
   private:
 	GLFWwindow* window;

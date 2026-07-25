@@ -42,6 +42,7 @@ public:
 	gColor* getDisabledButtonFontColor();
 
 	void enableBackgroundFill(bool isEnabled);
+	void setContentCentered(bool centered);
 
 	int getButtonWidth();
 	int getButtonHeight();
@@ -71,8 +72,11 @@ protected:
 	gColor fcolor, pressedfcolor, disabledfcolor;
 	gColor hcolor;
 	bool fillbackground;
+	bool contentcentered;
 
 	void resetTitlePosition();
+	int getButtonDrawLeft() const;
+	int getButtonDrawTop() const;
 
 private:
 };

@@ -741,6 +741,7 @@ void GLAPIENTRY openglErrorCallback(GLenum source, GLenum type, GLuint id,
 #endif
 
 void gGLRenderEngine::init() {
+	gLogi("gGLRenderEngine") << "OpenGL render engine active";
 #if !defined(GLIST_OPENGLES) && (defined(DEBUG) || defined(ENGINE_OPENGL_CHECKS))
 	// On newer versions of OpenGL, debug callbacks are available; we enable them only for debug builds because it might have a performance impact.
 	// You can place a debug point and go back to the original source of the message from the stack trace, because it is sync.

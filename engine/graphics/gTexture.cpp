@@ -68,7 +68,7 @@ gTexture::gTexture(int w, int h, int format, bool isFbo) {
 	wrapt = TEXTUREWRAP_REPEAT;
 	filtermin = TEXTUREMINMAGFILTER_LINEAR;
 	filtermag = TEXTUREMINMAGFILTER_LINEAR;
-#if TARGET_OS_IPHONE || TARGET_OS_SIMULATOR || EMSCRIPTEN
+#if TARGET_OS_IPHONE || TARGET_OS_SIMULATOR || EMSCRIPTEN || defined(ANDROID)
 	if(format == GL_DEPTH_COMPONENT) {
 		internalformat = GL_DEPTH_COMPONENT24;
 		valuetype = GL_UNSIGNED_INT;
