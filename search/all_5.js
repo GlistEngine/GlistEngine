@@ -17,7 +17,7 @@ var searchData=
   ['depthtesttype_5falways_14',['DEPTHTESTTYPE_ALWAYS',['../classgRenderer.html#a621043a25769b25cf582fea147a7e853',1,'gRenderer']]],
   ['depthtesttype_5fless_15',['DEPTHTESTTYPE_LESS',['../classgRenderer.html#a714415836f28448509a9f3716ae4361d',1,'gRenderer']]],
   ['depthtesttypeid_16',['depthtesttypeid',['../classgRenderer.html#af6e96ab0f9f3671bf3f3984705814588',1,'gRenderer']]],
-  ['destroy_17',['destroy',['../classgBaseParticles.html#a575dcf145b71e8759c4ef4c7b69848bd',1,'gBaseParticles::destroy()'],['../classgTweenAnimation.html#a695442e69d2099ed832e8f8cc9f5d31e',1,'gTweenAnimation::Destroy()']]],
+  ['destroy_17',['destroy',['../classgTweenAnimation.html#a695442e69d2099ed832e8f8cc9f5d31e',1,'gTweenAnimation::Destroy()'],['../classgBaseParticles.html#a575dcf145b71e8759c4ef4c7b69848bd',1,'gBaseParticles::destroy()']]],
   ['destroyrenderer_18',['destroyRenderer',['../classgRenderObject.html#ac9f891754643559fc81d22f0b9341452',1,'gRenderObject']]],
   ['detach_19',['detach',['../classgThread.html#ac0685c0c8244276adc768b2cde752125',1,'gThread']]],
   ['deviceorientation_20',['DeviceOrientation',['../gWindowEvents_8h.html#a9d99888a5a1ae95a0049445bc4bfd14c',1,'gWindowEvents.h']]],
