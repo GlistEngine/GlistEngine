@@ -225,15 +225,26 @@ GLuint gGLRenderEngine::createVAO() {
 void gGLRenderEngine::deleteVAO(GLuint& vao) {
 	if(vao != 0) {
 		G_CHECK_GL(glDeleteVertexArrays(1, &vao));
+		if(vao == currentvao) {
+			currentvao = 0;
+		}
 	}
 }
 
 void gGLRenderEngine::bindVAO(GLuint vao) {
+	if(vao == currentvao) {
+		return;
+	}
 	G_CHECK_GL(glBindVertexArray(vao));
+	currentvao = vao;
 }
 
 void gGLRenderEngine::unbindVAO() {
+	if(currentvao == 0) {
+		return;
+	}
 	G_CHECK_GL(glBindVertexArray(0));
+	currentvao = 0;
 }
 
 void gGLRenderEngine::setVertexBufferData(GLuint vbo, size_t size, const void* data, int usage) {
@@ -358,7 +369,7 @@ void gGLRenderEngine::createFullscreenQuad(GLuint& vao, GLuint& vbo) {
 	G_CHECK_GL(glGenVertexArrays(1, &vao));
 	G_CHECK_GL(glGenBuffers(1, &vbo));
 
-	G_CHECK_GL(glBindVertexArray(vao));
+	bindVAO(vao);
 	G_CHECK_GL(glBindBuffer(GL_ARRAY_BUFFER, vbo));
 	G_CHECK_GL(glBufferData(GL_ARRAY_BUFFER, sizeof(QUAD_VERTICES), &QUAD_VERTICES, GL_STATIC_DRAW));
 
@@ -528,7 +539,7 @@ void gGLRenderEngine::clearScreen(bool color, bool depth) {
 }
 
 void gGLRenderEngine::bindQuadVAO() {
-	G_CHECK_GL(glBindVertexArray(fullscreenquadvao));
+	bindVAO(fullscreenquadvao);
 }
 
 void gGLRenderEngine::drawFullscreenQuad() {
@@ -692,7 +703,7 @@ void gGLRenderEngine::createQuad(GLuint& inQuadVAO, GLuint& inQuadVBO) {
 	// setup plane VAO
 	G_CHECK_GL(glGenVertexArrays(1, &inQuadVAO));
 	G_CHECK_GL(glGenBuffers(1, &inQuadVBO));
-	G_CHECK_GL(glBindVertexArray(inQuadVAO));
+	bindVAO(inQuadVAO);
 	G_CHECK_GL(glBindBuffer(GL_ARRAY_BUFFER, inQuadVBO));
 	G_CHECK_GL(glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW));
 	G_CHECK_GL(glEnableVertexAttribArray(0));
