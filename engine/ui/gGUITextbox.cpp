@@ -2013,7 +2013,7 @@ void gGUITextbox::setTextFont(gFont* textFont) {
 
 void gGUITextbox::setTextAlignment(int textAlignment, float cellW, int initX) {
 	textalignment = textAlignment;
-	switch (textalignment) {
+	switch(textalignment) {
 	case TEXTALIGNMENT_LEFT:
 		textalignmentamount = initX + 1;
 		break;
@@ -2026,7 +2026,7 @@ void gGUITextbox::setTextAlignment(int textAlignment, float cellW, int initX) {
 	}
 }
 
-void gGUITextbox::setTextColor(gColor* textColor) {
+void gGUITextbox::setTextColor(gColor *textColor) {
 	textcolor = textColor;
 	colorset = true;
 }
