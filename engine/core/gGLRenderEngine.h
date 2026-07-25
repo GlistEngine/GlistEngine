@@ -179,6 +179,7 @@ protected:
 	void init() override;
 private:
 	mutable GLuint currentprogram = 0;
+	GLuint currentvao = 0;
 	void updatePackUnpackAlignment(int i) override;
 };
 
