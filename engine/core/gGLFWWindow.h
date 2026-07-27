@@ -63,7 +63,7 @@ public:
 	void setCursorMode(gCursorMode cursorMode) override;
 	void setCursorPos(int x, int y) override;
 
-	void setCustomCursor(gImage& image, int hotspotX = 0, int hotspotY = 0);
+	void setCustomCursor(gImage& image, int hotspotX = 0, int hotspotY = 0) override;
 
 	void setClipboardString(std::string text) override;
 	std::string getClipboardString() override;
