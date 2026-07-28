@@ -180,6 +180,26 @@ public:
 	void pushMatrix() override;
 	void popMatrix() override;
 
+	/* ---------------- Vulkan context ---------------- */
+	// gVKContext is opaque here (its layout lives in the .cpp), so a developer can
+	// reach the accessor rich context without this header ever pulling in
+	// <vulkan/vulkan.h>. Injecting a context with setContext() before init() lets
+	// you configure the instance/device up front; init() honours an already set
+	// context instead of replacing it. After init() the getter hands back the
+	// created handles.
+	gVKContext* getContext() { return vkcontext; }
+
+	// Takes ownership. Any context the engine already holds is torn down first -
+	// its Vulkan objects destroyed and its memory freed through cleanupVulkan() -
+	// so replacing a context never leaks the old one. The self assignment guard
+	// avoids destroying the very context being handed in. The engine frees the
+	// adopted context on cleanup.
+	void setContext(gVKContext* context) {
+		if(vkcontext == context) return;
+		cleanupVulkan();
+		vkcontext = context;
+	}
+
 protected:
 	void init() override;
 	void cleanup() override;
