@@ -473,7 +473,7 @@ var searchData=
   ['getframeno_470',['getFrameNo',['../classgSkinnedMesh.html#aaded407b664f537edefe4ebfeef4f4da',1,'gSkinnedMesh']]],
   ['getframerate_471',['getframerate',['../classgBaseApp.html#a72a246f800a68b1086874f32d920a696',1,'gBaseApp::getFramerate()'],['../classgAppManager.html#af843225c657fb34e0953739d5d422687',1,'gAppManager::getFramerate()']]],
   ['getfresnelpower_472',['getFresnelPower',['../classgScreenSpaceReflections.html#afd43689474fd53db626873414745cdaf',1,'gScreenSpaceReflections']]],
-  ['getfullpath_473',['getfullpath',['../classgTexture.html#a27509e4a3cab6fc5ed8b2c1273a5dedc',1,'gTexture::getFullPath()'],['../classgModel.html#aca7ad27e75e272d6e5653b749b01901e',1,'gModel::getFullpath()']]],
+  ['getfullpath_473',['getfullpath',['../classgModel.html#aca7ad27e75e272d6e5653b749b01901e',1,'gModel::getFullpath()'],['../classgTexture.html#a27509e4a3cab6fc5ed8b2c1273a5dedc',1,'gTexture::getFullPath()']]],
   ['getfullscreenquadvao_474',['getFullscreenQuadVAO',['../classgRenderer.html#a8c1269d9609bc1582e572c4f1337b973',1,'gRenderer']]],
   ['getgamepadaxisvalue_475',['getGamepadAxisValue',['../classgInputManager.html#a7d513dbfd80ed72e326bc88002e05853',1,'gInputManager']]],
   ['getgamepadid_476',['getGamepadId',['../classgInputPlayer.html#a88b4edab1b00917030e725dc844b7359',1,'gInputPlayer']]],

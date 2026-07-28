@@ -190,29 +190,36 @@ $(document).ready(function(){initNavTree('gGUILineGraph_8h_source.html',''); ini
 <div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span> </div>
 <div class="line"><a id="l00090" name="l00090"></a><span class="lineno"><a class="line" href="classgGUILineGraph.html#a9ac7690c53900da59937637d907cae9d">   90</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classgGUILineGraph.html#a9ac7690c53900da59937637d907cae9d">clear</a>() <span class="keyword">override</span>;</div>
 <div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span> </div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>    <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">int</span> linecolornum = 6;</div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>    <span class="keywordtype">void</span> drawGraph() <span class="keyword">override</span>;</div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>    <span class="keywordtype">void</span> updatePoints();</div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span> </div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>    std::deque&lt;std::deque&lt;std::array&lt;float, 4&gt;&gt;&gt; graphlines;</div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>    std::vector&lt;gLine&gt; cachedlines;</div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>    std::vector&lt;gCircle&gt; cachedcircles;</div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>    std::unordered_map&lt;uint64_t, gLine*&gt; linesmap;</div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>    std::unordered_map&lt;uint64_t, gCircle*&gt; circlesmap;</div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>    <a class="code hl_class" href="classgColor.html">gColor</a> linecolors[linecolornum];</div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span> </div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>    <span class="keywordtype">bool</span> pointsenabled;</div>
-<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>    <span class="keywordtype">bool</span> needsupdate = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span> </div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>    uint64_t hash(uint32_t <a class="code hl_variable" href="gColor_8h.html#a4aec1a5be9d9a4a394a2e49e9744286e">a</a>, uint32_t <a class="code hl_variable" href="gColor_8h.html#a83fc1af92e29717b4513d121b0c72c7d">b</a>) {</div>
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>        <span class="keywordflow">return</span> ((uint64_t)<a class="code hl_variable" href="gColor_8h.html#a4aec1a5be9d9a4a394a2e49e9744286e">a</a> &lt;&lt; 32) | <a class="code hl_variable" href="gColor_8h.html#a83fc1af92e29717b4513d121b0c72c7d">b</a>;</div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>    }</div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>};</div>
-</div>
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span> </div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno"><a class="line" href="classgGUILineGraph.html#a372b28906f90ed4ece3abb271105e0a0">   92</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classgGUILineGraph.html#a372b28906f90ed4ece3abb271105e0a0">setOffset</a>(<span class="keywordtype">int</span> leftOffset, <span class="keywordtype">int</span> rightOffset, <span class="keywordtype">int</span> topOffset, <span class="keywordtype">int</span> bottomOffset);</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>    <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">int</span> linecolornum = 6;</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>    <span class="keywordtype">void</span> drawGraph() <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>    <span class="keywordtype">void</span> updatePoints();</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>    <span class="keywordtype">void</span> updateOffset();</div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span> </div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>    std::deque&lt;std::deque&lt;std::array&lt;float, 4&gt;&gt;&gt; graphlines;</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>    std::vector&lt;gLine&gt; cachedlines;</div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>    std::vector&lt;gCircle&gt; cachedcircles;</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>    std::unordered_map&lt;uint64_t, gLine*&gt; linesmap;</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>    std::unordered_map&lt;uint64_t, gCircle*&gt; circlesmap;</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>    <a class="code hl_class" href="classgColor.html">gColor</a> linecolors[linecolornum];</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span> </div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>    <span class="keywordtype">bool</span> pointsenabled;</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>    <span class="keywordtype">bool</span> needsupdate = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>    <span class="keywordtype">int</span> offsetleft;</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>    <span class="keywordtype">int</span> offsetright;</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>    <span class="keywordtype">int</span> offsettop;</div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>    <span class="keywordtype">int</span> offsetbottom;</div>
 <div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span> </div>
-<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span><span class="preprocessor">#endif </span><span class="comment">/* UI_GGUILINEGRAPH_H_ */</span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span> </div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>    uint64_t hash(uint32_t <a class="code hl_variable" href="gColor_8h.html#a4aec1a5be9d9a4a394a2e49e9744286e">a</a>, uint32_t <a class="code hl_variable" href="gColor_8h.html#a83fc1af92e29717b4513d121b0c72c7d">b</a>) {</div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>        <span class="keywordflow">return</span> ((uint64_t)<a class="code hl_variable" href="gColor_8h.html#a4aec1a5be9d9a4a394a2e49e9744286e">a</a> &lt;&lt; 32) | <a class="code hl_variable" href="gColor_8h.html#a83fc1af92e29717b4513d121b0c72c7d">b</a>;</div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>    }</div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>};</div>
+</div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span> </div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span> </div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span><span class="preprocessor">#endif </span><span class="comment">/* UI_GGUILINEGRAPH_H_ */</span><span class="preprocessor"></span></div>
 <div class="ttc" id="aclassgBaseApp_html"><div class="ttname"><a href="classgBaseApp.html">gBaseApp</a></div><div class="ttdef"><b>Definition</b> gBaseApp.h:16</div></div>
 <div class="ttc" id="aclassgBaseGUIObject_html"><div class="ttname"><a href="classgBaseGUIObject.html">gBaseGUIObject</a></div><div class="ttdef"><b>Definition</b> gBaseGUIObject.h:18</div></div>
 <div class="ttc" id="aclassgBaseGUIObject_html_a1b904144beed0a06f3d1943a56b7edd6"><div class="ttname"><a href="classgBaseGUIObject.html#a1b904144beed0a06f3d1943a56b7edd6">gBaseGUIObject::root</a></div><div class="ttdeci">gBaseApp * root</div><div class="ttdef"><b>Definition</b> gBaseGUIObject.h:147</div></div>
@@ -223,6 +230,7 @@ $(document).ready(function(){initNavTree('gGUILineGraph_8h_source.html',''); ini
 <div class="ttc" id="aclassgGUILineGraph_html_a1ac80fbd9140049b02726b03f68bb2b4"><div class="ttname"><a href="classgGUILineGraph.html#a1ac80fbd9140049b02726b03f68bb2b4">gGUILineGraph::setMaxX</a></div><div class="ttdeci">void setMaxX(float maxX) override</div></div>
 <div class="ttc" id="aclassgGUILineGraph_html_a22b9721365a054014ecd71d01da5e414"><div class="ttname"><a href="classgGUILineGraph.html#a22b9721365a054014ecd71d01da5e414">gGUILineGraph::addData</a></div><div class="ttdeci">void addData(int lineIndex, std::deque&lt; std::array&lt; float, 2 &gt; &gt; dataToAdd)</div></div>
 <div class="ttc" id="aclassgGUILineGraph_html_a2ac847f8d37872e30047cf75f1a17959"><div class="ttname"><a href="classgGUILineGraph.html#a2ac847f8d37872e30047cf75f1a17959">gGUILineGraph::~gGUILineGraph</a></div><div class="ttdeci">virtual ~gGUILineGraph()</div></div>
+<div class="ttc" id="aclassgGUILineGraph_html_a372b28906f90ed4ece3abb271105e0a0"><div class="ttname"><a href="classgGUILineGraph.html#a372b28906f90ed4ece3abb271105e0a0">gGUILineGraph::setOffset</a></div><div class="ttdeci">void setOffset(int leftOffset, int rightOffset, int topOffset, int bottomOffset)</div></div>
 <div class="ttc" id="aclassgGUILineGraph_html_a375ce9b0f75a373b8039d01adef007a1"><div class="ttname"><a href="classgGUILineGraph.html#a375ce9b0f75a373b8039d01adef007a1">gGUILineGraph::setLabelCountY</a></div><div class="ttdeci">void setLabelCountY(int labelCount) override</div></div>
 <div class="ttc" id="aclassgGUILineGraph_html_a42822c79f8e7c4b21b20ac521a79f1bf"><div class="ttname"><a href="classgGUILineGraph.html#a42822c79f8e7c4b21b20ac521a79f1bf">gGUILineGraph::gGUILineGraph</a></div><div class="ttdeci">gGUILineGraph()</div></div>
 <div class="ttc" id="aclassgGUILineGraph_html_a48d06470d7f209d0c37445b0512fb5ba"><div class="ttname"><a href="classgGUILineGraph.html#a48d06470d7f209d0c37445b0512fb5ba">gGUILineGraph::removeFirstPointsFromLine</a></div><div class="ttdeci">void removeFirstPointsFromLine(int lineIndex, int pointNumLimit)</div></div>

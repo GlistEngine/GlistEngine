@@ -1,5 +1,6 @@
 var NAVTREEINDEX19 =
 {
+"structgRenderer_1_1gSceneLights.html#afe9ec239bcfdc6df6dee2ec63209ae62":[1,0,146,3,2],
 "structgVertex.html":[1,0,176],
 "structgVertex.html#a1307c4e7fc374612cd8e583ce90e8115":[1,0,176,3],
 "structgVertex.html#a2dd7f19388d400f24938593b878b8233":[1,0,176,1],

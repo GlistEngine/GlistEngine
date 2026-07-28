@@ -31,7 +31,7 @@ var searchData=
   ['removesubelement_28',['removeSubElement',['../structgGUITreelist_1_1Element.html#a8ea2dd9c14946f3bd76c43c3d3d64a81',1,'gGUITreelist::Element']]],
   ['rename_29',['rename',['../classgFile.html#a19362b52b3dfec38943e3138ca679f8a',1,'gFile']]],
   ['rend_30',['rend',['../classgUTF8Iterator.html#acc46ce3e3fc8bb3fffb4d32bde605eea',1,'gUTF8Iterator']]],
-  ['reset_31',['reset',['../classgSpriteAnimation.html#acba6350daaf899657446fc76cbd66ae7',1,'gSpriteAnimation::reset()'],['../classgAssetLoader.html#aad628a955abc50cd9d6ff6d69d0f9ad8',1,'gAssetLoader::reset()'],['../classgTweenAnimation.html#a10aa326ddb7b59ae3df087f027adee85',1,'gTweenAnimation::Reset()']]],
+  ['reset_31',['reset',['../classgTweenAnimation.html#a10aa326ddb7b59ae3df087f027adee85',1,'gTweenAnimation::Reset()'],['../classgSpriteAnimation.html#acba6350daaf899657446fc76cbd66ae7',1,'gSpriteAnimation::reset()'],['../classgAssetLoader.html#aad628a955abc50cd9d6ff6d69d0f9ad8',1,'gAssetLoader::reset()']]],
   ['resetanimation_32',['resetAnimation',['../classgSkinnedMesh.html#a2cc0d14f85d36811f4d8d5a9e80cce05',1,'gSkinnedMesh']]],
   ['resetbuttonsbar_33',['resetButtonsBar',['../classgGUIDialogue.html#a56e1e9a07bb9e3a08133cbe794b04be0',1,'gGUIDialogue']]],
   ['resetlook_34',['resetLook',['../classgCamera.html#a04a3ce88aaa4f8afdd638e7c0a73dae4',1,'gCamera']]],
