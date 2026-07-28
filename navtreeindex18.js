@@ -1,5 +1,7 @@
 var NAVTREEINDEX18 =
 {
+"gUtils_8h.html#a49165ceb9878eb49b60a771fc7f149ea":[2,0,0,8,9,72],
+"gUtils_8h.html#a500b11a913b4910cfdfbcfff13d96520":[2,0,0,8,9,33],
 "gUtils_8h.html#a598a3330b3c21701223ee0ca14316eca":[2,0,0,8,9,7],
 "gUtils_8h.html#a5f86b03f48f8915865d6712edc3c907d":[2,0,0,8,9,60],
 "gUtils_8h.html#a62db010a0399eea661a927e55151a5ef":[2,0,0,8,9,12],
@@ -247,7 +249,5 @@ var NAVTREEINDEX18 =
 "structgRenderer_1_1gSceneLights.html#a77f19e641d9d5a063dde338bd1c07bae":[1,0,146,3,0],
 "structgRenderer_1_1gSceneLights.html#a8c9ae0323cefbd7c5b04505e3e3f8215":[1,0,146,3,3],
 "structgRenderer_1_1gSceneLights.html#ae5569c939be0c2c1b1db5a5b104c95a0":[1,0,146,3,1],
-"structgRenderer_1_1gSceneLights.html#afe9ec239bcfdc6df6dee2ec63209ae62":[1,0,146,3,2],
-"structgVertex.html":[1,0,176],
-"structgVertex.html#a1307c4e7fc374612cd8e583ce90e8115":[1,0,176,3]
+"structgRenderer_1_1gSceneLights.html#afe9ec239bcfdc6df6dee2ec63209ae62":[1,0,146,3,2]
 };
