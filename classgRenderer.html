@@ -529,12 +529,16 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:af8ad4e62c1b11cce375ae38e2b7fa548"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a400b8bf33110bb06fb3cf9cafe0aa7cb" id="r_a400b8bf33110bb06fb3cf9cafe0aa7cb"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a400b8bf33110bb06fb3cf9cafe0aa7cb">setViewport</a> (int x, int y, int <a class="el" href="classgRenderer.html#a521e019ad5133df5702d399bf051adda">width</a>, int <a class="el" href="classgRenderer.html#a10ba9eb49755cea48500ab0046baf6e4">height</a>)=0</td></tr>
 <tr class="separator:a400b8bf33110bb06fb3cf9cafe0aa7cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a01a056ef36cd4d3920dd353189fb8540" id="r_a01a056ef36cd4d3920dd353189fb8540"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a01a056ef36cd4d3920dd353189fb8540">getViewport</a> (int &amp;x, int &amp;y, int &amp;<a class="el" href="classgRenderer.html#a521e019ad5133df5702d399bf051adda">width</a>, int &amp;<a class="el" href="classgRenderer.html#a10ba9eb49755cea48500ab0046baf6e4">height</a>) const</td></tr>
+<tr class="separator:a01a056ef36cd4d3920dd353189fb8540"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a50b7fdd46f1d82be09f63fb70bc27410" id="r_a50b7fdd46f1d82be09f63fb70bc27410"><td class="memItemLeft" align="right" valign="top">virtual GLuint&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a50b7fdd46f1d82be09f63fb70bc27410">createFramebuffer</a> ()=0</td></tr>
 <tr class="separator:a50b7fdd46f1d82be09f63fb70bc27410"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9c97ef6554bb2a74d971b6a6322512d8" id="r_a9c97ef6554bb2a74d971b6a6322512d8"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a9c97ef6554bb2a74d971b6a6322512d8">deleteFramebuffer</a> (GLuint &amp;fbo)=0</td></tr>
 <tr class="separator:a9c97ef6554bb2a74d971b6a6322512d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a61bb12c6c0de66996369698344d261ac" id="r_a61bb12c6c0de66996369698344d261ac"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a61bb12c6c0de66996369698344d261ac">bindFramebuffer</a> (GLuint fbo)=0</td></tr>
 <tr class="separator:a61bb12c6c0de66996369698344d261ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abedab64b15fc6e2f52a8ec26c9feca78" id="r_abedab64b15fc6e2f52a8ec26c9feca78"><td class="memItemLeft" align="right" valign="top">GLuint&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#abedab64b15fc6e2f52a8ec26c9feca78">getBoundFramebuffer</a> () const</td></tr>
+<tr class="separator:abedab64b15fc6e2f52a8ec26c9feca78"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae80e6011a01d01fb216e3911249e3dcb" id="r_ae80e6011a01d01fb216e3911249e3dcb"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#ae80e6011a01d01fb216e3911249e3dcb">checkFramebufferStatus</a> ()=0</td></tr>
 <tr class="separator:ae80e6011a01d01fb216e3911249e3dcb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aba73689c28db3b9a129845035e2ca052" id="r_aba73689c28db3b9a129845035e2ca052"><td class="memItemLeft" align="right" valign="top">virtual GLuint&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#aba73689c28db3b9a129845035e2ca052">createRenderbuffer</a> ()=0</td></tr>
@@ -819,6 +823,8 @@ Protected Member Functions</h2></td></tr>
 <tr class="separator:affc902b441dfc5d738153a47c2dd56ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a70d90192bda5c806e99719e4bb951b82" id="r_a70d90192bda5c806e99719e4bb951b82"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a70d90192bda5c806e99719e4bb951b82">cleanupSSAOResources</a> ()</td></tr>
 <tr class="separator:a70d90192bda5c806e99719e4bb951b82"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac223332acbbe9c2433e750b8ccbbad6b" id="r_ac223332acbbe9c2433e750b8ccbbad6b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#ac223332acbbe9c2433e750b8ccbbad6b">setupSSAODepthSampling</a> ()</td></tr>
+<tr class="separator:ac223332acbbe9c2433e750b8ccbbad6b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaaf4e5f2de99c7b1e58e726ee50026c7" id="r_aaaf4e5f2de99c7b1e58e726ee50026c7"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#aaaf4e5f2de99c7b1e58e726ee50026c7">init</a> ()</td></tr>
 <tr class="separator:aaaf4e5f2de99c7b1e58e726ee50026c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a93db9d7438e4df4a6da3529e1c4d1230" id="r_a93db9d7438e4df4a6da3529e1c4d1230"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a93db9d7438e4df4a6da3529e1c4d1230">cleanup</a> ()</td></tr>
@@ -929,6 +935,16 @@ Protected Attributes</h2></td></tr>
 <tr class="separator:a3684d8f30f9215112f3bf3c100b45583"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad406caf5afa27c2e705bc1951787fb3f" id="r_ad406caf5afa27c2e705bc1951787fb3f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#ad406caf5afa27c2e705bc1951787fb3f">isalphatestenabled</a></td></tr>
 <tr class="separator:ad406caf5afa27c2e705bc1951787fb3f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a49fdb2b3c01b7eb62ba72af8be13b7e9" id="r_a49fdb2b3c01b7eb62ba72af8be13b7e9"><td class="memItemLeft" align="right" valign="top">GLuint&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a49fdb2b3c01b7eb62ba72af8be13b7e9">boundframebuffer</a></td></tr>
+<tr class="separator:a49fdb2b3c01b7eb62ba72af8be13b7e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab3fab46a0612957786da9c7a6542fbbf" id="r_ab3fab46a0612957786da9c7a6542fbbf"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#ab3fab46a0612957786da9c7a6542fbbf">viewportx</a></td></tr>
+<tr class="separator:ab3fab46a0612957786da9c7a6542fbbf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a42df3fdfa5b522850597118190116dbf" id="r_a42df3fdfa5b522850597118190116dbf"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a42df3fdfa5b522850597118190116dbf">viewporty</a></td></tr>
+<tr class="separator:a42df3fdfa5b522850597118190116dbf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a35709d0f6a3f79b07db2ab21732c64c2" id="r_a35709d0f6a3f79b07db2ab21732c64c2"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a35709d0f6a3f79b07db2ab21732c64c2">viewportwidth</a></td></tr>
+<tr class="separator:a35709d0f6a3f79b07db2ab21732c64c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a26aa57ab9c0b48a8794d77c65c66446d" id="r_a26aa57ab9c0b48a8794d77c65c66446d"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a26aa57ab9c0b48a8794d77c65c66446d">viewportheight</a></td></tr>
+<tr class="separator:a26aa57ab9c0b48a8794d77c65c66446d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa0894ce7bd9388022035536b1832d150" id="r_aa0894ce7bd9388022035536b1832d150"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#aa0894ce7bd9388022035536b1832d150">isssaoenabled</a></td></tr>
 <tr class="separator:aa0894ce7bd9388022035536b1832d150"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2d0357f16524edb9127bb10e4944275b" id="r_a2d0357f16524edb9127bb10e4944275b"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a2d0357f16524edb9127bb10e4944275b">ssaobias</a></td></tr>
@@ -949,12 +965,12 @@ Protected Attributes</h2></td></tr>
 <tr class="separator:a417f3a0a82b2913b927abd56ae436f23"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aecc99f8f9ccc310bdb0d40a1c8d249e1" id="r_aecc99f8f9ccc310bdb0d40a1c8d249e1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgShader.html">gShader</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#aecc99f8f9ccc310bdb0d40a1c8d249e1">ssaoblurshader</a></td></tr>
 <tr class="separator:aecc99f8f9ccc310bdb0d40a1c8d249e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac7efab9e9ce416855d1bb24ecbd42154" id="r_ac7efab9e9ce416855d1bb24ecbd42154"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#ac7efab9e9ce416855d1bb24ecbd42154">ssaonoisetexture</a></td></tr>
-<tr class="separator:ac7efab9e9ce416855d1bb24ecbd42154"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a90f648a7213d22e80eb91cd96662f892" id="r_a90f648a7213d22e80eb91cd96662f892"><td class="memItemLeft" align="right" valign="top">std::vector&lt; glm::vec3 &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a90f648a7213d22e80eb91cd96662f892">ssaokernel</a></td></tr>
-<tr class="separator:a90f648a7213d22e80eb91cd96662f892"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a71dacb6330406aefdf101de854ceb987" id="r_a71dacb6330406aefdf101de854ceb987"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a71dacb6330406aefdf101de854ceb987">ssaorealdefaultfbo</a></td></tr>
 <tr class="separator:a71dacb6330406aefdf101de854ceb987"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0f5fad78d38916e965f667dbb5c8d386" id="r_a0f5fad78d38916e965f667dbb5c8d386"><td class="memItemLeft" align="right" valign="top">GLuint&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a0f5fad78d38916e965f667dbb5c8d386">ssaoprevframebuffer</a></td></tr>
+<tr class="separator:a0f5fad78d38916e965f667dbb5c8d386"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8c26d47d636fc666b7b305665aeeb970" id="r_a8c26d47d636fc666b7b305665aeeb970"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a8c26d47d636fc666b7b305665aeeb970">ssaoprevviewport</a> [4]</td></tr>
+<tr class="separator:a8c26d47d636fc666b7b305665aeeb970"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a334ebe899c16a64c70a88b738099b573" id="r_a334ebe899c16a64c70a88b738099b573"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a334ebe899c16a64c70a88b738099b573">isssaorendering</a></td></tr>
 <tr class="separator:a334ebe899c16a64c70a88b738099b573"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a699652a824fa3388f4945fe35e5d6ae3" id="r_a699652a824fa3388f4945fe35e5d6ae3"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a699652a824fa3388f4945fe35e5d6ae3">isgammacorrectionenabled</a></td></tr>
@@ -4642,6 +4658,23 @@ Friends</h2></td></tr>
 
 </div>
 </div>
+<a id="abedab64b15fc6e2f52a8ec26c9feca78" name="abedab64b15fc6e2f52a8ec26c9feca78"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abedab64b15fc6e2f52a8ec26c9feca78">&#9670;&#160;</a></span>getBoundFramebuffer()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">GLuint gRenderer::getBoundFramebuffer </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="ab81bebed6414cf63b33f4b7b0d37b638" name="ab81bebed6414cf63b33f4b7b0d37b638"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ab81bebed6414cf63b33f4b7b0d37b638">&#9670;&#160;</a></span>getBrdfShader()</h2>
 
@@ -6228,6 +6261,46 @@ Friends</h2></td></tr>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a01a056ef36cd4d3920dd353189fb8540" name="a01a056ef36cd4d3920dd353189fb8540"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a01a056ef36cd4d3920dd353189fb8540">&#9670;&#160;</a></span>getViewport()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gRenderer::getViewport </td>
+          <td>(</td>
+          <td class="paramtype">int &amp;&#160;</td>
+          <td class="paramname"><em>x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int &amp;&#160;</td>
+          <td class="paramname"><em>y</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int &amp;&#160;</td>
+          <td class="paramname"><em>width</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int &amp;&#160;</td>
+          <td class="paramname"><em>height</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -8863,6 +8936,31 @@ Friends</h2></td></tr>
 
 </div>
 </div>
+<a id="ac223332acbbe9c2433e750b8ccbbad6b" name="ac223332acbbe9c2433e750b8ccbbad6b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac223332acbbe9c2433e750b8ccbbad6b">&#9670;&#160;</a></span>setupSSAODepthSampling()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gRenderer::setupSSAODepthSampling </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a603df3f7916faff7f1f5111f5120f27b" name="a603df3f7916faff7f1f5111f5120f27b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a603df3f7916faff7f1f5111f5120f27b">&#9670;&#160;</a></span>setVec2() <span class="overload">[1/2]</span></h2>
 
@@ -10030,6 +10128,28 @@ Friends</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname">std::unique_ptr&lt;<a class="el" href="classgArc.html">gArc</a>&gt; gRenderer::arcmesh</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a49fdb2b3c01b7eb62ba72af8be13b7e9" name="a49fdb2b3c01b7eb62ba72af8be13b7e9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a49fdb2b3c01b7eb62ba72af8be13b7e9">&#9670;&#160;</a></span>boundframebuffer</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">GLuint gRenderer::boundframebuffer</td>
         </tr>
       </table>
   </td>
@@ -11603,8 +11723,8 @@ Friends</h2></td></tr>
 
 </div>
 </div>
-<a id="a90f648a7213d22e80eb91cd96662f892" name="a90f648a7213d22e80eb91cd96662f892"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a90f648a7213d22e80eb91cd96662f892">&#9670;&#160;</a></span>ssaokernel</h2>
+<a id="a0f5fad78d38916e965f667dbb5c8d386" name="a0f5fad78d38916e965f667dbb5c8d386"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0f5fad78d38916e965f667dbb5c8d386">&#9670;&#160;</a></span>ssaoprevframebuffer</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -11613,7 +11733,7 @@ Friends</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::vector&lt;glm::vec3&gt; gRenderer::ssaokernel</td>
+          <td class="memname">GLuint gRenderer::ssaoprevframebuffer</td>
         </tr>
       </table>
   </td>
@@ -11625,8 +11745,8 @@ Friends</h2></td></tr>
 
 </div>
 </div>
-<a id="ac7efab9e9ce416855d1bb24ecbd42154" name="ac7efab9e9ce416855d1bb24ecbd42154"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac7efab9e9ce416855d1bb24ecbd42154">&#9670;&#160;</a></span>ssaonoisetexture</h2>
+<a id="a8c26d47d636fc666b7b305665aeeb970" name="a8c26d47d636fc666b7b305665aeeb970"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8c26d47d636fc666b7b305665aeeb970">&#9670;&#160;</a></span>ssaoprevviewport</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -11635,7 +11755,7 @@ Friends</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">unsigned int gRenderer::ssaonoisetexture</td>
+          <td class="memname">int gRenderer::ssaoprevviewport[4]</td>
         </tr>
       </table>
   </td>
@@ -11900,6 +12020,94 @@ Friends</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname">glm::mat4 gRenderer::viewmatrixold</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a26aa57ab9c0b48a8794d77c65c66446d" name="a26aa57ab9c0b48a8794d77c65c66446d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a26aa57ab9c0b48a8794d77c65c66446d">&#9670;&#160;</a></span>viewportheight</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int gRenderer::viewportheight</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a35709d0f6a3f79b07db2ab21732c64c2" name="a35709d0f6a3f79b07db2ab21732c64c2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a35709d0f6a3f79b07db2ab21732c64c2">&#9670;&#160;</a></span>viewportwidth</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int gRenderer::viewportwidth</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ab3fab46a0612957786da9c7a6542fbbf" name="ab3fab46a0612957786da9c7a6542fbbf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab3fab46a0612957786da9c7a6542fbbf">&#9670;&#160;</a></span>viewportx</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int gRenderer::viewportx</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a42df3fdfa5b522850597118190116dbf" name="a42df3fdfa5b522850597118190116dbf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a42df3fdfa5b522850597118190116dbf">&#9670;&#160;</a></span>viewporty</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int gRenderer::viewporty</td>
         </tr>
       </table>
   </td>

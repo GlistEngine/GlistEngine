@@ -1,5 +1,13 @@
 var NAVTREEINDEX18 =
 {
+"gUtils_8h.html#a2ed85cbfd8460de76162b9456b281ec4":[2,0,0,8,9,48],
+"gUtils_8h.html#a2fe6c3daa3637fac1ee19a7cdd0ad996":[2,0,0,8,9,47],
+"gUtils_8h.html#a3032c90c64b493e8d519ce8f8dbb974d":[2,0,0,8,9,71],
+"gUtils_8h.html#a33712aa7f449750b3f0db7406c8526b4":[2,0,0,8,9,26],
+"gUtils_8h.html#a3a9265170003b111798107ecc55d179e":[2,0,0,8,9,64],
+"gUtils_8h.html#a3b454c86389d1a25a69d0be868ffdcf4":[2,0,0,8,9,30],
+"gUtils_8h.html#a3fb6d7b105fcd4527ade3200222c54a9":[2,0,0,8,9,52],
+"gUtils_8h.html#a41d01761c35dc88d145c0e3c0df0b877":[2,0,0,8,9,35],
 "gUtils_8h.html#a427f316c3ba73480480cdc40b2a05e36":[2,0,0,8,9,41],
 "gUtils_8h.html#a49165ceb9878eb49b60a771fc7f149ea":[2,0,0,8,9,72],
 "gUtils_8h.html#a500b11a913b4910cfdfbcfff13d96520":[2,0,0,8,9,33],
@@ -241,13 +249,5 @@ var NAVTREEINDEX18 =
 "structgRenderer_1_1gSceneLightData.html#a70a6daffbb49dd8e71938c072a2a4849":[1,0,146,2,6],
 "structgRenderer_1_1gSceneLightData.html#a7b4fb63d9e039936022413f0e72a3201":[1,0,146,2,7],
 "structgRenderer_1_1gSceneLightData.html#a810e47fb54610d2357db7f88c0db1497":[1,0,146,2,1],
-"structgRenderer_1_1gSceneLightData.html#a8ce6a13d339bf01998a1ed76e54ce658":[1,0,146,2,5],
-"structgRenderer_1_1gSceneLightData.html#ab0bf1d2db72c1241e48a1540132d6141":[1,0,146,2,0],
-"structgRenderer_1_1gSceneLightData.html#ad59666c91d27300054ac3789d5b304e1":[1,0,146,2,2],
-"structgRenderer_1_1gSceneLightData.html#aefd726dae99d74498ec9445f8a1d9fc2":[1,0,146,2,4],
-"structgRenderer_1_1gSceneLightData.html#aff5d90ffd9243175c358929499fc281f":[1,0,146,2,3],
-"structgRenderer_1_1gSceneLights.html":[1,0,146,3],
-"structgRenderer_1_1gSceneLights.html#a77f19e641d9d5a063dde338bd1c07bae":[1,0,146,3,0],
-"structgRenderer_1_1gSceneLights.html#a8c9ae0323cefbd7c5b04505e3e3f8215":[1,0,146,3,3],
-"structgRenderer_1_1gSceneLights.html#ae5569c939be0c2c1b1db5a5b104c95a0":[1,0,146,3,1]
+"structgRenderer_1_1gSceneLightData.html#a8ce6a13d339bf01998a1ed76e54ce658":[1,0,146,2,5]
 };

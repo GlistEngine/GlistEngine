@@ -12,6 +12,10 @@ var searchData=
   ['vertices_9',['vertices',['../classgMesh.html#ac02acb6091c09ff326d4155566248e8b',1,'gMesh']]],
   ['viewmatrix_10',['viewmatrix',['../structgRenderer_1_1gSceneData.html#a89f96a2a3d34fdc9e05c1f4b0720204e',1,'gRenderer::gSceneData::viewmatrix'],['../classgRenderer.html#af3c777d1e09f5023c2e701ff2036180d',1,'gRenderer::viewmatrix']]],
   ['viewmatrixold_11',['viewmatrixold',['../classgRenderer.html#a553d844b5ada950ae5d6b87d691f124b',1,'gRenderer']]],
-  ['viewpos_12',['viewpos',['../structgRenderer_1_1gSceneData.html#aa301bd9a32069c1189021b592d8c2b1d',1,'gRenderer::gSceneData']]],
-  ['violet_13',['VIOLET',['../classgColor.html#a7d75f08ba18034b051c435cddc7f1cef',1,'gColor']]]
+  ['viewportheight_12',['viewportheight',['../classgRenderer.html#a26aa57ab9c0b48a8794d77c65c66446d',1,'gRenderer']]],
+  ['viewportwidth_13',['viewportwidth',['../classgRenderer.html#a35709d0f6a3f79b07db2ab21732c64c2',1,'gRenderer']]],
+  ['viewportx_14',['viewportx',['../classgRenderer.html#ab3fab46a0612957786da9c7a6542fbbf',1,'gRenderer']]],
+  ['viewporty_15',['viewporty',['../classgRenderer.html#a42df3fdfa5b522850597118190116dbf',1,'gRenderer']]],
+  ['viewpos_16',['viewpos',['../structgRenderer_1_1gSceneData.html#aa301bd9a32069c1189021b592d8c2b1d',1,'gRenderer::gSceneData']]],
+  ['violet_17',['VIOLET',['../classgColor.html#a7d75f08ba18034b051c435cddc7f1cef',1,'gColor']]]
 ];

@@ -75,14 +75,14 @@ var NAVTREEINDEX =
 "classgInputManager.html#acab32e5a2a41d927de1cc074930959b2",
 "classgMatrix4.html",
 "classgObject.html#a92802af1d2172ba4501c38c40ccbed4a",
-"classgRenderer.html#a84949deaf64fdb9fce1381d18a2210f1",
-"classgShadowMap.html#a2e3845f2cd341e2e93f2d74851a31d12",
-"classgThread.html#a23afe6dec6da07a14bd4fe4d7d529fcf",
-"classgVbo.html#acd7dd67025e2ddd7220fd924ae3f28d4",
-"gEvent_8h.html#aa8b0556527d429476e3f3d6cfab1a21faa1ff59267ca574411d3c0825dced1cdf",
-"gKeyCode_8h.html#a9f519c326dfd8ce04f62b1994fcb7ac2",
-"gUtils_8h.html#a427f316c3ba73480480cdc40b2a05e36",
-"structgRenderer_1_1gSceneLights.html#afe9ec239bcfdc6df6dee2ec63209ae62"
+"classgRenderer.html#a7f91879781897b9ba9d54bf7dc08539c",
+"classgShader.html#aca29cff5650c2e994cd21d20ffef9654",
+"classgTexture.html#afd70c2559544df23661ce3a69022df54",
+"classgVbo.html#a73f04c6f2836362f6fe3b41e891d7553",
+"gEvent_8h.html#a191f70bbab8a83130414f49b20449ea5",
+"gKeyCode_8h.html#a8881e9018c1df53a34c7968b33f16b64",
+"gUtils_8h.html#a2ed85cbfd8460de76162b9456b281ec4",
+"structgRenderer_1_1gSceneLightData.html#ab0bf1d2db72c1241e48a1540132d6141"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
