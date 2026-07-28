@@ -19,6 +19,10 @@ gGUILineGraph::gGUILineGraph() {
 	linecolors[3] = {0.47f, 0.63f, 0.96f};
 	linecolors[4] = {0.87f, 0.68f, 0.40f};
 	linecolors[5] = {0.73f, 0.60f, 0.96f};
+	offsetleft = 0;
+	offsetright = 0;
+	offsettop = 0;
+	offsetbottom = 0;
 }
 
 gGUILineGraph::~gGUILineGraph() {
@@ -28,6 +32,8 @@ gGUILineGraph::~gGUILineGraph() {
 void gGUILineGraph::set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIObject* parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h) {
 	gGUIGraph::set(root, topParentGUIObject, parentGUIObject, parentSlotLineNo, parentSlotColumnNo, x, y, w, h);
 	needsupdate = true;
+
+	updateOffset();
 }
 
 void gGUILineGraph::setMaxX(float maxX){
@@ -145,8 +151,8 @@ void gGUILineGraph::setPointValues(int lineIndex, float oldX, float oldY, float 
         index--;
         break;
     }
-    for (int i = 0; i < pointcount; i++) {
-        if (graphlines[lineIndex][i][0] == oldX && graphlines[lineIndex][i][1] == oldY) {
+    for(int i = 0; i < pointcount; i++) {
+        if(graphlines[lineIndex][i][0] == oldX && graphlines[lineIndex][i][1] == oldY) {
             graphlines[lineIndex][i][0] = newX;
             graphlines[lineIndex][i][1] = newY;
             graphlines[lineIndex][i][2] = axisx1 + axisxw * (newX - minx) / (maxx - minx);
@@ -182,7 +188,7 @@ void gGUILineGraph::drawGraph() {
 			if(pointsenabled) {
 				size_t index = hash(i, j);
 				gCircle* circle = circlesmap[index];
-				if (circle) {
+				if(circle) {
 					circle->draw();
 				}
 			}
@@ -193,7 +199,7 @@ void gGUILineGraph::drawGraph() {
 
 			size_t index = hash(i, j);
 			gLine* line = linesmap[index];
-			if (line) {
+			if(line) {
 				line->draw();
 			}
 		}
@@ -237,16 +243,16 @@ void gGUILineGraph::updatePoints() {
 
 	// resize the cached lines, create or destroy them as necessary
 	int diff = cachedlines.size() - points;
-	if (diff > 0) {
+	if(diff > 0) {
 		// we have too many lines, so we destroy the last ones
-		for (int i = 0; i < diff; i++) {
+		for(int i = 0; i < diff; i++) {
 			gLine& line = cachedlines.back();
 			cachedlines.pop_back();
 			line.clear();
 		}
 	} else {
 		// we need more lines, so we create them
-		for (int i = 0; i < -diff; i++) {
+		for(int i = 0; i < -diff; i++) {
 			cachedlines.push_back(gLine());
 		}
 	}
@@ -259,9 +265,9 @@ void gGUILineGraph::updatePoints() {
 	for(int i = 0; i < linecount; i++) {
 		int pointcount = graphlines[i].size();
 		for(int j = 1; j < pointcount; j++) {
-			if (lineit == cachedlines.end()) {
+			if(lineit == cachedlines.end()) {
 				// no cached lines left, this should not happen as we have already resized the cache
-				// but kept here for safety, it would crash otherwise
+				// but kept here forsafety, it would crash otherwise
 				break;
 			}
 			lineit->setThickness(1.0f);
@@ -272,9 +278,9 @@ void gGUILineGraph::updatePoints() {
 		}
 	}
 
-	if (!pointsenabled) {
+	if(!pointsenabled) {
 		// clear everything
-		for (auto& item : cachedcircles) {
+		for(auto& item : cachedcircles) {
 			item.clear();
 		}
 		cachedcircles.clear();
@@ -284,16 +290,16 @@ void gGUILineGraph::updatePoints() {
 
 	// resize the cached circles, create or destroy them as necessary
 	diff = cachedcircles.size() - points;
-	if (diff > 0) {
+	if(diff > 0) {
 		// we have too many lines, so we destroy the last ones
-		for (int i = 0; i < diff; i++) {
+		for(int i = 0; i < diff; i++) {
 			gCircle& circle = cachedcircles.back();
 			cachedcircles.pop_back();
 			circle.clear();
 		}
 	} else {
 		// we need more circles, so we create them
-		for (int i = 0; i < -diff; i++) {
+		for(int i = 0; i < -diff; i++) {
 			cachedcircles.push_back(gCircle());
 		}
 	}
@@ -306,9 +312,9 @@ void gGUILineGraph::updatePoints() {
 	for(int i = 0; i < linecount; i++) {
 		int pointcount = graphlines[i].size();
 		for(int j = 1; j < pointcount; j++) {
-			if (circleit == cachedcircles.end()) {
+			if(circleit == cachedcircles.end()) {
 				// no cached circles left, this should not happen as we have already resized the cache
-				// but kept here for safety, it would crash otherwise
+				// but kept here forsafety, it would crash otherwise
 				break;
 			}
 			circleit->setPoints(graphlines[i][j][2], graphlines[i][j][3], 5, true, 64);
@@ -322,8 +328,8 @@ void gGUILineGraph::updatePoints() {
 }
 
 void gGUILineGraph::removeFirstPointsFromLine(int lineIndex, int pointNumLimit) {
-    if (!graphlines.empty()) {
-        if (graphlines[lineIndex].size() >= pointNumLimit) {
+    if(!graphlines.empty()) {
+        if(graphlines[lineIndex].size() >= pointNumLimit) {
             for(int i = 0; i < pointNumLimit; i++) graphlines[lineIndex].pop_front();
         }
     }
@@ -362,3 +368,29 @@ void gGUILineGraph::clear() {
 	needsupdate = true;
 }
 
+void gGUILineGraph::setOffset(int leftOffset, int rightOffset, int topOffset, int bottomOffset) {
+	this->offsetleft = leftOffset;
+	this->offsetright = rightOffset;
+	this->offsettop = topOffset;
+	this->offsetbottom = bottomOffset;
+	updateOffset();
+}
+
+void gGUILineGraph::updateOffset() {
+	axisx1 = left + offsetleft;
+	axisy1 = top + offsettop;
+
+	axisxw = width - (offsetleft + offsetright);
+	axisyh = height - (offsettop + offsetbottom);
+	axisx2 = axisx1 + axisxw;
+	axisy2 = axisy1 + axisyh;
+
+	axisxstart = axisy2;
+	if(miny < 0 && (maxy - miny) != 0) axisxstart -= axisyh * ((-miny) / (maxy - miny));
+	axisystart = axisx1;
+	if(minx < 0 && (maxx - minx) != 0) axisystart += axisxw * ((-minx) / (maxx - minx));
+
+	setLabelCountX(labelcountx);
+	setLabelCountY(labelcounty);
+	needsupdate = true;
+}

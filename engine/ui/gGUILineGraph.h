@@ -89,10 +89,12 @@ public:
 
 	void clear() override;
 
+	void setOffset(int leftOffset, int rightOffset, int topOffset, int bottomOffset);
 private:
 	static const int linecolornum = 6;
 	void drawGraph() override;
 	void updatePoints();
+	void updateOffset();
 
 	std::deque<std::deque<std::array<float, 4>>> graphlines;
 	std::vector<gLine> cachedlines;
@@ -103,6 +105,11 @@ private:
 
 	bool pointsenabled;
 	bool needsupdate = false;
+	int offsetleft;
+	int offsetright;
+	int offsettop;
+	int offsetbottom;
+
 
 	uint64_t hash(uint32_t a, uint32_t b) {
 		return ((uint64_t)a << 32) | b;
