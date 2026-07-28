@@ -955,6 +955,13 @@ bool gVKRenderEngine::initVulkan() {
 	if(vkcontext == nullptr) vkcontext = new gVKContext();
 	gVKContext* ctx = vkcontext;
 
+	// Re-initialising an already-live context would overwrite - and leak - the
+	// instance and device it already holds, so bail out if init already ran.
+	if(ctx->instance != VK_NULL_HANDLE) {
+		gLogw("gVKRenderEngine") << "Vulkan is already initialised; skipping re-initialisation.";
+		return true;
+	}
+
 #if defined(__APPLE__)
 	// MoltenVK (the macOS driver) and the Homebrew validation layers are not on
 	// the loader's default search path. The trailing 0 means "do not overwrite",
