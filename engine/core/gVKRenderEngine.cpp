@@ -733,9 +733,10 @@ struct gVKContext {
 	void setAppVersion(uint32_t version) { appversion = version; }
 	void setEngineVersion(uint32_t version) { engineversion = version; }
 
-	// The Vulkan API level the instance targets, e.g. VK_API_VERSION_1_3. init
+	// The Vulkan API level the instance targets, e.g. VK_API_VERSION_1_4. init
 	// clamps this down to what the loader supports (see getInstanceApiVersion()),
-	// so asking for a high version is safe - it never makes vkCreateInstance fail.
+	// so asking for a high version is safe - it never makes vkCreateInstance fail;
+	// the runtime just gets the highest version it can actually provide.
 	void setApiVersion(uint32_t version) { apiversion = version; }
 
 	// Validation layers are a debugging aid; on by default only in debug builds.
@@ -819,6 +820,12 @@ struct gVKContext {
 	// supports (samplerAnisotropy, geometryShader, ...). Memory: heaps and memory
 	// types, needed to pick where every buffer and image gets allocated.
 	VkPhysicalDeviceProperties* getDeviceProperties() { return &deviceproperties; }
+
+	// Convenience for the selected GPU's own Vulkan version (same as
+	// getDeviceProperties()->apiVersion). Check against this before using
+	// version-specific core features; getInstanceApiVersion() is the loader side.
+	uint32_t getDeviceApiVersion() const { return deviceproperties.apiVersion; }
+
 	VkPhysicalDeviceFeatures* getDeviceFeatures() { return &devicefeatures; }
 	VkPhysicalDeviceMemoryProperties* getDeviceMemoryProperties() { return &devicememoryproperties; }
 
@@ -849,7 +856,7 @@ private:
 	std::string enginename = "GlistEngine";
 	uint32_t appversion = VK_MAKE_API_VERSION(0, 1, 0, 0);
 	uint32_t engineversion = VK_MAKE_API_VERSION(0, 1, 0, 0);
-	uint32_t apiversion = VK_API_VERSION_1_3;
+	uint32_t apiversion = VK_API_VERSION_1_4;
 	bool enablevalidation = gvkdefaultvalidation;
 	std::vector<const char*> extrainstanceextensions;
 	std::vector<const char*> extradeviceextensions;
