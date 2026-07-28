@@ -185,7 +185,7 @@ public:
 	// reach the accessor rich context without this header ever pulling in
 	// <vulkan/vulkan.h>. getContext() creates the context on first access when it
 	// does not exist yet, so on a Vulkan-capable build it never returns null:
-	// getContext()->setApiVersion(...) before init() is safe, and init() adopts
+	// getContext()->setMinApiVersion(...) before init() is safe, and init() adopts
 	// this same context. Whether the handles are actually populated is a separate
 	// question - check isInitialized() before using them. (A build without Vulkan
 	// support has no context type, so there it returns null.)
@@ -196,11 +196,7 @@ public:
 	// so replacing a context never leaks the old one. The self assignment guard
 	// avoids destroying the very context being handed in. The engine frees the
 	// adopted context on cleanup.
-	void setContext(gVKContext* context) {
-		if(vkcontext == context) return;
-		cleanupVulkan();
-		vkcontext = context;
-	}
+	void setContext(gVKContext* context);
 
 protected:
 	void init() override;

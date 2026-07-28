@@ -733,11 +733,12 @@ struct gVKContext {
 	void setAppVersion(uint32_t version) { appversion = version; }
 	void setEngineVersion(uint32_t version) { engineversion = version; }
 
-	// The Vulkan API level the instance targets, e.g. VK_API_VERSION_1_4. init
-	// clamps this down to what the loader supports (see getInstanceApiVersion()),
-	// so asking for a high version is safe - it never makes vkCreateInstance fail;
-	// the runtime just gets the highest version it can actually provide.
-	void setApiVersion(uint32_t version) { apiversion = version; }
+	// The minimum Vulkan version the engine requires (the floor), e.g.
+	// VK_API_VERSION_1_3. init does NOT target this value: it targets the highest
+	// version the loader offers, so newer Vulkan (1.4 today, 1.5+ later) is picked
+	// up automatically with no code change. This floor only decides when to give
+	// up - if the loader cannot even reach it, init fails instead of limping on.
+	void setMinApiVersion(uint32_t version) { minapiversion = version; }
 
 	// Validation layers are a debugging aid; on by default only in debug builds.
 	void setValidationEnabled(bool enabled) { enablevalidation = enabled; }
@@ -755,7 +756,7 @@ struct gVKContext {
 	std::string* getEngineName() { return &enginename; }
 	uint32_t* getAppVersion() { return &appversion; }
 	uint32_t* getEngineVersion() { return &engineversion; }
-	uint32_t* getApiVersion() { return &apiversion; }
+	uint32_t* getMinApiVersion() { return &minapiversion; }
 	bool* getValidationEnabled() { return &enablevalidation; }
 	std::vector<const char*>* getInstanceExtensions() { return &extrainstanceextensions; }
 	std::vector<const char*>* getDeviceExtensions() { return &extradeviceextensions; }
@@ -837,8 +838,9 @@ struct gVKContext {
 	std::vector<VkPresentModeKHR>* getSurfacePresentModes() { return &surfacepresentmodes; }
 
 	// The instance-level Vulkan version the loader actually supports (from
-	// vkEnumerateInstanceVersion). getApiVersion() is what was requested; init
-	// clamps that request down to this value so vkCreateInstance never over-asks.
+	// vkEnumerateInstanceVersion). This is exactly what init targets - it is the
+	// highest version available; getMinApiVersion() is only the floor init checks
+	// it against.
 	uint32_t* getInstanceApiVersion() { return &instanceapiversion; }
 
 	// Whether validation is actually running, which is not the same as whether it
@@ -856,7 +858,7 @@ private:
 	std::string enginename = "GlistEngine";
 	uint32_t appversion = VK_MAKE_API_VERSION(0, 1, 0, 0);
 	uint32_t engineversion = VK_MAKE_API_VERSION(0, 1, 0, 0);
-	uint32_t apiversion = VK_API_VERSION_1_4;
+	uint32_t minapiversion = VK_API_VERSION_1_3;
 	bool enablevalidation = gvkdefaultvalidation;
 	std::vector<const char*> extrainstanceextensions;
 	std::vector<const char*> extradeviceextensions;
@@ -942,6 +944,13 @@ gVKContext* gVKRenderEngine::getContext() {
 	if(vkcontext == nullptr) vkcontext = new gVKContext();
 #endif
 	return vkcontext;
+}
+
+
+void gVKRenderEngine::setContext(gVKContext* context) {
+	if(vkcontext == context) return;
+	cleanupVulkan();
+	vkcontext = context;
 }
 
 
@@ -1048,14 +1057,23 @@ bool gVKRenderEngine::initVulkan() {
 	extensions.insert(extensions.end(), ctx->extrainstanceextensions.begin(), ctx->extrainstanceextensions.end());
 	layers.insert(layers.end(), ctx->extralayers.begin(), ctx->extralayers.end());
 
-	// Never request a higher API version than the runtime supports, or
-	// vkCreateInstance can fail with VK_ERROR_INCOMPATIBLE_DRIVER on older
-	// loaders/drivers. vkEnumerateInstanceVersion (Vulkan 1.1+) reports the
-	// ceiling; clamp the requested version down to it. Packed version numbers
-	// compare monotonically, so a plain < is correct here.
+	// Target the highest API version the loader offers so newer Vulkan (1.4 today,
+	// 1.5+ later) is used automatically with no code change. vkEnumerateInstanceVersion
+	// (Vulkan 1.1+) reports that ceiling; requesting exactly it never makes
+	// vkCreateInstance over-ask. minapiversion is the hard floor - if the runtime
+	// cannot even reach it, there is nothing usable to fall back to, so fail here
+	// rather than limp on. Packed version numbers compare monotonically, so plain
+	// relational operators are correct.
 	ctx->instanceapiversion = VK_API_VERSION_1_0;
 	vkEnumerateInstanceVersion(&ctx->instanceapiversion);
-	uint32_t targetapiversion = ctx->apiversion < ctx->instanceapiversion ? ctx->apiversion : ctx->instanceapiversion;
+	if(ctx->instanceapiversion < ctx->minapiversion) {
+		gLoge("gVKRenderEngine") << "Vulkan " << VK_API_VERSION_MAJOR(ctx->minapiversion) << "."
+				<< VK_API_VERSION_MINOR(ctx->minapiversion) << " is required, but the loader only supports "
+				<< VK_API_VERSION_MAJOR(ctx->instanceapiversion) << "."
+				<< VK_API_VERSION_MINOR(ctx->instanceapiversion) << ". Update the GPU driver / Vulkan runtime.";
+		return false;
+	}
+	uint32_t targetapiversion = ctx->instanceapiversion;
 
 	VkApplicationInfo appinfo{};
 	appinfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
@@ -1132,6 +1150,10 @@ bool gVKRenderEngine::initVulkan() {
 
 	// A GPU is usable only if it can both render and present to our surface, and
 	// in Vulkan those are separate queue family capabilities queried per family.
+	// It must also meet the version floor: the device's own apiVersion - not the
+	// loader's - is what caps the core features actually available on it, so a
+	// device below minapiversion cannot deliver what the engine requires.
+	bool rejectedforversion = false;
 	for(const auto& dev : ctx->physicaldevices) {
 		uint32_t familycount = 0;
 		vkGetPhysicalDeviceQueueFamilyProperties(dev, &familycount, nullptr);
@@ -1154,6 +1176,13 @@ bool gVKRenderEngine::initVulkan() {
 			}
 		}
 		if(foundgraphics && foundpresent) {
+			VkPhysicalDeviceProperties devprops{};
+			vkGetPhysicalDeviceProperties(dev, &devprops);
+			if(devprops.apiVersion < ctx->minapiversion) {
+				// Otherwise fine, but too old - keep looking for a newer GPU.
+				rejectedforversion = true;
+				continue;
+			}
 			ctx->physicaldevice = dev;
 			ctx->graphicsfamily = graphics;
 			ctx->presentfamily = present;
@@ -1165,7 +1194,14 @@ bool gVKRenderEngine::initVulkan() {
 		}
 	}
 	if(ctx->physicaldevice == VK_NULL_HANDLE) {
-		gLoge("gVKRenderEngine") << "No GPU can both render and present to this surface.";
+		if(rejectedforversion) {
+			gLoge("gVKRenderEngine") << "No GPU supports the required Vulkan "
+					<< VK_API_VERSION_MAJOR(ctx->minapiversion) << "."
+					<< VK_API_VERSION_MINOR(ctx->minapiversion)
+					<< ". Update the GPU driver.";
+		} else {
+			gLoge("gVKRenderEngine") << "No GPU can both render and present to this surface.";
+		}
 		cleanupVulkan();
 		return false;
 	}
@@ -1256,6 +1292,15 @@ bool gVKRenderEngine::initVulkan() {
 			<< VK_API_VERSION_MAJOR(props.apiVersion) << "."
 			<< VK_API_VERSION_MINOR(props.apiVersion) << "."
 			<< VK_API_VERSION_PATCH(props.apiVersion);
+	// Three distinct numbers - separated so a version mismatch is unambiguous:
+	// the floor the engine requires, the highest the loader offers (which is what
+	// the instance actually targets), and the highest the selected device supports.
+	gLogi("gVKRenderEngine") << "API versions -> min required: "
+			<< VK_API_VERSION_MAJOR(ctx->minapiversion) << "." << VK_API_VERSION_MINOR(ctx->minapiversion)
+			<< " | loader max (targeted): "
+			<< VK_API_VERSION_MAJOR(ctx->instanceapiversion) << "." << VK_API_VERSION_MINOR(ctx->instanceapiversion)
+			<< " | device max: "
+			<< VK_API_VERSION_MAJOR(props.apiVersion) << "." << VK_API_VERSION_MINOR(props.apiVersion);
 	gLogi("gVKRenderEngine") << "Vulkan device: " << props.deviceName
 			<< " | graphics family: " << ctx->graphicsfamily
 			<< " | present family: " << ctx->presentfamily
