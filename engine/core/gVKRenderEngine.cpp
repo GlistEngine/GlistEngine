@@ -23,6 +23,7 @@
 	#define GLFW_INCLUDE_VULKAN
 	#include "gGLFWWindow.h"
 	#include "gAppManager.h"
+	#include "gVKSwapchain.h"
 	#include <vector>
 	#include <set>
 	#include <cstring>
@@ -978,6 +979,15 @@ bool gVKRenderEngine::initVulkan() {
 			<< " | graphics family: " << ctx->graphicsfamily
 			<< " | present family: " << ctx->presentfamily
 			<< " | validation: " << (usevalidation ? "on" : "off");
+
+	/* ---------------- presentation resources ---------------- */
+	// The remaining modules of the frame path (render pass, framebuffers, command
+	// buffers and synchronisation) are hooked in here as they are implemented.
+	if(!gvkCreateSwapchain(*ctx, handle)) {
+		gLoge("gVKRenderEngine") << "Vulkan init: the swapchain could not be created.";
+		cleanupVulkan();
+		return false;
+	}
 	return true;
 #endif
 }
@@ -987,8 +997,12 @@ void gVKRenderEngine::cleanupVulkan() {
 #ifdef GVK_DESKTOP_GLFW
 	if(vkcontext == nullptr) return;
 	gVKContext* ctx = vkcontext;
+	// Destroying objects the GPU is still using is a validation error, so the
+	// device is drained first.
+	if(ctx->device != VK_NULL_HANDLE) vkDeviceWaitIdle(ctx->device);
 	// Strict reverse creation order: Vulkan requires children to be destroyed
 	// before their parent, and the surface must die before its instance.
+	gvkDestroySwapchain(*ctx);
 	if(ctx->device != VK_NULL_HANDLE) vkDestroyDevice(ctx->device, nullptr);
 	if(ctx->surface != VK_NULL_HANDLE) vkDestroySurfaceKHR(ctx->instance, ctx->surface, nullptr);
 	if(ctx->debugmessenger != VK_NULL_HANDLE) {
