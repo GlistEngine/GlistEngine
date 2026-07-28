@@ -766,16 +766,66 @@ struct gVKContext {
 	VkDebugUtilsMessengerEXT* getDebugMessenger() { return &debugmessenger; }
 	VkSurfaceKHR* getSurface() { return &surface; }
 	VkPhysicalDevice* getPhysicalDevice() { return &physicaldevice; }
+
+	// The full set of GPUs the instance enumerated, and how many. init keeps only
+	// the first device that can both render and present (getPhysicalDevice());
+	// these expose the whole list so code can inspect or pick a different one.
+	uint32_t* getDeviceCount() { return &devicecount; }
+	std::vector<VkPhysicalDevice>* getPhysicalDevices() { return &physicaldevices; }
+
+	// Properties and features for every enumerated GPU (parallel to
+	// getPhysicalDevices()), including the ones init did not pick, so code can
+	// compare and choose a different device without querying each handle itself.
+	std::vector<VkPhysicalDeviceProperties>* getAllDeviceProperties() { return &physicaldeviceproperties; }
+	std::vector<VkPhysicalDeviceFeatures>* getAllDeviceFeatures() { return &physicaldevicefeatures; }
+
 	VkDevice* getDevice() { return &device; }
 	VkQueue* getGraphicsQueue() { return &graphicsqueue; }
 	VkQueue* getPresentQueue() { return &presentqueue; }
 	uint32_t* getGraphicsFamily() { return &graphicsfamily; }
 	uint32_t* getPresentFamily() { return &presentfamily; }
 
-	// Physical device identity and limits, queried once during init. Useful for
-	// capability decisions later - max texture size, buffer alignments, whether a
-	// feature is supported - without re-querying the driver each time.
+	// Queue families of the selected physical device as the driver reported them:
+	// queue counts and capability flags (graphics/compute/transfer/...). init reads
+	// these to choose the graphics and present indices; kept for later multi-queue
+	// work (e.g. a dedicated transfer or compute queue).
+	std::vector<VkQueueFamilyProperties>* getQueueFamilyProperties() { return &queuefamilyproperties; }
+
+	// Per queue family of the selected device: whether that family can present to
+	// the surface (parallel to getQueueFamilyProperties()). init keeps only the
+	// first presentable family index; this exposes every family's support.
+	std::vector<VkBool32>* getQueueFamilyPresentSupport() { return &queuefamilypresentsupport; }
+
+	// The instance extensions, layers and device extensions actually enabled at
+	// creation: the mandatory GLFW / portability / swapchain / validation names
+	// merged with the developer's additions. getInstanceExtensions() / getLayers()
+	// / getDeviceExtensions() above return only the developer's extra requests;
+	// these return the full effective set that was handed to Vulkan.
+	std::vector<const char*>* getEnabledInstanceExtensions() { return &enabledinstanceextensions; }
+	std::vector<const char*>* getEnabledLayers() { return &enabledlayers; }
+	std::vector<const char*>* getEnabledDeviceExtensions() { return &enableddeviceextensions; }
+
+	// Everything the instance / GPU actually supports (not just what we enabled),
+	// enumerated once at init so a developer can check for a capability without
+	// re-querying: is extension X available on this GPU, is layer Y installed.
+	std::vector<VkExtensionProperties>* getAvailableInstanceExtensions() { return &availableinstanceextensions; }
+	std::vector<VkLayerProperties>* getAvailableLayers() { return &availablelayers; }
+	std::vector<VkExtensionProperties>* getAvailableDeviceExtensions() { return &availabledeviceextensions; }
+
+	// The three core physical-device capability blocks, queried once during init.
+	// Properties: limits and identity. Features: optional capabilities the GPU
+	// supports (samplerAnisotropy, geometryShader, ...). Memory: heaps and memory
+	// types, needed to pick where every buffer and image gets allocated.
 	VkPhysicalDeviceProperties* getDeviceProperties() { return &deviceproperties; }
+	VkPhysicalDeviceFeatures* getDeviceFeatures() { return &devicefeatures; }
+	VkPhysicalDeviceMemoryProperties* getDeviceMemoryProperties() { return &devicememoryproperties; }
+
+	// The surface's capabilities and the formats / present modes it supports on the
+	// selected device - what the swapchain is built from: extent and image-count
+	// bounds, colour formats, and vsync / present modes.
+	VkSurfaceCapabilitiesKHR* getSurfaceCapabilities() { return &surfacecapabilities; }
+	std::vector<VkSurfaceFormatKHR>* getSurfaceFormats() { return &surfaceformats; }
+	std::vector<VkPresentModeKHR>* getSurfacePresentModes() { return &surfacepresentmodes; }
 
 	// Whether validation is actually running, which is not the same as whether it
 	// was requested: setValidationEnabled(true) still yields false here when the
@@ -807,7 +857,24 @@ private:
 	VkQueue presentqueue = VK_NULL_HANDLE;
 	uint32_t graphicsfamily = 0;
 	uint32_t presentfamily = 0;
+	uint32_t devicecount = 0;
+	std::vector<VkPhysicalDevice> physicaldevices;
+	std::vector<VkPhysicalDeviceProperties> physicaldeviceproperties;
+	std::vector<VkPhysicalDeviceFeatures> physicaldevicefeatures;
+	std::vector<VkQueueFamilyProperties> queuefamilyproperties;
+	std::vector<VkBool32> queuefamilypresentsupport;
+	std::vector<const char*> enabledinstanceextensions;
+	std::vector<const char*> enabledlayers;
+	std::vector<const char*> enableddeviceextensions;
+	std::vector<VkExtensionProperties> availableinstanceextensions;
+	std::vector<VkLayerProperties> availablelayers;
+	std::vector<VkExtensionProperties> availabledeviceextensions;
 	VkPhysicalDeviceProperties deviceproperties{};
+	VkPhysicalDeviceFeatures devicefeatures{};
+	VkPhysicalDeviceMemoryProperties devicememoryproperties{};
+	VkSurfaceCapabilitiesKHR surfacecapabilities{};
+	std::vector<VkSurfaceFormatKHR> surfaceformats;
+	std::vector<VkPresentModeKHR> surfacepresentmodes;
 	bool validationactive = false;
 };
 
@@ -888,6 +955,20 @@ bool gVKRenderEngine::initVulkan() {
 		return false;
 	}
 
+	// Record what the instance level offers (every extension and layer present) so
+	// support can be queried later without re-enumerating. Done after the Apple
+	// env block above, since that is what points the loader at the layers.
+	uint32_t availinstextcount = 0;
+	if(vkEnumerateInstanceExtensionProperties(nullptr, &availinstextcount, nullptr) == VK_SUCCESS && availinstextcount > 0) {
+		ctx->availableinstanceextensions.resize(availinstextcount);
+		vkEnumerateInstanceExtensionProperties(nullptr, &availinstextcount, ctx->availableinstanceextensions.data());
+	}
+	uint32_t availlayercount = 0;
+	if(vkEnumerateInstanceLayerProperties(&availlayercount, nullptr) == VK_SUCCESS && availlayercount > 0) {
+		ctx->availablelayers.resize(availlayercount);
+		vkEnumerateInstanceLayerProperties(&availlayercount, ctx->availablelayers.data());
+	}
+
 	/* ---------------- instance ---------------- */
 	// Asking GLFW for the surface extensions keeps this portable instead of
 	// hardcoding VK_KHR_win32_surface / VK_EXT_metal_surface per platform.
@@ -898,7 +979,10 @@ bool gVKRenderEngine::initVulkan() {
 		cleanupVulkan();
 		return false;
 	}
-	std::vector<const char*> extensions(glfwexts, glfwexts + glfwextcount);
+	// Aliased onto the context so the effective list lives on as engine state
+	// instead of dying with this local when init returns.
+	std::vector<const char*>& extensions = ctx->enabledinstanceextensions;
+	extensions.assign(glfwexts, glfwexts + glfwextcount);
 
 #if defined(__APPLE__)
 	// MoltenVK is a portability driver: without these the loader does not even
@@ -910,7 +994,7 @@ bool gVKRenderEngine::initVulkan() {
 
 	// Only ask for the layer if it is actually installed; requesting a missing
 	// layer makes vkCreateInstance fail outright.
-	std::vector<const char*> layers;
+	std::vector<const char*>& layers = ctx->enabledlayers;
 	bool usevalidation = false;
 	if(ctx->enablevalidation) {
 		if(gvkHasLayer(GVK_VALIDATION_LAYER) && gvkHasInstanceExtension(VK_EXT_DEBUG_UTILS_EXTENSION_NAME)) {
@@ -986,24 +1070,34 @@ bool gVKRenderEngine::initVulkan() {
 	}
 
 	/* ---------------- physical device ---------------- */
-	uint32_t devicecount = 0;
-	vkEnumeratePhysicalDevices(ctx->instance, &devicecount, nullptr);
-	if(devicecount == 0) {
+	vkEnumeratePhysicalDevices(ctx->instance, &ctx->devicecount, nullptr);
+	if(ctx->devicecount == 0) {
 		gLoge("gVKRenderEngine") << "No Vulkan capable GPU was found.";
 		cleanupVulkan();
 		return false;
 	}
-	std::vector<VkPhysicalDevice> devices(devicecount);
-	vkEnumeratePhysicalDevices(ctx->instance, &devicecount, devices.data());
+	ctx->physicaldevices.resize(ctx->devicecount);
+	vkEnumeratePhysicalDevices(ctx->instance, &ctx->devicecount, ctx->physicaldevices.data());
+
+	// Properties and features for every GPU, so a developer can compare devices -
+	// including the ones init does not pick - through getAllDeviceProperties() /
+	// getAllDeviceFeatures().
+	ctx->physicaldeviceproperties.resize(ctx->devicecount);
+	ctx->physicaldevicefeatures.resize(ctx->devicecount);
+	for(uint32_t i = 0; i < ctx->devicecount; i++) {
+		vkGetPhysicalDeviceProperties(ctx->physicaldevices[i], &ctx->physicaldeviceproperties[i]);
+		vkGetPhysicalDeviceFeatures(ctx->physicaldevices[i], &ctx->physicaldevicefeatures[i]);
+	}
 
 	// A GPU is usable only if it can both render and present to our surface, and
 	// in Vulkan those are separate queue family capabilities queried per family.
-	for(const auto& dev : devices) {
+	for(const auto& dev : ctx->physicaldevices) {
 		uint32_t familycount = 0;
 		vkGetPhysicalDeviceQueueFamilyProperties(dev, &familycount, nullptr);
 		if(familycount == 0) continue;
 		std::vector<VkQueueFamilyProperties> families(familycount);
 		vkGetPhysicalDeviceQueueFamilyProperties(dev, &familycount, families.data());
+		std::vector<VkBool32> presentsupportlist(familycount, VK_FALSE);
 
 		bool foundgraphics = false, foundpresent = false;
 		uint32_t graphics = 0, present = 0;
@@ -1012,9 +1106,8 @@ bool gVKRenderEngine::initVulkan() {
 				graphics = i;
 				foundgraphics = true;
 			}
-			VkBool32 presentsupport = VK_FALSE;
-			vkGetPhysicalDeviceSurfaceSupportKHR(dev, i, ctx->surface, &presentsupport);
-			if(!foundpresent && presentsupport == VK_TRUE) {
+			vkGetPhysicalDeviceSurfaceSupportKHR(dev, i, ctx->surface, &presentsupportlist[i]);
+			if(!foundpresent && presentsupportlist[i] == VK_TRUE) {
 				present = i;
 				foundpresent = true;
 			}
@@ -1023,6 +1116,10 @@ bool gVKRenderEngine::initVulkan() {
 			ctx->physicaldevice = dev;
 			ctx->graphicsfamily = graphics;
 			ctx->presentfamily = present;
+			// Keep the chosen device's families (queue counts + capability flags)
+			// and which of them can present, so later phases need no re-query.
+			ctx->queuefamilyproperties = families;
+			ctx->queuefamilypresentsupport = presentsupportlist;
 			break;
 		}
 	}
@@ -1049,15 +1146,16 @@ bool gVKRenderEngine::initVulkan() {
 
 	// Swapchain is requested now because presentation is the next phase and
 	// asking here proves the device supports it.
-	std::vector<const char*> deviceextensions = {VK_KHR_SWAPCHAIN_EXTENSION_NAME};
+	std::vector<const char*>& deviceextensions = ctx->enableddeviceextensions;
+	deviceextensions = {VK_KHR_SWAPCHAIN_EXTENSION_NAME};
 	// VK_KHR_portability_subset is mandatory on portability drivers such as
 	// MoltenVK and absent on conformant ones, so it is queried, never assumed.
 	uint32_t devextcount = 0;
 	vkEnumerateDeviceExtensionProperties(ctx->physicaldevice, nullptr, &devextcount, nullptr);
 	if(devextcount > 0) {
-		std::vector<VkExtensionProperties> devexts(devextcount);
-		vkEnumerateDeviceExtensionProperties(ctx->physicaldevice, nullptr, &devextcount, devexts.data());
-		for(const auto& ext : devexts) {
+		ctx->availabledeviceextensions.resize(devextcount);
+		vkEnumerateDeviceExtensionProperties(ctx->physicaldevice, nullptr, &devextcount, ctx->availabledeviceextensions.data());
+		for(const auto& ext : ctx->availabledeviceextensions) {
 			if(strcmp(ext.extensionName, "VK_KHR_portability_subset") == 0) {
 				deviceextensions.push_back("VK_KHR_portability_subset");
 				break;
@@ -1067,12 +1165,14 @@ bool gVKRenderEngine::initVulkan() {
 	// Same rule as the instance side: developer requests extend the mandatory set.
 	deviceextensions.insert(deviceextensions.end(), ctx->extradeviceextensions.begin(), ctx->extradeviceextensions.end());
 
-	VkPhysicalDeviceFeatures devicefeatures{};
+	// Empty: no optional features are switched on yet. Kept separate from the
+	// context's devicefeatures, which records what the GPU actually supports.
+	VkPhysicalDeviceFeatures enabledfeatures{};
 	VkDeviceCreateInfo deviceinfo{};
 	deviceinfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
 	deviceinfo.queueCreateInfoCount = static_cast<uint32_t>(queueinfos.size());
 	deviceinfo.pQueueCreateInfos = queueinfos.data();
-	deviceinfo.pEnabledFeatures = &devicefeatures;
+	deviceinfo.pEnabledFeatures = &enabledfeatures;
 	deviceinfo.enabledExtensionCount = static_cast<uint32_t>(deviceextensions.size());
 	deviceinfo.ppEnabledExtensionNames = deviceextensions.data();
 	deviceinfo.enabledLayerCount = static_cast<uint32_t>(layers.size());
@@ -1087,8 +1187,29 @@ bool gVKRenderEngine::initVulkan() {
 	vkGetDeviceQueue(ctx->device, ctx->graphicsfamily, 0, &ctx->graphicsqueue);
 	vkGetDeviceQueue(ctx->device, ctx->presentfamily, 0, &ctx->presentqueue);
 
-	// Cached on the context so later phases can read limits without re-querying.
+	// Cached on the context so later phases can read them without re-querying:
+	// limits/identity, the GPU's supported features, and its memory layout.
 	vkGetPhysicalDeviceProperties(ctx->physicaldevice, &ctx->deviceproperties);
+	vkGetPhysicalDeviceFeatures(ctx->physicaldevice, &ctx->devicefeatures);
+	vkGetPhysicalDeviceMemoryProperties(ctx->physicaldevice, &ctx->devicememoryproperties);
+
+	// Surface capabilities, formats and present modes for the selected device -
+	// the inputs the swapchain phase consumes. The surface and device both exist
+	// by now, so cache them here rather than re-querying later.
+	vkGetPhysicalDeviceSurfaceCapabilitiesKHR(ctx->physicaldevice, ctx->surface, &ctx->surfacecapabilities);
+	uint32_t surfaceformatcount = 0;
+	vkGetPhysicalDeviceSurfaceFormatsKHR(ctx->physicaldevice, ctx->surface, &surfaceformatcount, nullptr);
+	if(surfaceformatcount > 0) {
+		ctx->surfaceformats.resize(surfaceformatcount);
+		vkGetPhysicalDeviceSurfaceFormatsKHR(ctx->physicaldevice, ctx->surface, &surfaceformatcount, ctx->surfaceformats.data());
+	}
+	uint32_t presentmodecount = 0;
+	vkGetPhysicalDeviceSurfacePresentModesKHR(ctx->physicaldevice, ctx->surface, &presentmodecount, nullptr);
+	if(presentmodecount > 0) {
+		ctx->surfacepresentmodes.resize(presentmodecount);
+		vkGetPhysicalDeviceSurfacePresentModesKHR(ctx->physicaldevice, ctx->surface, &presentmodecount, ctx->surfacepresentmodes.data());
+	}
+
 	VkPhysicalDeviceProperties& props = ctx->deviceproperties;
 	gLogi("gVKRenderEngine") << "Vulkan Instance successfully created! API Version: "
 			<< VK_API_VERSION_MAJOR(props.apiVersion) << "."
