@@ -210,6 +210,11 @@ set(SRC_FILES
 	${ENGINE_DIR}/core/gRenderer.cpp
 	${ENGINE_DIR}/core/gGLRenderEngine.cpp
 	${ENGINE_DIR}/core/gVKRenderEngine.cpp
+	${ENGINE_DIR}/core/gVKSwapchain.cpp
+	${ENGINE_DIR}/core/gVKRenderTarget.cpp
+	${ENGINE_DIR}/core/gVKCommands.cpp
+	${ENGINE_DIR}/core/gVKSync.cpp
+	${ENGINE_DIR}/core/gVKFrame.cpp
 	${ENGINE_DIR}/core/gRenderObject.cpp
 	${ENGINE_DIR}/core/gGUIActionManager.cpp
 	${ENGINE_DIR}/graphics/gTexture.cpp

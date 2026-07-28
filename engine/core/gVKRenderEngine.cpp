@@ -12,18 +12,15 @@
 #include "gShader.h"
 #include "gTracy.h"
 
-// Vulkan is only wired up on the desktop GLFW platforms. This file is compiled
-// everywhere, but gGLFWWindow.cpp is desktop only, so the guard below mirrors
-// the CMake condition exactly. <vulkan/vulkan.h> must be included before GLFW
-// so that glfwCreateWindowSurface / glfwGetRequiredInstanceExtensions become
-// visible.
-#if defined(__APPLE__)
-#include <TargetConditionals.h>
-#endif
-#if defined(GLIST_HAS_VULKAN) && !defined(ANDROID) && !defined(EMSCRIPTEN) && !(defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE)
-	#define GVK_DESKTOP_GLFW 1
+// Vulkan is only wired up on the desktop GLFW platforms and only when the Vulkan
+// development files are available. gVKContext.h evaluates that condition, defines
+// GVK_DESKTOP_GLFW accordingly and holds the shared state of the backend.
+#include "gVKContext.h"
+
+#ifdef GVK_DESKTOP_GLFW
+	// GLFW_INCLUDE_VULKAN has to be defined before GLFW is pulled in, otherwise
+	// glfwCreateWindowSurface and glfwGetRequiredInstanceExtensions stay hidden.
 	#define GLFW_INCLUDE_VULKAN
-	#include <vulkan/vulkan.h>
 	#include "gGLFWWindow.h"
 	#include "gAppManager.h"
 	#include <vector>
@@ -697,20 +694,8 @@ void gVKRenderEngine::popMatrix() {
 
 #ifdef GVK_DESKTOP_GLFW
 
-// Every Vulkan handle lives here so the header stays Vulkan free. All members
-// start as VK_NULL_HANDLE, which is what makes the "destroy only if non null"
-// teardown correct even when initialisation fails half way through.
-struct gVKContext {
-	VkInstance instance = VK_NULL_HANDLE;
-	VkDebugUtilsMessengerEXT debugmessenger = VK_NULL_HANDLE;
-	VkSurfaceKHR surface = VK_NULL_HANDLE;
-	VkPhysicalDevice physicaldevice = VK_NULL_HANDLE;
-	VkDevice device = VK_NULL_HANDLE;
-	VkQueue graphicsqueue = VK_NULL_HANDLE;
-	VkQueue presentqueue = VK_NULL_HANDLE;
-	uint32_t graphicsfamily = 0;
-	uint32_t presentfamily = 0;
-};
+// The gVKContext structure itself now lives in gVKContext.h so that every gVK*
+// module can share it.
 
 // Validation layers cost performance, so they follow the same DEBUG condition
 // the OpenGL debug output already uses in this engine.
