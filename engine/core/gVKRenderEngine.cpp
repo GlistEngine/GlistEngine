@@ -28,6 +28,7 @@
 	#include "gAppManager.h"
 	#include <vector>
 	#include <set>
+	#include <string>
 	#include <cstring>
 #endif
 
@@ -697,10 +698,106 @@ void gVKRenderEngine::popMatrix() {
 
 #ifdef GVK_DESKTOP_GLFW
 
-// Every Vulkan handle lives here so the header stays Vulkan free. All members
-// start as VK_NULL_HANDLE, which is what makes the "destroy only if non null"
-// teardown correct even when initialisation fails half way through.
+// Validation layers cost performance, so the default follows the same DEBUG
+// condition the OpenGL debug output already uses in this engine. A developer can
+// still override it per context through setValidationEnabled().
+#if defined(DEBUG) || defined(ENGINE_OPENGL_CHECKS)
+static constexpr bool gvkdefaultvalidation = true;
+#else
+static constexpr bool gvkdefaultvalidation = false;
+#endif
+
+// Every Vulkan handle lives here so the header stays Vulkan free, right next to
+// the developer facing settings that shape initialisation. Handles start as
+// VK_NULL_HANDLE, which is what makes the "destroy only if non null" teardown
+// correct even when initialisation fails half way through.
+//
+// The public surface is accessor based: settings go in through setters, and both
+// settings and handles come back out through pointer returning getters. Handing
+// back the address of a handle is deliberate - that is exactly the shape most
+// Vulkan entry points want for their out parameters, so the same getter both
+// reads a handle and receives it when the next phase (swapchain, pipeline, ...)
+// is wired up. gVKRenderEngine drives creation, so it is a friend and reaches
+// the raw members directly; every other consumer goes through the accessors.
 struct gVKContext {
+	friend class gVKRenderEngine;
+
+	/* ---------------- configurable settings ---------------- */
+	// Set these before the backend initialises to influence instance and device
+	// creation. Reading them afterwards simply reports what was used.
+
+	// Identity handed to VkApplicationInfo. Informational to drivers and tools,
+	// but handy for profiling and crash triage.
+	void setAppName(const std::string& name) { appname = name; }
+	void setEngineName(const std::string& name) { enginename = name; }
+	void setAppVersion(uint32_t version) { appversion = version; }
+	void setEngineVersion(uint32_t version) { engineversion = version; }
+
+	// The Vulkan API level the instance targets, e.g. VK_API_VERSION_1_2.
+	void setApiVersion(uint32_t version) { apiversion = version; }
+
+	// Validation layers are a debugging aid; on by default only in debug builds.
+	void setValidationEnabled(bool enabled) { enablevalidation = enabled; }
+
+	// Extra names appended on top of the mandatory GLFW / portability ones the
+	// engine always requests. The pointed to strings must outlive init, so string
+	// literals (or otherwise long lived storage) are the natural fit.
+	void addInstanceExtension(const char* name) { extrainstanceextensions.push_back(name); }
+	void addDeviceExtension(const char* name) { extradeviceextensions.push_back(name); }
+	void addLayer(const char* name) { extralayers.push_back(name); }
+
+	// Pointer returning getters for the settings, so a caller can both inspect
+	// and, when a Vulkan struct wants an address, forward it without copying.
+	std::string* getAppName() { return &appname; }
+	std::string* getEngineName() { return &enginename; }
+	uint32_t* getAppVersion() { return &appversion; }
+	uint32_t* getEngineVersion() { return &engineversion; }
+	uint32_t* getApiVersion() { return &apiversion; }
+	bool* getValidationEnabled() { return &enablevalidation; }
+	std::vector<const char*>* getInstanceExtensions() { return &extrainstanceextensions; }
+	std::vector<const char*>* getDeviceExtensions() { return &extradeviceextensions; }
+	std::vector<const char*>* getLayers() { return &extralayers; }
+
+	/* ---------------- created Vulkan handles ---------------- */
+	// Filled during init. Each getter returns the address of the handle, matching
+	// the out parameter shape of the Vulkan calls that will consume them.
+
+	VkInstance* getInstance() { return &instance; }
+	VkDebugUtilsMessengerEXT* getDebugMessenger() { return &debugmessenger; }
+	VkSurfaceKHR* getSurface() { return &surface; }
+	VkPhysicalDevice* getPhysicalDevice() { return &physicaldevice; }
+	VkDevice* getDevice() { return &device; }
+	VkQueue* getGraphicsQueue() { return &graphicsqueue; }
+	VkQueue* getPresentQueue() { return &presentqueue; }
+	uint32_t* getGraphicsFamily() { return &graphicsfamily; }
+	uint32_t* getPresentFamily() { return &presentfamily; }
+
+	// Physical device identity and limits, queried once during init. Useful for
+	// capability decisions later - max texture size, buffer alignments, whether a
+	// feature is supported - without re-querying the driver each time.
+	VkPhysicalDeviceProperties* getDeviceProperties() { return &deviceproperties; }
+
+	// Whether validation is actually running, which is not the same as whether it
+	// was requested: setValidationEnabled(true) still yields false here when the
+	// layer or debug-utils extension is missing at runtime. getValidationEnabled()
+	// reports the request; this reports the outcome.
+	bool isValidationActive() const { return validationactive; }
+
+	// True once a logical device exists, i.e. init reached the point where the
+	// context is actually usable for swapchains, pipelines and queues.
+	bool isInitialized() const { return device != VK_NULL_HANDLE; }
+
+private:
+	std::string appname = "GlistApp";
+	std::string enginename = "GlistEngine";
+	uint32_t appversion = VK_MAKE_API_VERSION(0, 1, 0, 0);
+	uint32_t engineversion = VK_MAKE_API_VERSION(0, 1, 0, 0);
+	uint32_t apiversion = VK_API_VERSION_1_2;
+	bool enablevalidation = gvkdefaultvalidation;
+	std::vector<const char*> extrainstanceextensions;
+	std::vector<const char*> extradeviceextensions;
+	std::vector<const char*> extralayers;
+
 	VkInstance instance = VK_NULL_HANDLE;
 	VkDebugUtilsMessengerEXT debugmessenger = VK_NULL_HANDLE;
 	VkSurfaceKHR surface = VK_NULL_HANDLE;
@@ -710,15 +807,9 @@ struct gVKContext {
 	VkQueue presentqueue = VK_NULL_HANDLE;
 	uint32_t graphicsfamily = 0;
 	uint32_t presentfamily = 0;
+	VkPhysicalDeviceProperties deviceproperties{};
+	bool validationactive = false;
 };
-
-// Validation layers cost performance, so they follow the same DEBUG condition
-// the OpenGL debug output already uses in this engine.
-#if defined(DEBUG) || defined(ENGINE_OPENGL_CHECKS)
-static constexpr bool gvkenablevalidation = true;
-#else
-static constexpr bool gvkenablevalidation = false;
-#endif
 
 static const char* const GVK_VALIDATION_LAYER = "VK_LAYER_KHRONOS_validation";
 
@@ -767,7 +858,9 @@ bool gVKRenderEngine::initVulkan() {
 	gLoge("gVKRenderEngine") << "Vulkan backend is not supported on this platform.";
 	return false;
 #else
-	vkcontext = new gVKContext();
+	// Honour a context a developer injected through setContext() so its settings
+	// survive; only allocate a default one when none was provided.
+	if(vkcontext == nullptr) vkcontext = new gVKContext();
 	gVKContext* ctx = vkcontext;
 
 #if defined(__APPLE__)
@@ -819,7 +912,7 @@ bool gVKRenderEngine::initVulkan() {
 	// layer makes vkCreateInstance fail outright.
 	std::vector<const char*> layers;
 	bool usevalidation = false;
-	if(gvkenablevalidation) {
+	if(ctx->enablevalidation) {
 		if(gvkHasLayer(GVK_VALIDATION_LAYER) && gvkHasInstanceExtension(VK_EXT_DEBUG_UTILS_EXTENSION_NAME)) {
 			layers.push_back(GVK_VALIDATION_LAYER);
 			extensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
@@ -830,13 +923,22 @@ bool gVKRenderEngine::initVulkan() {
 		}
 	}
 
+	// Record the outcome (requested validation may have been dropped above) so it
+	// is queryable through isValidationActive() rather than only reaching the log.
+	ctx->validationactive = usevalidation;
+
+	// Developer supplied names come last, so they can extend but never displace
+	// the extensions and layers the engine needs to function.
+	extensions.insert(extensions.end(), ctx->extrainstanceextensions.begin(), ctx->extrainstanceextensions.end());
+	layers.insert(layers.end(), ctx->extralayers.begin(), ctx->extralayers.end());
+
 	VkApplicationInfo appinfo{};
 	appinfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
-	appinfo.pApplicationName = "GlistApp";
-	appinfo.applicationVersion = VK_MAKE_API_VERSION(0, 1, 0, 0);
-	appinfo.pEngineName = "GlistEngine";
-	appinfo.engineVersion = VK_MAKE_API_VERSION(0, 1, 0, 0);
-	appinfo.apiVersion = VK_API_VERSION_1_2;
+	appinfo.pApplicationName = ctx->appname.c_str();
+	appinfo.applicationVersion = ctx->appversion;
+	appinfo.pEngineName = ctx->enginename.c_str();
+	appinfo.engineVersion = ctx->engineversion;
+	appinfo.apiVersion = ctx->apiversion;
 
 	VkInstanceCreateInfo instanceinfo{};
 	instanceinfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
@@ -962,6 +1064,8 @@ bool gVKRenderEngine::initVulkan() {
 			}
 		}
 	}
+	// Same rule as the instance side: developer requests extend the mandatory set.
+	deviceextensions.insert(deviceextensions.end(), ctx->extradeviceextensions.begin(), ctx->extradeviceextensions.end());
 
 	VkPhysicalDeviceFeatures devicefeatures{};
 	VkDeviceCreateInfo deviceinfo{};
@@ -983,8 +1087,9 @@ bool gVKRenderEngine::initVulkan() {
 	vkGetDeviceQueue(ctx->device, ctx->graphicsfamily, 0, &ctx->graphicsqueue);
 	vkGetDeviceQueue(ctx->device, ctx->presentfamily, 0, &ctx->presentqueue);
 
-	VkPhysicalDeviceProperties props{};
-	vkGetPhysicalDeviceProperties(ctx->physicaldevice, &props);
+	// Cached on the context so later phases can read limits without re-querying.
+	vkGetPhysicalDeviceProperties(ctx->physicaldevice, &ctx->deviceproperties);
+	VkPhysicalDeviceProperties& props = ctx->deviceproperties;
 	gLogi("gVKRenderEngine") << "Vulkan Instance successfully created! API Version: "
 			<< VK_API_VERSION_MAJOR(props.apiVersion) << "."
 			<< VK_API_VERSION_MINOR(props.apiVersion) << "."
