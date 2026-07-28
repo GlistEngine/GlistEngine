@@ -920,6 +920,16 @@ static bool gvkHasInstanceExtension(const char* name) {
 #endif
 
 
+gVKContext* gVKRenderEngine::getContext() {
+#ifdef GVK_DESKTOP_GLFW
+	// Create it on first access so callers never dereference null. init() adopts
+	// whatever exists here, and setContext() can still replace it afterwards.
+	if(vkcontext == nullptr) vkcontext = new gVKContext();
+#endif
+	return vkcontext;
+}
+
+
 bool gVKRenderEngine::initVulkan() {
 #ifndef GVK_DESKTOP_GLFW
 	gLoge("gVKRenderEngine") << "Vulkan backend is not supported on this platform.";
