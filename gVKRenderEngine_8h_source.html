@@ -286,38 +286,40 @@ $(document).ready(function(){initNavTree('gVKRenderEngine_8h_source.html',''); i
 <div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>    <span class="comment">/* ---------------- Vulkan context ---------------- */</span></div>
 <div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>    <span class="comment">// gVKContext is opaque here (its layout lives in the .cpp), so a developer can</span></div>
 <div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>    <span class="comment">// reach the accessor rich context without this header ever pulling in</span></div>
-<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>    <span class="comment">// &lt;vulkan/vulkan.h&gt;. Injecting a context with setContext() before init() lets</span></div>
-<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>    <span class="comment">// you configure the instance/device up front; init() honours an already set</span></div>
-<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>    <span class="comment">// context instead of replacing it. After init() the getter hands back the</span></div>
-<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>    <span class="comment">// created handles.</span></div>
-<div class="line"><a id="l00190" name="l00190"></a><span class="lineno"><a class="line" href="classgVKRenderEngine.html#ac4e750728c13c0eb5940a6ca2a831525">  190</a></span>    gVKContext* <a class="code hl_function" href="classgVKRenderEngine.html#ac4e750728c13c0eb5940a6ca2a831525">getContext</a>() { <span class="keywordflow">return</span> vkcontext; }</div>
-<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span> </div>
-<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>    <span class="comment">// Takes ownership. Any context the engine already holds is torn down first -</span></div>
-<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>    <span class="comment">// its Vulkan objects destroyed and its memory freed through cleanupVulkan() -</span></div>
-<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>    <span class="comment">// so replacing a context never leaks the old one. The self assignment guard</span></div>
-<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>    <span class="comment">// avoids destroying the very context being handed in. The engine frees the</span></div>
-<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>    <span class="comment">// adopted context on cleanup.</span></div>
-<div class="foldopen" id="foldopen00197" data-start="{" data-end="}">
-<div class="line"><a id="l00197" name="l00197"></a><span class="lineno"><a class="line" href="classgVKRenderEngine.html#a45b3e4fdfa8366ab3835a8840184e0a5">  197</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classgVKRenderEngine.html#a45b3e4fdfa8366ab3835a8840184e0a5">setContext</a>(gVKContext* context) {</div>
-<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>        <span class="keywordflow">if</span>(vkcontext == context) <span class="keywordflow">return</span>;</div>
-<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>        cleanupVulkan();</div>
-<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>        vkcontext = context;</div>
-<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>    }</div>
+<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>    <span class="comment">// &lt;vulkan/vulkan.h&gt;. getContext() creates the context on first access when it</span></div>
+<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>    <span class="comment">// does not exist yet, so on a Vulkan-capable build it never returns null:</span></div>
+<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>    <span class="comment">// getContext()-&gt;setApiVersion(...) before init() is safe, and init() adopts</span></div>
+<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>    <span class="comment">// this same context. Whether the handles are actually populated is a separate</span></div>
+<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>    <span class="comment">// question - check isInitialized() before using them. (A build without Vulkan</span></div>
+<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>    <span class="comment">// support has no context type, so there it returns null.)</span></div>
+<div class="line"><a id="l00192" name="l00192"></a><span class="lineno"><a class="line" href="classgVKRenderEngine.html#ac4e750728c13c0eb5940a6ca2a831525">  192</a></span>    gVKContext* <a class="code hl_function" href="classgVKRenderEngine.html#ac4e750728c13c0eb5940a6ca2a831525">getContext</a>();</div>
+<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span> </div>
+<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>    <span class="comment">// Takes ownership. Any context the engine already holds is torn down first -</span></div>
+<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>    <span class="comment">// its Vulkan objects destroyed and its memory freed through cleanupVulkan() -</span></div>
+<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>    <span class="comment">// so replacing a context never leaks the old one. The self assignment guard</span></div>
+<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>    <span class="comment">// avoids destroying the very context being handed in. The engine frees the</span></div>
+<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>    <span class="comment">// adopted context on cleanup.</span></div>
+<div class="foldopen" id="foldopen00199" data-start="{" data-end="}">
+<div class="line"><a id="l00199" name="l00199"></a><span class="lineno"><a class="line" href="classgVKRenderEngine.html#a45b3e4fdfa8366ab3835a8840184e0a5">  199</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classgVKRenderEngine.html#a45b3e4fdfa8366ab3835a8840184e0a5">setContext</a>(gVKContext* context) {</div>
+<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>        <span class="keywordflow">if</span>(vkcontext == context) <span class="keywordflow">return</span>;</div>
+<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>        cleanupVulkan();</div>
+<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>        vkcontext = context;</div>
+<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>    }</div>
 </div>
-<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span> </div>
-<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span><span class="keyword">protected</span>:</div>
-<div class="line"><a id="l00204" name="l00204"></a><span class="lineno"><a class="line" href="classgVKRenderEngine.html#a6a2ff8ff19e4ed68b92e493e0e17f8d3">  204</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classgVKRenderEngine.html#a6a2ff8ff19e4ed68b92e493e0e17f8d3">init</a>() <span class="keyword">override</span>;</div>
-<div class="line"><a id="l00205" name="l00205"></a><span class="lineno"><a class="line" href="classgVKRenderEngine.html#a188056a9648fbb89f3cf19a4daba34e2">  205</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classgVKRenderEngine.html#a188056a9648fbb89f3cf19a4daba34e2">cleanup</a>() <span class="keyword">override</span>;</div>
-<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>    <span class="keyword">mutable</span> GLuint currentprogram = 0;</div>
-<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>    <span class="keywordtype">bool</span> initVulkan();</div>
-<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>    <span class="keywordtype">void</span> cleanupVulkan();</div>
-<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>    gVKContext* vkcontext = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>    <span class="keywordtype">void</span> updatePackUnpackAlignment(<span class="keywordtype">int</span> i) <span class="keyword">override</span>;</div>
-<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>};</div>
+<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span> </div>
+<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span><span class="keyword">protected</span>:</div>
+<div class="line"><a id="l00206" name="l00206"></a><span class="lineno"><a class="line" href="classgVKRenderEngine.html#a6a2ff8ff19e4ed68b92e493e0e17f8d3">  206</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classgVKRenderEngine.html#a6a2ff8ff19e4ed68b92e493e0e17f8d3">init</a>() <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00207" name="l00207"></a><span class="lineno"><a class="line" href="classgVKRenderEngine.html#a188056a9648fbb89f3cf19a4daba34e2">  207</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classgVKRenderEngine.html#a188056a9648fbb89f3cf19a4daba34e2">cleanup</a>() <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>    <span class="keyword">mutable</span> GLuint currentprogram = 0;</div>
+<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>    <span class="keywordtype">bool</span> initVulkan();</div>
+<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>    <span class="keywordtype">void</span> cleanupVulkan();</div>
+<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>    gVKContext* vkcontext = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>    <span class="keywordtype">void</span> updatePackUnpackAlignment(<span class="keywordtype">int</span> i) <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>};</div>
 </div>
-<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span> </div>
-<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span> </div>
+<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span><span class="preprocessor">#endif</span></div>
 <div class="ttc" id="aclassgColor_html"><div class="ttname"><a href="classgColor.html">gColor</a></div><div class="ttdef"><b>Definition</b> gColor.h:17</div></div>
 <div class="ttc" id="aclassgImage_html"><div class="ttname"><a href="classgImage.html">gImage</a></div><div class="ttdef"><b>Definition</b> gImage.h:34</div></div>
 <div class="ttc" id="aclassgRenderer_html"><div class="ttname"><a href="classgRenderer.html">gRenderer</a></div><div class="ttdef"><b>Definition</b> gRenderer.h:123</div></div>
@@ -352,7 +354,7 @@ $(document).ready(function(){initNavTree('gVKRenderEngine_8h_source.html',''); i
 <div class="ttc" id="aclassgVKRenderEngine_html_a3e03dddb7281a6ef1c816ebccd339564"><div class="ttname"><a href="classgVKRenderEngine.html#a3e03dddb7281a6ef1c816ebccd339564">gVKRenderEngine::generateSkyMipMap</a></div><div class="ttdeci">void generateSkyMipMap() override</div></div>
 <div class="ttc" id="aclassgVKRenderEngine_html_a3f82ae9db33b5f7fdc240f060ae772d8"><div class="ttname"><a href="classgVKRenderEngine.html#a3f82ae9db33b5f7fdc240f060ae772d8">gVKRenderEngine::pushMatrix</a></div><div class="ttdeci">void pushMatrix() override</div></div>
 <div class="ttc" id="aclassgVKRenderEngine_html_a45ac8efb147cc7a9126ef434288c5e78"><div class="ttname"><a href="classgVKRenderEngine.html#a45ac8efb147cc7a9126ef434288c5e78">gVKRenderEngine::bindFramebuffer</a></div><div class="ttdeci">void bindFramebuffer(GLuint fbo) override</div></div>
-<div class="ttc" id="aclassgVKRenderEngine_html_a45b3e4fdfa8366ab3835a8840184e0a5"><div class="ttname"><a href="classgVKRenderEngine.html#a45b3e4fdfa8366ab3835a8840184e0a5">gVKRenderEngine::setContext</a></div><div class="ttdeci">void setContext(gVKContext *context)</div><div class="ttdef"><b>Definition</b> gVKRenderEngine.h:197</div></div>
+<div class="ttc" id="aclassgVKRenderEngine_html_a45b3e4fdfa8366ab3835a8840184e0a5"><div class="ttname"><a href="classgVKRenderEngine.html#a45b3e4fdfa8366ab3835a8840184e0a5">gVKRenderEngine::setContext</a></div><div class="ttdeci">void setContext(gVKContext *context)</div><div class="ttdef"><b>Definition</b> gVKRenderEngine.h:199</div></div>
 <div class="ttc" id="aclassgVKRenderEngine_html_a486128a304942af1bac66b4f762d4f3d"><div class="ttname"><a href="classgVKRenderEngine.html#a486128a304942af1bac66b4f762d4f3d">gVKRenderEngine::setBufferRange</a></div><div class="ttdeci">void setBufferRange(int index, GLuint buffer, int offset, int size) override</div></div>
 <div class="ttc" id="aclassgVKRenderEngine_html_a4a2f9b8d6b9c81e8323118bb6d3f7846"><div class="ttname"><a href="classgVKRenderEngine.html#a4a2f9b8d6b9c81e8323118bb6d3f7846">gVKRenderEngine::bindSkyTexture</a></div><div class="ttdeci">void bindSkyTexture(GLuint texId, int textureSlot) override</div></div>
 <div class="ttc" id="aclassgVKRenderEngine_html_a4b698cd3612bc53f77f0b7a7707cb2c5"><div class="ttname"><a href="classgVKRenderEngine.html#a4b698cd3612bc53f77f0b7a7707cb2c5">gVKRenderEngine::unbindSkyTexture</a></div><div class="ttdeci">void unbindSkyTexture() override</div></div>
@@ -412,7 +414,7 @@ $(document).ready(function(){initNavTree('gVKRenderEngine_8h_source.html',''); i
 <div class="ttc" id="aclassgVKRenderEngine_html_abbc9c43da9b56153ba63a03a95d09512"><div class="ttname"><a href="classgVKRenderEngine.html#abbc9c43da9b56153ba63a03a95d09512">gVKRenderEngine::bindBuffer</a></div><div class="ttdeci">void bindBuffer(GLenum target, GLuint buffer) override</div></div>
 <div class="ttc" id="aclassgVKRenderEngine_html_abefe11a969853a26e6ff30836f628551"><div class="ttname"><a href="classgVKRenderEngine.html#abefe11a969853a26e6ff30836f628551">gVKRenderEngine::attachTextureToFramebuffer</a></div><div class="ttdeci">void attachTextureToFramebuffer(GLenum attachment, GLenum textarget, GLuint texId, GLuint level=0) override</div></div>
 <div class="ttc" id="aclassgVKRenderEngine_html_ac393b32989c21991ebe6b9c449bbb18c"><div class="ttname"><a href="classgVKRenderEngine.html#ac393b32989c21991ebe6b9c449bbb18c">gVKRenderEngine::bindSkyTexture</a></div><div class="ttdeci">void bindSkyTexture(GLuint texId) override</div></div>
-<div class="ttc" id="aclassgVKRenderEngine_html_ac4e750728c13c0eb5940a6ca2a831525"><div class="ttname"><a href="classgVKRenderEngine.html#ac4e750728c13c0eb5940a6ca2a831525">gVKRenderEngine::getContext</a></div><div class="ttdeci">gVKContext * getContext()</div><div class="ttdef"><b>Definition</b> gVKRenderEngine.h:190</div></div>
+<div class="ttc" id="aclassgVKRenderEngine_html_ac4e750728c13c0eb5940a6ca2a831525"><div class="ttname"><a href="classgVKRenderEngine.html#ac4e750728c13c0eb5940a6ca2a831525">gVKRenderEngine::getContext</a></div><div class="ttdeci">gVKContext * getContext()</div></div>
 <div class="ttc" id="aclassgVKRenderEngine_html_ac79ea1e7182adebaa76bd0afc51d40d7"><div class="ttname"><a href="classgVKRenderEngine.html#ac79ea1e7182adebaa76bd0afc51d40d7">gVKRenderEngine::drawElements</a></div><div class="ttdeci">void drawElements(int drawMode, int count) override</div></div>
 <div class="ttc" id="aclassgVKRenderEngine_html_ad4cd6d842999347ae47e345429c71aad"><div class="ttname"><a href="classgVKRenderEngine.html#ad4cd6d842999347ae47e345429c71aad">gVKRenderEngine::unbindBuffer</a></div><div class="ttdeci">void unbindBuffer(GLenum target) override</div></div>
 <div class="ttc" id="aclassgVKRenderEngine_html_ad4d8a074e529f84bf596a63aa0b11e13"><div class="ttname"><a href="classgVKRenderEngine.html#ad4d8a074e529f84bf596a63aa0b11e13">gVKRenderEngine::enableAlphaBlending</a></div><div class="ttdeci">void enableAlphaBlending() override</div></div>
