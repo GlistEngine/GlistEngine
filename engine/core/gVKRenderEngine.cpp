@@ -1150,6 +1150,10 @@ bool gVKRenderEngine::initVulkan() {
 
 	// A GPU is usable only if it can both render and present to our surface, and
 	// in Vulkan those are separate queue family capabilities queried per family.
+	// It must also meet the version floor: the device's own apiVersion - not the
+	// loader's - is what caps the core features actually available on it, so a
+	// device below minapiversion cannot deliver what the engine requires.
+	bool rejectedforversion = false;
 	for(const auto& dev : ctx->physicaldevices) {
 		uint32_t familycount = 0;
 		vkGetPhysicalDeviceQueueFamilyProperties(dev, &familycount, nullptr);
@@ -1172,6 +1176,13 @@ bool gVKRenderEngine::initVulkan() {
 			}
 		}
 		if(foundgraphics && foundpresent) {
+			VkPhysicalDeviceProperties devprops{};
+			vkGetPhysicalDeviceProperties(dev, &devprops);
+			if(devprops.apiVersion < ctx->minapiversion) {
+				// Otherwise fine, but too old - keep looking for a newer GPU.
+				rejectedforversion = true;
+				continue;
+			}
 			ctx->physicaldevice = dev;
 			ctx->graphicsfamily = graphics;
 			ctx->presentfamily = present;
@@ -1183,7 +1194,14 @@ bool gVKRenderEngine::initVulkan() {
 		}
 	}
 	if(ctx->physicaldevice == VK_NULL_HANDLE) {
-		gLoge("gVKRenderEngine") << "No GPU can both render and present to this surface.";
+		if(rejectedforversion) {
+			gLoge("gVKRenderEngine") << "No GPU supports the required Vulkan "
+					<< VK_API_VERSION_MAJOR(ctx->minapiversion) << "."
+					<< VK_API_VERSION_MINOR(ctx->minapiversion)
+					<< ". Update the GPU driver.";
+		} else {
+			gLoge("gVKRenderEngine") << "No GPU can both render and present to this surface.";
+		}
 		cleanupVulkan();
 		return false;
 	}
