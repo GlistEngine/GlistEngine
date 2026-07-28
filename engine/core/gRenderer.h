@@ -402,11 +402,15 @@ public:
 	virtual void setVertexAttribPointer(int index, int size, int type, bool normalized, int stride, const void* pointer) = 0;
 
 	virtual void setViewport(int x, int y, int width, int height) = 0;
+	// Viewport that is currently set. Kept up to date by the render engines.
+	void getViewport(int& x, int& y, int& width, int& height) const;
 
 	/* -------------- gFbo --------------- */
 	virtual GLuint createFramebuffer() = 0;
 	virtual void deleteFramebuffer(GLuint& fbo) = 0;
 	virtual void bindFramebuffer(GLuint fbo) = 0;
+	// Framebuffer that is currently bound. Kept up to date by the render engines.
+	GLuint getBoundFramebuffer() const;
 	virtual void checkFramebufferStatus() = 0;
 
 	virtual GLuint createRenderbuffer() = 0;
@@ -551,6 +555,9 @@ protected:
 	unsigned int depthtesttypeid[2];
 	bool isalphablendingenabled, isalphatestenabled;
 
+	GLuint boundframebuffer;
+	int viewportx, viewporty, viewportwidth, viewportheight;
+
 	bool isssaoenabled;
 	float ssaobias;
 	float ssaoradius;
@@ -561,12 +568,13 @@ protected:
 	gFbo* ssaoresultfbo;
 	gShader* ssaoshader;
 	gShader* ssaoblurshader;
-	unsigned int ssaonoisetexture;
-	std::vector<glm::vec3> ssaokernel;
 	int ssaorealdefaultfbo;
+	GLuint ssaoprevframebuffer;
+	int ssaoprevviewport[4];
 	bool isssaorendering;
 	void initSSAOResources();
 	void cleanupSSAOResources();
+	void setupSSAODepthSampling();
 	bool isgammacorrectionenabled;
 	bool ishdrenabled;
 	bool issoftshadowsenabled;

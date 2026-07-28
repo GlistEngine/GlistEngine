@@ -282,6 +282,10 @@ void gGLRenderEngine::setVertexAttribPointer(int index, int size, int type, bool
 
 void gGLRenderEngine::setViewport(int x, int y, int width, int height) {
 	G_CHECK_GL(glViewport(x, y, width, height));
+	viewportx = x;
+	viewporty = y;
+	viewportwidth = width;
+	viewportheight = height;
 }
 
 // ----- Framebuffer -----
@@ -299,6 +303,7 @@ void gGLRenderEngine::deleteFramebuffer(GLuint& fbo) {
 
 void gGLRenderEngine::bindFramebuffer(GLuint fbo) {
 	G_CHECK_GL(glBindFramebuffer(GL_FRAMEBUFFER, fbo));
+	boundframebuffer = fbo;
 }
 
 void gGLRenderEngine::checkFramebufferStatus() {
@@ -548,6 +553,7 @@ void gGLRenderEngine::drawFullscreenQuad() {
 
 void gGLRenderEngine::bindDefaultFramebuffer() {
 	G_CHECK_GL(glBindFramebuffer(GL_FRAMEBUFFER, gFbo::defaultfbo));
+	boundframebuffer = gFbo::defaultfbo;
 }
 
 void gGLRenderEngine::drawVbo(const gVbo& vbo) {
