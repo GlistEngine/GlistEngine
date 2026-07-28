@@ -733,7 +733,9 @@ struct gVKContext {
 	void setAppVersion(uint32_t version) { appversion = version; }
 	void setEngineVersion(uint32_t version) { engineversion = version; }
 
-	// The Vulkan API level the instance targets, e.g. VK_API_VERSION_1_2.
+	// The Vulkan API level the instance targets, e.g. VK_API_VERSION_1_3. init
+	// clamps this down to what the loader supports (see getInstanceApiVersion()),
+	// so asking for a high version is safe - it never makes vkCreateInstance fail.
 	void setApiVersion(uint32_t version) { apiversion = version; }
 
 	// Validation layers are a debugging aid; on by default only in debug builds.
@@ -827,6 +829,11 @@ struct gVKContext {
 	std::vector<VkSurfaceFormatKHR>* getSurfaceFormats() { return &surfaceformats; }
 	std::vector<VkPresentModeKHR>* getSurfacePresentModes() { return &surfacepresentmodes; }
 
+	// The instance-level Vulkan version the loader actually supports (from
+	// vkEnumerateInstanceVersion). getApiVersion() is what was requested; init
+	// clamps that request down to this value so vkCreateInstance never over-asks.
+	uint32_t* getInstanceApiVersion() { return &instanceapiversion; }
+
 	// Whether validation is actually running, which is not the same as whether it
 	// was requested: setValidationEnabled(true) still yields false here when the
 	// layer or debug-utils extension is missing at runtime. getValidationEnabled()
@@ -842,7 +849,7 @@ private:
 	std::string enginename = "GlistEngine";
 	uint32_t appversion = VK_MAKE_API_VERSION(0, 1, 0, 0);
 	uint32_t engineversion = VK_MAKE_API_VERSION(0, 1, 0, 0);
-	uint32_t apiversion = VK_API_VERSION_1_2;
+	uint32_t apiversion = VK_API_VERSION_1_3;
 	bool enablevalidation = gvkdefaultvalidation;
 	std::vector<const char*> extrainstanceextensions;
 	std::vector<const char*> extradeviceextensions;
@@ -875,6 +882,7 @@ private:
 	VkSurfaceCapabilitiesKHR surfacecapabilities{};
 	std::vector<VkSurfaceFormatKHR> surfaceformats;
 	std::vector<VkPresentModeKHR> surfacepresentmodes;
+	uint32_t instanceapiversion = 0;
 	bool validationactive = false;
 };
 
@@ -1026,13 +1034,22 @@ bool gVKRenderEngine::initVulkan() {
 	extensions.insert(extensions.end(), ctx->extrainstanceextensions.begin(), ctx->extrainstanceextensions.end());
 	layers.insert(layers.end(), ctx->extralayers.begin(), ctx->extralayers.end());
 
+	// Never request a higher API version than the runtime supports, or
+	// vkCreateInstance can fail with VK_ERROR_INCOMPATIBLE_DRIVER on older
+	// loaders/drivers. vkEnumerateInstanceVersion (Vulkan 1.1+) reports the
+	// ceiling; clamp the requested version down to it. Packed version numbers
+	// compare monotonically, so a plain < is correct here.
+	ctx->instanceapiversion = VK_API_VERSION_1_0;
+	vkEnumerateInstanceVersion(&ctx->instanceapiversion);
+	uint32_t targetapiversion = ctx->apiversion < ctx->instanceapiversion ? ctx->apiversion : ctx->instanceapiversion;
+
 	VkApplicationInfo appinfo{};
 	appinfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
 	appinfo.pApplicationName = ctx->appname.c_str();
 	appinfo.applicationVersion = ctx->appversion;
 	appinfo.pEngineName = ctx->enginename.c_str();
 	appinfo.engineVersion = ctx->engineversion;
-	appinfo.apiVersion = ctx->apiversion;
+	appinfo.apiVersion = targetapiversion;
 
 	VkInstanceCreateInfo instanceinfo{};
 	instanceinfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
