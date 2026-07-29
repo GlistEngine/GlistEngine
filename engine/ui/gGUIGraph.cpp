@@ -203,7 +203,7 @@ void gGUIGraph::drawBackground() {
 void gGUIGraph::drawLabels() {
 	// Draw the labels for x-axis
 	float xpoint = 0;
-	int labelcountx = labelsx.size() - 1;
+
 	for(int i = 0; i < labelcountx; i++) {
 		xpoint = i * labelwidthx;
 		renderer->setColor(foregroundcolor);
@@ -217,7 +217,7 @@ void gGUIGraph::drawLabels() {
 //	font->drawText(axisxtitle, axisx1 + axisxw / 2, axisy2 + 40);
 	// Draw the labels for y-axis
 	int ypoint = 0;
-	int labelcounty = labelsy.size();
+
 	for(int i = 0; i < labelcounty; i++) {
 		ypoint = i * labelwidthy;
 		renderer->setColor(foregroundcolor);
