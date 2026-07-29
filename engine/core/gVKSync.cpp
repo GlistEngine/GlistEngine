@@ -2,7 +2,6 @@
  * gVKSync.cpp
  *
  * Synchronisation primitives of the Vulkan frame loop.
- * See VULKAN_RENDERING_GOREV_DAGILIMI.md section 5.1 for the locked decisions.
  */
 
 #include "gVKSync.h"

@@ -3,7 +3,7 @@
  *
  * Synchronisation primitives of the Vulkan frame loop. Semaphores order work
  * between GPU operations, fences let the CPU wait for the GPU.
- * Owner: Ozlem.
+ * Created by: Ozlem Tutuneken.
  */
 
 #pragma once

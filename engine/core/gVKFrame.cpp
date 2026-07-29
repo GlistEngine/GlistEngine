@@ -2,7 +2,7 @@
  * gVKFrame.cpp
  *
  * The Vulkan frame loop: acquire an image, record the render pass, submit and
- * present. See VULKAN_RENDERING_GOREV_DAGILIMI.md section 5.5.
+ * present.
  */
 
 #include "gVKFrame.h"
