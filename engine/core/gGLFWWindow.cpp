@@ -270,7 +270,8 @@ void gGLFWWindow::initialize(int width, int height, int windowMode, bool isResiz
 	   	if (monitor) {
 	   		glfwSetWindowMonitor(window, monitor, 0, 0, width, height, currentrefreshrate);
 	   	}
-	   	glViewport(0, 0, width, height);
+	   	// GL-only call; skipped under Vulkan where the window has no GL context.
+	   	if (!usevulkan) glViewport(0, 0, width, height);
 	}
 
 	glfwGetFramebufferSize(window, &width, &height);
@@ -332,8 +333,13 @@ void gGLFWWindow::initialize(int width, int height, int windowMode, bool isResiz
 
 	glfwSetWindowUserPointer(window, this);
 
-	// Window specs to OpenGL
-	glViewport(0, 0, width, height);
+	// glViewport is an OpenGL call, so it is meaningless - and unsafe, since a
+	// GLFW_NO_API window has no current context - under Vulkan. The Vulkan backend
+	// sets its viewport through the pipeline/command buffer instead.
+	if (!usevulkan) {
+		// Window specs to OpenGL
+		glViewport(0, 0, width, height);
+	}
 
 	// Notify OpenGL if the window size changed
 	glfwSetFramebufferSizeCallback(window, onFramebufferResize);

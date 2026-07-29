@@ -37,9 +37,14 @@ void gPostProcessManager::enable() {
 }
 
 void gPostProcessManager::disable() {
+	renderer->endSSAO();
+
 	renderer->disableDepthTest();
 	fbotoread = 0;
 	fbotowrite = 1;
+
+	// Effects sample from slot 0, the scene draws may have left another one active
+	renderer->resetTexture();
 
 	for(int i = 0; i < effects.size(); i++) {
 		fbos[fbotowrite].bind();

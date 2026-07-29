@@ -30,6 +30,7 @@
 	#include "gVKSync.h"
 	#include <vector>
 	#include <set>
+	#include <string>
 	#include <cstring>
 	#include <cstdlib>
 #endif
@@ -39,10 +40,13 @@
 // and the render pass writes it when the next frame begins.
 static void gvkStoreClearColor(gVKContext* ctx, float r, float g, float b, float a) {
 	if(ctx == nullptr) return;
-	ctx->clearvalue.color.float32[0] = r;
-	ctx->clearvalue.color.float32[1] = g;
-	ctx->clearvalue.color.float32[2] = b;
-	ctx->clearvalue.color.float32[3] = a;
+	// Through the accessor rather than the member: this helper is a free function,
+	// not part of the context's friendship.
+	VkClearValue* clearvalue = ctx->getClearValue();
+	clearvalue->color.float32[0] = r;
+	clearvalue->color.float32[1] = g;
+	clearvalue->color.float32[2] = b;
+	clearvalue->color.float32[3] = a;
 }
 #endif
 
@@ -261,6 +265,10 @@ void gVKRenderEngine::setVertexAttribPointer(int index, int size, int type, bool
 
 void gVKRenderEngine::setViewport(int x, int y, int width, int height) {
 	G_CHECK_GL(glViewport(x, y, width, height));
+	viewportx = x;
+	viewporty = y;
+	viewportwidth = width;
+	viewportheight = height;
 }
 
 // ----- Framebuffer -----
@@ -278,6 +286,7 @@ void gVKRenderEngine::deleteFramebuffer(GLuint& fbo) {
 
 void gVKRenderEngine::bindFramebuffer(GLuint fbo) {
 	G_CHECK_GL(glBindFramebuffer(GL_FRAMEBUFFER, fbo));
+	boundframebuffer = fbo;
 }
 
 void gVKRenderEngine::checkFramebufferStatus() {
@@ -527,6 +536,7 @@ void gVKRenderEngine::drawFullscreenQuad() {
 
 void gVKRenderEngine::bindDefaultFramebuffer() {
 	G_CHECK_GL(glBindFramebuffer(GL_FRAMEBUFFER, gFbo::defaultfbo));
+	boundframebuffer = gFbo::defaultfbo;
 }
 
 void gVKRenderEngine::drawVbo(const gVbo& vbo) {
@@ -713,16 +723,8 @@ void gVKRenderEngine::popMatrix() {
 
 #ifdef GVK_DESKTOP_GLFW
 
-// The gVKContext structure itself now lives in gVKContext.h so that every gVK*
-// module can share it.
-
-// Validation layers cost performance, so they follow the same DEBUG condition
-// the OpenGL debug output already uses in this engine.
-#if defined(DEBUG) || defined(ENGINE_OPENGL_CHECKS)
-static constexpr bool gvkenablevalidation = true;
-#else
-static constexpr bool gvkenablevalidation = false;
-#endif
+// gvkdefaultvalidation and the gVKContext layout now live in gVKContext.h, so
+// every module of the backend can share them.
 
 static const char* const GVK_VALIDATION_LAYER = "VK_LAYER_KHRONOS_validation";
 
@@ -778,13 +780,39 @@ static bool gvkHasInstanceExtension(const char* name) {
 #endif
 
 
+gVKContext* gVKRenderEngine::getContext() {
+#ifdef GVK_DESKTOP_GLFW
+	// Create it on first access so callers never dereference null. init() adopts
+	// whatever exists here, and setContext() can still replace it afterwards.
+	if(vkcontext == nullptr) vkcontext = new gVKContext();
+#endif
+	return vkcontext;
+}
+
+
+void gVKRenderEngine::setContext(gVKContext* context) {
+	if(vkcontext == context) return;
+	cleanupVulkan();
+	vkcontext = context;
+}
+
+
 bool gVKRenderEngine::initVulkan() {
 #ifndef GVK_DESKTOP_GLFW
 	gLoge("gVKRenderEngine") << "Vulkan backend is not supported on this platform.";
 	return false;
 #else
-	vkcontext = new gVKContext();
+	// Honour a context a developer injected through setContext() so its settings
+	// survive; only allocate a default one when none was provided.
+	if(vkcontext == nullptr) vkcontext = new gVKContext();
 	gVKContext* ctx = vkcontext;
+
+	// Re-initialising an already-live context would overwrite - and leak - the
+	// instance and device it already holds, so bail out if init already ran.
+	if(ctx->instance != VK_NULL_HANDLE) {
+		gLogw("gVKRenderEngine") << "Vulkan is already initialised; skipping re-initialisation.";
+		return true;
+	}
 
 	// The driver manifest on macOS and the validation layer manifest on both
 	// desktop platforms live outside the directories the loader searches by
@@ -812,6 +840,20 @@ bool gVKRenderEngine::initVulkan() {
 	// The frame loop reads this to react to resizes.
 	ctx->window = handle;
 
+	// Record what the instance level offers (every extension and layer present) so
+	// support can be queried later without re-enumerating. Done after the Apple
+	// env block above, since that is what points the loader at the layers.
+	uint32_t availinstextcount = 0;
+	if(vkEnumerateInstanceExtensionProperties(nullptr, &availinstextcount, nullptr) == VK_SUCCESS && availinstextcount > 0) {
+		ctx->availableinstanceextensions.resize(availinstextcount);
+		vkEnumerateInstanceExtensionProperties(nullptr, &availinstextcount, ctx->availableinstanceextensions.data());
+	}
+	uint32_t availlayercount = 0;
+	if(vkEnumerateInstanceLayerProperties(&availlayercount, nullptr) == VK_SUCCESS && availlayercount > 0) {
+		ctx->availablelayers.resize(availlayercount);
+		vkEnumerateInstanceLayerProperties(&availlayercount, ctx->availablelayers.data());
+	}
+
 	/* ---------------- instance ---------------- */
 	// Asking GLFW for the surface extensions keeps this portable instead of
 	// hardcoding VK_KHR_win32_surface / VK_EXT_metal_surface per platform.
@@ -822,7 +864,10 @@ bool gVKRenderEngine::initVulkan() {
 		cleanupVulkan();
 		return false;
 	}
-	std::vector<const char*> extensions(glfwexts, glfwexts + glfwextcount);
+	// Aliased onto the context so the effective list lives on as engine state
+	// instead of dying with this local when init returns.
+	std::vector<const char*>& extensions = ctx->enabledinstanceextensions;
+	extensions.assign(glfwexts, glfwexts + glfwextcount);
 
 #if defined(__APPLE__)
 	// MoltenVK is a portability driver: without these the loader does not even
@@ -834,9 +879,9 @@ bool gVKRenderEngine::initVulkan() {
 
 	// Only ask for the layer if it is actually installed; requesting a missing
 	// layer makes vkCreateInstance fail outright.
-	std::vector<const char*> layers;
+	std::vector<const char*>& layers = ctx->enabledlayers;
 	bool usevalidation = false;
-	if(gvkenablevalidation) {
+	if(ctx->enablevalidation) {
 		if(gvkHasLayer(GVK_VALIDATION_LAYER) && gvkHasInstanceExtension(VK_EXT_DEBUG_UTILS_EXTENSION_NAME)) {
 			layers.push_back(GVK_VALIDATION_LAYER);
 			extensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
@@ -847,13 +892,40 @@ bool gVKRenderEngine::initVulkan() {
 		}
 	}
 
+	// Record the outcome (requested validation may have been dropped above) so it
+	// is queryable through isValidationActive() rather than only reaching the log.
+	ctx->validationactive = usevalidation;
+
+	// Developer supplied names come last, so they can extend but never displace
+	// the extensions and layers the engine needs to function.
+	extensions.insert(extensions.end(), ctx->extrainstanceextensions.begin(), ctx->extrainstanceextensions.end());
+	layers.insert(layers.end(), ctx->extralayers.begin(), ctx->extralayers.end());
+
+	// Target the highest API version the loader offers so newer Vulkan (1.4 today,
+	// 1.5+ later) is used automatically with no code change. vkEnumerateInstanceVersion
+	// (Vulkan 1.1+) reports that ceiling; requesting exactly it never makes
+	// vkCreateInstance over-ask. minapiversion is the hard floor - if the runtime
+	// cannot even reach it, there is nothing usable to fall back to, so fail here
+	// rather than limp on. Packed version numbers compare monotonically, so plain
+	// relational operators are correct.
+	ctx->instanceapiversion = VK_API_VERSION_1_0;
+	vkEnumerateInstanceVersion(&ctx->instanceapiversion);
+	if(ctx->instanceapiversion < ctx->minapiversion) {
+		gLoge("gVKRenderEngine") << "Vulkan " << VK_API_VERSION_MAJOR(ctx->minapiversion) << "."
+				<< VK_API_VERSION_MINOR(ctx->minapiversion) << " is required, but the loader only supports "
+				<< VK_API_VERSION_MAJOR(ctx->instanceapiversion) << "."
+				<< VK_API_VERSION_MINOR(ctx->instanceapiversion) << ". Update the GPU driver / Vulkan runtime.";
+		return false;
+	}
+	uint32_t targetapiversion = ctx->instanceapiversion;
+
 	VkApplicationInfo appinfo{};
 	appinfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
-	appinfo.pApplicationName = "GlistApp";
-	appinfo.applicationVersion = VK_MAKE_API_VERSION(0, 1, 0, 0);
-	appinfo.pEngineName = "GlistEngine";
-	appinfo.engineVersion = VK_MAKE_API_VERSION(0, 1, 0, 0);
-	appinfo.apiVersion = VK_API_VERSION_1_2;
+	appinfo.pApplicationName = ctx->appname.c_str();
+	appinfo.applicationVersion = ctx->appversion;
+	appinfo.pEngineName = ctx->enginename.c_str();
+	appinfo.engineVersion = ctx->engineversion;
+	appinfo.apiVersion = targetapiversion;
 
 	VkInstanceCreateInfo instanceinfo{};
 	instanceinfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
@@ -901,24 +973,38 @@ bool gVKRenderEngine::initVulkan() {
 	}
 
 	/* ---------------- physical device ---------------- */
-	uint32_t devicecount = 0;
-	vkEnumeratePhysicalDevices(ctx->instance, &devicecount, nullptr);
-	if(devicecount == 0) {
+	vkEnumeratePhysicalDevices(ctx->instance, &ctx->devicecount, nullptr);
+	if(ctx->devicecount == 0) {
 		gLoge("gVKRenderEngine") << "No Vulkan capable GPU was found.";
 		cleanupVulkan();
 		return false;
 	}
-	std::vector<VkPhysicalDevice> devices(devicecount);
-	vkEnumeratePhysicalDevices(ctx->instance, &devicecount, devices.data());
+	ctx->physicaldevices.resize(ctx->devicecount);
+	vkEnumeratePhysicalDevices(ctx->instance, &ctx->devicecount, ctx->physicaldevices.data());
+
+	// Properties and features for every GPU, so a developer can compare devices -
+	// including the ones init does not pick - through getAllDeviceProperties() /
+	// getAllDeviceFeatures().
+	ctx->physicaldeviceproperties.resize(ctx->devicecount);
+	ctx->physicaldevicefeatures.resize(ctx->devicecount);
+	for(uint32_t i = 0; i < ctx->devicecount; i++) {
+		vkGetPhysicalDeviceProperties(ctx->physicaldevices[i], &ctx->physicaldeviceproperties[i]);
+		vkGetPhysicalDeviceFeatures(ctx->physicaldevices[i], &ctx->physicaldevicefeatures[i]);
+	}
 
 	// A GPU is usable only if it can both render and present to our surface, and
 	// in Vulkan those are separate queue family capabilities queried per family.
-	for(const auto& dev : devices) {
+	// It must also meet the version floor: the device's own apiVersion - not the
+	// loader's - is what caps the core features actually available on it, so a
+	// device below minapiversion cannot deliver what the engine requires.
+	bool rejectedforversion = false;
+	for(const auto& dev : ctx->physicaldevices) {
 		uint32_t familycount = 0;
 		vkGetPhysicalDeviceQueueFamilyProperties(dev, &familycount, nullptr);
 		if(familycount == 0) continue;
 		std::vector<VkQueueFamilyProperties> families(familycount);
 		vkGetPhysicalDeviceQueueFamilyProperties(dev, &familycount, families.data());
+		std::vector<VkBool32> presentsupportlist(familycount, VK_FALSE);
 
 		bool foundgraphics = false, foundpresent = false;
 		uint32_t graphics = 0, present = 0;
@@ -927,22 +1013,39 @@ bool gVKRenderEngine::initVulkan() {
 				graphics = i;
 				foundgraphics = true;
 			}
-			VkBool32 presentsupport = VK_FALSE;
-			vkGetPhysicalDeviceSurfaceSupportKHR(dev, i, ctx->surface, &presentsupport);
-			if(!foundpresent && presentsupport == VK_TRUE) {
+			vkGetPhysicalDeviceSurfaceSupportKHR(dev, i, ctx->surface, &presentsupportlist[i]);
+			if(!foundpresent && presentsupportlist[i] == VK_TRUE) {
 				present = i;
 				foundpresent = true;
 			}
 		}
 		if(foundgraphics && foundpresent) {
+			VkPhysicalDeviceProperties devprops{};
+			vkGetPhysicalDeviceProperties(dev, &devprops);
+			if(devprops.apiVersion < ctx->minapiversion) {
+				// Otherwise fine, but too old - keep looking for a newer GPU.
+				rejectedforversion = true;
+				continue;
+			}
 			ctx->physicaldevice = dev;
 			ctx->graphicsfamily = graphics;
 			ctx->presentfamily = present;
+			// Keep the chosen device's families (queue counts + capability flags)
+			// and which of them can present, so later phases need no re-query.
+			ctx->queuefamilyproperties = families;
+			ctx->queuefamilypresentsupport = presentsupportlist;
 			break;
 		}
 	}
 	if(ctx->physicaldevice == VK_NULL_HANDLE) {
-		gLoge("gVKRenderEngine") << "No GPU can both render and present to this surface.";
+		if(rejectedforversion) {
+			gLoge("gVKRenderEngine") << "No GPU supports the required Vulkan "
+					<< VK_API_VERSION_MAJOR(ctx->minapiversion) << "."
+					<< VK_API_VERSION_MINOR(ctx->minapiversion)
+					<< ". Update the GPU driver.";
+		} else {
+			gLoge("gVKRenderEngine") << "No GPU can both render and present to this surface.";
+		}
 		cleanupVulkan();
 		return false;
 	}
@@ -964,28 +1067,33 @@ bool gVKRenderEngine::initVulkan() {
 
 	// Swapchain is requested now because presentation is the next phase and
 	// asking here proves the device supports it.
-	std::vector<const char*> deviceextensions = {VK_KHR_SWAPCHAIN_EXTENSION_NAME};
+	std::vector<const char*>& deviceextensions = ctx->enableddeviceextensions;
+	deviceextensions = {VK_KHR_SWAPCHAIN_EXTENSION_NAME};
 	// VK_KHR_portability_subset is mandatory on portability drivers such as
 	// MoltenVK and absent on conformant ones, so it is queried, never assumed.
 	uint32_t devextcount = 0;
 	vkEnumerateDeviceExtensionProperties(ctx->physicaldevice, nullptr, &devextcount, nullptr);
 	if(devextcount > 0) {
-		std::vector<VkExtensionProperties> devexts(devextcount);
-		vkEnumerateDeviceExtensionProperties(ctx->physicaldevice, nullptr, &devextcount, devexts.data());
-		for(const auto& ext : devexts) {
+		ctx->availabledeviceextensions.resize(devextcount);
+		vkEnumerateDeviceExtensionProperties(ctx->physicaldevice, nullptr, &devextcount, ctx->availabledeviceextensions.data());
+		for(const auto& ext : ctx->availabledeviceextensions) {
 			if(strcmp(ext.extensionName, "VK_KHR_portability_subset") == 0) {
 				deviceextensions.push_back("VK_KHR_portability_subset");
 				break;
 			}
 		}
 	}
+	// Same rule as the instance side: developer requests extend the mandatory set.
+	deviceextensions.insert(deviceextensions.end(), ctx->extradeviceextensions.begin(), ctx->extradeviceextensions.end());
 
-	VkPhysicalDeviceFeatures devicefeatures{};
+	// Empty: no optional features are switched on yet. Kept separate from the
+	// context's devicefeatures, which records what the GPU actually supports.
+	VkPhysicalDeviceFeatures enabledfeatures{};
 	VkDeviceCreateInfo deviceinfo{};
 	deviceinfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
 	deviceinfo.queueCreateInfoCount = static_cast<uint32_t>(queueinfos.size());
 	deviceinfo.pQueueCreateInfos = queueinfos.data();
-	deviceinfo.pEnabledFeatures = &devicefeatures;
+	deviceinfo.pEnabledFeatures = &enabledfeatures;
 	deviceinfo.enabledExtensionCount = static_cast<uint32_t>(deviceextensions.size());
 	deviceinfo.ppEnabledExtensionNames = deviceextensions.data();
 	deviceinfo.enabledLayerCount = static_cast<uint32_t>(layers.size());
@@ -1000,12 +1108,43 @@ bool gVKRenderEngine::initVulkan() {
 	vkGetDeviceQueue(ctx->device, ctx->graphicsfamily, 0, &ctx->graphicsqueue);
 	vkGetDeviceQueue(ctx->device, ctx->presentfamily, 0, &ctx->presentqueue);
 
-	VkPhysicalDeviceProperties props{};
-	vkGetPhysicalDeviceProperties(ctx->physicaldevice, &props);
+	// Cached on the context so later phases can read them without re-querying:
+	// limits/identity, the GPU's supported features, and its memory layout.
+	vkGetPhysicalDeviceProperties(ctx->physicaldevice, &ctx->deviceproperties);
+	vkGetPhysicalDeviceFeatures(ctx->physicaldevice, &ctx->devicefeatures);
+	vkGetPhysicalDeviceMemoryProperties(ctx->physicaldevice, &ctx->devicememoryproperties);
+
+	// Surface capabilities, formats and present modes for the selected device -
+	// the inputs the swapchain phase consumes. The surface and device both exist
+	// by now, so cache them here rather than re-querying later.
+	vkGetPhysicalDeviceSurfaceCapabilitiesKHR(ctx->physicaldevice, ctx->surface, &ctx->surfacecapabilities);
+	uint32_t surfaceformatcount = 0;
+	vkGetPhysicalDeviceSurfaceFormatsKHR(ctx->physicaldevice, ctx->surface, &surfaceformatcount, nullptr);
+	if(surfaceformatcount > 0) {
+		ctx->surfaceformats.resize(surfaceformatcount);
+		vkGetPhysicalDeviceSurfaceFormatsKHR(ctx->physicaldevice, ctx->surface, &surfaceformatcount, ctx->surfaceformats.data());
+	}
+	uint32_t presentmodecount = 0;
+	vkGetPhysicalDeviceSurfacePresentModesKHR(ctx->physicaldevice, ctx->surface, &presentmodecount, nullptr);
+	if(presentmodecount > 0) {
+		ctx->surfacepresentmodes.resize(presentmodecount);
+		vkGetPhysicalDeviceSurfacePresentModesKHR(ctx->physicaldevice, ctx->surface, &presentmodecount, ctx->surfacepresentmodes.data());
+	}
+
+	VkPhysicalDeviceProperties& props = ctx->deviceproperties;
 	gLogi("gVKRenderEngine") << "Vulkan Instance successfully created! API Version: "
 			<< VK_API_VERSION_MAJOR(props.apiVersion) << "."
 			<< VK_API_VERSION_MINOR(props.apiVersion) << "."
 			<< VK_API_VERSION_PATCH(props.apiVersion);
+	// Three distinct numbers - separated so a version mismatch is unambiguous:
+	// the floor the engine requires, the highest the loader offers (which is what
+	// the instance actually targets), and the highest the selected device supports.
+	gLogi("gVKRenderEngine") << "API versions -> min required: "
+			<< VK_API_VERSION_MAJOR(ctx->minapiversion) << "." << VK_API_VERSION_MINOR(ctx->minapiversion)
+			<< " | loader max (targeted): "
+			<< VK_API_VERSION_MAJOR(ctx->instanceapiversion) << "." << VK_API_VERSION_MINOR(ctx->instanceapiversion)
+			<< " | device max: "
+			<< VK_API_VERSION_MAJOR(props.apiVersion) << "." << VK_API_VERSION_MINOR(props.apiVersion);
 	gLogi("gVKRenderEngine") << "Vulkan device: " << props.deviceName
 			<< " | graphics family: " << ctx->graphicsfamily
 			<< " | present family: " << ctx->presentfamily
