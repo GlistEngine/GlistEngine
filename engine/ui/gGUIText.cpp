@@ -19,6 +19,7 @@ gGUIText::gGUIText() {
 	setTextAlignment(TEXTALIGNMENT_LEFT);
 	setTextVerticalAlignment(TEXTVERTICALALIGNMENT_CENTER);
 	textcolor = fontcolor;
+	hascontent = false;
 }
 
 gGUIText::~gGUIText() {
@@ -34,6 +35,7 @@ void gGUIText::set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIO
 
 void gGUIText::setText(std::string text) {
     this->text = text;
+    hascontent = !text.empty();
     resetText();
 }
 
@@ -207,4 +209,8 @@ std::vector<std::string> gGUIText::splitString(const std::string& textToSplit, g
 
 void gGUIText::setDisabled(bool isDisabled) {
 	isdisabled = isDisabled;
+}
+
+bool gGUIText::hasContent() {
+	return hascontent;
 }
