@@ -66,6 +66,26 @@ public:
 	std::string getText();
 
 	/**
+	 * Selects a range of characters in the textbox.
+	 *
+	 * @param startChar The starting character index (0-based).
+	 * @param endChar The ending character index (0-based).
+	 */
+	void setSelection(int startChar, int endChar);
+
+	/**
+	 * Selects all text in the textbox.
+	 */
+	void selectAll();
+
+	/**
+	 * Returns the currently selected text.
+	 *
+	 * @return Selected text substring, or empty string if nothing is selected.
+	 */
+	std::string getSelectedText();
+
+	/**
 	 * Enables/disables the textbox for editing.
 	 *
 	 * @param isEditable Boolean value to enable/disable the textbox for editing.
