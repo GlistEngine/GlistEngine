@@ -15,5 +15,11 @@ var dir_a0e47c104ecd6c0b6dccb5f33d071508 =
     [ "gPostProcessManager.h", "gPostProcessManager_8h.html", "gPostProcessManager_8h" ],
     [ "gRenderer.h", "gRenderer_8h.html", "gRenderer_8h" ],
     [ "gRenderObject.h", "gRenderObject_8h.html", "gRenderObject_8h" ],
-    [ "gVKRenderEngine.h", "gVKRenderEngine_8h.html", "gVKRenderEngine_8h" ]
+    [ "gVKCommands.h", "gVKCommands_8h.html", "gVKCommands_8h" ],
+    [ "gVKContext.h", "gVKContext_8h.html", "gVKContext_8h" ],
+    [ "gVKFrame.h", "gVKFrame_8h.html", "gVKFrame_8h" ],
+    [ "gVKRenderEngine.h", "gVKRenderEngine_8h.html", "gVKRenderEngine_8h" ],
+    [ "gVKRenderTarget.h", "gVKRenderTarget_8h.html", "gVKRenderTarget_8h" ],
+    [ "gVKSwapchain.h", "gVKSwapchain_8h.html", "gVKSwapchain_8h" ],
+    [ "gVKSync.h", "gVKSync_8h.html", "gVKSync_8h" ]
 ];

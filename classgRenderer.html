@@ -287,6 +287,10 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ace9d224185df61cdf2ee58925626babd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae902a59b6bf68c7debfe2573a8c541ff" id="r_ae902a59b6bf68c7debfe2573a8c541ff"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgColor.html">gColor</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#ae902a59b6bf68c7debfe2573a8c541ff">getColor</a> ()</td></tr>
 <tr class="separator:ae902a59b6bf68c7debfe2573a8c541ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0b37acf5538bd8043e512c8c497ad594" id="r_a0b37acf5538bd8043e512c8c497ad594"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a0b37acf5538bd8043e512c8c497ad594">beginFrame</a> ()</td></tr>
+<tr class="separator:a0b37acf5538bd8043e512c8c497ad594"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a77abae2520f304935922d40a20613d74" id="r_a77abae2520f304935922d40a20613d74"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a77abae2520f304935922d40a20613d74">endFrame</a> ()</td></tr>
+<tr class="separator:a77abae2520f304935922d40a20613d74"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a143b0f6ffa8b00675cdceb8fdbcfce4d" id="r_a143b0f6ffa8b00675cdceb8fdbcfce4d"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a143b0f6ffa8b00675cdceb8fdbcfce4d">clear</a> ()=0</td></tr>
 <tr class="separator:a143b0f6ffa8b00675cdceb8fdbcfce4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a789b1047f3a01e2a1debea7198fe8406" id="r_a789b1047f3a01e2a1debea7198fe8406"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a789b1047f3a01e2a1debea7198fe8406">clearColor</a> (int <a class="el" href="gColor_8h.html#a4788d82c901b9367dd5c0daff8a7616b">r</a>, int <a class="el" href="gColor_8h.html#a8cf17d727651616de6f2b79ef32170cd">g</a>, int <a class="el" href="gColor_8h.html#a83fc1af92e29717b4513d121b0c72c7d">b</a>, int <a class="el" href="gColor_8h.html#a4aec1a5be9d9a4a394a2e49e9744286e">a</a>=255)=0</td></tr>
@@ -1347,6 +1351,33 @@ Friends</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+</div>
+</div>
+<a id="a0b37acf5538bd8043e512c8c497ad594" name="a0b37acf5538bd8043e512c8c497ad594"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0b37acf5538bd8043e512c8c497ad594">&#9670;&#160;</a></span>beginFrame()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual bool gRenderer::beginFrame </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reimplemented in <a class="el" href="classgVKRenderEngine.html#a17e93c8a6fec1a4a9fb72b2cf1db5b09">gVKRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -4557,6 +4588,33 @@ Friends</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Implemented in <a class="el" href="classgGLRenderEngine.html#aefd9cf89e5aac433be3bcf38fcdaf0ee">gGLRenderEngine</a>, and <a class="el" href="classgVKRenderEngine.html#a8c60fb39e182cb6b43d00a92d30f8804">gVKRenderEngine</a>.</p>
+
+</div>
+</div>
+<a id="a77abae2520f304935922d40a20613d74" name="a77abae2520f304935922d40a20613d74"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a77abae2520f304935922d40a20613d74">&#9670;&#160;</a></span>endFrame()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void gRenderer::endFrame </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reimplemented in <a class="el" href="classgVKRenderEngine.html#a35005e78d95fcd8aca38b018623f9567">gVKRenderEngine</a>.</p>
 
 </div>
 </div>
