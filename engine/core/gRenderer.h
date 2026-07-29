@@ -245,6 +245,16 @@ public:
 	void setColor(gColor* color);
 	gColor* getColor();
 
+	/*
+	 * Backends that have to bracket a frame explicitly, like Vulkan, prepare it in
+	 * beginFrame and submit and present it in endFrame. A false return means the
+	 * frame has to be skipped, for example while the swapchain is rebuilt after a
+	 * resize; endFrame must not be called in that case. OpenGL draws immediately
+	 * and needs neither, so both are no-ops there.
+	 */
+	virtual bool beginFrame() { return true; }
+	virtual void endFrame() {}
+
 	virtual void clear() = 0;
 	virtual void clearColor(int r, int g, int b, int a = 255) = 0;
 	virtual void clearColor(gColor color) = 0;

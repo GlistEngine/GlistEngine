@@ -24,10 +24,26 @@
 	#include "gGLFWWindow.h"
 	#include "gAppManager.h"
 	#include "gVKSwapchain.h"
+	#include "gVKRenderTarget.h"
+	#include "gVKCommands.h"
+	#include "gVKFrame.h"
+	#include "gVKSync.h"
 	#include <vector>
 	#include <set>
 	#include <cstring>
 	#include <cstdlib>
+#endif
+
+#ifdef GVK_DESKTOP_GLFW
+// Unlike OpenGL, clearing is not an immediate operation here: the colour is kept
+// and the render pass writes it when the next frame begins.
+static void gvkStoreClearColor(gVKContext* ctx, float r, float g, float b, float a) {
+	if(ctx == nullptr) return;
+	ctx->clearvalue.color.float32[0] = r;
+	ctx->clearvalue.color.float32[1] = g;
+	ctx->clearvalue.color.float32[2] = b;
+	ctx->clearvalue.color.float32[3] = a;
+}
 #endif
 
 gVKRenderEngine::~gVKRenderEngine() {
@@ -51,19 +67,20 @@ static void flipVertically(unsigned char* pixelData, int width, int height, int 
 }
 
 void gVKRenderEngine::clear() {
-	G_CHECK_GL(glClearColor(0.0f, 0.0f, 0.0f, 1.0f));
-	G_CHECK_GL(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
+	// The render pass clears the attachment at the start of every frame, so there
+	// is nothing to do at the moment this is called.
 }
 
 void gVKRenderEngine::clearColor(int r, int g, int b, int a) {
-	//    glBindFramebuffer(GL_FRAMEBUFFER, gFbo::defaultfbo);
-	G_CHECK_GL(glClearColor((float)r / 255, (float)g / 255, (float)b / 255, (float)a / 255));
-	G_CHECK_GL(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
+#ifdef GVK_DESKTOP_GLFW
+	gvkStoreClearColor(vkcontext, r / 255.0f, g / 255.0f, b / 255.0f, a / 255.0f);
+#endif
 }
 
 void gVKRenderEngine::clearColor(gColor color) {
-	G_CHECK_GL(glClearColor(color.r, color.g, color.b, color.a));
-	G_CHECK_GL(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
+#ifdef GVK_DESKTOP_GLFW
+	gvkStoreClearColor(vkcontext, color.r, color.g, color.b, color.a);
+#endif
 }
 
 void gVKRenderEngine::enableDepthTest() {
@@ -792,6 +809,8 @@ bool gVKRenderEngine::initVulkan() {
 		cleanupVulkan();
 		return false;
 	}
+	// The frame loop reads this to react to resizes.
+	ctx->window = handle;
 
 	/* ---------------- instance ---------------- */
 	// Asking GLFW for the surface extensions keeps this portable instead of
@@ -1000,6 +1019,31 @@ bool gVKRenderEngine::initVulkan() {
 		cleanupVulkan();
 		return false;
 	}
+	if(!gvkCreateRenderPass(*ctx)) {
+		gLoge("gVKRenderEngine") << "Vulkan init: the render pass could not be created.";
+		cleanupVulkan();
+		return false;
+	}
+	if(!gvkCreateFramebuffers(*ctx)) {
+		gLoge("gVKRenderEngine") << "Vulkan init: the framebuffers could not be created.";
+		cleanupVulkan();
+		return false;
+	}
+	if(!gvkCreateCommandResources(*ctx)) {
+		gLoge("gVKRenderEngine") << "Vulkan init: the command resources could not be created.";
+		cleanupVulkan();
+		return false;
+	}
+	if(!gvkCreateFrameSyncObjects(*ctx)) {
+		gLoge("gVKRenderEngine") << "Vulkan init: the frame synchronisation objects could not be created.";
+		cleanupVulkan();
+		return false;
+	}
+	if(!gvkCreatePresentSemaphores(*ctx, static_cast<uint32_t>(ctx->swapchainimages.size()))) {
+		gLoge("gVKRenderEngine") << "Vulkan init: the present semaphores could not be created.";
+		cleanupVulkan();
+		return false;
+	}
 	return true;
 #endif
 }
@@ -1014,6 +1058,11 @@ void gVKRenderEngine::cleanupVulkan() {
 	if(ctx->device != VK_NULL_HANDLE) vkDeviceWaitIdle(ctx->device);
 	// Strict reverse creation order: Vulkan requires children to be destroyed
 	// before their parent, and the surface must die before its instance.
+	gvkDestroyPresentSemaphores(*ctx);
+	gvkDestroyFrameSyncObjects(*ctx);
+	gvkDestroyCommandResources(*ctx);
+	gvkDestroyFramebuffers(*ctx);
+	gvkDestroyRenderPass(*ctx);
 	gvkDestroySwapchain(*ctx);
 	if(ctx->device != VK_NULL_HANDLE) vkDestroyDevice(ctx->device, nullptr);
 	if(ctx->surface != VK_NULL_HANDLE) vkDestroySurfaceKHR(ctx->instance, ctx->surface, nullptr);
@@ -1026,6 +1075,23 @@ void gVKRenderEngine::cleanupVulkan() {
 	delete vkcontext;
 #endif
 	vkcontext = nullptr;
+}
+
+
+bool gVKRenderEngine::beginFrame() {
+#ifdef GVK_DESKTOP_GLFW
+	if(vkcontext == nullptr) return false;
+	return gvkBeginFrame(*vkcontext, vkcontext->window);
+#else
+	return false;
+#endif
+}
+
+void gVKRenderEngine::endFrame() {
+#ifdef GVK_DESKTOP_GLFW
+	if(vkcontext == nullptr) return;
+	gvkEndFrame(*vkcontext, vkcontext->window);
+#endif
 }
 
 

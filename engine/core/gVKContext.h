@@ -31,6 +31,8 @@
 #include <vulkan/vulkan.h>
 #include <vector>
 
+struct GLFWwindow;
+
 // How many frames the CPU may prepare while the GPU is still busy with earlier ones.
 inline constexpr int GVK_MAX_FRAMES_IN_FLIGHT = 2;
 
@@ -48,6 +50,10 @@ struct gVKContext {
 	VkQueue presentqueue = VK_NULL_HANDLE;
 	uint32_t graphicsfamily = 0;
 	uint32_t presentfamily = 0;
+
+	// The window the surface was created from. The frame loop needs it to notice
+	// resizes and to rebuild the swapchain.
+	GLFWwindow* window = nullptr;
 
 	/* ---------------- gVKSwapchain ---------------- */
 	VkSwapchainKHR swapchain = VK_NULL_HANDLE;
