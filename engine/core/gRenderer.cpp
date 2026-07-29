@@ -269,6 +269,12 @@ void gRenderer::init() {
 	isalphablendingenabled = false;
 	isalphatestenabled = false;
 
+	boundframebuffer = gFbo::defaultfbo;
+	viewportx = 0;
+	viewporty = 0;
+	viewportwidth = getScreenWidth();
+	viewportheight = getScreenHeight();
+
 	isssaoenabled = false;
 	ssaobias = 0.025f;
 	ssaoradius = 0.5f;
@@ -280,8 +286,12 @@ void gRenderer::init() {
 	ssaoresultfbo = nullptr;
 	ssaoshader = nullptr;
 	ssaoblurshader = nullptr;
-	ssaonoisetexture = 0;
 	ssaorealdefaultfbo = 0;
+	ssaoprevframebuffer = 0;
+	ssaoprevviewport[0] = 0;
+	ssaoprevviewport[1] = 0;
+	ssaoprevviewport[2] = 0;
+	ssaoprevviewport[3] = 0;
 	isgammacorrectionenabled = false;
 	ishdrenabled = false;
 	issoftshadowsenabled = false;
@@ -420,6 +430,17 @@ gShader* gRenderer::getFboShader() {
 
 gShader* gRenderer::getGridShader() {
 	return gridshader;
+}
+
+GLuint gRenderer::getBoundFramebuffer() const {
+	return boundframebuffer;
+}
+
+void gRenderer::getViewport(int& x, int& y, int& width, int& height) const {
+	x = viewportx;
+	y = viewporty;
+	width = viewportwidth;
+	height = viewportheight;
 }
 
 void gRenderer::setProjectionMatrix(glm::mat4 projectionMatrix) {
@@ -1131,53 +1152,11 @@ void gRenderer::initSSAOResources() {
 	// Allocate FBO with color + depth texture
 	ssaofbo = new gFbo();
 	ssaofbo->allocate(getScreenWidth(), getScreenHeight(), false, true);
+	setupSSAODepthSampling();
 
 	// Load SSAO shader
 	ssaoshader = new gShader();
 	ssaoshader->loadProgram(getShaderSrcSSAOVertex(), getShaderSrcSSAOFragment());
-
-	// Generate hemisphere kernel samples
-	ssaokernel.clear();
-	srand(0); // deterministic seed
-	for (int i = 0; i < 32; i++) {
-		glm::vec3 sample(
-			((float)rand() / RAND_MAX) * 2.0f - 1.0f,
-			((float)rand() / RAND_MAX) * 2.0f - 1.0f,
-			((float)rand() / RAND_MAX) // z in [0, 1] (hemisphere)
-		);
-		sample = glm::normalize(sample);
-		sample *= ((float)rand() / RAND_MAX);
-		// Scale samples so more are closer to the origin (accelerating interpolation)
-		float scale = (float)i / 32.0f;
-		scale = 0.1f + scale * scale * (1.0f - 0.1f); // lerp(0.1, 1.0, scale*scale)
-		sample *= scale;
-		ssaokernel.push_back(sample);
-	}
-
-	// Generate 4x4 noise texture (random tangent-space vectors)
-	std::vector<glm::vec3> ssaoNoise;
-	for (int i = 0; i < 16; i++) {
-		glm::vec3 noise(
-			((float)rand() / RAND_MAX) * 2.0f - 1.0f,
-			((float)rand() / RAND_MAX) * 2.0f - 1.0f,
-			0.0f
-		);
-		ssaoNoise.push_back(glm::normalize(noise));
-	}
-
-	// Convert noise to [0,1] range for texture storage
-	std::vector<float> noiseData;
-	for (int i = 0; i < 16; i++) {
-		noiseData.push_back(ssaoNoise[i].x * 0.5f + 0.5f);
-		noiseData.push_back(ssaoNoise[i].y * 0.5f + 0.5f);
-		noiseData.push_back(ssaoNoise[i].z * 0.5f + 0.5f);
-	}
-
-	ssaonoisetexture = createTextures();
-	bindTexture(ssaonoisetexture);
-	texImage2D(GL_TEXTURE_2D, GL_RGB16F, 4, 4, GL_RGB, GL_FLOAT, noiseData.data());
-	setWrapping(GL_TEXTURE_2D, GL_REPEAT, GL_REPEAT);
-	setFiltering(GL_TEXTURE_2D, GL_NEAREST, GL_NEAREST);
 
 	// Allocate result FBO for SSAO AO output (blur reads from this)
 	ssaoresultfbo = new gFbo();
@@ -1189,12 +1168,7 @@ void gRenderer::initSSAOResources() {
 
 	// Set static uniforms on SSAO shader
 	ssaoshader->use();
-	ssaoshader->setInt("colorTexture", 0);
-	ssaoshader->setInt("depthTexture", 1);
-	ssaoshader->setInt("noiseTexture", 2);
-	for (int i = 0; i < 32; i++) {
-		ssaoshader->setVec3("samples[" + gToStr(i) + "]", ssaokernel[i]);
-	}
+	ssaoshader->setInt("depthTexture", 0);
 
 	// Set static uniforms on blur shader
 	ssaoblurshader->use();
@@ -1203,6 +1177,14 @@ void gRenderer::initSSAOResources() {
 	ssaoblurshader->setInt("depthTexture", 2);
 
 	isssaoallocated = true;
+}
+
+void gRenderer::setupSSAODepthSampling() {
+	// gTexture leaves fbo depth textures on its color map defaults. Repeat makes taps near
+	// a border read the opposite edge of the screen, and linear returns a blend of the two
+	// sides of a silhouette, a depth no geometry ever occupied.
+	bindTexture(ssaofbo->getDepthTextureId());
+	setWrappingAndFiltering(GL_TEXTURE_2D, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, GL_NEAREST, GL_NEAREST);
 }
 
 void gRenderer::cleanupSSAOResources() {
@@ -1220,19 +1202,32 @@ void gRenderer::cleanupSSAOResources() {
 	delete ssaoblurshader;
 	ssaoblurshader = nullptr;
 
-	if (ssaonoisetexture) {
-		deleteTexture(ssaonoisetexture);
-		ssaonoisetexture = 0;
-	}
-
-	ssaokernel.clear();
 	isssaoallocated = false;
 }
 
 void gRenderer::beginSSAO() {
+	// Nested begins would overwrite the saved render target, leaving it lost for good
+	if (isssaorendering) return;
+
+	// The scene may already be rendering into an fbo of its own, a post process manager's
+	// for instance, which is not necessarily gFbo::defaultfbo. Remember the real render
+	// target to composite into at endSSAO(). Has to happen before the allocate() below,
+	// that one leaves the default framebuffer bound.
+	ssaoprevframebuffer = boundframebuffer;
+	getViewport(ssaoprevviewport[0], ssaoprevviewport[1], ssaoprevviewport[2], ssaoprevviewport[3]);
+	// The window sizes its own viewport without going through the renderer, so the
+	// tracked one can be stale for the default framebuffer. It covers the screen anyway.
+	if (ssaoprevframebuffer == (GLuint)gFbo::defaultfbo || ssaoprevviewport[2] <= 0 || ssaoprevviewport[3] <= 0) {
+		ssaoprevviewport[0] = 0;
+		ssaoprevviewport[1] = 0;
+		ssaoprevviewport[2] = getScreenWidth();
+		ssaoprevviewport[3] = getScreenHeight();
+	}
+
 	// Re-allocate FBOs if screen size changed
 	if (ssaofbo->getWidth() != getScreenWidth() || ssaofbo->getHeight() != getScreenHeight()) {
 		ssaofbo->allocate(getScreenWidth(), getScreenHeight(), false, true);
+		setupSSAODepthSampling();
 		ssaoresultfbo->allocate(getScreenWidth(), getScreenHeight());
 	}
 
@@ -1260,20 +1255,16 @@ void gRenderer::endSSAO() {
 	ssaoshader->setVec2("screenSize", glm::vec2(getScreenWidth(), getScreenHeight()));
 	ssaoshader->setFloat("ssaoRadius", ssaoradius);
 	ssaoshader->setFloat("ssaoBias", ssaobias);
-	ssaoshader->setFloat("nearClip", camera ? camera->getNearClip() : 0.01f);
-	ssaoshader->setFloat("farClip", camera ? camera->getFarClip() : 1000.0f);
 
-	bindTexture(ssaofbo->getTextureId(), 0);
-	bindTexture(ssaofbo->getDepthTextureId(), 1);
-	bindTexture(ssaonoisetexture, 2);
+	bindTexture(ssaofbo->getDepthTextureId(), 0);
 
 	bindQuadVAO();
 	drawFullscreenQuad();
 
-	// Pass 2: Blur AO + composite with scene color → screen
+	// Pass 2: Blur AO + composite with scene color → the render target beginSSAO() replaced
 	gFbo::defaultfbo = ssaorealdefaultfbo;
-	bindDefaultFramebuffer();
-	setViewport(0, 0, getScreenWidth(), getScreenHeight());
+	bindFramebuffer(ssaoprevframebuffer);
+	setViewport(ssaoprevviewport[0], ssaoprevviewport[1], ssaoprevviewport[2], ssaoprevviewport[3]);
 	clearScreen(true, false);
 
 	ssaoblurshader->use();
@@ -1289,6 +1280,10 @@ void gRenderer::endSSAO() {
 
 	bindQuadVAO();
 	drawFullscreenQuad();
+
+	// gTexture::bind() has no slot of its own and draws from slot 0. Leaving slot 2 active
+	// would make the next single texture draw sample our leftovers.
+	resetTexture();
 
 	if (wasdepthtestenabled) enableDepthTest();
 }
