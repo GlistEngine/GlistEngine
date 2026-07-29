@@ -33,6 +33,8 @@ gGUIGraph::gGUIGraph() {
 	labelwidthy = 0.0f;
 	gridlinesxenabled = true;
 	gridlinesyenabled = true;
+	isxaxislinenable = true;
+	yaxislenable = true;
 	floatlabelsenabled = false;
 	labelcountx = 5;
 	labelcounty = 7;
@@ -40,12 +42,12 @@ gGUIGraph::gGUIGraph() {
 	axisxtitle = "x-axis";
 	axisytitle = "y-axis";
 
-	for(int i = 0; i < labelcounty; i++) {
+	for (int i = 0; i < labelcounty; i++) {
 		labelsx.push_back(i);
 		labelsy.push_back(i);
 	}
 
-	for(int i = 0; i < 8; i++) {
+	for (int i = 0; i < 8; i++) {
 		int labelstep = std::pow(10, i);
 		labelsteps.push_back(labelstep);
 		labelsteps.push_back(labelstep * 2);
@@ -56,23 +58,22 @@ gGUIGraph::gGUIGraph() {
 gGUIGraph::~gGUIGraph() {
 }
 
-void gGUIGraph::set(gBaseApp *root, gBaseGUIObject *topParentGUIObject, gBaseGUIObject *parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h) {
+void gGUIGraph::set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIObject* parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h) {
 	gGUIControl::set(root, topParentGUIObject, parentGUIObject, parentSlotLineNo, parentSlotColumnNo, x, y, w, h);
 	axisxw = width * 9 / 10;
 	axisyh = height * 3 / 4;
-//	gLogi("HEIGHT") << height;
-//	gLogi("WIDTH") << width;
-//	gLogi("/////////////////////") << top;
 	axisx1 = left + 80;
 	axisy1 = top + 0.14f * height;
 	axisx2 = axisx1 + axisxw;
 	axisy2 = axisy1 + axisyh;
 	axisxstart = axisy2;
-	if(miny < 0) axisxstart -= axisyh * ((-miny) / (maxy - miny));
+	if (miny < 0) axisxstart -= axisyh * ((-miny) / (maxy - miny));
 	axisystart = axisx1;
-	if(minx < 0) axisystart += axisxw * ((-minx) / (maxx - minx));
-	labelwidthx = axisxw / (labelcountx - 1);
-	labelwidthy = axisyh / (labelcounty - 1);
+	if (minx < 0) axisystart += axisxw * ((-minx) / (maxx - minx));
+	if (labelcountx > 1) labelwidthx = axisxw / (labelcountx - 1);
+	else labelwidthx = 0;
+	if (labelcounty > 1) labelwidthy = axisyh / (labelcounty - 1);
+	else labelwidthy = 0;
 }
 
 void gGUIGraph::setMaxX(float maxX) {
@@ -123,6 +124,11 @@ void gGUIGraph::enableGridlinesY(bool isEnabled) {
 	gridlinesyenabled = isEnabled;
 }
 
+void gGUIGraph::setAxislinesEnable(bool xaxis, bool yaxis) {
+	isxaxislinenable = xaxis;
+	yaxislenable = yaxis;
+}
+
 void gGUIGraph::setTitleX(std::string titleX) {
 	axisxtitle = titleX;
 }
@@ -141,7 +147,11 @@ std::string gGUIGraph::getTitleY() {
 
 void gGUIGraph::setLabelCountX(int labelCount) {
 	labelcountx = labelCount;
-	labelwidthx = axisxw / (labelcountx - 1);
+	if (labelcountx > 1) {
+		labelwidthx = axisxw / (labelcountx - 1);
+	} else {
+		labelwidthx = 0;
+	}
 }
 
 int gGUIGraph::getLabelCountX() {
@@ -150,7 +160,11 @@ int gGUIGraph::getLabelCountX() {
 
 void gGUIGraph::setLabelCountY(int labelCount) {
 	labelcounty = labelCount;
-	labelwidthy = axisyh / (labelcounty - 1);
+	if (labelcounty > 1) {
+		labelwidthy = axisyh / (labelcounty - 1);
+	} else {
+		labelwidthy = 0;
+	}
 }
 
 int gGUIGraph::getLabelCountY() {
@@ -177,7 +191,7 @@ int gGUIGraph::getRangeEnd() {
 void gGUIGraph::draw() {
 	gColor oldcolor = *renderer->getColor();
 
-	if(title != "") {
+	if (title != "") {
 		renderer->setColor(fontcolor);
 		font->drawText(title, (axisx1 + axisx2) / 2, axisy1 - 10);
 	}
@@ -196,100 +210,121 @@ void gGUIGraph::drawBackground() {
 
 	// Draw the axis
 	renderer->setColor(backgroundcolor);
-	gDrawLine(axisx1, axisxstart, axisx2, axisxstart);
-	gDrawLine(axisystart, axisy2, axisystart, axisy1);
+	if (isxaxislinenable) gDrawLine(axisx1, axisxstart, axisx2, axisxstart);
+	if (yaxislenable) gDrawLine(axisystart, axisy2, axisystart, axisy1);
 }
 
 void gGUIGraph::drawLabels() {
+	renderer->setColor(foregroundcolor);
+
 	// Draw the labels for x-axis
-	float xpoint = 0;
+	if (labelcountx > 0) {
+		float xpoint = 0;
+		for (int i = 0; i < labelcountx; i++) {
+			xpoint = i * labelwidthx;
+			if (isxaxislinenable) {
+				renderer->setColor(foregroundcolor);
+				if (!gridlinesxenabled) gDrawLine(axisx1 + xpoint, axisy2 + 0.04f * height, axisx1 + xpoint, axisy2);
+				else gDrawLine(axisx1 + xpoint, axisy2 + 0.04f * height, axisx1 + xpoint, axisy2 - axisyh);
+			}
 
-	for(int i = 0; i < labelcountx; i++) {
-		xpoint = i * labelwidthx;
+			renderer->setColor(fontcolor);
+			if (floatlabelsenabled) {
+				if (i < floatlabelsx.size()) font->drawText(std::to_string(floatlabelsx[i]), axisx1 + xpoint - 0.01f * width, axisxstart + 0.07f * height);
+			} else {
+				if (i < labelsx.size()) font->drawText(std::to_string(labelsx[i]), axisx1 + xpoint - 0.01f * width, axisxstart + 0.07f * height);
+			}
+		}
+	} else if (isxaxislinenable) {
 		renderer->setColor(foregroundcolor);
-		if(!gridlinesxenabled) gDrawLine(axisx1 + xpoint, axisy2 + 0.04f * height, axisx1 + xpoint, axisy2);
-		else gDrawLine(axisx1 + xpoint, axisy2 + 0.04f * height, axisx1 + xpoint, axisy2 - axisyh);
-
-		renderer->setColor(fontcolor);
-		if(floatlabelsenabled) font->drawText(std::to_string(floatlabelsx[i]), axisx1 + xpoint - 0.01f * width, axisxstart + 0.07f * height);
-		else font->drawText(std::to_string(labelsx[i]), axisx1 + xpoint - 0.01f * width, axisxstart + 0.07f * height);
+		float yend = gridlinesxenabled ? (axisy2 - axisyh) : axisy2;
+		gDrawLine(axisx1, axisy2 + 0.04f * height, axisx1, yend);
+		gDrawLine(axisx2, axisy2 + 0.04f * height, axisx2, yend);
 	}
-//	font->drawText(axisxtitle, axisx1 + axisxw / 2, axisy2 + 40);
+
 	// Draw the labels for y-axis
-	int ypoint = 0;
+	if (labelcounty > 0) {
+		int ypoint = 0;
+		for (int i = 0; i < labelcounty; i++) {
+			ypoint = i * labelwidthy;
+			if (yaxislenable) {
+				renderer->setColor(foregroundcolor);
+				if (!gridlinesyenabled) gDrawLine(axisx1 - 0.02f * width, axisy2 - ypoint, axisx1, axisy2 - ypoint);
+				else gDrawLine(axisx1 - 0.02f * width, axisy2 - ypoint, axisx1 + axisxw, axisy2 - ypoint);
+			}
 
-	for(int i = 0; i < labelcounty; i++) {
-		ypoint = i * labelwidthy;
+			renderer->setColor(fontcolor);
+			if (floatlabelsenabled) {
+				if (i < floatlabelsy.size()) font->drawText(std::to_string(floatlabelsy[i]), axisystart - 0.054f * width, axisy2 - ypoint + 0.012f * height);
+			} else {
+				if (i < labelsy.size()) font->drawText(std::to_string(labelsy[i]), axisystart - 0.054f * width, axisy2 - ypoint + 0.012f * height);
+			}
+		}
+	} else if (yaxislenable) {
 		renderer->setColor(foregroundcolor);
-		if(!gridlinesyenabled) gDrawLine(axisx1 - 0.02f * width, axisy2 - ypoint, axisx1, axisy2 - ypoint);
-		else gDrawLine(axisx1 - 0.02f * width, axisy2 - ypoint, axisx1 + axisxw, axisy2 - ypoint);
-
-		renderer->setColor(fontcolor);
-		if(floatlabelsenabled) font->drawText(std::to_string(floatlabelsy[i]), axisystart - 0.054f * width, axisy2 - ypoint + 0.012f * height);
-		else font->drawText(std::to_string(labelsy[i]), axisystart - 0.054f * width, axisy2 - ypoint + 0.012f * height);
+		float xend = gridlinesyenabled ? (axisx1 + axisxw) : axisx1;
+		gDrawLine(axisx1 - 0.02f * width, axisy2, xend, axisy2);
+		gDrawLine(axisx1 - 0.02f * width, axisy2 - axisyh, xend, axisy2 - axisyh);
 	}
 }
 
 void gGUIGraph::drawGraph() {
-
 }
 
 void gGUIGraph::updateLabelsX() {
-	if(floatlabelsenabled) {
+	if (floatlabelsenabled) {
 		float step = (maxx - minx) / (labelcountx - 1);
-		for(int i = 0; i < labelcountx; i++) {
+		for (int i = 0; i < labelcountx; i++) {
 			floatlabelsx[i] = minx + i * step;
 		}
-	}
-	else{
+	} else {
 		int step = abs(largestvaluex) / 10;
-		for(int i = 0; i < labelsteps.size(); i++) {
-			if(step < labelsteps[i]) {
+		for (int i = 0; i < labelsteps.size(); i++) {
+			if (step < labelsteps[i]) {
 				step = labelsteps[i];
 				break;
 			}
 		}
 
-		if(minx < 0) minx = (int(smallestvaluex / step) - 1) * step;
+		if (minx < 0) minx = (int(smallestvaluex / step) - 1) * step;
 		maxx = (int(largestvaluex / step) + 1) * step;
 		labelcountx = (maxx - minx) / step + 1;
-//		gLogi("labelx") << labelcountx << " " << maxx << " " << minx << " " << step;
+		//		gLogi("labelx") << labelcountx << " " << maxx << " " << minx << " " << step;
 		labelsx.clear();
-		for(int i = 0; i < labelcountx + 1; i++) {
+		for (int i = 0; i < labelcountx + 1; i++) {
 			labelsx.push_back(minx + i * step);
 		}
 	}
 }
 
 void gGUIGraph::updateLabelsY() {
-	if(floatlabelsenabled) {
+	if (floatlabelsenabled) {
 		float step = (maxy - miny) / (labelcounty - 1);
-		for(int i = 0; i < labelcounty; i++) {
+		for (int i = 0; i < labelcounty; i++) {
 			floatlabelsy[i] = miny + i * step;
 		}
-	}
-	else {
-		 int step = std::abs((int)largestvaluey) / 10;
-		    for(int i = 0; i < labelsteps.size(); i++) {
-		        if(step < labelsteps[i]) {
-		            step = labelsteps[i];
-		            break;
-		        }
-		    }
-		    if(step <= 0) step = 1;
+	} else {
+		int step = std::abs((int) largestvaluey) / 10;
+		for (int i = 0; i < labelsteps.size(); i++) {
+			if (step < labelsteps[i]) {
+				step = labelsteps[i];
+				break;
+			}
+		}
+		if (step <= 0) step = 1;
 
-		    if(smallestvaluey >= 0) {
-		        miny = 0;
-		    } else {
-		        miny = (int(smallestvaluey / step) - 1) * step;
-		    }
+		if (smallestvaluey >= 0) {
+			miny = 0;
+		} else {
+			miny = (int(smallestvaluey / step) - 1) * step;
+		}
 
-		    maxy = (int(largestvaluey / step) + 1) * step;
+		maxy = (int(largestvaluey / step) + 1) * step;
 
-		    labelcounty = (maxy - miny) / step + 1;
-		    labelsy.clear();
-		    for(int i = 0; i < labelcounty; i++) {
-		        labelsy.push_back(miny + i * step);
+		labelcounty = (maxy - miny) / step + 1;
+		labelsy.clear();
+		for (int i = 0; i < labelcounty; i++) {
+			labelsy.push_back(miny + i * step);
 		}
 	}
 }
@@ -299,5 +334,4 @@ int gGUIGraph::countDigits(int number) {
 }
 
 void gGUIGraph::clear() {
-
 }
