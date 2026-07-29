@@ -27,6 +27,7 @@
 	#include <vector>
 	#include <set>
 	#include <cstring>
+	#include <cstdlib>
 #endif
 
 gVKRenderEngine::~gVKRenderEngine() {
@@ -723,6 +724,18 @@ static VKAPI_ATTR VkBool32 VKAPI_CALL gvkDebugCallback(
 	return VK_FALSE;
 }
 
+// Hands the loader a search path, but never overrides a value the developer
+// exported themselves, so pointing the engine at a different driver or layer
+// build stays possible without touching the code.
+static void gvkSetEnvIfUnset(const char* name, const char* value) {
+	if(getenv(name) != nullptr) return;
+#if defined(_WIN32)
+	_putenv_s(name, value);
+#else
+	setenv(name, value, 0);
+#endif
+}
+
 static bool gvkHasLayer(const char* name) {
 	uint32_t count = 0;
 	if(vkEnumerateInstanceLayerProperties(&count, nullptr) != VK_SUCCESS || count == 0) return false;
@@ -756,16 +769,15 @@ bool gVKRenderEngine::initVulkan() {
 	vkcontext = new gVKContext();
 	gVKContext* ctx = vkcontext;
 
-#if defined(__APPLE__)
-	// MoltenVK (the macOS driver) and the Homebrew validation layers are not on
-	// the loader's default search path. The trailing 0 means "do not overwrite",
-	// so an explicitly exported value always wins.
+	// The driver manifest on macOS and the validation layer manifest on both
+	// desktop platforms live outside the directories the loader searches by
+	// itself, so their locations arrive as build definitions. Whether they are
+	// defined at all is decided per platform in engine/CMakeLists.txt.
 #ifdef GLIST_VK_ICD_FILE
-	setenv("VK_ICD_FILENAMES", GLIST_VK_ICD_FILE, 0);
+	gvkSetEnvIfUnset("VK_ICD_FILENAMES", GLIST_VK_ICD_FILE);
 #endif
 #ifdef GLIST_VK_LAYER_PATH
-	setenv("VK_LAYER_PATH", GLIST_VK_LAYER_PATH, 0);
-#endif
+	gvkSetEnvIfUnset("VK_LAYER_PATH", GLIST_VK_LAYER_PATH);
 #endif
 
 	gGLFWWindow* glfwwindow = dynamic_cast<gGLFWWindow*>(appmanager != nullptr ? appmanager->getWindow() : nullptr);

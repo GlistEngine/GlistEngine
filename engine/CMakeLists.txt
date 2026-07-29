@@ -591,6 +591,13 @@ elseif(WIN32)
 	if(EXISTS "${MINGW64_DIR}/include/vulkan/vulkan.h" AND GLIST_VULKAN_LIBRARY)
 		set(Lib_Vulkan "${GLIST_VULKAN_LIBRARY}")
 		target_compile_definitions(GlistEngine PRIVATE GLIST_HAS_VULKAN)
+		# The validation layer ships with zbin, but its manifest does not sit in a
+		# directory the loader searches on its own. Passing the path to the engine
+		# keeps the layer usable on machines that have no Vulkan SDK installed.
+		if(EXISTS "${MINGW64_DIR}/bin/VkLayer_khronos_validation.json")
+			target_compile_definitions(GlistEngine PRIVATE
+				GLIST_VK_LAYER_PATH="${MINGW64_DIR}/bin")
+		endif()
 	else()
 		message(STATUS "Vulkan development files not found in zbin; Vulkan backend disabled")
 	endif()
