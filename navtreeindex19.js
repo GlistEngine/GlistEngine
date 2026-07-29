@@ -1,5 +1,9 @@
 var NAVTREEINDEX19 =
 {
+"structgHttpFile_1_1ProgressData.html#a437d4db25e3c8db350206cb7de706e3f":[1,0,108,0,1],
+"structgHttpFile_1_1ProgressData.html#a7d3ae2b5d14fb694f338f136d344524c":[1,0,108,0,0],
+"structgInputPlayer_1_1AxisBinding.html":[1,0,111,0],
+"structgInputPlayer_1_1AxisBinding.html#a1a16695011eaaa83cba3756a9ac9d3fe":[1,0,111,0,0],
 "structgInputPlayer_1_1AxisBinding.html#aa98fffdadaaaca422681b8053e918f2a":[1,0,111,0,1],
 "structgInputPlayer_1_1GamepadAxisBinding.html":[1,0,111,1],
 "structgInputPlayer_1_1GamepadAxisBinding.html#a57919698b3f2df8f9ec8670b006c101c":[1,0,111,1,0],
