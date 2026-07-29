@@ -173,94 +173,72 @@ void gVKRenderEngine::takeScreenshot(gImage& img) {
 }
 
 
+// The buffer, VAO, vertex-attribute and draw entry points below are OpenGL only.
+// A Vulkan window is created with GLFW_NO_API, so there is no current GL context
+// and issuing these calls is undefined behaviour - on macOS/MoltenVK it hangs, the
+// same way glViewport did during window init. Until the Vulkan resource path is
+// implemented they are safe no-ops, which is what lets gTexture/gImage objects be
+// constructed and destroyed under the Vulkan backend (their setupRenderData() and
+// cleanupAll() run through here) without freezing. The "create" calls hand back 0,
+// a handle the matching delete calls already treat as nothing to free.
 GLuint gVKRenderEngine::genBuffers() {
-	GLuint buffer;
-	G_CHECK_GL(glGenBuffers(1, &buffer));
-	return buffer;
+	return 0;
 }
 
 void gVKRenderEngine::deleteBuffer(GLuint& buffer) {
-	if (buffer != 0) {
-		G_CHECK_GL(glDeleteBuffers(1, &buffer));
-	}
 }
 
 void gVKRenderEngine::bindBuffer(GLenum target, GLuint buffer) {
-	G_CHECK_GL(glBindBuffer(target, buffer));
 }
 
 void gVKRenderEngine::unbindBuffer(GLenum target) {
-	G_CHECK_GL(glBindBuffer(target, 0));
 }
 
 void gVKRenderEngine::bufSubData(GLuint buffer, int offset, int size, const void* data) {
-	bindBuffer(GL_UNIFORM_BUFFER, buffer);
-	G_CHECK_GL(glBufferSubData(GL_UNIFORM_BUFFER, offset, size, data));
-	unbindBuffer(GL_UNIFORM_BUFFER);
 }
 
 void gVKRenderEngine::setBufferData(GLuint buffer, const void* data, size_t size, int usage) {
-	bindBuffer(GL_UNIFORM_BUFFER, buffer);
-	G_CHECK_GL(glBufferData(GL_UNIFORM_BUFFER, size, data, usage));
-	unbindBuffer(GL_UNIFORM_BUFFER);
 }
 
 void gVKRenderEngine::setBufferRange(int index, GLuint buffer, int offset, int size) {
-	G_CHECK_GL(glBindBufferRange(GL_UNIFORM_BUFFER, index, buffer, offset, size));
 }
 
-// ----- VAO -----l
+// ----- VAO -----
 GLuint gVKRenderEngine::createVAO() {
-	GLuint vao;
-	G_CHECK_GL(glGenVertexArrays(1, &vao));
-	return vao;
+	return 0;
 }
 
 void gVKRenderEngine::deleteVAO(GLuint& vao) {
-	if(vao != 0) {
-		G_CHECK_GL(glDeleteVertexArrays(1, &vao));
-	}
 }
 
 void gVKRenderEngine::bindVAO(GLuint vao) {
-	G_CHECK_GL(glBindVertexArray(vao));
 }
 
 void gVKRenderEngine::unbindVAO() {
-	G_CHECK_GL(glBindVertexArray(0));
 }
 
 void gVKRenderEngine::setVertexBufferData(GLuint vbo, size_t size, const void* data, int usage) {
-	G_CHECK_GL(glBindBuffer(GL_ARRAY_BUFFER, vbo));
-	G_CHECK_GL(glBufferData(GL_ARRAY_BUFFER, size, data, usage));
 }
 
 void gVKRenderEngine::setIndexBufferData(GLuint ebo, size_t size, const void* data, int usage) {
-	G_CHECK_GL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo));
-	G_CHECK_GL(glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, data, usage));
 }
 
 // ----- Draw -----
 void gVKRenderEngine::drawArrays(int drawMode, int count) {
-	G_CHECK_GL(glDrawArrays(drawMode, 0, count));
 }
 
 void gVKRenderEngine::drawElements(int drawMode, int count) {
-	G_CHECK_GL(glDrawElements(drawMode, count, G_INDEX_SIZE, 0));
 }
 
 // ----- vertex attributes -----
 void gVKRenderEngine::enableVertexAttrib(int index) {
-	G_CHECK_GL(glEnableVertexAttribArray(index));
 }
 
 void gVKRenderEngine::disableVertexAttrib(int index) {
-	G_CHECK_GL(glDisableVertexAttribArray(index));
 }
 
 void gVKRenderEngine::setVertexAttribPointer(int index, int size, int type, bool normalized, int stride,
                                              const void* pointer) {
-	G_CHECK_GL(glVertexAttribPointer(index, size, type, normalized ? GL_TRUE : GL_FALSE, stride, pointer));
 }
 
 void gVKRenderEngine::setViewport(int x, int y, int width, int height) {
