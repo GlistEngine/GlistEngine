@@ -1,5 +1,8 @@
 var NAVTREEINDEX18 =
 {
+"gUtils_8h.html#a24d13730fff5ab23768c46b598932f7e":[2,0,0,8,9,75],
+"gUtils_8h.html#a2500a4466fbedde280387b72350ed15d":[2,0,0,8,9,37],
+"gUtils_8h.html#a295489476f2f5d0fe7d0ae65e7eb856c":[2,0,0,8,9,19],
 "gUtils_8h.html#a2ed85cbfd8460de76162b9456b281ec4":[2,0,0,8,9,48],
 "gUtils_8h.html#a2fe6c3daa3637fac1ee19a7cdd0ad996":[2,0,0,8,9,47],
 "gUtils_8h.html#a3032c90c64b493e8d519ce8f8dbb974d":[2,0,0,8,9,71],
@@ -101,14 +104,14 @@ var NAVTREEINDEX18 =
 "gWindowEvents_8h_source.html":[2,0,0,3,2],
 "gWindows_8h.html":[2,0,0,8,11],
 "gWindows_8h_source.html":[2,0,0,8,11],
-"globals.html":[2,1,0,0],
 "globals.html":[2,1,0],
+"globals.html":[2,1,0,0],
 "globals_a.html":[2,1,0,1],
 "globals_b.html":[2,1,0,2],
 "globals_c.html":[2,1,0,3],
 "globals_d.html":[2,1,0,4],
-"globals_defs.html":[2,1,6],
 "globals_defs.html":[2,1,6,0],
+"globals_defs.html":[2,1,6],
 "globals_defs_c.html":[2,1,6,1],
 "globals_defs_e.html":[2,1,6,2],
 "globals_defs_g.html":[2,1,6,3],
@@ -246,8 +249,5 @@ var NAVTREEINDEX18 =
 "structgRenderer_1_1gSceneLightData.html#a085ac9634fd9856eea279d671e0a10bb":[1,0,146,2,10],
 "structgRenderer_1_1gSceneLightData.html#a33134a037b7b3fc818f85fb96cc761df":[1,0,146,2,9],
 "structgRenderer_1_1gSceneLightData.html#a665ad65fd67620f1447bc82ceee28a32":[1,0,146,2,8],
-"structgRenderer_1_1gSceneLightData.html#a70a6daffbb49dd8e71938c072a2a4849":[1,0,146,2,6],
-"structgRenderer_1_1gSceneLightData.html#a7b4fb63d9e039936022413f0e72a3201":[1,0,146,2,7],
-"structgRenderer_1_1gSceneLightData.html#a810e47fb54610d2357db7f88c0db1497":[1,0,146,2,1],
-"structgRenderer_1_1gSceneLightData.html#a8ce6a13d339bf01998a1ed76e54ce658":[1,0,146,2,5]
+"structgRenderer_1_1gSceneLightData.html#a70a6daffbb49dd8e71938c072a2a4849":[1,0,146,2,6]
 };

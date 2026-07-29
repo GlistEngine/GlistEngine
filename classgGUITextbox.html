@@ -166,6 +166,12 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a83aa097d46a86437cfd86b7e0aea2892"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a313df9db46518f9842c88241656404ad" id="r_a313df9db46518f9842c88241656404ad"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgGUITextbox.html#a313df9db46518f9842c88241656404ad">getText</a> ()</td></tr>
 <tr class="separator:a313df9db46518f9842c88241656404ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4e50ee7bef151882db656a57578e743d" id="r_a4e50ee7bef151882db656a57578e743d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgGUITextbox.html#a4e50ee7bef151882db656a57578e743d">setSelection</a> (int startChar, int endChar)</td></tr>
+<tr class="separator:a4e50ee7bef151882db656a57578e743d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a33f2faa71aef57e54b252157ef331e73" id="r_a33f2faa71aef57e54b252157ef331e73"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgGUITextbox.html#a33f2faa71aef57e54b252157ef331e73">selectAll</a> ()</td></tr>
+<tr class="separator:a33f2faa71aef57e54b252157ef331e73"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ada4de8d7d3c57d173c7685c05d980e90" id="r_ada4de8d7d3c57d173c7685c05d980e90"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgGUITextbox.html#ada4de8d7d3c57d173c7685c05d980e90">getSelectedText</a> ()</td></tr>
+<tr class="separator:ada4de8d7d3c57d173c7685c05d980e90"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa689bb1a1633dd1c03bf5a2cb0e8f652" id="r_aa689bb1a1633dd1c03bf5a2cb0e8f652"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgGUITextbox.html#aa689bb1a1633dd1c03bf5a2cb0e8f652">setEditable</a> (bool <a class="el" href="classgGUITextbox.html#a508bb63272338ed3a04a1daf02ca3353">isEditable</a>)</td></tr>
 <tr class="separator:aa689bb1a1633dd1c03bf5a2cb0e8f652"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a508bb63272338ed3a04a1daf02ca3353" id="r_a508bb63272338ed3a04a1daf02ca3353"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgGUITextbox.html#a508bb63272338ed3a04a1daf02ca3353">isEditable</a> ()</td></tr>
@@ -962,6 +968,25 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a id="ada4de8d7d3c57d173c7685c05d980e90" name="ada4de8d7d3c57d173c7685c05d980e90"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ada4de8d7d3c57d173c7685c05d980e90">&#9670;&#160;</a></span>getSelectedText()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string gGUITextbox::getSelectedText </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Returns the currently selected text.</p>
+<dl class="section return"><dt>Returns</dt><dd>Selected text substring, or empty string if nothing is selected. </dd></dl>
+
+</div>
+</div>
 <a id="a313df9db46518f9842c88241656404ad" name="a313df9db46518f9842c88241656404ad"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a313df9db46518f9842c88241656404ad">&#9670;&#160;</a></span>getText()</h2>
 
@@ -1257,6 +1282,24 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Reimplemented from <a class="el" href="classgBaseGUIObject.html#a3b0f2d1d774701b3afb3ceddd30d986c">gBaseGUIObject</a>.</p>
+
+</div>
+</div>
+<a id="a33f2faa71aef57e54b252157ef331e73" name="a33f2faa71aef57e54b252157ef331e73"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a33f2faa71aef57e54b252157ef331e73">&#9670;&#160;</a></span>selectAll()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gGUITextbox::selectAll </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Selects all text in the textbox. </p>
 
 </div>
 </div>
@@ -1560,6 +1603,42 @@ Additional Inherited Members</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">isPassword</td><td>Boolean value to select between password box and textbox. If it is true, password box is active. If it is false, textbox is active. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a4e50ee7bef151882db656a57578e743d" name="a4e50ee7bef151882db656a57578e743d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4e50ee7bef151882db656a57578e743d">&#9670;&#160;</a></span>setSelection()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gGUITextbox::setSelection </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>startChar</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>endChar</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Selects a range of characters in the textbox.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">startChar</td><td>The starting character index (0-based). </td></tr>
+    <tr><td class="paramname">endChar</td><td>The ending character index (0-based). </td></tr>
   </table>
   </dd>
 </dl>
