@@ -187,6 +187,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a5d0d0569a5100a9f07950aafdd1ac9d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aed707c32ccf671c32854eb55da910541" id="r_aed707c32ccf671c32854eb55da910541"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgGUIGraph.html#aed707c32ccf671c32854eb55da910541">enableGridlinesY</a> (bool <a class="el" href="classgBaseGUIObject.html#aa5f7d18ec35e48c8c5cc08be79aa66eb">isEnabled</a>)</td></tr>
 <tr class="separator:aed707c32ccf671c32854eb55da910541"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4e0147e20111e5e0ceb07c334a53c147" id="r_a4e0147e20111e5e0ceb07c334a53c147"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgGUIGraph.html#a4e0147e20111e5e0ceb07c334a53c147">setAxislinesEnable</a> (bool xaxis, bool yaxis)</td></tr>
+<tr class="separator:a4e0147e20111e5e0ceb07c334a53c147"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a01ce10c83b5faaa2bf88ffb250701f66" id="r_a01ce10c83b5faaa2bf88ffb250701f66"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgGUIGraph.html#a01ce10c83b5faaa2bf88ffb250701f66">setTitleX</a> (std::string titleX)</td></tr>
 <tr class="separator:a01ce10c83b5faaa2bf88ffb250701f66"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adfa889f351af143e53fb1915d8bf3891" id="r_adfa889f351af143e53fb1915d8bf3891"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgGUIGraph.html#adfa889f351af143e53fb1915d8bf3891">getTitleX</a> ()</td></tr>
@@ -362,6 +364,10 @@ Protected Attributes</h2></td></tr>
 <tr class="separator:a977a2d904c25dd55cdd84ed2594b5a47"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad189595d5e3299668991ba7b23d90ee8" id="r_ad189595d5e3299668991ba7b23d90ee8"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgGUIGraph.html#ad189595d5e3299668991ba7b23d90ee8">gridlinesyenabled</a></td></tr>
 <tr class="separator:ad189595d5e3299668991ba7b23d90ee8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab8c5e89e3fd4111ea2ed08303b40f489" id="r_ab8c5e89e3fd4111ea2ed08303b40f489"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgGUIGraph.html#ab8c5e89e3fd4111ea2ed08303b40f489">isxaxislinenable</a></td></tr>
+<tr class="separator:ab8c5e89e3fd4111ea2ed08303b40f489"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a24fb923a7ef753f21de35173de551766" id="r_a24fb923a7ef753f21de35173de551766"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgGUIGraph.html#a24fb923a7ef753f21de35173de551766">yaxislenable</a></td></tr>
+<tr class="separator:a24fb923a7ef753f21de35173de551766"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3e60779ba1c38c4807f90c6e44a6893a" id="r_a3e60779ba1c38c4807f90c6e44a6893a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgGUIGraph.html#a3e60779ba1c38c4807f90c6e44a6893a">floatlabelsenabled</a></td></tr>
 <tr class="separator:a3e60779ba1c38c4807f90c6e44a6893a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a56615b3efd195c3f3dbd377c103931a8" id="r_a56615b3efd195c3f3dbd377c103931a8"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgGUIGraph.html#a56615b3efd195c3f3dbd377c103931a8">labelcountx</a></td></tr>
@@ -1035,6 +1041,34 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a id="a4e0147e20111e5e0ceb07c334a53c147" name="a4e0147e20111e5e0ceb07c334a53c147"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4e0147e20111e5e0ceb07c334a53c147">&#9670;&#160;</a></span>setAxislinesEnable()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gGUIGraph::setAxislinesEnable </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>xaxis</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>yaxis</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="aed1c2d6c01a9df41e6798c38ca88e9b1" name="aed1c2d6c01a9df41e6798c38ca88e9b1"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aed1c2d6c01a9df41e6798c38ca88e9b1">&#9670;&#160;</a></span>setLabelCountX()</h2>
 
@@ -1518,6 +1552,28 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a id="ab8c5e89e3fd4111ea2ed08303b40f489" name="ab8c5e89e3fd4111ea2ed08303b40f489"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab8c5e89e3fd4111ea2ed08303b40f489">&#9670;&#160;</a></span>isxaxislinenable</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool gGUIGraph::isxaxislinenable</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a56615b3efd195c3f3dbd377c103931a8" name="a56615b3efd195c3f3dbd377c103931a8"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a56615b3efd195c3f3dbd377c103931a8">&#9670;&#160;</a></span>labelcountx</h2>
 
@@ -1793,6 +1849,28 @@ Additional Inherited Members</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname">float gGUIGraph::smallestvaluey</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a24fb923a7ef753f21de35173de551766" name="a24fb923a7ef753f21de35173de551766"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a24fb923a7ef753f21de35173de551766">&#9670;&#160;</a></span>yaxislenable</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool gGUIGraph::yaxislenable</td>
         </tr>
       </table>
   </td>

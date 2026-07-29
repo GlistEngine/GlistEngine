@@ -23,7 +23,7 @@ var searchData=
   ['maxrownum_20',['maxrownum',['../classgGUIGrid.html#abeea03f884bf1a6736cdb9f2d29353ad',1,'gGUIGrid']]],
   ['maxtoolbarnum_21',['maxtoolbarnum',['../classgGUIForm.html#a56543b568ebac328df716f4e00d18809',1,'gGUIForm']]],
   ['maxx_22',['maxx',['../classgBoundingBox.html#a8f082ab10642164ed58b32406936b50b',1,'gBoundingBox::maxX()'],['../classgGUIGraph.html#a92e205688610f484d99ff2f8ad1ac414',1,'gGUIGraph::maxx']]],
-  ['maxy_23',['maxy',['../classgGUIGraph.html#ac691e84ee63e055cf33af61a29d2c4ac',1,'gGUIGraph::maxy'],['../classgBoundingBox.html#ac83306df2895c605213168111917474b',1,'gBoundingBox::maxY() const']]],
+  ['maxy_23',['maxy',['../classgBoundingBox.html#ac83306df2895c605213168111917474b',1,'gBoundingBox::maxY()'],['../classgGUIGraph.html#ac691e84ee63e055cf33af61a29d2c4ac',1,'gGUIGraph::maxy']]],
   ['maxz_24',['maxZ',['../classgBoundingBox.html#a3f47cb815a6e9ed52f312dd93bc1bd79',1,'gBoundingBox']]],
   ['menubar_25',['menubar',['../classgGUIForm.html#a1d1b26df6b6c8e8b800ab8b66bd9a6c2',1,'gGUIForm']]],
   ['menuboxh_26',['menuboxh',['../classgGUIMenuItem.html#acbba6e55e798f42ab820fad426800621',1,'gGUIMenuItem']]],

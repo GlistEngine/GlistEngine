@@ -65,5 +65,6 @@ var searchData=
   ['istextureallocated_62',['istextureallocated',['../classgTexture.html#aab9d161137770ed0e1d7d1279171b724',1,'gTexture']]],
   ['istextvisible_63',['istextvisible',['../classgGUIButton.html#ac5dafee1d7e16efca2e774a5384ce5e8',1,'gGUIButton']]],
   ['istitleon_64',['istitleon',['../classgBaseGUIObject.html#a1c577519d4e3ed1ab170afcc0b194d76',1,'gBaseGUIObject']]],
-  ['istoggle_65',['istoggle',['../classgGUIButton.html#a33c134f73e5732de78f195a38e2fb44d',1,'gGUIButton']]]
+  ['istoggle_65',['istoggle',['../classgGUIButton.html#a33c134f73e5732de78f195a38e2fb44d',1,'gGUIButton']]],
+  ['isxaxislinenable_66',['isxaxislinenable',['../classgGUIGraph.html#ab8c5e89e3fd4111ea2ed08303b40f489',1,'gGUIGraph']]]
 ];
