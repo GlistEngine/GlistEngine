@@ -368,11 +368,15 @@ bool gGLFWWindow::getShouldClose() {
 void gGLFWWindow::update() {
 	G_PROFILE_ZONE_SCOPED_N("gGLFWWindow::update()");
 	// End window drawing. A GLFW_NO_API window (Vulkan) owns no buffers to swap,
-	// and asking GLFW to swap them raises GLFW_NO_WINDOW_CONTEXT.
+	// and asking GLFW to swap them raises GLFW_NO_WINDOW_CONTEXT. The GL error
+	// checks are skipped along with it: without a context every glGetError call
+	// reports GL_INVALID_OPERATION, which would flood the log in debug builds.
 	if(appmanager == nullptr || appmanager->getRenderEngine() != G_RENDERER_VK) {
 		G_CHECK_GL(glfwSwapBuffers(window));
+		G_CHECK_GL(glfwPollEvents());
+	} else {
+		glfwPollEvents();
 	}
-	G_CHECK_GL(glfwPollEvents());
 }
 
 void gGLFWWindow::close() {

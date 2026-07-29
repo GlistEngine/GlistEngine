@@ -554,10 +554,14 @@ void gAppManager::tick() {
         return;
     }
 
-    // The Vulkan backend initialises only: there is no GL context and no Vulkan
-    // frame path yet, so the frame body is skipped. Events are still polled so the
-    // window stays responsive and closable.
+    // The Vulkan backend presents a cleared frame of its own. The engine's drawing
+    // code is still OpenGL only, so nothing is recorded between the two calls yet
+    // and the rest of the frame body stays skipped.
     if(renderengine == G_RENDERER_VK) {
+        if(renderer != nullptr && renderer->beginFrame()) {
+            renderer->endFrame();
+            totaldraws++;
+        }
         if(inputmanager) inputmanager->update();
         window->update();
         executeQueue();
