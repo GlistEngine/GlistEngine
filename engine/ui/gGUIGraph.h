@@ -65,6 +65,8 @@ public:
 	void enableGridlinesX(bool isEnabled);
 	void enableGridlinesY(bool isEnabled);
 
+	void setAxislinesEnable(bool xaxis, bool yaxis);
+
 	void setTitleX(std::string titleX);
 	std::string getTitleX();
 	void setTitleY(std::string titleY);
@@ -90,6 +92,7 @@ protected:
 	float maxy, miny, maxx, minx;
 	float largestvaluex, largestvaluey, smallestvaluex, smallestvaluey;
 	bool gridlinesxenabled, gridlinesyenabled;
+	bool isxaxislinenable, yaxislenable;
 	bool floatlabelsenabled;
 	int labelcountx, labelcounty;
 	int rangestart, rangeend;
