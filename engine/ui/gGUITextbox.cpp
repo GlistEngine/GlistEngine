@@ -112,6 +112,10 @@ gGUITextbox::gGUITextbox() {
 
 	widthexceeded = false;
 	widthAdjusmentDelay = 0;
+
+	hinttextcolor.set(0.6f, 0.6f, 0.6f, 1.0f);
+	hinttext.setTextColor(hinttextcolor);
+	hinttext.setTextVerticalAlignment(gGUIText::TEXTVERTICALALIGNMENT_TOP);
 }
 
 
@@ -141,6 +145,7 @@ void gGUITextbox::set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseG
 		lastutf = calculateLastUtf();
 		if(ismultiline) calculateLines();
 	}
+	hinttext.set(root, topParentGUIObject, parentGUIObject, parentSlotLineNo, parentSlotColumnNo, x + initx, y + hdiff, w - 2 * initx, h);
 }
 
 void gGUITextbox::setText(const std::string& text) {
@@ -524,7 +529,7 @@ void gGUITextbox::draw() {
 			if(lastdrawnline > rowsnum) lastline = rowsnum;
 			else
 				lastline = lastdrawnline;
-			gDrawRectangle(left - firstx + initx, top + hdiff + linetopmargin / 2 - firsty + 1, boxw - 2 * initx + 2, (lastline + 1) * (lineheight + linetopmargin), true);
+			gDrawRectangle(left - firstx + initx, top + hdiff + linetopmargin / 2 - firsty + 1, boxw - 2 * initx + 2, (lastline + 1) * (lineheight + linetopmargin) + 4, true);
 		} else if(ismultiline) {
 			int u1 = std::min(selectionposutf1, selectionposutf2);
 			int u2 = std::max(selectionposutf1, selectionposutf2);
@@ -547,7 +552,7 @@ void gGUITextbox::draw() {
 
 						int rectX = left + initx + x1 - firstx;
 						int rectY = top + hdiff + (i + 1) * (lineheight + linetopmargin) - lineheight - firsty + 1;
-						gDrawRectangle(rectX, rectY, boxW + 2, lineheight + linetopmargin - 1, true);
+						gDrawRectangle(rectX, rectY, boxW + 2, lineheight + linetopmargin + 3, true);
 					}
 				}
 			}
@@ -560,8 +565,8 @@ void gGUITextbox::draw() {
 			int x1 = textfont->getStringWidth(text.substr(firstutf, std::max(0, selStart - firstutf)));
 			int x2 = textfont->getStringWidth(text.substr(firstutf, std::max(0, selEnd - firstutf)));
 			int rectX = left + initx + x1 - firstx;
-			int rectY = top + hdiff + lineheight / 4 - firsty;
-			gDrawRectangle(rectX, rectY, (x2 - x1) + 2, lineheight + linetopmargin, true);
+			int rectY = top + hdiff + lineheight / 6 - firsty;
+			gDrawRectangle(rectX, rectY, (x2 - x1) + 2, lineheight + linetopmargin + 4, true);
 		}
 	}
 	if(!colorset) textcolor = fontcolor;
@@ -575,6 +580,11 @@ void gGUITextbox::draw() {
 		int dotlimit = (right - left) / (3 * dotradius) - 1;
 		if(dotlimit > text.size()) dotlimit = text.size();
 		for(int i = 0; i < dotlimit; i++) gDrawCircle(left + dotinit + i * dotlen, doty, dotradius, true);
+	} else if(text.empty() && !hinttext.getText().empty()) {
+		int hinty = top + hdiff + linetopmargin + lineheight - textfont->getSize() - firsty;
+		int hintx = left - textfont->getStringWidth(" ") / 2 - firstx + textalignmentamount;
+		hinttext.set(root, topparent, parent, parentslotlineno, parentslotcolumnno, hintx, hinty, width - 2 * initx, totalh);
+		hinttext.draw();
 	} else if(rowsnum == 1 && !ismultiline) {
 		textfont->drawText(text.substr(firstutf, lastutf), left - textfont->getStringWidth(" ") / 2 - firstx + textalignmentamount - (textfont->getStringWidth(text) * ((float) textalignment / 2)), top + hdiff + lineheight + linetopmargin - firsty);
 	} else {
@@ -2429,4 +2439,21 @@ void gGUITextbox::resetCursorPosition() {
 		if(start + count > text.length()) count = text.length() - start;
 		cursorposx = cursoroffset + textfont->getStringWidth(text.substr(start, count));
 	}
+}
+
+void gGUITextbox::setHintText(const std::string& hintText) {
+	hinttext.setText(hintText);
+}
+
+gGUIText* gGUITextbox::getHintText() {
+	return &hinttext;
+}
+
+void gGUITextbox::setHintTextColor(const gColor& color) {
+	hinttextcolor = color;
+	hinttext.setTextColor(hinttextcolor);
+}
+
+gGUIText* gGUITextbox::getHintTextObject() {
+	return &hinttext;
 }
