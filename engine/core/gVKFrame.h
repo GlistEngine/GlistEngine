@@ -3,7 +3,7 @@
  *
  * The Vulkan frame loop: acquire an image, record the command buffer, submit it
  * and present the result. This is the module the engine's main loop drives.
- * Owner: Mehmet.
+ * Created by: Mehmet Fatih Okur.
  */
 
 #pragma once

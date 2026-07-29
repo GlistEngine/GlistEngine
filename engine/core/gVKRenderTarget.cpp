@@ -2,7 +2,6 @@
  * gVKRenderTarget.cpp
  *
  * Render pass and framebuffers of the Vulkan backend.
- * See VULKAN_RENDERING_GOREV_DAGILIMI.md section 5.3 for the locked decisions.
  */
 
 #include "gVKRenderTarget.h"

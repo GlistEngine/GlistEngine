@@ -1,8 +1,7 @@
 /*
  * gVKSwapchain.cpp
  *
- * Swapchain, its image views and the resize path. Owner: Burak.
- * See VULKAN_RENDERING_GOREV_DAGILIMI.md section 5.4 for the locked decisions.
+ * Swapchain, its image views and the resize path. Created by: Veysel Burak Eroglu.
  */
 
 #include "gVKSwapchain.h"

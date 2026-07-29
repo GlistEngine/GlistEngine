@@ -2,7 +2,7 @@
  * gVKSwapchain.h
  *
  * Swapchain, its image views and the resize path of the Vulkan backend.
- * Owner: Burak.
+ * Created by: Veysel Burak Eroglu.
  */
 
 #pragma once

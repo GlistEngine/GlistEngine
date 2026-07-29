@@ -4,7 +4,7 @@
  * Render pass and framebuffers of the Vulkan backend. The render pass is what
  * actually clears the screen: its colour attachment uses a CLEAR load operation,
  * so the clear value handed to vkCmdBeginRenderPass is written by the GPU.
- * Owner: Anil.
+ * Created by: Anil Emre Akkoc.
  */
 
 #pragma once

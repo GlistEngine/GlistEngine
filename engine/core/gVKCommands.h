@@ -4,7 +4,7 @@
  * Command pool and command buffers of the Vulkan backend. Vulkan never executes a
  * command directly: commands are recorded into a command buffer and submitted to a
  * queue as a batch.
- * Owner: Efe.
+ * Created by: Efe Arda Palali.
  */
 
 #pragma once

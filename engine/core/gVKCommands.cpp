@@ -2,7 +2,6 @@
  * gVKCommands.cpp
  *
  * Command pool and command buffers of the Vulkan backend.
- * See VULKAN_RENDERING_GOREV_DAGILIMI.md section 5.2 for the locked decisions.
  */
 
 #include "gVKCommands.h"
