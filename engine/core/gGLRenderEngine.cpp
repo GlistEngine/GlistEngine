@@ -266,6 +266,14 @@ void gGLRenderEngine::drawElements(int drawMode, int count) {
 	G_CHECK_GL(glDrawElements(drawMode, count, G_INDEX_SIZE, 0));
 }
 
+void gGLRenderEngine::drawArraysInstanced(int drawMode, int count, int instanceCount) {
+    G_CHECK_GL(glDrawArraysInstanced(drawMode, 0, count, instanceCount));
+}
+
+void gGLRenderEngine::drawElementsInstanced(int drawMode, int count, int instanceCount) {
+    G_CHECK_GL(glDrawElementsInstanced(drawMode, count, G_INDEX_SIZE, 0, instanceCount));
+}
+
 // ----- vertex attributes -----
 void gGLRenderEngine::enableVertexAttrib(int index) {
 	G_CHECK_GL(glEnableVertexAttribArray(index));
@@ -278,6 +286,10 @@ void gGLRenderEngine::disableVertexAttrib(int index) {
 void gGLRenderEngine::setVertexAttribPointer(int index, int size, int type, bool normalized, int stride,
                                              const void* pointer) {
 	G_CHECK_GL(glVertexAttribPointer(index, size, type, normalized ? GL_TRUE : GL_FALSE, stride, pointer));
+}
+
+void gGLRenderEngine::setVertexAttribDivisor(int index, int divisor) {
+    G_CHECK_GL(glVertexAttribDivisor(index, divisor));
 }
 
 void gGLRenderEngine::setViewport(int x, int y, int width, int height) {

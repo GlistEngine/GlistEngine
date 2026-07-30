@@ -260,6 +260,12 @@ void gVKRenderEngine::drawArrays(int drawMode, int count) {
 void gVKRenderEngine::drawElements(int drawMode, int count) {
 }
 
+void gVKRenderEngine::drawArraysInstanced(int drawMode, int count, int instanceCount) {
+}
+
+void gVKRenderEngine::drawElementsInstanced(int drawMode, int count, int instanceCount) {
+}
+
 // ----- vertex attributes -----
 void gVKRenderEngine::enableVertexAttrib(int index) {
 }
@@ -269,6 +275,9 @@ void gVKRenderEngine::disableVertexAttrib(int index) {
 
 void gVKRenderEngine::setVertexAttribPointer(int index, int size, int type, bool normalized, int stride,
                                              const void* pointer) {
+}
+
+void gVKRenderEngine::setVertexAttribDivisor(int index, int divisor) {
 }
 
 void gVKRenderEngine::setViewport(int x, int y, int width, int height) {
