@@ -291,6 +291,14 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a0b37acf5538bd8043e512c8c497ad594"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a77abae2520f304935922d40a20613d74" id="r_a77abae2520f304935922d40a20613d74"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a77abae2520f304935922d40a20613d74">endFrame</a> ()</td></tr>
 <tr class="separator:a77abae2520f304935922d40a20613d74"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa54bbaeb280b3636715c34eafc15820d" id="r_aa54bbaeb280b3636715c34eafc15820d"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#aa54bbaeb280b3636715c34eafc15820d">getRenderEngineType</a> () const</td></tr>
+<tr class="separator:aa54bbaeb280b3636715c34eafc15820d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1342a46ef980da2945be90a9d3260699" id="r_a1342a46ef980da2945be90a9d3260699"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a1342a46ef980da2945be90a9d3260699">isVulkan</a> () const</td></tr>
+<tr class="separator:a1342a46ef980da2945be90a9d3260699"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9417c364ebcbfa50016c49b9b4712a77" id="r_a9417c364ebcbfa50016c49b9b4712a77"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a9417c364ebcbfa50016c49b9b4712a77">drawColored2D</a> (const glm::vec2 *points, int count, const glm::vec4 &amp;color, const glm::mat4 &amp;mvp, bool lineLoop=false)</td></tr>
+<tr class="separator:a9417c364ebcbfa50016c49b9b4712a77"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4d83764efc687add25a8a4cc5f5893a2" id="r_a4d83764efc687add25a8a4cc5f5893a2"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a4d83764efc687add25a8a4cc5f5893a2">drawTexturedRect2D</a> (GLuint textureId, const glm::vec4 &amp;tint, const glm::mat4 &amp;mvp)</td></tr>
+<tr class="separator:a4d83764efc687add25a8a4cc5f5893a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a143b0f6ffa8b00675cdceb8fdbcfce4d" id="r_a143b0f6ffa8b00675cdceb8fdbcfce4d"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a143b0f6ffa8b00675cdceb8fdbcfce4d">clear</a> ()=0</td></tr>
 <tr class="separator:a143b0f6ffa8b00675cdceb8fdbcfce4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a789b1047f3a01e2a1debea7198fe8406" id="r_a789b1047f3a01e2a1debea7198fe8406"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a789b1047f3a01e2a1debea7198fe8406">clearColor</a> (int <a class="el" href="gColor_8h.html#a4788d82c901b9367dd5c0daff8a7616b">r</a>, int <a class="el" href="gColor_8h.html#a8cf17d727651616de6f2b79ef32170cd">g</a>, int <a class="el" href="gColor_8h.html#a83fc1af92e29717b4513d121b0c72c7d">b</a>, int <a class="el" href="gColor_8h.html#a4aec1a5be9d9a4a394a2e49e9744286e">a</a>=255)=0</td></tr>
@@ -901,8 +909,10 @@ Static Protected Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-attribs" name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
-<tr class="memitem:ad06641dad9bc5f25c696b942c0f039eb" id="r_ad06641dad9bc5f25c696b942c0f039eb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgColor.html">gColor</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#ad06641dad9bc5f25c696b942c0f039eb">rendercolor</a></td></tr>
+<tr class="memitem:ad06641dad9bc5f25c696b942c0f039eb" id="r_ad06641dad9bc5f25c696b942c0f039eb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgColor.html">gColor</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#ad06641dad9bc5f25c696b942c0f039eb">rendercolor</a> = nullptr</td></tr>
 <tr class="separator:ad06641dad9bc5f25c696b942c0f039eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4470c579b669edfd6e5240a58881d6ac" id="r_a4470c579b669edfd6e5240a58881d6ac"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a4470c579b669edfd6e5240a58881d6ac">renderenginetype</a> = <a class="el" href="gConstants_8h.html#a3e3784edebe4255370a83311c7c49bdc">G_RENDERER_GL</a></td></tr>
+<tr class="separator:a4470c579b669edfd6e5240a58881d6ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad57528669488f2d772b5b09ca23bf2d2" id="r_ad57528669488f2d772b5b09ca23bf2d2"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#ad57528669488f2d772b5b09ca23bf2d2">isfogenabled</a></td></tr>
 <tr class="separator:ad57528669488f2d772b5b09ca23bf2d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9a472221f9b621503831395c7f9ff5d9" id="r_a9a472221f9b621503831395c7f9ff5d9"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a9a472221f9b621503831395c7f9ff5d9">fogno</a></td></tr>
@@ -921,9 +931,9 @@ Protected Attributes</h2></td></tr>
 <tr class="separator:ae53d87b61000b5f032783539c159ecad"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aad0a82299e8c4f80db8da78571971599" id="r_aad0a82299e8c4f80db8da78571971599"><td class="memItemLeft" align="right" valign="top">std::deque&lt; <a class="el" href="classgLight.html">gLight</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#aad0a82299e8c4f80db8da78571971599">scenelights</a></td></tr>
 <tr class="separator:aad0a82299e8c4f80db8da78571971599"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a29edd635a7d965bb1bca94c3fb67e299" id="r_a29edd635a7d965bb1bca94c3fb67e299"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgUbo.html">gUbo</a>&lt; <a class="el" href="structgRenderer_1_1gSceneLights.html">gSceneLights</a> &gt; *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a29edd635a7d965bb1bca94c3fb67e299">lightsubo</a></td></tr>
+<tr class="memitem:a29edd635a7d965bb1bca94c3fb67e299" id="r_a29edd635a7d965bb1bca94c3fb67e299"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgUbo.html">gUbo</a>&lt; <a class="el" href="structgRenderer_1_1gSceneLights.html">gSceneLights</a> &gt; *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a29edd635a7d965bb1bca94c3fb67e299">lightsubo</a> = nullptr</td></tr>
 <tr class="separator:a29edd635a7d965bb1bca94c3fb67e299"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a85ee2f7350adee1a9992bbc66f2abd5d" id="r_a85ee2f7350adee1a9992bbc66f2abd5d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgUbo.html">gUbo</a>&lt; <a class="el" href="structgRenderer_1_1gSceneData.html">gSceneData</a> &gt; *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a85ee2f7350adee1a9992bbc66f2abd5d">sceneubo</a></td></tr>
+<tr class="memitem:a85ee2f7350adee1a9992bbc66f2abd5d" id="r_a85ee2f7350adee1a9992bbc66f2abd5d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgUbo.html">gUbo</a>&lt; <a class="el" href="structgRenderer_1_1gSceneData.html">gSceneData</a> &gt; *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a85ee2f7350adee1a9992bbc66f2abd5d">sceneubo</a> = nullptr</td></tr>
 <tr class="separator:a85ee2f7350adee1a9992bbc66f2abd5d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0221132641799bf8a50584dc546b566a" id="r_a0221132641799bf8a50584dc546b566a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a0221132641799bf8a50584dc546b566a">islightingenabled</a></td></tr>
 <tr class="separator:a0221132641799bf8a50584dc546b566a"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -2936,6 +2946,62 @@ Friends</h2></td></tr>
 
 </div>
 </div>
+<a id="a9417c364ebcbfa50016c49b9b4712a77" name="a9417c364ebcbfa50016c49b9b4712a77"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9417c364ebcbfa50016c49b9b4712a77">&#9670;&#160;</a></span>drawColored2D()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void gRenderer::drawColored2D </td>
+          <td>(</td>
+          <td class="paramtype">const glm::vec2 *&#160;</td>
+          <td class="paramname"><em>points</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>count</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const glm::vec4 &amp;&#160;</td>
+          <td class="paramname"><em>color</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const glm::mat4 &amp;&#160;</td>
+          <td class="paramname"><em>mvp</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>lineLoop</em> = <code>false</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reimplemented in <a class="el" href="classgVKRenderEngine.html#aeb70eaf132b96fdefbbe739ef5c929e9">gVKRenderEngine</a>.</p>
+
+</div>
+</div>
 <a id="ab207c65ba66b88dbd4f7aec56aa12945" name="ab207c65ba66b88dbd4f7aec56aa12945"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ab207c65ba66b88dbd4f7aec56aa12945">&#9670;&#160;</a></span>drawCone()</h2>
 
@@ -3970,6 +4036,50 @@ Friends</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+</div>
+</div>
+<a id="a4d83764efc687add25a8a4cc5f5893a2" name="a4d83764efc687add25a8a4cc5f5893a2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4d83764efc687add25a8a4cc5f5893a2">&#9670;&#160;</a></span>drawTexturedRect2D()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void gRenderer::drawTexturedRect2D </td>
+          <td>(</td>
+          <td class="paramtype">GLuint&#160;</td>
+          <td class="paramname"><em>textureId</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const glm::vec4 &amp;&#160;</td>
+          <td class="paramname"><em>tint</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const glm::mat4 &amp;&#160;</td>
+          <td class="paramname"><em>mvp</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reimplemented in <a class="el" href="classgVKRenderEngine.html#a28e622db445a1d77e5ff693270d93353">gVKRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -5377,6 +5487,31 @@ Friends</h2></td></tr>
           <td> const</td>
         </tr>
       </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aa54bbaeb280b3636715c34eafc15820d" name="aa54bbaeb280b3636715c34eafc15820d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa54bbaeb280b3636715c34eafc15820d">&#9670;&#160;</a></span>getRenderEngineType()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int gRenderer::getRenderEngineType </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 </div>
@@ -6809,6 +6944,31 @@ Friends</h2></td></tr>
           <td></td>
         </tr>
       </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a1342a46ef980da2945be90a9d3260699" name="a1342a46ef980da2945be90a9d3260699"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1342a46ef980da2945be90a9d3260699">&#9670;&#160;</a></span>isVulkan()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool gRenderer::isVulkan </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 </div>
@@ -11395,7 +11555,7 @@ Friends</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classgUbo.html">gUbo</a>&lt;<a class="el" href="structgRenderer_1_1gSceneLights.html">gSceneLights</a>&gt;* gRenderer::lightsubo</td>
+          <td class="memname"><a class="el" href="classgUbo.html">gUbo</a>&lt;<a class="el" href="structgRenderer_1_1gSceneLights.html">gSceneLights</a>&gt;* gRenderer::lightsubo = nullptr</td>
         </tr>
       </table>
   </td>
@@ -11637,7 +11797,29 @@ Friends</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classgColor.html">gColor</a>* gRenderer::rendercolor</td>
+          <td class="memname"><a class="el" href="classgColor.html">gColor</a>* gRenderer::rendercolor = nullptr</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a4470c579b669edfd6e5240a58881d6ac" name="a4470c579b669edfd6e5240a58881d6ac"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4470c579b669edfd6e5240a58881d6ac">&#9670;&#160;</a></span>renderenginetype</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int gRenderer::renderenginetype = <a class="el" href="gConstants_8h.html#a3e3784edebe4255370a83311c7c49bdc">G_RENDERER_GL</a></td>
         </tr>
       </table>
   </td>
@@ -11703,7 +11885,7 @@ Friends</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classgUbo.html">gUbo</a>&lt;<a class="el" href="structgRenderer_1_1gSceneData.html">gSceneData</a>&gt;* gRenderer::sceneubo</td>
+          <td class="memname"><a class="el" href="classgUbo.html">gUbo</a>&lt;<a class="el" href="structgRenderer_1_1gSceneData.html">gSceneData</a>&gt;* gRenderer::sceneubo = nullptr</td>
         </tr>
       </table>
   </td>
