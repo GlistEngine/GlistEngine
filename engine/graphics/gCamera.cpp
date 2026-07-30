@@ -43,7 +43,11 @@ gCamera::~gCamera() {
 
 void gCamera::begin() {
 	G_PROFILE_ZONE_SCOPED_N("gCamera::begin()");
-	if (renderer->isSSAOEnabled() && renderer->isSSAOAllocated()) renderer->beginSSAO();
+#if !(TARGET_OS_IPHONE || TARGET_OS_SIMULATOR)
+    if (renderer->isSSAOEnabled() && renderer->isSSAOAllocated()) {
+        renderer->beginSSAO();
+    }
+#endif
 	renderer->backupMatrices();
 	float aspect = (float)renderer->getWidth() / (float)renderer->getHeight();
 	float fovY = glm::radians(fov);
@@ -70,7 +74,11 @@ void gCamera::begin() {
 
 void gCamera::end() {
 	G_PROFILE_ZONE_SCOPED_N("gCamera::end()");
-	if (renderer->isSSAOEnabled()) renderer->endSSAO();
+#if !(TARGET_OS_IPHONE || TARGET_OS_SIMULATOR)
+    if (renderer->isSSAOEnabled() && renderer->isSSAOAllocated()) {
+        renderer->endSSAO();
+    }
+#endif
 	renderer->restoreMatrices();
 	renderer->setCamera(nullptr);
 	renderer->updateScene();

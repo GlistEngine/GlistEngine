@@ -27,7 +27,7 @@ class gImage;
 
 class gBaseWindow : public gObject {
 public:
-
+	static const int VIRTUAL_GAMEPAD_ID = 15;
 	static const int WINDOWMODE_NONE = -1, WINDOWMODE_GAME = 0, WINDOWMODE_FULLSCREEN = 1, WINDOWMODE_APP = 2, WINDOWMODE_FULLSCREENGUIAPP = 3, WINDOWMODE_GUIAPP = 4;
 	static const int CURSOR_ARROW = 0, CURSOR_IBEAM = 1, CURSOR_CROSSHAIR = 2, CURSOR_HAND = 3, CURSOR_HRESIZE = 4, CURSOR_VRESIZE = 5, CURSOR_CUSTOM = 6;
 
@@ -143,7 +143,25 @@ public:
 	virtual bool isJoystickPresent(int joystickId);
     virtual bool isGamepadButtonPressed(int joystickId, int buttonId);
 	virtual const float* getJoystickAxes(int joystickId, int* axisCountPtr);
+    /**
+     * Updates a virtual gamepad connection state.
+     *
+     * Mobile window implementations can override this function and expose
+     * touchscreen controls through the existing gamepad input system.
+     */
+    virtual void setVirtualGamepadConnected(int gamepadId, bool connected);
 
+    /**
+     * Updates one axis of a virtual gamepad.
+     *
+     * Axis values are expected to be between -1.0f and 1.0f.
+     */
+    virtual void setVirtualGamepadAxis(int gamepadId, int axisId, float value);
+
+    /**
+     * Updates one button of a virtual gamepad.
+     */
+    virtual void setVirtualGamepadButton(int gamepadId, int buttonId, bool pressed);
 public:
 	bool vsync;
 
