@@ -3,6 +3,7 @@ var classgGUIText =
     [ "gGUIText", "classgGUIText.html#af9cedf71bbdaa229911950a827a7df08", null ],
     [ "~gGUIText", "classgGUIText.html#a7c414b9688346ad594b4f2f8c58d5c38", null ],
     [ "draw", "classgGUIText.html#ac6c6e7ad8a5d1eda8ba8a96940cd90ca", null ],
+    [ "getHasContent", "classgGUIText.html#a620dd0564fbd8781603bba4d0d2467e4", null ],
     [ "getText", "classgGUIText.html#a5d62be43ece08ff362063b5863caf2ca", null ],
     [ "getTextAlignment", "classgGUIText.html#aa54759cf9c98c35bcf652a550ad161bf", null ],
     [ "getTextColor", "classgGUIText.html#aff31b000aa5a2d254ffe8783aaa0582d", null ],
