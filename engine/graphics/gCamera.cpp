@@ -43,11 +43,7 @@ gCamera::~gCamera() {
 
 void gCamera::begin() {
 	G_PROFILE_ZONE_SCOPED_N("gCamera::begin()");
-#if !(TARGET_OS_IPHONE || TARGET_OS_SIMULATOR)
-    if (renderer->isSSAOEnabled() && renderer->isSSAOAllocated()) {
-        renderer->beginSSAO();
-    }
-#endif
+	if (renderer->isSSAOEnabled() && renderer->isSSAOAllocated()) renderer->beginSSAO();
 	renderer->backupMatrices();
 	float aspect = (float)renderer->getWidth() / (float)renderer->getHeight();
 	float fovY = glm::radians(fov);
@@ -74,11 +70,7 @@ void gCamera::begin() {
 
 void gCamera::end() {
 	G_PROFILE_ZONE_SCOPED_N("gCamera::end()");
-#if !(TARGET_OS_IPHONE || TARGET_OS_SIMULATOR)
-    if (renderer->isSSAOEnabled() && renderer->isSSAOAllocated()) {
-        renderer->endSSAO();
-    }
-#endif
+	if (renderer->isSSAOEnabled()) renderer->endSSAO();
 	renderer->restoreMatrices();
 	renderer->setCamera(nullptr);
 	renderer->updateScene();
@@ -122,19 +114,19 @@ void gCamera::setPosition(const glm::vec3 pv) {
 
 void gCamera::dolly(float distance) {
 	gNode::dolly(distance);
-	lookposition += normalize(glm::vec3(localtransformationmatrix[2])) * distance;
+	lookposition += normalize(glm::vec3(localtransformationmatrix.back()[2])) * distance;
 	processLookMatrix();
 }
 
 void gCamera::truck(float distance) {
 	gNode::truck(distance);
-	lookposition += normalize(glm::vec3(localtransformationmatrix[0])) * distance;
+	lookposition += normalize(glm::vec3(localtransformationmatrix.back()[0])) * distance;
 	processLookMatrix();
 }
 
 void gCamera::boom(float distance) {
 	gNode::boom(distance);
-	lookposition += normalize(glm::vec3(localtransformationmatrix[1])) * distance;
+	lookposition += normalize(glm::vec3(localtransformationmatrix.back()[1])) * distance;
 	processLookMatrix();
 }
 

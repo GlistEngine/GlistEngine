@@ -204,7 +204,7 @@ void gMesh::drawStart() {
 	G_PROFILE_ZONE_SCOPED_N("gMesh::drawStart()");
 	if (isshadowmappingenabled && renderpassno == 0) {
 		renderer->getShadowmapShader()->use();
-		renderer->getShadowmapShader()->setMat4("model", localtransformationmatrix);
+		renderer->getShadowmapShader()->setMat4("model", localtransformationmatrix.back());
 		return;
 	}
 
@@ -251,13 +251,13 @@ void gMesh::drawStart() {
 	    } else {
 		    colorshader.setMat4("projection", renderer->getProjectionMatrix());
 	    }
-		colorshader.setMat4("model", localtransformationmatrix);
+		colorshader.setMat4("model", localtransformationmatrix.back());
     } else { // isPBR
     	gShader& pbrshader = *renderer->getPbrShader();
     	pbrshader.use();
     	pbrshader.setMat4("projection", renderer->getProjectionMatrix());
 	    pbrshader.setMat4("view", renderer->getViewMatrix());
-    	pbrshader.setMat4("model", localtransformationmatrix);
+    	pbrshader.setMat4("model", localtransformationmatrix.back());
     	pbrshader.setVec3("camPos", renderer->getCameraPosition());
     	pbrshader.setInt("albedoMap", 3);
     	pbrshader.setInt("normalMap", 4);
@@ -333,7 +333,7 @@ void gMesh::recalculateBoundingBox() {
 	}
 
 	// Calculate the local bounding box
-	glm::vec4 pos1 = localtransformationmatrix * glm::vec4(verts[0].position, 1.0f);
+	glm::vec4 pos1 = localtransformationmatrix.back() * glm::vec4(verts[0].position, 1.0f);
 
 	float minx = pos1.x, miny = pos1.y, minz = pos1.z;
 	float maxx = pos1.x, maxy = pos1.y, maxz = pos1.z;
@@ -343,7 +343,7 @@ void gMesh::recalculateBoundingBox() {
 	__m128 maxvals = _mm_set_ps(maxz, maxy, maxx, 0);
 
 	for (size_t i = 1; i < vertices->size(); ++i) {
-		glm::vec4 pos = localtransformationmatrix * glm::vec4(verts[i].position, 1.0f);
+		glm::vec4 pos = localtransformationmatrix.back() * glm::vec4(verts[i].position, 1.0f);
 		__m128 current = _mm_set_ps(pos.z, pos.y, pos.x, 0);
 
 		minvals = _mm_min_ps(minvals, current);
@@ -365,7 +365,7 @@ void gMesh::recalculateBoundingBox() {
 	float32x4_t maxvals = {maxz, maxy, maxx, 0};
 
 	for (size_t i = 1; i < verts.size(); ++i) {
-		glm::vec4 pos = localtransformationmatrix * glm::vec4(verts[i].position, 1.0f);
+		glm::vec4 pos = localtransformationmatrix.back() * glm::vec4(verts[i].position, 1.0f);
 		float32x4_t current = {pos.z, pos.y, pos.x, 0};
 
 		minvals = vminq_f32(minvals, current);
@@ -383,7 +383,7 @@ void gMesh::recalculateBoundingBox() {
 	maxz = maxarray[0];
 #else
 	for (size_t i = 1; i < verts.size(); ++i) {
-		glm::vec4 pos = localtransformationmatrix * glm::vec4(verts[i].position, 1.0f);
+		glm::vec4 pos = localtransformationmatrix.back() * glm::vec4(verts[i].position, 1.0f);
 
 		minx = std::min(pos.x, minx);
 		miny = std::min(pos.y, miny);
