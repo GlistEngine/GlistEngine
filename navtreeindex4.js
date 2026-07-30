@@ -1,5 +1,8 @@
 var NAVTREEINDEX4 =
 {
+"classgGUICandleStickChart.html#ae7eaff4ea9d57e7c2bad4307ed11cd95":[1,0,59,4],
+"classgGUICheckbox.html":[1,0,60],
+"classgGUICheckbox.html#a0258cd3a65440c04b00c10d4125b7f19":[1,0,60,24],
 "classgGUICheckbox.html#a0456031be3534502d2a8e3b26d5647f2":[1,0,60,15],
 "classgGUICheckbox.html#a07763efade7d56ec63bce4929ae97375":[1,0,60,10],
 "classgGUICheckbox.html#a0b0df25601da6b72e8be082764ecca7b":[1,0,60,26],
@@ -246,8 +249,5 @@ var NAVTREEINDEX4 =
 "classgGUIForm.html#a7766ed10d8e46e7a0543f60f7e23a8f6":[1,0,72,41],
 "classgGUIForm.html#a786fd6073e756866732f7b630946ab0e":[1,0,72,67],
 "classgGUIForm.html#a7af7bd87f2f7301e17d84a0e8643d9d1":[1,0,72,23],
-"classgGUIForm.html#a7b349a89a1c286d77dc43a7d5f6def5a":[1,0,72,48],
-"classgGUIForm.html#a7c25a18c23c1f40f723690807fe72a15":[1,0,72,1],
-"classgGUIForm.html#a7ef665fc60f4f1a2c73e4d27021aec7d":[1,0,72,25],
-"classgGUIForm.html#a8c1cedd62b1d87200530bc56044ddfdf":[1,0,72,12]
+"classgGUIForm.html#a7b349a89a1c286d77dc43a7d5f6def5a":[1,0,72,48]
 };

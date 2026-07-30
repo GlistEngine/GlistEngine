@@ -18,6 +18,7 @@ var classgVbo =
     [ "setColorData", "classgVbo.html#a4aff03aa0bd8e96dae6417aada53fce1", null ],
     [ "setIndexData", "classgVbo.html#a6443dfa2ab892890d45c4e5bf0aa7f38", null ],
     [ "setIndexData", "classgVbo.html#a0f9de13e2cf3ca8b4137a41b27797c2f", null ],
+    [ "setInstanceData", "classgVbo.html#a73ed2ffed30838e53af5261a74107ae2", null ],
     [ "setNormalData", "classgVbo.html#a951d60eb313c30a60d37c76ef4cffacc", null ],
     [ "setNormalData", "classgVbo.html#a8fd41c23b393e8f5a6740ef5bb28b9bf", null ],
     [ "setTexCoordData", "classgVbo.html#a24e0e8cb26e29261161a649a1e6621fc", null ],

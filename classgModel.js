@@ -7,6 +7,7 @@ var classgModel =
     [ "disassemble", "classgModel.html#a60448b22929e63902575ca754ced1c93", null ],
     [ "dolly", "classgModel.html#a973f8b81665b9f53944e10d1e520237f", null ],
     [ "draw", "classgModel.html#a1ce4cc6d7620235438eea69dc68f9e29", null ],
+    [ "drawInstanced", "classgModel.html#ae621d95e02233b90ff498addf6c18e67", null ],
     [ "getAnimationDuration", "classgModel.html#a779afc6df5dfeb8df5d8deb02fa7a92a", null ],
     [ "getAnimationFrameNo", "classgModel.html#abe1c7042f567b4adf2b68ebcbaab3377", null ],
     [ "getAnimationFrameNum", "classgModel.html#a5df483650227163cac0301db1bd46b72", null ],

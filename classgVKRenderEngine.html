@@ -231,12 +231,18 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a9c07418d08445bdbd48ed5a69301bfc9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac79ea1e7182adebaa76bd0afc51d40d7" id="r_ac79ea1e7182adebaa76bd0afc51d40d7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgVKRenderEngine.html#ac79ea1e7182adebaa76bd0afc51d40d7">drawElements</a> (int drawMode, int count) override</td></tr>
 <tr class="separator:ac79ea1e7182adebaa76bd0afc51d40d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aae88c74e7980ba3ef56e5f10a8f8b78a" id="r_aae88c74e7980ba3ef56e5f10a8f8b78a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgVKRenderEngine.html#aae88c74e7980ba3ef56e5f10a8f8b78a">drawArraysInstanced</a> (int drawMode, int count, int instanceCount) override</td></tr>
+<tr class="separator:aae88c74e7980ba3ef56e5f10a8f8b78a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8d7dc5bdb8a2c21b946e5c31ef860283" id="r_a8d7dc5bdb8a2c21b946e5c31ef860283"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgVKRenderEngine.html#a8d7dc5bdb8a2c21b946e5c31ef860283">drawElementsInstanced</a> (int drawMode, int count, int instanceCount) override</td></tr>
+<tr class="separator:a8d7dc5bdb8a2c21b946e5c31ef860283"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8c60fb39e182cb6b43d00a92d30f8804" id="r_a8c60fb39e182cb6b43d00a92d30f8804"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgVKRenderEngine.html#a8c60fb39e182cb6b43d00a92d30f8804">enableVertexAttrib</a> (int index) override</td></tr>
 <tr class="separator:a8c60fb39e182cb6b43d00a92d30f8804"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a762b15b53e0033c22b855325be7d0f88" id="r_a762b15b53e0033c22b855325be7d0f88"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgVKRenderEngine.html#a762b15b53e0033c22b855325be7d0f88">disableVertexAttrib</a> (int index) override</td></tr>
 <tr class="separator:a762b15b53e0033c22b855325be7d0f88"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a255dcbefc6d76e3db17dc7ed2a56519e" id="r_a255dcbefc6d76e3db17dc7ed2a56519e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgVKRenderEngine.html#a255dcbefc6d76e3db17dc7ed2a56519e">setVertexAttribPointer</a> (int index, int size, int type, bool normalized, int stride, const void *pointer) override</td></tr>
 <tr class="separator:a255dcbefc6d76e3db17dc7ed2a56519e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a93f1756cb2f8b51864d3a249c2547922" id="r_a93f1756cb2f8b51864d3a249c2547922"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgVKRenderEngine.html#a93f1756cb2f8b51864d3a249c2547922">setVertexAttribDivisor</a> (int index, int divisor) override</td></tr>
+<tr class="separator:a93f1756cb2f8b51864d3a249c2547922"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a579a0bfa237072e5aede2c7410769b0a" id="r_a579a0bfa237072e5aede2c7410769b0a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgVKRenderEngine.html#a579a0bfa237072e5aede2c7410769b0a">setViewport</a> (int x, int y, int <a class="el" href="classgRenderer.html#a521e019ad5133df5702d399bf051adda">width</a>, int <a class="el" href="classgRenderer.html#a10ba9eb49755cea48500ab0046baf6e4">height</a>) override</td></tr>
 <tr class="separator:a579a0bfa237072e5aede2c7410769b0a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8518e43f326e485f9bdbaa52cfcc9091" id="r_a8518e43f326e485f9bdbaa52cfcc9091"><td class="memItemLeft" align="right" valign="top">GLuint&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgVKRenderEngine.html#a8518e43f326e485f9bdbaa52cfcc9091">createFramebuffer</a> () override</td></tr>
@@ -2399,6 +2405,50 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a id="aae88c74e7980ba3ef56e5f10a8f8b78a" name="aae88c74e7980ba3ef56e5f10a8f8b78a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aae88c74e7980ba3ef56e5f10a8f8b78a">&#9670;&#160;</a></span>drawArraysInstanced()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gVKRenderEngine::drawArraysInstanced </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>drawMode</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>count</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>instanceCount</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implements <a class="el" href="classgRenderer.html#ad670aa498b542f16df233abd75ae581d">gRenderer</a>.</p>
+
+</div>
+</div>
 <a id="ac79ea1e7182adebaa76bd0afc51d40d7" name="ac79ea1e7182adebaa76bd0afc51d40d7"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ac79ea1e7182adebaa76bd0afc51d40d7">&#9670;&#160;</a></span>drawElements()</h2>
 
@@ -2434,6 +2484,50 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Implements <a class="el" href="classgRenderer.html#acd00e3ec13306a20a77d4f0ab9378b60">gRenderer</a>.</p>
+
+</div>
+</div>
+<a id="a8d7dc5bdb8a2c21b946e5c31ef860283" name="a8d7dc5bdb8a2c21b946e5c31ef860283"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8d7dc5bdb8a2c21b946e5c31ef860283">&#9670;&#160;</a></span>drawElementsInstanced()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gVKRenderEngine::drawElementsInstanced </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>drawMode</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>count</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>instanceCount</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implements <a class="el" href="classgRenderer.html#aa59d4c7ac334f2c401fb3681bae558ed">gRenderer</a>.</p>
 
 </div>
 </div>
@@ -4149,6 +4243,44 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Implements <a class="el" href="classgRenderer.html#a8a902c570ad87bb0f9efa30efdfa8913">gRenderer</a>.</p>
+
+</div>
+</div>
+<a id="a93f1756cb2f8b51864d3a249c2547922" name="a93f1756cb2f8b51864d3a249c2547922"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a93f1756cb2f8b51864d3a249c2547922">&#9670;&#160;</a></span>setVertexAttribDivisor()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gVKRenderEngine::setVertexAttribDivisor </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>index</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>divisor</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implements <a class="el" href="classgRenderer.html#a32a24eac01b25a7e92cb34c03214ba38">gRenderer</a>.</p>
 
 </div>
 </div>

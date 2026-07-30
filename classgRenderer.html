@@ -525,12 +525,18 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a0d1abc82ef72d97575fd129601ab3303"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acd00e3ec13306a20a77d4f0ab9378b60" id="r_acd00e3ec13306a20a77d4f0ab9378b60"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#acd00e3ec13306a20a77d4f0ab9378b60">drawElements</a> (int drawMode, int count)=0</td></tr>
 <tr class="separator:acd00e3ec13306a20a77d4f0ab9378b60"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad670aa498b542f16df233abd75ae581d" id="r_ad670aa498b542f16df233abd75ae581d"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#ad670aa498b542f16df233abd75ae581d">drawArraysInstanced</a> (int drawMode, int count, int instanceCount)=0</td></tr>
+<tr class="separator:ad670aa498b542f16df233abd75ae581d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa59d4c7ac334f2c401fb3681bae558ed" id="r_aa59d4c7ac334f2c401fb3681bae558ed"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#aa59d4c7ac334f2c401fb3681bae558ed">drawElementsInstanced</a> (int drawMode, int count, int instanceCount)=0</td></tr>
+<tr class="separator:aa59d4c7ac334f2c401fb3681bae558ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8de047e628bf906142ec0ac78a657908" id="r_a8de047e628bf906142ec0ac78a657908"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a8de047e628bf906142ec0ac78a657908">enableVertexAttrib</a> (int index)=0</td></tr>
 <tr class="separator:a8de047e628bf906142ec0ac78a657908"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3b609694dc71752e7bf69ed5e9446a85" id="r_a3b609694dc71752e7bf69ed5e9446a85"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a3b609694dc71752e7bf69ed5e9446a85">disableVertexAttrib</a> (int index)=0</td></tr>
 <tr class="separator:a3b609694dc71752e7bf69ed5e9446a85"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af8ad4e62c1b11cce375ae38e2b7fa548" id="r_af8ad4e62c1b11cce375ae38e2b7fa548"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#af8ad4e62c1b11cce375ae38e2b7fa548">setVertexAttribPointer</a> (int index, int size, int type, bool normalized, int stride, const void *pointer)=0</td></tr>
 <tr class="separator:af8ad4e62c1b11cce375ae38e2b7fa548"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a32a24eac01b25a7e92cb34c03214ba38" id="r_a32a24eac01b25a7e92cb34c03214ba38"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a32a24eac01b25a7e92cb34c03214ba38">setVertexAttribDivisor</a> (int index, int divisor)=0</td></tr>
+<tr class="separator:a32a24eac01b25a7e92cb34c03214ba38"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a400b8bf33110bb06fb3cf9cafe0aa7cb" id="r_a400b8bf33110bb06fb3cf9cafe0aa7cb"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a400b8bf33110bb06fb3cf9cafe0aa7cb">setViewport</a> (int x, int y, int <a class="el" href="classgRenderer.html#a521e019ad5133df5702d399bf051adda">width</a>, int <a class="el" href="classgRenderer.html#a10ba9eb49755cea48500ab0046baf6e4">height</a>)=0</td></tr>
 <tr class="separator:a400b8bf33110bb06fb3cf9cafe0aa7cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a01a056ef36cd4d3920dd353189fb8540" id="r_a01a056ef36cd4d3920dd353189fb8540"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a01a056ef36cd4d3920dd353189fb8540">getViewport</a> (int &amp;x, int &amp;y, int &amp;<a class="el" href="classgRenderer.html#a521e019ad5133df5702d399bf051adda">width</a>, int &amp;<a class="el" href="classgRenderer.html#a10ba9eb49755cea48500ab0046baf6e4">height</a>) const</td></tr>
@@ -2702,6 +2708,50 @@ Friends</h2></td></tr>
 
 </div>
 </div>
+<a id="ad670aa498b542f16df233abd75ae581d" name="ad670aa498b542f16df233abd75ae581d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad670aa498b542f16df233abd75ae581d">&#9670;&#160;</a></span>drawArraysInstanced()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void gRenderer::drawArraysInstanced </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>drawMode</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>count</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>instanceCount</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a6634fc19e8f3900d14702788d0942179">gGLRenderEngine</a>, and <a class="el" href="classgVKRenderEngine.html#aae88c74e7980ba3ef56e5f10a8f8b78a">gVKRenderEngine</a>.</p>
+
+</div>
+</div>
 <a id="a579195e6264b11279711039a9bfcb872" name="a579195e6264b11279711039a9bfcb872"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a579195e6264b11279711039a9bfcb872">&#9670;&#160;</a></span>drawArrow()</h2>
 
@@ -3387,6 +3437,50 @@ Friends</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Implemented in <a class="el" href="classgGLRenderEngine.html#abf4b2f7697779086f6670d2c2c969943">gGLRenderEngine</a>, and <a class="el" href="classgVKRenderEngine.html#ac79ea1e7182adebaa76bd0afc51d40d7">gVKRenderEngine</a>.</p>
+
+</div>
+</div>
+<a id="aa59d4c7ac334f2c401fb3681bae558ed" name="aa59d4c7ac334f2c401fb3681bae558ed"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa59d4c7ac334f2c401fb3681bae558ed">&#9670;&#160;</a></span>drawElementsInstanced()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void gRenderer::drawElementsInstanced </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>drawMode</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>count</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>instanceCount</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a100ec0bcdb6d33a7786cfdcf9cc6644f">gGLRenderEngine</a>, and <a class="el" href="classgVKRenderEngine.html#a8d7dc5bdb8a2c21b946e5c31ef860283">gVKRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -9280,6 +9374,44 @@ Friends</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Implemented in <a class="el" href="classgGLRenderEngine.html#a7c469b0105ea847d72e60d6f92f53240">gGLRenderEngine</a>, and <a class="el" href="classgVKRenderEngine.html#aaacdb2589cb5712170e304e1e6778a66">gVKRenderEngine</a>.</p>
+
+</div>
+</div>
+<a id="a32a24eac01b25a7e92cb34c03214ba38" name="a32a24eac01b25a7e92cb34c03214ba38"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a32a24eac01b25a7e92cb34c03214ba38">&#9670;&#160;</a></span>setVertexAttribDivisor()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void gRenderer::setVertexAttribDivisor </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>index</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>divisor</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a79a1b05d445ef0a4ef4c339080d5afdb">gGLRenderEngine</a>, and <a class="el" href="classgVKRenderEngine.html#a93f1756cb2f8b51864d3a249c2547922">gVKRenderEngine</a>.</p>
 
 </div>
 </div>
