@@ -27,6 +27,7 @@
 #include "gShader.h"
 #include "gCamera.h"
 #include "gGrid.h"
+#include "gNode.h"
 
 //screenShot Related includes
 #include "stb/stb_image_write.h"
@@ -934,6 +935,17 @@ void gRenderer::updateScene() {
 	if (ischanged || flagschanged || fogChanged) {
 		sceneubo->update(0, sizeof(gSceneData));
 	}
+}
+
+void gRenderer::gPushMatrix() {
+    gNode::ismatrixpushing = true;
+}
+
+void gRenderer::gPopMatrix() {
+    if (gNode::matrixpopmeshptr) {
+        gNode::matrixpopmeshptr->popMatrix();
+        gNode::matrixpopmeshptr = nullptr;
+    }
 }
 
 #include "graphics/shaders/grid_vert.h"

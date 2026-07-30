@@ -326,6 +326,8 @@ public:
 
 	void updateScene();
 
+	void gPushMatrix();
+	void gPopMatrix();
 	virtual void enableDepthTest() = 0;
 	virtual void enableDepthTest(int depthTestType) = 0;
 	virtual void setDepthTestFunc(int depthTestType) = 0;
