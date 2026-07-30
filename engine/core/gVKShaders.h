@@ -2,8 +2,8 @@
  * gVKShaders.h
  *
  * SPIR-V for the Vulkan 2D shaders, generated from the .vert and .frag
- * sources in engine/graphics/shaders/vk by compile_vk_shaders.sh.
- * Do not edit by hand: change the .vert/.frag source and rerun the script.
+ * sources in engine/graphics/shaders/vk by gen_vk_shaders.cmake.
+ * Do not edit by hand: change the .vert/.frag source and rebuild.
  */
 
 #pragma once

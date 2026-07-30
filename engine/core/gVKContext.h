@@ -61,6 +61,7 @@ bool gvkEndFrame(gVKContext& ctx, GLFWwindow* window);
 // gVKFrame.cpp (render pass) / gVKPipeline.cpp (pipelines) / gVKDraw.cpp (ring).
 bool gvkEnsureRenderPass(gVKContext& ctx);
 bool gvkCreateGraphicsPipelines(gVKContext& ctx);
+bool gvkReloadGraphicsPipelines(gVKContext& ctx);
 void gvkDestroyGraphicsPipelines(gVKContext& ctx);
 bool gvkCreateDrawResources(gVKContext& ctx);
 void gvkDestroyDrawResources(gVKContext& ctx);
@@ -108,6 +109,7 @@ struct gVKContext {
 	friend bool gvkEndFrame(gVKContext&, GLFWwindow*);
 	friend bool gvkEnsureRenderPass(gVKContext&);
 	friend bool gvkCreateGraphicsPipelines(gVKContext&);
+	friend bool gvkReloadGraphicsPipelines(gVKContext&);
 	friend void gvkDestroyGraphicsPipelines(gVKContext&);
 	friend bool gvkCreateDrawResources(gVKContext&);
 	friend void gvkDestroyDrawResources(gVKContext&);
@@ -290,9 +292,21 @@ struct gVKContext {
 	VkPipelineLayout getColor2DPipelineLayout() { return color2dpipelinelayout; }
 	VkPipeline getImage2DPipeline() { return image2dpipeline; }
 	VkPipelineLayout getImage2DPipelineLayout() { return image2dpipelinelayout; }
-	VkDescriptorSetLayout getImageDescriptorSetLayout() { return image2ddescriptorsetlayout; }
+	// The layout of the image pipeline's descriptor set 0, which is where a
+	// texture's combined image sampler goes.
+	VkDescriptorSetLayout getImageDescriptorSetLayout() {
+		return image2dsetlayouts.empty() ? VK_NULL_HANDLE : image2dsetlayouts[0];
+	}
 	VkDescriptorPool getDescriptorPool() { return descriptorpool; }
 	bool isRenderPassActive() const { return renderpassactive; }
+
+	// Push constant block each 2D pipeline declares, as reported by reflecting its
+	// SPIR-V. gVKDraw pushes exactly this much to exactly these stages, so editing
+	// the push_constant block in a shader needs no matching change in the draw path.
+	uint32_t getColor2DPushSize() const { return color2dpushsize; }
+	VkShaderStageFlags getColor2DPushStages() const { return color2dpushstages; }
+	uint32_t getImage2DPushSize() const { return image2dpushsize; }
+	VkShaderStageFlags getImage2DPushStages() const { return image2dpushstages; }
 
 	// The command buffer of the frame currently being recorded, or VK_NULL_HANDLE
 	// when no frame is active.
@@ -398,7 +412,15 @@ private:
 	VkPipeline color2dpipeline = VK_NULL_HANDLE;
 	VkPipelineLayout image2dpipelinelayout = VK_NULL_HANDLE;
 	VkPipeline image2dpipeline = VK_NULL_HANDLE;
-	VkDescriptorSetLayout image2ddescriptorsetlayout = VK_NULL_HANDLE;
+	// Descriptor set layouts of each pipeline, in set order, and the push constant
+	// block each declares. All of it is reflected out of the compiled SPIR-V rather
+	// than written out here, so the shaders stay the single source of truth.
+	std::vector<VkDescriptorSetLayout> color2dsetlayouts;
+	std::vector<VkDescriptorSetLayout> image2dsetlayouts;
+	uint32_t color2dpushsize = 0;
+	VkShaderStageFlags color2dpushstages = 0;
+	uint32_t image2dpushsize = 0;
+	VkShaderStageFlags image2dpushstages = 0;
 	VkDescriptorPool descriptorpool = VK_NULL_HANDLE;
 	// One host-visible, persistently mapped vertex buffer per frame in flight,
 	// filled linearly each frame and rewound at the start of the next.

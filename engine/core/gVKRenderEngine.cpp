@@ -955,6 +955,24 @@ bool gVKRenderEngine::initVulkan() {
 	instanceinfo.ppEnabledLayerNames = layers.empty() ? nullptr : layers.data();
 
 	VkResult result = vkCreateInstance(&instanceinfo, nullptr, &ctx->instance);
+	if(result == VK_ERROR_LAYER_NOT_PRESENT && usevalidation) {
+		// The layer enumerated a moment ago but could not be loaded, which means its
+		// manifest names a library the loader cannot find - a packaging problem, not
+		// a missing layer. engine/CMakeLists.txt rewrites the manifest for the known
+		// case; if the run still lands here, say exactly what happened and carry on
+		// without validation rather than refusing to start over a development aid.
+		gLogw("gVKRenderEngine") << "The validation layer is installed but could not be loaded "
+				"(VK_ERROR_LAYER_NOT_PRESENT). Its manifest most likely names the layer library "
+				"by bare name and the loader cannot find it. Continuing without validation; to "
+				"get it back, point VK_LAYER_PATH at a manifest whose library_path is absolute, "
+				"or put the layer library on the library search path.";
+		layers.clear();
+		usevalidation = false;
+		ctx->validationactive = false;
+		instanceinfo.enabledLayerCount = 0;
+		instanceinfo.ppEnabledLayerNames = nullptr;
+		result = vkCreateInstance(&instanceinfo, nullptr, &ctx->instance);
+	}
 	if(result != VK_SUCCESS) {
 		gLoge("gVKRenderEngine") << "vkCreateInstance failed! VkResult: " << result;
 		cleanupVulkan();
@@ -1112,8 +1130,11 @@ bool gVKRenderEngine::initVulkan() {
 	deviceinfo.pEnabledFeatures = &enabledfeatures;
 	deviceinfo.enabledExtensionCount = static_cast<uint32_t>(deviceextensions.size());
 	deviceinfo.ppEnabledExtensionNames = deviceextensions.data();
-	deviceinfo.enabledLayerCount = static_cast<uint32_t>(layers.size());
-	deviceinfo.ppEnabledLayerNames = layers.empty() ? nullptr : layers.data();
+	// Device-level layers were deprecated in Vulkan 1.0: the layers enabled on the
+	// instance already cover the device, and passing them again here is a spec
+	// violation the validation layer reports. The spec requires these to be zero.
+	deviceinfo.enabledLayerCount = 0;
+	deviceinfo.ppEnabledLayerNames = nullptr;
 
 	result = vkCreateDevice(ctx->physicaldevice, &deviceinfo, nullptr, &ctx->device);
 	if(result != VK_SUCCESS) {
@@ -1255,9 +1276,36 @@ void gVKRenderEngine::cleanupVulkan() {
 bool gVKRenderEngine::beginFrame() {
 #ifdef GVK_DESKTOP_GLFW
 	if(vkcontext == nullptr) return false;
+	// Between frames is the only safe point to swap pipelines out: no command
+	// buffer is recording and the previous frame can be drained.
+	checkShaderReload();
 	return gvkBeginFrame(*vkcontext, vkcontext->window);
 #else
 	return false;
+#endif
+}
+
+void gVKRenderEngine::checkShaderReload() {
+#ifdef GVK_DESKTOP_GLFW
+	if(vkcontext == nullptr) return;
+	// Stating the sources every frame would be wasteful; a few times a second
+	// still feels immediate when a shader is saved.
+	if(--shaderpollcountdown > 0) return;
+	shaderpollcountdown = 20;
+
+	const long long newest = gvkShaderSourcesTimestamp();
+	if(newest == 0 || newest == shadersourcetimestamp) return;
+	const bool firstreading = shadersourcetimestamp == 0;
+	shadersourcetimestamp = newest;
+	// The first reading only establishes the baseline; it is not an edit.
+	if(firstreading) return;
+
+	if(!gvkReloadGraphicsPipelines(*vkcontext)) return;
+	// The reload destroys the descriptor pool, and with it every set allocated
+	// from it, so the textures that are still loaded need pointing at the new one.
+	for(auto& entry : vktextures) {
+		if(entry.second != nullptr) gvkWriteTextureDescriptorSet(*vkcontext, entry.second);
+	}
 #endif
 }
 

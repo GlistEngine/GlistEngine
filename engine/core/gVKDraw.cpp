@@ -8,6 +8,7 @@
 
 #include "gVKBuffer.h"
 #include "gUtils.h"
+#include <algorithm>
 
 // 1 MB of vertices per frame in flight. A 2D frame records only a handful of
 // triangles and quads, so this never fills in practice; overflow is dropped with
@@ -81,8 +82,13 @@ void gvkDrawColored2D(gVKContext& ctx, const glm::vec2* points, int count,
 	VkBuffer vbuf = ctx.getCurrentDynamicVertexBuffer();
 	vkCmdBindVertexBuffers(cmd, 0, 1, &vbuf, &offset);
 
+	// Size and stages come from reflecting the shader, so a change to its
+	// push_constant block needs no matching edit here.
 	gvkPush push{mvp, color};
-	vkCmdPushConstants(cmd, ctx.getColor2DPipelineLayout(), VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(push), &push);
+	const uint32_t pushsize = std::min<uint32_t>(sizeof(push), ctx.getColor2DPushSize());
+	if(pushsize > 0) {
+		vkCmdPushConstants(cmd, ctx.getColor2DPipelineLayout(), ctx.getColor2DPushStages(), 0, pushsize, &push);
+	}
 	vkCmdDraw(cmd, static_cast<uint32_t>(count), 1, 0, 0);
 }
 
@@ -111,7 +117,8 @@ void gvkDrawTextured2D(gVKContext& ctx, VkDescriptorSet textureSet,
 	vkCmdBindDescriptorSets(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, layout, 0, 1, &textureSet, 0, nullptr);
 
 	gvkPush push{mvp, tint};
-	vkCmdPushConstants(cmd, layout, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(push), &push);
+	const uint32_t pushsize = std::min<uint32_t>(sizeof(push), ctx.getImage2DPushSize());
+	if(pushsize > 0) vkCmdPushConstants(cmd, layout, ctx.getImage2DPushStages(), 0, pushsize, &push);
 	vkCmdDraw(cmd, 6, 1, 0, 0);
 }
 

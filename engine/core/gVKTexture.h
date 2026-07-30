@@ -32,6 +32,11 @@ struct gVKTexture {
 // context's pool. Returns nullptr on failure.
 gVKTexture* gvkCreateTextureRGBA8(gVKContext& ctx, const void* rgbaPixels, int width, int height);
 
+// Allocates the texture's descriptor set from the context's pool and points it at
+// the image. Called once at creation, and again after a shader reload, which
+// destroys the pool and with it every set allocated from it.
+bool gvkWriteTextureDescriptorSet(gVKContext& ctx, gVKTexture* tex);
+
 void gvkDestroyTexture(gVKContext& ctx, gVKTexture* tex);
 
 #endif /* GVK_DESKTOP_GLFW */

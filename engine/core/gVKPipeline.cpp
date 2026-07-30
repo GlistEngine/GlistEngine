@@ -6,19 +6,74 @@
 
 #ifdef GVK_DESKTOP_GLFW
 
+#include "gVKReflect.h"
+#include "gVKShaderCompiler.h"
 #include "gVKShaders.h"
 #include "gUtils.h"
+#include <algorithm>
 
-// mat4 mvp + vec4 colour/tint. Same size for both pipelines; the colour pipeline
-// reads it in the vertex stage, the image pipeline reads the tint in the fragment
-// stage, so the range covers both stages.
-static constexpr uint32_t GVK_PUSH_CONSTANT_SIZE = sizeof(float) * (16 + 4);
+namespace {
 
-static VkShaderModule gvkCreateShaderModule(VkDevice device, const uint32_t* code, size_t sizeBytes) {
+// One combined-image-sampler descriptor per texture; 1024 is plenty of headroom
+// for a 2D game and cheap to reserve.
+constexpr uint32_t GVK_DESCRIPTOR_POOL_SETS = 1024;
+
+// The stages the 2D path is built from. Each can be recompiled from its GLSL
+// source in a development build, and otherwise comes from the SPIR-V committed
+// in gVKShaders.h.
+enum {
+	GVK_STAGE_COLOR_VERT, GVK_STAGE_COLOR_FRAG,
+	GVK_STAGE_IMAGE_VERT, GVK_STAGE_IMAGE_FRAG,
+	GVK_STAGE_COUNT
+};
+
+struct gvkStageSource {
+	const char* file;
+	VkShaderStageFlagBits stage;
+	const uint32_t* embedded;
+	size_t embeddedsize;
+};
+
+const gvkStageSource gvkstagesources[GVK_STAGE_COUNT] = {
+	{"color2d.vert", VK_SHADER_STAGE_VERTEX_BIT, gvkspv_color2d_vert, sizeof(gvkspv_color2d_vert)},
+	{"color2d.frag", VK_SHADER_STAGE_FRAGMENT_BIT, gvkspv_color2d_frag, sizeof(gvkspv_color2d_frag)},
+	{"image2d.vert", VK_SHADER_STAGE_VERTEX_BIT, gvkspv_image2d_vert, sizeof(gvkspv_image2d_vert)},
+	{"image2d.frag", VK_SHADER_STAGE_FRAGMENT_BIT, gvkspv_image2d_frag, sizeof(gvkspv_image2d_frag)},
+};
+
+struct gvkShaderSet {
+	std::vector<uint32_t> spirv[GVK_STAGE_COUNT];
+};
+
+// Everything one pipeline needs, all of it derived from its shaders.
+struct gvkPipelineParts {
+	VkPipeline pipeline = VK_NULL_HANDLE;
+	VkPipelineLayout layout = VK_NULL_HANDLE;
+	std::vector<VkDescriptorSetLayout> setlayouts;
+	uint32_t pushsize = 0;
+	VkShaderStageFlags pushstages = 0;
+	std::vector<gVKReflectedBinding> bindings;
+};
+
+// requireSource is set on a hot reload, where the whole point is to see the
+// edit: a shader that fails to compile then has to abort the reload rather than
+// quietly fall back to the SPIR-V built into the binary and look like it worked.
+bool gvkLoadShaderSet(gvkShaderSet& set, bool requireSource) {
+	const bool runtime = gvkRuntimeShadersAvailable();
+	for(int i = 0; i < GVK_STAGE_COUNT; i++) {
+		const gvkStageSource& source = gvkstagesources[i];
+		if(runtime && gvkCompileShaderFile(source.file, source.stage, set.spirv[i])) continue;
+		if(requireSource) return false;
+		set.spirv[i].assign(source.embedded, source.embedded + source.embeddedsize / sizeof(uint32_t));
+	}
+	return true;
+}
+
+VkShaderModule gvkCreateShaderModule(VkDevice device, const std::vector<uint32_t>& code) {
 	VkShaderModuleCreateInfo info{};
 	info.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
-	info.codeSize = sizeBytes;
-	info.pCode = code;
+	info.codeSize = code.size() * sizeof(uint32_t);
+	info.pCode = code.data();
 	VkShaderModule mod = VK_NULL_HANDLE;
 	if(vkCreateShaderModule(device, &info, nullptr, &mod) != VK_SUCCESS) {
 		gLoge("gVKPipeline") << "vkCreateShaderModule failed.";
@@ -27,14 +82,66 @@ static VkShaderModule gvkCreateShaderModule(VkDevice device, const uint32_t* cod
 	return mod;
 }
 
-// Builds a pipeline that shares all the 2D state (triangle list, no depth, no
-// cull, dynamic viewport/scissor, straight alpha blending) and differs only in
-// its shaders, vertex layout and pipeline layout.
-static VkPipeline gvkBuildPipeline(VkDevice device, VkRenderPass renderpass,
-		VkShaderModule vert, VkShaderModule frag,
-		const VkVertexInputBindingDescription& binding,
-		const VkVertexInputAttributeDescription* attributes, uint32_t attributeCount,
-		VkPipelineLayout layout) {
+// Builds one pipeline out of a vertex and a fragment module. Every layout
+// decision - vertex attributes, push constant range, descriptor sets - comes
+// from reflecting the SPIR-V, so the shader sources are the only place those are
+// written down. The fixed 2D render state (triangle list, no depth, no cull,
+// dynamic viewport/scissor, straight alpha blending) is shared by both pipelines
+// and stays here.
+bool gvkBuildPipeline(VkDevice device, VkRenderPass renderpass, const char* name,
+		const std::vector<uint32_t>& vertSpirv, const std::vector<uint32_t>& fragSpirv,
+		gvkPipelineParts& parts) {
+	gVKReflectedLayout reflected;
+	if(!gvkReflectSpirv(vertSpirv.data(), vertSpirv.size() * sizeof(uint32_t), reflected) ||
+			!gvkReflectSpirv(fragSpirv.data(), fragSpirv.size() * sizeof(uint32_t), reflected)) {
+		gLoge("gVKPipeline") << "Could not reflect the " << name << " shaders.";
+		return false;
+	}
+	parts.pushsize = reflected.pushconstantsize;
+	parts.pushstages = reflected.pushconstantstages;
+	parts.bindings = reflected.bindings;
+
+	// One descriptor set layout per set the shaders declare, in set order, so the
+	// indices match the set numbers used in the shader.
+	const uint32_t setcount = reflected.getSetCount();
+	for(uint32_t set = 0; set < setcount; set++) {
+		std::vector<VkDescriptorSetLayoutBinding> bindings = reflected.getSetBindings(set);
+		VkDescriptorSetLayoutCreateInfo setlayoutinfo{};
+		setlayoutinfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
+		setlayoutinfo.bindingCount = static_cast<uint32_t>(bindings.size());
+		setlayoutinfo.pBindings = bindings.data();
+		VkDescriptorSetLayout setlayout = VK_NULL_HANDLE;
+		if(vkCreateDescriptorSetLayout(device, &setlayoutinfo, nullptr, &setlayout) != VK_SUCCESS) {
+			gLoge("gVKPipeline") << "vkCreateDescriptorSetLayout failed for " << name << " set " << set;
+			return false;
+		}
+		parts.setlayouts.push_back(setlayout);
+	}
+
+	VkPushConstantRange push{};
+	push.stageFlags = parts.pushstages;
+	push.offset = 0;
+	push.size = parts.pushsize;
+
+	VkPipelineLayoutCreateInfo layoutinfo{};
+	layoutinfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
+	layoutinfo.setLayoutCount = static_cast<uint32_t>(parts.setlayouts.size());
+	layoutinfo.pSetLayouts = parts.setlayouts.empty() ? nullptr : parts.setlayouts.data();
+	layoutinfo.pushConstantRangeCount = parts.pushsize > 0 ? 1 : 0;
+	layoutinfo.pPushConstantRanges = parts.pushsize > 0 ? &push : nullptr;
+	if(vkCreatePipelineLayout(device, &layoutinfo, nullptr, &parts.layout) != VK_SUCCESS) {
+		gLoge("gVKPipeline") << "vkCreatePipelineLayout failed for " << name;
+		return false;
+	}
+
+	VkShaderModule vert = gvkCreateShaderModule(device, vertSpirv);
+	VkShaderModule frag = gvkCreateShaderModule(device, fragSpirv);
+	if(vert == VK_NULL_HANDLE || frag == VK_NULL_HANDLE) {
+		if(vert != VK_NULL_HANDLE) vkDestroyShaderModule(device, vert, nullptr);
+		if(frag != VK_NULL_HANDLE) vkDestroyShaderModule(device, frag, nullptr);
+		return false;
+	}
+
 	VkPipelineShaderStageCreateInfo stages[2]{};
 	stages[0].sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
 	stages[0].stage = VK_SHADER_STAGE_VERTEX_BIT;
@@ -45,12 +152,17 @@ static VkPipeline gvkBuildPipeline(VkDevice device, VkRenderPass renderpass,
 	stages[1].module = frag;
 	stages[1].pName = "main";
 
+	VkVertexInputBindingDescription binding{};
+	binding.binding = 0;
+	binding.stride = reflected.vertexstride;
+	binding.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
+
 	VkPipelineVertexInputStateCreateInfo vertexinput{};
 	vertexinput.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
-	vertexinput.vertexBindingDescriptionCount = 1;
+	vertexinput.vertexBindingDescriptionCount = reflected.vertexattributes.empty() ? 0 : 1;
 	vertexinput.pVertexBindingDescriptions = &binding;
-	vertexinput.vertexAttributeDescriptionCount = attributeCount;
-	vertexinput.pVertexAttributeDescriptions = attributes;
+	vertexinput.vertexAttributeDescriptionCount = static_cast<uint32_t>(reflected.vertexattributes.size());
+	vertexinput.pVertexAttributeDescriptions = reflected.vertexattributes.data();
 
 	VkPipelineInputAssemblyStateCreateInfo inputassembly{};
 	inputassembly.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
@@ -106,16 +218,84 @@ static VkPipeline gvkBuildPipeline(VkDevice device, VkRenderPass renderpass,
 	// No depth attachment in the render pass, so no depth-stencil state.
 	pipelineinfo.pColorBlendState = &colorblend;
 	pipelineinfo.pDynamicState = &dynamicstate;
-	pipelineinfo.layout = layout;
+	pipelineinfo.layout = parts.layout;
 	pipelineinfo.renderPass = renderpass;
 	pipelineinfo.subpass = 0;
 
-	VkPipeline pipeline = VK_NULL_HANDLE;
-	if(vkCreateGraphicsPipelines(device, VK_NULL_HANDLE, 1, &pipelineinfo, nullptr, &pipeline) != VK_SUCCESS) {
-		gLoge("gVKPipeline") << "vkCreateGraphicsPipelines failed.";
-		return VK_NULL_HANDLE;
+	VkResult result = vkCreateGraphicsPipelines(device, VK_NULL_HANDLE, 1, &pipelineinfo, nullptr, &parts.pipeline);
+	vkDestroyShaderModule(device, vert, nullptr);
+	vkDestroyShaderModule(device, frag, nullptr);
+	if(result != VK_SUCCESS) {
+		gLoge("gVKPipeline") << "vkCreateGraphicsPipelines failed for " << name;
+		return false;
 	}
-	return pipeline;
+	return true;
+}
+
+void gvkDestroyParts(VkDevice device, gvkPipelineParts& parts) {
+	if(parts.pipeline != VK_NULL_HANDLE) vkDestroyPipeline(device, parts.pipeline, nullptr);
+	if(parts.layout != VK_NULL_HANDLE) vkDestroyPipelineLayout(device, parts.layout, nullptr);
+	for(VkDescriptorSetLayout setlayout : parts.setlayouts) vkDestroyDescriptorSetLayout(device, setlayout, nullptr);
+	parts = gvkPipelineParts{};
+}
+
+// Sized from the descriptor types the shaders actually declare, so a shader that
+// starts using a different resource kind gets a pool that can serve it.
+bool gvkCreateDescriptorPool(VkDevice device, const gvkPipelineParts& color, const gvkPipelineParts& image,
+		VkDescriptorPool& outPool) {
+	std::vector<VkDescriptorPoolSize> sizes;
+	auto add = [&sizes](const std::vector<gVKReflectedBinding>& bindings) {
+		for(const gVKReflectedBinding& b : bindings) {
+			VkDescriptorPoolSize* existing = nullptr;
+			for(VkDescriptorPoolSize& s : sizes) if(s.type == b.type) { existing = &s; break; }
+			if(existing != nullptr) existing->descriptorCount += b.count * GVK_DESCRIPTOR_POOL_SETS;
+			else sizes.push_back({b.type, b.count * GVK_DESCRIPTOR_POOL_SETS});
+		}
+	};
+	add(color.bindings);
+	add(image.bindings);
+	if(sizes.empty()) return true;   // no shader declares a descriptor; nothing to pool
+
+	VkDescriptorPoolCreateInfo poolinfo{};
+	poolinfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
+	poolinfo.flags = VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT;
+	poolinfo.maxSets = GVK_DESCRIPTOR_POOL_SETS;
+	poolinfo.poolSizeCount = static_cast<uint32_t>(sizes.size());
+	poolinfo.pPoolSizes = sizes.data();
+	if(vkCreateDescriptorPool(device, &poolinfo, nullptr, &outPool) != VK_SUCCESS) {
+		gLoge("gVKPipeline") << "vkCreateDescriptorPool failed.";
+		return false;
+	}
+	return true;
+}
+
+// Builds both pipelines and their pool without touching the context, so the
+// caller only adopts handles once everything succeeded. On failure nothing is
+// left allocated.
+bool gvkBuildAll(VkDevice device, VkRenderPass renderpass, const gvkShaderSet& shaders,
+		gvkPipelineParts& color, gvkPipelineParts& image, VkDescriptorPool& pool) {
+	if(gvkBuildPipeline(device, renderpass, "colour",
+					shaders.spirv[GVK_STAGE_COLOR_VERT], shaders.spirv[GVK_STAGE_COLOR_FRAG], color) &&
+			gvkBuildPipeline(device, renderpass, "image",
+					shaders.spirv[GVK_STAGE_IMAGE_VERT], shaders.spirv[GVK_STAGE_IMAGE_FRAG], image) &&
+			gvkCreateDescriptorPool(device, color, image, pool)) {
+		return true;
+	}
+	if(pool != VK_NULL_HANDLE) { vkDestroyDescriptorPool(device, pool, nullptr); pool = VK_NULL_HANDLE; }
+	gvkDestroyParts(device, color);
+	gvkDestroyParts(device, image);
+	return false;
+}
+
+} // namespace
+
+long long gvkShaderSourcesTimestamp() {
+	if(!gvkRuntimeShadersAvailable()) return 0;
+	long long newest = 0;
+	for(const gvkStageSource& source : gvkstagesources) {
+		newest = std::max(newest, gvkShaderFileTimestamp(source.file));
+	}
+	return newest;
 }
 
 bool gvkCreateGraphicsPipelines(gVKContext& ctx) {
@@ -123,105 +303,53 @@ bool gvkCreateGraphicsPipelines(gVKContext& ctx) {
 		gLoge("gVKPipeline") << "Pipelines need a device and render pass first.";
 		return false;
 	}
-	VkDevice device = ctx.device;
+	gvkShaderSet shaders;
+	gvkLoadShaderSet(shaders, false);
 
-	/* ---------------- colour pipeline (triangle / rectangle) ---------------- */
-	VkShaderModule colorvert = gvkCreateShaderModule(device, gvkspv_color2d_vert, sizeof(gvkspv_color2d_vert));
-	VkShaderModule colorfrag = gvkCreateShaderModule(device, gvkspv_color2d_frag, sizeof(gvkspv_color2d_frag));
+	gvkPipelineParts color;
+	gvkPipelineParts image;
+	VkDescriptorPool pool = VK_NULL_HANDLE;
+	if(!gvkBuildAll(ctx.device, ctx.renderpass, shaders, color, image, pool)) return false;
 
-	VkPushConstantRange colorpush{};
-	colorpush.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
-	colorpush.offset = 0;
-	colorpush.size = GVK_PUSH_CONSTANT_SIZE;
+	ctx.color2dpipeline = color.pipeline;
+	ctx.color2dpipelinelayout = color.layout;
+	ctx.color2dsetlayouts = color.setlayouts;
+	ctx.color2dpushsize = color.pushsize;
+	ctx.color2dpushstages = color.pushstages;
+	ctx.image2dpipeline = image.pipeline;
+	ctx.image2dpipelinelayout = image.layout;
+	ctx.image2dsetlayouts = image.setlayouts;
+	ctx.image2dpushsize = image.pushsize;
+	ctx.image2dpushstages = image.pushstages;
+	ctx.descriptorpool = pool;
 
-	VkPipelineLayoutCreateInfo colorlayoutinfo{};
-	colorlayoutinfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
-	colorlayoutinfo.pushConstantRangeCount = 1;
-	colorlayoutinfo.pPushConstantRanges = &colorpush;
-	vkCreatePipelineLayout(device, &colorlayoutinfo, nullptr, &ctx.color2dpipelinelayout);
+	if(gvkRuntimeShadersAvailable()) {
+		gLogi("gVKPipeline") << "2D graphics pipelines created from "
+				<< gvkShaderSourceDir() << "; edits to those shaders reload live.";
+	} else {
+		gLogi("gVKPipeline") << "2D graphics pipelines created.";
+	}
+	return true;
+}
 
-	VkVertexInputBindingDescription colorbinding{};
-	colorbinding.binding = 0;
-	colorbinding.stride = sizeof(float) * 2;
-	colorbinding.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
-	VkVertexInputAttributeDescription colorattr{};
-	colorattr.location = 0;
-	colorattr.binding = 0;
-	colorattr.format = VK_FORMAT_R32G32_SFLOAT;
-	colorattr.offset = 0;
+bool gvkReloadGraphicsPipelines(gVKContext& ctx) {
+	if(ctx.device == VK_NULL_HANDLE || ctx.renderpass == VK_NULL_HANDLE) return false;
 
-	ctx.color2dpipeline = gvkBuildPipeline(device, ctx.renderpass, colorvert, colorfrag, colorbinding, &colorattr, 1,
-			ctx.color2dpipelinelayout);
+	// Compile everything before touching a single Vulkan object: a shader with a
+	// typo in it then leaves the running pipelines exactly as they were. The build
+	// below compiles the same sources a second time, which costs a few milliseconds
+	// in a development build and keeps the creation path single.
+	gvkShaderSet probe;
+	if(!gvkLoadShaderSet(probe, true)) return false;
 
-	/* ---------------- image descriptor layout + pool ---------------- */
-	VkDescriptorSetLayoutBinding samplerbinding{};
-	samplerbinding.binding = 0;
-	samplerbinding.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-	samplerbinding.descriptorCount = 1;
-	samplerbinding.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
-
-	VkDescriptorSetLayoutCreateInfo setlayoutinfo{};
-	setlayoutinfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
-	setlayoutinfo.bindingCount = 1;
-	setlayoutinfo.pBindings = &samplerbinding;
-	vkCreateDescriptorSetLayout(device, &setlayoutinfo, nullptr, &ctx.image2ddescriptorsetlayout);
-
-	// One combined-image-sampler descriptor per texture; 1024 is plenty of headroom
-	// for a 2D game and cheap to reserve.
-	VkDescriptorPoolSize poolsize{};
-	poolsize.type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-	poolsize.descriptorCount = 1024;
-	VkDescriptorPoolCreateInfo poolinfo{};
-	poolinfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
-	poolinfo.flags = VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT;
-	poolinfo.maxSets = 1024;
-	poolinfo.poolSizeCount = 1;
-	poolinfo.pPoolSizes = &poolsize;
-	vkCreateDescriptorPool(device, &poolinfo, nullptr, &ctx.descriptorpool);
-
-	/* ---------------- image pipeline (textured quad) ---------------- */
-	VkShaderModule imagevert = gvkCreateShaderModule(device, gvkspv_image2d_vert, sizeof(gvkspv_image2d_vert));
-	VkShaderModule imagefrag = gvkCreateShaderModule(device, gvkspv_image2d_frag, sizeof(gvkspv_image2d_frag));
-
-	VkPushConstantRange imagepush{};
-	imagepush.stageFlags = VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT;
-	imagepush.offset = 0;
-	imagepush.size = GVK_PUSH_CONSTANT_SIZE;
-
-	VkPipelineLayoutCreateInfo imagelayoutinfo{};
-	imagelayoutinfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
-	imagelayoutinfo.setLayoutCount = 1;
-	imagelayoutinfo.pSetLayouts = &ctx.image2ddescriptorsetlayout;
-	imagelayoutinfo.pushConstantRangeCount = 1;
-	imagelayoutinfo.pPushConstantRanges = &imagepush;
-	vkCreatePipelineLayout(device, &imagelayoutinfo, nullptr, &ctx.image2dpipelinelayout);
-
-	VkVertexInputBindingDescription imagebinding{};
-	imagebinding.binding = 0;
-	imagebinding.stride = sizeof(float) * 4;
-	imagebinding.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
-	VkVertexInputAttributeDescription imageattrs[2]{};
-	imageattrs[0].location = 0;
-	imageattrs[0].binding = 0;
-	imageattrs[0].format = VK_FORMAT_R32G32_SFLOAT;
-	imageattrs[0].offset = 0;
-	imageattrs[1].location = 1;
-	imageattrs[1].binding = 0;
-	imageattrs[1].format = VK_FORMAT_R32G32_SFLOAT;
-	imageattrs[1].offset = sizeof(float) * 2;
-
-	ctx.image2dpipeline = gvkBuildPipeline(device, ctx.renderpass, imagevert, imagefrag, imagebinding, imageattrs, 2,
-			ctx.image2dpipelinelayout);
-
-	// Modules are only needed while the pipelines are being created.
-	vkDestroyShaderModule(device, colorvert, nullptr);
-	vkDestroyShaderModule(device, colorfrag, nullptr);
-	vkDestroyShaderModule(device, imagevert, nullptr);
-	vkDestroyShaderModule(device, imagefrag, nullptr);
-
-	bool ok = ctx.color2dpipeline != VK_NULL_HANDLE && ctx.image2dpipeline != VK_NULL_HANDLE;
-	if(ok) gLogi("gVKPipeline") << "2D graphics pipelines created.";
-	return ok;
+	vkDeviceWaitIdle(ctx.device);
+	gvkDestroyGraphicsPipelines(ctx);
+	if(!gvkCreateGraphicsPipelines(ctx)) {
+		gLoge("gVKPipeline") << "Shader reload failed to rebuild the pipelines.";
+		return false;
+	}
+	gLogi("gVKPipeline") << "Shaders reloaded.";
+	return true;
 }
 
 void gvkDestroyGraphicsPipelines(gVKContext& ctx) {
@@ -231,8 +359,17 @@ void gvkDestroyGraphicsPipelines(gVKContext& ctx) {
 	if(ctx.color2dpipeline != VK_NULL_HANDLE) { vkDestroyPipeline(device, ctx.color2dpipeline, nullptr); ctx.color2dpipeline = VK_NULL_HANDLE; }
 	if(ctx.image2dpipelinelayout != VK_NULL_HANDLE) { vkDestroyPipelineLayout(device, ctx.image2dpipelinelayout, nullptr); ctx.image2dpipelinelayout = VK_NULL_HANDLE; }
 	if(ctx.color2dpipelinelayout != VK_NULL_HANDLE) { vkDestroyPipelineLayout(device, ctx.color2dpipelinelayout, nullptr); ctx.color2dpipelinelayout = VK_NULL_HANDLE; }
+	// Destroying the pool frees every set allocated from it, so any texture
+	// descriptor sets are gone too and have to be written again afterwards.
 	if(ctx.descriptorpool != VK_NULL_HANDLE) { vkDestroyDescriptorPool(device, ctx.descriptorpool, nullptr); ctx.descriptorpool = VK_NULL_HANDLE; }
-	if(ctx.image2ddescriptorsetlayout != VK_NULL_HANDLE) { vkDestroyDescriptorSetLayout(device, ctx.image2ddescriptorsetlayout, nullptr); ctx.image2ddescriptorsetlayout = VK_NULL_HANDLE; }
+	for(VkDescriptorSetLayout setlayout : ctx.image2dsetlayouts) vkDestroyDescriptorSetLayout(device, setlayout, nullptr);
+	for(VkDescriptorSetLayout setlayout : ctx.color2dsetlayouts) vkDestroyDescriptorSetLayout(device, setlayout, nullptr);
+	ctx.image2dsetlayouts.clear();
+	ctx.color2dsetlayouts.clear();
+	ctx.color2dpushsize = 0;
+	ctx.color2dpushstages = 0;
+	ctx.image2dpushsize = 0;
+	ctx.image2dpushstages = 0;
 }
 
 #endif /* GVK_DESKTOP_GLFW */

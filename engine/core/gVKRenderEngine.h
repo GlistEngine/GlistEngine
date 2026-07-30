@@ -230,6 +230,14 @@ private:
 	GLuint nextvktextureid = 1;
 	GLuint boundtextureid = 0;
 	void destroyAllTextures();
+
+	// Shader hot reload. Development builds watch the .vert / .frag sources the 2D
+	// pipelines are compiled from and rebuild them when one is saved, so a shader
+	// can be tuned without restarting. Release builds compile nothing at runtime,
+	// the timestamp stays 0 and this costs one comparison per frame.
+	void checkShaderReload();
+	long long shadersourcetimestamp = 0;
+	int shaderpollcountdown = 0;
 };
 
 #endif

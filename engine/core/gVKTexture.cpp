@@ -139,7 +139,18 @@ gVKTexture* gvkCreateTextureRGBA8(gVKContext& ctx, const void* rgbaPixels, int w
 	samplerinfo.borderColor = VK_BORDER_COLOR_INT_OPAQUE_BLACK;
 	vkCreateSampler(device, &samplerinfo, nullptr, &tex->sampler);
 
+	gvkWriteTextureDescriptorSet(ctx, tex);
+	return tex;
+}
+
+bool gvkWriteTextureDescriptorSet(gVKContext& ctx, gVKTexture* tex) {
+	if(tex == nullptr || tex->view == VK_NULL_HANDLE) return false;
+	VkDevice device = *ctx.getDevice();
 	VkDescriptorSetLayout layout = ctx.getImageDescriptorSetLayout();
+	if(device == VK_NULL_HANDLE || layout == VK_NULL_HANDLE || ctx.getDescriptorPool() == VK_NULL_HANDLE) {
+		return false;
+	}
+
 	VkDescriptorSetAllocateInfo dsalloc{};
 	dsalloc.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
 	dsalloc.descriptorPool = ctx.getDescriptorPool();
@@ -147,23 +158,24 @@ gVKTexture* gvkCreateTextureRGBA8(gVKContext& ctx, const void* rgbaPixels, int w
 	dsalloc.pSetLayouts = &layout;
 	if(vkAllocateDescriptorSets(device, &dsalloc, &tex->descriptorset) != VK_SUCCESS) {
 		gLoge("gVKTexture") << "vkAllocateDescriptorSets failed (pool exhausted?).";
-	} else {
-		VkDescriptorImageInfo imginfo{};
-		imginfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-		imginfo.imageView = tex->view;
-		imginfo.sampler = tex->sampler;
-		VkWriteDescriptorSet write{};
-		write.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-		write.dstSet = tex->descriptorset;
-		write.dstBinding = 0;
-		write.dstArrayElement = 0;
-		write.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-		write.descriptorCount = 1;
-		write.pImageInfo = &imginfo;
-		vkUpdateDescriptorSets(device, 1, &write, 0, nullptr);
+		tex->descriptorset = VK_NULL_HANDLE;
+		return false;
 	}
 
-	return tex;
+	VkDescriptorImageInfo imginfo{};
+	imginfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+	imginfo.imageView = tex->view;
+	imginfo.sampler = tex->sampler;
+	VkWriteDescriptorSet write{};
+	write.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+	write.dstSet = tex->descriptorset;
+	write.dstBinding = 0;
+	write.dstArrayElement = 0;
+	write.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+	write.descriptorCount = 1;
+	write.pImageInfo = &imginfo;
+	vkUpdateDescriptorSets(device, 1, &write, 0, nullptr);
+	return true;
 }
 
 void gvkDestroyTexture(gVKContext& ctx, gVKTexture* tex) {
