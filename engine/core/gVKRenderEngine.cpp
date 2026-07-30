@@ -36,13 +36,38 @@
 	#include <string>
 	#include <cstring>
 	#include <cstdlib>
+	#include <algorithm>
+	#include <cmath>
 #endif
 
 #ifdef GVK_DESKTOP_GLFW
+static bool gvkSwapchainUsesSrgb(gVKContext* ctx) {
+	if(ctx == nullptr) return false;
+	const VkFormat format = *ctx->getSwapchainFormat();
+	return format == VK_FORMAT_R8G8B8A8_SRGB ||
+			format == VK_FORMAT_B8G8R8A8_SRGB ||
+			format == VK_FORMAT_A8B8G8R8_SRGB_PACK32;
+}
+
+// Engine colours are authored as the values expected in OpenGL's default
+// framebuffer. An sRGB Vulkan attachment, however, expects linear clear values
+// and encodes them while storing. Decode first so the stored/displayed value
+// remains identical to OpenGL (for example 30 stays 30 instead of becoming 96).
+static float gvkSrgbToLinear(float value) {
+	value = std::clamp(value, 0.0f, 1.0f);
+	if(value <= 0.04045f) return value / 12.92f;
+	return std::pow((value + 0.055f) / 1.055f, 2.4f);
+}
+
 // Unlike OpenGL, clearing is not an immediate operation here: the colour is kept
 // and the render pass writes it when the next frame begins.
 static void gvkStoreClearColor(gVKContext* ctx, float r, float g, float b, float a) {
 	if(ctx == nullptr) return;
+	if(gvkSwapchainUsesSrgb(ctx)) {
+		r = gvkSrgbToLinear(r);
+		g = gvkSrgbToLinear(g);
+		b = gvkSrgbToLinear(b);
+	}
 	// Through the accessor rather than the member: this helper is a free function,
 	// not part of the context's friendship.
 	VkClearValue* clearvalue = ctx->getClearValue();
