@@ -211,6 +211,6 @@ void gGUIText::setDisabled(bool isDisabled) {
 	isdisabled = isDisabled;
 }
 
-bool gGUIText::hasContent() {
+bool gGUIText::getHasContent() {
 	return hascontent;
 }

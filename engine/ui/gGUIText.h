@@ -39,7 +39,7 @@ public:
 
     void setDisabled(bool isDisabled);
 
-    bool hasContent();
+    bool getHasContent();
 
 private:
     std::string text;

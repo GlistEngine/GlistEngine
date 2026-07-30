@@ -593,7 +593,7 @@ void gGUITextbox::draw() {
 		int dotlimit = (right - left) / (3 * dotradius) - 1;
 		if(dotlimit > text.size()) dotlimit = text.size();
 		for(int i = 0; i < dotlimit; i++) gDrawCircle(left + dotinit + i * dotlen, doty, dotradius, true);
-	} else if(text.empty() && hinttext.hasContent()) {
+	} else if(text.empty() && hinttext.getHasContent()) {
 		int hinty = top + hdiff + linetopmargin + lineheight - textfont->getSize() - firsty;
 		int hintx = left - textfont->getStringWidth(" ") / 2 - firstx + textalignmentamount;
 		hinttext.set(root, topparent, parent, parentslotlineno, parentslotcolumnno, hintx, hinty, width - 2 * initx, totalh);
