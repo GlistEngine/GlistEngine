@@ -501,8 +501,8 @@ $(document).ready(function(){initNavTree('gVKContext_8h_source.html',''); initRe
 <div class="line"><a id="l00401" name="l00401"></a><span class="lineno">  401</span>    uint32_t currentframe = 0;</div>
 <div class="line"><a id="l00402" name="l00402"></a><span class="lineno">  402</span>    uint32_t currentimageindex = 0;</div>
 <div class="line"><a id="l00403" name="l00403"></a><span class="lineno">  403</span>    <span class="keywordtype">bool</span> frameactive = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00404" name="l00404"></a><span class="lineno">  404</span>    <span class="comment">// Cornflower blue until clearColor() says otherwise.</span></div>
-<div class="line"><a id="l00405" name="l00405"></a><span class="lineno">  405</span>    VkClearValue clearvalue = {{{0.39f, 0.58f, 0.93f, 1.0f}}};</div>
+<div class="line"><a id="l00404" name="l00404"></a><span class="lineno">  404</span>    <span class="comment">// Match gBaseCanvas::clearBackground(), the default used by the OpenGL path.</span></div>
+<div class="line"><a id="l00405" name="l00405"></a><span class="lineno">  405</span>    VkClearValue clearvalue = {{{0.0f, 0.0f, 30.0f / 255.0f, 0.0f}}};</div>
 <div class="line"><a id="l00406" name="l00406"></a><span class="lineno">  406</span> </div>
 <div class="line"><a id="l00407" name="l00407"></a><span class="lineno">  407</span>    <span class="comment">// 2D draw path. Built after the frame path; VK_NULL_HANDLE / empty until then.</span></div>
 <div class="line"><a id="l00408" name="l00408"></a><span class="lineno">  408</span>    <span class="comment">// renderpassactive tracks the lazily-begun render pass within a frame: geometry</span></div>
