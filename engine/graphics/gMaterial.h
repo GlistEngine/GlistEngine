@@ -13,7 +13,9 @@
 #include "gRenderObject.h"
 #include "gTexture.h"
 #include <array>
+#include <vector>
 
+class gShader;
 
 class gMaterial : public gRenderObject {
 public:
@@ -127,6 +129,9 @@ public:
 	void setAOMapEnabled(bool enabled) { setMapEnabled(gTexture::TEXTURETYPE_PBR_AO, enabled); }
 	bool isAOMapEnabled() const { return isMapEnabled(gTexture::TEXTURETYPE_PBR_AO); }
 
+	void addShader(gShader* shader);
+	void removeShader(gShader* shader);
+	const std::vector<gShader*>& getShaders() const;
 private:
 	struct TextureSlot {
 		gTexture* texture = nullptr;
@@ -138,6 +143,7 @@ private:
 	void cleanupSlot(TextureSlot& slot);
 
 	std::array<TextureSlot, gTexture::TEXTURETYPE_COUNT> slots;
+	std::vector<gShader*> extrashaders;
 	bool ispbr;
 
     gColor ambient;

@@ -6,6 +6,7 @@
  */
 
 #include "gMaterial.h"
+#include <algorithm>
 
 bool gMaterial::isPBRType(gTexture::TextureType type) {
 	return type == gTexture::TEXTURETYPE_PBR_ALBEDO
@@ -28,7 +29,7 @@ gMaterial::gMaterial()
 
 gMaterial::gMaterial(const gMaterial& other)
 	: ispbr(other.ispbr), ambient(other.ambient), diffuse(other.diffuse),
-	  specular(other.specular), shininess(other.shininess), slots(other.slots) {
+	  specular(other.specular), shininess(other.shininess), slots(other.slots), extrashaders(other.extrashaders) {
 	for(auto& slot : slots) {
 		slot.owned = false;
 	}
@@ -45,6 +46,7 @@ gMaterial& gMaterial::operator=(const gMaterial& other) {
 		shininess = other.shininess;
 		ispbr = other.ispbr;
 		slots = other.slots;
+		extrashaders = other.extrashaders;
 		for(auto& slot : slots) {
 			slot.owned = false;
 		}
@@ -172,4 +174,18 @@ void gMaterial::setShininess(float shininess) {
 
 float gMaterial::getShininess() const {
 	return shininess;
+}
+
+void gMaterial::addShader(gShader* shader) {
+	if(shader && std::find(extrashaders.begin(), extrashaders.end(), shader) == extrashaders.end()) {
+			extrashaders.push_back(shader);
+	}
+}
+
+void gMaterial::removeShader(gShader* shader) {
+	extrashaders.erase(std::remove(extrashaders.begin(), extrashaders.end(), shader), extrashaders.end());
+}
+
+const std::vector<gShader*>& gMaterial::getShaders() const {
+	return extrashaders;
 }

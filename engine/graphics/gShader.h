@@ -66,6 +66,8 @@ private:
 		GEOMETRY
 	};
 
+	static const gShader* currentlyboundshader;
+
 	void loadProgramInternal(const char* vertexSource, const char* fragmentSource, const char* geometrySource);
 
 	void checkCompileErrors(GLuint shader, const std::string& type, const char* shaderCode);
