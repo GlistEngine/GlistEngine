@@ -795,6 +795,9 @@ void gRenderer::removeAllSceneLights() {
 
 void gRenderer::updateLights() {
 	G_PROFILE_ZONE_SCOPED_N("gRenderer::updateLights()");
+	// The lights UBO belongs to the OpenGL shader path and is never created under
+	// Vulkan (gRenderer::init() is skipped there), so there is nothing to update.
+	if(lightsubo == nullptr) return;
 	gSceneLights* data = lightsubo->getData();
 	int previouslightnum = data->lightnum;
 	data->lightnum = std::min((int) scenelights.size(), GLIST_MAX_LIGHTS);
@@ -861,6 +864,9 @@ void gRenderer::updateLights() {
 
 void gRenderer::updateScene() {
 	G_PROFILE_ZONE_SCOPED_N("gRenderer::updateScene()");
+	// The scene UBO belongs to the OpenGL shader path and is never created under
+	// Vulkan (gRenderer::init() is skipped there), so there is nothing to update.
+	if(sceneubo == nullptr) return;
 	gSceneData* data = sceneubo->getData();
 	bool ischanged = false;
 
@@ -1550,6 +1556,18 @@ void gRenderer::drawLine(float x1, float y1, float z1, float x2, float y2, float
 
 void gRenderer::drawTriangle(float px, float py, float qx, float qy, float rx, float ry, bool is_filled) {
 	G_PROFILE_ZONE_SCOPED_N("gRenderer::drawTriangle()");
+	if(isVulkan()) {
+		// The Vulkan backend never built the primitive meshes (they need the GL
+		// path), so record the triangle straight into the frame instead. The 2D
+		// projection matches gTexture's: an ortho over the render size, top-left
+		// origin. The same three corners serve both forms - filled as one triangle,
+		// unfilled as a closed line loop.
+		glm::vec2 points[3] = {{px, py}, {qx, qy}, {rx, ry}};
+		glm::mat4 mvp = glm::ortho(0.0f, (float)getWidth(), (float)getHeight(), 0.0f, -1.0f, 1.0f);
+		drawColored2D(points, 3, glm::vec4(rendercolor->r, rendercolor->g, rendercolor->b, rendercolor->a), mvp,
+				!is_filled);
+		return;
+	}
 	trianglemesh->draw(px, py, qx, qy, rx, ry, is_filled);
 }
 
@@ -1580,6 +1598,23 @@ void gRenderer::drawArrow(float x1, float y1, float length, float angle, float t
 
 void gRenderer::drawRectangle(float x, float y, float w, float h, bool isFilled) {
 	G_PROFILE_ZONE_SCOPED_N("gRenderer::drawRectangle()");
+	if(isVulkan()) {
+		// Filled, that is two triangles covering the rectangle; unfilled, the four
+		// corners stroked as a closed loop.
+		glm::mat4 mvp = glm::ortho(0.0f, (float)getWidth(), (float)getHeight(), 0.0f, -1.0f, 1.0f);
+		glm::vec4 color(rendercolor->r, rendercolor->g, rendercolor->b, rendercolor->a);
+		if(isFilled) {
+			glm::vec2 points[6] = {
+				{x, y}, {x + w, y}, {x + w, y + h},
+				{x, y}, {x + w, y + h}, {x, y + h},
+			};
+			drawColored2D(points, 6, color, mvp);
+		} else {
+			glm::vec2 points[4] = {{x, y}, {x + w, y}, {x + w, y + h}, {x, y + h}};
+			drawColored2D(points, 4, color, mvp, true);
+		}
+		return;
+	}
 	rectanglemesh->draw(x, y, w, h, isFilled);
 }
 

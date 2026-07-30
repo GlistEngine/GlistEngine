@@ -642,13 +642,25 @@ void gTexture::drawSub(glm::vec2 pos, glm::vec2 size, glm::vec2 subPos, glm::vec
 
 void gTexture::beginDraw() {
 	G_PROFILE_ZONE_SCOPED_N("gTexture::beginDraw()");
-	renderer->getImageShader()->use();
+	// The image shader belongs to the OpenGL path and is never created under Vulkan;
+	// the Vulkan draw happens in endDraw() through the backend's own pipeline.
+	if(!renderer->isVulkan()) renderer->getImageShader()->use();
 	imagematrix = glm::mat4(1.0f);
 	renderer->setProjectionMatrix2d(glm::ortho(0.0f, (float)renderer->getWidth(), (float)renderer->getHeight(), 0.0f, -1.0f, 1.0f));
 }
 
 void gTexture::endDraw() {
 	G_PROFILE_ZONE_SCOPED_N("gTexture::endDraw()");
+	if(renderer->isVulkan()) {
+		// imagematrix already carries the translate/rotate/scale built up in draw();
+		// combine it with the 2D projection and hand the texture to the Vulkan draw
+		// path. Sub-part and alpha-mask draws are not handled here yet - the whole
+		// texture is drawn tinted by the current colour.
+		glm::mat4 mvp = renderer->getProjectionMatrix2d() * imagematrix;
+		gColor* c = renderer->getColor();
+		renderer->drawTexturedRect2D(id, glm::vec4(c->r, c->g, c->b, c->a), mvp);
+		return;
+	}
 	renderer->getImageShader()->setMat4("projection", renderer->getProjectionMatrix2d());
 	renderer->getImageShader()->setMat4("model", imagematrix);
 	renderer->getImageShader()->setVec4("spriteColor", glm::vec4(renderer->getColor()->r, renderer->getColor()->g, renderer->getColor()->b, renderer->getColor()->a));

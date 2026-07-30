@@ -28,6 +28,9 @@
 	#include "gVKCommands.h"
 	#include "gVKFrame.h"
 	#include "gVKSync.h"
+	#include "gVKPipeline.h"
+	#include "gVKDraw.h"
+	#include "gVKTexture.h"
 	#include <vector>
 	#include <set>
 	#include <string>
@@ -53,6 +56,8 @@ static void gvkStoreClearColor(gVKContext* ctx, float r, float g, float b, float
 gVKRenderEngine::~gVKRenderEngine() {
 	cleanupVulkan();
 	delete originalgrid;
+	delete rendercolor;
+	rendercolor = nullptr;
 }
 
 static void flipVertically(unsigned char* pixelData, int width, int height, int numChannels) {
@@ -530,86 +535,119 @@ void gVKRenderEngine::drawVbo(const gVbo& vbo) {
 	G_CHECK_GL(glDrawArrays(GL_TRIANGLES, 0, vbo.getVerticesNum()));
 }
 
+// These emulate just enough of the OpenGL texture object / bind state that
+// gTexture and gImage rely on. createTextures() mints an id; bindTexture() records
+// which id later texImage2D() uploads into; texImage2D() turns the pixels into a
+// real Vulkan texture (gVKTexture) kept in the registry. The wrap/filter/swizzle
+// setters have no OpenGL work to do here - the sampler is created with sensible
+// defaults in gvkCreateTextureRGBA8 - so they are no-ops.
 GLuint gVKRenderEngine::createTextures() {
-	GLuint id;
-	G_CHECK_GL(glGenTextures(1, &id));
+#ifdef GVK_DESKTOP_GLFW
+	GLuint id = nextvktextureid++;
+	boundtextureid = id;
 	return id;
+#else
+	return 0;
+#endif
 }
 
 void gVKRenderEngine::bindTexture(GLuint texId) {
-	G_CHECK_GL(glBindTexture(GL_TEXTURE_2D, texId));
+	boundtextureid = texId;
 }
 
 void gVKRenderEngine::bindTexture(GLuint texId, int textureSlotNo) {
-	G_CHECK_GL(glActiveTexture(GL_TEXTURE0 + textureSlotNo));
-	G_CHECK_GL(glBindTexture(GL_TEXTURE_2D, texId));
+	boundtextureid = texId;
 }
 
 void gVKRenderEngine::unbindTexture() {
-	G_CHECK_GL(glBindTexture(GL_TEXTURE_2D, 0));
+	boundtextureid = 0;
 }
 
 void gVKRenderEngine::activateTexture(int textureSlotNo) {
-	G_CHECK_GL(glActiveTexture(GL_TEXTURE0 + textureSlotNo));
 }
 
 void gVKRenderEngine::resetTexture() {
-	G_CHECK_GL(glActiveTexture(GL_TEXTURE0));
 }
 
 void gVKRenderEngine::deleteTexture(GLuint& texId) {
-	if (texId != 0) {
-		G_CHECK_GL(glDeleteTextures(1, &texId));
+#ifdef GVK_DESKTOP_GLFW
+	if(texId != 0 && vkcontext != nullptr) {
+		auto it = vktextures.find(texId);
+		if(it != vktextures.end()) {
+			// A runtime delete may target a texture a previous frame still samples,
+			// so drain the device before tearing it down.
+			if(*vkcontext->getDevice() != VK_NULL_HANDLE) vkDeviceWaitIdle(*vkcontext->getDevice());
+			gvkDestroyTexture(*vkcontext, it->second);
+			vktextures.erase(it);
+		}
 	}
+#endif
+	texId = 0;
 }
 
 void gVKRenderEngine::texImage2D(GLenum target, GLint internalFormat, int width, int height, GLint format,
                                  GLint type, void* data) {
-	G_CHECK_GL(glTexImage2D(target, 0, internalFormat, width, height, 0, format, type, data));
+#ifdef GVK_DESKTOP_GLFW
+	if(vkcontext == nullptr || boundtextureid == 0) return;
+	// Only 8-bit colour uploads that carry pixels become a texture. Allocation-only
+	// calls (data == nullptr, e.g. FBO colour targets) and float / HDR uploads are
+	// outside what the 2D image path handles.
+	if(data == nullptr || type != GL_UNSIGNED_BYTE || width <= 0 || height <= 0) return;
+
+	int components = 4;
+	if(format == GL_RED) components = 1;
+	else if(format == GL_RG) components = 2;
+	else if(format == GL_RGB) components = 3;
+	else if(format == GL_RGBA) components = 4;
+
+	// The Vulkan image is always R8G8B8A8_UNORM, so narrower formats are expanded.
+	const unsigned char* src = static_cast<const unsigned char*>(data);
+	const size_t pixels = static_cast<size_t>(width) * static_cast<size_t>(height);
+	std::vector<unsigned char> rgba(pixels * 4);
+	for(size_t i = 0; i < pixels; i++) {
+		const unsigned char* p = src + i * components;
+		unsigned char r = 0, g = 0, b = 0, a = 255;
+		if(components == 1) { r = g = b = p[0]; }
+		else if(components == 2) { r = g = b = p[0]; a = p[1]; }
+		else if(components == 3) { r = p[0]; g = p[1]; b = p[2]; }
+		else { r = p[0]; g = p[1]; b = p[2]; a = p[3]; }
+		rgba[i * 4 + 0] = r;
+		rgba[i * 4 + 1] = g;
+		rgba[i * 4 + 2] = b;
+		rgba[i * 4 + 3] = a;
+	}
+
+	// The load path uploads twice (once around generateMipMap), so replace any
+	// texture already registered for this id. The first upload is never sampled in
+	// a submitted frame, so tearing it down here needs no device wait.
+	auto it = vktextures.find(boundtextureid);
+	if(it != vktextures.end()) {
+		gvkDestroyTexture(*vkcontext, it->second);
+		vktextures.erase(it);
+	}
+	gVKTexture* tex = gvkCreateTextureRGBA8(*vkcontext, rgba.data(), width, height);
+	if(tex != nullptr) vktextures[boundtextureid] = tex;
+#endif
 }
 
 void gVKRenderEngine::setWrapping(GLenum target, GLint wrapS, GLint wrapT) {
-	G_CHECK_GL(glTexParameteri(target, GL_TEXTURE_WRAP_S, wrapS));
-	G_CHECK_GL(glTexParameteri(target, GL_TEXTURE_WRAP_T, wrapT));
 }
 
 void gVKRenderEngine::setWrapping(GLenum target, GLint wrapS, GLint wrapT, GLint wrapR) {
-	G_CHECK_GL(glTexParameteri(target, GL_TEXTURE_WRAP_S, wrapS));
-	G_CHECK_GL(glTexParameteri(target, GL_TEXTURE_WRAP_T, wrapT));
-	G_CHECK_GL(glTexParameteri(target, GL_TEXTURE_WRAP_R, wrapR));
 }
 
 void gVKRenderEngine::setFiltering(GLenum target, GLint minFilter, GLint magFilter) {
-	G_CHECK_GL(glTexParameteri(target, GL_TEXTURE_MIN_FILTER, minFilter));
-	G_CHECK_GL(glTexParameteri(target, GL_TEXTURE_MAG_FILTER, magFilter));
 }
 
 void gVKRenderEngine::setWrappingAndFiltering(GLenum target, GLint wrapS, GLint wrapT, GLint minFilter,
                                               GLint magFilter) {
-	G_CHECK_GL(glTexParameteri(target, GL_TEXTURE_WRAP_S, wrapS));
-	G_CHECK_GL(glTexParameteri(target, GL_TEXTURE_WRAP_T, wrapT));
-	G_CHECK_GL(glTexParameteri(target, GL_TEXTURE_MIN_FILTER, minFilter));
-	G_CHECK_GL(glTexParameteri(target, GL_TEXTURE_MAG_FILTER, magFilter));
 }
 
 void gVKRenderEngine::setWrappingAndFiltering(GLenum target, GLint wrapS, GLint wrapT, GLint wrapR, GLint minFilter,
                                               GLint magFilter) {
-	G_CHECK_GL(glTexParameteri(target, GL_TEXTURE_WRAP_S, wrapS));
-	G_CHECK_GL(glTexParameteri(target, GL_TEXTURE_WRAP_T, wrapT));
-	G_CHECK_GL(glTexParameteri(target, GL_TEXTURE_WRAP_R, wrapR));
-	G_CHECK_GL(glTexParameteri(target, GL_TEXTURE_MIN_FILTER, minFilter));
-	G_CHECK_GL(glTexParameteri(target, GL_TEXTURE_MAG_FILTER, magFilter));
 }
 
 void gVKRenderEngine::setSwizzleMask(GLint swizzleMask[4]) {
-#if defined(GLIST_OPENGLES)
-	G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_R, swizzleMask[0]));
-	G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_G, swizzleMask[1]));
-	G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_B, swizzleMask[2]));
-	G_CHECK_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_A, swizzleMask[3]));
-#else
-	G_CHECK_GL(glTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_RGBA, swizzleMask));
-#endif
 }
 
 void gVKRenderEngine::readTexturePixels(unsigned char* inPixels, GLuint textureId, int width, int height,
@@ -639,7 +677,7 @@ void gVKRenderEngine::readTexturePixelsHDR(float* inPixels, GLuint textureId, in
 }
 
 void gVKRenderEngine::generateMipMap() {
-	G_CHECK_GL(glGenerateMipmap(GL_TEXTURE_2D));
+	// The 2D image textures are single-level; nothing to generate here.
 }
 
 void gVKRenderEngine::bindSkyTexture(GLuint texId) {
@@ -926,6 +964,24 @@ bool gVKRenderEngine::initVulkan() {
 	instanceinfo.ppEnabledLayerNames = layers.empty() ? nullptr : layers.data();
 
 	VkResult result = vkCreateInstance(&instanceinfo, nullptr, &ctx->instance);
+	if(result == VK_ERROR_LAYER_NOT_PRESENT && usevalidation) {
+		// The layer enumerated a moment ago but could not be loaded, which means its
+		// manifest names a library the loader cannot find - a packaging problem, not
+		// a missing layer. engine/CMakeLists.txt rewrites the manifest for the known
+		// case; if the run still lands here, say exactly what happened and carry on
+		// without validation rather than refusing to start over a development aid.
+		gLogw("gVKRenderEngine") << "The validation layer is installed but could not be loaded "
+				"(VK_ERROR_LAYER_NOT_PRESENT). Its manifest most likely names the layer library "
+				"by bare name and the loader cannot find it. Continuing without validation; to "
+				"get it back, point VK_LAYER_PATH at a manifest whose library_path is absolute, "
+				"or put the layer library on the library search path.";
+		layers.clear();
+		usevalidation = false;
+		ctx->validationactive = false;
+		instanceinfo.enabledLayerCount = 0;
+		instanceinfo.ppEnabledLayerNames = nullptr;
+		result = vkCreateInstance(&instanceinfo, nullptr, &ctx->instance);
+	}
 	if(result != VK_SUCCESS) {
 		gLoge("gVKRenderEngine") << "vkCreateInstance failed! VkResult: " << result;
 		cleanupVulkan();
@@ -1083,8 +1139,11 @@ bool gVKRenderEngine::initVulkan() {
 	deviceinfo.pEnabledFeatures = &enabledfeatures;
 	deviceinfo.enabledExtensionCount = static_cast<uint32_t>(deviceextensions.size());
 	deviceinfo.ppEnabledExtensionNames = deviceextensions.data();
-	deviceinfo.enabledLayerCount = static_cast<uint32_t>(layers.size());
-	deviceinfo.ppEnabledLayerNames = layers.empty() ? nullptr : layers.data();
+	// Device-level layers were deprecated in Vulkan 1.0: the layers enabled on the
+	// instance already cover the device, and passing them again here is a spec
+	// violation the validation layer reports. The spec requires these to be zero.
+	deviceinfo.enabledLayerCount = 0;
+	deviceinfo.ppEnabledLayerNames = nullptr;
 
 	result = vkCreateDevice(ctx->physicaldevice, &deviceinfo, nullptr, &ctx->device);
 	if(result != VK_SUCCESS) {
@@ -1170,6 +1229,18 @@ bool gVKRenderEngine::initVulkan() {
 		cleanupVulkan();
 		return false;
 	}
+	// The 2D draw path: graphics pipelines (colour + image) and the per-frame
+	// vertex ring the triangle / rectangle / image helpers record into.
+	if(!gvkCreateGraphicsPipelines(*ctx)) {
+		gLoge("gVKRenderEngine") << "Vulkan init: the 2D graphics pipelines could not be created.";
+		cleanupVulkan();
+		return false;
+	}
+	if(!gvkCreateDrawResources(*ctx)) {
+		gLoge("gVKRenderEngine") << "Vulkan init: the draw resources could not be created.";
+		cleanupVulkan();
+		return false;
+	}
 	return true;
 #endif
 }
@@ -1183,7 +1254,14 @@ void gVKRenderEngine::cleanupVulkan() {
 	// device is drained first.
 	if(ctx->device != VK_NULL_HANDLE) vkDeviceWaitIdle(ctx->device);
 	// Strict reverse creation order: Vulkan requires children to be destroyed
-	// before their parent, and the surface must die before its instance.
+	// before their parent, and the surface must die before its instance. The 2D
+	// draw path was built last, so it is torn down first (pipelines reference the
+	// render pass, which is still alive at this point). Textures free their
+	// descriptor sets, so they go before the descriptor pool inside
+	// gvkDestroyGraphicsPipelines.
+	destroyAllTextures();
+	gvkDestroyDrawResources(*ctx);
+	gvkDestroyGraphicsPipelines(*ctx);
 	gvkDestroyPresentSemaphores(*ctx);
 	gvkDestroyFrameSyncObjects(*ctx);
 	gvkDestroyCommandResources(*ctx);
@@ -1207,9 +1285,36 @@ void gVKRenderEngine::cleanupVulkan() {
 bool gVKRenderEngine::beginFrame() {
 #ifdef GVK_DESKTOP_GLFW
 	if(vkcontext == nullptr) return false;
+	// Between frames is the only safe point to swap pipelines out: no command
+	// buffer is recording and the previous frame can be drained.
+	checkShaderReload();
 	return gvkBeginFrame(*vkcontext, vkcontext->window);
 #else
 	return false;
+#endif
+}
+
+void gVKRenderEngine::checkShaderReload() {
+#ifdef GVK_DESKTOP_GLFW
+	if(vkcontext == nullptr) return;
+	// Stating the sources every frame would be wasteful; a few times a second
+	// still feels immediate when a shader is saved.
+	if(--shaderpollcountdown > 0) return;
+	shaderpollcountdown = 20;
+
+	const long long newest = gvkShaderSourcesTimestamp();
+	if(newest == 0 || newest == shadersourcetimestamp) return;
+	const bool firstreading = shadersourcetimestamp == 0;
+	shadersourcetimestamp = newest;
+	// The first reading only establishes the baseline; it is not an edit.
+	if(firstreading) return;
+
+	if(!gvkReloadGraphicsPipelines(*vkcontext)) return;
+	// The reload destroys the descriptor pool, and with it every set allocated
+	// from it, so the textures that are still loaded need pointing at the new one.
+	for(auto& entry : vktextures) {
+		if(entry.second != nullptr) gvkWriteTextureDescriptorSet(*vkcontext, entry.second);
+	}
 #endif
 }
 
@@ -1227,6 +1332,10 @@ void gVKRenderEngine::init() {
 	// is assigned only inside that function and is never initialised in a
 	// constructor, so it is nulled here to keep the destructor's delete safe.
 	originalgrid = nullptr;
+	// gRenderer::init() also allocates rendercolor, but it is skipped under Vulkan;
+	// the 2D draw helpers read the current colour, so create a white default here.
+	rendercolor = new gColor();
+	rendercolor->set(255, 255, 255, 255);
 	if(!initVulkan()) {
 		gLoge("gVKRenderEngine") << "Vulkan initialization failed; the Vulkan backend is not usable.";
 	}
@@ -1235,8 +1344,36 @@ void gVKRenderEngine::init() {
 
 void gVKRenderEngine::cleanup() {
 	// The GL resources gRenderer::cleanup() would release were never created,
-	// because init() skips gRenderer::init().
+	// because init() skips gRenderer::init(). rendercolor is the one thing init()
+	// did allocate, so it is freed here.
 	cleanupVulkan();
+	delete rendercolor;
+	rendercolor = nullptr;
+}
+
+void gVKRenderEngine::drawColored2D(const glm::vec2* points, int count, const glm::vec4& color, const glm::mat4& mvp,
+		bool lineLoop) {
+#ifdef GVK_DESKTOP_GLFW
+	if(vkcontext == nullptr) return;
+	gvkDrawColored2D(*vkcontext, points, count, color, mvp, lineLoop);
+#endif
+}
+
+void gVKRenderEngine::drawTexturedRect2D(GLuint textureId, const glm::vec4& tint, const glm::mat4& mvp) {
+#ifdef GVK_DESKTOP_GLFW
+	if(vkcontext == nullptr) return;
+	auto it = vktextures.find(textureId);
+	if(it == vktextures.end() || it->second == nullptr) return;
+	gvkDrawTextured2D(*vkcontext, it->second->descriptorset, tint, mvp);
+#endif
+}
+
+void gVKRenderEngine::destroyAllTextures() {
+#ifdef GVK_DESKTOP_GLFW
+	if(vkcontext == nullptr) return;
+	for(auto& entry : vktextures) gvkDestroyTexture(*vkcontext, entry.second);
+	vktextures.clear();
+#endif
 }
 
 void gVKRenderEngine::updatePackUnpackAlignment(int i) {

@@ -258,6 +258,26 @@ public:
 	virtual bool beginFrame() { return true; }
 	virtual void endFrame() {}
 
+	// Which backend this renderer is (G_RENDERER_GL / G_RENDERER_VK). Set by
+	// gRenderObject::createRenderer.
+	int getRenderEngineType() const { return renderenginetype; }
+	bool isVulkan() const { return renderenginetype == G_RENDERER_VK; }
+
+	// Backend hook for the 2D coloured primitives (triangle, rectangle). OpenGL
+	// draws these through the mesh path and leaves this a no-op; the Vulkan backend
+	// overrides it to record into the active frame. points holds `count` 2D screen
+	// positions and colour components are 0..1. By default the points form a filled
+	// triangle list (three per triangle); with lineLoop set they are the corners of
+	// an outline, stroked as a closed loop the way the mesh path does.
+	virtual void drawColored2D(const glm::vec2* points, int count, const glm::vec4& color, const glm::mat4& mvp,
+			bool lineLoop = false) {}
+
+	// Backend hook for a textured 2D quad (gImage / gTexture). OpenGL draws through
+	// its image shader and leaves this a no-op; Vulkan looks the texture id up in
+	// its registry and records a textured unit quad. tint components are 0..1; mvp
+	// is projection2d * the image model matrix.
+	virtual void drawTexturedRect2D(GLuint textureId, const glm::vec4& tint, const glm::mat4& mvp) {}
+
 	virtual void clear() = 0;
 	virtual void clearColor(int r, int g, int b, int a = 255) = 0;
 	virtual void clearColor(gColor color) = 0;
@@ -546,7 +566,10 @@ protected:
 	static int screenscaling;
 	static int currentresolution, unitresolution;
 
-	gColor* rendercolor;
+	gColor* rendercolor = nullptr;
+
+	// G_RENDERER_GL or G_RENDERER_VK; assigned by gRenderObject::createRenderer.
+	int renderenginetype = G_RENDERER_GL;
 
 	bool isfogenabled;
 	int fogno;
@@ -558,8 +581,10 @@ protected:
 	float foglinearend;
 
 	std::deque<gLight*> scenelights;
-	gUbo<gSceneLights>* lightsubo;
-	gUbo<gSceneData>* sceneubo;
+	// Allocated only by gRenderer::init(), which the Vulkan backend skips, so they
+	// stay null there; updateScene()/updateLights() bail out under Vulkan.
+	gUbo<gSceneLights>* lightsubo = nullptr;
+	gUbo<gSceneData>* sceneubo = nullptr;
 	bool islightingenabled;
 	glm::vec3 lightingposition;
 	gColor lightingcolor;
