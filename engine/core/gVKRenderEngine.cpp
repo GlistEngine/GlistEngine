@@ -894,6 +894,13 @@ bool gVKRenderEngine::initVulkan() {
 	std::vector<const char*>& extensions = ctx->enabledinstanceextensions;
 	extensions.assign(glfwexts, glfwexts + glfwextcount);
 
+	// OpenGL's default framebuffer is a linear, pass-through target. When the
+	// presentation system exposes the matching Vulkan colour space, enable it so
+	// the compositor does not apply an extra sRGB colour-profile conversion.
+	if(gvkHasInstanceExtension(VK_EXT_SWAPCHAIN_COLOR_SPACE_EXTENSION_NAME)) {
+		extensions.push_back(VK_EXT_SWAPCHAIN_COLOR_SPACE_EXTENSION_NAME);
+	}
+
 #if defined(__APPLE__)
 	// MoltenVK is a portability driver: without these the loader does not even
 	// enumerate it and vkCreateInstance fails with VK_ERROR_INCOMPATIBLE_DRIVER.
