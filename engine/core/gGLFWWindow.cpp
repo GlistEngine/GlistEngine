@@ -5,6 +5,15 @@
  *      Author: noyan
  */
 
+// gVKContext.h decides whether Vulkan is available at all (GVK_DESKTOP_GLFW) and
+// pulls in <vulkan/vulkan.h>. Both have to happen before GLFW is included below:
+// glfwInitVulkanLoader is declared inside GLFW's #if defined(VK_VERSION_1_0)
+// block, so without the Vulkan header first it would not exist.
+#include "gVKContext.h"
+#ifdef GVK_DESKTOP_GLFW
+	#define GLFW_INCLUDE_VULKAN
+#endif
+
 #include "gGLFWWindow.h"
 #include "gAppManager.h"
 #include "gTracy.h"
@@ -191,6 +200,17 @@ void gGLFWWindow::initialize(int width, int height, int windowMode, bool isResiz
 	if (major > 3 || (major == 3 && minor >= 0)) {
 		glfwSetErrorCallback(gGLFWWindow::glfwErrorCallback);
 	}
+#endif
+
+#ifdef GVK_DESKTOP_GLFW
+	// Hand GLFW the loader this engine is already linked against, rather than let it
+	// search for one. Left to itself GLFW dlopens the loader by bare name, which
+	// fails wherever it lives outside the default library search path - Homebrew's
+	// /opt/homebrew/lib on macOS, for one. glfwVulkanSupported() would then report
+	// false and the backend below would silently fall back to OpenGL. Must come
+	// before glfwInit(), and is harmless for an OpenGL app: GLFW only ever uses the
+	// pointer for Vulkan calls.
+	glfwInitVulkanLoader(vkGetInstanceProcAddr);
 #endif
 
 	// Create glfw
