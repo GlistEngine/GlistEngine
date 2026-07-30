@@ -9,6 +9,7 @@
 #define ENGINE_BASE_GNODE_H_
 
 #include "gRenderObject.h"
+#include <vector>
 #include <deque>
 
 
@@ -135,13 +136,13 @@ public:
 	void setEnabled(bool isEnabled);
 	bool isEnabled() const;
 
-	void pushMatrix() const;
-	void popMatrix() const;
+	void pushMatrix();
+	void popMatrix();
 
 protected:
 	gNode* parent;
 	std::deque<gNode*> children;
-	glm::mat4 localtransformationmatrix;
+	std::vector<glm::mat4> localtransformationmatrix;
 
 	bool isenabled;
 
