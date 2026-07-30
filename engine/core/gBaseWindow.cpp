@@ -256,6 +256,29 @@ const float* gBaseWindow::getJoystickAxes(int joystickId, int* axisCountPtr) {
 	return nullptr;
 }
 
+void gBaseWindow::setVirtualGamepadConnected(
+    int gamepadId,
+    bool connected
+) {
+    // Base window does not provide a virtual gamepad.
+}
+
+void gBaseWindow::setVirtualGamepadAxis(
+    int gamepadId,
+    int axisId,
+    float value
+) {
+    // Base window does not provide virtual gamepad axes.
+}
+
+void gBaseWindow::setVirtualGamepadButton(
+    int gamepadId,
+    int buttonId,
+    bool pressed
+) {
+    // Base window does not provide virtual gamepad buttons.
+}
+
 /*
 void stacker() {
 

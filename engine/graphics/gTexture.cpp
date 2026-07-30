@@ -41,6 +41,37 @@ gTexture::gTexture() {
 	wrapt = TEXTUREWRAP_REPEAT;
 	filtermin = TEXTUREMINMAGFILTER_MIPMAPLINEAR;
 	filtermag = TEXTUREMINMAGFILTER_LINEAR;
+#if TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
+
+    if(format == GL_DEPTH_COMPONENT) {
+        internalformat = GL_DEPTH_COMPONENT16;
+        valuetype = GL_UNSIGNED_SHORT;
+
+        wrapt = TEXTUREWRAP_CLAMPTOEDGE;
+        wraps = TEXTUREWRAP_CLAMPTOEDGE;
+        filtermin = TEXTUREMINMAGFILTER_NEAREST;
+        filtermag = TEXTUREMINMAGFILTER_NEAREST;
+    } else if(format == GL_DEPTH_STENCIL) {
+        internalformat = GL_DEPTH24_STENCIL8;
+        valuetype = GL_UNSIGNED_INT_24_8;
+    }
+
+#elif EMSCRIPTEN || defined(ANDROID)
+
+    if(format == GL_DEPTH_COMPONENT) {
+        internalformat = GL_DEPTH_COMPONENT24;
+        valuetype = GL_UNSIGNED_INT;
+
+        wrapt = TEXTUREWRAP_CLAMPTOEDGE;
+        wraps = TEXTUREWRAP_CLAMPTOEDGE;
+        filtermin = TEXTUREMINMAGFILTER_NEAREST;
+        filtermag = TEXTUREMINMAGFILTER_NEAREST;
+    } else if(format == GL_DEPTH_STENCIL) {
+        internalformat = GL_DEPTH24_STENCIL8;
+        valuetype = GL_UNSIGNED_INT_24_8;
+    }
+
+#endif
 	type = TEXTURETYPE_DIFFUSE;
 	path = "";
 	width = 0;
