@@ -68,6 +68,23 @@ bool gvkBeginFrame(gVKContext& ctx, GLFWwindow* window) {
 		return false;
 	}
 
+	// The render pass is not begun here on purpose. Geometry has to be recorded
+	// inside it, yet the clear colour is only final after the canvas has drawn, so
+	// the pass is opened lazily on the first draw (gvkEnsureRenderPass) or, for a
+	// frame that draws nothing, in gvkEndFrame. Rewind this frame's vertex ring so
+	// the draw path can refill it from the start.
+	ctx.resetDynamicVertices();
+	ctx.renderpassactive = false;
+	ctx.frameactive = true;
+	return true;
+}
+
+bool gvkEnsureRenderPass(gVKContext& ctx) {
+	if(!ctx.frameactive) return false;
+	if(ctx.renderpassactive) return true;
+
+	VkCommandBuffer commandbuffer = ctx.commandbuffers[ctx.currentframe];
+
 	VkRenderPassBeginInfo renderpassinfo{};
 	renderpassinfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
 	renderpassinfo.renderPass = ctx.renderpass;
@@ -75,21 +92,41 @@ bool gvkBeginFrame(gVKContext& ctx, GLFWwindow* window) {
 	renderpassinfo.renderArea.offset = {0, 0};
 	renderpassinfo.renderArea.extent = ctx.swapchainextent;
 	// The attachment uses a CLEAR load operation, so this is the value that ends up
-	// covering the screen.
+	// covering the screen wherever nothing is drawn.
 	renderpassinfo.clearValueCount = 1;
 	renderpassinfo.pClearValues = &ctx.clearvalue;
 	vkCmdBeginRenderPass(commandbuffer, &renderpassinfo, VK_SUBPASS_CONTENTS_INLINE);
 
-	ctx.frameactive = true;
+	// A negative-height viewport flips Y, so the orthographic projection the engine
+	// builds for OpenGL's top-left origin lands the same way under Vulkan (needs
+	// maintenance1 / Vulkan 1.1+, which the selected device already targets).
+	VkViewport viewport{};
+	viewport.x = 0.0f;
+	viewport.y = static_cast<float>(ctx.swapchainextent.height);
+	viewport.width = static_cast<float>(ctx.swapchainextent.width);
+	viewport.height = -static_cast<float>(ctx.swapchainextent.height);
+	viewport.minDepth = 0.0f;
+	viewport.maxDepth = 1.0f;
+	vkCmdSetViewport(commandbuffer, 0, 1, &viewport);
+
+	VkRect2D scissor{};
+	scissor.offset = {0, 0};
+	scissor.extent = ctx.swapchainextent;
+	vkCmdSetScissor(commandbuffer, 0, 1, &scissor);
+
+	ctx.renderpassactive = true;
 	return true;
 }
 
 bool gvkEndFrame(gVKContext& ctx, GLFWwindow* window) {
 	if(!ctx.frameactive) return false;
+	// Open the pass if the frame drew nothing, so the clear still reaches the screen.
+	gvkEnsureRenderPass(ctx);
 	ctx.frameactive = false;
 
 	VkCommandBuffer commandbuffer = ctx.commandbuffers[ctx.currentframe];
 	vkCmdEndRenderPass(commandbuffer);
+	ctx.renderpassactive = false;
 	VkResult result = vkEndCommandBuffer(commandbuffer);
 	if(result != VK_SUCCESS) {
 		gLoge("gVKFrame") << "vkEndCommandBuffer failed! VkResult: " << result;

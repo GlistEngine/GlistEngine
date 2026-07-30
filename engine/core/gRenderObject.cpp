@@ -107,6 +107,9 @@ void gRenderObject::createRenderer(int renderEngine) {
 	} else {
 		renderer = new gGLRenderEngine();
 	}
+	// Record the active backend so the base class can branch the 2D helpers between
+	// the OpenGL mesh path and the Vulkan draw path (gRenderObject is a friend).
+	renderer->renderenginetype = renderEngine;
 	renderer->init();
 }
 

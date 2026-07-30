@@ -8,11 +8,13 @@
 #define CORE_GVKRENDERENGINE_H
 #include "gRenderer.h"
 #include "gUbo.h"
+#include <unordered_map>
 
-// All Vulkan objects live behind this opaque pointer, so <vulkan/vulkan.h> is
-// not pushed into every translation unit that includes this header and the
-// class still compiles on platforms that have no Vulkan headers.
+// All Vulkan objects live behind these opaque types, so <vulkan/vulkan.h> is not
+// pushed into every translation unit that includes this header and the class
+// still compiles on platforms that have no Vulkan headers.
 struct gVKContext;
+struct gVKTexture;
 
 class gVKRenderEngine : public gRenderer {
 public:
@@ -186,6 +188,16 @@ public:
 	void pushMatrix() override;
 	void popMatrix() override;
 
+	/* ---------------- 2D draw path ---------------- */
+	// Records a filled coloured triangle list into the active frame (the Vulkan
+	// side of gDrawTriangle / gDrawRectangle). No-op if no frame is active.
+	void drawColored2D(const glm::vec2* points, int count, const glm::vec4& color, const glm::mat4& mvp,
+			bool lineLoop = false) override;
+
+	// Records a textured quad using the registered Vulkan texture for textureId
+	// (the Vulkan side of gImage / gTexture::draw). No-op if the id is unknown.
+	void drawTexturedRect2D(GLuint textureId, const glm::vec4& tint, const glm::mat4& mvp) override;
+
 	/* ---------------- Vulkan context ---------------- */
 	// gVKContext is opaque here (its layout lives in the .cpp), so a developer can
 	// reach the accessor rich context without this header ever pulling in
@@ -213,6 +225,23 @@ private:
 	void cleanupVulkan();
 	gVKContext* vkcontext = nullptr;
 	void updatePackUnpackAlignment(int i) override;
+
+	// Registry backing the GLuint texture ids gTexture/gImage hand out: createTextures
+	// mints an id, texImage2D fills the Vulkan texture for the currently bound id,
+	// and deleteTexture frees it. boundtextureid mirrors the OpenGL bind state that
+	// gTexture's upload path relies on.
+	std::unordered_map<GLuint, gVKTexture*> vktextures;
+	GLuint nextvktextureid = 1;
+	GLuint boundtextureid = 0;
+	void destroyAllTextures();
+
+	// Shader hot reload. Development builds watch the .vert / .frag sources the 2D
+	// pipelines are compiled from and rebuild them when one is saved, so a shader
+	// can be tuned without restarting. Release builds compile nothing at runtime,
+	// the timestamp stays 0 and this costs one comparison per frame.
+	void checkShaderReload();
+	long long shadersourcetimestamp = 0;
+	int shaderpollcountdown = 0;
 };
 
 #endif
