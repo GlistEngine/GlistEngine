@@ -39,6 +39,8 @@ public:
 
     void setDisabled(bool isDisabled);
 
+    bool getHasContent();
+
 private:
     std::string text;
     std::vector<std::string> line;
@@ -51,7 +53,7 @@ private:
     float linespacingfactor;
     bool isdisabled;
     gColor textcolor;
-
+    bool hascontent;
     void resetText();
     void resetAlignment();
 

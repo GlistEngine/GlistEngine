@@ -28,6 +28,9 @@
 #include <GLES3/gl3ext.h>
 #include <GLES3/gl3platform.h>
 #endif
+#if defined(__APPLE__)
+#include <TargetConditionals.h>
+#endif
 #if TARGET_OS_OSX
 #include <GL/glew.h>
 #include <OpenGL/gl.h>

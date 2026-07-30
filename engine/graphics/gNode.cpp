@@ -19,7 +19,7 @@ gNode::gNode() {
 	id = lastid;
 	parent = nullptr;
 	isenabled = true;
-	localtransformationmatrix = glm::mat4(1.0f);
+	localtransformationmatrix.push_back(glm::mat4(1.0f));
 	position = glm::vec3(0.0f);
 	orientation = glm::angleAxis(0.0f, glm::vec3(0.0f, 0.0f, 0.0f));
 	scalevec = glm::vec3(1.0f);
@@ -110,17 +110,17 @@ void gNode::setPosition(const glm::vec3& pv) {
 }
 
 void gNode::dolly(float distance) {
-	position += normalize(glm::vec3(localtransformationmatrix[2])) * distance;
+	position += normalize(glm::vec3(localtransformationmatrix.back()[2])) * distance;
 	processTransformationMatrix();
 }
 
 void gNode::truck(float distance) {
-	position += normalize(glm::vec3(localtransformationmatrix[0])) * distance;
+	position += normalize(glm::vec3(localtransformationmatrix.back()[0])) * distance;
 	processTransformationMatrix();
 }
 
 void gNode::boom(float distance) {
-	position += normalize(glm::vec3(localtransformationmatrix[1])) * distance;
+	position += normalize(glm::vec3(localtransformationmatrix.back()[1])) * distance;
 	processTransformationMatrix();
 }
 
@@ -244,33 +244,31 @@ const glm::vec3& gNode::getScale() const{
 }
 
 glm::vec3 gNode::getScalarDirectionX() const {
-	return glm::vec3(localtransformationmatrix[0]);
+	return glm::vec3(localtransformationmatrix.back()[0]);
 }
 
 glm::vec3 gNode::getScalarDirectionY() const {
-	return glm::vec3(localtransformationmatrix[1]);
+	return glm::vec3(localtransformationmatrix.back()[1]);
 }
 
 glm::vec3 gNode::getScalarDirectionZ() const {
-	return glm::vec3(localtransformationmatrix[2]);
+	return glm::vec3(localtransformationmatrix.back()[2]);
 }
 
-void gNode::pushMatrix() const {
-#if defined(WIN32) || defined(LINUX)
-	renderer->pushMatrix();
-#endif
+void gNode::pushMatrix() {
+    localtransformationmatrix.push_back(localtransformationmatrix.back());
 }
 
-void gNode::popMatrix() const {
-#if defined(WIN32) || defined(LINUX)
-	renderer->popMatrix();
-#endif
+void gNode::popMatrix() {
+    if (localtransformationmatrix.size() > 1) {
+        localtransformationmatrix.pop_back();
+    }
 }
 
 void gNode::processTransformationMatrix() {
-	localtransformationmatrix = glm::translate(glm::mat4(1.0f), position);
-	localtransformationmatrix = localtransformationmatrix * glm::toMat4((const glm::quat&)orientation);
-	localtransformationmatrix = glm::scale(localtransformationmatrix, scalevec);
+	localtransformationmatrix.back() = glm::translate(glm::mat4(1.0f), position);
+	localtransformationmatrix.back() = localtransformationmatrix.back() * glm::toMat4(orientation);
+	localtransformationmatrix.back() = glm::scale(localtransformationmatrix.back(), scalevec);
 	prevposition = position;
 	prevorientation = orientation;
 	prevscalevec = scalevec;
@@ -285,9 +283,9 @@ bool gNode::isEnabled() const {
 }
 
 void gNode::setTransformationMatrix(const glm::mat4& transformationMatrix) {
-	localtransformationmatrix = transformationMatrix;
+	localtransformationmatrix.back() = transformationMatrix;
 }
 
 const glm::mat4& gNode::getTransformationMatrix() const {
-	return localtransformationmatrix;
+	return localtransformationmatrix.back();
 }

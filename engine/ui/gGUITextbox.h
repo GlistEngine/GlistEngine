@@ -39,6 +39,7 @@
 #define UI_GGUITEXTBOX_H_
 
 #include "gGUIControl.h"
+#include "gGUIText.h"
 #include <stack>
 class gGUIManager;
 
@@ -244,6 +245,34 @@ public:
 
 	int calculateContentHeight();
 
+	/**
+	 * Sets the hint text (placeholder) displayed when the textbox is empty.
+	 *
+	 * @param hintText Placeholder text to display.
+	 */
+	void setHintText(const std::string& hintText);
+
+	/**
+	 * Returns a pointer to the internal gGUIText hint text object.
+	 *
+	 * @return Pointer to gGUIText hinttext.
+	 */
+	gGUIText* getHintText();
+
+	/**
+	 * Sets the color of the hint text.
+	 *
+	 * @param color gColor for the hint text.
+	 */
+	void setHintTextColor(const gColor& color);
+
+	/**
+	 * Returns a pointer to the internal gGUIText hint text object.
+	 *
+	 * @return gGUIText pointer.
+	 */
+	gGUIText* getHintTextObject();
+
 private:
 	static const int KEY_NONE = 0, KEY_BACKSPACE = 1, KEY_LEFT = 2, KEY_RIGHT = 4, KEY_DELETE = 8, KEY_ENTER = 16, KEY_UP = 32, KEY_DOWN = 64;
 
@@ -329,6 +358,9 @@ private:
 
 	bool widthexceeded;
 	int widthAdjusmentDelay;
+
+	gGUIText hinttext;
+	gColor hinttextcolor;
 	
 	//undo stacks
 	std::stack<std::string> undostack;

@@ -836,6 +836,7 @@ void gAppManager::iosLoop()
             window->close();
         }
         initialized = false;
+        return;
     }
     
     // Delta time calculations

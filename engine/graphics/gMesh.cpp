@@ -174,6 +174,7 @@ void gMesh::draw() {
 
 	drawStart();
 	drawVbo();
+	drawExtraShaders();
 	drawEnd();
 }
 
@@ -200,100 +201,139 @@ void gMesh::processTransformationMatrix() {
 	gNode::processTransformationMatrix();
 }
 
+void gMesh::bindMaterialUniforms(gShader& shader) {
+	if(!material.isPBR()) {
+		shader.setVec4("material.ambient", material.getAmbientColor()->r, material.getAmbientColor()->g, material.getAmbientColor()->b, material.getAmbientColor()->a);
+		shader.setVec4("material.diffuse", material.getDiffuseColor()->r, material.getDiffuseColor()->g, material.getDiffuseColor()->b, material.getDiffuseColor()->a);
+		shader.setVec4("material.specular", material.getSpecularColor()->r, material.getSpecularColor()->g, material.getSpecularColor()->b, material.getSpecularColor()->a);
+		shader.setFloat("material.shininess", material.getShininess());
+
+		bool hasDiffuse = material.isMapEnabled(gTexture::TEXTURETYPE_DIFFUSE);
+		bool hasSpecular = hasDiffuse && material.isMapEnabled(gTexture::TEXTURETYPE_SPECULAR);
+		bool hasNormal = hasDiffuse && material.isMapEnabled(gTexture::TEXTURETYPE_NORMAL);
+
+		shader.setInt("material.useDiffuseMap", hasDiffuse);
+		shader.setInt("material.useSpecularMap", hasSpecular);
+		shader.setInt("material.useNormalMap", hasNormal);
+	} else { // isPBR
+		bool hasAlbedo = material.isMapEnabled(gTexture::TEXTURETYPE_PBR_ALBEDO);
+		bool hasDiffuseFallback = !hasAlbedo && material.isMapEnabled(gTexture::TEXTURETYPE_DIFFUSE);
+
+		shader.setInt("hasAlbedoMap", (hasAlbedo || hasDiffuseFallback) ? 1 : 0);
+		shader.setInt("hasNormalMap", material.isMapEnabled(gTexture::TEXTURETYPE_PBR_NORMAL) ? 1 : 0);
+		shader.setInt("hasMetallicMap", material.isMapEnabled(gTexture::TEXTURETYPE_PBR_METALNESS) ? 1 : 0);
+		shader.setInt("hasRoughnessMap", material.isMapEnabled(gTexture::TEXTURETYPE_PBR_ROUGHNESS) ? 1 : 0);
+		shader.setInt("hasAOMap", material.isMapEnabled(gTexture::TEXTURETYPE_PBR_AO) ? 1 : 0);
+	}
+}
+
+void gMesh::bindMaterialTextures(gShader& shader) {
+	if(!material.isPBR()) {
+		bool hasDiffuse = material.isMapEnabled(gTexture::TEXTURETYPE_DIFFUSE);
+		if(hasDiffuse) {
+			shader.setInt("material.diffusemap", 0);
+			renderer->activateTexture(0);
+			material.bindMap(gTexture::TEXTURETYPE_DIFFUSE);
+		}
+		bool hasSpecular = hasDiffuse && material.isMapEnabled(gTexture::TEXTURETYPE_SPECULAR);
+		if(hasSpecular) {
+			shader.setInt("material.specularmap", 1);
+			renderer->activateTexture(1);
+			material.bindMap(gTexture::TEXTURETYPE_SPECULAR);
+		}
+		bool hasNormal = hasDiffuse && material.isMapEnabled(gTexture::TEXTURETYPE_NORMAL);
+		if(hasNormal) {
+			shader.setInt("material.normalMap", 2);
+			renderer->activateTexture(2);
+			material.bindMap(gTexture::TEXTURETYPE_NORMAL);
+		}
+	} else { // isPBR
+		shader.setInt("albedoMap", 3);
+		shader.setInt("normalMap", 4);
+		shader.setInt("metallicMap", 5);
+		shader.setInt("roughnessMap", 6);
+		shader.setInt("aoMap", 7);
+
+		bool hasAlbedo = material.isMapEnabled(gTexture::TEXTURETYPE_PBR_ALBEDO);
+		bool hasDiffuseFallback = !hasAlbedo && material.isMapEnabled(gTexture::TEXTURETYPE_DIFFUSE);
+
+		if(hasAlbedo) {
+			material.bindMap(gTexture::TEXTURETYPE_PBR_ALBEDO, 3);
+		} else if(hasDiffuseFallback) {
+			material.getMap(gTexture::TEXTURETYPE_DIFFUSE)->bind(3);
+		}
+		material.bindMap(gTexture::TEXTURETYPE_PBR_NORMAL, 4);
+		material.bindMap(gTexture::TEXTURETYPE_PBR_METALNESS, 5);
+		material.bindMap(gTexture::TEXTURETYPE_PBR_ROUGHNESS, 6);
+		material.bindMap(gTexture::TEXTURETYPE_PBR_AO, 7);
+	}
+}
+
 void gMesh::drawStart() {
 	G_PROFILE_ZONE_SCOPED_N("gMesh::drawStart()");
-	if (isshadowmappingenabled && renderpassno == 0) {
-		renderer->getShadowmapShader()->use();
-		renderer->getShadowmapShader()->setMat4("model", localtransformationmatrix);
-		return;
-	}
+		if(isshadowmappingenabled && renderpassno == 0) {
+			renderer->getShadowmapShader()->use();
+			renderer->getShadowmapShader()->setMat4("model", localtransformationmatrix.back());
+			return;
+		}
 
-    if (!material.isPBR()) {
-    	gShader& colorshader = *renderer->getColorShader();
-		colorshader.use();
+		if(!material.isPBR()) {
+			gShader& colorshader = *renderer->getColorShader();
+			colorshader.use();
+			bindMaterialUniforms(colorshader);
+			bindMaterialTextures(colorshader);
 
-	    // Set material colors
-	    colorshader.setVec4("material.ambient", material.getAmbientColor()->r, material.getAmbientColor()->g, material.getAmbientColor()->b, material.getAmbientColor()->a);
-	    colorshader.setVec4("material.diffuse", material.getDiffuseColor()->r, material.getDiffuseColor()->g, material.getDiffuseColor()->b, material.getDiffuseColor()->a);
-	    colorshader.setVec4("material.specular", material.getSpecularColor()->r, material.getSpecularColor()->g, material.getSpecularColor()->b, material.getSpecularColor()->a);
-	    colorshader.setFloat("material.shininess", material.getShininess());
-
-	    // Bind diffuse textures
-	    bool hasDiffuse = material.isMapEnabled(gTexture::TEXTURETYPE_DIFFUSE);
-	    colorshader.setInt("material.useDiffuseMap", hasDiffuse);
-	    if (hasDiffuse) {
-			colorshader.setInt("material.diffusemap", 0);
-	    	renderer->activateTexture(0);
-		    material.bindMap(gTexture::TEXTURETYPE_DIFFUSE);
-	    }
-
-	    // Bind specular textures
-	    bool hasSpecular = hasDiffuse && material.isMapEnabled(gTexture::TEXTURETYPE_SPECULAR);
-	    colorshader.setInt("material.useSpecularMap", hasSpecular);
-	    if (hasSpecular) {
-			colorshader.setInt("material.specularmap", 1);
-	    	renderer->activateTexture(1);
-		    material.bindMap(gTexture::TEXTURETYPE_SPECULAR);
-	    }
-
-	    // Bind normal textures
-	    bool hasNormal = hasDiffuse && material.isMapEnabled(gTexture::TEXTURETYPE_NORMAL);
-	    colorshader.setInt("material.useNormalMap", hasNormal);
-	    if (hasNormal) {
-			colorshader.setInt("material.normalMap", 2);
-	    	renderer->activateTexture(2);
-		    material.bindMap(gTexture::TEXTURETYPE_NORMAL);
-	    }
-
-	    // Set matrices
-	    if(isprojection2d) {
-		    colorshader.setMat4("projection", renderer->getProjectionMatrix2d());
-	    } else {
-		    colorshader.setMat4("projection", renderer->getProjectionMatrix());
-	    }
-		colorshader.setMat4("model", localtransformationmatrix);
-    } else { // isPBR
-    	gShader& pbrshader = *renderer->getPbrShader();
-    	pbrshader.use();
-    	pbrshader.setMat4("projection", renderer->getProjectionMatrix());
-	    pbrshader.setMat4("view", renderer->getViewMatrix());
-    	pbrshader.setMat4("model", localtransformationmatrix);
-    	pbrshader.setVec3("camPos", renderer->getCameraPosition());
-    	pbrshader.setInt("albedoMap", 3);
-    	pbrshader.setInt("normalMap", 4);
-    	pbrshader.setInt("metallicMap", 5);
-    	pbrshader.setInt("roughnessMap", 6);
-    	pbrshader.setInt("aoMap", 7);
-    	bool hasAlbedo = material.isMapEnabled(gTexture::TEXTURETYPE_PBR_ALBEDO);
-    	bool hasDiffuseFallback = !hasAlbedo && material.isMapEnabled(gTexture::TEXTURETYPE_DIFFUSE);
-    	pbrshader.setInt("hasAlbedoMap", (hasAlbedo || hasDiffuseFallback) ? 1 : 0);
-    	pbrshader.setInt("hasNormalMap", material.isMapEnabled(gTexture::TEXTURETYPE_PBR_NORMAL) ? 1 : 0);
-    	pbrshader.setInt("hasMetallicMap", material.isMapEnabled(gTexture::TEXTURETYPE_PBR_METALNESS) ? 1 : 0);
-    	pbrshader.setInt("hasRoughnessMap", material.isMapEnabled(gTexture::TEXTURETYPE_PBR_ROUGHNESS) ? 1 : 0);
-    	pbrshader.setInt("hasAOMap", material.isMapEnabled(gTexture::TEXTURETYPE_PBR_AO) ? 1 : 0);
-    	if (hasAlbedo) {
-    		material.bindMap(gTexture::TEXTURETYPE_PBR_ALBEDO, 3);
-    	} else if (hasDiffuseFallback) {
-    		material.getMap(gTexture::TEXTURETYPE_DIFFUSE)->bind(3);
-    	}
-    	material.bindMap(gTexture::TEXTURETYPE_PBR_NORMAL, 4);
-    	material.bindMap(gTexture::TEXTURETYPE_PBR_METALNESS, 5);
-    	material.bindMap(gTexture::TEXTURETYPE_PBR_ROUGHNESS, 6);
-    	material.bindMap(gTexture::TEXTURETYPE_PBR_AO, 7);
-	}
+			if(isprojection2d) {
+				colorshader.setMat4("projection", renderer->getProjectionMatrix2d());
+			} else {
+				colorshader.setMat4("projection", renderer->getProjectionMatrix());
+			}
+			colorshader.setMat4("model", localtransformationmatrix.back());
+		} else { // isPBR
+			gShader& pbrshader = *renderer->getPbrShader();
+			pbrshader.use();
+			pbrshader.setMat4("projection", renderer->getProjectionMatrix());
+			pbrshader.setMat4("view", renderer->getViewMatrix());
+			pbrshader.setMat4("model", localtransformationmatrix.back());
+			pbrshader.setVec3("camPos", renderer->getCameraPosition());
+			bindMaterialUniforms(pbrshader);
+			bindMaterialTextures(pbrshader);
+		}
 }
 
 void gMesh::drawVbo() {
 	G_PROFILE_ZONE_SCOPED_N("gMesh::drawVbo()");
     // draw mesh
     vbo->bind();
-    if (vbo->isIndexDataAllocated()) {
+    if(vbo->isIndexDataAllocated()) {
     	renderer->drawElements(drawmode, vbo->getIndicesNum());
     } else {
     	renderer->drawArrays(drawmode, vbo->getVerticesNum());
     }
     vbo->unbind();
 //    vbo.clear();
+}
+
+void gMesh::drawExtraShaders() {
+	G_PROFILE_ZONE_SCOPED_N("gMesh::drawExtraShaders()");
+	if(isshadowmappingenabled && renderpassno == 0) return;
+	const std::vector<gShader*>& extraShaders = material.getShaders();
+	if(extraShaders.empty()) return;
+	for(gShader* shader : extraShaders) {
+		if(!shader) continue;
+		shader->use();
+		shader->setMat4("model", localtransformationmatrix.back());
+		if(isprojection2d) {
+			shader->setMat4("projection", renderer->getProjectionMatrix2d());
+		} else {
+			shader->setMat4("projection", renderer->getProjectionMatrix());
+			shader->setMat4("view", renderer->getViewMatrix());
+			shader->setVec3("camPos", renderer->getCameraPosition());
+		}
+		bindMaterialUniforms(*shader);
+		bindMaterialTextures(*shader);
+		drawVbo();
+	}
 }
 
 void gMesh::drawEnd() {
@@ -333,7 +373,7 @@ void gMesh::recalculateBoundingBox() {
 	}
 
 	// Calculate the local bounding box
-	glm::vec4 pos1 = localtransformationmatrix * glm::vec4(verts[0].position, 1.0f);
+	glm::vec4 pos1 = localtransformationmatrix.back() * glm::vec4(verts[0].position, 1.0f);
 
 	float minx = pos1.x, miny = pos1.y, minz = pos1.z;
 	float maxx = pos1.x, maxy = pos1.y, maxz = pos1.z;
@@ -343,7 +383,7 @@ void gMesh::recalculateBoundingBox() {
 	__m128 maxvals = _mm_set_ps(maxz, maxy, maxx, 0);
 
 	for (size_t i = 1; i < vertices->size(); ++i) {
-		glm::vec4 pos = localtransformationmatrix * glm::vec4(verts[i].position, 1.0f);
+		glm::vec4 pos = localtransformationmatrix.back() * glm::vec4(verts[i].position, 1.0f);
 		__m128 current = _mm_set_ps(pos.z, pos.y, pos.x, 0);
 
 		minvals = _mm_min_ps(minvals, current);
@@ -365,7 +405,7 @@ void gMesh::recalculateBoundingBox() {
 	float32x4_t maxvals = {maxz, maxy, maxx, 0};
 
 	for (size_t i = 1; i < verts.size(); ++i) {
-		glm::vec4 pos = localtransformationmatrix * glm::vec4(verts[i].position, 1.0f);
+		glm::vec4 pos = localtransformationmatrix.back() * glm::vec4(verts[i].position, 1.0f);
 		float32x4_t current = {pos.z, pos.y, pos.x, 0};
 
 		minvals = vminq_f32(minvals, current);
@@ -383,7 +423,7 @@ void gMesh::recalculateBoundingBox() {
 	maxz = maxarray[0];
 #else
 	for (size_t i = 1; i < verts.size(); ++i) {
-		glm::vec4 pos = localtransformationmatrix * glm::vec4(verts[i].position, 1.0f);
+		glm::vec4 pos = localtransformationmatrix.back() * glm::vec4(verts[i].position, 1.0f);
 
 		minx = std::min(pos.x, minx);
 		miny = std::min(pos.y, miny);

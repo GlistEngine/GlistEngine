@@ -114,19 +114,19 @@ void gCamera::setPosition(const glm::vec3 pv) {
 
 void gCamera::dolly(float distance) {
 	gNode::dolly(distance);
-	lookposition += normalize(glm::vec3(localtransformationmatrix[2])) * distance;
+	lookposition += normalize(glm::vec3(localtransformationmatrix.back()[2])) * distance;
 	processLookMatrix();
 }
 
 void gCamera::truck(float distance) {
 	gNode::truck(distance);
-	lookposition += normalize(glm::vec3(localtransformationmatrix[0])) * distance;
+	lookposition += normalize(glm::vec3(localtransformationmatrix.back()[0])) * distance;
 	processLookMatrix();
 }
 
 void gCamera::boom(float distance) {
 	gNode::boom(distance);
-	lookposition += normalize(glm::vec3(localtransformationmatrix[1])) * distance;
+	lookposition += normalize(glm::vec3(localtransformationmatrix.back()[1])) * distance;
 	processLookMatrix();
 }
 
