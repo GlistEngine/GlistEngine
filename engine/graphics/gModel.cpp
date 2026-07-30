@@ -1013,7 +1013,7 @@ glm::mat4 gModel::convertMatrix(const aiMatrix4x4 &aiMat) {
 }
 
 gBoundingBox& gModel::getInitialBoundingBox() {
-	initialboundingbox.setTransformationMatrix(localtransformationmatrix);
+	initialboundingbox.setTransformationMatrix(localtransformationmatrix.back());
 	return initialboundingbox;
 }
 

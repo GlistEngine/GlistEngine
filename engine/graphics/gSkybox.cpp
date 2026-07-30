@@ -350,7 +350,7 @@ void gSkybox::draw() {
 	skyboxshader->setInt("aIsHDR", ishdr);
 	skyboxshader->setMat4("projection", renderer->getProjectionMatrix());
 	skyboxshader->setMat4("view", renderer->getViewMatrix());
-	skyboxshader->setMat4("model", localtransformationmatrix);
+	skyboxshader->setMat4("model", localtransformationmatrix.back());
 
 //	skyboxshader->setInt("skymap", skymapint);
 
