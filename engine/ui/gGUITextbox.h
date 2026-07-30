@@ -39,6 +39,7 @@
 #define UI_GGUITEXTBOX_H_
 
 #include "gGUIControl.h"
+#include "gGUIText.h"
 #include <stack>
 class gGUIManager;
 
@@ -64,6 +65,26 @@ public:
 	 * @return Text inside the textbox.
 	 */
 	std::string getText();
+
+	/**
+	 * Selects a range of characters in the textbox.
+	 *
+	 * @param startChar The starting character index (0-based).
+	 * @param endChar The ending character index (0-based).
+	 */
+	void setSelection(int startChar, int endChar);
+
+	/**
+	 * Selects all text in the textbox.
+	 */
+	void selectAll();
+
+	/**
+	 * Returns the currently selected text.
+	 *
+	 * @return Selected text substring, or empty string if nothing is selected.
+	 */
+	std::string getSelectedText();
 
 	/**
 	 * Enables/disables the textbox for editing.
@@ -224,6 +245,34 @@ public:
 
 	int calculateContentHeight();
 
+	/**
+	 * Sets the hint text (placeholder) displayed when the textbox is empty.
+	 *
+	 * @param hintText Placeholder text to display.
+	 */
+	void setHintText(const std::string& hintText);
+
+	/**
+	 * Returns a pointer to the internal gGUIText hint text object.
+	 *
+	 * @return Pointer to gGUIText hinttext.
+	 */
+	gGUIText* getHintText();
+
+	/**
+	 * Sets the color of the hint text.
+	 *
+	 * @param color gColor for the hint text.
+	 */
+	void setHintTextColor(const gColor& color);
+
+	/**
+	 * Returns a pointer to the internal gGUIText hint text object.
+	 *
+	 * @return gGUIText pointer.
+	 */
+	gGUIText* getHintTextObject();
+
 private:
 	static const int KEY_NONE = 0, KEY_BACKSPACE = 1, KEY_LEFT = 2, KEY_RIGHT = 4, KEY_DELETE = 8, KEY_ENTER = 16, KEY_UP = 32, KEY_DOWN = 64;
 
@@ -309,6 +358,9 @@ private:
 
 	bool widthexceeded;
 	int widthAdjusmentDelay;
+
+	gGUIText hinttext;
+	gColor hinttextcolor;
 	
 	//undo stacks
 	std::stack<std::string> undostack;

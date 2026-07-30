@@ -19,6 +19,9 @@ public:
 	gVKRenderEngine() = default;
 	~gVKRenderEngine() override;
 
+	bool beginFrame() override;
+	void endFrame() override;
+
 	void clear() override;
 	void clearColor(int r, int g, int b, int a = 255) override;
 	void clearColor(gColor color) override;

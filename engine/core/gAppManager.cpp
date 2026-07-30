@@ -178,14 +178,11 @@ void gAppManager::setup() {
     if(setupcomplete) {
         return;
     }
-    // App setup loads images, fonts and shaders through the OpenGL path. It is
-    // skipped while the Vulkan backend has no rendering path, otherwise it would
-    // call GL functions without a context.
-    if(renderengine == G_RENDERER_VK) {
-        gLogi("gAppManager") << "Vulkan backend: skipping app setup until the Vulkan rendering path is implemented.";
-        setupcomplete = true;
-        return;
-    }
+    // gApp::setup() only creates the canvas and hands it to the canvas manager, so
+    // it is backend agnostic and runs under Vulkan too. The canvas' own setup() -
+    // which loads images and other OpenGL resources - is still driven separately by
+    // the canvas manager, and stays the developer's responsibility to keep Vulkan
+    // safe until the Vulkan drawing path exists.
     app->setup();
     setupcomplete = true;
 }
@@ -554,10 +551,24 @@ void gAppManager::tick() {
         return;
     }
 
-    // The Vulkan backend initialises only: there is no GL context and no Vulkan
-    // frame path yet, so the frame body is skipped. Events are still polled so the
-    // window stays responsive and closable.
+    // Under Vulkan the engine's OpenGL geometry path stays disabled, but the app's
+    // clearColor() is already wired through: it records the frame's clear colour
+    // into the Vulkan context, and the render pass applies that colour when the
+    // frame begins. So the canvas update/draw runs first - letting a clearColor()
+    // call inside draw() choose the colour - and then the frame is cleared to it
+    // and presented. Real geometry is not recorded between the two calls yet.
     if(renderengine == G_RENDERER_VK) {
+        if(canvasmanager) canvasmanager->update();
+        gBaseCanvas* vkcanvas = (canvasmanager && !isguiapp) ? canvasmanager->getCurrentCanvas() : nullptr;
+        if(!isguiapp) app->update();
+        if(vkcanvas) {
+            vkcanvas->update();
+            vkcanvas->draw();
+        }
+        if(renderer != nullptr && renderer->beginFrame()) {
+            renderer->endFrame();
+            totaldraws++;
+        }
         if(inputmanager) inputmanager->update();
         window->update();
         executeQueue();

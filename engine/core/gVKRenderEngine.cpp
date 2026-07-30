@@ -12,24 +12,42 @@
 #include "gShader.h"
 #include "gTracy.h"
 
-// Vulkan is only wired up on the desktop GLFW platforms. This file is compiled
-// everywhere, but gGLFWWindow.cpp is desktop only, so the guard below mirrors
-// the CMake condition exactly. <vulkan/vulkan.h> must be included before GLFW
-// so that glfwCreateWindowSurface / glfwGetRequiredInstanceExtensions become
-// visible.
-#if defined(__APPLE__)
-#include <TargetConditionals.h>
-#endif
-#if defined(GLIST_HAS_VULKAN) && !defined(ANDROID) && !defined(EMSCRIPTEN) && !(defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE)
-	#define GVK_DESKTOP_GLFW 1
+// Vulkan is only wired up on the desktop GLFW platforms and only when the Vulkan
+// development files are available. gVKContext.h evaluates that condition, defines
+// GVK_DESKTOP_GLFW accordingly and holds the shared state of the backend.
+#include "gVKContext.h"
+
+#ifdef GVK_DESKTOP_GLFW
+	// GLFW_INCLUDE_VULKAN has to be defined before GLFW is pulled in, otherwise
+	// glfwCreateWindowSurface and glfwGetRequiredInstanceExtensions stay hidden.
 	#define GLFW_INCLUDE_VULKAN
-	#include <vulkan/vulkan.h>
 	#include "gGLFWWindow.h"
 	#include "gAppManager.h"
+	#include "gVKSwapchain.h"
+	#include "gVKRenderTarget.h"
+	#include "gVKCommands.h"
+	#include "gVKFrame.h"
+	#include "gVKSync.h"
 	#include <vector>
 	#include <set>
 	#include <string>
 	#include <cstring>
+	#include <cstdlib>
+#endif
+
+#ifdef GVK_DESKTOP_GLFW
+// Unlike OpenGL, clearing is not an immediate operation here: the colour is kept
+// and the render pass writes it when the next frame begins.
+static void gvkStoreClearColor(gVKContext* ctx, float r, float g, float b, float a) {
+	if(ctx == nullptr) return;
+	// Through the accessor rather than the member: this helper is a free function,
+	// not part of the context's friendship.
+	VkClearValue* clearvalue = ctx->getClearValue();
+	clearvalue->color.float32[0] = r;
+	clearvalue->color.float32[1] = g;
+	clearvalue->color.float32[2] = b;
+	clearvalue->color.float32[3] = a;
+}
 #endif
 
 gVKRenderEngine::~gVKRenderEngine() {
@@ -53,19 +71,20 @@ static void flipVertically(unsigned char* pixelData, int width, int height, int 
 }
 
 void gVKRenderEngine::clear() {
-	G_CHECK_GL(glClearColor(0.0f, 0.0f, 0.0f, 1.0f));
-	G_CHECK_GL(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
+	// The render pass clears the attachment at the start of every frame, so there
+	// is nothing to do at the moment this is called.
 }
 
 void gVKRenderEngine::clearColor(int r, int g, int b, int a) {
-	//    glBindFramebuffer(GL_FRAMEBUFFER, gFbo::defaultfbo);
-	G_CHECK_GL(glClearColor((float)r / 255, (float)g / 255, (float)b / 255, (float)a / 255));
-	G_CHECK_GL(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
+#ifdef GVK_DESKTOP_GLFW
+	gvkStoreClearColor(vkcontext, r / 255.0f, g / 255.0f, b / 255.0f, a / 255.0f);
+#endif
 }
 
 void gVKRenderEngine::clearColor(gColor color) {
-	G_CHECK_GL(glClearColor(color.r, color.g, color.b, color.a));
-	G_CHECK_GL(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
+#ifdef GVK_DESKTOP_GLFW
+	gvkStoreClearColor(vkcontext, color.r, color.g, color.b, color.a);
+#endif
 }
 
 void gVKRenderEngine::enableDepthTest() {
@@ -154,94 +173,72 @@ void gVKRenderEngine::takeScreenshot(gImage& img) {
 }
 
 
+// The buffer, VAO, vertex-attribute and draw entry points below are OpenGL only.
+// A Vulkan window is created with GLFW_NO_API, so there is no current GL context
+// and issuing these calls is undefined behaviour - on macOS/MoltenVK it hangs, the
+// same way glViewport did during window init. Until the Vulkan resource path is
+// implemented they are safe no-ops, which is what lets gTexture/gImage objects be
+// constructed and destroyed under the Vulkan backend (their setupRenderData() and
+// cleanupAll() run through here) without freezing. The "create" calls hand back 0,
+// a handle the matching delete calls already treat as nothing to free.
 GLuint gVKRenderEngine::genBuffers() {
-	GLuint buffer;
-	G_CHECK_GL(glGenBuffers(1, &buffer));
-	return buffer;
+	return 0;
 }
 
 void gVKRenderEngine::deleteBuffer(GLuint& buffer) {
-	if (buffer != 0) {
-		G_CHECK_GL(glDeleteBuffers(1, &buffer));
-	}
 }
 
 void gVKRenderEngine::bindBuffer(GLenum target, GLuint buffer) {
-	G_CHECK_GL(glBindBuffer(target, buffer));
 }
 
 void gVKRenderEngine::unbindBuffer(GLenum target) {
-	G_CHECK_GL(glBindBuffer(target, 0));
 }
 
 void gVKRenderEngine::bufSubData(GLuint buffer, int offset, int size, const void* data) {
-	bindBuffer(GL_UNIFORM_BUFFER, buffer);
-	G_CHECK_GL(glBufferSubData(GL_UNIFORM_BUFFER, offset, size, data));
-	unbindBuffer(GL_UNIFORM_BUFFER);
 }
 
 void gVKRenderEngine::setBufferData(GLuint buffer, const void* data, size_t size, int usage) {
-	bindBuffer(GL_UNIFORM_BUFFER, buffer);
-	G_CHECK_GL(glBufferData(GL_UNIFORM_BUFFER, size, data, usage));
-	unbindBuffer(GL_UNIFORM_BUFFER);
 }
 
 void gVKRenderEngine::setBufferRange(int index, GLuint buffer, int offset, int size) {
-	G_CHECK_GL(glBindBufferRange(GL_UNIFORM_BUFFER, index, buffer, offset, size));
 }
 
-// ----- VAO -----l
+// ----- VAO -----
 GLuint gVKRenderEngine::createVAO() {
-	GLuint vao;
-	G_CHECK_GL(glGenVertexArrays(1, &vao));
-	return vao;
+	return 0;
 }
 
 void gVKRenderEngine::deleteVAO(GLuint& vao) {
-	if(vao != 0) {
-		G_CHECK_GL(glDeleteVertexArrays(1, &vao));
-	}
 }
 
 void gVKRenderEngine::bindVAO(GLuint vao) {
-	G_CHECK_GL(glBindVertexArray(vao));
 }
 
 void gVKRenderEngine::unbindVAO() {
-	G_CHECK_GL(glBindVertexArray(0));
 }
 
 void gVKRenderEngine::setVertexBufferData(GLuint vbo, size_t size, const void* data, int usage) {
-	G_CHECK_GL(glBindBuffer(GL_ARRAY_BUFFER, vbo));
-	G_CHECK_GL(glBufferData(GL_ARRAY_BUFFER, size, data, usage));
 }
 
 void gVKRenderEngine::setIndexBufferData(GLuint ebo, size_t size, const void* data, int usage) {
-	G_CHECK_GL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo));
-	G_CHECK_GL(glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, data, usage));
 }
 
 // ----- Draw -----
 void gVKRenderEngine::drawArrays(int drawMode, int count) {
-	G_CHECK_GL(glDrawArrays(drawMode, 0, count));
 }
 
 void gVKRenderEngine::drawElements(int drawMode, int count) {
-	G_CHECK_GL(glDrawElements(drawMode, count, G_INDEX_SIZE, 0));
 }
 
 // ----- vertex attributes -----
 void gVKRenderEngine::enableVertexAttrib(int index) {
-	G_CHECK_GL(glEnableVertexAttribArray(index));
 }
 
 void gVKRenderEngine::disableVertexAttrib(int index) {
-	G_CHECK_GL(glDisableVertexAttribArray(index));
 }
 
 void gVKRenderEngine::setVertexAttribPointer(int index, int size, int type, bool normalized, int stride,
                                              const void* pointer) {
-	G_CHECK_GL(glVertexAttribPointer(index, size, type, normalized ? GL_TRUE : GL_FALSE, stride, pointer));
 }
 
 void gVKRenderEngine::setViewport(int x, int y, int width, int height) {
@@ -704,202 +701,8 @@ void gVKRenderEngine::popMatrix() {
 
 #ifdef GVK_DESKTOP_GLFW
 
-// Validation layers cost performance, so the default follows the same DEBUG
-// condition the OpenGL debug output already uses in this engine. A developer can
-// still override it per context through setValidationEnabled().
-#if defined(DEBUG) || defined(ENGINE_OPENGL_CHECKS)
-static constexpr bool gvkdefaultvalidation = true;
-#else
-static constexpr bool gvkdefaultvalidation = false;
-#endif
-
-// Every Vulkan handle lives here so the header stays Vulkan free, right next to
-// the developer facing settings that shape initialisation. Handles start as
-// VK_NULL_HANDLE, which is what makes the "destroy only if non null" teardown
-// correct even when initialisation fails half way through.
-//
-// The public surface is accessor based: settings go in through setters, and both
-// settings and handles come back out through pointer returning getters. Handing
-// back the address of a handle is deliberate - that is exactly the shape most
-// Vulkan entry points want for their out parameters, so the same getter both
-// reads a handle and receives it when the next phase (swapchain, pipeline, ...)
-// is wired up. gVKRenderEngine drives creation, so it is a friend and reaches
-// the raw members directly; every other consumer goes through the accessors.
-struct gVKContext {
-	friend class gVKRenderEngine;
-
-	/* ---------------- configurable settings ---------------- */
-	// Set these before the backend initialises to influence instance and device
-	// creation. Reading them afterwards simply reports what was used.
-
-	// Identity handed to VkApplicationInfo. Informational to drivers and tools,
-	// but handy for profiling and crash triage.
-	void setAppName(const std::string& name) { appname = name; }
-	void setEngineName(const std::string& name) { enginename = name; }
-	void setAppVersion(uint32_t version) { appversion = version; }
-	void setEngineVersion(uint32_t version) { engineversion = version; }
-
-	// The minimum Vulkan version the engine requires (the floor), e.g.
-	// VK_API_VERSION_1_3. init does NOT target this value: it targets the highest
-	// version the loader offers, so newer Vulkan (1.4 today, 1.5+ later) is picked
-	// up automatically with no code change. This floor only decides when to give
-	// up - if the loader cannot even reach it, init fails instead of limping on.
-	void setMinApiVersion(uint32_t version) { minapiversion = version; }
-
-	// Validation layers are a debugging aid; on by default only in debug builds.
-	void setValidationEnabled(bool enabled) { enablevalidation = enabled; }
-
-	// Extra names appended on top of the mandatory GLFW / portability ones the
-	// engine always requests. The pointed to strings must outlive init, so string
-	// literals (or otherwise long lived storage) are the natural fit.
-	void addInstanceExtension(const char* name) { extrainstanceextensions.push_back(name); }
-	void addDeviceExtension(const char* name) { extradeviceextensions.push_back(name); }
-	void addLayer(const char* name) { extralayers.push_back(name); }
-
-	// Pointer returning getters for the settings, so a caller can both inspect
-	// and, when a Vulkan struct wants an address, forward it without copying.
-	std::string* getAppName() { return &appname; }
-	std::string* getEngineName() { return &enginename; }
-	uint32_t* getAppVersion() { return &appversion; }
-	uint32_t* getEngineVersion() { return &engineversion; }
-	uint32_t* getMinApiVersion() { return &minapiversion; }
-	bool* getValidationEnabled() { return &enablevalidation; }
-	std::vector<const char*>* getInstanceExtensions() { return &extrainstanceextensions; }
-	std::vector<const char*>* getDeviceExtensions() { return &extradeviceextensions; }
-	std::vector<const char*>* getLayers() { return &extralayers; }
-
-	/* ---------------- created Vulkan handles ---------------- */
-	// Filled during init. Each getter returns the address of the handle, matching
-	// the out parameter shape of the Vulkan calls that will consume them.
-
-	VkInstance* getInstance() { return &instance; }
-	VkDebugUtilsMessengerEXT* getDebugMessenger() { return &debugmessenger; }
-	VkSurfaceKHR* getSurface() { return &surface; }
-	VkPhysicalDevice* getPhysicalDevice() { return &physicaldevice; }
-
-	// The full set of GPUs the instance enumerated, and how many. init keeps only
-	// the first device that can both render and present (getPhysicalDevice());
-	// these expose the whole list so code can inspect or pick a different one.
-	uint32_t* getDeviceCount() { return &devicecount; }
-	std::vector<VkPhysicalDevice>* getPhysicalDevices() { return &physicaldevices; }
-
-	// Properties and features for every enumerated GPU (parallel to
-	// getPhysicalDevices()), including the ones init did not pick, so code can
-	// compare and choose a different device without querying each handle itself.
-	std::vector<VkPhysicalDeviceProperties>* getAllDeviceProperties() { return &physicaldeviceproperties; }
-	std::vector<VkPhysicalDeviceFeatures>* getAllDeviceFeatures() { return &physicaldevicefeatures; }
-
-	VkDevice* getDevice() { return &device; }
-	VkQueue* getGraphicsQueue() { return &graphicsqueue; }
-	VkQueue* getPresentQueue() { return &presentqueue; }
-	uint32_t* getGraphicsFamily() { return &graphicsfamily; }
-	uint32_t* getPresentFamily() { return &presentfamily; }
-
-	// Queue families of the selected physical device as the driver reported them:
-	// queue counts and capability flags (graphics/compute/transfer/...). init reads
-	// these to choose the graphics and present indices; kept for later multi-queue
-	// work (e.g. a dedicated transfer or compute queue).
-	std::vector<VkQueueFamilyProperties>* getQueueFamilyProperties() { return &queuefamilyproperties; }
-
-	// Per queue family of the selected device: whether that family can present to
-	// the surface (parallel to getQueueFamilyProperties()). init keeps only the
-	// first presentable family index; this exposes every family's support.
-	std::vector<VkBool32>* getQueueFamilyPresentSupport() { return &queuefamilypresentsupport; }
-
-	// The instance extensions, layers and device extensions actually enabled at
-	// creation: the mandatory GLFW / portability / swapchain / validation names
-	// merged with the developer's additions. getInstanceExtensions() / getLayers()
-	// / getDeviceExtensions() above return only the developer's extra requests;
-	// these return the full effective set that was handed to Vulkan.
-	std::vector<const char*>* getEnabledInstanceExtensions() { return &enabledinstanceextensions; }
-	std::vector<const char*>* getEnabledLayers() { return &enabledlayers; }
-	std::vector<const char*>* getEnabledDeviceExtensions() { return &enableddeviceextensions; }
-
-	// Everything the instance / GPU actually supports (not just what we enabled),
-	// enumerated once at init so a developer can check for a capability without
-	// re-querying: is extension X available on this GPU, is layer Y installed.
-	std::vector<VkExtensionProperties>* getAvailableInstanceExtensions() { return &availableinstanceextensions; }
-	std::vector<VkLayerProperties>* getAvailableLayers() { return &availablelayers; }
-	std::vector<VkExtensionProperties>* getAvailableDeviceExtensions() { return &availabledeviceextensions; }
-
-	// The three core physical-device capability blocks, queried once during init.
-	// Properties: limits and identity. Features: optional capabilities the GPU
-	// supports (samplerAnisotropy, geometryShader, ...). Memory: heaps and memory
-	// types, needed to pick where every buffer and image gets allocated.
-	VkPhysicalDeviceProperties* getDeviceProperties() { return &deviceproperties; }
-
-	// Convenience for the selected GPU's own Vulkan version (same as
-	// getDeviceProperties()->apiVersion). Check against this before using
-	// version-specific core features; getInstanceApiVersion() is the loader side.
-	uint32_t getDeviceApiVersion() const { return deviceproperties.apiVersion; }
-
-	VkPhysicalDeviceFeatures* getDeviceFeatures() { return &devicefeatures; }
-	VkPhysicalDeviceMemoryProperties* getDeviceMemoryProperties() { return &devicememoryproperties; }
-
-	// The surface's capabilities and the formats / present modes it supports on the
-	// selected device - what the swapchain is built from: extent and image-count
-	// bounds, colour formats, and vsync / present modes.
-	VkSurfaceCapabilitiesKHR* getSurfaceCapabilities() { return &surfacecapabilities; }
-	std::vector<VkSurfaceFormatKHR>* getSurfaceFormats() { return &surfaceformats; }
-	std::vector<VkPresentModeKHR>* getSurfacePresentModes() { return &surfacepresentmodes; }
-
-	// The instance-level Vulkan version the loader actually supports (from
-	// vkEnumerateInstanceVersion). This is exactly what init targets - it is the
-	// highest version available; getMinApiVersion() is only the floor init checks
-	// it against.
-	uint32_t* getInstanceApiVersion() { return &instanceapiversion; }
-
-	// Whether validation is actually running, which is not the same as whether it
-	// was requested: setValidationEnabled(true) still yields false here when the
-	// layer or debug-utils extension is missing at runtime. getValidationEnabled()
-	// reports the request; this reports the outcome.
-	bool isValidationActive() const { return validationactive; }
-
-	// True once a logical device exists, i.e. init reached the point where the
-	// context is actually usable for swapchains, pipelines and queues.
-	bool isInitialized() const { return device != VK_NULL_HANDLE; }
-
-private:
-	std::string appname = "GlistApp";
-	std::string enginename = "GlistEngine";
-	uint32_t appversion = VK_MAKE_API_VERSION(0, 1, 0, 0);
-	uint32_t engineversion = VK_MAKE_API_VERSION(0, 1, 0, 0);
-	uint32_t minapiversion = VK_API_VERSION_1_3;
-	bool enablevalidation = gvkdefaultvalidation;
-	std::vector<const char*> extrainstanceextensions;
-	std::vector<const char*> extradeviceextensions;
-	std::vector<const char*> extralayers;
-
-	VkInstance instance = VK_NULL_HANDLE;
-	VkDebugUtilsMessengerEXT debugmessenger = VK_NULL_HANDLE;
-	VkSurfaceKHR surface = VK_NULL_HANDLE;
-	VkPhysicalDevice physicaldevice = VK_NULL_HANDLE;
-	VkDevice device = VK_NULL_HANDLE;
-	VkQueue graphicsqueue = VK_NULL_HANDLE;
-	VkQueue presentqueue = VK_NULL_HANDLE;
-	uint32_t graphicsfamily = 0;
-	uint32_t presentfamily = 0;
-	uint32_t devicecount = 0;
-	std::vector<VkPhysicalDevice> physicaldevices;
-	std::vector<VkPhysicalDeviceProperties> physicaldeviceproperties;
-	std::vector<VkPhysicalDeviceFeatures> physicaldevicefeatures;
-	std::vector<VkQueueFamilyProperties> queuefamilyproperties;
-	std::vector<VkBool32> queuefamilypresentsupport;
-	std::vector<const char*> enabledinstanceextensions;
-	std::vector<const char*> enabledlayers;
-	std::vector<const char*> enableddeviceextensions;
-	std::vector<VkExtensionProperties> availableinstanceextensions;
-	std::vector<VkLayerProperties> availablelayers;
-	std::vector<VkExtensionProperties> availabledeviceextensions;
-	VkPhysicalDeviceProperties deviceproperties{};
-	VkPhysicalDeviceFeatures devicefeatures{};
-	VkPhysicalDeviceMemoryProperties devicememoryproperties{};
-	VkSurfaceCapabilitiesKHR surfacecapabilities{};
-	std::vector<VkSurfaceFormatKHR> surfaceformats;
-	std::vector<VkPresentModeKHR> surfacepresentmodes;
-	uint32_t instanceapiversion = 0;
-	bool validationactive = false;
-};
+// gvkdefaultvalidation and the gVKContext layout now live in gVKContext.h, so
+// every module of the backend can share them.
 
 static const char* const GVK_VALIDATION_LAYER = "VK_LAYER_KHRONOS_validation";
 
@@ -916,6 +719,18 @@ static VKAPI_ATTR VkBool32 VKAPI_CALL gvkDebugCallback(
 		gLogw("gVKRenderEngine") << "Validation: " << data->pMessage;
 	}
 	return VK_FALSE;
+}
+
+// Hands the loader a search path, but never overrides a value the developer
+// exported themselves, so pointing the engine at a different driver or layer
+// build stays possible without touching the code.
+static void gvkSetEnvIfUnset(const char* name, const char* value) {
+	if(getenv(name) != nullptr) return;
+#if defined(_WIN32)
+	_putenv_s(name, value);
+#else
+	setenv(name, value, 0);
+#endif
 }
 
 static bool gvkHasLayer(const char* name) {
@@ -977,16 +792,15 @@ bool gVKRenderEngine::initVulkan() {
 		return true;
 	}
 
-#if defined(__APPLE__)
-	// MoltenVK (the macOS driver) and the Homebrew validation layers are not on
-	// the loader's default search path. The trailing 0 means "do not overwrite",
-	// so an explicitly exported value always wins.
+	// The driver manifest on macOS and the validation layer manifest on both
+	// desktop platforms live outside the directories the loader searches by
+	// itself, so their locations arrive as build definitions. Whether they are
+	// defined at all is decided per platform in engine/CMakeLists.txt.
 #ifdef GLIST_VK_ICD_FILE
-	setenv("VK_ICD_FILENAMES", GLIST_VK_ICD_FILE, 0);
+	gvkSetEnvIfUnset("VK_ICD_FILENAMES", GLIST_VK_ICD_FILE);
 #endif
 #ifdef GLIST_VK_LAYER_PATH
-	setenv("VK_LAYER_PATH", GLIST_VK_LAYER_PATH, 0);
-#endif
+	gvkSetEnvIfUnset("VK_LAYER_PATH", GLIST_VK_LAYER_PATH);
 #endif
 
 	gGLFWWindow* glfwwindow = dynamic_cast<gGLFWWindow*>(appmanager != nullptr ? appmanager->getWindow() : nullptr);
@@ -1001,6 +815,8 @@ bool gVKRenderEngine::initVulkan() {
 		cleanupVulkan();
 		return false;
 	}
+	// The frame loop reads this to react to resizes.
+	ctx->window = handle;
 
 	// Record what the instance level offers (every extension and layer present) so
 	// support can be queried later without re-enumerating. Done after the Apple
@@ -1311,6 +1127,40 @@ bool gVKRenderEngine::initVulkan() {
 			<< " | graphics family: " << ctx->graphicsfamily
 			<< " | present family: " << ctx->presentfamily
 			<< " | validation: " << (usevalidation ? "on" : "off");
+
+	/* ---------------- presentation resources ---------------- */
+	// The remaining modules of the frame path (render pass, framebuffers, command
+	// buffers and synchronisation) are hooked in here as they are implemented.
+	if(!gvkCreateSwapchain(*ctx, handle)) {
+		gLoge("gVKRenderEngine") << "Vulkan init: the swapchain could not be created.";
+		cleanupVulkan();
+		return false;
+	}
+	if(!gvkCreateRenderPass(*ctx)) {
+		gLoge("gVKRenderEngine") << "Vulkan init: the render pass could not be created.";
+		cleanupVulkan();
+		return false;
+	}
+	if(!gvkCreateFramebuffers(*ctx)) {
+		gLoge("gVKRenderEngine") << "Vulkan init: the framebuffers could not be created.";
+		cleanupVulkan();
+		return false;
+	}
+	if(!gvkCreateCommandResources(*ctx)) {
+		gLoge("gVKRenderEngine") << "Vulkan init: the command resources could not be created.";
+		cleanupVulkan();
+		return false;
+	}
+	if(!gvkCreateFrameSyncObjects(*ctx)) {
+		gLoge("gVKRenderEngine") << "Vulkan init: the frame synchronisation objects could not be created.";
+		cleanupVulkan();
+		return false;
+	}
+	if(!gvkCreatePresentSemaphores(*ctx, static_cast<uint32_t>(ctx->swapchainimages.size()))) {
+		gLoge("gVKRenderEngine") << "Vulkan init: the present semaphores could not be created.";
+		cleanupVulkan();
+		return false;
+	}
 	return true;
 #endif
 }
@@ -1320,8 +1170,17 @@ void gVKRenderEngine::cleanupVulkan() {
 #ifdef GVK_DESKTOP_GLFW
 	if(vkcontext == nullptr) return;
 	gVKContext* ctx = vkcontext;
+	// Destroying objects the GPU is still using is a validation error, so the
+	// device is drained first.
+	if(ctx->device != VK_NULL_HANDLE) vkDeviceWaitIdle(ctx->device);
 	// Strict reverse creation order: Vulkan requires children to be destroyed
 	// before their parent, and the surface must die before its instance.
+	gvkDestroyPresentSemaphores(*ctx);
+	gvkDestroyFrameSyncObjects(*ctx);
+	gvkDestroyCommandResources(*ctx);
+	gvkDestroyFramebuffers(*ctx);
+	gvkDestroyRenderPass(*ctx);
+	gvkDestroySwapchain(*ctx);
 	if(ctx->device != VK_NULL_HANDLE) vkDestroyDevice(ctx->device, nullptr);
 	if(ctx->surface != VK_NULL_HANDLE) vkDestroySurfaceKHR(ctx->instance, ctx->surface, nullptr);
 	if(ctx->debugmessenger != VK_NULL_HANDLE) {
@@ -1333,6 +1192,23 @@ void gVKRenderEngine::cleanupVulkan() {
 	delete vkcontext;
 #endif
 	vkcontext = nullptr;
+}
+
+
+bool gVKRenderEngine::beginFrame() {
+#ifdef GVK_DESKTOP_GLFW
+	if(vkcontext == nullptr) return false;
+	return gvkBeginFrame(*vkcontext, vkcontext->window);
+#else
+	return false;
+#endif
+}
+
+void gVKRenderEngine::endFrame() {
+#ifdef GVK_DESKTOP_GLFW
+	if(vkcontext == nullptr) return;
+	gvkEndFrame(*vkcontext, vkcontext->window);
+#endif
 }
 
 
