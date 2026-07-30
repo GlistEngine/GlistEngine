@@ -188,7 +188,8 @@ public:
 	/* ---------------- 2D draw path ---------------- */
 	// Records a filled coloured triangle list into the active frame (the Vulkan
 	// side of gDrawTriangle / gDrawRectangle). No-op if no frame is active.
-	void drawColored2D(const glm::vec2* points, int count, const glm::vec4& color, const glm::mat4& mvp) override;
+	void drawColored2D(const glm::vec2* points, int count, const glm::vec4& color, const glm::mat4& mvp,
+			bool lineLoop = false) override;
 
 	// Records a textured quad using the registered Vulkan texture for textureId
 	// (the Vulkan side of gImage / gTexture::draw). No-op if the id is unknown.

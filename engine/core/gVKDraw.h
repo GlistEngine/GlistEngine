@@ -21,10 +21,12 @@
 
 #include <glm/glm.hpp>
 
-// Records a filled coloured triangle list. points holds `count` 2D positions
-// (three per triangle); colour components are 0..1; mvp is the full 2D transform.
+// Records coloured 2D geometry. Colour components are 0..1; mvp is the full 2D
+// transform. By default points holds `count` positions forming a filled triangle
+// list (three per triangle); with lineLoop set they are the corners of an outline,
+// stroked as a closed line strip.
 void gvkDrawColored2D(gVKContext& ctx, const glm::vec2* points, int count,
-		const glm::vec4& color, const glm::mat4& mvp);
+		const glm::vec4& color, const glm::mat4& mvp, bool lineLoop = false);
 
 // Records a textured unit quad (two triangles) sampled through the given combined
 // image sampler descriptor set. tint components are 0..1.

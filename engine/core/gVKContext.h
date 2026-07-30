@@ -289,6 +289,8 @@ struct gVKContext {
 	// gvkCreateGraphicsPipelines and gvkCreateDrawResources, consumed by gVKDraw.
 
 	VkPipeline getColor2DPipeline() { return color2dpipeline; }
+	// Same pipeline with a line topology, for stroking unfilled shapes.
+	VkPipeline getColor2DLinePipeline() { return color2dlinepipeline; }
 	VkPipelineLayout getColor2DPipelineLayout() { return color2dpipelinelayout; }
 	VkPipeline getImage2DPipeline() { return image2dpipeline; }
 	VkPipelineLayout getImage2DPipelineLayout() { return image2dpipelinelayout; }
@@ -410,6 +412,7 @@ private:
 	bool renderpassactive = false;
 	VkPipelineLayout color2dpipelinelayout = VK_NULL_HANDLE;
 	VkPipeline color2dpipeline = VK_NULL_HANDLE;
+	VkPipeline color2dlinepipeline = VK_NULL_HANDLE;
 	VkPipelineLayout image2dpipelinelayout = VK_NULL_HANDLE;
 	VkPipeline image2dpipeline = VK_NULL_HANDLE;
 	// Descriptor set layouts of each pipeline, in set order, and the push constant

@@ -1342,10 +1342,11 @@ void gVKRenderEngine::cleanup() {
 	rendercolor = nullptr;
 }
 
-void gVKRenderEngine::drawColored2D(const glm::vec2* points, int count, const glm::vec4& color, const glm::mat4& mvp) {
+void gVKRenderEngine::drawColored2D(const glm::vec2* points, int count, const glm::vec4& color, const glm::mat4& mvp,
+		bool lineLoop) {
 #ifdef GVK_DESKTOP_GLFW
 	if(vkcontext == nullptr) return;
-	gvkDrawColored2D(*vkcontext, points, count, color, mvp);
+	gvkDrawColored2D(*vkcontext, points, count, color, mvp, lineLoop);
 #endif
 }
 

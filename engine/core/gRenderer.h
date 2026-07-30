@@ -266,8 +266,11 @@ public:
 	// Backend hook for the 2D coloured primitives (triangle, rectangle). OpenGL
 	// draws these through the mesh path and leaves this a no-op; the Vulkan backend
 	// overrides it to record into the active frame. points holds `count` 2D screen
-	// positions (three per triangle); colour components are 0..1.
-	virtual void drawColored2D(const glm::vec2* points, int count, const glm::vec4& color, const glm::mat4& mvp) {}
+	// positions and colour components are 0..1. By default the points form a filled
+	// triangle list (three per triangle); with lineLoop set they are the corners of
+	// an outline, stroked as a closed loop the way the mesh path does.
+	virtual void drawColored2D(const glm::vec2* points, int count, const glm::vec4& color, const glm::mat4& mvp,
+			bool lineLoop = false) {}
 
 	// Backend hook for a textured 2D quad (gImage / gTexture). OpenGL draws through
 	// its image shader and leaves this a no-op; Vulkan looks the texture id up in

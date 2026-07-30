@@ -66,19 +66,34 @@ struct gvkImageVertex {
 }
 
 void gvkDrawColored2D(gVKContext& ctx, const glm::vec2* points, int count,
-		const glm::vec4& color, const glm::mat4& mvp) {
+		const glm::vec4& color, const glm::mat4& mvp, bool lineLoop) {
 	if(count <= 0 || points == nullptr) return;
 	if(!gvkEnsureRenderPass(ctx)) return;
 	VkCommandBuffer cmd = ctx.getCurrentCommandBuffer();
-	if(cmd == VK_NULL_HANDLE || ctx.getColor2DPipeline() == VK_NULL_HANDLE) return;
+	if(cmd == VK_NULL_HANDLE) return;
+	VkPipeline pipeline = lineLoop ? ctx.getColor2DLinePipeline() : ctx.getColor2DPipeline();
+	if(pipeline == VK_NULL_HANDLE) return;
 
-	VkDeviceSize offset = ctx.pushDynamicVertices(points, sizeof(glm::vec2) * count);
+	// A line strip only closes if the first point is repeated at the end, so an
+	// outline is uploaded as count + 1 vertices. The scratch buffer is reused
+	// between calls to keep outline draws free of per-call allocation.
+	const void* vertexdata = points;
+	int vertexcount = count;
+	if(lineLoop) {
+		static thread_local std::vector<glm::vec2> loop;
+		loop.assign(points, points + count);
+		loop.push_back(points[0]);
+		vertexdata = loop.data();
+		vertexcount = static_cast<int>(loop.size());
+	}
+
+	VkDeviceSize offset = ctx.pushDynamicVertices(vertexdata, sizeof(glm::vec2) * vertexcount);
 	if(offset == VK_WHOLE_SIZE) {
 		gLogw("gVKDraw") << "Dynamic vertex buffer full; dropping a coloured draw.";
 		return;
 	}
 
-	vkCmdBindPipeline(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, ctx.getColor2DPipeline());
+	vkCmdBindPipeline(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline);
 	VkBuffer vbuf = ctx.getCurrentDynamicVertexBuffer();
 	vkCmdBindVertexBuffers(cmd, 0, 1, &vbuf, &offset);
 
@@ -89,7 +104,7 @@ void gvkDrawColored2D(gVKContext& ctx, const glm::vec2* points, int count,
 	if(pushsize > 0) {
 		vkCmdPushConstants(cmd, ctx.getColor2DPipelineLayout(), ctx.getColor2DPushStages(), 0, pushsize, &push);
 	}
-	vkCmdDraw(cmd, static_cast<uint32_t>(count), 1, 0, 0);
+	vkCmdDraw(cmd, static_cast<uint32_t>(vertexcount), 1, 0, 0);
 }
 
 void gvkDrawTextured2D(gVKContext& ctx, VkDescriptorSet textureSet,

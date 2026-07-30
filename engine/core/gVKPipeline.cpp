@@ -45,9 +45,12 @@ struct gvkShaderSet {
 	std::vector<uint32_t> spirv[GVK_STAGE_COUNT];
 };
 
-// Everything one pipeline needs, all of it derived from its shaders.
+// Everything one pipeline needs, all of it derived from its shaders. linepipeline
+// is the same pipeline with a line topology, used to stroke unfilled shapes; it
+// stays VK_NULL_HANDLE for pipelines that have no outline form.
 struct gvkPipelineParts {
 	VkPipeline pipeline = VK_NULL_HANDLE;
+	VkPipeline linepipeline = VK_NULL_HANDLE;
 	VkPipelineLayout layout = VK_NULL_HANDLE;
 	std::vector<VkDescriptorSetLayout> setlayouts;
 	uint32_t pushsize = 0;
@@ -90,7 +93,7 @@ VkShaderModule gvkCreateShaderModule(VkDevice device, const std::vector<uint32_t
 // and stays here.
 bool gvkBuildPipeline(VkDevice device, VkRenderPass renderpass, const char* name,
 		const std::vector<uint32_t>& vertSpirv, const std::vector<uint32_t>& fragSpirv,
-		gvkPipelineParts& parts) {
+		bool lineVariant, gvkPipelineParts& parts) {
 	gVKReflectedLayout reflected;
 	if(!gvkReflectSpirv(vertSpirv.data(), vertSpirv.size() * sizeof(uint32_t), reflected) ||
 			!gvkReflectSpirv(fragSpirv.data(), fragSpirv.size() * sizeof(uint32_t), reflected)) {
@@ -223,6 +226,17 @@ bool gvkBuildPipeline(VkDevice device, VkRenderPass renderpass, const char* name
 	pipelineinfo.subpass = 0;
 
 	VkResult result = vkCreateGraphicsPipelines(device, VK_NULL_HANDLE, 1, &pipelineinfo, nullptr, &parts.pipeline);
+	if(result == VK_SUCCESS && lineVariant) {
+		// Identical state apart from the topology: an unfilled shape is stroked as a
+		// closed line strip, which is what the OpenGL path does with DRAWMODE_LINELOOP.
+		// The line width stays 1.0, the only value guaranteed without wideLines.
+		// Primitive restart only affects indexed draws, and these are not indexed, so
+		// leaving it on costs nothing and spares Metal a warning: MoltenVK cannot
+		// disable it for strip topologies.
+		inputassembly.topology = VK_PRIMITIVE_TOPOLOGY_LINE_STRIP;
+		inputassembly.primitiveRestartEnable = VK_TRUE;
+		result = vkCreateGraphicsPipelines(device, VK_NULL_HANDLE, 1, &pipelineinfo, nullptr, &parts.linepipeline);
+	}
 	vkDestroyShaderModule(device, vert, nullptr);
 	vkDestroyShaderModule(device, frag, nullptr);
 	if(result != VK_SUCCESS) {
@@ -233,6 +247,7 @@ bool gvkBuildPipeline(VkDevice device, VkRenderPass renderpass, const char* name
 }
 
 void gvkDestroyParts(VkDevice device, gvkPipelineParts& parts) {
+	if(parts.linepipeline != VK_NULL_HANDLE) vkDestroyPipeline(device, parts.linepipeline, nullptr);
 	if(parts.pipeline != VK_NULL_HANDLE) vkDestroyPipeline(device, parts.pipeline, nullptr);
 	if(parts.layout != VK_NULL_HANDLE) vkDestroyPipelineLayout(device, parts.layout, nullptr);
 	for(VkDescriptorSetLayout setlayout : parts.setlayouts) vkDestroyDescriptorSetLayout(device, setlayout, nullptr);
@@ -275,9 +290,9 @@ bool gvkCreateDescriptorPool(VkDevice device, const gvkPipelineParts& color, con
 bool gvkBuildAll(VkDevice device, VkRenderPass renderpass, const gvkShaderSet& shaders,
 		gvkPipelineParts& color, gvkPipelineParts& image, VkDescriptorPool& pool) {
 	if(gvkBuildPipeline(device, renderpass, "colour",
-					shaders.spirv[GVK_STAGE_COLOR_VERT], shaders.spirv[GVK_STAGE_COLOR_FRAG], color) &&
+					shaders.spirv[GVK_STAGE_COLOR_VERT], shaders.spirv[GVK_STAGE_COLOR_FRAG], true, color) &&
 			gvkBuildPipeline(device, renderpass, "image",
-					shaders.spirv[GVK_STAGE_IMAGE_VERT], shaders.spirv[GVK_STAGE_IMAGE_FRAG], image) &&
+					shaders.spirv[GVK_STAGE_IMAGE_VERT], shaders.spirv[GVK_STAGE_IMAGE_FRAG], false, image) &&
 			gvkCreateDescriptorPool(device, color, image, pool)) {
 		return true;
 	}
@@ -312,6 +327,7 @@ bool gvkCreateGraphicsPipelines(gVKContext& ctx) {
 	if(!gvkBuildAll(ctx.device, ctx.renderpass, shaders, color, image, pool)) return false;
 
 	ctx.color2dpipeline = color.pipeline;
+	ctx.color2dlinepipeline = color.linepipeline;
 	ctx.color2dpipelinelayout = color.layout;
 	ctx.color2dsetlayouts = color.setlayouts;
 	ctx.color2dpushsize = color.pushsize;
@@ -356,6 +372,7 @@ void gvkDestroyGraphicsPipelines(gVKContext& ctx) {
 	VkDevice device = ctx.device;
 	if(device == VK_NULL_HANDLE) return;
 	if(ctx.image2dpipeline != VK_NULL_HANDLE) { vkDestroyPipeline(device, ctx.image2dpipeline, nullptr); ctx.image2dpipeline = VK_NULL_HANDLE; }
+	if(ctx.color2dlinepipeline != VK_NULL_HANDLE) { vkDestroyPipeline(device, ctx.color2dlinepipeline, nullptr); ctx.color2dlinepipeline = VK_NULL_HANDLE; }
 	if(ctx.color2dpipeline != VK_NULL_HANDLE) { vkDestroyPipeline(device, ctx.color2dpipeline, nullptr); ctx.color2dpipeline = VK_NULL_HANDLE; }
 	if(ctx.image2dpipelinelayout != VK_NULL_HANDLE) { vkDestroyPipelineLayout(device, ctx.image2dpipelinelayout, nullptr); ctx.image2dpipelinelayout = VK_NULL_HANDLE; }
 	if(ctx.color2dpipelinelayout != VK_NULL_HANDLE) { vkDestroyPipelineLayout(device, ctx.color2dpipelinelayout, nullptr); ctx.color2dpipelinelayout = VK_NULL_HANDLE; }
