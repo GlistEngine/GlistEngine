@@ -74,17 +74,22 @@ void gvkDrawColored2D(gVKContext& ctx, const glm::vec2* points, int count,
 	VkPipeline pipeline = lineLoop ? ctx.getColor2DLinePipeline() : ctx.getColor2DPipeline();
 	if(pipeline == VK_NULL_HANDLE) return;
 
-	// A line strip only closes if the first point is repeated at the end, so an
-	// outline is uploaded as count + 1 vertices. The scratch buffer is reused
-	// between calls to keep outline draws free of per-call allocation.
+	// A line list wants both endpoints of every edge, so N corners become N edges:
+	// (p0,p1), (p1,p2) ... (pN-1,p0), the last one closing the loop. The scratch
+	// buffer is reused between calls to keep outline draws free of per-call
+	// allocation.
 	const void* vertexdata = points;
 	int vertexcount = count;
 	if(lineLoop) {
-		static thread_local std::vector<glm::vec2> loop;
-		loop.assign(points, points + count);
-		loop.push_back(points[0]);
-		vertexdata = loop.data();
-		vertexcount = static_cast<int>(loop.size());
+		static thread_local std::vector<glm::vec2> edges;
+		edges.clear();
+		edges.reserve(static_cast<size_t>(count) * 2);
+		for(int i = 0; i < count; i++) {
+			edges.push_back(points[i]);
+			edges.push_back(points[(i + 1) % count]);
+		}
+		vertexdata = edges.data();
+		vertexcount = static_cast<int>(edges.size());
 	}
 
 	VkDeviceSize offset = ctx.pushDynamicVertices(vertexdata, sizeof(glm::vec2) * vertexcount);

@@ -24,7 +24,7 @@
 // Records coloured 2D geometry. Colour components are 0..1; mvp is the full 2D
 // transform. By default points holds `count` positions forming a filled triangle
 // list (three per triangle); with lineLoop set they are the corners of an outline,
-// stroked as a closed line strip.
+// stroked as the closed loop of edges between them.
 void gvkDrawColored2D(gVKContext& ctx, const glm::vec2* points, int count,
 		const glm::vec4& color, const glm::mat4& mvp, bool lineLoop = false);
 

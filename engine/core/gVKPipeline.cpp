@@ -47,7 +47,7 @@ struct gvkShaderSet {
 
 // Everything one pipeline needs, all of it derived from its shaders. linepipeline
 // is the same pipeline with a line topology, used to stroke unfilled shapes; it
-// stays VK_NULL_HANDLE for pipelines that have no outline form.
+// stays VK_NULL_HANDLE for pipelines with no outline form.
 struct gvkPipelineParts {
 	VkPipeline pipeline = VK_NULL_HANDLE;
 	VkPipeline linepipeline = VK_NULL_HANDLE;
@@ -227,14 +227,13 @@ bool gvkBuildPipeline(VkDevice device, VkRenderPass renderpass, const char* name
 
 	VkResult result = vkCreateGraphicsPipelines(device, VK_NULL_HANDLE, 1, &pipelineinfo, nullptr, &parts.pipeline);
 	if(result == VK_SUCCESS && lineVariant) {
-		// Identical state apart from the topology: an unfilled shape is stroked as a
-		// closed line strip, which is what the OpenGL path does with DRAWMODE_LINELOOP.
-		// The line width stays 1.0, the only value guaranteed without wideLines.
-		// Primitive restart only affects indexed draws, and these are not indexed, so
-		// leaving it on costs nothing and spares Metal a warning: MoltenVK cannot
-		// disable it for strip topologies.
-		inputassembly.topology = VK_PRIMITIVE_TOPOLOGY_LINE_STRIP;
-		inputassembly.primitiveRestartEnable = VK_TRUE;
+		// Identical state apart from the topology: an unfilled shape is stroked as
+		// separate edges, which is what the OpenGL path draws through
+		// DRAWMODE_LINELOOP. A list rather than a strip so primitive restart stays
+		// off - a strip would have to leave it enabled on Metal, which quietly turns
+		// an index of ~0 into a break should this pipeline ever draw indexed. The
+		// line width stays 1.0, the only value guaranteed without wideLines.
+		inputassembly.topology = VK_PRIMITIVE_TOPOLOGY_LINE_LIST;
 		result = vkCreateGraphicsPipelines(device, VK_NULL_HANDLE, 1, &pipelineinfo, nullptr, &parts.linepipeline);
 	}
 	vkDestroyShaderModule(device, vert, nullptr);
