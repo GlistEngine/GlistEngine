@@ -14,12 +14,17 @@
 #include "gRenderer.h"
 #include "gRenderObject.h"
 
+const gShader* gShader::currentlyboundshader = nullptr;
+
 gShader::gShader() {
 	id = 0;
 	loaded = false;
 }
 
 gShader::~gShader() {
+	if(currentlyboundshader == this) {
+		currentlyboundshader = nullptr;
+	}
 	renderer->resetShader(id, loaded);
 }
 
@@ -119,7 +124,9 @@ void gShader::loadProgram(const std::string& vertexSource, const std::string& fr
 		preprocessedGeometrySourceStr = nullptr;
 	}
 #endif
-
+	if(currentlyboundshader == this) {
+		currentlyboundshader = nullptr;
+	}
 	id = renderer->loadProgram(preprocessedVertexSourceStr, preprocessedFragmentSourceStr, preprocessedGeometrySourceStr);
 	loaded = true;
 	clearUniformCaches();
@@ -144,7 +151,9 @@ void gShader::loadProgram(const std::string& shaderSource) {
 		preprocessedGeometrySourceStr = nullptr;
 	}
 #endif
-
+	if(currentlyboundshader == this) {
+		currentlyboundshader = nullptr;
+	}
 	id = renderer->loadProgram(preprocessedVertexSourceStr, preprocessedFragmentSourceStr, preprocessedGeometrySourceStr);
 	loaded = true;
 	clearUniformCaches();
@@ -238,6 +247,9 @@ void gShader::use() const {
 #ifdef DEBUG
     assert(loaded);
 #endif
+	if(currentlyboundshader == this) {
+		currentlyboundshader = nullptr;
+	}
 	renderer->useShader(id);
 }
 

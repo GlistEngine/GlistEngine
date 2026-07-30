@@ -109,7 +109,10 @@ protected:
 
     void drawStart();
     void drawVbo();
+    void drawExtraShaders();
     void drawEnd();
+    void bindMaterialUniforms(gShader& shader);
+	void bindMaterialTextures(gShader& shader);
 	std::unique_ptr<gVbo> vbo;
 	std::shared_ptr<std::vector<gVertex> >vertices;
     bool isprojection2d;
