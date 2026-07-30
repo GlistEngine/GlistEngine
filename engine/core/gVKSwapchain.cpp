@@ -14,12 +14,21 @@
 #include <GLFW/glfw3.h>
 #include <algorithm>
 
-// Picks the surface format. sRGB is preferred so the presented colours match what
-// the rest of the engine assumes; if the driver does not offer it the first
-// reported format is used, which is always valid.
+// The OpenGL backend treats the engine's colour values as display-ready values.
+// Prefer an UNORM swapchain so Vulkan follows the same path without an implicit
+// linear-to-sRGB conversion on every clear and fragment output.
 static VkSurfaceFormatKHR gvkPickSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& formats) {
+	if(formats.size() == 1 && formats[0].format == VK_FORMAT_UNDEFINED) {
+		return {VK_FORMAT_B8G8R8A8_UNORM, VK_COLOR_SPACE_SRGB_NONLINEAR_KHR};
+	}
 	for(const auto& format : formats) {
-		if(format.format == VK_FORMAT_B8G8R8A8_SRGB &&
+		if(format.format == VK_FORMAT_B8G8R8A8_UNORM &&
+				format.colorSpace == VK_COLOR_SPACE_SRGB_NONLINEAR_KHR) {
+			return format;
+		}
+	}
+	for(const auto& format : formats) {
+		if(format.format == VK_FORMAT_R8G8B8A8_UNORM &&
 				format.colorSpace == VK_COLOR_SPACE_SRGB_NONLINEAR_KHR) {
 			return format;
 		}
