@@ -409,10 +409,13 @@ public:
 
 	virtual void drawArrays(int drawMode, int count) = 0;
 	virtual void drawElements(int drawMode, int count) = 0;
+	virtual void drawArraysInstanced(int drawMode, int count, int instanceCount) = 0;
+	virtual void drawElementsInstanced(int drawMode, int count, int instanceCount) = 0;
 
 	virtual void enableVertexAttrib(int index) = 0;
 	virtual void disableVertexAttrib(int index) = 0;
 	virtual void setVertexAttribPointer(int index, int size, int type, bool normalized, int stride, const void* pointer) = 0;
+	virtual void setVertexAttribDivisor(int index, int divisor) = 0;
 
 	virtual void setViewport(int x, int y, int width, int height) = 0;
 	// Viewport that is currently set. Kept up to date by the render engines.

@@ -12,6 +12,7 @@ layout (location = 2) in vec2 aTexCoords;
 layout (location = 3) in vec3 aTangent;
 layout (location = 4) in vec3 aBitangent;
 layout (location = 5) in vec3 color;
+layout (location = 6) in mat4 instanceModel;
 
 struct Material {
     vec4 ambient;
@@ -48,6 +49,7 @@ layout(std140) uniform Scene {
 uniform int aUseShadowMap;
 
 uniform mat4 model;
+uniform int useInstancing;
 uniform mat4 projection;
 uniform vec3 lightPos;
 uniform mat4 lightMatrix;
@@ -65,14 +67,15 @@ out mat3 TBN;
 flat out int mUseShadowMap;
 
 void main() {
+	mat4 modelMatrix = useInstancing == 1 ? model * instanceModel : model;
     mUseShadowMap = aUseShadowMap;
-    FragPos = vec3(model * vec4(aPos, 1.0));
-    Normal = mat3(transpose(inverse(model))) * aNormal;
+	FragPos = vec3(modelMatrix * vec4(aPos, 1.0));
+	Normal = mat3(transpose(inverse(modelMatrix))) * aNormal;
     TexCoords = aTexCoords;
     FragPosLightSpace = lightMatrix * vec4(FragPos, 1.0);
 
     if (material.useNormalMap > 0) {
-        mat3 normalMatrix = transpose(inverse(mat3(model)));
+		mat3 normalMatrix = transpose(inverse(mat3(modelMatrix)));
         vec3 T = normalize(normalMatrix * aTangent);
         vec3 N = normalize(normalMatrix * aNormal);
         T = normalize(T - dot(T, N) * N);
@@ -82,7 +85,7 @@ void main() {
         TangentFragPos = TBN * FragPos;
     }
 
-    mat4 modelViewMatrix = viewMatrix * model;
+	mat4 modelViewMatrix = viewMatrix * modelMatrix;
     mat4 projectedMatrix = projection * modelViewMatrix;
     vec4 aPosVec4 = vec4(aPos, 1.0);
     gl_Position = projectedMatrix * aPosVec4;
