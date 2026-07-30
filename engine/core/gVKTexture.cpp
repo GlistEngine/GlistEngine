@@ -62,10 +62,9 @@ gVKTexture* gvkCreateTextureRGBA8(gVKContext& ctx, const void* rgbaPixels, int w
 	imageinfo.extent = {static_cast<uint32_t>(width), static_cast<uint32_t>(height), 1};
 	imageinfo.mipLevels = 1;
 	imageinfo.arrayLayers = 1;
-	// sRGB: the pixels come from ordinary image files (sRGB-encoded), so the sampler
-	// decodes them to linear for shading, and the sRGB swapchain re-encodes on write.
-	// Using a UNORM format here would double-encode and wash the image out.
-	imageinfo.format = VK_FORMAT_R8G8B8A8_SRGB;
+	// Keep file pixels as display-ready values, matching the OpenGL texture path
+	// and the UNORM swapchain. No implicit sRGB decode is performed while sampling.
+	imageinfo.format = VK_FORMAT_R8G8B8A8_UNORM;
 	imageinfo.tiling = VK_IMAGE_TILING_OPTIMAL;
 	imageinfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
 	imageinfo.usage = VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT;
@@ -120,7 +119,7 @@ gVKTexture* gvkCreateTextureRGBA8(gVKContext& ctx, const void* rgbaPixels, int w
 	viewinfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
 	viewinfo.image = tex->image;
 	viewinfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
-	viewinfo.format = VK_FORMAT_R8G8B8A8_SRGB;
+	viewinfo.format = VK_FORMAT_R8G8B8A8_UNORM;
 	viewinfo.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
 	viewinfo.subresourceRange.baseMipLevel = 0;
 	viewinfo.subresourceRange.levelCount = 1;

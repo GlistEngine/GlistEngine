@@ -401,8 +401,8 @@ private:
 	uint32_t currentframe = 0;
 	uint32_t currentimageindex = 0;
 	bool frameactive = false;
-	// Cornflower blue until clearColor() says otherwise.
-	VkClearValue clearvalue = {{{0.39f, 0.58f, 0.93f, 1.0f}}};
+	// Match gBaseCanvas::clearBackground(), the default used by the OpenGL path.
+	VkClearValue clearvalue = {{{0.0f, 0.0f, 30.0f / 255.0f, 0.0f}}};
 
 	// 2D draw path. Built after the frame path; VK_NULL_HANDLE / empty until then.
 	// renderpassactive tracks the lazily-begun render pass within a frame: geometry
