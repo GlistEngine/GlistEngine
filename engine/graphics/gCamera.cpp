@@ -76,7 +76,7 @@ void gCamera::end() {
 	G_PROFILE_ZONE_SCOPED_N("gCamera::end()");
 #if !(TARGET_OS_IPHONE || TARGET_OS_SIMULATOR)
     if (renderer->isSSAOEnabled() && renderer->isSSAOAllocated()) {
-        renderer->beginSSAO();
+        renderer->endSSAO();
     }
 #endif
 	renderer->restoreMatrices();
