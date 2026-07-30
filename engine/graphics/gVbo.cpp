@@ -14,6 +14,7 @@ gVbo::gVbo() {
 	vao = renderer->createVAO();
 	vbo = 0;
 	ebo = 0;
+	instancevbo = 0;
 	isenabled = true;
 	isvertexdataallocated = false;
 	vertexdatacoordnum = 0;
@@ -103,6 +104,27 @@ void gVbo::setIndexData(const gIndex* indices, int total) {
 	unbind();
 }
 
+void gVbo::setInstanceData(const glm::mat4* instanceTransformations, int instanceCount) {
+    if (instanceCount <= 0) {
+        return;
+    }
+
+    bind();
+    if (instancevbo == 0) {
+        instancevbo = renderer->genBuffers();
+    }
+    renderer->bindBuffer(GL_ARRAY_BUFFER, instancevbo);
+    renderer->setVertexBufferData(instancevbo, sizeof(glm::mat4) * instanceCount, instanceTransformations, GL_DYNAMIC_DRAW);
+    for (int i = 0; i < 4; ++i) {
+        const int attribute = 6 + i;
+        renderer->enableVertexAttrib(attribute);
+        renderer->setVertexAttribPointer(attribute, 4, GL_FLOAT, false, sizeof(glm::mat4), reinterpret_cast<const void*>(sizeof(glm::vec4) * i));
+        renderer->setVertexAttribDivisor(attribute, 1);
+    }
+
+    unbind();
+}
+
 void gVbo::clear() {
 	if(isvertexdataallocated) {
 		renderer->deleteBuffer(vbo);
@@ -112,6 +134,10 @@ void gVbo::clear() {
 		renderer->deleteBuffer(ebo);
 		isindexdataallocated = false;
     }
+	if (instancevbo != 0) {
+	    renderer->deleteBuffer(instancevbo);
+	    instancevbo = 0;
+	}
 	if (vao != GL_NONE) {
 		renderer->deleteVAO(vao);
 		vao = GL_NONE;

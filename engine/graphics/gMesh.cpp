@@ -178,6 +178,18 @@ void gMesh::draw() {
 	drawEnd();
 }
 
+void gMesh::drawInstanced(const std::vector<glm::mat4>& instanceTransformations) {
+    G_PROFILE_ZONE_SCOPED_N("gMesh::drawInstanced()");
+
+    if (!isenabled || instanceTransformations.empty()) {
+        return;
+    }
+
+    drawStart(true);
+    drawVboInstanced(instanceTransformations);
+    drawEnd();
+}
+
 void gMesh::processTransformationMatrix() {
 	G_PROFILE_ZONE_SCOPED_N("gMesh::processTransformationMatrix()");
 	if (needsboundingboxrecalculation) {
@@ -269,11 +281,12 @@ void gMesh::bindMaterialTextures(gShader& shader) {
 	}
 }
 
-void gMesh::drawStart() {
+void gMesh::drawStart(bool isInstanced) {
 	G_PROFILE_ZONE_SCOPED_N("gMesh::drawStart()");
 		if(isshadowmappingenabled && renderpassno == 0) {
 			renderer->getShadowmapShader()->use();
 			renderer->getShadowmapShader()->setMat4("model", localtransformationmatrix.back());
+			renderer->getShadowmapShader()->setInt("useInstancing", isInstanced ? 1 : 0);
 			return;
 		}
 
@@ -289,12 +302,14 @@ void gMesh::drawStart() {
 				colorshader.setMat4("projection", renderer->getProjectionMatrix());
 			}
 			colorshader.setMat4("model", localtransformationmatrix.back());
+			colorshader.setInt("useInstancing", isInstanced ? 1 : 0);
 		} else { // isPBR
 			gShader& pbrshader = *renderer->getPbrShader();
 			pbrshader.use();
 			pbrshader.setMat4("projection", renderer->getProjectionMatrix());
 			pbrshader.setMat4("view", renderer->getViewMatrix());
 			pbrshader.setMat4("model", localtransformationmatrix.back());
+			pbrshader.setInt("useInstancing", isInstanced ? 1 : 0);
 			pbrshader.setVec3("camPos", renderer->getCameraPosition());
 			bindMaterialUniforms(pbrshader);
 			bindMaterialTextures(pbrshader);
@@ -312,6 +327,19 @@ void gMesh::drawVbo() {
     }
     vbo->unbind();
 //    vbo.clear();
+}
+
+void gMesh::drawVboInstanced(const std::vector<glm::mat4>& instanceTransformations) {
+    G_PROFILE_ZONE_SCOPED_N("gMesh::drawVboInstanced()");
+
+    vbo->setInstanceData(instanceTransformations.data(), static_cast<int>(instanceTransformations.size()));
+    vbo->bind();
+    if (vbo->isIndexDataAllocated()) {
+        renderer->drawElementsInstanced(drawmode, vbo->getIndicesNum(), static_cast<int>(instanceTransformations.size()));
+    } else {
+        renderer->drawArraysInstanced(drawmode,vbo->getVerticesNum(), static_cast<int>(instanceTransformations.size()));
+    }
+    vbo->unbind();
 }
 
 void gMesh::drawExtraShaders() {

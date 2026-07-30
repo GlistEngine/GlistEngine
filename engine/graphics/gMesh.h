@@ -66,6 +66,7 @@ public:
 	gMaterial* getMaterial();
 
 	virtual void draw();
+	virtual void drawInstanced(const std::vector<glm::mat4>& instanceTransformations);
 
     const gBoundingBox& getInitialBoundingBox() const;
     bool intersectsTriangles(gRay* ray);
@@ -107,8 +108,9 @@ public:
 protected:
 	void processTransformationMatrix() override;
 
-    void drawStart();
+    void drawStart(bool isInstanced = false);
     void drawVbo();
+    void drawVboInstanced(const std::vector<glm::mat4>& instanceTransformations);
     void drawExtraShaders();
     void drawEnd();
     void bindMaterialUniforms(gShader& shader);

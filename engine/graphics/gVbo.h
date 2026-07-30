@@ -37,6 +37,7 @@ public:
 
 	void setVertexData(const gVertex* vertices, int coordNum, int total);
 	void setIndexData(const gIndex* indices, int total);
+	void setInstanceData(const glm::mat4* instanceTransformations, int instanceCount);
 	void clear();
 
 	void bind() const;
@@ -67,7 +68,7 @@ public:
 
 private:
     GLuint vao;
-    GLuint vbo, ebo;
+    GLuint vbo, ebo, instancevbo;
     bool isenabled;
 
     bool isvertexdataallocated;
