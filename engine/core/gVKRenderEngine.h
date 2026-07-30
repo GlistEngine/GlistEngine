@@ -66,10 +66,13 @@ public:
 
 	void drawArrays(int drawMode, int count) override;
 	void drawElements(int drawMode, int count) override;
+	void drawArraysInstanced(int drawMode, int count, int instanceCount) override;
+	void drawElementsInstanced(int drawMode, int count, int instanceCount) override;
 
 	void enableVertexAttrib(int index) override;
 	void disableVertexAttrib(int index) override;
 	void setVertexAttribPointer(int index, int size, int type, bool normalized, int stride, const void* pointer) override;
+	void setVertexAttribDivisor(int index, int divisor) override;
 	void setViewport(int x, int y, int width, int height) override;
 
 	/* -------------- gFbo --------------- */
