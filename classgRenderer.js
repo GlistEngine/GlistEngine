@@ -169,6 +169,8 @@ var classgRenderer =
     [ "getViewMatrix", "classgRenderer.html#abb04df020202c7a7fd8767e0da0e08bb", null ],
     [ "getViewport", "classgRenderer.html#a01a056ef36cd4d3920dd353189fb8540", null ],
     [ "getWidth", "classgRenderer.html#aff8c158d2b8171d117457d1591001dcc", null ],
+    [ "gPopMatrix", "classgRenderer.html#a1c9518e3ff39f5369577a04802a738b9", null ],
+    [ "gPushMatrix", "classgRenderer.html#af1298e4de4ee4d05cd8fcad64e1ba77c", null ],
     [ "init", "classgRenderer.html#aaaf4e5f2de99c7b1e58e726ee50026c7", null ],
     [ "initSSAOResources", "classgRenderer.html#affc902b441dfc5d738153a47c2dd56ad", null ],
     [ "isAlphaBlendingEnabled", "classgRenderer.html#ad3ab3584d4294ace444c66c6ac8450d8", null ],

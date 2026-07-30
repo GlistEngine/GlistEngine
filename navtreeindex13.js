@@ -1,5 +1,7 @@
 var NAVTREEINDEX13 =
 {
+"classgScreenSpaceReflections.html#afd43689474fd53db626873414745cdaf":[1,0,149,7],
+"classgScreenSpaceReflections.html#afed17fbab98a3b5e2aa9171ba06b781d":[1,0,149,17],
 "classgScreenSpaceReflections.html#affb67c01f746f052fbbed4d3b175eadf":[1,0,149,9],
 "classgSepiatone.html":[1,0,150],
 "classgSepiatone.html#a1e4cab914e41986dff0720ca8abb118b":[1,0,150,4],
@@ -247,7 +249,5 @@ var NAVTREEINDEX13 =
 "classgTexture.html#aa431445181e5a08193f56b8d0442cb1d":[1,0,164,61],
 "classgTexture.html#aa90cf88506484f0c089251a7e6785f47":[1,0,164,71],
 "classgTexture.html#aa99f5896d88f62ca9ecef165d354510e":[1,0,164,33],
-"classgTexture.html#aab9d161137770ed0e1d7d1279171b724":[1,0,164,84],
-"classgTexture.html#aad58539a966aab9ff7ec60aa9c70a157":[1,0,164,35],
-"classgTexture.html#aafb9fc45890f8546b311cdd98c9dcb69":[1,0,164,52]
+"classgTexture.html#aab9d161137770ed0e1d7d1279171b724":[1,0,164,84]
 };
