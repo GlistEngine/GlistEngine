@@ -47,6 +47,7 @@ public:
 	void loadMorphingTargetModel(const std::string& modelPath);
 	void load(const std::string& fullPath);
 	void draw();
+	void drawInstanced(const std::vector<glm::mat4>& instanceTransformations);
 
 	const std::string& getFilename() const;
 	const std::string getFullpath() const;

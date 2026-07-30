@@ -320,6 +320,18 @@ void gModel::draw() {
 	}
 }
 
+void gModel::drawInstanced(const std::vector<glm::mat4>& instanceTransformations) {
+    G_PROFILE_ZONE_SCOPED_N("gModel::drawInstanced()");
+
+    if (!isenabled || instanceTransformations.empty()) {
+        return;
+    }
+
+    for (gSkinnedMesh* mesh : meshes) {
+        mesh->drawInstanced(instanceTransformations);
+    }
+}
+
 const std::string& gModel::getFilename() const {
 	return filename;
 }
