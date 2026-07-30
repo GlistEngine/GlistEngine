@@ -306,6 +306,12 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ad4351cd5c027315d97be9d82f6cf9026"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4626e8a355fa11df21e4faccd2a957dd" id="r_a4626e8a355fa11df21e4faccd2a957dd"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgMaterial.html#a4626e8a355fa11df21e4faccd2a957dd">isAOMapEnabled</a> () const</td></tr>
 <tr class="separator:a4626e8a355fa11df21e4faccd2a957dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afbb9921e09c1196886cf1b17b5c9905a" id="r_afbb9921e09c1196886cf1b17b5c9905a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgMaterial.html#afbb9921e09c1196886cf1b17b5c9905a">addShader</a> (<a class="el" href="classgShader.html">gShader</a> *shader)</td></tr>
+<tr class="separator:afbb9921e09c1196886cf1b17b5c9905a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a88b3766ef8396616a8cbe66cfa723795" id="r_a88b3766ef8396616a8cbe66cfa723795"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgMaterial.html#a88b3766ef8396616a8cbe66cfa723795">removeShader</a> (<a class="el" href="classgShader.html">gShader</a> *shader)</td></tr>
+<tr class="separator:a88b3766ef8396616a8cbe66cfa723795"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af0b6cb70e9ff4cbdcadba06f21923e75" id="r_af0b6cb70e9ff4cbdcadba06f21923e75"><td class="memItemLeft" align="right" valign="top">const std::vector&lt; <a class="el" href="classgShader.html">gShader</a> * &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgMaterial.html#af0b6cb70e9ff4cbdcadba06f21923e75">getShaders</a> () const</td></tr>
+<tr class="separator:af0b6cb70e9ff4cbdcadba06f21923e75"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classgRenderObject"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classgRenderObject')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classgRenderObject.html">gRenderObject</a></td></tr>
 <tr class="memitem:a9aed705f1e1a4e4cdacfbfe13179a28f inherit pub_methods_classgRenderObject" id="r_a9aed705f1e1a4e4cdacfbfe13179a28f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderObject.html#a9aed705f1e1a4e4cdacfbfe13179a28f">gRenderObject</a> ()</td></tr>
 <tr class="separator:a9aed705f1e1a4e4cdacfbfe13179a28f inherit pub_methods_classgRenderObject"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -463,6 +469,24 @@ Additional Inherited Members</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="afbb9921e09c1196886cf1b17b5c9905a" name="afbb9921e09c1196886cf1b17b5c9905a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afbb9921e09c1196886cf1b17b5c9905a">&#9670;&#160;</a></span>addShader()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gMaterial::addShader </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classgShader.html">gShader</a> *&#160;</td>
+          <td class="paramname"><em>shader</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a1869acaedd89e7178636166b20cb3647" name="a1869acaedd89e7178636166b20cb3647"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1869acaedd89e7178636166b20cb3647">&#9670;&#160;</a></span>bindAlbedoMap()</h2>
 
@@ -987,6 +1011,23 @@ Additional Inherited Members</h2></td></tr>
 <span class="mlabels"><span class="mlabel">inline</span></span>  </td>
   </tr>
 </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="af0b6cb70e9ff4cbdcadba06f21923e75" name="af0b6cb70e9ff4cbdcadba06f21923e75"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af0b6cb70e9ff4cbdcadba06f21923e75">&#9670;&#160;</a></span>getShaders()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const std::vector&lt; <a class="el" href="classgShader.html">gShader</a> * &gt; &amp; gMaterial::getShaders </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
 </div><div class="memdoc">
 
 </div>
@@ -1583,6 +1624,24 @@ Additional Inherited Members</h2></td></tr>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classgMaterial.html">gMaterial</a> &amp;&#160;</td>
           <td class="paramname"><em>other</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a88b3766ef8396616a8cbe66cfa723795" name="a88b3766ef8396616a8cbe66cfa723795"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a88b3766ef8396616a8cbe66cfa723795">&#9670;&#160;</a></span>removeShader()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gMaterial::removeShader </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classgShader.html">gShader</a> *&#160;</td>
+          <td class="paramname"><em>shader</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
