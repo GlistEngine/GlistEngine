@@ -17,5 +17,6 @@ var searchData=
   ['viewportx_14',['viewportx',['../classgRenderer.html#ab3fab46a0612957786da9c7a6542fbbf',1,'gRenderer']]],
   ['viewporty_15',['viewporty',['../classgRenderer.html#a42df3fdfa5b522850597118190116dbf',1,'gRenderer']]],
   ['viewpos_16',['viewpos',['../structgRenderer_1_1gSceneData.html#aa301bd9a32069c1189021b592d8c2b1d',1,'gRenderer::gSceneData']]],
-  ['violet_17',['VIOLET',['../classgColor.html#a7d75f08ba18034b051c435cddc7f1cef',1,'gColor']]]
+  ['violet_17',['VIOLET',['../classgColor.html#a7d75f08ba18034b051c435cddc7f1cef',1,'gColor']]],
+  ['virtual_5fgamepad_5fid_18',['VIRTUAL_GAMEPAD_ID',['../classgBaseWindow.html#ae24a280657492d77e146b44a60cee59e',1,'gBaseWindow']]]
 ];
