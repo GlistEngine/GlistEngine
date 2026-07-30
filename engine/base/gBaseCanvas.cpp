@@ -106,16 +106,15 @@ void gBaseCanvas::deviceOrientationChanged(DeviceOrientation deviceorientation) 
 }
 
 void gBaseCanvas::touchMoved(int x, int y, int fingerId) {
-	mouseMoved(x,y);
+
 }
 
 void gBaseCanvas::touchPressed(int x, int y, int fingerId) {
-	mouseMoved(x,y);
-	mousePressed(x, y, 0);
+
 }
 
 void gBaseCanvas::touchReleased(int x, int y, int fingerId) {
-	mouseReleased(x, y, 0);
+
 }
 
 void gBaseCanvas::pause() {
