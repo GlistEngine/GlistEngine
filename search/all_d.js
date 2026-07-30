@@ -69,7 +69,7 @@ var searchData=
   ['loadtextures_66',['loadTextures',['../classgSkybox.html#a339a6868bb97a55c305fc2d9f0dde03c',1,'gSkybox']]],
   ['localizeword_67',['localizeWord',['../classgLocalization.html#a34f1639bf54d5b7132b9222465767c7f',1,'gLocalization']]],
   ['locallookmatrix_68',['locallookmatrix',['../classgCamera.html#a0dc26b43c5e50b5a64b5f89d5cb232af',1,'gCamera']]],
-  ['localtransformationmatrix_69',['localtransformationmatrix',['../classgNode.html#a82f2d87665cdf6c0871408edd880905c',1,'gNode']]],
+  ['localtransformationmatrix_69',['localtransformationmatrix',['../classgNode.html#ae147e9cccc90bd9dd1465b33d9682a46',1,'gNode']]],
   ['lock_70',['lock',['../classgThread.html#aa87ecbc628c14386373e0f5deb8eab8c',1,'gThread']]],
   ['logd_71',['logd',['../classgObject.html#a92802af1d2172ba4501c38c40ccbed4a',1,'gObject::logd(std::string message)'],['../classgObject.html#a21dc431930419f68ffa871bc3c42eb52',1,'gObject::logd(std::string tag, std::string message)']]],
   ['loge_72',['loge',['../classgObject.html#aa1eb5154520926fd6228394b47c3a752',1,'gObject::loge(std::string tag, std::string message)'],['../classgObject.html#a55667d5e42365ab3e637c5630193e713',1,'gObject::loge(std::string message)']]],
