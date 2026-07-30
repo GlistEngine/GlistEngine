@@ -117,6 +117,7 @@ void gModel::loadModelFile(const std::string& fullPath) {
     filename = fullPath.substr(fullPath.find_last_of('/') + 1, fullPath.length());
     animationnum = scene->mNumAnimations;
     isanimated = animationnum > 0;
+    staticmeshgroups.clear();
 
     // process ASSIMP's root node recursively
     processNode(scene->mRootNode, scene);
@@ -164,6 +165,7 @@ void gModel::loadModelFileWithOriginalVertices(const std::string &fullPath) {
     filename = fullPath.substr(fullPath.find_last_of('/') + 1, fullPath.length());
     animationnum = scene->mNumAnimations;
     isanimated = animationnum > 0;
+    staticmeshgroups.clear();
 
     // process ASSIMP's root node recursively
     processNode(scene->mRootNode, scene);
@@ -312,6 +314,12 @@ void gModel::setTransformationMatrix(const glm::mat4& transformationMatrix) {
 void gModel::draw() {
 	G_PROFILE_ZONE_SCOPED_N("gModel::draw()");
 	for(int i = 0; i < meshes.size(); i++) {
+		auto group = staticmeshgroups.find(meshindices[i]);
+		if (group != staticmeshgroups.end() &&
+		    group->second.instanceTransformations.size() > 1) {
+		    group->second.mesh->drawInstanced(group->second.instanceTransformations);
+		    continue;
+		}
 		if (isenablefrustumculling && renderer->getCamera() &&
 			!renderer->getCamera()->isInFrustum(meshes[i]->getBoundingBox())) {
 			continue;
@@ -322,13 +330,34 @@ void gModel::draw() {
 
 void gModel::drawInstanced(const std::vector<glm::mat4>& instanceTransformations) {
     G_PROFILE_ZONE_SCOPED_N("gModel::drawInstanced()");
-
     if (!isenabled || instanceTransformations.empty()) {
         return;
     }
 
-    for (gSkinnedMesh* mesh : meshes) {
-        mesh->drawInstanced(instanceTransformations);
+    for (size_t i = 0; i < meshes.size(); ++i) {
+        gSkinnedMesh* mesh = meshes[i];
+        const unsigned int meshIndex = meshindices[i];
+        auto group = staticmeshgroups.find(meshIndex);
+        if (group == staticmeshgroups.end() ||
+            group->second.instanceTransformations.size() == 1) {
+            mesh->drawInstanced(instanceTransformations);
+            continue;
+        }
+
+        std::vector<glm::mat4> combinedTransforms;
+        combinedTransforms.reserve(
+            instanceTransformations.size() *
+            group->second.instanceTransformations.size()
+        );
+        for (const glm::mat4& transformation : instanceTransformations) {
+            for (const glm::mat4& nodeTransformation :
+                 group->second.instanceTransformations) {
+                combinedTransforms.push_back(
+                    transformation * nodeTransformation
+                );
+            }
+        }
+        mesh->drawInstanced(combinedTransforms);
     }
 }
 
@@ -346,7 +375,7 @@ int gModel::getMeshNum() const {
 
 int gModel::getMeshNo(const std::string& meshName) const {
 	for(unsigned int i = 0; i < meshes.size(); i++) {
-		if (meshName == scene->mMeshes[i]->mName.C_Str()) return i;
+		if (meshName == scene->mMeshes[meshindices[i]]->mName.C_Str()) return i;
 	}
 	return -1;
 }
@@ -371,6 +400,20 @@ void gModel::processNode(aiNode* node, const aiScene* scene) {
 		// the scene contains all the data, node is just to keep stuff organized (like relations between nodes).
 		aiMesh* mesh = scene->mMeshes[meshIndex];
 		gLogi("gModel") << "Loading mesh:" << mesh->mName.C_Str() << ", vertexnum:" << mesh->mNumVertices << ", tm:" << node->mTransformation[0];
+		if (!isanimated && mesh->mNumBones == 0) {
+		    auto group = staticmeshgroups.find(meshIndex);
+
+		    if (group == staticmeshgroups.end()) {
+		        gSkinnedMesh* modelmesh = processMesh(mesh, scene, node->mTransformation);
+		        meshes.push_back(modelmesh);
+		        meshindices.push_back(meshIndex);
+		        modelmesh->setBaseMesh(modelmesh);
+		        group = staticmeshgroups.emplace(meshIndex, StaticMeshGroup{modelmesh, {}}).first;
+		    }
+		    group->second.instanceTransformations.push_back(getNodeTransformation(node));
+		    continue;
+		}
+
 		gSkinnedMesh* modelmesh = processMesh(mesh, scene, node->mTransformation);
 		meshes.push_back(modelmesh);
 		meshindices.push_back(meshIndex);
@@ -383,6 +426,21 @@ void gModel::processNode(aiNode* node, const aiScene* scene) {
 	for(unsigned int i = 0; i < node->mNumChildren; i++) {
 		processNode(node->mChildren[i], scene);
 	}
+}
+
+glm::mat4 gModel::getNodeTransformation(const aiNode* node) const {
+    glm::mat4 transformation(1.0f);
+
+    for (const aiNode* current = node;
+         current != nullptr;
+         current = current->mParent) {
+        transformation =
+            convertMatrix(current->mTransformation) * transformation;
+    }
+
+    return glm::inverse(
+        convertMatrix(scene->mRootNode->mTransformation)
+    ) * transformation;
 }
 
 gSkinnedMesh* gModel::processMesh(const aiMesh* mesh, const aiScene* scene, aiMatrix4x4 matrix) {
@@ -1015,7 +1073,7 @@ const gBoundingBox& gModel::getBoundingBox() {
 	return boundingbox;
 }
 
-glm::mat4 gModel::convertMatrix(const aiMatrix4x4 &aiMat) {
+glm::mat4 gModel::convertMatrix(const aiMatrix4x4 &aiMat) const {
 	return {
 	aiMat.a1, aiMat.b1, aiMat.c1, aiMat.d1,
 	aiMat.a2, aiMat.b2, aiMat.c2, aiMat.d2,

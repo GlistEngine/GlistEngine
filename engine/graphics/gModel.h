@@ -127,7 +127,12 @@ private:
 		std::shared_ptr<std::vector<gVertex>> vertices;
 		std::shared_ptr<std::vector<gIndex>> indices;
 	};
+	struct StaticMeshGroup {
+	    gSkinnedMesh* mesh;
+	    std::vector<glm::mat4> instanceTransformations;
+	};
 	std::unordered_map<const aiMesh*, SharedVertexIndex> mesh2svimap;
+	std::unordered_map<unsigned int, StaticMeshGroup> staticmeshgroups;
 
 	const aiScene* scene;
 	std::vector<const aiScene*> morphingtargetscenes;
@@ -136,6 +141,7 @@ private:
 	void loadMorphingTargetModelFile(const std::string& fullPath);
 	void processNode(aiNode* node, const aiScene* scene);
 	gSkinnedMesh* processMesh(const aiMesh* mesh, const aiScene* scene, aiMatrix4x4 matrix);
+	glm::mat4 getNodeTransformation(const aiNode* node) const;
 	void loadMaterialTextures(gSkinnedMesh* mesh, aiMaterial* mat, aiTextureType type, gTexture::TextureType textureType);
 	void processMorphingNode(const aiNode* node, const aiScene* scene);
 	gMesh* processMorphingMesh(const aiMesh* mesh, const aiScene* scene, aiMatrix4x4 matrix);
@@ -169,7 +175,7 @@ private:
 	std::unordered_map<std::string, aiNode*> nodemap;
 	std::vector<unsigned int> meshindices;
 
-    glm::mat4 convertMatrix(const aiMatrix4x4 &aiMat);
+	glm::mat4 convertMatrix(const aiMatrix4x4& aiMat) const;
     gBoundingBox initialboundingbox;
     gBoundingBox boundingbox;
 	bool isenablefrustumculling;
