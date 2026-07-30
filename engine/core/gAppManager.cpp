@@ -552,20 +552,18 @@ void gAppManager::tick() {
     }
 
     // Under Vulkan the engine's OpenGL geometry path stays disabled, but the app's
-    // clearColor() is already wired through: it records the frame's clear colour
-    // into the Vulkan context, and the render pass applies that colour when the
-    // frame begins. So the canvas update/draw runs first - letting a clearColor()
-    // call inside draw() choose the colour - and then the frame is cleared to it
-    // and presented. Real geometry is not recorded between the two calls yet.
+    // Updates run first, then the frame is opened and the canvas draws into it.
+    // beginFrame() only acquires the image and opens the command buffer; the render
+    // pass itself is begun lazily on the first draw (or in endFrame), so a
+    // clearColor() call at the top of draw() still sets the colour the pass clears
+    // to, and any geometry recorded afterwards lands inside that same pass.
     if(renderengine == G_RENDERER_VK) {
         if(canvasmanager) canvasmanager->update();
         gBaseCanvas* vkcanvas = (canvasmanager && !isguiapp) ? canvasmanager->getCurrentCanvas() : nullptr;
         if(!isguiapp) app->update();
-        if(vkcanvas) {
-            vkcanvas->update();
-            vkcanvas->draw();
-        }
+        if(vkcanvas) vkcanvas->update();
         if(renderer != nullptr && renderer->beginFrame()) {
+            if(vkcanvas) vkcanvas->draw();
             renderer->endFrame();
             totaldraws++;
         }

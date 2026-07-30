@@ -215,6 +215,10 @@ set(SRC_FILES
 	${ENGINE_DIR}/core/gVKCommands.cpp
 	${ENGINE_DIR}/core/gVKSync.cpp
 	${ENGINE_DIR}/core/gVKFrame.cpp
+	${ENGINE_DIR}/core/gVKBuffer.cpp
+	${ENGINE_DIR}/core/gVKPipeline.cpp
+	${ENGINE_DIR}/core/gVKDraw.cpp
+	${ENGINE_DIR}/core/gVKTexture.cpp
 	${ENGINE_DIR}/core/gRenderObject.cpp
 	${ENGINE_DIR}/core/gGUIActionManager.cpp
 	${ENGINE_DIR}/graphics/gTexture.cpp

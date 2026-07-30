@@ -30,6 +30,7 @@
 #ifdef GVK_DESKTOP_GLFW
 
 #include <vulkan/vulkan.h>
+#include <cstring>
 #include <string>
 #include <vector>
 
@@ -55,6 +56,14 @@ bool gvkCreatePresentSemaphores(gVKContext& ctx, uint32_t imagecount);
 void gvkDestroyPresentSemaphores(gVKContext& ctx);
 bool gvkBeginFrame(gVKContext& ctx, GLFWwindow* window);
 bool gvkEndFrame(gVKContext& ctx, GLFWwindow* window);
+
+// 2D draw path. Declared here so the struct can befriend them; defined in
+// gVKFrame.cpp (render pass) / gVKPipeline.cpp (pipelines) / gVKDraw.cpp (ring).
+bool gvkEnsureRenderPass(gVKContext& ctx);
+bool gvkCreateGraphicsPipelines(gVKContext& ctx);
+void gvkDestroyGraphicsPipelines(gVKContext& ctx);
+bool gvkCreateDrawResources(gVKContext& ctx);
+void gvkDestroyDrawResources(gVKContext& ctx);
 
 // Validation layers cost performance, so the default follows the same DEBUG
 // condition the OpenGL debug output already uses in this engine. A developer can
@@ -97,6 +106,11 @@ struct gVKContext {
 	friend void gvkDestroyPresentSemaphores(gVKContext&);
 	friend bool gvkBeginFrame(gVKContext&, GLFWwindow*);
 	friend bool gvkEndFrame(gVKContext&, GLFWwindow*);
+	friend bool gvkEnsureRenderPass(gVKContext&);
+	friend bool gvkCreateGraphicsPipelines(gVKContext&);
+	friend void gvkDestroyGraphicsPipelines(gVKContext&);
+	friend bool gvkCreateDrawResources(gVKContext&);
+	friend void gvkDestroyDrawResources(gVKContext&);
 
 	/* ---------------- configurable settings ---------------- */
 	// Set these before the backend initialises to influence instance and device
@@ -267,6 +281,44 @@ struct gVKContext {
 		return swapchain != VK_NULL_HANDLE && renderpass != VK_NULL_HANDLE;
 	}
 
+	/* ---------------- 2D draw path ---------------- */
+	// Pipelines and descriptor infrastructure the Vulkan triangle / rectangle /
+	// image helpers use, plus the per-frame host-visible vertex ring. Built by
+	// gvkCreateGraphicsPipelines and gvkCreateDrawResources, consumed by gVKDraw.
+
+	VkPipeline getColor2DPipeline() { return color2dpipeline; }
+	VkPipelineLayout getColor2DPipelineLayout() { return color2dpipelinelayout; }
+	VkPipeline getImage2DPipeline() { return image2dpipeline; }
+	VkPipelineLayout getImage2DPipelineLayout() { return image2dpipelinelayout; }
+	VkDescriptorSetLayout getImageDescriptorSetLayout() { return image2ddescriptorsetlayout; }
+	VkDescriptorPool getDescriptorPool() { return descriptorpool; }
+	bool isRenderPassActive() const { return renderpassactive; }
+
+	// The command buffer of the frame currently being recorded, or VK_NULL_HANDLE
+	// when no frame is active.
+	VkCommandBuffer getCurrentCommandBuffer() {
+		return frameactive ? commandbuffers[currentframe] : VK_NULL_HANDLE;
+	}
+
+	// Per-frame vertex ring. resetDynamicVertices() rewinds the current frame's
+	// buffer at frame start; pushDynamicVertices() appends vertex bytes (16-byte
+	// aligned) and returns the byte offset to bind from, or VK_WHOLE_SIZE when the
+	// buffer is full.
+	void resetDynamicVertices() {
+		if(!dynvertexoffsets.empty()) dynvertexoffsets[currentframe] = 0;
+	}
+	VkBuffer getCurrentDynamicVertexBuffer() {
+		return dynvertexbuffers.empty() ? VK_NULL_HANDLE : dynvertexbuffers[currentframe];
+	}
+	VkDeviceSize pushDynamicVertices(const void* data, VkDeviceSize size) {
+		if(dynvertexmapped.empty()) return VK_WHOLE_SIZE;
+		VkDeviceSize offset = (dynvertexoffsets[currentframe] + 15) & ~static_cast<VkDeviceSize>(15);
+		if(offset + size > dynvertexcapacity) return VK_WHOLE_SIZE;
+		std::memcpy(static_cast<char*>(dynvertexmapped[currentframe]) + offset, data, size);
+		dynvertexoffsets[currentframe] = offset + size;
+		return offset;
+	}
+
 private:
 	std::string appname = "GlistApp";
 	std::string enginename = "GlistEngine";
@@ -335,6 +387,26 @@ private:
 	bool frameactive = false;
 	// Cornflower blue until clearColor() says otherwise.
 	VkClearValue clearvalue = {{{0.39f, 0.58f, 0.93f, 1.0f}}};
+
+	// 2D draw path. Built after the frame path; VK_NULL_HANDLE / empty until then.
+	// renderpassactive tracks the lazily-begun render pass within a frame: geometry
+	// must be recorded inside vkCmdBeginRenderPass..EndRenderPass, but the clear
+	// colour is only final once the canvas has drawn, so the pass is opened on the
+	// first draw (or in endFrame) rather than in beginFrame.
+	bool renderpassactive = false;
+	VkPipelineLayout color2dpipelinelayout = VK_NULL_HANDLE;
+	VkPipeline color2dpipeline = VK_NULL_HANDLE;
+	VkPipelineLayout image2dpipelinelayout = VK_NULL_HANDLE;
+	VkPipeline image2dpipeline = VK_NULL_HANDLE;
+	VkDescriptorSetLayout image2ddescriptorsetlayout = VK_NULL_HANDLE;
+	VkDescriptorPool descriptorpool = VK_NULL_HANDLE;
+	// One host-visible, persistently mapped vertex buffer per frame in flight,
+	// filled linearly each frame and rewound at the start of the next.
+	std::vector<VkBuffer> dynvertexbuffers;
+	std::vector<VkDeviceMemory> dynvertexmemories;
+	std::vector<void*> dynvertexmapped;
+	std::vector<VkDeviceSize> dynvertexoffsets;
+	VkDeviceSize dynvertexcapacity = 0;
 };
 
 #endif /* GVK_DESKTOP_GLFW */
