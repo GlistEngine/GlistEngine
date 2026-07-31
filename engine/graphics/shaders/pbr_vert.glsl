@@ -17,10 +17,11 @@ uniform mat4 projection;
 uniform mat4 view;
 uniform mat4 model;
 uniform int useInstancing;
+uniform vec2 textureTiling;
 
 void main() {
 	mat4 modelMatrix = useInstancing == 1 ? model * instanceModel : model;
-    TexCoords = aTexCoords;
+    TexCoords = aTexCoords * textureTiling;
 	WorldPos = vec3(modelMatrix * vec4(aPos, 1.0));
 	Normal = mat3(transpose(inverse(modelMatrix))) * aNormal;
 
