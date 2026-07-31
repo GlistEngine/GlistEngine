@@ -12,7 +12,7 @@
 #include "gBox.h"
 #include "gCamera.h"
 #include "gLight.h"
-
+#include "gFont.h"
 
 class GameCanvas : public gBaseCanvas {
 public:
@@ -36,6 +36,7 @@ public:
 	void hideNotify();
 
 private:
+    gFont font;
     gCamera camera;
     gLight light;
     gBox box;
