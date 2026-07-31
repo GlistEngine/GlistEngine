@@ -87,7 +87,6 @@ void gGUIButton::draw() {
 	gColor* oldcolor = renderer->getColor();
 	const int drawleft = getButtonDrawLeft();
 	const int drawtop = getButtonDrawTop();
-	const int pressedoffset = ispressed ? 1 : 0;
 
 	if(fillbackground) {
 		if(isdisabled) renderer->setColor(&disabledbcolor);
@@ -97,7 +96,7 @@ void gGUIButton::draw() {
 			else renderer->setColor(&bcolor);
 		}
 	//	renderer->setColor(gColor(0.1f, 0.45f, 0.87f));
-		gDrawRectangle(drawleft + pressedoffset, drawtop + pressedoffset, buttonw, buttonh, true);
+		gDrawRectangle(drawleft, drawtop + ispressed, buttonw, buttonh, true);
 	}
 
 	if(istextvisible) {
@@ -109,7 +108,7 @@ void gGUIButton::draw() {
 
 	    resetTitlePosition();
 
-	    font->drawText(title, drawleft + tx + pressedoffset, drawtop + buttonh - ty + pressedoffset - 2);
+	    font->drawText(title, drawleft + tx, drawtop + buttonh - ty + ispressed - 2);
 	}
 	renderer->setColor(oldcolor);
 }
