@@ -399,7 +399,7 @@ var searchData=
   ['settextfont_396',['setTextFont',['../classgGUITextbox.html#ab0581a36f4dab26d7bc11fb02f3dc841',1,'gGUITextbox']]],
   ['settexture_397',['settexture',['../classgBaseParticles.html#a9ab3ccac56ba4848594621bb16a62846',1,'gBaseParticles::setTexture()'],['../classgMesh.html#a11459a102a3d384efe86846c1cac7c50',1,'gMesh::setTexture(gTexture *texture)']]],
   ['settextures_398',['settextures',['../classgMesh.html#aa544ae3b925841d04418c4028ad06c50',1,'gMesh::setTextures(const std::vector&lt; gTexture * &gt; &amp;textures)'],['../classgMesh.html#a43aff4756e49d794e46c22553a8b09f6',1,'gMesh::setTextures(const std::unordered_map&lt; gTexture::TextureType, gTexture * &gt; &amp;textures)']]],
-  ['settexturetiling_399',['settexturetiling',['../classgPlane.html#a63dbd258d99e0f302af8b177126f81a9',1,'gPlane::setTextureTiling(float tilingX, float tilingY)'],['../classgPlane.html#aa4b2e5daeee0e66c450868558b20d5e9',1,'gPlane::setTextureTiling(float tiling)']]],
+  ['settexturetiling_399',['settexturetiling',['../classgMesh.html#a12c1927e0ecb653f5d73309d9cff199b',1,'gMesh::setTextureTiling(float tilingX, float tilingY)'],['../classgMesh.html#a8b41ef6c3181eeae1c67567ff959b834',1,'gMesh::setTextureTiling(float tiling)']]],
   ['settextverticalalignment_400',['setTextVerticalAlignment',['../classgGUIText.html#ab9b991b9d9e6b2b8525edb3abf6ce449',1,'gGUIText']]],
   ['settextvisibility_401',['settextvisibility',['../classgGUIButton.html#abdd7d6ed40d29fb8ccb949409d877784',1,'gGUIButton::setTextVisibility()'],['../classgGUISlider.html#a37693d705837bee2b218e0c4b615c276',1,'gGUISlider::setTextVisibility()']]],
   ['settheme_402',['setTheme',['../classgGUIManager.html#aae7e2b2d00a5066e31c8e2b52b831d29',1,'gGUIManager']]],

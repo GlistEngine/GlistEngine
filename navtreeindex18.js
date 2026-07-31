@@ -1,5 +1,6 @@
 var NAVTREEINDEX18 =
 {
+"gSpriteAnimator_8h.html":[2,0,0,0,1],
 "gSpriteAnimator_8h_source.html":[2,0,0,0,1],
 "gTerrain_8h.html":[2,0,0,4,24],
 "gTerrain_8h_source.html":[2,0,0,4,24],
@@ -248,6 +249,5 @@ var NAVTREEINDEX18 =
 "structgCamera_1_1Plane.html#a7ffa3ecbb93099b09ae449276b3ea230":[1,0,21,1,2],
 "structgCamera_1_1Plane.html#a82a03246929cfd5f31c73779ab90036b":[1,0,21,1,1],
 "structgCamera_1_1Plane.html#a8887f8f3151ee9e79e81253f3c772a60":[1,0,21,1,0],
-"structgCamera_1_1Plane.html#abd51c32507e71def3c0026401f83071c":[1,0,21,1,5],
-"structgCamera_1_1Plane.html#ae85e56275c5423c4fd5712d7183ce263":[1,0,21,1,3]
+"structgCamera_1_1Plane.html#abd51c32507e71def3c0026401f83071c":[1,0,21,1,5]
 };
