@@ -121,21 +121,38 @@ $(document).ready(function(){initNavTree('gVKDraw_8h_source.html',''); initResiz
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#include &lt;glm/glm.hpp&gt;</span></div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="comment">// Records coloured 2D geometry. Colour components are 0..1; mvp is the full 2D</span></div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="comment">// transform. By default points holds `count` positions forming a filled triangle</span></div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="comment">// list (three per triangle); with lineLoop set they are the corners of an outline,</span></div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="comment">// stroked as the closed loop of edges between them.</span></div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="keywordtype">void</span> gvkDrawColored2D(gVKContext&amp; ctx, <span class="keyword">const</span> glm::vec2* points, <span class="keywordtype">int</span> count,</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>        <span class="keyword">const</span> glm::vec4&amp; color, <span class="keyword">const</span> glm::mat4&amp; mvp, <span class="keywordtype">bool</span> lineLoop = <span class="keyword">false</span>);</div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span> </div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="comment">// Records a textured unit quad (two triangles) sampled through the given combined</span></div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="comment">// image sampler descriptor set. tint components are 0..1.</span></div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="keywordtype">void</span> gvkDrawTextured2D(gVKContext&amp; ctx, VkDescriptorSet textureSet,</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>        <span class="keyword">const</span> glm::vec4&amp; tint, <span class="keyword">const</span> glm::mat4&amp; mvp);</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span> </div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span><span class="preprocessor">#endif </span><span class="comment">/* GVK_DESKTOP_GLFW */</span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="comment">// How the points handed to gvkDrawColored2D are connected. These mirror the mesh</span></div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="comment">// draw modes the 2D primitives use (gMesh::DRAWMODE_*), without this header having</span></div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="comment">// to know the GL constants behind them. The fan / strip / loop forms are expanded</span></div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="comment">// on the CPU, because the two colour pipelines are built as a triangle list and a</span></div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="comment">// line list and Vulkan has no line loop topology at all.</span></div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="keyword">enum</span> gvkDraw2DMode {</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>    GVK_DRAW2D_TRIANGLES,</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>    GVK_DRAW2D_TRIANGLESTRIP,</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>    GVK_DRAW2D_TRIANGLEFAN,</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>    GVK_DRAW2D_LINES,</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    GVK_DRAW2D_LINESTRIP,</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    GVK_DRAW2D_LINELOOP</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>};</div>
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span> </div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="preprocessor">#endif </span><span class="comment">/* CORE_GVKDRAW_H */</span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="comment">// Records coloured 2D geometry. Colour components are 0..1; mvp is the full 2D</span></div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span><span class="comment">// transform. points holds `count` positions connected as `mode` describes.</span></div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span><span class="keywordtype">void</span> gvkDrawColored2D(gVKContext&amp; ctx, <span class="keyword">const</span> glm::vec2* points, <span class="keywordtype">int</span> count,</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>        <span class="keyword">const</span> glm::vec4&amp; color, <span class="keyword">const</span> glm::mat4&amp; mvp, <span class="keywordtype">int</span> mode = GVK_DRAW2D_TRIANGLES);</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span> </div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span><span class="comment">// Records a textured unit quad (two triangles) sampled through the given combined</span></div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span><span class="comment">// image sampler descriptor set. tint components are 0..1. uvOffset / uvScale place</span></div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span><span class="comment">// the sampled region inside the texture: the default covers all of it, and a</span></div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span><span class="comment">// sub-part draw narrows it to the requested rectangle. maskSet is the descriptor</span></div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span><span class="comment">// set of an alpha mask whose inverted red channel scales the alpha, or</span></div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span><span class="comment">// VK_NULL_HANDLE to draw unmasked.</span></div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span><span class="keywordtype">void</span> gvkDrawTextured2D(gVKContext&amp; ctx, VkDescriptorSet textureSet, VkDescriptorSet maskSet,</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>        <span class="keyword">const</span> glm::vec4&amp; tint, <span class="keyword">const</span> glm::mat4&amp; mvp,</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>        <span class="keyword">const</span> glm::vec2&amp; uvOffset = glm::vec2(0.0f), <span class="keyword">const</span> glm::vec2&amp; uvScale = glm::vec2(1.0f));</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span> </div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span><span class="preprocessor">#endif </span><span class="comment">/* GVK_DESKTOP_GLFW */</span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span> </div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span><span class="preprocessor">#endif </span><span class="comment">/* CORE_GVKDRAW_H */</span><span class="preprocessor"></span></div>
 <div class="ttc" id="agVKContext_8h_html"><div class="ttname"><a href="gVKContext_8h.html">gVKContext.h</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

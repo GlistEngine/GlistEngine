@@ -1,5 +1,8 @@
 var NAVTREEINDEX18 =
 {
+"gSpriteAnimator_8h_source.html":[2,0,0,0,1],
+"gTerrain_8h.html":[2,0,0,4,24],
+"gTerrain_8h_source.html":[2,0,0,4,24],
 "gTexture_8h.html":[2,0,0,4,25],
 "gTexture_8h.html#a8e75a38096ba21b53a7c6331edc4cd6f":[2,0,0,4,25,1],
 "gTexture_8h_source.html":[2,0,0,4,25],
@@ -246,8 +249,5 @@ var NAVTREEINDEX18 =
 "structgCamera_1_1Plane.html#a82a03246929cfd5f31c73779ab90036b":[1,0,21,1,1],
 "structgCamera_1_1Plane.html#a8887f8f3151ee9e79e81253f3c772a60":[1,0,21,1,0],
 "structgCamera_1_1Plane.html#abd51c32507e71def3c0026401f83071c":[1,0,21,1,5],
-"structgCamera_1_1Plane.html#ae85e56275c5423c4fd5712d7183ce263":[1,0,21,1,3],
-"structgGUIActionManager_1_1Action.html":[1,0,54,0],
-"structgGUIActionManager_1_1Action.html#a230d194d230b66a0612760cb4f16f668":[1,0,54,0,0],
-"structgGUIActionManager_1_1Action.html#a460b8b9ada94902bdb09f9960be7975b":[1,0,54,0,2]
+"structgCamera_1_1Plane.html#ae85e56275c5423c4fd5712d7183ce263":[1,0,21,1,3]
 };

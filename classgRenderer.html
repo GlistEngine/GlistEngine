@@ -295,10 +295,10 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:aa54bbaeb280b3636715c34eafc15820d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1342a46ef980da2945be90a9d3260699" id="r_a1342a46ef980da2945be90a9d3260699"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a1342a46ef980da2945be90a9d3260699">isVulkan</a> () const</td></tr>
 <tr class="separator:a1342a46ef980da2945be90a9d3260699"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9417c364ebcbfa50016c49b9b4712a77" id="r_a9417c364ebcbfa50016c49b9b4712a77"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a9417c364ebcbfa50016c49b9b4712a77">drawColored2D</a> (const glm::vec2 *points, int count, const glm::vec4 &amp;color, const glm::mat4 &amp;mvp, bool lineLoop=false)</td></tr>
-<tr class="separator:a9417c364ebcbfa50016c49b9b4712a77"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4d83764efc687add25a8a4cc5f5893a2" id="r_a4d83764efc687add25a8a4cc5f5893a2"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a4d83764efc687add25a8a4cc5f5893a2">drawTexturedRect2D</a> (GLuint textureId, const glm::vec4 &amp;tint, const glm::mat4 &amp;mvp)</td></tr>
-<tr class="separator:a4d83764efc687add25a8a4cc5f5893a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a602f903b2536627048d051b354080dee" id="r_a602f903b2536627048d051b354080dee"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a602f903b2536627048d051b354080dee">drawColored2D</a> (const glm::vec2 *points, int count, const glm::vec4 &amp;color, const glm::mat4 &amp;mvp, int drawMode=GL_TRIANGLES)</td></tr>
+<tr class="separator:a602f903b2536627048d051b354080dee"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeddf5cd99f157610584d68393c83e8af" id="r_aeddf5cd99f157610584d68393c83e8af"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#aeddf5cd99f157610584d68393c83e8af">drawTexturedRect2D</a> (GLuint textureId, GLuint maskTextureId, const glm::vec4 &amp;tint, const glm::mat4 &amp;mvp, const glm::vec2 &amp;uvOffset=glm::vec2(0.0f), const glm::vec2 &amp;uvScale=glm::vec2(1.0f))</td></tr>
+<tr class="separator:aeddf5cd99f157610584d68393c83e8af"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a143b0f6ffa8b00675cdceb8fdbcfce4d" id="r_a143b0f6ffa8b00675cdceb8fdbcfce4d"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a143b0f6ffa8b00675cdceb8fdbcfce4d">clear</a> ()=0</td></tr>
 <tr class="separator:a143b0f6ffa8b00675cdceb8fdbcfce4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a789b1047f3a01e2a1debea7198fe8406" id="r_a789b1047f3a01e2a1debea7198fe8406"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a789b1047f3a01e2a1debea7198fe8406">clearColor</a> (int <a class="el" href="gColor_8h.html#a4788d82c901b9367dd5c0daff8a7616b">r</a>, int <a class="el" href="gColor_8h.html#a8cf17d727651616de6f2b79ef32170cd">g</a>, int <a class="el" href="gColor_8h.html#a83fc1af92e29717b4513d121b0c72c7d">b</a>, int <a class="el" href="gColor_8h.html#a4aec1a5be9d9a4a394a2e49e9744286e">a</a>=255)=0</td></tr>
@@ -853,6 +853,10 @@ Protected Member Functions</h2></td></tr>
 <tr class="separator:a93db9d7438e4df4a6da3529e1c4d1230"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac76e277b9f44da9325994ae8972b30c0" id="r_ac76e277b9f44da9325994ae8972b30c0"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#ac76e277b9f44da9325994ae8972b30c0">updatePackUnpackAlignment</a> (int i)=0</td></tr>
 <tr class="separator:ac76e277b9f44da9325994ae8972b30c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aab66f8c4fe49b16850a14bff3a6f2d85" id="r_aab66f8c4fe49b16850a14bff3a6f2d85"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#aab66f8c4fe49b16850a14bff3a6f2d85">createPrimitiveMeshes</a> ()</td></tr>
+<tr class="separator:aab66f8c4fe49b16850a14bff3a6f2d85"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a95a3b3f221414916241c9517f8c3cd58" id="r_a95a3b3f221414916241c9517f8c3cd58"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a95a3b3f221414916241c9517f8c3cd58">destroyPrimitiveMeshes</a> ()</td></tr>
+<tr class="separator:a95a3b3f221414916241c9517f8c3cd58"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-static-methods" name="pro-static-methods"></a>
 Static Protected Member Functions</h2></td></tr>
@@ -2101,6 +2105,31 @@ Friends</h2></td></tr>
 
 </div>
 </div>
+<a id="aab66f8c4fe49b16850a14bff3a6f2d85" name="aab66f8c4fe49b16850a14bff3a6f2d85"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aab66f8c4fe49b16850a14bff3a6f2d85">&#9670;&#160;</a></span>createPrimitiveMeshes()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gRenderer::createPrimitiveMeshes </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a8e7cb58db87e06ee1bb34339a63c60b7" name="a8e7cb58db87e06ee1bb34339a63c60b7"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a8e7cb58db87e06ee1bb34339a63c60b7">&#9670;&#160;</a></span>createQuad()</h2>
 
@@ -2395,6 +2424,31 @@ Friends</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Implemented in <a class="el" href="classgGLRenderEngine.html#aa785169e84053acf64c17f8334fdaeac">gGLRenderEngine</a>, and <a class="el" href="classgVKRenderEngine.html#a9de070c800ba145eaee1bc2f98589fd2">gVKRenderEngine</a>.</p>
+
+</div>
+</div>
+<a id="a95a3b3f221414916241c9517f8c3cd58" name="a95a3b3f221414916241c9517f8c3cd58"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a95a3b3f221414916241c9517f8c3cd58">&#9670;&#160;</a></span>destroyPrimitiveMeshes()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gRenderer::destroyPrimitiveMeshes </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -2950,8 +3004,8 @@ Friends</h2></td></tr>
 
 </div>
 </div>
-<a id="a9417c364ebcbfa50016c49b9b4712a77" name="a9417c364ebcbfa50016c49b9b4712a77"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9417c364ebcbfa50016c49b9b4712a77">&#9670;&#160;</a></span>drawColored2D()</h2>
+<a id="a602f903b2536627048d051b354080dee" name="a602f903b2536627048d051b354080dee"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a602f903b2536627048d051b354080dee">&#9670;&#160;</a></span>drawColored2D()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2986,8 +3040,8 @@ Friends</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>lineLoop</em> = <code>false</code>&#160;</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>drawMode</em> = <code>GL_TRIANGLES</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -3002,7 +3056,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Reimplemented in <a class="el" href="classgVKRenderEngine.html#aeb70eaf132b96fdefbbe739ef5c929e9">gVKRenderEngine</a>.</p>
+<p>Reimplemented in <a class="el" href="classgVKRenderEngine.html#ac3cebb9e9dc5907630a74dbc1612e461">gVKRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -4043,8 +4097,8 @@ Friends</h2></td></tr>
 
 </div>
 </div>
-<a id="a4d83764efc687add25a8a4cc5f5893a2" name="a4d83764efc687add25a8a4cc5f5893a2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4d83764efc687add25a8a4cc5f5893a2">&#9670;&#160;</a></span>drawTexturedRect2D()</h2>
+<a id="aeddf5cd99f157610584d68393c83e8af" name="aeddf5cd99f157610584d68393c83e8af"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aeddf5cd99f157610584d68393c83e8af">&#9670;&#160;</a></span>drawTexturedRect2D()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -4061,6 +4115,12 @@ Friends</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">GLuint&#160;</td>
+          <td class="paramname"><em>maskTextureId</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
           <td class="paramtype">const glm::vec4 &amp;&#160;</td>
           <td class="paramname"><em>tint</em>, </td>
         </tr>
@@ -4068,7 +4128,19 @@ Friends</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const glm::mat4 &amp;&#160;</td>
-          <td class="paramname"><em>mvp</em>&#160;</td>
+          <td class="paramname"><em>mvp</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const glm::vec2 &amp;&#160;</td>
+          <td class="paramname"><em>uvOffset</em> = <code>glm::vec2(0.0f)</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const glm::vec2 &amp;&#160;</td>
+          <td class="paramname"><em>uvScale</em> = <code>glm::vec2(1.0f)</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -4083,7 +4155,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Reimplemented in <a class="el" href="classgVKRenderEngine.html#a28e622db445a1d77e5ff693270d93353">gVKRenderEngine</a>.</p>
+<p>Reimplemented in <a class="el" href="classgVKRenderEngine.html#aee1c7119bd31cdecb8d3bff00990b551">gVKRenderEngine</a>.</p>
 
 </div>
 </div>

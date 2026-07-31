@@ -375,10 +375,10 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a3f82ae9db33b5f7fdc240f060ae772d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1d437101171cd2c807c296ad48409963" id="r_a1d437101171cd2c807c296ad48409963"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgVKRenderEngine.html#a1d437101171cd2c807c296ad48409963">popMatrix</a> () override</td></tr>
 <tr class="separator:a1d437101171cd2c807c296ad48409963"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aeb70eaf132b96fdefbbe739ef5c929e9" id="r_aeb70eaf132b96fdefbbe739ef5c929e9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgVKRenderEngine.html#aeb70eaf132b96fdefbbe739ef5c929e9">drawColored2D</a> (const glm::vec2 *points, int count, const glm::vec4 &amp;color, const glm::mat4 &amp;mvp, bool lineLoop=false) override</td></tr>
-<tr class="separator:aeb70eaf132b96fdefbbe739ef5c929e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a28e622db445a1d77e5ff693270d93353" id="r_a28e622db445a1d77e5ff693270d93353"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgVKRenderEngine.html#a28e622db445a1d77e5ff693270d93353">drawTexturedRect2D</a> (GLuint textureId, const glm::vec4 &amp;tint, const glm::mat4 &amp;mvp) override</td></tr>
-<tr class="separator:a28e622db445a1d77e5ff693270d93353"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac3cebb9e9dc5907630a74dbc1612e461" id="r_ac3cebb9e9dc5907630a74dbc1612e461"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgVKRenderEngine.html#ac3cebb9e9dc5907630a74dbc1612e461">drawColored2D</a> (const glm::vec2 *points, int count, const glm::vec4 &amp;color, const glm::mat4 &amp;mvp, int drawMode=GL_TRIANGLES) override</td></tr>
+<tr class="separator:ac3cebb9e9dc5907630a74dbc1612e461"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aee1c7119bd31cdecb8d3bff00990b551" id="r_aee1c7119bd31cdecb8d3bff00990b551"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgVKRenderEngine.html#aee1c7119bd31cdecb8d3bff00990b551">drawTexturedRect2D</a> (GLuint textureId, GLuint maskTextureId, const glm::vec4 &amp;tint, const glm::mat4 &amp;mvp, const glm::vec2 &amp;uvOffset=glm::vec2(0.0f), const glm::vec2 &amp;uvScale=glm::vec2(1.0f)) override</td></tr>
+<tr class="separator:aee1c7119bd31cdecb8d3bff00990b551"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac4e750728c13c0eb5940a6ca2a831525" id="r_ac4e750728c13c0eb5940a6ca2a831525"><td class="memItemLeft" align="right" valign="top">gVKContext *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgVKRenderEngine.html#ac4e750728c13c0eb5940a6ca2a831525">getContext</a> ()</td></tr>
 <tr class="separator:ac4e750728c13c0eb5940a6ca2a831525"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a45b3e4fdfa8366ab3835a8840184e0a5" id="r_a45b3e4fdfa8366ab3835a8840184e0a5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgVKRenderEngine.html#a45b3e4fdfa8366ab3835a8840184e0a5">setContext</a> (gVKContext *context)</td></tr>
@@ -741,6 +741,10 @@ Protected Member Functions</h2></td></tr>
 <tr class="separator:a70d90192bda5c806e99719e4bb951b82 inherit pro_methods_classgRenderer"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac223332acbbe9c2433e750b8ccbbad6b inherit pro_methods_classgRenderer" id="r_ac223332acbbe9c2433e750b8ccbbad6b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#ac223332acbbe9c2433e750b8ccbbad6b">setupSSAODepthSampling</a> ()</td></tr>
 <tr class="separator:ac223332acbbe9c2433e750b8ccbbad6b inherit pro_methods_classgRenderer"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aab66f8c4fe49b16850a14bff3a6f2d85 inherit pro_methods_classgRenderer" id="r_aab66f8c4fe49b16850a14bff3a6f2d85"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#aab66f8c4fe49b16850a14bff3a6f2d85">createPrimitiveMeshes</a> ()</td></tr>
+<tr class="separator:aab66f8c4fe49b16850a14bff3a6f2d85 inherit pro_methods_classgRenderer"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a95a3b3f221414916241c9517f8c3cd58 inherit pro_methods_classgRenderer" id="r_a95a3b3f221414916241c9517f8c3cd58"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a95a3b3f221414916241c9517f8c3cd58">destroyPrimitiveMeshes</a> ()</td></tr>
+<tr class="separator:a95a3b3f221414916241c9517f8c3cd58 inherit pro_methods_classgRenderer"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="inherited" name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
@@ -2463,8 +2467,8 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="aeb70eaf132b96fdefbbe739ef5c929e9" name="aeb70eaf132b96fdefbbe739ef5c929e9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aeb70eaf132b96fdefbbe739ef5c929e9">&#9670;&#160;</a></span>drawColored2D()</h2>
+<a id="ac3cebb9e9dc5907630a74dbc1612e461" name="ac3cebb9e9dc5907630a74dbc1612e461"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac3cebb9e9dc5907630a74dbc1612e461">&#9670;&#160;</a></span>drawColored2D()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2499,8 +2503,8 @@ Additional Inherited Members</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>lineLoop</em> = <code>false</code>&#160;</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>drawMode</em> = <code>GL_TRIANGLES</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -2515,7 +2519,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Reimplemented from <a class="el" href="classgRenderer.html#a9417c364ebcbfa50016c49b9b4712a77">gRenderer</a>.</p>
+<p>Reimplemented from <a class="el" href="classgRenderer.html#a602f903b2536627048d051b354080dee">gRenderer</a>.</p>
 
 </div>
 </div>
@@ -2628,8 +2632,8 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="a28e622db445a1d77e5ff693270d93353" name="a28e622db445a1d77e5ff693270d93353"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a28e622db445a1d77e5ff693270d93353">&#9670;&#160;</a></span>drawTexturedRect2D()</h2>
+<a id="aee1c7119bd31cdecb8d3bff00990b551" name="aee1c7119bd31cdecb8d3bff00990b551"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aee1c7119bd31cdecb8d3bff00990b551">&#9670;&#160;</a></span>drawTexturedRect2D()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2646,6 +2650,12 @@ Additional Inherited Members</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">GLuint&#160;</td>
+          <td class="paramname"><em>maskTextureId</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
           <td class="paramtype">const glm::vec4 &amp;&#160;</td>
           <td class="paramname"><em>tint</em>, </td>
         </tr>
@@ -2653,7 +2663,19 @@ Additional Inherited Members</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const glm::mat4 &amp;&#160;</td>
-          <td class="paramname"><em>mvp</em>&#160;</td>
+          <td class="paramname"><em>mvp</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const glm::vec2 &amp;&#160;</td>
+          <td class="paramname"><em>uvOffset</em> = <code>glm::vec2(0.0f)</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const glm::vec2 &amp;&#160;</td>
+          <td class="paramname"><em>uvScale</em> = <code>glm::vec2(1.0f)</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -2668,7 +2690,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Reimplemented from <a class="el" href="classgRenderer.html#a4d83764efc687add25a8a4cc5f5893a2">gRenderer</a>.</p>
+<p>Reimplemented from <a class="el" href="classgRenderer.html#aeddf5cd99f157610584d68393c83e8af">gRenderer</a>.</p>
 
 </div>
 </div>

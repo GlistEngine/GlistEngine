@@ -17,6 +17,7 @@ var classgMesh =
     [ "drawStart", "classgMesh.html#a488e48512553f93065c7782fd928b205", null ],
     [ "drawVbo", "classgMesh.html#aa5ea135e74def0f916e1456e519e3c5c", null ],
     [ "drawVboInstanced", "classgMesh.html#af95de8e64e3f201f980ecd32b9da0f16", null ],
+    [ "drawVulkan2D", "classgMesh.html#a35ff896a7ab0416cd35d3f96e9036dfd", null ],
     [ "fillMissingVertexColors", "classgMesh.html#a4ebe3afec5a7333eeda5fea8aec87c81", null ],
     [ "getBoundingBox", "classgMesh.html#acfa86348dd7b6ef0b453d46a38a2c932", null ],
     [ "getDrawMode", "classgMesh.html#a793d2b7855545e2f8f16e73512bc6461", null ],
