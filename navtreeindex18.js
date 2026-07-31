@@ -1,5 +1,10 @@
 var NAVTREEINDEX18 =
 {
+"gSpriteAnimation_8h.html#acab0e9e07a5b5b16aa9c7b2f70de400a":[2,0,0,0,0,4],
+"gSpriteAnimation_8h.html#af3a5f41be3fc211fbeeca534c470ef14":[2,0,0,0,0,8],
+"gSpriteAnimation_8h.html#af499d201367dfb12f9468d2f36010501":[2,0,0,0,0,11],
+"gSpriteAnimation_8h.html#afb5d92f8eea5ce60018b57906357ea3b":[2,0,0,0,0,6],
+"gSpriteAnimation_8h_source.html":[2,0,0,0,0],
 "gSpriteAnimator_8h.html":[2,0,0,0,1],
 "gSpriteAnimator_8h_source.html":[2,0,0,0,1],
 "gTerrain_8h.html":[2,0,0,4,24],
@@ -244,10 +249,5 @@ var NAVTREEINDEX18 =
 "structgCamera_1_1Frustum.html#adc74ca6df8dcf8e94b83eb24576555e0":[1,0,21,0,1],
 "structgCamera_1_1Frustum.html#aed75e631deb7a54b04de05d0d3b46a59":[1,0,21,0,0],
 "structgCamera_1_1Frustum.html#afe56e3cb2f006e489ebaf3477d26ab5f":[1,0,21,0,5],
-"structgCamera_1_1Plane.html":[1,0,21,1],
-"structgCamera_1_1Plane.html#a4f4ca2b2d4ab1d512f231198ba7f9f40":[1,0,21,1,4],
-"structgCamera_1_1Plane.html#a7ffa3ecbb93099b09ae449276b3ea230":[1,0,21,1,2],
-"structgCamera_1_1Plane.html#a82a03246929cfd5f31c73779ab90036b":[1,0,21,1,1],
-"structgCamera_1_1Plane.html#a8887f8f3151ee9e79e81253f3c772a60":[1,0,21,1,0],
-"structgCamera_1_1Plane.html#abd51c32507e71def3c0026401f83071c":[1,0,21,1,5]
+"structgCamera_1_1Plane.html":[1,0,21,1]
 };
