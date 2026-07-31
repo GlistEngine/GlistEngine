@@ -25,6 +25,13 @@ struct gVKTexture {
 	VkDescriptorSet descriptorset = VK_NULL_HANDLE;
 	int width = 0;
 	int height = 0;
+	// What the current sampler was built with, so a filtering or wrapping change
+	// can be detected and only then rebuild it. The defaults match what gTexture
+	// starts from.
+	VkFilter minfilter = VK_FILTER_LINEAR;
+	VkFilter magfilter = VK_FILTER_LINEAR;
+	VkSamplerAddressMode addressu = VK_SAMPLER_ADDRESS_MODE_REPEAT;
+	VkSamplerAddressMode addressv = VK_SAMPLER_ADDRESS_MODE_REPEAT;
 };
 
 // Uploads tightly-packed RGBA8 pixels (4 bytes per pixel, top row first) into a
@@ -36,6 +43,13 @@ gVKTexture* gvkCreateTextureRGBA8(gVKContext& ctx, const void* rgbaPixels, int w
 // the image. Called once at creation, and again after a shader reload, which
 // destroys the pool and with it every set allocated from it.
 bool gvkWriteTextureDescriptorSet(gVKContext& ctx, gVKTexture* tex);
+
+// Rebuilds the texture's sampler when the requested filtering or wrapping differs
+// from what it already has, and repoints the descriptor set at the new one. This is
+// how gTexture::setFiltering / setWrapping reach Vulkan. Returns false when nothing
+// had to change.
+bool gvkSetTextureSampler(gVKContext& ctx, gVKTexture* tex, VkFilter minFilter, VkFilter magFilter,
+		VkSamplerAddressMode addressU, VkSamplerAddressMode addressV);
 
 void gvkDestroyTexture(gVKContext& ctx, gVKTexture* tex);
 

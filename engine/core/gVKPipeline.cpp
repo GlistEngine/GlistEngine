@@ -12,11 +12,10 @@
 #include "gUtils.h"
 #include <algorithm>
 
-namespace {
 
 // One combined-image-sampler descriptor per texture; 1024 is plenty of headroom
 // for a 2D game and cheap to reserve.
-constexpr uint32_t GVK_DESCRIPTOR_POOL_SETS = 1024;
+static constexpr uint32_t GVK_DESCRIPTOR_POOL_SETS = 1024;
 
 // The stages the 2D path is built from. Each can be recompiled from its GLSL
 // source in a development build, and otherwise comes from the SPIR-V committed
@@ -34,7 +33,7 @@ struct gvkStageSource {
 	size_t embeddedsize;
 };
 
-const gvkStageSource gvkstagesources[GVK_STAGE_COUNT] = {
+static const gvkStageSource gvkstagesources[GVK_STAGE_COUNT] = {
 	{"color2d.vert", VK_SHADER_STAGE_VERTEX_BIT, gvkspv_color2d_vert, sizeof(gvkspv_color2d_vert)},
 	{"color2d.frag", VK_SHADER_STAGE_FRAGMENT_BIT, gvkspv_color2d_frag, sizeof(gvkspv_color2d_frag)},
 	{"image2d.vert", VK_SHADER_STAGE_VERTEX_BIT, gvkspv_image2d_vert, sizeof(gvkspv_image2d_vert)},
@@ -61,7 +60,7 @@ struct gvkPipelineParts {
 // requireSource is set on a hot reload, where the whole point is to see the
 // edit: a shader that fails to compile then has to abort the reload rather than
 // quietly fall back to the SPIR-V built into the binary and look like it worked.
-bool gvkLoadShaderSet(gvkShaderSet& set, bool requireSource) {
+static bool gvkLoadShaderSet(gvkShaderSet& set, bool requireSource) {
 	const bool runtime = gvkRuntimeShadersAvailable();
 	for(int i = 0; i < GVK_STAGE_COUNT; i++) {
 		const gvkStageSource& source = gvkstagesources[i];
@@ -72,7 +71,7 @@ bool gvkLoadShaderSet(gvkShaderSet& set, bool requireSource) {
 	return true;
 }
 
-VkShaderModule gvkCreateShaderModule(VkDevice device, const std::vector<uint32_t>& code) {
+static VkShaderModule gvkCreateShaderModule(VkDevice device, const std::vector<uint32_t>& code) {
 	VkShaderModuleCreateInfo info{};
 	info.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
 	info.codeSize = code.size() * sizeof(uint32_t);
@@ -91,7 +90,7 @@ VkShaderModule gvkCreateShaderModule(VkDevice device, const std::vector<uint32_t
 // written down. The fixed 2D render state (triangle list, no depth, no cull,
 // dynamic viewport/scissor, straight alpha blending) is shared by both pipelines
 // and stays here.
-bool gvkBuildPipeline(VkDevice device, VkRenderPass renderpass, const char* name,
+static bool gvkBuildPipeline(VkDevice device, VkRenderPass renderpass, const char* name,
 		const std::vector<uint32_t>& vertSpirv, const std::vector<uint32_t>& fragSpirv,
 		bool lineVariant, gvkPipelineParts& parts) {
 	gVKReflectedLayout reflected;
@@ -245,7 +244,7 @@ bool gvkBuildPipeline(VkDevice device, VkRenderPass renderpass, const char* name
 	return true;
 }
 
-void gvkDestroyParts(VkDevice device, gvkPipelineParts& parts) {
+static void gvkDestroyParts(VkDevice device, gvkPipelineParts& parts) {
 	if(parts.linepipeline != VK_NULL_HANDLE) vkDestroyPipeline(device, parts.linepipeline, nullptr);
 	if(parts.pipeline != VK_NULL_HANDLE) vkDestroyPipeline(device, parts.pipeline, nullptr);
 	if(parts.layout != VK_NULL_HANDLE) vkDestroyPipelineLayout(device, parts.layout, nullptr);
@@ -255,7 +254,7 @@ void gvkDestroyParts(VkDevice device, gvkPipelineParts& parts) {
 
 // Sized from the descriptor types the shaders actually declare, so a shader that
 // starts using a different resource kind gets a pool that can serve it.
-bool gvkCreateDescriptorPool(VkDevice device, const gvkPipelineParts& color, const gvkPipelineParts& image,
+static bool gvkCreateDescriptorPool(VkDevice device, const gvkPipelineParts& color, const gvkPipelineParts& image,
 		VkDescriptorPool& outPool) {
 	std::vector<VkDescriptorPoolSize> sizes;
 	auto add = [&sizes](const std::vector<gVKReflectedBinding>& bindings) {
@@ -286,7 +285,7 @@ bool gvkCreateDescriptorPool(VkDevice device, const gvkPipelineParts& color, con
 // Builds both pipelines and their pool without touching the context, so the
 // caller only adopts handles once everything succeeded. On failure nothing is
 // left allocated.
-bool gvkBuildAll(VkDevice device, VkRenderPass renderpass, const gvkShaderSet& shaders,
+static bool gvkBuildAll(VkDevice device, VkRenderPass renderpass, const gvkShaderSet& shaders,
 		gvkPipelineParts& color, gvkPipelineParts& image, VkDescriptorPool& pool) {
 	if(gvkBuildPipeline(device, renderpass, "colour",
 					shaders.spirv[GVK_STAGE_COLOR_VERT], shaders.spirv[GVK_STAGE_COLOR_FRAG], true, color) &&
@@ -301,7 +300,6 @@ bool gvkBuildAll(VkDevice device, VkRenderPass renderpass, const gvkShaderSet& s
 	return false;
 }
 
-} // namespace
 
 long long gvkShaderSourcesTimestamp() {
 	if(!gvkRuntimeShadersAvailable()) return 0;
