@@ -171,7 +171,7 @@ public:
     gTweenAnimation();
     ~gTweenAnimation();
 
-    void Set(float startvalue, float endvalue, float duration, float *targetptr, EASE_TYPE easetype, std::function<void()> FinishCallback = nullptr, float delay = 0.0f,);
+    void Set(float startvalue, float endvalue, float duration, float *targetptr, EASE_TYPE easetype = EASE_LINEAR, std::function<void()> FinishCallback = nullptr, float delay = 0.0f);
     void setDelay(float delay);
     float getDelay() const;
     bool isDelaying() const;
