@@ -9,13 +9,12 @@
 #include "gUtils.h"
 #include <algorithm>
 
-namespace {
 
 // Constants from the SPIR-V core specification. Spelled out rather than pulled
 // from spirv.h so the reflector needs nothing beyond <vulkan/vulkan.h>.
-constexpr uint32_t GVK_SPV_MAGIC = 0x07230203;
-constexpr uint32_t GVK_SPV_HEADER_WORDS = 5;
-constexpr uint32_t GVK_NO_OFFSET = 0xffffffffu;
+static constexpr uint32_t GVK_SPV_MAGIC = 0x07230203;
+static constexpr uint32_t GVK_SPV_HEADER_WORDS = 5;
+static constexpr uint32_t GVK_NO_OFFSET = 0xffffffffu;
 
 enum : uint32_t {
 	SpvOpEntryPoint = 15, SpvOpDecorate = 71, SpvOpMemberDecorate = 72,
@@ -70,7 +69,7 @@ struct gvkSpvId {
 	std::vector<uint32_t> memberoffsets;   // GVK_NO_OFFSET where undecorated
 };
 
-VkShaderStageFlagBits gvkStageOf(uint32_t executionModel) {
+static VkShaderStageFlagBits gvkStageOf(uint32_t executionModel) {
 	switch(executionModel) {
 	case SpvExecutionModelVertex: return VK_SHADER_STAGE_VERTEX_BIT;
 	case SpvExecutionModelTessellationControl: return VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT;
@@ -85,7 +84,7 @@ VkShaderStageFlagBits gvkStageOf(uint32_t executionModel) {
 // Byte size of a type as the shader lays it out. Structs are measured from their
 // member Offset decorations, which is what glslc emits for interface blocks, so
 // the answer matches the block's declared footprint including any padding.
-uint32_t gvkTypeSize(const std::vector<gvkSpvId>& ids, uint32_t type) {
+static uint32_t gvkTypeSize(const std::vector<gvkSpvId>& ids, uint32_t type) {
 	if(type >= ids.size()) return 0;
 	const gvkSpvId& t = ids[type];
 	switch(t.opcode) {
@@ -117,7 +116,7 @@ uint32_t gvkTypeSize(const std::vector<gvkSpvId>& ids, uint32_t type) {
 // VkFormat of a vertex input. Only the scalar and vector types a vertex
 // attribute can actually have are covered; anything else reports UNDEFINED and
 // the caller rejects the shader.
-VkFormat gvkVertexFormat(const std::vector<gvkSpvId>& ids, uint32_t type) {
+static VkFormat gvkVertexFormat(const std::vector<gvkSpvId>& ids, uint32_t type) {
 	if(type >= ids.size()) return VK_FORMAT_UNDEFINED;
 	const gvkSpvId& t = ids[type];
 	uint32_t components = 1;
@@ -147,7 +146,7 @@ VkFormat gvkVertexFormat(const std::vector<gvkSpvId>& ids, uint32_t type) {
 // Descriptor type of a resource variable, following the storage class and the
 // shape of the type it points at. Arrays are unwrapped first, and their length
 // becomes the descriptor count.
-bool gvkDescriptorTypeOf(const std::vector<gvkSpvId>& ids, uint32_t type, uint32_t storageClass,
+static bool gvkDescriptorTypeOf(const std::vector<gvkSpvId>& ids, uint32_t type, uint32_t storageClass,
 		VkDescriptorType& outType, uint32_t& outCount) {
 	outCount = 1;
 	while(type < ids.size() && ids[type].opcode == SpvOpTypeArray) {
@@ -189,7 +188,6 @@ bool gvkDescriptorTypeOf(const std::vector<gvkSpvId>& ids, uint32_t type, uint32
 	return false;
 }
 
-} // namespace
 
 uint32_t gVKReflectedLayout::getSetCount() const {
 	uint32_t count = 0;

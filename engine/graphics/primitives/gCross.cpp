@@ -29,6 +29,10 @@ void gCross::draw(float x, float y, float width, float height, float thickness, 
 }
 
 void gCross::drawNonFilled(float x, float y, float width, float height, float thickness) {
+	// The corners are rebuilt on every call, so the previous ones have to go first;
+	// without this the mesh grows by a full cross each frame.
+	vertices.clear();
+	indices.clear();
 	float mry = (height / 2) - (1 - (width / 2 / (width - thickness))) * (height - thickness); //length (from origin to intersection on y axis)
 	float mrx = ((1 - (height / 2 / (height - thickness))) * (width - thickness) - (width / 2)) * - 1; //length (from origin to intersection on x axis)
 	gVertex vertex;
@@ -92,6 +96,8 @@ void gCross::drawNonFilled(float x, float y, float width, float height, float th
 }
 
 void gCross::drawFilled(float x, float y, float width, float height, float thickness) {
+	vertices.clear();
+	indices.clear();
 	float mry = (height / 2) - (1 - (width / 2 / (width - thickness))) * (height - thickness); //length (from origin to intersection on y axis)
 	float mrx = ((1 - (height / 2 / (height - thickness))) * (width - thickness) - (width / 2)) * - 1; //length (from origin to intersection on x axis)
 	gVertex vertex;

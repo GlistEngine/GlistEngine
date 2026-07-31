@@ -110,6 +110,9 @@ protected:
 
     void drawStart(bool isInstanced = false);
     void drawVbo();
+    // Records this mesh through the Vulkan backend's 2D draw path instead of the
+    // VBO / shader path, which has no Vulkan equivalent. 3D meshes are skipped.
+    void drawVulkan2D();
     void drawVboInstanced(const std::vector<glm::mat4>& instanceTransformations);
     void drawExtraShaders();
     void drawEnd();

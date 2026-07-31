@@ -9,6 +9,7 @@
 #include "gVKBuffer.h"
 #include "gUtils.h"
 #include <algorithm>
+#include <vector>
 
 // 1 MB of vertices per frame in flight. A 2D frame records only a handful of
 // triangles and quads, so this never fills in practice; overflow is dropped with
@@ -53,44 +54,83 @@ void gvkDestroyDrawResources(gVKContext& ctx) {
 	ctx.dynvertexcapacity = 0;
 }
 
-// mvp + colour, matching the push_constant block in color2d.vert / image2d.*.
-namespace {
+// mvp + colour, matching the push_constant block in color2d.vert / image2d.*. The
+// image shaders carry one field more; the colour ones push only the first 80 bytes,
+// because the size actually pushed comes from reflecting each shader.
 struct gvkPush {
 	glm::mat4 mvp;
 	glm::vec4 color;
+	int masking = 0;
 };
 struct gvkImageVertex {
 	glm::vec2 pos;
 	glm::vec2 uv;
 };
-}
 
 void gvkDrawColored2D(gVKContext& ctx, const glm::vec2* points, int count,
-		const glm::vec4& color, const glm::mat4& mvp, bool lineLoop) {
+		const glm::vec4& color, const glm::mat4& mvp, int mode) {
 	if(count <= 0 || points == nullptr) return;
+
+	// Only a triangle list and a line list exist as pipelines, so every other mode
+	// is expanded into one of them here. The scratch buffer is reused between calls
+	// so an expanded draw still allocates nothing. Triangle strips alternate the
+	// first two corners to keep the winding consistent, matching what OpenGL feeds
+	// the rasteriser.
+	static thread_local std::vector<glm::vec2> expanded;
+	const void* vertexdata = points;
+	int vertexcount = count;
+	if(mode != GVK_DRAW2D_TRIANGLES && mode != GVK_DRAW2D_LINES) {
+		expanded.clear();
+		switch(mode) {
+		case GVK_DRAW2D_TRIANGLESTRIP:
+			expanded.reserve(static_cast<size_t>(std::max(count - 2, 0)) * 3);
+			for(int i = 2; i < count; i++) {
+				if(i % 2 == 0) {
+					expanded.push_back(points[i - 2]);
+					expanded.push_back(points[i - 1]);
+				} else {
+					expanded.push_back(points[i - 1]);
+					expanded.push_back(points[i - 2]);
+				}
+				expanded.push_back(points[i]);
+			}
+			break;
+		case GVK_DRAW2D_TRIANGLEFAN:
+			expanded.reserve(static_cast<size_t>(std::max(count - 2, 0)) * 3);
+			for(int i = 2; i < count; i++) {
+				expanded.push_back(points[0]);
+				expanded.push_back(points[i - 1]);
+				expanded.push_back(points[i]);
+			}
+			break;
+		case GVK_DRAW2D_LINESTRIP:
+			expanded.reserve(static_cast<size_t>(std::max(count - 1, 0)) * 2);
+			for(int i = 1; i < count; i++) {
+				expanded.push_back(points[i - 1]);
+				expanded.push_back(points[i]);
+			}
+			break;
+		case GVK_DRAW2D_LINELOOP:
+			expanded.reserve(static_cast<size_t>(count) * 2);
+			for(int i = 0; i < count; i++) {
+				expanded.push_back(points[i]);
+				expanded.push_back(points[(i + 1) % count]);
+			}
+			break;
+		default:
+			return;
+		}
+		if(expanded.empty()) return;
+		vertexdata = expanded.data();
+		vertexcount = static_cast<int>(expanded.size());
+	}
+
+	const bool lines = mode == GVK_DRAW2D_LINES || mode == GVK_DRAW2D_LINESTRIP || mode == GVK_DRAW2D_LINELOOP;
 	if(!gvkEnsureRenderPass(ctx)) return;
 	VkCommandBuffer cmd = ctx.getCurrentCommandBuffer();
 	if(cmd == VK_NULL_HANDLE) return;
-	VkPipeline pipeline = lineLoop ? ctx.getColor2DLinePipeline() : ctx.getColor2DPipeline();
+	VkPipeline pipeline = lines ? ctx.getColor2DLinePipeline() : ctx.getColor2DPipeline();
 	if(pipeline == VK_NULL_HANDLE) return;
-
-	// A line list wants both endpoints of every edge, so N corners become N edges:
-	// (p0,p1), (p1,p2) ... (pN-1,p0), the last one closing the loop. The scratch
-	// buffer is reused between calls to keep outline draws free of per-call
-	// allocation.
-	const void* vertexdata = points;
-	int vertexcount = count;
-	if(lineLoop) {
-		static thread_local std::vector<glm::vec2> edges;
-		edges.clear();
-		edges.reserve(static_cast<size_t>(count) * 2);
-		for(int i = 0; i < count; i++) {
-			edges.push_back(points[i]);
-			edges.push_back(points[(i + 1) % count]);
-		}
-		vertexdata = edges.data();
-		vertexcount = static_cast<int>(edges.size());
-	}
 
 	VkDeviceSize offset = ctx.pushDynamicVertices(vertexdata, sizeof(glm::vec2) * vertexcount);
 	if(offset == VK_WHOLE_SIZE) {
@@ -112,17 +152,22 @@ void gvkDrawColored2D(gVKContext& ctx, const glm::vec2* points, int count,
 	vkCmdDraw(cmd, static_cast<uint32_t>(vertexcount), 1, 0, 0);
 }
 
-void gvkDrawTextured2D(gVKContext& ctx, VkDescriptorSet textureSet,
-		const glm::vec4& tint, const glm::mat4& mvp) {
+void gvkDrawTextured2D(gVKContext& ctx, VkDescriptorSet textureSet, VkDescriptorSet maskSet,
+		const glm::vec4& tint, const glm::mat4& mvp,
+		const glm::vec2& uvOffset, const glm::vec2& uvScale) {
 	if(!gvkEnsureRenderPass(ctx)) return;
 	VkCommandBuffer cmd = ctx.getCurrentCommandBuffer();
 	if(cmd == VK_NULL_HANDLE || ctx.getImage2DPipeline() == VK_NULL_HANDLE || textureSet == VK_NULL_HANDLE) return;
 
 	// Unit quad in [0,1]; the mvp (projection2d * image model matrix) scales and
-	// places it, exactly like the OpenGL image quad.
+	// places it, exactly like the OpenGL image quad. The texture coordinates carry
+	// the sub-rectangle instead of a shader uniform, so a whole-texture draw and a
+	// sub-part draw share one pipeline.
+	const glm::vec2 uv0 = uvOffset;
+	const glm::vec2 uv1 = uvOffset + uvScale;
 	const gvkImageVertex quad[6] = {
-		{{0.0f, 0.0f}, {0.0f, 0.0f}}, {{1.0f, 0.0f}, {1.0f, 0.0f}}, {{1.0f, 1.0f}, {1.0f, 1.0f}},
-		{{0.0f, 0.0f}, {0.0f, 0.0f}}, {{1.0f, 1.0f}, {1.0f, 1.0f}}, {{0.0f, 1.0f}, {0.0f, 1.0f}},
+		{{0.0f, 0.0f}, {uv0.x, uv0.y}}, {{1.0f, 0.0f}, {uv1.x, uv0.y}}, {{1.0f, 1.0f}, {uv1.x, uv1.y}},
+		{{0.0f, 0.0f}, {uv0.x, uv0.y}}, {{1.0f, 1.0f}, {uv1.x, uv1.y}}, {{0.0f, 1.0f}, {uv0.x, uv1.y}},
 	};
 	VkDeviceSize offset = ctx.pushDynamicVertices(quad, sizeof(quad));
 	if(offset == VK_WHOLE_SIZE) {
@@ -134,9 +179,14 @@ void gvkDrawTextured2D(gVKContext& ctx, VkDescriptorSet textureSet,
 	VkBuffer vbuf = ctx.getCurrentDynamicVertexBuffer();
 	vkCmdBindVertexBuffers(cmd, 0, 1, &vbuf, &offset);
 	VkPipelineLayout layout = ctx.getImage2DPipelineLayout();
-	vkCmdBindDescriptorSets(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, layout, 0, 1, &textureSet, 0, nullptr);
+	// The fragment shader names the mask sampler whether or not it is read, so set 1
+	// always needs a valid set bound. Unmasked draws bind the image's own set there
+	// and turn the branch off through the push constant.
+	const bool masking = maskSet != VK_NULL_HANDLE;
+	VkDescriptorSet sets[2] = {textureSet, masking ? maskSet : textureSet};
+	vkCmdBindDescriptorSets(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, layout, 0, 2, sets, 0, nullptr);
 
-	gvkPush push{mvp, tint};
+	gvkPush push{mvp, tint, masking ? 1 : 0};
 	const uint32_t pushsize = std::min<uint32_t>(sizeof(push), ctx.getImage2DPushSize());
 	if(pushsize > 0) vkCmdPushConstants(cmd, layout, ctx.getImage2DPushStages(), 0, pushsize, &push);
 	vkCmdDraw(cmd, 6, 1, 0, 0);

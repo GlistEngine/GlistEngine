@@ -189,14 +189,18 @@ public:
 	void popMatrix() override;
 
 	/* ---------------- 2D draw path ---------------- */
-	// Records a filled coloured triangle list into the active frame (the Vulkan
-	// side of gDrawTriangle / gDrawRectangle). No-op if no frame is active.
+	// Records coloured 2D geometry into the active frame (the Vulkan side of the
+	// primitive meshes). drawMode is a GL primitive constant, the same one the mesh
+	// would hand OpenGL. No-op if no frame is active.
 	void drawColored2D(const glm::vec2* points, int count, const glm::vec4& color, const glm::mat4& mvp,
-			bool lineLoop = false) override;
+			int drawMode = GL_TRIANGLES) override;
 
 	// Records a textured quad using the registered Vulkan texture for textureId
-	// (the Vulkan side of gImage / gTexture::draw). No-op if the id is unknown.
-	void drawTexturedRect2D(GLuint textureId, const glm::vec4& tint, const glm::mat4& mvp) override;
+	// (the Vulkan side of gImage / gTexture::draw and drawSub). No-op if the id is
+	// unknown. An unknown mask id draws unmasked rather than dropping the image.
+	void drawTexturedRect2D(GLuint textureId, GLuint maskTextureId, const glm::vec4& tint,
+			const glm::mat4& mvp,
+			const glm::vec2& uvOffset = glm::vec2(0.0f), const glm::vec2& uvScale = glm::vec2(1.0f)) override;
 
 	/* ---------------- Vulkan context ---------------- */
 	// gVKContext is opaque here (its layout lives in the .cpp), so a developer can
@@ -233,7 +237,14 @@ private:
 	std::unordered_map<GLuint, gVKTexture*> vktextures;
 	GLuint nextvktextureid = 1;
 	GLuint boundtextureid = 0;
+	// Synthetic vertex array ids. gVbo asserts that its VAO is not GL_NONE before
+	// binding, so every gMesh needs a unique non-zero id even though Vulkan has no
+	// such object.
+	GLuint nextvkvaoid = 1;
 	void destroyAllTextures();
+	// The Vulkan texture behind the currently bound id, or null when there is none
+	// yet - gTexture sets filtering and wrapping both before and after the upload.
+	gVKTexture* getBoundVKTexture();
 
 	// Shader hot reload. Development builds watch the .vert / .frag sources the 2D
 	// pipelines are compiled from and rebuild them when one is saved, so a shader
