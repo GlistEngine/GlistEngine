@@ -16,6 +16,9 @@ GameCanvas::~GameCanvas() {
 }
 
 void GameCanvas::setup() {
+    root->setTargetFramerate(100000);
+    font.loadFont("FreeSansBold.ttf", 16);
+    
 	// Position the camera so the instance grid is visible.
     camera.setPosition(0.0f, 8.0f, 18.0f);
     camera.lookAt(glm::vec3(0.0f, 0.0f, -12.0f));
@@ -23,9 +26,9 @@ void GameCanvas::setup() {
 	// Light the instanced boxes.
     light = gLight(gLight::LIGHTTYPE_POINT);
     light.setPosition(0.0f, 10.0f, 5.0f);
-    light.setAmbientColor(80, 80, 80);
-    light.setDiffuseColor(255, 255, 255);
-    light.setSpecularColor(255, 255, 255);
+    light.setAmbientColor(20, 20, 20);
+    light.setDiffuseColor(120, 120, 120);
+    light.setSpecularColor(20, 20, 20);
 
 	// Store one transform for each box instance.
     instanceTransformations.reserve(400);
@@ -60,6 +63,9 @@ void GameCanvas::draw() {
     camera.end();
 
     disableDepthTest();
+
+    // Draw FPS
+    font.drawText("FPS: " + gToStr(root->getFramerate()), 30, 30);
 }
 
 void GameCanvas::keyPressed(int key) {

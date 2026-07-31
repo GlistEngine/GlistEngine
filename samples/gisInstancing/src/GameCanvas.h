@@ -9,6 +9,7 @@
 #define GAMECANVAS_H_
 
 #include "gBaseCanvas.h"
+#include "gFont.h"
 #include "gBox.h"
 #include "gCamera.h"
 #include "gLight.h"
@@ -36,6 +37,7 @@ public:
 	void hideNotify();
 
 private:
+	gFont font;
     gCamera camera;
     gLight light;
     gBox box;
