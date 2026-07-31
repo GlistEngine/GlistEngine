@@ -29,14 +29,7 @@
 class gPlane : public gMesh {
 public:
 	gPlane();
-	virtual ~gPlane();
-
-	void setTextureTiling(float tilingX, float tilingY);
-	void setTextureTiling(float tiling);
-
-private:
-	void initializePlane();
-	float tilingx, tilingy;
+	virtual ~gPlane() override;
 };
 
 #endif /* ENGINE_GRAPHICS_PRIMITIVES_GPLANE_H_ */
