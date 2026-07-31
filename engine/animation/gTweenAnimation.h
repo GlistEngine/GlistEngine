@@ -159,6 +159,8 @@ public:
     float endvalue = 0.0f;
     float duration = 0.0f;
     float elapsedtime = 0.0f;
+    float delay = 0.0f;
+    float delaytimer = 0.0f;
     //Target valu will be changed by tween system
     float *targetptr = nullptr;
     int repeatcount = 0;
@@ -169,7 +171,10 @@ public:
     gTweenAnimation();
     ~gTweenAnimation();
 
-    void Set(float startvalue, float endvalue, float duration, float *targetptr, EASE_TYPE easetype, std::function<void()> FinishCallback = nullptr);
+    void Set(float startvalue, float endvalue, float duration, float *targetptr, EASE_TYPE easetype, std::function<void()> FinishCallback = nullptr, float delay = 0.0f,);
+    void setDelay(float delay);
+    float getDelay() const;
+    bool isDelaying() const;
     void SetEasetype(EASE_TYPE easetype);
     void Update(float deltaTime);
     void Destroy();
