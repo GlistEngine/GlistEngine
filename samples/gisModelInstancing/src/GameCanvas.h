@@ -10,7 +10,7 @@
 
 #include "gBaseCanvas.h"
 #include "gFont.h"
-#include "gBox.h"
+#include "gModel.h"
 #include "gCamera.h"
 #include "gLight.h"
 
@@ -37,10 +37,10 @@ public:
 	void hideNotify();
 
 private:
-	gFont font;
+    gFont font;
     gCamera camera;
     gLight light;
-    gBox box;
+    gModel model;
 
     std::vector<glm::mat4> instanceTransformations;
 };

@@ -12,7 +12,7 @@
 
 int main(int argc, char **argv) {
 
-	gStartEngine(new gApp(), "gisInstancing", gBaseWindow::WINDOWMODE_APP, 800, 480);
+	gStartEngine(new gApp(), "gisModelInstancing", gBaseWindow::WINDOWMODE_APP, 800, 480);
 
 	return 0;
 }
