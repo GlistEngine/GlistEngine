@@ -139,6 +139,9 @@ public:
 	void pushMatrix();
 	void popMatrix();
 
+	static bool ismatrixpushing;
+	static gNode* matrixpopmeshptr;
+
 protected:
 	gNode* parent;
 	std::deque<gNode*> children;

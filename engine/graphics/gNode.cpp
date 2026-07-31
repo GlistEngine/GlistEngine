@@ -9,6 +9,8 @@
 #include <algorithm>
 
 int gNode::lastid = -1;
+bool gNode::ismatrixpushing = false;
+gNode* gNode::matrixpopmeshptr = nullptr;
 
 int gNode::getId() const {
 	return id;
@@ -266,6 +268,11 @@ void gNode::popMatrix() {
 }
 
 void gNode::processTransformationMatrix() {
+	if (ismatrixpushing) {
+	        pushMatrix();
+	        ismatrixpushing = false;
+	        matrixpopmeshptr = this;
+	    }
 	localtransformationmatrix.back() = glm::translate(glm::mat4(1.0f), position);
 	localtransformationmatrix.back() = localtransformationmatrix.back() * glm::toMat4(orientation);
 	localtransformationmatrix.back() = glm::scale(localtransformationmatrix.back(), scalevec);
