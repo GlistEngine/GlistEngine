@@ -56,7 +56,7 @@ var searchData=
   ['gdisableculling_53',['gDisableCulling',['../gRenderer_8h.html#ade8633c44a3c67fd57d341cd1859e680',1,'gRenderer.h']]],
   ['gdisablelogging_54',['gDisableLogging',['../gUtils_8h.html#ad2161baa188e15f33441b176830db027',1,'gUtils.h']]],
   ['gdrawarc_55',['gDrawArc',['../gRenderer_8h.html#af7f0e9f07fc9d9a3c151a2b672e43d91',1,'gRenderer.h']]],
-  ['gdrawarrow_56',['gDrawArrow',['../gRenderer_8h.html#a6122a443453afe9d86ab70805fd09d7b',1,'gRenderer.h']]],
+  ['gdrawarrow_56',['gDrawArrow',['../gRenderer_8h.html#a9c6ac38b0637fed67484ad9a17fbb226',1,'gRenderer.h']]],
   ['gdrawbox_57',['gdrawbox',['../gRenderer_8h.html#ae109af2e50a7a76154c78dd69e5029aa',1,'gDrawBox(float x, float y, float z, float w=1.0f, float h=1.0f, float d=1.0f, bool isFilled=true):&#160;gRenderer.h'],['../gRenderer_8h.html#a974a4e524495263daf6419cf5476ccaa',1,'gDrawBox(glm::mat4 transformationMatrix, bool isFilled=true):&#160;gRenderer.h']]],
   ['gdrawcircle_58',['gDrawCircle',['../gRenderer_8h.html#ac641b1e9588cc19395834416d916eb86',1,'gRenderer.h']]],
   ['gdrawcone_59',['gDrawCone',['../gRenderer_8h.html#a76449a7e88eb0c687bd2dfebc438928b',1,'gRenderer.h']]],
