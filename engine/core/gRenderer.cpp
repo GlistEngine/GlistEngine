@@ -83,9 +83,9 @@ void gDrawArc(float xCenter, float yCenter, float radius, bool isFilled, int num
 	gRenderObject::getRenderer()->drawArc(xCenter, yCenter, radius, isFilled, numberOfSides, degree, rotate);
 }
 
-void gDrawArrow(float x1, float y1, float length, float angle, float tipLength, float tipAngle) {
+void gDrawArrow(float x1, float y1, float length, float angle, float tipLength, float tipAngle, float thickness) {
 	G_PROFILE_ZONE_SCOPED_N("gDrawArrow()");
-	gRenderObject::getRenderer()->drawArrow(x1, y1, length, angle, tipLength, tipAngle);
+	gRenderObject::getRenderer()->drawArrow(x1, y1, length, angle, tipLength, tipAngle, thickness);
 }
 
 void gDrawRectangle(float x, float y, float w, float h, bool isFilled) {
@@ -1594,14 +1594,37 @@ void gRenderer::drawArc(float xCenter, float yCenter, float radius, bool isFille
 	arcmesh->draw(xCenter, yCenter, radius, isFilled, numberOfSides, degree, rotate);
 }
 
-void gRenderer::drawArrow(float x1, float y1, float length, float angle, float tipLength, float tipAngle) {
+void gRenderer::drawArrow(float x1, float y1, float length, float angle, float tipLength, float tipAngle, float thickness) {
 	G_PROFILE_ZONE_SCOPED_N("gRenderer::drawArrow()");
-	float x2, y2;
-	x2 = x1 + std::cos(gDegToRad(angle)) * length;
-	y2 = y1 + std::sin(gDegToRad(angle)) * length;;
-	linemesh->draw(x2, y2, x1, y1);
-	linemesh2->draw(x1, y1, x1 + std::cos(gDegToRad(angle) - gDegToRad(tipAngle)) * tipLength, y1 + std::sin(gDegToRad(angle) - gDegToRad(tipAngle)) * tipLength);
-	linemesh3->draw(x1, y1, x1 + (std::cos(gDegToRad(angle) + gDegToRad(tipAngle)) * tipLength) , y1 + std::sin(gDegToRad(angle) + gDegToRad(tipAngle)) * tipLength);
+	float x2 = x1 + std::cos(gDegToRad(angle)) * length;
+	float y2 = y1 + std::sin(gDegToRad(angle)) * length;
+
+	linemesh->setThickness(thickness);
+	linemesh2->setThickness(thickness);
+	linemesh3->setThickness(thickness);
+
+	float halfThickness = thickness * 0.8f;
+
+	float upperTipAngle = tipAngle + 5.0f;
+	float lowerTipAngle = tipAngle + 5.0f;
+
+	float wing1Angle = angle - upperTipAngle;
+	float wing2Angle = angle + lowerTipAngle;
+
+	float wing1StartX = x1 - halfThickness * std::sin(gDegToRad(wing1Angle));
+	float wing1StartY = y1 + halfThickness * std::cos(gDegToRad(wing1Angle));
+
+	float wing2StartX = x1 + halfThickness * std::sin(gDegToRad(wing2Angle));
+	float wing2StartY = y1 - halfThickness * std::cos(gDegToRad(wing2Angle));
+
+	float shaftOffset = halfThickness / std::sin(gDegToRad(tipAngle));
+	float bodyStartX = x1 + std::cos(gDegToRad(angle)) * shaftOffset;
+	float bodyStartY = y1 + std::sin(gDegToRad(angle)) * shaftOffset;
+
+	linemesh->draw(bodyStartX, bodyStartY, x2, y2);
+
+	linemesh2->draw(wing1StartX, wing1StartY, wing1StartX + std::cos(gDegToRad(wing1Angle)) * tipLength, wing1StartY + std::sin(gDegToRad(wing1Angle)) * tipLength);
+	linemesh3->draw(wing2StartX, wing2StartY, wing2StartX + std::cos(gDegToRad(wing2Angle)) * tipLength, wing2StartY + std::sin(gDegToRad(wing2Angle)) * tipLength);
 }
 
 void gRenderer::drawRectangle(float x, float y, float w, float h, bool isFilled) {
