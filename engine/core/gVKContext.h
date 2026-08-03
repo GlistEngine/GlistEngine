@@ -65,6 +65,8 @@ bool gvkReloadGraphicsPipelines(gVKContext& ctx);
 void gvkDestroyGraphicsPipelines(gVKContext& ctx);
 bool gvkCreateDrawResources(gVKContext& ctx);
 void gvkDestroyDrawResources(gVKContext& ctx);
+bool gvkUploadDynamicVertices(gVKContext& ctx, const void* data, VkDeviceSize size,
+		VkBuffer& outBuffer, VkDeviceSize& outOffset);
 
 // Validation layers cost performance, so the default follows the same DEBUG
 // condition the OpenGL debug output already uses in this engine. A developer can
@@ -113,6 +115,7 @@ struct gVKContext {
 	friend void gvkDestroyGraphicsPipelines(gVKContext&);
 	friend bool gvkCreateDrawResources(gVKContext&);
 	friend void gvkDestroyDrawResources(gVKContext&);
+	friend bool gvkUploadDynamicVertices(gVKContext&, const void*, VkDeviceSize, VkBuffer&, VkDeviceSize&);
 
 	/* ---------------- configurable settings ---------------- */
 	// Set these before the backend initialises to influence instance and device
@@ -317,25 +320,19 @@ struct gVKContext {
 		return frameactive ? commandbuffers[currentframe] : VK_NULL_HANDLE;
 	}
 
-	// Per-frame vertex ring. resetDynamicVertices() rewinds the current frame's
-	// buffer at frame start; pushDynamicVertices() appends vertex bytes (16-byte
-	// aligned) and returns the byte offset to bind from, or VK_WHOLE_SIZE when the
-	// buffer is full.
+	// Rewind the primary vertex ring and release overflow uploads belonging to this
+	// frame slot. beginFrame calls this only after the slot's fence has completed.
 	void resetDynamicVertices() {
 		if(!dynvertexoffsets.empty()) dynvertexoffsets[currentframe] = 0;
+		if(currentframe < dynvertexoverflows.size()) {
+			for(DynamicVertexOverflow& overflow : dynvertexoverflows[currentframe]) {
+				if(overflow.mapped != nullptr) vkUnmapMemory(device, overflow.memory);
+				if(overflow.buffer != VK_NULL_HANDLE) vkDestroyBuffer(device, overflow.buffer, nullptr);
+				if(overflow.memory != VK_NULL_HANDLE) vkFreeMemory(device, overflow.memory, nullptr);
+			}
+			dynvertexoverflows[currentframe].clear();
+		}
 	}
-	VkBuffer getCurrentDynamicVertexBuffer() {
-		return dynvertexbuffers.empty() ? VK_NULL_HANDLE : dynvertexbuffers[currentframe];
-	}
-	VkDeviceSize pushDynamicVertices(const void* data, VkDeviceSize size) {
-		if(dynvertexmapped.empty()) return VK_WHOLE_SIZE;
-		VkDeviceSize offset = (dynvertexoffsets[currentframe] + 15) & ~static_cast<VkDeviceSize>(15);
-		if(offset + size > dynvertexcapacity) return VK_WHOLE_SIZE;
-		std::memcpy(static_cast<char*>(dynvertexmapped[currentframe]) + offset, data, size);
-		dynvertexoffsets[currentframe] = offset + size;
-		return offset;
-	}
-
 private:
 	std::string appname = "GlistApp";
 	std::string enginename = "GlistEngine";
@@ -439,6 +436,12 @@ private:
 	std::vector<void*> dynvertexmapped;
 	std::vector<VkDeviceSize> dynvertexoffsets;
 	VkDeviceSize dynvertexcapacity = 0;
+	struct DynamicVertexOverflow {
+		VkBuffer buffer = VK_NULL_HANDLE;
+		VkDeviceMemory memory = VK_NULL_HANDLE;
+		void* mapped = nullptr;
+	};
+	std::vector<std::vector<DynamicVertexOverflow>> dynvertexoverflows;
 };
 
 #endif /* GVK_DESKTOP_GLFW */

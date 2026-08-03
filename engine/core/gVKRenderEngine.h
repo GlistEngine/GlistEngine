@@ -192,7 +192,7 @@ public:
 	// Records coloured 2D geometry into the active frame (the Vulkan side of the
 	// primitive meshes). drawMode is a GL primitive constant, the same one the mesh
 	// would hand OpenGL. No-op if no frame is active.
-	void drawColoredMesh2D(const glm::vec2* points, int count, const glm::vec4& color, const glm::mat4& mvp,
+	void drawColored2D(const glm::vec2* points, int count, const glm::vec4& color, const glm::mat4& mvp,
 			int drawMode = GL_TRIANGLES) override;
 	void drawMaterialMesh3D(const MeshVertex3D* vertices, int count, const glm::vec4& diffuse,
 			GLuint textureId, const glm::mat4& mvp, int drawMode = GL_TRIANGLES) override;

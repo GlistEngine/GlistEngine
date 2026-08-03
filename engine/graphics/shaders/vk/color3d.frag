@@ -16,9 +16,8 @@ layout(push_constant) uniform Push {
 void main() {
     outColor = vColor;
     if(pc.textured == 1) outColor *= texture(diffuseMap, vUV);
-    // A small object-space key light gives the first material path readable
-    // volume and, importantly, keeps normals in the reflected vertex interface.
-    // A world-space normal matrix will replace this when the light UBO lands.
+    // Normals arrive in world space after the mesh path applies the model's
+    // inverse-transpose normal matrix.
     float diffuse = max(dot(normalize(vNormal), normalize(vec3(0.4, 0.8, 0.5))), 0.0);
     outColor.rgb *= 0.35 + 0.65 * diffuse;
 }

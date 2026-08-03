@@ -11,10 +11,8 @@
 #include <algorithm>
 #include <vector>
 
-// 8 MB per frame in flight. The initial 1 MB ring was enough for 2D, but a
-// moderately tessellated gSphere expanded from a strip already exceeds it. This
-// remains a transitional upload path until meshes own device-local vertex/index
-// buffers; overflow is still reported instead of reallocating during recording.
+// 8 MB primary ring per frame in flight. Draws that exceed the remaining ring
+// space receive a frame-owned overflow buffer instead of being dropped.
 static constexpr VkDeviceSize GVK_DYNAMIC_VERTEX_CAPACITY = 8u << 20;
 
 bool gvkCreateDrawResources(gVKContext& ctx) {
@@ -26,6 +24,7 @@ bool gvkCreateDrawResources(gVKContext& ctx) {
 	ctx.dynvertexmemories.assign(frames, VK_NULL_HANDLE);
 	ctx.dynvertexmapped.assign(frames, nullptr);
 	ctx.dynvertexoffsets.assign(frames, 0);
+	ctx.dynvertexoverflows.resize(frames);
 
 	for(int i = 0; i < frames; i++) {
 		if(!gvkCreateBuffer(ctx, ctx.dynvertexcapacity, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT,
@@ -43,6 +42,14 @@ bool gvkCreateDrawResources(gVKContext& ctx) {
 
 void gvkDestroyDrawResources(gVKContext& ctx) {
 	if(ctx.device == VK_NULL_HANDLE) return;
+	for(auto& frameoverflows : ctx.dynvertexoverflows) {
+		for(auto& overflow : frameoverflows) {
+			if(overflow.mapped != nullptr) vkUnmapMemory(ctx.device, overflow.memory);
+			if(overflow.buffer != VK_NULL_HANDLE) vkDestroyBuffer(ctx.device, overflow.buffer, nullptr);
+			if(overflow.memory != VK_NULL_HANDLE) vkFreeMemory(ctx.device, overflow.memory, nullptr);
+		}
+	}
+	ctx.dynvertexoverflows.clear();
 	for(size_t i = 0; i < ctx.dynvertexbuffers.size(); i++) {
 		if(ctx.dynvertexmapped[i] != nullptr) vkUnmapMemory(ctx.device, ctx.dynvertexmemories[i]);
 		if(ctx.dynvertexbuffers[i] != VK_NULL_HANDLE) vkDestroyBuffer(ctx.device, ctx.dynvertexbuffers[i], nullptr);
@@ -53,6 +60,33 @@ void gvkDestroyDrawResources(gVKContext& ctx) {
 	ctx.dynvertexmapped.clear();
 	ctx.dynvertexoffsets.clear();
 	ctx.dynvertexcapacity = 0;
+}
+
+bool gvkUploadDynamicVertices(gVKContext& ctx, const void* data, VkDeviceSize size,
+		VkBuffer& outBuffer, VkDeviceSize& outOffset) {
+	if(data == nullptr || size == 0 || ctx.dynvertexmapped.empty()) return false;
+	outOffset = (ctx.dynvertexoffsets[ctx.currentframe] + 15) & ~static_cast<VkDeviceSize>(15);
+	if(outOffset + size <= ctx.dynvertexcapacity) {
+		std::memcpy(static_cast<char*>(ctx.dynvertexmapped[ctx.currentframe]) + outOffset, data, size);
+		ctx.dynvertexoffsets[ctx.currentframe] = outOffset + size;
+		outBuffer = ctx.dynvertexbuffers[ctx.currentframe];
+		return true;
+	}
+
+	gVKContext::DynamicVertexOverflow overflow;
+	if(!gvkCreateBuffer(ctx, size, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT,
+			VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
+			overflow.buffer, overflow.memory)) return false;
+	if(vkMapMemory(ctx.device, overflow.memory, 0, size, 0, &overflow.mapped) != VK_SUCCESS) {
+		vkDestroyBuffer(ctx.device, overflow.buffer, nullptr);
+		vkFreeMemory(ctx.device, overflow.memory, nullptr);
+		return false;
+	}
+	std::memcpy(overflow.mapped, data, size);
+	outBuffer = overflow.buffer;
+	outOffset = 0;
+	ctx.dynvertexoverflows[ctx.currentframe].push_back(overflow);
+	return true;
 }
 
 // mvp + colour, matching the push_constant block in color2d.vert / image2d.*. The
@@ -133,14 +167,11 @@ void gvkDrawColored2D(gVKContext& ctx, const glm::vec2* points, int count,
 	VkPipeline pipeline = lines ? ctx.getColor2DLinePipeline() : ctx.getColor2DPipeline();
 	if(pipeline == VK_NULL_HANDLE) return;
 
-	VkDeviceSize offset = ctx.pushDynamicVertices(vertexdata, sizeof(glm::vec2) * vertexcount);
-	if(offset == VK_WHOLE_SIZE) {
-		gLogw("gVKDraw") << "Dynamic vertex buffer full; dropping a coloured draw.";
-		return;
-	}
+	VkBuffer vbuf = VK_NULL_HANDLE;
+	VkDeviceSize offset = 0;
+	if(!gvkUploadDynamicVertices(ctx, vertexdata, sizeof(glm::vec2) * vertexcount, vbuf, offset)) return;
 
 	vkCmdBindPipeline(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline);
-	VkBuffer vbuf = ctx.getCurrentDynamicVertexBuffer();
 	vkCmdBindVertexBuffers(cmd, 0, 1, &vbuf, &offset);
 
 	// Size and stages come from reflecting the shader, so a change to its
@@ -160,13 +191,10 @@ void gvkDrawMesh3D(gVKContext& ctx, const gRenderer::MeshVertex3D* vertices, int
 	VkCommandBuffer cmd = ctx.getCurrentCommandBuffer();
 	if(cmd == VK_NULL_HANDLE || ctx.getColor3DPipeline() == VK_NULL_HANDLE) return;
 
-	VkDeviceSize offset = ctx.pushDynamicVertices(vertices, sizeof(gRenderer::MeshVertex3D) * count);
-	if(offset == VK_WHOLE_SIZE) {
-		gLogw("gVKDraw") << "Dynamic vertex buffer full; dropping a 3D mesh draw.";
-		return;
-	}
+	VkBuffer vbuf = VK_NULL_HANDLE;
+	VkDeviceSize offset = 0;
+	if(!gvkUploadDynamicVertices(ctx, vertices, sizeof(gRenderer::MeshVertex3D) * count, vbuf, offset)) return;
 	vkCmdBindPipeline(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, ctx.getColor3DPipeline());
-	VkBuffer vbuf = ctx.getCurrentDynamicVertexBuffer();
 	vkCmdBindVertexBuffers(cmd, 0, 1, &vbuf, &offset);
 	if(textureSet != VK_NULL_HANDLE) {
 		vkCmdBindDescriptorSets(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, ctx.getColor3DPipelineLayout(),
@@ -196,14 +224,11 @@ void gvkDrawTextured2D(gVKContext& ctx, VkDescriptorSet textureSet, VkDescriptor
 		{{0.0f, 0.0f}, {uv0.x, uv0.y}}, {{1.0f, 0.0f}, {uv1.x, uv0.y}}, {{1.0f, 1.0f}, {uv1.x, uv1.y}},
 		{{0.0f, 0.0f}, {uv0.x, uv0.y}}, {{1.0f, 1.0f}, {uv1.x, uv1.y}}, {{0.0f, 1.0f}, {uv0.x, uv1.y}},
 	};
-	VkDeviceSize offset = ctx.pushDynamicVertices(quad, sizeof(quad));
-	if(offset == VK_WHOLE_SIZE) {
-		gLogw("gVKDraw") << "Dynamic vertex buffer full; dropping a textured draw.";
-		return;
-	}
+	VkBuffer vbuf = VK_NULL_HANDLE;
+	VkDeviceSize offset = 0;
+	if(!gvkUploadDynamicVertices(ctx, quad, sizeof(quad), vbuf, offset)) return;
 
 	vkCmdBindPipeline(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, ctx.getImage2DPipeline());
-	VkBuffer vbuf = ctx.getCurrentDynamicVertexBuffer();
 	vkCmdBindVertexBuffers(cmd, 0, 1, &vbuf, &offset);
 	VkPipelineLayout layout = ctx.getImage2DPipelineLayout();
 	// The fragment shader names the mask sampler whether or not it is read, so set 1

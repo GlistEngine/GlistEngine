@@ -1427,7 +1427,7 @@ void gVKRenderEngine::cleanup() {
 	rendercolor = nullptr;
 }
 
-void gVKRenderEngine::drawColoredMesh2D(const glm::vec2* points, int count, const glm::vec4& color, const glm::mat4& mvp,
+void gVKRenderEngine::drawColored2D(const glm::vec2* points, int count, const glm::vec4& color, const glm::mat4& mvp,
 		int drawMode) {
 #ifdef GVK_DESKTOP_GLFW
 	if(vkcontext == nullptr) return;

@@ -369,12 +369,22 @@ void gMesh::drawVulkanMesh() {
 	static thread_local std::vector<gRenderer::MeshVertex3D> points3d;
 	points2d.clear();
 	points3d.clear();
+	if(!isprojection2d && drawmode != DRAWMODE_TRIANGLES &&
+			drawmode != DRAWMODE_TRIANGLESTRIP && drawmode != DRAWMODE_TRIANGLEFAN) return;
+	const glm::mat3 modelmatrix(localtransformationmatrix.back());
+	const float modeldeterminant = glm::determinant(modelmatrix);
+	const glm::mat3 normalmatrix = std::abs(modeldeterminant) > 0.000001f
+			? glm::transpose(glm::inverse(modelmatrix)) : glm::mat3(1.0f);
+	const auto makeVertex3D = [&](const gVertex& vertex) {
+		return gRenderer::MeshVertex3D{vertex.position,
+				glm::normalize(normalmatrix * vertex.normal), vertex.texcoords * texturetiling, vertex.color};
+	};
 	if (inds.empty()) {
 		points2d.reserve(verts.size());
 		points3d.reserve(verts.size());
 		for (const gVertex& vertex : verts) {
 			if(isprojection2d) points2d.emplace_back(vertex.position.x, vertex.position.y);
-			else points3d.push_back({vertex.position, vertex.normal, vertex.texcoords, vertex.color});
+			else points3d.push_back(makeVertex3D(vertex));
 		}
 	} else {
 		points2d.reserve(inds.size());
@@ -384,7 +394,7 @@ void gMesh::drawVulkanMesh() {
 			if(isprojection2d) points2d.emplace_back(verts[index].position.x, verts[index].position.y);
 			else {
 				const gVertex& vertex = verts[index];
-				points3d.push_back({vertex.position, vertex.normal, vertex.texcoords, vertex.color});
+				points3d.push_back(makeVertex3D(vertex));
 			}
 		}
 	}
@@ -396,7 +406,7 @@ void gMesh::drawVulkanMesh() {
 	const glm::vec4 rgba(color->r, color->g, color->b, color->a);
 	if(isprojection2d) {
 		glm::mat4 mvp = renderer->getProjectionMatrix2d() * localtransformationmatrix.back();
-		renderer->drawColoredMesh2D(points2d.data(), static_cast<int>(points2d.size()), rgba, mvp, drawmode);
+		renderer->drawColored2D(points2d.data(), static_cast<int>(points2d.size()), rgba, mvp, drawmode);
 	} else {
 		glm::mat4 mvp = renderer->getProjectionMatrix() * renderer->getViewMatrix() * localtransformationmatrix.back();
 		// Vulkan's material pipeline is a triangle list. Expand the strip/fan modes
@@ -411,6 +421,9 @@ void gMesh::drawVulkanMesh() {
 			for(size_t i = 2; i < points3d.size(); i++) {
 				const size_t a = drawmode == DRAWMODE_TRIANGLEFAN ? 0 : i - 2;
 				const size_t b = i - 1;
+				if(glm::all(glm::equal(points3d[a].position, points3d[b].position)) ||
+						glm::all(glm::equal(points3d[b].position, points3d[i].position)) ||
+						glm::all(glm::equal(points3d[a].position, points3d[i].position))) continue;
 				if(drawmode == DRAWMODE_TRIANGLESTRIP && (i & 1u)) {
 					triangles.push_back(points3d[b]);
 					triangles.push_back(points3d[a]);
