@@ -26,7 +26,12 @@
 static GLFWwindow* currentwindow = nullptr;
 
 static void onFramebufferResize(GLFWwindow* window, int width, int height) {
-    glViewport(0, 0, width, height);
+	// A Vulkan window is created with GLFW_NO_API and has no current OpenGL
+	// context. Calling glViewport from its resize callback is invalid and can crash
+	// while the Vulkan backend is rebuilding the swapchain.
+	if(glfwGetWindowAttrib(window, GLFW_CLIENT_API) != GLFW_NO_API) {
+		glViewport(0, 0, width, height);
+	}
 	auto handle = static_cast<gGLFWWindow*>(glfwGetWindowUserPointer(window));
 	if (handle) {
 		handle->setSize(width, height);
