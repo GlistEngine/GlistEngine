@@ -271,6 +271,15 @@ public:
 	virtual void drawColored2D(const glm::vec2* points, int count, const glm::vec4& color, const glm::mat4& mvp,
 			int drawMode = GL_TRIANGLES) {}
 
+	struct MeshVertex3D {
+		glm::vec3 position;
+		glm::vec3 normal;
+		glm::vec2 texcoords;
+		glm::vec3 color;
+	};
+	virtual void drawMesh3D(const MeshVertex3D* vertices, int count, const glm::vec4& diffuse,
+			GLuint textureId, const glm::mat4& mvp, int drawMode = GL_TRIANGLES) {}
+
 	// Backend hook for a textured 2D quad (gImage / gTexture). OpenGL draws through
 	// its image shader and leaves this a no-op; Vulkan looks the texture id up in
 	// its registry and records a textured unit quad. tint components are 0..1; mvp

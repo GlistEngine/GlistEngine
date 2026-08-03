@@ -1179,11 +1179,26 @@ bool gVKRenderEngine::initVulkan() {
 	// Empty: no optional features are switched on yet. Kept separate from the
 	// context's devicefeatures, which records what the GPU actually supports.
 	VkPhysicalDeviceFeatures enabledfeatures{};
+	VkPhysicalDeviceVulkan13Features supportedvulkan13{};
+	supportedvulkan13.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_3_FEATURES;
+	VkPhysicalDeviceFeatures2 supportedfeatures{};
+	supportedfeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
+	supportedfeatures.pNext = &supportedvulkan13;
+	vkGetPhysicalDeviceFeatures2(ctx->physicaldevice, &supportedfeatures);
+	if(supportedvulkan13.dynamicRendering != VK_TRUE) {
+		gLoge("gVKRenderEngine") << "The selected Vulkan 1.3 device does not support dynamic rendering.";
+		cleanupVulkan();
+		return false;
+	}
+	VkPhysicalDeviceVulkan13Features enabledvulkan13{};
+	enabledvulkan13.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_3_FEATURES;
+	enabledvulkan13.dynamicRendering = VK_TRUE;
 	VkDeviceCreateInfo deviceinfo{};
 	deviceinfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
 	deviceinfo.queueCreateInfoCount = static_cast<uint32_t>(queueinfos.size());
 	deviceinfo.pQueueCreateInfos = queueinfos.data();
 	deviceinfo.pEnabledFeatures = &enabledfeatures;
+	deviceinfo.pNext = &enabledvulkan13;
 	deviceinfo.enabledExtensionCount = static_cast<uint32_t>(deviceextensions.size());
 	deviceinfo.ppEnabledExtensionNames = deviceextensions.data();
 	// Device-level layers were deprecated in Vulkan 1.0: the layers enabled on the
@@ -1244,20 +1259,20 @@ bool gVKRenderEngine::initVulkan() {
 			<< " | validation: " << (usevalidation ? "on" : "off");
 
 	/* ---------------- presentation resources ---------------- */
-	// The remaining modules of the frame path (render pass, framebuffers, command
-	// buffers and synchronisation) are hooked in here as they are implemented.
+	// Dynamic Rendering needs formats and depth views, but no VkRenderPass or
+	// VkFramebuffer objects. Command and synchronisation resources follow them.
 	if(!gvkCreateSwapchain(*ctx, handle)) {
 		gLoge("gVKRenderEngine") << "Vulkan init: the swapchain could not be created.";
 		cleanupVulkan();
 		return false;
 	}
-	if(!gvkCreateRenderPass(*ctx)) {
-		gLoge("gVKRenderEngine") << "Vulkan init: the render pass could not be created.";
+	if(!gvkSelectRenderingFormats(*ctx)) {
+		gLoge("gVKRenderEngine") << "Vulkan init: rendering formats could not be selected.";
 		cleanupVulkan();
 		return false;
 	}
-	if(!gvkCreateFramebuffers(*ctx)) {
-		gLoge("gVKRenderEngine") << "Vulkan init: the framebuffers could not be created.";
+	if(!gvkCreateDepthTargets(*ctx)) {
+		gLoge("gVKRenderEngine") << "Vulkan init: depth targets could not be created.";
 		cleanupVulkan();
 		return false;
 	}
@@ -1288,6 +1303,13 @@ bool gVKRenderEngine::initVulkan() {
 		cleanupVulkan();
 		return false;
 	}
+	const uint32_t whitepixel = 0xffffffffu;
+	defaultvktexture = gvkCreateTextureRGBA8(*ctx, &whitepixel, 1, 1);
+	if(defaultvktexture == nullptr) {
+		gLoge("gVKRenderEngine") << "Vulkan init: the default material texture could not be created.";
+		cleanupVulkan();
+		return false;
+	}
 	return true;
 #endif
 }
@@ -1312,8 +1334,8 @@ void gVKRenderEngine::cleanupVulkan() {
 	gvkDestroyPresentSemaphores(*ctx);
 	gvkDestroyFrameSyncObjects(*ctx);
 	gvkDestroyCommandResources(*ctx);
-	gvkDestroyFramebuffers(*ctx);
-	gvkDestroyRenderPass(*ctx);
+	gvkDestroyDepthTargets(*ctx);
+	gvkResetRenderingFormats(*ctx);
 	gvkDestroySwapchain(*ctx);
 	if(ctx->device != VK_NULL_HANDLE) vkDestroyDevice(ctx->device, nullptr);
 	if(ctx->surface != VK_NULL_HANDLE) vkDestroySurfaceKHR(ctx->instance, ctx->surface, nullptr);
@@ -1362,6 +1384,7 @@ void gVKRenderEngine::checkShaderReload() {
 	for(auto& entry : vktextures) {
 		if(entry.second != nullptr) gvkWriteTextureDescriptorSet(*vkcontext, entry.second);
 	}
+	if(defaultvktexture != nullptr) gvkWriteTextureDescriptorSet(*vkcontext, defaultvktexture);
 #endif
 }
 
@@ -1432,6 +1455,20 @@ void gVKRenderEngine::drawColored2D(const glm::vec2* points, int count, const gl
 #endif
 }
 
+void gVKRenderEngine::drawMesh3D(const MeshVertex3D* vertices, int count, const glm::vec4& diffuse,
+		GLuint textureId, const glm::mat4& mvp, int drawMode) {
+#ifdef GVK_DESKTOP_GLFW
+	if(vkcontext == nullptr || drawMode != GL_TRIANGLES) return;
+	gVKTexture* texture = defaultvktexture;
+	if(textureId != 0) {
+		auto it = vktextures.find(textureId);
+		if(it != vktextures.end() && it->second != nullptr) texture = it->second;
+	}
+	gvkDrawMesh3D(*vkcontext, vertices, count,
+			texture != nullptr ? texture->descriptorset : VK_NULL_HANDLE, diffuse, mvp);
+#endif
+}
+
 void gVKRenderEngine::drawTexturedRect2D(GLuint textureId, GLuint maskTextureId, const glm::vec4& tint,
 		const glm::mat4& mvp, const glm::vec2& uvOffset, const glm::vec2& uvScale) {
 #ifdef GVK_DESKTOP_GLFW
@@ -1462,6 +1499,8 @@ void gVKRenderEngine::destroyAllTextures() {
 	if(vkcontext == nullptr) return;
 	for(auto& entry : vktextures) gvkDestroyTexture(*vkcontext, entry.second);
 	vktextures.clear();
+	gvkDestroyTexture(*vkcontext, defaultvktexture);
+	defaultvktexture = nullptr;
 #endif
 }
 

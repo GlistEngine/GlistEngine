@@ -68,34 +68,66 @@ bool gvkBeginFrame(gVKContext& ctx, GLFWwindow* window) {
 		return false;
 	}
 
-	// The render pass is not begun here on purpose. Geometry has to be recorded
-	// inside it, yet the clear colour is only final after the canvas has drawn, so
-	// the pass is opened lazily on the first draw (gvkEnsureRenderPass) or, for a
+	// Dynamic Rendering is not begun here: the clear colour is only final after the
+	// canvas has drawn, so the scope opens lazily on the first draw or, for a
 	// frame that draws nothing, in gvkEndFrame. Rewind this frame's vertex ring so
 	// the draw path can refill it from the start.
 	ctx.resetDynamicVertices();
-	ctx.renderpassactive = false;
+	ctx.renderingactive = false;
 	ctx.frameactive = true;
 	return true;
 }
 
-bool gvkEnsureRenderPass(gVKContext& ctx) {
+bool gvkEnsureRendering(gVKContext& ctx) {
 	if(!ctx.frameactive) return false;
-	if(ctx.renderpassactive) return true;
+	if(ctx.renderingactive) return true;
 
 	VkCommandBuffer commandbuffer = ctx.commandbuffers[ctx.currentframe];
 
-	VkRenderPassBeginInfo renderpassinfo{};
-	renderpassinfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-	renderpassinfo.renderPass = ctx.renderpass;
-	renderpassinfo.framebuffer = ctx.framebuffers[ctx.currentimageindex];
-	renderpassinfo.renderArea.offset = {0, 0};
-	renderpassinfo.renderArea.extent = ctx.swapchainextent;
-	// The attachment uses a CLEAR load operation, so this is the value that ends up
-	// covering the screen wherever nothing is drawn.
-	renderpassinfo.clearValueCount = 1;
-	renderpassinfo.pClearValues = &ctx.clearvalue;
-	vkCmdBeginRenderPass(commandbuffer, &renderpassinfo, VK_SUBPASS_CONTENTS_INLINE);
+	VkImageMemoryBarrier barriers[2]{};
+	barriers[0].sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
+	barriers[0].srcAccessMask = 0;
+	barriers[0].dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+	barriers[0].oldLayout = ctx.swapchainimagelayouts[ctx.currentimageindex];
+	barriers[0].newLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+	barriers[0].srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+	barriers[0].dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+	barriers[0].image = ctx.swapchainimages[ctx.currentimageindex];
+	barriers[0].subresourceRange = {VK_IMAGE_ASPECT_COLOR_BIT, 0, 1, 0, 1};
+	barriers[1].sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
+	barriers[1].dstAccessMask = VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
+	barriers[1].oldLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+	barriers[1].newLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+	barriers[1].srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+	barriers[1].dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+	barriers[1].image = ctx.depthimages[ctx.currentimageindex];
+	barriers[1].subresourceRange = {VK_IMAGE_ASPECT_DEPTH_BIT, 0, 1, 0, 1};
+	vkCmdPipelineBarrier(commandbuffer, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+			VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT,
+			0, 0, nullptr, 0, nullptr, 2, barriers);
+
+	VkRenderingAttachmentInfo colorattachment{};
+	colorattachment.sType = VK_STRUCTURE_TYPE_RENDERING_ATTACHMENT_INFO;
+	colorattachment.imageView = ctx.swapchainimageviews[ctx.currentimageindex];
+	colorattachment.imageLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+	colorattachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+	colorattachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+	colorattachment.clearValue = ctx.clearvalue;
+	VkRenderingAttachmentInfo depthattachment{};
+	depthattachment.sType = VK_STRUCTURE_TYPE_RENDERING_ATTACHMENT_INFO;
+	depthattachment.imageView = ctx.depthimageviews[ctx.currentimageindex];
+	depthattachment.imageLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+	depthattachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+	depthattachment.storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+	depthattachment.clearValue.depthStencil = {1.0f, 0};
+	VkRenderingInfo renderinginfo{};
+	renderinginfo.sType = VK_STRUCTURE_TYPE_RENDERING_INFO;
+	renderinginfo.renderArea = {{0, 0}, ctx.swapchainextent};
+	renderinginfo.layerCount = 1;
+	renderinginfo.colorAttachmentCount = 1;
+	renderinginfo.pColorAttachments = &colorattachment;
+	renderinginfo.pDepthAttachment = &depthattachment;
+	vkCmdBeginRendering(commandbuffer, &renderinginfo);
 
 	// A negative-height viewport flips Y, so the orthographic projection the engine
 	// builds for OpenGL's top-left origin lands the same way under Vulkan (needs
@@ -114,19 +146,31 @@ bool gvkEnsureRenderPass(gVKContext& ctx) {
 	scissor.extent = ctx.swapchainextent;
 	vkCmdSetScissor(commandbuffer, 0, 1, &scissor);
 
-	ctx.renderpassactive = true;
+	ctx.renderingactive = true;
 	return true;
 }
 
 bool gvkEndFrame(gVKContext& ctx, GLFWwindow* window) {
 	if(!ctx.frameactive) return false;
 	// Open the pass if the frame drew nothing, so the clear still reaches the screen.
-	gvkEnsureRenderPass(ctx);
+	gvkEnsureRendering(ctx);
 	ctx.frameactive = false;
 
 	VkCommandBuffer commandbuffer = ctx.commandbuffers[ctx.currentframe];
-	vkCmdEndRenderPass(commandbuffer);
-	ctx.renderpassactive = false;
+	vkCmdEndRendering(commandbuffer);
+	VkImageMemoryBarrier presentbarrier{};
+	presentbarrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
+	presentbarrier.srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+	presentbarrier.oldLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+	presentbarrier.newLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+	presentbarrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+	presentbarrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+	presentbarrier.image = ctx.swapchainimages[ctx.currentimageindex];
+	presentbarrier.subresourceRange = {VK_IMAGE_ASPECT_COLOR_BIT, 0, 1, 0, 1};
+	vkCmdPipelineBarrier(commandbuffer, VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
+			VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, 0, 0, nullptr, 0, nullptr, 1, &presentbarrier);
+	ctx.swapchainimagelayouts[ctx.currentimageindex] = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+	ctx.renderingactive = false;
 	VkResult result = vkEndCommandBuffer(commandbuffer);
 	if(result != VK_SUCCESS) {
 		gLoge("gVKFrame") << "vkEndCommandBuffer failed! VkResult: " << result;

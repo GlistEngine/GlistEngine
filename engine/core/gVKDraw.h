@@ -3,7 +3,7 @@
  *
  * The Vulkan 2D draw path: a per-frame host-visible vertex ring plus the record
  * helpers that the engine's 2D functions dispatch to under Vulkan. Every helper
- * opens the render pass lazily (gvkEnsureRenderPass), so the clear colour set by
+ * opens Dynamic Rendering lazily (gvkEnsureRendering), so the clear colour set by
  * the canvas earlier in the same draw() is what covers the screen.
  *
  * gvkCreateDrawResources / gvkDestroyDrawResources are declared in gVKContext.h
@@ -20,6 +20,7 @@
 #ifdef GVK_DESKTOP_GLFW
 
 #include <glm/glm.hpp>
+#include "gRenderer.h"
 
 // How the points handed to gvkDrawColored2D are connected. These mirror the mesh
 // draw modes the 2D primitives use (gMesh::DRAWMODE_*), without this header having
@@ -39,6 +40,9 @@ enum gvkDraw2DMode {
 // transform. points holds `count` positions connected as `mode` describes.
 void gvkDrawColored2D(gVKContext& ctx, const glm::vec2* points, int count,
 		const glm::vec4& color, const glm::mat4& mvp, int mode = GVK_DRAW2D_TRIANGLES);
+
+void gvkDrawMesh3D(gVKContext& ctx, const gRenderer::MeshVertex3D* vertices, int count,
+		VkDescriptorSet textureSet, const glm::vec4& diffuse, const glm::mat4& mvp);
 
 // Records a textured unit quad (two triangles) sampled through the given combined
 // image sampler descriptor set. tint components are 0..1. uvOffset / uvScale place

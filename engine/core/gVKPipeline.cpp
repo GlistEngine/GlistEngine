@@ -23,6 +23,7 @@ static constexpr uint32_t GVK_DESCRIPTOR_POOL_SETS = 1024;
 enum {
 	GVK_STAGE_COLOR_VERT, GVK_STAGE_COLOR_FRAG,
 	GVK_STAGE_IMAGE_VERT, GVK_STAGE_IMAGE_FRAG,
+	GVK_STAGE_COLOR3D_VERT, GVK_STAGE_COLOR3D_FRAG,
 	GVK_STAGE_COUNT
 };
 
@@ -38,6 +39,8 @@ static const gvkStageSource gvkstagesources[GVK_STAGE_COUNT] = {
 	{"color2d.frag", VK_SHADER_STAGE_FRAGMENT_BIT, gvkspv_color2d_frag, sizeof(gvkspv_color2d_frag)},
 	{"image2d.vert", VK_SHADER_STAGE_VERTEX_BIT, gvkspv_image2d_vert, sizeof(gvkspv_image2d_vert)},
 	{"image2d.frag", VK_SHADER_STAGE_FRAGMENT_BIT, gvkspv_image2d_frag, sizeof(gvkspv_image2d_frag)},
+	{"color3d.vert", VK_SHADER_STAGE_VERTEX_BIT, gvkspv_color3d_vert, sizeof(gvkspv_color3d_vert)},
+	{"color3d.frag", VK_SHADER_STAGE_FRAGMENT_BIT, gvkspv_color3d_frag, sizeof(gvkspv_color3d_frag)},
 };
 
 struct gvkShaderSet {
@@ -90,9 +93,9 @@ static VkShaderModule gvkCreateShaderModule(VkDevice device, const std::vector<u
 // written down. The fixed 2D render state (triangle list, no depth, no cull,
 // dynamic viewport/scissor, straight alpha blending) is shared by both pipelines
 // and stays here.
-static bool gvkBuildPipeline(VkDevice device, VkRenderPass renderpass, const char* name,
+static bool gvkBuildPipeline(VkDevice device, VkFormat colorFormat, VkFormat depthFormat, const char* name,
 		const std::vector<uint32_t>& vertSpirv, const std::vector<uint32_t>& fragSpirv,
-		bool lineVariant, gvkPipelineParts& parts) {
+		bool lineVariant, bool depthEnabled, gvkPipelineParts& parts) {
 	gVKReflectedLayout reflected;
 	if(!gvkReflectSpirv(vertSpirv.data(), vertSpirv.size() * sizeof(uint32_t), reflected) ||
 			!gvkReflectSpirv(fragSpirv.data(), fragSpirv.size() * sizeof(uint32_t), reflected)) {
@@ -186,6 +189,12 @@ static bool gvkBuildPipeline(VkDevice device, VkRenderPass renderpass, const cha
 	multisample.sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
 	multisample.rasterizationSamples = VK_SAMPLE_COUNT_1_BIT;
 
+	VkPipelineDepthStencilStateCreateInfo depthstate{};
+	depthstate.sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
+	depthstate.depthTestEnable = depthEnabled ? VK_TRUE : VK_FALSE;
+	depthstate.depthWriteEnable = depthEnabled ? VK_TRUE : VK_FALSE;
+	depthstate.depthCompareOp = VK_COMPARE_OP_LESS_OR_EQUAL;
+
 	VkPipelineColorBlendAttachmentState blendattachment{};
 	blendattachment.colorWriteMask = VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT |
 			VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT;
@@ -217,11 +226,17 @@ static bool gvkBuildPipeline(VkDevice device, VkRenderPass renderpass, const cha
 	pipelineinfo.pViewportState = &viewportstate;
 	pipelineinfo.pRasterizationState = &rasterizer;
 	pipelineinfo.pMultisampleState = &multisample;
-	// No depth attachment in the render pass, so no depth-stencil state.
+	pipelineinfo.pDepthStencilState = &depthstate;
 	pipelineinfo.pColorBlendState = &colorblend;
 	pipelineinfo.pDynamicState = &dynamicstate;
 	pipelineinfo.layout = parts.layout;
-	pipelineinfo.renderPass = renderpass;
+	VkPipelineRenderingCreateInfo renderinginfo{};
+	renderinginfo.sType = VK_STRUCTURE_TYPE_PIPELINE_RENDERING_CREATE_INFO;
+	renderinginfo.colorAttachmentCount = 1;
+	renderinginfo.pColorAttachmentFormats = &colorFormat;
+	renderinginfo.depthAttachmentFormat = depthFormat;
+	pipelineinfo.pNext = &renderinginfo;
+	pipelineinfo.renderPass = VK_NULL_HANDLE;
 	pipelineinfo.subpass = 0;
 
 	VkResult result = vkCreateGraphicsPipelines(device, VK_NULL_HANDLE, 1, &pipelineinfo, nullptr, &parts.pipeline);
@@ -285,18 +300,21 @@ static bool gvkCreateDescriptorPool(VkDevice device, const gvkPipelineParts& col
 // Builds both pipelines and their pool without touching the context, so the
 // caller only adopts handles once everything succeeded. On failure nothing is
 // left allocated.
-static bool gvkBuildAll(VkDevice device, VkRenderPass renderpass, const gvkShaderSet& shaders,
-		gvkPipelineParts& color, gvkPipelineParts& image, VkDescriptorPool& pool) {
-	if(gvkBuildPipeline(device, renderpass, "colour",
-					shaders.spirv[GVK_STAGE_COLOR_VERT], shaders.spirv[GVK_STAGE_COLOR_FRAG], true, color) &&
-			gvkBuildPipeline(device, renderpass, "image",
-					shaders.spirv[GVK_STAGE_IMAGE_VERT], shaders.spirv[GVK_STAGE_IMAGE_FRAG], false, image) &&
+static bool gvkBuildAll(VkDevice device, VkFormat colorFormat, VkFormat depthFormat, const gvkShaderSet& shaders,
+		gvkPipelineParts& color, gvkPipelineParts& image, gvkPipelineParts& color3d, VkDescriptorPool& pool) {
+	if(gvkBuildPipeline(device, colorFormat, depthFormat, "colour",
+					shaders.spirv[GVK_STAGE_COLOR_VERT], shaders.spirv[GVK_STAGE_COLOR_FRAG], true, false, color) &&
+			gvkBuildPipeline(device, colorFormat, depthFormat, "image",
+					shaders.spirv[GVK_STAGE_IMAGE_VERT], shaders.spirv[GVK_STAGE_IMAGE_FRAG], false, false, image) &&
+			gvkBuildPipeline(device, colorFormat, depthFormat, "3D material",
+					shaders.spirv[GVK_STAGE_COLOR3D_VERT], shaders.spirv[GVK_STAGE_COLOR3D_FRAG], false, true, color3d) &&
 			gvkCreateDescriptorPool(device, color, image, pool)) {
 		return true;
 	}
 	if(pool != VK_NULL_HANDLE) { vkDestroyDescriptorPool(device, pool, nullptr); pool = VK_NULL_HANDLE; }
 	gvkDestroyParts(device, color);
 	gvkDestroyParts(device, image);
+	gvkDestroyParts(device, color3d);
 	return false;
 }
 
@@ -311,8 +329,9 @@ long long gvkShaderSourcesTimestamp() {
 }
 
 bool gvkCreateGraphicsPipelines(gVKContext& ctx) {
-	if(ctx.device == VK_NULL_HANDLE || ctx.renderpass == VK_NULL_HANDLE) {
-		gLoge("gVKPipeline") << "Pipelines need a device and render pass first.";
+	if(ctx.device == VK_NULL_HANDLE || ctx.swapchainformat == VK_FORMAT_UNDEFINED ||
+			ctx.depthformat == VK_FORMAT_UNDEFINED) {
+		gLoge("gVKPipeline") << "Pipelines need dynamic rendering formats first.";
 		return false;
 	}
 	gvkShaderSet shaders;
@@ -320,8 +339,9 @@ bool gvkCreateGraphicsPipelines(gVKContext& ctx) {
 
 	gvkPipelineParts color;
 	gvkPipelineParts image;
+	gvkPipelineParts color3d;
 	VkDescriptorPool pool = VK_NULL_HANDLE;
-	if(!gvkBuildAll(ctx.device, ctx.renderpass, shaders, color, image, pool)) return false;
+	if(!gvkBuildAll(ctx.device, ctx.swapchainformat, ctx.depthformat, shaders, color, image, color3d, pool)) return false;
 
 	ctx.color2dpipeline = color.pipeline;
 	ctx.color2dlinepipeline = color.linepipeline;
@@ -334,6 +354,11 @@ bool gvkCreateGraphicsPipelines(gVKContext& ctx) {
 	ctx.image2dsetlayouts = image.setlayouts;
 	ctx.image2dpushsize = image.pushsize;
 	ctx.image2dpushstages = image.pushstages;
+	ctx.color3dpipeline = color3d.pipeline;
+	ctx.color3dpipelinelayout = color3d.layout;
+	ctx.color3dpushsize = color3d.pushsize;
+	ctx.color3dpushstages = color3d.pushstages;
+	ctx.color3dsetlayouts = color3d.setlayouts;
 	ctx.descriptorpool = pool;
 
 	if(gvkRuntimeShadersAvailable()) {
@@ -346,7 +371,7 @@ bool gvkCreateGraphicsPipelines(gVKContext& ctx) {
 }
 
 bool gvkReloadGraphicsPipelines(gVKContext& ctx) {
-	if(ctx.device == VK_NULL_HANDLE || ctx.renderpass == VK_NULL_HANDLE) return false;
+	if(ctx.device == VK_NULL_HANDLE || ctx.swapchainformat == VK_FORMAT_UNDEFINED) return false;
 
 	// Compile everything before touching a single Vulkan object: a shader with a
 	// typo in it then leaves the running pipelines exactly as they were. The build
@@ -369,21 +394,27 @@ void gvkDestroyGraphicsPipelines(gVKContext& ctx) {
 	VkDevice device = ctx.device;
 	if(device == VK_NULL_HANDLE) return;
 	if(ctx.image2dpipeline != VK_NULL_HANDLE) { vkDestroyPipeline(device, ctx.image2dpipeline, nullptr); ctx.image2dpipeline = VK_NULL_HANDLE; }
+	if(ctx.color3dpipeline != VK_NULL_HANDLE) { vkDestroyPipeline(device, ctx.color3dpipeline, nullptr); ctx.color3dpipeline = VK_NULL_HANDLE; }
 	if(ctx.color2dlinepipeline != VK_NULL_HANDLE) { vkDestroyPipeline(device, ctx.color2dlinepipeline, nullptr); ctx.color2dlinepipeline = VK_NULL_HANDLE; }
 	if(ctx.color2dpipeline != VK_NULL_HANDLE) { vkDestroyPipeline(device, ctx.color2dpipeline, nullptr); ctx.color2dpipeline = VK_NULL_HANDLE; }
 	if(ctx.image2dpipelinelayout != VK_NULL_HANDLE) { vkDestroyPipelineLayout(device, ctx.image2dpipelinelayout, nullptr); ctx.image2dpipelinelayout = VK_NULL_HANDLE; }
+	if(ctx.color3dpipelinelayout != VK_NULL_HANDLE) { vkDestroyPipelineLayout(device, ctx.color3dpipelinelayout, nullptr); ctx.color3dpipelinelayout = VK_NULL_HANDLE; }
 	if(ctx.color2dpipelinelayout != VK_NULL_HANDLE) { vkDestroyPipelineLayout(device, ctx.color2dpipelinelayout, nullptr); ctx.color2dpipelinelayout = VK_NULL_HANDLE; }
 	// Destroying the pool frees every set allocated from it, so any texture
 	// descriptor sets are gone too and have to be written again afterwards.
 	if(ctx.descriptorpool != VK_NULL_HANDLE) { vkDestroyDescriptorPool(device, ctx.descriptorpool, nullptr); ctx.descriptorpool = VK_NULL_HANDLE; }
 	for(VkDescriptorSetLayout setlayout : ctx.image2dsetlayouts) vkDestroyDescriptorSetLayout(device, setlayout, nullptr);
 	for(VkDescriptorSetLayout setlayout : ctx.color2dsetlayouts) vkDestroyDescriptorSetLayout(device, setlayout, nullptr);
+	for(VkDescriptorSetLayout setlayout : ctx.color3dsetlayouts) vkDestroyDescriptorSetLayout(device, setlayout, nullptr);
 	ctx.image2dsetlayouts.clear();
 	ctx.color2dsetlayouts.clear();
+	ctx.color3dsetlayouts.clear();
 	ctx.color2dpushsize = 0;
 	ctx.color2dpushstages = 0;
 	ctx.image2dpushsize = 0;
 	ctx.image2dpushstages = 0;
+	ctx.color3dpushsize = 0;
+	ctx.color3dpushstages = 0;
 }
 
 #endif /* GVK_DESKTOP_GLFW */

@@ -11,10 +11,11 @@
 #include <algorithm>
 #include <vector>
 
-// 1 MB of vertices per frame in flight. A 2D frame records only a handful of
-// triangles and quads, so this never fills in practice; overflow is dropped with
-// a warning rather than growing the buffer mid-frame.
-static constexpr VkDeviceSize GVK_DYNAMIC_VERTEX_CAPACITY = 1u << 20;
+// 8 MB per frame in flight. The initial 1 MB ring was enough for 2D, but a
+// moderately tessellated gSphere expanded from a strip already exceeds it. This
+// remains a transitional upload path until meshes own device-local vertex/index
+// buffers; overflow is still reported instead of reallocating during recording.
+static constexpr VkDeviceSize GVK_DYNAMIC_VERTEX_CAPACITY = 8u << 20;
 
 bool gvkCreateDrawResources(gVKContext& ctx) {
 	if(ctx.device == VK_NULL_HANDLE) return false;
@@ -126,7 +127,7 @@ void gvkDrawColored2D(gVKContext& ctx, const glm::vec2* points, int count,
 	}
 
 	const bool lines = mode == GVK_DRAW2D_LINES || mode == GVK_DRAW2D_LINESTRIP || mode == GVK_DRAW2D_LINELOOP;
-	if(!gvkEnsureRenderPass(ctx)) return;
+	if(!gvkEnsureRendering(ctx)) return;
 	VkCommandBuffer cmd = ctx.getCurrentCommandBuffer();
 	if(cmd == VK_NULL_HANDLE) return;
 	VkPipeline pipeline = lines ? ctx.getColor2DLinePipeline() : ctx.getColor2DPipeline();
@@ -152,10 +153,36 @@ void gvkDrawColored2D(gVKContext& ctx, const glm::vec2* points, int count,
 	vkCmdDraw(cmd, static_cast<uint32_t>(vertexcount), 1, 0, 0);
 }
 
+void gvkDrawMesh3D(gVKContext& ctx, const gRenderer::MeshVertex3D* vertices, int count,
+		VkDescriptorSet textureSet, const glm::vec4& diffuse, const glm::mat4& mvp) {
+	if(count <= 0 || vertices == nullptr) return;
+	if(!gvkEnsureRendering(ctx)) return;
+	VkCommandBuffer cmd = ctx.getCurrentCommandBuffer();
+	if(cmd == VK_NULL_HANDLE || ctx.getColor3DPipeline() == VK_NULL_HANDLE) return;
+
+	VkDeviceSize offset = ctx.pushDynamicVertices(vertices, sizeof(gRenderer::MeshVertex3D) * count);
+	if(offset == VK_WHOLE_SIZE) {
+		gLogw("gVKDraw") << "Dynamic vertex buffer full; dropping a 3D mesh draw.";
+		return;
+	}
+	vkCmdBindPipeline(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, ctx.getColor3DPipeline());
+	VkBuffer vbuf = ctx.getCurrentDynamicVertexBuffer();
+	vkCmdBindVertexBuffers(cmd, 0, 1, &vbuf, &offset);
+	if(textureSet != VK_NULL_HANDLE) {
+		vkCmdBindDescriptorSets(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, ctx.getColor3DPipelineLayout(),
+				0, 1, &textureSet, 0, nullptr);
+	}
+	gvkPush push{mvp, diffuse, textureSet != VK_NULL_HANDLE ? 1 : 0};
+	const uint32_t pushsize = std::min<uint32_t>(sizeof(push), ctx.getColor3DPushSize());
+	if(pushsize > 0) vkCmdPushConstants(cmd, ctx.getColor3DPipelineLayout(),
+			ctx.getColor3DPushStages(), 0, pushsize, &push);
+	vkCmdDraw(cmd, static_cast<uint32_t>(count), 1, 0, 0);
+}
+
 void gvkDrawTextured2D(gVKContext& ctx, VkDescriptorSet textureSet, VkDescriptorSet maskSet,
 		const glm::vec4& tint, const glm::mat4& mvp,
 		const glm::vec2& uvOffset, const glm::vec2& uvScale) {
-	if(!gvkEnsureRenderPass(ctx)) return;
+	if(!gvkEnsureRendering(ctx)) return;
 	VkCommandBuffer cmd = ctx.getCurrentCommandBuffer();
 	if(cmd == VK_NULL_HANDLE || ctx.getImage2DPipeline() == VK_NULL_HANDLE || textureSet == VK_NULL_HANDLE) return;
 

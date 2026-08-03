@@ -1,7 +1,7 @@
 /*
  * gVKRenderTarget.cpp
  *
- * Render pass and framebuffers of the Vulkan backend.
+ * Formats and depth targets used by Vulkan Dynamic Rendering.
  */
 
 #include "gVKRenderTarget.h"
@@ -10,125 +10,116 @@
 
 #include "gUtils.h"
 
-bool gvkCreateRenderPass(gVKContext& ctx) {
+static VkFormat gvkFindDepthFormat(VkPhysicalDevice physicaldevice) {
+	const VkFormat candidates[] = {VK_FORMAT_D32_SFLOAT, VK_FORMAT_D24_UNORM_S8_UINT,
+			VK_FORMAT_D32_SFLOAT_S8_UINT};
+	for(VkFormat format : candidates) {
+		VkFormatProperties properties{};
+		vkGetPhysicalDeviceFormatProperties(physicaldevice, format, &properties);
+		if(properties.optimalTilingFeatures & VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT) return format;
+	}
+	return VK_FORMAT_UNDEFINED;
+}
+
+bool gvkSelectRenderingFormats(gVKContext& ctx) {
 	if(ctx.device == VK_NULL_HANDLE || ctx.swapchainformat == VK_FORMAT_UNDEFINED) {
-		gLoge("gVKRenderTarget") << "Cannot create the render pass before the swapchain exists.";
+		gLoge("gVKRenderTarget") << "Cannot select rendering formats before the swapchain exists.";
 		return false;
 	}
 
-	VkAttachmentDescription colorattachment{};
-	// The attachment has to match the images it will be used with.
-	colorattachment.format = ctx.swapchainformat;
-	colorattachment.samples = VK_SAMPLE_COUNT_1_BIT;
-	// This is what paints the screen: the clear value handed to
-	// vkCmdBeginRenderPass is written over the whole attachment by the GPU.
-	colorattachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
-	// The result is kept, because it is what gets presented.
-	colorattachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
-	colorattachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
-	colorattachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
-	// The previous contents are cleared anyway, so there is nothing worth keeping.
-	colorattachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-	// Handover point to the presentation engine.
-	colorattachment.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
-
-	VkAttachmentReference colorattachmentref{};
-	colorattachmentref.attachment = 0;
-	colorattachmentref.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
-
-	VkSubpassDescription subpass{};
-	subpass.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
-	subpass.colorAttachmentCount = 1;
-	subpass.pColorAttachments = &colorattachmentref;
-
-	// Without this the layout transition of the attachment is not ordered against
-	// the work of the subpass, which the validation layers report as an error.
-	VkSubpassDependency dependency{};
-	dependency.srcSubpass = VK_SUBPASS_EXTERNAL;
-	dependency.dstSubpass = 0;
-	dependency.srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-	dependency.srcAccessMask = 0;
-	dependency.dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-	dependency.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
-
-	VkRenderPassCreateInfo renderpassinfo{};
-	renderpassinfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
-	renderpassinfo.attachmentCount = 1;
-	renderpassinfo.pAttachments = &colorattachment;
-	renderpassinfo.subpassCount = 1;
-	renderpassinfo.pSubpasses = &subpass;
-	renderpassinfo.dependencyCount = 1;
-	renderpassinfo.pDependencies = &dependency;
-
-	VkResult result = vkCreateRenderPass(ctx.device, &renderpassinfo, nullptr, &ctx.renderpass);
-	if(result != VK_SUCCESS) {
-		gLoge("gVKRenderTarget") << "vkCreateRenderPass failed! VkResult: " << result;
-		ctx.renderpass = VK_NULL_HANDLE;
+	ctx.depthformat = gvkFindDepthFormat(ctx.physicaldevice);
+	if(ctx.depthformat == VK_FORMAT_UNDEFINED) {
+		gLoge("gVKRenderTarget") << "No supported depth attachment format was found.";
 		return false;
 	}
-
-	gLogi("gVKRenderTarget") << "Render pass created with one cleared colour attachment";
+	gLogi("gVKRenderTarget") << "Dynamic rendering formats selected: colour "
+			<< ctx.swapchainformat << ", depth " << ctx.depthformat;
 	return true;
 }
 
-void gvkDestroyRenderPass(gVKContext& ctx) {
+void gvkResetRenderingFormats(gVKContext& ctx) {
 	if(ctx.device == VK_NULL_HANDLE) return;
 
-	if(ctx.renderpass != VK_NULL_HANDLE) {
-		vkDestroyRenderPass(ctx.device, ctx.renderpass, nullptr);
-		ctx.renderpass = VK_NULL_HANDLE;
-	}
+	ctx.depthformat = VK_FORMAT_UNDEFINED;
 }
 
-bool gvkCreateFramebuffers(gVKContext& ctx) {
-	if(ctx.device == VK_NULL_HANDLE || ctx.renderpass == VK_NULL_HANDLE) {
-		gLoge("gVKRenderTarget") << "Cannot create the framebuffers before the render pass exists.";
+bool gvkCreateDepthTargets(gVKContext& ctx) {
+	if(ctx.device == VK_NULL_HANDLE || ctx.depthformat == VK_FORMAT_UNDEFINED) {
+		gLoge("gVKRenderTarget") << "Cannot create depth images before formats are selected.";
 		return false;
 	}
 	if(ctx.swapchainimageviews.empty()) {
-		gLoge("gVKRenderTarget") << "Cannot create the framebuffers without swapchain image views.";
+		gLoge("gVKRenderTarget") << "Cannot create depth targets without swapchain image views.";
 		return false;
 	}
 
-	ctx.framebuffers.resize(ctx.swapchainimageviews.size(), VK_NULL_HANDLE);
+	ctx.depthimages.resize(ctx.swapchainimageviews.size(), VK_NULL_HANDLE);
+	ctx.depthmemories.resize(ctx.swapchainimageviews.size(), VK_NULL_HANDLE);
+	ctx.depthimageviews.resize(ctx.swapchainimageviews.size(), VK_NULL_HANDLE);
 
 	for(size_t i = 0; i < ctx.swapchainimageviews.size(); i++) {
-		// One framebuffer per swapchain image, because the frame loop does not know
-		// in advance which image it will be handed.
-		VkImageView attachments[] = {ctx.swapchainimageviews[i]};
-
-		VkFramebufferCreateInfo framebufferinfo{};
-		framebufferinfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
-		framebufferinfo.renderPass = ctx.renderpass;
-		framebufferinfo.attachmentCount = 1;
-		framebufferinfo.pAttachments = attachments;
-		framebufferinfo.width = ctx.swapchainextent.width;
-		framebufferinfo.height = ctx.swapchainextent.height;
-		framebufferinfo.layers = 1;
-
-		VkResult result = vkCreateFramebuffer(ctx.device, &framebufferinfo, nullptr, &ctx.framebuffers[i]);
-		if(result != VK_SUCCESS) {
-			gLoge("gVKRenderTarget") << "vkCreateFramebuffer failed for swapchain image " << i
-					<< "! VkResult: " << result;
-			gvkDestroyFramebuffers(ctx);
-			return false;
+		VkImageCreateInfo imageinfo{};
+		imageinfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
+		imageinfo.imageType = VK_IMAGE_TYPE_2D;
+		imageinfo.extent = {ctx.swapchainextent.width, ctx.swapchainextent.height, 1};
+		imageinfo.mipLevels = 1;
+		imageinfo.arrayLayers = 1;
+		imageinfo.format = ctx.depthformat;
+		imageinfo.tiling = VK_IMAGE_TILING_OPTIMAL;
+		imageinfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+		imageinfo.usage = VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
+		imageinfo.samples = VK_SAMPLE_COUNT_1_BIT;
+		imageinfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+		if(vkCreateImage(ctx.device, &imageinfo, nullptr, &ctx.depthimages[i]) != VK_SUCCESS) {
+			gvkDestroyDepthTargets(ctx); return false;
+		}
+		VkMemoryRequirements requirements{};
+		vkGetImageMemoryRequirements(ctx.device, ctx.depthimages[i], &requirements);
+		uint32_t memorytype = UINT32_MAX;
+		for(uint32_t type = 0; type < ctx.devicememoryproperties.memoryTypeCount; type++) {
+			if((requirements.memoryTypeBits & (1u << type)) &&
+					(ctx.devicememoryproperties.memoryTypes[type].propertyFlags & VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT)) {
+				memorytype = type; break;
+			}
+		}
+		if(memorytype == UINT32_MAX) { gvkDestroyDepthTargets(ctx); return false; }
+		VkMemoryAllocateInfo allocinfo{};
+		allocinfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+		allocinfo.allocationSize = requirements.size;
+		allocinfo.memoryTypeIndex = memorytype;
+		if(vkAllocateMemory(ctx.device, &allocinfo, nullptr, &ctx.depthmemories[i]) != VK_SUCCESS ||
+				vkBindImageMemory(ctx.device, ctx.depthimages[i], ctx.depthmemories[i], 0) != VK_SUCCESS) {
+			gvkDestroyDepthTargets(ctx); return false;
+		}
+		VkImageViewCreateInfo viewinfo{};
+		viewinfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+		viewinfo.image = ctx.depthimages[i];
+		viewinfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
+		viewinfo.format = ctx.depthformat;
+		viewinfo.subresourceRange.aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT;
+		viewinfo.subresourceRange.levelCount = 1;
+		viewinfo.subresourceRange.layerCount = 1;
+		if(vkCreateImageView(ctx.device, &viewinfo, nullptr, &ctx.depthimageviews[i]) != VK_SUCCESS) {
+			gvkDestroyDepthTargets(ctx); return false;
 		}
 	}
 
-	gLogi("gVKRenderTarget") << "Framebuffers created: " << ctx.framebuffers.size()
+	gLogi("gVKRenderTarget") << "Dynamic rendering depth images created: " << ctx.depthimages.size()
 			<< " at " << ctx.swapchainextent.width << "x" << ctx.swapchainextent.height;
 	return true;
 }
 
-void gvkDestroyFramebuffers(gVKContext& ctx) {
+void gvkDestroyDepthTargets(gVKContext& ctx) {
 	if(ctx.device == VK_NULL_HANDLE) return;
 
 	// Kept separate from the render pass on purpose: a resize rebuilds these while
 	// the render pass stays valid, since the surface format does not change.
-	for(VkFramebuffer framebuffer : ctx.framebuffers) {
-		if(framebuffer != VK_NULL_HANDLE) vkDestroyFramebuffer(ctx.device, framebuffer, nullptr);
-	}
-	ctx.framebuffers.clear();
+	for(VkImageView view : ctx.depthimageviews) if(view != VK_NULL_HANDLE) vkDestroyImageView(ctx.device, view, nullptr);
+	for(VkImage image : ctx.depthimages) if(image != VK_NULL_HANDLE) vkDestroyImage(ctx.device, image, nullptr);
+	for(VkDeviceMemory memory : ctx.depthmemories) if(memory != VK_NULL_HANDLE) vkFreeMemory(ctx.device, memory, nullptr);
+	ctx.depthimageviews.clear();
+	ctx.depthimages.clear();
+	ctx.depthmemories.clear();
 }
 
 #endif /* GVK_DESKTOP_GLFW */

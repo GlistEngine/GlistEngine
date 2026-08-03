@@ -194,6 +194,8 @@ public:
 	// would hand OpenGL. No-op if no frame is active.
 	void drawColored2D(const glm::vec2* points, int count, const glm::vec4& color, const glm::mat4& mvp,
 			int drawMode = GL_TRIANGLES) override;
+	void drawMesh3D(const MeshVertex3D* vertices, int count, const glm::vec4& diffuse,
+			GLuint textureId, const glm::mat4& mvp, int drawMode = GL_TRIANGLES) override;
 
 	// Records a textured quad using the registered Vulkan texture for textureId
 	// (the Vulkan side of gImage / gTexture::draw and drawSub). No-op if the id is
@@ -235,6 +237,7 @@ private:
 	// and deleteTexture frees it. boundtextureid mirrors the OpenGL bind state that
 	// gTexture's upload path relies on.
 	std::unordered_map<GLuint, gVKTexture*> vktextures;
+	gVKTexture* defaultvktexture = nullptr;
 	GLuint nextvktextureid = 1;
 	GLuint boundtextureid = 0;
 	// Synthetic vertex array ids. gVbo asserts that its VAO is not GL_NONE before

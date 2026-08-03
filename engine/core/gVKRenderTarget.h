@@ -1,9 +1,7 @@
 /*
  * gVKRenderTarget.h
  *
- * Render pass and framebuffers of the Vulkan backend. The render pass is what
- * actually clears the screen: its colour attachment uses a CLEAR load operation,
- * so the clear value handed to vkCmdBeginRenderPass is written by the GPU.
+ * Attachment formats and depth images used by Vulkan Dynamic Rendering.
  * Created by: Anil Emre Akkoc.
  */
 
@@ -17,19 +15,17 @@
 #ifdef GVK_DESKTOP_GLFW
 
 /*
- * Creates the single subpass render pass used by the backend. Depends on
- * ctx.swapchainformat, so the swapchain has to exist first.
+ * Selects formats consumed by VkPipelineRenderingCreateInfo.
  */
-bool gvkCreateRenderPass(gVKContext& ctx);
-void gvkDestroyRenderPass(gVKContext& ctx);
+bool gvkSelectRenderingFormats(gVKContext& ctx);
+void gvkResetRenderingFormats(gVKContext& ctx);
 
 /*
- * Creates one framebuffer per swapchain image view. Kept separate from the render
- * pass on purpose: a resize rebuilds the framebuffers while the render pass stays
- * valid, because the surface format does not change.
+ * Creates one depth target per swapchain image. No VkRenderPass or VkFramebuffer
+ * objects are needed; Dynamic Rendering consumes the image views directly.
  */
-bool gvkCreateFramebuffers(gVKContext& ctx);
-void gvkDestroyFramebuffers(gVKContext& ctx);
+bool gvkCreateDepthTargets(gVKContext& ctx);
+void gvkDestroyDepthTargets(gVKContext& ctx);
 
 #endif /* GVK_DESKTOP_GLFW */
 

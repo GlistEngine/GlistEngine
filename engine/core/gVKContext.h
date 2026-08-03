@@ -44,10 +44,10 @@ inline constexpr int GVK_MAX_FRAMES_IN_FLIGHT = 2;
 bool gvkCreateSwapchain(gVKContext& ctx, GLFWwindow* window);
 void gvkDestroySwapchain(gVKContext& ctx);
 bool gvkRecreateSwapchain(gVKContext& ctx, GLFWwindow* window);
-bool gvkCreateRenderPass(gVKContext& ctx);
-void gvkDestroyRenderPass(gVKContext& ctx);
-bool gvkCreateFramebuffers(gVKContext& ctx);
-void gvkDestroyFramebuffers(gVKContext& ctx);
+bool gvkSelectRenderingFormats(gVKContext& ctx);
+void gvkResetRenderingFormats(gVKContext& ctx);
+bool gvkCreateDepthTargets(gVKContext& ctx);
+void gvkDestroyDepthTargets(gVKContext& ctx);
 bool gvkCreateCommandResources(gVKContext& ctx);
 void gvkDestroyCommandResources(gVKContext& ctx);
 bool gvkCreateFrameSyncObjects(gVKContext& ctx);
@@ -59,7 +59,7 @@ bool gvkEndFrame(gVKContext& ctx, GLFWwindow* window);
 
 // 2D draw path. Declared here so the struct can befriend them; defined in
 // gVKFrame.cpp (render pass) / gVKPipeline.cpp (pipelines) / gVKDraw.cpp (ring).
-bool gvkEnsureRenderPass(gVKContext& ctx);
+bool gvkEnsureRendering(gVKContext& ctx);
 bool gvkCreateGraphicsPipelines(gVKContext& ctx);
 bool gvkReloadGraphicsPipelines(gVKContext& ctx);
 void gvkDestroyGraphicsPipelines(gVKContext& ctx);
@@ -95,10 +95,10 @@ struct gVKContext {
 	friend bool gvkCreateSwapchain(gVKContext&, GLFWwindow*);
 	friend void gvkDestroySwapchain(gVKContext&);
 	friend bool gvkRecreateSwapchain(gVKContext&, GLFWwindow*);
-	friend bool gvkCreateRenderPass(gVKContext&);
-	friend void gvkDestroyRenderPass(gVKContext&);
-	friend bool gvkCreateFramebuffers(gVKContext&);
-	friend void gvkDestroyFramebuffers(gVKContext&);
+	friend bool gvkSelectRenderingFormats(gVKContext&);
+	friend void gvkResetRenderingFormats(gVKContext&);
+	friend bool gvkCreateDepthTargets(gVKContext&);
+	friend void gvkDestroyDepthTargets(gVKContext&);
 	friend bool gvkCreateCommandResources(gVKContext&);
 	friend void gvkDestroyCommandResources(gVKContext&);
 	friend bool gvkCreateFrameSyncObjects(gVKContext&);
@@ -107,7 +107,7 @@ struct gVKContext {
 	friend void gvkDestroyPresentSemaphores(gVKContext&);
 	friend bool gvkBeginFrame(gVKContext&, GLFWwindow*);
 	friend bool gvkEndFrame(gVKContext&, GLFWwindow*);
-	friend bool gvkEnsureRenderPass(gVKContext&);
+	friend bool gvkEnsureRendering(gVKContext&);
 	friend bool gvkCreateGraphicsPipelines(gVKContext&);
 	friend bool gvkReloadGraphicsPipelines(gVKContext&);
 	friend void gvkDestroyGraphicsPipelines(gVKContext&);
@@ -246,7 +246,7 @@ struct gVKContext {
 	bool isInitialized() const { return device != VK_NULL_HANDLE; }
 
 	/* ---------------- presentation and frame path ---------------- */
-	// Built after the device, in this order: swapchain, render pass, framebuffers,
+	// Built after the device: swapchain views, Dynamic Rendering depth targets,
 	// command pool and buffers, synchronisation. Same pointer returning shape as
 	// the handles above, for the same reason.
 
@@ -255,9 +255,6 @@ struct gVKContext {
 	std::vector<VkImageView>* getSwapchainImageViews() { return &swapchainimageviews; }
 	VkFormat* getSwapchainFormat() { return &swapchainformat; }
 	VkExtent2D* getSwapchainExtent() { return &swapchainextent; }
-
-	VkRenderPass* getRenderPass() { return &renderpass; }
-	std::vector<VkFramebuffer>* getFramebuffers() { return &framebuffers; }
 
 	VkCommandPool* getCommandPool() { return &commandpool; }
 	std::vector<VkCommandBuffer>* getCommandBuffers() { return &commandbuffers; }
@@ -280,7 +277,7 @@ struct gVKContext {
 	// True once the frame path exists too, so a frame can actually be recorded.
 	// isInitialized() only promises a logical device.
 	bool isFramePathReady() const {
-		return swapchain != VK_NULL_HANDLE && renderpass != VK_NULL_HANDLE;
+		return swapchain != VK_NULL_HANDLE && depthformat != VK_FORMAT_UNDEFINED;
 	}
 
 	/* ---------------- 2D draw path ---------------- */
@@ -294,13 +291,17 @@ struct gVKContext {
 	VkPipelineLayout getColor2DPipelineLayout() { return color2dpipelinelayout; }
 	VkPipeline getImage2DPipeline() { return image2dpipeline; }
 	VkPipelineLayout getImage2DPipelineLayout() { return image2dpipelinelayout; }
+	VkPipeline getColor3DPipeline() { return color3dpipeline; }
+	VkPipelineLayout getColor3DPipelineLayout() { return color3dpipelinelayout; }
+	uint32_t getColor3DPushSize() const { return color3dpushsize; }
+	VkShaderStageFlags getColor3DPushStages() const { return color3dpushstages; }
 	// The layout of the image pipeline's descriptor set 0, which is where a
 	// texture's combined image sampler goes.
 	VkDescriptorSetLayout getImageDescriptorSetLayout() {
 		return image2dsetlayouts.empty() ? VK_NULL_HANDLE : image2dsetlayouts[0];
 	}
 	VkDescriptorPool getDescriptorPool() { return descriptorpool; }
-	bool isRenderPassActive() const { return renderpassactive; }
+	bool isRenderingActive() const { return renderingactive; }
 
 	// Push constant block each 2D pipeline declares, as reported by reflecting its
 	// SPIR-V. gVKDraw pushes exactly this much to exactly these stages, so editing
@@ -380,13 +381,15 @@ private:
 
 	VkSwapchainKHR swapchain = VK_NULL_HANDLE;
 	std::vector<VkImage> swapchainimages;
+	std::vector<VkImageLayout> swapchainimagelayouts;
 	std::vector<VkImageView> swapchainimageviews;
 	VkFormat swapchainformat = VK_FORMAT_UNDEFINED;
 	VkExtent2D swapchainextent = {0, 0};
 
-	VkRenderPass renderpass = VK_NULL_HANDLE;
-	// One per swapchain image view.
-	std::vector<VkFramebuffer> framebuffers;
+	VkFormat depthformat = VK_FORMAT_UNDEFINED;
+	std::vector<VkImage> depthimages;
+	std::vector<VkDeviceMemory> depthmemories;
+	std::vector<VkImageView> depthimageviews;
 
 	VkCommandPool commandpool = VK_NULL_HANDLE;
 	// GVK_MAX_FRAMES_IN_FLIGHT entries, indexed by currentframe.
@@ -405,25 +408,29 @@ private:
 	VkClearValue clearvalue = {{{0.0f, 0.0f, 30.0f / 255.0f, 0.0f}}};
 
 	// 2D draw path. Built after the frame path; VK_NULL_HANDLE / empty until then.
-	// renderpassactive tracks the lazily-begun render pass within a frame: geometry
-	// must be recorded inside vkCmdBeginRenderPass..EndRenderPass, but the clear
-	// colour is only final once the canvas has drawn, so the pass is opened on the
+	// renderingactive tracks the lazily-begun vkCmdBeginRendering scope. The clear
+	// colour is only final once the canvas has drawn, so rendering is opened on the
 	// first draw (or in endFrame) rather than in beginFrame.
-	bool renderpassactive = false;
+	bool renderingactive = false;
 	VkPipelineLayout color2dpipelinelayout = VK_NULL_HANDLE;
 	VkPipeline color2dpipeline = VK_NULL_HANDLE;
 	VkPipeline color2dlinepipeline = VK_NULL_HANDLE;
 	VkPipelineLayout image2dpipelinelayout = VK_NULL_HANDLE;
 	VkPipeline image2dpipeline = VK_NULL_HANDLE;
+	VkPipelineLayout color3dpipelinelayout = VK_NULL_HANDLE;
+	VkPipeline color3dpipeline = VK_NULL_HANDLE;
 	// Descriptor set layouts of each pipeline, in set order, and the push constant
 	// block each declares. All of it is reflected out of the compiled SPIR-V rather
 	// than written out here, so the shaders stay the single source of truth.
 	std::vector<VkDescriptorSetLayout> color2dsetlayouts;
 	std::vector<VkDescriptorSetLayout> image2dsetlayouts;
+	std::vector<VkDescriptorSetLayout> color3dsetlayouts;
 	uint32_t color2dpushsize = 0;
 	VkShaderStageFlags color2dpushstages = 0;
 	uint32_t image2dpushsize = 0;
 	VkShaderStageFlags image2dpushstages = 0;
+	uint32_t color3dpushsize = 0;
+	VkShaderStageFlags color3dpushstages = 0;
 	VkDescriptorPool descriptorpool = VK_NULL_HANDLE;
 	// One host-visible, persistently mapped vertex buffer per frame in flight,
 	// filled linearly each frame and rewound at the start of the next.

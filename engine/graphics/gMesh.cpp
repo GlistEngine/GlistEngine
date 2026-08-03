@@ -341,11 +341,6 @@ void gMesh::drawVbo() {
 
 void gMesh::drawVulkan2D() {
 	G_PROFILE_ZONE_SCOPED_N("gMesh::drawVulkan2D()");
-	// Only 2D meshes are recorded so far. A 3D mesh needs lighting, materials and a
-	// view matrix that the backend's two colour pipelines do not carry, so drawing
-	// it here would be wrong rather than merely unfinished - it is skipped instead.
-	if (!isprojection2d) return;
-
 	const std::vector<gVertex>& verts = *vertices;
 	if (verts.empty()) return;
 	const std::vector<gIndex>& inds = *indices;
@@ -355,28 +350,74 @@ void gMesh::drawVulkan2D() {
 	// travels with the points, because a fan, a strip and a line loop each need a
 	// different expansion on the Vulkan side. The scratch buffer is reused between
 	// draws so a per-frame primitive allocates nothing.
-	static thread_local std::vector<glm::vec2> points;
-	points.clear();
+	static thread_local std::vector<glm::vec2> points2d;
+	static thread_local std::vector<gRenderer::MeshVertex3D> points3d;
+	points2d.clear();
+	points3d.clear();
 	if (inds.empty()) {
-		points.reserve(verts.size());
+		points2d.reserve(verts.size());
+		points3d.reserve(verts.size());
 		for (const gVertex& vertex : verts) {
-			points.emplace_back(vertex.position.x, vertex.position.y);
+			if(isprojection2d) points2d.emplace_back(vertex.position.x, vertex.position.y);
+			else points3d.push_back({vertex.position, vertex.normal, vertex.texcoords, vertex.color});
 		}
 	} else {
-		points.reserve(inds.size());
+		points2d.reserve(inds.size());
+		points3d.reserve(inds.size());
 		for (gIndex index : inds) {
 			if (index >= verts.size()) return;
-			points.emplace_back(verts[index].position.x, verts[index].position.y);
+			if(isprojection2d) points2d.emplace_back(verts[index].position.x, verts[index].position.y);
+			else {
+				const gVertex& vertex = verts[index];
+				points3d.push_back({vertex.position, vertex.normal, vertex.texcoords, vertex.color});
+			}
 		}
 	}
 
 	// The model matrix rides in the mvp exactly like the OpenGL colour shader gets
 	// it, and the colour is the renderer's current one - the 2D primitives are drawn
 	// flat, without the material the 3D path applies.
-	glm::mat4 mvp = renderer->getProjectionMatrix2d() * localtransformationmatrix.back();
 	gColor* color = renderer->getColor();
-	renderer->drawColored2D(points.data(), static_cast<int>(points.size()),
-			glm::vec4(color->r, color->g, color->b, color->a), mvp, drawmode);
+	const glm::vec4 rgba(color->r, color->g, color->b, color->a);
+	if(isprojection2d) {
+		glm::mat4 mvp = renderer->getProjectionMatrix2d() * localtransformationmatrix.back();
+		renderer->drawColored2D(points2d.data(), static_cast<int>(points2d.size()), rgba, mvp, drawmode);
+	} else {
+		glm::mat4 mvp = renderer->getProjectionMatrix() * renderer->getViewMatrix() * localtransformationmatrix.back();
+		// Vulkan's material pipeline is a triangle list. Expand the strip/fan modes
+		// used by primitives such as gSphere while preserving winding. This mirrors
+		// the existing 2D expansion and also removes the degenerate connector
+		// triangles sphere rows use.
+		static thread_local std::vector<gRenderer::MeshVertex3D> triangles;
+		const std::vector<gRenderer::MeshVertex3D>* drawvertices = &points3d;
+		if(drawmode == DRAWMODE_TRIANGLESTRIP || drawmode == DRAWMODE_TRIANGLEFAN) {
+			triangles.clear();
+			triangles.reserve(points3d.size() > 2 ? (points3d.size() - 2) * 3 : 0);
+			for(size_t i = 2; i < points3d.size(); i++) {
+				const size_t a = drawmode == DRAWMODE_TRIANGLEFAN ? 0 : i - 2;
+				const size_t b = i - 1;
+				if(drawmode == DRAWMODE_TRIANGLESTRIP && (i & 1u)) {
+					triangles.push_back(points3d[b]);
+					triangles.push_back(points3d[a]);
+				} else {
+					triangles.push_back(points3d[a]);
+					triangles.push_back(points3d[b]);
+				}
+				triangles.push_back(points3d[i]);
+			}
+			drawvertices = &triangles;
+		}
+		gColor* diffuse = material.getDiffuseColor();
+		GLuint textureid = 0;
+		gTexture* diffusemap = material.isMapEnabled(gTexture::TEXTURETYPE_DIFFUSE)
+				? material.getMap(gTexture::TEXTURETYPE_DIFFUSE) : nullptr;
+		if(diffusemap == nullptr && material.isMapEnabled(gTexture::TEXTURETYPE_PBR_ALBEDO)) {
+			diffusemap = material.getMap(gTexture::TEXTURETYPE_PBR_ALBEDO);
+		}
+		if(diffusemap != nullptr) textureid = diffusemap->getId();
+		renderer->drawMesh3D(drawvertices->data(), static_cast<int>(drawvertices->size()),
+				glm::vec4(diffuse->r, diffuse->g, diffuse->b, diffuse->a), textureid, mvp, DRAWMODE_TRIANGLES);
+	}
 }
 
 void gMesh::drawVboInstanced(const std::vector<glm::mat4>& instanceTransformations) {

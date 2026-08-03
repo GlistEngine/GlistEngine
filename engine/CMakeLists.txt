@@ -765,6 +765,8 @@ if(Lib_Vulkan)
 				${GVK_SHADER_DIR}/color2d.frag
 				${GVK_SHADER_DIR}/image2d.vert
 				${GVK_SHADER_DIR}/image2d.frag
+				${GVK_SHADER_DIR}/color3d.vert
+				${GVK_SHADER_DIR}/color3d.frag
 				${GVK_SHADER_DIR}/gen_vk_shaders.cmake
 			COMMENT "Regenerating gVKShaders.h from the Vulkan 2D shader sources"
 			VERBATIM)

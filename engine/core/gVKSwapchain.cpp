@@ -143,6 +143,7 @@ bool gvkCreateSwapchain(gVKContext& ctx, GLFWwindow* window) {
 	vkGetSwapchainImagesKHR(ctx.device, ctx.swapchain, &createdcount, nullptr);
 	ctx.swapchainimages.resize(createdcount);
 	vkGetSwapchainImagesKHR(ctx.device, ctx.swapchain, &createdcount, ctx.swapchainimages.data());
+	ctx.swapchainimagelayouts.assign(createdcount, VK_IMAGE_LAYOUT_UNDEFINED);
 
 	ctx.swapchainformat = surfaceformat.format;
 	ctx.swapchainextent = extent;
@@ -197,6 +198,7 @@ void gvkDestroySwapchain(gVKContext& ctx) {
 	// The images belong to the swapchain and are freed with it, so only the handles
 	// are dropped here.
 	ctx.swapchainimages.clear();
+	ctx.swapchainimagelayouts.clear();
 }
 
 bool gvkRecreateSwapchain(gVKContext& ctx, GLFWwindow* window) {
@@ -215,12 +217,12 @@ bool gvkRecreateSwapchain(gVKContext& ctx, GLFWwindow* window) {
 
 	// Reverse dependency order: the framebuffers point at the image views, and the
 	// present semaphores are one per image, so both go before the swapchain.
-	gvkDestroyFramebuffers(ctx);
+	gvkDestroyDepthTargets(ctx);
 	gvkDestroyPresentSemaphores(ctx);
 	gvkDestroySwapchain(ctx);
 
 	if(!gvkCreateSwapchain(ctx, window)) return false;
-	if(!gvkCreateFramebuffers(ctx)) return false;
+	if(!gvkCreateDepthTargets(ctx)) return false;
 	// The render pass survives: the surface format does not change with the size.
 	if(!gvkCreatePresentSemaphores(ctx, static_cast<uint32_t>(ctx.swapchainimages.size()))) return false;
 
