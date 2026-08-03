@@ -378,7 +378,6 @@ void gTexture::setDataInternal(unsigned char* textureData, bool isMutable, bool 
 		bind();
 		renderer->texImage2D(GL_TEXTURE_2D, format, width, height, format, GL_UNSIGNED_BYTE, data);
 		renderer->generateMipMap();
-		renderer->texImage2D(GL_TEXTURE_2D, format, getWidth(), getHeight(), format, GL_UNSIGNED_BYTE, data);
 		renderer->setWrappingAndFiltering(GL_TEXTURE_2D, GL_REPEAT, GL_REPEAT,
 		                                     texturefilter[filtermin], texturefilter[filtermag]);
 
