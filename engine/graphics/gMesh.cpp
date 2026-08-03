@@ -381,7 +381,7 @@ void gMesh::drawVulkanMesh() {
 	const glm::vec4 rgba(color->r, color->g, color->b, color->a);
 	if(isprojection2d) {
 		glm::mat4 mvp = renderer->getProjectionMatrix2d() * localtransformationmatrix.back();
-		renderer->drawColored2D(points2d.data(), static_cast<int>(points2d.size()), rgba, mvp, drawmode);
+		renderer->drawColoredMesh2D(points2d.data(), static_cast<int>(points2d.size()), rgba, mvp, drawmode);
 	} else {
 		glm::mat4 mvp = renderer->getProjectionMatrix() * renderer->getViewMatrix() * localtransformationmatrix.back();
 		// Vulkan's material pipeline is a triangle list. Expand the strip/fan modes
@@ -415,7 +415,7 @@ void gMesh::drawVulkanMesh() {
 			diffusemap = material.getMap(gTexture::TEXTURETYPE_PBR_ALBEDO);
 		}
 		if(diffusemap != nullptr) textureid = diffusemap->getId();
-		renderer->drawMesh3D(drawvertices->data(), static_cast<int>(drawvertices->size()),
+		renderer->drawMaterialMesh3D(drawvertices->data(), static_cast<int>(drawvertices->size()),
 				glm::vec4(diffuse->r, diffuse->g, diffuse->b, diffuse->a), textureid, mvp, DRAWMODE_TRIANGLES);
 	}
 }

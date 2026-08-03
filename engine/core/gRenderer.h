@@ -268,7 +268,7 @@ public:
 	// into the active frame. points holds `count` 2D screen positions connected as
 	// drawMode says (a gMesh::DRAWMODE_* value, that is a GL primitive constant),
 	// and colour components are 0..1.
-	virtual void drawColored2D(const glm::vec2* points, int count, const glm::vec4& color, const glm::mat4& mvp,
+	virtual void drawColoredMesh2D(const glm::vec2* points, int count, const glm::vec4& color, const glm::mat4& mvp,
 			int drawMode = GL_TRIANGLES) {}
 
 	struct MeshVertex3D {
@@ -277,7 +277,7 @@ public:
 		glm::vec2 texcoords;
 		glm::vec3 color;
 	};
-	virtual void drawMesh3D(const MeshVertex3D* vertices, int count, const glm::vec4& diffuse,
+	virtual void drawMaterialMesh3D(const MeshVertex3D* vertices, int count, const glm::vec4& diffuse,
 			GLuint textureId, const glm::mat4& mvp, int drawMode = GL_TRIANGLES) {}
 
 	// Backend hook for a textured 2D quad (gImage / gTexture). OpenGL draws through

@@ -1427,7 +1427,7 @@ void gVKRenderEngine::cleanup() {
 	rendercolor = nullptr;
 }
 
-void gVKRenderEngine::drawColored2D(const glm::vec2* points, int count, const glm::vec4& color, const glm::mat4& mvp,
+void gVKRenderEngine::drawColoredMesh2D(const glm::vec2* points, int count, const glm::vec4& color, const glm::mat4& mvp,
 		int drawMode) {
 #ifdef GVK_DESKTOP_GLFW
 	if(vkcontext == nullptr) return;
@@ -1455,7 +1455,7 @@ void gVKRenderEngine::drawColored2D(const glm::vec2* points, int count, const gl
 #endif
 }
 
-void gVKRenderEngine::drawMesh3D(const MeshVertex3D* vertices, int count, const glm::vec4& diffuse,
+void gVKRenderEngine::drawMaterialMesh3D(const MeshVertex3D* vertices, int count, const glm::vec4& diffuse,
 		GLuint textureId, const glm::mat4& mvp, int drawMode) {
 #ifdef GVK_DESKTOP_GLFW
 	if(vkcontext == nullptr || drawMode != GL_TRIANGLES) return;
