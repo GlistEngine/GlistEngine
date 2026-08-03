@@ -108,7 +108,7 @@ void gGUIButton::draw() {
 
 	    resetTitlePosition();
 
-	    font->drawText(title, drawleft + tx, drawtop + buttonh - ty + ispressed - 2);
+	    font->drawText(title, drawleft + tx, drawtop + buttonh - ty + ispressed);
 	}
 	renderer->setColor(oldcolor);
 }
@@ -177,7 +177,7 @@ void gGUIButton::resetTitlePosition() {
 	float visualw = xmax - xmin;
 
 	tx = (int)std::round((buttonw - visualw) * 0.5f - xmin);
-	ty = (buttonh - font->getStringHeight("a")) / 2;
+	ty = (buttonh - font->getStringHeight("a")) / 2 + 2;
 
 	// clamp
 	if(tx < 4) tx = 4;
