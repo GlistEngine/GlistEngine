@@ -174,6 +174,10 @@ public:
 	void createQuad(GLuint& inQuadVAO, GLuint& inQuadVBO) override;
 	void enableCubeMap() override;
 
+	/* ---------------- 2D draw path ---------------- */
+	void drawTexturedTriangles2D(GLuint textureId, const glm::vec4& tint,
+			const glm::mat4& mvp, const float* xyuv, int vertexCount) override;
+
 	/* ---------------- gRenderObject ---------------- */
 	void pushMatrix() override;
 	void popMatrix() override;
@@ -183,6 +187,8 @@ protected:
 private:
 	mutable GLuint currentprogram = 0;
 	GLuint currentvao = 0;
+	GLuint textbatchvao = 0;
+	GLuint textbatchvbo = 0;
 	void updatePackUnpackAlignment(int i) override;
 };
 

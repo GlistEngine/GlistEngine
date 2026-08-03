@@ -1447,6 +1447,16 @@ void gVKRenderEngine::drawTexturedRect2D(GLuint textureId, GLuint maskTextureId,
 #endif
 }
 
+void gVKRenderEngine::drawTexturedTriangles2D(GLuint textureId, const glm::vec4& tint,
+		const glm::mat4& mvp, const float* xyuv, int vertexCount) {
+#ifdef GVK_DESKTOP_GLFW
+	if(vkcontext == nullptr) return;
+	auto it = vktextures.find(textureId);
+	if(it == vktextures.end() || it->second == nullptr) return;
+	gvkDrawTexturedTriangles2D(*vkcontext, it->second->descriptorset, tint, mvp, xyuv, vertexCount);
+#endif
+}
+
 gVKTexture* gVKRenderEngine::getBoundVKTexture() {
 #ifdef GVK_DESKTOP_GLFW
 	if(vkcontext == nullptr || boundtextureid == 0) return nullptr;

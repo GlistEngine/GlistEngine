@@ -201,6 +201,8 @@ public:
 	void drawTexturedRect2D(GLuint textureId, GLuint maskTextureId, const glm::vec4& tint,
 			const glm::mat4& mvp,
 			const glm::vec2& uvOffset = glm::vec2(0.0f), const glm::vec2& uvScale = glm::vec2(1.0f)) override;
+	void drawTexturedTriangles2D(GLuint textureId, const glm::vec4& tint,
+			const glm::mat4& mvp, const float* xyuv, int vertexCount) override;
 
 	/* ---------------- Vulkan context ---------------- */
 	// gVKContext is opaque here (its layout lives in the .cpp), so a developer can

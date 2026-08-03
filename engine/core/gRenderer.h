@@ -281,6 +281,13 @@ public:
 			const glm::mat4& mvp,
 			const glm::vec2& uvOffset = glm::vec2(0.0f), const glm::vec2& uvScale = glm::vec2(1.0f)) {}
 
+	// Backend hook for an already-expanded textured triangle list. xyuv contains
+	// four floats per vertex: screen-space x/y followed by texture u/v. This is
+	// used by batched text, where all glyph quads share one atlas texture and can
+	// therefore be recorded as one draw instead of one draw per glyph.
+	virtual void drawTexturedTriangles2D(GLuint textureId, const glm::vec4& tint,
+			const glm::mat4& mvp, const float* xyuv, int vertexCount) {}
+
 	virtual void clear() = 0;
 	virtual void clearColor(int r, int g, int b, int a = 255) = 0;
 	virtual void clearColor(gColor color) = 0;
