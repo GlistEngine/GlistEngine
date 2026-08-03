@@ -173,7 +173,7 @@ void gMesh::draw() {
 	if (!isenabled) return;
 
 	if (renderer->isVulkan()) {
-		drawVulkan2D();
+		drawVulkanMesh();
 		return;
 	}
 
@@ -339,8 +339,8 @@ void gMesh::drawVbo() {
 //    vbo.clear();
 }
 
-void gMesh::drawVulkan2D() {
-	G_PROFILE_ZONE_SCOPED_N("gMesh::drawVulkan2D()");
+void gMesh::drawVulkanMesh() {
+	G_PROFILE_ZONE_SCOPED_N("gMesh::drawVulkanMesh()");
 	const std::vector<gVertex>& verts = *vertices;
 	if (verts.empty()) return;
 	const std::vector<gIndex>& inds = *indices;
