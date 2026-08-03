@@ -435,6 +435,7 @@ void gMesh::drawVulkanMesh() {
 			}
 			drawvertices = &triangles;
 		}
+		gColor* ambient = material.getAmbientColor();
 		gColor* diffuse = material.getDiffuseColor();
 		GLuint textureid = 0;
 		gTexture* diffusemap = material.isMapEnabled(gTexture::TEXTURETYPE_DIFFUSE)
@@ -444,7 +445,9 @@ void gMesh::drawVulkanMesh() {
 		}
 		if(diffusemap != nullptr) textureid = diffusemap->getId();
 		renderer->drawMaterialMesh3D(drawvertices->data(), static_cast<int>(drawvertices->size()),
-				glm::vec4(diffuse->r, diffuse->g, diffuse->b, diffuse->a), textureid, mvp, DRAWMODE_TRIANGLES);
+				glm::vec4(ambient->r, ambient->g, ambient->b, ambient->a),
+				glm::vec4(diffuse->r, diffuse->g, diffuse->b, diffuse->a),
+				textureid, mvp, DRAWMODE_TRIANGLES);
 	}
 }
 

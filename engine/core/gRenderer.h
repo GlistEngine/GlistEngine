@@ -277,7 +277,8 @@ public:
 		glm::vec2 texcoords;
 		glm::vec3 color;
 	};
-	virtual void drawMaterialMesh3D(const MeshVertex3D* vertices, int count, const glm::vec4& diffuse,
+	virtual void drawMaterialMesh3D(const MeshVertex3D* vertices, int count, const glm::vec4& ambient,
+			const glm::vec4& diffuse,
 			GLuint textureId, const glm::mat4& mvp, int drawMode = GL_TRIANGLES) {}
 
 	// Backend hook for a textured 2D quad (gImage / gTexture). OpenGL draws through

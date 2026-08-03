@@ -7,8 +7,9 @@ layout(location = 3) in vec3 aColor;
 
 layout(push_constant) uniform Push {
     mat4 mvp;
-    vec4 color;
-    int textured;
+    vec4 ambientProduct;
+    vec4 diffuseProduct;
+    vec4 lightDirectionTextured;
 } pc;
 
 layout(location = 0) out vec4 vColor;
@@ -20,7 +21,7 @@ void main() {
     // Glist's camera matrices use OpenGL's -1..1 clip-space depth. Vulkan uses
     // 0..1, so remap z while preserving the perspective divide.
     gl_Position.z = (gl_Position.z + gl_Position.w) * 0.5;
-    vColor = pc.color * vec4(aColor, 1.0);
+    vColor = vec4(aColor, 1.0);
     vUV = aUV;
     vNormal = normalize(aNormal);
 }

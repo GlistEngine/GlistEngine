@@ -9,6 +9,7 @@
 #include "gBaseApp.h"
 #include "gGrid.h"
 #include "gImage.h"
+#include "gLight.h"
 #include "gShader.h"
 #include "gTracy.h"
 
@@ -1455,7 +1456,8 @@ void gVKRenderEngine::drawColored2D(const glm::vec2* points, int count, const gl
 #endif
 }
 
-void gVKRenderEngine::drawMaterialMesh3D(const MeshVertex3D* vertices, int count, const glm::vec4& diffuse,
+void gVKRenderEngine::drawMaterialMesh3D(const MeshVertex3D* vertices, int count, const glm::vec4& ambient,
+		const glm::vec4& diffuse,
 		GLuint textureId, const glm::mat4& mvp, int drawMode) {
 #ifdef GVK_DESKTOP_GLFW
 	if(vkcontext == nullptr || drawMode != GL_TRIANGLES) return;
@@ -1464,8 +1466,39 @@ void gVKRenderEngine::drawMaterialMesh3D(const MeshVertex3D* vertices, int count
 		auto it = vktextures.find(textureId);
 		if(it != vktextures.end() && it->second != nullptr) texture = it->second;
 	}
+	const bool textured = textureId != 0;
+	glm::vec4 ambientproduct(0.0f);
+	glm::vec4 diffuseproduct(0.0f);
+	glm::vec3 lightdirection(0.0f, 0.0f, 1.0f);
+	bool haslight = false;
+	bool hasdirectional = false;
+	if(islightingenabled) {
+		for(gLight* light : scenelights) {
+			if(light == nullptr || !light->isEnabled()) continue;
+			if(light->getType() == gLight::LIGHTTYPE_AMBIENT) {
+				ambientproduct += light->getAmbientColor()->asVec4();
+				haslight = true;
+			} else if(light->getType() == gLight::LIGHTTYPE_DIRECTIONAL && !hasdirectional) {
+				ambientproduct += light->getAmbientColor()->asVec4();
+				diffuseproduct = light->getDiffuseColor()->asVec4();
+				lightdirection = -light->getDirection();
+				haslight = true;
+				hasdirectional = true;
+			}
+		}
+	}
+	if(!haslight) ambientproduct = globalambientcolor.asVec4();
+	const glm::vec4 drawcolor = rendercolor != nullptr ? rendercolor->asVec4() : glm::vec4(1.0f);
+	if(!textured) {
+		ambientproduct *= ambient * drawcolor;
+		diffuseproduct *= diffuse * drawcolor;
+	} else {
+		ambientproduct *= drawcolor;
+		diffuseproduct *= drawcolor;
+	}
 	gvkDrawMesh3D(*vkcontext, vertices, count,
-			texture != nullptr ? texture->descriptorset : VK_NULL_HANDLE, diffuse, mvp);
+			texture != nullptr ? texture->descriptorset : VK_NULL_HANDLE,
+			ambientproduct, diffuseproduct, lightdirection, textured, mvp);
 #endif
 }
 

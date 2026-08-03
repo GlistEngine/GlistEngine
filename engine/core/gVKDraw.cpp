@@ -97,6 +97,12 @@ struct gvkPush {
 	glm::vec4 color;
 	int masking = 0;
 };
+struct gvkPush3D {
+	glm::mat4 mvp;
+	glm::vec4 ambientProduct;
+	glm::vec4 diffuseProduct;
+	glm::vec4 lightDirectionTextured;
+};
 struct gvkImageVertex {
 	glm::vec2 pos;
 	glm::vec2 uv;
@@ -185,7 +191,9 @@ void gvkDrawColored2D(gVKContext& ctx, const glm::vec2* points, int count,
 }
 
 void gvkDrawMesh3D(gVKContext& ctx, const gRenderer::MeshVertex3D* vertices, int count,
-		VkDescriptorSet textureSet, const glm::vec4& diffuse, const glm::mat4& mvp) {
+		VkDescriptorSet textureSet, const glm::vec4& ambientProduct,
+		const glm::vec4& diffuseProduct, const glm::vec3& lightDirection, bool textured,
+		const glm::mat4& mvp) {
 	if(count <= 0 || vertices == nullptr) return;
 	if(!gvkEnsureRendering(ctx)) return;
 	VkCommandBuffer cmd = ctx.getCurrentCommandBuffer();
@@ -200,7 +208,8 @@ void gvkDrawMesh3D(gVKContext& ctx, const gRenderer::MeshVertex3D* vertices, int
 		vkCmdBindDescriptorSets(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, ctx.getColor3DPipelineLayout(),
 				0, 1, &textureSet, 0, nullptr);
 	}
-	gvkPush push{mvp, diffuse, textureSet != VK_NULL_HANDLE ? 1 : 0};
+	gvkPush3D push{mvp, ambientProduct, diffuseProduct,
+			glm::vec4(lightDirection, textured ? 1.0f : 0.0f)};
 	const uint32_t pushsize = std::min<uint32_t>(sizeof(push), ctx.getColor3DPushSize());
 	if(pushsize > 0) vkCmdPushConstants(cmd, ctx.getColor3DPipelineLayout(),
 			ctx.getColor3DPushStages(), 0, pushsize, &push);

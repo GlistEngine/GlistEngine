@@ -9,15 +9,13 @@ layout(set = 0, binding = 0) uniform sampler2D diffuseMap;
 
 layout(push_constant) uniform Push {
     mat4 mvp;
-    vec4 color;
-    int textured;
+    vec4 ambientProduct;
+    vec4 diffuseProduct;
+    vec4 lightDirectionTextured;
 } pc;
 
 void main() {
-    outColor = vColor;
-    if(pc.textured == 1) outColor *= texture(diffuseMap, vUV);
-    // Normals arrive in world space after the mesh path applies the model's
-    // inverse-transpose normal matrix.
-    float diffuse = max(dot(normalize(vNormal), normalize(vec3(0.4, 0.8, 0.5))), 0.0);
-    outColor.rgb *= 0.35 + 0.65 * diffuse;
+    float diffuse = max(dot(normalize(vNormal), normalize(pc.lightDirectionTextured.xyz)), 0.0);
+    outColor = vColor * (pc.ambientProduct + pc.diffuseProduct * diffuse);
+    if(pc.lightDirectionTextured.w > 0.5) outColor *= texture(diffuseMap, vUV);
 }
