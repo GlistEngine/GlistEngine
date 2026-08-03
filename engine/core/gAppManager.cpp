@@ -952,6 +952,21 @@ bool gAppManager::onTouchEvent(gTouchEvent& event) {
 			}
 			target->touchReleased(x, y, input.fingerid);
 		} else if (event.getAction() == ACTIONTYPE_MOVE) {
+#ifdef ANDROID
+			// ACTION_MOVE batches every active pointer into one event instead of
+			// identifying a single one via actionIndex (unlike DOWN/UP), so all
+			// inputs must be forwarded or additional fingers stop moving.
+			for(int i = 0; i < event.getInputCount(); i++) {
+				TouchInput& input = event.getInputs()[i];
+				int x = input.x;
+				int y = input.y;
+				if(gRenderer::getScreenScaling() > G_SCREENSCALING_NONE) {
+					x = gRenderer::scaleX(x);
+					y = gRenderer::scaleY(y);
+				}
+				target->touchMoved(x, y, input.fingerid);
+			}
+#else
 			int inputindex = event.getActionIndex();
 			TouchInput& input = event.getInputs()[inputindex];
 			int x = input.x;
@@ -961,6 +976,7 @@ bool gAppManager::onTouchEvent(gTouchEvent& event) {
 				y = gRenderer::scaleY(y);
 			}
 			target->touchMoved(x, y, input.fingerid);
+#endif
 		}
 	}
 	return false;
