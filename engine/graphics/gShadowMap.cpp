@@ -29,8 +29,8 @@ gShadowMap::~gShadowMap() {}
 void gShadowMap::allocate(gLight* light, gCamera* camera, int width, int height) {
 	this->width = width;
 	this->height = height;
-	depthfbo.allocate(width, height, true);
-	isallocated = true;
+	if(renderer->isVulkan()) isallocated = renderer->allocateShadowMap(width, height);
+	else { depthfbo.allocate(width, height, true); isallocated = true; }
 	this->camera = camera;
 	this->light = light;
 	lightposition = light->getPosition();
@@ -82,6 +82,7 @@ void gShadowMap::activate() {
 }
 
 void gShadowMap::deactivate() {
+	if(renderer->isVulkan()) renderer->stopUsingShadowMap();
 	renderpassnum = 1;
 	updateshadows = false;
 	disable();
@@ -100,6 +101,10 @@ void gShadowMap::enable() {
 	isshadowmappingenabled = true;
 
 	if (updateshadows && renderpassno == 0) {
+		if(renderer->isVulkan()) {
+			renderer->beginShadowMap(lightmatrix);
+			return;
+		}
 		glViewport(0, 0, depthfbo.getWidth(), depthfbo.getHeight());
 		renderer->getShadowmapShader()->use();
 		renderer->getShadowmapShader()->setMat4("lightMatrix", lightmatrix);
@@ -107,6 +112,11 @@ void gShadowMap::enable() {
 	//	glViewport(0, 0, width, height);
 		renderer->clearScreen(false, true);
 	} else {
+		if(renderer->isVulkan()) {
+			renderer->useShadowMap(lightmatrix, lightposition);
+			renderpassno = 1;
+			return;
+		}
 		glViewport(0, 0, renderer->getScreenWidth(), renderer->getScreenHeight());
 		renderer->getColorShader()->use();
 		renderer->getColorShader()->setInt("aUseShadowMap", 1);
@@ -120,12 +130,19 @@ void gShadowMap::enable() {
 
 void gShadowMap::disable() {
 	G_PROFILE_ZONE_SCOPED_N("gShadowMap::disable()");
-	if (!isallocated || !isactivated || renderpassno > 0) return;
+	if (!isallocated || !isactivated) return;
+	if(renderpassno > 0) {
+		isenabled = false;
+		isshadowmappingenabled = false;
+		if(renderer->isVulkan()) renderer->stopUsingShadowMap();
+		return;
+	}
 
 	isenabled = false;
 	isshadowmappingenabled = false;
 
-	depthfbo.unbind();
+	if(renderer->isVulkan()) renderer->endShadowMap();
+	else depthfbo.unbind();
 }
 
 bool gShadowMap::isEnabled() const {
@@ -162,5 +179,3 @@ glm::mat4 gShadowMap::getLightMatrix() const {
 gFbo& gShadowMap::getDepthFbo() {
 	return depthfbo;
 }
-
-

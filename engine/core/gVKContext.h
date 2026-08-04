@@ -101,6 +101,8 @@ struct gVKContext {
 	friend void gvkResetRenderingFormats(gVKContext&);
 	friend bool gvkCreateDepthTargets(gVKContext&);
 	friend void gvkDestroyDepthTargets(gVKContext&);
+	friend bool gvkCreateShadowTarget(gVKContext&, uint32_t, uint32_t);
+	friend void gvkDestroyShadowTarget(gVKContext&);
 	friend bool gvkCreateCommandResources(gVKContext&);
 	friend void gvkDestroyCommandResources(gVKContext&);
 	friend bool gvkCreateFrameSyncObjects(gVKContext&);
@@ -296,6 +298,10 @@ struct gVKContext {
 	VkPipelineLayout getImage2DPipelineLayout() { return image2dpipelinelayout; }
 	VkPipeline getColor3DPipeline() { return color3dpipeline; }
 	VkPipeline getColor3DPipeline(bool blending) { return blending ? color3dpipeline : color3dnoblendpipeline; }
+	VkPipeline getShadow3DPipeline() { return shadow3dpipeline; }
+	VkPipelineLayout getShadow3DPipelineLayout() { return shadow3dpipelinelayout; }
+	uint32_t getShadow3DPushSize() const { return shadow3dpushsize; }
+	VkShaderStageFlags getShadow3DPushStages() const { return shadow3dpushstages; }
 	VkPipelineLayout getColor3DPipelineLayout() { return color3dpipelinelayout; }
 	uint32_t getColor3DPushSize() const { return color3dpushsize; }
 	VkShaderStageFlags getColor3DPushStages() const { return color3dpushstages; }
@@ -305,8 +311,17 @@ struct gVKContext {
 		return image2dsetlayouts.empty() ? VK_NULL_HANDLE : image2dsetlayouts[0];
 	}
 	VkDescriptorPool getDescriptorPool() { return descriptorpool; }
-	void* getMaterialSceneMapped() { return materialscenemapped; }
-	VkDescriptorSet getMaterialSceneSet() { return materialsceneset; }
+	VkDescriptorSetLayout getShadowDescriptorSetLayout() {
+		return color3dsetlayouts.size() > 6 ? color3dsetlayouts[6] : VK_NULL_HANDLE;
+	}
+	VkDescriptorSet getShadowDescriptorSet() const { return shadowdescriptorset; }
+	VkExtent2D getShadowExtent() const { return shadowextent; }
+	void* getMaterialSceneMapped() {
+		return currentframe < materialscenemapped.size() ? materialscenemapped[currentframe] : nullptr;
+	}
+	VkDescriptorSet getMaterialSceneSet() {
+		return currentframe < materialscenesets.size() ? materialscenesets[currentframe] : VK_NULL_HANDLE;
+	}
 	bool isRenderingActive() const { return renderingactive; }
 
 	// Push constant block each 2D pipeline declares, as reported by reflecting its
@@ -390,6 +405,13 @@ private:
 	std::vector<VkImage> depthimages;
 	std::vector<VkDeviceMemory> depthmemories;
 	std::vector<VkImageView> depthimageviews;
+	VkImage shadowimage = VK_NULL_HANDLE;
+	VkDeviceMemory shadowmemory = VK_NULL_HANDLE;
+	VkImageView shadowimageview = VK_NULL_HANDLE;
+	VkSampler shadowsampler = VK_NULL_HANDLE;
+	VkDescriptorSet shadowdescriptorset = VK_NULL_HANDLE;
+	VkExtent2D shadowextent = {0, 0};
+	VkImageLayout shadowlayout = VK_IMAGE_LAYOUT_UNDEFINED;
 
 	VkCommandPool commandpool = VK_NULL_HANDLE;
 	// GVK_MAX_FRAMES_IN_FLIGHT entries, indexed by currentframe.
@@ -420,6 +442,10 @@ private:
 	VkPipelineLayout color3dpipelinelayout = VK_NULL_HANDLE;
 	VkPipeline color3dpipeline = VK_NULL_HANDLE;
 	VkPipeline color3dnoblendpipeline = VK_NULL_HANDLE;
+	VkPipelineLayout shadow3dpipelinelayout = VK_NULL_HANDLE;
+	VkPipeline shadow3dpipeline = VK_NULL_HANDLE;
+	uint32_t shadow3dpushsize = 0;
+	VkShaderStageFlags shadow3dpushstages = 0;
 	// Descriptor set layouts of each pipeline, in set order, and the push constant
 	// block each declares. All of it is reflected out of the compiled SPIR-V rather
 	// than written out here, so the shaders stay the single source of truth.
@@ -433,10 +459,10 @@ private:
 	uint32_t color3dpushsize = 0;
 	VkShaderStageFlags color3dpushstages = 0;
 	VkDescriptorPool descriptorpool = VK_NULL_HANDLE;
-	VkBuffer materialscenebuffer = VK_NULL_HANDLE;
-	VkDeviceMemory materialscenememory = VK_NULL_HANDLE;
-	void* materialscenemapped = nullptr;
-	VkDescriptorSet materialsceneset = VK_NULL_HANDLE;
+	std::vector<VkBuffer> materialscenebuffers;
+	std::vector<VkDeviceMemory> materialscenememories;
+	std::vector<void*> materialscenemapped;
+	std::vector<VkDescriptorSet> materialscenesets;
 	// One host-visible, persistently mapped vertex buffer per frame in flight,
 	// filled linearly each frame and rewound at the start of the next.
 	std::vector<VkBuffer> dynvertexbuffers;

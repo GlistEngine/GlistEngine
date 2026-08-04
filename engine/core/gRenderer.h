@@ -305,6 +305,13 @@ public:
 			const glm::vec4& diffuse, const glm::vec4& specular, float shininess, bool pbr,
 			const MaterialTextures3D& textures, const MaterialLighting3D& lighting,
 			const glm::mat4& mvp, int drawMode = GL_TRIANGLES) {}
+	virtual bool allocateShadowMap(int width, int height) { return false; }
+	virtual void beginShadowMap(const glm::mat4& lightMatrix) {}
+	virtual void endShadowMap() {}
+	virtual void useShadowMap(const glm::mat4& lightMatrix, const glm::vec3& lightPosition) {}
+	virtual void stopUsingShadowMap() {}
+	virtual bool isShadowPassActive() const { return false; }
+	virtual void drawShadowMesh3D(const MeshVertex3D* vertices, int count) {}
 
 	// Backend hook for a textured 2D quad (gImage / gTexture). OpenGL draws through
 	// its image shader and leaves this a no-op; Vulkan looks the texture id up in

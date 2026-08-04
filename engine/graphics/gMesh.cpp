@@ -408,6 +408,13 @@ void gMesh::drawVulkanMesh() {
 		glm::mat4 mvp = renderer->getProjectionMatrix2d() * localtransformationmatrix.back();
 		renderer->drawColored2D(points2d.data(), static_cast<int>(points2d.size()), rgba, mvp, drawmode);
 	} else {
+		if(renderer->isShadowPassActive()) {
+			const glm::mat4& model = localtransformationmatrix.back();
+			for(gRenderer::MeshVertex3D& point : points3d)
+				point.position = glm::vec3(model * glm::vec4(point.position, 1.0f));
+			renderer->drawShadowMesh3D(points3d.data(), static_cast<int>(points3d.size()));
+			return;
+		}
 		glm::mat4 mvp = renderer->getProjectionMatrix() * renderer->getViewMatrix();
 		// Vulkan's material pipeline is a triangle list. Expand the strip/fan modes
 		// used by primitives such as gSphere while preserving winding. This mirrors

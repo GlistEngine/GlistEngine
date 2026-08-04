@@ -1316,6 +1316,11 @@ bool gVKRenderEngine::initVulkan() {
 		cleanupVulkan();
 		return false;
 	}
+	if(!gvkCreateShadowTarget(*ctx, 1, 1)) {
+		gLoge("gVKRenderEngine") << "Vulkan init: the default shadow target could not be created.";
+		cleanupVulkan();
+		return false;
+	}
 	const uint32_t whitepixel = 0xffffffffu;
 	defaultvktexture = gvkCreateTextureRGBA8(*ctx, &whitepixel, 1, 1);
 	if(defaultvktexture == nullptr) {
@@ -1342,6 +1347,7 @@ void gVKRenderEngine::cleanupVulkan() {
 	// descriptor sets, so they go before the descriptor pool inside
 	// gvkDestroyGraphicsPipelines.
 	destroyAllTextures();
+	gvkDestroyShadowTarget(*ctx);
 	gvkDestroyDrawResources(*ctx);
 	gvkDestroyGraphicsPipelines(*ctx);
 	gvkDestroyPresentSemaphores(*ctx);
@@ -1391,7 +1397,16 @@ void gVKRenderEngine::checkShaderReload() {
 	// The first reading only establishes the baseline; it is not an edit.
 	if(firstreading) return;
 
+	const VkExtent2D shadowextent = vkcontext->getShadowExtent();
+	vkDeviceWaitIdle(*vkcontext->getDevice());
+	gvkDestroyShadowTarget(*vkcontext);
+	gvkDestroyDrawResources(*vkcontext);
 	if(!gvkReloadGraphicsPipelines(*vkcontext)) return;
+	if(!gvkCreateDrawResources(*vkcontext) ||
+			!gvkCreateShadowTarget(*vkcontext, std::max(1u, shadowextent.width), std::max(1u, shadowextent.height))) {
+		gLoge("gVKRenderEngine") << "Could not recreate material/shadow resources after shader reload.";
+		return;
+	}
 	// The reload destroys the descriptor pool, and with it every set allocated
 	// from it, so the textures that are still loaded need pointing at the new one.
 	for(auto& entry : vktextures) {
@@ -1526,7 +1541,8 @@ void gVKRenderEngine::drawMaterialMesh3D(const MeshVertex3D* vertices, int count
 	gvkDrawMesh3D(*vkcontext, vertices, count, texturesets, textureflags,
 			ambient * drawcolor, diffuse * drawcolor, specular * drawcolor, shininess, textured, pbr,
 			cameraposition, lighting, isdepthtestenabled, depthtesttype,
-			isalphablendingenabled, iscullingenabled, cullface, cullingdirection, mvp);
+			isalphablendingenabled, iscullingenabled, cullface, cullingdirection,
+			shadowmapenabled, issoftshadowsenabled, shadowlightmatrix, mvp);
 #endif
 }
 
@@ -1543,6 +1559,91 @@ void gVKRenderEngine::drawTexturedRect2D(GLuint textureId, GLuint maskTextureId,
 	}
 	gvkDrawTextured2D(*vkcontext, it->second->descriptorset, maskset, tint, mvp, uvOffset, uvScale);
 #endif
+}
+
+bool gVKRenderEngine::allocateShadowMap(int width, int height) {
+	if(vkcontext == nullptr) return false;
+	if(vkcontext->device != VK_NULL_HANDLE) vkDeviceWaitIdle(vkcontext->device);
+	return gvkCreateShadowTarget(*vkcontext, static_cast<uint32_t>(width), static_cast<uint32_t>(height));
+}
+
+void gVKRenderEngine::beginShadowMap(const glm::mat4& lightMatrix) {
+	shadowlightmatrix = lightMatrix;
+	if(vkcontext == nullptr || vkcontext->shadowimage == VK_NULL_HANDLE || vkcontext->renderingactive) return;
+	VkCommandBuffer cmd = vkcontext->getCurrentCommandBuffer();
+	if(cmd == VK_NULL_HANDLE) return;
+	VkImageMemoryBarrier barrier{VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER};
+	barrier.oldLayout = vkcontext->shadowlayout;
+	barrier.newLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+	barrier.srcQueueFamilyIndex = barrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+	barrier.image = vkcontext->shadowimage;
+	barrier.subresourceRange = {VK_IMAGE_ASPECT_DEPTH_BIT, 0, 1, 0, 1};
+	barrier.dstAccessMask = VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
+	vkCmdPipelineBarrier(cmd, VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT, VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT,
+			0, 0, nullptr, 0, nullptr, 1, &barrier);
+	VkRenderingAttachmentInfo depth{VK_STRUCTURE_TYPE_RENDERING_ATTACHMENT_INFO};
+	depth.imageView = vkcontext->shadowimageview; depth.imageLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+	depth.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR; depth.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+	depth.clearValue.depthStencil = {1.0f, 0};
+	VkRenderingInfo info{VK_STRUCTURE_TYPE_RENDERING_INFO};
+	info.renderArea = {{0,0}, vkcontext->shadowextent}; info.layerCount = 1; info.pDepthAttachment = &depth;
+	vkCmdBeginRendering(cmd, &info);
+	VkViewport viewport{0.0f, static_cast<float>(vkcontext->shadowextent.height),
+			static_cast<float>(vkcontext->shadowextent.width), -static_cast<float>(vkcontext->shadowextent.height), 0.0f, 1.0f};
+	vkCmdSetViewport(cmd, 0, 1, &viewport);
+	VkRect2D scissor{{0,0}, vkcontext->shadowextent}; vkCmdSetScissor(cmd, 0, 1, &scissor);
+	shadowpassactive = true;
+}
+
+void gVKRenderEngine::endShadowMap() {
+	if(vkcontext != nullptr && shadowpassactive) {
+		VkCommandBuffer cmd = vkcontext->getCurrentCommandBuffer();
+		vkCmdEndRendering(cmd);
+		VkImageMemoryBarrier barrier{VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER};
+		barrier.oldLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+		barrier.newLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL;
+		barrier.srcQueueFamilyIndex = barrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+		barrier.image = vkcontext->shadowimage;
+		barrier.subresourceRange = {VK_IMAGE_ASPECT_DEPTH_BIT, 0, 1, 0, 1};
+		barrier.srcAccessMask = VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
+		barrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
+		vkCmdPipelineBarrier(cmd, VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT, VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT,
+				0, 0, nullptr, 0, nullptr, 1, &barrier);
+		vkcontext->shadowlayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL;
+	}
+	shadowpassactive = false;
+}
+
+void gVKRenderEngine::useShadowMap(const glm::mat4& lightMatrix, const glm::vec3& lightPosition) {
+	shadowlightmatrix = lightMatrix;
+	shadowlightposition = lightPosition;
+	shadowmapenabled = true;
+}
+
+void gVKRenderEngine::stopUsingShadowMap() {
+	shadowmapenabled = false;
+}
+
+bool gVKRenderEngine::isShadowPassActive() const {
+	return shadowpassactive;
+}
+
+void gVKRenderEngine::drawShadowMesh3D(const MeshVertex3D* vertices, int count) {
+	if(!shadowpassactive || vkcontext == nullptr || vertices == nullptr || count <= 0) return;
+	static thread_local std::vector<glm::vec3> positions;
+	positions.resize(count);
+	for(int i = 0; i < count; i++) positions[i] = vertices[i].position;
+	VkBuffer buffer = VK_NULL_HANDLE; VkDeviceSize offset = 0;
+	if(!gvkUploadDynamicVertices(*vkcontext, positions.data(), positions.size() * sizeof(glm::vec3), buffer, offset)) return;
+	VkCommandBuffer cmd = vkcontext->getCurrentCommandBuffer();
+	vkCmdBindPipeline(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, vkcontext->getShadow3DPipeline());
+	vkCmdSetDepthTestEnable(cmd, VK_TRUE); vkCmdSetDepthWriteEnable(cmd, VK_TRUE);
+	vkCmdSetDepthCompareOp(cmd, VK_COMPARE_OP_LESS); vkCmdSetCullMode(cmd, VK_CULL_MODE_NONE);
+	vkCmdSetFrontFace(cmd, VK_FRONT_FACE_CLOCKWISE);
+	vkCmdBindVertexBuffers(cmd, 0, 1, &buffer, &offset);
+	vkCmdPushConstants(cmd, vkcontext->getShadow3DPipelineLayout(), vkcontext->getShadow3DPushStages(),
+			0, std::min<uint32_t>(sizeof(glm::mat4), vkcontext->getShadow3DPushSize()), &shadowlightmatrix);
+	vkCmdDraw(cmd, static_cast<uint32_t>(count), 1, 0, 0);
 }
 
 gVKTexture* gVKRenderEngine::getBoundVKTexture() {

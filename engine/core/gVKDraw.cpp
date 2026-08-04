@@ -29,6 +29,8 @@ struct alignas(16) gvkMaterialLight {
 struct alignas(16) gvkMaterialScene {
 	glm::ivec4 counts{0};
 	glm::vec4 globalAmbient{1.0f};
+	glm::mat4 shadowMatrix{1.0f};
+	glm::ivec4 shadowOptions{0};
 	gvkMaterialLight lights[GLIST_MAX_LIGHTS];
 };
 
@@ -53,43 +55,55 @@ bool gvkCreateDrawResources(gVKContext& ctx) {
 		// Host coherent and persistently mapped: no flush and no per-frame remap.
 		vkMapMemory(ctx.device, ctx.dynvertexmemories[i], 0, ctx.dynvertexcapacity, 0, &ctx.dynvertexmapped[i]);
 	}
-	if(ctx.color3dsetlayouts.size() <= 5 || ctx.descriptorpool == VK_NULL_HANDLE ||
-			!gvkCreateBuffer(ctx, sizeof(gvkMaterialScene), VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
-					VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
-					ctx.materialscenebuffer, ctx.materialscenememory)) {
+	if(ctx.color3dsetlayouts.size() <= 5 || ctx.descriptorpool == VK_NULL_HANDLE) {
 		gLoge("gVKDraw") << "Could not create the material scene uniform buffer.";
 		return false;
 	}
-	if(vkMapMemory(ctx.device, ctx.materialscenememory, 0, sizeof(gvkMaterialScene), 0,
-			&ctx.materialscenemapped) != VK_SUCCESS) return false;
+	ctx.materialscenebuffers.assign(frames, VK_NULL_HANDLE);
+	ctx.materialscenememories.assign(frames, VK_NULL_HANDLE);
+	ctx.materialscenemapped.assign(frames, nullptr);
+	ctx.materialscenesets.assign(frames, VK_NULL_HANDLE);
+	for(int i = 0; i < frames; i++) {
+		if(!gvkCreateBuffer(ctx, sizeof(gvkMaterialScene), VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
+				VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
+				ctx.materialscenebuffers[i], ctx.materialscenememories[i])) return false;
+		if(vkMapMemory(ctx.device, ctx.materialscenememories[i], 0, sizeof(gvkMaterialScene), 0,
+				&ctx.materialscenemapped[i]) != VK_SUCCESS) return false;
+	}
 	VkDescriptorSetAllocateInfo alloc{};
 	alloc.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
 	alloc.descriptorPool = ctx.descriptorpool;
-	alloc.descriptorSetCount = 1;
+	alloc.descriptorSetCount = frames;
 	alloc.pSetLayouts = &ctx.color3dsetlayouts[5];
-	if(vkAllocateDescriptorSets(ctx.device, &alloc, &ctx.materialsceneset) != VK_SUCCESS) return false;
-	VkDescriptorBufferInfo bufferinfo{ctx.materialscenebuffer, 0, sizeof(gvkMaterialScene)};
-	VkWriteDescriptorSet write{};
-	write.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-	write.dstSet = ctx.materialsceneset;
-	write.dstBinding = 0;
-	write.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-	write.descriptorCount = 1;
-	write.pBufferInfo = &bufferinfo;
-	vkUpdateDescriptorSets(ctx.device, 1, &write, 0, nullptr);
+	std::vector<VkDescriptorSetLayout> layouts(frames, ctx.color3dsetlayouts[5]);
+	alloc.pSetLayouts = layouts.data();
+	if(vkAllocateDescriptorSets(ctx.device, &alloc, ctx.materialscenesets.data()) != VK_SUCCESS) return false;
+	for(int i = 0; i < frames; i++) {
+		VkDescriptorBufferInfo bufferinfo{ctx.materialscenebuffers[i], 0, sizeof(gvkMaterialScene)};
+		VkWriteDescriptorSet write{};
+		write.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+		write.dstSet = ctx.materialscenesets[i];
+		write.dstBinding = 0;
+		write.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+		write.descriptorCount = 1;
+		write.pBufferInfo = &bufferinfo;
+		vkUpdateDescriptorSets(ctx.device, 1, &write, 0, nullptr);
+	}
 	gLogi("gVKDraw") << "Dynamic vertex buffers ready.";
 	return true;
 }
 
 void gvkDestroyDrawResources(gVKContext& ctx) {
 	if(ctx.device == VK_NULL_HANDLE) return;
-	if(ctx.materialscenemapped != nullptr) vkUnmapMemory(ctx.device, ctx.materialscenememory);
-	if(ctx.materialscenebuffer != VK_NULL_HANDLE) vkDestroyBuffer(ctx.device, ctx.materialscenebuffer, nullptr);
-	if(ctx.materialscenememory != VK_NULL_HANDLE) vkFreeMemory(ctx.device, ctx.materialscenememory, nullptr);
-	ctx.materialscenemapped = nullptr;
-	ctx.materialscenebuffer = VK_NULL_HANDLE;
-	ctx.materialscenememory = VK_NULL_HANDLE;
-	ctx.materialsceneset = VK_NULL_HANDLE;
+	for(size_t i = 0; i < ctx.materialscenebuffers.size(); i++) {
+		if(ctx.materialscenemapped[i] != nullptr) vkUnmapMemory(ctx.device, ctx.materialscenememories[i]);
+		if(ctx.materialscenebuffers[i] != VK_NULL_HANDLE) vkDestroyBuffer(ctx.device, ctx.materialscenebuffers[i], nullptr);
+		if(ctx.materialscenememories[i] != VK_NULL_HANDLE) vkFreeMemory(ctx.device, ctx.materialscenememories[i], nullptr);
+	}
+	ctx.materialscenemapped.clear();
+	ctx.materialscenebuffers.clear();
+	ctx.materialscenememories.clear();
+	ctx.materialscenesets.clear();
 	for(auto& frameoverflows : ctx.dynvertexoverflows) {
 		for(auto& overflow : frameoverflows) {
 			if(overflow.mapped != nullptr) vkUnmapMemory(ctx.device, overflow.memory);
@@ -244,7 +258,7 @@ void gvkDrawMesh3D(gVKContext& ctx, const gRenderer::MeshVertex3D* vertices, int
 		const glm::vec4& diffuseProduct, const glm::vec4& specular, float shininess, bool textured,
 		bool pbr, const glm::vec3& cameraPosition, const gRenderer::MaterialLighting3D& lighting,
 		bool depthEnabled, int depthType, bool blendingEnabled, bool cullingEnabled, int cullFace, int frontFace,
-		const glm::mat4& mvp) {
+		bool shadowEnabled, bool softShadowsEnabled, const glm::mat4& shadowMatrix, const glm::mat4& mvp) {
 	if(count <= 0 || vertices == nullptr) return;
 	if(!gvkEnsureRendering(ctx)) return;
 	VkCommandBuffer cmd = ctx.getCurrentCommandBuffer();
@@ -272,6 +286,9 @@ void gvkDrawMesh3D(gVKContext& ctx, const gRenderer::MeshVertex3D* vertices, int
 	scene.counts.x = std::min(lighting.lightCount, GLIST_MAX_LIGHTS);
 	scene.counts.y = static_cast<int>(lighting.enabledMask);
 	scene.globalAmbient = lighting.globalAmbient;
+	scene.shadowMatrix = shadowMatrix;
+	scene.shadowOptions.x = shadowEnabled ? 1 : 0;
+	scene.shadowOptions.y = softShadowsEnabled ? 1 : 0;
 	for(int i = 0; i < scene.counts.x; i++) {
 		const auto& src = lighting.lights[i];
 		auto& dst = scene.lights[i];
@@ -288,6 +305,9 @@ void gvkDrawMesh3D(gVKContext& ctx, const gRenderer::MeshVertex3D* vertices, int
 	VkDescriptorSet sceneset = ctx.getMaterialSceneSet();
 	if(sceneset != VK_NULL_HANDLE) vkCmdBindDescriptorSets(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS,
 			ctx.getColor3DPipelineLayout(), 5, 1, &sceneset, 0, nullptr);
+	VkDescriptorSet shadowset = ctx.getShadowDescriptorSet();
+	if(shadowset != VK_NULL_HANDLE) vkCmdBindDescriptorSets(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS,
+			ctx.getColor3DPipelineLayout(), 6, 1, &shadowset, 0, nullptr);
 	gvkPush3D push{mvp, ambientProduct, diffuseProduct,
 			glm::vec4(glm::vec3(specular), shininess),
 			glm::vec4(cameraPosition, static_cast<float>(textureFlags | (pbr ? 32u : 0u)))};

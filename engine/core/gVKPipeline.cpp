@@ -24,6 +24,7 @@ enum {
 	GVK_STAGE_COLOR_VERT, GVK_STAGE_COLOR_FRAG,
 	GVK_STAGE_IMAGE_VERT, GVK_STAGE_IMAGE_FRAG,
 	GVK_STAGE_COLOR3D_VERT, GVK_STAGE_COLOR3D_FRAG,
+	GVK_STAGE_SHADOW3D_VERT, GVK_STAGE_SHADOW3D_FRAG,
 	GVK_STAGE_COUNT
 };
 
@@ -41,6 +42,8 @@ static const gvkStageSource gvkstagesources[GVK_STAGE_COUNT] = {
 	{"image2d.frag", VK_SHADER_STAGE_FRAGMENT_BIT, gvkspv_image2d_frag, sizeof(gvkspv_image2d_frag)},
 	{"color3d.vert", VK_SHADER_STAGE_VERTEX_BIT, gvkspv_color3d_vert, sizeof(gvkspv_color3d_vert)},
 	{"color3d.frag", VK_SHADER_STAGE_FRAGMENT_BIT, gvkspv_color3d_frag, sizeof(gvkspv_color3d_frag)},
+	{"shadow3d.vert", VK_SHADER_STAGE_VERTEX_BIT, gvkspv_shadow3d_vert, sizeof(gvkspv_shadow3d_vert)},
+	{"shadow3d.frag", VK_SHADER_STAGE_FRAGMENT_BIT, gvkspv_shadow3d_frag, sizeof(gvkspv_shadow3d_frag)},
 };
 
 struct gvkShaderSet {
@@ -96,7 +99,7 @@ static VkShaderModule gvkCreateShaderModule(VkDevice device, const std::vector<u
 // and stays here.
 static bool gvkBuildPipeline(VkDevice device, VkFormat colorFormat, VkFormat depthFormat, const char* name,
 		const std::vector<uint32_t>& vertSpirv, const std::vector<uint32_t>& fragSpirv,
-		bool lineVariant, bool depthEnabled, bool dynamic3DState, gvkPipelineParts& parts) {
+		bool lineVariant, bool depthEnabled, bool dynamic3DState, bool depthOnly, gvkPipelineParts& parts) {
 	gVKReflectedLayout reflected;
 	if(!gvkReflectSpirv(vertSpirv.data(), vertSpirv.size() * sizeof(uint32_t), reflected) ||
 			!gvkReflectSpirv(fragSpirv.data(), fragSpirv.size() * sizeof(uint32_t), reflected)) {
@@ -209,8 +212,8 @@ static bool gvkBuildPipeline(VkDevice device, VkFormat colorFormat, VkFormat dep
 
 	VkPipelineColorBlendStateCreateInfo colorblend{};
 	colorblend.sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
-	colorblend.attachmentCount = 1;
-	colorblend.pAttachments = &blendattachment;
+	colorblend.attachmentCount = depthOnly ? 0 : 1;
+	colorblend.pAttachments = depthOnly ? nullptr : &blendattachment;
 
 	VkDynamicState dynamicstates[] = {VK_DYNAMIC_STATE_VIEWPORT, VK_DYNAMIC_STATE_SCISSOR,
 			VK_DYNAMIC_STATE_CULL_MODE, VK_DYNAMIC_STATE_FRONT_FACE,
@@ -236,8 +239,8 @@ static bool gvkBuildPipeline(VkDevice device, VkFormat colorFormat, VkFormat dep
 	pipelineinfo.layout = parts.layout;
 	VkPipelineRenderingCreateInfo renderinginfo{};
 	renderinginfo.sType = VK_STRUCTURE_TYPE_PIPELINE_RENDERING_CREATE_INFO;
-	renderinginfo.colorAttachmentCount = 1;
-	renderinginfo.pColorAttachmentFormats = &colorFormat;
+	renderinginfo.colorAttachmentCount = depthOnly ? 0 : 1;
+	renderinginfo.pColorAttachmentFormats = depthOnly ? nullptr : &colorFormat;
 	renderinginfo.depthAttachmentFormat = depthFormat;
 	pipelineinfo.pNext = &renderinginfo;
 	pipelineinfo.renderPass = VK_NULL_HANDLE;
@@ -313,13 +316,17 @@ static bool gvkCreateDescriptorPool(VkDevice device, const gvkPipelineParts& col
 // caller only adopts handles once everything succeeded. On failure nothing is
 // left allocated.
 static bool gvkBuildAll(VkDevice device, VkFormat colorFormat, VkFormat depthFormat, const gvkShaderSet& shaders,
-		gvkPipelineParts& color, gvkPipelineParts& image, gvkPipelineParts& color3d, VkDescriptorPool& pool) {
+		gvkPipelineParts& color, gvkPipelineParts& image, gvkPipelineParts& color3d,
+		gvkPipelineParts& shadow3d, VkDescriptorPool& pool) {
 	if(gvkBuildPipeline(device, colorFormat, depthFormat, "colour",
-					shaders.spirv[GVK_STAGE_COLOR_VERT], shaders.spirv[GVK_STAGE_COLOR_FRAG], true, false, false, color) &&
+					shaders.spirv[GVK_STAGE_COLOR_VERT], shaders.spirv[GVK_STAGE_COLOR_FRAG], true, false, false, false, color) &&
 			gvkBuildPipeline(device, colorFormat, depthFormat, "image",
-					shaders.spirv[GVK_STAGE_IMAGE_VERT], shaders.spirv[GVK_STAGE_IMAGE_FRAG], false, false, false, image) &&
+					shaders.spirv[GVK_STAGE_IMAGE_VERT], shaders.spirv[GVK_STAGE_IMAGE_FRAG], false, false, false, false, image) &&
 			gvkBuildPipeline(device, colorFormat, depthFormat, "3D material",
-					shaders.spirv[GVK_STAGE_COLOR3D_VERT], shaders.spirv[GVK_STAGE_COLOR3D_FRAG], false, true, true, color3d) &&
+					shaders.spirv[GVK_STAGE_COLOR3D_VERT], shaders.spirv[GVK_STAGE_COLOR3D_FRAG], false, true, true, false, color3d) &&
+			gvkBuildPipeline(device, colorFormat, depthFormat, "3D shadow",
+					shaders.spirv[GVK_STAGE_SHADOW3D_VERT], shaders.spirv[GVK_STAGE_SHADOW3D_FRAG],
+					false, true, true, true, shadow3d) &&
 			gvkCreateDescriptorPool(device, color, image, color3d, pool)) {
 		return true;
 	}
@@ -327,6 +334,7 @@ static bool gvkBuildAll(VkDevice device, VkFormat colorFormat, VkFormat depthFor
 	gvkDestroyParts(device, color);
 	gvkDestroyParts(device, image);
 	gvkDestroyParts(device, color3d);
+	gvkDestroyParts(device, shadow3d);
 	return false;
 }
 
@@ -352,8 +360,9 @@ bool gvkCreateGraphicsPipelines(gVKContext& ctx) {
 	gvkPipelineParts color;
 	gvkPipelineParts image;
 	gvkPipelineParts color3d;
+	gvkPipelineParts shadow3d;
 	VkDescriptorPool pool = VK_NULL_HANDLE;
-	if(!gvkBuildAll(ctx.device, ctx.swapchainformat, ctx.depthformat, shaders, color, image, color3d, pool)) return false;
+	if(!gvkBuildAll(ctx.device, ctx.swapchainformat, ctx.depthformat, shaders, color, image, color3d, shadow3d, pool)) return false;
 
 	ctx.color2dpipeline = color.pipeline;
 	ctx.color2dlinepipeline = color.linepipeline;
@@ -372,6 +381,10 @@ bool gvkCreateGraphicsPipelines(gVKContext& ctx) {
 	ctx.color3dpushsize = color3d.pushsize;
 	ctx.color3dpushstages = color3d.pushstages;
 	ctx.color3dsetlayouts = color3d.setlayouts;
+	ctx.shadow3dpipeline = shadow3d.pipeline;
+	ctx.shadow3dpipelinelayout = shadow3d.layout;
+	ctx.shadow3dpushsize = shadow3d.pushsize;
+	ctx.shadow3dpushstages = shadow3d.pushstages;
 	ctx.descriptorpool = pool;
 
 	if(gvkRuntimeShadersAvailable()) {
@@ -408,11 +421,13 @@ void gvkDestroyGraphicsPipelines(gVKContext& ctx) {
 	if(device == VK_NULL_HANDLE) return;
 	if(ctx.image2dpipeline != VK_NULL_HANDLE) { vkDestroyPipeline(device, ctx.image2dpipeline, nullptr); ctx.image2dpipeline = VK_NULL_HANDLE; }
 	if(ctx.color3dpipeline != VK_NULL_HANDLE) { vkDestroyPipeline(device, ctx.color3dpipeline, nullptr); ctx.color3dpipeline = VK_NULL_HANDLE; }
+	if(ctx.shadow3dpipeline != VK_NULL_HANDLE) { vkDestroyPipeline(device, ctx.shadow3dpipeline, nullptr); ctx.shadow3dpipeline = VK_NULL_HANDLE; }
 	if(ctx.color3dnoblendpipeline != VK_NULL_HANDLE) { vkDestroyPipeline(device, ctx.color3dnoblendpipeline, nullptr); ctx.color3dnoblendpipeline = VK_NULL_HANDLE; }
 	if(ctx.color2dlinepipeline != VK_NULL_HANDLE) { vkDestroyPipeline(device, ctx.color2dlinepipeline, nullptr); ctx.color2dlinepipeline = VK_NULL_HANDLE; }
 	if(ctx.color2dpipeline != VK_NULL_HANDLE) { vkDestroyPipeline(device, ctx.color2dpipeline, nullptr); ctx.color2dpipeline = VK_NULL_HANDLE; }
 	if(ctx.image2dpipelinelayout != VK_NULL_HANDLE) { vkDestroyPipelineLayout(device, ctx.image2dpipelinelayout, nullptr); ctx.image2dpipelinelayout = VK_NULL_HANDLE; }
 	if(ctx.color3dpipelinelayout != VK_NULL_HANDLE) { vkDestroyPipelineLayout(device, ctx.color3dpipelinelayout, nullptr); ctx.color3dpipelinelayout = VK_NULL_HANDLE; }
+	if(ctx.shadow3dpipelinelayout != VK_NULL_HANDLE) { vkDestroyPipelineLayout(device, ctx.shadow3dpipelinelayout, nullptr); ctx.shadow3dpipelinelayout = VK_NULL_HANDLE; }
 	if(ctx.color2dpipelinelayout != VK_NULL_HANDLE) { vkDestroyPipelineLayout(device, ctx.color2dpipelinelayout, nullptr); ctx.color2dpipelinelayout = VK_NULL_HANDLE; }
 	// Destroying the pool frees every set allocated from it, so any texture
 	// descriptor sets are gone too and have to be written again afterwards.

@@ -26,6 +26,8 @@ void gvkResetRenderingFormats(gVKContext& ctx);
  */
 bool gvkCreateDepthTargets(gVKContext& ctx);
 void gvkDestroyDepthTargets(gVKContext& ctx);
+bool gvkCreateShadowTarget(gVKContext& ctx, uint32_t width, uint32_t height);
+void gvkDestroyShadowTarget(gVKContext& ctx);
 
 #endif /* GVK_DESKTOP_GLFW */
 

@@ -25,8 +25,11 @@ struct Light {
 layout(std140, set = 5, binding = 0) uniform MaterialScene {
     ivec4 counts;
     vec4 globalAmbient;
+    mat4 shadowMatrix;
+    ivec4 shadowOptions;
     Light lights[8];
 } scene;
+layout(set = 6, binding = 0) uniform sampler2D shadowMap;
 
 layout(push_constant) uniform Push {
     mat4 mvp;
@@ -55,6 +58,29 @@ vec3 fresnelSchlick(float cosine, vec3 f0) {
     return f0 + (1.0 - f0) * pow(max(1.0 - cosine, 0.0), 5.0);
 }
 
+float shadowVisibility(vec3 normal) {
+	if(scene.shadowOptions.x == 0) return 1.0;
+	vec4 clip = scene.shadowMatrix * vec4(vWorldPos, 1.0);
+	vec3 projected = clip.xyz / clip.w;
+	projected = projected * 0.5 + 0.5;
+	projected.y = 1.0 - projected.y;
+	if(projected.z > 1.0 || any(lessThan(projected.xy, vec2(0.0))) || any(greaterThan(projected.xy, vec2(1.0)))) return 1.0;
+	vec3 lightDirection = vec3(0.0, 1.0, 0.0);
+	for(int i = 0; i < scene.counts.x; i++) {
+		if((scene.counts.y & (1 << i)) != 0 && scene.lights[i].meta.x == 1) {
+			lightDirection = normalize(-scene.lights[i].direction.xyz); break;
+		}
+	}
+	float bias = max(0.005 * (1.0 - dot(normal, lightDirection)), 0.0005);
+	if(scene.shadowOptions.y == 0)
+		return projected.z - bias > texture(shadowMap, projected.xy).r ? 0.0 : 1.0;
+	vec2 texel = 1.0 / vec2(textureSize(shadowMap, 0));
+	float blocked = 0.0;
+	for(int x = -1; x <= 1; x++) for(int y = -1; y <= 1; y++)
+		blocked += projected.z - bias > texture(shadowMap, projected.xy + vec2(x,y) * texel).r ? 1.0 : 0.0;
+	return 1.0 - blocked / 9.0;
+}
+
 void main() {
 	uint flags = uint(pc.cameraPositionFlags.w + 0.5);
     vec3 N = normalize(vNormal);
@@ -73,6 +99,7 @@ void main() {
 			N = normalize(mat3(T, B, N) * tangentNormal);
 		}
 		vec3 V = normalize(pc.cameraPositionFlags.xyz - vWorldPos);
+		float visibility = shadowVisibility(N);
 		vec3 f0 = mix(vec3(0.04), albedo, metallic);
 		vec3 lo = vec3(0.0);
 		vec3 ambientSum = vec3(0.0);
@@ -107,7 +134,7 @@ void main() {
 			vec3 specular = ndf * geometry * F
 					/ (4.0 * max(dot(N, V), 0.0) * max(dot(N, lightVector), 0.0) + 0.001);
 			vec3 kD = (vec3(1.0) - F) * (1.0 - metallic);
-			lo += (kD * albedo / PI + specular) * radiance * max(dot(N, lightVector), 0.0);
+			lo += (kD * albedo / PI + specular) * radiance * max(dot(N, lightVector), 0.0) * visibility;
 		}
 		vec3 ambientLight = ambientSum;
 		if(dot(ambientLight, ambientLight) < 0.001 && scene.counts.x == 0) ambientLight = scene.globalAmbient.rgb;
@@ -128,6 +155,7 @@ void main() {
 		if((flags & 1u) != 0u && materialDiffuse.a < 0.5) discard;
 		vec4 materialSpecular = vec4(pc.materialSpecularShininess.rgb, 1.0);
 		vec3 V = normalize(pc.cameraPositionFlags.xyz - vWorldPos);
+		float visibility = shadowVisibility(N);
 		vec4 result = vec4(0.0);
 		bool hasLight = false;
 		for(int i = 0; i < scene.counts.x; i++) {
@@ -160,7 +188,7 @@ void main() {
 			float spec = pow(max(dot(V, reflected), 0.0), pc.materialSpecularShininess.w);
 			result += light.ambient * materialAmbient * attenuation
 					+ (light.diffuse * ndl * materialDiffuse
-					+ light.specular * spec * materialSpecular) * attenuation * intensity;
+					+ light.specular * spec * materialSpecular) * attenuation * intensity * visibility;
 			hasLight = true;
 		}
 		if(!hasLight) result = scene.globalAmbient * materialAmbient;

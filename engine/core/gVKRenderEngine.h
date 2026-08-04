@@ -198,6 +198,13 @@ public:
 			const glm::vec4& diffuse, const glm::vec4& specular, float shininess, bool pbr,
 			const MaterialTextures3D& textures, const MaterialLighting3D& lighting,
 			const glm::mat4& mvp, int drawMode = GL_TRIANGLES) override;
+	bool allocateShadowMap(int width, int height) override;
+	void beginShadowMap(const glm::mat4& lightMatrix) override;
+	void endShadowMap() override;
+	void useShadowMap(const glm::mat4& lightMatrix, const glm::vec3& lightPosition) override;
+	void stopUsingShadowMap() override;
+	bool isShadowPassActive() const override;
+	void drawShadowMesh3D(const MeshVertex3D* vertices, int count) override;
 
 	// Records a textured quad using the registered Vulkan texture for textureId
 	// (the Vulkan side of gImage / gTexture::draw and drawSub). No-op if the id is
@@ -228,6 +235,10 @@ protected:
 	void init() override;
 	void cleanup() override;
 private:
+	bool shadowpassactive = false;
+	bool shadowmapenabled = false;
+	glm::mat4 shadowlightmatrix{1.0f};
+	glm::vec3 shadowlightposition{0.0f};
 	mutable GLuint currentprogram = 0;
 	bool initVulkan();
 	void cleanupVulkan();
