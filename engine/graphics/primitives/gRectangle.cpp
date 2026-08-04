@@ -60,7 +60,7 @@ void gRectangle::setRectanglePoints(float x, float y, float w, float h, bool isF
 	float cosA = std::cos(rotateAngle);
 	float sinA = std::sin(rotateAngle);
 
-	// Rotates a point around the pivot point by rotateAngle (radians)
+	// Rotates a point around the pivot point by rotateAngle
 	auto rotatePoint = [&](float vx, float vy) -> glm::vec3 {
 		float dx = vx - px;
 		float dy = vy - py;
