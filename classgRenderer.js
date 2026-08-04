@@ -91,7 +91,7 @@ var classgRenderer =
     [ "drawLine", "classgRenderer.html#ae6a99d730dd14c230c02fc8555f8bd4c", null ],
     [ "drawPyramid", "classgRenderer.html#a00180e1235eaf6d031480500285fcc13", null ],
     [ "drawPyramidOblique", "classgRenderer.html#a7ed87e0fccd7fc3c177f29d98c1458a8", null ],
-    [ "drawRectangle", "classgRenderer.html#ad2624240fca840e6396031e7e8125b8c", null ],
+    [ "drawRectangle", "classgRenderer.html#a965c5d03c8cbbf9d0808a8e933f95d86", null ],
     [ "drawRoundedRectangle", "classgRenderer.html#a249cbc3570e968ac0ac227f0f7bf6bb1", null ],
     [ "drawSphere", "classgRenderer.html#ac87b18cdea5749740d6c7c6a8ed0da5a", null ],
     [ "drawTexturedRect2D", "classgRenderer.html#aeddf5cd99f157610584d68393c83e8af", null ],

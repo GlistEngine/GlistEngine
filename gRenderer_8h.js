@@ -30,7 +30,7 @@ var gRenderer_8h =
     [ "gDrawLine", "gRenderer_8h.html#a986ec48f2fdbf064e77eca1d28fb22a5", null ],
     [ "gDrawPyramid", "gRenderer_8h.html#a5cea195076770e08bd97c9d367d07a43", null ],
     [ "gDrawPyramidOblique", "gRenderer_8h.html#adeb854d5944529240f0175edff87520b", null ],
-    [ "gDrawRectangle", "gRenderer_8h.html#ac06ebc94fef4874810adc536dab8b43d", null ],
+    [ "gDrawRectangle", "gRenderer_8h.html#a95d2e0f490386a84f16cd657fee96512", null ],
     [ "gDrawRoundedRectangle", "gRenderer_8h.html#a90e6c05c119cfc9595ec9f8000f0ac3f", null ],
     [ "gDrawSphere", "gRenderer_8h.html#a173dd67d8bcf26a0b6721053e155b609", null ],
     [ "gDrawTriangle", "gRenderer_8h.html#a18a5572275b3e79c529bb88f7d6d1efe", null ],
