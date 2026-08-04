@@ -243,6 +243,7 @@ void gvkDrawMesh3D(gVKContext& ctx, const gRenderer::MeshVertex3D* vertices, int
 		const VkDescriptorSet textureSets[5], uint32_t textureFlags, const glm::vec4& ambientProduct,
 		const glm::vec4& diffuseProduct, const glm::vec4& specular, float shininess, bool textured,
 		bool pbr, const glm::vec3& cameraPosition, const gRenderer::MaterialLighting3D& lighting,
+		bool depthEnabled, int depthType, bool cullingEnabled, int cullFace, int frontFace,
 		const glm::mat4& mvp) {
 	if(count <= 0 || vertices == nullptr) return;
 	if(!gvkEnsureRendering(ctx)) return;
@@ -253,6 +254,15 @@ void gvkDrawMesh3D(gVKContext& ctx, const gRenderer::MeshVertex3D* vertices, int
 	VkDeviceSize offset = 0;
 	if(!gvkUploadDynamicVertices(ctx, vertices, sizeof(gRenderer::MeshVertex3D) * count, vbuf, offset)) return;
 	vkCmdBindPipeline(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, ctx.getColor3DPipeline());
+	vkCmdSetDepthTestEnable(cmd, depthEnabled ? VK_TRUE : VK_FALSE);
+	vkCmdSetDepthWriteEnable(cmd, depthEnabled ? VK_TRUE : VK_FALSE);
+	vkCmdSetDepthCompareOp(cmd, depthType == gRenderer::DEPTHTESTTYPE_ALWAYS
+			? VK_COMPARE_OP_ALWAYS : VK_COMPARE_OP_LESS);
+	VkCullModeFlags vkCull = VK_CULL_MODE_NONE;
+	if(cullingEnabled) vkCull = cullFace == GL_FRONT ? VK_CULL_MODE_FRONT_BIT
+			: cullFace == GL_FRONT_AND_BACK ? VK_CULL_MODE_FRONT_AND_BACK : VK_CULL_MODE_BACK_BIT;
+	vkCmdSetCullMode(cmd, vkCull);
+	vkCmdSetFrontFace(cmd, frontFace == GL_CCW ? VK_FRONT_FACE_CLOCKWISE : VK_FRONT_FACE_COUNTER_CLOCKWISE);
 	vkCmdBindVertexBuffers(cmd, 0, 1, &vbuf, &offset);
 	if(textureSets != nullptr && textureSets[0] != VK_NULL_HANDLE) {
 		vkCmdBindDescriptorSets(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, ctx.getColor3DPipelineLayout(),

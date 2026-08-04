@@ -95,7 +95,7 @@ static VkShaderModule gvkCreateShaderModule(VkDevice device, const std::vector<u
 // and stays here.
 static bool gvkBuildPipeline(VkDevice device, VkFormat colorFormat, VkFormat depthFormat, const char* name,
 		const std::vector<uint32_t>& vertSpirv, const std::vector<uint32_t>& fragSpirv,
-		bool lineVariant, bool depthEnabled, gvkPipelineParts& parts) {
+		bool lineVariant, bool depthEnabled, bool dynamic3DState, gvkPipelineParts& parts) {
 	gVKReflectedLayout reflected;
 	if(!gvkReflectSpirv(vertSpirv.data(), vertSpirv.size() * sizeof(uint32_t), reflected) ||
 			!gvkReflectSpirv(fragSpirv.data(), fragSpirv.size() * sizeof(uint32_t), reflected)) {
@@ -211,10 +211,13 @@ static bool gvkBuildPipeline(VkDevice device, VkFormat colorFormat, VkFormat dep
 	colorblend.attachmentCount = 1;
 	colorblend.pAttachments = &blendattachment;
 
-	VkDynamicState dynamicstates[] = {VK_DYNAMIC_STATE_VIEWPORT, VK_DYNAMIC_STATE_SCISSOR};
+	VkDynamicState dynamicstates[] = {VK_DYNAMIC_STATE_VIEWPORT, VK_DYNAMIC_STATE_SCISSOR,
+			VK_DYNAMIC_STATE_CULL_MODE, VK_DYNAMIC_STATE_FRONT_FACE,
+			VK_DYNAMIC_STATE_DEPTH_TEST_ENABLE, VK_DYNAMIC_STATE_DEPTH_WRITE_ENABLE,
+			VK_DYNAMIC_STATE_DEPTH_COMPARE_OP};
 	VkPipelineDynamicStateCreateInfo dynamicstate{};
 	dynamicstate.sType = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO;
-	dynamicstate.dynamicStateCount = 2;
+	dynamicstate.dynamicStateCount = dynamic3DState ? 7 : 2;
 	dynamicstate.pDynamicStates = dynamicstates;
 
 	VkGraphicsPipelineCreateInfo pipelineinfo{};
@@ -304,11 +307,11 @@ static bool gvkCreateDescriptorPool(VkDevice device, const gvkPipelineParts& col
 static bool gvkBuildAll(VkDevice device, VkFormat colorFormat, VkFormat depthFormat, const gvkShaderSet& shaders,
 		gvkPipelineParts& color, gvkPipelineParts& image, gvkPipelineParts& color3d, VkDescriptorPool& pool) {
 	if(gvkBuildPipeline(device, colorFormat, depthFormat, "colour",
-					shaders.spirv[GVK_STAGE_COLOR_VERT], shaders.spirv[GVK_STAGE_COLOR_FRAG], true, false, color) &&
+					shaders.spirv[GVK_STAGE_COLOR_VERT], shaders.spirv[GVK_STAGE_COLOR_FRAG], true, false, false, color) &&
 			gvkBuildPipeline(device, colorFormat, depthFormat, "image",
-					shaders.spirv[GVK_STAGE_IMAGE_VERT], shaders.spirv[GVK_STAGE_IMAGE_FRAG], false, false, image) &&
+					shaders.spirv[GVK_STAGE_IMAGE_VERT], shaders.spirv[GVK_STAGE_IMAGE_FRAG], false, false, false, image) &&
 			gvkBuildPipeline(device, colorFormat, depthFormat, "3D material",
-					shaders.spirv[GVK_STAGE_COLOR3D_VERT], shaders.spirv[GVK_STAGE_COLOR3D_FRAG], false, true, color3d) &&
+					shaders.spirv[GVK_STAGE_COLOR3D_VERT], shaders.spirv[GVK_STAGE_COLOR3D_FRAG], false, true, true, color3d) &&
 			gvkCreateDescriptorPool(device, color, image, color3d, pool)) {
 		return true;
 	}

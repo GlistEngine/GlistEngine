@@ -1180,8 +1180,11 @@ bool gVKRenderEngine::initVulkan() {
 	// Empty: no optional features are switched on yet. Kept separate from the
 	// context's devicefeatures, which records what the GPU actually supports.
 	VkPhysicalDeviceFeatures enabledfeatures{};
+	VkPhysicalDeviceExtendedDynamicStateFeaturesEXT supportedextended{};
+	supportedextended.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTENDED_DYNAMIC_STATE_FEATURES_EXT;
 	VkPhysicalDeviceVulkan13Features supportedvulkan13{};
 	supportedvulkan13.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_3_FEATURES;
+	supportedvulkan13.pNext = &supportedextended;
 	VkPhysicalDeviceFeatures2 supportedfeatures{};
 	supportedfeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
 	supportedfeatures.pNext = &supportedvulkan13;
@@ -1191,9 +1194,18 @@ bool gVKRenderEngine::initVulkan() {
 		cleanupVulkan();
 		return false;
 	}
+	if(supportedextended.extendedDynamicState != VK_TRUE) {
+		gLoge("gVKRenderEngine") << "The selected Vulkan 1.3 device lacks extended dynamic state.";
+		cleanupVulkan();
+		return false;
+	}
 	VkPhysicalDeviceVulkan13Features enabledvulkan13{};
 	enabledvulkan13.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_3_FEATURES;
 	enabledvulkan13.dynamicRendering = VK_TRUE;
+	VkPhysicalDeviceExtendedDynamicStateFeaturesEXT enabledextended{};
+	enabledextended.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTENDED_DYNAMIC_STATE_FEATURES_EXT;
+	enabledextended.extendedDynamicState = VK_TRUE;
+	enabledvulkan13.pNext = &enabledextended;
 	VkDeviceCreateInfo deviceinfo{};
 	deviceinfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
 	deviceinfo.queueCreateInfoCount = static_cast<uint32_t>(queueinfos.size());
@@ -1513,7 +1525,8 @@ void gVKRenderEngine::drawMaterialMesh3D(const MeshVertex3D* vertices, int count
 	}
 	gvkDrawMesh3D(*vkcontext, vertices, count, texturesets, textureflags,
 			ambient * drawcolor, diffuse * drawcolor, specular * drawcolor, shininess, textured, pbr,
-			cameraposition, lighting, mvp);
+			cameraposition, lighting, isdepthtestenabled, depthtesttype,
+			iscullingenabled, cullface, cullingdirection, mvp);
 #endif
 }
 
