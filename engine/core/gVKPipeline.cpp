@@ -53,6 +53,7 @@ struct gvkShaderSet {
 struct gvkPipelineParts {
 	VkPipeline pipeline = VK_NULL_HANDLE;
 	VkPipeline linepipeline = VK_NULL_HANDLE;
+	VkPipeline noblendpipeline = VK_NULL_HANDLE;
 	VkPipelineLayout layout = VK_NULL_HANDLE;
 	std::vector<VkDescriptorSetLayout> setlayouts;
 	uint32_t pushsize = 0;
@@ -243,6 +244,12 @@ static bool gvkBuildPipeline(VkDevice device, VkFormat colorFormat, VkFormat dep
 	pipelineinfo.subpass = 0;
 
 	VkResult result = vkCreateGraphicsPipelines(device, VK_NULL_HANDLE, 1, &pipelineinfo, nullptr, &parts.pipeline);
+	if(result == VK_SUCCESS && dynamic3DState) {
+		blendattachment.blendEnable = VK_FALSE;
+		result = vkCreateGraphicsPipelines(device, VK_NULL_HANDLE, 1, &pipelineinfo, nullptr,
+				&parts.noblendpipeline);
+		blendattachment.blendEnable = VK_TRUE;
+	}
 	if(result == VK_SUCCESS && lineVariant) {
 		// Identical state apart from the topology: an unfilled shape is stroked as
 		// separate edges, which is what the OpenGL path draws through
@@ -263,6 +270,7 @@ static bool gvkBuildPipeline(VkDevice device, VkFormat colorFormat, VkFormat dep
 }
 
 static void gvkDestroyParts(VkDevice device, gvkPipelineParts& parts) {
+	if(parts.noblendpipeline != VK_NULL_HANDLE) vkDestroyPipeline(device, parts.noblendpipeline, nullptr);
 	if(parts.linepipeline != VK_NULL_HANDLE) vkDestroyPipeline(device, parts.linepipeline, nullptr);
 	if(parts.pipeline != VK_NULL_HANDLE) vkDestroyPipeline(device, parts.pipeline, nullptr);
 	if(parts.layout != VK_NULL_HANDLE) vkDestroyPipelineLayout(device, parts.layout, nullptr);
@@ -359,6 +367,7 @@ bool gvkCreateGraphicsPipelines(gVKContext& ctx) {
 	ctx.image2dpushsize = image.pushsize;
 	ctx.image2dpushstages = image.pushstages;
 	ctx.color3dpipeline = color3d.pipeline;
+	ctx.color3dnoblendpipeline = color3d.noblendpipeline;
 	ctx.color3dpipelinelayout = color3d.layout;
 	ctx.color3dpushsize = color3d.pushsize;
 	ctx.color3dpushstages = color3d.pushstages;
@@ -399,6 +408,7 @@ void gvkDestroyGraphicsPipelines(gVKContext& ctx) {
 	if(device == VK_NULL_HANDLE) return;
 	if(ctx.image2dpipeline != VK_NULL_HANDLE) { vkDestroyPipeline(device, ctx.image2dpipeline, nullptr); ctx.image2dpipeline = VK_NULL_HANDLE; }
 	if(ctx.color3dpipeline != VK_NULL_HANDLE) { vkDestroyPipeline(device, ctx.color3dpipeline, nullptr); ctx.color3dpipeline = VK_NULL_HANDLE; }
+	if(ctx.color3dnoblendpipeline != VK_NULL_HANDLE) { vkDestroyPipeline(device, ctx.color3dnoblendpipeline, nullptr); ctx.color3dnoblendpipeline = VK_NULL_HANDLE; }
 	if(ctx.color2dlinepipeline != VK_NULL_HANDLE) { vkDestroyPipeline(device, ctx.color2dlinepipeline, nullptr); ctx.color2dlinepipeline = VK_NULL_HANDLE; }
 	if(ctx.color2dpipeline != VK_NULL_HANDLE) { vkDestroyPipeline(device, ctx.color2dpipeline, nullptr); ctx.color2dpipeline = VK_NULL_HANDLE; }
 	if(ctx.image2dpipelinelayout != VK_NULL_HANDLE) { vkDestroyPipelineLayout(device, ctx.image2dpipelinelayout, nullptr); ctx.image2dpipelinelayout = VK_NULL_HANDLE; }

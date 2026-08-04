@@ -243,17 +243,17 @@ void gvkDrawMesh3D(gVKContext& ctx, const gRenderer::MeshVertex3D* vertices, int
 		const VkDescriptorSet textureSets[5], uint32_t textureFlags, const glm::vec4& ambientProduct,
 		const glm::vec4& diffuseProduct, const glm::vec4& specular, float shininess, bool textured,
 		bool pbr, const glm::vec3& cameraPosition, const gRenderer::MaterialLighting3D& lighting,
-		bool depthEnabled, int depthType, bool cullingEnabled, int cullFace, int frontFace,
+		bool depthEnabled, int depthType, bool blendingEnabled, bool cullingEnabled, int cullFace, int frontFace,
 		const glm::mat4& mvp) {
 	if(count <= 0 || vertices == nullptr) return;
 	if(!gvkEnsureRendering(ctx)) return;
 	VkCommandBuffer cmd = ctx.getCurrentCommandBuffer();
-	if(cmd == VK_NULL_HANDLE || ctx.getColor3DPipeline() == VK_NULL_HANDLE) return;
+	if(cmd == VK_NULL_HANDLE || ctx.getColor3DPipeline(blendingEnabled) == VK_NULL_HANDLE) return;
 
 	VkBuffer vbuf = VK_NULL_HANDLE;
 	VkDeviceSize offset = 0;
 	if(!gvkUploadDynamicVertices(ctx, vertices, sizeof(gRenderer::MeshVertex3D) * count, vbuf, offset)) return;
-	vkCmdBindPipeline(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, ctx.getColor3DPipeline());
+	vkCmdBindPipeline(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, ctx.getColor3DPipeline(blendingEnabled));
 	vkCmdSetDepthTestEnable(cmd, depthEnabled ? VK_TRUE : VK_FALSE);
 	vkCmdSetDepthWriteEnable(cmd, depthEnabled ? VK_TRUE : VK_FALSE);
 	vkCmdSetDepthCompareOp(cmd, depthType == gRenderer::DEPTHTESTTYPE_ALWAYS

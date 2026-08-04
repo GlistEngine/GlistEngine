@@ -1526,7 +1526,7 @@ void gVKRenderEngine::drawMaterialMesh3D(const MeshVertex3D* vertices, int count
 	gvkDrawMesh3D(*vkcontext, vertices, count, texturesets, textureflags,
 			ambient * drawcolor, diffuse * drawcolor, specular * drawcolor, shininess, textured, pbr,
 			cameraposition, lighting, isdepthtestenabled, depthtesttype,
-			iscullingenabled, cullface, cullingdirection, mvp);
+			isalphablendingenabled, iscullingenabled, cullface, cullingdirection, mvp);
 #endif
 }
 

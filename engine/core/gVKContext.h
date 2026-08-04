@@ -295,6 +295,7 @@ struct gVKContext {
 	VkPipeline getImage2DPipeline() { return image2dpipeline; }
 	VkPipelineLayout getImage2DPipelineLayout() { return image2dpipelinelayout; }
 	VkPipeline getColor3DPipeline() { return color3dpipeline; }
+	VkPipeline getColor3DPipeline(bool blending) { return blending ? color3dpipeline : color3dnoblendpipeline; }
 	VkPipelineLayout getColor3DPipelineLayout() { return color3dpipelinelayout; }
 	uint32_t getColor3DPushSize() const { return color3dpushsize; }
 	VkShaderStageFlags getColor3DPushStages() const { return color3dpushstages; }
@@ -418,6 +419,7 @@ private:
 	VkPipeline image2dpipeline = VK_NULL_HANDLE;
 	VkPipelineLayout color3dpipelinelayout = VK_NULL_HANDLE;
 	VkPipeline color3dpipeline = VK_NULL_HANDLE;
+	VkPipeline color3dnoblendpipeline = VK_NULL_HANDLE;
 	// Descriptor set layouts of each pipeline, in set order, and the push constant
 	// block each declares. All of it is reflected out of the compiled SPIR-V rather
 	// than written out here, so the shaders stay the single source of truth.
