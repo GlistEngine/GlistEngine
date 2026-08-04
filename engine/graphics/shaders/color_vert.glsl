@@ -51,6 +51,7 @@ uniform int aUseShadowMap;
 uniform mat4 model;
 uniform int useInstancing;
 uniform mat4 projection;
+uniform vec2 textureTiling;
 uniform vec3 lightPos;
 uniform mat4 lightMatrix;
 
@@ -71,7 +72,7 @@ void main() {
     mUseShadowMap = aUseShadowMap;
 	FragPos = vec3(modelMatrix * vec4(aPos, 1.0));
 	Normal = mat3(transpose(inverse(modelMatrix))) * aNormal;
-    TexCoords = aTexCoords;
+    TexCoords = aTexCoords * textureTiling;
     FragPosLightSpace = lightMatrix * vec4(FragPos, 1.0);
 
     if (material.useNormalMap > 0) {

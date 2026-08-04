@@ -9,9 +9,12 @@
 layout(location = 0) in vec2 aPos;
 layout(location = 1) in vec2 aUV;
 
+// The block is declared exactly as the fragment stage declares it, so both stages
+// see the same push constant layout. masking is unused here.
 layout(push_constant) uniform Push {
     mat4 mvp;
     vec4 tint;
+    int masking;
 } pc;
 
 layout(location = 0) out vec2 vUV;

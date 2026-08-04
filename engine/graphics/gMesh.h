@@ -41,10 +41,15 @@ public:
 	void setVertices(const std::vector<gVertex>& vertices);
 	void setVertices(std::shared_ptr<std::vector<gVertex>> vertices);
 	void setVertices(std::shared_ptr<std::vector<gVertex>> vertices, std::shared_ptr<std::vector<gIndex>> indices);
+
 	void setTextures(const std::vector<gTexture*>& textures);
 	void setTextures(const std::unordered_map<gTexture::TextureType, gTexture*>& textures);
 	void setTexture(gTexture* texture);
 	gTexture* getTexture(gTexture::TextureType type);
+
+	void setTextureTiling(float tilingX, float tilingY);
+	void setTextureTiling(float tiling);
+	const glm::vec2& getTextureTiling() const;
 
 	std::vector<gVertex>& getVertices();
 	std::vector<gIndex>& getIndices();
@@ -110,6 +115,9 @@ protected:
 
     void drawStart(bool isInstanced = false);
     void drawVbo();
+    // Records this mesh through the Vulkan backend's 2D draw path instead of the
+    // VBO / shader path, which has no Vulkan equivalent. 3D meshes are skipped.
+    void drawVulkan2D();
     void drawVboInstanced(const std::vector<glm::mat4>& instanceTransformations);
     void drawExtraShaders();
     void drawEnd();
@@ -138,6 +146,7 @@ private:
 	};
 	int drawmode;
     gMaterial material;
+    glm::vec2 texturetiling{1.0f, 1.0f};
 
     gBoundingBox initialboundingbox;
     gBoundingBox boundingbox;

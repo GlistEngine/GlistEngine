@@ -34,6 +34,26 @@ static void gvkTransitionImageLayout(VkCommandBuffer cmd, VkImage image,
 	vkCmdPipelineBarrier(cmd, srcStage, dstStage, 0, 0, nullptr, 0, nullptr, 1, &barrier);
 }
 
+// Builds a sampler for the given filtering and wrapping. Only one mip level is ever
+// uploaded, so the mipmap mode follows the minification filter and stays consistent
+// with it rather than being a third setting.
+static VkSampler gvkCreateSampler(VkDevice device, VkFilter minFilter, VkFilter magFilter,
+		VkSamplerAddressMode addressU, VkSamplerAddressMode addressV) {
+	VkSamplerCreateInfo samplerinfo{};
+	samplerinfo.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
+	samplerinfo.magFilter = magFilter;
+	samplerinfo.minFilter = minFilter;
+	samplerinfo.addressModeU = addressU;
+	samplerinfo.addressModeV = addressV;
+	samplerinfo.addressModeW = VK_SAMPLER_ADDRESS_MODE_REPEAT;
+	samplerinfo.mipmapMode = minFilter == VK_FILTER_NEAREST
+			? VK_SAMPLER_MIPMAP_MODE_NEAREST : VK_SAMPLER_MIPMAP_MODE_LINEAR;
+	samplerinfo.borderColor = VK_BORDER_COLOR_INT_OPAQUE_BLACK;
+	VkSampler sampler = VK_NULL_HANDLE;
+	vkCreateSampler(device, &samplerinfo, nullptr, &sampler);
+	return sampler;
+}
+
 gVKTexture* gvkCreateTextureRGBA8(gVKContext& ctx, const void* rgbaPixels, int width, int height) {
 	if(width <= 0 || height <= 0 || rgbaPixels == nullptr) return nullptr;
 	VkDevice device = *ctx.getDevice();
@@ -127,19 +147,51 @@ gVKTexture* gvkCreateTextureRGBA8(gVKContext& ctx, const void* rgbaPixels, int w
 	viewinfo.subresourceRange.layerCount = 1;
 	vkCreateImageView(device, &viewinfo, nullptr, &tex->view);
 
-	VkSamplerCreateInfo samplerinfo{};
-	samplerinfo.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
-	samplerinfo.magFilter = VK_FILTER_LINEAR;
-	samplerinfo.minFilter = VK_FILTER_LINEAR;
-	samplerinfo.addressModeU = VK_SAMPLER_ADDRESS_MODE_REPEAT;
-	samplerinfo.addressModeV = VK_SAMPLER_ADDRESS_MODE_REPEAT;
-	samplerinfo.addressModeW = VK_SAMPLER_ADDRESS_MODE_REPEAT;
-	samplerinfo.mipmapMode = VK_SAMPLER_MIPMAP_MODE_LINEAR;
-	samplerinfo.borderColor = VK_BORDER_COLOR_INT_OPAQUE_BLACK;
-	vkCreateSampler(device, &samplerinfo, nullptr, &tex->sampler);
+	// The sampler starts from gTexture's own defaults; setFiltering / setWrapping
+	// rebuild it through gvkSetTextureSampler when the texture asks for something
+	// else, which the upload path does right after this returns.
+	tex->sampler = gvkCreateSampler(device, tex->minfilter, tex->magfilter, tex->addressu, tex->addressv);
 
 	gvkWriteTextureDescriptorSet(ctx, tex);
 	return tex;
+}
+
+bool gvkSetTextureSampler(gVKContext& ctx, gVKTexture* tex, VkFilter minFilter, VkFilter magFilter,
+		VkSamplerAddressMode addressU, VkSamplerAddressMode addressV) {
+	if(tex == nullptr) return false;
+	if(tex->minfilter == minFilter && tex->magfilter == magFilter
+			&& tex->addressu == addressU && tex->addressv == addressV) {
+		return false;
+	}
+	tex->minfilter = minFilter;
+	tex->magfilter = magFilter;
+	tex->addressu = addressU;
+	tex->addressv = addressV;
+
+	VkDevice device = *ctx.getDevice();
+	if(device == VK_NULL_HANDLE || tex->sampler == VK_NULL_HANDLE) return false;
+	// A frame that is still in flight may sample through the old sampler, so the
+	// device is drained before it is destroyed. Sampler changes happen while a
+	// texture is being set up, not per frame, so this costs nothing in a running
+	// scene.
+	vkDeviceWaitIdle(device);
+	vkDestroySampler(device, tex->sampler, nullptr);
+	tex->sampler = gvkCreateSampler(device, minFilter, magFilter, addressU, addressV);
+	if(tex->descriptorset != VK_NULL_HANDLE) {
+		VkDescriptorImageInfo imginfo{};
+		imginfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+		imginfo.imageView = tex->view;
+		imginfo.sampler = tex->sampler;
+		VkWriteDescriptorSet write{};
+		write.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+		write.dstSet = tex->descriptorset;
+		write.dstBinding = 0;
+		write.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+		write.descriptorCount = 1;
+		write.pImageInfo = &imginfo;
+		vkUpdateDescriptorSets(device, 1, &write, 0, nullptr);
+	}
+	return true;
 }
 
 bool gvkWriteTextureDescriptorSet(gVKContext& ctx, gVKTexture* tex) {

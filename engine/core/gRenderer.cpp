@@ -83,9 +83,9 @@ void gDrawArc(float xCenter, float yCenter, float radius, bool isFilled, int num
 	gRenderObject::getRenderer()->drawArc(xCenter, yCenter, radius, isFilled, numberOfSides, degree, rotate);
 }
 
-void gDrawArrow(float x1, float y1, float length, float angle, float tipLength, float tipAngle) {
+void gDrawArrow(float x1, float y1, float length, float angle, float tipLength, float tipAngle, float thickness) {
 	G_PROFILE_ZONE_SCOPED_N("gDrawArrow()");
-	gRenderObject::getRenderer()->drawArrow(x1, y1, length, angle, tipLength, tipAngle);
+	gRenderObject::getRenderer()->drawArrow(x1, y1, length, angle, tipLength, tipAngle, thickness);
 }
 
 void gDrawRectangle(float x, float y, float w, float h, bool isFilled) {
@@ -306,6 +306,13 @@ void gRenderer::init() {
 	fullscreenquadvbo = 0;
 	createFullscreenQuad(fullscreenquadvao, fullscreenquadvbo);
 
+	createPrimitiveMeshes();
+
+	enableSSAO();
+	enableSoftShadows();
+}
+
+void gRenderer::createPrimitiveMeshes() {
 	linemesh = std::make_unique<gLine>();
 	linemesh2 = std::make_unique<gLine>();
 	linemesh3 = std::make_unique<gLine>();
@@ -316,12 +323,9 @@ void gRenderer::init() {
 	rectanglemesh = std::make_unique<gRectangle>();
 	roundedrectanglemesh = std::make_unique<gRoundedRectangle>();
 	boxmesh = std::make_unique<gBox>();
-
-	enableSSAO();
-	enableSoftShadows();
 }
 
-void gRenderer::cleanup() {
+void gRenderer::destroyPrimitiveMeshes() {
 	// Setting unique pointers to nullptr will delete the underlying pointer
 	linemesh = nullptr;
 	linemesh2 = nullptr;
@@ -333,6 +337,10 @@ void gRenderer::cleanup() {
 	rectanglemesh = nullptr;
 	roundedrectanglemesh = nullptr;
 	boxmesh = nullptr;
+}
+
+void gRenderer::cleanup() {
+	destroyPrimitiveMeshes();
 
 	cleanupSSAOResources();
 
@@ -1568,18 +1576,6 @@ void gRenderer::drawLine(float x1, float y1, float z1, float x2, float y2, float
 
 void gRenderer::drawTriangle(float px, float py, float qx, float qy, float rx, float ry, bool is_filled) {
 	G_PROFILE_ZONE_SCOPED_N("gRenderer::drawTriangle()");
-	if(isVulkan()) {
-		// The Vulkan backend never built the primitive meshes (they need the GL
-		// path), so record the triangle straight into the frame instead. The 2D
-		// projection matches gTexture's: an ortho over the render size, top-left
-		// origin. The same three corners serve both forms - filled as one triangle,
-		// unfilled as a closed line loop.
-		glm::vec2 points[3] = {{px, py}, {qx, qy}, {rx, ry}};
-		glm::mat4 mvp = glm::ortho(0.0f, (float)getWidth(), (float)getHeight(), 0.0f, -1.0f, 1.0f);
-		drawColored2D(points, 3, glm::vec4(rendercolor->r, rendercolor->g, rendercolor->b, rendercolor->a), mvp,
-				!is_filled);
-		return;
-	}
 	trianglemesh->draw(px, py, qx, qy, rx, ry, is_filled);
 }
 
@@ -1598,35 +1594,41 @@ void gRenderer::drawArc(float xCenter, float yCenter, float radius, bool isFille
 	arcmesh->draw(xCenter, yCenter, radius, isFilled, numberOfSides, degree, rotate);
 }
 
-void gRenderer::drawArrow(float x1, float y1, float length, float angle, float tipLength, float tipAngle) {
+void gRenderer::drawArrow(float x1, float y1, float length, float angle, float tipLength, float tipAngle, float thickness) {
 	G_PROFILE_ZONE_SCOPED_N("gRenderer::drawArrow()");
-	float x2, y2;
-	x2 = x1 + std::cos(gDegToRad(angle)) * length;
-	y2 = y1 + std::sin(gDegToRad(angle)) * length;;
-	linemesh->draw(x2, y2, x1, y1);
-	linemesh2->draw(x1, y1, x1 + std::cos(gDegToRad(angle) - gDegToRad(tipAngle)) * tipLength, y1 + std::sin(gDegToRad(angle) - gDegToRad(tipAngle)) * tipLength);
-	linemesh3->draw(x1, y1, x1 + (std::cos(gDegToRad(angle) + gDegToRad(tipAngle)) * tipLength) , y1 + std::sin(gDegToRad(angle) + gDegToRad(tipAngle)) * tipLength);
+	float x2 = x1 + std::cos(gDegToRad(angle)) * length;
+	float y2 = y1 + std::sin(gDegToRad(angle)) * length;
+
+	linemesh->setThickness(thickness);
+	linemesh2->setThickness(thickness);
+	linemesh3->setThickness(thickness);
+
+	float halfThickness = thickness * 0.8f;
+
+	float upperTipAngle = tipAngle + 5.0f;
+	float lowerTipAngle = tipAngle + 5.0f;
+
+	float wing1Angle = angle - upperTipAngle;
+	float wing2Angle = angle + lowerTipAngle;
+
+	float wing1StartX = x1 - halfThickness * std::sin(gDegToRad(wing1Angle));
+	float wing1StartY = y1 + halfThickness * std::cos(gDegToRad(wing1Angle));
+
+	float wing2StartX = x1 + halfThickness * std::sin(gDegToRad(wing2Angle));
+	float wing2StartY = y1 - halfThickness * std::cos(gDegToRad(wing2Angle));
+
+	float shaftOffset = halfThickness / std::sin(gDegToRad(tipAngle));
+	float bodyStartX = x1 + std::cos(gDegToRad(angle)) * shaftOffset;
+	float bodyStartY = y1 + std::sin(gDegToRad(angle)) * shaftOffset;
+
+	linemesh->draw(bodyStartX, bodyStartY, x2, y2);
+
+	linemesh2->draw(wing1StartX, wing1StartY, wing1StartX + std::cos(gDegToRad(wing1Angle)) * tipLength, wing1StartY + std::sin(gDegToRad(wing1Angle)) * tipLength);
+	linemesh3->draw(wing2StartX, wing2StartY, wing2StartX + std::cos(gDegToRad(wing2Angle)) * tipLength, wing2StartY + std::sin(gDegToRad(wing2Angle)) * tipLength);
 }
 
 void gRenderer::drawRectangle(float x, float y, float w, float h, bool isFilled) {
 	G_PROFILE_ZONE_SCOPED_N("gRenderer::drawRectangle()");
-	if(isVulkan()) {
-		// Filled, that is two triangles covering the rectangle; unfilled, the four
-		// corners stroked as a closed loop.
-		glm::mat4 mvp = glm::ortho(0.0f, (float)getWidth(), (float)getHeight(), 0.0f, -1.0f, 1.0f);
-		glm::vec4 color(rendercolor->r, rendercolor->g, rendercolor->b, rendercolor->a);
-		if(isFilled) {
-			glm::vec2 points[6] = {
-				{x, y}, {x + w, y}, {x + w, y + h},
-				{x, y}, {x + w, y + h}, {x, y + h},
-			};
-			drawColored2D(points, 6, color, mvp);
-		} else {
-			glm::vec2 points[4] = {{x, y}, {x + w, y}, {x + w, y + h}, {x, y + h}};
-			drawColored2D(points, 4, color, mvp, true);
-		}
-		return;
-	}
 	rectanglemesh->draw(x, y, w, h, isFilled);
 }
 

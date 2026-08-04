@@ -92,24 +92,24 @@ void gVKRenderEngine::clearColor(gColor color) {
 #endif
 }
 
+// The render state setters below only remember what was asked for. There is no GL
+// context under Vulkan, so issuing GL calls here would at best be ignored and at
+// worst call through a null GLEW pointer; the state that the 2D path cares about is
+// read back through the is...Enabled() accessors instead.
 void gVKRenderEngine::enableDepthTest() {
-	G_CHECK_GL(enableDepthTest(DEPTHTESTTYPE_LESS));
+	enableDepthTest(DEPTHTESTTYPE_LESS);
 }
 
 void gVKRenderEngine::enableDepthTest(int depthTestType) {
-	G_CHECK_GL(glEnable(GL_DEPTH_TEST));
-	G_CHECK_GL(glDepthFunc(depthtesttypeid[depthTestType]));
 	isdepthtestenabled = true;
 	depthtesttype = depthTestType;
 }
 
 void gVKRenderEngine::setDepthTestFunc(int depthTestType) {
-	G_CHECK_GL(glDepthFunc(depthtesttypeid[depthTestType]));
 	depthtesttype = depthTestType;
 }
 
 void gVKRenderEngine::disableDepthTest() {
-	G_CHECK_GL(glDisable(GL_DEPTH_TEST));
 	isdepthtestenabled = false;
 }
 
@@ -122,13 +122,10 @@ int gVKRenderEngine::getDepthTestType() {
 }
 
 void gVKRenderEngine::enableAlphaBlending() {
-	G_CHECK_GL(glEnable(GL_BLEND));
-	G_CHECK_GL(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
 	isalphablendingenabled = true;
 }
 
 void gVKRenderEngine::disableAlphaBlending() {
-	G_CHECK_GL(glDisable(GL_BLEND));
 	isalphablendingenabled = false;
 }
 
@@ -137,18 +134,11 @@ bool gVKRenderEngine::isAlphaBlendingEnabled() {
 }
 
 void gVKRenderEngine::enableAlphaTest() {
-#if defined(WIN32) || defined(LINUX)
-	G_CHECK_GL(glEnable(GL_ALPHA_TEST));
-	G_CHECK_GL(glAlphaFunc(GL_GREATER, 0.1));
 	isalphatestenabled = true;
-#endif
 }
 
 void gVKRenderEngine::disableAlphaTest() {
-#if defined(WIN32) || defined(LINUX)
-	G_CHECK_GL(glDisable(GL_ALPHA_TEST));
 	isalphatestenabled = false;
-#endif
 }
 
 bool gVKRenderEngine::isAlphaTestEnabled() {
@@ -210,7 +200,11 @@ void gVKRenderEngine::setBufferRange(int index, GLuint buffer, int offset, int s
 
 // ----- VAO -----
 GLuint gVKRenderEngine::createVAO() {
-	return 0;
+	// There is no vertex array object under Vulkan, but gVbo treats GL_NONE as "not
+	// created yet" and asserts on it when binding, so a synthetic non-zero id is
+	// handed out. Nothing ever dereferences it: the Vulkan 2D path reads the mesh's
+	// own vertices and every VAO entry point here is a no-op.
+	return nextvkvaoid++;
 }
 
 void gVKRenderEngine::deleteVAO(GLuint& vao) {
@@ -256,7 +250,8 @@ void gVKRenderEngine::setVertexAttribDivisor(int index, int divisor) {
 }
 
 void gVKRenderEngine::setViewport(int x, int y, int width, int height) {
-	G_CHECK_GL(glViewport(x, y, width, height));
+	// The frame's viewport is dynamic state set when the render pass opens; this
+	// only records what was asked for.
 	viewportx = x;
 	viewporty = y;
 	viewportwidth = width;
@@ -607,7 +602,11 @@ void gVKRenderEngine::texImage2D(GLenum target, GLint internalFormat, int width,
 	for(size_t i = 0; i < pixels; i++) {
 		const unsigned char* p = src + i * components;
 		unsigned char r = 0, g = 0, b = 0, a = 255;
-		if(components == 1) { r = g = b = p[0]; }
+		// The expansion mirrors what OpenGL samples, so an image looks the same on
+		// both backends: a one channel texture reads as (r, 0, 0, 1) because the GL
+		// path applies no swizzle to it, while a two channel one is swizzled to
+		// (r, r, r, g) there and is expanded the same way here.
+		if(components == 1) { r = p[0]; g = 0; b = 0; }
 		else if(components == 2) { r = g = b = p[0]; a = p[1]; }
 		else if(components == 3) { r = p[0]; g = p[1]; b = p[2]; }
 		else { r = p[0]; g = p[1]; b = p[2]; a = p[3]; }
@@ -630,21 +629,62 @@ void gVKRenderEngine::texImage2D(GLenum target, GLint internalFormat, int width,
 #endif
 }
 
+#ifdef GVK_DESKTOP_GLFW
+// gTexture speaks in GL enums. Nearest is the only distinction the 2D path needs -
+// there is a single mip level, so the mipmap variants collapse onto their base
+// filter - and the clamping wrap modes all map onto clamp to edge, which is what
+// the GL path resolves them to as well.
+static VkFilter gvkFilterFromGL(GLint filter) {
+	return (filter == GL_NEAREST || filter == GL_NEAREST_MIPMAP_NEAREST || filter == GL_NEAREST_MIPMAP_LINEAR)
+			? VK_FILTER_NEAREST : VK_FILTER_LINEAR;
+}
+
+static VkSamplerAddressMode gvkAddressFromGL(GLint wrap) {
+	if(wrap == GL_MIRRORED_REPEAT) return VK_SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT;
+	if(wrap == GL_REPEAT) return VK_SAMPLER_ADDRESS_MODE_REPEAT;
+	return VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
+}
+#endif
+
+// The bound texture's sampler is rebuilt from whichever half of the state the call
+// carries; the other half is whatever the texture already has. A call that arrives
+// before the pixels do is ignored, because the upload path sets both again right
+// afterwards.
 void gVKRenderEngine::setWrapping(GLenum target, GLint wrapS, GLint wrapT) {
+#ifdef GVK_DESKTOP_GLFW
+	gVKTexture* tex = getBoundVKTexture();
+	if(tex == nullptr) return;
+	gvkSetTextureSampler(*vkcontext, tex, tex->minfilter, tex->magfilter,
+			gvkAddressFromGL(wrapS), gvkAddressFromGL(wrapT));
+#endif
 }
 
 void gVKRenderEngine::setWrapping(GLenum target, GLint wrapS, GLint wrapT, GLint wrapR) {
+	setWrapping(target, wrapS, wrapT);
 }
 
 void gVKRenderEngine::setFiltering(GLenum target, GLint minFilter, GLint magFilter) {
+#ifdef GVK_DESKTOP_GLFW
+	gVKTexture* tex = getBoundVKTexture();
+	if(tex == nullptr) return;
+	gvkSetTextureSampler(*vkcontext, tex, gvkFilterFromGL(minFilter), gvkFilterFromGL(magFilter),
+			tex->addressu, tex->addressv);
+#endif
 }
 
 void gVKRenderEngine::setWrappingAndFiltering(GLenum target, GLint wrapS, GLint wrapT, GLint minFilter,
                                               GLint magFilter) {
+#ifdef GVK_DESKTOP_GLFW
+	gVKTexture* tex = getBoundVKTexture();
+	if(tex == nullptr) return;
+	gvkSetTextureSampler(*vkcontext, tex, gvkFilterFromGL(minFilter), gvkFilterFromGL(magFilter),
+			gvkAddressFromGL(wrapS), gvkAddressFromGL(wrapT));
+#endif
 }
 
 void gVKRenderEngine::setWrappingAndFiltering(GLenum target, GLint wrapS, GLint wrapT, GLint wrapR, GLint minFilter,
                                               GLint magFilter) {
+	setWrappingAndFiltering(target, wrapS, wrapT, minFilter, magFilter);
 }
 
 void gVKRenderEngine::setSwizzleMask(GLint swizzleMask[4]) {
@@ -1343,6 +1383,11 @@ void gVKRenderEngine::init() {
 	// the 2D draw helpers read the current colour, so create a white default here.
 	rendercolor = new gColor();
 	rendercolor->set(255, 255, 255, 255);
+	// The primitive meshes are created by gRenderer::init() as well. They hold no GL
+	// objects until they are drawn, and the 2D ones now record through the backend's
+	// draw path, so drawLine / drawCircle / drawRectangle and friends need them here
+	// just as much as the OpenGL path does.
+	createPrimitiveMeshes();
 	if(!initVulkan()) {
 		gLoge("gVKRenderEngine") << "Vulkan initialization failed; the Vulkan backend is not usable.";
 	}
@@ -1351,27 +1396,64 @@ void gVKRenderEngine::init() {
 
 void gVKRenderEngine::cleanup() {
 	// The GL resources gRenderer::cleanup() would release were never created,
-	// because init() skips gRenderer::init(). rendercolor is the one thing init()
-	// did allocate, so it is freed here.
+	// because init() skips gRenderer::init(). The primitive meshes and rendercolor
+	// are what init() did allocate, so they are released here.
+	destroyPrimitiveMeshes();
 	cleanupVulkan();
 	delete rendercolor;
 	rendercolor = nullptr;
 }
 
 void gVKRenderEngine::drawColored2D(const glm::vec2* points, int count, const glm::vec4& color, const glm::mat4& mvp,
-		bool lineLoop) {
+		int drawMode) {
 #ifdef GVK_DESKTOP_GLFW
 	if(vkcontext == nullptr) return;
-	gvkDrawColored2D(*vkcontext, points, count, color, mvp, lineLoop);
+	// The mesh path speaks in GL primitive constants; translate them into the modes
+	// the Vulkan draw path expands. GL_POINTS has no pipeline of its own and no 2D
+	// primitive asks for it, so such a mesh is skipped rather than drawn as
+	// something else.
+	int mode;
+	switch(drawMode) {
+	case GL_TRIANGLES: mode = GVK_DRAW2D_TRIANGLES; break;
+	case GL_TRIANGLE_STRIP: mode = GVK_DRAW2D_TRIANGLESTRIP; break;
+	case GL_TRIANGLE_FAN: mode = GVK_DRAW2D_TRIANGLEFAN; break;
+	case GL_LINES: mode = GVK_DRAW2D_LINES; break;
+	case GL_LINE_STRIP: mode = GVK_DRAW2D_LINESTRIP; break;
+	case GL_LINE_LOOP: mode = GVK_DRAW2D_LINELOOP; break;
+	default: return;
+	}
+	// The colour pipeline always blends, while OpenGL only blends when the app asked
+	// for it - with blending off it writes the colour straight into the framebuffer.
+	// Forcing alpha to 1 reproduces exactly that, since src * 1 + dst * 0 is the
+	// source colour, and it avoids a second pipeline just for the disabled state.
+	glm::vec4 drawcolor = color;
+	if(!isalphablendingenabled) drawcolor.a = 1.0f;
+	gvkDrawColored2D(*vkcontext, points, count, drawcolor, mvp, mode);
 #endif
 }
 
-void gVKRenderEngine::drawTexturedRect2D(GLuint textureId, const glm::vec4& tint, const glm::mat4& mvp) {
+void gVKRenderEngine::drawTexturedRect2D(GLuint textureId, GLuint maskTextureId, const glm::vec4& tint,
+		const glm::mat4& mvp, const glm::vec2& uvOffset, const glm::vec2& uvScale) {
 #ifdef GVK_DESKTOP_GLFW
 	if(vkcontext == nullptr) return;
 	auto it = vktextures.find(textureId);
 	if(it == vktextures.end() || it->second == nullptr) return;
-	gvkDrawTextured2D(*vkcontext, it->second->descriptorset, tint, mvp);
+	VkDescriptorSet maskset = VK_NULL_HANDLE;
+	if(maskTextureId != 0) {
+		auto maskit = vktextures.find(maskTextureId);
+		if(maskit != vktextures.end() && maskit->second != nullptr) maskset = maskit->second->descriptorset;
+	}
+	gvkDrawTextured2D(*vkcontext, it->second->descriptorset, maskset, tint, mvp, uvOffset, uvScale);
+#endif
+}
+
+gVKTexture* gVKRenderEngine::getBoundVKTexture() {
+#ifdef GVK_DESKTOP_GLFW
+	if(vkcontext == nullptr || boundtextureid == 0) return nullptr;
+	auto it = vktextures.find(boundtextureid);
+	return it == vktextures.end() ? nullptr : it->second;
+#else
+	return nullptr;
 #endif
 }
 

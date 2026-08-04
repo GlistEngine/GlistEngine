@@ -85,7 +85,7 @@ void gDrawTriangle(float px, float py, float qx, float qy, float rx, float ry, b
 void gDrawCircle(float xCenter, float yCenter, float radius, bool isFilled = false, float numberOfSides = 64.0f);
 void gDrawCross(float x, float y, float width, float height, float thickness, bool isFilled);
 void gDrawArc(float xCenter, float yCenter, float radius, bool isFilled = true, int numberOfSides = 60, float degree = 360.0f, float rotate = 360.0f);
-void gDrawArrow(float x1, float y1, float length, float angle, float tipLength, float tipAngle);
+void gDrawArrow(float x1, float y1, float length, float angle, float tipLength, float tipAngle, float thickness = 1.0f);
 void gDrawRectangle(float x, float y, float w, float h, bool isFilled = false);
 void gDrawRoundedRectangle(float x, float y, float w, float h, int radius, bool isFilled);
 void gDrawBox(float x, float y, float z, float w = 1.0f, float h = 1.0f, float d = 1.0f, bool isFilled = true);
@@ -263,20 +263,23 @@ public:
 	int getRenderEngineType() const { return renderenginetype; }
 	bool isVulkan() const { return renderenginetype == G_RENDERER_VK; }
 
-	// Backend hook for the 2D coloured primitives (triangle, rectangle). OpenGL
-	// draws these through the mesh path and leaves this a no-op; the Vulkan backend
-	// overrides it to record into the active frame. points holds `count` 2D screen
-	// positions and colour components are 0..1. By default the points form a filled
-	// triangle list (three per triangle); with lineLoop set they are the corners of
-	// an outline, stroked as a closed loop the way the mesh path does.
+	// Backend hook for the 2D coloured primitives. OpenGL draws these through the
+	// mesh path and leaves this a no-op; the Vulkan backend overrides it to record
+	// into the active frame. points holds `count` 2D screen positions connected as
+	// drawMode says (a gMesh::DRAWMODE_* value, that is a GL primitive constant),
+	// and colour components are 0..1.
 	virtual void drawColored2D(const glm::vec2* points, int count, const glm::vec4& color, const glm::mat4& mvp,
-			bool lineLoop = false) {}
+			int drawMode = GL_TRIANGLES) {}
 
 	// Backend hook for a textured 2D quad (gImage / gTexture). OpenGL draws through
 	// its image shader and leaves this a no-op; Vulkan looks the texture id up in
 	// its registry and records a textured unit quad. tint components are 0..1; mvp
-	// is projection2d * the image model matrix.
-	virtual void drawTexturedRect2D(GLuint textureId, const glm::vec4& tint, const glm::mat4& mvp) {}
+	// is projection2d * the image model matrix. uvOffset / uvScale select the part
+	// of the texture to sample, covering all of it by default. maskTextureId is an
+	// alpha mask sampled with the same coordinates, or 0 for an unmasked draw.
+	virtual void drawTexturedRect2D(GLuint textureId, GLuint maskTextureId, const glm::vec4& tint,
+			const glm::mat4& mvp,
+			const glm::vec2& uvOffset = glm::vec2(0.0f), const glm::vec2& uvScale = glm::vec2(1.0f)) {}
 
 	virtual void clear() = 0;
 	virtual void clearColor(int r, int g, int b, int a = 255) = 0;
@@ -540,7 +543,7 @@ public:
 	void drawCircle(float xCenter, float yCenter, float radius, bool isFilled = false, float numberOfSides = 64.0f);
 	void drawCross(float x, float y, float width, float height, float thickness, bool isFilled);
 	void drawArc(float xCenter, float yCenter, float radius, bool isFilled = true, int numberOfSides = 60, float degree = 360.0f, float rotate = 360.0f);
-	void drawArrow(float x1, float y1, float length, float angle, float tipLength, float tipAngle);
+	void drawArrow(float x1, float y1, float length, float angle, float tipLength, float tipAngle, float thickness = 1.0f);
 	void drawRectangle(float x, float y, float w, float h, bool isFilled = false);
 	void drawRoundedRectangle(float x, float y, float w, float h, int radius, bool isFilled);
 	void drawBox(float x, float y, float z, float w = 1.0f, float h = 1.0f, float d = 1.0f, bool isFilled = true);
@@ -663,6 +666,13 @@ protected:
 	virtual void init();
 	virtual void cleanup();
 	virtual void updatePackUnpackAlignment(int i) = 0;
+
+	// The primitive meshes above are what drawLine / drawCircle / drawRectangle and
+	// friends draw through. They hold no backend objects of their own until they are
+	// drawn, so both backends create them the same way - the Vulkan backend needs
+	// them too, and it skips init().
+	void createPrimitiveMeshes();
+	void destroyPrimitiveMeshes();
 
 	static const std::string& getShaderSrcGridVertex();
 	static const std::string& getShaderSrcGridFragment();

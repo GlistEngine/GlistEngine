@@ -11,10 +11,12 @@
 gTweenAnimation::gTweenAnimation() {}
 gTweenAnimation::~gTweenAnimation() {}
 
-void gTweenAnimation::Set(float startvalue, float endvalue, float duration, float *targetptr, EASE_TYPE easetype, std::function<void()> FinishCallback) {
+void gTweenAnimation::Set(float startvalue, float endvalue, float duration, float *targetptr, EASE_TYPE easetype, std::function<void()> FinishCallback, float delay) {
     this->startvalue = startvalue;
     this->endvalue = endvalue;
     this->duration = (duration <= 0.0f) ? 0.001f : duration; // To prevent to devide to 0 bug
+    this->delay = (delay < 0.0f) ? 0.0f : delay;
+    this->delaytimer = this->delay;
     this->elapsedtime = 0.0f;
     this->targetptr = targetptr;
     this->easetype = easetype;
@@ -23,12 +25,35 @@ void gTweenAnimation::Set(float startvalue, float endvalue, float duration, floa
     this->isfinished = false;
     AssignEaseFunction();
 }
+
+void gTweenAnimation::setDelay(float delay) {
+    this->delay = (delay < 0.0f) ? 0.0f : delay;
+    this->delaytimer = this->delay;
+}
+
+float gTweenAnimation::getDelay() const {
+    return delay;
+}
+
+bool gTweenAnimation::isDelaying() const {
+    return isactive && (delaytimer > 0.0f);
+}
+
 void gTweenAnimation::SetEasetype(EASE_TYPE easetype) {
     this->easetype = easetype;
     AssignEaseFunction();
 }
+
 void gTweenAnimation::Update(float deltatime) {
     if (!isactive || isfinished) return;
+
+    if (delaytimer > 0.0f) {
+        delaytimer -= deltatime;
+        if (delaytimer > 0.0f) {
+            return;
+        }
+        delaytimer = 0.0f;
+    }
 
     elapsedtime += deltatime;
     // isfinished will be setted true when duration is reached
@@ -52,11 +77,13 @@ void gTweenAnimation::Update(float deltatime) {
         if (repeatcount == -1) {
             //Unlimited cycle
             elapsedtime = 0.0f;
+            delaytimer = delay;
             isfinished = false;
         } else if (repeatcount > 1) {
             //Decrease work count time
             repeatcount--;
             elapsedtime = 0.0f;
+            delaytimer = delay;
             isfinished = false;
         } else {
             // repeatcount == 0 (Animasyon is finished)
@@ -109,6 +136,7 @@ void gTweenAnimation::Destroy() {}
 
 void gTweenAnimation::Reset(int repeatcount) {
     elapsedtime = 0.0f;
+    delaytimer = delay;
     isfinished = false;
     this->repeatcount = repeatcount;
     if (targetptr != nullptr) {
@@ -120,6 +148,7 @@ void gTweenAnimation::Reset(int repeatcount) {
 void gTweenAnimation::Start(int repeatcount) {
     isactive = true;
     elapsedtime = 0.0f;
+    delaytimer = delay;
     isfinished = false;
     this->repeatcount = repeatcount;
     if (targetptr != nullptr) {

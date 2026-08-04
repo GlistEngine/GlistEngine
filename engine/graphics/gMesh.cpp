@@ -45,6 +45,7 @@ gMesh::gMesh(const gMesh& other) {
 	name = other.name;
 	drawmode = DRAWMODE_TRIANGLES;
 	isprojection2d = false;
+    texturetiling = other.texturetiling;
 	setVertices(other.vertices, other.indices);
 	setTextures(other.textures);
 }
@@ -152,6 +153,18 @@ gTexture* gMesh::getTexture(gTexture::TextureType textureType) {
 	return textures[textureType];
 }
 
+void gMesh::setTextureTiling(float tilingX, float tilingY) {
+    texturetiling = glm::vec2(tilingX, tilingY);
+}
+
+void gMesh::setTextureTiling(float tiling) {
+    setTextureTiling(tiling, tiling);
+}
+
+const glm::vec2& gMesh::getTextureTiling() const {
+    return texturetiling;
+}
+
 void gMesh::setDrawMode(int drawMode) {
 	drawmode = drawMode;
 }
@@ -172,6 +185,11 @@ void gMesh::draw() {
 	G_PROFILE_ZONE_SCOPED_N("gMesh::draw()");
 	if (!isenabled) return;
 
+	if (renderer->isVulkan()) {
+		drawVulkan2D();
+		return;
+	}
+
 	drawStart();
 	drawVbo();
 	drawExtraShaders();
@@ -184,6 +202,11 @@ void gMesh::drawInstanced(const std::vector<glm::mat4>& instanceTransformations)
     if (!isenabled || instanceTransformations.empty()) {
         return;
     }
+
+    // Instancing is an OpenGL-only path for now: it needs the colour shader's
+    // useInstancing branch and a per-instance vertex buffer, neither of which the
+    // Vulkan 2D pipelines have. Without this the call would reach a null shader.
+    if (renderer->isVulkan()) return;
 
     drawStart(true);
     drawVboInstanced(instanceTransformations);
@@ -293,6 +316,7 @@ void gMesh::drawStart(bool isInstanced) {
 		if(!material.isPBR()) {
 			gShader& colorshader = *renderer->getColorShader();
 			colorshader.use();
+			colorshader.setVec2("textureTiling", texturetiling);
 			bindMaterialUniforms(colorshader);
 			bindMaterialTextures(colorshader);
 
@@ -306,6 +330,7 @@ void gMesh::drawStart(bool isInstanced) {
 		} else { // isPBR
 			gShader& pbrshader = *renderer->getPbrShader();
 			pbrshader.use();
+			pbrshader.setVec2("textureTiling", texturetiling);
 			pbrshader.setMat4("projection", renderer->getProjectionMatrix());
 			pbrshader.setMat4("view", renderer->getViewMatrix());
 			pbrshader.setMat4("model", localtransformationmatrix.back());
@@ -327,6 +352,46 @@ void gMesh::drawVbo() {
     }
     vbo->unbind();
 //    vbo.clear();
+}
+
+void gMesh::drawVulkan2D() {
+	G_PROFILE_ZONE_SCOPED_N("gMesh::drawVulkan2D()");
+	// Only 2D meshes are recorded so far. A 3D mesh needs lighting, materials and a
+	// view matrix that the backend's two colour pipelines do not carry, so drawing
+	// it here would be wrong rather than merely unfinished - it is skipped instead.
+	if (!isprojection2d) return;
+
+	const std::vector<gVertex>& verts = *vertices;
+	if (verts.empty()) return;
+	const std::vector<gIndex>& inds = *indices;
+
+	// The colour pipeline takes plain 2D positions, so the mesh is flattened here:
+	// indices are resolved and z is dropped (a 2D mesh keeps it at 0). The draw mode
+	// travels with the points, because a fan, a strip and a line loop each need a
+	// different expansion on the Vulkan side. The scratch buffer is reused between
+	// draws so a per-frame primitive allocates nothing.
+	static thread_local std::vector<glm::vec2> points;
+	points.clear();
+	if (inds.empty()) {
+		points.reserve(verts.size());
+		for (const gVertex& vertex : verts) {
+			points.emplace_back(vertex.position.x, vertex.position.y);
+		}
+	} else {
+		points.reserve(inds.size());
+		for (gIndex index : inds) {
+			if (index >= verts.size()) return;
+			points.emplace_back(verts[index].position.x, verts[index].position.y);
+		}
+	}
+
+	// The model matrix rides in the mvp exactly like the OpenGL colour shader gets
+	// it, and the colour is the renderer's current one - the 2D primitives are drawn
+	// flat, without the material the 3D path applies.
+	glm::mat4 mvp = renderer->getProjectionMatrix2d() * localtransformationmatrix.back();
+	gColor* color = renderer->getColor();
+	renderer->drawColored2D(points.data(), static_cast<int>(points.size()),
+			glm::vec4(color->r, color->g, color->b, color->a), mvp, drawmode);
 }
 
 void gMesh::drawVboInstanced(const std::vector<glm::mat4>& instanceTransformations) {

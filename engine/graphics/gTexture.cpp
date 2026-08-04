@@ -654,11 +654,26 @@ void gTexture::endDraw() {
 	if(renderer->isVulkan()) {
 		// imagematrix already carries the translate/rotate/scale built up in draw();
 		// combine it with the 2D projection and hand the texture to the Vulkan draw
-		// path. Sub-part and alpha-mask draws are not handled here yet - the whole
-		// texture is drawn tinted by the current colour.
+		// path. A sub-part draw narrows the sampled rectangle the same way the image
+		// shader does, TexCoords = (uv + subpos) / subscale, except that the Vulkan
+		// path bakes it into the quad's texture coordinates.
 		glm::mat4 mvp = renderer->getProjectionMatrix2d() * imagematrix;
 		gColor* c = renderer->getColor();
-		renderer->drawTexturedRect2D(id, glm::vec4(c->r, c->g, c->b, c->a), mvp);
+		glm::vec2 uvoffset(0.0f);
+		glm::vec2 uvscale(1.0f);
+		if(issubpart) {
+			uvoffset = subpos / subscale;
+			uvscale = 1.0f / subscale;
+		}
+		// The image pipeline always blends. Below, the OpenGL path turns blending on
+		// for the formats that need it and leaves it alone otherwise, so a tint alpha
+		// only reaches the screen when one of those two holds; forcing it to 1 in the
+		// remaining case keeps the two backends showing the same pixels.
+		glm::vec4 tint(c->r, c->g, c->b, c->a);
+		bool needsalphablending = format == GL_RGBA || format == GL_RG || ismaskloaded;
+		if(!needsalphablending && !renderer->isAlphaBlendingEnabled()) tint.a = 1.0f;
+		GLuint maskid = (ismaskloaded && masktexture != nullptr) ? masktexture->getId() : 0;
+		renderer->drawTexturedRect2D(id, maskid, tint, mvp, uvoffset, uvscale);
 		return;
 	}
 	renderer->getImageShader()->setMat4("projection", renderer->getProjectionMatrix2d());
