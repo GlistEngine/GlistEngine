@@ -86,7 +86,7 @@ void gDrawCircle(float xCenter, float yCenter, float radius, bool isFilled = fal
 void gDrawCross(float x, float y, float width, float height, float thickness, bool isFilled);
 void gDrawArc(float xCenter, float yCenter, float radius, bool isFilled = true, int numberOfSides = 60, float degree = 360.0f, float rotate = 360.0f);
 void gDrawArrow(float x1, float y1, float length, float angle, float tipLength, float tipAngle, float thickness = 1.0f);
-void gDrawRectangle(float x, float y, float w, float h, bool isFilled = false);
+void gDrawRectangle(float x, float y, float w, float h, bool isFilled = false, float rotateAngle = 0.0f);
 void gDrawRoundedRectangle(float x, float y, float w, float h, int radius, bool isFilled);
 void gDrawBox(float x, float y, float z, float w = 1.0f, float h = 1.0f, float d = 1.0f, bool isFilled = true);
 void gDrawBox(glm::mat4 transformationMatrix, bool isFilled = true);
@@ -544,7 +544,7 @@ public:
 	void drawCross(float x, float y, float width, float height, float thickness, bool isFilled);
 	void drawArc(float xCenter, float yCenter, float radius, bool isFilled = true, int numberOfSides = 60, float degree = 360.0f, float rotate = 360.0f);
 	void drawArrow(float x1, float y1, float length, float angle, float tipLength, float tipAngle, float thickness = 1.0f);
-	void drawRectangle(float x, float y, float w, float h, bool isFilled = false);
+	void drawRectangle(float x, float y, float w, float h, bool isFilled = false, float rotateAngle = 0.0f);
 	void drawRoundedRectangle(float x, float y, float w, float h, int radius, bool isFilled);
 	void drawBox(float x, float y, float z, float w = 1.0f, float h = 1.0f, float d = 1.0f, bool isFilled = true);
 	void drawBox(glm::mat4 transformationMatrix, bool isFilled = true);

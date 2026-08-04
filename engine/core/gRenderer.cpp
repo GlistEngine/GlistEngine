@@ -88,9 +88,9 @@ void gDrawArrow(float x1, float y1, float length, float angle, float tipLength, 
 	gRenderObject::getRenderer()->drawArrow(x1, y1, length, angle, tipLength, tipAngle, thickness);
 }
 
-void gDrawRectangle(float x, float y, float w, float h, bool isFilled) {
+void gDrawRectangle(float x, float y, float w, float h, bool isFilled, float rotateAngle) {
 	G_PROFILE_ZONE_SCOPED_N("gDrawRectangle()");
-	gRenderObject::getRenderer()->drawRectangle(x, y, w, h, isFilled);
+	gRenderObject::getRenderer()->drawRectangle(x, y, w, h, isFilled, rotateAngle);
 }
 
 void gDrawRoundedRectangle(float x, float y, float w, float h, int radius, bool isFilled) {
@@ -1627,9 +1627,9 @@ void gRenderer::drawArrow(float x1, float y1, float length, float angle, float t
 	linemesh3->draw(wing2StartX, wing2StartY, wing2StartX + std::cos(gDegToRad(wing2Angle)) * tipLength, wing2StartY + std::sin(gDegToRad(wing2Angle)) * tipLength);
 }
 
-void gRenderer::drawRectangle(float x, float y, float w, float h, bool isFilled) {
+void gRenderer::drawRectangle(float x, float y, float w, float h, bool isFilled, float rotateAngle) {
 	G_PROFILE_ZONE_SCOPED_N("gRenderer::drawRectangle()");
-	rectanglemesh->draw(x, y, w, h, isFilled);
+	rectanglemesh->draw(x, y, w, h, isFilled, rotateAngle);
 }
 
 void gRenderer::drawRoundedRectangle(float x, float y, float w, float h, int radius, bool isFilled) {

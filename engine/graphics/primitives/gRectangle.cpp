@@ -6,6 +6,7 @@
  */
 
 #include "gRectangle.h"
+#include <cmath>
 
 /*
  * Draws a rectangle.
@@ -16,20 +17,21 @@
  * @param w Width of rectangle.
  * @param h Height of rectangle.
  * @param isFilled Specifies whether the rectangle is filled or empty.
+ * @param rotateAngle Rotation angle in radians, applied around the rectangle's center.
  */
 
 gRectangle::gRectangle() {
 
 }
 
-gRectangle::gRectangle(float x, float y, float w, float h, bool isFilled) {
+gRectangle::gRectangle(float x, float y, float w, float h, bool isFilled, float rotateAngle) {
 	isprojection2d = true;
-	setRectanglePoints(x, y, w, h, isFilled);
+	setRectanglePoints(x, y, w, h, isFilled, rotateAngle);
 }
 
-void gRectangle::setPoints(float x, float y, float w, float h, bool isFilled) {
+void gRectangle::setPoints(float x, float y, float w, float h, bool isFilled, float rotateAngle) {
 	isprojection2d = true;
-	setRectanglePoints(x, y, w, h, isFilled);
+	setRectanglePoints(x, y, w, h, isFilled, rotateAngle);
 }
 
 void gRectangle::draw() {
@@ -37,22 +39,38 @@ void gRectangle::draw() {
 	gMesh::draw();
 }
 
-void gRectangle::draw(float x, float y, float w, float h, bool isFilled) {
+void gRectangle::draw(float x, float y, float w, float h, bool isFilled, float rotateAngle) {
 	isprojection2d = true;
-	setRectanglePoints(x, y, w, h, isFilled);
+	setRectanglePoints(x, y, w, h, isFilled, rotateAngle);
 	gMesh::draw();
 }
 
-void gRectangle::setRectanglePoints(float x, float y, float w, float h, bool isFilled) {
+void gRectangle::setRectanglePoints(float x, float y, float w, float h, bool isFilled, float rotateAngle) {
 	if(!verticessb.empty()) {
 		verticessb.clear();
 		indicessb.clear();
 	}
 
-	verticessb.push_back({{x, y, 0.0f}});
-	verticessb.push_back({{x + w, y, 0.0f}});
-	verticessb.push_back({{x + w, y + h, 0.0f}});
-	verticessb.push_back({{x, y + h, 0.0f}});
+	// Rectangle's center, rotation pivot point
+	float cx = x + w * 0.5f;
+	float cy = y + h * 0.5f;
+
+	float cosA = std::cos(rotateAngle);
+	float sinA = std::sin(rotateAngle);
+
+	// Rotates a point around the rectangle's center by rotateAngle (radians)
+	auto rotatePoint = [&](float px, float py) -> glm::vec3 {
+		float dx = px - cx;
+		float dy = py - cy;
+		float rx = dx * cosA - dy * sinA;
+		float ry = dx * sinA + dy * cosA;
+		return glm::vec3(cx + rx, cy + ry, 0.0f);
+	};
+
+	verticessb.push_back({rotatePoint(x, y)});
+	verticessb.push_back({rotatePoint(x + w, y)});
+	verticessb.push_back({rotatePoint(x + w, y + h)});
+	verticessb.push_back({rotatePoint(x, y + h)});
 
 	if (isFilled) {
 		indicessb.push_back(0);
