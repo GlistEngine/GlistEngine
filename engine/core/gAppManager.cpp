@@ -563,7 +563,13 @@ void gAppManager::tick() {
         if(!isguiapp) app->update();
         if(vkcanvas) vkcanvas->update();
         if(renderer != nullptr && renderer->beginFrame()) {
-            if(vkcanvas) vkcanvas->draw();
+            if(vkcanvas) {
+                for(int i = 0; i < renderpassnum; i++) {
+                    renderpassno = i;
+                    renderer->updateScene();
+                    vkcanvas->draw();
+                }
+            }
             renderer->endFrame();
             totaldraws++;
         }
