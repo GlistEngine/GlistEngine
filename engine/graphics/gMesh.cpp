@@ -437,17 +437,45 @@ void gMesh::drawVulkanMesh() {
 		}
 		gColor* ambient = material.getAmbientColor();
 		gColor* diffuse = material.getDiffuseColor();
-		GLuint textureid = 0;
+		gColor* specular = material.getSpecularColor();
+		gRenderer::MaterialTextures3D materialtextures;
 		gTexture* diffusemap = material.isMapEnabled(gTexture::TEXTURETYPE_DIFFUSE)
 				? material.getMap(gTexture::TEXTURETYPE_DIFFUSE) : nullptr;
 		if(diffusemap == nullptr && material.isMapEnabled(gTexture::TEXTURETYPE_PBR_ALBEDO)) {
 			diffusemap = material.getMap(gTexture::TEXTURETYPE_PBR_ALBEDO);
 		}
-		if(diffusemap != nullptr) textureid = diffusemap->getId();
+		if(diffusemap != nullptr) materialtextures.albedo = diffusemap->getId();
+		const auto mapid = [this](gTexture::TextureType type) -> GLuint {
+			gTexture* map = material.isMapEnabled(type) ? material.getMap(type) : nullptr;
+			return map != nullptr ? map->getId() : 0;
+		};
+		materialtextures.normal = mapid(material.isPBR() ? gTexture::TEXTURETYPE_PBR_NORMAL : gTexture::TEXTURETYPE_NORMAL);
+		materialtextures.metallic = mapid(gTexture::TEXTURETYPE_PBR_METALNESS);
+		materialtextures.roughness = mapid(gTexture::TEXTURETYPE_PBR_ROUGHNESS);
+		materialtextures.ao = mapid(gTexture::TEXTURETYPE_PBR_AO);
+		gRenderer::MaterialLighting3D lighting;
+		lighting.globalAmbient = renderer->getGlobalAmbientColor()->asVec4();
+		lighting.lightCount = std::min(renderer->getSceneLightNum(), GLIST_MAX_LIGHTS);
+		for(int i = 0; i < lighting.lightCount; i++) {
+			gLight* light = renderer->getSceneLight(i);
+			if(light == nullptr) continue;
+			auto& dst = lighting.lights[i];
+			dst.type = light->getType();
+			dst.position = light->getPosition();
+			dst.direction = light->getDirection();
+			dst.ambient = light->getAmbientColor()->asVec4();
+			dst.diffuse = light->getDiffuseColor()->asVec4();
+			dst.specular = light->getSpecularColor()->asVec4();
+			dst.attenuation = light->getAttenuation();
+			dst.spotCutoff = glm::vec2(light->getSpotCutOffAngle(), light->getSpotOuterCutOffAngle());
+			if(renderer->isLightingEnabled() && light->isEnabled()) lighting.enabledMask |= 1u << i;
+		}
 		renderer->drawMaterialMesh3D(drawvertices->data(), static_cast<int>(drawvertices->size()),
 				glm::vec4(ambient->r, ambient->g, ambient->b, ambient->a),
-				glm::vec4(diffuse->r, diffuse->g, diffuse->b, diffuse->a), material.isPBR(),
-				textureid, mvp, DRAWMODE_TRIANGLES);
+				glm::vec4(diffuse->r, diffuse->g, diffuse->b, diffuse->a),
+				glm::vec4(specular->r, specular->g, specular->b, specular->a), material.getShininess(),
+				material.isPBR(),
+				materialtextures, lighting, mvp, DRAWMODE_TRIANGLES);
 	}
 }
 

@@ -9,7 +9,7 @@ layout(push_constant) uniform Push {
     mat4 mvp;
     vec4 ambientProduct;
     vec4 diffuseProduct;
-    vec4 lightDirectionTextured;
+    vec4 materialSpecularShininess;
     vec4 cameraPositionPbr;
 } pc;
 

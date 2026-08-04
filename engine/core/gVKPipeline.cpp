@@ -270,7 +270,7 @@ static void gvkDestroyParts(VkDevice device, gvkPipelineParts& parts) {
 // Sized from the descriptor types the shaders actually declare, so a shader that
 // starts using a different resource kind gets a pool that can serve it.
 static bool gvkCreateDescriptorPool(VkDevice device, const gvkPipelineParts& color, const gvkPipelineParts& image,
-		VkDescriptorPool& outPool) {
+		const gvkPipelineParts& color3d, VkDescriptorPool& outPool) {
 	std::vector<VkDescriptorPoolSize> sizes;
 	auto add = [&sizes](const std::vector<gVKReflectedBinding>& bindings) {
 		for(const gVKReflectedBinding& b : bindings) {
@@ -282,6 +282,7 @@ static bool gvkCreateDescriptorPool(VkDevice device, const gvkPipelineParts& col
 	};
 	add(color.bindings);
 	add(image.bindings);
+	add(color3d.bindings);
 	if(sizes.empty()) return true;   // no shader declares a descriptor; nothing to pool
 
 	VkDescriptorPoolCreateInfo poolinfo{};
@@ -308,7 +309,7 @@ static bool gvkBuildAll(VkDevice device, VkFormat colorFormat, VkFormat depthFor
 					shaders.spirv[GVK_STAGE_IMAGE_VERT], shaders.spirv[GVK_STAGE_IMAGE_FRAG], false, false, image) &&
 			gvkBuildPipeline(device, colorFormat, depthFormat, "3D material",
 					shaders.spirv[GVK_STAGE_COLOR3D_VERT], shaders.spirv[GVK_STAGE_COLOR3D_FRAG], false, true, color3d) &&
-			gvkCreateDescriptorPool(device, color, image, pool)) {
+			gvkCreateDescriptorPool(device, color, image, color3d, pool)) {
 		return true;
 	}
 	if(pool != VK_NULL_HANDLE) { vkDestroyDescriptorPool(device, pool, nullptr); pool = VK_NULL_HANDLE; }

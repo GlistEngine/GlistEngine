@@ -1457,16 +1457,26 @@ void gVKRenderEngine::drawColored2D(const glm::vec2* points, int count, const gl
 }
 
 void gVKRenderEngine::drawMaterialMesh3D(const MeshVertex3D* vertices, int count, const glm::vec4& ambient,
-		const glm::vec4& diffuse, bool pbr,
-		GLuint textureId, const glm::mat4& mvp, int drawMode) {
+		const glm::vec4& diffuse, const glm::vec4& specular, float shininess, bool pbr,
+		const MaterialTextures3D& textures, const MaterialLighting3D& lighting,
+		const glm::mat4& mvp, int drawMode) {
 #ifdef GVK_DESKTOP_GLFW
 	if(vkcontext == nullptr || drawMode != GL_TRIANGLES) return;
-	gVKTexture* texture = defaultvktexture;
-	if(textureId != 0) {
-		auto it = vktextures.find(textureId);
-		if(it != vktextures.end() && it->second != nullptr) texture = it->second;
+	const GLuint textureids[5] = {textures.albedo, textures.normal, textures.metallic, textures.roughness, textures.ao};
+	VkDescriptorSet texturesets[5]{};
+	uint32_t textureflags = 0;
+	for(uint32_t i = 0; i < 5; i++) {
+		gVKTexture* texture = defaultvktexture;
+		if(textureids[i] != 0) {
+			auto it = vktextures.find(textureids[i]);
+			if(it != vktextures.end() && it->second != nullptr) {
+				texture = it->second;
+				textureflags |= 1u << i;
+			}
+		}
+		texturesets[i] = texture != nullptr ? texture->descriptorset : VK_NULL_HANDLE;
 	}
-	const bool textured = textureId != 0;
+	const bool textured = (textureflags & 1u) != 0;
 	glm::vec4 ambientproduct(0.0f);
 	glm::vec4 diffuseproduct(0.0f);
 	glm::vec3 lightdirection(0.0f, 0.0f, 1.0f);
@@ -1501,10 +1511,9 @@ void gVKRenderEngine::drawMaterialMesh3D(const MeshVertex3D* vertices, int count
 		ambientproduct *= drawcolor;
 		diffuseproduct *= drawcolor;
 	}
-	gvkDrawMesh3D(*vkcontext, vertices, count,
-			texture != nullptr ? texture->descriptorset : VK_NULL_HANDLE,
-			ambientproduct, diffuseproduct, lightdirection, textured, pbr,
-			cameraposition, mvp);
+	gvkDrawMesh3D(*vkcontext, vertices, count, texturesets, textureflags,
+			ambient * drawcolor, diffuse * drawcolor, specular * drawcolor, shininess, textured, pbr,
+			cameraposition, lighting, mvp);
 #endif
 }
 

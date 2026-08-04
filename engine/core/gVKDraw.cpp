@@ -15,6 +15,23 @@
 // space receive a frame-owned overflow buffer instead of being dropped.
 static constexpr VkDeviceSize GVK_DYNAMIC_VERTEX_CAPACITY = 8u << 20;
 
+struct alignas(16) gvkMaterialLight {
+	glm::ivec4 meta{0};
+	glm::vec4 position{0.0f};
+	glm::vec4 direction{0.0f};
+	glm::vec4 ambient{0.0f};
+	glm::vec4 diffuse{0.0f};
+	glm::vec4 specular{0.0f};
+	glm::vec4 attenuation{1.0f, 0.0f, 0.0f, 0.0f};
+	glm::vec4 spotCutoff{0.0f};
+};
+
+struct alignas(16) gvkMaterialScene {
+	glm::ivec4 counts{0};
+	glm::vec4 globalAmbient{1.0f};
+	gvkMaterialLight lights[GLIST_MAX_LIGHTS];
+};
+
 bool gvkCreateDrawResources(gVKContext& ctx) {
 	if(ctx.device == VK_NULL_HANDLE) return false;
 
@@ -36,12 +53,43 @@ bool gvkCreateDrawResources(gVKContext& ctx) {
 		// Host coherent and persistently mapped: no flush and no per-frame remap.
 		vkMapMemory(ctx.device, ctx.dynvertexmemories[i], 0, ctx.dynvertexcapacity, 0, &ctx.dynvertexmapped[i]);
 	}
+	if(ctx.color3dsetlayouts.size() <= 5 || ctx.descriptorpool == VK_NULL_HANDLE ||
+			!gvkCreateBuffer(ctx, sizeof(gvkMaterialScene), VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
+					VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
+					ctx.materialscenebuffer, ctx.materialscenememory)) {
+		gLoge("gVKDraw") << "Could not create the material scene uniform buffer.";
+		return false;
+	}
+	if(vkMapMemory(ctx.device, ctx.materialscenememory, 0, sizeof(gvkMaterialScene), 0,
+			&ctx.materialscenemapped) != VK_SUCCESS) return false;
+	VkDescriptorSetAllocateInfo alloc{};
+	alloc.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
+	alloc.descriptorPool = ctx.descriptorpool;
+	alloc.descriptorSetCount = 1;
+	alloc.pSetLayouts = &ctx.color3dsetlayouts[5];
+	if(vkAllocateDescriptorSets(ctx.device, &alloc, &ctx.materialsceneset) != VK_SUCCESS) return false;
+	VkDescriptorBufferInfo bufferinfo{ctx.materialscenebuffer, 0, sizeof(gvkMaterialScene)};
+	VkWriteDescriptorSet write{};
+	write.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+	write.dstSet = ctx.materialsceneset;
+	write.dstBinding = 0;
+	write.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+	write.descriptorCount = 1;
+	write.pBufferInfo = &bufferinfo;
+	vkUpdateDescriptorSets(ctx.device, 1, &write, 0, nullptr);
 	gLogi("gVKDraw") << "Dynamic vertex buffers ready.";
 	return true;
 }
 
 void gvkDestroyDrawResources(gVKContext& ctx) {
 	if(ctx.device == VK_NULL_HANDLE) return;
+	if(ctx.materialscenemapped != nullptr) vkUnmapMemory(ctx.device, ctx.materialscenememory);
+	if(ctx.materialscenebuffer != VK_NULL_HANDLE) vkDestroyBuffer(ctx.device, ctx.materialscenebuffer, nullptr);
+	if(ctx.materialscenememory != VK_NULL_HANDLE) vkFreeMemory(ctx.device, ctx.materialscenememory, nullptr);
+	ctx.materialscenemapped = nullptr;
+	ctx.materialscenebuffer = VK_NULL_HANDLE;
+	ctx.materialscenememory = VK_NULL_HANDLE;
+	ctx.materialsceneset = VK_NULL_HANDLE;
 	for(auto& frameoverflows : ctx.dynvertexoverflows) {
 		for(auto& overflow : frameoverflows) {
 			if(overflow.mapped != nullptr) vkUnmapMemory(ctx.device, overflow.memory);
@@ -101,8 +149,8 @@ struct gvkPush3D {
 	glm::mat4 mvp;
 	glm::vec4 ambientProduct;
 	glm::vec4 diffuseProduct;
-	glm::vec4 lightDirectionTextured;
-	glm::vec4 cameraPositionPbr;
+	glm::vec4 materialSpecularShininess;
+	glm::vec4 cameraPositionFlags;
 };
 struct gvkImageVertex {
 	glm::vec2 pos;
@@ -192,9 +240,10 @@ void gvkDrawColored2D(gVKContext& ctx, const glm::vec2* points, int count,
 }
 
 void gvkDrawMesh3D(gVKContext& ctx, const gRenderer::MeshVertex3D* vertices, int count,
-		VkDescriptorSet textureSet, const glm::vec4& ambientProduct,
-		const glm::vec4& diffuseProduct, const glm::vec3& lightDirection, bool textured,
-		bool pbr, const glm::vec3& cameraPosition, const glm::mat4& mvp) {
+		const VkDescriptorSet textureSets[5], uint32_t textureFlags, const glm::vec4& ambientProduct,
+		const glm::vec4& diffuseProduct, const glm::vec4& specular, float shininess, bool textured,
+		bool pbr, const glm::vec3& cameraPosition, const gRenderer::MaterialLighting3D& lighting,
+		const glm::mat4& mvp) {
 	if(count <= 0 || vertices == nullptr) return;
 	if(!gvkEnsureRendering(ctx)) return;
 	VkCommandBuffer cmd = ctx.getCurrentCommandBuffer();
@@ -205,13 +254,33 @@ void gvkDrawMesh3D(gVKContext& ctx, const gRenderer::MeshVertex3D* vertices, int
 	if(!gvkUploadDynamicVertices(ctx, vertices, sizeof(gRenderer::MeshVertex3D) * count, vbuf, offset)) return;
 	vkCmdBindPipeline(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, ctx.getColor3DPipeline());
 	vkCmdBindVertexBuffers(cmd, 0, 1, &vbuf, &offset);
-	if(textureSet != VK_NULL_HANDLE) {
+	if(textureSets != nullptr && textureSets[0] != VK_NULL_HANDLE) {
 		vkCmdBindDescriptorSets(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, ctx.getColor3DPipelineLayout(),
-				0, 1, &textureSet, 0, nullptr);
+				0, 5, textureSets, 0, nullptr);
 	}
+	gvkMaterialScene scene{};
+	scene.counts.x = std::min(lighting.lightCount, GLIST_MAX_LIGHTS);
+	scene.counts.y = static_cast<int>(lighting.enabledMask);
+	scene.globalAmbient = lighting.globalAmbient;
+	for(int i = 0; i < scene.counts.x; i++) {
+		const auto& src = lighting.lights[i];
+		auto& dst = scene.lights[i];
+		dst.meta.x = src.type;
+		dst.position = glm::vec4(src.position, 1.0f);
+		dst.direction = glm::vec4(src.direction, 0.0f);
+		dst.ambient = src.ambient;
+		dst.diffuse = src.diffuse;
+		dst.specular = src.specular;
+		dst.attenuation = glm::vec4(src.attenuation, 0.0f);
+		dst.spotCutoff = glm::vec4(src.spotCutoff, 0.0f, 0.0f);
+	}
+	if(ctx.getMaterialSceneMapped() != nullptr) std::memcpy(ctx.getMaterialSceneMapped(), &scene, sizeof(scene));
+	VkDescriptorSet sceneset = ctx.getMaterialSceneSet();
+	if(sceneset != VK_NULL_HANDLE) vkCmdBindDescriptorSets(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS,
+			ctx.getColor3DPipelineLayout(), 5, 1, &sceneset, 0, nullptr);
 	gvkPush3D push{mvp, ambientProduct, diffuseProduct,
-			glm::vec4(lightDirection, textured ? 1.0f : 0.0f),
-			glm::vec4(cameraPosition, pbr ? 1.0f : 0.0f)};
+			glm::vec4(glm::vec3(specular), shininess),
+			glm::vec4(cameraPosition, static_cast<float>(textureFlags | (pbr ? 32u : 0u)))};
 	const uint32_t pushsize = std::min<uint32_t>(sizeof(push), ctx.getColor3DPushSize());
 	if(pushsize > 0) vkCmdPushConstants(cmd, ctx.getColor3DPipelineLayout(),
 			ctx.getColor3DPushStages(), 0, pushsize, &push);

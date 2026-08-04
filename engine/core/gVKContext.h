@@ -304,6 +304,8 @@ struct gVKContext {
 		return image2dsetlayouts.empty() ? VK_NULL_HANDLE : image2dsetlayouts[0];
 	}
 	VkDescriptorPool getDescriptorPool() { return descriptorpool; }
+	void* getMaterialSceneMapped() { return materialscenemapped; }
+	VkDescriptorSet getMaterialSceneSet() { return materialsceneset; }
 	bool isRenderingActive() const { return renderingactive; }
 
 	// Push constant block each 2D pipeline declares, as reported by reflecting its
@@ -429,6 +431,10 @@ private:
 	uint32_t color3dpushsize = 0;
 	VkShaderStageFlags color3dpushstages = 0;
 	VkDescriptorPool descriptorpool = VK_NULL_HANDLE;
+	VkBuffer materialscenebuffer = VK_NULL_HANDLE;
+	VkDeviceMemory materialscenememory = VK_NULL_HANDLE;
+	void* materialscenemapped = nullptr;
+	VkDescriptorSet materialsceneset = VK_NULL_HANDLE;
 	// One host-visible, persistently mapped vertex buffer per frame in flight,
 	// filled linearly each frame and rewound at the start of the next.
 	std::vector<VkBuffer> dynvertexbuffers;

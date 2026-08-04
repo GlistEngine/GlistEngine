@@ -51,6 +51,7 @@
 #include "gColor.h"
 #include "gConstants.h"
 #include <deque>
+#include <array>
 #include <memory>
 #include <vector>
 
@@ -277,9 +278,33 @@ public:
 		glm::vec2 texcoords;
 		glm::vec3 color;
 	};
+	struct MaterialTextures3D {
+		GLuint albedo = 0;
+		GLuint normal = 0;
+		GLuint metallic = 0;
+		GLuint roughness = 0;
+		GLuint ao = 0;
+	};
+	struct MaterialLight3D {
+		int type = 0;
+		glm::vec3 position{0.0f};
+		glm::vec3 direction{0.0f, 0.0f, -1.0f};
+		glm::vec4 ambient{0.0f};
+		glm::vec4 diffuse{0.0f};
+		glm::vec4 specular{0.0f};
+		glm::vec3 attenuation{1.0f, 0.0f, 0.0f};
+		glm::vec2 spotCutoff{0.0f};
+	};
+	struct MaterialLighting3D {
+		glm::vec4 globalAmbient{1.0f};
+		std::array<MaterialLight3D, GLIST_MAX_LIGHTS> lights{};
+		int lightCount = 0;
+		uint32_t enabledMask = 0;
+	};
 	virtual void drawMaterialMesh3D(const MeshVertex3D* vertices, int count, const glm::vec4& ambient,
-			const glm::vec4& diffuse, bool pbr,
-			GLuint textureId, const glm::mat4& mvp, int drawMode = GL_TRIANGLES) {}
+			const glm::vec4& diffuse, const glm::vec4& specular, float shininess, bool pbr,
+			const MaterialTextures3D& textures, const MaterialLighting3D& lighting,
+			const glm::mat4& mvp, int drawMode = GL_TRIANGLES) {}
 
 	// Backend hook for a textured 2D quad (gImage / gTexture). OpenGL draws through
 	// its image shader and leaves this a no-op; Vulkan looks the texture id up in

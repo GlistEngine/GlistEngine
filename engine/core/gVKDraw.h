@@ -42,9 +42,10 @@ void gvkDrawColored2D(gVKContext& ctx, const glm::vec2* points, int count,
 		const glm::vec4& color, const glm::mat4& mvp, int mode = GVK_DRAW2D_TRIANGLES);
 
 void gvkDrawMesh3D(gVKContext& ctx, const gRenderer::MeshVertex3D* vertices, int count,
-		VkDescriptorSet textureSet, const glm::vec4& ambientProduct,
-		const glm::vec4& diffuseProduct, const glm::vec3& lightDirection, bool textured,
-		bool pbr, const glm::vec3& cameraPosition, const glm::mat4& mvp);
+		const VkDescriptorSet textureSets[5], uint32_t textureFlags, const glm::vec4& ambientProduct,
+		const glm::vec4& diffuseProduct, const glm::vec4& specular, float shininess, bool textured,
+		bool pbr, const glm::vec3& cameraPosition, const gRenderer::MaterialLighting3D& lighting,
+		const glm::mat4& mvp);
 
 // Records a textured unit quad (two triangles) sampled through the given combined
 // image sampler descriptor set. tint components are 0..1. uvOffset / uvScale place
