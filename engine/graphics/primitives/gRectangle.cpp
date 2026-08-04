@@ -17,21 +17,23 @@
  * @param w Width of rectangle.
  * @param h Height of rectangle.
  * @param isFilled Specifies whether the rectangle is filled or empty.
- * @param rotateAngle Rotation angle in radians, applied around the rectangle's center.
+ * @param rotateAngle Rotation angle in radians.
+ * @param pivotx Normalized pivot point on x-axis (0.0 to 1.0).
+ * @param pivoty Normalized pivot point on y-axis (0.0 to 1.0).
  */
 
 gRectangle::gRectangle() {
 
 }
 
-gRectangle::gRectangle(float x, float y, float w, float h, bool isFilled, float rotateAngle) {
+gRectangle::gRectangle(float x, float y, float w, float h, bool isFilled, float rotateAngle, float pivotx, float pivoty) {
 	isprojection2d = true;
-	setRectanglePoints(x, y, w, h, isFilled, rotateAngle);
+	setRectanglePoints(x, y, w, h, isFilled, rotateAngle, pivotx, pivoty);
 }
 
-void gRectangle::setPoints(float x, float y, float w, float h, bool isFilled, float rotateAngle) {
+void gRectangle::setPoints(float x, float y, float w, float h, bool isFilled, float rotateAngle, float pivotx, float pivoty) {
 	isprojection2d = true;
-	setRectanglePoints(x, y, w, h, isFilled, rotateAngle);
+	setRectanglePoints(x, y, w, h, isFilled, rotateAngle, pivotx, pivoty);
 }
 
 void gRectangle::draw() {
@@ -39,32 +41,32 @@ void gRectangle::draw() {
 	gMesh::draw();
 }
 
-void gRectangle::draw(float x, float y, float w, float h, bool isFilled, float rotateAngle) {
+void gRectangle::draw(float x, float y, float w, float h, bool isFilled, float rotateAngle, float pivotx, float pivoty) {
 	isprojection2d = true;
-	setRectanglePoints(x, y, w, h, isFilled, rotateAngle);
+	setRectanglePoints(x, y, w, h, isFilled, rotateAngle, pivotx, pivoty);
 	gMesh::draw();
 }
 
-void gRectangle::setRectanglePoints(float x, float y, float w, float h, bool isFilled, float rotateAngle) {
+void gRectangle::setRectanglePoints(float x, float y, float w, float h, bool isFilled, float rotateAngle, float pivotx, float pivoty) {
 	if(!verticessb.empty()) {
 		verticessb.clear();
 		indicessb.clear();
 	}
 
-	// Rectangle's center, rotation pivot point
-	float cx = x + w * 0.5f;
-	float cy = y + h * 0.5f;
+	// Rectangle's rotation pivot point
+	float px = x + pivotx * w;
+	float py = y + pivoty * h;
 
 	float cosA = std::cos(rotateAngle);
 	float sinA = std::sin(rotateAngle);
 
-	// Rotates a point around the rectangle's center by rotateAngle (radians)
-	auto rotatePoint = [&](float px, float py) -> glm::vec3 {
-		float dx = px - cx;
-		float dy = py - cy;
+	// Rotates a point around the pivot point by rotateAngle (radians)
+	auto rotatePoint = [&](float vx, float vy) -> glm::vec3 {
+		float dx = vx - px;
+		float dy = vy - py;
 		float rx = dx * cosA - dy * sinA;
 		float ry = dx * sinA + dy * cosA;
-		return glm::vec3(cx + rx, cy + ry, 0.0f);
+		return glm::vec3(px + rx, py + ry, 0.0f);
 	};
 
 	verticessb.push_back({rotatePoint(x, y)});
@@ -76,7 +78,7 @@ void gRectangle::setRectanglePoints(float x, float y, float w, float h, bool isF
 		indicessb.push_back(0);
 		indicessb.push_back(3);
 		indicessb.push_back(2);
-        indicessb.push_back(1);
+		indicessb.push_back(1);
 		setDrawMode(gMesh::DRAWMODE_TRIANGLEFAN);
 	} else {
 		indicessb.push_back(0);
