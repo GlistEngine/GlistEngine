@@ -1457,7 +1457,7 @@ void gVKRenderEngine::drawColored2D(const glm::vec2* points, int count, const gl
 }
 
 void gVKRenderEngine::drawMaterialMesh3D(const MeshVertex3D* vertices, int count, const glm::vec4& ambient,
-		const glm::vec4& diffuse,
+		const glm::vec4& diffuse, bool pbr,
 		GLuint textureId, const glm::mat4& mvp, int drawMode) {
 #ifdef GVK_DESKTOP_GLFW
 	if(vkcontext == nullptr || drawMode != GL_TRIANGLES) return;
@@ -1479,7 +1479,9 @@ void gVKRenderEngine::drawMaterialMesh3D(const MeshVertex3D* vertices, int count
 				ambientproduct += light->getAmbientColor()->asVec4();
 				haslight = true;
 			} else if(light->getType() == gLight::LIGHTTYPE_DIRECTIONAL && !hasdirectional) {
-				ambientproduct += light->getAmbientColor()->asVec4();
+				// The existing OpenGL PBR shader only accumulates explicit ambient
+				// lights; classic materials also receive a directional light's ambient.
+				if(!pbr) ambientproduct += light->getAmbientColor()->asVec4();
 				diffuseproduct = light->getDiffuseColor()->asVec4();
 				lightdirection = -light->getDirection();
 				haslight = true;
@@ -1487,9 +1489,12 @@ void gVKRenderEngine::drawMaterialMesh3D(const MeshVertex3D* vertices, int count
 			}
 		}
 	}
-	if(!haslight) ambientproduct = globalambientcolor.asVec4();
+	if(!haslight && (!pbr || scenelights.empty())) ambientproduct = globalambientcolor.asVec4();
 	const glm::vec4 drawcolor = rendercolor != nullptr ? rendercolor->asVec4() : glm::vec4(1.0f);
-	if(!textured) {
+	if(pbr) {
+		// OpenGL's PBR shader treats these as light colours; material colour and
+		// renderer tint do not participate when an albedo map is present.
+	} else if(!textured) {
 		ambientproduct *= ambient * drawcolor;
 		diffuseproduct *= diffuse * drawcolor;
 	} else {
@@ -1498,7 +1503,8 @@ void gVKRenderEngine::drawMaterialMesh3D(const MeshVertex3D* vertices, int count
 	}
 	gvkDrawMesh3D(*vkcontext, vertices, count,
 			texture != nullptr ? texture->descriptorset : VK_NULL_HANDLE,
-			ambientproduct, diffuseproduct, lightdirection, textured, mvp);
+			ambientproduct, diffuseproduct, lightdirection, textured, pbr,
+			cameraposition, mvp);
 #endif
 }
 

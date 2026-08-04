@@ -102,6 +102,7 @@ struct gvkPush3D {
 	glm::vec4 ambientProduct;
 	glm::vec4 diffuseProduct;
 	glm::vec4 lightDirectionTextured;
+	glm::vec4 cameraPositionPbr;
 };
 struct gvkImageVertex {
 	glm::vec2 pos;
@@ -193,7 +194,7 @@ void gvkDrawColored2D(gVKContext& ctx, const glm::vec2* points, int count,
 void gvkDrawMesh3D(gVKContext& ctx, const gRenderer::MeshVertex3D* vertices, int count,
 		VkDescriptorSet textureSet, const glm::vec4& ambientProduct,
 		const glm::vec4& diffuseProduct, const glm::vec3& lightDirection, bool textured,
-		const glm::mat4& mvp) {
+		bool pbr, const glm::vec3& cameraPosition, const glm::mat4& mvp) {
 	if(count <= 0 || vertices == nullptr) return;
 	if(!gvkEnsureRendering(ctx)) return;
 	VkCommandBuffer cmd = ctx.getCurrentCommandBuffer();
@@ -209,7 +210,8 @@ void gvkDrawMesh3D(gVKContext& ctx, const gRenderer::MeshVertex3D* vertices, int
 				0, 1, &textureSet, 0, nullptr);
 	}
 	gvkPush3D push{mvp, ambientProduct, diffuseProduct,
-			glm::vec4(lightDirection, textured ? 1.0f : 0.0f)};
+			glm::vec4(lightDirection, textured ? 1.0f : 0.0f),
+			glm::vec4(cameraPosition, pbr ? 1.0f : 0.0f)};
 	const uint32_t pushsize = std::min<uint32_t>(sizeof(push), ctx.getColor3DPushSize());
 	if(pushsize > 0) vkCmdPushConstants(cmd, ctx.getColor3DPipelineLayout(),
 			ctx.getColor3DPushStages(), 0, pushsize, &push);

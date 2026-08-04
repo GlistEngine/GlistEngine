@@ -376,7 +376,7 @@ void gMesh::drawVulkanMesh() {
 	const glm::mat3 normalmatrix = std::abs(modeldeterminant) > 0.000001f
 			? glm::transpose(glm::inverse(modelmatrix)) : glm::mat3(1.0f);
 	const auto makeVertex3D = [&](const gVertex& vertex) {
-		return gRenderer::MeshVertex3D{vertex.position,
+		return gRenderer::MeshVertex3D{glm::vec3(localtransformationmatrix.back() * glm::vec4(vertex.position, 1.0f)),
 				glm::normalize(normalmatrix * vertex.normal), vertex.texcoords * texturetiling, vertex.color};
 	};
 	if (inds.empty()) {
@@ -408,7 +408,7 @@ void gMesh::drawVulkanMesh() {
 		glm::mat4 mvp = renderer->getProjectionMatrix2d() * localtransformationmatrix.back();
 		renderer->drawColored2D(points2d.data(), static_cast<int>(points2d.size()), rgba, mvp, drawmode);
 	} else {
-		glm::mat4 mvp = renderer->getProjectionMatrix() * renderer->getViewMatrix() * localtransformationmatrix.back();
+		glm::mat4 mvp = renderer->getProjectionMatrix() * renderer->getViewMatrix();
 		// Vulkan's material pipeline is a triangle list. Expand the strip/fan modes
 		// used by primitives such as gSphere while preserving winding. This mirrors
 		// the existing 2D expansion and also removes the degenerate connector
@@ -446,7 +446,7 @@ void gMesh::drawVulkanMesh() {
 		if(diffusemap != nullptr) textureid = diffusemap->getId();
 		renderer->drawMaterialMesh3D(drawvertices->data(), static_cast<int>(drawvertices->size()),
 				glm::vec4(ambient->r, ambient->g, ambient->b, ambient->a),
-				glm::vec4(diffuse->r, diffuse->g, diffuse->b, diffuse->a),
+				glm::vec4(diffuse->r, diffuse->g, diffuse->b, diffuse->a), material.isPBR(),
 				textureid, mvp, DRAWMODE_TRIANGLES);
 	}
 }

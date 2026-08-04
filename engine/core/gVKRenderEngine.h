@@ -195,7 +195,7 @@ public:
 	void drawColored2D(const glm::vec2* points, int count, const glm::vec4& color, const glm::mat4& mvp,
 			int drawMode = GL_TRIANGLES) override;
 	void drawMaterialMesh3D(const MeshVertex3D* vertices, int count, const glm::vec4& ambient,
-			const glm::vec4& diffuse,
+			const glm::vec4& diffuse, bool pbr,
 			GLuint textureId, const glm::mat4& mvp, int drawMode = GL_TRIANGLES) override;
 
 	// Records a textured quad using the registered Vulkan texture for textureId
