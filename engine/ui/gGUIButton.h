@@ -31,12 +31,14 @@ public:
 	void setButtonColor(gColor color);
 	void setPressedButtonColor(gColor color);
 	void setDisabledButtonColor(gColor color);
+	void setHoverButtonColor(gColor color);
 	void setButtonFontColor(gColor color);
 	void setPressedButtonFontColor(gColor color);
 	void setDisabledButtonFontColor(gColor color);
 	gColor* getButtonColor();
 	gColor* getPressedButtonColor();
 	gColor* getDisabledButtonColor();
+	gColor* getHoverButtonColor();
 	gColor* getButtonFontColor();
 	gColor* getPressedButtonFontColor();
 	gColor* getDisabledButtonFontColor();
@@ -71,6 +73,7 @@ protected:
 	gColor bcolor, pressedbcolor, disabledbcolor;
 	gColor fcolor, pressedfcolor, disabledfcolor;
 	gColor hcolor;
+	bool customhovercolor;
 	bool fillbackground;
 	bool contentcentered;
 

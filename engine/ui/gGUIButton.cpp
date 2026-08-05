@@ -26,6 +26,7 @@ gGUIButton::gGUIButton() {
 //	gLogi("Button") << "r:" << bcolor.r << ", g:" << bcolor.g << ", b:" << bcolor.b;
 	pressedbcolor = *pressedbuttoncolor;
 	hcolor.set((pressedbcolor.r + bcolor.r) / 2, (pressedbcolor.g + bcolor.g) / 2, (pressedbcolor.b + bcolor.b) / 2);
+	customhovercolor = false;
 	disabledbcolor = *disabledbuttoncolor;
 	fcolor = *buttonfontcolor;
 	pressedfcolor = *pressedbuttonfontcolor;
@@ -186,12 +187,17 @@ void gGUIButton::resetTitlePosition() {
 
 void gGUIButton::setButtonColor(gColor color) {
 	bcolor = color;
-	hcolor.set((pressedbcolor.r + bcolor.r) / 2, (pressedbcolor.g + bcolor.g) / 2, (pressedbcolor.b + bcolor.b) / 2);
+	if(!customhovercolor) hcolor.set((pressedbcolor.r + bcolor.r) / 2, (pressedbcolor.g + bcolor.g) / 2, (pressedbcolor.b + bcolor.b) / 2);
 }
 
 void gGUIButton::setPressedButtonColor(gColor color) {
 	pressedbcolor = color;
-	hcolor.set((pressedbcolor.r + bcolor.r) / 2, (pressedbcolor.g + bcolor.g) / 2, (pressedbcolor.b + bcolor.b) / 2);
+	if(!customhovercolor) hcolor.set((pressedbcolor.r + bcolor.r) / 2, (pressedbcolor.g + bcolor.g) / 2, (pressedbcolor.b + bcolor.b) / 2);
+}
+
+void gGUIButton::setHoverButtonColor(gColor color) {
+	customhovercolor = true;
+	hcolor = color;
 }
 
 void gGUIButton::setDisabledButtonColor(gColor color) {
@@ -220,6 +226,10 @@ gColor* gGUIButton::getPressedButtonColor() {
 
 gColor* gGUIButton::getDisabledButtonColor() {
 	return &disabledbcolor;
+}
+
+gColor* gGUIButton::getHoverButtonColor() {
+	return &hcolor;
 }
 
 gColor* gGUIButton::getButtonFontColor() {
