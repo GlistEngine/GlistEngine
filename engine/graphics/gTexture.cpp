@@ -112,6 +112,41 @@ gTexture::gTexture(int w, int h, int format, bool isFbo) {
 	setupRenderData();
 }
 
+gTexture::gTexture(int w, int h, int miplevels, int format, bool isFbo) {
+	id = GL_NONE;
+	int valuetype = GL_UNSIGNED_BYTE;
+	internalformat = format;
+	this->format = format;
+	wraps = TEXTUREWRAP_CLAMPTOEDGE;
+	wrapt = TEXTUREWRAP_CLAMPTOEDGE;
+	filtermin = TEXTUREMINMAGFILTER_MIPMAPLINEAR;
+	filtermag = TEXTUREMINMAGFILTER_LINEAR;
+	type = TEXTURETYPE_DIFFUSE;
+	path = "";
+	width = w; height = h;
+	ismutable = false; isstbimage = false;
+	isfbo = isFbo; ishdr = false;
+	ismaskloaded = false; isloaded = false;
+	masktexture = nullptr;
+	componentnum = (format == GL_RGBA) ? 4 : (format == GL_RGB) ? 3 : (format == GL_RG) ? 2 : 1;
+	data = nullptr; datahdr = nullptr;
+
+	id = renderer->createTextures();
+	istextureallocated = true;
+	bind();
+
+	for (int level = 0; level < miplevels; level++) {
+		int lw = std::max(1, w >> level);
+		int lh = std::max(1, h >> level);
+		renderer->texImage2D(GL_TEXTURE_2D, internalformat, lw, lh, format, valuetype, nullptr, level);
+	}
+
+	renderer->setTextureMaxLevel(GL_TEXTURE_2D, miplevels - 1);
+	renderer->setWrappingAndFiltering(GL_TEXTURE_2D, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE,
+	                                   texturefilter[filtermin], texturefilter[filtermag]);
+	setupRenderData();
+}
+
 gTexture::gTexture(const gTexture& other) : gTexture() {
 #ifdef DEBUG
 	gLogw("gTexture") << "Copy constructor is called, this usually means lower performance! Consider modifying your code.";

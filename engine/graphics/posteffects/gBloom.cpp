@@ -137,7 +137,7 @@ const std::string gBloom::getFragSrc() {
 			"   float gaussianblur[9] = float[9]("
 			"	0.0625, 0.125, 0.0625,"
 			"	0.125,  0.25,  0.125,"
-			"	0.0625, 0.0125, 0.0625"
+			"	0.0625, 0.125, 0.0625"
 			"   );"
 			""
 			"   vec4 texcolor = texture(screenTexture, TexCoords);"

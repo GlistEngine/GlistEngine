@@ -49,16 +49,12 @@ void gPostProcessManager::disable() {
 	for(int i = 0; i < effects.size(); i++) {
 		fbos[fbotowrite].bind();
 		renderer->clearScreen(true, false);
-		effects[i]->use();
-		renderer->bindQuadVAO();
-		fbos[fbotoread].getTexture().bind();
-		renderer->drawFullscreenQuad();
-
+		effects[i]->render(fbos[fbotoread], fbos[fbotowrite]);
 		lastwrittenfbo = fbotowrite;
 		int temp = fbotoread;
 		fbotoread = fbotowrite;
 		fbotowrite = temp;
-	}
+		}
 
 	renderer->bindDefaultFramebuffer();
 	renderer->clearScreen(true, false);

@@ -645,9 +645,12 @@ void gGLRenderEngine::deleteTexture(GLuint& texId) {
 	}
 }
 
-void gGLRenderEngine::texImage2D(GLenum target, GLint internalFormat, int width, int height, GLint format,
-                                 GLint type, void* data) {
-	G_CHECK_GL(glTexImage2D(target, 0, internalFormat, width, height, 0, format, type, data));
+void gGLRenderEngine::texImage2D(GLenum target, GLint internalFormat, int width, int height, GLint format, GLint type, void* data, GLint level) {
+	G_CHECK_GL(glTexImage2D(target, level, internalFormat, width, height, 0, format, type, data));
+}
+
+void gGLRenderEngine::setTextureMaxLevel(GLenum target, int maxLevel) {
+	G_CHECK_GL(glTexParameteri(target, GL_TEXTURE_MAX_LEVEL, maxLevel));
 }
 
 void gGLRenderEngine::setWrapping(GLenum target, GLint wrapS, GLint wrapT) {

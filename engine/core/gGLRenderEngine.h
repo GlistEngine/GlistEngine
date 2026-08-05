@@ -150,7 +150,8 @@ public:
 	void resetTexture() override;
 	void deleteTexture(GLuint& texId) override;
 
-	void texImage2D(GLenum target, GLint internalFormat, int width, int height, GLint format, GLint type, void* data) override;
+	void texImage2D(GLenum target, GLint internalFormat, int width, int height, GLint format, GLint type, void* data, GLint level = 0) override;
+	void setTextureMaxLevel(GLenum target, int maxLevel) override;
 	void setWrapping(GLenum target, GLint wrapS, GLint wrapT) override;
 	void setWrapping(GLenum target, GLint wrapS, GLint wrapT, GLint wrapR) override;
 

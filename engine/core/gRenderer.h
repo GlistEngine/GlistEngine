@@ -515,7 +515,8 @@ public:
 	virtual void resetTexture() = 0;
 	virtual void deleteTexture(GLuint& texId) = 0;
 
-	virtual void texImage2D(GLenum target, GLint internalFormat, int width, int height, GLint format, GLint type, void* data) = 0;
+	virtual void texImage2D(GLenum target, GLint internalFormat, int width, int height, GLint format, GLint type, void* data, GLint level = 0) = 0;
+	virtual void setTextureMaxLevel(GLenum target, int maxLevel) = 0;
 	virtual void setWrapping(GLenum target, GLint wrapS, GLint wrapT) = 0;
 	virtual void setWrapping(GLenum target, GLint wrapS, GLint wrapT, GLint wrapR) = 0;
 

@@ -47,6 +47,7 @@ public:
 	gTexture(int w, int h, int format = GL_RGBA, bool isFbo = false);
 	gTexture(const gTexture& other);
 	gTexture(gTexture&& other) noexcept;
+	gTexture(int w, int h, int miplevels, int format, bool isFbo);
 	gTexture& operator=(const gTexture& other);
 	gTexture& operator=(gTexture&& other) noexcept;
 	virtual ~gTexture();
