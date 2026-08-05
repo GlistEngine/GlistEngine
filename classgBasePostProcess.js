@@ -5,6 +5,7 @@ var classgBasePostProcess =
     [ "getFragSrc", "classgBasePostProcess.html#a4df33b6110c8af58ca1dedc1c1fc10b8", null ],
     [ "getShader", "classgBasePostProcess.html#a74745fe6e87e512ff0c9ee30fa171933", null ],
     [ "getVertSrc", "classgBasePostProcess.html#ab3451851816b50a9deb7c7ba31a4cd22", null ],
+    [ "render", "classgBasePostProcess.html#a0d618afc5a458874521bfc5f1d891b5d", null ],
     [ "use", "classgBasePostProcess.html#a519d793c08b5d19fd5b14c678e33b527", null ],
     [ "shader", "classgBasePostProcess.html#a2ba63944deade7467bc6ab408da5e49d", null ]
 ];

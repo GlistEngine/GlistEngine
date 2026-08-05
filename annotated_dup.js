@@ -18,6 +18,7 @@ var annotated_dup =
     [ "gBaseSound", "classgBaseSound.html", "classgBaseSound" ],
     [ "gBaseWindow", "classgBaseWindow.html", "classgBaseWindow" ],
     [ "gBloom", "classgBloom.html", "classgBloom" ],
+    [ "gBloomPyramid", "classgBloomPyramid.html", "classgBloomPyramid" ],
     [ "gBlur", "classgBlur.html", "classgBlur" ],
     [ "gBoundingBox", "classgBoundingBox.html", "classgBoundingBox" ],
     [ "gBox", "classgBox.html", "classgBox" ],

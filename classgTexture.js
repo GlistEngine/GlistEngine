@@ -28,6 +28,7 @@ var classgTexture =
     [ "gTexture", "classgTexture.html#a8ecee7e8a43c9a03e53a6f3b774496c1", null ],
     [ "gTexture", "classgTexture.html#a23a85c16de396cc89feb98df8c41db26", null ],
     [ "gTexture", "classgTexture.html#a541ed68ecf8c3ffc74cbfe26faaf51c5", null ],
+    [ "gTexture", "classgTexture.html#a3142251a2eb83efaa04bb8ca8ad76a9b", null ],
     [ "~gTexture", "classgTexture.html#a9c6608b1cd9a28579e84eafb278dadfe", null ],
     [ "bind", "classgTexture.html#a819525baeaf079004ae85a94e598f1a2", null ],
     [ "bind", "classgTexture.html#ad83aaa2bb1212e336577d225cd46c0ca", null ],

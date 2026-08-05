@@ -142,6 +142,7 @@ var hierarchy =
         [ "gBasePlugin", "classgBasePlugin.html", null ],
         [ "gBasePostProcess", "classgBasePostProcess.html", [
           [ "gBloom", "classgBloom.html", null ],
+          [ "gBloomPyramid", "classgBloomPyramid.html", null ],
           [ "gChromaticAberration", "classgChromaticAberration.html", null ],
           [ "gColorAdjustments", "classgColorAdjustments.html", null ],
           [ "gColorChannelMixer", "classgColorChannelMixer.html", null ],

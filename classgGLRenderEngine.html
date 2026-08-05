@@ -331,8 +331,10 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a0091bdb865f49b7ad3fed5a442a00d9a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9c529b52a2edaad6c8360321a2664682" id="r_a9c529b52a2edaad6c8360321a2664682"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgGLRenderEngine.html#a9c529b52a2edaad6c8360321a2664682">deleteTexture</a> (GLuint &amp;texId) override</td></tr>
 <tr class="separator:a9c529b52a2edaad6c8360321a2664682"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af169d69a4986b7a5a69dce8c8944e53c" id="r_af169d69a4986b7a5a69dce8c8944e53c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgGLRenderEngine.html#af169d69a4986b7a5a69dce8c8944e53c">texImage2D</a> (GLenum target, GLint internalFormat, int <a class="el" href="classgRenderer.html#a521e019ad5133df5702d399bf051adda">width</a>, int <a class="el" href="classgRenderer.html#a10ba9eb49755cea48500ab0046baf6e4">height</a>, GLint format, GLint type, void *data) override</td></tr>
-<tr class="separator:af169d69a4986b7a5a69dce8c8944e53c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae90565cffafb1542f11d4815b180c7d7" id="r_ae90565cffafb1542f11d4815b180c7d7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgGLRenderEngine.html#ae90565cffafb1542f11d4815b180c7d7">texImage2D</a> (GLenum target, GLint internalFormat, int <a class="el" href="classgRenderer.html#a521e019ad5133df5702d399bf051adda">width</a>, int <a class="el" href="classgRenderer.html#a10ba9eb49755cea48500ab0046baf6e4">height</a>, GLint format, GLint type, void *data, GLint level=0) override</td></tr>
+<tr class="separator:ae90565cffafb1542f11d4815b180c7d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a883e0f7e91c4b1eb9bea9b6932f634d2" id="r_a883e0f7e91c4b1eb9bea9b6932f634d2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgGLRenderEngine.html#a883e0f7e91c4b1eb9bea9b6932f634d2">setTextureMaxLevel</a> (GLenum target, int maxLevel) override</td></tr>
+<tr class="separator:a883e0f7e91c4b1eb9bea9b6932f634d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad938e11eb33c09aa73d1b77a675c8dea" id="r_ad938e11eb33c09aa73d1b77a675c8dea"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgGLRenderEngine.html#ad938e11eb33c09aa73d1b77a675c8dea">setWrapping</a> (GLenum target, GLint wrapS, GLint wrapT) override</td></tr>
 <tr class="separator:ad938e11eb33c09aa73d1b77a675c8dea"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af76de2a542df796dcce2f8043afc634c" id="r_af76de2a542df796dcce2f8043afc634c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgGLRenderEngine.html#af76de2a542df796dcce2f8043afc634c">setWrapping</a> (GLenum target, GLint wrapS, GLint wrapT, GLint wrapR) override</td></tr>
@@ -3900,6 +3902,44 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a id="a883e0f7e91c4b1eb9bea9b6932f634d2" name="a883e0f7e91c4b1eb9bea9b6932f634d2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a883e0f7e91c4b1eb9bea9b6932f634d2">&#9670;&#160;</a></span>setTextureMaxLevel()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gGLRenderEngine::setTextureMaxLevel </td>
+          <td>(</td>
+          <td class="paramtype">GLenum&#160;</td>
+          <td class="paramname"><em>target</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>maxLevel</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implements <a class="el" href="classgRenderer.html#adfe65703393a4638dbf177048939d929">gRenderer</a>.</p>
+
+</div>
+</div>
 <a id="a5eb439506e697085da6aa62269f8dc99" name="a5eb439506e697085da6aa62269f8dc99"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a5eb439506e697085da6aa62269f8dc99">&#9670;&#160;</a></span>setUnsignedInt()</h2>
 
@@ -4698,8 +4738,8 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="af169d69a4986b7a5a69dce8c8944e53c" name="af169d69a4986b7a5a69dce8c8944e53c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af169d69a4986b7a5a69dce8c8944e53c">&#9670;&#160;</a></span>texImage2D()</h2>
+<a id="ae90565cffafb1542f11d4815b180c7d7" name="ae90565cffafb1542f11d4815b180c7d7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae90565cffafb1542f11d4815b180c7d7">&#9670;&#160;</a></span>texImage2D()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -4747,7 +4787,13 @@ Additional Inherited Members</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">void *&#160;</td>
-          <td class="paramname"><em>data</em>&#160;</td>
+          <td class="paramname"><em>data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">GLint&#160;</td>
+          <td class="paramname"><em>level</em> = <code>0</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -4762,7 +4808,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implements <a class="el" href="classgRenderer.html#ac76438b137a5cbdd53481d531f2b1d82">gRenderer</a>.</p>
+<p>Implements <a class="el" href="classgRenderer.html#a462c1d51331d521f50667a6f6cac5345">gRenderer</a>.</p>
 
 </div>
 </div>
