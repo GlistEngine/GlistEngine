@@ -741,7 +741,7 @@ var searchData=
   ['grandomf_738',['gRandomf',['../gUtils_8h.html#a3fb6d7b105fcd4527ade3200222c54a9',1,'gUtils.h']]],
   ['gray_739',['gray',['../classgRay.html#adf9b9b43d8f6d8d527a364f8e3a6dd82',1,'gRay::gRay(const glm::vec3 &amp;originPoint, const glm::vec3 &amp;directionVector)'],['../classgRay.html#ac8d293b061a78f961fbb4a6e8fe0a367',1,'gRay::gRay()']]],
   ['grect_740',['grect',['../classgRect.html#a42bf2b485a2abbfc2473ffe29a88d048',1,'gRect::gRect(const gRect &amp;r)'],['../classgRect.html#a1cabde9929893cfa07c797a64b91db1b',1,'gRect::gRect(int left, int top, int right, int bottom)'],['../classgRect.html#a76287e7ebf528db7b5966bab37046872',1,'gRect::gRect()']]],
-  ['grectangle_741',['grectangle',['../classgRectangle.html#a7501a0a948151e8ec0eb7f527041dc20',1,'gRectangle::gRectangle()'],['../classgRectangle.html#ab8bad16554422dda3730b177517b5a41',1,'gRectangle::gRectangle(float x, float y, float w, float h, bool isFilled, float rotateAngle=0.0f)']]],
+  ['grectangle_741',['grectangle',['../classgRectangle.html#a7501a0a948151e8ec0eb7f527041dc20',1,'gRectangle::gRectangle()'],['../classgRectangle.html#aaea19db85e241d7d2b0024e1ac8136e7',1,'gRectangle::gRectangle(float x, float y, float w, float h, bool isFilled, float rotateAngle=0.0f, float pivotx=0.5f, float pivoty=0.5f)']]],
   ['grenderer_742',['gRenderer',['../classgRenderer.html#a6551c9bca5231a4575f3afa7aa379eca',1,'gRenderer']]],
   ['grenderobject_743',['gRenderObject',['../classgRenderObject.html#a9aed705f1e1a4e4cdacfbfe13179a28f',1,'gRenderObject']]],
   ['greplaceall_744',['gReplaceAll',['../gUtils_8h.html#a808b4eebc0b92845b7c47eb042f97df9',1,'gUtils.h']]],
