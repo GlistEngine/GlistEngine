@@ -25,11 +25,14 @@ struct gVKTexture {
 	VkDescriptorSet descriptorset = VK_NULL_HANDLE;
 	int width = 0;
 	int height = 0;
+	uint32_t miplevels = 1;
+	bool usemipmaps = true;
 	// What the current sampler was built with, so a filtering or wrapping change
 	// can be detected and only then rebuild it. The defaults match what gTexture
 	// starts from.
 	VkFilter minfilter = VK_FILTER_LINEAR;
 	VkFilter magfilter = VK_FILTER_LINEAR;
+	VkSamplerMipmapMode mipmapmode = VK_SAMPLER_MIPMAP_MODE_LINEAR;
 	VkSamplerAddressMode addressu = VK_SAMPLER_ADDRESS_MODE_REPEAT;
 	VkSamplerAddressMode addressv = VK_SAMPLER_ADDRESS_MODE_REPEAT;
 };
@@ -49,7 +52,8 @@ bool gvkWriteTextureDescriptorSet(gVKContext& ctx, gVKTexture* tex);
 // how gTexture::setFiltering / setWrapping reach Vulkan. Returns false when nothing
 // had to change.
 bool gvkSetTextureSampler(gVKContext& ctx, gVKTexture* tex, VkFilter minFilter, VkFilter magFilter,
-		VkSamplerAddressMode addressU, VkSamplerAddressMode addressV);
+		VkSamplerAddressMode addressU, VkSamplerAddressMode addressV, bool useMipmaps = true,
+		VkSamplerMipmapMode mipmapMode = VK_SAMPLER_MIPMAP_MODE_LINEAR);
 
 void gvkDestroyTexture(gVKContext& ctx, gVKTexture* tex);
 

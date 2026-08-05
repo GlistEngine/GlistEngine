@@ -8,6 +8,8 @@
 
 #include "gVKBuffer.h"
 #include "gUtils.h"
+#include <algorithm>
+#include <cmath>
 #include <cstring>
 
 // Records a layout transition for a colour image with a full pipeline barrier.
@@ -16,7 +18,8 @@
 static void gvkTransitionImageLayout(VkCommandBuffer cmd, VkImage image,
 		VkImageLayout oldLayout, VkImageLayout newLayout,
 		VkAccessFlags srcAccess, VkAccessFlags dstAccess,
-		VkPipelineStageFlags srcStage, VkPipelineStageFlags dstStage) {
+		VkPipelineStageFlags srcStage, VkPipelineStageFlags dstStage,
+		uint32_t baseMipLevel = 0, uint32_t levelCount = 1) {
 	VkImageMemoryBarrier barrier{};
 	barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
 	barrier.oldLayout = oldLayout;
@@ -25,8 +28,8 @@ static void gvkTransitionImageLayout(VkCommandBuffer cmd, VkImage image,
 	barrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
 	barrier.image = image;
 	barrier.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-	barrier.subresourceRange.baseMipLevel = 0;
-	barrier.subresourceRange.levelCount = 1;
+	barrier.subresourceRange.baseMipLevel = baseMipLevel;
+	barrier.subresourceRange.levelCount = levelCount;
 	barrier.subresourceRange.baseArrayLayer = 0;
 	barrier.subresourceRange.layerCount = 1;
 	barrier.srcAccessMask = srcAccess;
@@ -34,11 +37,11 @@ static void gvkTransitionImageLayout(VkCommandBuffer cmd, VkImage image,
 	vkCmdPipelineBarrier(cmd, srcStage, dstStage, 0, 0, nullptr, 0, nullptr, 1, &barrier);
 }
 
-// Builds a sampler for the given filtering and wrapping. Only one mip level is ever
-// uploaded, so the mipmap mode follows the minification filter and stays consistent
-// with it rather than being a third setting.
-static VkSampler gvkCreateSampler(VkDevice device, VkFilter minFilter, VkFilter magFilter,
+// Builds a sampler for the given filtering and wrapping. The texture owns a full
+// mip chain; usemipmaps selects whether the sampler may traverse it.
+static VkSampler gvkCreateSampler(gVKContext& ctx, const gVKTexture& texture, VkFilter minFilter, VkFilter magFilter,
 		VkSamplerAddressMode addressU, VkSamplerAddressMode addressV) {
+	VkDevice device = *ctx.getDevice();
 	VkSamplerCreateInfo samplerinfo{};
 	samplerinfo.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
 	samplerinfo.magFilter = magFilter;
@@ -46,8 +49,9 @@ static VkSampler gvkCreateSampler(VkDevice device, VkFilter minFilter, VkFilter 
 	samplerinfo.addressModeU = addressU;
 	samplerinfo.addressModeV = addressV;
 	samplerinfo.addressModeW = VK_SAMPLER_ADDRESS_MODE_REPEAT;
-	samplerinfo.mipmapMode = minFilter == VK_FILTER_NEAREST
-			? VK_SAMPLER_MIPMAP_MODE_NEAREST : VK_SAMPLER_MIPMAP_MODE_LINEAR;
+	samplerinfo.mipmapMode = texture.mipmapmode;
+	samplerinfo.minLod = 0.0f;
+	samplerinfo.maxLod = texture.usemipmaps ? static_cast<float>(texture.miplevels - 1) : 0.0f;
 	samplerinfo.borderColor = VK_BORDER_COLOR_INT_OPAQUE_BLACK;
 	VkSampler sampler = VK_NULL_HANDLE;
 	vkCreateSampler(device, &samplerinfo, nullptr, &sampler);
@@ -75,19 +79,20 @@ gVKTexture* gvkCreateTextureRGBA8(gVKContext& ctx, const void* rgbaPixels, int w
 	gVKTexture* tex = new gVKTexture();
 	tex->width = width;
 	tex->height = height;
+	tex->miplevels = static_cast<uint32_t>(std::floor(std::log2(std::max(width, height)))) + 1;
 
 	VkImageCreateInfo imageinfo{};
 	imageinfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
 	imageinfo.imageType = VK_IMAGE_TYPE_2D;
 	imageinfo.extent = {static_cast<uint32_t>(width), static_cast<uint32_t>(height), 1};
-	imageinfo.mipLevels = 1;
+	imageinfo.mipLevels = tex->miplevels;
 	imageinfo.arrayLayers = 1;
 	// Keep file pixels as display-ready values, matching the OpenGL texture path
 	// and the UNORM swapchain. No implicit sRGB decode is performed while sampling.
 	imageinfo.format = VK_FORMAT_R8G8B8A8_UNORM;
 	imageinfo.tiling = VK_IMAGE_TILING_OPTIMAL;
 	imageinfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-	imageinfo.usage = VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT;
+	imageinfo.usage = VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT;
 	imageinfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
 	imageinfo.samples = VK_SAMPLE_COUNT_1_BIT;
 	if(vkCreateImage(device, &imageinfo, nullptr, &tex->image) != VK_SUCCESS) {
@@ -126,10 +131,35 @@ gVKTexture* gvkCreateTextureRGBA8(gVKContext& ctx, const void* rgbaPixels, int w
 	region.imageExtent = {static_cast<uint32_t>(width), static_cast<uint32_t>(height), 1};
 	vkCmdCopyBufferToImage(cmd, staging, tex->image, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &region);
 
-	gvkTransitionImageLayout(cmd, tex->image,
-			VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
-			VK_ACCESS_TRANSFER_WRITE_BIT, VK_ACCESS_SHADER_READ_BIT,
-			VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT);
+	int32_t mipwidth = width;
+	int32_t mipheight = height;
+	for(uint32_t level = 1; level < tex->miplevels; level++) {
+		gvkTransitionImageLayout(cmd, tex->image, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+				VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, VK_ACCESS_TRANSFER_WRITE_BIT, VK_ACCESS_TRANSFER_READ_BIT,
+				VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT, level - 1);
+		gvkTransitionImageLayout(cmd, tex->image, VK_IMAGE_LAYOUT_UNDEFINED,
+				VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 0, VK_ACCESS_TRANSFER_WRITE_BIT,
+				VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT, level);
+		VkImageBlit blit{};
+		blit.srcSubresource = {VK_IMAGE_ASPECT_COLOR_BIT, level - 1, 0, 1};
+		blit.srcOffsets[1] = {mipwidth, mipheight, 1};
+		const int32_t nextwidth = std::max(1, mipwidth / 2);
+		const int32_t nextheight = std::max(1, mipheight / 2);
+		blit.dstSubresource = {VK_IMAGE_ASPECT_COLOR_BIT, level, 0, 1};
+		blit.dstOffsets[1] = {nextwidth, nextheight, 1};
+		vkCmdBlitImage(cmd, tex->image, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
+				tex->image, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &blit, VK_FILTER_LINEAR);
+		mipwidth = nextwidth;
+		mipheight = nextheight;
+	}
+	if(tex->miplevels > 1) {
+		gvkTransitionImageLayout(cmd, tex->image, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
+				VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, VK_ACCESS_TRANSFER_READ_BIT, VK_ACCESS_SHADER_READ_BIT,
+				VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT, 0, tex->miplevels - 1);
+	}
+	gvkTransitionImageLayout(cmd, tex->image, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+			VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, VK_ACCESS_TRANSFER_WRITE_BIT, VK_ACCESS_SHADER_READ_BIT,
+			VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT, tex->miplevels - 1);
 	gvkEndSingleTimeCommands(ctx, cmd);
 
 	vkDestroyBuffer(device, staging, nullptr);
@@ -142,7 +172,7 @@ gVKTexture* gvkCreateTextureRGBA8(gVKContext& ctx, const void* rgbaPixels, int w
 	viewinfo.format = VK_FORMAT_R8G8B8A8_UNORM;
 	viewinfo.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
 	viewinfo.subresourceRange.baseMipLevel = 0;
-	viewinfo.subresourceRange.levelCount = 1;
+	viewinfo.subresourceRange.levelCount = tex->miplevels;
 	viewinfo.subresourceRange.baseArrayLayer = 0;
 	viewinfo.subresourceRange.layerCount = 1;
 	vkCreateImageView(device, &viewinfo, nullptr, &tex->view);
@@ -150,23 +180,27 @@ gVKTexture* gvkCreateTextureRGBA8(gVKContext& ctx, const void* rgbaPixels, int w
 	// The sampler starts from gTexture's own defaults; setFiltering / setWrapping
 	// rebuild it through gvkSetTextureSampler when the texture asks for something
 	// else, which the upload path does right after this returns.
-	tex->sampler = gvkCreateSampler(device, tex->minfilter, tex->magfilter, tex->addressu, tex->addressv);
+	tex->sampler = gvkCreateSampler(ctx, *tex, tex->minfilter, tex->magfilter, tex->addressu, tex->addressv);
 
 	gvkWriteTextureDescriptorSet(ctx, tex);
 	return tex;
 }
 
 bool gvkSetTextureSampler(gVKContext& ctx, gVKTexture* tex, VkFilter minFilter, VkFilter magFilter,
-		VkSamplerAddressMode addressU, VkSamplerAddressMode addressV) {
+		VkSamplerAddressMode addressU, VkSamplerAddressMode addressV, bool useMipmaps,
+		VkSamplerMipmapMode mipmapMode) {
 	if(tex == nullptr) return false;
 	if(tex->minfilter == minFilter && tex->magfilter == magFilter
-			&& tex->addressu == addressU && tex->addressv == addressV) {
+			&& tex->addressu == addressU && tex->addressv == addressV && tex->usemipmaps == useMipmaps
+			&& tex->mipmapmode == mipmapMode) {
 		return false;
 	}
 	tex->minfilter = minFilter;
 	tex->magfilter = magFilter;
 	tex->addressu = addressU;
 	tex->addressv = addressV;
+	tex->usemipmaps = useMipmaps;
+	tex->mipmapmode = mipmapMode;
 
 	VkDevice device = *ctx.getDevice();
 	if(device == VK_NULL_HANDLE || tex->sampler == VK_NULL_HANDLE) return false;
@@ -176,7 +210,7 @@ bool gvkSetTextureSampler(gVKContext& ctx, gVKTexture* tex, VkFilter minFilter, 
 	// scene.
 	vkDeviceWaitIdle(device);
 	vkDestroySampler(device, tex->sampler, nullptr);
-	tex->sampler = gvkCreateSampler(device, minFilter, magFilter, addressU, addressV);
+	tex->sampler = gvkCreateSampler(ctx, *tex, minFilter, magFilter, addressU, addressV);
 	if(tex->descriptorset != VK_NULL_HANDLE) {
 		VkDescriptorImageInfo imginfo{};
 		imginfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;

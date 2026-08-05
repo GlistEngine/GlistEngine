@@ -631,13 +631,22 @@ void gVKRenderEngine::texImage2D(GLenum target, GLint internalFormat, int width,
 }
 
 #ifdef GVK_DESKTOP_GLFW
-// gTexture speaks in GL enums. Nearest is the only distinction the 2D path needs -
-// there is a single mip level, so the mipmap variants collapse onto their base
-// filter - and the clamping wrap modes all map onto clamp to edge, which is what
-// the GL path resolves them to as well.
+// gTexture speaks in GL enums. Texel filtering and mip-level filtering are kept
+// separate below so GL_LINEAR_MIPMAP_LINEAR maps to Vulkan's linear minification
+// plus linear mip interpolation, while plain GL_LINEAR clamps sampling to level 0.
 static VkFilter gvkFilterFromGL(GLint filter) {
 	return (filter == GL_NEAREST || filter == GL_NEAREST_MIPMAP_NEAREST || filter == GL_NEAREST_MIPMAP_LINEAR)
 			? VK_FILTER_NEAREST : VK_FILTER_LINEAR;
+}
+
+static bool gvkUsesMipmaps(GLint filter) {
+	return filter == GL_NEAREST_MIPMAP_NEAREST || filter == GL_LINEAR_MIPMAP_NEAREST
+			|| filter == GL_NEAREST_MIPMAP_LINEAR || filter == GL_LINEAR_MIPMAP_LINEAR;
+}
+
+static VkSamplerMipmapMode gvkMipmapModeFromGL(GLint filter) {
+	return filter == GL_NEAREST_MIPMAP_NEAREST || filter == GL_LINEAR_MIPMAP_NEAREST
+			? VK_SAMPLER_MIPMAP_MODE_NEAREST : VK_SAMPLER_MIPMAP_MODE_LINEAR;
 }
 
 static VkSamplerAddressMode gvkAddressFromGL(GLint wrap) {
@@ -656,7 +665,7 @@ void gVKRenderEngine::setWrapping(GLenum target, GLint wrapS, GLint wrapT) {
 	gVKTexture* tex = getBoundVKTexture();
 	if(tex == nullptr) return;
 	gvkSetTextureSampler(*vkcontext, tex, tex->minfilter, tex->magfilter,
-			gvkAddressFromGL(wrapS), gvkAddressFromGL(wrapT));
+			gvkAddressFromGL(wrapS), gvkAddressFromGL(wrapT), tex->usemipmaps, tex->mipmapmode);
 #endif
 }
 
@@ -669,7 +678,7 @@ void gVKRenderEngine::setFiltering(GLenum target, GLint minFilter, GLint magFilt
 	gVKTexture* tex = getBoundVKTexture();
 	if(tex == nullptr) return;
 	gvkSetTextureSampler(*vkcontext, tex, gvkFilterFromGL(minFilter), gvkFilterFromGL(magFilter),
-			tex->addressu, tex->addressv);
+			tex->addressu, tex->addressv, gvkUsesMipmaps(minFilter), gvkMipmapModeFromGL(minFilter));
 #endif
 }
 
@@ -679,7 +688,8 @@ void gVKRenderEngine::setWrappingAndFiltering(GLenum target, GLint wrapS, GLint 
 	gVKTexture* tex = getBoundVKTexture();
 	if(tex == nullptr) return;
 	gvkSetTextureSampler(*vkcontext, tex, gvkFilterFromGL(minFilter), gvkFilterFromGL(magFilter),
-			gvkAddressFromGL(wrapS), gvkAddressFromGL(wrapT));
+			gvkAddressFromGL(wrapS), gvkAddressFromGL(wrapT), gvkUsesMipmaps(minFilter),
+			gvkMipmapModeFromGL(minFilter));
 #endif
 }
 
@@ -718,7 +728,8 @@ void gVKRenderEngine::readTexturePixelsHDR(float* inPixels, GLuint textureId, in
 }
 
 void gVKRenderEngine::generateMipMap() {
-	// The 2D image textures are single-level; nothing to generate here.
+	// gvkCreateTextureRGBA8 generates the complete chain during upload, before the
+	// image becomes shader-readable. The later gTexture callback is therefore done.
 }
 
 void gVKRenderEngine::bindSkyTexture(GLuint texId) {

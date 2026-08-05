@@ -206,7 +206,7 @@ static bool gvkBuildPipeline(VkDevice device, VkFormat colorFormat, VkFormat dep
 	blendattachment.srcColorBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA;
 	blendattachment.dstColorBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
 	blendattachment.colorBlendOp = VK_BLEND_OP_ADD;
-	blendattachment.srcAlphaBlendFactor = VK_BLEND_FACTOR_ONE;
+	blendattachment.srcAlphaBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA;
 	blendattachment.dstAlphaBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
 	blendattachment.alphaBlendOp = VK_BLEND_OP_ADD;
 
