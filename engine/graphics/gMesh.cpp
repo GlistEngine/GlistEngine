@@ -203,10 +203,11 @@ void gMesh::drawInstanced(const std::vector<glm::mat4>& instanceTransformations)
         return;
     }
 
-    // Instancing is an OpenGL-only path for now: it needs the colour shader's
-    // useInstancing branch and a per-instance vertex buffer, neither of which the
-    // Vulkan 2D pipelines have. Without this the call would reach a null shader.
-    if (renderer->isVulkan()) return;
+    if (renderer->isVulkan()) {
+        for(const glm::mat4& transformation : instanceTransformations)
+            drawVulkanMesh(&transformation);
+        return;
+    }
 
     drawStart(true);
     drawVboInstanced(instanceTransformations);
@@ -354,7 +355,7 @@ void gMesh::drawVbo() {
 //    vbo.clear();
 }
 
-void gMesh::drawVulkanMesh() {
+void gMesh::drawVulkanMesh(const glm::mat4* instanceTransformation) {
 	G_PROFILE_ZONE_SCOPED_N("gMesh::drawVulkanMesh()");
 	const std::vector<gVertex>& verts = *vertices;
 	if (verts.empty()) return;
@@ -371,12 +372,15 @@ void gMesh::drawVulkanMesh() {
 	points3d.clear();
 	if(!isprojection2d && drawmode != DRAWMODE_TRIANGLES &&
 			drawmode != DRAWMODE_TRIANGLESTRIP && drawmode != DRAWMODE_TRIANGLEFAN) return;
-	const glm::mat3 modelmatrix(localtransformationmatrix.back());
+	const glm::mat4 drawmodel = instanceTransformation != nullptr
+			? localtransformationmatrix.back() * *instanceTransformation
+			: localtransformationmatrix.back();
+	const glm::mat3 modelmatrix(drawmodel);
 	const float modeldeterminant = glm::determinant(modelmatrix);
 	const glm::mat3 normalmatrix = std::abs(modeldeterminant) > 0.000001f
 			? glm::transpose(glm::inverse(modelmatrix)) : glm::mat3(1.0f);
 	const auto makeVertex3D = [&](const gVertex& vertex) {
-		return gRenderer::MeshVertex3D{glm::vec3(localtransformationmatrix.back() * glm::vec4(vertex.position, 1.0f)),
+		return gRenderer::MeshVertex3D{glm::vec3(drawmodel * glm::vec4(vertex.position, 1.0f)),
 				glm::normalize(normalmatrix * vertex.normal), vertex.texcoords * texturetiling, vertex.color};
 	};
 	if (inds.empty()) {
@@ -409,9 +413,6 @@ void gMesh::drawVulkanMesh() {
 		renderer->drawColored2D(points2d.data(), static_cast<int>(points2d.size()), rgba, mvp, drawmode);
 	} else {
 		if(renderer->isShadowPassActive()) {
-			const glm::mat4& model = localtransformationmatrix.back();
-			for(gRenderer::MeshVertex3D& point : points3d)
-				point.position = glm::vec3(model * glm::vec4(point.position, 1.0f));
 			renderer->drawShadowMesh3D(points3d.data(), static_cast<int>(points3d.size()));
 			return;
 		}

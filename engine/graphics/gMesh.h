@@ -116,7 +116,7 @@ protected:
     void drawStart(bool isInstanced = false);
     void drawVbo();
     // Routes a mesh to the Vulkan backend's coloured 2D or material 3D path.
-    void drawVulkanMesh();
+    void drawVulkanMesh(const glm::mat4* instanceTransformation = nullptr);
     void drawVboInstanced(const std::vector<glm::mat4>& instanceTransformations);
     void drawExtraShaders();
     void drawEnd();

@@ -36,13 +36,14 @@ void gSkinnedMesh::draw() {
 		}
 		gMesh::draw();
 	}
-	else if (!isvertexanimationstoredonvram) {
+	else if (!isvertexanimationstoredonvram || renderer->isVulkan()) {
 		if (isvertexanimated && (frameno != framenoold || framenoold == -1)) {
 			for(int i = 0; i < vbo->getVerticesNum(); i++) {
 				verts[i].position = animatedPosData[0][frameno][i];
 				verts[i].normal = animatedNormData[0][frameno][i];
 			}
-			vbo->setVertexData(&verts[0], sizeof(gVertex), vbo->getVerticesNum());
+			if(!renderer->isVulkan())
+				vbo->setVertexData(&verts[0], sizeof(gVertex), vbo->getVerticesNum());
 			framenoold = frameno;
 		}
 		gMesh::draw();
