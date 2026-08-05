@@ -1434,6 +1434,13 @@ void gVKRenderEngine::init() {
 	// the 2D draw helpers read the current colour, so create a white default here.
 	rendercolor = new gColor();
 	rendercolor->set(255, 255, 255, 255);
+	isdepthtestenabled = false;
+	depthtesttype = DEPTHTESTTYPE_LESS;
+	isalphablendingenabled = false;
+	isalphatestenabled = false;
+	islightingenabled = true;
+	issoftshadowsenabled = true;
+	globalambientcolor.set(255, 255, 255, 255);
 	// The primitive meshes are created by gRenderer::init() as well. They hold no GL
 	// objects until they are drawn, and the 2D ones now record through the backend's
 	// draw path, so drawLine / drawCircle / drawRectangle and friends need them here
@@ -1542,7 +1549,7 @@ void gVKRenderEngine::drawMaterialMesh3D(const MeshVertex3D* vertices, int count
 			ambient * drawcolor, diffuse * drawcolor, specular * drawcolor, shininess, textured, pbr,
 			cameraposition, lighting, isdepthtestenabled, depthtesttype,
 			isalphablendingenabled, iscullingenabled, cullface, cullingdirection,
-			shadowmapenabled, issoftshadowsenabled, shadowlightmatrix, mvp);
+			shadowmapenabled, issoftshadowsenabled, shadowlightmatrix, shadowlightposition, mvp);
 #endif
 }
 

@@ -30,6 +30,7 @@ struct alignas(16) gvkMaterialScene {
 	glm::ivec4 counts{0};
 	glm::vec4 globalAmbient{1.0f};
 	glm::mat4 shadowMatrix{1.0f};
+	glm::vec4 shadowLightPosition{0.0f};
 	glm::ivec4 shadowOptions{0};
 	gvkMaterialLight lights[GLIST_MAX_LIGHTS];
 };
@@ -258,7 +259,8 @@ void gvkDrawMesh3D(gVKContext& ctx, const gRenderer::MeshVertex3D* vertices, int
 		const glm::vec4& diffuseProduct, const glm::vec4& specular, float shininess, bool textured,
 		bool pbr, const glm::vec3& cameraPosition, const gRenderer::MaterialLighting3D& lighting,
 		bool depthEnabled, int depthType, bool blendingEnabled, bool cullingEnabled, int cullFace, int frontFace,
-		bool shadowEnabled, bool softShadowsEnabled, const glm::mat4& shadowMatrix, const glm::mat4& mvp) {
+		bool shadowEnabled, bool softShadowsEnabled, const glm::mat4& shadowMatrix,
+		const glm::vec3& shadowLightPosition, const glm::mat4& mvp) {
 	if(count <= 0 || vertices == nullptr) return;
 	if(!gvkEnsureRendering(ctx)) return;
 	VkCommandBuffer cmd = ctx.getCurrentCommandBuffer();
@@ -287,6 +289,7 @@ void gvkDrawMesh3D(gVKContext& ctx, const gRenderer::MeshVertex3D* vertices, int
 	scene.counts.y = static_cast<int>(lighting.enabledMask);
 	scene.globalAmbient = lighting.globalAmbient;
 	scene.shadowMatrix = shadowMatrix;
+	scene.shadowLightPosition = glm::vec4(shadowLightPosition, 1.0f);
 	scene.shadowOptions.x = shadowEnabled ? 1 : 0;
 	scene.shadowOptions.y = softShadowsEnabled ? 1 : 0;
 	for(int i = 0; i < scene.counts.x; i++) {

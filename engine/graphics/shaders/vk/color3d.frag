@@ -26,6 +26,7 @@ layout(std140, set = 5, binding = 0) uniform MaterialScene {
     ivec4 counts;
     vec4 globalAmbient;
     mat4 shadowMatrix;
+	vec4 shadowLightPosition;
     ivec4 shadowOptions;
     Light lights[8];
 } scene;
@@ -65,20 +66,15 @@ float shadowVisibility(vec3 normal) {
 	projected = projected * 0.5 + 0.5;
 	projected.y = 1.0 - projected.y;
 	if(projected.z > 1.0 || any(lessThan(projected.xy, vec2(0.0))) || any(greaterThan(projected.xy, vec2(1.0)))) return 1.0;
-	vec3 lightDirection = vec3(0.0, 1.0, 0.0);
-	for(int i = 0; i < scene.counts.x; i++) {
-		if((scene.counts.y & (1 << i)) != 0 && scene.lights[i].meta.x == 1) {
-			lightDirection = normalize(-scene.lights[i].direction.xyz); break;
-		}
-	}
-	float bias = max(0.005 * (1.0 - dot(normal, lightDirection)), 0.0005);
-	if(scene.shadowOptions.y == 0)
-		return projected.z - bias > texture(shadowMap, projected.xy).r ? 0.0 : 1.0;
+	vec3 lightDirection = normalize(scene.shadowLightPosition.xyz - vWorldPos);
+	float bias = max(0.05 * (1.0 - dot(normal, lightDirection)), 0.005);
 	vec2 texel = 1.0 / vec2(textureSize(shadowMap, 0));
 	float blocked = 0.0;
-	for(int x = -1; x <= 1; x++) for(int y = -1; y <= 1; y++)
+	int radius = scene.shadowOptions.y != 0 ? 2 : 1;
+	for(int x = -radius; x <= radius; x++) for(int y = -radius; y <= radius; y++)
 		blocked += projected.z - bias > texture(shadowMap, projected.xy + vec2(x,y) * texel).r ? 1.0 : 0.0;
-	return 1.0 - blocked / 9.0;
+	float sampleCount = float((radius * 2 + 1) * (radius * 2 + 1));
+	return 1.0 - blocked / sampleCount;
 }
 
 void main() {
@@ -155,7 +151,7 @@ void main() {
 		if((flags & 1u) != 0u && materialDiffuse.a < 0.5) discard;
 		vec4 materialSpecular = vec4(pc.materialSpecularShininess.rgb, 1.0);
 		vec3 V = normalize(pc.cameraPositionFlags.xyz - vWorldPos);
-		float visibility = shadowVisibility(N);
+		float visibility = shadowVisibility(normalize(vNormal));
 		vec4 result = vec4(0.0);
 		bool hasLight = false;
 		for(int i = 0; i < scene.counts.x; i++) {

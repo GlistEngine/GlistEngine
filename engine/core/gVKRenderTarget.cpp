@@ -152,8 +152,7 @@ bool gvkCreateShadowTarget(gVKContext& ctx, uint32_t width, uint32_t height) {
 	if(vkCreateImageView(ctx.device, &view, nullptr, &ctx.shadowimageview) != VK_SUCCESS) { gvkDestroyShadowTarget(ctx); return false; }
 	VkSamplerCreateInfo sampler{VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO};
 	sampler.magFilter = VK_FILTER_LINEAR; sampler.minFilter = VK_FILTER_LINEAR;
-	sampler.addressModeU = sampler.addressModeV = sampler.addressModeW = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER;
-	sampler.borderColor = VK_BORDER_COLOR_FLOAT_OPAQUE_WHITE;
+	sampler.addressModeU = sampler.addressModeV = sampler.addressModeW = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
 	sampler.maxLod = 1.0f;
 	if(vkCreateSampler(ctx.device, &sampler, nullptr, &ctx.shadowsampler) != VK_SUCCESS) { gvkDestroyShadowTarget(ctx); return false; }
 	VkDescriptorSetLayout layout = ctx.getShadowDescriptorSetLayout();

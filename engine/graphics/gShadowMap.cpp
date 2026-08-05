@@ -120,8 +120,14 @@ void gShadowMap::enable() {
 		glViewport(0, 0, renderer->getScreenWidth(), renderer->getScreenHeight());
 		renderer->getColorShader()->use();
 		renderer->getColorShader()->setInt("aUseShadowMap", 1);
-		renderer->getColorShader()->setVec3("lightPos", lightposition);
+		renderer->getColorShader()->setVec3("shadowLightPos", lightposition);
 		renderer->getColorShader()->setInt("shadowMap", shadowmaptextureslot);
+		renderer->getPbrShader()->use();
+		renderer->getPbrShader()->setInt("useShadowMap", 1);
+		renderer->getPbrShader()->setInt("softShadows", renderer->isSoftShadowsEnabled() ? 1 : 0);
+		renderer->getPbrShader()->setVec3("shadowLightPos", lightposition);
+		renderer->getPbrShader()->setMat4("lightMatrix", lightmatrix);
+		renderer->getPbrShader()->setInt("shadowMap", shadowmaptextureslot);
 
 		renderer->bindTexture(depthfbo.getTextureId(), shadowmaptextureslot);
 		renderpassno = 1;
@@ -135,6 +141,12 @@ void gShadowMap::disable() {
 		isenabled = false;
 		isshadowmappingenabled = false;
 		if(renderer->isVulkan()) renderer->stopUsingShadowMap();
+		else {
+			renderer->getColorShader()->use();
+			renderer->getColorShader()->setInt("aUseShadowMap", 0);
+			renderer->getPbrShader()->use();
+			renderer->getPbrShader()->setInt("useShadowMap", 0);
+		}
 		return;
 	}
 
