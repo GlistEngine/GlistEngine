@@ -580,8 +580,7 @@ void gVKRenderEngine::deleteTexture(GLuint& texId) {
 	texId = 0;
 }
 
-void gVKRenderEngine::texImage2D(GLenum target, GLint internalFormat, int width, int height, GLint format,
-                                 GLint type, void* data) {
+void gVKRenderEngine::texImage2D(GLenum target, GLint internalFormat, int width, int height, GLint format, GLint type, void* data, GLint level) {
 #ifdef GVK_DESKTOP_GLFW
 	if(vkcontext == nullptr || boundtextureid == 0) return;
 	// Only 8-bit colour uploads that carry pixels become a texture. Allocation-only
@@ -627,6 +626,10 @@ void gVKRenderEngine::texImage2D(GLenum target, GLint internalFormat, int width,
 	gVKTexture* tex = gvkCreateTextureRGBA8(*vkcontext, rgba.data(), width, height);
 	if(tex != nullptr) vktextures[boundtextureid] = tex;
 #endif
+}
+
+void gVKRenderEngine::setTextureMaxLevel(GLenum target, int maxLevel) {
+    /* no-op */
 }
 
 #ifdef GVK_DESKTOP_GLFW

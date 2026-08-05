@@ -90,6 +90,51 @@ void gFbo::allocate(int width, int height, bool isDepthMap, bool useDepthTexture
 	isallocated = true;
 }
 
+void gFbo::allocateMipChain(int width, int height, int miplevels) {
+	if(isallocated) {
+		delete texture;
+		delete depthtexture;
+		if (!usedepthtexture) renderer->deleteRenderbuffer(rbo);
+		renderer->deleteFramebuffer(framebuffer);
+
+		texture = nullptr;
+		depthtexture = nullptr;
+		isallocated = false;
+	}
+
+	/*	@brief Depth + Stencil allocation does not implemented
+	 * 	This mipchain designed for post process shader
+	 */
+
+	this->width = width;
+	this->height = height;
+	this->miplevels = miplevels;
+	isdepthmap = false;
+	usedepthtexture = false;
+
+	framebuffer = renderer->createFramebuffer();
+	texture = new gTexture(width, height, miplevels, GL_RGBA, true);
+
+	renderer->bindFramebuffer(framebuffer);
+	renderer->attachTextureToFramebuffer(GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture->getId(), 0);
+
+#if defined(DEBUG) || defined(ENGINE_OPENGL_CHECKS)
+	renderer->checkFramebufferStatus();
+#endif
+
+	renderer->bindDefaultFramebuffer();
+	isallocated = true;
+}
+
+void gFbo::bindMip(int level) {
+	renderer->bindFramebuffer(framebuffer);
+	renderer->attachTextureToFramebuffer(GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture->getId(), level);
+
+	int w = std::max(1, width >> level);
+	int h = std::max(1, height >> level);
+	renderer->setViewport(0, 0, w, h);
+}
+
 unsigned int gFbo::getId() const {
 	return framebuffer;
 }
