@@ -109,6 +109,8 @@ bool gvkCreateSwapchain(gVKContext& ctx, GLFWwindow* window) {
 	createinfo.imageExtent = extent;
 	createinfo.imageArrayLayers = 1;
 	createinfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+	if((caps.supportedUsageFlags & VK_IMAGE_USAGE_TRANSFER_SRC_BIT) != 0)
+		createinfo.imageUsage |= VK_IMAGE_USAGE_TRANSFER_SRC_BIT;
 
 	// When one family renders and another presents, the images are used by both, so
 	// they have to be shared. On the usual single family setup exclusive ownership

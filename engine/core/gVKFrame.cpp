@@ -10,8 +10,10 @@
 #ifdef GVK_DESKTOP_GLFW
 
 #include "gVKSwapchain.h"
+#include "gVKBuffer.h"
 #include "gUtils.h"
 #include <GLFW/glfw3.h>
+#include <cstring>
 
 bool gvkBeginFrame(gVKContext& ctx, GLFWwindow* window) {
 	if(ctx.device == VK_NULL_HANDLE || ctx.swapchain == VK_NULL_HANDLE || window == nullptr) {
@@ -158,16 +160,48 @@ bool gvkEndFrame(gVKContext& ctx, GLFWwindow* window) {
 
 	VkCommandBuffer commandbuffer = ctx.commandbuffers[ctx.currentframe];
 	vkCmdEndRendering(commandbuffer);
+	VkBuffer screenshotbuffer = VK_NULL_HANDLE;
+	VkDeviceMemory screenshotmemory = VK_NULL_HANDLE;
+	const VkDeviceSize screenshotsize = static_cast<VkDeviceSize>(ctx.swapchainextent.width)
+			* ctx.swapchainextent.height * 4;
+	const bool capturescreenshot = ctx.screenshotrequested
+			&& (ctx.surfacecapabilities.supportedUsageFlags & VK_IMAGE_USAGE_TRANSFER_SRC_BIT) != 0
+			&& gvkCreateBuffer(ctx, screenshotsize, VK_BUFFER_USAGE_TRANSFER_DST_BIT,
+					VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
+					screenshotbuffer, screenshotmemory);
+	if(capturescreenshot) {
+		VkImageMemoryBarrier transferbarrier{};
+		transferbarrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
+		transferbarrier.srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+		transferbarrier.dstAccessMask = VK_ACCESS_TRANSFER_READ_BIT;
+		transferbarrier.oldLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+		transferbarrier.newLayout = VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL;
+		transferbarrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+		transferbarrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+		transferbarrier.image = ctx.swapchainimages[ctx.currentimageindex];
+		transferbarrier.subresourceRange = {VK_IMAGE_ASPECT_COLOR_BIT, 0, 1, 0, 1};
+		vkCmdPipelineBarrier(commandbuffer, VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
+				VK_PIPELINE_STAGE_TRANSFER_BIT, 0, 0, nullptr, 0, nullptr, 1, &transferbarrier);
+
+		VkBufferImageCopy copyregion{};
+		copyregion.imageSubresource = {VK_IMAGE_ASPECT_COLOR_BIT, 0, 0, 1};
+		copyregion.imageExtent = {ctx.swapchainextent.width, ctx.swapchainextent.height, 1};
+		vkCmdCopyImageToBuffer(commandbuffer, ctx.swapchainimages[ctx.currentimageindex],
+				VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, screenshotbuffer, 1, &copyregion);
+	} else if(ctx.screenshotrequested) {
+		ctx.screenshotrequested = false;
+		gLoge("gVKFrame") << "Could not allocate the screenshot readback buffer.";
+	}
 	VkImageMemoryBarrier presentbarrier{};
 	presentbarrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
-	presentbarrier.srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
-	presentbarrier.oldLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+	presentbarrier.srcAccessMask = capturescreenshot ? VK_ACCESS_TRANSFER_READ_BIT : VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+	presentbarrier.oldLayout = capturescreenshot ? VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL : VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
 	presentbarrier.newLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
 	presentbarrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
 	presentbarrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
 	presentbarrier.image = ctx.swapchainimages[ctx.currentimageindex];
 	presentbarrier.subresourceRange = {VK_IMAGE_ASPECT_COLOR_BIT, 0, 1, 0, 1};
-	vkCmdPipelineBarrier(commandbuffer, VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
+	vkCmdPipelineBarrier(commandbuffer, capturescreenshot ? VK_PIPELINE_STAGE_TRANSFER_BIT : VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
 			VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, 0, 0, nullptr, 0, nullptr, 1, &presentbarrier);
 	ctx.swapchainimagelayouts[ctx.currentimageindex] = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
 	ctx.renderingactive = false;
@@ -199,6 +233,24 @@ bool gvkEndFrame(gVKContext& ctx, GLFWwindow* window) {
 	if(result != VK_SUCCESS) {
 		gLoge("gVKFrame") << "vkQueueSubmit failed! VkResult: " << result;
 		return false;
+	}
+	if(capturescreenshot) {
+		vkWaitForFences(ctx.device, 1, &ctx.inflightfences[ctx.currentframe], VK_TRUE, UINT64_MAX);
+		void* mapped = nullptr;
+		if(vkMapMemory(ctx.device, screenshotmemory, 0, screenshotsize, 0, &mapped) == VK_SUCCESS) {
+			ctx.screenshotpixels.resize(static_cast<size_t>(screenshotsize));
+			std::memcpy(ctx.screenshotpixels.data(), mapped, static_cast<size_t>(screenshotsize));
+			vkUnmapMemory(ctx.device, screenshotmemory);
+			ctx.screenshotwidth = ctx.swapchainextent.width;
+			ctx.screenshotheight = ctx.swapchainextent.height;
+			ctx.screenshotformat = ctx.swapchainformat;
+			ctx.screenshotready = true;
+		} else {
+			gLoge("gVKFrame") << "Could not map the screenshot readback buffer.";
+		}
+		ctx.screenshotrequested = false;
+		vkDestroyBuffer(ctx.device, screenshotbuffer, nullptr);
+		vkFreeMemory(ctx.device, screenshotmemory, nullptr);
 	}
 
 	VkPresentInfoKHR presentinfo{};

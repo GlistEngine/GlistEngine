@@ -564,6 +564,10 @@ void gAppManager::tick() {
         if(vkcanvas) vkcanvas->update();
         if(renderer != nullptr && renderer->beginFrame()) {
             if(vkcanvas) {
+				// Keep the canvas lifecycle identical to the OpenGL path. Dynamic
+				// Rendering has not begun yet, so this selects the attachment clear
+				// colour that the first draw will consume.
+				vkcanvas->clearBackground();
                 for(int i = 0; i < renderpassnum; i++) {
                     renderpassno = i;
                     renderer->updateScene();

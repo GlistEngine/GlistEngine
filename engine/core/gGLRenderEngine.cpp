@@ -171,8 +171,10 @@ void gGLRenderEngine::takeScreenshot(gImage& img, int x, int y, int width, int h
 
 void gGLRenderEngine::takeScreenshot(gImage& img) {
 	G_PROFILE_ZONE_SCOPED_N("gGLRenderEngine::takeScreenshot()");
-	int height = gBaseApp::getAppManager()->getWindow()->getHeight();
-	int width = gBaseApp::getAppManager()->getWindow()->getWidth();
+	GLint viewport[4]{};
+	G_CHECK_GL(glGetIntegerv(GL_VIEWPORT, viewport));
+	const int width = viewport[2];
+	const int height = viewport[3];
 	unsigned char* pixeldata = new unsigned char[width * height * 4];
 	G_CHECK_GL(glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, pixeldata));
 	flipVertically(pixeldata, width, height, 4);

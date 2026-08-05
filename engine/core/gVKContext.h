@@ -434,6 +434,12 @@ private:
 	// colour is only final once the canvas has drawn, so rendering is opened on the
 	// first draw (or in endFrame) rather than in beginFrame.
 	bool renderingactive = false;
+	bool screenshotrequested = false;
+	bool screenshotready = false;
+	std::vector<unsigned char> screenshotpixels;
+	uint32_t screenshotwidth = 0;
+	uint32_t screenshotheight = 0;
+	VkFormat screenshotformat = VK_FORMAT_UNDEFINED;
 	VkPipelineLayout color2dpipelinelayout = VK_NULL_HANDLE;
 	VkPipeline color2dpipeline = VK_NULL_HANDLE;
 	VkPipeline color2dlinepipeline = VK_NULL_HANDLE;
