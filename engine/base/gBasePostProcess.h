@@ -16,7 +16,7 @@ class gBasePostProcess : public gRenderObject {
 public:
 	gBasePostProcess();
 	virtual ~gBasePostProcess();
-
+	virtual void render(gFbo& src, gFbo& dst);
 	virtual void use() = 0;
 	gShader* getShader();
 
