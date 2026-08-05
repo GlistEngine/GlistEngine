@@ -142,6 +142,10 @@ Public Types</h2></td></tr>
 , <a class="el" href="classgFont.html#a6e81faaa533f247131d7c7c0cb555529a1a8c137fb3ff9dc6fa1a59e8743fc1e9">JUSTIFY</a>
  }</td></tr>
 <tr class="separator:a6e81faaa533f247131d7c7c0cb555529"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a95c0b91b08c263445431c475edc39d6d" id="r_a95c0b91b08c263445431c475edc39d6d"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgFont.html#a95c0b91b08c263445431c475edc39d6d">TextRenderMode</a> { <a class="el" href="classgFont.html#a95c0b91b08c263445431c475edc39d6dab6f28eddfaa068473cadb3b1e866467f">GLYPH</a>
+, <a class="el" href="classgFont.html#a95c0b91b08c263445431c475edc39d6da96fd73b0c28fff2d9cfd9dc354ac83db">ATLAS</a>
+ }</td></tr>
+<tr class="separator:a95c0b91b08c263445431c475edc39d6d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -155,6 +159,10 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a3735214e7a048f574a5bf5b5ac7db2d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af12e725c755b22443a139c3e6a4353aa" id="r_af12e725c755b22443a139c3e6a4353aa"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgFont.html#af12e725c755b22443a139c3e6a4353aa">drawText</a> (const std::string &amp;text, float x, float y)</td></tr>
 <tr class="separator:af12e725c755b22443a139c3e6a4353aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae8967c361ee9870c491967f3d345c140" id="r_ae8967c361ee9870c491967f3d345c140"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgFont.html#ae8967c361ee9870c491967f3d345c140">setTextRenderMode</a> (<a class="el" href="classgFont.html#a95c0b91b08c263445431c475edc39d6d">TextRenderMode</a> renderMode)</td></tr>
+<tr class="separator:ae8967c361ee9870c491967f3d345c140"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6b71cd539dabe331b855ae99de08869b" id="r_a6b71cd539dabe331b855ae99de08869b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgFont.html#a95c0b91b08c263445431c475edc39d6d">TextRenderMode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgFont.html#a6b71cd539dabe331b855ae99de08869b">getTextRenderMode</a> () const</td></tr>
+<tr class="separator:a6b71cd539dabe331b855ae99de08869b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a82fee83cf0e7d88e24b1f3689c5c0070" id="r_a82fee83cf0e7d88e24b1f3689c5c0070"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgFont.html#a82fee83cf0e7d88e24b1f3689c5c0070">drawTextVerticallyFlipped</a> (const std::string &amp;text, float x, float y)</td></tr>
 <tr class="memdesc:a82fee83cf0e7d88e24b1f3689c5c0070"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draws the given text vertically flipped at the specified position.  <br /></td></tr>
 <tr class="separator:a82fee83cf0e7d88e24b1f3689c5c0070"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -451,6 +459,32 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a id="a95c0b91b08c263445431c475edc39d6d" name="a95c0b91b08c263445431c475edc39d6d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a95c0b91b08c263445431c475edc39d6d">&#9670;&#160;</a></span>TextRenderMode</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum class <a class="el" href="classgFont.html#a95c0b91b08c263445431c475edc39d6d">gFont::TextRenderMode</a></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">strong</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a95c0b91b08c263445431c475edc39d6dab6f28eddfaa068473cadb3b1e866467f" name="a95c0b91b08c263445431c475edc39d6dab6f28eddfaa068473cadb3b1e866467f"></a>GLYPH&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a95c0b91b08c263445431c475edc39d6da96fd73b0c28fff2d9cfd9dc354ac83db" name="a95c0b91b08c263445431c475edc39d6da96fd73b0c28fff2d9cfd9dc354ac83db"></a>ATLAS&#160;</td><td class="fielddoc"></td></tr>
+</table>
+
+</div>
+</div>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="ac47bcd67e802ea5b562e026cb5ee0b23" name="ac47bcd67e802ea5b562e026cb5ee0b23"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ac47bcd67e802ea5b562e026cb5ee0b23">&#9670;&#160;</a></span>gFont()</h2>
@@ -743,6 +777,23 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a id="a6b71cd539dabe331b855ae99de08869b" name="a6b71cd539dabe331b855ae99de08869b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6b71cd539dabe331b855ae99de08869b">&#9670;&#160;</a></span>getTextRenderMode()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classgFont.html#a95c0b91b08c263445431c475edc39d6d">TextRenderMode</a> gFont::getTextRenderMode </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a08c0993a33ed5134a2b0b7d0cfd7427e" name="a08c0993a33ed5134a2b0b7d0cfd7427e"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a08c0993a33ed5134a2b0b7d0cfd7427e">&#9670;&#160;</a></span>getVisualBoundsX()</h2>
 
@@ -948,6 +999,25 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Implements <a class="el" href="classgEventHook.html#a408ca13a49589f90a9250243b83e7721">gEventHook</a>.</p>
+
+</div>
+</div>
+<a id="ae8967c361ee9870c491967f3d345c140" name="ae8967c361ee9870c491967f3d345c140"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae8967c361ee9870c491967f3d345c140">&#9670;&#160;</a></span>setTextRenderMode()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gFont::setTextRenderMode </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classgFont.html#a95c0b91b08c263445431c475edc39d6d">TextRenderMode</a>&#160;</td>
+          <td class="paramname"><em>renderMode</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Selects whether drawText renders one glyph at a time or uses the glyph atlas. The default mode is GLYPH to preserve the existing rendering behaviour. </p>
 
 </div>
 </div>

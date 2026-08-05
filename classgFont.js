@@ -6,6 +6,10 @@ var classgFont =
       [ "RIGHT", "classgFont.html#a6e81faaa533f247131d7c7c0cb555529a21507b40c80068eda19865706fdc2403", null ],
       [ "JUSTIFY", "classgFont.html#a6e81faaa533f247131d7c7c0cb555529a1a8c137fb3ff9dc6fa1a59e8743fc1e9", null ]
     ] ],
+    [ "TextRenderMode", "classgFont.html#a95c0b91b08c263445431c475edc39d6d", [
+      [ "GLYPH", "classgFont.html#a95c0b91b08c263445431c475edc39d6dab6f28eddfaa068473cadb3b1e866467f", null ],
+      [ "ATLAS", "classgFont.html#a95c0b91b08c263445431c475edc39d6da96fd73b0c28fff2d9cfd9dc354ac83db", null ]
+    ] ],
     [ "gFont", "classgFont.html#ac47bcd67e802ea5b562e026cb5ee0b23", null ],
     [ "~gFont", "classgFont.html#a3c871e4333d5112844bb10cc27539578", null ],
     [ "drawText", "classgFont.html#af12e725c755b22443a139c3e6a4353aa", null ],
@@ -17,11 +21,13 @@ var classgFont =
     [ "getSize", "classgFont.html#a801adde301959cfc26c2a85c424a3b9e", null ],
     [ "getStringHeight", "classgFont.html#aae027bba23783b011117e36e7510c374", null ],
     [ "getStringWidth", "classgFont.html#a4662bf7fec0a4a2b4b08bef6d553d5c5", null ],
+    [ "getTextRenderMode", "classgFont.html#a6b71cd539dabe331b855ae99de08869b", null ],
     [ "getVisualBoundsX", "classgFont.html#a08c0993a33ed5134a2b0b7d0cfd7427e", null ],
     [ "isAntialised", "classgFont.html#a452fde9a822efbc22500338df92cdceb", null ],
     [ "isLoaded", "classgFont.html#a441196d2161ae3918e05baf04ff4cae5", null ],
     [ "load", "classgFont.html#a6d3ee7c7cadd22d2e6f1536ae6fb1a97", null ],
     [ "loadFont", "classgFont.html#a3735214e7a048f574a5bf5b5ac7db2d1", null ],
     [ "onEvent", "classgFont.html#a26023e75e4d9cabdfd6124f4b9e6eecd", null ],
+    [ "setTextRenderMode", "classgFont.html#ae8967c361ee9870c491967f3d345c140", null ],
     [ "wrapSentenceByWidth", "classgFont.html#a5e94e6bd50585adad6f294030f58d47e", null ]
 ];

@@ -48,6 +48,7 @@ var classgVKRenderEngine =
     [ "drawElementsInstanced", "classgVKRenderEngine.html#a8d7dc5bdb8a2c21b946e5c31ef860283", null ],
     [ "drawFullscreenQuad", "classgVKRenderEngine.html#a214544864c195ffbdb52901d288ad138", null ],
     [ "drawTexturedRect2D", "classgVKRenderEngine.html#aee1c7119bd31cdecb8d3bff00990b551", null ],
+    [ "drawTexturedTriangles2D", "classgVKRenderEngine.html#abc672d604fd7b12f4f10c51c70bdde32", null ],
     [ "drawVbo", "classgVKRenderEngine.html#a8e11be74a02084dd14f0f03dd23ab10d", null ],
     [ "enableAlphaBlending", "classgVKRenderEngine.html#ad4d8a074e529f84bf596a63aa0b11e13", null ],
     [ "enableAlphaTest", "classgVKRenderEngine.html#a7cf399e7f619c698ccdb996c4558f7fa", null ],

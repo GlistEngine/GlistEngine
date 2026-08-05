@@ -95,6 +95,7 @@ var classgRenderer =
     [ "drawRoundedRectangle", "classgRenderer.html#a249cbc3570e968ac0ac227f0f7bf6bb1", null ],
     [ "drawSphere", "classgRenderer.html#ac87b18cdea5749740d6c7c6a8ed0da5a", null ],
     [ "drawTexturedRect2D", "classgRenderer.html#aeddf5cd99f157610584d68393c83e8af", null ],
+    [ "drawTexturedTriangles2D", "classgRenderer.html#af0278765ae9dc206e5fc3cb9d75452f9", null ],
     [ "drawTriangle", "classgRenderer.html#a78e3167ca69e9ee2e7b5fb799e840178", null ],
     [ "drawTube", "classgRenderer.html#aae683d09f7492496e87db96fb94df4d2", null ],
     [ "drawTubeOblique", "classgRenderer.html#aeee44a9a56717cfb3a5496e213321061", null ],

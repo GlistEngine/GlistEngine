@@ -299,6 +299,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a602f903b2536627048d051b354080dee"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aeddf5cd99f157610584d68393c83e8af" id="r_aeddf5cd99f157610584d68393c83e8af"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#aeddf5cd99f157610584d68393c83e8af">drawTexturedRect2D</a> (GLuint textureId, GLuint maskTextureId, const glm::vec4 &amp;tint, const glm::mat4 &amp;mvp, const glm::vec2 &amp;uvOffset=glm::vec2(0.0f), const glm::vec2 &amp;uvScale=glm::vec2(1.0f))</td></tr>
 <tr class="separator:aeddf5cd99f157610584d68393c83e8af"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af0278765ae9dc206e5fc3cb9d75452f9" id="r_af0278765ae9dc206e5fc3cb9d75452f9"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#af0278765ae9dc206e5fc3cb9d75452f9">drawTexturedTriangles2D</a> (GLuint textureId, const glm::vec4 &amp;tint, const glm::mat4 &amp;mvp, const float *xyuv, int vertexCount)</td></tr>
+<tr class="separator:af0278765ae9dc206e5fc3cb9d75452f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a143b0f6ffa8b00675cdceb8fdbcfce4d" id="r_a143b0f6ffa8b00675cdceb8fdbcfce4d"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a143b0f6ffa8b00675cdceb8fdbcfce4d">clear</a> ()=0</td></tr>
 <tr class="separator:a143b0f6ffa8b00675cdceb8fdbcfce4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a789b1047f3a01e2a1debea7198fe8406" id="r_a789b1047f3a01e2a1debea7198fe8406"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a789b1047f3a01e2a1debea7198fe8406">clearColor</a> (int <a class="el" href="gColor_8h.html#a4788d82c901b9367dd5c0daff8a7616b">r</a>, int <a class="el" href="gColor_8h.html#a8cf17d727651616de6f2b79ef32170cd">g</a>, int <a class="el" href="gColor_8h.html#a83fc1af92e29717b4513d121b0c72c7d">b</a>, int <a class="el" href="gColor_8h.html#a4aec1a5be9d9a4a394a2e49e9744286e">a</a>=255)=0</td></tr>
@@ -4168,6 +4170,62 @@ Friends</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Reimplemented in <a class="el" href="classgVKRenderEngine.html#aee1c7119bd31cdecb8d3bff00990b551">gVKRenderEngine</a>.</p>
+
+</div>
+</div>
+<a id="af0278765ae9dc206e5fc3cb9d75452f9" name="af0278765ae9dc206e5fc3cb9d75452f9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af0278765ae9dc206e5fc3cb9d75452f9">&#9670;&#160;</a></span>drawTexturedTriangles2D()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void gRenderer::drawTexturedTriangles2D </td>
+          <td>(</td>
+          <td class="paramtype">GLuint&#160;</td>
+          <td class="paramname"><em>textureId</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const glm::vec4 &amp;&#160;</td>
+          <td class="paramname"><em>tint</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const glm::mat4 &amp;&#160;</td>
+          <td class="paramname"><em>mvp</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const float *&#160;</td>
+          <td class="paramname"><em>xyuv</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>vertexCount</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reimplemented in <a class="el" href="classgGLRenderEngine.html#aa4f06ea13c907aff1b09402b4a3583fb">gGLRenderEngine</a>, and <a class="el" href="classgVKRenderEngine.html#abc672d604fd7b12f4f10c51c70bdde32">gVKRenderEngine</a>.</p>
 
 </div>
 </div>
