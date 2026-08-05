@@ -69,7 +69,7 @@ bool gFont::load(const std::string& fullPath, int size, bool isAntialiased, int 
 
 	iskerning = FT_HAS_KERNING(fontface);
 
-	if (!buildAtlas()) {
+	if (textrendermode != TextRenderMode::ATLAS || !buildAtlas()) {
 		resizeVectors(characternumlimit);
 	}
 
@@ -82,7 +82,19 @@ bool gFont::loadFont(const std::string& fontPath, int size, bool isAntialiased, 
 }
 
 void gFont::setTextRenderMode(TextRenderMode renderMode) {
+	if (textrendermode == renderMode) return;
 	textrendermode = renderMode;
+	if (!isloaded || !fontface) return;
+
+	if (textrendermode == TextRenderMode::ATLAS) {
+		if (!buildAtlas()) resizeVectors(characternumlimit);
+	} else {
+		delete atlastexture;
+		atlastexture = nullptr;
+		atlaspixels.clear();
+		atlaspixels.shrink_to_fit();
+		resizeVectors(characternumlimit);
+	}
 }
 
 gFont::TextRenderMode gFont::getTextRenderMode() const {
@@ -165,7 +177,7 @@ void gFont::reloadFont() {
 	delete atlastexture;
 	atlastexture = nullptr;
 
-	if (!buildAtlas()) {
+	if (textrendermode != TextRenderMode::ATLAS || !buildAtlas()) {
 		// Reload space character for the legacy per-glyph texture path.
 		loadChar(' ');
 	}
@@ -177,6 +189,10 @@ bool gFont::buildAtlas() {
 	delete atlastexture;
 	atlastexture = nullptr;
 	charproperties.clear();
+	for (std::pair<const int, gTexture*> pair : chartextures) {
+		delete pair.second;
+	}
+	chartextures.clear();
 	atlaspixels.resize(static_cast<size_t>(atlaswidth) * atlasheight * 4);
 	for (size_t i = 0; i < atlaspixels.size(); i += 4) {
 		atlaspixels[i] = 255;
