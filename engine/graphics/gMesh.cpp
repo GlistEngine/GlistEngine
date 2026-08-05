@@ -412,10 +412,6 @@ void gMesh::drawVulkanMesh(const glm::mat4* instanceTransformation) {
 		glm::mat4 mvp = renderer->getProjectionMatrix2d() * localtransformationmatrix.back();
 		renderer->drawColored2D(points2d.data(), static_cast<int>(points2d.size()), rgba, mvp, drawmode);
 	} else {
-		if(renderer->isShadowPassActive()) {
-			renderer->drawShadowMesh3D(points3d.data(), static_cast<int>(points3d.size()));
-			return;
-		}
 		glm::mat4 mvp = renderer->getProjectionMatrix() * renderer->getViewMatrix();
 		// Vulkan's material pipeline is a triangle list. Expand the strip/fan modes
 		// used by primitives such as gSphere while preserving winding. This mirrors
@@ -442,6 +438,10 @@ void gMesh::drawVulkanMesh(const glm::mat4* instanceTransformation) {
 				triangles.push_back(points3d[i]);
 			}
 			drawvertices = &triangles;
+		}
+		if(renderer->isShadowPassActive()) {
+			renderer->drawShadowMesh3D(drawvertices->data(), static_cast<int>(drawvertices->size()));
+			return;
 		}
 		gColor* ambient = material.getAmbientColor();
 		gColor* diffuse = material.getDiffuseColor();
