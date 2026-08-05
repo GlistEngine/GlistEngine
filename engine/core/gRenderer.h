@@ -87,7 +87,7 @@ void gDrawCircle(float xCenter, float yCenter, float radius, bool isFilled = fal
 void gDrawCross(float x, float y, float width, float height, float thickness, bool isFilled);
 void gDrawArc(float xCenter, float yCenter, float radius, bool isFilled = true, int numberOfSides = 60, float degree = 360.0f, float rotate = 360.0f);
 void gDrawArrow(float x1, float y1, float length, float angle, float tipLength, float tipAngle, float thickness = 1.0f);
-void gDrawRectangle(float x, float y, float w, float h, bool isFilled = false);
+void gDrawRectangle(float x, float y, float w, float h, bool isFilled = false, float rotateAngle = 0.0f);
 void gDrawRoundedRectangle(float x, float y, float w, float h, int radius, bool isFilled);
 void gDrawBox(float x, float y, float z, float w = 1.0f, float h = 1.0f, float d = 1.0f, bool isFilled = true);
 void gDrawBox(glm::mat4 transformationMatrix, bool isFilled = true);
@@ -322,6 +322,13 @@ public:
 	virtual void drawTexturedRect2D(GLuint textureId, GLuint maskTextureId, const glm::vec4& tint,
 			const glm::mat4& mvp,
 			const glm::vec2& uvOffset = glm::vec2(0.0f), const glm::vec2& uvScale = glm::vec2(1.0f)) {}
+
+	// Backend hook for an already-expanded textured triangle list. xyuv contains
+	// four floats per vertex: screen-space x/y followed by texture u/v. This is
+	// used by batched text, where all glyph quads share one atlas texture and can
+	// therefore be recorded as one draw instead of one draw per glyph.
+	virtual void drawTexturedTriangles2D(GLuint textureId, const glm::vec4& tint,
+			const glm::mat4& mvp, const float* xyuv, int vertexCount) {}
 
 	virtual void clear() = 0;
 	virtual void clearColor(int r, int g, int b, int a = 255) = 0;
@@ -593,7 +600,7 @@ public:
 	void drawCross(float x, float y, float width, float height, float thickness, bool isFilled);
 	void drawArc(float xCenter, float yCenter, float radius, bool isFilled = true, int numberOfSides = 60, float degree = 360.0f, float rotate = 360.0f);
 	void drawArrow(float x1, float y1, float length, float angle, float tipLength, float tipAngle, float thickness = 1.0f);
-	void drawRectangle(float x, float y, float w, float h, bool isFilled = false);
+	void drawRectangle(float x, float y, float w, float h, bool isFilled = false, float rotateAngle = 0.0f);
 	void drawRoundedRectangle(float x, float y, float w, float h, int radius, bool isFilled);
 	void drawBox(float x, float y, float z, float w = 1.0f, float h = 1.0f, float d = 1.0f, bool isFilled = true);
 	void drawBox(glm::mat4 transformationMatrix, bool isFilled = true);
