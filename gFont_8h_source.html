@@ -228,33 +228,39 @@ $(document).ready(function(){initNavTree('gFont_8h_source.html',''); initResizab
 <div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span>        <span class="keywordtype">float</span> texturewidth = 0.0f, textureheight = 0.0f;</div>
 <div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>        <span class="keywordtype">float</span> dxleft = 0.0f, dxright = 0.0f, dytop = 0.0f, dybottom = 0.0f;</div>
 <div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>        <span class="keywordtype">float</span> atlasu0 = 0.0f, atlasv0 = 0.0f, atlasu1 = 0.0f, atlasv1 = 0.0f;</div>
-<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>        <span class="keywordtype">bool</span> inatlas = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>    };</div>
-<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span> </div>
-<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>    std::unordered_map&lt;int, CharProperties&gt; charproperties;</div>
-<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span>    std::unordered_map&lt;int, gTexture*&gt; chartextures;</div>
-<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>    <a class="code hl_class" href="classgTexture.html">gTexture</a>* atlastexture = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keywordtype">int</span> atlaswidth = 2048;</div>
-<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keywordtype">int</span> atlasheight = 2048;</div>
-<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>    <span class="keywordtype">bool</span> atlasbuilding = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>    <span class="keywordtype">int</span> atlascursorx = 0;</div>
-<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span>    <span class="keywordtype">int</span> atlascursory = 0;</div>
-<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span>    <span class="keywordtype">int</span> atlasrowheight = 0;</div>
-<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>    std::vector&lt;unsigned char&gt; atlaspixels;</div>
-<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>    std::vector&lt;float&gt; batchvertices;</div>
-<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>    <a class="code hl_enumeration" href="classgFont.html#a95c0b91b08c263445431c475edc39d6d">TextRenderMode</a> textrendermode = <a class="code hl_enumvalue" href="classgFont.html#a95c0b91b08c263445431c475edc39d6dab6f28eddfaa068473cadb3b1e866467f">TextRenderMode::GLYPH</a>;</div>
-<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span> </div>
-<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span>    <span class="keywordtype">float</span> getKerning(<span class="keywordtype">int</span> c, <span class="keywordtype">int</span> prevC) <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>    <span class="keywordtype">void</span> resizeVectors(<span class="keywordtype">int</span> num);</div>
-<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span>    <span class="keywordtype">bool</span> insertData(<span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span>* srcData, <span class="keywordtype">int</span> srcWidth, <span class="keywordtype">int</span> srcHeight, <span class="keywordtype">int</span> componentNum,</div>
-<div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span>                    <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span>* dstData, <span class="keywordtype">int</span> dstWidth, <span class="keywordtype">int</span> dstHeight, <span class="keywordtype">int</span> dstComponentNum,</div>
-<div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span>                    <span class="keywordtype">size_t</span> dstFirstX, <span class="keywordtype">size_t</span> dstFirstY) <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span>    std::wstring s2ws(<span class="keyword">const</span> std::string&amp; s) <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span>    <span class="keywordtype">float</span> roundIfRequired(<span class="keywordtype">float</span> val);</div>
-<div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span>};</div>
+<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>        <span class="keywordtype">int</span> atlaspage = -1;</div>
+<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>        <span class="keywordtype">bool</span> inatlas = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>    };</div>
+<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span> </div>
+<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span>    <span class="keyword">struct </span>AtlasPage {</div>
+<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>        <a class="code hl_class" href="classgTexture.html">gTexture</a>* texture = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>        <span class="keywordtype">int</span> cursorx = 0;</div>
+<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span>        <span class="keywordtype">int</span> cursory = 0;</div>
+<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>        <span class="keywordtype">int</span> rowheight = 0;</div>
+<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>        <span class="keywordtype">bool</span> dirty = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span>        std::vector&lt;unsigned char&gt; pixels;</div>
+<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span>    };</div>
+<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span> </div>
+<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>    std::unordered_map&lt;int, CharProperties&gt; charproperties;</div>
+<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>    std::unordered_map&lt;int, gTexture*&gt; chartextures;</div>
+<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>    std::vector&lt;AtlasPage&gt; atlaspages;</div>
+<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keywordtype">int</span> atlaswidth = 1024;</div>
+<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keywordtype">int</span> atlasheight = 1024;</div>
+<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span>    <span class="keywordtype">bool</span> atlasbuilding = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span>    std::vector&lt;std::vector&lt;float&gt;&gt; batchvertices;</div>
+<div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span>    <a class="code hl_enumeration" href="classgFont.html#a95c0b91b08c263445431c475edc39d6d">TextRenderMode</a> textrendermode = <a class="code hl_enumvalue" href="classgFont.html#a95c0b91b08c263445431c475edc39d6dab6f28eddfaa068473cadb3b1e866467f">TextRenderMode::GLYPH</a>;</div>
+<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span> </div>
+<div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span>    <span class="keywordtype">float</span> getKerning(<span class="keywordtype">int</span> c, <span class="keywordtype">int</span> prevC) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span>    <span class="keywordtype">void</span> resizeVectors(<span class="keywordtype">int</span> num);</div>
+<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span>    <span class="keywordtype">bool</span> insertData(<span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span>* srcData, <span class="keywordtype">int</span> srcWidth, <span class="keywordtype">int</span> srcHeight, <span class="keywordtype">int</span> componentNum,</div>
+<div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span>                    <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span>* dstData, <span class="keywordtype">int</span> dstWidth, <span class="keywordtype">int</span> dstHeight, <span class="keywordtype">int</span> dstComponentNum,</div>
+<div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span>                    <span class="keywordtype">size_t</span> dstFirstX, <span class="keywordtype">size_t</span> dstFirstY) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span>    std::wstring s2ws(<span class="keyword">const</span> std::string&amp; s) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span>    <span class="keywordtype">float</span> roundIfRequired(<span class="keywordtype">float</span> val);</div>
+<div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span>};</div>
 </div>
-<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span> </div>
-<div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span><span class="preprocessor">#endif </span><span class="comment">/* ENGINE_GRAPHICS_GFONT_H_ */</span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00267" name="l00267"></a><span class="lineno">  267</span> </div>
+<div class="line"><a id="l00268" name="l00268"></a><span class="lineno">  268</span><span class="preprocessor">#endif </span><span class="comment">/* ENGINE_GRAPHICS_GFONT_H_ */</span><span class="preprocessor"></span></div>
 <div class="ttc" id="aclassgEventHook_html"><div class="ttname"><a href="classgEventHook.html">gEventHook</a></div><div class="ttdef"><b>Definition</b> gEventHook.h:14</div></div>
 <div class="ttc" id="aclassgEvent_html"><div class="ttname"><a href="classgEvent.html">gEvent</a></div><div class="ttdef"><b>Definition</b> gEvent.h:32</div></div>
 <div class="ttc" id="aclassgFont_html"><div class="ttname"><a href="classgFont.html">gFont</a></div><div class="ttdef"><b>Definition</b> gFont.h:47</div></div>
