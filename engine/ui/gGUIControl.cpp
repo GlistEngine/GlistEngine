@@ -12,9 +12,19 @@ gGUIControl::gGUIControl() {
 	countasspace = false;
 	oldwidth = 0;
 	oldheight = 0;
+	localfont = nullptr;
 }
 
 gGUIControl::~gGUIControl() {
+}
+
+void gGUIControl::setFont(gFont* font) {
+	localfont = font;
+}
+
+gFont* gGUIControl::getFont() {
+	if(localfont) return localfont;
+	return gBaseGUIObject::getFont();
 }
 
 void gGUIControl::set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIObject* parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h) {

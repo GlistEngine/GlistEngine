@@ -12,12 +12,12 @@
 
 
 gGUIListbox::gGUIListbox() {
-	lineh = 2 * font->getSize() + 2;
+	lineh = 2 * getFont()->getSize() + 2;
 	firstlineno = 0;
 	flno = firstlineno;
 	selectedno = 0;
 	mousepressedonlist = false;
-	textoffset = (lineh - font->getStringHeight("ae")) / 2 + 1;
+	textoffset = (lineh - getFont()->getStringHeight("ae")) / 2 + 1;
 	fldy = 0;
 	chosencolor = gColor(1.0f, 0.5f, 0.0f);
 	iconcolor = textbackgroundcolor;
@@ -63,7 +63,7 @@ void gGUIListbox::drawContent() {
 
 	for(int i = startindex; i < endindex; i++) {
 		renderer->setColor(fontcolor);
-		font->drawText(data[i], 2, (i * lineh) + lineh - textoffset - verticalscroll);
+		getFont()->drawText(data[i], 2, (i * lineh) + lineh - textoffset - verticalscroll);
 	}
 
 	renderer->setColor(oldcolor);

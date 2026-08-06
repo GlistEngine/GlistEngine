@@ -234,20 +234,26 @@ private:
 		float texturewidth = 0.0f, textureheight = 0.0f;
 		float dxleft = 0.0f, dxright = 0.0f, dytop = 0.0f, dybottom = 0.0f;
 		float atlasu0 = 0.0f, atlasv0 = 0.0f, atlasu1 = 0.0f, atlasv1 = 0.0f;
+		int atlaspage = -1;
 		bool inatlas = false;
+	};
+
+	struct AtlasPage {
+		gTexture* texture = nullptr;
+		int cursorx = 0;
+		int cursory = 0;
+		int rowheight = 0;
+		bool dirty = false;
+		std::vector<unsigned char> pixels;
 	};
 
 	std::unordered_map<int, CharProperties> charproperties;
 	std::unordered_map<int, gTexture*> chartextures;
-	gTexture* atlastexture = nullptr;
-	static constexpr int atlaswidth = 2048;
-	static constexpr int atlasheight = 2048;
+	std::vector<AtlasPage> atlaspages;
+	static constexpr int atlaswidth = 1024;
+	static constexpr int atlasheight = 1024;
 	bool atlasbuilding = false;
-	int atlascursorx = 0;
-	int atlascursory = 0;
-	int atlasrowheight = 0;
-	std::vector<unsigned char> atlaspixels;
-	std::vector<float> batchvertices;
+	std::vector<std::vector<float>> batchvertices;
 	TextRenderMode textrendermode = TextRenderMode::GLYPH;
 
 	float getKerning(int c, int prevC) const;

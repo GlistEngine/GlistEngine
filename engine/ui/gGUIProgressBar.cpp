@@ -24,7 +24,7 @@ gGUIProgressBar::gGUIProgressBar() {
 	backgroundcolor = middlegroundcolor;
 	linetextcolor = gColor(9.9f, 9.9f, 9.9f);
 	spintextcolor = gColor(0.1f, 0.1f, 0.1f);
-	texth = font->getStringHeight("100");
+	texth = getFont()->getStringHeight("100");
 }
 
 gGUIProgressBar::~gGUIProgressBar() {
@@ -50,11 +50,11 @@ void gGUIProgressBar::draw() {
 		renderer->setColor(linetextcolor); //set color to text color
 		std::string progresstext = std::to_string(int(value / valuemax * 100)) + "%";
 		if(type == TYPE_LINE) {
-			font->drawText(progresstext, left + thickness / 2 + ((progressbarw - thickness) * value / valuemax - font->getStringWidth(progresstext)) / 2,
+			getFont()->drawText(progresstext, left + thickness / 2 + ((progressbarw - thickness) * value / valuemax - getFont()->getStringWidth(progresstext)) / 2,
 										top + thickness / 2 + (progressbarh - thickness) / 2 + texth / 4);
 		} else if(type == TYPE_SPIN || type == TYPE_CIRCULAR) {
 			renderer->setColor(spintextcolor);
-			font->drawText(progresstext, (left + right) / 2 - spinthickness / 2 - font->getStringWidth(progresstext) / 2, (top + bottom) / 2 + texth / 4);
+			getFont()->drawText(progresstext, (left + right) / 2 - spinthickness / 2 - getFont()->getStringWidth(progresstext) / 2, (top + bottom) / 2 + texth / 4);
 		}
 	}
 

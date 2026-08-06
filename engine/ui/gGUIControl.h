@@ -46,9 +46,13 @@ public:
 	virtual bool countAsSpace();
 	void setCountAsSpace(bool isSpace);
 
+	void setFont(gFont* font);
+	gFont* getFont();
+
 protected:
 	bool countasspace;
 	int oldwidth, oldheight;
+	gFont* localfont;
 };
 
 #endif /* UI_GGUICONTROL_H_ */

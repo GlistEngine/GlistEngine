@@ -83,7 +83,7 @@ void gGUIToolbarButton::draw() {
 		} else {
 			renderer->setColor(&fcolor);
 		}
-		font->drawText(title, left + tx - 1, top + buttonh - ty + ispressed - 2);
+		getFont()->drawText(title, left + tx - 1, top + buttonh - ty + ispressed - 2);
 	}
 	renderer->setColor(oldcolor);
 }

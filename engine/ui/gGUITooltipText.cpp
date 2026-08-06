@@ -48,7 +48,7 @@ void gGUITooltipText::draw() {
 		renderer->setColor(&color);
 		gDrawRectangle(sizerx + marginx, sizery + objecth + marginy, textw + tx * 3, 2 * texth, true);
 		renderer->setColor(fontcolor);
-		for(int i = 0; i < textlist.size(); i++) { font->drawText(textlist[i], sizerx + marginx + tx - 2, sizery + objecth + marginy + texth + 2);}
+		for(int i = 0; i < textlist.size(); i++) { getFont()->drawText(textlist[i], sizerx + marginx + tx - 2, sizery + objecth + marginy + texth + 2);}
 		renderer->setColor(&oldcolor);
 	}
 }
@@ -86,9 +86,9 @@ void gGUITooltipText::activate(gGUISizer* sizer, objects guiobject, int lineNo, 
 }
 
 void gGUITooltipText::setTitleLength(std::string text) {
-	texth = font->getStringHeight("A");
-	textw = font->getStringWidth(text);
-	tx = font->getStringWidth("a") / 2;
+	texth = getFont()->getStringHeight("A");
+	textw = getFont()->getStringWidth(text);
+	tx = getFont()->getStringWidth("a") / 2;
 	//gLogi("gCanvas") << texth << " " << textw << " " << tx;
 }
 

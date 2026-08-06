@@ -238,9 +238,9 @@ void gGUITimebox::draw() {
 		}
 	}
 	renderer->setColor(fontcolor);
-	font->drawText(":", 51.2, 69);
-	font->drawText(":", 89, 69);
-	font->drawText(title, left + 2, top + 5);
+	getFont()->drawText(":", 51.2, 69);
+	getFont()->drawText(":", 89, 69);
+	getFont()->drawText(title, left + 2, top + 5);
 	if(guisizer) guisizer->draw();
 	renderer->setColor(oldcolor);
 }

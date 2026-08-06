@@ -25,9 +25,9 @@ gGUIDate::gGUIDate() {
 	daysnames.push_back("Sun");
 	setDaysName(daysnames);
     for (int i = 0; i < 31; i++) {
-        daysnumderswidths[i] = font->getStringWidth(std::to_string(i));
+        daysnumderswidths[i] = getFont()->getStringWidth(std::to_string(i));
     }
-    textheight = font->getStringHeight("W");
+    textheight = getFont()->getStringHeight("W");
 }
 
 void gGUIDate::setup() {
@@ -56,7 +56,7 @@ void gGUIDate::drawCalendar(int month, int year) {
     int tx = leftmargin, ty = topmargin;
     int cellWidth = w / 7;
     for(int i = 0; i < 7; i++) {
-        font->drawText(days[i], x + tx + cellWidth / 2 - daysnameswidths[i] / 2, y + ty);
+        getFont()->drawText(days[i], x + tx + cellWidth / 2 - daysnameswidths[i] / 2, y + ty);
         tx += cellWidth;
     }
 
@@ -65,8 +65,8 @@ void gGUIDate::drawCalendar(int month, int year) {
 
     // Draw the days in the calendar
     tx = leftmargin;
-    int cellHeight = (h - font->getStringHeight("W") - 5 - topmargin) / numRows;
-    ty += font->getStringHeight("W") + 5; // Use "W" as a representative character for height
+    int cellHeight = (h - getFont()->getStringHeight("W") - 5 - topmargin) / numRows;
+    ty += getFont()->getStringHeight("W") + 5; // Use "W" as a representative character for height
     int dayCounter = 1;
     for (int row = 0; row < numRows; row++) {
         for (int col = 0; col < 7; col++) {
@@ -74,7 +74,7 @@ void gGUIDate::drawCalendar(int month, int year) {
                 if (dayCounter <= daysInMonth) {
                     std::stringstream dayStr;
                     dayStr << dayCounter; // Removed zero padding
-                    font->drawText(dayStr.str(), x + tx + cellWidth / 2 - font->getStringWidth(dayStr.str()) / 2, y + ty + cellHeight / 2 - font->getStringHeight(dayStr.str()) / 2);
+                    getFont()->drawText(dayStr.str(), x + tx + cellWidth / 2 - getFont()->getStringWidth(dayStr.str()) / 2, y + ty + cellHeight / 2 - getFont()->getStringHeight(dayStr.str()) / 2);
                     dayCounter++;
                 }
             }
@@ -120,7 +120,7 @@ void gGUIDate::setDaysName(std::vector<std::string> days) {
         this->days[i] = days[i];
     }
     for (int i = 0; i < 7; i++) {
-		this->daysnameswidths[i] = font->getStringWidth(this->days[i]);
+		this->daysnameswidths[i] = getFont()->getStringWidth(this->days[i]);
 	}
 }
 

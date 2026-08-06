@@ -30,6 +30,7 @@ public:
 	void set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIObject* parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h) override;
 
 	void draw() override;
+	void setFont(gFont* font);
 
 
 	/**

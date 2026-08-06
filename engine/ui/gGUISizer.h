@@ -9,6 +9,7 @@
 #define UI_GGUISIZER_H_
 
 #include "gGUIControl.h"
+#include "gImage.h"
 
 
 class gGUISizer: public gGUIControl {
@@ -62,7 +63,12 @@ public:
 
 	bool isControlSet(int lineNo, int columnNo);
 
+	void setBackgroundImage(const std::string& path);
+	void setBackgroungImageEnabled(bool isenable);
 private:
+	gImage backgroundimage;
+	bool isbackgroundimageenabled;
+
 	struct Entry {
 		gGUIControl* control = nullptr;
 		bool isset = false;

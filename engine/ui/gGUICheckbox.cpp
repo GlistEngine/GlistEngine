@@ -18,8 +18,8 @@ gGUICheckbox::gGUICheckbox() {
 	tickcolor = *fontcolor;
 	titlecolor = *fontcolor;
 	title = "Checkbox";
-	titlew = font->getStringWidth(title);
-	titleh = font->getStringHeight(title);
+	titlew = getFont()->getStringWidth(title);
+	titleh = getFont()->getStringHeight(title);
 	isdisabled = false;
 }
 
@@ -29,8 +29,8 @@ gGUICheckbox::~gGUICheckbox() {
 
 void gGUICheckbox::setTitle(std::string title) {
 	gBaseGUIObject::setTitle(title);
-	titlew = font->getStringWidth(title);
-	titleh = font->getStringHeight(title);
+	titlew = getFont()->getStringWidth(title);
+	titleh = getFont()->getStringHeight(title);
 }
 
 void gGUICheckbox::setSize(int width, int height) {
@@ -100,7 +100,7 @@ void gGUICheckbox::draw() {
 	if (istextvisible) {
 		if(isdisabled) renderer->setColor(disabledbcolor);
 		else renderer->setColor(fontcolor);
-		font->drawText(title, left + buttonw, top - 2 + (buttonh + titleh) / 2 - 1);
+		getFont()->drawText(title, left + buttonw, top - 2 + (buttonh + titleh) / 2 - 1);
 		renderer->setColor(255, 255, 255);
 	}
 }

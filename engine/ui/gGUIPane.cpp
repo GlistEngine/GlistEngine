@@ -18,7 +18,7 @@ gGUIPane::gGUIPane() {
 	titlefontsize = 24;
 	titlefont.loadFont("FreeSansBold.ttf", titlefontsize);
 	titlecolor = gColor(128, 128, 128);
-	topbarh = titlefontsize * 4 + font->getSize();
+	topbarh = titlefontsize * 4 + getFont()->getSize();
 	panesizer.setSlotPadding(titlefontsize * 2, 0);
 	navbuttonsenabled = true;
 	previouspane = nullptr;
@@ -54,7 +54,7 @@ void gGUIPane::set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIO
 	titlex = left + titlefontsize * 2;
 	titley = top + titlefontsize * 3;
 	subtitlex = titlex;
-	subtitley = titley + 3 * font->getSize();
+	subtitley = titley + 3 * getFont()->getSize();
 }
 
 void gGUIPane::setSubTitle(std::string subTitle) {
@@ -118,7 +118,7 @@ void gGUIPane::draw() {
 	if(issubtitleset) {
 		renderer->setColor(40, 80, 120);
 //		renderer->setColor(150, 150, 150);
-		font->drawText(subtitle, subtitlex, subtitley);
+		getFont()->drawText(subtitle, subtitlex, subtitley);
 	}
 
 	renderer->setColor(&oldcolor);

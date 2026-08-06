@@ -77,7 +77,7 @@ gGUITextbox::gGUITextbox() {
 	lastutf = 0;
 	isselectedall = false;
 	rowsnum = 1;
-	lineheight = font->getStringHeight("ly");
+	lineheight = getFont()->getStringHeight("ly");
 	ismultiline = false;
 	rowsnumexceeded = false;
 	currentline = 1;
@@ -107,7 +107,7 @@ gGUITextbox::gGUITextbox() {
 	colorset = false;
 	isdisabled = false;
 	cursoroffset = 10.0f;
-	textfont = font;
+	textfont = getFont();
 	setTextAlignment(textalignment, boxw, initx);
 
 	widthexceeded = false;
@@ -183,7 +183,7 @@ void gGUITextbox::setSelection(int startChar, int endChar) {
 	}
 
 	if(!textfont) {
-		textfont = font;
+		textfont = getFont();
 	}
 
 	if(letterlength.empty()) {
@@ -251,7 +251,7 @@ void gGUITextbox::setSelection(int startChar, int endChar) {
 void gGUITextbox::selectAll() {
 	if(text.empty()) return;
 
-	if(!textfont) textfont = font;
+	if(!textfont) textfont = getFont();
 
 	letterlength.clear();
 	letterpos.clear();
@@ -1498,7 +1498,7 @@ void gGUITextbox::pressKey() {
 				cursorposx = 0;
 			}
 		} else {
-			if(!textfont) textfont = font;
+			if(!textfont) textfont = getFont();
 			if(textfont) {
 				if(firstutf > (int) text.length()) {
 					firstutf = 0;
@@ -2397,6 +2397,11 @@ void gGUITextbox::setTextFont(gFont* textFont) {
 		lastutf = calculateLastUtf();
 		if(ismultiline) calculateLines();
 	}
+}
+
+void gGUITextbox::setFont(gFont* font) {
+	gGUIControl::setFont(font);
+	setTextFont(font);
 }
 
 void gGUITextbox::setTextAlignment(int textAlignment, float cellW, int initX) {

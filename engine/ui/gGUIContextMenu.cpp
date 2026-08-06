@@ -25,8 +25,8 @@ gGUIContextMenuItem::gGUIContextMenuItem(std::string text, gImage* menuIcon, boo
 	contextmenudefaultw = 295;
 	contextmenuh = 0;
 	contextmenuleftmargin = 45;
-	contextmenulineh = 2 * font->getSize() + 2;
-	datady = (contextmenulineh - font->getStringHeight("ae")) / 2 + 1;
+	contextmenulineh = 2 * getFont()->getSize() + 2;
+	datady = (contextmenulineh - getFont()->getStringHeight("ae")) / 2 + 1;
 	contextmenuw = 0;
 	contextmenushown = false;
 	hovered = false;
@@ -216,8 +216,8 @@ void gGUIContextMenuItem::drawMenuItem() {
 			if(items[i].parentitemid >= 0) {
 				renderer->setColor(fontcolor);
 //				">" symbol for parent items
-				if(items[i].isparent) font->drawText(">", items[i].right - 20, items[i].top + items[i].height - datady - 2);
-				font->drawText(items[i].title, items[i].left + contextmenuleftmargin, items[i].top + items[i].height - datady);
+				if(items[i].isparent) getFont()->drawText(">", items[i].right - 20, items[i].top + items[i].height - datady - 2);
+				getFont()->drawText(items[i].title, items[i].left + contextmenuleftmargin, items[i].top + items[i].height - datady);
 			}
 		}
 		i = 0;

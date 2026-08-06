@@ -51,7 +51,7 @@ gGUINumberBox::gGUINumberBox() {
 	defintvalue = "0";
 	deffloatvalue = "0.0";
 	istitleshown = false;
-	boxtoph = istitleshown * font->getSize();
+	boxtoph = istitleshown * getFont()->getSize();
 
 	boxsizer.setSize(1, 2);
 	float columnprops[2] = {0.70f, 0.30f};
@@ -132,7 +132,7 @@ void gGUINumberBox::setSize(int width, int height) {
 
 void gGUINumberBox::showTitle(bool isShown) {
 	istitleshown = isShown;
-	boxtoph = istitleshown * font->getSize();
+	boxtoph = istitleshown * getFont()->getSize();
 }
 
 bool gGUINumberBox::setType(bool isInteger) {
@@ -336,7 +336,7 @@ void gGUINumberBox::draw() {
 	if(istitleshown) {
 		if(isdisabled) renderer->setColor(&disabledfcolor);
 		renderer->setColor(fontcolor);
-		font->drawText(title, left, top + font->getSize());
+		getFont()->drawText(title, left, top + getFont()->getSize());
 	}
 	renderer->setColor(oldcolor);
 	if(guisizer) guisizer->draw();
