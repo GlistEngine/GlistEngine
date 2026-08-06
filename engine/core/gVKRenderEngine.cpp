@@ -41,6 +41,14 @@
 #endif
 
 #ifdef GVK_DESKTOP_GLFW
+struct gVKFramebuffer {
+	gVKTexture* color = nullptr;
+	gVKTexture* depth = nullptr;
+	uint32_t width = 0;
+	uint32_t height = 0;
+	bool active = false;
+};
+
 // Unlike OpenGL, clearing is not an immediate operation here: the colour is kept
 // and the render pass writes it when the next frame begins.
 static void gvkStoreClearColor(gVKContext* ctx, float r, float g, float b, float a) {
@@ -285,59 +293,139 @@ void gVKRenderEngine::setViewport(int x, int y, int width, int height) {
 
 // ----- Framebuffer -----
 GLuint gVKRenderEngine::createFramebuffer() {
-	GLuint fbo;
-	G_CHECK_GL(glGenFramebuffers(1, &fbo));
-	return fbo;
+#ifdef GVK_DESKTOP_GLFW
+	const GLuint id = nextvkframebufferid++;
+	vkframebuffers[id] = new gVKFramebuffer();
+	return id;
+#else
+	return 0;
+#endif
 }
 
 void gVKRenderEngine::deleteFramebuffer(GLuint& fbo) {
-	if(fbo != 0) {
-		G_CHECK_GL(glDeleteFramebuffers(1, &fbo));
-	}
+#ifdef GVK_DESKTOP_GLFW
+	if(boundframebuffer == fbo) bindDefaultFramebuffer();
+	auto it = vkframebuffers.find(fbo);
+	if(it != vkframebuffers.end()) { delete it->second; vkframebuffers.erase(it); }
+#endif
+	fbo = 0;
 }
 
 void gVKRenderEngine::bindFramebuffer(GLuint fbo) {
-	G_CHECK_GL(glBindFramebuffer(GL_FRAMEBUFFER, fbo));
+#ifdef GVK_DESKTOP_GLFW
+	if(vkcontext == nullptr || !vkcontext->frameactive) { boundframebuffer = fbo; return; }
+	endOffscreenRendering();
+	// Switching from the swapchain to an FBO is a rendering-scope boundary.
+	if(vkcontext->renderingactive && boundframebuffer == gFbo::defaultfbo) {
+		vkCmdEndRendering(vkcontext->commandbuffers[vkcontext->currentframe]);
+		vkcontext->renderingactive = false;
+	}
+	auto it = vkframebuffers.find(fbo);
+	if(it == vkframebuffers.end()) return;
+	gVKFramebuffer* target = it->second;
+	if(target == nullptr || (target->color == nullptr && target->depth == nullptr)) {
+		boundframebuffer = fbo;
+		return;
+	}
+	VkCommandBuffer command = vkcontext->commandbuffers[vkcontext->currentframe];
+	VkImageMemoryBarrier barriers[2]{};
+	uint32_t count = 0;
+	auto transition = [&](gVKTexture* texture, VkImageLayout layout, VkAccessFlags access) {
+		if(texture == nullptr) return;
+		VkImageMemoryBarrier& barrier = barriers[count++];
+		barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
+		barrier.srcAccessMask = texture->layout == VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL
+				? VK_ACCESS_SHADER_READ_BIT : 0;
+		barrier.dstAccessMask = access;
+		barrier.oldLayout = texture->layout;
+		barrier.newLayout = layout;
+		barrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+		barrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+		barrier.image = texture->image;
+		barrier.subresourceRange = {texture->aspect, 0, 1, 0, 1};
+		texture->layout = layout;
+	};
+	transition(target->color, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT);
+	transition(target->depth, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
+			VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT);
+	if(count > 0) vkCmdPipelineBarrier(command, VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT,
+			VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT,
+			0, 0, nullptr, 0, nullptr, count, barriers);
+	VkRenderingAttachmentInfo colorattachment{};
+	colorattachment.sType = VK_STRUCTURE_TYPE_RENDERING_ATTACHMENT_INFO;
+	if(target->color != nullptr) {
+		colorattachment.imageView = target->color->view;
+		colorattachment.imageLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+		colorattachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+		colorattachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+	}
+	VkRenderingAttachmentInfo depthattachment{};
+	depthattachment.sType = VK_STRUCTURE_TYPE_RENDERING_ATTACHMENT_INFO;
+	if(target->depth != nullptr) {
+		depthattachment.imageView = target->depth->view;
+		depthattachment.imageLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+		depthattachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+		depthattachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+		depthattachment.clearValue.depthStencil = {1.0f, 0};
+	}
+	VkRenderingInfo info{};
+	info.sType = VK_STRUCTURE_TYPE_RENDERING_INFO;
+	info.renderArea = {{0, 0}, {target->width, target->height}};
+	info.layerCount = 1;
+	info.colorAttachmentCount = target->color != nullptr ? 1u : 0u;
+	info.pColorAttachments = target->color != nullptr ? &colorattachment : nullptr;
+	info.pDepthAttachment = target->depth != nullptr ? &depthattachment : nullptr;
+	vkCmdBeginRendering(command, &info);
+	VkViewport viewport{0.0f, static_cast<float>(target->height), static_cast<float>(target->width),
+			-static_cast<float>(target->height), 0.0f, 1.0f};
+	VkRect2D scissor{{0, 0}, {target->width, target->height}};
+	vkCmdSetViewport(command, 0, 1, &viewport);
+	vkCmdSetScissor(command, 0, 1, &scissor);
+	vkcontext->renderingactive = true;
+	target->active = true;
+#endif
 	boundframebuffer = fbo;
 }
 
 void gVKRenderEngine::checkFramebufferStatus() {
-	// check if fbo complete
-	G_CHECK_GL2(GLuint status, glCheckFramebufferStatus(GL_FRAMEBUFFER));
-	if(status != GL_FRAMEBUFFER_COMPLETE) {
-		gLogi("gFbo") << "Framebuffer is not complete! status:" << gToHex(status, 4);
-	}
+#ifdef GVK_DESKTOP_GLFW
+	auto it = vkframebuffers.find(boundframebuffer);
+	if(it == vkframebuffers.end() || (it->second->color == nullptr && it->second->depth == nullptr))
+		gLogi("gFbo") << "Vulkan framebuffer has no attachment.";
+#endif
 }
 
 // ----- Renderbuffer -----
 GLuint gVKRenderEngine::createRenderbuffer() {
-	GLuint rbo;
-	G_CHECK_GL(glGenRenderbuffers(1, &rbo));
-	return rbo;
+	return nextvkframebufferid++;
 }
 
 void gVKRenderEngine::deleteRenderbuffer(GLuint& rbo) {
-	if(rbo != 0) {
-		G_CHECK_GL(glDeleteRenderbuffers(1, &rbo));
-	}
+	rbo = 0;
 }
 
 void gVKRenderEngine::bindRenderbuffer(GLuint rbo) {
-	assert(rbo != 0);
-	G_CHECK_GL(glBindRenderbuffer(GL_RENDERBUFFER, rbo));
+	boundvkrenderbufferid = rbo;
 }
 
 void gVKRenderEngine::setRenderbufferStorage(GLenum format, int width, int height) {
-	G_CHECK_GL(glRenderbufferStorage(GL_RENDERBUFFER, format, width, height));
 }
 
 // ----- Attachments -----
 void gVKRenderEngine::attachTextureToFramebuffer(GLenum attachment, GLenum textarget, GLuint texId, GLuint level) {
-	G_CHECK_GL(glFramebufferTexture2D(GL_FRAMEBUFFER, attachment, textarget, texId, level));
+#ifdef GVK_DESKTOP_GLFW
+	auto framebuffer = vkframebuffers.find(boundframebuffer);
+	auto texture = vktextures.find(texId);
+	if(framebuffer == vkframebuffers.end() || texture == vktextures.end()) return;
+	if(attachment == GL_COLOR_ATTACHMENT0) framebuffer->second->color = texture->second;
+	else if(attachment == GL_DEPTH_ATTACHMENT || attachment == GL_DEPTH_STENCIL_ATTACHMENT)
+		framebuffer->second->depth = texture->second;
+	framebuffer->second->width = static_cast<uint32_t>(texture->second->width);
+	framebuffer->second->height = static_cast<uint32_t>(texture->second->height);
+#endif
 }
 
 void gVKRenderEngine::attachRenderbufferToFramebuffer(GLenum attachment, GLuint rbo) {
-	G_CHECK_GL(glFramebufferRenderbuffer(GL_FRAMEBUFFER, attachment, GL_RENDERBUFFER, rbo));
 }
 
 // ----- Draw/Read buffers -----
@@ -532,10 +620,32 @@ void gVKRenderEngine::resetShader(GLuint id, bool loaded) const {
 }
 
 void gVKRenderEngine::clearScreen(bool color, bool depth) {
-	GLbitfield mask = 0;
-	if(color) mask |= GL_COLOR_BUFFER_BIT;
-	if(depth) mask |= GL_DEPTH_BUFFER_BIT;
-	glClear(mask);
+#ifdef GVK_DESKTOP_GLFW
+	if(vkcontext == nullptr || (!color && !depth)) return;
+	// Open the dynamic-rendering scope if this is the first operation of the
+	// frame. Later clears (for example clearing depth before a first-person gun)
+	// are attachment clears recorded into the current Vulkan command buffer.
+	if(!gvkEnsureRendering(*vkcontext)) return;
+	VkClearAttachment attachments[2]{};
+	uint32_t attachmentcount = 0;
+	if(color) {
+		attachments[attachmentcount].aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+		attachments[attachmentcount].colorAttachment = 0;
+		attachments[attachmentcount].clearValue = *vkcontext->getClearValue();
+		attachmentcount++;
+	}
+	if(depth) {
+		attachments[attachmentcount].aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT;
+		attachments[attachmentcount].clearValue.depthStencil = {1.0f, 0};
+		attachmentcount++;
+	}
+	VkClearRect rect{};
+	rect.rect = {{0, 0}, vkcontext->swapchainextent};
+	rect.baseArrayLayer = 0;
+	rect.layerCount = 1;
+	vkCmdClearAttachments(vkcontext->commandbuffers[vkcontext->currentframe],
+			attachmentcount, attachments, 1, &rect);
+#endif
 }
 
 void gVKRenderEngine::bindQuadVAO() {
@@ -547,8 +657,44 @@ void gVKRenderEngine::drawFullscreenQuad() {
 }
 
 void gVKRenderEngine::bindDefaultFramebuffer() {
-	G_CHECK_GL(glBindFramebuffer(GL_FRAMEBUFFER, gFbo::defaultfbo));
+#ifdef GVK_DESKTOP_GLFW
+	endOffscreenRendering();
+#endif
 	boundframebuffer = gFbo::defaultfbo;
+}
+
+void gVKRenderEngine::endOffscreenRendering() {
+#ifdef GVK_DESKTOP_GLFW
+	if(vkcontext == nullptr || !vkcontext->renderingactive || boundframebuffer == gFbo::defaultfbo) return;
+	auto it = vkframebuffers.find(boundframebuffer);
+	if(it == vkframebuffers.end() || it->second == nullptr || !it->second->active) return;
+	gVKFramebuffer* target = it->second;
+	VkCommandBuffer command = vkcontext->commandbuffers[vkcontext->currentframe];
+	vkCmdEndRendering(command);
+	VkImageMemoryBarrier barriers[2]{};
+	uint32_t count = 0;
+	auto makeReadable = [&](gVKTexture* texture, VkAccessFlags sourceAccess) {
+		if(texture == nullptr) return;
+		VkImageMemoryBarrier& barrier = barriers[count++];
+		barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
+		barrier.srcAccessMask = sourceAccess;
+		barrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
+		barrier.oldLayout = texture->layout;
+		barrier.newLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+		barrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+		barrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+		barrier.image = texture->image;
+		barrier.subresourceRange = {texture->aspect, 0, 1, 0, 1};
+		texture->layout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+	};
+	makeReadable(target->color, VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT);
+	makeReadable(target->depth, VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT);
+	if(count > 0) vkCmdPipelineBarrier(command,
+			VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT,
+			VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT, 0, 0, nullptr, 0, nullptr, count, barriers);
+	target->active = false;
+	vkcontext->renderingactive = false;
+#endif
 }
 
 void gVKRenderEngine::drawVbo(const gVbo& vbo) {
@@ -612,7 +758,19 @@ void gVKRenderEngine::texImage2D(GLenum target, GLint internalFormat, int width,
 	// Only 8-bit colour uploads that carry pixels become a texture. Allocation-only
 	// calls (data == nullptr, e.g. FBO colour targets) and float / HDR uploads are
 	// outside what the 2D image path handles.
-	if(data == nullptr || type != GL_UNSIGNED_BYTE || width <= 0 || height <= 0) return;
+	if(width <= 0 || height <= 0) return;
+	if(data == nullptr) {
+		auto old = vktextures.find(boundtextureid);
+		if(old != vktextures.end()) { gvkDestroyTexture(*vkcontext, old->second); vktextures.erase(old); }
+		const bool depth = format == GL_DEPTH_COMPONENT || internalFormat == GL_DEPTH_COMPONENT;
+		gVKTexture* texture = gvkCreateRenderTexture(*vkcontext, width, height,
+				depth ? vkcontext->depthformat : vkcontext->swapchainformat,
+				depth ? VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT : VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
+				depth ? VK_IMAGE_ASPECT_DEPTH_BIT : VK_IMAGE_ASPECT_COLOR_BIT);
+		if(texture != nullptr) vktextures[boundtextureid] = texture;
+		return;
+	}
+	if(type != GL_UNSIGNED_BYTE) return;
 
 	int components = 4;
 	if(format == GL_RED) components = 1;
@@ -757,29 +915,25 @@ void gVKRenderEngine::generateMipMap() {
 }
 
 void gVKRenderEngine::bindSkyTexture(GLuint texId) {
-	G_CHECK_GL(glBindTexture(GL_TEXTURE_CUBE_MAP, texId));
+	// Cubemap resources are not part of the Vulkan texture registry yet. Do not
+	// issue OpenGL calls: a Vulkan GLFW window has no current OpenGL context.
 }
 
 void gVKRenderEngine::bindSkyTexture(GLuint texId, int textureSlot) {
-	G_CHECK_GL(glActiveTexture(textureSlot));
-	G_CHECK_GL(glBindTexture(GL_TEXTURE_CUBE_MAP, texId));
 }
 
 void gVKRenderEngine::unbindSkyTexture() {
-	G_CHECK_GL(glBindTexture(GL_TEXTURE_CUBE_MAP, 0));
 }
 
 void gVKRenderEngine::unbindSkyTexture(int textureSlotNo) {
-	G_CHECK_GL(glActiveTexture(GL_TEXTURE0 + textureSlotNo));
-	G_CHECK_GL(glBindTexture(GL_TEXTURE_CUBE_MAP, 0));
 }
 
 void gVKRenderEngine::generateSkyMipMap() {
-	G_CHECK_GL(glGenerateMipmap(GL_TEXTURE_CUBE_MAP));
 }
 
 void gVKRenderEngine::enableDepthTestEqual() {
-	G_CHECK_GL(glDepthFunc(GL_LEQUAL));
+	isdepthtestenabled = true;
+	depthtesttype = 2; // Vulkan-only LEQUAL state used by the skybox draw.
 }
 
 void gVKRenderEngine::createQuad(GLuint& inQuadVAO, GLuint& inQuadVBO) {
@@ -803,11 +957,7 @@ void gVKRenderEngine::createQuad(GLuint& inQuadVAO, GLuint& inQuadVBO) {
 }
 
 void gVKRenderEngine::enableCubeMap() {
-#if defined(GLIST_OPENGLES)
-	G_CHECK_GL(glEnable(GL_TEXTURE_CUBE_MAP)); // OpenGL ES does not support GL_TEXTURE_CUBE_MAP_SEAMLESS
-#else
-	G_CHECK_GL(glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS));
-#endif
+	// Vulkan does not have an enable/disable capability for cubemap sampling.
 }
 
 void gVKRenderEngine::pushMatrix() {
@@ -1381,6 +1531,7 @@ void gVKRenderEngine::cleanupVulkan() {
 	// render pass, which is still alive at this point). Textures free their
 	// descriptor sets, so they go before the descriptor pool inside
 	// gvkDestroyGraphicsPipelines.
+	destroyAllFramebuffers();
 	destroyAllTextures();
 	gvkDestroyShadowTarget(*ctx);
 	gvkDestroyDrawResources(*ctx);
@@ -1734,6 +1885,12 @@ void gVKRenderEngine::destroyAllTextures() {
 	gvkDestroyTexture(*vkcontext, defaultvktexture);
 	defaultvktexture = nullptr;
 #endif
+}
+
+void gVKRenderEngine::destroyAllFramebuffers() {
+	for(auto& entry : vkframebuffers) delete entry.second;
+	vkframebuffers.clear();
+	boundframebuffer = gFbo::defaultfbo;
 }
 
 void gVKRenderEngine::updatePackUnpackAlignment(int i) {

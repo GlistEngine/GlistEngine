@@ -15,6 +15,7 @@
 // still compiles on platforms that have no Vulkan headers.
 struct gVKContext;
 struct gVKTexture;
+struct gVKFramebuffer;
 
 class gVKRenderEngine : public gRenderer {
 public:
@@ -255,6 +256,11 @@ private:
 	gVKTexture* defaultvktexture = nullptr;
 	GLuint nextvktextureid = 1;
 	GLuint boundtextureid = 0;
+	std::unordered_map<GLuint, gVKFramebuffer*> vkframebuffers;
+	GLuint nextvkframebufferid = 1;
+	GLuint boundvkrenderbufferid = 0;
+	void endOffscreenRendering();
+	void destroyAllFramebuffers();
 	// Synthetic vertex array ids. gVbo asserts that its VAO is not GL_NONE before
 	// binding, so every gMesh needs a unique non-zero id even though Vulkan has no
 	// such object.

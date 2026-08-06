@@ -61,6 +61,7 @@ public:
 	void loadDataSkybox(std::string* data, int width, int height);
 private:
 	unsigned int id;
+	std::array<unsigned int, 6> vkfaceids{};
 	int width, height, nrChannels;
 	void setupRenderData();
 

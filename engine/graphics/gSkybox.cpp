@@ -33,7 +33,30 @@ gSkybox::gSkybox() {
 	setupRenderData();
 }
 
-gSkybox::~gSkybox() {}
+gSkybox::~gSkybox() {
+	if(renderer != nullptr && renderer->isVulkan()) {
+		for(auto& faceid : vkfaceids) renderer->deleteTexture(faceid);
+	}
+}
+
+static unsigned int uploadVulkanSkyFace(gRenderer* renderer, int width, int height,
+		void* pixels, bool hdr = false) {
+	if(renderer == nullptr || pixels == nullptr || width <= 0 || height <= 0) return 0;
+	std::vector<unsigned char> converted;
+	void* source = pixels;
+	if(hdr) {
+		const float* fpixels = static_cast<const float*>(pixels);
+		converted.resize(static_cast<size_t>(width) * height * 3);
+		for(size_t i = 0; i < converted.size(); i++)
+			converted[i] = static_cast<unsigned char>(glm::clamp(fpixels[i], 0.0f, 1.0f) * 255.0f);
+		source = converted.data();
+	}
+	unsigned int texture = renderer->createTextures();
+	renderer->bindTexture(texture);
+	renderer->texImage2D(GL_TEXTURE_2D, GL_RGB, width, height, GL_RGB, GL_UNSIGNED_BYTE, source);
+	renderer->setWrappingAndFiltering(GL_TEXTURE_2D, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, GL_LINEAR, GL_LINEAR);
+	return texture;
+}
 
 unsigned int gSkybox::loadTextures(const std::vector<std::string>& paths) {
 	std::vector<std::string> fullpaths;
@@ -45,6 +68,17 @@ unsigned int gSkybox::loadTextures(const std::vector<std::string>& paths) {
 }
 
 unsigned int gSkybox::load(const std::vector<std::string>& fullPaths) {
+	if(renderer->isVulkan()) {
+		for(auto& faceid : vkfaceids) renderer->deleteTexture(faceid);
+		for(size_t i = 0; i < std::min<size_t>(6, fullPaths.size()); i++) {
+			unsigned char* data = stbi_load(fullPaths[i].c_str(), &width, &height, &nrChannels, 3);
+			if(data != nullptr) vkfaceids[i] = uploadVulkanSkyFace(renderer, width, height, data);
+			else gLoge("gSkyBox") << "Cubemap tex failed to load at path: " << fullPaths[i];
+			stbi_image_free(data);
+		}
+		id = vkfaceids[0];
+		return id;
+	}
 	skymapslot = GL_TEXTURE0;
 	skymapint = 0;
 
@@ -75,6 +109,13 @@ unsigned int gSkybox::load(const std::vector<std::string>& fullPaths) {
 }
 
 void gSkybox::loadSkybox(gImage* images) {
+	if(renderer->isVulkan()) {
+		for(auto& faceid : vkfaceids) renderer->deleteTexture(faceid);
+		for(size_t i = 0; i < 6; i++) vkfaceids[i] = uploadVulkanSkyFace(renderer,
+				images[i].getWidth(), images[i].getHeight(), images[i].getImageData());
+		id = vkfaceids[0];
+		return;
+	}
 	skymapslot = GL_TEXTURE0;
 	skymapint = 0;
 
@@ -100,6 +141,13 @@ void gSkybox::loadSkybox(gImage* images) {
 }
 
 void gSkybox::loadFromData(std::array<int, 6> widths, std::array<int, 6> heights, std::array<void*, 6> rawdata, std::array<bool, 6> ishdr) {
+	if(renderer->isVulkan()) {
+		for(auto& faceid : vkfaceids) renderer->deleteTexture(faceid);
+		for(size_t i = 0; i < 6; i++) vkfaceids[i] = uploadVulkanSkyFace(renderer,
+				widths[i], heights[i], rawdata[i], ishdr[i]);
+		id = vkfaceids[0];
+		return;
+	}
 	skymapslot = GL_TEXTURE0;
 	skymapint = 0;
 
@@ -127,6 +175,15 @@ void gSkybox::loadFromData(std::array<int, 6> widths, std::array<int, 6> heights
 }
 
 void gSkybox::loadDataSkybox(std::string *data, int width, int height) {
+	if(renderer->isVulkan()) {
+		for(auto& faceid : vkfaceids) renderer->deleteTexture(faceid);
+		for(size_t i = 0; i < 6; i++) {
+			std::string decoded = gDecodeBase64(data[i]);
+			vkfaceids[i] = uploadVulkanSkyFace(renderer, width, height, decoded.data());
+		}
+		id = vkfaceids[0];
+		return;
+	}
 	skymapslot = GL_TEXTURE0;
 	skymapint = 0;
 
@@ -156,6 +213,10 @@ unsigned int gSkybox::loadTextureEquirectangular(const std::string& texturePath)
 }
 
 unsigned int gSkybox::loadEquirectangular(const std::string& fullPath) {
+	if(renderer->isVulkan()) {
+		id = GL_NONE;
+		return id;
+	}
 	ishdr = true;
 	skymapslot = GL_TEXTURE0;
 	skymapint = 0;
@@ -211,6 +272,7 @@ unsigned int gSkybox::loadEquirectangular(const std::string& fullPath) {
 }
 
 void gSkybox::generatePbrMaps() {
+	if(renderer->isVulkan()) return;
 	renderer->bindSkyTexture(id, skymapslot);
 
 	pbrShader = renderer->getPbrShader();
@@ -334,6 +396,7 @@ void gSkybox::generatePbrMaps() {
 }
 
 void gSkybox::bindPbrMaps() {
+	if(renderer->isVulkan()) return;
 	pbrShader->use();
 	pbrShader->setMat4("view", renderer->getViewMatrix());
 	pbrShader->setVec3("camPos", renderer->getCameraPosition());
@@ -344,6 +407,53 @@ void gSkybox::bindPbrMaps() {
 
 void gSkybox::draw() {
 	G_PROFILE_ZONE_SCOPED_N("gSkybox::draw()");
+	if(renderer->isVulkan()) {
+		if(id == GL_NONE || renderer->isShadowPassActive()) return;
+		const glm::vec3 c = renderer->getCameraPosition();
+		const float s = 200.0f;
+		const glm::vec3 corners[8] = {
+			c + glm::vec3(-s,-s,-s), c + glm::vec3(s,-s,-s), c + glm::vec3(s,s,-s), c + glm::vec3(-s,s,-s),
+			c + glm::vec3(-s,-s,s), c + glm::vec3(s,-s,s), c + glm::vec3(s,s,s), c + glm::vec3(-s,s,s)
+		};
+		// right, left, top, bottom, front, back -- the same ordering as the GL cubemap API.
+		const int faces[6][6] = {{1,5,6,1,6,2},{4,0,3,4,3,7},{3,2,6,3,6,7},
+				{4,5,1,4,1,0},{5,4,7,5,7,6},{0,1,2,0,2,3}};
+		const bool wasculling = renderer->isCullingEnabled();
+		const bool wasdepthenabled = renderer->isDepthTestEnabled();
+		const int olddepthtype = renderer->getDepthTestType();
+		renderer->disableCulling();
+		renderer->enableDepthTestEqual();
+		gRenderer::MaterialLighting3D lighting;
+		lighting.unlit = true;
+		for(size_t face = 0; face < 6; face++) {
+			if(vkfaceids[face] == 0) continue;
+			gRenderer::MeshVertex3D vertices[6];
+			for(size_t vertex = 0; vertex < 6; vertex++) {
+				const glm::vec3 direction = (corners[faces[face][vertex]] - c) / s;
+				glm::vec2 texcoord;
+				// Exact OpenGL samplerCube face convention. stb's first memory row
+				// remains coordinate zero in both uploads; treating it as coordinate
+				// one inverted every face and put the sea above the horizon.
+				if(face == 0) texcoord = {(-direction.z + 1.0f) * 0.5f, (-direction.y + 1.0f) * 0.5f};
+				else if(face == 1) texcoord = {(direction.z + 1.0f) * 0.5f, (-direction.y + 1.0f) * 0.5f};
+				else if(face == 2) texcoord = {(direction.x + 1.0f) * 0.5f, (direction.z + 1.0f) * 0.5f};
+				else if(face == 3) texcoord = {(direction.x + 1.0f) * 0.5f, (-direction.z + 1.0f) * 0.5f};
+				else if(face == 4) texcoord = {(direction.x + 1.0f) * 0.5f, (-direction.y + 1.0f) * 0.5f};
+				else texcoord = {(-direction.x + 1.0f) * 0.5f, (-direction.y + 1.0f) * 0.5f};
+				vertices[vertex] = {corners[faces[face][vertex]], glm::vec3(0.0f), texcoord, glm::vec3(1.0f)};
+			}
+			gRenderer::MaterialTextures3D textures;
+			textures.albedo = vkfaceids[face];
+			renderer->drawMaterialMesh3D(vertices, 6, glm::vec4(1.0f), glm::vec4(1.0f),
+					glm::vec4(0.0f), 0.0f, false, textures, lighting,
+					renderer->getProjectionMatrix() * renderer->getViewMatrix(), GL_TRIANGLES);
+		}
+		if(wasculling) renderer->enableCulling();
+		if(wasdepthenabled) renderer->enableDepthTest(olddepthtype);
+		else renderer->disableDepthTest();
+		return;
+	}
+	if(id == GL_NONE) return;
 	skyboxshader = renderer->getSkyboxShader();
 	renderer->enableDepthTestEqual(); // change depth function so depth test passes when values are equal to depth buffer's content
 	skyboxshader->use();

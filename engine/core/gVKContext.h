@@ -434,6 +434,9 @@ private:
 	// colour is only final once the canvas has drawn, so rendering is opened on the
 	// first draw (or in endFrame) rather than in beginFrame.
 	bool renderingactive = false;
+	// An offscreen FBO may temporarily end the swapchain rendering scope. When it
+	// resumes in the same frame, attachments must be loaded rather than cleared.
+	bool swapchainrenderedthisframe = false;
 	bool screenshotrequested = false;
 	bool screenshotready = false;
 	std::vector<unsigned char> screenshotpixels;

@@ -79,6 +79,10 @@ float shadowVisibility(vec3 normal) {
 
 void main() {
 	uint flags = uint(pc.cameraPositionFlags.w + 0.5);
+	if((flags & 64u) != 0u) {
+		outColor = ((flags & 1u) != 0u ? texture(albedoMap, vUV) : pc.diffuseProduct) * vColor;
+		return;
+	}
     vec3 N = normalize(vNormal);
     if((flags & 32u) != 0u) {
         vec3 albedo = (flags & 1u) != 0u ? pow(texture(albedoMap, vUV).rgb, vec3(2.2)) : vec3(0.5);

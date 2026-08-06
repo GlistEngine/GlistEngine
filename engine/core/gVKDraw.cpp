@@ -273,7 +273,7 @@ void gvkDrawMesh3D(gVKContext& ctx, const gRenderer::MeshVertex3D* vertices, int
 	vkCmdSetDepthTestEnable(cmd, depthEnabled ? VK_TRUE : VK_FALSE);
 	vkCmdSetDepthWriteEnable(cmd, depthEnabled ? VK_TRUE : VK_FALSE);
 	vkCmdSetDepthCompareOp(cmd, depthType == gRenderer::DEPTHTESTTYPE_ALWAYS
-			? VK_COMPARE_OP_ALWAYS : VK_COMPARE_OP_LESS);
+			? VK_COMPARE_OP_ALWAYS : depthType == 2 ? VK_COMPARE_OP_LESS_OR_EQUAL : VK_COMPARE_OP_LESS);
 	VkCullModeFlags vkCull = VK_CULL_MODE_NONE;
 	if(cullingEnabled) vkCull = cullFace == GL_FRONT ? VK_CULL_MODE_FRONT_BIT
 			: cullFace == GL_FRONT_AND_BACK ? VK_CULL_MODE_FRONT_AND_BACK : VK_CULL_MODE_BACK_BIT;
@@ -313,7 +313,8 @@ void gvkDrawMesh3D(gVKContext& ctx, const gRenderer::MeshVertex3D* vertices, int
 			ctx.getColor3DPipelineLayout(), 6, 1, &shadowset, 0, nullptr);
 	gvkPush3D push{mvp, ambientProduct, diffuseProduct,
 			glm::vec4(glm::vec3(specular), shininess),
-			glm::vec4(cameraPosition, static_cast<float>(textureFlags | (pbr ? 32u : 0u)))};
+			glm::vec4(cameraPosition, static_cast<float>(textureFlags | (pbr ? 32u : 0u)
+					| (lighting.unlit ? 64u : 0u)))};
 	const uint32_t pushsize = std::min<uint32_t>(sizeof(push), ctx.getColor3DPushSize());
 	if(pushsize > 0) vkCmdPushConstants(cmd, ctx.getColor3DPipelineLayout(),
 			ctx.getColor3DPushStages(), 0, pushsize, &push);

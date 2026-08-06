@@ -23,6 +23,9 @@ void main() {
     // Glist's camera matrices use OpenGL's -1..1 clip-space depth. Vulkan uses
     // 0..1, so remap z while preserving the perspective divide.
     gl_Position.z = (gl_Position.z + gl_Position.w) * 0.5;
+	// Skyboxes use the same xyww convention as the OpenGL skybox shader: their
+	// depth is always the far plane, so they cannot cover scene geometry.
+	if((uint(pc.cameraPositionPbr.w + 0.5) & 64u) != 0u) gl_Position.z = gl_Position.w;
     vColor = vec4(aColor, 1.0);
     vUV = aUV;
     vNormal = normalize(aNormal);

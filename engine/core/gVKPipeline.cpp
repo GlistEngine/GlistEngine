@@ -247,7 +247,10 @@ static bool gvkBuildPipeline(VkDevice device, VkFormat colorFormat, VkFormat dep
 	pipelineinfo.subpass = 0;
 
 	VkResult result = vkCreateGraphicsPipelines(device, VK_NULL_HANDLE, 1, &pipelineinfo, nullptr, &parts.pipeline);
-	if(result == VK_SUCCESS && dynamic3DState) {
+	// A depth-only shadow pipeline has no colour attachment, so blending has no
+	// meaning there. Creating a second variant would also leave an unadopted
+	// pipeline handle because the context stores only the shadow pipeline itself.
+	if(result == VK_SUCCESS && dynamic3DState && !depthOnly) {
 		blendattachment.blendEnable = VK_FALSE;
 		result = vkCreateGraphicsPipelines(device, VK_NULL_HANDLE, 1, &pipelineinfo, nullptr,
 				&parts.noblendpipeline);

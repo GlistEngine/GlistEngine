@@ -26,6 +26,10 @@ struct gVKTexture {
 	int width = 0;
 	int height = 0;
 	uint32_t miplevels = 1;
+	VkFormat format = VK_FORMAT_R8G8B8A8_UNORM;
+	VkImageLayout layout = VK_IMAGE_LAYOUT_UNDEFINED;
+	VkImageAspectFlags aspect = VK_IMAGE_ASPECT_COLOR_BIT;
+	bool rendertarget = false;
 	bool usemipmaps = true;
 	// What the current sampler was built with, so a filtering or wrapping change
 	// can be detected and only then rebuild it. The defaults match what gTexture
@@ -41,6 +45,11 @@ struct gVKTexture {
 // new device-local sampled image and allocates its descriptor set from the
 // context's pool. Returns nullptr on failure.
 gVKTexture* gvkCreateTextureRGBA8(gVKContext& ctx, const void* rgbaPixels, int width, int height);
+
+// Creates an allocation-only image suitable for Dynamic Rendering and, after
+// rendering, sampling through the ordinary gTexture draw path.
+gVKTexture* gvkCreateRenderTexture(gVKContext& ctx, int width, int height, VkFormat format,
+		VkImageUsageFlags usage, VkImageAspectFlags aspect);
 
 // Allocates the texture's descriptor set from the context's pool and points it at
 // the image. Called once at creation, and again after a shader reload, which

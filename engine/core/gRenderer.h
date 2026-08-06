@@ -300,6 +300,7 @@ public:
 		std::array<MaterialLight3D, GLIST_MAX_LIGHTS> lights{};
 		int lightCount = 0;
 		uint32_t enabledMask = 0;
+		bool unlit = false;
 	};
 	virtual void drawMaterialMesh3D(const MeshVertex3D* vertices, int count, const glm::vec4& ambient,
 			const glm::vec4& diffuse, const glm::vec4& specular, float shininess, bool pbr,

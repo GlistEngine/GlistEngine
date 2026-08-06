@@ -76,6 +76,7 @@ bool gvkBeginFrame(gVKContext& ctx, GLFWwindow* window) {
 	// the draw path can refill it from the start.
 	ctx.resetDynamicVertices();
 	ctx.renderingactive = false;
+	ctx.swapchainrenderedthisframe = false;
 	ctx.frameactive = true;
 	return true;
 }
@@ -90,7 +91,8 @@ bool gvkEnsureRendering(gVKContext& ctx) {
 	barriers[0].sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
 	barriers[0].srcAccessMask = 0;
 	barriers[0].dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
-	barriers[0].oldLayout = ctx.swapchainimagelayouts[ctx.currentimageindex];
+	barriers[0].oldLayout = ctx.swapchainrenderedthisframe
+			? VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL : ctx.swapchainimagelayouts[ctx.currentimageindex];
 	barriers[0].newLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
 	barriers[0].srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
 	barriers[0].dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
@@ -98,7 +100,8 @@ bool gvkEnsureRendering(gVKContext& ctx) {
 	barriers[0].subresourceRange = {VK_IMAGE_ASPECT_COLOR_BIT, 0, 1, 0, 1};
 	barriers[1].sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
 	barriers[1].dstAccessMask = VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
-	barriers[1].oldLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+	barriers[1].oldLayout = ctx.swapchainrenderedthisframe
+			? VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL : VK_IMAGE_LAYOUT_UNDEFINED;
 	barriers[1].newLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
 	barriers[1].srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
 	barriers[1].dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
@@ -112,14 +115,14 @@ bool gvkEnsureRendering(gVKContext& ctx) {
 	colorattachment.sType = VK_STRUCTURE_TYPE_RENDERING_ATTACHMENT_INFO;
 	colorattachment.imageView = ctx.swapchainimageviews[ctx.currentimageindex];
 	colorattachment.imageLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
-	colorattachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+	colorattachment.loadOp = ctx.swapchainrenderedthisframe ? VK_ATTACHMENT_LOAD_OP_LOAD : VK_ATTACHMENT_LOAD_OP_CLEAR;
 	colorattachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
 	colorattachment.clearValue = ctx.clearvalue;
 	VkRenderingAttachmentInfo depthattachment{};
 	depthattachment.sType = VK_STRUCTURE_TYPE_RENDERING_ATTACHMENT_INFO;
 	depthattachment.imageView = ctx.depthimageviews[ctx.currentimageindex];
 	depthattachment.imageLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
-	depthattachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+	depthattachment.loadOp = ctx.swapchainrenderedthisframe ? VK_ATTACHMENT_LOAD_OP_LOAD : VK_ATTACHMENT_LOAD_OP_CLEAR;
 	depthattachment.storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
 	depthattachment.clearValue.depthStencil = {1.0f, 0};
 	VkRenderingInfo renderinginfo{};
@@ -149,6 +152,7 @@ bool gvkEnsureRendering(gVKContext& ctx) {
 	vkCmdSetScissor(commandbuffer, 0, 1, &scissor);
 
 	ctx.renderingactive = true;
+	ctx.swapchainrenderedthisframe = true;
 	return true;
 }
 

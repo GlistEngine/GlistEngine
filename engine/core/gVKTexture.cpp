@@ -79,6 +79,7 @@ gVKTexture* gvkCreateTextureRGBA8(gVKContext& ctx, const void* rgbaPixels, int w
 	gVKTexture* tex = new gVKTexture();
 	tex->width = width;
 	tex->height = height;
+	tex->layout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
 	tex->miplevels = static_cast<uint32_t>(std::floor(std::log2(std::max(width, height)))) + 1;
 
 	VkImageCreateInfo imageinfo{};
@@ -182,6 +183,62 @@ gVKTexture* gvkCreateTextureRGBA8(gVKContext& ctx, const void* rgbaPixels, int w
 	// else, which the upload path does right after this returns.
 	tex->sampler = gvkCreateSampler(ctx, *tex, tex->minfilter, tex->magfilter, tex->addressu, tex->addressv);
 
+	gvkWriteTextureDescriptorSet(ctx, tex);
+	return tex;
+}
+
+gVKTexture* gvkCreateRenderTexture(gVKContext& ctx, int width, int height, VkFormat format,
+		VkImageUsageFlags usage, VkImageAspectFlags aspect) {
+	if(width <= 0 || height <= 0) return nullptr;
+	VkDevice device = *ctx.getDevice();
+	gVKTexture* tex = new gVKTexture();
+	tex->width = width;
+	tex->height = height;
+	tex->format = format;
+	tex->aspect = aspect;
+	tex->rendertarget = true;
+	tex->usemipmaps = false;
+
+	VkImageCreateInfo imageinfo{};
+	imageinfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
+	imageinfo.imageType = VK_IMAGE_TYPE_2D;
+	imageinfo.extent = {static_cast<uint32_t>(width), static_cast<uint32_t>(height), 1};
+	imageinfo.mipLevels = 1;
+	imageinfo.arrayLayers = 1;
+	imageinfo.format = format;
+	imageinfo.tiling = VK_IMAGE_TILING_OPTIMAL;
+	imageinfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+	imageinfo.usage = usage | VK_IMAGE_USAGE_SAMPLED_BIT;
+	imageinfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+	imageinfo.samples = VK_SAMPLE_COUNT_1_BIT;
+	if(vkCreateImage(device, &imageinfo, nullptr, &tex->image) != VK_SUCCESS) {
+		delete tex;
+		return nullptr;
+	}
+	VkMemoryRequirements requirements{};
+	vkGetImageMemoryRequirements(device, tex->image, &requirements);
+	VkMemoryAllocateInfo allocation{};
+	allocation.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+	allocation.allocationSize = requirements.size;
+	allocation.memoryTypeIndex = gvkFindMemoryType(ctx, requirements.memoryTypeBits,
+			VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
+	if(vkAllocateMemory(device, &allocation, nullptr, &tex->memory) != VK_SUCCESS) {
+		gvkDestroyTexture(ctx, tex);
+		return nullptr;
+	}
+	vkBindImageMemory(device, tex->image, tex->memory, 0);
+	VkImageViewCreateInfo viewinfo{};
+	viewinfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+	viewinfo.image = tex->image;
+	viewinfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
+	viewinfo.format = format;
+	viewinfo.subresourceRange = {aspect, 0, 1, 0, 1};
+	if(vkCreateImageView(device, &viewinfo, nullptr, &tex->view) != VK_SUCCESS) {
+		gvkDestroyTexture(ctx, tex);
+		return nullptr;
+	}
+	tex->sampler = gvkCreateSampler(ctx, *tex, VK_FILTER_LINEAR, VK_FILTER_LINEAR,
+			VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE, VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE);
 	gvkWriteTextureDescriptorSet(ctx, tex);
 	return tex;
 }
