@@ -8,6 +8,7 @@ out vec4 FragColor;
 in vec2 TexCoords;
 in vec3 WorldPos;
 in vec3 Normal;
+in vec4 FragPosLightSpace;
 
 // material parameters
 uniform sampler2D albedoMap;
@@ -15,6 +16,10 @@ uniform sampler2D normalMap;
 uniform sampler2D metallicMap;
 uniform sampler2D roughnessMap;
 uniform sampler2D aoMap;
+uniform sampler2D shadowMap;
+uniform vec3 shadowLightPos;
+uniform int useShadowMap;
+uniform int softShadows;
 
 struct Light {
 	int type; //0-ambient, 1-directional, 2-point, 3-spot
@@ -110,6 +115,27 @@ vec3 fresnelSchlick(float cosTheta, vec3 F0)
 {
     return F0 + (1.0 - F0) * pow(max(1.0 - cosTheta, 0.0), 5.0);
 }
+
+float shadowVisibility(vec3 normal)
+{
+    if (useShadowMap == 0) return 1.0;
+    vec3 projected = FragPosLightSpace.xyz / FragPosLightSpace.w;
+    projected = projected * 0.5 + 0.5;
+    if (projected.z > 1.0) return 1.0;
+    vec3 lightDirection = normalize(shadowLightPos - WorldPos);
+    float bias = max(0.05 * (1.0 - dot(normal, lightDirection)), 0.005);
+    vec2 texel = 1.0 / vec2(textureSize(shadowMap, 0));
+    int radius = softShadows != 0 ? 2 : 1;
+    float blocked = 0.0;
+    for (int x = -radius; x <= radius; ++x) {
+        for (int y = -radius; y <= radius; ++y) {
+            float depth = texture(shadowMap, projected.xy + vec2(x, y) * texel).r;
+            blocked += projected.z - bias > depth ? 1.0 : 0.0;
+        }
+    }
+    float samples = float((radius * 2 + 1) * (radius * 2 + 1));
+    return 1.0 - blocked / samples;
+}
 // ----------------------------------------------------------------------------
 void main()
 {
@@ -122,6 +148,7 @@ void main()
     // input lighting data
     vec3 N = hasNormalMap > 0 ? getNormalFromMap() : normalize(Normal);
     vec3 V = normalize(camPos - WorldPos);
+    float visibility = shadowVisibility(N);
 
     // calculate reflectance at normal incidence; if dia-electric (like plastic) use F0
     // of 0.04 and if it's a metal, use the albedo color as F0 (metallic workflow)
@@ -184,7 +211,7 @@ void main()
 
         float NdotL = max(dot(N, L), 0.0);
 
-        Lo += (kD * albedo / PI + specular) * radiance * NdotL;
+        Lo += (kD * albedo / PI + specular) * radiance * NdotL * visibility;
     }
 
     // Ambient lighting from accumulated ambient lights
