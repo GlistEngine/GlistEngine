@@ -19,9 +19,16 @@
 // For gVKMeshPush, the 3D path's push constant block.
 #include "gVKUniform.h"
 
+#ifdef GVK_DESKTOP_GLFW
+
+#include <glm/glm.hpp>
+
 // The renderer's culling state, handed to a 3D draw the same way the depth state is.
 // Already in Vulkan terms: gVKRenderEngine translates the engine's GL-flavoured
 // culling API, so this header needs no GL constants.
+//
+// Inside the guard, like everything else here: a build without the Vulkan backend
+// never sees a Vulkan header, so a type named outside it does not exist at all.
 //
 // The front face is deliberately the opposite of the OpenGL one. The frame loop
 // draws through a negative-height viewport, which mirrors the y axis and reverses
@@ -31,10 +38,6 @@ struct gVKCullState {
 	VkCullModeFlags mode = VK_CULL_MODE_NONE;
 	VkFrontFace frontface = VK_FRONT_FACE_CLOCKWISE;
 };
-
-#ifdef GVK_DESKTOP_GLFW
-
-#include <glm/glm.hpp>
 
 // How the points handed to gvkDrawColored2D are connected. These mirror the mesh
 // draw modes the 2D primitives use (gMesh::DRAWMODE_*), without this header having

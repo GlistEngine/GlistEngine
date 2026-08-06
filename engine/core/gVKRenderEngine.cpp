@@ -239,12 +239,16 @@ void gVKRenderEngine::takeScreenshot(gImage& img) {
 // baked into the pipeline rather than set per draw, and gVertex has one fixed layout
 // that the 3D pipeline declares once.
 GLuint gVKRenderEngine::genBuffers() {
+#ifdef GVK_DESKTOP_GLFW
 	if(vkcontext == nullptr) return 0;
 	// The entry is created empty; the VkBuffer appears on the first upload, because
 	// only then is the size and the vertex/index role known.
 	GLuint id = nextvkbufferid++;
 	vkmeshbuffers[id] = new gVKMeshBuffer();
 	return id;
+#else
+	return 0;
+#endif
 }
 
 gVKMeshBuffer* gVKRenderEngine::getMeshBuffer(GLuint id) {
@@ -254,6 +258,7 @@ gVKMeshBuffer* gVKRenderEngine::getMeshBuffer(GLuint id) {
 }
 
 void gVKRenderEngine::deleteBuffer(GLuint& buffer) {
+#ifdef GVK_DESKTOP_GLFW
 	if(buffer == 0 || vkcontext == nullptr) return;
 
 	auto it = vkmeshbuffers.find(buffer);
@@ -278,6 +283,9 @@ void gVKRenderEngine::deleteBuffer(GLuint& buffer) {
 
 	// Matches the OpenGL path, where glDeleteBuffers leaves the caller's name zeroed.
 	buffer = 0;
+#else
+	buffer = 0;
+#endif
 }
 
 void gVKRenderEngine::bindBuffer(GLenum target, GLuint buffer) {
@@ -332,6 +340,7 @@ void gVKRenderEngine::unbindVAO() {
 }
 
 void gVKRenderEngine::setVertexBufferData(GLuint vbo, size_t size, const void* data, int usage) {
+#ifdef GVK_DESKTOP_GLFW
 	if(vkcontext == nullptr) return;
 
 	gVKMeshBuffer* buf = getMeshBuffer(vbo);
@@ -355,9 +364,11 @@ void gVKRenderEngine::setVertexBufferData(GLuint vbo, size_t size, const void* d
 	gVKVertexArray& array = vkvertexarrays[boundvaoid];
 	if(array.vertexbuffer == 0 || array.vertexbuffer == vbo) array.vertexbuffer = vbo;
 	else array.instancebuffer = vbo;
+#endif
 }
 
 void gVKRenderEngine::setIndexBufferData(GLuint ebo, size_t size, const void* data, int usage) {
+#ifdef GVK_DESKTOP_GLFW
 	if(vkcontext == nullptr) return;
 
 	gVKMeshBuffer* buf = getMeshBuffer(ebo);
@@ -374,6 +385,7 @@ void gVKRenderEngine::setIndexBufferData(GLuint ebo, size_t size, const void* da
 	// it does for vertices - the OpenGL path binds inside setIndexBufferData itself -
 	// so the pairing is recorded here rather than in bindBuffer.
 	if(boundvaoid != 0) vkvertexarrays[boundvaoid].indexbuffer = ebo;
+#endif
 }
 
 // ----- Draw -----
