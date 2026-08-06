@@ -10,7 +10,7 @@
 
 gGUINotebook::gGUINotebook() {
 	tabposition = TabPosition::TOP;
-	titlefont = font;
+	titlefont = getFont();
 	titlepadding = 8;
 	tabgap = 5;
 	tabscroll = 0;
@@ -24,6 +24,11 @@ gGUINotebook::gGUINotebook() {
 
 gGUINotebook::~gGUINotebook() {
 
+}
+
+void gGUINotebook::setFont(gFont* font) {
+	gGUIControl::setFont(font);
+	titlefont = font;
 }
 
 void gGUINotebook::set(gBaseApp* root, gBaseGUIObject* topParent, gBaseGUIObject* parent, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h) {

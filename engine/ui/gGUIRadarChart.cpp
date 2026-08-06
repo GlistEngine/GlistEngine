@@ -165,23 +165,23 @@ void gGUIRadarChart::drawBase() {
 
         renderer->setColor(this->fontcolor);
         if ((i > 0 && i < n / 2) || (n % 2 != 0 && i == n / 2)) {
-            float text_width = this->font->getStringWidth(this->labels[i]);
+            float text_width = this->getFont()->getStringWidth(this->labels[i]);
 
-            this->font->drawText(
+            this->getFont()->drawText(
                 this->labels[i],
                 this->vertices[i].position.x - text_width,
                 this->vertices[i].position.y
             );
         } else if (i == 0 || (n % 2 == 0 && i == n / 2)) {
-            float text_width = this->font->getStringWidth(this->labels[i]);
+            float text_width = this->getFont()->getStringWidth(this->labels[i]);
 
-            this->font->drawText(
+            this->getFont()->drawText(
                 this->labels[i],
                 this->vertices[i].position.x - text_width / 2.0f,
                 this->vertices[i].position.y
             );
         } else {
-            this->font->drawText(
+            this->getFont()->drawText(
                 this->labels[i],
                 this->vertices[i].position.x,
                 this->vertices[i].position.y

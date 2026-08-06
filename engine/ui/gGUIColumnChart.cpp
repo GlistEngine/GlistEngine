@@ -1,7 +1,7 @@
 /*
  * gGUIColumnChart.cpp
  *
- *  Created on: 11 Aðu 2022
+ *  Created on: 11 Aï¿½u 2022
  *      Author: Batuhan
  */
 
@@ -154,7 +154,7 @@ void gGUIColumnChart::drawMultiColumns() {
 		renderer->setColor(middlegroundcolor);
 		if(textison) {
 			this->title = textvector[i];
-			font->drawText(title, left + multicolumnxe[i] + ((columnsw * columnnumber + ((columnnumber - 1) * initialmcspadding ) - font->getStringWidth(title)) / 2), top + charty + 15); //columnnumberý vectore dönüþtür
+			getFont()->drawText(title, left + multicolumnxe[i] + ((columnsw * columnnumber + ((columnnumber - 1) * initialmcspadding ) - getFont()->getStringWidth(title)) / 2), top + charty + 15); //columnnumberï¿½ vectore dï¿½nï¿½ï¿½tï¿½r
 		}
 		renderer->setColor(oldcolor);
 		colorindex = 0;
@@ -192,7 +192,7 @@ void gGUIColumnChart::drawLinesAndNumbers() {
 			gColor oldcolor = renderer->getColor();
 			renderer->setColor(middlegroundcolor);
 			this->title = numbersinchart;
-			font->drawText(title, left + chartx - font->getStringWidth(title) - 8, top + charty - chartliney);
+			getFont()->drawText(title, left + chartx - getFont()->getStringWidth(title) - 8, top + charty - chartliney);
 			renderer->setColor(oldcolor);
 			//gLogi("chartliney : ") << chartliney;
 		}

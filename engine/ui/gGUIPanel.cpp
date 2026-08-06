@@ -42,7 +42,7 @@ void gGUIPanel::draw() {
 		renderer->setColor(middlegroundcolor->r, middlegroundcolor->g, middlegroundcolor->b);
 		gDrawLine(left, top + toplineh, right, top + toplineh);
 		renderer->setColor(fontcolor);
-		font->drawText(title, left + 2, top + 12);
+		getFont()->drawText(title, left + 2, top + 12);
 	}
 	renderer->setColor(&oldcolor);
 	if(guisizer) guisizer->draw();

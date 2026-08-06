@@ -80,13 +80,13 @@ void gGUINavigation::draw() {
 	for(int i = 0; !bottombarenabled && i < panes.size(); i++) {
 		if(!paneenabled[i]) {
 			renderer->setColor(196, 196, 196);
-			font->drawText(gToStr(i + 1) + ". " + panes[i]->getTitle(), panelinepad, panetoph + i * panelineh);
+			getFont()->drawText(gToStr(i + 1) + ". " + panes[i]->getTitle(), panelinepad, panetoph + i * panelineh);
 		} else if(i == selectedpane) {
 			renderer->setColor(255, 255, 255);
 			root->getAppManager()->getGUIManager()->getFont(0, 1)->drawText(gToStr(i + 1) + ". " + panes[i]->getTitle(), panelinepad, panetoph + i * panelineh);
 		} else {
 			renderer->setColor(255, 255, 255);
-			font->drawText(gToStr(i + 1) + ". " + panes[i]->getTitle(), panelinepad, panetoph + i * panelineh);
+			getFont()->drawText(gToStr(i + 1) + ". " + panes[i]->getTitle(), panelinepad, panetoph + i * panelineh);
 		}
 	}
 
@@ -179,7 +179,7 @@ void gGUINavigation::mouseReleased(int x, int y, int button) {
 	gGUIScrollable::mouseReleased(x, y, button);
 	for(int i = 0; !bottombarenabled && i < panes.size(); i++) {
 		if(!paneenabled[i]) continue;
-		if(x >= panelinepad && x < width - panelinepad && y >= panetoph + i * panelineh - font->getSize() && y < panetoph + i * panelineh + font->getSize() / 2) {
+		if(x >= panelinepad && x < width - panelinepad && y >= panetoph + i * panelineh - getFont()->getSize() && y < panetoph + i * panelineh + getFont()->getSize() / 2) {
 			selectedpane = i;
 			showPane(panes[selectedpane]);
 			break;

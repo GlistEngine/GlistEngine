@@ -103,7 +103,7 @@ void gGUIStatusBar::statusbarAllTextDraw() {
 		gDrawLine(textsliderx[id], textslidery[id] + textsliderh[id]* 0.05f, textsliderx[id], textslidery[id] + textsliderh[id]*0.95f);
 		//statusbartexts
 		renderer->setColor(fontcolor);
-		font->drawText(text[id], textx[id], texty[id]);
+		getFont()->drawText(text[id], textx[id], texty[id]);
 		renderer->setColor(middlegroundcolor->r, middlegroundcolor->g, middlegroundcolor->b);
 	}
 }

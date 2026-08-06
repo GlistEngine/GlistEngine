@@ -17,15 +17,15 @@ gGUITreelist::gGUITreelist() {
 	topelement.parentlist = this;
 	topelement.title = "Top";
 	topelement.isexpanded = true;
-	lineh = 2 * font->getSize() + 2;
+	lineh = 2 * getFont()->getSize() + 2;
 	firstlineno = 0;
 	flno = firstlineno;
 	selectedno = 0;
 	mousepressedonlist = false;
-	textoffset = (lineh - font->getStringHeight("ae")) / 2 + 1;
+	textoffset = (lineh - getFont()->getStringHeight("ae")) / 2 + 1;
 	fldy = 0;
-	arrowsize = font->getStringWidth(">");
-	spacesize = font->getStringWidth("  ");
+	arrowsize = getFont()->getStringWidth(">");
+	spacesize = getFont()->getStringWidth("  ");
 	chosencolor = gColor(1.0f, 0.5f, 0.0f);
 	iconcolor = textbackgroundcolor;
 	iconw = lineh / 2;
@@ -113,7 +113,7 @@ void gGUITreelist::drawContent() {
 			icons[i]->draw(allorderno[i] * spacesize - (iconw * 2 / 3), (i * lineh) - textoffset / 2 + lineh / 2 - verticalscroll, iconw, iconh);
 		}
 		renderer->setColor(fontcolor);
-		font->drawText(allsubtitles[i], 2, (i * lineh) + lineh - textoffset - verticalscroll);
+		getFont()->drawText(allsubtitles[i], 2, (i * lineh) + lineh - textoffset - verticalscroll);
 	}
 
 	renderer->setColor(oldcolor);
@@ -165,7 +165,7 @@ void gGUITreelist::mouseReleased(int x, int y, int button) {
 				if(tmptitle[i] == '>') {
 					arrow = true;
 					parsedtitle = tmptitle.substr(i + 2, tmptitle.size() - i);
-					arrowposx = font->getStringWidth(tmptitle.substr(0, i + 1));
+					arrowposx = getFont()->getStringWidth(tmptitle.substr(0, i + 1));
 				}
 				i++;
 			}

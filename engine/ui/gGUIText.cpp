@@ -10,7 +10,7 @@
 
 gGUIText::gGUIText() {
     text = "";
-    fontsize = font->getSize();
+    fontsize = getFont()->getSize();
     linespacingfactor = 0.4f;
 	lineh = fontsize + (fontsize * linespacingfactor);
     width = 0;
@@ -27,7 +27,7 @@ gGUIText::~gGUIText() {
 
 void gGUIText::set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIObject* parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h) {
     gGUIControl::set(root, topParentGUIObject, parentGUIObject, parentSlotLineNo, parentSlotColumnNo, x, y, w, h);
-    fontsize = font->getSize();
+    fontsize = getFont()->getSize();
     linespacingfactor = 0.4f;
 	lineh = fontsize + (fontsize * linespacingfactor);
     resetText();
@@ -78,7 +78,7 @@ void gGUIText::draw() {
 	}
 
     for (int i = 0; i < linenum; i++) {
-		font->drawText(line[i], left + linefirstx[i], top + fontsize + (i * lineh) + verticaloffset);
+		getFont()->drawText(line[i], left + linefirstx[i], top + fontsize + (i * lineh) + verticaloffset);
 	}
     renderer->setColor(oldcolor);
 }
@@ -102,7 +102,7 @@ void gGUIText::resetText() {
     // Process each line and apply alignment rules
     for (const std::string& singleline : lines) {
 //        std::vector<std::string> splitlines = gSplitString(singleline, "\n");
-        std::vector<std::string> splitlines = splitString(singleline, font, width);
+        std::vector<std::string> splitlines = splitString(singleline, getFont(), width);
         for (const std::string& splitline : splitlines) {
             lineswithrules.push_back(splitline);
         }
@@ -115,9 +115,9 @@ void gGUIText::resetText() {
 
 void gGUIText::resetAlignment() {
     linefirstx.clear();
-    int spacewidth = font->getStringWidth(" ");
+    int spacewidth = getFont()->getStringWidth(" ");
     for (int i = 0; i < linenum; i++) {
-        int linetextwidth = font->getStringWidth(line[i]);
+        int linetextwidth = getFont()->getStringWidth(line[i]);
         int lineindent = 0;
 
         if (textalignment == TEXTALIGNMENT_CENTER) {
@@ -128,7 +128,7 @@ void gGUIText::resetAlignment() {
         	 int numspaces = std::count(line[i].begin(), line[i].end(), ' ');
 				if (numspaces > 0) {
 					int totalspacing = width - linetextwidth;
-				    int extraspacing = (totalspacing % spacewidth) - font->getStringWidth(" ");
+				    int extraspacing = (totalspacing % spacewidth) - getFont()->getStringWidth(" ");
 					totalspacing /= spacewidth;
 					int spacing = totalspacing / numspaces * 2;
 					if(spacing == 0) spacing = 1;
@@ -169,14 +169,14 @@ void gGUIText::resetAlignment() {
 	if (textverticalalignment == TEXTVERTICALALIGNMENT_BOTTOM) {
 		int totalheight = 0;
 		for (int i = 0; i < linenum; i++) {
-			totalheight += font->getStringHeight(line[i]);
+			totalheight += getFont()->getStringHeight(line[i]);
 		}
 		verticaloffset = height - totalheight - 2;
 	}
 	if (textverticalalignment == TEXTVERTICALALIGNMENT_CENTER) {
 		int totalheight = 0;
 		for (int i = 0; i < linenum; i++) {
-			totalheight += font->getStringHeight(line[i]);
+			totalheight += getFont()->getStringHeight(line[i]);
 		}
 		verticaloffset = (height - totalheight) / 2 - 2;
 	}

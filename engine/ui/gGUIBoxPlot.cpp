@@ -193,7 +193,7 @@ void gGUIBoxPlot::draw() {
     if(!hasStats) {
         renderer->setColor(0.35f, 0.35f, 0.35f);
         if(font) {
-            font->drawText("Not enough data for box plot.", left + 20, top + 80);
+            getFont()->drawText("Not enough data for box plot.", left + 20, top + 80);
         }
         renderer->setColor(old);
         return;
@@ -212,7 +212,7 @@ void gGUIBoxPlot::draw() {
     // Title
     renderer->setColor(0.25f, 0.25f, 0.25f);
     if(font) {
-        font->drawText(title, left + 20, top + 20);
+        getFont()->drawText(title, left + 20, top + 20);
     }
 
     // Center X
@@ -260,9 +260,9 @@ void gGUIBoxPlot::draw() {
     // Footer quick stats (optional)
     renderer->setColor(0.35f, 0.35f, 0.35f);
     if(font) {
-        font->drawText("Q1=" + gToStr(q1) + "  Med=" + gToStr(med) + "  Q3=" + gToStr(q3),
+        getFont()->drawText("Q1=" + gToStr(q1) + "  Med=" + gToStr(med) + "  Q3=" + gToStr(q3),
                        left + 20, top + height - 45);
-        font->drawText("Whiskers: [" + gToStr(whiskLow) + ", " + gToStr(whiskHigh) + "]" +
+        getFont()->drawText("Whiskers: [" + gToStr(whiskLow) + ", " + gToStr(whiskHigh) + "]" +
                        (showOutliers ? ("  Outliers: " + gToStr((int)outliers.size())) : ""),
                        left + 20, top + height - 25);
     }

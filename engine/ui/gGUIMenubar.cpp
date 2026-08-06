@@ -24,15 +24,15 @@ gGUIMenuItem::gGUIMenuItem(std::string text) {
 	selected = false;
 	hovered = false;
 	menuboxdefaultw = 150;
-	menuboxdefaulth = font->getSize() * 2 / 3;
+	menuboxdefaulth = getFont()->getSize() * 2 / 3;
 	menuboxx = 0;
 	menuboxy = 0;
 	menuboxw = 0;
 	menuboxh = 0;
-	menuboxlineh = font->getSize() * 9 / 4;
+	menuboxlineh = getFont()->getSize() * 9 / 4;
 	menuboxtextextrah = 0;
 	menuboxshown = false;
-	texth = font->getStringHeight("Ap");
+	texth = getFont()->getStringHeight("Ap");
 	texty = 0;
 	isparent = false;
 	counter = 0;
@@ -55,7 +55,7 @@ int gGUIMenuItem::getItemId() {
 void gGUIMenuItem::setParentItemId(int itemId) {
 	parentitemid = itemId;
 	menuboxtextextrah = 0;
-	if(parentitemid == 0) menuboxtextextrah = font->getSize() * 3 / 4;
+	if(parentitemid == 0) menuboxtextextrah = getFont()->getSize() * 3 / 4;
 }
 
 int gGUIMenuItem::getParentItemId() {
@@ -71,7 +71,7 @@ int gGUIMenuItem::addChild(std::string text, bool addSeperator) {
 	lastparentitemid = itemid;
 	childs[childno].menuicon = new gImage();
 
-	int tw = font->getStringWidth(text) + 6 + font->getSize();
+	int tw = getFont()->getStringWidth(text) + 6 + getFont()->getSize();
 	if(itemid == 0) {
 		childs[childno].set(root, topparent, this, 0, 0, totaltextw, 0, tw, height);
 		childs[childno].menuboxx = childs[childno].left;
@@ -96,7 +96,7 @@ int gGUIMenuItem::addChild(std::string text, bool addSeperator) {
 	}
 	totaltextw += tw;
 	menuboxh = 0;
-//	if(font->getStringWidth(text) > menuboxw) menuboxw = font->getStringWidth(text);
+//	if(getFont()->getStringWidth(text) > menuboxw) menuboxw = getFont()->getStringWidth(text);
 	return childs[childno].getItemId();
 }
 
@@ -104,7 +104,7 @@ int gGUIMenuItem::addChild(gGUIMenuItem childItem) {
 	int childno = childs.size();
 	childs.push_back(childItem);
 	childs[childno].setParentItemId(itemid);
-	int tw = font->getStringWidth(childItem.getTitle()) + 6 + font->getSize();
+	int tw = getFont()->getStringWidth(childItem.getTitle()) + 6 + getFont()->getSize();
 	if(itemid == 0) childs[childno].set(root, topparent, this, 0, 0, totaltextw, 0, tw, height);
 	else childs[childno].set(root, topparent, this, 0, 0, menuboxx, (menuboxlineh * 5 / 3) + childno * menuboxlineh, menuboxw - 1, menuboxlineh);
 	totaltextw += tw;
@@ -202,15 +202,15 @@ void gGUIMenuItem::draw() {
 	}
 
 	renderer->setColor(fontcolor);
-	if(parentitemid != 0)font->drawText(title, left + iconh, top + (font->getSize() - texth / 3) + menuboxtextextrah);
-	else font->drawText(title, left + 8, top + (font->getSize() - texth / 3) + menuboxtextextrah);
+	if(parentitemid != 0)getFont()->drawText(title, left + iconh, top + (getFont()->getSize() - texth / 3) + menuboxtextextrah);
+	else getFont()->drawText(title, left + 8, top + (getFont()->getSize() - texth / 3) + menuboxtextextrah);
 
 	if(seperator){
 		renderer->setColor(backgroundcolor);
 		gDrawLine(left + iconh, bottom - texth / 2, right + 10, bottom - texth / 2);
 	}
 
-	if(isparent && parentitemid != 0) font->drawText(">", left + menuboxw, top + (font->getSize() - texth / 3) + menuboxtextextrah);
+	if(isparent && parentitemid != 0) getFont()->drawText(">", left + menuboxw, top + (getFont()->getSize() - texth / 3) + menuboxtextextrah);
 
 	if(itemid == 0) {
 		for(int i = 0; i < childs.size(); i++) {
