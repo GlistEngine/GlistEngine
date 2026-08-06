@@ -27,13 +27,6 @@ public:
 	void disableDepthTest() override;
 	bool isDepthTestEnabled() override;
 	int getDepthTestType() override;
-	void enableCulling() override;
-	void disableCulling() override;
-	bool isCullingEnabled() const override;
-	void setCullFace(int face) override;
-	int getCullFace() const override;
-	void setCullingDirection(int direction) override;
-	int getCullingDirection() const override;
 
 	void enableAlphaBlending() override;
 	void disableAlphaBlending() override;

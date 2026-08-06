@@ -78,11 +78,7 @@ unsigned int gSkybox::load(const std::vector<std::string>& fullPaths) {
 	renderer->bindSkyTexture(id, skymapslot);
 
 	for (unsigned int i = 0; i < fullPaths.size(); i++) {
-		// Forced to three channels. The upload below is always GL_RGB, so letting stb
-		// return the file's own count made a four channel image arrive with the wrong
-		// stride and unpack as diagonal colour stripes. A three channel file is
-		// unaffected, which is why this went unnoticed.
-        unsigned char *data = stbi_load(fullPaths[i].c_str(), &width, &height, &nrChannels, 3);
+        unsigned char *data = stbi_load(fullPaths[i].c_str(), &width, &height, &nrChannels, 0);
         if (data) {
         	renderer->texImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, GL_RGB, width, height, GL_RGB, GL_UNSIGNED_BYTE, data);
             stbi_image_free(data);

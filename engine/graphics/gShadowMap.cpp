@@ -146,20 +146,8 @@ void gShadowMap::enable() {
 		glViewport(0, 0, renderer->getScreenWidth(), renderer->getScreenHeight());
 		renderer->getColorShader()->use();
 		renderer->getColorShader()->setInt("aUseShadowMap", 1);
-		// The uniform is named shadowLightPos in color_frag.glsl. This used to set
-		// "lightPos", which no shader declares, so the shadow bias was computed
-		// against a zero light position on the OpenGL path.
-		renderer->getColorShader()->setVec3("shadowLightPos", lightposition);
+		renderer->getColorShader()->setVec3("lightPos", lightposition);
 		renderer->getColorShader()->setInt("shadowMap", shadowmaptextureslot);
-
-		// The PBR shader carries its own copy of the shadow state: it is a separate
-		// program, so nothing set on the colour shader reaches it.
-		renderer->getPbrShader()->use();
-		renderer->getPbrShader()->setInt("useShadowMap", 1);
-		renderer->getPbrShader()->setInt("softShadows", renderer->isSoftShadowsEnabled() ? 1 : 0);
-		renderer->getPbrShader()->setVec3("shadowLightPos", lightposition);
-		renderer->getPbrShader()->setMat4("lightMatrix", lightmatrix);
-		renderer->getPbrShader()->setInt("shadowMap", shadowmaptextureslot);
 
 		renderer->bindTexture(depthfbo.getTextureId(), shadowmaptextureslot);
 		renderpassno = 1;
@@ -168,25 +156,7 @@ void gShadowMap::enable() {
 
 void gShadowMap::disable() {
 	G_PROFILE_ZONE_SCOPED_N("gShadowMap::disable()");
-	if (!isallocated || !isactivated) return;
-
-	// After the shading pass the shadow state has to be switched off again. This
-	// used to return early on renderpassno > 0 and never did, so aUseShadowMap
-	// stayed at 1 and everything drawn afterwards - including a later frame's first
-	// draws - kept sampling the shadow map.
-	if (renderpassno > 0) {
-		isenabled = false;
-		isshadowmappingenabled = false;
-		if (renderer->isVulkan()) {
-			renderer->setShadowMapState(false, lightmatrix, lightposition, false);
-		} else {
-			renderer->getColorShader()->use();
-			renderer->getColorShader()->setInt("aUseShadowMap", 0);
-			renderer->getPbrShader()->use();
-			renderer->getPbrShader()->setInt("useShadowMap", 0);
-		}
-		return;
-	}
+	if (!isallocated || !isactivated || renderpassno > 0) return;
 
 	isenabled = false;
 	isshadowmappingenabled = false;

@@ -20,40 +20,37 @@ void gCheckGLErrorAndPrint(const std::string& prefix, const std::string& func, i
 }
 
 void gEnableCulling() {
-	gRenderObject::getRenderer()->enableCulling();
+	G_CHECK_GL(glEnable(GL_CULL_FACE));
 }
 
 void gDisableCulling() {
-	gRenderObject::getRenderer()->disableCulling();
+	G_CHECK_GL(glDisable(GL_CULL_FACE));
 }
 
 bool gIsCullingEnabled() {
-	return gRenderObject::getRenderer()->isCullingEnabled();
+	G_CHECK_GL2(GLboolean res, glIsEnabled(GL_CULL_FACE));
+	return res == GL_TRUE;
 }
 
 void gCullFace(int cullingFace) {
-	gRenderObject::getRenderer()->setCullFace(cullingFace);
+	G_CHECK_GL(glCullFace(cullingFace));
 }
 
 int gGetCullFace() {
-	return gRenderObject::getRenderer()->getCullFace();
+	GLint i;
+	G_CHECK_GL(glGetIntegerv(GL_CULL_FACE_MODE, &i));
+	return i;
 }
 
 void gSetCullingDirection(int cullingDirection) {
-	gRenderObject::getRenderer()->setCullingDirection(cullingDirection);
+	G_CHECK_GL(glFrontFace(cullingDirection));
 }
 
 int gGetCullingDirection() {
-	return gRenderObject::getRenderer()->getCullingDirection();
+	GLint i;
+	G_CHECK_GL(glGetIntegerv(GL_FRONT_FACE, &i));
+	return i;
 }
-
-void gGLRenderEngine::enableCulling() { G_CHECK_GL(glEnable(GL_CULL_FACE)); iscullingenabled = true; }
-void gGLRenderEngine::disableCulling() { G_CHECK_GL(glDisable(GL_CULL_FACE)); iscullingenabled = false; }
-bool gGLRenderEngine::isCullingEnabled() const { return iscullingenabled; }
-void gGLRenderEngine::setCullFace(int face) { G_CHECK_GL(glCullFace(face)); cullface = face; }
-int gGLRenderEngine::getCullFace() const { return cullface; }
-void gGLRenderEngine::setCullingDirection(int direction) { G_CHECK_GL(glFrontFace(direction)); cullingdirection = direction; }
-int gGLRenderEngine::getCullingDirection() const { return cullingdirection; }
 
 gGLRenderEngine::~gGLRenderEngine() {
 	if(textbatchvbo != 0) G_CHECK_GL(glDeleteBuffers(1, &textbatchvbo));
@@ -173,10 +170,8 @@ void gGLRenderEngine::takeScreenshot(gImage& img, int x, int y, int width, int h
 
 void gGLRenderEngine::takeScreenshot(gImage& img) {
 	G_PROFILE_ZONE_SCOPED_N("gGLRenderEngine::takeScreenshot()");
-	GLint viewport[4]{};
-	G_CHECK_GL(glGetIntegerv(GL_VIEWPORT, viewport));
-	const int width = viewport[2];
-	const int height = viewport[3];
+	int height = gBaseApp::getAppManager()->getWindow()->getHeight();
+	int width = gBaseApp::getAppManager()->getWindow()->getWidth();
 	unsigned char* pixeldata = new unsigned char[width * height * 4];
 	G_CHECK_GL(glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, pixeldata));
 	flipVertically(pixeldata, width, height, 4);
