@@ -1,5 +1,8 @@
 <map id="gVKDraw.h" name="gVKDraw.h">
 <area shape="rect" id="Node000001" title=" " alt="" coords="14,5,107,31"/>
-<area shape="rect" id="Node000002" href="$gVKContext_8h.html" title=" " alt="" coords="5,79,116,104"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="63,31,63,65,58,65,58,31"/>
+<area shape="rect" id="Node000002" href="$gVKContext_8h.html" title=" " alt="" coords="5,152,116,177"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="58,32,42,79,43,110,52,139,47,140,38,111,37,78,53,30"/>
+<area shape="rect" id="Node000003" href="$gVKUniform_8h.html" title=" " alt="" coords="51,79,163,104"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="71,30,94,66,90,69,66,32"/>
+<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="102,106,78,142,74,139,97,103"/>
 </map>

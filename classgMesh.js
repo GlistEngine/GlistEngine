@@ -18,6 +18,8 @@ var classgMesh =
     [ "drawVbo", "classgMesh.html#aa5ea135e74def0f916e1456e519e3c5c", null ],
     [ "drawVboInstanced", "classgMesh.html#af95de8e64e3f201f980ecd32b9da0f16", null ],
     [ "drawVulkan2D", "classgMesh.html#a35ff896a7ab0416cd35d3f96e9036dfd", null ],
+    [ "drawVulkan3D", "classgMesh.html#af8e4aa6bbfa084157f7df9925f71373a", null ],
+    [ "expandIndicesForVulkan", "classgMesh.html#af9c2e3f01b5705077521a66e149ddac4", null ],
     [ "fillMissingVertexColors", "classgMesh.html#a4ebe3afec5a7333eeda5fea8aec87c81", null ],
     [ "getBoundingBox", "classgMesh.html#acfa86348dd7b6ef0b453d46a38a2c932", null ],
     [ "getDrawMode", "classgMesh.html#a793d2b7855545e2f8f16e73512bc6461", null ],
@@ -51,5 +53,6 @@ var classgMesh =
     [ "setVertices", "classgMesh.html#ab603c4809cae3f4a7d9df8b92ef2f67e", null ],
     [ "isprojection2d", "classgMesh.html#a4eea22146d02379680c8e00fff26ee58", null ],
     [ "vbo", "classgMesh.html#ac00e01236f4660d7b8191ca6506fa85f", null ],
-    [ "vertices", "classgMesh.html#ac02acb6091c09ff326d4155566248e8b", null ]
+    [ "vertices", "classgMesh.html#ac02acb6091c09ff326d4155566248e8b", null ],
+    [ "vulkanindicesexpanded", "classgMesh.html#a3c87461d562199189faa5d4664a4675a", null ]
 ];

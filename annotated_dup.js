@@ -180,6 +180,7 @@ var annotated_dup =
     [ "gVertex", "structgVertex.html", "structgVertex" ],
     [ "gVignette", "classgVignette.html", "classgVignette" ],
     [ "gVKRenderEngine", "classgVKRenderEngine.html", "classgVKRenderEngine" ],
+    [ "gVKVertexArray", "structgVKVertexArray.html", "structgVKVertexArray" ],
     [ "gWhiteBalance", "classgWhiteBalance.html", "classgWhiteBalance" ],
     [ "gWindowFocusEvent", "classgWindowFocusEvent.html", "classgWindowFocusEvent" ],
     [ "gWindowLoseFocusEvent", "classgWindowLoseFocusEvent.html", "classgWindowLoseFocusEvent" ],

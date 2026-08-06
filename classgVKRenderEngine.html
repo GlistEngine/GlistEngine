@@ -173,6 +173,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a96a24dc5b9e7ae505e8be9674c89099a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a568bf8d79511c126f494dcc892524546" id="r_a568bf8d79511c126f494dcc892524546"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgVKRenderEngine.html#a568bf8d79511c126f494dcc892524546">clearColor</a> (<a class="el" href="classgColor.html">gColor</a> color) override</td></tr>
 <tr class="separator:a568bf8d79511c126f494dcc892524546"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a98669f8ac781f00cfdec0d0d6775f647" id="r_a98669f8ac781f00cfdec0d0d6775f647"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgVKRenderEngine.html#a98669f8ac781f00cfdec0d0d6775f647">setProjectionMatrix</a> (glm::mat4 projectionMatrix) override</td></tr>
+<tr class="separator:a98669f8ac781f00cfdec0d0d6775f647"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae736a229a772bbe8e28124f979944796" id="r_ae736a229a772bbe8e28124f979944796"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgVKRenderEngine.html#ae736a229a772bbe8e28124f979944796">takeScreenshot</a> (<a class="el" href="classgImage.html">gImage</a> &amp;img, int x, int y, int <a class="el" href="classgRenderer.html#a521e019ad5133df5702d399bf051adda">width</a>, int <a class="el" href="classgRenderer.html#a10ba9eb49755cea48500ab0046baf6e4">height</a>) override</td></tr>
 <tr class="separator:ae736a229a772bbe8e28124f979944796"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab45ffd90b3966d2191bd72318e4fbe73" id="r_ab45ffd90b3966d2191bd72318e4fbe73"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgVKRenderEngine.html#ab45ffd90b3966d2191bd72318e4fbe73">takeScreenshot</a> (<a class="el" href="classgImage.html">gImage</a> &amp;img) override</td></tr>
@@ -379,6 +381,20 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a1d437101171cd2c807c296ad48409963"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac3cebb9e9dc5907630a74dbc1612e461" id="r_ac3cebb9e9dc5907630a74dbc1612e461"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgVKRenderEngine.html#ac3cebb9e9dc5907630a74dbc1612e461">drawColored2D</a> (const glm::vec2 *points, int count, const glm::vec4 &amp;color, const glm::mat4 &amp;mvp, int drawMode=GL_TRIANGLES) override</td></tr>
 <tr class="separator:ac3cebb9e9dc5907630a74dbc1612e461"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adc7af4d55471bed396af65efda5f84ef" id="r_adc7af4d55471bed396af65efda5f84ef"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgVKRenderEngine.html#adc7af4d55471bed396af65efda5f84ef">drawMesh3D</a> (GLuint vertexArrayId, int vertexCount, int indexCount, const glm::mat4 &amp;model, const <a class="el" href="structgRenderer_1_1gMeshSurface.html">gMeshSurface</a> &amp;surface, int drawMode=GL_TRIANGLES, int instanceCount=1) override</td></tr>
+<tr class="separator:adc7af4d55471bed396af65efda5f84ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a93b2333a439dd87e5d82cc6df3fae0ba" id="r_a93b2333a439dd87e5d82cc6df3fae0ba"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgVKRenderEngine.html#a93b2333a439dd87e5d82cc6df3fae0ba">drawSkyboxFace</a> (GLuint textureId, const float *xyzuv, int vertexCount, const glm::mat4 &amp;viewProjection) override</td></tr>
+<tr class="separator:a93b2333a439dd87e5d82cc6df3fae0ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a789a29b7944a948072570f36c9077a9e" id="r_a789a29b7944a948072570f36c9077a9e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgVKRenderEngine.html#a789a29b7944a948072570f36c9077a9e">allocateShadowMap</a> (int <a class="el" href="classgRenderer.html#a521e019ad5133df5702d399bf051adda">width</a>, int <a class="el" href="classgRenderer.html#a10ba9eb49755cea48500ab0046baf6e4">height</a>) override</td></tr>
+<tr class="separator:a789a29b7944a948072570f36c9077a9e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a44205ced52e0290c5e9a313a498d7668" id="r_a44205ced52e0290c5e9a313a498d7668"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgVKRenderEngine.html#a44205ced52e0290c5e9a313a498d7668">releaseShadowMap</a> () override</td></tr>
+<tr class="separator:a44205ced52e0290c5e9a313a498d7668"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad6f4620d268cd6787a8e48dc115766c0" id="r_ad6f4620d268cd6787a8e48dc115766c0"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgVKRenderEngine.html#ad6f4620d268cd6787a8e48dc115766c0">beginShadowPass</a> () override</td></tr>
+<tr class="separator:ad6f4620d268cd6787a8e48dc115766c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a416623416a661d84faf59f76214591a3" id="r_a416623416a661d84faf59f76214591a3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgVKRenderEngine.html#a416623416a661d84faf59f76214591a3">endShadowPass</a> () override</td></tr>
+<tr class="separator:a416623416a661d84faf59f76214591a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1ed740874d8ba02eb68db25436b09f9b" id="r_a1ed740874d8ba02eb68db25436b09f9b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgVKRenderEngine.html#a1ed740874d8ba02eb68db25436b09f9b">setShadowMapState</a> (bool enabled, const glm::mat4 &amp;lightMatrix, const glm::vec3 &amp;lightPosition, bool softShadows) override</td></tr>
+<tr class="separator:a1ed740874d8ba02eb68db25436b09f9b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aee1c7119bd31cdecb8d3bff00990b551" id="r_aee1c7119bd31cdecb8d3bff00990b551"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgVKRenderEngine.html#aee1c7119bd31cdecb8d3bff00990b551">drawTexturedRect2D</a> (GLuint textureId, GLuint maskTextureId, const glm::vec4 &amp;tint, const glm::mat4 &amp;mvp, const glm::vec2 &amp;uvOffset=glm::vec2(0.0f), const glm::vec2 &amp;uvScale=glm::vec2(1.0f)) override</td></tr>
 <tr class="separator:aee1c7119bd31cdecb8d3bff00990b551"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abc672d604fd7b12f4f10c51c70bdde32" id="r_abc672d604fd7b12f4f10c51c70bdde32"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgVKRenderEngine.html#abc672d604fd7b12f4f10c51c70bdde32">drawTexturedTriangles2D</a> (GLuint textureId, const glm::vec4 &amp;tint, const glm::mat4 &amp;mvp, const float *xyuv, int vertexCount) override</td></tr>
@@ -564,6 +580,20 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:af1298e4de4ee4d05cd8fcad64e1ba77c inherit pub_methods_classgRenderer"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1c9518e3ff39f5369577a04802a738b9 inherit pub_methods_classgRenderer" id="r_a1c9518e3ff39f5369577a04802a738b9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a1c9518e3ff39f5369577a04802a738b9">gPopMatrix</a> ()</td></tr>
 <tr class="separator:a1c9518e3ff39f5369577a04802a738b9 inherit pub_methods_classgRenderer"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adada6caa68ead6e9388c111f0c7792c4 inherit pub_methods_classgRenderer" id="r_adada6caa68ead6e9388c111f0c7792c4"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#adada6caa68ead6e9388c111f0c7792c4">enableCulling</a> ()</td></tr>
+<tr class="separator:adada6caa68ead6e9388c111f0c7792c4 inherit pub_methods_classgRenderer"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a66d4532faf085f704a5aa2502e87cc1f inherit pub_methods_classgRenderer" id="r_a66d4532faf085f704a5aa2502e87cc1f"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a66d4532faf085f704a5aa2502e87cc1f">disableCulling</a> ()</td></tr>
+<tr class="separator:a66d4532faf085f704a5aa2502e87cc1f inherit pub_methods_classgRenderer"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab2bd891b9fe643732366141fb760af40 inherit pub_methods_classgRenderer" id="r_ab2bd891b9fe643732366141fb760af40"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#ab2bd891b9fe643732366141fb760af40">isCullingEnabled</a> () const</td></tr>
+<tr class="separator:ab2bd891b9fe643732366141fb760af40 inherit pub_methods_classgRenderer"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a934464517381b54100a311077c49375e inherit pub_methods_classgRenderer" id="r_a934464517381b54100a311077c49375e"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a934464517381b54100a311077c49375e">setCullFace</a> (int face)</td></tr>
+<tr class="separator:a934464517381b54100a311077c49375e inherit pub_methods_classgRenderer"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a682389b4c7983b7920da0d3cd552a8e1 inherit pub_methods_classgRenderer" id="r_a682389b4c7983b7920da0d3cd552a8e1"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a682389b4c7983b7920da0d3cd552a8e1">getCullFace</a> () const</td></tr>
+<tr class="separator:a682389b4c7983b7920da0d3cd552a8e1 inherit pub_methods_classgRenderer"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a42e26bb7c1e7396d469f0fd8e219ce04 inherit pub_methods_classgRenderer" id="r_a42e26bb7c1e7396d469f0fd8e219ce04"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a42e26bb7c1e7396d469f0fd8e219ce04">setCullingDirection</a> (int direction)</td></tr>
+<tr class="separator:a42e26bb7c1e7396d469f0fd8e219ce04 inherit pub_methods_classgRenderer"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1925d3182fbbd0456ac1857c5bc8382c inherit pub_methods_classgRenderer" id="r_a1925d3182fbbd0456ac1857c5bc8382c"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a1925d3182fbbd0456ac1857c5bc8382c">getCullingDirection</a> () const</td></tr>
+<tr class="separator:a1925d3182fbbd0456ac1857c5bc8382c inherit pub_methods_classgRenderer"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adc76a7bb833427a2bd9ef95950132d28 inherit pub_methods_classgRenderer" id="r_adc76a7bb833427a2bd9ef95950132d28"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#adc76a7bb833427a2bd9ef95950132d28">isSSAOEnabled</a> ()</td></tr>
 <tr class="separator:adc76a7bb833427a2bd9ef95950132d28 inherit pub_methods_classgRenderer"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa2d8a8b220a98985be1457b08ba1293f inherit pub_methods_classgRenderer" id="r_aa2d8a8b220a98985be1457b08ba1293f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#aa2d8a8b220a98985be1457b08ba1293f">enableSSAO</a> ()</td></tr>
@@ -636,8 +666,6 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:aca5af8d23b92b70b5c9fbd1b497d11e9 inherit pub_methods_classgRenderer"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7f91879781897b9ba9d54bf7dc08539c inherit pub_methods_classgRenderer" id="r_a7f91879781897b9ba9d54bf7dc08539c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgShader.html">gShader</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a7f91879781897b9ba9d54bf7dc08539c">getGridShader</a> ()</td></tr>
 <tr class="separator:a7f91879781897b9ba9d54bf7dc08539c inherit pub_methods_classgRenderer"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acf3a9d4e3d32be8583c3eeae57e6139f inherit pub_methods_classgRenderer" id="r_acf3a9d4e3d32be8583c3eeae57e6139f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#acf3a9d4e3d32be8583c3eeae57e6139f">setProjectionMatrix</a> (glm::mat4 projectionMatrix)</td></tr>
-<tr class="separator:acf3a9d4e3d32be8583c3eeae57e6139f inherit pub_methods_classgRenderer"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:addf7108c9745cdb092bf888b99418d1f inherit pub_methods_classgRenderer" id="r_addf7108c9745cdb092bf888b99418d1f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#addf7108c9745cdb092bf888b99418d1f">setProjectionMatrix2d</a> (glm::mat4 projectionMatrix2d)</td></tr>
 <tr class="separator:addf7108c9745cdb092bf888b99418d1f inherit pub_methods_classgRenderer"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:add20288b75535a460ccaf6615b2dcbd9 inherit pub_methods_classgRenderer" id="r_add20288b75535a460ccaf6615b2dcbd9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#add20288b75535a460ccaf6615b2dcbd9">setViewMatrix</a> (glm::mat4 viewMatrix)</td></tr>
@@ -947,6 +975,12 @@ Additional Inherited Members</h2></td></tr>
 <tr class="separator:a0e557827e17430f41c1fe0e2dee08da3 inherit pro_attribs_classgRenderer"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3fb0a655ca4e96c4dce3d373f5b45771 inherit pro_attribs_classgRenderer" id="r_a3fb0a655ca4e96c4dce3d373f5b45771"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a3fb0a655ca4e96c4dce3d373f5b45771">depthtesttype</a></td></tr>
 <tr class="separator:a3fb0a655ca4e96c4dce3d373f5b45771 inherit pro_attribs_classgRenderer"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a715a9fc6e9129387775ade4e0472a159 inherit pro_attribs_classgRenderer" id="r_a715a9fc6e9129387775ade4e0472a159"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a715a9fc6e9129387775ade4e0472a159">iscullingenabled</a> = false</td></tr>
+<tr class="separator:a715a9fc6e9129387775ade4e0472a159 inherit pro_attribs_classgRenderer"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4c1980d55767122f751c3f3d5ddf91e2 inherit pro_attribs_classgRenderer" id="r_a4c1980d55767122f751c3f3d5ddf91e2"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a4c1980d55767122f751c3f3d5ddf91e2">cullface</a> = GL_BACK</td></tr>
+<tr class="separator:a4c1980d55767122f751c3f3d5ddf91e2 inherit pro_attribs_classgRenderer"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5ad74a671db3033bd6f0cbd6f427319c inherit pro_attribs_classgRenderer" id="r_a5ad74a671db3033bd6f0cbd6f427319c"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a5ad74a671db3033bd6f0cbd6f427319c">cullingdirection</a> = GL_CCW</td></tr>
+<tr class="separator:a5ad74a671db3033bd6f0cbd6f427319c inherit pro_attribs_classgRenderer"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af6e96ab0f9f3671bf3f3984705814588 inherit pro_attribs_classgRenderer" id="r_af6e96ab0f9f3671bf3f3984705814588"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#af6e96ab0f9f3671bf3f3984705814588">depthtesttypeid</a> [2]</td></tr>
 <tr class="separator:af6e96ab0f9f3671bf3f3984705814588 inherit pro_attribs_classgRenderer"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3684d8f30f9215112f3bf3c100b45583 inherit pro_attribs_classgRenderer" id="r_a3684d8f30f9215112f3bf3c100b45583"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a3684d8f30f9215112f3bf3c100b45583">isalphablendingenabled</a></td></tr>
@@ -1170,6 +1204,44 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a id="a789a29b7944a948072570f36c9077a9e" name="a789a29b7944a948072570f36c9077a9e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a789a29b7944a948072570f36c9077a9e">&#9670;&#160;</a></span>allocateShadowMap()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool gVKRenderEngine::allocateShadowMap </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>width</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>height</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reimplemented from <a class="el" href="classgRenderer.html#abc5d41bc9d69816ff91ec9f4fc0868fc">gRenderer</a>.</p>
+
+</div>
+</div>
 <a id="a7c64228f715fe3173fae71628f5ac1cf" name="a7c64228f715fe3173fae71628f5ac1cf"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a7c64228f715fe3173fae71628f5ac1cf">&#9670;&#160;</a></span>attachRenderbufferToFramebuffer()</h2>
 
@@ -1326,6 +1398,33 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Reimplemented from <a class="el" href="classgRenderer.html#a0b37acf5538bd8043e512c8c497ad594">gRenderer</a>.</p>
+
+</div>
+</div>
+<a id="ad6f4620d268cd6787a8e48dc115766c0" name="ad6f4620d268cd6787a8e48dc115766c0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad6f4620d268cd6787a8e48dc115766c0">&#9670;&#160;</a></span>beginShadowPass()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool gVKRenderEngine::beginShadowPass </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reimplemented from <a class="el" href="classgRenderer.html#a127e233c28807e3ca9cf3a5cc9527e23">gRenderer</a>.</p>
 
 </div>
 </div>
@@ -2640,6 +2739,124 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a id="adc7af4d55471bed396af65efda5f84ef" name="adc7af4d55471bed396af65efda5f84ef"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adc7af4d55471bed396af65efda5f84ef">&#9670;&#160;</a></span>drawMesh3D()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gVKRenderEngine::drawMesh3D </td>
+          <td>(</td>
+          <td class="paramtype">GLuint&#160;</td>
+          <td class="paramname"><em>vertexArrayId</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>vertexCount</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>indexCount</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const glm::mat4 &amp;&#160;</td>
+          <td class="paramname"><em>model</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structgRenderer_1_1gMeshSurface.html">gMeshSurface</a> &amp;&#160;</td>
+          <td class="paramname"><em>surface</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>drawMode</em> = <code>GL_TRIANGLES</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>instanceCount</em> = <code>1</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reimplemented from <a class="el" href="classgRenderer.html#a810560de1b15d5c25b5f315698b0400e">gRenderer</a>.</p>
+
+</div>
+</div>
+<a id="a93b2333a439dd87e5d82cc6df3fae0ba" name="a93b2333a439dd87e5d82cc6df3fae0ba"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a93b2333a439dd87e5d82cc6df3fae0ba">&#9670;&#160;</a></span>drawSkyboxFace()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool gVKRenderEngine::drawSkyboxFace </td>
+          <td>(</td>
+          <td class="paramtype">GLuint&#160;</td>
+          <td class="paramname"><em>textureId</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const float *&#160;</td>
+          <td class="paramname"><em>xyzuv</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>vertexCount</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const glm::mat4 &amp;&#160;</td>
+          <td class="paramname"><em>viewProjection</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reimplemented from <a class="el" href="classgRenderer.html#a0f21fbf1141b5c319554d3ee4a57ba5e">gRenderer</a>.</p>
+
+</div>
+</div>
 <a id="aee1c7119bd31cdecb8d3bff00990b551" name="aee1c7119bd31cdecb8d3bff00990b551"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aee1c7119bd31cdecb8d3bff00990b551">&#9670;&#160;</a></span>drawTexturedRect2D()</h2>
 
@@ -3001,6 +3218,33 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Reimplemented from <a class="el" href="classgRenderer.html#a77abae2520f304935922d40a20613d74">gRenderer</a>.</p>
+
+</div>
+</div>
+<a id="a416623416a661d84faf59f76214591a3" name="a416623416a661d84faf59f76214591a3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a416623416a661d84faf59f76214591a3">&#9670;&#160;</a></span>endShadowPass()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gVKRenderEngine::endShadowPass </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reimplemented from <a class="el" href="classgRenderer.html#a706f192fc85d66b454e666ad645c8669">gRenderer</a>.</p>
 
 </div>
 </div>
@@ -3482,6 +3726,33 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Implements <a class="el" href="classgRenderer.html#a81efcd42acb925f493e05a4edd3aa315">gRenderer</a>.</p>
+
+</div>
+</div>
+<a id="a44205ced52e0290c5e9a313a498d7668" name="a44205ced52e0290c5e9a313a498d7668"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a44205ced52e0290c5e9a313a498d7668">&#9670;&#160;</a></span>releaseShadowMap()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gVKRenderEngine::releaseShadowMap </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reimplemented from <a class="el" href="classgRenderer.html#a389ea84e7ca0431a0e335da2debd0002">gRenderer</a>.</p>
 
 </div>
 </div>
@@ -4045,6 +4316,34 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a id="a98669f8ac781f00cfdec0d0d6775f647" name="a98669f8ac781f00cfdec0d0d6775f647"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a98669f8ac781f00cfdec0d0d6775f647">&#9670;&#160;</a></span>setProjectionMatrix()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gVKRenderEngine::setProjectionMatrix </td>
+          <td>(</td>
+          <td class="paramtype">glm::mat4&#160;</td>
+          <td class="paramname"><em>projectionMatrix</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reimplemented from <a class="el" href="classgRenderer.html#a4d32c792a92df89552950a31ac2d7bc7">gRenderer</a>.</p>
+
+</div>
+</div>
 <a id="a871241a9816a9b68517520cbc073f16a" name="a871241a9816a9b68517520cbc073f16a"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a871241a9816a9b68517520cbc073f16a">&#9670;&#160;</a></span>setReadBufferNone()</h2>
 
@@ -4113,6 +4412,56 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Implements <a class="el" href="classgRenderer.html#a6e0d8e9c2831b7e7f877ae598ca9dee3">gRenderer</a>.</p>
+
+</div>
+</div>
+<a id="a1ed740874d8ba02eb68db25436b09f9b" name="a1ed740874d8ba02eb68db25436b09f9b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1ed740874d8ba02eb68db25436b09f9b">&#9670;&#160;</a></span>setShadowMapState()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gVKRenderEngine::setShadowMapState </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>enabled</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const glm::mat4 &amp;&#160;</td>
+          <td class="paramname"><em>lightMatrix</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const glm::vec3 &amp;&#160;</td>
+          <td class="paramname"><em>lightPosition</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>softShadows</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reimplemented from <a class="el" href="classgRenderer.html#affadcc9658ac4cbabf02d297f4739ad5">gRenderer</a>.</p>
 
 </div>
 </div>

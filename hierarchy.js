@@ -50,6 +50,7 @@ var hierarchy =
       [ "gLogw", "classgLogw.html", null ]
     ] ],
     [ "gMatrix4", "classgMatrix4.html", null ],
+    [ "gRenderer::gMeshSurface", "structgRenderer_1_1gMeshSurface.html", null ],
     [ "gModelAnimator", "classgModelAnimator.html", null ],
     [ "gObject", "classgObject.html", [
       [ "gAES", "classgAES.html", null ],
@@ -231,6 +232,7 @@ var hierarchy =
     [ "gUtils", "classgUtils.html", null ],
     [ "gUUID", "classgUUID.html", null ],
     [ "gVertex", "structgVertex.html", null ],
+    [ "gVKVertexArray", "structgVKVertexArray.html", null ],
     [ "gCamera::Plane", "structgCamera_1_1Plane.html", null ],
     [ "gHttpFile::ProgressData", "structgHttpFile_1_1ProgressData.html", null ],
     [ "TouchInput", "structTouchInput.html", null ]

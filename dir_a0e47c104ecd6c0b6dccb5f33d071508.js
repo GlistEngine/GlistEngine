@@ -20,13 +20,16 @@ var dir_a0e47c104ecd6c0b6dccb5f33d071508 =
     [ "gVKContext.h", "gVKContext_8h.html", "gVKContext_8h" ],
     [ "gVKDraw.h", "gVKDraw_8h.html", "gVKDraw_8h" ],
     [ "gVKFrame.h", "gVKFrame_8h.html", "gVKFrame_8h" ],
+    [ "gVKMeshBuffer.h", "gVKMeshBuffer_8h.html", "gVKMeshBuffer_8h" ],
     [ "gVKPipeline.h", "gVKPipeline_8h.html", "gVKPipeline_8h" ],
     [ "gVKReflect.h", "gVKReflect_8h.html", "gVKReflect_8h" ],
     [ "gVKRenderEngine.h", "gVKRenderEngine_8h.html", "gVKRenderEngine_8h" ],
     [ "gVKRenderTarget.h", "gVKRenderTarget_8h.html", "gVKRenderTarget_8h" ],
     [ "gVKShaderCompiler.h", "gVKShaderCompiler_8h.html", "gVKShaderCompiler_8h" ],
     [ "gVKShaders.h", "gVKShaders_8h.html", null ],
+    [ "gVKShadow.h", "gVKShadow_8h.html", "gVKShadow_8h" ],
     [ "gVKSwapchain.h", "gVKSwapchain_8h.html", "gVKSwapchain_8h" ],
     [ "gVKSync.h", "gVKSync_8h.html", "gVKSync_8h" ],
-    [ "gVKTexture.h", "gVKTexture_8h.html", "gVKTexture_8h" ]
+    [ "gVKTexture.h", "gVKTexture_8h.html", "gVKTexture_8h" ],
+    [ "gVKUniform.h", "gVKUniform_8h.html", "gVKUniform_8h" ]
 ];

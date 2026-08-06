@@ -26,12 +26,13 @@ var searchData=
   ['menuboxy_23',['menuboxy',['../classgGUIMenuItem.html#a1c3c6454abba5d80b319f4800d33a949',1,'gGUIMenuItem']]],
   ['menuh_24',['menuh',['../classgGUIForm.html#ad019217efd578e1977b5087afb788346',1,'gGUIForm']]],
   ['meshes_25',['meshes',['../classgModel.html#ac86fbf79931314dbe9e4022bb4581ebc',1,'gModel']]],
-  ['middlegroundcolor_26',['middlegroundcolor',['../classgBaseGUIObject.html#a17e76771cbd006d84e08032672d29478',1,'gBaseGUIObject']]],
-  ['minx_27',['minx',['../classgGUIGraph.html#a7296ef007d1d699ec587941d638524ad',1,'gGUIGraph']]],
-  ['miny_28',['miny',['../classgGUIGraph.html#aba5c61f513a0006e6fc8a34a084faa4b',1,'gGUIGraph']]],
-  ['mode_29',['mode',['../structgRenderer_1_1gSceneFogData.html#a430bc52be9ae45e5c6161086fbdedd63',1,'gRenderer::gSceneFogData']]],
-  ['mousebutton_5fleft_30',['MOUSEBUTTON_LEFT',['../classgBaseCanvas.html#aba0625cd26628d91df0b867e69ef24ed',1,'gBaseCanvas']]],
-  ['mousebutton_5fmiddle_31',['MOUSEBUTTON_MIDDLE',['../classgBaseCanvas.html#a80a692c784a47d7e10d4f70d4e67d30f',1,'gBaseCanvas']]],
-  ['mousebutton_5fright_32',['MOUSEBUTTON_RIGHT',['../classgBaseCanvas.html#a97ce633fa36a271bbf950b84718d92a7',1,'gBaseCanvas']]],
-  ['mutex_33',['mutex',['../classgThread.html#a2762b38468da5d223a205b1a4f3610bb',1,'gThread']]]
+  ['metallicmapid_26',['metallicmapid',['../structgRenderer_1_1gMeshSurface.html#a2d0bb2d60c220ce89a1208c4139544b7',1,'gRenderer::gMeshSurface']]],
+  ['middlegroundcolor_27',['middlegroundcolor',['../classgBaseGUIObject.html#a17e76771cbd006d84e08032672d29478',1,'gBaseGUIObject']]],
+  ['minx_28',['minx',['../classgGUIGraph.html#a7296ef007d1d699ec587941d638524ad',1,'gGUIGraph']]],
+  ['miny_29',['miny',['../classgGUIGraph.html#aba5c61f513a0006e6fc8a34a084faa4b',1,'gGUIGraph']]],
+  ['mode_30',['mode',['../structgRenderer_1_1gSceneFogData.html#a430bc52be9ae45e5c6161086fbdedd63',1,'gRenderer::gSceneFogData']]],
+  ['mousebutton_5fleft_31',['MOUSEBUTTON_LEFT',['../classgBaseCanvas.html#aba0625cd26628d91df0b867e69ef24ed',1,'gBaseCanvas']]],
+  ['mousebutton_5fmiddle_32',['MOUSEBUTTON_MIDDLE',['../classgBaseCanvas.html#a80a692c784a47d7e10d4f70d4e67d30f',1,'gBaseCanvas']]],
+  ['mousebutton_5fright_33',['MOUSEBUTTON_RIGHT',['../classgBaseCanvas.html#a97ce633fa36a271bbf950b84718d92a7',1,'gBaseCanvas']]],
+  ['mutex_34',['mutex',['../classgThread.html#a2762b38468da5d223a205b1a4f3610bb',1,'gThread']]]
 ];
