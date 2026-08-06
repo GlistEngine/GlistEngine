@@ -109,6 +109,8 @@ bool gvkCreateSwapchain(gVKContext& ctx, GLFWwindow* window) {
 	createinfo.imageExtent = extent;
 	createinfo.imageArrayLayers = 1;
 	createinfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+	if((caps.supportedUsageFlags & VK_IMAGE_USAGE_TRANSFER_SRC_BIT) != 0)
+		createinfo.imageUsage |= VK_IMAGE_USAGE_TRANSFER_SRC_BIT;
 
 	// When one family renders and another presents, the images are used by both, so
 	// they have to be shared. On the usual single family setup exclusive ownership
@@ -213,15 +215,21 @@ bool gvkRecreateSwapchain(gVKContext& ctx, GLFWwindow* window) {
 	// Everything below is still referenced by work the GPU may not have finished.
 	vkDeviceWaitIdle(ctx.device);
 
-	// Reverse dependency order: the framebuffers point at the image views, and the
-	// present semaphores are one per image, so both go before the swapchain.
+	// Reverse dependency order: the framebuffers point at the image views and at the
+	// depth view, and the present semaphores are one per image, so all of them go
+	// before the swapchain.
 	gvkDestroyFramebuffers(ctx);
+	gvkDestroyDepthResources(ctx);
 	gvkDestroyPresentSemaphores(ctx);
 	gvkDestroySwapchain(ctx);
 
 	if(!gvkCreateSwapchain(ctx, window)) return false;
+	// The depth buffer is sized to the swapchain, so it is rebuilt here; its format
+	// is kept, which is what lets the render pass survive.
+	if(!gvkCreateDepthResources(ctx)) return false;
 	if(!gvkCreateFramebuffers(ctx)) return false;
-	// The render pass survives: the surface format does not change with the size.
+	// The render pass survives: neither the surface format nor the depth format
+	// changes with the size.
 	if(!gvkCreatePresentSemaphores(ctx, static_cast<uint32_t>(ctx.swapchainimages.size()))) return false;
 
 	gLogi("gVKSwapchain") << "Swapchain recreated for " << ctx.swapchainextent.width

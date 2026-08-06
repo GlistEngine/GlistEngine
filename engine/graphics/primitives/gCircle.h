@@ -39,10 +39,13 @@ public:
 	 * @param yCenter y-coordinate of the circle's center
 	 * @param radius radius of the circle
 	 * @param isFilled signifies whether the circle is full or empty
-	 * @param numberOfsides  indicates the detail value of the circle.
+	 * @param numberOfSides indicates the detail value of the circle.
+	 * @param rotateAngle rotation angle in radians
+	 * @param pivotx rotation pivot x position ratio (0.0f - 1.0f)
+	 * @param pivoty rotation pivot y position ratio (0.0f - 1.0f)
 	 */
 	gCircle();
-	gCircle(float xCenter, float yCenter, float radius, bool isFilled, float numberOfSides = 64.0f);
+	gCircle(float xCenter, float yCenter, float radius, bool isFilled, float numberOfSides = 64.0f, float rotateAngle = 0.0f, float pivotx = 0.5f, float pivoty = 0.5f);
 	virtual ~gCircle();
 
    /*
@@ -50,7 +53,7 @@ public:
 	*/
 	void draw();
 
-	void setPoints(float xCenter, float yCenter, float radius, bool isFilled,  float numberOfSides = 64.0f);
+	void setPoints(float xCenter, float yCenter, float radius, bool isFilled, float numberOfSides = 64.0f, float rotateAngle = 0.0f, float pivotx = 0.5f, float pivoty = 0.5f);
 
 	/*
 	 * Determines whether the projection is two-dimensional.
@@ -61,26 +64,32 @@ public:
 	 * @param yCenter y-coordinate of the circle's center
 	 * @param radius radius of the circle
 	 * @param isFilled signifies whether the circle is full or empty
-	 * @param numberOfsides  indicates the detail value of the circle.
+	 * @param numberOfSides indicates the detail value of the circle.
+	 * @param rotateAngle rotation angle in radians
+	 * @param pivotx rotation pivot x position ratio (0.0f - 1.0f)
+	 * @param pivoty rotation pivot y position ratio (0.0f - 1.0f)
 	 */
-	void draw(float xCenter, float yCenter, float radius, bool isFilled, float numberOfSides = 64.0f);
+	void draw(float xCenter, float yCenter, float radius, bool isFilled, float numberOfSides = 64.0f, float rotateAngle = 0.0f, float pivotx = 0.5f, float pivoty = 0.5f);
 
 private:
 
 	/*
 	 * The circle is formed by triangles.
-	 * These triangles vertices form  circle.
+	 * These triangles vertices form circle.
 	 * Calculating coordinate information.
-	 * The more side are given, the sharper the circle will be, as the number of triangles will increase.
+	 * The more sides are given, the sharper the circle will be, as the number of triangles will increase.
 	 * But it does not provide any visible change after 64 sides given as default.
 	 *
 	 * @param xCenter x-coordinate of the circle's center
 	 * @param yCenter y-coordinate of the circle's center
 	 * @param radius radius of the circle
 	 * @param isFilled signifies whether the circle is full or empty
-	 * @param numberOfsides  indicates the detail value of the circle.
+	 * @param numberOfSides indicates the detail value of the circle.
+	 * @param rotateAngle rotation angle in radians
+	 * @param pivotx rotation pivot x position ratio (0.0f - 1.0f)
+	 * @param pivoty rotation pivot y position ratio (0.0f - 1.0f)
 	 */
-	void setCirclePoints(float xCenter, float yCenter, float radius, bool isFilled, float numberOfSides = 64.0f);
+	void setCirclePoints(float xCenter, float yCenter, float radius, bool isFilled, float numberOfSides = 64.0f, float rotateAngle = 0.0f, float pivotx = 0.5f, float pivoty = 0.5f);
 };
 
 #endif /* GRAPHICS_PRIMITIVES_GCIRCLE_H_ */

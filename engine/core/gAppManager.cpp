@@ -563,7 +563,20 @@ void gAppManager::tick() {
         if(!isguiapp) app->update();
         if(vkcanvas) vkcanvas->update();
         if(renderer != nullptr && renderer->beginFrame()) {
-            if(vkcanvas) vkcanvas->draw();
+            // The scene is drawn once per render pass, the same way the OpenGL loop
+            // below does it. renderpassnum is 1 normally and 2 once gShadowMap has
+            // been activated: pass 0 fills the shadow map from the light's point of
+            // view, pass 1 shades the result to the screen. The canvas is unaware of
+            // this and simply draws itself twice; what changes between the two is
+            // which render pass the backend has open.
+            for(int i = 0; i < renderpassnum; i++) {
+                renderpassno = i;
+                const bool shadowpass = renderpassnum > 1 && i == 0;
+                if(shadowpass && !renderer->beginShadowPass()) continue;
+                if(vkcanvas) vkcanvas->draw();
+                if(shadowpass) renderer->endShadowPass();
+            }
+            renderpassno = 0;
             renderer->endFrame();
             totaldraws++;
         }

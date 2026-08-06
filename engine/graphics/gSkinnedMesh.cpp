@@ -49,6 +49,17 @@ void gSkinnedMesh::draw() {
 	} else {
 		if (!isenabled) return;
 
+		// drawStart() reaches into the OpenGL colour shader, which the Vulkan backend
+		// never creates - gRenderer::init() is skipped there. The other two branches
+		// above go through gMesh::draw(), which already picks the right path per
+		// backend; this one calls the OpenGL steps directly, so it has to make that
+		// choice itself.
+		if (renderer->isVulkan()) {
+			drawVulkan3D(nullptr, vboframe[0][frameno].get());
+			framenoold = frameno;
+			return;
+		}
+
 		drawStart();
 		drawVboFrame();
 		drawEnd();

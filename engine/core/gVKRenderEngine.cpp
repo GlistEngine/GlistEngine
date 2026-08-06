@@ -9,6 +9,8 @@
 #include "gBaseApp.h"
 #include "gGrid.h"
 #include "gImage.h"
+// The scene uniform block is filled from these.
+#include "gLight.h"
 #include "gShader.h"
 #include "gTracy.h"
 
@@ -31,10 +33,26 @@
 	#include "gVKPipeline.h"
 	#include "gVKDraw.h"
 	#include "gVKTexture.h"
+	#include "gVKMeshBuffer.h"
+	#include "gVKUniform.h"
+	#include "gVKShadow.h"
+
+	// Defined further down; declared here because drawMesh3D reaches it first. Kept
+	// out of the class because it returns a Vulkan handle and gVKRenderEngine.h is
+	// deliberately free of Vulkan headers.
+	static VkDescriptorSet gvkGetPbrMaterialSet(gVKContext* vkcontext,
+			std::unordered_map<GLuint, gVKTexture*>& vktextures, GLuint whitetextureid,
+			const gRenderer::gMeshSurface& surface);
+	#include <algorithm>
 	#include <vector>
 	#include <set>
 	#include <string>
 	#include <cstring>
+	// The PBR material cache keys on a std::array and lives in a std::map. Both were
+	// reaching this file only through another header on one toolchain, which is the
+	// kind of thing that builds on Windows and fails everywhere else.
+	#include <array>
+	#include <map>
 	#include <cstdlib>
 #endif
 
@@ -92,6 +110,24 @@ void gVKRenderEngine::clearColor(gColor color) {
 #endif
 }
 
+void gVKRenderEngine::setProjectionMatrix(glm::mat4 projectionMatrix) {
+	// gCamera builds its matrix with glm::perspective, which targets OpenGL: the
+	// clip volume runs from -w to +w in depth. Vulkan's runs from 0 to +w, so a
+	// matrix used unchanged would put the near half of the scene behind the viewer
+	// and clip it away. This maps z' = (z + w) / 2, turning one range into the other.
+	//
+	// The Y axis is deliberately not touched. Vulkan's Y also points the opposite way
+	// to OpenGL's, but the frame loop already handles that with a negative-height
+	// viewport (see gVKFrame.cpp), and flipping it here as well would cancel that out
+	// and turn the picture upside down again.
+	//
+	// Written column-major, the way glm indexes: clip[column][row].
+	glm::mat4 clip(1.0f);
+	clip[2][2] = 0.5f;
+	clip[3][2] = 0.5f;
+	gRenderer::setProjectionMatrix(clip * projectionMatrix);
+}
+
 // The render state setters below only remember what was asked for. There is no GL
 // context under Vulkan, so issuing GL calls here would at best be ignored and at
 // worst call through a null GLEW pointer; the state that the 2D path cares about is
@@ -147,43 +183,120 @@ bool gVKRenderEngine::isAlphaTestEnabled() {
 
 void gVKRenderEngine::takeScreenshot(gImage& img, int x, int y, int width, int height) {
 	G_PROFILE_ZONE_SCOPED_N("gVKRenderEngine::takeScreenshot()");
-	unsigned char* pixeldata = new unsigned char[width * height * 4];
-	G_CHECK_GL(glReadPixels(x, getHeight() - y - height, width, height, GL_RGBA, GL_UNSIGNED_BYTE, pixeldata));
-	flipVertically(pixeldata, width, height, 4);
+	gImage full;
+	takeScreenshot(full);
+	if(full.getImageData() == nullptr || width <= 0 || height <= 0) return;
+	const int sourcewidth = full.getWidth();
+	const int sourceheight = full.getHeight();
+	x = std::max(0, x); y = std::max(0, y);
+	width = std::min(width, sourcewidth - x);
+	height = std::min(height, sourceheight - y);
+	if(width <= 0 || height <= 0) return;
+	auto* pixeldata = new unsigned char[static_cast<size_t>(width) * height * 4];
+	for(int row = 0; row < height; row++)
+		std::memcpy(pixeldata + static_cast<size_t>(row) * width * 4,
+				full.getImageData() + (static_cast<size_t>(y + row) * sourcewidth + x) * 4,
+				static_cast<size_t>(width) * 4);
 	img.setImageData(pixeldata, width, height, 4);
-	//std::string imagePath = "output.png";   USE IT TO SAVE THE IMAGE
-	// screenShot->saveImage(imagePath);  USE IT TO SAVE THE IMAGE
 }
 
 void gVKRenderEngine::takeScreenshot(gImage& img) {
 	G_PROFILE_ZONE_SCOPED_N("gVKRenderEngine::takeScreenshot()");
-	int height = gBaseApp::getAppManager()->getWindow()->getHeight();
-	int width = gBaseApp::getAppManager()->getWindow()->getWidth();
-	unsigned char* pixeldata = new unsigned char[width * height * 4];
-	G_CHECK_GL(glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, pixeldata));
-	flipVertically(pixeldata, width, height, 4);
-	img.setImageData(pixeldata, width, height, 4);
-	//std::string imagePath = "output.png";   USE IT TO SAVE THE IMAGE
-	// screenShot->saveImage(imagePath);  USE IT TO SAVE THE IMAGE
+#ifdef GVK_DESKTOP_GLFW
+	if(vkcontext == nullptr || vkcontext->device == VK_NULL_HANDLE) return;
+	if(vkcontext->screenshotready) {
+		auto* pixeldata = new unsigned char[vkcontext->screenshotpixels.size()];
+		std::memcpy(pixeldata, vkcontext->screenshotpixels.data(), vkcontext->screenshotpixels.size());
+		if(vkcontext->screenshotformat == VK_FORMAT_B8G8R8A8_UNORM
+				|| vkcontext->screenshotformat == VK_FORMAT_B8G8R8A8_SRGB) {
+			for(size_t i = 0; i < static_cast<size_t>(vkcontext->screenshotwidth) * vkcontext->screenshotheight; i++)
+				std::swap(pixeldata[i * 4], pixeldata[i * 4 + 2]);
+		}
+		img.setImageData(pixeldata, static_cast<int>(vkcontext->screenshotwidth),
+				static_cast<int>(vkcontext->screenshotheight), 4);
+		vkcontext->screenshotpixels.clear();
+		vkcontext->screenshotready = false;
+		return;
+	}
+	if((vkcontext->surfacecapabilities.supportedUsageFlags & VK_IMAGE_USAGE_TRANSFER_SRC_BIT) == 0) {
+		gLoge("gVKRenderEngine") << "The swapchain does not support screenshot transfer reads.";
+		return;
+	}
+	vkcontext->screenshotrequested = true;
+#endif
 }
 
 
-// The buffer, VAO, vertex-attribute and draw entry points below are OpenGL only.
-// A Vulkan window is created with GLFW_NO_API, so there is no current GL context
-// and issuing these calls is undefined behaviour - on macOS/MoltenVK it hangs, the
-// same way glViewport did during window init. Until the Vulkan resource path is
-// implemented they are safe no-ops, which is what lets gTexture/gImage objects be
-// constructed and destroyed under the Vulkan backend (their setupRenderData() and
-// cleanupAll() run through here) without freezing. The "create" calls hand back 0,
-// a handle the matching delete calls already treat as nothing to free.
+// The entry points below carry OpenGL's names and OpenGL's shape, because gVbo and
+// gTexture are written against them, but none of them issues a GL call: a Vulkan
+// window is created with GLFW_NO_API, so there is no current GL context and calling
+// into GL would be undefined behaviour - on macOS/MoltenVK it hangs, the same way
+// glViewport did during window init.
+//
+// The buffer and VAO calls are backed by the registries in gVKMeshBuffer.h: a name
+// maps to a real VkBuffer and a vertex array remembers which names were bound to it.
+// The vertex-attribute calls stay no-ops, because in Vulkan the attribute layout is
+// baked into the pipeline rather than set per draw, and gVertex has one fixed layout
+// that the 3D pipeline declares once.
 GLuint gVKRenderEngine::genBuffers() {
+#ifdef GVK_DESKTOP_GLFW
+	if(vkcontext == nullptr) return 0;
+	// The entry is created empty; the VkBuffer appears on the first upload, because
+	// only then is the size and the vertex/index role known.
+	GLuint id = nextvkbufferid++;
+	vkmeshbuffers[id] = new gVKMeshBuffer();
+	return id;
+#else
 	return 0;
+#endif
+}
+
+gVKMeshBuffer* gVKRenderEngine::getMeshBuffer(GLuint id) {
+	if(id == 0) return nullptr;
+	auto it = vkmeshbuffers.find(id);
+	return it == vkmeshbuffers.end() ? nullptr : it->second;
 }
 
 void gVKRenderEngine::deleteBuffer(GLuint& buffer) {
+#ifdef GVK_DESKTOP_GLFW
+	if(buffer == 0 || vkcontext == nullptr) return;
+
+	auto it = vkmeshbuffers.find(buffer);
+	if(it != vkmeshbuffers.end()) {
+		// The GPU may still be reading this buffer for a frame in flight.
+		if(vkcontext->getDevice() != nullptr && *vkcontext->getDevice() != VK_NULL_HANDLE) {
+			vkDeviceWaitIdle(*vkcontext->getDevice());
+		}
+		gvkDestroyMeshBuffer(*vkcontext, *it->second);
+		delete it->second;
+		vkmeshbuffers.erase(it);
+	}
+
+	// Any vertex array still pointing at the name has to forget it, otherwise a later
+	// draw would look up an id that no longer exists.
+	for(auto& entry : vkvertexarrays) {
+		if(entry.second.vertexbuffer == buffer) entry.second.vertexbuffer = 0;
+		if(entry.second.indexbuffer == buffer) entry.second.indexbuffer = 0;
+	}
+	if(boundarraybufferid == buffer) boundarraybufferid = 0;
+	if(boundelementbufferid == buffer) boundelementbufferid = 0;
+
+	// Matches the OpenGL path, where glDeleteBuffers leaves the caller's name zeroed.
+	buffer = 0;
+#else
+	buffer = 0;
+#endif
 }
 
 void gVKRenderEngine::bindBuffer(GLenum target, GLuint buffer) {
+	// Mirrors the OpenGL bind state so an upload knows which name it is filling and
+	// the current vertex array can record the pairing.
+	if(target == GL_ELEMENT_ARRAY_BUFFER) {
+		boundelementbufferid = buffer;
+		if(boundvaoid != 0) vkvertexarrays[boundvaoid].indexbuffer = buffer;
+	} else {
+		boundarraybufferid = buffer;
+	}
 }
 
 void gVKRenderEngine::unbindBuffer(GLenum target) {
@@ -200,26 +313,79 @@ void gVKRenderEngine::setBufferRange(int index, GLuint buffer, int offset, int s
 
 // ----- VAO -----
 GLuint gVKRenderEngine::createVAO() {
-	// There is no vertex array object under Vulkan, but gVbo treats GL_NONE as "not
-	// created yet" and asserts on it when binding, so a synthetic non-zero id is
-	// handed out. Nothing ever dereferences it: the Vulkan 2D path reads the mesh's
-	// own vertices and every VAO entry point here is a no-op.
-	return nextvkvaoid++;
+	// Vulkan has no vertex array object. The id is still real bookkeeping here: it is
+	// the key under which the backend remembers which vertex and index buffer were
+	// bound while this array was current, which is what a draw needs. gVbo also
+	// treats GL_NONE as "not created yet" and asserts on it, so the id must not be 0.
+	GLuint id = nextvkvaoid++;
+	vkvertexarrays[id] = gVKVertexArray();
+	return id;
 }
 
 void gVKRenderEngine::deleteVAO(GLuint& vao) {
+	if(vao == 0) return;
+	// Only the pairing is dropped. The buffers themselves belong to gVbo, which
+	// deletes them through deleteBuffer.
+	vkvertexarrays.erase(vao);
+	if(boundvaoid == vao) boundvaoid = 0;
+	vao = 0;
 }
 
 void gVKRenderEngine::bindVAO(GLuint vao) {
+	boundvaoid = vao;
 }
 
 void gVKRenderEngine::unbindVAO() {
+	boundvaoid = 0;
 }
 
 void gVKRenderEngine::setVertexBufferData(GLuint vbo, size_t size, const void* data, int usage) {
+#ifdef GVK_DESKTOP_GLFW
+	if(vkcontext == nullptr) return;
+
+	gVKMeshBuffer* buf = getMeshBuffer(vbo);
+	if(buf == nullptr) {
+		gLoge("gVKRenderEngine") << "setVertexBufferData called with unknown buffer id " << vbo;
+		return;
+	}
+
+	// usage is ignored: it is OpenGL's hint about how often the data changes, and the
+	// Vulkan side always places mesh data in device local memory. Data that really
+	// does change every frame goes through gVKDraw's host visible ring instead.
+	if(!gvkUploadMeshBuffer(*vkcontext, *buf, data, static_cast<VkDeviceSize>(size), false)) {
+		return;
+	}
+
+	// gVbo binds its vertex array, then the buffer, then uploads - so this is where
+	// the array learns which buffer holds its vertices. A vertex array only ever has
+	// one vertex buffer; a second, different one is the per-instance data that
+	// setInstanceData uploads through this same call.
+	if(boundvaoid == 0) return;
+	gVKVertexArray& array = vkvertexarrays[boundvaoid];
+	if(array.vertexbuffer == 0 || array.vertexbuffer == vbo) array.vertexbuffer = vbo;
+	else array.instancebuffer = vbo;
+#endif
 }
 
 void gVKRenderEngine::setIndexBufferData(GLuint ebo, size_t size, const void* data, int usage) {
+#ifdef GVK_DESKTOP_GLFW
+	if(vkcontext == nullptr) return;
+
+	gVKMeshBuffer* buf = getMeshBuffer(ebo);
+	if(buf == nullptr) {
+		gLoge("gVKRenderEngine") << "setIndexBufferData called with unknown buffer id " << ebo;
+		return;
+	}
+
+	if(!gvkUploadMeshBuffer(*vkcontext, *buf, data, static_cast<VkDeviceSize>(size), true)) {
+		return;
+	}
+
+	// gVbo does not bindBuffer(GL_ELEMENT_ARRAY_BUFFER, ...) before this call the way
+	// it does for vertices - the OpenGL path binds inside setIndexBufferData itself -
+	// so the pairing is recorded here rather than in bindBuffer.
+	if(boundvaoid != 0) vkvertexarrays[boundvaoid].indexbuffer = ebo;
+#endif
 }
 
 // ----- Draw -----
@@ -247,6 +413,17 @@ void gVKRenderEngine::setVertexAttribPointer(int index, int size, int type, bool
 }
 
 void gVKRenderEngine::setVertexAttribDivisor(int index, int divisor) {
+	// Vulkan sets the step rate on the binding when the pipeline is built, not per
+	// attribute at draw time, so there is nothing to forward. It is still worth
+	// listening to: a non-zero divisor is the caller stating that the array buffer
+	// currently bound holds per-instance data, which confirms what
+	// setVertexBufferData inferred from the order of the uploads.
+	if(divisor <= 0 || boundvaoid == 0 || boundarraybufferid == 0) return;
+	gVKVertexArray& array = vkvertexarrays[boundvaoid];
+	array.instancebuffer = boundarraybufferid;
+	// If this buffer was mistaken for the vertex data, it was the first one this
+	// array saw and there is no vertex buffer after all.
+	if(array.vertexbuffer == boundarraybufferid) array.vertexbuffer = 0;
 }
 
 void gVKRenderEngine::setViewport(int x, int y, int width, int height) {
@@ -258,61 +435,306 @@ void gVKRenderEngine::setViewport(int x, int y, int width, int height) {
 	viewportheight = height;
 }
 
+#ifdef GVK_DESKTOP_GLFW
+// One offscreen render target. The attachments are gTextures the application owns,
+// so only the pass and the framebuffer wrapping them belong here. Both are built on
+// the first bind rather than at creation, because gFbo attaches its textures after
+// asking for the framebuffer.
+struct gVKFramebuffer {
+	gVKTexture* color = nullptr;
+	gVKTexture* depth = nullptr;
+	VkRenderPass renderpass = VK_NULL_HANDLE;
+	VkFramebuffer framebuffer = VK_NULL_HANDLE;
+	uint32_t width = 0;
+	uint32_t height = 0;
+	// True while its render pass is the one being recorded into.
+	bool active = false;
+};
+
+// Builds the pass and the framebuffer for a target, once. Returns false when the
+// target has nothing usable attached.
+bool gVKRenderEngine::ensureFramebufferPass(gVKFramebuffer* target) {
+	if(target == nullptr || vkcontext == nullptr || vkcontext->device == VK_NULL_HANDLE) return false;
+	if(target->renderpass != VK_NULL_HANDLE && target->framebuffer != VK_NULL_HANDLE) return true;
+	if(target->width == 0 || target->height == 0) return false;
+
+	VkAttachmentDescription attachments[2]{};
+	VkAttachmentReference colorref{};
+	VkAttachmentReference depthref{};
+	VkImageView views[2]{};
+	uint32_t count = 0;
+
+	if(target->color != nullptr) {
+		colorref.attachment = count;
+		colorref.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+		VkAttachmentDescription& a = attachments[count];
+		a.format = target->color->format;
+		a.samples = VK_SAMPLE_COUNT_1_BIT;
+		a.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+		a.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+		a.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+		a.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+		a.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+		// Left ready to sample, so nothing else has to transition it afterwards -
+		// the same trick the shadow map's pass uses.
+		a.finalLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+		views[count] = target->color->view;
+		count++;
+	}
+	if(target->depth != nullptr) {
+		depthref.attachment = count;
+		depthref.layout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+		VkAttachmentDescription& a = attachments[count];
+		a.format = target->depth->format;
+		a.samples = VK_SAMPLE_COUNT_1_BIT;
+		a.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+		a.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+		a.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+		a.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+		a.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+		a.finalLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+		views[count] = target->depth->view;
+		count++;
+	}
+	if(count == 0) return false;
+
+	VkSubpassDescription subpass{};
+	subpass.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
+	subpass.colorAttachmentCount = target->color != nullptr ? 1 : 0;
+	subpass.pColorAttachments = target->color != nullptr ? &colorref : nullptr;
+	subpass.pDepthStencilAttachment = target->depth != nullptr ? &depthref : nullptr;
+
+	// One dependency, matching the screen pass exactly. Render pass compatibility is
+	// what lets the pipelines built for the screen be recorded into an FBO, and the
+	// validation layer compares this too - two dependencies here made every draw
+	// into an FBO an incompatibility error.
+	VkSubpassDependency dependency{};
+	dependency.srcSubpass = VK_SUBPASS_EXTERNAL;
+	dependency.dstSubpass = 0;
+	dependency.srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT
+			| VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
+	dependency.srcAccessMask = 0;
+	dependency.dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT
+			| VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
+	dependency.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT
+			| VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
+
+	VkRenderPassCreateInfo passinfo{};
+	passinfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
+	passinfo.attachmentCount = count;
+	passinfo.pAttachments = attachments;
+	passinfo.subpassCount = 1;
+	passinfo.pSubpasses = &subpass;
+	passinfo.dependencyCount = 1;
+	passinfo.pDependencies = &dependency;
+	if(vkCreateRenderPass(vkcontext->device, &passinfo, nullptr, &target->renderpass) != VK_SUCCESS) {
+		gLoge("gVKRenderEngine") << "vkCreateRenderPass failed for a framebuffer.";
+		target->renderpass = VK_NULL_HANDLE;
+		return false;
+	}
+
+	VkFramebufferCreateInfo fbinfo{};
+	fbinfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
+	fbinfo.renderPass = target->renderpass;
+	fbinfo.attachmentCount = count;
+	fbinfo.pAttachments = views;
+	fbinfo.width = target->width;
+	fbinfo.height = target->height;
+	fbinfo.layers = 1;
+	if(vkCreateFramebuffer(vkcontext->device, &fbinfo, nullptr, &target->framebuffer) != VK_SUCCESS) {
+		gLoge("gVKRenderEngine") << "vkCreateFramebuffer failed for a framebuffer.";
+		vkDestroyRenderPass(vkcontext->device, target->renderpass, nullptr);
+		target->renderpass = VK_NULL_HANDLE;
+		target->framebuffer = VK_NULL_HANDLE;
+		return false;
+	}
+	return true;
+}
+
+void gVKRenderEngine::endOffscreenPass() {
+	if(vkcontext == nullptr || !vkcontext->frameactive) return;
+	for(auto& entry : vkframebuffers) {
+		if(entry.second == nullptr || !entry.second->active) continue;
+		vkCmdEndRenderPass(vkcontext->commandbuffers[vkcontext->currentframe]);
+		entry.second->active = false;
+		vkcontext->renderpassactive = false;
+		// The pass's finalLayout already left both attachments sampleable.
+		return;
+	}
+}
+
+void gVKRenderEngine::destroyAllFramebuffers() {
+	for(auto& entry : vkframebuffers) {
+		if(entry.second == nullptr) continue;
+		if(vkcontext != nullptr && vkcontext->device != VK_NULL_HANDLE) {
+			if(entry.second->framebuffer != VK_NULL_HANDLE) {
+				vkDestroyFramebuffer(vkcontext->device, entry.second->framebuffer, nullptr);
+			}
+			if(entry.second->renderpass != VK_NULL_HANDLE) {
+				vkDestroyRenderPass(vkcontext->device, entry.second->renderpass, nullptr);
+			}
+		}
+		delete entry.second;
+	}
+	vkframebuffers.clear();
+	boundframebuffer = gFbo::defaultfbo;
+}
+#endif
+
 // ----- Framebuffer -----
 GLuint gVKRenderEngine::createFramebuffer() {
-	GLuint fbo;
-	G_CHECK_GL(glGenFramebuffers(1, &fbo));
-	return fbo;
+#ifdef GVK_DESKTOP_GLFW
+	const GLuint id = nextvkframebufferid++;
+	vkframebuffers[id] = new gVKFramebuffer();
+	return id;
+#else
+	return 0;
+#endif
 }
 
 void gVKRenderEngine::deleteFramebuffer(GLuint& fbo) {
-	if(fbo != 0) {
-		G_CHECK_GL(glDeleteFramebuffers(1, &fbo));
+#ifdef GVK_DESKTOP_GLFW
+	if(fbo == 0) return;
+	if(boundframebuffer == fbo) bindFramebuffer(gFbo::defaultfbo);
+	auto it = vkframebuffers.find(fbo);
+	if(it == vkframebuffers.end()) return;
+	// The attachments themselves belong to the gTextures that own them; only the
+	// pass and the framebuffer built around them are freed here.
+	if(vkcontext != nullptr && vkcontext->device != VK_NULL_HANDLE) {
+		vkDeviceWaitIdle(vkcontext->device);
+		if(it->second->framebuffer != VK_NULL_HANDLE) {
+			vkDestroyFramebuffer(vkcontext->device, it->second->framebuffer, nullptr);
+		}
+		if(it->second->renderpass != VK_NULL_HANDLE) {
+			vkDestroyRenderPass(vkcontext->device, it->second->renderpass, nullptr);
+		}
 	}
+	delete it->second;
+	vkframebuffers.erase(it);
+	fbo = 0;
+#endif
 }
 
 void gVKRenderEngine::bindFramebuffer(GLuint fbo) {
-	G_CHECK_GL(glBindFramebuffer(GL_FRAMEBUFFER, fbo));
+#ifdef GVK_DESKTOP_GLFW
+	if(vkcontext == nullptr) { boundframebuffer = fbo; return; }
+
+	// Whatever pass is open has to close before another can open. Outside a frame
+	// there is nothing to close and nothing to begin, so the bind is only recorded
+	// and acted on when the frame that uses it starts drawing.
+	endOffscreenPass();
 	boundframebuffer = fbo;
+	if(!vkcontext->frameactive || fbo == gFbo::defaultfbo) return;
+
+	auto it = vkframebuffers.find(fbo);
+	if(it == vkframebuffers.end() || it->second == nullptr) return;
+	gVKFramebuffer* target = it->second;
+	if(target->color == nullptr && target->depth == nullptr) return;
+	if(!ensureFramebufferPass(target)) return;
+
+	// The screen pass may already be open - a canvas can bind an FBO half way
+	// through drawing - and two passes cannot be recorded at once.
+	if(vkcontext->renderpassactive) {
+		vkCmdEndRenderPass(vkcontext->commandbuffers[vkcontext->currentframe]);
+		vkcontext->renderpassactive = false;
+	}
+
+	VkCommandBuffer cmd = vkcontext->commandbuffers[vkcontext->currentframe];
+	VkClearValue clears[2];
+	uint32_t clearcount = 0;
+	if(target->color != nullptr) clears[clearcount++] = vkcontext->clearvalue;
+	if(target->depth != nullptr) clears[clearcount++].depthStencil = {1.0f, 0};
+
+	VkRenderPassBeginInfo info{};
+	info.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+	info.renderPass = target->renderpass;
+	info.framebuffer = target->framebuffer;
+	info.renderArea.offset = {0, 0};
+	info.renderArea.extent = {target->width, target->height};
+	info.clearValueCount = clearcount;
+	info.pClearValues = clears;
+	vkCmdBeginRenderPass(cmd, &info, VK_SUBPASS_CONTENTS_INLINE);
+
+	// Negative height as on the screen pass: an FBO is drawn into with the same
+	// top-left origin projections the engine builds everywhere else.
+	VkViewport viewport{};
+	viewport.x = 0.0f;
+	viewport.y = static_cast<float>(target->height);
+	viewport.width = static_cast<float>(target->width);
+	viewport.height = -static_cast<float>(target->height);
+	viewport.minDepth = 0.0f;
+	viewport.maxDepth = 1.0f;
+	vkCmdSetViewport(cmd, 0, 1, &viewport);
+	VkRect2D scissor{};
+	scissor.offset = {0, 0};
+	scissor.extent = {target->width, target->height};
+	vkCmdSetScissor(cmd, 0, 1, &scissor);
+
+	vkcontext->renderpassactive = true;
+	target->active = true;
+	if(target->color != nullptr) target->color->layout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+	if(target->depth != nullptr) target->depth->layout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+#endif
 }
 
 void gVKRenderEngine::checkFramebufferStatus() {
-	// check if fbo complete
-	G_CHECK_GL2(GLuint status, glCheckFramebufferStatus(GL_FRAMEBUFFER));
-	if(status != GL_FRAMEBUFFER_COMPLETE) {
-		gLogi("gFbo") << "Framebuffer is not complete! status:" << gToHex(status, 4);
+#ifdef GVK_DESKTOP_GLFW
+	auto it = vkframebuffers.find(boundframebuffer);
+	if(it == vkframebuffers.end() || it->second == nullptr
+			|| (it->second->color == nullptr && it->second->depth == nullptr)) {
+		gLogi("gFbo") << "Framebuffer is not complete! No attachment was bound to it.";
 	}
+#endif
 }
 
 // ----- Renderbuffer -----
+// Vulkan has no renderbuffer object. gFbo is steered onto a sampleable depth
+// texture instead (see gFbo::allocate), so these only have to hand out ids that
+// are unique and non-zero, and do nothing with them.
 GLuint gVKRenderEngine::createRenderbuffer() {
-	GLuint rbo;
-	G_CHECK_GL(glGenRenderbuffers(1, &rbo));
-	return rbo;
+	return nextvkrenderbufferid++;
 }
 
 void gVKRenderEngine::deleteRenderbuffer(GLuint& rbo) {
-	if(rbo != 0) {
-		G_CHECK_GL(glDeleteRenderbuffers(1, &rbo));
-	}
+	rbo = 0;
 }
 
 void gVKRenderEngine::bindRenderbuffer(GLuint rbo) {
-	assert(rbo != 0);
-	G_CHECK_GL(glBindRenderbuffer(GL_RENDERBUFFER, rbo));
 }
 
 void gVKRenderEngine::setRenderbufferStorage(GLenum format, int width, int height) {
-	G_CHECK_GL(glRenderbufferStorage(GL_RENDERBUFFER, format, width, height));
 }
 
 // ----- Attachments -----
 void gVKRenderEngine::attachTextureToFramebuffer(GLenum attachment, GLenum textarget, GLuint texId, GLuint level) {
-	G_CHECK_GL(glFramebufferTexture2D(GL_FRAMEBUFFER, attachment, textarget, texId, level));
+#ifdef GVK_DESKTOP_GLFW
+	auto fb = vkframebuffers.find(boundframebuffer);
+	auto tex = vktextures.find(texId);
+	if(fb == vkframebuffers.end() || fb->second == nullptr
+			|| tex == vktextures.end() || tex->second == nullptr) return;
+
+	if(attachment == GL_DEPTH_ATTACHMENT || attachment == GL_DEPTH_STENCIL_ATTACHMENT) {
+		fb->second->depth = tex->second;
+	} else {
+		fb->second->color = tex->second;
+	}
+	fb->second->width = static_cast<uint32_t>(tex->second->width);
+	fb->second->height = static_cast<uint32_t>(tex->second->height);
+	// The pass is built lazily on first bind, so an attachment added after one
+	// already exists invalidates it rather than being ignored.
+	if(fb->second->renderpass != VK_NULL_HANDLE && vkcontext != nullptr
+			&& vkcontext->device != VK_NULL_HANDLE) {
+		vkDeviceWaitIdle(vkcontext->device);
+		vkDestroyFramebuffer(vkcontext->device, fb->second->framebuffer, nullptr);
+		vkDestroyRenderPass(vkcontext->device, fb->second->renderpass, nullptr);
+		fb->second->framebuffer = VK_NULL_HANDLE;
+		fb->second->renderpass = VK_NULL_HANDLE;
+	}
+#endif
 }
 
 void gVKRenderEngine::attachRenderbufferToFramebuffer(GLenum attachment, GLuint rbo) {
-	G_CHECK_GL(glFramebufferRenderbuffer(GL_FRAMEBUFFER, attachment, GL_RENDERBUFFER, rbo));
+	// Nothing to attach; see createRenderbuffer.
 }
 
 // ----- Draw/Read buffers -----
@@ -522,8 +944,10 @@ void gVKRenderEngine::drawFullscreenQuad() {
 }
 
 void gVKRenderEngine::bindDefaultFramebuffer() {
-	G_CHECK_GL(glBindFramebuffer(GL_FRAMEBUFFER, gFbo::defaultfbo));
-	boundframebuffer = gFbo::defaultfbo;
+	// gFbo::unbind() comes through here rather than bindFramebuffer, so this is what
+	// closes an offscreen pass and lets the screen pass be reopened by the next draw.
+	// It used to call glBindFramebuffer, which raised an error on every unbind.
+	bindFramebuffer(gFbo::defaultfbo);
 }
 
 void gVKRenderEngine::drawVbo(const gVbo& vbo) {
@@ -583,10 +1007,33 @@ void gVKRenderEngine::deleteTexture(GLuint& texId) {
 void gVKRenderEngine::texImage2D(GLenum target, GLint internalFormat, int width, int height, GLint format, GLint type, void* data, GLint level) {
 #ifdef GVK_DESKTOP_GLFW
 	if(vkcontext == nullptr || boundtextureid == 0) return;
-	// Only 8-bit colour uploads that carry pixels become a texture. Allocation-only
-	// calls (data == nullptr, e.g. FBO colour targets) and float / HDR uploads are
-	// outside what the 2D image path handles.
-	if(data == nullptr || type != GL_UNSIGNED_BYTE || width <= 0 || height <= 0) return;
+	if(width <= 0 || height <= 0) return;
+
+	// An allocation-only call is an FBO attachment: gFbo makes its colour and depth
+	// textures by asking for storage with no pixels in it. Those become renderable
+	// images rather than sampled-only ones, and are registered under the same id so
+	// the rest of the engine can bind them as ordinary textures afterwards.
+	if(data == nullptr) {
+		// Only the two constants the engine itself uses for a depth target, which is
+		// what gFbo and gTexture ask for. The sized 16 and 32F spellings were also
+		// tested for, but nothing here produces them and they are not guaranteed to
+		// exist in every platform's GL headers.
+		const bool depth = internalFormat == GL_DEPTH_COMPONENT || format == GL_DEPTH_COMPONENT
+				|| internalFormat == GL_DEPTH_COMPONENT24;
+		auto existing = vktextures.find(boundtextureid);
+		if(existing != vktextures.end()) {
+			vkDeviceWaitIdle(vkcontext->device);
+			gvkDestroyTexture(*vkcontext, existing->second);
+			vktextures.erase(existing);
+		}
+		gVKTexture* target = gvkCreateAttachmentTexture(*vkcontext, width, height, depth);
+		if(target != nullptr) vktextures[boundtextureid] = target;
+		return;
+	}
+
+	// Only 8-bit colour uploads become a sampled texture; float / HDR ones are
+	// outside what the image path handles.
+	if(type != GL_UNSIGNED_BYTE) return;
 
 	int components = 4;
 	if(format == GL_RED) components = 1;
@@ -641,6 +1088,19 @@ void gVKRenderEngine::setTextureMaxLevel(GLenum target, int maxLevel) {
 // there is a single mip level, so the mipmap variants collapse onto their base
 // filter - and the clamping wrap modes all map onto clamp to edge, which is what
 // the GL path resolves them to as well.
+// OpenGL folds two decisions into the minification filter: how a texel is sampled
+// and whether the mip chain is used at all. Vulkan keeps them apart, so both are
+// read out of the same constant here.
+static bool gvkMipmapsFromGL(GLint filter) {
+	return filter == GL_NEAREST_MIPMAP_NEAREST || filter == GL_NEAREST_MIPMAP_LINEAR
+			|| filter == GL_LINEAR_MIPMAP_NEAREST || filter == GL_LINEAR_MIPMAP_LINEAR;
+}
+
+static VkSamplerMipmapMode gvkMipmapModeFromGL(GLint filter) {
+	return (filter == GL_NEAREST_MIPMAP_NEAREST || filter == GL_LINEAR_MIPMAP_NEAREST)
+			? VK_SAMPLER_MIPMAP_MODE_NEAREST : VK_SAMPLER_MIPMAP_MODE_LINEAR;
+}
+
 static VkFilter gvkFilterFromGL(GLint filter) {
 	return (filter == GL_NEAREST || filter == GL_NEAREST_MIPMAP_NEAREST || filter == GL_NEAREST_MIPMAP_LINEAR)
 			? VK_FILTER_NEAREST : VK_FILTER_LINEAR;
@@ -675,7 +1135,7 @@ void gVKRenderEngine::setFiltering(GLenum target, GLint minFilter, GLint magFilt
 	gVKTexture* tex = getBoundVKTexture();
 	if(tex == nullptr) return;
 	gvkSetTextureSampler(*vkcontext, tex, gvkFilterFromGL(minFilter), gvkFilterFromGL(magFilter),
-			tex->addressu, tex->addressv);
+			tex->addressu, tex->addressv, gvkMipmapsFromGL(minFilter), gvkMipmapModeFromGL(minFilter));
 #endif
 }
 
@@ -685,7 +1145,8 @@ void gVKRenderEngine::setWrappingAndFiltering(GLenum target, GLint wrapS, GLint 
 	gVKTexture* tex = getBoundVKTexture();
 	if(tex == nullptr) return;
 	gvkSetTextureSampler(*vkcontext, tex, gvkFilterFromGL(minFilter), gvkFilterFromGL(magFilter),
-			gvkAddressFromGL(wrapS), gvkAddressFromGL(wrapT));
+			gvkAddressFromGL(wrapS), gvkAddressFromGL(wrapT),
+			gvkMipmapsFromGL(minFilter), gvkMipmapModeFromGL(minFilter));
 #endif
 }
 
@@ -750,7 +1211,10 @@ void gVKRenderEngine::generateSkyMipMap() {
 }
 
 void gVKRenderEngine::enableDepthTestEqual() {
-	G_CHECK_GL(glDepthFunc(GL_LEQUAL));
+	// Was a raw glDepthFunc call, which has no meaning with no OpenGL context. The
+	// only caller is gSkybox, and the depth compare it wants is applied where it
+	// belongs on this backend: drawSkyboxFace sets LESS_OR_EQUAL on the command
+	// buffer, because the sky pipeline declares that state dynamic.
 }
 
 void gVKRenderEngine::createQuad(GLuint& inQuadVAO, GLuint& inQuadVBO) {
@@ -1263,6 +1727,12 @@ bool gVKRenderEngine::initVulkan() {
 		cleanupVulkan();
 		return false;
 	}
+	// Before the framebuffers, which pair every swapchain view with this one.
+	if(!gvkCreateDepthResources(*ctx)) {
+		gLoge("gVKRenderEngine") << "Vulkan init: the depth buffer could not be created.";
+		cleanupVulkan();
+		return false;
+	}
 	if(!gvkCreateFramebuffers(*ctx)) {
 		gLoge("gVKRenderEngine") << "Vulkan init: the framebuffers could not be created.";
 		cleanupVulkan();
@@ -1295,6 +1765,12 @@ bool gVKRenderEngine::initVulkan() {
 		cleanupVulkan();
 		return false;
 	}
+	// After the pipelines and the pool, both of which it allocates from.
+	if(!gvkCreateUniformResources(*ctx)) {
+		gLoge("gVKRenderEngine") << "Vulkan init: the scene uniform buffers could not be created.";
+		cleanupVulkan();
+		return false;
+	}
 	return true;
 #endif
 }
@@ -1314,12 +1790,15 @@ void gVKRenderEngine::cleanupVulkan() {
 	// descriptor sets, so they go before the descriptor pool inside
 	// gvkDestroyGraphicsPipelines.
 	destroyAllTextures();
+	destroyAllMeshBuffers();
+	gvkDestroyUniformResources(*ctx);
 	gvkDestroyDrawResources(*ctx);
 	gvkDestroyGraphicsPipelines(*ctx);
 	gvkDestroyPresentSemaphores(*ctx);
 	gvkDestroyFrameSyncObjects(*ctx);
 	gvkDestroyCommandResources(*ctx);
 	gvkDestroyFramebuffers(*ctx);
+	gvkDestroyDepthResources(*ctx);
 	gvkDestroyRenderPass(*ctx);
 	gvkDestroySwapchain(*ctx);
 	if(ctx->device != VK_NULL_HANDLE) vkDestroyDevice(ctx->device, nullptr);
@@ -1342,6 +1821,9 @@ bool gVKRenderEngine::beginFrame() {
 	// Between frames is the only safe point to swap pipelines out: no command
 	// buffer is recording and the previous frame can be drained.
 	checkShaderReload();
+	// The new frame writes into a different uniform buffer, so whatever the previous
+	// one gathered does not carry over.
+	sceneuniformswritten = false;
 	return gvkBeginFrame(*vkcontext, vkcontext->window);
 #else
 	return false;
@@ -1375,6 +1857,11 @@ void gVKRenderEngine::checkShaderReload() {
 void gVKRenderEngine::endFrame() {
 #ifdef GVK_DESKTOP_GLFW
 	if(vkcontext == nullptr) return;
+	// An application that forgot to unbind its FBO would otherwise leave that pass
+	// open, and the frame loop would close it believing it was the screen one -
+	// leaving the swapchain image never rendered and never transitioned.
+	endOffscreenPass();
+	boundframebuffer = gFbo::defaultfbo;
 	gvkEndFrame(*vkcontext, vkcontext->window);
 #endif
 }
@@ -1434,8 +1921,306 @@ void gVKRenderEngine::drawColored2D(const glm::vec2* points, int count, const gl
 	// Forcing alpha to 1 reproduces exactly that, since src * 1 + dst * 0 is the
 	// source colour, and it avoids a second pipeline just for the disabled state.
 	glm::vec4 drawcolor = color;
+	if(islightingenabled) {
+		bool hasenabledlight = false;
+		for(gLight* light : scenelights) {
+			if(light != nullptr && light->isEnabled()) {
+				hasenabledlight = true;
+				break;
+			}
+		}
+		// OpenGL's mesh shader falls back to global ambient when lighting is on
+		// but every scene light is disabled. Coloured 2D primitives use that same
+		// mesh path there, so preserve the observable API behaviour in Vulkan.
+		if(!hasenabledlight) {
+			const glm::vec4 ambient = globalambientcolor.asVec4();
+			drawcolor.r *= ambient.r;
+			drawcolor.g *= ambient.g;
+			drawcolor.b *= ambient.b;
+		}
+	}
 	if(!isalphablendingenabled) drawcolor.a = 1.0f;
 	gvkDrawColored2D(*vkcontext, points, count, drawcolor, mvp, mode);
+#endif
+}
+
+#ifdef GVK_DESKTOP_GLFW
+void gVKRenderEngine::updateSceneUniforms() {
+	// Rebuilt every frame rather than tracked for changes: it is one memcpy into
+	// already mapped memory, and the OpenGL path's change tracking exists to avoid
+	// glBufferSubData calls that have no equivalent here.
+	gVKSceneUniforms uniforms{};
+	uniforms.projection = projectionmatrix;
+	uniforms.view = viewmatrix;
+	uniforms.viewpos = glm::vec4(cameraposition, 1.0f);
+	uniforms.globalambientcolor = globalambientcolor.asVec4();
+	// See gVKSceneUniforms::rendercolor: the OpenGL colour shader multiplies every
+	// mesh by this, so leaving it out was the whole of the colour difference between
+	// the two backends in a scene that drew text before its geometry.
+	uniforms.rendercolor = rendercolor != nullptr ? rendercolor->asVec4() : glm::vec4(1.0f);
+
+	// The w component doubles as the "is a shadow map bound" flag the shader tests,
+	// which keeps it out of the integer block below and its padding rules.
+	const bool shadowsready = shadowmapenabled && vkcontext->hasShadowMap();
+	uniforms.lightmatrix = shadowlightmatrix;
+	uniforms.shadowlightpos = glm::vec4(shadowlightposition, shadowsready ? 1.0f : 0.0f);
+	uniforms.softshadows = shadowsoft ? 1 : 0;
+
+	uniforms.lightnum = std::min((int) scenelights.size(), GVK_MAX_LIGHTS);
+	uniforms.enabledlights = 0;
+	for(int i = 0; i < uniforms.lightnum; i++) {
+		gLight* light = scenelights[i];
+		// The bitmask is what the shader tests, so a light that is off simply never
+		// gets its bit set - matching gRenderer::updateLights on the OpenGL side,
+		// where lighting being disabled globally switches every light off at once.
+		if(islightingenabled && light->isEnabled()) uniforms.enabledlights |= (1 << i);
+
+		gVKLightData& data = uniforms.lights[i];
+		data.type = light->getType();
+		data.position = light->getPosition();
+		data.direction = light->getDirection();
+		data.ambient = light->getAmbientColor()->asVec4();
+		data.diffuse = light->getDiffuseColor()->asVec4();
+		data.specular = light->getSpecularColor()->asVec4();
+		data.constant = light->getAttenuationConstant();
+		data.linear = light->getAttenuationLinear();
+		data.quadratic = light->getAttenuationQuadratic();
+		data.cutoff = light->getSpotCutOffAngle();
+		data.outercutoff = light->getSpotOuterCutOffAngle();
+	}
+
+	gvkWriteSceneUniforms(*vkcontext, uniforms);
+}
+#endif
+
+void gVKRenderEngine::drawMesh3D(GLuint vertexArrayId, int vertexCount, int indexCount,
+		const glm::mat4& model, const gMeshSurface& surface, int drawMode, int instanceCount) {
+#ifdef GVK_DESKTOP_GLFW
+	if(vkcontext == nullptr || vertexArrayId == 0 || instanceCount <= 0) return;
+
+	// The vertex array is what gVbo bound while it uploaded, so it knows which two
+	// buffers this mesh lives in.
+	auto arrayentry = vkvertexarrays.find(vertexArrayId);
+	if(arrayentry == vkvertexarrays.end()) return;
+
+	gVKMeshBuffer* vertices = getMeshBuffer(arrayentry->second.vertexbuffer);
+	if(vertices == nullptr || vertices->buffer == VK_NULL_HANDLE) return;
+	gVKMeshBuffer* indices = getMeshBuffer(arrayentry->second.indexbuffer);
+	const bool indexed = indices != nullptr && indices->buffer != VK_NULL_HANDLE && indexCount > 0;
+
+	// The mesh's draw mode picks both the pipeline (triangle or line) and the
+	// topology set on the command buffer. Strips are native to Vulkan, so they are
+	// drawn as they are rather than expanded - important here because a 3D mesh is
+	// drawn straight from device memory, and expanding it would mean uploading a
+	// second copy of it. gSphere is a triangle strip, so this is not a corner case.
+	//
+	// GL_TRIANGLE_FAN and GL_LINE_LOOP never reach this point: gMesh rewrites their
+	// indices into a triangle list and a line strip before calling, because Vulkan
+	// has no line loop at all and MoltenVK no triangle fan. Reaching the default
+	// below therefore means a mode nothing in the engine produces.
+	bool lines;
+	VkPrimitiveTopology topology;
+	switch(drawMode) {
+	case GL_TRIANGLES:      lines = false; topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST; break;
+	case GL_TRIANGLE_STRIP: lines = false; topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP; break;
+	case GL_LINES:          lines = true;  topology = VK_PRIMITIVE_TOPOLOGY_LINE_LIST; break;
+	case GL_LINE_STRIP:     lines = true;  topology = VK_PRIMITIVE_TOPOLOGY_LINE_STRIP; break;
+	default: return;
+	}
+
+	// The scene block is per frame, but a frame is only known to have 3D in it once
+	// a mesh actually arrives, so the first such draw is what fills it in.
+	if(!sceneuniformswritten) {
+		updateSceneUniforms();
+		sceneuniformswritten = true;
+	}
+
+	// The shadow pass draws the same meshes with a different pipeline and nothing
+	// but their position: no material, no lights, no descriptor sets. Handled before
+	// any of that is gathered, so the depth pass costs a fraction of a shading one.
+	// This has to come before the PBR branch below, not after: a PBR mesh returns
+	// there, so leaving this second meant such a mesh never reached the depth pass
+	// and cast no shadow at all. Nothing failed loudly either - the PBR draw simply
+	// found the shadow pass open and dropped itself in gvkEnsureRenderPass.
+	if(vkcontext->isShadowPassActive()) {
+		// Line geometry is skipped rather than drawn into the map. There is only a
+		// triangle shadow pipeline, and Vulkan will not let a line topology be set on
+		// it - the topologies have to stay in the same class. Building a second
+		// pipeline for it would buy nothing either: a wireframe or a grid casting a
+		// one-pixel-wide shadow is not what any of this is for.
+		if(lines) return;
+
+		VkBuffer shadowinstances = VK_NULL_HANDLE;
+		if(instanceCount > 1) {
+			gVKMeshBuffer* instances = getMeshBuffer(arrayentry->second.instancebuffer);
+			if(instances == nullptr || instances->buffer == VK_NULL_HANDLE) return;
+			shadowinstances = instances->buffer;
+		} else {
+			if(!ensureIdentityInstanceBuffer()) return;
+			shadowinstances = identityinstancebuffer->buffer;
+		}
+		// Cutout casters: a mesh whose diffuse map punches holes in it has to cast a
+		// shadow with the same holes, so the map is looked up here and the fragment
+		// stage discards against it. Only the diffuse map and only a non-PBR mesh,
+		// because that is exactly where mesh3d.frag discards in the shading pass -
+		// mesh3dpbr.frag has no cutout, and a PBR mesh casting holes it does not
+		// render would be the same disagreement the other way round.
+		VkDescriptorSet cutoutset = VK_NULL_HANDLE;
+		if(!surface.ispbr && surface.diffusemapid != 0) {
+			auto it = vktextures.find(surface.diffusemapid);
+			if(it != vktextures.end() && it->second != nullptr) cutoutset = it->second->descriptorset;
+		}
+		gVKShadowPush shadowpush{};
+		// The light's matrix is folded into the model matrix on the CPU; see
+		// shadow3d.vert for why the three are not sent separately.
+		shadowpush.lightmodel = shadowlightmatrix * model;
+		shadowpush.misc = glm::vec4(cutoutset != VK_NULL_HANDLE ? 1.0f : 0.0f, 0.0f, 0.0f, 0.0f);
+		// The binding has to be filled either way, so an opaque caster gets the white
+		// texture and the flag above tells the shader not to sample it.
+		if(cutoutset == VK_NULL_HANDLE) {
+			if(!ensureWhiteTexture()) return;
+			cutoutset = vktextures[whitetextureid]->descriptorset;
+		}
+
+		const VkIndexType shadowindextype = sizeof(gIndex) == 2 ? VK_INDEX_TYPE_UINT16 : VK_INDEX_TYPE_UINT32;
+		gvkDrawShadowCaster(*vkcontext, vertices->buffer,
+				indexed ? indices->buffer : VK_NULL_HANDLE,
+				indexed ? indexCount : vertexCount, shadowindextype, shadowpush, cutoutset,
+				shadowinstances, instanceCount, topology);
+		return;
+	}
+
+	// The renderer's culling state, translated once for whichever of the two 3D
+	// pipelines records this mesh. Both are built with the cull mode and the front
+	// face dynamic, so every draw has to set them. See gVKCullState for why the
+	// front face comes out as the opposite of the OpenGL one.
+	gVKCullState cullstate;
+	if(iscullingenabled) {
+		if(cullface == GL_FRONT) cullstate.mode = VK_CULL_MODE_FRONT_BIT;
+		else if(cullface == GL_FRONT_AND_BACK) cullstate.mode = VK_CULL_MODE_FRONT_AND_BACK;
+		else cullstate.mode = VK_CULL_MODE_BACK_BIT;
+	}
+	cullstate.frontface = cullingdirection == GL_CW
+			? VK_FRONT_FACE_COUNTER_CLOCKWISE : VK_FRONT_FACE_CLOCKWISE;
+
+	// renderColor is deliberately not applied to a 3D mesh, even though
+	// color_frag.glsl ends with "result * renderColor". Measured against the OpenGL
+	// backend, a mesh comes out as its material colour alone: setColor moves the 2D
+	// drawing colour and never reaches a mesh there. Multiplying it in here would
+	// tint every mesh by whatever colour the canvas last drew text in, which is
+	// exactly the mismatch this was found through.
+	gVKMeshPush push{};
+	push.model = model;
+	push.ambient = surface.ambient;
+	push.diffuse = surface.diffuse;
+	push.specular = surface.specular;
+	// PBR takes a separate pipeline and a separate shader, so it branches out before
+	// the non-PBR material work below.
+	if(surface.ispbr) {
+		if(!ensureWhiteTexture()) return;
+		VkDescriptorSet materialset = gvkGetPbrMaterialSet(vkcontext, vktextures, whitetextureid, surface);
+		if(materialset == VK_NULL_HANDLE) return;
+
+		// Set 2, and it has to point at a real descriptor whether or not a shadow map
+		// exists. The white texture reads as "nothing was ever closer to the light",
+		// so it casts no shadow even before the shader's flag says not to look.
+		VkDescriptorSet pbrshadowset = VK_NULL_HANDLE;
+		if(vkcontext->hasShadowMap()) pbrshadowset = vkcontext->getShadowDescriptorSet();
+		if(pbrshadowset == VK_NULL_HANDLE) pbrshadowset = vktextures[whitetextureid]->descriptorset;
+
+		gVKPbrPush pbrpush{};
+		pbrpush.model = model;
+		pbrpush.maps0 = glm::ivec4(surface.albedomapid != 0 ? 1 : 0, surface.pbrnormalmapid != 0 ? 1 : 0,
+				surface.metallicmapid != 0 ? 1 : 0, surface.roughnessmapid != 0 ? 1 : 0);
+		pbrpush.maps1 = glm::ivec4(surface.aomapid != 0 ? 1 : 0, 0, 0, 0);
+
+		VkBuffer pbrinstances = VK_NULL_HANDLE;
+		if(instanceCount > 1) {
+			gVKMeshBuffer* instances = getMeshBuffer(arrayentry->second.instancebuffer);
+			if(instances == nullptr || instances->buffer == VK_NULL_HANDLE) return;
+			pbrinstances = instances->buffer;
+		} else {
+			if(!ensureIdentityInstanceBuffer()) return;
+			pbrinstances = identityinstancebuffer->buffer;
+		}
+
+		const VkIndexType pbrindextype = sizeof(gIndex) == 2 ? VK_INDEX_TYPE_UINT16 : VK_INDEX_TYPE_UINT32;
+		gvkDrawMesh3DPbr(*vkcontext, vertices->buffer, indexed ? indices->buffer : VK_NULL_HANDLE,
+				indexed ? indexCount : vertexCount, pbrindextype, pbrpush, materialset,
+				pbrshadowset,
+				pbrinstances, instanceCount, topology,
+				isdepthtestenabled, depthtesttype == DEPTHTESTTYPE_ALWAYS, cullstate,
+				isalphablendingenabled);
+		return;
+	}
+
+	// A map only counts once its texture is actually registered here; a material can
+	// name one that never made it through texImage2D (an unsupported format, say),
+	// and sampling white is closer to the OpenGL result than sampling nothing.
+	VkDescriptorSet diffuseset = VK_NULL_HANDLE;
+	VkDescriptorSet specularset = VK_NULL_HANDLE;
+	// Shadow map, bound as set 4. Falls back to the white texture when there is
+	// none, which reads as "nothing was ever closer to the light" and so casts no
+	// shadow - the shader's flag says not to look at it anyway.
+	VkDescriptorSet shadowset = VK_NULL_HANDLE;
+	if(vkcontext->hasShadowMap()) shadowset = vkcontext->getShadowDescriptorSet();
+	if(surface.diffusemapid != 0) {
+		auto it = vktextures.find(surface.diffusemapid);
+		if(it != vktextures.end() && it->second != nullptr) diffuseset = it->second->descriptorset;
+	}
+	if(surface.specularmapid != 0) {
+		auto it = vktextures.find(surface.specularmapid);
+		if(it != vktextures.end() && it->second != nullptr) specularset = it->second->descriptorset;
+	}
+	VkDescriptorSet normalset = VK_NULL_HANDLE;
+	if(surface.normalmapid != 0) {
+		auto it = vktextures.find(surface.normalmapid);
+		if(it != vktextures.end() && it->second != nullptr) normalset = it->second->descriptorset;
+	}
+
+	push.misc = glm::vec4(surface.shininess,
+			diffuseset != VK_NULL_HANDLE ? 1.0f : 0.0f,
+			specularset != VK_NULL_HANDLE ? 1.0f : 0.0f,
+			normalset != VK_NULL_HANDLE ? 1.0f : 0.0f);
+
+	// Both bindings must point at a real descriptor even when the flags say not to
+	// sample them, so the unused ones fall back to the 1x1 white texture.
+	if(diffuseset == VK_NULL_HANDLE || specularset == VK_NULL_HANDLE ||
+			normalset == VK_NULL_HANDLE || shadowset == VK_NULL_HANDLE) {
+		if(!ensureWhiteTexture()) return;
+		VkDescriptorSet whiteset = vktextures[whitetextureid]->descriptorset;
+		if(diffuseset == VK_NULL_HANDLE) diffuseset = whiteset;
+		if(specularset == VK_NULL_HANDLE) specularset = whiteset;
+		if(normalset == VK_NULL_HANDLE) normalset = whiteset;
+		if(shadowset == VK_NULL_HANDLE) shadowset = whiteset;
+	}
+	// No alpha fixup here, unlike the 2D path: the 3D pipeline does not blend at all
+	// (see gVKPipeline.cpp), so what the lighting sum leaves in the alpha channel
+	// never reaches the framebuffer as transparency.
+
+	// The instance buffer is always bound, because the shader always reads a model
+	// matrix from it. An instanced draw uses the one gVbo uploaded; anything else
+	// gets the shared identity, which multiplies out to no change at all.
+	VkBuffer instancebuffer = VK_NULL_HANDLE;
+	if(instanceCount > 1) {
+		gVKMeshBuffer* instances = getMeshBuffer(arrayentry->second.instancebuffer);
+		if(instances == nullptr || instances->buffer == VK_NULL_HANDLE) return;
+		instancebuffer = instances->buffer;
+	} else {
+		if(!ensureIdentityInstanceBuffer()) return;
+		instancebuffer = identityinstancebuffer->buffer;
+	}
+
+	// gIndex is what gVbo uploaded, so the index type follows it: 16 bit on Android,
+	// 32 bit everywhere else.
+	const VkIndexType indextype = sizeof(gIndex) == 2 ? VK_INDEX_TYPE_UINT16 : VK_INDEX_TYPE_UINT32;
+
+	gvkDrawMesh3D(*vkcontext, vertices->buffer, indexed ? indices->buffer : VK_NULL_HANDLE,
+			indexed ? indexCount : vertexCount, indextype, push, diffuseset, specularset, normalset,
+			shadowset,
+			instancebuffer, instanceCount,
+			topology, isdepthtestenabled, depthtesttype == DEPTHTESTTYPE_ALWAYS, lines, cullstate,
+			isalphablendingenabled);
 #endif
 }
 
@@ -1477,8 +2262,231 @@ gVKTexture* gVKRenderEngine::getBoundVKTexture() {
 void gVKRenderEngine::destroyAllTextures() {
 #ifdef GVK_DESKTOP_GLFW
 	if(vkcontext == nullptr) return;
+	// The framebuffers first: they hold render passes built around these textures'
+	// views, and a pass outliving its attachment is what turns a clean shutdown into
+	// a validation error.
+	destroyAllFramebuffers();
 	for(auto& entry : vktextures) gvkDestroyTexture(*vkcontext, entry.second);
 	vktextures.clear();
+#endif
+}
+
+bool gVKRenderEngine::ensureWhiteTexture() {
+#ifdef GVK_DESKTOP_GLFW
+	if(whitetextureid != 0) return true;
+	if(vkcontext == nullptr) return false;
+
+	// Built through the ordinary texture entry points so it gets an image, a sampler
+	// and a descriptor set the same way every other texture does.
+	const GLuint previousbound = boundtextureid;
+	GLuint id = createTextures();
+	const unsigned char white[4] = {255, 255, 255, 255};
+	texImage2D(GL_TEXTURE_2D, GL_RGBA, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE,
+			const_cast<unsigned char*>(white));
+	boundtextureid = previousbound;
+
+	auto it = vktextures.find(id);
+	if(it == vktextures.end() || it->second == nullptr) {
+		gLoge("gVKRenderEngine") << "Could not create the 1x1 white fallback texture.";
+		return false;
+	}
+	whitetextureid = id;
+	return true;
+#else
+	return false;
+#endif
+}
+
+#ifdef GVK_DESKTOP_GLFW
+// Kept out of the class because its return type is a Vulkan handle and
+// gVKRenderEngine.h is deliberately free of Vulkan headers.
+static VkDescriptorSet gvkGetPbrMaterialSet(gVKContext* vkcontext,
+		std::unordered_map<GLuint, gVKTexture*>& vktextures, GLuint whitetextureid,
+		const gRenderer::gMeshSurface& surface) {
+	if(vkcontext == nullptr || whitetextureid == 0) return VK_NULL_HANDLE;
+	VkDescriptorSetLayout layout = vkcontext->getMesh3DPbrMaterialSetLayout();
+	if(layout == VK_NULL_HANDLE || vkcontext->getDescriptorPool() == VK_NULL_HANDLE) return VK_NULL_HANDLE;
+
+	const std::array<uint32_t, 5> key = {surface.albedomapid, surface.pbrnormalmapid,
+			surface.metallicmapid, surface.roughnessmapid, surface.aomapid};
+	std::map<std::array<uint32_t, 5>, VkDescriptorSet>& cache = *vkcontext->getPbrMaterialSets();
+	auto cached = cache.find(key);
+	if(cached != cache.end()) return cached->second;
+
+	VkDevice device = *vkcontext->getDevice();
+	VkDescriptorSetAllocateInfo allocinfo{};
+	allocinfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
+	allocinfo.descriptorPool = vkcontext->getDescriptorPool();
+	allocinfo.descriptorSetCount = 1;
+	allocinfo.pSetLayouts = &layout;
+	VkDescriptorSet set = VK_NULL_HANDLE;
+	if(vkAllocateDescriptorSets(device, &allocinfo, &set) != VK_SUCCESS) {
+		gLoge("gVKRenderEngine") << "Could not allocate a PBR material descriptor set.";
+		return VK_NULL_HANDLE;
+	}
+
+	// Every binding is written, whether or not the material supplies that map: the
+	// shader names all five samplers, so an unwritten binding would be invalid. The
+	// flags in the push constant are what decide which ones are actually read.
+	gVKTexture* white = vktextures[whitetextureid];
+	VkDescriptorImageInfo images[5]{};
+	VkWriteDescriptorSet writes[5]{};
+	for(int i = 0; i < 5; i++) {
+		gVKTexture* tex = nullptr;
+		auto it = vktextures.find(key[i]);
+		if(key[i] != 0 && it != vktextures.end()) tex = it->second;
+		if(tex == nullptr) tex = white;
+
+		images[i].imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+		images[i].imageView = tex->view;
+		images[i].sampler = tex->sampler;
+
+		writes[i].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+		writes[i].dstSet = set;
+		writes[i].dstBinding = static_cast<uint32_t>(i);
+		writes[i].dstArrayElement = 0;
+		writes[i].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+		writes[i].descriptorCount = 1;
+		writes[i].pImageInfo = &images[i];
+	}
+	vkUpdateDescriptorSets(device, 5, writes, 0, nullptr);
+
+	cache[key] = set;
+	return set;
+}
+#endif
+
+bool gVKRenderEngine::drawSkyboxFace(GLuint textureId, const float* xyzuv, int vertexCount,
+		const glm::mat4& viewProjection) {
+#ifdef GVK_DESKTOP_GLFW
+	if(vkcontext == nullptr || textureId == 0 || xyzuv == nullptr || vertexCount <= 0) return false;
+	// The sky is not a caster. Drawing it into the depth map would put a wall at the
+	// far edge of the light's frustum and shadow the whole scene.
+	if(vkcontext->isShadowPassActive()) return true;
+
+	auto it = vktextures.find(textureId);
+	if(it == vktextures.end() || it->second == nullptr) return false;
+
+	// LESS_OR_EQUAL rather than LESS: the sky is drawn at the far plane and has to
+	// survive a depth value equal to what is already there, which is the same reason
+	// the OpenGL path switches to GL_LEQUAL for it.
+	gvkDrawSkyboxFace(*vkcontext, it->second->descriptorset, xyzuv, vertexCount,
+			viewProjection, VK_COMPARE_OP_LESS_OR_EQUAL);
+	return true;
+#else
+	return false;
+#endif
+}
+
+bool gVKRenderEngine::allocateShadowMap(int width, int height) {
+#ifdef GVK_DESKTOP_GLFW
+	if(vkcontext == nullptr || width <= 0 || height <= 0) return false;
+	// The map outlives individual frames, so anything still reading the old one has
+	// to be finished before it is replaced.
+	vkDeviceWaitIdle(*vkcontext->getDevice());
+	return gvkCreateShadowResources(*vkcontext,
+			static_cast<uint32_t>(width), static_cast<uint32_t>(height));
+#else
+	return false;
+#endif
+}
+
+void gVKRenderEngine::releaseShadowMap() {
+#ifdef GVK_DESKTOP_GLFW
+	if(vkcontext == nullptr) return;
+	vkDeviceWaitIdle(*vkcontext->getDevice());
+	gvkDestroyShadowResources(*vkcontext);
+	shadowmapenabled = false;
+#endif
+}
+
+bool gVKRenderEngine::beginShadowPass() {
+#ifdef GVK_DESKTOP_GLFW
+	if(vkcontext == nullptr) return false;
+	// Deliberately does not gather the scene uniforms. This runs before the canvas
+	// has drawn anything, so gCamera::begin() has not set the view and projection
+	// yet - writing the block here would freeze last frame's camera into it, and
+	// because the block is written once per frame the shading pass would then
+	// inherit it and place the whole scene wrongly. The shadow pipeline reads no
+	// descriptors at all, so it has nothing to gain from an early write; the first
+	// mesh of the shading pass fills the block, by which time the camera is set.
+	return gvkBeginShadowPass(*vkcontext);
+#else
+	return false;
+#endif
+}
+
+void gVKRenderEngine::endShadowPass() {
+#ifdef GVK_DESKTOP_GLFW
+	if(vkcontext == nullptr) return;
+	gvkEndShadowPass(*vkcontext);
+#endif
+}
+
+void gVKRenderEngine::setShadowMapState(bool enabled, const glm::mat4& lightMatrix,
+		const glm::vec3& lightPosition, bool softShadows) {
+	shadowmapenabled = enabled;
+	// The same -1..1 to 0..1 depth correction setProjectionMatrix applies to the
+	// camera. gShadowMap builds the light's projection with glm::ortho, which targets
+	// OpenGL's clip volume, and it never passes through setProjectionMatrix - so
+	// without this the depth pass writes values outside what Vulkan keeps and the
+	// shading pass compares against the wrong range. The result is a shadow map that
+	// is technically produced and visibly does nothing.
+	glm::mat4 clip(1.0f);
+	clip[2][2] = 0.5f;
+	clip[3][2] = 0.5f;
+	shadowlightmatrix = clip * lightMatrix;
+	shadowlightposition = lightPosition;
+	shadowsoft = softShadows;
+}
+
+bool gVKRenderEngine::ensureIdentityInstanceBuffer() {
+#ifdef GVK_DESKTOP_GLFW
+	if(identityinstancebuffer != nullptr && identityinstancebuffer->buffer != VK_NULL_HANDLE) return true;
+	if(vkcontext == nullptr) return false;
+
+	if(identityinstancebuffer == nullptr) identityinstancebuffer = new gVKMeshBuffer();
+	const glm::mat4 identity(1.0f);
+	if(!gvkUploadMeshBuffer(*vkcontext, *identityinstancebuffer, &identity, sizeof(identity), false)) {
+		gLoge("gVKRenderEngine") << "Could not create the identity instance buffer.";
+		return false;
+	}
+	return true;
+#else
+	return false;
+#endif
+}
+
+void gVKRenderEngine::destroyAllMeshBuffers() {
+#ifdef GVK_DESKTOP_GLFW
+	if(vkcontext == nullptr) return;
+	// Called from cleanupVulkan after vkDeviceWaitIdle, so nothing is still reading
+	// these; the per-buffer wait in deleteBuffer would be redundant here.
+	size_t live = 0;
+	VkDeviceSize bytes = 0;
+	for(auto& entry : vkmeshbuffers) {
+		if(entry.second->buffer != VK_NULL_HANDLE) {
+			live++;
+			bytes += entry.second->size;
+		}
+		gvkDestroyMeshBuffer(*vkcontext, *entry.second);
+		delete entry.second;
+	}
+	// Whatever is still here at shutdown was never released by its gVbo. That is not
+	// an error - the engine tears objects down in its own order - but the count is
+	// what tells you the buffer path ran at all, and how much it was holding.
+	gLogi("gVKRenderEngine") << "Mesh buffers released at shutdown: " << live
+			<< " (" << bytes << " bytes), across " << vkvertexarrays.size() << " vertex arrays";
+	if(identityinstancebuffer != nullptr) {
+		gvkDestroyMeshBuffer(*vkcontext, *identityinstancebuffer);
+		delete identityinstancebuffer;
+		identityinstancebuffer = nullptr;
+	}
+	vkmeshbuffers.clear();
+	vkvertexarrays.clear();
+	boundvaoid = 0;
+	boundarraybufferid = 0;
+	boundelementbufferid = 0;
 #endif
 }
 

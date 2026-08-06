@@ -10,8 +10,10 @@
 #ifdef GVK_DESKTOP_GLFW
 
 #include "gVKSwapchain.h"
+#include "gVKBuffer.h"
 #include "gUtils.h"
 #include <GLFW/glfw3.h>
+#include <cstring>
 
 bool gvkBeginFrame(gVKContext& ctx, GLFWwindow* window) {
 	if(ctx.device == VK_NULL_HANDLE || ctx.swapchain == VK_NULL_HANDLE || window == nullptr) {
@@ -81,6 +83,12 @@ bool gvkBeginFrame(gVKContext& ctx, GLFWwindow* window) {
 
 bool gvkEnsureRenderPass(gVKContext& ctx) {
 	if(!ctx.frameactive) return false;
+	// The shadow pass is open, which means this is the depth pass and whatever is
+	// asking to draw belongs to the screen pass - 2D overlays, mostly, since the
+	// canvas draws itself whole in both passes. Refusing here is what keeps them
+	// out of the shadow map; the mesh path has its own branch and never gets this
+	// far.
+	if(ctx.shadowpassactive) return false;
 	if(ctx.renderpassactive) return true;
 
 	VkCommandBuffer commandbuffer = ctx.commandbuffers[ctx.currentframe];
@@ -91,10 +99,15 @@ bool gvkEnsureRenderPass(gVKContext& ctx) {
 	renderpassinfo.framebuffer = ctx.framebuffers[ctx.currentimageindex];
 	renderpassinfo.renderArea.offset = {0, 0};
 	renderpassinfo.renderArea.extent = ctx.swapchainextent;
-	// The attachment uses a CLEAR load operation, so this is the value that ends up
-	// covering the screen wherever nothing is drawn.
-	renderpassinfo.clearValueCount = 1;
-	renderpassinfo.pClearValues = &ctx.clearvalue;
+	// Both attachments use a CLEAR load operation, and the array is indexed by
+	// attachment number, so entry 0 is the colour the screen ends up showing
+	// wherever nothing is drawn and entry 1 is the depth the buffer starts at.
+	// 1.0 is the far plane, so any fragment passes the default VK_COMPARE_OP_LESS.
+	VkClearValue clearvalues[2];
+	clearvalues[0] = ctx.clearvalue;
+	clearvalues[1].depthStencil = {1.0f, 0};
+	renderpassinfo.clearValueCount = 2;
+	renderpassinfo.pClearValues = clearvalues;
 	vkCmdBeginRenderPass(commandbuffer, &renderpassinfo, VK_SUBPASS_CONTENTS_INLINE);
 
 	// A negative-height viewport flips Y, so the orthographic projection the engine
@@ -127,6 +140,53 @@ bool gvkEndFrame(gVKContext& ctx, GLFWwindow* window) {
 	VkCommandBuffer commandbuffer = ctx.commandbuffers[ctx.currentframe];
 	vkCmdEndRenderPass(commandbuffer);
 	ctx.renderpassactive = false;
+
+	// Screenshot readback, ported from Mehmet's branch and adapted: his frame loop
+	// uses Dynamic Rendering and has to raise the present barrier itself, while the
+	// render pass here already leaves the image in PRESENT_SRC_KHR through its
+	// finalLayout. So the copy takes the image out of that layout and puts it back,
+	// rather than sitting between the attachment write and the present transition.
+	VkBuffer screenshotbuffer = VK_NULL_HANDLE;
+	VkDeviceMemory screenshotmemory = VK_NULL_HANDLE;
+	const VkDeviceSize screenshotsize = static_cast<VkDeviceSize>(ctx.swapchainextent.width)
+			* ctx.swapchainextent.height * 4;
+	const bool capturescreenshot = ctx.screenshotrequested
+			&& (ctx.surfacecapabilities.supportedUsageFlags & VK_IMAGE_USAGE_TRANSFER_SRC_BIT) != 0
+			&& gvkCreateBuffer(ctx, screenshotsize, VK_BUFFER_USAGE_TRANSFER_DST_BIT,
+					VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
+					screenshotbuffer, screenshotmemory);
+	if(capturescreenshot) {
+		VkImageMemoryBarrier barrier{};
+		barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
+		barrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+		barrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+		barrier.image = ctx.swapchainimages[ctx.currentimageindex];
+		barrier.subresourceRange = {VK_IMAGE_ASPECT_COLOR_BIT, 0, 1, 0, 1};
+
+		barrier.srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+		barrier.dstAccessMask = VK_ACCESS_TRANSFER_READ_BIT;
+		barrier.oldLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+		barrier.newLayout = VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL;
+		vkCmdPipelineBarrier(commandbuffer, VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
+				VK_PIPELINE_STAGE_TRANSFER_BIT, 0, 0, nullptr, 0, nullptr, 1, &barrier);
+
+		VkBufferImageCopy copyregion{};
+		copyregion.imageSubresource = {VK_IMAGE_ASPECT_COLOR_BIT, 0, 0, 1};
+		copyregion.imageExtent = {ctx.swapchainextent.width, ctx.swapchainextent.height, 1};
+		vkCmdCopyImageToBuffer(commandbuffer, ctx.swapchainimages[ctx.currentimageindex],
+				VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, screenshotbuffer, 1, &copyregion);
+
+		// Back to what the render pass left, so presenting stays valid.
+		barrier.srcAccessMask = VK_ACCESS_TRANSFER_READ_BIT;
+		barrier.dstAccessMask = 0;
+		barrier.oldLayout = VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL;
+		barrier.newLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+		vkCmdPipelineBarrier(commandbuffer, VK_PIPELINE_STAGE_TRANSFER_BIT,
+				VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, 0, 0, nullptr, 0, nullptr, 1, &barrier);
+	} else if(ctx.screenshotrequested) {
+		ctx.screenshotrequested = false;
+		gLoge("gVKFrame") << "Could not allocate the screenshot readback buffer.";
+	}
 	VkResult result = vkEndCommandBuffer(commandbuffer);
 	if(result != VK_SUCCESS) {
 		gLoge("gVKFrame") << "vkEndCommandBuffer failed! VkResult: " << result;
@@ -155,6 +215,24 @@ bool gvkEndFrame(gVKContext& ctx, GLFWwindow* window) {
 	if(result != VK_SUCCESS) {
 		gLoge("gVKFrame") << "vkQueueSubmit failed! VkResult: " << result;
 		return false;
+	}
+	if(capturescreenshot) {
+		vkWaitForFences(ctx.device, 1, &ctx.inflightfences[ctx.currentframe], VK_TRUE, UINT64_MAX);
+		void* mapped = nullptr;
+		if(vkMapMemory(ctx.device, screenshotmemory, 0, screenshotsize, 0, &mapped) == VK_SUCCESS) {
+			ctx.screenshotpixels.resize(static_cast<size_t>(screenshotsize));
+			std::memcpy(ctx.screenshotpixels.data(), mapped, static_cast<size_t>(screenshotsize));
+			vkUnmapMemory(ctx.device, screenshotmemory);
+			ctx.screenshotwidth = ctx.swapchainextent.width;
+			ctx.screenshotheight = ctx.swapchainextent.height;
+			ctx.screenshotformat = ctx.swapchainformat;
+			ctx.screenshotready = true;
+		} else {
+			gLoge("gVKFrame") << "Could not map the screenshot readback buffer.";
+		}
+		ctx.screenshotrequested = false;
+		vkDestroyBuffer(ctx.device, screenshotbuffer, nullptr);
+		vkFreeMemory(ctx.device, screenshotmemory, nullptr);
 	}
 
 	VkPresentInfoKHR presentinfo{};

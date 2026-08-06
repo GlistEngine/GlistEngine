@@ -25,11 +25,29 @@ struct gVKTexture {
 	VkDescriptorSet descriptorset = VK_NULL_HANDLE;
 	int width = 0;
 	int height = 0;
+	// Levels in the mip chain, 1 meaning no chain. Built at upload time, the same
+	// way the OpenGL path calls glGenerateMipmap after its upload.
+	uint32_t miplevels = 1;
+	// Tracked so a render target can be moved between being written as an
+	// attachment and being sampled. An uploaded texture never leaves
+	// SHADER_READ_ONLY, which is why that is the default.
+	VkImageLayout layout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+	VkImageAspectFlags aspect = VK_IMAGE_ASPECT_COLOR_BIT;
+	VkFormat format = VK_FORMAT_R8G8B8A8_UNORM;
+	// True for a texture created as an FBO attachment rather than uploaded from
+	// pixels. Those carry no mip chain and are cleared by the render pass.
+	bool isattachment = false;
 	// What the current sampler was built with, so a filtering or wrapping change
 	// can be detected and only then rebuild it. The defaults match what gTexture
 	// starts from.
 	VkFilter minfilter = VK_FILTER_LINEAR;
 	VkFilter magfilter = VK_FILTER_LINEAR;
+	// Whether the sampler may walk the mip chain at all. OpenGL says so through the
+	// minification filter: GL_LINEAR samples level 0 only, GL_LINEAR_MIPMAP_LINEAR
+	// is trilinear. Collapsing both onto "always mip" softened textures the
+	// application had asked to be sampled flat.
+	bool usemipmaps = true;
+	VkSamplerMipmapMode mipmapmode = VK_SAMPLER_MIPMAP_MODE_LINEAR;
 	VkSamplerAddressMode addressu = VK_SAMPLER_ADDRESS_MODE_REPEAT;
 	VkSamplerAddressMode addressv = VK_SAMPLER_ADDRESS_MODE_REPEAT;
 };
@@ -49,7 +67,14 @@ bool gvkWriteTextureDescriptorSet(gVKContext& ctx, gVKTexture* tex);
 // how gTexture::setFiltering / setWrapping reach Vulkan. Returns false when nothing
 // had to change.
 bool gvkSetTextureSampler(gVKContext& ctx, gVKTexture* tex, VkFilter minFilter, VkFilter magFilter,
-		VkSamplerAddressMode addressU, VkSamplerAddressMode addressV);
+		VkSamplerAddressMode addressU, VkSamplerAddressMode addressV,
+		bool useMipmaps = true, VkSamplerMipmapMode mipmapMode = VK_SAMPLER_MIPMAP_MODE_LINEAR);
+
+// Creates an empty texture to be rendered into, for gFbo's colour and depth
+// attachments. Unlike an uploaded texture this carries no pixels and no mip chain:
+// the render pass clears it, the draws fill it, and it is transitioned back to
+// SHADER_READ_ONLY afterwards so the same object can be sampled.
+gVKTexture* gvkCreateAttachmentTexture(gVKContext& ctx, int width, int height, bool depth);
 
 void gvkDestroyTexture(gVKContext& ctx, gVKTexture* tex);
 

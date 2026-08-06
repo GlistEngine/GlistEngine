@@ -15,6 +15,24 @@
 // still compiles on platforms that have no Vulkan headers.
 struct gVKContext;
 struct gVKTexture;
+struct gVKFramebuffer;
+struct gVKMeshBuffer;
+
+// What a vertex array id stands for: the pair of buffer ids that were bound while
+// it was current, 0 meaning nothing was bound. Vulkan has no vertex array object,
+// but gVbo binds one around every upload and every draw, so remembering the pairing
+// is what lets a draw find the buffers it is about. Defined here rather than in
+// gVKMeshBuffer.h because it holds no Vulkan types and so needs no Vulkan headers.
+struct gVKVertexArray {
+	GLuint vertexbuffer = 0;
+	GLuint indexbuffer = 0;
+	// A vertex array that is drawn instanced has a second array buffer holding one
+	// model matrix per instance. gVbo uploads it through the same entry points as
+	// the vertex data, so the backend tells them apart by order: the first array
+	// buffer a vertex array sees is its vertices, a later different one is the
+	// instance data. setVertexAttribDivisor confirms it.
+	GLuint instancebuffer = 0;
+};
 
 class gVKRenderEngine : public gRenderer {
 public:
@@ -27,6 +45,11 @@ public:
 	void clear() override;
 	void clearColor(int r, int g, int b, int a = 255) override;
 	void clearColor(gColor color) override;
+
+	// Takes the camera's OpenGL-style projection and stores the Vulkan equivalent.
+	// See gVKRenderEngine.cpp for what the correction is and why the Y axis is not
+	// part of it.
+	void setProjectionMatrix(glm::mat4 projectionMatrix) override;
 
 	void takeScreenshot(gImage& img, int x, int y, int width, int height) override;
 	void takeScreenshot(gImage& img) override;
@@ -199,6 +222,20 @@ public:
 	// Records a textured quad using the registered Vulkan texture for textureId
 	// (the Vulkan side of gImage / gTexture::draw and drawSub). No-op if the id is
 	// unknown. An unknown mask id draws unmasked rather than dropping the image.
+	void drawMesh3D(GLuint vertexArrayId, int vertexCount, int indexCount,
+			const glm::mat4& model, const gMeshSurface& surface,
+			int drawMode = GL_TRIANGLES, int instanceCount = 1) override;
+
+	bool drawSkyboxFace(GLuint textureId, const float* xyzuv, int vertexCount,
+			const glm::mat4& viewProjection) override;
+
+	bool allocateShadowMap(int width, int height) override;
+	void releaseShadowMap() override;
+	bool beginShadowPass() override;
+	void endShadowPass() override;
+	void setShadowMapState(bool enabled, const glm::mat4& lightMatrix,
+			const glm::vec3& lightPosition, bool softShadows) override;
+
 	void drawTexturedRect2D(GLuint textureId, GLuint maskTextureId, const glm::vec4& tint,
 			const glm::mat4& mvp,
 			const glm::vec2& uvOffset = glm::vec2(0.0f), const glm::vec2& uvScale = glm::vec2(1.0f)) override;
@@ -240,10 +277,72 @@ private:
 	std::unordered_map<GLuint, gVKTexture*> vktextures;
 	GLuint nextvktextureid = 1;
 	GLuint boundtextureid = 0;
-	// Synthetic vertex array ids. gVbo asserts that its VAO is not GL_NONE before
-	// binding, so every gMesh needs a unique non-zero id even though Vulkan has no
-	// such object.
+	// Offscreen render targets, one per gFbo. Each owns a render pass and a
+	// framebuffer of its own, the same shape the shadow map already uses, because
+	// this backend renders through render passes rather than dynamic rendering.
+	std::unordered_map<GLuint, gVKFramebuffer*> vkframebuffers;
+	GLuint nextvkframebufferid = 1;
+	// Renderbuffers have no Vulkan counterpart: gFbo is steered onto a sampleable
+	// depth texture instead, so these ids only have to be unique and non-zero.
+	GLuint nextvkrenderbufferid = 1;
+	// Ends whatever offscreen pass is open and hands its attachments back to the
+	// shader as sampleable textures. Safe to call when none is open.
+	void endOffscreenPass();
+	void destroyAllFramebuffers();
+	// Builds a target's render pass and framebuffer on first use.
+	bool ensureFramebufferPass(gVKFramebuffer* target);
+	// Vertex array ids. Vulkan has no such object, but gVbo binds one before every
+	// upload and every draw, so the id is what tells the backend which pair of
+	// buffers a draw is about. See gVKMeshBuffer.h.
+	std::unordered_map<GLuint, gVKVertexArray> vkvertexarrays;
 	GLuint nextvkvaoid = 1;
+	GLuint boundvaoid = 0;
+
+	// Registry backing the GLuint buffer names gVbo hands out. genBuffers mints an
+	// id, setVertexBufferData / setIndexBufferData fill it, deleteBuffer frees it.
+	// boundarraybufferid mirrors the OpenGL bind state, which is what lets a vertex
+	// array learn which buffer belongs to it.
+	std::unordered_map<GLuint, gVKMeshBuffer*> vkmeshbuffers;
+	GLuint nextvkbufferid = 1;
+	GLuint boundarraybufferid = 0;
+	GLuint boundelementbufferid = 0;
+
+	// Fetches the buffer behind an id, or null if the id was never minted. Uploading
+	// creates the VkBuffer lazily, so the entry can exist while its handle is still
+	// VK_NULL_HANDLE.
+	gVKMeshBuffer* getMeshBuffer(GLuint id);
+	void destroyAllMeshBuffers();
+
+	// A 1x1 white texture bound wherever a mesh has no map of that kind. The 3D
+	// shader samples its map bindings unconditionally from Vulkan's point of view -
+	// the "use this map" flag only decides what happens to the result - so every
+	// binding has to point at something valid. White is the identity for the
+	// multiply that follows, which keeps an unmapped material's colours untouched.
+	GLuint whitetextureid = 0;
+	bool ensureWhiteTexture();
+
+	// One identity matrix, bound as the instance buffer of a draw that is not
+	// instanced. The 3D shader always reads a per-instance model matrix, so this is
+	// what lets a single pipeline and a single shader serve both kinds of draw:
+	// multiplying by the identity leaves the mesh where its own model matrix put it.
+	gVKMeshBuffer* identityinstancebuffer = nullptr;
+	bool ensureIdentityInstanceBuffer();
+
+	// What gShadowMap last told the backend. Fed into the scene uniform block, and
+	// into the depth pass's push constant while the shadow pass is being recorded.
+	bool shadowmapenabled = false;
+	bool shadowsoft = false;
+	glm::mat4 shadowlightmatrix{1.0f};
+	glm::vec3 shadowlightposition{0.0f};
+
+
+	// Fills the frame's scene uniform block from the renderer's camera and lights.
+	// Declared unconditionally: this header does not pull in the Vulkan guard, and
+	// the definition is what is compiled out on a build without Vulkan.
+	void updateSceneUniforms();
+	// Whether this frame's scene block has been written yet. Reset in beginFrame, so
+	// the camera and lights are gathered once per frame instead of once per mesh.
+	bool sceneuniformswritten = false;
 	void destroyAllTextures();
 	// The Vulkan texture behind the currently bound id, or null when there is none
 	// yet - gTexture sets filtering and wrapping both before and after the upload.
