@@ -17,8 +17,10 @@ public:
 
 	void draw(float px, float py, float qx, float qy, float rx, float ry, bool is_filled);
 
+	void draw(float px, float py, float qx, float qy, float rx, float ry, bool is_filled, float rotateAngle, float pivotx = 0.5f, float pivoty = 0.5f);
+
 private:
-	void setPoints(float px, float py, float qx, float qy, float rx, float ry, bool is_filled);
+	void setPoints(float px, float py, float qx, float qy, float rx, float ry, bool is_filled, float rotateAngle = 0.0f, float pivotx = 0.5f, float pivoty = 0.5f);
 
 	std::vector<gVertex> vertices;
 	std::vector<gIndex> indices;

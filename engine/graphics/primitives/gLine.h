@@ -30,22 +30,22 @@
 class gLine: public gMesh {
 public:
 	gLine();
-	gLine(float x1, float y1, float x2, float y2);
-	gLine(float x1, float y1, float z1, float x2, float y2, float z2);
+	gLine(float x1, float y1, float x2, float y2, float rotateAngle = 0.0f, float pivotx = 0.5f, float pivoty = 0.5f);
+	gLine(float x1, float y1, float z1, float x2, float y2, float z2, float rotateAngle = 0.0f, float pivotx = 0.5f, float pivoty = 0.5f);
 
-	void setPoints(float x1, float y1, float x2, float y2);
-	void setPoints(float x1, float y1, float z1, float x2, float y2, float z2);
+	void setPoints(float x1, float y1, float x2, float y2, float rotateAngle = 0.0f, float pivotx = 0.5f, float pivoty = 0.5f);
+	void setPoints(float x1, float y1, float z1, float x2, float y2, float z2, float rotateAngle, float pivotx, float pivoty);
 
-	void draw();
-	void draw(float x1, float y1, float x2, float y2);
-	void draw(float x1, float y1, float z1, float x2, float y2, float z2);
+	void draw() override;
+	void draw(float x1, float y1, float x2, float y2, float rotateAngle = 0.0f, float pivotx = 0.5f, float pivoty = 0.5f);
+	void draw(float x1, float y1, float z1, float x2, float y2, float z2, float rotateAngle, float pivotx, float pivoty);
 
 	void setThickness(float thickness);
 
 private:
 	std::vector<gVertex> verticessb;
 	std::vector<gIndex> indicessb;
-	void setLinePoints(float x1, float y1, float z1, float x2, float y2, float z2);
+	void setLinePoints(float x1, float y1, float z1, float x2, float y2, float z2, float rotateAngle = 0.0f, float pivotx = 0.5f, float pivoty = 0.5f);
 	gVertex vertex1, vertex2;
 	float thickness;
 

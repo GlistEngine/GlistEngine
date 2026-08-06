@@ -1,5 +1,5 @@
 /*
- * gRenderManager.h
+ * gRenderer.h
  *
  *  Created on: 4 Ara 2020
  *      Author: Acer
@@ -79,15 +79,19 @@ int gGetCullFace();
 void gSetCullingDirection(int cullingDirection);
 int gGetCullingDirection();
 
-void gDrawLine(float x1, float y1, float x2, float y2, float thickness = 1.0f);
+// --- 2D / 3D Line Overloads (Ambiguous hatasýný önlemek için ayrýþtýrýldý) ---
+void gDrawLine(float x1, float y1, float x2, float y2);
+void gDrawLine(float x1, float y1, float x2, float y2, float thickness);
 void gDrawLine(float x1, float y1, float z1, float x2, float y2, float z2, float thickness = 1.0f);
-void gDrawTriangle(float px, float py, float qx, float qy, float rx, float ry, bool is_filled = true);
-void gDrawCircle(float xCenter, float yCenter, float radius, bool isFilled = false, float numberOfSides = 64.0f);
-void gDrawCross(float x, float y, float width, float height, float thickness, bool isFilled);
-void gDrawArc(float xCenter, float yCenter, float radius, bool isFilled = true, int numberOfSides = 60, float degree = 360.0f, float rotate = 360.0f);
-void gDrawArrow(float x1, float y1, float length, float angle, float tipLength, float tipAngle, float thickness = 1.0f);
-void gDrawRectangle(float x, float y, float w, float h, bool isFilled = false, float rotateAngle = 0.0f);
-void gDrawRoundedRectangle(float x, float y, float w, float h, int radius, bool isFilled);
+void gDrawLine(float x1, float y1, float x2, float y2, float thickness, float rotateAngle, float pivotx, float pivoty);
+
+void gDrawTriangle(float px, float py, float qx, float qy, float rx, float ry, bool is_filled = true, float rotateAngle = 0.0f, float pivotx = 0.5f, float pivoty = 0.5f);
+void gDrawCircle(float xCenter, float yCenter, float radius, bool isFilled = false, float numberOfSides = 64.0f, float rotateAngle = 0.0f, float pivotx = 0.5f, float pivoty = 0.5f);
+void gDrawCross(float x, float y, float width, float height, float thickness, bool isFilled, float rotateAngle = 0.0f, float pivotx = 0.5f, float pivoty = 0.5f);
+void gDrawArc(float xCenter, float yCenter, float radius, bool isFilled = true, int numberOfSides = 60, float degree = 360.0f, float rotate = 360.0f, float rotateAngle = 0.0f, float pivotx = 0.5f, float pivoty = 0.5f);
+void gDrawArrow(float x1, float y1, float length, float angle, float tipLength, float tipAngle, float thickness = 1.0f, float rotateAngle = 0.0f, float pivotx = 0.5f, float pivoty = 0.5f);
+void gDrawRectangle(float x, float y, float w, float h, bool isFilled = false, float rotateAngle = 0.0f, float pivotx = 0.5f, float pivoty = 0.5f);
+void gDrawRoundedRectangle(float x, float y, float w, float h, int radius, bool isFilled, float rotateAngle = 0.0f, float pivotx = 0.5f, float pivoty = 0.5f);
 void gDrawBox(float x, float y, float z, float w = 1.0f, float h = 1.0f, float d = 1.0f, bool isFilled = true);
 void gDrawBox(glm::mat4 transformationMatrix, bool isFilled = true);
 void gDrawSphere(float xPos, float yPos, float zPos, glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f), int xSegmentNum = 64, int ySegmentNum = 32, bool isFilled = true);
@@ -122,6 +126,7 @@ class gArc;
 class gRectangle;
 class gRoundedRectangle;
 class gBox;
+//class gArrow;
 
 class gRenderer : public gObject {
 public:
@@ -146,8 +151,6 @@ public:
 
 	struct alignas(16) gSceneLights {
 		alignas(4) int lightnum = 0;
-		// bitwise enabled lights, 1 means enabled, 0 means disabled, 32-bit integer
-		// supports only 32 max lights, make sure to change this if max lights is changed to be something above 32
 		alignas(4) int enabledlights;
 		alignas(16) glm::vec4 globalambientcolor;
 		gSceneLightData lights[GLIST_MAX_LIGHTS];
@@ -248,35 +251,15 @@ public:
 	void setColor(gColor* color);
 	gColor* getColor();
 
-	/*
-	 * Backends that have to bracket a frame explicitly, like Vulkan, prepare it in
-	 * beginFrame and submit and present it in endFrame. A false return means the
-	 * frame has to be skipped, for example while the swapchain is rebuilt after a
-	 * resize; endFrame must not be called in that case. OpenGL draws immediately
-	 * and needs neither, so both are no-ops there.
-	 */
 	virtual bool beginFrame() { return true; }
 	virtual void endFrame() {}
 
-	// Which backend this renderer is (G_RENDERER_GL / G_RENDERER_VK). Set by
-	// gRenderObject::createRenderer.
 	int getRenderEngineType() const { return renderenginetype; }
 	bool isVulkan() const { return renderenginetype == G_RENDERER_VK; }
 
-	// Backend hook for the 2D coloured primitives. OpenGL draws these through the
-	// mesh path and leaves this a no-op; the Vulkan backend overrides it to record
-	// into the active frame. points holds `count` 2D screen positions connected as
-	// drawMode says (a gMesh::DRAWMODE_* value, that is a GL primitive constant),
-	// and colour components are 0..1.
 	virtual void drawColored2D(const glm::vec2* points, int count, const glm::vec4& color, const glm::mat4& mvp,
 			int drawMode = GL_TRIANGLES) {}
 
-	// Backend hook for a textured 2D quad (gImage / gTexture). OpenGL draws through
-	// its image shader and leaves this a no-op; Vulkan looks the texture id up in
-	// its registry and records a textured unit quad. tint components are 0..1; mvp
-	// is projection2d * the image model matrix. uvOffset / uvScale select the part
-	// of the texture to sample, covering all of it by default. maskTextureId is an
-	// alpha mask sampled with the same coordinates, or 0 for an unmasked draw.
 	virtual void drawTexturedRect2D(GLuint textureId, GLuint maskTextureId, const glm::vec4& tint,
 			const glm::mat4& mvp,
 			const glm::vec2& uvOffset = glm::vec2(0.0f), const glm::vec2& uvScale = glm::vec2(1.0f)) {}
@@ -318,8 +301,6 @@ public:
 	float getFogLinearStart() const;
 	float getFogLinearEnd() const;
 
-	// add and remove functions are called by gLight class automatically,
-	// so you don't need to
 	void addSceneLight(gLight* light);
 	void removeSceneLight(gLight* light);
 	gLight* getSceneLight(int lightNo);
@@ -399,14 +380,7 @@ public:
 	void backupMatrices();
 	void restoreMatrices();
 
-	/*
-	 * Takes Screen Shot of the current Rendered Screen and returns it as an gImage class
-	 */
 	virtual void takeScreenshot(gImage& img) = 0;
-
-	/*
-	 * Takes Screen Shot of the part of current Rendered Screen and returns it as an gImage class
-	 */
 	virtual void takeScreenshot(gImage& img, int x, int y, int width, int height) = 0;
 
 	/* -------------- gUbo ------------- */
@@ -443,14 +417,12 @@ public:
 	virtual void setVertexAttribDivisor(int index, int divisor) = 0;
 
 	virtual void setViewport(int x, int y, int width, int height) = 0;
-	// Viewport that is currently set. Kept up to date by the render engines.
 	void getViewport(int& x, int& y, int& width, int& height) const;
 
 	/* -------------- gFbo --------------- */
 	virtual GLuint createFramebuffer() = 0;
 	virtual void deleteFramebuffer(GLuint& fbo) = 0;
 	virtual void bindFramebuffer(GLuint fbo) = 0;
-	// Framebuffer that is currently bound. Kept up to date by the render engines.
 	GLuint getBoundFramebuffer() const;
 	virtual void checkFramebufferStatus() = 0;
 
@@ -469,7 +441,6 @@ public:
 	virtual void deleteFullscreenQuad(GLuint& vao, GLuint* vbo) = 0;
 
 	/* -------------- gShader --------------- */
-	// This function loads shaders without preproccesing them. Geometry source can be nullptr.
 	virtual GLuint loadProgram(const char* vertexSource, const char* fragmentSource, const char* geometrySource) = 0;
 	virtual void checkCompileErrors(GLuint shader, const std::string& type) = 0;
 	virtual void setBool(GLuint uniformloc, bool value) = 0;
@@ -536,16 +507,19 @@ public:
 	virtual void pushMatrix() = 0;
 	virtual void popMatrix() = 0;
 
-	/* ---------------- Utilities ---------------- */
-	void drawLine(float x1, float y1, float x2, float y2, float thickness = 1.0f);
+	/* ---------------- Utilities (drawLine overloads düzenlendi) ---------------- */
+	void drawLine(float x1, float y1, float x2, float y2);
+	void drawLine(float x1, float y1, float x2, float y2, float thickness);
 	void drawLine(float x1, float y1, float z1, float x2, float y2, float z2, float thickness = 1.0f);
-	void drawTriangle(float px, float py, float qx, float qy, float rx, float ry, bool is_filled = true);
-	void drawCircle(float xCenter, float yCenter, float radius, bool isFilled = false, float numberOfSides = 64.0f);
-	void drawCross(float x, float y, float width, float height, float thickness, bool isFilled);
-	void drawArc(float xCenter, float yCenter, float radius, bool isFilled = true, int numberOfSides = 60, float degree = 360.0f, float rotate = 360.0f);
-	void drawArrow(float x1, float y1, float length, float angle, float tipLength, float tipAngle, float thickness = 1.0f);
-	void drawRectangle(float x, float y, float w, float h, bool isFilled = false, float rotateAngle = 0.0f);
-	void drawRoundedRectangle(float x, float y, float w, float h, int radius, bool isFilled);
+	void drawLine(float x1, float y1, float x2, float y2, float thickness, float rotateAngle, float pivotx, float pivoty);
+
+	void drawTriangle(float px, float py, float qx, float qy, float rx, float ry, bool is_filled = true, float rotateAngle = 0.0f, float pivotx = 0.5f, float pivoty = 0.5f);
+	void drawCircle(float xCenter, float yCenter, float radius, bool isFilled = false, float numberOfSides = 64.0f, float rotateAngle = 0.0f, float pivotx = 0.5f, float pivoty = 0.5f);
+	void drawCross(float x, float y, float width, float height, float thickness, bool isFilled, float rotateAngle = 0.0f, float pivotx = 0.5f, float pivoty = 0.5f);
+	void drawArc(float xCenter, float yCenter, float radius, bool isFilled = true, int numberOfSides = 60, float degree = 360.0f, float rotate = 360.0f, float rotateAngle = 0.0f, float pivotx = 0.5f, float pivoty = 0.5f);
+	void drawArrow(float x1, float y1, float length, float angle, float tipLength, float tipAngle, float thickness = 1.0f, float rotateAngle = 0.0f, float pivotx = 0.5f, float pivoty = 0.5f);
+	void drawRectangle(float x, float y, float w, float h, bool isFilled = false, float rotateAngle = 0.0f, float pivotx = 0.5f, float pivoty = 0.5f);
+	void drawRoundedRectangle(float x, float y, float w, float h, int radius, bool isFilled, float rotateAngle = 0.0f, float pivotx = 0.5f, float pivoty = 0.5f);
 	void drawBox(float x, float y, float z, float w = 1.0f, float h = 1.0f, float d = 1.0f, bool isFilled = true);
 	void drawBox(glm::mat4 transformationMatrix, bool isFilled = true);
 	void drawSphere(float xPos, float yPos, float zPos, glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f), int xSegmentNum = 64, int ySegmentNum = 32, bool isFilled = true);
@@ -563,7 +537,7 @@ public:
 	void drawTubeObliqueTrapezodial(float x, float y, float z, int topouterradius,int topinnerradious, int buttomouterradious, int buttominnerradious, int h, glm::vec2 shiftdistance, glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f), int segmentnum = 32, bool isFilled = true);
 
 protected:
-	friend class gRenderObject; // this is where renderer->init() is called from
+	friend class gRenderObject;
 	friend class gAppManager;
 
 	static int width, height;
@@ -573,7 +547,6 @@ protected:
 
 	gColor* rendercolor = nullptr;
 
-	// G_RENDERER_GL or G_RENDERER_VK; assigned by gRenderObject::createRenderer.
 	int renderenginetype = G_RENDERER_GL;
 
 	bool isfogenabled;
@@ -586,8 +559,6 @@ protected:
 	float foglinearend;
 
 	std::deque<gLight*> scenelights;
-	// Allocated only by gRenderer::init(), which the Vulkan backend skips, so they
-	// stay null there; updateScene()/updateLights() bail out under Vulkan.
 	gUbo<gSceneLights>* lightsubo = nullptr;
 	gUbo<gSceneData>* sceneubo = nullptr;
 	bool islightingenabled;
@@ -653,7 +624,6 @@ protected:
 	unsigned int fullscreenquadvao;
 	unsigned int fullscreenquadvbo;
 
-	// std::unique_ptr is automatically deletes the underlying object when this gRenderer object is deleted
 	std::unique_ptr<gLine> linemesh, linemesh2, linemesh3;
 	std::unique_ptr<gTriangle> trianglemesh;
 	std::unique_ptr<gCircle> circlemesh;
@@ -662,15 +632,12 @@ protected:
 	std::unique_ptr<gRectangle> rectanglemesh;
 	std::unique_ptr<gRoundedRectangle> roundedrectanglemesh;
 	std::unique_ptr<gBox> boxmesh;
+	//std::unique_ptr<gArrow> arrowmesh;
 
 	virtual void init();
 	virtual void cleanup();
 	virtual void updatePackUnpackAlignment(int i) = 0;
 
-	// The primitive meshes above are what drawLine / drawCircle / drawRectangle and
-	// friends draw through. They hold no backend objects of their own until they are
-	// drawn, so both backends create them the same way - the Vulkan backend needs
-	// them too, and it skips init().
 	void createPrimitiveMeshes();
 	void destroyPrimitiveMeshes();
 
@@ -701,8 +668,6 @@ protected:
 	static const std::string& getShaderSrcSSAOVertex();
 	static const std::string& getShaderSrcSSAOFragment();
 	static const std::string& getShaderSrcSSAOBlurFragment();
-
-
 };
 
 #endif /* CORE_GRENDERER_H_ */
