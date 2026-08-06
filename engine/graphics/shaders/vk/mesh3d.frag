@@ -50,6 +50,7 @@ layout(set = 0, binding = 0) uniform Scene {
     mat4 lightmatrix;
     vec4 viewpos;
     vec4 globalambientcolor;
+    vec4 rendercolor;
     // xyz the shadow-casting light's position, w whether a shadow map is bound.
     vec4 shadowlightpos;
     int lightnum;
@@ -283,8 +284,13 @@ void main() {
         result = scene.globalambientcolor * matAmbient;
     }
 
-    // No renderColor factor here, unlike color_frag.glsl: measured against the
-    // OpenGL backend a mesh comes out as its material colour alone, because setColor
-    // moves the 2D drawing colour and never reaches a mesh there.
-    outColor = result * vec4(vColor, 1.0);
+    // color_frag.glsl ends with "result * renderColor * vec4(incolor, 1.0)", so a
+    // mesh on the OpenGL path is tinted by whatever colour setColor was last given -
+    // text included. This file used to leave the factor out on the belief that it
+    // never reached a mesh; measured, it does, and its absence was the entire colour
+    // difference between the two backends.
+    //
+    // Only here, not in mesh3dpbr.frag: pbr_frag.glsl does not apply it either, so
+    // the two backends agree on PBR meshes by both leaving it alone.
+    outColor = result * scene.rendercolor * vec4(vColor, 1.0);
 }

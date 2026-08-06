@@ -1930,6 +1930,10 @@ void gVKRenderEngine::updateSceneUniforms() {
 	uniforms.view = viewmatrix;
 	uniforms.viewpos = glm::vec4(cameraposition, 1.0f);
 	uniforms.globalambientcolor = globalambientcolor.asVec4();
+	// See gVKSceneUniforms::rendercolor: the OpenGL colour shader multiplies every
+	// mesh by this, so leaving it out was the whole of the colour difference between
+	// the two backends in a scene that drew text before its geometry.
+	uniforms.rendercolor = rendercolor != nullptr ? rendercolor->asVec4() : glm::vec4(1.0f);
 
 	// The w component doubles as the "is a shadow map bound" flag the shader tests,
 	// which keeps it out of the integer block below and its padding rules.

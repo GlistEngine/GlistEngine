@@ -37,6 +37,7 @@ layout(set = 0, binding = 0) uniform Scene {
     mat4 lightmatrix;
     vec4 viewpos;
     vec4 globalambientcolor;
+    vec4 rendercolor;
     // xyz the shadow-casting light's position, w whether a shadow map is bound.
     vec4 shadowlightpos;
     int lightnum;

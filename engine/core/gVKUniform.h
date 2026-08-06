@@ -65,6 +65,15 @@ struct alignas(16) gVKSceneUniforms {
 	alignas(16) glm::mat4 lightmatrix;
 	alignas(16) glm::vec4 viewpos;
 	alignas(16) glm::vec4 globalambientcolor;
+	// The renderer's current draw colour. color_frag.glsl ends with
+	// "result * renderColor", so a mesh on the OpenGL path is tinted by whatever
+	// setColor was last given - including a colour left over from drawing text.
+	// Matched here rather than left out, because OpenGL is the reference this port
+	// is measured against. One difference remains and is not worth a per-draw push
+	// constant: OpenGL refreshes it inside setColor, while this block is written
+	// once per frame, so a colour changed between two mesh draws lands on the next
+	// frame rather than immediately.
+	alignas(16) glm::vec4 rendercolor;
 	// xyz is the shadow-casting light's position, which the depth bias is computed
 	// from; w is 0 or 1 for whether a shadow map is bound at all.
 	alignas(16) glm::vec4 shadowlightpos;
