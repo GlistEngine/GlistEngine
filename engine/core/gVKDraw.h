@@ -125,6 +125,16 @@ void gvkDrawMesh3DPbr(gVKContext& ctx, VkBuffer vertexBuffer, VkBuffer indexBuff
 		VkPrimitiveTopology topology, bool depthTest, bool depthTestAlways,
 		const gVKCullState& culling, bool blending);
 
+// Records one face of the skybox: a quad list in world space, sampled from a plain
+// 2D texture rather than a cube map. xyzuv holds five floats per vertex, three of
+// position and two of texture coordinate, and goes through the per-frame dynamic
+// ring because the quads are rebuilt around the camera every frame.
+//
+// depthCompare is the renderer's current depth function, so gSkybox can ask for the
+// same EQUAL test the OpenGL path uses to keep the sky behind everything else.
+void gvkDrawSkyboxFace(gVKContext& ctx, VkDescriptorSet faceSet, const float* xyzuv,
+		int vertexCount, const glm::mat4& viewProjection, VkCompareOp depthCompare);
+
 #endif /* GVK_DESKTOP_GLFW */
 
 #endif /* CORE_GVKDRAW_H */

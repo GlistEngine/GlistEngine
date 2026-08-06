@@ -906,7 +906,10 @@ void gVKRenderEngine::generateSkyMipMap() {
 }
 
 void gVKRenderEngine::enableDepthTestEqual() {
-	G_CHECK_GL(glDepthFunc(GL_LEQUAL));
+	// Was a raw glDepthFunc call, which has no meaning with no OpenGL context. The
+	// only caller is gSkybox, and the depth compare it wants is applied where it
+	// belongs on this backend: drawSkyboxFace sets LESS_OR_EQUAL on the command
+	// buffer, because the sky pipeline declares that state dynamic.
 }
 
 void gVKRenderEngine::createQuad(GLuint& inQuadVAO, GLuint& inQuadVBO) {
@@ -2034,6 +2037,28 @@ static VkDescriptorSet gvkGetPbrMaterialSet(gVKContext* vkcontext,
 	return set;
 }
 #endif
+
+bool gVKRenderEngine::drawSkyboxFace(GLuint textureId, const float* xyzuv, int vertexCount,
+		const glm::mat4& viewProjection) {
+#ifdef GVK_DESKTOP_GLFW
+	if(vkcontext == nullptr || textureId == 0 || xyzuv == nullptr || vertexCount <= 0) return false;
+	// The sky is not a caster. Drawing it into the depth map would put a wall at the
+	// far edge of the light's frustum and shadow the whole scene.
+	if(vkcontext->isShadowPassActive()) return true;
+
+	auto it = vktextures.find(textureId);
+	if(it == vktextures.end() || it->second == nullptr) return false;
+
+	// LESS_OR_EQUAL rather than LESS: the sky is drawn at the far plane and has to
+	// survive a depth value equal to what is already there, which is the same reason
+	// the OpenGL path switches to GL_LEQUAL for it.
+	gvkDrawSkyboxFace(*vkcontext, it->second->descriptorset, xyzuv, vertexCount,
+			viewProjection, VK_COMPARE_OP_LESS_OR_EQUAL);
+	return true;
+#else
+	return false;
+#endif
+}
 
 bool gVKRenderEngine::allocateShadowMap(int width, int height) {
 #ifdef GVK_DESKTOP_GLFW

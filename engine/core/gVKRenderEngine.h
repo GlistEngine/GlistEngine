@@ -225,6 +225,9 @@ public:
 			const glm::mat4& model, const gMeshSurface& surface,
 			int drawMode = GL_TRIANGLES, int instanceCount = 1) override;
 
+	bool drawSkyboxFace(GLuint textureId, const float* xyzuv, int vertexCount,
+			const glm::mat4& viewProjection) override;
+
 	bool allocateShadowMap(int width, int height) override;
 	void releaseShadowMap() override;
 	bool beginShadowPass() override;

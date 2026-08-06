@@ -33,7 +33,13 @@ gSkybox::gSkybox() {
 	setupRenderData();
 }
 
-gSkybox::~gSkybox() {}
+gSkybox::~gSkybox() {
+	if(renderer != nullptr && renderer->isVulkan()) {
+		for(unsigned int& faceid : vkfaceids) {
+			if(faceid != 0) renderer->deleteTexture(faceid);
+		}
+	}
+}
 
 unsigned int gSkybox::loadTextures(const std::vector<std::string>& paths) {
 	std::vector<std::string> fullpaths;
@@ -45,6 +51,24 @@ unsigned int gSkybox::loadTextures(const std::vector<std::string>& paths) {
 }
 
 unsigned int gSkybox::load(const std::vector<std::string>& fullPaths) {
+	// Vulkan gets six plain 2D textures instead of a cube map; see drawVulkan.
+	if(renderer->isVulkan()) {
+		for(unsigned int& faceid : vkfaceids) {
+			if(faceid != 0) renderer->deleteTexture(faceid);
+			faceid = 0;
+		}
+		for(size_t i = 0; i < std::min<size_t>(6, fullPaths.size()); i++) {
+			// Forced to three channels so every face has the layout uploadVulkanFace
+			// hands to texImage2D, whatever the file happens to carry.
+			unsigned char* data = stbi_load(fullPaths[i].c_str(), &width, &height, &nrChannels, 3);
+			if(data != nullptr) vkfaceids[i] = uploadVulkanFace(width, height, data);
+			else gLoge("gSkyBox") << "Cubemap tex failed to load at path: " << fullPaths[i];
+			stbi_image_free(data);
+		}
+		id = vkfaceids[0];
+		return id;
+	}
+
 	skymapslot = GL_TEXTURE0;
 	skymapint = 0;
 
@@ -75,6 +99,19 @@ unsigned int gSkybox::load(const std::vector<std::string>& fullPaths) {
 }
 
 void gSkybox::loadSkybox(gImage* images) {
+	if(renderer->isVulkan()) {
+		for(unsigned int& faceid : vkfaceids) {
+			if(faceid != 0) renderer->deleteTexture(faceid);
+			faceid = 0;
+		}
+		for(int i = 0; i < 6; i++) {
+			vkfaceids[i] = uploadVulkanFace(images[i].getWidth(), images[i].getHeight(),
+					images[i].getImageData());
+		}
+		id = vkfaceids[0];
+		return;
+	}
+
 	skymapslot = GL_TEXTURE0;
 	skymapint = 0;
 
@@ -100,6 +137,18 @@ void gSkybox::loadSkybox(gImage* images) {
 }
 
 void gSkybox::loadFromData(std::array<int, 6> widths, std::array<int, 6> heights, std::array<void*, 6> rawdata, std::array<bool, 6> ishdr) {
+	if(renderer->isVulkan()) {
+		for(unsigned int& faceid : vkfaceids) {
+			if(faceid != 0) renderer->deleteTexture(faceid);
+			faceid = 0;
+		}
+		for(int i = 0; i < 6; i++) {
+			vkfaceids[i] = uploadVulkanFace(widths[i], heights[i], rawdata[i], ishdr[i]);
+		}
+		id = vkfaceids[0];
+		return;
+	}
+
 	skymapslot = GL_TEXTURE0;
 	skymapint = 0;
 
@@ -127,6 +176,19 @@ void gSkybox::loadFromData(std::array<int, 6> widths, std::array<int, 6> heights
 }
 
 void gSkybox::loadDataSkybox(std::string *data, int width, int height) {
+	if(renderer->isVulkan()) {
+		for(unsigned int& faceid : vkfaceids) {
+			if(faceid != 0) renderer->deleteTexture(faceid);
+			faceid = 0;
+		}
+		for(int i = 0; i < 6; i++) {
+			std::string decoded = gDecodeBase64(data[i]);
+			vkfaceids[i] = uploadVulkanFace(width, height, decoded.data());
+		}
+		id = vkfaceids[0];
+		return;
+	}
+
 	skymapslot = GL_TEXTURE0;
 	skymapint = 0;
 
@@ -156,6 +218,15 @@ unsigned int gSkybox::loadTextureEquirectangular(const std::string& texturePath)
 }
 
 unsigned int gSkybox::loadEquirectangular(const std::string& fullPath) {
+	// Not ported: this one projects an HDR panorama into a cube map with a render
+	// pass of its own, which needs the framebuffer path Vulkan does not have here
+	// yet. Left returning nothing so draw() skips rather than showing a wrong sky.
+	if(renderer->isVulkan()) {
+		gLogw("gSkyBox") << "Equirectangular skyboxes are not supported on the Vulkan backend yet.";
+		id = GL_NONE;
+		return id;
+	}
+
 	ishdr = true;
 	skymapslot = GL_TEXTURE0;
 	skymapint = 0;
@@ -211,6 +282,10 @@ unsigned int gSkybox::loadEquirectangular(const std::string& fullPath) {
 }
 
 void gSkybox::generatePbrMaps() {
+	// Image-based lighting needs the irradiance, prefilter and BRDF passes, all of
+	// which render into framebuffers the Vulkan backend has no equivalent for yet.
+	if(renderer->isVulkan()) return;
+
 	renderer->bindSkyTexture(id, skymapslot);
 
 	pbrShader = renderer->getPbrShader();
@@ -334,6 +409,9 @@ void gSkybox::generatePbrMaps() {
 }
 
 void gSkybox::bindPbrMaps() {
+	// Nothing to bind: generatePbrMaps never ran on this backend.
+	if(renderer->isVulkan()) return;
+
 	pbrShader->use();
 	pbrShader->setMat4("view", renderer->getViewMatrix());
 	pbrShader->setVec3("camPos", renderer->getCameraPosition());
@@ -342,12 +420,85 @@ void gSkybox::bindPbrMaps() {
 	renderer->bindTexture(brdfLUTTexture, GL_TEXTURE2 - GL_TEXTURE0);
 }
 
+unsigned int gSkybox::uploadVulkanFace(int faceWidth, int faceHeight, void* pixels, bool hdr) {
+	if(pixels == nullptr || faceWidth <= 0 || faceHeight <= 0) return 0;
+
+	// An HDR source arrives as floats. The Vulkan texture path takes bytes, so the
+	// range is clamped and scaled here rather than carrying a float format through
+	// for the one case that needs it.
+	std::vector<unsigned char> converted;
+	void* source = pixels;
+	if(hdr) {
+		const float* fpixels = static_cast<const float*>(pixels);
+		converted.resize(static_cast<size_t>(faceWidth) * faceHeight * 3);
+		for(size_t i = 0; i < converted.size(); i++) {
+			converted[i] = static_cast<unsigned char>(glm::clamp(fpixels[i], 0.0f, 1.0f) * 255.0f);
+		}
+		source = converted.data();
+	}
+
+	unsigned int texture = renderer->createTextures();
+	renderer->bindTexture(texture);
+	renderer->texImage2D(GL_TEXTURE_2D, GL_RGB, faceWidth, faceHeight, GL_RGB, GL_UNSIGNED_BYTE, source);
+	// Clamped, because a sky face must not wrap: a repeat would fold the opposite
+	// edge back in and show a seam along every corner of the box.
+	renderer->setWrappingAndFiltering(GL_TEXTURE_2D, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE,
+			GL_LINEAR, GL_LINEAR);
+	return texture;
+}
+
+void gSkybox::drawVulkan() {
+	if(id == GL_NONE) return;
+
+	// A box centred on the camera, big enough to sit outside anything the scene
+	// draws but well inside the far plane. It moves with the camera, so the sky
+	// never gets closer no matter how far the viewer travels.
+	const glm::vec3 c = renderer->getCameraPosition();
+	const float s = 200.0f;
+	const glm::vec3 corners[8] = {
+		c + glm::vec3(-s, -s, -s), c + glm::vec3(s, -s, -s), c + glm::vec3(s, s, -s), c + glm::vec3(-s, s, -s),
+		c + glm::vec3(-s, -s, s), c + glm::vec3(s, -s, s), c + glm::vec3(s, s, s), c + glm::vec3(-s, s, s)
+	};
+	// right, left, top, bottom, front, back - the order the cubemap API loads them in.
+	static const int faces[6][6] = {
+		{1, 5, 6, 1, 6, 2}, {4, 0, 3, 4, 3, 7}, {3, 2, 6, 3, 6, 7},
+		{4, 5, 1, 4, 1, 0}, {5, 4, 7, 5, 7, 6}, {0, 1, 2, 0, 2, 3}
+	};
+
+	const glm::mat4 viewprojection = renderer->getProjectionMatrix() * renderer->getViewMatrix();
+	for(int face = 0; face < 6; face++) {
+		if(vkfaceids[face] == 0) continue;
+
+		float xyzuv[6 * 5];
+		for(int vertex = 0; vertex < 6; vertex++) {
+			const glm::vec3 position = corners[faces[face][vertex]];
+			// Direction from the camera, on the unit cube, which is what a samplerCube
+			// would have been given. The per-face mapping below is the OpenGL cube map
+			// convention; getting it wrong flips a face rather than shifting it, so it
+			// is written out per face instead of derived.
+			const glm::vec3 d = (position - c) / s;
+			glm::vec2 uv;
+			if(face == 0)      uv = {(-d.z + 1.0f) * 0.5f, (-d.y + 1.0f) * 0.5f};
+			else if(face == 1) uv = {( d.z + 1.0f) * 0.5f, (-d.y + 1.0f) * 0.5f};
+			else if(face == 2) uv = {( d.x + 1.0f) * 0.5f, ( d.z + 1.0f) * 0.5f};
+			else if(face == 3) uv = {( d.x + 1.0f) * 0.5f, (-d.z + 1.0f) * 0.5f};
+			else if(face == 4) uv = {( d.x + 1.0f) * 0.5f, (-d.y + 1.0f) * 0.5f};
+			else               uv = {(-d.x + 1.0f) * 0.5f, (-d.y + 1.0f) * 0.5f};
+
+			float* v = xyzuv + vertex * 5;
+			v[0] = position.x; v[1] = position.y; v[2] = position.z;
+			v[3] = uv.x;       v[4] = uv.y;
+		}
+		renderer->drawSkyboxFace(vkfaceids[face], xyzuv, 6, viewprojection);
+	}
+}
+
 void gSkybox::draw() {
 	G_PROFILE_ZONE_SCOPED_N("gSkybox::draw()");
-	// The skybox needs a cube map and the skybox shader, neither of which the Vulkan
-	// backend provides yet; getSkyboxShader() returns null there and using it would
-	// crash. Skipped rather than half drawn.
-	if(renderer->isVulkan()) return;
+	if(renderer->isVulkan()) {
+		drawVulkan();
+		return;
+	}
 
 	skyboxshader = renderer->getSkyboxShader();
 	renderer->enableDepthTestEqual(); // change depth function so depth test passes when values are equal to depth buffer's content

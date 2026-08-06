@@ -342,6 +342,16 @@ public:
 	//
 	// allocateShadowMap returns false when the backend cannot provide one, which is
 	// what makes gShadowMap fall back to drawing the scene unshadowed.
+	// Backend hook for one face of the skybox. OpenGL draws the sky through its own
+	// cubemap shader and leaves this a no-op; Vulkan has no cube map here and draws
+	// six quads instead, one per face, each sampling a plain 2D texture.
+	//
+	// xyzuv holds five floats per vertex - three of position in world space, two of
+	// texture coordinate. Returns false when the backend cannot draw it, which is
+	// what tells gSkybox to fall back to its own path.
+	virtual bool drawSkyboxFace(GLuint textureId, const float* xyzuv, int vertexCount,
+			const glm::mat4& viewProjection) { return false; }
+
 	virtual bool allocateShadowMap(int width, int height) { return false; }
 	virtual void releaseShadowMap() {}
 

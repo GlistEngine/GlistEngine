@@ -398,4 +398,41 @@ void gvkDrawTexturedTriangles2D(gVKContext& ctx, VkDescriptorSet textureSet,
 	vkCmdDraw(cmd, static_cast<uint32_t>(vertexCount), 1, 0, 0);
 }
 
+void gvkDrawSkyboxFace(gVKContext& ctx, VkDescriptorSet faceSet, const float* xyzuv,
+		int vertexCount, const glm::mat4& viewProjection, VkCompareOp depthCompare) {
+	if(xyzuv == nullptr || vertexCount <= 0 || faceSet == VK_NULL_HANDLE) return;
+	if(!gvkEnsureRenderPass(ctx)) return;
+
+	VkCommandBuffer cmd = ctx.getCurrentCommandBuffer();
+	if(cmd == VK_NULL_HANDLE || ctx.getSkyboxPipeline() == VK_NULL_HANDLE) return;
+
+	// Five floats per vertex: position then texture coordinate.
+	const VkDeviceSize bytes = static_cast<VkDeviceSize>(vertexCount) * 5 * sizeof(float);
+	VkDeviceSize offset = ctx.pushDynamicVertices(xyzuv, bytes);
+	if(offset == VK_WHOLE_SIZE) {
+		gLogw("gVKDraw") << "Dynamic vertex buffer full; dropping a skybox face.";
+		return;
+	}
+
+	vkCmdBindPipeline(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, ctx.getSkyboxPipeline());
+	// Depth is tested but never written: the sky sits behind everything, and letting
+	// it claim depth would hide geometry drawn after it.
+	vkCmdSetDepthTestEnable(cmd, VK_TRUE);
+	vkCmdSetDepthWriteEnable(cmd, VK_FALSE);
+	vkCmdSetDepthCompareOp(cmd, depthCompare);
+	vkCmdSetPrimitiveTopology(cmd, VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST);
+
+	VkBuffer vbuf = ctx.getCurrentDynamicVertexBuffer();
+	vkCmdBindVertexBuffers(cmd, 0, 1, &vbuf, &offset);
+	vkCmdBindDescriptorSets(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, ctx.getSkyboxPipelineLayout(),
+			0, 1, &faceSet, 0, nullptr);
+
+	const uint32_t pushsize = std::min<uint32_t>(sizeof(viewProjection), ctx.getSkyboxPushSize());
+	if(pushsize > 0) {
+		vkCmdPushConstants(cmd, ctx.getSkyboxPipelineLayout(), ctx.getSkyboxPushStages(),
+				0, pushsize, &viewProjection);
+	}
+	vkCmdDraw(cmd, static_cast<uint32_t>(vertexCount), 1, 0, 0);
+}
+
 #endif /* GVK_DESKTOP_GLFW */

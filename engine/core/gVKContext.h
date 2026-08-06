@@ -340,6 +340,10 @@ struct gVKContext {
 	// drawn as wireframe.
 	VkPipeline getMesh3DPipeline() { return mesh3dpipeline; }
 	VkPipeline getMesh3DLinePipeline() { return mesh3dlinepipeline; }
+	VkPipeline getSkyboxPipeline() { return skyboxpipeline; }
+	VkPipelineLayout getSkyboxPipelineLayout() { return skyboxpipelinelayout; }
+	uint32_t getSkyboxPushSize() const { return skyboxpushsize; }
+	VkShaderStageFlags getSkyboxPushStages() const { return skyboxpushstages; }
 	// Blending cannot be a dynamic state, so each 3D path keeps a second pipeline
 	// with the opposite setting and the draw picks by the renderer's current one.
 	// The line variant has no blended twin: a wireframe pass is a debugging aid.
@@ -542,6 +546,13 @@ private:
 	// each: Vulkan only guarantees four bound sets, and scene plus five textures
 	// would need six.
 	VkPipelineLayout mesh3dpbrpipelinelayout = VK_NULL_HANDLE;
+	// The skybox: six textured quads around the camera, with a pipeline of its own
+	// because nothing it draws is lit and it needs none of the mesh push constants.
+	VkPipelineLayout skyboxpipelinelayout = VK_NULL_HANDLE;
+	VkPipeline skyboxpipeline = VK_NULL_HANDLE;
+	std::vector<VkDescriptorSetLayout> skyboxsetlayouts;
+	uint32_t skyboxpushsize = 0;
+	VkShaderStageFlags skyboxpushstages = 0;
 	VkPipeline mesh3dpbrpipeline = VK_NULL_HANDLE;
 	VkPipeline mesh3dpbrblendpipeline = VK_NULL_HANDLE;
 	std::vector<VkDescriptorSetLayout> mesh3dpbrsetlayouts;

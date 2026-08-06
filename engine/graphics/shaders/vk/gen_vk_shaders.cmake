@@ -31,7 +31,9 @@ set(GVK_SHADERS
 	gvkspv_mesh3dpbr_vert mesh3dpbr.vert
 	gvkspv_mesh3dpbr_frag mesh3dpbr.frag
 	gvkspv_shadow3d_vert shadow3d.vert
-	gvkspv_shadow3d_frag shadow3d.frag)
+	gvkspv_shadow3d_frag shadow3d.frag
+	gvkspv_skybox3d_vert skybox3d.vert
+	gvkspv_skybox3d_frag skybox3d.frag)
 
 set(GVK_HEADER "/*
  * gVKShaders.h

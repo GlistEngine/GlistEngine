@@ -30,6 +30,7 @@ enum {
 	GVK_STAGE_MESH3D_VERT, GVK_STAGE_MESH3D_FRAG,
 	GVK_STAGE_MESH3DPBR_VERT, GVK_STAGE_MESH3DPBR_FRAG,
 	GVK_STAGE_SHADOW_VERT, GVK_STAGE_SHADOW_FRAG,
+	GVK_STAGE_SKYBOX_VERT, GVK_STAGE_SKYBOX_FRAG,
 	GVK_STAGE_COUNT
 };
 
@@ -51,6 +52,8 @@ static const gvkStageSource gvkstagesources[GVK_STAGE_COUNT] = {
 	{"mesh3dpbr.frag", VK_SHADER_STAGE_FRAGMENT_BIT, gvkspv_mesh3dpbr_frag, sizeof(gvkspv_mesh3dpbr_frag)},
 	{"shadow3d.vert", VK_SHADER_STAGE_VERTEX_BIT, gvkspv_shadow3d_vert, sizeof(gvkspv_shadow3d_vert)},
 	{"shadow3d.frag", VK_SHADER_STAGE_FRAGMENT_BIT, gvkspv_shadow3d_frag, sizeof(gvkspv_shadow3d_frag)},
+	{"skybox3d.vert", VK_SHADER_STAGE_VERTEX_BIT, gvkspv_skybox3d_vert, sizeof(gvkspv_skybox3d_vert)},
+	{"skybox3d.frag", VK_SHADER_STAGE_FRAGMENT_BIT, gvkspv_skybox3d_frag, sizeof(gvkspv_skybox3d_frag)},
 };
 
 // The gVertex layout, written out rather than reflected from the shader.
@@ -474,7 +477,7 @@ static bool gvkCreateDescriptorPool(VkDevice device, const gvkPipelineParts& col
 // left allocated.
 static bool gvkBuildAll(VkDevice device, VkRenderPass renderpass, const gvkShaderSet& shaders,
 		gvkPipelineParts& color, gvkPipelineParts& image, gvkPipelineParts& mesh3d,
-		gvkPipelineParts& mesh3dpbr, VkDescriptorPool& pool) {
+		gvkPipelineParts& mesh3dpbr, gvkPipelineParts& skybox, VkDescriptorPool& pool) {
 	gvkPipelineOptions coloropts;
 	coloropts.linevariant = true;
 
@@ -495,6 +498,14 @@ static bool gvkBuildAll(VkDevice device, VkRenderPass renderpass, const gvkShade
 	// A mesh can be drawn as an outline too, through DRAWMODE_LINES and friends.
 	mesh3dopts.linevariant = true;
 
+	// The sky needs the depth buffer, so scene geometry occludes it, but never culls
+	// and never blends. Its vertex layout is small enough to come from reflection.
+	// The depth compare op is dynamic here as on the other 3D paths, which is what
+	// lets gSkybox ask for the same EQUAL test the OpenGL path uses.
+	gvkPipelineOptions skyboxopts;
+	skyboxopts.depthtest = true;
+	skyboxopts.blend = false;
+
 	if(gvkBuildPipeline(device, renderpass, "colour",
 					shaders.spirv[GVK_STAGE_COLOR_VERT], shaders.spirv[GVK_STAGE_COLOR_FRAG], coloropts, color) &&
 			gvkBuildPipeline(device, renderpass, "image",
@@ -504,6 +515,9 @@ static bool gvkBuildAll(VkDevice device, VkRenderPass renderpass, const gvkShade
 			gvkBuildPipeline(device, renderpass, "mesh3dpbr",
 					shaders.spirv[GVK_STAGE_MESH3DPBR_VERT], shaders.spirv[GVK_STAGE_MESH3DPBR_FRAG],
 					mesh3dopts, mesh3dpbr) &&
+			gvkBuildPipeline(device, renderpass, "skybox3d",
+					shaders.spirv[GVK_STAGE_SKYBOX_VERT], shaders.spirv[GVK_STAGE_SKYBOX_FRAG],
+					skyboxopts, skybox) &&
 			gvkCreateDescriptorPool(device, color, image, mesh3d, mesh3dpbr, pool)) {
 		return true;
 	}
@@ -512,6 +526,7 @@ static bool gvkBuildAll(VkDevice device, VkRenderPass renderpass, const gvkShade
 	gvkDestroyParts(device, image);
 	gvkDestroyParts(device, mesh3d);
 	gvkDestroyParts(device, mesh3dpbr);
+	gvkDestroyParts(device, skybox);
 	return false;
 }
 
@@ -537,8 +552,15 @@ bool gvkCreateGraphicsPipelines(gVKContext& ctx) {
 	gvkPipelineParts image;
 	gvkPipelineParts mesh3d;
 	gvkPipelineParts mesh3dpbr;
+	gvkPipelineParts skybox;
 	VkDescriptorPool pool = VK_NULL_HANDLE;
-	if(!gvkBuildAll(ctx.device, ctx.renderpass, shaders, color, image, mesh3d, mesh3dpbr, pool)) return false;
+	if(!gvkBuildAll(ctx.device, ctx.renderpass, shaders, color, image, mesh3d, mesh3dpbr, skybox, pool)) return false;
+
+	ctx.skyboxpipeline = skybox.pipeline;
+	ctx.skyboxpipelinelayout = skybox.layout;
+	ctx.skyboxsetlayouts = skybox.setlayouts;
+	ctx.skyboxpushsize = skybox.pushsize;
+	ctx.skyboxpushstages = skybox.pushstages;
 
 	ctx.mesh3dpbrpipeline = mesh3dpbr.pipeline;
 	ctx.mesh3dpbrblendpipeline = mesh3dpbr.blendvariantpipeline;
@@ -660,6 +682,10 @@ void gvkDestroyGraphicsPipelines(gVKContext& ctx) {
 	VkDevice device = ctx.device;
 	if(device == VK_NULL_HANDLE) return;
 	if(ctx.mesh3dpbrpipeline != VK_NULL_HANDLE) { vkDestroyPipeline(device, ctx.mesh3dpbrpipeline, nullptr); ctx.mesh3dpbrpipeline = VK_NULL_HANDLE; }
+	if(ctx.skyboxpipeline != VK_NULL_HANDLE) { vkDestroyPipeline(device, ctx.skyboxpipeline, nullptr); ctx.skyboxpipeline = VK_NULL_HANDLE; }
+	if(ctx.skyboxpipelinelayout != VK_NULL_HANDLE) { vkDestroyPipelineLayout(device, ctx.skyboxpipelinelayout, nullptr); ctx.skyboxpipelinelayout = VK_NULL_HANDLE; }
+	for(VkDescriptorSetLayout l : ctx.skyboxsetlayouts) vkDestroyDescriptorSetLayout(device, l, nullptr);
+	ctx.skyboxsetlayouts.clear();
 	if(ctx.mesh3dpbrblendpipeline != VK_NULL_HANDLE) { vkDestroyPipeline(device, ctx.mesh3dpbrblendpipeline, nullptr); ctx.mesh3dpbrblendpipeline = VK_NULL_HANDLE; }
 	if(ctx.mesh3dblendpipeline != VK_NULL_HANDLE) { vkDestroyPipeline(device, ctx.mesh3dblendpipeline, nullptr); ctx.mesh3dblendpipeline = VK_NULL_HANDLE; }
 	if(ctx.mesh3dpbrpipelinelayout != VK_NULL_HANDLE) { vkDestroyPipelineLayout(device, ctx.mesh3dpbrpipelinelayout, nullptr); ctx.mesh3dpbrpipelinelayout = VK_NULL_HANDLE; }
