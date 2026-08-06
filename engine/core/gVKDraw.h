@@ -52,6 +52,11 @@ void gvkDrawTextured2D(gVKContext& ctx, VkDescriptorSet textureSet, VkDescriptor
 		const glm::vec4& tint, const glm::mat4& mvp,
 		const glm::vec2& uvOffset = glm::vec2(0.0f), const glm::vec2& uvScale = glm::vec2(1.0f));
 
+// Records an expanded textured triangle list. xyuv has four floats per vertex
+// and matches the image pipeline's position/UV vertex layout.
+void gvkDrawTexturedTriangles2D(gVKContext& ctx, VkDescriptorSet textureSet,
+		const glm::vec4& tint, const glm::mat4& mvp, const float* xyuv, int vertexCount);
+
 // Records one 3D mesh out of buffers that already live on the device, unlike the
 // 2D calls above, which copy their geometry into a per-frame ring first. A mesh
 // uploads once through gVKMeshBuffer and is then drawn straight from there.

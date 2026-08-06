@@ -45,6 +45,7 @@ gMesh::gMesh(const gMesh& other) {
 	name = other.name;
 	drawmode = DRAWMODE_TRIANGLES;
 	isprojection2d = false;
+    texturetiling = other.texturetiling;
 	setVertices(other.vertices, other.indices);
 	setTextures(other.textures);
 }
@@ -150,6 +151,18 @@ void gMesh::setTexture(gTexture* texture) {
 
 gTexture* gMesh::getTexture(gTexture::TextureType textureType) {
 	return textures[textureType];
+}
+
+void gMesh::setTextureTiling(float tilingX, float tilingY) {
+    texturetiling = glm::vec2(tilingX, tilingY);
+}
+
+void gMesh::setTextureTiling(float tiling) {
+    setTextureTiling(tiling, tiling);
+}
+
+const glm::vec2& gMesh::getTextureTiling() const {
+    return texturetiling;
 }
 
 void gMesh::setDrawMode(int drawMode) {
@@ -307,6 +320,7 @@ void gMesh::drawStart(bool isInstanced) {
 		if(!material.isPBR()) {
 			gShader& colorshader = *renderer->getColorShader();
 			colorshader.use();
+			colorshader.setVec2("textureTiling", texturetiling);
 			bindMaterialUniforms(colorshader);
 			bindMaterialTextures(colorshader);
 
@@ -320,6 +334,7 @@ void gMesh::drawStart(bool isInstanced) {
 		} else { // isPBR
 			gShader& pbrshader = *renderer->getPbrShader();
 			pbrshader.use();
+			pbrshader.setVec2("textureTiling", texturetiling);
 			pbrshader.setMat4("projection", renderer->getProjectionMatrix());
 			pbrshader.setMat4("view", renderer->getViewMatrix());
 			pbrshader.setMat4("model", localtransformationmatrix.back());

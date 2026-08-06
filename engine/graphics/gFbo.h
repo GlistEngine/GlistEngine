@@ -39,11 +39,15 @@ public:
     void drawSub(glm::vec2 pos, glm::vec2 size, glm::vec2 subpos, glm::vec2 subsize, float rotate = 0.0f);
     void drawSub(const gRect& src, const gRect& dst, float rotate = 0.f);
 
+    void allocateMipChain(int width, int height, int miplevels);
+	void bindMip(int level);
+
     static int defaultfbo;
 
 private:
     unsigned int framebuffer;
     unsigned int rbo;
+    int miplevels = 1;
     gTexture* texture;
     gTexture* depthtexture;
     int width, height;

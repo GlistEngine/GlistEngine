@@ -16,3 +16,11 @@ gBasePostProcess::~gBasePostProcess() {
 gShader* gBasePostProcess::getShader() {
 	return shader;
 }
+
+void gBasePostProcess::render(gFbo& src, gFbo& dst) {
+	dst.bind();
+	use();
+	renderer->bindQuadVAO();
+	src.getTexture().bind();
+	renderer->drawFullscreenQuad();
+}

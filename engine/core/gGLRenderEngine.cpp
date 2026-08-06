@@ -53,6 +53,8 @@ int gGetCullingDirection() {
 }
 
 gGLRenderEngine::~gGLRenderEngine() {
+	if(textbatchvbo != 0) G_CHECK_GL(glDeleteBuffers(1, &textbatchvbo));
+	if(textbatchvao != 0) G_CHECK_GL(glDeleteVertexArrays(1, &textbatchvao));
 	delete originalgrid;
 }
 
@@ -572,6 +574,44 @@ void gGLRenderEngine::drawVbo(const gVbo& vbo) {
 	G_CHECK_GL(glDrawArrays(GL_TRIANGLES, 0, vbo.getVerticesNum()));
 }
 
+void gGLRenderEngine::drawTexturedTriangles2D(GLuint textureId, const glm::vec4& tint,
+		const glm::mat4& mvp, const float* xyuv, int vertexCount) {
+	if(textureId == 0 || xyuv == nullptr || vertexCount <= 0) return;
+
+	if(textbatchvao == 0) {
+		G_CHECK_GL(glGenVertexArrays(1, &textbatchvao));
+		G_CHECK_GL(glGenBuffers(1, &textbatchvbo));
+		G_CHECK_GL(glBindVertexArray(textbatchvao));
+		G_CHECK_GL(glBindBuffer(GL_ARRAY_BUFFER, textbatchvbo));
+		G_CHECK_GL(glEnableVertexAttribArray(0));
+		G_CHECK_GL(glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), nullptr));
+	}
+
+	gShader* shader = getImageShader();
+	shader->use();
+	shader->setMat4("projection", mvp);
+	shader->setMat4("model", glm::mat4(1.0f));
+	shader->setVec4("spriteColor", tint);
+	shader->setInt("image", 0);
+	shader->setBool("isAlphaMasking", false);
+	shader->setBool("isSubPart", false);
+
+	G_CHECK_GL(glActiveTexture(GL_TEXTURE0));
+	G_CHECK_GL(glBindTexture(GL_TEXTURE_2D, textureId));
+	G_CHECK_GL(glBindVertexArray(textbatchvao));
+	G_CHECK_GL(glBindBuffer(GL_ARRAY_BUFFER, textbatchvbo));
+	G_CHECK_GL(glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizeiptr>(vertexCount) * 4 * sizeof(float),
+			xyuv, GL_STREAM_DRAW));
+
+	const bool alphablending = isAlphaBlendingEnabled();
+	if(!alphablending) enableAlphaBlending();
+	G_CHECK_GL(glDrawArrays(GL_TRIANGLES, 0, vertexCount));
+	if(!alphablending) disableAlphaBlending();
+
+	G_CHECK_GL(glBindBuffer(GL_ARRAY_BUFFER, 0));
+	G_CHECK_GL(glBindVertexArray(0));
+}
+
 GLuint gGLRenderEngine::createTextures() {
 	GLuint id;
 	G_CHECK_GL(glGenTextures(1, &id));
@@ -605,9 +645,12 @@ void gGLRenderEngine::deleteTexture(GLuint& texId) {
 	}
 }
 
-void gGLRenderEngine::texImage2D(GLenum target, GLint internalFormat, int width, int height, GLint format,
-                                 GLint type, void* data) {
-	G_CHECK_GL(glTexImage2D(target, 0, internalFormat, width, height, 0, format, type, data));
+void gGLRenderEngine::texImage2D(GLenum target, GLint internalFormat, int width, int height, GLint format, GLint type, void* data, GLint level) {
+	G_CHECK_GL(glTexImage2D(target, level, internalFormat, width, height, 0, format, type, data));
+}
+
+void gGLRenderEngine::setTextureMaxLevel(GLenum target, int maxLevel) {
+	G_CHECK_GL(glTexParameteri(target, GL_TEXTURE_MAX_LEVEL, maxLevel));
 }
 
 void gGLRenderEngine::setWrapping(GLenum target, GLint wrapS, GLint wrapT) {

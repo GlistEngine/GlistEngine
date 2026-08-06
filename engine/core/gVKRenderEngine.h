@@ -182,7 +182,8 @@ public:
 	void resetTexture() override;
 	void deleteTexture(GLuint& texId) override;
 
-	void texImage2D(GLenum target, GLint internalFormat, int width, int height, GLint format, GLint type, void* data) override;
+	void texImage2D(GLenum target, GLint internalFormat, int width, int height, GLint format, GLint type, void* data, GLint level = 0) override;
+	void setTextureMaxLevel(GLenum target, int maxLevel) override;
 	void setWrapping(GLenum target, GLint wrapS, GLint wrapT) override;
 	void setWrapping(GLenum target, GLint wrapS, GLint wrapT, GLint wrapR) override;
 
@@ -234,6 +235,8 @@ public:
 	void drawTexturedRect2D(GLuint textureId, GLuint maskTextureId, const glm::vec4& tint,
 			const glm::mat4& mvp,
 			const glm::vec2& uvOffset = glm::vec2(0.0f), const glm::vec2& uvScale = glm::vec2(1.0f)) override;
+	void drawTexturedTriangles2D(GLuint textureId, const glm::vec4& tint,
+			const glm::mat4& mvp, const float* xyuv, int vertexCount) override;
 
 	/* ---------------- Vulkan context ---------------- */
 	// gVKContext is opaque here (its layout lives in the .cpp), so a developer can

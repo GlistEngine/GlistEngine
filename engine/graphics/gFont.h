@@ -47,6 +47,7 @@
 class gFont : public gNode, public gEventHook {
 public:
 	enum class TextAlign {LEFT, CENTER, RIGHT, JUSTIFY};
+	enum class TextRenderMode {GLYPH, ATLAS};
 
 	gFont();
 	virtual ~gFont();
@@ -99,6 +100,13 @@ public:
 ,	 * @param float y - y coordinate of the region you want to draw
 	 */
 	void drawText(const std::string& text, float x, float y);
+
+	/**
+	 * Selects whether drawText renders one glyph at a time or uses the glyph atlas.
+	 * The default mode is GLYPH to preserve the existing rendering behaviour.
+	 */
+	void setTextRenderMode(TextRenderMode renderMode);
+	TextRenderMode getTextRenderMode() const;
 
 
 	/**
@@ -198,6 +206,7 @@ public:
 
 private:
 	void reloadFont();
+	bool buildAtlas();
 
 	bool isloaded = false;
 	std::string fullpath;
@@ -224,10 +233,22 @@ private:
 		float advance = 0.0f;
 		float texturewidth = 0.0f, textureheight = 0.0f;
 		float dxleft = 0.0f, dxright = 0.0f, dytop = 0.0f, dybottom = 0.0f;
+		float atlasu0 = 0.0f, atlasv0 = 0.0f, atlasu1 = 0.0f, atlasv1 = 0.0f;
+		bool inatlas = false;
 	};
 
 	std::unordered_map<int, CharProperties> charproperties;
 	std::unordered_map<int, gTexture*> chartextures;
+	gTexture* atlastexture = nullptr;
+	static constexpr int atlaswidth = 2048;
+	static constexpr int atlasheight = 2048;
+	bool atlasbuilding = false;
+	int atlascursorx = 0;
+	int atlascursory = 0;
+	int atlasrowheight = 0;
+	std::vector<unsigned char> atlaspixels;
+	std::vector<float> batchvertices;
+	TextRenderMode textrendermode = TextRenderMode::GLYPH;
 
 	float getKerning(int c, int prevC) const;
 	void resizeVectors(int num);

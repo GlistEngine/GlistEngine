@@ -359,4 +359,31 @@ void gvkDrawMesh3DPbr(gVKContext& ctx, VkBuffer vertexBuffer, VkBuffer indexBuff
 	}
 }
 
+void gvkDrawTexturedTriangles2D(gVKContext& ctx, VkDescriptorSet textureSet,
+		const glm::vec4& tint, const glm::mat4& mvp, const float* xyuv, int vertexCount) {
+	if(xyuv == nullptr || vertexCount <= 0 || !gvkEnsureRenderPass(ctx)) return;
+	VkCommandBuffer cmd = ctx.getCurrentCommandBuffer();
+	if(cmd == VK_NULL_HANDLE || ctx.getImage2DPipeline() == VK_NULL_HANDLE || textureSet == VK_NULL_HANDLE) return;
+
+	const VkDeviceSize vertexbytes = static_cast<VkDeviceSize>(vertexCount) * sizeof(gvkImageVertex);
+	VkDeviceSize offset = ctx.pushDynamicVertices(xyuv, vertexbytes);
+	if(offset == VK_WHOLE_SIZE) {
+		gLogw("gVKDraw") << "Dynamic vertex buffer full; dropping a textured triangle batch.";
+		return;
+	}
+
+	vkCmdBindPipeline(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, ctx.getImage2DPipeline());
+	VkBuffer vbuf = ctx.getCurrentDynamicVertexBuffer();
+	vkCmdBindVertexBuffers(cmd, 0, 1, &vbuf, &offset);
+
+	VkPipelineLayout layout = ctx.getImage2DPipelineLayout();
+	VkDescriptorSet sets[2] = {textureSet, textureSet};
+	vkCmdBindDescriptorSets(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, layout, 0, 2, sets, 0, nullptr);
+
+	gvkPush push{mvp, tint, 0};
+	const uint32_t pushsize = std::min<uint32_t>(sizeof(push), ctx.getImage2DPushSize());
+	if(pushsize > 0) vkCmdPushConstants(cmd, layout, ctx.getImage2DPushStages(), 0, pushsize, &push);
+	vkCmdDraw(cmd, static_cast<uint32_t>(vertexCount), 1, 0, 0);
+}
+
 #endif /* GVK_DESKTOP_GLFW */

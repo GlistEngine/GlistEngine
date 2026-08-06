@@ -716,8 +716,7 @@ void gVKRenderEngine::deleteTexture(GLuint& texId) {
 	texId = 0;
 }
 
-void gVKRenderEngine::texImage2D(GLenum target, GLint internalFormat, int width, int height, GLint format,
-                                 GLint type, void* data) {
+void gVKRenderEngine::texImage2D(GLenum target, GLint internalFormat, int width, int height, GLint format, GLint type, void* data, GLint level) {
 #ifdef GVK_DESKTOP_GLFW
 	if(vkcontext == nullptr || boundtextureid == 0) return;
 	// Only 8-bit colour uploads that carry pixels become a texture. Allocation-only
@@ -763,6 +762,10 @@ void gVKRenderEngine::texImage2D(GLenum target, GLint internalFormat, int width,
 	gVKTexture* tex = gvkCreateTextureRGBA8(*vkcontext, rgba.data(), width, height);
 	if(tex != nullptr) vktextures[boundtextureid] = tex;
 #endif
+}
+
+void gVKRenderEngine::setTextureMaxLevel(GLenum target, int maxLevel) {
+    /* no-op */
 }
 
 #ifdef GVK_DESKTOP_GLFW
@@ -1859,6 +1862,16 @@ void gVKRenderEngine::drawTexturedRect2D(GLuint textureId, GLuint maskTextureId,
 		if(maskit != vktextures.end() && maskit->second != nullptr) maskset = maskit->second->descriptorset;
 	}
 	gvkDrawTextured2D(*vkcontext, it->second->descriptorset, maskset, tint, mvp, uvOffset, uvScale);
+#endif
+}
+
+void gVKRenderEngine::drawTexturedTriangles2D(GLuint textureId, const glm::vec4& tint,
+		const glm::mat4& mvp, const float* xyuv, int vertexCount) {
+#ifdef GVK_DESKTOP_GLFW
+	if(vkcontext == nullptr) return;
+	auto it = vktextures.find(textureId);
+	if(it == vktextures.end() || it->second == nullptr) return;
+	gvkDrawTexturedTriangles2D(*vkcontext, it->second->descriptorset, tint, mvp, xyuv, vertexCount);
 #endif
 }
 

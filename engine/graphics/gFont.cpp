@@ -21,6 +21,8 @@
 gFont::gFont() = default;
 
 gFont::~gFont() {
+	delete atlastexture;
+	atlastexture = nullptr;
 	if (fontface) {
 		for (std::pair<const int, gTexture*> pair : chartextures) {
 			delete pair.second;
@@ -67,7 +69,9 @@ bool gFont::load(const std::string& fullPath, int size, bool isAntialiased, int 
 
 	iskerning = FT_HAS_KERNING(fontface);
 
-	resizeVectors(characternumlimit);
+	if (textrendermode != TextRenderMode::ATLAS || !buildAtlas()) {
+		resizeVectors(characternumlimit);
+	}
 
 	isloaded = true;
 	return true;
@@ -75,6 +79,26 @@ bool gFont::load(const std::string& fullPath, int size, bool isAntialiased, int 
 
 bool gFont::loadFont(const std::string& fontPath, int size, bool isAntialiased, int dpi) {
 	return load(gGetFontsDir() + fontPath, size, isAntialiased, dpi);
+}
+
+void gFont::setTextRenderMode(TextRenderMode renderMode) {
+	if (textrendermode == renderMode) return;
+	textrendermode = renderMode;
+	if (!isloaded || !fontface) return;
+
+	if (textrendermode == TextRenderMode::ATLAS) {
+		if (!buildAtlas()) resizeVectors(characternumlimit);
+	} else {
+		delete atlastexture;
+		atlastexture = nullptr;
+		atlaspixels.clear();
+		atlaspixels.shrink_to_fit();
+		resizeVectors(characternumlimit);
+	}
+}
+
+gFont::TextRenderMode gFont::getTextRenderMode() const {
+	return textrendermode;
 }
 
 void gFont::getVisualBoundsX(const std::string& text, float& xmin, float& xmax) {
@@ -150,38 +174,157 @@ void gFont::reloadFont() {
 	}
 	chartextures.clear();
 	charproperties.clear();
+	delete atlastexture;
+	atlastexture = nullptr;
 
-	// Reload space character
-	loadChar(' ');
+	if (textrendermode != TextRenderMode::ATLAS || !buildAtlas()) {
+		// Reload space character for the legacy per-glyph texture path.
+		loadChar(' ');
+	}
+}
+
+bool gFont::buildAtlas() {
+	if (!fontface) return false;
+
+	delete atlastexture;
+	atlastexture = nullptr;
+	charproperties.clear();
+	for (std::pair<const int, gTexture*> pair : chartextures) {
+		delete pair.second;
+	}
+	chartextures.clear();
+	atlaspixels.resize(static_cast<size_t>(atlaswidth) * atlasheight * 4);
+	for (size_t i = 0; i < atlaspixels.size(); i += 4) {
+		atlaspixels[i] = 255;
+		atlaspixels[i + 1] = 255;
+		atlaspixels[i + 2] = 255;
+		atlaspixels[i + 3] = 0;
+	}
+	atlascursorx = 0;
+	atlascursory = 0;
+	atlasrowheight = 0;
+	atlasbuilding = true;
+
+	// The existing font cache limit is 1000 codepoints. Prepacking the same range
+	// covers Latin, Latin Extended (including Turkish), Greek and Cyrillic while
+	// keeping the atlas immutable after it has entered a submitted frame.
+	for (int c = 32; c < characternumlimit; ++c) {
+		if (FT_Get_Char_Index(fontface, c) != 0 || c == ' ') loadChar(c);
+	}
+	atlasbuilding = false;
+
+	bool hasglyph = false;
+	for (const auto& entry : charproperties) {
+		if (entry.second.inatlas) {
+			hasglyph = true;
+			break;
+		}
+	}
+	if (!hasglyph) {
+		atlaspixels.clear();
+		return false;
+	}
+
+	atlastexture = new gTexture(atlaswidth, atlasheight, GL_RGBA, false);
+	atlastexture->setFiltering(
+			isantialiased ? gTexture::TEXTUREMINMAGFILTER_LINEAR : gTexture::TEXTUREMINMAGFILTER_NEAREST,
+			isantialiased ? gTexture::TEXTUREMINMAGFILTER_LINEAR : gTexture::TEXTUREMINMAGFILTER_NEAREST);
+	atlastexture->setData(atlaspixels.data(), atlaswidth, atlasheight, 4, false, false);
+	atlaspixels.clear();
+	atlaspixels.shrink_to_fit();
+
+	gLogi("gFont") << "Glyph atlas ready: " << atlaswidth << "x" << atlasheight
+			<< ", cached glyphs: " << charproperties.size();
+	return true;
 }
 
 void gFont::drawText(const std::string& text, float x, float y) {
 	G_PROFILE_ZONE_SCOPED_N("gFont::drawText()");
-	float posx = x;
-	float posy = y;
-
 	std::wstring wtext = s2ws(text);
-	size_t len = wtext.length();
-
-	int previous = -1;
-	for (size_t i = 0; i < len; ++i) {
-		int c = wtext[i];
-
-		if (c == '\n') {
-			posy += lineheight;
-			posx = x;
-		} else {
-			if (charproperties.find(c) == charproperties.end()) {
-				loadChar(c);
-			}
-			posx += getKerning(c, previous);
-			float drawx = roundIfRequired(posx + charproperties[c].leftmargin);
-			float drawy = roundIfRequired(posy + charproperties[c].dytop);
-			chartextures[c]->draw(glm::vec2(drawx, drawy),
-								  glm::vec2(charproperties[c].texturewidth, charproperties[c].textureheight));
-			posx += charproperties[c].advance * letterspacing * (c == ' ' ? spacesize : 1.0f);
+	bool canbatch = textrendermode == TextRenderMode::ATLAS && atlastexture != nullptr && !wtext.empty();
+	for (wchar_t wc : wtext) {
+		const int c = static_cast<int>(wc);
+		if (c == '\n') continue;
+		auto it = charproperties.find(c);
+		if (it == charproperties.end() || !it->second.inatlas) {
+			canbatch = false;
+			break;
 		}
-		previous = c;
+	}
+
+	if (canbatch) {
+		batchvertices.clear();
+		batchvertices.reserve(wtext.size() * 6 * 4);
+		float posx = x;
+		float posy = y;
+		int previous = -1;
+
+		auto appendvertex = [this](float px, float py, float u, float v) {
+			batchvertices.push_back(px);
+			batchvertices.push_back(py);
+			batchvertices.push_back(u);
+			batchvertices.push_back(v);
+		};
+
+		for (wchar_t wc : wtext) {
+			const int c = static_cast<int>(wc);
+			if (c == '\n') {
+				posy += lineheight;
+				posx = x;
+				previous = -1;
+				continue;
+			}
+
+			const CharProperties& p = charproperties[c];
+			posx += getKerning(c, previous);
+			const float x0 = roundIfRequired(posx + p.leftmargin);
+			const float y0 = roundIfRequired(posy + p.dytop);
+			const float x1 = x0 + p.texturewidth;
+			const float y1 = y0 + p.textureheight;
+
+			appendvertex(x0, y0, p.atlasu0, p.atlasv0);
+			appendvertex(x1, y0, p.atlasu1, p.atlasv0);
+			appendvertex(x1, y1, p.atlasu1, p.atlasv1);
+			appendvertex(x0, y0, p.atlasu0, p.atlasv0);
+			appendvertex(x1, y1, p.atlasu1, p.atlasv1);
+			appendvertex(x0, y1, p.atlasu0, p.atlasv1);
+
+			posx += p.advance * letterspacing * (c == ' ' ? spacesize : 1.0f);
+			previous = c;
+		}
+
+		if (!batchvertices.empty()) {
+			renderer->setProjectionMatrix2d(glm::ortho(0.0f, static_cast<float>(renderer->getWidth()),
+					static_cast<float>(renderer->getHeight()), 0.0f, -1.0f, 1.0f));
+			gColor* color = renderer->getColor();
+			const glm::vec4 tint(color->r, color->g, color->b, color->a);
+			renderer->drawTexturedTriangles2D(atlastexture->getId(), tint, renderer->getProjectionMatrix2d(),
+					batchvertices.data(), static_cast<int>(batchvertices.size() / 4));
+		}
+	} else {
+		float posx = x;
+		float posy = y;
+		int previous = -1;
+		for (wchar_t wc : wtext) {
+			const int c = static_cast<int>(wc);
+			if (c == '\n') {
+				posy += lineheight;
+				posx = x;
+				previous = -1;
+				continue;
+			}
+			if (chartextures.find(c) == chartextures.end()) loadChar(c);
+			auto texture = chartextures.find(c);
+			if (texture == chartextures.end() || texture->second == nullptr) continue;
+
+			const CharProperties& p = charproperties[c];
+			posx += getKerning(c, previous);
+			const float drawx = roundIfRequired(posx + p.leftmargin);
+			const float drawy = roundIfRequired(posy + p.dytop);
+			texture->second->draw(glm::vec2(drawx, drawy), glm::vec2(p.texturewidth, p.textureheight));
+			posx += p.advance * letterspacing * (c == ' ' ? spacesize : 1.0f);
+			previous = c;
+		}
 	}
 }
 
@@ -201,9 +344,10 @@ void gFont::drawTextVerticallyFlipped(const std::string& text, float x, float y)
 			posy -= lineheight;
 			posx = x;
 		} else {
-			if (charproperties.find(c) == charproperties.end()) {
+			if (chartextures.find(c) == chartextures.end()) {
 				loadChar(c);
 			}
+			if (chartextures.find(c) == chartextures.end() || chartextures[c] == nullptr) continue;
 			posx += getKerning(c, previous);
 			float drawx = roundIfRequired(posx + charproperties[c].leftmargin);
 			float drawy = roundIfRequired(posy - charproperties[c].dytop);
@@ -226,7 +370,7 @@ void gFont::drawTextHorizontallyFlipped(const std::string& text, float x, float 
 	float totalwidth = 0.0f;
 	for (size_t i = 0; i < len; ++i) {
 		int c = wtext[i];
-		if (charproperties.find(c) == charproperties.end()) {
+		if (chartextures.find(c) == chartextures.end()) {
 			loadChar(c);
 		}
 		totalwidth += charproperties[c].advance * letterspacing * (c == ' ' ? spacesize : 1.0f);
@@ -248,9 +392,10 @@ void gFont::drawTextHorizontallyFlipped(const std::string& text, float x, float 
 			posy += lineheight;
 			posx = x + totalwidth;
 		} else {
-			if (charproperties.find(c) == charproperties.end()) {
+			if (chartextures.find(c) == chartextures.end()) {
 				loadChar(c);
 			}
+			if (chartextures.find(c) == chartextures.end() || chartextures[c] == nullptr) continue;
 
 			float kerning = getKerning(c, prevChar);
 			posx -= kerning;
@@ -397,15 +542,19 @@ void gFont::loadChar(int charCode) {
 		}
 	}
 
-	int longside = border * 2 + std::max(dataw, datah);
-
-	// Find next power of 2
-	int longest = 1;
-	while (longside > longest) {
-		longest <<= 1;
+	int pixelsw;
+	int pixelsh;
+	if (atlasbuilding) {
+		pixelsw = border * 2 + dataw;
+		pixelsh = border * 2 + datah;
+	} else {
+		const int longside = border * 2 + std::max(dataw, datah);
+		// The legacy per-glyph path keeps its original square power-of-two texture.
+		int longest = 1;
+		while (longside > longest) longest <<= 1;
+		pixelsw = longest;
+		pixelsh = longest;
 	}
-	int pixelsw = longest;
-	int pixelsh = longest;
 
 	std::vector<unsigned char> pixels(pixelsw * pixelsh * 4);
 	for (int i = 0; i < pixelsw * pixelsh; ++i) {
@@ -418,16 +567,36 @@ void gFont::loadChar(int charCode) {
 
 	insertData(data.data(), dataw, datah, 4, pixels.data(), pixelsw, pixelsh, 4, border, border);
 
-	chartextures[charCode] = new gTexture(pixelsw, pixelsh, GL_RGBA, false);
-
-	chartextures[charCode]->setFiltering(
-			isantialiased ? gTexture::TEXTUREMINMAGFILTER_LINEAR : gTexture::TEXTUREMINMAGFILTER_NEAREST,
-			isantialiased ? gTexture::TEXTUREMINMAGFILTER_LINEAR : gTexture::TEXTUREMINMAGFILTER_NEAREST);
-
-	chartextures[charCode]->setData(pixels.data(), pixelsw, pixelsh, 4, false, false);
-
 	// Prepare properties
 	CharProperties& props = charproperties[charCode];
+	if (atlasbuilding) {
+		if (atlascursorx + pixelsw > atlaswidth) {
+			atlascursorx = 0;
+			atlascursory += atlasrowheight;
+			atlasrowheight = 0;
+		}
+		if (atlascursory + pixelsh <= atlasheight) {
+			insertData(pixels.data(), pixelsw, pixelsh, 4, atlaspixels.data(), atlaswidth, atlasheight, 4,
+					static_cast<size_t>(atlascursorx), static_cast<size_t>(atlascursory));
+			props.atlasu0 = static_cast<float>(atlascursorx) / atlaswidth;
+			props.atlasv0 = static_cast<float>(atlascursory) / atlasheight;
+			props.atlasu1 = static_cast<float>(atlascursorx + pixelsw) / atlaswidth;
+			props.atlasv1 = static_cast<float>(atlascursory + pixelsh) / atlasheight;
+			props.inatlas = true;
+			atlascursorx += pixelsw;
+			atlasrowheight = std::max(atlasrowheight, pixelsh);
+		} else {
+			props.inatlas = false;
+		}
+	} else {
+		auto existing = chartextures.find(charCode);
+		if (existing != chartextures.end()) delete existing->second;
+		chartextures[charCode] = new gTexture(pixelsw, pixelsh, GL_RGBA, false);
+		chartextures[charCode]->setFiltering(
+				isantialiased ? gTexture::TEXTUREMINMAGFILTER_LINEAR : gTexture::TEXTUREMINMAGFILTER_NEAREST,
+				isantialiased ? gTexture::TEXTUREMINMAGFILTER_LINEAR : gTexture::TEXTUREMINMAGFILTER_NEAREST);
+		chartextures[charCode]->setData(pixels.data(), pixelsw, pixelsh, 4, false, false);
+	}
 
 	// Simply divide all metrics by scale - no rounding
 	props.height = static_cast<float>(glyph->bitmap_top) / scale;
@@ -443,8 +612,8 @@ void gFont::loadChar(int charCode) {
 	props.dxright = props.leftmargin + props.width;
 	props.dybottom = props.height + lccorr;
 
-	props.texturewidth = static_cast<float>(chartextures[charCode]->getWidth()) / scale;
-	props.textureheight = static_cast<float>(chartextures[charCode]->getHeight()) / scale;
+	props.texturewidth = static_cast<float>(pixelsw) / scale;
+	props.textureheight = static_cast<float>(pixelsh) / scale;
 	// Divide by 64 first (26.6 fixed point), then by scale to preserve precision
 	props.advance = (glyph->advance.x / 64.0f) / scale;
 }
