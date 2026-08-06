@@ -154,7 +154,7 @@ void gGUIColumnChart::drawMultiColumns() {
 		renderer->setColor(middlegroundcolor);
 		if(textison) {
 			this->title = textvector[i];
-			getFont()->drawText(title, left + multicolumnxe[i] + ((columnsw * columnnumber + ((columnnumber - 1) * initialmcspadding ) - getFont()->getStringWidth(title)) / 2), top + charty + 15); //columnnumber� vectore d�n��t�r
+			getFont()->drawText(title, left + multicolumnxe[i] + ((columnsw * columnnumber + ((columnnumber - 1) * initialmcspadding ) - getFont()->getStringWidth(title)) / 2), top + charty + 15);
 		}
 		renderer->setColor(oldcolor);
 		colorindex = 0;
