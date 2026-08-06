@@ -118,23 +118,26 @@ $(document).ready(function(){initNavTree('gTriangle_8h_source.html',''); initRes
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span> </div>
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno"><a class="line" href="classgTriangle.html#a676b480fd607103636e6975b4f466b24">   18</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classgTriangle.html#a676b480fd607103636e6975b4f466b24">draw</a>(<span class="keywordtype">float</span> px, <span class="keywordtype">float</span> py, <span class="keywordtype">float</span> qx, <span class="keywordtype">float</span> qy, <span class="keywordtype">float</span> rx, <span class="keywordtype">float</span> ry, <span class="keywordtype">bool</span> is_filled);</div>
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span> </div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>    <span class="keywordtype">void</span> setPoints(<span class="keywordtype">float</span> px, <span class="keywordtype">float</span> py, <span class="keywordtype">float</span> qx, <span class="keywordtype">float</span> qy, <span class="keywordtype">float</span> rx, <span class="keywordtype">float</span> ry, <span class="keywordtype">bool</span> is_filled);</div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span> </div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>    std::vector&lt;gVertex&gt; vertices;</div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>    std::vector&lt;gIndex&gt; indices;</div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>    <a class="code hl_struct" href="structgVertex.html">gVertex</a> vertex1;</div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>    <a class="code hl_struct" href="structgVertex.html">gVertex</a> vertex2;</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>    <a class="code hl_struct" href="structgVertex.html">gVertex</a> vertex3;</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>};</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno"><a class="line" href="classgTriangle.html#abd273fd0c2c29af7204563b98d05d7d7">   20</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classgTriangle.html#abd273fd0c2c29af7204563b98d05d7d7">draw</a>(<span class="keywordtype">float</span> px, <span class="keywordtype">float</span> py, <span class="keywordtype">float</span> qx, <span class="keywordtype">float</span> qy, <span class="keywordtype">float</span> rx, <span class="keywordtype">float</span> ry, <span class="keywordtype">bool</span> is_filled, <span class="keywordtype">float</span> rotateAngle, <span class="keywordtype">float</span> pivotx = 0.5f, <span class="keywordtype">float</span> pivoty = 0.5f);</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>    <span class="keywordtype">void</span> setPoints(<span class="keywordtype">float</span> px, <span class="keywordtype">float</span> py, <span class="keywordtype">float</span> qx, <span class="keywordtype">float</span> qy, <span class="keywordtype">float</span> rx, <span class="keywordtype">float</span> ry, <span class="keywordtype">bool</span> is_filled, <span class="keywordtype">float</span> rotateAngle = 0.0f, <span class="keywordtype">float</span> pivotx = 0.5f, <span class="keywordtype">float</span> pivoty = 0.5f);</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span> </div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>    std::vector&lt;gVertex&gt; vertices;</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>    std::vector&lt;gIndex&gt; indices;</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>    <a class="code hl_struct" href="structgVertex.html">gVertex</a> vertex1;</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>    <a class="code hl_struct" href="structgVertex.html">gVertex</a> vertex2;</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>    <a class="code hl_struct" href="structgVertex.html">gVertex</a> vertex3;</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>};</div>
 </div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="preprocessor">#endif </span><span class="comment">/* GRAPHICS_PRIMITIVES_GTRIANGLE_H_ */</span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="preprocessor">#endif </span><span class="comment">/* GRAPHICS_PRIMITIVES_GTRIANGLE_H_ */</span><span class="preprocessor"></span></div>
 <div class="ttc" id="aclassgMesh_html"><div class="ttname"><a href="classgMesh.html">gMesh</a></div><div class="ttdef"><b>Definition</b> gMesh.h:27</div></div>
 <div class="ttc" id="aclassgTriangle_html"><div class="ttname"><a href="classgTriangle.html">gTriangle</a></div><div class="ttdef"><b>Definition</b> gTriangle.h:13</div></div>
 <div class="ttc" id="aclassgTriangle_html_a0fd7c2118a8cf8828d0d3008b04e57da"><div class="ttname"><a href="classgTriangle.html#a0fd7c2118a8cf8828d0d3008b04e57da">gTriangle::gTriangle</a></div><div class="ttdeci">gTriangle()</div></div>
 <div class="ttc" id="aclassgTriangle_html_a4e38f3c700074fcfa82262588742c21f"><div class="ttname"><a href="classgTriangle.html#a4e38f3c700074fcfa82262588742c21f">gTriangle::~gTriangle</a></div><div class="ttdeci">~gTriangle() override</div></div>
 <div class="ttc" id="aclassgTriangle_html_a676b480fd607103636e6975b4f466b24"><div class="ttname"><a href="classgTriangle.html#a676b480fd607103636e6975b4f466b24">gTriangle::draw</a></div><div class="ttdeci">void draw(float px, float py, float qx, float qy, float rx, float ry, bool is_filled)</div></div>
+<div class="ttc" id="aclassgTriangle_html_abd273fd0c2c29af7204563b98d05d7d7"><div class="ttname"><a href="classgTriangle.html#abd273fd0c2c29af7204563b98d05d7d7">gTriangle::draw</a></div><div class="ttdeci">void draw(float px, float py, float qx, float qy, float rx, float ry, bool is_filled, float rotateAngle, float pivotx=0.5f, float pivoty=0.5f)</div></div>
 <div class="ttc" id="agMesh_8h_html"><div class="ttname"><a href="gMesh_8h.html">gMesh.h</a></div></div>
 <div class="ttc" id="astructgVertex_html"><div class="ttname"><a href="structgVertex.html">gVertex</a></div><div class="ttdef"><b>Definition</b> gVbo.h:14</div></div>
 </div><!-- fragment --></div><!-- contents -->
