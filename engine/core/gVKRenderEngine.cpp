@@ -48,6 +48,11 @@
 	#include <set>
 	#include <string>
 	#include <cstring>
+	// The PBR material cache keys on a std::array and lives in a std::map. Both were
+	// reaching this file only through another header on one toolchain, which is the
+	// kind of thing that builds on Windows and fails everywhere else.
+	#include <array>
+	#include <map>
 	#include <cstdlib>
 #endif
 
@@ -997,9 +1002,12 @@ void gVKRenderEngine::texImage2D(GLenum target, GLint internalFormat, int width,
 	// images rather than sampled-only ones, and are registered under the same id so
 	// the rest of the engine can bind them as ordinary textures afterwards.
 	if(data == nullptr) {
+		// Only the two constants the engine itself uses for a depth target, which is
+		// what gFbo and gTexture ask for. The sized 16 and 32F spellings were also
+		// tested for, but nothing here produces them and they are not guaranteed to
+		// exist in every platform's GL headers.
 		const bool depth = internalFormat == GL_DEPTH_COMPONENT || format == GL_DEPTH_COMPONENT
-				|| internalFormat == GL_DEPTH_COMPONENT16 || internalFormat == GL_DEPTH_COMPONENT24
-				|| internalFormat == GL_DEPTH_COMPONENT32F;
+				|| internalFormat == GL_DEPTH_COMPONENT24;
 		auto existing = vktextures.find(boundtextureid);
 		if(existing != vktextures.end()) {
 			vkDeviceWaitIdle(vkcontext->device);

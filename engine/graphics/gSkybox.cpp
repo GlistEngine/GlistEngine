@@ -10,6 +10,10 @@
 #include "gTexture.h"
 #include "gFbo.h"
 #include "gTracy.h"
+// std::min and the scratch buffer the Vulkan face upload builds. Both were reaching
+// this file only through another header on one toolchain.
+#include <algorithm>
+#include <vector>
 
 glm::mat4 captureProjection = glm::perspective(glm::radians(90.0f), 1.0f, 0.1f, 10.0f);
 glm::mat4 captureViews[] = {
