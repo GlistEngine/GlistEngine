@@ -364,18 +364,32 @@ bool gvkReflectSpirv(const uint32_t* spirv, size_t sizeBytes, gVKReflectedLayout
 
 		if(var.storageclass == SpvStorageClassInput) {
 			if(stage != VK_SHADER_STAGE_VERTEX_BIT || !var.haslocation || var.hasbuiltin) continue;
-			VkFormat format = gvkVertexFormat(ids, pointee);
-			if(format == VK_FORMAT_UNDEFINED) {
+
+			// A matrix attribute is not one input but one per column, at consecutive
+			// locations - a mat4 declared at location 6 occupies 6, 7, 8 and 9. That
+			// is how an instanced model matrix arrives, so it has to be unrolled here
+			// rather than rejected.
+			uint32_t columns = 1;
+			uint32_t columntype = pointee;
+			if(pointee < idbound && ids[pointee].opcode == SpvOpTypeMatrix) {
+				columns = ids[pointee].count;
+				columntype = ids[pointee].basetype;
+			}
+
+			VkFormat format = gvkVertexFormat(ids, columntype);
+			if(format == VK_FORMAT_UNDEFINED || columns < 1 || columns > 4) {
 				gLoge("gVKReflect") << "Vertex input at location " << var.location
 						<< " has a type this reflector cannot map to a VkFormat.";
 				return false;
 			}
-			VkVertexInputAttributeDescription attribute{};
-			attribute.location = var.location;
-			attribute.binding = 0;
-			attribute.format = format;
-			attribute.offset = 0;   // filled in below, once they are in location order
-			attributes.push_back(attribute);
+			for(uint32_t column = 0; column < columns; column++) {
+				VkVertexInputAttributeDescription attribute{};
+				attribute.location = var.location + column;
+				attribute.binding = 0;
+				attribute.format = format;
+				attribute.offset = 0;   // filled in below, once they are in location order
+				attributes.push_back(attribute);
+			}
 			continue;
 		}
 

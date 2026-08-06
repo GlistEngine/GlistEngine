@@ -173,7 +173,8 @@ void gMesh::draw() {
 	if (!isenabled) return;
 
 	if (renderer->isVulkan()) {
-		drawVulkan2D();
+		if (isprojection2d) drawVulkan2D();
+		else drawVulkan3D();
 		return;
 	}
 
@@ -190,10 +191,13 @@ void gMesh::drawInstanced(const std::vector<glm::mat4>& instanceTransformations)
         return;
     }
 
-    // Instancing is an OpenGL-only path for now: it needs the colour shader's
-    // useInstancing branch and a per-instance vertex buffer, neither of which the
-    // Vulkan 2D pipelines have. Without this the call would reach a null shader.
-    if (renderer->isVulkan()) return;
+    if (renderer->isVulkan()) {
+        // 2D meshes have no instanced path on the Vulkan side; they are recorded
+        // through the colour helpers, which take plain screen-space points.
+        if (isprojection2d) return;
+        drawVulkan3D(&instanceTransformations);
+        return;
+    }
 
     drawStart(true);
     drawVboInstanced(instanceTransformations);
@@ -339,11 +343,133 @@ void gMesh::drawVbo() {
 //    vbo.clear();
 }
 
+void gMesh::expandIndicesForVulkan() {
+	G_PROFILE_ZONE_SCOPED_N("gMesh::expandIndicesForVulkan()");
+	if (vbo == nullptr) return;
+
+	// A non-indexed mesh is expanded through a generated 0..n-1 sequence, so the
+	// result is indexed either way - which costs nothing here and keeps the draw
+	// path down to one case.
+	std::vector<gIndex> source;
+	if (indices && !indices->empty()) {
+		source = *indices;
+	} else {
+		const int vertexnum = vbo->getVerticesNum();
+		source.resize(static_cast<size_t>(vertexnum));
+		for (int i = 0; i < vertexnum; i++) source[i] = static_cast<gIndex>(i);
+	}
+	if (source.size() < 2) return;
+
+	std::vector<gIndex> expanded;
+	if (drawmode == DRAWMODE_TRIANGLEFAN) {
+		// A fan is a shared first corner plus a moving edge: every triangle is
+		// (first, previous, current).
+		if (source.size() < 3) return;
+		expanded.reserve((source.size() - 2) * 3);
+		for (size_t i = 2; i < source.size(); i++) {
+			expanded.push_back(source[0]);
+			expanded.push_back(source[i - 1]);
+			expanded.push_back(source[i]);
+		}
+	} else {
+		// A line loop is a line strip that comes back to where it started.
+		expanded.reserve(source.size() + 1);
+		expanded = source;
+		expanded.push_back(source[0]);
+	}
+
+	// Only the buffer is rewritten; this->indices keeps the original geometry, which
+	// is what the bounding box and any app-side reader expect to see.
+	vbo->setIndexData(expanded.data(), static_cast<int>(expanded.size()));
+}
+
+void gMesh::drawVulkan3D(const std::vector<glm::mat4>* instanceTransformations, gVbo* sourceVbo) {
+	G_PROFILE_ZONE_SCOPED_N("gMesh::drawVulkan3D()");
+	gVbo* source = sourceVbo != nullptr ? sourceVbo : vbo.get();
+	if (source == nullptr || !source->isVertexDataAllocated()) return;
+
+	// An instanced draw uploads its transforms first, exactly as drawVboInstanced
+	// does for OpenGL. gVbo routes that through the renderer's buffer calls, so the
+	// Vulkan backend ends up with them in a device buffer of its own.
+	int instancecount = 1;
+	if (instanceTransformations != nullptr) {
+		if (instanceTransformations->empty()) return;
+		instancecount = static_cast<int>(instanceTransformations->size());
+		source->setInstanceData(instanceTransformations->data(), instancecount);
+	}
+
+	// Unlike the 2D path, nothing is read back or reshaped here: the vertices were
+	// uploaded to the device when gVbo filled its buffers, and the backend finds
+	// them again through the vertex array id. Only the model matrix and the surface
+	// travel per mesh; the camera and the lights are scene state the backend reads
+	// from the renderer itself.
+	gRenderer::gMeshSurface surface;
+	surface.ambient = material.getAmbientColor()->asVec4();
+	surface.diffuse = material.getDiffuseColor()->asVec4();
+	surface.specular = material.getSpecularColor()->asVec4();
+	surface.shininess = material.getShininess();
+
+	surface.ispbr = material.isPBR();
+	if(surface.ispbr) {
+		// The PBR path has no diffuse-map prerequisite: each map stands alone, and a
+		// missing one falls back to a constant inside the shader.
+		auto mapid = [this](gTexture::TextureType type) -> GLuint {
+			if(!material.isMapEnabled(type)) return 0;
+			gTexture* map = material.getMap(type);
+			return map != nullptr ? map->getId() : 0;
+		};
+		surface.albedomapid = mapid(gTexture::TEXTURETYPE_PBR_ALBEDO);
+		surface.pbrnormalmapid = mapid(gTexture::TEXTURETYPE_PBR_NORMAL);
+		surface.metallicmapid = mapid(gTexture::TEXTURETYPE_PBR_METALNESS);
+		surface.roughnessmapid = mapid(gTexture::TEXTURETYPE_PBR_ROUGHNESS);
+		surface.aomapid = mapid(gTexture::TEXTURETYPE_PBR_AO);
+
+		// bindMaterialTextures() falls back to the plain diffuse map when a PBR
+		// material has no albedo of its own; the same fallback applies here.
+		if(surface.albedomapid == 0 && material.isMapEnabled(gTexture::TEXTURETYPE_DIFFUSE)) {
+			gTexture* diffusemap = material.getMap(gTexture::TEXTURETYPE_DIFFUSE);
+			if(diffusemap != nullptr) surface.albedomapid = diffusemap->getId();
+		}
+	}
+
+	// Same rule as the OpenGL path in bindMaterialTextures(): a specular map only
+	// counts when there is a diffuse map too, so a material cannot end up specular
+	// mapped but flat coloured.
+	if(!material.isPBR() && material.isMapEnabled(gTexture::TEXTURETYPE_DIFFUSE)) {
+		gTexture* diffusemap = material.getMap(gTexture::TEXTURETYPE_DIFFUSE);
+		if(diffusemap != nullptr) surface.diffusemapid = diffusemap->getId();
+
+		if(material.isMapEnabled(gTexture::TEXTURETYPE_SPECULAR)) {
+			gTexture* specularmap = material.getMap(gTexture::TEXTURETYPE_SPECULAR);
+			if(specularmap != nullptr) surface.specularmapid = specularmap->getId();
+		}
+		if(material.isMapEnabled(gTexture::TEXTURETYPE_NORMAL)) {
+			gTexture* normalmap = material.getMap(gTexture::TEXTURETYPE_NORMAL);
+			if(normalmap != nullptr) surface.normalmapid = normalmap->getId();
+		}
+	}
+
+	// Fan and loop have no usable Vulkan topology, so the indices are rewritten once
+	// and the draw is reported as the equivalent form. Only the mesh's own buffer is
+	// rewritten; a per-frame source (vertex animation) is left alone, since it is
+	// replaced wholesale anyway and those meshes are triangle lists.
+	int effectivedrawmode = drawmode;
+	if (drawmode == DRAWMODE_TRIANGLEFAN || drawmode == DRAWMODE_LINELOOP) {
+		if (!vulkanindicesexpanded && sourceVbo == nullptr) {
+			expandIndicesForVulkan();
+			vulkanindicesexpanded = true;
+		}
+		if (vulkanindicesexpanded) {
+			effectivedrawmode = drawmode == DRAWMODE_TRIANGLEFAN ? DRAWMODE_TRIANGLES : DRAWMODE_LINESTRIP;
+		}
+	}
+
+	renderer->drawMesh3D(source->getVAOid(), source->getVerticesNum(), source->getIndicesNum(),
+			localtransformationmatrix.back(), surface, effectivedrawmode, instancecount);
+}
+
 void gMesh::drawVulkan2D() {
 	G_PROFILE_ZONE_SCOPED_N("gMesh::drawVulkan2D()");
-	// Only 2D meshes are recorded so far. A 3D mesh needs lighting, materials and a
-	// view matrix that the backend's two colour pipelines do not carry, so drawing
-	// it here would be wrong rather than merely unfinished - it is skipped instead.
 	if (!isprojection2d) return;
 
 	const std::vector<gVertex>& verts = *vertices;

@@ -33,6 +33,8 @@
 #include <cstring>
 #include <string>
 #include <vector>
+#include <map>
+#include <array>
 
 struct GLFWwindow;
 struct gVKContext;
@@ -44,6 +46,9 @@ inline constexpr int GVK_MAX_FRAMES_IN_FLIGHT = 2;
 bool gvkCreateSwapchain(gVKContext& ctx, GLFWwindow* window);
 void gvkDestroySwapchain(gVKContext& ctx);
 bool gvkRecreateSwapchain(gVKContext& ctx, GLFWwindow* window);
+VkFormat gvkFindDepthFormat(gVKContext& ctx);
+bool gvkCreateDepthResources(gVKContext& ctx);
+void gvkDestroyDepthResources(gVKContext& ctx);
 bool gvkCreateRenderPass(gVKContext& ctx);
 void gvkDestroyRenderPass(gVKContext& ctx);
 bool gvkCreateFramebuffers(gVKContext& ctx);
@@ -65,6 +70,14 @@ bool gvkReloadGraphicsPipelines(gVKContext& ctx);
 void gvkDestroyGraphicsPipelines(gVKContext& ctx);
 bool gvkCreateDrawResources(gVKContext& ctx);
 void gvkDestroyDrawResources(gVKContext& ctx);
+bool gvkCreateShadowResources(gVKContext& ctx, uint32_t width, uint32_t height);
+bool gvkCreateShadowPipeline(gVKContext& ctx);
+void gvkDestroyShadowPipeline(gVKContext& ctx);
+void gvkDestroyShadowResources(gVKContext& ctx);
+bool gvkBeginShadowPass(gVKContext& ctx);
+void gvkEndShadowPass(gVKContext& ctx);
+bool gvkCreateUniformResources(gVKContext& ctx);
+void gvkDestroyUniformResources(gVKContext& ctx);
 
 // Validation layers cost performance, so the default follows the same DEBUG
 // condition the OpenGL debug output already uses in this engine. A developer can
@@ -95,6 +108,9 @@ struct gVKContext {
 	friend bool gvkCreateSwapchain(gVKContext&, GLFWwindow*);
 	friend void gvkDestroySwapchain(gVKContext&);
 	friend bool gvkRecreateSwapchain(gVKContext&, GLFWwindow*);
+	friend VkFormat gvkFindDepthFormat(gVKContext&);
+	friend bool gvkCreateDepthResources(gVKContext&);
+	friend void gvkDestroyDepthResources(gVKContext&);
 	friend bool gvkCreateRenderPass(gVKContext&);
 	friend void gvkDestroyRenderPass(gVKContext&);
 	friend bool gvkCreateFramebuffers(gVKContext&);
@@ -113,6 +129,16 @@ struct gVKContext {
 	friend void gvkDestroyGraphicsPipelines(gVKContext&);
 	friend bool gvkCreateDrawResources(gVKContext&);
 	friend void gvkDestroyDrawResources(gVKContext&);
+	friend bool gvkCreateShadowResources(gVKContext&, uint32_t, uint32_t);
+	friend bool gvkCreateShadowPipeline(gVKContext&);
+	friend void gvkDestroyShadowPipeline(gVKContext&);
+	friend void gvkDestroyShadowResources(gVKContext&);
+	friend bool gvkBeginShadowPass(gVKContext&);
+	friend void gvkEndShadowPass(gVKContext&);
+	friend bool gvkCreateUniformResources(gVKContext&);
+	friend void gvkDestroyUniformResources(gVKContext&);
+	friend struct gVKSceneUniforms;
+	friend void gvkWriteSceneUniforms(gVKContext&, const struct gVKSceneUniforms&);
 
 	/* ---------------- configurable settings ---------------- */
 	// Set these before the backend initialises to influence instance and device
@@ -257,7 +283,23 @@ struct gVKContext {
 	VkExtent2D* getSwapchainExtent() { return &swapchainextent; }
 
 	VkRenderPass* getRenderPass() { return &renderpass; }
+	VkRenderPass getShadowRenderPass() const { return shadowrenderpass; }
+	VkDescriptorSet getShadowDescriptorSet() const { return shadowdescriptorset; }
+	bool hasShadowMap() const { return shadowframebuffer != VK_NULL_HANDLE; }
+	VkPipeline getShadowPipeline() const { return shadowpipeline; }
+	VkPipelineLayout getShadowPipelineLayout() const { return shadowpipelinelayout; }
+	// False when the shadow shader does not sample its cutout map, in which case the
+	// reflected layout has no descriptor set to bind into.
+	bool hasShadowDescriptorSetLayout() const { return !shadowsetlayouts.empty(); }
+	uint32_t getShadowPushSize() const { return shadowpushsize; }
+	VkShaderStageFlags getShadowPushStages() const { return shadowpushstages; }
+	bool isShadowPassActive() const { return shadowpassactive; }
 	std::vector<VkFramebuffer>* getFramebuffers() { return &framebuffers; }
+
+	// Depth attachment shared by every framebuffer. VK_FORMAT_UNDEFINED until the
+	// render pass has picked a format the device actually supports.
+	VkFormat getDepthFormat() const { return depthformat; }
+	VkImageView getDepthImageView() const { return depthimageview; }
 
 	VkCommandPool* getCommandPool() { return &commandpool; }
 	std::vector<VkCommandBuffer>* getCommandBuffers() { return &commandbuffers; }
@@ -294,6 +336,28 @@ struct gVKContext {
 	VkPipelineLayout getColor2DPipelineLayout() { return color2dpipelinelayout; }
 	VkPipeline getImage2DPipeline() { return image2dpipeline; }
 	VkPipelineLayout getImage2DPipelineLayout() { return image2dpipelinelayout; }
+	// The 3D mesh pipeline, and the same pipeline with a line topology for meshes
+	// drawn as wireframe.
+	VkPipeline getMesh3DPipeline() { return mesh3dpipeline; }
+	VkPipeline getMesh3DLinePipeline() { return mesh3dlinepipeline; }
+	VkPipelineLayout getMesh3DPipelineLayout() { return mesh3dpipelinelayout; }
+	uint32_t getMesh3DPushSize() const { return mesh3dpushsize; }
+	VkShaderStageFlags getMesh3DPushStages() const { return mesh3dpushstages; }
+
+	VkPipeline getMesh3DPbrPipeline() { return mesh3dpbrpipeline; }
+	VkPipelineLayout getMesh3DPbrPipelineLayout() { return mesh3dpbrpipelinelayout; }
+	uint32_t getMesh3DPbrPushSize() const { return mesh3dpbrpushsize; }
+	VkShaderStageFlags getMesh3DPbrPushStages() const { return mesh3dpbrpushstages; }
+	// Layout of the PBR material set (set 1), which gVKRenderEngine allocates one of
+	// per distinct combination of maps.
+	std::map<std::array<uint32_t, 5>, VkDescriptorSet>* getPbrMaterialSets() { return &pbrmaterialsets; }
+	VkDescriptorSetLayout getMesh3DPbrMaterialSetLayout() {
+		return mesh3dpbrsetlayouts.size() > 1 ? mesh3dpbrsetlayouts[1] : VK_NULL_HANDLE;
+	}
+
+	// The scene descriptor set of the frame being recorded: camera matrices and
+	// lights. VK_NULL_HANDLE when the 3D path has no uniform block.
+	VkDescriptorSet getCurrentSceneDescriptorSet() const { return sceneuniformsets[currentframe]; }
 	// The layout of the image pipeline's descriptor set 0, which is where a
 	// texture's combined image sampler goes.
 	VkDescriptorSetLayout getImageDescriptorSetLayout() {
@@ -384,6 +448,40 @@ private:
 	VkFormat swapchainformat = VK_FORMAT_UNDEFINED;
 	VkExtent2D swapchainextent = {0, 0};
 
+	// Depth attachment of the render pass. One image for all swapchain images: only
+	// one frame writes depth at a time, because the render pass both clears it at
+	// the start and never stores it past the end. Sized with the swapchain, so it is
+	// rebuilt on a resize alongside the framebuffers.
+	VkImage depthimage = VK_NULL_HANDLE;
+	VkDeviceMemory depthimagememory = VK_NULL_HANDLE;
+	VkImageView depthimageview = VK_NULL_HANDLE;
+	VkFormat depthformat = VK_FORMAT_UNDEFINED;
+
+	// Shadow map: a depth-only target drawn from the light's point of view and
+	// sampled while shading. See gVKShadow.h.
+	VkImage shadowimage = VK_NULL_HANDLE;
+	VkDeviceMemory shadowmemory = VK_NULL_HANDLE;
+	VkImageView shadowview = VK_NULL_HANDLE;
+	VkSampler shadowsampler = VK_NULL_HANDLE;
+	VkRenderPass shadowrenderpass = VK_NULL_HANDLE;
+	VkFramebuffer shadowframebuffer = VK_NULL_HANDLE;
+	VkDescriptorSet shadowdescriptorset = VK_NULL_HANDLE;
+	// Depth-only pipeline that fills the map. Built with the shadow render pass,
+	// so it cannot exist before that pass does.
+	VkPipeline shadowpipeline = VK_NULL_HANDLE;
+	VkPipelineLayout shadowpipelinelayout = VK_NULL_HANDLE;
+	// One set layout, for the cutout diffuse map. Held here rather than left in the
+	// build's scratch struct because it has to outlive the build and be destroyed
+	// with the pipeline; before the cutout sampler existed this list was empty.
+	std::vector<VkDescriptorSetLayout> shadowsetlayouts;
+	uint32_t shadowpushsize = 0;
+	VkShaderStageFlags shadowpushstages = 0;
+	VkFormat shadowformat = VK_FORMAT_UNDEFINED;
+	VkExtent2D shadowextent = {0, 0};
+	// True between gvkBeginShadowPass and gvkEndShadowPass, so the draw path can
+	// tell which of the two passes it is recording into.
+	bool shadowpassactive = false;
+
 	VkRenderPass renderpass = VK_NULL_HANDLE;
 	// One per swapchain image view.
 	std::vector<VkFramebuffer> framebuffers;
@@ -415,6 +513,36 @@ private:
 	VkPipeline color2dlinepipeline = VK_NULL_HANDLE;
 	VkPipelineLayout image2dpipelinelayout = VK_NULL_HANDLE;
 	VkPipeline image2dpipeline = VK_NULL_HANDLE;
+	// 3D mesh path. Same shape as the 2D pipelines above, but with depth test and
+	// depth write on and a vertex layout matching gVertex.
+	VkPipelineLayout mesh3dpipelinelayout = VK_NULL_HANDLE;
+	VkPipeline mesh3dpipeline = VK_NULL_HANDLE;
+	VkPipeline mesh3dlinepipeline = VK_NULL_HANDLE;
+	std::vector<VkDescriptorSetLayout> mesh3dsetlayouts;
+	uint32_t mesh3dpushsize = 0;
+	VkShaderStageFlags mesh3dpushstages = 0;
+
+	// PBR variant. Its five maps share one descriptor set rather than taking one
+	// each: Vulkan only guarantees four bound sets, and scene plus five textures
+	// would need six.
+	VkPipelineLayout mesh3dpbrpipelinelayout = VK_NULL_HANDLE;
+	VkPipeline mesh3dpbrpipeline = VK_NULL_HANDLE;
+	std::vector<VkDescriptorSetLayout> mesh3dpbrsetlayouts;
+	uint32_t mesh3dpbrpushsize = 0;
+	VkShaderStageFlags mesh3dpbrpushstages = 0;
+	// One descriptor set per distinct combination of the five PBR maps, keyed by
+	// their texture ids. Materials commonly share maps, and a descriptor pool is
+	// finite, so caching by combination rather than per mesh keeps allocations down.
+	// Freed with the pool in gvkDestroyGraphicsPipelines, so this only needs clearing.
+	std::map<std::array<uint32_t, 5>, VkDescriptorSet> pbrmaterialsets;
+
+	// Camera and lights for the 3D path, one set per frame in flight so the CPU can
+	// write the next frame while the GPU still reads the previous one. Permanently
+	// mapped; see gVKUniform.h.
+	VkBuffer sceneuniformbuffers[GVK_MAX_FRAMES_IN_FLIGHT] = {};
+	VkDeviceMemory sceneuniformmemories[GVK_MAX_FRAMES_IN_FLIGHT] = {};
+	void* sceneuniformmapped[GVK_MAX_FRAMES_IN_FLIGHT] = {};
+	VkDescriptorSet sceneuniformsets[GVK_MAX_FRAMES_IN_FLIGHT] = {};
 	// Descriptor set layouts of each pipeline, in set order, and the push constant
 	// block each declares. All of it is reflected out of the compiled SPIR-V rather
 	// than written out here, so the shaders stay the single source of truth.

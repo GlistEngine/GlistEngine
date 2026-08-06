@@ -344,6 +344,11 @@ void gSkybox::bindPbrMaps() {
 
 void gSkybox::draw() {
 	G_PROFILE_ZONE_SCOPED_N("gSkybox::draw()");
+	// The skybox needs a cube map and the skybox shader, neither of which the Vulkan
+	// backend provides yet; getSkyboxShader() returns null there and using it would
+	// crash. Skipped rather than half drawn.
+	if(renderer->isVulkan()) return;
+
 	skyboxshader = renderer->getSkyboxShader();
 	renderer->enableDepthTestEqual(); // change depth function so depth test passes when values are equal to depth buffer's content
 	skyboxshader->use();

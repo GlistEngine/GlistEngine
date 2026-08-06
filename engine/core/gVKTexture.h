@@ -25,6 +25,9 @@ struct gVKTexture {
 	VkDescriptorSet descriptorset = VK_NULL_HANDLE;
 	int width = 0;
 	int height = 0;
+	// Levels in the mip chain, 1 meaning no chain. Built at upload time, the same
+	// way the OpenGL path calls glGenerateMipmap after its upload.
+	uint32_t miplevels = 1;
 	// What the current sampler was built with, so a filtering or wrapping change
 	// can be detected and only then rebuild it. The defaults match what gTexture
 	// starts from.

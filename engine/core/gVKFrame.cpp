@@ -81,6 +81,12 @@ bool gvkBeginFrame(gVKContext& ctx, GLFWwindow* window) {
 
 bool gvkEnsureRenderPass(gVKContext& ctx) {
 	if(!ctx.frameactive) return false;
+	// The shadow pass is open, which means this is the depth pass and whatever is
+	// asking to draw belongs to the screen pass - 2D overlays, mostly, since the
+	// canvas draws itself whole in both passes. Refusing here is what keeps them
+	// out of the shadow map; the mesh path has its own branch and never gets this
+	// far.
+	if(ctx.shadowpassactive) return false;
 	if(ctx.renderpassactive) return true;
 
 	VkCommandBuffer commandbuffer = ctx.commandbuffers[ctx.currentframe];
@@ -91,10 +97,15 @@ bool gvkEnsureRenderPass(gVKContext& ctx) {
 	renderpassinfo.framebuffer = ctx.framebuffers[ctx.currentimageindex];
 	renderpassinfo.renderArea.offset = {0, 0};
 	renderpassinfo.renderArea.extent = ctx.swapchainextent;
-	// The attachment uses a CLEAR load operation, so this is the value that ends up
-	// covering the screen wherever nothing is drawn.
-	renderpassinfo.clearValueCount = 1;
-	renderpassinfo.pClearValues = &ctx.clearvalue;
+	// Both attachments use a CLEAR load operation, and the array is indexed by
+	// attachment number, so entry 0 is the colour the screen ends up showing
+	// wherever nothing is drawn and entry 1 is the depth the buffer starts at.
+	// 1.0 is the far plane, so any fragment passes the default VK_COMPARE_OP_LESS.
+	VkClearValue clearvalues[2];
+	clearvalues[0] = ctx.clearvalue;
+	clearvalues[1].depthStencil = {1.0f, 0};
+	renderpassinfo.clearValueCount = 2;
+	renderpassinfo.pClearValues = clearvalues;
 	vkCmdBeginRenderPass(commandbuffer, &renderpassinfo, VK_SUBPASS_CONTENTS_INLINE);
 
 	// A negative-height viewport flips Y, so the orthographic projection the engine

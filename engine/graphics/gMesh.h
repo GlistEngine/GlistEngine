@@ -112,7 +112,21 @@ protected:
     void drawVbo();
     // Records this mesh through the Vulkan backend's 2D draw path instead of the
     // VBO / shader path, which has no Vulkan equivalent. 3D meshes are skipped.
+    // Vulkan has no line loop topology at all, and triangle fan - while in the
+    // specification - is missing on MoltenVK, so a mesh drawn in either mode has its
+    // indices rewritten once into a form Vulkan does have. Done lazily on the first
+    // draw rather than at upload, because the draw mode is set after the vertices.
+    bool vulkanindicesexpanded = false;
+    void expandIndicesForVulkan();
+
     void drawVulkan2D();
+    // instanceTransformations null for an ordinary draw; otherwise one model matrix
+    // per instance, uploaded here and drawn in a single call.
+    //
+    // sourceVbo overrides which buffer is drawn from, for the vertex-animated case
+    // where the mesh keeps one vbo per animation frame instead of a single one.
+    void drawVulkan3D(const std::vector<glm::mat4>* instanceTransformations = nullptr,
+            gVbo* sourceVbo = nullptr);
     void drawVboInstanced(const std::vector<glm::mat4>& instanceTransformations);
     void drawExtraShaders();
     void drawEnd();

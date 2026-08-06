@@ -192,4 +192,171 @@ void gvkDrawTextured2D(gVKContext& ctx, VkDescriptorSet textureSet, VkDescriptor
 	vkCmdDraw(cmd, 6, 1, 0, 0);
 }
 
+void gvkDrawMesh3D(gVKContext& ctx, VkBuffer vertexBuffer, VkBuffer indexBuffer, int count,
+		VkIndexType indexType, const gVKMeshPush& push,
+		VkDescriptorSet diffuseSet, VkDescriptorSet specularSet, VkDescriptorSet normalSet,
+		VkDescriptorSet shadowSet,
+		VkBuffer instanceBuffer, int instanceCount,
+		VkPrimitiveTopology topology, bool depthTest, bool depthTestAlways, bool lines) {
+	if(count <= 0 || vertexBuffer == VK_NULL_HANDLE) return;
+	if(!gvkEnsureRenderPass(ctx)) return;
+
+	VkCommandBuffer cmd = ctx.getCurrentCommandBuffer();
+	if(cmd == VK_NULL_HANDLE) return;
+	VkPipeline pipeline = lines ? ctx.getMesh3DLinePipeline() : ctx.getMesh3DPipeline();
+	if(pipeline == VK_NULL_HANDLE) return;
+
+	vkCmdBindPipeline(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline);
+
+	// Depth state follows the renderer's, the same way glEnable(GL_DEPTH_TEST) does
+	// on the OpenGL side. Writing is tied to testing: the engine has no separate
+	// switch for it, and a depth write with no test would let a hidden surface claim
+	// the depth buffer. ALWAYS still writes, which matches glDepthFunc(GL_ALWAYS).
+	vkCmdSetDepthTestEnable(cmd, depthTest ? VK_TRUE : VK_FALSE);
+	vkCmdSetDepthWriteEnable(cmd, depthTest ? VK_TRUE : VK_FALSE);
+	vkCmdSetDepthCompareOp(cmd, depthTestAlways ? VK_COMPARE_OP_ALWAYS : VK_COMPARE_OP_LESS);
+	// The mesh's own draw mode, within the class the bound pipeline was built for.
+	vkCmdSetPrimitiveTopology(cmd, topology);
+
+	// Camera and lights, the same for every mesh in the frame. Bound per draw rather
+	// than once per frame because the 2D pipelines are interleaved with these and
+	// binding a pipeline with an incompatible layout invalidates the binding.
+	// Sets 0..3 in one call: the scene block, then the three material maps. Bound
+	// together because they are contiguous and the layout expects all four.
+	VkDescriptorSet sceneset = ctx.getCurrentSceneDescriptorSet();
+	if(sceneset != VK_NULL_HANDLE && diffuseSet != VK_NULL_HANDLE &&
+			specularSet != VK_NULL_HANDLE && normalSet != VK_NULL_HANDLE &&
+			shadowSet != VK_NULL_HANDLE) {
+		VkDescriptorSet sets[] = {sceneset, diffuseSet, specularSet, normalSet, shadowSet};
+		vkCmdBindDescriptorSets(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, ctx.getMesh3DPipelineLayout(),
+				0, 5, sets, 0, nullptr);
+	}
+
+	// Straight from the mesh's own device local buffer - no staging, no per-frame
+	// copy, which is the whole point of uploading a mesh once. Binding 1 carries the
+	// per-instance model matrices and is never absent; see gVKRenderEngine's
+	// identity instance buffer.
+	VkBuffer buffers[] = {vertexBuffer, instanceBuffer};
+	VkDeviceSize offsets[] = {0, 0};
+	vkCmdBindVertexBuffers(cmd, 0, instanceBuffer != VK_NULL_HANDLE ? 2 : 1, buffers, offsets);
+
+	const uint32_t pushsize = std::min<uint32_t>(sizeof(push), ctx.getMesh3DPushSize());
+	if(pushsize > 0) {
+		vkCmdPushConstants(cmd, ctx.getMesh3DPipelineLayout(), ctx.getMesh3DPushStages(), 0, pushsize, &push);
+	}
+
+	const uint32_t instances = static_cast<uint32_t>(instanceCount < 1 ? 1 : instanceCount);
+	if(indexBuffer != VK_NULL_HANDLE) {
+		vkCmdBindIndexBuffer(cmd, indexBuffer, 0, indexType);
+		vkCmdDrawIndexed(cmd, static_cast<uint32_t>(count), instances, 0, 0, 0);
+	} else {
+		vkCmdDraw(cmd, static_cast<uint32_t>(count), instances, 0, 0);
+	}
+}
+
+void gvkDrawShadowCaster(gVKContext& ctx, VkBuffer vertexBuffer, VkBuffer indexBuffer,
+		int count, VkIndexType indexType, const gVKShadowPush& push,
+		VkDescriptorSet diffuseSet,
+		VkBuffer instanceBuffer, int instanceCount, VkPrimitiveTopology topology) {
+	if(count <= 0 || vertexBuffer == VK_NULL_HANDLE) return;
+	// No gvkEnsureRenderPass here: the shadow pass is opened by the frame loop
+	// before the scene is drawn, and this must not fall back to opening the screen
+	// pass instead.
+	if(!ctx.isShadowPassActive()) return;
+
+	VkCommandBuffer cmd = ctx.getCurrentCommandBuffer();
+	if(cmd == VK_NULL_HANDLE || ctx.getShadowPipeline() == VK_NULL_HANDLE) return;
+	if(diffuseSet == VK_NULL_HANDLE) return;
+
+	vkCmdBindPipeline(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, ctx.getShadowPipeline());
+
+	// One set, the caster's diffuse map, and only so a cutout material can discard
+	// its holes. An opaque mesh binds the white texture here and never samples it.
+	//
+	// Guarded on the layout actually declaring a set rather than assumed: the
+	// reflection that builds this layout only sees the sampler while the shader
+	// still reads it, so an edit to shadow3d.frag that stops sampling - live shader
+	// reload makes that a runtime possibility, not just a build-time one - leaves a
+	// layout with no sets, and binding one into it crashes the driver.
+	if(ctx.hasShadowDescriptorSetLayout()) {
+		vkCmdBindDescriptorSets(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, ctx.getShadowPipelineLayout(),
+				0, 1, &diffuseSet, 0, nullptr);
+	}
+
+	VkBuffer buffers[] = {vertexBuffer, instanceBuffer};
+	VkDeviceSize offsets[] = {0, 0};
+	vkCmdBindVertexBuffers(cmd, 0, instanceBuffer != VK_NULL_HANDLE ? 2 : 1, buffers, offsets);
+
+	const uint32_t pushsize = std::min<uint32_t>(sizeof(push), ctx.getShadowPushSize());
+	if(pushsize > 0) {
+		vkCmdPushConstants(cmd, ctx.getShadowPipelineLayout(), ctx.getShadowPushStages(),
+				0, pushsize, &push);
+	}
+
+	// This pipeline declares the same dynamic state as the shading one, so depth has
+	// to be set even though it never varies here: the map is the pass's only output,
+	// and a caster that skipped the test would leave the wrong distance in it. The
+	// scene's own enableDepthTest deliberately has no say.
+	vkCmdSetDepthTestEnable(cmd, VK_TRUE);
+	vkCmdSetDepthWriteEnable(cmd, VK_TRUE);
+	vkCmdSetDepthCompareOp(cmd, VK_COMPARE_OP_LESS);
+	vkCmdSetPrimitiveTopology(cmd, topology);
+
+	const uint32_t instances = static_cast<uint32_t>(instanceCount < 1 ? 1 : instanceCount);
+	if(indexBuffer != VK_NULL_HANDLE) {
+		vkCmdBindIndexBuffer(cmd, indexBuffer, 0, indexType);
+		vkCmdDrawIndexed(cmd, static_cast<uint32_t>(count), instances, 0, 0, 0);
+	} else {
+		vkCmdDraw(cmd, static_cast<uint32_t>(count), instances, 0, 0);
+	}
+}
+
+void gvkDrawMesh3DPbr(gVKContext& ctx, VkBuffer vertexBuffer, VkBuffer indexBuffer, int count,
+		VkIndexType indexType, const gVKPbrPush& push, VkDescriptorSet materialSet,
+		VkDescriptorSet shadowSet,
+		VkBuffer instanceBuffer, int instanceCount,
+		VkPrimitiveTopology topology, bool depthTest, bool depthTestAlways) {
+	if(count <= 0 || vertexBuffer == VK_NULL_HANDLE) return;
+	if(!gvkEnsureRenderPass(ctx)) return;
+
+	VkCommandBuffer cmd = ctx.getCurrentCommandBuffer();
+	if(cmd == VK_NULL_HANDLE) return;
+	VkPipeline pipeline = ctx.getMesh3DPbrPipeline();
+	if(pipeline == VK_NULL_HANDLE) return;
+
+	VkDescriptorSet sceneset = ctx.getCurrentSceneDescriptorSet();
+	if(sceneset == VK_NULL_HANDLE || materialSet == VK_NULL_HANDLE ||
+			shadowSet == VK_NULL_HANDLE) return;
+
+	vkCmdBindPipeline(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline);
+
+	vkCmdSetDepthTestEnable(cmd, depthTest ? VK_TRUE : VK_FALSE);
+	vkCmdSetDepthWriteEnable(cmd, depthTest ? VK_TRUE : VK_FALSE);
+	vkCmdSetDepthCompareOp(cmd, depthTestAlways ? VK_COMPARE_OP_ALWAYS : VK_COMPARE_OP_LESS);
+	vkCmdSetPrimitiveTopology(cmd, topology);
+
+	// Three sets: the scene block, the whole material, and the shadow map.
+	VkDescriptorSet sets[] = {sceneset, materialSet, shadowSet};
+	vkCmdBindDescriptorSets(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, ctx.getMesh3DPbrPipelineLayout(),
+			0, 3, sets, 0, nullptr);
+
+	VkBuffer buffers[] = {vertexBuffer, instanceBuffer};
+	VkDeviceSize offsets[] = {0, 0};
+	vkCmdBindVertexBuffers(cmd, 0, instanceBuffer != VK_NULL_HANDLE ? 2 : 1, buffers, offsets);
+
+	const uint32_t pushsize = std::min<uint32_t>(sizeof(push), ctx.getMesh3DPbrPushSize());
+	if(pushsize > 0) {
+		vkCmdPushConstants(cmd, ctx.getMesh3DPbrPipelineLayout(), ctx.getMesh3DPbrPushStages(),
+				0, pushsize, &push);
+	}
+
+	const uint32_t instances = static_cast<uint32_t>(instanceCount < 1 ? 1 : instanceCount);
+	if(indexBuffer != VK_NULL_HANDLE) {
+		vkCmdBindIndexBuffer(cmd, indexBuffer, 0, indexType);
+		vkCmdDrawIndexed(cmd, static_cast<uint32_t>(count), instances, 0, 0, 0);
+	} else {
+		vkCmdDraw(cmd, static_cast<uint32_t>(count), instances, 0, 0);
+	}
+}
+
 #endif /* GVK_DESKTOP_GLFW */
