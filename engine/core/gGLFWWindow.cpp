@@ -421,7 +421,11 @@ void gGLFWWindow::close() {
 
 void gGLFWWindow::setVsync(bool vsync) {
 	gBaseWindow::setVsync(vsync);
-	glfwSwapInterval(vsync);
+	// glfwSwapInterval controls the current OpenGL context. Vulkan windows are
+	// created with GLFW_NO_API and synchronise presentation through the swapchain
+	// present mode instead, so calling it there raises GLFW_NO_CURRENT_CONTEXT.
+	if(window != nullptr && glfwGetWindowAttrib(window, GLFW_CLIENT_API) != GLFW_NO_API)
+		glfwSwapInterval(vsync ? 1 : 0);
 }
 
 void gGLFWWindow::setCursor(int cursorNo) {
