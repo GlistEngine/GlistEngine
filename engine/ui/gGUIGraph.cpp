@@ -193,7 +193,7 @@ void gGUIGraph::draw() {
 
 	if (title != "") {
 		renderer->setColor(fontcolor);
-		font->drawText(title, (axisx1 + axisx2) / 2, axisy1 - 10);
+		getFont()->drawText(title, (axisx1 + axisx2) / 2, axisy1 - 10);
 	}
 
 	drawBackground();
@@ -230,9 +230,9 @@ void gGUIGraph::drawLabels() {
 
 			renderer->setColor(fontcolor);
 			if (floatlabelsenabled) {
-				if (i < floatlabelsx.size()) font->drawText(std::to_string(floatlabelsx[i]), axisx1 + xpoint - 0.01f * width, axisxstart + 0.07f * height);
+				if (i < floatlabelsx.size()) getFont()->drawText(std::to_string(floatlabelsx[i]), axisx1 + xpoint - 0.01f * width, axisxstart + 0.07f * height);
 			} else {
-				if (i < labelsx.size()) font->drawText(std::to_string(labelsx[i]), axisx1 + xpoint - 0.01f * width, axisxstart + 0.07f * height);
+				if (i < labelsx.size()) getFont()->drawText(std::to_string(labelsx[i]), axisx1 + xpoint - 0.01f * width, axisxstart + 0.07f * height);
 			}
 		}
 	} else if (isxaxislinenable) {
@@ -255,9 +255,9 @@ void gGUIGraph::drawLabels() {
 
 			renderer->setColor(fontcolor);
 			if (floatlabelsenabled) {
-				if (i < floatlabelsy.size()) font->drawText(std::to_string(floatlabelsy[i]), axisystart - 0.054f * width, axisy2 - ypoint + 0.012f * height);
+				if (i < floatlabelsy.size()) getFont()->drawText(std::to_string(floatlabelsy[i]), axisystart - 0.054f * width, axisy2 - ypoint + 0.012f * height);
 			} else {
-				if (i < labelsy.size()) font->drawText(std::to_string(labelsy[i]), axisystart - 0.054f * width, axisy2 - ypoint + 0.012f * height);
+				if (i < labelsy.size()) getFont()->drawText(std::to_string(labelsy[i]), axisystart - 0.054f * width, axisy2 - ypoint + 0.012f * height);
 			}
 		}
 	} else if (yaxislenable) {

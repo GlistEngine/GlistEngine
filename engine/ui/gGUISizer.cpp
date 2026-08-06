@@ -448,7 +448,7 @@ void gGUISizer::draw() {
 	for(int line = 0; line < linenum; line++) {
 		for(int column = 0; column < columnnum; column++) {
 			gGUIControl* control = getControl(line, column);
-			if(control != nullptr && control->isEnabled()) {
+			if(control != nullptr && control->isEnabled() && control->isVisible()) {
 				control->draw();
 			}
 		}
@@ -482,7 +482,7 @@ void gGUISizer::keyPressed(int key) {
 	for(int line = 0; line < linenum; line++) {
 		for(int column = 0; column < columnnum; column++) {
 			gGUIControl* control = getControl(line, column);
-			if(control != nullptr && control->isEnabled() && control->isfocused) {
+			if(control != nullptr && control->isEnabled() && control->isVisible() && control->isfocused) {
 				control->keyPressed(key);
 			}
 		}
@@ -493,7 +493,7 @@ void gGUISizer::keyReleased(int key) {
 	for(int line = 0; line < linenum; line++) {
 		for(int column = 0; column < columnnum; column++) {
 			gGUIControl* control = getControl(line, column);
-			if(control != nullptr && control->isEnabled() && control->isfocused) {
+			if(control != nullptr && control->isEnabled() && control->isVisible() && control->isfocused) {
 				control->keyReleased(key);
 			}
 		}
@@ -504,7 +504,7 @@ void gGUISizer::charPressed(unsigned int codepoint) {
 	for(int line = 0; line < linenum; line++) {
 		for(int column = 0; column < columnnum; column++) {
 			gGUIControl* control = getControl(line, column);
-			if(control != nullptr && control->isEnabled() && control->isfocused) {
+			if(control != nullptr && control->isEnabled() && control->isVisible() && control->isfocused) {
 				control->charPressed(codepoint);
 			}
 		}
@@ -515,7 +515,7 @@ void gGUISizer::mouseMoved(int x, int y) {
 	for(int line = 0; line < linenum; line++) {
 		for(int column = 0; column < columnnum; column++) {
 			gGUIControl* control = getControl(line, column);
-			if(control != nullptr && control->isEnabled()) {
+			if(control != nullptr && control->isEnabled() && control->isVisible()) {
 				bool iscursoronold = control->iscursoron;
 				if(x >= control->left && x < control->right && y >= control->top && y < control->bottom) {
 					control->setCursorOn(true);
@@ -560,7 +560,7 @@ void gGUISizer::mousePressed(int x, int y, int button) {
 	for(int line = 0; line < linenum; line++) {
 		for(int column = 0; column < columnnum; column++) {
 			gGUIControl* control = getControl(line, column);
-			if(control != nullptr && control->isEnabled()) {
+			if(control != nullptr && control->isEnabled() && control->isVisible()) {
 //				bool focusold = control->isfocused;
 				control->isfocused = false;
 //				gLogi("Sizer") << "mousePressed 21, i:" << i << ", j:" << j << ", x:" << x << ", y:" << y << ", l:" << control->left << ", t:" << control->top << ", r:" << control->right << ", b:" << control->bottom;
@@ -643,7 +643,7 @@ void gGUISizer::mouseDragged(int x, int y, int button) {
 	for (int line = 0; line < linenum; line++) {
 		for (int column = 0; column < columnnum; column++) {
 			gGUIControl* control = getControl(line, column);
-			if(control != nullptr && control->isEnabled() && control->iscursoron) {
+			if(control != nullptr && control->isEnabled() && control->isVisible() && control->iscursoron) {
 				control->mouseDragged(x, y, button);
 			}
 		}
@@ -710,7 +710,7 @@ void gGUISizer::mouseReleased(int x, int y, int button) {
 	for (int line = 0; line < linenum; line++) {
 		for (int column = 0; column < columnnum; column++) {
 			gGUIControl* control = getControl(line, column);
-			if(control != nullptr && control->isEnabled()) {
+			if(control != nullptr && control->isEnabled() && control->isVisible()) {
 				control->mouseReleased(x, y, button);
 			}
 		}
@@ -721,7 +721,7 @@ void gGUISizer::mouseScrolled(int x, int y) {
 	for (int line = 0; line < linenum; line++) {
 		for (int column = 0; column < columnnum; column++) {
 			gGUIControl* control =  getControl(line, column);
-			if(control != nullptr && control->isEnabled() && control->iscursoron) {
+			if(control != nullptr && control->isEnabled() && control->isVisible() && control->iscursoron) {
 				control->mouseScrolled(x, y);
 			}
 		}
@@ -736,7 +736,7 @@ void gGUISizer::mouseExited() {
 	for (int line = 0; line < linenum; line++) {
 		for (int column = 0; column < columnnum; column++) {
 			gGUIControl* control = getControl(line, column);
-			if(control != nullptr && control->isEnabled() && control->iscursoron) {
+			if(control != nullptr && control->isEnabled() && control->isVisible() && control->iscursoron) {
 				control->setCursorOn(false);
 				control->mouseExited();
 			}
@@ -748,7 +748,7 @@ void gGUISizer::windowResized(int w, int h) {
 	for (int line = 0; line < linenum; line++) {
 		for (int column = 0; column < columnnum; column++) {
 			gGUIControl* control = getControl(line, column);
-			if(control != nullptr && control->isEnabled()) {
+			if(control != nullptr && control->isEnabled() && control->isVisible()) {
 				control->windowResized(w, h);
 			}
 		}

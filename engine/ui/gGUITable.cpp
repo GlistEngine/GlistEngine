@@ -109,8 +109,8 @@ void gGUITable::draw() {
 		gColor oldcolor = *renderer->getColor();
 		renderer->setColor(&fcolor);
 		setFontColor(&fcolor);
-		font->drawText(imagetextlist[index],
-				x + filew / 2 - (font->getStringWidth(imagetextlist[index]) / 2) + (index % maxcolumncount) * 100,
+		getFont()->drawText(imagetextlist[index],
+				x + filew / 2 - (getFont()->getStringWidth(imagetextlist[index]) / 2) + (index % maxcolumncount) * 100,
 				 y + fileh + 10 + (index / maxcolumncount) * 200);
 		renderer->setColor(&oldcolor);
 	}

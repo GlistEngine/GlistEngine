@@ -2,7 +2,7 @@
  * gGUIRadioButton.cpp
  *
  *  Created on: 19 Tem 2022
- *      Author: Utku Sarýalan
+ *      Author: Utku Sarï¿½alan
  */
 
 #include "gGUIRadioButton.h"
@@ -21,8 +21,8 @@ gGUIRadioButton::gGUIRadioButton() {
 	selectedbutton = 0;
 	titles = new std::string;
 	*titles = "Radio button";
-	titlew = font->getStringWidth(title);
-	titleh = font->getStringHeight(title);
+	titlew = getFont()->getStringWidth(title);
+	titleh = getFont()->getStringHeight(title);
 	horizontaldistance = 8;
 	verticaldistance = 5;
 	columncount = 1;
@@ -46,15 +46,15 @@ gGUIRadioButton::~gGUIRadioButton() {
 
 void gGUIRadioButton::setTitle(std::string title) {
 	gBaseGUIObject::setTitle(title);
-	titlew = font->getStringWidth(title);
-	titleh = font->getStringHeight(title);
+	titlew = getFont()->getStringWidth(title);
+	titleh = getFont()->getStringHeight(title);
 }
 
 void gGUIRadioButton::setRadioTitle(int index, std::string title) {
 	if(index >= buttoncount || index < 0) return;
 	titles[index] = title;
 
-	int temp = font->getStringWidth(title);
+	int temp = getFont()->getStringWidth(title);
 	if(temp > titlew) {
 		titlew = temp;
 		maxradiowidth = titlew + buttonradius * 2 + 2 + horizontaldistance;
@@ -175,7 +175,7 @@ void gGUIRadioButton::draw() {
 	float index = 0.0f;
 
 	renderer->setColor(fontcolor);
-	font->drawText(title, left, top + inity);
+	getFont()->drawText(title, left, top + inity);
 
 	float circlex, circley;
 
@@ -208,8 +208,8 @@ void gGUIRadioButton::draw() {
 	if(istextvisible) {
 		for(int i = 0; i < buttoncount; i++) {
 			renderer->setColor(fontcolor);
-//			font->drawText(title, left + buttonradius * 2 + 2, top - 2 + (buttonradius * 2 + titleh) / 2 - textmargin + i * lineheightlimit);
-			font->drawText(titles[i], left + buttonradius * 2 + 2 + (i % columncount) * maxradiowidth,
+//			getFont()->drawText(title, left + buttonradius * 2 + 2, top - 2 + (buttonradius * 2 + titleh) / 2 - textmargin + i * lineheightlimit);
+			getFont()->drawText(titles[i], left + buttonradius * 2 + 2 + (i % columncount) * maxradiowidth,
 					top - 2 + titleh + buttonradius + titleh / 2 + i / columncount * lineheightlimit + inity);
 
 			index++;

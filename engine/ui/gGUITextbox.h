@@ -228,6 +228,7 @@ public:
 	int getInitX();
 
 	void setTextFont(gFont* textFont);
+	void setFont(gFont* font);
 
 	void setTextAlignment(int textAlignment, float cellW, int initX);
 

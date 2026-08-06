@@ -70,7 +70,7 @@ void gGUIPieGraph::draw() {
 
 		//Labels
 		renderer->setColor(255, 255, 255);
-		font->drawText(labelstr[i], labelx[i], labely[i]);
+		getFont()->drawText(labelstr[i], labelx[i], labely[i]);
 	}
 
 /*
@@ -130,10 +130,10 @@ void gGUIPieGraph::draw() {
 		renderer->setColor(outlinecolor);
 
 		if (setPredictedOutputNameRequested == true) {
-			font->drawText(variablelabels[predictedoutputs[i]], px + 6, py - 6);
+			getFont()->drawText(variablelabels[predictedoutputs[i]], px + 6, py - 6);
 		} else {
 			std::string label = std::to_string(count + 1) + ".";
-			font->drawText(label, px + 6, py - 6);
+			getFont()->drawText(label, px + 6, py - 6);
 		}
 	}
 }
@@ -293,7 +293,7 @@ void gGUIPieGraph::calculateLabelPositions() {
 	for(int i = 0; i < variablelabels.size(); i++) {
 		degree = (360.0f * variablevalues.at(i)) / totalvalue;
 		float meandeg = totaldegree + degree / 2.0f;
-		float lx = widthhalf + (std::cos(gDegToRad(meandeg)) * radius / 2) - (font->getStringWidth("Group 0 (50%") / 2);
+		float lx = widthhalf + (std::cos(gDegToRad(meandeg)) * radius / 2) - (getFont()->getStringWidth("Group 0 (50%") / 2);
 		float ly = heighthalf + additionallabely + (std::sin(gDegToRad(meandeg)) * radius / 2);
 		labelx.push_back(lx);
 		labely.push_back(ly);
@@ -357,7 +357,7 @@ void gGUIPieGraph::setAdditionalLabelY(float diff) {
 }
 
 void gGUIPieGraph::loadFont() {
-	fontforinfotext.load(font->getPath(), fontsize, font->isAntialised(), font->getDpi());
+	fontforinfotext.load(getFont()->getPath(), fontsize, getFont()->isAntialised(), getFont()->getDpi());
 }
 
 void gGUIPieGraph::clear() {

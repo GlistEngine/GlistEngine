@@ -37,6 +37,7 @@ gBaseGUIObject::gBaseGUIObject() {
 	lastid++;
 	id = lastid;
 	isenabled = true;
+	isvisible = true;
 	parentslotlineno = -1;
 	parentslotcolumnno = -1;
 	left = 0;
@@ -70,6 +71,14 @@ void gBaseGUIObject::setEnabled(bool isEnabled) {
 
 bool gBaseGUIObject::isEnabled() {
 	return isenabled;
+}
+
+void gBaseGUIObject::setVisible(bool isVisible) {
+	isvisible = isVisible;
+}
+
+bool gBaseGUIObject::isVisible() {
+	return isvisible;
 }
 
 void gBaseGUIObject::setTitleOn(bool isTitleOn) {

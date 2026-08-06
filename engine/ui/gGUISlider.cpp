@@ -172,9 +172,9 @@ void gGUISlider::set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGU
 	tickx = left + (sliderw / 2) - 1;
 	ticky = top + sliderh;
 	textx = tickx;
-	texty = ticky + 12 + font->getSize();
+	texty = ticky + 12 + getFont()->getSize();
 
-	currentvaluey = top - (sliderh / 2) + font->getSize() - 4;
+	currentvaluey = top - (sliderh / 2) + getFont()->getSize() - 4;
 }
 
 void gGUISlider::update() {
@@ -233,11 +233,11 @@ void gGUISlider::drawText() {
     	//Tick number texts
     	float temp_ticknumbers = floor((i * (maxvalue - minvalue) / ticknum) * 100.0) / 100.0;
     	ticknumbers = gToStr(temp_ticknumbers);
-        font->drawText(ticknumbers, textx - 8 + (spacelength * i), texty);
+        getFont()->drawText(ticknumbers, textx - 8 + (spacelength * i), texty);
     }
     //Current value text
     float tempvalue = floor((currentvalue * 100.0)) / 100.0;
-    font->drawText(gToStr(tempvalue), currentvaluex, currentvaluey);
+    getFont()->drawText(gToStr(tempvalue), currentvaluex, currentvaluey);
 }
 
 void gGUISlider::drawSlider() {

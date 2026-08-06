@@ -28,8 +28,8 @@ gGUIScrollable::gGUIScrollable() {
 	barforegroundcolor = backgroundcolor;
 	#endif
 	titlex = left;
-	titley = top + font->getStringHeight("AE");
-	titleheight = font->getSize() * 1.8f;
+	titley = top + getFont()->getStringHeight("AE");
+	titleheight = getFont()->getSize() * 1.8f;
 	boxfbo = new gFbo();
 	setTitleOn(false);
 	toolbarw = 0;
@@ -67,8 +67,8 @@ void gGUIScrollable::setDimensions(int newWidth, int newHeight) {
 //	totalw = boxw;
 //	totalh = boxh + barsize;
 
-	titlex = left + font->getStringWidth("i");
-	titley = top + font->getStringHeight("AE");
+	titlex = left + getFont()->getStringWidth("i");
+	titley = top + getFont()->getStringHeight("AE");
 
 	const int screenwidth = renderer->getScreenWidth();
 	const int screenheight = renderer->getScreenHeight();
@@ -144,7 +144,7 @@ void gGUIScrollable::draw() {
 		renderer->disableAlphaTest();
 	}
 	renderer->setColor(fontcolor);
-	if(istitleon) font->drawText(title, titlex, titley);
+	if(istitleon) getFont()->drawText(title, titlex, titley);
 	renderer->setColor(0, 0, 0);
 	boxfbo->bind();
 	renderer->clearColor(0, 0, 0, 0);
