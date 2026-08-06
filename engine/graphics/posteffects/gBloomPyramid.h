@@ -101,7 +101,8 @@ public:
 	void setMinGlowBrightness(float newminglowbrightness);
 	void setAlphaMask(bool enabled);
 
-
+	void disableRgbMask();
+	void disableAlphaMask();
 	void resize(int screenwidth, int screenheight);
 
 protected:

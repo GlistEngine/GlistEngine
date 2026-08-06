@@ -188,12 +188,11 @@ void gBloomPyramid::setRgbMask(float r, float g, float b) {
 	isrgbmask = true;
 	rgbmask[0] = r; rgbmask[1] = g; rgbmask[2] = b;
 }
+void gBloomPyramid::disableRgbMask() { isrgbmask = false; }
+void gBloomPyramid::disableAlphaMask() { isalphamask = false; }
 void gBloomPyramid::setColorSoftness(float v) { colorsoftness = v; }
 void gBloomPyramid::setMinGlowBrightness(float v) { minglowbrightness = v; }
 
-// ============================================================================
-// SHADERLAR
-// ============================================================================
 
 const std::string gBloomPyramid::getVertSrc() {
 	const char* src =
@@ -232,7 +231,7 @@ const std::string gBloomPyramid::getPrefilterFragSrc() {
 		"        float brightweight = step(minglowbrightness, dot(texcolor.rgb, vec3(0.2126, 0.7152, 0.0722)));"
 		"        result = texcolor.rgb * colorweight * brightweight;"
 		"    } else {"
-		"        float brightness = dot(texcolor.rgb, vec3(0.2126, 0.7152, 0.0722));"
+		"        float brightness = max(texcolor.r, max(texcolor.g, texcolor.b));"
 		"        float knee2 = threshold * knee + 1e-5;"
 		"        float soft = brightness - threshold + knee2;"
 		"        soft = clamp(soft, 0.0, 2.0 * knee2);"
