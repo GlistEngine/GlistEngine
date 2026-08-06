@@ -12,6 +12,9 @@
 gGUILineGraph::gGUILineGraph() {
 	title = "Graph";
 	pointsenabled = true;
+	isfilledarea = false;
+	isautoscaled = false;
+	linethickness = 1.0f;
 
 	linecolors[0] = {0.20f, 0.20f, 0.96f};
 	linecolors[1] = {0.96f, 0.46f, 0.55f};
@@ -19,6 +22,12 @@ gGUILineGraph::gGUILineGraph() {
 	linecolors[3] = {0.47f, 0.63f, 0.96f};
 	linecolors[4] = {0.87f, 0.68f, 0.40f};
 	linecolors[5] = {0.73f, 0.60f, 0.96f};
+
+	for (int i = 0; i < linecolornum; i++) {
+		filledcolors[i] = linecolors[i];
+		filledcolors[i].a = 0.15f;
+	}
+
 	offsetleft = 0;
 	offsetright = 0;
 	offsettop = 0;
@@ -26,7 +35,20 @@ gGUILineGraph::gGUILineGraph() {
 }
 
 gGUILineGraph::~gGUILineGraph() {
+}
 
+void gGUILineGraph::enableFilledArea(bool isEnabled) {
+	isfilledarea = isEnabled;
+}
+
+void gGUILineGraph::setLineThickness(float thickness) {
+	linethickness = thickness;
+	needsupdate = true;
+}
+
+void gGUILineGraph::enableAutoScale(bool isEnabled) {
+	isautoscaled = isEnabled;
+	needsupdate = true;
 }
 
 void gGUILineGraph::set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIObject* parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h) {
@@ -36,7 +58,7 @@ void gGUILineGraph::set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBas
 	updateOffset();
 }
 
-void gGUILineGraph::setMaxX(float maxX){
+void gGUILineGraph::setMaxX(float maxX) {
 	gGUIGraph::setMaxX(maxX);
 	needsupdate = true;
 }
@@ -58,7 +80,7 @@ void gGUILineGraph::setMinY(float minY) {
 	needsupdate = true;
 }
 
-void gGUILineGraph::setLabelCountX(int labelCount){
+void gGUILineGraph::setLabelCountX(int labelCount) {
 	gGUIGraph::setLabelCountX(labelCount);
 	needsupdate = true;
 }
@@ -80,6 +102,19 @@ gColor gGUILineGraph::getLineColor(int lineIndex) {
 	return linecolors[lineIndex];
 }
 
+void gGUILineGraph::setFilledAreaColor(int lineIndex, gColor fillColor) {
+	if (lineIndex >= 0 && lineIndex < linecolornum) {
+		filledcolors[lineIndex] = fillColor;
+	}
+}
+
+gColor gGUILineGraph::getFilledAreaColor(int lineIndex) {
+	if (lineIndex >= 0 && lineIndex < linecolornum) {
+		return filledcolors[lineIndex];
+	}
+	return gColor(0.0f, 0.0f, 0.0f, 0.0f);
+}
+
 void gGUILineGraph::addLine() {
 	std::deque<std::array<float, 4>> newline;
 	graphlines.push_back(newline);
@@ -87,25 +122,25 @@ void gGUILineGraph::addLine() {
 
 void gGUILineGraph::addData(int lineIndex, std::deque<std::array<float, 2>> dataToAdd) {
 	int datasize = dataToAdd.size();
-	for(int i = 0; i < datasize; i++) addPointToLine(lineIndex, dataToAdd[i][0], dataToAdd[i][1]);
+	for (int i = 0; i < datasize; i++) addPointToLine(lineIndex, dataToAdd[i][0], dataToAdd[i][1]);
 }
 
 void gGUILineGraph::addPointToLine(int lineIndex, float x, float y) {
-	if(graphlines.size() - 1 < lineIndex) return;
-	if(x < smallestvaluex) setMinX(x);
-	else if(x > largestvaluex) setMaxX(x);
-	if(y < smallestvaluey) setMinY(y);
-	else if(y > largestvaluey) setMaxY(y);
+	if (graphlines.size() - 1 < lineIndex) return;
+	if (x < smallestvaluex) setMinX(x);
+	if (x > largestvaluex) setMaxX(x);
+	if (y < smallestvaluey) setMinY(y);
+	if (y > largestvaluey) setMaxY(y);
 	setLabelCountX(getLabelCountX());
 	setLabelCountY(getLabelCountY());
 	int pointcount = graphlines[lineIndex].size();
-	if(pointcount == 0) {
+	if (pointcount == 0) {
 		graphlines[lineIndex].push_back({x, y, axisx1 + axisxw * (x - minx) / (maxx - minx), axisy2 - axisyh * (y - miny) / (maxy - miny)});
 		return;
 	}
 	int index = 0;
-	while(index < pointcount) {
-		if(graphlines[lineIndex][index++][0] < x) continue;
+	while (index < pointcount) {
+		if (graphlines[lineIndex][index++][0] < x) continue;
 		index--;
 		break;
 	}
@@ -113,99 +148,125 @@ void gGUILineGraph::addPointToLine(int lineIndex, float x, float y) {
 }
 
 void gGUILineGraph::setPointValues(int lineIndex, int pointIndex, float newX, float newY) {
-	if(graphlines.size() - 1 < lineIndex) return;
-		if(newX < smallestvaluex) setMinX(newX);
-		else if(newX > largestvaluex) setMaxX(newX);
-		if(newY < smallestvaluey) setMinY(newY);
-		else if(newY > largestvaluey) setMaxY(newY);
-		setLabelCountX(getLabelCountX());
-		setLabelCountY(getLabelCountY());
-		int pointcount = graphlines[lineIndex].size();
-		int index = 0;
-		while(index < pointcount) {
-			if(graphlines[lineIndex][index++][0] < newX) continue;
-			index--;
-			break;
-		}
-		graphlines[lineIndex][pointIndex - 1] = {newX,newY, axisx1 + axisxw * (newX - minx) / (maxx - minx), axisy2 - axisyh * (newY - miny) / (maxy - miny)};
+	if (graphlines.size() - 1 < lineIndex) return;
+	if (newX < smallestvaluex) setMinX(newX);
+	if (newX > largestvaluex) setMaxX(newX);
+	if (newY < smallestvaluey) setMinY(newY);
+	if (newY > largestvaluey) setMaxY(newY);
+	setLabelCountX(getLabelCountX());
+	setLabelCountY(getLabelCountY());
+	int pointcount = graphlines[lineIndex].size();
+	int index = 0;
+	while (index < pointcount) {
+		if (graphlines[lineIndex][index++][0] < newX) continue;
+		index--;
+		break;
+	}
+	graphlines[lineIndex][pointIndex - 1] = {newX, newY, axisx1 + axisxw * (newX - minx) / (maxx - minx), axisy2 - axisyh * (newY - miny) / (maxy - miny)};
 }
 
 void gGUILineGraph::setPointValues(int lineIndex, float oldX, float oldY, float newX, float newY) {
-    if(graphlines.size() - 1 < lineIndex) return;
-    if(newX < smallestvaluex) {
+	if (graphlines.size() - 1 < lineIndex) return;
+	if (newX < smallestvaluex) {
 		setMinX(newX);
-	} else if(newX > largestvaluex) {
+	}
+	if (newX > largestvaluex) {
 		setMaxX(newX);
 	}
-	if(newY < smallestvaluey) {
+	if (newY < smallestvaluey) {
 		setMinY(newY);
-	} else if(newY > largestvaluey) {
+	}
+	if (newY > largestvaluey) {
 		setMaxY(newY);
 	}
-    setLabelCountX(getLabelCountX());
-    setLabelCountY(getLabelCountY());
-    int pointcount = graphlines[lineIndex].size();
-    int index = 0;
-    while(index < pointcount) {
-        if(graphlines[lineIndex][index++][0] < newX) continue;
-        index--;
-        break;
-    }
-    for(int i = 0; i < pointcount; i++) {
-        if(graphlines[lineIndex][i][0] == oldX && graphlines[lineIndex][i][1] == oldY) {
-            graphlines[lineIndex][i][0] = newX;
-            graphlines[lineIndex][i][1] = newY;
-            graphlines[lineIndex][i][2] = axisx1 + axisxw * (newX - minx) / (maxx - minx);
-            graphlines[lineIndex][i][3] = axisy2 - axisyh * (newY - miny) / (maxy - miny);
-        }
-    }
+	setLabelCountX(getLabelCountX());
+	setLabelCountY(getLabelCountY());
+	int pointcount = graphlines[lineIndex].size();
+	int index = 0;
+	while (index < pointcount) {
+		if (graphlines[lineIndex][index++][0] < newX) continue;
+		index--;
+		break;
+	}
+	for (int i = 0; i < pointcount; i++) {
+		if (graphlines[lineIndex][i][0] == oldX && graphlines[lineIndex][i][1] == oldY) {
+			graphlines[lineIndex][i][0] = newX;
+			graphlines[lineIndex][i][1] = newY;
+			graphlines[lineIndex][i][2] = axisx1 + axisxw * (newX - minx) / (maxx - minx);
+			graphlines[lineIndex][i][3] = axisy2 - axisyh * (newY - miny) / (maxy - miny);
+		}
+	}
 	needsupdate = true;
 }
 
 void gGUILineGraph::drawGraph() {
-	if(needsupdate) {
+	if (needsupdate) {
 		updatePoints();
 		needsupdate = false;
 	}
-	if(graphlines.empty()) {
+	if (graphlines.empty()) {
 		return;
 	}
 
 	gColor oldcolor = *renderer->getColor();
 
 	int linecount = graphlines.size();
-	for(int i = 0; i < linecount; i++) {
-		renderer->setColor(linecolors[i % linecolornum]);
+	for (int i = 0; i < linecount; i++) {
 		int pointcount = graphlines[i].size();
+
+		// Draw filled area if enabled
+		if (isfilledarea && pointcount > 1) {
+			renderer->setColor(filledcolors[i % linecolornum]);
+
+			float bottomY = axisy2;
+			for (int j = 1; j < pointcount; j++) {
+				if (rangeenabled) {
+					if (graphlines[i][j - 1][0] < rangestart || graphlines[i][j - 1][0] > rangeend ||
+						graphlines[i][j][0] < rangestart || graphlines[i][j][0] > rangeend) {
+						continue;
+					}
+				}
+
+				float x1 = graphlines[i][j - 1][2];
+				float y1 = graphlines[i][j - 1][3];
+				float x2 = graphlines[i][j][2];
+				float y2 = graphlines[i][j][3];
+
+				gDrawTriangle(x1, y1, x2, y2, x1, bottomY, true);
+				gDrawTriangle(x2, y2, x2, bottomY, x1, bottomY, true);
+			}
+		}
+
+		renderer->setColor(linecolors[i % linecolornum]);
 		bool skipped = true;
-		for(int j = 0; j < pointcount; j++) {
-			if(rangeenabled) {
-				if(graphlines[i][j][0] < rangestart || graphlines[i][j][0] > rangeend) {
+		for (int j = 0; j < pointcount; j++) {
+			if (rangeenabled) {
+				if (graphlines[i][j][0] < rangestart || graphlines[i][j][0] > rangeend) {
 					skipped = true;
 					continue;
 				}
 			}
-			if(pointsenabled) {
+			if (pointsenabled) {
 				size_t index = hash(i, j);
 				gCircle* circle = circlesmap[index];
-				if(circle) {
+				if (circle) {
 					circle->draw();
 				}
 			}
-			if(skipped) {
+			if (skipped) {
 				skipped = false;
 				continue;
 			}
 
 			size_t index = hash(i, j);
 			gLine* line = linesmap[index];
-			if(line) {
+			if (line) {
 				line->draw();
 			}
 		}
 	}
 
-	renderer->setColor(oldcolor);
+	renderer->setColor(&oldcolor);
 }
 
 void gGUILineGraph::updatePoints() {
@@ -213,28 +274,31 @@ void gGUILineGraph::updatePoints() {
 	float rawMin = smallestvaluey;
 	float rawMax = largestvaluey;
 
-	if(rawMin > rawMax) std::swap(rawMin, rawMax);
+	if (rawMin > rawMax) std::swap(rawMin, rawMax);
 
 	float range = rawMax - rawMin;
-	if(range < 1e-6f) range = 1.0f; // Prevent division by zero when the value range is too small
+	if (range < 1e-6f) range = 1.0f;// Prevent division by zero when the value range is too small
 
 	float pad = std::max(range * 0.05f, 0.001f);
 
 	float relativeSpan = range / std::max(std::abs(rawMax), 1e-6f);
 
-	if(rawMin >= 0.0f && relativeSpan > 0.20f) {
-	    miny = 0.0f;
-	    maxy = rawMax + pad;
+	if (isautoscaled) {
+		miny = rawMin - pad;
+		maxy = rawMax + pad;
+	} else if (rawMin >= 0.0f && relativeSpan > 0.20f) {
+		miny = 0.0f;
+		maxy = rawMax + pad;
 	} else {
-	    miny = rawMin - pad;
-	    maxy = rawMax + pad;
+		miny = rawMin - pad;
+		maxy = rawMax + pad;
 	}
 
 	int linecount = graphlines.size();
 	int points = 0;
-	for(int i = 0; i < linecount; i++) {
+	for (int i = 0; i < linecount; i++) {
 		int pointcount = graphlines[i].size();
-		for(int j = 0; j < pointcount; j++) {
+		for (int j = 0; j < pointcount; j++) {
 			graphlines[i][j][2] = axisx1 + axisxw * (graphlines[i][j][0] - minx) / (maxx - minx);
 			graphlines[i][j][3] = axisy2 - axisyh * (graphlines[i][j][1] - miny) / (maxy - miny);
 			points++;
@@ -243,44 +307,44 @@ void gGUILineGraph::updatePoints() {
 
 	// resize the cached lines, create or destroy them as necessary
 	int diff = cachedlines.size() - points;
-	if(diff > 0) {
+	if (diff > 0) {
 		// we have too many lines, so we destroy the last ones
-		for(int i = 0; i < diff; i++) {
+		for (int i = 0; i < diff; i++) {
 			gLine& line = cachedlines.back();
 			cachedlines.pop_back();
 			line.clear();
 		}
 	} else {
 		// we need more lines, so we create them
-		for(int i = 0; i < -diff; i++) {
+		for (int i = 0; i < -diff; i++) {
 			cachedlines.push_back(gLine());
 		}
 	}
 
 	// update the lines
-	linesmap.clear(); // clears the cached index to line pointer map
+	linesmap.clear();// clears the cached index to line pointer map
 
 	auto lineit = cachedlines.begin();
 	// iterate over all lines, and update the points
-	for(int i = 0; i < linecount; i++) {
+	for (int i = 0; i < linecount; i++) {
 		int pointcount = graphlines[i].size();
-		for(int j = 1; j < pointcount; j++) {
-			if(lineit == cachedlines.end()) {
+		for (int j = 1; j < pointcount; j++) {
+			if (lineit == cachedlines.end()) {
 				// no cached lines left, this should not happen as we have already resized the cache
 				// but kept here forsafety, it would crash otherwise
 				break;
 			}
-			lineit->setThickness(1.0f);
-			lineit->setPoints(graphlines[i][j-1][2], graphlines[i][j-1][3], graphlines[i][j][2], graphlines[i][j][3]);
+			lineit->setThickness(linethickness);
+			lineit->setPoints(graphlines[i][j - 1][2], graphlines[i][j - 1][3], graphlines[i][j][2], graphlines[i][j][3]);
 			linesmap[hash(i, j)] = &*lineit;
 
-			lineit++; // get the next line from the list
+			lineit++;// get the next line from the list
 		}
 	}
 
-	if(!pointsenabled) {
+	if (!pointsenabled) {
 		// clear everything
-		for(auto& item : cachedcircles) {
+		for (auto& item : cachedcircles) {
 			item.clear();
 		}
 		cachedcircles.clear();
@@ -290,29 +354,29 @@ void gGUILineGraph::updatePoints() {
 
 	// resize the cached circles, create or destroy them as necessary
 	diff = cachedcircles.size() - points;
-	if(diff > 0) {
+	if (diff > 0) {
 		// we have too many lines, so we destroy the last ones
-		for(int i = 0; i < diff; i++) {
+		for (int i = 0; i < diff; i++) {
 			gCircle& circle = cachedcircles.back();
 			cachedcircles.pop_back();
 			circle.clear();
 		}
 	} else {
 		// we need more circles, so we create them
-		for(int i = 0; i < -diff; i++) {
+		for (int i = 0; i < -diff; i++) {
 			cachedcircles.push_back(gCircle());
 		}
 	}
 
 	// update the circles
-	circlesmap.clear(); // clears the cached index to line pointer map
+	circlesmap.clear();// clears the cached index to line pointer map
 
 	auto circleit = cachedcircles.begin();
 	// iterate over all circles, and update the poitns
-	for(int i = 0; i < linecount; i++) {
+	for (int i = 0; i < linecount; i++) {
 		int pointcount = graphlines[i].size();
-		for(int j = 1; j < pointcount; j++) {
-			if(circleit == cachedcircles.end()) {
+		for (int j = 1; j < pointcount; j++) {
+			if (circleit == cachedcircles.end()) {
 				// no cached circles left, this should not happen as we have already resized the cache
 				// but kept here forsafety, it would crash otherwise
 				break;
@@ -320,19 +384,17 @@ void gGUILineGraph::updatePoints() {
 			circleit->setPoints(graphlines[i][j][2], graphlines[i][j][3], 5, true, 64);
 			circlesmap[hash(i, j)] = &*circleit;
 
-			circleit++; // get the next circle from the list
+			circleit++;// get the next circle from the list
 		}
 	}
-
-
 }
 
 void gGUILineGraph::removeFirstPointsFromLine(int lineIndex, int pointNumLimit) {
-    if(!graphlines.empty()) {
-        if(graphlines[lineIndex].size() >= pointNumLimit) {
-            for(int i = 0; i < pointNumLimit; i++) graphlines[lineIndex].pop_front();
-        }
-    }
+	if (!graphlines.empty()) {
+		if (graphlines[lineIndex].size() >= pointNumLimit) {
+			for (int i = 0; i < pointNumLimit; i++) graphlines[lineIndex].pop_front();
+		}
+	}
 }
 
 int gGUILineGraph::getPointNum(int lineIndex) {
@@ -356,9 +418,9 @@ void gGUILineGraph::clear() {
 	circlesmap.clear();
 
 	smallestvaluex = std::numeric_limits<float>::max();
-	largestvaluex  = std::numeric_limits<float>::lowest();
+	largestvaluex = std::numeric_limits<float>::lowest();
 	smallestvaluey = std::numeric_limits<float>::max();
-	largestvaluey  = std::numeric_limits<float>::lowest();
+	largestvaluey = std::numeric_limits<float>::lowest();
 
 	minx = 0.0f;
 	maxx = 0.0f;
@@ -386,9 +448,9 @@ void gGUILineGraph::updateOffset() {
 	axisy2 = axisy1 + axisyh;
 
 	axisxstart = axisy2;
-	if(miny < 0 && (maxy - miny) != 0) axisxstart -= axisyh * ((-miny) / (maxy - miny));
+	if (miny < 0 && (maxy - miny) != 0) axisxstart -= axisyh * ((-miny) / (maxy - miny));
 	axisystart = axisx1;
-	if(minx < 0 && (maxx - minx) != 0) axisystart += axisxw * ((-minx) / (maxx - minx));
+	if (minx < 0 && (maxx - minx) != 0) axisystart += axisxw * ((-minx) / (maxx - minx));
 
 	setLabelCountX(labelcountx);
 	setLabelCountY(labelcounty);
