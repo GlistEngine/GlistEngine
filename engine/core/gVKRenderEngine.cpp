@@ -418,61 +418,306 @@ void gVKRenderEngine::setViewport(int x, int y, int width, int height) {
 	viewportheight = height;
 }
 
+#ifdef GVK_DESKTOP_GLFW
+// One offscreen render target. The attachments are gTextures the application owns,
+// so only the pass and the framebuffer wrapping them belong here. Both are built on
+// the first bind rather than at creation, because gFbo attaches its textures after
+// asking for the framebuffer.
+struct gVKFramebuffer {
+	gVKTexture* color = nullptr;
+	gVKTexture* depth = nullptr;
+	VkRenderPass renderpass = VK_NULL_HANDLE;
+	VkFramebuffer framebuffer = VK_NULL_HANDLE;
+	uint32_t width = 0;
+	uint32_t height = 0;
+	// True while its render pass is the one being recorded into.
+	bool active = false;
+};
+
+// Builds the pass and the framebuffer for a target, once. Returns false when the
+// target has nothing usable attached.
+bool gVKRenderEngine::ensureFramebufferPass(gVKFramebuffer* target) {
+	if(target == nullptr || vkcontext == nullptr || vkcontext->device == VK_NULL_HANDLE) return false;
+	if(target->renderpass != VK_NULL_HANDLE && target->framebuffer != VK_NULL_HANDLE) return true;
+	if(target->width == 0 || target->height == 0) return false;
+
+	VkAttachmentDescription attachments[2]{};
+	VkAttachmentReference colorref{};
+	VkAttachmentReference depthref{};
+	VkImageView views[2]{};
+	uint32_t count = 0;
+
+	if(target->color != nullptr) {
+		colorref.attachment = count;
+		colorref.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+		VkAttachmentDescription& a = attachments[count];
+		a.format = target->color->format;
+		a.samples = VK_SAMPLE_COUNT_1_BIT;
+		a.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+		a.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+		a.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+		a.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+		a.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+		// Left ready to sample, so nothing else has to transition it afterwards -
+		// the same trick the shadow map's pass uses.
+		a.finalLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+		views[count] = target->color->view;
+		count++;
+	}
+	if(target->depth != nullptr) {
+		depthref.attachment = count;
+		depthref.layout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+		VkAttachmentDescription& a = attachments[count];
+		a.format = target->depth->format;
+		a.samples = VK_SAMPLE_COUNT_1_BIT;
+		a.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+		a.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+		a.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+		a.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+		a.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+		a.finalLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+		views[count] = target->depth->view;
+		count++;
+	}
+	if(count == 0) return false;
+
+	VkSubpassDescription subpass{};
+	subpass.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
+	subpass.colorAttachmentCount = target->color != nullptr ? 1 : 0;
+	subpass.pColorAttachments = target->color != nullptr ? &colorref : nullptr;
+	subpass.pDepthStencilAttachment = target->depth != nullptr ? &depthref : nullptr;
+
+	// One dependency, matching the screen pass exactly. Render pass compatibility is
+	// what lets the pipelines built for the screen be recorded into an FBO, and the
+	// validation layer compares this too - two dependencies here made every draw
+	// into an FBO an incompatibility error.
+	VkSubpassDependency dependency{};
+	dependency.srcSubpass = VK_SUBPASS_EXTERNAL;
+	dependency.dstSubpass = 0;
+	dependency.srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT
+			| VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
+	dependency.srcAccessMask = 0;
+	dependency.dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT
+			| VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
+	dependency.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT
+			| VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
+
+	VkRenderPassCreateInfo passinfo{};
+	passinfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
+	passinfo.attachmentCount = count;
+	passinfo.pAttachments = attachments;
+	passinfo.subpassCount = 1;
+	passinfo.pSubpasses = &subpass;
+	passinfo.dependencyCount = 1;
+	passinfo.pDependencies = &dependency;
+	if(vkCreateRenderPass(vkcontext->device, &passinfo, nullptr, &target->renderpass) != VK_SUCCESS) {
+		gLoge("gVKRenderEngine") << "vkCreateRenderPass failed for a framebuffer.";
+		target->renderpass = VK_NULL_HANDLE;
+		return false;
+	}
+
+	VkFramebufferCreateInfo fbinfo{};
+	fbinfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
+	fbinfo.renderPass = target->renderpass;
+	fbinfo.attachmentCount = count;
+	fbinfo.pAttachments = views;
+	fbinfo.width = target->width;
+	fbinfo.height = target->height;
+	fbinfo.layers = 1;
+	if(vkCreateFramebuffer(vkcontext->device, &fbinfo, nullptr, &target->framebuffer) != VK_SUCCESS) {
+		gLoge("gVKRenderEngine") << "vkCreateFramebuffer failed for a framebuffer.";
+		vkDestroyRenderPass(vkcontext->device, target->renderpass, nullptr);
+		target->renderpass = VK_NULL_HANDLE;
+		target->framebuffer = VK_NULL_HANDLE;
+		return false;
+	}
+	return true;
+}
+
+void gVKRenderEngine::endOffscreenPass() {
+	if(vkcontext == nullptr || !vkcontext->frameactive) return;
+	for(auto& entry : vkframebuffers) {
+		if(entry.second == nullptr || !entry.second->active) continue;
+		vkCmdEndRenderPass(vkcontext->commandbuffers[vkcontext->currentframe]);
+		entry.second->active = false;
+		vkcontext->renderpassactive = false;
+		// The pass's finalLayout already left both attachments sampleable.
+		return;
+	}
+}
+
+void gVKRenderEngine::destroyAllFramebuffers() {
+	for(auto& entry : vkframebuffers) {
+		if(entry.second == nullptr) continue;
+		if(vkcontext != nullptr && vkcontext->device != VK_NULL_HANDLE) {
+			if(entry.second->framebuffer != VK_NULL_HANDLE) {
+				vkDestroyFramebuffer(vkcontext->device, entry.second->framebuffer, nullptr);
+			}
+			if(entry.second->renderpass != VK_NULL_HANDLE) {
+				vkDestroyRenderPass(vkcontext->device, entry.second->renderpass, nullptr);
+			}
+		}
+		delete entry.second;
+	}
+	vkframebuffers.clear();
+	boundframebuffer = gFbo::defaultfbo;
+}
+#endif
+
 // ----- Framebuffer -----
 GLuint gVKRenderEngine::createFramebuffer() {
-	GLuint fbo;
-	G_CHECK_GL(glGenFramebuffers(1, &fbo));
-	return fbo;
+#ifdef GVK_DESKTOP_GLFW
+	const GLuint id = nextvkframebufferid++;
+	vkframebuffers[id] = new gVKFramebuffer();
+	return id;
+#else
+	return 0;
+#endif
 }
 
 void gVKRenderEngine::deleteFramebuffer(GLuint& fbo) {
-	if(fbo != 0) {
-		G_CHECK_GL(glDeleteFramebuffers(1, &fbo));
+#ifdef GVK_DESKTOP_GLFW
+	if(fbo == 0) return;
+	if(boundframebuffer == fbo) bindFramebuffer(gFbo::defaultfbo);
+	auto it = vkframebuffers.find(fbo);
+	if(it == vkframebuffers.end()) return;
+	// The attachments themselves belong to the gTextures that own them; only the
+	// pass and the framebuffer built around them are freed here.
+	if(vkcontext != nullptr && vkcontext->device != VK_NULL_HANDLE) {
+		vkDeviceWaitIdle(vkcontext->device);
+		if(it->second->framebuffer != VK_NULL_HANDLE) {
+			vkDestroyFramebuffer(vkcontext->device, it->second->framebuffer, nullptr);
+		}
+		if(it->second->renderpass != VK_NULL_HANDLE) {
+			vkDestroyRenderPass(vkcontext->device, it->second->renderpass, nullptr);
+		}
 	}
+	delete it->second;
+	vkframebuffers.erase(it);
+	fbo = 0;
+#endif
 }
 
 void gVKRenderEngine::bindFramebuffer(GLuint fbo) {
-	G_CHECK_GL(glBindFramebuffer(GL_FRAMEBUFFER, fbo));
+#ifdef GVK_DESKTOP_GLFW
+	if(vkcontext == nullptr) { boundframebuffer = fbo; return; }
+
+	// Whatever pass is open has to close before another can open. Outside a frame
+	// there is nothing to close and nothing to begin, so the bind is only recorded
+	// and acted on when the frame that uses it starts drawing.
+	endOffscreenPass();
 	boundframebuffer = fbo;
+	if(!vkcontext->frameactive || fbo == gFbo::defaultfbo) return;
+
+	auto it = vkframebuffers.find(fbo);
+	if(it == vkframebuffers.end() || it->second == nullptr) return;
+	gVKFramebuffer* target = it->second;
+	if(target->color == nullptr && target->depth == nullptr) return;
+	if(!ensureFramebufferPass(target)) return;
+
+	// The screen pass may already be open - a canvas can bind an FBO half way
+	// through drawing - and two passes cannot be recorded at once.
+	if(vkcontext->renderpassactive) {
+		vkCmdEndRenderPass(vkcontext->commandbuffers[vkcontext->currentframe]);
+		vkcontext->renderpassactive = false;
+	}
+
+	VkCommandBuffer cmd = vkcontext->commandbuffers[vkcontext->currentframe];
+	VkClearValue clears[2];
+	uint32_t clearcount = 0;
+	if(target->color != nullptr) clears[clearcount++] = vkcontext->clearvalue;
+	if(target->depth != nullptr) clears[clearcount++].depthStencil = {1.0f, 0};
+
+	VkRenderPassBeginInfo info{};
+	info.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+	info.renderPass = target->renderpass;
+	info.framebuffer = target->framebuffer;
+	info.renderArea.offset = {0, 0};
+	info.renderArea.extent = {target->width, target->height};
+	info.clearValueCount = clearcount;
+	info.pClearValues = clears;
+	vkCmdBeginRenderPass(cmd, &info, VK_SUBPASS_CONTENTS_INLINE);
+
+	// Negative height as on the screen pass: an FBO is drawn into with the same
+	// top-left origin projections the engine builds everywhere else.
+	VkViewport viewport{};
+	viewport.x = 0.0f;
+	viewport.y = static_cast<float>(target->height);
+	viewport.width = static_cast<float>(target->width);
+	viewport.height = -static_cast<float>(target->height);
+	viewport.minDepth = 0.0f;
+	viewport.maxDepth = 1.0f;
+	vkCmdSetViewport(cmd, 0, 1, &viewport);
+	VkRect2D scissor{};
+	scissor.offset = {0, 0};
+	scissor.extent = {target->width, target->height};
+	vkCmdSetScissor(cmd, 0, 1, &scissor);
+
+	vkcontext->renderpassactive = true;
+	target->active = true;
+	if(target->color != nullptr) target->color->layout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+	if(target->depth != nullptr) target->depth->layout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+#endif
 }
 
 void gVKRenderEngine::checkFramebufferStatus() {
-	// check if fbo complete
-	G_CHECK_GL2(GLuint status, glCheckFramebufferStatus(GL_FRAMEBUFFER));
-	if(status != GL_FRAMEBUFFER_COMPLETE) {
-		gLogi("gFbo") << "Framebuffer is not complete! status:" << gToHex(status, 4);
+#ifdef GVK_DESKTOP_GLFW
+	auto it = vkframebuffers.find(boundframebuffer);
+	if(it == vkframebuffers.end() || it->second == nullptr
+			|| (it->second->color == nullptr && it->second->depth == nullptr)) {
+		gLogi("gFbo") << "Framebuffer is not complete! No attachment was bound to it.";
 	}
+#endif
 }
 
 // ----- Renderbuffer -----
+// Vulkan has no renderbuffer object. gFbo is steered onto a sampleable depth
+// texture instead (see gFbo::allocate), so these only have to hand out ids that
+// are unique and non-zero, and do nothing with them.
 GLuint gVKRenderEngine::createRenderbuffer() {
-	GLuint rbo;
-	G_CHECK_GL(glGenRenderbuffers(1, &rbo));
-	return rbo;
+	return nextvkrenderbufferid++;
 }
 
 void gVKRenderEngine::deleteRenderbuffer(GLuint& rbo) {
-	if(rbo != 0) {
-		G_CHECK_GL(glDeleteRenderbuffers(1, &rbo));
-	}
+	rbo = 0;
 }
 
 void gVKRenderEngine::bindRenderbuffer(GLuint rbo) {
-	assert(rbo != 0);
-	G_CHECK_GL(glBindRenderbuffer(GL_RENDERBUFFER, rbo));
 }
 
 void gVKRenderEngine::setRenderbufferStorage(GLenum format, int width, int height) {
-	G_CHECK_GL(glRenderbufferStorage(GL_RENDERBUFFER, format, width, height));
 }
 
 // ----- Attachments -----
 void gVKRenderEngine::attachTextureToFramebuffer(GLenum attachment, GLenum textarget, GLuint texId, GLuint level) {
-	G_CHECK_GL(glFramebufferTexture2D(GL_FRAMEBUFFER, attachment, textarget, texId, level));
+#ifdef GVK_DESKTOP_GLFW
+	auto fb = vkframebuffers.find(boundframebuffer);
+	auto tex = vktextures.find(texId);
+	if(fb == vkframebuffers.end() || fb->second == nullptr
+			|| tex == vktextures.end() || tex->second == nullptr) return;
+
+	if(attachment == GL_DEPTH_ATTACHMENT || attachment == GL_DEPTH_STENCIL_ATTACHMENT) {
+		fb->second->depth = tex->second;
+	} else {
+		fb->second->color = tex->second;
+	}
+	fb->second->width = static_cast<uint32_t>(tex->second->width);
+	fb->second->height = static_cast<uint32_t>(tex->second->height);
+	// The pass is built lazily on first bind, so an attachment added after one
+	// already exists invalidates it rather than being ignored.
+	if(fb->second->renderpass != VK_NULL_HANDLE && vkcontext != nullptr
+			&& vkcontext->device != VK_NULL_HANDLE) {
+		vkDeviceWaitIdle(vkcontext->device);
+		vkDestroyFramebuffer(vkcontext->device, fb->second->framebuffer, nullptr);
+		vkDestroyRenderPass(vkcontext->device, fb->second->renderpass, nullptr);
+		fb->second->framebuffer = VK_NULL_HANDLE;
+		fb->second->renderpass = VK_NULL_HANDLE;
+	}
+#endif
 }
 
 void gVKRenderEngine::attachRenderbufferToFramebuffer(GLenum attachment, GLuint rbo) {
-	G_CHECK_GL(glFramebufferRenderbuffer(GL_FRAMEBUFFER, attachment, GL_RENDERBUFFER, rbo));
+	// Nothing to attach; see createRenderbuffer.
 }
 
 // ----- Draw/Read buffers -----
@@ -682,8 +927,10 @@ void gVKRenderEngine::drawFullscreenQuad() {
 }
 
 void gVKRenderEngine::bindDefaultFramebuffer() {
-	G_CHECK_GL(glBindFramebuffer(GL_FRAMEBUFFER, gFbo::defaultfbo));
-	boundframebuffer = gFbo::defaultfbo;
+	// gFbo::unbind() comes through here rather than bindFramebuffer, so this is what
+	// closes an offscreen pass and lets the screen pass be reopened by the next draw.
+	// It used to call glBindFramebuffer, which raised an error on every unbind.
+	bindFramebuffer(gFbo::defaultfbo);
 }
 
 void gVKRenderEngine::drawVbo(const gVbo& vbo) {
@@ -743,10 +990,30 @@ void gVKRenderEngine::deleteTexture(GLuint& texId) {
 void gVKRenderEngine::texImage2D(GLenum target, GLint internalFormat, int width, int height, GLint format, GLint type, void* data, GLint level) {
 #ifdef GVK_DESKTOP_GLFW
 	if(vkcontext == nullptr || boundtextureid == 0) return;
-	// Only 8-bit colour uploads that carry pixels become a texture. Allocation-only
-	// calls (data == nullptr, e.g. FBO colour targets) and float / HDR uploads are
-	// outside what the 2D image path handles.
-	if(data == nullptr || type != GL_UNSIGNED_BYTE || width <= 0 || height <= 0) return;
+	if(width <= 0 || height <= 0) return;
+
+	// An allocation-only call is an FBO attachment: gFbo makes its colour and depth
+	// textures by asking for storage with no pixels in it. Those become renderable
+	// images rather than sampled-only ones, and are registered under the same id so
+	// the rest of the engine can bind them as ordinary textures afterwards.
+	if(data == nullptr) {
+		const bool depth = internalFormat == GL_DEPTH_COMPONENT || format == GL_DEPTH_COMPONENT
+				|| internalFormat == GL_DEPTH_COMPONENT16 || internalFormat == GL_DEPTH_COMPONENT24
+				|| internalFormat == GL_DEPTH_COMPONENT32F;
+		auto existing = vktextures.find(boundtextureid);
+		if(existing != vktextures.end()) {
+			vkDeviceWaitIdle(vkcontext->device);
+			gvkDestroyTexture(*vkcontext, existing->second);
+			vktextures.erase(existing);
+		}
+		gVKTexture* target = gvkCreateAttachmentTexture(*vkcontext, width, height, depth);
+		if(target != nullptr) vktextures[boundtextureid] = target;
+		return;
+	}
+
+	// Only 8-bit colour uploads become a sampled texture; float / HDR ones are
+	// outside what the image path handles.
+	if(type != GL_UNSIGNED_BYTE) return;
 
 	int components = 4;
 	if(format == GL_RED) components = 1;
@@ -1552,6 +1819,11 @@ void gVKRenderEngine::checkShaderReload() {
 void gVKRenderEngine::endFrame() {
 #ifdef GVK_DESKTOP_GLFW
 	if(vkcontext == nullptr) return;
+	// An application that forgot to unbind its FBO would otherwise leave that pass
+	// open, and the frame loop would close it believing it was the screen one -
+	// leaving the swapchain image never rendered and never transitioned.
+	endOffscreenPass();
+	boundframebuffer = gFbo::defaultfbo;
 	gvkEndFrame(*vkcontext, vkcontext->window);
 #endif
 }
@@ -1948,6 +2220,10 @@ gVKTexture* gVKRenderEngine::getBoundVKTexture() {
 void gVKRenderEngine::destroyAllTextures() {
 #ifdef GVK_DESKTOP_GLFW
 	if(vkcontext == nullptr) return;
+	// The framebuffers first: they hold render passes built around these textures'
+	// views, and a pass outliving its attachment is what turns a clean shutdown into
+	// a validation error.
+	destroyAllFramebuffers();
 	for(auto& entry : vktextures) gvkDestroyTexture(*vkcontext, entry.second);
 	vktextures.clear();
 #endif

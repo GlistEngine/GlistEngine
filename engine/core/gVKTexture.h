@@ -28,6 +28,15 @@ struct gVKTexture {
 	// Levels in the mip chain, 1 meaning no chain. Built at upload time, the same
 	// way the OpenGL path calls glGenerateMipmap after its upload.
 	uint32_t miplevels = 1;
+	// Tracked so a render target can be moved between being written as an
+	// attachment and being sampled. An uploaded texture never leaves
+	// SHADER_READ_ONLY, which is why that is the default.
+	VkImageLayout layout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+	VkImageAspectFlags aspect = VK_IMAGE_ASPECT_COLOR_BIT;
+	VkFormat format = VK_FORMAT_R8G8B8A8_UNORM;
+	// True for a texture created as an FBO attachment rather than uploaded from
+	// pixels. Those carry no mip chain and are cleared by the render pass.
+	bool isattachment = false;
 	// What the current sampler was built with, so a filtering or wrapping change
 	// can be detected and only then rebuild it. The defaults match what gTexture
 	// starts from.
@@ -53,6 +62,12 @@ bool gvkWriteTextureDescriptorSet(gVKContext& ctx, gVKTexture* tex);
 // had to change.
 bool gvkSetTextureSampler(gVKContext& ctx, gVKTexture* tex, VkFilter minFilter, VkFilter magFilter,
 		VkSamplerAddressMode addressU, VkSamplerAddressMode addressV);
+
+// Creates an empty texture to be rendered into, for gFbo's colour and depth
+// attachments. Unlike an uploaded texture this carries no pixels and no mip chain:
+// the render pass clears it, the draws fill it, and it is transitioned back to
+// SHADER_READ_ONLY afterwards so the same object can be sampled.
+gVKTexture* gvkCreateAttachmentTexture(gVKContext& ctx, int width, int height, bool depth);
 
 void gvkDestroyTexture(gVKContext& ctx, gVKTexture* tex);
 

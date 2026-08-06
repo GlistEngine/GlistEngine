@@ -52,7 +52,9 @@ void gFbo::allocate(int width, int height, bool isDepthMap, bool useDepthTexture
 	this->width = width;
 	this->height = height;
 	isdepthmap = isDepthMap;
-	usedepthtexture = useDepthTexture;
+	// Vulkan has no renderbuffer object, so the depth attachment is always a
+	// sampleable texture there. The public FBO API is unchanged either way.
+	usedepthtexture = useDepthTexture || renderer->isVulkan();
 
 	framebuffer = renderer->createFramebuffer();
 	renderer->bindFramebuffer(framebuffer);
@@ -63,7 +65,7 @@ void gFbo::allocate(int width, int height, bool isDepthMap, bool useDepthTexture
 		texture->bind();
 		renderer->attachTextureToFramebuffer(GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture->getId());
 
-		if(useDepthTexture) {
+		if(usedepthtexture) {
 			// create a sampleable depth texture attachment
 			depthtexture = new gTexture(width, height, GL_DEPTH_COMPONENT, true);
 			depthtexture->bind();

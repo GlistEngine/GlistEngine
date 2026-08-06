@@ -308,6 +308,85 @@ bool gvkWriteTextureDescriptorSet(gVKContext& ctx, gVKTexture* tex) {
 	return true;
 }
 
+gVKTexture* gvkCreateAttachmentTexture(gVKContext& ctx, int width, int height, bool depth) {
+	VkDevice device = *ctx.getDevice();
+	if(device == VK_NULL_HANDLE || width <= 0 || height <= 0) return nullptr;
+
+	gVKTexture* tex = new gVKTexture();
+	tex->width = width;
+	tex->height = height;
+	tex->miplevels = 1;
+	tex->isattachment = true;
+	// The swapchain's own formats, not this file's usual R8G8B8A8. Vulkan pipelines
+	// are built against a render pass, and a pipeline can only be recorded into a
+	// pass its attachments are compatible with - so an offscreen target has to carry
+	// the same formats as the screen or none of the existing pipelines could draw
+	// into it. The depth one is what the shadow map already settled on.
+	tex->format = depth ? gvkFindDepthFormat(ctx) : *ctx.getSwapchainFormat();
+	tex->aspect = depth ? VK_IMAGE_ASPECT_DEPTH_BIT : VK_IMAGE_ASPECT_COLOR_BIT;
+	tex->layout = VK_IMAGE_LAYOUT_UNDEFINED;
+	if(tex->format == VK_FORMAT_UNDEFINED) { delete tex; return nullptr; }
+
+	VkImageCreateInfo imageinfo{};
+	imageinfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
+	imageinfo.imageType = VK_IMAGE_TYPE_2D;
+	imageinfo.extent = {static_cast<uint32_t>(width), static_cast<uint32_t>(height), 1};
+	imageinfo.mipLevels = 1;
+	imageinfo.arrayLayers = 1;
+	imageinfo.format = tex->format;
+	imageinfo.tiling = VK_IMAGE_TILING_OPTIMAL;
+	imageinfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+	// SAMPLED as well as the attachment usage: the whole point of an FBO here is to
+	// draw into it and then read it back as a texture.
+	imageinfo.usage = (depth ? VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT
+			: VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT) | VK_IMAGE_USAGE_SAMPLED_BIT;
+	imageinfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+	imageinfo.samples = VK_SAMPLE_COUNT_1_BIT;
+	if(vkCreateImage(device, &imageinfo, nullptr, &tex->image) != VK_SUCCESS) {
+		gLoge("gVKTexture") << "vkCreateImage failed for a framebuffer attachment.";
+		delete tex;
+		return nullptr;
+	}
+
+	VkMemoryRequirements requirements{};
+	vkGetImageMemoryRequirements(device, tex->image, &requirements);
+	VkMemoryAllocateInfo allocinfo{};
+	allocinfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+	allocinfo.allocationSize = requirements.size;
+	allocinfo.memoryTypeIndex = gvkFindMemoryType(ctx, requirements.memoryTypeBits,
+			VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
+	if(vkAllocateMemory(device, &allocinfo, nullptr, &tex->memory) != VK_SUCCESS) {
+		gLoge("gVKTexture") << "vkAllocateMemory failed for a framebuffer attachment.";
+		gvkDestroyTexture(ctx, tex);
+		return nullptr;
+	}
+	vkBindImageMemory(device, tex->image, tex->memory, 0);
+
+	VkImageViewCreateInfo viewinfo{};
+	viewinfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+	viewinfo.image = tex->image;
+	viewinfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
+	viewinfo.format = tex->format;
+	viewinfo.subresourceRange.aspectMask = tex->aspect;
+	viewinfo.subresourceRange.baseMipLevel = 0;
+	viewinfo.subresourceRange.levelCount = 1;
+	viewinfo.subresourceRange.baseArrayLayer = 0;
+	viewinfo.subresourceRange.layerCount = 1;
+	if(vkCreateImageView(device, &viewinfo, nullptr, &tex->view) != VK_SUCCESS) {
+		gLoge("gVKTexture") << "vkCreateImageView failed for a framebuffer attachment.";
+		gvkDestroyTexture(ctx, tex);
+		return nullptr;
+	}
+
+	// Clamped rather than repeating: a render target sampled outside its own edge
+	// should not fold the opposite side back in.
+	tex->addressu = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
+	tex->addressv = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
+	tex->sampler = gvkCreateSampler(device, tex->minfilter, tex->magfilter, tex->addressu, tex->addressv);
+	gvkWriteTextureDescriptorSet(ctx, tex);
+	return tex;
+}
+
 void gvkDestroyTexture(gVKContext& ctx, gVKTexture* tex) {
 	if(tex == nullptr) return;
 	VkDevice device = *ctx.getDevice();

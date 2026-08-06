@@ -15,6 +15,7 @@
 // still compiles on platforms that have no Vulkan headers.
 struct gVKContext;
 struct gVKTexture;
+struct gVKFramebuffer;
 struct gVKMeshBuffer;
 
 // What a vertex array id stands for: the pair of buffer ids that were bound while
@@ -276,6 +277,20 @@ private:
 	std::unordered_map<GLuint, gVKTexture*> vktextures;
 	GLuint nextvktextureid = 1;
 	GLuint boundtextureid = 0;
+	// Offscreen render targets, one per gFbo. Each owns a render pass and a
+	// framebuffer of its own, the same shape the shadow map already uses, because
+	// this backend renders through render passes rather than dynamic rendering.
+	std::unordered_map<GLuint, gVKFramebuffer*> vkframebuffers;
+	GLuint nextvkframebufferid = 1;
+	// Renderbuffers have no Vulkan counterpart: gFbo is steered onto a sampleable
+	// depth texture instead, so these ids only have to be unique and non-zero.
+	GLuint nextvkrenderbufferid = 1;
+	// Ends whatever offscreen pass is open and hands its attachments back to the
+	// shader as sampleable textures. Safe to call when none is open.
+	void endOffscreenPass();
+	void destroyAllFramebuffers();
+	// Builds a target's render pass and framebuffer on first use.
+	bool ensureFramebufferPass(gVKFramebuffer* target);
 	// Vertex array ids. Vulkan has no such object, but gVbo binds one before every
 	// upload and every draw, so the id is what tells the backend which pair of
 	// buffers a draw is about. See gVKMeshBuffer.h.
