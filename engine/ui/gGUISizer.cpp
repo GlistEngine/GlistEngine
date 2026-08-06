@@ -22,6 +22,7 @@ gGUISizer::gGUISizer() {
 	slotpadding = 2;
 	slotheightpadding = 0;
 	alignvertically = false;
+	isbackgroundimageenabled = false;
 	lineprs = nullptr;
 	columnprs = nullptr;
 	linetprs = nullptr;
@@ -428,17 +429,24 @@ void gGUISizer::update() {
 }
 
 void gGUISizer::draw() {
-//	gLogi("gGUISizer") << "draw";
-//	gLogi("gGUISizer") << "l:" << left << ", t:" << top << ", w:" << width << ", h:" << height << ", ln:" << linenum << ", cn:" << columnnum;
+	//	gLogi("gGUISizer") << "draw";
+	//	gLogi("gGUISizer") << "l:" << left << ", t:" << top << ", w:" << width << ", h:" << height << ", ln:" << linenum << ", cn:" << columnnum;
+	if(fillbackground || isbackgroundimageenabled) {
+		gColor oldcolor = *renderer->getColor();
+		renderer->setColor(backgroundcolor);
+		gDrawRectangle(left, top, width, height, true);
+		renderer->setColor(&oldcolor);
+	}
+
+	if(isbackgroundimageenabled) {
+		gColor oldcolor = *renderer->getColor();
+		renderer->setColor(255, 255, 255, 255);
+		this->backgroundimage.draw(left, top, width, height);
+		renderer->setColor(&oldcolor);
+	}
+
 	for(int line = 0; line < linenum; line++) {
 		for(int column = 0; column < columnnum; column++) {
-			if(fillbackground) {
-				gColor oldcolor = *renderer->getColor();
-				renderer->setColor(backgroundcolor);
-				gDrawRectangle(left + (width * columntprs[column]), top + (height * linetprs[line]), width * columnprs[column], height * lineprs[line], true);
-				renderer->setColor(&oldcolor);
-			}
-
 			gGUIControl* control = getControl(line, column);
 			if(control != nullptr && control->isEnabled()) {
 				control->draw();
@@ -745,4 +753,14 @@ void gGUISizer::windowResized(int w, int h) {
 			}
 		}
 	}
+}
+
+void gGUISizer::setBackgroundImage(const std::string& path) {
+	isbackgroundimageenabled = true;
+	this->backgroundimage.loadImage(path);
+}
+
+
+void gGUISizer::setBackgroungImageEnabled(bool isenable) {
+	this->isbackgroundimageenabled = isenable;
 }
