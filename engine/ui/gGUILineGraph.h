@@ -61,35 +61,135 @@ public:
 	gGUILineGraph();
 	virtual ~gGUILineGraph();
 
+	/**
+	 * Sets the positioning, slot indexing, and dimensions of the line graph control.
+	 */
 	void set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIObject* parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h) override;
 
+	/**
+	 * Sets the maximum value limits of the X axis.
+	 */
 	void setMaxX(float maxX) override;
+
+	/**
+	 * Sets the minimum value limits of the X axis.
+	 */
 	void setMinX(float minX) override;
+
+	/**
+	 * Sets the maximum value limits of the Y axis.
+	 */
 	void setMaxY(float maxY) override;
+
+	/**
+	 * Sets the minimum value limits of the Y axis.
+	 */
 	void setMinY(float minY) override;
 
+	/**
+	 * Sets the number of labels to be drawn on the X axis.
+	 */
 	void setLabelCountX(int labelCount) override;
+
+	/**
+	 * Sets the number of labels to be drawn on the Y axis.
+	 */
 	void setLabelCountY(int labelCount) override;
 
+	/**
+	 * Enables or disables drawing circles/points at the data coordinates.
+	 */
 	void enablePoints(bool arePointsEnabled);
+
+	/**
+	 * Sets the drawing color for a specific line index.
+	 */
 	void setLineColor(int lineIndex, gColor lineColor);
+
+	/**
+	 * Gets the drawing color of a specific line index.
+	 */
 	gColor getLineColor(int lineIndex);
 
+	/**
+	 * Sets the filled area color under the graph line for a specific line index.
+	 */
+	void setFilledAreaColor(int lineIndex, gColor fillColor);
+
+	/**
+	 * Gets the filled area color under the graph line for a specific line index.
+	 */
+	gColor getFilledAreaColor(int lineIndex);
+
+	/**
+	 * Adds a new line series data container to the graph.
+	 */
 	void addLine();
+
+	/**
+	 * Appends a batch of points to a specific line series.
+	 */
 	void addData(int lineIndex, std::deque<std::array<float, 2>> dataToAdd);
+
+	/**
+	 * Appends a single data point to a specific line series.
+	 */
 	void addPointToLine(int lineIndex, float x, float y);
+
+	/**
+	 * Updates the coordinates of a data point at a specific index in a line series.
+	 */
 	void setPointValues(int lineIndex, int pointIndex, float newX, float newY);
+
+	/**
+	 * Finds a data point by old coordinates and updates it to new coordinates.
+	 */
 	void setPointValues(int lineIndex, float oldX, float oldY, float newX, float newY);
+
+	/**
+	 * Truncates the oldest points from the beginning of a line series if it exceeds a limit.
+	 */
 	void removeFirstPointsFromLine(int lineIndex, int pointNumLimit);
 
+	/**
+	 * Gets the total number of points in a specific line series.
+	 */
 	int getPointNum(int lineIndex);
 
+	/**
+	 * Gets the raw X value of a point inside a specific line series.
+	 */
 	float getPointXValue(int lineIndex, int pointIndex);
+
+	/**
+	 * Gets the raw Y value of a point inside a specific line series.
+	 */
 	float getPointYValue(int lineIndex, int pointIndex);
 
+	/**
+	 * Clears all data lines, points, and customized colors from the graph.
+	 */
 	void clear() override;
 
+	/**
+	 * Configures outer margins/padding around the graph axes boundary.
+	 */
 	void setOffset(int leftOffset, int rightOffset, int topOffset, int bottomOffset);
+
+	/**
+	 * Enables or disables drawing a filled area beneath the graph lines.
+	 */
+	void enableFilledArea(bool isEnabled);
+
+	/**
+	 * Configures the thickness of the line segments on the graph.
+	 */
+	void setLineThickness(float thickness);
+
+	/**
+	 * Enables or disables auto-scaling of the Y axis tightly to the actual min/max data range.
+	 */
+	void enableAutoScale(bool isEnabled);
 private:
 	static const int linecolornum = 6;
 	void drawGraph() override;
@@ -102,8 +202,12 @@ private:
 	std::unordered_map<uint64_t, gLine*> linesmap;
 	std::unordered_map<uint64_t, gCircle*> circlesmap;
 	gColor linecolors[linecolornum];
+	gColor filledcolors[linecolornum];
 
 	bool pointsenabled;
+	bool isfilledarea;
+	bool isautoscaled;
+	float linethickness;
 	bool needsupdate = false;
 	int offsetleft;
 	int offsetright;
