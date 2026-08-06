@@ -19,6 +19,19 @@
 // For gVKMeshPush, the 3D path's push constant block.
 #include "gVKUniform.h"
 
+// The renderer's culling state, handed to a 3D draw the same way the depth state is.
+// Already in Vulkan terms: gVKRenderEngine translates the engine's GL-flavoured
+// culling API, so this header needs no GL constants.
+//
+// The front face is deliberately the opposite of the OpenGL one. The frame loop
+// draws through a negative-height viewport, which mirrors the y axis and reverses
+// the winding a triangle appears to have on screen, so geometry OpenGL calls
+// counter-clockwise reaches this rasteriser as clockwise.
+struct gVKCullState {
+	VkCullModeFlags mode = VK_CULL_MODE_NONE;
+	VkFrontFace frontface = VK_FRONT_FACE_CLOCKWISE;
+};
+
 #ifdef GVK_DESKTOP_GLFW
 
 #include <glm/glm.hpp>
@@ -86,7 +99,8 @@ void gvkDrawMesh3D(gVKContext& ctx, VkBuffer vertexBuffer, VkBuffer indexBuffer,
 		VkDescriptorSet diffuseSet, VkDescriptorSet specularSet, VkDescriptorSet normalSet,
 		VkDescriptorSet shadowSet,
 		VkBuffer instanceBuffer, int instanceCount,
-		VkPrimitiveTopology topology, bool depthTest, bool depthTestAlways, bool lines);
+		VkPrimitiveTopology topology, bool depthTest, bool depthTestAlways, bool lines,
+		const gVKCullState& culling);
 
 // Records one mesh into the shadow map through the depth-only pipeline. diffuseSet
 // is the caster's diffuse map, bound as set 0 so a cutout material can discard the
@@ -108,7 +122,8 @@ void gvkDrawMesh3DPbr(gVKContext& ctx, VkBuffer vertexBuffer, VkBuffer indexBuff
 		VkIndexType indexType, const gVKPbrPush& push, VkDescriptorSet materialSet,
 		VkDescriptorSet shadowSet,
 		VkBuffer instanceBuffer, int instanceCount,
-		VkPrimitiveTopology topology, bool depthTest, bool depthTestAlways);
+		VkPrimitiveTopology topology, bool depthTest, bool depthTestAlways,
+		const gVKCullState& culling);
 
 #endif /* GVK_DESKTOP_GLFW */
 

@@ -412,6 +412,13 @@ public:
 	virtual void disableDepthTest() = 0;
 	virtual bool isDepthTestEnabled() = 0;
 	virtual int getDepthTestType() = 0;
+	virtual void enableCulling() { iscullingenabled = true; }
+	virtual void disableCulling() { iscullingenabled = false; }
+	virtual bool isCullingEnabled() const { return iscullingenabled; }
+	virtual void setCullFace(int face) { cullface = face; }
+	virtual int getCullFace() const { return cullface; }
+	virtual void setCullingDirection(int direction) { cullingdirection = direction; }
+	virtual int getCullingDirection() const { return cullingdirection; }
 
 	virtual void enableAlphaBlending() = 0;
 	virtual void disableAlphaBlending() = 0;
@@ -679,6 +686,9 @@ protected:
 
 	bool isdepthtestenabled;
 	int depthtesttype;
+	bool iscullingenabled = false;
+	int cullface = GL_BACK;
+	int cullingdirection = GL_CCW;
 	unsigned int depthtesttypeid[2];
 	bool isalphablendingenabled, isalphatestenabled;
 

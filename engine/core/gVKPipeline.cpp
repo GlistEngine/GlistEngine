@@ -105,6 +105,11 @@ struct gvkPipelineOptions {
 	// draws meshes with blending switched off.
 	bool blend = true;
 	VkCullModeFlags cullmode = VK_CULL_MODE_NONE;
+	// Makes the cull mode and the front face dynamic, so a 3D draw can follow the
+	// renderer's culling state the way it already follows the depth state. Only the
+	// 3D pipelines ask for it; the 2D ones never cull, and leaving the state static
+	// there means their draw calls have nothing extra to set.
+	bool dynamicculling = false;
 	// When set, the vertex input is taken from here instead of from reflection.
 	const VkVertexInputAttributeDescription* vertexattributes = nullptr;
 	uint32_t vertexattributecount = 0;
@@ -331,18 +336,23 @@ static bool gvkBuildPipeline(VkDevice device, VkRenderPass renderpass, const cha
 	// mode, and gSphere for one is a triangle strip while gBox is a triangle list.
 	// Vulkan allows this to change freely within a topology class, so the triangle
 	// pipeline covers list and strip and the line pipeline covers list and strip too.
+	// The two culling states come last so the count below can simply take or leave
+	// them; every draw recording through a pipeline that asked for them must set
+	// both, because a dynamic state left unset is undefined.
 	VkDynamicState dynamicstates[] = {
 		VK_DYNAMIC_STATE_VIEWPORT,
 		VK_DYNAMIC_STATE_SCISSOR,
 		VK_DYNAMIC_STATE_DEPTH_TEST_ENABLE,
 		VK_DYNAMIC_STATE_DEPTH_WRITE_ENABLE,
 		VK_DYNAMIC_STATE_DEPTH_COMPARE_OP,
-		VK_DYNAMIC_STATE_PRIMITIVE_TOPOLOGY};
+		VK_DYNAMIC_STATE_PRIMITIVE_TOPOLOGY,
+		VK_DYNAMIC_STATE_CULL_MODE,
+		VK_DYNAMIC_STATE_FRONT_FACE};
 	VkPipelineDynamicStateCreateInfo dynamicstate{};
 	dynamicstate.sType = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO;
 	// The 2D pipelines keep the static state below: their geometry is expanded into
 	// plain lists before it ever reaches a draw call.
-	dynamicstate.dynamicStateCount = options.depthtest ? 6 : 2;
+	dynamicstate.dynamicStateCount = options.dynamicculling ? 8 : (options.depthtest ? 6 : 2);
 	dynamicstate.pDynamicStates = dynamicstates;
 
 	// The render pass carries a depth attachment, and a pipeline used with such a
@@ -458,6 +468,9 @@ static bool gvkBuildAll(VkDevice device, VkRenderPass renderpass, const gvkShade
 	gvkPipelineOptions mesh3dopts;
 	mesh3dopts.depthtest = true;
 	mesh3dopts.blend = false;
+	// A mesh follows the renderer's culling state, which an app can change between
+	// draws exactly as it changes depth testing.
+	mesh3dopts.dynamicculling = true;
 	mesh3dopts.vertexattributes = gvkmesh3dattributes;
 	mesh3dopts.vertexattributecount = static_cast<uint32_t>(std::size(gvkmesh3dattributes));
 	mesh3dopts.vertexstride = GVK_MESH3D_VERTEX_STRIDE;
@@ -582,6 +595,10 @@ bool gvkCreateShadowPipeline(gVKContext& ctx) {
 	// map. The scene's own enableDepthTest has no say here.
 	options.depthtest = true;
 	options.blend = false;
+	// The shadow pipeline shares the mesh vertex layout and the same dynamic state
+	// set, so its draws set the culling state too. Casters are not culled - a shadow
+	// wants the whole silhouette, including back faces.
+	options.dynamicculling = true;
 	options.vertexattributes = gvkmesh3dattributes;
 	options.vertexattributecount = static_cast<uint32_t>(std::size(gvkmesh3dattributes));
 	options.vertexstride = GVK_MESH3D_VERTEX_STRIDE;

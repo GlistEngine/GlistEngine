@@ -20,37 +20,40 @@ void gCheckGLErrorAndPrint(const std::string& prefix, const std::string& func, i
 }
 
 void gEnableCulling() {
-	G_CHECK_GL(glEnable(GL_CULL_FACE));
+	gRenderObject::getRenderer()->enableCulling();
 }
 
 void gDisableCulling() {
-	G_CHECK_GL(glDisable(GL_CULL_FACE));
+	gRenderObject::getRenderer()->disableCulling();
 }
 
 bool gIsCullingEnabled() {
-	G_CHECK_GL2(GLboolean res, glIsEnabled(GL_CULL_FACE));
-	return res == GL_TRUE;
+	return gRenderObject::getRenderer()->isCullingEnabled();
 }
 
 void gCullFace(int cullingFace) {
-	G_CHECK_GL(glCullFace(cullingFace));
+	gRenderObject::getRenderer()->setCullFace(cullingFace);
 }
 
 int gGetCullFace() {
-	GLint i;
-	G_CHECK_GL(glGetIntegerv(GL_CULL_FACE_MODE, &i));
-	return i;
+	return gRenderObject::getRenderer()->getCullFace();
 }
 
 void gSetCullingDirection(int cullingDirection) {
-	G_CHECK_GL(glFrontFace(cullingDirection));
+	gRenderObject::getRenderer()->setCullingDirection(cullingDirection);
 }
 
 int gGetCullingDirection() {
-	GLint i;
-	G_CHECK_GL(glGetIntegerv(GL_FRONT_FACE, &i));
-	return i;
+	return gRenderObject::getRenderer()->getCullingDirection();
 }
+
+void gGLRenderEngine::enableCulling() { G_CHECK_GL(glEnable(GL_CULL_FACE)); iscullingenabled = true; }
+void gGLRenderEngine::disableCulling() { G_CHECK_GL(glDisable(GL_CULL_FACE)); iscullingenabled = false; }
+bool gGLRenderEngine::isCullingEnabled() const { return iscullingenabled; }
+void gGLRenderEngine::setCullFace(int face) { G_CHECK_GL(glCullFace(face)); cullface = face; }
+int gGLRenderEngine::getCullFace() const { return cullface; }
+void gGLRenderEngine::setCullingDirection(int direction) { G_CHECK_GL(glFrontFace(direction)); cullingdirection = direction; }
+int gGLRenderEngine::getCullingDirection() const { return cullingdirection; }
 
 gGLRenderEngine::~gGLRenderEngine() {
 	if(textbatchvbo != 0) G_CHECK_GL(glDeleteBuffers(1, &textbatchvbo));

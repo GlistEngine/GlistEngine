@@ -197,7 +197,8 @@ void gvkDrawMesh3D(gVKContext& ctx, VkBuffer vertexBuffer, VkBuffer indexBuffer,
 		VkDescriptorSet diffuseSet, VkDescriptorSet specularSet, VkDescriptorSet normalSet,
 		VkDescriptorSet shadowSet,
 		VkBuffer instanceBuffer, int instanceCount,
-		VkPrimitiveTopology topology, bool depthTest, bool depthTestAlways, bool lines) {
+		VkPrimitiveTopology topology, bool depthTest, bool depthTestAlways, bool lines,
+		const gVKCullState& culling) {
 	if(count <= 0 || vertexBuffer == VK_NULL_HANDLE) return;
 	if(!gvkEnsureRenderPass(ctx)) return;
 
@@ -217,6 +218,10 @@ void gvkDrawMesh3D(gVKContext& ctx, VkBuffer vertexBuffer, VkBuffer indexBuffer,
 	vkCmdSetDepthCompareOp(cmd, depthTestAlways ? VK_COMPARE_OP_ALWAYS : VK_COMPARE_OP_LESS);
 	// The mesh's own draw mode, within the class the bound pipeline was built for.
 	vkCmdSetPrimitiveTopology(cmd, topology);
+	// Culling follows the renderer too, and both states have to be set because the
+	// 3D pipelines declare them dynamic.
+	vkCmdSetCullMode(cmd, culling.mode);
+	vkCmdSetFrontFace(cmd, culling.frontface);
 
 	// Camera and lights, the same for every mesh in the frame. Bound per draw rather
 	// than once per frame because the 2D pipelines are interleaved with these and
@@ -301,6 +306,10 @@ void gvkDrawShadowCaster(gVKContext& ctx, VkBuffer vertexBuffer, VkBuffer indexB
 	vkCmdSetDepthWriteEnable(cmd, VK_TRUE);
 	vkCmdSetDepthCompareOp(cmd, VK_COMPARE_OP_LESS);
 	vkCmdSetPrimitiveTopology(cmd, topology);
+	// Casters are never culled, whatever the scene asked for: a shadow wants the
+	// whole silhouette, and dropping back faces would punch holes in it.
+	vkCmdSetCullMode(cmd, VK_CULL_MODE_NONE);
+	vkCmdSetFrontFace(cmd, VK_FRONT_FACE_CLOCKWISE);
 
 	const uint32_t instances = static_cast<uint32_t>(instanceCount < 1 ? 1 : instanceCount);
 	if(indexBuffer != VK_NULL_HANDLE) {
@@ -315,7 +324,8 @@ void gvkDrawMesh3DPbr(gVKContext& ctx, VkBuffer vertexBuffer, VkBuffer indexBuff
 		VkIndexType indexType, const gVKPbrPush& push, VkDescriptorSet materialSet,
 		VkDescriptorSet shadowSet,
 		VkBuffer instanceBuffer, int instanceCount,
-		VkPrimitiveTopology topology, bool depthTest, bool depthTestAlways) {
+		VkPrimitiveTopology topology, bool depthTest, bool depthTestAlways,
+		const gVKCullState& culling) {
 	if(count <= 0 || vertexBuffer == VK_NULL_HANDLE) return;
 	if(!gvkEnsureRenderPass(ctx)) return;
 
@@ -334,6 +344,8 @@ void gvkDrawMesh3DPbr(gVKContext& ctx, VkBuffer vertexBuffer, VkBuffer indexBuff
 	vkCmdSetDepthWriteEnable(cmd, depthTest ? VK_TRUE : VK_FALSE);
 	vkCmdSetDepthCompareOp(cmd, depthTestAlways ? VK_COMPARE_OP_ALWAYS : VK_COMPARE_OP_LESS);
 	vkCmdSetPrimitiveTopology(cmd, topology);
+	vkCmdSetCullMode(cmd, culling.mode);
+	vkCmdSetFrontFace(cmd, culling.frontface);
 
 	// Three sets: the scene block, the whole material, and the shadow map.
 	VkDescriptorSet sets[] = {sceneset, materialSet, shadowSet};

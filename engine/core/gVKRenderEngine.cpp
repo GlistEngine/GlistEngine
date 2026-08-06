@@ -1731,6 +1731,19 @@ void gVKRenderEngine::drawMesh3D(GLuint vertexArrayId, int vertexCount, int inde
 		return;
 	}
 
+	// The renderer's culling state, translated once for whichever of the two 3D
+	// pipelines records this mesh. Both are built with the cull mode and the front
+	// face dynamic, so every draw has to set them. See gVKCullState for why the
+	// front face comes out as the opposite of the OpenGL one.
+	gVKCullState cullstate;
+	if(iscullingenabled) {
+		if(cullface == GL_FRONT) cullstate.mode = VK_CULL_MODE_FRONT_BIT;
+		else if(cullface == GL_FRONT_AND_BACK) cullstate.mode = VK_CULL_MODE_FRONT_AND_BACK;
+		else cullstate.mode = VK_CULL_MODE_BACK_BIT;
+	}
+	cullstate.frontface = cullingdirection == GL_CW
+			? VK_FRONT_FACE_COUNTER_CLOCKWISE : VK_FRONT_FACE_CLOCKWISE;
+
 	// renderColor is deliberately not applied to a 3D mesh, even though
 	// color_frag.glsl ends with "result * renderColor". Measured against the OpenGL
 	// backend, a mesh comes out as its material colour alone: setColor moves the 2D
@@ -1777,7 +1790,7 @@ void gVKRenderEngine::drawMesh3D(GLuint vertexArrayId, int vertexCount, int inde
 				indexed ? indexCount : vertexCount, pbrindextype, pbrpush, materialset,
 				pbrshadowset,
 				pbrinstances, instanceCount, topology,
-				isdepthtestenabled, depthtesttype == DEPTHTESTTYPE_ALWAYS);
+				isdepthtestenabled, depthtesttype == DEPTHTESTTYPE_ALWAYS, cullstate);
 		return;
 	}
 
@@ -1846,7 +1859,7 @@ void gVKRenderEngine::drawMesh3D(GLuint vertexArrayId, int vertexCount, int inde
 			indexed ? indexCount : vertexCount, indextype, push, diffuseset, specularset, normalset,
 			shadowset,
 			instancebuffer, instanceCount,
-			topology, isdepthtestenabled, depthtesttype == DEPTHTESTTYPE_ALWAYS, lines);
+			topology, isdepthtestenabled, depthtesttype == DEPTHTESTTYPE_ALWAYS, lines, cullstate);
 #endif
 }
 
