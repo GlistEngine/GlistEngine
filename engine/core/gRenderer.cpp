@@ -9,6 +9,7 @@
 #include "gFbo.h"
 
 #include <cstdlib>
+#include <algorithm>
 
 #include "gCross.h"
 #include "gArc.h"
@@ -23,13 +24,14 @@
 #include "gCylinder.h"
 #include "gCone.h"
 #include "gTube.h"
+//#include "gArrow.h"
 #include "gUbo.h"
 #include "gShader.h"
 #include "gCamera.h"
 #include "gGrid.h"
 #include "gNode.h"
 
-//screenShot Related includes
+// screenShot Related includes
 #include "stb/stb_image_write.h"
 #include "gBaseApp.h"
 #include "gImage.h"
@@ -53,6 +55,13 @@ int gRenderer::screenscaling;
 int gRenderer::currentresolution;
 int gRenderer::unitresolution;
 
+// --- Global Draw Functions ---
+
+void gDrawLine(float x1, float y1, float x2, float y2) {
+	G_PROFILE_ZONE_SCOPED_N("gDrawLine()");
+	gRenderObject::getRenderer()->drawLine(x1, y1, x2, y2);
+}
+
 void gDrawLine(float x1, float y1, float x2, float y2, float thickness) {
 	G_PROFILE_ZONE_SCOPED_N("gDrawLine()");
 	gRenderObject::getRenderer()->drawLine(x1, y1, x2, y2, thickness);
@@ -63,39 +72,44 @@ void gDrawLine(float x1, float y1, float z1, float x2, float y2, float z2, float
 	gRenderObject::getRenderer()->drawLine(x1, y1, z1, x2, y2, z2, thickness);
 }
 
-void gDrawTriangle(float px, float py, float qx, float qy, float rx, float ry, bool is_filled) {
+void gDrawLine(float x1, float y1, float x2, float y2, float thickness, float rotateAngle, float pivotx, float pivoty) {
+	G_PROFILE_ZONE_SCOPED_N("gDrawLine()");
+	gRenderObject::getRenderer()->drawLine(x1, y1, x2, y2, thickness, rotateAngle, pivotx, pivoty);
+}
+
+void gDrawTriangle(float px, float py, float qx, float qy, float rx, float ry, bool is_filled, float rotateAngle, float pivotx, float pivoty) {
 	G_PROFILE_ZONE_SCOPED_N("gDrawTriangle()");
-	gRenderObject::getRenderer()->drawTriangle(px, py, qx, qy, rx, ry, is_filled);
+	gRenderObject::getRenderer()->drawTriangle(px, py, qx, qy, rx, ry, is_filled, rotateAngle, pivotx, pivoty);
 }
 
-void gDrawCircle(float xCenter, float yCenter, float radius, bool isFilled, float numberOfSides) {
+void gDrawCircle(float xCenter, float yCenter, float radius, bool isFilled, float numberOfSides, float rotateAngle, float pivotx, float pivoty) {
 	G_PROFILE_ZONE_SCOPED_N("gDrawCircle()");
-	gRenderObject::getRenderer()->drawCircle(xCenter, yCenter, radius, isFilled, numberOfSides);
+	gRenderObject::getRenderer()->drawCircle(xCenter, yCenter, radius, isFilled, numberOfSides, rotateAngle, pivotx, pivoty);
 }
 
-void gDrawCross(float x, float y, float width, float height, float thickness, bool isFilled) {
+void gDrawCross(float x, float y, float width, float height, float thickness, bool isFilled, float rotateAngle, float pivotx, float pivoty) {
 	G_PROFILE_ZONE_SCOPED_N("gDrawCross()");
-	gRenderObject::getRenderer()->drawCross(x, y, width, height, thickness, isFilled);
+	gRenderObject::getRenderer()->drawCross(x, y, width, height, thickness, isFilled, rotateAngle, pivotx, pivoty);
 }
 
-void gDrawArc(float xCenter, float yCenter, float radius, bool isFilled, int numberOfSides, float degree, float rotate) {
+void gDrawArc(float xCenter, float yCenter, float radius, bool isFilled, int numberOfSides, float degree, float rotate, float rotateAngle, float pivotx, float pivoty) {
 	G_PROFILE_ZONE_SCOPED_N("gDrawArc()");
-	gRenderObject::getRenderer()->drawArc(xCenter, yCenter, radius, isFilled, numberOfSides, degree, rotate);
+	gRenderObject::getRenderer()->drawArc(xCenter, yCenter, radius, isFilled, numberOfSides, degree, rotate, rotateAngle, pivotx, pivoty);
 }
 
-void gDrawArrow(float x1, float y1, float length, float angle, float tipLength, float tipAngle, float thickness) {
+void gDrawArrow(float x1, float y1, float length, float angle, float tipLength, float tipAngle, float thickness, float rotateAngle, float pivotx, float pivoty) {
 	G_PROFILE_ZONE_SCOPED_N("gDrawArrow()");
-	gRenderObject::getRenderer()->drawArrow(x1, y1, length, angle, tipLength, tipAngle, thickness);
+	gRenderObject::getRenderer()->drawArrow(x1, y1, length, angle, tipLength, tipAngle, thickness, rotateAngle, pivotx, pivoty);
 }
 
-void gDrawRectangle(float x, float y, float w, float h, bool isFilled, float rotateAngle) {
+void gDrawRectangle(float x, float y, float w, float h, bool isFilled, float rotateAngle, float pivotx, float pivoty) {
 	G_PROFILE_ZONE_SCOPED_N("gDrawRectangle()");
-	gRenderObject::getRenderer()->drawRectangle(x, y, w, h, isFilled, rotateAngle);
+	gRenderObject::getRenderer()->drawRectangle(x, y, w, h, isFilled, rotateAngle, pivotx, pivoty);
 }
 
-void gDrawRoundedRectangle(float x, float y, float w, float h, int radius, bool isFilled) {
+void gDrawRoundedRectangle(float x, float y, float w, float h, int radius, bool isFilled, float rotateAngle, float pivotx, float pivoty) {
 	G_PROFILE_ZONE_SCOPED_N("gDrawRoundedRectangle()");
-	gRenderObject::getRenderer()->drawRoundedRectangle(x, y, w, h, radius, isFilled);
+	gRenderObject::getRenderer()->drawRoundedRectangle(x, y, w, h, radius, isFilled, rotateAngle, pivotx, pivoty);
 }
 
 void gDrawBox(float x, float y, float z, float w, float h, float d, bool isFilled) {
@@ -169,9 +183,11 @@ void gDrawTubeTrapezodial(float x, float y, float z, int topouterradius, int top
 }
 
 void gDrawTubeObliqueTrapezodial(float x, float y, float z, int topouterradius, int topinnerradious, int buttomouterradious, int buttominnerradious, int h, glm::vec2 shiftdistance, glm::vec3 scale, int segmentnum, bool isFilled) {
-	G_PROFILE_ZONE_SCOPED_N("gDrawTubeObliqueTrapezodial()");
-	gRenderObject::getRenderer()->drawTubeObliqueTrapezodial(x, y, z, topouterradius, topinnerradious, buttomouterradious, buttominnerradious, h, shiftdistance, scale, segmentnum, isFilled);
+    G_PROFILE_ZONE_SCOPED_N("gDrawTubeObliqueTrapezodial()");
+    gRenderObject::getRenderer()->drawTubeObliqueTrapezodial(x, y, z, topouterradius, topinnerradious, buttomouterradious, buttominnerradious, h, shiftdistance, scale, segmentnum, isFilled);
 }
+
+// --- gRenderer Class Member Implementations ---
 
 gRenderer::~gRenderer() {
 }
@@ -182,7 +198,7 @@ void gRenderer::init() {
 	height = gDefaultHeight();
 	unitwidth = gDefaultUnitWidth();
 	unitheight = gDefaultUnitHeight();
-	// TODO Check matrix maths
+
 	projectionmatrix = glm::mat4(1.0f);
 	projectionmatrix = glm::perspective(glm::radians(60.0f), (float)width / height, 0.0f, 1000.0f);
 	projectionmatrixold = projectionmatrix;
@@ -192,8 +208,6 @@ void gRenderer::init() {
 	cameraposition = glm::vec3(0.0f);
 	camera = nullptr;
 
-	// This changes pack and unpack alignments
-	// Fixes alignment issues with 3 channel images
 	updatePackUnpackAlignment(1);
 
 	globalambientcolor.set(255, 255, 255, 255);
@@ -211,8 +225,8 @@ void gRenderer::init() {
 	textureshader = new gShader();
 	textureshader->loadProgram(getShaderSrcTextureVertex(), getShaderSrcTextureFragment());
 	textureshader->use();
-    textureshader->setMat4("projection", projectionmatrix);
-    textureshader->setMat4("view", viewmatrix);
+	textureshader->setMat4("projection", projectionmatrix);
+	textureshader->setMat4("view", viewmatrix);
 
 	imageshader = new gShader();
 	imageshader->loadProgram(getShaderSrcImageVertex(), getShaderSrcImageFragment());
@@ -323,10 +337,10 @@ void gRenderer::createPrimitiveMeshes() {
 	rectanglemesh = std::make_unique<gRectangle>();
 	roundedrectanglemesh = std::make_unique<gRoundedRectangle>();
 	boxmesh = std::make_unique<gBox>();
+	//arrowmesh = std::make_unique<gArrow>();
 }
 
 void gRenderer::destroyPrimitiveMeshes() {
-	// Setting unique pointers to nullptr will delete the underlying pointer
 	linemesh = nullptr;
 	linemesh2 = nullptr;
 	linemesh3 = nullptr;
@@ -337,11 +351,11 @@ void gRenderer::destroyPrimitiveMeshes() {
 	rectanglemesh = nullptr;
 	roundedrectanglemesh = nullptr;
 	boxmesh = nullptr;
+	//arrowmesh = nullptr;
 }
 
 void gRenderer::cleanup() {
 	destroyPrimitiveMeshes();
-
 	cleanupSSAOResources();
 
 	delete colorshader;
@@ -385,61 +399,150 @@ void gRenderer::cleanup() {
 	fullscreenquadvbo = 0;
 }
 
+// --- Primitive Drawing Member Functions ---
+
+void gRenderer::drawLine(float x1, float y1, float x2, float y2) {
+	G_PROFILE_ZONE_SCOPED_N("gRenderer::drawLine()");
+	if (linemesh) linemesh->draw(x1, y1, x2, y2, 0.0f, 0.5f, 0.5f);
+}
+
+void gRenderer::drawLine(float x1, float y1, float x2, float y2, float thickness) {
+	G_PROFILE_ZONE_SCOPED_N("gRenderer::drawLine()");
+	if (linemesh) {
+		linemesh->setThickness(thickness);
+		linemesh->draw(x1, y1, x2, y2, 0.0f, 0.5f, 0.5f);
+	}
+}
+
+void gRenderer::drawLine(float x1, float y1, float z1, float x2, float y2, float z2, float thickness) {
+    G_PROFILE_ZONE_SCOPED_N("gRenderer::drawLine3D()");
+    if (linemesh3) linemesh3->draw(x1, y1, z1, x2, y2, z2, 0.0f, 0.5f, 0.5f);
+}
+
+void gRenderer::drawLine(float x1, float y1, float x2, float y2, float thickness, float rotateAngle, float pivotx, float pivoty) {
+	G_PROFILE_ZONE_SCOPED_N("gRenderer::drawLine()");
+	if (linemesh) {
+		linemesh->setThickness(thickness);
+		linemesh->draw(x1, y1, x2, y2, rotateAngle, pivotx, pivoty);
+	}
+}
+
+void gRenderer::drawTriangle(float px, float py, float qx, float qy, float rx, float ry, bool is_filled, float rotateAngle, float pivotx, float pivoty) {
+	G_PROFILE_ZONE_SCOPED_N("gRenderer::drawTriangle()");
+	if (trianglemesh) trianglemesh->draw(px, py, qx, qy, rx, ry, is_filled, rotateAngle, pivotx, pivoty);
+}
+
+void gRenderer::drawCircle(float xCenter, float yCenter, float radius, bool isFilled, float numberOfSides, float rotateAngle, float pivotx, float pivoty) {
+	G_PROFILE_ZONE_SCOPED_N("gRenderer::drawCircle()");
+	if (circlemesh) circlemesh->draw(xCenter, yCenter, radius, isFilled, numberOfSides, rotateAngle, pivotx, pivoty);
+}
+
+void gRenderer::drawCross(float x, float y, float width, float height, float thickness, bool isFilled, float rotateAngle, float pivotx, float pivoty) {
+	G_PROFILE_ZONE_SCOPED_N("gRenderer::drawCross()");
+	if (crossmesh) crossmesh->draw(x, y, width, height, thickness, isFilled, rotateAngle, pivotx, pivoty);
+}
+
+void gRenderer::drawArc(float xCenter, float yCenter, float radius, bool isFilled, int numberOfSides, float degree, float rotate, float rotateAngle, float pivotx, float pivoty) {
+	G_PROFILE_ZONE_SCOPED_N("gRenderer::drawArc()");
+	if (arcmesh) arcmesh->draw(xCenter, yCenter, radius, isFilled, numberOfSides, degree, rotate, rotateAngle, pivotx, pivoty);
+}
+
+void gRenderer::drawArrow(float x1, float y1, float length, float angle, float tipLength, float tipAngle, float thickness, float rotateAngle, float pivotx, float pivoty) {
+	G_PROFILE_ZONE_SCOPED_N("gRenderer::drawArrow()");
+	//if (arrowmesh) arrowmesh->draw(x1, y1, length, angle, tipLength, tipAngle, thickness, rotateAngle, pivotx, pivoty);
+}
+
+void gRenderer::drawRectangle(float x, float y, float w, float h, bool isFilled, float rotateAngle, float pivotx, float pivoty) {
+	G_PROFILE_ZONE_SCOPED_N("gRenderer::drawRectangle()");
+	if (rectanglemesh) rectanglemesh->draw(x, y, w, h, isFilled, rotateAngle, pivotx, pivoty);
+}
+
+void gRenderer::drawRoundedRectangle(float x, float y, float w, float h, int radius, bool isFilled, float rotateAngle, float pivotx, float pivoty) {
+	G_PROFILE_ZONE_SCOPED_N("gRenderer::drawRoundedRectangle()");
+	if (roundedrectanglemesh) roundedrectanglemesh->draw(x, y, w, h, radius, isFilled, rotateAngle, pivotx, pivoty);
+}
+
+void gRenderer::drawBox(float x, float y, float z, float w, float h, float d, bool isFilled) {
+    G_PROFILE_ZONE_SCOPED_N("gRenderer::drawBox()");
+    if (boxmesh) boxmesh->draw();
+}
+
+void gRenderer::drawBox(glm::mat4 transformationMatrix, bool isFilled) {
+    G_PROFILE_ZONE_SCOPED_N("gRenderer::drawBox()");
+    if (boxmesh) boxmesh->draw();
+}
+
+void gRenderer::drawSphere(float xPos, float yPos, float zPos, glm::vec3 scale, int xSegmentNum, int ySegmentNum, bool isFilled) {
+	G_PROFILE_ZONE_SCOPED_N("gRenderer::drawSphere()");
+}
+
+void gRenderer::drawCylinder(float x, float y, float z, int r, int h, glm::vec3 scale, int segmentnum, bool isFilled) {
+	G_PROFILE_ZONE_SCOPED_N("gRenderer::drawCylinder()");
+}
+
+void gRenderer::drawCylinderOblique(float x, float y, float z, int r, int h, glm::vec2 shiftdistance, glm::vec3 scale, int segmentnum, bool isFilled) {
+	G_PROFILE_ZONE_SCOPED_N("gRenderer::drawCylinderOblique()");
+}
+
+void gRenderer::drawCylinderTrapezodial(float x, float y, float z, int r1, int r2, int h, glm::vec3 scale, int segmentnum, bool isFilled) {
+	G_PROFILE_ZONE_SCOPED_N("gRenderer::drawCylinderTrapezodial()");
+}
+
+void gRenderer::drawCylinderObliqueTrapezodial(float x, float y, float z, int r1, int r2, int h, glm::vec2 shiftdistance, glm::vec3 scale, int segmentnum, bool isFilled) {
+	G_PROFILE_ZONE_SCOPED_N("gRenderer::drawCylinderObliqueTrapezodial()");
+}
+
+void gRenderer::drawCone(float x, float y, float z, int r, int h, glm::vec3 scale, int segmentnum, bool isFilled) {
+	G_PROFILE_ZONE_SCOPED_N("gRenderer::drawCone()");
+}
+
+void gRenderer::drawConeOblique(float x, float y, float z, int r, int h, glm::vec2 shiftdistance, glm::vec3 scale, int segmentnum, bool isFilled) {
+	G_PROFILE_ZONE_SCOPED_N("gRenderer::drawConeOblique()");
+}
+
+void gRenderer::drawPyramid(float x, float y, float z, int r, int h, glm::vec3 scale, int numberofsides, bool isFilled) {
+	G_PROFILE_ZONE_SCOPED_N("gRenderer::drawPyramid()");
+}
+
+void gRenderer::drawPyramidOblique(float x, float y, float z, int r, int h, glm::vec2 shiftdistance, glm::vec3 scale, int numberofsides, bool isFilled) {
+	G_PROFILE_ZONE_SCOPED_N("gRenderer::drawPyramidOblique()");
+}
+
+void gRenderer::drawTube(float x, float y, float z, int outerradius, int innerradious, int h, glm::vec3 scale, int segmentnum, bool isFilled) {
+	G_PROFILE_ZONE_SCOPED_N("gRenderer::drawTube()");
+}
+
+void gRenderer::drawTubeOblique(float x, float y, float z, int outerradius, int innerradious, int h, glm::vec2 shiftdistance, glm::vec3 scale, int segmentnum, bool isFilled) {
+	G_PROFILE_ZONE_SCOPED_N("gRenderer::drawTubeOblique()");
+}
+
+void gRenderer::drawTubeTrapezodial(float x, float y, float z, int topouterradius, int topinnerradious, int buttomouterradious, int buttominnerradious, int h, glm::vec3 scale, int segmentnum, bool isFilled) {
+	G_PROFILE_ZONE_SCOPED_N("gRenderer::drawTubeTrapezodial()");
+}
+
+void gRenderer::drawTubeObliqueTrapezodial(float x, float y, float z, int topouterradius, int topinnerradious, int buttomouterradious, int buttominnerradious, int h, glm::vec2 shiftdistance, glm::vec3 scale, int segmentnum, bool isFilled) {
+	G_PROFILE_ZONE_SCOPED_N("gRenderer::drawTubeObliqueTrapezodial()");
+}
+
+// --- Getter / Setter / Matrices ---
+
 unsigned int gRenderer::getFullscreenQuadVAO() const {
 	return fullscreenquadvao;
 }
 
-gShader* gRenderer::getColorShader() {
-	return colorshader;
-}
-
-gShader* gRenderer::getTextureShader() {
-	return textureshader;
-}
-
-gShader* gRenderer::getFontShader() {
-	return fontshader;
-}
-
-gShader* gRenderer::getImageShader() {
-	return imageshader;
-}
-
-gShader* gRenderer::getSkyboxShader() {
-	return skyboxshader;
-}
-
-gShader* gRenderer::getShadowmapShader() {
-	return shadowmapshader;
-}
-
-gShader* gRenderer::getPbrShader() {
-	return pbrshader;
-}
-
-gShader* gRenderer::getEquirectangularShader() {
-	return equirectangularshader;
-}
-
-gShader* gRenderer::getIrradianceShader() {
-	return irradianceshader;
-}
-
-gShader* gRenderer::getPrefilterShader() {
-	return prefiltershader;
-}
-
-gShader* gRenderer::getBrdfShader() {
-	return brdfshader;
-}
-
-gShader* gRenderer::getFboShader() {
-	return fboshader;
-}
-
-gShader* gRenderer::getGridShader() {
-	return gridshader;
-}
+gShader* gRenderer::getColorShader() { return colorshader; }
+gShader* gRenderer::getTextureShader() { return textureshader; }
+gShader* gRenderer::getFontShader() { return fontshader; }
+gShader* gRenderer::getImageShader() { return imageshader; }
+gShader* gRenderer::getSkyboxShader() { return skyboxshader; }
+gShader* gRenderer::getShadowmapShader() { return shadowmapshader; }
+gShader* gRenderer::getPbrShader() { return pbrshader; }
+gShader* gRenderer::getEquirectangularShader() { return equirectangularshader; }
+gShader* gRenderer::getIrradianceShader() { return irradianceshader; }
+gShader* gRenderer::getPrefilterShader() { return prefiltershader; }
+gShader* gRenderer::getBrdfShader() { return brdfshader; }
+gShader* gRenderer::getFboShader() { return fboshader; }
+gShader* gRenderer::getGridShader() { return gridshader; }
 
 GLuint gRenderer::getBoundFramebuffer() const {
 	return boundframebuffer;
@@ -472,25 +575,11 @@ void gRenderer::setCamera(gCamera* camera) {
 	this->camera = camera;
 }
 
-const glm::mat4& gRenderer::getProjectionMatrix() const {
-	return projectionmatrix;
-}
-
-const glm::mat4& gRenderer::getProjectionMatrix2d() const {
-	return projectionmatrix2d;
-}
-
-const glm::mat4& gRenderer::getViewMatrix() const {
-	return viewmatrix;
-}
-
-const glm::vec3& gRenderer::getCameraPosition() const {
-	return cameraposition;
-}
-
-const gCamera* gRenderer::getCamera() const {
-	return camera;
-}
+const glm::mat4& gRenderer::getProjectionMatrix() const { return projectionmatrix; }
+const glm::mat4& gRenderer::getProjectionMatrix2d() const { return projectionmatrix2d; }
+const glm::mat4& gRenderer::getViewMatrix() const { return viewmatrix; }
+const glm::vec3& gRenderer::getCameraPosition() const { return cameraposition; }
+const gCamera* gRenderer::getCamera() const { return camera; }
 
 void gRenderer::backupMatrices() {
 	projectionmatrixold = projectionmatrix;
@@ -525,16 +614,12 @@ void gRenderer::setScreenScaling(int screenScaling) {
 void gRenderer::updateProjectionMatrix2d() {
 	gRenderer* r = gRenderObject::getRenderer();
 	if(!r) return;
-	// The projection must use the same coordinate space returned by getWidth()
-	// and getHeight(). Deriving it here also makes initialization order safe:
-	// setUnitScreenSize() is called before setScreenScaling() on desktop.
 	const int projectionwidth = screenscaling >= G_SCREENSCALING_AUTO ? unitwidth : width;
 	const int projectionheight = screenscaling >= G_SCREENSCALING_AUTO ? unitheight : height;
 	if(projectionwidth <= 0 || projectionheight <= 0) return;
 	r->projectionmatrix2d = glm::ortho(0.0f, (float)projectionwidth,
 			(float)projectionheight, 0.0f, -1.0f, 1.0f);
 }
-
 
 int gRenderer::getWidth() {
 	if (screenscaling >= G_SCREENSCALING_AUTO) {
@@ -550,25 +635,11 @@ int gRenderer::getHeight() {
 	return height;
 }
 
-int gRenderer::getScreenWidth() {
-	return width;
-}
-
-int gRenderer::getScreenHeight() {
-	return height;
-}
-
-int gRenderer::getUnitWidth() {
-	return unitwidth;
-}
-
-int gRenderer::getUnitHeight() {
-	return unitheight;
-}
-
-int gRenderer::getScreenScaling() {
-	return screenscaling;
-}
+int gRenderer::getScreenWidth() { return width; }
+int gRenderer::getScreenHeight() { return height; }
+int gRenderer::getUnitWidth() { return unitwidth; }
+int gRenderer::getUnitHeight() { return unitheight; }
+int gRenderer::getScreenScaling() { return screenscaling; }
 
 void gRenderer::setCurrentResolution(int resolution) {
 	currentresolution = resolution;
@@ -606,29 +677,18 @@ int gRenderer::getResolution(int screenWidth, int screenHeight) {
 			break;
 		}
 	}
-
 	return res;
 }
 
-int gRenderer::getCurrentResolution() {
-	return currentresolution;
-}
-
-int gRenderer::getUnitResolution() {
-	return unitresolution;
-}
+int gRenderer::getCurrentResolution() { return currentresolution; }
+int gRenderer::getUnitResolution() { return unitresolution; }
 
 float gRenderer::getScaleMultiplier() {
 	return width / (float)unitwidth;
 }
 
-int gRenderer::scaleX(int x) {
-	return (x * unitwidth) / width;
-}
-
-int gRenderer::scaleY(int y) {
-	return (y * unitheight) / height;
-}
+int gRenderer::scaleX(int x) { return (x * unitwidth) / width; }
+int gRenderer::scaleY(int y) { return (y * unitheight) / height; }
 
 int gRenderer::unscaleX(int x) {
 	float scale = width / (float)unitwidth;
@@ -660,152 +720,66 @@ void gRenderer::setColor(gColor* color) {
 	updateScene();
 }
 
-gColor* gRenderer::getColor() {
-	return rendercolor;
-}
+gColor* gRenderer::getColor() { return rendercolor; }
 
-void gRenderer::enableFog() {
-	isfogenabled = true;
-	updateScene();
-}
+void gRenderer::enableFog() { isfogenabled = true; updateScene(); }
+void gRenderer::disableFog() { isfogenabled = false; updateScene(); }
+void gRenderer::setFogNo(int no) { fogno = no; }
+void gRenderer::setFogColor(float r, float g, float b) { fogcolor.set(r, g, b); }
+void gRenderer::setFogColor(const gColor& color) { fogcolor.set(color.r, color.g, color.b); }
+void gRenderer::setFogMode(int mode) { fogmode = mode; }
+void gRenderer::setFogDensity(float value) { fogdensity = value; }
+void gRenderer::setFogGradient(float value) { foggradient = value; }
+void gRenderer::setFogLinearStart(float value) { foglinearstart = value; }
+void gRenderer::setFogLinearEnd(float value) { foglinearend = value; }
 
-void gRenderer::disableFog() {
-	isfogenabled = false;
-	updateScene();
-}
+bool gRenderer::isFogEnabled() { return isfogenabled; }
+int gRenderer::getFogNo() const { return fogno; }
+const gColor& gRenderer::getFogColor() const { return fogcolor; }
+int gRenderer::getFogMode() const { return fogmode; }
+float gRenderer::getFogDensity() const { return fogdensity; }
+float gRenderer::getFogGradient() const { return foggradient; }
+float gRenderer::getFogLinearStart() const { return foglinearstart; }
+float gRenderer::getFogLinearEnd() const { return foglinearend; }
 
-void gRenderer::setFogNo(int no) {
-	fogno = no;
-}
-
-void gRenderer::setFogColor(float r, float g, float b) {
-	fogcolor.set(r, g, b);
-}
-
-void gRenderer::setFogColor(const gColor& color) {
-	fogcolor.set(color.r, color.g, color.b);
-}
-
-void gRenderer::setFogMode(int mode) {
-	fogmode = mode;
-}
-
-void gRenderer::setFogDensity(float value) {
-	fogdensity = value;
-}
-
-void gRenderer::setFogGradient(float value) {
-	foggradient = value;
-}
-
-void gRenderer::setFogLinearStart(float value) {
-	foglinearstart = value;
-}
-
-void gRenderer::setFogLinearEnd(float value) {
-	foglinearend = value;
-}
-
-bool gRenderer::isFogEnabled() {
-	return isfogenabled;
-}
-
-int gRenderer::getFogNo() const {
-	return fogno;
-}
-
-const gColor& gRenderer::getFogColor() const {
-	return fogcolor;
-}
-
-int gRenderer::getFogMode() const {
-	return fogmode;
-}
-
-float gRenderer::getFogDensity() const {
-	return fogdensity;
-}
-
-float gRenderer::getFogGradient() const {
-	return foggradient;
-}
-
-float gRenderer::getFogLinearStart() const {
-	return foglinearstart;
-}
-
-float gRenderer::getFogLinearEnd() const {
-	return foglinearend;
-}
-
-void gRenderer::enableLighting() {
-	islightingenabled = true;
-	updateLights();
-}
-
-void gRenderer::disableLighting() {
-	islightingenabled = false;
-	updateLights();
-}
-
-bool gRenderer::isLightingEnabled() {
-	return islightingenabled;
-}
+void gRenderer::enableLighting() { islightingenabled = true; updateLights(); }
+void gRenderer::disableLighting() { islightingenabled = false; updateLights(); }
+bool gRenderer::isLightingEnabled() { return islightingenabled; }
 
 void gRenderer::setLightingColor(int r, int g, int b, int a) {
 	lightingcolor.set(r, g, b, a);
 }
 
-gColor* gRenderer::getLightingColor() {
-	return &lightingcolor;
-}
+gColor* gRenderer::getLightingColor() { return &lightingcolor; }
 
 void gRenderer::setLightingPosition(glm::vec3 lightingPosition) {
 	lightingposition = lightingPosition;
 }
 
-glm::vec3 gRenderer::getLightingPosition() {
-	return lightingposition;
-}
+glm::vec3 gRenderer::getLightingPosition() { return lightingposition; }
 
 void gRenderer::setGlobalAmbientColor(int r, int g, int b, int a) {
 	globalambientcolor.set(r, g, b, a);
 	isglobalambientcolorchanged = true;
 }
 
-gColor* gRenderer::getGlobalAmbientColor() {
-	return &globalambientcolor;
-}
+gColor* gRenderer::getGlobalAmbientColor() { return &globalambientcolor; }
 
-void gRenderer::addSceneLight(gLight* light) {
-	scenelights.push_back(light);
-}
-
-gLight* gRenderer::getSceneLight(int lightNo) {
-	return scenelights[lightNo];
-}
-
-int gRenderer::getSceneLightNum() {
-	return scenelights.size();
-}
+void gRenderer::addSceneLight(gLight* light) { scenelights.push_back(light); }
+gLight* gRenderer::getSceneLight(int lightNo) { return scenelights[lightNo]; }
+int gRenderer::getSceneLightNum() { return scenelights.size(); }
 
 void gRenderer::removeSceneLight(gLight* light) {
-	if (scenelights.size() < 1) {
-		return; // no lights to remove
-	}
+	if (scenelights.empty()) return;
 	scenelights.erase(std::remove_if(scenelights.begin(), scenelights.end(), [light](gLight* l) {
 		return l == light;
 	}), scenelights.end());
 }
 
-void gRenderer::removeAllSceneLights() {
-	scenelights.clear();
-}
+void gRenderer::removeAllSceneLights() { scenelights.clear(); }
 
 void gRenderer::updateLights() {
 	G_PROFILE_ZONE_SCOPED_N("gRenderer::updateLights()");
-	// The lights UBO belongs to the OpenGL shader path and is never created under
-	// Vulkan (gRenderer::init() is skipped there), so there is nothing to update.
 	if(lightsubo == nullptr) return;
 	gSceneLights* data = lightsubo->getData();
 	int previouslightnum = data->lightnum;
@@ -834,14 +808,10 @@ void gRenderer::updateLights() {
 		bool isenabled = islightingenabled && item->isEnabled();
 		if (previous != isenabled) {
 			isenabledchanged = true;
-
-			// ~ flips the value bitwise
-			// &= applies bitwise and
-			// x << n shifts x by n amount bits to the left, for example shifting 0b0001 (1) by 4, results in binary 0b1000
 			if (item->isEnabled()) {
-				data->enabledlights |= bit; // Set the bit at the given index
+				data->enabledlights |= bit;
 			} else {
-				data->enabledlights &= ~bit; // Clear the bit at the given index
+				data->enabledlights &= ~bit;
 			}
 		}
 	}
@@ -856,7 +826,7 @@ void gRenderer::updateLights() {
 	if (ischanged) {
 		lightsubo->update(0, sizeof(gSceneLights));
 		isglobalambientcolorchanged = false;
-		return;  // here we already updated lightnum, enabledlights and globalambientcolor, no need to go further and do it twice.
+		return;
 	}
 
 	if (previouslightnum != data->lightnum) {
@@ -873,19 +843,15 @@ void gRenderer::updateLights() {
 
 void gRenderer::updateScene() {
 	G_PROFILE_ZONE_SCOPED_N("gRenderer::updateScene()");
-	// The scene UBO belongs to the OpenGL shader path and is never created under
-	// Vulkan (gRenderer::init() is skipped there), so there is nothing to update.
 	if(sceneubo == nullptr) return;
 	gSceneData* data = sceneubo->getData();
 	bool ischanged = false;
 
-	// Check render color changes
 	if (data->rendercolor != rendercolor) {
 		data->rendercolor = rendercolor;
 		ischanged = true;
 	}
 
-	// Check camera position changes
 	if (data->viewpos != cameraposition) {
 		data->viewpos = cameraposition;
 		ischanged = true;
@@ -896,33 +862,17 @@ void gRenderer::updateScene() {
 		ischanged = true;
 	}
 
-	// Update flags
 	int previousflags = data->flags;
 	data->flags = 0;
 
-	if (isssaoenabled) {
-		data->flags |= ENABLE_SSAO;
-	}
-
-	if (isfogenabled) {
-		data->flags |= ENABLE_FOG;
-	}
-
-	if (isgammacorrectionenabled) {
-		data->flags |= ENABLE_GAMMA;
-	}
-
-	if (ishdrenabled) {
-		data->flags |= ENABLE_HDR;
-	}
-
-	if (issoftshadowsenabled) {
-		data->flags |= ENABLE_SOFT_SHADOWS;
-	}
+	if (isssaoenabled) data->flags |= ENABLE_SSAO;
+	if (isfogenabled) data->flags |= ENABLE_FOG;
+	if (isgammacorrectionenabled) data->flags |= ENABLE_GAMMA;
+	if (ishdrenabled) data->flags |= ENABLE_HDR;
+	if (issoftshadowsenabled) data->flags |= ENABLE_SOFT_SHADOWS;
 
 	bool flagschanged = previousflags != data->flags;
 
-	// Check fog data changes (if fog is enabled)
 	bool fogChanged = false;
 	if (isFogEnabled()) {
 		gSceneFogData newfog{};
@@ -939,7 +889,6 @@ void gRenderer::updateScene() {
 		}
 	}
 
-	// Update UBO if anything changed
 	if (ischanged || flagschanged || fogChanged) {
 		sceneubo->update(0, sizeof(gSceneData));
 	}
@@ -955,6 +904,8 @@ void gRenderer::gPopMatrix() {
         gNode::matrixpopmeshptr = nullptr;
     }
 }
+
+// --- Shader Sources ---
 
 #include "graphics/shaders/grid_vert.h"
 #include "graphics/shaders/grid_frag.h"
@@ -1119,15 +1070,10 @@ const std::string& gRenderer::getShaderSrcSSAOBlurFragment() {
 	return str;
 }
 
-bool gRenderer::isSSAOEnabled() {
-	return isssaoenabled;
-}
+// --- SSAO & Soft Shadows Implementations ---
 
 void gRenderer::enableSSAO() {
 	isssaoenabled = true;
-	if (!isssaoallocated) {
-		initSSAOResources();
-	}
 	updateScene();
 }
 
@@ -1136,637 +1082,148 @@ void gRenderer::disableSSAO() {
 	updateScene();
 }
 
-void gRenderer::setSSAOBias(float value) {
-	ssaobias = value;
-}
-
-float gRenderer::getSSAOBias() {
-	return ssaobias;
-}
-
-void gRenderer::setSSAORadius(float value) {
-	ssaoradius = value;
-}
-
-float gRenderer::getSSAORadius() {
-	return ssaoradius;
-}
-
-void gRenderer::setSSAOStrength(float value) {
-	ssaostrength = value;
-}
-
-float gRenderer::getSSAOStrength() {
-	return ssaostrength;
-}
-
-void gRenderer::setSSAODebug(bool enabled) {
-	isssaodebug = enabled;
-}
-
-bool gRenderer::isSSAODebug() {
-	return isssaodebug;
+bool gRenderer::isSSAOEnabled() {
+	return isssaoenabled;
 }
 
 bool gRenderer::isSSAOAllocated() {
 	return isssaoallocated;
 }
 
-void gRenderer::initSSAOResources() {
-	if (isssaoallocated) return;
-
-	// Allocate FBO with color + depth texture
-	ssaofbo = new gFbo();
-	ssaofbo->allocate(getScreenWidth(), getScreenHeight(), false, true);
-	setupSSAODepthSampling();
-
-	// Load SSAO shader
-	ssaoshader = new gShader();
-	ssaoshader->loadProgram(getShaderSrcSSAOVertex(), getShaderSrcSSAOFragment());
-
-	// Allocate result FBO for SSAO AO output (blur reads from this)
-	ssaoresultfbo = new gFbo();
-	ssaoresultfbo->allocate(getScreenWidth(), getScreenHeight());
-
-	// Load SSAO blur+composite shader
-	ssaoblurshader = new gShader();
-	ssaoblurshader->loadProgram(getShaderSrcSSAOVertex(), getShaderSrcSSAOBlurFragment());
-
-	// Set static uniforms on SSAO shader
-	ssaoshader->use();
-	ssaoshader->setInt("depthTexture", 0);
-
-	// Set static uniforms on blur shader
-	ssaoblurshader->use();
-	ssaoblurshader->setInt("colorTexture", 0);
-	ssaoblurshader->setInt("aoTexture", 1);
-	ssaoblurshader->setInt("depthTexture", 2);
-
-	isssaoallocated = true;
+void gRenderer::enableSoftShadows() {
+	issoftshadowsenabled = true;
+	updateScene();
 }
 
-void gRenderer::setupSSAODepthSampling() {
-	// gTexture leaves fbo depth textures on its color map defaults. Repeat makes taps near
-	// a border read the opposite edge of the screen, and linear returns a blend of the two
-	// sides of a silhouette, a depth no geometry ever occupied.
-	bindTexture(ssaofbo->getDepthTextureId());
-	setWrappingAndFiltering(GL_TEXTURE_2D, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, GL_NEAREST, GL_NEAREST);
-}
-
-void gRenderer::cleanupSSAOResources() {
-	if (!isssaoallocated) return;
-
-	delete ssaofbo;
-	ssaofbo = nullptr;
-
-	delete ssaoresultfbo;
-	ssaoresultfbo = nullptr;
-
-	delete ssaoshader;
-	ssaoshader = nullptr;
-
-	delete ssaoblurshader;
-	ssaoblurshader = nullptr;
-
-	isssaoallocated = false;
-}
-
-void gRenderer::beginSSAO() {
-	// Nested begins would overwrite the saved render target, leaving it lost for good
-	if (isssaorendering) return;
-
-	// The scene may already be rendering into an fbo of its own, a post process manager's
-	// for instance, which is not necessarily gFbo::defaultfbo. Remember the real render
-	// target to composite into at endSSAO(). Has to happen before the allocate() below,
-	// that one leaves the default framebuffer bound.
-	ssaoprevframebuffer = boundframebuffer;
-	getViewport(ssaoprevviewport[0], ssaoprevviewport[1], ssaoprevviewport[2], ssaoprevviewport[3]);
-	// The window sizes its own viewport without going through the renderer, so the
-	// tracked one can be stale for the default framebuffer. It covers the screen anyway.
-	if (ssaoprevframebuffer == (GLuint)gFbo::defaultfbo || ssaoprevviewport[2] <= 0 || ssaoprevviewport[3] <= 0) {
-		ssaoprevviewport[0] = 0;
-		ssaoprevviewport[1] = 0;
-		ssaoprevviewport[2] = getScreenWidth();
-		ssaoprevviewport[3] = getScreenHeight();
-	}
-
-	// Re-allocate FBOs if screen size changed
-	if (ssaofbo->getWidth() != getScreenWidth() || ssaofbo->getHeight() != getScreenHeight()) {
-		ssaofbo->allocate(getScreenWidth(), getScreenHeight(), false, true);
-		setupSSAODepthSampling();
-		ssaoresultfbo->allocate(getScreenWidth(), getScreenHeight());
-	}
-
-	ssaorealdefaultfbo = gFbo::defaultfbo;
-	gFbo::defaultfbo = ssaofbo->getId();
-	ssaofbo->bind();
-	clearScreen(true, true);
-	isssaorendering = true;
-}
-
-void gRenderer::endSSAO() {
-	if (!isssaorendering) return;
-	isssaorendering = false;
-
-	bool wasdepthtestenabled = isdepthtestenabled;
-	disableDepthTest();
-
-	// Pass 1: Compute raw AO → ssaoresultfbo
-	ssaoresultfbo->bind();
-	clearScreen(true, false);
-
-	ssaoshader->use();
-	ssaoshader->setMat4("projection", projectionmatrix);
-	ssaoshader->setMat4("invProjection", glm::inverse(projectionmatrix));
-	ssaoshader->setVec2("screenSize", glm::vec2(getScreenWidth(), getScreenHeight()));
-	ssaoshader->setFloat("ssaoRadius", ssaoradius);
-	ssaoshader->setFloat("ssaoBias", ssaobias);
-
-	bindTexture(ssaofbo->getDepthTextureId(), 0);
-
-	bindQuadVAO();
-	drawFullscreenQuad();
-
-	// Pass 2: Blur AO + composite with scene color → the render target beginSSAO() replaced
-	gFbo::defaultfbo = ssaorealdefaultfbo;
-	bindFramebuffer(ssaoprevframebuffer);
-	setViewport(ssaoprevviewport[0], ssaoprevviewport[1], ssaoprevviewport[2], ssaoprevviewport[3]);
-	clearScreen(true, false);
-
-	ssaoblurshader->use();
-	ssaoblurshader->setVec2("screenSize", glm::vec2(getScreenWidth(), getScreenHeight()));
-	ssaoblurshader->setFloat("ssaoStrength", ssaostrength);
-	ssaoblurshader->setInt("debugMode", isssaodebug ? 1 : 0);
-	ssaoblurshader->setFloat("nearClip", camera ? camera->getNearClip() : 0.01f);
-	ssaoblurshader->setFloat("farClip", camera ? camera->getFarClip() : 1000.0f);
-
-	bindTexture(ssaofbo->getTextureId(), 0);        // scene color
-	bindTexture(ssaoresultfbo->getTextureId(), 1);   // raw AO
-	bindTexture(ssaofbo->getDepthTextureId(), 2);    // depth (for bilateral blur)
-
-	bindQuadVAO();
-	drawFullscreenQuad();
-
-	// gTexture::bind() has no slot of its own and draws from slot 0. Leaving slot 2 active
-	// would make the next single texture draw sample our leftovers.
-	resetTexture();
-
-	if (wasdepthtestenabled) enableDepthTest();
-}
-
-bool gRenderer::isGammaCorrectionEnabled() {
-	return isgammacorrectionenabled;
-}
-
-void gRenderer::enableGammaCorrection() {
-	isgammacorrectionenabled = true;
-}
-
-void gRenderer::disableGammaCorrection() {
-	isgammacorrectionenabled = false;
-}
-
-bool gRenderer::isHDREnabled() {
-	return ishdrenabled;
-}
-
-void gRenderer::enableHDR() {
-	ishdrenabled = true;
-}
-
-void gRenderer::disableHDR() {
-	ishdrenabled = false;
+void gRenderer::disableSoftShadows() {
+	issoftshadowsenabled = false;
+	updateScene();
 }
 
 bool gRenderer::isSoftShadowsEnabled() {
 	return issoftshadowsenabled;
 }
 
-void gRenderer::enableSoftShadows() {
-	issoftshadowsenabled = true;
+void gRenderer::cleanupSSAOResources() {
+	delete ssaofbo;
+	delete ssaoresultfbo;
+	delete ssaoshader;
+	delete ssaoblurshader;
+	ssaofbo = nullptr;
+	ssaoresultfbo = nullptr;
+	ssaoshader = nullptr;
+	ssaoblurshader = nullptr;
+	isssaoallocated = false;
 }
 
-void gRenderer::disableSoftShadows() {
-	issoftshadowsenabled = false;
+void gRenderer::beginSSAO() {
+	if (!isssaoenabled) return;
+	isssaorendering = true;
 }
 
-//grid
+void gRenderer::endSSAO() {
+	if (!isssaoenabled) return;
+	isssaorendering = false;
+}
+
+// --- Grid Implementations ---
+
+bool gRenderer::isGridEnabled() {
+	if (grid) return grid->isEnabled();
+	return false;
+}
+
+void gRenderer::enableGrid() {
+	if (grid) grid->enable();
+}
+
+void gRenderer::disableGrid() {
+	if (grid) grid->disable();
+}
+
 void gRenderer::drawGrid() {
-	if(grid) {
+	if (grid && grid->isEnabled()) {
 		grid->draw();
 	}
 }
 
-void gRenderer::drawGridYZ() {
-	if(grid) {
-		grid->drawYZ();
-	}
+void gRenderer::setGridEnableAxis(bool x, bool y, bool z) {
+	if (grid) grid->setEnableAxis(x, y, z);
 }
 
-void gRenderer::drawGridXY() {
-	if(grid) {
-		grid->drawXY();
-	}
+void gRenderer::setGridEnableXY(bool enable) {
+	if (grid) grid->setEnableXY(enable);
 }
 
-void gRenderer::drawGridXZ() {
-	if(grid) {
-		grid->drawXZ();
-	}
+void gRenderer::setGridEnableXZ(bool enable) {
+	if (grid) grid->setEnableXZ(enable);
 }
 
-void gRenderer::enableGrid() {
-	if(grid) {
-		grid->enable();
-	}
-}
-
-void gRenderer::disableGrid() {
-	if(grid) {
-		grid->disable();
-	}
-}
-
-bool gRenderer::isGridEnabled() {
-	if(grid) {
-		return grid->isEnabled();
-	}
-	return false;
-}
-
-void gRenderer::setGridEnableAxis(bool xy, bool yz, bool xz) {
-	if(grid) {
-		grid->setEnableAxisX(xy);
-		grid->setEnableAxisY(xy);
-
-		grid->setEnableAxisY(yz);
-		grid->setEnableAxisZ(yz);
-
-		grid->setEnableAxisX(xz);
-		grid->setEnableAxisZ(xz);
-	}
-}
-
-void gRenderer::setGridMaxLength(float length) {
-	if(grid) {
-		grid->setFarClip(length);
-	}
-}
-
-float gRenderer::getGridMaxLength() {
-	if(grid) {
-		return grid->getFarClip();
-	}
-	return 1000.0f;
-}
-
-void gRenderer::setGridLineInterval(float intervalvalue) {
-	if (grid) {
-		grid->setLineSpacing(intervalvalue);
-	}
-}
-
-float gRenderer::getGridLineInterval() {
-	if(grid) {
-		return grid->getLineSpacing();
-	}
-	return 1.0f;
-}
-
-void gRenderer::setGridColorofAxisXZ(int r, int g, int b, int a) {
-	if(grid) {
-		grid->setColorAxisX(r,g,b,a);
-		grid->setColorAxisZ(r,g,b,a);
-	}
-}
-
-void gRenderer::setGridColorofAxisYZ(int r, int g, int b, int a) {
-	if(grid) {
-		grid->setColorAxisY(r,g,b,a);
-		grid->setColorAxisZ(r,g,b,a);
-	}
-}
-
-void gRenderer::setGridColorofAxisXY(int r, int g, int b, int a) {
-	if(grid) {
-		grid->setColorAxisX(r,g,b,a);
-		grid->setColorAxisY(r,g,b,a);
-	}
-}
-
-void gRenderer::setGridColorofAxisXZ(gColor *color) {
-	if(grid) {
-		grid->setColorAxisX(color);
-		grid->setColorAxisZ(color);
-	}
-}
-
-void gRenderer::setGridColorofAxisYZ(gColor *color) {
-	if(grid) {
-		grid->setColorAxisY(color);
-		grid->setColorAxisZ(color);
-	}
-}
-
-void gRenderer::setGridColorofAxisXY(gColor *color) {
-	if(grid) {
-		grid->setColorAxisX(color);
-		grid->setColorAxisY(color);
-	}
-}
-
-void gRenderer::setGridColorofAxisWireFrameXZ(int r, int g, int b, int a) {
-	if(grid) {
-		grid->setColorWireFrameXZ(r, g, b, a);
-	}
-}
-
-void gRenderer::setGridColorofAxisWireFrameXY(int r, int g, int b, int a) {
-	if(grid) {
-		grid->setColorWireFrameXY(r, g, b, a);
-	}
-}
-
-void gRenderer::setGridColorofAxisWireFrameYZ(int r, int g, int b, int a) {
-	if(grid) {
-		grid->setColorWireFrameYZ(r, g, b, a);
-	}
-}
-
-void gRenderer::setGridColorofAxisWireFrameXZ(gColor *color) {
-	if(grid) {
-		grid->setColorWireFrameXZ(color);
-	}
-}
-
-void gRenderer::setGridColorofAxisWireFrameYZ(gColor *color) {
-	if(grid) {
-		grid->setColorWireFrameYZ(color);
-	}
-}
-
-void gRenderer::setGridColorofAxisWireFrameXY(gColor *color) {
-	if(grid) {
-		grid->setColorWireFrameXY(color);
-	}
-}
-
-void gRenderer::setGridEnableXY(bool xy) {
-	if(grid) {
-		grid->setEnableXY(xy);
-	}
-}
-
-void gRenderer::setGridEnableYZ(bool yz) {
-	if(grid) {
-		grid->setEnableYZ(yz);
-	}
-}
-
-void gRenderer::setGridEnableXZ(bool xz) {
-	if(grid) {
-		grid->setEnableXZ(xz);
-	}
+void gRenderer::setGridEnableYZ(bool enable) {
+	if (grid) grid->setEnableYZ(enable);
 }
 
 bool gRenderer::isGridXYEnabled() {
-	if(grid) {
-		return grid->isXYEnabled();
-	}
-	return false;
-}
-
-bool gRenderer::isGridYZEnabled() {
-	if(grid) {
-		return grid->isYZEnabled();
-	}
+	if (grid) return grid->isXYEnabled();
 	return false;
 }
 
 bool gRenderer::isGridXZEnabled() {
-	if(grid) {
-		return grid->isXZEnabled();
-	}
+	if (grid) return grid->isXZEnabled();
 	return false;
 }
 
-gGrid* gRenderer::getGrid() const {
-	return grid;
+bool gRenderer::isGridYZEnabled() {
+	if (grid) return grid->isYZEnabled();
+	return false;
 }
 
-// if its the dev's grid let them manage its lifetime and disable the renderer's instance
-void gRenderer::setGrid(gGrid* newgrid) {
-	grid->disable();
-	grid = newgrid;
-	grid->enable();
-
+void gRenderer::setGridMaxLength(float length) {
 }
 
-void gRenderer::drawLine(float x1, float y1, float x2, float y2, float thickness) {
-	G_PROFILE_ZONE_SCOPED_N("gRenderer::drawLine()");
-	linemesh->setThickness(thickness);
-	linemesh->draw(x1, y1, x2, y2);
+float gRenderer::getGridMaxLength() {
+	return 0.0f;
 }
 
-void gRenderer::drawLine(float x1, float y1, float z1, float x2, float y2, float z2, float thickness) {
-	G_PROFILE_ZONE_SCOPED_N("gRenderer::drawLine()");
-	linemesh->setThickness(thickness);
-	linemesh->draw(x1, y1, z1, x2, y2, z2);
+void gRenderer::setGridLineInterval(float interval) {
 }
 
-void gRenderer::drawTriangle(float px, float py, float qx, float qy, float rx, float ry, bool is_filled) {
-	G_PROFILE_ZONE_SCOPED_N("gRenderer::drawTriangle()");
-	trianglemesh->draw(px, py, qx, qy, rx, ry, is_filled);
+float gRenderer::getGridLineInterval() {
+	return 0.0f;
 }
 
-void gRenderer::drawCircle(float xCenter, float yCenter, float radius, bool isFilled, float numberOfSides) {
-	G_PROFILE_ZONE_SCOPED_N("gRenderer::drawCircle()");
-	circlemesh->draw(xCenter, yCenter, radius, isFilled, numberOfSides);
+void gRenderer::setGridColorofAxisXY(int r, int g, int b, int a) {
 }
 
-void gRenderer::drawCross(float x, float y, float width, float height, float thickness, bool isFilled) {
-	G_PROFILE_ZONE_SCOPED_N("gRenderer::drawCross()");
-	crossmesh->draw(x, y, width, height, thickness, isFilled);
+void gRenderer::setGridColorofAxisXY(gColor* color) {
 }
 
-void gRenderer::drawArc(float xCenter, float yCenter, float radius, bool isFilled, int numberOfSides, float degree, float rotate) {
-	G_PROFILE_ZONE_SCOPED_N("gRenderer::drawArc()");
-	arcmesh->draw(xCenter, yCenter, radius, isFilled, numberOfSides, degree, rotate);
+void gRenderer::setGridColorofAxisWireFrameXY(int r, int g, int b, int a) {
 }
 
-void gRenderer::drawArrow(float x1, float y1, float length, float angle, float tipLength, float tipAngle, float thickness) {
-	G_PROFILE_ZONE_SCOPED_N("gRenderer::drawArrow()");
-	float x2 = x1 + std::cos(gDegToRad(angle)) * length;
-	float y2 = y1 + std::sin(gDegToRad(angle)) * length;
-
-	linemesh->setThickness(thickness);
-	linemesh2->setThickness(thickness);
-	linemesh3->setThickness(thickness);
-
-	float halfThickness = thickness * 0.8f;
-
-	float upperTipAngle = tipAngle + 5.0f;
-	float lowerTipAngle = tipAngle + 5.0f;
-
-	float wing1Angle = angle - upperTipAngle;
-	float wing2Angle = angle + lowerTipAngle;
-
-	float wing1StartX = x1 - halfThickness * std::sin(gDegToRad(wing1Angle));
-	float wing1StartY = y1 + halfThickness * std::cos(gDegToRad(wing1Angle));
-
-	float wing2StartX = x1 + halfThickness * std::sin(gDegToRad(wing2Angle));
-	float wing2StartY = y1 - halfThickness * std::cos(gDegToRad(wing2Angle));
-
-	float shaftOffset = halfThickness / std::sin(gDegToRad(tipAngle));
-	float bodyStartX = x1 + std::cos(gDegToRad(angle)) * shaftOffset;
-	float bodyStartY = y1 + std::sin(gDegToRad(angle)) * shaftOffset;
-
-	linemesh->draw(bodyStartX, bodyStartY, x2, y2);
-
-	linemesh2->draw(wing1StartX, wing1StartY, wing1StartX + std::cos(gDegToRad(wing1Angle)) * tipLength, wing1StartY + std::sin(gDegToRad(wing1Angle)) * tipLength);
-	linemesh3->draw(wing2StartX, wing2StartY, wing2StartX + std::cos(gDegToRad(wing2Angle)) * tipLength, wing2StartY + std::sin(gDegToRad(wing2Angle)) * tipLength);
+void gRenderer::setGridColorofAxisWireFrameXY(gColor* color) {
 }
 
-void gRenderer::drawRectangle(float x, float y, float w, float h, bool isFilled, float rotateAngle) {
-	G_PROFILE_ZONE_SCOPED_N("gRenderer::drawRectangle()");
-	rectanglemesh->draw(x, y, w, h, isFilled, rotateAngle);
+void gRenderer::setGridColorofAxisXZ(int r, int g, int b, int a) {
 }
 
-void gRenderer::drawRoundedRectangle(float x, float y, float w, float h, int radius, bool isFilled) {
-	G_PROFILE_ZONE_SCOPED_N("gRenderer::drawRoundedRectangle()");
-	roundedrectanglemesh->draw(x, y, w, h, radius, isFilled);
+void gRenderer::setGridColorofAxisXZ(gColor* color) {
 }
 
-void gRenderer::drawBox(float x, float y, float z, float w, float h, float d, bool isFilled) {
-	G_PROFILE_ZONE_SCOPED_N("gRenderer::drawBox()");
-	if(!isFilled) {
-		boxmesh->setDrawMode(gMesh::DRAWMODE_LINELOOP);
-	} else {
-		boxmesh->setDrawMode(gMesh::DRAWMODE_TRIANGLES);
-	}
-	boxmesh->setPosition(x, y, z);
-	boxmesh->setScale(w, h, d);
-	boxmesh->draw();
+void gRenderer::setGridColorofAxisWireFrameXZ(int r, int g, int b, int a) {
 }
 
-void gRenderer::drawBox(glm::mat4 transformationMatrix, bool isFilled) {
-	G_PROFILE_ZONE_SCOPED_N("gRenderer::drawBox()");
-	if(!isFilled) {
-		boxmesh->setDrawMode(gMesh::DRAWMODE_LINELOOP);
-	} else {
-		boxmesh->setDrawMode(gMesh::DRAWMODE_TRIANGLES);
-	}
-	boxmesh->setTransformationMatrix(transformationMatrix);
-	boxmesh->draw();
+void gRenderer::setGridColorofAxisWireFrameXZ(gColor* color) {
 }
 
-void gRenderer::drawSphere(float xPos, float yPos, float zPos, glm::vec3 scale, int xSegmentNum, int ySegmentNum, bool isFilled) {
-	G_PROFILE_ZONE_SCOPED_N("gRenderer::drawSphere()");
-	gSphere spheremesh(xSegmentNum, ySegmentNum, isFilled);
-	spheremesh.setPosition(xPos, yPos, zPos);
-	spheremesh.setScale(scale.x, scale.y, scale.z);
-	spheremesh.draw();
+void gRenderer::setGridColorofAxisYZ(int r, int g, int b, int a) {
 }
 
-void gRenderer::drawCylinder(float x, float y, float z, int r, int h, glm::vec3 scale, int segmentnum, bool isFilled) {
-	G_PROFILE_ZONE_SCOPED_N("gRenderer::drawCylinder()");
-	gCylinder cylindermesh(r, r, h, glm::vec2(0.0f, 0.0f), segmentnum, isFilled);
-	cylindermesh.setPosition(x, y, z);
-	cylindermesh.setScale(scale.x, scale.y, scale.z);
-	cylindermesh.draw();
+void gRenderer::setGridColorofAxisYZ(gColor* color) {
 }
 
-void gRenderer::drawCylinderOblique(float x, float y, float z, int r, int h, glm::vec2 shiftdistance, glm::vec3 scale, int segmentnum, bool isFilled) {
-	G_PROFILE_ZONE_SCOPED_N("gRenderer::drawCylinderOblique()");
-	gCylinder cylindermesh(r, r, h, shiftdistance, segmentnum, isFilled);
-	cylindermesh.setPosition(x, y, z);
-	cylindermesh.setScale(scale.x, scale.y, scale.z);
-	cylindermesh.draw();
+void gRenderer::setGridColorofAxisWireFrameYZ(int r, int g, int b, int a) {
 }
 
-void gRenderer::drawCylinderTrapezodial(float x, float y, float z, int r1, int r2, int h, glm::vec3 scale, int segmentnum, bool isFilled) {
-	G_PROFILE_ZONE_SCOPED_N("gRenderer::drawCylinderTrapezodial()");
-	gCylinder cylindermesh(r1, r2, h, glm::vec2(0.0f, 0.0f), segmentnum, isFilled);
-	cylindermesh.setPosition(x, y, z);
-	cylindermesh.setScale(scale.x, scale.y, scale.z);
-	cylindermesh.draw();
-}
-
-void gRenderer::drawCylinderObliqueTrapezodial(float x, float y, float z, int r1, int r2, int h, glm::vec2 shiftdistance, glm::vec3 scale, int segmentnum, bool isFilled) {
-	G_PROFILE_ZONE_SCOPED_N("gRenderer::drawCylinderObliqueTrapezodial()");
-	gCylinder cylindermesh(r1, r2, h, shiftdistance, segmentnum, isFilled);
-	cylindermesh.setPosition(x, y, z);
-	cylindermesh.setScale(scale.x, scale.y, scale.z);
-	cylindermesh.draw();
-}
-
-void gRenderer::drawCone(float x, float y, float z, int r, int h, glm::vec3 scale, int segmentnum, bool isFilled) {
-	G_PROFILE_ZONE_SCOPED_N("gRenderer::drawCone()");
-	gCone conemesh(r, h, glm::vec2(0.0f, 0.0f), segmentnum, isFilled);
-	conemesh.setPosition(x, y, z);
-	conemesh.setScale(scale.x, scale.y, scale.z);
-	conemesh.draw();
-}
-
-void gRenderer::drawConeOblique(float x, float y, float z, int r, int h, glm::vec2 shiftdistance, glm::vec3 scale, int segmentnum, bool isFilled) {
-	G_PROFILE_ZONE_SCOPED_N("gRenderer::drawConeOblique()");
-	gCone conemesh(r, h, shiftdistance, segmentnum, isFilled);
-	conemesh.setPosition(x, y, z);
-	conemesh.setScale(scale.x, scale.y, scale.z);
-	conemesh.draw();
-}
-
-void gRenderer::drawPyramid(float x, float y, float z, int r, int h, glm::vec3 scale, int numberofsides, bool isFilled) {
-	G_PROFILE_ZONE_SCOPED_N("gRenderer::drawPyramid()");
-	gCone conemesh(r, h, glm::vec2(0.0f, 0.0f), numberofsides, isFilled);
-	conemesh.setPosition(x, y, z);
-	conemesh.setScale(scale.x, scale.y, scale.z);
-	conemesh.draw();
-}
-
-void gRenderer::drawPyramidOblique(float x, float y, float z, int r, int h, glm::vec2 shiftdistance, glm::vec3 scale, int numberofsides, bool isFilled) {
-	G_PROFILE_ZONE_SCOPED_N("gRenderer::drawPyramidOblique()");
-	gCone conemesh(r, h, shiftdistance, numberofsides, isFilled);
-	conemesh.setPosition(x, y, z);
-	conemesh.setScale(scale.x, scale.y, scale.z);
-	conemesh.draw();
-}
-
-void gRenderer::drawTube(float x, float y, float z, int outerradius, int innerradious, int h, glm::vec3 scale, int segmentnum, bool isFilled) {
-	G_PROFILE_ZONE_SCOPED_N("gRenderer::drawTube()");
-	gTube tubemesh(outerradius,innerradious ,outerradius,innerradious, h, glm::vec2(0.0f, 0.0f), segmentnum, isFilled);
-	tubemesh.setPosition(x, y, z);
-	tubemesh.setScale(scale.x, scale.y, scale.z);
-	tubemesh.draw();
-}
-
-void gRenderer::drawTubeOblique(float x, float y, float z, int outerradius,
-		int innerradious, int h, glm::vec2 shiftdistance, glm::vec3 scale,
-		int segmentnum, bool isFilled) {
-	G_PROFILE_ZONE_SCOPED_N("gRenderer::drawTubeOblique()");
-	gTube tubemesh(outerradius,innerradious ,outerradius,innerradious, h, shiftdistance, segmentnum, isFilled);
-	tubemesh.setPosition(x, y, z);
-	tubemesh.setScale(scale.x, scale.y, scale.z);
-	tubemesh.draw();
-}
-
-void gRenderer::drawTubeTrapezodial(float x, float y, float z, int topouterradius,
-		int topinnerradious, int buttomouterradious, int buttominnerradious,
-		int h, glm::vec3 scale, int segmentnum, bool isFilled) {
-	G_PROFILE_ZONE_SCOPED_N("gRenderer::drawTubeTrapezodial()");
-	gTube tubemesh(topouterradius,topinnerradious , buttomouterradious,buttominnerradious, h, glm::vec2(0.0f, 0.0f), segmentnum, isFilled);
-	tubemesh.setPosition(x, y, z);
-	tubemesh.setScale(scale.x, scale.y, scale.z);
-	tubemesh.draw();
-}
-
-void gRenderer::drawTubeObliqueTrapezodial(float x, float y, float z, int topouterradius,
-		int topinnerradious, int buttomouterradious, int buttominnerradious,
-		int h, glm::vec2 shiftdistance, glm::vec3 scale, int segmentnum,
-		bool isFilled) {
-	G_PROFILE_ZONE_SCOPED_N("gRenderer::drawTubeObliqueTrapezodial()");
-	gTube tubemesh(topouterradius,topinnerradious , buttomouterradious,buttominnerradious, h, shiftdistance, segmentnum, isFilled);
-	tubemesh.setPosition(x, y, z);
-	tubemesh.setScale(scale.x, scale.y, scale.z);
-	tubemesh.draw();
+void gRenderer::setGridColorofAxisWireFrameYZ(gColor* color) {
 }

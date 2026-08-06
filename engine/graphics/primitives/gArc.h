@@ -15,10 +15,10 @@ public:
 	gArc();
 	~gArc() override;
 
-	void draw(float xCenter, float yCenter, float radius, bool isFilled, int numberOfSides = 60, float degree = 360.0f, float rotate = 360.0f);
+	void draw(float xCenter, float yCenter, float radius, bool isFilled, int numberOfSides = 60, float degree = 360.0f, float rotate = 0.0f, float rotateAngle = 0.0f, float pivotx = 0.5f, float pivoty = 0.5f);
 
-private:
-	void setArcPoints(float xCenter, float yCenter, float radius, bool isFilled, int numberOfSides = 60, float degree = 360.0f, float rotate = 360.0f);
+	private:
+		void setArcPoints(float xCenter, float yCenter, float radius, bool isFilled, int numberOfSides = 60, float degree = 360.0f, float rotate = 0.0f, float rotateAngle = 0.0f, float pivotx = 0.5f, float pivoty = 0.5f);
 	std::vector<gVertex> vertices;
 	std::vector<gIndex> indices;
 };

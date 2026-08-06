@@ -13,12 +13,12 @@
 class gRoundedRectangle : public gMesh {
 public:
 	gRoundedRectangle();
-	gRoundedRectangle(int x, int y, int w, int h, int radius, bool isFilled);
+	gRoundedRectangle(int x, int y, int w, int h, int radius, bool isFilled, float rotateAngle = 0.0f, float pivotx = 0.5f, float pivoty = 0.5f);
 	~gRoundedRectangle() override;
 
 	void draw() override;
-	void draw(int x, int y, int w, int h, int radius, bool isFilled);
-	void setRoundedRectanglePoints(int x, int y, int w, int h, int radius, bool isFilled);
+	void draw(int x, int y, int w, int h, int radius, bool isFilled, float rotateAngle = 0.0f, float pivotx = 0.5f, float pivoty = 0.5f);
+	void setRoundedRectanglePoints(int x, int y, int w, int h, int radius, bool isFilled, float rotateAngle = 0.0f, float pivotx = 0.5f, float pivoty = 0.5f);
 private:
 	//This is the default value of vertices of the created shape
 	//Since it has as many vertices as its width or height (whichever is higher)
