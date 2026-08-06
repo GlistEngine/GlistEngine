@@ -43,6 +43,7 @@
 	static VkDescriptorSet gvkGetPbrMaterialSet(gVKContext* vkcontext,
 			std::unordered_map<GLuint, gVKTexture*>& vktextures, GLuint whitetextureid,
 			const gRenderer::gMeshSurface& surface);
+	#include <algorithm>
 	#include <vector>
 	#include <set>
 	#include <string>
@@ -177,24 +178,47 @@ bool gVKRenderEngine::isAlphaTestEnabled() {
 
 void gVKRenderEngine::takeScreenshot(gImage& img, int x, int y, int width, int height) {
 	G_PROFILE_ZONE_SCOPED_N("gVKRenderEngine::takeScreenshot()");
-	unsigned char* pixeldata = new unsigned char[width * height * 4];
-	G_CHECK_GL(glReadPixels(x, getHeight() - y - height, width, height, GL_RGBA, GL_UNSIGNED_BYTE, pixeldata));
-	flipVertically(pixeldata, width, height, 4);
+	gImage full;
+	takeScreenshot(full);
+	if(full.getImageData() == nullptr || width <= 0 || height <= 0) return;
+	const int sourcewidth = full.getWidth();
+	const int sourceheight = full.getHeight();
+	x = std::max(0, x); y = std::max(0, y);
+	width = std::min(width, sourcewidth - x);
+	height = std::min(height, sourceheight - y);
+	if(width <= 0 || height <= 0) return;
+	auto* pixeldata = new unsigned char[static_cast<size_t>(width) * height * 4];
+	for(int row = 0; row < height; row++)
+		std::memcpy(pixeldata + static_cast<size_t>(row) * width * 4,
+				full.getImageData() + (static_cast<size_t>(y + row) * sourcewidth + x) * 4,
+				static_cast<size_t>(width) * 4);
 	img.setImageData(pixeldata, width, height, 4);
-	//std::string imagePath = "output.png";   USE IT TO SAVE THE IMAGE
-	// screenShot->saveImage(imagePath);  USE IT TO SAVE THE IMAGE
 }
 
 void gVKRenderEngine::takeScreenshot(gImage& img) {
 	G_PROFILE_ZONE_SCOPED_N("gVKRenderEngine::takeScreenshot()");
-	int height = gBaseApp::getAppManager()->getWindow()->getHeight();
-	int width = gBaseApp::getAppManager()->getWindow()->getWidth();
-	unsigned char* pixeldata = new unsigned char[width * height * 4];
-	G_CHECK_GL(glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, pixeldata));
-	flipVertically(pixeldata, width, height, 4);
-	img.setImageData(pixeldata, width, height, 4);
-	//std::string imagePath = "output.png";   USE IT TO SAVE THE IMAGE
-	// screenShot->saveImage(imagePath);  USE IT TO SAVE THE IMAGE
+#ifdef GVK_DESKTOP_GLFW
+	if(vkcontext == nullptr || vkcontext->device == VK_NULL_HANDLE) return;
+	if(vkcontext->screenshotready) {
+		auto* pixeldata = new unsigned char[vkcontext->screenshotpixels.size()];
+		std::memcpy(pixeldata, vkcontext->screenshotpixels.data(), vkcontext->screenshotpixels.size());
+		if(vkcontext->screenshotformat == VK_FORMAT_B8G8R8A8_UNORM
+				|| vkcontext->screenshotformat == VK_FORMAT_B8G8R8A8_SRGB) {
+			for(size_t i = 0; i < static_cast<size_t>(vkcontext->screenshotwidth) * vkcontext->screenshotheight; i++)
+				std::swap(pixeldata[i * 4], pixeldata[i * 4 + 2]);
+		}
+		img.setImageData(pixeldata, static_cast<int>(vkcontext->screenshotwidth),
+				static_cast<int>(vkcontext->screenshotheight), 4);
+		vkcontext->screenshotpixels.clear();
+		vkcontext->screenshotready = false;
+		return;
+	}
+	if((vkcontext->surfacecapabilities.supportedUsageFlags & VK_IMAGE_USAGE_TRANSFER_SRC_BIT) == 0) {
+		gLoge("gVKRenderEngine") << "The swapchain does not support screenshot transfer reads.";
+		return;
+	}
+	vkcontext->screenshotrequested = true;
+#endif
 }
 
 
@@ -1584,6 +1608,24 @@ void gVKRenderEngine::drawColored2D(const glm::vec2* points, int count, const gl
 	// Forcing alpha to 1 reproduces exactly that, since src * 1 + dst * 0 is the
 	// source colour, and it avoids a second pipeline just for the disabled state.
 	glm::vec4 drawcolor = color;
+	if(islightingenabled) {
+		bool hasenabledlight = false;
+		for(gLight* light : scenelights) {
+			if(light != nullptr && light->isEnabled()) {
+				hasenabledlight = true;
+				break;
+			}
+		}
+		// OpenGL's mesh shader falls back to global ambient when lighting is on
+		// but every scene light is disabled. Coloured 2D primitives use that same
+		// mesh path there, so preserve the observable API behaviour in Vulkan.
+		if(!hasenabledlight) {
+			const glm::vec4 ambient = globalambientcolor.asVec4();
+			drawcolor.r *= ambient.r;
+			drawcolor.g *= ambient.g;
+			drawcolor.b *= ambient.b;
+		}
+	}
 	if(!isalphablendingenabled) drawcolor.a = 1.0f;
 	gvkDrawColored2D(*vkcontext, points, count, drawcolor, mvp, mode);
 #endif
