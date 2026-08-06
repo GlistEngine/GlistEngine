@@ -1,5 +1,7 @@
 var NAVTREEINDEX6 =
 {
+"classgGUIImageButton.html#ae82ba5e15b6c4b051cba4b710910cc3b":[1,0,77,12],
+"classgGUILineGraph.html":[1,0,78],
 "classgGUILineGraph.html#a07232ac919d1738cfd805bcbe2ab7e20":[1,0,78,18],
 "classgGUILineGraph.html#a1ac80fbd9140049b02726b03f68bb2b4":[1,0,78,16],
 "classgGUILineGraph.html#a22b9721365a054014ecd71d01da5e414":[1,0,78,2],
@@ -247,7 +249,5 @@ var NAVTREEINDEX6 =
 "classgGUIPieGraph.html#afeec500078ae3aaea9ae1c83a9dce6ee":[1,0,88,1],
 "classgGUIProgressBar.html":[1,0,89],
 "classgGUIProgressBar.html#a0114a3ae023cd63b5f37fea44b9f31a6":[1,0,89,6],
-"classgGUIProgressBar.html#a02ea5a879e552f4418ce8d8dc71c87ff":[1,0,89,8],
-"classgGUIProgressBar.html#a1c9de9af36f2b93f46fd900ec0ada20b":[1,0,89,23],
-"classgGUIProgressBar.html#a1dd8b772791f33a447d44cf0eb5f2b59":[1,0,89,7]
+"classgGUIProgressBar.html#a02ea5a879e552f4418ce8d8dc71c87ff":[1,0,89,8]
 };

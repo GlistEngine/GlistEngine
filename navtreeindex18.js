@@ -1,5 +1,7 @@
 var NAVTREEINDEX18 =
 {
+"gSepiatone_8h_source.html":[2,0,0,4,1,14],
+"gShader_8h.html":[2,0,0,4,20],
 "gShader_8h_source.html":[2,0,0,4,20],
 "gShadowMap_8h.html":[2,0,0,4,21],
 "gShadowMap_8h_source.html":[2,0,0,4,21],
@@ -247,7 +249,5 @@ var NAVTREEINDEX18 =
 "globals_enum.html":[2,1,4],
 "globals_eval.html":[2,1,5],
 "globals_f.html":[2,1,0,6],
-"globals_func.html":[2,1,1],
-"globals_g.html":[2,1,0,7],
-"globals_i.html":[2,1,0,8]
+"globals_func.html":[2,1,1]
 };

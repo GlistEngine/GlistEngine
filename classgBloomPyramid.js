@@ -5,6 +5,8 @@ var classgBloomPyramid =
     [ "gBloomPyramid", "classgBloomPyramid.html#a85714b8531c74cadbf167f115c076373", null ],
     [ "gBloomPyramid", "classgBloomPyramid.html#ac12c774513bc586f3f778dce9a4b6a6b", null ],
     [ "~gBloomPyramid", "classgBloomPyramid.html#adb369f4249830a7c16b304f1b3f84d99", null ],
+    [ "disableAlphaMask", "classgBloomPyramid.html#a4260689ccbbfc9e358aa4e98fb73f04e", null ],
+    [ "disableRgbMask", "classgBloomPyramid.html#a2e00e8e2c1f501847538720e0040ce8f", null ],
     [ "getFragSrc", "classgBloomPyramid.html#a55387b54b78b96e381400697d0792b16", null ],
     [ "getVertSrc", "classgBloomPyramid.html#a1808232c6ab5c2e2c9213f8a12f47e54", null ],
     [ "render", "classgBloomPyramid.html#a490bbd52f0fd9189ac9fbd46a66926ac", null ],
