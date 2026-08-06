@@ -21,8 +21,8 @@
 gFont::gFont() = default;
 
 gFont::~gFont() {
-	delete atlastexture;
-	atlastexture = nullptr;
+	for (AtlasPage& page : atlaspages) delete page.texture;
+	atlaspages.clear();
 	if (fontface) {
 		for (std::pair<const int, gTexture*> pair : chartextures) {
 			delete pair.second;
@@ -89,10 +89,8 @@ void gFont::setTextRenderMode(TextRenderMode renderMode) {
 	if (textrendermode == TextRenderMode::ATLAS) {
 		if (!buildAtlas()) resizeVectors(characternumlimit);
 	} else {
-		delete atlastexture;
-		atlastexture = nullptr;
-		atlaspixels.clear();
-		atlaspixels.shrink_to_fit();
+		for (AtlasPage& page : atlaspages) delete page.texture;
+		atlaspages.clear();
 		resizeVectors(characternumlimit);
 	}
 }
@@ -174,8 +172,8 @@ void gFont::reloadFont() {
 	}
 	chartextures.clear();
 	charproperties.clear();
-	delete atlastexture;
-	atlastexture = nullptr;
+	for (AtlasPage& page : atlaspages) delete page.texture;
+	atlaspages.clear();
 
 	if (textrendermode != TextRenderMode::ATLAS || !buildAtlas()) {
 		// Reload space character for the legacy per-glyph texture path.
@@ -186,85 +184,62 @@ void gFont::reloadFont() {
 bool gFont::buildAtlas() {
 	if (!fontface) return false;
 
-	delete atlastexture;
-	atlastexture = nullptr;
+	for (AtlasPage& page : atlaspages) delete page.texture;
+	atlaspages.clear();
 	charproperties.clear();
 	for (std::pair<const int, gTexture*> pair : chartextures) {
 		delete pair.second;
 	}
 	chartextures.clear();
-	atlaspixels.resize(static_cast<size_t>(atlaswidth) * atlasheight * 4);
-	for (size_t i = 0; i < atlaspixels.size(); i += 4) {
-		atlaspixels[i] = 255;
-		atlaspixels[i + 1] = 255;
-		atlaspixels[i + 2] = 255;
-		atlaspixels[i + 3] = 0;
-	}
-	atlascursorx = 0;
-	atlascursory = 0;
-	atlasrowheight = 0;
-	atlasbuilding = true;
-
-	// The existing font cache limit is 1000 codepoints. Prepacking the same range
-	// covers Latin, Latin Extended (including Turkish), Greek and Cyrillic while
-	// keeping the atlas immutable after it has entered a submitted frame.
-	for (int c = 32; c < characternumlimit; ++c) {
-		if (FT_Get_Char_Index(fontface, c) != 0 || c == ' ') loadChar(c);
-	}
-	atlasbuilding = false;
-
-	bool hasglyph = false;
-	for (const auto& entry : charproperties) {
-		if (entry.second.inatlas) {
-			hasglyph = true;
-			break;
-		}
-	}
-	if (!hasglyph) {
-		atlaspixels.clear();
-		return false;
-	}
-
-	atlastexture = new gTexture(atlaswidth, atlasheight, GL_RGBA, false);
-	atlastexture->setFiltering(
-			isantialiased ? gTexture::TEXTUREMINMAGFILTER_LINEAR : gTexture::TEXTUREMINMAGFILTER_NEAREST,
-			isantialiased ? gTexture::TEXTUREMINMAGFILTER_LINEAR : gTexture::TEXTUREMINMAGFILTER_NEAREST);
-	atlastexture->setData(atlaspixels.data(), atlaswidth, atlasheight, 4, false, false);
-	atlaspixels.clear();
-	atlaspixels.shrink_to_fit();
-
-	gLogi("gFont") << "Glyph atlas ready: " << atlaswidth << "x" << atlasheight
-			<< ", cached glyphs: " << charproperties.size();
 	return true;
 }
 
 void gFont::drawText(const std::string& text, float x, float y) {
 	G_PROFILE_ZONE_SCOPED_N("gFont::drawText()");
 	std::wstring wtext = s2ws(text);
-	bool canbatch = textrendermode == TextRenderMode::ATLAS && atlastexture != nullptr && !wtext.empty();
-	for (wchar_t wc : wtext) {
-		const int c = static_cast<int>(wc);
-		if (c == '\n') continue;
-		auto it = charproperties.find(c);
-		if (it == charproperties.end() || !it->second.inatlas) {
-			canbatch = false;
-			break;
+	bool canbatch = textrendermode == TextRenderMode::ATLAS && !wtext.empty();
+	if (canbatch) {
+		atlasbuilding = true;
+		for (wchar_t wc : wtext) {
+			const int c = static_cast<int>(wc);
+			if (c == '\n') continue;
+			auto it = charproperties.find(c);
+			if (it == charproperties.end() || !it->second.inatlas) loadChar(c);
+		}
+		atlasbuilding = false;
+
+		for (AtlasPage& page : atlaspages) {
+			if (!page.dirty) continue;
+			if (page.texture == nullptr) {
+				page.texture = new gTexture(atlaswidth, atlasheight, GL_RGBA, false);
+				page.texture->setFiltering(
+						isantialiased ? gTexture::TEXTUREMINMAGFILTER_LINEAR : gTexture::TEXTUREMINMAGFILTER_NEAREST,
+						isantialiased ? gTexture::TEXTUREMINMAGFILTER_LINEAR : gTexture::TEXTUREMINMAGFILTER_NEAREST);
+			}
+			page.texture->setData(page.pixels.data(), atlaswidth, atlasheight, 4, false, false);
+			page.dirty = false;
+		}
+
+		for (wchar_t wc : wtext) {
+			const int c = static_cast<int>(wc);
+			if (c == '\n') continue;
+			auto it = charproperties.find(c);
+			if (it == charproperties.end() || !it->second.inatlas
+					|| it->second.atlaspage < 0
+					|| it->second.atlaspage >= static_cast<int>(atlaspages.size())
+					|| atlaspages[it->second.atlaspage].texture == nullptr) {
+				canbatch = false;
+				break;
+			}
 		}
 	}
 
 	if (canbatch) {
 		batchvertices.clear();
-		batchvertices.reserve(wtext.size() * 6 * 4);
+		batchvertices.resize(atlaspages.size());
 		float posx = x;
 		float posy = y;
 		int previous = -1;
-
-		auto appendvertex = [this](float px, float py, float u, float v) {
-			batchvertices.push_back(px);
-			batchvertices.push_back(py);
-			batchvertices.push_back(u);
-			batchvertices.push_back(v);
-		};
 
 		for (wchar_t wc : wtext) {
 			const int c = static_cast<int>(wc);
@@ -281,6 +256,13 @@ void gFont::drawText(const std::string& text, float x, float y) {
 			const float y0 = roundIfRequired(posy + p.dytop);
 			const float x1 = x0 + p.texturewidth;
 			const float y1 = y0 + p.textureheight;
+			std::vector<float>& vertices = batchvertices[p.atlaspage];
+			auto appendvertex = [&vertices](float px, float py, float u, float v) {
+				vertices.push_back(px);
+				vertices.push_back(py);
+				vertices.push_back(u);
+				vertices.push_back(v);
+			};
 
 			appendvertex(x0, y0, p.atlasu0, p.atlasv0);
 			appendvertex(x1, y0, p.atlasu1, p.atlasv0);
@@ -293,13 +275,15 @@ void gFont::drawText(const std::string& text, float x, float y) {
 			previous = c;
 		}
 
-		if (!batchvertices.empty()) {
-			renderer->setProjectionMatrix2d(glm::ortho(0.0f, static_cast<float>(renderer->getWidth()),
-					static_cast<float>(renderer->getHeight()), 0.0f, -1.0f, 1.0f));
-			gColor* color = renderer->getColor();
-			const glm::vec4 tint(color->r, color->g, color->b, color->a);
-			renderer->drawTexturedTriangles2D(atlastexture->getId(), tint, renderer->getProjectionMatrix2d(),
-					batchvertices.data(), static_cast<int>(batchvertices.size() / 4));
+		renderer->setProjectionMatrix2d(glm::ortho(0.0f, static_cast<float>(renderer->getWidth()),
+				static_cast<float>(renderer->getHeight()), 0.0f, -1.0f, 1.0f));
+		gColor* color = renderer->getColor();
+		const glm::vec4 tint(color->r, color->g, color->b, color->a);
+		for (size_t pageindex = 0; pageindex < batchvertices.size(); ++pageindex) {
+			std::vector<float>& vertices = batchvertices[pageindex];
+			if (vertices.empty()) continue;
+			renderer->drawTexturedTriangles2D(atlaspages[pageindex].texture->getId(), tint,
+					renderer->getProjectionMatrix2d(), vertices.data(), static_cast<int>(vertices.size() / 4));
 		}
 	} else {
 		float posx = x;
@@ -570,22 +554,68 @@ void gFont::loadChar(int charCode) {
 	// Prepare properties
 	CharProperties& props = charproperties[charCode];
 	if (atlasbuilding) {
-		if (atlascursorx + pixelsw > atlaswidth) {
-			atlascursorx = 0;
-			atlascursory += atlasrowheight;
-			atlasrowheight = 0;
+		auto existing = chartextures.find(charCode);
+		if (existing != chartextures.end()) {
+			delete existing->second;
+			chartextures.erase(existing);
 		}
-		if (atlascursory + pixelsh <= atlasheight) {
-			insertData(pixels.data(), pixelsw, pixelsh, 4, atlaspixels.data(), atlaswidth, atlasheight, 4,
-					static_cast<size_t>(atlascursorx), static_cast<size_t>(atlascursory));
-			props.atlasu0 = static_cast<float>(atlascursorx) / atlaswidth;
-			props.atlasv0 = static_cast<float>(atlascursory) / atlasheight;
-			props.atlasu1 = static_cast<float>(atlascursorx + pixelsw) / atlaswidth;
-			props.atlasv1 = static_cast<float>(atlascursory + pixelsh) / atlasheight;
+
+		int pageindex = -1;
+		int insertx = 0;
+		int inserty = 0;
+		if (pixelsw <= atlaswidth && pixelsh <= atlasheight) {
+			for (size_t i = 0; i < atlaspages.size(); ++i) {
+				AtlasPage& page = atlaspages[i];
+				int candidatex = page.cursorx;
+				int candidatey = page.cursory;
+				if (candidatex + pixelsw > atlaswidth) {
+					candidatex = 0;
+					candidatey += page.rowheight;
+				}
+				if (candidatey + pixelsh <= atlasheight) {
+					pageindex = static_cast<int>(i);
+					insertx = candidatex;
+					inserty = candidatey;
+					break;
+				}
+			}
+
+			if (pageindex == -1) {
+				AtlasPage page;
+				page.pixels.resize(static_cast<size_t>(atlaswidth) * atlasheight * 4);
+				for (size_t i = 0; i < page.pixels.size(); i += 4) {
+					page.pixels[i] = 255;
+					page.pixels[i + 1] = 255;
+					page.pixels[i + 2] = 255;
+					page.pixels[i + 3] = 0;
+				}
+				atlaspages.push_back(std::move(page));
+				pageindex = static_cast<int>(atlaspages.size()) - 1;
+				gLogi("gFont") << "Glyph atlas page created: " << atlaswidth << "x" << atlasheight
+						<< ", page: " << pageindex;
+			}
+		}
+
+		if (pageindex >= 0) {
+			AtlasPage& page = atlaspages[pageindex];
+			if (insertx == 0 && page.cursorx != 0) {
+				page.cursory += page.rowheight;
+				page.rowheight = 0;
+			}
+			insertData(pixels.data(), pixelsw, pixelsh, 4, page.pixels.data(), atlaswidth, atlasheight, 4,
+					static_cast<size_t>(insertx), static_cast<size_t>(inserty));
+			props.atlasu0 = static_cast<float>(insertx) / atlaswidth;
+			props.atlasv0 = static_cast<float>(inserty) / atlasheight;
+			props.atlasu1 = static_cast<float>(insertx + pixelsw) / atlaswidth;
+			props.atlasv1 = static_cast<float>(inserty + pixelsh) / atlasheight;
+			props.atlaspage = pageindex;
 			props.inatlas = true;
-			atlascursorx += pixelsw;
-			atlasrowheight = std::max(atlasrowheight, pixelsh);
+			page.cursorx = insertx + pixelsw;
+			page.cursory = inserty;
+			page.rowheight = std::max(page.rowheight, pixelsh);
+			page.dirty = true;
 		} else {
+			props.atlaspage = -1;
 			props.inatlas = false;
 		}
 	} else {
@@ -596,6 +626,8 @@ void gFont::loadChar(int charCode) {
 				isantialiased ? gTexture::TEXTUREMINMAGFILTER_LINEAR : gTexture::TEXTUREMINMAGFILTER_NEAREST,
 				isantialiased ? gTexture::TEXTUREMINMAGFILTER_LINEAR : gTexture::TEXTUREMINMAGFILTER_NEAREST);
 		chartextures[charCode]->setData(pixels.data(), pixelsw, pixelsh, 4, false, false);
+		props.atlaspage = -1;
+		props.inatlas = false;
 	}
 
 	// Simply divide all metrics by scale - no rounding
