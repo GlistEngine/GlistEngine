@@ -1064,6 +1064,19 @@ void gVKRenderEngine::setTextureMaxLevel(GLenum target, int maxLevel) {
 // there is a single mip level, so the mipmap variants collapse onto their base
 // filter - and the clamping wrap modes all map onto clamp to edge, which is what
 // the GL path resolves them to as well.
+// OpenGL folds two decisions into the minification filter: how a texel is sampled
+// and whether the mip chain is used at all. Vulkan keeps them apart, so both are
+// read out of the same constant here.
+static bool gvkMipmapsFromGL(GLint filter) {
+	return filter == GL_NEAREST_MIPMAP_NEAREST || filter == GL_NEAREST_MIPMAP_LINEAR
+			|| filter == GL_LINEAR_MIPMAP_NEAREST || filter == GL_LINEAR_MIPMAP_LINEAR;
+}
+
+static VkSamplerMipmapMode gvkMipmapModeFromGL(GLint filter) {
+	return (filter == GL_NEAREST_MIPMAP_NEAREST || filter == GL_LINEAR_MIPMAP_NEAREST)
+			? VK_SAMPLER_MIPMAP_MODE_NEAREST : VK_SAMPLER_MIPMAP_MODE_LINEAR;
+}
+
 static VkFilter gvkFilterFromGL(GLint filter) {
 	return (filter == GL_NEAREST || filter == GL_NEAREST_MIPMAP_NEAREST || filter == GL_NEAREST_MIPMAP_LINEAR)
 			? VK_FILTER_NEAREST : VK_FILTER_LINEAR;
@@ -1098,7 +1111,7 @@ void gVKRenderEngine::setFiltering(GLenum target, GLint minFilter, GLint magFilt
 	gVKTexture* tex = getBoundVKTexture();
 	if(tex == nullptr) return;
 	gvkSetTextureSampler(*vkcontext, tex, gvkFilterFromGL(minFilter), gvkFilterFromGL(magFilter),
-			tex->addressu, tex->addressv);
+			tex->addressu, tex->addressv, gvkMipmapsFromGL(minFilter), gvkMipmapModeFromGL(minFilter));
 #endif
 }
 
@@ -1108,7 +1121,8 @@ void gVKRenderEngine::setWrappingAndFiltering(GLenum target, GLint wrapS, GLint 
 	gVKTexture* tex = getBoundVKTexture();
 	if(tex == nullptr) return;
 	gvkSetTextureSampler(*vkcontext, tex, gvkFilterFromGL(minFilter), gvkFilterFromGL(magFilter),
-			gvkAddressFromGL(wrapS), gvkAddressFromGL(wrapT));
+			gvkAddressFromGL(wrapS), gvkAddressFromGL(wrapT),
+			gvkMipmapsFromGL(minFilter), gvkMipmapModeFromGL(minFilter));
 #endif
 }
 

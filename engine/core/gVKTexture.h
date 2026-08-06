@@ -42,6 +42,12 @@ struct gVKTexture {
 	// starts from.
 	VkFilter minfilter = VK_FILTER_LINEAR;
 	VkFilter magfilter = VK_FILTER_LINEAR;
+	// Whether the sampler may walk the mip chain at all. OpenGL says so through the
+	// minification filter: GL_LINEAR samples level 0 only, GL_LINEAR_MIPMAP_LINEAR
+	// is trilinear. Collapsing both onto "always mip" softened textures the
+	// application had asked to be sampled flat.
+	bool usemipmaps = true;
+	VkSamplerMipmapMode mipmapmode = VK_SAMPLER_MIPMAP_MODE_LINEAR;
 	VkSamplerAddressMode addressu = VK_SAMPLER_ADDRESS_MODE_REPEAT;
 	VkSamplerAddressMode addressv = VK_SAMPLER_ADDRESS_MODE_REPEAT;
 };
@@ -61,7 +67,8 @@ bool gvkWriteTextureDescriptorSet(gVKContext& ctx, gVKTexture* tex);
 // how gTexture::setFiltering / setWrapping reach Vulkan. Returns false when nothing
 // had to change.
 bool gvkSetTextureSampler(gVKContext& ctx, gVKTexture* tex, VkFilter minFilter, VkFilter magFilter,
-		VkSamplerAddressMode addressU, VkSamplerAddressMode addressV);
+		VkSamplerAddressMode addressU, VkSamplerAddressMode addressV,
+		bool useMipmaps = true, VkSamplerMipmapMode mipmapMode = VK_SAMPLER_MIPMAP_MODE_LINEAR);
 
 // Creates an empty texture to be rendered into, for gFbo's colour and depth
 // attachments. Unlike an uploaded texture this carries no pixels and no mip chain:

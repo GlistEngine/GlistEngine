@@ -53,7 +53,8 @@ static void gvkTransitionImageLayout(VkCommandBuffer cmd, VkImage image,
 // uploaded, so the mipmap mode follows the minification filter and stays consistent
 // with it rather than being a third setting.
 static VkSampler gvkCreateSampler(VkDevice device, VkFilter minFilter, VkFilter magFilter,
-		VkSamplerAddressMode addressU, VkSamplerAddressMode addressV) {
+		VkSamplerAddressMode addressU, VkSamplerAddressMode addressV,
+		bool useMipmaps, VkSamplerMipmapMode mipmapMode) {
 	VkSamplerCreateInfo samplerinfo{};
 	samplerinfo.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
 	samplerinfo.magFilter = magFilter;
@@ -61,13 +62,13 @@ static VkSampler gvkCreateSampler(VkDevice device, VkFilter minFilter, VkFilter 
 	samplerinfo.addressModeU = addressU;
 	samplerinfo.addressModeV = addressV;
 	samplerinfo.addressModeW = VK_SAMPLER_ADDRESS_MODE_REPEAT;
-	samplerinfo.mipmapMode = minFilter == VK_FILTER_NEAREST
-			? VK_SAMPLER_MIPMAP_MODE_NEAREST : VK_SAMPLER_MIPMAP_MODE_LINEAR;
-	// Without this maxLod defaults to 0, which pins sampling to level 0 and makes
-	// the mip chain built at upload time dead weight. CLAMP_NONE lets every level
-	// be reached, so the texture is filtered the way glGenerateMipmap leaves it.
+	samplerinfo.mipmapMode = mipmapMode;
+	// maxLod defaults to 0, which pins sampling to level 0 and would make the mip
+	// chain built at upload time dead weight. CLAMP_NONE lets every level be
+	// reached - but only when the application asked for a mipmapping filter, since
+	// plain GL_LINEAR means level 0 alone.
 	samplerinfo.minLod = 0.0f;
-	samplerinfo.maxLod = VK_LOD_CLAMP_NONE;
+	samplerinfo.maxLod = useMipmaps ? VK_LOD_CLAMP_NONE : 0.0f;
 	samplerinfo.borderColor = VK_BORDER_COLOR_INT_OPAQUE_BLACK;
 	VkSampler sampler = VK_NULL_HANDLE;
 	vkCreateSampler(device, &samplerinfo, nullptr, &sampler);
@@ -229,23 +230,28 @@ gVKTexture* gvkCreateTextureRGBA8(gVKContext& ctx, const void* rgbaPixels, int w
 	// The sampler starts from gTexture's own defaults; setFiltering / setWrapping
 	// rebuild it through gvkSetTextureSampler when the texture asks for something
 	// else, which the upload path does right after this returns.
-	tex->sampler = gvkCreateSampler(device, tex->minfilter, tex->magfilter, tex->addressu, tex->addressv);
+	tex->sampler = gvkCreateSampler(device, tex->minfilter, tex->magfilter, tex->addressu, tex->addressv,
+			tex->usemipmaps, tex->mipmapmode);
 
 	gvkWriteTextureDescriptorSet(ctx, tex);
 	return tex;
 }
 
 bool gvkSetTextureSampler(gVKContext& ctx, gVKTexture* tex, VkFilter minFilter, VkFilter magFilter,
-		VkSamplerAddressMode addressU, VkSamplerAddressMode addressV) {
+		VkSamplerAddressMode addressU, VkSamplerAddressMode addressV,
+		bool useMipmaps, VkSamplerMipmapMode mipmapMode) {
 	if(tex == nullptr) return false;
 	if(tex->minfilter == minFilter && tex->magfilter == magFilter
-			&& tex->addressu == addressU && tex->addressv == addressV) {
+			&& tex->addressu == addressU && tex->addressv == addressV
+			&& tex->usemipmaps == useMipmaps && tex->mipmapmode == mipmapMode) {
 		return false;
 	}
 	tex->minfilter = minFilter;
 	tex->magfilter = magFilter;
 	tex->addressu = addressU;
 	tex->addressv = addressV;
+	tex->usemipmaps = useMipmaps;
+	tex->mipmapmode = mipmapMode;
 
 	VkDevice device = *ctx.getDevice();
 	if(device == VK_NULL_HANDLE || tex->sampler == VK_NULL_HANDLE) return false;
@@ -255,7 +261,8 @@ bool gvkSetTextureSampler(gVKContext& ctx, gVKTexture* tex, VkFilter minFilter, 
 	// scene.
 	vkDeviceWaitIdle(device);
 	vkDestroySampler(device, tex->sampler, nullptr);
-	tex->sampler = gvkCreateSampler(device, minFilter, magFilter, addressU, addressV);
+	tex->sampler = gvkCreateSampler(device, minFilter, magFilter, addressU, addressV,
+			useMipmaps, mipmapMode);
 	if(tex->descriptorset != VK_NULL_HANDLE) {
 		VkDescriptorImageInfo imginfo{};
 		imginfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
@@ -382,7 +389,8 @@ gVKTexture* gvkCreateAttachmentTexture(gVKContext& ctx, int width, int height, b
 	// should not fold the opposite side back in.
 	tex->addressu = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
 	tex->addressv = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
-	tex->sampler = gvkCreateSampler(device, tex->minfilter, tex->magfilter, tex->addressu, tex->addressv);
+	tex->sampler = gvkCreateSampler(device, tex->minfilter, tex->magfilter, tex->addressu, tex->addressv,
+			tex->usemipmaps, tex->mipmapmode);
 	gvkWriteTextureDescriptorSet(ctx, tex);
 	return tex;
 }

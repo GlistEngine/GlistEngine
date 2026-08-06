@@ -775,6 +775,8 @@ if(Lib_Vulkan)
 				${GVK_SHADER_DIR}/mesh3dpbr.frag
 				${GVK_SHADER_DIR}/shadow3d.vert
 				${GVK_SHADER_DIR}/shadow3d.frag
+				${GVK_SHADER_DIR}/skybox3d.vert
+				${GVK_SHADER_DIR}/skybox3d.frag
 				${GVK_SHADER_DIR}/gen_vk_shaders.cmake
 			COMMENT "Regenerating gVKShaders.h from the Vulkan 2D shader sources"
 			VERBATIM)
