@@ -1,5 +1,7 @@
 var NAVTREEINDEX17 =
 {
+"gGUIToolbar_8h_source.html":[2,0,0,7,46],
+"gGUITooltipText_8h.html":[2,0,0,7,48],
 "gGUITooltipText_8h_source.html":[2,0,0,7,48],
 "gGUITreelist_8h.html":[2,0,0,7,49],
 "gGUITreelist_8h_source.html":[2,0,0,7,49],
@@ -247,7 +249,5 @@ var NAVTREEINDEX17 =
 "gRenderer_8h_source.html":[2,0,0,2,13],
 "gRoundedRectangle_8h.html":[2,0,0,4,2,9],
 "gRoundedRectangle_8h_source.html":[2,0,0,4,2,9],
-"gScreenSpaceReflections_8h.html":[2,0,0,4,1,13],
-"gScreenSpaceReflections_8h_source.html":[2,0,0,4,1,13],
-"gSepiatone_8h.html":[2,0,0,4,1,14]
+"gScreenSpaceReflections_8h.html":[2,0,0,4,1,13]
 };

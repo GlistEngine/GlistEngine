@@ -1,5 +1,7 @@
 var NAVTREEINDEX16 =
 {
+"gBaseGUIObject_8h.html":[2,0,0,1,3],
+"gBaseGUIObject_8h_source.html":[2,0,0,1,3],
 "gBaseParticles_8h.html":[2,0,0,1,4],
 "gBaseParticles_8h_source.html":[2,0,0,1,4],
 "gBasePlugin_8h.html":[2,0,0,1,5],
@@ -247,7 +249,5 @@ var NAVTREEINDEX16 =
 "gGUITimebox_8h_source.html":[2,0,0,7,45],
 "gGUIToolbarButton_8h.html":[2,0,0,7,47],
 "gGUIToolbarButton_8h_source.html":[2,0,0,7,47],
-"gGUIToolbar_8h.html":[2,0,0,7,46],
-"gGUIToolbar_8h_source.html":[2,0,0,7,46],
-"gGUITooltipText_8h.html":[2,0,0,7,48]
+"gGUIToolbar_8h.html":[2,0,0,7,46]
 };

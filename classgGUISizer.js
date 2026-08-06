@@ -31,6 +31,8 @@ var classgGUISizer =
     [ "set", "classgGUISizer.html#a493dc3b76d37aa6eaa9a9fb621db0cfd", null ],
     [ "set", "classgGUISizer.html#aeeab1473e98d9e469f311554074ba271", null ],
     [ "setAlignContentVertically", "classgGUISizer.html#ac5572b5b863fcf831bf0cc91ff8495a4", null ],
+    [ "setBackgroundImage", "classgGUISizer.html#a4c9b5293aac79f84bc2fd4685c86679e", null ],
+    [ "setBackgroungImageEnabled", "classgGUISizer.html#ade418a668c2aaf8ccd6361d99b94183d", null ],
     [ "setColumnProportions", "classgGUISizer.html#a8ca1c78d0efcfcf2c20c218806d22fd3", null ],
     [ "setControl", "classgGUISizer.html#a8245b1f5ae3970668709e2b579123603", null ],
     [ "setLineProportions", "classgGUISizer.html#a81a4769ca9b69780a7feec9139591b3e", null ],
