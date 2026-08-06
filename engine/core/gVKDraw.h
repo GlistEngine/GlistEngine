@@ -16,10 +16,28 @@
 #define CORE_GVKDRAW_H
 
 #include "gVKContext.h"
+// For gVKMeshPush, the 3D path's push constant block.
+#include "gVKUniform.h"
 
 #ifdef GVK_DESKTOP_GLFW
 
 #include <glm/glm.hpp>
+
+// The renderer's culling state, handed to a 3D draw the same way the depth state is.
+// Already in Vulkan terms: gVKRenderEngine translates the engine's GL-flavoured
+// culling API, so this header needs no GL constants.
+//
+// Inside the guard, like everything else here: a build without the Vulkan backend
+// never sees a Vulkan header, so a type named outside it does not exist at all.
+//
+// The front face is deliberately the opposite of the OpenGL one. The frame loop
+// draws through a negative-height viewport, which mirrors the y axis and reverses
+// the winding a triangle appears to have on screen, so geometry OpenGL calls
+// counter-clockwise reaches this rasteriser as clockwise.
+struct gVKCullState {
+	VkCullModeFlags mode = VK_CULL_MODE_NONE;
+	VkFrontFace frontface = VK_FRONT_FACE_CLOCKWISE;
+};
 
 // How the points handed to gvkDrawColored2D are connected. These mirror the mesh
 // draw modes the 2D primitives use (gMesh::DRAWMODE_*), without this header having
@@ -54,6 +72,71 @@ void gvkDrawTextured2D(gVKContext& ctx, VkDescriptorSet textureSet, VkDescriptor
 // and matches the image pipeline's position/UV vertex layout.
 void gvkDrawTexturedTriangles2D(gVKContext& ctx, VkDescriptorSet textureSet,
 		const glm::vec4& tint, const glm::mat4& mvp, const float* xyuv, int vertexCount);
+
+// Records one 3D mesh out of buffers that already live on the device, unlike the
+// 2D calls above, which copy their geometry into a per-frame ring first. A mesh
+// uploads once through gVKMeshBuffer and is then drawn straight from there.
+//
+// indexBuffer may be VK_NULL_HANDLE, in which case count is a vertex count and the
+// draw is non-indexed; otherwise count is an index count and indexType says how
+// wide those indices are - the caller passes it because gIndex is 16 bit on Android
+// and 32 bit elsewhere, and this file has no reason to depend on that header.
+//
+// push carries the model matrix and the material; the camera and the lights come
+// from the frame's scene descriptor set, which this binds.
+//
+// depthTest / depthTestAlways mirror the renderer's current depth state and are set
+// on the command buffer rather than baked into the pipeline, because the engine lets
+// an app toggle depth testing between draws. lines selects the wireframe pipeline.
+// diffuseSet / specularSet / normalSet are the material's maps, as sets 1, 2 and 3.
+// None may be VK_NULL_HANDLE: the shader declares all three samplers, so every
+// binding needs a valid descriptor even for a mesh that uses no maps - the caller
+// binds a 1x1 white texture in that case.
+// topology has to belong to the class the chosen pipeline was built for: a triangle
+// one when lines is false, a line one when it is true.
+// instanceBuffer holds one model matrix per instance and is bound as binding 1. It
+// is required even for a single draw, because the shader always reads from it - the
+// caller passes a one-element identity buffer when the draw is not instanced.
+void gvkDrawMesh3D(gVKContext& ctx, VkBuffer vertexBuffer, VkBuffer indexBuffer, int count,
+		VkIndexType indexType, const gVKMeshPush& push,
+		VkDescriptorSet diffuseSet, VkDescriptorSet specularSet, VkDescriptorSet normalSet,
+		VkDescriptorSet shadowSet,
+		VkBuffer instanceBuffer, int instanceCount,
+		VkPrimitiveTopology topology, bool depthTest, bool depthTestAlways, bool lines,
+		const gVKCullState& culling, bool blending);
+
+// Records one mesh into the shadow map through the depth-only pipeline. diffuseSet
+// is the caster's diffuse map, bound as set 0 so a cutout material can discard the
+// holes it punches; it must be a real descriptor even for an opaque mesh, where the
+// 1x1 white texture stands in and push.misc.x says not to sample it. Only valid
+// while the shadow render pass is open.
+void gvkDrawShadowCaster(gVKContext& ctx, VkBuffer vertexBuffer, VkBuffer indexBuffer,
+		int count, VkIndexType indexType, const gVKShadowPush& push,
+		VkDescriptorSet diffuseSet,
+		VkBuffer instanceBuffer, int instanceCount, VkPrimitiveTopology topology);
+
+// Records one 3D mesh through the PBR pipeline. materialSet holds all five maps in
+// a single descriptor set (bindings 0..4), unlike the non-PBR path where each map
+// is its own set: Vulkan only guarantees four bound sets, and scene plus five
+// textures would need six. shadowSet is the depth map from the light's point of
+// view and goes in as set 2, per frame rather than per material. There is no line
+// variant - a wireframe PBR draw has no meaning that the OpenGL path offers either.
+void gvkDrawMesh3DPbr(gVKContext& ctx, VkBuffer vertexBuffer, VkBuffer indexBuffer, int count,
+		VkIndexType indexType, const gVKPbrPush& push, VkDescriptorSet materialSet,
+		VkDescriptorSet shadowSet,
+		VkBuffer instanceBuffer, int instanceCount,
+		VkPrimitiveTopology topology, bool depthTest, bool depthTestAlways,
+		const gVKCullState& culling, bool blending);
+
+// Records one face of the skybox: a quad list in world space, sampled from a plain
+// 2D texture rather than a cube map. xyzuv holds five floats per vertex, three of
+// position and two of texture coordinate, and goes through the per-frame dynamic
+// ring because the quads are rebuilt around the camera every frame.
+//
+// depthCompare is the renderer's current depth function, so gSkybox can ask for the
+// same EQUAL test the OpenGL path uses to keep the sky behind everything else.
+void gvkDrawSkyboxFace(gVKContext& ctx, VkDescriptorSet faceSet, const float* xyzuv,
+		int vertexCount, const glm::mat4& viewProjection, VkCompareOp depthCompare);
 
 #endif /* GVK_DESKTOP_GLFW */
 

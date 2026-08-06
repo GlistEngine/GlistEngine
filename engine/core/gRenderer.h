@@ -271,6 +271,84 @@ public:
 	virtual void drawTexturedTriangles2D(GLuint textureId, const glm::vec4& tint,
 			const glm::mat4& mvp, const float* xyuv, int vertexCount) {}
 
+	// What a backend needs about a mesh's surface in order to shade it. Mirrors the
+	// non-map part of gMaterial; the texture maps join it once the Vulkan path can
+	// sample them.
+	struct gMeshSurface {
+		glm::vec4 ambient{1.0f};
+		glm::vec4 diffuse{1.0f};
+		glm::vec4 specular{1.0f};
+		float shininess = 0.5f;
+		// Texture ids as gTexture hands them out, or 0 for "this mesh has no map of
+		// that kind". A diffuse map replaces the ambient and diffuse colours rather
+		// than tinting them, matching what the OpenGL shader does.
+		GLuint diffusemapid = 0;
+		GLuint specularmapid = 0;
+		// Tangent-space normal map. When set, the surface normal comes from the
+		// texture and the lighting is computed in tangent space.
+		GLuint normalmapid = 0;
+
+		// PBR takes a different shader entirely: a metallic-roughness workflow whose
+		// maps replace the colours above rather than sitting alongside them. Backends
+		// switch on ispbr rather than on which ids happen to be set, because a PBR
+		// material with no maps at all is still PBR and has its own defaults.
+		bool ispbr = false;
+		GLuint albedomapid = 0;
+		GLuint pbrnormalmapid = 0;
+		GLuint metallicmapid = 0;
+		GLuint roughnessmapid = 0;
+		GLuint aomapid = 0;
+	};
+
+	// Backend hook for a 3D mesh. OpenGL draws these through its own shader and vbo
+	// binding and leaves this a no-op; Vulkan looks the vertex array id up in its
+	// registry and records a draw from the buffers already on the device.
+	//
+	// vertexArrayId is gVbo's VAO name, which is what the backend keys its buffers
+	// off. indexCount is 0 for a non-indexed mesh, in which case vertexCount is
+	// used. Only the model matrix is passed: the camera and the lights are scene
+	// state the backend already has, and sending them per mesh would mean pushing
+	// far more than the 128 bytes Vulkan guarantees for push constants.
+	//
+	// instanceCount above 1 draws the mesh that many times, reading a model matrix
+	// per instance from the buffer gVbo::setInstanceData uploaded. The transforms
+	// themselves are not passed here: they already live on the device by the time
+	// this is called, which is the point of uploading them.
+	virtual void drawMesh3D(GLuint vertexArrayId, int vertexCount, int indexCount,
+			const glm::mat4& model, const gMeshSurface& surface,
+			int drawMode = GL_TRIANGLES, int instanceCount = 1) {}
+
+	// Backend hooks for shadow mapping. OpenGL leaves both alone: gShadowMap drives
+	// it there directly, through an FBO and shader uniforms it owns. Vulkan needs
+	// the render target created up front and the light's transform handed over,
+	// because the depth pass is a separate render pass with its own pipeline.
+	//
+	// allocateShadowMap returns false when the backend cannot provide one, which is
+	// what makes gShadowMap fall back to drawing the scene unshadowed.
+	// Backend hook for one face of the skybox. OpenGL draws the sky through its own
+	// cubemap shader and leaves this a no-op; Vulkan has no cube map here and draws
+	// six quads instead, one per face, each sampling a plain 2D texture.
+	//
+	// xyzuv holds five floats per vertex - three of position in world space, two of
+	// texture coordinate. Returns false when the backend cannot draw it, which is
+	// what tells gSkybox to fall back to its own path.
+	virtual bool drawSkyboxFace(GLuint textureId, const float* xyzuv, int vertexCount,
+			const glm::mat4& viewProjection) { return false; }
+
+	virtual bool allocateShadowMap(int width, int height) { return false; }
+	virtual void releaseShadowMap() {}
+
+	// Opens and closes the depth-only pass the shadow map is drawn into. Called by
+	// the frame loop around the first of the two scene draws; OpenGL does the
+	// equivalent inside gShadowMap::enable() and leaves these alone.
+	virtual bool beginShadowPass() { return false; }
+	virtual void endShadowPass() {}
+
+	// lightMatrix is lightProjection * lightView; lightPosition is where the caster
+	// sits, used for the depth bias. enabled false means shade without shadows.
+	virtual void setShadowMapState(bool enabled, const glm::mat4& lightMatrix,
+			const glm::vec3& lightPosition, bool softShadows) {}
+
 	virtual void clear() = 0;
 	virtual void clearColor(int r, int g, int b, int a = 255) = 0;
 	virtual void clearColor(gColor color) = 0;
@@ -325,6 +403,13 @@ public:
 	virtual void disableDepthTest() = 0;
 	virtual bool isDepthTestEnabled() = 0;
 	virtual int getDepthTestType() = 0;
+	virtual void enableCulling() { iscullingenabled = true; }
+	virtual void disableCulling() { iscullingenabled = false; }
+	virtual bool isCullingEnabled() const { return iscullingenabled; }
+	virtual void setCullFace(int face) { cullface = face; }
+	virtual int getCullFace() const { return cullface; }
+	virtual void setCullingDirection(int direction) { cullingdirection = direction; }
+	virtual int getCullingDirection() const { return cullingdirection; }
 
 	virtual void enableAlphaBlending() = 0;
 	virtual void disableAlphaBlending() = 0;
@@ -374,7 +459,12 @@ public:
 	gShader* getFboShader();
 	gShader* getGridShader();
 
-	void setProjectionMatrix(glm::mat4 projectionMatrix);
+	// Virtual because the two backends do not agree on what a projection matrix is.
+	// OpenGL clips depth to -1..1, Vulkan to 0..1, so the Vulkan backend folds a
+	// correction into whatever the camera hands it. Everything downstream - gMesh,
+	// gGrid, gSkybox - passes getProjectionMatrix() straight to a shader, so putting
+	// the fix here keeps it out of every one of those call sites.
+	virtual void setProjectionMatrix(glm::mat4 projectionMatrix);
 	void setProjectionMatrix2d(glm::mat4 projectionMatrix2d);
 	void setViewMatrix(glm::mat4 viewMatrix);
 	void setCameraPosition(glm::vec3 cameraPosition);
@@ -577,6 +667,9 @@ protected:
 
 	bool isdepthtestenabled;
 	int depthtesttype;
+	bool iscullingenabled = false;
+	int cullface = GL_BACK;
+	int cullingdirection = GL_CCW;
 	unsigned int depthtesttypeid[2];
 	bool isalphablendingenabled, isalphatestenabled;
 

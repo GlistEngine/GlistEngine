@@ -61,8 +61,16 @@ public:
 	void loadDataSkybox(std::string* data, int width, int height);
 private:
 	unsigned int id;
+	// The six faces as ordinary 2D textures, for the Vulkan path. That backend has
+	// no cube map here, so the sky is drawn as six quads instead and each one needs
+	// a texture of its own. Zero where a face never loaded.
+	std::array<unsigned int, 6> vkfaceids{};
 	int width, height, nrChannels;
 	void setupRenderData();
+	// Uploads one face through the renderer's plain 2D texture path. hdr converts
+	// float source pixels down to bytes first.
+	unsigned int uploadVulkanFace(int faceWidth, int faceHeight, void* pixels, bool hdr = false);
+	void drawVulkan();
 
 	unsigned int cubeVAO, cubeVBO;
 	unsigned int skyboxVAO, skyboxVBO;
