@@ -621,6 +621,10 @@ void gVKRenderEngine::texImage2D(GLenum target, GLint internalFormat, int width,
 	// a submitted frame, so tearing it down here needs no device wait.
 	auto it = vktextures.find(boundtextureid);
 	if(it != vktextures.end()) {
+		// Runtime glyph-atlas growth can replace a texture that an in-flight frame
+		// still samples. Drain the device before destroying that image and its
+		// descriptor resources. Atlas uploads are cache misses, not per-frame work.
+		if(*vkcontext->getDevice() != VK_NULL_HANDLE) vkDeviceWaitIdle(*vkcontext->getDevice());
 		gvkDestroyTexture(*vkcontext, it->second);
 		vktextures.erase(it);
 	}
