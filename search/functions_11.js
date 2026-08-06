@@ -33,7 +33,7 @@ var searchData=
   ['rename_30',['rename',['../classgFile.html#a19362b52b3dfec38943e3138ca679f8a',1,'gFile']]],
   ['rend_31',['rend',['../classgUTF8Iterator.html#acc46ce3e3fc8bb3fffb4d32bde605eea',1,'gUTF8Iterator']]],
   ['render_32',['render',['../classgBloomPyramid.html#a490bbd52f0fd9189ac9fbd46a66926ac',1,'gBloomPyramid::render()'],['../classgBasePostProcess.html#a0d618afc5a458874521bfc5f1d891b5d',1,'gBasePostProcess::render()']]],
-  ['reset_33',['reset',['../classgTweenAnimation.html#a10aa326ddb7b59ae3df087f027adee85',1,'gTweenAnimation::Reset()'],['../classgSpriteAnimation.html#acba6350daaf899657446fc76cbd66ae7',1,'gSpriteAnimation::reset()'],['../classgAssetLoader.html#aad628a955abc50cd9d6ff6d69d0f9ad8',1,'gAssetLoader::reset()']]],
+  ['reset_33',['reset',['../classgSpriteAnimation.html#acba6350daaf899657446fc76cbd66ae7',1,'gSpriteAnimation::reset()'],['../classgAssetLoader.html#aad628a955abc50cd9d6ff6d69d0f9ad8',1,'gAssetLoader::reset()'],['../classgTweenAnimation.html#a10aa326ddb7b59ae3df087f027adee85',1,'gTweenAnimation::Reset()']]],
   ['resetanimation_34',['resetAnimation',['../classgSkinnedMesh.html#a2cc0d14f85d36811f4d8d5a9e80cce05',1,'gSkinnedMesh']]],
   ['resetbuttonsbar_35',['resetButtonsBar',['../classgGUIDialogue.html#a56e1e9a07bb9e3a08133cbe794b04be0',1,'gGUIDialogue']]],
   ['resetlook_36',['resetLook',['../classgCamera.html#a04a3ce88aaa4f8afdd638e7c0a73dae4',1,'gCamera']]],

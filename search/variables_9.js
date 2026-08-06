@@ -67,5 +67,6 @@ var searchData=
   ['istextvisible_64',['istextvisible',['../classgGUIButton.html#ac5dafee1d7e16efca2e774a5384ce5e8',1,'gGUIButton']]],
   ['istitleon_65',['istitleon',['../classgBaseGUIObject.html#a1c577519d4e3ed1ab170afcc0b194d76',1,'gBaseGUIObject']]],
   ['istoggle_66',['istoggle',['../classgGUIButton.html#a33c134f73e5732de78f195a38e2fb44d',1,'gGUIButton']]],
-  ['isxaxislinenable_67',['isxaxislinenable',['../classgGUIGraph.html#ab8c5e89e3fd4111ea2ed08303b40f489',1,'gGUIGraph']]]
+  ['isvisible_67',['isvisible',['../classgBaseGUIObject.html#ab3ecedb04f60e9314757a965ace054f1',1,'gBaseGUIObject']]],
+  ['isxaxislinenable_68',['isxaxislinenable',['../classgGUIGraph.html#ab8c5e89e3fd4111ea2ed08303b40f489',1,'gGUIGraph']]]
 ];

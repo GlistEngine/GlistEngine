@@ -39,6 +39,7 @@ var classgGUITextbox =
     [ "setEditMode", "classgGUITextbox.html#a487a2f2e78585c9625e82f45beb476c2", null ],
     [ "setFirstX", "classgGUITextbox.html#af056405b640b2578281f4baae09484cf", null ],
     [ "setFirstY", "classgGUITextbox.html#ae165f54e3bc8eaeafa497393bfb4e233", null ],
+    [ "setFont", "classgGUITextbox.html#a1d8dc89399d220df51b5873a7971ce8f", null ],
     [ "setHintText", "classgGUITextbox.html#a14f1902735ae3faaa11a2422ad7625f9", null ],
     [ "setHintTextColor", "classgGUITextbox.html#ad7f7b1afcf6a47d0e314153b7c7a7b4d", null ],
     [ "setLineCount", "classgGUITextbox.html#a35c6bc9259522115233412f72383d3f5", null ],

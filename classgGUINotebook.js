@@ -19,6 +19,7 @@ var classgGUINotebook =
     [ "isTabClosable", "classgGUINotebook.html#a536252bdd66a3b1784ccb2f4c2a71f76", null ],
     [ "set", "classgGUINotebook.html#a23503a8f9b79ebc1e553202b0606711f", null ],
     [ "setActiveTab", "classgGUINotebook.html#a2dd9aa92311d9408caa33cdd405b8404", null ],
+    [ "setFont", "classgGUINotebook.html#aa134f9fc74a9aa39ad81d25a50818e59", null ],
     [ "setTabAutoClose", "classgGUINotebook.html#a5ce4637f129724dd6ec2c3590d20a18b", null ],
     [ "setTabClosable", "classgGUINotebook.html#a68614df66b248d537340cdbc006a9570", null ],
     [ "setTabPosition", "classgGUINotebook.html#ad7d6ef157d74472cf606847041c0c1ef", null ],
