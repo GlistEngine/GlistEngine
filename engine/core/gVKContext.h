@@ -340,6 +340,15 @@ struct gVKContext {
 	// drawn as wireframe.
 	VkPipeline getMesh3DPipeline() { return mesh3dpipeline; }
 	VkPipeline getMesh3DLinePipeline() { return mesh3dlinepipeline; }
+	// Blending cannot be a dynamic state, so each 3D path keeps a second pipeline
+	// with the opposite setting and the draw picks by the renderer's current one.
+	// The line variant has no blended twin: a wireframe pass is a debugging aid.
+	VkPipeline getMesh3DPipeline(bool blending) {
+		return blending && mesh3dblendpipeline != VK_NULL_HANDLE ? mesh3dblendpipeline : mesh3dpipeline;
+	}
+	VkPipeline getMesh3DPbrPipeline(bool blending) {
+		return blending && mesh3dpbrblendpipeline != VK_NULL_HANDLE ? mesh3dpbrblendpipeline : mesh3dpbrpipeline;
+	}
 	VkPipelineLayout getMesh3DPipelineLayout() { return mesh3dpipelinelayout; }
 	uint32_t getMesh3DPushSize() const { return mesh3dpushsize; }
 	VkShaderStageFlags getMesh3DPushStages() const { return mesh3dpushstages; }
@@ -518,6 +527,7 @@ private:
 	VkPipelineLayout mesh3dpipelinelayout = VK_NULL_HANDLE;
 	VkPipeline mesh3dpipeline = VK_NULL_HANDLE;
 	VkPipeline mesh3dlinepipeline = VK_NULL_HANDLE;
+	VkPipeline mesh3dblendpipeline = VK_NULL_HANDLE;
 	std::vector<VkDescriptorSetLayout> mesh3dsetlayouts;
 	uint32_t mesh3dpushsize = 0;
 	VkShaderStageFlags mesh3dpushstages = 0;
@@ -527,6 +537,7 @@ private:
 	// would need six.
 	VkPipelineLayout mesh3dpbrpipelinelayout = VK_NULL_HANDLE;
 	VkPipeline mesh3dpbrpipeline = VK_NULL_HANDLE;
+	VkPipeline mesh3dpbrblendpipeline = VK_NULL_HANDLE;
 	std::vector<VkDescriptorSetLayout> mesh3dpbrsetlayouts;
 	uint32_t mesh3dpbrpushsize = 0;
 	VkShaderStageFlags mesh3dpbrpushstages = 0;

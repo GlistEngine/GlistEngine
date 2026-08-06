@@ -198,13 +198,13 @@ void gvkDrawMesh3D(gVKContext& ctx, VkBuffer vertexBuffer, VkBuffer indexBuffer,
 		VkDescriptorSet shadowSet,
 		VkBuffer instanceBuffer, int instanceCount,
 		VkPrimitiveTopology topology, bool depthTest, bool depthTestAlways, bool lines,
-		const gVKCullState& culling) {
+		const gVKCullState& culling, bool blending) {
 	if(count <= 0 || vertexBuffer == VK_NULL_HANDLE) return;
 	if(!gvkEnsureRenderPass(ctx)) return;
 
 	VkCommandBuffer cmd = ctx.getCurrentCommandBuffer();
 	if(cmd == VK_NULL_HANDLE) return;
-	VkPipeline pipeline = lines ? ctx.getMesh3DLinePipeline() : ctx.getMesh3DPipeline();
+	VkPipeline pipeline = lines ? ctx.getMesh3DLinePipeline() : ctx.getMesh3DPipeline(blending);
 	if(pipeline == VK_NULL_HANDLE) return;
 
 	vkCmdBindPipeline(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline);
@@ -325,13 +325,13 @@ void gvkDrawMesh3DPbr(gVKContext& ctx, VkBuffer vertexBuffer, VkBuffer indexBuff
 		VkDescriptorSet shadowSet,
 		VkBuffer instanceBuffer, int instanceCount,
 		VkPrimitiveTopology topology, bool depthTest, bool depthTestAlways,
-		const gVKCullState& culling) {
+		const gVKCullState& culling, bool blending) {
 	if(count <= 0 || vertexBuffer == VK_NULL_HANDLE) return;
 	if(!gvkEnsureRenderPass(ctx)) return;
 
 	VkCommandBuffer cmd = ctx.getCurrentCommandBuffer();
 	if(cmd == VK_NULL_HANDLE) return;
-	VkPipeline pipeline = ctx.getMesh3DPbrPipeline();
+	VkPipeline pipeline = ctx.getMesh3DPbrPipeline(blending);
 	if(pipeline == VK_NULL_HANDLE) return;
 
 	VkDescriptorSet sceneset = ctx.getCurrentSceneDescriptorSet();

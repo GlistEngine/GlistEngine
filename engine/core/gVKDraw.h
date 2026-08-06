@@ -100,7 +100,7 @@ void gvkDrawMesh3D(gVKContext& ctx, VkBuffer vertexBuffer, VkBuffer indexBuffer,
 		VkDescriptorSet shadowSet,
 		VkBuffer instanceBuffer, int instanceCount,
 		VkPrimitiveTopology topology, bool depthTest, bool depthTestAlways, bool lines,
-		const gVKCullState& culling);
+		const gVKCullState& culling, bool blending);
 
 // Records one mesh into the shadow map through the depth-only pipeline. diffuseSet
 // is the caster's diffuse map, bound as set 0 so a cutout material can discard the
@@ -123,7 +123,7 @@ void gvkDrawMesh3DPbr(gVKContext& ctx, VkBuffer vertexBuffer, VkBuffer indexBuff
 		VkDescriptorSet shadowSet,
 		VkBuffer instanceBuffer, int instanceCount,
 		VkPrimitiveTopology topology, bool depthTest, bool depthTestAlways,
-		const gVKCullState& culling);
+		const gVKCullState& culling, bool blending);
 
 #endif /* GVK_DESKTOP_GLFW */
 

@@ -110,6 +110,9 @@ struct gvkPipelineOptions {
 	// 3D pipelines ask for it; the 2D ones never cull, and leaving the state static
 	// there means their draw calls have nothing extra to set.
 	bool dynamicculling = false;
+	// Builds a second pipeline with the blend flag flipped, for paths that have to
+	// follow the renderer's alpha blending state rather than fix it at build time.
+	bool blendvariant = false;
 	// When set, the vertex input is taken from here instead of from reflection.
 	const VkVertexInputAttributeDescription* vertexattributes = nullptr;
 	uint32_t vertexattributecount = 0;
@@ -129,6 +132,8 @@ struct gvkShaderSet {
 struct gvkPipelineParts {
 	VkPipeline pipeline = VK_NULL_HANDLE;
 	VkPipeline linepipeline = VK_NULL_HANDLE;
+	// The same pipeline with the opposite blend setting; see gvkPipelineOptions.
+	VkPipeline blendvariantpipeline = VK_NULL_HANDLE;
 	VkPipelineLayout layout = VK_NULL_HANDLE;
 	std::vector<VkDescriptorSetLayout> setlayouts;
 	uint32_t pushsize = 0;
@@ -390,6 +395,15 @@ static bool gvkBuildPipeline(VkDevice device, VkRenderPass renderpass, const cha
 	pipelineinfo.subpass = 0;
 
 	VkResult result = vkCreateGraphicsPipelines(device, VK_NULL_HANDLE, 1, &pipelineinfo, nullptr, &parts.pipeline);
+	if(result == VK_SUCCESS && options.blendvariant) {
+		// A second copy with blending flipped, so a 3D draw can follow the renderer's
+		// alpha blending state. It cannot be a dynamic state - blending is baked into
+		// a Vulkan pipeline - so the choice is made by binding one or the other.
+		blendattachment.blendEnable = options.blend ? VK_FALSE : VK_TRUE;
+		result = vkCreateGraphicsPipelines(device, VK_NULL_HANDLE, 1, &pipelineinfo, nullptr,
+				&parts.blendvariantpipeline);
+		blendattachment.blendEnable = options.blend ? VK_TRUE : VK_FALSE;
+	}
 	if(result == VK_SUCCESS && options.linevariant) {
 		// Identical state apart from the topology: an unfilled shape is stroked as
 		// separate edges, which is what the OpenGL path draws through
@@ -410,6 +424,7 @@ static bool gvkBuildPipeline(VkDevice device, VkRenderPass renderpass, const cha
 }
 
 static void gvkDestroyParts(VkDevice device, gvkPipelineParts& parts) {
+	if(parts.blendvariantpipeline != VK_NULL_HANDLE) vkDestroyPipeline(device, parts.blendvariantpipeline, nullptr);
 	if(parts.linepipeline != VK_NULL_HANDLE) vkDestroyPipeline(device, parts.linepipeline, nullptr);
 	if(parts.pipeline != VK_NULL_HANDLE) vkDestroyPipeline(device, parts.pipeline, nullptr);
 	if(parts.layout != VK_NULL_HANDLE) vkDestroyPipelineLayout(device, parts.layout, nullptr);
@@ -469,8 +484,10 @@ static bool gvkBuildAll(VkDevice device, VkRenderPass renderpass, const gvkShade
 	mesh3dopts.depthtest = true;
 	mesh3dopts.blend = false;
 	// A mesh follows the renderer's culling state, which an app can change between
-	// draws exactly as it changes depth testing.
+	// draws exactly as it changes depth testing. Alpha blending is the same kind of
+	// state, but it cannot be dynamic, so it gets a second pipeline instead.
 	mesh3dopts.dynamicculling = true;
+	mesh3dopts.blendvariant = true;
 	mesh3dopts.vertexattributes = gvkmesh3dattributes;
 	mesh3dopts.vertexattributecount = static_cast<uint32_t>(std::size(gvkmesh3dattributes));
 	mesh3dopts.vertexstride = GVK_MESH3D_VERTEX_STRIDE;
@@ -524,12 +541,14 @@ bool gvkCreateGraphicsPipelines(gVKContext& ctx) {
 	if(!gvkBuildAll(ctx.device, ctx.renderpass, shaders, color, image, mesh3d, mesh3dpbr, pool)) return false;
 
 	ctx.mesh3dpbrpipeline = mesh3dpbr.pipeline;
+	ctx.mesh3dpbrblendpipeline = mesh3dpbr.blendvariantpipeline;
 	ctx.mesh3dpbrpipelinelayout = mesh3dpbr.layout;
 	ctx.mesh3dpbrsetlayouts = mesh3dpbr.setlayouts;
 	ctx.mesh3dpbrpushsize = mesh3dpbr.pushsize;
 	ctx.mesh3dpbrpushstages = mesh3dpbr.pushstages;
 
 	ctx.mesh3dpipeline = mesh3d.pipeline;
+	ctx.mesh3dblendpipeline = mesh3d.blendvariantpipeline;
 	ctx.mesh3dlinepipeline = mesh3d.linepipeline;
 	ctx.mesh3dpipelinelayout = mesh3d.layout;
 	ctx.mesh3dsetlayouts = mesh3d.setlayouts;
@@ -641,6 +660,8 @@ void gvkDestroyGraphicsPipelines(gVKContext& ctx) {
 	VkDevice device = ctx.device;
 	if(device == VK_NULL_HANDLE) return;
 	if(ctx.mesh3dpbrpipeline != VK_NULL_HANDLE) { vkDestroyPipeline(device, ctx.mesh3dpbrpipeline, nullptr); ctx.mesh3dpbrpipeline = VK_NULL_HANDLE; }
+	if(ctx.mesh3dpbrblendpipeline != VK_NULL_HANDLE) { vkDestroyPipeline(device, ctx.mesh3dpbrblendpipeline, nullptr); ctx.mesh3dpbrblendpipeline = VK_NULL_HANDLE; }
+	if(ctx.mesh3dblendpipeline != VK_NULL_HANDLE) { vkDestroyPipeline(device, ctx.mesh3dblendpipeline, nullptr); ctx.mesh3dblendpipeline = VK_NULL_HANDLE; }
 	if(ctx.mesh3dpbrpipelinelayout != VK_NULL_HANDLE) { vkDestroyPipelineLayout(device, ctx.mesh3dpbrpipelinelayout, nullptr); ctx.mesh3dpbrpipelinelayout = VK_NULL_HANDLE; }
 	for(VkDescriptorSetLayout setlayout : ctx.mesh3dpbrsetlayouts) vkDestroyDescriptorSetLayout(device, setlayout, nullptr);
 	ctx.mesh3dpbrsetlayouts.clear();

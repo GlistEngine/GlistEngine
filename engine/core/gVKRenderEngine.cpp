@@ -1790,7 +1790,8 @@ void gVKRenderEngine::drawMesh3D(GLuint vertexArrayId, int vertexCount, int inde
 				indexed ? indexCount : vertexCount, pbrindextype, pbrpush, materialset,
 				pbrshadowset,
 				pbrinstances, instanceCount, topology,
-				isdepthtestenabled, depthtesttype == DEPTHTESTTYPE_ALWAYS, cullstate);
+				isdepthtestenabled, depthtesttype == DEPTHTESTTYPE_ALWAYS, cullstate,
+				isalphablendingenabled);
 		return;
 	}
 
@@ -1859,7 +1860,8 @@ void gVKRenderEngine::drawMesh3D(GLuint vertexArrayId, int vertexCount, int inde
 			indexed ? indexCount : vertexCount, indextype, push, diffuseset, specularset, normalset,
 			shadowset,
 			instancebuffer, instanceCount,
-			topology, isdepthtestenabled, depthtesttype == DEPTHTESTTYPE_ALWAYS, lines, cullstate);
+			topology, isdepthtestenabled, depthtesttype == DEPTHTESTTYPE_ALWAYS, lines, cullstate,
+			isalphablendingenabled);
 #endif
 }
 
