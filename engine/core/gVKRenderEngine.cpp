@@ -1956,9 +1956,12 @@ void gVKRenderEngine::updateSceneUniforms() {
 	uniforms.view = viewmatrix;
 	uniforms.viewpos = glm::vec4(cameraposition, 1.0f);
 	uniforms.globalambientcolor = globalambientcolor.asVec4();
-	// See gVKSceneUniforms::rendercolor: the OpenGL colour shader multiplies every
-	// mesh by this, so leaving it out was the whole of the colour difference between
-	// the two backends in a scene that drew text before its geometry.
+	// Still filled in, but no shader reads it any more: renderColor reaches a mesh
+	// through the push constant instead, because it has to be able to change between
+	// two draws of the same pass and a uniform block cannot express that. The field
+	// stays because both 3D shaders still declare it in this block, and the C++ side
+	// has to match that layout byte for byte. Dropping it means editing the two
+	// shaders as well; worth doing, not worth doing in the same change as the fix.
 	uniforms.rendercolor = rendercolor != nullptr ? rendercolor->asVec4() : glm::vec4(1.0f);
 
 	// The w component doubles as the "is a shadow map bound" flag the shader tests,
@@ -2447,6 +2450,23 @@ bool gVKRenderEngine::beginShadowPass() {
 	return gvkBeginShadowPass(*vkcontext);
 #else
 	return false;
+#endif
+}
+
+void gVKRenderEngine::updateLights() {
+	gRenderer::updateLights();
+#ifdef GVK_DESKTOP_GLFW
+	// A light was enabled, disabled or recoloured. The scene block this backend
+	// hands the shaders holds that state, and it is gathered once and then left
+	// alone for the rest of the pass, so it has to be dropped here or the change
+	// only lands on the frame after next.
+	//
+	// This is what a canvas doing the ordinary thing runs into: enable the light,
+	// draw the scene, disable it again. Without this the first draw of the pass
+	// captures the state from before the enable - the light off - and every mesh in
+	// that pass is shaded by the global ambient fallback instead, which comes out
+	// far brighter than the light would have made it.
+	sceneuniformswritten = false;
 #endif
 }
 

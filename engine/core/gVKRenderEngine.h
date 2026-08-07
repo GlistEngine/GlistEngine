@@ -236,6 +236,10 @@ public:
 	void setShadowMapState(bool enabled, const glm::mat4& lightMatrix,
 			const glm::vec3& lightPosition, bool softShadows) override;
 
+	// Drops the gathered scene block so the next 3D draw rebuilds it; see the base
+	// declaration for why the two backends cannot share one moment for this.
+	void updateLights() override;
+
 	void drawTexturedRect2D(GLuint textureId, GLuint maskTextureId, const glm::vec4& tint,
 			const glm::mat4& mvp,
 			const glm::vec2& uvOffset = glm::vec2(0.0f), const glm::vec2& uvScale = glm::vec2(1.0f)) override;
