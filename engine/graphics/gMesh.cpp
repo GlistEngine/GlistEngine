@@ -535,6 +535,7 @@ void gMesh::drawVboInstanced(const std::vector<glm::mat4>& instanceTransformatio
 
 void gMesh::drawExtraShaders() {
 	G_PROFILE_ZONE_SCOPED_N("gMesh::drawExtraShaders()");
+	if(!isextrashadersenabled) return;
 	if(isshadowmappingenabled && renderpassno == 0) return;
 	const std::vector<gShader*>& extraShaders = material.getShaders();
 	if(extraShaders.empty()) return;

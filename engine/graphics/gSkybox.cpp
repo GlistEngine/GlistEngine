@@ -45,6 +45,10 @@ gSkybox::~gSkybox() {
 	}
 }
 
+unsigned int gSkybox::getTextureId() const {
+	return id;
+}
+
 unsigned int gSkybox::loadTextures(const std::vector<std::string>& paths) {
 	std::vector<std::string> fullpaths;
 	fullpaths.resize(6);

@@ -99,6 +99,39 @@ gFont::TextRenderMode gFont::getTextRenderMode() const {
 	return textrendermode;
 }
 
+void gFont::setAtlasPageLimit(int maxPageCount) {
+	const int previouslimit = atlasmaxpages;
+	atlasmaxpages = std::max(1, maxPageCount);
+	if (atlasmaxpages > previouslimit) {
+		for (auto& entry : charproperties) {
+			if (!entry.second.inatlas) entry.second.atlasattempted = false;
+		}
+	}
+	if (atlaspages.size() <= static_cast<size_t>(atlasmaxpages)) return;
+
+	for (size_t i = static_cast<size_t>(atlasmaxpages); i < atlaspages.size(); ++i) {
+		delete atlaspages[i].texture;
+	}
+	atlaspages.resize(static_cast<size_t>(atlasmaxpages));
+	for (auto& entry : charproperties) {
+		CharProperties& properties = entry.second;
+		if (properties.atlaspage >= atlasmaxpages) {
+			properties.atlaspage = -1;
+			properties.atlasattempted = false;
+			properties.inatlas = false;
+		}
+	}
+	batchvertices.clear();
+}
+
+int gFont::getAtlasPageLimit() const {
+	return atlasmaxpages;
+}
+
+int gFont::getAtlasPageCount() const {
+	return static_cast<int>(atlaspages.size());
+}
+
 void gFont::getVisualBoundsX(const std::string& text, float& xmin, float& xmax) {
 	float posx = 0.0f;
 
@@ -197,14 +230,14 @@ bool gFont::buildAtlas() {
 void gFont::drawText(const std::string& text, float x, float y) {
 	G_PROFILE_ZONE_SCOPED_N("gFont::drawText()");
 	std::wstring wtext = s2ws(text);
-	bool canbatch = textrendermode == TextRenderMode::ATLAS && !wtext.empty();
-	if (canbatch) {
+	const bool useatlas = textrendermode == TextRenderMode::ATLAS && !wtext.empty();
+	if (useatlas) {
 		atlasbuilding = true;
 		for (wchar_t wc : wtext) {
 			const int c = static_cast<int>(wc);
 			if (c == '\n') continue;
 			auto it = charproperties.find(c);
-			if (it == charproperties.end() || !it->second.inatlas) loadChar(c);
+			if (it == charproperties.end() || (!it->second.inatlas && !it->second.atlasattempted)) loadChar(c);
 		}
 		atlasbuilding = false;
 
@@ -219,22 +252,15 @@ void gFont::drawText(const std::string& text, float x, float y) {
 			page.texture->setData(page.pixels.data(), atlaswidth, atlasheight, 4, false, false);
 			page.dirty = false;
 		}
-
-		for (wchar_t wc : wtext) {
-			const int c = static_cast<int>(wc);
-			if (c == '\n') continue;
-			auto it = charproperties.find(c);
-			if (it == charproperties.end() || !it->second.inatlas
-					|| it->second.atlaspage < 0
-					|| it->second.atlaspage >= static_cast<int>(atlaspages.size())
-					|| atlaspages[it->second.atlaspage].texture == nullptr) {
-				canbatch = false;
-				break;
-			}
-		}
 	}
 
-	if (canbatch) {
+	if (useatlas) {
+		struct LegacyGlyphDraw {
+			gTexture* texture;
+			glm::vec2 position;
+			glm::vec2 size;
+		};
+		std::vector<LegacyGlyphDraw> legacyglyphs;
 		batchvertices.clear();
 		batchvertices.resize(atlaspages.size());
 		float posx = x;
@@ -250,26 +276,45 @@ void gFont::drawText(const std::string& text, float x, float y) {
 				continue;
 			}
 
-			const CharProperties& p = charproperties[c];
+			auto properties = charproperties.find(c);
+			bool glyphinatlas = properties != charproperties.end()
+					&& properties->second.inatlas
+					&& properties->second.atlaspage >= 0
+					&& properties->second.atlaspage < static_cast<int>(atlaspages.size())
+					&& atlaspages[properties->second.atlaspage].texture != nullptr;
+			if (!glyphinatlas && chartextures.find(c) == chartextures.end()) loadChar(c);
+			properties = charproperties.find(c);
+			if (properties == charproperties.end()) continue;
+
+			const CharProperties& p = properties->second;
 			posx += getKerning(c, previous);
 			const float x0 = roundIfRequired(posx + p.leftmargin);
 			const float y0 = roundIfRequired(posy + p.dytop);
 			const float x1 = x0 + p.texturewidth;
 			const float y1 = y0 + p.textureheight;
-			std::vector<float>& vertices = batchvertices[p.atlaspage];
-			auto appendvertex = [&vertices](float px, float py, float u, float v) {
-				vertices.push_back(px);
-				vertices.push_back(py);
-				vertices.push_back(u);
-				vertices.push_back(v);
-			};
 
-			appendvertex(x0, y0, p.atlasu0, p.atlasv0);
-			appendvertex(x1, y0, p.atlasu1, p.atlasv0);
-			appendvertex(x1, y1, p.atlasu1, p.atlasv1);
-			appendvertex(x0, y0, p.atlasu0, p.atlasv0);
-			appendvertex(x1, y1, p.atlasu1, p.atlasv1);
-			appendvertex(x0, y1, p.atlasu0, p.atlasv1);
+			if (glyphinatlas) {
+				std::vector<float>& vertices = batchvertices[p.atlaspage];
+				auto appendvertex = [&vertices](float px, float py, float u, float v) {
+					vertices.push_back(px);
+					vertices.push_back(py);
+					vertices.push_back(u);
+					vertices.push_back(v);
+				};
+
+				appendvertex(x0, y0, p.atlasu0, p.atlasv0);
+				appendvertex(x1, y0, p.atlasu1, p.atlasv0);
+				appendvertex(x1, y1, p.atlasu1, p.atlasv1);
+				appendvertex(x0, y0, p.atlasu0, p.atlasv0);
+				appendvertex(x1, y1, p.atlasu1, p.atlasv1);
+				appendvertex(x0, y1, p.atlasu0, p.atlasv1);
+			} else {
+				auto texture = chartextures.find(c);
+				if (texture != chartextures.end() && texture->second != nullptr) {
+					legacyglyphs.push_back({texture->second, glm::vec2(x0, y0),
+							glm::vec2(p.texturewidth, p.textureheight)});
+				}
+			}
 
 			posx += p.advance * letterspacing * (c == ' ' ? spacesize : 1.0f);
 			previous = c;
@@ -284,6 +329,9 @@ void gFont::drawText(const std::string& text, float x, float y) {
 			if (vertices.empty()) continue;
 			renderer->drawTexturedTriangles2D(atlaspages[pageindex].texture->getId(), tint,
 					renderer->getProjectionMatrix2d(), vertices.data(), static_cast<int>(vertices.size() / 4));
+		}
+		for (const LegacyGlyphDraw& glyph : legacyglyphs) {
+			glyph.texture->draw(glyph.position, glyph.size);
 		}
 	} else {
 		float posx = x;
@@ -554,6 +602,7 @@ void gFont::loadChar(int charCode) {
 	// Prepare properties
 	CharProperties& props = charproperties[charCode];
 	if (atlasbuilding) {
+		props.atlasattempted = true;
 		auto existing = chartextures.find(charCode);
 		if (existing != chartextures.end()) {
 			delete existing->second;
@@ -580,7 +629,7 @@ void gFont::loadChar(int charCode) {
 				}
 			}
 
-			if (pageindex == -1) {
+			if (pageindex == -1 && static_cast<int>(atlaspages.size()) < atlasmaxpages) {
 				AtlasPage page;
 				page.pixels.resize(static_cast<size_t>(atlaswidth) * atlasheight * 4);
 				for (size_t i = 0; i < page.pixels.size(); i += 4) {

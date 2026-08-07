@@ -31,6 +31,8 @@ public:
 	gSkybox();
 	virtual ~gSkybox();
 
+	unsigned int getTextureId() const;
+
 	/**
 	 * Loads skybox textures from the assets/textures folder. 6 textures needed for the 6 sided skybox. Due to OpenGL instructions,
 	 * the textures should be in this order: right, left, top, bottom, front, back.
