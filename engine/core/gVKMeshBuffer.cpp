@@ -12,6 +12,76 @@
 #include "gUtils.h"
 #include <cstring>
 
+// Buffers replaced by a promotion, kept alive rather than destroyed on the spot.
+//
+// A promotion happens in the middle of a draw - the second upload arrives while
+// the frame that will use it is being recorded - and by then that command buffer
+// may already hold a bind of the buffer being replaced. vkDeviceWaitIdle does not
+// help: it waits for submitted work, and this command buffer has not been
+// submitted yet, so destroying the buffer here leaves a recorded reference to
+// freed memory. That wedged the device hard enough that every later
+// vkAcquireNextImageKHR failed and the window stopped updating altogether.
+//
+// One buffer per mesh that ever turns dynamic is a bounded, small amount to hold
+// until shutdown, and it is the version of this that is obviously correct.
+static std::vector<std::pair<VkBuffer, VkDeviceMemory>> gvkretiredmeshbuffers;
+
+void gvkDestroyRetiredMeshBuffers(gVKContext& ctx) {
+	VkDevice device = *ctx.getDevice();
+	if(device == VK_NULL_HANDLE) {
+		gvkretiredmeshbuffers.clear();
+		return;
+	}
+	for(auto& retired : gvkretiredmeshbuffers) {
+		if(retired.first != VK_NULL_HANDLE) vkDestroyBuffer(device, retired.first, nullptr);
+		if(retired.second != VK_NULL_HANDLE) vkFreeMemory(device, retired.second, nullptr);
+	}
+	gvkretiredmeshbuffers.clear();
+}
+
+// Rebuilds a buffer as one host visible copy per frame in flight and leaves them
+// permanently mapped. Called the moment a buffer is uploaded to a second time,
+// which is what marks it as data the CPU intends to keep rewriting.
+static bool gvkMakeMeshBufferDynamic(gVKContext& ctx, gVKMeshBuffer& buf,
+		VkDeviceSize size, bool isIndex) {
+	VkDevice device = *ctx.getDevice();
+
+	// Set aside rather than freed; see gvkretiredmeshbuffers above for why.
+	if(!buf.isdynamic && buf.buffer != VK_NULL_HANDLE) {
+		gvkretiredmeshbuffers.emplace_back(buf.buffer, buf.memory);
+		buf.buffer = VK_NULL_HANDLE;
+		buf.memory = VK_NULL_HANDLE;
+	}
+	gvkDestroyMeshBuffer(ctx, buf);
+
+	const VkBufferUsageFlags usage = isIndex ? VK_BUFFER_USAGE_INDEX_BUFFER_BIT
+			: VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
+	for(int i = 0; i < GVK_MAX_FRAMES_IN_FLIGHT; i++) {
+		if(!gvkCreateBuffer(ctx, size, usage,
+				VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
+				buf.slotbuffers[i], buf.slotmemories[i])) {
+			gLoge("gVKMeshBuffer") << "Could not create a host visible " << size
+					<< " byte buffer for a mesh that updates every frame.";
+			gvkDestroyMeshBuffer(ctx, buf);
+			return false;
+		}
+		if(vkMapMemory(device, buf.slotmemories[i], 0, size, 0, &buf.slotmapped[i]) != VK_SUCCESS) {
+			gLoge("gVKMeshBuffer") << "vkMapMemory failed for a per-frame mesh buffer.";
+			gvkDestroyMeshBuffer(ctx, buf);
+			return false;
+		}
+		// Nothing written yet, so no slot holds any version of the data.
+		buf.slotversion[i] = 0;
+	}
+
+	buf.isdynamic = true;
+	buf.size = size;
+	buf.isindex = isIndex;
+	buf.version = 0;
+	buf.shadow.resize(static_cast<size_t>(size));
+	return true;
+}
+
 bool gvkUploadMeshBuffer(gVKContext& ctx, gVKMeshBuffer& buf, const void* data,
 		VkDeviceSize size, bool isIndex) {
 	VkDevice device = *ctx.getDevice();
@@ -24,11 +94,39 @@ bool gvkUploadMeshBuffer(gVKContext& ctx, gVKMeshBuffer& buf, const void* data,
 		return true;
 	}
 
-	// A buffer of the same size is refilled in place. A different size needs a new
-	// allocation, and the old one may still be referenced by frames the GPU has not
-	// finished, so the device is drained before it goes away. Resizes are rare - a
-	// mesh normally uploads once - which is what makes the stall acceptable here.
-	if(buf.buffer != VK_NULL_HANDLE && (buf.size != size || buf.isindex != isIndex)) {
+	const bool wasallocated = buf.isdynamic || buf.buffer != VK_NULL_HANDLE;
+	const bool shapechanged = wasallocated && (buf.size != size || buf.isindex != isIndex);
+
+	// The second upload is the signal that this mesh rewrites its own vertices -
+	// CPU skinning does it on every animation frame. Staging such a buffer means a
+	// device local copy per update, and because the copy is submitted to the
+	// graphics queue and waited on, each one drains everything already queued: the
+	// frame being recorded ends up serialised against the one before it. Moving the
+	// buffer to host visible memory removes the copy, the submit and the wait, and
+	// leaves an upload costing one memcpy.
+	if(!buf.isdynamic && wasallocated && !shapechanged) {
+		if(!gvkMakeMeshBufferDynamic(ctx, buf, size, isIndex)) return false;
+	}
+
+	if(buf.isdynamic) {
+		if(shapechanged) {
+			// A resize cannot reuse the mapped slots. Rebuilding them keeps the
+			// buffer dynamic, which is what it has already shown itself to be.
+			if(!gvkMakeMeshBufferDynamic(ctx, buf, size, isIndex)) return false;
+		}
+		const uint32_t slot = ctx.getCurrentFrame() % GVK_MAX_FRAMES_IN_FLIGHT;
+		std::memcpy(buf.shadow.data(), data, static_cast<size_t>(size));
+		buf.version++;
+		std::memcpy(buf.slotmapped[slot], data, static_cast<size_t>(size));
+		buf.slotversion[slot] = buf.version;
+		buf.buffer = buf.slotbuffers[slot];
+		return true;
+	}
+
+	// A different size needs a new allocation, and the old one may still be
+	// referenced by frames the GPU has not finished, so the device is drained
+	// before it goes away.
+	if(shapechanged) {
 		vkDeviceWaitIdle(device);
 		gvkDestroyMeshBuffer(ctx, buf);
 	}
@@ -80,18 +178,55 @@ bool gvkUploadMeshBuffer(gVKContext& ctx, gVKMeshBuffer& buf, const void* data,
 	return true;
 }
 
+VkBuffer gvkResolveMeshBuffer(gVKContext& ctx, gVKMeshBuffer& buf) {
+	if(!buf.isdynamic) return buf.buffer;
+
+	const uint32_t slot = ctx.getCurrentFrame() % GVK_MAX_FRAMES_IN_FLIGHT;
+	if(buf.slotmapped[slot] == nullptr) return VK_NULL_HANDLE;
+
+	// This frame's slot is behind whenever the mesh was uploaded while a different
+	// frame was being recorded - a skinned mesh holding the same animation frame
+	// across two renders does exactly that. Catching it up costs one memcpy and is
+	// what keeps the two slots from showing alternating poses.
+	if(buf.slotversion[slot] != buf.version && !buf.shadow.empty()) {
+		std::memcpy(buf.slotmapped[slot], buf.shadow.data(), buf.shadow.size());
+		buf.slotversion[slot] = buf.version;
+	}
+
+	buf.buffer = buf.slotbuffers[slot];
+	return buf.buffer;
+}
+
 void gvkDestroyMeshBuffer(gVKContext& ctx, gVKMeshBuffer& buf) {
 	VkDevice device = *ctx.getDevice();
 	if(device == VK_NULL_HANDLE) return;
 
-	if(buf.buffer != VK_NULL_HANDLE) {
+	if(buf.buffer != VK_NULL_HANDLE && !buf.isdynamic) {
 		vkDestroyBuffer(device, buf.buffer, nullptr);
-		buf.buffer = VK_NULL_HANDLE;
 	}
+	buf.buffer = VK_NULL_HANDLE;
 	if(buf.memory != VK_NULL_HANDLE) {
 		vkFreeMemory(device, buf.memory, nullptr);
 		buf.memory = VK_NULL_HANDLE;
 	}
+
+	// The mapped slots are freed rather than unmapped first: freeing the memory
+	// they belong to unmaps them, and the pointers go away with it.
+	for(int i = 0; i < GVK_MAX_FRAMES_IN_FLIGHT; i++) {
+		if(buf.slotbuffers[i] != VK_NULL_HANDLE) {
+			vkDestroyBuffer(device, buf.slotbuffers[i], nullptr);
+			buf.slotbuffers[i] = VK_NULL_HANDLE;
+		}
+		if(buf.slotmemories[i] != VK_NULL_HANDLE) {
+			vkFreeMemory(device, buf.slotmemories[i], nullptr);
+			buf.slotmemories[i] = VK_NULL_HANDLE;
+		}
+		buf.slotmapped[i] = nullptr;
+		buf.slotversion[i] = 0;
+	}
+	buf.isdynamic = false;
+	buf.version = 0;
+	buf.shadow.clear();
 	buf.size = 0;
 }
 
