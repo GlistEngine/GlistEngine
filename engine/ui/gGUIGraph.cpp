@@ -36,6 +36,7 @@ gGUIGraph::gGUIGraph() {
 	isxaxislinenable = true;
 	yaxislenable = true;
 	floatlabelsenabled = false;
+	isbackgroundenabled = true;
 	labelcountx = 5;
 	labelcounty = 7;
 
@@ -188,6 +189,14 @@ int gGUIGraph::getRangeEnd() {
 	return rangeend;
 }
 
+void gGUIGraph::enableBackground(bool isEnabled) {
+	isbackgroundenabled = isEnabled;
+}
+
+bool gGUIGraph::isBackgroundEnabled() {
+	return isbackgroundenabled;
+}
+
 void gGUIGraph::draw() {
 	gColor oldcolor = *renderer->getColor();
 
@@ -205,8 +214,10 @@ void gGUIGraph::draw() {
 
 void gGUIGraph::drawBackground() {
 	// First draw the background
-	renderer->setColor(textbackgroundcolor);
-	gDrawRectangle(left, top, width, height, true);
+	if (isbackgroundenabled) {
+		renderer->setColor(textbackgroundcolor);
+		gDrawRectangle(left, top, width, height, true);
+	}
 
 	// Draw the axis
 	renderer->setColor(backgroundcolor);

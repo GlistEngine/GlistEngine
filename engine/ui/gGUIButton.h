@@ -30,15 +30,19 @@ public:
 
 	void setButtonColor(gColor color);
 	void setPressedButtonColor(gColor color);
+	void setHoverButtonColor(gColor color);
 	void setDisabledButtonColor(gColor color);
 	void setButtonFontColor(gColor color);
 	void setPressedButtonFontColor(gColor color);
+	void setHoverButtonFontColor(gColor color);
 	void setDisabledButtonFontColor(gColor color);
 	gColor* getButtonColor();
 	gColor* getPressedButtonColor();
+	gColor* getHoverButtonColor();
 	gColor* getDisabledButtonColor();
 	gColor* getButtonFontColor();
 	gColor* getPressedButtonFontColor();
+	gColor* getHoverButtonFontColor();
 	gColor* getDisabledButtonFontColor();
 
 	void enableBackgroundFill(bool isEnabled);
@@ -69,7 +73,7 @@ protected:
 	bool ispressednow;
 	bool isdisabled;
 	gColor bcolor, pressedbcolor, disabledbcolor;
-	gColor fcolor, pressedfcolor, disabledfcolor;
+	gColor fcolor, pressedfcolor, hoverfcolor, disabledfcolor;
 	gColor hcolor;
 	bool fillbackground;
 	bool contentcentered;

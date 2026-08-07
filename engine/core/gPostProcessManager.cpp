@@ -32,8 +32,18 @@ void gPostProcessManager::addEffect(gBasePostProcess *effect) {
 }
 
 void gPostProcessManager::enable() {
-	fbos[0].bind(); // this is where we will draw our affected objects.
-	renderer->clearScreen(true, true);
+	if (this->width != renderer->getScreenWidth() || this->height != renderer->getScreenHeight()) {
+			this->width = renderer->getScreenWidth();
+			this->height = renderer->getScreenHeight();
+
+			if (fbos != nullptr) {
+				for(int i = 0; i < fbocount; i++) {
+					fbos[i].allocate(width, height, false);
+				}
+			}
+		}
+		fbos[0].bind();
+		renderer->clearScreen(true, true);
 }
 
 void gPostProcessManager::disable() {

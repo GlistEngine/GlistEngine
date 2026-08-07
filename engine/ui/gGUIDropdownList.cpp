@@ -1,4 +1,4 @@
- /*
+/*
   * gGUIDropdownList.cpp
   *
   *  Created on: 19 Aug 2022
@@ -6,8 +6,9 @@
  */
 
 #include "gGUIDropdownList.h"
-#include "gBaseCanvas.h"
 #include "gBaseApp.h"
+#include "gBaseCanvas.h"
+
 
 gGUIDropdownList::gGUIDropdownList() {
 	buttonw = 24;
@@ -16,6 +17,7 @@ gGUIDropdownList::gGUIDropdownList() {
 	float columnproportions[2] = {0.8f, 0.2f};
 	guisizer->setColumnProportions(columnproportions);
 	guisizer->enableBorders(false);
+	guisizer->setAlignContentVertically(true);
 	button.setButtonColor(pressedbuttoncolor);
 	button.setSize(buttonw, buttonw);
 	button.setTitle("");
@@ -52,22 +54,28 @@ gGUIDropdownList::~gGUIDropdownList() {
 
 
 void gGUIDropdownList::set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIObject* parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h) {
-    totalh = h;
-    gGUIScrollable::set(root, topParentGUIObject, parentGUIObject, parentSlotLineNo, parentSlotColumnNo, x, y, w, h);
-    gGUIScrollable::setDimensions(w, h);
-    guisizer->set(root, topParentGUIObject, parentGUIObject, parentSlotLineNo, parentSlotColumnNo, x, y + topbarh, w, h - topbarh);
-//	gGUIControl::set(root, topParentGUIObject, parentGUIObject, parentSlotLineNo, parentSlotColumnNo, x, y, w, h);
+	totalh = h;
+	gGUIScrollable::set(root, topParentGUIObject, parentGUIObject, parentSlotLineNo, parentSlotColumnNo, x, y, w, h);
+	gGUIScrollable::setDimensions(w, h);
+	guisizer->set(root, topParentGUIObject, parentGUIObject, parentSlotLineNo, parentSlotColumnNo, x, y + topbarh, w, h - topbarh);
+
+	button.left = textbox.left + textbox.width;
+	button.top = textbox.top;
+	button.width = textbox.height;
+	button.height = textbox.height;
+	button.setSize(button.width, button.height);
+
 	textboxw = textbox.width;
-	textboxh = textbox.getTextboxh();
-	buttonw = textboxh;
-	button.setSize(buttonw, buttonw);
+	textboxh = textbox.height;
+	buttonw = button.width;
+
 	listw = textboxw + buttonw + 5;
 	listx = textbox.left;
 	listy = textbox.top + textboxh - list.getTitleTop() + 5;
 }
 
 void gGUIDropdownList::onGUIEvent(int guiObjectId, int eventType, int sourceEventType, std::string value1, std::string value2) {
-	if(sourceEventType == G_GUIEVENT_BUTTONRELEASED) {
+	if (sourceEventType == G_GUIEVENT_BUTTONRELEASED) {
 		buttonpressed = listopened;
 		ispressed = false;
 		frame->addTreelist(&list, listx, listy, listw);
@@ -75,19 +83,19 @@ void gGUIDropdownList::onGUIEvent(int guiObjectId, int eventType, int sourceEven
 		actionmanager.onGUIEvent(id, G_GUIEVENT_TREELISTOPENEDONDROPDOWNLIST);
 		listopened = !listopened;
 	}
-	if(sourceEventType == G_GUIEVENT_BUTTONPRESSED){
+	if (sourceEventType == G_GUIEVENT_BUTTONPRESSED) {
 		ispressed = true;
 	}
-	if(sourceEventType == G_GUIEVENT_TREELISTSELECTED) {
+	if (sourceEventType == G_GUIEVENT_TREELISTSELECTED) {
 		selectedline = true;
 		setSelectedTitle();
 		listopened = false;
 		frame->addTreelist(nullptr, listx, listy, listw);
 	}
-	if(sourceEventType == G_GUIEVENT_TREELISTEXPANDED) {
+	if (sourceEventType == G_GUIEVENT_TREELISTEXPANDED) {
 		listexpanded = true;
 	}
-	if(sourceEventType == G_GUIEVENT_MOUSEPRESSEDONTREELIST) {
+	if (sourceEventType == G_GUIEVENT_MOUSEPRESSEDONTREELIST) {
 		pressedonlist = true;
 	}
 }
@@ -95,20 +103,17 @@ void gGUIDropdownList::onGUIEvent(int guiObjectId, int eventType, int sourceEven
 void gGUIDropdownList::draw() {
 	gGUIContainer::draw();
 
-//		if(listopened) {
-//		list.draw();
-//	}
-
 	gColor* oldcolor = renderer->getColor();
-	if(isdisabled) renderer->setColor(disabledbuttonfontcolor);
-	else renderer->setColor(buttonfontcolor);
-	gDrawTriangle((button.left + (buttonw/2)) - 6.5,
-	                (top) + ((buttonw/2) - 3),
-	                (button.left + (buttonw/2)) + 6.5,
-	                (top) + ((buttonw/2) - 3),
-	                (button.left + (buttonw/2)),
-	                (button.top) + ((buttonw/2) + 3),
-	                true);
+	if (isdisabled) renderer->setColor(disabledbuttonfontcolor);
+	else
+		renderer->setColor(buttonfontcolor);
+	gDrawTriangle((button.left + (button.width / 2.0f)) - 6.5f,
+				  (button.top + (button.height / 2.0f)) - 3.0f,
+				  (button.left + (button.width / 2.0f)) + 6.5f,
+				  (button.top + (button.height / 2.0f)) - 3.0f,
+				  (button.left + (button.width / 2.0f)),
+				  (button.top + (button.height / 2.0f)) + 3.0f,
+				  true);
 	renderer->setColor(oldcolor);
 }
 
@@ -131,46 +136,46 @@ void gGUIDropdownList::addElement(gGUITreelist::Element* element, gGUITreelist::
 }
 
 void gGUIDropdownList::mousePressed(int x, int y, int button) {
-	if(isdisabled) return;
+	if (isdisabled) return;
 	gGUIContainer::mousePressed(x, y, button);
-	if(listopened)
+	if (listopened)
 		list.mousePressed(x, y, button);
 	ispressed = true;
 }
 
 void gGUIDropdownList::mouseReleased(int x, int y, int button) {
-	if(isdisabled) return;
-    lopened = listopened;
-    gGUIContainer::mouseReleased(x, y, button);
-    if(listopened) {
-    	list.mouseReleased(x, y, button);
-    }
-    setSelectedTitle();
-    //Clicking on the Textbox opens the Treelist.
-    if (x >= textbox.left && x <= textbox.right && y >= textbox.top + 5 && y <= textbox.height + buttonw) {
-        buttonpressed = true;
-        frame->addTreelist(&list, listx, listy, listw);
-        root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_TREELISTOPENEDONDROPDOWNLIST);
-        actionmanager.onGUIEvent(id, G_GUIEVENT_TREELISTOPENEDONDROPDOWNLIST);
-        listopened = true;
-    }
-    // Clicking outside the Textbox closes the Treelist.
-    else if (lopened) {
-        listopened = false;
-        frame->addTreelist(nullptr, listx, listy, listw);
-    }
-    pressedonlist = false;
-    ispressed = false;
+	if (isdisabled) return;
+	lopened = listopened;
+	gGUIContainer::mouseReleased(x, y, button);
+	if (listopened) {
+		list.mouseReleased(x, y, button);
+	}
+	setSelectedTitle();
+	//Clicking on the Textbox opens the Treelist.
+	if (x >= textbox.left && x <= textbox.right && y >= textbox.top + 5 && y <= textbox.height + buttonw) {
+		buttonpressed = true;
+		frame->addTreelist(&list, listx, listy, listw);
+		root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_TREELISTOPENEDONDROPDOWNLIST);
+		actionmanager.onGUIEvent(id, G_GUIEVENT_TREELISTOPENEDONDROPDOWNLIST);
+		listopened = true;
+	}
+	// Clicking outside the Textbox closes the Treelist.
+	else if (lopened) {
+		listopened = false;
+		frame->addTreelist(nullptr, listx, listy, listw);
+	}
+	pressedonlist = false;
+	ispressed = false;
 }
 
 void gGUIDropdownList::mouseScrolled(int x, int y) {
-	if(isdisabled) return;
+	if (isdisabled) return;
 	list.mouseScrolled(x, y);
 }
 
 void gGUIDropdownList::setfirstTitle() {
 	rootelement = list.getRootElement();
-	if(rootelement->sub.size() > 0) {
+	if (rootelement->sub.size() > 0) {
 		textbox.setText(rootelement->sub[0]->title);
 		title = rootelement->sub[0]->title;
 		fTitle = title;
@@ -180,12 +185,12 @@ void gGUIDropdownList::setfirstTitle() {
 void gGUIDropdownList::setSelectedTitle() {
 	std::string title = "";
 	bool arrow = false;
-	if(selectedline) {
+	if (selectedline) {
 		title = rootelement->parentlist->allsubtitles[list.getSelectedLineNumber()];
-		if(rootelement->isicon) {
+		if (rootelement->isicon) {
 			int i = 0;
-			while(i < title.size() && !arrow) {
-				if(title[i] == ' ') {
+			while (i < title.size() && !arrow) {
+				if (title[i] == ' ') {
 					i++;
 				} else {
 					arrow = true;
@@ -194,8 +199,8 @@ void gGUIDropdownList::setSelectedTitle() {
 			title = title.substr(i, title.size() - i);
 		} else {
 			int i = 0;
-			while(i < title.size() && !arrow) {
-				if(title[i] == '>' || title[i] == '-') {
+			while (i < title.size() && !arrow) {
+				if (title[i] == '>' || title[i] == '-') {
 					arrow = true;
 					title = title.substr(i + 2, title.size() - i);
 				}

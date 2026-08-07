@@ -205,6 +205,7 @@ set(SRC_FILES
 	${ENGINE_DIR}/utils/gFile.cpp
 	${ENGINE_DIR}/utils/gHttpFile.cpp
 	${ENGINE_DIR}/graphics/gShader.cpp
+	${ENGINE_DIR}/graphics/gBezier.cpp
 	${ENGINE_DIR}/graphics/gFog.cpp
 	${ENGINE_DIR}/core/gObject.cpp
 	${ENGINE_DIR}/core/gRenderer.cpp
@@ -294,6 +295,7 @@ set(SRC_FILES
 	${ENGINE_DIR}/ui/gGUIText.cpp
 	${ENGINE_DIR}/ui/gGUITooltipText.cpp
 	${ENGINE_DIR}/ui/gGUIDivider.cpp
+	${ENGINE_DIR}/ui/gGUILine.cpp
 	${ENGINE_DIR}/ui/gGUIToolbarButton.cpp
 	${ENGINE_DIR}/ui/gGUIProgressBar.cpp
 	${ENGINE_DIR}/ui/gGUIRadioButton.cpp
@@ -352,6 +354,7 @@ set(SRC_FILES
 	${ENGINE_DIR}/graphics/posteffects/gTiltShift.cpp
 	${ENGINE_DIR}/graphics/posteffects/gBloom.cpp
 	${ENGINE_DIR}/graphics/posteffects/gBloomPyramid.cpp
+	${ENGINE_DIR}/graphics/posteffects/gFXAA.cpp
 	${ENGINE_DIR}/graphics/posteffects/gKernelEffect.cpp
 	${ENGINE_DIR}/graphics/posteffects/kerneleffects/gBlur.cpp
 	${ENGINE_DIR}/graphics/posteffects/kerneleffects/gSharpen.cpp
