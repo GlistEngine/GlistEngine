@@ -97,7 +97,7 @@ $(document).ready(function(){initNavTree('classgBezier.html',''); initResizable(
 </div><!--header-->
 <div class="contents">
 
-<p>Evaluates and renders 2D/3D Cubic Bezier curves using Bernstein polynomials.  
+<p>Evaluates and renders dynamic (N-degree) Bezier curves.  
  <a href="classgBezier.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="gBezier_8h_source.html">gBezier.h</a>&gt;</code></p>
@@ -106,7 +106,7 @@ Inheritance diagram for gBezier:</div>
 <div class="dyncontent">
 <div class="center"><img src="classgBezier__inherit__graph.png" border="0" usemap="#agBezier_inherit__map" alt="Inheritance graph"/></div>
 <map name="agBezier_inherit__map" id="agBezier_inherit__map">
-<area shape="rect" title="Evaluates and renders 2D/3D Cubic Bezier curves using Bernstein polynomials." alt="" coords="29,152,100,177"/>
+<area shape="rect" title="Evaluates and renders dynamic (N&#45;degree) Bezier curves." alt="" coords="29,152,100,177"/>
 <area shape="rect" href="classgRenderObject.html" title=" " alt="" coords="5,79,124,104"/>
 <area shape="poly" title=" " alt="" coords="67,118,67,152,62,152,62,118"/>
 <area shape="rect" href="classgObject.html" title=" " alt="" coords="29,5,101,31"/>
@@ -118,7 +118,7 @@ Collaboration diagram for gBezier:</div>
 <div class="dyncontent">
 <div class="center"><img src="classgBezier__coll__graph.png" border="0" usemap="#agBezier_coll__map" alt="Collaboration graph"/></div>
 <map name="agBezier_coll__map" id="agBezier_coll__map">
-<area shape="rect" title="Evaluates and renders 2D/3D Cubic Bezier curves using Bernstein polynomials." alt="" coords="29,152,100,177"/>
+<area shape="rect" title="Evaluates and renders dynamic (N&#45;degree) Bezier curves." alt="" coords="29,152,100,177"/>
 <area shape="rect" href="classgRenderObject.html" title=" " alt="" coords="5,79,124,104"/>
 <area shape="poly" title=" " alt="" coords="67,118,67,152,62,152,62,118"/>
 <area shape="rect" href="classgObject.html" title=" " alt="" coords="29,5,101,31"/>
@@ -130,20 +130,20 @@ Collaboration diagram for gBezier:</div>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:ac6dc7c760305639d7d8515a60e1bee1d" id="r_ac6dc7c760305639d7d8515a60e1bee1d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBezier.html#ac6dc7c760305639d7d8515a60e1bee1d">gBezier</a> ()</td></tr>
 <tr class="separator:ac6dc7c760305639d7d8515a60e1bee1d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a224c172db4680036c720f80d4a3a3eec" id="r_a224c172db4680036c720f80d4a3a3eec"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBezier.html#a224c172db4680036c720f80d4a3a3eec">gBezier</a> (glm::vec2 p0, glm::vec2 p1, glm::vec2 p2, glm::vec2 p3)</td></tr>
-<tr class="separator:a224c172db4680036c720f80d4a3a3eec"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac4aed1d0d65f1791b9e75efaa6553bcf" id="r_ac4aed1d0d65f1791b9e75efaa6553bcf"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBezier.html#ac4aed1d0d65f1791b9e75efaa6553bcf">gBezier</a> (glm::vec3 p0, glm::vec3 p1, glm::vec3 p2, glm::vec3 p3)</td></tr>
-<tr class="separator:ac4aed1d0d65f1791b9e75efaa6553bcf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab0cd1ac1a1a2a4660aa7db905eaf7055" id="r_ab0cd1ac1a1a2a4660aa7db905eaf7055"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBezier.html#ab0cd1ac1a1a2a4660aa7db905eaf7055">~gBezier</a> ()</td></tr>
 <tr class="separator:ab0cd1ac1a1a2a4660aa7db905eaf7055"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8c7b735f1d2171ae483e9bbedf99c086" id="r_a8c7b735f1d2171ae483e9bbedf99c086"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBezier.html#a8c7b735f1d2171ae483e9bbedf99c086">setPoint</a> (glm::vec2 p0, glm::vec2 p1, glm::vec2 p2, glm::vec2 p3)</td></tr>
-<tr class="separator:a8c7b735f1d2171ae483e9bbedf99c086"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a83135374d72cc0c00928f96e46dc07d7" id="r_a83135374d72cc0c00928f96e46dc07d7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBezier.html#a83135374d72cc0c00928f96e46dc07d7">setPoint</a> (glm::vec3 p0, glm::vec3 p1, glm::vec3 p2, glm::vec3 p3)</td></tr>
-<tr class="separator:a83135374d72cc0c00928f96e46dc07d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab768d372312dab27dafdc31a8311f7f7" id="r_ab768d372312dab27dafdc31a8311f7f7"><td class="memItemLeft" align="right" valign="top">glm::vec2&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBezier.html#ab768d372312dab27dafdc31a8311f7f7">getPoint2D</a> (float t) const</td></tr>
-<tr class="separator:ab768d372312dab27dafdc31a8311f7f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad15b8f1cbaeffc60aa677fd906f57320" id="r_ad15b8f1cbaeffc60aa677fd906f57320"><td class="memItemLeft" align="right" valign="top">glm::vec3&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBezier.html#ad15b8f1cbaeffc60aa677fd906f57320">getPoint3D</a> (float t) const</td></tr>
-<tr class="separator:ad15b8f1cbaeffc60aa677fd906f57320"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8f7abe00be484c29f135e56511f3c0e9" id="r_a8f7abe00be484c29f135e56511f3c0e9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBezier.html#a8f7abe00be484c29f135e56511f3c0e9">setPoint</a> (const std::vector&lt; glm::vec2 &gt; &amp;pts)</td></tr>
+<tr class="separator:a8f7abe00be484c29f135e56511f3c0e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adeaaf612bf985c3774fffe5e98995b36" id="r_adeaaf612bf985c3774fffe5e98995b36"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBezier.html#adeaaf612bf985c3774fffe5e98995b36">setPoint</a> (const std::vector&lt; glm::vec3 &gt; &amp;pts)</td></tr>
+<tr class="separator:adeaaf612bf985c3774fffe5e98995b36"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2b7eab781740341985c84f74bd1bdd7c" id="r_a2b7eab781740341985c84f74bd1bdd7c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBezier.html#a2b7eab781740341985c84f74bd1bdd7c">addPoint</a> (glm::vec2 p)</td></tr>
+<tr class="separator:a2b7eab781740341985c84f74bd1bdd7c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5f7778e60495e390a1451d99fcc187b5" id="r_a5f7778e60495e390a1451d99fcc187b5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBezier.html#a5f7778e60495e390a1451d99fcc187b5">addPoint</a> (glm::vec3 p)</td></tr>
+<tr class="separator:a5f7778e60495e390a1451d99fcc187b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6d68e90d999eb5506570f21ba025816a" id="r_a6d68e90d999eb5506570f21ba025816a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBezier.html#a6d68e90d999eb5506570f21ba025816a">clearPoints</a> ()</td></tr>
+<tr class="separator:a6d68e90d999eb5506570f21ba025816a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afa081e5502e29dbafca6209d68bbb37f" id="r_afa081e5502e29dbafca6209d68bbb37f"><td class="memItemLeft" align="right" valign="top">glm::vec3&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBezier.html#afa081e5502e29dbafca6209d68bbb37f">getPoint</a> (float t) const</td></tr>
+<tr class="separator:afa081e5502e29dbafca6209d68bbb37f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a313aea133a295c43d6a458b2d3ff1625" id="r_a313aea133a295c43d6a458b2d3ff1625"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBezier.html#a313aea133a295c43d6a458b2d3ff1625">setResolution</a> (int res)</td></tr>
 <tr class="separator:a313aea133a295c43d6a458b2d3ff1625"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a784d9598b5cdf7bb32892c9b94a27e85" id="r_a784d9598b5cdf7bb32892c9b94a27e85"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBezier.html#a784d9598b5cdf7bb32892c9b94a27e85">draw</a> () const</td></tr>
@@ -260,11 +260,11 @@ Additional Inherited Members</h2></td></tr>
 <tr class="separator:a9a7e5f300e8e38ad6f0beb85ad840c52 inherit pro_static_attribs_classgObject"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Evaluates and renders 2D/3D Cubic Bezier curves using Bernstein polynomials. </p>
-<p>@usage <a class="el" href="classgBezier.html" title="Evaluates and renders 2D/3D Cubic Bezier curves using Bernstein polynomials.">gBezier</a> curve(p0, p1, p2, p3); curve.setResolution(100); // Optional: higher is smoother (default: 50) curve.draw(); // Call inside the <a class="el" href="classgBezier.html#a784d9598b5cdf7bb32892c9b94a27e85">draw()</a> loop </p>
+<div class="textblock"><p>Evaluates and renders dynamic (N-degree) Bezier curves. </p>
+<p>Usage: <a class="el" href="classgBezier.html" title="Evaluates and renders dynamic (N-degree) Bezier curves.">gBezier</a> curve; curve.addPoint(glm::vec3(0.0f, 0.0f, 0.0f)); curve.addPoint(glm::vec3(5.0f, 10.0f, 0.0f)); curve.addPoint(glm::vec3(10.0f, 0.0f, 0.0f)); curve.draw(); </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="ac6dc7c760305639d7d8515a60e1bee1d" name="ac6dc7c760305639d7d8515a60e1bee1d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac6dc7c760305639d7d8515a60e1bee1d">&#9670;&#160;</a></span>gBezier() <span class="overload">[1/3]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ac6dc7c760305639d7d8515a60e1bee1d">&#9670;&#160;</a></span>gBezier()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -274,86 +274,6 @@ Additional Inherited Members</h2></td></tr>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a224c172db4680036c720f80d4a3a3eec" name="a224c172db4680036c720f80d4a3a3eec"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a224c172db4680036c720f80d4a3a3eec">&#9670;&#160;</a></span>gBezier() <span class="overload">[2/3]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">gBezier::gBezier </td>
-          <td>(</td>
-          <td class="paramtype">glm::vec2&#160;</td>
-          <td class="paramname"><em>p0</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">glm::vec2&#160;</td>
-          <td class="paramname"><em>p1</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">glm::vec2&#160;</td>
-          <td class="paramname"><em>p2</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">glm::vec2&#160;</td>
-          <td class="paramname"><em>p3</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ac4aed1d0d65f1791b9e75efaa6553bcf" name="ac4aed1d0d65f1791b9e75efaa6553bcf"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac4aed1d0d65f1791b9e75efaa6553bcf">&#9670;&#160;</a></span>gBezier() <span class="overload">[3/3]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">gBezier::gBezier </td>
-          <td>(</td>
-          <td class="paramtype">glm::vec3&#160;</td>
-          <td class="paramname"><em>p0</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">glm::vec3&#160;</td>
-          <td class="paramname"><em>p1</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">glm::vec3&#160;</td>
-          <td class="paramname"><em>p2</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">glm::vec3&#160;</td>
-          <td class="paramname"><em>p3</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -386,6 +306,59 @@ Additional Inherited Members</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="a2b7eab781740341985c84f74bd1bdd7c" name="a2b7eab781740341985c84f74bd1bdd7c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2b7eab781740341985c84f74bd1bdd7c">&#9670;&#160;</a></span>addPoint() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gBezier::addPoint </td>
+          <td>(</td>
+          <td class="paramtype">glm::vec2&#160;</td>
+          <td class="paramname"><em>p</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a5f7778e60495e390a1451d99fcc187b5" name="a5f7778e60495e390a1451d99fcc187b5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5f7778e60495e390a1451d99fcc187b5">&#9670;&#160;</a></span>addPoint() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gBezier::addPoint </td>
+          <td>(</td>
+          <td class="paramtype">glm::vec3&#160;</td>
+          <td class="paramname"><em>p</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a6d68e90d999eb5506570f21ba025816a" name="a6d68e90d999eb5506570f21ba025816a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6d68e90d999eb5506570f21ba025816a">&#9670;&#160;</a></span>clearPoints()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gBezier::clearPoints </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a784d9598b5cdf7bb32892c9b94a27e85" name="a784d9598b5cdf7bb32892c9b94a27e85"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a784d9598b5cdf7bb32892c9b94a27e85">&#9670;&#160;</a></span>draw()</h2>
 
@@ -403,14 +376,14 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="ab768d372312dab27dafdc31a8311f7f7" name="ab768d372312dab27dafdc31a8311f7f7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab768d372312dab27dafdc31a8311f7f7">&#9670;&#160;</a></span>getPoint2D()</h2>
+<a id="afa081e5502e29dbafca6209d68bbb37f" name="afa081e5502e29dbafca6209d68bbb37f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afa081e5502e29dbafca6209d68bbb37f">&#9670;&#160;</a></span>getPoint()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">glm::vec2 gBezier::getPoint2D </td>
+          <td class="memname">glm::vec3 gBezier::getPoint </td>
           <td>(</td>
           <td class="paramtype">float&#160;</td>
           <td class="paramname"><em>t</em></td><td>)</td>
@@ -421,26 +394,8 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="ad15b8f1cbaeffc60aa677fd906f57320" name="ad15b8f1cbaeffc60aa677fd906f57320"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad15b8f1cbaeffc60aa677fd906f57320">&#9670;&#160;</a></span>getPoint3D()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">glm::vec3 gBezier::getPoint3D </td>
-          <td>(</td>
-          <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>t</em></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a8c7b735f1d2171ae483e9bbedf99c086" name="a8c7b735f1d2171ae483e9bbedf99c086"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8c7b735f1d2171ae483e9bbedf99c086">&#9670;&#160;</a></span>setPoint() <span class="overload">[1/2]</span></h2>
+<a id="a8f7abe00be484c29f135e56511f3c0e9" name="a8f7abe00be484c29f135e56511f3c0e9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8f7abe00be484c29f135e56511f3c0e9">&#9670;&#160;</a></span>setPoint() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -448,39 +403,17 @@ Additional Inherited Members</h2></td></tr>
         <tr>
           <td class="memname">void gBezier::setPoint </td>
           <td>(</td>
-          <td class="paramtype">glm::vec2&#160;</td>
-          <td class="paramname"><em>p0</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
+          <td class="paramtype">const std::vector&lt; glm::vec2 &gt; &amp;&#160;</td>
+          <td class="paramname"><em>pts</em></td><td>)</td>
           <td></td>
-          <td class="paramtype">glm::vec2&#160;</td>
-          <td class="paramname"><em>p1</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">glm::vec2&#160;</td>
-          <td class="paramname"><em>p2</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">glm::vec2&#160;</td>
-          <td class="paramname"><em>p3</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="a83135374d72cc0c00928f96e46dc07d7" name="a83135374d72cc0c00928f96e46dc07d7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a83135374d72cc0c00928f96e46dc07d7">&#9670;&#160;</a></span>setPoint() <span class="overload">[2/2]</span></h2>
+<a id="adeaaf612bf985c3774fffe5e98995b36" name="adeaaf612bf985c3774fffe5e98995b36"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adeaaf612bf985c3774fffe5e98995b36">&#9670;&#160;</a></span>setPoint() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -488,31 +421,9 @@ Additional Inherited Members</h2></td></tr>
         <tr>
           <td class="memname">void gBezier::setPoint </td>
           <td>(</td>
-          <td class="paramtype">glm::vec3&#160;</td>
-          <td class="paramname"><em>p0</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
+          <td class="paramtype">const std::vector&lt; glm::vec3 &gt; &amp;&#160;</td>
+          <td class="paramname"><em>pts</em></td><td>)</td>
           <td></td>
-          <td class="paramtype">glm::vec3&#160;</td>
-          <td class="paramname"><em>p1</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">glm::vec3&#160;</td>
-          <td class="paramname"><em>p2</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">glm::vec3&#160;</td>
-          <td class="paramname"><em>p3</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">

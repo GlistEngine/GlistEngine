@@ -1,13 +1,13 @@
 var classgBezier =
 [
     [ "gBezier", "classgBezier.html#ac6dc7c760305639d7d8515a60e1bee1d", null ],
-    [ "gBezier", "classgBezier.html#a224c172db4680036c720f80d4a3a3eec", null ],
-    [ "gBezier", "classgBezier.html#ac4aed1d0d65f1791b9e75efaa6553bcf", null ],
     [ "~gBezier", "classgBezier.html#ab0cd1ac1a1a2a4660aa7db905eaf7055", null ],
+    [ "addPoint", "classgBezier.html#a2b7eab781740341985c84f74bd1bdd7c", null ],
+    [ "addPoint", "classgBezier.html#a5f7778e60495e390a1451d99fcc187b5", null ],
+    [ "clearPoints", "classgBezier.html#a6d68e90d999eb5506570f21ba025816a", null ],
     [ "draw", "classgBezier.html#a784d9598b5cdf7bb32892c9b94a27e85", null ],
-    [ "getPoint2D", "classgBezier.html#ab768d372312dab27dafdc31a8311f7f7", null ],
-    [ "getPoint3D", "classgBezier.html#ad15b8f1cbaeffc60aa677fd906f57320", null ],
-    [ "setPoint", "classgBezier.html#a8c7b735f1d2171ae483e9bbedf99c086", null ],
-    [ "setPoint", "classgBezier.html#a83135374d72cc0c00928f96e46dc07d7", null ],
+    [ "getPoint", "classgBezier.html#afa081e5502e29dbafca6209d68bbb37f", null ],
+    [ "setPoint", "classgBezier.html#a8f7abe00be484c29f135e56511f3c0e9", null ],
+    [ "setPoint", "classgBezier.html#adeaaf612bf985c3774fffe5e98995b36", null ],
     [ "setResolution", "classgBezier.html#a313aea133a295c43d6a458b2d3ff1625", null ]
 ];
