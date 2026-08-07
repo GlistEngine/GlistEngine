@@ -24,7 +24,7 @@ gGUIBitmap::~gGUIBitmap() {
 }
 
 void gGUIBitmap::draw() {
-	gColor* oldcolor = renderer->getColor();
+	gColor oldcolor = *renderer->getColor();
 	gColor white(1.0f, 1.0f, 1.0f, 1.0f);
 	renderer->setColor(&white);
 

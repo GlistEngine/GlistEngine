@@ -41,7 +41,7 @@ bool gGUILine::isVertical() {
 }
 
 void gGUILine::draw() {
-	gColor* oldcolor = renderer->getColor();
+	gColor oldcolor = *renderer->getColor();
 	renderer->setColor(linecolor);
 
 	if (isvertical) {

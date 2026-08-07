@@ -85,7 +85,7 @@ void gGUIButton::update() {
 
 void gGUIButton::draw() {
 //	gLogi("gGUIButton") << "draw, w:" << width;
-	gColor* oldcolor = renderer->getColor();
+	gColor oldcolor = *renderer->getColor();
 	const int drawleft = getButtonDrawLeft();
 	const int drawtop = getButtonDrawTop();
 

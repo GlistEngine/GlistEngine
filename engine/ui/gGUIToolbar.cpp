@@ -32,7 +32,7 @@ void gGUIToolbar::draw() {
 	// The foregroundcolor and backgroundcolor assignments have been made.
 //	gLogi("gGUIToolbar") << "draw";
 //	gLogi("gGUIToolbar") << "l:" << left << ", t:" << top << ", w:" << width << ", h:" << height;
-	gColor* oldcolor = renderer->getColor();
+	gColor oldcolor = *renderer->getColor();
 	if(backgroundfillenabled && toolbartype == TOOLBAR_HORIZONTAL) {
 		renderer->setColor(&toolbarforegroundcolor);
 		gDrawRectangle(left, top, width, height, true);

@@ -103,7 +103,7 @@ void gGUIDropdownList::onGUIEvent(int guiObjectId, int eventType, int sourceEven
 void gGUIDropdownList::draw() {
 	gGUIContainer::draw();
 
-	gColor* oldcolor = renderer->getColor();
+	gColor oldcolor = *renderer->getColor();
 	if (isdisabled) renderer->setColor(disabledbuttonfontcolor);
 	else
 		renderer->setColor(buttonfontcolor);
