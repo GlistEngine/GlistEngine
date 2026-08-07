@@ -22,6 +22,7 @@ var dir_ae5170f952997566e512365547790ab2 =
     [ "gGUIGraph.h", "gGUIGraph_8h.html", "gGUIGraph_8h" ],
     [ "gGUIGrid.h", "gGUIGrid_8h.html", "gGUIGrid_8h" ],
     [ "gGUIImageButton.h", "gGUIImageButton_8h.html", "gGUIImageButton_8h" ],
+    [ "gGUILine.h", "gGUILine_8h.html", "gGUILine_8h" ],
     [ "gGUILineGraph.h", "gGUILineGraph_8h.html", "gGUILineGraph_8h" ],
     [ "gGUIListbox.h", "gGUIListbox_8h.html", "gGUIListbox_8h" ],
     [ "gGUIMenubar.h", "gGUIMenubar_8h.html", "gGUIMenubar_8h" ],

@@ -98,6 +98,7 @@ var hierarchy =
               [ "gGUICandleStickChart", "classgGUICandleStickChart.html", null ],
               [ "gGUILineGraph", "classgGUILineGraph.html", null ]
             ] ],
+            [ "gGUILine", "classgGUILine.html", null ],
             [ "gGUIMenuItem", "classgGUIMenuItem.html", [
               [ "gGUIMenubar", "classgGUIMenubar.html", null ]
             ] ],

@@ -2,6 +2,7 @@ var classgGUINumberBox =
 [
     [ "gGUINumberBox", "classgGUINumberBox.html#a914679c40e6d06e841300fd439a59580", null ],
     [ "~gGUINumberBox", "classgGUINumberBox.html#afd633030a8b4ff0ee61f7dfeb28ca007", null ],
+    [ "calculateContentHeight", "classgGUINumberBox.html#a3c5e06d811ace3fc9fd1936f5f27abd3", null ],
     [ "charPressed", "classgGUINumberBox.html#a2542e02957c55b1f6f52e7cc7c4b1da0", null ],
     [ "draw", "classgGUINumberBox.html#a36bb9d46a06dd09f8ccccfa3f99c66ec", null ],
     [ "getFloat", "classgGUINumberBox.html#ac577e48910ce51ec7d92d3d98baae82d", null ],

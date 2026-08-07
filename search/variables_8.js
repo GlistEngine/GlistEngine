@@ -7,5 +7,6 @@ var searchData=
   ['horizontalscroll_4',['horizontalscroll',['../classgGUIScrollable.html#a77b4beafa79ff7aca67fa85c6337d6eb',1,'gGUIScrollable']]],
   ['horizontalscrollbarpos_5',['horizontalscrollbarpos',['../classgGUIScrollable.html#a98a011c866297b5cac788756e9731a0e',1,'gGUIScrollable']]],
   ['horizontalscrollclickedtime_6',['horizontalscrollclickedtime',['../classgGUIScrollable.html#ab82e97a19da3dc380a2cc69aefa1f83f',1,'gGUIScrollable']]],
-  ['horizontalscrolldragstart_7',['horizontalscrolldragstart',['../classgGUIScrollable.html#aee58c998062bf6de5bcdfb1a11c0651f',1,'gGUIScrollable']]]
+  ['horizontalscrolldragstart_7',['horizontalscrolldragstart',['../classgGUIScrollable.html#aee58c998062bf6de5bcdfb1a11c0651f',1,'gGUIScrollable']]],
+  ['hoverfcolor_8',['hoverfcolor',['../classgGUIButton.html#a6c7338da920ee3c0e86aedf71bcc6bc4',1,'gGUIButton']]]
 ];
