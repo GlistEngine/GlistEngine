@@ -39,9 +39,9 @@ public:
 	static void disableShadowMapping();
 	static bool isShadowMappingEnabled();
 
-	static void enableExtraShaders();
+	static void enableExtraShaders(bool isEnabled = true);
 	static void disableExtraShaders();
-	static bool areExtraShadersEnabled();
+	static bool isExtraShadersEnabled();
 
 	static gRenderer* getRenderer();
 

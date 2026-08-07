@@ -95,15 +95,15 @@ bool gRenderObject::isShadowMappingEnabled() {
 	return isshadowmappingenabled;
 }
 
-void gRenderObject::enableExtraShaders() {
-	isextrashadersenabled = true;
+void gRenderObject::enableExtraShaders(bool isEnabled) {
+	isextrashadersenabled = isEnabled;
 }
 
 void gRenderObject::disableExtraShaders() {
 	isextrashadersenabled = false;
 }
 
-bool gRenderObject::areExtraShadersEnabled() {
+bool gRenderObject::isExtraShadersEnabled() {
 	return isextrashadersenabled;
 }
 
