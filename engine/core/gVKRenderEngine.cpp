@@ -2014,11 +2014,14 @@ void gVKRenderEngine::drawMesh3D(GLuint vertexArrayId, int vertexCount, int inde
 	// hands back its single buffer and nothing else happens.
 	gVKMeshBuffer* vertices = getMeshBuffer(arrayentry->second.vertexbuffer);
 	if(vertices == nullptr) return;
-	const VkBuffer vertexbuffer = gvkResolveMeshBuffer(*vkcontext, *vertices);
+	VkDeviceSize vertexoffset = 0;
+	const VkBuffer vertexbuffer = gvkResolveMeshBuffer(*vkcontext, *vertices, vertexoffset);
 	if(vertexbuffer == VK_NULL_HANDLE) return;
 	gVKMeshBuffer* indices = getMeshBuffer(arrayentry->second.indexbuffer);
+	// Indices are never rewritten per frame, so their offset is always zero.
+	VkDeviceSize indexoffset = 0;
 	const VkBuffer indexbuffer = indices != nullptr
-			? gvkResolveMeshBuffer(*vkcontext, *indices) : VK_NULL_HANDLE;
+			? gvkResolveMeshBuffer(*vkcontext, *indices, indexoffset) : VK_NULL_HANDLE;
 	const bool indexed = indexbuffer != VK_NULL_HANDLE && indexCount > 0;
 
 	// The mesh's draw mode picks both the pipeline (triangle or line) and the
@@ -2064,14 +2067,16 @@ void gVKRenderEngine::drawMesh3D(GLuint vertexArrayId, int vertexCount, int inde
 		if(lines) return;
 
 		VkBuffer shadowinstances = VK_NULL_HANDLE;
+		VkDeviceSize shadowinstancesoffset = 0;
 		if(instanceCount > 1) {
 			gVKMeshBuffer* instances = getMeshBuffer(arrayentry->second.instancebuffer);
 			if(instances == nullptr) return;
-			shadowinstances = gvkResolveMeshBuffer(*vkcontext, *instances);
+			shadowinstances = gvkResolveMeshBuffer(*vkcontext, *instances, shadowinstancesoffset);
 			if(shadowinstances == VK_NULL_HANDLE) return;
 		} else {
 			if(!ensureIdentityInstanceBuffer()) return;
 			shadowinstances = identityinstancebuffer->buffer;
+			shadowinstancesoffset = 0;
 		}
 		// Cutout casters: a mesh whose diffuse map punches holes in it has to cast a
 		// shadow with the same holes, so the map is looked up here and the fragment
@@ -2097,10 +2102,10 @@ void gVKRenderEngine::drawMesh3D(GLuint vertexArrayId, int vertexCount, int inde
 		}
 
 		const VkIndexType shadowindextype = sizeof(gIndex) == 2 ? VK_INDEX_TYPE_UINT16 : VK_INDEX_TYPE_UINT32;
-		gvkDrawShadowCaster(*vkcontext, vertexbuffer,
+		gvkDrawShadowCaster(*vkcontext, vertexbuffer, vertexoffset,
 				indexed ? indexbuffer : VK_NULL_HANDLE,
 				indexed ? indexCount : vertexCount, shadowindextype, shadowpush, cutoutset,
-				shadowinstances, instanceCount, topology);
+				shadowinstances, shadowinstancesoffset, instanceCount, topology);
 		return;
 	}
 
@@ -2146,21 +2151,23 @@ void gVKRenderEngine::drawMesh3D(GLuint vertexArrayId, int vertexCount, int inde
 		pbrpush.maps1 = glm::ivec4(surface.aomapid != 0 ? 1 : 0, 0, 0, 0);
 
 		VkBuffer pbrinstances = VK_NULL_HANDLE;
+		VkDeviceSize pbrinstancesoffset = 0;
 		if(instanceCount > 1) {
 			gVKMeshBuffer* instances = getMeshBuffer(arrayentry->second.instancebuffer);
 			if(instances == nullptr) return;
-			pbrinstances = gvkResolveMeshBuffer(*vkcontext, *instances);
+			pbrinstances = gvkResolveMeshBuffer(*vkcontext, *instances, pbrinstancesoffset);
 			if(pbrinstances == VK_NULL_HANDLE) return;
 		} else {
 			if(!ensureIdentityInstanceBuffer()) return;
 			pbrinstances = identityinstancebuffer->buffer;
+			pbrinstancesoffset = 0;
 		}
 
 		const VkIndexType pbrindextype = sizeof(gIndex) == 2 ? VK_INDEX_TYPE_UINT16 : VK_INDEX_TYPE_UINT32;
-		gvkDrawMesh3DPbr(*vkcontext, vertexbuffer, indexed ? indexbuffer : VK_NULL_HANDLE,
+		gvkDrawMesh3DPbr(*vkcontext, vertexbuffer, vertexoffset, indexed ? indexbuffer : VK_NULL_HANDLE,
 				indexed ? indexCount : vertexCount, pbrindextype, pbrpush, materialset,
 				pbrshadowset,
-				pbrinstances, instanceCount, topology,
+				pbrinstances, pbrinstancesoffset, instanceCount, topology,
 				isdepthtestenabled, depthtesttype == DEPTHTESTTYPE_ALWAYS, cullstate,
 				isalphablendingenabled);
 		return;
@@ -2233,24 +2240,26 @@ void gVKRenderEngine::drawMesh3D(GLuint vertexArrayId, int vertexCount, int inde
 	// matrix from it. An instanced draw uses the one gVbo uploaded; anything else
 	// gets the shared identity, which multiplies out to no change at all.
 	VkBuffer instancebuffer = VK_NULL_HANDLE;
+	VkDeviceSize instancebufferoffset = 0;
 	if(instanceCount > 1) {
 		gVKMeshBuffer* instances = getMeshBuffer(arrayentry->second.instancebuffer);
 		if(instances == nullptr) return;
-		instancebuffer = gvkResolveMeshBuffer(*vkcontext, *instances);
+		instancebuffer = gvkResolveMeshBuffer(*vkcontext, *instances, instancebufferoffset);
 		if(instancebuffer == VK_NULL_HANDLE) return;
 	} else {
 		if(!ensureIdentityInstanceBuffer()) return;
 		instancebuffer = identityinstancebuffer->buffer;
+		instancebufferoffset = 0;
 	}
 
 	// gIndex is what gVbo uploaded, so the index type follows it: 16 bit on Android,
 	// 32 bit everywhere else.
 	const VkIndexType indextype = sizeof(gIndex) == 2 ? VK_INDEX_TYPE_UINT16 : VK_INDEX_TYPE_UINT32;
 
-	gvkDrawMesh3D(*vkcontext, vertexbuffer, indexed ? indexbuffer : VK_NULL_HANDLE,
+	gvkDrawMesh3D(*vkcontext, vertexbuffer, vertexoffset, indexed ? indexbuffer : VK_NULL_HANDLE,
 			indexed ? indexCount : vertexCount, indextype, push, diffuseset, specularset, normalset,
 			shadowset,
-			instancebuffer, instanceCount,
+			instancebuffer, instancebufferoffset, instanceCount,
 			topology, isdepthtestenabled, depthtesttype == DEPTHTESTTYPE_ALWAYS, lines, cullstate,
 			isalphablendingenabled);
 #endif

@@ -16,6 +16,58 @@
 // a warning rather than growing the buffer mid-frame.
 static constexpr VkDeviceSize GVK_DYNAMIC_VERTEX_CAPACITY = 1u << 20;
 
+// Enough for a few thousand animated vertices on the first frame; it grows from
+// here the moment a frame needs more.
+static constexpr VkDeviceSize GVK_MESH_ARENA_INITIAL_CAPACITY = 8 * 1024 * 1024;
+
+// One host visible arena per frame in flight, persistently mapped. Recreated
+// rather than resized, which is why the caller drains the device first: the
+// buffers being replaced may still be referenced by work in flight.
+bool gvkEnsureMeshArena(gVKContext& ctx, VkDeviceSize capacity) {
+	if(ctx.device == VK_NULL_HANDLE || capacity == 0) return false;
+	if(capacity <= ctx.mesharenacapacity) return true;
+
+	gvkDestroyMeshArena(ctx);
+
+	const int frames = GVK_MAX_FRAMES_IN_FLIGHT;
+	ctx.mesharenacapacity = capacity;
+	ctx.mesharenabuffers.assign(frames, VK_NULL_HANDLE);
+	ctx.mesharenamemories.assign(frames, VK_NULL_HANDLE);
+	ctx.mesharenamapped.assign(frames, nullptr);
+	ctx.mesharenaoffsets.assign(frames, 0);
+	for(int i = 0; i < frames; i++) {
+		if(!gvkCreateBuffer(ctx, capacity, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT,
+				VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
+				ctx.mesharenabuffers[i], ctx.mesharenamemories[i])) {
+			gLoge("gVKDraw") << "Could not create the " << capacity
+					<< " byte mesh arena; animated meshes fall back to one buffer each.";
+			gvkDestroyMeshArena(ctx);
+			return false;
+		}
+		vkMapMemory(ctx.device, ctx.mesharenamemories[i], 0, capacity, 0, &ctx.mesharenamapped[i]);
+	}
+	gLogi("gVKDraw") << "Mesh arena ready: " << frames << " x " << capacity << " bytes";
+	return true;
+}
+
+void gvkDestroyMeshArena(gVKContext& ctx) {
+	if(ctx.device == VK_NULL_HANDLE) return;
+	for(size_t i = 0; i < ctx.mesharenabuffers.size(); i++) {
+		if(ctx.mesharenamemories[i] != VK_NULL_HANDLE) {
+			vkUnmapMemory(ctx.device, ctx.mesharenamemories[i]);
+			vkFreeMemory(ctx.device, ctx.mesharenamemories[i], nullptr);
+		}
+		if(ctx.mesharenabuffers[i] != VK_NULL_HANDLE) {
+			vkDestroyBuffer(ctx.device, ctx.mesharenabuffers[i], nullptr);
+		}
+	}
+	ctx.mesharenabuffers.clear();
+	ctx.mesharenamemories.clear();
+	ctx.mesharenamapped.clear();
+	ctx.mesharenaoffsets.clear();
+	ctx.mesharenacapacity = 0;
+}
+
 bool gvkCreateDrawResources(gVKContext& ctx) {
 	if(ctx.device == VK_NULL_HANDLE) return false;
 
@@ -36,11 +88,16 @@ bool gvkCreateDrawResources(gVKContext& ctx) {
 		// Host coherent and persistently mapped: no flush and no per-frame remap.
 		vkMapMemory(ctx.device, ctx.dynvertexmemories[i], 0, ctx.dynvertexcapacity, 0, &ctx.dynvertexmapped[i]);
 	}
+	// The mesh arena starts modest and grows to whatever a frame actually asks
+	// for; a scene that re-poses one model per enemy needs a slice per draw, and
+	// how many that is only the running game knows.
+	if(!gvkEnsureMeshArena(ctx, GVK_MESH_ARENA_INITIAL_CAPACITY)) return false;
 	gLogi("gVKDraw") << "Dynamic vertex buffers ready.";
 	return true;
 }
 
 void gvkDestroyDrawResources(gVKContext& ctx) {
+	gvkDestroyMeshArena(ctx);
 	if(ctx.device == VK_NULL_HANDLE) return;
 	for(size_t i = 0; i < ctx.dynvertexbuffers.size(); i++) {
 		if(ctx.dynvertexmapped[i] != nullptr) vkUnmapMemory(ctx.device, ctx.dynvertexmemories[i]);
@@ -192,11 +249,12 @@ void gvkDrawTextured2D(gVKContext& ctx, VkDescriptorSet textureSet, VkDescriptor
 	vkCmdDraw(cmd, 6, 1, 0, 0);
 }
 
-void gvkDrawMesh3D(gVKContext& ctx, VkBuffer vertexBuffer, VkBuffer indexBuffer, int count,
+void gvkDrawMesh3D(gVKContext& ctx, VkBuffer vertexBuffer, VkDeviceSize vertexOffset,
+		VkBuffer indexBuffer, int count,
 		VkIndexType indexType, const gVKMeshPush& push,
 		VkDescriptorSet diffuseSet, VkDescriptorSet specularSet, VkDescriptorSet normalSet,
 		VkDescriptorSet shadowSet,
-		VkBuffer instanceBuffer, int instanceCount,
+		VkBuffer instanceBuffer, VkDeviceSize instanceOffset, int instanceCount,
 		VkPrimitiveTopology topology, bool depthTest, bool depthTestAlways, bool lines,
 		const gVKCullState& culling, bool blending) {
 	if(count <= 0 || vertexBuffer == VK_NULL_HANDLE) return;
@@ -242,7 +300,7 @@ void gvkDrawMesh3D(gVKContext& ctx, VkBuffer vertexBuffer, VkBuffer indexBuffer,
 	// per-instance model matrices and is never absent; see gVKRenderEngine's
 	// identity instance buffer.
 	VkBuffer buffers[] = {vertexBuffer, instanceBuffer};
-	VkDeviceSize offsets[] = {0, 0};
+	VkDeviceSize offsets[] = {vertexOffset, instanceOffset};
 	vkCmdBindVertexBuffers(cmd, 0, instanceBuffer != VK_NULL_HANDLE ? 2 : 1, buffers, offsets);
 
 	const uint32_t pushsize = std::min<uint32_t>(sizeof(push), ctx.getMesh3DPushSize());
@@ -259,10 +317,11 @@ void gvkDrawMesh3D(gVKContext& ctx, VkBuffer vertexBuffer, VkBuffer indexBuffer,
 	}
 }
 
-void gvkDrawShadowCaster(gVKContext& ctx, VkBuffer vertexBuffer, VkBuffer indexBuffer,
+void gvkDrawShadowCaster(gVKContext& ctx, VkBuffer vertexBuffer, VkDeviceSize vertexOffset,
+		VkBuffer indexBuffer,
 		int count, VkIndexType indexType, const gVKShadowPush& push,
 		VkDescriptorSet diffuseSet,
-		VkBuffer instanceBuffer, int instanceCount, VkPrimitiveTopology topology) {
+		VkBuffer instanceBuffer, VkDeviceSize instanceOffset, int instanceCount, VkPrimitiveTopology topology) {
 	if(count <= 0 || vertexBuffer == VK_NULL_HANDLE) return;
 	// No gvkEnsureRenderPass here: the shadow pass is opened by the frame loop
 	// before the scene is drawn, and this must not fall back to opening the screen
@@ -289,7 +348,7 @@ void gvkDrawShadowCaster(gVKContext& ctx, VkBuffer vertexBuffer, VkBuffer indexB
 	}
 
 	VkBuffer buffers[] = {vertexBuffer, instanceBuffer};
-	VkDeviceSize offsets[] = {0, 0};
+	VkDeviceSize offsets[] = {vertexOffset, instanceOffset};
 	vkCmdBindVertexBuffers(cmd, 0, instanceBuffer != VK_NULL_HANDLE ? 2 : 1, buffers, offsets);
 
 	const uint32_t pushsize = std::min<uint32_t>(sizeof(push), ctx.getShadowPushSize());
@@ -320,10 +379,11 @@ void gvkDrawShadowCaster(gVKContext& ctx, VkBuffer vertexBuffer, VkBuffer indexB
 	}
 }
 
-void gvkDrawMesh3DPbr(gVKContext& ctx, VkBuffer vertexBuffer, VkBuffer indexBuffer, int count,
+void gvkDrawMesh3DPbr(gVKContext& ctx, VkBuffer vertexBuffer, VkDeviceSize vertexOffset,
+		VkBuffer indexBuffer, int count,
 		VkIndexType indexType, const gVKPbrPush& push, VkDescriptorSet materialSet,
 		VkDescriptorSet shadowSet,
-		VkBuffer instanceBuffer, int instanceCount,
+		VkBuffer instanceBuffer, VkDeviceSize instanceOffset, int instanceCount,
 		VkPrimitiveTopology topology, bool depthTest, bool depthTestAlways,
 		const gVKCullState& culling, bool blending) {
 	if(count <= 0 || vertexBuffer == VK_NULL_HANDLE) return;
@@ -353,7 +413,7 @@ void gvkDrawMesh3DPbr(gVKContext& ctx, VkBuffer vertexBuffer, VkBuffer indexBuff
 			0, 3, sets, 0, nullptr);
 
 	VkBuffer buffers[] = {vertexBuffer, instanceBuffer};
-	VkDeviceSize offsets[] = {0, 0};
+	VkDeviceSize offsets[] = {vertexOffset, instanceOffset};
 	vkCmdBindVertexBuffers(cmd, 0, instanceBuffer != VK_NULL_HANDLE ? 2 : 1, buffers, offsets);
 
 	const uint32_t pushsize = std::min<uint32_t>(sizeof(push), ctx.getMesh3DPbrPushSize());

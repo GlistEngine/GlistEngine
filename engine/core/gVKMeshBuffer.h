@@ -76,6 +76,14 @@ struct gVKMeshBuffer {
 	uint64_t slotversion[GVK_MAX_FRAMES_IN_FLIGHT] = {};
 	uint64_t version = 0;
 	std::vector<unsigned char> shadow;
+
+	// Where this mesh's newest data sits inside the per-frame arena, and which
+	// frame that slice belongs to. A mesh drawn without a fresh upload keeps
+	// using its slice for the rest of that frame; once the arena has been rewound
+	// the generation no longer matches and the data is pushed again.
+	VkBuffer arenabuffer = VK_NULL_HANDLE;
+	VkDeviceSize arenaoffset = 0;
+	uint64_t arenageneration = 0;
 };
 
 /*
@@ -102,10 +110,13 @@ bool gvkUploadMeshBuffer(gVKContext& ctx, gVKMeshBuffer& buf, const void* data,
  * one belonging to the frame being recorded, refreshing it from the newest data
  * first if that frame has not seen the latest upload.
  *
+ * outOffset is the byte offset to bind the vertex buffer from - zero for a
+ * static mesh, and the mesh's slice inside the arena for a dynamic one.
+ *
  * A static buffer is returned as it is. Returns VK_NULL_HANDLE if there is nothing
  * to draw from, which callers already check for.
  */
-VkBuffer gvkResolveMeshBuffer(gVKContext& ctx, gVKMeshBuffer& buf);
+VkBuffer gvkResolveMeshBuffer(gVKContext& ctx, gVKMeshBuffer& buf, VkDeviceSize& outOffset);
 
 /*
  * Frees the device local buffers that promotions replaced. They are held rather

@@ -114,11 +114,37 @@ bool gvkUploadMeshBuffer(gVKContext& ctx, gVKMeshBuffer& buf, const void* data,
 			// buffer dynamic, which is what it has already shown itself to be.
 			if(!gvkMakeMeshBufferDynamic(ctx, buf, size, isIndex)) return false;
 		}
-		const uint32_t slot = ctx.getCurrentFrame() % GVK_MAX_FRAMES_IN_FLIGHT;
 		std::memcpy(buf.shadow.data(), data, static_cast<size_t>(size));
 		buf.version++;
+
+		// A slice of its own for this upload. The mesh may be uploaded to and drawn
+		// several times in one frame - a game posing a single soldier model once per
+		// enemy does exactly that - and every one of those draws has to read the data
+		// it was recorded with. One buffer per mesh cannot do that: the draws execute
+		// after the frame is submitted, so they would all read whatever was written
+		// last and every soldier would strike the same pose.
+		// Vertices only. The arena is created as a vertex buffer, and index data has
+		// no reason to be there anyway: what makes a slice per draw necessary is the
+		// same mesh being re-posed between draws, and re-posing rewrites positions,
+		// never the indices that join them.
+		const VkDeviceSize arenaoffset = buf.isindex
+				? VK_WHOLE_SIZE : ctx.pushMeshData(data, size);
+		if(arenaoffset != VK_WHOLE_SIZE) {
+			buf.arenabuffer = ctx.getCurrentMeshArena();
+			buf.arenaoffset = arenaoffset;
+			buf.arenageneration = ctx.getMeshGeneration();
+			buf.buffer = buf.arenabuffer;
+			return true;
+		}
+
+		// The arena is full for this frame. It grows at the next frame start, so this
+		// is the one frame where the mesh's own per-frame buffer stands in - correct
+		// against anything drawn in another frame, and only wrong if the same mesh is
+		// posed more than once inside this one.
+		const uint32_t slot = ctx.getCurrentFrame() % GVK_MAX_FRAMES_IN_FLIGHT;
 		std::memcpy(buf.slotmapped[slot], data, static_cast<size_t>(size));
 		buf.slotversion[slot] = buf.version;
+		buf.arenabuffer = VK_NULL_HANDLE;
 		buf.buffer = buf.slotbuffers[slot];
 		return true;
 	}
@@ -178,8 +204,34 @@ bool gvkUploadMeshBuffer(gVKContext& ctx, gVKMeshBuffer& buf, const void* data,
 	return true;
 }
 
-VkBuffer gvkResolveMeshBuffer(gVKContext& ctx, gVKMeshBuffer& buf) {
+VkBuffer gvkResolveMeshBuffer(gVKContext& ctx, gVKMeshBuffer& buf, VkDeviceSize& outOffset) {
+	outOffset = 0;
 	if(!buf.isdynamic) return buf.buffer;
+
+	// The slice this mesh was last uploaded into, as long as it belongs to the frame
+	// being recorded. Two enemies posed to the same animation frame skip the second
+	// upload entirely, and this is what lets the second draw reuse the first's data
+	// rather than push an identical copy.
+	if(!buf.isindex && buf.arenabuffer != VK_NULL_HANDLE && buf.arenageneration == ctx.getMeshGeneration()) {
+		outOffset = buf.arenaoffset;
+		buf.buffer = buf.arenabuffer;
+		return buf.arenabuffer;
+	}
+
+	// A new frame has rewound the arena, so the slice is gone. Push the newest data
+	// back in and carry on; falling through to the per-frame buffer below would work
+	// too, but this keeps every draw of the frame reading from the same place.
+	if(!buf.isindex && !buf.shadow.empty()) {
+		const VkDeviceSize offset = ctx.pushMeshData(buf.shadow.data(), buf.shadow.size());
+		if(offset != VK_WHOLE_SIZE) {
+			buf.arenabuffer = ctx.getCurrentMeshArena();
+			buf.arenaoffset = offset;
+			buf.arenageneration = ctx.getMeshGeneration();
+			buf.buffer = buf.arenabuffer;
+			outOffset = offset;
+			return buf.arenabuffer;
+		}
+	}
 
 	const uint32_t slot = ctx.getCurrentFrame() % GVK_MAX_FRAMES_IN_FLIGHT;
 	if(buf.slotmapped[slot] == nullptr) return VK_NULL_HANDLE;

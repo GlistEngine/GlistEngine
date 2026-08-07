@@ -76,6 +76,15 @@ bool gvkBeginFrame(gVKContext& ctx, GLFWwindow* window) {
 	// frame that draws nothing, in gvkEndFrame. Rewind this frame's vertex ring so
 	// the draw path can refill it from the start.
 	ctx.resetDynamicVertices();
+	// Rewind the mesh arena too, and grow it first if the last frames wanted more
+	// than it holds. Growing here means draining the device, which is why it is
+	// done at a frame boundary and only when the high-water mark says it is
+	// needed - in practice a handful of times while a level loads, then never.
+	if(ctx.mesharenahighwater > ctx.mesharenacapacity) {
+		vkDeviceWaitIdle(ctx.device);
+		gvkEnsureMeshArena(ctx, ctx.mesharenahighwater * 2);
+	}
+	ctx.resetMeshArena();
 	ctx.renderpassactive = false;
 	ctx.frameactive = true;
 	return true;

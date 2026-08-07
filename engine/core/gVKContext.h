@@ -30,6 +30,8 @@
 #ifdef GVK_DESKTOP_GLFW
 
 #include <vulkan/vulkan.h>
+#include <algorithm>
+#include <cstdint>
 #include <cstring>
 #include <string>
 #include <vector>
@@ -69,6 +71,8 @@ bool gvkCreateGraphicsPipelines(gVKContext& ctx);
 bool gvkReloadGraphicsPipelines(gVKContext& ctx);
 void gvkDestroyGraphicsPipelines(gVKContext& ctx);
 bool gvkCreateDrawResources(gVKContext& ctx);
+bool gvkEnsureMeshArena(gVKContext& ctx, VkDeviceSize capacity);
+void gvkDestroyMeshArena(gVKContext& ctx);
 void gvkDestroyDrawResources(gVKContext& ctx);
 bool gvkCreateShadowResources(gVKContext& ctx, uint32_t width, uint32_t height);
 bool gvkCreateShadowPipeline(gVKContext& ctx);
@@ -128,6 +132,8 @@ struct gVKContext {
 	friend bool gvkReloadGraphicsPipelines(gVKContext&);
 	friend void gvkDestroyGraphicsPipelines(gVKContext&);
 	friend bool gvkCreateDrawResources(gVKContext&);
+	friend bool gvkEnsureMeshArena(gVKContext&, VkDeviceSize);
+	friend void gvkDestroyMeshArena(gVKContext&);
 	friend void gvkDestroyDrawResources(gVKContext&);
 	friend bool gvkCreateShadowResources(gVKContext&, uint32_t, uint32_t);
 	friend bool gvkCreateShadowPipeline(gVKContext&);
@@ -417,6 +423,49 @@ struct gVKContext {
 		return offset;
 	}
 
+	// The same idea again, for 3D meshes whose vertices the CPU rewrites: a per
+	// frame arena that every upload takes its own slice of.
+	//
+	// One slice per upload rather than one buffer per mesh, because a mesh can be
+	// uploaded to several times in a single frame and drawn in between. A game
+	// posing one soldier model once per enemy does exactly that, and a single
+	// buffer per mesh gives every one of them the last pose written - the draws are
+	// recorded now and executed later, so they all read whatever the buffer holds
+	// by the end of the frame. Slices keep each draw pointing at the data it was
+	// recorded with.
+	//
+	// pushMeshData returns the byte offset to bind from, or VK_WHOLE_SIZE when the
+	// arena is full - the caller falls back to its own buffer for that frame, and
+	// the arena grows to the high-water mark at the next frame start.
+	void resetMeshArena() {
+		if(mesharenaoffsets.empty()) return;
+		if(mesharenaoffsets[currentframe] > mesharenahighwater) {
+			mesharenahighwater = mesharenaoffsets[currentframe];
+		}
+		mesharenaoffsets[currentframe] = 0;
+		meshgeneration++;
+	}
+	VkBuffer getCurrentMeshArena() {
+		return mesharenabuffers.empty() ? VK_NULL_HANDLE : mesharenabuffers[currentframe];
+	}
+	VkDeviceSize pushMeshData(const void* data, VkDeviceSize size) {
+		if(mesharenamapped.empty() || mesharenamapped[currentframe] == nullptr) return VK_WHOLE_SIZE;
+		VkDeviceSize offset = (mesharenaoffsets[currentframe] + 63) & ~static_cast<VkDeviceSize>(63);
+		if(offset + size > mesharenacapacity) {
+			// Remember what was actually asked for, so the grow at the next reset is
+			// big enough rather than one slice short of it.
+			mesharenahighwater = std::max(mesharenahighwater, offset + size);
+			return VK_WHOLE_SIZE;
+		}
+		std::memcpy(static_cast<char*>(mesharenamapped[currentframe]) + offset, data, size);
+		mesharenaoffsets[currentframe] = offset + size;
+		return offset;
+	}
+	// Which frame the arena is on. A slice handed out in an earlier frame points
+	// into memory that has since been rewound, so a mesh drawn without a fresh
+	// upload compares this before trusting the slice it kept.
+	uint64_t getMeshGeneration() const { return meshgeneration; }
+
 private:
 	std::string appname = "GlistApp";
 	std::string enginename = "GlistEngine";
@@ -593,6 +642,15 @@ private:
 	std::vector<void*> dynvertexmapped;
 	std::vector<VkDeviceSize> dynvertexoffsets;
 	VkDeviceSize dynvertexcapacity = 0;
+
+	// Per-frame arena for mesh vertices the CPU rewrites; see pushMeshData.
+	std::vector<VkBuffer> mesharenabuffers;
+	std::vector<VkDeviceMemory> mesharenamemories;
+	std::vector<void*> mesharenamapped;
+	std::vector<VkDeviceSize> mesharenaoffsets;
+	VkDeviceSize mesharenacapacity = 0;
+	VkDeviceSize mesharenahighwater = 0;
+	uint64_t meshgeneration = 0;
 };
 
 #endif /* GVK_DESKTOP_GLFW */
