@@ -194,6 +194,10 @@ void gGUIButton::setPressedButtonColor(gColor color) {
 	hcolor.set((pressedbcolor.r + bcolor.r) / 2, (pressedbcolor.g + bcolor.g) / 2, (pressedbcolor.b + bcolor.b) / 2);
 }
 
+void gGUIButton::setHoverButtonColor(gColor color) {
+	hcolor = color;
+}
+
 void gGUIButton::setDisabledButtonColor(gColor color) {
 	disabledbcolor = color;
 }
@@ -216,6 +220,10 @@ gColor* gGUIButton::getButtonColor() {
 
 gColor* gGUIButton::getPressedButtonColor() {
 	return &pressedbcolor;
+}
+
+gColor* gGUIButton::getHoverButtonColor() {
+	return &hcolor;
 }
 
 gColor* gGUIButton::getDisabledButtonColor() {

@@ -56,14 +56,11 @@ gGUINumberBox::gGUINumberBox() {
 	boxsizer.setSize(1, 2);
 	float columnprops[2] = {0.70f, 0.30f};
 	boxsizer.setColumnProportions(columnprops);
-//	boxsizer.setSize(lineno, columno);
-//	float lineprops[] = {0.43f, 0.06f, 0.2f, 0.01f};
-//	float columnprops[] = {0.50f, 0.50f};
 	boxsizer.enableBorders(false);
-//	boxsizer.setColumnProportions(columnprops);
-//	boxsizer.setLineProportions(lineprops);
+	boxsizer.setAlignContentVertically(true);
 	textbox.setEditable(true);
 	textbox.setNumeric(true);
+	textbox.enableVerticalMargin(false);
 	boxsizer.setControl(0, 0, &textbox);
 	setSizer(&boxsizer);
 	maxvalue = std::numeric_limits<int>::max();
@@ -80,41 +77,53 @@ gGUINumberBox::~gGUINumberBox() {
 
 void gGUINumberBox::set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIObject* parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h) {
 	gGUIContainer::set(root, topParentGUIObject, parentGUIObject, parentSlotLineNo, parentSlotColumnNo, x, y, w, h);
+	smalboxheight = (textbox.height - 2) / 2;
+	smalltriangleheight = smalboxheight * 0.4f;
+	if (smalltriangleheight < 3) smalltriangleheight = 3;
+
 	incboxposx = textbox.left + textbox.width + 5;
 	incboxposy = textbox.top;
 	decboxposx = incboxposx;
 	decboxposy = incboxposy + smalboxheight + 2;
-	inctrilcorpx = incboxposx + 3;
-	inctrilcorpy = incboxposy + smalboxheight - 1 - (smalboxheight - smalltriangleheight) / 2;
-	inctrircorpx = incboxposx + smalboxwidth - 2;
+
+	inctrilcorpx = incboxposx + smalboxwidth * 0.25f;
+	inctrilcorpy = incboxposy + smalboxheight - (smalboxheight - smalltriangleheight) / 2;
+	inctrircorpx = incboxposx + smalboxwidth * 0.75f;
 	inctrircorpy = inctrilcorpy;
-	inctriucorpx = (inctrilcorpx + inctrircorpx) / 2;
+	inctriucorpx = incboxposx + smalboxwidth * 0.5f;
 	inctriucorpy = inctrilcorpy - smalltriangleheight;
-	dectrilcorpx = decboxposx + 3;
-	dectrilcorpy = decboxposy + 1 + (smalboxheight - smalltriangleheight) / 2;
-	dectrircorpx = decboxposx + smalboxwidth - 2;
+
+	dectrilcorpx = decboxposx + smalboxwidth * 0.25f;
+	dectrilcorpy = decboxposy + (smalboxheight - smalltriangleheight) / 2;
+	dectrircorpx = decboxposx + smalboxwidth * 0.75f;
 	dectrircorpy = dectrilcorpy;
-	dectriucorpx = (dectrilcorpx + dectrircorpx) / 2;
+	dectriucorpx = decboxposx + smalboxwidth * 0.5f;
 	dectriucorpy = dectrilcorpy + smalltriangleheight;
 }
 
 void gGUINumberBox::set(int x, int y, int w, int h) {
 	gGUIContainer::set(x, y, w, h);
+	smalboxheight = (textbox.height - 2) / 2;
+	smalltriangleheight = smalboxheight * 0.4f;
+	if (smalltriangleheight < 3) smalltriangleheight = 3;
+
 	incboxposx = textbox.left + textbox.width + 5;
 	incboxposy = textbox.top;
 	decboxposx = incboxposx;
 	decboxposy = incboxposy + smalboxheight + 2;
-	inctrilcorpx = incboxposx + 3;
-	inctrilcorpy = incboxposy + smalboxheight - 1 - (smalboxheight - smalltriangleheight) / 2;
-	inctrircorpx = incboxposx + smalboxwidth - 2;
+
+	inctrilcorpx = incboxposx + smalboxwidth * 0.25f;
+	inctrilcorpy = incboxposy + smalboxheight - (smalboxheight - smalltriangleheight) / 2;
+	inctrircorpx = incboxposx + smalboxwidth * 0.75f;
 	inctrircorpy = inctrilcorpy;
-	inctriucorpx = (inctrilcorpx + inctrircorpx) / 2;
+	inctriucorpx = incboxposx + smalboxwidth * 0.5f;
 	inctriucorpy = inctrilcorpy - smalltriangleheight;
-	dectrilcorpx = decboxposx + 3;
-	dectrilcorpy = decboxposy + 1 + (smalboxheight - smalltriangleheight) / 2;
-	dectrircorpx = decboxposx + smalboxwidth - 2;
+
+	dectrilcorpx = decboxposx + smalboxwidth * 0.25f;
+	dectrilcorpy = decboxposy + (smalboxheight - smalltriangleheight) / 2;
+	dectrircorpx = decboxposx + smalboxwidth * 0.75f;
 	dectrircorpy = dectrilcorpy;
-	dectriucorpx = (dectrilcorpx + dectrircorpx) / 2;
+	dectriucorpx = decboxposx + smalboxwidth * 0.5f;
 	dectriucorpy = dectrilcorpy + smalltriangleheight;
 }
 
@@ -345,4 +354,8 @@ void gGUINumberBox::draw() {
 void gGUINumberBox::setDisabled(bool isDisabled) {
 	isdisabled = isDisabled;
 	textbox.setDisabled(isdisabled);
+}
+
+int gGUINumberBox::calculateContentHeight() {
+	return textbox.calculateContentHeight();
 }

@@ -30,12 +30,14 @@ public:
 
 	void setButtonColor(gColor color);
 	void setPressedButtonColor(gColor color);
+	void setHoverButtonColor(gColor color);
 	void setDisabledButtonColor(gColor color);
 	void setButtonFontColor(gColor color);
 	void setPressedButtonFontColor(gColor color);
 	void setDisabledButtonFontColor(gColor color);
 	gColor* getButtonColor();
 	gColor* getPressedButtonColor();
+	gColor* getHoverButtonColor();
 	gColor* getDisabledButtonColor();
 	gColor* getButtonFontColor();
 	gColor* getPressedButtonFontColor();

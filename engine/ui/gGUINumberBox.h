@@ -59,6 +59,8 @@ public:
 	friend class gGUIToolbar;
 
 	void setDisabled(bool isDisabled);
+
+	int calculateContentHeight() override;
 private:
 	int boxwidth, boxheight, numboxwidth, numboxheight, smalboxwidth, smalboxheight;
 
