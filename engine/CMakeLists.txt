@@ -204,13 +204,27 @@ set(SRC_FILES
 	${ENGINE_DIR}/utils/gUUID.cpp
 	${ENGINE_DIR}/utils/gFile.cpp
 	${ENGINE_DIR}/utils/gHttpFile.cpp
-	${ENGINE_DIR}/graphics/gBezier.cpp
 	${ENGINE_DIR}/graphics/gShader.cpp
+	${ENGINE_DIR}/graphics/gBezier.cpp
 	${ENGINE_DIR}/graphics/gFog.cpp
 	${ENGINE_DIR}/core/gObject.cpp
 	${ENGINE_DIR}/core/gRenderer.cpp
 	${ENGINE_DIR}/core/gGLRenderEngine.cpp
 	${ENGINE_DIR}/core/gVKRenderEngine.cpp
+	${ENGINE_DIR}/core/gVKSwapchain.cpp
+	${ENGINE_DIR}/core/gVKRenderTarget.cpp
+	${ENGINE_DIR}/core/gVKCommands.cpp
+	${ENGINE_DIR}/core/gVKSync.cpp
+	${ENGINE_DIR}/core/gVKFrame.cpp
+	${ENGINE_DIR}/core/gVKBuffer.cpp
+	${ENGINE_DIR}/core/gVKMeshBuffer.cpp
+	${ENGINE_DIR}/core/gVKUniform.cpp
+	${ENGINE_DIR}/core/gVKShadow.cpp
+	${ENGINE_DIR}/core/gVKPipeline.cpp
+	${ENGINE_DIR}/core/gVKReflect.cpp
+	${ENGINE_DIR}/core/gVKShaderCompiler.cpp
+	${ENGINE_DIR}/core/gVKDraw.cpp
+	${ENGINE_DIR}/core/gVKTexture.cpp
 	${ENGINE_DIR}/core/gRenderObject.cpp
 	${ENGINE_DIR}/core/gGUIActionManager.cpp
 	${ENGINE_DIR}/graphics/gTexture.cpp
@@ -281,6 +295,7 @@ set(SRC_FILES
 	${ENGINE_DIR}/ui/gGUIText.cpp
 	${ENGINE_DIR}/ui/gGUITooltipText.cpp
 	${ENGINE_DIR}/ui/gGUIDivider.cpp
+	${ENGINE_DIR}/ui/gGUILine.cpp
 	${ENGINE_DIR}/ui/gGUIToolbarButton.cpp
 	${ENGINE_DIR}/ui/gGUIProgressBar.cpp
 	${ENGINE_DIR}/ui/gGUIRadioButton.cpp
@@ -338,6 +353,8 @@ set(SRC_FILES
 	${ENGINE_DIR}/graphics/posteffects/gWhiteBalance.cpp
 	${ENGINE_DIR}/graphics/posteffects/gTiltShift.cpp
 	${ENGINE_DIR}/graphics/posteffects/gBloom.cpp
+	${ENGINE_DIR}/graphics/posteffects/gBloomPyramid.cpp
+	${ENGINE_DIR}/graphics/posteffects/gFXAA.cpp
 	${ENGINE_DIR}/graphics/posteffects/gKernelEffect.cpp
 	${ENGINE_DIR}/graphics/posteffects/kerneleffects/gBlur.cpp
 	${ENGINE_DIR}/graphics/posteffects/kerneleffects/gSharpen.cpp
@@ -587,6 +604,13 @@ elseif(WIN32)
 	if(EXISTS "${MINGW64_DIR}/include/vulkan/vulkan.h" AND GLIST_VULKAN_LIBRARY)
 		set(Lib_Vulkan "${GLIST_VULKAN_LIBRARY}")
 		target_compile_definitions(GlistEngine PRIVATE GLIST_HAS_VULKAN)
+		# The validation layer ships with zbin, but its manifest does not sit in a
+		# directory the loader searches on its own. Passing the path to the engine
+		# keeps the layer usable on machines that have no Vulkan SDK installed.
+		if(EXISTS "${MINGW64_DIR}/bin/VkLayer_khronos_validation.json")
+			target_compile_definitions(GlistEngine PRIVATE
+				GLIST_VK_LAYER_PATH="${MINGW64_DIR}/bin")
+		endif()
 	else()
 		message(STATUS "Vulkan development files not found in zbin; Vulkan backend disabled")
 	endif()
@@ -658,6 +682,150 @@ elseif(APPLE)
         # For backwards compatibility
         find_library(Lib_crypto crypto HINTS ${BREW_PATH}/openssl@${OPENSSL_VER_SHORT}/${OPENSSL_VER_FULL}/lib)
     endif()
+endif()
+
+
+########## VULKAN SHADER HOT RELOAD ##########
+# A development build can compile engine/graphics/shaders/vk/*.vert|frag to
+# SPIR-V while the app runs, so saving a shader shows up without rebuilding.
+# It needs libshaderc, which is not linked into a release build: there the
+# shaders come from the SPIR-V committed in core/gVKShaders.h. Both paths run
+# the same sources through the same compiler settings, so this only changes how
+# quickly an edit is visible, never what gets rendered.
+#
+# On by default in Debug builds where shaderc is present. Multi-config
+# generators leave CMAKE_BUILD_TYPE empty, so those need -DGLIST_VK_SHADER_HOT_RELOAD=ON.
+option(GLIST_VK_SHADER_HOT_RELOAD "Compile the Vulkan 2D shaders at run time (needs shaderc)" OFF)
+if(Lib_Vulkan AND (GLIST_VK_SHADER_HOT_RELOAD OR CMAKE_BUILD_TYPE STREQUAL "Debug"))
+	set(GLIST_SHADERC_FOUND FALSE)
+	if(WIN32)
+		# Windows takes its libraries from zbin and nowhere else, exactly like the
+		# Vulkan block above - NO_DEFAULT_PATH keeps a stray shaderc elsewhere on the
+		# machine from being picked up instead of the one the toolchain ships.
+		find_library(GLIST_SHADERC_LIBRARY
+			NAMES shaderc_shared shaderc_combined shaderc
+			PATHS "${MINGW64_DIR}/lib"
+			NO_DEFAULT_PATH)
+		find_path(GLIST_SHADERC_INCLUDE shaderc/shaderc.hpp
+			PATHS "${MINGW64_DIR}/include"
+			NO_DEFAULT_PATH)
+		if(GLIST_SHADERC_LIBRARY AND GLIST_SHADERC_INCLUDE)
+			target_include_directories(GlistEngine PRIVATE "${GLIST_SHADERC_INCLUDE}")
+			target_link_libraries(GlistEngine PRIVATE "${GLIST_SHADERC_LIBRARY}")
+			set(GLIST_SHADERC_FOUND TRUE)
+			set(GLIST_SHADERC_ORIGIN "${GLIST_SHADERC_LIBRARY}")
+		endif()
+	else()
+		find_package(PkgConfig QUIET)
+		if(PKG_CONFIG_FOUND)
+			pkg_check_modules(shaderc QUIET IMPORTED_TARGET shaderc)
+		endif()
+		if(shaderc_FOUND)
+			target_link_libraries(GlistEngine PRIVATE PkgConfig::shaderc)
+			set(GLIST_SHADERC_FOUND TRUE)
+			set(GLIST_SHADERC_ORIGIN "shaderc ${shaderc_VERSION}")
+		endif()
+	endif()
+
+	if(GLIST_SHADERC_FOUND)
+		target_compile_definitions(GlistEngine PRIVATE
+			GVK_RUNTIME_SHADERS
+			GVK_VK_SHADER_SOURCE_DIR="${ENGINE_DIR}/graphics/shaders/vk")
+		message(STATUS "Vulkan shader hot reload enabled (${GLIST_SHADERC_ORIGIN})")
+	else()
+		message(STATUS "shaderc not found; Vulkan shaders come from the committed SPIR-V")
+	endif()
+endif()
+
+
+########## VULKAN SHADER SPIR-V ##########
+# core/gVKShaders.h holds the SPIR-V the engine ships with, and is committed so
+# the build needs no shader compiler. Keeping it in step by hand is a step that
+# gets forgotten, so when glslc is available the header is regenerated whenever
+# one of the shader sources is newer than it. Without glslc nothing runs and the
+# committed header is used as-is, which is what keeps this off the critical path
+# for anyone not editing shaders.
+#
+# This is separate from hot reload: reload shows an edit in the running app,
+# this makes sure the edit reaches the committed SPIR-V before it is pushed.
+if(Lib_Vulkan)
+	if(WIN32)
+		# Same rule as the libraries: glslc comes from zbin, not from wherever a
+		# Vulkan SDK may have put one.
+		find_program(GLIST_GLSLC glslc PATHS "${MINGW64_DIR}/bin" NO_DEFAULT_PATH)
+	else()
+		find_program(GLIST_GLSLC glslc HINTS /opt/homebrew/bin /usr/local/bin)
+	endif()
+	if(GLIST_GLSLC)
+		set(GVK_SHADER_DIR ${ENGINE_DIR}/graphics/shaders/vk)
+		# The generator is a CMake script rather than a shell script so this works
+		# the same on Windows, macOS and Linux.
+		add_custom_command(
+			OUTPUT ${ENGINE_DIR}/core/gVKShaders.h
+			COMMAND ${CMAKE_COMMAND}
+				-DGLSLC=${GLIST_GLSLC}
+				-DSHADER_DIR=${GVK_SHADER_DIR}
+				-DOUT=${ENGINE_DIR}/core/gVKShaders.h
+				-P ${GVK_SHADER_DIR}/gen_vk_shaders.cmake
+			DEPENDS
+				${GVK_SHADER_DIR}/color2d.vert
+				${GVK_SHADER_DIR}/color2d.frag
+				${GVK_SHADER_DIR}/image2d.vert
+				${GVK_SHADER_DIR}/image2d.frag
+				${GVK_SHADER_DIR}/mesh3d.vert
+				${GVK_SHADER_DIR}/mesh3d.frag
+				${GVK_SHADER_DIR}/mesh3dpbr.vert
+				${GVK_SHADER_DIR}/mesh3dpbr.frag
+				${GVK_SHADER_DIR}/shadow3d.vert
+				${GVK_SHADER_DIR}/shadow3d.frag
+				${GVK_SHADER_DIR}/skybox3d.vert
+				${GVK_SHADER_DIR}/skybox3d.frag
+				${GVK_SHADER_DIR}/gen_vk_shaders.cmake
+			COMMENT "Regenerating gVKShaders.h from the Vulkan 2D shader sources"
+			VERBATIM)
+		add_custom_target(GlistVKShaders DEPENDS ${ENGINE_DIR}/core/gVKShaders.h)
+		add_dependencies(GlistEngine GlistVKShaders)
+	else()
+		message(STATUS "glslc not found; core/gVKShaders.h will be used as committed")
+	endif()
+endif()
+
+
+########## VULKAN VALIDATION LAYER MANIFEST ##########
+# Some distributions - Homebrew's vulkan-validationlayers among them - ship a
+# layer manifest whose "library_path" is a bare file name. The loader can then
+# enumerate the layer (vulkaninfo lists it) but not load it, so vkCreateInstance
+# fails with VK_ERROR_LAYER_NOT_PRESENT unless the library happens to sit on the
+# default search path - which under Homebrew it does not.
+#
+# Rather than make every developer export DYLD_LIBRARY_PATH, a corrected copy of
+# the manifest is written into the build tree with the library's absolute path,
+# and gVKRenderEngine::initVulkan points VK_LAYER_PATH at it through the existing
+# GLIST_VK_LAYER_PATH hook. Only Debug builds ask for the layer at all, and a
+# manifest that already carries a usable path is left alone.
+if(Lib_Vulkan AND CMAKE_BUILD_TYPE STREQUAL "Debug")
+	find_file(GLIST_VK_VALIDATION_MANIFEST VkLayer_khronos_validation.json
+		PATHS
+			/opt/homebrew/share/vulkan/explicit_layer.d
+			/usr/local/share/vulkan/explicit_layer.d
+			/usr/share/vulkan/explicit_layer.d
+		NO_DEFAULT_PATH)
+	find_library(GLIST_VK_VALIDATION_LIBRARY VkLayer_khronos_validation
+		PATHS /opt/homebrew/lib /usr/local/lib /usr/lib)
+	if(GLIST_VK_VALIDATION_MANIFEST AND GLIST_VK_VALIDATION_LIBRARY)
+		file(READ "${GLIST_VK_VALIDATION_MANIFEST}" GLIST_VK_MANIFEST_TEXT)
+		# A value with no path separator is the broken case; anything else already
+		# resolves, either absolutely or relative to the manifest's own directory.
+		if(GLIST_VK_MANIFEST_TEXT MATCHES "\"library_path\"[ \t]*:[ \t]*\"[^/\"]+\"")
+			string(REGEX REPLACE "(\"library_path\"[ \t]*:[ \t]*\")[^/\"]+(\")"
+				"\\1${GLIST_VK_VALIDATION_LIBRARY}\\2"
+				GLIST_VK_MANIFEST_TEXT "${GLIST_VK_MANIFEST_TEXT}")
+			set(GLIST_VK_LAYER_DIR "${CMAKE_CURRENT_BINARY_DIR}/vklayers")
+			file(WRITE "${GLIST_VK_LAYER_DIR}/VkLayer_khronos_validation.json" "${GLIST_VK_MANIFEST_TEXT}")
+			target_compile_definitions(GlistEngine PRIVATE GLIST_VK_LAYER_PATH="${GLIST_VK_LAYER_DIR}")
+			message(STATUS "Vulkan validation layer manifest rewritten with an absolute library path")
+		endif()
+	endif()
 endif()
 
 
