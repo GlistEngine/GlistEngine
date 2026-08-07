@@ -10,39 +10,41 @@
 
 #include "gRenderObject.h"
 #include <glm/glm.hpp>
+#include <vector>
 
 /**
  * @class gBezier
- * @brief Evaluates and renders 2D/3D Cubic Bezier curves using Bernstein polynomials.
+ * @brief Evaluates and renders dynamic (N-degree) Bezier curves.
  *
- * @usage
- * gBezier curve(p0, p1, p2, p3);
- * curve.setResolution(100); // Optional: higher is smoother (default: 50)
- * curve.draw(); // Call inside the draw() loop
+ * Usage:
+ * gBezier curve;
+ * curve.addPoint(glm::vec3(0.0f, 0.0f, 0.0f));
+ * curve.addPoint(glm::vec3(5.0f, 10.0f, 0.0f));
+ * curve.addPoint(glm::vec3(10.0f, 0.0f, 0.0f));
+ * curve.draw();
  */
 
 class gBezier : public gRenderObject {
 public:
 	gBezier();
-	// Creates a 2D curve. Z axis will be 0.0f.
-	gBezier(glm::vec2 p0, glm::vec2 p1, glm::vec2 p2, glm::vec2 p3);
-	//Creates a 3D curve in world coordinates.
-	gBezier(glm::vec3 p0, glm::vec3 p1, glm::vec3 p2, glm::vec3 p3);
 	virtual ~gBezier();
-
-	void setPoint(glm::vec2 p0, glm::vec2 p1, glm::vec2 p2, glm::vec2 p3);
-	void setPoint(glm::vec3 p0, glm::vec3 p1, glm::vec3 p2, glm::vec3 p3);
-
-	//Returns the exact 2D coordinates at time t [0.0 - 1.0].
-	glm::vec2 getPoint2D(float t) const;
-	//Returns the exact 3D coordinates at time t [0.0 - 1.0].
-	glm::vec3 getPoint3D(float t) const;
-	//Sets the number of line segments used for drawing.
+	//Sets curve control points
+	void setPoint(const std::vector<glm::vec2>& pts);
+	void setPoint(const std::vector<glm::vec3>& pts);
+	// Adds a 2D control point to the end of the curve. Z axis defaults to 0.0f.
+	void addPoint(glm::vec2 p);
+	//Adds a 3D control point to the end of the curve.
+	void addPoint(glm::vec3 p);
+	//Clears all points to reset or reuse the curve.
+	void clearPoints();
+	//Gets the exact interpolated point at time t [0.0 - 1.0] using De Casteljau's algorithm.
+	glm::vec3 getPoint(float t) const;
+	//Sets rendering resolution (number of segments).
 	void setResolution(int res);
-	//Draws the curve to the screen automatically in 2D or 3D.
+	//Draws the curve automatically in 2D or 3D based on input points.
 	void draw() const;
 private:
-	glm::vec3 p0, p1, p2, p3;
+	std::vector<glm::vec3> points;
 	int resolution;
 	bool is3D;
 };
