@@ -1,0 +1,1 @@
+The developers can put their video files under assets/videos. gVideo.loadVideo(filename) function check this folder to open the texture file.
