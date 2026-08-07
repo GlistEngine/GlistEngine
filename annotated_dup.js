@@ -50,6 +50,7 @@ var annotated_dup =
     [ "gFmodSound", "classgFmodSound.html", "classgFmodSound" ],
     [ "gFog", "classgFog.html", "classgFog" ],
     [ "gFont", "classgFont.html", "classgFont" ],
+    [ "gFXAA", "classgFXAA.html", "classgFXAA" ],
     [ "gGLFWWindow", "classgGLFWWindow.html", "classgGLFWWindow" ],
     [ "gGLRenderEngine", "classgGLRenderEngine.html", "classgGLRenderEngine" ],
     [ "gGrain", "classgGrain.html", "classgGrain" ],

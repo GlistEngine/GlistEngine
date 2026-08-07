@@ -149,6 +149,7 @@ var hierarchy =
           [ "gColorChannelMixer", "classgColorChannelMixer.html", null ],
           [ "gColorCurves", "classgColorCurves.html", null ],
           [ "gDynamicGrain", "classgDynamicGrain.html", null ],
+          [ "gFXAA", "classgFXAA.html", null ],
           [ "gGrain", "classgGrain.html", null ],
           [ "gGrayscale", "classgGrayscale.html", null ],
           [ "gHighContrast", "classgHighContrast.html", null ],

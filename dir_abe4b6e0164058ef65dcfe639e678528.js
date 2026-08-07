@@ -8,6 +8,7 @@ var dir_abe4b6e0164058ef65dcfe639e678528 =
     [ "gColorChannelMixer.h", "gColorChannelMixer_8h.html", "gColorChannelMixer_8h" ],
     [ "gColorCurves.h", "gColorCurves_8h.html", "gColorCurves_8h" ],
     [ "gDynamicGrain.h", "gDynamicGrain_8h.html", "gDynamicGrain_8h" ],
+    [ "gFXAA.h", "gFXAA_8h.html", "gFXAA_8h" ],
     [ "gGrain.h", "gGrain_8h.html", "gGrain_8h" ],
     [ "gGrayscale.h", "gGrayscale_8h.html", "gGrayscale_8h" ],
     [ "gHighContrast.h", "gHighContrast_8h.html", "gHighContrast_8h" ],
