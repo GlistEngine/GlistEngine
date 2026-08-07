@@ -73,6 +73,10 @@ void gvkDrawTextured2D(gVKContext& ctx, VkDescriptorSet textureSet, VkDescriptor
 void gvkDrawTexturedTriangles2D(gVKContext& ctx, VkDescriptorSet textureSet,
 		const glm::vec4& tint, const glm::mat4& mvp, const float* xyuv, int vertexCount);
 
+// vertexOffset is where this mesh's vertices start inside the bound buffer. Zero
+// for a mesh uploaded once; a mesh whose vertices the CPU rewrites is given a
+// slice of the frame's arena instead, so that each of its draws reads the data
+// it was recorded with rather than whatever the last upload of the frame left.
 // Records one 3D mesh out of buffers that already live on the device, unlike the
 // 2D calls above, which copy their geometry into a per-frame ring first. A mesh
 // uploads once through gVKMeshBuffer and is then drawn straight from there.
@@ -97,11 +101,12 @@ void gvkDrawTexturedTriangles2D(gVKContext& ctx, VkDescriptorSet textureSet,
 // instanceBuffer holds one model matrix per instance and is bound as binding 1. It
 // is required even for a single draw, because the shader always reads from it - the
 // caller passes a one-element identity buffer when the draw is not instanced.
-void gvkDrawMesh3D(gVKContext& ctx, VkBuffer vertexBuffer, VkBuffer indexBuffer, int count,
+void gvkDrawMesh3D(gVKContext& ctx, VkBuffer vertexBuffer, VkDeviceSize vertexOffset,
+		VkBuffer indexBuffer, int count,
 		VkIndexType indexType, const gVKMeshPush& push,
 		VkDescriptorSet diffuseSet, VkDescriptorSet specularSet, VkDescriptorSet normalSet,
 		VkDescriptorSet shadowSet,
-		VkBuffer instanceBuffer, int instanceCount,
+		VkBuffer instanceBuffer, VkDeviceSize instanceOffset, int instanceCount,
 		VkPrimitiveTopology topology, bool depthTest, bool depthTestAlways, bool lines,
 		const gVKCullState& culling, bool blending);
 
@@ -110,10 +115,11 @@ void gvkDrawMesh3D(gVKContext& ctx, VkBuffer vertexBuffer, VkBuffer indexBuffer,
 // holes it punches; it must be a real descriptor even for an opaque mesh, where the
 // 1x1 white texture stands in and push.misc.x says not to sample it. Only valid
 // while the shadow render pass is open.
-void gvkDrawShadowCaster(gVKContext& ctx, VkBuffer vertexBuffer, VkBuffer indexBuffer,
+void gvkDrawShadowCaster(gVKContext& ctx, VkBuffer vertexBuffer, VkDeviceSize vertexOffset,
+		VkBuffer indexBuffer,
 		int count, VkIndexType indexType, const gVKShadowPush& push,
 		VkDescriptorSet diffuseSet,
-		VkBuffer instanceBuffer, int instanceCount, VkPrimitiveTopology topology);
+		VkBuffer instanceBuffer, VkDeviceSize instanceOffset, int instanceCount, VkPrimitiveTopology topology);
 
 // Records one 3D mesh through the PBR pipeline. materialSet holds all five maps in
 // a single descriptor set (bindings 0..4), unlike the non-PBR path where each map
@@ -121,10 +127,11 @@ void gvkDrawShadowCaster(gVKContext& ctx, VkBuffer vertexBuffer, VkBuffer indexB
 // textures would need six. shadowSet is the depth map from the light's point of
 // view and goes in as set 2, per frame rather than per material. There is no line
 // variant - a wireframe PBR draw has no meaning that the OpenGL path offers either.
-void gvkDrawMesh3DPbr(gVKContext& ctx, VkBuffer vertexBuffer, VkBuffer indexBuffer, int count,
+void gvkDrawMesh3DPbr(gVKContext& ctx, VkBuffer vertexBuffer, VkDeviceSize vertexOffset,
+		VkBuffer indexBuffer, int count,
 		VkIndexType indexType, const gVKPbrPush& push, VkDescriptorSet materialSet,
 		VkDescriptorSet shadowSet,
-		VkBuffer instanceBuffer, int instanceCount,
+		VkBuffer instanceBuffer, VkDeviceSize instanceOffset, int instanceCount,
 		VkPrimitiveTopology topology, bool depthTest, bool depthTestAlways,
 		const gVKCullState& culling, bool blending);
 

@@ -391,7 +391,14 @@ public:
 	gLight* getSceneLight(int lightNo);
 	int getSceneLightNum();
 	void removeAllSceneLights();
-	void updateLights();
+	// Virtual because the two backends publish light state at different moments.
+	// OpenGL writes its uniform block right here, the instant a light is enabled or
+	// its colour changes. The Vulkan backend gathers the whole scene block once per
+	// render pass instead, so it overrides this to mark that block stale - a canvas
+	// that enables its light just before drawing and disables it after, which is
+	// what gLight's API invites, would otherwise be shaded with the state left over
+	// from the previous frame, when the light was off.
+	virtual void updateLights();
 
 	void updateScene();
 
@@ -647,34 +654,34 @@ protected:
 
 	int renderenginetype = G_RENDERER_GL;
 
-	bool isfogenabled;
-	int fogno;
+	bool isfogenabled = false;
+	int fogno = -1;
 	gColor fogcolor;
-	float fogdensity;
-	float foggradient;
-	int fogmode;
-	float foglinearstart;
-	float foglinearend;
+	float fogdensity = 0.3f;
+	float foggradient = 2.0f;
+	int fogmode = FOGMODE_EXP;
+	float foglinearstart = 0.0f;
+	float foglinearend = 1.0f;
 
 	std::deque<gLight*> scenelights;
 	gUbo<gSceneLights>* lightsubo = nullptr;
 	gUbo<gSceneData>* sceneubo = nullptr;
-	bool islightingenabled;
+	bool islightingenabled = true;
 	glm::vec3 lightingposition;
 	gColor lightingcolor;
 	gColor globalambientcolor;
-	bool isglobalambientcolorchanged;
+	bool isglobalambientcolorchanged = true;
 
-	bool isdepthtestenabled;
-	int depthtesttype;
+	bool isdepthtestenabled = false;
+	int depthtesttype = 0;
 	bool iscullingenabled = false;
 	int cullface = GL_BACK;
 	int cullingdirection = GL_CCW;
 	unsigned int depthtesttypeid[2];
-	bool isalphablendingenabled, isalphatestenabled;
+	bool isalphablendingenabled = false, isalphatestenabled = false;
 
-	GLuint boundframebuffer;
-	int viewportx, viewporty, viewportwidth, viewportheight;
+	GLuint boundframebuffer = 0;
+	int viewportx = 0, viewporty = 0, viewportwidth = 0, viewportheight = 0;
 
 	bool isssaoenabled;
 	float ssaobias;
@@ -693,9 +700,9 @@ protected:
 	void initSSAOResources();
 	void cleanupSSAOResources();
 	void setupSSAODepthSampling();
-	bool isgammacorrectionenabled;
-	bool ishdrenabled;
-	bool issoftshadowsenabled;
+	bool isgammacorrectionenabled = false;
+	bool ishdrenabled = false;
+	bool issoftshadowsenabled = false;
 
 	gShader* colorshader;
 	gShader* textureshader;
