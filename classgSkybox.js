@@ -5,6 +5,7 @@ var classgSkybox =
     [ "bindPbrMaps", "classgSkybox.html#ac0bec377edffc9dc15c12055a1c05e9e", null ],
     [ "draw", "classgSkybox.html#a17bbe7209e58bedc5c17c8531043d47c", null ],
     [ "generatePbrMaps", "classgSkybox.html#a650e89c8baa98e5aff76c54c5fd0b086", null ],
+    [ "getTextureId", "classgSkybox.html#a6cdfdfc347dabcd1bf94547f18b78c24", null ],
     [ "load", "classgSkybox.html#a29ba5f5d341fd8c234b2768f8629e651", null ],
     [ "loadDataSkybox", "classgSkybox.html#aefca38c3c4002a1ac9ecbf0270837944", null ],
     [ "loadEquirectangular", "classgSkybox.html#a477c317824050625917698060e2c4c3a", null ],
