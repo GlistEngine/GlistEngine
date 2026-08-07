@@ -15,6 +15,8 @@ var classgFont =
     [ "drawText", "classgFont.html#af12e725c755b22443a139c3e6a4353aa", null ],
     [ "drawTextHorizontallyFlipped", "classgFont.html#af5385aa7cc1b384269332b3d5ed67af6", null ],
     [ "drawTextVerticallyFlipped", "classgFont.html#a82fee83cf0e7d88e24b1f3689c5c0070", null ],
+    [ "getAtlasPageCount", "classgFont.html#a8469f068ca50e7cc11c9980ae5978dbe", null ],
+    [ "getAtlasPageLimit", "classgFont.html#a59fcc0dada5066906a012cd71a129056", null ],
     [ "getDpi", "classgFont.html#ab2956c6808062159685f2c5dc36a692e", null ],
     [ "getLineHeight", "classgFont.html#a3ef263d01ea05e673377f8e3d8795c77", null ],
     [ "getPath", "classgFont.html#aba41d309c206eced9af81109f40571de", null ],
@@ -28,6 +30,7 @@ var classgFont =
     [ "load", "classgFont.html#a6d3ee7c7cadd22d2e6f1536ae6fb1a97", null ],
     [ "loadFont", "classgFont.html#a3735214e7a048f574a5bf5b5ac7db2d1", null ],
     [ "onEvent", "classgFont.html#a26023e75e4d9cabdfd6124f4b9e6eecd", null ],
+    [ "setAtlasPageLimit", "classgFont.html#a6c8397ae5da23303fa1751c3a9403c9a", null ],
     [ "setTextRenderMode", "classgFont.html#ae8967c361ee9870c491967f3d345c140", null ],
     [ "wrapSentenceByWidth", "classgFont.html#a5e94e6bd50585adad6f294030f58d47e", null ]
 ];
