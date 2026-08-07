@@ -22,6 +22,7 @@ gGUISizer::gGUISizer() {
 	slotpadding = 2;
 	slotheightpadding = 0;
 	alignvertically = false;
+	haslocalbackgroundcolor = false;
 	isbackgroundimageenabled = false;
 	lineprs = nullptr;
 	columnprs = nullptr;
@@ -377,7 +378,7 @@ void gGUISizer::reloadControl(gGUIControl& control, int line, int column) {
 		if (contentheight > 0) {
 			int diff = (h - contentheight) / 2;
 			y += diff;
-			h -= diff;
+			h = contentheight;
 		}
 	}
 	control.set(root, topparent, this, line, column, x, y, w, h);
@@ -397,6 +398,16 @@ void gGUISizer::enableResizing(bool isEnabled) {
 
 void gGUISizer::enableBackgroundFill(bool isEnabled) {
 	fillbackground = isEnabled;
+}
+
+void gGUISizer::setBackgroundColor(gColor color) {
+	localsizerbackgroundcolor = color;
+	haslocalbackgroundcolor = true;
+}
+
+gColor gGUISizer::getBackgroundColor() {
+	if (haslocalbackgroundcolor) return localsizerbackgroundcolor;
+	return *backgroundcolor;
 }
 
 void gGUISizer::setAlignContentVertically(bool enabled) {
@@ -433,7 +444,11 @@ void gGUISizer::draw() {
 	//	gLogi("gGUISizer") << "l:" << left << ", t:" << top << ", w:" << width << ", h:" << height << ", ln:" << linenum << ", cn:" << columnnum;
 	if(fillbackground || isbackgroundimageenabled) {
 		gColor oldcolor = *renderer->getColor();
-		renderer->setColor(backgroundcolor);
+		if (haslocalbackgroundcolor) {
+			renderer->setColor(localsizerbackgroundcolor);
+		} else {
+			renderer->setColor(backgroundcolor);
+		}
 		gDrawRectangle(left, top, width, height, true);
 		renderer->setColor(&oldcolor);
 	}
