@@ -27,6 +27,7 @@
 #include "gVKRenderEngine.h"
 
 bool gRenderObject::isshadowmappingenabled = false;
+bool gRenderObject::isextrashadersenabled = true;
 
 gRenderObject::gRenderObject() {
 	// Renderer should be created by the gAppManager
@@ -92,6 +93,18 @@ bool gRenderObject::isShadowMappingEnabled() {
 	assert(renderer);
 #endif
 	return isshadowmappingenabled;
+}
+
+void gRenderObject::enableExtraShaders() {
+	isextrashadersenabled = true;
+}
+
+void gRenderObject::disableExtraShaders() {
+	isextrashadersenabled = false;
+}
+
+bool gRenderObject::areExtraShadersEnabled() {
+	return isextrashadersenabled;
 }
 
 gRenderer* renderer = nullptr;

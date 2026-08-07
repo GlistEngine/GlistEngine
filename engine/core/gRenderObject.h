@@ -39,6 +39,10 @@ public:
 	static void disableShadowMapping();
 	static bool isShadowMappingEnabled();
 
+	static void enableExtraShaders();
+	static void disableExtraShaders();
+	static bool areExtraShadersEnabled();
+
 	static gRenderer* getRenderer();
 
 	static void destroyRenderer();
@@ -46,6 +50,7 @@ public:
 protected:
 	friend class gRenderer;
 	static bool isshadowmappingenabled;
+	static bool isextrashadersenabled;
 };
 
 #endif /* ENGINE_BASE_GRENDEROBJECT_H_ */
