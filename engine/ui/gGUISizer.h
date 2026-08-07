@@ -40,6 +40,8 @@ public:
 	void enableBorders(bool isEnabled);
 	void enableResizing(bool isEnabled);
 	void enableBackgroundFill(bool isEnabled);
+	void setBackgroundColor(gColor color);
+	gColor getBackgroundColor();
 
 	void setAlignContentVertically(bool enabled);
 	bool isAlignContentVertically();
@@ -89,6 +91,8 @@ private:
 	int slotpadding;
 	int slotheightpadding;
 	bool alignvertically;
+	gColor localsizerbackgroundcolor;
+	bool haslocalbackgroundcolor;
 
 private:
 	int detectSizerType();

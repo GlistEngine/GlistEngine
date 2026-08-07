@@ -130,11 +130,19 @@ void gGUITextbox::set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseG
 	toplimit = top;
 	bottomlimit = bottom;
 	textfont = appmanager->getGUIManager()->getFont(gGUIManager::FONT_FREESANS);
+	lineheight = textfont->getStringHeight("ly");
 	cursoroffset = textfont->getStringWidth("a") * 0.2f;
 	boxw = w;
 	if(!ismultiline) {
 		boxh = 24;
 		totalh = h;
+		if (hdiff > 0) hdiff = boxh / 4;
+	} else {
+		boxh = lineheight + linetopmargin;
+		totalh = h;
+		hdiff = 0;
+		rowsnum = totalh / boxh;
+		if(rowsnum < 1) rowsnum = 1;
 	}
 	setTextAlignment(textalignment, boxw, initx);
 	if(!text.empty()) {
@@ -527,10 +535,10 @@ void gGUITextbox::draw() {
 	gColor oldcolor = *renderer->getColor();
 	if(isbackgroundenabled) {
 		renderer->setColor(foregroundcolor);
-		gDrawRectangle(left - firstx, top + hdiff - firsty, width, totalh, false);
+		gDrawRectangle(left, top + hdiff, width, totalh, false);
 	}
 	renderer->setColor(textbackgroundcolor);
-	gDrawRectangle(left - firstx, top + hdiff - firsty, width, totalh, true);
+	gDrawRectangle(left, top + hdiff, width, totalh, true);
 
 	if(selectionmode && !text.empty()) {
 		if(isfocused) renderer->setColor(255, 128, 0);
@@ -542,7 +550,13 @@ void gGUITextbox::draw() {
 			if(lastdrawnline > rowsnum) lastline = rowsnum;
 			else
 				lastline = lastdrawnline;
-			gDrawRectangle(left - firstx + initx, top + hdiff + linetopmargin / 2 - firsty + 1, boxw - 2 * initx + 2, (lastline + 1) * (lineheight + linetopmargin) + 4, true);
+			int rectY = top + hdiff + linetopmargin / 2 - firsty + 1;
+			int rectH = (lastline + 1) * (lineheight + linetopmargin) + 4;
+			if (!ismultiline) {
+				rectH = lineheight + linetopmargin + 2;
+				rectY = top + hdiff + (totalh - rectH) / 2 - firsty;
+			}
+			gDrawRectangle(left - firstx + initx, rectY, boxw - 2 * initx + 2, rectH, true);
 		} else if(ismultiline) {
 			int u1 = std::min(selectionposutf1, selectionposutf2);
 			int u2 = std::max(selectionposutf1, selectionposutf2);
@@ -558,13 +572,16 @@ void gGUITextbox::draw() {
 					int selEnd = std::min(u2, lEnd);
 
 					if(selStart <= selEnd && lStart <= (int) text.length()) {
+						int visible_i = i - (lastdrawnline - rowsnum) * rowsnumexceeded;
+						if (visible_i < 0 || visible_i >= rowsnum) continue;
+
 						int x1 = textfont->getStringWidth(text.substr(lStart, std::max(0, selStart - lStart)));
 						int x2 = textfont->getStringWidth(text.substr(lStart, std::max(0, selEnd - lStart)));
 						int boxW = x2 - x1;
 						if(selStart < selEnd && boxW <= 0) boxW = 6;
 
 						int rectX = left + initx + x1 - firstx;
-						int rectY = top + hdiff + (i + 1) * (lineheight + linetopmargin) - lineheight - firsty + 1;
+						int rectY = top + hdiff + visible_i * (lineheight + linetopmargin) + linetopmargin / 2 - firsty + 1;
 						gDrawRectangle(rectX, rectY, boxW + 2, lineheight + linetopmargin + 3, true);
 					}
 				}
@@ -578,8 +595,9 @@ void gGUITextbox::draw() {
 			int x1 = textfont->getStringWidth(text.substr(firstutf, std::max(0, selStart - firstutf)));
 			int x2 = textfont->getStringWidth(text.substr(firstutf, std::max(0, selEnd - firstutf)));
 			int rectX = left + initx + x1 - firstx;
-			int rectY = top + hdiff + lineheight / 6 - firsty;
-			gDrawRectangle(rectX, rectY, (x2 - x1) + 2, lineheight + linetopmargin + 4, true);
+			int rectH = lineheight + linetopmargin + 2;
+			int rectY = top + hdiff + (totalh - rectH) / 2 - firsty;
+			gDrawRectangle(rectX, rectY, (x2 - x1) + 2, rectH, true);
 		}
 	}
 	if(!colorset) textcolor = fontcolor;
@@ -605,15 +623,15 @@ void gGUITextbox::draw() {
 		for(int i = 0; i < rowsnum; i++) {
 			int line_idx = i + (lastdrawnline - rowsnum) * rowsnumexceeded;
 			if(line_idx < 0 || line_idx >= (int) lines.size()) continue;
-			textfont->drawText(lines[line_idx], left - textfont->getStringWidth(" ") / 2 - firstx + textalignmentamount - (textfont->getStringWidth(text) * ((float) textalignment / 2)), top + hdiff + (i + 1) * (lineheight + linetopmargin) - firsty);
+			textfont->drawText(lines[line_idx], left - textfont->getStringWidth(" ") / 2 - firstx + textalignmentamount - (textfont->getStringWidth(text) * ((float) textalignment / 2)), top + hdiff + i * (lineheight + linetopmargin) + lineheight + linetopmargin / 2 - firsty);
 		}
 	}
 
 	if(editmode && (cursorshowcounter <= cursorshowlimit || keystate)) {
 		int linebottom = 0;
-		if(currentline <= rowsnum && lastdrawnline <= rowsnum) linebottom = top + hdiff + currentline * (lineheight + linetopmargin) - firsty;
+		if(currentline <= rowsnum && lastdrawnline <= rowsnum) linebottom = top + hdiff + (currentline - 1) * (lineheight + linetopmargin) + lineheight + linetopmargin / 2 - firsty;
 		else
-			linebottom = top + hdiff + (rowsnum - (lastdrawnline - currentline)) * (lineheight + linetopmargin) - firsty;
+			linebottom = top + hdiff + (rowsnum - (lastdrawnline - currentline) - 1) * (lineheight + linetopmargin) + lineheight + linetopmargin / 2 - firsty;
 		gDrawLine(left + cursorposx - firstx + textalignmentamount - (textfont->getStringWidth(text) * ((float) textalignment / 2)), linebottom - lineheight,
 				  left + cursorposx - firstx + textalignmentamount - (textfont->getStringWidth(text) * ((float) textalignment / 2)), linebottom + lineheight * 2 / 3);
 	}
@@ -2030,12 +2048,12 @@ std::vector<int> gGUITextbox::calculateClickPositionMultiline(int x, int y) {
 
 	int selectedline = 1;
 	for(int i = 0; i < rowsnum; i++) {
-		if(y > top + hdiff + i * (lineheight + linetopmargin) && y < top + hdiff + (i + 1) * (lineheight + linetopmargin)) {
+		if(y > top + hdiff + i * (lineheight + linetopmargin) + linetopmargin / 2 && y < top + hdiff + (i + 1) * (lineheight + linetopmargin) + linetopmargin / 2) {
 			if(lastdrawnline > rowsnum) selectedline = lastdrawnline - rowsnum + i + 1;
 			else
 				selectedline = i + 1;
 			break;
-		} else if(y >= top + hdiff + (i + 1) * (lineheight + linetopmargin)) {
+		} else if(y >= top + hdiff + (i + 1) * (lineheight + linetopmargin) + linetopmargin / 2) {
 			selectedline = lastdrawnline;
 		}
 	}

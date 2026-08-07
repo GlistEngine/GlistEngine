@@ -82,11 +82,15 @@ public:
 	int getRangeStart();
 	int getRangeEnd();
 
+	void enableBackground(bool isEnabled);
+	bool isBackgroundEnabled();
+
 	void draw();
 
 	virtual void clear();
 
 protected:
+	bool isbackgroundenabled;
 	float axisx1, axisy1, axisx2, axisy2, axisxstart, axisystart;
 	float axisxw, axisyh;
 	float maxy, miny, maxx, minx;
