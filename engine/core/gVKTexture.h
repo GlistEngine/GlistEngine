@@ -37,6 +37,10 @@ struct gVKTexture {
 	// True for a texture created as an FBO attachment rather than uploaded from
 	// pixels. Those carry no mip chain and are cleared by the render pass.
 	bool isattachment = false;
+	// Set after the descriptor has been recorded by a draw. Replacing a texture
+	// that has never been sampled needs no device-wide wait (for example the
+	// duplicate upload performed while gTexture initially sets itself up).
+	bool sampled = false;
 	// What the current sampler was built with, so a filtering or wrapping change
 	// can be detected and only then rebuild it. The defaults match what gTexture
 	// starts from.

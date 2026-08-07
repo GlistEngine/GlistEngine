@@ -1070,7 +1070,9 @@ void gVKRenderEngine::texImage2D(GLenum target, GLint internalFormat, int width,
 		// Runtime glyph-atlas growth can replace a texture that an in-flight frame
 		// still samples. Drain the device before destroying that image and its
 		// descriptor resources. Atlas uploads are cache misses, not per-frame work.
-		if(*vkcontext->getDevice() != VK_NULL_HANDLE) vkDeviceWaitIdle(*vkcontext->getDevice());
+		if(it->second->sampled && *vkcontext->getDevice() != VK_NULL_HANDLE) {
+			vkDeviceWaitIdle(*vkcontext->getDevice());
+		}
 		gvkDestroyTexture(*vkcontext, it->second);
 		vktextures.erase(it);
 	}
@@ -2257,10 +2259,14 @@ void gVKRenderEngine::drawTexturedRect2D(GLuint textureId, GLuint maskTextureId,
 	if(vkcontext == nullptr) return;
 	auto it = vktextures.find(textureId);
 	if(it == vktextures.end() || it->second == nullptr) return;
+	it->second->sampled = true;
 	VkDescriptorSet maskset = VK_NULL_HANDLE;
 	if(maskTextureId != 0) {
 		auto maskit = vktextures.find(maskTextureId);
-		if(maskit != vktextures.end() && maskit->second != nullptr) maskset = maskit->second->descriptorset;
+		if(maskit != vktextures.end() && maskit->second != nullptr) {
+			maskit->second->sampled = true;
+			maskset = maskit->second->descriptorset;
+		}
 	}
 	gvkDrawTextured2D(*vkcontext, it->second->descriptorset, maskset, tint, mvp, uvOffset, uvScale);
 #endif
@@ -2272,6 +2278,7 @@ void gVKRenderEngine::drawTexturedTriangles2D(GLuint textureId, const glm::vec4&
 	if(vkcontext == nullptr) return;
 	auto it = vktextures.find(textureId);
 	if(it == vktextures.end() || it->second == nullptr) return;
+	it->second->sampled = true;
 	gvkDrawTexturedTriangles2D(*vkcontext, it->second->descriptorset, tint, mvp, xyuv, vertexCount);
 #endif
 }
