@@ -28,18 +28,54 @@
 
 #ifdef GVK_DESKTOP_GLFW
 
+#include <cstdint>
+#include <utility>
+#include <vector>
+
 /*
- * One device local buffer, either vertex or index data. size is the number of bytes
- * actually uploaded, which the draw path uses to sanity check a draw against the
- * data behind it.
+ * One buffer, either vertex or index data. size is the number of bytes actually
+ * uploaded, which the draw path uses to sanity check a draw against the data
+ * behind it.
+ *
+ * There are two shapes here, and which one a buffer takes is decided by how it is
+ * used rather than by anything the caller says:
+ *
+ *  - Uploaded once: a device local buffer filled through a staging copy. This is
+ *    the overwhelming majority - a mesh loads and is then drawn unchanged - and
+ *    device local is the right memory for data the GPU reads every frame.
+ *
+ *  - Uploaded again: the buffer is rebuilt as one host visible copy per frame in
+ *    flight, and every later upload is a plain memcpy into the copy belonging to
+ *    the frame being recorded. This is what a CPU-skinned mesh does; it rewrites
+ *    its vertices on every animation frame, and the staging path made that cost a
+ *    full pipeline stall each time.
+ *
+ * The per-frame copies are what makes writing safe without any stall: the frame
+ * loop waits on frame f's fence before recording frame f, so by the time the CPU
+ * writes slot f, every submission that read slot f has finished.
  */
 struct gVKMeshBuffer {
+	// The buffer a draw should bind. For a static buffer this is the only one; for
+	// a dynamic one gvkResolveMeshBuffer keeps it pointed at the current frame's
+	// slot, so every call site can go on reading this field.
 	VkBuffer buffer = VK_NULL_HANDLE;
 	VkDeviceMemory memory = VK_NULL_HANDLE;
 	VkDeviceSize size = 0;
 	// Which usage flag the buffer was created with. A GLuint name carries no type in
 	// OpenGL, the first upload decides it here.
 	bool isindex = false;
+
+	// Everything below is unused until a second upload promotes the buffer.
+	bool isdynamic = false;
+	VkBuffer slotbuffers[GVK_MAX_FRAMES_IN_FLIGHT] = {};
+	VkDeviceMemory slotmemories[GVK_MAX_FRAMES_IN_FLIGHT] = {};
+	void* slotmapped[GVK_MAX_FRAMES_IN_FLIGHT] = {};
+	// Which version of the data each slot currently holds, against the newest
+	// version in shadow. A frame that draws the mesh without a fresh upload finds
+	// its slot behind and refreshes it, so no frame ever draws stale vertices.
+	uint64_t slotversion[GVK_MAX_FRAMES_IN_FLIGHT] = {};
+	uint64_t version = 0;
+	std::vector<unsigned char> shadow;
 };
 
 /*
@@ -59,6 +95,24 @@ struct gVKMeshBuffer {
  */
 bool gvkUploadMeshBuffer(gVKContext& ctx, gVKMeshBuffer& buf, const void* data,
 		VkDeviceSize size, bool isIndex);
+
+/*
+ * The VkBuffer a draw recorded right now should bind, and the only supported way
+ * to get one: a dynamic buffer has a copy per frame in flight, and this picks the
+ * one belonging to the frame being recorded, refreshing it from the newest data
+ * first if that frame has not seen the latest upload.
+ *
+ * A static buffer is returned as it is. Returns VK_NULL_HANDLE if there is nothing
+ * to draw from, which callers already check for.
+ */
+VkBuffer gvkResolveMeshBuffer(gVKContext& ctx, gVKMeshBuffer& buf);
+
+/*
+ * Frees the device local buffers that promotions replaced. They are held rather
+ * than destroyed at promotion time because the frame being recorded may already
+ * reference them; call this once at shutdown, after the device is idle.
+ */
+void gvkDestroyRetiredMeshBuffers(gVKContext& ctx);
 
 void gvkDestroyMeshBuffer(gVKContext& ctx, gVKMeshBuffer& buf);
 

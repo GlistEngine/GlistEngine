@@ -2003,10 +2003,18 @@ void gVKRenderEngine::drawMesh3D(GLuint vertexArrayId, int vertexCount, int inde
 	auto arrayentry = vkvertexarrays.find(vertexArrayId);
 	if(arrayentry == vkvertexarrays.end()) return;
 
+	// Resolved rather than read straight off the struct: a mesh that rewrites its
+	// vertices every frame keeps one buffer per frame in flight, and this is what
+	// picks the one belonging to the frame being recorded. A mesh uploaded once
+	// hands back its single buffer and nothing else happens.
 	gVKMeshBuffer* vertices = getMeshBuffer(arrayentry->second.vertexbuffer);
-	if(vertices == nullptr || vertices->buffer == VK_NULL_HANDLE) return;
+	if(vertices == nullptr) return;
+	const VkBuffer vertexbuffer = gvkResolveMeshBuffer(*vkcontext, *vertices);
+	if(vertexbuffer == VK_NULL_HANDLE) return;
 	gVKMeshBuffer* indices = getMeshBuffer(arrayentry->second.indexbuffer);
-	const bool indexed = indices != nullptr && indices->buffer != VK_NULL_HANDLE && indexCount > 0;
+	const VkBuffer indexbuffer = indices != nullptr
+			? gvkResolveMeshBuffer(*vkcontext, *indices) : VK_NULL_HANDLE;
+	const bool indexed = indexbuffer != VK_NULL_HANDLE && indexCount > 0;
 
 	// The mesh's draw mode picks both the pipeline (triangle or line) and the
 	// topology set on the command buffer. Strips are native to Vulkan, so they are
@@ -2053,8 +2061,9 @@ void gVKRenderEngine::drawMesh3D(GLuint vertexArrayId, int vertexCount, int inde
 		VkBuffer shadowinstances = VK_NULL_HANDLE;
 		if(instanceCount > 1) {
 			gVKMeshBuffer* instances = getMeshBuffer(arrayentry->second.instancebuffer);
-			if(instances == nullptr || instances->buffer == VK_NULL_HANDLE) return;
-			shadowinstances = instances->buffer;
+			if(instances == nullptr) return;
+			shadowinstances = gvkResolveMeshBuffer(*vkcontext, *instances);
+			if(shadowinstances == VK_NULL_HANDLE) return;
 		} else {
 			if(!ensureIdentityInstanceBuffer()) return;
 			shadowinstances = identityinstancebuffer->buffer;
@@ -2083,8 +2092,8 @@ void gVKRenderEngine::drawMesh3D(GLuint vertexArrayId, int vertexCount, int inde
 		}
 
 		const VkIndexType shadowindextype = sizeof(gIndex) == 2 ? VK_INDEX_TYPE_UINT16 : VK_INDEX_TYPE_UINT32;
-		gvkDrawShadowCaster(*vkcontext, vertices->buffer,
-				indexed ? indices->buffer : VK_NULL_HANDLE,
+		gvkDrawShadowCaster(*vkcontext, vertexbuffer,
+				indexed ? indexbuffer : VK_NULL_HANDLE,
 				indexed ? indexCount : vertexCount, shadowindextype, shadowpush, cutoutset,
 				shadowinstances, instanceCount, topology);
 		return;
@@ -2103,12 +2112,9 @@ void gVKRenderEngine::drawMesh3D(GLuint vertexArrayId, int vertexCount, int inde
 	cullstate.frontface = cullingdirection == GL_CW
 			? VK_FRONT_FACE_COUNTER_CLOCKWISE : VK_FRONT_FACE_CLOCKWISE;
 
-	// renderColor is deliberately not applied to a 3D mesh, even though
-	// color_frag.glsl ends with "result * renderColor". Measured against the OpenGL
-	// backend, a mesh comes out as its material colour alone: setColor moves the 2D
-	// drawing colour and never reaches a mesh there. Multiplying it in here would
-	// tint every mesh by whatever colour the canvas last drew text in, which is
-	// exactly the mismatch this was found through.
+	// The material colours are filled in for the PBR branch below, which takes them
+	// as they are. The non-PBR path overwrites all three further down, where
+	// renderColor gets folded into them.
 	gVKMeshPush push{};
 	push.model = model;
 	push.ambient = surface.ambient;
@@ -2137,15 +2143,16 @@ void gVKRenderEngine::drawMesh3D(GLuint vertexArrayId, int vertexCount, int inde
 		VkBuffer pbrinstances = VK_NULL_HANDLE;
 		if(instanceCount > 1) {
 			gVKMeshBuffer* instances = getMeshBuffer(arrayentry->second.instancebuffer);
-			if(instances == nullptr || instances->buffer == VK_NULL_HANDLE) return;
-			pbrinstances = instances->buffer;
+			if(instances == nullptr) return;
+			pbrinstances = gvkResolveMeshBuffer(*vkcontext, *instances);
+			if(pbrinstances == VK_NULL_HANDLE) return;
 		} else {
 			if(!ensureIdentityInstanceBuffer()) return;
 			pbrinstances = identityinstancebuffer->buffer;
 		}
 
 		const VkIndexType pbrindextype = sizeof(gIndex) == 2 ? VK_INDEX_TYPE_UINT16 : VK_INDEX_TYPE_UINT32;
-		gvkDrawMesh3DPbr(*vkcontext, vertices->buffer, indexed ? indices->buffer : VK_NULL_HANDLE,
+		gvkDrawMesh3DPbr(*vkcontext, vertexbuffer, indexed ? indexbuffer : VK_NULL_HANDLE,
 				indexed ? indexCount : vertexCount, pbrindextype, pbrpush, materialset,
 				pbrshadowset,
 				pbrinstances, instanceCount, topology,
@@ -2183,6 +2190,25 @@ void gVKRenderEngine::drawMesh3D(GLuint vertexArrayId, int vertexCount, int inde
 			specularset != VK_NULL_HANDLE ? 1.0f : 0.0f,
 			normalset != VK_NULL_HANDLE ? 1.0f : 0.0f);
 
+	// renderColor is folded into the material here rather than read from the scene
+	// block, and that is what makes it per draw. The OpenGL shader multiplies its
+	// finished result by it, and gRenderer::setColor republishes it the moment it
+	// changes, so a canvas that recolours between two meshes - fading one enemy out
+	// while the next stays opaque - gets a different colour on each. A uniform block
+	// cannot express that: it is read when the commands execute, not when they are
+	// recorded, so every draw in the frame would see whichever value was written
+	// last.
+	//
+	// Folding it in is exact rather than an approximation: every term the shader
+	// sums is linear in these three colours, so scaling all three scales the result
+	// by the same factor. Where a colour comes from a texture instead, the matching
+	// push slot is unused by that branch, so it carries the colour on its own and
+	// the shader multiplies the sampled value by it.
+	const glm::vec4 tint = rendercolor != nullptr ? rendercolor->asVec4() : glm::vec4(1.0f);
+	push.ambient = diffuseset != VK_NULL_HANDLE ? tint : surface.ambient * tint;
+	push.diffuse = diffuseset != VK_NULL_HANDLE ? tint : surface.diffuse * tint;
+	push.specular = specularset != VK_NULL_HANDLE ? tint : surface.specular * tint;
+
 	// Both bindings must point at a real descriptor even when the flags say not to
 	// sample them, so the unused ones fall back to the 1x1 white texture.
 	if(diffuseset == VK_NULL_HANDLE || specularset == VK_NULL_HANDLE ||
@@ -2204,8 +2230,9 @@ void gVKRenderEngine::drawMesh3D(GLuint vertexArrayId, int vertexCount, int inde
 	VkBuffer instancebuffer = VK_NULL_HANDLE;
 	if(instanceCount > 1) {
 		gVKMeshBuffer* instances = getMeshBuffer(arrayentry->second.instancebuffer);
-		if(instances == nullptr || instances->buffer == VK_NULL_HANDLE) return;
-		instancebuffer = instances->buffer;
+		if(instances == nullptr) return;
+		instancebuffer = gvkResolveMeshBuffer(*vkcontext, *instances);
+		if(instancebuffer == VK_NULL_HANDLE) return;
 	} else {
 		if(!ensureIdentityInstanceBuffer()) return;
 		instancebuffer = identityinstancebuffer->buffer;
@@ -2215,7 +2242,7 @@ void gVKRenderEngine::drawMesh3D(GLuint vertexArrayId, int vertexCount, int inde
 	// 32 bit everywhere else.
 	const VkIndexType indextype = sizeof(gIndex) == 2 ? VK_INDEX_TYPE_UINT16 : VK_INDEX_TYPE_UINT32;
 
-	gvkDrawMesh3D(*vkcontext, vertices->buffer, indexed ? indices->buffer : VK_NULL_HANDLE,
+	gvkDrawMesh3D(*vkcontext, vertexbuffer, indexed ? indexbuffer : VK_NULL_HANDLE,
 			indexed ? indexCount : vertexCount, indextype, push, diffuseset, specularset, normalset,
 			shadowset,
 			instancebuffer, instanceCount,
@@ -2420,6 +2447,19 @@ void gVKRenderEngine::endShadowPass() {
 #ifdef GVK_DESKTOP_GLFW
 	if(vkcontext == nullptr) return;
 	gvkEndShadowPass(*vkcontext);
+	// The scene block is gathered again for the pass that follows, rather than once
+	// for the whole frame. It carries renderColor, which the OpenGL shader applies
+	// to every mesh and which gRenderer::setColor republishes on the spot - so on
+	// that backend the screen pass sees whatever colour was set during the shadow
+	// pass, including one left behind by a canvas that draws text. Writing this
+	// once per frame meant Vulkan kept the value from before that, and the two
+	// backends shaded the same scene through different colours.
+	//
+	// Safe to rewrite here even though the shadow pass has already recorded its
+	// draws: a uniform buffer is read when the commands execute, not when they are
+	// recorded, but the depth-only pipeline binds no scene set at all - its only
+	// descriptor is the caster's diffuse map - so nothing recorded so far reads it.
+	sceneuniformswritten = false;
 #endif
 }
 
@@ -2477,6 +2517,9 @@ void gVKRenderEngine::destroyAllMeshBuffers() {
 	// what tells you the buffer path ran at all, and how much it was holding.
 	gLogi("gVKRenderEngine") << "Mesh buffers released at shutdown: " << live
 			<< " (" << bytes << " bytes), across " << vkvertexarrays.size() << " vertex arrays";
+	// The device local buffers that promotions replaced, held until now because the
+	// frame being recorded at the time may still have referenced them.
+	gvkDestroyRetiredMeshBuffers(*vkcontext);
 	if(identityinstancebuffer != nullptr) {
 		gvkDestroyMeshBuffer(*vkcontext, *identityinstancebuffer);
 		delete identityinstancebuffer;

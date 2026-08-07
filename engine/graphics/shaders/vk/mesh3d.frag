@@ -242,12 +242,19 @@ void main() {
     // A diffuse map replaces both the ambient and the diffuse colour, exactly as in
     // color_frag.glsl - the map is treated as the surface's colour, not as a tint on
     // top of the material.
+    //
+    // On top of that, the push colours arrive with renderColor already folded in;
+    // see drawMesh3D for why that has to happen per draw rather than through the
+    // scene block. Where the colour comes from a texture the push slot carries
+    // nothing but renderColor and scales the sample, and where it does not the slot
+    // is the material colour times renderColor and is used as it is. Either way
+    // what reaches the lighting below is the surface colour times renderColor.
     vec4 matAmbient;
     vec4 matDiffuse;
     if (pc.misc.y > 0.0) {
         vec4 sampled = texture(diffusemap, vTexCoords);
-        matAmbient = sampled;
-        matDiffuse = sampled;
+        matAmbient = sampled * pc.ambient;
+        matDiffuse = sampled * pc.diffuse;
         // Cutout transparency: the OpenGL path discards these fragments rather than
         // blending them, which is what keeps foliage and fences from writing depth
         // over what is behind them.
@@ -257,7 +264,7 @@ void main() {
         matDiffuse = pc.diffuse;
     }
 
-    vec4 matSpecular = pc.misc.z > 0.0 ? texture(specularmap, vTexCoords) : pc.specular;
+    vec4 matSpecular = pc.misc.z > 0.0 ? texture(specularmap, vTexCoords) * pc.specular : pc.specular;
 
     vec4 result = vec4(0.0);
     bool haslight = false;
@@ -286,11 +293,12 @@ void main() {
 
     // color_frag.glsl ends with "result * renderColor * vec4(incolor, 1.0)", so a
     // mesh on the OpenGL path is tinted by whatever colour setColor was last given -
-    // text included. This file used to leave the factor out on the belief that it
-    // never reached a mesh; measured, it does, and its absence was the entire colour
-    // difference between the two backends.
+    // text included. renderColor is not applied here because it is already in the
+    // three material colours above, folded in per draw; the scene block's copy is
+    // one value for the whole frame and cannot follow a colour that changes between
+    // two meshes.
     //
-    // Only here, not in mesh3dpbr.frag: pbr_frag.glsl does not apply it either, so
+    // Only mesh3d, not mesh3dpbr.frag: pbr_frag.glsl does not apply it either, so
     // the two backends agree on PBR meshes by both leaving it alone.
-    outColor = result * scene.rendercolor * vec4(vColor, 1.0);
+    outColor = result * vec4(vColor, 1.0);
 }
