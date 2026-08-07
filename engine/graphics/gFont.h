@@ -108,6 +108,14 @@ public:
 	void setTextRenderMode(TextRenderMode renderMode);
 	TextRenderMode getTextRenderMode() const;
 
+	/**
+	 * Limits the number of 1024x1024 atlas pages owned by this font.
+	 * Glyphs that do not fit within the budget use the legacy glyph path.
+	 */
+	void setAtlasPageLimit(int maxPageCount);
+	int getAtlasPageLimit() const;
+	int getAtlasPageCount() const;
+
 
 	/**
 	 * @brief Draws the given text vertically flipped at the specified position.
@@ -235,6 +243,7 @@ private:
 		float dxleft = 0.0f, dxright = 0.0f, dytop = 0.0f, dybottom = 0.0f;
 		float atlasu0 = 0.0f, atlasv0 = 0.0f, atlasu1 = 0.0f, atlasv1 = 0.0f;
 		int atlaspage = -1;
+		bool atlasattempted = false;
 		bool inatlas = false;
 	};
 
@@ -252,6 +261,7 @@ private:
 	std::vector<AtlasPage> atlaspages;
 	static constexpr int atlaswidth = 1024;
 	static constexpr int atlasheight = 1024;
+	int atlasmaxpages = 2;
 	bool atlasbuilding = false;
 	std::vector<std::vector<float>> batchvertices;
 	TextRenderMode textrendermode = TextRenderMode::GLYPH;
