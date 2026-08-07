@@ -304,7 +304,7 @@ var classgRenderer =
     [ "unbindSkyTexture", "classgRenderer.html#a8d27d3a0f72c15bb7fba50d9559b39e1", null ],
     [ "unbindTexture", "classgRenderer.html#a2525803d49c36405c2184663f3f6e485", null ],
     [ "unbindVAO", "classgRenderer.html#ac06b366f419f103cef7066e18d02e8ba", null ],
-    [ "updateLights", "classgRenderer.html#af52cd93978e1bbe6f89f1d3a6d74f3c6", null ],
+    [ "updateLights", "classgRenderer.html#a00e1a2c68a48ea80409231ede91a40d6", null ],
     [ "updatePackUnpackAlignment", "classgRenderer.html#ac76e277b9f44da9325994ae8972b30c0", null ],
     [ "updateScene", "classgRenderer.html#a3324e5981d632c55cfb192aeac453a5a", null ],
     [ "useShader", "classgRenderer.html#adbf9bacb21ed3896783981469a82e34c", null ],

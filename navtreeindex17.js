@@ -1,5 +1,6 @@
 var NAVTREEINDEX17 =
 {
+"gGUIControl_8h_source.html":[2,0,0,7,11],
 "gGUIDate_8h.html":[2,0,0,7,12],
 "gGUIDate_8h_source.html":[2,0,0,7,12],
 "gGUIDialogue_8h.html":[2,0,0,7,13],
@@ -248,6 +249,5 @@ var NAVTREEINDEX17 =
 "gKeyCode_8h.html#aed0d43a06150282cb2ad7c2c42adffda":[2,0,0,8,5,17],
 "gKeyCode_8h.html#aee5b6a17764811c4fb1b225d487bec36":[2,0,0,8,5,48],
 "gKeyCode_8h.html#aee60424efc36cd974cfa1891d5e68975":[2,0,0,8,5,61],
-"gKeyCode_8h.html#aef2432124ae436a24271c26f8ad74dac":[2,0,0,8,5,95],
-"gKeyCode_8h.html#af0822a04e5b04b635e42a24b1fc22142":[2,0,0,8,5,46]
+"gKeyCode_8h.html#aef2432124ae436a24271c26f8ad74dac":[2,0,0,8,5,95]
 };

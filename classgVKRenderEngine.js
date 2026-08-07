@@ -123,5 +123,6 @@ var classgVKRenderEngine =
     [ "unbindSkyTexture", "classgVKRenderEngine.html#a515279797fda5bbddc5214f8cae6fac8", null ],
     [ "unbindTexture", "classgVKRenderEngine.html#a6e1c7f1b6670ed4d5bc7994f509d2153", null ],
     [ "unbindVAO", "classgVKRenderEngine.html#ab56ec5ae26cc89c7fc8a0d0ee202c868", null ],
+    [ "updateLights", "classgVKRenderEngine.html#a01de61e2a5152955877139b9d779c071", null ],
     [ "useShader", "classgVKRenderEngine.html#a99bd099e0db63d5a8ba01408ed96eee2", null ]
 ];
