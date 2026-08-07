@@ -17,6 +17,7 @@ var annotated_dup =
     [ "gBasePostProcess", "classgBasePostProcess.html", "classgBasePostProcess" ],
     [ "gBaseSound", "classgBaseSound.html", "classgBaseSound" ],
     [ "gBaseWindow", "classgBaseWindow.html", "classgBaseWindow" ],
+    [ "gBezier", "classgBezier.html", "classgBezier" ],
     [ "gBloom", "classgBloom.html", "classgBloom" ],
     [ "gBloomPyramid", "classgBloomPyramid.html", "classgBloomPyramid" ],
     [ "gBlur", "classgBlur.html", "classgBlur" ],

@@ -3,6 +3,7 @@ var dir_8aa109d331f3e3b3014e32565285b6b8 =
     [ "particles", "dir_1f739eb951a415097a64a8d5c18967fb.html", "dir_1f739eb951a415097a64a8d5c18967fb" ],
     [ "posteffects", "dir_abe4b6e0164058ef65dcfe639e678528.html", "dir_abe4b6e0164058ef65dcfe639e678528" ],
     [ "primitives", "dir_95f98002015846fd36af7f4632d0a4f4.html", "dir_95f98002015846fd36af7f4632d0a4f4" ],
+    [ "gBezier.h", "gBezier_8h.html", "gBezier_8h" ],
     [ "gBoundingBox.h", "gBoundingBox_8h.html", "gBoundingBox_8h" ],
     [ "gCamera.h", "gCamera_8h.html", "gCamera_8h" ],
     [ "gCameraController.h", "gCameraController_8h.html", "gCameraController_8h" ],
