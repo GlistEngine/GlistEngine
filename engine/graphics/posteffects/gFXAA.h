@@ -42,15 +42,15 @@ public:
 	gFXAA(float subpixelblend = 0.75f, float edgethresholdmin = 0.0312f, float edgethresholdmax = 0.125f);
 	virtual ~gFXAA();
 
-	void use();
+	void use() override;
 
 	void setSubpixelBlend(float value);
 	void setEdgeThresholdMin(float value);
 	void setEdgeThresholdMax(float value);
 
 protected:
-	const std::string getVertSrc();
-	const std::string getFragSrc();
+	const std::string getVertSrc() override;
+	const std::string getFragSrc() override;
 	void render(gFbo& src, gFbo& dst) override;
 
 private:
