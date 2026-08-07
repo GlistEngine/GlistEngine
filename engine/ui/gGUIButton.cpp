@@ -29,6 +29,7 @@ gGUIButton::gGUIButton() {
 	disabledbcolor = *disabledbuttoncolor;
 	fcolor = *buttonfontcolor;
 	pressedfcolor = *pressedbuttonfontcolor;
+	hoverfcolor = *buttonfontcolor;
 	disabledfcolor = *disabledbuttonfontcolor;
 	fillbackground = true;
 	contentcentered = false;
@@ -103,6 +104,7 @@ void gGUIButton::draw() {
 	    if(isdisabled) renderer->setColor(&disabledfcolor);
 	    else {
 	        if(ispressed) renderer->setColor(&pressedfcolor);
+	        else if(ishover) renderer->setColor(&hoverfcolor);
 	        else renderer->setColor(&fcolor);
 	    }
 
@@ -210,6 +212,10 @@ void gGUIButton::setPressedButtonFontColor(gColor color) {
 	pressedfcolor = color;
 }
 
+void gGUIButton::setHoverButtonFontColor(gColor color) {
+	hoverfcolor = color;
+}
+
 void gGUIButton::setDisabledButtonFontColor(gColor color) {
 	disabledfcolor = color;
 }
@@ -236,6 +242,10 @@ gColor* gGUIButton::getButtonFontColor() {
 
 gColor* gGUIButton::getPressedButtonFontColor() {
 	return &pressedfcolor;
+}
+
+gColor* gGUIButton::getHoverButtonFontColor() {
+	return &hoverfcolor;
 }
 
 gColor* gGUIButton::getDisabledButtonFontColor() {
