@@ -371,6 +371,11 @@ struct gVKContext {
 	// The scene descriptor set of the frame being recorded: camera matrices and
 	// lights. VK_NULL_HANDLE when the 3D path has no uniform block.
 	VkDescriptorSet getCurrentSceneDescriptorSet() const { return sceneuniformsets[currentframe]; }
+	// Which of the frames in flight is being recorded. Anything the CPU rewrites
+	// while the GPU may still be reading the previous frame needs one copy per
+	// index and has to write the one this returns: the frame loop waits on that
+	// index's fence before recording, which is what makes the copy free again.
+	uint32_t getCurrentFrame() const { return currentframe; }
 	// The layout of the image pipeline's descriptor set 0, which is where a
 	// texture's combined image sampler goes.
 	VkDescriptorSetLayout getImageDescriptorSetLayout() {
