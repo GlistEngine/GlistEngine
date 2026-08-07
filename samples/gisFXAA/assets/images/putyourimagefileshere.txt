@@ -1,1 +1,0 @@
-The developers can put their image files under assets/images. gImage.loadImage(filename) function checks this folder to open the image file.
