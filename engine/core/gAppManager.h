@@ -212,6 +212,8 @@ public:
 	 * @return Is current window focused
 	 */
 	bool isWindowFocused();
+	void showKeyboard();
+	void hideKeyboard();
 
 	/**
 	 * Publishes the event to canvas, app and gui manager. Returns if true the event was handled by any of them.

@@ -309,6 +309,10 @@ void gBaseGUIObject::setCursorOn(bool isOn) {
 	iscursoron = isOn;
 }
 
+void gBaseGUIObject::unfocus() {
+	isfocused = false;
+}
+
 void gBaseGUIObject::cleanupResources() {
 	res.cleanup();
 }
