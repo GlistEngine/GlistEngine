@@ -1,5 +1,6 @@
 <map id="gGUITextbox" name="gGUITextbox">
 <area shape="rect" id="Node000001" title=" " alt="" coords="217,805,322,831"/>
+<area shape="poly" id="edge21_Node000001_Node000001" title=" " alt="" coords="337,810,349,818,340,825,322,828,322,822,338,820,343,818,334,815"/>
 <area shape="rect" id="Node000002" href="$classgGUIControl.html" title=" " alt="" coords="219,731,320,756"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="272,770,272,805,267,805,267,770"/>
 <area shape="rect" id="Node000003" href="$classgBaseGUIObject.html" title=" " alt="" coords="368,654,496,679"/>

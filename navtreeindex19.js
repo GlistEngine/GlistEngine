@@ -1,5 +1,17 @@
 var NAVTREEINDEX19 =
 {
+"gUtils_8h.html#ad69032ffae2da4a7748563f1a1cd42c8":[2,0,0,8,9,24],
+"gUtils_8h.html#adefdf209d09b50f0f30397bb98d0d563":[2,0,0,8,9,62],
+"gUtils_8h.html#ae6513f2591dc2716494570e4d98802b9":[2,0,0,8,9,17],
+"gUtils_8h.html#aea9355233c86690f6f7b0d0d7dcbfbba":[2,0,0,8,9,54],
+"gUtils_8h.html#aeaca45855ab7131fc82243d8a590aa85":[2,0,0,8,9,27],
+"gUtils_8h.html#aebd1c53c1078f8a2aa439bab7b4d6907":[2,0,0,8,9,42],
+"gUtils_8h.html#aed9621ab2aab7745c939d975e3c320b2":[2,0,0,8,9,67],
+"gUtils_8h.html#af0abe3d6efdea731ce4c2b22ae166fe2":[2,0,0,8,9,21],
+"gUtils_8h.html#af152d32ffeb880314b9a77aa5de0f96b":[2,0,0,8,9,36],
+"gUtils_8h.html#af2e14cb61be4a0c76af6dbdc567a9023":[2,0,0,8,9,20],
+"gUtils_8h.html#af4679076f1cada4ce4b5022171ca1050":[2,0,0,8,9,68],
+"gUtils_8h.html#af8b249f1e5a2645c743db23785c95c2a":[2,0,0,8,9,43],
 "gUtils_8h_source.html":[2,0,0,8,9],
 "gVKBuffer_8h.html":[2,0,0,2,15],
 "gVKBuffer_8h.html#a57217d9209c7e42d47ef2fcaa4453b25":[2,0,0,2,15,0],
@@ -237,17 +249,5 @@ var NAVTREEINDEX19 =
 "structgRenderer_1_1gSceneData.html#a89f96a2a3d34fdc9e05c1f4b0720204e":[1,0,150,1,3],
 "structgRenderer_1_1gSceneData.html#aa301bd9a32069c1189021b592d8c2b1d":[1,0,150,1,4],
 "structgRenderer_1_1gSceneData.html#aad361730c6a440e3b644bf0bb45c264c":[1,0,150,1,2],
-"structgRenderer_1_1gSceneFogData.html":[1,0,150,2],
-"structgRenderer_1_1gSceneFogData.html#a430bc52be9ae45e5c6161086fbdedd63":[1,0,150,2,5],
-"structgRenderer_1_1gSceneFogData.html#a52fbca828c7a89b94457ba5f0c8cb461":[1,0,150,2,4],
-"structgRenderer_1_1gSceneFogData.html#a555b19f83c6c0e00463b12da0f4d2cea":[1,0,150,2,1],
-"structgRenderer_1_1gSceneFogData.html#a6e3e7ba8c2a35dd85b44c3dbbef51d16":[1,0,150,2,0],
-"structgRenderer_1_1gSceneFogData.html#a88990ff245ff5283fb0df9f4a4962f5d":[1,0,150,2,3],
-"structgRenderer_1_1gSceneFogData.html#aa7101cf0df447fa7f44729163cf6fb87":[1,0,150,2,2],
-"structgRenderer_1_1gSceneLightData.html":[1,0,150,3],
-"structgRenderer_1_1gSceneLightData.html#a085ac9634fd9856eea279d671e0a10bb":[1,0,150,3,10],
-"structgRenderer_1_1gSceneLightData.html#a33134a037b7b3fc818f85fb96cc761df":[1,0,150,3,9],
-"structgRenderer_1_1gSceneLightData.html#a665ad65fd67620f1447bc82ceee28a32":[1,0,150,3,8],
-"structgRenderer_1_1gSceneLightData.html#a70a6daffbb49dd8e71938c072a2a4849":[1,0,150,3,6],
-"structgRenderer_1_1gSceneLightData.html#a7b4fb63d9e039936022413f0e72a3201":[1,0,150,3,7]
+"structgRenderer_1_1gSceneFogData.html":[1,0,150,2]
 };

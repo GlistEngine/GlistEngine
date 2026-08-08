@@ -21,6 +21,7 @@ var classgGUIContainer =
     [ "setContentSize", "classgGUIContainer.html#a661ed1134714cc6fd732c45652819688", null ],
     [ "setCursorOn", "classgGUIContainer.html#aae20ebe5161ef015abc36ba5b2b70f30", null ],
     [ "setSizer", "classgGUIContainer.html#a652d1e210e07e0567345d9bf413a6f9a", null ],
+    [ "unfocus", "classgGUIContainer.html#a5f03a57d8361830fb27288a56c20f60e", null ],
     [ "update", "classgGUIContainer.html#ae93b4ad8b48a1ecd1a3f0515abb25db7", null ],
     [ "windowResized", "classgGUIContainer.html#acd5a12dea7ed51fbb6d24b0117a08fdc", null ],
     [ "contentdragscrollx", "classgGUIContainer.html#ab9d457b654a32b11fe242ddea1d56566", null ],

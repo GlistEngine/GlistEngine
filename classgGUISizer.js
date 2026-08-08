@@ -40,6 +40,7 @@ var classgGUISizer =
     [ "setLineProportions", "classgGUISizer.html#a81a4769ca9b69780a7feec9139591b3e", null ],
     [ "setSize", "classgGUISizer.html#ae0b1a1c77bf9411470937562c5c59344", null ],
     [ "setSlotPadding", "classgGUISizer.html#a0dc33ec3ac73fd58274bfdeb07718f8a", null ],
+    [ "unfocus", "classgGUISizer.html#a6cf724c70271760e08d0462606057bf3", null ],
     [ "update", "classgGUISizer.html#a5f077ff3efbf401fa7dae9fab0fbbe09", null ],
     [ "windowResized", "classgGUISizer.html#a8f99b2a44be6584f58c85d0118992806", null ]
 ];

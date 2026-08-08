@@ -1,5 +1,17 @@
 var NAVTREEINDEX20 =
 {
+"structgRenderer_1_1gSceneFogData.html#a430bc52be9ae45e5c6161086fbdedd63":[1,0,150,2,5],
+"structgRenderer_1_1gSceneFogData.html#a52fbca828c7a89b94457ba5f0c8cb461":[1,0,150,2,4],
+"structgRenderer_1_1gSceneFogData.html#a555b19f83c6c0e00463b12da0f4d2cea":[1,0,150,2,1],
+"structgRenderer_1_1gSceneFogData.html#a6e3e7ba8c2a35dd85b44c3dbbef51d16":[1,0,150,2,0],
+"structgRenderer_1_1gSceneFogData.html#a88990ff245ff5283fb0df9f4a4962f5d":[1,0,150,2,3],
+"structgRenderer_1_1gSceneFogData.html#aa7101cf0df447fa7f44729163cf6fb87":[1,0,150,2,2],
+"structgRenderer_1_1gSceneLightData.html":[1,0,150,3],
+"structgRenderer_1_1gSceneLightData.html#a085ac9634fd9856eea279d671e0a10bb":[1,0,150,3,10],
+"structgRenderer_1_1gSceneLightData.html#a33134a037b7b3fc818f85fb96cc761df":[1,0,150,3,9],
+"structgRenderer_1_1gSceneLightData.html#a665ad65fd67620f1447bc82ceee28a32":[1,0,150,3,8],
+"structgRenderer_1_1gSceneLightData.html#a70a6daffbb49dd8e71938c072a2a4849":[1,0,150,3,6],
+"structgRenderer_1_1gSceneLightData.html#a7b4fb63d9e039936022413f0e72a3201":[1,0,150,3,7],
 "structgRenderer_1_1gSceneLightData.html#a810e47fb54610d2357db7f88c0db1497":[1,0,150,3,1],
 "structgRenderer_1_1gSceneLightData.html#a8ce6a13d339bf01998a1ed76e54ce658":[1,0,150,3,5],
 "structgRenderer_1_1gSceneLightData.html#ab0bf1d2db72c1241e48a1540132d6141":[1,0,150,3,0],

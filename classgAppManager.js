@@ -27,6 +27,7 @@ var classgAppManager =
     [ "getTargetFramerate", "classgAppManager.html#a78191f2beaa4d835239927f0ea2a8a53", null ],
     [ "getWindow", "classgAppManager.html#ae5203036754ef8843a82972fae5a20d9", null ],
     [ "getWindowMode", "classgAppManager.html#aafa998e13fbeee554d72e867fd58d3f7", null ],
+    [ "hideKeyboard", "classgAppManager.html#ab24c64af083061c2d178575551f64391", null ],
     [ "initialize", "classgAppManager.html#a7dbf3c16fb2a6847df489cad291804c4", null ],
     [ "iosLoop", "classgAppManager.html#a75bc57cbce5ac601329df9bb6d5258b5", null ],
     [ "isGamepadButtonPressed", "classgAppManager.html#af2db5faa194ca30a7843621971448ef5", null ],
@@ -52,6 +53,7 @@ var classgAppManager =
     [ "setWindowSize", "classgAppManager.html#a3b8934e9e1d0bc2e6ad9ab3ef7f708ad", null ],
     [ "setWindowSizeLimits", "classgAppManager.html#a39e24499be52efca66b2afc9a650b0e1", null ],
     [ "setWindowTitle", "classgAppManager.html#ae702a908d8c220a52a2fae601baebf79", null ],
+    [ "showKeyboard", "classgAppManager.html#afc8b1718e2d4785c15e76a8060728432", null ],
     [ "stop", "classgAppManager.html#a1b0aa3043c4b905a2735e811e36a71f3", null ],
     [ "submitToMainThread", "classgAppManager.html#a7ec1b448edd49af1edf578955bf11d26", null ]
 ];

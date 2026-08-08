@@ -1,5 +1,8 @@
 var NAVTREEINDEX2 =
 {
+"classgCamera.html#a46d876d4226320424f31637ca8e28408":[1,0,23,7],
+"classgCamera.html#a485c221a3c10309f3543b3670953c382":[1,0,23,14],
+"classgCamera.html#a4aa68e4581c4b252ef71d0c025feded6":[1,0,23,55],
 "classgCamera.html#a4dfe1cbb945510392c891e0f08f2c11d":[1,0,23,56],
 "classgCamera.html#a5213ea7bf646407533c9731543616787":[1,0,23,20],
 "classgCamera.html#a5264e8d43ad04e6a0394f23a126a2ab8":[1,0,23,47],
@@ -246,8 +249,5 @@ var NAVTREEINDEX2 =
 "classgFile.html#ae80ada36638daaeeae86c35dd547afe1":[1,0,45,20],
 "classgFile.html#af6d677ffaa7209df3ef184e6eb3edb9c":[1,0,45,16],
 "classgFireParticles.html":[1,0,46],
-"classgFireParticles.html#a0c5510bdd86373c1073b75d1ea4b86ec":[1,0,46,4],
-"classgFireParticles.html#a7bcf4de2972f604c8fc86d841f8b7467":[1,0,46,2],
-"classgFireParticles.html#a9c3b22bea0704e3c0f9651fa46c0329d":[1,0,46,0],
-"classgFireParticles.html#ad75dd158215e3c0f6746f8540ee73020":[1,0,46,3]
+"classgFireParticles.html#a0c5510bdd86373c1073b75d1ea4b86ec":[1,0,46,4]
 };
