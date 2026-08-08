@@ -36,6 +36,7 @@ public:
 
 	void update();
 	void draw();
+	void unfocus() override;
 
 	void enableBorders(bool isEnabled);
 	void enableResizing(bool isEnabled);

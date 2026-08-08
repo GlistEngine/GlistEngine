@@ -70,7 +70,7 @@ gColor* gGUIText::getTextColor() {
 }
 
 void gGUIText::draw() {
-    gColor* oldcolor = renderer->getColor();
+    gColor oldcolor = *renderer->getColor();
     if(isdisabled) {
 		renderer->setColor(disabledbuttonfontcolor);
 	} else {

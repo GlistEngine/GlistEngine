@@ -55,7 +55,7 @@ void gGUIToolbarButton::setImage(int iconId) {
 }
 
 void gGUIToolbarButton::draw() {
-	gColor* oldcolor = renderer->getColor();
+	gColor oldcolor = *renderer->getColor();
 	if(fillbackground) {
 		if(isdisabled) {
 			renderer->setColor(&disabledbcolor);

@@ -85,7 +85,7 @@ void gGUIButton::update() {
 
 void gGUIButton::draw() {
 //	gLogi("gGUIButton") << "draw, w:" << width;
-	gColor* oldcolor = renderer->getColor();
+	gColor oldcolor = *renderer->getColor();
 	const int drawleft = getButtonDrawLeft();
 	const int drawtop = getButtonDrawTop();
 
@@ -116,7 +116,6 @@ void gGUIButton::draw() {
 }
 
 void gGUIButton::mousePressed(int x, int y, int button) {
-//	gLogi("Button") << "pressed, id:" << id;
 	if(isdisabled) return;
 	const int drawleft = getButtonDrawLeft();
 	const int drawtop = getButtonDrawTop();
@@ -133,7 +132,6 @@ void gGUIButton::mousePressed(int x, int y, int button) {
 }
 
 void gGUIButton::mouseReleased(int x, int y, int button) {
-//	gLogi("Button") << "released, id:" << id;
 	if(isdisabled) return;
 	const int drawleft = getButtonDrawLeft();
 	const int drawtop = getButtonDrawTop();

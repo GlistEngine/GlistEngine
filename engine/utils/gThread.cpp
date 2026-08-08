@@ -88,11 +88,7 @@ void gThread::detach() {
 }
 
 void gThread::sleep(std::chrono::duration<double, std::milli> milliseconds) {
-	starttime = std::chrono::high_resolution_clock::now();
-	while(true) {
-		timediff = std::chrono::high_resolution_clock::now() - starttime;
-		if(timediff >= milliseconds) break;
-	}
+	std::this_thread::sleep_for(milliseconds);
 }
 
 void gThread::sleep(double milliseconds) {

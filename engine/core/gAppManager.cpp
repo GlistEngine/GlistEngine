@@ -26,6 +26,7 @@
 #include "gAndroidWindow.h"
 #include "gAndroidCanvas.h"
 #include "gAndroidApp.h"
+#include "gAndroidUtil.h"
 #elif TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
 #   include "gIOSWindow.h"
 #   include "gIOSCanvas.h"
@@ -916,7 +917,11 @@ bool gAppManager::onTouchEvent(gTouchEvent& event) {
 	// only converts the platform event into the existing GUI mouse contract; it
 	// deliberately carries no page-scroll state or gesture policy.
 	if(isguiapp && guimanager && guimanager->isframeset && event.getInputCount() > 0) {
-		const int inputindex = event.getActionIndex();
+		int inputindex = event.getActionIndex();
+		const ActionType action = event.getAction();
+		if (action == ACTIONTYPE_MOVE) {
+			inputindex = 0;
+		}
 		if(inputindex >= 0 && inputindex < event.getInputCount()) {
 			TouchInput& input = event.getInputs()[inputindex];
 			int x = input.x;
@@ -925,9 +930,7 @@ bool gAppManager::onTouchEvent(gTouchEvent& event) {
 				x = gRenderer::scaleX(x);
 				y = gRenderer::scaleY(y);
 			}
-			const ActionType action = event.getAction();
-			submitToMainThread([this, x, y, action]() {
-				if(!guimanager || !guimanager->isframeset) return;
+			if(guimanager && guimanager->isframeset) {
 				if(action == ACTIONTYPE_POINTER_DOWN || action == ACTIONTYPE_DOWN) {
 					guimanager->mouseMoved(x, y);
 					guimanager->mousePressed(x, y, 0);
@@ -937,7 +940,7 @@ bool gAppManager::onTouchEvent(gTouchEvent& event) {
 						|| action == ACTIONTYPE_CANCEL || action == ACTIONTYPE_OUTSIDE) {
 					guimanager->mouseReleased(x, y, 0);
 				}
-			});
+			}
 			return false;
 		}
 	}
@@ -1008,15 +1011,22 @@ void gAppManager::submitToMainThread(std::function<void()> fn) {
 
 void gAppManager::executeQueue() {
 	G_PROFILE_ZONE_SCOPED_N("gAppManager::executeQueue()");
-    std::unique_lock<std::mutex> lock(mainthreadqueuemutex);
-    for (auto& func : mainthreadqueue) {
-        func();
-    }
-    mainthreadqueue.clear();
+	std::vector<std::function<void()>> localqueue;
+	{
+		std::unique_lock<std::mutex> lock(mainthreadqueuemutex);
+		localqueue = std::move(mainthreadqueue);
+		mainthreadqueue.clear();
+	}
+	for (auto& func : localqueue) {
+		func();
+	}
 }
 
 void gAppManager::preciseSleep(double seconds) {
 	G_PROFILE_ZONE_SCOPED_N("gAppManager::preciseSleep()");
+#if defined(ANDROID) || defined(IOS)
+	// No-op on mobile. eglSwapBuffers handles vsync throttling natively.
+#else
     double estimate = 5e-3;
     double mean = 5e-3;
     double m2 = 0;
@@ -1044,4 +1054,17 @@ void gAppManager::preciseSleep(double seconds) {
     // spin lock
     AppClockTimePoint start = AppClock::now();
     while ((AppClock::now() - start).count() / 1'000'000'000.0 < seconds);
+#endif
+}
+
+void gAppManager::showKeyboard() {
+#ifdef ANDROID
+	gAndroidUtil::showKeyboard();
+#endif
+}
+
+void gAppManager::hideKeyboard() {
+#ifdef ANDROID
+	gAndroidUtil::hideKeyboard();
+#endif
 }

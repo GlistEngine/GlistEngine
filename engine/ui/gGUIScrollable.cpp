@@ -174,7 +174,7 @@ void gGUIScrollable::drawContent() {
 
 void gGUIScrollable::drawScrollbars() {
 	// render
-	gColor* oldcolor = renderer->getColor();
+	gColor oldcolor = *renderer->getColor();
 	const bool drawvertical = hasVerticalOverflow();
 	const bool drawhorizontal = hasHorizontalOverflow();
 	if(drawvertical) {

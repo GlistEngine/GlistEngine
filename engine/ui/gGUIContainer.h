@@ -48,6 +48,7 @@ public:
 	void drawContent() override;
 
 	void setCursorOn(bool isOn) override;
+	void unfocus() override;
 
 
 protected:

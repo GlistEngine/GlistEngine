@@ -117,6 +117,7 @@ public:
 	void setRootApp(gBaseApp* root);
 
 	virtual void setCursorOn(bool isOn);
+	virtual void unfocus();
 
 
 	int id, type;
