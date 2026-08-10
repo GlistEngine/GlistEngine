@@ -9,6 +9,7 @@
 #include "gRenderer.h"
 #include "gUbo.h"
 #include <unordered_map>
+#include <vector>
 
 // All Vulkan objects live behind these opaque types, so <vulkan/vulkan.h> is not
 // pushed into every translation unit that includes this header and the class
@@ -61,6 +62,10 @@ public:
 	void disableDepthTest() override;
 	bool isDepthTestEnabled() override;
 	int getDepthTestType() override;
+	void enableCulling() override;
+	void disableCulling() override;
+	void setCullFace(int face) override;
+	void setCullingDirection(int direction) override;
 
 	void enableAlphaBlending() override;
 	void disableAlphaBlending() override;
@@ -348,6 +353,28 @@ private:
 	// Whether this frame's scene block has been written yet. Reset in beginFrame, so
 	// the camera and lights are gathered once per frame instead of once per mesh.
 	bool sceneuniformswritten = false;
+
+	// Consecutive opaque mesh calls are safe to combine because their relative
+	// order is preserved.  Transparent meshes and caller-provided instancing stay
+	// immediate: changing either would alter the public draw semantics.
+	struct QueuedMeshDraw {
+		GLuint vertexarrayid = 0;
+		int vertexcount = 0;
+		int indexcount = 0;
+		int drawmode = GL_TRIANGLES;
+		glm::mat4 model{1.0f};
+		gMeshSurface surface{};
+		glm::vec4 tint{1.0f};
+		bool depthtest = false;
+		int depthtesttype = DEPTHTESTTYPE_LESS;
+		bool culling = false;
+		int cullface = GL_BACK;
+		int cullingdirection = GL_CCW;
+	};
+	std::vector<QueuedMeshDraw> queuedmeshdraws;
+	bool flushingqueueddraws = false;
+	bool canMergeQueuedDraws(const QueuedMeshDraw& first, const QueuedMeshDraw& next) const;
+	void recordQueuedDrawGroup(size_t first, size_t count);
 	void destroyAllTextures();
 	// The Vulkan texture behind the currently bound id, or null when there is none
 	// yet - gTexture sets filtering and wrapping both before and after the upload.
