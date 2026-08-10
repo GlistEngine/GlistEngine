@@ -13,6 +13,7 @@
 // std::min and the scratch buffer the Vulkan face upload builds. Both were reaching
 // this file only through another header on one toolchain.
 #include <algorithm>
+#include <cmath>
 #include <vector>
 
 glm::mat4 captureProjection = glm::perspective(glm::radians(90.0f), 1.0f, 0.1f, 10.0f);
@@ -24,6 +25,49 @@ glm::mat4 captureViews[] = {
 	glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3( 0.0f,  0.0f,  1.0f), glm::vec3(0.0f, -1.0f,  0.0f)),
 	glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3( 0.0f,  0.0f, -1.0f), glm::vec3(0.0f, -1.0f,  0.0f))
 };
+
+static const float gSkyboxPi = 3.14159265358979323846f;
+
+static glm::vec3 gSkyboxFaceDirection(int face, float u, float v) {
+	const float x = u * 2.0f - 1.0f;
+	const float y = 1.0f - v * 2.0f;
+	switch(face) {
+	case 0: return glm::normalize(glm::vec3( 1.0f, y, -x)); // right
+	case 1: return glm::normalize(glm::vec3(-1.0f, y,  x)); // left
+	case 2: return glm::normalize(glm::vec3( x,  1.0f, -y)); // top
+	case 3: return glm::normalize(glm::vec3( x, -1.0f,  y)); // bottom
+	case 4: return glm::normalize(glm::vec3( x,  y,  1.0f)); // front
+	default:return glm::normalize(glm::vec3(-x,  y, -1.0f)); // back
+	}
+}
+
+static glm::vec3 gSampleEquirectangular(const void* pixels, int width, int height,
+		int components, bool hdr, const glm::vec3& direction) {
+	const float u = std::atan2(direction.z, direction.x) / (2.0f * gSkyboxPi) + 0.5f;
+	const float v = std::asin(glm::clamp(direction.y, -1.0f, 1.0f)) / gSkyboxPi + 0.5f;
+	const float sourcex = u * width - 0.5f;
+	const float sourcey = v * height - 0.5f;
+	const int x0 = static_cast<int>(std::floor(sourcex));
+	const int y0 = std::max(0, std::min(height - 1, static_cast<int>(std::floor(sourcey))));
+	const int x1 = (x0 + 1 + width) % width;
+	const int wrappedx0 = (x0 % width + width) % width;
+	const int y1 = std::min(height - 1, y0 + 1);
+	const float tx = sourcex - std::floor(sourcex);
+	const float ty = sourcey - std::floor(sourcey);
+
+	auto read = [&](int x, int y) {
+		const size_t offset = (static_cast<size_t>(y) * width + x) * components;
+		auto component = [&](int index) {
+			if(index >= components) return 0.0f;
+			return hdr ? static_cast<const float*>(pixels)[offset + index]
+					: static_cast<const unsigned char*>(pixels)[offset + index] / 255.0f;
+		};
+		return glm::vec3(component(0), component(1), component(2));
+	};
+
+	return glm::mix(glm::mix(read(wrappedx0, y0), read(x1, y0), tx),
+			glm::mix(read(wrappedx0, y1), read(x1, y1), tx), ty);
+}
 
 gSkybox::gSkybox() {
 	id = GL_NONE;
@@ -226,12 +270,47 @@ unsigned int gSkybox::loadTextureEquirectangular(const std::string& texturePath)
 }
 
 unsigned int gSkybox::loadEquirectangular(const std::string& fullPath) {
-	// Not ported: this one projects an HDR panorama into a cube map with a render
-	// pass of its own, which needs the framebuffer path Vulkan does not have here
-	// yet. Left returning nothing so draw() skips rather than showing a wrong sky.
 	if(renderer->isVulkan()) {
-		gLogw("gSkyBox") << "Equirectangular skyboxes are not supported on the Vulkan backend yet.";
-		id = GL_NONE;
+		int panoramawidth = 0;
+		int panoramaheight = 0;
+		int components = 0;
+		const bool hdr = stbi_is_hdr(fullPath.c_str()) != 0;
+		void* panorama = hdr
+				? static_cast<void*>(stbi_loadf(fullPath.c_str(), &panoramawidth, &panoramaheight, &components, 0))
+				: static_cast<void*>(stbi_load(fullPath.c_str(), &panoramawidth, &panoramaheight, &components, 0));
+		if(panorama == nullptr || panoramawidth <= 0 || panoramaheight <= 0 || components < 3) {
+			gLoge("gSkyBox") << "Equirectangular skybox failed to load at path: " << fullPath;
+			stbi_image_free(panorama);
+			return id;
+		}
+
+		for(unsigned int& faceid : vkfaceids) {
+			if(faceid != 0) renderer->deleteTexture(faceid);
+			faceid = 0;
+		}
+
+		// Match the OpenGL conversion target resolution while doing the conversion once
+		// on the CPU. The renderer keeps drawing the resulting faces through its normal
+		// Vulkan skybox path; no temporary framebuffer or render-pass transition is used.
+		constexpr int facesize = 512;
+		std::vector<unsigned char> facepixels(static_cast<size_t>(facesize) * facesize * 3);
+		for(int face = 0; face < 6; face++) {
+			for(int y = 0; y < facesize; y++) {
+				for(int x = 0; x < facesize; x++) {
+					const glm::vec3 color = gSampleEquirectangular(panorama, panoramawidth,
+							panoramaheight, components, hdr, gSkyboxFaceDirection(face,
+									(x + 0.5f) / facesize, (y + 0.5f) / facesize));
+					const size_t offset = (static_cast<size_t>(y) * facesize + x) * 3;
+					facepixels[offset] = static_cast<unsigned char>(glm::clamp(color.r, 0.0f, 1.0f) * 255.0f);
+					facepixels[offset + 1] = static_cast<unsigned char>(glm::clamp(color.g, 0.0f, 1.0f) * 255.0f);
+					facepixels[offset + 2] = static_cast<unsigned char>(glm::clamp(color.b, 0.0f, 1.0f) * 255.0f);
+				}
+			}
+			vkfaceids[face] = uploadVulkanFace(facesize, facesize, facepixels.data());
+		}
+		stbi_image_free(panorama);
+		ishdr = hdr;
+		id = vkfaceids[0];
 		return id;
 	}
 

@@ -50,7 +50,7 @@ public:
 	gGUITextbox();
 	virtual ~gGUITextbox();
 
-	virtual void set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIObject* parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h);
+	void set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIObject* parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h) override;
 
 	/**
 	 * Changes the text displayed in the textbox.
@@ -132,7 +132,7 @@ public:
 	/**
 	 * Returns the current position of the cursor.
 	 */
-	int getCursor(int x, int y);
+	int getCursor(int x, int y) override;
 
 	/**
 	 * Changes the textbox's measurements. Makes sure that textbox's size is
@@ -217,15 +217,15 @@ public:
 	void enableVerticalMargin(bool isAligned);
 	bool isBackgroundEnabled();
 
-	void update();
-	void draw();
+	void update() override;
+	void draw() override;
 
-	void keyPressed(int key);
-	void keyReleased(int key);
-	void charPressed(unsigned int codepoint);
-	void mousePressed(int x, int y, int button);
-	void mouseReleased(int x, int y, int button);
-	void mouseDragged(int x, int y, int button);
+	void keyPressed(int key) override;
+	void keyReleased(int key) override;
+	void charPressed(unsigned int codepoint) override;
+	void mousePressed(int x, int y, int button) override;
+	void mouseReleased(int x, int y, int button) override;
+	void mouseDragged(int x, int y, int button) override;
 	void unfocus() override;
 
 	int getTextboxh();
@@ -253,7 +253,7 @@ public:
 
 	void setEditMode(bool editMode);
 
-	int calculateContentHeight();
+	int calculateContentHeight() override;
 
 	/**
 	 * Sets the hint text (placeholder) displayed when the textbox is empty.

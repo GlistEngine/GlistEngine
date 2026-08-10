@@ -64,39 +64,32 @@ static VkExtent2D gvkPickExtent(const VkSurfaceCapabilitiesKHR& caps, GLFWwindow
 	return extent;
 }
 
-// Which present mode to ask for, from what the surface actually supports.
+// Which present mode to ask for, from what the surface reported when the device
+// was chosen.
 //
 // This is where vsync lives on Vulkan. There is no glfwSwapInterval to call:
-// presentation pacing is a property of the swapchain, so the choice is made
-// here and a change to it costs a swapchain rebuild.
+// presentation pacing is a property of the swapchain, so the choice is made here
+// and a change to it costs a swapchain rebuild.
 //
 // FIFO waits for the display and is the only mode the specification guarantees
-// everywhere, so it is both the vsynced choice and the fallback. With vsync off
-// MAILBOX is preferred over IMMEDIATE: it also presents as fast as the frames
-// arrive, but replaces the queued image instead of scanning out mid-frame, so
-// it does not tear.
-static VkPresentModeKHR gvkPickPresentMode(VkPhysicalDevice physicaldevice,
-		VkSurfaceKHR surface, bool vsync) {
-	if(vsync) return VK_PRESENT_MODE_FIFO_KHR;
-
-	uint32_t count = 0;
-	vkGetPhysicalDeviceSurfacePresentModesKHR(physicaldevice, surface, &count, nullptr);
-	if(count == 0) return VK_PRESENT_MODE_FIFO_KHR;
-	std::vector<VkPresentModeKHR> modes(count);
-	vkGetPhysicalDeviceSurfacePresentModesKHR(physicaldevice, surface, &count, modes.data());
-
-	const auto supports = [&modes](VkPresentModeKHR mode) {
-		return std::find(modes.begin(), modes.end(), mode) != modes.end();
-	};
-	// IMMEDIATE before MAILBOX, because vsync off is a request not to be paced by the
-	// display and only IMMEDIATE means that. MAILBOX drops stale frames rather than
-	// queueing them, which avoids tearing and reads like the better mode, but the app
-	// still cannot get ahead of the refresh: with the image count drivers hand out
-	// here it measured a hard 144.0 fps on a 144 Hz screen, all of it spent waiting
-	// inside vkAcquireNextImageKHR, while OpenGL with glfwSwapInterval(0) ran the same
-	// scene at 523. MAILBOX stays as the fallback for surfaces without IMMEDIATE.
-	if(supports(VK_PRESENT_MODE_IMMEDIATE_KHR)) return VK_PRESENT_MODE_IMMEDIATE_KHR;
-	if(supports(VK_PRESENT_MODE_MAILBOX_KHR)) return VK_PRESENT_MODE_MAILBOX_KHR;
+// everywhere, so it is both the vsynced choice and the fallback.
+//
+// With vsync off, IMMEDIATE comes before MAILBOX. MAILBOX drops stale frames
+// rather than queueing them, which avoids tearing and reads like the better mode,
+// but the application still cannot get ahead of the refresh: with the image count
+// drivers hand out here it measured a hard 144.0 fps on a 144 Hz screen, frame
+// period 6.944 ms with no variance, all of it spent waiting inside
+// vkAcquireNextImageKHR, while OpenGL with glfwSwapInterval(0) ran the same scene
+// at 523. Vsync off is a request not to be paced by the display and IMMEDIATE is
+// the mode that means that; MAILBOX stays as the fallback for surfaces without it.
+static VkPresentModeKHR gvkPickPresentMode(const std::vector<VkPresentModeKHR>& modes, bool vsyncenabled) {
+	if(vsyncenabled) return VK_PRESENT_MODE_FIFO_KHR;
+	for(VkPresentModeKHR mode : modes) {
+		if(mode == VK_PRESENT_MODE_IMMEDIATE_KHR) return mode;
+	}
+	for(VkPresentModeKHR mode : modes) {
+		if(mode == VK_PRESENT_MODE_MAILBOX_KHR) return mode;
+	}
 	return VK_PRESENT_MODE_FIFO_KHR;
 }
 
@@ -162,7 +155,7 @@ bool gvkCreateSwapchain(gVKContext& ctx, GLFWwindow* window) {
 
 	createinfo.preTransform = caps.currentTransform;
 	createinfo.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
-	createinfo.presentMode = gvkPickPresentMode(ctx.physicaldevice, ctx.surface, ctx.isVsyncEnabled());
+	createinfo.presentMode = gvkPickPresentMode(ctx.surfacepresentmodes, ctx.vsyncenabled);
 	createinfo.clipped = VK_TRUE;
 	createinfo.oldSwapchain = VK_NULL_HANDLE;
 
