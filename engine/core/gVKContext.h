@@ -401,8 +401,14 @@ struct gVKContext {
 	// The command buffer of the frame currently being recorded, or VK_NULL_HANDLE
 	// when no frame is active.
 	VkCommandBuffer getCurrentCommandBuffer() {
+		if(recordingcommandbuffer != VK_NULL_HANDLE) return recordingcommandbuffer;
 		return frameactive ? commandbuffers[currentframe] : VK_NULL_HANDLE;
 	}
+	// Temporarily redirects draw helpers to a secondary command buffer while its
+	// worker records. The frame thread restores VK_NULL_HANDLE before it resumes
+	// primary recording. This is deliberately not a global command-pool switch.
+	void setRecordingCommandBuffer(VkCommandBuffer buffer) { recordingcommandbuffer = buffer; }
+	void clearRecordingCommandBuffer() { recordingcommandbuffer = VK_NULL_HANDLE; }
 
 	// Per-frame vertex ring. resetDynamicVertices() rewinds the current frame's
 	// buffer at frame start; pushDynamicVertices() appends vertex bytes (16-byte
@@ -612,6 +618,7 @@ private:
 	// remains owned exclusively by the frame thread and records the primary buffer.
 	std::vector<VkCommandPool> workercommandpools;
 	std::vector<std::vector<VkCommandBuffer>> workercommandbuffers;
+	VkCommandBuffer recordingcommandbuffer = VK_NULL_HANDLE;
 
 	// GVK_MAX_FRAMES_IN_FLIGHT entries, indexed by currentframe.
 	std::vector<VkSemaphore> imageavailablesemaphores;
