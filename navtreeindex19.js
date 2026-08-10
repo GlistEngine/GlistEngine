@@ -1,5 +1,8 @@
 var NAVTREEINDEX19 =
 {
+"gUtils_8h.html#a992cf347e382719f2fd66c160a3d771b":[2,0,0,8,9,77],
+"gUtils_8h.html#a9bd6ca1070093f3ae4968a5c0e730a5b":[2,0,0,8,9,49],
+"gUtils_8h.html#a9d05ef43c3bede60bf28cd44e8b5a5b5":[2,0,0,8,9,23],
 "gUtils_8h.html#a9d16a741e037d39bc076a52e95737486":[2,0,0,8,9,13],
 "gUtils_8h.html#a9ffe74c3705877080965ae1d4ca9b7ea":[2,0,0,8,9,63],
 "gUtils_8h.html#aa008cc42702c48f7badb432d2da5747c":[2,0,0,8,9,10],
@@ -246,8 +249,5 @@ var NAVTREEINDEX19 =
 "structgInputPlayer_1_1GamepadAxisBinding.html#a57919698b3f2df8f9ec8670b006c101c":[1,0,115,1,0],
 "structgInputPlayer_1_1GamepadAxisBinding.html#ac180684797bf7c233dcbaefc21b40ee0":[1,0,115,1,1],
 "structgInputPlayer_1_1GamepadButtonAxisBinding.html":[1,0,115,2],
-"structgInputPlayer_1_1GamepadButtonAxisBinding.html#a06791e7d6f932c8494d3003cc712e22a":[1,0,115,2,1],
-"structgInputPlayer_1_1GamepadButtonAxisBinding.html#aa6d24c955849ea1753f35fbe98d681a0":[1,0,115,2,0],
-"structgRenderer_1_1gMeshSurface.html":[1,0,150,0],
-"structgRenderer_1_1gMeshSurface.html#a2d0bb2d60c220ce89a1208c4139544b7":[1,0,150,0,6]
+"structgInputPlayer_1_1GamepadButtonAxisBinding.html#a06791e7d6f932c8494d3003cc712e22a":[1,0,115,2,1]
 };

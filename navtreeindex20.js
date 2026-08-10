@@ -1,5 +1,8 @@
 var NAVTREEINDEX20 =
 {
+"structgInputPlayer_1_1GamepadButtonAxisBinding.html#aa6d24c955849ea1753f35fbe98d681a0":[1,0,115,2,0],
+"structgRenderer_1_1gMeshSurface.html":[1,0,150,0],
+"structgRenderer_1_1gMeshSurface.html#a2d0bb2d60c220ce89a1208c4139544b7":[1,0,150,0,6],
 "structgRenderer_1_1gMeshSurface.html#a3afd633a20ce586abaa667bed48a9d02":[1,0,150,0,3],
 "structgRenderer_1_1gMeshSurface.html#a3fe4572a4530fd5d36f5564bd64b8c1f":[1,0,150,0,4],
 "structgRenderer_1_1gMeshSurface.html#a6491ddb1c6a3c7279789560d70230969":[1,0,150,0,5],

@@ -1,5 +1,8 @@
 var NAVTREEINDEX16 =
 {
+"classgWindowScaleChangedEvent.html":[1,0,191],
+"classgWindowScaleChangedEvent.html#a098ab53b6d75f027952764fc7271ef1a":[1,0,191,1],
+"classgWindowScaleChangedEvent.html#a67e5805faec25bba0dcbeefb4928dec5":[1,0,191,0],
 "classgWindowScaleChangedEvent.html#a96740ffd86f4545a6197548a4befc41a":[1,0,191,3],
 "classgWindowScaleChangedEvent.html#aa0a78aa06b936ddd4db376e3d7f9797e":[1,0,191,4],
 "classgWindowScaleChangedEvent.html#aaea1539855ddcd14d945f32e754106fd":[1,0,191,2],
@@ -246,8 +249,5 @@ var NAVTREEINDEX16 =
 "gFireworksParticles_8h.html":[2,0,0,4,0,1],
 "gFireworksParticles_8h_source.html":[2,0,0,4,0,1],
 "gFmodSound_8h.html":[2,0,0,5,1],
-"gFmodSound_8h_source.html":[2,0,0,5,1],
-"gFog_8h.html":[2,0,0,4,8],
-"gFog_8h_source.html":[2,0,0,4,8],
-"gFont_8h.html":[2,0,0,4,9]
+"gFmodSound_8h_source.html":[2,0,0,5,1]
 };

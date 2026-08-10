@@ -1,5 +1,8 @@
 var NAVTREEINDEX14 =
 {
+"classgSoftFocus.html#a0529c89af00a855bd2a3d688432c8403":[1,0,161,4],
+"classgSoftFocus.html#a55655b936d0b1998da9cce9d9d43fab4":[1,0,161,1],
+"classgSoftFocus.html#a58844e035b4edc5a3af58634444c7f71":[1,0,161,2],
 "classgSoftFocus.html#a680f9e93fc80da777a606b42288d3d14":[1,0,161,3],
 "classgSoftFocus.html#a8eb3f7a706bc499a7991c4c6b08a4bc4":[1,0,161,0],
 "classgSound.html":[1,0,162],
@@ -246,8 +249,5 @@ var NAVTREEINDEX14 =
 "classgTweenAnimation.html#a3f90ea58ee321a3b40c3dca7fa824363a362b68e565b2842ec8814072efcce806":[1,0,174,0,12],
 "classgTweenAnimation.html#a3f90ea58ee321a3b40c3dca7fa824363a3a99152fbf4cbb8682b764711e5d6e0f":[1,0,174,0,2],
 "classgTweenAnimation.html#a3f90ea58ee321a3b40c3dca7fa824363a48936efbed4c43576afb49a318b64dc9":[1,0,174,0,4],
-"classgTweenAnimation.html#a3f90ea58ee321a3b40c3dca7fa824363a56414098dd3b36fe6d920319ea6b6548":[1,0,174,0,7],
-"classgTweenAnimation.html#a3f90ea58ee321a3b40c3dca7fa824363a637349062b743b696dd6ae675141ba06":[1,0,174,0,24],
-"classgTweenAnimation.html#a3f90ea58ee321a3b40c3dca7fa824363a6f9b271917ef278631f5afc319d863cc":[1,0,174,0,11],
-"classgTweenAnimation.html#a3f90ea58ee321a3b40c3dca7fa824363a7952d64d3275b6380985bc6e2a8dd835":[1,0,174,0,6]
+"classgTweenAnimation.html#a3f90ea58ee321a3b40c3dca7fa824363a56414098dd3b36fe6d920319ea6b6548":[1,0,174,0,7]
 };
