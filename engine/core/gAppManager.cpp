@@ -560,8 +560,16 @@ void gAppManager::tick() {
     // to, and any geometry recorded afterwards lands inside that same pass.
     if(renderengine == G_RENDERER_VK) {
         if(canvasmanager) canvasmanager->update();
-        gBaseCanvas* vkcanvas = (canvasmanager && !isguiapp) ? canvasmanager->getCurrentCanvas() : nullptr;
+        if(guimanager) guimanager->update();
         if(!isguiapp) app->update();
+        for(gBaseComponent*& component : gBaseComponent::usedcomponents) {
+            component->update();
+        }
+        for(gBasePlugin*& component : gBasePlugin::usedplugins) {
+            component->update();
+        }
+
+        gBaseCanvas* vkcanvas = (canvasmanager && !isguiapp) ? canvasmanager->getCurrentCanvas() : nullptr;
         if(vkcanvas) vkcanvas->update();
         if(renderer != nullptr && renderer->beginFrame()) {
             // The scene is drawn once per render pass, the same way the OpenGL loop
@@ -578,6 +586,7 @@ void gAppManager::tick() {
                 if(shadowpass) renderer->endShadowPass();
             }
             renderpassno = 0;
+            if(guimanager) guimanager->draw();
             renderer->endFrame();
             totaldraws++;
         }
