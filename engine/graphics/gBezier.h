@@ -31,16 +31,26 @@ public:
 	//Sets curve control points
 	void setPoint(const std::vector<glm::vec2>& pts);
 	void setPoint(const std::vector<glm::vec3>& pts);
+
 	// Adds a 2D control point to the end of the curve. Z axis defaults to 0.0f.
 	void addPoint(glm::vec2 p);
+
 	//Adds a 3D control point to the end of the curve.
 	void addPoint(glm::vec3 p);
+
+	// Updates a specific control point coordinate by its index safely.
+	void setPointAtIndex(int index, glm::vec3 p);
+	void setPointAtIndex(int index, glm::vec2 p);
+
 	//Clears all points to reset or reuse the curve.
 	void clearPoints();
+
 	//Gets the exact interpolated point at time t [0.0 - 1.0] using De Casteljau's algorithm.
 	glm::vec3 getPoint(float t) const;
+
 	//Sets rendering resolution (number of segments).
 	void setResolution(int res);
+
 	//Draws the curve automatically in 2D or 3D based on input points.
 	void draw() const;
 private:

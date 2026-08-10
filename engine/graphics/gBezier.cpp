@@ -48,34 +48,47 @@ void gBezier::setResolution(int res) {
 	resolution = res;
 }
 
+void gBezier::setPointAtIndex(int index, glm::vec3 p) {
+	if(index >= 0 && index < points.size()) {
+		points[index] = p;
+		is3D = true;
+	}
+}
+
+void gBezier::setPointAtIndex(int index, glm::vec2 p) {
+	if(index >= 0 && index < points.size()) {
+		points[index] = glm::vec3(p.x, p.y, 0.0f);
+	}
+}
+
 glm::vec3 gBezier::getPoint(float t) const {
 
 	if(points.size() < 3) {
-			if(points.empty()) return glm::vec3(0.0f);
-			if(points.size() == 1) return points[0];
-			return points[0] * (1.0f - t) + points[1] * t;
-		}
+		if(points.empty()) return glm::vec3(0.0f);
+		if(points.size() == 1) return points[0];
+		return points[0] * (1.0f - t) + points[1] * t;
+	}
 
-		if(t <= 0.0f) return points.front();
-		if(t >= 1.0f) return points.back();
+	if(t <= 0.0f) return points.front();
+	if(t >= 1.0f) return points.back();
 
-		int numSegments = (points.size() - 1) / 2;
+	int numSegments = (points.size() - 1) / 2;
 
-		float scaled_t = t * numSegments;
+	float scaled_t = t * numSegments;
 
-		int segment = (int)scaled_t;
-		if(segment >= numSegments) segment = numSegments - 1;
+	int segment = (int)scaled_t;
+	if(segment >= numSegments) segment = numSegments - 1;
 
-		float local_t = scaled_t - segment;
+	float local_t = scaled_t - segment;
 
-		int startIndex = segment * 2;
+	int startIndex = segment * 2;
 
-		glm::vec3 p0 = points[startIndex];
-		glm::vec3 p1 = points[startIndex + 1];
-		glm::vec3 p2 = points[startIndex + 2];
+	glm::vec3 p0 = points[startIndex];
+	glm::vec3 p1 = points[startIndex + 1];
+	glm::vec3 p2 = points[startIndex + 2];
 
-		float u = 1.0f - local_t;
-		return (u * u * p0) + (2.0f * u * local_t * p1) + (local_t * local_t * p2);
+	float u = 1.0f - local_t;
+	return (u * u * p0) + (2.0f * u * local_t * p1) + (local_t * local_t * p2);
 }
 
 void gBezier::draw() const {
