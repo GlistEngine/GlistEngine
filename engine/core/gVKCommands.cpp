@@ -9,6 +9,8 @@
 #ifdef GVK_DESKTOP_GLFW
 
 #include "gUtils.h"
+#include <algorithm>
+#include <thread>
 
 bool gvkCreateCommandResources(gVKContext& ctx) {
 	if(ctx.device == VK_NULL_HANDLE) {
@@ -52,13 +54,51 @@ bool gvkCreateCommandResources(gVKContext& ctx) {
 		return false;
 	}
 
+	// Secondary command buffers are recorded from worker threads once the renderer
+	// has collected a complete render-pass command list.  Command pools themselves
+	// are not thread safe, hence one pool per worker and one secondary buffer per
+	// frame slot. Keep the number bounded: recording competes with the application's
+	// update thread, and a handful of large mesh batches scales better than dozens
+	// of tiny workers.
+	const unsigned int hardwarethreads = std::thread::hardware_concurrency();
+	const unsigned int workercount = hardwarethreads > 1
+			? std::min(3u, hardwarethreads - 1) : 0u;
+	ctx.workercommandpools.assign(workercount, VK_NULL_HANDLE);
+	ctx.workercommandbuffers.assign(workercount,
+			std::vector<VkCommandBuffer>(GVK_MAX_FRAMES_IN_FLIGHT, VK_NULL_HANDLE));
+	for(unsigned int worker = 0; worker < workercount; ++worker) {
+		if(vkCreateCommandPool(ctx.device, &poolinfo, nullptr, &ctx.workercommandpools[worker]) != VK_SUCCESS) {
+			gLoge("gVKCommands") << "Could not create Vulkan worker command pool " << worker << ".";
+			gvkDestroyCommandResources(ctx);
+			return false;
+		}
+		VkCommandBufferAllocateInfo workeralloc{};
+		workeralloc.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+		workeralloc.commandPool = ctx.workercommandpools[worker];
+		workeralloc.level = VK_COMMAND_BUFFER_LEVEL_SECONDARY;
+		workeralloc.commandBufferCount = GVK_MAX_FRAMES_IN_FLIGHT;
+		if(vkAllocateCommandBuffers(ctx.device, &workeralloc, ctx.workercommandbuffers[worker].data()) != VK_SUCCESS) {
+			gLoge("gVKCommands") << "Could not allocate Vulkan worker command buffers.";
+			gvkDestroyCommandResources(ctx);
+			return false;
+		}
+	}
+
 	gLogi("gVKCommands") << "Command pool created with " << ctx.commandbuffers.size()
-			<< " primary command buffers on queue family " << ctx.graphicsfamily;
+			<< " primary command buffers and " << workercount << " worker pools on queue family "
+			<< ctx.graphicsfamily;
 	return true;
 }
 
 void gvkDestroyCommandResources(gVKContext& ctx) {
 	if(ctx.device == VK_NULL_HANDLE) return;
+
+	for(VkCommandPool& pool : ctx.workercommandpools) {
+		if(pool != VK_NULL_HANDLE) vkDestroyCommandPool(ctx.device, pool, nullptr);
+		pool = VK_NULL_HANDLE;
+	}
+	ctx.workercommandbuffers.clear();
+	ctx.workercommandpools.clear();
 
 	// Destroying the pool frees every command buffer allocated from it, so calling
 	// vkFreeCommandBuffers beforehand would be redundant.

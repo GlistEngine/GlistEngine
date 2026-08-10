@@ -605,6 +605,13 @@ private:
 	VkCommandPool commandpool = VK_NULL_HANDLE;
 	// GVK_MAX_FRAMES_IN_FLIGHT entries, indexed by currentframe.
 	std::vector<VkCommandBuffer> commandbuffers;
+	// A command pool is externally synchronized in Vulkan: two threads must never
+	// allocate, reset or record through the same pool.  These per-worker pools and
+	// their secondary command buffers are the ownership boundary used by the
+	// deferred parallel recorder.  They are kept separate from commandpool, which
+	// remains owned exclusively by the frame thread and records the primary buffer.
+	std::vector<VkCommandPool> workercommandpools;
+	std::vector<std::vector<VkCommandBuffer>> workercommandbuffers;
 
 	// GVK_MAX_FRAMES_IN_FLIGHT entries, indexed by currentframe.
 	std::vector<VkSemaphore> imageavailablesemaphores;
