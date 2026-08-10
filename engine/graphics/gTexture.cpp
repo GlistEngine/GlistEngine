@@ -54,6 +54,11 @@ gTexture::gTexture() {
 	masktexture = nullptr;
 	componentnum = 0;
 	istextureallocated = false;
+	isalphamasking = false;
+	maskmode = MASKMODE_BOTH;
+	imageRotation = 0.0f;
+	maskRotation = 0.0f;
+	objectRotation = 0.0f;
 	data = nullptr;
 	datahdr = nullptr;
 	setupRenderData();
@@ -224,6 +229,11 @@ void gTexture::copyFrom(const gTexture& other) noexcept {
 	issubpart = other.issubpart;
 	subpos = other.subpos;
 	subscale = other.subscale;
+	maskmode = other.maskmode;
+	maskRotation = other.maskRotation;
+	imageRotation = other.imageRotation;
+	objectRotation = other.objectRotation;
+	isalphamasking = other.isalphamasking;
 
 	// Deep copy texture data
 	if (other.width > 0 && other.height > 0 && other.componentnum > 0) {
@@ -292,6 +302,11 @@ void gTexture::swap(gTexture& other) noexcept {
 	std::swap(ismaskloaded, other.ismaskloaded);
 	std::swap(masktexture, other.masktexture);
 	std::swap(istextureallocated, other.istextureallocated);
+	std::swap(maskmode, other.maskmode);
+	std::swap(maskRotation, other.maskRotation);
+	std::swap(imageRotation, other.imageRotation);
+	std::swap(objectRotation, other.objectRotation);
+	std::swap(isalphamasking, other.isalphamasking);
 	std::swap(quadVAO, other.quadVAO);
 	std::swap(quadVBO, other.quadVBO);
 	std::swap(imagematrix, other.imagematrix);
@@ -528,6 +543,35 @@ void gTexture::setFiltering(int minFilter, int magFilter) {
 	unbind();
 }
 
+void gTexture::setMaskMode(int maskMode) {
+    setAlphaMasking(maskMode);
+}
+
+void gTexture::setAlphaMasking(int maskMode) {
+    this->maskmode = maskMode;
+    this->isalphamasking = true;
+}
+
+void gTexture::disableAlphaMasking() {
+    this->isalphamasking = false;
+}
+
+bool gTexture::getAlphaMasking() const {
+    return isalphamasking;
+}
+
+void gTexture::setImageRotation(float angle) {
+    imageRotation = angle;
+}
+
+void gTexture::setMaskRotation(float angle) {
+    maskRotation = angle;
+}
+
+void gTexture::setObjectRotation(float angle) {
+    objectRotation = angle;
+}
+
 int gTexture::getWrapS() const {
 	return wraps;
 }
@@ -716,7 +760,13 @@ void gTexture::endDraw() {
 	renderer->getImageShader()->setVec4("spriteColor", glm::vec4(renderer->getColor()->r, renderer->getColor()->g, renderer->getColor()->b, renderer->getColor()->a));
 	renderer->getImageShader()->setInt("image", 0);
 	renderer->getImageShader()->setInt("maskimage", 1);
-	renderer->getImageShader()->setBool("isAlphaMasking", ismaskloaded);
+	renderer->getImageShader()->setBool("isAlphaMasking", ismaskloaded && isalphamasking);
+	renderer->getImageShader()->setInt("maskMode", maskmode);
+	renderer->getImageShader()->setFloat("maskCos", cos(glm::radians(maskRotation)));
+	renderer->getImageShader()->setFloat("maskSin", sin(glm::radians(maskRotation)));
+	renderer->getImageShader()->setFloat("imageCos", cos(glm::radians(imageRotation)));
+	renderer->getImageShader()->setFloat("imageSin", sin(glm::radians(imageRotation)));
+
 	renderer->getImageShader()->setBool("isSubPart", issubpart);
 	if (issubpart) {
 		renderer->getImageShader()->setVec2("subPos", subpos);
@@ -726,7 +776,7 @@ void gTexture::endDraw() {
 	renderer->resetTexture();
 
 	bind();
-	renderer->getImageShader()->setBool("isAlphaMasking", ismaskloaded);
+	renderer->getImageShader()->setBool("isAlphaMasking", ismaskloaded && isalphamasking);
 	if(ismaskloaded) {
 		renderer->getImageShader()->setInt("maskimage", 1);
 		renderer->activateTexture(1); // GL_TEXTURE1
