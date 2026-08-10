@@ -237,6 +237,7 @@ set(SRC_FILES
 	${ENGINE_DIR}/graphics/gCamera.cpp
 	${ENGINE_DIR}/graphics/gCameraController.cpp
 	${ENGINE_DIR}/graphics/gFont.cpp
+	${ENGINE_DIR}/graphics/gBitmapFont.cpp
 	${ENGINE_DIR}/graphics/gMaterial.cpp
 	${ENGINE_DIR}/graphics/gMesh.cpp
 	${ENGINE_DIR}/graphics/gSkinnedMesh.cpp
