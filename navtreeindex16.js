@@ -1,5 +1,14 @@
 var NAVTREEINDEX16 =
 {
+"classgWindowLoseFocusEvent.html#a7f702e57d8bf70f89350b1c0ccc7977f":[1,0,186,0],
+"classgWindowMouseEnterEvent.html":[1,0,187],
+"classgWindowMouseEnterEvent.html#ad100f2352f44ee63642ba2d5e3c0dba4":[1,0,187,0],
+"classgWindowMouseExitEvent.html":[1,0,188],
+"classgWindowMouseExitEvent.html#a2643381a147dd2770d498da624e45424":[1,0,188,0],
+"classgWindowResizeEvent.html":[1,0,189],
+"classgWindowResizeEvent.html#a091f4f44f61e2e178d6ce2952641d129":[1,0,189,1],
+"classgWindowResizeEvent.html#a12037a9797b82a2efcd950a2e740f344":[1,0,189,2],
+"classgWindowResizeEvent.html#a303c8759dad7cdd6f914b71c1821c6d2":[1,0,189,0],
 "classgWindowScaleChangedEvent.html":[1,0,191],
 "classgWindowScaleChangedEvent.html#a098ab53b6d75f027952764fc7271ef1a":[1,0,191,1],
 "classgWindowScaleChangedEvent.html#a67e5805faec25bba0dcbeefb4928dec5":[1,0,191,0],
@@ -240,14 +249,5 @@ var NAVTREEINDEX16 =
 "gFbo_8h.html":[2,0,0,4,7],
 "gFbo_8h_source.html":[2,0,0,4,7],
 "gFile_8h.html":[2,0,0,8,3],
-"gFile_8h.html#a6403a5197805cd4be3f1e3db86210ff2":[2,0,0,8,3,3],
-"gFile_8h.html#abd38bed113ec30fc0cf304e41ee3ff12":[2,0,0,8,3,1],
-"gFile_8h.html#ac99ee6cbdcaf6f7e90def06726182670":[2,0,0,8,3,2],
-"gFile_8h_source.html":[2,0,0,8,3],
-"gFireParticles_8h.html":[2,0,0,4,0,0],
-"gFireParticles_8h_source.html":[2,0,0,4,0,0],
-"gFireworksParticles_8h.html":[2,0,0,4,0,1],
-"gFireworksParticles_8h_source.html":[2,0,0,4,0,1],
-"gFmodSound_8h.html":[2,0,0,5,1],
-"gFmodSound_8h_source.html":[2,0,0,5,1]
+"gFile_8h.html#a6403a5197805cd4be3f1e3db86210ff2":[2,0,0,8,3,3]
 };

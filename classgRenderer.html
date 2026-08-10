@@ -293,6 +293,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a0b37acf5538bd8043e512c8c497ad594"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a77abae2520f304935922d40a20613d74" id="r_a77abae2520f304935922d40a20613d74"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a77abae2520f304935922d40a20613d74">endFrame</a> ()</td></tr>
 <tr class="separator:a77abae2520f304935922d40a20613d74"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa040c24e1704d7b6f4a1269241c0e406" id="r_aa040c24e1704d7b6f4a1269241c0e406"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#aa040c24e1704d7b6f4a1269241c0e406">flushQueuedDraws</a> ()</td></tr>
+<tr class="separator:aa040c24e1704d7b6f4a1269241c0e406"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa54bbaeb280b3636715c34eafc15820d" id="r_aa54bbaeb280b3636715c34eafc15820d"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#aa54bbaeb280b3636715c34eafc15820d">getRenderEngineType</a> () const</td></tr>
 <tr class="separator:aa54bbaeb280b3636715c34eafc15820d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1342a46ef980da2945be90a9d3260699" id="r_a1342a46ef980da2945be90a9d3260699"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a1342a46ef980da2945be90a9d3260699">isVulkan</a> () const</td></tr>
@@ -315,6 +317,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a127e233c28807e3ca9cf3a5cc9527e23"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a706f192fc85d66b454e666ad645c8669" id="r_a706f192fc85d66b454e666ad645c8669"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a706f192fc85d66b454e666ad645c8669">endShadowPass</a> ()</td></tr>
 <tr class="separator:a706f192fc85d66b454e666ad645c8669"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a957ae9171f3230e8e0b4aecfcab0e5ce" id="r_a957ae9171f3230e8e0b4aecfcab0e5ce"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a957ae9171f3230e8e0b4aecfcab0e5ce">isShadowPassActive</a> () const</td></tr>
+<tr class="separator:a957ae9171f3230e8e0b4aecfcab0e5ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:affadcc9658ac4cbabf02d297f4739ad5" id="r_affadcc9658ac4cbabf02d297f4739ad5"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#affadcc9658ac4cbabf02d297f4739ad5">setShadowMapState</a> (bool enabled, const glm::mat4 &amp;lightMatrix, const glm::vec3 &amp;lightPosition, bool softShadows)</td></tr>
 <tr class="separator:affadcc9658ac4cbabf02d297f4739ad5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a143b0f6ffa8b00675cdceb8fdbcfce4d" id="r_a143b0f6ffa8b00675cdceb8fdbcfce4d"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a143b0f6ffa8b00675cdceb8fdbcfce4d">clear</a> ()=0</td></tr>
@@ -2637,6 +2641,8 @@ Friends</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Reimplemented in <a class="el" href="classgVKRenderEngine.html#a730754ad5d1adc60148d97f62096d678">gVKRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -5209,6 +5215,8 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Reimplemented in <a class="el" href="classgVKRenderEngine.html#a77400698996d84ea19973e67aaa671c1">gVKRenderEngine</a>.</p>
+
 </div>
 </div>
 <a id="a739dc806dcafdaf2adec88f6ad2f887a" name="a739dc806dcafdaf2adec88f6ad2f887a"></a>
@@ -5508,6 +5516,33 @@ Friends</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+</div>
+</div>
+<a id="aa040c24e1704d7b6f4a1269241c0e406" name="aa040c24e1704d7b6f4a1269241c0e406"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa040c24e1704d7b6f4a1269241c0e406">&#9670;&#160;</a></span>flushQueuedDraws()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void gRenderer::flushQueuedDraws </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reimplemented in <a class="el" href="classgVKRenderEngine.html#a5d4abe70c497f3fbd88ce18e1cabd530">gVKRenderEngine</a>.</p>
 
 </div>
 </div>
@@ -7661,6 +7696,33 @@ Friends</h2></td></tr>
 
 </div>
 </div>
+<a id="a957ae9171f3230e8e0b4aecfcab0e5ce" name="a957ae9171f3230e8e0b4aecfcab0e5ce"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a957ae9171f3230e8e0b4aecfcab0e5ce">&#9670;&#160;</a></span>isShadowPassActive()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual bool gRenderer::isShadowPassActive </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reimplemented in <a class="el" href="classgVKRenderEngine.html#afcfb1b575df00425ecd5c41e87dce918">gVKRenderEngine</a>.</p>
+
+</div>
+</div>
 <a id="a94a8306f853c907f29b6f9b1c7d4feb8" name="a94a8306f853c907f29b6f9b1c7d4feb8"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a94a8306f853c907f29b6f9b1c7d4feb8">&#9670;&#160;</a></span>isSoftShadowsEnabled()</h2>
 
@@ -8474,6 +8536,8 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Reimplemented in <a class="el" href="classgVKRenderEngine.html#a3bdf5fdaa4c9cd6e503a5f0e8e224c75">gVKRenderEngine</a>.</p>
+
 </div>
 </div>
 <a id="a42e26bb7c1e7396d469f0fd8e219ce04" name="a42e26bb7c1e7396d469f0fd8e219ce04"></a>
@@ -8499,6 +8563,8 @@ Friends</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Reimplemented in <a class="el" href="classgVKRenderEngine.html#a88fa79c18bd39669a3bf682f67fd1cd7">gVKRenderEngine</a>.</p>
 
 </div>
 </div>

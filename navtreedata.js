@@ -76,14 +76,14 @@ var NAVTREEINDEX =
 "classgLine.html#abde2fdff8e66811f59b166f19539c732",
 "classgModel.html#aea5d1955ca7a410afa1b83f37a81b839",
 "classgRenderer.html#a12c44e88ee63f51da32b2b82eb258cc7",
-"classgRenderer.html#abb04df020202c7a7fd8767e0da0e08bb",
-"classgSoftFocus.html#a0529c89af00a855bd2a3d688432c8403",
-"classgTweenAnimation.html#a3f90ea58ee321a3b40c3dca7fa824363a637349062b743b696dd6ae675141ba06",
-"classgWindowScaleChangedEvent.html",
-"gFog_8h.html",
-"gKeyCode_8h.html#abad31a0a0411213fbe03760b325c964f",
-"gUtils_8h.html#a992cf347e382719f2fd66c160a3d771b",
-"structgInputPlayer_1_1GamepadButtonAxisBinding.html#aa6d24c955849ea1753f35fbe98d681a0"
+"classgRenderer.html#ab9dde2a792049fe98a8f04b4a56a1821",
+"classgSkybox.html#aefca38c3c4002a1ac9ecbf0270837944",
+"classgTweenAnimation.html#a3f90ea58ee321a3b40c3dca7fa824363a48936efbed4c43576afb49a318b64dc9",
+"classgWindowLoseFocusEvent.html#a7f702e57d8bf70f89350b1c0ccc7977f",
+"gFile_8h.html#abd38bed113ec30fc0cf304e41ee3ff12",
+"gKeyCode_8h.html#ab0cd5c9e442b761076fce59ceef70f18",
+"gUtils_8h.html#a6e599a6825f1158ce4a2718d7c61ca22",
+"structgHttpFile_1_1ProgressData.html#a7d3ae2b5d14fb694f338f136d344524c"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
