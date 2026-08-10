@@ -19,7 +19,7 @@ public:
 	gGUISizer();
 	virtual ~gGUISizer();
 
-	void set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIObject* parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h);
+	void set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIObject* parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h) override;
 	void set(int x, int y, int w, int h);
 	int getSizerType();
 
@@ -34,8 +34,8 @@ public:
 	void removeControl(int lineNo, int columnNo);
 	gGUIControl* getControl(int lineNo, int columnNo);
 
-	void update();
-	void draw();
+	void update() override;
+	void draw() override;
 	void unfocus() override;
 
 	void enableBorders(bool isEnabled);
@@ -47,18 +47,18 @@ public:
 	void setAlignContentVertically(bool enabled);
 	bool isAlignContentVertically();
 
-	int getCursor(int x, int y);
-	void keyPressed(int key);
-	void keyReleased(int key);
-	void charPressed(unsigned int codepoint);
-	void mouseMoved(int x, int y);
-	void mousePressed(int x, int y, int button);
-	void mouseDragged(int x, int y, int button);
-	void mouseReleased(int x, int y, int button);
-	void mouseScrolled(int x, int y);
-	void mouseEntered();
-	void mouseExited();
-	void windowResized(int w, int h);
+	int getCursor(int x, int y) override;
+	void keyPressed(int key) override;
+	void keyReleased(int key) override;
+	void charPressed(unsigned int codepoint) override;
+	void mouseMoved(int x, int y) override;
+	void mousePressed(int x, int y, int button) override;
+	void mouseDragged(int x, int y, int button) override;
+	void mouseReleased(int x, int y, int button) override;
+	void mouseScrolled(int x, int y) override;
+	void mouseEntered() override;
+	void mouseExited() override;
+	void windowResized(int w, int h) override;
 	int getSlotWidth(int lineNo, int columnNo);
 	int getSlotHeight(int lineNo, int columnNo);
 	int getSlotX(int lineNo, int columnNo);

@@ -18,7 +18,7 @@ public:
 	gGUINumberBox();
 	virtual ~gGUINumberBox();
 
-	virtual void set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIObject* parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h);
+	void set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIObject* parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h) override;
 	virtual void set(int x, int y, int w, int h);
 
 	void setText(const std::string& text);
@@ -35,14 +35,14 @@ public:
 	void setSize(int width, int height);
 	void showTitle(bool isShown);
 
-	void keyPressed(int key);
-	void keyReleased(int key);
-	void charPressed(unsigned int codepoint);
-	void mousePressed(int x, int y, int button);
-	void mouseReleased(int x, int y, int button);
-	void mouseDragged(int x, int y, int button);
-	void update();
-	void draw();
+	void keyPressed(int key) override;
+	void keyReleased(int key) override;
+	void charPressed(unsigned int codepoint) override;
+	void mousePressed(int x, int y, int button) override;
+	void mouseReleased(int x, int y, int button) override;
+	void mouseDragged(int x, int y, int button) override;
+	void update() override;
+	void draw() override;
 	void setMaxValue(int maxValue);
 	void setMinValue(int minValue);
 	void setMaxValue(float maxValuef);
