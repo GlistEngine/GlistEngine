@@ -70,7 +70,7 @@ var NAVTREEINDEX =
 "classgGUIButton.html#a335d521c64ce9ac54422a04539702373",
 "classgGUIDialogue.html#ae2cd1d8cf51fb31ae4700df87a1dddb1",
 "classgGUIGrid.html#ac967cb0b987feff4ab3b8edeb1af531e",
-"classgGUINumberBox.html#a96bfc1151bf76657c98218f82883ae94",
+"classgGUINumberBox.html#ab283b2ef6530bd57df306290699f49f7",
 "classgGUISlider.html#a7854ed0d56b659e4f3b6b59b7423334b",
 "classgGrayscale.html#ab8bd28550b38a702d0952cf5735d1361",
 "classgLocalization.html#a34f1639bf54d5b7132b9222465767c7f",
