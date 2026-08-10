@@ -42,6 +42,9 @@ public:
 	void setPointAtIndex(int index, glm::vec3 p);
 	void setPointAtIndex(int index, glm::vec2 p);
 
+	// Gets the current 3D coordinates of a specific control point by its index.
+	glm::vec3 getPointAtIndex(int index) const;
+
 	//Clears all points to reset or reuse the curve.
 	void clearPoints();
 

@@ -61,6 +61,13 @@ void gBezier::setPointAtIndex(int index, glm::vec2 p) {
 	}
 }
 
+glm::vec3 gBezier::getPointAtIndex(int index) const {
+	if(index >= 0 && index < points.size()) {
+		return points[index];
+	}
+	return glm::vec3(0.0f);
+}
+
 glm::vec3 gBezier::getPoint(float t) const {
 
 	if(points.size() < 3) {
