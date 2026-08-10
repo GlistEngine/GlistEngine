@@ -3,14 +3,8 @@
 Real-time, depth-aware screen-space reflections with temporal reprojection, shown on a reflective floor and a metallic sphere in a procedurally generated sunset environment.
 
 ## Demo
+<video src="https://github.com/user-attachments/assets/e2cb9e6f-78f5-4573-a3c3-8290758eb3f6" controls></video>
 
-<!--
-Drop the demo video/GIF here. If uploading directly on GitHub (drag & drop into
-this file's edit box, or into a PR/issue comment first), paste the generated
-tag it gives you, for example:
-
-<video src="https://github.com/user-attachments/assets/your-video-id" controls></video>
--->
 
 ## What this sample shows
 
