@@ -38,7 +38,9 @@ bool gvkEnsureMeshArena(gVKContext& ctx, VkDeviceSize capacity) {
 	for(int i = 0; i < frames; i++) {
 		if(!gvkCreateBuffer(ctx, capacity, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT,
 				VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
-				ctx.mesharenabuffers[i], ctx.mesharenamemories[i])) {
+				ctx.mesharenabuffers[i], ctx.mesharenamemories[i],
+				VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT | VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT
+						| VK_MEMORY_PROPERTY_HOST_COHERENT_BIT)) {
 			gLoge("gVKDraw") << "Could not create the " << capacity
 					<< " byte mesh arena; animated meshes fall back to one buffer each.";
 			gvkDestroyMeshArena(ctx);
@@ -81,7 +83,9 @@ bool gvkCreateDrawResources(gVKContext& ctx) {
 	for(int i = 0; i < frames; i++) {
 		if(!gvkCreateBuffer(ctx, ctx.dynvertexcapacity, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT,
 				VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
-				ctx.dynvertexbuffers[i], ctx.dynvertexmemories[i])) {
+				ctx.dynvertexbuffers[i], ctx.dynvertexmemories[i],
+				VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT | VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT
+						| VK_MEMORY_PROPERTY_HOST_COHERENT_BIT)) {
 			gLoge("gVKDraw") << "Could not create the dynamic vertex buffer.";
 			return false;
 		}

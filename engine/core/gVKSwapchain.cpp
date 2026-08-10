@@ -88,8 +88,15 @@ static VkPresentModeKHR gvkPickPresentMode(VkPhysicalDevice physicaldevice,
 	const auto supports = [&modes](VkPresentModeKHR mode) {
 		return std::find(modes.begin(), modes.end(), mode) != modes.end();
 	};
-	if(supports(VK_PRESENT_MODE_MAILBOX_KHR)) return VK_PRESENT_MODE_MAILBOX_KHR;
+	// IMMEDIATE before MAILBOX, because vsync off is a request not to be paced by the
+	// display and only IMMEDIATE means that. MAILBOX drops stale frames rather than
+	// queueing them, which avoids tearing and reads like the better mode, but the app
+	// still cannot get ahead of the refresh: with the image count drivers hand out
+	// here it measured a hard 144.0 fps on a 144 Hz screen, all of it spent waiting
+	// inside vkAcquireNextImageKHR, while OpenGL with glfwSwapInterval(0) ran the same
+	// scene at 523. MAILBOX stays as the fallback for surfaces without IMMEDIATE.
 	if(supports(VK_PRESENT_MODE_IMMEDIATE_KHR)) return VK_PRESENT_MODE_IMMEDIATE_KHR;
+	if(supports(VK_PRESENT_MODE_MAILBOX_KHR)) return VK_PRESENT_MODE_MAILBOX_KHR;
 	return VK_PRESENT_MODE_FIFO_KHR;
 }
 

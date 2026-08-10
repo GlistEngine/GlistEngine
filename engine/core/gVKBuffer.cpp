@@ -8,7 +8,10 @@
 
 #include "gUtils.h"
 
-uint32_t gvkFindMemoryType(gVKContext& ctx, uint32_t typeFilter, VkMemoryPropertyFlags properties) {
+// Returns UINT32_MAX rather than logging when nothing matches, so a caller can ask
+// for memory it would like and fall back to memory it needs.
+static uint32_t gvkTryFindMemoryType(gVKContext& ctx, uint32_t typeFilter,
+		VkMemoryPropertyFlags properties) {
 	VkPhysicalDeviceMemoryProperties* memprops = ctx.getDeviceMemoryProperties();
 	for(uint32_t i = 0; i < memprops->memoryTypeCount; i++) {
 		if((typeFilter & (1u << i)) &&
@@ -16,12 +19,19 @@ uint32_t gvkFindMemoryType(gVKContext& ctx, uint32_t typeFilter, VkMemoryPropert
 			return i;
 		}
 	}
+	return UINT32_MAX;
+}
+
+uint32_t gvkFindMemoryType(gVKContext& ctx, uint32_t typeFilter, VkMemoryPropertyFlags properties) {
+	const uint32_t index = gvkTryFindMemoryType(ctx, typeFilter, properties);
+	if(index != UINT32_MAX) return index;
 	gLoge("gVKBuffer") << "No suitable memory type found.";
 	return 0;
 }
 
 bool gvkCreateBuffer(gVKContext& ctx, VkDeviceSize size, VkBufferUsageFlags usage,
-		VkMemoryPropertyFlags properties, VkBuffer& outBuffer, VkDeviceMemory& outMemory) {
+		VkMemoryPropertyFlags properties, VkBuffer& outBuffer, VkDeviceMemory& outMemory,
+		VkMemoryPropertyFlags preferred) {
 	VkDevice device = *ctx.getDevice();
 
 	VkBufferCreateInfo bufferinfo{};
@@ -38,10 +48,18 @@ bool gvkCreateBuffer(gVKContext& ctx, VkDeviceSize size, VkBufferUsageFlags usag
 	VkMemoryRequirements memreq;
 	vkGetBufferMemoryRequirements(device, outBuffer, &memreq);
 
+	// preferred is memory the caller would rather have but can do without - device
+	// local memory that the CPU can also write, which is where a buffer the CPU
+	// rewrites every frame belongs: plain host visible memory lives in system RAM and
+	// the GPU reads it across the bus on every draw.
+	uint32_t memtype = UINT32_MAX;
+	if(preferred != 0) memtype = gvkTryFindMemoryType(ctx, memreq.memoryTypeBits, preferred);
+	if(memtype == UINT32_MAX) memtype = gvkFindMemoryType(ctx, memreq.memoryTypeBits, properties);
+
 	VkMemoryAllocateInfo allocinfo{};
 	allocinfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
 	allocinfo.allocationSize = memreq.size;
-	allocinfo.memoryTypeIndex = gvkFindMemoryType(ctx, memreq.memoryTypeBits, properties);
+	allocinfo.memoryTypeIndex = memtype;
 	if(vkAllocateMemory(device, &allocinfo, nullptr, &outMemory) != VK_SUCCESS) {
 		gLoge("gVKBuffer") << "vkAllocateMemory failed.";
 		vkDestroyBuffer(device, outBuffer, nullptr);

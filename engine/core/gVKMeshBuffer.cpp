@@ -75,7 +75,9 @@ static bool gvkMakeMeshBufferDynamic(gVKContext& ctx, gVKMeshBuffer& buf,
 	for(int i = 0; i < GVK_MAX_FRAMES_IN_FLIGHT; i++) {
 		if(!gvkCreateBuffer(ctx, capacity, usage,
 				VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
-				buf.slotbuffers[i], buf.slotmemories[i])) {
+				buf.slotbuffers[i], buf.slotmemories[i],
+				VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT | VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT
+						| VK_MEMORY_PROPERTY_HOST_COHERENT_BIT)) {
 			gLoge("gVKMeshBuffer") << "Could not create a host visible " << capacity
 					<< " byte buffer for a mesh that updates every frame.";
 			gvkDestroyMeshBuffer(ctx, buf);
