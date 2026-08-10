@@ -709,16 +709,6 @@ void gvkDestroyGraphicsPipelines(gVKContext& ctx) {
 	// descriptor sets are gone too and have to be written again afterwards.
 	if(ctx.descriptorpool != VK_NULL_HANDLE) { vkDestroyDescriptorPool(device, ctx.descriptorpool, nullptr); ctx.descriptorpool = VK_NULL_HANDLE; }
 	for(VkDescriptorSetLayout setlayout : ctx.mesh3dsetlayouts) vkDestroyDescriptorSetLayout(device, setlayout, nullptr);
-	if(ctx.mesh3dpbrpipeline != VK_NULL_HANDLE) { vkDestroyPipeline(device, ctx.mesh3dpbrpipeline, nullptr); ctx.mesh3dpbrpipeline = VK_NULL_HANDLE; }
-	if(ctx.mesh3dpbrpipelinelayout != VK_NULL_HANDLE) { vkDestroyPipelineLayout(device, ctx.mesh3dpbrpipelinelayout, nullptr); ctx.mesh3dpbrpipelinelayout = VK_NULL_HANDLE; }
-	for(VkDescriptorSetLayout setlayout : ctx.mesh3dpbrsetlayouts) vkDestroyDescriptorSetLayout(device, setlayout, nullptr);
-	ctx.mesh3dpbrsetlayouts.clear();
-	ctx.mesh3dpbrpushsize = 0;
-	ctx.mesh3dpbrpushstages = 0;
-	if(ctx.mesh3dlinepipeline != VK_NULL_HANDLE) { vkDestroyPipeline(device, ctx.mesh3dlinepipeline, nullptr); ctx.mesh3dlinepipeline = VK_NULL_HANDLE; }
-	if(ctx.mesh3dpipeline != VK_NULL_HANDLE) { vkDestroyPipeline(device, ctx.mesh3dpipeline, nullptr); ctx.mesh3dpipeline = VK_NULL_HANDLE; }
-	if(ctx.mesh3dpipelinelayout != VK_NULL_HANDLE) { vkDestroyPipelineLayout(device, ctx.mesh3dpipelinelayout, nullptr); ctx.mesh3dpipelinelayout = VK_NULL_HANDLE; }
-	for(VkDescriptorSetLayout setlayout : ctx.mesh3dsetlayouts) vkDestroyDescriptorSetLayout(device, setlayout, nullptr);
 	ctx.mesh3dsetlayouts.clear();
 	ctx.mesh3dpushsize = 0;
 	ctx.mesh3dpushstages = 0;

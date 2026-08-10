@@ -92,6 +92,7 @@ class gImage;
  * the framebuffer and create a bigger window than the developer's value.
  */
 void gStartEngine(gBaseApp* baseApp, const std::string& appName, int windowMode, int width, int height, bool isResizable = true, int renderEngine = G_RENDERER_GL);
+void gStartEngine(gBaseApp* baseApp, const std::string& appName, int windowMode, int width, int height, bool isResizable, int renderEngine, bool vsync, int frameRateLimit);
 
 /**
  * Sets the app settings for engine according to given name, mode of window,
@@ -137,6 +138,7 @@ void gStartEngine(gBaseApp* baseApp, const std::string& appName, int windowMode,
  * the framebuffer and create a bigger window than the developer's value.
  */
 void gStartEngine(gBaseApp* baseApp, const std::string& appName, int windowMode, int unitWidth, int unitHeight, int screenScaling, int width, int height, bool isResizable = true, int renderEngine = G_RENDERER_GL);
+void gStartEngine(gBaseApp* baseApp, const std::string& appName, int windowMode, int unitWidth, int unitHeight, int screenScaling, int width, int height, bool isResizable, int renderEngine, bool vsync, int frameRateLimit);
 
 /**
  * Creates a windowless console/service app.
@@ -234,6 +236,7 @@ public:
 	 * @param framerate Target frames per second value
 	 */
     void setTargetFramerate(int framerate);
+	void setFrameRateLimitOverride(int framerate);
 
 	/**
 	 * @return Target frames per second value
@@ -398,6 +401,7 @@ private:
     int totalupdates;
     int totaldraws;
     int targetframerate;
+	int frameratelimitoverride;
     bool iscanvasset;
 
     bool isjoystickenabled;

@@ -342,11 +342,10 @@ void gvkDrawShadowCaster(gVKContext& ctx, VkBuffer vertexBuffer, VkDeviceSize ve
 
 	VkCommandBuffer cmd = ctx.getCurrentCommandBuffer();
 	if(cmd == VK_NULL_HANDLE || ctx.getShadowPipeline() == VK_NULL_HANDLE) return;
-	if(diffuseSet == VK_NULL_HANDLE) return;
 
-	if(ctx.shouldBindPipeline(ctx.getShadowPipeline())) {
-		vkCmdBindPipeline(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, ctx.getShadowPipeline());
-	}
+	// Shadow recording deliberately emits complete state. It is a separate render
+	// pass and must not inherit assumptions cached while recording the scene pass.
+	vkCmdBindPipeline(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, ctx.getShadowPipeline());
 
 	// One set, the caster's diffuse map, and only so a cutout material can discard
 	// its holes. An opaque mesh binds the white texture here and never samples it.
@@ -356,11 +355,9 @@ void gvkDrawShadowCaster(gVKContext& ctx, VkBuffer vertexBuffer, VkDeviceSize ve
 	// still reads it, so an edit to shadow3d.frag that stops sampling - live shader
 	// reload makes that a runtime possibility, not just a build-time one - leaves a
 	// layout with no sets, and binding one into it crashes the driver.
-	if(ctx.hasShadowDescriptorSetLayout()) {
-		if(ctx.shouldBindDescriptorSets(ctx.getShadowPipelineLayout(), &diffuseSet, 1)) {
-			vkCmdBindDescriptorSets(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, ctx.getShadowPipelineLayout(),
-					0, 1, &diffuseSet, 0, nullptr);
-		}
+	if(ctx.hasShadowDescriptorSetLayout() && diffuseSet != VK_NULL_HANDLE) {
+		vkCmdBindDescriptorSets(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, ctx.getShadowPipelineLayout(),
+				0, 1, &diffuseSet, 0, nullptr);
 	}
 
 	VkBuffer buffers[] = {vertexBuffer, instanceBuffer};
@@ -377,18 +374,14 @@ void gvkDrawShadowCaster(gVKContext& ctx, VkBuffer vertexBuffer, VkDeviceSize ve
 	// to be set even though it never varies here: the map is the pass's only output,
 	// and a caster that skipped the test would leave the wrong distance in it. The
 	// scene's own enableDepthTest deliberately has no say.
-	if(ctx.shouldSetDepthState(VK_TRUE, VK_TRUE, VK_COMPARE_OP_LESS)) {
-		vkCmdSetDepthTestEnable(cmd, VK_TRUE);
-		vkCmdSetDepthWriteEnable(cmd, VK_TRUE);
-		vkCmdSetDepthCompareOp(cmd, VK_COMPARE_OP_LESS);
-	}
-	if(ctx.shouldSetTopology(topology)) vkCmdSetPrimitiveTopology(cmd, topology);
+	vkCmdSetDepthTestEnable(cmd, VK_TRUE);
+	vkCmdSetDepthWriteEnable(cmd, VK_TRUE);
+	vkCmdSetDepthCompareOp(cmd, VK_COMPARE_OP_LESS);
+	vkCmdSetPrimitiveTopology(cmd, topology);
 	// Casters are never culled, whatever the scene asked for: a shadow wants the
 	// whole silhouette, and dropping back faces would punch holes in it.
-	if(ctx.shouldSetCullState(VK_CULL_MODE_NONE, VK_FRONT_FACE_CLOCKWISE)) {
-		vkCmdSetCullMode(cmd, VK_CULL_MODE_NONE);
-		vkCmdSetFrontFace(cmd, VK_FRONT_FACE_CLOCKWISE);
-	}
+	vkCmdSetCullMode(cmd, VK_CULL_MODE_NONE);
+	vkCmdSetFrontFace(cmd, VK_FRONT_FACE_CLOCKWISE);
 
 	const uint32_t instances = static_cast<uint32_t>(instanceCount < 1 ? 1 : instanceCount);
 	if(indexBuffer != VK_NULL_HANDLE) {

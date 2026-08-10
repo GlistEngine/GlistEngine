@@ -22,6 +22,12 @@ static_assert(GVK_MAX_LIGHTS == GLIST_MAX_LIGHTS,
 static_assert(sizeof(gVKLightData) == sizeof(gRenderer::gSceneLightData),
 		"gVKLightData no longer matches gRenderer::gSceneLightData");
 
+static VkDeviceSize gvkSceneUniformStride(const gVKContext& ctx) {
+	const VkDeviceSize alignment = ctx.getMinUniformBufferOffsetAlignment();
+	if(alignment == 0) return sizeof(gVKSceneUniforms);
+	return (sizeof(gVKSceneUniforms) + alignment - 1) & ~(alignment - 1);
+}
+
 bool gvkCreateUniformResources(gVKContext& ctx) {
 	VkDevice device = *ctx.getDevice();
 	if(device == VK_NULL_HANDLE) return false;
@@ -39,7 +45,9 @@ bool gvkCreateUniformResources(gVKContext& ctx) {
 	for(int i = 0; i < GVK_MAX_FRAMES_IN_FLIGHT; i++) {
 		// Host visible and coherent: written every frame by the CPU, read by the GPU,
 		// and coherent memory means no explicit flush after each write.
-		if(!gvkCreateBuffer(ctx, sizeof(gVKSceneUniforms), VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
+		const VkDeviceSize stride = gvkSceneUniformStride(ctx);
+		const VkDeviceSize buffersize = stride * GVK_SCENE_UNIFORM_SLOTS;
+		if(!gvkCreateBuffer(ctx, buffersize, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
 				VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
 				ctx.sceneuniformbuffers[i], ctx.sceneuniformmemories[i])) {
 			gLoge("gVKUniform") << "Could not create the scene uniform buffer for frame " << i;
@@ -47,7 +55,7 @@ bool gvkCreateUniformResources(gVKContext& ctx) {
 			return false;
 		}
 
-		if(vkMapMemory(device, ctx.sceneuniformmemories[i], 0, sizeof(gVKSceneUniforms), 0,
+		if(vkMapMemory(device, ctx.sceneuniformmemories[i], 0, buffersize, 0,
 				&ctx.sceneuniformmapped[i]) != VK_SUCCESS) {
 			gLoge("gVKUniform") << "vkMapMemory failed for the scene uniform buffer " << i;
 			gvkDestroyUniformResources(ctx);
@@ -55,36 +63,37 @@ bool gvkCreateUniformResources(gVKContext& ctx) {
 		}
 		// A frame that draws no 3D still has its buffer bound, so it must not contain
 		// whatever the allocation happened to hold.
-		std::memset(ctx.sceneuniformmapped[i], 0, sizeof(gVKSceneUniforms));
+		std::memset(ctx.sceneuniformmapped[i], 0, buffersize);
 
 		VkDescriptorSetAllocateInfo allocinfo{};
 		allocinfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
 		allocinfo.descriptorPool = ctx.descriptorpool;
-		allocinfo.descriptorSetCount = 1;
-		allocinfo.pSetLayouts = &ctx.mesh3dsetlayouts[0];
-		if(vkAllocateDescriptorSets(device, &allocinfo, &ctx.sceneuniformsets[i]) != VK_SUCCESS) {
+		std::vector<VkDescriptorSetLayout> layouts(GVK_SCENE_UNIFORM_SLOTS, ctx.mesh3dsetlayouts[0]);
+		allocinfo.descriptorSetCount = GVK_SCENE_UNIFORM_SLOTS;
+		allocinfo.pSetLayouts = layouts.data();
+		if(vkAllocateDescriptorSets(device, &allocinfo, ctx.sceneuniformsets[i]) != VK_SUCCESS) {
 			gLoge("gVKUniform") << "vkAllocateDescriptorSets failed for the scene set " << i;
-			ctx.sceneuniformsets[i] = VK_NULL_HANDLE;
+			for(VkDescriptorSet& set : ctx.sceneuniformsets[i]) set = VK_NULL_HANDLE;
 			gvkDestroyUniformResources(ctx);
 			return false;
 		}
 
 		// Written once here rather than per frame: the set always points at the same
 		// buffer, and only the buffer's contents change.
-		VkDescriptorBufferInfo bufferinfo{};
-		bufferinfo.buffer = ctx.sceneuniformbuffers[i];
-		bufferinfo.offset = 0;
-		bufferinfo.range = sizeof(gVKSceneUniforms);
-
-		VkWriteDescriptorSet write{};
-		write.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-		write.dstSet = ctx.sceneuniformsets[i];
-		write.dstBinding = 0;
-		write.dstArrayElement = 0;
-		write.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-		write.descriptorCount = 1;
-		write.pBufferInfo = &bufferinfo;
-		vkUpdateDescriptorSets(device, 1, &write, 0, nullptr);
+		for(uint32_t slot = 0; slot < GVK_SCENE_UNIFORM_SLOTS; ++slot) {
+			VkDescriptorBufferInfo bufferinfo{};
+			bufferinfo.buffer = ctx.sceneuniformbuffers[i];
+			bufferinfo.offset = stride * slot;
+			bufferinfo.range = sizeof(gVKSceneUniforms);
+			VkWriteDescriptorSet write{};
+			write.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+			write.dstSet = ctx.sceneuniformsets[i][slot];
+			write.dstBinding = 0;
+			write.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+			write.descriptorCount = 1;
+			write.pBufferInfo = &bufferinfo;
+			vkUpdateDescriptorSets(device, 1, &write, 0, nullptr);
+		}
 	}
 
 	gLogi("gVKUniform") << "Scene uniform buffers ready: " << GVK_MAX_FRAMES_IN_FLIGHT
@@ -99,7 +108,7 @@ void gvkDestroyUniformResources(gVKContext& ctx) {
 	for(int i = 0; i < GVK_MAX_FRAMES_IN_FLIGHT; i++) {
 		// The sets are not freed one by one: they were allocated from the descriptor
 		// pool, which gvkDestroyGraphicsPipelines destroys as a whole.
-		ctx.sceneuniformsets[i] = VK_NULL_HANDLE;
+		for(VkDescriptorSet& set : ctx.sceneuniformsets[i]) set = VK_NULL_HANDLE;
 
 		if(ctx.sceneuniformmapped[i] != nullptr) {
 			vkUnmapMemory(device, ctx.sceneuniformmemories[i]);
@@ -116,10 +125,18 @@ void gvkDestroyUniformResources(gVKContext& ctx) {
 	}
 }
 
-void gvkWriteSceneUniforms(gVKContext& ctx, const gVKSceneUniforms& data) {
+bool gvkWriteSceneUniforms(gVKContext& ctx, const gVKSceneUniforms& data) {
 	void* mapped = ctx.sceneuniformmapped[ctx.currentframe];
-	if(mapped == nullptr) return;
-	std::memcpy(mapped, &data, sizeof(gVKSceneUniforms));
+	if(mapped == nullptr) return false;
+	if(ctx.sceneuniformslotcount >= GVK_SCENE_UNIFORM_SLOTS) {
+		gLoge("gVKUniform") << "Too many scene lighting changes in one frame.";
+		return false;
+	}
+	ctx.currentsceneuniformslot = ctx.sceneuniformslotcount++;
+	auto* destination = static_cast<unsigned char*>(mapped)
+			+ gvkSceneUniformStride(ctx) * ctx.currentsceneuniformslot;
+	std::memcpy(destination, &data, sizeof(gVKSceneUniforms));
+	return true;
 }
 
 #endif /* GVK_DESKTOP_GLFW */

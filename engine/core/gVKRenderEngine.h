@@ -239,6 +239,7 @@ public:
 	void releaseShadowMap() override;
 	bool beginShadowPass() override;
 	void endShadowPass() override;
+	bool isShadowPassActive() const override;
 	void setShadowMapState(bool enabled, const glm::mat4& lightMatrix,
 			const glm::vec3& lightPosition, bool softShadows) override;
 
@@ -362,6 +363,7 @@ private:
 		int vertexcount = 0;
 		int indexcount = 0;
 		int drawmode = GL_TRIANGLES;
+		int instancecount = 1;
 		glm::mat4 model{1.0f};
 		gMeshSurface surface{};
 		glm::vec4 tint{1.0f};

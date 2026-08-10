@@ -9,7 +9,6 @@
 // attributes this shader consumes.
 
 layout(location = 0) in vec3 aPos;
-layout(location = 2) in vec2 aTexCoords;
 // Same per-instance binding as mesh3d.vert, so an instanced mesh casts as many
 // shadows as it draws copies. Non-instanced draws bind a one-element identity.
 layout(location = 6) in mat4 aInstanceModel;
@@ -19,14 +18,8 @@ layout(push_constant) uniform Push {
     // separate would cost 192 bytes of a 128 byte budget; the instance matrix below
     // is the only part that cannot be folded in, since it differs per instance.
     mat4 lightmodel;
-    // Declared here as well even though this stage never reads it: a push constant
-    // block has to be described identically in every stage that names it.
-    vec4 misc;
 } pc;
 
-layout(location = 0) out vec2 vTexCoords;
-
 void main() {
-    vTexCoords = aTexCoords;
     gl_Position = pc.lightmodel * aInstanceModel * vec4(aPos, 1.0);
 }

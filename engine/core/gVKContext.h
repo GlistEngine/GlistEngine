@@ -43,6 +43,7 @@ struct gVKContext;
 
 // How many frames the CPU may prepare while the GPU is still busy with earlier ones.
 inline constexpr int GVK_MAX_FRAMES_IN_FLIGHT = 2;
+inline constexpr uint32_t GVK_SCENE_UNIFORM_SLOTS = 16;
 
 // Declared here as well so the struct can befriend them.
 bool gvkCreateSwapchain(gVKContext& ctx, GLFWwindow* window);
@@ -144,7 +145,7 @@ struct gVKContext {
 	friend bool gvkCreateUniformResources(gVKContext&);
 	friend void gvkDestroyUniformResources(gVKContext&);
 	friend struct gVKSceneUniforms;
-	friend void gvkWriteSceneUniforms(gVKContext&, const struct gVKSceneUniforms&);
+	friend bool gvkWriteSceneUniforms(gVKContext&, const struct gVKSceneUniforms&);
 
 	/* ---------------- configurable settings ---------------- */
 	// Set these before the backend initialises to influence instance and device
@@ -376,12 +377,18 @@ struct gVKContext {
 
 	// The scene descriptor set of the frame being recorded: camera matrices and
 	// lights. VK_NULL_HANDLE when the 3D path has no uniform block.
-	VkDescriptorSet getCurrentSceneDescriptorSet() const { return sceneuniformsets[currentframe]; }
+	VkDescriptorSet getCurrentSceneDescriptorSet() const {
+		return sceneuniformsets[currentframe][currentsceneuniformslot];
+	}
+	void resetSceneUniformSlots() { currentsceneuniformslot = 0; sceneuniformslotcount = 0; }
 	// Which of the frames in flight is being recorded. Anything the CPU rewrites
 	// while the GPU may still be reading the previous frame needs one copy per
 	// index and has to write the one this returns: the frame loop waits on that
 	// index's fence before recording, which is what makes the copy free again.
 	uint32_t getCurrentFrame() const { return currentframe; }
+	VkDeviceSize getMinUniformBufferOffsetAlignment() const {
+		return deviceproperties.limits.minUniformBufferOffsetAlignment;
+	}
 	// The layout of the image pipeline's descriptor set 0, which is where a
 	// texture's combined image sampler goes.
 	VkDescriptorSetLayout getImageDescriptorSetLayout() {
@@ -401,14 +408,8 @@ struct gVKContext {
 	// The command buffer of the frame currently being recorded, or VK_NULL_HANDLE
 	// when no frame is active.
 	VkCommandBuffer getCurrentCommandBuffer() {
-		if(recordingcommandbuffer != VK_NULL_HANDLE) return recordingcommandbuffer;
 		return frameactive ? commandbuffers[currentframe] : VK_NULL_HANDLE;
 	}
-	// Temporarily redirects draw helpers to a secondary command buffer while its
-	// worker records. The frame thread restores VK_NULL_HANDLE before it resumes
-	// primary recording. This is deliberately not a global command-pool switch.
-	void setRecordingCommandBuffer(VkCommandBuffer buffer) { recordingcommandbuffer = buffer; }
-	void clearRecordingCommandBuffer() { recordingcommandbuffer = VK_NULL_HANDLE; }
 
 	// Per-frame vertex ring. resetDynamicVertices() rewinds the current frame's
 	// buffer at frame start; pushDynamicVertices() appends vertex bytes (16-byte
@@ -563,6 +564,7 @@ private:
 	bool validationactive = false;
 
 	GLFWwindow* window = nullptr;
+	bool vsyncenabled = false;
 
 	VkSwapchainKHR swapchain = VK_NULL_HANDLE;
 	std::vector<VkImage> swapchainimages;
@@ -611,14 +613,6 @@ private:
 	VkCommandPool commandpool = VK_NULL_HANDLE;
 	// GVK_MAX_FRAMES_IN_FLIGHT entries, indexed by currentframe.
 	std::vector<VkCommandBuffer> commandbuffers;
-	// A command pool is externally synchronized in Vulkan: two threads must never
-	// allocate, reset or record through the same pool.  These per-worker pools and
-	// their secondary command buffers are the ownership boundary used by the
-	// deferred parallel recorder.  They are kept separate from commandpool, which
-	// remains owned exclusively by the frame thread and records the primary buffer.
-	std::vector<VkCommandPool> workercommandpools;
-	std::vector<std::vector<VkCommandBuffer>> workercommandbuffers;
-	VkCommandBuffer recordingcommandbuffer = VK_NULL_HANDLE;
 
 	// GVK_MAX_FRAMES_IN_FLIGHT entries, indexed by currentframe.
 	std::vector<VkSemaphore> imageavailablesemaphores;
@@ -687,7 +681,9 @@ private:
 	VkBuffer sceneuniformbuffers[GVK_MAX_FRAMES_IN_FLIGHT] = {};
 	VkDeviceMemory sceneuniformmemories[GVK_MAX_FRAMES_IN_FLIGHT] = {};
 	void* sceneuniformmapped[GVK_MAX_FRAMES_IN_FLIGHT] = {};
-	VkDescriptorSet sceneuniformsets[GVK_MAX_FRAMES_IN_FLIGHT] = {};
+	VkDescriptorSet sceneuniformsets[GVK_MAX_FRAMES_IN_FLIGHT][GVK_SCENE_UNIFORM_SLOTS] = {};
+	uint32_t currentsceneuniformslot = 0;
+	uint32_t sceneuniformslotcount = 0;
 	// Descriptor set layouts of each pipeline, in set order, and the push constant
 	// block each declares. All of it is reflected out of the compiled SPIR-V rather
 	// than written out here, so the shaders stay the single source of truth.
