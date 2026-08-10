@@ -13,8 +13,6 @@
 #include "gUtils.h"
 #include <GLFW/glfw3.h>
 #include <algorithm>
-#include <cstdlib>
-#include <cstring>
 
 // The OpenGL backend treats the engine's colour values as display-ready values.
 // Prefer an UNORM swapchain so Vulkan follows the same path without an implicit
@@ -64,24 +62,6 @@ static VkExtent2D gvkPickExtent(const VkSurfaceCapabilitiesKHR& caps, GLFWwindow
 	extent.width = std::clamp(static_cast<uint32_t>(width), caps.minImageExtent.width, caps.maxImageExtent.width);
 	extent.height = std::clamp(static_cast<uint32_t>(height), caps.minImageExtent.height, caps.maxImageExtent.height);
 	return extent;
-}
-
-static VkPresentModeKHR gvkPickPresentMode(const std::vector<VkPresentModeKHR>& modes, bool vsyncenabled) {
-	// FIFO remains the normal engine default. For profiling, GLIST_VK_VSYNC=0 makes
-	// Vulkan comparable with OpenGL's glfwSwapInterval(0) without changing game
-	// source or permanently taking ownership of the public VSync implementation.
-	const char* overridevalue = std::getenv("GLIST_VK_VSYNC");
-	const bool disablevsync = overridevalue != nullptr
-			? std::strcmp(overridevalue, "0") == 0
-			: !vsyncenabled;
-	if(!disablevsync) return VK_PRESENT_MODE_FIFO_KHR;
-	for(VkPresentModeKHR mode : modes) {
-		if(mode == VK_PRESENT_MODE_IMMEDIATE_KHR) return mode;
-	}
-	for(VkPresentModeKHR mode : modes) {
-		if(mode == VK_PRESENT_MODE_MAILBOX_KHR) return mode;
-	}
-	return VK_PRESENT_MODE_FIFO_KHR;
 }
 
 bool gvkCreateSwapchain(gVKContext& ctx, GLFWwindow* window) {
@@ -146,7 +126,9 @@ bool gvkCreateSwapchain(gVKContext& ctx, GLFWwindow* window) {
 
 	createinfo.preTransform = caps.currentTransform;
 	createinfo.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
-	createinfo.presentMode = gvkPickPresentMode(ctx.surfacepresentmodes, ctx.vsyncenabled);
+	// FIFO is the only present mode the specification guarantees everywhere, and it
+	// is vsynced, so no tearing.
+	createinfo.presentMode = VK_PRESENT_MODE_FIFO_KHR;
 	createinfo.clipped = VK_TRUE;
 	createinfo.oldSwapchain = VK_NULL_HANDLE;
 
@@ -198,7 +180,7 @@ bool gvkCreateSwapchain(gVKContext& ctx, GLFWwindow* window) {
 	gLogi("gVKSwapchain") << "Swapchain created: " << createdcount << " images, "
 			<< ctx.swapchainextent.width << "x" << ctx.swapchainextent.height
 			<< ", format " << ctx.swapchainformat << ", color space " << surfaceformat.colorSpace
-			<< ", present mode " << static_cast<int>(createinfo.presentMode);
+			<< ", present mode FIFO";
 	return true;
 }
 

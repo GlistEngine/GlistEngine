@@ -15,8 +15,6 @@
 #include "gGUIFrame.h"
 
 #include <algorithm>
-#include <climits>
-#include <cstdlib>
 #include <thread>
 #include "gGUIAppThread.h"
 #include "gTracy.h"
@@ -42,35 +40,19 @@
 #endif
 
 void gStartEngine(gBaseApp* baseApp, const std::string& appName, int windowMode, int width, int height, bool isResizable, int renderEngine) {
-    gStartEngine(baseApp, appName, windowMode, width, height, isResizable, renderEngine, false, -1);
-}
-
-void gStartEngine(gBaseApp* baseApp, const std::string& appName, int windowMode, int width, int height, bool isResizable, int renderEngine, bool vsync, int frameRateLimit) {
-    gStartEngine(baseApp, appName, windowMode, width, height, G_SCREENSCALING_AUTO_ONCE, width, height, isResizable, renderEngine, vsync, frameRateLimit);
+    gStartEngine(baseApp, appName, windowMode, width, height, G_SCREENSCALING_AUTO_ONCE, width, height, isResizable, renderEngine);
 }
 
 void gStartEngine(gBaseApp* baseApp, const std::string& appName, int windowMode, int unitWidth, int unitHeight, int screenScaling, int width, int height, bool isResizable, int renderEngine) {
-    gStartEngine(baseApp, appName, windowMode, unitWidth, unitHeight, screenScaling, width, height, isResizable, renderEngine, false, -1);
-}
-
-void gStartEngine(gBaseApp* baseApp, const std::string& appName, int windowMode, int unitWidth, int unitHeight, int screenScaling, int width, int height, bool isResizable, int renderEngine, bool vsync, int frameRateLimit) {
     if(windowMode == G_WINDOWMODE_NONE) windowMode = G_WINDOWMODE_APP;
 #if TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
     ios_main(baseApp, appName.c_str(), windowMode, unitWidth, unitHeight, screenScaling, width, height, isResizable);
 #elif defined(ANDROID)
     gAppManager* manager = new gAppManager(appName, baseApp, width, height, windowMode, unitWidth, unitHeight, screenScaling, isResizable, G_LOOPMODE_NORMAL);
     manager->setRenderEngine(renderEngine);
-    if(renderEngine == G_RENDERER_VK) {
-        if(vsync) manager->enableVsync();
-        manager->setFrameRateLimitOverride(frameRateLimit);
-    }
 #else
-	gAppManager manager(appName, baseApp, width, height, windowMode, unitWidth, unitHeight, screenScaling, isResizable, G_LOOPMODE_NORMAL);
+    gAppManager manager(appName, baseApp, width, height, windowMode, unitWidth, unitHeight, screenScaling, isResizable, G_LOOPMODE_NORMAL);
 	manager.setRenderEngine(renderEngine);
-	if(renderEngine == G_RENDERER_VK) {
-		if(vsync) manager.enableVsync();
-		manager.setFrameRateLimitOverride(frameRateLimit);
-	}
 	manager.runApp();
 #endif
 }
@@ -128,7 +110,6 @@ gAppManager::gAppManager(const std::string& appName, gBaseApp *baseApp, int widt
         mousebuttonpressed[i] = false;
     }
     targetframerate = 60;
-	frameratelimitoverride = -1;
 	framerate = targetframerate;
     updateTime();
     starttime = AppClock::now();
@@ -305,10 +286,6 @@ void gAppManager::loop() {
 
         if(totaltime >= 1'000'000'000) {
         	framerate = totalupdates;
-			if(std::getenv("GLIST_LOG_FPS") != nullptr) {
-				gLogi("gAppManager") << (renderengine == G_RENDERER_VK ? "Vulkan" : "OpenGL")
-						<< " FPS: " << framerate;
-			}
             totaltime = 0;
             totalupdates = 0;
             totaldraws = 0;
@@ -461,28 +438,8 @@ gBaseCanvas* gAppManager::getCurrentCanvas() {
 }
 
 void gAppManager::setTargetFramerate(int framerate) {
-	// A profiling-only process override. It lets the same unmodified application
-	// binary run both backends without an application-side limiter hiding their
-	// rendering cost. Zero means unlimited; a positive value supplies an explicit
-	// cap. When the variable is absent, the application's request is untouched.
-	static const int profileoverride = []() {
-		const char* value = std::getenv("GLIST_MAX_FPS");
-		if(value == nullptr) return -1;
-		char* end = nullptr;
-		const long parsed = std::strtol(value, &end, 10);
-		if(end == value || *end != '\0' || parsed < 0) return -1;
-		if(parsed == 0 || parsed >= INT_MAX) return INT_MAX;
-		return static_cast<int>(parsed);
-	}();
-	if(profileoverride >= 0) framerate = profileoverride;
-	if(frameratelimitoverride >= 0) framerate = frameratelimitoverride;
     targetframerate = framerate;
 	updateTime();
-}
-
-void gAppManager::setFrameRateLimitOverride(int framerate) {
-	frameratelimitoverride = framerate == 0 ? INT_MAX : framerate;
-	if(framerate >= 0) setTargetFramerate(framerate);
 }
 
 int gAppManager::getTargetFramerate() {
@@ -1054,12 +1011,7 @@ bool gAppManager::onTouchEvent(gTouchEvent& event) {
 #endif
 
 void gAppManager::updateTime() {
-	if(targetframerate >= INT_MAX) {
-		targettimestep = AppClockDuration(0);
-		return;
-	}
-	const int safeFramerate = std::max(0, targetframerate);
-	targettimestep = AppClockDuration(1'000'000'000LL / (static_cast<int64_t>(safeFramerate) + 1));
+	targettimestep = AppClockDuration(1'000'000'000 / (targetframerate + 1));
 }
 
 void gAppManager::submitToMainThread(std::function<void()> fn) {

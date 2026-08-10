@@ -134,15 +134,15 @@ float calculateShadow(vec3 normal) {
 
     vec2 texelSize = 1.0 / vec2(textureSize(shadowmap, 0));
     float shadow = 0.0;
-    float spacing = scene.softshadows != 0 ? 2.0 : 1.0;
-    for (int x = -1; x <= 1; ++x) {
-        for (int y = -1; y <= 1; ++y) {
-            float pcfDepth = texture(shadowmap,
-                    projCoords.xy + vec2(x, y) * texelSize * spacing).r;
+    int radius = scene.softshadows != 0 ? 2 : 1;
+    for (int x = -radius; x <= radius; ++x) {
+        for (int y = -radius; y <= radius; ++y) {
+            float pcfDepth = texture(shadowmap, projCoords.xy + vec2(x, y) * texelSize).r;
             shadow += currentDepth - bias > pcfDepth ? 1.0 : 0.0;
         }
     }
-    return shadow / 9.0;
+    float taps = float((2 * radius + 1) * (2 * radius + 1));
+    return shadow / taps;
 }
 
 void main() {

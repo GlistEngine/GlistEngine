@@ -26,11 +26,9 @@ glm::mat4 captureViews[] = {
 	glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3( 0.0f,  0.0f, -1.0f), glm::vec3(0.0f, -1.0f,  0.0f))
 };
 
-namespace {
+static const float gSkyboxPi = 3.14159265358979323846f;
 
-constexpr float gSkyboxPi = 3.14159265358979323846f;
-
-glm::vec3 gSkyboxFaceDirection(int face, float u, float v) {
+static glm::vec3 gSkyboxFaceDirection(int face, float u, float v) {
 	const float x = u * 2.0f - 1.0f;
 	const float y = 1.0f - v * 2.0f;
 	switch(face) {
@@ -43,7 +41,7 @@ glm::vec3 gSkyboxFaceDirection(int face, float u, float v) {
 	}
 }
 
-glm::vec3 gSampleEquirectangular(const void* pixels, int width, int height,
+static glm::vec3 gSampleEquirectangular(const void* pixels, int width, int height,
 		int components, bool hdr, const glm::vec3& direction) {
 	const float u = std::atan2(direction.z, direction.x) / (2.0f * gSkyboxPi) + 0.5f;
 	const float v = std::asin(glm::clamp(direction.y, -1.0f, 1.0f)) / gSkyboxPi + 0.5f;
@@ -70,8 +68,6 @@ glm::vec3 gSampleEquirectangular(const void* pixels, int width, int height,
 	return glm::mix(glm::mix(read(wrappedx0, y0), read(x1, y0), tx),
 			glm::mix(read(wrappedx0, y1), read(x1, y1), tx), ty);
 }
-
-} // namespace
 
 gSkybox::gSkybox() {
 	id = GL_NONE;
