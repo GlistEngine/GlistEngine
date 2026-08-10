@@ -43,6 +43,7 @@ struct gVKContext;
 
 // How many frames the CPU may prepare while the GPU is still busy with earlier ones.
 inline constexpr int GVK_MAX_FRAMES_IN_FLIGHT = 2;
+inline constexpr uint32_t GVK_SCENE_UNIFORM_SLOTS = 16;
 
 // Declared here as well so the struct can befriend them.
 bool gvkCreateSwapchain(gVKContext& ctx, GLFWwindow* window);
@@ -144,7 +145,7 @@ struct gVKContext {
 	friend bool gvkCreateUniformResources(gVKContext&);
 	friend void gvkDestroyUniformResources(gVKContext&);
 	friend struct gVKSceneUniforms;
-	friend void gvkWriteSceneUniforms(gVKContext&, const struct gVKSceneUniforms&);
+	friend bool gvkWriteSceneUniforms(gVKContext&, const struct gVKSceneUniforms&);
 
 	/* ---------------- configurable settings ---------------- */
 	// Set these before the backend initialises to influence instance and device
@@ -376,12 +377,18 @@ struct gVKContext {
 
 	// The scene descriptor set of the frame being recorded: camera matrices and
 	// lights. VK_NULL_HANDLE when the 3D path has no uniform block.
-	VkDescriptorSet getCurrentSceneDescriptorSet() const { return sceneuniformsets[currentframe]; }
+	VkDescriptorSet getCurrentSceneDescriptorSet() const {
+		return sceneuniformsets[currentframe][currentsceneuniformslot];
+	}
+	void resetSceneUniformSlots() { currentsceneuniformslot = 0; sceneuniformslotcount = 0; }
 	// Which of the frames in flight is being recorded. Anything the CPU rewrites
 	// while the GPU may still be reading the previous frame needs one copy per
 	// index and has to write the one this returns: the frame loop waits on that
 	// index's fence before recording, which is what makes the copy free again.
 	uint32_t getCurrentFrame() const { return currentframe; }
+	VkDeviceSize getMinUniformBufferOffsetAlignment() const {
+		return deviceproperties.limits.minUniformBufferOffsetAlignment;
+	}
 	// The layout of the image pipeline's descriptor set 0, which is where a
 	// texture's combined image sampler goes.
 	VkDescriptorSetLayout getImageDescriptorSetLayout() {
@@ -466,6 +473,55 @@ struct gVKContext {
 	// upload compares this before trusting the slice it kept.
 	uint64_t getMeshGeneration() const { return meshgeneration; }
 
+	// Command-buffer-local state cache. Vulkan state persists between draw calls,
+	// so recording an unchanged bind or dynamic state again only adds CPU/driver
+	// work. The frame and every render-pass begin reset this cache.
+	void resetRecordedDrawState() {
+		recordedpipeline = VK_NULL_HANDLE;
+		recordeddescriptorlayout = VK_NULL_HANDLE;
+		recordeddescriptorcount = 0;
+		recordeddepthvalid = false;
+		recordedtopologyvalid = false;
+		recordedcullvalid = false;
+	}
+	bool shouldBindPipeline(VkPipeline pipeline) {
+		if(recordedpipeline == pipeline) return false;
+		recordedpipeline = pipeline;
+		recordeddescriptorlayout = VK_NULL_HANDLE;
+		recordeddescriptorcount = 0;
+		return true;
+	}
+	bool shouldBindDescriptorSets(VkPipelineLayout layout, const VkDescriptorSet* sets, uint32_t count) {
+		if(recordeddescriptorlayout == layout && recordeddescriptorcount == count
+				&& std::equal(sets, sets + count, recordeddescriptors.begin())) return false;
+		recordeddescriptorlayout = layout;
+		recordeddescriptorcount = count;
+		std::copy(sets, sets + count, recordeddescriptors.begin());
+		return true;
+	}
+	bool shouldSetDepthState(VkBool32 test, VkBool32 write, VkCompareOp compare) {
+		if(recordeddepthvalid && recordeddepthtest == test && recordeddepthwrite == write
+				&& recordeddepthcompare == compare) return false;
+		recordeddepthvalid = true;
+		recordeddepthtest = test;
+		recordeddepthwrite = write;
+		recordeddepthcompare = compare;
+		return true;
+	}
+	bool shouldSetTopology(VkPrimitiveTopology topology) {
+		if(recordedtopologyvalid && recordedtopology == topology) return false;
+		recordedtopologyvalid = true;
+		recordedtopology = topology;
+		return true;
+	}
+	bool shouldSetCullState(VkCullModeFlags mode, VkFrontFace frontface) {
+		if(recordedcullvalid && recordedcullmode == mode && recordedfrontface == frontface) return false;
+		recordedcullvalid = true;
+		recordedcullmode = mode;
+		recordedfrontface = frontface;
+		return true;
+	}
+
 private:
 	std::string appname = "GlistApp";
 	std::string enginename = "GlistEngine";
@@ -508,6 +564,8 @@ private:
 	bool validationactive = false;
 
 	GLFWwindow* window = nullptr;
+	bool vsyncenabled = false;
+	bool swapchainrecreaterequested = false;
 
 	VkSwapchainKHR swapchain = VK_NULL_HANDLE;
 	std::vector<VkImage> swapchainimages;
@@ -624,7 +682,9 @@ private:
 	VkBuffer sceneuniformbuffers[GVK_MAX_FRAMES_IN_FLIGHT] = {};
 	VkDeviceMemory sceneuniformmemories[GVK_MAX_FRAMES_IN_FLIGHT] = {};
 	void* sceneuniformmapped[GVK_MAX_FRAMES_IN_FLIGHT] = {};
-	VkDescriptorSet sceneuniformsets[GVK_MAX_FRAMES_IN_FLIGHT] = {};
+	VkDescriptorSet sceneuniformsets[GVK_MAX_FRAMES_IN_FLIGHT][GVK_SCENE_UNIFORM_SLOTS] = {};
+	uint32_t currentsceneuniformslot = 0;
+	uint32_t sceneuniformslotcount = 0;
 	// Descriptor set layouts of each pipeline, in set order, and the push constant
 	// block each declares. All of it is reflected out of the compiled SPIR-V rather
 	// than written out here, so the shaders stay the single source of truth.
@@ -651,6 +711,20 @@ private:
 	VkDeviceSize mesharenacapacity = 0;
 	VkDeviceSize mesharenahighwater = 0;
 	uint64_t meshgeneration = 0;
+
+	VkPipeline recordedpipeline = VK_NULL_HANDLE;
+	VkPipelineLayout recordeddescriptorlayout = VK_NULL_HANDLE;
+	std::array<VkDescriptorSet, 5> recordeddescriptors{};
+	uint32_t recordeddescriptorcount = 0;
+	bool recordeddepthvalid = false;
+	VkBool32 recordeddepthtest = VK_FALSE;
+	VkBool32 recordeddepthwrite = VK_FALSE;
+	VkCompareOp recordeddepthcompare = VK_COMPARE_OP_ALWAYS;
+	bool recordedtopologyvalid = false;
+	VkPrimitiveTopology recordedtopology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
+	bool recordedcullvalid = false;
+	VkCullModeFlags recordedcullmode = VK_CULL_MODE_NONE;
+	VkFrontFace recordedfrontface = VK_FRONT_FACE_CLOCKWISE;
 };
 
 #endif /* GVK_DESKTOP_GLFW */

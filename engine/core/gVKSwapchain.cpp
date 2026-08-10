@@ -64,6 +64,17 @@ static VkExtent2D gvkPickExtent(const VkSurfaceCapabilitiesKHR& caps, GLFWwindow
 	return extent;
 }
 
+static VkPresentModeKHR gvkPickPresentMode(const std::vector<VkPresentModeKHR>& modes, bool vsyncenabled) {
+	if(vsyncenabled) return VK_PRESENT_MODE_FIFO_KHR;
+	for(VkPresentModeKHR mode : modes) {
+		if(mode == VK_PRESENT_MODE_IMMEDIATE_KHR) return mode;
+	}
+	for(VkPresentModeKHR mode : modes) {
+		if(mode == VK_PRESENT_MODE_MAILBOX_KHR) return mode;
+	}
+	return VK_PRESENT_MODE_FIFO_KHR;
+}
+
 bool gvkCreateSwapchain(gVKContext& ctx, GLFWwindow* window) {
 	if(ctx.device == VK_NULL_HANDLE || ctx.surface == VK_NULL_HANDLE || window == nullptr) {
 		gLoge("gVKSwapchain") << "Cannot create the swapchain before the device and the surface exist.";
@@ -126,9 +137,7 @@ bool gvkCreateSwapchain(gVKContext& ctx, GLFWwindow* window) {
 
 	createinfo.preTransform = caps.currentTransform;
 	createinfo.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
-	// FIFO is the only present mode the specification guarantees everywhere, and it
-	// is vsynced, so no tearing.
-	createinfo.presentMode = VK_PRESENT_MODE_FIFO_KHR;
+	createinfo.presentMode = gvkPickPresentMode(ctx.surfacepresentmodes, ctx.vsyncenabled);
 	createinfo.clipped = VK_TRUE;
 	createinfo.oldSwapchain = VK_NULL_HANDLE;
 
@@ -180,7 +189,7 @@ bool gvkCreateSwapchain(gVKContext& ctx, GLFWwindow* window) {
 	gLogi("gVKSwapchain") << "Swapchain created: " << createdcount << " images, "
 			<< ctx.swapchainextent.width << "x" << ctx.swapchainextent.height
 			<< ", format " << ctx.swapchainformat << ", color space " << surfaceformat.colorSpace
-			<< ", present mode FIFO";
+			<< ", present mode " << static_cast<int>(createinfo.presentMode);
 	return true;
 }
 
