@@ -20,7 +20,6 @@
 #include "gModel.h"
 #include "gFbo.h"
 #include "gShader.h"
-#include <vector>
 
 class gCanvas : public gBaseCanvas {
 public:
@@ -93,7 +92,14 @@ private:
 	gTexture sphereroughness;
 	gTexture spheremetalness;
 
-	std::vector<gModel> showcasemodels;
+	gModel doorframe;
+	gModel columnastraleft;
+	gModel columnastraright;
+	gModel columnhollow;
+	gModel columnround;
+	gModel crate3;
+	gModel crate4;
+	gModel chest;
 
 	void setupsky();
 	void setupfloor();
