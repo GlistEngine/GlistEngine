@@ -195,7 +195,7 @@ void gvkDrawColored2D(gVKContext& ctx, const glm::vec2* points, int count,
 		return;
 	}
 
-	vkCmdBindPipeline(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline);
+	if(ctx.shouldBindPipeline(pipeline)) vkCmdBindPipeline(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline);
 	VkBuffer vbuf = ctx.getCurrentDynamicVertexBuffer();
 	vkCmdBindVertexBuffers(cmd, 0, 1, &vbuf, &offset);
 
@@ -232,7 +232,9 @@ void gvkDrawTextured2D(gVKContext& ctx, VkDescriptorSet textureSet, VkDescriptor
 		return;
 	}
 
-	vkCmdBindPipeline(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, ctx.getImage2DPipeline());
+	if(ctx.shouldBindPipeline(ctx.getImage2DPipeline())) {
+		vkCmdBindPipeline(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, ctx.getImage2DPipeline());
+	}
 	VkBuffer vbuf = ctx.getCurrentDynamicVertexBuffer();
 	vkCmdBindVertexBuffers(cmd, 0, 1, &vbuf, &offset);
 	VkPipelineLayout layout = ctx.getImage2DPipelineLayout();
@@ -241,7 +243,9 @@ void gvkDrawTextured2D(gVKContext& ctx, VkDescriptorSet textureSet, VkDescriptor
 	// and turn the branch off through the push constant.
 	const bool masking = maskSet != VK_NULL_HANDLE;
 	VkDescriptorSet sets[2] = {textureSet, masking ? maskSet : textureSet};
-	vkCmdBindDescriptorSets(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, layout, 0, 2, sets, 0, nullptr);
+	if(ctx.shouldBindDescriptorSets(layout, sets, 2)) {
+		vkCmdBindDescriptorSets(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, layout, 0, 2, sets, 0, nullptr);
+	}
 
 	gvkPush push{mvp, tint, masking ? 1 : 0};
 	const uint32_t pushsize = std::min<uint32_t>(sizeof(push), ctx.getImage2DPushSize());
@@ -265,21 +269,27 @@ void gvkDrawMesh3D(gVKContext& ctx, VkBuffer vertexBuffer, VkDeviceSize vertexOf
 	VkPipeline pipeline = lines ? ctx.getMesh3DLinePipeline() : ctx.getMesh3DPipeline(blending);
 	if(pipeline == VK_NULL_HANDLE) return;
 
-	vkCmdBindPipeline(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline);
+	if(ctx.shouldBindPipeline(pipeline)) vkCmdBindPipeline(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline);
 
 	// Depth state follows the renderer's, the same way glEnable(GL_DEPTH_TEST) does
 	// on the OpenGL side. Writing is tied to testing: the engine has no separate
 	// switch for it, and a depth write with no test would let a hidden surface claim
 	// the depth buffer. ALWAYS still writes, which matches glDepthFunc(GL_ALWAYS).
-	vkCmdSetDepthTestEnable(cmd, depthTest ? VK_TRUE : VK_FALSE);
-	vkCmdSetDepthWriteEnable(cmd, depthTest ? VK_TRUE : VK_FALSE);
-	vkCmdSetDepthCompareOp(cmd, depthTestAlways ? VK_COMPARE_OP_ALWAYS : VK_COMPARE_OP_LESS);
+	const VkBool32 depthenabled = depthTest ? VK_TRUE : VK_FALSE;
+	const VkCompareOp depthcompare = depthTestAlways ? VK_COMPARE_OP_ALWAYS : VK_COMPARE_OP_LESS;
+	if(ctx.shouldSetDepthState(depthenabled, depthenabled, depthcompare)) {
+		vkCmdSetDepthTestEnable(cmd, depthenabled);
+		vkCmdSetDepthWriteEnable(cmd, depthenabled);
+		vkCmdSetDepthCompareOp(cmd, depthcompare);
+	}
 	// The mesh's own draw mode, within the class the bound pipeline was built for.
-	vkCmdSetPrimitiveTopology(cmd, topology);
+	if(ctx.shouldSetTopology(topology)) vkCmdSetPrimitiveTopology(cmd, topology);
 	// Culling follows the renderer too, and both states have to be set because the
 	// 3D pipelines declare them dynamic.
-	vkCmdSetCullMode(cmd, culling.mode);
-	vkCmdSetFrontFace(cmd, culling.frontface);
+	if(ctx.shouldSetCullState(culling.mode, culling.frontface)) {
+		vkCmdSetCullMode(cmd, culling.mode);
+		vkCmdSetFrontFace(cmd, culling.frontface);
+	}
 
 	// Camera and lights, the same for every mesh in the frame. Bound per draw rather
 	// than once per frame because the 2D pipelines are interleaved with these and
@@ -291,8 +301,10 @@ void gvkDrawMesh3D(gVKContext& ctx, VkBuffer vertexBuffer, VkDeviceSize vertexOf
 			specularSet != VK_NULL_HANDLE && normalSet != VK_NULL_HANDLE &&
 			shadowSet != VK_NULL_HANDLE) {
 		VkDescriptorSet sets[] = {sceneset, diffuseSet, specularSet, normalSet, shadowSet};
-		vkCmdBindDescriptorSets(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, ctx.getMesh3DPipelineLayout(),
-				0, 5, sets, 0, nullptr);
+		if(ctx.shouldBindDescriptorSets(ctx.getMesh3DPipelineLayout(), sets, 5)) {
+			vkCmdBindDescriptorSets(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, ctx.getMesh3DPipelineLayout(),
+					0, 5, sets, 0, nullptr);
+		}
 	}
 
 	// Straight from the mesh's own device local buffer - no staging, no per-frame
@@ -332,7 +344,9 @@ void gvkDrawShadowCaster(gVKContext& ctx, VkBuffer vertexBuffer, VkDeviceSize ve
 	if(cmd == VK_NULL_HANDLE || ctx.getShadowPipeline() == VK_NULL_HANDLE) return;
 	if(diffuseSet == VK_NULL_HANDLE) return;
 
-	vkCmdBindPipeline(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, ctx.getShadowPipeline());
+	if(ctx.shouldBindPipeline(ctx.getShadowPipeline())) {
+		vkCmdBindPipeline(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, ctx.getShadowPipeline());
+	}
 
 	// One set, the caster's diffuse map, and only so a cutout material can discard
 	// its holes. An opaque mesh binds the white texture here and never samples it.
@@ -343,8 +357,10 @@ void gvkDrawShadowCaster(gVKContext& ctx, VkBuffer vertexBuffer, VkDeviceSize ve
 	// reload makes that a runtime possibility, not just a build-time one - leaves a
 	// layout with no sets, and binding one into it crashes the driver.
 	if(ctx.hasShadowDescriptorSetLayout()) {
-		vkCmdBindDescriptorSets(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, ctx.getShadowPipelineLayout(),
-				0, 1, &diffuseSet, 0, nullptr);
+		if(ctx.shouldBindDescriptorSets(ctx.getShadowPipelineLayout(), &diffuseSet, 1)) {
+			vkCmdBindDescriptorSets(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, ctx.getShadowPipelineLayout(),
+					0, 1, &diffuseSet, 0, nullptr);
+		}
 	}
 
 	VkBuffer buffers[] = {vertexBuffer, instanceBuffer};
@@ -361,14 +377,18 @@ void gvkDrawShadowCaster(gVKContext& ctx, VkBuffer vertexBuffer, VkDeviceSize ve
 	// to be set even though it never varies here: the map is the pass's only output,
 	// and a caster that skipped the test would leave the wrong distance in it. The
 	// scene's own enableDepthTest deliberately has no say.
-	vkCmdSetDepthTestEnable(cmd, VK_TRUE);
-	vkCmdSetDepthWriteEnable(cmd, VK_TRUE);
-	vkCmdSetDepthCompareOp(cmd, VK_COMPARE_OP_LESS);
-	vkCmdSetPrimitiveTopology(cmd, topology);
+	if(ctx.shouldSetDepthState(VK_TRUE, VK_TRUE, VK_COMPARE_OP_LESS)) {
+		vkCmdSetDepthTestEnable(cmd, VK_TRUE);
+		vkCmdSetDepthWriteEnable(cmd, VK_TRUE);
+		vkCmdSetDepthCompareOp(cmd, VK_COMPARE_OP_LESS);
+	}
+	if(ctx.shouldSetTopology(topology)) vkCmdSetPrimitiveTopology(cmd, topology);
 	// Casters are never culled, whatever the scene asked for: a shadow wants the
 	// whole silhouette, and dropping back faces would punch holes in it.
-	vkCmdSetCullMode(cmd, VK_CULL_MODE_NONE);
-	vkCmdSetFrontFace(cmd, VK_FRONT_FACE_CLOCKWISE);
+	if(ctx.shouldSetCullState(VK_CULL_MODE_NONE, VK_FRONT_FACE_CLOCKWISE)) {
+		vkCmdSetCullMode(cmd, VK_CULL_MODE_NONE);
+		vkCmdSetFrontFace(cmd, VK_FRONT_FACE_CLOCKWISE);
+	}
 
 	const uint32_t instances = static_cast<uint32_t>(instanceCount < 1 ? 1 : instanceCount);
 	if(indexBuffer != VK_NULL_HANDLE) {
@@ -398,19 +418,27 @@ void gvkDrawMesh3DPbr(gVKContext& ctx, VkBuffer vertexBuffer, VkDeviceSize verte
 	if(sceneset == VK_NULL_HANDLE || materialSet == VK_NULL_HANDLE ||
 			shadowSet == VK_NULL_HANDLE) return;
 
-	vkCmdBindPipeline(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline);
+	if(ctx.shouldBindPipeline(pipeline)) vkCmdBindPipeline(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline);
 
-	vkCmdSetDepthTestEnable(cmd, depthTest ? VK_TRUE : VK_FALSE);
-	vkCmdSetDepthWriteEnable(cmd, depthTest ? VK_TRUE : VK_FALSE);
-	vkCmdSetDepthCompareOp(cmd, depthTestAlways ? VK_COMPARE_OP_ALWAYS : VK_COMPARE_OP_LESS);
-	vkCmdSetPrimitiveTopology(cmd, topology);
-	vkCmdSetCullMode(cmd, culling.mode);
-	vkCmdSetFrontFace(cmd, culling.frontface);
+	const VkBool32 depthenabled = depthTest ? VK_TRUE : VK_FALSE;
+	const VkCompareOp depthcompare = depthTestAlways ? VK_COMPARE_OP_ALWAYS : VK_COMPARE_OP_LESS;
+	if(ctx.shouldSetDepthState(depthenabled, depthenabled, depthcompare)) {
+		vkCmdSetDepthTestEnable(cmd, depthenabled);
+		vkCmdSetDepthWriteEnable(cmd, depthenabled);
+		vkCmdSetDepthCompareOp(cmd, depthcompare);
+	}
+	if(ctx.shouldSetTopology(topology)) vkCmdSetPrimitiveTopology(cmd, topology);
+	if(ctx.shouldSetCullState(culling.mode, culling.frontface)) {
+		vkCmdSetCullMode(cmd, culling.mode);
+		vkCmdSetFrontFace(cmd, culling.frontface);
+	}
 
 	// Three sets: the scene block, the whole material, and the shadow map.
 	VkDescriptorSet sets[] = {sceneset, materialSet, shadowSet};
-	vkCmdBindDescriptorSets(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, ctx.getMesh3DPbrPipelineLayout(),
-			0, 3, sets, 0, nullptr);
+	if(ctx.shouldBindDescriptorSets(ctx.getMesh3DPbrPipelineLayout(), sets, 3)) {
+		vkCmdBindDescriptorSets(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, ctx.getMesh3DPbrPipelineLayout(),
+				0, 3, sets, 0, nullptr);
+	}
 
 	VkBuffer buffers[] = {vertexBuffer, instanceBuffer};
 	VkDeviceSize offsets[] = {vertexOffset, instanceOffset};
@@ -444,13 +472,17 @@ void gvkDrawTexturedTriangles2D(gVKContext& ctx, VkDescriptorSet textureSet,
 		return;
 	}
 
-	vkCmdBindPipeline(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, ctx.getImage2DPipeline());
+	if(ctx.shouldBindPipeline(ctx.getImage2DPipeline())) {
+		vkCmdBindPipeline(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, ctx.getImage2DPipeline());
+	}
 	VkBuffer vbuf = ctx.getCurrentDynamicVertexBuffer();
 	vkCmdBindVertexBuffers(cmd, 0, 1, &vbuf, &offset);
 
 	VkPipelineLayout layout = ctx.getImage2DPipelineLayout();
 	VkDescriptorSet sets[2] = {textureSet, textureSet};
-	vkCmdBindDescriptorSets(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, layout, 0, 2, sets, 0, nullptr);
+	if(ctx.shouldBindDescriptorSets(layout, sets, 2)) {
+		vkCmdBindDescriptorSets(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, layout, 0, 2, sets, 0, nullptr);
+	}
 
 	gvkPush push{mvp, tint, 0};
 	const uint32_t pushsize = std::min<uint32_t>(sizeof(push), ctx.getImage2DPushSize());
@@ -474,18 +506,26 @@ void gvkDrawSkyboxFace(gVKContext& ctx, VkDescriptorSet faceSet, const float* xy
 		return;
 	}
 
-	vkCmdBindPipeline(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, ctx.getSkyboxPipeline());
+	if(ctx.shouldBindPipeline(ctx.getSkyboxPipeline())) {
+		vkCmdBindPipeline(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, ctx.getSkyboxPipeline());
+	}
 	// Depth is tested but never written: the sky sits behind everything, and letting
 	// it claim depth would hide geometry drawn after it.
-	vkCmdSetDepthTestEnable(cmd, VK_TRUE);
-	vkCmdSetDepthWriteEnable(cmd, VK_FALSE);
-	vkCmdSetDepthCompareOp(cmd, depthCompare);
-	vkCmdSetPrimitiveTopology(cmd, VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST);
+	if(ctx.shouldSetDepthState(VK_TRUE, VK_FALSE, depthCompare)) {
+		vkCmdSetDepthTestEnable(cmd, VK_TRUE);
+		vkCmdSetDepthWriteEnable(cmd, VK_FALSE);
+		vkCmdSetDepthCompareOp(cmd, depthCompare);
+	}
+	if(ctx.shouldSetTopology(VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST)) {
+		vkCmdSetPrimitiveTopology(cmd, VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST);
+	}
 
 	VkBuffer vbuf = ctx.getCurrentDynamicVertexBuffer();
 	vkCmdBindVertexBuffers(cmd, 0, 1, &vbuf, &offset);
-	vkCmdBindDescriptorSets(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, ctx.getSkyboxPipelineLayout(),
-			0, 1, &faceSet, 0, nullptr);
+	if(ctx.shouldBindDescriptorSets(ctx.getSkyboxPipelineLayout(), &faceSet, 1)) {
+		vkCmdBindDescriptorSets(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, ctx.getSkyboxPipelineLayout(),
+				0, 1, &faceSet, 0, nullptr);
+	}
 
 	const uint32_t pushsize = std::min<uint32_t>(sizeof(viewProjection), ctx.getSkyboxPushSize());
 	if(pushsize > 0) {

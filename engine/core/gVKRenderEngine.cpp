@@ -654,6 +654,7 @@ void gVKRenderEngine::bindFramebuffer(GLuint fbo) {
 	info.clearValueCount = clearcount;
 	info.pClearValues = clears;
 	vkCmdBeginRenderPass(cmd, &info, VK_SUBPASS_CONTENTS_INLINE);
+	vkcontext->resetRecordedDrawState();
 
 	// Negative height as on the screen pass: an FBO is drawn into with the same
 	// top-left origin projections the engine builds everywhere else.

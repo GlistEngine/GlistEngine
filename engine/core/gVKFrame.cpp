@@ -61,6 +61,7 @@ bool gvkBeginFrame(gVKContext& ctx, GLFWwindow* window) {
 
 	VkCommandBuffer commandbuffer = ctx.commandbuffers[ctx.currentframe];
 	vkResetCommandBuffer(commandbuffer, 0);
+	ctx.resetRecordedDrawState();
 
 	VkCommandBufferBeginInfo begininfo{};
 	begininfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
@@ -118,6 +119,7 @@ bool gvkEnsureRenderPass(gVKContext& ctx) {
 	renderpassinfo.clearValueCount = 2;
 	renderpassinfo.pClearValues = clearvalues;
 	vkCmdBeginRenderPass(commandbuffer, &renderpassinfo, VK_SUBPASS_CONTENTS_INLINE);
+	ctx.resetRecordedDrawState();
 
 	// A negative-height viewport flips Y, so the orthographic projection the engine
 	// builds for OpenGL's top-left origin lands the same way under Vulkan (needs

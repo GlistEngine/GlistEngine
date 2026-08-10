@@ -285,6 +285,7 @@ bool gvkBeginShadowPass(gVKContext& ctx) {
 	info.clearValueCount = 1;
 	info.pClearValues = &clear;
 	vkCmdBeginRenderPass(cmd, &info, VK_SUBPASS_CONTENTS_INLINE);
+	ctx.resetRecordedDrawState();
 
 	// Positive height here, unlike the screen pass. The Y flip there exists to match
 	// OpenGL's top-left 2D origin; the shadow map is never presented and is sampled

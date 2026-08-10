@@ -466,6 +466,55 @@ struct gVKContext {
 	// upload compares this before trusting the slice it kept.
 	uint64_t getMeshGeneration() const { return meshgeneration; }
 
+	// Command-buffer-local state cache. Vulkan state persists between draw calls,
+	// so recording an unchanged bind or dynamic state again only adds CPU/driver
+	// work. The frame and every render-pass begin reset this cache.
+	void resetRecordedDrawState() {
+		recordedpipeline = VK_NULL_HANDLE;
+		recordeddescriptorlayout = VK_NULL_HANDLE;
+		recordeddescriptorcount = 0;
+		recordeddepthvalid = false;
+		recordedtopologyvalid = false;
+		recordedcullvalid = false;
+	}
+	bool shouldBindPipeline(VkPipeline pipeline) {
+		if(recordedpipeline == pipeline) return false;
+		recordedpipeline = pipeline;
+		recordeddescriptorlayout = VK_NULL_HANDLE;
+		recordeddescriptorcount = 0;
+		return true;
+	}
+	bool shouldBindDescriptorSets(VkPipelineLayout layout, const VkDescriptorSet* sets, uint32_t count) {
+		if(recordeddescriptorlayout == layout && recordeddescriptorcount == count
+				&& std::equal(sets, sets + count, recordeddescriptors.begin())) return false;
+		recordeddescriptorlayout = layout;
+		recordeddescriptorcount = count;
+		std::copy(sets, sets + count, recordeddescriptors.begin());
+		return true;
+	}
+	bool shouldSetDepthState(VkBool32 test, VkBool32 write, VkCompareOp compare) {
+		if(recordeddepthvalid && recordeddepthtest == test && recordeddepthwrite == write
+				&& recordeddepthcompare == compare) return false;
+		recordeddepthvalid = true;
+		recordeddepthtest = test;
+		recordeddepthwrite = write;
+		recordeddepthcompare = compare;
+		return true;
+	}
+	bool shouldSetTopology(VkPrimitiveTopology topology) {
+		if(recordedtopologyvalid && recordedtopology == topology) return false;
+		recordedtopologyvalid = true;
+		recordedtopology = topology;
+		return true;
+	}
+	bool shouldSetCullState(VkCullModeFlags mode, VkFrontFace frontface) {
+		if(recordedcullvalid && recordedcullmode == mode && recordedfrontface == frontface) return false;
+		recordedcullvalid = true;
+		recordedcullmode = mode;
+		recordedfrontface = frontface;
+		return true;
+	}
+
 private:
 	std::string appname = "GlistApp";
 	std::string enginename = "GlistEngine";
@@ -651,6 +700,20 @@ private:
 	VkDeviceSize mesharenacapacity = 0;
 	VkDeviceSize mesharenahighwater = 0;
 	uint64_t meshgeneration = 0;
+
+	VkPipeline recordedpipeline = VK_NULL_HANDLE;
+	VkPipelineLayout recordeddescriptorlayout = VK_NULL_HANDLE;
+	std::array<VkDescriptorSet, 5> recordeddescriptors{};
+	uint32_t recordeddescriptorcount = 0;
+	bool recordeddepthvalid = false;
+	VkBool32 recordeddepthtest = VK_FALSE;
+	VkBool32 recordeddepthwrite = VK_FALSE;
+	VkCompareOp recordeddepthcompare = VK_COMPARE_OP_ALWAYS;
+	bool recordedtopologyvalid = false;
+	VkPrimitiveTopology recordedtopology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
+	bool recordedcullvalid = false;
+	VkCullModeFlags recordedcullmode = VK_CULL_MODE_NONE;
+	VkFrontFace recordedfrontface = VK_FRONT_FACE_CLOCKWISE;
 };
 
 #endif /* GVK_DESKTOP_GLFW */
