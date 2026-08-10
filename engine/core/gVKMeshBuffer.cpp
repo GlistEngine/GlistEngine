@@ -144,8 +144,17 @@ bool gvkUploadMeshBuffer(gVKContext& ctx, gVKMeshBuffer& buf, const void* data,
 		buf.version++;
 
 		const uint64_t generation = ctx.getMeshGeneration();
-		const bool againthisframe = buf.lastuploadgeneration == generation;
-		buf.lastuploadgeneration = generation;
+		// Uploads that arrive while no frame is being recorded all share one
+		// generation, so the second and later ones look like re-poses inside a single
+		// frame and would take an arena slice. The arena is rewound before the first
+		// real frame, and the slice takes the newest data with it: a mesh built in
+		// setup() through more than two uploads - gCylinder writing its positions and
+		// the canvas then filling in normals and texture coordinates - ended up drawing
+		// whichever version happened to land in a slot, which is why the spinning
+		// cylinder and cone came out untextured while everything else was fine.
+		const bool inframe = ctx.isFrameActive();
+		const bool againthisframe = inframe && buf.lastuploadgeneration == generation;
+		buf.lastuploadgeneration = inframe ? generation : ~0ull;
 
 		// Only a second upload inside one frame needs an arena slice, and that is the
 		// case worth spending memory on: the mesh is being re-posed between draws - a
@@ -264,33 +273,28 @@ VkBuffer gvkResolveMeshBuffer(gVKContext& ctx, gVKMeshBuffer& buf, VkDeviceSize&
 
 	// This frame's slot is behind whenever the mesh was last uploaded while a
 	// different frame was being recorded - a mesh that animated for a while and then
-	// held still does exactly that, and without catching the slot up the two frames
-	// in flight would alternate between two poses.
+	// held still does exactly that. The draw binds whichever slot holds the newest
+	// data instead of bringing this one up to date.
 	//
-	// The source is the freshest slot rather than a heap copy of the data. Keeping
-	// such a copy is the obvious way to write this and is what it used to do, but the
-	// copy has to be made on every upload while it is read only when a mesh skips a
-	// frame: measured on game_martyr that was 205 writes per frame against one read
-	// every fifty. Paying it cost 1.2 ms per frame directly and about 1.9 ms more in
-	// the game's own code, which lost the cache to 8.5 MB per frame of vertex data it
-	// had no use for.
+	// Binding another frame's slot is safe. The reason each frame has its own copy is
+	// that the CPU writes one while the GPU may still be reading the other, and that
+	// is a write-versus-read hazard; two draws reading the same buffer is not a hazard
+	// at all. The slot the CPU writes is still only ever the current frame's, and the
+	// frame loop has waited on that frame's fence before any of this runs.
 	//
-	// Reading another slot is safe while that frame is still in flight - the GPU only
-	// reads it too - and the slot being written was released by the fence the frame
-	// loop waits on. What it cannot recover is data whose last upload went to the
-	// arena, since the arena is rewound; such a mesh falls back to the pose of its
-	// first upload in that frame. That is one frame of a slightly stale pose on a
-	// mesh that has stopped being re-posed, against re-copying every mesh every frame.
+	// Copying instead - which is what this did - is what makes it expensive, and the
+	// cost is not the copy itself but where it reads from. These slots live in memory
+	// that is device local as well as host visible, so the GPU reads vertices without
+	// crossing the bus; such memory is write combined, and reading it back is roughly
+	// 25 MB/s. On game_martyr that turned 400 KB of catch-up per frame into 20 ms of
+	// frame time, and only in the parts of the map where meshes skip frames - which is
+	// why it looked like the backend randomly getting slower rather than a copy.
 	uint32_t freshest = slot;
 	for(uint32_t i = 0; i < GVK_MAX_FRAMES_IN_FLIGHT; i++) {
 		if(buf.slotmapped[i] != nullptr && buf.slotversion[i] > buf.slotversion[freshest]) freshest = i;
 	}
-	if(freshest != slot) {
-		std::memcpy(buf.slotmapped[slot], buf.slotmapped[freshest], static_cast<size_t>(buf.size));
-		buf.slotversion[slot] = buf.slotversion[freshest];
-	}
 
-	buf.buffer = buf.slotbuffers[slot];
+	buf.buffer = buf.slotbuffers[freshest];
 	return buf.buffer;
 }
 

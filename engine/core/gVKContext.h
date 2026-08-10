@@ -410,6 +410,9 @@ struct gVKContext {
 	VkCommandBuffer getCurrentCommandBuffer() {
 		return frameactive ? commandbuffers[currentframe] : VK_NULL_HANDLE;
 	}
+	// Whether a frame is being recorded. Uploads that arrive outside one - a canvas
+	// building its meshes in setup() - cannot use anything the frame loop rewinds.
+	bool isFrameActive() const { return frameactive; }
 
 	// Per-frame vertex ring. resetDynamicVertices() rewinds the current frame's
 	// buffer at frame start; pushDynamicVertices() appends vertex bytes (16-byte
