@@ -42,11 +42,19 @@ public:
 	void setPointAtIndex(int index, glm::vec3 p);
 	void setPointAtIndex(int index, glm::vec2 p);
 
+	// Gets the current 3D coordinates of a specific control point by its index.
+	glm::vec3 getPointAtIndex(int index) const;
+
+	// Gets the current 2D coordinates (X, Y) of a specific control point.
+	glm::vec2 getPoint2DAtIndex(int index) const;
+
 	//Clears all points to reset or reuse the curve.
 	void clearPoints();
 
 	//Gets the exact interpolated point at time t [0.0 - 1.0] using De Casteljau's algorithm.
 	glm::vec3 getPoint(float t) const;
+
+	glm::vec2 getPoint2D(float t) const;
 
 	//Sets rendering resolution (number of segments).
 	void setResolution(int res);

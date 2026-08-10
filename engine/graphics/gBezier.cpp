@@ -61,6 +61,20 @@ void gBezier::setPointAtIndex(int index, glm::vec2 p) {
 	}
 }
 
+glm::vec2 gBezier::getPoint2DAtIndex(int index) const {
+	if(index >= 0 && index < points.size()) {
+		return glm::vec2(points[index].x, points[index].y);
+	}
+	return glm::vec2(0.0f);
+}
+
+glm::vec3 gBezier::getPointAtIndex(int index) const {
+	if(index >= 0 && index < points.size()) {
+		return points[index];
+	}
+	return glm::vec3(0.0f);
+}
+
 glm::vec3 gBezier::getPoint(float t) const {
 
 	if(points.size() < 3) {
@@ -89,6 +103,11 @@ glm::vec3 gBezier::getPoint(float t) const {
 
 	float u = 1.0f - local_t;
 	return (u * u * p0) + (2.0f * u * local_t * p1) + (local_t * local_t * p2);
+}
+
+glm::vec2 gBezier::getPoint2D(float t) const {
+    glm::vec3 p = getPoint(t);
+    return glm::vec2(p.x, p.y);
 }
 
 void gBezier::draw() const {
