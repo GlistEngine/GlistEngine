@@ -583,6 +583,7 @@ void gAppManager::tick() {
                 const bool shadowpass = renderpassnum > 1 && i == 0;
                 if(shadowpass && !renderer->beginShadowPass()) continue;
                 if(vkcanvas) vkcanvas->draw();
+				renderer->flushQueuedDraws();
                 if(shadowpass) renderer->endShadowPass();
             }
             renderpassno = 0;

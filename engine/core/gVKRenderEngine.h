@@ -41,6 +41,7 @@ public:
 
 	bool beginFrame() override;
 	void endFrame() override;
+	void flushQueuedDraws() override;
 
 	void clear() override;
 	void clearColor(int r, int g, int b, int a = 255) override;

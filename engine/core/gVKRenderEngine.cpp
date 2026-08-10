@@ -1860,6 +1860,7 @@ void gVKRenderEngine::checkShaderReload() {
 void gVKRenderEngine::endFrame() {
 #ifdef GVK_DESKTOP_GLFW
 	if(vkcontext == nullptr) return;
+	flushQueuedDraws();
 	// An application that forgot to unbind its FBO would otherwise leave that pass
 	// open, and the frame loop would close it believing it was the screen one -
 	// leaving the swapchain image never rendered and never transitioned.
@@ -1867,6 +1868,9 @@ void gVKRenderEngine::endFrame() {
 	boundframebuffer = gFbo::defaultfbo;
 	gvkEndFrame(*vkcontext, vkcontext->window);
 #endif
+}
+
+void gVKRenderEngine::flushQueuedDraws() {
 }
 
 

@@ -253,6 +253,7 @@ public:
 
 	virtual bool beginFrame() { return true; }
 	virtual void endFrame() {}
+	virtual void flushQueuedDraws() {}
 
 	int getRenderEngineType() const { return renderenginetype; }
 	bool isVulkan() const { return renderenginetype == G_RENDERER_VK; }
