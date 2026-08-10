@@ -1,5 +1,7 @@
 var NAVTREEINDEX2 =
 {
+"classgCamera.html#a3da24c038cd37ade38418ca2fc0bcf52":[1,0,23,50],
+"classgCamera.html#a40049ca83c02cd3c54f0304022a66a86":[1,0,23,11],
 "classgCamera.html#a46d876d4226320424f31637ca8e28408":[1,0,23,7],
 "classgCamera.html#a485c221a3c10309f3543b3670953c382":[1,0,23,14],
 "classgCamera.html#a4aa68e4581c4b252ef71d0c025feded6":[1,0,23,55],
@@ -247,7 +249,5 @@ var NAVTREEINDEX2 =
 "classgFile.html#ae0409e2a1e11645fb3301ded923fe7cbae9ec4853a6e3e3fc0344290d28db05e3":[1,0,45,0,1],
 "classgFile.html#ae634889c4747c8484a0c4294f9b38a30":[1,0,45,9],
 "classgFile.html#ae80ada36638daaeeae86c35dd547afe1":[1,0,45,20],
-"classgFile.html#af6d677ffaa7209df3ef184e6eb3edb9c":[1,0,45,16],
-"classgFireParticles.html":[1,0,46],
-"classgFireParticles.html#a0c5510bdd86373c1073b75d1ea4b86ec":[1,0,46,4]
+"classgFile.html#af6d677ffaa7209df3ef184e6eb3edb9c":[1,0,45,16]
 };

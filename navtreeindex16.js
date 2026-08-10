@@ -1,5 +1,7 @@
 var NAVTREEINDEX16 =
 {
+"classgWindowScaleChangedEvent.html#a96740ffd86f4545a6197548a4befc41a":[1,0,191,3],
+"classgWindowScaleChangedEvent.html#aa0a78aa06b936ddd4db376e3d7f9797e":[1,0,191,4],
 "classgWindowScaleChangedEvent.html#aaea1539855ddcd14d945f32e754106fd":[1,0,191,2],
 "classgWindows.html":[1,0,190],
 "classgWindows.html#a7367ee868f779e088558d991671a7f46":[1,0,190,1],
@@ -247,7 +249,5 @@ var NAVTREEINDEX16 =
 "gFmodSound_8h_source.html":[2,0,0,5,1],
 "gFog_8h.html":[2,0,0,4,8],
 "gFog_8h_source.html":[2,0,0,4,8],
-"gFont_8h.html":[2,0,0,4,9],
-"gFont_8h_source.html":[2,0,0,4,9],
-"gGLFWWindow_8h.html":[2,0,0,2,4]
+"gFont_8h.html":[2,0,0,4,9]
 };

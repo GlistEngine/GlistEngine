@@ -9,5 +9,7 @@ var classgBezier =
     [ "getPoint", "classgBezier.html#afa081e5502e29dbafca6209d68bbb37f", null ],
     [ "setPoint", "classgBezier.html#a8f7abe00be484c29f135e56511f3c0e9", null ],
     [ "setPoint", "classgBezier.html#adeaaf612bf985c3774fffe5e98995b36", null ],
+    [ "setPointAtIndex", "classgBezier.html#afe8ea0b1d07d70d694dbb0b76e5ded69", null ],
+    [ "setPointAtIndex", "classgBezier.html#a36f2c2b4716af81512d5d725922cf37e", null ],
     [ "setResolution", "classgBezier.html#a313aea133a295c43d6a458b2d3ff1625", null ]
 ];
