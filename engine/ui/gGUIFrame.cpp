@@ -66,7 +66,7 @@ void gGUIFrame::draw() {
 	if(isprogressshown) {
 		cprdeg += 2.0f * cpspeed;
 		if(cprdeg >= 360.0f) cprdeg -= 360.0f;
-		gColor* oldcolor = renderer->getColor();
+		gColor oldcolor = *renderer->getColor();
 		renderer->setColor(&cpcolor);
 		res.getIconImage(gGUIResources::ICONBIG_LOADING, true)->draw(cpx, cpy, cpw, cph, cprdeg);
 		renderer->setColor(oldcolor);

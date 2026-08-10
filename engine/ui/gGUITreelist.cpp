@@ -85,7 +85,7 @@ void gGUITreelist::updateTotalHeight() {
 void gGUITreelist::drawContent() {
 	//topelement.logTitle();
 
-	gColor* oldcolor = renderer->getColor();
+	gColor oldcolor = *renderer->getColor();
 	renderer->setColor(textbackgroundcolor);
 	gDrawRectangle(0, 0, boxw, boxh, true);
 

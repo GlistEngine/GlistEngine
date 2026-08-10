@@ -15,6 +15,12 @@
 #include <codecvt>
 #include <cwchar>
 
+#ifdef GLIST_ANDROID
+#include "gAndroidUtil.h"
+#endif
+
+gGUITextbox* gGUITextbox::focusedtextbox = nullptr;
+
 
 static inline std::string gSafeSubstr(const std::string& s, std::size_t pos, std::size_t n = std::string::npos) {
 	if(pos > s.size()) pos = s.size();
@@ -40,6 +46,7 @@ gGUITextbox::gGUITextbox() {
 	keypresstimelimit1 = 50;
 	keypresstimelimit2 = 40;
 	selectionmode = false;
+	isselectionmenushown = false;
 	selectionposchar1 = 0;
 	selectionposchar2 = 0;
 	selectionposx1 = 0;
@@ -416,6 +423,10 @@ bool gGUITextbox::isPassword() {
 
 void gGUITextbox::update() {
 	if(widthAdjusmentDelay < 5) widthAdjusmentDelay++;
+	if (editmode && !isfocused) {
+		editmode = false;
+		appmanager->hideKeyboard();
+	}
 	if(editmode) {
 		cursorshowcounter++;
 		if(cursorshowcounter >= cursorshowcounterlimit) {
@@ -635,6 +646,17 @@ void gGUITextbox::draw() {
 		gDrawLine(left + cursorposx - firstx + textalignmentamount - (textfont->getStringWidth(text) * ((float) textalignment / 2)), linebottom - lineheight,
 				  left + cursorposx - firstx + textalignmentamount - (textfont->getStringWidth(text) * ((float) textalignment / 2)), linebottom + lineheight * 2 / 3);
 	}
+	if (isfocused && selectionmode && selectionposchar1 != selectionposchar2) {
+		if (!isselectionmenushown) {
+			showAndroidSelectionMenu();
+			isselectionmenushown = true;
+		}
+	} else {
+		if (isselectionmenushown) {
+			hideAndroidSelectionMenu();
+			isselectionmenushown = false;
+		}
+	}
 	renderer->setColor(&oldcolor);
 }
 
@@ -717,6 +739,9 @@ void gGUITextbox::keyPressed(int key) {
 		break;
 	}
 	keystate |= pressedkey;
+	if (pressedkey != KEY_NONE) {
+		pressKey();
+	}
 }
 
 void gGUITextbox::keyReleased(int key) {
@@ -1695,31 +1720,35 @@ void gGUITextbox::charPressed(unsigned int codepoint) {
 		if(isnumeric && (codepoint < 48 || codepoint > 57) && codepoint != 44 && codepoint != 46) return;
 		if(isselectedall) {
 			cleanText();
-		} else if(selectionmode && selectionposchar1 != selectionposchar2) {
-			int sepc1 = std::min(selectionposchar1, selectionposchar2);
-			int sepc2 = std::max(selectionposchar1, selectionposchar2);
-			int sepu1 = std::min(selectionposutf1, selectionposutf2);
-			int sepu2 = std::max(selectionposutf1, selectionposutf2);
-			if(sepc1 < 0) sepc1 = 0;
-			if(sepc2 > (int) letterlength.size()) sepc2 = (int) letterlength.size();
-			if(sepu1 < 0) sepu1 = 0;
-			if(sepu2 > (int) text.length()) sepu2 = (int) text.length();
+			selectionmode = false;
+			isselectedall = false;
+		} else if(selectionmode) {
+			if (selectionposchar1 != selectionposchar2) {
+				int sepc1 = std::min(selectionposchar1, selectionposchar2);
+				int sepc2 = std::max(selectionposchar1, selectionposchar2);
+				int sepu1 = std::min(selectionposutf1, selectionposutf2);
+				int sepu2 = std::max(selectionposutf1, selectionposutf2);
+				if(sepc1 < 0) sepc1 = 0;
+				if(sepc2 > (int) letterlength.size()) sepc2 = (int) letterlength.size();
+				if(sepu1 < 0) sepu1 = 0;
+				if(sepu2 > (int) text.length()) sepu2 = (int) text.length();
 
-			std::string newtext = "";
-			if(sepu1 > 0) newtext = text.substr(0, sepu1);
-			if(sepu2 < (int) text.length()) newtext += text.substr(sepu2);
-			text = newtext;
+				std::string newtext = "";
+				if(sepu1 > 0) newtext = text.substr(0, sepu1);
+				if(sepu2 < (int) text.length()) newtext += text.substr(sepu2);
+				text = newtext;
 
-			if(sepc1 < sepc2 && sepc1 < (int) letterlength.size()) {
-				letterlength.erase(letterlength.begin() + sepc1, letterlength.begin() + std::min((int) letterlength.size(), sepc2));
-			}
-			letterpos = calculateAllLetterPositions();
-			cursorposutf = sepu1;
-			cursorposchar = sepc1;
-			if(textfont) {
-				cursorposx = textfont->getStringWidth(text.substr(0, cursorposutf));
-			} else {
-				cursorposx = 0;
+				if(sepc1 < sepc2 && sepc1 < (int) letterlength.size()) {
+					letterlength.erase(letterlength.begin() + sepc1, letterlength.begin() + std::min((int) letterlength.size(), sepc2));
+				}
+				letterpos = calculateAllLetterPositions();
+				cursorposutf = sepu1;
+				cursorposchar = sepc1;
+				if(textfont) {
+					cursorposx = textfont->getStringWidth(text.substr(0, cursorposutf));
+				} else {
+					cursorposx = 0;
+				}
 			}
 			selectionmode = false;
 			isselectedall = false;
@@ -1854,6 +1883,8 @@ void gGUITextbox::mousePressed(int x, int y, int button) {
 	if(x >= drawleft && x < drawright && y >= drawtop && y < drawbottom && button == 0) {
 		editmode = true;
 		isfocused = true;
+		focusedtextbox = this;
+		appmanager->showKeyboard();
 
 		if(!iseditable) {
 			if(root && root->getCurrentCanvas()) {
@@ -1961,7 +1992,7 @@ void gGUITextbox::mouseReleased(int x, int y, int button) {
 		}
 		return;
 	}
-	if(!isdragging) {
+	if(!isdragging || selectionposchar1 == selectionposchar2) {
 		selectionmode = false;
 	}
 	editmode = false;
@@ -2238,6 +2269,10 @@ void gGUITextbox::calculateLines() {
 		if(textfont) firstposx += textfont->getStringWidth(gSafeSubstr(text, firstutf, linesize + 1));
 		firstutf += linesize + 1;
 	}
+	if (!text.empty() && text.back() == '\n') {
+		lines.push_back("");
+		lineendchar.push_back(text.size());
+	}
 	linecount = lines.size();
 	firstchar = 0;
 	firstutf = 0;
@@ -2259,15 +2294,14 @@ void gGUITextbox::startSelection() {
 
 std::vector<short> gGUITextbox::readString(const std::string& str) {
 	std::vector<short> lettersizes;
-	int codepoints = 0;
 	for(int i = 0; i < str.length(); i++) {
 		if((str[i] & 0xC0) != 0x80) {
 			// not UTF-8 intermediate byte
 			int lsize = 1;
-			if(i < str.length() - 1 && (str[i + 1] & 0xC0) == 0x80) lsize = 2;
+			while(i + lsize < str.length() && (str[i + lsize] & 0xC0) == 0x80) {
+				lsize++;
+			}
 			lettersizes.push_back(lsize);
-			codepoints++;
-		} else {
 		}
 	}
 	return lettersizes;
@@ -2538,4 +2572,68 @@ void gGUITextbox::setHintTextColor(const gColor& color) {
 
 gGUIText* gGUITextbox::getHintTextObject() {
 	return &hinttext;
+}
+
+void gGUITextbox::unfocus() {
+	gGUIControl::unfocus();
+	if (focusedtextbox == this) {
+		focusedtextbox = nullptr;
+	}
+	hideAndroidSelectionMenu();
+}
+
+void gGUITextbox::copyText() {
+	ctrlcpressed = true;
+	pressKey();
+	ctrlcpressed = false;
+}
+
+void gGUITextbox::cutText() {
+	ctrlxpressed = true;
+	pressKey();
+	ctrlxpressed = false;
+}
+
+void gGUITextbox::pasteText() {
+	ctrlvpressed = true;
+	pressKey();
+	ctrlvpressed = false;
+}
+
+void gGUITextbox::showAndroidSelectionMenu() {
+#ifdef GLIST_ANDROID
+	gAndroidUtil::callJavaStaticVoidMethod("dev/glist/android/lib/GlistNative", "showSelectionMenu", "(ZZZ)V", true, true, true);
+#endif
+}
+
+void gGUITextbox::hideAndroidSelectionMenu() {
+#ifdef GLIST_ANDROID
+	gAndroidUtil::callJavaStaticVoidMethod("dev/glist/android/lib/GlistNative", "hideSelectionMenu", "()V");
+#endif
+}
+
+void gGUITextbox::longPressed(int x, int y) {
+	if(isdisabled) return;
+
+	int drawleft = left - firstx;
+	int drawtop = top + hdiff - firsty;
+	int drawright = drawleft + width;
+	int drawbottom = drawtop + totalh;
+
+	if(x >= drawleft && x < drawright && y >= drawtop && y < drawbottom) {
+		std::vector<int> clickpos = clickTextbox(x, y);
+		cursorposchar = clickpos[0];
+		cursorposx = clickpos[1];
+		cursorposutf = clickpos[2];
+
+		if (selectionposchar1 == selectionposchar2) {
+#ifdef GLIST_ANDROID
+			bool haspaste = gAndroidUtil::callJavaStaticBoolMethod("dev/glist/android/lib/GlistNative", "hasClipboardText", "()Z");
+			if (haspaste) {
+				gAndroidUtil::callJavaStaticVoidMethod("dev/glist/android/lib/GlistNative", "showSelectionMenu", "(ZZZ)V", false, false, true);
+				isselectionmenushown = true;
+			}
+#endif
+		}
+	}
 }

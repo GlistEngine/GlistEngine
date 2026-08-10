@@ -240,3 +240,10 @@ void gGUIContainer::setCursorOn(bool isOn) {
 	gBaseGUIObject::setCursorOn(isOn);
 	guisizer->setCursorOn(isOn);
 }
+
+void gGUIContainer::unfocus() {
+	isfocused = false;
+	if(guisizer != nullptr) {
+		guisizer->unfocus();
+	}
+}

@@ -577,7 +577,7 @@ void gGUISizer::mousePressed(int x, int y, int button) {
 			gGUIControl* control = getControl(line, column);
 			if(control != nullptr && control->isEnabled() && control->isVisible()) {
 //				bool focusold = control->isfocused;
-				control->isfocused = false;
+				control->unfocus();
 //				gLogi("Sizer") << "mousePressed 21, i:" << i << ", j:" << j << ", x:" << x << ", y:" << y << ", l:" << control->left << ", t:" << control->top << ", r:" << control->right << ", b:" << control->bottom;
 				if(control->iscursoron) {
 					control->isfocused = true;
@@ -778,4 +778,16 @@ void gGUISizer::setBackgroundImage(const std::string& path) {
 
 void gGUISizer::setBackgroungImageEnabled(bool isenable) {
 	this->isbackgroundimageenabled = isenable;
+}
+
+void gGUISizer::unfocus() {
+	isfocused = false;
+	for(int line = 0; line < linenum; line++) {
+		for(int column = 0; column < columnnum; column++) {
+			gGUIControl* control = getControl(line, column);
+			if(control != nullptr) {
+				control->unfocus();
+			}
+		}
+	}
 }

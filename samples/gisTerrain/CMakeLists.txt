@@ -9,7 +9,7 @@ set(PLUGINS)
 
 
 ########## CPP VERSION ##########
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 
@@ -106,12 +106,12 @@ endif()
 set(GlistApp_SOURCES
 		${APP_DIR}/src/main.cpp
 		${APP_DIR}/src/gApp.cpp
-		${APP_DIR}/src/GameCanvas.cpp
+		${APP_DIR}/src/gCanvas.cpp
 )
 
 set(GlistApp_HEADERS
 		${APP_DIR}/src/gApp.h
-		${APP_DIR}/src/GameCanvas.h
+		${APP_DIR}/src/gCanvas.h
 )
 
 add_executable(${APP_NAME}

@@ -38,7 +38,7 @@ void gGUIListbox::set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseG
 }
 
 void gGUIListbox::drawContent() {
-	gColor* oldcolor = renderer->getColor();
+	gColor oldcolor = *renderer->getColor();
 
 	renderer->setColor(textbackgroundcolor);
 	gDrawRectangle(0, 0, boxw, boxh, true);

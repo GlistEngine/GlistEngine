@@ -41,7 +41,7 @@ void gGUINotebook::set(gBaseApp* root, gBaseGUIObject* topParent, gBaseGUIObject
 
 
 void gGUINotebook::draw() {
-	gColor* oldcolor = renderer->getColor();
+	gColor oldcolor = *renderer->getColor();
 
 	if (tabvisibility) {
 		drawHeader();

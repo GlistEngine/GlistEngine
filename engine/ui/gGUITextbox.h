@@ -86,6 +86,14 @@ public:
 	 */
 	std::string getSelectedText();
 
+	static gGUITextbox* focusedtextbox;
+	void copyText();
+	void cutText();
+	void pasteText();
+	void showAndroidSelectionMenu();
+	void hideAndroidSelectionMenu();
+	void longPressed(int x, int y);
+
 	/**
 	 * Enables/disables the textbox for editing.
 	 *
@@ -218,6 +226,7 @@ public:
 	void mousePressed(int x, int y, int button);
 	void mouseReleased(int x, int y, int button);
 	void mouseDragged(int x, int y, int button);
+	void unfocus() override;
 
 	int getTextboxh();
 	void cleanText();
@@ -282,6 +291,7 @@ private:
 	std::string text;
 	int cursorshowcounter, cursorshowcounterlimit, cursorshowlimit;
 	bool editmode;
+	bool isselectionmenushown;
 	std::vector<short> letterlength;
 	std::vector<int> letterpos;
 	int keystate;
