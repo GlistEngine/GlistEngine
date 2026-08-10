@@ -18,7 +18,8 @@
 #include "gSkybox.h"
 #include "gTexture.h"
 #include "gModel.h"
-#include "gScreenSpaceReflection.h"
+#include "gFbo.h"
+#include "gShader.h"
 #include <vector>
 
 class gCanvas : public gBaseCanvas {
@@ -46,6 +47,32 @@ public:
 	void hideNotify();
 
 private:
+	gFbo ssrscenefbo;
+	gFbo ssrreflectionfbo[2];
+	gShader ssrshader;
+	int ssrcurrentreflectionindex;
+	bool ssrhasvalidhistory;
+	int ssrframeindex;
+	glm::mat4 ssrcaptureprojection;
+	glm::mat4 ssrcaptureview;
+	glm::mat4 ssrpreviousviewprojection;
+	float ssrcapturenearclip;
+	float ssrcapturefarclip;
+	float ssrreflectivity;
+	float ssrfresnelbias;
+	float ssrfresnelpower;
+	glm::vec3 ssrfallbackcolor;
+
+	void setupssr();
+	void resizessr(int width, int height);
+	void beginssrcapture();
+	void capturessrcameramatrices(gCamera& camera);
+	void endssrcapture();
+	void beginssrreflectionpass(gSkybox* skybox);
+	void endssrreflectionpass();
+	void beginssrcomposite();
+	void endssrcomposite();
+
 	gApp* root;
 
 	gCamera camera;
@@ -67,8 +94,6 @@ private:
 	gTexture spheremetalness;
 
 	std::vector<gModel> showcasemodels;
-
-	gScreenSpaceReflection ssr;
 
 	void setupsky();
 	void setupfloor();

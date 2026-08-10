@@ -9,22 +9,169 @@
 #include "gInputManager.h"
 #include "gMaterial.h"
 
-static glm::vec3 hsvtorgb(float h, float s, float v) {
-	float c = v * s;
-	float hp = h / 60.0f;
-	float x = c * (1.0f - fabsf(fmodf(hp, 2.0f) - 1.0f));
-	float r1, g1, b1;
-	if(hp < 1.0f) { r1 = c; g1 = x; b1 = 0.0f; }
-	else if(hp < 2.0f) { r1 = x; g1 = c; b1 = 0.0f; }
-	else if(hp < 3.0f) { r1 = 0.0f; g1 = c; b1 = x; }
-	else if(hp < 4.0f) { r1 = 0.0f; g1 = x; b1 = c; }
-	else if(hp < 5.0f) { r1 = x; g1 = 0.0f; b1 = c; }
-	else { r1 = c; g1 = 0.0f; b1 = x; }
-	float m = v - c;
-	return glm::vec3(r1 + m, g1 + m, b1 + m);
+/*
+ * How to use screen-space reflections (SSR) in your own scene:
+ *
+ * step 1: load the SSR shader's vertex/fragment source from disk.
+ * step 2: allocate the scene-capture FBO and the two ping-pong reflection FBOs at screen size.
+ * step 3: attach the SSR shader to the material of every mesh that should be reflective.
+ * step 4: each frame, begin the capture pass and bind the scene FBO.
+ * step 5: store the camera's current matrices and clip planes for the reflection math.
+ * step 6: draw the entire scene into the capture FBO.
+ * step 7: end the capture pass and build mipmaps for blurred/rough reflections.
+ * step 8: begin the reflection pass, passing a skybox (or null) as the miss fallback.
+ * step 9: draw only the reflective meshes so the shader can raymarch their reflections.
+ * step 10: end the reflection pass, saving this frame's matrix and swapping the ping-pong buffers.
+ * step 11: draw the scene normally to the screen.
+ * step 12: begin the composite pass, feeding it the captured color and the reflection buffer.
+ * step 13: draw the reflective meshes again so the shader blends the reflection onto them.
+ * step 14: end the composite pass.
+ * step 15: on window resize, reallocate the FBOs at the new screen size.
+ */
+
+void gCanvas::setupssr() {
+	ssrcapturenearclip = 0.01f;
+	ssrcapturefarclip = 1000.0f;
+	ssrcurrentreflectionindex = 0;
+	ssrhasvalidhistory = false;
+	ssrframeindex = 0;
+	ssrpreviousviewprojection = glm::mat4(1.0f);
+
+	renderer->disableSSAO();
+
+	ssrshader.load(gObject::gGetShadersDir() + "screenspacereflection_vert.glsl", gObject::gGetShadersDir() + "screenspacereflection_frag.glsl");
+	resizessr(renderer->getScreenWidth(), renderer->getScreenHeight());
 }
 
-static glm::vec3 cubefacedirection(int face, float s, float t) {
+void gCanvas::resizessr(int width, int height) {
+	ssrscenefbo.allocate(width, height, false, true);
+
+	renderer->bindTexture(ssrscenefbo.getDepthTextureId());
+	renderer->setWrappingAndFiltering(GL_TEXTURE_2D, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, GL_NEAREST, GL_NEAREST);
+	renderer->bindTexture(ssrscenefbo.getTextureId());
+	renderer->setWrappingAndFiltering(GL_TEXTURE_2D, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR);
+	renderer->generateMipMap();
+
+	ssrreflectionfbo[0].allocate(width, height);
+	ssrreflectionfbo[1].allocate(width, height);
+	renderer->bindTexture(ssrreflectionfbo[0].getTextureId());
+	renderer->setWrappingAndFiltering(GL_TEXTURE_2D, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, GL_LINEAR, GL_LINEAR);
+	renderer->bindTexture(ssrreflectionfbo[1].getTextureId());
+	renderer->setWrappingAndFiltering(GL_TEXTURE_2D, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, GL_LINEAR, GL_LINEAR);
+	renderer->resetTexture();
+
+	ssrhasvalidhistory = false;
+}
+
+void gCanvas::beginssrcapture() {
+	renderer->activateTexture(8);
+	renderer->resetTexture();
+	renderer->activateTexture(9);
+	renderer->resetTexture();
+	renderer->activateTexture(10);
+	renderer->resetTexture();
+	renderer->activateTexture(11);
+	renderer->resetTexture();
+
+	gRenderObject::disableExtraShaders();
+
+	ssrscenefbo.bind();
+	renderer->clearScreen(true, true);
+}
+
+void gCanvas::capturessrcameramatrices(gCamera& camera) {
+	ssrcaptureprojection = renderer->getProjectionMatrix();
+	ssrcaptureview = renderer->getViewMatrix();
+	ssrcapturenearclip = camera.getNearClip();
+	ssrcapturefarclip = camera.getFarClip();
+}
+
+void gCanvas::endssrcapture() {
+	ssrscenefbo.unbind();
+
+	renderer->bindTexture(ssrscenefbo.getTextureId());
+	renderer->generateMipMap();
+
+	gRenderObject::enableExtraShaders();
+}
+
+void gCanvas::beginssrreflectionpass(gSkybox* skybox) {
+	int previndex = 1 - ssrcurrentreflectionindex;
+
+	ssrshader.use();
+	ssrshader.setInt("sspass", 0);
+	ssrshader.setInt("validhistory", ssrhasvalidhistory ? 1 : 0);
+	ssrshader.setMat4("projection", ssrcaptureprojection);
+	ssrshader.setMat4("invview", glm::inverse(ssrcaptureview));
+	ssrshader.setMat4("previousviewprojection", ssrpreviousviewprojection);
+	ssrshader.setVec2("screensize", glm::vec2(ssrscenefbo.getWidth(), ssrscenefbo.getHeight()));
+	ssrshader.setFloat("nearclip", ssrcapturenearclip);
+	ssrshader.setFloat("farclip", ssrcapturefarclip);
+	ssrshader.setFloat("reflectivity", ssrreflectivity);
+	ssrshader.setFloat("fresnelbias", ssrfresnelbias);
+	ssrshader.setFloat("fresnelpower", ssrfresnelpower);
+	ssrshader.setVec3("fallbackcolor", ssrfallbackcolor);
+	ssrshader.setFloat("ditherphase", float(ssrframeindex % 64) * 0.6180339887f);
+	ssrframeindex++;
+
+	ssrshader.setInt("scenecolor", 8);
+	renderer->activateTexture(8);
+	renderer->bindTexture(ssrscenefbo.getTextureId());
+
+	ssrshader.setInt("scenedepth", 9);
+	renderer->activateTexture(9);
+	renderer->bindTexture(ssrscenefbo.getDepthTextureId());
+
+	ssrshader.setInt("hasskymap", skybox != nullptr ? 1 : 0);
+	if(skybox != nullptr) {
+		ssrshader.setInt("skymap", 10);
+		renderer->bindSkyTexture(skybox->getTextureId(), GL_TEXTURE0 + 10);
+	}
+
+	ssrshader.setInt("reflectionbuffer", 11);
+	renderer->activateTexture(11);
+	renderer->bindTexture(ssrreflectionfbo[previndex].getTextureId());
+
+	renderer->disableAlphaBlending();
+
+	ssrreflectionfbo[ssrcurrentreflectionindex].bind();
+	renderer->clearScreen(true, true);
+
+	renderer->enableDepthTestEqual();
+}
+
+void gCanvas::endssrreflectionpass() {
+	renderer->setDepthTestFunc(gRenderer::DEPTHTESTTYPE_LESS);
+
+	ssrreflectionfbo[ssrcurrentreflectionindex].unbind();
+	renderer->enableAlphaBlending();
+
+	ssrpreviousviewprojection = ssrcaptureprojection * ssrcaptureview;
+	ssrhasvalidhistory = true;
+	ssrcurrentreflectionindex = 1 - ssrcurrentreflectionindex;
+}
+
+void gCanvas::beginssrcomposite() {
+	ssrshader.use();
+	ssrshader.setInt("sspass", 1);
+	ssrshader.setVec2("screensize", glm::vec2(ssrscenefbo.getWidth(), ssrscenefbo.getHeight()));
+
+	ssrshader.setInt("scenecolor", 8);
+	renderer->activateTexture(8);
+	renderer->bindTexture(ssrscenefbo.getTextureId());
+
+	ssrshader.setInt("reflectionbuffer", 11);
+	renderer->activateTexture(11);
+	renderer->bindTexture(ssrreflectionfbo[1 - ssrcurrentreflectionindex].getTextureId());
+
+	renderer->enableDepthTestEqual();
+}
+
+void gCanvas::endssrcomposite() {
+	renderer->setDepthTestFunc(gRenderer::DEPTHTESTTYPE_LESS);
+}
+
+glm::vec3 cubefacedirection(int face, float s, float t) {
 	switch(face) {
 		case 0: return glm::normalize(glm::vec3(1.0f, -t, -s));
 		case 1: return glm::normalize(glm::vec3(-1.0f, -t, s));
@@ -35,7 +182,7 @@ static glm::vec3 cubefacedirection(int face, float s, float t) {
 	}
 }
 
-static glm::vec3 skycolorat(const glm::vec3& dir, const glm::vec3& sundir) {
+glm::vec3 skycolorat(const glm::vec3& dir, const glm::vec3& sundir) {
 	float elevation = dir.y;
 	glm::vec2 dirxz(dir.x, dir.z);
 	glm::vec2 sunxz(sundir.x, sundir.z);
@@ -65,7 +212,7 @@ static glm::vec3 skycolorat(const glm::vec3& dir, const glm::vec3& sundir) {
 	return glm::clamp(color, 0.0f, 1.0f);
 }
 
-static void generatesunsetskybox(gSkybox& sky, const glm::vec3& sundir, int facesize) {
+void generatesunsetskybox(gSkybox& sky, const glm::vec3& sundir, int facesize) {
 	std::array<int, 6> widths{};
 	std::array<int, 6> heights{};
 	std::array<void*, 6> facedata{};
@@ -96,7 +243,7 @@ static void generatesunsetskybox(gSkybox& sky, const glm::vec3& sundir, int face
 	for(int face = 0; face < 6; face++) delete[] (unsigned char*) facedata[face];
 }
 
-static void generateflattexture(gTexture& texture, unsigned char r, unsigned char g, unsigned char b, int size) {
+void generateflattexture(gTexture& texture, unsigned char r, unsigned char g, unsigned char b, int size) {
 	unsigned char* pixels = new unsigned char[size * size * 3];
 	for(int i = 0; i < size * size; i++) {
 		pixels[i * 3 + 0] = r;
@@ -116,7 +263,7 @@ struct showcasepiece {
 };
 
 // y keeps each model's own lowest vertex resting on the floor, since the kit's models are not uniformly centered
-static const showcasepiece showcasepieces[] = {
+const showcasepiece showcasepieces[] = {
 	{"ModularSciFiKit/OBJ/Platforms/Door_Frame_Square.obj", 0.0f, 0.013425f, -7.0f, 1.0f, 0.0f, false, 0, 0, 0},
 	{"ModularSciFiKit/OBJ/Columns/Column_Astra.obj", -3.6f, 0.006465f, -7.0f, 1.0f, 0.0f, false, 0, 0, 0},
 	{"ModularSciFiKit/OBJ/Columns/Column_Astra.obj", 3.6f, 0.006465f, -7.0f, 1.0f, 0.0f, false, 0, 0, 0},
@@ -127,10 +274,10 @@ static const showcasepiece showcasepieces[] = {
 	{"ModularSciFiKit/OBJ/Props/Prop_Computer.obj", 1.5f, 0.001192f, 3.2f, 1.0f, -10.0f, true, 30, 30, 34},
 	{"ModularSciFiKit/OBJ/Props/Prop_Chest.obj", 2.6f, -0.003236f, 3.8f, 1.0f, 20.0f, false, 0, 0, 0},
 };
-static const int showcasepiecenum = sizeof(showcasepieces) / sizeof(showcasepieces[0]);
+const int showcasepiecenum = sizeof(showcasepieces) / sizeof(showcasepieces[0]);
 
 // obj materials with no texture map default to flat white in this engine, so recolor them by hand
-static void tintuntexturedmeshes(gModel& model, unsigned char r, unsigned char g, unsigned char b) {
+void tintuntexturedmeshes(gModel& model, unsigned char r, unsigned char g, unsigned char b) {
 	for(int i = 0; i < model.getMeshNum(); i++) {
 		gMaterial* material = model.getMeshPtr(i)->getMaterial();
 		if(material->isDiffuseMapEnabled() || material->isAlbedoMapEnabled()) continue;
@@ -187,6 +334,13 @@ void gCanvas::setupshowcase() {
 	}
 }
 
+void gCanvas::drawscene() {
+	sky.draw();
+	floortile.draw();
+	showcasesphere.draw();
+	for(gModel& model : showcasemodels) model.draw();
+}
+
 void gCanvas::setup() {
 	camera.setNearClip(0.1f);
 	camera.setFarClip(300.0f);
@@ -209,46 +363,39 @@ void gCanvas::setup() {
 	setupsphere();
 	setupshowcase();
 
-	ssr.setup();
-	ssr.setReflectivity(0.85f);
-	ssr.setFresnelBias(0.5f);
-	ssr.setFresnelPower(3.0f);
-	ssr.setFallbackColor(glm::vec3(0.35f, 0.37f, 0.42f));
-	ssr.attachTo(floortile);
-	ssr.attachTo(showcasesphere);
+	ssrreflectivity = 0.85f;
+	ssrfresnelbias = 0.5f;
+	ssrfresnelpower = 3.0f;
+	ssrfallbackcolor = glm::vec3(0.35f, 0.37f, 0.42f);
+	setupssr();
+	floortile.getMaterial()->addShader(&ssrshader);
+	showcasesphere.getMaterial()->addShader(&ssrshader);
 }
 
 void gCanvas::update() {
 	camcontroller.update();
 }
 
-void gCanvas::drawscene() {
-	sky.draw();
-	floortile.draw();
-	showcasesphere.draw();
-	for(gModel& model : showcasemodels) model.draw();
-}
-
 void gCanvas::draw() {
 	enableDepthTest();
 	enableAlphaBlending();
 
-	ssr.beginCapture();
+	beginssrcapture();
 	camera.begin();
-	ssr.captureCameraMatrices(camera);
+	capturessrcameramatrices(camera);
 	sun.enable();
 	skyfill.enable();
 	drawscene();
 	skyfill.disable();
 	sun.disable();
 	camera.end();
-	ssr.endCapture();
+	endssrcapture();
 
 	camera.begin();
-	ssr.beginReflectionPass(&sky);
+	beginssrreflectionpass(&sky);
 	floortile.draw();
 	showcasesphere.draw();
-	ssr.endReflectionPass();
+	endssrreflectionpass();
 	camera.end();
 
 	camera.begin();
@@ -256,12 +403,12 @@ void gCanvas::draw() {
 	skyfill.enable();
 	sky.draw();
 	for(gModel& model : showcasemodels) model.draw();
-	ssr.beginComposite();
+	beginssrcomposite();
 	floortile.draw();
-	ssr.endComposite();
-	ssr.beginComposite();
+	endssrcomposite();
+	beginssrcomposite();
 	showcasesphere.draw();
-	ssr.endComposite();
+	endssrcomposite();
 	skyfill.disable();
 	sun.disable();
 	camera.end();
@@ -301,7 +448,7 @@ void gCanvas::mouseExited() {
 }
 
 void gCanvas::windowResized(int w, int h) {
-	ssr.resize(getScreenWidth(), getScreenHeight());
+	resizessr(getScreenWidth(), getScreenHeight());
 }
 
 void gCanvas::showNotify() {

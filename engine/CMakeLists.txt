@@ -231,7 +231,6 @@ set(SRC_FILES
 	${ENGINE_DIR}/graphics/gGrid.cpp
 	${ENGINE_DIR}/graphics/gImage.cpp
 	${ENGINE_DIR}/graphics/gSkybox.cpp
-	${ENGINE_DIR}/graphics/gScreenSpaceReflection.cpp
 	${ENGINE_DIR}/graphics/gNode.cpp
 	${ENGINE_DIR}/graphics/gLight.cpp
 	${ENGINE_DIR}/graphics/gShadowMap.cpp
