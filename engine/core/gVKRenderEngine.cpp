@@ -1879,6 +1879,18 @@ bool gVKRenderEngine::beginFrame() {
 #endif
 }
 
+void gVKRenderEngine::setVsync(bool enabled) {
+#ifdef GVK_DESKTOP_GLFW
+	if(vkcontext == nullptr || vkcontext->vsyncenabled == enabled) return;
+	vkcontext->vsyncenabled = enabled;
+	if(vkcontext->swapchain != VK_NULL_HANDLE) {
+		vkcontext->swapchainrecreaterequested = true;
+	}
+#else
+	(void)enabled;
+#endif
+}
+
 void gVKRenderEngine::checkShaderReload() {
 #ifdef GVK_DESKTOP_GLFW
 	if(vkcontext == nullptr) return;

@@ -13,6 +13,7 @@
 #include "gBaseApp.h"
 #include "gCanvasManager.h"
 #include "gGUIFrame.h"
+#include "gVKRenderEngine.h"
 
 #include <algorithm>
 #include <thread>
@@ -452,10 +453,16 @@ int gAppManager::getFramerate() {
 
 void gAppManager::enableVsync() {
     window->setVsync(true);
+	if(renderengine == G_RENDERER_VK && renderer != nullptr) {
+		static_cast<gVKRenderEngine*>(renderer)->setVsync(true);
+	}
 }
 
 void gAppManager::disableVsync() {
     window->setVsync(false);
+	if(renderengine == G_RENDERER_VK && renderer != nullptr) {
+		static_cast<gVKRenderEngine*>(renderer)->setVsync(false);
+	}
 }
 
 void gAppManager::setCurrentGUIFrame(gGUIFrame *guiFrame) {

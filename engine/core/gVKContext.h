@@ -565,6 +565,7 @@ private:
 
 	GLFWwindow* window = nullptr;
 	bool vsyncenabled = false;
+	bool swapchainrecreaterequested = false;
 
 	VkSwapchainKHR swapchain = VK_NULL_HANDLE;
 	std::vector<VkImage> swapchainimages;

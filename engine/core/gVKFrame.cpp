@@ -32,6 +32,11 @@ bool gvkBeginFrame(gVKContext& ctx, GLFWwindow* window) {
 		// Minimised: there is nothing to render into.
 		return false;
 	}
+	if(ctx.swapchainrecreaterequested) {
+		ctx.swapchainrecreaterequested = false;
+		gvkRecreateSwapchain(ctx, window);
+		return false;
+	}
 	if(static_cast<uint32_t>(width) != ctx.swapchainextent.width ||
 			static_cast<uint32_t>(height) != ctx.swapchainextent.height) {
 		gvkRecreateSwapchain(ctx, window);
