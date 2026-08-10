@@ -1378,6 +1378,11 @@ bool gVKRenderEngine::initVulkan() {
 	// The frame loop reads this to react to resizes.
 	ctx->window = handle;
 
+	// Presentation pacing has to be known before the swapchain is built, because
+	// that is where Vulkan expresses it. Taken from the window so an app that
+	// asked for vsync either way gets what it asked for on this backend too.
+	ctx->setVsyncEnabled(glfwwindow->isVsyncEnabled());
+
 	// Record what the instance level offers (every extension and layer present) so
 	// support can be queried later without re-enumerating. Done after the Apple
 	// env block above, since that is what points the loader at the layers.
@@ -2459,6 +2464,21 @@ bool gVKRenderEngine::beginShadowPass() {
 	return gvkBeginShadowPass(*vkcontext);
 #else
 	return false;
+#endif
+}
+
+void gVKRenderEngine::setVsync(bool enabled) {
+#ifdef GVK_DESKTOP_GLFW
+	if(vkcontext == nullptr || vkcontext->isVsyncEnabled() == enabled) return;
+	vkcontext->setVsyncEnabled(enabled);
+
+	// The present mode is fixed when the swapchain is created, so changing it means
+	// building a new one. Nothing else about the swapchain changes, but there is no
+	// cheaper way to say it in Vulkan.
+	if(*vkcontext->getSwapchain() != VK_NULL_HANDLE && vkcontext->window != nullptr) {
+		vkDeviceWaitIdle(*vkcontext->getDevice());
+		gvkRecreateSwapchain(*vkcontext, vkcontext->window);
+	}
 #endif
 }
 

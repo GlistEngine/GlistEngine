@@ -240,6 +240,9 @@ public:
 	// declaration for why the two backends cannot share one moment for this.
 	void updateLights() override;
 
+	// Rebuilds the swapchain with the present mode the new setting asks for.
+	void setVsync(bool enabled) override;
+
 	void drawTexturedRect2D(GLuint textureId, GLuint maskTextureId, const glm::vec4& tint,
 			const glm::mat4& mvp,
 			const glm::vec2& uvOffset = glm::vec2(0.0f), const glm::vec2& uvScale = glm::vec2(1.0f)) override;

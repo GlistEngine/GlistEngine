@@ -400,6 +400,11 @@ public:
 	// from the previous frame, when the light was off.
 	virtual void updateLights();
 
+	// Presentation pacing. OpenGL sets it on the window through glfwSwapInterval
+	// and needs nothing here; Vulkan expresses it as the swapchain's present mode,
+	// so the backend overrides this to rebuild the swapchain with the new one.
+	virtual void setVsync(bool enabled) {}
+
 	void updateScene();
 
 	void gPushMatrix();

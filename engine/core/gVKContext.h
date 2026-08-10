@@ -382,6 +382,13 @@ struct gVKContext {
 	// index and has to write the one this returns: the frame loop waits on that
 	// index's fence before recording, which is what makes the copy free again.
 	uint32_t getCurrentFrame() const { return currentframe; }
+
+	// Whether presentation waits for the display. Vulkan expresses this as the
+	// swapchain's present mode rather than a call like glfwSwapInterval, so a
+	// change only takes effect when the swapchain is rebuilt - which is what
+	// gVKRenderEngine::setVsync asks for.
+	void setVsyncEnabled(bool enabled) { vsyncenabled = enabled; }
+	bool isVsyncEnabled() const { return vsyncenabled; }
 	// The layout of the image pipeline's descriptor set 0, which is where a
 	// texture's combined image sampler goes.
 	VkDescriptorSetLayout getImageDescriptorSetLayout() {
@@ -651,6 +658,7 @@ private:
 	VkDeviceSize mesharenacapacity = 0;
 	VkDeviceSize mesharenahighwater = 0;
 	uint64_t meshgeneration = 0;
+	bool vsyncenabled = true;
 };
 
 #endif /* GVK_DESKTOP_GLFW */

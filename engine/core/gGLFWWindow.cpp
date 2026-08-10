@@ -16,6 +16,7 @@
 
 #include "gGLFWWindow.h"
 #include "gAppManager.h"
+#include "gRenderObject.h"
 #include "gTracy.h"
 #ifdef WIN32
 #include <ShellScalingApi.h>
@@ -424,8 +425,17 @@ void gGLFWWindow::setVsync(bool vsync) {
 	// glfwSwapInterval controls the current OpenGL context. Vulkan windows are
 	// created with GLFW_NO_API and synchronise presentation through the swapchain
 	// present mode instead, so calling it there raises GLFW_NO_CURRENT_CONTEXT.
-	if(window != nullptr && glfwGetWindowAttrib(window, GLFW_CLIENT_API) != GLFW_NO_API)
+	//
+	// That other path has to actually be taken, though. Leaving it out is what kept
+	// the Vulkan backend on FIFO whatever the game asked for - vsynced, and so
+	// capped at the display's refresh rate while the OpenGL build of the same game
+	// ran unlocked. It made the two look far apart on a frame counter when the
+	// difference was that one of them was waiting for the monitor.
+	if(window != nullptr && glfwGetWindowAttrib(window, GLFW_CLIENT_API) != GLFW_NO_API) {
 		glfwSwapInterval(vsync ? 1 : 0);
+	} else if(gRenderObject::getRenderer() != nullptr) {
+		gRenderObject::getRenderer()->setVsync(vsync);
+	}
 }
 
 void gGLFWWindow::setCursor(int cursorNo) {

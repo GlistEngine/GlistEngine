@@ -84,6 +84,10 @@ struct gVKMeshBuffer {
 	VkBuffer arenabuffer = VK_NULL_HANDLE;
 	VkDeviceSize arenaoffset = 0;
 	uint64_t arenageneration = 0;
+	// The frame of this buffer's last upload. A second upload inside the same
+	// frame is what makes an arena slice necessary; a mesh uploaded once a frame
+	// is served by its own per-frame copy, which costs nothing to keep.
+	uint64_t lastuploadgeneration = ~0ull;
 };
 
 /*

@@ -64,6 +64,35 @@ static VkExtent2D gvkPickExtent(const VkSurfaceCapabilitiesKHR& caps, GLFWwindow
 	return extent;
 }
 
+// Which present mode to ask for, from what the surface actually supports.
+//
+// This is where vsync lives on Vulkan. There is no glfwSwapInterval to call:
+// presentation pacing is a property of the swapchain, so the choice is made
+// here and a change to it costs a swapchain rebuild.
+//
+// FIFO waits for the display and is the only mode the specification guarantees
+// everywhere, so it is both the vsynced choice and the fallback. With vsync off
+// MAILBOX is preferred over IMMEDIATE: it also presents as fast as the frames
+// arrive, but replaces the queued image instead of scanning out mid-frame, so
+// it does not tear.
+static VkPresentModeKHR gvkPickPresentMode(VkPhysicalDevice physicaldevice,
+		VkSurfaceKHR surface, bool vsync) {
+	if(vsync) return VK_PRESENT_MODE_FIFO_KHR;
+
+	uint32_t count = 0;
+	vkGetPhysicalDeviceSurfacePresentModesKHR(physicaldevice, surface, &count, nullptr);
+	if(count == 0) return VK_PRESENT_MODE_FIFO_KHR;
+	std::vector<VkPresentModeKHR> modes(count);
+	vkGetPhysicalDeviceSurfacePresentModesKHR(physicaldevice, surface, &count, modes.data());
+
+	const auto supports = [&modes](VkPresentModeKHR mode) {
+		return std::find(modes.begin(), modes.end(), mode) != modes.end();
+	};
+	if(supports(VK_PRESENT_MODE_MAILBOX_KHR)) return VK_PRESENT_MODE_MAILBOX_KHR;
+	if(supports(VK_PRESENT_MODE_IMMEDIATE_KHR)) return VK_PRESENT_MODE_IMMEDIATE_KHR;
+	return VK_PRESENT_MODE_FIFO_KHR;
+}
+
 bool gvkCreateSwapchain(gVKContext& ctx, GLFWwindow* window) {
 	if(ctx.device == VK_NULL_HANDLE || ctx.surface == VK_NULL_HANDLE || window == nullptr) {
 		gLoge("gVKSwapchain") << "Cannot create the swapchain before the device and the surface exist.";
@@ -126,9 +155,7 @@ bool gvkCreateSwapchain(gVKContext& ctx, GLFWwindow* window) {
 
 	createinfo.preTransform = caps.currentTransform;
 	createinfo.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
-	// FIFO is the only present mode the specification guarantees everywhere, and it
-	// is vsynced, so no tearing.
-	createinfo.presentMode = VK_PRESENT_MODE_FIFO_KHR;
+	createinfo.presentMode = gvkPickPresentMode(ctx.physicaldevice, ctx.surface, ctx.isVsyncEnabled());
 	createinfo.clipped = VK_TRUE;
 	createinfo.oldSwapchain = VK_NULL_HANDLE;
 
@@ -180,7 +207,9 @@ bool gvkCreateSwapchain(gVKContext& ctx, GLFWwindow* window) {
 	gLogi("gVKSwapchain") << "Swapchain created: " << createdcount << " images, "
 			<< ctx.swapchainextent.width << "x" << ctx.swapchainextent.height
 			<< ", format " << ctx.swapchainformat << ", color space " << surfaceformat.colorSpace
-			<< ", present mode FIFO";
+			<< ", present mode " << (createinfo.presentMode == VK_PRESENT_MODE_FIFO_KHR ? "FIFO (vsync)"
+					: createinfo.presentMode == VK_PRESENT_MODE_MAILBOX_KHR ? "MAILBOX"
+					: createinfo.presentMode == VK_PRESENT_MODE_IMMEDIATE_KHR ? "IMMEDIATE" : "other");
 	return true;
 }
 
