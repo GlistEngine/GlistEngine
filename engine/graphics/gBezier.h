@@ -14,7 +14,7 @@
 
 /**
  * @class gBezier
- * @brief Evaluates and renders dynamic (N-degree) Bezier curves.
+ * @brief Evaluates and renders composite quadratic Bezier curves.
  *
  * Usage:
  * gBezier curve;
