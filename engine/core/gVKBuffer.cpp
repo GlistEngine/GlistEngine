@@ -80,9 +80,29 @@ void gvkEndSingleTimeCommands(gVKContext& ctx, VkCommandBuffer commandBuffer) {
 	submitinfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
 	submitinfo.commandBufferCount = 1;
 	submitinfo.pCommandBuffers = &commandBuffer;
-	// A transient transfer; waiting on the queue is simpler than a fence here.
-	vkQueueSubmit(*ctx.getGraphicsQueue(), 1, &submitinfo, VK_NULL_HANDLE);
-	vkQueueWaitIdle(*ctx.getGraphicsQueue());
+
+	// Do not drain the complete graphics queue for one staging copy.  A fence waits
+	// for this submission (and the work it depends on) only; vkQueueWaitIdle also
+	// waits for unrelated work submitted behind it, turning an asset upload into a
+	// full GPU stall when a level streams resources during rendering.
+	VkFenceCreateInfo fenceinfo{};
+	fenceinfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
+	VkFence fence = VK_NULL_HANDLE;
+	if(vkCreateFence(device, &fenceinfo, nullptr, &fence) == VK_SUCCESS) {
+		if(vkQueueSubmit(*ctx.getGraphicsQueue(), 1, &submitinfo, fence) == VK_SUCCESS) {
+			vkWaitForFences(device, 1, &fence, VK_TRUE, UINT64_MAX);
+		} else {
+			// The command buffer cannot be freed while an unsuccessfully submitted
+			// command might still be pending. No submission means it is safe now.
+			gLoge("gVKBuffer") << "vkQueueSubmit failed for a one-time command buffer.";
+		}
+		vkDestroyFence(device, fence, nullptr);
+	} else {
+		// Resource creation is already failing; retain the old conservative path so
+		// the caller never frees staging memory still read by the GPU.
+		vkQueueSubmit(*ctx.getGraphicsQueue(), 1, &submitinfo, VK_NULL_HANDLE);
+		vkQueueWaitIdle(*ctx.getGraphicsQueue());
+	}
 	vkFreeCommandBuffers(device, *ctx.getCommandPool(), 1, &commandBuffer);
 }
 

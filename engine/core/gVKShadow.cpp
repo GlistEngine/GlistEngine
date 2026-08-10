@@ -285,11 +285,8 @@ bool gvkBeginShadowPass(gVKContext& ctx) {
 	info.clearValueCount = 1;
 	info.pClearValues = &clear;
 	vkCmdBeginRenderPass(cmd, &info, VK_SUBPASS_CONTENTS_INLINE);
+	ctx.resetRecordedDrawState();
 
-	// Positive height here, unlike the screen pass. The Y flip there exists to match
-	// OpenGL's top-left 2D origin; the shadow map is never presented and is sampled
-	// with coordinates derived from the same light matrix that filled it, so flipping
-	// it would only have to be undone when reading.
 	VkViewport viewport{};
 	viewport.x = 0.0f;
 	viewport.y = 0.0f;
@@ -298,10 +295,7 @@ bool gvkBeginShadowPass(gVKContext& ctx) {
 	viewport.minDepth = 0.0f;
 	viewport.maxDepth = 1.0f;
 	vkCmdSetViewport(cmd, 0, 1, &viewport);
-
-	VkRect2D scissor{};
-	scissor.offset = {0, 0};
-	scissor.extent = ctx.shadowextent;
+	VkRect2D scissor{{0, 0}, ctx.shadowextent};
 	vkCmdSetScissor(cmd, 0, 1, &scissor);
 
 	ctx.renderpassactive = true;

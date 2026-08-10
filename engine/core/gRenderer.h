@@ -253,6 +253,7 @@ public:
 
 	virtual bool beginFrame() { return true; }
 	virtual void endFrame() {}
+	virtual void flushQueuedDraws() {}
 
 	int getRenderEngineType() const { return renderenginetype; }
 	bool isVulkan() const { return renderenginetype == G_RENDERER_VK; }
@@ -343,6 +344,7 @@ public:
 	// equivalent inside gShadowMap::enable() and leaves these alone.
 	virtual bool beginShadowPass() { return false; }
 	virtual void endShadowPass() {}
+	virtual bool isShadowPassActive() const { return false; }
 
 	// lightMatrix is lightProjection * lightView; lightPosition is where the caster
 	// sits, used for the depth bias. enabled false means shade without shadows.

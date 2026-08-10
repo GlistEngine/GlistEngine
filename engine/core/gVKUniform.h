@@ -125,6 +125,9 @@ struct gVKShadowPush {
 	glm::vec4 misc;
 };
 
+// A frame can change its lights while recording (muzzle flashes are a common
+// example). Each change needs immutable storage until that frame's fence signals;
+// otherwise rewriting one mapped UBO retroactively changes earlier draws.
 /*
  * Creates one uniform buffer and one descriptor set per frame in flight. Must run
  * after the pipelines, because the set layout and the descriptor pool it allocates
@@ -138,7 +141,7 @@ void gvkDestroyUniformResources(gVKContext& ctx);
  * host coherent and already mapped, so this is a memcpy with no flush and no
  * synchronisation of its own - the frame's fence is what keeps it safe.
  */
-void gvkWriteSceneUniforms(gVKContext& ctx, const gVKSceneUniforms& data);
+bool gvkWriteSceneUniforms(gVKContext& ctx, const gVKSceneUniforms& data);
 
 #endif /* GVK_DESKTOP_GLFW */
 

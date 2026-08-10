@@ -94,23 +94,27 @@ static void flipVertically(unsigned char* pixelData, int width, int height, int 
 }
 
 void gVKRenderEngine::clear() {
+	flushQueuedDraws();
 	// The render pass clears the attachment at the start of every frame, so there
 	// is nothing to do at the moment this is called.
 }
 
 void gVKRenderEngine::clearColor(int r, int g, int b, int a) {
+	flushQueuedDraws();
 #ifdef GVK_DESKTOP_GLFW
 	gvkStoreClearColor(vkcontext, r / 255.0f, g / 255.0f, b / 255.0f, a / 255.0f);
 #endif
 }
 
 void gVKRenderEngine::clearColor(gColor color) {
+	flushQueuedDraws();
 #ifdef GVK_DESKTOP_GLFW
 	gvkStoreClearColor(vkcontext, color.r, color.g, color.b, color.a);
 #endif
 }
 
 void gVKRenderEngine::setProjectionMatrix(glm::mat4 projectionMatrix) {
+	flushQueuedDraws();
 	// gCamera builds its matrix with glm::perspective, which targets OpenGL: the
 	// clip volume runs from -w to +w in depth. Vulkan's runs from 0 to +w, so a
 	// matrix used unchanged would put the near half of the scene behind the viewer
@@ -137,15 +141,18 @@ void gVKRenderEngine::enableDepthTest() {
 }
 
 void gVKRenderEngine::enableDepthTest(int depthTestType) {
+	flushQueuedDraws();
 	isdepthtestenabled = true;
 	depthtesttype = depthTestType;
 }
 
 void gVKRenderEngine::setDepthTestFunc(int depthTestType) {
+	flushQueuedDraws();
 	depthtesttype = depthTestType;
 }
 
 void gVKRenderEngine::disableDepthTest() {
+	flushQueuedDraws();
 	isdepthtestenabled = false;
 }
 
@@ -157,11 +164,33 @@ int gVKRenderEngine::getDepthTestType() {
 	return depthtesttype;
 }
 
+void gVKRenderEngine::enableCulling() {
+	flushQueuedDraws();
+	gRenderer::enableCulling();
+}
+
+void gVKRenderEngine::disableCulling() {
+	flushQueuedDraws();
+	gRenderer::disableCulling();
+}
+
+void gVKRenderEngine::setCullFace(int face) {
+	flushQueuedDraws();
+	gRenderer::setCullFace(face);
+}
+
+void gVKRenderEngine::setCullingDirection(int direction) {
+	flushQueuedDraws();
+	gRenderer::setCullingDirection(direction);
+}
+
 void gVKRenderEngine::enableAlphaBlending() {
+	flushQueuedDraws();
 	isalphablendingenabled = true;
 }
 
 void gVKRenderEngine::disableAlphaBlending() {
+	flushQueuedDraws();
 	isalphablendingenabled = false;
 }
 
@@ -617,6 +646,7 @@ void gVKRenderEngine::deleteFramebuffer(GLuint& fbo) {
 
 void gVKRenderEngine::bindFramebuffer(GLuint fbo) {
 #ifdef GVK_DESKTOP_GLFW
+	flushQueuedDraws();
 	if(vkcontext == nullptr) { boundframebuffer = fbo; return; }
 
 	// Whatever pass is open has to close before another can open. Outside a frame
@@ -654,6 +684,7 @@ void gVKRenderEngine::bindFramebuffer(GLuint fbo) {
 	info.clearValueCount = clearcount;
 	info.pClearValues = clears;
 	vkCmdBeginRenderPass(cmd, &info, VK_SUBPASS_CONTENTS_INLINE);
+	vkcontext->resetRecordedDrawState();
 
 	// Negative height as on the screen pass: an FBO is drawn into with the same
 	// top-left origin projections the engine builds everywhere else.
@@ -929,10 +960,18 @@ void gVKRenderEngine::resetShader(GLuint id, bool loaded) const {
 }
 
 void gVKRenderEngine::clearScreen(bool color, bool depth) {
-	GLbitfield mask = 0;
-	if(color) mask |= GL_COLOR_BUFFER_BIT;
-	if(depth) mask |= GL_DEPTH_BUFFER_BIT;
-	glClear(mask);
+	#ifdef GVK_DESKTOP_GLFW
+	flushQueuedDraws();
+	// Screen, shadow and offscreen passes all clear through their attachment
+	// loadOp when they begin. Mid-pass clears from the legacy OpenGL traversal must
+	// not be replayed here: several scene helpers issue them while sharing a Vulkan
+	// pass, which would erase previously recorded draws and produce flicker.
+	(void) color;
+	(void) depth;
+	#else
+	(void) color;
+	(void) depth;
+	#endif
 }
 
 void gVKRenderEngine::bindQuadVAO() {
@@ -940,6 +979,7 @@ void gVKRenderEngine::bindQuadVAO() {
 }
 
 void gVKRenderEngine::drawFullscreenQuad() {
+	flushQueuedDraws();
 	G_CHECK_GL(glDrawArrays(GL_TRIANGLES, 0, 6));
 }
 
@@ -1377,6 +1417,7 @@ bool gVKRenderEngine::initVulkan() {
 	}
 	// The frame loop reads this to react to resizes.
 	ctx->window = handle;
+	ctx->vsyncenabled = glfwwindow->isVsyncEnabled();
 
 	// Record what the instance level offers (every extension and layer present) so
 	// support can be queried later without re-enumerating. Done after the Apple
@@ -1793,6 +1834,11 @@ void gVKRenderEngine::cleanupVulkan() {
 	// gvkDestroyGraphicsPipelines.
 	destroyAllTextures();
 	destroyAllMeshBuffers();
+	// Shadow resources are created on demand after the main pipelines. Their
+	// pipeline references the shadow render pass and their descriptor set belongs
+	// to the main descriptor pool, so the whole shadow unit must die before that
+	// pool and before the device.
+	gvkDestroyShadowResources(*ctx);
 	gvkDestroyUniformResources(*ctx);
 	gvkDestroyDrawResources(*ctx);
 	gvkDestroyGraphicsPipelines(*ctx);
@@ -1826,9 +1872,22 @@ bool gVKRenderEngine::beginFrame() {
 	// The new frame writes into a different uniform buffer, so whatever the previous
 	// one gathered does not carry over.
 	sceneuniformswritten = false;
+	vkcontext->resetSceneUniformSlots();
 	return gvkBeginFrame(*vkcontext, vkcontext->window);
 #else
 	return false;
+#endif
+}
+
+void gVKRenderEngine::setVsync(bool enabled) {
+#ifdef GVK_DESKTOP_GLFW
+	if(vkcontext == nullptr || vkcontext->vsyncenabled == enabled) return;
+	vkcontext->vsyncenabled = enabled;
+	if(vkcontext->swapchain != VK_NULL_HANDLE) {
+		vkcontext->swapchainrecreaterequested = true;
+	}
+#else
+	(void)enabled;
 #endif
 }
 
@@ -1847,7 +1906,15 @@ void gVKRenderEngine::checkShaderReload() {
 	// The first reading only establishes the baseline; it is not an edit.
 	if(firstreading) return;
 
+	// Scene descriptor sets belong to the descriptor pool rebuilt by a reload.
+	// Release their buffers first, then recreate both buffers and sets against the
+	// new reflected layout; retaining the old handles would bind freed sets.
+	gvkDestroyUniformResources(*vkcontext);
 	if(!gvkReloadGraphicsPipelines(*vkcontext)) return;
+	if(!gvkCreateUniformResources(*vkcontext)) {
+		gLoge("gVKRenderEngine") << "Could not recreate scene uniforms after shader reload.";
+		return;
+	}
 	// The reload destroys the descriptor pool, and with it every set allocated
 	// from it, so the textures that are still loaded need pointing at the new one.
 	for(auto& entry : vktextures) {
@@ -1859,6 +1926,7 @@ void gVKRenderEngine::checkShaderReload() {
 void gVKRenderEngine::endFrame() {
 #ifdef GVK_DESKTOP_GLFW
 	if(vkcontext == nullptr) return;
+	flushQueuedDraws();
 	// An application that forgot to unbind its FBO would otherwise leave that pass
 	// open, and the frame loop would close it believing it was the screen one -
 	// leaving the swapchain image never rendered and never transitioned.
@@ -1866,6 +1934,124 @@ void gVKRenderEngine::endFrame() {
 	boundframebuffer = gFbo::defaultfbo;
 	gvkEndFrame(*vkcontext, vkcontext->window);
 #endif
+}
+
+void gVKRenderEngine::flushQueuedDraws() {
+	if(queuedmeshdraws.empty() || flushingqueueddraws) return;
+	// Keep the submission order intact.  Opaque meshes can share one instanced draw
+	// only when every material and raster state input is identical; unlike sorting,
+	// this cannot change equal-depth results or application-visible draw order.
+	for(size_t first = 0; first < queuedmeshdraws.size();) {
+		size_t count = 1;
+		while(first + count < queuedmeshdraws.size()
+				&& canMergeQueuedDraws(queuedmeshdraws[first], queuedmeshdraws[first + count])) {
+			++count;
+		}
+		recordQueuedDrawGroup(first, count);
+		first += count;
+	}
+	queuedmeshdraws.clear();
+}
+
+bool gVKRenderEngine::canMergeQueuedDraws(const QueuedMeshDraw& first, const QueuedMeshDraw& next) const {
+	auto samevec4 = [](const glm::vec4& a, const glm::vec4& b) {
+		return a.x == b.x && a.y == b.y && a.z == b.z && a.w == b.w;
+	};
+	const gMeshSurface& a = first.surface;
+	const gMeshSurface& b = next.surface;
+	return first.vertexarrayid == next.vertexarrayid
+			&& first.instancecount == 1 && next.instancecount == 1
+			&& first.vertexcount == next.vertexcount && first.indexcount == next.indexcount
+			&& first.drawmode == next.drawmode && samevec4(first.tint, next.tint)
+			&& first.depthtest == next.depthtest && first.depthtesttype == next.depthtesttype
+			&& first.culling == next.culling && first.cullface == next.cullface
+			&& first.cullingdirection == next.cullingdirection
+			&& samevec4(a.ambient, b.ambient) && samevec4(a.diffuse, b.diffuse)
+			&& samevec4(a.specular, b.specular) && a.shininess == b.shininess
+			&& a.diffusemapid == b.diffusemapid && a.specularmapid == b.specularmapid
+			&& a.normalmapid == b.normalmapid && a.ispbr == b.ispbr
+			&& a.albedomapid == b.albedomapid && a.pbrnormalmapid == b.pbrnormalmapid
+			&& a.metallicmapid == b.metallicmapid && a.roughnessmapid == b.roughnessmapid
+			&& a.aomapid == b.aomapid;
+}
+
+void gVKRenderEngine::recordQueuedDrawGroup(size_t first, size_t count) {
+	if(first >= queuedmeshdraws.size() || count == 0) return;
+	const QueuedMeshDraw& draw = queuedmeshdraws[first];
+
+	const bool saveddepthtest = isdepthtestenabled;
+	const int saveddepthtesttype = depthtesttype;
+	const bool savedculling = iscullingenabled;
+	const int savedcullface = cullface;
+	const int savedcullingdirection = cullingdirection;
+	const gColor savedcolor = rendercolor != nullptr ? *rendercolor : gColor();
+	isdepthtestenabled = draw.depthtest;
+	depthtesttype = draw.depthtesttype;
+	iscullingenabled = draw.culling;
+	cullface = draw.cullface;
+	cullingdirection = draw.cullingdirection;
+	if(rendercolor != nullptr) rendercolor->set(draw.tint.x, draw.tint.y, draw.tint.z, draw.tint.w);
+
+	flushingqueueddraws = true;
+#ifdef GVK_DESKTOP_GLFW
+	// The normal mesh path already understands instancing.  Supplying a short-lived
+	// view of the current frame's mapped mesh arena lets it use that exact path for
+	// a gathered run, including PBR and shadow casters, without a second material
+	// implementation.  Command buffers retain only the VkBuffer and offset, so the
+	// view can disappear as soon as recording finishes.
+	if(count > 1 && vkcontext != nullptr) {
+		std::vector<glm::mat4> models;
+		models.reserve(count);
+		for(size_t i = 0; i < count; ++i) models.push_back(queuedmeshdraws[first + i].model);
+		const VkDeviceSize offset = vkcontext->pushMeshData(models.data(), models.size() * sizeof(glm::mat4));
+		const VkBuffer buffer = vkcontext->getCurrentMeshArena();
+		if(offset != VK_WHOLE_SIZE && buffer != VK_NULL_HANDLE) {
+			gVKMeshBuffer instances;
+			instances.isdynamic = true;
+			instances.arenabuffer = buffer;
+			instances.arenaoffset = offset;
+			instances.arenageneration = vkcontext->getMeshGeneration();
+			const GLuint temporaryid = nextvkbufferid++;
+			auto arrayentry = vkvertexarrays.find(draw.vertexarrayid);
+			if(arrayentry != vkvertexarrays.end()) {
+				const GLuint savedinstancebuffer = arrayentry->second.instancebuffer;
+				vkmeshbuffers[temporaryid] = &instances;
+				arrayentry->second.instancebuffer = temporaryid;
+				drawMesh3D(draw.vertexarrayid, draw.vertexcount, draw.indexcount, glm::mat4(1.0f),
+						draw.surface, draw.drawmode, static_cast<int>(count));
+				arrayentry->second.instancebuffer = savedinstancebuffer;
+				vkmeshbuffers.erase(temporaryid);
+			} else {
+				for(size_t i = 0; i < count; ++i) {
+					const QueuedMeshDraw& item = queuedmeshdraws[first + i];
+					drawMesh3D(item.vertexarrayid, item.vertexcount, item.indexcount, item.model,
+							item.surface, item.drawmode, item.instancecount);
+				}
+			}
+		} else {
+			for(size_t i = 0; i < count; ++i) {
+				const QueuedMeshDraw& item = queuedmeshdraws[first + i];
+				drawMesh3D(item.vertexarrayid, item.vertexcount, item.indexcount, item.model,
+						item.surface, item.drawmode, item.instancecount);
+			}
+		}
+	} else
+#endif
+	{
+		for(size_t i = 0; i < count; ++i) {
+			const QueuedMeshDraw& item = queuedmeshdraws[first + i];
+			drawMesh3D(item.vertexarrayid, item.vertexcount, item.indexcount, item.model,
+					item.surface, item.drawmode, item.instancecount);
+		}
+	}
+	flushingqueueddraws = false;
+
+	isdepthtestenabled = saveddepthtest;
+	depthtesttype = saveddepthtesttype;
+	iscullingenabled = savedculling;
+	cullface = savedcullface;
+	cullingdirection = savedcullingdirection;
+	if(rendercolor != nullptr) *rendercolor = savedcolor;
 }
 
 
@@ -1903,6 +2089,7 @@ void gVKRenderEngine::cleanup() {
 void gVKRenderEngine::drawColored2D(const glm::vec2* points, int count, const glm::vec4& color, const glm::mat4& mvp,
 		int drawMode) {
 #ifdef GVK_DESKTOP_GLFW
+	flushQueuedDraws();
 	if(vkcontext == nullptr) return;
 	// The mesh path speaks in GL primitive constants; translate them into the modes
 	// the Vulkan draw path expands. GL_POINTS has no pipeline of its own and no 2D
@@ -1994,7 +2181,7 @@ void gVKRenderEngine::updateSceneUniforms() {
 		data.outercutoff = light->getSpotOuterCutOffAngle();
 	}
 
-	gvkWriteSceneUniforms(*vkcontext, uniforms);
+	if(!gvkWriteSceneUniforms(*vkcontext, uniforms)) return;
 }
 #endif
 
@@ -2002,6 +2189,34 @@ void gVKRenderEngine::drawMesh3D(GLuint vertexArrayId, int vertexCount, int inde
 		const glm::mat4& model, const gMeshSurface& surface, int drawMode, int instanceCount) {
 #ifdef GVK_DESKTOP_GLFW
 	if(vkcontext == nullptr || vertexArrayId == 0 || instanceCount <= 0) return;
+	const bool shadowqueued = vkcontext->isShadowPassActive();
+	// Snapshot camera and lighting when the first screen mesh arrives, not later
+	// when a state change happens to flush the queue. Otherwise light/shadow changes
+	// made by overlays (such as a muzzle flash) can recolour every mesh that was
+	// queued before them.
+	if(!shadowqueued && !sceneuniformswritten) {
+		updateSceneUniforms();
+		sceneuniformswritten = true;
+	}
+	if(!flushingqueueddraws && (shadowqueued || (instanceCount == 1 && !isalphablendingenabled
+			&& boundframebuffer == gFbo::defaultfbo))) {
+		QueuedMeshDraw queued;
+		queued.vertexarrayid = vertexArrayId;
+		queued.vertexcount = vertexCount;
+		queued.indexcount = indexCount;
+		queued.drawmode = drawMode;
+		queued.instancecount = instanceCount;
+		queued.model = model;
+		queued.surface = surface;
+		queued.tint = rendercolor != nullptr ? rendercolor->asVec4() : glm::vec4(1.0f);
+		queued.depthtest = isdepthtestenabled;
+		queued.depthtesttype = depthtesttype;
+		queued.culling = iscullingenabled;
+		queued.cullface = cullface;
+		queued.cullingdirection = cullingdirection;
+		queuedmeshdraws.push_back(queued);
+		return;
+	}
 
 	// The vertex array is what gVbo bound while it uploaded, so it knows which two
 	// buffers this mesh lives in.
@@ -2046,11 +2261,6 @@ void gVKRenderEngine::drawMesh3D(GLuint vertexArrayId, int vertexCount, int inde
 
 	// The scene block is per frame, but a frame is only known to have 3D in it once
 	// a mesh actually arrives, so the first such draw is what fills it in.
-	if(!sceneuniformswritten) {
-		updateSceneUniforms();
-		sceneuniformswritten = true;
-	}
-
 	// The shadow pass draws the same meshes with a different pipeline and nothing
 	// but their position: no material, no lights, no descriptor sets. Handled before
 	// any of that is gathered, so the depth pass costs a fraction of a shading one.
@@ -2078,33 +2288,15 @@ void gVKRenderEngine::drawMesh3D(GLuint vertexArrayId, int vertexCount, int inde
 			shadowinstances = identityinstancebuffer->buffer;
 			shadowinstancesoffset = 0;
 		}
-		// Cutout casters: a mesh whose diffuse map punches holes in it has to cast a
-		// shadow with the same holes, so the map is looked up here and the fragment
-		// stage discards against it. Only the diffuse map and only a non-PBR mesh,
-		// because that is exactly where mesh3d.frag discards in the shading pass -
-		// mesh3dpbr.frag has no cutout, and a PBR mesh casting holes it does not
-		// render would be the same disagreement the other way round.
-		VkDescriptorSet cutoutset = VK_NULL_HANDLE;
-		if(!surface.ispbr && surface.diffusemapid != 0) {
-			auto it = vktextures.find(surface.diffusemapid);
-			if(it != vktextures.end() && it->second != nullptr) cutoutset = it->second->descriptorset;
-		}
 		gVKShadowPush shadowpush{};
 		// The light's matrix is folded into the model matrix on the CPU; see
 		// shadow3d.vert for why the three are not sent separately.
 		shadowpush.lightmodel = shadowlightmatrix * model;
-		shadowpush.misc = glm::vec4(cutoutset != VK_NULL_HANDLE ? 1.0f : 0.0f, 0.0f, 0.0f, 0.0f);
-		// The binding has to be filled either way, so an opaque caster gets the white
-		// texture and the flag above tells the shader not to sample it.
-		if(cutoutset == VK_NULL_HANDLE) {
-			if(!ensureWhiteTexture()) return;
-			cutoutset = vktextures[whitetextureid]->descriptorset;
-		}
 
 		const VkIndexType shadowindextype = sizeof(gIndex) == 2 ? VK_INDEX_TYPE_UINT16 : VK_INDEX_TYPE_UINT32;
 		gvkDrawShadowCaster(*vkcontext, vertexbuffer, vertexoffset,
 				indexed ? indexbuffer : VK_NULL_HANDLE,
-				indexed ? indexCount : vertexCount, shadowindextype, shadowpush, cutoutset,
+				indexed ? indexCount : vertexCount, shadowindextype, shadowpush, VK_NULL_HANDLE,
 				shadowinstances, shadowinstancesoffset, instanceCount, topology);
 		return;
 	}
@@ -2268,6 +2460,7 @@ void gVKRenderEngine::drawMesh3D(GLuint vertexArrayId, int vertexCount, int inde
 void gVKRenderEngine::drawTexturedRect2D(GLuint textureId, GLuint maskTextureId, const glm::vec4& tint,
 		const glm::mat4& mvp, const glm::vec2& uvOffset, const glm::vec2& uvScale) {
 #ifdef GVK_DESKTOP_GLFW
+	flushQueuedDraws();
 	if(vkcontext == nullptr) return;
 	auto it = vktextures.find(textureId);
 	if(it == vktextures.end() || it->second == nullptr) return;
@@ -2287,6 +2480,7 @@ void gVKRenderEngine::drawTexturedRect2D(GLuint textureId, GLuint maskTextureId,
 void gVKRenderEngine::drawTexturedTriangles2D(GLuint textureId, const glm::vec4& tint,
 		const glm::mat4& mvp, const float* xyuv, int vertexCount) {
 #ifdef GVK_DESKTOP_GLFW
+	flushQueuedDraws();
 	if(vkcontext == nullptr) return;
 	auto it = vktextures.find(textureId);
 	if(it == vktextures.end() || it->second == nullptr) return;
@@ -2405,6 +2599,7 @@ static VkDescriptorSet gvkGetPbrMaterialSet(gVKContext* vkcontext,
 bool gVKRenderEngine::drawSkyboxFace(GLuint textureId, const float* xyzuv, int vertexCount,
 		const glm::mat4& viewProjection) {
 #ifdef GVK_DESKTOP_GLFW
+	flushQueuedDraws();
 	if(vkcontext == nullptr || textureId == 0 || xyzuv == nullptr || vertexCount <= 0) return false;
 	// The sky is not a caster. Drawing it into the depth map would put a wall at the
 	// far edge of the light's frustum and shadow the whole scene.
@@ -2463,6 +2658,7 @@ bool gVKRenderEngine::beginShadowPass() {
 }
 
 void gVKRenderEngine::updateLights() {
+	flushQueuedDraws();
 	gRenderer::updateLights();
 #ifdef GVK_DESKTOP_GLFW
 	// A light was enabled, disabled or recoloured. The scene block this backend
@@ -2481,6 +2677,7 @@ void gVKRenderEngine::updateLights() {
 
 void gVKRenderEngine::endShadowPass() {
 #ifdef GVK_DESKTOP_GLFW
+	flushQueuedDraws();
 	if(vkcontext == nullptr) return;
 	gvkEndShadowPass(*vkcontext);
 	// The scene block is gathered again for the pass that follows, rather than once
@@ -2499,8 +2696,17 @@ void gVKRenderEngine::endShadowPass() {
 #endif
 }
 
+bool gVKRenderEngine::isShadowPassActive() const {
+#ifdef GVK_DESKTOP_GLFW
+	return vkcontext != nullptr && vkcontext->isShadowPassActive();
+#else
+	return false;
+#endif
+}
+
 void gVKRenderEngine::setShadowMapState(bool enabled, const glm::mat4& lightMatrix,
 		const glm::vec3& lightPosition, bool softShadows) {
+	flushQueuedDraws();
 	shadowmapenabled = enabled;
 	// The same -1..1 to 0..1 depth correction setProjectionMatrix applies to the
 	// camera. gShadowMap builds the light's projection with glm::ortho, which targets
