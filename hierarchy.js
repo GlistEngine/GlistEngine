@@ -8,6 +8,7 @@ var hierarchy =
     [ "gInputPlayer::GamepadAxisBinding", "structgInputPlayer_1_1GamepadAxisBinding.html", null ],
     [ "gInputPlayer::GamepadButtonAxisBinding", "structgInputPlayer_1_1GamepadButtonAxisBinding.html", null ],
     [ "gAnimationTrigger", "classgAnimationTrigger.html", null ],
+    [ "gBitmapFont", "classgBitmapFont.html", null ],
     [ "gColor", "classgColor.html", null ],
     [ "gColorHSL", "classgColorHSL.html", null ],
     [ "gEvent", "classgEvent.html", [
