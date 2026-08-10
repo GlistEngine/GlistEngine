@@ -10,6 +10,7 @@
 
 #include "gVKBuffer.h"
 #include "gUtils.h"
+#include <algorithm>
 #include <cstring>
 
 // Buffers replaced by a promotion, kept alive rather than destroyed on the spot.
@@ -46,26 +47,41 @@ static bool gvkMakeMeshBufferDynamic(gVKContext& ctx, gVKMeshBuffer& buf,
 		VkDeviceSize size, bool isIndex) {
 	VkDevice device = *ctx.getDevice();
 
-	// Set aside rather than freed; see gvkretiredmeshbuffers above for why.
-	if(!buf.isdynamic && buf.buffer != VK_NULL_HANDLE) {
+	// Set aside rather than freed; see gvkretiredmeshbuffers above for why. The same
+	// applies to slots being replaced by larger ones: the frame being recorded may
+	// already have bound them.
+	if(buf.buffer != VK_NULL_HANDLE && !buf.isdynamic) {
 		gvkretiredmeshbuffers.emplace_back(buf.buffer, buf.memory);
 		buf.buffer = VK_NULL_HANDLE;
 		buf.memory = VK_NULL_HANDLE;
 	}
+	for(int i = 0; i < GVK_MAX_FRAMES_IN_FLIGHT; i++) {
+		if(buf.slotbuffers[i] == VK_NULL_HANDLE) continue;
+		if(buf.slotmapped[i] != nullptr) vkUnmapMemory(device, buf.slotmemories[i]);
+		gvkretiredmeshbuffers.emplace_back(buf.slotbuffers[i], buf.slotmemories[i]);
+		buf.slotbuffers[i] = VK_NULL_HANDLE;
+		buf.slotmemories[i] = VK_NULL_HANDLE;
+		buf.slotmapped[i] = nullptr;
+	}
 	gvkDestroyMeshBuffer(ctx, buf);
 
+	// Half again as much as asked for, so a mesh whose size moves a little between
+	// draws settles after one allocation instead of reallocating on each. Without it
+	// a gRectangle alternating between filled and outlined - four indices then five -
+	// rebuilt both its buffers twice a frame, and every rebuild drained the device.
+	const VkDeviceSize capacity = std::max<VkDeviceSize>(size + size / 2, 256);
 	const VkBufferUsageFlags usage = isIndex ? VK_BUFFER_USAGE_INDEX_BUFFER_BIT
 			: VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
 	for(int i = 0; i < GVK_MAX_FRAMES_IN_FLIGHT; i++) {
-		if(!gvkCreateBuffer(ctx, size, usage,
+		if(!gvkCreateBuffer(ctx, capacity, usage,
 				VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
 				buf.slotbuffers[i], buf.slotmemories[i])) {
-			gLoge("gVKMeshBuffer") << "Could not create a host visible " << size
+			gLoge("gVKMeshBuffer") << "Could not create a host visible " << capacity
 					<< " byte buffer for a mesh that updates every frame.";
 			gvkDestroyMeshBuffer(ctx, buf);
 			return false;
 		}
-		if(vkMapMemory(device, buf.slotmemories[i], 0, size, 0, &buf.slotmapped[i]) != VK_SUCCESS) {
+		if(vkMapMemory(device, buf.slotmemories[i], 0, capacity, 0, &buf.slotmapped[i]) != VK_SUCCESS) {
 			gLoge("gVKMeshBuffer") << "vkMapMemory failed for a per-frame mesh buffer.";
 			gvkDestroyMeshBuffer(ctx, buf);
 			return false;
@@ -76,9 +92,9 @@ static bool gvkMakeMeshBufferDynamic(gVKContext& ctx, gVKMeshBuffer& buf,
 
 	buf.isdynamic = true;
 	buf.size = size;
+	buf.capacity = capacity;
 	buf.isindex = isIndex;
 	buf.version = 0;
-	buf.shadow.resize(static_cast<size_t>(size));
 	return true;
 }
 
@@ -95,6 +111,7 @@ bool gvkUploadMeshBuffer(gVKContext& ctx, gVKMeshBuffer& buf, const void* data,
 	}
 
 	const bool wasallocated = buf.isdynamic || buf.buffer != VK_NULL_HANDLE;
+	const bool rolechanged = wasallocated && buf.isindex != isIndex;
 	const bool shapechanged = wasallocated && (buf.size != size || buf.isindex != isIndex);
 
 	// The second upload is the signal that this mesh rewrites its own vertices -
@@ -104,17 +121,24 @@ bool gvkUploadMeshBuffer(gVKContext& ctx, gVKMeshBuffer& buf, const void* data,
 	// frame being recorded ends up serialised against the one before it. Moving the
 	// buffer to host visible memory removes the copy, the submit and the wait, and
 	// leaves an upload costing one memcpy.
-	if(!buf.isdynamic && wasallocated && !shapechanged) {
+	//
+	// A second upload of a different size counts just as much. It used to be excluded
+	// - a resize looked like a different mesh rather than the same one changing - and
+	// so it fell through to the staging path below, which drains the device on every
+	// call. gRectangle is one buffer drawn filled and then outlined, four indices then
+	// five, and that alone cost about a millisecond a frame in game_martyr's HUD. It
+	// also destroyed buffers the command buffer being recorded still referenced.
+	if(!buf.isdynamic && wasallocated && !rolechanged) {
 		if(!gvkMakeMeshBufferDynamic(ctx, buf, size, isIndex)) return false;
 	}
 
 	if(buf.isdynamic) {
-		if(shapechanged) {
-			// A resize cannot reuse the mapped slots. Rebuilding them keeps the
-			// buffer dynamic, which is what it has already shown itself to be.
+		if(rolechanged || size > buf.capacity) {
+			// Only a mesh outgrowing its slots needs new ones; anything that still
+			// fits is written in place and simply records its new length.
 			if(!gvkMakeMeshBufferDynamic(ctx, buf, size, isIndex)) return false;
 		}
-		std::memcpy(buf.shadow.data(), data, static_cast<size_t>(size));
+		buf.size = size;
 		buf.version++;
 
 		const uint64_t generation = ctx.getMeshGeneration();
@@ -130,7 +154,7 @@ bool gvkUploadMeshBuffer(gVKContext& ctx, gVKMeshBuffer& buf, const void* data,
 		// The first upload of a frame goes to the buffer's own per-frame copy instead.
 		// That copy is what a later draw finds when the mesh is not uploaded again,
 		// and keeping it current here is what stops the resolve below from having to
-		// copy the whole mesh back out of the shadow. Doing it the other way round -
+		// copy the whole mesh back out of another slot. Doing it the other way round -
 		// arena first, always - meant re-pushing every dynamic mesh that held still
 		// for a frame, which measured 18 to 22 MB of memcpy per frame in a scene with
 		// a hundred of them, and was the single largest cost in the whole draw path.
@@ -236,13 +260,32 @@ VkBuffer gvkResolveMeshBuffer(gVKContext& ctx, gVKMeshBuffer& buf, VkDeviceSize&
 	const uint32_t slot = ctx.getCurrentFrame() % GVK_MAX_FRAMES_IN_FLIGHT;
 	if(buf.slotmapped[slot] == nullptr) return VK_NULL_HANDLE;
 
-	// This frame's slot is behind whenever the mesh was uploaded while a different
-	// frame was being recorded - a skinned mesh holding the same animation frame
-	// across two renders does exactly that. Catching it up costs one memcpy and is
-	// what keeps the two slots from showing alternating poses.
-	if(buf.slotversion[slot] != buf.version && !buf.shadow.empty()) {
-		std::memcpy(buf.slotmapped[slot], buf.shadow.data(), buf.shadow.size());
-		buf.slotversion[slot] = buf.version;
+	// This frame's slot is behind whenever the mesh was last uploaded while a
+	// different frame was being recorded - a mesh that animated for a while and then
+	// held still does exactly that, and without catching the slot up the two frames
+	// in flight would alternate between two poses.
+	//
+	// The source is the freshest slot rather than a heap copy of the data. Keeping
+	// such a copy is the obvious way to write this and is what it used to do, but the
+	// copy has to be made on every upload while it is read only when a mesh skips a
+	// frame: measured on game_martyr that was 205 writes per frame against one read
+	// every fifty. Paying it cost 1.2 ms per frame directly and about 1.9 ms more in
+	// the game's own code, which lost the cache to 8.5 MB per frame of vertex data it
+	// had no use for.
+	//
+	// Reading another slot is safe while that frame is still in flight - the GPU only
+	// reads it too - and the slot being written was released by the fence the frame
+	// loop waits on. What it cannot recover is data whose last upload went to the
+	// arena, since the arena is rewound; such a mesh falls back to the pose of its
+	// first upload in that frame. That is one frame of a slightly stale pose on a
+	// mesh that has stopped being re-posed, against re-copying every mesh every frame.
+	uint32_t freshest = slot;
+	for(uint32_t i = 0; i < GVK_MAX_FRAMES_IN_FLIGHT; i++) {
+		if(buf.slotmapped[i] != nullptr && buf.slotversion[i] > buf.slotversion[freshest]) freshest = i;
+	}
+	if(freshest != slot) {
+		std::memcpy(buf.slotmapped[slot], buf.slotmapped[freshest], static_cast<size_t>(buf.size));
+		buf.slotversion[slot] = buf.slotversion[freshest];
 	}
 
 	buf.buffer = buf.slotbuffers[slot];
@@ -278,8 +321,8 @@ void gvkDestroyMeshBuffer(gVKContext& ctx, gVKMeshBuffer& buf) {
 	}
 	buf.isdynamic = false;
 	buf.version = 0;
-	buf.shadow.clear();
 	buf.size = 0;
+	buf.capacity = 0;
 }
 
 #endif /* GVK_DESKTOP_GLFW */
