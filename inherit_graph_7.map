@@ -65,7 +65,7 @@
 <area shape="poly" id="edge98_Node000024_Node000082" title=" " alt="" coords="205,2359,218,2311,240,2250,275,2188,297,2160,324,2136,359,2118,396,2111,397,2117,361,2124,327,2140,301,2164,279,2191,245,2252,223,2312,210,2361"/>
 <area shape="rect" id="Node000083" href="$classgBasePostProcess.html" title=" " alt="" coords="379,2151,519,2176"/>
 <area shape="poly" id="edge99_Node000024_Node000083" title=" " alt="" coords="208,2359,224,2320,248,2273,281,2225,301,2203,324,2185,350,2172,378,2164,379,2169,352,2177,327,2190,305,2207,285,2228,253,2275,229,2322,213,2361"/>
-<area shape="rect" id="Node000107" href="$classgBezier.html" title="Evaluates and renders dynamic (N&#45;degree) Bezier curves." alt="" coords="413,2200,484,2225"/>
+<area shape="rect" id="Node000107" href="$classgBezier.html" title="Evaluates and renders composite quadratic Bezier curves." alt="" coords="413,2200,484,2225"/>
 <area shape="poly" id="edge123_Node000024_Node000107" title=" " alt="" coords="214,2360,257,2296,288,2262,324,2234,369,2217,413,2211,413,2216,370,2222,327,2239,291,2266,261,2299,218,2363"/>
 <area shape="rect" id="Node000108" href="$classgBoundingBox.html" title=" " alt="" coords="391,2249,507,2275"/>
 <area shape="poly" id="edge124_Node000024_Node000108" title=" " alt="" coords="222,2362,266,2321,294,2301,324,2284,357,2272,390,2265,391,2270,358,2277,326,2288,297,2305,269,2325,225,2366"/>
