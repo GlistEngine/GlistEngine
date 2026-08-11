@@ -1,0 +1,22 @@
+#ifndef GCANVAS_H_
+#define GCANVAS_H_
+
+#include "gBaseCanvas.h"
+#include "gBitmapFont.h"
+
+class gApp;
+
+class gCanvas : public gBaseCanvas {
+public:
+	explicit gCanvas(gApp* root);
+	void setup() override;
+	void update() override;
+	void draw() override;
+	void keyPressed(int key) override;
+
+private:
+	gBitmapFont bitmapfont;
+	float scale = 0.25f;
+};
+
+#endif
