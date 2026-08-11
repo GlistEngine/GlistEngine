@@ -808,7 +808,7 @@ void gRenderer::updateLights() {
 		bool isenabled = islightingenabled && item->isEnabled();
 		if (previous != isenabled) {
 			isenabledchanged = true;
-			if (item->isEnabled()) {
+			if (isenabled) {
 				data->enabledlights |= bit;
 			} else {
 				data->enabledlights &= ~bit;
