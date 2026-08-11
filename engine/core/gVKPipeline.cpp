@@ -116,6 +116,9 @@ struct gvkPipelineOptions {
 	// Builds a second pipeline with the blend flag flipped, for paths that have to
 	// follow the renderer's alpha blending state rather than fix it at build time.
 	bool blendvariant = false;
+	// Builds a copy that adds instead of compositing, for gRenderer::BLENDMODE_ADDITIVE.
+	// Blending factors cannot be dynamic state, so the mode is a choice of pipeline.
+	bool additivevariant = false;
 	// When set, the vertex input is taken from here instead of from reflection.
 	const VkVertexInputAttributeDescription* vertexattributes = nullptr;
 	uint32_t vertexattributecount = 0;
@@ -137,6 +140,8 @@ struct gvkPipelineParts {
 	VkPipeline linepipeline = VK_NULL_HANDLE;
 	// The same pipeline with the opposite blend setting; see gvkPipelineOptions.
 	VkPipeline blendvariantpipeline = VK_NULL_HANDLE;
+	// The same pipeline blending additively; see gvkPipelineOptions::additivevariant.
+	VkPipeline additivepipeline = VK_NULL_HANDLE;
 	VkPipelineLayout layout = VK_NULL_HANDLE;
 	std::vector<VkDescriptorSetLayout> setlayouts;
 	uint32_t pushsize = 0;
@@ -407,6 +412,19 @@ static bool gvkBuildPipeline(VkDevice device, VkRenderPass renderpass, const cha
 				&parts.blendvariantpipeline);
 		blendattachment.blendEnable = options.blend ? VK_TRUE : VK_FALSE;
 	}
+	if(result == VK_SUCCESS && options.additivevariant) {
+		// Only the destination factor changes: the source is still scaled by alpha, so
+		// a fully transparent texel contributes nothing and an opaque one contributes
+		// its full colour, exactly as glBlendFunc(GL_SRC_ALPHA, GL_ONE) does. The
+		// alpha channel keeps the over operator - the colour is what is being added,
+		// and letting alpha accumulate as well would saturate the target's coverage.
+		blendattachment.blendEnable = VK_TRUE;
+		blendattachment.dstColorBlendFactor = VK_BLEND_FACTOR_ONE;
+		result = vkCreateGraphicsPipelines(device, VK_NULL_HANDLE, 1, &pipelineinfo, nullptr,
+				&parts.additivepipeline);
+		blendattachment.blendEnable = options.blend ? VK_TRUE : VK_FALSE;
+		blendattachment.dstColorBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
+	}
 	if(result == VK_SUCCESS && options.linevariant) {
 		// Identical state apart from the topology: an unfilled shape is stroked as
 		// separate edges, which is what the OpenGL path draws through
@@ -427,6 +445,10 @@ static bool gvkBuildPipeline(VkDevice device, VkRenderPass renderpass, const cha
 }
 
 static void gvkDestroyParts(VkDevice device, gvkPipelineParts& parts) {
+	if(parts.additivepipeline != VK_NULL_HANDLE) {
+		vkDestroyPipeline(device, parts.additivepipeline, nullptr);
+		parts.additivepipeline = VK_NULL_HANDLE;
+	}
 	if(parts.blendvariantpipeline != VK_NULL_HANDLE) vkDestroyPipeline(device, parts.blendvariantpipeline, nullptr);
 	if(parts.linepipeline != VK_NULL_HANDLE) vkDestroyPipeline(device, parts.linepipeline, nullptr);
 	if(parts.pipeline != VK_NULL_HANDLE) vkDestroyPipeline(device, parts.pipeline, nullptr);
@@ -480,8 +502,10 @@ static bool gvkBuildAll(VkDevice device, VkRenderPass renderpass, const gvkShade
 		gvkPipelineParts& mesh3dpbr, gvkPipelineParts& skybox, VkDescriptorPool& pool) {
 	gvkPipelineOptions coloropts;
 	coloropts.linevariant = true;
+	coloropts.additivevariant = true;
 
 	gvkPipelineOptions imageopts;
+	imageopts.additivevariant = true;
 
 	gvkPipelineOptions mesh3dopts;
 	mesh3dopts.depthtest = true;
@@ -578,11 +602,13 @@ bool gvkCreateGraphicsPipelines(gVKContext& ctx) {
 	ctx.mesh3dpushstages = mesh3d.pushstages;
 	ctx.color2dpipeline = color.pipeline;
 	ctx.color2dlinepipeline = color.linepipeline;
+	ctx.color2dadditivepipeline = color.additivepipeline;
 	ctx.color2dpipelinelayout = color.layout;
 	ctx.color2dsetlayouts = color.setlayouts;
 	ctx.color2dpushsize = color.pushsize;
 	ctx.color2dpushstages = color.pushstages;
 	ctx.image2dpipeline = image.pipeline;
+	ctx.image2dadditivepipeline = image.additivepipeline;
 	ctx.image2dpipelinelayout = image.layout;
 	ctx.image2dsetlayouts = image.setlayouts;
 	ctx.image2dpushsize = image.pushsize;
@@ -701,6 +727,8 @@ void gvkDestroyGraphicsPipelines(gVKContext& ctx) {
 	if(ctx.mesh3dpipeline != VK_NULL_HANDLE) { vkDestroyPipeline(device, ctx.mesh3dpipeline, nullptr); ctx.mesh3dpipeline = VK_NULL_HANDLE; }
 	if(ctx.image2dpipeline != VK_NULL_HANDLE) { vkDestroyPipeline(device, ctx.image2dpipeline, nullptr); ctx.image2dpipeline = VK_NULL_HANDLE; }
 	if(ctx.color2dlinepipeline != VK_NULL_HANDLE) { vkDestroyPipeline(device, ctx.color2dlinepipeline, nullptr); ctx.color2dlinepipeline = VK_NULL_HANDLE; }
+	if(ctx.color2dadditivepipeline != VK_NULL_HANDLE) { vkDestroyPipeline(device, ctx.color2dadditivepipeline, nullptr); ctx.color2dadditivepipeline = VK_NULL_HANDLE; }
+	if(ctx.image2dadditivepipeline != VK_NULL_HANDLE) { vkDestroyPipeline(device, ctx.image2dadditivepipeline, nullptr); ctx.image2dadditivepipeline = VK_NULL_HANDLE; }
 	if(ctx.color2dpipeline != VK_NULL_HANDLE) { vkDestroyPipeline(device, ctx.color2dpipeline, nullptr); ctx.color2dpipeline = VK_NULL_HANDLE; }
 	if(ctx.mesh3dpipelinelayout != VK_NULL_HANDLE) { vkDestroyPipelineLayout(device, ctx.mesh3dpipelinelayout, nullptr); ctx.mesh3dpipelinelayout = VK_NULL_HANDLE; }
 	if(ctx.image2dpipelinelayout != VK_NULL_HANDLE) { vkDestroyPipelineLayout(device, ctx.image2dpipelinelayout, nullptr); ctx.image2dpipelinelayout = VK_NULL_HANDLE; }

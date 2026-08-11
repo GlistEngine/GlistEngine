@@ -186,7 +186,19 @@ void gVKRenderEngine::setCullingDirection(int direction) {
 
 void gVKRenderEngine::enableAlphaBlending() {
 	flushQueuedDraws();
+	// Resets the mode, exactly as the OpenGL path does by reissuing glBlendFunc.
+	blendmode = BLENDMODE_ALPHA;
 	isalphablendingenabled = true;
+}
+
+void gVKRenderEngine::setBlendMode(int blendMode) {
+	if(blendmode == blendMode) return;
+	// The queued draws were recorded against the pipeline the old mode selects, and
+	// the queue is flushed by binding that pipeline once for the batch. Changing the
+	// mode has to end the batch, or draws made before the change would be added
+	// rather than composited.
+	flushQueuedDraws();
+	blendmode = blendMode;
 }
 
 void gVKRenderEngine::disableAlphaBlending() {
@@ -2139,7 +2151,8 @@ void gVKRenderEngine::drawColored2D(const glm::vec2* points, int count, const gl
 		}
 	}
 	if(!isalphablendingenabled) drawcolor.a = 1.0f;
-	gvkDrawColored2D(*vkcontext, points, count, drawcolor, mvp, mode);
+	gvkDrawColored2D(*vkcontext, points, count, drawcolor, mvp, mode,
+			blendmode == BLENDMODE_ADDITIVE);
 #endif
 }
 
@@ -2483,7 +2496,8 @@ void gVKRenderEngine::drawTexturedRect2D(GLuint textureId, GLuint maskTextureId,
 			maskset = maskit->second->descriptorset;
 		}
 	}
-	gvkDrawTextured2D(*vkcontext, it->second->descriptorset, maskset, tint, mvp, uvOffset, uvScale);
+	gvkDrawTextured2D(*vkcontext, it->second->descriptorset, maskset, tint, mvp, uvOffset, uvScale,
+			blendmode == BLENDMODE_ADDITIVE);
 #endif
 }
 
@@ -2495,7 +2509,8 @@ void gVKRenderEngine::drawTexturedTriangles2D(GLuint textureId, const glm::vec4&
 	auto it = vktextures.find(textureId);
 	if(it == vktextures.end() || it->second == nullptr) return;
 	it->second->sampled = true;
-	gvkDrawTexturedTriangles2D(*vkcontext, it->second->descriptorset, tint, mvp, xyuv, vertexCount);
+	gvkDrawTexturedTriangles2D(*vkcontext, it->second->descriptorset, tint, mvp, xyuv, vertexCount,
+			blendmode == BLENDMODE_ADDITIVE);
 #endif
 }
 

@@ -99,6 +99,10 @@ protected:
 
 	void enableAlphaBlending();
 	void disableAlphaBlending();
+	// How a blended draw combines with the framebuffer; see gRenderer::BlendMode.
+	// Enabling alpha blending resets this to BLENDMODE_ALPHA.
+	void setBlendMode(int blendMode);
+	int getBlendMode() const;
 	void enableAlphaTest();
 	void disableAlphaTest();
 

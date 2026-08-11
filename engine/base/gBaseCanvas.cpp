@@ -272,6 +272,14 @@ void gBaseCanvas::disableAlphaBlending() {
 	renderer->disableAlphaBlending();
 }
 
+void gBaseCanvas::setBlendMode(int blendMode) {
+	renderer->setBlendMode(blendMode);
+}
+
+int gBaseCanvas::getBlendMode() const {
+	return renderer->getBlendMode();
+}
+
 void gBaseCanvas::enableAlphaTest() {
 	renderer->enableAlphaTest();
 }

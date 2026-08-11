@@ -106,7 +106,20 @@ int gGLRenderEngine::getDepthTestType() {
 void gGLRenderEngine::enableAlphaBlending() {
 	G_CHECK_GL(glEnable(GL_BLEND));
 	G_CHECK_GL(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
+	blendmode = BLENDMODE_ALPHA;
 	isalphablendingenabled = true;
+}
+
+void gGLRenderEngine::setBlendMode(int blendMode) {
+	blendmode = blendMode;
+	// Set even when blending is off: glBlendFunc is remembered by the context, so a
+	// later enableAlphaBlending would otherwise start in whatever mode was last
+	// used. Enabling deliberately resets it to ALPHA, so the two agree either way.
+	if(blendMode == BLENDMODE_ADDITIVE) {
+		G_CHECK_GL(glBlendFunc(GL_SRC_ALPHA, GL_ONE));
+	} else {
+		G_CHECK_GL(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
+	}
 }
 
 void gGLRenderEngine::disableAlphaBlending() {

@@ -55,8 +55,12 @@ enum gvkDraw2DMode {
 
 // Records coloured 2D geometry. Colour components are 0..1; mvp is the full 2D
 // transform. points holds `count` positions connected as `mode` describes.
+// additive selects the pipeline that adds to the target instead of compositing
+// over it, for gRenderer::BLENDMODE_ADDITIVE. Blend factors are baked into a
+// Vulkan pipeline, so this is a choice of pipeline rather than a state to set.
 void gvkDrawColored2D(gVKContext& ctx, const glm::vec2* points, int count,
-		const glm::vec4& color, const glm::mat4& mvp, int mode = GVK_DRAW2D_TRIANGLES);
+		const glm::vec4& color, const glm::mat4& mvp, int mode = GVK_DRAW2D_TRIANGLES,
+		bool additive = false);
 
 // Records a textured unit quad (two triangles) sampled through the given combined
 // image sampler descriptor set. tint components are 0..1. uvOffset / uvScale place
@@ -66,12 +70,14 @@ void gvkDrawColored2D(gVKContext& ctx, const glm::vec2* points, int count,
 // VK_NULL_HANDLE to draw unmasked.
 void gvkDrawTextured2D(gVKContext& ctx, VkDescriptorSet textureSet, VkDescriptorSet maskSet,
 		const glm::vec4& tint, const glm::mat4& mvp,
-		const glm::vec2& uvOffset = glm::vec2(0.0f), const glm::vec2& uvScale = glm::vec2(1.0f));
+		const glm::vec2& uvOffset = glm::vec2(0.0f), const glm::vec2& uvScale = glm::vec2(1.0f),
+		bool additive = false);
 
 // Records an expanded textured triangle list. xyuv has four floats per vertex
 // and matches the image pipeline's position/UV vertex layout.
 void gvkDrawTexturedTriangles2D(gVKContext& ctx, VkDescriptorSet textureSet,
-		const glm::vec4& tint, const glm::mat4& mvp, const float* xyuv, int vertexCount);
+		const glm::vec4& tint, const glm::mat4& mvp, const float* xyuv, int vertexCount,
+		bool additive = false);
 
 // vertexOffset is where this mesh's vertices start inside the bound buffer. Zero
 // for a mesh uploaded once; a mesh whose vertices the CPU rewrites is given a

@@ -68,6 +68,7 @@ public:
 	void setCullingDirection(int direction) override;
 
 	void enableAlphaBlending() override;
+	void setBlendMode(int blendMode) override;
 	void disableAlphaBlending() override;
 	bool isAlphaBlendingEnabled() override;
 	void enableAlphaTest() override;
