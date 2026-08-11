@@ -23,9 +23,42 @@
 // freed memory. That wedged the device hard enough that every later
 // vkAcquireNextImageKHR failed and the window stopped updating altogether.
 //
-// One buffer per mesh that ever turns dynamic is a bounded, small amount to hold
-// until shutdown, and it is the version of this that is obviously correct.
-static std::vector<std::pair<VkBuffer, VkDeviceMemory>> gvkretiredmeshbuffers;
+// Each entry remembers the frame it was retired in, and is freed once enough
+// frames have passed that no command buffer can still reference it. Holding them
+// all until shutdown was the first version of this, on the reasoning that one
+// buffer per mesh is a small bounded amount - which is true only while meshes are
+// bounded. Measured on game_martyr the list reached two thousand entries in a
+// minute of play, each holding a VkBuffer and its VkDeviceMemory, because the game
+// creates meshes it never destroys and every one of them promotes.
+struct gVKRetiredBuffer {
+	VkBuffer buffer = VK_NULL_HANDLE;
+	VkDeviceMemory memory = VK_NULL_HANDLE;
+	uint64_t frame = 0;
+};
+static std::vector<gVKRetiredBuffer> gvkretiredmeshbuffers;
+
+// A buffer retired while frame N was being recorded can still be read by frame N
+// and by the frames already in flight behind it. Once the frame counter has moved
+// on by more than the number of frames in flight, every submission that could name
+// it has finished - the frame loop waits on that slot's fence before reusing it.
+void gvkCollectRetiredMeshBuffers(gVKContext& ctx) {
+	if(gvkretiredmeshbuffers.empty()) return;
+	VkDevice device = *ctx.getDevice();
+	if(device == VK_NULL_HANDLE) return;
+	const uint64_t now = ctx.getMeshGeneration();
+	const uint64_t keepfor = GVK_MAX_FRAMES_IN_FLIGHT + 1;
+	size_t kept = 0;
+	for(size_t i = 0; i < gvkretiredmeshbuffers.size(); i++) {
+		gVKRetiredBuffer& entry = gvkretiredmeshbuffers[i];
+		if(now < entry.frame + keepfor) {
+			gvkretiredmeshbuffers[kept++] = entry;
+			continue;
+		}
+		if(entry.buffer != VK_NULL_HANDLE) vkDestroyBuffer(device, entry.buffer, nullptr);
+		if(entry.memory != VK_NULL_HANDLE) vkFreeMemory(device, entry.memory, nullptr);
+	}
+	gvkretiredmeshbuffers.resize(kept);
+}
 
 void gvkDestroyRetiredMeshBuffers(gVKContext& ctx) {
 	VkDevice device = *ctx.getDevice();
@@ -34,8 +67,8 @@ void gvkDestroyRetiredMeshBuffers(gVKContext& ctx) {
 		return;
 	}
 	for(auto& retired : gvkretiredmeshbuffers) {
-		if(retired.first != VK_NULL_HANDLE) vkDestroyBuffer(device, retired.first, nullptr);
-		if(retired.second != VK_NULL_HANDLE) vkFreeMemory(device, retired.second, nullptr);
+		if(retired.buffer != VK_NULL_HANDLE) vkDestroyBuffer(device, retired.buffer, nullptr);
+		if(retired.memory != VK_NULL_HANDLE) vkFreeMemory(device, retired.memory, nullptr);
 	}
 	gvkretiredmeshbuffers.clear();
 }
@@ -51,14 +84,15 @@ static bool gvkMakeMeshBufferDynamic(gVKContext& ctx, gVKMeshBuffer& buf,
 	// applies to slots being replaced by larger ones: the frame being recorded may
 	// already have bound them.
 	if(buf.buffer != VK_NULL_HANDLE && !buf.isdynamic) {
-		gvkretiredmeshbuffers.emplace_back(buf.buffer, buf.memory);
+		gvkretiredmeshbuffers.push_back({buf.buffer, buf.memory, ctx.getMeshGeneration()});
 		buf.buffer = VK_NULL_HANDLE;
 		buf.memory = VK_NULL_HANDLE;
 	}
 	for(int i = 0; i < GVK_MAX_FRAMES_IN_FLIGHT; i++) {
 		if(buf.slotbuffers[i] == VK_NULL_HANDLE) continue;
 		if(buf.slotmapped[i] != nullptr) vkUnmapMemory(device, buf.slotmemories[i]);
-		gvkretiredmeshbuffers.emplace_back(buf.slotbuffers[i], buf.slotmemories[i]);
+		gvkretiredmeshbuffers.push_back({buf.slotbuffers[i], buf.slotmemories[i],
+				ctx.getMeshGeneration()});
 		buf.slotbuffers[i] = VK_NULL_HANDLE;
 		buf.slotmemories[i] = VK_NULL_HANDLE;
 		buf.slotmapped[i] = nullptr;

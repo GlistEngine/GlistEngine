@@ -135,6 +135,12 @@ VkBuffer gvkResolveMeshBuffer(gVKContext& ctx, gVKMeshBuffer& buf, VkDeviceSize&
  */
 void gvkDestroyRetiredMeshBuffers(gVKContext& ctx);
 
+/*
+ * Frees the retired buffers that are old enough to be certain no command buffer
+ * still names them. Called once at the top of a frame; anything younger stays.
+ */
+void gvkCollectRetiredMeshBuffers(gVKContext& ctx);
+
 void gvkDestroyMeshBuffer(gVKContext& ctx, gVKMeshBuffer& buf);
 
 #endif /* GVK_DESKTOP_GLFW */
