@@ -83,7 +83,19 @@ struct alignas(16) gVKSceneUniforms {
 	alignas(4) int enabledlights;
 	// 5x5 PCF instead of 3x3, mirroring ENABLE_SOFT_SHADOWS on the OpenGL side.
 	alignas(4) int softshadows;
-	alignas(4) int pad0;
+	// The same bitfield color_frag.glsl reads, with the same bit values - see
+	// gRenderer::ENABLE_FOG and friends. Soft shadows keep their own field above,
+	// which predates this and is what the shadow code already reads; the bit is set
+	// here too so the two never disagree about what the renderer was asked for.
+	// SSAO's bit is carried but nothing acts on it: it needs a depth and normal
+	// prepass, which this backend does not have.
+	alignas(4) int flags;
+	// xyz the fog colour, w the mode (0 linear, 1 exponential). Packed into the
+	// spare component rather than given an int of its own, which std140 would have
+	// to pad out to sixteen bytes anyway.
+	alignas(16) glm::vec4 fogcolor;
+	// x density, y gradient, z linear start, w linear end.
+	alignas(16) glm::vec4 fogparams;
 	gVKLightData lights[GVK_MAX_LIGHTS];
 };
 

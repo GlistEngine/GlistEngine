@@ -56,6 +56,12 @@ layout(set = 0, binding = 0) uniform Scene {
     int lightnum;
     int enabledlights;
     int softshadows;
+    // Declared to match mesh3d.frag, which reads them. Every shader binding a
+    // uniform block has to declare it identically; leaving these out moves the light
+    // array and the block stops meaning the same thing in each stage.
+    int flags;
+    vec4 fogcolor;
+    vec4 fogparams;
     Light lights[8];
 } scene;
 

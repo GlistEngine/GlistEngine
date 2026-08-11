@@ -1104,6 +1104,38 @@ bool gRenderer::isSoftShadowsEnabled() {
 	return issoftshadowsenabled;
 }
 
+// These six were declared in the header and never defined, so anything calling one
+// failed to link. Both backends' shaders have always carried the flag - ENABLE_GAMMA
+// and ENABLE_HDR in color_frag.glsl, the same bits in the Vulkan scene block - and
+// updateScene() has always published them; the only missing piece was a way to ask.
+void gRenderer::enableGammaCorrection() {
+	isgammacorrectionenabled = true;
+	updateScene();
+}
+
+void gRenderer::disableGammaCorrection() {
+	isgammacorrectionenabled = false;
+	updateScene();
+}
+
+bool gRenderer::isGammaCorrectionEnabled() {
+	return isgammacorrectionenabled;
+}
+
+void gRenderer::enableHDR() {
+	ishdrenabled = true;
+	updateScene();
+}
+
+void gRenderer::disableHDR() {
+	ishdrenabled = false;
+	updateScene();
+}
+
+bool gRenderer::isHDREnabled() {
+	return ishdrenabled;
+}
+
 void gRenderer::cleanupSSAOResources() {
 	delete ssaofbo;
 	delete ssaoresultfbo;

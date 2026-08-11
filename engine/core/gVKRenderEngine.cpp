@@ -2181,6 +2181,23 @@ void gVKRenderEngine::updateSceneUniforms() {
 	uniforms.shadowlightpos = glm::vec4(shadowlightposition, shadowsready ? 1.0f : 0.0f);
 	uniforms.softshadows = shadowsoft ? 1 : 0;
 
+	// The same bits gRenderer::updateScene() builds for the OpenGL scene block, from
+	// the same state, so a scene reads identically on both backends. SSAO's bit is
+	// carried for completeness; nothing in this backend acts on it yet.
+	uniforms.flags = 0;
+	if(isssaoenabled) uniforms.flags |= ENABLE_SSAO;
+	if(isfogenabled) uniforms.flags |= ENABLE_FOG;
+	if(isgammacorrectionenabled) uniforms.flags |= ENABLE_GAMMA;
+	if(ishdrenabled) uniforms.flags |= ENABLE_HDR;
+	if(issoftshadowsenabled) uniforms.flags |= ENABLE_SOFT_SHADOWS;
+
+	// Written whether or not fog is on: the shader only reads it behind the flag,
+	// and writing it unconditionally keeps this free of a branch that would other-
+	// wise leave stale values behind the one time fog is switched back on.
+	const glm::vec3 fogrgb = fogcolor.asVec3();
+	uniforms.fogcolor = glm::vec4(fogrgb, fogmode == FOGMODE_EXP ? 1.0f : 0.0f);
+	uniforms.fogparams = glm::vec4(fogdensity, foggradient, foglinearstart, foglinearend);
+
 	uniforms.lightnum = std::min((int) scenelights.size(), GVK_MAX_LIGHTS);
 	uniforms.enabledlights = 0;
 	for(int i = 0; i < uniforms.lightnum; i++) {
