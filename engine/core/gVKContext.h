@@ -340,8 +340,13 @@ struct gVKContext {
 	VkPipeline getColor2DPipeline() { return color2dpipeline; }
 	// Same pipeline with a line topology, for stroking unfilled shapes.
 	VkPipeline getColor2DLinePipeline() { return color2dlinepipeline; }
+	// Additive copies of the 2D pipelines, for gRenderer::BLENDMODE_ADDITIVE. Blend
+	// factors are baked into a pipeline, so the mode is chosen by binding one or the
+	// other; both fall back to the compositing pipeline if the copy failed to build.
+	VkPipeline getColor2DAdditivePipeline() { return color2dadditivepipeline != VK_NULL_HANDLE ? color2dadditivepipeline : color2dpipeline; }
 	VkPipelineLayout getColor2DPipelineLayout() { return color2dpipelinelayout; }
 	VkPipeline getImage2DPipeline() { return image2dpipeline; }
+	VkPipeline getImage2DAdditivePipeline() { return image2dadditivepipeline != VK_NULL_HANDLE ? image2dadditivepipeline : image2dpipeline; }
 	VkPipelineLayout getImage2DPipelineLayout() { return image2dpipelinelayout; }
 	// The 3D mesh pipeline, and the same pipeline with a line topology for meshes
 	// drawn as wireframe.
@@ -386,6 +391,14 @@ struct gVKContext {
 	// index and has to write the one this returns: the frame loop waits on that
 	// index's fence before recording, which is what makes the copy free again.
 	uint32_t getCurrentFrame() const { return currentframe; }
+
+	// Whether presentation waits for the display. Vulkan expresses this as the
+	// swapchain's present mode rather than a call like glfwSwapInterval, so a
+	// change only takes effect when the swapchain is rebuilt - which is what
+	// gVKRenderEngine::setVsync asks for.
+	void setVsyncEnabled(bool enabled) { vsyncenabled = enabled; }
+	bool isVsyncEnabled() const { return vsyncenabled; }
+
 	VkDeviceSize getMinUniformBufferOffsetAlignment() const {
 		return deviceproperties.limits.minUniformBufferOffsetAlignment;
 	}
@@ -410,6 +423,9 @@ struct gVKContext {
 	VkCommandBuffer getCurrentCommandBuffer() {
 		return frameactive ? commandbuffers[currentframe] : VK_NULL_HANDLE;
 	}
+	// Whether a frame is being recorded. Uploads that arrive outside one - a canvas
+	// building its meshes in setup() - cannot use anything the frame loop rewinds.
+	bool isFrameActive() const { return frameactive; }
 
 	// Per-frame vertex ring. resetDynamicVertices() rewinds the current frame's
 	// buffer at frame start; pushDynamicVertices() appends vertex bytes (16-byte
@@ -642,6 +658,8 @@ private:
 	VkPipelineLayout color2dpipelinelayout = VK_NULL_HANDLE;
 	VkPipeline color2dpipeline = VK_NULL_HANDLE;
 	VkPipeline color2dlinepipeline = VK_NULL_HANDLE;
+	VkPipeline color2dadditivepipeline = VK_NULL_HANDLE;
+	VkPipeline image2dadditivepipeline = VK_NULL_HANDLE;
 	VkPipelineLayout image2dpipelinelayout = VK_NULL_HANDLE;
 	VkPipeline image2dpipeline = VK_NULL_HANDLE;
 	// 3D mesh path. Same shape as the 2D pipelines above, but with depth test and

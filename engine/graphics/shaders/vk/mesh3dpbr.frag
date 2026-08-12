@@ -43,6 +43,18 @@ layout(set = 0, binding = 0) uniform Scene {
     int lightnum;
     int enabledlights;
     int softshadows;
+    // Declared but not read here, and that is deliberate. This block is shared with
+    // mesh3d, which does read them, and a uniform block has to be declared the same
+    // way by every shader that binds it - leaving these out shifts the light array
+    // by thirty two bytes and the PBR path reads whatever happens to sit there. The
+    // symptom is one object going black while everything else looks right.
+    //
+    // Nothing applies them because pbr_frag.glsl does not either: fog and tone
+    // mapping never reached the OpenGL PBR path, and matching it is what keeps the
+    // two backends drawing the same picture.
+    int flags;
+    vec4 fogcolor;
+    vec4 fogparams;
     Light lights[8];
 } scene;
 

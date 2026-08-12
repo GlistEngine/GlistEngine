@@ -31,6 +31,7 @@ public:
 	void enableAlphaBlending() override;
 	void disableAlphaBlending() override;
 	bool isAlphaBlendingEnabled() override;
+	void setBlendMode(int blendMode) override;
 	void enableAlphaTest() override;
 	void disableAlphaTest() override;
 	bool isAlphaTestEnabled() override;

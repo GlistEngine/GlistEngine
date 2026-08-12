@@ -22,8 +22,15 @@ uint32_t gvkFindMemoryType(gVKContext& ctx, uint32_t typeFilter, VkMemoryPropert
 
 // Creates a buffer and backs it with freshly allocated memory. Returns false and
 // leaves the handles at VK_NULL_HANDLE on failure.
+//
+// preferred names memory the caller would rather have; when no memory type offers
+// it the allocation falls back to properties, which is what it must have. It exists
+// for buffers the CPU writes and the GPU reads every frame: on a device that
+// exposes device local memory as host visible those belong there rather than in
+// system RAM, which the GPU can only reach across the bus.
 bool gvkCreateBuffer(gVKContext& ctx, VkDeviceSize size, VkBufferUsageFlags usage,
-		VkMemoryPropertyFlags properties, VkBuffer& outBuffer, VkDeviceMemory& outMemory);
+		VkMemoryPropertyFlags properties, VkBuffer& outBuffer, VkDeviceMemory& outMemory,
+		VkMemoryPropertyFlags preferred = 0);
 
 // Allocates and begins a single-use command buffer from the context's pool. Pair
 // every call with gvkEndSingleTimeCommands, which submits it and waits for the GPU.

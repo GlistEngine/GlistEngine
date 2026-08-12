@@ -6,6 +6,7 @@
  */
 
 #include "gVKFrame.h"
+#include "gVKMeshBuffer.h"
 
 #ifdef GVK_DESKTOP_GLFW
 
@@ -91,6 +92,9 @@ bool gvkBeginFrame(gVKContext& ctx, GLFWwindow* window) {
 		gvkEnsureMeshArena(ctx, ctx.mesharenahighwater * 2);
 	}
 	ctx.resetMeshArena();
+	// The generation has just moved on, so this is the point where the oldest
+	// retired buffers become safe to free.
+	gvkCollectRetiredMeshBuffers(ctx);
 	ctx.renderpassactive = false;
 	ctx.frameactive = true;
 	return true;

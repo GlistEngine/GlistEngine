@@ -43,7 +43,6 @@ public:
 	bool beginFrame() override;
 	void endFrame() override;
 	void flushQueuedDraws() override;
-	void setVsync(bool enabled);
 
 	void clear() override;
 	void clearColor(int r, int g, int b, int a = 255) override;
@@ -69,6 +68,7 @@ public:
 	void setCullingDirection(int direction) override;
 
 	void enableAlphaBlending() override;
+	void setBlendMode(int blendMode) override;
 	void disableAlphaBlending() override;
 	bool isAlphaBlendingEnabled() override;
 	void enableAlphaTest() override;
@@ -247,6 +247,9 @@ public:
 	// Drops the gathered scene block so the next 3D draw rebuilds it; see the base
 	// declaration for why the two backends cannot share one moment for this.
 	void updateLights() override;
+
+	// Rebuilds the swapchain with the present mode the new setting asks for.
+	void setVsync(bool enabled) override;
 
 	void drawTexturedRect2D(GLuint textureId, GLuint maskTextureId, const glm::vec4& tint,
 			const glm::mat4& mvp,

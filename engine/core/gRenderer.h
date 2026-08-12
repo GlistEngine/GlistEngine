@@ -79,7 +79,7 @@ int gGetCullFace();
 void gSetCullingDirection(int cullingDirection);
 int gGetCullingDirection();
 
-// --- 2D / 3D Line Overloads (Ambiguous hatasýný önlemek için ayrýþtýrýldý) ---
+// --- 2D / 3D Line Overloads (Ambiguous hatasï¿½nï¿½ ï¿½nlemek iï¿½in ayrï¿½ï¿½tï¿½rï¿½ldï¿½) ---
 void gDrawLine(float x1, float y1, float x2, float y2);
 void gDrawLine(float x1, float y1, float x2, float y2, float thickness);
 void gDrawLine(float x1, float y1, float z1, float x2, float y2, float z2, float thickness = 1.0f);
@@ -402,6 +402,11 @@ public:
 	// from the previous frame, when the light was off.
 	virtual void updateLights();
 
+	// Presentation pacing. OpenGL sets it on the window through glfwSwapInterval
+	// and needs nothing here; Vulkan expresses it as the swapchain's present mode,
+	// so the backend overrides this to rebuild the swapchain with the new one.
+	virtual void setVsync(bool enabled) {}
+
 	void updateScene();
 
 	void gPushMatrix();
@@ -423,6 +428,23 @@ public:
 	virtual void enableAlphaBlending() = 0;
 	virtual void disableAlphaBlending() = 0;
 	virtual bool isAlphaBlendingEnabled() = 0;
+
+	// How a blended draw combines with what is already in the framebuffer. Only
+	// meaningful while alpha blending is on; enabling it resets the mode to ALPHA,
+	// which is what it has always done.
+	//
+	// This exists because there was no way to ask for anything but the standard
+	// over operator. A game wanting an additive effect - a muzzle flash, a glow, a
+	// spark - had to reach past the renderer and call glBlendFunc itself, and that
+	// call means nothing to a backend that is not OpenGL: on Vulkan blending is
+	// baked into the pipeline, so the effect silently came out composited instead
+	// of added.
+	enum BlendMode {
+		BLENDMODE_ALPHA,     // src * a + dst * (1 - a). Layers one image over another.
+		BLENDMODE_ADDITIVE,  // src * a + dst. Only brightens, so black adds nothing.
+	};
+	virtual void setBlendMode(int blendMode) { blendmode = blendMode; }
+	virtual int getBlendMode() const { return blendmode; }
 	virtual void enableAlphaTest() = 0;
 	virtual void disableAlphaTest() = 0;
 	virtual bool isAlphaTestEnabled() = 0;
@@ -614,7 +636,7 @@ public:
 	virtual void pushMatrix() = 0;
 	virtual void popMatrix() = 0;
 
-	/* ---------------- Utilities (drawLine overloads düzenlendi) ---------------- */
+	/* ---------------- Utilities (drawLine overloads dï¿½zenlendi) ---------------- */
 	void drawLine(float x1, float y1, float x2, float y2);
 	void drawLine(float x1, float y1, float x2, float y2, float thickness);
 	void drawLine(float x1, float y1, float z1, float x2, float y2, float z2, float thickness = 1.0f);
@@ -681,6 +703,7 @@ protected:
 	int cullingdirection = GL_CCW;
 	unsigned int depthtesttypeid[2];
 	bool isalphablendingenabled = false, isalphatestenabled = false;
+	int blendmode = BLENDMODE_ALPHA;
 
 	GLuint boundframebuffer = 0;
 	int viewportx = 0, viewporty = 0, viewportwidth = 0, viewportheight = 0;

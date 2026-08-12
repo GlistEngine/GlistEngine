@@ -60,7 +60,13 @@ struct gVKMeshBuffer {
 	// slot, so every call site can go on reading this field.
 	VkBuffer buffer = VK_NULL_HANDLE;
 	VkDeviceMemory memory = VK_NULL_HANDLE;
+	// How many bytes the mesh currently holds, and how many its slots were built to
+	// take. They differ because the slots are allocated with room to spare: a mesh
+	// whose vertex count wobbles between draws - a rectangle drawn filled and then
+	// outlined shares one buffer and one index count is longer than the other - would
+	// otherwise reallocate on every draw.
 	VkDeviceSize size = 0;
+	VkDeviceSize capacity = 0;
 	// Which usage flag the buffer was created with. A GLuint name carries no type in
 	// OpenGL, the first upload decides it here.
 	bool isindex = false;
@@ -70,12 +76,12 @@ struct gVKMeshBuffer {
 	VkBuffer slotbuffers[GVK_MAX_FRAMES_IN_FLIGHT] = {};
 	VkDeviceMemory slotmemories[GVK_MAX_FRAMES_IN_FLIGHT] = {};
 	void* slotmapped[GVK_MAX_FRAMES_IN_FLIGHT] = {};
-	// Which version of the data each slot currently holds, against the newest
-	// version in shadow. A frame that draws the mesh without a fresh upload finds
-	// its slot behind and refreshes it, so no frame ever draws stale vertices.
+	// Which version of the data each slot currently holds, counted against version,
+	// which every upload advances. A frame that draws the mesh without a fresh
+	// upload finds its slot behind and copies the freshest slot over it, so no frame
+	// draws a pose two frames old.
 	uint64_t slotversion[GVK_MAX_FRAMES_IN_FLIGHT] = {};
 	uint64_t version = 0;
-	std::vector<unsigned char> shadow;
 
 	// Where this mesh's newest data sits inside the per-frame arena, and which
 	// frame that slice belongs to. A mesh drawn without a fresh upload keeps
@@ -84,6 +90,10 @@ struct gVKMeshBuffer {
 	VkBuffer arenabuffer = VK_NULL_HANDLE;
 	VkDeviceSize arenaoffset = 0;
 	uint64_t arenageneration = 0;
+	// The frame of this buffer's last upload. A second upload inside the same
+	// frame is what makes an arena slice necessary; a mesh uploaded once a frame
+	// is served by its own per-frame copy, which costs nothing to keep.
+	uint64_t lastuploadgeneration = ~0ull;
 };
 
 /*
@@ -124,6 +134,12 @@ VkBuffer gvkResolveMeshBuffer(gVKContext& ctx, gVKMeshBuffer& buf, VkDeviceSize&
  * reference them; call this once at shutdown, after the device is idle.
  */
 void gvkDestroyRetiredMeshBuffers(gVKContext& ctx);
+
+/*
+ * Frees the retired buffers that are old enough to be certain no command buffer
+ * still names them. Called once at the top of a frame; anything younger stays.
+ */
+void gvkCollectRetiredMeshBuffers(gVKContext& ctx);
 
 void gvkDestroyMeshBuffer(gVKContext& ctx, gVKMeshBuffer& buf);
 

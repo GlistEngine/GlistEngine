@@ -38,7 +38,9 @@ bool gvkEnsureMeshArena(gVKContext& ctx, VkDeviceSize capacity) {
 	for(int i = 0; i < frames; i++) {
 		if(!gvkCreateBuffer(ctx, capacity, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT,
 				VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
-				ctx.mesharenabuffers[i], ctx.mesharenamemories[i])) {
+				ctx.mesharenabuffers[i], ctx.mesharenamemories[i],
+				VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT | VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT
+						| VK_MEMORY_PROPERTY_HOST_COHERENT_BIT)) {
 			gLoge("gVKDraw") << "Could not create the " << capacity
 					<< " byte mesh arena; animated meshes fall back to one buffer each.";
 			gvkDestroyMeshArena(ctx);
@@ -81,7 +83,9 @@ bool gvkCreateDrawResources(gVKContext& ctx) {
 	for(int i = 0; i < frames; i++) {
 		if(!gvkCreateBuffer(ctx, ctx.dynvertexcapacity, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT,
 				VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
-				ctx.dynvertexbuffers[i], ctx.dynvertexmemories[i])) {
+				ctx.dynvertexbuffers[i], ctx.dynvertexmemories[i],
+				VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT | VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT
+						| VK_MEMORY_PROPERTY_HOST_COHERENT_BIT)) {
 			gLoge("gVKDraw") << "Could not create the dynamic vertex buffer.";
 			return false;
 		}
@@ -125,7 +129,7 @@ struct gvkImageVertex {
 };
 
 void gvkDrawColored2D(gVKContext& ctx, const glm::vec2* points, int count,
-		const glm::vec4& color, const glm::mat4& mvp, int mode) {
+		const glm::vec4& color, const glm::mat4& mvp, int mode, bool additive) {
 	if(count <= 0 || points == nullptr) return;
 
 	// Only a triangle list and a line list exist as pipelines, so every other mode
@@ -186,7 +190,8 @@ void gvkDrawColored2D(gVKContext& ctx, const glm::vec2* points, int count,
 	if(!gvkEnsureRenderPass(ctx)) return;
 	VkCommandBuffer cmd = ctx.getCurrentCommandBuffer();
 	if(cmd == VK_NULL_HANDLE) return;
-	VkPipeline pipeline = lines ? ctx.getColor2DLinePipeline() : ctx.getColor2DPipeline();
+	VkPipeline pipeline = lines ? ctx.getColor2DLinePipeline()
+			: (additive ? ctx.getColor2DAdditivePipeline() : ctx.getColor2DPipeline());
 	if(pipeline == VK_NULL_HANDLE) return;
 
 	VkDeviceSize offset = ctx.pushDynamicVertices(vertexdata, sizeof(glm::vec2) * vertexcount);
@@ -211,10 +216,11 @@ void gvkDrawColored2D(gVKContext& ctx, const glm::vec2* points, int count,
 
 void gvkDrawTextured2D(gVKContext& ctx, VkDescriptorSet textureSet, VkDescriptorSet maskSet,
 		const glm::vec4& tint, const glm::mat4& mvp,
-		const glm::vec2& uvOffset, const glm::vec2& uvScale) {
+		const glm::vec2& uvOffset, const glm::vec2& uvScale, bool additive) {
 	if(!gvkEnsureRenderPass(ctx)) return;
 	VkCommandBuffer cmd = ctx.getCurrentCommandBuffer();
 	if(cmd == VK_NULL_HANDLE || ctx.getImage2DPipeline() == VK_NULL_HANDLE || textureSet == VK_NULL_HANDLE) return;
+	VkPipeline imagepipeline = additive ? ctx.getImage2DAdditivePipeline() : ctx.getImage2DPipeline();
 
 	// Unit quad in [0,1]; the mvp (projection2d * image model matrix) scales and
 	// places it, exactly like the OpenGL image quad. The texture coordinates carry
@@ -232,8 +238,8 @@ void gvkDrawTextured2D(gVKContext& ctx, VkDescriptorSet textureSet, VkDescriptor
 		return;
 	}
 
-	if(ctx.shouldBindPipeline(ctx.getImage2DPipeline())) {
-		vkCmdBindPipeline(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, ctx.getImage2DPipeline());
+	if(ctx.shouldBindPipeline(imagepipeline)) {
+		vkCmdBindPipeline(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, imagepipeline);
 	}
 	VkBuffer vbuf = ctx.getCurrentDynamicVertexBuffer();
 	vkCmdBindVertexBuffers(cmd, 0, 1, &vbuf, &offset);
@@ -453,10 +459,12 @@ void gvkDrawMesh3DPbr(gVKContext& ctx, VkBuffer vertexBuffer, VkDeviceSize verte
 }
 
 void gvkDrawTexturedTriangles2D(gVKContext& ctx, VkDescriptorSet textureSet,
-		const glm::vec4& tint, const glm::mat4& mvp, const float* xyuv, int vertexCount) {
+		const glm::vec4& tint, const glm::mat4& mvp, const float* xyuv, int vertexCount,
+		bool additive) {
 	if(xyuv == nullptr || vertexCount <= 0 || !gvkEnsureRenderPass(ctx)) return;
 	VkCommandBuffer cmd = ctx.getCurrentCommandBuffer();
 	if(cmd == VK_NULL_HANDLE || ctx.getImage2DPipeline() == VK_NULL_HANDLE || textureSet == VK_NULL_HANDLE) return;
+	VkPipeline imagepipeline = additive ? ctx.getImage2DAdditivePipeline() : ctx.getImage2DPipeline();
 
 	const VkDeviceSize vertexbytes = static_cast<VkDeviceSize>(vertexCount) * sizeof(gvkImageVertex);
 	VkDeviceSize offset = ctx.pushDynamicVertices(xyuv, vertexbytes);
@@ -465,8 +473,8 @@ void gvkDrawTexturedTriangles2D(gVKContext& ctx, VkDescriptorSet textureSet,
 		return;
 	}
 
-	if(ctx.shouldBindPipeline(ctx.getImage2DPipeline())) {
-		vkCmdBindPipeline(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, ctx.getImage2DPipeline());
+	if(ctx.shouldBindPipeline(imagepipeline)) {
+		vkCmdBindPipeline(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, imagepipeline);
 	}
 	VkBuffer vbuf = ctx.getCurrentDynamicVertexBuffer();
 	vkCmdBindVertexBuffers(cmd, 0, 1, &vbuf, &offset);

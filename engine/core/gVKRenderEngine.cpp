@@ -186,7 +186,19 @@ void gVKRenderEngine::setCullingDirection(int direction) {
 
 void gVKRenderEngine::enableAlphaBlending() {
 	flushQueuedDraws();
+	// Resets the mode, exactly as the OpenGL path does by reissuing glBlendFunc.
+	blendmode = BLENDMODE_ALPHA;
 	isalphablendingenabled = true;
+}
+
+void gVKRenderEngine::setBlendMode(int blendMode) {
+	if(blendmode == blendMode) return;
+	// The queued draws were recorded against the pipeline the old mode selects, and
+	// the queue is flushed by binding that pipeline once for the batch. Changing the
+	// mode has to end the batch, or draws made before the change would be added
+	// rather than composited.
+	flushQueuedDraws();
+	blendmode = blendMode;
 }
 
 void gVKRenderEngine::disableAlphaBlending() {
@@ -817,7 +829,33 @@ void gVKRenderEngine::deleteFullscreenQuad(GLuint& vao, GLuint* vbo) {
 	}
 }
 
+// The gShader family below is inherited from gRenderer and every one of these
+// used to reach straight for OpenGL - glCreateShader, glUseProgram, glUniform* -
+// inside a backend that has no GL context at all. Nothing crashed only because the
+// Vulkan draw paths never call them: gMesh::draw() returns before drawExtraShaders,
+// and the engine's own shaders are SPIR-V compiled ahead of time. An application
+// that builds a gShader of its own walked straight into it.
+//
+// They refuse instead. A user supplied GLSL program is not something this backend
+// can honour: Vulkan wants SPIR-V, and the GLSL such a program is written in uses
+// OpenGL's model - bare "uniform mat4 model", samplers with no set or binding -
+// which is not valid Vulkan GLSL and could not simply be recompiled. Saying so once
+// is worth more than a silent no-op or an undefined call.
+static void gvkReportNoUserShaders(const char* what) {
+	static bool reported = false;
+	if(reported) return;
+	reported = true;
+	gLogw("gVKRenderEngine") << what << " is not supported on the Vulkan backend. "
+			<< "Shader programs built through gShader are OpenGL programs; this backend "
+			<< "draws with SPIR-V pipelines built from the engine's own shaders. A "
+			<< "material's extra shaders are skipped, and gMesh draws once with the "
+			<< "standard pipeline.";
+}
+
 GLuint gVKRenderEngine::loadProgram(const char* vertexSource, const char* fragmentSource, const char* geometrySource) {
+	gvkReportNoUserShaders("gShader::load");
+	(void)vertexSource; (void)fragmentSource; (void)geometrySource;
+	return 0;
 	unsigned int vertex = GL_NONE;
 	unsigned int fragment = GL_NONE;
 #if defined(WIN32) || defined(LINUX)
@@ -867,6 +905,9 @@ GLuint gVKRenderEngine::loadProgram(const char* vertexSource, const char* fragme
 }
 
 void gVKRenderEngine::checkCompileErrors(GLuint shader, const std::string& type) {
+	// Nothing is ever compiled here, so there is nothing to check.
+	(void)shader; (void)type;
+	return;
 	GLint success;
 	GLchar infoLog[1024];
 	if(type != "PROGRAM") {
@@ -890,69 +931,94 @@ void gVKRenderEngine::checkCompileErrors(GLuint shader, const std::string& type)
 }
 
 void gVKRenderEngine::setBool(GLuint uniformloc, bool value) {
+	return;  // no GL context here; see gvkReportNoUserShaders
 	G_CHECK_GL(glUniform1i(uniformloc, (int)value));
 }
 
 void gVKRenderEngine::setInt(GLuint uniformloc, int value) {
+	return;  // no GL context here; see gvkReportNoUserShaders
 	G_CHECK_GL(glUniform1i(uniformloc, value));
 }
 
 void gVKRenderEngine::setUnsignedInt(GLuint uniformloc, unsigned int value) {
+	return;  // no GL context here; see gvkReportNoUserShaders
 	G_CHECK_GL(glUniform1ui(uniformloc, value));
 }
 
 void gVKRenderEngine::setFloat(GLuint uniformloc, float value) {
+	return;  // no GL context here; see gvkReportNoUserShaders
 	G_CHECK_GL(glUniform1f(uniformloc, value));
 }
 
 void gVKRenderEngine::setVec2(GLuint uniformloc, const glm::vec2& value) {
+	return;  // no GL context here; see gvkReportNoUserShaders
 	G_CHECK_GL(glUniform2fv(uniformloc, 1, &value[0]));
 }
 
 void gVKRenderEngine::setVec2(GLuint uniformloc, float x, float y) {
+	return;  // no GL context here; see gvkReportNoUserShaders
 	G_CHECK_GL(glUniform2f(uniformloc, x, y));
 }
 
 void gVKRenderEngine::setVec3(GLuint uniformloc, const glm::vec3& value) {
+	return;  // no GL context here; see gvkReportNoUserShaders
 	G_CHECK_GL(glUniform3fv(uniformloc, 1, &value[0]));
 }
 
 void gVKRenderEngine::setVec3(GLuint uniformloc, float x, float y, float z) {
+	return;  // no GL context here; see gvkReportNoUserShaders
 	G_CHECK_GL(glUniform3f(uniformloc, x, y, z));
 }
 
 void gVKRenderEngine::setVec4(GLuint uniformloc, const glm::vec4& value) {
+	return;  // no GL context here; see gvkReportNoUserShaders
 	G_CHECK_GL(glUniform4fv(uniformloc, 1, &value[0]));
 }
 
 void gVKRenderEngine::setVec4(GLuint uniformloc, float x, float y, float z, float w) {
+	return;  // no GL context here; see gvkReportNoUserShaders
 	G_CHECK_GL(glUniform4f(uniformloc, x, y, z, w));
 }
 
 void gVKRenderEngine::setMat2(GLuint uniformloc, const glm::mat2& mat) {
+	return;  // no GL context here; see gvkReportNoUserShaders
 	G_CHECK_GL(glUniformMatrix2fv(uniformloc, 1, GL_FALSE, &mat[0][0]));
 }
 
 void gVKRenderEngine::setMat3(GLuint uniformloc, const glm::mat3& mat) {
+	return;  // no GL context here; see gvkReportNoUserShaders
 	G_CHECK_GL(glUniformMatrix3fv(uniformloc, 1, GL_FALSE, &mat[0][0]));
 }
 
 void gVKRenderEngine::setMat4(GLuint uniformloc, const glm::mat4& mat) {
+	return;  // no GL context here; see gvkReportNoUserShaders
 	G_CHECK_GL(glUniformMatrix4fv(uniformloc, 1, GL_FALSE, &mat[0][0]));
 }
 
 GLuint gVKRenderEngine::getUniformLocation(GLuint id, const std::string& name) {
+	// The same value glGetUniformLocation returns for a name that is not there, so
+	// a caller testing the result behaves as it would on an OpenGL program without
+	// that uniform.
+	gvkReportNoUserShaders("gShader uniform lookup");
+	(void)id; (void)name;
+	return static_cast<GLuint>(-1);
 	G_CHECK_GL2(GLuint location, glGetUniformLocation(id, name.c_str()));
 	return location;
 }
 
 void gVKRenderEngine::useShader(GLuint id) const {
+	// A gShader id means nothing here; the pipeline a draw uses is chosen by the
+	// draw path itself.
+	(void)id;
+	return;
 	if (currentprogram == id) return;
 	currentprogram = id;
 	G_CHECK_GL(glUseProgram(id));
 }
 
 void gVKRenderEngine::resetShader(GLuint id, bool loaded) const {
+	(void)id; (void)loaded;
+	return;
 	if(loaded) {
 		if (currentprogram == id) currentprogram = 0;
 		G_CHECK_GL(glDeleteShader(id));
@@ -1419,6 +1485,11 @@ bool gVKRenderEngine::initVulkan() {
 	ctx->window = handle;
 	ctx->vsyncenabled = glfwwindow->isVsyncEnabled();
 
+	// Presentation pacing has to be known before the swapchain is built, because
+	// that is where Vulkan expresses it. Taken from the window so an app that
+	// asked for vsync either way gets what it asked for on this backend too.
+	ctx->setVsyncEnabled(glfwwindow->isVsyncEnabled());
+
 	// Record what the instance level offers (every extension and layer present) so
 	// support can be queried later without re-enumerating. Done after the Apple
 	// env block above, since that is what points the loader at the layers.
@@ -1879,6 +1950,11 @@ bool gVKRenderEngine::beginFrame() {
 #endif
 }
 
+// The present mode is fixed when the swapchain is created, so changing vsync means
+// building a new swapchain. That cannot happen here: this is reached from wherever
+// the app changed the setting, which may be mid-frame with a command buffer already
+// recording. The request is flagged and gvkBeginFrame acts on it at the next frame
+// boundary, where no work is in flight.
 void gVKRenderEngine::setVsync(bool enabled) {
 #ifdef GVK_DESKTOP_GLFW
 	if(vkcontext == nullptr || vkcontext->vsyncenabled == enabled) return;
@@ -2129,7 +2205,8 @@ void gVKRenderEngine::drawColored2D(const glm::vec2* points, int count, const gl
 		}
 	}
 	if(!isalphablendingenabled) drawcolor.a = 1.0f;
-	gvkDrawColored2D(*vkcontext, points, count, drawcolor, mvp, mode);
+	gvkDrawColored2D(*vkcontext, points, count, drawcolor, mvp, mode,
+			blendmode == BLENDMODE_ADDITIVE);
 #endif
 }
 
@@ -2157,6 +2234,23 @@ void gVKRenderEngine::updateSceneUniforms() {
 	uniforms.lightmatrix = shadowlightmatrix;
 	uniforms.shadowlightpos = glm::vec4(shadowlightposition, shadowsready ? 1.0f : 0.0f);
 	uniforms.softshadows = shadowsoft ? 1 : 0;
+
+	// The same bits gRenderer::updateScene() builds for the OpenGL scene block, from
+	// the same state, so a scene reads identically on both backends. SSAO's bit is
+	// carried for completeness; nothing in this backend acts on it yet.
+	uniforms.flags = 0;
+	if(isssaoenabled) uniforms.flags |= ENABLE_SSAO;
+	if(isfogenabled) uniforms.flags |= ENABLE_FOG;
+	if(isgammacorrectionenabled) uniforms.flags |= ENABLE_GAMMA;
+	if(ishdrenabled) uniforms.flags |= ENABLE_HDR;
+	if(issoftshadowsenabled) uniforms.flags |= ENABLE_SOFT_SHADOWS;
+
+	// Written whether or not fog is on: the shader only reads it behind the flag,
+	// and writing it unconditionally keeps this free of a branch that would other-
+	// wise leave stale values behind the one time fog is switched back on.
+	const glm::vec3 fogrgb = fogcolor.asVec3();
+	uniforms.fogcolor = glm::vec4(fogrgb, fogmode == FOGMODE_EXP ? 1.0f : 0.0f);
+	uniforms.fogparams = glm::vec4(fogdensity, foggradient, foglinearstart, foglinearend);
 
 	uniforms.lightnum = std::min((int) scenelights.size(), GVK_MAX_LIGHTS);
 	uniforms.enabledlights = 0;
@@ -2473,7 +2567,8 @@ void gVKRenderEngine::drawTexturedRect2D(GLuint textureId, GLuint maskTextureId,
 			maskset = maskit->second->descriptorset;
 		}
 	}
-	gvkDrawTextured2D(*vkcontext, it->second->descriptorset, maskset, tint, mvp, uvOffset, uvScale);
+	gvkDrawTextured2D(*vkcontext, it->second->descriptorset, maskset, tint, mvp, uvOffset, uvScale,
+			blendmode == BLENDMODE_ADDITIVE);
 #endif
 }
 
@@ -2485,7 +2580,8 @@ void gVKRenderEngine::drawTexturedTriangles2D(GLuint textureId, const glm::vec4&
 	auto it = vktextures.find(textureId);
 	if(it == vktextures.end() || it->second == nullptr) return;
 	it->second->sampled = true;
-	gvkDrawTexturedTriangles2D(*vkcontext, it->second->descriptorset, tint, mvp, xyuv, vertexCount);
+	gvkDrawTexturedTriangles2D(*vkcontext, it->second->descriptorset, tint, mvp, xyuv, vertexCount,
+			blendmode == BLENDMODE_ADDITIVE);
 #endif
 }
 

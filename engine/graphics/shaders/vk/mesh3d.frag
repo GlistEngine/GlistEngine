@@ -56,8 +56,28 @@ layout(set = 0, binding = 0) uniform Scene {
     int lightnum;
     int enabledlights;
     int softshadows;
+    // Same bits as color_frag.glsl; see gRenderer::ENABLE_FOG and friends.
+    int flags;
+    // xyz fog colour, w mode: 0 linear, 1 exponential.
+    vec4 fogcolor;
+    // x density, y gradient, z linear start, w linear end.
+    vec4 fogparams;
     Light lights[8];
 } scene;
+
+const int ENABLE_FOG_FLAG = 1 << 1;
+const int ENABLE_GAMMA_FLAG = 1 << 2;
+const int ENABLE_HDR_FLAG = 1 << 3;
+
+// The same curve color_frag.glsl uses, so a scene fogged on one backend is fogged
+// the same amount on the other.
+float fogVisibility(float distance) {
+    if (scene.fogcolor.w < 0.5) {
+        float len = scene.fogparams.w - scene.fogparams.z;
+        return clamp((scene.fogparams.w - distance) / len, 0.0, 1.0);
+    }
+    return clamp(exp(-pow(distance * scene.fogparams.x, scene.fogparams.y)), 0.0, 1.0);
+}
 
 layout(push_constant) uniform Push {
     mat4 model;
@@ -301,4 +321,21 @@ void main() {
     // Only mesh3d, not mesh3dpbr.frag: pbr_frag.glsl does not apply it either, so
     // the two backends agree on PBR meshes by both leaving it alone.
     outColor = result * vec4(vColor, 1.0);
+
+    // Fog, tone mapping and gamma, in the order color_frag.glsl applies them. The
+    // distance is the view space depth rather than the radial distance to the eye,
+    // which is what "abs(EyePosition.z / EyePosition.w)" comes to there; taking the
+    // length of the eye vector instead would fog the edges of the screen more than
+    // the centre and the two backends would part company at wide fields of view.
+    if ((scene.flags & ENABLE_FOG_FLAG) > 0) {
+        vec4 eyepos = scene.view * vec4(vFragPos, 1.0);
+        float distance = abs(eyepos.z / eyepos.w);
+        outColor = mix(vec4(scene.fogcolor.rgb, 1.0), outColor, fogVisibility(distance));
+    }
+    if ((scene.flags & ENABLE_HDR_FLAG) > 0) {
+        outColor = vec4(outColor.rgb / (outColor.rgb + vec3(1.0)), outColor.a);
+    }
+    if ((scene.flags & ENABLE_GAMMA_FLAG) > 0) {
+        outColor.rgb = pow(outColor.rgb, vec3(1.0 / 2.2));
+    }
 }

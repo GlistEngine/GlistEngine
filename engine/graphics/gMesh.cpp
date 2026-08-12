@@ -188,6 +188,21 @@ void gMesh::draw() {
 	if (renderer->isVulkan()) {
 		if (isprojection2d) drawVulkan2D();
 		else drawVulkan3D();
+		// A material can carry extra shaders, and on OpenGL the mesh is drawn again
+		// once per shader below. That cannot be honoured here - see the note above
+		// gvkReportNoUserShaders in gVKRenderEngine.cpp for why a gShader has no
+		// meaning on this backend - so the mesh is drawn once and the extras are
+		// skipped. Reported rather than skipped quietly: the effect simply not
+		// appearing, with nothing said, is the hard version of this to diagnose.
+		if (isextrashadersenabled && !material.getShaders().empty()) {
+			static bool reported = false;
+			if (!reported) {
+				reported = true;
+				gLogw("gMesh") << "A material carries extra shaders, which the Vulkan "
+						<< "backend cannot draw with; the mesh is drawn once with the "
+						<< "standard pipeline and the extra passes are skipped.";
+			}
+		}
 		return;
 	}
 
