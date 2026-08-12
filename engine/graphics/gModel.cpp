@@ -629,7 +629,10 @@ void gModel::animate(float animationPosition) {
 	animationpositionold = animationposition;
 	animationposition = animationPosition;
 
-	if(!isvertexanimationstoredonvram && animationposition != animationpositionold) {
+	// A vertex animated model already holds every frame, in system memory or in GPU
+	// buffers, and gSkinnedMesh::draw() applies the stored one. Skinning here would
+	// recompute what is about to be overwritten.
+	if(!isvertexanimated && animationposition != animationpositionold) {
 		updateAnimationNodes();
 		for (int i = 0; i < meshes.size(); i++) {
 			updateBones(meshes[i], scene->mMeshes[meshindices[i]]);
@@ -949,8 +952,10 @@ void gModel::makeVertexAnimated(bool storeOnVram) {
 	G_PROFILE_ZONE_VALUE(storeOnVram);
 	if (!isvertexanimated) {
 		isvertexanimationstoredonvram = storeOnVram;
-		prepareVertexAnimationData();
+		// Set before preparing, so the setAnimationFrameNo() calls inside do not
+		// skin a frame that prepareVertexAnimationData() is about to skin itself.
 		isvertexanimated = true;
+		prepareVertexAnimationData();
 		for(int i=0; i<meshes.size(); i++) {
 			meshes[i]->setVertexAnimated(true);
 			meshes[i]->setVertexAnimationStoredOnVram(storeOnVram);
