@@ -5,26 +5,25 @@
 #include <algorithm>
 #include <vector>
 
-namespace {
-constexpr int AtlasColumns = 6;
-constexpr int GlyphSize = 209;
-const std::string Characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-}
-
 gCanvas::gCanvas(gApp* root) : gBaseCanvas(root) {
 }
 
 void gCanvas::setup() {
+	atlascolumns = 6;
+	glyphsize = 209;
+	characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+	scale = 0.25f;
+
 	std::vector<gRect> coordinates;
-	coordinates.reserve(Characters.size());
-	for (int i = 0; i < static_cast<int>(Characters.size()); ++i) {
-		const int left = (i % AtlasColumns) * GlyphSize;
-		const int top = (i / AtlasColumns) * GlyphSize;
-		coordinates.emplace_back(left, top, left + GlyphSize, top + GlyphSize);
+	coordinates.reserve(characters.size());
+	for (int i = 0; i < static_cast<int>(characters.size()); ++i) {
+		const int left = (i % atlascolumns) * glyphsize;
+		const int top = (i / atlascolumns) * glyphsize;
+		coordinates.emplace_back(left, top, left + glyphsize, top + glyphsize);
 	}
 
 	if (!bitmapfont.loadImage("bitmap-font-atlas.png")
-			|| !bitmapfont.setCharacters(Characters, coordinates)) {
+			|| !bitmapfont.setCharacters(characters, coordinates)) {
 		gLoge("gisBitmapFont") << "Bitmap font could not be configured.";
 	}
 

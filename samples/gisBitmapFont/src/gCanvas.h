@@ -4,6 +4,8 @@
 #include "gBaseCanvas.h"
 #include "gBitmapFont.h"
 
+#include <string>
+
 class gApp;
 
 class gCanvas : public gBaseCanvas {
@@ -16,7 +18,10 @@ public:
 
 private:
 	gBitmapFont bitmapfont;
-	float scale = 0.25f;
+	int atlascolumns;
+	int glyphsize;
+	std::string characters;
+	float scale;
 };
 
 #endif
