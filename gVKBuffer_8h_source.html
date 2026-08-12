@@ -122,19 +122,26 @@ $(document).ready(function(){initNavTree('gVKBuffer_8h_source.html',''); initRes
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span> </div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="comment">// Creates a buffer and backs it with freshly allocated memory. Returns false and</span></div>
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="comment">// leaves the handles at VK_NULL_HANDLE on failure.</span></div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="keywordtype">bool</span> gvkCreateBuffer(gVKContext&amp; ctx, VkDeviceSize size, VkBufferUsageFlags usage,</div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>        VkMemoryPropertyFlags properties, VkBuffer&amp; outBuffer, VkDeviceMemory&amp; outMemory);</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="comment">// Allocates and begins a single-use command buffer from the context&#39;s pool. Pair</span></div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="comment">// every call with gvkEndSingleTimeCommands, which submits it and waits for the GPU.</span></div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>VkCommandBuffer gvkBeginSingleTimeCommands(gVKContext&amp; ctx);</div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="keywordtype">void</span> gvkEndSingleTimeCommands(gVKContext&amp; ctx, VkCommandBuffer commandBuffer);</div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span> </div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="keywordtype">void</span> gvkCopyBuffer(gVKContext&amp; ctx, VkBuffer src, VkBuffer dst, VkDeviceSize size);</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="comment">//</span></div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="comment">// preferred names memory the caller would rather have; when no memory type offers</span></div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="comment">// it the allocation falls back to properties, which is what it must have. It exists</span></div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="comment">// for buffers the CPU writes and the GPU reads every frame: on a device that</span></div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="comment">// exposes device local memory as host visible those belong there rather than in</span></div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="comment">// system RAM, which the GPU can only reach across the bus.</span></div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="keywordtype">bool</span> gvkCreateBuffer(gVKContext&amp; ctx, VkDeviceSize size, VkBufferUsageFlags usage,</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>        VkMemoryPropertyFlags properties, VkBuffer&amp; outBuffer, VkDeviceMemory&amp; outMemory,</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>        VkMemoryPropertyFlags preferred = 0);</div>
 <div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span> </div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span><span class="preprocessor">#endif </span><span class="comment">/* GVK_DESKTOP_GLFW */</span><span class="preprocessor"></span></div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span> </div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span><span class="preprocessor">#endif </span><span class="comment">/* CORE_GVKBUFFER_H */</span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span><span class="comment">// Allocates and begins a single-use command buffer from the context&#39;s pool. Pair</span></div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span><span class="comment">// every call with gvkEndSingleTimeCommands, which submits it and waits for the GPU.</span></div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>VkCommandBuffer gvkBeginSingleTimeCommands(gVKContext&amp; ctx);</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="keywordtype">void</span> gvkEndSingleTimeCommands(gVKContext&amp; ctx, VkCommandBuffer commandBuffer);</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span> </div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span><span class="keywordtype">void</span> gvkCopyBuffer(gVKContext&amp; ctx, VkBuffer src, VkBuffer dst, VkDeviceSize size);</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span> </div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span><span class="preprocessor">#endif </span><span class="comment">/* GVK_DESKTOP_GLFW */</span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span> </div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span><span class="preprocessor">#endif </span><span class="comment">/* CORE_GVKBUFFER_H */</span><span class="preprocessor"></span></div>
 <div class="ttc" id="agVKContext_8h_html"><div class="ttname"><a href="gVKContext_8h.html">gVKContext.h</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

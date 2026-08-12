@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['inputtype_0',['InputType',['../gWindowEvents_8h.html#a5fc772c800c3d40d2b95564e8a839bab',1,'gWindowEvents.h']]]
+  ['gcursormode_0',['gCursorMode',['../gWindowEvents_8h.html#a42de6dd908ace1ea857f6ad43c704d17',1,'gWindowEvents.h']]]
 ];

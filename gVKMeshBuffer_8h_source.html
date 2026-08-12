@@ -160,76 +160,92 @@ $(document).ready(function(){initNavTree('gVKMeshBuffer_8h_source.html',''); ini
 <div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    <span class="comment">// slot, so every call site can go on reading this field.</span></div>
 <div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    VkBuffer buffer = VK_NULL_HANDLE;</div>
 <div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    VkDeviceMemory memory = VK_NULL_HANDLE;</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    VkDeviceSize size = 0;</div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    <span class="comment">// Which usage flag the buffer was created with. A GLuint name carries no type in</span></div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>    <span class="comment">// OpenGL, the first upload decides it here.</span></div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    <span class="keywordtype">bool</span> isindex = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span> </div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    <span class="comment">// Everything below is unused until a second upload promotes the buffer.</span></div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>    <span class="keywordtype">bool</span> isdynamic = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    VkBuffer slotbuffers[GVK_MAX_FRAMES_IN_FLIGHT] = {};</div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>    VkDeviceMemory slotmemories[GVK_MAX_FRAMES_IN_FLIGHT] = {};</div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    <span class="keywordtype">void</span>* slotmapped[GVK_MAX_FRAMES_IN_FLIGHT] = {};</div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>    <span class="comment">// Which version of the data each slot currently holds, against the newest</span></div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    <span class="comment">// version in shadow. A frame that draws the mesh without a fresh upload finds</span></div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>    <span class="comment">// its slot behind and refreshes it, so no frame ever draws stale vertices.</span></div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>    uint64_t slotversion[GVK_MAX_FRAMES_IN_FLIGHT] = {};</div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>    uint64_t version = 0;</div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>    std::vector&lt;unsigned char&gt; shadow;</div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span> </div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>    <span class="comment">// Where this mesh&#39;s newest data sits inside the per-frame arena, and which</span></div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>    <span class="comment">// frame that slice belongs to. A mesh drawn without a fresh upload keeps</span></div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>    <span class="comment">// using its slice for the rest of that frame; once the arena has been rewound</span></div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>    <span class="comment">// the generation no longer matches and the data is pushed again.</span></div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>    VkBuffer arenabuffer = VK_NULL_HANDLE;</div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>    VkDeviceSize arenaoffset = 0;</div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>    uint64_t arenageneration = 0;</div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>};</div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span> </div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span><span class="comment">/*</span></div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span><span class="comment"> * What a vertex array id stands for lives in gVKRenderEngine.h as gVKVertexArray:</span></div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span><span class="comment"> * it holds nothing but two GLuint ids, so it does not belong behind this header&#39;s</span></div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span><span class="comment"> * Vulkan guard.</span></div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span><span class="comment"> *</span></div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span><span class="comment"> * ---------------------------------------------------------------------------</span></div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span><span class="comment"> *</span></div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span><span class="comment"> * Uploads data into buf, creating or resizing its VkBuffer as needed. The copy goes</span></div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span><span class="comment"> * through a host visible staging buffer, so the destination can stay device local:</span></div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span><span class="comment"> * mesh data is written once and read by the GPU every frame, which is the case that</span></div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span><span class="comment"> * memory type is for.</span></div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span><span class="comment"> *</span></div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span><span class="comment"> * Returns false and leaves buf empty if the buffer could not be created. Passing</span></div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span><span class="comment"> * size 0 or a null pointer frees whatever the id held and returns true.</span></div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span><span class="comment"> */</span></div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span><span class="keywordtype">bool</span> gvkUploadMeshBuffer(gVKContext&amp; ctx, gVKMeshBuffer&amp; buf, <span class="keyword">const</span> <span class="keywordtype">void</span>* data,</div>
-<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>        VkDeviceSize size, <span class="keywordtype">bool</span> isIndex);</div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span> </div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span><span class="comment">/*</span></div>
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span><span class="comment"> * The VkBuffer a draw recorded right now should bind, and the only supported way</span></div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span><span class="comment"> * to get one: a dynamic buffer has a copy per frame in flight, and this picks the</span></div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span><span class="comment"> * one belonging to the frame being recorded, refreshing it from the newest data</span></div>
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span><span class="comment"> * first if that frame has not seen the latest upload.</span></div>
-<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span><span class="comment"> *</span></div>
-<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span><span class="comment"> * outOffset is the byte offset to bind the vertex buffer from - zero for a</span></div>
-<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span><span class="comment"> * static mesh, and the mesh&#39;s slice inside the arena for a dynamic one.</span></div>
-<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span><span class="comment"> *</span></div>
-<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span><span class="comment"> * A static buffer is returned as it is. Returns VK_NULL_HANDLE if there is nothing</span></div>
-<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span><span class="comment"> * to draw from, which callers already check for.</span></div>
-<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span><span class="comment"> */</span></div>
-<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>VkBuffer gvkResolveMeshBuffer(gVKContext&amp; ctx, gVKMeshBuffer&amp; buf, VkDeviceSize&amp; outOffset);</div>
-<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span> </div>
-<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span><span class="comment">/*</span></div>
-<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span><span class="comment"> * Frees the device local buffers that promotions replaced. They are held rather</span></div>
-<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span><span class="comment"> * than destroyed at promotion time because the frame being recorded may already</span></div>
-<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span><span class="comment"> * reference them; call this once at shutdown, after the device is idle.</span></div>
-<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span><span class="comment"> */</span></div>
-<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span><span class="keywordtype">void</span> gvkDestroyRetiredMeshBuffers(gVKContext&amp; ctx);</div>
-<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span> </div>
-<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span><span class="keywordtype">void</span> gvkDestroyMeshBuffer(gVKContext&amp; ctx, gVKMeshBuffer&amp; buf);</div>
-<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span> </div>
-<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span><span class="preprocessor">#endif </span><span class="comment">/* GVK_DESKTOP_GLFW */</span><span class="preprocessor"></span></div>
-<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span> </div>
-<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span><span class="preprocessor">#endif </span><span class="comment">/* CORE_GVKMESHBUFFER_H */</span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    <span class="comment">// How many bytes the mesh currently holds, and how many its slots were built to</span></div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    <span class="comment">// take. They differ because the slots are allocated with room to spare: a mesh</span></div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>    <span class="comment">// whose vertex count wobbles between draws - a rectangle drawn filled and then</span></div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    <span class="comment">// outlined shares one buffer and one index count is longer than the other - would</span></div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    <span class="comment">// otherwise reallocate on every draw.</span></div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    VkDeviceSize size = 0;</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>    VkDeviceSize capacity = 0;</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    <span class="comment">// Which usage flag the buffer was created with. A GLuint name carries no type in</span></div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>    <span class="comment">// OpenGL, the first upload decides it here.</span></div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    <span class="keywordtype">bool</span> isindex = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span> </div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    <span class="comment">// Everything below is unused until a second upload promotes the buffer.</span></div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>    <span class="keywordtype">bool</span> isdynamic = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>    VkBuffer slotbuffers[GVK_MAX_FRAMES_IN_FLIGHT] = {};</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>    VkDeviceMemory slotmemories[GVK_MAX_FRAMES_IN_FLIGHT] = {};</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>    <span class="keywordtype">void</span>* slotmapped[GVK_MAX_FRAMES_IN_FLIGHT] = {};</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>    <span class="comment">// Which version of the data each slot currently holds, counted against version,</span></div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>    <span class="comment">// which every upload advances. A frame that draws the mesh without a fresh</span></div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>    <span class="comment">// upload finds its slot behind and copies the freshest slot over it, so no frame</span></div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>    <span class="comment">// draws a pose two frames old.</span></div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>    uint64_t slotversion[GVK_MAX_FRAMES_IN_FLIGHT] = {};</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>    uint64_t version = 0;</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span> </div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>    <span class="comment">// Where this mesh&#39;s newest data sits inside the per-frame arena, and which</span></div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>    <span class="comment">// frame that slice belongs to. A mesh drawn without a fresh upload keeps</span></div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>    <span class="comment">// using its slice for the rest of that frame; once the arena has been rewound</span></div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>    <span class="comment">// the generation no longer matches and the data is pushed again.</span></div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>    VkBuffer arenabuffer = VK_NULL_HANDLE;</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>    VkDeviceSize arenaoffset = 0;</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>    uint64_t arenageneration = 0;</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>    <span class="comment">// The frame of this buffer&#39;s last upload. A second upload inside the same</span></div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>    <span class="comment">// frame is what makes an arena slice necessary; a mesh uploaded once a frame</span></div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>    <span class="comment">// is served by its own per-frame copy, which costs nothing to keep.</span></div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>    uint64_t lastuploadgeneration = ~0ull;</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>};</div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span> </div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span><span class="comment">/*</span></div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span><span class="comment"> * What a vertex array id stands for lives in gVKRenderEngine.h as gVKVertexArray:</span></div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span><span class="comment"> * it holds nothing but two GLuint ids, so it does not belong behind this header&#39;s</span></div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span><span class="comment"> * Vulkan guard.</span></div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span><span class="comment"> *</span></div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span><span class="comment"> * ---------------------------------------------------------------------------</span></div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span><span class="comment"> *</span></div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span><span class="comment"> * Uploads data into buf, creating or resizing its VkBuffer as needed. The copy goes</span></div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span><span class="comment"> * through a host visible staging buffer, so the destination can stay device local:</span></div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span><span class="comment"> * mesh data is written once and read by the GPU every frame, which is the case that</span></div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span><span class="comment"> * memory type is for.</span></div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span><span class="comment"> *</span></div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span><span class="comment"> * Returns false and leaves buf empty if the buffer could not be created. Passing</span></div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span><span class="comment"> * size 0 or a null pointer frees whatever the id held and returns true.</span></div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span><span class="comment"> */</span></div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span><span class="keywordtype">bool</span> gvkUploadMeshBuffer(gVKContext&amp; ctx, gVKMeshBuffer&amp; buf, <span class="keyword">const</span> <span class="keywordtype">void</span>* data,</div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>        VkDeviceSize size, <span class="keywordtype">bool</span> isIndex);</div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span> </div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span><span class="comment">/*</span></div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span><span class="comment"> * The VkBuffer a draw recorded right now should bind, and the only supported way</span></div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span><span class="comment"> * to get one: a dynamic buffer has a copy per frame in flight, and this picks the</span></div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span><span class="comment"> * one belonging to the frame being recorded, refreshing it from the newest data</span></div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span><span class="comment"> * first if that frame has not seen the latest upload.</span></div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span><span class="comment"> *</span></div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span><span class="comment"> * outOffset is the byte offset to bind the vertex buffer from - zero for a</span></div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span><span class="comment"> * static mesh, and the mesh&#39;s slice inside the arena for a dynamic one.</span></div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span><span class="comment"> *</span></div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span><span class="comment"> * A static buffer is returned as it is. Returns VK_NULL_HANDLE if there is nothing</span></div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span><span class="comment"> * to draw from, which callers already check for.</span></div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span><span class="comment"> */</span></div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>VkBuffer gvkResolveMeshBuffer(gVKContext&amp; ctx, gVKMeshBuffer&amp; buf, VkDeviceSize&amp; outOffset);</div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span> </div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span><span class="comment">/*</span></div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span><span class="comment"> * Frees the device local buffers that promotions replaced. They are held rather</span></div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span><span class="comment"> * than destroyed at promotion time because the frame being recorded may already</span></div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span><span class="comment"> * reference them; call this once at shutdown, after the device is idle.</span></div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span><span class="comment"> */</span></div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span><span class="keywordtype">void</span> gvkDestroyRetiredMeshBuffers(gVKContext&amp; ctx);</div>
+<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span> </div>
+<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span><span class="comment">/*</span></div>
+<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span><span class="comment"> * Frees the retired buffers that are old enough to be certain no command buffer</span></div>
+<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span><span class="comment"> * still names them. Called once at the top of a frame; anything younger stays.</span></div>
+<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span><span class="comment"> */</span></div>
+<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span><span class="keywordtype">void</span> gvkCollectRetiredMeshBuffers(gVKContext&amp; ctx);</div>
+<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span> </div>
+<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span><span class="keywordtype">void</span> gvkDestroyMeshBuffer(gVKContext&amp; ctx, gVKMeshBuffer&amp; buf);</div>
+<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span> </div>
+<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span><span class="preprocessor">#endif </span><span class="comment">/* GVK_DESKTOP_GLFW */</span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span> </div>
+<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span><span class="preprocessor">#endif </span><span class="comment">/* CORE_GVKMESHBUFFER_H */</span><span class="preprocessor"></span></div>
 <div class="ttc" id="agVKContext_8h_html"><div class="ttname"><a href="gVKContext_8h.html">gVKContext.h</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

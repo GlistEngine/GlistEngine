@@ -69,6 +69,7 @@ var classgGLRenderEngine =
     [ "readTexturePixelsHDR", "classgGLRenderEngine.html#ad75f8febed9e8783886661a920082acd", null ],
     [ "resetShader", "classgGLRenderEngine.html#a5db5b9ff301b6f512a4745b2baaa8907", null ],
     [ "resetTexture", "classgGLRenderEngine.html#a0091bdb865f49b7ad3fed5a442a00d9a", null ],
+    [ "setBlendMode", "classgGLRenderEngine.html#a741c0161ea8e656eb556e57da5c067d5", null ],
     [ "setBool", "classgGLRenderEngine.html#ae22e6676eb1ef96747240958cc36b6b7", null ],
     [ "setBufferData", "classgGLRenderEngine.html#ae9cb6bb79ad2106c7c18b28e9ac9fb84", null ],
     [ "setBufferRange", "classgGLRenderEngine.html#a2d56e32354e44bcdc087f769292d3334", null ],

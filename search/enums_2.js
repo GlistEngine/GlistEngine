@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['deviceorientation_0',['DeviceOrientation',['../gWindowEvents_8h.html#a9d99888a5a1ae95a0049445bc4bfd14c',1,'gWindowEvents.h']]]
+  ['copyoptions_0',['CopyOptions',['../classgFile.html#ae0409e2a1e11645fb3301ded923fe7cb',1,'gFile']]]
 ];

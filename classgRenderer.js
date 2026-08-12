@@ -5,6 +5,10 @@ var classgRenderer =
     [ "gSceneFogData", "structgRenderer_1_1gSceneFogData.html", "structgRenderer_1_1gSceneFogData" ],
     [ "gSceneLightData", "structgRenderer_1_1gSceneLightData.html", "structgRenderer_1_1gSceneLightData" ],
     [ "gSceneLights", "structgRenderer_1_1gSceneLights.html", "structgRenderer_1_1gSceneLights" ],
+    [ "BlendMode", "classgRenderer.html#aeceaf55a930649dab4659f5f09e5bf4a", [
+      [ "BLENDMODE_ALPHA", "classgRenderer.html#aeceaf55a930649dab4659f5f09e5bf4aa4c6509836b1bdc14fbfbb6bbbbac8d98", null ],
+      [ "BLENDMODE_ADDITIVE", "classgRenderer.html#aeceaf55a930649dab4659f5f09e5bf4aa8131013ec82364fbaeacc7db52d79514", null ]
+    ] ],
     [ "SceneDataFlags", "classgRenderer.html#adba1900f960be6d02c5d143026ec8454", [
       [ "ENABLE_SSAO", "classgRenderer.html#adba1900f960be6d02c5d143026ec8454a89f383e880b00465b46fab2f4ec5bef0", null ],
       [ "ENABLE_FOG", "classgRenderer.html#adba1900f960be6d02c5d143026ec8454a631d8073096dd6fe38e97d17d2672c1c", null ],
@@ -132,6 +136,7 @@ var classgRenderer =
     [ "genBuffers", "classgRenderer.html#adb94f7f6b70c0e8ca2bb6579e5ee5c6a", null ],
     [ "generateMipMap", "classgRenderer.html#a3f5076e956d456b57820926d38c5f165", null ],
     [ "generateSkyMipMap", "classgRenderer.html#afd8b2ad8d14480c26b27d4723ad758e0", null ],
+    [ "getBlendMode", "classgRenderer.html#a76f7b12f756addf1342c440e8fb8391a", null ],
     [ "getBoundFramebuffer", "classgRenderer.html#abedab64b15fc6e2f52a8ec26c9feca78", null ],
     [ "getBrdfShader", "classgRenderer.html#ab81bebed6414cf63b33f4b7b0d37b638", null ],
     [ "getCamera", "classgRenderer.html#a35e1585ab3628522149e5ab9f6e2bed6", null ],
@@ -218,6 +223,7 @@ var classgRenderer =
     [ "resetShader", "classgRenderer.html#a5b5245c298f347c18c5ac2349fb4a250", null ],
     [ "resetTexture", "classgRenderer.html#a945999c5cf994bf23536fcd3be4c6311", null ],
     [ "restoreMatrices", "classgRenderer.html#a07afe7d0163e605821b066fa75903304", null ],
+    [ "setBlendMode", "classgRenderer.html#ae101af94d8068209013d6c38c0fe78de", null ],
     [ "setBool", "classgRenderer.html#a41d736b14d48d5def8fc48d38d8ad7b4", null ],
     [ "setBufferData", "classgRenderer.html#a14096a56fe4428d658ae8c9719509706", null ],
     [ "setBufferRange", "classgRenderer.html#ae51e3011165d6d30e9ed5949696114a5", null ],
@@ -294,6 +300,7 @@ var classgRenderer =
     [ "setVertexBufferData", "classgRenderer.html#a8dd289dd03118ec0daaa0fd08243c72a", null ],
     [ "setViewMatrix", "classgRenderer.html#add20288b75535a460ccaf6615b2dcbd9", null ],
     [ "setViewport", "classgRenderer.html#a400b8bf33110bb06fb3cf9cafe0aa7cb", null ],
+    [ "setVsync", "classgRenderer.html#a1144a0d485e5e848d583e8735eff94e8", null ],
     [ "setWrapping", "classgRenderer.html#a15249fb4bdcd7c63b8be7ccf2d479c46", null ],
     [ "setWrapping", "classgRenderer.html#ab28a95bd7100af0bd794f0374ccea230", null ],
     [ "setWrappingAndFiltering", "classgRenderer.html#af640e1d4d72a8bac8dcdc82534174d5a", null ],
@@ -313,6 +320,7 @@ var classgRenderer =
     [ "gAppManager", "classgRenderer.html#ab9dde2a792049fe98a8f04b4a56a1821", null ],
     [ "gRenderObject", "classgRenderer.html#a9acbb4fb4810b70c2b1467d45a86215e", null ],
     [ "arcmesh", "classgRenderer.html#ad71f7e9c015076342aef669d2fa409e0", null ],
+    [ "blendmode", "classgRenderer.html#a1c9bea850cdf5ebc3326415c41205ca8", null ],
     [ "boundframebuffer", "classgRenderer.html#a49fdb2b3c01b7eb62ba72af8be13b7e9", null ],
     [ "boxmesh", "classgRenderer.html#ad5e67e7b65655bf1de951c53bf169ed5", null ],
     [ "brdfshader", "classgRenderer.html#a13aa791c6c60d07bbb33f96a963b7b37", null ],
