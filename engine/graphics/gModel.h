@@ -111,6 +111,18 @@ public:
 
 	bool isVertexAnimated() const;
 	bool isVertexAnimationStoredOnVram() const;
+
+	/**
+	 * Bakes every skeletal animation frame into stored vertices, once, so
+	 * setAnimationFrameNo() only picks one afterwards and drawing costs no
+	 * skinning. Call it after setAnimationFrameNum(), which decides the frame
+	 * count. Memory is the trade, growing with frames x vertices.
+	 *
+	 * @param storeOnVram True gives each frame its own GPU buffer, so drawing a
+	 * pose only binds it: the fastest, and the usual choice. False keeps the
+	 * frames in system memory and uploads the chosen one on each frame change,
+	 * which is slower but spends no video memory.
+	 */
 	void makeVertexAnimated(bool storeOnVram = true);
 
     gBoundingBox& getInitialBoundingBox();
