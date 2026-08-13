@@ -962,7 +962,6 @@ void gModel::makeVertexAnimated(bool storeOnVram) {
 
 void gModel::prepareVertexAnimationData() {
 	G_PROFILE_ZONE_SCOPED_N("gModel::prepareVertexAnimationData()");
-    int mnum = meshes.size();
     int anum = scene->mNumAnimations;
     int fnum = getAnimationFrameNum();
 
@@ -981,57 +980,13 @@ void gModel::prepareVertexAnimationData() {
 				//updateBones(&meshes[i], scene->mMeshes[i], nullptr);
 				updateBones(meshes[i], mesh);
 
-				// calculate bone matrices
-				std::vector<aiMatrix4x4> boneMatrices(mesh->mNumBones);
-				for(unsigned int a = 0; a < mesh->mNumBones; ++a) {
-					const aiBone* bone = mesh->mBones[a];
-
-					// find the corresponding node by again looking recursively through the node hierarchy for the same name
-					aiNode* node = scene->mRootNode->FindNode(bone->mName);
-
-					// start with the mesh-to-bone matrix
-					boneMatrices[a] = bone->mOffsetMatrix;
-					// and now append all node transformations down the parent chain until we're back at mesh coordinates again
-					const aiNode* tempNode = node;
-					while (tempNode) {
-						// check your matrix multiplication order here!!!
-						boneMatrices[a] = tempNode->mTransformation * boneMatrices[a];
-						// boneMatrices[a] = boneMatrices[a] * tempNode->mTransformation;
-						tempNode = tempNode->mParent;
-					}
-				}
-
-				meshes[i]->resetVertexAnimationData(j, k);
-
-				// loop through all vertex weights of all bones
-				for (unsigned int a = 0; a < mesh->mNumBones; ++a) {
-					const aiBone* bone = mesh->mBones[a];
-					const aiMatrix4x4& posTrafo = boneMatrices[a];
-
-					for (unsigned int b = 0; b < bone->mNumWeights; ++b) {
-						const aiVertexWeight& weight = bone->mWeights[b];
-						size_t vertexId = weight.mVertexId;
-						const aiVector3D& srcPos = mesh->mVertices[vertexId];
-
-						glm::vec3 oldweightpos = meshes[i]->getVertexPosData(j, k, vertexId);
-						aiVector3D aiaddweight = weight.mWeight * (posTrafo * srcPos);
-						glm::vec3 vPos(oldweightpos.x + aiaddweight.x, oldweightpos.y + aiaddweight.y, oldweightpos.z + aiaddweight.z);
-						meshes[i]->setVertexPosData(j, k, vertexId, vPos);
-					}
-					if (mesh->HasNormals()) {
-						// 3x3 matrix, contains the bone matrix without the translation, only with rotation and possibly scaling
-						aiMatrix3x3 normTrafo = aiMatrix3x3(posTrafo);
-						for (unsigned int b = 0; b < bone->mNumWeights; ++b) {
-							const aiVertexWeight& weight = bone->mWeights[b];
-							size_t vertexId = weight.mVertexId;
-
-							const aiVector3D& srcNorm = mesh->mNormals[vertexId];
-
-							glm::vec3 oldweightnorm = meshes[i]->getVertexNormData(j, k, vertexId);
-							aiVector3D aiaddweight = weight.mWeight * (posTrafo * srcNorm);
-							meshes[i]->setVertexNormData(j, k, vertexId, glm::vec3(oldweightnorm.x + aiaddweight.x, oldweightnorm.y + aiaddweight.y, oldweightnorm.z + aiaddweight.z));
-						}
-					}
+				const std::vector<glm::vec3>& animatedpos = meshes[i]->getAnimatedPos();
+				const std::vector<glm::vec3>& animatednorm = meshes[i]->getAnimatedNorm();
+				for (unsigned int vertexId = 0; vertexId < mesh->mNumVertices; ++vertexId) {
+				    meshes[i]->setVertexPosData(j, k, vertexId, animatedpos[vertexId]);
+				    if (mesh->HasNormals()) {
+				    	meshes[i]->setVertexNormData(j, k, vertexId, animatednorm[vertexId]);
+				    }
 				}
 
 				if (isvertexanimationstoredonvram) {
