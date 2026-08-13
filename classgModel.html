@@ -1139,6 +1139,13 @@ Additional Inherited Members</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Bakes every skeletal animation frame into stored vertices, once, so <a class="el" href="classgModel.html#a7068099a36182446d76bf65cf7f0c73d">setAnimationFrameNo()</a> only picks one afterwards and drawing costs no skinning. Call it after <a class="el" href="classgModel.html#adffdfd95a243a6681998e47264853ea6">setAnimationFrameNum()</a>, which decides the frame count. Memory is the trade, growing with frames x vertices.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">storeOnVram</td><td>True gives each frame its own GPU buffer, so drawing a pose only binds it: the fastest, and the usual choice. False keeps the frames in system memory and uploads the chosen one on each frame change, which is slower but spends no video memory. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
