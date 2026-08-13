@@ -1,0 +1,1 @@
+The developers can put their 4K image files under assets/mipmaps/2-4k/. If scaling is set as SCREENSCALING_MIPMAP and unitResolution set as 1, gImage.loadImage(filename) function checks this folder to open the image file.

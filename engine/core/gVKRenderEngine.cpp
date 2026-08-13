@@ -1057,7 +1057,18 @@ void gVKRenderEngine::bindDefaultFramebuffer() {
 }
 
 void gVKRenderEngine::drawVbo(const gVbo& vbo) {
-	G_CHECK_GL(glDrawArrays(GL_TRIANGLES, 0, vbo.getVerticesNum()));
+    gMeshSurface surface;
+
+    surface.ambient = glm::vec4(1.0f);
+    surface.diffuse = glm::vec4(1.0f);
+    surface.specular = glm::vec4(1.0f);
+    surface.shininess = 0.5f;
+
+    drawVbo(vbo, glm::mat4(1.0f),surface);
+}
+
+void gVKRenderEngine::drawVbo(const gVbo& vbo, const glm::mat4& model, const gMeshSurface& surface) {
+    drawMesh3D(vbo.getVAOid(), vbo.getVerticesNum(), vbo.getIndicesNum(), model, surface, GL_TRIANGLES, 1);
 }
 
 // These emulate just enough of the OpenGL texture object / bind state that

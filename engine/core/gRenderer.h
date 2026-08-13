@@ -598,6 +598,7 @@ public:
 
 	/* -------------- gGrid --------------- */
 	virtual void drawVbo(const gVbo& vbo) = 0;
+	virtual void drawVbo(const gVbo& vbo, const glm::mat4& model, const gMeshSurface& surface) = 0;
 
 	/* ---------------- gTexture ---------------- */
 	virtual GLuint createTextures() = 0;
