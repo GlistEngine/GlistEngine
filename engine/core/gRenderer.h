@@ -79,7 +79,7 @@ int gGetCullFace();
 void gSetCullingDirection(int cullingDirection);
 int gGetCullingDirection();
 
-// --- 2D / 3D Line Overloads (Ambiguous hatas�n� �nlemek i�in ayr��t�r�ld�) ---
+// --- 2D / 3D Line Overloads
 void gDrawLine(float x1, float y1, float x2, float y2);
 void gDrawLine(float x1, float y1, float x2, float y2, float thickness);
 void gDrawLine(float x1, float y1, float z1, float x2, float y2, float z2, float thickness = 1.0f);
@@ -93,6 +93,7 @@ void gDrawArrow(float x1, float y1, float length, float angle, float tipLength, 
 void gDrawRectangle(float x, float y, float w, float h, bool isFilled = false, float rotateAngle = 0.0f, float pivotx = 0.5f, float pivoty = 0.5f);
 void gDrawRoundedRectangle(float x, float y, float w, float h, int radius, bool isFilled, float rotateAngle = 0.0f, float pivotx = 0.5f, float pivoty = 0.5f);
 void gDrawBox(float x, float y, float z, float w = 1.0f, float h = 1.0f, float d = 1.0f, bool isFilled = true);
+void gDrawBox(float x, float y, float z, float w, float h, float d, float rotateAngle, float axisX, float axisY, float axisZ, bool isFilled = true);
 void gDrawBox(glm::mat4 transformationMatrix, bool isFilled = true);
 void gDrawSphere(float xPos, float yPos, float zPos, glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f), int xSegmentNum = 64, int ySegmentNum = 32, bool isFilled = true);
 void gDrawCylinder(float x, float y, float z, int r, int h, glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f), int segmentnum = 32, bool isFilled = true);
@@ -650,6 +651,7 @@ public:
 	void drawRectangle(float x, float y, float w, float h, bool isFilled = false, float rotateAngle = 0.0f, float pivotx = 0.5f, float pivoty = 0.5f);
 	void drawRoundedRectangle(float x, float y, float w, float h, int radius, bool isFilled, float rotateAngle = 0.0f, float pivotx = 0.5f, float pivoty = 0.5f);
 	void drawBox(float x, float y, float z, float w = 1.0f, float h = 1.0f, float d = 1.0f, bool isFilled = true);
+	void drawBox(float x, float y, float z, float w, float h, float d, float rotateAngle, float axisX, float axisY, float axisZ, bool isFilled = true);
 	void drawBox(glm::mat4 transformationMatrix, bool isFilled = true);
 	void drawSphere(float xPos, float yPos, float zPos, glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f), int xSegmentNum = 64, int ySegmentNum = 32, bool isFilled = true);
 	void drawCylinder(float x, float y, float z, int r, int h, glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f), int segmentnum = 32, bool isFilled = true);

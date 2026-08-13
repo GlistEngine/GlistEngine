@@ -2132,25 +2132,20 @@ void gVKRenderEngine::recordQueuedDrawGroup(size_t first, size_t count) {
 
 
 void gVKRenderEngine::init() {
-	// gRenderer::init() is deliberately not called: it compiles shaders and
-	// builds GL objects, and there is no GL context under Vulkan. originalgrid
-	// is assigned only inside that function and is never initialised in a
-	// constructor, so it is nulled here to keep the destructor's delete safe.
-	originalgrid = nullptr;
-	// gRenderer::init() also allocates rendercolor, but it is skipped under Vulkan;
-	// the 2D draw helpers read the current colour, so create a white default here.
-	rendercolor = new gColor();
-	rendercolor->set(255, 255, 255, 255);
-	// The primitive meshes are created by gRenderer::init() as well. They hold no GL
-	// objects until they are drawn, and the 2D ones now record through the backend's
-	// draw path, so drawLine / drawCircle / drawRectangle and friends need them here
-	// just as much as the OpenGL path does.
-	createPrimitiveMeshes();
-	if(!initVulkan()) {
-		gLoge("gVKRenderEngine") << "Vulkan initialization failed; the Vulkan backend is not usable.";
-	}
-}
 
+    originalgrid = nullptr;
+
+    rendercolor = new gColor();
+    rendercolor->set(255, 255, 255, 255);
+
+    if(!initVulkan()) {
+        gLoge("gVKRenderEngine")
+            << "Vulkan initialization failed; the Vulkan backend is not usable.";
+        return;
+    }
+
+    createPrimitiveMeshes();
+}
 
 void gVKRenderEngine::cleanup() {
 	// The GL resources gRenderer::cleanup() would release were never created,
