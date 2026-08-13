@@ -115,6 +115,7 @@ var classgRenderer =
     [ "drawTubeObliqueTrapezodial", "classgRenderer.html#a69be63781a9254ea18c6e854ddeea9fb", null ],
     [ "drawTubeTrapezodial", "classgRenderer.html#afe18e9643e638980fe2440be1c9fdadf", null ],
     [ "drawVbo", "classgRenderer.html#af20ab5017a69ae95ca38fbf62a07734d", null ],
+    [ "drawVbo", "classgRenderer.html#a16d1a7c207618316231f40e149d4e507", null ],
     [ "enableAlphaBlending", "classgRenderer.html#abbe5ef7b2f0b50b64af2ea68faade5a0", null ],
     [ "enableAlphaTest", "classgRenderer.html#afb29f970e60b9df09aa3102cf94ca04f", null ],
     [ "enableCubeMap", "classgRenderer.html#a33f8f20362b379379eea5f9b134f80b7", null ],

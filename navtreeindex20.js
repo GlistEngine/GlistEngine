@@ -1,5 +1,8 @@
 var NAVTREEINDEX20 =
 {
+"structgGUIActionManager_1_1Action.html#aa74d24f9e11147167081f533bd4614ef":[1,0,58,0,3],
+"structgGUIActionManager_1_1Action.html#ab9d527edbd49c60a31db16fe813be15c":[1,0,58,0,1],
+"structgGUIGrid_1_1Cell.html":[1,0,79,0],
 "structgGUIGrid_1_1Cell.html#a0d34e5140bfff3f102eef2563765ef54":[1,0,79,0,13],
 "structgGUIGrid_1_1Cell.html#a18d25ba1bdcb734586614006710f0921":[1,0,79,0,8],
 "structgGUIGrid_1_1Cell.html#a1f485137b0c94db83a51472da3cb3a53":[1,0,79,0,21],

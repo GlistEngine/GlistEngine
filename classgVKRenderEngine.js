@@ -55,6 +55,7 @@ var classgVKRenderEngine =
     [ "drawTexturedRect2D", "classgVKRenderEngine.html#aee1c7119bd31cdecb8d3bff00990b551", null ],
     [ "drawTexturedTriangles2D", "classgVKRenderEngine.html#abc672d604fd7b12f4f10c51c70bdde32", null ],
     [ "drawVbo", "classgVKRenderEngine.html#a8e11be74a02084dd14f0f03dd23ab10d", null ],
+    [ "drawVbo", "classgVKRenderEngine.html#a35cec16c3b379f140b42fe7baeff4819", null ],
     [ "enableAlphaBlending", "classgVKRenderEngine.html#ad4d8a074e529f84bf596a63aa0b11e13", null ],
     [ "enableAlphaTest", "classgVKRenderEngine.html#a7cf399e7f619c698ccdb996c4558f7fa", null ],
     [ "enableCubeMap", "classgVKRenderEngine.html#ab90b7a3c810f33e7ad44f542f3a66c8a", null ],

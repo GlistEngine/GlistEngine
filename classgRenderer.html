@@ -675,6 +675,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a82ebf6dfb61cb56fdcd0df69ea944cbe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af20ab5017a69ae95ca38fbf62a07734d" id="r_af20ab5017a69ae95ca38fbf62a07734d"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#af20ab5017a69ae95ca38fbf62a07734d">drawVbo</a> (const <a class="el" href="classgVbo.html">gVbo</a> &amp;vbo)=0</td></tr>
 <tr class="separator:af20ab5017a69ae95ca38fbf62a07734d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a16d1a7c207618316231f40e149d4e507" id="r_a16d1a7c207618316231f40e149d4e507"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a16d1a7c207618316231f40e149d4e507">drawVbo</a> (const <a class="el" href="classgVbo.html">gVbo</a> &amp;vbo, const glm::mat4 &amp;model, const <a class="el" href="structgRenderer_1_1gMeshSurface.html">gMeshSurface</a> &amp;surface)=0</td></tr>
+<tr class="separator:a16d1a7c207618316231f40e149d4e507"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aeb94b28ffa51df3f0e619b2b3387fb8c" id="r_aeb94b28ffa51df3f0e619b2b3387fb8c"><td class="memItemLeft" align="right" valign="top">virtual GLuint&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#aeb94b28ffa51df3f0e619b2b3387fb8c">createTextures</a> ()=0</td></tr>
 <tr class="separator:aeb94b28ffa51df3f0e619b2b3387fb8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0b4b6ee2905720600d223f650964f3e9" id="r_a0b4b6ee2905720600d223f650964f3e9"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a0b4b6ee2905720600d223f650964f3e9">bindTexture</a> (GLuint texId)=0</td></tr>
@@ -5198,7 +5200,7 @@ Friends</h2></td></tr>
 </div>
 </div>
 <a id="af20ab5017a69ae95ca38fbf62a07734d" name="af20ab5017a69ae95ca38fbf62a07734d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af20ab5017a69ae95ca38fbf62a07734d">&#9670;&#160;</a></span>drawVbo()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#af20ab5017a69ae95ca38fbf62a07734d">&#9670;&#160;</a></span>drawVbo() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -5222,6 +5224,50 @@ Friends</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Implemented in <a class="el" href="classgGLRenderEngine.html#a85b9c31776005fa45e765e9786a3da9e">gGLRenderEngine</a>, and <a class="el" href="classgVKRenderEngine.html#a8e11be74a02084dd14f0f03dd23ab10d">gVKRenderEngine</a>.</p>
+
+</div>
+</div>
+<a id="a16d1a7c207618316231f40e149d4e507" name="a16d1a7c207618316231f40e149d4e507"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a16d1a7c207618316231f40e149d4e507">&#9670;&#160;</a></span>drawVbo() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void gRenderer::drawVbo </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classgVbo.html">gVbo</a> &amp;&#160;</td>
+          <td class="paramname"><em>vbo</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const glm::mat4 &amp;&#160;</td>
+          <td class="paramname"><em>model</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structgRenderer_1_1gMeshSurface.html">gMeshSurface</a> &amp;&#160;</td>
+          <td class="paramname"><em>surface</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implemented in <a class="el" href="classgGLRenderEngine.html#a59d26495838a2f97516401620140c228">gGLRenderEngine</a>, and <a class="el" href="classgVKRenderEngine.html#a35cec16c3b379f140b42fe7baeff4819">gVKRenderEngine</a>.</p>
 
 </div>
 </div>
