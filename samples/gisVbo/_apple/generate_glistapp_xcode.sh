@@ -1,6 +1,5 @@
 #!/bin/sh
 
-BINARY_DIR="$HOME/dev/glist/zbin/glistzbin-macos/mingw64/lib"
 GLISTWD="$(pwd)/.."
 BUILD_DIR="$GLISTWD/_build"
 
@@ -14,15 +13,15 @@ DEPLOYMENT_VERSION="13.0"
 
 # EXPOSED VARIABLES END
 
-export CC="/opt/homebrew/opt/llvm/bin/clang"
-export CXX="/opt/homebrew/opt/llvm/bin/clang++"
-export OBJC="/opt/homebrew/opt/llvm/bin/clang"
-export OBJCXX="/opt/homebrew/opt/llvm/bin/clang++"
+export CC="/usr/bin/clang"
+export CXX="/usr/bin/clang++"
+export OBJC="/usr/bin/clang"
+export OBJCXX="/usr/bin/clang++"
 
 if [ $1 = "ios" ]
 then
 cmake -S "$GLISTWD" \
--D CMAKE_TOOLCHAIN_FILE="$GLISTWD/macos/ios.toolchain.cmake" \
+-D CMAKE_TOOLCHAIN_FILE="$GLISTWD/_apple/ios.toolchain.cmake" \
 -G Xcode \
 -B "$GLISTWD/_build" \
 -D PLATFORM=$PLATFORM \
@@ -36,9 +35,6 @@ cmake -S "$GLISTWD" \
 -G Xcode \
 -B "$GLISTWD/_build"
 fi
-
-xattr -w com.apple.quarantine "$(xattr -p com.apple.quarantine "$BINARY_DIR/libfmod.dylib" | sed 's/^.\{4\}/00c1/')" $BINARY_DIR/libfmod.dylib
-xattr -w com.apple.quarantine "$(xattr -p com.apple.quarantine "$BINARY_DIR/libfmodL.dylib" | sed 's/^.\{4\}/00c1/')" $BINARY_DIR/libfmodL.dylib
 
 if [ ! -d "$BUILD_DIR/$BUILD_TYPE" ]
 then

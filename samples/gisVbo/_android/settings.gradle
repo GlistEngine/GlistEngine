@@ -1,0 +1,28 @@
+pluginManagement {
+    repositories {
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+def getProjectNameFromCMake() {
+    def cmakeFile = new File(settingsDir, '../CMakeLists.txt')
+    if (cmakeFile.exists()) {
+        def pattern = ~/set\(\s*APP_NAME\s+["']?([^"'\s)]+)["']?\s*\)/
+        def match = pattern.matcher(cmakeFile.text)
+        if (match.find()) {
+            return match.group(1)
+        }
+    }
+    return "GlistApp"
+}
+
+rootProject.name = getProjectNameFromCMake()
+include ':app'

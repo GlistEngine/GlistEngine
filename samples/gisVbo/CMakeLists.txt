@@ -1,4 +1,4 @@
-cmake_minimum_required (VERSION 3.10.2)
+cmake_minimum_required(VERSION 3.13)
 
 
 ########## PROJECT NAME ##########
@@ -31,7 +31,7 @@ endif()
 
 
 ########## PATHS ##########
-set(APP_DIR ${CMAKE_SOURCE_DIR})
+set(APP_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 
 # samples/gisVbo -> samples -> GlistEngine
 set(MAIN_DIR ${APP_DIR}/../..)
@@ -43,14 +43,16 @@ set(ENGINE_DIR ${MAIN_DIR}/engine)
 
 
 ########## WINDOWS COMPILER PATH ##########
-# Toolchain is located outside GlistEngine:
-# C:/dev/glist/zbin/glistzbin-win64/...
+# Clang compiler definition for Windows.
+# zbin is located next to the GlistEngine directory.
 if(WIN32)
-	set(CMAKE_C_COMPILER
+	set(
+		CMAKE_C_COMPILER
 		"${TOP_DIR}/zbin/glistzbin-win64/clang64/bin/clang.exe"
 	)
 
-	set(CMAKE_CXX_COMPILER
+	set(
+		CMAKE_CXX_COMPILER
 		"${TOP_DIR}/zbin/glistzbin-win64/clang64/bin/clang++.exe"
 	)
 endif()
@@ -137,9 +139,7 @@ endif()
 
 
 ########## ENGINE ##########
-if(APPLE)
-	add_subdirectory(${ENGINE_DIR} ./_build)
-else()
+if(NOT TARGET GlistEngine)
 	include(${ENGINE_DIR}/CMakeLists.txt)
 endif()
 
@@ -163,27 +163,37 @@ set(
 )
 
 
-add_executable(
-	${APP_NAME}
+if(ANDROID)
 
-	${GlistApp_SOURCES}
-	${GlistApp_HEADERS}
-)
+	add_library(
+		${APP_NAME}
+		SHARED
+
+		${GlistApp_SOURCES}
+		${GlistApp_HEADERS}
+	)
+
+else()
+
+	add_executable(
+		${APP_NAME}
+
+		${GlistApp_SOURCES}
+		${GlistApp_HEADERS}
+	)
+
+endif()
 
 
 ######### APPLE AND IOS SPECIFIC SETTINGS #########
 
 if(IOS)
 
-	if(PLUGINS MATCHES "^.*gipIOS.*$")
-		include(${TOP_DIR}/glistplugins/gipIOS/CMakeLists.txt)
-	endif()
-
-
 	set_source_files_properties(
-		macos/GlistApp.storyboard
+		_apple/GlistApp.storyboard
 
 		PROPERTIES
+
 		MACOSX_PACKAGE_LOCATION Resources
 	)
 
@@ -193,7 +203,7 @@ if(IOS)
 
 		PRIVATE
 
-		${APP_DIR}/macos/GlistApp.storyboard
+		${APP_DIR}/_apple/GlistApp.storyboard
 		${IOS_PLUGIN_HEADERS}
 		${IOS_PLUGIN_SRCS}
 	)
@@ -250,7 +260,8 @@ if(IOS)
 
 	# Put assets to the Resources folder of the bundle
 	file(
-		GLOB_RECURSE RESOURCES
+		GLOB_RECURSE
+		RESOURCES
 		"${CMAKE_CURRENT_SOURCE_DIR}/assets/*"
 	)
 
@@ -267,7 +278,8 @@ if(IOS)
 	foreach(FILE ${RESOURCES})
 
 		file(
-			RELATIVE_PATH NEW_FILE
+			RELATIVE_PATH
+			NEW_FILE
 			"${CMAKE_CURRENT_SOURCE_DIR}/assets"
 			${FILE}
 		)
@@ -304,7 +316,7 @@ if(IOS)
 		PROPERTY
 
 		MACOSX_BUNDLE_INFO_PLIST
-		${CMAKE_CURRENT_SOURCE_DIR}/macos/Info.plist
+		${CMAKE_CURRENT_SOURCE_DIR}/_apple/Info.plist
 	)
 
 endif()
@@ -312,27 +324,13 @@ endif()
 
 ########## INCLUDE DIRECTORIES ##########
 
-if(APPLE)
+target_include_directories(
+	${APP_NAME}
 
-	target_include_directories(
-		${APP_NAME}
+	PRIVATE
 
-		PRIVATE
-
-		${APP_DIR}/src
-	)
-
-else()
-
-	target_include_directories(
-		${APP_NAME}
-
-		PRIVATE
-
-		${APP_DIR}/src
-	)
-
-endif()
+	${APP_DIR}/src
+)
 
 
 ########## LINKING ##########
