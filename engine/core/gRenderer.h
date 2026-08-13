@@ -637,7 +637,7 @@ public:
 	virtual void pushMatrix() = 0;
 	virtual void popMatrix() = 0;
 
-	/* ---------------- Utilities (drawLine overloads d�zenlendi) ---------------- */
+	/* ---------------- Utilities ---------------- */
 	void drawLine(float x1, float y1, float x2, float y2);
 	void drawLine(float x1, float y1, float x2, float y2, float thickness);
 	void drawLine(float x1, float y1, float z1, float x2, float y2, float z2, float thickness = 1.0f);
