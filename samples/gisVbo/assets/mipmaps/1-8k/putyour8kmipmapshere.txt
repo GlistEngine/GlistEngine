@@ -1,0 +1,1 @@
+The developers can put their 8K image files under assets/mipmaps/1-8k/. If scaling is set as SCREENSCALING_MIPMAP and unitResolution set as 0, gImage.loadImage(filename) function checks this folder to open the image file.

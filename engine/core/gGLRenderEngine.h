@@ -141,6 +141,7 @@ public:
 
 	/* -------------- gGrid --------------- */
 	void drawVbo(const gVbo& vbo) override;
+	void drawVbo(const gVbo& vbo, const glm::mat4& model, const gMeshSurface& surface) override;
 
 	/* ---------------- gTexture ---------------- */
 	GLuint createTextures() override;

@@ -1,0 +1,1 @@
+The developers can put their 3d model files under assets/models. gModel.loadModel(filename) function checks this folder to open the model file.

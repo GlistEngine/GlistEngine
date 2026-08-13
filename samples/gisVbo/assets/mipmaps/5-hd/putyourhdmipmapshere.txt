@@ -1,0 +1,1 @@
+The developers can put their HD image files under assets/mipmaps/5-hd/. If scaling is set as SCREENSCALING_MIPMAP and unitResolution set as 4, gImage.loadImage(filename) function checks this folder to open the image file.

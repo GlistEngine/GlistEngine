@@ -584,8 +584,36 @@ void gGLRenderEngine::bindDefaultFramebuffer() {
 }
 
 void gGLRenderEngine::drawVbo(const gVbo& vbo) {
-	G_CHECK_GL(glDrawArrays(GL_TRIANGLES, 0, vbo.getVerticesNum()));
+    vbo.bind();
+    drawArrays(GL_TRIANGLES, vbo.getVerticesNum());
+    vbo.unbind();
 }
+
+void gGLRenderEngine::drawVbo(const gVbo& vbo, const glm::mat4& model, const gMeshSurface& surface) {
+    gShader* shader = getColorShader();
+    shader->use();
+
+    shader->setMat4("projection", getProjectionMatrix());
+    shader->setMat4("model", model);
+
+    shader->setVec2("textureTiling", glm::vec2(1.0f));
+
+    shader->setVec4("material.ambient", surface.ambient);
+    shader->setVec4("material.diffuse", surface.diffuse);
+    shader->setVec4("material.specular", surface.specular);
+    shader->setFloat("material.shininess", surface.shininess);
+
+    shader->setInt("material.useDiffuseMap", 0);
+    shader->setInt("material.useSpecularMap", 0);
+    shader->setInt("material.useNormalMap", 0);
+
+    shader->setInt("useInstancing", 0);
+
+    vbo.bind();
+    drawArrays(GL_TRIANGLES, vbo.getVerticesNum());
+    vbo.unbind();
+}
+
 
 void gGLRenderEngine::drawTexturedTriangles2D(GLuint textureId, const glm::vec4& tint,
 		const glm::mat4& mvp, const float* xyuv, int vertexCount) {
