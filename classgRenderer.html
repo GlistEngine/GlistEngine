@@ -755,6 +755,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a0241c9680db2cfe0babda6feac4e3254"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a37e20d873bfea09ac2f66e98ee562794" id="r_a37e20d873bfea09ac2f66e98ee562794"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a37e20d873bfea09ac2f66e98ee562794">drawBox</a> (float x, float y, float z, float w=1.0f, float h=1.0f, float d=1.0f, bool isFilled=true)</td></tr>
 <tr class="separator:a37e20d873bfea09ac2f66e98ee562794"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad459ae7c929e07197781f1ae3cdcabaa" id="r_ad459ae7c929e07197781f1ae3cdcabaa"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#ad459ae7c929e07197781f1ae3cdcabaa">drawBox</a> (float x, float y, float z, float w, float h, float d, float rotateAngle, float axisX, float axisY, float axisZ, bool isFilled=true)</td></tr>
+<tr class="separator:ad459ae7c929e07197781f1ae3cdcabaa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a70a3eec87619bd2c46bb369901e09cf3" id="r_a70a3eec87619bd2c46bb369901e09cf3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a70a3eec87619bd2c46bb369901e09cf3">drawBox</a> (glm::mat4 transformationMatrix, bool isFilled=true)</td></tr>
 <tr class="separator:a70a3eec87619bd2c46bb369901e09cf3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac87b18cdea5749740d6c7c6a8ed0da5a" id="r_ac87b18cdea5749740d6c7c6a8ed0da5a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#ac87b18cdea5749740d6c7c6a8ed0da5a">drawSphere</a> (float xPos, float yPos, float zPos, glm::vec3 scale=glm::vec3(1.0f, 1.0f, 1.0f), int xSegmentNum=64, int ySegmentNum=32, bool isFilled=true)</td></tr>
@@ -3084,8 +3086,90 @@ Friends</h2></td></tr>
 
 </div>
 </div>
+<a id="ad459ae7c929e07197781f1ae3cdcabaa" name="ad459ae7c929e07197781f1ae3cdcabaa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad459ae7c929e07197781f1ae3cdcabaa">&#9670;&#160;</a></span>drawBox() <span class="overload">[1/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gRenderer::drawBox </td>
+          <td>(</td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>y</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>z</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>w</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>h</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>d</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>rotateAngle</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>axisX</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>axisY</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>axisZ</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>isFilled</em> = <code>true</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a37e20d873bfea09ac2f66e98ee562794" name="a37e20d873bfea09ac2f66e98ee562794"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a37e20d873bfea09ac2f66e98ee562794">&#9670;&#160;</a></span>drawBox() <span class="overload">[1/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a37e20d873bfea09ac2f66e98ee562794">&#9670;&#160;</a></span>drawBox() <span class="overload">[2/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -3143,7 +3227,7 @@ Friends</h2></td></tr>
 </div>
 </div>
 <a id="a70a3eec87619bd2c46bb369901e09cf3" name="a70a3eec87619bd2c46bb369901e09cf3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a70a3eec87619bd2c46bb369901e09cf3">&#9670;&#160;</a></span>drawBox() <span class="overload">[2/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a70a3eec87619bd2c46bb369901e09cf3">&#9670;&#160;</a></span>drawBox() <span class="overload">[3/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">

@@ -77,6 +77,7 @@ var classgRenderer =
     [ "drawArrays", "classgRenderer.html#a0d1abc82ef72d97575fd129601ab3303", null ],
     [ "drawArraysInstanced", "classgRenderer.html#ad670aa498b542f16df233abd75ae581d", null ],
     [ "drawArrow", "classgRenderer.html#a2a079963defb813e09228cbfb97e7b8d", null ],
+    [ "drawBox", "classgRenderer.html#ad459ae7c929e07197781f1ae3cdcabaa", null ],
     [ "drawBox", "classgRenderer.html#a37e20d873bfea09ac2f66e98ee562794", null ],
     [ "drawBox", "classgRenderer.html#a70a3eec87619bd2c46bb369901e09cf3", null ],
     [ "drawCircle", "classgRenderer.html#a4e78f128ff26d629d8b80b075aff82ad", null ],

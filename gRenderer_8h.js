@@ -17,6 +17,7 @@ var gRenderer_8h =
     [ "gDisableCulling", "gRenderer_8h.html#ade8633c44a3c67fd57d341cd1859e680", null ],
     [ "gDrawArc", "gRenderer_8h.html#a2be5f7748bf26c1082280f4dbe8fe190", null ],
     [ "gDrawArrow", "gRenderer_8h.html#aab9be80627c07e1ad8bbc9d74ffa7508", null ],
+    [ "gDrawBox", "gRenderer_8h.html#ac1f9ffab18ad08983a1aaf30bf7dcba5", null ],
     [ "gDrawBox", "gRenderer_8h.html#ae109af2e50a7a76154c78dd69e5029aa", null ],
     [ "gDrawBox", "gRenderer_8h.html#a974a4e524495263daf6419cf5476ccaa", null ],
     [ "gDrawCircle", "gRenderer_8h.html#a3a3f34b143446946f08d7176bb3daaa6", null ],
