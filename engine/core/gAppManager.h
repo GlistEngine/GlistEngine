@@ -399,6 +399,7 @@ private:
     bool isresizable;
     int loopmode;
     int renderengine = G_RENDERER_GL;
+    int requestedmultisampling = 1;
     bool initialized;
     bool initializedbefore;
     bool iswindowfocused;

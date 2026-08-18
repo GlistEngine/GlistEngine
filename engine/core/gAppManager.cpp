@@ -218,6 +218,9 @@ void gAppManager::initialize() {
 		}
 		// Create renderer
 		gRenderObject::createRenderer(renderengine);
+		// setMultiSampling() may be called before initialize(), while no renderer
+		// exists yet. Apply the remembered request as soon as the backend is ready.
+		renderer->setMultiSampling(requestedmultisampling);
 		// The engine's GUI resources are OpenGL based. Under the Vulkan backend the
 		// window carries no GL context, so they stay uninitialised until the Vulkan
 		// rendering path exists.
@@ -466,11 +469,14 @@ void gAppManager::disableVsync() {
 }
 
 void gAppManager::setMultiSampling(int samples) {
-	if(renderer != nullptr) renderer->setMultiSampling(samples);
+	requestedmultisampling = samples < 1 ? 1 : samples;
+	if(renderer != nullptr) renderer->setMultiSampling(requestedmultisampling);
 }
 
 int gAppManager::getMultiSampling() const {
-	if(renderer == nullptr) return 1;
+	// Before initialization there is no achieved device value yet; report the
+	// request that will be applied when the renderer is created.
+	if(renderer == nullptr) return requestedmultisampling;
 	return renderer->getMultiSampling();
 }
 
