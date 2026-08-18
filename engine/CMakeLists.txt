@@ -206,6 +206,7 @@ set(SRC_FILES
 	${ENGINE_DIR}/utils/gHttpFile.cpp
 	${ENGINE_DIR}/graphics/gShader.cpp
 	${ENGINE_DIR}/graphics/gBezier.cpp
+	${ENGINE_DIR}/graphics/gPath.cpp
 	${ENGINE_DIR}/graphics/gFog.cpp
 	${ENGINE_DIR}/core/gObject.cpp
 	${ENGINE_DIR}/core/gRenderer.cpp
