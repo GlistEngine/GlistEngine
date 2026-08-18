@@ -146,6 +146,7 @@ var annotated_dup =
     [ "gNode", "classgNode.html", "classgNode" ],
     [ "gObject", "classgObject.html", "classgObject" ],
     [ "gParticle", "classgParticle.html", "classgParticle" ],
+    [ "gPath", "classgPath.html", "classgPath" ],
     [ "gPlane", "classgPlane.html", "classgPlane" ],
     [ "gPostProcessManager", "classgPostProcessManager.html", "classgPostProcessManager" ],
     [ "gRay", "classgRay.html", "classgRay" ],

@@ -226,11 +226,13 @@ var hierarchy =
       ] ],
       [ "gWindows", "classgWindows.html", null ]
     ] ],
+    [ "gPath", "classgPath.html", null ],
     [ "gRect", "classgRect.html", null ],
     [ "gRenderer::gSceneData", "structgRenderer_1_1gSceneData.html", null ],
     [ "gRenderer::gSceneFogData", "structgRenderer_1_1gSceneFogData.html", null ],
     [ "gRenderer::gSceneLightData", "structgRenderer_1_1gSceneLightData.html", null ],
     [ "gRenderer::gSceneLights", "structgRenderer_1_1gSceneLights.html", null ],
+    [ "gPath::gSubPath", "classgPath_1_1gSubPath.html", null ],
     [ "gTweenAnimation", "classgTweenAnimation.html", null ],
     [ "gUTF8Iterator", "classgUTF8Iterator.html", null ],
     [ "gUtils", "classgUtils.html", null ],

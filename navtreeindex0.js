@@ -77,6 +77,7 @@ var NAVTREEINDEX0 =
 "classgAppResumeEvent.html#a8960bca40ee4a58a02e0f4deb8c29806":[1,0,5,0],
 "classgArc.html":[1,0,6],
 "classgArc.html#a32ed967c87654e6b47707cffa2bebbd4":[1,0,6,0],
+"classgArc.html#a6a9854fa41dbc67b51fbdd6a4c6e2bfe":[1,0,6,3],
 "classgArc.html#a7226a91c6c46d655d68686b0218f38d2":[1,0,6,2],
 "classgArc.html#acffbab72179125cfcf17b9f58fa7715e":[1,0,6,1],
 "classgAssetLoader.html":[1,0,7],
@@ -248,6 +249,5 @@ var NAVTREEINDEX0 =
 "classgBaseGUIObject.html#a6f768f37eb2433acaf02c0b2d543205b":[1,0,11,55],
 "classgBaseGUIObject.html#a710482bf10978d06c49478ccede77a2b":[1,0,11,25],
 "classgBaseGUIObject.html#a743fdaff0398c2c4dc7157290c634093":[1,0,11,50],
-"classgBaseGUIObject.html#a785649d969d2e42e030dd13cb6d3ef4a":[1,0,11,16],
-"classgBaseGUIObject.html#a789f332c968607d91451ba85d519c924":[1,0,11,62]
+"classgBaseGUIObject.html#a785649d969d2e42e030dd13cb6d3ef4a":[1,0,11,16]
 };

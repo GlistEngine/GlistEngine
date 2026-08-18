@@ -1,5 +1,6 @@
 var NAVTREEINDEX3 =
 {
+"classgFile.html#a4299311553afc40191493bcee0f20e59":[1,0,46,11],
 "classgFile.html#a52b73ee9d4934012344616d2805292d7":[1,0,46,22],
 "classgFile.html#a5a76e8bbbcb9d05889387b7f7d2e488d":[1,0,46,14],
 "classgFile.html#a5a9e9ebc0f7c86bbb0172465c2962375":[1,0,46,3],
@@ -248,6 +249,5 @@ var NAVTREEINDEX3 =
 "classgGUIBitmap.html#abf9c0fce13593408b7816be48fa4fe0f":[1,0,60,1],
 "classgGUIBitmap.html#acc5909c55cca45588a33f7f3cd57acb3":[1,0,60,7],
 "classgGUIBitmap.html#acfc2f07c8a3b22a6384f67de4fd9ae86":[1,0,60,6],
-"classgGUIBoxPlot.html":[1,0,61],
-"classgGUIBoxPlot.html#a09bdbdd5d6b769d73298a707df9a346e":[1,0,61,11]
+"classgGUIBoxPlot.html":[1,0,61]
 };
