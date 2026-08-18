@@ -19,21 +19,28 @@ gBezier::~gBezier() {
 void gBezier::setPoint(const std::vector<glm::vec2>& pts) {
 	points.clear();
 	for (const auto& p : pts) {
+		if(points.size() >= 3) break;
 		points.push_back(glm::vec3(p.x, p.y, 0.0f));
 	}
 	is3D = false;
 }
 
 void gBezier::setPoint(const std::vector<glm::vec3>& pts) {
-	points = pts;
+	points.clear();
+	for (const auto& p : pts) {
+		if(points.size() >= 3) break;
+		points.push_back(p);
+	}
 	is3D = true;
 }
 
 void gBezier::addPoint(glm::vec2 p) {
+	if(points.size() >= 3) return;
 	points.push_back(glm::vec3(p.x, p.y, 0.0f));
 }
 
 void gBezier::addPoint(glm::vec3 p) {
+	if(points.size() >= 3) return;
 	points.push_back(p);
 	is3D = true;
 }
@@ -76,33 +83,13 @@ glm::vec3 gBezier::getPointAtIndex(int index) const {
 }
 
 glm::vec3 gBezier::getPoint(float t) const {
+	if(points.size() != 3) return glm::vec3(0.0f);
 
-	if(points.size() < 3) {
-		if(points.empty()) return glm::vec3(0.0f);
-		if(points.size() == 1) return points[0];
-		return points[0] * (1.0f - t) + points[1] * t;
-	}
+	if(t < 0.0f) t = 0.0f;
+	if(t > 1.0f) t = 1.0f;
 
-	if(t <= 0.0f) return points.front();
-	if(t >= 1.0f) return points.back();
-
-	int numSegments = (points.size() - 1) / 2;
-
-	float scaled_t = t * numSegments;
-
-	int segment = (int)scaled_t;
-	if(segment >= numSegments) segment = numSegments - 1;
-
-	float local_t = scaled_t - segment;
-
-	int startIndex = segment * 2;
-
-	glm::vec3 p0 = points[startIndex];
-	glm::vec3 p1 = points[startIndex + 1];
-	glm::vec3 p2 = points[startIndex + 2];
-
-	float u = 1.0f - local_t;
-	return (u * u * p0) + (2.0f * u * local_t * p1) + (local_t * local_t * p2);
+	float u = 1.0f - t;
+	return (u * u * points[0]) + (2.0f * u * t * points[1]) + (t * t * points[2]);
 }
 
 glm::vec2 gBezier::getPoint2D(float t) const {
@@ -111,7 +98,7 @@ glm::vec2 gBezier::getPoint2D(float t) const {
 }
 
 void gBezier::draw() const {
-	if (points.size() < 2) return;
+	if (points.size() != 3) return;
 
 	float step = 1.0f / (float)resolution;
 	glm::vec3 previousPoint = getPoint(0.0f);
