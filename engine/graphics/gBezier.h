@@ -14,7 +14,7 @@
 
 /**
  * @class gBezier
- * @brief Evaluates and renders composite quadratic Bezier curves.
+ * @brief Evaluates and renders a single quadratic Bezier curve requiring exactly 3 control points (two ends and a middle control point).
  *
  * Usage:
  * gBezier curve;
@@ -28,14 +28,14 @@ class gBezier : public gRenderObject {
 public:
 	gBezier();
 	virtual ~gBezier();
-	//Sets curve control points
+	//Sets curve control points, capped at 3
 	void setPoint(const std::vector<glm::vec2>& pts);
 	void setPoint(const std::vector<glm::vec3>& pts);
 
-	// Adds a 2D control point to the end of the curve. Z axis defaults to 0.0f.
+	// Adds a 2D control point to the end of the curve, up to 3. Z axis defaults to 0.0f.
 	void addPoint(glm::vec2 p);
 
-	//Adds a 3D control point to the end of the curve.
+	//Adds a 3D control point to the end of the curve, up to 3.
 	void addPoint(glm::vec3 p);
 
 	// Updates a specific control point coordinate by its index safely.
@@ -51,7 +51,7 @@ public:
 	//Clears all points to reset or reuse the curve.
 	void clearPoints();
 
-	//Gets the exact interpolated point at time t [0.0 - 1.0] using De Casteljau's algorithm.
+	//Gets the interpolated point at time t [0.0 - 1.0]. Requires exactly 3 points; returns (0,0,0) otherwise.
 	glm::vec3 getPoint(float t) const;
 
 	glm::vec2 getPoint2D(float t) const;
@@ -59,7 +59,7 @@ public:
 	//Sets rendering resolution (number of segments).
 	void setResolution(int res);
 
-	//Draws the curve automatically in 2D or 3D based on input points.
+	//Draws the curve in 2D or 3D based on input points. No-op unless exactly 3 points are set.
 	void draw() const;
 private:
 	std::vector<glm::vec3> points;
