@@ -283,4 +283,67 @@ bool gvkRecreateSwapchain(gVKContext& ctx, gBaseWindow* window) {
 	return true;
 }
 
+
+bool gvkRecreateSurface(gVKContext& ctx, gBaseWindow* window) {
+	if(window == nullptr || ctx.device == VK_NULL_HANDLE || ctx.instance == VK_NULL_HANDLE) return false;
+	// No native window to build onto. This happens between the old one going away
+	// and the new one arriving, so it is an ordinary skipped frame rather than an
+	// error - the caller asks again next frame.
+	if(!window->supportsVulkan()) return false;
+
+	vkDeviceWaitIdle(ctx.device);
+
+	// Same reverse dependency order as a swapchain rebuild, and then the surface
+	// itself, which the swapchain was created from.
+	gvkDestroyFramebuffers(ctx);
+	gvkDestroyMsaaColorResources(ctx);
+	gvkDestroyDepthResources(ctx);
+	gvkDestroyPresentSemaphores(ctx);
+	gvkDestroySwapchain(ctx);
+
+	const VkFormat previousformat = ctx.swapchainformat;
+	if(ctx.surface != VK_NULL_HANDLE) {
+		vkDestroySurfaceKHR(ctx.instance, ctx.surface, nullptr);
+		ctx.surface = VK_NULL_HANDLE;
+	}
+	if(!window->createVulkanSurface(&ctx.instance, &ctx.surface)) {
+		gLoge("gVKSwapchain") << "The platform could not create a surface for the new native window.";
+		return false;
+	}
+
+	// Present modes belong to the surface, and gvkCreateSwapchain reads them from
+	// the context rather than querying again. The capabilities and formats it does
+	// query itself. The queue families are unchanged: the same device is presenting
+	// to the same kind of window.
+	uint32_t presentmodecount = 0;
+	vkGetPhysicalDeviceSurfacePresentModesKHR(ctx.physicaldevice, ctx.surface, &presentmodecount, nullptr);
+	ctx.surfacepresentmodes.clear();
+	if(presentmodecount > 0) {
+		ctx.surfacepresentmodes.resize(presentmodecount);
+		vkGetPhysicalDeviceSurfacePresentModesKHR(ctx.physicaldevice, ctx.surface, &presentmodecount,
+				ctx.surfacepresentmodes.data());
+	}
+
+	if(!gvkCreateSwapchain(ctx, window)) return false;
+	// The render passes were built for the old format. A new window on the same
+	// device keeps it in practice, but if it ever changed, every pipeline built
+	// against those passes would be invalid, so stop rather than present garbage.
+	if(previousformat != VK_FORMAT_UNDEFINED && ctx.swapchainformat != previousformat) {
+		gLoge("gVKSwapchain") << "The recreated surface reports format " << ctx.swapchainformat
+				<< " where the render pass was built for " << previousformat << ".";
+		return false;
+	}
+	if(!gvkCreateDepthResources(ctx)) return false;
+	if(!gvkCreateMsaaColorResources(ctx)) return false;
+	if(!gvkCreateFramebuffers(ctx)) return false;
+	if(!gvkCreatePresentSemaphores(ctx, static_cast<uint32_t>(ctx.swapchainimages.size()))) return false;
+
+	// Only now, with a surface actually built from it, does the window count as
+	// the one being presented to.
+	window->vulkanSurfaceRecreated();
+	gLogi("gVKSwapchain") << "Surface recreated for " << ctx.swapchainextent.width
+			<< "x" << ctx.swapchainextent.height;
+	return true;
+}
+
 #endif /* GVK_VULKAN */

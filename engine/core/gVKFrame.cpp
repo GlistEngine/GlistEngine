@@ -18,11 +18,25 @@
 #include <cstring>
 
 bool gvkBeginFrame(gVKContext& ctx, gBaseWindow* window) {
-	if(ctx.device == VK_NULL_HANDLE || ctx.swapchain == VK_NULL_HANDLE || window == nullptr) {
+	if(ctx.device == VK_NULL_HANDLE || window == nullptr) {
 		return false;
 	}
 	if(ctx.frameactive) {
 		gLoge("gVKFrame") << "gvkBeginFrame was called while a frame was already active.";
+		return false;
+	}
+
+	// The surface can outlive the window it was created from: Android replaces the
+	// native window on rotation and when the activity returns to the foreground,
+	// and a driver can report the surface lost outright. Both invalidate the
+	// swapchain as well, so this is checked before the swapchain handle - a failed
+	// rebuild leaves no swapchain, and the request stands until one succeeds.
+	if(ctx.surfacerecreaterequested || window->isVulkanSurfaceOutdated()) {
+		ctx.surfacerecreaterequested = false;
+		gvkRecreateSurface(ctx, window);
+		return false;
+	}
+	if(ctx.swapchain == VK_NULL_HANDLE) {
 		return false;
 	}
 
@@ -62,6 +76,12 @@ bool gvkBeginFrame(gVKContext& ctx, gBaseWindow* window) {
 			ctx.imageavailablesemaphores[ctx.currentframe], VK_NULL_HANDLE, &ctx.currentimageindex);
 	if(result == VK_ERROR_OUT_OF_DATE_KHR) {
 		gvkRecreateSwapchain(ctx, window);
+		return false;
+	}
+	if(result == VK_ERROR_SURFACE_LOST_KHR) {
+		// The surface is gone rather than merely stale: rebuilding the swapchain from
+		// it would fail the same way, so ask for the surface itself.
+		ctx.surfacerecreaterequested = true;
 		return false;
 	}
 	// Suboptimal still presents correctly, so the frame is drawn and the swapchain
@@ -314,6 +334,8 @@ bool gvkEndFrame(gVKContext& ctx, gBaseWindow* window) {
 	} else if(result == VK_SUBOPTIMAL_KHR) {
 		// Keep rendering until acquire/present reports OUT_OF_DATE or an explicit
 		// resize/vsync request asks for a rebuild.
+	} else if(result == VK_ERROR_SURFACE_LOST_KHR) {
+		ctx.surfacerecreaterequested = true;
 	} else if(result != VK_SUCCESS) {
 		gLoge("gVKFrame") << "vkQueuePresentKHR failed! VkResult: " << result;
 	}

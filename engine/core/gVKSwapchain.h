@@ -35,6 +35,13 @@ void gvkDestroySwapchain(gVKContext& ctx);
  */
 bool gvkRecreateSwapchain(gVKContext& ctx, gBaseWindow* window);
 
+// Rebuilds the presentation surface and everything that hangs off it. Needed when
+// the platform replaces the native window the surface was created from - Android
+// does this on rotation and when the activity returns to the foreground - or when
+// the driver reports the surface lost. Returns false when there is nothing to
+// build onto yet, in which case the caller skips the frame and tries again.
+bool gvkRecreateSurface(gVKContext& ctx, gBaseWindow* window);
+
 #endif /* GVK_VULKAN */
 
 #endif /* CORE_GVKSWAPCHAIN_H */

@@ -45,6 +45,7 @@
 			std::unordered_map<GLuint, gVKTexture*>& vktextures, GLuint whitetextureid,
 			GLuint diffusemapid, GLuint specularmapid, GLuint normalmapid);
 	static GLuint gvkRegisteredTextureId(std::unordered_map<GLuint, gVKTexture*>& vktextures, GLuint id);
+	static void gvkReleaseMaterialSetsUsingTexture(gVKContext* vkcontext, GLuint textureid);
 	#include <algorithm>
 	#include <vector>
 	#include <set>
@@ -1124,6 +1125,7 @@ void gVKRenderEngine::deleteTexture(GLuint& texId) {
 			// A runtime delete may target a texture a previous frame still samples,
 			// so drain the device before tearing it down.
 			if(*vkcontext->getDevice() != VK_NULL_HANDLE) vkDeviceWaitIdle(*vkcontext->getDevice());
+			gvkReleaseMaterialSetsUsingTexture(vkcontext, texId);
 			gvkDestroyTexture(*vkcontext, it->second);
 			vktextures.erase(it);
 		}
@@ -1151,6 +1153,7 @@ void gVKRenderEngine::texImage2D(GLenum target, GLint internalFormat, int width,
 		auto existing = vktextures.find(boundtextureid);
 		if(existing != vktextures.end()) {
 			vkDeviceWaitIdle(vkcontext->device);
+			gvkReleaseMaterialSetsUsingTexture(vkcontext, boundtextureid);
 			gvkDestroyTexture(*vkcontext, existing->second);
 			vktextures.erase(existing);
 		}
@@ -1207,6 +1210,7 @@ void gVKRenderEngine::texImage2D(GLenum target, GLint internalFormat, int width,
 		if(it->second->sampled && *vkcontext->getDevice() != VK_NULL_HANDLE) {
 			vkDeviceWaitIdle(*vkcontext->getDevice());
 		}
+		gvkReleaseMaterialSetsUsingTexture(vkcontext, boundtextureid);
 		gvkDestroyTexture(*vkcontext, it->second);
 		vktextures.erase(it);
 	}
@@ -2949,6 +2953,36 @@ static VkDescriptorSet gvkWriteMaterialSet(gVKContext* vkcontext,
 	}
 	vkUpdateDescriptorSets(device, count, writes, 0, nullptr);
 	return set;
+}
+
+// A cached material set holds the image view and sampler of every texture it was
+// written from, so it outlives them unless the cache is told. Both paths that end a
+// texture come through here: a plain delete, and the replace that a growing glyph
+// atlas or a resized render target performs - that one keeps the id and swaps the
+// image underneath it, which would leave the cached set pointing at a destroyed
+// view. Freeing the sets also returns them to the descriptor pool, which is what
+// keeps a long session of loading and unloading from draining it.
+static void gvkReleaseMaterialSetsUsingTexture(gVKContext* vkcontext, GLuint textureid) {
+	if(vkcontext == nullptr || textureid == 0) return;
+	VkDevice device = *vkcontext->getDevice();
+	VkDescriptorPool pool = vkcontext->getDescriptorPool();
+	if(device == VK_NULL_HANDLE || pool == VK_NULL_HANDLE) return;
+
+	const auto uses = [textureid](const auto& key) {
+		return std::find(key.begin(), key.end(), static_cast<uint32_t>(textureid)) != key.end();
+	};
+	auto& pbrsets = *vkcontext->getPbrMaterialSets();
+	for(auto it = pbrsets.begin(); it != pbrsets.end(); ) {
+		if(!uses(it->first)) { ++it; continue; }
+		if(it->second != VK_NULL_HANDLE) vkFreeDescriptorSets(device, pool, 1, &it->second);
+		it = pbrsets.erase(it);
+	}
+	auto& sets = *vkcontext->getMaterialSets();
+	for(auto it = sets.begin(); it != sets.end(); ) {
+		if(!uses(it->first)) { ++it; continue; }
+		if(it->second != VK_NULL_HANDLE) vkFreeDescriptorSets(device, pool, 1, &it->second);
+		it = sets.erase(it);
+	}
 }
 
 static VkDescriptorSet gvkGetPbrMaterialSet(gVKContext* vkcontext,

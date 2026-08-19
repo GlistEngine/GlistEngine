@@ -49,6 +49,7 @@ inline constexpr uint32_t GVK_SCENE_UNIFORM_SLOTS = 16;
 bool gvkCreateSwapchain(gVKContext& ctx, gBaseWindow* window);
 void gvkDestroySwapchain(gVKContext& ctx);
 bool gvkRecreateSwapchain(gVKContext& ctx, gBaseWindow* window);
+bool gvkRecreateSurface(gVKContext& ctx, gBaseWindow* window);
 VkFormat gvkFindDepthFormat(gVKContext& ctx);
 bool gvkCreateDepthResources(gVKContext& ctx);
 void gvkDestroyDepthResources(gVKContext& ctx);
@@ -85,6 +86,7 @@ bool gvkBeginShadowPass(gVKContext& ctx);
 void gvkEndShadowPass(gVKContext& ctx);
 bool gvkCreateUniformResources(gVKContext& ctx);
 void gvkDestroyUniformResources(gVKContext& ctx);
+bool gvkAppendSceneUniformChunk(gVKContext& ctx, int framei);
 
 // Multisampling and the render-pass compatibility problem it creates.
 //
@@ -168,6 +170,7 @@ struct gVKContext {
 	friend bool gvkCreateSwapchain(gVKContext&, gBaseWindow*);
 	friend void gvkDestroySwapchain(gVKContext&);
 	friend bool gvkRecreateSwapchain(gVKContext&, gBaseWindow*);
+	friend bool gvkRecreateSurface(gVKContext&, gBaseWindow*);
 	friend VkFormat gvkFindDepthFormat(gVKContext&);
 	friend bool gvkCreateDepthResources(gVKContext&);
 	friend void gvkDestroyDepthResources(gVKContext&);
@@ -201,6 +204,7 @@ struct gVKContext {
 	friend bool gvkBeginShadowPass(gVKContext&);
 	friend void gvkEndShadowPass(gVKContext&);
 	friend bool gvkCreateUniformResources(gVKContext&);
+	friend bool gvkAppendSceneUniformChunk(gVKContext&, int);
 	friend void gvkDestroyUniformResources(gVKContext&);
 	friend struct gVKSceneUniforms;
 	friend bool gvkWriteSceneUniforms(gVKContext&, const struct gVKSceneUniforms&);
@@ -466,8 +470,10 @@ struct gVKContext {
 	}
 
 	// The scene descriptor set of the frame being recorded: camera matrices and
-	// lights. VK_NULL_HANDLE when the 3D path has no uniform block.
+	// lights. VK_NULL_HANDLE when the 3D path has no uniform block, or when the
+	// slot is beyond every chunk allocated so far.
 	VkDescriptorSet getCurrentSceneDescriptorSet() const {
+		if(currentsceneuniformslot >= sceneuniformsets[currentframe].size()) return VK_NULL_HANDLE;
 		return sceneuniformsets[currentframe][currentsceneuniformslot];
 	}
 	void resetSceneUniformSlots() { currentsceneuniformslot = 0; sceneuniformslotcount = 0; }
@@ -745,6 +751,9 @@ private:
 	gBaseWindow* window = nullptr;
 	bool vsyncenabled = false;
 	bool swapchainrecreaterequested = false;
+	// Set when the surface itself has to be rebuilt rather than just the swapchain:
+	// the native window was replaced, or the driver reported VK_ERROR_SURFACE_LOST_KHR.
+	bool surfacerecreaterequested = false;
 
 	VkSwapchainKHR swapchain = VK_NULL_HANDLE;
 	std::vector<VkImage> swapchainimages;
@@ -875,7 +884,9 @@ private:
 	// One descriptor set per distinct combination of the five PBR maps, keyed by
 	// their texture ids. Materials commonly share maps, and a descriptor pool is
 	// finite, so caching by combination rather than per mesh keeps allocations down.
-	// Freed with the pool in gvkDestroyGraphicsPipelines, so this only needs clearing.
+	// An entry is freed and dropped when one of its textures is destroyed or
+	// replaced, which is what keeps a session of loading and unloading from draining
+	// the pool; what is left is freed with the pool in gvkDestroyGraphicsPipelines.
 	std::map<std::array<uint32_t, 5>, VkDescriptorSet> pbrmaterialsets;
 	// And one per distinct diffuse/specular/normal trio for the classic path.
 	std::map<std::array<uint32_t, 3>, VkDescriptorSet> materialsets;
@@ -883,10 +894,14 @@ private:
 	// Camera and lights for the 3D path, one set per frame in flight so the CPU can
 	// write the next frame while the GPU still reads the previous one. Permanently
 	// mapped; see gVKUniform.h.
-	VkBuffer sceneuniformbuffers[GVK_MAX_FRAMES_IN_FLIGHT] = {};
-	VkDeviceMemory sceneuniformmemories[GVK_MAX_FRAMES_IN_FLIGHT] = {};
-	void* sceneuniformmapped[GVK_MAX_FRAMES_IN_FLIGHT] = {};
-	VkDescriptorSet sceneuniformsets[GVK_MAX_FRAMES_IN_FLIGHT][GVK_SCENE_UNIFORM_SLOTS] = {};
+	// One entry per chunk of GVK_SCENE_UNIFORM_SLOTS slots; a frame that needs more
+	// scene lighting changes than one chunk holds gets another appended to it
+	// rather than being capped. sceneuniformsets is flat and indexed by slot
+	// directly, since a descriptor set is naturally one-per-slot, not one-per-chunk.
+	std::vector<VkBuffer> sceneuniformbuffers[GVK_MAX_FRAMES_IN_FLIGHT];
+	std::vector<VkDeviceMemory> sceneuniformmemories[GVK_MAX_FRAMES_IN_FLIGHT];
+	std::vector<void*> sceneuniformmapped[GVK_MAX_FRAMES_IN_FLIGHT];
+	std::vector<VkDescriptorSet> sceneuniformsets[GVK_MAX_FRAMES_IN_FLIGHT];
 	uint32_t currentsceneuniformslot = 0;
 	uint32_t sceneuniformslotcount = 0;
 	// Descriptor set layouts of each pipeline, in set order, and the push constant

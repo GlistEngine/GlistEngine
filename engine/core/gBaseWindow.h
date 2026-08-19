@@ -61,6 +61,14 @@ public:
 	virtual bool supportsVulkan() const;
 	virtual void getVulkanInstanceExtensions(std::vector<const char*>& extensions) const;
 	virtual bool createVulkanSurface(void* instance, void* surface);
+	// A VkSurfaceKHR belongs to the native window it was created from. Desktop
+	// windows keep theirs for their whole life, but Android replaces the window
+	// behind a SurfaceView on rotation and when the activity returns to the
+	// foreground, so the renderer asks before every frame and rebuilds the surface
+	// - and everything sized to it - when the answer is yes.
+	virtual bool isVulkanSurfaceOutdated() const;
+	// Called once the renderer has built a surface for the current native window.
+	virtual void vulkanSurfaceRecreated();
 
 	bool isVsyncEnabled();
 	virtual void setVsync(bool vsync);

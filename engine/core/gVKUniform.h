@@ -149,6 +149,13 @@ bool gvkCreateUniformResources(gVKContext& ctx);
 void gvkDestroyUniformResources(gVKContext& ctx);
 
 /*
+ * Adds one more chunk of scene uniform slots to a frame in flight. Not a file
+ * local helper because gVKContext has to befriend it: the storage it appends to
+ * is the context's own.
+ */
+bool gvkAppendSceneUniformChunk(gVKContext& ctx, int framei);
+
+/*
  * Copies data into the current frame's buffer. Cheap: the buffer is host visible,
  * host coherent and already mapped, so this is a memcpy with no flush and no
  * synchronisation of its own - the frame's fence is what keeps it safe.

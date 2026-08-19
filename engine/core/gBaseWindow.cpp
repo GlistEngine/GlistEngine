@@ -103,6 +103,14 @@ bool gBaseWindow::createVulkanSurface(void* instance, void* surface) {
 	return false;
 }
 
+bool gBaseWindow::isVulkanSurfaceOutdated() const {
+	return false;
+}
+
+void gBaseWindow::vulkanSurfaceRecreated() {
+
+}
+
 bool gBaseWindow::isVsyncEnabled() {
 	return vsync;
 }
