@@ -22,7 +22,7 @@
 
 #include "gVKContext.h"
 
-#ifdef GVK_DESKTOP_GLFW
+#ifdef GVK_VULKAN
 
 #include <cstddef>
 #include <cstdint>
@@ -67,6 +67,6 @@ struct gVKReflectedLayout {
 // module is not valid SPIR-V or uses something this reflector cannot describe.
 bool gvkReflectSpirv(const uint32_t* spirv, size_t sizeBytes, gVKReflectedLayout& layout);
 
-#endif /* GVK_DESKTOP_GLFW */
+#endif /* GVK_VULKAN */
 
 #endif /* CORE_GVKREFLECT_H */

@@ -20,7 +20,7 @@
 
 #include "gVKContext.h"
 
-#ifdef GVK_DESKTOP_GLFW
+#ifdef GVK_VULKAN
 
 #include <glm/glm.hpp>
 
@@ -155,6 +155,6 @@ void gvkDestroyUniformResources(gVKContext& ctx);
  */
 bool gvkWriteSceneUniforms(gVKContext& ctx, const gVKSceneUniforms& data);
 
-#endif /* GVK_DESKTOP_GLFW */
+#endif /* GVK_VULKAN */
 
 #endif /* CORE_GVKUNIFORM_H */

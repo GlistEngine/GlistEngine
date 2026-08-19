@@ -69,7 +69,17 @@ void main() {
     vec4 world = model * vec4(aPos, 1.0);
     vWorldPos = world.xyz;
     vTexCoords = aTexCoords;
-    vNormal = mat3(transpose(inverse(model))) * aNormal;
+    // The cofactor matrix of the model's rotation/scale part, which is the
+    // inverse-transpose scaled by the determinant - see mesh3d.vert for the full
+    // reasoning. What it replaces here was worse than there: inverting the whole
+    // mat4 and only then taking its upper 3x3 meant a four by four inverse, per
+    // vertex, to produce nine numbers. The fragment stage normalises this, so the
+    // determinant's magnitude does not matter; only its sign does, and that is one
+    // dot product on a cross product already computed.
+    mat3 m = mat3(model);
+    mat3 normalmatrix = mat3(cross(m[1], m[2]), cross(m[2], m[0]), cross(m[0], m[1]));
+    normalmatrix *= dot(m[0], normalmatrix[0]) < 0.0 ? -1.0 : 1.0;
+    vNormal = normalmatrix * aNormal;
     vFragPosLightSpace = scene.lightmatrix * world;
 
     gl_Position = scene.projection * scene.view * world;

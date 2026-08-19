@@ -16,18 +16,16 @@
 
 // Vulkan is only wired up on the desktop GLFW platforms and only when the Vulkan
 // development files are available. gVKContext.h evaluates that condition, defines
-// GVK_DESKTOP_GLFW accordingly and holds the shared state of the backend.
+// GVK_VULKAN accordingly and holds the shared state of the backend.
 #include "gVKContext.h"
 
-#ifdef GVK_DESKTOP_GLFW
-	// GLFW_INCLUDE_VULKAN has to be defined before GLFW is pulled in, otherwise
-	// glfwCreateWindowSurface and glfwGetRequiredInstanceExtensions stay hidden.
-	#define GLFW_INCLUDE_VULKAN
-	#include "gGLFWWindow.h"
+#ifdef GVK_VULKAN
 	#include "gAppManager.h"
+	#include "gBaseWindow.h"
 	#include "gVKSwapchain.h"
 	#include "gVKRenderTarget.h"
 	#include "gVKCommands.h"
+	#include "gVKBuffer.h"
 	#include "gVKFrame.h"
 	#include "gVKSync.h"
 	#include "gVKPipeline.h"
@@ -43,6 +41,10 @@
 	static VkDescriptorSet gvkGetPbrMaterialSet(gVKContext* vkcontext,
 			std::unordered_map<GLuint, gVKTexture*>& vktextures, GLuint whitetextureid,
 			const gRenderer::gMeshSurface& surface);
+	static VkDescriptorSet gvkGetMaterialSet(gVKContext* vkcontext,
+			std::unordered_map<GLuint, gVKTexture*>& vktextures, GLuint whitetextureid,
+			GLuint diffusemapid, GLuint specularmapid, GLuint normalmapid);
+	static GLuint gvkRegisteredTextureId(std::unordered_map<GLuint, gVKTexture*>& vktextures, GLuint id);
 	#include <algorithm>
 	#include <vector>
 	#include <set>
@@ -56,7 +58,7 @@
 	#include <cstdlib>
 #endif
 
-#ifdef GVK_DESKTOP_GLFW
+#ifdef GVK_VULKAN
 // Unlike OpenGL, clearing is not an immediate operation here: the colour is kept
 // and the render pass writes it when the next frame begins.
 static void gvkStoreClearColor(gVKContext* ctx, float r, float g, float b, float a) {
@@ -101,14 +103,14 @@ void gVKRenderEngine::clear() {
 
 void gVKRenderEngine::clearColor(int r, int g, int b, int a) {
 	flushQueuedDraws();
-#ifdef GVK_DESKTOP_GLFW
+#ifdef GVK_VULKAN
 	gvkStoreClearColor(vkcontext, r / 255.0f, g / 255.0f, b / 255.0f, a / 255.0f);
 #endif
 }
 
 void gVKRenderEngine::clearColor(gColor color) {
 	flushQueuedDraws();
-#ifdef GVK_DESKTOP_GLFW
+#ifdef GVK_VULKAN
 	gvkStoreClearColor(vkcontext, color.r, color.g, color.b, color.a);
 #endif
 }
@@ -243,7 +245,7 @@ void gVKRenderEngine::takeScreenshot(gImage& img, int x, int y, int width, int h
 
 void gVKRenderEngine::takeScreenshot(gImage& img) {
 	G_PROFILE_ZONE_SCOPED_N("gVKRenderEngine::takeScreenshot()");
-#ifdef GVK_DESKTOP_GLFW
+#ifdef GVK_VULKAN
 	if(vkcontext == nullptr || vkcontext->device == VK_NULL_HANDLE) return;
 	if(vkcontext->screenshotready) {
 		auto* pixeldata = new unsigned char[vkcontext->screenshotpixels.size()];
@@ -280,7 +282,7 @@ void gVKRenderEngine::takeScreenshot(gImage& img) {
 // baked into the pipeline rather than set per draw, and gVertex has one fixed layout
 // that the 3D pipeline declares once.
 GLuint gVKRenderEngine::genBuffers() {
-#ifdef GVK_DESKTOP_GLFW
+#ifdef GVK_VULKAN
 	if(vkcontext == nullptr) return 0;
 	// The entry is created empty; the VkBuffer appears on the first upload, because
 	// only then is the size and the vertex/index role known.
@@ -299,7 +301,7 @@ gVKMeshBuffer* gVKRenderEngine::getMeshBuffer(GLuint id) {
 }
 
 void gVKRenderEngine::deleteBuffer(GLuint& buffer) {
-#ifdef GVK_DESKTOP_GLFW
+#ifdef GVK_VULKAN
 	if(buffer == 0 || vkcontext == nullptr) return;
 
 	auto it = vkmeshbuffers.find(buffer);
@@ -381,7 +383,7 @@ void gVKRenderEngine::unbindVAO() {
 }
 
 void gVKRenderEngine::setVertexBufferData(GLuint vbo, size_t size, const void* data, int usage) {
-#ifdef GVK_DESKTOP_GLFW
+#ifdef GVK_VULKAN
 	if(vkcontext == nullptr) return;
 
 	gVKMeshBuffer* buf = getMeshBuffer(vbo);
@@ -409,7 +411,7 @@ void gVKRenderEngine::setVertexBufferData(GLuint vbo, size_t size, const void* d
 }
 
 void gVKRenderEngine::setIndexBufferData(GLuint ebo, size_t size, const void* data, int usage) {
-#ifdef GVK_DESKTOP_GLFW
+#ifdef GVK_VULKAN
 	if(vkcontext == nullptr) return;
 
 	gVKMeshBuffer* buf = getMeshBuffer(ebo);
@@ -476,7 +478,7 @@ void gVKRenderEngine::setViewport(int x, int y, int width, int height) {
 	viewportheight = height;
 }
 
-#ifdef GVK_DESKTOP_GLFW
+#ifdef GVK_VULKAN
 // One offscreen render target. The attachments are gTextures the application owns,
 // so only the pass and the framebuffer wrapping them belong here. Both are built on
 // the first bind rather than at creation, because gFbo attaches its textures after
@@ -596,6 +598,9 @@ void gVKRenderEngine::endOffscreenPass() {
 	if(vkcontext == nullptr || !vkcontext->frameactive) return;
 	for(auto& entry : vkframebuffers) {
 		if(entry.second == nullptr || !entry.second->active) continue;
+		// Anything the canvas batched into this target has to be recorded before the
+		// pass it belongs to closes.
+		gvkFlush2DBatch(*vkcontext);
 		vkCmdEndRenderPass(vkcontext->commandbuffers[vkcontext->currentframe]);
 		entry.second->active = false;
 		vkcontext->renderpassactive = false;
@@ -624,7 +629,7 @@ void gVKRenderEngine::destroyAllFramebuffers() {
 
 // ----- Framebuffer -----
 GLuint gVKRenderEngine::createFramebuffer() {
-#ifdef GVK_DESKTOP_GLFW
+#ifdef GVK_VULKAN
 	const GLuint id = nextvkframebufferid++;
 	vkframebuffers[id] = new gVKFramebuffer();
 	return id;
@@ -634,7 +639,7 @@ GLuint gVKRenderEngine::createFramebuffer() {
 }
 
 void gVKRenderEngine::deleteFramebuffer(GLuint& fbo) {
-#ifdef GVK_DESKTOP_GLFW
+#ifdef GVK_VULKAN
 	if(fbo == 0) return;
 	if(boundframebuffer == fbo) bindFramebuffer(gFbo::defaultfbo);
 	auto it = vkframebuffers.find(fbo);
@@ -657,7 +662,7 @@ void gVKRenderEngine::deleteFramebuffer(GLuint& fbo) {
 }
 
 void gVKRenderEngine::bindFramebuffer(GLuint fbo) {
-#ifdef GVK_DESKTOP_GLFW
+#ifdef GVK_VULKAN
 	flushQueuedDraws();
 	if(vkcontext == nullptr) { boundframebuffer = fbo; return; }
 
@@ -677,6 +682,7 @@ void gVKRenderEngine::bindFramebuffer(GLuint fbo) {
 	// The screen pass may already be open - a canvas can bind an FBO half way
 	// through drawing - and two passes cannot be recorded at once.
 	if(vkcontext->renderpassactive) {
+		gvkFlush2DBatch(*vkcontext);
 		vkCmdEndRenderPass(vkcontext->commandbuffers[vkcontext->currentframe]);
 		vkcontext->renderpassactive = false;
 	}
@@ -714,6 +720,11 @@ void gVKRenderEngine::bindFramebuffer(GLuint fbo) {
 	vkCmdSetScissor(cmd, 0, 1, &scissor);
 
 	vkcontext->renderpassactive = true;
+	// Offscreen targets are never multisampled - their attachments are textures the
+	// application samples afterwards - so from here until this pass closes the draws
+	// have to use the single-sample pipeline build. See the design note in
+	// gVKContext.h for why the two builds exist at all.
+	vkcontext->useOffscreenPipelines();
 	target->active = true;
 	if(target->color != nullptr) target->color->layout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
 	if(target->depth != nullptr) target->depth->layout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
@@ -721,7 +732,7 @@ void gVKRenderEngine::bindFramebuffer(GLuint fbo) {
 }
 
 void gVKRenderEngine::checkFramebufferStatus() {
-#ifdef GVK_DESKTOP_GLFW
+#ifdef GVK_VULKAN
 	auto it = vkframebuffers.find(boundframebuffer);
 	if(it == vkframebuffers.end() || it->second == nullptr
 			|| (it->second->color == nullptr && it->second->depth == nullptr)) {
@@ -750,7 +761,7 @@ void gVKRenderEngine::setRenderbufferStorage(GLenum format, int width, int heigh
 
 // ----- Attachments -----
 void gVKRenderEngine::attachTextureToFramebuffer(GLenum attachment, GLenum textarget, GLuint texId, GLuint level) {
-#ifdef GVK_DESKTOP_GLFW
+#ifdef GVK_VULKAN
 	auto fb = vkframebuffers.find(boundframebuffer);
 	auto tex = vktextures.find(texId);
 	if(fb == vkframebuffers.end() || fb->second == nullptr
@@ -1026,7 +1037,7 @@ void gVKRenderEngine::resetShader(GLuint id, bool loaded) const {
 }
 
 void gVKRenderEngine::clearScreen(bool color, bool depth) {
-	#ifdef GVK_DESKTOP_GLFW
+	#ifdef GVK_VULKAN
 	flushQueuedDraws();
 	// Screen, shadow and offscreen passes all clear through their attachment
 	// loadOp when they begin. Mid-pass clears from the legacy OpenGL traversal must
@@ -1078,7 +1089,7 @@ void gVKRenderEngine::drawVbo(const gVbo& vbo, const glm::mat4& model, const gMe
 // setters have no OpenGL work to do here - the sampler is created with sensible
 // defaults in gvkCreateTextureRGBA8 - so they are no-ops.
 GLuint gVKRenderEngine::createTextures() {
-#ifdef GVK_DESKTOP_GLFW
+#ifdef GVK_VULKAN
 	GLuint id = nextvktextureid++;
 	boundtextureid = id;
 	return id;
@@ -1106,7 +1117,7 @@ void gVKRenderEngine::resetTexture() {
 }
 
 void gVKRenderEngine::deleteTexture(GLuint& texId) {
-#ifdef GVK_DESKTOP_GLFW
+#ifdef GVK_VULKAN
 	if(texId != 0 && vkcontext != nullptr) {
 		auto it = vktextures.find(texId);
 		if(it != vktextures.end()) {
@@ -1122,7 +1133,7 @@ void gVKRenderEngine::deleteTexture(GLuint& texId) {
 }
 
 void gVKRenderEngine::texImage2D(GLenum target, GLint internalFormat, int width, int height, GLint format, GLint type, void* data, GLint level) {
-#ifdef GVK_DESKTOP_GLFW
+#ifdef GVK_VULKAN
 	if(vkcontext == nullptr || boundtextureid == 0) return;
 	if(width <= 0 || height <= 0) return;
 
@@ -1162,6 +1173,11 @@ void gVKRenderEngine::texImage2D(GLenum target, GLint internalFormat, int width,
 	const unsigned char* src = static_cast<const unsigned char*>(data);
 	const size_t pixels = static_cast<size_t>(width) * static_cast<size_t>(height);
 	std::vector<unsigned char> rgba(pixels * 4);
+	// Whether this image can trip mesh3d.frag's cutout test, which discards at an
+	// alpha of 0.5. Found here because the loop below already touches every texel;
+	// a separate pass would double the cost of an upload to learn the same thing.
+	// The threshold is the shader's, expressed in bytes.
+	bool hascutout = false;
 	for(size_t i = 0; i < pixels; i++) {
 		const unsigned char* p = src + i * components;
 		unsigned char r = 0, g = 0, b = 0, a = 255;
@@ -1177,6 +1193,7 @@ void gVKRenderEngine::texImage2D(GLenum target, GLint internalFormat, int width,
 		rgba[i * 4 + 1] = g;
 		rgba[i * 4 + 2] = b;
 		rgba[i * 4 + 3] = a;
+		if(a < 128) hascutout = true;
 	}
 
 	// The load path uploads twice (once around generateMipMap), so replace any
@@ -1194,7 +1211,10 @@ void gVKRenderEngine::texImage2D(GLenum target, GLint internalFormat, int width,
 		vktextures.erase(it);
 	}
 	gVKTexture* tex = gvkCreateTextureRGBA8(*vkcontext, rgba.data(), width, height);
-	if(tex != nullptr) vktextures[boundtextureid] = tex;
+	if(tex != nullptr) {
+		tex->hascutout = hascutout;
+		vktextures[boundtextureid] = tex;
+	}
 #endif
 }
 
@@ -1202,7 +1222,7 @@ void gVKRenderEngine::setTextureMaxLevel(GLenum target, int maxLevel) {
     /* no-op */
 }
 
-#ifdef GVK_DESKTOP_GLFW
+#ifdef GVK_VULKAN
 // gTexture speaks in GL enums. Nearest is the only distinction the 2D path needs -
 // there is a single mip level, so the mipmap variants collapse onto their base
 // filter - and the clamping wrap modes all map onto clamp to edge, which is what
@@ -1237,7 +1257,7 @@ static VkSamplerAddressMode gvkAddressFromGL(GLint wrap) {
 // before the pixels do is ignored, because the upload path sets both again right
 // afterwards.
 void gVKRenderEngine::setWrapping(GLenum target, GLint wrapS, GLint wrapT) {
-#ifdef GVK_DESKTOP_GLFW
+#ifdef GVK_VULKAN
 	gVKTexture* tex = getBoundVKTexture();
 	if(tex == nullptr) return;
 	gvkSetTextureSampler(*vkcontext, tex, tex->minfilter, tex->magfilter,
@@ -1250,7 +1270,7 @@ void gVKRenderEngine::setWrapping(GLenum target, GLint wrapS, GLint wrapT, GLint
 }
 
 void gVKRenderEngine::setFiltering(GLenum target, GLint minFilter, GLint magFilter) {
-#ifdef GVK_DESKTOP_GLFW
+#ifdef GVK_VULKAN
 	gVKTexture* tex = getBoundVKTexture();
 	if(tex == nullptr) return;
 	gvkSetTextureSampler(*vkcontext, tex, gvkFilterFromGL(minFilter), gvkFilterFromGL(magFilter),
@@ -1260,7 +1280,7 @@ void gVKRenderEngine::setFiltering(GLenum target, GLint minFilter, GLint magFilt
 
 void gVKRenderEngine::setWrappingAndFiltering(GLenum target, GLint wrapS, GLint wrapT, GLint minFilter,
                                               GLint magFilter) {
-#ifdef GVK_DESKTOP_GLFW
+#ifdef GVK_VULKAN
 	gVKTexture* tex = getBoundVKTexture();
 	if(tex == nullptr) return;
 	gvkSetTextureSampler(*vkcontext, tex, gvkFilterFromGL(minFilter), gvkFilterFromGL(magFilter),
@@ -1376,7 +1396,7 @@ void gVKRenderEngine::popMatrix() {
 #endif
 }
 
-#ifdef GVK_DESKTOP_GLFW
+#ifdef GVK_VULKAN
 
 // gvkdefaultvalidation and the gVKContext layout now live in gVKContext.h, so
 // every module of the backend can share them.
@@ -1436,7 +1456,7 @@ static bool gvkHasInstanceExtension(const char* name) {
 
 
 gVKContext* gVKRenderEngine::getContext() {
-#ifdef GVK_DESKTOP_GLFW
+#ifdef GVK_VULKAN
 	// Create it on first access so callers never dereference null. init() adopts
 	// whatever exists here, and setContext() can still replace it afterwards.
 	if(vkcontext == nullptr) vkcontext = new gVKContext();
@@ -1453,7 +1473,7 @@ void gVKRenderEngine::setContext(gVKContext* context) {
 
 
 bool gVKRenderEngine::initVulkan() {
-#ifndef GVK_DESKTOP_GLFW
+#ifndef GVK_VULKAN
 	gLoge("gVKRenderEngine") << "Vulkan backend is not supported on this platform.";
 	return false;
 #else
@@ -1480,26 +1500,20 @@ bool gVKRenderEngine::initVulkan() {
 	gvkSetEnvIfUnset("VK_LAYER_PATH", GLIST_VK_LAYER_PATH);
 #endif
 
-	gGLFWWindow* glfwwindow = dynamic_cast<gGLFWWindow*>(appmanager != nullptr ? appmanager->getWindow() : nullptr);
-	if(glfwwindow == nullptr) {
-		gLoge("gVKRenderEngine") << "Vulkan init: no GLFW window available for surface creation.";
-		cleanupVulkan();
-		return false;
-	}
-	GLFWwindow* handle = glfwwindow->getGLFWWindow();
-	if(handle == nullptr) {
-		gLoge("gVKRenderEngine") << "Vulkan init: the GLFW window handle is null.";
+	gBaseWindow* platformwindow = appmanager != nullptr ? appmanager->getWindow() : nullptr;
+	if(platformwindow == nullptr || !platformwindow->supportsVulkan()) {
+		gLoge("gVKRenderEngine") << "Vulkan init: the platform window cannot create a Vulkan surface.";
 		cleanupVulkan();
 		return false;
 	}
 	// The frame loop reads this to react to resizes.
-	ctx->window = handle;
-	ctx->vsyncenabled = glfwwindow->isVsyncEnabled();
+	ctx->window = platformwindow;
+	ctx->vsyncenabled = platformwindow->isVsyncEnabled();
 
 	// Presentation pacing has to be known before the swapchain is built, because
 	// that is where Vulkan expresses it. Taken from the window so an app that
 	// asked for vsync either way gets what it asked for on this backend too.
-	ctx->setVsyncEnabled(glfwwindow->isVsyncEnabled());
+	ctx->setVsyncEnabled(platformwindow->isVsyncEnabled());
 
 	// Record what the instance level offers (every extension and layer present) so
 	// support can be queried later without re-enumerating. Done after the Apple
@@ -1516,19 +1530,16 @@ bool gVKRenderEngine::initVulkan() {
 	}
 
 	/* ---------------- instance ---------------- */
-	// Asking GLFW for the surface extensions keeps this portable instead of
-	// hardcoding VK_KHR_win32_surface / VK_EXT_metal_surface per platform.
-	uint32_t glfwextcount = 0;
-	const char** glfwexts = glfwGetRequiredInstanceExtensions(&glfwextcount);
-	if(glfwexts == nullptr) {
-		gLoge("gVKRenderEngine") << "Vulkan init: GLFW could not report the required instance extensions.";
-		cleanupVulkan();
-		return false;
-	}
 	// Aliased onto the context so the effective list lives on as engine state
 	// instead of dying with this local when init returns.
 	std::vector<const char*>& extensions = ctx->enabledinstanceextensions;
-	extensions.assign(glfwexts, glfwexts + glfwextcount);
+	extensions.clear();
+	platformwindow->getVulkanInstanceExtensions(extensions);
+	if(extensions.empty()) {
+		gLoge("gVKRenderEngine") << "Vulkan init: the platform reported no surface extensions.";
+		cleanupVulkan();
+		return false;
+	}
 
 	// OpenGL's default framebuffer is a linear, pass-through target. When the
 	// presentation system exposes the matching Vulkan colour space, enable it so
@@ -1538,11 +1549,17 @@ bool gVKRenderEngine::initVulkan() {
 	}
 
 #if defined(__APPLE__)
-	// MoltenVK is a portability driver: without these the loader does not even
-	// enumerate it and vkCreateInstance fails with VK_ERROR_INCOMPATIBLE_DRIVER.
-	// They are Apple only - requesting them on a conformant driver would fail.
-	extensions.push_back(VK_KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME);
-	extensions.push_back(VK_KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME);
+	// Loader-based MoltenVK exposes portability enumeration, while directly
+	// linked iOS MoltenVK already enumerates itself and may omit that extension.
+	// Request each helper only when this runtime advertises it.
+	const bool useportabilityenumeration =
+			gvkHasInstanceExtension(VK_KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME);
+	if(useportabilityenumeration) {
+		extensions.push_back(VK_KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME);
+	}
+	if(gvkHasInstanceExtension(VK_KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME)) {
+		extensions.push_back(VK_KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME);
+	}
 #endif
 
 	// Only ask for the layer if it is actually installed; requesting a missing
@@ -1599,7 +1616,9 @@ bool gVKRenderEngine::initVulkan() {
 	instanceinfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
 	instanceinfo.pApplicationInfo = &appinfo;
 #if defined(__APPLE__)
-	instanceinfo.flags = VK_INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR;
+	if(useportabilityenumeration) {
+		instanceinfo.flags = VK_INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR;
+	}
 #endif
 	instanceinfo.enabledExtensionCount = static_cast<uint32_t>(extensions.size());
 	instanceinfo.ppEnabledExtensionNames = extensions.data();
@@ -1650,10 +1669,8 @@ bool gVKRenderEngine::initVulkan() {
 	}
 
 	/* ---------------- surface ---------------- */
-	// GLFW creates it, so the engine never touches Win32/Cocoa/Metal directly.
-	result = glfwCreateWindowSurface(ctx->instance, handle, nullptr, &ctx->surface);
-	if(result != VK_SUCCESS) {
-		gLoge("gVKRenderEngine") << "glfwCreateWindowSurface failed! VkResult: " << result;
+	if(!platformwindow->createVulkanSurface(&ctx->instance, &ctx->surface)) {
+		gLoge("gVKRenderEngine") << "The platform failed to create a Vulkan presentation surface.";
 		cleanupVulkan();
 		return false;
 	}
@@ -1772,9 +1789,19 @@ bool gVKRenderEngine::initVulkan() {
 	// Same rule as the instance side: developer requests extend the mandatory set.
 	deviceextensions.insert(deviceextensions.end(), ctx->extradeviceextensions.begin(), ctx->extradeviceextensions.end());
 
-	// Empty: no optional features are switched on yet. Kept separate from the
-	// context's devicefeatures, which records what the GPU actually supports.
+	// Anisotropic filtering is the one optional feature this backend asks for, and it
+	// has to be enabled here or the samplers may not use it. It is what keeps a ground
+	// or road texture sharp where the surface runs away from the camera: the pixel's
+	// footprint there is long in one direction and narrow in the other, an isotropic
+	// sampler has to pick a single mip level wide enough to cover the long axis, and
+	// the result is the blur that makes distant ground look like mud. Supported by
+	// every GPU this engine runs on, but optional in the specification, so it is
+	// queried rather than assumed - a driver that says no simply gets samplers
+	// without it (see gvkAcquireSampler).
+	VkPhysicalDeviceFeatures supportedfeatures{};
+	vkGetPhysicalDeviceFeatures(ctx->physicaldevice, &supportedfeatures);
 	VkPhysicalDeviceFeatures enabledfeatures{};
+	enabledfeatures.samplerAnisotropy = supportedfeatures.samplerAnisotropy;
 	VkDeviceCreateInfo deviceinfo{};
 	deviceinfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
 	deviceinfo.queueCreateInfoCount = static_cast<uint32_t>(queueinfos.size());
@@ -1838,11 +1865,31 @@ bool gVKRenderEngine::initVulkan() {
 			<< " | graphics family: " << ctx->graphicsfamily
 			<< " | present family: " << ctx->presentfamily
 			<< " | validation: " << (usevalidation ? "on" : "off");
+	// Every texture and every static mesh buffer holds one vkAllocateMemory, and a
+	// mobile driver caps how many of those can exist at once - commonly 4096. The
+	// limit is logged next to the shutdown counts so the two can be read together
+	// when deciding whether a level is anywhere near it.
+	// The two limits the emulator and MoltenVK both report generously and real
+	// mobile hardware does not. maxBoundDescriptorSets is 4 on Adreno and Mali, so a
+	// pipeline layout asking for five sets is simply not creatable there; the mesh
+	// pipelines are built to three for that reason. maxMemoryAllocationCount is
+	// commonly 4096, and every texture and mesh buffer is one allocation today.
+	gLogi("gVKRenderEngine") << "Device limits: maxBoundDescriptorSets="
+			<< props.limits.maxBoundDescriptorSets
+			<< " maxMemoryAllocationCount=" << props.limits.maxMemoryAllocationCount
+			<< " maxPushConstantsSize=" << props.limits.maxPushConstantsSize;
 
 	/* ---------------- presentation resources ---------------- */
+	// An application can ask for MSAA before the backend exists - in its constructor,
+	// or anywhere ahead of the first frame - so a request made that early is carried
+	// here rather than triggering a rebuild of objects that have not been built yet.
+	if(pendingsamplecount > 0) {
+		ctx->setSampleCount(pendingsamplecount);
+		pendingsamplecount = 0;
+	}
 	// The remaining modules of the frame path (render pass, framebuffers, command
 	// buffers and synchronisation) are hooked in here as they are implemented.
-	if(!gvkCreateSwapchain(*ctx, handle)) {
+	if(!gvkCreateSwapchain(*ctx, platformwindow)) {
 		gLoge("gVKRenderEngine") << "Vulkan init: the swapchain could not be created.";
 		cleanupVulkan();
 		return false;
@@ -1852,9 +1899,18 @@ bool gVKRenderEngine::initVulkan() {
 		cleanupVulkan();
 		return false;
 	}
-	// Before the framebuffers, which pair every swapchain view with this one.
+	// Before the framebuffers, which pair every swapchain view with this one. Both
+	// depend on the sample count the render pass just resolved, which is why they
+	// come after it.
 	if(!gvkCreateDepthResources(*ctx)) {
 		gLoge("gVKRenderEngine") << "Vulkan init: the depth buffer could not be created.";
+		cleanupVulkan();
+		return false;
+	}
+	// Does nothing while MSAA is off; with it on, this is the transient attachment
+	// the pass renders into and resolves out of.
+	if(!gvkCreateMsaaColorResources(*ctx)) {
+		gLoge("gVKRenderEngine") << "Vulkan init: the MSAA colour buffer could not be created.";
 		cleanupVulkan();
 		return false;
 	}
@@ -1902,7 +1958,7 @@ bool gVKRenderEngine::initVulkan() {
 
 
 void gVKRenderEngine::cleanupVulkan() {
-#ifdef GVK_DESKTOP_GLFW
+#ifdef GVK_VULKAN
 	if(vkcontext == nullptr) return;
 	gVKContext* ctx = vkcontext;
 	// Destroying objects the GPU is still using is a validation error, so the
@@ -1924,10 +1980,15 @@ void gVKRenderEngine::cleanupVulkan() {
 	gvkDestroyUniformResources(*ctx);
 	gvkDestroyDrawResources(*ctx);
 	gvkDestroyGraphicsPipelines(*ctx);
+	gvkDestroyPipelineCache(*ctx);
 	gvkDestroyPresentSemaphores(*ctx);
 	gvkDestroyFrameSyncObjects(*ctx);
+	// The upload batches hold command buffers from the pool below and fences of
+	// their own, so they go before the pool does.
+	gvkDestroyUploadContext(*ctx);
 	gvkDestroyCommandResources(*ctx);
 	gvkDestroyFramebuffers(*ctx);
+	gvkDestroyMsaaColorResources(*ctx);
 	gvkDestroyDepthResources(*ctx);
 	gvkDestroyRenderPass(*ctx);
 	gvkDestroySwapchain(*ctx);
@@ -1946,10 +2007,11 @@ void gVKRenderEngine::cleanupVulkan() {
 
 
 bool gVKRenderEngine::beginFrame() {
-#ifdef GVK_DESKTOP_GLFW
+#ifdef GVK_VULKAN
 	if(vkcontext == nullptr) return false;
 	// Between frames is the only safe point to swap pipelines out: no command
 	// buffer is recording and the previous frame can be drained.
+	applyPendingSampleCount();
 	checkShaderReload();
 	// The new frame writes into a different uniform buffer, so whatever the previous
 	// one gathered does not carry over.
@@ -1967,7 +2029,7 @@ bool gVKRenderEngine::beginFrame() {
 // recording. The request is flagged and gvkBeginFrame acts on it at the next frame
 // boundary, where no work is in flight.
 void gVKRenderEngine::setVsync(bool enabled) {
-#ifdef GVK_DESKTOP_GLFW
+#ifdef GVK_VULKAN
 	if(vkcontext == nullptr || vkcontext->vsyncenabled == enabled) return;
 	vkcontext->vsyncenabled = enabled;
 	if(vkcontext->swapchain != VK_NULL_HANDLE) {
@@ -1978,8 +2040,98 @@ void gVKRenderEngine::setVsync(bool enabled) {
 #endif
 }
 
+// Same deferral as setVsync, and for a stronger reason: the sample count is baked
+// into the render pass, its attachments and every pipeline, so changing it destroys
+// and rebuilds objects a recording command buffer may be pointing at. The request is
+// parked and beginFrame acts on it where no work is in flight.
+void gVKRenderEngine::setMultiSampling(int samples) {
+#ifdef GVK_VULKAN
+	const int requested = samples < 1 ? 1 : samples;
+	if(vkcontext == nullptr) {
+		// Before the backend exists there is nothing to rebuild; initVulkan picks
+		// this up and builds everything at the right count the first time.
+		pendingsamplecount = requested;
+		return;
+	}
+	if(vkcontext->getRequestedSampleCount() == requested) return;
+	if(!vkcontext->isFramePathReady()) {
+		vkcontext->setSampleCount(requested);
+		return;
+	}
+	pendingsamplecount = requested;
+#else
+	(void)samples;
+#endif
+}
+
+// What was achieved, not what was asked for: a request is capped at what the device
+// supports for colour and depth attachments alike.
+int gVKRenderEngine::getMultiSampling() const {
+#ifdef GVK_VULKAN
+	return vkcontext == nullptr ? 1 : vkcontext->getActiveSampleCount();
+#else
+	return 1;
+#endif
+}
+
+void gVKRenderEngine::applyPendingSampleCount() {
+#ifdef GVK_VULKAN
+	if(pendingsamplecount == 0 || vkcontext == nullptr) return;
+	const int requested = pendingsamplecount;
+	pendingsamplecount = 0;
+	if(!vkcontext->isFramePathReady()) {
+		vkcontext->setSampleCount(requested);
+		return;
+	}
+
+	gVKContext* ctx = vkcontext;
+	// Everything below is referenced by work the GPU may not have finished, and the
+	// descriptor pool about to be destroyed backs sets that live elsewhere.
+	vkDeviceWaitIdle(ctx->device);
+
+	// The shadow map's descriptor set and its pipeline come out of the pool and cache
+	// that gvkDestroyGraphicsPipelines takes with it, so a map that is already
+	// allocated is torn down here and rebuilt at the same size afterwards. Its pass
+	// stays 1x throughout; only the pool underneath it changes.
+	const bool hadshadowmap = ctx->hasShadowMap();
+	const VkExtent2D shadowextent = ctx->shadowextent;
+	if(hadshadowmap) gvkDestroyShadowResources(*ctx);
+	// Scene descriptor sets belong to the same pool; release them before it goes,
+	// exactly as the shader reload path does.
+	gvkDestroyUniformResources(*ctx);
+	gvkDestroyGraphicsPipelines(*ctx);
+	gvkDestroyFramebuffers(*ctx);
+	gvkDestroyMsaaColorResources(*ctx);
+	gvkDestroyDepthResources(*ctx);
+	gvkDestroyRenderPass(*ctx);
+
+	ctx->setSampleCount(requested);
+
+	// Same order as init: the render pass resolves the sample count, the attachments
+	// are allocated at it, the framebuffers bind them together and the pipelines are
+	// built against the pass.
+	if(!gvkCreateRenderPass(*ctx) || !gvkCreateDepthResources(*ctx)
+			|| !gvkCreateMsaaColorResources(*ctx) || !gvkCreateFramebuffers(*ctx)
+			|| !gvkCreateGraphicsPipelines(*ctx) || !gvkCreateUniformResources(*ctx)) {
+		gLoge("gVKRenderEngine") << "Could not rebuild the frame path for " << requested
+				<< "x MSAA; rendering will be broken until this is resolved.";
+		return;
+	}
+	// The rebuild destroyed the descriptor pool, so every texture still loaded needs
+	// pointing at the new one - the same fix-up the shader reload does.
+	for(auto& entry : vktextures) {
+		if(entry.second != nullptr) gvkWriteTextureDescriptorSet(*ctx, entry.second);
+	}
+	if(hadshadowmap) gvkCreateShadowResources(*ctx, shadowextent.width, shadowextent.height);
+
+	gLogi("gVKRenderEngine") << "MSAA set to " << ctx->getActiveSampleCount() << "x"
+			<< (ctx->getActiveSampleCount() != requested ? " (capped from the requested "
+					+ std::to_string(requested) + "x)" : "");
+#endif
+}
+
 void gVKRenderEngine::checkShaderReload() {
-#ifdef GVK_DESKTOP_GLFW
+#ifdef GVK_VULKAN
 	if(vkcontext == nullptr) return;
 	// Stating the sources every frame would be wasteful; a few times a second
 	// still feels immediate when a shader is saved.
@@ -2011,7 +2163,7 @@ void gVKRenderEngine::checkShaderReload() {
 }
 
 void gVKRenderEngine::endFrame() {
-#ifdef GVK_DESKTOP_GLFW
+#ifdef GVK_VULKAN
 	if(vkcontext == nullptr) return;
 	flushQueuedDraws();
 	// An application that forgot to unbind its FBO would otherwise leave that pass
@@ -2023,11 +2175,89 @@ void gVKRenderEngine::endFrame() {
 #endif
 }
 
+// FNV-1a over the fields a merge depends on. Written out field by field rather than
+// hashing the structs as bytes: both carry padding, and padding holds whatever was
+// on the stack, so two identical materials would digest differently often enough to
+// lose most of the merges this exists to find.
+static void gvkHashValue(uint64_t& hash, const void* data, size_t size) {
+	const unsigned char* bytes = static_cast<const unsigned char*>(data);
+	for(size_t i = 0; i < size; i++) {
+		hash ^= bytes[i];
+		hash *= 1099511628211ull;
+	}
+}
+
+template<typename T>
+static void gvkHashField(uint64_t& hash, const T& value) {
+	gvkHashValue(hash, &value, sizeof(T));
+}
+
+// Whether reordering this draw among its neighbours can be seen. A mesh that depth
+// tests normally is decided by the depth buffer rather than by when it was
+// submitted, so two of them may swap places freely. One drawn with testing off, or
+// with an ALWAYS compare, is decided purely by sequence - whatever is drawn last
+// wins - so it must stay exactly where the application put it.
+static bool gvkQueuedDrawIsOrderIndependent(bool depthtest, int depthtesttype) {
+	return depthtest && depthtesttype != gRenderer::DEPTHTESTTYPE_ALWAYS;
+}
+
+// Every input canMergeQueuedDraws compares, in one number. Two draws that can merge
+// always produce the same key; two that cannot may collide, which costs a merge that
+// would not have happened anyway once the exact comparison runs.
+uint64_t gVKRenderEngine::gvkQueuedDrawKey(const QueuedMeshDraw& draw) {
+	uint64_t hash = 14695981039346656037ull;
+	gvkHashField(hash, draw.vertexarrayid);
+	gvkHashField(hash, draw.vertexcount);
+	gvkHashField(hash, draw.indexcount);
+	gvkHashField(hash, draw.drawmode);
+	gvkHashField(hash, draw.tint);
+	gvkHashField(hash, draw.depthtest);
+	gvkHashField(hash, draw.depthtesttype);
+	gvkHashField(hash, draw.culling);
+	gvkHashField(hash, draw.cullface);
+	gvkHashField(hash, draw.cullingdirection);
+	gvkHashField(hash, draw.surface.ambient);
+	gvkHashField(hash, draw.surface.diffuse);
+	gvkHashField(hash, draw.surface.specular);
+	gvkHashField(hash, draw.surface.shininess);
+	gvkHashField(hash, draw.surface.diffusemapid);
+	gvkHashField(hash, draw.surface.specularmapid);
+	gvkHashField(hash, draw.surface.normalmapid);
+	gvkHashField(hash, draw.surface.ispbr);
+	gvkHashField(hash, draw.surface.albedomapid);
+	gvkHashField(hash, draw.surface.pbrnormalmapid);
+	gvkHashField(hash, draw.surface.metallicmapid);
+	gvkHashField(hash, draw.surface.roughnessmapid);
+	gvkHashField(hash, draw.surface.aomapid);
+	return hash;
+}
+
 void gVKRenderEngine::flushQueuedDraws() {
 	if(queuedmeshdraws.empty() || flushingqueueddraws) return;
-	// Keep the submission order intact.  Opaque meshes can share one instanced draw
-	// only when every material and raster state input is identical; unlike sorting,
-	// this cannot change equal-depth results or application-visible draw order.
+
+	// Adjacent draws that agree on everything merge into one instanced draw below.
+	// What used to stop that from firing was interleaving: a scene submits a crate,
+	// a barrel, another crate, and the two crates never meet even though they are
+	// the same mesh with the same material. Sorting by the merge key brings them
+	// together, and the run of identical draws then collapses into a single
+	// vkCmdDraw with an instance count.
+	//
+	// Only where the reordering cannot be seen. Anything order dependent (see above)
+	// is left in place and acts as a barrier: the run before it is sorted, it stays,
+	// and the next run starts after it. The sort is stable, so draws sharing a key
+	// keep their submission order relative to each other.
+	size_t segmentbegin = 0;
+	for(size_t i = 0; i <= queuedmeshdraws.size(); i++) {
+		const bool barrier = i == queuedmeshdraws.size()
+				|| !gvkQueuedDrawIsOrderIndependent(queuedmeshdraws[i].depthtest, queuedmeshdraws[i].depthtesttype);
+		if(!barrier) continue;
+		if(i - segmentbegin > 1) {
+			std::stable_sort(queuedmeshdraws.begin() + segmentbegin, queuedmeshdraws.begin() + i,
+					[](const QueuedMeshDraw& a, const QueuedMeshDraw& b) { return a.mergekey < b.mergekey; });
+		}
+		segmentbegin = i + 1;
+	}
+
 	for(size_t first = 0; first < queuedmeshdraws.size();) {
 		size_t count = 1;
 		while(first + count < queuedmeshdraws.size()
@@ -2080,14 +2310,18 @@ void gVKRenderEngine::recordQueuedDrawGroup(size_t first, size_t count) {
 	if(rendercolor != nullptr) rendercolor->set(draw.tint.x, draw.tint.y, draw.tint.z, draw.tint.w);
 
 	flushingqueueddraws = true;
-#ifdef GVK_DESKTOP_GLFW
+#ifdef GVK_VULKAN
 	// The normal mesh path already understands instancing.  Supplying a short-lived
 	// view of the current frame's mapped mesh arena lets it use that exact path for
 	// a gathered run, including PBR and shadow casters, without a second material
 	// implementation.  Command buffers retain only the VkBuffer and offset, so the
 	// view can disappear as soon as recording finishes.
 	if(count > 1 && vkcontext != nullptr) {
-		std::vector<glm::mat4> models;
+		// Reuse the scratch allocation across groups and frames. Crowds commonly
+		// produce several merged runs per pass; allocating a temporary vector for
+		// every run showed up directly in mobile command-record time.
+		static thread_local std::vector<glm::mat4> models;
+		models.clear();
 		models.reserve(count);
 		for(size_t i = 0; i < count; ++i) models.push_back(queuedmeshdraws[first + i].model);
 		const VkDeviceSize offset = vkcontext->pushMeshData(models.data(), models.size() * sizeof(glm::mat4));
@@ -2152,6 +2386,9 @@ void gVKRenderEngine::init() {
 	// the 2D draw helpers read the current colour, so create a white default here.
     rendercolor = new gColor();
     rendercolor->set(255, 255, 255, 255);
+	// Retained by clear(), so this is a one-time allocation for the normal mobile
+	// scene rather than vector growth during the first shadow and colour passes.
+	queuedmeshdraws.reserve(2048);
 	// The primitive meshes are created by gRenderer::init() as well. They hold no GL
 	// objects until they are drawn, and the 2D ones now record through the backend's
 	// draw path, so drawLine / drawCircle / drawRectangle and friends need them here
@@ -2177,7 +2414,7 @@ void gVKRenderEngine::cleanup() {
 
 void gVKRenderEngine::drawColored2D(const glm::vec2* points, int count, const glm::vec4& color, const glm::mat4& mvp,
 		int drawMode) {
-#ifdef GVK_DESKTOP_GLFW
+#ifdef GVK_VULKAN
 	flushQueuedDraws();
 	if(vkcontext == nullptr) return;
 	// The mesh path speaks in GL primitive constants; translate them into the modes
@@ -2223,7 +2460,7 @@ void gVKRenderEngine::drawColored2D(const glm::vec2* points, int count, const gl
 #endif
 }
 
-#ifdef GVK_DESKTOP_GLFW
+#ifdef GVK_VULKAN
 void gVKRenderEngine::updateSceneUniforms() {
 	// Rebuilt every frame rather than tracked for changes: it is one memcpy into
 	// already mapped memory, and the OpenGL path's change tracking exists to avoid
@@ -2294,7 +2531,7 @@ void gVKRenderEngine::updateSceneUniforms() {
 
 void gVKRenderEngine::drawMesh3D(GLuint vertexArrayId, int vertexCount, int indexCount,
 		const glm::mat4& model, const gMeshSurface& surface, int drawMode, int instanceCount) {
-#ifdef GVK_DESKTOP_GLFW
+#ifdef GVK_VULKAN
 	if(vkcontext == nullptr || vertexArrayId == 0 || instanceCount <= 0) return;
 	const bool shadowqueued = vkcontext->isShadowPassActive();
 	// Snapshot camera and lighting when the first screen mesh arrives, not later
@@ -2321,6 +2558,7 @@ void gVKRenderEngine::drawMesh3D(GLuint vertexArrayId, int vertexCount, int inde
 		queued.culling = iscullingenabled;
 		queued.cullface = cullface;
 		queued.cullingdirection = cullingdirection;
+		queued.mergekey = gvkQueuedDrawKey(queued);
 		queuedmeshdraws.push_back(queued);
 		return;
 	}
@@ -2475,31 +2713,14 @@ void gVKRenderEngine::drawMesh3D(GLuint vertexArrayId, int vertexCount, int inde
 	// A map only counts once its texture is actually registered here; a material can
 	// name one that never made it through texImage2D (an unsupported format, say),
 	// and sampling white is closer to the OpenGL result than sampling nothing.
-	VkDescriptorSet diffuseset = VK_NULL_HANDLE;
-	VkDescriptorSet specularset = VK_NULL_HANDLE;
-	// Shadow map, bound as set 4. Falls back to the white texture when there is
-	// none, which reads as "nothing was ever closer to the light" and so casts no
-	// shadow - the shader's flag says not to look at it anyway.
-	VkDescriptorSet shadowset = VK_NULL_HANDLE;
-	if(vkcontext->hasShadowMap()) shadowset = vkcontext->getShadowDescriptorSet();
-	if(surface.diffusemapid != 0) {
-		auto it = vktextures.find(surface.diffusemapid);
-		if(it != vktextures.end() && it->second != nullptr) diffuseset = it->second->descriptorset;
-	}
-	if(surface.specularmapid != 0) {
-		auto it = vktextures.find(surface.specularmapid);
-		if(it != vktextures.end() && it->second != nullptr) specularset = it->second->descriptorset;
-	}
-	VkDescriptorSet normalset = VK_NULL_HANDLE;
-	if(surface.normalmapid != 0) {
-		auto it = vktextures.find(surface.normalmapid);
-		if(it != vktextures.end() && it->second != nullptr) normalset = it->second->descriptorset;
-	}
+	const GLuint diffusemapid = gvkRegisteredTextureId(vktextures, surface.diffusemapid);
+	const GLuint specularmapid = gvkRegisteredTextureId(vktextures, surface.specularmapid);
+	const GLuint normalmapid = gvkRegisteredTextureId(vktextures, surface.normalmapid);
 
 	push.misc = glm::vec4(surface.shininess,
-			diffuseset != VK_NULL_HANDLE ? 1.0f : 0.0f,
-			specularset != VK_NULL_HANDLE ? 1.0f : 0.0f,
-			normalset != VK_NULL_HANDLE ? 1.0f : 0.0f);
+			diffusemapid != 0 ? 1.0f : 0.0f,
+			specularmapid != 0 ? 1.0f : 0.0f,
+			normalmapid != 0 ? 1.0f : 0.0f);
 
 	// renderColor is folded into the material here rather than read from the scene
 	// block, and that is what makes it per draw. The OpenGL shader multiplies its
@@ -2516,21 +2737,30 @@ void gVKRenderEngine::drawMesh3D(GLuint vertexArrayId, int vertexCount, int inde
 	// push slot is unused by that branch, so it carries the colour on its own and
 	// the shader multiplies the sampled value by it.
 	const glm::vec4 tint = rendercolor != nullptr ? rendercolor->asVec4() : glm::vec4(1.0f);
-	push.ambient = diffuseset != VK_NULL_HANDLE ? tint : surface.ambient * tint;
-	push.diffuse = diffuseset != VK_NULL_HANDLE ? tint : surface.diffuse * tint;
-	push.specular = specularset != VK_NULL_HANDLE ? tint : surface.specular * tint;
+	push.ambient = diffusemapid != 0 ? tint : surface.ambient * tint;
+	push.diffuse = diffusemapid != 0 ? tint : surface.diffuse * tint;
+	push.specular = specularmapid != 0 ? tint : surface.specular * tint;
 
-	// Both bindings must point at a real descriptor even when the flags say not to
-	// sample them, so the unused ones fall back to the 1x1 white texture.
-	if(diffuseset == VK_NULL_HANDLE || specularset == VK_NULL_HANDLE ||
-			normalset == VK_NULL_HANDLE || shadowset == VK_NULL_HANDLE) {
-		if(!ensureWhiteTexture()) return;
-		VkDescriptorSet whiteset = vktextures[whitetextureid]->descriptorset;
-		if(diffuseset == VK_NULL_HANDLE) diffuseset = whiteset;
-		if(specularset == VK_NULL_HANDLE) specularset = whiteset;
-		if(normalset == VK_NULL_HANDLE) normalset = whiteset;
-		if(shadowset == VK_NULL_HANDLE) shadowset = whiteset;
-	}
+	// Every binding must point at a real descriptor even when the flags say not to
+	// sample it, so the unused ones fall back to the 1x1 white texture.
+	if(!ensureWhiteTexture()) return;
+	VkDescriptorSet whiteset = vktextures[whitetextureid]->descriptorset;
+
+	// The three maps travel as one set (set 1), the way the PBR path's five do, so
+	// this pipeline binds three sets rather than five and stays inside the four
+	// Vulkan guarantees - which is exactly four on Adreno and Mali. Cached by the
+	// combination of ids, because materials share maps far more often than each one
+	// is unique.
+	VkDescriptorSet materialset = gvkGetMaterialSet(vkcontext, vktextures, whitetextureid,
+			diffusemapid, specularmapid, normalmapid);
+	if(materialset == VK_NULL_HANDLE) return;
+
+	// Shadow map, bound as set 2. Falls back to the white texture when there is
+	// none, which reads as "nothing was ever closer to the light" and so casts no
+	// shadow - the shader's flag says not to look at it anyway.
+	VkDescriptorSet shadowset = VK_NULL_HANDLE;
+	if(vkcontext->hasShadowMap()) shadowset = vkcontext->getShadowDescriptorSet();
+	if(shadowset == VK_NULL_HANDLE) shadowset = whiteset;
 	// No alpha fixup here, unlike the 2D path: the 3D pipeline does not blend at all
 	// (see gVKPipeline.cpp), so what the lighting sum leaves in the alpha channel
 	// never reaches the framebuffer as transparency.
@@ -2555,18 +2785,29 @@ void gVKRenderEngine::drawMesh3D(GLuint vertexArrayId, int vertexCount, int inde
 	// 32 bit everywhere else.
 	const VkIndexType indextype = sizeof(gIndex) == 2 ? VK_INDEX_TYPE_UINT16 : VK_INDEX_TYPE_UINT32;
 
+	// Whether the shader's cutout test can fire at all for this draw. Only a sampled
+	// diffuse map reaches that branch, and the alpha of its texels was recorded when
+	// the pixels were uploaded, so this is a fact about the image rather than a guess:
+	// a material with no diffuse map, or one whose map is fully opaque - most of them -
+	// goes through the pipeline that keeps early depth rejection.
+	bool cutout = false;
+	if(diffusemapid != 0) {
+		auto diffuseit = vktextures.find(diffusemapid);
+		cutout = diffuseit != vktextures.end() && diffuseit->second != nullptr
+				&& diffuseit->second->hascutout;
+	}
+
 	gvkDrawMesh3D(*vkcontext, vertexbuffer, vertexoffset, indexed ? indexbuffer : VK_NULL_HANDLE,
-			indexed ? indexCount : vertexCount, indextype, push, diffuseset, specularset, normalset,
-			shadowset,
+			indexed ? indexCount : vertexCount, indextype, push, materialset, shadowset,
 			instancebuffer, instancebufferoffset, instanceCount,
 			topology, isdepthtestenabled, depthtesttype == DEPTHTESTTYPE_ALWAYS, lines, cullstate,
-			isalphablendingenabled);
+			isalphablendingenabled, cutout);
 #endif
 }
 
 void gVKRenderEngine::drawTexturedRect2D(GLuint textureId, GLuint maskTextureId, const glm::vec4& tint,
 		const glm::mat4& mvp, const glm::vec2& uvOffset, const glm::vec2& uvScale) {
-#ifdef GVK_DESKTOP_GLFW
+#ifdef GVK_VULKAN
 	flushQueuedDraws();
 	if(vkcontext == nullptr) return;
 	auto it = vktextures.find(textureId);
@@ -2587,7 +2828,7 @@ void gVKRenderEngine::drawTexturedRect2D(GLuint textureId, GLuint maskTextureId,
 
 void gVKRenderEngine::drawTexturedTriangles2D(GLuint textureId, const glm::vec4& tint,
 		const glm::mat4& mvp, const float* xyuv, int vertexCount) {
-#ifdef GVK_DESKTOP_GLFW
+#ifdef GVK_VULKAN
 	flushQueuedDraws();
 	if(vkcontext == nullptr) return;
 	auto it = vktextures.find(textureId);
@@ -2599,7 +2840,7 @@ void gVKRenderEngine::drawTexturedTriangles2D(GLuint textureId, const glm::vec4&
 }
 
 gVKTexture* gVKRenderEngine::getBoundVKTexture() {
-#ifdef GVK_DESKTOP_GLFW
+#ifdef GVK_VULKAN
 	if(vkcontext == nullptr || boundtextureid == 0) return nullptr;
 	auto it = vktextures.find(boundtextureid);
 	return it == vktextures.end() ? nullptr : it->second;
@@ -2609,19 +2850,22 @@ gVKTexture* gVKRenderEngine::getBoundVKTexture() {
 }
 
 void gVKRenderEngine::destroyAllTextures() {
-#ifdef GVK_DESKTOP_GLFW
+#ifdef GVK_VULKAN
 	if(vkcontext == nullptr) return;
 	// The framebuffers first: they hold render passes built around these textures'
 	// views, and a pass outliving its attachment is what turns a clean shutdown into
 	// a validation error.
 	destroyAllFramebuffers();
+	// Each of these owns one device memory allocation, so the count reads directly
+	// against the limit logged when the device was selected.
+	gLogi("gVKRenderEngine") << "Textures released at shutdown: " << vktextures.size();
 	for(auto& entry : vktextures) gvkDestroyTexture(*vkcontext, entry.second);
 	vktextures.clear();
 #endif
 }
 
 bool gVKRenderEngine::ensureWhiteTexture() {
-#ifdef GVK_DESKTOP_GLFW
+#ifdef GVK_VULKAN
 	if(whitetextureid != 0) return true;
 	if(vkcontext == nullptr) return false;
 
@@ -2646,9 +2890,67 @@ bool gVKRenderEngine::ensureWhiteTexture() {
 #endif
 }
 
-#ifdef GVK_DESKTOP_GLFW
+#ifdef GVK_VULKAN
 // Kept out of the class because its return type is a Vulkan handle and
 // gVKRenderEngine.h is deliberately free of Vulkan headers.
+// The texture id a material named, or 0 when nothing was ever registered under it.
+// A material can name a texture that never made it through texImage2D - an
+// unsupported format, say - and sampling white is closer to the OpenGL result than
+// sampling nothing. Collapsing the two cases to 0 here means the material cache
+// key, the shader's "has this map" flag and the descriptor write all agree.
+static GLuint gvkRegisteredTextureId(std::unordered_map<GLuint, gVKTexture*>& vktextures, GLuint id) {
+	if(id == 0) return 0;
+	auto it = vktextures.find(id);
+	if(it == vktextures.end() || it->second == nullptr) return 0;
+	return id;
+}
+
+// Allocates one descriptor set holding `count` combined image samplers, in binding
+// order, with the 1x1 white texture standing in wherever the material named no map.
+// Every binding is written whether or not it is sampled: the shader names all of
+// them, so an unwritten one would be invalid, and the flags in the push constant
+// are what decide which are actually read.
+static VkDescriptorSet gvkWriteMaterialSet(gVKContext* vkcontext,
+		std::unordered_map<GLuint, gVKTexture*>& vktextures, GLuint whitetextureid,
+		VkDescriptorSetLayout layout, const uint32_t* ids, uint32_t count, const char* what) {
+	VkDevice device = *vkcontext->getDevice();
+	VkDescriptorSetAllocateInfo allocinfo{};
+	allocinfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
+	allocinfo.descriptorPool = vkcontext->getDescriptorPool();
+	allocinfo.descriptorSetCount = 1;
+	allocinfo.pSetLayouts = &layout;
+	VkDescriptorSet set = VK_NULL_HANDLE;
+	if(vkAllocateDescriptorSets(device, &allocinfo, &set) != VK_SUCCESS) {
+		gLoge("gVKRenderEngine") << "Could not allocate a " << what << " material descriptor set.";
+		return VK_NULL_HANDLE;
+	}
+
+	gVKTexture* white = vktextures[whitetextureid];
+	VkDescriptorImageInfo images[5]{};
+	VkWriteDescriptorSet writes[5]{};
+	if(count > 5) count = 5;
+	for(uint32_t i = 0; i < count; i++) {
+		gVKTexture* tex = nullptr;
+		auto it = vktextures.find(ids[i]);
+		if(ids[i] != 0 && it != vktextures.end()) tex = it->second;
+		if(tex == nullptr) tex = white;
+
+		images[i].imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+		images[i].imageView = tex->view;
+		images[i].sampler = tex->sampler;
+
+		writes[i].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+		writes[i].dstSet = set;
+		writes[i].dstBinding = i;
+		writes[i].dstArrayElement = 0;
+		writes[i].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+		writes[i].descriptorCount = 1;
+		writes[i].pImageInfo = &images[i];
+	}
+	vkUpdateDescriptorSets(device, count, writes, 0, nullptr);
+	return set;
+}
+
 static VkDescriptorSet gvkGetPbrMaterialSet(gVKContext* vkcontext,
 		std::unordered_map<GLuint, gVKTexture*>& vktextures, GLuint whitetextureid,
 		const gRenderer::gMeshSurface& surface) {
@@ -2662,44 +2964,31 @@ static VkDescriptorSet gvkGetPbrMaterialSet(gVKContext* vkcontext,
 	auto cached = cache.find(key);
 	if(cached != cache.end()) return cached->second;
 
-	VkDevice device = *vkcontext->getDevice();
-	VkDescriptorSetAllocateInfo allocinfo{};
-	allocinfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
-	allocinfo.descriptorPool = vkcontext->getDescriptorPool();
-	allocinfo.descriptorSetCount = 1;
-	allocinfo.pSetLayouts = &layout;
-	VkDescriptorSet set = VK_NULL_HANDLE;
-	if(vkAllocateDescriptorSets(device, &allocinfo, &set) != VK_SUCCESS) {
-		gLoge("gVKRenderEngine") << "Could not allocate a PBR material descriptor set.";
-		return VK_NULL_HANDLE;
-	}
+	VkDescriptorSet set = gvkWriteMaterialSet(vkcontext, vktextures, whitetextureid, layout,
+			key.data(), 5, "PBR");
+	if(set == VK_NULL_HANDLE) return VK_NULL_HANDLE;
+	cache[key] = set;
+	return set;
+}
 
-	// Every binding is written, whether or not the material supplies that map: the
-	// shader names all five samplers, so an unwritten binding would be invalid. The
-	// flags in the push constant are what decide which ones are actually read.
-	gVKTexture* white = vktextures[whitetextureid];
-	VkDescriptorImageInfo images[5]{};
-	VkWriteDescriptorSet writes[5]{};
-	for(int i = 0; i < 5; i++) {
-		gVKTexture* tex = nullptr;
-		auto it = vktextures.find(key[i]);
-		if(key[i] != 0 && it != vktextures.end()) tex = it->second;
-		if(tex == nullptr) tex = white;
+// The classic path's diffuse/specular/normal trio, cached the same way. The ids
+// have already been through gvkRegisteredTextureId, so 0 means "no map" and the
+// white texture fills that binding.
+static VkDescriptorSet gvkGetMaterialSet(gVKContext* vkcontext,
+		std::unordered_map<GLuint, gVKTexture*>& vktextures, GLuint whitetextureid,
+		GLuint diffusemapid, GLuint specularmapid, GLuint normalmapid) {
+	if(vkcontext == nullptr || whitetextureid == 0) return VK_NULL_HANDLE;
+	VkDescriptorSetLayout layout = vkcontext->getMesh3DMaterialSetLayout();
+	if(layout == VK_NULL_HANDLE || vkcontext->getDescriptorPool() == VK_NULL_HANDLE) return VK_NULL_HANDLE;
 
-		images[i].imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-		images[i].imageView = tex->view;
-		images[i].sampler = tex->sampler;
+	const std::array<uint32_t, 3> key = {diffusemapid, specularmapid, normalmapid};
+	std::map<std::array<uint32_t, 3>, VkDescriptorSet>& cache = *vkcontext->getMaterialSets();
+	auto cached = cache.find(key);
+	if(cached != cache.end()) return cached->second;
 
-		writes[i].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-		writes[i].dstSet = set;
-		writes[i].dstBinding = static_cast<uint32_t>(i);
-		writes[i].dstArrayElement = 0;
-		writes[i].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-		writes[i].descriptorCount = 1;
-		writes[i].pImageInfo = &images[i];
-	}
-	vkUpdateDescriptorSets(device, 5, writes, 0, nullptr);
-
+	VkDescriptorSet set = gvkWriteMaterialSet(vkcontext, vktextures, whitetextureid, layout,
+			key.data(), 3, "mesh");
+	if(set == VK_NULL_HANDLE) return VK_NULL_HANDLE;
 	cache[key] = set;
 	return set;
 }
@@ -2707,7 +2996,7 @@ static VkDescriptorSet gvkGetPbrMaterialSet(gVKContext* vkcontext,
 
 bool gVKRenderEngine::drawSkyboxFace(GLuint textureId, const float* xyzuv, int vertexCount,
 		const glm::mat4& viewProjection) {
-#ifdef GVK_DESKTOP_GLFW
+#ifdef GVK_VULKAN
 	flushQueuedDraws();
 	if(vkcontext == nullptr || textureId == 0 || xyzuv == nullptr || vertexCount <= 0) return false;
 	// The sky is not a caster. Drawing it into the depth map would put a wall at the
@@ -2729,7 +3018,7 @@ bool gVKRenderEngine::drawSkyboxFace(GLuint textureId, const float* xyzuv, int v
 }
 
 bool gVKRenderEngine::allocateShadowMap(int width, int height) {
-#ifdef GVK_DESKTOP_GLFW
+#ifdef GVK_VULKAN
 	if(vkcontext == nullptr || width <= 0 || height <= 0) return false;
 	// The map outlives individual frames, so anything still reading the old one has
 	// to be finished before it is replaced.
@@ -2742,7 +3031,7 @@ bool gVKRenderEngine::allocateShadowMap(int width, int height) {
 }
 
 void gVKRenderEngine::releaseShadowMap() {
-#ifdef GVK_DESKTOP_GLFW
+#ifdef GVK_VULKAN
 	if(vkcontext == nullptr) return;
 	vkDeviceWaitIdle(*vkcontext->getDevice());
 	gvkDestroyShadowResources(*vkcontext);
@@ -2751,7 +3040,7 @@ void gVKRenderEngine::releaseShadowMap() {
 }
 
 bool gVKRenderEngine::beginShadowPass() {
-#ifdef GVK_DESKTOP_GLFW
+#ifdef GVK_VULKAN
 	if(vkcontext == nullptr) return false;
 	// Deliberately does not gather the scene uniforms. This runs before the canvas
 	// has drawn anything, so gCamera::begin() has not set the view and projection
@@ -2769,7 +3058,7 @@ bool gVKRenderEngine::beginShadowPass() {
 void gVKRenderEngine::updateLights() {
 	flushQueuedDraws();
 	gRenderer::updateLights();
-#ifdef GVK_DESKTOP_GLFW
+#ifdef GVK_VULKAN
 	// A light was enabled, disabled or recoloured. The scene block this backend
 	// hands the shaders holds that state, and it is gathered once and then left
 	// alone for the rest of the pass, so it has to be dropped here or the change
@@ -2785,7 +3074,7 @@ void gVKRenderEngine::updateLights() {
 }
 
 void gVKRenderEngine::endShadowPass() {
-#ifdef GVK_DESKTOP_GLFW
+#ifdef GVK_VULKAN
 	flushQueuedDraws();
 	if(vkcontext == nullptr) return;
 	gvkEndShadowPass(*vkcontext);
@@ -2806,7 +3095,7 @@ void gVKRenderEngine::endShadowPass() {
 }
 
 bool gVKRenderEngine::isShadowPassActive() const {
-#ifdef GVK_DESKTOP_GLFW
+#ifdef GVK_VULKAN
 	return vkcontext != nullptr && vkcontext->isShadowPassActive();
 #else
 	return false;
@@ -2832,7 +3121,7 @@ void gVKRenderEngine::setShadowMapState(bool enabled, const glm::mat4& lightMatr
 }
 
 bool gVKRenderEngine::ensureIdentityInstanceBuffer() {
-#ifdef GVK_DESKTOP_GLFW
+#ifdef GVK_VULKAN
 	if(identityinstancebuffer != nullptr && identityinstancebuffer->buffer != VK_NULL_HANDLE) return true;
 	if(vkcontext == nullptr) return false;
 
@@ -2849,7 +3138,7 @@ bool gVKRenderEngine::ensureIdentityInstanceBuffer() {
 }
 
 void gVKRenderEngine::destroyAllMeshBuffers() {
-#ifdef GVK_DESKTOP_GLFW
+#ifdef GVK_VULKAN
 	if(vkcontext == nullptr) return;
 	// Called from cleanupVulkan after vkDeviceWaitIdle, so nothing is still reading
 	// these; the per-buffer wait in deleteBuffer would be redundant here.

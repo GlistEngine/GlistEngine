@@ -81,18 +81,19 @@ layout(location = 0) out vec3 vNormal;
 layout(location = 1) out vec3 vFragPos;
 layout(location = 2) out vec3 vColor;
 layout(location = 3) out vec2 vTexCoords;
-// Tangent space, for normal mapping. A mat3 takes three locations, so these run
-// 4..6 and the two vectors follow. Always computed, even when no normal map is
-// bound: color_vert.glsl guards it with the useNormalMap flag, but the fragment
-// stage ignores these unless that flag is set, so the result is the same and the
-// vertex stage stays branchless.
-layout(location = 4) out mat3 vTBN;
-layout(location = 7) out vec3 vTangentViewPos;
-layout(location = 8) out vec3 vTangentFragPos;
+// The tangent alone, rather than the finished tangent space. This stage used to
+// build the TBN matrix here and hand it over along with the view and fragment
+// positions already rotated into it - fifteen floats of varyings, paid on every
+// mesh in the scene whether or not it has a normal map, and interpolated per
+// fragment. Only the tangent actually has to be interpolated; the basis is
+// rebuilt in mesh3d.frag from it and the normal, and only where a normal map is
+// bound. The Gram-Schmidt step moves with it, so a mesh without one now costs
+// neither the varyings nor the maths.
+layout(location = 4) out vec3 vTangent;
 // Where this fragment falls in the shadow map, still homogeneous - the perspective
 // divide happens in the fragment stage so it is done per pixel rather than
 // interpolated, which is what color_vert.glsl does with FragPosLightSpace.
-layout(location = 9) out vec4 vFragPosLightSpace;
+layout(location = 5) out vec4 vFragPosLightSpace;
 
 void main() {
     // Matches color_vert.glsl's "model * instanceModel" ordering.
@@ -104,26 +105,30 @@ void main() {
     gl_Position = scene.projection * scene.view * world;
 
     vFragPos = world.xyz;
+
     // Normals do not survive a non-uniform scale under the model matrix itself, so
     // the inverse-transpose is what keeps them perpendicular to the surface. The
     // OpenGL path builds this on the CPU; here it is cheaper to derive than to
     // spend another 48 bytes of the push constant budget carrying it.
-    mat3 normalmatrix = transpose(inverse(mat3(model)));
+    //
+    // Derived as the cofactor matrix rather than transpose(inverse(m)), which is the
+    // same thing scaled by the determinant: the columns of the cofactor matrix are
+    // the cross products of the other two columns, so this is three cross products
+    // instead of a nine-term inverse with a division, per vertex of every mesh in the
+    // frame. Everything downstream normalises what it reads out of this, so a
+    // positive scale factor changes nothing - but a negative one would flip the
+    // normals of mirrored geometry, and the determinant's sign is one dot product
+    // away because its first cross product has already been computed.
+    mat3 m = mat3(model);
+    mat3 normalmatrix = mat3(cross(m[1], m[2]), cross(m[2], m[0]), cross(m[0], m[1]));
+    normalmatrix *= dot(m[0], normalmatrix[0]) < 0.0 ? -1.0 : 1.0;
+
     vNormal = normalmatrix * aNormal;
+    // Not orthogonalised or normalised here: interpolation would break both anyway,
+    // so mesh3d.frag redoes the Gram-Schmidt per fragment where it is needed.
+    vTangent = normalmatrix * aTangent;
     vColor = aColor;
     vTexCoords = aTexCoords;
-
-    // Gram-Schmidt: the tangent is re-orthogonalised against the normal, and the
-    // bitangent comes from their cross product rather than the vertex attribute.
-    // Transposing an orthonormal basis inverts it, so vTBN maps world space into
-    // tangent space - which is the direction the fragment stage needs.
-    vec3 T = normalize(normalmatrix * aTangent);
-    vec3 N = normalize(normalmatrix * aNormal);
-    T = normalize(T - dot(T, N) * N);
-    vec3 B = cross(N, T);
-    vTBN = transpose(mat3(T, B, N));
-    vTangentViewPos = vTBN * scene.viewpos.xyz;
-    vTangentFragPos = vTBN * vFragPos;
 
     vFragPosLightSpace = scene.lightmatrix * vec4(vFragPos, 1.0);
 }

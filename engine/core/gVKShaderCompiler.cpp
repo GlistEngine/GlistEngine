@@ -4,7 +4,7 @@
 
 #include "gVKShaderCompiler.h"
 
-#ifdef GVK_DESKTOP_GLFW
+#ifdef GVK_VULKAN
 
 #include "gUtils.h"
 
@@ -97,4 +97,4 @@ bool gvkCompileShaderFile(const std::string& fileName, VkShaderStageFlagBits sta
 
 #endif /* GVK_RUNTIME_SHADERS */
 
-#endif /* GVK_DESKTOP_GLFW */
+#endif /* GVK_VULKAN */

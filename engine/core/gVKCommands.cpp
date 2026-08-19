@@ -6,7 +6,7 @@
 
 #include "gVKCommands.h"
 
-#ifdef GVK_DESKTOP_GLFW
+#ifdef GVK_VULKAN
 
 #include "gUtils.h"
 
@@ -69,4 +69,4 @@ void gvkDestroyCommandResources(gVKContext& ctx) {
 	ctx.commandbuffers.clear();
 }
 
-#endif /* GVK_DESKTOP_GLFW */
+#endif /* GVK_VULKAN */

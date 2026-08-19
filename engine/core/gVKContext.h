@@ -21,13 +21,13 @@
 // Vulkan is an optional dependency of this engine: engine/CMakeLists.txt defines
 // GLIST_HAS_VULKAN only when the development files are actually present, which is
 // not the case on every machine or CI runner. Every gVK* module guards its body
-// with GVK_DESKTOP_GLFW so those translation units stay empty when Vulkan is not
+// with GVK_VULKAN so those translation units stay empty when Vulkan is not
 // available, and the engine still builds.
-#if defined(GLIST_HAS_VULKAN) && !defined(ANDROID) && !defined(EMSCRIPTEN) && !(defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE)
-#define GVK_DESKTOP_GLFW 1
+#if defined(GLIST_HAS_VULKAN) && !defined(EMSCRIPTEN)
+#define GVK_VULKAN 1
 #endif
 
-#ifdef GVK_DESKTOP_GLFW
+#ifdef GVK_VULKAN
 
 #include <vulkan/vulkan.h>
 #include <algorithm>
@@ -38,7 +38,7 @@
 #include <map>
 #include <array>
 
-struct GLFWwindow;
+class gBaseWindow;
 struct gVKContext;
 
 // How many frames the CPU may prepare while the GPU is still busy with earlier ones.
@@ -46,12 +46,14 @@ inline constexpr int GVK_MAX_FRAMES_IN_FLIGHT = 2;
 inline constexpr uint32_t GVK_SCENE_UNIFORM_SLOTS = 16;
 
 // Declared here as well so the struct can befriend them.
-bool gvkCreateSwapchain(gVKContext& ctx, GLFWwindow* window);
+bool gvkCreateSwapchain(gVKContext& ctx, gBaseWindow* window);
 void gvkDestroySwapchain(gVKContext& ctx);
-bool gvkRecreateSwapchain(gVKContext& ctx, GLFWwindow* window);
+bool gvkRecreateSwapchain(gVKContext& ctx, gBaseWindow* window);
 VkFormat gvkFindDepthFormat(gVKContext& ctx);
 bool gvkCreateDepthResources(gVKContext& ctx);
 void gvkDestroyDepthResources(gVKContext& ctx);
+bool gvkCreateMsaaColorResources(gVKContext& ctx);
+void gvkDestroyMsaaColorResources(gVKContext& ctx);
 bool gvkCreateRenderPass(gVKContext& ctx);
 void gvkDestroyRenderPass(gVKContext& ctx);
 bool gvkCreateFramebuffers(gVKContext& ctx);
@@ -62,8 +64,8 @@ bool gvkCreateFrameSyncObjects(gVKContext& ctx);
 void gvkDestroyFrameSyncObjects(gVKContext& ctx);
 bool gvkCreatePresentSemaphores(gVKContext& ctx, uint32_t imagecount);
 void gvkDestroyPresentSemaphores(gVKContext& ctx);
-bool gvkBeginFrame(gVKContext& ctx, GLFWwindow* window);
-bool gvkEndFrame(gVKContext& ctx, GLFWwindow* window);
+bool gvkBeginFrame(gVKContext& ctx, gBaseWindow* window);
+bool gvkEndFrame(gVKContext& ctx, gBaseWindow* window);
 
 // 2D draw path. Declared here so the struct can befriend them; defined in
 // gVKFrame.cpp (render pass) / gVKPipeline.cpp (pipelines) / gVKDraw.cpp (ring).
@@ -83,6 +85,59 @@ bool gvkBeginShadowPass(gVKContext& ctx);
 void gvkEndShadowPass(gVKContext& ctx);
 bool gvkCreateUniformResources(gVKContext& ctx);
 void gvkDestroyUniformResources(gVKContext& ctx);
+
+// Multisampling and the render-pass compatibility problem it creates.
+//
+// A graphics pipeline is baked against a render pass, and the sample count of
+// every attachment is part of render-pass *compatibility*: a pipeline built for a
+// 4x pass cannot be recorded into a 1x one, nor the other way round. This backend
+// has three kinds of pass - the screen pass, one pass per offscreen render target
+// (gFbo), and the shadow pass - and the same 2D/3D pipelines are recorded into the
+// first two. Switching the screen pass to 4x therefore breaks every draw into an
+// FBO unless something is done about it.
+//
+// The two honest ways out are to put every pass on the same sample count, or to
+// key the pipelines by sample count and build the variants that are actually used.
+// This backend does the second, for three reasons:
+//
+//  - The shadow pass must stay 1x. Multisampling a depth-only map that is compared
+//    against rather than displayed buys nothing and costs bandwidth and memory on
+//    exactly the mobile parts this backend targets. So "one count everywhere" is
+//    already impossible; the only question is where the seam sits.
+//  - An FBO's attachments are gTextures the application samples afterwards. Making
+//    those passes multisampled means a transient MSAA image *plus* the resolve
+//    target for every render target the app owns, and a depth-only FBO - which
+//    gFbo produces for depth prepasses - has no resolve path at all before VK 1.2's
+//    separate depth/stencil resolve. A post-processing chain wants the raw 1x
+//    buffer regardless.
+//  - The cost of the second design is one extra set of VkPipeline objects, and only
+//    while MSAA is on. They come out of the same VkPipelineCache and reuse the same
+//    modules and layouts, so the second build is a fraction of the first.
+//
+// So: index 0 is the single-sample build, used by every offscreen pass and by the
+// screen pass while MSAA is off; index 1 is the build for the screen pass's sample
+// count and only exists while that is above one. getActivePipelineVariant() is what
+// the pipeline getters index with, and whichever pass opens sets it.
+inline constexpr uint32_t GVK_PIPELINE_SAMPLE_VARIANTS = 2;
+
+// The forms one pipeline family takes at a single sample count. Which of them get
+// built is decided per family by gvkPipelineOptions; the ones that are not stay
+// null and the getters fall back to the plain pipeline. gVKContext holds one array
+// of these per family, indexed by sample-count variant.
+struct gVKPipelineVariants {
+	VkPipeline pipeline = VK_NULL_HANDLE;
+	// The same pipeline with a line topology, for stroking unfilled shapes and for
+	// meshes drawn as wireframe.
+	VkPipeline linepipeline = VK_NULL_HANDLE;
+	// The same pipeline with the opposite blend setting; blending cannot be dynamic
+	// state, so following the renderer's setting means choosing a pipeline.
+	VkPipeline blendvariantpipeline = VK_NULL_HANDLE;
+	// The same pipeline adding instead of compositing, for BLENDMODE_ADDITIVE.
+	VkPipeline additivepipeline = VK_NULL_HANDLE;
+	// The same pipeline with the cutout discard specialised out; see
+	// gvkPipelineOptions::nocutoutvariant in gVKPipeline.cpp.
+	VkPipeline nocutoutpipeline = VK_NULL_HANDLE;
+};
 
 // Validation layers cost performance, so the default follows the same DEBUG
 // condition the OpenGL debug output already uses in this engine. A developer can
@@ -110,12 +165,14 @@ struct gVKContext {
 	// The backend's own modules create and tear down the members below, so they
 	// reach them directly just like gVKRenderEngine does. Everything outside the
 	// backend goes through the accessors.
-	friend bool gvkCreateSwapchain(gVKContext&, GLFWwindow*);
+	friend bool gvkCreateSwapchain(gVKContext&, gBaseWindow*);
 	friend void gvkDestroySwapchain(gVKContext&);
-	friend bool gvkRecreateSwapchain(gVKContext&, GLFWwindow*);
+	friend bool gvkRecreateSwapchain(gVKContext&, gBaseWindow*);
 	friend VkFormat gvkFindDepthFormat(gVKContext&);
 	friend bool gvkCreateDepthResources(gVKContext&);
 	friend void gvkDestroyDepthResources(gVKContext&);
+	friend bool gvkCreateMsaaColorResources(gVKContext&);
+	friend void gvkDestroyMsaaColorResources(gVKContext&);
 	friend bool gvkCreateRenderPass(gVKContext&);
 	friend void gvkDestroyRenderPass(gVKContext&);
 	friend bool gvkCreateFramebuffers(gVKContext&);
@@ -126,12 +183,13 @@ struct gVKContext {
 	friend void gvkDestroyFrameSyncObjects(gVKContext&);
 	friend bool gvkCreatePresentSemaphores(gVKContext&, uint32_t);
 	friend void gvkDestroyPresentSemaphores(gVKContext&);
-	friend bool gvkBeginFrame(gVKContext&, GLFWwindow*);
-	friend bool gvkEndFrame(gVKContext&, GLFWwindow*);
+	friend bool gvkBeginFrame(gVKContext&, gBaseWindow*);
+	friend bool gvkEndFrame(gVKContext&, gBaseWindow*);
 	friend bool gvkEnsureRenderPass(gVKContext&);
 	friend bool gvkCreateGraphicsPipelines(gVKContext&);
 	friend bool gvkReloadGraphicsPipelines(gVKContext&);
 	friend void gvkDestroyGraphicsPipelines(gVKContext&);
+	friend void gvkDestroyPipelineCache(gVKContext&);
 	friend bool gvkCreateDrawResources(gVKContext&);
 	friend bool gvkEnsureMeshArena(gVKContext&, VkDeviceSize);
 	friend void gvkDestroyMeshArena(gVKContext&);
@@ -303,10 +361,11 @@ struct gVKContext {
 	bool isShadowPassActive() const { return shadowpassactive; }
 	std::vector<VkFramebuffer>* getFramebuffers() { return &framebuffers; }
 
-	// Depth attachment shared by every framebuffer. VK_FORMAT_UNDEFINED until the
-	// render pass has picked a format the device actually supports.
+	// Depth attachments are private to each frame in flight.
 	VkFormat getDepthFormat() const { return depthformat; }
-	VkImageView getDepthImageView() const { return depthimageview; }
+	VkImageView getDepthImageView() const {
+		return depthimageviews.empty() ? VK_NULL_HANDLE : depthimageviews[0];
+	}
 
 	VkCommandPool* getCommandPool() { return &commandpool; }
 	std::vector<VkCommandBuffer>* getCommandBuffers() { return &commandbuffers; }
@@ -324,7 +383,7 @@ struct gVKContext {
 
 	// The window the surface was created from. The frame loop needs it to notice
 	// resizes and rebuild the swapchain.
-	GLFWwindow* getWindow() { return window; }
+	gBaseWindow* getWindow() { return window; }
 
 	// True once the frame path exists too, so a frame can actually be recorded.
 	// isInitialized() only promises a logical device.
@@ -337,22 +396,31 @@ struct gVKContext {
 	// image helpers use, plus the per-frame host-visible vertex ring. Built by
 	// gvkCreateGraphicsPipelines and gvkCreateDrawResources, consumed by gVKDraw.
 
-	VkPipeline getColor2DPipeline() { return color2dpipeline; }
+	// Every getter here indexes by getActivePipelineVariant(), which the open pass
+	// set: the screen pass hands out the pipelines built for its sample count, an
+	// offscreen pass the single-sampled ones. See GVK_PIPELINE_SAMPLE_VARIANTS.
+	VkPipeline getColor2DPipeline() { return color2d[activepipelinevariant].pipeline; }
 	// Same pipeline with a line topology, for stroking unfilled shapes.
-	VkPipeline getColor2DLinePipeline() { return color2dlinepipeline; }
+	VkPipeline getColor2DLinePipeline() { return color2d[activepipelinevariant].linepipeline; }
 	// Additive copies of the 2D pipelines, for gRenderer::BLENDMODE_ADDITIVE. Blend
 	// factors are baked into a pipeline, so the mode is chosen by binding one or the
 	// other; both fall back to the compositing pipeline if the copy failed to build.
-	VkPipeline getColor2DAdditivePipeline() { return color2dadditivepipeline != VK_NULL_HANDLE ? color2dadditivepipeline : color2dpipeline; }
+	VkPipeline getColor2DAdditivePipeline() {
+		const gVKPipelineVariants& v = color2d[activepipelinevariant];
+		return v.additivepipeline != VK_NULL_HANDLE ? v.additivepipeline : v.pipeline;
+	}
 	VkPipelineLayout getColor2DPipelineLayout() { return color2dpipelinelayout; }
-	VkPipeline getImage2DPipeline() { return image2dpipeline; }
-	VkPipeline getImage2DAdditivePipeline() { return image2dadditivepipeline != VK_NULL_HANDLE ? image2dadditivepipeline : image2dpipeline; }
+	VkPipeline getImage2DPipeline() { return image2d[activepipelinevariant].pipeline; }
+	VkPipeline getImage2DAdditivePipeline() {
+		const gVKPipelineVariants& v = image2d[activepipelinevariant];
+		return v.additivepipeline != VK_NULL_HANDLE ? v.additivepipeline : v.pipeline;
+	}
 	VkPipelineLayout getImage2DPipelineLayout() { return image2dpipelinelayout; }
 	// The 3D mesh pipeline, and the same pipeline with a line topology for meshes
 	// drawn as wireframe.
-	VkPipeline getMesh3DPipeline() { return mesh3dpipeline; }
-	VkPipeline getMesh3DLinePipeline() { return mesh3dlinepipeline; }
-	VkPipeline getSkyboxPipeline() { return skyboxpipeline; }
+	VkPipeline getMesh3DPipeline() { return mesh3d[activepipelinevariant].pipeline; }
+	VkPipeline getMesh3DLinePipeline() { return mesh3d[activepipelinevariant].linepipeline; }
+	VkPipeline getSkyboxPipeline() { return skybox[activepipelinevariant].pipeline; }
 	VkPipelineLayout getSkyboxPipelineLayout() { return skyboxpipelinelayout; }
 	uint32_t getSkyboxPushSize() const { return skyboxpushsize; }
 	VkShaderStageFlags getSkyboxPushStages() const { return skyboxpushstages; }
@@ -360,16 +428,28 @@ struct gVKContext {
 	// with the opposite setting and the draw picks by the renderer's current one.
 	// The line variant has no blended twin: a wireframe pass is a debugging aid.
 	VkPipeline getMesh3DPipeline(bool blending) {
-		return blending && mesh3dblendpipeline != VK_NULL_HANDLE ? mesh3dblendpipeline : mesh3dpipeline;
+		const gVKPipelineVariants& v = mesh3d[activepipelinevariant];
+		return blending && v.blendvariantpipeline != VK_NULL_HANDLE ? v.blendvariantpipeline : v.pipeline;
+	}
+	// cutout false means the caller has established that this draw's diffuse map holds
+	// no texel transparent enough for the shader's cutout test, so it can go through
+	// the copy with the discard compiled out and keep early depth rejection. Only the
+	// opaque form has that copy: a blended draw is sorted and layered rather than
+	// depth rejected, so it gains nothing, and the wireframe one is a debugging aid.
+	VkPipeline getMesh3DPipeline(bool blending, bool cutout) {
+		const gVKPipelineVariants& v = mesh3d[activepipelinevariant];
+		if(!blending && !cutout && v.nocutoutpipeline != VK_NULL_HANDLE) return v.nocutoutpipeline;
+		return getMesh3DPipeline(blending);
 	}
 	VkPipeline getMesh3DPbrPipeline(bool blending) {
-		return blending && mesh3dpbrblendpipeline != VK_NULL_HANDLE ? mesh3dpbrblendpipeline : mesh3dpbrpipeline;
+		const gVKPipelineVariants& v = mesh3dpbr[activepipelinevariant];
+		return blending && v.blendvariantpipeline != VK_NULL_HANDLE ? v.blendvariantpipeline : v.pipeline;
 	}
 	VkPipelineLayout getMesh3DPipelineLayout() { return mesh3dpipelinelayout; }
 	uint32_t getMesh3DPushSize() const { return mesh3dpushsize; }
 	VkShaderStageFlags getMesh3DPushStages() const { return mesh3dpushstages; }
 
-	VkPipeline getMesh3DPbrPipeline() { return mesh3dpbrpipeline; }
+	VkPipeline getMesh3DPbrPipeline() { return mesh3dpbr[activepipelinevariant].pipeline; }
 	VkPipelineLayout getMesh3DPbrPipelineLayout() { return mesh3dpbrpipelinelayout; }
 	uint32_t getMesh3DPbrPushSize() const { return mesh3dpbrpushsize; }
 	VkShaderStageFlags getMesh3DPbrPushStages() const { return mesh3dpbrpushstages; }
@@ -378,6 +458,11 @@ struct gVKContext {
 	std::map<std::array<uint32_t, 5>, VkDescriptorSet>* getPbrMaterialSets() { return &pbrmaterialsets; }
 	VkDescriptorSetLayout getMesh3DPbrMaterialSetLayout() {
 		return mesh3dpbrsetlayouts.size() > 1 ? mesh3dpbrsetlayouts[1] : VK_NULL_HANDLE;
+	}
+	// The same arrangement for the classic path's diffuse/specular/normal trio.
+	std::map<std::array<uint32_t, 3>, VkDescriptorSet>* getMaterialSets() { return &materialsets; }
+	VkDescriptorSetLayout getMesh3DMaterialSetLayout() {
+		return mesh3dsetlayouts.size() > 1 ? mesh3dsetlayouts[1] : VK_NULL_HANDLE;
 	}
 
 	// The scene descriptor set of the frame being recorded: camera matrices and
@@ -399,6 +484,43 @@ struct gVKContext {
 	void setVsyncEnabled(bool enabled) { vsyncenabled = enabled; }
 	bool isVsyncEnabled() const { return vsyncenabled; }
 
+	/* ---------------- multisampling ---------------- */
+	// What the application asked for, and what it got. The two are not the same
+	// thing: a request is capped at the intersection of the device's
+	// framebufferColorSampleCounts and framebufferDepthSampleCounts, so asking for
+	// 8x on a part that offers 4x colour and 4x depth yields 4x, and asking on a
+	// part that offers neither yields 1x - MSAA simply off. Like vsync, the sample
+	// count is baked into objects (the render pass, its attachments and every
+	// pipeline) rather than set per draw, so a change only lands when those are
+	// rebuilt; gVKRenderEngine::setMultiSampling does that at a frame boundary.
+	void setSampleCount(int samples) {
+		requestedsamples = samples < 1 ? 1 : static_cast<uint32_t>(samples);
+	}
+	int getRequestedSampleCount() const { return static_cast<int>(requestedsamples); }
+	int getActiveSampleCount() const { return static_cast<int>(samplecount); }
+	VkSampleCountFlagBits getSampleCountFlag() const { return samplecount; }
+	bool isMultiSampled() const { return samplecount != VK_SAMPLE_COUNT_1_BIT; }
+
+	// Sample shading runs the fragment shader per sample instead of per pixel, which
+	// is the only thing that antialiases *inside* a triangle - specular sparkle on a
+	// normal-mapped surface, alpha-tested foliage edges. It is off by default and
+	// should stay off on mobile: coverage MSAA costs the resolve and nothing else,
+	// while sample shading multiplies the fragment shader's own cost by
+	// minSampleShading x rasterizationSamples, which on a tiler with a heavy PBR
+	// shader is the difference between free and unshippable. Requires the device's
+	// sampleRateShading feature; the request is ignored when it is missing.
+	void setSampleShadingEnabled(bool enabled) { sampleshadingenabled = enabled; }
+	bool isSampleShadingEnabled() const { return sampleshadingenabled; }
+	void setMinSampleShading(float fraction) { minsampleshading = fraction; }
+	float getMinSampleShading() const { return minsampleshading; }
+
+	// Which sample-count build of the pipelines the pass currently being recorded
+	// needs; every pipeline getter above indexes with it. Whichever pass opens sets
+	// it, so a draw can never reach a pipeline that pass would reject.
+	uint32_t getActivePipelineVariant() const { return activepipelinevariant; }
+	void useScreenPipelines() { activepipelinevariant = isMultiSampled() ? 1 : 0; }
+	void useOffscreenPipelines() { activepipelinevariant = 0; }
+
 	VkDeviceSize getMinUniformBufferOffsetAlignment() const {
 		return deviceproperties.limits.minUniformBufferOffsetAlignment;
 	}
@@ -408,6 +530,7 @@ struct gVKContext {
 		return image2dsetlayouts.empty() ? VK_NULL_HANDLE : image2dsetlayouts[0];
 	}
 	VkDescriptorPool getDescriptorPool() { return descriptorpool; }
+	std::map<uint64_t, std::pair<VkSampler, uint32_t>>& getSamplerCache() { return samplercache; }
 	bool isRenderPassActive() const { return renderpassactive; }
 
 	// Push constant block each 2D pipeline declares, as reported by reflecting its
@@ -437,9 +560,17 @@ struct gVKContext {
 	VkBuffer getCurrentDynamicVertexBuffer() {
 		return dynvertexbuffers.empty() ? VK_NULL_HANDLE : dynvertexbuffers[currentframe];
 	}
-	VkDeviceSize pushDynamicVertices(const void* data, VkDeviceSize size) {
+	// alignment is the caller's vertex stride wherever the caller means to reach its
+	// slice through firstVertex rather than by binding at the offset: the index is
+	// offset/stride, so the offset has to be a whole number of vertices from the
+	// start of the buffer. Paths that bind at their own offset can leave it at the
+	// default. Getting this wrong shifts a draw by a fraction of a vertex and
+	// scrambles it, so it is a parameter rather than an assumption - the ring is
+	// shared, and one path's stride is not another's.
+	VkDeviceSize pushDynamicVertices(const void* data, VkDeviceSize size, VkDeviceSize alignment = 16) {
 		if(dynvertexmapped.empty()) return VK_WHOLE_SIZE;
-		VkDeviceSize offset = (dynvertexoffsets[currentframe] + 15) & ~static_cast<VkDeviceSize>(15);
+		if(alignment == 0) alignment = 1;
+		VkDeviceSize offset = ((dynvertexoffsets[currentframe] + alignment - 1) / alignment) * alignment;
 		if(offset + size > dynvertexcapacity) return VK_WHOLE_SIZE;
 		std::memcpy(static_cast<char*>(dynvertexmapped[currentframe]) + offset, data, size);
 		dynvertexoffsets[currentframe] = offset + size;
@@ -499,6 +630,8 @@ struct gVKContext {
 		recordeddepthvalid = false;
 		recordedtopologyvalid = false;
 		recordedcullvalid = false;
+		recordedvertexcount = 0;
+		recordedindexbuffer = VK_NULL_HANDLE;
 	}
 	bool shouldBindPipeline(VkPipeline pipeline) {
 		if(recordedpipeline == pipeline) return false;
@@ -535,6 +668,36 @@ struct gVKContext {
 		recordedcullvalid = true;
 		recordedcullmode = mode;
 		recordedfrontface = frontface;
+		return true;
+	}
+	// Vertex and index bindings are command buffer state in their own right: binding a
+	// pipeline does not disturb them, so a run of draws over one mesh - a crowd posed
+	// from the same model, or the same buffer drawn once per material - can rebind the
+	// same handles hundreds of times per frame for nothing. The contents behind a
+	// handle may change between draws; that does not matter here, because a draw reads
+	// the buffer when the GPU executes it, not when the bind was recorded.
+	//
+	// Every vkCmdBindVertexBuffers / vkCmdBindIndexBuffer in the backend goes through
+	// these. One that did not would leave the cache describing a binding that is no
+	// longer current, and the next draw would skip a bind it actually needed.
+	bool shouldBindVertexBuffers(const VkBuffer* buffers, const VkDeviceSize* offsets, uint32_t count) {
+		if(count > gvkmaxvertexbindings) return true;
+		if(recordedvertexcount == count
+				&& std::equal(buffers, buffers + count, recordedvertexbuffers.begin())
+				&& std::equal(offsets, offsets + count, recordedvertexoffsets.begin())) {
+			return false;
+		}
+		recordedvertexcount = count;
+		std::copy(buffers, buffers + count, recordedvertexbuffers.begin());
+		std::copy(offsets, offsets + count, recordedvertexoffsets.begin());
+		return true;
+	}
+	bool shouldBindIndexBuffer(VkBuffer buffer, VkDeviceSize offset, VkIndexType type) {
+		if(recordedindexbuffer == buffer && recordedindexoffset == offset
+				&& recordedindextype == type) return false;
+		recordedindexbuffer = buffer;
+		recordedindexoffset = offset;
+		recordedindextype = type;
 		return true;
 	}
 
@@ -579,7 +742,7 @@ private:
 	uint32_t instanceapiversion = 0;
 	bool validationactive = false;
 
-	GLFWwindow* window = nullptr;
+	gBaseWindow* window = nullptr;
 	bool vsyncenabled = false;
 	bool swapchainrecreaterequested = false;
 
@@ -589,14 +752,29 @@ private:
 	VkFormat swapchainformat = VK_FORMAT_UNDEFINED;
 	VkExtent2D swapchainextent = {0, 0};
 
-	// Depth attachment of the render pass. One image for all swapchain images: only
-	// one frame writes depth at a time, because the render pass both clears it at
-	// the start and never stores it past the end. Sized with the swapchain, so it is
-	// rebuilt on a resize alongside the framebuffers.
-	VkImage depthimage = VK_NULL_HANDLE;
-	VkDeviceMemory depthimagememory = VK_NULL_HANDLE;
-	VkImageView depthimageview = VK_NULL_HANDLE;
+	// One depth attachment per frame in flight. This avoids overlapping writes
+	// without allocating one for every (often more numerous) swapchain image.
+	std::vector<VkImage> depthimages;
+	std::vector<VkDeviceMemory> depthimagememories;
+	std::vector<VkImageView> depthimageviews;
 	VkFormat depthformat = VK_FORMAT_UNDEFINED;
+
+	// Multisampling. requestedsamples is the application's ask, samplecount is what
+	// the device agreed to and what everything below is built with; see the setters.
+	uint32_t requestedsamples = 1;
+	VkSampleCountFlagBits samplecount = VK_SAMPLE_COUNT_1_BIT;
+	bool sampleshadingenabled = false;
+	float minsampleshading = 0.25f;
+
+	// The multisampled colour attachment the screen pass renders into while MSAA is
+	// on, one per frame in flight for the same reason depth is: private slots avoid
+	// overlapping writes without one per swapchain image. It never leaves tile
+	// memory - the pass clears it, resolves it into the acquired swapchain image and
+	// discards the samples - so it is created TRANSIENT and, where the device offers
+	// it, backed by LAZILY_ALLOCATED memory that a tiler never has to page in.
+	std::vector<VkImage> msaacolorimages;
+	std::vector<VkDeviceMemory> msaacolormemories;
+	std::vector<VkImageView> msaacolorviews;
 
 	// Shadow map: a depth-only target drawn from the light's point of view and
 	// sampled while shading. See gVKShadow.h.
@@ -624,7 +802,14 @@ private:
 	bool shadowpassactive = false;
 
 	VkRenderPass renderpass = VK_NULL_HANDLE;
-	// One per swapchain image view.
+	// A 1x colour+depth pass that is never begun. It exists only while the screen
+	// pass is multisampled, as the compatibility template the single-sample
+	// pipelines are built against - a pipeline needs a render pass at build time,
+	// and the passes those pipelines really run in (the per-FBO ones) are created
+	// later, on demand, one per render target. VK_NULL_HANDLE when MSAA is off,
+	// where the screen pass is itself the 1x template.
+	VkRenderPass singlesamplerenderpass = VK_NULL_HANDLE;
+	// One per (frame-in-flight, swapchain image) pair.
 	std::vector<VkFramebuffer> framebuffers;
 
 	VkCommandPool commandpool = VK_NULL_HANDLE;
@@ -655,19 +840,19 @@ private:
 	uint32_t screenshotwidth = 0;
 	uint32_t screenshotheight = 0;
 	VkFormat screenshotformat = VK_FORMAT_UNDEFINED;
+	// One entry per sample count in use; index 0 is always the single-sample build.
+	// Layouts and reflected sizes are shared by both, because the variants differ
+	// only in their multisample state and the pass they were built against.
 	VkPipelineLayout color2dpipelinelayout = VK_NULL_HANDLE;
-	VkPipeline color2dpipeline = VK_NULL_HANDLE;
-	VkPipeline color2dlinepipeline = VK_NULL_HANDLE;
-	VkPipeline color2dadditivepipeline = VK_NULL_HANDLE;
-	VkPipeline image2dadditivepipeline = VK_NULL_HANDLE;
+	gVKPipelineVariants color2d[GVK_PIPELINE_SAMPLE_VARIANTS];
 	VkPipelineLayout image2dpipelinelayout = VK_NULL_HANDLE;
-	VkPipeline image2dpipeline = VK_NULL_HANDLE;
+	gVKPipelineVariants image2d[GVK_PIPELINE_SAMPLE_VARIANTS];
+	// Which of the two the getters hand out; see useScreenPipelines().
+	uint32_t activepipelinevariant = 0;
 	// 3D mesh path. Same shape as the 2D pipelines above, but with depth test and
 	// depth write on and a vertex layout matching gVertex.
 	VkPipelineLayout mesh3dpipelinelayout = VK_NULL_HANDLE;
-	VkPipeline mesh3dpipeline = VK_NULL_HANDLE;
-	VkPipeline mesh3dlinepipeline = VK_NULL_HANDLE;
-	VkPipeline mesh3dblendpipeline = VK_NULL_HANDLE;
+	gVKPipelineVariants mesh3d[GVK_PIPELINE_SAMPLE_VARIANTS];
 	std::vector<VkDescriptorSetLayout> mesh3dsetlayouts;
 	uint32_t mesh3dpushsize = 0;
 	VkShaderStageFlags mesh3dpushstages = 0;
@@ -679,12 +864,11 @@ private:
 	// The skybox: six textured quads around the camera, with a pipeline of its own
 	// because nothing it draws is lit and it needs none of the mesh push constants.
 	VkPipelineLayout skyboxpipelinelayout = VK_NULL_HANDLE;
-	VkPipeline skyboxpipeline = VK_NULL_HANDLE;
+	gVKPipelineVariants skybox[GVK_PIPELINE_SAMPLE_VARIANTS];
 	std::vector<VkDescriptorSetLayout> skyboxsetlayouts;
 	uint32_t skyboxpushsize = 0;
 	VkShaderStageFlags skyboxpushstages = 0;
-	VkPipeline mesh3dpbrpipeline = VK_NULL_HANDLE;
-	VkPipeline mesh3dpbrblendpipeline = VK_NULL_HANDLE;
+	gVKPipelineVariants mesh3dpbr[GVK_PIPELINE_SAMPLE_VARIANTS];
 	std::vector<VkDescriptorSetLayout> mesh3dpbrsetlayouts;
 	uint32_t mesh3dpbrpushsize = 0;
 	VkShaderStageFlags mesh3dpbrpushstages = 0;
@@ -693,6 +877,8 @@ private:
 	// finite, so caching by combination rather than per mesh keeps allocations down.
 	// Freed with the pool in gvkDestroyGraphicsPipelines, so this only needs clearing.
 	std::map<std::array<uint32_t, 5>, VkDescriptorSet> pbrmaterialsets;
+	// And one per distinct diffuse/specular/normal trio for the classic path.
+	std::map<std::array<uint32_t, 3>, VkDescriptorSet> materialsets;
 
 	// Camera and lights for the 3D path, one set per frame in flight so the CPU can
 	// write the next frame while the GPU still reads the previous one. Permanently
@@ -713,6 +899,9 @@ private:
 	uint32_t image2dpushsize = 0;
 	VkShaderStageFlags image2dpushstages = 0;
 	VkDescriptorPool descriptorpool = VK_NULL_HANDLE;
+	VkPipelineCache pipelinecache = VK_NULL_HANDLE;
+	// Identical filter/wrap combinations share one immutable sampler object.
+	std::map<uint64_t, std::pair<VkSampler, uint32_t>> samplercache;
 	// One host-visible, persistently mapped vertex buffer per frame in flight,
 	// filled linearly each frame and rewound at the start of the next.
 	std::vector<VkBuffer> dynvertexbuffers;
@@ -743,8 +932,17 @@ private:
 	bool recordedcullvalid = false;
 	VkCullModeFlags recordedcullmode = VK_CULL_MODE_NONE;
 	VkFrontFace recordedfrontface = VK_FRONT_FACE_CLOCKWISE;
+	// Two: a mesh binds its vertices plus the per-instance model matrices, and the
+	// 2D paths bind one. A larger bind is simply never cached.
+	static const uint32_t gvkmaxvertexbindings = 2;
+	std::array<VkBuffer, gvkmaxvertexbindings> recordedvertexbuffers{};
+	std::array<VkDeviceSize, gvkmaxvertexbindings> recordedvertexoffsets{};
+	uint32_t recordedvertexcount = 0;
+	VkBuffer recordedindexbuffer = VK_NULL_HANDLE;
+	VkDeviceSize recordedindexoffset = 0;
+	VkIndexType recordedindextype = VK_INDEX_TYPE_UINT32;
 };
 
-#endif /* GVK_DESKTOP_GLFW */
+#endif /* GVK_VULKAN */
 
 #endif /* CORE_GVKCONTEXT_H */

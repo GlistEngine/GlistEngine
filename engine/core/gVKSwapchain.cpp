@@ -6,12 +6,12 @@
 
 #include "gVKSwapchain.h"
 
-#ifdef GVK_DESKTOP_GLFW
+#ifdef GVK_VULKAN
 
 #include "gVKRenderTarget.h"
 #include "gVKSync.h"
 #include "gUtils.h"
-#include <GLFW/glfw3.h>
+#include "gBaseWindow.h"
 #include <algorithm>
 
 // The OpenGL backend treats the engine's colour values as display-ready values.
@@ -52,12 +52,13 @@ static VkSurfaceFormatKHR gvkPickSurfaceFormat(const std::vector<VkSurfaceFormat
 // currentExtent; the special value UINT32_MAX means the window system lets us
 // choose, in which case the framebuffer size is used and clamped to what the
 // surface supports.
-static VkExtent2D gvkPickExtent(const VkSurfaceCapabilitiesKHR& caps, GLFWwindow* window) {
+static VkExtent2D gvkPickExtent(const VkSurfaceCapabilitiesKHR& caps, gBaseWindow* window) {
 	if(caps.currentExtent.width != UINT32_MAX) {
 		return caps.currentExtent;
 	}
 	int width = 0, height = 0;
-	glfwGetFramebufferSize(window, &width, &height);
+	width = window->getWidth();
+	height = window->getHeight();
 	VkExtent2D extent{};
 	extent.width = std::clamp(static_cast<uint32_t>(width), caps.minImageExtent.width, caps.maxImageExtent.width);
 	extent.height = std::clamp(static_cast<uint32_t>(height), caps.minImageExtent.height, caps.maxImageExtent.height);
@@ -93,7 +94,7 @@ static VkPresentModeKHR gvkPickPresentMode(const std::vector<VkPresentModeKHR>& 
 	return VK_PRESENT_MODE_FIFO_KHR;
 }
 
-bool gvkCreateSwapchain(gVKContext& ctx, GLFWwindow* window) {
+bool gvkCreateSwapchain(gVKContext& ctx, gBaseWindow* window) {
 	if(ctx.device == VK_NULL_HANDLE || ctx.surface == VK_NULL_HANDLE || window == nullptr) {
 		gLoge("gVKSwapchain") << "Cannot create the swapchain before the device and the surface exist.";
 		return false;
@@ -104,6 +105,10 @@ bool gvkCreateSwapchain(gVKContext& ctx, GLFWwindow* window) {
 		gLoge("gVKSwapchain") << "Could not query the surface capabilities.";
 		return false;
 	}
+	// Keep the capabilities that produced this swapchain. On platforms such as
+	// Android, currentExtent is fixed in physical surface pixels while the window
+	// can intentionally expose a smaller logical design size to the game.
+	ctx.surfacecapabilities = caps;
 
 	uint32_t formatcount = 0;
 	vkGetPhysicalDeviceSurfaceFormatsKHR(ctx.physicaldevice, ctx.surface, &formatcount, nullptr);
@@ -153,7 +158,12 @@ bool gvkCreateSwapchain(gVKContext& ctx, GLFWwindow* window) {
 		createinfo.imageSharingMode = VK_SHARING_MODE_EXCLUSIVE;
 	}
 
-	createinfo.preTransform = caps.currentTransform;
+	// ANativeWindow dimensions are already expressed in the activity's current
+	// coordinates. Applying Android's natural-display transform again rotates a
+	// landscape render target inside the landscape window.
+	createinfo.preTransform = (caps.supportedTransforms & VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR)
+			? VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR
+			: caps.currentTransform;
 	createinfo.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
 	createinfo.presentMode = gvkPickPresentMode(ctx.surfacepresentmodes, ctx.vsyncenabled);
 	createinfo.clipped = VK_TRUE;
@@ -207,6 +217,7 @@ bool gvkCreateSwapchain(gVKContext& ctx, GLFWwindow* window) {
 	gLogi("gVKSwapchain") << "Swapchain created: " << createdcount << " images, "
 			<< ctx.swapchainextent.width << "x" << ctx.swapchainextent.height
 			<< ", format " << ctx.swapchainformat << ", color space " << surfaceformat.colorSpace
+			<< ", transform " << createinfo.preTransform
 			<< ", present mode " << (createinfo.presentMode == VK_PRESENT_MODE_FIFO_KHR ? "FIFO (vsync)"
 					: createinfo.presentMode == VK_PRESENT_MODE_MAILBOX_KHR ? "MAILBOX"
 					: createinfo.presentMode == VK_PRESENT_MODE_IMMEDIATE_KHR ? "IMMEDIATE" : "other");
@@ -230,11 +241,12 @@ void gvkDestroySwapchain(gVKContext& ctx) {
 	ctx.swapchainimages.clear();
 }
 
-bool gvkRecreateSwapchain(gVKContext& ctx, GLFWwindow* window) {
+bool gvkRecreateSwapchain(gVKContext& ctx, gBaseWindow* window) {
 	if(window == nullptr || ctx.device == VK_NULL_HANDLE) return false;
 
 	int width = 0, height = 0;
-	glfwGetFramebufferSize(window, &width, &height);
+	width = window->getWidth();
+	height = window->getHeight();
 	if(width == 0 || height == 0) {
 		// Minimised: there is nothing to size the swapchain to. The frame is skipped
 		// and the loop tries again once the window comes back.
@@ -244,10 +256,11 @@ bool gvkRecreateSwapchain(gVKContext& ctx, GLFWwindow* window) {
 	// Everything below is still referenced by work the GPU may not have finished.
 	vkDeviceWaitIdle(ctx.device);
 
-	// Reverse dependency order: the framebuffers point at the image views and at the
-	// depth view, and the present semaphores are one per image, so all of them go
-	// before the swapchain.
+	// Reverse dependency order: the framebuffers point at the image views, at the
+	// depth view and - with MSAA on - at the multisampled colour view, and the
+	// present semaphores are one per image, so all of them go before the swapchain.
 	gvkDestroyFramebuffers(ctx);
+	gvkDestroyMsaaColorResources(ctx);
 	gvkDestroyDepthResources(ctx);
 	gvkDestroyPresentSemaphores(ctx);
 	gvkDestroySwapchain(ctx);
@@ -256,6 +269,10 @@ bool gvkRecreateSwapchain(gVKContext& ctx, GLFWwindow* window) {
 	// The depth buffer is sized to the swapchain, so it is rebuilt here; its format
 	// is kept, which is what lets the render pass survive.
 	if(!gvkCreateDepthResources(ctx)) return false;
+	// So is the multisampled colour attachment, for the same reason. Its sample
+	// count and format are unchanged, so this too leaves the render pass valid; it
+	// does nothing at all while MSAA is off.
+	if(!gvkCreateMsaaColorResources(ctx)) return false;
 	if(!gvkCreateFramebuffers(ctx)) return false;
 	// The render pass survives: neither the surface format nor the depth format
 	// changes with the size.
@@ -266,4 +283,4 @@ bool gvkRecreateSwapchain(gVKContext& ctx, GLFWwindow* window) {
 	return true;
 }
 
-#endif /* GVK_DESKTOP_GLFW */
+#endif /* GVK_VULKAN */

@@ -408,6 +408,20 @@ public:
 	// so the backend overrides this to rebuild the swapchain with the new one.
 	virtual void setVsync(bool enabled) {}
 
+	// Multisample anti-aliasing, in samples per pixel: 1 (the default) is off, and 2,
+	// 4 or 8 ask for that many coverage samples on the screen pass. Shaped like
+	// setVsync for the same reason - OpenGL takes it from the window's framebuffer
+	// while Vulkan bakes it into the render pass and every pipeline, so only the
+	// Vulkan backend overrides these.
+	//
+	// The request is capped at what the device supports for colour *and* depth
+	// attachments, so getMultiSampling() is the value that was actually achieved and
+	// may be lower than what was asked for - 1 on a device that offers no
+	// multisampled combination at all. Off by default: an existing application sees
+	// no change in cost or appearance until it asks.
+	virtual void setMultiSampling(int samples) {}
+	virtual int getMultiSampling() const { return 1; }
+
 	void updateScene();
 
 	void gPushMatrix();

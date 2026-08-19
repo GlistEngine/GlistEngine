@@ -21,7 +21,7 @@
 
 #include "gVKContext.h"
 
-#ifdef GVK_DESKTOP_GLFW
+#ifdef GVK_VULKAN
 
 #include <cstdint>
 #include <string>
@@ -44,6 +44,6 @@ long long gvkShaderFileTimestamp(const std::string& fileName);
 bool gvkCompileShaderFile(const std::string& fileName, VkShaderStageFlagBits stage,
 		std::vector<uint32_t>& spirv);
 
-#endif /* GVK_DESKTOP_GLFW */
+#endif /* GVK_VULKAN */
 
 #endif /* CORE_GVKSHADERCOMPILER_H */

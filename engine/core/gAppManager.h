@@ -314,6 +314,25 @@ public:
 	void disableVsync();
 
 	/**
+	 * Asks the renderer for multisample anti-aliasing, in the same place and the same
+	 * way vsync is asked for: the application states what it wants and the backend
+	 * decides what it can actually give.
+	 *
+	 * samples is 1 (off), 2, 4, 8 or 16. The request is capped at what the device
+	 * reports for colour and depth attachments together and rounded down to a
+	 * supported count, so getMultiSampling() returns what was achieved rather than
+	 * what was asked for - a device that offers nothing above 1x simply leaves it off.
+	 * Only the Vulkan backend implements this; under OpenGL it is a no-op returning 1.
+	 *
+	 * Safe to call before the renderer exists, in which case the request is carried
+	 * into Vulkan initialisation; called later, it is applied at the next frame
+	 * boundary, because taking effect means rebuilding the render pass, the depth and
+	 * multisample images, the framebuffers and every pipeline.
+	 */
+	void setMultiSampling(int samples);
+	int getMultiSampling() const;
+
+	/**
 	 * Completely replace the current gGUIFrame with the specified gGUIFrame.
 	 *
 	 * @param guiFrame new gGUIFrame to replace.

@@ -25,7 +25,7 @@
 
 #include "gVKContext.h"
 
-#ifdef GVK_DESKTOP_GLFW
+#ifdef GVK_VULKAN
 
 /*
  * Creates the depth image, its view and sampler, the render pass and framebuffer
@@ -50,6 +50,6 @@ void gvkDestroyShadowResources(gVKContext& ctx);
 bool gvkBeginShadowPass(gVKContext& ctx);
 void gvkEndShadowPass(gVKContext& ctx);
 
-#endif /* GVK_DESKTOP_GLFW */
+#endif /* GVK_VULKAN */
 
 #endif /* CORE_GVKSHADOW_H */

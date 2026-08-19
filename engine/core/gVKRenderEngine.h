@@ -252,6 +252,13 @@ public:
 	// Rebuilds the swapchain with the present mode the new setting asks for.
 	void setVsync(bool enabled) override;
 
+	// Rebuilds the screen render pass, its attachments and every pipeline at the new
+	// sample count. Like setVsync, the work is deferred to the next frame boundary,
+	// because this can be called from anywhere - including mid-frame with a command
+	// buffer already recording.
+	void setMultiSampling(int samples) override;
+	int getMultiSampling() const override;
+
 	void drawTexturedRect2D(GLuint textureId, GLuint maskTextureId, const glm::vec4& tint,
 			const glm::mat4& mvp,
 			const glm::vec2& uvOffset = glm::vec2(0.0f), const glm::vec2& uvScale = glm::vec2(1.0f)) override;
@@ -377,15 +384,31 @@ private:
 		bool culling = false;
 		int cullface = GL_BACK;
 		int cullingdirection = GL_CCW;
+		// A digest of everything canMergeQueuedDraws compares, filled when the draw
+		// is queued. flushQueuedDraws sorts by it so that draws which could merge but
+		// arrived apart end up next to each other; the exact comparison still decides
+		// whether they really do, so a hash collision costs a missed merge and
+		// nothing else.
+		uint64_t mergekey = 0;
 	};
 	std::vector<QueuedMeshDraw> queuedmeshdraws;
 	bool flushingqueueddraws = false;
+	static uint64_t gvkQueuedDrawKey(const QueuedMeshDraw& draw);
 	bool canMergeQueuedDraws(const QueuedMeshDraw& first, const QueuedMeshDraw& next) const;
 	void recordQueuedDrawGroup(size_t first, size_t count);
 	void destroyAllTextures();
 	// The Vulkan texture behind the currently bound id, or null when there is none
 	// yet - gTexture sets filtering and wrapping both before and after the upload.
 	gVKTexture* getBoundVKTexture();
+
+	// Applies a pending setMultiSampling at a frame boundary: everything the sample
+	// count is baked into - the render pass, the depth and MSAA attachments, the
+	// framebuffers and both pipeline builds - is destroyed and rebuilt. Returns
+	// straight away when nothing was requested, which is the normal case.
+	void applyPendingSampleCount();
+	// The sample count an app asked for before the context existed, and the pending
+	// request applyPendingSampleCount acts on. 0 means "nothing pending".
+	int pendingsamplecount = 0;
 
 	// Shader hot reload. Development builds watch the .vert / .frag sources the 2D
 	// pipelines are compiled from and rebuild them when one is saved, so a shader

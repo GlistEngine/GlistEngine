@@ -13,7 +13,7 @@
 
 #include "gVKContext.h"
 
-#ifdef GVK_DESKTOP_GLFW
+#ifdef GVK_VULKAN
 
 /*
  * Creates the per frame primitives: GVK_MAX_FRAMES_IN_FLIGHT image available
@@ -33,6 +33,6 @@ void gvkDestroyFrameSyncObjects(gVKContext& ctx);
 bool gvkCreatePresentSemaphores(gVKContext& ctx, uint32_t imagecount);
 void gvkDestroyPresentSemaphores(gVKContext& ctx);
 
-#endif /* GVK_DESKTOP_GLFW */
+#endif /* GVK_VULKAN */
 
 #endif /* CORE_GVKSYNC_H */

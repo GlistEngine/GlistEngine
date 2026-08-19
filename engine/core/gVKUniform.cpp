@@ -6,7 +6,7 @@
 
 #include "gVKUniform.h"
 
-#ifdef GVK_DESKTOP_GLFW
+#ifdef GVK_VULKAN
 
 #include "gVKBuffer.h"
 #include "gRenderer.h"
@@ -139,4 +139,4 @@ bool gvkWriteSceneUniforms(gVKContext& ctx, const gVKSceneUniforms& data) {
 	return true;
 }
 
-#endif /* GVK_DESKTOP_GLFW */
+#endif /* GVK_VULKAN */

@@ -14,6 +14,7 @@
 #include <iostream>
 #include <signal.h>
 #include <unistd.h>
+#include <vector>
 
 class gAppManager;
 class gImage;
@@ -57,6 +58,9 @@ public:
 	 * Destroys all remaining windows and cursors, restores any modified gamma ramps and frees any other allocated resources.
 	 */
 	virtual void close();
+	virtual bool supportsVulkan() const;
+	virtual void getVulkanInstanceExtensions(std::vector<const char*>& extensions) const;
+	virtual bool createVulkanSurface(void* instance, void* surface);
 
 	bool isVsyncEnabled();
 	virtual void setVsync(bool vsync);

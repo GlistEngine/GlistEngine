@@ -13,9 +13,9 @@
 
 #include "gVKContext.h"
 
-#ifdef GVK_DESKTOP_GLFW
+#ifdef GVK_VULKAN
 
-struct GLFWwindow;
+class gBaseWindow;
 
 /*
  * Waits for the previous use of this frame slot, acquires a swapchain image and
@@ -23,14 +23,14 @@ struct GLFWwindow;
  * frame has to be skipped, for example because the swapchain was rebuilt; the
  * caller must not call gvkEndFrame in that case.
  */
-bool gvkBeginFrame(gVKContext& ctx, GLFWwindow* window);
+bool gvkBeginFrame(gVKContext& ctx, gBaseWindow* window);
 
 /*
  * Ends the render pass, submits the command buffer and presents the image, then
  * advances to the next frame slot.
  */
-bool gvkEndFrame(gVKContext& ctx, GLFWwindow* window);
+bool gvkEndFrame(gVKContext& ctx, gBaseWindow* window);
 
-#endif /* GVK_DESKTOP_GLFW */
+#endif /* GVK_VULKAN */
 
 #endif /* CORE_GVKFRAME_H */

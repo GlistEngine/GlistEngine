@@ -47,7 +47,7 @@ void gStartEngine(gBaseApp* baseApp, const std::string& appName, int windowMode,
 void gStartEngine(gBaseApp* baseApp, const std::string& appName, int windowMode, int unitWidth, int unitHeight, int screenScaling, int width, int height, bool isResizable, int renderEngine) {
     if(windowMode == G_WINDOWMODE_NONE) windowMode = G_WINDOWMODE_APP;
 #if TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
-    ios_main(baseApp, appName.c_str(), windowMode, unitWidth, unitHeight, screenScaling, width, height, isResizable);
+    ios_main(baseApp, appName.c_str(), windowMode, unitWidth, unitHeight, screenScaling, width, height, isResizable, renderEngine);
 #elif defined(ANDROID)
     gAppManager* manager = new gAppManager(appName, baseApp, width, height, windowMode, unitWidth, unitHeight, screenScaling, isResizable, G_LOOPMODE_NORMAL);
     manager->setRenderEngine(renderEngine);
@@ -463,6 +463,15 @@ void gAppManager::disableVsync() {
 	if(renderengine == G_RENDERER_VK && renderer != nullptr) {
 		static_cast<gVKRenderEngine*>(renderer)->setVsync(false);
 	}
+}
+
+void gAppManager::setMultiSampling(int samples) {
+	if(renderer != nullptr) renderer->setMultiSampling(samples);
+}
+
+int gAppManager::getMultiSampling() const {
+	if(renderer == nullptr) return 1;
+	return renderer->getMultiSampling();
 }
 
 void gAppManager::setCurrentGUIFrame(gGUIFrame *guiFrame) {

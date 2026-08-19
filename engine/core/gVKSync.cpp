@@ -6,7 +6,7 @@
 
 #include "gVKSync.h"
 
-#ifdef GVK_DESKTOP_GLFW
+#ifdef GVK_VULKAN
 
 #include "gUtils.h"
 
@@ -101,4 +101,4 @@ void gvkDestroyPresentSemaphores(gVKContext& ctx) {
 	ctx.renderfinishedsemaphores.clear();
 }
 
-#endif /* GVK_DESKTOP_GLFW */
+#endif /* GVK_VULKAN */

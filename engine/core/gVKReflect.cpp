@@ -4,7 +4,7 @@
 
 #include "gVKReflect.h"
 
-#ifdef GVK_DESKTOP_GLFW
+#ifdef GVK_VULKAN
 
 #include "gUtils.h"
 #include <algorithm>
@@ -463,4 +463,4 @@ bool gvkReflectSpirv(const uint32_t* spirv, size_t sizeBytes, gVKReflectedLayout
 	return true;
 }
 
-#endif /* GVK_DESKTOP_GLFW */
+#endif /* GVK_VULKAN */

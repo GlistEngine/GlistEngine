@@ -6,17 +6,18 @@
  */
 
 #include "gVKFrame.h"
+#include "gVKDraw.h"
 #include "gVKMeshBuffer.h"
 
-#ifdef GVK_DESKTOP_GLFW
+#ifdef GVK_VULKAN
 
 #include "gVKSwapchain.h"
 #include "gVKBuffer.h"
 #include "gUtils.h"
-#include <GLFW/glfw3.h>
+#include "gBaseWindow.h"
 #include <cstring>
 
-bool gvkBeginFrame(gVKContext& ctx, GLFWwindow* window) {
+bool gvkBeginFrame(gVKContext& ctx, gBaseWindow* window) {
 	if(ctx.device == VK_NULL_HANDLE || ctx.swapchain == VK_NULL_HANDLE || window == nullptr) {
 		return false;
 	}
@@ -28,7 +29,8 @@ bool gvkBeginFrame(gVKContext& ctx, GLFWwindow* window) {
 	// A resized window makes the current swapchain the wrong size. Rebuilding it
 	// here keeps the check in one place instead of relying on a resize callback.
 	int width = 0, height = 0;
-	glfwGetFramebufferSize(window, &width, &height);
+	width = window->getWidth();
+	height = window->getHeight();
 	if(width <= 0 || height <= 0) {
 		// Minimised: there is nothing to render into.
 		return false;
@@ -38,8 +40,16 @@ bool gvkBeginFrame(gVKContext& ctx, GLFWwindow* window) {
 		gvkRecreateSwapchain(ctx, window);
 		return false;
 	}
-	if(static_cast<uint32_t>(width) != ctx.swapchainextent.width ||
-			static_cast<uint32_t>(height) != ctx.swapchainextent.height) {
+	// Only compare the window size when the window system lets the application
+	// choose the swapchain extent. Android commonly reports a fixed currentExtent
+	// in physical pixels while gBaseWindow exposes logical game coordinates; those
+	// values are both correct and must not cause a rebuild loop. Fixed-extent
+	// surfaces report real changes through acquire/present as OUT_OF_DATE.
+	const bool applicationChoosesExtent =
+			ctx.surfacecapabilities.currentExtent.width == UINT32_MAX;
+	if(applicationChoosesExtent &&
+			(static_cast<uint32_t>(width) != ctx.swapchainextent.width ||
+			 static_cast<uint32_t>(height) != ctx.swapchainextent.height)) {
 		gvkRecreateSwapchain(ctx, window);
 		return false;
 	}
@@ -60,10 +70,6 @@ bool gvkBeginFrame(gVKContext& ctx, GLFWwindow* window) {
 		gLoge("gVKFrame") << "vkAcquireNextImageKHR failed! VkResult: " << result;
 		return false;
 	}
-
-	// Only reset the fence once it is certain that work will be submitted, other-
-	// wise an early return would leave it unsignalled and the next wait would hang.
-	vkResetFences(ctx.device, 1, &ctx.inflightfences[ctx.currentframe]);
 
 	VkCommandBuffer commandbuffer = ctx.commandbuffers[ctx.currentframe];
 	vkResetCommandBuffer(commandbuffer, 0);
@@ -95,6 +101,12 @@ bool gvkBeginFrame(gVKContext& ctx, GLFWwindow* window) {
 	// The generation has just moved on, so this is the point where the oldest
 	// retired buffers become safe to free.
 	gvkCollectRetiredMeshBuffers(ctx);
+	// Staging of uploads the GPU has already finished. Checked rather than waited
+	// on, so a batch still running simply gets collected a frame later.
+	gvkCollectUploads(ctx);
+	// The vertex ring has just been rewound, so any batch left over from a frame
+	// that ended badly now points at bytes about to be overwritten.
+	gvkReset2DBatch();
 	ctx.renderpassactive = false;
 	ctx.frameactive = true;
 	return true;
@@ -115,13 +127,20 @@ bool gvkEnsureRenderPass(gVKContext& ctx) {
 	VkRenderPassBeginInfo renderpassinfo{};
 	renderpassinfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
 	renderpassinfo.renderPass = ctx.renderpass;
-	renderpassinfo.framebuffer = ctx.framebuffers[ctx.currentimageindex];
+	const size_t framebufferindex = static_cast<size_t>(ctx.currentframe) * ctx.swapchainimageviews.size()
+			+ ctx.currentimageindex;
+	if(framebufferindex >= ctx.framebuffers.size()) return false;
+	renderpassinfo.framebuffer = ctx.framebuffers[framebufferindex];
 	renderpassinfo.renderArea.offset = {0, 0};
 	renderpassinfo.renderArea.extent = ctx.swapchainextent;
-	// Both attachments use a CLEAR load operation, and the array is indexed by
-	// attachment number, so entry 0 is the colour the screen ends up showing
-	// wherever nothing is drawn and entry 1 is the depth the buffer starts at.
-	// 1.0 is the far plane, so any fragment passes the default VK_COMPARE_OP_LESS.
+	// The colour and depth attachments use a CLEAR load operation, and the array is
+	// indexed by attachment number, so entry 0 is the colour the screen ends up
+	// showing wherever nothing is drawn and entry 1 is the depth the buffer starts
+	// at. 1.0 is the far plane, so any fragment passes the default
+	// VK_COMPARE_OP_LESS. With MSAA on those two are the multisampled pair and the
+	// swapchain image follows as attachment 2, but it loads DONT_CARE - every texel
+	// of it is written by the resolve - so it needs no clear value and this array
+	// stays two entries either way.
 	VkClearValue clearvalues[2];
 	clearvalues[0] = ctx.clearvalue;
 	clearvalues[1].depthStencil = {1.0f, 0};
@@ -129,6 +148,11 @@ bool gvkEnsureRenderPass(gVKContext& ctx) {
 	renderpassinfo.pClearValues = clearvalues;
 	vkCmdBeginRenderPass(commandbuffer, &renderpassinfo, VK_SUBPASS_CONTENTS_INLINE);
 	ctx.resetRecordedDrawState();
+	// From here until this pass closes, every draw has to use pipelines built for
+	// this pass's sample count. Set after the begin rather than at the top of the
+	// function, because the early return above is also taken while an *offscreen*
+	// pass is open, and that one is single-sampled.
+	ctx.useScreenPipelines();
 
 	// A negative-height viewport flips Y, so the orthographic projection the engine
 	// builds for OpenGL's top-left origin lands the same way under Vulkan (needs
@@ -151,10 +175,14 @@ bool gvkEnsureRenderPass(gVKContext& ctx) {
 	return true;
 }
 
-bool gvkEndFrame(gVKContext& ctx, GLFWwindow* window) {
+bool gvkEndFrame(gVKContext& ctx, gBaseWindow* window) {
 	if(!ctx.frameactive) return false;
 	// Open the pass if the frame drew nothing, so the clear still reaches the screen.
 	gvkEnsureRenderPass(ctx);
+	// Whatever 2D is still batched has to be recorded while the pass is open. This
+	// is the last chance: the batch holds a range of the frame's vertex buffer, and
+	// that buffer is rewound at the start of the next frame.
+	gvkFlush2DBatch(ctx);
 	ctx.frameactive = false;
 
 	VkCommandBuffer commandbuffer = ctx.commandbuffers[ctx.currentframe];
@@ -231,6 +259,20 @@ bool gvkEndFrame(gVKContext& ctx, GLFWwindow* window) {
 	submitinfo.signalSemaphoreCount = 1;
 	submitinfo.pSignalSemaphores = signalsemaphores;
 
+	// Anything uploaded while this frame was recorded has to reach the queue before
+	// the frame does. Submission order is what orders them: the barriers ending each
+	// transfer apply to every command submitted after it on this queue, so the frame
+	// reads finished textures and vertices without the CPU waiting for either.
+	gvkFlushUploads(ctx);
+
+
+	// Reset only immediately before submission. Any earlier recording error must
+	// leave the already-signalled fence intact so the next frame cannot deadlock.
+	result = vkResetFences(ctx.device, 1, &ctx.inflightfences[ctx.currentframe]);
+	if(result != VK_SUCCESS) {
+		gLoge("gVKFrame") << "vkResetFences failed! VkResult: " << result;
+		return false;
+	}
 	result = vkQueueSubmit(ctx.graphicsqueue, 1, &submitinfo, ctx.inflightfences[ctx.currentframe]);
 	if(result != VK_SUCCESS) {
 		gLoge("gVKFrame") << "vkQueueSubmit failed! VkResult: " << result;
@@ -264,8 +306,14 @@ bool gvkEndFrame(gVKContext& ctx, GLFWwindow* window) {
 	presentinfo.pImageIndices = &ctx.currentimageindex;
 
 	result = vkQueuePresentKHR(ctx.presentqueue, &presentinfo);
-	if(result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR) {
+	if(result == VK_ERROR_OUT_OF_DATE_KHR) {
 		gvkRecreateSwapchain(ctx, window);
+	// SUBOPTIMAL is still a successful presentation. Some Android emulator
+	// surfaces report it persistently even when their extent is stable; rebuilding
+	// here would therefore destroy and recreate the complete frame path every frame.
+	} else if(result == VK_SUBOPTIMAL_KHR) {
+		// Keep rendering until acquire/present reports OUT_OF_DATE or an explicit
+		// resize/vsync request asks for a rebuild.
 	} else if(result != VK_SUCCESS) {
 		gLoge("gVKFrame") << "vkQueuePresentKHR failed! VkResult: " << result;
 	}
@@ -280,4 +328,4 @@ bool gvkEndFrame(gVKContext& ctx, GLFWwindow* window) {
 	return true;
 }
 
-#endif /* GVK_DESKTOP_GLFW */
+#endif /* GVK_VULKAN */
