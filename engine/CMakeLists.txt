@@ -260,6 +260,7 @@ set(SRC_FILES
 	${ENGINE_DIR}/graphics/primitives/gBox.cpp
 	${ENGINE_DIR}/graphics/primitives/gSphere.cpp
 	${ENGINE_DIR}/graphics/primitives/gTriangle.cpp
+        ${ENGINE_DIR}/graphics/primitives/gPolygon.cpp
 	${ENGINE_DIR}/graphics/primitives/gCylinder.cpp
 	${ENGINE_DIR}/graphics/primitives/gCone.cpp
 	${ENGINE_DIR}/graphics/primitives/gTube.cpp
