@@ -8,12 +8,12 @@
 #ifndef GRAPHICS_GBEZIERQUAD_H_
 #define GRAPHICS_GBEZIERQUAD_H_
 
-#include "gRenderObject.h"
+#include "gMesh.h"
 #include <glm/glm.hpp>
 #include <vector>
 
 // Evaluates and renders a standard 4-point (Cubic) Bezier curve.
-class gBezierQuad : public gRenderObject {
+class gBezierQuad : public gMesh {
 public:
 	gBezierQuad();
 	virtual ~gBezierQuad();

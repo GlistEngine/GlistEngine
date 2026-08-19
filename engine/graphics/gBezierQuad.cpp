@@ -76,14 +76,11 @@ glm::vec3 gBezierQuad::getPoint(float t) const {
 	if(points.empty()) return glm::vec3(0.0f);
 	if(points.size() == 1) return points[0];
 	if(points.size() == 2) return points[0] * (1.0f - t) + points[1] * t;
-
-	// 3 noktalý durum korumasý (Quadratic)
 	if(points.size() == 3) {
 		float u = 1.0f - t;
 		return (u * u * points[0]) + (2.0f * u * t * points[1]) + (t * t * points[2]);
 	}
 
-	// Standart 4 Noktalý (Cubic) Bezier Matematiði
 	float u = 1.0f - t;
 	return (u * u * u * points[0]) +
 	       (3.0f * u * u * t * points[1]) +
