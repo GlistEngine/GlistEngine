@@ -123,10 +123,16 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a0777928ef2860273b3477a7c2b47bf60"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7441f238a5edd1fc116bfdba5ce24fd7" id="r_a7441f238a5edd1fc116bfdba5ce24fd7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgPath.html#a7441f238a5edd1fc116bfdba5ce24fd7">addSubPath</a> (const <a class="el" href="classgPath.html">gPath</a> &amp;path, int pointcount)</td></tr>
 <tr class="separator:a7441f238a5edd1fc116bfdba5ce24fd7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a00c14273e236f7525cff2c32b5b0f748" id="r_a00c14273e236f7525cff2c32b5b0f748"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgPath.html#a00c14273e236f7525cff2c32b5b0f748">addSubPath</a> (const <a class="el" href="classgBezierQuad.html">gBezierQuad</a> &amp;bezierquad, int pointcount)</td></tr>
+<tr class="separator:a00c14273e236f7525cff2c32b5b0f748"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a53078ef1eb4d5d44c26b2243464f73c7" id="r_a53078ef1eb4d5d44c26b2243464f73c7"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgPath.html#a53078ef1eb4d5d44c26b2243464f73c7">getSubPathCount</a> () const</td></tr>
 <tr class="separator:a53078ef1eb4d5d44c26b2243464f73c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a435ccf75ac2b6e4379287b3c8c58ee1c" id="r_a435ccf75ac2b6e4379287b3c8c58ee1c"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgPath.html#a435ccf75ac2b6e4379287b3c8c58ee1c">getPointCount</a> () const</td></tr>
 <tr class="separator:a435ccf75ac2b6e4379287b3c8c58ee1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5a76d2316f06d8e8311f2dce43ba8c29" id="r_a5a76d2316f06d8e8311f2dce43ba8c29"><td class="memItemLeft" align="right" valign="top">glm::vec3&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgPath.html#a5a76d2316f06d8e8311f2dce43ba8c29">getPoint</a> (int pointno)</td></tr>
+<tr class="separator:a5a76d2316f06d8e8311f2dce43ba8c29"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a70e06381e7fc89f8f686e2d9238b2280" id="r_a70e06381e7fc89f8f686e2d9238b2280"><td class="memItemLeft" align="right" valign="top">glm::vec3&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgPath.html#a70e06381e7fc89f8f686e2d9238b2280">getPoint</a> (int subpathno, int subpathpointno)</td></tr>
+<tr class="separator:a70e06381e7fc89f8f686e2d9238b2280"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5aeebe15ea1949093b4830f9c1e57903" id="r_a5aeebe15ea1949093b4830f9c1e57903"><td class="memItemLeft" align="right" valign="top">const std::vector&lt; <a class="el" href="classgPath_1_1gSubPath.html">gSubPath</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgPath.html#a5aeebe15ea1949093b4830f9c1e57903">getSubPaths</a> () const</td></tr>
 <tr class="separator:a5aeebe15ea1949093b4830f9c1e57903"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a084b356adfc83c165adc735ae2764119" id="r_a084b356adfc83c165adc735ae2764119"><td class="memItemLeft" align="right" valign="top">std::vector&lt; glm::vec3 &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgPath.html#a084b356adfc83c165adc735ae2764119">getPoints</a> () const</td></tr>
@@ -183,7 +189,7 @@ Public Member Functions</h2></td></tr>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
 <a id="a0777928ef2860273b3477a7c2b47bf60" name="a0777928ef2860273b3477a7c2b47bf60"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0777928ef2860273b3477a7c2b47bf60">&#9670;&#160;</a></span>addSubPath() <span class="overload">[1/5]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a0777928ef2860273b3477a7c2b47bf60">&#9670;&#160;</a></span>addSubPath() <span class="overload">[1/6]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -210,8 +216,36 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a00c14273e236f7525cff2c32b5b0f748" name="a00c14273e236f7525cff2c32b5b0f748"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a00c14273e236f7525cff2c32b5b0f748">&#9670;&#160;</a></span>addSubPath() <span class="overload">[2/6]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gPath::addSubPath </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classgBezierQuad.html">gBezierQuad</a> &amp;&#160;</td>
+          <td class="paramname"><em>bezierquad</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>pointcount</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a7441f238a5edd1fc116bfdba5ce24fd7" name="a7441f238a5edd1fc116bfdba5ce24fd7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7441f238a5edd1fc116bfdba5ce24fd7">&#9670;&#160;</a></span>addSubPath() <span class="overload">[2/5]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a7441f238a5edd1fc116bfdba5ce24fd7">&#9670;&#160;</a></span>addSubPath() <span class="overload">[3/6]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -239,7 +273,7 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <a id="ab6a59627f36b44742017fdfea235b272" name="ab6a59627f36b44742017fdfea235b272"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab6a59627f36b44742017fdfea235b272">&#9670;&#160;</a></span>addSubPath() <span class="overload">[3/5]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ab6a59627f36b44742017fdfea235b272">&#9670;&#160;</a></span>addSubPath() <span class="overload">[4/6]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -257,7 +291,7 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <a id="af5102a91803795f5e758e1810c9258c7" name="af5102a91803795f5e758e1810c9258c7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af5102a91803795f5e758e1810c9258c7">&#9670;&#160;</a></span>addSubPath() <span class="overload">[4/5]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#af5102a91803795f5e758e1810c9258c7">&#9670;&#160;</a></span>addSubPath() <span class="overload">[5/6]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -285,7 +319,7 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <a id="a2d596a6351b10b80e70561b34466553e" name="a2d596a6351b10b80e70561b34466553e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2d596a6351b10b80e70561b34466553e">&#9670;&#160;</a></span>addSubPath() <span class="overload">[5/5]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a2d596a6351b10b80e70561b34466553e">&#9670;&#160;</a></span>addSubPath() <span class="overload">[6/6]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -340,6 +374,52 @@ Public Member Functions</h2></td></tr>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a5a76d2316f06d8e8311f2dce43ba8c29" name="a5a76d2316f06d8e8311f2dce43ba8c29"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5a76d2316f06d8e8311f2dce43ba8c29">&#9670;&#160;</a></span>getPoint() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">glm::vec3 gPath::getPoint </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>pointno</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a70e06381e7fc89f8f686e2d9238b2280" name="a70e06381e7fc89f8f686e2d9238b2280"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a70e06381e7fc89f8f686e2d9238b2280">&#9670;&#160;</a></span>getPoint() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">glm::vec3 gPath::getPoint </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>subpathno</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>subpathpointno</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
