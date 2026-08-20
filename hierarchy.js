@@ -169,7 +169,6 @@ var hierarchy =
           [ "gVignette", "classgVignette.html", null ],
           [ "gWhiteBalance", "classgWhiteBalance.html", null ]
         ] ],
-        [ "gBezier", "classgBezier.html", null ],
         [ "gBoundingBox", "classgBoundingBox.html", null ],
         [ "gCameraController", "classgCameraController.html", null ],
         [ "gFbo", "classgFbo.html", null ],
@@ -182,6 +181,8 @@ var hierarchy =
           [ "gLight", "classgLight.html", null ],
           [ "gMesh", "classgMesh.html", [
             [ "gArc", "classgArc.html", null ],
+            [ "gBezier", "classgBezier.html", null ],
+            [ "gBezierQuad", "classgBezierQuad.html", null ],
             [ "gBox", "classgBox.html", null ],
             [ "gCircle", "classgCircle.html", null ],
             [ "gCone", "classgCone.html", null ],
