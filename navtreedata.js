@@ -78,13 +78,13 @@ var NAVTREEINDEX =
 "classgPlane.html#ab697bc3e8e990ab8e34f897dd1090291",
 "classgRenderer.html#a718d650a1b32d25e1179df1671a8e3f1",
 "classgScreenSpaceReflections.html#aea58bb0c9416f90aa50bc1a52dc0d04f",
-"classgTexture.html#a91447a28e32d516eaaa8aff0222b0a7b",
-"classgVKRenderEngine.html#a73c1b47981bff65ce7c24f60bc0f58ec",
-"gAppManager_8h.html#a5a2599d2a330d567fefbfb18d88fef57",
-"gGUIResources_8h_source.html",
-"gRenderer_8h.html#a57a0aeff1c9f906ecf062a54a772e3ad",
-"gWindowEvents_8h.html#a21d5e8f8cdaa838586b31007df0a950bacbff41a48c73fbbf04f79cba5924bd30",
-"tinyfiledialogs_8h.html#a0c19cd62f9b9ff0f7def8971d2bc3f9d"
+"classgTexture.html#a5ca603f44afb54501680477f2b1f1ec2ad338417b9cf85aa1500e0f7b267f3e61",
+"classgVKRenderEngine.html#a4dfbe9a2546ba00cd388ef10649e4974",
+"functions_vars_m.html",
+"gGUIMenubar_8h.html",
+"gRectangle_8h.html",
+"gVKSync_8h.html#a1011c1199e450517ccee9425784c64dd",
+"tinyfiledialogs_8c.html#a77c4dde5df84387f5e8764f33bf04ba3"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

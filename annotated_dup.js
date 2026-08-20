@@ -169,6 +169,7 @@ var annotated_dup =
     [ "gSound", "classgSound.html", "classgSound" ],
     [ "gSoundRecorder", "classgSoundRecorder.html", "classgSoundRecorder" ],
     [ "gSphere", "classgSphere.html", "classgSphere" ],
+    [ "gSpline", "classgSpline.html", "classgSpline" ],
     [ "gSpriteAnimation", "classgSpriteAnimation.html", "classgSpriteAnimation" ],
     [ "gSpriteAnimator", "classgSpriteAnimator.html", "classgSpriteAnimator" ],
     [ "gTerrain", "classgTerrain.html", "classgTerrain" ],

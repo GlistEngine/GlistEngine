@@ -28,6 +28,7 @@ var dir_8aa109d331f3e3b3014e32565285b6b8 =
     [ "gShadowMap.h", "gShadowMap_8h.html", "gShadowMap_8h" ],
     [ "gSkinnedMesh.h", "gSkinnedMesh_8h.html", "gSkinnedMesh_8h" ],
     [ "gSkybox.h", "gSkybox_8h.html", "gSkybox_8h" ],
+    [ "gSpline.h", "gSpline_8h.html", "gSpline_8h" ],
     [ "gTerrain.h", "gTerrain_8h.html", "gTerrain_8h" ],
     [ "gTexture.h", "gTexture_8h.html", "gTexture_8h" ],
     [ "gUbo.h", "gUbo_8h.html", "gUbo_8h" ],
