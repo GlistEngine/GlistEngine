@@ -104,7 +104,10 @@ void gLocalization::setCurrentLanguage(int languageId) {
     		languages += name;
     		languages += ", ";
     	}
-    	languages.erase(languages.length() - 2);
+    	// Guard: when availablelanguages is empty (e.g. localization db failed to
+    	// load), languages is empty and erase(length()-2) == erase((size_t)-2)
+    	// throws std::out_of_range, aborting the app on startup.
+    	if (languages.length() >= 2) languages.erase(languages.length() - 2);
 //        gLogw("gLocalization") << "Invalid language id: " << languageId << ", available languages: " << languages << " (c: " << availablelanguages.size() << ")";
     }
 }
