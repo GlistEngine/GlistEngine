@@ -4,7 +4,9 @@
 
 #include "gVKTexture.h"
 
-#ifdef GVK_DESKTOP_GLFW
+#include <algorithm>
+
+#ifdef GVK_VULKAN
 
 #include "gVKBuffer.h"
 #include "gUtils.h"
@@ -52,9 +54,27 @@ static void gvkTransitionImageLayout(VkCommandBuffer cmd, VkImage image,
 // Builds a sampler for the given filtering and wrapping. Only one mip level is ever
 // uploaded, so the mipmap mode follows the minification filter and stays consistent
 // with it rather than being a third setting.
-static VkSampler gvkCreateSampler(VkDevice device, VkFilter minFilter, VkFilter magFilter,
+static uint64_t gvkSamplerKey(VkFilter minFilter, VkFilter magFilter,
 		VkSamplerAddressMode addressU, VkSamplerAddressMode addressV,
 		bool useMipmaps, VkSamplerMipmapMode mipmapMode) {
+	return static_cast<uint64_t>(minFilter)
+			| (static_cast<uint64_t>(magFilter) << 8)
+			| (static_cast<uint64_t>(addressU) << 16)
+			| (static_cast<uint64_t>(addressV) << 24)
+			| (static_cast<uint64_t>(useMipmaps ? 1 : 0) << 32)
+			| (static_cast<uint64_t>(mipmapMode) << 40);
+}
+
+static VkSampler gvkAcquireSampler(gVKContext& ctx, VkFilter minFilter, VkFilter magFilter,
+		VkSamplerAddressMode addressU, VkSamplerAddressMode addressV,
+		bool useMipmaps, VkSamplerMipmapMode mipmapMode, uint64_t& outKey) {
+	outKey = gvkSamplerKey(minFilter, magFilter, addressU, addressV, useMipmaps, mipmapMode);
+	auto& cache = ctx.getSamplerCache();
+	auto found = cache.find(outKey);
+	if(found != cache.end()) {
+		++found->second.second;
+		return found->second.first;
+	}
 	VkSamplerCreateInfo samplerinfo{};
 	samplerinfo.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
 	samplerinfo.magFilter = magFilter;
@@ -70,9 +90,36 @@ static VkSampler gvkCreateSampler(VkDevice device, VkFilter minFilter, VkFilter 
 	samplerinfo.minLod = 0.0f;
 	samplerinfo.maxLod = useMipmaps ? VK_LOD_CLAMP_NONE : 0.0f;
 	samplerinfo.borderColor = VK_BORDER_COLOR_INT_OPAQUE_BLACK;
+	// Anisotropy is a rule for choosing among mip levels, so it is only asked for
+	// where there is a chain to choose from; a sampler pinned to level 0 would gain
+	// nothing from it. Capped at 8 rather than taken at the device maximum, which is
+	// usually 16: the difference between the two is not visible at these texture
+	// sizes and the extra taps are bandwidth a mobile tiler would rather keep.
+	// gVKRenderEngine enables the feature when the device offers it, and leaves it
+	// off otherwise, which is why this checks before asking.
+	const VkPhysicalDeviceFeatures* features = ctx.getDeviceFeatures();
+	if(useMipmaps && features != nullptr && features->samplerAnisotropy == VK_TRUE) {
+		samplerinfo.anisotropyEnable = VK_TRUE;
+		samplerinfo.maxAnisotropy = std::min(8.0f, ctx.getDeviceProperties()->limits.maxSamplerAnisotropy);
+	}
 	VkSampler sampler = VK_NULL_HANDLE;
-	vkCreateSampler(device, &samplerinfo, nullptr, &sampler);
+	vkCreateSampler(*ctx.getDevice(), &samplerinfo, nullptr, &sampler);
+	if(sampler != VK_NULL_HANDLE) cache.emplace(outKey, std::make_pair(sampler, 1u));
 	return sampler;
+}
+
+static void gvkReleaseSampler(gVKContext& ctx, uint64_t key, VkSampler sampler) {
+	if(sampler == VK_NULL_HANDLE) return;
+	auto& cache = ctx.getSamplerCache();
+	auto found = cache.find(key);
+	if(found == cache.end()) {
+		vkDestroySampler(*ctx.getDevice(), sampler, nullptr);
+		return;
+	}
+	if(--found->second.second == 0) {
+		vkDestroySampler(*ctx.getDevice(), found->second.first, nullptr);
+		cache.erase(found);
+	}
 }
 
 gVKTexture* gvkCreateTextureRGBA8(gVKContext& ctx, const void* rgbaPixels, int width, int height) {
@@ -89,7 +136,12 @@ gVKTexture* gvkCreateTextureRGBA8(gVKContext& ctx, const void* rgbaPixels, int w
 		return nullptr;
 	}
 	void* mapped = nullptr;
-	vkMapMemory(device, stagingmem, 0, imagesize, 0, &mapped);
+	if(vkMapMemory(device, stagingmem, 0, imagesize, 0, &mapped) != VK_SUCCESS) {
+		gLoge("gVKTexture") << "Could not map the texture staging memory.";
+		vkDestroyBuffer(device, staging, nullptr);
+		vkFreeMemory(device, stagingmem, nullptr);
+		return nullptr;
+	}
 	std::memcpy(mapped, rgbaPixels, static_cast<size_t>(imagesize));
 	vkUnmapMemory(device, stagingmem);
 
@@ -133,12 +185,33 @@ gVKTexture* gvkCreateTextureRGBA8(gVKContext& ctx, const void* rgbaPixels, int w
 	allocinfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
 	allocinfo.allocationSize = memreq.size;
 	allocinfo.memoryTypeIndex = gvkFindMemoryType(ctx, memreq.memoryTypeBits, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
-	vkAllocateMemory(device, &allocinfo, nullptr, &tex->memory);
-	vkBindImageMemory(device, tex->image, tex->memory, 0);
+	if(vkAllocateMemory(device, &allocinfo, nullptr, &tex->memory) != VK_SUCCESS) {
+		gLoge("gVKTexture") << "vkAllocateMemory failed for an uploaded texture.";
+		vkDestroyBuffer(device, staging, nullptr);
+		vkFreeMemory(device, stagingmem, nullptr);
+		gvkDestroyTexture(ctx, tex);
+		return nullptr;
+	}
+	if(vkBindImageMemory(device, tex->image, tex->memory, 0) != VK_SUCCESS) {
+		gLoge("gVKTexture") << "vkBindImageMemory failed for an uploaded texture.";
+		vkDestroyBuffer(device, staging, nullptr);
+		vkFreeMemory(device, stagingmem, nullptr);
+		gvkDestroyTexture(ctx, tex);
+		return nullptr;
+	}
 
 	// Upload: undefined -> transfer dst, copy into level 0, build the rest of the
-	// chain from it, then the whole chain -> shader read.
-	VkCommandBuffer cmd = gvkBeginSingleTimeCommands(ctx);
+	// chain from it, then the whole chain -> shader read. This is recorded into the
+	// shared upload batch, so it is not submitted here and the staging buffer stays
+	// alive until the batch that reads it has finished on the GPU.
+	VkCommandBuffer cmd = gvkBeginUpload(ctx);
+	if(cmd == VK_NULL_HANDLE) {
+		gLoge("gVKTexture") << "Could not open an upload batch for a texture.";
+		vkDestroyBuffer(device, staging, nullptr);
+		vkFreeMemory(device, stagingmem, nullptr);
+		gvkDestroyTexture(ctx, tex);
+		return nullptr;
+	}
 	gvkTransitionImageLayout(cmd, tex->image,
 			VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
 			0, VK_ACCESS_TRANSFER_WRITE_BIT,
@@ -210,10 +283,10 @@ gVKTexture* gvkCreateTextureRGBA8(gVKContext& ctx, const void* rgbaPixels, int w
 			VK_ACCESS_TRANSFER_WRITE_BIT, VK_ACCESS_SHADER_READ_BIT,
 			VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT,
 			tex->miplevels - 1, 1);
-	gvkEndSingleTimeCommands(ctx, cmd);
-
-	vkDestroyBuffer(device, staging, nullptr);
-	vkFreeMemory(device, stagingmem, nullptr);
+	// The batch owns the staging buffer from here on and destroys it once its
+	// submission has finished; destroying it here would free memory the GPU is
+	// about to read.
+	gvkEndUpload(ctx, staging, stagingmem, imagesize);
 
 	VkImageViewCreateInfo viewinfo{};
 	viewinfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
@@ -225,15 +298,27 @@ gVKTexture* gvkCreateTextureRGBA8(gVKContext& ctx, const void* rgbaPixels, int w
 	viewinfo.subresourceRange.levelCount = tex->miplevels;
 	viewinfo.subresourceRange.baseArrayLayer = 0;
 	viewinfo.subresourceRange.layerCount = 1;
-	vkCreateImageView(device, &viewinfo, nullptr, &tex->view);
+	if(vkCreateImageView(device, &viewinfo, nullptr, &tex->view) != VK_SUCCESS) {
+		gLoge("gVKTexture") << "vkCreateImageView failed for an uploaded texture.";
+		gvkDestroyTexture(ctx, tex);
+		return nullptr;
+	}
 
 	// The sampler starts from gTexture's own defaults; setFiltering / setWrapping
 	// rebuild it through gvkSetTextureSampler when the texture asks for something
 	// else, which the upload path does right after this returns.
-	tex->sampler = gvkCreateSampler(device, tex->minfilter, tex->magfilter, tex->addressu, tex->addressv,
-			tex->usemipmaps, tex->mipmapmode);
+	tex->sampler = gvkAcquireSampler(ctx, tex->minfilter, tex->magfilter, tex->addressu, tex->addressv,
+			tex->usemipmaps, tex->mipmapmode, tex->samplerkey);
+	if(tex->sampler == VK_NULL_HANDLE) {
+		gLoge("gVKTexture") << "vkCreateSampler failed for an uploaded texture.";
+		gvkDestroyTexture(ctx, tex);
+		return nullptr;
+	}
 
-	gvkWriteTextureDescriptorSet(ctx, tex);
+	if(!gvkWriteTextureDescriptorSet(ctx, tex)) {
+		gvkDestroyTexture(ctx, tex);
+		return nullptr;
+	}
 	return tex;
 }
 
@@ -246,23 +331,30 @@ bool gvkSetTextureSampler(gVKContext& ctx, gVKTexture* tex, VkFilter minFilter, 
 			&& tex->usemipmaps == useMipmaps && tex->mipmapmode == mipmapMode) {
 		return false;
 	}
+	VkDevice device = *ctx.getDevice();
+	if(device == VK_NULL_HANDLE || tex->sampler == VK_NULL_HANDLE) return false;
+	// A frame that is still in flight may sample through the old sampler. Newly
+	// loaded textures have not reached a draw yet, however, and draining the whole
+	// device for every filter/wrap setter turns a large level load into hundreds of
+	// serial GPU stalls (especially expensive through MoltenVK). Only synchronize
+	// when this texture has actually been submitted before.
+	uint64_t newsamplerkey = 0;
+	VkSampler newsampler = gvkAcquireSampler(ctx, minFilter, magFilter, addressU, addressV,
+			useMipmaps, mipmapMode, newsamplerkey);
+	if(newsampler == VK_NULL_HANDLE) {
+		gLoge("gVKTexture") << "vkCreateSampler failed while changing texture sampling.";
+		return false;
+	}
+	if(tex->sampled) vkDeviceWaitIdle(device);
+	gvkReleaseSampler(ctx, tex->samplerkey, tex->sampler);
+	tex->sampler = newsampler;
+	tex->samplerkey = newsamplerkey;
 	tex->minfilter = minFilter;
 	tex->magfilter = magFilter;
 	tex->addressu = addressU;
 	tex->addressv = addressV;
 	tex->usemipmaps = useMipmaps;
 	tex->mipmapmode = mipmapMode;
-
-	VkDevice device = *ctx.getDevice();
-	if(device == VK_NULL_HANDLE || tex->sampler == VK_NULL_HANDLE) return false;
-	// A frame that is still in flight may sample through the old sampler, so the
-	// device is drained before it is destroyed. Sampler changes happen while a
-	// texture is being set up, not per frame, so this costs nothing in a running
-	// scene.
-	vkDeviceWaitIdle(device);
-	vkDestroySampler(device, tex->sampler, nullptr);
-	tex->sampler = gvkCreateSampler(device, minFilter, magFilter, addressU, addressV,
-			useMipmaps, mipmapMode);
 	if(tex->descriptorset != VK_NULL_HANDLE) {
 		VkDescriptorImageInfo imginfo{};
 		imginfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
@@ -293,8 +385,10 @@ bool gvkWriteTextureDescriptorSet(gVKContext& ctx, gVKTexture* tex) {
 	dsalloc.descriptorPool = ctx.getDescriptorPool();
 	dsalloc.descriptorSetCount = 1;
 	dsalloc.pSetLayouts = &layout;
-	if(vkAllocateDescriptorSets(device, &dsalloc, &tex->descriptorset) != VK_SUCCESS) {
-		gLoge("gVKTexture") << "vkAllocateDescriptorSets failed (pool exhausted?).";
+	const VkResult allocresult = vkAllocateDescriptorSets(device, &dsalloc, &tex->descriptorset);
+	if(allocresult != VK_SUCCESS) {
+		gLoge("gVKTexture") << "vkAllocateDescriptorSets failed, VkResult="
+				<< static_cast<int>(allocresult) << ".";
 		tex->descriptorset = VK_NULL_HANDLE;
 		return false;
 	}
@@ -367,7 +461,11 @@ gVKTexture* gvkCreateAttachmentTexture(gVKContext& ctx, int width, int height, b
 		gvkDestroyTexture(ctx, tex);
 		return nullptr;
 	}
-	vkBindImageMemory(device, tex->image, tex->memory, 0);
+	if(vkBindImageMemory(device, tex->image, tex->memory, 0) != VK_SUCCESS) {
+		gLoge("gVKTexture") << "vkBindImageMemory failed for a framebuffer attachment.";
+		gvkDestroyTexture(ctx, tex);
+		return nullptr;
+	}
 
 	VkImageViewCreateInfo viewinfo{};
 	viewinfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
@@ -389,9 +487,17 @@ gVKTexture* gvkCreateAttachmentTexture(gVKContext& ctx, int width, int height, b
 	// should not fold the opposite side back in.
 	tex->addressu = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
 	tex->addressv = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
-	tex->sampler = gvkCreateSampler(device, tex->minfilter, tex->magfilter, tex->addressu, tex->addressv,
-			tex->usemipmaps, tex->mipmapmode);
-	gvkWriteTextureDescriptorSet(ctx, tex);
+	tex->sampler = gvkAcquireSampler(ctx, tex->minfilter, tex->magfilter, tex->addressu, tex->addressv,
+			tex->usemipmaps, tex->mipmapmode, tex->samplerkey);
+	if(tex->sampler == VK_NULL_HANDLE) {
+		gLoge("gVKTexture") << "vkCreateSampler failed for a framebuffer attachment.";
+		gvkDestroyTexture(ctx, tex);
+		return nullptr;
+	}
+	if(!gvkWriteTextureDescriptorSet(ctx, tex)) {
+		gvkDestroyTexture(ctx, tex);
+		return nullptr;
+	}
 	return tex;
 }
 
@@ -399,10 +505,15 @@ void gvkDestroyTexture(gVKContext& ctx, gVKTexture* tex) {
 	if(tex == nullptr) return;
 	VkDevice device = *ctx.getDevice();
 	if(device != VK_NULL_HANDLE) {
+		// This image may be the destination of a transfer that is recorded but not
+		// yet submitted, which vkDeviceWaitIdle cannot see. The first destruction
+		// after a load drains the upload path; the rest of the level's textures then
+		// find nothing outstanding and return immediately.
+		gvkWaitUploads(ctx);
 		if(tex->descriptorset != VK_NULL_HANDLE && ctx.getDescriptorPool() != VK_NULL_HANDLE) {
 			vkFreeDescriptorSets(device, ctx.getDescriptorPool(), 1, &tex->descriptorset);
 		}
-		if(tex->sampler != VK_NULL_HANDLE) vkDestroySampler(device, tex->sampler, nullptr);
+		gvkReleaseSampler(ctx, tex->samplerkey, tex->sampler);
 		if(tex->view != VK_NULL_HANDLE) vkDestroyImageView(device, tex->view, nullptr);
 		if(tex->image != VK_NULL_HANDLE) vkDestroyImage(device, tex->image, nullptr);
 		if(tex->memory != VK_NULL_HANDLE) vkFreeMemory(device, tex->memory, nullptr);
@@ -410,4 +521,4 @@ void gvkDestroyTexture(gVKContext& ctx, gVKTexture* tex) {
 	delete tex;
 }
 
-#endif /* GVK_DESKTOP_GLFW */
+#endif /* GVK_VULKAN */

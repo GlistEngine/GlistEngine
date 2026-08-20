@@ -6,7 +6,7 @@
 
 #include "gVKShadow.h"
 
-#ifdef GVK_DESKTOP_GLFW
+#ifdef GVK_VULKAN
 
 #include "gVKBuffer.h"
 #include "gVKRenderTarget.h"
@@ -310,4 +310,4 @@ void gvkEndShadowPass(gVKContext& ctx) {
 	ctx.shadowpassactive = false;
 }
 
-#endif /* GVK_DESKTOP_GLFW */
+#endif /* GVK_VULKAN */

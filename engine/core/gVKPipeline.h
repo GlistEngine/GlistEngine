@@ -23,13 +23,14 @@
 
 #include "gVKContext.h"
 
-#ifdef GVK_DESKTOP_GLFW
+#ifdef GVK_VULKAN
 
 // Newest modification time across the shader sources the 2D pipelines are built
 // from, or 0 when runtime shader compilation is unavailable. Comparing successive
 // readings is how the renderer notices an edit worth reloading for.
 long long gvkShaderSourcesTimestamp();
+void gvkDestroyPipelineCache(gVKContext& ctx);
 
-#endif /* GVK_DESKTOP_GLFW */
+#endif /* GVK_VULKAN */
 
 #endif /* CORE_GVKPIPELINE_H */

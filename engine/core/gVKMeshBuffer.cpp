@@ -6,7 +6,7 @@
 
 #include "gVKMeshBuffer.h"
 
-#ifdef GVK_DESKTOP_GLFW
+#ifdef GVK_VULKAN
 
 #include "gVKBuffer.h"
 #include "gUtils.h"
@@ -84,6 +84,12 @@ static bool gvkMakeMeshBufferDynamic(gVKContext& ctx, gVKMeshBuffer& buf,
 	// applies to slots being replaced by larger ones: the frame being recorded may
 	// already have bound them.
 	if(buf.buffer != VK_NULL_HANDLE && !buf.isdynamic) {
+		// The retired list counts frames, which is the right measure for a command
+		// buffer that still names this buffer - but a staging copy into it may not
+		// have been submitted at all yet, and no number of frames makes unsubmitted
+		// work safe. Drain the upload path once, here, where a static buffer stops
+		// being one.
+		gvkWaitUploads(ctx);
 		gvkretiredmeshbuffers.push_back({buf.buffer, buf.memory, ctx.getMeshGeneration()});
 		buf.buffer = VK_NULL_HANDLE;
 		buf.memory = VK_NULL_HANDLE;
@@ -254,33 +260,10 @@ bool gvkUploadMeshBuffer(gVKContext& ctx, gVKMeshBuffer& buf, const void* data,
 
 	// The destination is device local, so the CPU cannot write to it directly; the
 	// data goes to a host visible staging buffer first and the GPU copies it over.
-	VkBuffer staging = VK_NULL_HANDLE;
-	VkDeviceMemory stagingmemory = VK_NULL_HANDLE;
-	if(!gvkCreateBuffer(ctx, size, VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
-			VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
-			staging, stagingmemory)) {
-		gLoge("gVKMeshBuffer") << "Could not create the staging buffer for a " << size
-				<< " byte upload.";
-		return false;
-	}
-
-	void* mapped = nullptr;
-	if(vkMapMemory(device, stagingmemory, 0, size, 0, &mapped) != VK_SUCCESS) {
-		gLoge("gVKMeshBuffer") << "vkMapMemory failed for the staging buffer.";
-		vkDestroyBuffer(device, staging, nullptr);
-		vkFreeMemory(device, stagingmemory, nullptr);
-		return false;
-	}
-	std::memcpy(mapped, data, static_cast<size_t>(size));
-	// Host coherent memory needs no explicit flush.
-	vkUnmapMemory(device, stagingmemory);
-
-	gvkCopyBuffer(ctx, staging, buf.buffer, size);
-
-	// gvkCopyBuffer waits for the copy to finish, so the staging buffer is free to go.
-	vkDestroyBuffer(device, staging, nullptr);
-	vkFreeMemory(device, stagingmemory, nullptr);
-	return true;
+	// The upload path owns that staging buffer and the copy shares a batch with
+	// every other transfer around it, so a level of static meshes costs one submit
+	// per batch rather than one submit and one host wait per mesh.
+	return gvkUploadBufferData(ctx, buf.buffer, data, size);
 }
 
 VkBuffer gvkResolveMeshBuffer(gVKContext& ctx, gVKMeshBuffer& buf, VkDeviceSize& outOffset) {
@@ -337,6 +320,11 @@ void gvkDestroyMeshBuffer(gVKContext& ctx, gVKMeshBuffer& buf) {
 	if(device == VK_NULL_HANDLE) return;
 
 	if(buf.buffer != VK_NULL_HANDLE && !buf.isdynamic) {
+		// A static buffer is the destination of a staging copy that may be recorded
+		// and not yet submitted, which vkDeviceWaitIdle - what the callers that need
+		// it already do - cannot cover, because that work has not reached the queue.
+		// Only this branch can name such a buffer, so nothing else here has to wait.
+		gvkWaitUploads(ctx);
 		vkDestroyBuffer(device, buf.buffer, nullptr);
 	}
 	buf.buffer = VK_NULL_HANDLE;
@@ -365,4 +353,4 @@ void gvkDestroyMeshBuffer(gVKContext& ctx, gVKMeshBuffer& buf) {
 	buf.capacity = 0;
 }
 
-#endif /* GVK_DESKTOP_GLFW */
+#endif /* GVK_VULKAN */

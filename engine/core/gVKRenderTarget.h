@@ -14,7 +14,7 @@
 
 #include "gVKContext.h"
 
-#ifdef GVK_DESKTOP_GLFW
+#ifdef GVK_VULKAN
 
 /*
  * Picks a depth format the physical device supports as a depth-stencil attachment,
@@ -25,31 +25,49 @@
 VkFormat gvkFindDepthFormat(gVKContext& ctx);
 
 /*
- * Creates the depth image, its memory and its view, sized to the current swapchain
- * extent. Called before the framebuffers, and again after a resize, because the
- * depth buffer has to match the colour attachment pixel for pixel.
+ * Creates one depth image per frame in flight, sized to the current swapchain
+ * extent. Private frame slots avoid overlapping writes without allocating one
+ * depth image for every swapchain colour image. The images carry the context's
+ * sample count: every attachment of a subpass has to agree on it, so switching the
+ * screen pass to MSAA multisamples depth as well.
  */
 bool gvkCreateDepthResources(gVKContext& ctx);
 void gvkDestroyDepthResources(gVKContext& ctx);
+
+/*
+ * Creates the multisampled colour attachment the screen pass renders into while
+ * MSAA is on, one per frame in flight alongside the depth images. A no-op that
+ * simply reports success when the context's sample count is 1, where the swapchain
+ * image is rendered into directly. Must be called after gvkCreateRenderPass, which
+ * is where the sample count is resolved, and before gvkCreateFramebuffers.
+ */
+bool gvkCreateMsaaColorResources(gVKContext& ctx);
+void gvkDestroyMsaaColorResources(gVKContext& ctx);
 
 /*
  * Creates the single subpass render pass used by the backend. Depends on
  * ctx.swapchainformat, so the swapchain has to exist first. The pass carries a
  * colour and a depth attachment; the depth one is cleared on load and discarded on
  * store, since nothing reads it after the frame.
+ *
+ * This is also where the requested sample count is resolved against what the device
+ * supports and written to the context. With MSAA on, the pass gains a third
+ * attachment - the acquired swapchain image as the resolve target - and builds a
+ * second, single-sampled pass as the compatibility template the offscreen pipelines
+ * are built against. See gVKContext.h for why the two exist.
  */
 bool gvkCreateRenderPass(gVKContext& ctx);
 void gvkDestroyRenderPass(gVKContext& ctx);
 
 /*
- * Creates one framebuffer per swapchain image view, each pairing that view with the
- * shared depth view. Kept separate from the render pass on purpose: a resize
+ * Creates one framebuffer per frame-slot/swapchain-image pair, pairing any acquired
+ * colour image with that frame slot's private depth view. A resize
  * rebuilds the framebuffers while the render pass stays valid, because neither the
  * surface format nor the depth format changes.
  */
 bool gvkCreateFramebuffers(gVKContext& ctx);
 void gvkDestroyFramebuffers(gVKContext& ctx);
 
-#endif /* GVK_DESKTOP_GLFW */
+#endif /* GVK_VULKAN */
 
 #endif /* CORE_GVKRENDERTARGET_H */

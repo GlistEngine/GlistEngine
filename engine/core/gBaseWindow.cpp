@@ -89,6 +89,28 @@ void gBaseWindow::close() {
 
 }
 
+bool gBaseWindow::supportsVulkan() const {
+	return false;
+}
+
+void gBaseWindow::getVulkanInstanceExtensions(std::vector<const char*>& extensions) const {
+	(void)extensions;
+}
+
+bool gBaseWindow::createVulkanSurface(void* instance, void* surface) {
+	(void)instance;
+	(void)surface;
+	return false;
+}
+
+bool gBaseWindow::isVulkanSurfaceOutdated() const {
+	return false;
+}
+
+void gBaseWindow::vulkanSurfaceRecreated() {
+
+}
+
 bool gBaseWindow::isVsyncEnabled() {
 	return vsync;
 }
@@ -297,4 +319,3 @@ p.address = true;
 p.print(st, stderr);
 }
 */
-

@@ -14,7 +14,7 @@
 
 #include "gVKContext.h"
 
-#ifdef GVK_DESKTOP_GLFW
+#ifdef GVK_VULKAN
 
 /*
  * Creates the command pool on the graphics queue family and allocates
@@ -28,6 +28,6 @@ bool gvkCreateCommandResources(gVKContext& ctx);
  */
 void gvkDestroyCommandResources(gVKContext& ctx);
 
-#endif /* GVK_DESKTOP_GLFW */
+#endif /* GVK_VULKAN */
 
 #endif /* CORE_GVKCOMMANDS_H */

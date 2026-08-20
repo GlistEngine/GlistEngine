@@ -15,13 +15,14 @@
 
 #include "gVKContext.h"
 
-#ifdef GVK_DESKTOP_GLFW
+#ifdef GVK_VULKAN
 
 struct gVKTexture {
 	VkImage image = VK_NULL_HANDLE;
 	VkDeviceMemory memory = VK_NULL_HANDLE;
 	VkImageView view = VK_NULL_HANDLE;
 	VkSampler sampler = VK_NULL_HANDLE;
+	uint64_t samplerkey = 0;
 	VkDescriptorSet descriptorset = VK_NULL_HANDLE;
 	int width = 0;
 	int height = 0;
@@ -37,6 +38,13 @@ struct gVKTexture {
 	// True for a texture created as an FBO attachment rather than uploaded from
 	// pixels. Those carry no mip chain and are cleared by the render pass.
 	bool isattachment = false;
+	// Whether any texel in the upload is transparent enough for mesh3d.frag's cutout
+	// test to discard it. Found while the pixels are being expanded to RGBA anyway,
+	// so it costs nothing, and it lets a mesh drawn with this as its diffuse map take
+	// the pipeline that has the discard compiled out - which is what keeps early
+	// depth rejection alive on mobile. Left false for an attachment, which is never a
+	// material map.
+	bool hascutout = false;
 	// Set after the descriptor has been recorded by a draw. Replacing a texture
 	// that has never been sampled needs no device-wide wait (for example the
 	// duplicate upload performed while gTexture initially sets itself up).
@@ -82,6 +90,6 @@ gVKTexture* gvkCreateAttachmentTexture(gVKContext& ctx, int width, int height, b
 
 void gvkDestroyTexture(gVKContext& ctx, gVKTexture* tex);
 
-#endif /* GVK_DESKTOP_GLFW */
+#endif /* GVK_VULKAN */
 
 #endif /* CORE_GVKTEXTURE_H */

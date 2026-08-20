@@ -19,7 +19,7 @@
 // For gVKMeshPush, the 3D path's push constant block.
 #include "gVKUniform.h"
 
-#ifdef GVK_DESKTOP_GLFW
+#ifdef GVK_VULKAN
 
 #include <glm/glm.hpp>
 
@@ -73,11 +73,27 @@ void gvkDrawTextured2D(gVKContext& ctx, VkDescriptorSet textureSet, VkDescriptor
 		const glm::vec2& uvOffset = glm::vec2(0.0f), const glm::vec2& uvScale = glm::vec2(1.0f),
 		bool additive = false);
 
-// Records an expanded textured triangle list. xyuv has four floats per vertex
-// and matches the image pipeline's position/UV vertex layout.
+// Records an expanded textured triangle list. xyuv has four floats per vertex:
+// position then texture coordinate.
 void gvkDrawTexturedTriangles2D(gVKContext& ctx, VkDescriptorSet textureSet,
 		const glm::vec4& tint, const glm::mat4& mvp, const float* xyuv, int vertexCount,
 		bool additive = false);
+
+// The 2D calls above do not record a draw of their own. Each appends its vertices
+// to an open batch, and the batch becomes a single vkCmdDraw here - a frame of a
+// couple of hundred sprites and glyphs collapses into a handful of draws whenever
+// consecutive ones share a texture and a blend mode.
+//
+// Order is preserved by ending the batch rather than reordering around it, so
+// anything that records into the same pass and must appear after the 2D issued
+// before it has to call this first. The 3D paths in this file already do; a new
+// one that records directly into the command buffer has to as well, and so does
+// any code that ends a render pass while the frame is still going.
+void gvkFlush2DBatch(gVKContext& ctx);
+
+// Abandons the open batch without recording it, for the frame boundary: the range
+// it names is about to be rewound underneath it.
+void gvkReset2DBatch();
 
 // vertexOffset is where this mesh's vertices start inside the bound buffer. Zero
 // for a mesh uploaded once; a mesh whose vertices the CPU rewrites is given a
@@ -98,23 +114,28 @@ void gvkDrawTexturedTriangles2D(gVKContext& ctx, VkDescriptorSet textureSet,
 // depthTest / depthTestAlways mirror the renderer's current depth state and are set
 // on the command buffer rather than baked into the pipeline, because the engine lets
 // an app toggle depth testing between draws. lines selects the wireframe pipeline.
-// diffuseSet / specularSet / normalSet are the material's maps, as sets 1, 2 and 3.
-// None may be VK_NULL_HANDLE: the shader declares all three samplers, so every
-// binding needs a valid descriptor even for a mesh that uses no maps - the caller
-// binds a 1x1 white texture in that case.
+// materialSet holds the diffuse, specular and normal maps as bindings 0, 1 and 2 of
+// set 1, and shadowSet is set 2. Neither may be VK_NULL_HANDLE: the shader declares
+// every sampler, so each binding needs a valid descriptor even for a mesh that uses
+// no maps - the caller fills the unused ones with a 1x1 white texture.
 // topology has to belong to the class the chosen pipeline was built for: a triangle
 // one when lines is false, a line one when it is true.
 // instanceBuffer holds one model matrix per instance and is bound as binding 1. It
 // is required even for a single draw, because the shader always reads from it - the
 // caller passes a one-element identity buffer when the draw is not instanced.
+// cutout says whether this draw's diffuse map can produce a texel the shader's
+// alpha test would discard. False routes it through the pipeline with the discard
+// compiled out, which is what lets a tile based GPU reject its fragments on depth
+// before shading them; it must only be false where the caller knows that for
+// certain, because a cutout material drawn through it would render its holes
+// opaque. See GVK_CUTOUT in mesh3d.frag.
 void gvkDrawMesh3D(gVKContext& ctx, VkBuffer vertexBuffer, VkDeviceSize vertexOffset,
 		VkBuffer indexBuffer, int count,
 		VkIndexType indexType, const gVKMeshPush& push,
-		VkDescriptorSet diffuseSet, VkDescriptorSet specularSet, VkDescriptorSet normalSet,
-		VkDescriptorSet shadowSet,
+		VkDescriptorSet materialSet, VkDescriptorSet shadowSet,
 		VkBuffer instanceBuffer, VkDeviceSize instanceOffset, int instanceCount,
 		VkPrimitiveTopology topology, bool depthTest, bool depthTestAlways, bool lines,
-		const gVKCullState& culling, bool blending);
+		const gVKCullState& culling, bool blending, bool cutout);
 
 // Records one mesh into the shadow map through the depth-only pipeline. diffuseSet
 // is the caster's diffuse map, bound as set 0 so a cutout material can discard the
@@ -151,6 +172,6 @@ void gvkDrawMesh3DPbr(gVKContext& ctx, VkBuffer vertexBuffer, VkDeviceSize verte
 void gvkDrawSkyboxFace(gVKContext& ctx, VkDescriptorSet faceSet, const float* xyzuv,
 		int vertexCount, const glm::mat4& viewProjection, VkCompareOp depthCompare);
 
-#endif /* GVK_DESKTOP_GLFW */
+#endif /* GVK_VULKAN */
 
 #endif /* CORE_GVKDRAW_H */

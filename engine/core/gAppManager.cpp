@@ -47,7 +47,7 @@ void gStartEngine(gBaseApp* baseApp, const std::string& appName, int windowMode,
 void gStartEngine(gBaseApp* baseApp, const std::string& appName, int windowMode, int unitWidth, int unitHeight, int screenScaling, int width, int height, bool isResizable, int renderEngine) {
     if(windowMode == G_WINDOWMODE_NONE) windowMode = G_WINDOWMODE_APP;
 #if TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
-    ios_main(baseApp, appName.c_str(), windowMode, unitWidth, unitHeight, screenScaling, width, height, isResizable);
+    ios_main(baseApp, appName.c_str(), windowMode, unitWidth, unitHeight, screenScaling, width, height, isResizable, renderEngine);
 #elif defined(ANDROID)
     gAppManager* manager = new gAppManager(appName, baseApp, width, height, windowMode, unitWidth, unitHeight, screenScaling, isResizable, G_LOOPMODE_NORMAL);
     manager->setRenderEngine(renderEngine);
@@ -218,6 +218,9 @@ void gAppManager::initialize() {
 		}
 		// Create renderer
 		gRenderObject::createRenderer(renderengine);
+		// setMultiSampling() may be called before initialize(), while no renderer
+		// exists yet. Apply the remembered request as soon as the backend is ready.
+		renderer->setMultiSampling(requestedmultisampling);
 		// The engine's GUI resources are OpenGL based. Under the Vulkan backend the
 		// window carries no GL context, so they stay uninitialised until the Vulkan
 		// rendering path exists.
@@ -463,6 +466,18 @@ void gAppManager::disableVsync() {
 	if(renderengine == G_RENDERER_VK && renderer != nullptr) {
 		static_cast<gVKRenderEngine*>(renderer)->setVsync(false);
 	}
+}
+
+void gAppManager::setMultiSampling(int samples) {
+	requestedmultisampling = samples < 1 ? 1 : samples;
+	if(renderer != nullptr) renderer->setMultiSampling(requestedmultisampling);
+}
+
+int gAppManager::getMultiSampling() const {
+	// Before initialization there is no achieved device value yet; report the
+	// request that will be applied when the renderer is created.
+	if(renderer == nullptr) return requestedmultisampling;
+	return renderer->getMultiSampling();
 }
 
 void gAppManager::setCurrentGUIFrame(gGUIFrame *guiFrame) {

@@ -4,7 +4,7 @@
 
 #include "gVKPipeline.h"
 
-#ifdef GVK_DESKTOP_GLFW
+#ifdef GVK_VULKAN
 
 #include "gVKReflect.h"
 #include "gVKShaderCompiler.h"
@@ -17,9 +17,12 @@
 #include <iterator>
 
 
-// One combined-image-sampler descriptor per texture; 1024 is plenty of headroom
-// for a 2D game and cheap to reserve.
-static constexpr uint32_t GVK_DESCRIPTOR_POOL_SETS = 1024;
+// This pool serves every long-lived texture, scene-uniform slot and cached PBR
+// material. Asset-heavy applications such as Martyr legitimately exceed 1024
+// sets during loading even though no descriptor is leaked. Keep enough headroom
+// for a complete mobile level; descriptor storage is still bounded and created
+// once, rather than allocating another pool in the render loop.
+static constexpr uint32_t GVK_DESCRIPTOR_POOL_SETS = 8192;
 
 // The stages the 2D path is built from. Each can be recompiled from its GLSL
 // source in a development build, and otherwise comes from the SPIR-V committed
@@ -86,6 +89,19 @@ static const VkVertexInputAttributeDescription gvkmesh3dattributes[] = {
 static constexpr uint32_t GVK_MESH3D_VERTEX_STRIDE = 68;
 static constexpr uint32_t GVK_MESH3D_INSTANCE_STRIDE = 64;   // one glm::mat4
 
+// One vertex layout for both 2D pipelines, stated here rather than reflected for
+// the same reason as the 3D one: gVKDraw's batcher packs coloured shapes and
+// images into a single buffer and indexes it with firstVertex, which only works
+// while every 2D draw agrees on one stride. The coloured pipeline ignores the
+// texture coordinate; carrying it costs eight bytes a vertex and saves a second
+// layout. See gvk2DVertex in gVKDraw.cpp, which this must match.
+static const VkVertexInputAttributeDescription gvk2dattributes[] = {
+	{0, 0, VK_FORMAT_R32G32B32A32_SFLOAT, 0},    // clip space position
+	{1, 0, VK_FORMAT_R32G32B32A32_SFLOAT, 16},   // colour / tint
+	{2, 0, VK_FORMAT_R32G32_SFLOAT, 32},         // texture coordinate
+};
+static constexpr uint32_t GVK_2D_VERTEX_STRIDE = 48;
+
 static_assert(sizeof(gVertex) == GVK_MESH3D_VERTEX_STRIDE, "gVertex size no longer matches the Vulkan 3D vertex layout");
 static_assert(offsetof(gVertex, position) == 0, "gVertex::position moved");
 static_assert(offsetof(gVertex, normal) == 12, "gVertex::normal moved");
@@ -119,6 +135,23 @@ struct gvkPipelineOptions {
 	// Builds a copy that adds instead of compositing, for gRenderer::BLENDMODE_ADDITIVE.
 	// Blending factors cannot be dynamic state, so the mode is a choice of pipeline.
 	bool additivevariant = false;
+	// Offsets every depth this pipeline writes, away from the light, by a constant
+	// plus a term proportional to how steeply the polygon is sloped in screen space.
+	// This is where shadow acne is meant to be dealt with: the alternative is a
+	// constant subtracted in the shading pass, which cannot work at both ends of the
+	// scene at once - it is expressed in normalised depth, so how much world distance
+	// it forgives depends on how deep the light's frustum is, and a value tuned for a
+	// ten unit frustum swallows whole vehicles in a hundred unit one. The hardware
+	// bias is in units of the depth buffer's own resolution and is applied per
+	// polygon with its slope taken into account, so it holds regardless.
+	bool depthbias = false;
+	// Builds a copy of the fragment stage with specialization constant 0 set to zero,
+	// which is how mesh3d.frag is told that this pipeline's draws cannot discard. See
+	// the constant's comment there for why that is worth a whole second pipeline: a
+	// shader containing any discard loses early depth rejection on tile based mobile
+	// GPUs, for every mesh drawn through it. The default copy keeps the constant at
+	// its declared value of 1, so a shader with no such constant is unaffected.
+	bool nocutoutvariant = false;
 	// When set, the vertex input is taken from here instead of from reflection.
 	const VkVertexInputAttributeDescription* vertexattributes = nullptr;
 	uint32_t vertexattributecount = 0;
@@ -132,21 +165,35 @@ struct gvkShaderSet {
 	std::vector<uint32_t> spirv[GVK_STAGE_COUNT];
 };
 
-// Everything one pipeline needs, all of it derived from its shaders. linepipeline
-// is the same pipeline with a line topology, used to stroke unfilled shapes; it
-// stays VK_NULL_HANDLE for pipelines with no outline form.
+// Everything one pipeline needs, all of it derived from its shaders. The handles
+// come as one gVKPipelineVariants per sample count in use: index 0 is the
+// single-sample build every offscreen pass records into, index 1 the build for the
+// screen pass's sample count and only present while MSAA is on. Everything else
+// here - layout, set layouts, reflected push block - is shared by both, because the
+// variants differ only in multisample state and the pass they were built against.
 struct gvkPipelineParts {
-	VkPipeline pipeline = VK_NULL_HANDLE;
-	VkPipeline linepipeline = VK_NULL_HANDLE;
-	// The same pipeline with the opposite blend setting; see gvkPipelineOptions.
-	VkPipeline blendvariantpipeline = VK_NULL_HANDLE;
-	// The same pipeline blending additively; see gvkPipelineOptions::additivevariant.
-	VkPipeline additivepipeline = VK_NULL_HANDLE;
+	gVKPipelineVariants variants[GVK_PIPELINE_SAMPLE_VARIANTS];
 	VkPipelineLayout layout = VK_NULL_HANDLE;
 	std::vector<VkDescriptorSetLayout> setlayouts;
 	uint32_t pushsize = 0;
 	VkShaderStageFlags pushstages = 0;
 	std::vector<gVKReflectedBinding> bindings;
+};
+
+// Where one build is aimed: the render pass per sample-count variant, plus the
+// multisample state the second one uses. pass[0] is the single-sample template -
+// the screen pass itself while MSAA is off, otherwise its 1x twin - and pass[1] is
+// the multisampled screen pass, VK_NULL_HANDLE when there is none. The shadow build
+// fills in pass[0] only, which is what keeps the shadow map at 1x: multisampling a
+// depth-only map that is compared against rather than displayed antialiases nothing
+// and costs a multiple of its bandwidth and footprint.
+struct gvkTargetPasses {
+	VkRenderPass pass[GVK_PIPELINE_SAMPLE_VARIANTS] = {};
+	VkSampleCountFlagBits samples = VK_SAMPLE_COUNT_1_BIT;
+	// Per-sample fragment shading. See gVKContext::setSampleShadingEnabled for why
+	// this is off unless an application deliberately turns it on.
+	bool sampleshading = false;
+	float minsampleshading = 0.0f;
 };
 
 // requireSource is set on a hot reload, where the whole point is to see the
@@ -182,7 +229,7 @@ static VkShaderModule gvkCreateShaderModule(VkDevice device, const std::vector<u
 // written down. The fixed 2D render state (triangle list, no depth, no cull,
 // dynamic viewport/scissor, straight alpha blending) is shared by both pipelines
 // and stays here.
-static bool gvkBuildPipeline(VkDevice device, VkRenderPass renderpass, const char* name,
+static bool gvkBuildPipeline(VkDevice device, VkPipelineCache cache, const gvkTargetPasses& passes, const char* name,
 		const std::vector<uint32_t>& vertSpirv, const std::vector<uint32_t>& fragSpirv,
 		const gvkPipelineOptions& options, gvkPipelineParts& parts) {
 	gVKReflectedLayout reflected;
@@ -318,7 +365,16 @@ static bool gvkBuildPipeline(VkDevice device, VkRenderPass renderpass, const cha
 	// OpenGL one - not the same value. Left at NONE for now, which sidesteps it.
 	rasterizer.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;
 	rasterizer.lineWidth = 1.0f;
+	// See gvkPipelineOptions::depthbias. The two factors are the values that the
+	// depth-only passes of most renderers settle on; they are deliberately modest,
+	// because overshooting here detaches a shadow from the object casting it.
+	rasterizer.depthBiasEnable = options.depthbias ? VK_TRUE : VK_FALSE;
+	rasterizer.depthBiasConstantFactor = options.depthbias ? 1.25f : 0.0f;
+	rasterizer.depthBiasSlopeFactor = options.depthbias ? 2.0f : 0.0f;
 
+	// Filled per sample-count variant in the loop at the bottom of this function; a
+	// pipeline's rasterizationSamples has to match the sample count of the pass it is
+	// built against or it cannot be recorded into it.
 	VkPipelineMultisampleStateCreateInfo multisample{};
 	multisample.sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
 	multisample.rasterizationSamples = VK_SAMPLE_COUNT_1_BIT;
@@ -399,41 +455,89 @@ static bool gvkBuildPipeline(VkDevice device, VkRenderPass renderpass, const cha
 	pipelineinfo.pColorBlendState = &colorblend;
 	pipelineinfo.pDynamicState = &dynamicstate;
 	pipelineinfo.layout = parts.layout;
-	pipelineinfo.renderPass = renderpass;
 	pipelineinfo.subpass = 0;
 
-	VkResult result = vkCreateGraphicsPipelines(device, VK_NULL_HANDLE, 1, &pipelineinfo, nullptr, &parts.pipeline);
-	if(result == VK_SUCCESS && options.blendvariant) {
-		// A second copy with blending flipped, so a 3D draw can follow the renderer's
-		// alpha blending state. It cannot be a dynamic state - blending is baked into
-		// a Vulkan pipeline - so the choice is made by binding one or the other.
-		blendattachment.blendEnable = options.blend ? VK_FALSE : VK_TRUE;
-		result = vkCreateGraphicsPipelines(device, VK_NULL_HANDLE, 1, &pipelineinfo, nullptr,
-				&parts.blendvariantpipeline);
-		blendattachment.blendEnable = options.blend ? VK_TRUE : VK_FALSE;
-	}
-	if(result == VK_SUCCESS && options.additivevariant) {
-		// Only the destination factor changes: the source is still scaled by alpha, so
-		// a fully transparent texel contributes nothing and an opaque one contributes
-		// its full colour, exactly as glBlendFunc(GL_SRC_ALPHA, GL_ONE) does. The
-		// alpha channel keeps the over operator - the colour is what is being added,
-		// and letting alpha accumulate as well would saturate the target's coverage.
-		blendattachment.blendEnable = VK_TRUE;
-		blendattachment.dstColorBlendFactor = VK_BLEND_FACTOR_ONE;
-		result = vkCreateGraphicsPipelines(device, VK_NULL_HANDLE, 1, &pipelineinfo, nullptr,
-				&parts.additivepipeline);
-		blendattachment.blendEnable = options.blend ? VK_TRUE : VK_FALSE;
-		blendattachment.dstColorBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
-	}
-	if(result == VK_SUCCESS && options.linevariant) {
-		// Identical state apart from the topology: an unfilled shape is stroked as
-		// separate edges, which is what the OpenGL path draws through
-		// DRAWMODE_LINELOOP. A list rather than a strip so primitive restart stays
-		// off - a strip would have to leave it enabled on Metal, which quietly turns
-		// an index of ~0 into a break should this pipeline ever draw indexed. The
-		// line width stays 1.0, the only value guaranteed without wideLines.
-		inputassembly.topology = VK_PRIMITIVE_TOPOLOGY_LINE_LIST;
-		result = vkCreateGraphicsPipelines(device, VK_NULL_HANDLE, 1, &pipelineinfo, nullptr, &parts.linepipeline);
+	// One build per sample count actually in use. This is the answer to the
+	// render-pass compatibility problem multisampling creates: a pipeline is baked
+	// against a pass and the sample count is part of that compatibility, so the same
+	// shaders are compiled into a single-sample pipeline for the offscreen passes and
+	// a multisampled one for the screen pass, and the getters in gVKContext hand out
+	// whichever the pass being recorded will accept. The second build shares this
+	// function's modules, layout and every state struct above and comes out of the
+	// same VkPipelineCache, so it costs a fraction of the first. See gVKContext.h.
+	VkResult result = VK_SUCCESS;
+	for(uint32_t variant = 0; variant < GVK_PIPELINE_SAMPLE_VARIANTS && result == VK_SUCCESS; variant++) {
+		if(passes.pass[variant] == VK_NULL_HANDLE) continue;
+		pipelineinfo.renderPass = passes.pass[variant];
+		multisample.rasterizationSamples = variant == 0 ? VK_SAMPLE_COUNT_1_BIT : passes.samples;
+		// Coverage antialiasing alone runs the fragment shader once per pixel and only
+		// the depth/coverage test per sample, which is why it is nearly free. Sample
+		// shading runs it per sample instead - the only thing that antialiases inside a
+		// triangle, and a multiplier on the most expensive stage of a mobile frame.
+		// Never on the single-sample variant, where it would mean nothing.
+		const bool shadepersample = variant > 0 && passes.sampleshading
+				&& multisample.rasterizationSamples != VK_SAMPLE_COUNT_1_BIT;
+		multisample.sampleShadingEnable = shadepersample ? VK_TRUE : VK_FALSE;
+		multisample.minSampleShading = shadepersample ? passes.minsampleshading : 0.0f;
+		gVKPipelineVariants& built = parts.variants[variant];
+
+		// Every copy below puts the state it changed back before the next one, so both
+		// the following copy and the next variant start from the base state the
+		// options describe.
+		result = vkCreateGraphicsPipelines(device, cache, 1, &pipelineinfo, nullptr, &built.pipeline);
+		if(result == VK_SUCCESS && options.blendvariant) {
+			// A second copy with blending flipped, so a 3D draw can follow the renderer's
+			// alpha blending state. It cannot be a dynamic state - blending is baked into
+			// a Vulkan pipeline - so the choice is made by binding one or the other.
+			blendattachment.blendEnable = options.blend ? VK_FALSE : VK_TRUE;
+			result = vkCreateGraphicsPipelines(device, cache, 1, &pipelineinfo, nullptr,
+					&built.blendvariantpipeline);
+			blendattachment.blendEnable = options.blend ? VK_TRUE : VK_FALSE;
+		}
+		if(result == VK_SUCCESS && options.additivevariant) {
+			// Only the destination factor changes: the source is still scaled by alpha, so
+			// a fully transparent texel contributes nothing and an opaque one contributes
+			// its full colour, exactly as glBlendFunc(GL_SRC_ALPHA, GL_ONE) does. The
+			// alpha channel keeps the over operator - the colour is what is being added,
+			// and letting alpha accumulate as well would saturate the target's coverage.
+			blendattachment.blendEnable = VK_TRUE;
+			blendattachment.dstColorBlendFactor = VK_BLEND_FACTOR_ONE;
+			result = vkCreateGraphicsPipelines(device, cache, 1, &pipelineinfo, nullptr,
+					&built.additivepipeline);
+			blendattachment.blendEnable = options.blend ? VK_TRUE : VK_FALSE;
+			blendattachment.dstColorBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
+		}
+		if(result == VK_SUCCESS && options.nocutoutvariant) {
+			// The same modules, compiled a second time with the cutout constant forced to
+			// zero. Specialization is applied to the fragment stage only; the vertex shader
+			// declares no constants, and handing it an entry that names one it does not have
+			// is invalid.
+			const uint32_t nocutout = 0;
+			VkSpecializationMapEntry entry{};
+			entry.constantID = 0;
+			entry.offset = 0;
+			entry.size = sizeof(nocutout);
+			VkSpecializationInfo specialization{};
+			specialization.mapEntryCount = 1;
+			specialization.pMapEntries = &entry;
+			specialization.dataSize = sizeof(nocutout);
+			specialization.pData = &nocutout;
+			stages[1].pSpecializationInfo = &specialization;
+			result = vkCreateGraphicsPipelines(device, cache, 1, &pipelineinfo, nullptr,
+					&built.nocutoutpipeline);
+			stages[1].pSpecializationInfo = nullptr;
+		}
+		if(result == VK_SUCCESS && options.linevariant) {
+			// Identical state apart from the topology: an unfilled shape is stroked as
+			// separate edges, which is what the OpenGL path draws through
+			// DRAWMODE_LINELOOP. A list rather than a strip so primitive restart stays
+			// off - a strip would have to leave it enabled on Metal, which quietly turns
+			// an index of ~0 into a break should this pipeline ever draw indexed. The
+			// line width stays 1.0, the only value guaranteed without wideLines.
+			inputassembly.topology = VK_PRIMITIVE_TOPOLOGY_LINE_LIST;
+			result = vkCreateGraphicsPipelines(device, cache, 1, &pipelineinfo, nullptr, &built.linepipeline);
+			inputassembly.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
+		}
 	}
 	vkDestroyShaderModule(device, vert, nullptr);
 	vkDestroyShaderModule(device, frag, nullptr);
@@ -444,14 +548,20 @@ static bool gvkBuildPipeline(VkDevice device, VkRenderPass renderpass, const cha
 	return true;
 }
 
+// Every handle of one sample-count variant. Shared by the build's own failure path
+// and by gvkDestroyGraphicsPipelines, so the two cannot drift apart as variants are
+// added.
+static void gvkDestroyPipelineVariants(VkDevice device, gVKPipelineVariants& variants) {
+	if(variants.additivepipeline != VK_NULL_HANDLE) vkDestroyPipeline(device, variants.additivepipeline, nullptr);
+	if(variants.nocutoutpipeline != VK_NULL_HANDLE) vkDestroyPipeline(device, variants.nocutoutpipeline, nullptr);
+	if(variants.blendvariantpipeline != VK_NULL_HANDLE) vkDestroyPipeline(device, variants.blendvariantpipeline, nullptr);
+	if(variants.linepipeline != VK_NULL_HANDLE) vkDestroyPipeline(device, variants.linepipeline, nullptr);
+	if(variants.pipeline != VK_NULL_HANDLE) vkDestroyPipeline(device, variants.pipeline, nullptr);
+	variants = gVKPipelineVariants{};
+}
+
 static void gvkDestroyParts(VkDevice device, gvkPipelineParts& parts) {
-	if(parts.additivepipeline != VK_NULL_HANDLE) {
-		vkDestroyPipeline(device, parts.additivepipeline, nullptr);
-		parts.additivepipeline = VK_NULL_HANDLE;
-	}
-	if(parts.blendvariantpipeline != VK_NULL_HANDLE) vkDestroyPipeline(device, parts.blendvariantpipeline, nullptr);
-	if(parts.linepipeline != VK_NULL_HANDLE) vkDestroyPipeline(device, parts.linepipeline, nullptr);
-	if(parts.pipeline != VK_NULL_HANDLE) vkDestroyPipeline(device, parts.pipeline, nullptr);
+	for(gVKPipelineVariants& variants : parts.variants) gvkDestroyPipelineVariants(device, variants);
 	if(parts.layout != VK_NULL_HANDLE) vkDestroyPipelineLayout(device, parts.layout, nullptr);
 	for(VkDescriptorSetLayout setlayout : parts.setlayouts) vkDestroyDescriptorSetLayout(device, setlayout, nullptr);
 	parts = gvkPipelineParts{};
@@ -460,26 +570,55 @@ static void gvkDestroyParts(VkDevice device, gvkPipelineParts& parts) {
 // Sized from the descriptor types the shaders actually declare, so a shader that
 // starts using a different resource kind gets a pool that can serve it.
 static bool gvkCreateDescriptorPool(VkDevice device, const gvkPipelineParts& color, const gvkPipelineParts& image,
-		const gvkPipelineParts& mesh3d, const gvkPipelineParts& mesh3dpbr, VkDescriptorPool& outPool) {
+		const gvkPipelineParts& mesh3d, const gvkPipelineParts& mesh3dpbr,
+		const gvkPipelineParts& skybox, VkDescriptorPool& outPool) {
 	std::vector<VkDescriptorPoolSize> sizes;
-	auto add = [&sizes](const std::vector<gVKReflectedBinding>& bindings) {
+	// maxSets is shared by every layout allocated from this pool. Adding every
+	// pipeline's bindings and then multiplying each sum by maxSets assumes all
+	// 8192 sets simultaneously have the descriptors of every pipeline. That cannot
+	// happen: one allocated set has exactly one layout. On mobile drivers the old
+	// calculation reserved several times the descriptor backing store actually
+	// addressable by the pool.
+	//
+	// Find the largest number of each descriptor type used by any *single set* and
+	// reserve that worst case for maxSets. This remains safe for any mixture of
+	// texture, scene, PBR and skybox sets while avoiding the multiplied waste.
+	auto addLayoutWorstCase = [&sizes](const std::vector<gVKReflectedBinding>& bindings) {
+		std::vector<VkDescriptorPoolSize> perSet;
+		uint32_t currentSet = UINT32_MAX;
+		auto mergeSet = [&sizes, &perSet]() {
+			for(const VkDescriptorPoolSize& candidate : perSet) {
+				auto found = std::find_if(sizes.begin(), sizes.end(), [&](const VkDescriptorPoolSize& size) {
+					return size.type == candidate.type;
+				});
+				if(found == sizes.end()) sizes.push_back(candidate);
+				else found->descriptorCount = std::max(found->descriptorCount, candidate.descriptorCount);
+			}
+			perSet.clear();
+		};
 		for(const gVKReflectedBinding& b : bindings) {
-			VkDescriptorPoolSize* existing = nullptr;
-			for(VkDescriptorPoolSize& s : sizes) if(s.type == b.type) { existing = &s; break; }
-			if(existing != nullptr) existing->descriptorCount += b.count * GVK_DESCRIPTOR_POOL_SETS;
-			else sizes.push_back({b.type, b.count * GVK_DESCRIPTOR_POOL_SETS});
+			if(currentSet != UINT32_MAX && b.set != currentSet) mergeSet();
+			currentSet = b.set;
+			auto found = std::find_if(perSet.begin(), perSet.end(), [&](const VkDescriptorPoolSize& size) {
+				return size.type == b.type;
+			});
+			if(found == perSet.end()) perSet.push_back({b.type, b.count});
+			else found->descriptorCount += b.count;
 		}
+		mergeSet();
 	};
-	add(color.bindings);
-	add(image.bindings);
+	addLayoutWorstCase(color.bindings);
+	addLayoutWorstCase(image.bindings);
 	// The 3D path's scene uniform block is a different descriptor type to the 2D
 	// path's samplers, so leaving it out here would leave nothing to allocate its
 	// sets from.
-	add(mesh3d.bindings);
+	addLayoutWorstCase(mesh3d.bindings);
 	// The PBR path allocates one set per material rather than one per texture, so
 	// its five samplers have to be counted here too.
-	add(mesh3dpbr.bindings);
+	addLayoutWorstCase(mesh3dpbr.bindings);
+	addLayoutWorstCase(skybox.bindings);
 	if(sizes.empty()) return true;   // no shader declares a descriptor; nothing to pool
+	for(VkDescriptorPoolSize& size : sizes) size.descriptorCount *= GVK_DESCRIPTOR_POOL_SETS;
 
 	VkDescriptorPoolCreateInfo poolinfo{};
 	poolinfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
@@ -497,15 +636,22 @@ static bool gvkCreateDescriptorPool(VkDevice device, const gvkPipelineParts& col
 // Builds both pipelines and their pool without touching the context, so the
 // caller only adopts handles once everything succeeded. On failure nothing is
 // left allocated.
-static bool gvkBuildAll(VkDevice device, VkRenderPass renderpass, const gvkShaderSet& shaders,
+static bool gvkBuildAll(VkDevice device, VkPipelineCache cache, const gvkTargetPasses& passes,
+		const gvkShaderSet& shaders,
 		gvkPipelineParts& color, gvkPipelineParts& image, gvkPipelineParts& mesh3d,
 		gvkPipelineParts& mesh3dpbr, gvkPipelineParts& skybox, VkDescriptorPool& pool) {
 	gvkPipelineOptions coloropts;
 	coloropts.linevariant = true;
 	coloropts.additivevariant = true;
+	coloropts.vertexattributes = gvk2dattributes;
+	coloropts.vertexattributecount = static_cast<uint32_t>(std::size(gvk2dattributes));
+	coloropts.vertexstride = GVK_2D_VERTEX_STRIDE;
 
 	gvkPipelineOptions imageopts;
 	imageopts.additivevariant = true;
+	imageopts.vertexattributes = gvk2dattributes;
+	imageopts.vertexattributecount = static_cast<uint32_t>(std::size(gvk2dattributes));
+	imageopts.vertexstride = GVK_2D_VERTEX_STRIDE;
 
 	gvkPipelineOptions mesh3dopts;
 	mesh3dopts.depthtest = true;
@@ -521,6 +667,14 @@ static bool gvkBuildAll(VkDevice device, VkRenderPass renderpass, const gvkShade
 	mesh3dopts.instancestride = GVK_MESH3D_INSTANCE_STRIDE;
 	// A mesh can be drawn as an outline too, through DRAWMODE_LINES and friends.
 	mesh3dopts.linevariant = true;
+	// And a copy without the cutout discard, for materials that cannot need it.
+	mesh3dopts.nocutoutvariant = true;
+
+	// The PBR path shares all of that but not the last flag: its shader has no cutout
+	// branch to compile out, so it already keeps early depth rejection and a second
+	// copy would only be a duplicate.
+	gvkPipelineOptions mesh3dpbropts = mesh3dopts;
+	mesh3dpbropts.nocutoutvariant = false;
 
 	// The sky needs the depth buffer, so scene geometry occludes it, but never culls
 	// and never blends. Its vertex layout is small enough to come from reflection.
@@ -530,19 +684,19 @@ static bool gvkBuildAll(VkDevice device, VkRenderPass renderpass, const gvkShade
 	skyboxopts.depthtest = true;
 	skyboxopts.blend = false;
 
-	if(gvkBuildPipeline(device, renderpass, "colour",
+	if(gvkBuildPipeline(device, cache, passes, "colour",
 					shaders.spirv[GVK_STAGE_COLOR_VERT], shaders.spirv[GVK_STAGE_COLOR_FRAG], coloropts, color) &&
-			gvkBuildPipeline(device, renderpass, "image",
+			gvkBuildPipeline(device, cache, passes, "image",
 					shaders.spirv[GVK_STAGE_IMAGE_VERT], shaders.spirv[GVK_STAGE_IMAGE_FRAG], imageopts, image) &&
-			gvkBuildPipeline(device, renderpass, "mesh3d",
+			gvkBuildPipeline(device, cache, passes, "mesh3d",
 					shaders.spirv[GVK_STAGE_MESH3D_VERT], shaders.spirv[GVK_STAGE_MESH3D_FRAG], mesh3dopts, mesh3d) &&
-			gvkBuildPipeline(device, renderpass, "mesh3dpbr",
+			gvkBuildPipeline(device, cache, passes, "mesh3dpbr",
 					shaders.spirv[GVK_STAGE_MESH3DPBR_VERT], shaders.spirv[GVK_STAGE_MESH3DPBR_FRAG],
-					mesh3dopts, mesh3dpbr) &&
-			gvkBuildPipeline(device, renderpass, "skybox3d",
+					mesh3dpbropts, mesh3dpbr) &&
+			gvkBuildPipeline(device, cache, passes, "skybox3d",
 					shaders.spirv[GVK_STAGE_SKYBOX_VERT], shaders.spirv[GVK_STAGE_SKYBOX_FRAG],
 					skyboxopts, skybox) &&
-			gvkCreateDescriptorPool(device, color, image, mesh3d, mesh3dpbr, pool)) {
+			gvkCreateDescriptorPool(device, color, image, mesh3d, mesh3dpbr, skybox, pool)) {
 		return true;
 	}
 	if(pool != VK_NULL_HANDLE) { vkDestroyDescriptorPool(device, pool, nullptr); pool = VK_NULL_HANDLE; }
@@ -569,6 +723,14 @@ bool gvkCreateGraphicsPipelines(gVKContext& ctx) {
 		gLoge("gVKPipeline") << "Pipelines need a device and render pass first.";
 		return false;
 	}
+	if(ctx.pipelinecache == VK_NULL_HANDLE) {
+		VkPipelineCacheCreateInfo cacheinfo{};
+		cacheinfo.sType = VK_STRUCTURE_TYPE_PIPELINE_CACHE_CREATE_INFO;
+		if(vkCreatePipelineCache(ctx.device, &cacheinfo, nullptr, &ctx.pipelinecache) != VK_SUCCESS) {
+			gLoge("gVKPipeline") << "vkCreatePipelineCache failed.";
+			return false;
+		}
+	}
 	gvkShaderSet shaders;
 	gvkLoadShaderSet(shaders, false);
 
@@ -578,37 +740,55 @@ bool gvkCreateGraphicsPipelines(gVKContext& ctx) {
 	gvkPipelineParts mesh3dpbr;
 	gvkPipelineParts skybox;
 	VkDescriptorPool pool = VK_NULL_HANDLE;
-	if(!gvkBuildAll(ctx.device, ctx.renderpass, shaders, color, image, mesh3d, mesh3dpbr, skybox, pool)) return false;
 
-	ctx.skyboxpipeline = skybox.pipeline;
+	// Variant 0 is built against the single-sample template - the screen pass itself
+	// while MSAA is off, otherwise the 1x twin gvkCreateRenderPass keeps for exactly
+	// this - and is what the per-FBO passes record. Variant 1 exists only while the
+	// screen pass is multisampled and is built against that pass.
+	gvkTargetPasses passes;
+	passes.pass[0] = ctx.singlesamplerenderpass != VK_NULL_HANDLE ? ctx.singlesamplerenderpass : ctx.renderpass;
+	passes.pass[1] = ctx.isMultiSampled() ? ctx.renderpass : VK_NULL_HANDLE;
+	passes.samples = ctx.samplecount;
+	// Sample shading is honoured only when the device advertises the feature; asking
+	// for it without sampleRateShading is invalid pipeline state, not a slow path.
+	passes.sampleshading = ctx.sampleshadingenabled && ctx.devicefeatures.sampleRateShading == VK_TRUE;
+	passes.minsampleshading = ctx.minsampleshading;
+	if(ctx.sampleshadingenabled && ctx.devicefeatures.sampleRateShading != VK_TRUE) {
+		gLogi("gVKPipeline") << "Sample shading was requested but the device does not support"
+				<< " sampleRateShading; multisampling stays coverage only.";
+	}
+
+	if(!gvkBuildAll(ctx.device, ctx.pipelinecache, passes, shaders,
+			color, image, mesh3d, mesh3dpbr, skybox, pool)) return false;
+
+	for(uint32_t v = 0; v < GVK_PIPELINE_SAMPLE_VARIANTS; v++) {
+		ctx.skybox[v] = skybox.variants[v];
+		ctx.mesh3dpbr[v] = mesh3dpbr.variants[v];
+		ctx.mesh3d[v] = mesh3d.variants[v];
+		ctx.color2d[v] = color.variants[v];
+		ctx.image2d[v] = image.variants[v];
+	}
+	// Nothing is being recorded yet, so start on the variant the screen pass wants.
+	ctx.useScreenPipelines();
+
 	ctx.skyboxpipelinelayout = skybox.layout;
 	ctx.skyboxsetlayouts = skybox.setlayouts;
 	ctx.skyboxpushsize = skybox.pushsize;
 	ctx.skyboxpushstages = skybox.pushstages;
 
-	ctx.mesh3dpbrpipeline = mesh3dpbr.pipeline;
-	ctx.mesh3dpbrblendpipeline = mesh3dpbr.blendvariantpipeline;
 	ctx.mesh3dpbrpipelinelayout = mesh3dpbr.layout;
 	ctx.mesh3dpbrsetlayouts = mesh3dpbr.setlayouts;
 	ctx.mesh3dpbrpushsize = mesh3dpbr.pushsize;
 	ctx.mesh3dpbrpushstages = mesh3dpbr.pushstages;
 
-	ctx.mesh3dpipeline = mesh3d.pipeline;
-	ctx.mesh3dblendpipeline = mesh3d.blendvariantpipeline;
-	ctx.mesh3dlinepipeline = mesh3d.linepipeline;
 	ctx.mesh3dpipelinelayout = mesh3d.layout;
 	ctx.mesh3dsetlayouts = mesh3d.setlayouts;
 	ctx.mesh3dpushsize = mesh3d.pushsize;
 	ctx.mesh3dpushstages = mesh3d.pushstages;
-	ctx.color2dpipeline = color.pipeline;
-	ctx.color2dlinepipeline = color.linepipeline;
-	ctx.color2dadditivepipeline = color.additivepipeline;
 	ctx.color2dpipelinelayout = color.layout;
 	ctx.color2dsetlayouts = color.setlayouts;
 	ctx.color2dpushsize = color.pushsize;
 	ctx.color2dpushstages = color.pushstages;
-	ctx.image2dpipeline = image.pipeline;
-	ctx.image2dadditivepipeline = image.additivepipeline;
 	ctx.image2dpipelinelayout = image.layout;
 	ctx.image2dsetlayouts = image.setlayouts;
 	ctx.image2dpushsize = image.pushsize;
@@ -620,6 +800,11 @@ bool gvkCreateGraphicsPipelines(gVKContext& ctx) {
 				<< gvkShaderSourceDir() << "; edits to those shaders reload live.";
 	} else {
 		gLogi("gVKPipeline") << "2D and 3D graphics pipelines created.";
+	}
+	if(ctx.isMultiSampled()) {
+		gLogi("gVKPipeline") << "Two sample-count builds: 1x for offscreen targets and "
+				<< static_cast<int>(ctx.samplecount) << "x for the screen pass"
+				<< (passes.sampleshading ? ", with sample shading" : "");
 	}
 	return true;
 }
@@ -670,15 +855,26 @@ bool gvkCreateShadowPipeline(gVKContext& ctx) {
 	options.vertexattributecount = static_cast<uint32_t>(std::size(gvkmesh3dattributes));
 	options.vertexstride = GVK_MESH3D_VERTEX_STRIDE;
 	options.instancestride = GVK_MESH3D_INSTANCE_STRIDE;
+	// The only pipeline that wants it: this is the pass whose depths are compared
+	// against later, so this is where the offset belongs.
+	options.depthbias = true;
+
+	// One target only, and at one sample: the shadow map is a depth-only image that
+	// is sampled and compared against, never displayed, so multisampling it would
+	// antialias nothing while multiplying the one buffer a shadowed frame writes and
+	// reads most. That is also why this pipeline is built here rather than with the
+	// others - it belongs to a different pass, at a different sample count.
+	gvkTargetPasses passes;
+	passes.pass[0] = ctx.shadowrenderpass;
 
 	gvkPipelineParts parts;
-	if(!gvkBuildPipeline(ctx.device, ctx.shadowrenderpass, "shadow3d",
+	if(!gvkBuildPipeline(ctx.device, ctx.pipelinecache, passes, "shadow3d",
 			shaders.spirv[GVK_STAGE_SHADOW_VERT], shaders.spirv[GVK_STAGE_SHADOW_FRAG],
 			options, parts)) {
 		return false;
 	}
 
-	ctx.shadowpipeline = parts.pipeline;
+	ctx.shadowpipeline = parts.variants[0].pipeline;
 	ctx.shadowpipelinelayout = parts.layout;
 	ctx.shadowsetlayouts = parts.setlayouts;
 	ctx.shadowpushsize = parts.pushsize;
@@ -707,13 +903,19 @@ void gvkDestroyShadowPipeline(gVKContext& ctx) {
 void gvkDestroyGraphicsPipelines(gVKContext& ctx) {
 	VkDevice device = ctx.device;
 	if(device == VK_NULL_HANDLE) return;
-	if(ctx.mesh3dpbrpipeline != VK_NULL_HANDLE) { vkDestroyPipeline(device, ctx.mesh3dpbrpipeline, nullptr); ctx.mesh3dpbrpipeline = VK_NULL_HANDLE; }
-	if(ctx.skyboxpipeline != VK_NULL_HANDLE) { vkDestroyPipeline(device, ctx.skyboxpipeline, nullptr); ctx.skyboxpipeline = VK_NULL_HANDLE; }
+	// Both sample-count builds, in one place: every family's variants first, then the
+	// layouts and pools they shared.
+	for(uint32_t v = 0; v < GVK_PIPELINE_SAMPLE_VARIANTS; v++) {
+		gvkDestroyPipelineVariants(device, ctx.skybox[v]);
+		gvkDestroyPipelineVariants(device, ctx.mesh3dpbr[v]);
+		gvkDestroyPipelineVariants(device, ctx.mesh3d[v]);
+		gvkDestroyPipelineVariants(device, ctx.image2d[v]);
+		gvkDestroyPipelineVariants(device, ctx.color2d[v]);
+	}
+	ctx.activepipelinevariant = 0;
 	if(ctx.skyboxpipelinelayout != VK_NULL_HANDLE) { vkDestroyPipelineLayout(device, ctx.skyboxpipelinelayout, nullptr); ctx.skyboxpipelinelayout = VK_NULL_HANDLE; }
 	for(VkDescriptorSetLayout l : ctx.skyboxsetlayouts) vkDestroyDescriptorSetLayout(device, l, nullptr);
 	ctx.skyboxsetlayouts.clear();
-	if(ctx.mesh3dpbrblendpipeline != VK_NULL_HANDLE) { vkDestroyPipeline(device, ctx.mesh3dpbrblendpipeline, nullptr); ctx.mesh3dpbrblendpipeline = VK_NULL_HANDLE; }
-	if(ctx.mesh3dblendpipeline != VK_NULL_HANDLE) { vkDestroyPipeline(device, ctx.mesh3dblendpipeline, nullptr); ctx.mesh3dblendpipeline = VK_NULL_HANDLE; }
 	if(ctx.mesh3dpbrpipelinelayout != VK_NULL_HANDLE) { vkDestroyPipelineLayout(device, ctx.mesh3dpbrpipelinelayout, nullptr); ctx.mesh3dpbrpipelinelayout = VK_NULL_HANDLE; }
 	for(VkDescriptorSetLayout setlayout : ctx.mesh3dpbrsetlayouts) vkDestroyDescriptorSetLayout(device, setlayout, nullptr);
 	ctx.mesh3dpbrsetlayouts.clear();
@@ -721,15 +923,9 @@ void gvkDestroyGraphicsPipelines(gVKContext& ctx) {
 	// lookup has to be dropped - keeping stale handles would hand a freed set to a
 	// draw after a shader reload.
 	ctx.pbrmaterialsets.clear();
+	ctx.materialsets.clear();
 	ctx.mesh3dpbrpushsize = 0;
 	ctx.mesh3dpbrpushstages = 0;
-	if(ctx.mesh3dlinepipeline != VK_NULL_HANDLE) { vkDestroyPipeline(device, ctx.mesh3dlinepipeline, nullptr); ctx.mesh3dlinepipeline = VK_NULL_HANDLE; }
-	if(ctx.mesh3dpipeline != VK_NULL_HANDLE) { vkDestroyPipeline(device, ctx.mesh3dpipeline, nullptr); ctx.mesh3dpipeline = VK_NULL_HANDLE; }
-	if(ctx.image2dpipeline != VK_NULL_HANDLE) { vkDestroyPipeline(device, ctx.image2dpipeline, nullptr); ctx.image2dpipeline = VK_NULL_HANDLE; }
-	if(ctx.color2dlinepipeline != VK_NULL_HANDLE) { vkDestroyPipeline(device, ctx.color2dlinepipeline, nullptr); ctx.color2dlinepipeline = VK_NULL_HANDLE; }
-	if(ctx.color2dadditivepipeline != VK_NULL_HANDLE) { vkDestroyPipeline(device, ctx.color2dadditivepipeline, nullptr); ctx.color2dadditivepipeline = VK_NULL_HANDLE; }
-	if(ctx.image2dadditivepipeline != VK_NULL_HANDLE) { vkDestroyPipeline(device, ctx.image2dadditivepipeline, nullptr); ctx.image2dadditivepipeline = VK_NULL_HANDLE; }
-	if(ctx.color2dpipeline != VK_NULL_HANDLE) { vkDestroyPipeline(device, ctx.color2dpipeline, nullptr); ctx.color2dpipeline = VK_NULL_HANDLE; }
 	if(ctx.mesh3dpipelinelayout != VK_NULL_HANDLE) { vkDestroyPipelineLayout(device, ctx.mesh3dpipelinelayout, nullptr); ctx.mesh3dpipelinelayout = VK_NULL_HANDLE; }
 	if(ctx.image2dpipelinelayout != VK_NULL_HANDLE) { vkDestroyPipelineLayout(device, ctx.image2dpipelinelayout, nullptr); ctx.image2dpipelinelayout = VK_NULL_HANDLE; }
 	if(ctx.color2dpipelinelayout != VK_NULL_HANDLE) { vkDestroyPipelineLayout(device, ctx.color2dpipelinelayout, nullptr); ctx.color2dpipelinelayout = VK_NULL_HANDLE; }
@@ -753,4 +949,11 @@ void gvkDestroyGraphicsPipelines(gVKContext& ctx) {
 	ctx.mesh3dpushstages = 0;
 }
 
-#endif /* GVK_DESKTOP_GLFW */
+void gvkDestroyPipelineCache(gVKContext& ctx) {
+	if(ctx.device != VK_NULL_HANDLE && ctx.pipelinecache != VK_NULL_HANDLE) {
+		vkDestroyPipelineCache(ctx.device, ctx.pipelinecache, nullptr);
+		ctx.pipelinecache = VK_NULL_HANDLE;
+	}
+}
+
+#endif /* GVK_VULKAN */

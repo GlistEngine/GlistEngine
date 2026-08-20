@@ -26,7 +26,7 @@
 
 #include "gVKContext.h"
 
-#ifdef GVK_DESKTOP_GLFW
+#ifdef GVK_VULKAN
 
 #include <cstdint>
 #include <utility>
@@ -44,11 +44,11 @@
  *    the overwhelming majority - a mesh loads and is then drawn unchanged - and
  *    device local is the right memory for data the GPU reads every frame.
  *
- *  - Uploaded again: the buffer is rebuilt as one host visible copy per frame in
- *    flight, and every later upload is a plain memcpy into the copy belonging to
- *    the frame being recorded. This is what a CPU-skinned mesh does; it rewrites
- *    its vertices on every animation frame, and the staging path made that cost a
- *    full pipeline stall each time.
+ *  - Updated while frames are being recorded, or after it has already been drawn:
+ *    the buffer is rebuilt as one host visible copy per frame in flight, and every
+ *    later upload is a plain memcpy into the copy belonging to the frame being
+ *    recorded. This is what a CPU-skinned mesh does. Repeated setup uploads remain
+ *    static, because mesh builders often fill one buffer in several steps.
  *
  * The per-frame copies are what makes writing safe without any stall: the frame
  * loop waits on frame f's fence before recording frame f, so by the time the CPU
@@ -70,7 +70,6 @@ struct gVKMeshBuffer {
 	// Which usage flag the buffer was created with. A GLuint name carries no type in
 	// OpenGL, the first upload decides it here.
 	bool isindex = false;
-
 	// Everything below is unused until a second upload promotes the buffer.
 	bool isdynamic = false;
 	VkBuffer slotbuffers[GVK_MAX_FRAMES_IN_FLIGHT] = {};
@@ -143,6 +142,6 @@ void gvkCollectRetiredMeshBuffers(gVKContext& ctx);
 
 void gvkDestroyMeshBuffer(gVKContext& ctx, gVKMeshBuffer& buf);
 
-#endif /* GVK_DESKTOP_GLFW */
+#endif /* GVK_VULKAN */
 
 #endif /* CORE_GVKMESHBUFFER_H */
