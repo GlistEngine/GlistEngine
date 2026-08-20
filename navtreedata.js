@@ -75,15 +75,16 @@ var NAVTREEINDEX =
 "classgGUITooltipText.html#a93fb6f0e96abd7db0024f2e3f8a62d05",
 "classgLight.html#a270a9b866b7f5e2701cb42da5177c9ae",
 "classgModel.html#a4395a666701efdab9162dad16e8ed17e",
-"classgPostProcessManager.html#a7b5869bab0432300ed2103346a7c7240",
-"classgRenderer.html#a8212d9fc6fc90aedc1c49abece04ee5d",
-"classgShader.html#a48e908a98229f501d880a7b0cca53066",
-"classgTexture.html#ab3cd05a4084bea80ddf93ac2cd72134a",
-"classgVKRenderEngine.html#a8b5478443ea4ba4fa67eb8d363ae3cf3",
-"gBaseParticles_8h_source.html",
-"gGUITextbox_8h.html",
-"gRenderer_8h.html#ad9c969b4791dd7390a95eecf331d35bf",
-"gWindows_8h.html"
+"classgPolygon.html#a439b4c082c46298e3652669586b81571",
+"classgRenderer.html#a76f7b12f756addf1342c440e8fb8391a",
+"classgSepiatone.html#a27e938e45b8616cb6a490c9b7db81947",
+"classgTexture.html#a98ca85cd0515fb72516de3d682ac2405",
+"classgVKRenderEngine.html#a7c12afe9686b9d38c9a42dda3f71c594",
+"gArc_8h.html",
+"gGUISizer_8h_source.html",
+"gRenderer_8h.html#a788ae9f02cf5bbb99675872185fe6ba9",
+"gWindowEvents_8h.html#a42de6dd908ace1ea857f6ad43c704d17a88693b018115fe78ec46b023275c4072",
+"tinyfiledialogs_8h.html#aa2db23282c31c40c4c12b4847b92659b"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
