@@ -50,6 +50,7 @@ public:
 
 		Type getType() const;
 		int getPointCount() const;
+		glm::vec3 getPoint(int pointno);
 		const std::vector<glm::vec3>& getPoints() const;
 
 		bool hasNextPoint() const;
@@ -79,6 +80,8 @@ public:
 
 	int getSubPathCount() const;
 	int getPointCount() const;
+	glm::vec3 getPoint(int pointno);
+	glm::vec3 getPoint(int subpathno, int subpathpointno);
 
 	const std::vector<gSubPath>& getSubPaths() const;
 	std::vector<glm::vec3> getPoints() const;

@@ -106,6 +106,14 @@ int gPath::gSubPath::getPointCount() const {
 	return static_cast<int>(points.size());
 }
 
+glm::vec3 gPath::gSubPath::getPoint(int pointno) {
+	if (pointno < 0 || pointno >= getPointCount()) {
+		return glm::vec3(0.0f);
+	}
+
+	return points[pointno];
+}
+
 const std::vector<glm::vec3>&
 gPath::gSubPath::getPoints() const {
 	return points;
@@ -239,6 +247,32 @@ int gPath::getPointCount() const {
 	}
 
 	return pointcount;
+}
+
+glm::vec3 gPath::getPoint(int pointno) {
+	if (pointno < 0) {
+		return glm::vec3(0.0f);
+	}
+
+	for (gSubPath& subpath : subpaths) {
+		int subpathpointcount = subpath.getPointCount();
+
+		if (pointno < subpathpointcount) {
+			return subpath.getPoint(pointno);
+		}
+
+		pointno -= subpathpointcount;
+	}
+
+	return glm::vec3(0.0f);
+}
+
+glm::vec3 gPath::getPoint(int subpathno, int subpathpointno) {
+	if (subpathno < 0 || subpathno >= getSubPathCount()) {
+		return glm::vec3(0.0f);
+	}
+
+	return subpaths[subpathno].getPoint(subpathpointno);
 }
 
 const std::vector<gPath::gSubPath>&
