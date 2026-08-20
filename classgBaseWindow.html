@@ -138,6 +138,16 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a7ce6fc79d7fdadd40181156614b83b7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4f01bf13a831462ad7c13cc8e542b45b" id="r_a4f01bf13a831462ad7c13cc8e542b45b"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBaseWindow.html#a4f01bf13a831462ad7c13cc8e542b45b">close</a> ()</td></tr>
 <tr class="separator:a4f01bf13a831462ad7c13cc8e542b45b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a63b6cb50d4bbbb182a625b4b8dae70c1" id="r_a63b6cb50d4bbbb182a625b4b8dae70c1"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBaseWindow.html#a63b6cb50d4bbbb182a625b4b8dae70c1">supportsVulkan</a> () const</td></tr>
+<tr class="separator:a63b6cb50d4bbbb182a625b4b8dae70c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae2512712968fd2007e8a4d6f278d4fd5" id="r_ae2512712968fd2007e8a4d6f278d4fd5"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBaseWindow.html#ae2512712968fd2007e8a4d6f278d4fd5">getVulkanInstanceExtensions</a> (std::vector&lt; const char * &gt; &amp;extensions) const</td></tr>
+<tr class="separator:ae2512712968fd2007e8a4d6f278d4fd5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5152066b859b9d9123c2130ce9f756d7" id="r_a5152066b859b9d9123c2130ce9f756d7"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBaseWindow.html#a5152066b859b9d9123c2130ce9f756d7">createVulkanSurface</a> (void *instance, void *surface)</td></tr>
+<tr class="separator:a5152066b859b9d9123c2130ce9f756d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6de6bf13fd633e5c530c6431366302c9" id="r_a6de6bf13fd633e5c530c6431366302c9"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBaseWindow.html#a6de6bf13fd633e5c530c6431366302c9">isVulkanSurfaceOutdated</a> () const</td></tr>
+<tr class="separator:a6de6bf13fd633e5c530c6431366302c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad460fea99013ee563c7504abaff6742e" id="r_ad460fea99013ee563c7504abaff6742e"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBaseWindow.html#ad460fea99013ee563c7504abaff6742e">vulkanSurfaceRecreated</a> ()</td></tr>
+<tr class="separator:ad460fea99013ee563c7504abaff6742e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6bb62d9f5c2ecce6532a42dc62e580fa" id="r_a6bb62d9f5c2ecce6532a42dc62e580fa"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBaseWindow.html#a6bb62d9f5c2ecce6532a42dc62e580fa">isVsyncEnabled</a> ()</td></tr>
 <tr class="separator:a6bb62d9f5c2ecce6532a42dc62e580fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af4c9f98c827b64968159c2335231c7c2" id="r_af4c9f98c827b64968159c2335231c7c2"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBaseWindow.html#af4c9f98c827b64968159c2335231c7c2">setVsync</a> (bool vsync)</td></tr>
@@ -360,6 +370,44 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a id="a5152066b859b9d9123c2130ce9f756d7" name="a5152066b859b9d9123c2130ce9f756d7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5152066b859b9d9123c2130ce9f756d7">&#9670;&#160;</a></span>createVulkanSurface()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual bool gBaseWindow::createVulkanSurface </td>
+          <td>(</td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>instance</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>surface</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reimplemented in <a class="el" href="classgGLFWWindow.html#abef0f8212f159755e9c99d9aee42a344">gGLFWWindow</a>.</p>
+
+</div>
+</div>
 <a id="a8a271b838dbb0c8f9c099f9374ffd4aa" name="a8a271b838dbb0c8f9c099f9374ffd4aa"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a8a271b838dbb0c8f9c099f9374ffd4aa">&#9670;&#160;</a></span>disableVsync()</h2>
 
@@ -521,6 +569,34 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a id="ae2512712968fd2007e8a4d6f278d4fd5" name="ae2512712968fd2007e8a4d6f278d4fd5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae2512712968fd2007e8a4d6f278d4fd5">&#9670;&#160;</a></span>getVulkanInstanceExtensions()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void gBaseWindow::getVulkanInstanceExtensions </td>
+          <td>(</td>
+          <td class="paramtype">std::vector&lt; const char * &gt; &amp;&#160;</td>
+          <td class="paramname"><em>extensions</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reimplemented in <a class="el" href="classgGLFWWindow.html#a3dd8b07f41b3422c6adf4ab64b938fdd">gGLFWWindow</a>.</p>
+
+</div>
+</div>
 <a id="a1a18778e3537b13d1962bb9f39cd8340" name="a1a18778e3537b13d1962bb9f39cd8340"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1a18778e3537b13d1962bb9f39cd8340">&#9670;&#160;</a></span>getWidth()</h2>
 
@@ -629,6 +705,31 @@ Additional Inherited Members</h2></td></tr>
           <td></td>
         </tr>
       </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a6de6bf13fd633e5c530c6431366302c9" name="a6de6bf13fd633e5c530c6431366302c9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6de6bf13fd633e5c530c6431366302c9">&#9670;&#160;</a></span>isVulkanSurfaceOutdated()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual bool gBaseWindow::isVulkanSurfaceOutdated </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 </div>
@@ -1104,6 +1205,33 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a id="a63b6cb50d4bbbb182a625b4b8dae70c1" name="a63b6cb50d4bbbb182a625b4b8dae70c1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a63b6cb50d4bbbb182a625b4b8dae70c1">&#9670;&#160;</a></span>supportsVulkan()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual bool gBaseWindow::supportsVulkan </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reimplemented in <a class="el" href="classgGLFWWindow.html#ab387d90ab4e466038271282e51dd5986">gGLFWWindow</a>.</p>
+
+</div>
+</div>
 <a id="a7ce6fc79d7fdadd40181156614b83b7e" name="a7ce6fc79d7fdadd40181156614b83b7e"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a7ce6fc79d7fdadd40181156614b83b7e">&#9670;&#160;</a></span>update()</h2>
 
@@ -1129,6 +1257,31 @@ Additional Inherited Members</h2></td></tr>
 <p>Performs the said operations at the specified frame rate. </p>
 
 <p>Reimplemented in <a class="el" href="classgGLFWWindow.html#a2480f711c72c0e4f963e70a704bc971f">gGLFWWindow</a>.</p>
+
+</div>
+</div>
+<a id="ad460fea99013ee563c7504abaff6742e" name="ad460fea99013ee563c7504abaff6742e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad460fea99013ee563c7504abaff6742e">&#9670;&#160;</a></span>vulkanSurfaceRecreated()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void gBaseWindow::vulkanSurfaceRecreated </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
 
 </div>
 </div>

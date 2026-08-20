@@ -416,6 +416,10 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a01de61e2a5152955877139b9d779c071"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a385a706a44db1c33f1b761c83cc1686f" id="r_a385a706a44db1c33f1b761c83cc1686f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgVKRenderEngine.html#a385a706a44db1c33f1b761c83cc1686f">setVsync</a> (bool enabled) override</td></tr>
 <tr class="separator:a385a706a44db1c33f1b761c83cc1686f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a922311e35a13fe1af805ea5e127c5ae3" id="r_a922311e35a13fe1af805ea5e127c5ae3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgVKRenderEngine.html#a922311e35a13fe1af805ea5e127c5ae3">setMultiSampling</a> (int samples) override</td></tr>
+<tr class="separator:a922311e35a13fe1af805ea5e127c5ae3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa8da74883f2964885b2138217faa2b47" id="r_aa8da74883f2964885b2138217faa2b47"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgVKRenderEngine.html#aa8da74883f2964885b2138217faa2b47">getMultiSampling</a> () const override</td></tr>
+<tr class="separator:aa8da74883f2964885b2138217faa2b47"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aee1c7119bd31cdecb8d3bff00990b551" id="r_aee1c7119bd31cdecb8d3bff00990b551"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgVKRenderEngine.html#aee1c7119bd31cdecb8d3bff00990b551">drawTexturedRect2D</a> (GLuint textureId, GLuint maskTextureId, const glm::vec4 &amp;tint, const glm::mat4 &amp;mvp, const glm::vec2 &amp;uvOffset=glm::vec2(0.0f), const glm::vec2 &amp;uvScale=glm::vec2(1.0f)) override</td></tr>
 <tr class="separator:aee1c7119bd31cdecb8d3bff00990b551"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abc672d604fd7b12f4f10c51c70bdde32" id="r_abc672d604fd7b12f4f10c51c70bdde32"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgVKRenderEngine.html#abc672d604fd7b12f4f10c51c70bdde32">drawTexturedTriangles2D</a> (GLuint textureId, const glm::vec4 &amp;tint, const glm::mat4 &amp;mvp, const float *xyuv, int vertexCount) override</td></tr>
@@ -3519,6 +3523,33 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a id="aa8da74883f2964885b2138217faa2b47" name="aa8da74883f2964885b2138217faa2b47"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa8da74883f2964885b2138217faa2b47">&#9670;&#160;</a></span>getMultiSampling()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int gVKRenderEngine::getMultiSampling </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reimplemented from <a class="el" href="classgRenderer.html#aa8eb6f1749f35205780185cdd667f20d">gRenderer</a>.</p>
+
+</div>
+</div>
 <a id="a92a9d9deefc7690f18c0c02a04fa310f" name="a92a9d9deefc7690f18c0c02a04fa310f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a92a9d9deefc7690f18c0c02a04fa310f">&#9670;&#160;</a></span>getUniformLocation()</h2>
 
@@ -4570,6 +4601,34 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Implements <a class="el" href="classgRenderer.html#a714e1dc62d8be220a69ad3a0b1b3a5a2">gRenderer</a>.</p>
+
+</div>
+</div>
+<a id="a922311e35a13fe1af805ea5e127c5ae3" name="a922311e35a13fe1af805ea5e127c5ae3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a922311e35a13fe1af805ea5e127c5ae3">&#9670;&#160;</a></span>setMultiSampling()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gVKRenderEngine::setMultiSampling </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>samples</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reimplemented from <a class="el" href="classgRenderer.html#a1e042d985476aa9f3adb2108f9e5d500">gRenderer</a>.</p>
 
 </div>
 </div>

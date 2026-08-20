@@ -138,6 +138,12 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a2480f711c72c0e4f963e70a704bc971f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acd4fb915673ad68f52190337c25967d8" id="r_acd4fb915673ad68f52190337c25967d8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgGLFWWindow.html#acd4fb915673ad68f52190337c25967d8">close</a> () override</td></tr>
 <tr class="separator:acd4fb915673ad68f52190337c25967d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab387d90ab4e466038271282e51dd5986" id="r_ab387d90ab4e466038271282e51dd5986"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgGLFWWindow.html#ab387d90ab4e466038271282e51dd5986">supportsVulkan</a> () const override</td></tr>
+<tr class="separator:ab387d90ab4e466038271282e51dd5986"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3dd8b07f41b3422c6adf4ab64b938fdd" id="r_a3dd8b07f41b3422c6adf4ab64b938fdd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgGLFWWindow.html#a3dd8b07f41b3422c6adf4ab64b938fdd">getVulkanInstanceExtensions</a> (std::vector&lt; const char * &gt; &amp;extensions) const override</td></tr>
+<tr class="separator:a3dd8b07f41b3422c6adf4ab64b938fdd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abef0f8212f159755e9c99d9aee42a344" id="r_abef0f8212f159755e9c99d9aee42a344"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgGLFWWindow.html#abef0f8212f159755e9c99d9aee42a344">createVulkanSurface</a> (void *instance, void *surface) override</td></tr>
+<tr class="separator:abef0f8212f159755e9c99d9aee42a344"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac77ae081eb18e471d7a5533443253fcf" id="r_ac77ae081eb18e471d7a5533443253fcf"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgGLFWWindow.html#ac77ae081eb18e471d7a5533443253fcf">setVsync</a> (bool vsync) override</td></tr>
 <tr class="separator:ac77ae081eb18e471d7a5533443253fcf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aad0f9c5efce47b2588c9ea96a4c3c099" id="r_aad0f9c5efce47b2588c9ea96a4c3c099"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgGLFWWindow.html#aad0f9c5efce47b2588c9ea96a4c3c099">setCursor</a> (int cursorNo) override</td></tr>
@@ -185,6 +191,10 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a593af624ca2c39b2ba0664630193363b inherit pub_methods_classgBaseWindow"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae2126f9457a55ad769121413acc7a7f1 inherit pub_methods_classgBaseWindow" id="r_ae2126f9457a55ad769121413acc7a7f1"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBaseWindow.html#ae2126f9457a55ad769121413acc7a7f1">isRendering</a> ()</td></tr>
 <tr class="separator:ae2126f9457a55ad769121413acc7a7f1 inherit pub_methods_classgBaseWindow"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6de6bf13fd633e5c530c6431366302c9 inherit pub_methods_classgBaseWindow" id="r_a6de6bf13fd633e5c530c6431366302c9"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBaseWindow.html#a6de6bf13fd633e5c530c6431366302c9">isVulkanSurfaceOutdated</a> () const</td></tr>
+<tr class="separator:a6de6bf13fd633e5c530c6431366302c9 inherit pub_methods_classgBaseWindow"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad460fea99013ee563c7504abaff6742e inherit pub_methods_classgBaseWindow" id="r_ad460fea99013ee563c7504abaff6742e"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBaseWindow.html#ad460fea99013ee563c7504abaff6742e">vulkanSurfaceRecreated</a> ()</td></tr>
+<tr class="separator:ad460fea99013ee563c7504abaff6742e inherit pub_methods_classgBaseWindow"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6bb62d9f5c2ecce6532a42dc62e580fa inherit pub_methods_classgBaseWindow" id="r_a6bb62d9f5c2ecce6532a42dc62e580fa"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBaseWindow.html#a6bb62d9f5c2ecce6532a42dc62e580fa">isVsyncEnabled</a> ()</td></tr>
 <tr class="separator:a6bb62d9f5c2ecce6532a42dc62e580fa inherit pub_methods_classgBaseWindow"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a17c4bec808328c76195f2f61dfc05c06 inherit pub_methods_classgBaseWindow" id="r_a17c4bec808328c76195f2f61dfc05c06"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgBaseWindow.html#a17c4bec808328c76195f2f61dfc05c06">enableVsync</a> ()</td></tr>
@@ -390,6 +400,44 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a id="abef0f8212f159755e9c99d9aee42a344" name="abef0f8212f159755e9c99d9aee42a344"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abef0f8212f159755e9c99d9aee42a344">&#9670;&#160;</a></span>createVulkanSurface()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool gGLFWWindow::createVulkanSurface </td>
+          <td>(</td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>instance</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>surface</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reimplemented from <a class="el" href="classgBaseWindow.html#a5152066b859b9d9123c2130ce9f756d7">gBaseWindow</a>.</p>
+
+</div>
+</div>
 <a id="af5c79950f648cf21d0c9077292a731a7" name="af5c79950f648cf21d0c9077292a731a7"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#af5c79950f648cf21d0c9077292a731a7">&#9670;&#160;</a></span>getClipboardString()</h2>
 
@@ -554,6 +602,34 @@ Additional Inherited Members</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>bool varaible and says that windows should be closed or not. </dd></dl>
 
 <p>Reimplemented from <a class="el" href="classgBaseWindow.html#ae05b932ac4d6e6c9499911af09fcdfd4">gBaseWindow</a>.</p>
+
+</div>
+</div>
+<a id="a3dd8b07f41b3422c6adf4ab64b938fdd" name="a3dd8b07f41b3422c6adf4ab64b938fdd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3dd8b07f41b3422c6adf4ab64b938fdd">&#9670;&#160;</a></span>getVulkanInstanceExtensions()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gGLFWWindow::getVulkanInstanceExtensions </td>
+          <td>(</td>
+          <td class="paramtype">std::vector&lt; const char * &gt; &amp;&#160;</td>
+          <td class="paramname"><em>extensions</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reimplemented from <a class="el" href="classgBaseWindow.html#ae2512712968fd2007e8a4d6f278d4fd5">gBaseWindow</a>.</p>
 
 </div>
 </div>
@@ -1120,6 +1196,33 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Reimplemented from <a class="el" href="classgBaseWindow.html#a849d4ef5fdfa2d392e80a81c29084dc3">gBaseWindow</a>.</p>
+
+</div>
+</div>
+<a id="ab387d90ab4e466038271282e51dd5986" name="ab387d90ab4e466038271282e51dd5986"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab387d90ab4e466038271282e51dd5986">&#9670;&#160;</a></span>supportsVulkan()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool gGLFWWindow::supportsVulkan </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reimplemented from <a class="el" href="classgBaseWindow.html#a63b6cb50d4bbbb182a625b4b8dae70c1">gBaseWindow</a>.</p>
 
 </div>
 </div>

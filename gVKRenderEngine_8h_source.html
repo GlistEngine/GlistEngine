@@ -357,157 +357,180 @@ $(document).ready(function(){initNavTree('gVKRenderEngine_8h_source.html',''); i
 <div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>    <span class="comment">// Rebuilds the swapchain with the present mode the new setting asks for.</span></div>
 <div class="line"><a id="l00253" name="l00253"></a><span class="lineno"><a class="line" href="classgVKRenderEngine.html#a385a706a44db1c33f1b761c83cc1686f">  253</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classgVKRenderEngine.html#a385a706a44db1c33f1b761c83cc1686f">setVsync</a>(<span class="keywordtype">bool</span> enabled) <span class="keyword">override</span>;</div>
 <div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span> </div>
-<div class="line"><a id="l00255" name="l00255"></a><span class="lineno"><a class="line" href="classgVKRenderEngine.html#aee1c7119bd31cdecb8d3bff00990b551">  255</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classgVKRenderEngine.html#aee1c7119bd31cdecb8d3bff00990b551">drawTexturedRect2D</a>(GLuint textureId, GLuint maskTextureId, <span class="keyword">const</span> glm::vec4&amp; tint,</div>
-<div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span>            <span class="keyword">const</span> glm::mat4&amp; mvp,</div>
-<div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span>            <span class="keyword">const</span> glm::vec2&amp; uvOffset = glm::vec2(0.0f), <span class="keyword">const</span> glm::vec2&amp; uvScale = glm::vec2(1.0f)) <span class="keyword">override</span>;</div>
-<div class="line"><a id="l00258" name="l00258"></a><span class="lineno"><a class="line" href="classgVKRenderEngine.html#abc672d604fd7b12f4f10c51c70bdde32">  258</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classgVKRenderEngine.html#abc672d604fd7b12f4f10c51c70bdde32">drawTexturedTriangles2D</a>(GLuint textureId, <span class="keyword">const</span> glm::vec4&amp; tint,</div>
-<div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span>            <span class="keyword">const</span> glm::mat4&amp; mvp, <span class="keyword">const</span> <span class="keywordtype">float</span>* xyuv, <span class="keywordtype">int</span> vertexCount) <span class="keyword">override</span>;</div>
-<div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span> </div>
-<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span>    <span class="comment">/* ---------------- Vulkan context ---------------- */</span></div>
-<div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span>    <span class="comment">// gVKContext is opaque here (its layout lives in the .cpp), so a developer can</span></div>
-<div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span>    <span class="comment">// reach the accessor rich context without this header ever pulling in</span></div>
-<div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span>    <span class="comment">// &lt;vulkan/vulkan.h&gt;. getContext() creates the context on first access when it</span></div>
-<div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span>    <span class="comment">// does not exist yet, so on a Vulkan-capable build it never returns null:</span></div>
-<div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span>    <span class="comment">// getContext()-&gt;setMinApiVersion(...) before init() is safe, and init() adopts</span></div>
-<div class="line"><a id="l00267" name="l00267"></a><span class="lineno">  267</span>    <span class="comment">// this same context. Whether the handles are actually populated is a separate</span></div>
-<div class="line"><a id="l00268" name="l00268"></a><span class="lineno">  268</span>    <span class="comment">// question - check isInitialized() before using them. (A build without Vulkan</span></div>
-<div class="line"><a id="l00269" name="l00269"></a><span class="lineno">  269</span>    <span class="comment">// support has no context type, so there it returns null.)</span></div>
-<div class="line"><a id="l00270" name="l00270"></a><span class="lineno"><a class="line" href="classgVKRenderEngine.html#ac4e750728c13c0eb5940a6ca2a831525">  270</a></span>    gVKContext* <a class="code hl_function" href="classgVKRenderEngine.html#ac4e750728c13c0eb5940a6ca2a831525">getContext</a>();</div>
-<div class="line"><a id="l00271" name="l00271"></a><span class="lineno">  271</span> </div>
-<div class="line"><a id="l00272" name="l00272"></a><span class="lineno">  272</span>    <span class="comment">// Takes ownership. Any context the engine already holds is torn down first -</span></div>
-<div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span>    <span class="comment">// its Vulkan objects destroyed and its memory freed through cleanupVulkan() -</span></div>
-<div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span>    <span class="comment">// so replacing a context never leaks the old one. The self assignment guard</span></div>
-<div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span>    <span class="comment">// avoids destroying the very context being handed in. The engine frees the</span></div>
-<div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span>    <span class="comment">// adopted context on cleanup.</span></div>
-<div class="line"><a id="l00277" name="l00277"></a><span class="lineno"><a class="line" href="classgVKRenderEngine.html#a45b3e4fdfa8366ab3835a8840184e0a5">  277</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classgVKRenderEngine.html#a45b3e4fdfa8366ab3835a8840184e0a5">setContext</a>(gVKContext* context);</div>
+<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span>    <span class="comment">// Rebuilds the screen render pass, its attachments and every pipeline at the new</span></div>
+<div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span>    <span class="comment">// sample count. Like setVsync, the work is deferred to the next frame boundary,</span></div>
+<div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span>    <span class="comment">// because this can be called from anywhere - including mid-frame with a command</span></div>
+<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span>    <span class="comment">// buffer already recording.</span></div>
+<div class="line"><a id="l00259" name="l00259"></a><span class="lineno"><a class="line" href="classgVKRenderEngine.html#a922311e35a13fe1af805ea5e127c5ae3">  259</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classgVKRenderEngine.html#a922311e35a13fe1af805ea5e127c5ae3">setMultiSampling</a>(<span class="keywordtype">int</span> samples) <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00260" name="l00260"></a><span class="lineno"><a class="line" href="classgVKRenderEngine.html#aa8da74883f2964885b2138217faa2b47">  260</a></span>    <span class="keywordtype">int</span> <a class="code hl_function" href="classgVKRenderEngine.html#aa8da74883f2964885b2138217faa2b47">getMultiSampling</a>() <span class="keyword">const override</span>;</div>
+<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span> </div>
+<div class="line"><a id="l00262" name="l00262"></a><span class="lineno"><a class="line" href="classgVKRenderEngine.html#aee1c7119bd31cdecb8d3bff00990b551">  262</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classgVKRenderEngine.html#aee1c7119bd31cdecb8d3bff00990b551">drawTexturedRect2D</a>(GLuint textureId, GLuint maskTextureId, <span class="keyword">const</span> glm::vec4&amp; tint,</div>
+<div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span>            <span class="keyword">const</span> glm::mat4&amp; mvp,</div>
+<div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span>            <span class="keyword">const</span> glm::vec2&amp; uvOffset = glm::vec2(0.0f), <span class="keyword">const</span> glm::vec2&amp; uvScale = glm::vec2(1.0f)) <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00265" name="l00265"></a><span class="lineno"><a class="line" href="classgVKRenderEngine.html#abc672d604fd7b12f4f10c51c70bdde32">  265</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classgVKRenderEngine.html#abc672d604fd7b12f4f10c51c70bdde32">drawTexturedTriangles2D</a>(GLuint textureId, <span class="keyword">const</span> glm::vec4&amp; tint,</div>
+<div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span>            <span class="keyword">const</span> glm::mat4&amp; mvp, <span class="keyword">const</span> <span class="keywordtype">float</span>* xyuv, <span class="keywordtype">int</span> vertexCount) <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00267" name="l00267"></a><span class="lineno">  267</span> </div>
+<div class="line"><a id="l00268" name="l00268"></a><span class="lineno">  268</span>    <span class="comment">/* ---------------- Vulkan context ---------------- */</span></div>
+<div class="line"><a id="l00269" name="l00269"></a><span class="lineno">  269</span>    <span class="comment">// gVKContext is opaque here (its layout lives in the .cpp), so a developer can</span></div>
+<div class="line"><a id="l00270" name="l00270"></a><span class="lineno">  270</span>    <span class="comment">// reach the accessor rich context without this header ever pulling in</span></div>
+<div class="line"><a id="l00271" name="l00271"></a><span class="lineno">  271</span>    <span class="comment">// &lt;vulkan/vulkan.h&gt;. getContext() creates the context on first access when it</span></div>
+<div class="line"><a id="l00272" name="l00272"></a><span class="lineno">  272</span>    <span class="comment">// does not exist yet, so on a Vulkan-capable build it never returns null:</span></div>
+<div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span>    <span class="comment">// getContext()-&gt;setMinApiVersion(...) before init() is safe, and init() adopts</span></div>
+<div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span>    <span class="comment">// this same context. Whether the handles are actually populated is a separate</span></div>
+<div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span>    <span class="comment">// question - check isInitialized() before using them. (A build without Vulkan</span></div>
+<div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span>    <span class="comment">// support has no context type, so there it returns null.)</span></div>
+<div class="line"><a id="l00277" name="l00277"></a><span class="lineno"><a class="line" href="classgVKRenderEngine.html#ac4e750728c13c0eb5940a6ca2a831525">  277</a></span>    gVKContext* <a class="code hl_function" href="classgVKRenderEngine.html#ac4e750728c13c0eb5940a6ca2a831525">getContext</a>();</div>
 <div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span> </div>
-<div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span><span class="keyword">protected</span>:</div>
-<div class="line"><a id="l00280" name="l00280"></a><span class="lineno"><a class="line" href="classgVKRenderEngine.html#a6a2ff8ff19e4ed68b92e493e0e17f8d3">  280</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classgVKRenderEngine.html#a6a2ff8ff19e4ed68b92e493e0e17f8d3">init</a>() <span class="keyword">override</span>;</div>
-<div class="line"><a id="l00281" name="l00281"></a><span class="lineno"><a class="line" href="classgVKRenderEngine.html#a188056a9648fbb89f3cf19a4daba34e2">  281</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classgVKRenderEngine.html#a188056a9648fbb89f3cf19a4daba34e2">cleanup</a>() <span class="keyword">override</span>;</div>
-<div class="line"><a id="l00282" name="l00282"></a><span class="lineno">  282</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00283" name="l00283"></a><span class="lineno">  283</span>    <span class="keyword">mutable</span> GLuint currentprogram = 0;</div>
-<div class="line"><a id="l00284" name="l00284"></a><span class="lineno">  284</span>    <span class="keywordtype">bool</span> initVulkan();</div>
-<div class="line"><a id="l00285" name="l00285"></a><span class="lineno">  285</span>    <span class="keywordtype">void</span> cleanupVulkan();</div>
-<div class="line"><a id="l00286" name="l00286"></a><span class="lineno">  286</span>    gVKContext* vkcontext = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00287" name="l00287"></a><span class="lineno">  287</span>    <span class="keywordtype">void</span> updatePackUnpackAlignment(<span class="keywordtype">int</span> i) <span class="keyword">override</span>;</div>
-<div class="line"><a id="l00288" name="l00288"></a><span class="lineno">  288</span> </div>
-<div class="line"><a id="l00289" name="l00289"></a><span class="lineno">  289</span>    <span class="comment">// Registry backing the GLuint texture ids gTexture/gImage hand out: createTextures</span></div>
-<div class="line"><a id="l00290" name="l00290"></a><span class="lineno">  290</span>    <span class="comment">// mints an id, texImage2D fills the Vulkan texture for the currently bound id,</span></div>
-<div class="line"><a id="l00291" name="l00291"></a><span class="lineno">  291</span>    <span class="comment">// and deleteTexture frees it. boundtextureid mirrors the OpenGL bind state that</span></div>
-<div class="line"><a id="l00292" name="l00292"></a><span class="lineno">  292</span>    <span class="comment">// gTexture&#39;s upload path relies on.</span></div>
-<div class="line"><a id="l00293" name="l00293"></a><span class="lineno">  293</span>    std::unordered_map&lt;GLuint, gVKTexture*&gt; vktextures;</div>
-<div class="line"><a id="l00294" name="l00294"></a><span class="lineno">  294</span>    GLuint nextvktextureid = 1;</div>
-<div class="line"><a id="l00295" name="l00295"></a><span class="lineno">  295</span>    GLuint boundtextureid = 0;</div>
-<div class="line"><a id="l00296" name="l00296"></a><span class="lineno">  296</span>    <span class="comment">// Offscreen render targets, one per gFbo. Each owns a render pass and a</span></div>
-<div class="line"><a id="l00297" name="l00297"></a><span class="lineno">  297</span>    <span class="comment">// framebuffer of its own, the same shape the shadow map already uses, because</span></div>
-<div class="line"><a id="l00298" name="l00298"></a><span class="lineno">  298</span>    <span class="comment">// this backend renders through render passes rather than dynamic rendering.</span></div>
-<div class="line"><a id="l00299" name="l00299"></a><span class="lineno">  299</span>    std::unordered_map&lt;GLuint, gVKFramebuffer*&gt; vkframebuffers;</div>
-<div class="line"><a id="l00300" name="l00300"></a><span class="lineno">  300</span>    GLuint nextvkframebufferid = 1;</div>
-<div class="line"><a id="l00301" name="l00301"></a><span class="lineno">  301</span>    <span class="comment">// Renderbuffers have no Vulkan counterpart: gFbo is steered onto a sampleable</span></div>
-<div class="line"><a id="l00302" name="l00302"></a><span class="lineno">  302</span>    <span class="comment">// depth texture instead, so these ids only have to be unique and non-zero.</span></div>
-<div class="line"><a id="l00303" name="l00303"></a><span class="lineno">  303</span>    GLuint nextvkrenderbufferid = 1;</div>
-<div class="line"><a id="l00304" name="l00304"></a><span class="lineno">  304</span>    <span class="comment">// Ends whatever offscreen pass is open and hands its attachments back to the</span></div>
-<div class="line"><a id="l00305" name="l00305"></a><span class="lineno">  305</span>    <span class="comment">// shader as sampleable textures. Safe to call when none is open.</span></div>
-<div class="line"><a id="l00306" name="l00306"></a><span class="lineno">  306</span>    <span class="keywordtype">void</span> endOffscreenPass();</div>
-<div class="line"><a id="l00307" name="l00307"></a><span class="lineno">  307</span>    <span class="keywordtype">void</span> destroyAllFramebuffers();</div>
-<div class="line"><a id="l00308" name="l00308"></a><span class="lineno">  308</span>    <span class="comment">// Builds a target&#39;s render pass and framebuffer on first use.</span></div>
-<div class="line"><a id="l00309" name="l00309"></a><span class="lineno">  309</span>    <span class="keywordtype">bool</span> ensureFramebufferPass(gVKFramebuffer* target);</div>
-<div class="line"><a id="l00310" name="l00310"></a><span class="lineno">  310</span>    <span class="comment">// Vertex array ids. Vulkan has no such object, but gVbo binds one before every</span></div>
-<div class="line"><a id="l00311" name="l00311"></a><span class="lineno">  311</span>    <span class="comment">// upload and every draw, so the id is what tells the backend which pair of</span></div>
-<div class="line"><a id="l00312" name="l00312"></a><span class="lineno">  312</span>    <span class="comment">// buffers a draw is about. See gVKMeshBuffer.h.</span></div>
-<div class="line"><a id="l00313" name="l00313"></a><span class="lineno">  313</span>    std::unordered_map&lt;GLuint, gVKVertexArray&gt; vkvertexarrays;</div>
-<div class="line"><a id="l00314" name="l00314"></a><span class="lineno">  314</span>    GLuint nextvkvaoid = 1;</div>
-<div class="line"><a id="l00315" name="l00315"></a><span class="lineno">  315</span>    GLuint boundvaoid = 0;</div>
-<div class="line"><a id="l00316" name="l00316"></a><span class="lineno">  316</span> </div>
-<div class="line"><a id="l00317" name="l00317"></a><span class="lineno">  317</span>    <span class="comment">// Registry backing the GLuint buffer names gVbo hands out. genBuffers mints an</span></div>
-<div class="line"><a id="l00318" name="l00318"></a><span class="lineno">  318</span>    <span class="comment">// id, setVertexBufferData / setIndexBufferData fill it, deleteBuffer frees it.</span></div>
-<div class="line"><a id="l00319" name="l00319"></a><span class="lineno">  319</span>    <span class="comment">// boundarraybufferid mirrors the OpenGL bind state, which is what lets a vertex</span></div>
-<div class="line"><a id="l00320" name="l00320"></a><span class="lineno">  320</span>    <span class="comment">// array learn which buffer belongs to it.</span></div>
-<div class="line"><a id="l00321" name="l00321"></a><span class="lineno">  321</span>    std::unordered_map&lt;GLuint, gVKMeshBuffer*&gt; vkmeshbuffers;</div>
-<div class="line"><a id="l00322" name="l00322"></a><span class="lineno">  322</span>    GLuint nextvkbufferid = 1;</div>
-<div class="line"><a id="l00323" name="l00323"></a><span class="lineno">  323</span>    GLuint boundarraybufferid = 0;</div>
-<div class="line"><a id="l00324" name="l00324"></a><span class="lineno">  324</span>    GLuint boundelementbufferid = 0;</div>
-<div class="line"><a id="l00325" name="l00325"></a><span class="lineno">  325</span> </div>
-<div class="line"><a id="l00326" name="l00326"></a><span class="lineno">  326</span>    <span class="comment">// Fetches the buffer behind an id, or null if the id was never minted. Uploading</span></div>
-<div class="line"><a id="l00327" name="l00327"></a><span class="lineno">  327</span>    <span class="comment">// creates the VkBuffer lazily, so the entry can exist while its handle is still</span></div>
-<div class="line"><a id="l00328" name="l00328"></a><span class="lineno">  328</span>    <span class="comment">// VK_NULL_HANDLE.</span></div>
-<div class="line"><a id="l00329" name="l00329"></a><span class="lineno">  329</span>    gVKMeshBuffer* getMeshBuffer(GLuint <span class="keywordtype">id</span>);</div>
-<div class="line"><a id="l00330" name="l00330"></a><span class="lineno">  330</span>    <span class="keywordtype">void</span> destroyAllMeshBuffers();</div>
-<div class="line"><a id="l00331" name="l00331"></a><span class="lineno">  331</span> </div>
-<div class="line"><a id="l00332" name="l00332"></a><span class="lineno">  332</span>    <span class="comment">// A 1x1 white texture bound wherever a mesh has no map of that kind. The 3D</span></div>
-<div class="line"><a id="l00333" name="l00333"></a><span class="lineno">  333</span>    <span class="comment">// shader samples its map bindings unconditionally from Vulkan&#39;s point of view -</span></div>
-<div class="line"><a id="l00334" name="l00334"></a><span class="lineno">  334</span>    <span class="comment">// the &quot;use this map&quot; flag only decides what happens to the result - so every</span></div>
-<div class="line"><a id="l00335" name="l00335"></a><span class="lineno">  335</span>    <span class="comment">// binding has to point at something valid. White is the identity for the</span></div>
-<div class="line"><a id="l00336" name="l00336"></a><span class="lineno">  336</span>    <span class="comment">// multiply that follows, which keeps an unmapped material&#39;s colours untouched.</span></div>
-<div class="line"><a id="l00337" name="l00337"></a><span class="lineno">  337</span>    GLuint whitetextureid = 0;</div>
-<div class="line"><a id="l00338" name="l00338"></a><span class="lineno">  338</span>    <span class="keywordtype">bool</span> ensureWhiteTexture();</div>
-<div class="line"><a id="l00339" name="l00339"></a><span class="lineno">  339</span> </div>
-<div class="line"><a id="l00340" name="l00340"></a><span class="lineno">  340</span>    <span class="comment">// One identity matrix, bound as the instance buffer of a draw that is not</span></div>
-<div class="line"><a id="l00341" name="l00341"></a><span class="lineno">  341</span>    <span class="comment">// instanced. The 3D shader always reads a per-instance model matrix, so this is</span></div>
-<div class="line"><a id="l00342" name="l00342"></a><span class="lineno">  342</span>    <span class="comment">// what lets a single pipeline and a single shader serve both kinds of draw:</span></div>
-<div class="line"><a id="l00343" name="l00343"></a><span class="lineno">  343</span>    <span class="comment">// multiplying by the identity leaves the mesh where its own model matrix put it.</span></div>
-<div class="line"><a id="l00344" name="l00344"></a><span class="lineno">  344</span>    gVKMeshBuffer* identityinstancebuffer = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00345" name="l00345"></a><span class="lineno">  345</span>    <span class="keywordtype">bool</span> ensureIdentityInstanceBuffer();</div>
+<div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span>    <span class="comment">// Takes ownership. Any context the engine already holds is torn down first -</span></div>
+<div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span>    <span class="comment">// its Vulkan objects destroyed and its memory freed through cleanupVulkan() -</span></div>
+<div class="line"><a id="l00281" name="l00281"></a><span class="lineno">  281</span>    <span class="comment">// so replacing a context never leaks the old one. The self assignment guard</span></div>
+<div class="line"><a id="l00282" name="l00282"></a><span class="lineno">  282</span>    <span class="comment">// avoids destroying the very context being handed in. The engine frees the</span></div>
+<div class="line"><a id="l00283" name="l00283"></a><span class="lineno">  283</span>    <span class="comment">// adopted context on cleanup.</span></div>
+<div class="line"><a id="l00284" name="l00284"></a><span class="lineno"><a class="line" href="classgVKRenderEngine.html#a45b3e4fdfa8366ab3835a8840184e0a5">  284</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classgVKRenderEngine.html#a45b3e4fdfa8366ab3835a8840184e0a5">setContext</a>(gVKContext* context);</div>
+<div class="line"><a id="l00285" name="l00285"></a><span class="lineno">  285</span> </div>
+<div class="line"><a id="l00286" name="l00286"></a><span class="lineno">  286</span><span class="keyword">protected</span>:</div>
+<div class="line"><a id="l00287" name="l00287"></a><span class="lineno"><a class="line" href="classgVKRenderEngine.html#a6a2ff8ff19e4ed68b92e493e0e17f8d3">  287</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classgVKRenderEngine.html#a6a2ff8ff19e4ed68b92e493e0e17f8d3">init</a>() <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00288" name="l00288"></a><span class="lineno"><a class="line" href="classgVKRenderEngine.html#a188056a9648fbb89f3cf19a4daba34e2">  288</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classgVKRenderEngine.html#a188056a9648fbb89f3cf19a4daba34e2">cleanup</a>() <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00289" name="l00289"></a><span class="lineno">  289</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00290" name="l00290"></a><span class="lineno">  290</span>    <span class="keyword">mutable</span> GLuint currentprogram = 0;</div>
+<div class="line"><a id="l00291" name="l00291"></a><span class="lineno">  291</span>    <span class="keywordtype">bool</span> initVulkan();</div>
+<div class="line"><a id="l00292" name="l00292"></a><span class="lineno">  292</span>    <span class="keywordtype">void</span> cleanupVulkan();</div>
+<div class="line"><a id="l00293" name="l00293"></a><span class="lineno">  293</span>    gVKContext* vkcontext = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00294" name="l00294"></a><span class="lineno">  294</span>    <span class="keywordtype">void</span> updatePackUnpackAlignment(<span class="keywordtype">int</span> i) <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00295" name="l00295"></a><span class="lineno">  295</span> </div>
+<div class="line"><a id="l00296" name="l00296"></a><span class="lineno">  296</span>    <span class="comment">// Registry backing the GLuint texture ids gTexture/gImage hand out: createTextures</span></div>
+<div class="line"><a id="l00297" name="l00297"></a><span class="lineno">  297</span>    <span class="comment">// mints an id, texImage2D fills the Vulkan texture for the currently bound id,</span></div>
+<div class="line"><a id="l00298" name="l00298"></a><span class="lineno">  298</span>    <span class="comment">// and deleteTexture frees it. boundtextureid mirrors the OpenGL bind state that</span></div>
+<div class="line"><a id="l00299" name="l00299"></a><span class="lineno">  299</span>    <span class="comment">// gTexture&#39;s upload path relies on.</span></div>
+<div class="line"><a id="l00300" name="l00300"></a><span class="lineno">  300</span>    std::unordered_map&lt;GLuint, gVKTexture*&gt; vktextures;</div>
+<div class="line"><a id="l00301" name="l00301"></a><span class="lineno">  301</span>    GLuint nextvktextureid = 1;</div>
+<div class="line"><a id="l00302" name="l00302"></a><span class="lineno">  302</span>    GLuint boundtextureid = 0;</div>
+<div class="line"><a id="l00303" name="l00303"></a><span class="lineno">  303</span>    <span class="comment">// Offscreen render targets, one per gFbo. Each owns a render pass and a</span></div>
+<div class="line"><a id="l00304" name="l00304"></a><span class="lineno">  304</span>    <span class="comment">// framebuffer of its own, the same shape the shadow map already uses, because</span></div>
+<div class="line"><a id="l00305" name="l00305"></a><span class="lineno">  305</span>    <span class="comment">// this backend renders through render passes rather than dynamic rendering.</span></div>
+<div class="line"><a id="l00306" name="l00306"></a><span class="lineno">  306</span>    std::unordered_map&lt;GLuint, gVKFramebuffer*&gt; vkframebuffers;</div>
+<div class="line"><a id="l00307" name="l00307"></a><span class="lineno">  307</span>    GLuint nextvkframebufferid = 1;</div>
+<div class="line"><a id="l00308" name="l00308"></a><span class="lineno">  308</span>    <span class="comment">// Renderbuffers have no Vulkan counterpart: gFbo is steered onto a sampleable</span></div>
+<div class="line"><a id="l00309" name="l00309"></a><span class="lineno">  309</span>    <span class="comment">// depth texture instead, so these ids only have to be unique and non-zero.</span></div>
+<div class="line"><a id="l00310" name="l00310"></a><span class="lineno">  310</span>    GLuint nextvkrenderbufferid = 1;</div>
+<div class="line"><a id="l00311" name="l00311"></a><span class="lineno">  311</span>    <span class="comment">// Ends whatever offscreen pass is open and hands its attachments back to the</span></div>
+<div class="line"><a id="l00312" name="l00312"></a><span class="lineno">  312</span>    <span class="comment">// shader as sampleable textures. Safe to call when none is open.</span></div>
+<div class="line"><a id="l00313" name="l00313"></a><span class="lineno">  313</span>    <span class="keywordtype">void</span> endOffscreenPass();</div>
+<div class="line"><a id="l00314" name="l00314"></a><span class="lineno">  314</span>    <span class="keywordtype">void</span> destroyAllFramebuffers();</div>
+<div class="line"><a id="l00315" name="l00315"></a><span class="lineno">  315</span>    <span class="comment">// Builds a target&#39;s render pass and framebuffer on first use.</span></div>
+<div class="line"><a id="l00316" name="l00316"></a><span class="lineno">  316</span>    <span class="keywordtype">bool</span> ensureFramebufferPass(gVKFramebuffer* target);</div>
+<div class="line"><a id="l00317" name="l00317"></a><span class="lineno">  317</span>    <span class="comment">// Vertex array ids. Vulkan has no such object, but gVbo binds one before every</span></div>
+<div class="line"><a id="l00318" name="l00318"></a><span class="lineno">  318</span>    <span class="comment">// upload and every draw, so the id is what tells the backend which pair of</span></div>
+<div class="line"><a id="l00319" name="l00319"></a><span class="lineno">  319</span>    <span class="comment">// buffers a draw is about. See gVKMeshBuffer.h.</span></div>
+<div class="line"><a id="l00320" name="l00320"></a><span class="lineno">  320</span>    std::unordered_map&lt;GLuint, gVKVertexArray&gt; vkvertexarrays;</div>
+<div class="line"><a id="l00321" name="l00321"></a><span class="lineno">  321</span>    GLuint nextvkvaoid = 1;</div>
+<div class="line"><a id="l00322" name="l00322"></a><span class="lineno">  322</span>    GLuint boundvaoid = 0;</div>
+<div class="line"><a id="l00323" name="l00323"></a><span class="lineno">  323</span> </div>
+<div class="line"><a id="l00324" name="l00324"></a><span class="lineno">  324</span>    <span class="comment">// Registry backing the GLuint buffer names gVbo hands out. genBuffers mints an</span></div>
+<div class="line"><a id="l00325" name="l00325"></a><span class="lineno">  325</span>    <span class="comment">// id, setVertexBufferData / setIndexBufferData fill it, deleteBuffer frees it.</span></div>
+<div class="line"><a id="l00326" name="l00326"></a><span class="lineno">  326</span>    <span class="comment">// boundarraybufferid mirrors the OpenGL bind state, which is what lets a vertex</span></div>
+<div class="line"><a id="l00327" name="l00327"></a><span class="lineno">  327</span>    <span class="comment">// array learn which buffer belongs to it.</span></div>
+<div class="line"><a id="l00328" name="l00328"></a><span class="lineno">  328</span>    std::unordered_map&lt;GLuint, gVKMeshBuffer*&gt; vkmeshbuffers;</div>
+<div class="line"><a id="l00329" name="l00329"></a><span class="lineno">  329</span>    GLuint nextvkbufferid = 1;</div>
+<div class="line"><a id="l00330" name="l00330"></a><span class="lineno">  330</span>    GLuint boundarraybufferid = 0;</div>
+<div class="line"><a id="l00331" name="l00331"></a><span class="lineno">  331</span>    GLuint boundelementbufferid = 0;</div>
+<div class="line"><a id="l00332" name="l00332"></a><span class="lineno">  332</span> </div>
+<div class="line"><a id="l00333" name="l00333"></a><span class="lineno">  333</span>    <span class="comment">// Fetches the buffer behind an id, or null if the id was never minted. Uploading</span></div>
+<div class="line"><a id="l00334" name="l00334"></a><span class="lineno">  334</span>    <span class="comment">// creates the VkBuffer lazily, so the entry can exist while its handle is still</span></div>
+<div class="line"><a id="l00335" name="l00335"></a><span class="lineno">  335</span>    <span class="comment">// VK_NULL_HANDLE.</span></div>
+<div class="line"><a id="l00336" name="l00336"></a><span class="lineno">  336</span>    gVKMeshBuffer* getMeshBuffer(GLuint <span class="keywordtype">id</span>);</div>
+<div class="line"><a id="l00337" name="l00337"></a><span class="lineno">  337</span>    <span class="keywordtype">void</span> destroyAllMeshBuffers();</div>
+<div class="line"><a id="l00338" name="l00338"></a><span class="lineno">  338</span> </div>
+<div class="line"><a id="l00339" name="l00339"></a><span class="lineno">  339</span>    <span class="comment">// A 1x1 white texture bound wherever a mesh has no map of that kind. The 3D</span></div>
+<div class="line"><a id="l00340" name="l00340"></a><span class="lineno">  340</span>    <span class="comment">// shader samples its map bindings unconditionally from Vulkan&#39;s point of view -</span></div>
+<div class="line"><a id="l00341" name="l00341"></a><span class="lineno">  341</span>    <span class="comment">// the &quot;use this map&quot; flag only decides what happens to the result - so every</span></div>
+<div class="line"><a id="l00342" name="l00342"></a><span class="lineno">  342</span>    <span class="comment">// binding has to point at something valid. White is the identity for the</span></div>
+<div class="line"><a id="l00343" name="l00343"></a><span class="lineno">  343</span>    <span class="comment">// multiply that follows, which keeps an unmapped material&#39;s colours untouched.</span></div>
+<div class="line"><a id="l00344" name="l00344"></a><span class="lineno">  344</span>    GLuint whitetextureid = 0;</div>
+<div class="line"><a id="l00345" name="l00345"></a><span class="lineno">  345</span>    <span class="keywordtype">bool</span> ensureWhiteTexture();</div>
 <div class="line"><a id="l00346" name="l00346"></a><span class="lineno">  346</span> </div>
-<div class="line"><a id="l00347" name="l00347"></a><span class="lineno">  347</span>    <span class="comment">// What gShadowMap last told the backend. Fed into the scene uniform block, and</span></div>
-<div class="line"><a id="l00348" name="l00348"></a><span class="lineno">  348</span>    <span class="comment">// into the depth pass&#39;s push constant while the shadow pass is being recorded.</span></div>
-<div class="line"><a id="l00349" name="l00349"></a><span class="lineno">  349</span>    <span class="keywordtype">bool</span> shadowmapenabled = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00350" name="l00350"></a><span class="lineno">  350</span>    <span class="keywordtype">bool</span> shadowsoft = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00351" name="l00351"></a><span class="lineno">  351</span>    glm::mat4 shadowlightmatrix{1.0f};</div>
-<div class="line"><a id="l00352" name="l00352"></a><span class="lineno">  352</span>    glm::vec3 shadowlightposition{0.0f};</div>
+<div class="line"><a id="l00347" name="l00347"></a><span class="lineno">  347</span>    <span class="comment">// One identity matrix, bound as the instance buffer of a draw that is not</span></div>
+<div class="line"><a id="l00348" name="l00348"></a><span class="lineno">  348</span>    <span class="comment">// instanced. The 3D shader always reads a per-instance model matrix, so this is</span></div>
+<div class="line"><a id="l00349" name="l00349"></a><span class="lineno">  349</span>    <span class="comment">// what lets a single pipeline and a single shader serve both kinds of draw:</span></div>
+<div class="line"><a id="l00350" name="l00350"></a><span class="lineno">  350</span>    <span class="comment">// multiplying by the identity leaves the mesh where its own model matrix put it.</span></div>
+<div class="line"><a id="l00351" name="l00351"></a><span class="lineno">  351</span>    gVKMeshBuffer* identityinstancebuffer = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00352" name="l00352"></a><span class="lineno">  352</span>    <span class="keywordtype">bool</span> ensureIdentityInstanceBuffer();</div>
 <div class="line"><a id="l00353" name="l00353"></a><span class="lineno">  353</span> </div>
-<div class="line"><a id="l00354" name="l00354"></a><span class="lineno">  354</span> </div>
-<div class="line"><a id="l00355" name="l00355"></a><span class="lineno">  355</span>    <span class="comment">// Fills the frame&#39;s scene uniform block from the renderer&#39;s camera and lights.</span></div>
-<div class="line"><a id="l00356" name="l00356"></a><span class="lineno">  356</span>    <span class="comment">// Declared unconditionally: this header does not pull in the Vulkan guard, and</span></div>
-<div class="line"><a id="l00357" name="l00357"></a><span class="lineno">  357</span>    <span class="comment">// the definition is what is compiled out on a build without Vulkan.</span></div>
-<div class="line"><a id="l00358" name="l00358"></a><span class="lineno">  358</span>    <span class="keywordtype">void</span> updateSceneUniforms();</div>
-<div class="line"><a id="l00359" name="l00359"></a><span class="lineno">  359</span>    <span class="comment">// Whether this frame&#39;s scene block has been written yet. Reset in beginFrame, so</span></div>
-<div class="line"><a id="l00360" name="l00360"></a><span class="lineno">  360</span>    <span class="comment">// the camera and lights are gathered once per frame instead of once per mesh.</span></div>
-<div class="line"><a id="l00361" name="l00361"></a><span class="lineno">  361</span>    <span class="keywordtype">bool</span> sceneuniformswritten = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00362" name="l00362"></a><span class="lineno">  362</span> </div>
-<div class="line"><a id="l00363" name="l00363"></a><span class="lineno">  363</span>    <span class="comment">// Consecutive opaque mesh calls are safe to combine because their relative</span></div>
-<div class="line"><a id="l00364" name="l00364"></a><span class="lineno">  364</span>    <span class="comment">// order is preserved.  Transparent meshes and caller-provided instancing stay</span></div>
-<div class="line"><a id="l00365" name="l00365"></a><span class="lineno">  365</span>    <span class="comment">// immediate: changing either would alter the public draw semantics.</span></div>
-<div class="line"><a id="l00366" name="l00366"></a><span class="lineno">  366</span>    <span class="keyword">struct </span>QueuedMeshDraw {</div>
-<div class="line"><a id="l00367" name="l00367"></a><span class="lineno">  367</span>        GLuint vertexarrayid = 0;</div>
-<div class="line"><a id="l00368" name="l00368"></a><span class="lineno">  368</span>        <span class="keywordtype">int</span> vertexcount = 0;</div>
-<div class="line"><a id="l00369" name="l00369"></a><span class="lineno">  369</span>        <span class="keywordtype">int</span> indexcount = 0;</div>
-<div class="line"><a id="l00370" name="l00370"></a><span class="lineno">  370</span>        <span class="keywordtype">int</span> drawmode = GL_TRIANGLES;</div>
-<div class="line"><a id="l00371" name="l00371"></a><span class="lineno">  371</span>        <span class="keywordtype">int</span> instancecount = 1;</div>
-<div class="line"><a id="l00372" name="l00372"></a><span class="lineno">  372</span>        glm::mat4 model{1.0f};</div>
-<div class="line"><a id="l00373" name="l00373"></a><span class="lineno">  373</span>        gMeshSurface surface{};</div>
-<div class="line"><a id="l00374" name="l00374"></a><span class="lineno">  374</span>        glm::vec4 tint{1.0f};</div>
-<div class="line"><a id="l00375" name="l00375"></a><span class="lineno">  375</span>        <span class="keywordtype">bool</span> depthtest = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00376" name="l00376"></a><span class="lineno">  376</span>        <span class="keywordtype">int</span> depthtesttype = <a class="code hl_variable" href="classgRenderer.html#a714415836f28448509a9f3716ae4361d">DEPTHTESTTYPE_LESS</a>;</div>
-<div class="line"><a id="l00377" name="l00377"></a><span class="lineno">  377</span>        <span class="keywordtype">bool</span> culling = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00378" name="l00378"></a><span class="lineno">  378</span>        <span class="keywordtype">int</span> cullface = GL_BACK;</div>
-<div class="line"><a id="l00379" name="l00379"></a><span class="lineno">  379</span>        <span class="keywordtype">int</span> cullingdirection = GL_CCW;</div>
-<div class="line"><a id="l00380" name="l00380"></a><span class="lineno">  380</span>    };</div>
-<div class="line"><a id="l00381" name="l00381"></a><span class="lineno">  381</span>    std::vector&lt;QueuedMeshDraw&gt; queuedmeshdraws;</div>
-<div class="line"><a id="l00382" name="l00382"></a><span class="lineno">  382</span>    <span class="keywordtype">bool</span> flushingqueueddraws = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00383" name="l00383"></a><span class="lineno">  383</span>    <span class="keywordtype">bool</span> canMergeQueuedDraws(<span class="keyword">const</span> QueuedMeshDraw&amp; first, <span class="keyword">const</span> QueuedMeshDraw&amp; next) <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00384" name="l00384"></a><span class="lineno">  384</span>    <span class="keywordtype">void</span> recordQueuedDrawGroup(<span class="keywordtype">size_t</span> first, <span class="keywordtype">size_t</span> count);</div>
-<div class="line"><a id="l00385" name="l00385"></a><span class="lineno">  385</span>    <span class="keywordtype">void</span> destroyAllTextures();</div>
-<div class="line"><a id="l00386" name="l00386"></a><span class="lineno">  386</span>    <span class="comment">// The Vulkan texture behind the currently bound id, or null when there is none</span></div>
-<div class="line"><a id="l00387" name="l00387"></a><span class="lineno">  387</span>    <span class="comment">// yet - gTexture sets filtering and wrapping both before and after the upload.</span></div>
-<div class="line"><a id="l00388" name="l00388"></a><span class="lineno">  388</span>    gVKTexture* getBoundVKTexture();</div>
-<div class="line"><a id="l00389" name="l00389"></a><span class="lineno">  389</span> </div>
-<div class="line"><a id="l00390" name="l00390"></a><span class="lineno">  390</span>    <span class="comment">// Shader hot reload. Development builds watch the .vert / .frag sources the 2D</span></div>
-<div class="line"><a id="l00391" name="l00391"></a><span class="lineno">  391</span>    <span class="comment">// pipelines are compiled from and rebuild them when one is saved, so a shader</span></div>
-<div class="line"><a id="l00392" name="l00392"></a><span class="lineno">  392</span>    <span class="comment">// can be tuned without restarting. Release builds compile nothing at runtime,</span></div>
-<div class="line"><a id="l00393" name="l00393"></a><span class="lineno">  393</span>    <span class="comment">// the timestamp stays 0 and this costs one comparison per frame.</span></div>
-<div class="line"><a id="l00394" name="l00394"></a><span class="lineno">  394</span>    <span class="keywordtype">void</span> checkShaderReload();</div>
-<div class="line"><a id="l00395" name="l00395"></a><span class="lineno">  395</span>    <span class="keywordtype">long</span> <span class="keywordtype">long</span> shadersourcetimestamp = 0;</div>
-<div class="line"><a id="l00396" name="l00396"></a><span class="lineno">  396</span>    <span class="keywordtype">int</span> shaderpollcountdown = 0;</div>
-<div class="line"><a id="l00397" name="l00397"></a><span class="lineno">  397</span>};</div>
+<div class="line"><a id="l00354" name="l00354"></a><span class="lineno">  354</span>    <span class="comment">// What gShadowMap last told the backend. Fed into the scene uniform block, and</span></div>
+<div class="line"><a id="l00355" name="l00355"></a><span class="lineno">  355</span>    <span class="comment">// into the depth pass&#39;s push constant while the shadow pass is being recorded.</span></div>
+<div class="line"><a id="l00356" name="l00356"></a><span class="lineno">  356</span>    <span class="keywordtype">bool</span> shadowmapenabled = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00357" name="l00357"></a><span class="lineno">  357</span>    <span class="keywordtype">bool</span> shadowsoft = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00358" name="l00358"></a><span class="lineno">  358</span>    glm::mat4 shadowlightmatrix{1.0f};</div>
+<div class="line"><a id="l00359" name="l00359"></a><span class="lineno">  359</span>    glm::vec3 shadowlightposition{0.0f};</div>
+<div class="line"><a id="l00360" name="l00360"></a><span class="lineno">  360</span> </div>
+<div class="line"><a id="l00361" name="l00361"></a><span class="lineno">  361</span> </div>
+<div class="line"><a id="l00362" name="l00362"></a><span class="lineno">  362</span>    <span class="comment">// Fills the frame&#39;s scene uniform block from the renderer&#39;s camera and lights.</span></div>
+<div class="line"><a id="l00363" name="l00363"></a><span class="lineno">  363</span>    <span class="comment">// Declared unconditionally: this header does not pull in the Vulkan guard, and</span></div>
+<div class="line"><a id="l00364" name="l00364"></a><span class="lineno">  364</span>    <span class="comment">// the definition is what is compiled out on a build without Vulkan.</span></div>
+<div class="line"><a id="l00365" name="l00365"></a><span class="lineno">  365</span>    <span class="keywordtype">void</span> updateSceneUniforms();</div>
+<div class="line"><a id="l00366" name="l00366"></a><span class="lineno">  366</span>    <span class="comment">// Whether this frame&#39;s scene block has been written yet. Reset in beginFrame, so</span></div>
+<div class="line"><a id="l00367" name="l00367"></a><span class="lineno">  367</span>    <span class="comment">// the camera and lights are gathered once per frame instead of once per mesh.</span></div>
+<div class="line"><a id="l00368" name="l00368"></a><span class="lineno">  368</span>    <span class="keywordtype">bool</span> sceneuniformswritten = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00369" name="l00369"></a><span class="lineno">  369</span> </div>
+<div class="line"><a id="l00370" name="l00370"></a><span class="lineno">  370</span>    <span class="comment">// Consecutive opaque mesh calls are safe to combine because their relative</span></div>
+<div class="line"><a id="l00371" name="l00371"></a><span class="lineno">  371</span>    <span class="comment">// order is preserved.  Transparent meshes and caller-provided instancing stay</span></div>
+<div class="line"><a id="l00372" name="l00372"></a><span class="lineno">  372</span>    <span class="comment">// immediate: changing either would alter the public draw semantics.</span></div>
+<div class="line"><a id="l00373" name="l00373"></a><span class="lineno">  373</span>    <span class="keyword">struct </span>QueuedMeshDraw {</div>
+<div class="line"><a id="l00374" name="l00374"></a><span class="lineno">  374</span>        GLuint vertexarrayid = 0;</div>
+<div class="line"><a id="l00375" name="l00375"></a><span class="lineno">  375</span>        <span class="keywordtype">int</span> vertexcount = 0;</div>
+<div class="line"><a id="l00376" name="l00376"></a><span class="lineno">  376</span>        <span class="keywordtype">int</span> indexcount = 0;</div>
+<div class="line"><a id="l00377" name="l00377"></a><span class="lineno">  377</span>        <span class="keywordtype">int</span> drawmode = GL_TRIANGLES;</div>
+<div class="line"><a id="l00378" name="l00378"></a><span class="lineno">  378</span>        <span class="keywordtype">int</span> instancecount = 1;</div>
+<div class="line"><a id="l00379" name="l00379"></a><span class="lineno">  379</span>        glm::mat4 model{1.0f};</div>
+<div class="line"><a id="l00380" name="l00380"></a><span class="lineno">  380</span>        gMeshSurface surface{};</div>
+<div class="line"><a id="l00381" name="l00381"></a><span class="lineno">  381</span>        glm::vec4 tint{1.0f};</div>
+<div class="line"><a id="l00382" name="l00382"></a><span class="lineno">  382</span>        <span class="keywordtype">bool</span> depthtest = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00383" name="l00383"></a><span class="lineno">  383</span>        <span class="keywordtype">int</span> depthtesttype = <a class="code hl_variable" href="classgRenderer.html#a714415836f28448509a9f3716ae4361d">DEPTHTESTTYPE_LESS</a>;</div>
+<div class="line"><a id="l00384" name="l00384"></a><span class="lineno">  384</span>        <span class="keywordtype">bool</span> culling = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00385" name="l00385"></a><span class="lineno">  385</span>        <span class="keywordtype">int</span> cullface = GL_BACK;</div>
+<div class="line"><a id="l00386" name="l00386"></a><span class="lineno">  386</span>        <span class="keywordtype">int</span> cullingdirection = GL_CCW;</div>
+<div class="line"><a id="l00387" name="l00387"></a><span class="lineno">  387</span>        <span class="comment">// A digest of everything canMergeQueuedDraws compares, filled when the draw</span></div>
+<div class="line"><a id="l00388" name="l00388"></a><span class="lineno">  388</span>        <span class="comment">// is queued. flushQueuedDraws sorts by it so that draws which could merge but</span></div>
+<div class="line"><a id="l00389" name="l00389"></a><span class="lineno">  389</span>        <span class="comment">// arrived apart end up next to each other; the exact comparison still decides</span></div>
+<div class="line"><a id="l00390" name="l00390"></a><span class="lineno">  390</span>        <span class="comment">// whether they really do, so a hash collision costs a missed merge and</span></div>
+<div class="line"><a id="l00391" name="l00391"></a><span class="lineno">  391</span>        <span class="comment">// nothing else.</span></div>
+<div class="line"><a id="l00392" name="l00392"></a><span class="lineno">  392</span>        uint64_t mergekey = 0;</div>
+<div class="line"><a id="l00393" name="l00393"></a><span class="lineno">  393</span>    };</div>
+<div class="line"><a id="l00394" name="l00394"></a><span class="lineno">  394</span>    std::vector&lt;QueuedMeshDraw&gt; queuedmeshdraws;</div>
+<div class="line"><a id="l00395" name="l00395"></a><span class="lineno">  395</span>    <span class="keywordtype">bool</span> flushingqueueddraws = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00396" name="l00396"></a><span class="lineno">  396</span>    <span class="keyword">static</span> uint64_t gvkQueuedDrawKey(<span class="keyword">const</span> QueuedMeshDraw&amp; draw);</div>
+<div class="line"><a id="l00397" name="l00397"></a><span class="lineno">  397</span>    <span class="keywordtype">bool</span> canMergeQueuedDraws(<span class="keyword">const</span> QueuedMeshDraw&amp; first, <span class="keyword">const</span> QueuedMeshDraw&amp; next) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00398" name="l00398"></a><span class="lineno">  398</span>    <span class="keywordtype">void</span> recordQueuedDrawGroup(<span class="keywordtype">size_t</span> first, <span class="keywordtype">size_t</span> count);</div>
+<div class="line"><a id="l00399" name="l00399"></a><span class="lineno">  399</span>    <span class="keywordtype">void</span> destroyAllTextures();</div>
+<div class="line"><a id="l00400" name="l00400"></a><span class="lineno">  400</span>    <span class="comment">// The Vulkan texture behind the currently bound id, or null when there is none</span></div>
+<div class="line"><a id="l00401" name="l00401"></a><span class="lineno">  401</span>    <span class="comment">// yet - gTexture sets filtering and wrapping both before and after the upload.</span></div>
+<div class="line"><a id="l00402" name="l00402"></a><span class="lineno">  402</span>    gVKTexture* getBoundVKTexture();</div>
+<div class="line"><a id="l00403" name="l00403"></a><span class="lineno">  403</span> </div>
+<div class="line"><a id="l00404" name="l00404"></a><span class="lineno">  404</span>    <span class="comment">// Applies a pending setMultiSampling at a frame boundary: everything the sample</span></div>
+<div class="line"><a id="l00405" name="l00405"></a><span class="lineno">  405</span>    <span class="comment">// count is baked into - the render pass, the depth and MSAA attachments, the</span></div>
+<div class="line"><a id="l00406" name="l00406"></a><span class="lineno">  406</span>    <span class="comment">// framebuffers and both pipeline builds - is destroyed and rebuilt. Returns</span></div>
+<div class="line"><a id="l00407" name="l00407"></a><span class="lineno">  407</span>    <span class="comment">// straight away when nothing was requested, which is the normal case.</span></div>
+<div class="line"><a id="l00408" name="l00408"></a><span class="lineno">  408</span>    <span class="keywordtype">void</span> applyPendingSampleCount();</div>
+<div class="line"><a id="l00409" name="l00409"></a><span class="lineno">  409</span>    <span class="comment">// The sample count an app asked for before the context existed, and the pending</span></div>
+<div class="line"><a id="l00410" name="l00410"></a><span class="lineno">  410</span>    <span class="comment">// request applyPendingSampleCount acts on. 0 means &quot;nothing pending&quot;.</span></div>
+<div class="line"><a id="l00411" name="l00411"></a><span class="lineno">  411</span>    <span class="keywordtype">int</span> pendingsamplecount = 0;</div>
+<div class="line"><a id="l00412" name="l00412"></a><span class="lineno">  412</span> </div>
+<div class="line"><a id="l00413" name="l00413"></a><span class="lineno">  413</span>    <span class="comment">// Shader hot reload. Development builds watch the .vert / .frag sources the 2D</span></div>
+<div class="line"><a id="l00414" name="l00414"></a><span class="lineno">  414</span>    <span class="comment">// pipelines are compiled from and rebuild them when one is saved, so a shader</span></div>
+<div class="line"><a id="l00415" name="l00415"></a><span class="lineno">  415</span>    <span class="comment">// can be tuned without restarting. Release builds compile nothing at runtime,</span></div>
+<div class="line"><a id="l00416" name="l00416"></a><span class="lineno">  416</span>    <span class="comment">// the timestamp stays 0 and this costs one comparison per frame.</span></div>
+<div class="line"><a id="l00417" name="l00417"></a><span class="lineno">  417</span>    <span class="keywordtype">void</span> checkShaderReload();</div>
+<div class="line"><a id="l00418" name="l00418"></a><span class="lineno">  418</span>    <span class="keywordtype">long</span> <span class="keywordtype">long</span> shadersourcetimestamp = 0;</div>
+<div class="line"><a id="l00419" name="l00419"></a><span class="lineno">  419</span>    <span class="keywordtype">int</span> shaderpollcountdown = 0;</div>
+<div class="line"><a id="l00420" name="l00420"></a><span class="lineno">  420</span>};</div>
 </div>
-<div class="line"><a id="l00398" name="l00398"></a><span class="lineno">  398</span> </div>
-<div class="line"><a id="l00399" name="l00399"></a><span class="lineno">  399</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00421" name="l00421"></a><span class="lineno">  421</span> </div>
+<div class="line"><a id="l00422" name="l00422"></a><span class="lineno">  422</span><span class="preprocessor">#endif</span></div>
 <div class="ttc" id="aclassgColor_html"><div class="ttname"><a href="classgColor.html">gColor</a></div><div class="ttdef"><b>Definition</b> gColor.h:17</div></div>
 <div class="ttc" id="aclassgImage_html"><div class="ttname"><a href="classgImage.html">gImage</a></div><div class="ttdef"><b>Definition</b> gImage.h:34</div></div>
 <div class="ttc" id="aclassgRenderer_html"><div class="ttname"><a href="classgRenderer.html">gRenderer</a></div><div class="ttdef"><b>Definition</b> gRenderer.h:132</div></div>
-<div class="ttc" id="aclassgRenderer_html_a10ba9eb49755cea48500ab0046baf6e4"><div class="ttname"><a href="classgRenderer.html#a10ba9eb49755cea48500ab0046baf6e4">gRenderer::height</a></div><div class="ttdeci">static int height</div><div class="ttdef"><b>Definition</b> gRenderer.h:675</div></div>
-<div class="ttc" id="aclassgRenderer_html_a521e019ad5133df5702d399bf051adda"><div class="ttname"><a href="classgRenderer.html#a521e019ad5133df5702d399bf051adda">gRenderer::width</a></div><div class="ttdeci">static int width</div><div class="ttdef"><b>Definition</b> gRenderer.h:675</div></div>
+<div class="ttc" id="aclassgRenderer_html_a10ba9eb49755cea48500ab0046baf6e4"><div class="ttname"><a href="classgRenderer.html#a10ba9eb49755cea48500ab0046baf6e4">gRenderer::height</a></div><div class="ttdeci">static int height</div><div class="ttdef"><b>Definition</b> gRenderer.h:689</div></div>
+<div class="ttc" id="aclassgRenderer_html_a521e019ad5133df5702d399bf051adda"><div class="ttname"><a href="classgRenderer.html#a521e019ad5133df5702d399bf051adda">gRenderer::width</a></div><div class="ttdeci">static int width</div><div class="ttdef"><b>Definition</b> gRenderer.h:689</div></div>
 <div class="ttc" id="aclassgRenderer_html_a714415836f28448509a9f3716ae4361d"><div class="ttname"><a href="classgRenderer.html#a714415836f28448509a9f3716ae4361d">gRenderer::DEPTHTESTTYPE_LESS</a></div><div class="ttdeci">static const int DEPTHTESTTYPE_LESS</div><div class="ttdef"><b>Definition</b> gRenderer.h:135</div></div>
 <div class="ttc" id="aclassgVKRenderEngine_html"><div class="ttname"><a href="classgVKRenderEngine.html">gVKRenderEngine</a></div><div class="ttdef"><b>Definition</b> gVKRenderEngine.h:38</div></div>
 <div class="ttc" id="aclassgVKRenderEngine_html_a01de61e2a5152955877139b9d779c071"><div class="ttname"><a href="classgVKRenderEngine.html#a01de61e2a5152955877139b9d779c071">gVKRenderEngine::updateLights</a></div><div class="ttdeci">void updateLights() override</div></div>
@@ -597,6 +620,7 @@ $(document).ready(function(){initNavTree('gVKRenderEngine_8h_source.html',''); i
 <div class="ttc" id="aclassgVKRenderEngine_html_a8cd10ba8deae3393358b5ae5f524dbed"><div class="ttname"><a href="classgVKRenderEngine.html#a8cd10ba8deae3393358b5ae5f524dbed">gVKRenderEngine::enableDepthTest</a></div><div class="ttdeci">void enableDepthTest(int depthTestType) override</div></div>
 <div class="ttc" id="aclassgVKRenderEngine_html_a8d7dc5bdb8a2c21b946e5c31ef860283"><div class="ttname"><a href="classgVKRenderEngine.html#a8d7dc5bdb8a2c21b946e5c31ef860283">gVKRenderEngine::drawElementsInstanced</a></div><div class="ttdeci">void drawElementsInstanced(int drawMode, int count, int instanceCount) override</div></div>
 <div class="ttc" id="aclassgVKRenderEngine_html_a8e11be74a02084dd14f0f03dd23ab10d"><div class="ttname"><a href="classgVKRenderEngine.html#a8e11be74a02084dd14f0f03dd23ab10d">gVKRenderEngine::drawVbo</a></div><div class="ttdeci">void drawVbo(const gVbo &amp;vbo) override</div></div>
+<div class="ttc" id="aclassgVKRenderEngine_html_a922311e35a13fe1af805ea5e127c5ae3"><div class="ttname"><a href="classgVKRenderEngine.html#a922311e35a13fe1af805ea5e127c5ae3">gVKRenderEngine::setMultiSampling</a></div><div class="ttdeci">void setMultiSampling(int samples) override</div></div>
 <div class="ttc" id="aclassgVKRenderEngine_html_a92a9d9deefc7690f18c0c02a04fa310f"><div class="ttname"><a href="classgVKRenderEngine.html#a92a9d9deefc7690f18c0c02a04fa310f">gVKRenderEngine::getUniformLocation</a></div><div class="ttdeci">GLuint getUniformLocation(GLuint id, const std::string &amp;name) override</div></div>
 <div class="ttc" id="aclassgVKRenderEngine_html_a93b2333a439dd87e5d82cc6df3fae0ba"><div class="ttname"><a href="classgVKRenderEngine.html#a93b2333a439dd87e5d82cc6df3fae0ba">gVKRenderEngine::drawSkyboxFace</a></div><div class="ttdeci">bool drawSkyboxFace(GLuint textureId, const float *xyzuv, int vertexCount, const glm::mat4 &amp;viewProjection) override</div></div>
 <div class="ttc" id="aclassgVKRenderEngine_html_a93f1756cb2f8b51864d3a249c2547922"><div class="ttname"><a href="classgVKRenderEngine.html#a93f1756cb2f8b51864d3a249c2547922">gVKRenderEngine::setVertexAttribDivisor</a></div><div class="ttdeci">void setVertexAttribDivisor(int index, int divisor) override</div></div>
@@ -611,6 +635,7 @@ $(document).ready(function(){initNavTree('gVKRenderEngine_8h_source.html',''); i
 <div class="ttc" id="aclassgVKRenderEngine_html_a9c07418d08445bdbd48ed5a69301bfc9"><div class="ttname"><a href="classgVKRenderEngine.html#a9c07418d08445bdbd48ed5a69301bfc9">gVKRenderEngine::drawArrays</a></div><div class="ttdeci">void drawArrays(int drawMode, int count) override</div></div>
 <div class="ttc" id="aclassgVKRenderEngine_html_a9de070c800ba145eaee1bc2f98589fd2"><div class="ttname"><a href="classgVKRenderEngine.html#a9de070c800ba145eaee1bc2f98589fd2">gVKRenderEngine::deleteVAO</a></div><div class="ttdeci">void deleteVAO(GLuint &amp;vao) override</div></div>
 <div class="ttc" id="aclassgVKRenderEngine_html_a9df6d7174837dbd9dbea6c241368fedd"><div class="ttname"><a href="classgVKRenderEngine.html#a9df6d7174837dbd9dbea6c241368fedd">gVKRenderEngine::setSwizzleMask</a></div><div class="ttdeci">void setSwizzleMask(GLint swizzleMask[4]) override</div></div>
+<div class="ttc" id="aclassgVKRenderEngine_html_aa8da74883f2964885b2138217faa2b47"><div class="ttname"><a href="classgVKRenderEngine.html#aa8da74883f2964885b2138217faa2b47">gVKRenderEngine::getMultiSampling</a></div><div class="ttdeci">int getMultiSampling() const override</div></div>
 <div class="ttc" id="aclassgVKRenderEngine_html_aaacdb2589cb5712170e304e1e6778a66"><div class="ttname"><a href="classgVKRenderEngine.html#aaacdb2589cb5712170e304e1e6778a66">gVKRenderEngine::setVec4</a></div><div class="ttdeci">void setVec4(GLuint uniformloc, float x, float y, float z, float w) override</div></div>
 <div class="ttc" id="aclassgVKRenderEngine_html_aae88c74e7980ba3ef56e5f10a8f8b78a"><div class="ttname"><a href="classgVKRenderEngine.html#aae88c74e7980ba3ef56e5f10a8f8b78a">gVKRenderEngine::drawArraysInstanced</a></div><div class="ttdeci">void drawArraysInstanced(int drawMode, int count, int instanceCount) override</div></div>
 <div class="ttc" id="aclassgVKRenderEngine_html_aaf325da2f48eaec7c93c73e3e42d9839"><div class="ttname"><a href="classgVKRenderEngine.html#aaf325da2f48eaec7c93c73e3e42d9839">gVKRenderEngine::setWrappingAndFiltering</a></div><div class="ttdeci">void setWrappingAndFiltering(GLenum target, GLint wrapS, GLint wrapT, GLint wrapR, GLint minFilter, GLint magFilter) override</div></div>

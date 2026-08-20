@@ -20,5 +20,6 @@ var searchData=
   ['viewpos_17',['viewpos',['../structgRenderer_1_1gSceneData.html#aa301bd9a32069c1189021b592d8c2b1d',1,'gRenderer::gSceneData']]],
   ['violet_18',['VIOLET',['../classgColor.html#a7d75f08ba18034b051c435cddc7f1cef',1,'gColor']]],
   ['virtual_5fgamepad_5fid_19',['VIRTUAL_GAMEPAD_ID',['../classgBaseWindow.html#ae24a280657492d77e146b44a60cee59e',1,'gBaseWindow']]],
-  ['vulkanindicesexpanded_20',['vulkanindicesexpanded',['../classgMesh.html#a3c87461d562199189faa5d4664a4675a',1,'gMesh']]]
+  ['vulkanindicesexpanded_20',['vulkanindicesexpanded',['../classgMesh.html#a3c87461d562199189faa5d4664a4675a',1,'gMesh']]],
+  ['vulkansurfacerecreated_21',['vulkanSurfaceRecreated',['../classgBaseWindow.html#ad460fea99013ee563c7504abaff6742e',1,'gBaseWindow']]]
 ];

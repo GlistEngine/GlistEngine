@@ -102,8 +102,8 @@ $(document).ready(function(){initNavTree('gVKBuffer_8h_source.html',''); initRes
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment"> * gVKBuffer.h</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment"> *</span></div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment"> * Small allocation helpers shared by the Vulkan draw path: creating buffers with</span></div>
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="comment"> * a matching memory type, and running one-off transfer commands (buffer copies,</span></div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="comment"> * image layout transitions) on a throwaway command buffer. Kept separate from the</span></div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="comment"> * a matching memory type, and the batched upload path that carries transfer work</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="comment"> * (buffer copies, image layout transitions) to the GPU. Kept separate from the</span></div>
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="comment"> * frame loop so both the vertex ring (gVKDraw) and textures (gVKTexture) reuse it.</span></div>
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="comment"> */</span></div>
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span> </div>
@@ -114,7 +114,7 @@ $(document).ready(function(){initNavTree('gVKBuffer_8h_source.html',''); initRes
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span> </div>
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#include &quot;<a class="code" href="gVKContext_8h.html">gVKContext.h</a>&quot;</span></div>
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span> </div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">#ifdef GVK_DESKTOP_GLFW</span></div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">#ifdef GVK_VULKAN</span></div>
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span> </div>
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="comment">// Picks a memory type index that is allowed by typeFilter and exposes all of the</span></div>
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="comment">// requested property flags (e.g. host visible + coherent, or device local).</span></div>
@@ -132,16 +132,44 @@ $(document).ready(function(){initNavTree('gVKBuffer_8h_source.html',''); initRes
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>        VkMemoryPropertyFlags properties, VkBuffer&amp; outBuffer, VkDeviceMemory&amp; outMemory,</div>
 <div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>        VkMemoryPropertyFlags preferred = 0);</div>
 <div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span> </div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span><span class="comment">// Allocates and begins a single-use command buffer from the context&#39;s pool. Pair</span></div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span><span class="comment">// every call with gvkEndSingleTimeCommands, which submits it and waits for the GPU.</span></div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>VkCommandBuffer gvkBeginSingleTimeCommands(gVKContext&amp; ctx);</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="keywordtype">void</span> gvkEndSingleTimeCommands(gVKContext&amp; ctx, VkCommandBuffer commandBuffer);</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span> </div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span><span class="keywordtype">void</span> gvkCopyBuffer(gVKContext&amp; ctx, VkBuffer src, VkBuffer dst, VkDeviceSize size);</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span> </div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span><span class="preprocessor">#endif </span><span class="comment">/* GVK_DESKTOP_GLFW */</span><span class="preprocessor"></span></div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span> </div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span><span class="preprocessor">#endif </span><span class="comment">/* CORE_GVKBUFFER_H */</span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span><span class="comment">// Transfer work - staging copies into device local buffers and images, and the</span></div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span><span class="comment">// layout transitions around them - is recorded into a shared batch rather than</span></div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span><span class="comment">// submitted on its own. gvkBeginUpload returns a command buffer that is already</span></div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="comment">// recording; record into it and hand it back with gvkEndUpload, naming the</span></div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span><span class="comment">// staging buffer the recorded commands read. The batch owns that staging buffer</span></div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span><span class="comment">// from then on and destroys it once the submission it went into has finished, so</span></div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span><span class="comment">// a caller must never destroy it itself.</span></div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span><span class="comment">//</span></div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span><span class="comment">// Returns VK_NULL_HANDLE when no batch could be opened, in which case nothing was</span></div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span><span class="comment">// recorded and gvkEndUpload must not be called.</span></div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>VkCommandBuffer gvkBeginUpload(gVKContext&amp; ctx);</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span><span class="keywordtype">void</span> gvkEndUpload(gVKContext&amp; ctx, VkBuffer stagingBuffer = VK_NULL_HANDLE,</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>        VkDeviceMemory stagingMemory = VK_NULL_HANDLE, VkDeviceSize stagingSize = 0);</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span><span class="comment">// Copies size bytes into a device local buffer through staging the upload path</span></div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span><span class="comment">// owns, and leaves a barrier making the result visible to vertex and index reads.</span></div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span><span class="keywordtype">bool</span> gvkUploadBufferData(gVKContext&amp; ctx, VkBuffer dst, <span class="keyword">const</span> <span class="keywordtype">void</span>* data, VkDeviceSize size);</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span> </div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span><span class="comment">// Submits whatever is recorded. The frame loop calls this before submitting the</span></div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span><span class="comment">// frame, which is what makes uploads recorded during that frame visible to it:</span></div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span><span class="comment">// barriers apply to everything submitted later on the same queue, so no host wait</span></div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span><span class="comment">// is involved.</span></div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span><span class="keywordtype">void</span> gvkFlushUploads(gVKContext&amp; ctx);</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span> </div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span><span class="comment">// Frees the staging of batches the GPU has finished with. Cheap, and meant to run</span></div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span><span class="comment">// once per frame.</span></div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span><span class="keywordtype">void</span> gvkCollectUploads(gVKContext&amp; ctx);</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span> </div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span><span class="comment">// Submits and waits for every outstanding upload. Needed before destroying</span></div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span><span class="comment">// anything a recorded-but-unsubmitted transfer names, which vkDeviceWaitIdle</span></div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span><span class="comment">// cannot cover because that work has not reached the queue yet.</span></div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span><span class="keywordtype">void</span> gvkWaitUploads(gVKContext&amp; ctx);</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span> </div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span><span class="keywordtype">void</span> gvkDestroyUploadContext(gVKContext&amp; ctx);</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span> </div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span><span class="preprocessor">#endif </span><span class="comment">/* GVK_VULKAN */</span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span> </div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span><span class="preprocessor">#endif </span><span class="comment">/* CORE_GVKBUFFER_H */</span><span class="preprocessor"></span></div>
 <div class="ttc" id="agVKContext_8h_html"><div class="ttname"><a href="gVKContext_8h.html">gVKContext.h</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

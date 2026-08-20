@@ -3,6 +3,7 @@ var classgBaseWindow =
     [ "gBaseWindow", "classgBaseWindow.html#a8462c16376b8afb82add115155ff7b09", null ],
     [ "~gBaseWindow", "classgBaseWindow.html#a593af624ca2c39b2ba0664630193363b", null ],
     [ "close", "classgBaseWindow.html#a4f01bf13a831462ad7c13cc8e542b45b", null ],
+    [ "createVulkanSurface", "classgBaseWindow.html#a5152066b859b9d9123c2130ce9f756d7", null ],
     [ "disableVsync", "classgBaseWindow.html#a8a271b838dbb0c8f9c099f9374ffd4aa", null ],
     [ "enableVsync", "classgBaseWindow.html#a17c4bec808328c76195f2f61dfc05c06", null ],
     [ "enableVsync", "classgBaseWindow.html#a919c57c2696bb89499653c80ceefa90c", null ],
@@ -11,10 +12,12 @@ var classgBaseWindow =
     [ "getHeight", "classgBaseWindow.html#a9d71d3bba9233a0aef11cb7f322bf175", null ],
     [ "getShouldClose", "classgBaseWindow.html#ae05b932ac4d6e6c9499911af09fcdfd4", null ],
     [ "getTitle", "classgBaseWindow.html#adb6f90d7bcceaf98bf03cc0dd44213cd", null ],
+    [ "getVulkanInstanceExtensions", "classgBaseWindow.html#ae2512712968fd2007e8a4d6f278d4fd5", null ],
     [ "getWidth", "classgBaseWindow.html#a1a18778e3537b13d1962bb9f39cd8340", null ],
     [ "initialize", "classgBaseWindow.html#ad9b39abff15d1ceb60428971f8c78748", null ],
     [ "isRendering", "classgBaseWindow.html#ae2126f9457a55ad769121413acc7a7f1", null ],
     [ "isVsyncEnabled", "classgBaseWindow.html#a6bb62d9f5c2ecce6532a42dc62e580fa", null ],
+    [ "isVulkanSurfaceOutdated", "classgBaseWindow.html#a6de6bf13fd633e5c530c6431366302c9", null ],
     [ "setClipboardString", "classgBaseWindow.html#a647cd488e3f07fe807869a6183d60734", null ],
     [ "setCursor", "classgBaseWindow.html#a90c1c59b15e4f55d0cdd484d33f30d2e", null ],
     [ "setCursorMode", "classgBaseWindow.html#a517bf3ffec51c109b797959522917528", null ],
@@ -29,5 +32,7 @@ var classgBaseWindow =
     [ "setWindowResizable", "classgBaseWindow.html#a7a630098e306f9e43593694eb28d3a9e", null ],
     [ "setWindowSize", "classgBaseWindow.html#a8f7979b4aedcbdcc96c0d8c90757c0d0", null ],
     [ "setWindowSizeLimits", "classgBaseWindow.html#a849d4ef5fdfa2d392e80a81c29084dc3", null ],
-    [ "update", "classgBaseWindow.html#a7ce6fc79d7fdadd40181156614b83b7e", null ]
+    [ "supportsVulkan", "classgBaseWindow.html#a63b6cb50d4bbbb182a625b4b8dae70c1", null ],
+    [ "update", "classgBaseWindow.html#a7ce6fc79d7fdadd40181156614b83b7e", null ],
+    [ "vulkanSurfaceRecreated", "classgBaseWindow.html#ad460fea99013ee563c7504abaff6742e", null ]
 ];

@@ -131,11 +131,12 @@ var searchData=
   ['isvisible_128',['isVisible',['../classgBaseGUIObject.html#acf9a0595f00a99a28d8f35ef2437ed5c',1,'gBaseGUIObject']]],
   ['isvsyncenabled_129',['isVsyncEnabled',['../classgBaseWindow.html#a6bb62d9f5c2ecce6532a42dc62e580fa',1,'gBaseWindow']]],
   ['isvulkan_130',['isVulkan',['../classgRenderer.html#a1342a46ef980da2945be90a9d3260699',1,'gRenderer']]],
-  ['iswindowfocused_131',['isWindowFocused',['../classgAppManager.html#a8b56c4097f3cfc5282c89cf08a81a96a',1,'gAppManager']]],
-  ['iswireframexyenabled_132',['isWireFrameXYEnabled',['../classgGrid.html#a0e9d9a61ff268d9164fe74032582031c',1,'gGrid']]],
-  ['iswireframexzenabled_133',['isWireFrameXZEnabled',['../classgGrid.html#a867eae5f1d404db288c3d56b37deaa0d',1,'gGrid']]],
-  ['iswireframeyzenabled_134',['isWireFrameYZEnabled',['../classgGrid.html#ad2b4727848307501e4bbe22c232105de',1,'gGrid']]],
-  ['isxyenabled_135',['isXYEnabled',['../classgGrid.html#a0d9e89378466323addfcb8778bc21e13',1,'gGrid']]],
-  ['isxzenabled_136',['isXZEnabled',['../classgGrid.html#a6f45a5f2b1db304a097c92e8d68f618e',1,'gGrid']]],
-  ['isyzenabled_137',['isYZEnabled',['../classgGrid.html#a8da6b1edfab41171237dff8fc4eb671a',1,'gGrid']]]
+  ['isvulkansurfaceoutdated_131',['isVulkanSurfaceOutdated',['../classgBaseWindow.html#a6de6bf13fd633e5c530c6431366302c9',1,'gBaseWindow']]],
+  ['iswindowfocused_132',['isWindowFocused',['../classgAppManager.html#a8b56c4097f3cfc5282c89cf08a81a96a',1,'gAppManager']]],
+  ['iswireframexyenabled_133',['isWireFrameXYEnabled',['../classgGrid.html#a0e9d9a61ff268d9164fe74032582031c',1,'gGrid']]],
+  ['iswireframexzenabled_134',['isWireFrameXZEnabled',['../classgGrid.html#a867eae5f1d404db288c3d56b37deaa0d',1,'gGrid']]],
+  ['iswireframeyzenabled_135',['isWireFrameYZEnabled',['../classgGrid.html#ad2b4727848307501e4bbe22c232105de',1,'gGrid']]],
+  ['isxyenabled_136',['isXYEnabled',['../classgGrid.html#a0d9e89378466323addfcb8778bc21e13',1,'gGrid']]],
+  ['isxzenabled_137',['isXZEnabled',['../classgGrid.html#a6f45a5f2b1db304a097c92e8d68f618e',1,'gGrid']]],
+  ['isyzenabled_138',['isYZEnabled',['../classgGrid.html#a8da6b1edfab41171237dff8fc4eb671a',1,'gGrid']]]
 ];

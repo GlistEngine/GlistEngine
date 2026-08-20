@@ -3,12 +3,14 @@ var classgGLFWWindow =
     [ "gGLFWWindow", "classgGLFWWindow.html#a1dd02adc9e910380e1a0cac1b400b0e5", null ],
     [ "~gGLFWWindow", "classgGLFWWindow.html#a862afff8aabd0f751ef27087dca5c345", null ],
     [ "close", "classgGLFWWindow.html#acd4fb915673ad68f52190337c25967d8", null ],
+    [ "createVulkanSurface", "classgGLFWWindow.html#abef0f8212f159755e9c99d9aee42a344", null ],
     [ "getClipboardString", "classgGLFWWindow.html#af5c79950f648cf21d0c9077292a731a7", null ],
     [ "getGLFWWindow", "classgGLFWWindow.html#a208cb0c7f4bc785c4e51612f286de723", null ],
     [ "getJoystickAxes", "classgGLFWWindow.html#ad3d9239a9278fe14fdc9bebf370491a6", null ],
     [ "getScaleX", "classgGLFWWindow.html#ad30b9b2995be193428cf3869a0714233", null ],
     [ "getScaleY", "classgGLFWWindow.html#aef8e86de9dec1879057bdd365e3c99c3", null ],
     [ "getShouldClose", "classgGLFWWindow.html#a08b6f75645fdb36da4731759e2a8e604", null ],
+    [ "getVulkanInstanceExtensions", "classgGLFWWindow.html#a3dd8b07f41b3422c6adf4ab64b938fdd", null ],
     [ "initialize", "classgGLFWWindow.html#a379c147808dfeeefa7a4f4862803b819", null ],
     [ "isGamepadButtonPressed", "classgGLFWWindow.html#a15dc67d582f90b88049e03f21a3e657a", null ],
     [ "isJoystickPresent", "classgGLFWWindow.html#ad61bc4c718fc6a0cb7e88e1470b15122", null ],
@@ -25,5 +27,6 @@ var classgGLFWWindow =
     [ "setWindowResizable", "classgGLFWWindow.html#a88b0793816aa79f3667ac13d6432800e", null ],
     [ "setWindowSize", "classgGLFWWindow.html#a7a5ad603510df5bea81eb9098ef11718", null ],
     [ "setWindowSizeLimits", "classgGLFWWindow.html#a3d44cb80525f64095977fcd9194fb021", null ],
+    [ "supportsVulkan", "classgGLFWWindow.html#ab387d90ab4e466038271282e51dd5986", null ],
     [ "update", "classgGLFWWindow.html#a2480f711c72c0e4f963e70a704bc971f", null ]
 ];

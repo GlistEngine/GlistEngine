@@ -403,6 +403,10 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a00e1a2c68a48ea80409231ede91a40d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1144a0d485e5e848d583e8735eff94e8" id="r_a1144a0d485e5e848d583e8735eff94e8"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a1144a0d485e5e848d583e8735eff94e8">setVsync</a> (bool enabled)</td></tr>
 <tr class="separator:a1144a0d485e5e848d583e8735eff94e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1e042d985476aa9f3adb2108f9e5d500" id="r_a1e042d985476aa9f3adb2108f9e5d500"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a1e042d985476aa9f3adb2108f9e5d500">setMultiSampling</a> (int samples)</td></tr>
+<tr class="separator:a1e042d985476aa9f3adb2108f9e5d500"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa8eb6f1749f35205780185cdd667f20d" id="r_aa8eb6f1749f35205780185cdd667f20d"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#aa8eb6f1749f35205780185cdd667f20d">getMultiSampling</a> () const</td></tr>
+<tr class="separator:aa8eb6f1749f35205780185cdd667f20d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3324e5981d632c55cfb192aeac453a5a" id="r_a3324e5981d632c55cfb192aeac453a5a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a3324e5981d632c55cfb192aeac453a5a">updateScene</a> ()</td></tr>
 <tr class="separator:a3324e5981d632c55cfb192aeac453a5a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af1298e4de4ee4d05cd8fcad64e1ba77c" id="r_af1298e4de4ee4d05cd8fcad64e1ba77c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#af1298e4de4ee4d05cd8fcad64e1ba77c">gPushMatrix</a> ()</td></tr>
@@ -6365,6 +6369,33 @@ Friends</h2></td></tr>
 
 </div>
 </div>
+<a id="aa8eb6f1749f35205780185cdd667f20d" name="aa8eb6f1749f35205780185cdd667f20d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa8eb6f1749f35205780185cdd667f20d">&#9670;&#160;</a></span>getMultiSampling()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual int gRenderer::getMultiSampling </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reimplemented in <a class="el" href="classgVKRenderEngine.html#aa8da74883f2964885b2138217faa2b47">gVKRenderEngine</a>.</p>
+
+</div>
+</div>
 <a id="aafd8b09a4dd3dd19b2377c38f00d9325" name="aafd8b09a4dd3dd19b2377c38f00d9325"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aafd8b09a4dd3dd19b2377c38f00d9325">&#9670;&#160;</a></span>getPbrShader()</h2>
 
@@ -9979,6 +10010,34 @@ Friends</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Implemented in <a class="el" href="classgGLRenderEngine.html#acfe40a75915903ba17009bae209d5f6d">gGLRenderEngine</a>, and <a class="el" href="classgVKRenderEngine.html#a73c1b47981bff65ce7c24f60bc0f58ec">gVKRenderEngine</a>.</p>
+
+</div>
+</div>
+<a id="a1e042d985476aa9f3adb2108f9e5d500" name="a1e042d985476aa9f3adb2108f9e5d500"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1e042d985476aa9f3adb2108f9e5d500">&#9670;&#160;</a></span>setMultiSampling()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void gRenderer::setMultiSampling </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>samples</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reimplemented in <a class="el" href="classgVKRenderEngine.html#a922311e35a13fe1af805ea5e127c5ae3">gVKRenderEngine</a>.</p>
 
 </div>
 </div>

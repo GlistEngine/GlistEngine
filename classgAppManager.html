@@ -193,6 +193,10 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a542ffc28b86ef4acd5921b16a5a37255"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afed9d41c6aa9268605f208aa06207aef" id="r_afed9d41c6aa9268605f208aa06207aef"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgAppManager.html#afed9d41c6aa9268605f208aa06207aef">disableVsync</a> ()</td></tr>
 <tr class="separator:afed9d41c6aa9268605f208aa06207aef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1287b844cf1039ed46a3495a11ae5aa4" id="r_a1287b844cf1039ed46a3495a11ae5aa4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgAppManager.html#a1287b844cf1039ed46a3495a11ae5aa4">setMultiSampling</a> (int samples)</td></tr>
+<tr class="separator:a1287b844cf1039ed46a3495a11ae5aa4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adda28f227605e197a243eec7fb8df347" id="r_adda28f227605e197a243eec7fb8df347"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgAppManager.html#adda28f227605e197a243eec7fb8df347">getMultiSampling</a> () const</td></tr>
+<tr class="separator:adda28f227605e197a243eec7fb8df347"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adeed85080aa46f267b91a007ccb63684" id="r_adeed85080aa46f267b91a007ccb63684"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgAppManager.html#adeed85080aa46f267b91a007ccb63684">setCurrentGUIFrame</a> (<a class="el" href="classgGUIFrame.html">gGUIFrame</a> *guiFrame)</td></tr>
 <tr class="separator:adeed85080aa46f267b91a007ccb63684"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:accd95d8864d795c8e1cadefb64cf6cae" id="r_accd95d8864d795c8e1cadefb64cf6cae"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgGUIAppThread.html">gGUIAppThread</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgAppManager.html#accd95d8864d795c8e1cadefb64cf6cae">getGUIAppThread</a> ()</td></tr>
@@ -804,6 +808,23 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a id="adda28f227605e197a243eec7fb8df347" name="adda28f227605e197a243eec7fb8df347"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adda28f227605e197a243eec7fb8df347">&#9670;&#160;</a></span>getMultiSampling()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int gAppManager::getMultiSampling </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a7820aefc5996461c7c3507db851f7b21" name="a7820aefc5996461c7c3507db851f7b21"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a7820aefc5996461c7c3507db851f7b21">&#9670;&#160;</a></span>getRenderEngine()</h2>
 
@@ -1240,6 +1261,27 @@ Additional Inherited Members</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+</div>
+</div>
+<a id="a1287b844cf1039ed46a3495a11ae5aa4" name="a1287b844cf1039ed46a3495a11ae5aa4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1287b844cf1039ed46a3495a11ae5aa4">&#9670;&#160;</a></span>setMultiSampling()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gAppManager::setMultiSampling </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>samples</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Asks the renderer for multisample anti-aliasing, in the same place and the same way vsync is asked for: the application states what it wants and the backend decides what it can actually give.</p>
+<p>samples is 1 (off), 2, 4, 8 or 16. The request is capped at what the device reports for colour and depth attachments together and rounded down to a supported count, so <a class="el" href="classgAppManager.html#adda28f227605e197a243eec7fb8df347">getMultiSampling()</a> returns what was achieved rather than what was asked for - a device that offers nothing above 1x simply leaves it off. Only the Vulkan backend implements this; under OpenGL it is a no-op returning 1.</p>
+<p>Safe to call before the renderer exists, in which case the request is carried into Vulkan initialisation; called later, it is applied at the next frame boundary, because taking effect means rebuilding the render pass, the depth and multisample images, the framebuffers and every pipeline. </p>
 
 </div>
 </div>
