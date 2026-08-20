@@ -8,7 +8,7 @@
 #ifndef GRAPHICS_GBEZIER_H_
 #define GRAPHICS_GBEZIER_H_
 
-#include "gRenderObject.h"
+#include "gMesh.h"
 #include <glm/glm.hpp>
 #include <vector>
 
@@ -24,7 +24,7 @@
  * curve.draw();
  */
 
-class gBezier : public gRenderObject {
+class gBezier : public gMesh {
 public:
 	gBezier();
 	virtual ~gBezier();
