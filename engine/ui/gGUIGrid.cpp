@@ -1318,29 +1318,23 @@ void gGUIGrid::fillCell(int cellNo, const std::string& tempstr) {
 		functions.erase(functions.begin() + delindex);
 	}
 
-	Cell& cell = allcells[cellNo];
-	int nearestindex = -1;
-	for (int i = cell.cellrowno + 1; i < columnnum; ++i) {
-		Cell* next = getCell(cell.cellrowno, i);
-		if (!next) {
-			continue;
-		}
-		nearestindex = getNearestFilledCell(i);
-		if(nearestindex != -1) {
-			next->overflowcontent = fixOverflowText(*next, allcells[nearestindex]);
-		} else {
-			next->overflowcontent = "";
-		}
+	// [FIX macOS26 grid-populate freeze — overflow made lazy/cached]
+	// The Excel-style overflow-spill used to be computed HERE, in fillCell, via
+	// getFont()->getStringWidth()/fixOverflowText(). getStringWidth() lazily creates a GL glyph
+	// texture (gFont::loadChar -> gTexture -> gGLRenderEngine::createTextures). Grid population is
+	// driven from gCanvas::update(), NOT draw(); on macOS 26's Metal-backed OpenGL, creating a
+	// texture outside the draw phase hangs in the platform signal handler, freezing the app for
+	// minutes while a large grid populates (profiled: 100% of samples in fillCell -> getStringWidth
+	// -> loadChar -> createTextures). So we no longer measure width during populate. Instead we
+	// just mark the affected cells "overflowdirty"; the overflow width/spill is computed ONCE,
+	// lazily, in drawCellContents() (a safe GL context) and cached until the content changes again.
+	// Filling a cell can change its whole row's spill relationships, so mark the entire row dirty.
+	int changedrow = allcells[cellNo].cellrowno;
+	for (int col = 0; col < columnnum; ++col) {
+		int idx = getCellNo(changedrow, col);
+		if (idx != -1) allcells[idx].overflowdirty = true;
 	}
-
-	if (cell.cellw < getFont()->getStringWidth(cell.showncontent)) {
-		nearestindex = getNearestFilledCell(cellNo);
-		if(nearestindex != -1) {
-			cell.overflowcontent = fixOverflowText(cell, allcells[nearestindex]);
-		} else {
-			cell.overflowcontent = "";
-		}
-	}
+	allcells[cellNo].overflowdirty = true;
 }
 
 float gGUIGrid::makeSum(int c1, int r1, int c2, int r2) {
@@ -2634,6 +2628,20 @@ void gGUIGrid::drawCellContents() {
 		int shownwidth = cellfont.getStringWidth(currentcell.showncontent);
 		if(currentcell.cellx + shownwidth * currentcell.textmoveamount - textbox.getInitX() * currentcell.cellalignment < gridx + horizontalscroll) {
 			continue;
+		}
+
+		// [overflow-cache] Excel-style overflow-spill is computed lazily HERE, in draw (a safe GL
+		// context — glyph-texture creation during update()/populate hangs on macOS 26). It runs
+		// once per cell when marked overflowdirty (by fillCell) and is cached afterwards, so it is
+		// NOT recomputed every frame. Reuses the shownwidth already measured above.
+		if(currentcell.overflowdirty) {
+			currentcell.overflowdirty = false;
+			if(currentcell.cellw < shownwidth) {
+				int nearestindex = getNearestFilledCell(i);
+				currentcell.overflowcontent = (nearestindex != -1) ? fixOverflowText(currentcell, allcells[nearestindex]) : "";
+			} else {
+				currentcell.overflowcontent = "";
+			}
 		}
 
 		if(!currentcell.iscolorchanged) {

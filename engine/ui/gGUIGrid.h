@@ -52,10 +52,12 @@ public:
 	    gColor cellfontcolor;
 		bool removed;
 		bool readonly;
+		bool overflowdirty; // [overflow-cache] recompute overflowcontent lazily at draw time when set
 
 	    Cell() {
 			readonly = false;
 			removed = false;
+			overflowdirty = true;
 	    	iscellselected = false;
 	    	iscellaligned = false;
 	    	isbold = false;
