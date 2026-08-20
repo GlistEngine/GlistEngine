@@ -10,7 +10,7 @@ var searchData=
   ['onguievent_7',['onguievent',['../classgBaseCanvas.html#a286c57483068857371425641c263de30',1,'gBaseCanvas::onGuiEvent()'],['../classgBaseGUIObject.html#aba419d856535f412a57bbc9ebc804be5',1,'gBaseGUIObject::onGUIEvent()'],['../classgGUIActionManager.html#a02f8c7124338dd0d829bd8505f192e77',1,'gGUIActionManager::onGUIEvent()'],['../classgGUIDropdownList.html#a082a6467bd914443f5ee4bc667a082d6',1,'gGUIDropdownList::onGUIEvent()'],['../classgGUIPane.html#add5fa63c9ca89cadf47d107e4579af03',1,'gGUIPane::onGUIEvent()']]],
   ['operator_21_3d_8',['operator!=',['../classgUUID.html#aa8562aeb18d1f918da9d9e004d87e1a9',1,'gUUID::operator!='],['../gColor_8h.html#a547eb65d89068b4acd3f960dd2dc0c3a',1,'operator!=():&#160;gColor.h']]],
   ['operator_3c_9',['operator&lt;',['../classgUUID.html#a39e67e6fcf77ea5b72f6d65168afc56d',1,'gUUID']]],
-  ['operator_3c_3c_10',['operator&lt;&lt;',['../classgLog.html#a912049df8e4ec07bc35d8f35cc45e107',1,'gLog::operator&lt;&lt;(std::ostream &amp;(*func)(std::ostream &amp;))'],['../classgLog.html#a40e7b43cf2b398b9c41c4493db87d130',1,'gLog::operator&lt;&lt;(const T &amp;value)']]],
+  ['operator_3c_3c_10',['operator&lt;&lt;',['../classgLog.html#a40e7b43cf2b398b9c41c4493db87d130',1,'gLog::operator&lt;&lt;(const T &amp;value)'],['../classgLog.html#a912049df8e4ec07bc35d8f35cc45e107',1,'gLog::operator&lt;&lt;(std::ostream &amp;(*func)(std::ostream &amp;))']]],
   ['operator_3d_11',['operator=',['../classgImage.html#aa5c2beeb3cc05993975a0f477fb7f232',1,'gImage::operator=()'],['../classgMaterial.html#a9bbdfc29e598c708a42c2e32ca40f981',1,'gMaterial::operator=()'],['../classgTexture.html#a06c6cccc32d8dd7a2c27044f6a2df78f',1,'gTexture::operator=(const gTexture &amp;other)'],['../classgTexture.html#ab1f82a3b35b1833d45f4fd5c31633ba8',1,'gTexture::operator=(gTexture &amp;&amp;other) noexcept'],['../classgVbo.html#ad046c4ba8d6ff13946d342427366ce61',1,'gVbo::operator=()'],['../classgImage.html#a9e5e78241be62683c63679048a73f27f',1,'gImage::operator=()']]],
   ['operator_3d_3d_12',['operator==',['../classgUUID.html#aff61124c42aff80e3872bb27f77b84bc',1,'gUUID::operator=='],['../gColor_8h.html#a324be753fcae72fd315b409aaa51ad2e',1,'operator==():&#160;gColor.h']]],
   ['orange_13',['ORANGE',['../classgColor.html#a231080fe6acb938a524c1f6bd8ce3d34',1,'gColor']]],
@@ -18,5 +18,6 @@ var searchData=
   ['orientation_15',['orientation',['../classgNode.html#a0d3a820f6eab89ba1533c6085e178681',1,'gNode']]],
   ['originalgrid_16',['originalgrid',['../classgRenderer.html#a9164aad8460cd5c795b5ae08472462d4',1,'gRenderer']]],
   ['overflowcontent_17',['overflowcontent',['../structgGUIGrid_1_1Cell.html#a6a6f3a8c1cbd138a9de68cfbae382f18',1,'gGUIGrid::Cell']]],
-  ['overwrite_5fexisting_18',['OVERWRITE_EXISTING',['../classgFile.html#ae0409e2a1e11645fb3301ded923fe7cba0c6de1f6458bcaa579ac30cb9ba38c5a',1,'gFile']]]
+  ['overflowdirty_18',['overflowdirty',['../structgGUIGrid_1_1Cell.html#ac38341be37b50ccae50d5e8b0a2d721f',1,'gGUIGrid::Cell']]],
+  ['overwrite_5fexisting_19',['OVERWRITE_EXISTING',['../classgFile.html#ae0409e2a1e11645fb3301ded923fe7cba0c6de1f6458bcaa579ac30cb9ba38c5a',1,'gFile']]]
 ];

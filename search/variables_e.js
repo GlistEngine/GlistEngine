@@ -7,5 +7,6 @@ var searchData=
   ['orderno_4',['orderno',['../structgGUITreelist_1_1Element.html#a21759f075f353a53636cd8284809b00e',1,'gGUITreelist::Element']]],
   ['orientation_5',['orientation',['../classgNode.html#a0d3a820f6eab89ba1533c6085e178681',1,'gNode']]],
   ['originalgrid_6',['originalgrid',['../classgRenderer.html#a9164aad8460cd5c795b5ae08472462d4',1,'gRenderer']]],
-  ['overflowcontent_7',['overflowcontent',['../structgGUIGrid_1_1Cell.html#a6a6f3a8c1cbd138a9de68cfbae382f18',1,'gGUIGrid::Cell']]]
+  ['overflowcontent_7',['overflowcontent',['../structgGUIGrid_1_1Cell.html#a6a6f3a8c1cbd138a9de68cfbae382f18',1,'gGUIGrid::Cell']]],
+  ['overflowdirty_8',['overflowdirty',['../structgGUIGrid_1_1Cell.html#ac38341be37b50ccae50d5e8b0a2d721f',1,'gGUIGrid::Cell']]]
 ];
