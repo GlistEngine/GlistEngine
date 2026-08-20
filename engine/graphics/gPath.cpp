@@ -27,6 +27,7 @@
 #include "gBezier.h"
 #include "gLine.h"
 #include "gMesh.h"
+#include "gBezierQuad.h"
 
 #include <glm/common.hpp>
 #include <glm/geometric.hpp>
@@ -90,6 +91,28 @@ gPath::gSubPath::gSubPath(
 		points.push_back(bezier.getPoint(t));
 	}
 }
+gPath::gSubPath::gSubPath(
+		const gBezierQuad& bezierquad,
+		int pointcount)
+	: type(TYPE_BEZIERQUAD), currentpoint(0) {
+	if (pointcount <= 0) {
+		return;
+	}
+
+	points.reserve(pointcount);
+
+	if (pointcount == 1) {
+		points.push_back(bezierquad.getPoint(0.0f));
+		return;
+	}
+
+	for (int i = 0; i < pointcount; i++) {
+		float t = static_cast<float>(i) /
+				  static_cast<float>(pointcount - 1);
+
+		points.push_back(bezierquad.getPoint(t));
+	}
+}
 
 gPath::gSubPath::gSubPath(
 		const gPath& path,
@@ -104,6 +127,14 @@ gPath::gSubPath::Type gPath::gSubPath::getType() const {
 
 int gPath::gSubPath::getPointCount() const {
 	return static_cast<int>(points.size());
+}
+
+glm::vec3 gPath::gSubPath::getPoint(int pointno) {
+	if (pointno < 0 || pointno >= getPointCount()) {
+		return glm::vec3(0.0f);
+	}
+
+	return points[pointno];
 }
 
 const std::vector<glm::vec3>&
@@ -222,6 +253,12 @@ void gPath::addSubPath(
 }
 
 void gPath::addSubPath(
+		const gBezierQuad& bezierquad,
+		int pointcount) {
+	subpaths.emplace_back(bezierquad, pointcount);
+}
+
+void gPath::addSubPath(
 		const gPath& path,
 		int pointcount) {
 	subpaths.emplace_back(path, pointcount);
@@ -239,6 +276,32 @@ int gPath::getPointCount() const {
 	}
 
 	return pointcount;
+}
+
+glm::vec3 gPath::getPoint(int pointno) {
+	if (pointno < 0) {
+		return glm::vec3(0.0f);
+	}
+
+	for (gSubPath& subpath : subpaths) {
+		int subpathpointcount = subpath.getPointCount();
+
+		if (pointno < subpathpointcount) {
+			return subpath.getPoint(pointno);
+		}
+
+		pointno -= subpathpointcount;
+	}
+
+	return glm::vec3(0.0f);
+}
+
+glm::vec3 gPath::getPoint(int subpathno, int subpathpointno) {
+	if (subpathno < 0 || subpathno >= getSubPathCount()) {
+		return glm::vec3(0.0f);
+	}
+
+	return subpaths[subpathno].getPoint(subpathpointno);
 }
 
 const std::vector<gPath::gSubPath>&

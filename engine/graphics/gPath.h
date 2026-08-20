@@ -31,6 +31,7 @@
 class gArc;
 class gBezier;
 class gLine;
+class gBezierQuad;
 
 class gPath {
 public:
@@ -40,6 +41,7 @@ public:
 			TYPE_LINE,
 			TYPE_ARC,
 			TYPE_BEZIER,
+			TYPE_BEZIERQUAD,
 			TYPE_PATH
 		};
 
@@ -47,9 +49,11 @@ public:
 		gSubPath(gArc& arc, int pointcount);
 		gSubPath(const gBezier& bezier, int pointcount);
 		gSubPath(const gPath& path, int pointcount);
+		gSubPath(const gBezierQuad& bezierquad, int pointcount);
 
 		Type getType() const;
 		int getPointCount() const;
+		glm::vec3 getPoint(int pointno);
 		const std::vector<glm::vec3>& getPoints() const;
 
 		bool hasNextPoint() const;
@@ -76,9 +80,12 @@ public:
 	void addSubPath(gArc& arc, int pointcount);
 	void addSubPath(const gBezier& bezier, int pointcount);
 	void addSubPath(const gPath& path, int pointcount);
+	void addSubPath(const gBezierQuad& bezierquad, int pointcount);
 
 	int getSubPathCount() const;
 	int getPointCount() const;
+	glm::vec3 getPoint(int pointno);
+	glm::vec3 getPoint(int subpathno, int subpathpointno);
 
 	const std::vector<gSubPath>& getSubPaths() const;
 	std::vector<glm::vec3> getPoints() const;
