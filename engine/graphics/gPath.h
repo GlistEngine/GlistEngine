@@ -31,6 +31,7 @@
 class gArc;
 class gBezier;
 class gLine;
+class gBezierQuad;
 
 class gPath {
 public:
@@ -40,6 +41,7 @@ public:
 			TYPE_LINE,
 			TYPE_ARC,
 			TYPE_BEZIER,
+			TYPE_BEZIERQUAD,
 			TYPE_PATH
 		};
 
@@ -47,6 +49,7 @@ public:
 		gSubPath(gArc& arc, int pointcount);
 		gSubPath(const gBezier& bezier, int pointcount);
 		gSubPath(const gPath& path, int pointcount);
+		gSubPath(const gBezierQuad& bezierquad, int pointcount);
 
 		Type getType() const;
 		int getPointCount() const;
@@ -77,6 +80,7 @@ public:
 	void addSubPath(gArc& arc, int pointcount);
 	void addSubPath(const gBezier& bezier, int pointcount);
 	void addSubPath(const gPath& path, int pointcount);
+	void addSubPath(const gBezierQuad& bezierquad, int pointcount);
 
 	int getSubPathCount() const;
 	int getPointCount() const;

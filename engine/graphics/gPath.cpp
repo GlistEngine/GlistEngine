@@ -27,6 +27,7 @@
 #include "gBezier.h"
 #include "gLine.h"
 #include "gMesh.h"
+#include "gBezierQuad.h"
 
 #include <glm/common.hpp>
 #include <glm/geometric.hpp>
@@ -88,6 +89,28 @@ gPath::gSubPath::gSubPath(
 		float t = static_cast<float>(i) / static_cast<float>(pointcount - 1);
 
 		points.push_back(bezier.getPoint(t));
+	}
+}
+gPath::gSubPath::gSubPath(
+		const gBezierQuad& bezierquad,
+		int pointcount)
+	: type(TYPE_BEZIERQUAD), currentpoint(0) {
+	if (pointcount <= 0) {
+		return;
+	}
+
+	points.reserve(pointcount);
+
+	if (pointcount == 1) {
+		points.push_back(bezierquad.getPoint(0.0f));
+		return;
+	}
+
+	for (int i = 0; i < pointcount; i++) {
+		float t = static_cast<float>(i) /
+				  static_cast<float>(pointcount - 1);
+
+		points.push_back(bezierquad.getPoint(t));
 	}
 }
 
@@ -227,6 +250,12 @@ void gPath::addSubPath(
 		const gBezier& bezier,
 		int pointcount) {
 	subpaths.emplace_back(bezier, pointcount);
+}
+
+void gPath::addSubPath(
+		const gBezierQuad& bezierquad,
+		int pointcount) {
+	subpaths.emplace_back(bezierquad, pointcount);
 }
 
 void gPath::addSubPath(
