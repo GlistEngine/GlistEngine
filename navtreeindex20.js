@@ -1,5 +1,8 @@
 var NAVTREEINDEX20 =
 {
+"gVKSwapchain_8h.html#aac0c5cbc1bfc30d705dcce39ef32fe6e":[2,0,0,2,28,0],
+"gVKSwapchain_8h_source.html":[2,0,0,2,28],
+"gVKSync_8h.html":[2,0,0,2,29],
 "gVKSync_8h.html#a1011c1199e450517ccee9425784c64dd":[2,0,0,2,29,0],
 "gVKSync_8h_source.html":[2,0,0,2,29],
 "gVKTexture_8h.html":[2,0,0,2,30],
@@ -246,8 +249,5 @@ var NAVTREEINDEX20 =
 "tinyfiledialogs_8c.html#a460e8b223e71d9e54e6e6d288a865156":[2,0,0,7,0,0,3],
 "tinyfiledialogs_8c.html#a47f8aa977cd899f2e44c677491cb1a5d":[2,0,0,7,0,0,4],
 "tinyfiledialogs_8c.html#a4b0b3b0324df8080770064489cf73c14":[2,0,0,7,0,0,16],
-"tinyfiledialogs_8c.html#a4e0c55962cd5119defe2e4ab70440d27":[2,0,0,7,0,0,35],
-"tinyfiledialogs_8c.html#a5702c782c083fb90757b8bb6a95de325":[2,0,0,7,0,0,19],
-"tinyfiledialogs_8c.html#a570a95a1dce391ed29f7fc5861ecee69":[2,0,0,7,0,0,34],
-"tinyfiledialogs_8c.html#a6a75d29f7cc1a6606e1b709fb2d13756":[2,0,0,7,0,0,7]
+"tinyfiledialogs_8c.html#a4e0c55962cd5119defe2e4ab70440d27":[2,0,0,7,0,0,35]
 };

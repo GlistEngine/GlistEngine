@@ -8,5 +8,5 @@ var searchData=
   ['texturewrap_5',['TextureWrap',['../classgTexture.html#a8d173f0d769a407a7d13c9908c9b4158',1,'gTexture']]],
   ['triggercondition_6',['TriggerCondition',['../gSpriteAnimation_8h.html#a05ace1778679794e816adbd5d83eb7bc',1,'gSpriteAnimation.h']]],
   ['triggertype_7',['TriggerType',['../classgModelAnimator.html#af35fe3f0fb5c97098c5aa764c5ca15ae',1,'gModelAnimator']]],
-  ['type_8',['type',['../classgPath_1_1gSubPath.html#a585f495a992c82becb087c277aa5681d',1,'gPath::gSubPath::Type'],['../classgGUIProgressBar.html#a3df3b3f959627ebe32bddbbd4d43fa68',1,'gGUIProgressBar::TYPE']]]
+  ['type_8',['type',['../classgGUIProgressBar.html#a3df3b3f959627ebe32bddbbd4d43fa68',1,'gGUIProgressBar::TYPE'],['../classgPath_1_1gSubPath.html#a585f495a992c82becb087c277aa5681d',1,'gPath::gSubPath::Type']]]
 ];
