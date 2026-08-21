@@ -1598,7 +1598,9 @@ bool gVKRenderEngine::initVulkan() {
 	// rather than limp on. Packed version numbers compare monotonically, so plain
 	// relational operators are correct.
 	ctx->instanceapiversion = VK_API_VERSION_1_0;
-	vkEnumerateInstanceVersion(&ctx->instanceapiversion);
+	PFN_vkEnumerateInstanceVersion pfnEnumerateInstanceVersion =
+			reinterpret_cast<PFN_vkEnumerateInstanceVersion>(vkGetInstanceProcAddr(nullptr, "vkEnumerateInstanceVersion"));
+	if(pfnEnumerateInstanceVersion) pfnEnumerateInstanceVersion(&ctx->instanceapiversion);
 	if(ctx->instanceapiversion < ctx->minapiversion) {
 		gLoge("gVKRenderEngine") << "Vulkan " << VK_API_VERSION_MAJOR(ctx->minapiversion) << "."
 				<< VK_API_VERSION_MINOR(ctx->minapiversion) << " is required, but the loader only supports "
@@ -1827,6 +1829,22 @@ bool gVKRenderEngine::initVulkan() {
 	}
 	vkGetDeviceQueue(ctx->device, ctx->graphicsfamily, 0, &ctx->graphicsqueue);
 	vkGetDeviceQueue(ctx->device, ctx->presentfamily, 0, &ctx->presentqueue);
+
+	// See gVKContext::cmdSetDepthState/cmdSetTopology/cmdSetCullState: Android's NDK
+	// import library withholds these symbols below API level 33 no matter what the
+	// driver supports, so they are fetched by name instead of called directly.
+	ctx->pfncmdsetdepthtestenable = reinterpret_cast<PFN_vkCmdSetDepthTestEnable>(vkGetDeviceProcAddr(ctx->device, "vkCmdSetDepthTestEnable"));
+	ctx->pfncmdsetdepthwriteenable = reinterpret_cast<PFN_vkCmdSetDepthWriteEnable>(vkGetDeviceProcAddr(ctx->device, "vkCmdSetDepthWriteEnable"));
+	ctx->pfncmdsetdepthcompareop = reinterpret_cast<PFN_vkCmdSetDepthCompareOp>(vkGetDeviceProcAddr(ctx->device, "vkCmdSetDepthCompareOp"));
+	ctx->pfncmdsetprimitivetopology = reinterpret_cast<PFN_vkCmdSetPrimitiveTopology>(vkGetDeviceProcAddr(ctx->device, "vkCmdSetPrimitiveTopology"));
+	ctx->pfncmdsetcullmode = reinterpret_cast<PFN_vkCmdSetCullMode>(vkGetDeviceProcAddr(ctx->device, "vkCmdSetCullMode"));
+	ctx->pfncmdsetfrontface = reinterpret_cast<PFN_vkCmdSetFrontFace>(vkGetDeviceProcAddr(ctx->device, "vkCmdSetFrontFace"));
+	if(!ctx->pfncmdsetdepthtestenable || !ctx->pfncmdsetdepthwriteenable || !ctx->pfncmdsetdepthcompareop
+			|| !ctx->pfncmdsetprimitivetopology || !ctx->pfncmdsetcullmode || !ctx->pfncmdsetfrontface) {
+		gLoge("gVKRenderEngine") << "Device is missing VK_EXT_extended_dynamic_state entry points required by minapiversion 1.3.";
+		cleanupVulkan();
+		return false;
+	}
 
 	// Cached on the context so later phases can read them without re-querying:
 	// limits/identity, the GPU's supported features, and its memory layout.
