@@ -676,6 +676,26 @@ struct gVKContext {
 		recordedfrontface = frontface;
 		return true;
 	}
+
+	// VK_EXT_extended_dynamic_state, core since Vulkan 1.3 - which minapiversion
+	// already requires as this backend's floor. Android's NDK import library only
+	// exports these six entry points for API level 33+ regardless of what the
+	// device driver actually supports, so gvkCreateDevice resolves them itself
+	// through vkGetDeviceProcAddr instead of leaving them to link statically, and
+	// every draw call goes through these wrappers rather than the raw vkCmdSetXxx
+	// names.
+	void cmdSetDepthState(VkCommandBuffer cmd, VkBool32 test, VkBool32 write, VkCompareOp compare) {
+		pfncmdsetdepthtestenable(cmd, test);
+		pfncmdsetdepthwriteenable(cmd, write);
+		pfncmdsetdepthcompareop(cmd, compare);
+	}
+	void cmdSetTopology(VkCommandBuffer cmd, VkPrimitiveTopology topology) {
+		pfncmdsetprimitivetopology(cmd, topology);
+	}
+	void cmdSetCullState(VkCommandBuffer cmd, VkCullModeFlags mode, VkFrontFace frontface) {
+		pfncmdsetcullmode(cmd, mode);
+		pfncmdsetfrontface(cmd, frontface);
+	}
 	// Vertex and index bindings are command buffer state in their own right: binding a
 	// pipeline does not disturb them, so a run of draws over one mesh - a crowd posed
 	// from the same model, or the same buffer drawn once per material - can rebind the
@@ -727,6 +747,14 @@ private:
 	VkQueue presentqueue = VK_NULL_HANDLE;
 	uint32_t graphicsfamily = 0;
 	uint32_t presentfamily = 0;
+	// Resolved via vkGetDeviceProcAddr right after device creation; see
+	// cmdSetDepthState / cmdSetTopology / cmdSetCullState above.
+	PFN_vkCmdSetDepthTestEnable pfncmdsetdepthtestenable = nullptr;
+	PFN_vkCmdSetDepthWriteEnable pfncmdsetdepthwriteenable = nullptr;
+	PFN_vkCmdSetDepthCompareOp pfncmdsetdepthcompareop = nullptr;
+	PFN_vkCmdSetPrimitiveTopology pfncmdsetprimitivetopology = nullptr;
+	PFN_vkCmdSetCullMode pfncmdsetcullmode = nullptr;
+	PFN_vkCmdSetFrontFace pfncmdsetfrontface = nullptr;
 	uint32_t devicecount = 0;
 	std::vector<VkPhysicalDevice> physicaldevices;
 	std::vector<VkPhysicalDeviceProperties> physicaldeviceproperties;
