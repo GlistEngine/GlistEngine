@@ -97,6 +97,26 @@ glm::vec2 gBezier::getPoint2D(float t) const {
     return glm::vec2(p.x, p.y);
 }
 
+glm::vec3 gBezier::getTangent(float t) const {
+	if(points.size() != 3) return glm::vec3(0.0f);
+
+	if(t < 0.0f) t = 0.0f;
+	if(t > 1.0f) t = 1.0f;
+
+	float u = 1.0f - t;
+	return (2.0f * u * (points[1] - points[0])) + (2.0f * t * (points[2] - points[1]));
+}
+
+glm::vec2 gBezier::getTangent2D(float t) const {
+	glm::vec3 tangent = getTangent(t);
+	return glm::vec2(tangent.x, tangent.y);
+}
+
+float gBezier::getAngle(float t) const {
+	glm::vec3 tangent = getTangent(t);
+	return atan2(tangent.y, tangent.x);
+}
+
 void gBezier::draw() const {
 	if (points.size() != 3) return;
 
