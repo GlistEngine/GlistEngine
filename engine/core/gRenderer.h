@@ -96,18 +96,31 @@ void gDrawBox(float x, float y, float z, float w = 1.0f, float h = 1.0f, float d
 void gDrawBox(float x, float y, float z, float w, float h, float d, float rotateAngle, float axisX, float axisY, float axisZ, bool isFilled = true);
 void gDrawBox(glm::mat4 transformationMatrix, bool isFilled = true);
 void gDrawSphere(float xPos, float yPos, float zPos, glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f), int xSegmentNum = 64, int ySegmentNum = 32, bool isFilled = true);
+void gDrawSphere(float xPos, float yPos, float zPos, glm::vec3 scale, int xSegmentNum, int ySegmentNum, float rotateAngle, float axisX, float axisY, float axisZ, bool isFilled = true);
 void gDrawCylinder(float x, float y, float z, int r, int h, glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f), int segmentnum = 32, bool isFilled = true);
+void gDrawCylinder(float x, float y, float z, int r, int h, glm::vec3 scale, int segmentnum, float rotateAngle, float axisX, float axisY, float axisZ, bool isFilled = true);
 void gDrawCylinderOblique(float x, float y, float z, int r, int h, glm::vec2 shiftdistance, glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f), int segmentnum = 32, bool isFilled = true);
+void gDrawCylinderOblique(float x, float y, float z, int r, int h, glm::vec2 shiftdistance, glm::vec3 scale, int segmentnum, float rotateAngle, float axisX, float axisY, float axisZ, bool isFilled = true);
 void gDrawCylinderTrapezodial(float x, float y, float z, int r1, int r2, int h, glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f), int segmentnum = 32, bool isFilled = true);
+void gDrawCylinderTrapezodial(float x, float y, float z, int r1, int r2, int h, glm::vec3 scale, int segmentnum, float rotateAngle, float axisX, float axisY, float axisZ, bool isFilled = true);
 void gDrawCylinderObliqueTrapezodial(float x, float y, float z, int r1, int r2, int h, glm::vec2 shiftdistance, glm::vec3 scale = glm::vec3(1.0, 1.0, 1.0), int segmentnum = 32, bool isFilled = true);
+void gDrawCylinderObliqueTrapezodial(float x, float y, float z, int r1, int r2, int h, glm::vec2 shiftdistance, glm::vec3 scale, int segmentnum, float rotateAngle, float axisX, float axisY, float axisZ, bool isFilled = true);
 void gDrawCone(float x, float y, float z, int r, int h, glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f), int segmentnum = 32, bool isFilled = true);
+void gDrawCone(float x, float y, float z, int r, int h, glm::vec3 scale, int segmentnum, float rotateAngle, float axisX, float axisY, float axisZ, bool isFilled = true);
 void gDrawConeOblique(float x, float y, float z, int r, int h, glm::vec2 shiftdistance, glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f), int segmentnum = 32, bool isFilled = true);
+void gDrawConeOblique(float x, float y, float z, int r, int h, glm::vec2 shiftdistance, glm::vec3 scale, int segmentnum, float rotateAngle, float axisX, float axisY, float axisZ, bool isFilled = true);
 void gDrawPyramid(float x, float y, float z, int r, int h, glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f), int numberofsides = 4, bool isFilled = true);
+void gDrawPyramid(float x, float y, float z, int r, int h, glm::vec3 scale, int numberofsides, float rotateAngle, float axisX, float axisY, float axisZ, bool isFilled = true);
 void gDrawPyramidOblique(float x, float y, float z, int r, int h, glm::vec2 shiftdistance, glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f), int numberofsides = 4, bool isFilled = true);
+void gDrawPyramidOblique(float x, float y, float z, int r, int h, glm::vec2 shiftdistance, glm::vec3 scale, int numberofsides, float rotateAngle, float axisX, float axisY, float axisZ, bool isFilled = true);
 void gDrawTube(float x, float y, float z, int outerradius,int innerradious, int h, glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f), int segmentnum = 32, bool isFilled = true);
+void gDrawTube(float x, float y, float z, int outerradius, int innerradious, int h, glm::vec3 scale, int segmentnum, float rotateAngle, float axisX, float axisY, float axisZ, bool isFilled = true);
 void gDrawTubeOblique(float x, float y, float z, int outerradius,int innerradious, int h, glm::vec2 shiftdistance, glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f), int segmentnum = 32, bool isFilled = true);
+void gDrawTubeOblique(float x, float y, float z, int outerradius, int innerradious, int h, glm::vec2 shiftdistance, glm::vec3 scale, int segmentnum, float rotateAngle, float axisX, float axisY, float axisZ, bool isFilled = true);
 void gDrawTubeTrapezodial(float x, float y, float z, int topouterradius,int topinnerradious, int buttomouterradious, int buttominnerradious, int h, glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f), int segmentnum = 32, bool isFilled = true);
+void gDrawTubeTrapezodial(float x, float y, float z, int topouterradius, int topinnerradious, int buttomouterradious, int buttominnerradious, int h, glm::vec3 scale, int segmentnum, float rotateAngle, float axisX, float axisY, float axisZ, bool isFilled = true);
 void gDrawTubeObliqueTrapezodial(float x, float y, float z, int topouterradius,int topinnerradious, int buttomouterradious, int buttominnerradious, int h, glm::vec2 shiftdistance, glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f), int segmentnum = 32, bool isFilled = true);
+void gDrawTubeObliqueTrapezodial(float x, float y, float z, int topouterradius, int topinnerradious, int buttomouterradious, int buttominnerradious, int h, glm::vec2 shiftdistance, glm::vec3 scale, int segmentnum, float rotateAngle, float axisX, float axisY, float axisZ, bool isFilled = true);
 
 class gVbo;
 class gFbo;
@@ -127,6 +140,10 @@ class gArc;
 class gRectangle;
 class gRoundedRectangle;
 class gBox;
+class gSphere;
+class gCylinder;
+class gCone;
+class gTube;
 //class gArrow;
 
 class gRenderer : public gObject {
@@ -669,18 +686,31 @@ public:
 	void drawBox(float x, float y, float z, float w, float h, float d, float rotateAngle, float axisX, float axisY, float axisZ, bool isFilled = true);
 	void drawBox(glm::mat4 transformationMatrix, bool isFilled = true);
 	void drawSphere(float xPos, float yPos, float zPos, glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f), int xSegmentNum = 64, int ySegmentNum = 32, bool isFilled = true);
+	void drawSphere(float xPos, float yPos, float zPos, glm::vec3 scale, int xSegmentNum, int ySegmentNum, float rotateAngle, float axisX, float axisY, float axisZ, bool isFilled = true);
 	void drawCylinder(float x, float y, float z, int r, int h, glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f), int segmentnum = 32, bool isFilled = true);
+	void drawCylinder(float x, float y, float z, int r, int h, glm::vec3 scale, int segmentnum, float rotateAngle, float axisX, float axisY, float axisZ, bool isFilled = true);
 	void drawCylinderOblique(float x, float y, float z, int r, int h, glm::vec2 shiftdistance, glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f), int segmentnum = 32, bool isFilled = true);
+	void drawCylinderOblique(float x, float y, float z, int r, int h, glm::vec2 shiftdistance, glm::vec3 scale, int segmentnum, float rotateAngle, float axisX, float axisY, float axisZ, bool isFilled = true);
 	void drawCylinderTrapezodial(float x, float y, float z, int r1, int r2, int h, glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f), int segmentnum = 32, bool isFilled = true);
+	void drawCylinderTrapezodial(float x, float y, float z, int r1, int r2, int h, glm::vec3 scale, int segmentnum, float rotateAngle, float axisX, float axisY, float axisZ, bool isFilled = true);
 	void drawCylinderObliqueTrapezodial(float x, float y, float z, int r1, int r2, int h, glm::vec2 shiftdistance, glm::vec3 scale = glm::vec3(1.0, 1.0, 1.0), int segmentnum = 32, bool isFilled = true);
+	void drawCylinderObliqueTrapezodial(float x, float y, float z, int r1, int r2, int h, glm::vec2 shiftdistance, glm::vec3 scale, int segmentnum, float rotateAngle, float axisX, float axisY, float axisZ, bool isFilled = true);
 	void drawCone(float x, float y, float z, int r, int h, glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f), int segmentnum = 32, bool isFilled = true);
+	void drawCone(float x, float y, float z, int r, int h, glm::vec3 scale, int segmentnum, float rotateAngle, float axisX, float axisY, float axisZ, bool isFilled = true);
 	void drawConeOblique(float x, float y, float z, int r, int h, glm::vec2 shiftdistance, glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f), int segmentnum = 32, bool isFilled = true);
+	void drawConeOblique(float x, float y, float z, int r, int h, glm::vec2 shiftdistance, glm::vec3 scale, int segmentnum, float rotateAngle, float axisX, float axisY, float axisZ, bool isFilled = true);
 	void drawPyramid(float x, float y, float z, int r, int h, glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f), int numberofsides = 4, bool isFilled = true);
+	void drawPyramid(float x, float y, float z, int r, int h, glm::vec3 scale, int numberofsides, float rotateAngle, float axisX, float axisY, float axisZ, bool isFilled = true);
 	void drawPyramidOblique(float x, float y, float z, int r, int h, glm::vec2 shiftdistance, glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f), int numberofsides = 4, bool isFilled = true);
+	void drawPyramidOblique(float x, float y, float z, int r, int h, glm::vec2 shiftdistance, glm::vec3 scale, int numberofsides, float rotateAngle, float axisX, float axisY, float axisZ, bool isFilled = true);
 	void drawTube(float x, float y, float z, int outerradius,int innerradious, int h, glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f), int segmentnum = 32, bool isFilled = true);
+	void drawTube(float x, float y, float z, int outerradius, int innerradious, int h, glm::vec3 scale, int segmentnum, float rotateAngle, float axisX, float axisY, float axisZ, bool isFilled = true);
 	void drawTubeOblique(float x, float y, float z, int outerradius,int innerradious, int h, glm::vec2 shiftdistance, glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f), int segmentnum = 32, bool isFilled = true);
+	void drawTubeOblique(float x, float y, float z, int outerradius, int innerradious, int h, glm::vec2 shiftdistance, glm::vec3 scale, int segmentnum, float rotateAngle, float axisX, float axisY, float axisZ, bool isFilled = true);
 	void drawTubeTrapezodial(float x, float y, float z, int topouterradius,int topinnerradious, int buttomouterradious, int buttominnerradious, int h, glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f), int segmentnum = 32, bool isFilled = true);
+	void drawTubeTrapezodial(float x, float y, float z, int topouterradius, int topinnerradious, int buttomouterradious, int buttominnerradious, int h, glm::vec3 scale, int segmentnum, float rotateAngle, float axisX, float axisY, float axisZ, bool isFilled = true);
 	void drawTubeObliqueTrapezodial(float x, float y, float z, int topouterradius,int topinnerradious, int buttomouterradious, int buttominnerradious, int h, glm::vec2 shiftdistance, glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f), int segmentnum = 32, bool isFilled = true);
+	void drawTubeObliqueTrapezodial(float x, float y, float z, int topouterradius, int topinnerradious, int buttomouterradious, int buttominnerradious, int h, glm::vec2 shiftdistance, glm::vec3 scale, int segmentnum, float rotateAngle, float axisX, float axisY, float axisZ, bool isFilled = true);
 
 protected:
 	friend class gRenderObject;
@@ -782,6 +812,93 @@ protected:
 	std::unique_ptr<gRectangle> rectanglemesh;
 	std::unique_ptr<gRoundedRectangle> roundedrectanglemesh;
 	std::unique_ptr<gBox> boxmesh;
+	std::unique_ptr<gBox> boxlinemesh;
+
+
+	// ---------------- SPHERE CACHE ----------------
+	struct SphereMeshCacheEntry {
+		int xSegmentNum;
+		int ySegmentNum;
+		bool isFilled;
+		std::unique_ptr<gSphere> mesh;
+	};
+
+	std::vector<SphereMeshCacheEntry> spheremeshcache;
+
+	gSphere* getSphereMesh(
+			int xSegmentNum,
+			int ySegmentNum,
+			bool isFilled
+	);
+
+	// ---------------- CYLINDER CACHE ----------------
+	struct CylinderMeshCacheEntry {
+		int r1;
+		int r2;
+		int h;
+		glm::vec2 shiftdistance;
+		int segmentnum;
+		bool isFilled;
+		std::unique_ptr<gCylinder> mesh;
+	};
+
+	std::vector<CylinderMeshCacheEntry> cylindermeshcache;
+
+	gCylinder* getCylinderMesh(
+			int r1,
+			int r2,
+			int h,
+			const glm::vec2& shiftdistance,
+			int segmentnum,
+			bool isFilled
+	);
+
+	// ---------------- CONE CACHE ----------------
+	struct ConeMeshCacheEntry {
+		int r;
+		int h;
+		glm::vec2 shiftdistance;
+		int segmentnum;
+		bool isFilled;
+		std::unique_ptr<gCone> mesh;
+	};
+
+	std::vector<ConeMeshCacheEntry> conemeshcache;
+
+	gCone* getConeMesh(
+			int r,
+			int h,
+			const glm::vec2& shiftdistance,
+			int segmentnum,
+			bool isFilled
+	);
+
+	// ---------------- TUBE CACHE ----------------
+	struct TubeMeshCacheEntry {
+		int topOuterRadius;
+		int topInnerRadius;
+		int bottomOuterRadius;
+		int bottomInnerRadius;
+		int h;
+		glm::vec2 shiftdistance;
+		int segmentnum;
+		bool isFilled;
+		std::unique_ptr<gTube> mesh;
+	};
+
+	std::vector<TubeMeshCacheEntry> tubemeshcache;
+
+	gTube* getTubeMesh(
+			int topOuterRadius,
+			int topInnerRadius,
+			int bottomOuterRadius,
+			int bottomInnerRadius,
+			int h,
+			const glm::vec2& shiftdistance,
+			int segmentnum,
+			bool isFilled
+	);
+
 	//std::unique_ptr<gArrow> arrowmesh;
 
 	virtual void init();
