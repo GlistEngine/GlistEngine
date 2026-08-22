@@ -209,8 +209,8 @@ void gGUIRadioButton::draw() {
 		for(int i = 0; i < buttoncount; i++) {
 			renderer->setColor(fontcolor);
 //			getFont()->drawText(title, left + buttonradius * 2 + 2, top - 2 + (buttonradius * 2 + titleh) / 2 - textmargin + i * lineheightlimit);
-			getFont()->drawText(titles[i], left + buttonradius * 2 + 2 + (i % columncount) * maxradiowidth,
-					top - 2 + titleh + buttonradius + titleh / 2 + i / columncount * lineheightlimit + inity);
+			getFont()->drawText(titles[i], left + buttonradius * 2 + 8 + (i % columncount) * maxradiowidth,
+					top + 2 + titleh + buttonradius + titleh / 2 + i / columncount * lineheightlimit + inity);
 
 			index++;
 		}
