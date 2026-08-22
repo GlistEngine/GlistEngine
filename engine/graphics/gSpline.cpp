@@ -26,6 +26,7 @@
 #include "gRenderer.h"
 
 #include <algorithm>
+#include <cmath>
 
 gSpline::gSpline()
 	: degree(3), resolution(50), is3D(false) {
@@ -172,6 +173,30 @@ glm::vec3 gSpline::getPoint(float t) const {
 glm::vec2 gSpline::getPoint2D(float t) const {
 	glm::vec3 point = getPoint(t);
 	return glm::vec2(point.x, point.y);
+}
+
+float gSpline::getSlope(float t) const {
+	if (points.size() < 2) {
+		return 0.0f;
+	}
+
+	constexpr float epsilon = 0.0001f;
+
+	float normalizedt = std::max(0.0f, std::min(1.0f, t));
+	float previoust = std::max(0.0f, normalizedt - epsilon);
+	float nextt = std::min(1.0f, normalizedt + epsilon);
+
+	glm::vec3 tangent = getPoint(nextt) - getPoint(previoust);
+
+	float lengthSquared =
+			tangent.x * tangent.x
+			+ tangent.y * tangent.y;
+
+	if (lengthSquared <= 0.000000000001f) {
+		return 0.0f;
+	}
+
+	return std::atan2(tangent.y, tangent.x);
 }
 
 void gSpline::setResolution(int resolution) {

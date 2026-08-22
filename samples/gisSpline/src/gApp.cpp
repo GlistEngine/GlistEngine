@@ -1,12 +1,8 @@
 /*
  * gApp.cpp
  *
- * Created on: May 6, 2020
- * Original Author: Noyan Culum
- *
- * gisSpline Sample
  * Created on: Aug 21, 2026
- * Sample Authors: Bahar Kucukozer, Mehmet Sefa Ciftci
+ * Authors: Bahar Kucukozer, Mehmet Sefa Ciftci
  */
 
 #include "gApp.h"
