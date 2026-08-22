@@ -113,8 +113,13 @@ gGUITextbox::gGUITextbox() {
 	textcolor = fontcolor;
 	colorset = false;
 	isdisabled = false;
-	cursoroffset = 10.0f;
+	charawidth = 0;
+	cursoroffset = 0.0f;
 	textfont = getFont();
+	if(textfont) {
+		charawidth = textfont->getStringWidth("a");
+		cursoroffset = charawidth / 2.0f;
+	}
 	setTextAlignment(textalignment, boxw, initx);
 
 	widthexceeded = false;
@@ -138,7 +143,8 @@ void gGUITextbox::set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseG
 	bottomlimit = bottom;
 	textfont = appmanager->getGUIManager()->getFont(gGUIManager::FONT_FREESANS);
 	lineheight = textfont->getStringHeight("ly");
-	cursoroffset = textfont->getStringWidth("a") * 0.2f;
+	charawidth = textfont ? textfont->getStringWidth("a") : 8;
+	cursoroffset = charawidth / 2.0f;
 	boxw = w;
 	if(!ismultiline) {
 		boxh = std::max(24, lineheight + std::max(6, (int)(lineheight * 0.4f)));
@@ -691,7 +697,11 @@ void gGUITextbox::draw() {
 			cursorTop = lineTextY - fontAscent - 1;
 			cursorBottom = lineTextY + fontDescent + 1;
 		}
-		int cursorOffset = (cursorposx > 0) ? 1 : 0;
+		if(charawidth <= 0 && textfont) {
+			charawidth = textfont->getStringWidth("a");
+			cursoroffset = charawidth / 2.0f;
+		}
+		int cursorOffset = (cursorposx > 0) ? (int)cursoroffset : 0;
 		int cursorDrawX = textDrawX + cursorposx + cursorOffset;
 		gDrawLine(cursorDrawX, cursorTop, cursorDrawX, cursorBottom);
 	}
@@ -2533,6 +2543,10 @@ int gGUITextbox::getInitX() {
 
 void gGUITextbox::setTextFont(gFont* textFont) {
 	textfont = textFont;
+	if(textfont) {
+		charawidth = textfont->getStringWidth("a");
+		cursoroffset = charawidth / 2.0f;
+	}
 	if(!text.empty()) {
 		letterlength.clear();
 		letterpos.clear();
