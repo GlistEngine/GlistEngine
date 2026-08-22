@@ -104,7 +104,7 @@ var searchData=
   ['iscellaligned_101',['iscellaligned',['../structgGUIGrid_1_1Cell.html#aafb69ff4b9eeac0a91b0745b2562997f',1,'gGUIGrid::Cell']]],
   ['iscellselected_102',['iscellselected',['../structgGUIGrid_1_1Cell.html#a6170b43a3ab5613efeb3a37edf1b01aa',1,'gGUIGrid::Cell']]],
   ['ischanged_103',['isChanged',['../classgLight.html#aa0d0476dc74d772414f4e34f86a1ab9b',1,'gLight']]],
-  ['ischecked_104',['ischecked',['../classgGUICheckbox.html#af6f69912b760b299f4938d1d8492f57d',1,'gGUICheckbox::isChecked()'],['../classgGUICheckbox.html#a63b5679a895d6c53a434f82f7e4c5102',1,'gGUICheckbox::ischecked']]],
+  ['ischecked_104',['ischecked',['../classgGUICheckbox.html#a63b5679a895d6c53a434f82f7e4c5102',1,'gGUICheckbox::ischecked'],['../classgGUICheckbox.html#af6f69912b760b299f4938d1d8492f57d',1,'gGUICheckbox::isChecked()']]],
   ['iscolorchanged_105',['iscolorchanged',['../structgGUIGrid_1_1Cell.html#a518d8ccdeb424362f8f58d16e9aa6b13',1,'gGUIGrid::Cell']]],
   ['isconditiontriggered_106',['isconditiontriggered',['../classgSpriteAnimation.html#a8ee3903d20f4805edaabf923756058c1',1,'gSpriteAnimation::isConditionTriggered()'],['../classgAnimationTrigger.html#a7a760476cf8664941377f3e3f65d27ae',1,'gAnimationTrigger::isConditionTriggered()']]],
   ['isconfigured_107',['isConfigured',['../classgBitmapFont.html#a9519c42ee6c6a459e55023de0707b1a9',1,'gBitmapFont']]],

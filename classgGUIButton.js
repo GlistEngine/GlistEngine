@@ -2,6 +2,7 @@ var classgGUIButton =
 [
     [ "gGUIButton", "classgGUIButton.html#a7b90be1901678d113003118e3f3ee988", null ],
     [ "~gGUIButton", "classgGUIButton.html#ac56d78d8ec99d201e4674e2608006c2d", null ],
+    [ "calculateContentHeight", "classgGUIButton.html#a6bc4d5b66e668a1a2a44200ff114e480", null ],
     [ "draw", "classgGUIButton.html#a5b22d95d81faa128345bf23ebb225a35", null ],
     [ "enableBackgroundFill", "classgGUIButton.html#a36bce056e4faea77f1557a6461d7e0eb", null ],
     [ "getButtonColor", "classgGUIButton.html#abac60733c5081405963a97c21b712bdf", null ],
