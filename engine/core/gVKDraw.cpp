@@ -397,17 +397,14 @@ void gvkDrawMesh3D(gVKContext& ctx, VkBuffer vertexBuffer, VkDeviceSize vertexOf
 	const VkBool32 depthenabled = depthTest ? VK_TRUE : VK_FALSE;
 	const VkCompareOp depthcompare = depthTestAlways ? VK_COMPARE_OP_ALWAYS : VK_COMPARE_OP_LESS;
 	if(ctx.shouldSetDepthState(depthenabled, depthenabled, depthcompare)) {
-		vkCmdSetDepthTestEnable(cmd, depthenabled);
-		vkCmdSetDepthWriteEnable(cmd, depthenabled);
-		vkCmdSetDepthCompareOp(cmd, depthcompare);
+		ctx.cmdSetDepthState(cmd, depthenabled, depthenabled, depthcompare);
 	}
 	// The mesh's own draw mode, within the class the bound pipeline was built for.
-	if(ctx.shouldSetTopology(topology)) vkCmdSetPrimitiveTopology(cmd, topology);
+	if(ctx.shouldSetTopology(topology)) ctx.cmdSetTopology(cmd, topology);
 	// Culling follows the renderer too, and both states have to be set because the
 	// 3D pipelines declare them dynamic.
 	if(ctx.shouldSetCullState(culling.mode, culling.frontface)) {
-		vkCmdSetCullMode(cmd, culling.mode);
-		vkCmdSetFrontFace(cmd, culling.frontface);
+		ctx.cmdSetCullState(cmd, culling.mode, culling.frontface);
 	}
 
 	// Camera and lights, the same for every mesh in the frame. Bound per draw rather
@@ -507,16 +504,13 @@ void gvkDrawShadowCaster(gVKContext& ctx, VkBuffer vertexBuffer, VkDeviceSize ve
 	// and a caster that skipped the test would leave the wrong distance in it. The
 	// scene's own enableDepthTest deliberately has no say.
 	if(ctx.shouldSetDepthState(VK_TRUE, VK_TRUE, VK_COMPARE_OP_LESS)) {
-		vkCmdSetDepthTestEnable(cmd, VK_TRUE);
-		vkCmdSetDepthWriteEnable(cmd, VK_TRUE);
-		vkCmdSetDepthCompareOp(cmd, VK_COMPARE_OP_LESS);
+		ctx.cmdSetDepthState(cmd, VK_TRUE, VK_TRUE, VK_COMPARE_OP_LESS);
 	}
-	if(ctx.shouldSetTopology(topology)) vkCmdSetPrimitiveTopology(cmd, topology);
+	if(ctx.shouldSetTopology(topology)) ctx.cmdSetTopology(cmd, topology);
 	// Casters are never culled, whatever the scene asked for: a shadow wants the
 	// whole silhouette, and dropping back faces would punch holes in it.
 	if(ctx.shouldSetCullState(VK_CULL_MODE_NONE, VK_FRONT_FACE_CLOCKWISE)) {
-		vkCmdSetCullMode(cmd, VK_CULL_MODE_NONE);
-		vkCmdSetFrontFace(cmd, VK_FRONT_FACE_CLOCKWISE);
+		ctx.cmdSetCullState(cmd, VK_CULL_MODE_NONE, VK_FRONT_FACE_CLOCKWISE);
 	}
 
 	const uint32_t instances = static_cast<uint32_t>(instanceCount < 1 ? 1 : instanceCount);
@@ -557,14 +551,11 @@ void gvkDrawMesh3DPbr(gVKContext& ctx, VkBuffer vertexBuffer, VkDeviceSize verte
 	const VkBool32 depthenabled = depthTest ? VK_TRUE : VK_FALSE;
 	const VkCompareOp depthcompare = depthTestAlways ? VK_COMPARE_OP_ALWAYS : VK_COMPARE_OP_LESS;
 	if(ctx.shouldSetDepthState(depthenabled, depthenabled, depthcompare)) {
-		vkCmdSetDepthTestEnable(cmd, depthenabled);
-		vkCmdSetDepthWriteEnable(cmd, depthenabled);
-		vkCmdSetDepthCompareOp(cmd, depthcompare);
+		ctx.cmdSetDepthState(cmd, depthenabled, depthenabled, depthcompare);
 	}
-	if(ctx.shouldSetTopology(topology)) vkCmdSetPrimitiveTopology(cmd, topology);
+	if(ctx.shouldSetTopology(topology)) ctx.cmdSetTopology(cmd, topology);
 	if(ctx.shouldSetCullState(culling.mode, culling.frontface)) {
-		vkCmdSetCullMode(cmd, culling.mode);
-		vkCmdSetFrontFace(cmd, culling.frontface);
+		ctx.cmdSetCullState(cmd, culling.mode, culling.frontface);
 	}
 
 	// Three sets: the scene block, the whole material, and the shadow map.
@@ -655,12 +646,10 @@ void gvkDrawSkyboxFace(gVKContext& ctx, VkDescriptorSet faceSet, const float* xy
 	// Depth is tested but never written: the sky sits behind everything, and letting
 	// it claim depth would hide geometry drawn after it.
 	if(ctx.shouldSetDepthState(VK_TRUE, VK_FALSE, depthCompare)) {
-		vkCmdSetDepthTestEnable(cmd, VK_TRUE);
-		vkCmdSetDepthWriteEnable(cmd, VK_FALSE);
-		vkCmdSetDepthCompareOp(cmd, depthCompare);
+		ctx.cmdSetDepthState(cmd, VK_TRUE, VK_FALSE, depthCompare);
 	}
 	if(ctx.shouldSetTopology(VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST)) {
-		vkCmdSetPrimitiveTopology(cmd, VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST);
+		ctx.cmdSetTopology(cmd, VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST);
 	}
 
 	VkBuffer vbuf = ctx.getCurrentDynamicVertexBuffer();

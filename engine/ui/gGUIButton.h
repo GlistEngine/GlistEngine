@@ -50,6 +50,7 @@ public:
 
 	int getButtonWidth();
 	int getButtonHeight();
+	int calculateContentHeight() override;
 
 	virtual void update();
 	virtual void draw();

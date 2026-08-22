@@ -56,6 +56,14 @@ public:
 
 	glm::vec2 getPoint2D(float t) const;
 
+	//Gets the tangent (derivative) vector at time t [0.0 - 1.0]. Not normalized. Requires exactly 3 points; returns (0,0,0) otherwise.
+	glm::vec3 getTangent(float t) const;
+
+	glm::vec2 getTangent2D(float t) const;
+
+	//Gets the curve's slope angle at time t [0.0 - 1.0], in radians, measured in the XY plane (atan2 of the tangent's Y and X).
+	float getAngle(float t) const;
+
 	//Sets rendering resolution (number of segments).
 	void setResolution(int res);
 
