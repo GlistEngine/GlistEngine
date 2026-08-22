@@ -100,7 +100,7 @@ void gGUICheckbox::draw() {
 	if (istextvisible) {
 		if(isdisabled) renderer->setColor(disabledbcolor);
 		else renderer->setColor(fontcolor);
-		getFont()->drawText(title, left + buttonw, top - 2 + (buttonh + titleh) / 2 - 1);
+		getFont()->drawText(title, left + buttonw + 6, top - 2 + (buttonh + titleh) / 2 - 1);
 		renderer->setColor(255, 255, 255);
 	}
 }
