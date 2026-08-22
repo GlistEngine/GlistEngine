@@ -274,6 +274,10 @@ int gGUIButton::getButtonHeight() {
 	return buttonh;
 }
 
+int gGUIButton::calculateContentHeight() {
+	return buttonh;
+}
+
 void gGUIButton::setButtonh(int buttonh) {
 	this->buttonh = buttonh;
 }

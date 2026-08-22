@@ -90,7 +90,7 @@ gGUITextbox::gGUITextbox() {
 	currentline = 1;
 	linecount = 1;
 	lastdrawnline = 1;
-	linetopmargin = 4;
+	linetopmargin = 1;
 	lines.clear();
 	lines.push_back("");
 	leftlimit = 0;
@@ -142,13 +142,13 @@ void gGUITextbox::set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseG
 	boxw = w;
 	if(!ismultiline) {
 		boxh = 24;
-		totalh = h;
-		if (hdiff > 0) hdiff = boxh / 4;
+		totalh = boxh;
+		hdiff = 0;
 	} else {
 		boxh = lineheight + linetopmargin;
 		totalh = h;
 		hdiff = 0;
-		rowsnum = totalh / boxh;
+		rowsnum = (totalh - 6) / boxh;
 		if(rowsnum < 1) rowsnum = 1;
 	}
 	setTextAlignment(textalignment, boxw, initx);
@@ -328,7 +328,7 @@ void gGUITextbox::setLineCount(int linecount) {
 	if(linecount > 1) {
 		ismultiline = true;
 		boxh = lineheight + linetopmargin;
-		totalh = boxh * linecount;
+		totalh = boxh * linecount + 6;
 		lines.clear();
 		calculateLines();
 	}
@@ -545,11 +545,11 @@ bool gGUITextbox::isBackgroundEnabled() {
 void gGUITextbox::draw() {
 	gColor oldcolor = *renderer->getColor();
 	if(isbackgroundenabled) {
+		renderer->setColor(textbackgroundcolor);
+		gDrawRectangle(left, top + hdiff, width, totalh, true);
 		renderer->setColor(foregroundcolor);
 		gDrawRectangle(left, top + hdiff, width, totalh, false);
 	}
-	renderer->setColor(textbackgroundcolor);
-	gDrawRectangle(left, top + hdiff, width, totalh, true);
 
 	if(selectionmode && !text.empty()) {
 		if(isfocused) renderer->setColor(255, 128, 0);
@@ -592,8 +592,8 @@ void gGUITextbox::draw() {
 						if(selStart < selEnd && boxW <= 0) boxW = 6;
 
 						int rectX = left + initx + x1 - firstx;
-						int rectY = top + hdiff + visible_i * (lineheight + linetopmargin) + linetopmargin / 2 - firsty + 1;
-						gDrawRectangle(rectX, rectY, boxW + 2, lineheight + linetopmargin + 3, true);
+						int rectY = top + hdiff + 2 + visible_i * (lineheight + linetopmargin) - firsty;
+						gDrawRectangle(rectX, rectY, boxW + 2, lineheight + linetopmargin + 1, true);
 					}
 				}
 			}
@@ -634,17 +634,17 @@ void gGUITextbox::draw() {
 		for(int i = 0; i < rowsnum; i++) {
 			int line_idx = i + (lastdrawnline - rowsnum) * rowsnumexceeded;
 			if(line_idx < 0 || line_idx >= (int) lines.size()) continue;
-			textfont->drawText(lines[line_idx], left - textfont->getStringWidth(" ") / 2 - firstx + textalignmentamount - (textfont->getStringWidth(text) * ((float) textalignment / 2)), top + hdiff + i * (lineheight + linetopmargin) + lineheight + linetopmargin / 2 - firsty);
+			textfont->drawText(lines[line_idx], left - textfont->getStringWidth(" ") / 2 - firstx + textalignmentamount - (textfont->getStringWidth(text) * ((float) textalignment / 2)), top + hdiff + 2 + i * (lineheight + linetopmargin) + lineheight - firsty);
 		}
 	}
 
 	if(editmode && (cursorshowcounter <= cursorshowlimit || keystate)) {
 		int linebottom = 0;
-		if(currentline <= rowsnum && lastdrawnline <= rowsnum) linebottom = top + hdiff + (currentline - 1) * (lineheight + linetopmargin) + lineheight + linetopmargin / 2 - firsty;
+		if(currentline <= rowsnum && lastdrawnline <= rowsnum) linebottom = top + hdiff + 2 + (currentline - 1) * (lineheight + linetopmargin) + lineheight - firsty;
 		else
-			linebottom = top + hdiff + (rowsnum - (lastdrawnline - currentline) - 1) * (lineheight + linetopmargin) + lineheight + linetopmargin / 2 - firsty;
+			linebottom = top + hdiff + 2 + (rowsnum - (lastdrawnline - currentline) - 1) * (lineheight + linetopmargin) + lineheight - firsty;
 		gDrawLine(left + cursorposx - firstx + textalignmentamount - (textfont->getStringWidth(text) * ((float) textalignment / 2)), linebottom - lineheight,
-				  left + cursorposx - firstx + textalignmentamount - (textfont->getStringWidth(text) * ((float) textalignment / 2)), linebottom + lineheight * 2 / 3);
+				  left + cursorposx - firstx + textalignmentamount - (textfont->getStringWidth(text) * ((float) textalignment / 2)), linebottom + 2);
 	}
 	if (isfocused && selectionmode && selectionposchar1 != selectionposchar2) {
 		if (!isselectionmenushown) {
@@ -809,10 +809,9 @@ void gGUITextbox::handleKeys() {
 	if(isdisabled) return;
 	if(keypresstime >= 0) {
 		keypresstime++;
-		if(keypresstime >= keypresstimelimit2) keypresstime = keypresstimelimit1;
-
-		if(keypresstime == 1 || keypresstime == keypresstimelimit1) {
+		if(keypresstime >= keypresstimelimit1) {
 			pressKey();
+			keypresstime = keypresstimelimit1 - 5;
 		}
 		return;
 	}
@@ -2507,7 +2506,8 @@ void gGUITextbox::setEditMode(bool editMode) {
 }
 
 int gGUITextbox::calculateContentHeight() {
-	return totalh;
+	if(!ismultiline) return boxh;
+	return rowsnum * boxh + 6;
 }
 
 void gGUITextbox::resetCursorPosition() {
