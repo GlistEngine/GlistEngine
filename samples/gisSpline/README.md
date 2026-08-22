@@ -6,7 +6,9 @@ An interactive sample demonstrating the `gSpline` class and its clamped, uniform
 
 The video below demonstrates control-point dragging, degree adjustment, animation controls, slope visualization and reset functionality.
 
-<!-- The demonstration video will be added here. -->
+
+https://github.com/user-attachments/assets/b44a0b28-37e2-49e6-ac22-7c5318dcf3ce
+
 
 ## Features
 
