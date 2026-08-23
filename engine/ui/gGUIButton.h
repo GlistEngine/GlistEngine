@@ -15,7 +15,7 @@ class gGUIButton: public gGUIControl {
 public:
 
 	gGUIButton();
-	virtual ~gGUIButton();
+	virtual ~gGUIButton() override;
 
 	void setTitle(std::string title);
 	void setSize(int width, int height);
@@ -52,15 +52,15 @@ public:
 	int getButtonHeight();
 	int calculateContentHeight() override;
 
-	virtual void update();
-	virtual void draw();
+	void update() override;
+	void draw() override;
 
-	virtual void mousePressed(int x, int y, int button);
-	virtual void mouseReleased(int x, int y, int button);
-	virtual void mouseMoved(int x, int y);
-	virtual void mouseDragged(int x, int y, int button);
-	virtual void mouseEntered();
-	virtual void mouseExited();
+	void mousePressed(int x, int y, int button) override;
+	void mouseReleased(int x, int y, int button) override;
+	void mouseMoved(int x, int y) override;
+	void mouseDragged(int x, int y, int button) override;
+	void mouseEntered() override;
+	void mouseExited() override;
 	void setButtonh(int buttonh);
 	void setButtonw(int buttonw);
 
