@@ -88,13 +88,13 @@ class gGUIContextMenuItem: public gGUIControl {
 public:
 
 	gGUIContextMenuItem(std::string text, gImage* menuIcon, bool seperatorAdded);
-	~gGUIContextMenuItem();
+	virtual ~gGUIContextMenuItem() override;
 
 	virtual void drawMenuItem();
 
-	void mouseMoved(int x, int y);
-	void mousePressed(int x, int y, int button);
-	void mouseReleased(int x, int y, int button);
+	void mouseMoved(int x, int y) override;
+	void mousePressed(int x, int y, int button) override;
+	void mouseReleased(int x, int y, int button) override;
 
 	/**
 	 * Returns item id.
@@ -216,9 +216,9 @@ class gGUIContextMenu : public gGUIContextMenuItem {
 public:
 
 	gGUIContextMenu();
-	virtual ~gGUIContextMenu();
+	virtual ~gGUIContextMenu() override;
 
-	void draw();
+	void draw() override;
 
 private:
 	std::vector<gGUIContextMenuItem> items;

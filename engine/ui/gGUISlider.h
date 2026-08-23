@@ -52,13 +52,13 @@
 class gGUISlider: public gGUIControl {
 public:
 	gGUISlider();
-	virtual ~gGUISlider();
+	virtual ~gGUISlider() override;
 
-	void update();
-	void draw();
-	void mousePressed(int x, int y, int button);
-	void mouseReleased(int x, int y, int button);
-	void mouseDragged(int x, int y, int button);
+	void update() override;
+	void draw() override;
+	void mousePressed(int x, int y, int button) override;
+	void mouseReleased(int x, int y, int button) override;
+	void mouseDragged(int x, int y, int button) override;
 
 	/**
 	 * Returns the current width of the sliderbar.
@@ -209,7 +209,7 @@ public:
 	bool isPressed();
 	bool isSliderPressed();
 
-	virtual void set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIObject* parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h);
+	void set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIObject* parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h) override;
 
 	friend class gGUIToolbar;
 

@@ -22,9 +22,9 @@
 class gGUIDropdownList: public gGUIContainer {
 public:
 	gGUITreelist list;
-	virtual void onGUIEvent(int guiObjectId, int eventType, int sourceEventType, std::string value1 = "", std::string value2 = "") override;
+	void onGUIEvent(int guiObjectId, int eventType, int sourceEventType, std::string value1 = "", std::string value2 = "") override;
 	gGUIDropdownList();
-	virtual ~gGUIDropdownList();
+	virtual ~gGUIDropdownList() override;
 	void set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIObject* parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h) override;
 	void draw() override;
 	void setParentFrame(gGUIForm* form);
