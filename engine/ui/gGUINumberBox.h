@@ -60,6 +60,8 @@ public:
 
 	void setDisabled(bool isDisabled);
 
+	gGUITextbox* getTextbox() { return &textbox; }
+
 	int calculateContentHeight() override;
 private:
 	int boxwidth, boxheight, numboxwidth, numboxheight, smalboxwidth, smalboxheight;
