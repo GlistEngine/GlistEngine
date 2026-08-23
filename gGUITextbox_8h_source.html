@@ -333,25 +333,26 @@ $(document).ready(function(){initNavTree('gGUITextbox_8h_source.html',''); initR
 <div class="line"><a id="l00365" name="l00365"></a><span class="lineno">  365</span>    <a class="code hl_class" href="classgColor.html">gColor</a>* textcolor;</div>
 <div class="line"><a id="l00366" name="l00366"></a><span class="lineno">  366</span>    <span class="keywordtype">bool</span> colorset;</div>
 <div class="line"><a id="l00367" name="l00367"></a><span class="lineno">  367</span>    <span class="keywordtype">bool</span> isdisabled;</div>
-<div class="line"><a id="l00368" name="l00368"></a><span class="lineno">  368</span>    <span class="keywordtype">float</span> cursoroffset;</div>
-<div class="line"><a id="l00369" name="l00369"></a><span class="lineno">  369</span> </div>
-<div class="line"><a id="l00370" name="l00370"></a><span class="lineno">  370</span>    <span class="keywordtype">bool</span> widthexceeded;</div>
-<div class="line"><a id="l00371" name="l00371"></a><span class="lineno">  371</span>    <span class="keywordtype">int</span> widthAdjusmentDelay;</div>
-<div class="line"><a id="l00372" name="l00372"></a><span class="lineno">  372</span> </div>
-<div class="line"><a id="l00373" name="l00373"></a><span class="lineno">  373</span>    <a class="code hl_class" href="classgGUIText.html">gGUIText</a> hinttext;</div>
-<div class="line"><a id="l00374" name="l00374"></a><span class="lineno">  374</span>    <a class="code hl_class" href="classgColor.html">gColor</a> hinttextcolor;</div>
-<div class="line"><a id="l00375" name="l00375"></a><span class="lineno">  375</span>    </div>
-<div class="line"><a id="l00376" name="l00376"></a><span class="lineno">  376</span>    <span class="comment">//undo stacks</span></div>
-<div class="line"><a id="l00377" name="l00377"></a><span class="lineno">  377</span>    std::stack&lt;std::string&gt; undostack;</div>
-<div class="line"><a id="l00378" name="l00378"></a><span class="lineno">  378</span>    std::stack&lt;int&gt; cursorposxstack, cursorposystack, cursorposcharstack, cursorposutfstack;</div>
-<div class="line"><a id="l00379" name="l00379"></a><span class="lineno">  379</span>    std::stack&lt;int&gt; firstutfstack, firstcharstack, firstposxstack;</div>
-<div class="line"><a id="l00380" name="l00380"></a><span class="lineno">  380</span>    std::stack&lt;int&gt; currentlinestack, lastdrawnlinestack,linecountstack;</div>
-<div class="line"><a id="l00381" name="l00381"></a><span class="lineno">  381</span> </div>
-<div class="line"><a id="l00382" name="l00382"></a><span class="lineno">  382</span>    <span class="keywordtype">void</span> pushToStack();</div>
-<div class="line"><a id="l00383" name="l00383"></a><span class="lineno">  383</span>};</div>
+<div class="line"><a id="l00368" name="l00368"></a><span class="lineno">  368</span>    <span class="keywordtype">int</span> charawidth;</div>
+<div class="line"><a id="l00369" name="l00369"></a><span class="lineno">  369</span>    <span class="keywordtype">float</span> cursoroffset;</div>
+<div class="line"><a id="l00370" name="l00370"></a><span class="lineno">  370</span> </div>
+<div class="line"><a id="l00371" name="l00371"></a><span class="lineno">  371</span>    <span class="keywordtype">bool</span> widthexceeded;</div>
+<div class="line"><a id="l00372" name="l00372"></a><span class="lineno">  372</span>    <span class="keywordtype">int</span> widthAdjusmentDelay;</div>
+<div class="line"><a id="l00373" name="l00373"></a><span class="lineno">  373</span> </div>
+<div class="line"><a id="l00374" name="l00374"></a><span class="lineno">  374</span>    <a class="code hl_class" href="classgGUIText.html">gGUIText</a> hinttext;</div>
+<div class="line"><a id="l00375" name="l00375"></a><span class="lineno">  375</span>    <a class="code hl_class" href="classgColor.html">gColor</a> hinttextcolor;</div>
+<div class="line"><a id="l00376" name="l00376"></a><span class="lineno">  376</span>    </div>
+<div class="line"><a id="l00377" name="l00377"></a><span class="lineno">  377</span>    <span class="comment">//undo stacks</span></div>
+<div class="line"><a id="l00378" name="l00378"></a><span class="lineno">  378</span>    std::stack&lt;std::string&gt; undostack;</div>
+<div class="line"><a id="l00379" name="l00379"></a><span class="lineno">  379</span>    std::stack&lt;int&gt; cursorposxstack, cursorposystack, cursorposcharstack, cursorposutfstack;</div>
+<div class="line"><a id="l00380" name="l00380"></a><span class="lineno">  380</span>    std::stack&lt;int&gt; firstutfstack, firstcharstack, firstposxstack;</div>
+<div class="line"><a id="l00381" name="l00381"></a><span class="lineno">  381</span>    std::stack&lt;int&gt; currentlinestack, lastdrawnlinestack,linecountstack;</div>
+<div class="line"><a id="l00382" name="l00382"></a><span class="lineno">  382</span> </div>
+<div class="line"><a id="l00383" name="l00383"></a><span class="lineno">  383</span>    <span class="keywordtype">void</span> pushToStack();</div>
+<div class="line"><a id="l00384" name="l00384"></a><span class="lineno">  384</span>};</div>
 </div>
-<div class="line"><a id="l00384" name="l00384"></a><span class="lineno">  384</span> </div>
-<div class="line"><a id="l00385" name="l00385"></a><span class="lineno">  385</span><span class="preprocessor">#endif </span><span class="comment">/* UI_GGUITEXTBOX_H_ */</span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00385" name="l00385"></a><span class="lineno">  385</span> </div>
+<div class="line"><a id="l00386" name="l00386"></a><span class="lineno">  386</span><span class="preprocessor">#endif </span><span class="comment">/* UI_GGUITEXTBOX_H_ */</span><span class="preprocessor"></span></div>
 <div class="ttc" id="aclassgBaseApp_html"><div class="ttname"><a href="classgBaseApp.html">gBaseApp</a></div><div class="ttdef"><b>Definition</b> gBaseApp.h:16</div></div>
 <div class="ttc" id="aclassgBaseGUIObject_html"><div class="ttname"><a href="classgBaseGUIObject.html">gBaseGUIObject</a></div><div class="ttdef"><b>Definition</b> gBaseGUIObject.h:18</div></div>
 <div class="ttc" id="aclassgBaseGUIObject_html_a122728db7360f9a172fe1fa60c998978"><div class="ttname"><a href="classgBaseGUIObject.html#a122728db7360f9a172fe1fa60c998978">gBaseGUIObject::top</a></div><div class="ttdeci">int top</div><div class="ttdef"><b>Definition</b> gBaseGUIObject.h:124</div></div>
