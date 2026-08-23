@@ -11,6 +11,7 @@ var classgGUINumberBox =
     [ "getInteger", "classgGUINumberBox.html#a4227476b1272f22335d2eb54d38c207c", null ],
     [ "getIntegerIncrement", "classgGUINumberBox.html#aa5d3b72ac600bbe88dd0f9ed38ca706e", null ],
     [ "getText", "classgGUINumberBox.html#a05f9ebcb8dad1760d0b3fcfbae840ee5", null ],
+    [ "getTextbox", "classgGUINumberBox.html#a589deecffb7f4332b99c74a6efac80c6", null ],
     [ "keyPressed", "classgGUINumberBox.html#adae394feac7a2b985bb97b0687522151", null ],
     [ "keyReleased", "classgGUINumberBox.html#a5d725a91dc0944d65487cd09351ec764", null ],
     [ "mouseDragged", "classgGUINumberBox.html#aa8b14eb00fa77807906f94a6253ff59f", null ],

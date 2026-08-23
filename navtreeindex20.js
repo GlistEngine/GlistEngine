@@ -1,5 +1,6 @@
 var NAVTREEINDEX20 =
 {
+"gVKShadow_8h.html#a6773abab06eb00a68180c0e31b16e330":[2,0,0,2,27,0],
 "gVKShadow_8h_source.html":[2,0,0,2,27],
 "gVKSwapchain_8h.html":[2,0,0,2,28],
 "gVKSwapchain_8h.html#aac0c5cbc1bfc30d705dcce39ef32fe6e":[2,0,0,2,28,0],
@@ -57,8 +58,8 @@ var NAVTREEINDEX20 =
 "globals_b.html":[2,1,0,2],
 "globals_c.html":[2,1,0,3],
 "globals_d.html":[2,1,0,4],
-"globals_defs.html":[2,1,6,0],
 "globals_defs.html":[2,1,6],
+"globals_defs.html":[2,1,6,0],
 "globals_defs_c.html":[2,1,6,1],
 "globals_defs_e.html":[2,1,6,2],
 "globals_defs_g.html":[2,1,6,3],
@@ -248,6 +249,5 @@ var NAVTREEINDEX20 =
 "tinyfiledialogs_8c.html#a2369e180c58a73d4861bb0130cd82dab":[2,0,0,7,0,0,25],
 "tinyfiledialogs_8c.html#a26568df53ae8a94f7ffbf5a267c9a6ae":[2,0,0,7,0,0,31],
 "tinyfiledialogs_8c.html#a3fce7991af06249434ec2e2c3e6ce6cc":[2,0,0,7,0,0,11],
-"tinyfiledialogs_8c.html#a460e8b223e71d9e54e6e6d288a865156":[2,0,0,7,0,0,3],
-"tinyfiledialogs_8c.html#a47f8aa977cd899f2e44c677491cb1a5d":[2,0,0,7,0,0,4]
+"tinyfiledialogs_8c.html#a460e8b223e71d9e54e6e6d288a865156":[2,0,0,7,0,0,3]
 };
