@@ -13,7 +13,7 @@
 class gGUILine : public gGUIControl {
 public:
 	gGUILine();
-	virtual ~gGUILine();
+	virtual ~gGUILine() override;
 
 	void setLineColor(gColor color);
 	gColor getLineColor();
@@ -24,7 +24,7 @@ public:
 	void setVertical(bool isVertical);
 	bool isVertical();
 
-	virtual void draw();
+	void draw() override;
 
 private:
 	gColor linecolor;

@@ -16,7 +16,7 @@
 class gGUINumberBox: public gGUIContainer {
 public:
 	gGUINumberBox();
-	virtual ~gGUINumberBox();
+	virtual ~gGUINumberBox() override;
 
 	void set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIObject* parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h) override;
 	virtual void set(int x, int y, int w, int h);

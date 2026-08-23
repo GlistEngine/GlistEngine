@@ -68,7 +68,7 @@
 class gGUIScrollable: public gGUIControl {
 public:
 	gGUIScrollable();
-	virtual ~gGUIScrollable();
+	virtual ~gGUIScrollable() override;
 
 	/*
 	 * Makes scrollbars visible or invisible. For using scrollable function in
@@ -88,7 +88,7 @@ public:
 
 	void updateScrollbar();
 
-	void draw();
+	void draw() override;
 
 	/*
 	 * Draws contents of class. But it is empty for now, must be overrided in
@@ -110,19 +110,19 @@ public:
 	 *
 	 *	@param h is the new height value.
 	 */
-	virtual void windowResized(int w, int h);
+	void windowResized(int w, int h) override;
 
-	virtual void mouseMoved(int x, int y);
-	virtual void mousePressed(int x, int y, int button);
-	virtual void mouseDragged(int x, int y, int button);
-	virtual void mouseReleased(int x, int y, int button);
+	void mouseMoved(int x, int y) override;
+	void mousePressed(int x, int y, int button) override;
+	void mouseDragged(int x, int y, int button) override;
+	void mouseReleased(int x, int y, int button) override;
 
 	/*
 	 * Makes the scroll movement according to coordinate of the mouse. When mouse
 	 * used for scroll, it changed some values of box that we draw.
 	 *
 	 */
-	virtual void mouseScrolled(int x, int y);
+	void mouseScrolled(int x, int y) override;
 
 	int getVerticalScroll();
 

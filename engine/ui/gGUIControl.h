@@ -30,14 +30,14 @@ class gGUIControl: public gBaseGUIObject {
 public:
 
 	gGUIControl();
-	virtual ~gGUIControl();
+	virtual ~gGUIControl() override;
 
 	virtual void set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIObject* parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h);
 
-	virtual int getCursor(int x, int y);
+	int getCursor(int x, int y) override;
 
-	virtual void update();
-	virtual void draw();
+	void update() override;
+	void draw() override;
 
 	virtual int calculateContentHeight() {
 		return height;

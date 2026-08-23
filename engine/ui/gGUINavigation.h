@@ -17,12 +17,12 @@
 class gGUINavigation: public gGUIScrollable {
 public:
 	gGUINavigation();
-	virtual ~gGUINavigation();
+	virtual ~gGUINavigation() override;
 
-	virtual void set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIObject* parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h);
+	void set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIObject* parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h) override;
 
-	virtual void update();
-	virtual void draw();
+	void update() override;
+	void draw() override;
 
 	void addPane(gGUIPane* newPane, bool isEnabled = true);
 	void setPane(int paneNo, gGUIPane* newPane, bool isEnabled = true);
@@ -39,12 +39,12 @@ public:
 
 	void showPane(gGUIPane* paneToShow);
 
-	virtual void mousePressed(int x, int y, int button);
-	virtual void mouseReleased(int x, int y, int button);
-	virtual void mouseMoved(int x, int y);
-	virtual void mouseDragged(int x, int y, int button);
-	virtual void mouseEntered();
-	virtual void mouseExited();
+	void mousePressed(int x, int y, int button) override;
+	void mouseReleased(int x, int y, int button) override;
+	void mouseMoved(int x, int y) override;
+	void mouseDragged(int x, int y, int button) override;
+	void mouseEntered() override;
+	void mouseExited() override;
 
 	void enableToolbar();
 	void enableBottomBar();

@@ -53,7 +53,7 @@ public:
 	static const int TYPE_ITEM = 0, TYPE_SEPERATOR = 1;
 
 	gGUIMenuItem(std::string text);
-	~gGUIMenuItem();
+	virtual ~gGUIMenuItem() override;
 
 /**
  * Gets the menubar's items id.
@@ -112,7 +112,7 @@ public:
 
 	gGUIMenuItem* findChild(int itemId);
 
-	virtual void draw();
+	void draw() override;
 
 /**
  * Sets icon to the menubar items. User can load their own icons with this
@@ -133,10 +133,10 @@ public:
  */
 	void setMenuicon(int menuItemId, int icon);
 
-	void mouseMoved(int x, int y);
-	void mousePressed(int x, int y, int button);
-	void mouseReleased(int x, int y, int button);
-	void update();
+	void mouseMoved(int x, int y) override;
+	void mousePressed(int x, int y, int button) override;
+	void mouseReleased(int x, int y, int button) override;
+	void update() override;
 
 	void resInitialize();
 	int menuboxx, menuboxy, menuboxw, menuboxh;
@@ -175,9 +175,9 @@ class gGUIMenubar : public gGUIMenuItem {
 public:
 
 	gGUIMenubar();
-	virtual ~gGUIMenubar();
+	virtual ~gGUIMenubar() override;
 
-	void draw();
+	void draw() override;
 
 /*
 	int addMenuItem(std::string text);

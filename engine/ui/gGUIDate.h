@@ -13,9 +13,9 @@
 class gGUIDate: public gGUIControl {
 public:
 	gGUIDate();
-	virtual ~gGUIDate();
+	virtual ~gGUIDate() override;
 	virtual void setup();
-	virtual void draw();
+	void draw() override;
 
 	void drawCalendar(int month, int year);
 	void setSize(int w, int h);
