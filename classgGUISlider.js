@@ -1,8 +1,8 @@
 var classgGUISlider =
 [
     [ "gGUISlider", "classgGUISlider.html#af0283b147a1c6d9e7ceb489047b86fa4", null ],
-    [ "~gGUISlider", "classgGUISlider.html#aa276531cc458e54b32270fe4904b4669", null ],
-    [ "draw", "classgGUISlider.html#a282e76f48dbec7aaf476e778fec174a5", null ],
+    [ "~gGUISlider", "classgGUISlider.html#afc26a29433c9777d808445f99818c81c", null ],
+    [ "draw", "classgGUISlider.html#ab7b58c9e0ec91665be2888fa1c14984b", null ],
     [ "getCurrentValue", "classgGUISlider.html#a33939f1305f392a45dbda4fa837b05b9", null ],
     [ "getDisabledColor", "classgGUISlider.html#ab2bf1bd0c8ac6e66f16fa46c9cc1311c", null ],
     [ "getMaxValue", "classgGUISlider.html#a7b00cb5cf61f38b52da43e2a68e95949", null ],
@@ -17,10 +17,10 @@ var classgGUISlider =
     [ "isPressed", "classgGUISlider.html#afb44641fbf0026a90cb11c5376deaaa7", null ],
     [ "isSliderPressed", "classgGUISlider.html#a3cfd48ce0e03ec1a94c309162ae0d01e", null ],
     [ "isTickVisible", "classgGUISlider.html#a80b7f2023af55449c9eed2d3cf1673d4", null ],
-    [ "mouseDragged", "classgGUISlider.html#a227be15f18cff63ea1d7d6deb1429877", null ],
-    [ "mousePressed", "classgGUISlider.html#a180e9bf1b15d7f3860d914ea1310cbce", null ],
-    [ "mouseReleased", "classgGUISlider.html#a01a2e35d7605f05a387136aa5b2e62e2", null ],
-    [ "set", "classgGUISlider.html#a640e609d9677d5a8f884e4c226a5f0dd", null ],
+    [ "mouseDragged", "classgGUISlider.html#a949dd3cd8735c9457620fb2b6bddea8b", null ],
+    [ "mousePressed", "classgGUISlider.html#a920e186df0e473866a45feeaad5c5529", null ],
+    [ "mouseReleased", "classgGUISlider.html#a545a9f874197d7a2d5ac04154e5c42a7", null ],
+    [ "set", "classgGUISlider.html#a2d1c98708e913bf310ced871c74d561e", null ],
     [ "setDisabled", "classgGUISlider.html#af9332dd1d66f23978cc65cbf2152c537", null ],
     [ "setDisabledColor", "classgGUISlider.html#a75ab3fdcb318fe5fe20bc8abfc8d176a", null ],
     [ "setMaxValue", "classgGUISlider.html#a7854ed0d56b659e4f3b6b59b7423334b", null ],
@@ -32,6 +32,6 @@ var classgGUISlider =
     [ "setTickColor", "classgGUISlider.html#a3706b3c780c71fa80b8d1421485d1ebd", null ],
     [ "setTicknum", "classgGUISlider.html#ae452156060aa909b7b0554e6a0b0b5d0", null ],
     [ "setTickVisibility", "classgGUISlider.html#a0827b92935e668275ba4ede35ae02b6b", null ],
-    [ "update", "classgGUISlider.html#a5fd4f5877a1e6b0ee94221f983a78042", null ],
+    [ "update", "classgGUISlider.html#ab86b75994ba4d7ec28630ba9fccb558e", null ],
     [ "gGUIToolbar", "classgGUISlider.html#abca0955883a4320f4ed9965d71443713", null ]
 ];

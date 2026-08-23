@@ -1,9 +1,9 @@
 var classgGUIGraph =
 [
     [ "gGUIGraph", "classgGUIGraph.html#a61adfa9e54a68eb97dc4c158c21fdf12", null ],
-    [ "~gGUIGraph", "classgGUIGraph.html#ae91ce270173055f11a1d792def6eb3ed", null ],
+    [ "~gGUIGraph", "classgGUIGraph.html#a3cc398baff44d8438fb83a30df9f589c", null ],
     [ "clear", "classgGUIGraph.html#acd6d25a2d14f358027f06a36292f712e", null ],
-    [ "draw", "classgGUIGraph.html#aa75e83f42eed80a72a65614cc353121e", null ],
+    [ "draw", "classgGUIGraph.html#a831c5eb3fced276e43c01bbf6d6f7c91", null ],
     [ "enableBackground", "classgGUIGraph.html#a02523f8f7bb9ee7a028dd0bbf9776411", null ],
     [ "enableGridlinesX", "classgGUIGraph.html#a5d0d0569a5100a9f07950aafdd1ac9d5", null ],
     [ "enableGridlinesY", "classgGUIGraph.html#aed707c32ccf671c32854eb55da910541", null ],
@@ -19,7 +19,7 @@ var classgGUIGraph =
     [ "getTitleX", "classgGUIGraph.html#adfa889f351af143e53fb1915d8bf3891", null ],
     [ "getTitleY", "classgGUIGraph.html#aa87305bbd215f59f00c825b576ee6443", null ],
     [ "isBackgroundEnabled", "classgGUIGraph.html#a219ee83a30efcf70e428a36d0bddf397", null ],
-    [ "set", "classgGUIGraph.html#a510db11d39ee50ea46d6a98befe1b687", null ],
+    [ "set", "classgGUIGraph.html#af3c223a870997df1ed5331c297fadfd5", null ],
     [ "setAxislinesEnable", "classgGUIGraph.html#a4e0147e20111e5e0ceb07c334a53c147", null ],
     [ "setLabelCountX", "classgGUIGraph.html#aed1c2d6c01a9df41e6798c38ca88e9b1", null ],
     [ "setLabelCountY", "classgGUIGraph.html#a029c150e6b53f4702fcc806a9f7f8d3e", null ],

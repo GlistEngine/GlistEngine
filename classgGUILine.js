@@ -1,8 +1,8 @@
 var classgGUILine =
 [
     [ "gGUILine", "classgGUILine.html#acff4262d2ec312efc78737c7055c023b", null ],
-    [ "~gGUILine", "classgGUILine.html#a8010d95a72fda8398e1724cebec47734", null ],
-    [ "draw", "classgGUILine.html#a243104bb86e0f701973898b999beb3bc", null ],
+    [ "~gGUILine", "classgGUILine.html#adecc6039c25a953727cd2a2781a7d31b", null ],
+    [ "draw", "classgGUILine.html#a524bff598cba9b97b90be21a7de26350", null ],
     [ "getLineColor", "classgGUILine.html#a87866a6b1a1db9fdc59e4a5bb51575d8", null ],
     [ "getThickness", "classgGUILine.html#ad94a95c33e02013bb9dc0ebf31dac326", null ],
     [ "isVertical", "classgGUILine.html#af6870c0dede60df5bfaa81baf081f233", null ],
