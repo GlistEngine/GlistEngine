@@ -56,6 +56,7 @@ public:
 
 	glm::vec3 getPoint(float t) const;
 	glm::vec2 getPoint2D(float t) const;
+	float getSlope(float t) const;
 
 	void setResolution(int resolution);
 	int getResolution() const;

@@ -176,7 +176,7 @@ void gCanvas::drawMarker() {
 
 void gCanvas::drawInterface() {
 	setColor(240, 249, 255);
-	titlefont.drawText("B-SPLINE PLAYGROUND", 54, 62);
+    titlefont.drawText("gSPLINE PLAYGROUND", 54, 62);
 
 	setColor(148, 163, 184);
 	bodyfont.drawText(
