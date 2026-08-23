@@ -52,7 +52,7 @@ var searchData=
   ['_7egguiappthread_49',['~gGUIAppThread',['../classgGUIAppThread.html#aea4274d441779b7dd53d2991d2498354',1,'gGUIAppThread']]],
   ['_7egguibitmap_50',['~gGUIBitmap',['../classgGUIBitmap.html#abf9c0fce13593408b7816be48fa4fe0f',1,'gGUIBitmap']]],
   ['_7egguiboxplot_51',['~gGUIBoxPlot',['../classgGUIBoxPlot.html#ab66b4646ac6bf20b2808400c1edd9e28',1,'gGUIBoxPlot']]],
-  ['_7egguibutton_52',['~gGUIButton',['../classgGUIButton.html#ac56d78d8ec99d201e4674e2608006c2d',1,'gGUIButton']]],
+  ['_7egguibutton_52',['~gGUIButton',['../classgGUIButton.html#a9d5ea4bd557ca08e05ed0106e8587bed',1,'gGUIButton']]],
   ['_7egguicandlestickchart_53',['~gGUICandleStickChart',['../classgGUICandleStickChart.html#a559200bd7991ad4b9033b7f742162dd3',1,'gGUICandleStickChart']]],
   ['_7egguicheckbox_54',['~gGUICheckbox',['../classgGUICheckbox.html#a362bd5e575d6ea6cfed4db9a927ace0e',1,'gGUICheckbox']]],
   ['_7egguicolorbox_55',['~gGUIColorbox',['../classgGUIColorbox.html#a61ae0376e62e333fdfc454b6493a0473',1,'gGUIColorbox']]],
