@@ -365,6 +365,7 @@ private:
 	gColor* textcolor;
 	bool colorset;
 	bool isdisabled;
+	int charawidth;
     float cursoroffset;
 
 	bool widthexceeded;
