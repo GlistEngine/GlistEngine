@@ -14,6 +14,7 @@ var classgSpline =
     [ "getPoints", "classgSpline.html#af91c646962743ea862a920fa344200cf", null ],
     [ "getPoints2D", "classgSpline.html#ae1c439c5d805c249e2d82df6b0a8a324", null ],
     [ "getResolution", "classgSpline.html#a7afeee47819ba38dabed24aba90445f8", null ],
+    [ "getSlope", "classgSpline.html#a53ab88bcf0560d639a74d3adcd1dfe03", null ],
     [ "setDegree", "classgSpline.html#a2fe295a2087a3b1b71775ecf25fd7932", null ],
     [ "setPoint", "classgSpline.html#a78f60ebd06fd23fc39efeb4f9278fef8", null ],
     [ "setPoint", "classgSpline.html#a765d3a170c71953429d2d919827b0abb", null ],

@@ -157,27 +157,28 @@ $(document).ready(function(){initNavTree('gSpline_8h_source.html',''); initResiz
 <div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span> </div>
 <div class="line"><a id="l00057" name="l00057"></a><span class="lineno"><a class="line" href="classgSpline.html#a29ab4f547b46e760508ec52b6e2a3a78">   57</a></span>    glm::vec3 <a class="code hl_function" href="classgSpline.html#a29ab4f547b46e760508ec52b6e2a3a78">getPoint</a>(<span class="keywordtype">float</span> t) <span class="keyword">const</span>;</div>
 <div class="line"><a id="l00058" name="l00058"></a><span class="lineno"><a class="line" href="classgSpline.html#aadfe91b65bf3a306912aa2639e949ba8">   58</a></span>    glm::vec2 <a class="code hl_function" href="classgSpline.html#aadfe91b65bf3a306912aa2639e949ba8">getPoint2D</a>(<span class="keywordtype">float</span> t) <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span> </div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno"><a class="line" href="classgSpline.html#a4c5f95a5638b2e7306ba30588daec705">   60</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classgSpline.html#a4c5f95a5638b2e7306ba30588daec705">setResolution</a>(<span class="keywordtype">int</span> resolution);</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno"><a class="line" href="classgSpline.html#a7afeee47819ba38dabed24aba90445f8">   61</a></span>    <span class="keywordtype">int</span> <a class="code hl_function" href="classgSpline.html#a7afeee47819ba38dabed24aba90445f8">getResolution</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span> </div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno"><a class="line" href="classgSpline.html#ad3ee41d09086c97453f8e8c02bdc8a7d">   63</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classgSpline.html#ad3ee41d09086c97453f8e8c02bdc8a7d">draw</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span> </div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    <span class="keywordtype">int</span> getEffectiveDegree() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    <span class="keywordtype">void</span> updateKnotVector();</div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    <span class="keywordtype">int</span> findSpan(<span class="keywordtype">float</span> t) <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span> </div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    std::vector&lt;glm::vec3&gt; points;</div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>    std::vector&lt;float&gt; knots;</div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span> </div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>    <span class="keywordtype">int</span> degree;</div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    <span class="keywordtype">int</span> resolution;</div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>    <span class="keywordtype">bool</span> is3D;</div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>};</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno"><a class="line" href="classgSpline.html#a53ab88bcf0560d639a74d3adcd1dfe03">   59</a></span>    <span class="keywordtype">float</span> <a class="code hl_function" href="classgSpline.html#a53ab88bcf0560d639a74d3adcd1dfe03">getSlope</a>(<span class="keywordtype">float</span> t) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span> </div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno"><a class="line" href="classgSpline.html#a4c5f95a5638b2e7306ba30588daec705">   61</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classgSpline.html#a4c5f95a5638b2e7306ba30588daec705">setResolution</a>(<span class="keywordtype">int</span> resolution);</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno"><a class="line" href="classgSpline.html#a7afeee47819ba38dabed24aba90445f8">   62</a></span>    <span class="keywordtype">int</span> <a class="code hl_function" href="classgSpline.html#a7afeee47819ba38dabed24aba90445f8">getResolution</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span> </div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno"><a class="line" href="classgSpline.html#ad3ee41d09086c97453f8e8c02bdc8a7d">   64</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classgSpline.html#ad3ee41d09086c97453f8e8c02bdc8a7d">draw</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span> </div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    <span class="keywordtype">int</span> getEffectiveDegree() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    <span class="keywordtype">void</span> updateKnotVector();</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>    <span class="keywordtype">int</span> findSpan(<span class="keywordtype">float</span> t) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span> </div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>    std::vector&lt;glm::vec3&gt; points;</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    std::vector&lt;float&gt; knots;</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span> </div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    <span class="keywordtype">int</span> degree;</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>    <span class="keywordtype">int</span> resolution;</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>    <span class="keywordtype">bool</span> is3D;</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>};</div>
 </div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span> </div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span><span class="preprocessor">#endif </span><span class="comment">/* GRAPHICS_GSPLINE_H_ */</span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span> </div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span><span class="preprocessor">#endif </span><span class="comment">/* GRAPHICS_GSPLINE_H_ */</span><span class="preprocessor"></span></div>
 <div class="ttc" id="aclassgMesh_html"><div class="ttname"><a href="classgMesh.html">gMesh</a></div><div class="ttdef"><b>Definition</b> gMesh.h:27</div></div>
 <div class="ttc" id="aclassgSpline_html"><div class="ttname"><a href="classgSpline.html">gSpline</a></div><div class="ttdef"><b>Definition</b> gSpline.h:32</div></div>
 <div class="ttc" id="aclassgSpline_html_a08f0fc926b4426036b9477fe20c53f1b"><div class="ttname"><a href="classgSpline.html#a08f0fc926b4426036b9477fe20c53f1b">gSpline::addPoint</a></div><div class="ttdeci">void addPoint(glm::vec2 point)</div></div>
@@ -187,6 +188,7 @@ $(document).ready(function(){initNavTree('gSpline_8h_source.html',''); initResiz
 <div class="ttc" id="aclassgSpline_html_a482ebfeb6ee9977d1fa5cc28614a3da1"><div class="ttname"><a href="classgSpline.html#a482ebfeb6ee9977d1fa5cc28614a3da1">gSpline::addPoint</a></div><div class="ttdeci">void addPoint(glm::vec3 point)</div></div>
 <div class="ttc" id="aclassgSpline_html_a4bc0c6632beacb6dfacd9e8f9d377570"><div class="ttname"><a href="classgSpline.html#a4bc0c6632beacb6dfacd9e8f9d377570">gSpline::clearPoints</a></div><div class="ttdeci">void clearPoints()</div></div>
 <div class="ttc" id="aclassgSpline_html_a4c5f95a5638b2e7306ba30588daec705"><div class="ttname"><a href="classgSpline.html#a4c5f95a5638b2e7306ba30588daec705">gSpline::setResolution</a></div><div class="ttdeci">void setResolution(int resolution)</div></div>
+<div class="ttc" id="aclassgSpline_html_a53ab88bcf0560d639a74d3adcd1dfe03"><div class="ttname"><a href="classgSpline.html#a53ab88bcf0560d639a74d3adcd1dfe03">gSpline::getSlope</a></div><div class="ttdeci">float getSlope(float t) const</div></div>
 <div class="ttc" id="aclassgSpline_html_a6eb627c4ce6f6c1315dba3f61b81ec02"><div class="ttname"><a href="classgSpline.html#a6eb627c4ce6f6c1315dba3f61b81ec02">gSpline::getDegree</a></div><div class="ttdeci">int getDegree() const</div></div>
 <div class="ttc" id="aclassgSpline_html_a765d3a170c71953429d2d919827b0abb"><div class="ttname"><a href="classgSpline.html#a765d3a170c71953429d2d919827b0abb">gSpline::setPoint</a></div><div class="ttdeci">void setPoint(const std::vector&lt; glm::vec3 &gt; &amp;points)</div></div>
 <div class="ttc" id="aclassgSpline_html_a78f60ebd06fd23fc39efeb4f9278fef8"><div class="ttname"><a href="classgSpline.html#a78f60ebd06fd23fc39efeb4f9278fef8">gSpline::setPoint</a></div><div class="ttdeci">void setPoint(const std::vector&lt; glm::vec2 &gt; &amp;points)</div></div>
