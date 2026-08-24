@@ -1044,11 +1044,13 @@ void gVKRenderEngine::deleteFullscreenQuad(GLuint& vao, GLuint* vbo) {
  * which remembers which shader and which name it meant. That keeps gShader's
  * whole call path, including its own value caching, working unchanged.
  */
+#ifdef GVK_VULKAN
 struct gvkUniformSlot {
 	gVKUserShaderId shader = GVK_NO_USER_SHADER;
 	std::string name;
 };
 static std::vector<gvkUniformSlot> gvkuniformslots;
+#endif
 
 // The same value glGetUniformLocation returns for a name a program does not have.
 static constexpr GLuint GVK_NO_UNIFORM = static_cast<GLuint>(-1);
@@ -1077,6 +1079,7 @@ static gVKRenderEngine* gvkactiveengine = nullptr;
  * So the handles are parked here and destroyed at the start of a later frame,
  * past the fence wait and the command buffer reset that clear the reference.
  */
+#ifdef GVK_VULKAN
 struct gVKRetiredPass {
 	VkRenderPass renderpass = VK_NULL_HANDLE;
 	std::vector<VkFramebuffer> framebuffers;
@@ -1098,8 +1101,10 @@ static void gvkSetUniform(GLuint location, const void* data, gVKMemberComponent 
 	if(slot == nullptr) return;
 	gvkSetUserShaderValue(slot->shader, slot->name, data, component, rows, columns);
 }
+#endif
 
 GLuint gVKRenderEngine::loadProgram(const char* vertexSource, const char* fragmentSource, const char* geometrySource) {
+#ifdef GVK_VULKAN
 	if(vkcontext == nullptr) return 0;
 	if(geometrySource != nullptr && geometrySource[0] != '\0') {
 		// A geometry stage is legal Vulkan but is not supported on Metal through
@@ -1114,6 +1119,10 @@ GLuint gVKRenderEngine::loadProgram(const char* vertexSource, const char* fragme
 			fragmentSource != nullptr ? fragmentSource : "",
 			gvkshadervertexpath, gvkshaderfragmentpath);
 	return static_cast<GLuint>(id);
+#else
+	(void) vertexSource; (void) fragmentSource; (void) geometrySource;
+	return 0;
+#endif
 }
 
 void gVKRenderEngine::setShaderSourcePaths(const std::string& vertexPath, const std::string& fragmentPath) {
@@ -1147,6 +1156,7 @@ void gVKRenderEngine::checkCompileErrors(GLuint shader, const std::string& type)
 #endif
 }
 
+#ifdef GVK_VULKAN
 void gVKRenderEngine::setBool(GLuint uniformloc, bool value) {
 	// A GLSL bool occupies four bytes in a uniform block, exactly as a uint does,
 	// so it travels as one.
@@ -1253,6 +1263,24 @@ void gVKRenderEngine::resetShader(GLuint id, bool loaded) const {
 	vkDeviceWaitIdle(*vkcontext->getDevice());
 	gvkDestroyUserShader(*vkcontext, static_cast<gVKUserShaderId>(id));
 }
+#else
+void gVKRenderEngine::setBool(GLuint uniformloc, bool value) { (void)uniformloc; (void)value; }
+void gVKRenderEngine::setInt(GLuint uniformloc, int value) { (void)uniformloc; (void)value; }
+void gVKRenderEngine::setUnsignedInt(GLuint uniformloc, unsigned int value) { (void)uniformloc; (void)value; }
+void gVKRenderEngine::setFloat(GLuint uniformloc, float value) { (void)uniformloc; (void)value; }
+void gVKRenderEngine::setVec2(GLuint uniformloc, const glm::vec2& value) { (void)uniformloc; (void)value; }
+void gVKRenderEngine::setVec2(GLuint uniformloc, float x, float y) { (void)uniformloc; (void)x; (void)y; }
+void gVKRenderEngine::setVec3(GLuint uniformloc, const glm::vec3& value) { (void)uniformloc; (void)value; }
+void gVKRenderEngine::setVec3(GLuint uniformloc, float x, float y, float z) { (void)uniformloc; (void)x; (void)y; (void)z; }
+void gVKRenderEngine::setVec4(GLuint uniformloc, const glm::vec4& value) { (void)uniformloc; (void)value; }
+void gVKRenderEngine::setVec4(GLuint uniformloc, float x, float y, float z, float w) { (void)uniformloc; (void)x; (void)y; (void)z; (void)w; }
+void gVKRenderEngine::setMat2(GLuint uniformloc, const glm::mat2& mat) { (void)uniformloc; (void)mat; }
+void gVKRenderEngine::setMat3(GLuint uniformloc, const glm::mat3& mat) { (void)uniformloc; (void)mat; }
+void gVKRenderEngine::setMat4(GLuint uniformloc, const glm::mat4& mat) { (void)uniformloc; (void)mat; }
+GLuint gVKRenderEngine::getUniformLocation(GLuint id, const std::string& name) { (void)id; (void)name; return GVK_NO_UNIFORM; }
+void gVKRenderEngine::useShader(GLuint id) const { (void)id; }
+void gVKRenderEngine::resetShader(GLuint id, bool loaded) const { (void)id; (void)loaded; }
+#endif
 
 void gVKRenderEngine::clearScreen(bool color, bool depth) {
 	#ifdef GVK_VULKAN
@@ -2324,6 +2352,7 @@ void gVKRenderEngine::cleanupVulkan() {
 }
 
 
+#ifdef GVK_VULKAN
 static void gvkRetireFramebufferPass(gVKContext* vkcontext, gVKFramebuffer* target) {
 	if(target == nullptr || vkcontext == nullptr || *vkcontext->getDevice() == VK_NULL_HANDLE) return;
 	if(target->renderpass == VK_NULL_HANDLE && target->levelframebuffers.empty()) return;
@@ -2360,6 +2389,7 @@ static void gvkDrainRetiredPasses(gVKContext* vkcontext, bool force) {
 		retiredpasses.erase(retiredpasses.begin() + i);
 	}
 }
+#endif
 
 bool gVKRenderEngine::beginFrame() {
 #ifdef GVK_VULKAN
