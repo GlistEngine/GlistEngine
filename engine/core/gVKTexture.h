@@ -17,10 +17,17 @@
 
 #ifdef GVK_VULKAN
 
+#include <vector>
+
 struct gVKTexture {
 	VkImage image = VK_NULL_HANDLE;
 	VkDeviceMemory memory = VK_NULL_HANDLE;
 	VkImageView view = VK_NULL_HANDLE;
+	// One view per mip level, for a render target whose levels are drawn into
+	// individually - a bloom pyramid does exactly that. A framebuffer attachment
+	// has to name a single level, which `view` (spanning the whole chain, so it can
+	// be sampled with textureLod) cannot do. Empty for a single-level texture.
+	std::vector<VkImageView> levelviews;
 	VkSampler sampler = VK_NULL_HANDLE;
 	uint64_t samplerkey = 0;
 	VkDescriptorSet descriptorset = VK_NULL_HANDLE;
@@ -86,7 +93,13 @@ bool gvkSetTextureSampler(gVKContext& ctx, gVKTexture* tex, VkFilter minFilter, 
 // attachments. Unlike an uploaded texture this carries no pixels and no mip chain:
 // the render pass clears it, the draws fill it, and it is transitioned back to
 // SHADER_READ_ONLY afterwards so the same object can be sampled.
-gVKTexture* gvkCreateAttachmentTexture(gVKContext& ctx, int width, int height, bool depth);
+// mipLevels above 1 allocates the whole chain and gives every level a view of its
+// own, so each can be rendered into while the texture as a whole stays sampleable.
+// transferDst additionally makes the image a legal destination for a copy, which is
+// what the screen restore texture needs - it is filled by copying the resolved
+// swapchain image into it rather than by being drawn into.
+gVKTexture* gvkCreateAttachmentTexture(gVKContext& ctx, int width, int height, bool depth,
+		int mipLevels = 1, bool transferDst = false);
 
 void gvkDestroyTexture(gVKContext& ctx, gVKTexture* tex);
 

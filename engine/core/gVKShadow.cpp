@@ -224,8 +224,6 @@ bool gvkCreateShadowResources(gVKContext& ctx, uint32_t width, uint32_t height) 
 		return false;
 	}
 
-	gLogi("gVKShadow") << "Shadow map created: " << width << "x" << height
-			<< ", format " << ctx.shadowformat;
 	return true;
 }
 
@@ -298,6 +296,8 @@ bool gvkBeginShadowPass(gVKContext& ctx) {
 	VkRect2D scissor{{0, 0}, ctx.shadowextent};
 	vkCmdSetScissor(cmd, 0, 1, &scissor);
 
+	// Positive viewport above, so nothing is mirrored here.
+	ctx.passflipsy = false;
 	ctx.renderpassactive = true;
 	ctx.shadowpassactive = true;
 	return true;
@@ -308,6 +308,8 @@ void gvkEndShadowPass(gVKContext& ctx) {
 	vkCmdEndRenderPass(ctx.commandbuffers[ctx.currentframe]);
 	ctx.renderpassactive = false;
 	ctx.shadowpassactive = false;
+	// The screen pass is what the scene pass opens next, and it mirrors y.
+	ctx.passflipsy = true;
 }
 
 #endif /* GVK_VULKAN */

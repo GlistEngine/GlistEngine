@@ -115,6 +115,13 @@ gRenderer* gRenderObject::getRenderer() {
 
 void gRenderObject::createRenderer(int renderEngine) {
 	destroyRenderer(); // Delete the previous renderer if exists. If renderer is null, this will have no effect.
+#ifdef EMSCRIPTEN
+	// Web builds render through WebGL, which is exposed through the OpenGL ES API.
+	// Normalize here at the renderer factory boundary as well as in the window
+	// setup, so a direct createRenderer(G_RENDERER_VK) call cannot construct the
+	// Vulkan stub or leave renderenginetype disagreeing with the actual backend.
+	renderEngine = G_RENDERER_GL;
+#endif
 	if(renderEngine == G_RENDERER_VK) {
 		renderer = new gVKRenderEngine();
 	} else {

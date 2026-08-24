@@ -52,8 +52,6 @@ bool gvkCreateCommandResources(gVKContext& ctx) {
 		return false;
 	}
 
-	gLogi("gVKCommands") << "Command pool created with " << ctx.commandbuffers.size()
-			<< " primary command buffers on queue family " << ctx.graphicsfamily;
 	return true;
 }
 

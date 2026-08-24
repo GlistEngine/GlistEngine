@@ -85,12 +85,53 @@ bool gvkCompileShaderFile(const std::string& fileName, VkShaderStageFlagBits sta
 	return !spirv.empty();
 }
 
+bool gvkCompileShaderSource(const std::string& source, VkShaderStageFlagBits stage,
+		const std::string& debugName, std::vector<uint32_t>& spirv) {
+	if(source.empty()) return false;
+
+	shaderc_shader_kind kind;
+	switch(stage) {
+	case VK_SHADER_STAGE_VERTEX_BIT: kind = shaderc_vertex_shader; break;
+	case VK_SHADER_STAGE_FRAGMENT_BIT: kind = shaderc_fragment_shader; break;
+	case VK_SHADER_STAGE_GEOMETRY_BIT: kind = shaderc_geometry_shader; break;
+	case VK_SHADER_STAGE_COMPUTE_BIT: kind = shaderc_compute_shader; break;
+	default:
+		gLoge("gVKShaderCompiler") << "Unsupported shader stage for " << debugName;
+		return false;
+	}
+
+	shaderc::Compiler compiler;
+	shaderc::CompileOptions options;
+	options.SetTargetEnvironment(shaderc_target_env_vulkan, shaderc_env_version_vulkan_1_2);
+	options.SetOptimizationLevel(shaderc_optimization_level_performance);
+	// Keeps OpName and OpMemberName, which is what makes setFloat("name", v) able
+	// to find anything. Optimisation still runs.
+	options.SetGenerateDebugInfo();
+
+	shaderc::SpvCompilationResult result = compiler.CompileGlslToSpv(source, kind, debugName.c_str(), options);
+	if(result.GetCompilationStatus() != shaderc_compilation_status_success) {
+		gLoge("gVKShaderCompiler") << debugName << ": " << result.GetErrorMessage();
+		return false;
+	}
+	spirv.assign(result.cbegin(), result.cend());
+	return !spirv.empty();
+}
+
 #else
 
 bool gvkCompileShaderFile(const std::string& fileName, VkShaderStageFlagBits stage,
 		std::vector<uint32_t>& spirv) {
 	(void)fileName;
 	(void)stage;
+	(void)spirv;
+	return false;
+}
+
+bool gvkCompileShaderSource(const std::string& source, VkShaderStageFlagBits stage,
+		const std::string& debugName, std::vector<uint32_t>& spirv) {
+	(void)source;
+	(void)stage;
+	(void)debugName;
 	(void)spirv;
 	return false;
 }

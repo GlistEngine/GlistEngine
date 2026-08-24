@@ -47,6 +47,8 @@ public:
 	void clear() override;
 	void clearColor(int r, int g, int b, int a = 255) override;
 	void clearColor(gColor color) override;
+	// Records a clear into the pass that is already open; see the note in the .cpp.
+	void clearColorNow(float r, float g, float b, float a);
 
 	// Takes the camera's OpenGL-style projection and stores the Vulkan equivalent.
 	// See gVKRenderEngine.cpp for what the correction is and why the Y axis is not
@@ -130,6 +132,7 @@ public:
 	/* -------------- gShader --------------- */
 	// This function loads shaders without preproccesing them. Geometry source can be nullptr.
 	GLuint loadProgram(const char* vertexSource, const char* fragmentSource, const char* geometrySource) override;
+	void setShaderSourcePaths(const std::string& vertexPath, const std::string& fragmentPath) override;
 	void checkCompileErrors(GLuint shader, const std::string& type) override;
 	void setBool(GLuint uniformloc, bool value) override;
 	void setInt(GLuint uniformloc, int value) override;
@@ -300,6 +303,13 @@ private:
 	std::unordered_map<GLuint, gVKTexture*> vktextures;
 	GLuint nextvktextureid = 1;
 	GLuint boundtextureid = 0;
+	// What each texture unit holds. The engine's own draws read only the one texture
+	// bound last, which is what boundtextureid is for, but a user shader can declare
+	// several samplers and point each at a unit of its own - so the units have to be
+	// remembered separately rather than collapsed onto the last bind.
+	static constexpr int GVK_TEXTURE_UNITS = 8;
+	GLuint boundtextureunits[GVK_TEXTURE_UNITS] = {};
+	int activetextureunit = 0;
 	// Offscreen render targets, one per gFbo. Each owns a render pass and a
 	// framebuffer of its own, the same shape the shadow map already uses, because
 	// this backend renders through render passes rather than dynamic rendering.
@@ -400,6 +410,8 @@ private:
 	// The Vulkan texture behind the currently bound id, or null when there is none
 	// yet - gTexture sets filtering and wrapping both before and after the upload.
 	gVKTexture* getBoundVKTexture();
+	// The texture bound to one unit, for gVKUserShader's sampler resolution.
+	gVKTexture* getVKTextureAtUnit(int unit);
 
 	// Applies a pending setMultiSampling at a frame boundary: everything the sample
 	// count is baked into - the render pass, the depth and MSAA attachments, the

@@ -744,6 +744,18 @@ void gTexture::endDraw() {
 			uvoffset = subpos / subscale;
 			uvscale = 1.0f / subscale;
 		}
+		// setupRenderData below builds two different vertex tables: a render target
+		// and an HDR image pair the quad's top with the *lower* v, every other
+		// texture pairs it with the higher one. The Vulkan quad is built once, from
+		// this offset and scale alone, so the distinction has to be made here
+		// instead - by walking the v range backwards, which is the same mirroring
+		// that table does. A render target holds its rows in the opposite order to a
+		// loaded image on both backends, so this is not a Vulkan quirk being papered
+		// over: it is the same rule, expressed where the Vulkan path can act on it.
+		if(isfbo || ishdr) {
+			uvoffset.y += uvscale.y;
+			uvscale.y = -uvscale.y;
+		}
 		// The image pipeline always blends. Below, the OpenGL path turns blending on
 		// for the formats that need it and leaves it alone otherwise, so a tint alpha
 		// only reaches the screen when one of those two holds; forcing it to 1 in the

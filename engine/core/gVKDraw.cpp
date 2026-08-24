@@ -3,6 +3,7 @@
  */
 
 #include "gVKDraw.h"
+#include "gVKUserShader.h"
 
 #ifdef GVK_VULKAN
 
@@ -50,7 +51,6 @@ bool gvkEnsureMeshArena(gVKContext& ctx, VkDeviceSize capacity) {
 		}
 		vkMapMemory(ctx.device, ctx.mesharenamemories[i], 0, capacity, 0, &ctx.mesharenamapped[i]);
 	}
-	gLogi("gVKDraw") << "Mesh arena ready: " << frames << " x " << capacity << " bytes";
 	return true;
 }
 
@@ -98,7 +98,6 @@ bool gvkCreateDrawResources(gVKContext& ctx) {
 	// for; a scene that re-poses one model per enemy needs a slice per draw, and
 	// how many that is only the running game knows.
 	if(!gvkEnsureMeshArena(ctx, GVK_MESH_ARENA_INITIAL_CAPACITY)) return false;
-	gLogi("gVKDraw") << "Dynamic vertex buffers ready.";
 	return true;
 }
 
@@ -217,7 +216,13 @@ static bool gvkAppend2D(gVKContext& ctx, VkPipeline pipeline, VkPipelineLayout l
 	const VkDeviceSize offset = ctx.pushDynamicVertices(vertices, sizeof(gvk2DVertex) * count,
 			sizeof(gvk2DVertex));
 	if(offset == VK_WHOLE_SIZE) {
-		gLogw("gVKDraw") << "Dynamic vertex buffer full; dropping a 2D draw.";
+		// Once only: the ring filling up repeats every frame it happens, and a
+		// warning per dropped draw would bury everything else in the log.
+		static bool reported = false;
+		if(!reported) {
+			reported = true;
+			gLogw("gVKDraw") << "Dynamic vertex buffer full; dropping a 2D draw.";
+		}
 		return false;
 	}
 
@@ -370,6 +375,152 @@ void gvkDrawTextured2D(gVKContext& ctx, VkDescriptorSet textureSet, VkDescriptor
 			ctx.getImage2DPushSize(), ctx.getImage2DPushStages(), masking ? 1 : 0, quad, 6);
 }
 
+bool gvkDrawScreenRestore(gVKContext& ctx, VkDescriptorSet textureSet) {
+	VkCommandBuffer cmd = ctx.getCurrentCommandBuffer();
+	VkPipeline pipeline = ctx.getImage2DOpaquePipeline();
+	if(cmd == VK_NULL_HANDLE || pipeline == VK_NULL_HANDLE || textureSet == VK_NULL_HANDLE) return false;
+
+	// The whole screen in clip space, paired with the whole of the texture. The pass
+	// this goes into draws through a negative height viewport, so clip y = +1 is the
+	// image's first row - and the copy that filled the texture put the top of the
+	// picture in its first row too, so the top corner takes v = 0.
+	static const glm::vec2 positions[6] = {
+		{-1.0f, 1.0f}, {-1.0f, -1.0f}, {1.0f, -1.0f},
+		{-1.0f, 1.0f}, {1.0f, -1.0f}, {1.0f, 1.0f}};
+	static const glm::vec2 uvs[6] = {
+		{0.0f, 0.0f}, {0.0f, 1.0f}, {1.0f, 1.0f},
+		{0.0f, 0.0f}, {1.0f, 1.0f}, {1.0f, 0.0f}};
+	gvk2DVertex quad[6];
+	for(int i = 0; i < 6; i++) {
+		quad[i].pos = glm::vec4(positions[i], 0.0f, 1.0f);
+		quad[i].color = glm::vec4(1.0f);
+		quad[i].uv = uvs[i];
+		quad[i].pad = glm::vec2(0.0f);
+	}
+	const VkDeviceSize offset = ctx.pushDynamicVertices(quad, sizeof(quad), sizeof(gvk2DVertex));
+	if(offset == VK_WHOLE_SIZE) return false;
+
+	// Recorded directly rather than through the batch. This has to be the first
+	// thing in the reopened pass, before any draw the application makes, and it must
+	// not merge with anything - so it bypasses the state caches and then clears them,
+	// which is what tells the next draw to bind its own state again.
+	vkCmdBindPipeline(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline);
+	VkBuffer vertexbuffer = ctx.getCurrentDynamicVertexBuffer();
+	const VkDeviceSize bindoffset = 0;
+	vkCmdBindVertexBuffers(cmd, 0, 1, &vertexbuffer, &bindoffset);
+	// Set 1 is the mask sampler, which the shader names whether or not it reads it;
+	// the image's own set goes there and the push constant turns the branch off.
+	VkDescriptorSet sets[2] = {textureSet, textureSet};
+	vkCmdBindDescriptorSets(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, ctx.getImage2DPipelineLayout(),
+			0, 2, sets, 0, nullptr);
+	if(ctx.getImage2DPushSize() > 0) {
+		const gvk2DPush push{0};
+		vkCmdPushConstants(cmd, ctx.getImage2DPipelineLayout(), ctx.getImage2DPushStages(), 0,
+				std::min<uint32_t>(sizeof(push), ctx.getImage2DPushSize()), &push);
+	}
+	vkCmdDraw(cmd, 6, 1, static_cast<uint32_t>(offset / sizeof(gvk2DVertex)), 0);
+	ctx.resetRecordedDrawState();
+	return true;
+}
+
+/*
+ * The quad, in clip space, with its texture coordinates. The same table
+ * gGLRenderEngine::createFullscreenQuad uses, deliberately: what this quad samples
+ * is always an offscreen target, and those are now stored the way OpenGL stores a
+ * texture - bottom row first - because the offscreen pass draws through a positive
+ * viewport (see gVKRenderEngine::beginOffscreenPass). So the top of the picture is
+ * v = 1 here exactly as it is there.
+ *
+ * It used to hold OpenGL's V coordinates flipped, back when offscreen targets were
+ * recorded through a negative viewport like the screen and came out stored top row
+ * first. The picture was right either way - two mirrorings cancelling - but the
+ * direction TexCoords.y *grows* in was reversed inside every effect's shader, so
+ * any hand written vertical offset came out mirrored, and any consumer addressing
+ * such a texture by OpenGL's rules read the wrong rows.
+ */
+struct gvkFullscreenVertex {
+	glm::vec2 position;
+	glm::vec2 uv;
+};
+
+static const gvkFullscreenVertex GVK_FULLSCREEN_QUAD[6] = {
+	{{-1.0f,  1.0f}, {0.0f, 1.0f}},
+	{{-1.0f, -1.0f}, {0.0f, 0.0f}},
+	{{ 1.0f, -1.0f}, {1.0f, 0.0f}},
+
+	{{-1.0f,  1.0f}, {0.0f, 1.0f}},
+	{{ 1.0f, -1.0f}, {1.0f, 0.0f}},
+	{{ 1.0f,  1.0f}, {1.0f, 1.0f}},
+};
+
+bool gvkDrawFullscreenQuad(gVKContext& ctx) {
+	if(gvkBoundUserShader() == GVK_NO_USER_SHADER) {
+		// The engine's own fullscreen work - resolving an FBO to the screen - does
+		// not come through here, so this means an effect whose shader failed to load.
+		// Once only: the failed effect is drawn again every frame.
+		static bool reported = false;
+		if(!reported) {
+			reported = true;
+			gLogw("gVKDraw") << "A fullscreen quad was requested with no shader bound; nothing to draw it with.";
+		}
+		return false;
+	}
+	// A shader built against the mesh layout expects a gVertex and would read this
+	// quad's two floats as the first two of a position, then take normals and
+	// texture coordinates from whatever follows in the ring.
+	if(gvkBoundUserShaderUsesMeshLayout() ||
+			gvkBoundUserShaderVertexStride() != sizeof(gvkFullscreenVertex)) {
+		static bool reported = false;
+		if(!reported) {
+			reported = true;
+			gLogw("gVKDraw") << "The bound shader does not read a fullscreen quad's vertex layout"
+					<< " (vec2 position at location 0, vec2 texture coordinate at location 1).";
+		}
+		return false;
+	}
+	if(!gvkEnsureRenderPass(ctx)) return false;
+	// A post-process pass composites over what came before it, so anything still
+	// batched has to reach the command buffer first.
+	gvkFlush2DBatch(ctx);
+
+	VkCommandBuffer cmd = ctx.getCurrentCommandBuffer();
+	if(cmd == VK_NULL_HANDLE) return false;
+
+	const VkDeviceSize offset = ctx.pushDynamicVertices(GVK_FULLSCREEN_QUAD, sizeof(GVK_FULLSCREEN_QUAD),
+			sizeof(gvkFullscreenVertex));
+	if(offset == VK_WHOLE_SIZE) {
+		static bool reported = false;
+		if(!reported) {
+			reported = true;
+			gLogw("gVKDraw") << "Dynamic vertex buffer full; dropping a fullscreen pass.";
+		}
+		return false;
+	}
+
+	if(!gvkBindUserShaderForDraw(ctx, cmd, false, false)) return false;
+
+	// The quad covers the target exactly and is composited by the effect itself, so
+	// it neither tests nor writes depth. Every state the pipeline declared dynamic
+	// has to be set: leaving one unset is undefined, not inherited.
+	if(ctx.shouldSetDepthState(VK_FALSE, VK_FALSE, VK_COMPARE_OP_ALWAYS)) {
+		ctx.cmdSetDepthState(cmd, VK_FALSE, VK_FALSE, VK_COMPARE_OP_ALWAYS);
+	}
+	if(ctx.shouldSetTopology(VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST)) {
+		ctx.cmdSetTopology(cmd, VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST);
+	}
+	if(ctx.shouldSetCullState(VK_CULL_MODE_NONE, VK_FRONT_FACE_COUNTER_CLOCKWISE)) {
+		ctx.cmdSetCullState(cmd, VK_CULL_MODE_NONE, VK_FRONT_FACE_COUNTER_CLOCKWISE);
+	}
+
+	VkBuffer buffer = ctx.getCurrentDynamicVertexBuffer();
+	if(buffer == VK_NULL_HANDLE) return false;
+	if(ctx.shouldBindVertexBuffers(&buffer, &offset, 1)) {
+		vkCmdBindVertexBuffers(cmd, 0, 1, &buffer, &offset);
+	}
+	vkCmdDraw(cmd, 6, 1, 0, 0);
+	return true;
+}
+
 void gvkDrawMesh3D(gVKContext& ctx, VkBuffer vertexBuffer, VkDeviceSize vertexOffset,
 		VkBuffer indexBuffer, int count,
 		VkIndexType indexType, const gVKMeshPush& push,
@@ -385,10 +536,34 @@ void gvkDrawMesh3D(gVKContext& ctx, VkBuffer vertexBuffer, VkDeviceSize vertexOf
 
 	VkCommandBuffer cmd = ctx.getCurrentCommandBuffer();
 	if(cmd == VK_NULL_HANDLE) return;
-	VkPipeline pipeline = lines ? ctx.getMesh3DLinePipeline() : ctx.getMesh3DPipeline(blending, cutout);
-	if(pipeline == VK_NULL_HANDLE) return;
 
-	if(ctx.shouldBindPipeline(pipeline)) vkCmdBindPipeline(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline);
+	// An application that bound its own shader draws through that instead: its
+	// pipeline, its descriptor sets and its push constants replace the engine's.
+	// Everything after this point - the dynamic state, the vertex buffers and the
+	// draw itself - is the same either way, which is the whole reason a user shader
+	// is built against the engine's vertex layout.
+	// A shader is bound but reads a layout this draw cannot feed - a post effect's
+	// quad of two vec2s, against a buffer of gVertex - so the bytes would be read
+	// as the wrong fields entirely. Nothing is drawn rather than something wrong.
+	if(gvkBoundUserShader() != GVK_NO_USER_SHADER && !gvkBoundUserShaderUsesMeshLayout()) {
+		static bool reported = false;
+		if(!reported) {
+			reported = true;
+			gLogw("gVKDraw") << "A mesh was drawn with a shader that does not read the mesh vertex"
+					<< " layout (vec3 position, vec3 normal, vec2 texture coordinate); the draw is skipped.";
+		}
+		return;
+	}
+	const bool usershader = gvkBindUserShaderForDraw(ctx, cmd, blending, lines);
+	// Falling back to the engine's pipeline here would draw the mesh with a shader
+	// the application did not ask for, which looks like a working draw and is not
+	// one. A bind that failed has already said why.
+	if(!usershader && gvkBoundUserShader() != GVK_NO_USER_SHADER) return;
+	if(!usershader) {
+		VkPipeline pipeline = lines ? ctx.getMesh3DLinePipeline() : ctx.getMesh3DPipeline(blending, cutout);
+		if(pipeline == VK_NULL_HANDLE) return;
+		if(ctx.shouldBindPipeline(pipeline)) vkCmdBindPipeline(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline);
+	}
 
 	// Depth state follows the renderer's, the same way glEnable(GL_DEPTH_TEST) does
 	// on the OpenGL side. Writing is tied to testing: the engine has no separate
@@ -416,7 +591,7 @@ void gvkDrawMesh3D(gVKContext& ctx, VkBuffer vertexBuffer, VkDeviceSize vertexOf
 	// Adreno and Mali offer exactly four, so a set per texture would leave this
 	// pipeline uncreatable on most Android phones.
 	VkDescriptorSet sceneset = ctx.getCurrentSceneDescriptorSet();
-	if(sceneset != VK_NULL_HANDLE && materialSet != VK_NULL_HANDLE
+	if(!usershader && sceneset != VK_NULL_HANDLE && materialSet != VK_NULL_HANDLE
 			&& shadowSet != VK_NULL_HANDLE) {
 		VkDescriptorSet sets[] = {sceneset, materialSet, shadowSet};
 		if(ctx.shouldBindDescriptorSets(ctx.getMesh3DPipelineLayout(), sets, 3)) {
@@ -437,7 +612,7 @@ void gvkDrawMesh3D(gVKContext& ctx, VkBuffer vertexBuffer, VkDeviceSize vertexOf
 	}
 
 	const uint32_t pushsize = std::min<uint32_t>(sizeof(push), ctx.getMesh3DPushSize());
-	if(pushsize > 0) {
+	if(!usershader && pushsize > 0) {
 		vkCmdPushConstants(cmd, ctx.getMesh3DPipelineLayout(), ctx.getMesh3DPushStages(), 0, pushsize, &push);
 	}
 
@@ -636,7 +811,11 @@ void gvkDrawSkyboxFace(gVKContext& ctx, VkDescriptorSet faceSet, const float* xy
 	const VkDeviceSize bytes = static_cast<VkDeviceSize>(vertexCount) * 5 * sizeof(float);
 	VkDeviceSize offset = ctx.pushDynamicVertices(xyzuv, bytes);
 	if(offset == VK_WHOLE_SIZE) {
-		gLogw("gVKDraw") << "Dynamic vertex buffer full; dropping a skybox face.";
+		static bool reported = false;
+		if(!reported) {
+			reported = true;
+			gLogw("gVKDraw") << "Dynamic vertex buffer full; dropping a skybox face.";
+		}
 		return;
 	}
 

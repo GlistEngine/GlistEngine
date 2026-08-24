@@ -71,6 +71,9 @@ bool gvkEndFrame(gVKContext& ctx, gBaseWindow* window);
 // 2D draw path. Declared here so the struct can befriend them; defined in
 // gVKFrame.cpp (render pass) / gVKPipeline.cpp (pipelines) / gVKDraw.cpp (ring).
 bool gvkEnsureRenderPass(gVKContext& ctx);
+// Copies what the last pass resolved into a sampleable texture, so a multisampled
+// frame can be rebuilt after a render target was bound part way through it.
+VkDescriptorSet gvkCaptureResolvedScreen(gVKContext& ctx);
 bool gvkCreateGraphicsPipelines(gVKContext& ctx);
 bool gvkReloadGraphicsPipelines(gVKContext& ctx);
 void gvkDestroyGraphicsPipelines(gVKContext& ctx);
@@ -189,6 +192,7 @@ struct gVKContext {
 	friend bool gvkBeginFrame(gVKContext&, gBaseWindow*);
 	friend bool gvkEndFrame(gVKContext&, gBaseWindow*);
 	friend bool gvkEnsureRenderPass(gVKContext&);
+	friend VkDescriptorSet gvkCaptureResolvedScreen(gVKContext&);
 	friend bool gvkCreateGraphicsPipelines(gVKContext&);
 	friend bool gvkReloadGraphicsPipelines(gVKContext&);
 	friend void gvkDestroyGraphicsPipelines(gVKContext&);
@@ -208,6 +212,13 @@ struct gVKContext {
 	friend void gvkDestroyUniformResources(gVKContext&);
 	friend struct gVKSceneUniforms;
 	friend bool gvkWriteSceneUniforms(gVKContext&, const struct gVKSceneUniforms&);
+	// A pipeline built from a shader the application supplied. Reaches the same
+	// render passes, sample state and pipeline cache the built-in builds do, which
+	// is what makes a user shader record into the same passes as the engine's own.
+	// gVKUserShader itself needs none of this and goes through the public getters.
+	friend bool gvkBuildUserPipeline(gVKContext&, const std::vector<uint32_t>&,
+			const std::vector<uint32_t>&, const char*, struct gVKUserPipeline&);
+	friend void gvkDestroyUserPipeline(gVKContext&, struct gVKUserPipeline&);
 
 	/* ---------------- configurable settings ---------------- */
 	// Set these before the backend initialises to influence instance and device
@@ -419,6 +430,13 @@ struct gVKContext {
 		const gVKPipelineVariants& v = image2d[activepipelinevariant];
 		return v.additivepipeline != VK_NULL_HANDLE ? v.additivepipeline : v.pipeline;
 	}
+	// The image pipeline with blending switched off, so a draw can replace what is
+	// under it rather than composite onto it. Used to rebuild the screen from a
+	// resolved copy; see gvkEnsureRenderPass.
+	VkPipeline getImage2DOpaquePipeline() {
+		const gVKPipelineVariants& v = image2d[activepipelinevariant];
+		return v.blendvariantpipeline;
+	}
 	VkPipelineLayout getImage2DPipelineLayout() { return image2dpipelinelayout; }
 	// The 3D mesh pipeline, and the same pipeline with a line topology for meshes
 	// drawn as wireframe.
@@ -538,6 +556,7 @@ struct gVKContext {
 	VkDescriptorPool getDescriptorPool() { return descriptorpool; }
 	std::map<uint64_t, std::pair<VkSampler, uint32_t>>& getSamplerCache() { return samplercache; }
 	bool isRenderPassActive() const { return renderpassactive; }
+	bool doesPassFlipY() const { return passflipsy; }
 
 	// Push constant block each 2D pipeline declares, as reported by reflecting its
 	// SPIR-V. gVKDraw pushes exactly this much to exactly these stages, so editing
@@ -562,7 +581,13 @@ struct gVKContext {
 	// buffer is full.
 	void resetDynamicVertices() {
 		if(!dynvertexoffsets.empty()) dynvertexoffsets[currentframe] = 0;
+		framesequence++;
 	}
+	// Frames since start-up, unlike currentframe which cycles 0..1. A per-frame ring
+	// of any kind has to compare against this: the cycling index repeats, so a user
+	// of the ring that skips a frame would see the same index twice running and
+	// conclude nothing had changed.
+	uint64_t getFrameSequence() const { return framesequence; }
 	VkBuffer getCurrentDynamicVertexBuffer() {
 		return dynvertexbuffers.empty() ? VK_NULL_HANDLE : dynvertexbuffers[currentframe];
 	}
@@ -680,8 +705,8 @@ struct gVKContext {
 	// VK_EXT_extended_dynamic_state, core since Vulkan 1.3 - which minapiversion
 	// already requires as this backend's floor. Android's NDK import library only
 	// exports these six entry points for API level 33+ regardless of what the
-	// device driver actually supports, so gvkCreateDevice resolves them itself
-	// through vkGetDeviceProcAddr instead of leaving them to link statically, and
+	// device driver actually supports, so gVKRenderEngine::initVulkan resolves them
+	// itself through vkGetDeviceProcAddr instead of linking them statically, and
 	// every draw call goes through these wrappers rather than the raw vkCmdSetXxx
 	// names.
 	void cmdSetDepthState(VkCommandBuffer cmd, VkBool32 test, VkBool32 write, VkCompareOp compare) {
@@ -839,6 +864,23 @@ private:
 	bool shadowpassactive = false;
 
 	VkRenderPass renderpass = VK_NULL_HANDLE;
+	// The same pass with LOAD in place of CLEAR on colour and depth. A frame opens
+	// the screen pass more than once whenever the application binds a render target
+	// half way through drawing - a gGUIScrollable renders its clipped content into
+	// an FBO, a canvas may run a post effect over the scene it has drawn so far -
+	// and reopening with the clearing pass would erase everything recorded before
+	// the target was bound. Every reopen after the frame's first one uses this.
+	VkRenderPass loadrenderpass = VK_NULL_HANDLE;
+	// Multisampled only. The multisample image is a transient attachment - it may
+	// live entirely on chip and have no memory behind it at all - so its contents
+	// cannot survive between two passes, and the LOAD variant above is useless
+	// there. This one discards the multisample colour and clears depth, and the
+	// picture is put back by redrawing the resolved swapchain image into it.
+	VkRenderPass restorerenderpass = VK_NULL_HANDLE;
+	// The single-sampled copy that redraw samples from, sized to the swapchain and
+	// rebuilt with it. Created on the first reopen and not before: a frame that
+	// never binds a render target half way through never needs it.
+	struct gVKTexture* screenrestoretexture = nullptr;
 	// A 1x colour+depth pass that is never begun. It exists only while the screen
 	// pass is multisampled, as the compatibility template the single-sample
 	// pipelines are built against - a pipeline needs a render pass at build time,
@@ -860,6 +902,7 @@ private:
 	std::vector<VkSemaphore> renderfinishedsemaphores;
 
 	uint32_t currentframe = 0;
+	uint64_t framesequence = 0;
 	uint32_t currentimageindex = 0;
 	bool frameactive = false;
 	// Match gBaseCanvas::clearBackground(), the default used by the OpenGL path.
@@ -870,7 +913,19 @@ private:
 	// must be recorded inside vkCmdBeginRenderPass..EndRenderPass, but the clear
 	// colour is only final once the canvas has drawn, so the pass is opened on the
 	// first draw (or in endFrame) rather than in beginFrame.
+	// Whether the open pass draws through a negative-height viewport. Only the
+	// screen pass does: it has to hand the presentation engine an image stored top
+	// row first. Offscreen targets are drawn with a positive viewport instead, so
+	// they end up stored bottom row first - the order OpenGL keeps a texture in -
+	// and every consumer written against OpenGL then addresses them correctly,
+	// shaders reading TexCoords included. Mirroring the y axis also reverses the
+	// winding a triangle appears to have, so this is what decides whether the front
+	// face has to be flipped; see gVKCullState.
+	bool passflipsy = true;
 	bool renderpassactive = false;
+	// Whether the screen pass has been begun at all this frame. The first begin
+	// clears, every later one loads what the earlier ones left.
+	bool screenpassbegun = false;
 	bool screenshotrequested = false;
 	bool screenshotready = false;
 	std::vector<unsigned char> screenshotpixels;

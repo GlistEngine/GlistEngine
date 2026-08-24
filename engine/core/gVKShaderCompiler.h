@@ -44,6 +44,17 @@ long long gvkShaderFileTimestamp(const std::string& fileName);
 bool gvkCompileShaderFile(const std::string& fileName, VkShaderStageFlagBits stage,
 		std::vector<uint32_t>& spirv);
 
+// Compiles GLSL held in memory rather than read from the shader directory, for
+// shaders an application loads through gShader. debugName only names the module
+// in diagnostics.
+//
+// Unlike the engine's own shaders these keep their debug names: a user shader is
+// addressed by name - setFloat("intensity", v) - and the names have to survive
+// into the SPIR-V for reflection to find them. Optimisation is unaffected; the
+// two are separate switches.
+bool gvkCompileShaderSource(const std::string& source, VkShaderStageFlagBits stage,
+		const std::string& debugName, std::vector<uint32_t>& spirv);
+
 #endif /* GVK_VULKAN */
 
 #endif /* CORE_GVKSHADERCOMPILER_H */

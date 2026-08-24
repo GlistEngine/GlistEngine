@@ -44,8 +44,6 @@ bool gvkCreateFrameSyncObjects(gVKContext& ctx) {
 		}
 	}
 
-	gLogi("gVKSync") << "Frame synchronisation objects created for "
-			<< GVK_MAX_FRAMES_IN_FLIGHT << " frames in flight";
 	return true;
 }
 
@@ -88,7 +86,6 @@ bool gvkCreatePresentSemaphores(gVKContext& ctx, uint32_t imagecount) {
 		}
 	}
 
-	gLogi("gVKSync") << "Present semaphores created: " << imagecount << " (one per swapchain image)";
 	return true;
 }
 

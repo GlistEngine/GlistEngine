@@ -226,6 +226,7 @@ set(SRC_FILES
 	${ENGINE_DIR}/core/gVKPipeline.cpp
 	${ENGINE_DIR}/core/gVKReflect.cpp
 	${ENGINE_DIR}/core/gVKShaderCompiler.cpp
+	${ENGINE_DIR}/core/gVKUserShader.cpp
 	${ENGINE_DIR}/core/gVKDraw.cpp
 	${ENGINE_DIR}/core/gVKTexture.cpp
 	${ENGINE_DIR}/core/gRenderObject.cpp
@@ -774,13 +775,19 @@ if(Lib_Vulkan)
 		set(GVK_SHADER_DIR ${ENGINE_DIR}/graphics/shaders/vk)
 		# The generator is a CMake script rather than a shell script so this works
 		# the same on Windows, macOS and Linux.
+		# The rule's output is a stamp in the build directory rather than the header
+		# itself. The generator decides whether the header needs rewriting - it
+		# compares a hash of the shader sources against the one the header records -
+		# and a header it leaves alone keeps its modification time, which would make
+		# a rule declaring it as output run again on every single build.
 		add_custom_command(
-			OUTPUT ${ENGINE_DIR}/core/gVKShaders.h
+			OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/gVKShaders.stamp
 			COMMAND ${CMAKE_COMMAND}
 				-DGLSLC=${GLIST_GLSLC}
 				-DSHADER_DIR=${GVK_SHADER_DIR}
 				-DOUT=${ENGINE_DIR}/core/gVKShaders.h
 				-P ${GVK_SHADER_DIR}/gen_vk_shaders.cmake
+			COMMAND ${CMAKE_COMMAND} -E touch ${CMAKE_CURRENT_BINARY_DIR}/gVKShaders.stamp
 			DEPENDS
 				${GVK_SHADER_DIR}/color2d.vert
 				${GVK_SHADER_DIR}/color2d.frag
@@ -797,7 +804,7 @@ if(Lib_Vulkan)
 				${GVK_SHADER_DIR}/gen_vk_shaders.cmake
 			COMMENT "Regenerating gVKShaders.h from the Vulkan 2D shader sources"
 			VERBATIM)
-		add_custom_target(GlistVKShaders DEPENDS ${ENGINE_DIR}/core/gVKShaders.h)
+		add_custom_target(GlistVKShaders DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/gVKShaders.stamp)
 		add_dependencies(GlistEngine GlistVKShaders)
 	else()
 		message(STATUS "glslc not found; core/gVKShaders.h will be used as committed")

@@ -221,18 +221,16 @@ void gAppManager::initialize() {
 		// setMultiSampling() may be called before initialize(), while no renderer
 		// exists yet. Apply the remembered request as soon as the backend is ready.
 		renderer->setMultiSampling(requestedmultisampling);
-		// The engine's GUI resources are OpenGL based. Under the Vulkan backend the
-		// window carries no GL context, so they stay uninitialised until the Vulkan
-		// rendering path exists.
-		const bool isvulkanbackend = (renderengine == G_RENDERER_VK);
-		if(!isvulkanbackend) gBaseGUIObject::initializeResources();
+		// The GUI draws through the renderer's backend independent 2D entry points,
+		// so its resources load the same way on either backend.
+		gBaseGUIObject::initializeResources();
 		// Update renderer dimensions
 		renderer->setScreenSize(width, height);
 		renderer->setUnitScreenSize(unitwidth, unitheight);
 		renderer->setScreenScaling(screenscaling);
 
 		// Create managers if not created
-		if(!isvulkanbackend && !guimanager) {
+		if(!guimanager) {
 			guimanager = new gGUIManager(app, renderer->getWidth(), renderer->getHeight());
 			guimanager->getCurrentFrame()->getRenderer()->updateLights();
 		}
