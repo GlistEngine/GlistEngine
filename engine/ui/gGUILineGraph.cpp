@@ -15,6 +15,7 @@ gGUILineGraph::gGUILineGraph() {
 	isfilledarea = false;
 	isautoscaled = false;
 	linethickness = 1.0f;
+	floatlabelsyenabled = true;// Y values are frequently sub-integer (e.g. forex rates); whole-number-only labels would collapse a narrow range to one repeated number
 
 	linecolors[0] = {0.20f, 0.20f, 0.96f};
 	linecolors[1] = {0.96f, 0.46f, 0.55f};
@@ -293,6 +294,8 @@ void gGUILineGraph::updatePoints() {
 		miny = rawMin - pad;
 		maxy = rawMax + pad;
 	}
+
+	setLabelsYForRange(miny, maxy);
 
 	int linecount = graphlines.size();
 	int points = 0;

@@ -97,10 +97,18 @@ protected:
 	float largestvaluex, largestvaluey, smallestvaluex, smallestvaluey;
 	bool gridlinesxenabled, gridlinesyenabled;
 	bool isxaxislinenable, yaxislenable;
-	bool floatlabelsenabled;
+	bool floatlabelsxenabled;
+	bool floatlabelsyenabled;
 	int labelcountx, labelcounty;
 	int rangestart, rangeend;
 	bool rangeenabled;
+
+	/**
+	 * Sets the Y axis range directly and regenerates the Y axis labels to match it exactly,
+	 * instead of updateLabelsY()'s usual snap-to-a-nice-step recalculation. Lets a subclass that
+	 * computes its own miny/maxy (e.g. an autoscaled line graph) keep the drawn labels in sync.
+	 */
+	void setLabelsYForRange(float rangeMinY, float rangeMaxY);
 
 private:
 	void drawBackground();
