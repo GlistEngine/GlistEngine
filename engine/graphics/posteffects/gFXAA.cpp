@@ -11,6 +11,7 @@
 
 gFXAA::gFXAA(float subpixelblend, float edgethresholdmin, float edgethresholdmax)
 	: subpixelblend(subpixelblend), edgethresholdmin(edgethresholdmin), edgethresholdmax(edgethresholdmax) {
+	linearsampler = 0;
 	shader = new gShader();
 	shader->loadProgram(getVertSrc(), getFragSrc());
 	shader->use();
@@ -19,6 +20,12 @@ gFXAA::gFXAA(float subpixelblend, float edgethresholdmin, float edgethresholdmax
 	shader->setFloat("edgethresholdmin", edgethresholdmin);
 	shader->setFloat("edgethresholdmax", edgethresholdmax);
 
+	// A sampler object of its own, so the source is read with linear filtering and
+	// clamped edges whatever the texture was left set to. These are raw OpenGL
+	// calls rather than renderer ones, and there is no GL context under Vulkan -
+	// calling them there is a crash, not a no-op. The backend needs none of it:
+	// a Vulkan render target already carries a linear, clamped sampler of its own.
+	if(renderer->isVulkan()) return;
 	glGenSamplers(1, &linearsampler);
 	glSamplerParameteri(linearsampler, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glSamplerParameteri(linearsampler, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -28,6 +35,7 @@ gFXAA::gFXAA(float subpixelblend, float edgethresholdmin, float edgethresholdmax
 
 gFXAA::~gFXAA() {
 	delete shader;
+	if(renderer->isVulkan()) return;
 	glDeleteSamplers(1, &linearsampler);
 }
 
@@ -39,17 +47,16 @@ void gFXAA::render(gFbo& src, gFbo& dst) {
 	dst.bind();
 	use();
 
-	glBindSampler(0, linearsampler);
+	// See the constructor: the sampler object is an OpenGL-only detail.
+	const bool usesamplerobject = !renderer->isVulkan();
+	if(usesamplerobject) glBindSampler(0, linearsampler);
 
 	renderer->bindQuadVAO();
 	src.getTexture().bind();
 
-	GLint activeunit;
-	glGetIntegerv(GL_ACTIVE_TEXTURE, &activeunit);
-
 	renderer->drawFullscreenQuad();
 
-	glBindSampler(0, 0);
+	if(usesamplerobject) glBindSampler(0, 0);
 }
 
 void gFXAA::setSubpixelBlend(float value) {
@@ -72,12 +79,31 @@ void gFXAA::setEdgeThresholdMax(float value) {
 
 const std::string gFXAA::getVertSrc() {
 	const char* shadersource =
+			"#if VULKAN\n"
+			"#version 450\n"
+			"#endif\n"
+			"#if GLES\n"
+			"#version 300 es\n"
+			"precision highp float;\n"
+			"#endif\n"
+			"#if GLCORE\n"
 			"#version 330 core\n"
-			"layout (location = 0) in vec2 aPos;"
-			"layout (location = 1) in vec2 aTexCoords;"
-			""
-			"out vec2 TexCoords;"
-			""
+			"#endif\n"
+			"#if VULKAN\n"
+			"layout (location = 0) in vec2 aPos;\n"
+			"layout (location = 1) in vec2 aTexCoords;\n"
+			"layout (location = 0) out vec2 TexCoords;\n"
+			"#endif\n"
+			"#if GLES\n"
+			"layout (location = 0) in vec2 aPos;\n"
+			"layout (location = 1) in vec2 aTexCoords;\n"
+			"out vec2 TexCoords;\n"
+			"#endif\n"
+			"#if GLCORE\n"
+			"layout (location = 0) in vec2 aPos;\n"
+			"layout (location = 1) in vec2 aTexCoords;\n"
+			"out vec2 TexCoords;\n"
+			"#endif\n"
 			"void main()"
 			"{"
 			"	gl_Position = vec4(aPos.x, aPos.y, 0.0, 1.0);"
@@ -88,16 +114,42 @@ const std::string gFXAA::getVertSrc() {
 
 const std::string gFXAA::getFragSrc() {
 	const char* shadersource =
+			"#if VULKAN\n"
+			"#version 450\n"
+			"#endif\n"
+			"#if GLES\n"
+			"#version 300 es\n"
+			"precision highp float;\n"
+			"#endif\n"
+			"#if GLCORE\n"
 			"#version 330 core\n"
-			"out vec4 FragColor;"
-			""
-			"in vec2 TexCoords;"
-			""
-			"uniform sampler2D screenTexture;"
-			"uniform float subpixelblend;"
-			"uniform float edgethresholdmin;"
-			"uniform float edgethresholdmax;"
-			""
+			"#endif\n"
+			"#if VULKAN\n"
+			"layout (location = 0) out vec4 FragColor;\n"
+			"layout (location = 0) in vec2 TexCoords;\n"
+			"layout (set = 0, binding = 0) uniform sampler2D screenTexture;\n"
+			"layout (set = 0, binding = 1) uniform Params {\n"
+			"    float subpixelblend;\n"
+			"    float edgethresholdmin;\n"
+			"    float edgethresholdmax;\n"
+			"};\n"
+			"#endif\n"
+			"#if GLES\n"
+			"out vec4 FragColor;\n"
+			"in vec2 TexCoords;\n"
+			"uniform sampler2D screenTexture;\n"
+			"uniform float subpixelblend;\n"
+			"uniform float edgethresholdmin;\n"
+			"uniform float edgethresholdmax;\n"
+			"#endif\n"
+			"#if GLCORE\n"
+			"out vec4 FragColor;\n"
+			"in vec2 TexCoords;\n"
+			"uniform sampler2D screenTexture;\n"
+			"uniform float subpixelblend;\n"
+			"uniform float edgethresholdmin;\n"
+			"uniform float edgethresholdmax;\n"
+			"#endif\n"
 			"float luma(vec3 c) {"
 			"	return dot(c, vec3(0.299, 0.587, 0.114));"
 			"}"

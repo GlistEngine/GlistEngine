@@ -640,8 +640,6 @@ void gFont::loadChar(int charCode) {
 				}
 				atlaspages.push_back(std::move(page));
 				pageindex = static_cast<int>(atlaspages.size()) - 1;
-				gLogi("gFont") << "Glyph atlas page created: " << atlaswidth << "x" << atlasheight
-						<< ", page: " << pageindex;
 			}
 		}
 

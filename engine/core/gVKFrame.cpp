@@ -8,6 +8,7 @@
 #include "gVKFrame.h"
 #include "gVKDraw.h"
 #include "gVKMeshBuffer.h"
+#include "gVKTexture.h"
 
 #ifdef GVK_VULKAN
 
@@ -128,8 +129,85 @@ bool gvkBeginFrame(gVKContext& ctx, gBaseWindow* window) {
 	// that ended badly now points at bytes about to be overwritten.
 	gvkReset2DBatch();
 	ctx.renderpassactive = false;
+	ctx.screenpassbegun = false;
 	ctx.frameactive = true;
 	return true;
+}
+
+
+// Copies what the last pass resolved into a texture the next one can sample, so a
+// multisampled frame can be put back together after a render target was bound part
+// way through it. The multisample image itself is a transient attachment and holds
+// nothing between passes, which is why the resolved image is the only copy there is.
+// Returns the descriptor set to sample, or VK_NULL_HANDLE if the screen cannot be
+// read back on this surface - in which case the caller clears instead and says so.
+VkDescriptorSet gvkCaptureResolvedScreen(gVKContext& ctx) {
+	if((ctx.surfacecapabilities.supportedUsageFlags & VK_IMAGE_USAGE_TRANSFER_SRC_BIT) == 0) return VK_NULL_HANDLE;
+	VkCommandBuffer cmd = ctx.commandbuffers[ctx.currentframe];
+	if(cmd == VK_NULL_HANDLE || ctx.currentimageindex >= ctx.swapchainimages.size()) return VK_NULL_HANDLE;
+
+	// Built on the first reopen and kept for the life of the swapchain. A frame that
+	// never binds a render target half way through never allocates it.
+	if(ctx.screenrestoretexture != nullptr
+			&& (ctx.screenrestoretexture->width != static_cast<int>(ctx.swapchainextent.width)
+					|| ctx.screenrestoretexture->height != static_cast<int>(ctx.swapchainextent.height))) {
+		gvkDestroyTexture(ctx, ctx.screenrestoretexture);
+		ctx.screenrestoretexture = nullptr;
+	}
+	if(ctx.screenrestoretexture == nullptr) {
+		ctx.screenrestoretexture = gvkCreateAttachmentTexture(ctx,
+				static_cast<int>(ctx.swapchainextent.width),
+				static_cast<int>(ctx.swapchainextent.height), false, 1, true);
+		if(ctx.screenrestoretexture == nullptr) return VK_NULL_HANDLE;
+	}
+	gVKTexture* target = ctx.screenrestoretexture;
+	if(target->descriptorset == VK_NULL_HANDLE) return VK_NULL_HANDLE;
+
+	VkImage swapimage = ctx.swapchainimages[ctx.currentimageindex];
+	VkImageMemoryBarrier barriers[2]{};
+	for(VkImageMemoryBarrier& barrier : barriers) {
+		barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
+		barrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+		barrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+		barrier.subresourceRange = {VK_IMAGE_ASPECT_COLOR_BIT, 0, 1, 0, 1};
+	}
+	// The pass that just ended left the swapchain image ready to present; take it
+	// out of that, read it, and put it back.
+	barriers[0].image = swapimage;
+	barriers[0].srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+	barriers[0].dstAccessMask = VK_ACCESS_TRANSFER_READ_BIT;
+	barriers[0].oldLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+	barriers[0].newLayout = VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL;
+	// The copy overwrites every texel of the target, so whatever it held is not
+	// worth a transition of its own.
+	barriers[1].image = target->image;
+	barriers[1].srcAccessMask = VK_ACCESS_SHADER_READ_BIT;
+	barriers[1].dstAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
+	barriers[1].oldLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+	barriers[1].newLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
+	vkCmdPipelineBarrier(cmd, VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT,
+			VK_PIPELINE_STAGE_TRANSFER_BIT, 0, 0, nullptr, 0, nullptr, 2, barriers);
+
+	VkImageCopy region{};
+	region.srcSubresource = {VK_IMAGE_ASPECT_COLOR_BIT, 0, 0, 1};
+	region.dstSubresource = {VK_IMAGE_ASPECT_COLOR_BIT, 0, 0, 1};
+	region.extent = {ctx.swapchainextent.width, ctx.swapchainextent.height, 1};
+	vkCmdCopyImage(cmd, swapimage, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
+			target->image, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &region);
+
+	barriers[0].srcAccessMask = VK_ACCESS_TRANSFER_READ_BIT;
+	barriers[0].dstAccessMask = 0;
+	barriers[0].oldLayout = VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL;
+	barriers[0].newLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+	barriers[1].srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
+	barriers[1].dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
+	barriers[1].oldLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
+	barriers[1].newLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+	vkCmdPipelineBarrier(cmd, VK_PIPELINE_STAGE_TRANSFER_BIT,
+			VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT | VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT,
+			0, 0, nullptr, 0, nullptr, 2, barriers);
+	target->layout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+	return target->descriptorset;
 }
 
 bool gvkEnsureRenderPass(gVKContext& ctx) {
@@ -146,7 +224,35 @@ bool gvkEnsureRenderPass(gVKContext& ctx) {
 
 	VkRenderPassBeginInfo renderpassinfo{};
 	renderpassinfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-	renderpassinfo.renderPass = ctx.renderpass;
+	// The frame's first open clears the screen; a later one - the application bound
+	// a render target half way through and has now unbound it - has to keep what is
+	// already there, or everything drawn before the bind disappears.
+	// Reopening after a render target was bound half way through the frame. Single
+	// sampled, the colour attachment *is* the swapchain image and simply persists,
+	// so the pass loads it. Multisampled, the attachment is a transient image that
+	// keeps nothing between passes - so the only surviving copy of the picture is
+	// what the last pass resolved, and it is captured here and drawn back below.
+	const bool reopening = ctx.screenpassbegun;
+	VkDescriptorSet restoreset = VK_NULL_HANDLE;
+	if(reopening && ctx.isMultiSampled()) {
+		restoreset = gvkCaptureResolvedScreen(ctx);
+		if(restoreset == VK_NULL_HANDLE) {
+			// Only when the surface refuses to be read back, which also disables
+			// screenshots. Nothing can be rebuilt then, so say so rather than
+			// presenting a frame that has silently lost half of itself.
+			static bool reported = false;
+			if(!reported) {
+				reported = true;
+				gLogw("gVKFrame") << "A render target was bound part way through a multisampled frame,"
+						<< " and this surface cannot be read back, so what was drawn before the bind"
+						<< " is lost. Turn multisampling off, or bind the target before drawing.";
+			}
+		}
+	}
+	const bool restoring = restoreset != VK_NULL_HANDLE;
+	const bool loading = reopening && !ctx.isMultiSampled();
+	renderpassinfo.renderPass = loading ? ctx.loadrenderpass
+			: (reopening && ctx.isMultiSampled() ? ctx.restorerenderpass : ctx.renderpass);
 	const size_t framebufferindex = static_cast<size_t>(ctx.currentframe) * ctx.swapchainimageviews.size()
 			+ ctx.currentimageindex;
 	if(framebufferindex >= ctx.framebuffers.size()) return false;
@@ -164,9 +270,13 @@ bool gvkEnsureRenderPass(gVKContext& ctx) {
 	VkClearValue clearvalues[2];
 	clearvalues[0] = ctx.clearvalue;
 	clearvalues[1].depthStencil = {1.0f, 0};
-	renderpassinfo.clearValueCount = 2;
-	renderpassinfo.pClearValues = clearvalues;
+	// A loading pass clears nothing. The restoring one discards its colour and
+	// clears depth, so entry 1 still has to be there - and the array is indexed by
+	// attachment number, so entry 0 has to be present for it to be reached.
+	renderpassinfo.clearValueCount = loading ? 0 : 2;
+	renderpassinfo.pClearValues = loading ? nullptr : clearvalues;
 	vkCmdBeginRenderPass(commandbuffer, &renderpassinfo, VK_SUBPASS_CONTENTS_INLINE);
+	ctx.screenpassbegun = true;
 	ctx.resetRecordedDrawState();
 	// From here until this pass closes, every draw has to use pipelines built for
 	// this pass's sample count. Set after the begin rather than at the top of the
@@ -191,7 +301,12 @@ bool gvkEnsureRenderPass(gVKContext& ctx) {
 	scissor.extent = ctx.swapchainextent;
 	vkCmdSetScissor(commandbuffer, 0, 1, &scissor);
 
+	ctx.passflipsy = true;
 	ctx.renderpassactive = true;
+
+	// Before anything the application draws, and after the viewport and scissor are
+	// set, because it covers the whole of them.
+	if(restoring) gvkDrawScreenRestore(ctx, restoreset);
 	return true;
 }
 
@@ -338,12 +453,6 @@ bool gvkEndFrame(gVKContext& ctx, gBaseWindow* window) {
 		ctx.surfacerecreaterequested = true;
 	} else if(result != VK_SUCCESS) {
 		gLoge("gVKFrame") << "vkQueuePresentKHR failed! VkResult: " << result;
-	}
-
-	static bool loggedfirstframe = false;
-	if(!loggedfirstframe) {
-		loggedfirstframe = true;
-		gLogi("gVKFrame") << "First frame presented";
 	}
 
 	ctx.currentframe = (ctx.currentframe + 1) % GVK_MAX_FRAMES_IN_FLIGHT;

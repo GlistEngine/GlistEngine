@@ -2886,3 +2886,4 @@ static const uint32_t gvkspv_skybox3d_frag[] =
 0x000100fd,0x00010038}
 ;
 
+// source-sha256: 50b894eec53b70f263929df020bbc3b36cb1692254b671cd740b7e71709c731b

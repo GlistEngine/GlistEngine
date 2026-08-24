@@ -172,10 +172,6 @@ bool gvkCreateDepthResources(gVKContext& ctx) {
 		}
 	}
 
-	gLogi("gVKRenderTarget") << GVK_MAX_FRAMES_IN_FLIGHT << " depth buffers created: format "
-			<< ctx.depthformat << " at " << ctx.swapchainextent.width << "x" << ctx.swapchainextent.height
-			<< ", " << static_cast<int>(ctx.samplecount) << "x samples"
-			<< (lazy ? ", lazy transient memory" : ", device memory");
 	return true;
 }
 
@@ -252,10 +248,6 @@ bool gvkCreateMsaaColorResources(gVKContext& ctx) {
 		}
 	}
 
-	gLogi("gVKRenderTarget") << GVK_MAX_FRAMES_IN_FLIGHT << " MSAA colour buffers created: "
-			<< static_cast<int>(ctx.samplecount) << "x at " << ctx.swapchainextent.width
-			<< "x" << ctx.swapchainextent.height
-			<< (lazy ? ", lazy transient memory (stays in tile memory)" : ", device memory");
 	return true;
 }
 
@@ -304,8 +296,23 @@ void gvkDestroyDepthResources(gVKContext& ctx) {
 // and depth clear values at indices 0 and 1 in both forms, so the frame loop hands
 // over the same two-entry array either way. The resolve attachment loads DONT_CARE
 // and therefore needs no clear value at all.
-static bool gvkBuildScreenRenderPass(gVKContext& ctx, VkSampleCountFlagBits samples, VkRenderPass& outPass) {
+// What the screen pass does with what is already in its attachments when it opens.
+// CLEAR is the frame's first open. LOAD continues a frame that has already drawn -
+// single sampled only, where the colour attachment is the swapchain image itself
+// and simply persists. RESTORE is the multisampled form of the same thing: the
+// multisample image is transient and holds nothing between passes, so its colour is
+// discarded and the caller redraws the resolved picture into it.
+enum gvkScreenPassMode {
+	GVK_SCREENPASS_CLEAR,
+	GVK_SCREENPASS_LOAD,
+	GVK_SCREENPASS_RESTORE
+};
+
+static bool gvkBuildScreenRenderPass(gVKContext& ctx, VkSampleCountFlagBits samples, VkRenderPass& outPass,
+		gvkScreenPassMode mode = GVK_SCREENPASS_CLEAR) {
 	const bool multisampled = samples != VK_SAMPLE_COUNT_1_BIT;
+	const bool preserve = mode == GVK_SCREENPASS_LOAD;
+	const bool restore = mode == GVK_SCREENPASS_RESTORE;
 
 	VkAttachmentDescription colorattachment{};
 	// The attachment has to match the images it will be used with.
@@ -313,14 +320,24 @@ static bool gvkBuildScreenRenderPass(gVKContext& ctx, VkSampleCountFlagBits samp
 	colorattachment.samples = samples;
 	// This is what paints the screen: the clear value handed to
 	// vkCmdBeginRenderPass is written over the whole attachment by the GPU.
-	colorattachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
-	// Single-sampled, the result is kept because it is what gets presented.
-	// Multisampled, the samples are thrown away and the resolve is kept instead.
+	// Unless this is the variant that continues a frame already begun, in which
+	// case what is there has to survive.
+	colorattachment.loadOp = preserve ? VK_ATTACHMENT_LOAD_OP_LOAD
+			: (restore ? VK_ATTACHMENT_LOAD_OP_DONT_CARE : VK_ATTACHMENT_LOAD_OP_CLEAR);
+	// Single-sampled, the result is kept because it is what gets presented, and a
+	// later pass in the same frame can load it back. Multisampled, the samples are
+	// thrown away and the resolve is kept instead - and they have to be, because the
+	// multisample image is allocated as a transient attachment and may have no
+	// memory behind it at all. That is why a multisampled reopen restores from the
+	// resolve rather than loading the samples.
 	colorattachment.storeOp = multisampled ? VK_ATTACHMENT_STORE_OP_DONT_CARE : VK_ATTACHMENT_STORE_OP_STORE;
 	colorattachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
 	colorattachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
 	// The previous contents are cleared anyway, so there is nothing worth keeping.
-	colorattachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+	// Loading them instead means naming the layout the earlier pass left behind:
+	// UNDEFINED would discard exactly the pixels this variant exists to keep.
+	colorattachment.initialLayout = preserve ? VK_IMAGE_LAYOUT_PRESENT_SRC_KHR
+			: VK_IMAGE_LAYOUT_UNDEFINED;
 	// Handover point to the presentation engine - unless this is the multisampled
 	// image, which no one outside the pass ever sees.
 	colorattachment.finalLayout = multisampled
@@ -330,13 +347,26 @@ static bool gvkBuildScreenRenderPass(gVKContext& ctx, VkSampleCountFlagBits samp
 	depthattachment.format = ctx.getDepthFormat();
 	depthattachment.samples = samples;
 	// Cleared every frame for the same reason as the colour attachment.
-	depthattachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
-	// Nothing reads depth once the frame is done, so letting the driver drop it
-	// saves the write-out on tiled architectures.
-	depthattachment.storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+	// RESTORE clears depth rather than loading it: the depth buffer is multisampled
+	// alongside the colour and just as transient, so there is nothing to load. The
+	// picture is rebuilt flat, which is what an overlay or a post effect wants; a 3D
+	// scene that continues after a render target bind loses its occlusion, and that
+	// is the one thing multisampling still costs here.
+	depthattachment.loadOp = preserve ? VK_ATTACHMENT_LOAD_OP_LOAD : VK_ATTACHMENT_LOAD_OP_CLEAR;
+	// Nothing outside the frame reads depth, but a frame that reopens the screen
+	// pass does: the geometry drawn after the reopen has to occlude against what was
+	// drawn before it, so the buffer has to survive the gap. Kept rather than
+	// dropped for that reason - the write-out costs bandwidth on tiled hardware,
+	// which is the price of a mid-frame render target bind being correct.
+	depthattachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
 	depthattachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
 	depthattachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
-	depthattachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+	depthattachment.initialLayout = preserve ? VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL
+			: VK_IMAGE_LAYOUT_UNDEFINED;
+	// Only the single-sampled path ever loads depth back, and only that path needs
+	// it written out. Multisampled depth is transient like the colour.
+	depthattachment.storeOp = multisampled ? VK_ATTACHMENT_STORE_OP_DONT_CARE
+			: VK_ATTACHMENT_STORE_OP_STORE;
 	depthattachment.finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
 
 	// The acquired swapchain image, when the colour attachment above is not it.
@@ -431,13 +461,27 @@ bool gvkCreateRenderPass(gVKContext& ctx) {
 	// the application's request meets what the hardware will actually do.
 	const VkSampleCountFlagBits samples = gvkPickSampleCount(ctx, ctx.requestedsamples);
 	if(ctx.requestedsamples > 1 && samples == VK_SAMPLE_COUNT_1_BIT) {
-		gLogi("gVKRenderTarget") << "MSAA " << ctx.requestedsamples
+		gLogw("gVKRenderTarget") << "MSAA " << ctx.requestedsamples
 				<< "x was requested but this device supports no multisampled colour+depth"
 				<< " combination; continuing without it.";
 	}
 	ctx.samplecount = samples;
 
 	if(!gvkBuildScreenRenderPass(ctx, ctx.samplecount, ctx.renderpass)) return false;
+
+	// Same attachments, same sample counts, so both are render pass compatible with
+	// the framebuffers built for the pass above and need none of their own. Which of
+	// the two a reopen uses depends on the sample count, so only the relevant one is
+	// built.
+	if(!ctx.isMultiSampled()) {
+		if(!gvkBuildScreenRenderPass(ctx, ctx.samplecount, ctx.loadrenderpass, GVK_SCREENPASS_LOAD)) {
+			gvkDestroyRenderPass(ctx);
+			return false;
+		}
+	} else if(!gvkBuildScreenRenderPass(ctx, ctx.samplecount, ctx.restorerenderpass, GVK_SCREENPASS_RESTORE)) {
+		gvkDestroyRenderPass(ctx);
+		return false;
+	}
 
 	// While the screen pass is multisampled, the pipelines that record into the
 	// per-FBO passes still have to be built against *something* single-sampled, and
@@ -450,10 +494,6 @@ bool gvkCreateRenderPass(gVKContext& ctx) {
 		return false;
 	}
 
-	gLogi("gVKRenderTarget") << "Render pass created with a cleared colour and depth attachment"
-			<< (ctx.isMultiSampled()
-					? ", " + std::to_string(static_cast<int>(ctx.samplecount)) + "x MSAA resolved to the swapchain image"
-					: "");
 	return true;
 }
 
@@ -463,6 +503,14 @@ void gvkDestroyRenderPass(gVKContext& ctx) {
 	if(ctx.singlesamplerenderpass != VK_NULL_HANDLE) {
 		vkDestroyRenderPass(ctx.device, ctx.singlesamplerenderpass, nullptr);
 		ctx.singlesamplerenderpass = VK_NULL_HANDLE;
+	}
+	if(ctx.restorerenderpass != VK_NULL_HANDLE) {
+		vkDestroyRenderPass(ctx.device, ctx.restorerenderpass, nullptr);
+		ctx.restorerenderpass = VK_NULL_HANDLE;
+	}
+	if(ctx.loadrenderpass != VK_NULL_HANDLE) {
+		vkDestroyRenderPass(ctx.device, ctx.loadrenderpass, nullptr);
+		ctx.loadrenderpass = VK_NULL_HANDLE;
 	}
 	if(ctx.renderpass != VK_NULL_HANDLE) {
 		vkDestroyRenderPass(ctx.device, ctx.renderpass, nullptr);
@@ -525,9 +573,6 @@ bool gvkCreateFramebuffers(gVKContext& ctx) {
 	}
 	}
 
-	gLogi("gVKRenderTarget") << "Framebuffers created: " << ctx.framebuffers.size()
-			<< " at " << ctx.swapchainextent.width << "x" << ctx.swapchainextent.height
-			<< " across " << GVK_MAX_FRAMES_IN_FLIGHT << " frame slots";
 	return true;
 }
 

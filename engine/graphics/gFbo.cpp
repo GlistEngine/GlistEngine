@@ -112,13 +112,29 @@ void gFbo::allocateMipChain(int width, int height, int miplevels) {
 	this->height = height;
 	this->miplevels = miplevels;
 	isdepthmap = false;
-	usedepthtexture = false;
+	// A Vulkan pipeline is built against a render pass and can only be recorded
+	// into a compatible one, and every pipeline the engine builds is aimed at the
+	// screen pass - which carries a depth attachment. So a target with colour alone
+	// would be one nothing could draw into. The same reasoning as in allocate(),
+	// and like it, OpenGL is left exactly as it was: no depth attachment there,
+	// because a post-process chain never tests depth.
+	usedepthtexture = renderer->isVulkan();
 
 	framebuffer = renderer->createFramebuffer();
 	texture = new gTexture(width, height, miplevels, GL_RGBA, true);
 
 	renderer->bindFramebuffer(framebuffer);
 	renderer->attachTextureToFramebuffer(GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture->getId(), 0);
+
+	if(usedepthtexture) {
+		// One full-size depth attachment for the whole chain: a framebuffer's
+		// attachments may be larger than the framebuffer itself, so the smaller
+		// levels reuse it rather than each needing one of their own.
+		depthtexture = new gTexture(width, height, GL_DEPTH_COMPONENT, true);
+		depthtexture->bind();
+		renderer->attachTextureToFramebuffer(GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthtexture->getId());
+		texture->bind();
+	}
 
 #if defined(DEBUG) || defined(ENGINE_OPENGL_CHECKS)
 	renderer->checkFramebufferStatus();

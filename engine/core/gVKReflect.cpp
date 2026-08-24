@@ -8,6 +8,7 @@
 
 #include "gUtils.h"
 #include <algorithm>
+#include <string>
 
 
 // Constants from the SPIR-V core specification. Spelled out rather than pulled
@@ -17,6 +18,7 @@ static constexpr uint32_t GVK_SPV_HEADER_WORDS = 5;
 static constexpr uint32_t GVK_NO_OFFSET = 0xffffffffu;
 
 enum : uint32_t {
+	SpvOpName = 5, SpvOpMemberName = 6,
 	SpvOpEntryPoint = 15, SpvOpDecorate = 71, SpvOpMemberDecorate = 72,
 	SpvOpTypeInt = 21, SpvOpTypeFloat = 22, SpvOpTypeVector = 23, SpvOpTypeMatrix = 24,
 	SpvOpTypeImage = 25, SpvOpTypeSampler = 26, SpvOpTypeSampledImage = 27,
@@ -25,7 +27,8 @@ enum : uint32_t {
 };
 
 enum : uint32_t {
-	SpvDecorationBlock = 2, SpvDecorationBufferBlock = 3, SpvDecorationArrayStride = 6,
+	SpvDecorationBlock = 2, SpvDecorationBufferBlock = 3, SpvDecorationRowMajor = 4,
+	SpvDecorationColMajor = 5, SpvDecorationArrayStride = 6, SpvDecorationMatrixStride = 7,
 	SpvDecorationBuiltIn = 11, SpvDecorationLocation = 30, SpvDecorationBinding = 33,
 	SpvDecorationDescriptorSet = 34, SpvDecorationOffset = 35,
 };
@@ -67,7 +70,28 @@ struct gvkSpvId {
 	bool isblock = false, isbufferblock = false;
 	std::vector<uint32_t> membertypes;
 	std::vector<uint32_t> memberoffsets;   // GVK_NO_OFFSET where undecorated
+	// OpName / OpMemberName, present only while the module keeps its debug names.
+	std::string name;
+	std::vector<std::string> membernames;
+	// MatrixStride is decorated on the member, not on the matrix type, so it is
+	// kept alongside the offsets and read when that member turns out to be one.
+	std::vector<uint32_t> membermatrixstrides;
+	std::vector<bool> memberrowmajor;
 };
+
+// A SPIR-V literal string: UTF-8 packed four bytes to a word, low byte first,
+// null terminated and padded out to the end of the word.
+static std::string gvkSpvString(const uint32_t* words, uint32_t count) {
+	std::string text;
+	for(uint32_t w = 0; w < count; w++) {
+		for(int b = 0; b < 4; b++) {
+			const char c = static_cast<char>((words[w] >> (b * 8)) & 0xffu);
+			if(c == '\0') return text;
+			text.push_back(c);
+		}
+	}
+	return text;
+}
 
 static VkShaderStageFlagBits gvkStageOf(uint32_t executionModel) {
 	switch(executionModel) {
@@ -79,6 +103,28 @@ static VkShaderStageFlagBits gvkStageOf(uint32_t executionModel) {
 	case SpvExecutionModelGLCompute: return VK_SHADER_STAGE_COMPUTE_BIT;
 	default: return static_cast<VkShaderStageFlagBits>(0);
 	}
+}
+
+static uint32_t gvkTypeSize(const std::vector<gvkSpvId>& ids, uint32_t type);
+
+// Byte size of one member of a struct, as the block reserves it rather than as
+// the type packs it. The two differ for matrices, and only the struct can tell
+// them apart: MatrixStride is decorated on the member, not on the matrix type, so
+// a mat3 - 36 bytes of floats - reserves 48 with its columns 16 bytes apart. Read
+// from the type alone it measures 36, and a block ending in one is then allocated
+// eight bytes short of what the shader reads.
+static uint32_t gvkStructMemberSize(const std::vector<gvkSpvId>& ids, const gvkSpvId& block, size_t member) {
+	if(member >= block.membertypes.size()) return 0;
+	const uint32_t type = block.membertypes[member];
+	if(type >= ids.size()) return 0;
+	const uint32_t matrixstride = (member < block.membermatrixstrides.size())
+			? block.membermatrixstrides[member] : 0;
+	// An array of matrices is spaced by its ArrayStride, which already covers the
+	// per-column padding, so only a lone matrix needs the correction.
+	if(matrixstride != 0 && ids[type].opcode == SpvOpTypeMatrix) {
+		return ids[type].count * matrixstride;
+	}
+	return gvkTypeSize(ids, type);
 }
 
 // Byte size of a type as the shader lays it out. Structs are measured from their
@@ -104,7 +150,7 @@ static uint32_t gvkTypeSize(const std::vector<gvkSpvId>& ids, uint32_t type) {
 		for(size_t i = 0; i < t.membertypes.size(); i++) {
 			uint32_t offset = (i < t.memberoffsets.size()) ? t.memberoffsets[i] : GVK_NO_OFFSET;
 			if(offset == GVK_NO_OFFSET) continue;
-			size = std::max(size, offset + gvkTypeSize(ids, t.membertypes[i]));
+			size = std::max(size, offset + gvkStructMemberSize(ids, t, i));
 		}
 		return size;
 	}
@@ -189,6 +235,183 @@ static bool gvkDescriptorTypeOf(const std::vector<gvkSpvId>& ids, uint32_t type,
 }
 
 
+// Upper bound on how many leaves one shader may expose. A block declaring a huge
+// array of structs would otherwise flatten into an entry per element per field;
+// the cap turns that into a warning rather than a stall.
+static constexpr size_t GVK_MAX_REFLECTED_MEMBERS = 4096;
+
+// Fills in the shape of a leaf: the component type, how many rows and columns it
+// has, and its array footprint. Returns false for a type this reflector has no
+// way to describe, which the caller reports rather than guesses at.
+static bool gvkClassifyLeaf(const std::vector<gvkSpvId>& ids, uint32_t type, gVKReflectedMember& member) {
+	if(type >= ids.size()) return false;
+
+	// Arrays first: the element type is what carries the shape, and the array only
+	// contributes its length and stride.
+	if(ids[type].opcode == SpvOpTypeArray) {
+		const gvkSpvId& array = ids[type];
+		const uint32_t length = (array.lengthid < ids.size()) ? ids[array.lengthid].constant : 0;
+		if(length == 0) return false;
+		member.arraylength = length;
+		member.arraystride = array.arraystride != 0 ? array.arraystride : gvkTypeSize(ids, array.basetype);
+		type = array.basetype;
+		if(type >= ids.size()) return false;
+	}
+
+	if(ids[type].opcode == SpvOpTypeMatrix) {
+		member.columns = ids[type].count;
+		type = ids[type].basetype;
+		if(type >= ids.size()) return false;
+	}
+	if(ids[type].opcode == SpvOpTypeVector) {
+		member.rows = ids[type].count;
+		type = ids[type].basetype;
+		if(type >= ids.size()) return false;
+	}
+
+	const gvkSpvId& scalar = ids[type];
+	if(scalar.opcode == SpvOpTypeFloat) {
+		member.component = GVK_MEMBER_FLOAT;
+	} else if(scalar.opcode == SpvOpTypeInt) {
+		// A GLSL bool is a 32 bit unsigned integer in a block, which is why setBool
+		// and setUnsignedInt end up writing the same bytes.
+		member.component = scalar.signedness != 0 ? GVK_MEMBER_INT : GVK_MEMBER_UINT;
+	} else {
+		return false;
+	}
+	return true;
+}
+
+// Walks one block's struct type and appends an entry for every addressable leaf.
+// Nested structs extend the name with a dot and arrays of structs with an index,
+// so what comes out reads the way the shader source spells it.
+static void gvkFlattenBlock(const std::vector<gvkSpvId>& ids, uint32_t structType,
+		const std::string& prefix, uint32_t baseOffset, uint32_t set, uint32_t binding,
+		bool pushConstant, std::vector<gVKReflectedMember>& out) {
+	if(structType >= ids.size() || ids[structType].opcode != SpvOpTypeStruct) return;
+	const gvkSpvId& block = ids[structType];
+
+	for(size_t i = 0; i < block.membertypes.size(); i++) {
+		if(out.size() >= GVK_MAX_REFLECTED_MEMBERS) {
+			gLogw("gVKReflect") << "Block has more members than this reflector exposes by name; the rest are unreachable from gShader.";
+			return;
+		}
+		const uint32_t offset = (i < block.memberoffsets.size()) ? block.memberoffsets[i] : GVK_NO_OFFSET;
+		if(offset == GVK_NO_OFFSET) continue;
+		const uint32_t type = block.membertypes[i];
+		if(type >= ids.size()) continue;
+
+		std::string name = (i < block.membernames.size()) ? block.membernames[i] : std::string();
+		if(name.empty()) name = "member" + gToStr(static_cast<int>(i));
+		const std::string fullname = prefix.empty() ? name : prefix + "." + name;
+		const uint32_t absoluteoffset = baseOffset + offset;
+
+		// An array of structs is expanded per element, which is what makes
+		// "lights[3].position" resolvable the way the OpenGL path resolves it.
+		uint32_t elementtype = type;
+		uint32_t length = 1;
+		uint32_t stride = 0;
+		if(ids[type].opcode == SpvOpTypeArray) {
+			elementtype = ids[type].basetype;
+			length = (ids[type].lengthid < ids.size()) ? ids[ids[type].lengthid].constant : 0;
+			stride = ids[type].arraystride != 0 ? ids[type].arraystride : gvkTypeSize(ids, elementtype);
+		}
+		if(elementtype < ids.size() && ids[elementtype].opcode == SpvOpTypeStruct) {
+			for(uint32_t e = 0; e < length; e++) {
+				const std::string elementname = (ids[type].opcode == SpvOpTypeArray)
+						? fullname + "[" + gToStr(static_cast<int>(e)) + "]"
+						: fullname;
+				gvkFlattenBlock(ids, elementtype, elementname, absoluteoffset + e * stride,
+						set, binding, pushConstant, out);
+			}
+			continue;
+		}
+
+		gVKReflectedMember member;
+		member.name = fullname;
+		member.set = set;
+		member.binding = binding;
+		member.offset = absoluteoffset;
+		member.pushconstant = pushConstant;
+		if(i < block.membermatrixstrides.size()) member.matrixstride = block.membermatrixstrides[i];
+		if(!gvkClassifyLeaf(ids, type, member)) {
+			// Not fatal: the shader still works, this one member just cannot be
+			// addressed by name. Rejecting the whole module would be worse.
+			gLogw("gVKReflect") << "Block member '" << fullname << "' has a type that cannot be set by name.";
+			continue;
+		}
+		member.size = gvkTypeSize(ids, type);
+		// gvkTypeSize measures a matrix as its columns packed tight, which is what
+		// it occupies in memory but not what it occupies in a block: std140 spaces
+		// the columns matrixstride apart, so a mat3 declared as 36 bytes of floats
+		// actually reserves 48. Anything reading size to know where the member ends
+		// needs the reserved figure.
+		if(member.arraylength <= 1 && member.columns > 1 && member.matrixstride != 0) {
+			member.size = member.columns * member.matrixstride;
+		}
+		out.push_back(member);
+	}
+}
+
+const gVKReflectedMember* gVKReflectedLayout::findMember(const std::string& name) const {
+	for(const gVKReflectedMember& member : members) {
+		if(member.name == name) return &member;
+	}
+	// A block declared with an instance name addresses its members through it -
+	// "params.intensity" - while an anonymous block addresses them bare. The
+	// shader source decides which, and the caller should not have to know, so a
+	// trailing-component match stands in for the qualified form.
+	for(const gVKReflectedMember& member : members) {
+		const size_t dot = member.name.rfind('.');
+		if(dot != std::string::npos && member.name.compare(dot + 1, std::string::npos, name) == 0) return &member;
+		if(dot == std::string::npos && name.size() > member.name.size()) {
+			const size_t namedot = name.rfind('.');
+			if(namedot != std::string::npos && name.compare(namedot + 1, std::string::npos, member.name) == 0) return &member;
+		}
+	}
+	return nullptr;
+}
+
+bool gVKReflectedLayout::resolveMember(const std::string& name, gVKReflectedMember& out) const {
+	const gVKReflectedMember* member = findMember(name);
+	if(member != nullptr) {
+		out = *member;
+		return true;
+	}
+	// "offsets[2]" addresses one element of a plain array. Arrays of structs are
+	// already flattened per element by gvkFlattenBlock, because their leaves need
+	// names of their own; an array of scalars, vectors or matrices stays one member
+	// with a stride, so the index is resolved against that stride here.
+	if(name.size() < 4 || name.back() != ']') return false;
+	const size_t bracket = name.rfind('[');
+	if(bracket == std::string::npos || bracket + 1 >= name.size() - 1) return false;
+	const std::string digits = name.substr(bracket + 1, name.size() - bracket - 2);
+	if(digits.empty() || digits.find_first_not_of("0123456789") != std::string::npos) return false;
+	const gVKReflectedMember* array = findMember(name.substr(0, bracket));
+	if(array == nullptr || array->arraylength == 0) return false;
+
+	const unsigned long element = std::stoul(digits);
+	if(element >= array->arraylength) return false;
+	out = *array;
+	out.name = name;
+	out.offset += static_cast<uint32_t>(element) * array->arraystride;
+	// One element, measured as itself rather than as the array: the stride between
+	// elements is 16 bytes even for a float, and taking that as the size would let
+	// a write spill into the padding a neighbouring member may sit in.
+	out.arraylength = 1;
+	out.size = (out.columns > 1 && out.matrixstride != 0)
+			? out.columns * out.matrixstride
+			: out.rows * 4u;
+	return true;
+}
+
+const gVKReflectedBinding* gVKReflectedLayout::findBinding(const std::string& name) const {
+	for(const gVKReflectedBinding& binding : bindings) {
+		if(binding.name == name) return &binding;
+	}
+	return nullptr;
+}
+
 uint32_t gVKReflectedLayout::getSetCount() const {
 	uint32_t count = 0;
 	for(const gVKReflectedBinding& b : bindings) count = std::max(count, b.set + 1);
@@ -242,6 +465,19 @@ bool gvkReflectSpirv(const uint32_t* spirv, size_t sizeBytes, gVKReflectedLayout
 		};
 
 		switch(opcode) {
+		case SpvOpName: {
+			gvkSpvId* target = opcount >= 2 ? at(ops[0]) : nullptr;
+			if(target != nullptr) target->name = gvkSpvString(ops + 1, opcount - 1);
+			break;
+		}
+		case SpvOpMemberName: {
+			gvkSpvId* target = opcount >= 3 ? at(ops[0]) : nullptr;
+			if(target == nullptr) break;
+			const uint32_t member = ops[1];
+			if(target->membernames.size() <= member) target->membernames.resize(member + 1);
+			target->membernames[member] = gvkSpvString(ops + 2, opcount - 2);
+			break;
+		}
 		case SpvOpEntryPoint:
 			if(opcount >= 1) stage = gvkStageOf(ops[0]);
 			break;
@@ -267,6 +503,12 @@ bool gvkReflectSpirv(const uint32_t* spirv, size_t sizeBytes, gVKReflectedLayout
 			if(ops[2] == SpvDecorationOffset && opcount >= 4) {
 				if(target->memberoffsets.size() <= member) target->memberoffsets.resize(member + 1, GVK_NO_OFFSET);
 				target->memberoffsets[member] = ops[3];
+			} else if(ops[2] == SpvDecorationMatrixStride && opcount >= 4) {
+				if(target->membermatrixstrides.size() <= member) target->membermatrixstrides.resize(member + 1, 0);
+				target->membermatrixstrides[member] = ops[3];
+			} else if(ops[2] == SpvDecorationRowMajor) {
+				if(target->memberrowmajor.size() <= member) target->memberrowmajor.resize(member + 1, false);
+				target->memberrowmajor[member] = true;
 			} else if(ops[2] == SpvDecorationBuiltIn) {
 				// A struct with built-in members is gl_PerVertex, never an interface
 				// block the pipeline layout cares about.
@@ -354,6 +596,12 @@ bool gvkReflectSpirv(const uint32_t* spirv, size_t sizeBytes, gVKReflectedLayout
 	// Vertex inputs are only meaningful on the vertex stage; the Input variables of
 	// a fragment shader are interpolated varyings, not pipeline attributes.
 	std::vector<VkVertexInputAttributeDescription> attributes;
+	// A pipeline has one push constant block shared by its stages, so it is
+	// flattened once however many stages declare it.
+	bool pushconstantsflattened = false;
+	for(const gVKReflectedMember& member : layout.members) {
+		if(member.pushconstant) { pushconstantsflattened = true; break; }
+	}
 
 	for(uint32_t id = 0; id < idbound; id++) {
 		const gvkSpvId& var = ids[id];
@@ -401,6 +649,13 @@ bool gvkReflectSpirv(const uint32_t* spirv, size_t sizeBytes, gVKReflectedLayout
 			}
 			layout.pushconstantsize = std::max(layout.pushconstantsize, size);
 			layout.pushconstantstages |= stage;
+			// Only the first stage to declare the block contributes its members: the
+			// other stages see the same block, and reflecting it twice would leave
+			// two entries per name.
+			if(!pushconstantsflattened) {
+				gvkFlattenBlock(ids, pointee, "", 0, 0, 0, true, layout.members);
+				pushconstantsflattened = true;
+			}
 			continue;
 		}
 
@@ -420,9 +675,17 @@ bool gvkReflectSpirv(const uint32_t* spirv, size_t sizeBytes, gVKReflectedLayout
 			for(gVKReflectedBinding& b : layout.bindings) {
 				if(b.set == var.set && b.binding == var.binding) { existing = &b; break; }
 			}
+			// A sampler is addressed by its variable name; a block by the name of its
+			// struct type, which is what the source writes before the braces.
+			std::string resourcename = var.name;
+			const bool isblock = (type == VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER ||
+					type == VK_DESCRIPTOR_TYPE_STORAGE_BUFFER);
+			if(isblock && pointee < idbound && !ids[pointee].name.empty()) resourcename = ids[pointee].name;
+
 			if(existing != nullptr) {
 				existing->stages |= stage;
 				existing->count = std::max(existing->count, count);
+				if(existing->name.empty()) existing->name = resourcename;
 			} else {
 				gVKReflectedBinding entry{};
 				entry.set = var.set;
@@ -430,7 +693,20 @@ bool gvkReflectSpirv(const uint32_t* spirv, size_t sizeBytes, gVKReflectedLayout
 				entry.count = count;
 				entry.type = type;
 				entry.stages = stage;
+				entry.name = resourcename;
+				if(isblock) {
+					// Rounded up to sixteen: std140 pads a block out to a multiple of
+					// its largest alignment, and the buffer range bound for it has to
+					// cover what the shader may read, not only what the last member
+					// occupies.
+					entry.blocksize = (gvkTypeSize(ids, pointee) + 15u) & ~15u;
+				}
 				layout.bindings.push_back(entry);
+				// Flattened once per binding, on whichever stage declares it first:
+				// a block read by both stages is still one block.
+				if(type == VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER) {
+					gvkFlattenBlock(ids, pointee, "", 0, var.set, var.binding, false, layout.members);
+				}
 			}
 		}
 	}
