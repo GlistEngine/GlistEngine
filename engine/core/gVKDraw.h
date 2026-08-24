@@ -30,10 +30,13 @@
 // Inside the guard, like everything else here: a build without the Vulkan backend
 // never sees a Vulkan header, so a type named outside it does not exist at all.
 //
-// The front face is deliberately the opposite of the OpenGL one. The frame loop
-// draws through a negative-height viewport, which mirrors the y axis and reverses
-// the winding a triangle appears to have on screen, so geometry OpenGL calls
-// counter-clockwise reaches this rasteriser as clockwise.
+// The front face is the opposite of the OpenGL one while the *screen* pass is
+// open: that pass draws through a negative-height viewport, which mirrors the y
+// axis and reverses the winding a triangle appears to have, so geometry OpenGL
+// calls counter-clockwise reaches this rasteriser as clockwise. An offscreen pass
+// uses a positive viewport and mirrors nothing, so there the OpenGL winding is
+// passed through unchanged. gVKContext::doesPassFlipY says which case is open, and
+// gVKRenderEngine::drawMesh3D is where the choice is made.
 struct gVKCullState {
 	VkCullModeFlags mode = VK_CULL_MODE_NONE;
 	VkFrontFace frontface = VK_FRONT_FACE_CLOCKWISE;
@@ -73,6 +76,14 @@ void gvkDrawTextured2D(gVKContext& ctx, VkDescriptorSet textureSet, VkDescriptor
 		const glm::vec2& uvOffset = glm::vec2(0.0f), const glm::vec2& uvScale = glm::vec2(1.0f),
 		bool additive = false);
 
+// Redraws a single-sampled copy of the screen over the whole of the reopened pass,
+// with blending off so it replaces rather than composites. This is how a
+// multisampled frame gets its picture back after a render target was bound half way
+// through: the multisample image is transient and keeps nothing between passes, so
+// the resolved image is copied aside and put back through here. Recorded outside the
+// 2D batch, because it has to come before every draw in the pass.
+bool gvkDrawScreenRestore(gVKContext& ctx, VkDescriptorSet textureSet);
+
 // Records an expanded textured triangle list. xyuv has four floats per vertex:
 // position then texture coordinate.
 void gvkDrawTexturedTriangles2D(gVKContext& ctx, VkDescriptorSet textureSet,
@@ -90,6 +101,18 @@ void gvkDrawTexturedTriangles2D(gVKContext& ctx, VkDescriptorSet textureSet,
 // one that records directly into the command buffer has to as well, and so does
 // any code that ends a render pass while the frame is still going.
 void gvkFlush2DBatch(gVKContext& ctx);
+
+/*
+ * Draws a screen-covering quad through whatever user shader is bound, which is
+ * how a post-process effect reaches the Vulkan backend: gPostProcessManager binds
+ * an effect's shader, points it at the previous pass's texture and asks for one
+ * quad covering the target.
+ *
+ * There is no pipeline of the engine's own behind this - the effect's own shader
+ * is the pipeline - so it does nothing and reports false when no user shader is
+ * bound, or when the bound one does not read the two inputs this path supplies.
+ */
+bool gvkDrawFullscreenQuad(gVKContext& ctx);
 
 // Abandons the open batch without recording it, for the frame boundary: the range
 // it names is about to be rewound underneath it.

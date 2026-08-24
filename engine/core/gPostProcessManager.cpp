@@ -32,6 +32,9 @@ void gPostProcessManager::addEffect(gBasePostProcess *effect) {
 }
 
 void gPostProcessManager::enable() {
+	// setDimensions() owns the allocation. Without it there is nothing to bind, and
+	// fbos[0] below would read through a null array.
+	if(fbos == nullptr) return;
 	if (this->width != renderer->getScreenWidth() || this->height != renderer->getScreenHeight()) {
 			this->width = renderer->getScreenWidth();
 			this->height = renderer->getScreenHeight();
@@ -47,6 +50,8 @@ void gPostProcessManager::enable() {
 }
 
 void gPostProcessManager::disable() {
+	// Mirrors the guard in enable(): nothing was bound, so nothing is unbound.
+	if(fbos == nullptr) return;
 	renderer->endSSAO();
 
 	renderer->disableDepthTest();
@@ -69,7 +74,12 @@ void gPostProcessManager::disable() {
 	renderer->bindDefaultFramebuffer();
 	renderer->clearScreen(true, false);
 
-	renderer->getFboShader()->use();
+	// The final resolve to the screen. Both backends create this shader - OpenGL in
+	// gRenderer::init(), Vulkan in gVKRenderEngine::init() - but a backend that
+	// failed to build it must not be dereferenced through a null.
+	gShader* fboshader = renderer->getFboShader();
+	if(fboshader == nullptr) return;
+	fboshader->use();
 	renderer->bindQuadVAO();
 	fbos[lastwrittenfbo].getTexture().bind();
 	renderer->drawFullscreenQuad();

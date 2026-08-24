@@ -49,6 +49,44 @@ set(GVK_HEADER "/*
 
 ")
 
+# Whether the committed SPIR-V still corresponds to these sources is a question
+# about the sources, not about the clock and not about the compiler. Timestamps
+# answer it wrongly in both directions: a fresh clone or a branch switch sets
+# every file's modification time at once and in no useful order, so the rule
+# fires with nothing changed - and then whichever glslc the developer happens to
+# have rewrites the header, because two versions of the optimiser do not emit the
+# same words for the same source. The result is a committed binary that changes
+# from machine to machine and conflicts on every merge.
+#
+# So the header records a hash of the sources it was generated from, and the
+# generator stops here when that hash still matches. Editing a shader changes it
+# and the SPIR-V is regenerated; upgrading a compiler does not, and the committed
+# bytes stay put. Pass -DFORCE=ON to regenerate anyway, which is what a
+# deliberate toolchain upgrade wants.
+set(GVK_HASH_INPUT "")
+list(LENGTH GVK_SHADERS GVK_HASH_COUNT)
+math(EXPR GVK_HASH_LAST "${GVK_HASH_COUNT} - 1")
+foreach(i RANGE 0 ${GVK_HASH_LAST} 2)
+	math(EXPR j "${i} + 1")
+	list(GET GVK_SHADERS ${j} file)
+	file(READ "${SHADER_DIR}/${file}" GVK_ONE_SOURCE)
+	string(APPEND GVK_HASH_INPUT "${file}\n${GVK_ONE_SOURCE}")
+endforeach()
+# The generator itself is part of the input: change how the header is written and
+# the header has to be rewritten.
+file(READ "${CMAKE_CURRENT_LIST_FILE}" GVK_GENERATOR_SOURCE)
+string(APPEND GVK_HASH_INPUT "${GVK_GENERATOR_SOURCE}")
+string(SHA256 GVK_HASH "${GVK_HASH_INPUT}")
+set(GVK_HASH_LINE "// source-sha256: ${GVK_HASH}")
+
+if(NOT FORCE AND EXISTS "${OUT}")
+	file(STRINGS "${OUT}" GVK_RECORDED_HASH REGEX "^// source-sha256: ")
+	if(GVK_RECORDED_HASH STREQUAL GVK_HASH_LINE)
+		message(STATUS "Vulkan shader sources unchanged; keeping the committed SPIR-V in ${OUT}")
+		return()
+	endif()
+endif()
+
 list(LENGTH GVK_SHADERS GVK_SHADER_COUNT)
 math(EXPR GVK_LAST "${GVK_SHADER_COUNT} - 1")
 foreach(i RANGE 0 ${GVK_LAST} 2)
@@ -70,6 +108,8 @@ foreach(i RANGE 0 ${GVK_LAST} 2)
 
 	string(APPEND GVK_HEADER "static const uint32_t ${name}[] =\n${spirv};\n\n")
 endforeach()
+
+string(APPEND GVK_HEADER "${GVK_HASH_LINE}\n")
 
 # Only touch the header when the bytes actually change, so an unrelated rebuild
 # does not keep restamping a committed file.

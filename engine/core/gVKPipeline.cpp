@@ -178,6 +178,9 @@ struct gvkPipelineParts {
 	uint32_t pushsize = 0;
 	VkShaderStageFlags pushstages = 0;
 	std::vector<gVKReflectedBinding> bindings;
+	// The whole reflected interface. The built-in pipelines only ever needed the
+	// three fields above; a user shader is addressed by name, so it needs the rest.
+	gVKReflectedLayout reflected;
 };
 
 // Where one build is aimed: the render pass per sample-count variant, plus the
@@ -241,9 +244,7 @@ static bool gvkBuildPipeline(VkDevice device, VkPipelineCache cache, const gvkTa
 	parts.pushsize = reflected.pushconstantsize;
 	parts.pushstages = reflected.pushconstantstages;
 	parts.bindings = reflected.bindings;
-	gLogi("gVKPipeline") << name << ": push " << parts.pushsize << " bytes, "
-			<< reflected.bindings.size() << " descriptor bindings, vertex stride "
-			<< reflected.vertexstride;
+	parts.reflected = reflected;
 
 	// One descriptor set layout per set the shaders declare, in set order, so the
 	// indices match the set numbers used in the shader.
@@ -386,7 +387,16 @@ static bool gvkBuildPipeline(VkDevice device, VkPipelineCache cache, const gvkTa
 	blendattachment.srcColorBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA;
 	blendattachment.dstColorBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
 	blendattachment.colorBlendOp = VK_BLEND_OP_ADD;
-	blendattachment.srcAlphaBlendFactor = VK_BLEND_FACTOR_ONE;
+	// The same factors as the colour channels, because that is what OpenGL does:
+	// glBlendFunc sets one pair for all four channels, so the alpha channel is
+	// scaled by the source alpha there too. Vulkan can separate them, and the more
+	// usual choice - ONE / ONE_MINUS_SRC_ALPHA, the proper over operator for
+	// coverage - was what this used to hold. It is arguably the better formula, but
+	// it is not the engine's: a half covered glyph drawn into a render target came
+	// out with alpha 1 here and alpha 0.75 on OpenGL, and the difference showed up
+	// the moment that target was composited back (gGUIScrollable does exactly that,
+	// and its text edges were visibly darker under Vulkan).
+	blendattachment.srcAlphaBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA;
 	blendattachment.dstAlphaBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
 	blendattachment.alphaBlendOp = VK_BLEND_OP_ADD;
 
@@ -498,14 +508,17 @@ static bool gvkBuildPipeline(VkDevice device, VkPipelineCache cache, const gvkTa
 			// Only the destination factor changes: the source is still scaled by alpha, so
 			// a fully transparent texel contributes nothing and an opaque one contributes
 			// its full colour, exactly as glBlendFunc(GL_SRC_ALPHA, GL_ONE) does. The
-			// alpha channel keeps the over operator - the colour is what is being added,
-			// and letting alpha accumulate as well would saturate the target's coverage.
+			// alpha channel follows along, because glBlendFunc(GL_SRC_ALPHA, GL_ONE)
+			// applies to all four channels on the OpenGL side and this has to land on
+			// the same pixels.
 			blendattachment.blendEnable = VK_TRUE;
 			blendattachment.dstColorBlendFactor = VK_BLEND_FACTOR_ONE;
+			blendattachment.dstAlphaBlendFactor = VK_BLEND_FACTOR_ONE;
 			result = vkCreateGraphicsPipelines(device, cache, 1, &pipelineinfo, nullptr,
 					&built.additivepipeline);
 			blendattachment.blendEnable = options.blend ? VK_TRUE : VK_FALSE;
 			blendattachment.dstColorBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
+			blendattachment.dstAlphaBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
 		}
 		if(result == VK_SUCCESS && options.nocutoutvariant) {
 			// The same modules, compiled a second time with the cutout constant forced to
@@ -649,6 +662,10 @@ static bool gvkBuildAll(VkDevice device, VkPipelineCache cache, const gvkTargetP
 
 	gvkPipelineOptions imageopts;
 	imageopts.additivevariant = true;
+	// And a copy with blending off, which is what rebuilding the screen from a
+	// resolved copy needs: that draw replaces every texel rather than compositing,
+	// and the resolved image's own alpha must not decide what survives.
+	imageopts.blendvariant = true;
 	imageopts.vertexattributes = gvk2dattributes;
 	imageopts.vertexattributecount = static_cast<uint32_t>(std::size(gvk2dattributes));
 	imageopts.vertexstride = GVK_2D_VERTEX_STRIDE;
@@ -754,7 +771,7 @@ bool gvkCreateGraphicsPipelines(gVKContext& ctx) {
 	passes.sampleshading = ctx.sampleshadingenabled && ctx.devicefeatures.sampleRateShading == VK_TRUE;
 	passes.minsampleshading = ctx.minsampleshading;
 	if(ctx.sampleshadingenabled && ctx.devicefeatures.sampleRateShading != VK_TRUE) {
-		gLogi("gVKPipeline") << "Sample shading was requested but the device does not support"
+		gLogw("gVKPipeline") << "Sample shading was requested but the device does not support"
 				<< " sampleRateShading; multisampling stays coverage only.";
 	}
 
@@ -795,17 +812,6 @@ bool gvkCreateGraphicsPipelines(gVKContext& ctx) {
 	ctx.image2dpushstages = image.pushstages;
 	ctx.descriptorpool = pool;
 
-	if(gvkRuntimeShadersAvailable()) {
-		gLogi("gVKPipeline") << "2D and 3D graphics pipelines created from "
-				<< gvkShaderSourceDir() << "; edits to those shaders reload live.";
-	} else {
-		gLogi("gVKPipeline") << "2D and 3D graphics pipelines created.";
-	}
-	if(ctx.isMultiSampled()) {
-		gLogi("gVKPipeline") << "Two sample-count builds: 1x for offscreen targets and "
-				<< static_cast<int>(ctx.samplecount) << "x for the screen pass"
-				<< (passes.sampleshading ? ", with sample shading" : "");
-	}
 	return true;
 }
 
@@ -947,6 +953,103 @@ void gvkDestroyGraphicsPipelines(gVKContext& ctx) {
 	ctx.image2dpushstages = 0;
 	ctx.mesh3dpushsize = 0;
 	ctx.mesh3dpushstages = 0;
+}
+
+bool gvkBuildUserPipeline(gVKContext& ctx, const std::vector<uint32_t>& vertSpirv,
+		const std::vector<uint32_t>& fragSpirv, const char* debugName, gVKUserPipeline& out) {
+	out = gVKUserPipeline{};
+	if(ctx.device == VK_NULL_HANDLE || ctx.renderpass == VK_NULL_HANDLE) {
+		gLoge("gVKPipeline") << "Cannot build the shader '" << debugName
+				<< "': the Vulkan device is not up yet. Load shaders from setup(), not before.";
+		return false;
+	}
+	if(vertSpirv.empty() || fragSpirv.empty()) return false;
+
+	// Aimed at the same passes the built-in pipelines are, so a user shader records
+	// into the screen pass and into an offscreen target alike.
+	gvkTargetPasses passes;
+	passes.pass[0] = ctx.singlesamplerenderpass != VK_NULL_HANDLE ? ctx.singlesamplerenderpass : ctx.renderpass;
+	passes.pass[1] = ctx.isMultiSampled() ? ctx.renderpass : VK_NULL_HANDLE;
+	passes.samples = ctx.samplecount;
+	passes.sampleshading = ctx.sampleshadingenabled && ctx.devicefeatures.sampleRateShading == VK_TRUE;
+	passes.minsampleshading = ctx.minsampleshading;
+
+	// The same render state a mesh drawn through the engine's own shader gets, so
+	// swapping a user shader in changes what is computed and nothing else: depth
+	// tested, culling and depth dynamic, and a second copy with blending on because
+	// blend state cannot be dynamic. Everything the two use differently - depth off
+	// for a fullscreen pass, a different topology - is dynamic state that the draw
+	// sets, so one build serves both.
+	gvkPipelineOptions options;
+	options.depthtest = true;
+	options.blend = false;
+	options.dynamicculling = true;
+	options.blendvariant = true;
+	options.linevariant = true;
+
+	// Which vertex layout the pipeline describes has to follow what the shader
+	// actually reads, because a user shader can be either of two quite different
+	// things: a replacement for the engine's mesh shading, fed gVertex buffers, or
+	// a fullscreen pass over a texture, fed a quad of position and texture
+	// coordinate. Guessing wrong does not fail loudly - it feeds the shader the
+	// wrong bytes and renders nonsense.
+	//
+	// The test is exact: the mesh layout is used only when every input the shader
+	// declares appears in it at the same location with the same format. A post
+	// effect declaring vec2 at location 0 does not match the mesh layout's vec3
+	// there, so it falls through to the layout reflected out of the shader itself -
+	// attributes packed in location order, which is exactly how the fullscreen quad
+	// path writes its vertices.
+	bool fitsmeshlayout = true;
+	{
+		gVKReflectedLayout probe;
+		if(!gvkReflectSpirv(vertSpirv.data(), vertSpirv.size() * sizeof(uint32_t), probe)) return false;
+		for(const VkVertexInputAttributeDescription& declared : probe.vertexattributes) {
+			bool matched = false;
+			for(const VkVertexInputAttributeDescription& available : gvkmesh3dattributes) {
+				if(available.location == declared.location && available.format == declared.format) {
+					matched = true;
+					break;
+				}
+			}
+			if(!matched) { fitsmeshlayout = false; break; }
+		}
+		if(probe.vertexattributes.empty()) fitsmeshlayout = false;
+	}
+	if(fitsmeshlayout) {
+		options.vertexattributes = gvkmesh3dattributes;
+		options.vertexattributecount = static_cast<uint32_t>(std::size(gvkmesh3dattributes));
+		options.vertexstride = GVK_MESH3D_VERTEX_STRIDE;
+		options.instancestride = GVK_MESH3D_INSTANCE_STRIDE;
+	}
+
+	gvkPipelineParts parts;
+	if(!gvkBuildPipeline(ctx.device, ctx.pipelinecache, passes, debugName, vertSpirv, fragSpirv, options, parts)) {
+		gvkDestroyParts(ctx.device, parts);
+		return false;
+	}
+	out.usesmeshlayout = fitsmeshlayout;
+	out.vertexstride = fitsmeshlayout ? GVK_MESH3D_VERTEX_STRIDE : parts.reflected.vertexstride;
+
+	for(uint32_t v = 0; v < GVK_PIPELINE_SAMPLE_VARIANTS; v++) out.variants[v] = parts.variants[v];
+	out.layout = parts.layout;
+	out.setlayouts = parts.setlayouts;
+	out.pushsize = parts.pushsize;
+	out.pushstages = parts.pushstages;
+	out.reflected = parts.reflected;
+	return true;
+}
+
+void gvkDestroyUserPipeline(gVKContext& ctx, gVKUserPipeline& pipeline) {
+	if(ctx.device == VK_NULL_HANDLE) { pipeline = gVKUserPipeline{}; return; }
+	for(uint32_t v = 0; v < GVK_PIPELINE_SAMPLE_VARIANTS; v++) {
+		gvkDestroyPipelineVariants(ctx.device, pipeline.variants[v]);
+	}
+	if(pipeline.layout != VK_NULL_HANDLE) vkDestroyPipelineLayout(ctx.device, pipeline.layout, nullptr);
+	for(VkDescriptorSetLayout setlayout : pipeline.setlayouts) {
+		if(setlayout != VK_NULL_HANDLE) vkDestroyDescriptorSetLayout(ctx.device, setlayout, nullptr);
+	}
+	pipeline = gVKUserPipeline{};
 }
 
 void gvkDestroyPipelineCache(gVKContext& ctx) {

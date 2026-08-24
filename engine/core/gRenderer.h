@@ -585,6 +585,16 @@ public:
 
 	/* -------------- gShader --------------- */
 	virtual GLuint loadProgram(const char* vertexSource, const char* fragmentSource, const char* geometrySource) = 0;
+
+	// Where the sources about to be handed to loadProgram came from, when they came
+	// from files rather than from strings the application built. The OpenGL backend
+	// has no use for it and ignores it; the Vulkan backend looks for pre-compiled
+	// SPIR-V beside them, which is how a shader reaches a build with no shader
+	// compiler linked in - every mobile and release build.
+	virtual void setShaderSourcePaths(const std::string& vertexPath, const std::string& fragmentPath) {
+		(void)vertexPath;
+		(void)fragmentPath;
+	}
 	virtual void checkCompileErrors(GLuint shader, const std::string& type) = 0;
 	virtual void setBool(GLuint uniformloc, bool value) = 0;
 	virtual void setInt(GLuint uniformloc, int value) = 0;
@@ -731,10 +741,10 @@ protected:
 	float ssaostrength;
 	bool isssaoallocated;
 	bool isssaodebug;
-	gFbo* ssaofbo;
-	gFbo* ssaoresultfbo;
-	gShader* ssaoshader;
-	gShader* ssaoblurshader;
+	gFbo* ssaofbo = nullptr;
+	gFbo* ssaoresultfbo = nullptr;
+	gShader* ssaoshader = nullptr;
+	gShader* ssaoblurshader = nullptr;
 	int ssaorealdefaultfbo;
 	GLuint ssaoprevframebuffer;
 	int ssaoprevviewport[4];
@@ -746,19 +756,23 @@ protected:
 	bool ishdrenabled = false;
 	bool issoftshadowsenabled = false;
 
-	gShader* colorshader;
-	gShader* textureshader;
-	gShader* fontshader;
-	gShader* imageshader;
-	gShader* skyboxshader;
-	gShader* shadowmapshader;
-	gShader* pbrshader;
-	gShader* equirectangularshader;
-	gShader* irradianceshader;
-	gShader* prefiltershader;
-	gShader* brdfshader;
-	gShader* fboshader;
-	gShader* gridshader;
+	// init() creates these, and init() is skipped under Vulkan because there is no
+	// GL context to compile GLSL against. Without an initialiser the members would
+	// hold indeterminate values there, and a caller that forgets its backend check
+	// would dereference garbage rather than crash on a null.
+	gShader* colorshader = nullptr;
+	gShader* textureshader = nullptr;
+	gShader* fontshader = nullptr;
+	gShader* imageshader = nullptr;
+	gShader* skyboxshader = nullptr;
+	gShader* shadowmapshader = nullptr;
+	gShader* pbrshader = nullptr;
+	gShader* equirectangularshader = nullptr;
+	gShader* irradianceshader = nullptr;
+	gShader* prefiltershader = nullptr;
+	gShader* brdfshader = nullptr;
+	gShader* fboshader = nullptr;
+	gShader* gridshader = nullptr;
 
 	glm::mat4 projectionmatrix;
 	glm::mat4 projectionmatrixold;
@@ -766,10 +780,10 @@ protected:
 	glm::mat4 viewmatrix;
 	glm::mat4 viewmatrixold;
 	glm::vec3 cameraposition;
-	gCamera* camera;
+	gCamera* camera = nullptr;
 
-	gGrid* grid;
-	gGrid* originalgrid;
+	gGrid* grid = nullptr;
+	gGrid* originalgrid = nullptr;
 
 	unsigned int fullscreenquadvao;
 	unsigned int fullscreenquadvbo;

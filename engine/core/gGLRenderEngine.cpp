@@ -15,7 +15,7 @@
 void gCheckGLErrorAndPrint(const std::string& prefix, const std::string& func, int line) {
 	GLenum error = glGetError();
 	if (error != GL_NO_ERROR) {
-		gLogi("gGLRenderEngine") << prefix << "OpenGL ERROR at " << func << ", line " << line << ", error: " << gToHex(error, 4);
+		gLoge("gGLRenderEngine") << prefix << "OpenGL ERROR at " << func << ", line " << line << ", error: " << gToHex(error, 4);
 	}
 }
 
@@ -337,7 +337,7 @@ void gGLRenderEngine::checkFramebufferStatus() {
 	// check if fbo complete
 	G_CHECK_GL2(GLuint status, glCheckFramebufferStatus(GL_FRAMEBUFFER));
 	if(status != GL_FRAMEBUFFER_COMPLETE) {
-		gLogi("gFbo") << "Framebuffer is not complete! status:" << gToHex(status, 4);
+		gLoge("gFbo") << "Framebuffer is not complete! status:" << gToHex(status, 4);
 	}
 }
 
@@ -854,7 +854,6 @@ void GLAPIENTRY openglErrorCallback(GLenum source, GLenum type, GLuint id,
 #endif
 
 void gGLRenderEngine::init() {
-	gLogi("gGLRenderEngine") << "OpenGL render engine active";
 #if !defined(GLIST_OPENGLES) && (defined(DEBUG) || defined(ENGINE_OPENGL_CHECKS))
 	// On newer versions of OpenGL, debug callbacks are available; we enable them only for debug builds because it might have a performance impact.
 	// You can place a debug point and go back to the original source of the message from the stack trace, because it is sync.

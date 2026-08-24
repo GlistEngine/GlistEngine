@@ -37,7 +37,7 @@ void gShadowMap::allocate(gLight* light, gCamera* camera, int width, int height)
 	// renders without them instead of crashing.
 	if(renderer->isVulkan()) {
 		if(!renderer->allocateShadowMap(width, height)) {
-			gLogi("gShadowMap") << "The Vulkan backend could not allocate a shadow map; "
+			gLogw("gShadowMap") << "The Vulkan backend could not allocate a shadow map; "
 					<< "the scene will be drawn unshadowed.";
 			return;
 		}

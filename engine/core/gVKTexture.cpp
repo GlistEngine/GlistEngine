@@ -33,7 +33,8 @@ static void gvkTransitionImageLayout(VkCommandBuffer cmd, VkImage image,
 		VkImageLayout oldLayout, VkImageLayout newLayout,
 		VkAccessFlags srcAccess, VkAccessFlags dstAccess,
 		VkPipelineStageFlags srcStage, VkPipelineStageFlags dstStage,
-		uint32_t baseLevel = 0, uint32_t levelCount = 1) {
+		uint32_t baseLevel = 0, uint32_t levelCount = 1,
+		VkImageAspectFlags aspect = VK_IMAGE_ASPECT_COLOR_BIT) {
 	VkImageMemoryBarrier barrier{};
 	barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
 	barrier.oldLayout = oldLayout;
@@ -41,7 +42,9 @@ static void gvkTransitionImageLayout(VkCommandBuffer cmd, VkImage image,
 	barrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
 	barrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
 	barrier.image = image;
-	barrier.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+	// A depth image must be named by its depth aspect; the colour default covers
+	// every other caller here.
+	barrier.subresourceRange.aspectMask = aspect;
 	barrier.subresourceRange.baseMipLevel = baseLevel;
 	barrier.subresourceRange.levelCount = levelCount;
 	barrier.subresourceRange.baseArrayLayer = 0;
@@ -357,7 +360,15 @@ bool gvkSetTextureSampler(gVKContext& ctx, gVKTexture* tex, VkFilter minFilter, 
 	tex->mipmapmode = mipmapMode;
 	if(tex->descriptorset != VK_NULL_HANDLE) {
 		VkDescriptorImageInfo imginfo{};
-		imginfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+	// A mip-chained render target is sampled through a view spanning every level,
+	// and one of those levels is the attachment being drawn into at the time - a
+	// bloom pyramid reads the level above the one it fills. A view cannot be
+	// SHADER_READ_ONLY and COLOR_ATTACHMENT at once, so the whole image sits in
+	// GENERAL instead, which is valid for both. It is the one layout that allows
+	// this, and it applies only to chained targets: everything else keeps the
+	// tighter layout a driver can optimise for.
+		imginfo.imageLayout = tex->miplevels > 1 && tex->isattachment
+				? VK_IMAGE_LAYOUT_GENERAL : VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
 		imginfo.imageView = tex->view;
 		imginfo.sampler = tex->sampler;
 		VkWriteDescriptorSet write{};
@@ -394,7 +405,10 @@ bool gvkWriteTextureDescriptorSet(gVKContext& ctx, gVKTexture* tex) {
 	}
 
 	VkDescriptorImageInfo imginfo{};
-	imginfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+	// See the note in gvkUpdateTextureSampler: a chained render target is read and
+	// written at the same time and so lives in GENERAL.
+	imginfo.imageLayout = tex->miplevels > 1 && tex->isattachment
+			? VK_IMAGE_LAYOUT_GENERAL : VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
 	imginfo.imageView = tex->view;
 	imginfo.sampler = tex->sampler;
 	VkWriteDescriptorSet write{};
@@ -409,14 +423,23 @@ bool gvkWriteTextureDescriptorSet(gVKContext& ctx, gVKTexture* tex) {
 	return true;
 }
 
-gVKTexture* gvkCreateAttachmentTexture(gVKContext& ctx, int width, int height, bool depth) {
+gVKTexture* gvkCreateAttachmentTexture(gVKContext& ctx, int width, int height, bool depth,
+		int mipLevels, bool transferDst) {
 	VkDevice device = *ctx.getDevice();
 	if(device == VK_NULL_HANDLE || width <= 0 || height <= 0) return nullptr;
+	if(mipLevels < 1) mipLevels = 1;
+	// A chain cannot be longer than the point where both sides reach one texel.
+	int maxlevels = 1;
+	for(int extent = std::max(width, height); extent > 1; extent >>= 1) maxlevels++;
+	if(mipLevels > maxlevels) mipLevels = maxlevels;
+	// Depth targets are compared against rather than filtered down, so a chain
+	// would have nothing to hold.
+	if(depth) mipLevels = 1;
 
 	gVKTexture* tex = new gVKTexture();
 	tex->width = width;
 	tex->height = height;
-	tex->miplevels = 1;
+	tex->miplevels = static_cast<uint32_t>(mipLevels);
 	tex->isattachment = true;
 	// The swapchain's own formats, not this file's usual R8G8B8A8. Vulkan pipelines
 	// are built against a render pass, and a pipeline can only be recorded into a
@@ -432,7 +455,7 @@ gVKTexture* gvkCreateAttachmentTexture(gVKContext& ctx, int width, int height, b
 	imageinfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
 	imageinfo.imageType = VK_IMAGE_TYPE_2D;
 	imageinfo.extent = {static_cast<uint32_t>(width), static_cast<uint32_t>(height), 1};
-	imageinfo.mipLevels = 1;
+	imageinfo.mipLevels = tex->miplevels;
 	imageinfo.arrayLayers = 1;
 	imageinfo.format = tex->format;
 	imageinfo.tiling = VK_IMAGE_TILING_OPTIMAL;
@@ -441,6 +464,7 @@ gVKTexture* gvkCreateAttachmentTexture(gVKContext& ctx, int width, int height, b
 	// draw into it and then read it back as a texture.
 	imageinfo.usage = (depth ? VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT
 			: VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT) | VK_IMAGE_USAGE_SAMPLED_BIT;
+	if(transferDst) imageinfo.usage |= VK_IMAGE_USAGE_TRANSFER_DST_BIT;
 	imageinfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
 	imageinfo.samples = VK_SAMPLE_COUNT_1_BIT;
 	if(vkCreateImage(device, &imageinfo, nullptr, &tex->image) != VK_SUCCESS) {
@@ -474,7 +498,9 @@ gVKTexture* gvkCreateAttachmentTexture(gVKContext& ctx, int width, int height, b
 	viewinfo.format = tex->format;
 	viewinfo.subresourceRange.aspectMask = tex->aspect;
 	viewinfo.subresourceRange.baseMipLevel = 0;
-	viewinfo.subresourceRange.levelCount = 1;
+	// Spans the whole chain, which is what makes textureLod able to reach a level
+	// other than 0. The per-level views below are the ones a framebuffer names.
+	viewinfo.subresourceRange.levelCount = tex->miplevels;
 	viewinfo.subresourceRange.baseArrayLayer = 0;
 	viewinfo.subresourceRange.layerCount = 1;
 	if(vkCreateImageView(device, &viewinfo, nullptr, &tex->view) != VK_SUCCESS) {
@@ -483,10 +509,44 @@ gVKTexture* gvkCreateAttachmentTexture(gVKContext& ctx, int width, int height, b
 		return nullptr;
 	}
 
+	// A framebuffer attachment must name exactly one level, so each gets a view.
+	if(tex->miplevels > 1) {
+		tex->levelviews.assign(tex->miplevels, VK_NULL_HANDLE);
+		for(uint32_t level = 0; level < tex->miplevels; level++) {
+			viewinfo.subresourceRange.baseMipLevel = level;
+			viewinfo.subresourceRange.levelCount = 1;
+			if(vkCreateImageView(device, &viewinfo, nullptr, &tex->levelviews[level]) != VK_SUCCESS) {
+				gLoge("gVKTexture") << "vkCreateImageView failed for mip level " << level
+						<< " of a framebuffer attachment.";
+				gvkDestroyTexture(ctx, tex);
+				return nullptr;
+			}
+		}
+	}
+
+	// Every level starts sampleable. A pyramid is filled from the top down and a
+	// shader may read a level before anything has been drawn into it; leaving those
+	// in UNDEFINED would make that read invalid rather than merely empty.
+	VkCommandBuffer cmd = gvkBeginUpload(ctx);
+	if(cmd != VK_NULL_HANDLE) {
+		const VkImageLayout resting = tex->miplevels > 1
+				? VK_IMAGE_LAYOUT_GENERAL : VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+		gvkTransitionImageLayout(cmd, tex->image,
+				VK_IMAGE_LAYOUT_UNDEFINED, resting,
+				0, VK_ACCESS_SHADER_READ_BIT,
+				VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT,
+				0, tex->miplevels, tex->aspect);
+		gvkEndUpload(ctx);
+		tex->layout = resting;
+	}
+
 	// Clamped rather than repeating: a render target sampled outside its own edge
 	// should not fold the opposite side back in.
 	tex->addressu = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
 	tex->addressv = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
+	// Only a chained target may walk levels; a single-level one must not, or a
+	// minified sample would read a level that does not exist.
+	tex->usemipmaps = tex->miplevels > 1;
 	tex->sampler = gvkAcquireSampler(ctx, tex->minfilter, tex->magfilter, tex->addressu, tex->addressv,
 			tex->usemipmaps, tex->mipmapmode, tex->samplerkey);
 	if(tex->sampler == VK_NULL_HANDLE) {
@@ -515,6 +575,9 @@ void gvkDestroyTexture(gVKContext& ctx, gVKTexture* tex) {
 		}
 		gvkReleaseSampler(ctx, tex->samplerkey, tex->sampler);
 		if(tex->view != VK_NULL_HANDLE) vkDestroyImageView(device, tex->view, nullptr);
+		for(VkImageView levelview : tex->levelviews) {
+			if(levelview != VK_NULL_HANDLE) vkDestroyImageView(device, levelview, nullptr);
+		}
 		if(tex->image != VK_NULL_HANDLE) vkDestroyImage(device, tex->image, nullptr);
 		if(tex->memory != VK_NULL_HANDLE) vkFreeMemory(device, tex->memory, nullptr);
 	}

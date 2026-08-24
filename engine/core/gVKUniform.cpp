@@ -122,9 +122,6 @@ bool gvkCreateUniformResources(gVKContext& ctx) {
 		}
 	}
 
-	gLogi("gVKUniform") << "Scene uniform buffers ready: " << GVK_MAX_FRAMES_IN_FLIGHT
-			<< " x " << GVK_SCENE_UNIFORM_SLOTS << " slots of " << sizeof(gVKSceneUniforms)
-			<< " bytes, up to " << GVK_MAX_LIGHTS << " lights, growing on demand";
 	return true;
 }
 

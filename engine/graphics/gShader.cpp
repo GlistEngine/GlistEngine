@@ -79,7 +79,11 @@ void gShader::load(const std::string& vertexFullPath, const std::string& fragmen
     } catch (std::ifstream::failure& e) {
         std::cout << "ERROR::SHADER::FILE_NOT_SUCCESFULLY_READ" << std::endl;
     }
+    // The Vulkan backend needs the paths as well as the text: a build without a
+    // shader compiler loads the SPIR-V sitting beside them instead of compiling.
+    renderer->setShaderSourcePaths(vertexFullPath, fragmentFullPath);
     loadProgram(vertexCode, fragmentCode, geometryCode);
+    renderer->setShaderSourcePaths("", "");
 }
 
 void gShader::load(const std::string& shaderFullPath) {
@@ -233,9 +237,23 @@ std::unordered_map<std::string, std::string> gShader::generateDefines(ShaderType
 	} else if (type == ShaderType::GEOMETRY) {
 		map.insert(std::pair<std::string, std::string>("GEOMETRY", ""));
 	}
+	// Exactly one dialect marker, so a shader can carry all three variants as flat
+	// blocks. The preprocessor above understands #if / #else / #endif at one level
+	// only, which rules out nesting a Vulkan branch inside the existing GLES one -
+	// three sibling blocks each testing their own marker is what fits it.
+	//
+	// Vulkan wins over GLES where both could apply: an Android build defines
+	// GLIST_OPENGLES at compile time whichever backend it ends up running, and the
+	// backend in use is the question this answers.
+	if(renderer != nullptr && renderer->isVulkan()) {
+		map.insert(std::pair<std::string, std::string>("VULKAN", ""));
+	} else {
 #if defined(GLIST_OPENGLES)
-	map.insert(std::pair<std::string, std::string>("GLES", ""));
+		map.insert(std::pair<std::string, std::string>("GLES", ""));
+#else
+		map.insert(std::pair<std::string, std::string>("GLCORE", ""));
 #endif
+	}
 	int max_lights = GLIST_MAX_LIGHTS;
 	map.insert(std::pair<std::string, std::string>("GLIST_MAX_LIGHTS", gToStr(max_lights)));
 	return map;

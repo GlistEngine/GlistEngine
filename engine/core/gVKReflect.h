@@ -26,6 +26,7 @@
 
 #include <cstddef>
 #include <cstdint>
+#include <string>
 #include <vector>
 
 // One descriptor a shader declares, in the shape vkCreateDescriptorSetLayout
@@ -38,6 +39,55 @@ struct gVKReflectedBinding {
 	uint32_t count = 1;
 	VkDescriptorType type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
 	VkShaderStageFlags stages = 0;
+	// The name the shader gave the resource: the sampler's variable name, or the
+	// block's type name for a uniform buffer. Empty when the module carries no
+	// debug names, which is what glslc emits under -g0. gShader looks a texture up
+	// by this name, so a stripped module can still be drawn with - it just cannot
+	// be addressed by name.
+	std::string name;
+	// Byte footprint of a uniform or storage block, 0 for images and samplers.
+	uint32_t blocksize = 0;
+};
+
+// What a block member is made of, which is what a setter needs in order to turn
+// a packed glm value into the block's own layout. A glm::mat3 is nine floats
+// with no gaps; the same mat3 in a std140 block is three columns sixteen bytes
+// apart, so writing one over the other would corrupt two thirds of it.
+enum gVKMemberComponent {
+	GVK_MEMBER_UNKNOWN = 0,
+	GVK_MEMBER_FLOAT,
+	GVK_MEMBER_INT,
+	GVK_MEMBER_UINT,
+	GVK_MEMBER_BOOL,
+};
+
+// One addressable scalar, vector, matrix or array leaf inside a uniform block or
+// a push constant block, named the way the shader source names it. Nested
+// structs and arrays of structs are flattened with dots and indices, so
+// "lights[2].position" addresses exactly what it reads like.
+struct gVKReflectedMember {
+	std::string name;
+	uint32_t set = 0;
+	uint32_t binding = 0;
+	// Byte offset from the start of the block.
+	uint32_t offset = 0;
+	// Bytes the member occupies in the block, padding between matrix columns and
+	// array elements included.
+	uint32_t size = 0;
+	gVKMemberComponent component = GVK_MEMBER_UNKNOWN;
+	// Vector components, or rows of a matrix. 1 for a scalar.
+	uint32_t rows = 1;
+	// Matrix columns. 1 for scalars and vectors.
+	uint32_t columns = 1;
+	// Bytes between two matrix columns; 0 when the member is not a matrix.
+	uint32_t matrixstride = 0;
+	// Elements of an array, 1 when the member is not one.
+	uint32_t arraylength = 1;
+	// Bytes between two array elements; 0 when the member is not an array.
+	uint32_t arraystride = 0;
+	// Push constant members live in the push constant block rather than in a
+	// descriptor, so set and binding say nothing about them.
+	bool pushconstant = false;
 };
 
 // The merged interface of every stage of one pipeline. Reflect the vertex and
@@ -56,6 +106,24 @@ struct gVKReflectedLayout {
 	VkShaderStageFlags pushconstantstages = 0;
 	// Sorted by (set, binding).
 	std::vector<gVKReflectedBinding> bindings;
+	// Every named leaf of every uniform and push constant block, in declaration
+	// order. Empty when the modules were compiled without debug names.
+	std::vector<gVKReflectedMember> members;
+
+	// The member with this exact name, or nullptr. Names are the shader's own.
+	const gVKReflectedMember* findMember(const std::string& name) const;
+	// The member an application-facing name addresses, which is not always one the
+	// reflector stored: "kernel[3]" names an element of a member the shader
+	// declared once, so the element is resolved into `out` with its own offset.
+	// Names without an index resolve to a copy of the stored member. Returns false
+	// when the shader declares nothing by that name.
+	//
+	// Everything that answers a question about a name has to come through here,
+	// including the "does this shader have it" test - a name resolvable by one and
+	// not the other means the setter is never reached.
+	bool resolveMember(const std::string& name, gVKReflectedMember& out) const;
+	// The binding with this exact name, or nullptr.
+	const gVKReflectedBinding* findBinding(const std::string& name) const;
 
 	// Highest descriptor set index used, plus one; 0 when there are none.
 	uint32_t getSetCount() const;

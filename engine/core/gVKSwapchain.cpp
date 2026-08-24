@@ -214,13 +214,6 @@ bool gvkCreateSwapchain(gVKContext& ctx, gBaseWindow* window) {
 		}
 	}
 
-	gLogi("gVKSwapchain") << "Swapchain created: " << createdcount << " images, "
-			<< ctx.swapchainextent.width << "x" << ctx.swapchainextent.height
-			<< ", format " << ctx.swapchainformat << ", color space " << surfaceformat.colorSpace
-			<< ", transform " << createinfo.preTransform
-			<< ", present mode " << (createinfo.presentMode == VK_PRESENT_MODE_FIFO_KHR ? "FIFO (vsync)"
-					: createinfo.presentMode == VK_PRESENT_MODE_MAILBOX_KHR ? "MAILBOX"
-					: createinfo.presentMode == VK_PRESENT_MODE_IMMEDIATE_KHR ? "IMMEDIATE" : "other");
 	return true;
 }
 
@@ -278,8 +271,6 @@ bool gvkRecreateSwapchain(gVKContext& ctx, gBaseWindow* window) {
 	// changes with the size.
 	if(!gvkCreatePresentSemaphores(ctx, static_cast<uint32_t>(ctx.swapchainimages.size()))) return false;
 
-	gLogi("gVKSwapchain") << "Swapchain recreated for " << ctx.swapchainextent.width
-			<< "x" << ctx.swapchainextent.height;
 	return true;
 }
 
@@ -341,8 +332,6 @@ bool gvkRecreateSurface(gVKContext& ctx, gBaseWindow* window) {
 	// Only now, with a surface actually built from it, does the window count as
 	// the one being presented to.
 	window->vulkanSurfaceRecreated();
-	gLogi("gVKSwapchain") << "Surface recreated for " << ctx.swapchainextent.width
-			<< "x" << ctx.swapchainextent.height;
 	return true;
 }
 
