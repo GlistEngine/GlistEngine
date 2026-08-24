@@ -1,5 +1,7 @@
 var NAVTREEINDEX19 =
 {
+"gPlane_8h_source.html":[2,0,0,4,2,7],
+"gPolygon_8h.html":[2,0,0,4,2,8],
 "gPolygon_8h_source.html":[2,0,0,4,2,8],
 "gPostProcessManager_8h.html":[2,0,0,2,12],
 "gPostProcessManager_8h_source.html":[2,0,0,2,12],
@@ -247,7 +249,5 @@ var NAVTREEINDEX19 =
 "gVKRenderTarget_8h.html":[2,0,0,2,24],
 "gVKRenderTarget_8h.html#a00997810c6adea94a687885a06059772":[2,0,0,2,24,0],
 "gVKRenderTarget_8h_source.html":[2,0,0,2,24],
-"gVKShaderCompiler_8h.html":[2,0,0,2,25],
-"gVKShaderCompiler_8h.html#ae837647a98c14dd0243d234ecae94447":[2,0,0,2,25,0],
-"gVKShaderCompiler_8h_source.html":[2,0,0,2,25]
+"gVKShaderCompiler_8h.html":[2,0,0,2,25]
 };

@@ -1,5 +1,7 @@
 var NAVTREEINDEX16 =
 {
+"classgVKRenderEngine.html#a3e03dddb7281a6ef1c816ebccd339564":[1,0,187,70],
+"classgVKRenderEngine.html#a3f82ae9db33b5f7fdc240f060ae772d8":[1,0,187,82],
 "classgVKRenderEngine.html#a416623416a661d84faf59f76214591a3":[1,0,187,66],
 "classgVKRenderEngine.html#a44205ced52e0290c5e9a313a498d7668":[1,0,187,85],
 "classgVKRenderEngine.html#a45ac8efb147cc7a9126ef434288c5e78":[1,0,187,11],
@@ -188,8 +190,8 @@ var NAVTREEINDEX16 =
 "functions_d.html":[1,3,0,3],
 "functions_e.html":[1,3,0,4],
 "functions_enum.html":[1,3,4],
-"functions_eval.html":[1,3,5],
 "functions_eval.html":[1,3,5,0],
+"functions_eval.html":[1,3,5],
 "functions_eval_c.html":[1,3,5,1],
 "functions_eval_d.html":[1,3,5,2],
 "functions_eval_e.html":[1,3,5,3],
@@ -247,7 +249,5 @@ var NAVTREEINDEX16 =
 "functions_type.html":[1,3,3],
 "functions_u.html":[1,3,0,20],
 "functions_v.html":[1,3,0,21],
-"functions_vars.html":[1,3,2],
-"functions_vars.html":[1,3,2,0],
-"functions_vars_b.html":[1,3,2,1]
+"functions_vars.html":[1,3,2]
 };

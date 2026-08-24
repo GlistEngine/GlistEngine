@@ -92,6 +92,7 @@ $(document).ready(function(){initNavTree('classgGUIGraph.html',''); initResizabl
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pro-methods">Protected Member Functions</a> &#124;
 <a href="#pro-attribs">Protected Attributes</a> &#124;
 <a href="classgGUIGraph-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">gGUIGraph Class Reference</div></div>
@@ -341,6 +342,11 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aa1eb5154520926fd6228394b47c3a752 inherit pub_methods_classgObject" id="r_aa1eb5154520926fd6228394b47c3a752"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgObject.html#aa1eb5154520926fd6228394b47c3a752">loge</a> (std::string tag, std::string message)</td></tr>
 <tr class="separator:aa1eb5154520926fd6228394b47c3a752 inherit pub_methods_classgObject"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-methods" name="pro-methods"></a>
+Protected Member Functions</h2></td></tr>
+<tr class="memitem:a6ce94169715c465c81f2c22d82a5df6b" id="r_a6ce94169715c465c81f2c22d82a5df6b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgGUIGraph.html#a6ce94169715c465c81f2c22d82a5df6b">setLabelsYForRange</a> (float rangeMinY, float rangeMaxY)</td></tr>
+<tr class="separator:a6ce94169715c465c81f2c22d82a5df6b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-attribs" name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
 <tr class="memitem:aa60c61213a65bfe3c7ce60ed1fb37963" id="r_aa60c61213a65bfe3c7ce60ed1fb37963"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgGUIGraph.html#aa60c61213a65bfe3c7ce60ed1fb37963">isbackgroundenabled</a></td></tr>
@@ -385,8 +391,10 @@ Protected Attributes</h2></td></tr>
 <tr class="separator:ab8c5e89e3fd4111ea2ed08303b40f489"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a24fb923a7ef753f21de35173de551766" id="r_a24fb923a7ef753f21de35173de551766"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgGUIGraph.html#a24fb923a7ef753f21de35173de551766">yaxislenable</a></td></tr>
 <tr class="separator:a24fb923a7ef753f21de35173de551766"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3e60779ba1c38c4807f90c6e44a6893a" id="r_a3e60779ba1c38c4807f90c6e44a6893a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgGUIGraph.html#a3e60779ba1c38c4807f90c6e44a6893a">floatlabelsenabled</a></td></tr>
-<tr class="separator:a3e60779ba1c38c4807f90c6e44a6893a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aad6050ac3b67ae0398ba36585e640b56" id="r_aad6050ac3b67ae0398ba36585e640b56"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgGUIGraph.html#aad6050ac3b67ae0398ba36585e640b56">floatlabelsxenabled</a></td></tr>
+<tr class="separator:aad6050ac3b67ae0398ba36585e640b56"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acc0fe1e54f0d19cae399073b8e156377" id="r_acc0fe1e54f0d19cae399073b8e156377"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgGUIGraph.html#acc0fe1e54f0d19cae399073b8e156377">floatlabelsyenabled</a></td></tr>
+<tr class="separator:acc0fe1e54f0d19cae399073b8e156377"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a56615b3efd195c3f3dbd377c103931a8" id="r_a56615b3efd195c3f3dbd377c103931a8"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgGUIGraph.html#a56615b3efd195c3f3dbd377c103931a8">labelcountx</a></td></tr>
 <tr class="separator:a56615b3efd195c3f3dbd377c103931a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a116c26dcd78ac3d445c6bdff32ae914d" id="r_a116c26dcd78ac3d445c6bdff32ae914d"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgGUIGraph.html#a116c26dcd78ac3d445c6bdff32ae914d">labelcounty</a></td></tr>
@@ -1189,6 +1197,43 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a id="a6ce94169715c465c81f2c22d82a5df6b" name="a6ce94169715c465c81f2c22d82a5df6b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6ce94169715c465c81f2c22d82a5df6b">&#9670;&#160;</a></span>setLabelsYForRange()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gGUIGraph::setLabelsYForRange </td>
+          <td>(</td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>rangeMinY</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>rangeMaxY</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Sets the Y axis range directly and regenerates the Y axis labels to match it exactly, instead of updateLabelsY()'s usual snap-to-a-nice-step recalculation. Lets a subclass that computes its own miny/maxy (e.g. an autoscaled line graph) keep the drawn labels in sync. </p>
+
+</div>
+</div>
 <a id="abbf70b34957b013ee53e016bb96d1b3b" name="abbf70b34957b013ee53e016bb96d1b3b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#abbf70b34957b013ee53e016bb96d1b3b">&#9670;&#160;</a></span>setMaxX()</h2>
 
@@ -1550,8 +1595,8 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="a3e60779ba1c38c4807f90c6e44a6893a" name="a3e60779ba1c38c4807f90c6e44a6893a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3e60779ba1c38c4807f90c6e44a6893a">&#9670;&#160;</a></span>floatlabelsenabled</h2>
+<a id="aad6050ac3b67ae0398ba36585e640b56" name="aad6050ac3b67ae0398ba36585e640b56"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aad6050ac3b67ae0398ba36585e640b56">&#9670;&#160;</a></span>floatlabelsxenabled</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1560,7 +1605,29 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">bool gGUIGraph::floatlabelsenabled</td>
+          <td class="memname">bool gGUIGraph::floatlabelsxenabled</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="acc0fe1e54f0d19cae399073b8e156377" name="acc0fe1e54f0d19cae399073b8e156377"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acc0fe1e54f0d19cae399073b8e156377">&#9670;&#160;</a></span>floatlabelsyenabled</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool gGUIGraph::floatlabelsyenabled</td>
         </tr>
       </table>
   </td>
