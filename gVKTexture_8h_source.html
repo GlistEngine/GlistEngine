@@ -117,82 +117,95 @@ $(document).ready(function(){initNavTree('gVKTexture_8h_source.html',''); initRe
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span> </div>
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="preprocessor">#ifdef GVK_VULKAN</span></div>
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span> </div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="keyword">struct </span>gVKTexture {</div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>    VkImage image = VK_NULL_HANDLE;</div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>    VkDeviceMemory memory = VK_NULL_HANDLE;</div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>    VkImageView view = VK_NULL_HANDLE;</div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>    VkSampler sampler = VK_NULL_HANDLE;</div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>    uint64_t samplerkey = 0;</div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>    VkDescriptorSet descriptorset = VK_NULL_HANDLE;</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>    <span class="keywordtype">int</span> width = 0;</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>    <span class="keywordtype">int</span> height = 0;</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>    <span class="comment">// Levels in the mip chain, 1 meaning no chain. Built at upload time, the same</span></div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>    <span class="comment">// way the OpenGL path calls glGenerateMipmap after its upload.</span></div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>    uint32_t miplevels = 1;</div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>    <span class="comment">// Tracked so a render target can be moved between being written as an</span></div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>    <span class="comment">// attachment and being sampled. An uploaded texture never leaves</span></div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    <span class="comment">// SHADER_READ_ONLY, which is why that is the default.</span></div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    VkImageLayout layout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>    VkImageAspectFlags aspect = VK_IMAGE_ASPECT_COLOR_BIT;</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    VkFormat format = VK_FORMAT_R8G8B8A8_UNORM;</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    <span class="comment">// True for a texture created as an FBO attachment rather than uploaded from</span></div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    <span class="comment">// pixels. Those carry no mip chain and are cleared by the render pass.</span></div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    <span class="keywordtype">bool</span> isattachment = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    <span class="comment">// Whether any texel in the upload is transparent enough for mesh3d.frag&#39;s cutout</span></div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    <span class="comment">// test to discard it. Found while the pixels are being expanded to RGBA anyway,</span></div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    <span class="comment">// so it costs nothing, and it lets a mesh drawn with this as its diffuse map take</span></div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    <span class="comment">// the pipeline that has the discard compiled out - which is what keeps early</span></div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    <span class="comment">// depth rejection alive on mobile. Left false for an attachment, which is never a</span></div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    <span class="comment">// material map.</span></div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    <span class="keywordtype">bool</span> hascutout = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    <span class="comment">// Set after the descriptor has been recorded by a draw. Replacing a texture</span></div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    <span class="comment">// that has never been sampled needs no device-wide wait (for example the</span></div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    <span class="comment">// duplicate upload performed while gTexture initially sets itself up).</span></div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    <span class="keywordtype">bool</span> sampled = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    <span class="comment">// What the current sampler was built with, so a filtering or wrapping change</span></div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    <span class="comment">// can be detected and only then rebuild it. The defaults match what gTexture</span></div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    <span class="comment">// starts from.</span></div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    VkFilter minfilter = VK_FILTER_LINEAR;</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    VkFilter magfilter = VK_FILTER_LINEAR;</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    <span class="comment">// Whether the sampler may walk the mip chain at all. OpenGL says so through the</span></div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    <span class="comment">// minification filter: GL_LINEAR samples level 0 only, GL_LINEAR_MIPMAP_LINEAR</span></div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    <span class="comment">// is trilinear. Collapsing both onto &quot;always mip&quot; softened textures the</span></div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    <span class="comment">// application had asked to be sampled flat.</span></div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    <span class="keywordtype">bool</span> usemipmaps = <span class="keyword">true</span>;</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    VkSamplerMipmapMode mipmapmode = VK_SAMPLER_MIPMAP_MODE_LINEAR;</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    VkSamplerAddressMode addressu = VK_SAMPLER_ADDRESS_MODE_REPEAT;</div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    VkSamplerAddressMode addressv = VK_SAMPLER_ADDRESS_MODE_REPEAT;</div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>};</div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span> </div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span><span class="comment">// Uploads tightly-packed RGBA8 pixels (4 bytes per pixel, top row first) into a</span></div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span><span class="comment">// new device-local sampled image and allocates its descriptor set from the</span></div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span><span class="comment">// context&#39;s pool. Returns nullptr on failure.</span></div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>gVKTexture* gvkCreateTextureRGBA8(gVKContext&amp; ctx, <span class="keyword">const</span> <span class="keywordtype">void</span>* rgbaPixels, <span class="keywordtype">int</span> width, <span class="keywordtype">int</span> height);</div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span> </div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span><span class="comment">// Allocates the texture&#39;s descriptor set from the context&#39;s pool and points it at</span></div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span><span class="comment">// the image. Called once at creation, and again after a shader reload, which</span></div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span><span class="comment">// destroys the pool and with it every set allocated from it.</span></div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span><span class="keywordtype">bool</span> gvkWriteTextureDescriptorSet(gVKContext&amp; ctx, gVKTexture* tex);</div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span> </div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span><span class="comment">// Rebuilds the texture&#39;s sampler when the requested filtering or wrapping differs</span></div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span><span class="comment">// from what it already has, and repoints the descriptor set at the new one. This is</span></div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span><span class="comment">// how gTexture::setFiltering / setWrapping reach Vulkan. Returns false when nothing</span></div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span><span class="comment">// had to change.</span></div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span><span class="keywordtype">bool</span> gvkSetTextureSampler(gVKContext&amp; ctx, gVKTexture* tex, VkFilter minFilter, VkFilter magFilter,</div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>        VkSamplerAddressMode addressU, VkSamplerAddressMode addressV,</div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>        <span class="keywordtype">bool</span> useMipmaps = <span class="keyword">true</span>, VkSamplerMipmapMode mipmapMode = VK_SAMPLER_MIPMAP_MODE_LINEAR);</div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span> </div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span><span class="comment">// Creates an empty texture to be rendered into, for gFbo&#39;s colour and depth</span></div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span><span class="comment">// attachments. Unlike an uploaded texture this carries no pixels and no mip chain:</span></div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span><span class="comment">// the render pass clears it, the draws fill it, and it is transitioned back to</span></div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span><span class="comment">// SHADER_READ_ONLY afterwards so the same object can be sampled.</span></div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>gVKTexture* gvkCreateAttachmentTexture(gVKContext&amp; ctx, <span class="keywordtype">int</span> width, <span class="keywordtype">int</span> height, <span class="keywordtype">bool</span> depth);</div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span> </div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span><span class="keywordtype">void</span> gvkDestroyTexture(gVKContext&amp; ctx, gVKTexture* tex);</div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span> </div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span><span class="preprocessor">#endif </span><span class="comment">/* GVK_VULKAN */</span><span class="preprocessor"></span></div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span> </div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span><span class="preprocessor">#endif </span><span class="comment">/* CORE_GVKTEXTURE_H */</span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#include &lt;vector&gt;</span></div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="keyword">struct </span>gVKTexture {</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>    VkImage image = VK_NULL_HANDLE;</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>    VkDeviceMemory memory = VK_NULL_HANDLE;</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>    VkImageView view = VK_NULL_HANDLE;</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>    <span class="comment">// One view per mip level, for a render target whose levels are drawn into</span></div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>    <span class="comment">// individually - a bloom pyramid does exactly that. A framebuffer attachment</span></div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>    <span class="comment">// has to name a single level, which `view` (spanning the whole chain, so it can</span></div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>    <span class="comment">// be sampled with textureLod) cannot do. Empty for a single-level texture.</span></div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>    std::vector&lt;VkImageView&gt; levelviews;</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>    VkSampler sampler = VK_NULL_HANDLE;</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>    uint64_t samplerkey = 0;</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>    VkDescriptorSet descriptorset = VK_NULL_HANDLE;</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    <span class="keywordtype">int</span> width = 0;</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    <span class="keywordtype">int</span> height = 0;</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>    <span class="comment">// Levels in the mip chain, 1 meaning no chain. Built at upload time, the same</span></div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    <span class="comment">// way the OpenGL path calls glGenerateMipmap after its upload.</span></div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    uint32_t miplevels = 1;</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    <span class="comment">// Tracked so a render target can be moved between being written as an</span></div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    <span class="comment">// attachment and being sampled. An uploaded texture never leaves</span></div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    <span class="comment">// SHADER_READ_ONLY, which is why that is the default.</span></div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    VkImageLayout layout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    VkImageAspectFlags aspect = VK_IMAGE_ASPECT_COLOR_BIT;</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    VkFormat format = VK_FORMAT_R8G8B8A8_UNORM;</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    <span class="comment">// True for a texture created as an FBO attachment rather than uploaded from</span></div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    <span class="comment">// pixels. Those carry no mip chain and are cleared by the render pass.</span></div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    <span class="keywordtype">bool</span> isattachment = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    <span class="comment">// Whether any texel in the upload is transparent enough for mesh3d.frag&#39;s cutout</span></div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    <span class="comment">// test to discard it. Found while the pixels are being expanded to RGBA anyway,</span></div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    <span class="comment">// so it costs nothing, and it lets a mesh drawn with this as its diffuse map take</span></div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    <span class="comment">// the pipeline that has the discard compiled out - which is what keeps early</span></div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    <span class="comment">// depth rejection alive on mobile. Left false for an attachment, which is never a</span></div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    <span class="comment">// material map.</span></div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    <span class="keywordtype">bool</span> hascutout = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    <span class="comment">// Set after the descriptor has been recorded by a draw. Replacing a texture</span></div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    <span class="comment">// that has never been sampled needs no device-wide wait (for example the</span></div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    <span class="comment">// duplicate upload performed while gTexture initially sets itself up).</span></div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    <span class="keywordtype">bool</span> sampled = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    <span class="comment">// What the current sampler was built with, so a filtering or wrapping change</span></div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    <span class="comment">// can be detected and only then rebuild it. The defaults match what gTexture</span></div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    <span class="comment">// starts from.</span></div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    VkFilter minfilter = VK_FILTER_LINEAR;</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    VkFilter magfilter = VK_FILTER_LINEAR;</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    <span class="comment">// Whether the sampler may walk the mip chain at all. OpenGL says so through the</span></div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>    <span class="comment">// minification filter: GL_LINEAR samples level 0 only, GL_LINEAR_MIPMAP_LINEAR</span></div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    <span class="comment">// is trilinear. Collapsing both onto &quot;always mip&quot; softened textures the</span></div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    <span class="comment">// application had asked to be sampled flat.</span></div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    <span class="keywordtype">bool</span> usemipmaps = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>    VkSamplerMipmapMode mipmapmode = VK_SAMPLER_MIPMAP_MODE_LINEAR;</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    VkSamplerAddressMode addressu = VK_SAMPLER_ADDRESS_MODE_REPEAT;</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>    VkSamplerAddressMode addressv = VK_SAMPLER_ADDRESS_MODE_REPEAT;</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>};</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span> </div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span><span class="comment">// Uploads tightly-packed RGBA8 pixels (4 bytes per pixel, top row first) into a</span></div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span><span class="comment">// new device-local sampled image and allocates its descriptor set from the</span></div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span><span class="comment">// context&#39;s pool. Returns nullptr on failure.</span></div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>gVKTexture* gvkCreateTextureRGBA8(gVKContext&amp; ctx, <span class="keyword">const</span> <span class="keywordtype">void</span>* rgbaPixels, <span class="keywordtype">int</span> width, <span class="keywordtype">int</span> height);</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span> </div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span><span class="comment">// Allocates the texture&#39;s descriptor set from the context&#39;s pool and points it at</span></div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span><span class="comment">// the image. Called once at creation, and again after a shader reload, which</span></div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span><span class="comment">// destroys the pool and with it every set allocated from it.</span></div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span><span class="keywordtype">bool</span> gvkWriteTextureDescriptorSet(gVKContext&amp; ctx, gVKTexture* tex);</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span> </div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span><span class="comment">// Rebuilds the texture&#39;s sampler when the requested filtering or wrapping differs</span></div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span><span class="comment">// from what it already has, and repoints the descriptor set at the new one. This is</span></div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span><span class="comment">// how gTexture::setFiltering / setWrapping reach Vulkan. Returns false when nothing</span></div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span><span class="comment">// had to change.</span></div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span><span class="keywordtype">bool</span> gvkSetTextureSampler(gVKContext&amp; ctx, gVKTexture* tex, VkFilter minFilter, VkFilter magFilter,</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>        VkSamplerAddressMode addressU, VkSamplerAddressMode addressV,</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>        <span class="keywordtype">bool</span> useMipmaps = <span class="keyword">true</span>, VkSamplerMipmapMode mipmapMode = VK_SAMPLER_MIPMAP_MODE_LINEAR);</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span> </div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span><span class="comment">// Creates an empty texture to be rendered into, for gFbo&#39;s colour and depth</span></div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span><span class="comment">// attachments. Unlike an uploaded texture this carries no pixels and no mip chain:</span></div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span><span class="comment">// the render pass clears it, the draws fill it, and it is transitioned back to</span></div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span><span class="comment">// SHADER_READ_ONLY afterwards so the same object can be sampled.</span></div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span><span class="comment">// mipLevels above 1 allocates the whole chain and gives every level a view of its</span></div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span><span class="comment">// own, so each can be rendered into while the texture as a whole stays sampleable.</span></div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span><span class="comment">// transferDst additionally makes the image a legal destination for a copy, which is</span></div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span><span class="comment">// what the screen restore texture needs - it is filled by copying the resolved</span></div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span><span class="comment">// swapchain image into it rather than by being drawn into.</span></div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>gVKTexture* gvkCreateAttachmentTexture(gVKContext&amp; ctx, <span class="keywordtype">int</span> width, <span class="keywordtype">int</span> height, <span class="keywordtype">bool</span> depth,</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>        <span class="keywordtype">int</span> mipLevels = 1, <span class="keywordtype">bool</span> transferDst = <span class="keyword">false</span>);</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span> </div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span><span class="keywordtype">void</span> gvkDestroyTexture(gVKContext&amp; ctx, gVKTexture* tex);</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span> </div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span><span class="preprocessor">#endif </span><span class="comment">/* GVK_VULKAN */</span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span> </div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span><span class="preprocessor">#endif </span><span class="comment">/* CORE_GVKTEXTURE_H */</span><span class="preprocessor"></span></div>
 <div class="ttc" id="agVKContext_8h_html"><div class="ttname"><a href="gVKContext_8h.html">gVKContext.h</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

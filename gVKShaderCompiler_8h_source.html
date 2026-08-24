@@ -144,9 +144,20 @@ $(document).ready(function(){initNavTree('gVKShaderCompiler_8h_source.html','');
 <div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span><span class="keywordtype">bool</span> gvkCompileShaderFile(<span class="keyword">const</span> std::string&amp; fileName, VkShaderStageFlagBits stage,</div>
 <div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>        std::vector&lt;uint32_t&gt;&amp; spirv);</div>
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span> </div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span><span class="preprocessor">#endif </span><span class="comment">/* GVK_VULKAN */</span><span class="preprocessor"></span></div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span><span class="preprocessor">#endif </span><span class="comment">/* CORE_GVKSHADERCOMPILER_H */</span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span><span class="comment">// Compiles GLSL held in memory rather than read from the shader directory, for</span></div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span><span class="comment">// shaders an application loads through gShader. debugName only names the module</span></div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span><span class="comment">// in diagnostics.</span></div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span><span class="comment">//</span></div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span><span class="comment">// Unlike the engine&#39;s own shaders these keep their debug names: a user shader is</span></div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span><span class="comment">// addressed by name - setFloat(&quot;intensity&quot;, v) - and the names have to survive</span></div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span><span class="comment">// into the SPIR-V for reflection to find them. Optimisation is unaffected; the</span></div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span><span class="comment">// two are separate switches.</span></div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span><span class="keywordtype">bool</span> gvkCompileShaderSource(<span class="keyword">const</span> std::string&amp; source, VkShaderStageFlagBits stage,</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>        <span class="keyword">const</span> std::string&amp; debugName, std::vector&lt;uint32_t&gt;&amp; spirv);</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span> </div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span><span class="preprocessor">#endif </span><span class="comment">/* GVK_VULKAN */</span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span> </div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span><span class="preprocessor">#endif </span><span class="comment">/* CORE_GVKSHADERCOMPILER_H */</span><span class="preprocessor"></span></div>
 <div class="ttc" id="agVKContext_8h_html"><div class="ttname"><a href="gVKContext_8h.html">gVKContext.h</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

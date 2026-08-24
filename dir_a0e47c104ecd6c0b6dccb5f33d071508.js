@@ -31,5 +31,6 @@ var dir_a0e47c104ecd6c0b6dccb5f33d071508 =
     [ "gVKSwapchain.h", "gVKSwapchain_8h.html", "gVKSwapchain_8h" ],
     [ "gVKSync.h", "gVKSync_8h.html", "gVKSync_8h" ],
     [ "gVKTexture.h", "gVKTexture_8h.html", "gVKTexture_8h" ],
-    [ "gVKUniform.h", "gVKUniform_8h.html", "gVKUniform_8h" ]
+    [ "gVKUniform.h", "gVKUniform_8h.html", "gVKUniform_8h" ],
+    [ "gVKUserShader.h", "gVKUserShader_8h.html", "gVKUserShader_8h" ]
 ];

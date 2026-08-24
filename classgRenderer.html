@@ -635,6 +635,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a649fc6cfb8110c32b26253bc8abc42f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2651dc3211f689e80d3d434df9d89afd" id="r_a2651dc3211f689e80d3d434df9d89afd"><td class="memItemLeft" align="right" valign="top">virtual GLuint&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a2651dc3211f689e80d3d434df9d89afd">loadProgram</a> (const char *vertexSource, const char *fragmentSource, const char *geometrySource)=0</td></tr>
 <tr class="separator:a2651dc3211f689e80d3d434df9d89afd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a57eccf2412308f981536b4a7c83637df" id="r_a57eccf2412308f981536b4a7c83637df"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a57eccf2412308f981536b4a7c83637df">setShaderSourcePaths</a> (const std::string &amp;vertexPath, const std::string &amp;fragmentPath)</td></tr>
+<tr class="separator:a57eccf2412308f981536b4a7c83637df"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4cb04f55dcddf1dc2d4a883c43304678" id="r_a4cb04f55dcddf1dc2d4a883c43304678"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a4cb04f55dcddf1dc2d4a883c43304678">checkCompileErrors</a> (GLuint shader, const std::string &amp;type)=0</td></tr>
 <tr class="separator:a4cb04f55dcddf1dc2d4a883c43304678"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a41d736b14d48d5def8fc48d38d8ad7b4" id="r_a41d736b14d48d5def8fc48d38d8ad7b4"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a41d736b14d48d5def8fc48d38d8ad7b4">setBool</a> (GLuint uniformloc, bool value)=0</td></tr>
@@ -1053,13 +1055,13 @@ Protected Attributes</h2></td></tr>
 <tr class="separator:a684eefd6b31300abd61ed00f3353ea6e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1ccf1ba499fd6a483d8e8d5eb9bc3cae" id="r_a1ccf1ba499fd6a483d8e8d5eb9bc3cae"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a1ccf1ba499fd6a483d8e8d5eb9bc3cae">isssaodebug</a></td></tr>
 <tr class="separator:a1ccf1ba499fd6a483d8e8d5eb9bc3cae"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0d727fed45556950c59f81417d5ffc99" id="r_a0d727fed45556950c59f81417d5ffc99"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgFbo.html">gFbo</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a0d727fed45556950c59f81417d5ffc99">ssaofbo</a></td></tr>
+<tr class="memitem:a0d727fed45556950c59f81417d5ffc99" id="r_a0d727fed45556950c59f81417d5ffc99"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgFbo.html">gFbo</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a0d727fed45556950c59f81417d5ffc99">ssaofbo</a> = nullptr</td></tr>
 <tr class="separator:a0d727fed45556950c59f81417d5ffc99"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a402b065d495ac04ae7cf76bc8dbe93e3" id="r_a402b065d495ac04ae7cf76bc8dbe93e3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgFbo.html">gFbo</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a402b065d495ac04ae7cf76bc8dbe93e3">ssaoresultfbo</a></td></tr>
+<tr class="memitem:a402b065d495ac04ae7cf76bc8dbe93e3" id="r_a402b065d495ac04ae7cf76bc8dbe93e3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgFbo.html">gFbo</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a402b065d495ac04ae7cf76bc8dbe93e3">ssaoresultfbo</a> = nullptr</td></tr>
 <tr class="separator:a402b065d495ac04ae7cf76bc8dbe93e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a417f3a0a82b2913b927abd56ae436f23" id="r_a417f3a0a82b2913b927abd56ae436f23"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgShader.html">gShader</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a417f3a0a82b2913b927abd56ae436f23">ssaoshader</a></td></tr>
+<tr class="memitem:a417f3a0a82b2913b927abd56ae436f23" id="r_a417f3a0a82b2913b927abd56ae436f23"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgShader.html">gShader</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a417f3a0a82b2913b927abd56ae436f23">ssaoshader</a> = nullptr</td></tr>
 <tr class="separator:a417f3a0a82b2913b927abd56ae436f23"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aecc99f8f9ccc310bdb0d40a1c8d249e1" id="r_aecc99f8f9ccc310bdb0d40a1c8d249e1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgShader.html">gShader</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#aecc99f8f9ccc310bdb0d40a1c8d249e1">ssaoblurshader</a></td></tr>
+<tr class="memitem:aecc99f8f9ccc310bdb0d40a1c8d249e1" id="r_aecc99f8f9ccc310bdb0d40a1c8d249e1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgShader.html">gShader</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#aecc99f8f9ccc310bdb0d40a1c8d249e1">ssaoblurshader</a> = nullptr</td></tr>
 <tr class="separator:aecc99f8f9ccc310bdb0d40a1c8d249e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a71dacb6330406aefdf101de854ceb987" id="r_a71dacb6330406aefdf101de854ceb987"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a71dacb6330406aefdf101de854ceb987">ssaorealdefaultfbo</a></td></tr>
 <tr class="separator:a71dacb6330406aefdf101de854ceb987"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1075,31 +1077,31 @@ Protected Attributes</h2></td></tr>
 <tr class="separator:affba8f778e6b3fe851abacdd172a1d89"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acd68f3b553d7b9dcc5842d0c973a7b13" id="r_acd68f3b553d7b9dcc5842d0c973a7b13"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#acd68f3b553d7b9dcc5842d0c973a7b13">issoftshadowsenabled</a> = false</td></tr>
 <tr class="separator:acd68f3b553d7b9dcc5842d0c973a7b13"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a095f6a2a2df090837fafd50664c87f89" id="r_a095f6a2a2df090837fafd50664c87f89"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgShader.html">gShader</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a095f6a2a2df090837fafd50664c87f89">colorshader</a></td></tr>
+<tr class="memitem:a095f6a2a2df090837fafd50664c87f89" id="r_a095f6a2a2df090837fafd50664c87f89"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgShader.html">gShader</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a095f6a2a2df090837fafd50664c87f89">colorshader</a> = nullptr</td></tr>
 <tr class="separator:a095f6a2a2df090837fafd50664c87f89"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1c6ef46ff43d51226610ad5de5eed935" id="r_a1c6ef46ff43d51226610ad5de5eed935"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgShader.html">gShader</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a1c6ef46ff43d51226610ad5de5eed935">textureshader</a></td></tr>
+<tr class="memitem:a1c6ef46ff43d51226610ad5de5eed935" id="r_a1c6ef46ff43d51226610ad5de5eed935"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgShader.html">gShader</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a1c6ef46ff43d51226610ad5de5eed935">textureshader</a> = nullptr</td></tr>
 <tr class="separator:a1c6ef46ff43d51226610ad5de5eed935"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ada1b3525e35b96457a276a06a6977e06" id="r_ada1b3525e35b96457a276a06a6977e06"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgShader.html">gShader</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#ada1b3525e35b96457a276a06a6977e06">fontshader</a></td></tr>
+<tr class="memitem:ada1b3525e35b96457a276a06a6977e06" id="r_ada1b3525e35b96457a276a06a6977e06"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgShader.html">gShader</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#ada1b3525e35b96457a276a06a6977e06">fontshader</a> = nullptr</td></tr>
 <tr class="separator:ada1b3525e35b96457a276a06a6977e06"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad9116b64278d378f711e46e2e81132f1" id="r_ad9116b64278d378f711e46e2e81132f1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgShader.html">gShader</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#ad9116b64278d378f711e46e2e81132f1">imageshader</a></td></tr>
+<tr class="memitem:ad9116b64278d378f711e46e2e81132f1" id="r_ad9116b64278d378f711e46e2e81132f1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgShader.html">gShader</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#ad9116b64278d378f711e46e2e81132f1">imageshader</a> = nullptr</td></tr>
 <tr class="separator:ad9116b64278d378f711e46e2e81132f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5fb12b19f71ba85586b2164b6aaa76d2" id="r_a5fb12b19f71ba85586b2164b6aaa76d2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgShader.html">gShader</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a5fb12b19f71ba85586b2164b6aaa76d2">skyboxshader</a></td></tr>
+<tr class="memitem:a5fb12b19f71ba85586b2164b6aaa76d2" id="r_a5fb12b19f71ba85586b2164b6aaa76d2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgShader.html">gShader</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a5fb12b19f71ba85586b2164b6aaa76d2">skyboxshader</a> = nullptr</td></tr>
 <tr class="separator:a5fb12b19f71ba85586b2164b6aaa76d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a50483e38ba0497112c4c56b236b8704d" id="r_a50483e38ba0497112c4c56b236b8704d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgShader.html">gShader</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a50483e38ba0497112c4c56b236b8704d">shadowmapshader</a></td></tr>
+<tr class="memitem:a50483e38ba0497112c4c56b236b8704d" id="r_a50483e38ba0497112c4c56b236b8704d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgShader.html">gShader</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a50483e38ba0497112c4c56b236b8704d">shadowmapshader</a> = nullptr</td></tr>
 <tr class="separator:a50483e38ba0497112c4c56b236b8704d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a39871a3ede598b48f768af353884048b" id="r_a39871a3ede598b48f768af353884048b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgShader.html">gShader</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a39871a3ede598b48f768af353884048b">pbrshader</a></td></tr>
+<tr class="memitem:a39871a3ede598b48f768af353884048b" id="r_a39871a3ede598b48f768af353884048b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgShader.html">gShader</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a39871a3ede598b48f768af353884048b">pbrshader</a> = nullptr</td></tr>
 <tr class="separator:a39871a3ede598b48f768af353884048b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1ba5643685ee4817c448c2eaa1209387" id="r_a1ba5643685ee4817c448c2eaa1209387"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgShader.html">gShader</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a1ba5643685ee4817c448c2eaa1209387">equirectangularshader</a></td></tr>
+<tr class="memitem:a1ba5643685ee4817c448c2eaa1209387" id="r_a1ba5643685ee4817c448c2eaa1209387"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgShader.html">gShader</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a1ba5643685ee4817c448c2eaa1209387">equirectangularshader</a> = nullptr</td></tr>
 <tr class="separator:a1ba5643685ee4817c448c2eaa1209387"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0945f211f4981b39affee0824ad23a0d" id="r_a0945f211f4981b39affee0824ad23a0d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgShader.html">gShader</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a0945f211f4981b39affee0824ad23a0d">irradianceshader</a></td></tr>
+<tr class="memitem:a0945f211f4981b39affee0824ad23a0d" id="r_a0945f211f4981b39affee0824ad23a0d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgShader.html">gShader</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a0945f211f4981b39affee0824ad23a0d">irradianceshader</a> = nullptr</td></tr>
 <tr class="separator:a0945f211f4981b39affee0824ad23a0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a85e464ddd3fab891998f91fda6409fe8" id="r_a85e464ddd3fab891998f91fda6409fe8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgShader.html">gShader</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a85e464ddd3fab891998f91fda6409fe8">prefiltershader</a></td></tr>
+<tr class="memitem:a85e464ddd3fab891998f91fda6409fe8" id="r_a85e464ddd3fab891998f91fda6409fe8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgShader.html">gShader</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a85e464ddd3fab891998f91fda6409fe8">prefiltershader</a> = nullptr</td></tr>
 <tr class="separator:a85e464ddd3fab891998f91fda6409fe8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a13aa791c6c60d07bbb33f96a963b7b37" id="r_a13aa791c6c60d07bbb33f96a963b7b37"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgShader.html">gShader</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a13aa791c6c60d07bbb33f96a963b7b37">brdfshader</a></td></tr>
+<tr class="memitem:a13aa791c6c60d07bbb33f96a963b7b37" id="r_a13aa791c6c60d07bbb33f96a963b7b37"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgShader.html">gShader</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a13aa791c6c60d07bbb33f96a963b7b37">brdfshader</a> = nullptr</td></tr>
 <tr class="separator:a13aa791c6c60d07bbb33f96a963b7b37"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4b4e89e1350d9af5cd05d1e0f1a214f2" id="r_a4b4e89e1350d9af5cd05d1e0f1a214f2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgShader.html">gShader</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a4b4e89e1350d9af5cd05d1e0f1a214f2">fboshader</a></td></tr>
+<tr class="memitem:a4b4e89e1350d9af5cd05d1e0f1a214f2" id="r_a4b4e89e1350d9af5cd05d1e0f1a214f2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgShader.html">gShader</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a4b4e89e1350d9af5cd05d1e0f1a214f2">fboshader</a> = nullptr</td></tr>
 <tr class="separator:a4b4e89e1350d9af5cd05d1e0f1a214f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab4ca6e7dccebc610df313775dc45b675" id="r_ab4ca6e7dccebc610df313775dc45b675"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgShader.html">gShader</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#ab4ca6e7dccebc610df313775dc45b675">gridshader</a></td></tr>
+<tr class="memitem:ab4ca6e7dccebc610df313775dc45b675" id="r_ab4ca6e7dccebc610df313775dc45b675"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgShader.html">gShader</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#ab4ca6e7dccebc610df313775dc45b675">gridshader</a> = nullptr</td></tr>
 <tr class="separator:ab4ca6e7dccebc610df313775dc45b675"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acfb7a2d7dbd4f0de2e3fbb1abb7f94dd" id="r_acfb7a2d7dbd4f0de2e3fbb1abb7f94dd"><td class="memItemLeft" align="right" valign="top">glm::mat4&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#acfb7a2d7dbd4f0de2e3fbb1abb7f94dd">projectionmatrix</a></td></tr>
 <tr class="separator:acfb7a2d7dbd4f0de2e3fbb1abb7f94dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1113,11 +1115,11 @@ Protected Attributes</h2></td></tr>
 <tr class="separator:a553d844b5ada950ae5d6b87d691f124b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6513b8ff020b7dbeaedb6a47f9be3e00" id="r_a6513b8ff020b7dbeaedb6a47f9be3e00"><td class="memItemLeft" align="right" valign="top">glm::vec3&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a6513b8ff020b7dbeaedb6a47f9be3e00">cameraposition</a></td></tr>
 <tr class="separator:a6513b8ff020b7dbeaedb6a47f9be3e00"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:accf213049dfa02b51068b029a2784c7c" id="r_accf213049dfa02b51068b029a2784c7c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgCamera.html">gCamera</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#accf213049dfa02b51068b029a2784c7c">camera</a></td></tr>
+<tr class="memitem:accf213049dfa02b51068b029a2784c7c" id="r_accf213049dfa02b51068b029a2784c7c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgCamera.html">gCamera</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#accf213049dfa02b51068b029a2784c7c">camera</a> = nullptr</td></tr>
 <tr class="separator:accf213049dfa02b51068b029a2784c7c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac2535cba0653314d7173d936ef116f9f" id="r_ac2535cba0653314d7173d936ef116f9f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgGrid.html">gGrid</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#ac2535cba0653314d7173d936ef116f9f">grid</a></td></tr>
+<tr class="memitem:ac2535cba0653314d7173d936ef116f9f" id="r_ac2535cba0653314d7173d936ef116f9f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgGrid.html">gGrid</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#ac2535cba0653314d7173d936ef116f9f">grid</a> = nullptr</td></tr>
 <tr class="separator:ac2535cba0653314d7173d936ef116f9f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9164aad8460cd5c795b5ae08472462d4" id="r_a9164aad8460cd5c795b5ae08472462d4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgGrid.html">gGrid</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a9164aad8460cd5c795b5ae08472462d4">originalgrid</a></td></tr>
+<tr class="memitem:a9164aad8460cd5c795b5ae08472462d4" id="r_a9164aad8460cd5c795b5ae08472462d4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgGrid.html">gGrid</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a9164aad8460cd5c795b5ae08472462d4">originalgrid</a> = nullptr</td></tr>
 <tr class="separator:a9164aad8460cd5c795b5ae08472462d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac89dcc29743e84dd21579de8fa58f241" id="r_ac89dcc29743e84dd21579de8fa58f241"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#ac89dcc29743e84dd21579de8fa58f241">fullscreenquadvao</a></td></tr>
 <tr class="separator:ac89dcc29743e84dd21579de8fa58f241"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -10220,6 +10222,44 @@ Friends</h2></td></tr>
 
 </div>
 </div>
+<a id="a57eccf2412308f981536b4a7c83637df" name="a57eccf2412308f981536b4a7c83637df"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a57eccf2412308f981536b4a7c83637df">&#9670;&#160;</a></span>setShaderSourcePaths()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void gRenderer::setShaderSourcePaths </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>vertexPath</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>fragmentPath</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reimplemented in <a class="el" href="classgVKRenderEngine.html#ab0542f55c1cf45d7873a39f899af0a45">gVKRenderEngine</a>.</p>
+
+</div>
+</div>
 <a id="affadcc9658ac4cbabf02d297f4739ad5" name="affadcc9658ac4cbabf02d297f4739ad5"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#affadcc9658ac4cbabf02d297f4739ad5">&#9670;&#160;</a></span>setShadowMapState()</h2>
 
@@ -11905,7 +11945,7 @@ Friends</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classgShader.html">gShader</a>* gRenderer::brdfshader</td>
+          <td class="memname"><a class="el" href="classgShader.html">gShader</a>* gRenderer::brdfshader = nullptr</td>
         </tr>
       </table>
   </td>
@@ -11927,7 +11967,7 @@ Friends</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classgCamera.html">gCamera</a>* gRenderer::camera</td>
+          <td class="memname"><a class="el" href="classgCamera.html">gCamera</a>* gRenderer::camera = nullptr</td>
         </tr>
       </table>
   </td>
@@ -11993,7 +12033,7 @@ Friends</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classgShader.html">gShader</a>* gRenderer::colorshader</td>
+          <td class="memname"><a class="el" href="classgShader.html">gShader</a>* gRenderer::colorshader = nullptr</td>
         </tr>
       </table>
   </td>
@@ -12191,7 +12231,7 @@ Friends</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classgShader.html">gShader</a>* gRenderer::equirectangularshader</td>
+          <td class="memname"><a class="el" href="classgShader.html">gShader</a>* gRenderer::equirectangularshader = nullptr</td>
         </tr>
       </table>
   </td>
@@ -12213,7 +12253,7 @@ Friends</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classgShader.html">gShader</a>* gRenderer::fboshader</td>
+          <td class="memname"><a class="el" href="classgShader.html">gShader</a>* gRenderer::fboshader = nullptr</td>
         </tr>
       </table>
   </td>
@@ -12433,7 +12473,7 @@ Friends</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classgShader.html">gShader</a>* gRenderer::fontshader</td>
+          <td class="memname"><a class="el" href="classgShader.html">gShader</a>* gRenderer::fontshader = nullptr</td>
         </tr>
       </table>
   </td>
@@ -12521,7 +12561,7 @@ Friends</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classgGrid.html">gGrid</a>* gRenderer::grid</td>
+          <td class="memname"><a class="el" href="classgGrid.html">gGrid</a>* gRenderer::grid = nullptr</td>
         </tr>
       </table>
   </td>
@@ -12543,7 +12583,7 @@ Friends</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classgShader.html">gShader</a>* gRenderer::gridshader</td>
+          <td class="memname"><a class="el" href="classgShader.html">gShader</a>* gRenderer::gridshader = nullptr</td>
         </tr>
       </table>
   </td>
@@ -12587,7 +12627,7 @@ Friends</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classgShader.html">gShader</a>* gRenderer::imageshader</td>
+          <td class="memname"><a class="el" href="classgShader.html">gShader</a>* gRenderer::imageshader = nullptr</td>
         </tr>
       </table>
   </td>
@@ -12609,7 +12649,7 @@ Friends</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classgShader.html">gShader</a>* gRenderer::irradianceshader</td>
+          <td class="memname"><a class="el" href="classgShader.html">gShader</a>* gRenderer::irradianceshader = nullptr</td>
         </tr>
       </table>
   </td>
@@ -13071,7 +13111,7 @@ Friends</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classgGrid.html">gGrid</a>* gRenderer::originalgrid</td>
+          <td class="memname"><a class="el" href="classgGrid.html">gGrid</a>* gRenderer::originalgrid = nullptr</td>
         </tr>
       </table>
   </td>
@@ -13093,7 +13133,7 @@ Friends</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classgShader.html">gShader</a>* gRenderer::pbrshader</td>
+          <td class="memname"><a class="el" href="classgShader.html">gShader</a>* gRenderer::pbrshader = nullptr</td>
         </tr>
       </table>
   </td>
@@ -13115,7 +13155,7 @@ Friends</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classgShader.html">gShader</a>* gRenderer::prefiltershader</td>
+          <td class="memname"><a class="el" href="classgShader.html">gShader</a>* gRenderer::prefiltershader = nullptr</td>
         </tr>
       </table>
   </td>
@@ -13423,7 +13463,7 @@ Friends</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classgShader.html">gShader</a>* gRenderer::shadowmapshader</td>
+          <td class="memname"><a class="el" href="classgShader.html">gShader</a>* gRenderer::shadowmapshader = nullptr</td>
         </tr>
       </table>
   </td>
@@ -13445,7 +13485,7 @@ Friends</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classgShader.html">gShader</a>* gRenderer::skyboxshader</td>
+          <td class="memname"><a class="el" href="classgShader.html">gShader</a>* gRenderer::skyboxshader = nullptr</td>
         </tr>
       </table>
   </td>
@@ -13489,7 +13529,7 @@ Friends</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classgShader.html">gShader</a>* gRenderer::ssaoblurshader</td>
+          <td class="memname"><a class="el" href="classgShader.html">gShader</a>* gRenderer::ssaoblurshader = nullptr</td>
         </tr>
       </table>
   </td>
@@ -13511,7 +13551,7 @@ Friends</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classgFbo.html">gFbo</a>* gRenderer::ssaofbo</td>
+          <td class="memname"><a class="el" href="classgFbo.html">gFbo</a>* gRenderer::ssaofbo = nullptr</td>
         </tr>
       </table>
   </td>
@@ -13621,7 +13661,7 @@ Friends</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classgFbo.html">gFbo</a>* gRenderer::ssaoresultfbo</td>
+          <td class="memname"><a class="el" href="classgFbo.html">gFbo</a>* gRenderer::ssaoresultfbo = nullptr</td>
         </tr>
       </table>
   </td>
@@ -13643,7 +13683,7 @@ Friends</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classgShader.html">gShader</a>* gRenderer::ssaoshader</td>
+          <td class="memname"><a class="el" href="classgShader.html">gShader</a>* gRenderer::ssaoshader = nullptr</td>
         </tr>
       </table>
   </td>
@@ -13687,7 +13727,7 @@ Friends</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classgShader.html">gShader</a>* gRenderer::textureshader</td>
+          <td class="memname"><a class="el" href="classgShader.html">gShader</a>* gRenderer::textureshader = nullptr</td>
         </tr>
       </table>
   </td>

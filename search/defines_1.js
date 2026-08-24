@@ -17,5 +17,6 @@ var searchData=
   ['core_5fgvkswapchain_5fh_14',['CORE_GVKSWAPCHAIN_H',['../gVKSwapchain_8h.html#aac0c5cbc1bfc30d705dcce39ef32fe6e',1,'gVKSwapchain.h']]],
   ['core_5fgvksync_5fh_15',['CORE_GVKSYNC_H',['../gVKSync_8h.html#a1011c1199e450517ccee9425784c64dd',1,'gVKSync.h']]],
   ['core_5fgvktexture_5fh_16',['CORE_GVKTEXTURE_H',['../gVKTexture_8h.html#ab8471b189a90521c823b96e6f49dfa62',1,'gVKTexture.h']]],
-  ['core_5fgvkuniform_5fh_17',['CORE_GVKUNIFORM_H',['../gVKUniform_8h.html#a836f2624a51311b16bce2bcd9d1f84e8',1,'gVKUniform.h']]]
+  ['core_5fgvkuniform_5fh_17',['CORE_GVKUNIFORM_H',['../gVKUniform_8h.html#a836f2624a51311b16bce2bcd9d1f84e8',1,'gVKUniform.h']]],
+  ['core_5fgvkusershader_5fh_18',['CORE_GVKUSERSHADER_H',['../gVKUserShader_8h.html#a876965b5677512bafc6fd5afeb13df2b',1,'gVKUserShader.h']]]
 ];

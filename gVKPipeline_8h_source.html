@@ -125,16 +125,58 @@ $(document).ready(function(){initNavTree('gVKPipeline_8h_source.html',''); initR
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="preprocessor">#ifdef GVK_VULKAN</span></div>
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="comment">// Newest modification time across the shader sources the 2D pipelines are built</span></div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="comment">// from, or 0 when runtime shader compilation is unavailable. Comparing successive</span></div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="comment">// readings is how the renderer notices an edit worth reloading for.</span></div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="keywordtype">long</span> <span class="keywordtype">long</span> gvkShaderSourcesTimestamp();</div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="keywordtype">void</span> gvkDestroyPipelineCache(gVKContext&amp; ctx);</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span> </div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><span class="preprocessor">#endif </span><span class="comment">/* GVK_VULKAN */</span><span class="preprocessor"></span></div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span> </div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span><span class="preprocessor">#endif </span><span class="comment">/* CORE_GVKPIPELINE_H */</span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="preprocessor">#include &quot;<a class="code" href="gVKReflect_8h.html">gVKReflect.h</a>&quot;</span></div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="preprocessor">#include &lt;vector&gt;</span></div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span> </div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="comment">// Newest modification time across the shader sources the 2D pipelines are built</span></div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="comment">// from, or 0 when runtime shader compilation is unavailable. Comparing successive</span></div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="comment">// readings is how the renderer notices an edit worth reloading for.</span></div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><span class="keywordtype">long</span> <span class="keywordtype">long</span> gvkShaderSourcesTimestamp();</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span><span class="keywordtype">void</span> gvkDestroyPipelineCache(gVKContext&amp; ctx);</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span> </div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span><span class="comment">/*</span></div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="comment"> * A pipeline built from a shader the application supplied rather than one of the</span></div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span><span class="comment"> * engine&#39;s own. Everything in it is reflected out of the given SPIR-V, exactly as</span></div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span><span class="comment"> * the built-in pipelines are, so a gShader loaded at run time gets the same</span></div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span><span class="comment"> * treatment as mesh3d: the shader declares its interface and the layout follows.</span></div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span><span class="comment"> *</span></div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span><span class="comment"> * The vertex input is the one exception. It is taken from the engine&#39;s own mesh</span></div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span><span class="comment"> * layout rather than from reflection, because the buffer the draw path binds is</span></div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span><span class="comment"> * a gVertex array whatever the shader happens to declare. Vulkan allows a</span></div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span><span class="comment"> * pipeline to describe attributes the shader never reads, so a shader consuming</span></div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span><span class="comment"> * only position and texcoords still works against the full layout - what it must</span></div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span><span class="comment"> * not do is declare an input the layout has no attribute for, which</span></div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span><span class="comment"> * gvkBuildUserPipeline rejects.</span></div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span><span class="comment"> */</span></div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span><span class="keyword">struct </span>gVKUserPipeline {</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    gVKPipelineVariants variants[GVK_PIPELINE_SAMPLE_VARIANTS];</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    VkPipelineLayout layout = VK_NULL_HANDLE;</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    std::vector&lt;VkDescriptorSetLayout&gt; setlayouts;</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    uint32_t pushsize = 0;</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    VkShaderStageFlags pushstages = 0;</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    <span class="comment">// What the shader declared, kept so values can be addressed by name.</span></div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    gVKReflectedLayout reflected;</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    <span class="comment">// True when the pipeline describes the engine&#39;s gVertex layout, so it can be</span></div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    <span class="comment">// drawn with mesh buffers. False means the layout came from reflection and the</span></div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    <span class="comment">// shader is fed by the fullscreen quad path instead.</span></div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    <span class="keywordtype">bool</span> usesmeshlayout = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    <span class="comment">// Bytes per vertex of whichever layout was chosen.</span></div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    uint32_t vertexstride = 0;</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>};</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span> </div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span><span class="comment">// Builds one. Returns false with everything released on any failure, so a caller</span></div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span><span class="comment">// can report the shader as unloaded and carry on.</span></div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span><span class="keywordtype">bool</span> gvkBuildUserPipeline(gVKContext&amp; ctx, <span class="keyword">const</span> std::vector&lt;uint32_t&gt;&amp; vertSpirv,</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>        <span class="keyword">const</span> std::vector&lt;uint32_t&gt;&amp; fragSpirv, <span class="keyword">const</span> <span class="keywordtype">char</span>* debugName, gVKUserPipeline&amp; out);</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span> </div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span><span class="comment">// Releases one. Safe on an all-null instance, and leaves it that way.</span></div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span><span class="keywordtype">void</span> gvkDestroyUserPipeline(gVKContext&amp; ctx, gVKUserPipeline&amp; pipeline);</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span> </div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span><span class="preprocessor">#endif </span><span class="comment">/* GVK_VULKAN */</span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span> </div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span><span class="preprocessor">#endif </span><span class="comment">/* CORE_GVKPIPELINE_H */</span><span class="preprocessor"></span></div>
 <div class="ttc" id="agVKContext_8h_html"><div class="ttname"><a href="gVKContext_8h.html">gVKContext.h</a></div></div>
+<div class="ttc" id="agVKReflect_8h_html"><div class="ttname"><a href="gVKReflect_8h.html">gVKReflect.h</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

@@ -176,6 +176,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a96a24dc5b9e7ae505e8be9674c89099a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a568bf8d79511c126f494dcc892524546" id="r_a568bf8d79511c126f494dcc892524546"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgVKRenderEngine.html#a568bf8d79511c126f494dcc892524546">clearColor</a> (<a class="el" href="classgColor.html">gColor</a> color) override</td></tr>
 <tr class="separator:a568bf8d79511c126f494dcc892524546"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5e30efd17b2f9f33c6d4a2c17cfd53a2" id="r_a5e30efd17b2f9f33c6d4a2c17cfd53a2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgVKRenderEngine.html#a5e30efd17b2f9f33c6d4a2c17cfd53a2">clearColorNow</a> (float <a class="el" href="gColor_8h.html#a4788d82c901b9367dd5c0daff8a7616b">r</a>, float <a class="el" href="gColor_8h.html#a8cf17d727651616de6f2b79ef32170cd">g</a>, float <a class="el" href="gColor_8h.html#a83fc1af92e29717b4513d121b0c72c7d">b</a>, float <a class="el" href="gColor_8h.html#a4aec1a5be9d9a4a394a2e49e9744286e">a</a>)</td></tr>
+<tr class="separator:a5e30efd17b2f9f33c6d4a2c17cfd53a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a98669f8ac781f00cfdec0d0d6775f647" id="r_a98669f8ac781f00cfdec0d0d6775f647"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgVKRenderEngine.html#a98669f8ac781f00cfdec0d0d6775f647">setProjectionMatrix</a> (glm::mat4 projectionMatrix) override</td></tr>
 <tr class="separator:a98669f8ac781f00cfdec0d0d6775f647"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae736a229a772bbe8e28124f979944796" id="r_ae736a229a772bbe8e28124f979944796"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgVKRenderEngine.html#ae736a229a772bbe8e28124f979944796">takeScreenshot</a> (<a class="el" href="classgImage.html">gImage</a> &amp;img, int x, int y, int <a class="el" href="classgRenderer.html#a521e019ad5133df5702d399bf051adda">width</a>, int <a class="el" href="classgRenderer.html#a10ba9eb49755cea48500ab0046baf6e4">height</a>) override</td></tr>
@@ -290,6 +292,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a3a7c15912fbd86940084a43eeaafd444"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae3d0c810a1a3e287e2471abfba6e1c8b" id="r_ae3d0c810a1a3e287e2471abfba6e1c8b"><td class="memItemLeft" align="right" valign="top">GLuint&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgVKRenderEngine.html#ae3d0c810a1a3e287e2471abfba6e1c8b">loadProgram</a> (const char *vertexSource, const char *fragmentSource, const char *geometrySource) override</td></tr>
 <tr class="separator:ae3d0c810a1a3e287e2471abfba6e1c8b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab0542f55c1cf45d7873a39f899af0a45" id="r_ab0542f55c1cf45d7873a39f899af0a45"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgVKRenderEngine.html#ab0542f55c1cf45d7873a39f899af0a45">setShaderSourcePaths</a> (const std::string &amp;vertexPath, const std::string &amp;fragmentPath) override</td></tr>
+<tr class="separator:ab0542f55c1cf45d7873a39f899af0a45"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0c0a44385339e30716c63444277ac530" id="r_a0c0a44385339e30716c63444277ac530"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgVKRenderEngine.html#a0c0a44385339e30716c63444277ac530">checkCompileErrors</a> (GLuint shader, const std::string &amp;type) override</td></tr>
 <tr class="separator:a0c0a44385339e30716c63444277ac530"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a20749ab11a7a3000df8327612ddabf2f" id="r_a20749ab11a7a3000df8327612ddabf2f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgVKRenderEngine.html#a20749ab11a7a3000df8327612ddabf2f">setBool</a> (GLuint uniformloc, bool value) override</td></tr>
@@ -1034,13 +1038,13 @@ Additional Inherited Members</h2></td></tr>
 <tr class="separator:a684eefd6b31300abd61ed00f3353ea6e inherit pro_attribs_classgRenderer"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1ccf1ba499fd6a483d8e8d5eb9bc3cae inherit pro_attribs_classgRenderer" id="r_a1ccf1ba499fd6a483d8e8d5eb9bc3cae"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a1ccf1ba499fd6a483d8e8d5eb9bc3cae">isssaodebug</a></td></tr>
 <tr class="separator:a1ccf1ba499fd6a483d8e8d5eb9bc3cae inherit pro_attribs_classgRenderer"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0d727fed45556950c59f81417d5ffc99 inherit pro_attribs_classgRenderer" id="r_a0d727fed45556950c59f81417d5ffc99"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgFbo.html">gFbo</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a0d727fed45556950c59f81417d5ffc99">ssaofbo</a></td></tr>
+<tr class="memitem:a0d727fed45556950c59f81417d5ffc99 inherit pro_attribs_classgRenderer" id="r_a0d727fed45556950c59f81417d5ffc99"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgFbo.html">gFbo</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a0d727fed45556950c59f81417d5ffc99">ssaofbo</a> = nullptr</td></tr>
 <tr class="separator:a0d727fed45556950c59f81417d5ffc99 inherit pro_attribs_classgRenderer"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a402b065d495ac04ae7cf76bc8dbe93e3 inherit pro_attribs_classgRenderer" id="r_a402b065d495ac04ae7cf76bc8dbe93e3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgFbo.html">gFbo</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a402b065d495ac04ae7cf76bc8dbe93e3">ssaoresultfbo</a></td></tr>
+<tr class="memitem:a402b065d495ac04ae7cf76bc8dbe93e3 inherit pro_attribs_classgRenderer" id="r_a402b065d495ac04ae7cf76bc8dbe93e3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgFbo.html">gFbo</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a402b065d495ac04ae7cf76bc8dbe93e3">ssaoresultfbo</a> = nullptr</td></tr>
 <tr class="separator:a402b065d495ac04ae7cf76bc8dbe93e3 inherit pro_attribs_classgRenderer"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a417f3a0a82b2913b927abd56ae436f23 inherit pro_attribs_classgRenderer" id="r_a417f3a0a82b2913b927abd56ae436f23"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgShader.html">gShader</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a417f3a0a82b2913b927abd56ae436f23">ssaoshader</a></td></tr>
+<tr class="memitem:a417f3a0a82b2913b927abd56ae436f23 inherit pro_attribs_classgRenderer" id="r_a417f3a0a82b2913b927abd56ae436f23"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgShader.html">gShader</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a417f3a0a82b2913b927abd56ae436f23">ssaoshader</a> = nullptr</td></tr>
 <tr class="separator:a417f3a0a82b2913b927abd56ae436f23 inherit pro_attribs_classgRenderer"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aecc99f8f9ccc310bdb0d40a1c8d249e1 inherit pro_attribs_classgRenderer" id="r_aecc99f8f9ccc310bdb0d40a1c8d249e1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgShader.html">gShader</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#aecc99f8f9ccc310bdb0d40a1c8d249e1">ssaoblurshader</a></td></tr>
+<tr class="memitem:aecc99f8f9ccc310bdb0d40a1c8d249e1 inherit pro_attribs_classgRenderer" id="r_aecc99f8f9ccc310bdb0d40a1c8d249e1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgShader.html">gShader</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#aecc99f8f9ccc310bdb0d40a1c8d249e1">ssaoblurshader</a> = nullptr</td></tr>
 <tr class="separator:aecc99f8f9ccc310bdb0d40a1c8d249e1 inherit pro_attribs_classgRenderer"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a71dacb6330406aefdf101de854ceb987 inherit pro_attribs_classgRenderer" id="r_a71dacb6330406aefdf101de854ceb987"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a71dacb6330406aefdf101de854ceb987">ssaorealdefaultfbo</a></td></tr>
 <tr class="separator:a71dacb6330406aefdf101de854ceb987 inherit pro_attribs_classgRenderer"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1056,31 +1060,31 @@ Additional Inherited Members</h2></td></tr>
 <tr class="separator:affba8f778e6b3fe851abacdd172a1d89 inherit pro_attribs_classgRenderer"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acd68f3b553d7b9dcc5842d0c973a7b13 inherit pro_attribs_classgRenderer" id="r_acd68f3b553d7b9dcc5842d0c973a7b13"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#acd68f3b553d7b9dcc5842d0c973a7b13">issoftshadowsenabled</a> = false</td></tr>
 <tr class="separator:acd68f3b553d7b9dcc5842d0c973a7b13 inherit pro_attribs_classgRenderer"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a095f6a2a2df090837fafd50664c87f89 inherit pro_attribs_classgRenderer" id="r_a095f6a2a2df090837fafd50664c87f89"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgShader.html">gShader</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a095f6a2a2df090837fafd50664c87f89">colorshader</a></td></tr>
+<tr class="memitem:a095f6a2a2df090837fafd50664c87f89 inherit pro_attribs_classgRenderer" id="r_a095f6a2a2df090837fafd50664c87f89"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgShader.html">gShader</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a095f6a2a2df090837fafd50664c87f89">colorshader</a> = nullptr</td></tr>
 <tr class="separator:a095f6a2a2df090837fafd50664c87f89 inherit pro_attribs_classgRenderer"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1c6ef46ff43d51226610ad5de5eed935 inherit pro_attribs_classgRenderer" id="r_a1c6ef46ff43d51226610ad5de5eed935"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgShader.html">gShader</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a1c6ef46ff43d51226610ad5de5eed935">textureshader</a></td></tr>
+<tr class="memitem:a1c6ef46ff43d51226610ad5de5eed935 inherit pro_attribs_classgRenderer" id="r_a1c6ef46ff43d51226610ad5de5eed935"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgShader.html">gShader</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a1c6ef46ff43d51226610ad5de5eed935">textureshader</a> = nullptr</td></tr>
 <tr class="separator:a1c6ef46ff43d51226610ad5de5eed935 inherit pro_attribs_classgRenderer"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ada1b3525e35b96457a276a06a6977e06 inherit pro_attribs_classgRenderer" id="r_ada1b3525e35b96457a276a06a6977e06"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgShader.html">gShader</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#ada1b3525e35b96457a276a06a6977e06">fontshader</a></td></tr>
+<tr class="memitem:ada1b3525e35b96457a276a06a6977e06 inherit pro_attribs_classgRenderer" id="r_ada1b3525e35b96457a276a06a6977e06"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgShader.html">gShader</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#ada1b3525e35b96457a276a06a6977e06">fontshader</a> = nullptr</td></tr>
 <tr class="separator:ada1b3525e35b96457a276a06a6977e06 inherit pro_attribs_classgRenderer"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad9116b64278d378f711e46e2e81132f1 inherit pro_attribs_classgRenderer" id="r_ad9116b64278d378f711e46e2e81132f1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgShader.html">gShader</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#ad9116b64278d378f711e46e2e81132f1">imageshader</a></td></tr>
+<tr class="memitem:ad9116b64278d378f711e46e2e81132f1 inherit pro_attribs_classgRenderer" id="r_ad9116b64278d378f711e46e2e81132f1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgShader.html">gShader</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#ad9116b64278d378f711e46e2e81132f1">imageshader</a> = nullptr</td></tr>
 <tr class="separator:ad9116b64278d378f711e46e2e81132f1 inherit pro_attribs_classgRenderer"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5fb12b19f71ba85586b2164b6aaa76d2 inherit pro_attribs_classgRenderer" id="r_a5fb12b19f71ba85586b2164b6aaa76d2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgShader.html">gShader</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a5fb12b19f71ba85586b2164b6aaa76d2">skyboxshader</a></td></tr>
+<tr class="memitem:a5fb12b19f71ba85586b2164b6aaa76d2 inherit pro_attribs_classgRenderer" id="r_a5fb12b19f71ba85586b2164b6aaa76d2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgShader.html">gShader</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a5fb12b19f71ba85586b2164b6aaa76d2">skyboxshader</a> = nullptr</td></tr>
 <tr class="separator:a5fb12b19f71ba85586b2164b6aaa76d2 inherit pro_attribs_classgRenderer"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a50483e38ba0497112c4c56b236b8704d inherit pro_attribs_classgRenderer" id="r_a50483e38ba0497112c4c56b236b8704d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgShader.html">gShader</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a50483e38ba0497112c4c56b236b8704d">shadowmapshader</a></td></tr>
+<tr class="memitem:a50483e38ba0497112c4c56b236b8704d inherit pro_attribs_classgRenderer" id="r_a50483e38ba0497112c4c56b236b8704d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgShader.html">gShader</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a50483e38ba0497112c4c56b236b8704d">shadowmapshader</a> = nullptr</td></tr>
 <tr class="separator:a50483e38ba0497112c4c56b236b8704d inherit pro_attribs_classgRenderer"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a39871a3ede598b48f768af353884048b inherit pro_attribs_classgRenderer" id="r_a39871a3ede598b48f768af353884048b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgShader.html">gShader</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a39871a3ede598b48f768af353884048b">pbrshader</a></td></tr>
+<tr class="memitem:a39871a3ede598b48f768af353884048b inherit pro_attribs_classgRenderer" id="r_a39871a3ede598b48f768af353884048b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgShader.html">gShader</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a39871a3ede598b48f768af353884048b">pbrshader</a> = nullptr</td></tr>
 <tr class="separator:a39871a3ede598b48f768af353884048b inherit pro_attribs_classgRenderer"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1ba5643685ee4817c448c2eaa1209387 inherit pro_attribs_classgRenderer" id="r_a1ba5643685ee4817c448c2eaa1209387"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgShader.html">gShader</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a1ba5643685ee4817c448c2eaa1209387">equirectangularshader</a></td></tr>
+<tr class="memitem:a1ba5643685ee4817c448c2eaa1209387 inherit pro_attribs_classgRenderer" id="r_a1ba5643685ee4817c448c2eaa1209387"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgShader.html">gShader</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a1ba5643685ee4817c448c2eaa1209387">equirectangularshader</a> = nullptr</td></tr>
 <tr class="separator:a1ba5643685ee4817c448c2eaa1209387 inherit pro_attribs_classgRenderer"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0945f211f4981b39affee0824ad23a0d inherit pro_attribs_classgRenderer" id="r_a0945f211f4981b39affee0824ad23a0d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgShader.html">gShader</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a0945f211f4981b39affee0824ad23a0d">irradianceshader</a></td></tr>
+<tr class="memitem:a0945f211f4981b39affee0824ad23a0d inherit pro_attribs_classgRenderer" id="r_a0945f211f4981b39affee0824ad23a0d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgShader.html">gShader</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a0945f211f4981b39affee0824ad23a0d">irradianceshader</a> = nullptr</td></tr>
 <tr class="separator:a0945f211f4981b39affee0824ad23a0d inherit pro_attribs_classgRenderer"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a85e464ddd3fab891998f91fda6409fe8 inherit pro_attribs_classgRenderer" id="r_a85e464ddd3fab891998f91fda6409fe8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgShader.html">gShader</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a85e464ddd3fab891998f91fda6409fe8">prefiltershader</a></td></tr>
+<tr class="memitem:a85e464ddd3fab891998f91fda6409fe8 inherit pro_attribs_classgRenderer" id="r_a85e464ddd3fab891998f91fda6409fe8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgShader.html">gShader</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a85e464ddd3fab891998f91fda6409fe8">prefiltershader</a> = nullptr</td></tr>
 <tr class="separator:a85e464ddd3fab891998f91fda6409fe8 inherit pro_attribs_classgRenderer"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a13aa791c6c60d07bbb33f96a963b7b37 inherit pro_attribs_classgRenderer" id="r_a13aa791c6c60d07bbb33f96a963b7b37"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgShader.html">gShader</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a13aa791c6c60d07bbb33f96a963b7b37">brdfshader</a></td></tr>
+<tr class="memitem:a13aa791c6c60d07bbb33f96a963b7b37 inherit pro_attribs_classgRenderer" id="r_a13aa791c6c60d07bbb33f96a963b7b37"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgShader.html">gShader</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a13aa791c6c60d07bbb33f96a963b7b37">brdfshader</a> = nullptr</td></tr>
 <tr class="separator:a13aa791c6c60d07bbb33f96a963b7b37 inherit pro_attribs_classgRenderer"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4b4e89e1350d9af5cd05d1e0f1a214f2 inherit pro_attribs_classgRenderer" id="r_a4b4e89e1350d9af5cd05d1e0f1a214f2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgShader.html">gShader</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a4b4e89e1350d9af5cd05d1e0f1a214f2">fboshader</a></td></tr>
+<tr class="memitem:a4b4e89e1350d9af5cd05d1e0f1a214f2 inherit pro_attribs_classgRenderer" id="r_a4b4e89e1350d9af5cd05d1e0f1a214f2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgShader.html">gShader</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a4b4e89e1350d9af5cd05d1e0f1a214f2">fboshader</a> = nullptr</td></tr>
 <tr class="separator:a4b4e89e1350d9af5cd05d1e0f1a214f2 inherit pro_attribs_classgRenderer"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab4ca6e7dccebc610df313775dc45b675 inherit pro_attribs_classgRenderer" id="r_ab4ca6e7dccebc610df313775dc45b675"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgShader.html">gShader</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#ab4ca6e7dccebc610df313775dc45b675">gridshader</a></td></tr>
+<tr class="memitem:ab4ca6e7dccebc610df313775dc45b675 inherit pro_attribs_classgRenderer" id="r_ab4ca6e7dccebc610df313775dc45b675"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgShader.html">gShader</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#ab4ca6e7dccebc610df313775dc45b675">gridshader</a> = nullptr</td></tr>
 <tr class="separator:ab4ca6e7dccebc610df313775dc45b675 inherit pro_attribs_classgRenderer"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acfb7a2d7dbd4f0de2e3fbb1abb7f94dd inherit pro_attribs_classgRenderer" id="r_acfb7a2d7dbd4f0de2e3fbb1abb7f94dd"><td class="memItemLeft" align="right" valign="top">glm::mat4&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#acfb7a2d7dbd4f0de2e3fbb1abb7f94dd">projectionmatrix</a></td></tr>
 <tr class="separator:acfb7a2d7dbd4f0de2e3fbb1abb7f94dd inherit pro_attribs_classgRenderer"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1094,11 +1098,11 @@ Additional Inherited Members</h2></td></tr>
 <tr class="separator:a553d844b5ada950ae5d6b87d691f124b inherit pro_attribs_classgRenderer"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6513b8ff020b7dbeaedb6a47f9be3e00 inherit pro_attribs_classgRenderer" id="r_a6513b8ff020b7dbeaedb6a47f9be3e00"><td class="memItemLeft" align="right" valign="top">glm::vec3&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a6513b8ff020b7dbeaedb6a47f9be3e00">cameraposition</a></td></tr>
 <tr class="separator:a6513b8ff020b7dbeaedb6a47f9be3e00 inherit pro_attribs_classgRenderer"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:accf213049dfa02b51068b029a2784c7c inherit pro_attribs_classgRenderer" id="r_accf213049dfa02b51068b029a2784c7c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgCamera.html">gCamera</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#accf213049dfa02b51068b029a2784c7c">camera</a></td></tr>
+<tr class="memitem:accf213049dfa02b51068b029a2784c7c inherit pro_attribs_classgRenderer" id="r_accf213049dfa02b51068b029a2784c7c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgCamera.html">gCamera</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#accf213049dfa02b51068b029a2784c7c">camera</a> = nullptr</td></tr>
 <tr class="separator:accf213049dfa02b51068b029a2784c7c inherit pro_attribs_classgRenderer"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac2535cba0653314d7173d936ef116f9f inherit pro_attribs_classgRenderer" id="r_ac2535cba0653314d7173d936ef116f9f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgGrid.html">gGrid</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#ac2535cba0653314d7173d936ef116f9f">grid</a></td></tr>
+<tr class="memitem:ac2535cba0653314d7173d936ef116f9f inherit pro_attribs_classgRenderer" id="r_ac2535cba0653314d7173d936ef116f9f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgGrid.html">gGrid</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#ac2535cba0653314d7173d936ef116f9f">grid</a> = nullptr</td></tr>
 <tr class="separator:ac2535cba0653314d7173d936ef116f9f inherit pro_attribs_classgRenderer"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9164aad8460cd5c795b5ae08472462d4 inherit pro_attribs_classgRenderer" id="r_a9164aad8460cd5c795b5ae08472462d4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgGrid.html">gGrid</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a9164aad8460cd5c795b5ae08472462d4">originalgrid</a></td></tr>
+<tr class="memitem:a9164aad8460cd5c795b5ae08472462d4 inherit pro_attribs_classgRenderer" id="r_a9164aad8460cd5c795b5ae08472462d4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgGrid.html">gGrid</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#a9164aad8460cd5c795b5ae08472462d4">originalgrid</a> = nullptr</td></tr>
 <tr class="separator:a9164aad8460cd5c795b5ae08472462d4 inherit pro_attribs_classgRenderer"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac89dcc29743e84dd21579de8fa58f241 inherit pro_attribs_classgRenderer" id="r_ac89dcc29743e84dd21579de8fa58f241"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgRenderer.html#ac89dcc29743e84dd21579de8fa58f241">fullscreenquadvao</a></td></tr>
 <tr class="separator:ac89dcc29743e84dd21579de8fa58f241 inherit pro_attribs_classgRenderer"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -2005,6 +2009,46 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Implements <a class="el" href="classgRenderer.html#a789b1047f3a01e2a1debea7198fe8406">gRenderer</a>.</p>
+
+</div>
+</div>
+<a id="a5e30efd17b2f9f33c6d4a2c17cfd53a2" name="a5e30efd17b2f9f33c6d4a2c17cfd53a2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5e30efd17b2f9f33c6d4a2c17cfd53a2">&#9670;&#160;</a></span>clearColorNow()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gVKRenderEngine::clearColorNow </td>
+          <td>(</td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>r</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>g</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>b</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>a</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -4728,6 +4772,44 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Implements <a class="el" href="classgRenderer.html#a6e0d8e9c2831b7e7f877ae598ca9dee3">gRenderer</a>.</p>
+
+</div>
+</div>
+<a id="ab0542f55c1cf45d7873a39f899af0a45" name="ab0542f55c1cf45d7873a39f899af0a45"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab0542f55c1cf45d7873a39f899af0a45">&#9670;&#160;</a></span>setShaderSourcePaths()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gVKRenderEngine::setShaderSourcePaths </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>vertexPath</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>fragmentPath</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reimplemented from <a class="el" href="classgRenderer.html#a57eccf2412308f981536b4a7c83637df">gRenderer</a>.</p>
 
 </div>
 </div>

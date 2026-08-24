@@ -180,7 +180,8 @@ var searchData=
   ['gvksync_2eh_177',['gVKSync.h',['../gVKSync_8h.html',1,'']]],
   ['gvktexture_2eh_178',['gVKTexture.h',['../gVKTexture_8h.html',1,'']]],
   ['gvkuniform_2eh_179',['gVKUniform.h',['../gVKUniform_8h.html',1,'']]],
-  ['gwhitebalance_2eh_180',['gWhiteBalance.h',['../gWhiteBalance_8h.html',1,'']]],
-  ['gwindowevents_2eh_181',['gWindowEvents.h',['../gWindowEvents_8h.html',1,'']]],
-  ['gwindows_2eh_182',['gWindows.h',['../gWindows_8h.html',1,'']]]
+  ['gvkusershader_2eh_180',['gVKUserShader.h',['../gVKUserShader_8h.html',1,'']]],
+  ['gwhitebalance_2eh_181',['gWhiteBalance.h',['../gWhiteBalance_8h.html',1,'']]],
+  ['gwindowevents_2eh_182',['gWindowEvents.h',['../gWindowEvents_8h.html',1,'']]],
+  ['gwindows_2eh_183',['gWindows.h',['../gWindows_8h.html',1,'']]]
 ];

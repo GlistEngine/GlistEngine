@@ -1,5 +1,8 @@
 var NAVTREEINDEX17 =
 {
+"functions_vars_c.html":[1,3,2,2],
+"functions_vars_d.html":[1,3,2,3],
+"functions_vars_e.html":[1,3,2,4],
 "functions_vars_f.html":[1,3,2,5],
 "functions_vars_g.html":[1,3,2,6],
 "functions_vars_h.html":[1,3,2,7],
@@ -246,8 +249,5 @@ var NAVTREEINDEX17 =
 "gGUIGraph_8h_source.html":[2,0,0,7,19],
 "gGUIGrid_8h.html":[2,0,0,7,20],
 "gGUIGrid_8h_source.html":[2,0,0,7,20],
-"gGUIImageButton_8h.html":[2,0,0,7,21],
-"gGUIImageButton_8h_source.html":[2,0,0,7,21],
-"gGUILineGraph_8h.html":[2,0,0,7,23],
-"gGUILineGraph_8h_source.html":[2,0,0,7,23]
+"gGUIImageButton_8h.html":[2,0,0,7,21]
 };

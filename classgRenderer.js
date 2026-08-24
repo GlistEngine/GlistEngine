@@ -284,6 +284,7 @@ var classgRenderer =
     [ "setProjectionMatrix2d", "classgRenderer.html#addf7108c9745cdb092bf888b99418d1f", null ],
     [ "setReadBufferNone", "classgRenderer.html#ad19171b9b90c27875757e1117156d315", null ],
     [ "setRenderbufferStorage", "classgRenderer.html#a6e0d8e9c2831b7e7f877ae598ca9dee3", null ],
+    [ "setShaderSourcePaths", "classgRenderer.html#a57eccf2412308f981536b4a7c83637df", null ],
     [ "setShadowMapState", "classgRenderer.html#affadcc9658ac4cbabf02d297f4739ad5", null ],
     [ "setSSAOBias", "classgRenderer.html#a14f49dde3312311288f0ca34c847efc4", null ],
     [ "setSSAODebug", "classgRenderer.html#a376781dbaed44ecf11c22927f6197d61", null ],
