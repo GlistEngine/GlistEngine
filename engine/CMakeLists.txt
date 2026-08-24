@@ -520,6 +520,11 @@ set(ENGINE_INCLUDES
 
 list(APPEND INC_DIRS ${ENGINE_INCLUDES})
 
+# Marks the engine's own translation units. gRenderer.h redirects the handful of
+# OpenGL calls applications still make by hand to the renderer, and the engine is
+# the one place that must keep calling the real ones.
+target_compile_definitions(GlistEngine PRIVATE GLIST_ENGINE_BUILD)
+
 if(TRACY_ENABLE)
 	target_compile_definitions(GlistEngine PUBLIC TRACY_ENABLE)
 	list(APPEND INC_DIRS
@@ -801,6 +806,8 @@ if(Lib_Vulkan)
 				${GVK_SHADER_DIR}/shadow3d.frag
 				${GVK_SHADER_DIR}/skybox3d.vert
 				${GVK_SHADER_DIR}/skybox3d.frag
+				${GVK_SHADER_DIR}/fbo.vert
+				${GVK_SHADER_DIR}/fbo.frag
 				${GVK_SHADER_DIR}/gen_vk_shaders.cmake
 			COMMENT "Regenerating gVKShaders.h from the Vulkan 2D shader sources"
 			VERBATIM)

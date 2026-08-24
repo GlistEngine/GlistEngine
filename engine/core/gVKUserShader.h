@@ -53,13 +53,24 @@ struct gVKTexture;
 using gVKUserShaderId = uint32_t;
 inline constexpr gVKUserShaderId GVK_NO_USER_SHADER = 0;
 
+// Shaders the engine builds through this path rather than as a pipeline of its
+// own, and which therefore have to work in a build that links no shader compiler.
+// There is one: gFbo's screen resolve, the pass that ends a post-process chain.
+// Its SPIR-V is compiled at build time from graphics/shaders/vk/fbo.vert and
+// .frag and lives in gVKShaders.h, and is used when compiling is not possible.
+// Anything an application loads has no such fallback and passes NONE.
+enum gvkBuiltinShader {
+	GVK_BUILTIN_NONE = 0,
+	GVK_BUILTIN_FBO,
+};
+
 // Compiles and builds one shader from GLSL held in memory. sourcePath, when the
 // sources came from files, is where a pre-compiled .spv is looked for; leave it
 // empty for sources the application built in memory. Returns GVK_NO_USER_SHADER
 // on any failure, having logged why.
 gVKUserShaderId gvkCreateUserShader(gVKContext& ctx, const std::string& vertexSource,
 		const std::string& fragmentSource, const std::string& vertexPath,
-		const std::string& fragmentPath);
+		const std::string& fragmentPath, int builtin = GVK_BUILTIN_NONE);
 
 // Releases one. The pipeline may still be recorded into a frame in flight, so the
 // caller is responsible for having waited; gVKRenderEngine does that at teardown.

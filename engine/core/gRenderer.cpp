@@ -7,6 +7,7 @@
 
 #include "gRenderer.h"
 #include "gFbo.h"
+#include "gRenderObject.h" // for the global renderer the compatibility calls below use
 
 #include <cstdlib>
 #include <algorithm>
@@ -1303,4 +1304,35 @@ void gRenderer::setGridColorofAxisWireFrameYZ(int r, int g, int b, int a) {
 }
 
 void gRenderer::setGridColorofAxisWireFrameYZ(gColor* color) {
+}
+
+// See the comment on these in gRenderer.h. Compiled as part of the engine, where
+// the redirection is not in force, so glClear and glBlendFunc here are the real
+// ones.
+void gCompatClear(unsigned int mask) {
+	if(renderer == nullptr) return;
+	if(!renderer->isVulkan()) {
+		glClear(mask);
+		return;
+	}
+	const bool color = (mask & GL_COLOR_BUFFER_BIT) != 0;
+	const bool depth = (mask & GL_DEPTH_BUFFER_BIT) != 0;
+	if(!color && !depth) return;
+	renderer->clearScreen(color, depth);
+}
+
+void gCompatBlendFunc(unsigned int sourceFactor, unsigned int destinationFactor) {
+	if(renderer == nullptr) return;
+	if(!renderer->isVulkan()) {
+		glBlendFunc(sourceFactor, destinationFactor);
+		return;
+	}
+	// The two combinations a game asks for by hand. Anything else has no blend mode
+	// to map onto, and silently picking the wrong one would be worse than leaving
+	// the mode where it was.
+	if(sourceFactor == GL_SRC_ALPHA && destinationFactor == GL_ONE) {
+		renderer->setBlendMode(gRenderer::BLENDMODE_ADDITIVE);
+	} else if(sourceFactor == GL_SRC_ALPHA && destinationFactor == GL_ONE_MINUS_SRC_ALPHA) {
+		renderer->setBlendMode(gRenderer::BLENDMODE_ALPHA);
+	}
 }

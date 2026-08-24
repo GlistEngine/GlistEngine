@@ -848,4 +848,32 @@ void gvkDrawSkyboxFace(gVKContext& ctx, VkDescriptorSet faceSet, const float* xy
 	vkCmdDraw(cmd, static_cast<uint32_t>(vertexCount), 1, 0, 0);
 }
 
+bool gvkClearDepthNow(gVKContext& ctx) {
+	// A first person weapon is the reason this exists: the scene is drawn, the depth
+	// buffer is thrown away, and the gun is drawn afterwards so nothing in the world
+	// can poke through it. OpenGL spells that glClear(GL_DEPTH_BUFFER_BIT) part way
+	// through the frame. Vulkan bakes clears into a pass's load operation, which has
+	// already happened by then, so the equivalent is vkCmdClearAttachments - the one
+	// clear that is legal inside an open pass and touches only the render area.
+	if(!ctx.renderpassactive) return false;
+	VkCommandBuffer cmd = ctx.getCurrentCommandBuffer();
+	if(cmd == VK_NULL_HANDLE) return false;
+	if(ctx.currentpassextent.width == 0 || ctx.currentpassextent.height == 0) return false;
+
+	VkClearAttachment attachment{};
+	attachment.aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT;
+	// No colour attachment is named, so colorAttachment is ignored; the depth
+	// attachment of the current subpass is the one that gets cleared.
+	attachment.clearValue.depthStencil.depth = 1.0f;
+	attachment.clearValue.depthStencil.stencil = 0;
+
+	VkClearRect rect{};
+	rect.rect.offset = {0, 0};
+	rect.rect.extent = ctx.currentpassextent;
+	rect.baseArrayLayer = 0;
+	rect.layerCount = 1;
+	vkCmdClearAttachments(cmd, 1, &attachment, 1, &rect);
+	return true;
+}
+
 #endif /* GVK_VULKAN */

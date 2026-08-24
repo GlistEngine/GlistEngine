@@ -74,6 +74,11 @@ bool gvkEnsureRenderPass(gVKContext& ctx);
 // Copies what the last pass resolved into a sampleable texture, so a multisampled
 // frame can be rebuilt after a render target was bound part way through it.
 VkDescriptorSet gvkCaptureResolvedScreen(gVKContext& ctx);
+// Clears the depth buffer of the open pass without ending it, the way
+// glClear(GL_DEPTH_BUFFER_BIT) does part way through a frame. Defined in
+// gVKDraw.cpp. Returns false when no pass is open, in which case the pass's own
+// load op has already done the clearing.
+bool gvkClearDepthNow(gVKContext& ctx);
 bool gvkCreateGraphicsPipelines(gVKContext& ctx);
 bool gvkReloadGraphicsPipelines(gVKContext& ctx);
 void gvkDestroyGraphicsPipelines(gVKContext& ctx);
@@ -193,6 +198,7 @@ struct gVKContext {
 	friend bool gvkEndFrame(gVKContext&, gBaseWindow*);
 	friend bool gvkEnsureRenderPass(gVKContext&);
 	friend VkDescriptorSet gvkCaptureResolvedScreen(gVKContext&);
+	friend bool gvkClearDepthNow(gVKContext&);
 	friend bool gvkCreateGraphicsPipelines(gVKContext&);
 	friend bool gvkReloadGraphicsPipelines(gVKContext&);
 	friend void gvkDestroyGraphicsPipelines(gVKContext&);
@@ -923,6 +929,11 @@ private:
 	// face has to be flipped; see gVKCullState.
 	bool passflipsy = true;
 	bool renderpassactive = false;
+	// The render area of whichever pass is open, so a mid-pass clear knows the
+	// rectangle it may touch. Set by every pass begin: the screen pass uses the
+	// swapchain extent, the shadow pass its map size, an offscreen pass the mip
+	// level it renders into.
+	VkExtent2D currentpassextent = {0, 0};
 	// Whether the screen pass has been begun at all this frame. The first begin
 	// clears, every later one loads what the earlier ones left.
 	bool screenpassbegun = false;

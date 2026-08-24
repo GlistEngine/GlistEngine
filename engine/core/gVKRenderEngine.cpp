@@ -850,6 +850,7 @@ void gVKRenderEngine::bindFramebuffer(GLuint fbo) {
 	info.framebuffer = target->framebuffer;
 	info.renderArea.offset = {0, 0};
 	info.renderArea.extent = {target->levelWidth(), target->levelHeight()};
+	vkcontext->currentpassextent = info.renderArea.extent;
 	info.clearValueCount = clearcount;
 	info.pClearValues = clears;
 	vkCmdBeginRenderPass(cmd, &info, VK_SUBPASS_CONTENTS_INLINE);
@@ -1060,6 +1061,13 @@ static constexpr GLuint GVK_NO_UNIFORM = static_cast<GLuint>(-1);
 static std::string gvkshadervertexpath;
 static std::string gvkshaderfragmentpath;
 
+// Set while init() builds gFbo's screen resolve shader, which goes through
+// gShader like an application's would but is the engine's own and ships as
+// SPIR-V compiled at build time. Without that fallback a release build - which
+// links no shader compiler - would have no way to build it, and every
+// post-process chain would end in nothing being drawn.
+static bool gvkloadingfboshader = false;
+
 // The backend in use, so the texture resolver gVKUserShader calls can reach the
 // texture registry. There is one render engine per run - gRenderObject creates it
 // and replaces it only by destroying the previous one - so this cannot go stale
@@ -1117,7 +1125,8 @@ GLuint gVKRenderEngine::loadProgram(const char* vertexSource, const char* fragme
 	const gVKUserShaderId id = gvkCreateUserShader(*vkcontext,
 			vertexSource != nullptr ? vertexSource : "",
 			fragmentSource != nullptr ? fragmentSource : "",
-			gvkshadervertexpath, gvkshaderfragmentpath);
+			gvkshadervertexpath, gvkshaderfragmentpath,
+			gvkloadingfboshader ? GVK_BUILTIN_FBO : GVK_BUILTIN_NONE);
 	return static_cast<GLuint>(id);
 #else
 	(void) vertexSource; (void) fragmentSource; (void) geometrySource;
@@ -1289,6 +1298,14 @@ void gVKRenderEngine::clearScreen(bool color, bool depth) {
 	// loadOp when they begin. Mid-pass clears from the legacy OpenGL traversal must
 	// not be replayed here: several scene helpers issue them while sharing a Vulkan
 	// pass, which would erase previously recorded draws and produce flicker.
+	//
+	// A clear that asks for depth and not colour is the exception, and is honoured.
+	// Nothing in the engine issues one to start a pass off - the helpers that share
+	// a pass all ask for colour as well - so it only ever comes from code that means
+	// what glClear(GL_DEPTH_BUFFER_BIT) means: keep the picture, forget how far away
+	// it was. A first person weapon drawn over the world needs exactly that, and
+	// clearing depth cannot disturb what has already been drawn.
+	if(depth && !color && vkcontext != nullptr) gvkClearDepthNow(*vkcontext);
 	(void) color;
 	(void) depth;
 	#else
@@ -2797,10 +2814,13 @@ void gVKRenderEngine::init() {
     // pass that resolves a framebuffer to the screen, which is what ends a
     // post-process chain. It goes through gShader like any application shader, so
     // it is compiled from the same fbo_vert/fbo_frag sources - their Vulkan branch
-    // - rather than duplicated as SPIR-V in the engine. Created here and not in
+    // - wherever a compiler is linked in, and falls back to the SPIR-V built from
+    // graphics/shaders/vk/fbo.* where one is not. Created here and not in
     // initVulkan because it needs the pipelines that initVulkan builds.
     fboshader = new gShader();
+    gvkloadingfboshader = true;
     fboshader->loadProgram(getShaderSrcFboVertex(), getShaderSrcFboFragment());
+    gvkloadingfboshader = false;
 
     createPrimitiveMeshes();
 }
