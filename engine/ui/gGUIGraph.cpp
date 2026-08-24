@@ -35,7 +35,8 @@ gGUIGraph::gGUIGraph() {
 	gridlinesyenabled = true;
 	isxaxislinenable = true;
 	yaxislenable = true;
-	floatlabelsenabled = false;
+	floatlabelsxenabled = false;
+	floatlabelsyenabled = false;
 	isbackgroundenabled = true;
 	labelcountx = 5;
 	labelcounty = 7;
@@ -231,6 +232,7 @@ void gGUIGraph::drawLabels() {
 	// Draw the labels for x-axis
 	if (labelcountx > 0) {
 		float xpoint = 0;
+		float labely = axisxstart + 0.04f * height + 4.0f;// small fixed gap below the tick mark, independent of the control's size
 		for (int i = 0; i < labelcountx; i++) {
 			xpoint = i * labelwidthx;
 			if (isxaxislinenable) {
@@ -240,11 +242,13 @@ void gGUIGraph::drawLabels() {
 			}
 
 			renderer->setColor(fontcolor);
-			if (floatlabelsenabled) {
-				if (i < floatlabelsx.size()) getFont()->drawText(std::to_string(floatlabelsx[i]), axisx1 + xpoint - 0.01f * width, axisxstart + 0.07f * height);
+			std::string labeltext;
+			if (floatlabelsxenabled) {
+				if (i < floatlabelsx.size()) labeltext = gToStr(floatlabelsx[i]);
 			} else {
-				if (i < labelsx.size()) getFont()->drawText(std::to_string(labelsx[i]), axisx1 + xpoint - 0.01f * width, axisxstart + 0.07f * height);
+				if (i < labelsx.size()) labeltext = std::to_string(labelsx[i]);
 			}
+			if (!labeltext.empty()) getFont()->drawText(labeltext, axisx1 + xpoint - getFont()->getStringWidth(labeltext) / 2.0f, labely);
 		}
 	} else if (isxaxislinenable) {
 		renderer->setColor(foregroundcolor);
@@ -256,6 +260,7 @@ void gGUIGraph::drawLabels() {
 	// Draw the labels for y-axis
 	if (labelcounty > 0) {
 		int ypoint = 0;
+		float lineheight = getFont()->getLineHeight();
 		for (int i = 0; i < labelcounty; i++) {
 			ypoint = i * labelwidthy;
 			if (yaxislenable) {
@@ -265,10 +270,15 @@ void gGUIGraph::drawLabels() {
 			}
 
 			renderer->setColor(fontcolor);
-			if (floatlabelsenabled) {
-				if (i < floatlabelsy.size()) getFont()->drawText(std::to_string(floatlabelsy[i]), axisystart - 0.054f * width, axisy2 - ypoint + 0.012f * height);
+			std::string labeltext;
+			if (floatlabelsyenabled) {
+				if (i < floatlabelsy.size()) labeltext = gToStr(floatlabelsy[i]);
 			} else {
-				if (i < labelsy.size()) getFont()->drawText(std::to_string(labelsy[i]), axisystart - 0.054f * width, axisy2 - ypoint + 0.012f * height);
+				if (i < labelsy.size()) labeltext = std::to_string(labelsy[i]);
+			}
+			if (!labeltext.empty()) {
+				float labelw = getFont()->getStringWidth(labeltext);
+				getFont()->drawText(labeltext, axisystart - labelw - 8.0f, axisy2 - ypoint - lineheight / 2.0f);
 			}
 		}
 	} else if (yaxislenable) {
@@ -283,8 +293,9 @@ void gGUIGraph::drawGraph() {
 }
 
 void gGUIGraph::updateLabelsX() {
-	if (floatlabelsenabled) {
+	if (floatlabelsxenabled) {
 		float step = (maxx - minx) / (labelcountx - 1);
+		floatlabelsx.resize(labelcountx);
 		for (int i = 0; i < labelcountx; i++) {
 			floatlabelsx[i] = minx + i * step;
 		}
@@ -298,7 +309,7 @@ void gGUIGraph::updateLabelsX() {
 		}
 
 		if (minx < 0) minx = (int(smallestvaluex / step) - 1) * step;
-		maxx = (int(largestvaluex / step) + 1) * step;
+		maxx = (int)std::ceil(largestvaluex / (float)step) * step;// round up only as far as needed to cover the data, no extra step
 		labelcountx = (maxx - minx) / step + 1;
 		//		gLogi("labelx") << labelcountx << " " << maxx << " " << minx << " " << step;
 		labelsx.clear();
@@ -309,8 +320,9 @@ void gGUIGraph::updateLabelsX() {
 }
 
 void gGUIGraph::updateLabelsY() {
-	if (floatlabelsenabled) {
+	if (floatlabelsyenabled) {
 		float step = (maxy - miny) / (labelcounty - 1);
+		floatlabelsy.resize(labelcounty);
 		for (int i = 0; i < labelcounty; i++) {
 			floatlabelsy[i] = miny + i * step;
 		}
@@ -330,7 +342,7 @@ void gGUIGraph::updateLabelsY() {
 			miny = (int(smallestvaluey / step) - 1) * step;
 		}
 
-		maxy = (int(largestvaluey / step) + 1) * step;
+		maxy = (int)std::ceil(largestvaluey / (float)step) * step;// round up only as far as needed to cover the data, no extra step
 
 		labelcounty = (maxy - miny) / step + 1;
 		labelsy.clear();
@@ -338,6 +350,33 @@ void gGUIGraph::updateLabelsY() {
 			labelsy.push_back(miny + i * step);
 		}
 	}
+}
+
+void gGUIGraph::setLabelsYForRange(float rangeMinY, float rangeMaxY) {
+	float span = rangeMaxY - rangeMinY;
+	if (span < 1e-6f) span = 1.0f;
+	int targetcount = (labelcounty > 1) ? labelcounty : 7;
+
+	// snap the step to a "nice" 1/2/5 x 10^n value so labels land on whole numbers whenever the
+	// data range allows it (e.g. EUR-SEK's ~7-12), falling back to a nice decimal step only when
+	// the range is too narrow for whole numbers to be meaningful (e.g. EUR-GBP's ~0.66-0.92)
+	float rawstep = span / (targetcount - 1);
+	float magnitude = std::pow(10.0f, std::floor(std::log10(rawstep)));
+	float normalized = rawstep / magnitude;
+	float nicestep = ((normalized <= 1.0f) ? 1.0f : (normalized <= 2.0f) ? 2.0f : (normalized <= 5.0f) ? 5.0f : 10.0f) * magnitude;
+
+	float nicemin = std::floor(rangeMinY / nicestep) * nicestep;
+	float nicemax = std::ceil(rangeMaxY / nicestep) * nicestep;
+
+	miny = nicemin;
+	maxy = nicemax;
+	labelcounty = (int)std::round((nicemax - nicemin) / nicestep) + 1;
+
+	floatlabelsy.resize(labelcounty);
+	for (int i = 0; i < labelcounty; i++) {
+		floatlabelsy[i] = nicemin + i * nicestep;
+	}
+	labelwidthy = (labelcounty > 1) ? axisyh / (labelcounty - 1) : 0.0f;
 }
 
 int gGUIGraph::countDigits(int number) {
