@@ -7,6 +7,7 @@
 
 #include "gRenderer.h"
 #include "gFbo.h"
+#include "gRenderObject.h" // for the global renderer the compatibility calls below use
 
 #include <cstdlib>
 #include <algorithm>
@@ -1303,4 +1304,70 @@ void gRenderer::setGridColorofAxisWireFrameYZ(int r, int g, int b, int a) {
 }
 
 void gRenderer::setGridColorofAxisWireFrameYZ(gColor* color) {
+}
+
+// See the comment on these in gRenderer.h. Compiled as part of the engine, where
+// the redirection is not in force, so glClear and glBlendFunc here are the real
+// ones.
+void gCompatClear(unsigned int mask) {
+	if(renderer == nullptr) return;
+	if(!renderer->isVulkan()) {
+		glClear(mask);
+		return;
+	}
+	static bool told = false;
+	if(!told) {
+		told = true;
+		gLogw("gRenderer") << "This application clears the framebuffer by calling glClear directly."
+				<< " There is no OpenGL underneath the Vulkan backend, so the call is being served"
+				<< " by the renderer instead. Call clearScreen(colour, depth) and it works on"
+				<< " either backend, with nothing in the way.";
+	}
+	const bool color = (mask & GL_COLOR_BUFFER_BIT) != 0;
+	const bool depth = (mask & GL_DEPTH_BUFFER_BIT) != 0;
+	if(!color && !depth) return;
+	// Worth saying out loud, because the request is not carried out: a Vulkan pass
+	// clears its colour as it begins, and doing it again part way through would
+	// erase what has already been drawn. Only the depth half of this survives.
+	static bool toldaboutcolour = false;
+	if(color && !toldaboutcolour) {
+		toldaboutcolour = true;
+		gLogw("gRenderer") << "A mid-frame colour clear is ignored on the Vulkan backend; the pass"
+				<< " clears its colour when it begins. Only the depth part of this call is carried"
+				<< " out.";
+	}
+	renderer->clearScreen(color, depth);
+}
+
+void gCompatBlendFunc(unsigned int sourceFactor, unsigned int destinationFactor) {
+	if(renderer == nullptr) return;
+	if(!renderer->isVulkan()) {
+		glBlendFunc(sourceFactor, destinationFactor);
+		return;
+	}
+	static bool told = false;
+	if(!told) {
+		told = true;
+		gLogw("gRenderer") << "This application chooses its blend factors by calling glBlendFunc"
+				<< " directly. There is no OpenGL underneath the Vulkan backend, so the call is"
+				<< " being mapped onto a blend mode. Call setBlendMode(BLENDMODE_ALPHA or"
+				<< " BLENDMODE_ADDITIVE) and it works on either backend.";
+	}
+	// The two combinations a game asks for by hand. Anything else has no blend mode
+	// to map onto, and silently picking the wrong one would be worse than leaving
+	// the mode where it was - but saying nothing about it would be worse still.
+	if(sourceFactor == GL_SRC_ALPHA && destinationFactor == GL_ONE) {
+		renderer->setBlendMode(gRenderer::BLENDMODE_ADDITIVE);
+	} else if(sourceFactor == GL_SRC_ALPHA && destinationFactor == GL_ONE_MINUS_SRC_ALPHA) {
+		renderer->setBlendMode(gRenderer::BLENDMODE_ALPHA);
+	} else {
+		static bool toldaboutfactors = false;
+		if(!toldaboutfactors) {
+			toldaboutfactors = true;
+			gLogw("gRenderer") << "These blend factors have no equivalent on the Vulkan backend,"
+					<< " which offers alpha and additive blending; the mode is left as it was."
+					<< " Source factor: " << sourceFactor << ", destination factor: "
+					<< destinationFactor << ".";
+		}
+	}
 }

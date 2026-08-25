@@ -259,6 +259,7 @@ bool gvkEnsureRenderPass(gVKContext& ctx) {
 	renderpassinfo.framebuffer = ctx.framebuffers[framebufferindex];
 	renderpassinfo.renderArea.offset = {0, 0};
 	renderpassinfo.renderArea.extent = ctx.swapchainextent;
+	ctx.currentpassextent = ctx.swapchainextent;
 	// The colour and depth attachments use a CLEAR load operation, and the array is
 	// indexed by attachment number, so entry 0 is the colour the screen ends up
 	// showing wherever nothing is drawn and entry 1 is the depth the buffer starts

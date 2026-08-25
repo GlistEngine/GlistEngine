@@ -834,4 +834,34 @@ protected:
 	static const std::string& getShaderSrcSSAOBlurFragment();
 };
 
+
+// OpenGL calls made by application code
+// -------------------------------------
+// Games written against this engine reach past the renderer now and then and call
+// OpenGL directly, because for most of the engine's life OpenGL was the only thing
+// underneath. Those calls mean nothing on a backend that is not OpenGL: with no GL
+// context bound they do not even fail cleanly - the driver is entitled to hang.
+//
+// The two that come up in practice are a mid-frame depth clear, which is how a
+// first person weapon is drawn over the world, and a switch to additive blending
+// for a muzzle flash or a spark. Both have renderer entry points, so the calls are
+// routed there rather than left to reach a context that is not there. On OpenGL
+// each one still ends up in the same glClear / glBlendFunc it always did, so the
+// GL path is unchanged, down to the arguments.
+//
+// This is deliberately narrow. It rescues the calls that existing games make, not
+// OpenGL in general: anything else an application calls directly still goes
+// straight to GL and still means nothing on another backend.
+void gCompatClear(unsigned int mask);
+void gCompatBlendFunc(unsigned int sourceFactor, unsigned int destinationFactor);
+
+// Not applied while the engine itself is being compiled - it has a renderer to
+// call and needs the real entry points to implement these with. GLIST_ENGINE_BUILD
+// is defined on the engine target only, so application and plugin translation
+// units are the ones that get the redirection.
+#ifndef GLIST_ENGINE_BUILD
+#define glClear(mask) gCompatClear(mask)
+#define glBlendFunc(sourceFactor, destinationFactor) gCompatBlendFunc(sourceFactor, destinationFactor)
+#endif
+
 #endif /* CORE_GRENDERER_H_ */

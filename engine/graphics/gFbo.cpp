@@ -28,6 +28,8 @@ gFbo::~gFbo() {
 	G_PROFILE_ZONE_SCOPED_N("gFbo::~gFbo()");
 	delete texture;
 	delete depthtexture;
+	// See gVbo::clear: no renderer past engine shutdown, and nothing to give back.
+	if (renderer == nullptr) return;
 	if (!usedepthtexture) renderer->deleteRenderbuffer(rbo);
 	renderer->deleteFramebuffer(framebuffer);
 }

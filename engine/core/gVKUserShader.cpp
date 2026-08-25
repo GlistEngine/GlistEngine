@@ -9,6 +9,7 @@
 #include "gVKBuffer.h"
 #include "gVKPipeline.h"
 #include "gVKShaderCompiler.h"
+#include "gVKShaders.h"
 #include "gVKTexture.h"
 #include "gUtils.h"
 
@@ -204,9 +205,16 @@ static bool gvkReadSpirvFile(const std::string& path, std::vector<uint32_t>& spi
 // so preferring it would mean preferring the wrong module, and an edit to the
 // source would go unnoticed for as long as a stale .spv sat next to it.
 static bool gvkObtainSpirv(const std::string& source, const std::string& path,
-		VkShaderStageFlagBits stage, const std::string& debugName, std::vector<uint32_t>& spirv) {
+		VkShaderStageFlagBits stage, const std::string& debugName, std::vector<uint32_t>& spirv,
+		const uint32_t* builtinSpirv, size_t builtinBytes) {
 	if(gvkCompileShaderSource(source, stage, debugName, spirv)) return true;
 	if(!path.empty() && gvkReadSpirvFile(path + ".spv", spirv)) return true;
+	// Built at the same time as the engine, from the Vulkan branch of the same
+	// source, so this is the module the compiler would have produced.
+	if(builtinSpirv != nullptr && builtinBytes > 0) {
+		spirv.assign(builtinSpirv, builtinSpirv + builtinBytes / sizeof(uint32_t));
+		return true;
+	}
 
 	if(path.empty()) {
 		gLoge("gVKUserShader") << debugName << " could not be compiled: this build has no shader"
@@ -389,15 +397,28 @@ static bool gvkBuildUserResources(gVKContext& ctx, gvkUserShader& shader) {
 
 gVKUserShaderId gvkCreateUserShader(gVKContext& ctx, const std::string& vertexSource,
 		const std::string& fragmentSource, const std::string& vertexPath,
-		const std::string& fragmentPath) {
+		const std::string& fragmentPath, int builtin) {
 	const std::string name = vertexPath.empty() ? std::string("user shader") : vertexPath;
+
+	const uint32_t* builtinvert = nullptr;
+	const uint32_t* builtinfrag = nullptr;
+	size_t builtinvertbytes = 0;
+	size_t builtinfragbytes = 0;
+	if(builtin == GVK_BUILTIN_FBO) {
+		builtinvert = gvkspv_fbo_vert;
+		builtinvertbytes = sizeof(gvkspv_fbo_vert);
+		builtinfrag = gvkspv_fbo_frag;
+		builtinfragbytes = sizeof(gvkspv_fbo_frag);
+	}
 
 	std::vector<uint32_t> vertspirv;
 	std::vector<uint32_t> fragspirv;
-	if(!gvkObtainSpirv(vertexSource, vertexPath, VK_SHADER_STAGE_VERTEX_BIT, name + " (vertex)", vertspirv)) {
+	if(!gvkObtainSpirv(vertexSource, vertexPath, VK_SHADER_STAGE_VERTEX_BIT, name + " (vertex)", vertspirv,
+			builtinvert, builtinvertbytes)) {
 		return GVK_NO_USER_SHADER;
 	}
-	if(!gvkObtainSpirv(fragmentSource, fragmentPath, VK_SHADER_STAGE_FRAGMENT_BIT, name + " (fragment)", fragspirv)) {
+	if(!gvkObtainSpirv(fragmentSource, fragmentPath, VK_SHADER_STAGE_FRAGMENT_BIT, name + " (fragment)", fragspirv,
+			builtinfrag, builtinfragbytes)) {
 		return GVK_NO_USER_SHADER;
 	}
 

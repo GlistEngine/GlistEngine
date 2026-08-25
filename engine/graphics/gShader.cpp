@@ -25,6 +25,8 @@ gShader::~gShader() {
 	if(currentlyboundshader == this) {
 		currentlyboundshader = nullptr;
 	}
+	// See gVbo::clear: no renderer past engine shutdown, and nothing to give back.
+	if(renderer == nullptr) return;
 	renderer->resetShader(id, loaded);
 }
 

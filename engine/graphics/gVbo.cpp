@@ -126,6 +126,17 @@ void gVbo::setInstanceData(const glm::mat4* instanceTransformations, int instanc
 }
 
 void gVbo::clear() {
+	// Nothing to free through once the engine has shut down: the global renderer is
+	// deleted and nulled there, and the GPU objects went with the context. An object
+	// that outlives the engine - a static, a singleton holding a mesh - used to call
+	// through that null pointer on its way out and take the process down with it.
+	if(renderer == nullptr) {
+		isvertexdataallocated = false;
+		isindexdataallocated = false;
+		instancevbo = 0;
+		vao = GL_NONE;
+		return;
+	}
 	if(isvertexdataallocated) {
 		renderer->deleteBuffer(vbo);
 		isvertexdataallocated = false;

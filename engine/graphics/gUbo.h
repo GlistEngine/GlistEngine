@@ -22,7 +22,8 @@ public:
 	}
 
 	~gUbo() {
-		if (id != GL_NONE) {
+		// See gVbo::clear: no renderer past engine shutdown, and nothing to give back.
+		if (id != GL_NONE && renderer != nullptr) {
 			renderer->deleteBuffer(id);
 		}
 		delete data;

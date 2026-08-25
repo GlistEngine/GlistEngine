@@ -280,6 +280,7 @@ bool gvkBeginShadowPass(gVKContext& ctx) {
 	info.framebuffer = ctx.shadowframebuffer;
 	info.renderArea.offset = {0, 0};
 	info.renderArea.extent = ctx.shadowextent;
+	ctx.currentpassextent = ctx.shadowextent;
 	info.clearValueCount = 1;
 	info.pClearValues = &clear;
 	vkCmdBeginRenderPass(cmd, &info, VK_SUBPASS_CONTENTS_INLINE);

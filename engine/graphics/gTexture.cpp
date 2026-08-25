@@ -816,6 +816,12 @@ void gTexture::setupRenderData() {
 
 void gTexture::cleanupAll() {
 	G_PROFILE_ZONE_SCOPED_N("gTexture::cleanupAll()");
+	// See gVbo::clear: past engine shutdown there is no renderer to release the GPU
+	// side through, and nothing left to release. The CPU side below still is.
+	if(renderer == nullptr) {
+		isloaded = false;
+		istextureallocated = false;
+	}
 	if(isloaded) {
 		renderer->deleteBuffer(quadVBO);
 		renderer->deleteVAO(quadVAO);
