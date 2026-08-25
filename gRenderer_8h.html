@@ -339,6 +339,10 @@ Macros</h2></td></tr>
 <tr class="separator:a126ea59d9a44ee184840f29d22efbee2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3497aa9ac80070baab6a2665d7a8de63" id="r_a3497aa9ac80070baab6a2665d7a8de63"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="gRenderer_8h.html#a3497aa9ac80070baab6a2665d7a8de63">G_CHECK_GL2</a>(value,  fn)&#160;&#160;&#160;value = fn</td></tr>
 <tr class="separator:a3497aa9ac80070baab6a2665d7a8de63"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a950d5c8f1452cc906ae6da52e873dc89" id="r_a950d5c8f1452cc906ae6da52e873dc89"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="gRenderer_8h.html#a950d5c8f1452cc906ae6da52e873dc89">glClear</a>(mask)&#160;&#160;&#160;<a class="el" href="gRenderer_8h.html#a177301f73e9a5b2399ee184f1a5b5a6d">gCompatClear</a>(mask)</td></tr>
+<tr class="separator:a950d5c8f1452cc906ae6da52e873dc89"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0ee2ee7ff5a961c32c3ee75a36324b94" id="r_a0ee2ee7ff5a961c32c3ee75a36324b94"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="gRenderer_8h.html#a0ee2ee7ff5a961c32c3ee75a36324b94">glBlendFunc</a>(sourceFactor,  destinationFactor)&#160;&#160;&#160;<a class="el" href="gRenderer_8h.html#af3ecbefe6a474976766659a49eebc484">gCompatBlendFunc</a>(sourceFactor, destinationFactor)</td></tr>
+<tr class="separator:a0ee2ee7ff5a961c32c3ee75a36324b94"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
@@ -412,6 +416,10 @@ Functions</h2></td></tr>
 <tr class="separator:a95cb027b2d3062d0114792f29ca82d57"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad9c969b4791dd7390a95eecf331d35bf" id="r_ad9c969b4791dd7390a95eecf331d35bf"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="gRenderer_8h.html#ad9c969b4791dd7390a95eecf331d35bf">gDrawTubeObliqueTrapezodial</a> (float x, float y, float z, int topouterradius, int topinnerradious, int buttomouterradious, int buttominnerradious, int h, glm::vec2 shiftdistance, glm::vec3 scale=glm::vec3(1.0f, 1.0f, 1.0f), int segmentnum=32, bool isFilled=true)</td></tr>
 <tr class="separator:ad9c969b4791dd7390a95eecf331d35bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a177301f73e9a5b2399ee184f1a5b5a6d" id="r_a177301f73e9a5b2399ee184f1a5b5a6d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="gRenderer_8h.html#a177301f73e9a5b2399ee184f1a5b5a6d">gCompatClear</a> (unsigned int mask)</td></tr>
+<tr class="separator:a177301f73e9a5b2399ee184f1a5b5a6d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af3ecbefe6a474976766659a49eebc484" id="r_af3ecbefe6a474976766659a49eebc484"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="gRenderer_8h.html#af3ecbefe6a474976766659a49eebc484">gCompatBlendFunc</a> (unsigned int sourceFactor, unsigned int destinationFactor)</td></tr>
+<tr class="separator:af3ecbefe6a474976766659a49eebc484"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Macro Definition Documentation</h2>
 <a id="a57a0aeff1c9f906ecf062a54a772e3ad" name="a57a0aeff1c9f906ecf062a54a772e3ad"></a>
@@ -468,6 +476,52 @@ Functions</h2></td></tr>
           <td></td>
           <td>)</td>
           <td></td><td>&#160;&#160;&#160;value = fn</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a0ee2ee7ff5a961c32c3ee75a36324b94" name="a0ee2ee7ff5a961c32c3ee75a36324b94"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0ee2ee7ff5a961c32c3ee75a36324b94">&#9670;&#160;</a></span>glBlendFunc</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define glBlendFunc</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">sourceFactor, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">destinationFactor&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td>&#160;&#160;&#160;<a class="el" href="gRenderer_8h.html#af3ecbefe6a474976766659a49eebc484">gCompatBlendFunc</a>(sourceFactor, destinationFactor)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a950d5c8f1452cc906ae6da52e873dc89" name="a950d5c8f1452cc906ae6da52e873dc89"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a950d5c8f1452cc906ae6da52e873dc89">&#9670;&#160;</a></span>glClear</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define glClear</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">mask</td><td>)</td>
+          <td>&#160;&#160;&#160;<a class="el" href="gRenderer_8h.html#a177301f73e9a5b2399ee184f1a5b5a6d">gCompatClear</a>(mask)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -545,6 +599,52 @@ Functions</h2></td></tr>
           <td></td>
           <td>)</td>
           <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="af3ecbefe6a474976766659a49eebc484" name="af3ecbefe6a474976766659a49eebc484"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af3ecbefe6a474976766659a49eebc484">&#9670;&#160;</a></span>gCompatBlendFunc()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gCompatBlendFunc </td>
+          <td>(</td>
+          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramname"><em>sourceFactor</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramname"><em>destinationFactor</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a177301f73e9a5b2399ee184f1a5b5a6d" name="a177301f73e9a5b2399ee184f1a5b5a6d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a177301f73e9a5b2399ee184f1a5b5a6d">&#9670;&#160;</a></span>gCompatClear()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gCompatClear </td>
+          <td>(</td>
+          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramname"><em>mask</em></td><td>)</td>
+          <td></td>
         </tr>
       </table>
 </div><div class="memdoc">

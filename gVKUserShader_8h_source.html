@@ -153,70 +153,81 @@ $(document).ready(function(){initNavTree('gVKUserShader_8h_source.html',''); ini
 <div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span><span class="keyword">using </span>gVKUserShaderId = uint32_t;</div>
 <div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span><span class="keyword">inline</span> <span class="keyword">constexpr</span> gVKUserShaderId GVK_NO_USER_SHADER = 0;</div>
 <div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span> </div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span><span class="comment">// Compiles and builds one shader from GLSL held in memory. sourcePath, when the</span></div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span><span class="comment">// sources came from files, is where a pre-compiled .spv is looked for; leave it</span></div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span><span class="comment">// empty for sources the application built in memory. Returns GVK_NO_USER_SHADER</span></div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span><span class="comment">// on any failure, having logged why.</span></div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>gVKUserShaderId gvkCreateUserShader(gVKContext&amp; ctx, <span class="keyword">const</span> std::string&amp; vertexSource,</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>        <span class="keyword">const</span> std::string&amp; fragmentSource, <span class="keyword">const</span> std::string&amp; vertexPath,</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>        <span class="keyword">const</span> std::string&amp; fragmentPath);</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span> </div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span><span class="comment">// Releases one. The pipeline may still be recorded into a frame in flight, so the</span></div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span><span class="comment">// caller is responsible for having waited; gVKRenderEngine does that at teardown.</span></div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span><span class="keywordtype">void</span> gvkDestroyUserShader(gVKContext&amp; ctx, gVKUserShaderId <span class="keywordtype">id</span>);</div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span><span class="keywordtype">void</span> gvkDestroyAllUserShaders(gVKContext&amp; ctx);</div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span> </div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span><span class="comment">// Rebuilds every live shader&#39;s pipeline and descriptor sets. Called after a</span></div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span><span class="comment">// swapchain or render pass rebuild, which invalidates both.</span></div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span><span class="keywordtype">bool</span> gvkRebuildUserShaders(gVKContext&amp; ctx);</div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span> </div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span><span class="comment">// gShader::use(). The bound shader is what the next draw records with; binding</span></div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span><span class="comment">// GVK_NO_USER_SHADER puts the engine&#39;s own pipelines back.</span></div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span><span class="keywordtype">void</span> gvkUseUserShader(gVKUserShaderId <span class="keywordtype">id</span>);</div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>gVKUserShaderId gvkBoundUserShader();</div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span> </div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span><span class="comment">// Writes one value by name. component, rows and columns describe what data</span></div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span><span class="comment">// points at - a glm::mat4 is FLOAT 4x4, a glm::vec3 is FLOAT 3x1 - and the write</span></div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span><span class="comment">// is converted into whatever layout the block declared, which is not the same</span></div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span><span class="comment">// thing: a mat3 is nine tight floats here and three sixteen-byte columns there.</span></div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span><span class="comment">//</span></div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span><span class="comment">// Returns false when the shader declares no such name, which is not an error in</span></div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span><span class="comment">// itself: the OpenGL path silently ignores a uniform the shader optimised away,</span></div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span><span class="comment">// and this keeps that behaviour rather than making every unused setter fatal.</span></div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span><span class="keywordtype">bool</span> gvkSetUserShaderValue(gVKUserShaderId <span class="keywordtype">id</span>, <span class="keyword">const</span> std::string&amp; name, <span class="keyword">const</span> <span class="keywordtype">void</span>* data,</div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>        gVKMemberComponent component, uint32_t rows, uint32_t columns);</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span><span class="comment">// Shaders the engine builds through this path rather than as a pipeline of its</span></div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span><span class="comment">// own, and which therefore have to work in a build that links no shader compiler.</span></div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span><span class="comment">// There is one: gFbo&#39;s screen resolve, the pass that ends a post-process chain.</span></div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span><span class="comment">// Its SPIR-V is compiled at build time from graphics/shaders/vk/fbo.vert and</span></div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span><span class="comment">// .frag and lives in gVKShaders.h, and is used when compiling is not possible.</span></div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span><span class="comment">// Anything an application loads has no such fallback and passes NONE.</span></div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span><span class="keyword">enum</span> gvkBuiltinShader {</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    GVK_BUILTIN_NONE = 0,</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    GVK_BUILTIN_FBO,</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>};</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span> </div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span><span class="comment">// Compiles and builds one shader from GLSL held in memory. sourcePath, when the</span></div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span><span class="comment">// sources came from files, is where a pre-compiled .spv is looked for; leave it</span></div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span><span class="comment">// empty for sources the application built in memory. Returns GVK_NO_USER_SHADER</span></div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span><span class="comment">// on any failure, having logged why.</span></div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>gVKUserShaderId gvkCreateUserShader(gVKContext&amp; ctx, <span class="keyword">const</span> std::string&amp; vertexSource,</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>        <span class="keyword">const</span> std::string&amp; fragmentSource, <span class="keyword">const</span> std::string&amp; vertexPath,</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>        <span class="keyword">const</span> std::string&amp; fragmentPath, <span class="keywordtype">int</span> builtin = GVK_BUILTIN_NONE);</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span> </div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span><span class="comment">// Releases one. The pipeline may still be recorded into a frame in flight, so the</span></div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span><span class="comment">// caller is responsible for having waited; gVKRenderEngine does that at teardown.</span></div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span><span class="keywordtype">void</span> gvkDestroyUserShader(gVKContext&amp; ctx, gVKUserShaderId <span class="keywordtype">id</span>);</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span><span class="keywordtype">void</span> gvkDestroyAllUserShaders(gVKContext&amp; ctx);</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span> </div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span><span class="comment">// Rebuilds every live shader&#39;s pipeline and descriptor sets. Called after a</span></div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span><span class="comment">// swapchain or render pass rebuild, which invalidates both.</span></div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span><span class="keywordtype">bool</span> gvkRebuildUserShaders(gVKContext&amp; ctx);</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span> </div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span><span class="comment">// gShader::use(). The bound shader is what the next draw records with; binding</span></div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span><span class="comment">// GVK_NO_USER_SHADER puts the engine&#39;s own pipelines back.</span></div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span><span class="keywordtype">void</span> gvkUseUserShader(gVKUserShaderId <span class="keywordtype">id</span>);</div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>gVKUserShaderId gvkBoundUserShader();</div>
 <div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span> </div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span><span class="comment">// Points a sampler at a texture unit, which is what setInt(&quot;tex&quot;, 0) means on the</span></div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span><span class="comment">// OpenGL side.</span></div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span><span class="keywordtype">bool</span> gvkSetUserShaderTexture(gVKUserShaderId <span class="keywordtype">id</span>, <span class="keyword">const</span> std::string&amp; name, <span class="keywordtype">int</span> unit);</div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span> </div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span><span class="comment">// True when the shader declares this name at all, block member or sampler.</span></div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span><span class="keywordtype">bool</span> gvkUserShaderHasUniform(gVKUserShaderId <span class="keywordtype">id</span>, <span class="keyword">const</span> std::string&amp; name);</div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span> </div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span><span class="comment">// How gVKUserShader reaches the texture bound to one unit without depending on</span></div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span><span class="comment">// the renderer. gVKRenderEngine installs this at start-up.</span></div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span><span class="keyword">using </span>gVKUserShaderTextureResolver = gVKTexture* (*)(<span class="keywordtype">int</span> unit);</div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span><span class="keywordtype">void</span> gvkSetUserShaderTextureResolver(gVKUserShaderTextureResolver resolver);</div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span> </div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span><span class="comment">// Records the bound shader - pipeline, descriptor sets and push constants - into</span></div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span><span class="comment">// the current command buffer, ready for a draw. Returns false when no user shader</span></div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span><span class="comment">// is bound or it could not be made ready, and the caller draws through the</span></div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span><span class="comment">// engine&#39;s own pipeline instead.</span></div>
-<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span><span class="comment">//</span></div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span><span class="comment">// blending and lines pick the pipeline variant, the same way the mesh path picks</span></div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span><span class="comment">// between the engine&#39;s own: blend state and topology class are baked into a</span></div>
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span><span class="comment">// pipeline and cannot be changed by a command.</span></div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span><span class="keywordtype">bool</span> gvkBindUserShaderForDraw(gVKContext&amp; ctx, VkCommandBuffer cmd, <span class="keywordtype">bool</span> blending, <span class="keywordtype">bool</span> lines);</div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span> </div>
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span><span class="comment">// Bytes per vertex of the layout the bound shader&#39;s pipeline describes, and</span></div>
-<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span><span class="comment">// whether that layout is the engine&#39;s mesh one. The fullscreen quad path checks</span></div>
-<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span><span class="comment">// both before feeding a shader vertices it would misread.</span></div>
-<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>uint32_t gvkBoundUserShaderVertexStride();</div>
-<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span><span class="keywordtype">bool</span> gvkBoundUserShaderUsesMeshLayout();</div>
-<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span> </div>
-<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span><span class="preprocessor">#endif </span><span class="comment">/* GVK_VULKAN */</span><span class="preprocessor"></span></div>
-<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span> </div>
-<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span><span class="preprocessor">#endif </span><span class="comment">/* CORE_GVKUSERSHADER_H */</span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span><span class="comment">// Writes one value by name. component, rows and columns describe what data</span></div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span><span class="comment">// points at - a glm::mat4 is FLOAT 4x4, a glm::vec3 is FLOAT 3x1 - and the write</span></div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span><span class="comment">// is converted into whatever layout the block declared, which is not the same</span></div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span><span class="comment">// thing: a mat3 is nine tight floats here and three sixteen-byte columns there.</span></div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span><span class="comment">//</span></div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span><span class="comment">// Returns false when the shader declares no such name, which is not an error in</span></div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span><span class="comment">// itself: the OpenGL path silently ignores a uniform the shader optimised away,</span></div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span><span class="comment">// and this keeps that behaviour rather than making every unused setter fatal.</span></div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span><span class="keywordtype">bool</span> gvkSetUserShaderValue(gVKUserShaderId <span class="keywordtype">id</span>, <span class="keyword">const</span> std::string&amp; name, <span class="keyword">const</span> <span class="keywordtype">void</span>* data,</div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>        gVKMemberComponent component, uint32_t rows, uint32_t columns);</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span> </div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span><span class="comment">// Points a sampler at a texture unit, which is what setInt(&quot;tex&quot;, 0) means on the</span></div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span><span class="comment">// OpenGL side.</span></div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span><span class="keywordtype">bool</span> gvkSetUserShaderTexture(gVKUserShaderId <span class="keywordtype">id</span>, <span class="keyword">const</span> std::string&amp; name, <span class="keywordtype">int</span> unit);</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span> </div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span><span class="comment">// True when the shader declares this name at all, block member or sampler.</span></div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span><span class="keywordtype">bool</span> gvkUserShaderHasUniform(gVKUserShaderId <span class="keywordtype">id</span>, <span class="keyword">const</span> std::string&amp; name);</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span> </div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span><span class="comment">// How gVKUserShader reaches the texture bound to one unit without depending on</span></div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span><span class="comment">// the renderer. gVKRenderEngine installs this at start-up.</span></div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span><span class="keyword">using </span>gVKUserShaderTextureResolver = gVKTexture* (*)(<span class="keywordtype">int</span> unit);</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span><span class="keywordtype">void</span> gvkSetUserShaderTextureResolver(gVKUserShaderTextureResolver resolver);</div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span> </div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span><span class="comment">// Records the bound shader - pipeline, descriptor sets and push constants - into</span></div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span><span class="comment">// the current command buffer, ready for a draw. Returns false when no user shader</span></div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span><span class="comment">// is bound or it could not be made ready, and the caller draws through the</span></div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span><span class="comment">// engine&#39;s own pipeline instead.</span></div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span><span class="comment">//</span></div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span><span class="comment">// blending and lines pick the pipeline variant, the same way the mesh path picks</span></div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span><span class="comment">// between the engine&#39;s own: blend state and topology class are baked into a</span></div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span><span class="comment">// pipeline and cannot be changed by a command.</span></div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span><span class="keywordtype">bool</span> gvkBindUserShaderForDraw(gVKContext&amp; ctx, VkCommandBuffer cmd, <span class="keywordtype">bool</span> blending, <span class="keywordtype">bool</span> lines);</div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span> </div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span><span class="comment">// Bytes per vertex of the layout the bound shader&#39;s pipeline describes, and</span></div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span><span class="comment">// whether that layout is the engine&#39;s mesh one. The fullscreen quad path checks</span></div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span><span class="comment">// both before feeding a shader vertices it would misread.</span></div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>uint32_t gvkBoundUserShaderVertexStride();</div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span><span class="keywordtype">bool</span> gvkBoundUserShaderUsesMeshLayout();</div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span> </div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span><span class="preprocessor">#endif </span><span class="comment">/* GVK_VULKAN */</span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span> </div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span><span class="preprocessor">#endif </span><span class="comment">/* CORE_GVKUSERSHADER_H */</span><span class="preprocessor"></span></div>
 <div class="ttc" id="agVKContext_8h_html"><div class="ttname"><a href="gVKContext_8h.html">gVKContext.h</a></div></div>
 <div class="ttc" id="agVKReflect_8h_html"><div class="ttname"><a href="gVKReflect_8h.html">gVKReflect.h</a></div></div>
 </div><!-- fragment --></div><!-- contents -->

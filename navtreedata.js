@@ -83,8 +83,8 @@ var NAVTREEINDEX =
 "functions_vars.html",
 "gGUIGrid_8h_source.html",
 "gPlane_8h_source.html",
-"gVKShaderCompiler_8h.html#ae837647a98c14dd0243d234ecae94447",
-"tinyfiledialogs_8c.html#a15fdc38cfcc89302704d4554221c85f7"
+"gVKRenderTarget_8h.html",
+"tinyfiledialogs_8c.html#a0612543f1a6828a8b0008da041c06f6a"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
