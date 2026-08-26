@@ -6,6 +6,11 @@ precision highp int;
 #version 330 core
 #endif
 
+layout (location = 0) out vec4 FragColor; 
+layout (location = 1) out vec4 gPosition; 
+layout (location = 2) out vec4 gNormal;   
+layout (location = 3) out vec4 gAlbedo; 
+
 struct Material {
     vec4 ambient;
     vec4 diffuse;
@@ -72,6 +77,7 @@ uniform mat4 projection;
 
 uniform sampler2D shadowMap;
 uniform vec3 shadowLightPos;
+uniform int isDeferred;
 
 in vec3 Normal;
 in vec3 FragPos;
@@ -85,8 +91,6 @@ in vec3 incolor;
 in mat3 TBN;
 
 flat in int mUseShadowMap;
-
-out vec4 FragColor;
 
 float calculateShadow(vec4 fragPosLightSpace, bool softShadows) {
     vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
@@ -236,6 +240,50 @@ float getFogVisibility(Fog fog, float distance) {
 }
 
 void main() {
+
+	if(isDeferred == 2) {
+		if(material.useDiffuseMap > 0) {
+			vec4 texColor = texture(material.diffusemap, TexCoords).rgba;
+			if (texColor.a < 0.5) discard;
+			FragColor = texColor * renderColor * vec4(incolor, 1.0f);
+		} else {
+			FragColor = renderColor * vec4(incolor, 1.0f);
+		}
+		return;
+	}
+
+	if(isDeferred == 1) {
+		gPosition = vec4(FragPos, material.shininess);
+		
+		float specIntensity = 0.0;
+		if (material.useSpecularMap > 0) {
+			specIntensity = texture(material.specularmap, TexCoords).r;
+		} else {
+			specIntensity = (material.specular.r + material.specular.g + material.specular.b) / 3.0;
+		}
+		
+		vec3 finalNormal;
+		if (material.useNormalMap > 0) {
+			vec3 tangentNormal = texture(material.normalMap, TexCoords).rgb * 2.0 - 1.0;
+			finalNormal = normalize(tangentNormal);
+		} else {
+			finalNormal = normalize(Normal);
+		}
+		gNormal = vec4(finalNormal, specIntensity);
+
+	if(material.useDiffuseMap > 0) {
+		vec4 texColor = texture(material.diffusemap, TexCoords).rgba;
+		if (texColor.a < 0.5) discard;
+		gAlbedo = texColor * renderColor * vec4(incolor, 1.0f);
+	}
+	else {
+		gAlbedo = material.diffuse * renderColor * vec4(incolor, 1.0f);
+	}
+	
+	FragColor = vec4(0.0f);
+	return;
+	}
+	
     vec4 result = vec4(0.0);
     vec3 norm;
     if (material.useNormalMap > 0) {
@@ -313,5 +361,29 @@ void main() {
     if((flags & ENABLE_GAMMA_FLAG) > 0) {
         float gamma = 2.2;
         FragColor.rgb = pow(FragColor.rgb, vec3(1.0 / gamma));
+    }
+    
+    gPosition = vec4(FragPos, material.shininess);
+    
+    float specIntensity = 0.0;
+    if (material.useSpecularMap > 0) {
+        specIntensity = texture(material.specularmap, TexCoords).r;
+    } else {
+        specIntensity = (material.specular.r + material.specular.g + material.specular.b) / 3.0;
+    }
+    
+    vec3 finalNormal;
+    if (material.useNormalMap > 0) {
+        vec3 tangentNormal = texture(material.normalMap, TexCoords).rgb * 2.0 - 1.0;
+        finalNormal = normalize(tangentNormal);
+    } else {
+        finalNormal = normalize(Normal);
+    }
+    gNormal = vec4(finalNormal, specIntensity);
+    
+    if (material.useDiffuseMap > 0) {
+        gAlbedo = texture(material.diffusemap, TexCoords).rgba * renderColor * vec4(incolor, 1.0);
+    } else {
+        gAlbedo = material.diffuse * renderColor * vec4(incolor, 1.0);
     }
 }
