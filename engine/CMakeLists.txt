@@ -347,6 +347,7 @@ set(SRC_FILES
 	${ENGINE_DIR}/graphics/posteffects/gGrayscale.cpp
 	${ENGINE_DIR}/graphics/posteffects/gSepiatone.cpp
 	${ENGINE_DIR}/graphics/posteffects/gGrain.cpp
+	${ENGINE_DIR}/graphics/posteffects/gMagnifier.cpp
 	${ENGINE_DIR}/graphics/posteffects/gDynamicGrain.cpp
 	${ENGINE_DIR}/graphics/posteffects/gColorAdjustments.cpp
 	${ENGINE_DIR}/graphics/posteffects/gColorChannelMixer.cpp
