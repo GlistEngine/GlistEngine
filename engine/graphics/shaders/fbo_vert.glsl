@@ -1,8 +1,3 @@
-// Resolves a framebuffer to the screen: a quad already in clip space, with its
-// texture coordinate passed straight through.
-//
-// Three flat dialect blocks rather than a nested #if: gShader's preprocessor
-// handles one level, and defines exactly one of VULKAN / GLES / GLCORE.
 #if VULKAN
 #version 450
 #endif
@@ -13,6 +8,12 @@ precision highp float;
 #if GLCORE
 #version 330 core
 #endif
+
+// Resolves a framebuffer to the screen: a quad already in clip space, with its
+// texture coordinate passed straight through.
+//
+// Three flat dialect blocks rather than a nested #if: gShader's preprocessor
+// handles one level, and defines exactly one of VULKAN / GLES / GLCORE.
 
 layout (location = 0) in vec2 aPos;
 layout (location = 1) in vec2 aTexCoords;

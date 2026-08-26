@@ -58,8 +58,11 @@
 		#endif
         // define something for OSX
     #endif
-#elif __ANDROID__
+#elif defined(__ANDROID__)
     // Android
+	#ifndef ANDROID
+		#define ANDROID 1
+	#endif
 #elif __linux
     // Linux
 	#ifndef LINUX
@@ -71,7 +74,7 @@
     // POSIX
 #endif
 
-#if ANDROID || TARGET_OS_IPHONE || TARGET_OS_SIMULATOR || EMSCRIPTEN
+#if defined(ANDROID) || defined(__ANDROID__) || TARGET_OS_IPHONE || TARGET_OS_SIMULATOR || EMSCRIPTEN
 #ifndef GLIST_OPENGLES
 #define GLIST_OPENGLES 1
 #endif
@@ -87,7 +90,7 @@
 #define GLIST_IOS 1
 #endif
 #endif
-#if ANDROID
+#if defined(ANDROID) || defined(__ANDROID__)
 #ifndef GLIST_ANDROID
 #define GLIST_ANDROID 1
 #endif
