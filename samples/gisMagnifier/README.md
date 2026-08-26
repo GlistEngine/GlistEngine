@@ -8,7 +8,9 @@ The sample magnifies a circular area around the mouse position. A transparent ma
 
 The demonstration video shows the magnified region following the mouse across the background and the GlistEngine logo.
 
-<!-- Add the GitHub video attachment URL here. -->
+
+https://github.com/user-attachments/assets/7cb6e4d8-202a-4a58-80a3-1ad9ad7dfd65
+
 
 ## Features
 
