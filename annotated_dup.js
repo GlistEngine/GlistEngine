@@ -133,6 +133,7 @@ var annotated_dup =
     [ "gLoge", "classgLoge.html", "classgLoge" ],
     [ "gLogi", "classgLogi.html", "classgLogi" ],
     [ "gLogw", "classgLogw.html", "classgLogw" ],
+    [ "gMagnifier", "classgMagnifier.html", "classgMagnifier" ],
     [ "gMaterial", "classgMaterial.html", "classgMaterial" ],
     [ "gMatrix4", "classgMatrix4.html", "classgMatrix4" ],
     [ "gMesh", "classgMesh.html", "classgMesh" ],

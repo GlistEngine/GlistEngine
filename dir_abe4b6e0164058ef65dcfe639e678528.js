@@ -14,6 +14,7 @@ var dir_abe4b6e0164058ef65dcfe639e678528 =
     [ "gHighContrast.h", "gHighContrast_8h.html", "gHighContrast_8h" ],
     [ "gInversion.h", "gInversion_8h.html", "gInversion_8h" ],
     [ "gKernelEffect.h", "gKernelEffect_8h.html", "gKernelEffect_8h" ],
+    [ "gMagnifier.h", "gMagnifier_8h.html", "gMagnifier_8h" ],
     [ "gScreenSpaceReflections.h", "gScreenSpaceReflections_8h.html", "gScreenSpaceReflections_8h" ],
     [ "gSepiatone.h", "gSepiatone_8h.html", "gSepiatone_8h" ],
     [ "gShadowsMidtonesHighlights.h", "gShadowsMidtonesHighlights_8h.html", "gShadowsMidtonesHighlights_8h" ],
