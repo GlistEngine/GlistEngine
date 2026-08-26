@@ -229,6 +229,11 @@ bool gFont::buildAtlas() {
 
 void gFont::drawText(const std::string& text, float x, float y) {
 	G_PROFILE_ZONE_SCOPED_N("gFont::drawText()");
+
+	bool isalphablendingold = renderer->isAlphaBlendingEnabled();
+	renderer->enableAlphaBlending();
+	renderer->setBlendMode(gRenderer::BLENDMODE_ALPHA);
+
 	std::wstring wtext = s2ws(text);
 	const bool useatlas = textrendermode == TextRenderMode::ATLAS && !wtext.empty();
 	if (useatlas) {
@@ -327,6 +332,7 @@ void gFont::drawText(const std::string& text, float x, float y) {
 		for (size_t pageindex = 0; pageindex < batchvertices.size(); ++pageindex) {
 			std::vector<float>& vertices = batchvertices[pageindex];
 			if (vertices.empty()) continue;
+
 			renderer->drawTexturedTriangles2D(atlaspages[pageindex].texture->getId(), tint,
 					renderer->getProjectionMatrix2d(), vertices.data(), static_cast<int>(vertices.size() / 4));
 		}
@@ -353,15 +359,25 @@ void gFont::drawText(const std::string& text, float x, float y) {
 			posx += getKerning(c, previous);
 			const float drawx = roundIfRequired(posx + p.leftmargin);
 			const float drawy = roundIfRequired(posy + p.dytop);
+
 			texture->second->draw(glm::vec2(drawx, drawy), glm::vec2(p.texturewidth, p.textureheight));
 			posx += p.advance * letterspacing * (c == ' ' ? spacesize : 1.0f);
 			previous = c;
 		}
 	}
+
+	if (!isalphablendingold) {
+		renderer->disableAlphaBlending();
+	}
 }
 
 void gFont::drawTextVerticallyFlipped(const std::string& text, float x, float y) {
 	G_PROFILE_ZONE_SCOPED_N("gFont::drawTextVerticallyFlipped()");
+
+	bool isalphablendingold = renderer->isAlphaBlendingEnabled();
+	renderer->enableAlphaBlending();
+	renderer->setBlendMode(gRenderer::BLENDMODE_ALPHA);
+
 	float posx = x;
 	float posy = y;
 
@@ -389,10 +405,19 @@ void gFont::drawTextVerticallyFlipped(const std::string& text, float x, float y)
 		}
 		previous = c;
 	}
+
+	if (!isalphablendingold) {
+		renderer->disableAlphaBlending();
+	}
 }
 
 void gFont::drawTextHorizontallyFlipped(const std::string& text, float x, float y) {
 	G_PROFILE_ZONE_SCOPED_N("gFont::drawTextHorizontallyFlipped()");
+
+	bool isalphablendingold = renderer->isAlphaBlendingEnabled();
+	renderer->enableAlphaBlending();
+	renderer->setBlendMode(gRenderer::BLENDMODE_ALPHA);
+
 	float posy = y;
 
 	std::wstring wtext = s2ws(text);
@@ -438,6 +463,10 @@ void gFont::drawTextHorizontallyFlipped(const std::string& text, float x, float 
 			posx -= charproperties[c].advance * letterspacing * (c == ' ' ? spacesize : 1.0f);
 		}
 		prevChar = c;
+	}
+
+	if (!isalphablendingold) {
+		renderer->disableAlphaBlending();
 	}
 }
 
