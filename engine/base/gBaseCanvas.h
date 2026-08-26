@@ -71,6 +71,10 @@ protected:
 	void clear();
 	void clearColor(int r, int g, int b, int a = 255);
 	void clearColor(gColor color);
+	// Clears the buffers named, leaving the others as they are. Clearing depth
+	// alone is how a scene draws something over what is already there without
+	// letting the two intersect - a first person weapon over the world.
+	void clearScreen(bool color = true, bool depth = true);
 
 	void enableLighting();
 	void disableLighting();
