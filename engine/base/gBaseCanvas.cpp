@@ -175,6 +175,10 @@ void gBaseCanvas::clearColor(gColor color) {
 	renderer->clearColor(color);
 }
 
+void gBaseCanvas::clearScreen(bool color, bool depth) {
+	renderer->clearScreen(color, depth);
+}
+
 void gBaseCanvas::enableLighting() {
 	renderer->enableLighting();
 }
