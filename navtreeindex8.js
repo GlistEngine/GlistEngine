@@ -1,5 +1,6 @@
 var NAVTREEINDEX8 =
 {
+"classgGUISizer.html#a0fee6fca65e8387aa9e8ca289df0017a":[1,0,99,23],
 "classgGUISizer.html#a1baa153b1ddc4b4d3162c9b1e0c79d2a":[1,0,99,13],
 "classgGUISizer.html#a22ae19bf2367c771f2eaa871e24dd195":[1,0,99,9],
 "classgGUISizer.html#a36fdb1821cc3af7dcdf519b19abeea95":[1,0,99,14],
@@ -248,6 +249,5 @@ var NAVTREEINDEX8 =
 "classgGUIToolbarButton.html#ab4dc01885007f1a5039745c98fbd57b7":[1,0,110,1],
 "classgGUIToolbarButton.html#af46669389990a69138f9000a5a80610a":[1,0,110,3],
 "classgGUITooltipText.html":[1,0,111],
-"classgGUITooltipText.html#a282acabffa43599ae4c2fd003cde1701":[1,0,111,5],
-"classgGUITooltipText.html#a2cedadc240d53936d63f66ecb36e771a":[1,0,111,0]
+"classgGUITooltipText.html#a282acabffa43599ae4c2fd003cde1701":[1,0,111,5]
 };

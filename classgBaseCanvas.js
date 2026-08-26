@@ -8,6 +8,7 @@ var classgBaseCanvas =
     [ "clearBackground", "classgBaseCanvas.html#aa32c8d8d3f908c2be22944cd6cd80f8d", null ],
     [ "clearColor", "classgBaseCanvas.html#a97aa2612b361e843dce67e7de175a7d2", null ],
     [ "clearColor", "classgBaseCanvas.html#a99b9b4b928047e7b3c38e834eebfb821", null ],
+    [ "clearScreen", "classgBaseCanvas.html#a8c34ccfd0628f8115ee53a91e2b7a171", null ],
     [ "deviceOrientationChanged", "classgBaseCanvas.html#a54756094bda6f4de9249efeacfd11f0d", null ],
     [ "disableAlphaBlending", "classgBaseCanvas.html#a9737f6cbb7ff3069ff0ac8d313d20b76", null ],
     [ "disableAlphaTest", "classgBaseCanvas.html#aa65dde2a1ebc557a11383263dc25a3e3", null ],

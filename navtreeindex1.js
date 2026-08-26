@@ -1,5 +1,6 @@
 var NAVTREEINDEX1 =
 {
+"classgBaseGUIObject.html#a710482bf10978d06c49478ccede77a2b":[1,0,11,25],
 "classgBaseGUIObject.html#a743fdaff0398c2c4dc7157290c634093":[1,0,11,50],
 "classgBaseGUIObject.html#a785649d969d2e42e030dd13cb6d3ef4a":[1,0,11,16],
 "classgBaseGUIObject.html#a789f332c968607d91451ba85d519c924":[1,0,11,62],
@@ -248,6 +249,5 @@ var NAVTREEINDEX1 =
 "classgBoundingBox.html":[1,0,23],
 "classgBoundingBox.html#a02d528a31017c2ac5812a2c2fcb6a7ff":[1,0,23,4],
 "classgBoundingBox.html#a0797ed3a4d1e3b82b511c432e1f31cf6":[1,0,23,32],
-"classgBoundingBox.html#a0b1fb3ef7b3722bc860368fc3f6ca231":[1,0,23,21],
-"classgBoundingBox.html#a0dcbeaa4992a9a3f470ed29eb802c5b5":[1,0,23,28]
+"classgBoundingBox.html#a0b1fb3ef7b3722bc860368fc3f6ca231":[1,0,23,21]
 };

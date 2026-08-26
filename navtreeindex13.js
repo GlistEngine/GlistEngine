@@ -1,5 +1,6 @@
 var NAVTREEINDEX13 =
 {
+"classgRenderer.html#a6c4e83e857bdb0d15025eeeb47caa960":[1,0,154,286],
 "classgRenderer.html#a6cb4605360bf5dcc3a1f132201dd82a8":[1,0,154,9],
 "classgRenderer.html#a6cba165b26ccde2ce2ce1aee741f99c1":[1,0,154,263],
 "classgRenderer.html#a6e0d8e9c2831b7e7f877ae598ca9dee3":[1,0,154,274],
@@ -248,6 +249,5 @@ var NAVTREEINDEX13 =
 "classgScreenSpaceReflections.html#a3cfd85c2e1d6b605c85ed7cb948f7466":[1,0,157,15],
 "classgScreenSpaceReflections.html#a5b46156e268d645627340395979faeef":[1,0,157,19],
 "classgScreenSpaceReflections.html#a5cb762c53c797255eeb7beb303dd2263":[1,0,157,13],
-"classgScreenSpaceReflections.html#a7c7f8e7f8fc01dee42b908ba5fb1978b":[1,0,157,11],
-"classgScreenSpaceReflections.html#a81d281768818016a9305894550c55db4":[1,0,157,12]
+"classgScreenSpaceReflections.html#a7c7f8e7f8fc01dee42b908ba5fb1978b":[1,0,157,11]
 };
