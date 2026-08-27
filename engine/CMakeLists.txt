@@ -210,6 +210,7 @@ set(SRC_FILES
 	${ENGINE_DIR}/graphics/gPath.cpp
 	${ENGINE_DIR}/graphics/gSpline.cpp
 	${ENGINE_DIR}/graphics/gFog.cpp
+	${ENGINE_DIR}/graphics/gDeferredLight.cpp
 	${ENGINE_DIR}/core/gObject.cpp
 	${ENGINE_DIR}/core/gRenderer.cpp
 	${ENGINE_DIR}/core/gGLRenderEngine.cpp
