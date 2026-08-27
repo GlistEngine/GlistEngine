@@ -1126,35 +1126,40 @@ $(document).ready(function(){initNavTree('gVKContext_8h_source.html',''); initRe
 <div class="line"><a id="l01026" name="l01026"></a><span class="lineno"> 1026</span>    std::vector&lt;VkDeviceSize&gt; mesharenaoffsets;</div>
 <div class="line"><a id="l01027" name="l01027"></a><span class="lineno"> 1027</span>    VkDeviceSize mesharenacapacity = 0;</div>
 <div class="line"><a id="l01028" name="l01028"></a><span class="lineno"> 1028</span>    VkDeviceSize mesharenahighwater = 0;</div>
-<div class="line"><a id="l01029" name="l01029"></a><span class="lineno"> 1029</span>    uint64_t meshgeneration = 0;</div>
-<div class="line"><a id="l01030" name="l01030"></a><span class="lineno"> 1030</span> </div>
-<div class="line"><a id="l01031" name="l01031"></a><span class="lineno"> 1031</span>    VkPipeline recordedpipeline = VK_NULL_HANDLE;</div>
-<div class="line"><a id="l01032" name="l01032"></a><span class="lineno"> 1032</span>    VkPipelineLayout recordeddescriptorlayout = VK_NULL_HANDLE;</div>
-<div class="line"><a id="l01033" name="l01033"></a><span class="lineno"> 1033</span>    std::array&lt;VkDescriptorSet, 5&gt; recordeddescriptors{};</div>
-<div class="line"><a id="l01034" name="l01034"></a><span class="lineno"> 1034</span>    uint32_t recordeddescriptorcount = 0;</div>
-<div class="line"><a id="l01035" name="l01035"></a><span class="lineno"> 1035</span>    <span class="keywordtype">bool</span> recordeddepthvalid = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l01036" name="l01036"></a><span class="lineno"> 1036</span>    VkBool32 recordeddepthtest = VK_FALSE;</div>
-<div class="line"><a id="l01037" name="l01037"></a><span class="lineno"> 1037</span>    VkBool32 recordeddepthwrite = VK_FALSE;</div>
-<div class="line"><a id="l01038" name="l01038"></a><span class="lineno"> 1038</span>    VkCompareOp recordeddepthcompare = VK_COMPARE_OP_ALWAYS;</div>
-<div class="line"><a id="l01039" name="l01039"></a><span class="lineno"> 1039</span>    <span class="keywordtype">bool</span> recordedtopologyvalid = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l01040" name="l01040"></a><span class="lineno"> 1040</span>    VkPrimitiveTopology recordedtopology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;</div>
-<div class="line"><a id="l01041" name="l01041"></a><span class="lineno"> 1041</span>    <span class="keywordtype">bool</span> recordedcullvalid = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l01042" name="l01042"></a><span class="lineno"> 1042</span>    VkCullModeFlags recordedcullmode = VK_CULL_MODE_NONE;</div>
-<div class="line"><a id="l01043" name="l01043"></a><span class="lineno"> 1043</span>    VkFrontFace recordedfrontface = VK_FRONT_FACE_CLOCKWISE;</div>
-<div class="line"><a id="l01044" name="l01044"></a><span class="lineno"> 1044</span>    <span class="comment">// Two: a mesh binds its vertices plus the per-instance model matrices, and the</span></div>
-<div class="line"><a id="l01045" name="l01045"></a><span class="lineno"> 1045</span>    <span class="comment">// 2D paths bind one. A larger bind is simply never cached.</span></div>
-<div class="line"><a id="l01046" name="l01046"></a><span class="lineno"> 1046</span>    <span class="keyword">static</span> <span class="keyword">const</span> uint32_t gvkmaxvertexbindings = 2;</div>
-<div class="line"><a id="l01047" name="l01047"></a><span class="lineno"> 1047</span>    std::array&lt;VkBuffer, gvkmaxvertexbindings&gt; recordedvertexbuffers{};</div>
-<div class="line"><a id="l01048" name="l01048"></a><span class="lineno"> 1048</span>    std::array&lt;VkDeviceSize, gvkmaxvertexbindings&gt; recordedvertexoffsets{};</div>
-<div class="line"><a id="l01049" name="l01049"></a><span class="lineno"> 1049</span>    uint32_t recordedvertexcount = 0;</div>
-<div class="line"><a id="l01050" name="l01050"></a><span class="lineno"> 1050</span>    VkBuffer recordedindexbuffer = VK_NULL_HANDLE;</div>
-<div class="line"><a id="l01051" name="l01051"></a><span class="lineno"> 1051</span>    VkDeviceSize recordedindexoffset = 0;</div>
-<div class="line"><a id="l01052" name="l01052"></a><span class="lineno"> 1052</span>    VkIndexType recordedindextype = VK_INDEX_TYPE_UINT32;</div>
-<div class="line"><a id="l01053" name="l01053"></a><span class="lineno"> 1053</span>};</div>
-<div class="line"><a id="l01054" name="l01054"></a><span class="lineno"> 1054</span> </div>
-<div class="line"><a id="l01055" name="l01055"></a><span class="lineno"> 1055</span><span class="preprocessor">#endif </span><span class="comment">/* GVK_VULKAN */</span><span class="preprocessor"></span></div>
-<div class="line"><a id="l01056" name="l01056"></a><span class="lineno"> 1056</span> </div>
-<div class="line"><a id="l01057" name="l01057"></a><span class="lineno"> 1057</span><span class="preprocessor">#endif </span><span class="comment">/* CORE_GVKCONTEXT_H */</span><span class="preprocessor"></span></div>
+<div class="line"><a id="l01029" name="l01029"></a><span class="lineno"> 1029</span>    <span class="comment">// A capacity the device refused. The frame loop asks for the arena to grow</span></div>
+<div class="line"><a id="l01030" name="l01030"></a><span class="lineno"> 1030</span>    <span class="comment">// whenever the high-water mark is above what it holds, so without remembering</span></div>
+<div class="line"><a id="l01031" name="l01031"></a><span class="lineno"> 1031</span>    <span class="comment">// this it would ask again on the next frame, and the next - each attempt</span></div>
+<div class="line"><a id="l01032" name="l01032"></a><span class="lineno"> 1032</span>    <span class="comment">// draining the device first. Cleared as soon as any growth succeeds.</span></div>
+<div class="line"><a id="l01033" name="l01033"></a><span class="lineno"> 1033</span>    VkDeviceSize mesharenarefusedcapacity = 0;</div>
+<div class="line"><a id="l01034" name="l01034"></a><span class="lineno"> 1034</span>    uint64_t meshgeneration = 0;</div>
+<div class="line"><a id="l01035" name="l01035"></a><span class="lineno"> 1035</span> </div>
+<div class="line"><a id="l01036" name="l01036"></a><span class="lineno"> 1036</span>    VkPipeline recordedpipeline = VK_NULL_HANDLE;</div>
+<div class="line"><a id="l01037" name="l01037"></a><span class="lineno"> 1037</span>    VkPipelineLayout recordeddescriptorlayout = VK_NULL_HANDLE;</div>
+<div class="line"><a id="l01038" name="l01038"></a><span class="lineno"> 1038</span>    std::array&lt;VkDescriptorSet, 5&gt; recordeddescriptors{};</div>
+<div class="line"><a id="l01039" name="l01039"></a><span class="lineno"> 1039</span>    uint32_t recordeddescriptorcount = 0;</div>
+<div class="line"><a id="l01040" name="l01040"></a><span class="lineno"> 1040</span>    <span class="keywordtype">bool</span> recordeddepthvalid = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l01041" name="l01041"></a><span class="lineno"> 1041</span>    VkBool32 recordeddepthtest = VK_FALSE;</div>
+<div class="line"><a id="l01042" name="l01042"></a><span class="lineno"> 1042</span>    VkBool32 recordeddepthwrite = VK_FALSE;</div>
+<div class="line"><a id="l01043" name="l01043"></a><span class="lineno"> 1043</span>    VkCompareOp recordeddepthcompare = VK_COMPARE_OP_ALWAYS;</div>
+<div class="line"><a id="l01044" name="l01044"></a><span class="lineno"> 1044</span>    <span class="keywordtype">bool</span> recordedtopologyvalid = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l01045" name="l01045"></a><span class="lineno"> 1045</span>    VkPrimitiveTopology recordedtopology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;</div>
+<div class="line"><a id="l01046" name="l01046"></a><span class="lineno"> 1046</span>    <span class="keywordtype">bool</span> recordedcullvalid = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l01047" name="l01047"></a><span class="lineno"> 1047</span>    VkCullModeFlags recordedcullmode = VK_CULL_MODE_NONE;</div>
+<div class="line"><a id="l01048" name="l01048"></a><span class="lineno"> 1048</span>    VkFrontFace recordedfrontface = VK_FRONT_FACE_CLOCKWISE;</div>
+<div class="line"><a id="l01049" name="l01049"></a><span class="lineno"> 1049</span>    <span class="comment">// Two: a mesh binds its vertices plus the per-instance model matrices, and the</span></div>
+<div class="line"><a id="l01050" name="l01050"></a><span class="lineno"> 1050</span>    <span class="comment">// 2D paths bind one. A larger bind is simply never cached.</span></div>
+<div class="line"><a id="l01051" name="l01051"></a><span class="lineno"> 1051</span>    <span class="keyword">static</span> <span class="keyword">const</span> uint32_t gvkmaxvertexbindings = 2;</div>
+<div class="line"><a id="l01052" name="l01052"></a><span class="lineno"> 1052</span>    std::array&lt;VkBuffer, gvkmaxvertexbindings&gt; recordedvertexbuffers{};</div>
+<div class="line"><a id="l01053" name="l01053"></a><span class="lineno"> 1053</span>    std::array&lt;VkDeviceSize, gvkmaxvertexbindings&gt; recordedvertexoffsets{};</div>
+<div class="line"><a id="l01054" name="l01054"></a><span class="lineno"> 1054</span>    uint32_t recordedvertexcount = 0;</div>
+<div class="line"><a id="l01055" name="l01055"></a><span class="lineno"> 1055</span>    VkBuffer recordedindexbuffer = VK_NULL_HANDLE;</div>
+<div class="line"><a id="l01056" name="l01056"></a><span class="lineno"> 1056</span>    VkDeviceSize recordedindexoffset = 0;</div>
+<div class="line"><a id="l01057" name="l01057"></a><span class="lineno"> 1057</span>    VkIndexType recordedindextype = VK_INDEX_TYPE_UINT32;</div>
+<div class="line"><a id="l01058" name="l01058"></a><span class="lineno"> 1058</span>};</div>
+<div class="line"><a id="l01059" name="l01059"></a><span class="lineno"> 1059</span> </div>
+<div class="line"><a id="l01060" name="l01060"></a><span class="lineno"> 1060</span><span class="preprocessor">#endif </span><span class="comment">/* GVK_VULKAN */</span><span class="preprocessor"></span></div>
+<div class="line"><a id="l01061" name="l01061"></a><span class="lineno"> 1061</span> </div>
+<div class="line"><a id="l01062" name="l01062"></a><span class="lineno"> 1062</span><span class="preprocessor">#endif </span><span class="comment">/* CORE_GVKCONTEXT_H */</span><span class="preprocessor"></span></div>
 <div class="ttc" id="aclassgBaseWindow_html"><div class="ttname"><a href="classgBaseWindow.html">gBaseWindow</a></div><div class="ttdef"><b>Definition</b> gBaseWindow.h:29</div></div>
 <div class="ttc" id="aclassgVKRenderEngine_html"><div class="ttname"><a href="classgVKRenderEngine.html">gVKRenderEngine</a></div><div class="ttdef"><b>Definition</b> gVKRenderEngine.h:38</div></div>
 </div><!-- fragment --></div><!-- contents -->
