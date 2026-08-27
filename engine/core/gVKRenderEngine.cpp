@@ -1067,7 +1067,6 @@ static std::string gvkshaderfragmentpath;
 // links no shader compiler - would have no way to build it, and every
 // post-process chain would end in nothing being drawn.
 static bool gvkloadingfboshader = false;
-static int gvkloadingbuiltinshader = GVK_BUILTIN_NONE;
 
 // The backend in use, so the texture resolver gVKUserShader calls can reach the
 // texture registry. There is one render engine per run - gRenderObject creates it
@@ -1095,6 +1094,7 @@ struct gVKRetiredPass {
 	// Frames left before it is safe: one per frame that may still hold it.
 	int framesleft = 0;
 };
+static int gvkloadingbuiltinshader = GVK_BUILTIN_NONE;
 static std::vector<gVKRetiredPass> retiredpasses;
 
 static const gvkUniformSlot* gvkUniformSlotAt(GLuint location) {
@@ -1144,13 +1144,7 @@ void gVKRenderEngine::setShaderSourcePaths(const std::string& vertexPath, const 
 	gvkshaderfragmentpath = fragmentPath;
 }
 
-void gVKRenderEngine::setBuiltinShaderType(int type) {
-	if(type == G_BUILTIN_SHADER_MAGNIFIER) {
-		gvkloadingbuiltinshader = GVK_BUILTIN_MAGNIFIER;
-	} else {
-		gvkloadingbuiltinshader = GVK_BUILTIN_NONE;
-	}
-}
+
 
 void gVKRenderEngine::checkCompileErrors(GLuint shader, const std::string& type) {
 	// Nothing is ever compiled here, so there is nothing to check.
@@ -1185,7 +1179,13 @@ void gVKRenderEngine::setBool(GLuint uniformloc, bool value) {
 	const uint32_t asuint = value ? 1u : 0u;
 	gvkSetUniform(uniformloc, &asuint, GVK_MEMBER_BOOL, 1, 1);
 }
-
+void gVKRenderEngine::setBuiltinShaderType(int type) {
+	if(type == G_BUILTIN_SHADER_MAGNIFIER) {
+		gvkloadingbuiltinshader = GVK_BUILTIN_MAGNIFIER;
+	} else {
+		gvkloadingbuiltinshader = GVK_BUILTIN_NONE;
+	}
+}
 void gVKRenderEngine::setInt(GLuint uniformloc, int value) {
 	// setInt does double duty on the OpenGL side: it sets an integer uniform, and
 	// it points a sampler at a texture unit. Which one this is depends on what the
