@@ -1179,6 +1179,7 @@ void gVKRenderEngine::setBool(GLuint uniformloc, bool value) {
 	const uint32_t asuint = value ? 1u : 0u;
 	gvkSetUniform(uniformloc, &asuint, GVK_MEMBER_BOOL, 1, 1);
 }
+
 void gVKRenderEngine::setBuiltinShaderType(int type) {
 	if(type == G_BUILTIN_SHADER_MAGNIFIER) {
 		gvkloadingbuiltinshader = GVK_BUILTIN_MAGNIFIER;
@@ -1186,6 +1187,7 @@ void gVKRenderEngine::setBuiltinShaderType(int type) {
 		gvkloadingbuiltinshader = GVK_BUILTIN_NONE;
 	}
 }
+
 void gVKRenderEngine::setInt(GLuint uniformloc, int value) {
 	// setInt does double duty on the OpenGL side: it sets an integer uniform, and
 	// it points a sampler at a texture unit. Which one this is depends on what the
@@ -1272,6 +1274,8 @@ void gVKRenderEngine::useShader(GLuint id) const {
 	gvkUseUserShader(static_cast<gVKUserShaderId>(id));
 }
 
+
+
 void gVKRenderEngine::resetShader(GLuint id, bool loaded) const {
 	if(!loaded || id == 0 || vkcontext == nullptr) return;
 	// The names this shader interned are gone with it. Left behind they would still
@@ -1287,6 +1291,7 @@ void gVKRenderEngine::resetShader(GLuint id, bool loaded) const {
 }
 #else
 void gVKRenderEngine::setBool(GLuint uniformloc, bool value) { (void)uniformloc; (void)value; }
+void gVKRenderEngine::setBuiltinShaderType(int type) { (void)type; }
 void gVKRenderEngine::setInt(GLuint uniformloc, int value) { (void)uniformloc; (void)value; }
 void gVKRenderEngine::setUnsignedInt(GLuint uniformloc, unsigned int value) { (void)uniformloc; (void)value; }
 void gVKRenderEngine::setFloat(GLuint uniformloc, float value) { (void)uniformloc; (void)value; }
