@@ -1,6 +1,6 @@
 #include "gDeferredLight.h"
 #include "gRenderer.h"
-#include <GL/glew.h>
+#include <Gl/glew.h>
 #include<iostream>
 #include "gUtils.h"
 #include "graphics/shaders/deferred_geom_vert.h"
@@ -116,7 +116,7 @@ void gDeferredLight::enable() {
 	}
 }
 
-void gDeferredLight::disable(gLight* light, gCamera* camera, gShadowMap* shadowmap) {
+void gDeferredLight::renderLightingPass(gLight* light, gCamera* camera, gShadowMap* shadowmap) {
 	gRenderer* renderer = gRenderObject::getRenderer();
 	GLuint currentFBO = renderer->getBoundFramebuffer();
 
@@ -124,11 +124,10 @@ void gDeferredLight::disable(gLight* light, gCamera* camera, gShadowMap* shadowm
 	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	//LightingPass
 	if(lightingShader != nullptr && shadowmap != nullptr) {
 		lightingShader->use();
 
-		//G-Buffer
+		// G-Buffer
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, positionTexture);
 		lightingShader->setInt("gPosition", 0);
@@ -141,13 +140,13 @@ void gDeferredLight::disable(gLight* light, gCamera* camera, gShadowMap* shadowm
 		glBindTexture(GL_TEXTURE_2D, albedoTexture);
 		lightingShader->setInt("gAlbedo", 2);
 
-		//Lighting
+		// Lighting
 		lightingShader->setVec3("lightPos", light->getPosition());
 		lightingShader->setVec3("lightAmbient", light->getAmbientColor()->r, light->getAmbientColor()->g, light->getAmbientColor()->b);
 		lightingShader->setVec3("lightDiffuse", light->getDiffuseColor()->r, light->getDiffuseColor()->g, light->getDiffuseColor()->b);
 		lightingShader->setVec3("viewPos", camera->getPosX(), camera->getPosY(), camera->getPosZ());
 
-		//Shadow
+		// Shadow
 		lightingShader->setVec3("shadowLightPos", shadowmap->getLight()->getPosition());
 		lightingShader->setMat4("lightMatrix", shadowmap->getLightMatrix());
 
@@ -166,12 +165,14 @@ void gDeferredLight::disable(gLight* light, gCamera* camera, gShadowMap* shadowm
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, currentFBO);
 	glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_DEPTH_BUFFER_BIT, GL_NEAREST);
 	glBindFramebuffer(GL_FRAMEBUFFER, currentFBO);
+}
 
-	//ForwardPass - isDeferred == 2 (UI / Unlit Pass)
+void gDeferredLight::disable() {
+	gRenderer* renderer = gRenderObject::getRenderer();
 	renderer->getColorShader()->use();
-	renderer->getColorShader()->setInt("isDeferred", 2);
+	renderer->getColorShader()->setInt("isDeferred", 0);
 	renderer->getTextureShader()->use();
-	renderer->getTextureShader()->setInt("isDeferred", 2);
+	renderer->getTextureShader()->setInt("isDeferred", 0);
 }
 
 void gDeferredLight::drawFullScreenQuad() {

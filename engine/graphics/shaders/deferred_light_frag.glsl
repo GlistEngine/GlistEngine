@@ -149,21 +149,20 @@ void main() {
     vec3 lightDir = normalize(lightPos - FragPos); 
     
     // Evaluate Fake SSAO for corner and edge depth
-    float aoFactor = calculateAO(TexCoords, FragPos, norm);
+	float rawAO = calculateAO(TexCoords, FragPos, norm);
+	float aoFactor = mix(1.0, rawAO, 0.3);
     
     // Evaluate Hemispheric Ambient (Up-facing is brighter than down-facing)
     float hemi = (norm.y + 1.0) * 0.5;
     float hemiFactor = mix(0.4, 1.0, hemi);
     
     //Lighting
-    vec3 totalAmbient = vec3(0.0);
+	vec3 totalAmbient = globalambientcolor.rgb * Albedo.rgb * aoFactor * hemiFactor;
     vec3 totalDiffuse = vec3(0.0);
     vec3 totalSpecular = vec3(0.0);
     
-    bool haslight = false;
     for (int i = 0; i < lightnum; i++) {
         if ((enabledlights & (1 << i)) == 0) continue;
-        haslight = true;
         
         Light light = lights[i];
         
@@ -179,12 +178,12 @@ void main() {
                 spec = pow(max(dot(vDir, reflectDir), 0.0), objShininess);
             }
             
-            // AO heavily darkens directional light in crevices (micro-shadowing)
-            totalAmbient += light.ambient.rgb * Albedo.rgb * aoFactor * hemiFactor;
-            totalDiffuse += light.diffuse.rgb * diff * Albedo.rgb * aoFactor;
-            totalSpecular += light.specular.rgb * spec * specIntensity * aoFactor; 
+				totalAmbient += light.ambient.rgb * Albedo.rgb * aoFactor * hemiFactor;
+				totalDiffuse += light.diffuse.rgb * diff * Albedo.rgb;
+				totalSpecular += light.specular.rgb * spec * specIntensity;
         }
         else if (light.type == 2) {
+			// Point Light
             vec3 lDir = normalize(light.position - FragPos);
             float distance = length(light.position - FragPos);
             float diff = max(dot(norm, lDir), 0.0);
@@ -197,10 +196,11 @@ void main() {
             float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));
             
             totalAmbient += light.ambient.rgb * Albedo.rgb * aoFactor * hemiFactor;
-            totalDiffuse += light.diffuse.rgb * diff * Albedo.rgb * attenuation * aoFactor;
-            totalSpecular += light.specular.rgb * spec * specIntensity * attenuation * aoFactor;
+			totalDiffuse += light.diffuse.rgb * diff * Albedo.rgb;
+			totalSpecular += light.specular.rgb * spec * specIntensity;
         }
         else if (light.type == 3) {
+            // Spot Light
             vec3 lDir = normalize(light.position - FragPos);
             float distance = length(light.position - FragPos);
             float diff = max(dot(norm, lDir), 0.0);
@@ -216,13 +216,9 @@ void main() {
             float intensity = clamp((theta - light.outerCutOff) / epsilon, 0.0, 1.0);
             
             totalAmbient += light.ambient.rgb * Albedo.rgb * aoFactor * hemiFactor;
-            totalDiffuse += light.diffuse.rgb * diff * Albedo.rgb * attenuation * intensity * aoFactor;
-            totalSpecular += light.specular.rgb * spec * specIntensity * attenuation * intensity * aoFactor;
+			totalDiffuse += light.diffuse.rgb * diff * Albedo.rgb;
+			totalSpecular += light.specular.rgb * spec * specIntensity;
         }
-    }
-    
-    if (!haslight) {
-        totalAmbient = globalambientcolor.rgb * Albedo.rgb;
     }
     
     //Shadow Blending
