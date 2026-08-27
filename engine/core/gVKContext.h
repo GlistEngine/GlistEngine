@@ -1026,6 +1026,11 @@ private:
 	std::vector<VkDeviceSize> mesharenaoffsets;
 	VkDeviceSize mesharenacapacity = 0;
 	VkDeviceSize mesharenahighwater = 0;
+	// A capacity the device refused. The frame loop asks for the arena to grow
+	// whenever the high-water mark is above what it holds, so without remembering
+	// this it would ask again on the next frame, and the next - each attempt
+	// draining the device first. Cleared as soon as any growth succeeds.
+	VkDeviceSize mesharenarefusedcapacity = 0;
 	uint64_t meshgeneration = 0;
 
 	VkPipeline recordedpipeline = VK_NULL_HANDLE;

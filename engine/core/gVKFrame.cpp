@@ -111,11 +111,12 @@ bool gvkBeginFrame(gVKContext& ctx, gBaseWindow* window) {
 	// the draw path can refill it from the start.
 	ctx.resetDynamicVertices();
 	// Rewind the mesh arena too, and grow it first if the last frames wanted more
-	// than it holds. Growing here means draining the device, which is why it is
-	// done at a frame boundary and only when the high-water mark says it is
-	// needed - in practice a handful of times while a level loads, then never.
+	// than it holds. A frame boundary is where that belongs, because replacing the
+	// arena drains the device - gvkEnsureMeshArena does that itself, at the point
+	// the old buffers are actually freed, and returns without spending a stall when
+	// there is nothing it can do. In practice this grows a handful of times while a
+	// level loads, then never.
 	if(ctx.mesharenahighwater > ctx.mesharenacapacity) {
-		vkDeviceWaitIdle(ctx.device);
 		gvkEnsureMeshArena(ctx, ctx.mesharenahighwater * 2);
 	}
 	ctx.resetMeshArena();
