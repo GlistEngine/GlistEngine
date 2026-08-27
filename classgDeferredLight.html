@@ -133,8 +133,10 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a50c91b8ac08418f39c23a7d557688131"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a029f6bbf6773f8154445b561a0817e2a" id="r_a029f6bbf6773f8154445b561a0817e2a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgDeferredLight.html#a029f6bbf6773f8154445b561a0817e2a">enable</a> ()</td></tr>
 <tr class="separator:a029f6bbf6773f8154445b561a0817e2a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8183121ce850792d9b03c9d9815da0a5" id="r_a8183121ce850792d9b03c9d9815da0a5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgDeferredLight.html#a8183121ce850792d9b03c9d9815da0a5">disable</a> (<a class="el" href="classgLight.html">gLight</a> *light, <a class="el" href="classgCamera.html">gCamera</a> *camera, <a class="el" href="classgShadowMap.html">gShadowMap</a> *shadowmap)</td></tr>
-<tr class="separator:a8183121ce850792d9b03c9d9815da0a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaa9cf1e36b5c31da35f69c28fa027c7e" id="r_aaa9cf1e36b5c31da35f69c28fa027c7e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgDeferredLight.html#aaa9cf1e36b5c31da35f69c28fa027c7e">renderLightingPass</a> (<a class="el" href="classgLight.html">gLight</a> *light, <a class="el" href="classgCamera.html">gCamera</a> *camera, <a class="el" href="classgShadowMap.html">gShadowMap</a> *shadowmap)</td></tr>
+<tr class="separator:aaa9cf1e36b5c31da35f69c28fa027c7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a27a0ed06b49ba231d200aed1ab205682" id="r_a27a0ed06b49ba231d200aed1ab205682"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgDeferredLight.html#a27a0ed06b49ba231d200aed1ab205682">disable</a> ()</td></tr>
+<tr class="separator:a27a0ed06b49ba231d200aed1ab205682"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af331545a36199d263f536d5a72e002b8" id="r_af331545a36199d263f536d5a72e002b8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgShader.html">gShader</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgDeferredLight.html#af331545a36199d263f536d5a72e002b8">getGeomShader</a> ()</td></tr>
 <tr class="separator:af331545a36199d263f536d5a72e002b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9fa4ccadc43872ab630a634ea0d04f7b" id="r_a9fa4ccadc43872ab630a634ea0d04f7b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgShader.html">gShader</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgDeferredLight.html#a9fa4ccadc43872ab630a634ea0d04f7b">getLightShader</a> ()</td></tr>
@@ -294,8 +296,8 @@ Additional Inherited Members</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a8183121ce850792d9b03c9d9815da0a5" name="a8183121ce850792d9b03c9d9815da0a5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8183121ce850792d9b03c9d9815da0a5">&#9670;&#160;</a></span>disable()</h2>
+<a id="a27a0ed06b49ba231d200aed1ab205682" name="a27a0ed06b49ba231d200aed1ab205682"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a27a0ed06b49ba231d200aed1ab205682">&#9670;&#160;</a></span>disable()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -303,25 +305,8 @@ Additional Inherited Members</h2></td></tr>
         <tr>
           <td class="memname">void gDeferredLight::disable </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classgLight.html">gLight</a> *&#160;</td>
-          <td class="paramname"><em>light</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
+          <td class="paramname"></td><td>)</td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classgCamera.html">gCamera</a> *&#160;</td>
-          <td class="paramname"><em>camera</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="classgShadowMap.html">gShadowMap</a> *&#160;</td>
-          <td class="paramname"><em>shadowmap</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -391,6 +376,40 @@ Additional Inherited Members</h2></td></tr>
 <span class="mlabels"><span class="mlabel">inline</span></span>  </td>
   </tr>
 </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aaa9cf1e36b5c31da35f69c28fa027c7e" name="aaa9cf1e36b5c31da35f69c28fa027c7e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaa9cf1e36b5c31da35f69c28fa027c7e">&#9670;&#160;</a></span>renderLightingPass()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gDeferredLight::renderLightingPass </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classgLight.html">gLight</a> *&#160;</td>
+          <td class="paramname"><em>light</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classgCamera.html">gCamera</a> *&#160;</td>
+          <td class="paramname"><em>camera</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classgShadowMap.html">gShadowMap</a> *&#160;</td>
+          <td class="paramname"><em>shadowmap</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
 </div><div class="memdoc">
 
 </div>

@@ -121,45 +121,49 @@ $(document).ready(function(){initNavTree('gDeferredLight_8h_source.html',''); in
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>    <span class="comment">// Starts geometry pass</span></div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno"><a class="line" href="classgDeferredLight.html#a029f6bbf6773f8154445b561a0817e2a">   21</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classgDeferredLight.html#a029f6bbf6773f8154445b561a0817e2a">enable</a>();</div>
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span> </div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>    <span class="comment">// Applies lighting and ends deferred pass</span></div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno"><a class="line" href="classgDeferredLight.html#a8183121ce850792d9b03c9d9815da0a5">   24</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classgDeferredLight.html#a8183121ce850792d9b03c9d9815da0a5">disable</a>(<a class="code hl_class" href="classgLight.html">gLight</a>* light, <a class="code hl_class" href="classgCamera.html">gCamera</a>* camera, <a class="code hl_class" href="classgShadowMap.html">gShadowMap</a>* shadowmap);</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>    <span class="comment">// Lighting Pass</span></div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno"><a class="line" href="classgDeferredLight.html#aaa9cf1e36b5c31da35f69c28fa027c7e">   24</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classgDeferredLight.html#aaa9cf1e36b5c31da35f69c28fa027c7e">renderLightingPass</a>(<a class="code hl_class" href="classgLight.html">gLight</a>* light, <a class="code hl_class" href="classgCamera.html">gCamera</a>* camera, <a class="code hl_class" href="classgShadowMap.html">gShadowMap</a>* shadowmap);</div>
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno"><a class="line" href="classgDeferredLight.html#af331545a36199d263f536d5a72e002b8">   26</a></span>    <a class="code hl_class" href="classgShader.html">gShader</a>* <a class="code hl_function" href="classgDeferredLight.html#af331545a36199d263f536d5a72e002b8">getGeomShader</a>() {<span class="keywordflow">return</span> geometryShader;}</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno"><a class="line" href="classgDeferredLight.html#a9fa4ccadc43872ab630a634ea0d04f7b">   27</a></span>    <a class="code hl_class" href="classgShader.html">gShader</a>* <a class="code hl_function" href="classgDeferredLight.html#a9fa4ccadc43872ab630a634ea0d04f7b">getLightShader</a>() {<span class="keywordflow">return</span> lightingShader;}</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>    <span class="comment">// End Deferred</span></div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno"><a class="line" href="classgDeferredLight.html#a27a0ed06b49ba231d200aed1ab205682">   27</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classgDeferredLight.html#a27a0ed06b49ba231d200aed1ab205682">disable</a>();</div>
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span> </div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>    <span class="comment">// Sets up G-Buffer textures</span></div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>    <span class="keywordtype">void</span> setupGBuffer();</div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span> </div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>    <span class="comment">// Draws lighting quad</span></div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    <span class="keywordtype">void</span> drawFullScreenQuad();</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno"><a class="line" href="classgDeferredLight.html#af331545a36199d263f536d5a72e002b8">   29</a></span>    <a class="code hl_class" href="classgShader.html">gShader</a>* <a class="code hl_function" href="classgDeferredLight.html#af331545a36199d263f536d5a72e002b8">getGeomShader</a>() {<span class="keywordflow">return</span> geometryShader;}</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno"><a class="line" href="classgDeferredLight.html#a9fa4ccadc43872ab630a634ea0d04f7b">   30</a></span>    <a class="code hl_class" href="classgShader.html">gShader</a>* <a class="code hl_function" href="classgDeferredLight.html#a9fa4ccadc43872ab630a634ea0d04f7b">getLightShader</a>() {<span class="keywordflow">return</span> lightingShader;}</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>    <span class="comment">// Sets up G-Buffer textures</span></div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    <span class="keywordtype">void</span> setupGBuffer();</div>
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span> </div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> gBufferFBO;</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> positionTexture;</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> normalTexture;</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> albedoTexture;</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> rboDepth;</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> quadVAO;</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> quadVBO;</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span> </div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    <span class="keywordtype">int</span> width;</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    <span class="keywordtype">int</span> height;</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>    <span class="comment">// Draws lighting quad</span></div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    <span class="keywordtype">void</span> drawFullScreenQuad();</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span> </div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> gBufferFBO;</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> positionTexture;</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> normalTexture;</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> albedoTexture;</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> rboDepth;</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> quadVAO;</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> quadVBO;</div>
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span> </div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    <a class="code hl_class" href="classgShader.html">gShader</a>* geometryShader;</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    <a class="code hl_class" href="classgShader.html">gShader</a>* lightingShader;</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>};</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    <span class="keywordtype">int</span> width;</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    <span class="keywordtype">int</span> height;</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span> </div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    <a class="code hl_class" href="classgShader.html">gShader</a>* geometryShader;</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    <a class="code hl_class" href="classgShader.html">gShader</a>* lightingShader;</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>};</div>
 </div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span> </div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span><span class="preprocessor">#endif </span><span class="comment">/* ENGINE_GRAPHICS_GDEFERREDLIGHT_H_ */</span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> </div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span><span class="preprocessor">#endif </span><span class="comment">/* ENGINE_GRAPHICS_GDEFERREDLIGHT_H_ */</span><span class="preprocessor"></span></div>
 <div class="ttc" id="aclassgCamera_html"><div class="ttname"><a href="classgCamera.html">gCamera</a></div><div class="ttdef"><b>Definition</b> gCamera.h:19</div></div>
 <div class="ttc" id="aclassgDeferredLight_html"><div class="ttname"><a href="classgDeferredLight.html">gDeferredLight</a></div><div class="ttdef"><b>Definition</b> gDeferredLight.h:13</div></div>
 <div class="ttc" id="aclassgDeferredLight_html_a029f6bbf6773f8154445b561a0817e2a"><div class="ttname"><a href="classgDeferredLight.html#a029f6bbf6773f8154445b561a0817e2a">gDeferredLight::enable</a></div><div class="ttdeci">void enable()</div></div>
+<div class="ttc" id="aclassgDeferredLight_html_a27a0ed06b49ba231d200aed1ab205682"><div class="ttname"><a href="classgDeferredLight.html#a27a0ed06b49ba231d200aed1ab205682">gDeferredLight::disable</a></div><div class="ttdeci">void disable()</div></div>
 <div class="ttc" id="aclassgDeferredLight_html_a50c91b8ac08418f39c23a7d557688131"><div class="ttname"><a href="classgDeferredLight.html#a50c91b8ac08418f39c23a7d557688131">gDeferredLight::setup</a></div><div class="ttdeci">void setup(int screenWidth, int screenHeight)</div></div>
-<div class="ttc" id="aclassgDeferredLight_html_a8183121ce850792d9b03c9d9815da0a5"><div class="ttname"><a href="classgDeferredLight.html#a8183121ce850792d9b03c9d9815da0a5">gDeferredLight::disable</a></div><div class="ttdeci">void disable(gLight *light, gCamera *camera, gShadowMap *shadowmap)</div></div>
-<div class="ttc" id="aclassgDeferredLight_html_a9fa4ccadc43872ab630a634ea0d04f7b"><div class="ttname"><a href="classgDeferredLight.html#a9fa4ccadc43872ab630a634ea0d04f7b">gDeferredLight::getLightShader</a></div><div class="ttdeci">gShader * getLightShader()</div><div class="ttdef"><b>Definition</b> gDeferredLight.h:27</div></div>
+<div class="ttc" id="aclassgDeferredLight_html_a9fa4ccadc43872ab630a634ea0d04f7b"><div class="ttname"><a href="classgDeferredLight.html#a9fa4ccadc43872ab630a634ea0d04f7b">gDeferredLight::getLightShader</a></div><div class="ttdeci">gShader * getLightShader()</div><div class="ttdef"><b>Definition</b> gDeferredLight.h:30</div></div>
+<div class="ttc" id="aclassgDeferredLight_html_aaa9cf1e36b5c31da35f69c28fa027c7e"><div class="ttname"><a href="classgDeferredLight.html#aaa9cf1e36b5c31da35f69c28fa027c7e">gDeferredLight::renderLightingPass</a></div><div class="ttdeci">void renderLightingPass(gLight *light, gCamera *camera, gShadowMap *shadowmap)</div></div>
 <div class="ttc" id="aclassgDeferredLight_html_abb1f91b9c31a47337036a1de5348d8bc"><div class="ttname"><a href="classgDeferredLight.html#abb1f91b9c31a47337036a1de5348d8bc">gDeferredLight::gDeferredLight</a></div><div class="ttdeci">gDeferredLight()</div></div>
 <div class="ttc" id="aclassgDeferredLight_html_abc86feb211dc9413da911e3672e0b8ac"><div class="ttname"><a href="classgDeferredLight.html#abc86feb211dc9413da911e3672e0b8ac">gDeferredLight::~gDeferredLight</a></div><div class="ttdeci">virtual ~gDeferredLight()</div></div>
-<div class="ttc" id="aclassgDeferredLight_html_af331545a36199d263f536d5a72e002b8"><div class="ttname"><a href="classgDeferredLight.html#af331545a36199d263f536d5a72e002b8">gDeferredLight::getGeomShader</a></div><div class="ttdeci">gShader * getGeomShader()</div><div class="ttdef"><b>Definition</b> gDeferredLight.h:26</div></div>
+<div class="ttc" id="aclassgDeferredLight_html_af331545a36199d263f536d5a72e002b8"><div class="ttname"><a href="classgDeferredLight.html#af331545a36199d263f536d5a72e002b8">gDeferredLight::getGeomShader</a></div><div class="ttdeci">gShader * getGeomShader()</div><div class="ttdef"><b>Definition</b> gDeferredLight.h:29</div></div>
 <div class="ttc" id="aclassgLight_html"><div class="ttname"><a href="classgLight.html">gLight</a></div><div class="ttdef"><b>Definition</b> gLight.h:22</div></div>
 <div class="ttc" id="aclassgRenderObject_html"><div class="ttname"><a href="classgRenderObject.html">gRenderObject</a></div><div class="ttdef"><b>Definition</b> gRenderObject.h:25</div></div>
 <div class="ttc" id="aclassgShader_html"><div class="ttname"><a href="classgShader.html">gShader</a></div><div class="ttdef"><b>Definition</b> gShader.h:19</div></div>

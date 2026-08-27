@@ -208,9 +208,10 @@ var NAVTREEINDEX2 =
 "classgDatabase.html#acf36a173a1dda1ca2b70ee6d3ae9aa8a":[1,0,39,2],
 "classgDeferredLight.html":[1,0,40],
 "classgDeferredLight.html#a029f6bbf6773f8154445b561a0817e2a":[1,0,40,3],
-"classgDeferredLight.html#a50c91b8ac08418f39c23a7d557688131":[1,0,40,6],
-"classgDeferredLight.html#a8183121ce850792d9b03c9d9815da0a5":[1,0,40,2],
+"classgDeferredLight.html#a27a0ed06b49ba231d200aed1ab205682":[1,0,40,2],
+"classgDeferredLight.html#a50c91b8ac08418f39c23a7d557688131":[1,0,40,7],
 "classgDeferredLight.html#a9fa4ccadc43872ab630a634ea0d04f7b":[1,0,40,5],
+"classgDeferredLight.html#aaa9cf1e36b5c31da35f69c28fa027c7e":[1,0,40,6],
 "classgDeferredLight.html#abb1f91b9c31a47337036a1de5348d8bc":[1,0,40,0],
 "classgDeferredLight.html#abc86feb211dc9413da911e3672e0b8ac":[1,0,40,1],
 "classgDeferredLight.html#af331545a36199d263f536d5a72e002b8":[1,0,40,4],
@@ -248,6 +249,5 @@ var NAVTREEINDEX2 =
 "classgFXAA.html#a24d73788e73ca3201abcb1874f741d82":[1,0,54,2],
 "classgFXAA.html#a4cf8c7764a6cf027e13be8632a382165":[1,0,54,7],
 "classgFXAA.html#a5af39ce9c1a6019c951898d148760d78":[1,0,54,3],
-"classgFXAA.html#a61219a18029fd22fac7ea95e51bcc8ad":[1,0,54,5],
-"classgFXAA.html#aaf3f1e0855c17d22fd1698fc906b11ca":[1,0,54,6]
+"classgFXAA.html#a61219a18029fd22fac7ea95e51bcc8ad":[1,0,54,5]
 };
