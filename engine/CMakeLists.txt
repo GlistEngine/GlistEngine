@@ -810,6 +810,7 @@ if(Lib_Vulkan)
 				${GVK_SHADER_DIR}/skybox3d.frag
 				${GVK_SHADER_DIR}/fbo.vert
 				${GVK_SHADER_DIR}/fbo.frag
+				${GVK_SHADER_DIR}/magnifier.frag
 				${GVK_SHADER_DIR}/gen_vk_shaders.cmake
 			COMMENT "Regenerating gVKShaders.h from the Vulkan 2D shader sources"
 			VERBATIM)

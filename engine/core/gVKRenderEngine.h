@@ -133,6 +133,7 @@ public:
 	// This function loads shaders without preproccesing them. Geometry source can be nullptr.
 	GLuint loadProgram(const char* vertexSource, const char* fragmentSource, const char* geometrySource) override;
 	void setShaderSourcePaths(const std::string& vertexPath, const std::string& fragmentPath) override;
+	void setBuiltinShaderType(int type) override;
 	void checkCompileErrors(GLuint shader, const std::string& type) override;
 	void setBool(GLuint uniformloc, bool value) override;
 	void setInt(GLuint uniformloc, int value) override;

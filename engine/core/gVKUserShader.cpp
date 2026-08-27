@@ -410,6 +410,12 @@ gVKUserShaderId gvkCreateUserShader(gVKContext& ctx, const std::string& vertexSo
 		builtinfrag = gvkspv_fbo_frag;
 		builtinfragbytes = sizeof(gvkspv_fbo_frag);
 	}
+	else if(builtin == GVK_BUILTIN_MAGNIFIER) {
+		builtinvert = gvkspv_fbo_vert;
+		builtinvertbytes = sizeof(gvkspv_fbo_vert);
+		builtinfrag = gvkspv_magnifier_frag;
+		builtinfragbytes = sizeof(gvkspv_magnifier_frag);
+	}
 
 	std::vector<uint32_t> vertspirv;
 	std::vector<uint32_t> fragspirv;

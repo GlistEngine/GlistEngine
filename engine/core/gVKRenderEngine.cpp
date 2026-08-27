@@ -1067,6 +1067,7 @@ static std::string gvkshaderfragmentpath;
 // links no shader compiler - would have no way to build it, and every
 // post-process chain would end in nothing being drawn.
 static bool gvkloadingfboshader = false;
+static int gvkloadingbuiltinshader = GVK_BUILTIN_NONE;
 
 // The backend in use, so the texture resolver gVKUserShader calls can reach the
 // texture registry. There is one render engine per run - gRenderObject creates it
@@ -1122,11 +1123,15 @@ GLuint gVKRenderEngine::loadProgram(const char* vertexSource, const char* fragme
 		gLogw("gVKRenderEngine") << "The Vulkan backend builds vertex and fragment stages only;"
 				<< " the geometry shader given here is ignored.";
 	}
+	const int builtinshader = gvkloadingfboshader
+			? GVK_BUILTIN_FBO
+			: gvkloadingbuiltinshader;
+
 	const gVKUserShaderId id = gvkCreateUserShader(*vkcontext,
 			vertexSource != nullptr ? vertexSource : "",
 			fragmentSource != nullptr ? fragmentSource : "",
 			gvkshadervertexpath, gvkshaderfragmentpath,
-			gvkloadingfboshader ? GVK_BUILTIN_FBO : GVK_BUILTIN_NONE);
+			builtinshader);
 	return static_cast<GLuint>(id);
 #else
 	(void) vertexSource; (void) fragmentSource; (void) geometrySource;
@@ -1137,6 +1142,14 @@ GLuint gVKRenderEngine::loadProgram(const char* vertexSource, const char* fragme
 void gVKRenderEngine::setShaderSourcePaths(const std::string& vertexPath, const std::string& fragmentPath) {
 	gvkshadervertexpath = vertexPath;
 	gvkshaderfragmentpath = fragmentPath;
+}
+
+void gVKRenderEngine::setBuiltinShaderType(int type) {
+	if(type == G_BUILTIN_SHADER_MAGNIFIER) {
+		gvkloadingbuiltinshader = GVK_BUILTIN_MAGNIFIER;
+	} else {
+		gvkloadingbuiltinshader = GVK_BUILTIN_NONE;
+	}
 }
 
 void gVKRenderEngine::checkCompileErrors(GLuint shader, const std::string& type) {

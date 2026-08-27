@@ -62,6 +62,7 @@ inline constexpr gVKUserShaderId GVK_NO_USER_SHADER = 0;
 enum gvkBuiltinShader {
 	GVK_BUILTIN_NONE = 0,
 	GVK_BUILTIN_FBO,
+	GVK_BUILTIN_MAGNIFIER,
 };
 
 // Compiles and builds one shader from GLSL held in memory. sourcePath, when the

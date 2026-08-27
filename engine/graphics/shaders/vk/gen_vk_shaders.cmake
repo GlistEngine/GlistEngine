@@ -35,7 +35,8 @@ set(GVK_SHADERS
 	gvkspv_skybox3d_vert skybox3d.vert
 	gvkspv_skybox3d_frag skybox3d.frag
 	gvkspv_fbo_vert fbo.vert
-	gvkspv_fbo_frag fbo.frag)
+	gvkspv_fbo_frag fbo.frag
+	gvkspv_magnifier_frag magnifier.frag)
 
 set(GVK_HEADER "/*
  * gVKShaders.h
@@ -99,11 +100,17 @@ foreach(i RANGE 0 ${GVK_LAST} 2)
 	# -mfmt=c emits the SPIR-V as a braced C initialiser; -o - sends it to stdout,
 	# so no temporary file is needed. The flags match what the engine's runtime
 	# compiler uses, so both paths produce the same code.
-	execute_process(
-		COMMAND "${GLSLC}" --target-env=vulkan1.2 -O "${SHADER_DIR}/${file}" -mfmt=c -o -
-		OUTPUT_VARIABLE spirv
-		ERROR_VARIABLE glslcerror
-		RESULT_VARIABLE glslcresult)
+set(GLSLC_DEBUG_FLAGS)
+if(file STREQUAL "magnifier.frag")
+	list(APPEND GLSLC_DEBUG_FLAGS -g)
+endif()
+
+execute_process(
+	COMMAND "${GLSLC}" --target-env=vulkan1.2 -O ${GLSLC_DEBUG_FLAGS}
+		"${SHADER_DIR}/${file}" -mfmt=c -o -
+	OUTPUT_VARIABLE spirv
+	ERROR_VARIABLE glslcerror
+	RESULT_VARIABLE glslcresult)
 	if(NOT glslcresult EQUAL 0)
 		message(FATAL_ERROR "glslc failed on ${file}:\n${glslcerror}")
 	endif()

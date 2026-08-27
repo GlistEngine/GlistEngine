@@ -109,6 +109,10 @@ void gDrawTubeOblique(float x, float y, float z, int outerradius,int innerradiou
 void gDrawTubeTrapezodial(float x, float y, float z, int topouterradius,int topinnerradious, int buttomouterradious, int buttominnerradious, int h, glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f), int segmentnum = 32, bool isFilled = true);
 void gDrawTubeObliqueTrapezodial(float x, float y, float z, int topouterradius,int topinnerradious, int buttomouterradious, int buttominnerradious, int h, glm::vec2 shiftdistance, glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f), int segmentnum = 32, bool isFilled = true);
 
+enum gBuiltinShaderType {
+	G_BUILTIN_SHADER_NONE = 0,
+	G_BUILTIN_SHADER_MAGNIFIER
+};
 class gVbo;
 class gFbo;
 
@@ -594,6 +598,9 @@ public:
 	virtual void setShaderSourcePaths(const std::string& vertexPath, const std::string& fragmentPath) {
 		(void)vertexPath;
 		(void)fragmentPath;
+	}
+	virtual void setBuiltinShaderType(int type) {
+		(void)type;
 	}
 	virtual void checkCompileErrors(GLuint shader, const std::string& type) = 0;
 	virtual void setBool(GLuint uniformloc, bool value) = 0;
