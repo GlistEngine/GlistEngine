@@ -863,6 +863,15 @@ void gGLRenderEngine::init() {
 		glDebugMessageCallback(openglErrorCallback, nullptr);
 	}
 #endif
+	// The counterpart of the Vulkan backend's startup line: which backend this run
+	// actually got, and on what. A game that asked for one backend and quietly got
+	// the other looks the same in every other line of the log, so the difference
+	// only ever showed up as a frame counter nobody could explain.
+	const GLubyte* devicename = glGetString(GL_RENDERER);
+	const GLubyte* deviceversion = glGetString(GL_VERSION);
+	gLogi("gGLRenderEngine") << "Renderer: OpenGL "
+			<< (deviceversion != nullptr ? reinterpret_cast<const char*>(deviceversion) : "of an unreported version")
+			<< " on " << (devicename != nullptr ? reinterpret_cast<const char*>(devicename) : "an unnamed device") << ".";
 	gRenderer::init();
 }
 

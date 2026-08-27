@@ -1748,6 +1748,32 @@ void gVKRenderEngine::popMatrix() {
 
 static const char* const GVK_VALIDATION_LAYER = "VK_LAYER_KHRONOS_validation";
 
+// How much a GPU is worth to a renderer that has to hit a frame deadline, best
+// first. Only the class of device is weighed, because that is the part of the
+// answer that does not depend on the scene: a GPU with its own memory beats one
+// sharing the CPU's, and anything with hardware behind it beats an emulation of
+// one.
+static int gvkRateDeviceType(VkPhysicalDeviceType type) {
+	switch(type) {
+		case VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU: return 4;
+		case VK_PHYSICAL_DEVICE_TYPE_INTEGRATED_GPU: return 3;
+		case VK_PHYSICAL_DEVICE_TYPE_VIRTUAL_GPU: return 2;
+		case VK_PHYSICAL_DEVICE_TYPE_CPU: return 1;
+		default: return 0;
+	}
+}
+
+// The same classes, for the startup line.
+static const char* gvkDeviceTypeName(VkPhysicalDeviceType type) {
+	switch(type) {
+		case VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU: return "discrete";
+		case VK_PHYSICAL_DEVICE_TYPE_INTEGRATED_GPU: return "integrated";
+		case VK_PHYSICAL_DEVICE_TYPE_VIRTUAL_GPU: return "virtual";
+		case VK_PHYSICAL_DEVICE_TYPE_CPU: return "software";
+		default: return "an unreported kind of";
+	}
+}
+
 // True the first time this exact message is seen. The same text repeated carries
 // no new information and buries what does: MoltenVK reports each Metal limitation
 // once per pipeline built, which is eighty identical lines about one thing. Past
@@ -2065,7 +2091,17 @@ bool gVKRenderEngine::initVulkan() {
 	// It must also meet the version floor: the device's own apiVersion - not the
 	// loader's - is what caps the core features actually available on it, so a
 	// device below minapiversion cannot deliver what the engine requires.
+	//
+	// Among the usable ones the best is taken rather than the first. Enumeration
+	// order is the loader's business, and on a laptop with switchable graphics the
+	// integrated GPU is commonly the one listed first - so a machine that reaches
+	// for its discrete GPU under OpenGL would run Vulkan on the slow half of
+	// itself, which reads as the Vulkan backend being no faster than OpenGL rather
+	// than as the wrong GPU. The two hints that pull OpenGL onto the discrete GPU,
+	// NvOptimusEnablement and AmdPowerXpressRequestHighPerformance, say nothing to
+	// Vulkan: here the choice belongs to the application, so it is made.
 	bool rejectedforversion = false;
+	int bestrating = -1;
 	for(const auto& dev : ctx->physicaldevices) {
 		uint32_t familycount = 0;
 		vkGetPhysicalDeviceQueueFamilyProperties(dev, &familycount, nullptr);
@@ -2095,6 +2131,12 @@ bool gVKRenderEngine::initVulkan() {
 				rejectedforversion = true;
 				continue;
 			}
+			// Strictly better only, so a tie leaves the device found earlier in
+			// place and a machine with a single GPU ends up exactly where it did
+			// before there was a choice to make.
+			const int rating = gvkRateDeviceType(devprops.deviceType);
+			if(rating <= bestrating) continue;
+			bestrating = rating;
 			ctx->physicaldevice = dev;
 			ctx->graphicsfamily = graphics;
 			ctx->presentfamily = present;
@@ -2102,7 +2144,6 @@ bool gVKRenderEngine::initVulkan() {
 			// and which of them can present, so later phases need no re-query.
 			ctx->queuefamilyproperties = families;
 			ctx->queuefamilypresentsupport = presentsupportlist;
-			break;
 		}
 	}
 	if(ctx->physicaldevice == VK_NULL_HANDLE) {
@@ -2117,6 +2158,20 @@ bool gVKRenderEngine::initVulkan() {
 		cleanupVulkan();
 		return false;
 	}
+
+	// Which backend this run actually got, and on what. Both backends print a line
+	// like this because from inside a running game the two are indistinguishable -
+	// the log is otherwise identical either way - and a frame counter read against
+	// a wrong assumption about which one is underneath has cost more than one
+	// investigation.
+	VkPhysicalDeviceProperties chosenprops{};
+	vkGetPhysicalDeviceProperties(ctx->physicaldevice, &chosenprops);
+	gLogi("gVKRenderEngine") << "Renderer: Vulkan " << VK_API_VERSION_MAJOR(chosenprops.apiVersion)
+			<< "." << VK_API_VERSION_MINOR(chosenprops.apiVersion) << " on "
+			<< chosenprops.deviceName << ", " << gvkDeviceTypeName(chosenprops.deviceType)
+			<< " of " << ctx->devicecount << " GPU(s) offered. Validation "
+			<< (ctx->validationactive ? "on - every command goes through the layer, so this "
+					"build is not one to judge performance by" : "off") << ".";
 
 	/* ---------------- logical device ---------------- */
 	// A set, because graphics and present are usually the same family and the

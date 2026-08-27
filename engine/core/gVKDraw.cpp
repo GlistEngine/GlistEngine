@@ -29,28 +29,52 @@ static constexpr VkDeviceSize GVK_MESH_ARENA_INITIAL_CAPACITY = 8 * 1024 * 1024;
 bool gvkEnsureMeshArena(gVKContext& ctx, VkDeviceSize capacity) {
 	if(ctx.device == VK_NULL_HANDLE || capacity == 0) return false;
 	if(capacity <= ctx.mesharenacapacity) return true;
+	// A size the device has already refused is not worth asking for a second time.
+	// The caller drains the device before every attempt, so retrying each frame
+	// would cost a full stall per frame for as long as the scene kept wanting it.
+	if(ctx.mesharenarefusedcapacity != 0 && capacity >= ctx.mesharenarefusedcapacity) return false;
 
-	gvkDestroyMeshArena(ctx);
-
+	// Built beside the arena in use rather than in place of it. Growing used to
+	// destroy what was there before finding out whether the replacement could be
+	// allocated, so a growth the device refused left no arena at all - and an arena
+	// that is merely too small still holds most of a frame's slices, while one that
+	// is gone sends every gathered draw back to one draw call per object.
 	const int frames = GVK_MAX_FRAMES_IN_FLIGHT;
-	ctx.mesharenacapacity = capacity;
-	ctx.mesharenabuffers.assign(frames, VK_NULL_HANDLE);
-	ctx.mesharenamemories.assign(frames, VK_NULL_HANDLE);
-	ctx.mesharenamapped.assign(frames, nullptr);
-	ctx.mesharenaoffsets.assign(frames, 0);
+	std::vector<VkBuffer> buffers(frames, VK_NULL_HANDLE);
+	std::vector<VkDeviceMemory> memories(frames, VK_NULL_HANDLE);
+	std::vector<void*> mapped(frames, nullptr);
 	for(int i = 0; i < frames; i++) {
 		if(!gvkCreateBuffer(ctx, capacity, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT,
 				VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
-				ctx.mesharenabuffers[i], ctx.mesharenamemories[i],
+				buffers[i], memories[i],
 				VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT | VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT
-						| VK_MEMORY_PROPERTY_HOST_COHERENT_BIT)) {
-			gLoge("gVKDraw") << "Could not create the " << capacity
-					<< " byte mesh arena; animated meshes fall back to one buffer each.";
-			gvkDestroyMeshArena(ctx);
+						| VK_MEMORY_PROPERTY_HOST_COHERENT_BIT)
+				|| vkMapMemory(ctx.device, memories[i], 0, capacity, 0, &mapped[i]) != VK_SUCCESS) {
+			gLogw("gVKDraw") << "Could not grow the mesh arena to " << capacity
+					<< " bytes; keeping the " << ctx.mesharenacapacity << " byte one.";
+			for(int j = 0; j <= i; j++) {
+				if(mapped[j] != nullptr) vkUnmapMemory(ctx.device, memories[j]);
+				if(buffers[j] != VK_NULL_HANDLE) vkDestroyBuffer(ctx.device, buffers[j], nullptr);
+				if(memories[j] != VK_NULL_HANDLE) vkFreeMemory(ctx.device, memories[j], nullptr);
+			}
+			ctx.mesharenarefusedcapacity = capacity;
 			return false;
 		}
-		vkMapMemory(ctx.device, ctx.mesharenamemories[i], 0, capacity, 0, &ctx.mesharenamapped[i]);
 	}
+
+	// Only now, with a replacement in hand, does the old one go - and the device is
+	// drained here rather than by the caller, because this is the one moment it is
+	// needed: the buffers about to be freed may still be referenced by a frame that
+	// has not finished. Draining before the allocation, as the frame loop used to,
+	// spent a full stall on attempts that turned out to fail.
+	vkDeviceWaitIdle(ctx.device);
+	gvkDestroyMeshArena(ctx);
+	ctx.mesharenacapacity = capacity;
+	ctx.mesharenabuffers = std::move(buffers);
+	ctx.mesharenamemories = std::move(memories);
+	ctx.mesharenamapped = std::move(mapped);
+	ctx.mesharenaoffsets.assign(frames, 0);
+	ctx.mesharenarefusedcapacity = 0;
 	return true;
 }
 

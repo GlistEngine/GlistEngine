@@ -12,14 +12,24 @@
 
 // Returns UINT32_MAX rather than logging when nothing matches, so a caller can ask
 // for memory it would like and fall back to memory it needs.
+// The first memory type the buffer can use that carries every one of `properties`,
+// or UINT32_MAX if there is none.
+//
+// A type whose heap is smaller than `size` is passed over, because matching flags
+// is not the same as having room. It matters for one heap in particular: a discrete
+// GPU exposes the part of its video memory that the CPU can also write as a heap of
+// its own, and on Windows that heap is 256 MB unless the machine has resizable BAR
+// turned on. Every persistently mapped buffer here asks for that heap first, so it
+// is the one that runs out - and a caller told "no such memory type" can fall back,
+// while one told nothing at all simply fails.
 static uint32_t gvkTryFindMemoryType(gVKContext& ctx, uint32_t typeFilter,
-		VkMemoryPropertyFlags properties) {
+		VkMemoryPropertyFlags properties, VkDeviceSize size = 0) {
 	VkPhysicalDeviceMemoryProperties* memprops = ctx.getDeviceMemoryProperties();
 	for(uint32_t i = 0; i < memprops->memoryTypeCount; i++) {
-		if((typeFilter & (1u << i)) &&
-				(memprops->memoryTypes[i].propertyFlags & properties) == properties) {
-			return i;
-		}
+		if((typeFilter & (1u << i)) == 0) continue;
+		if((memprops->memoryTypes[i].propertyFlags & properties) != properties) continue;
+		if(size > memprops->memoryHeaps[memprops->memoryTypes[i].heapIndex].size) continue;
+		return i;
 	}
 	return UINT32_MAX;
 }
@@ -54,16 +64,49 @@ bool gvkCreateBuffer(gVKContext& ctx, VkDeviceSize size, VkBufferUsageFlags usag
 	// local memory that the CPU can also write, which is where a buffer the CPU
 	// rewrites every frame belongs: plain host visible memory lives in system RAM and
 	// the GPU reads it across the bus on every draw.
+	uint32_t required = gvkTryFindMemoryType(ctx, memreq.memoryTypeBits, properties, memreq.size);
+	// Should the size filter leave nothing at all, ask again without it and let the
+	// driver be the one to refuse. The filter exists to keep a buffer out of a heap
+	// it plainly cannot fit - not to answer on the driver's behalf, which is what
+	// refusing here on a heap size the driver itself reported would amount to.
+	if(required == UINT32_MAX) required = gvkTryFindMemoryType(ctx, memreq.memoryTypeBits, properties);
 	uint32_t memtype = UINT32_MAX;
-	if(preferred != 0) memtype = gvkTryFindMemoryType(ctx, memreq.memoryTypeBits, preferred);
-	if(memtype == UINT32_MAX) memtype = gvkFindMemoryType(ctx, memreq.memoryTypeBits, properties);
+	if(preferred != 0) memtype = gvkTryFindMemoryType(ctx, memreq.memoryTypeBits, preferred, memreq.size);
+	if(memtype == UINT32_MAX) memtype = required;
+	if(memtype == UINT32_MAX) {
+		gLoge("gVKBuffer") << "No memory type on this GPU can hold a " << memreq.size << " byte buffer.";
+		vkDestroyBuffer(device, outBuffer, nullptr);
+		outBuffer = VK_NULL_HANDLE;
+		outMemory = VK_NULL_HANDLE;
+		return false;
+	}
 
 	VkMemoryAllocateInfo allocinfo{};
 	allocinfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
 	allocinfo.allocationSize = memreq.size;
 	allocinfo.memoryTypeIndex = memtype;
-	if(vkAllocateMemory(device, &allocinfo, nullptr, &outMemory) != VK_SUCCESS) {
-		gLoge("gVKBuffer") << "vkAllocateMemory failed.";
+	VkResult allocated = vkAllocateMemory(device, &allocinfo, nullptr, &outMemory);
+
+	// A heap large enough on paper can still be full, and the preferred one is the
+	// first to go: on a discrete GPU it is a slice of video memory that every
+	// persistently mapped buffer in the engine competes for. The required properties
+	// name memory that is slower, not absent, so the allocation is worth retrying
+	// there rather than failing.
+	//
+	// What failing costs is out of proportion to what it looks like. gvkCreateBuffer
+	// returning false for the mesh arena leaves the engine with no arena at all, and
+	// every gathered run of identical meshes then goes back to one draw call per
+	// object - the Vulkan backend quietly gives up the thing that made it faster than
+	// OpenGL, while still drawing the correct picture.
+	if(allocated != VK_SUCCESS && memtype != required && required != UINT32_MAX) {
+		gLogw("gVKBuffer") << "The preferred memory heap could not hold a " << memreq.size
+				<< " byte buffer, so it goes to memory the GPU reads across the bus. "
+				<< "On a discrete GPU this heap is 256 MB without resizable BAR.";
+		allocinfo.memoryTypeIndex = required;
+		allocated = vkAllocateMemory(device, &allocinfo, nullptr, &outMemory);
+	}
+	if(allocated != VK_SUCCESS) {
+		gLoge("gVKBuffer") << "vkAllocateMemory failed for a " << memreq.size << " byte buffer.";
 		vkDestroyBuffer(device, outBuffer, nullptr);
 		outBuffer = VK_NULL_HANDLE;
 		outMemory = VK_NULL_HANDLE;
