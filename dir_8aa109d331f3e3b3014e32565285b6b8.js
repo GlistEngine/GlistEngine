@@ -9,6 +9,7 @@ var dir_8aa109d331f3e3b3014e32565285b6b8 =
     [ "gBoundingBox.h", "gBoundingBox_8h.html", "gBoundingBox_8h" ],
     [ "gCamera.h", "gCamera_8h.html", "gCamera_8h" ],
     [ "gCameraController.h", "gCameraController_8h.html", "gCameraController_8h" ],
+    [ "gDeferredLight.h", "gDeferredLight_8h.html", "gDeferredLight_8h" ],
     [ "gFbo.h", "gFbo_8h.html", "gFbo_8h" ],
     [ "gFog.h", "gFog_8h.html", "gFog_8h" ],
     [ "gFont.h", "gFont_8h.html", "gFont_8h" ],

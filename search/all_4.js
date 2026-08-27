@@ -95,7 +95,7 @@ var searchData=
   ['core_5fgvktexture_5fh_92',['CORE_GVKTEXTURE_H',['../gVKTexture_8h.html#ab8471b189a90521c823b96e6f49dfa62',1,'gVKTexture.h']]],
   ['core_5fgvkuniform_5fh_93',['CORE_GVKUNIFORM_H',['../gVKUniform_8h.html#a836f2624a51311b16bce2bcd9d1f84e8',1,'gVKUniform.h']]],
   ['core_5fgvkusershader_5fh_94',['CORE_GVKUSERSHADER_H',['../gVKUserShader_8h.html#a876965b5677512bafc6fd5afeb13df2b',1,'gVKUserShader.h']]],
-  ['countasspace_95',['countasspace',['../classgGUIControl.html#a0a6329f7c6e37e952083eb5da30a0f44',1,'gGUIControl::countAsSpace()'],['../classgGUIControl.html#a1adecb735c5036fafde5878a7532e894',1,'gGUIControl::countasspace']]],
+  ['countasspace_95',['countasspace',['../classgGUIControl.html#a1adecb735c5036fafde5878a7532e894',1,'gGUIControl::countasspace'],['../classgGUIControl.html#a0a6329f7c6e37e952083eb5da30a0f44',1,'gGUIControl::countAsSpace()']]],
   ['countcolors_96',['countColors',['../classgGUIColorPicker.html#abdfa71e02c09a987eafefbfa73ac7073',1,'gGUIColorPicker']]],
   ['cpcolor_97',['cpcolor',['../classgGUIForm.html#a33631cdf62d267e227d13776dc322e0b',1,'gGUIForm']]],
   ['cph_98',['cph',['../classgGUIForm.html#aff8f0ae991c306068b7578755ede13df',1,'gGUIForm']]],

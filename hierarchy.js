@@ -172,6 +172,7 @@ var hierarchy =
         ] ],
         [ "gBoundingBox", "classgBoundingBox.html", null ],
         [ "gCameraController", "classgCameraController.html", null ],
+        [ "gDeferredLight", "classgDeferredLight.html", null ],
         [ "gFbo", "classgFbo.html", null ],
         [ "gFog", "classgFog.html", null ],
         [ "gGrid", "classgGrid.html", null ],

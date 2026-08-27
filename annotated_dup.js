@@ -40,6 +40,7 @@ var annotated_dup =
     [ "gCross", "classgCross.html", "classgCross" ],
     [ "gCylinder", "classgCylinder.html", "classgCylinder" ],
     [ "gDatabase", "classgDatabase.html", "classgDatabase" ],
+    [ "gDeferredLight", "classgDeferredLight.html", "classgDeferredLight" ],
     [ "gDeviceOrientationChangedEvent", "classgDeviceOrientationChangedEvent.html", "classgDeviceOrientationChangedEvent" ],
     [ "gDynamicGrain", "classgDynamicGrain.html", "classgDynamicGrain" ],
     [ "gEdgeDetection", "classgEdgeDetection.html", "classgEdgeDetection" ],
