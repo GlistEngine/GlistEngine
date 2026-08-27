@@ -20,8 +20,11 @@ public:
 	// Starts geometry pass
 	void enable();
 
-	// Applies lighting and ends deferred pass
-	void disable(gLight* light, gCamera* camera, gShadowMap* shadowmap);
+    // Lighting Pass
+	void renderLightingPass(gLight* light, gCamera* camera, gShadowMap* shadowmap);
+
+	// End Deferred
+	void disable();
 
 	gShader* getGeomShader() {return geometryShader;}
 	gShader* getLightShader() {return lightingShader;}
