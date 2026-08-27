@@ -70,7 +70,7 @@ static glm::vec3 gSampleEquirectangular(const void* pixels, int width, int heigh
 }
 
 gSkybox::gSkybox() {
-	id = GL_NONE;
+	id = 0;
 
 	width = 0;
 	height = 0;
@@ -317,9 +317,6 @@ unsigned int gSkybox::loadEquirectangular(const std::string& fullPath) {
 	ishdr = true;
 	skymapslot = GL_TEXTURE0;
 	skymapint = 0;
-//	glActiveTexture(skymapslot);
-//	glGenTextures(1, &id);
-//	glBindTexture(GL_TEXTURE_CUBE_MAP, id);
 
 	renderer->enableCubeMap();
 
@@ -349,7 +346,7 @@ unsigned int gSkybox::loadEquirectangular(const std::string& fullPath) {
 	hdr.load(fullPath);
 	renderer->bindTexture(hdr.getId(), 0);
 
-	glViewport(0, 0, 512, 512); // don't forget to configure the viewport to the capture dimensions.
+	renderer->setViewport(0, 0, 512, 512); // don't forget to configure the viewport to the capture dimensions.
 	renderer->bindFramebuffer(captureFBO);
 	for (unsigned int i = 0; i < 6; ++i) {
 		equirectangularToCubemapShader->setMat4("view", captureViews[i]);
@@ -364,7 +361,7 @@ unsigned int gSkybox::loadEquirectangular(const std::string& fullPath) {
 	renderer->generateSkyMipMap();
 
 	if(ispbr) generatePbrMaps();
-	glViewport(0, 0, getScreenWidth(), getScreenHeight());
+	renderer->setViewport(0, 0, getScreenWidth(), getScreenHeight());
 	return id;
 }
 
@@ -401,7 +398,7 @@ void gSkybox::generatePbrMaps() {
 	irradianceShader->setMat4("projection", captureProjection);
 	renderer->bindSkyTexture(id, GL_TEXTURE0);
 
-	glViewport(0, 0, 32, 32); // don't forget to configure the viewport to the capture dimensions.
+	renderer->setViewport(0, 0, 32, 32); // don't forget to configure the viewport to the capture dimensions.
 	renderer->bindFramebuffer(captureFBO);
 	for (unsigned int i = 0; i < 6; ++i) {
 		irradianceShader->setMat4("view", captureViews[i]);
@@ -437,7 +434,7 @@ void gSkybox::generatePbrMaps() {
 		unsigned int mipHeight = 128 * std::pow(0.5, mip);
 		renderer->bindRenderbuffer(captureRBO);
 		renderer->setRenderbufferStorage(GL_DEPTH_COMPONENT24, mipWidth, mipHeight);
-		glViewport(0, 0, mipWidth, mipHeight);
+		renderer->setViewport(0, 0, mipWidth, mipHeight);
 
 		float roughness = (float)mip / (float)(maxMipLevels - 1);
 		prefilterShader->setFloat("roughness", roughness);
@@ -468,7 +465,7 @@ void gSkybox::generatePbrMaps() {
 	renderer->setRenderbufferStorage(GL_DEPTH_COMPONENT24, 512, 512);
 	renderer->attachTextureToFramebuffer(GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, brdfLUTTexture);
 
-	glViewport(0, 0, renderer->getScreenWidth(), renderer->getScreenHeight());
+	renderer->setViewport(0, 0, renderer->getScreenWidth(), renderer->getScreenHeight());
 	brdfShader->use();
 	renderer->clearScreen(true, true);
 	renderQuad();
@@ -582,26 +579,41 @@ void gSkybox::drawVulkan() {
 
 void gSkybox::draw() {
 	G_PROFILE_ZONE_SCOPED_N("gSkybox::draw()");
+
+	bool oldblendstate = renderer->isAlphaBlendingEnabled();
+	int oldblendmode = renderer->getBlendMode();
+
 	if(renderer->isVulkan()) {
 		drawVulkan();
 		return;
 	}
 
+	if (oldblendstate) {
+		renderer->disableAlphaBlending();
+	}
+
 	skyboxshader = renderer->getSkyboxShader();
-	renderer->enableDepthTestEqual(); // change depth function so depth test passes when values are equal to depth buffer's content
+	renderer->enableDepthTestEqual();
 	skyboxshader->use();
 	skyboxshader->setInt("aIsHDR", ishdr);
 	skyboxshader->setMat4("projection", renderer->getProjectionMatrix());
 	skyboxshader->setMat4("view", renderer->getViewMatrix());
 	skyboxshader->setMat4("model", localtransformationmatrix.back());
 
-//	skyboxshader->setInt("skymap", skymapint);
-
 	renderer->bindSkyTexture(id, skymapslot);
-    vbo.bind();
+	vbo.bind();
+	// GL_TRIANGLES yerine renderer draw mode kullanýldý
 	renderer->drawElements(GL_TRIANGLES, vbo.getIndicesNum());
-    vbo.unbind();
+	vbo.unbind();
 	renderer->unbindSkyTexture();
+
+	// Eski blending durumuna geri dönme
+	if (oldblendstate) {
+		renderer->enableAlphaBlending();
+		renderer->setBlendMode(oldblendmode);
+	} else {
+		renderer->disableAlphaBlending();
+	}
 }
 
 void gSkybox::setupRenderData() {
@@ -788,5 +800,3 @@ void gSkybox::renderQuad() {
 	renderer->drawArrays(GL_TRIANGLES, 36);
 	renderer->unbindVAO();
 }
-
-

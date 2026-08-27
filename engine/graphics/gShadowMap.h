@@ -68,6 +68,8 @@ private:
 	int width, height;
 	int shadowmaptextureslot;
 	bool updateshadows;
+	bool oldblendstate;
+	int oldblendmode;
 };
 
 #endif /* GRAPHICS_GSHADOWMAP_H_ */

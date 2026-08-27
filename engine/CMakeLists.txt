@@ -499,6 +499,7 @@ set(INC_DIRS
 	${LIBS_DIR}/ghc/include
 	${LIBS_DIR}/miniaudio/include
 	${LIBS_DIR}/sqlite/include
+	${LIBS_DIR}/OpenWhiz/include
 )
 
 set(ENGINE_INCLUDES
