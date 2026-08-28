@@ -45,7 +45,7 @@ struct gVKTexture {
 	// True for a texture created as an FBO attachment rather than uploaded from
 	// pixels. Those carry no mip chain and are cleared by the render pass.
 	bool isattachment = false;
-	// Whether any texel in the upload is transparent enough for mesh3d.frag's cutout
+	// Whether any texel in the upload is transparent enough for color_frag.glsl's cutout
 	// test to discard it. Found while the pixels are being expanded to RGBA anyway,
 	// so it costs nothing, and it lets a mesh drawn with this as its diffuse map take
 	// the pipeline that has the discard compiled out - which is what keeps early

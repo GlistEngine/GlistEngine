@@ -56,8 +56,9 @@ inline constexpr gVKUserShaderId GVK_NO_USER_SHADER = 0;
 // Shaders the engine builds through this path rather than as a pipeline of its
 // own, and which therefore have to work in a build that links no shader compiler.
 // There is one: gFbo's screen resolve, the pass that ends a post-process chain.
-// Its SPIR-V is compiled at build time from graphics/shaders/vk/fbo.vert and
-// .frag and lives in gVKShaders.h, and is used when compiling is not possible.
+// Its SPIR-V is compiled at build time from graphics/shaders/fbo_vert.glsl and
+// fbo_frag.glsl and lives in gVKShaders.h, and is used when compiling is not
+// possible.
 // Anything an application loads has no such fallback and passes NONE.
 enum gvkBuiltinShader {
 	GVK_BUILTIN_NONE = 0,
