@@ -251,7 +251,7 @@ $(document).ready(function(){initNavTree('gVKDraw_8h_source.html',''); initResiz
 <div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span><span class="comment">// compiled out, which is what lets a tile based GPU reject its fragments on depth</span></div>
 <div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span><span class="comment">// before shading them; it must only be false where the caller knows that for</span></div>
 <div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span><span class="comment">// certain, because a cutout material drawn through it would render its holes</span></div>
-<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span><span class="comment">// opaque. See GVK_CUTOUT in mesh3d.frag.</span></div>
+<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span><span class="comment">// opaque. See GVK_CUTOUT in color_frag.glsl.</span></div>
 <div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span><span class="keywordtype">void</span> gvkDrawMesh3D(gVKContext&amp; ctx, VkBuffer vertexBuffer, VkDeviceSize vertexOffset,</div>
 <div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>        VkBuffer indexBuffer, <span class="keywordtype">int</span> count,</div>
 <div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>        VkIndexType indexType, <span class="keyword">const</span> gVKMeshPush&amp; push,</div>

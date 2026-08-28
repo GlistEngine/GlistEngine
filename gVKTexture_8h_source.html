@@ -145,7 +145,7 @@ $(document).ready(function(){initNavTree('gVKTexture_8h_source.html',''); initRe
 <div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    <span class="comment">// True for a texture created as an FBO attachment rather than uploaded from</span></div>
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    <span class="comment">// pixels. Those carry no mip chain and are cleared by the render pass.</span></div>
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    <span class="keywordtype">bool</span> isattachment = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    <span class="comment">// Whether any texel in the upload is transparent enough for mesh3d.frag&#39;s cutout</span></div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    <span class="comment">// Whether any texel in the upload is transparent enough for color_frag.glsl&#39;s cutout</span></div>
 <div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    <span class="comment">// test to discard it. Found while the pixels are being expanded to RGBA anyway,</span></div>
 <div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    <span class="comment">// so it costs nothing, and it lets a mesh drawn with this as its diffuse map take</span></div>
 <div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    <span class="comment">// the pipeline that has the discard compiled out - which is what keeps early</span></div>
